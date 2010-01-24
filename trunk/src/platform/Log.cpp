@@ -1,0 +1,110 @@
+//-----------------------------------------------------------------------------
+//
+//	Log.cpp
+//
+//	Cross-platform message and error logging
+//
+//	Copyright (c) 2010 Mal Lansell <openzwave@lansell.org>
+//
+//	SOFTWARE NOTICE AND LICENSE
+//
+//	This file is part of OpenZWave.
+//
+//	OpenZWave is free software: you can redistribute it and/or modify
+//	it under the terms of the GNU General Public License as published
+//	by the Free Software Foundation, either version 3 of the License,
+//	or (at your option) any later version.
+//
+//	OpenZWave is distributed in the hope that it will be useful,
+//	but WITHOUT ANY WARRANTY; without even the implied warranty of
+//	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//	GNU General Public License for more details.
+//
+//	You should have received a copy of the GNU General Public License
+//	along with OpenZWave.  If not, see <http://www.gnu.org/licenses/>.
+//
+//-----------------------------------------------------------------------------
+
+#include <stdarg.h>
+
+#include "Defs.h"
+#include "Log.h"
+
+#include "LogImpl.h"	// Platform-specific implementation of a log
+
+
+using namespace OpenZWave;
+
+Log* Log::s_pInstance = NULL;
+
+
+//-----------------------------------------------------------------------------
+//	<Log::Create>
+//	Static creation of the singleton
+//-----------------------------------------------------------------------------
+Log* Log::Create
+(
+	string const& _filename 
+)
+{
+	if( NULL == s_pInstance )
+	{
+		s_pInstance = new Log( _filename );
+	}
+
+	return s_pInstance;
+}
+
+//-----------------------------------------------------------------------------
+//	<Log::Destroy>
+//	Static method to destroy the logging singleton.
+//-----------------------------------------------------------------------------
+void Log::Destroy
+(
+)
+{
+	delete s_pInstance;
+	s_pInstance = NULL;
+}
+
+//-----------------------------------------------------------------------------
+//	<Log::Write>
+//	Write to the log
+//-----------------------------------------------------------------------------
+void Log::Write
+( 
+	char* _format, 
+	... 
+)
+{
+	if( s_pInstance )
+	{
+		va_list args;
+		va_start( args, _format );
+		s_pInstance->m_pImpl->Write( _format, args );
+		va_end( args );
+	}
+}
+
+//-----------------------------------------------------------------------------
+//	<Log::Log>
+//	Constructor
+//-----------------------------------------------------------------------------
+Log::Log
+(
+	string const& _filename 
+):
+	m_pImpl( new LogImpl( _filename ) )
+{
+}
+
+//-----------------------------------------------------------------------------
+//	<Log::~Log>
+//	Destructor
+//-----------------------------------------------------------------------------
+Log::~Log
+(
+)
+{
+	delete m_pImpl;
+}
