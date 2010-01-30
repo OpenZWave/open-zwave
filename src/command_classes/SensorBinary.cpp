@@ -73,16 +73,25 @@ bool SensorBinary::HandleMsg
 	uint32 const _instance	// = 0
 )
 {
-    if (SensorBinaryCmd_Report == (SensorBinaryCmd)_pData[0])
-    {
-		m_state = ( _pData[1] != 0 );
+	Node* pNode = GetNode();
+	if( pNode )
+	{
+		ValueStore* pStore = pNode->GetValueStore();
+		if( pStore )
+		{
+			if (SensorBinaryCmd_Report == (SensorBinaryCmd)_pData[0])
+			{
+				if( ValueBool* pValue = static_cast<ValueBool*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
+				{
+					pValue->OnValueChanged( _pData[1] != 0 );
+				}
 
-		Log::Write( "Received SensorBinary report from node %d: State=%s", GetNodeId(), m_state ? "On" : "Off" );
+				Log::Write( "Received SensorBinary report from node %d: State=%s", GetNodeId(), _pData[1] ? "On" : "Off" );
+				return true;
+			}
+		}
+	}
 
-		// Send an xPL message reporting the state
-
-		return true;
-    }
     return false;
 }
 

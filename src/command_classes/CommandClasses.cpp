@@ -34,6 +34,7 @@ using namespace OpenZWave;
 #include "Alarm.h"
 #include "ApplicationStatus.h"
 #include "Association.h"
+#include "AssociationCommandConfiguration.h"
 #include "Basic.h"
 #include "BasicWindowCovering.h"
 #include "Battery.h"
@@ -127,6 +128,7 @@ void CommandClasses::RegisterCommandClasses
 	cc.Register( Alarm::StaticGetCommandClassId(), Alarm::Create );
 	cc.Register( ApplicationStatus::StaticGetCommandClassId(), ApplicationStatus::Create );
 	cc.Register( Association::StaticGetCommandClassId(), Association::Create );
+	cc.Register( AssociationCommandConfiguration::StaticGetCommandClassId(), AssociationCommandConfiguration::Create );
 	cc.Register( Basic::StaticGetCommandClassId(), Basic::Create );
 	//cc.Register( BasicWindowCovering::StaticGetCommandClassId(), BasicWindowCovering::Create );
 	cc.Register( Battery::StaticGetCommandClassId(), Battery::Create );

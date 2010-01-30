@@ -37,6 +37,8 @@ namespace OpenZWave
 {
 	class Value
 	{
+		friend class ValueStore;
+
 	public:
 		Value( uint8 const _nodeId, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, string const& _label, bool const _bReadOnly );
 		Value( TiXmlElement* _pValueElement );
@@ -52,16 +54,24 @@ namespace OpenZWave
 		string const& GetLabel()const{ return m_label; }
 		bool IsReadOnly()const{ return m_bReadOnly; }
 
-		uint32 AddRef(){ ++m_refs; return m_refs; }
+		string const& GetUnits()const{ return m_units; }
+		void SetUnits( string const& _units ){ m_units = _units; }
+
 		uint32 Release(){ if( !(--m_refs) ){ delete this; return 0; } return m_refs; }
 
 	protected:
 		virtual ~Value(){}
 
+		bool Set();				// Fot the user to change a value in a device
+		void OnValueChanged();	// A value in a device has been changed.
+
 	private:
+		uint32 AddRef(){ ++m_refs; return m_refs; }
+
 		uint32		m_refs;
 		ValueID		m_id;
 		string		m_label;
+		string		m_units;
 		bool		m_bReadOnly;
 	};
 

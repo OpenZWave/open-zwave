@@ -79,16 +79,31 @@ bool EnergyProduction::HandleMsg
 	uint32 const _instance	// = 0
 )
 {
-    if (EnergyProductionCmd_Report == (EnergyProductionCmd)_pData[0])
-    {
-		ProductionEnum productionType = (ProductionEnum)_pData[1];	
-		
-		uint8 scale;
-		float32 value = ExtractValue( &_pData[2], &scale );
+	Node* pNode = GetNode();
+	if( pNode )
+	{
+		ValueStore* pStore = pNode->GetValueStore();
+		if( pStore )
+		{
+			if (EnergyProductionCmd_Report == (EnergyProductionCmd)_pData[0])
+			{
+				uint8 scale;
+				float32 value = ExtractValue( &_pData[2], &scale );
 
-		Log::Write( "Received an Energy production report from node %d: %s = %f", GetNodeId(), c_energyParameterNames[productionType], value );
-        return true;
-    }
+				char valueStr[16];
+				snprintf( valueStr, 16, "%.3f", value );
+
+				if( ValueDecimal* pValue = static_cast<ValueDecimal*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, _pData[1] ) ) ) )
+				{
+					pValue->OnValueChanged( valueStr );
+				}
+
+				Log::Write( "Received an Energy production report from node %d: %s = %s", GetNodeId(), c_energyParameterNames[_pData[1]], valueStr );
+				return true;
+			}
+		}
+	}
+
     return false;
 }
 

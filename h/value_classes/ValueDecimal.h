@@ -46,6 +46,7 @@ namespace OpenZWave
 		virtual ~ValueDecimal(){}
 
 		bool Set( string const& _value );
+		void OnValueChanged( string const& _value );
 
 		static uint8 const StaticGetValueTypeId(){ return 0x04; }
 		static string const StaticGetValueTypeName(){ return "VALUE_DECIMAL"; }
@@ -57,8 +58,12 @@ namespace OpenZWave
 
 		virtual string GetAsString()const{ return m_value; }
 
+		string GetValue()const{ return m_value; }
+		string GetPending()const{ return m_pending; }
+
 	private:
 		string	m_value;
+		string	m_pending;
 	};
 
 } // namespace OpenZWave

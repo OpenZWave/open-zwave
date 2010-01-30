@@ -245,30 +245,3 @@ bool ManufacturerSpecific::LoadProductXML
 	return true;
 }
 
-//-----------------------------------------------------------------------------
-// <ManufacturerSpecific::CreateVars>
-// Create the values managed by this command class
-//-----------------------------------------------------------------------------
-void ManufacturerSpecific::CreateVars
-(
-	uint8 const _instance
-)
-{
-	Node* pNode = GetNode();
-	if( pNode )
-	{
-		ValueStore* pStore = pNode->GetValueStore();
-		if( pStore )
-		{
-			Value* pValue;
-			
-			pValue = new ValueString( GetNodeId(), GetCommandClassId(), _instance, (uint8)ValueIndex_Manufacturer, "Manufacturer", true, "Unknown"  );
-			pStore->AddValue( pValue );
-			pValue->Release();
-
-			pValue = new ValueString( GetNodeId(), GetCommandClassId(), _instance, (uint8)ValueIndex_Product, "Product", true, "Unknown"  );
-			pStore->AddValue( pValue );
-			pValue->Release();
-		}
-	}
-}

@@ -76,63 +76,64 @@ bool Basic::HandleMsg
 	uint32 const _instance	// = 0
 )
 {
-    if( BasicCmd_Report == (BasicCmd)_pData[0] )
-    {
-		GetNode()->SetLevel( _pData[1] );
-		Log::Write( "Received Basic report from node %d: level=%d", GetNodeId(), _pData[1] );
-		return true;
-	}
-    if( BasicCmd_Set == (BasicCmd)_pData[0] )
-    {
-		GetNode()->SetLevel( _pData[1] );
-		Log::Write( "Received Basic set from node %d: level=%d", GetNodeId(), _pData[1] );
-		
-		if( Node const* pNode = GetNode() )
+	Node* pNode = GetNode();
+	if( pNode )
+	{
+		ValueStore* pStore = pNode->GetValueStore();
+		if( pStore )
 		{
-			if( ( Node::GenericType_SwitchRemote == pNode->GetGeneric() ) && ( Node::BasicType_RoutingSlave == pNode->GetBasic() ) )
+			if( BasicCmd_Report == (BasicCmd)_pData[0] )
 			{
-				if( Association* pAssociation = static_cast<Association*>( pNode->GetCommandClass( Association::StaticGetCommandClassId() ) ) )
+				// Level
+				if( ValueByte* pValue = static_cast<ValueByte*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
 				{
-					Log::Write( "This is a powered remote switch, so we traverse the associations and request reports" );
-					for( uint8 i=1; i<=pAssociation->GetNumGroups(); ++i )
-					{
-						vector<uint8> const& group = pAssociation->GetGroup( i );
-						for( vector<uint8>::const_iterator it = group.begin(); it != group.end(); ++it )
-						{
-							Msg* pMsg = new Msg( "BasicCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-							pMsg->Append( *it );
-							pMsg->Append( 2 );
-							pMsg->Append( GetCommandClassId() );
-							pMsg->Append( BasicCmd_Get );
-							pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-							Driver::Get()->SendMsg( pMsg );
-						}
-					}
+					pValue->OnValueChanged( _pData[1] );
 				}
+
+				Log::Write( "Received Basic report from node %d: level=%d", GetNodeId(), _pData[1] );
+				return true;
+			}
+
+			if( BasicCmd_Set == (BasicCmd)_pData[0] )
+			{
+				// Level
+				if( ValueByte* pValue = static_cast<ValueByte*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
+				{
+					pValue->OnValueChanged( _pData[1] );
+				}
+
+				Log::Write( "Received Basic set from node %d: level=%d", GetNodeId(), _pData[1] );
+				return true;
 			}
 		}
-		return true;
 	}
+
     return false;
 }
 
 //-----------------------------------------------------------------------------
-// <Basic::Set>
-// Set the level on a device
+// <Basic::SetValue>
+// Set a value on the Z-Wave device
 //-----------------------------------------------------------------------------
-void Basic::Set
+bool Basic::SetValue
 (
-	uint8 const _level
+	Value const& _value
 )
 {
-	Log::Write( "Basic::Set - Setting node %d to level %d", GetNodeId(), _level );
-	Msg* pMsg = new Msg( "Basic Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
-	pMsg->Append( GetNodeId() );
-	pMsg->Append( 3 );
-	pMsg->Append( GetCommandClassId() );
-	pMsg->Append( BasicCmd_Set );
-	pMsg->Append( _level );
-	pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	if( ValueByte const* value = static_cast<ValueByte const*>(&_value) )
+	{
+		Log::Write( "Basic::Set - Setting node %d to level %d", GetNodeId(), value->GetPending() );
+		Msg* pMsg = new Msg( "Basic Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
+		pMsg->Append( GetNodeId() );
+		pMsg->Append( 3 );
+		pMsg->Append( GetCommandClassId() );
+		pMsg->Append( BasicCmd_Set );
+		pMsg->Append( value->GetPending() );
+		pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		return true;
+	}
+
+	return false;
 }
 
 //-----------------------------------------------------------------------------

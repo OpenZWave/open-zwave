@@ -105,32 +105,41 @@ bool ThermostatOperatingState::HandleMsg
 	uint32 const _instance	// = 0
 )
 {
-	if( ThermostatOperatingStateCmd_Report == (ThermostatOperatingStateCmd)_pData[0] )
+	Node* pNode = GetNode();
+	if( pNode )
 	{
-		// We have received the thermostat operating state from the Z-Wave device
-		m_state = (ThermostatOperatingStateEnum)_pData[1];
-
-		// Send an xPL message reporting the mode
-		return true;
-	}
-	else if( _pData[1] == ThermostatOperatingStateCmd_SupportedReport )
-	{
-		// We have received the supported thermostat modes from the Z-Wave device
-		m_supportedStates.clear();
-		for( uint32 i=2; i<_length; ++i )
+		ValueStore* pStore = pNode->GetValueStore();
+		if( pStore )
 		{
-			for( int32 bit=0; bit<8; ++bit )
+			if( ThermostatOperatingStateCmd_Report == (ThermostatOperatingStateCmd)_pData[0] )
 			{
-				if( ( _pData[i] & (1<<bit) ) != 0 )
+				// We have received the thermostat operating state from the Z-Wave device
+				if( ValueList* pValueList = static_cast<ValueList*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
 				{
-					ThermostatOperatingStateEnum mode = (ThermostatOperatingStateEnum)(i+bit-2);
-					m_supportedStates.push_back( c_stateName[mode] );
+					pValueList->OnValueChanged( c_stateName[_pData[1]] );
 				}
+				return true;
+			}
+			else if( _pData[1] == ThermostatOperatingStateCmd_SupportedReport )
+			{
+				// We have received the supported thermostat modes from the Z-Wave device
+				m_supportedStates.clear();
+				for( uint32 i=2; i<_length; ++i )
+				{
+					for( int32 bit=0; bit<8; ++bit )
+					{
+						if( ( _pData[i] & (1<<bit) ) != 0 )
+						{
+							ThermostatOperatingStateEnum mode = (ThermostatOperatingStateEnum)(i+bit-2);
+							m_supportedStates.push_back( c_stateName[mode] );
+						}
+					}
+				}
+
+				CreateVars( _instance );
+				return true;
 			}
 		}
-
-		CreateVars( _instance );
-		return true;
 	}
 
 	// Not handled

@@ -37,19 +37,11 @@ namespace OpenZWave
 	class ThermostatSetpoint: public CommandClass
 	{
 	public:
-		enum ThermostatSetpointScaleEnum
-		{
-			ThermostatSetpointScaleCelsius = 0,
-			ThermostatSetpointScaleFahrenheit
-		};
-
 		static CommandClass* Create( uint8 const _nodeId ){ return new ThermostatSetpoint( _nodeId ); }
-		virtual ~ThermostatSetpoint(){}
+		virtual ~ThermostatSetpoint(){ memset( m_supportedSetpoints, 0, sizeof(m_supportedSetpoints) ); } 
 
 		static uint8 const StaticGetCommandClassId(){ return 0x43; }		
 		static string const StaticGetCommandClassName(){ return "COMMAND_CLASS_THERMOSTAT_SETPOINT"; }
-
-		void Set( string const& _setpoint, float32 const _temperature, ThermostatSetpointScaleEnum const _scale );
 
 		// From CommandClass
 		virtual void RequestStatic();
@@ -57,6 +49,7 @@ namespace OpenZWave
 		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }
 		virtual string const GetCommandClassName()const{ return StaticGetCommandClassName(); }
 		virtual bool HandleMsg( uint8 const* _pData, uint32 const _length, uint32 const _instance = 0 );
+		virtual bool SetValue( Value const& _value );
 
 	private:
 		ThermostatSetpoint( uint8 const _nodeId ): CommandClass( _nodeId ){}
@@ -72,9 +65,7 @@ namespace OpenZWave
 			ThermostatSetpoint_Count
 		};
 
-		bool						m_supportedSetpoints[ThermostatSetpoint_Count];
-		float32						m_setpoints[ThermostatSetpoint_Count];
-		ThermostatSetpointScaleEnum	m_scales[ThermostatSetpoint_Count];
+		bool m_supportedSetpoints[ThermostatSetpoint_Count];
 	};
 
 } // namespace OpenZWave

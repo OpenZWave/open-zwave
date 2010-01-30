@@ -75,32 +75,51 @@ bool Indicator::HandleMsg
 	uint32 const _instance	// = 0
 )
 {
-    if( IndicatorCmd_Report == (IndicatorCmd)_pData[0] )
-    {
-		m_indicator = _pData[1];
-		Log::Write( "Received an Indicator report from node %d: Indicator=%d", GetNodeId(), m_indicator );
-        return true;
-    }
+	Node* pNode = GetNode();
+	if( pNode )
+	{
+		ValueStore* pStore = pNode->GetValueStore();
+		if( pStore )
+		{
+			if( IndicatorCmd_Report == (IndicatorCmd)_pData[0] )
+			{
+				if( ValueBool* pValue = static_cast<ValueBool*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
+				{
+					pValue->OnValueChanged( _pData[1] != 0 );
+				}
+
+				Log::Write( "Received an Indicator report from node %d: Indicator=%d", GetNodeId(), _pData[1] );
+				return true;
+			}
+		}
+	}
+
     return false;
 }
 
 //-----------------------------------------------------------------------------
-// <Indicator::Set>
+// <Indicator::SetValue>
 // Set the device's indicator value 
 //-----------------------------------------------------------------------------
-void Indicator::Set
+bool Indicator::SetValue
 (
-	uint8 const _indicator
-)const
+	Value const& _value
+)
 {
-	Log::Write( "Indicator::Set - Setting indicator on node %d to %d", GetNodeId(), _indicator );
-	Msg* pMsg = new Msg( "Basic Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
-	pMsg->Append( GetNodeId() );
-	pMsg->Append( 3 );
-	pMsg->Append( GetCommandClassId() );
-	pMsg->Append( IndicatorCmd_Set );
-	pMsg->Append( _indicator );
-	pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	if( ValueBool const* value = static_cast<ValueBool const*>(&_value) )
+	{
+		Log::Write( "Indicator::SetValue - Setting indicator on node %d to %s", GetNodeId(), value->GetPending() ? "On" : "Off" );
+		Msg* pMsg = new Msg( "Basic Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
+		pMsg->Append( GetNodeId() );
+		pMsg->Append( 3 );
+		pMsg->Append( GetCommandClassId() );
+		pMsg->Append( IndicatorCmd_Set );
+		pMsg->Append( value->GetPending() ? 0xff: 0x00 );
+		pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		return true;
+	}
+
+	return false;
 }
 
 //-----------------------------------------------------------------------------

@@ -75,34 +75,53 @@ bool Lock::HandleMsg
 	uint32 const _instance	// = 0
 )
 {
-    if( LockCmd_Report == (LockCmd)_pData[0] )
-    {
-        // We have received a report from the Z-Wave device
-        m_state = (LockStateEnum)_pData[1];
-		Log::Write( "Received Lock report from node %d: Lock is %s", GetNodeId(), (m_state == LockState_Unlocked) ? "Unlocked" : "Locked" );
-        return true;
-    }
+	Node* pNode = GetNode();
+	if( pNode )
+	{
+		ValueStore* pStore = pNode->GetValueStore();
+		if( pStore )
+		{
+			if( LockCmd_Report == (LockCmd)_pData[0] )
+			{
+				// We have received a report from the Z-Wave device
+				if( ValueBool* pValue = static_cast<ValueBool*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
+				{
+					pValue->OnValueChanged( _pData[1] != 0 );
+				}
+
+				Log::Write( "Received Lock report from node %d: Lock is %s", GetNodeId(), _pData[1] ? "Locked" : "Unlocked" );
+				return true;
+			}
+		}
+	}
+
     return false;
 }
 
 //-----------------------------------------------------------------------------
-// <Lock::Set>
-// Set the device's 
+// <Lock::SetValue>
+// Set the lock's state
 //-----------------------------------------------------------------------------
-void Lock::Set
+bool Lock::SetValue
 (
-	LockStateEnum _state
+	Value const& _value
 )
 {
-	Log::Write( "Lock::Set - Requesting the node %d lock to be %s", GetNodeId(), (_state==LockState_Unlocked) ? "Unlocked" : "Locked" );
-    Msg* pMsg = new Msg( "LockCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-    pMsg->Append( GetNodeId() );
-    pMsg->Append( 3 );
-    pMsg->Append( GetCommandClassId() );
-    pMsg->Append( LockCmd_Set );
-    pMsg->Append( _state );
-    pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-    Driver::Get()->SendMsg( pMsg );
+	if( ValueBool const* value = static_cast<ValueBool const*>(&_value) )
+	{
+		Log::Write( "Lock::Set - Requesting the node %d lock to be %s", GetNodeId(), value->GetPending() ? "Locked" : "Unlocked" );
+		Msg* pMsg = new Msg( "LockCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+		pMsg->Append( GetNodeId() );
+		pMsg->Append( 3 );
+		pMsg->Append( GetCommandClassId() );
+		pMsg->Append( LockCmd_Set );
+		pMsg->Append( value->GetPending() ? 0xff:0x00 );
+		pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		Driver::Get()->SendMsg( pMsg );
+		return true;
+	}
+
+	return false;
 }
 
 //-----------------------------------------------------------------------------
