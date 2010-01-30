@@ -112,6 +112,8 @@ bool ThermostatSetpoint::HandleMsg
 	uint32 const _instance	// = 0
 )
 {
+	bool handled = false;
+
 	Node* pNode = GetNode();
 	if( pNode )
 	{
@@ -129,7 +131,7 @@ bool ThermostatSetpoint::HandleMsg
 					pValue->SetUnits( scale ? "F" : "C" );
 					pValue->OnValueChanged( temperature );
 				}
-				return true;
+				handled = true;
 			}
 			else if( _pData[1] == ThermostatSetpointCmd_SupportedReport )
 			{
@@ -139,18 +141,19 @@ bool ThermostatSetpoint::HandleMsg
 					m_supportedSetpoints[i] = (( _pData[2] & (1<<i) ) != 0 );
 					if( m_supportedSetpoints[i] )
 					{
-						Value* pValue = new ValueDecimal( GetNodeId(), GetCommandClassId(), _instance, i, c_setpointName[i], false, "0.0"  );
+						Value* pValue = new ValueDecimal( GetNodeId(), GetCommandClassId(), _instance, i, Value::Genre_User, c_setpointName[i], false, "0.0"  );
 						pStore->AddValue( pValue );
 						pValue->Release();
 					}
 				}
-				return true;
+				handled = true;
 			}
+
+			pNode->ReleaseValueStore();
 		}
 	}
 
-	// Not handled
-	return false;
+	return handled;
 }
 
 //-----------------------------------------------------------------------------

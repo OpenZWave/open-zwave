@@ -109,13 +109,15 @@ void AssociationCommandConfiguration::CreateVars
 		{
 			Value* pValue;
 		
-			pValue = new ValueByte( GetNodeId(), GetCommandClassId(), _instance, ValueIndex_Type, "AssociationCommandConfiguration Type", true, 0 );
+			pValue = new ValueByte( GetNodeId(), GetCommandClassId(), _instance, ValueIndex_Type, Value::Genre_System, "AssociationCommandConfiguration Type", true, 0 );
 			pStore->AddValue( pValue );
 			pValue->Release();
 
-			pValue = new ValueByte( GetNodeId(), GetCommandClassId(), _instance, ValueIndex_Level, "AssociationCommandConfiguration Level", true, 0 );
+			pValue = new ValueByte( GetNodeId(), GetCommandClassId(), _instance, ValueIndex_Level, Value::Genre_System, "AssociationCommandConfiguration Level", true, 0 );
 			pStore->AddValue( pValue );
 			pValue->Release();
+
+			pNode->ReleaseValueStore();
 		}
 	}
 }

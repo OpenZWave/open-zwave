@@ -34,37 +34,18 @@
 
 namespace OpenZWave
 {
-	class Mutex;
 	class Value;
 
 	class ValueStore
 	{
 	public:
-		// Custom iterator for the value store, which includes automatic serialisation of
-		// access to prevent values being added or removed while iterating.
-		class Iterator 
-		{
-		public:
-			Iterator( ValueStore* _pStore );
-			~Iterator();
+		
+		typedef map<ValueID,Value*>::const_iterator Iterator;
 
-			Iterator& operator = (const Iterator& _other){ m_it = _other.m_it; return( *this ); }
-			bool operator == ( const Iterator& _other ){ return( m_it == _other.m_it ); }
-			bool operator != ( const Iterator& _other ){ return( m_it != _other.m_it ); }
-			Iterator& operator++(){ ++m_it; return( *this ); }
-			Iterator& operator++(int){ m_it++; return( *this ); }
-
-			ValueID const& operator*()
-			{
-				return( m_it->first );
-			}
-
-		private:
-			map<ValueID,Value*>::iterator	m_it;
-			ValueStore*						m_pStore;
-		};
-
-		ValueStore();
+		Iterator Begin(){ return m_values.begin(); }
+		Iterator End(){ return m_values.begin(); }
+		
+		ValueStore(){}
 		~ValueStore();
 
 		bool AddValue( Value* _pValue );
@@ -73,7 +54,6 @@ namespace OpenZWave
 
 	private:
 		map<ValueID,Value*>	m_values;
-		Mutex*				m_pMutex;
 	};
 
 } // namespace OpenZWave

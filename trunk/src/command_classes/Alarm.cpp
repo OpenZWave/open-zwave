@@ -101,6 +101,7 @@ bool Alarm::HandleMsg
 				{
 					pValue->OnValueChanged( _pData[2] );
 				}
+				pNode->ReleaseValueStore();
 
 				Log::Write( "Received Alarm report from node %d: type=%d, level=%d", GetNodeId(), _pData[1], _pData[2] );
 			}
@@ -128,13 +129,15 @@ void Alarm::CreateVars
 		{
 			Value* pValue;
 		
-			pValue = new ValueByte( GetNodeId(), GetCommandClassId(), _instance, ValueIndex_Type, "Alarm Type", true, 0 );
+			pValue = new ValueByte( GetNodeId(), GetCommandClassId(), _instance, ValueIndex_Type, Value::Genre_User, "Alarm Type", true, 0 );
 			pStore->AddValue( pValue );
 			pValue->Release();
 
-			pValue = new ValueByte( GetNodeId(), GetCommandClassId(), _instance, ValueIndex_Level, "Alarm Level", true, 0 );
+			pValue = new ValueByte( GetNodeId(), GetCommandClassId(), _instance, ValueIndex_Level, Value::Genre_User, "Alarm Level", true, 0 );
 			pStore->AddValue( pValue );
 			pValue->Release();
+
+			pNode->ReleaseValueStore();
 		}
 	}
 }

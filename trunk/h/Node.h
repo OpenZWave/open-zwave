@@ -40,6 +40,7 @@ namespace OpenZWave
 	class ValueStore;
 	class ValueID;
 	class Value;
+	class Mutex;
 
 	class Node
 	{
@@ -126,12 +127,12 @@ namespace OpenZWave
 		uint8 GetSpecific()const{ return m_specific; }
 		string const& GetBasicLabel()const{ return m_basicLabel; }	
 		string const& GetGenericLabel()const{ return m_genericLabel; }	
-		uint8 GetLevel()const{ return m_level; }
-		void SetLevel( uint8 const _level );
 		bool IsPolled()const{ return m_bPolled; }
 		void SetPolled( bool _bState ){ m_bPolled = _bState; }
 		Value* GetValue( ValueID const& _id )const;
-		ValueStore* GetValueStore()const{ return m_pValues; }
+
+		ValueStore* GetValueStore();
+		void ReleaseValueStore();
 
 	private:
 		CommandClass* AddCommandClass( uint8 const _commandClassId );
@@ -153,12 +154,11 @@ namespace OpenZWave
 
 		bool							m_bPolled;
 
-		uint8							m_level;
-
 		bool							m_bProtocolInfoReceived;
 		bool							m_bNodeInfoReceived;
 
-		ValueStore*						m_pValues;	// Values reported via command classes
+		ValueStore*						m_pValues;			// Values reported via command classes
+		Mutex*							m_pValuesMutex;		// Serialize access to the store
 	};
 
 } //namespace OpenZWave

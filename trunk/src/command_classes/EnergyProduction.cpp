@@ -79,6 +79,8 @@ bool EnergyProduction::HandleMsg
 	uint32 const _instance	// = 0
 )
 {
+	bool handled = false;
+
 	Node* pNode = GetNode();
 	if( pNode )
 	{
@@ -99,12 +101,14 @@ bool EnergyProduction::HandleMsg
 				}
 
 				Log::Write( "Received an Energy production report from node %d: %s = %s", GetNodeId(), c_energyParameterNames[_pData[1]], valueStr );
-				return true;
+				handled = true;
 			}
+
+			pNode->ReleaseValueStore();
 		}
 	}
 
-    return false;
+    return handled;
 }
 
 //-----------------------------------------------------------------------------
@@ -144,21 +148,23 @@ void EnergyProduction::CreateVars
 		{
 			Value* pValue;
 			
-			pValue = new ValueDecimal( GetNodeId(), GetCommandClassId(), _instance, (uint8)Production_Instant, c_energyParameterNames[Production_Instant], true, "0.0"  );
+			pValue = new ValueDecimal( GetNodeId(), GetCommandClassId(), _instance, (uint8)Production_Instant, Value::Genre_User, c_energyParameterNames[Production_Instant], true, "0.0"  );
 			pStore->AddValue( pValue );
 			pValue->Release();
 
-			pValue = new ValueDecimal( GetNodeId(), GetCommandClassId(), _instance, (uint8)Production_Total, c_energyParameterNames[Production_Total], true, "0.0"  );
+			pValue = new ValueDecimal( GetNodeId(), GetCommandClassId(), _instance, (uint8)Production_Total, Value::Genre_User, c_energyParameterNames[Production_Total], true, "0.0"  );
 			pStore->AddValue( pValue );
 			pValue->Release();
 
-			pValue = new ValueDecimal( GetNodeId(), GetCommandClassId(), _instance, (uint8)Production_Today, c_energyParameterNames[Production_Today], true, "0.0"  );
+			pValue = new ValueDecimal( GetNodeId(), GetCommandClassId(), _instance, (uint8)Production_Today, Value::Genre_User, c_energyParameterNames[Production_Today], true, "0.0"  );
 			pStore->AddValue( pValue );
 			pValue->Release();
 
-			pValue = new ValueDecimal( GetNodeId(), GetCommandClassId(), _instance, (uint8)Production_Time, c_energyParameterNames[Production_Time], true, "0.0"  );
+			pValue = new ValueDecimal( GetNodeId(), GetCommandClassId(), _instance, (uint8)Production_Time, Value::Genre_User, c_energyParameterNames[Production_Time], true, "0.0"  );
 			pStore->AddValue( pValue );
 			pValue->Release();
+
+			pNode->ReleaseValueStore();
 		}
 	}
 }

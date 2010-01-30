@@ -83,18 +83,19 @@ bool Protection::HandleMsg
 	uint32 const _instance	// = 0
 )
 {
-	Node* pNode = GetNode();
-	if( pNode )
+	if (ProtectionCmd_Report == (ProtectionCmd)_pData[0])
 	{
-		ValueStore* pStore = pNode->GetValueStore();
-		if( pStore )
+		Node* pNode = GetNode();
+		if( pNode )
 		{
-			if (ProtectionCmd_Report == (ProtectionCmd)_pData[0])
+			ValueStore* pStore = pNode->GetValueStore();
+			if( pStore )
 			{
 				if( ValueList* pValue = static_cast<ValueList*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
 				{
 					pValue->OnValueChanged( c_protectionStateNames[_pData[1]] );
 				}
+				pNode->ReleaseValueStore();
 
 				Log::Write( "Received a Protection report from node %d: %s", GetNodeId(), c_protectionStateNames[_pData[1]] );
 				return true;
@@ -161,9 +162,11 @@ void Protection::CreateVars
 			items.push_back( c_protectionStateNames[1] ); 
 			items.push_back( c_protectionStateNames[2] ); 
 
-			Value* pValue = new ValueList( GetNodeId(), GetCommandClassId(), _instance, 0, "Protection", false, items, c_protectionStateNames[0] );
+			Value* pValue = new ValueList( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_System, "Protection", false, items, c_protectionStateNames[0] );
 			pStore->AddValue( pValue );
 			pValue->Release();
+		
+			pNode->ReleaseValueStore();
 		}
 	}
 }

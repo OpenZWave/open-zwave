@@ -73,18 +73,19 @@ bool SensorBinary::HandleMsg
 	uint32 const _instance	// = 0
 )
 {
-	Node* pNode = GetNode();
-	if( pNode )
+	if (SensorBinaryCmd_Report == (SensorBinaryCmd)_pData[0])
 	{
-		ValueStore* pStore = pNode->GetValueStore();
-		if( pStore )
+		Node* pNode = GetNode();
+		if( pNode )
 		{
-			if (SensorBinaryCmd_Report == (SensorBinaryCmd)_pData[0])
+			ValueStore* pStore = pNode->GetValueStore();
+			if( pStore )
 			{
 				if( ValueBool* pValue = static_cast<ValueBool*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
 				{
 					pValue->OnValueChanged( _pData[1] != 0 );
 				}
+				pNode->ReleaseValueStore();
 
 				Log::Write( "Received SensorBinary report from node %d: State=%s", GetNodeId(), _pData[1] ? "On" : "Off" );
 				return true;
@@ -110,9 +111,11 @@ void SensorBinary::CreateVars
 		ValueStore* pStore = pNode->GetValueStore();
 		if( pStore )
 		{
-			Value* pValue = new ValueBool( GetNodeId(), GetCommandClassId(), _instance, 0, "Sensor", true, false );
+			Value* pValue = new ValueBool( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_User, "Sensor", true, false );
 			pStore->AddValue( pValue );
 			pValue->Release();
+
+			pNode->ReleaseValueStore();
 		}
 	}
 }

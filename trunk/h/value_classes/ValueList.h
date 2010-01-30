@@ -42,7 +42,7 @@ namespace OpenZWave
 	class ValueList: public Value
 	{
 	public:
-		ValueList( uint8 const _nodeId, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, string const& _label, bool const _bReadOnly, vector<string> const& _items, string const& _value );
+		ValueList( uint8 const _nodeId, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, uint32 const _genre, string const& _label, bool const _bReadOnly, vector<string> const& _items, string const& _value );
 		ValueList( TiXmlElement* _pValueElement );
 		virtual ~ValueList(){}
 

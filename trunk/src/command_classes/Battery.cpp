@@ -96,6 +96,8 @@ bool Battery::HandleMsg
 				}
 
 				Log::Write( "Received Battery report from node %d: level=%d", GetNodeId(), batteryLevel );
+
+				pNode->ReleaseValueStore();
 				return true;
 			}
 		}
@@ -118,9 +120,11 @@ void Battery::CreateVars
 		ValueStore* pStore = pNode->GetValueStore();
 		if( pStore )
 		{
-			Value* pValue = new ValueByte( GetNodeId(), GetCommandClassId(), _instance, 0, "Battery Level", true, 100 );
+			Value* pValue = new ValueByte( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_User, "Battery Level", true, 100 );
 			pStore->AddValue( pValue );
 			pValue->Release();
+
+			pNode->ReleaseValueStore();
 		}
 	}
 }
