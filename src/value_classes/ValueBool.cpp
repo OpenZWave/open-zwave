@@ -27,8 +27,8 @@
 
 #include "tinyxml.h"
 #include "ValueBool.h"
-#include "Msg.h"
-#include "Log.h"
+#include "Driver.h"
+#include "Node.h"
 
 using namespace OpenZWave;
 
@@ -45,10 +45,10 @@ ValueBool::ValueBool
 	uint8 const _index,
 	string const& _label,
 	bool const _bReadOnly,
-	bool const _bValue
+	bool const _value
 ):
 	Value( _nodeId, _commandClassId, _instance, _index, _label, _bReadOnly ),
-	m_bValue( _bValue )
+	m_value( _value )
 {
 }
 
@@ -65,7 +65,7 @@ ValueBool::ValueBool
 	char const* str = _pValueElement->Attribute( "value" );
 	if( str )
 	{
-		m_bValue = !strcmp( str, "True" );
+		m_value = !strcmp( str, "True" );
 	}
 }
 
@@ -79,7 +79,7 @@ void ValueBool::WriteXML
 )
 {
 	Value::WriteXML( _pValueElement );
-	_pValueElement->SetAttribute( "value", m_bValue ? "True" : "False" );
+	_pValueElement->SetAttribute( "value", m_value ? "True" : "False" );
 }
 
 //-----------------------------------------------------------------------------
@@ -90,7 +90,7 @@ string ValueBool::GetAsString
 (
 )const
 {
-	return( m_bValue ? "True" : "False" );
+	return( m_value ? "True" : "False" );
 }
 
 //-----------------------------------------------------------------------------
@@ -99,21 +99,38 @@ string ValueBool::GetAsString
 //-----------------------------------------------------------------------------
 bool ValueBool::Set
 (
-	bool const _bValue
+	bool const _value
 )
 {
-	if( IsReadOnly() )
+	if( _value == m_value )
 	{
-		return false;
-	}
-
-	if( _bValue == m_bValue )
-	{
+		// Value already set
 		return true;
 	}
 
-	return false;
+	m_pending = _value;
+	return Value::Set();
 }
+
+//-----------------------------------------------------------------------------
+// <ValueBool::OnValueChanged>
+// A value in a device has changed
+//-----------------------------------------------------------------------------
+void ValueBool::OnValueChanged
+(
+	bool const _value
+)
+{
+	if( _value == m_value )
+	{
+		// Value already set
+		return;
+	}
+
+	m_value = _value;
+	Value::OnValueChanged();
+}
+
 
 
 

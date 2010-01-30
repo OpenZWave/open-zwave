@@ -107,17 +107,32 @@ bool ValueByte::Set
 	uint8 const _value
 )
 {
-	if( IsReadOnly() )
-	{
-		return false;
-	}
-
 	if( _value == m_value )
 	{
+		// Value already set
 		return true;
 	}
 
-	return false;
+	m_pending = _value;
+	return Value::Set();
 }
 
+//-----------------------------------------------------------------------------
+// <ValueByte::OnValueChanged>
+// A value in a device has changed
+//-----------------------------------------------------------------------------
+void ValueByte::OnValueChanged
+(
+	uint8 const _value
+)
+{
+	if( _value == m_value )
+	{
+		// Value already set
+		return;
+	}
+
+	m_value = _value;
+	Value::OnValueChanged();
+}
 

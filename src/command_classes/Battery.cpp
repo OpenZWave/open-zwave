@@ -78,15 +78,27 @@ bool Battery::HandleMsg
     {
         // We have received a battery level report from the Z-Wave device.
 		// Devices send 0xff instead of zero for a low battery warning.
-		m_batteryLevel = _pData[1];
-		if( m_batteryLevel == 0xff )
+		uint8 batteryLevel = _pData[1];
+		if( batteryLevel == 0xff )
 		{
-			m_batteryLevel = 0;
+			batteryLevel = 0;
 		}
 
-		Log::Write( "Received Battery report from node %d: level=%d", GetNodeId(), m_batteryLevel );
-		// Send an xPL message reporting the battery level
-        return true;
+		Node* pNode = GetNode();
+		if( pNode )
+		{
+			ValueStore* pStore = pNode->GetValueStore();
+			if( pStore )
+			{
+				if( ValueByte* pValue = static_cast<ValueByte*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
+				{
+					pValue->OnValueChanged( batteryLevel );
+				}
+
+				Log::Write( "Received Battery report from node %d: level=%d", GetNodeId(), batteryLevel );
+				return true;
+			}
+		}
     }
     return false;
 }

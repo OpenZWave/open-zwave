@@ -46,6 +46,7 @@ namespace OpenZWave
 		virtual ~ValueByte(){}
 
 		bool Set( uint8 const _value );
+		void OnValueChanged( uint8 const _value );
 
 		static uint8 const StaticGetValueTypeId(){ return 0x02; }
 		static string const StaticGetValueTypeName(){ return "VALUE_BYTE"; }
@@ -57,8 +58,12 @@ namespace OpenZWave
 
 		virtual string GetAsString()const;
 
+		uint8 GetValue()const{ return m_value; }
+		uint8 GetPending()const{ return m_pending; }
+
 	private:
 		uint8	m_value;
+		uint8	m_pending;
 	};
 
 } // namespace OpenZWave

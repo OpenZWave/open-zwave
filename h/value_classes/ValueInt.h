@@ -46,6 +46,7 @@ namespace OpenZWave
 		virtual ~ValueInt(){}
 
 		bool Set( int32 const _value );
+		void OnValueChanged( int32 const _value );
 
 		static uint8 const StaticGetValueTypeId(){ return 0x03; }
 		static string const StaticGetValueTypeName(){ return "VALUE_INT"; }
@@ -57,8 +58,12 @@ namespace OpenZWave
 
 		virtual string GetAsString()const;
 
+		int32 GetValue()const{ return m_value; }
+		int32 GetPending()const{ return m_pending; }
+
 	private:
 		int32	m_value;
+		int32	m_pending;
 	};
 
 } // namespace OpenZWave

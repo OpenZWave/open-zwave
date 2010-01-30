@@ -63,7 +63,6 @@ namespace OpenZWave
 			ThermostatFanState_RunningHigh
 		};
 
-		ThermostatFanStateEnum	m_state;
 		vector<string>			m_supportedStates;
 	};
 

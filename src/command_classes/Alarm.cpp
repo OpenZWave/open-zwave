@@ -84,11 +84,31 @@ bool Alarm::HandleMsg
     {
         // We have received a report from the Z-Wave device
 		// No known mappings for these values yet
-        uint8 alarmType = _pData[1];
-        uint8 alarmLevel = _pData[2];
-		Log::Write( "Received Alarm report from node %d: type=%d, level=%d", GetNodeId(), alarmType, alarmLevel );
+		if( Node* pNode = GetNode() )
+		{
+			if( ValueStore* pStore = pNode->GetValueStore() )
+			{
+				ValueByte* pValue;
+
+				// Alarm Type
+				if( pValue = static_cast<ValueByte*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, ValueIndex_Type ) ) ) )
+				{
+					pValue->OnValueChanged( _pData[1] );
+				}
+		
+				// Alarm Level
+				if( pValue = static_cast<ValueByte*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, ValueIndex_Level ) ) ) )
+				{
+					pValue->OnValueChanged( _pData[2] );
+				}
+
+				Log::Write( "Received Alarm report from node %d: type=%d, level=%d", GetNodeId(), _pData[1], _pData[2] );
+			}
+		}
+
         return true;
 	}
+
     return false;
 }
 
@@ -104,8 +124,7 @@ void Alarm::CreateVars
 	Node* pNode = GetNode();
 	if( pNode )
 	{
-		ValueStore* pStore = pNode->GetValueStore();
-		if( pStore )
+		if( ValueStore* pStore = pNode->GetValueStore() )
 		{
 			Value* pValue;
 		

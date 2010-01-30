@@ -84,37 +84,68 @@ bool SwitchAll::HandleMsg
 	uint32 const _instance	// = 0
 )
 {
-    if (SwitchAllCmd_Report == (SwitchAllCmd)_pData[0])
-    {
-		m_state = (SwitchAllEnabled)_pData[1];
+	Node* pNode = GetNode();
+	if( pNode )
+	{
+		ValueStore* pStore = pNode->GetValueStore();
+		if( pStore )
+		{
+			if (SwitchAllCmd_Report == (SwitchAllCmd)_pData[0])
+			{
+				char* stateStr = (_pData[1]==SwitchAllEnabled_Both) ? c_switchAllStateName[3] : c_switchAllStateName[_pData[1]];
 
-		
-		Log::Write( "Received SwitchAll report from node %d: %s", GetNodeId(), (m_state==SwitchAllEnabled_Both) ? c_switchAllStateName[3] : c_switchAllStateName[_pData[1]] );
+				if( ValueList* pValue = static_cast<ValueList*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
+				{
+					pValue->OnValueChanged( stateStr );
+				}
 
-		// Send an xPL message reporting the change in state
+				Log::Write( "Received SwitchAll report from node %d: %s", GetNodeId(), stateStr );
+				return true;
+			}
+		}
+	}
 
-		return true;
-    }
     return false;
 }
 
 //-----------------------------------------------------------------------------
-// <SwitchAll::Set>
+// <SwitchAll::SetValue>
 // Set the device's response to SWITCH_ALL commands 
 //-----------------------------------------------------------------------------
-void SwitchAll::Set
+bool SwitchAll::SetValue
 (
-	SwitchAllEnabled _state
+	Value const& _value
 )
 {
-	Log::Write( "SwitchAll::Set - %s on node %d", c_switchAllStateName[((uint8)_state)&0x03], GetNodeId() );
-	Msg* pMsg = new Msg( "SwitchAllCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
-	pMsg->Append( GetNodeId() );
-	pMsg->Append( 3 );
-	pMsg->Append( GetCommandClassId() );
-	pMsg->Append( SwitchAllCmd_Set );
-	pMsg->Append( (uint8)_state );
-	pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	if( ValueList const* pValue = static_cast<ValueList const*>(&_value) )
+	{
+		// Convert the selected option to an index
+		uint8 state = 0;
+		for( int i=0; i<3; ++i )
+		{
+			if( !strcmp( c_switchAllStateName[i], pValue->GetPending().c_str() ) )
+			{
+				state = i;
+				break;
+			}
+		}
+		if( state == 3 )
+		{
+			state = 0xff;
+		}
+
+		Log::Write( "SwitchAll::Set - %s on node %d", pValue->GetPending().c_str(), GetNodeId() );
+		Msg* pMsg = new Msg( "SwitchAllCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
+		pMsg->Append( GetNodeId() );
+		pMsg->Append( 3 );
+		pMsg->Append( GetCommandClassId() );
+		pMsg->Append( SwitchAllCmd_Set );
+		pMsg->Append( state );
+		pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		return true;
+	}
+
+	return false;
 }
 
 //-----------------------------------------------------------------------------

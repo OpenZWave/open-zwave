@@ -67,19 +67,33 @@ bool SensorMultilevel::HandleMsg
 	uint32 const _instance	// = 0
 )
 {
-    if (SensorMultilevelCmd_Report == (SensorMultilevelCmd)_pData[0])
-    {
-		m_sensorType = (SensorType)_pData[1];
+	Node* pNode = GetNode();
+	if( pNode )
+	{
+		ValueStore* pStore = pNode->GetValueStore();
+		if( pStore )
+		{
+			if (SensorMultilevelCmd_Report == (SensorMultilevelCmd)_pData[0])
+			{
+				m_sensorType = (SensorType)_pData[1];
 
-		uint8 scale;
-		m_value = ExtractValue( &_pData[2], &scale );
+				uint8 scale;
+				float value = ExtractValue( &_pData[2], &scale );
 
-		Log::Write( "Received SensorMultiLevel report from node %d: value=%f", GetNodeId(), m_value );
+				char valueStr[16];
+				snprintf( valueStr, 16, "%.3f", value );
 
-		// Send an xPL message reporting the level
+				if( ValueDecimal* pValue = static_cast<ValueDecimal*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
+				{
+					pValue->OnValueChanged( valueStr );
+				}
 
-		return true;
-    }
+				Log::Write( "Received SensorMultiLevel report from node %d: value=%s", GetNodeId(), valueStr );
+				return true;
+			}
+		}
+	}
+
     return false;
 }
 

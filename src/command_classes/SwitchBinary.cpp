@@ -74,33 +74,52 @@ bool SwitchBinary::HandleMsg
 	uint32 const _instance	// = 0
 )
 {
-    if (SwitchBinaryCmd_Report == (SwitchBinaryCmd)_pData[0])
-    {
-		Log::Write( "Received SwitchBinary report from node %d: level=%d", GetNodeId(), _pData[1] );
-		GetNode()->SetLevel( _pData[1] );
-        return true;
-    }
+	Node* pNode = GetNode();
+	if( pNode )
+	{
+		ValueStore* pStore = pNode->GetValueStore();
+		if( pStore )
+		{
+			if (SwitchBinaryCmd_Report == (SwitchBinaryCmd)_pData[0])
+			{
+				if( ValueBool* pValue = static_cast<ValueBool*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
+				{
+					pValue->OnValueChanged( _pData[1] != 0 );
+				}
+
+				Log::Write( "Received SwitchBinary report from node %d: level=%d", GetNodeId(), _pData[1] ? "On" : "Off" );
+				return true;
+			}
+		}
+	}
+
     return false;
 }
 
 //-----------------------------------------------------------------------------
-// <SwitchBinary::Set>
+// <SwitchBinary::SetValue>
 // Set the state of the switch
 //-----------------------------------------------------------------------------
-void SwitchBinary::Set
+bool SwitchBinary::SetValue
 (
-	bool const _bState
+	Value const& _value
 )
 {
-	Log::Write( "SwitchBinary::Set - Setting node %d to %s", GetNodeId(), _bState ? "on" : "off" );
-	Msg* pMsg = new Msg( "SwitchBinary Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
-	pMsg->Append( GetNodeId() );
-	pMsg->Append( 3 );
-	pMsg->Append( GetCommandClassId() );
-	pMsg->Append( SwitchBinaryCmd_Set );
-	pMsg->Append( _bState ? 0xff : 0x00 );
-	pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	Driver::Get()->SendMsg( pMsg );
+	if( ValueBool const* value = static_cast<ValueBool const*>(&_value) )
+	{
+		Log::Write( "SwitchBinary::Set - Setting node %d to %s", GetNodeId(), value->GetPending() ? "On" : "Off" );
+		Msg* pMsg = new Msg( "SwitchBinary Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
+		pMsg->Append( GetNodeId() );
+		pMsg->Append( 3 );
+		pMsg->Append( GetCommandClassId() );
+		pMsg->Append( SwitchBinaryCmd_Set );
+		pMsg->Append( value->GetPending() ? 0xff : 0x00 );
+		pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		Driver::Get()->SendMsg( pMsg );
+		return true;
+	}
+
+	return false;
 }
 
 //-----------------------------------------------------------------------------

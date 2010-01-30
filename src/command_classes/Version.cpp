@@ -54,7 +54,6 @@ static enum
 };
 
 
-
 //-----------------------------------------------------------------------------
 // <Version::RequestStatic>                                                   
 // Request current state from the device                                       
@@ -83,29 +82,53 @@ bool Version::HandleMsg
 	uint32 const _instance	// = 0
 )
 {
-    if (VersionCmd_Report == (VersionCmd)_pData[0])
-    {
-		m_libraryType = _pData[1];
-		m_protcolVersion = _pData[2];
-		m_protocolSubVersion = _pData[3];
-		m_applicationVersion = _pData[4];
-		m_applicationSubVersion = _pData[5];
-
-		// Report the version information to xPL
-		Log::Write( "Received Version report from node %d: Library=%d, Protocol=%d.%d, Application=%d.%d", GetNodeId(), m_libraryType, m_protcolVersion, m_protocolSubVersion, m_applicationVersion, m_applicationSubVersion );
-        return true;
-    }
-
-    if (VersionCmd_CommandClassReport == (VersionCmd)_pData[0])
-    {
-		if( CommandClass* pCommandClass = GetNode()->GetCommandClass( _pData[1] ) )
+	Node* pNode = GetNode();
+	if( pNode )
+	{
+		ValueStore* pStore = pNode->GetValueStore();
+		if( pStore )
 		{
-			pCommandClass->SetVersion( _pData[2] );				
-			Log::Write( "Received Command Class Version report from node %d: CommandClass=%s, Version=%d", GetNodeId(), pCommandClass->GetCommandClassName().c_str(), _pData[2] );
-		}
+			if (VersionCmd_Report == (VersionCmd)_pData[0])
+			{
+				ValueString* pValue;
 
-        return true;
-    }
+				char library[8];
+				snprintf( library, 8, "%d", _pData[1] );
+				if( pValue = static_cast<ValueString*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, (uint8)ValueIndex_Library ) ) ) )
+				{
+					pValue->OnValueChanged( library );
+				}
+
+				char protocol[16];
+				snprintf( protocol, 6, "%d.%d", _pData[2], _pData[3] );
+				if( pValue = static_cast<ValueString*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, (uint8)ValueIndex_Protocol ) ) ) )
+				{
+					pValue->OnValueChanged( protocol );
+				}
+
+				char application[16];
+				snprintf( application, 6, "%d.%d", _pData[4], _pData[5] );
+				if( pValue = static_cast<ValueString*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, (uint8)ValueIndex_Application ) ) ) )
+				{
+					pValue->OnValueChanged( application );
+				}
+
+				Log::Write( "Received Version report from node %d: Library=%s, Protocol=%s, Application=%s", GetNodeId(), library, protocol, application );
+				return true;
+			}
+
+			if (VersionCmd_CommandClassReport == (VersionCmd)_pData[0])
+			{
+				if( CommandClass* pCommandClass = GetNode()->GetCommandClass( _pData[1] ) )
+				{
+					pCommandClass->SetVersion( _pData[2] );				
+					Log::Write( "Received Command Class Version report from node %d: CommandClass=%s, Version=%d", GetNodeId(), pCommandClass->GetCommandClassName().c_str(), _pData[2] );
+				}
+
+				return true;
+			}
+		}
+	}
 
 	return false;
 }

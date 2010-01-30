@@ -1393,6 +1393,69 @@ Value* Driver::GetValue
 //	Notifications
 //-----------------------------------------------------------------------------
 
+//-----------------------------------------------------------------------------
+// <Driver::AddWatcher>
+// Add a watcher to the list
+//-----------------------------------------------------------------------------
+bool Driver::AddWatcher
+(
+	pfnOnValueChanged_t _pWatcher,
+	void* _pContext
+)
+{
+	// Ensure this watcher is not already on the list
+	for( list<Watcher*>::iterator it = m_watchers.begin(); it != m_watchers.end(); ++it )
+	{
+		if( ((*it)->m_callback == _pWatcher ) && ( (*it)->m_pContext == _pContext ) )
+		{
+			// Already in the list
+			return false;
+		}
+	}
+
+	m_watchers.push_back( new Watcher( _pWatcher, _pContext ) );
+	return true;
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::RemoveWatcher>
+// Remove a watcher from the list
+//-----------------------------------------------------------------------------
+bool Driver::RemoveWatcher
+(
+	pfnOnValueChanged_t _pWatcher,
+	void* _pContext
+)
+{
+	list<Watcher*>::iterator it = m_watchers.begin();
+	while( it != m_watchers.end() )
+	{
+		if( ((*it)->m_callback == _pWatcher ) && ( (*it)->m_pContext == _pContext ) )
+		{
+			delete (*it);
+			m_watchers.erase( it );
+			return true;
+		}
+	}
+
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::NotifyWatchers>
+// Notify any watching objects of a value change
+//-----------------------------------------------------------------------------
+void Driver::NotifyWatchers
+(
+	ValueID const& _id
+)
+{
+	for( list<Watcher*>::iterator it = m_watchers.begin(); it != m_watchers.end(); ++it )
+	{
+		Watcher* pWatcher = *it;
+		pWatcher->m_callback( _id, pWatcher->m_pContext );
+	}
+}
 
 ////-----------------------------------------------------------------------------
 //// <Driver::SetBasic>

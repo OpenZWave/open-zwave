@@ -41,8 +41,6 @@ namespace OpenZWave
 		static uint8 const StaticGetCommandClassId(){ return 0x77; }		
 		static string const StaticGetCommandClassName(){ return "COMMAND_CLASS_NODE_NAMING"; }
 
-		void Set( uint8 const _level );
-
 		// From CommandClass
 		virtual void RequestState();
 		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }		

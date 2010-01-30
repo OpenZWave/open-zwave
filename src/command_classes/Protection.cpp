@@ -83,32 +83,62 @@ bool Protection::HandleMsg
 	uint32 const _instance	// = 0
 )
 {
-    if (ProtectionCmd_Report == (ProtectionCmd)_pData[0])
-    {
-		ProtectionEnum protectionState = (ProtectionEnum)_pData[1];	
-		Log::Write( "Received a Protection report from node %d: %s", GetNodeId(), c_protectionStateNames[protectionState] );
-        return true;
-    }
+	Node* pNode = GetNode();
+	if( pNode )
+	{
+		ValueStore* pStore = pNode->GetValueStore();
+		if( pStore )
+		{
+			if (ProtectionCmd_Report == (ProtectionCmd)_pData[0])
+			{
+				if( ValueList* pValue = static_cast<ValueList*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
+				{
+					pValue->OnValueChanged( c_protectionStateNames[_pData[1]] );
+				}
+
+				Log::Write( "Received a Protection report from node %d: %s", GetNodeId(), c_protectionStateNames[_pData[1]] );
+				return true;
+			}
+		}
+	}
+
     return false;
 }
 
 //-----------------------------------------------------------------------------
 // <Protection::Set>
-// Set the device's 
+// Set the device's protection state
 //-----------------------------------------------------------------------------
-void Protection::Set
+bool Protection::SetValue
 (
-	ProtectionEnum _state
+	Value const& _value
 )
 {
-	Log::Write( "Protection::Set - Setting protection state on node %d to '%s'", GetNodeId(), c_protectionStateNames[_state] );
-	Msg* pMsg = new Msg( "Protection Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
-	pMsg->Append( GetNodeId() );
-	pMsg->Append( 3 );
-	pMsg->Append( GetCommandClassId() );
-	pMsg->Append( ProtectionCmd_Set );
-	pMsg->Append( (uint8)_state );
-	pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	if( ValueList const* pValue = static_cast<ValueList const*>(&_value) )
+	{
+		// Convert the selected option to an index
+		uint8 state = 0;
+		for( int i=0; i<3; ++i )
+		{
+			if( !strcmp( c_protectionStateNames[i], pValue->GetPending().c_str() ) )
+			{
+				state = i;
+				break;
+			}
+		}
+
+		Log::Write( "Protection::Set - Setting protection state on node %d to '%s'", GetNodeId(), c_protectionStateNames[state] );
+		Msg* pMsg = new Msg( "Protection Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
+		pMsg->Append( GetNodeId() );
+		pMsg->Append( 3 );
+		pMsg->Append( GetCommandClassId() );
+		pMsg->Append( ProtectionCmd_Set );
+		pMsg->Append( state );
+		pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		return true;
+	}
+
+	return false;
 }
 
 //-----------------------------------------------------------------------------

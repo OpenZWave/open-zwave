@@ -91,16 +91,32 @@ bool ValueString::Set
 	string const& _value
 )
 {
-	if( IsReadOnly() )
-	{
-		return false;
-	}
-
 	if( _value == m_value )
 	{
+		// Value already set
 		return true;
 	}
 
-	return false;
+	m_pending = _value;
+	return Value::Set();
+}
+
+//-----------------------------------------------------------------------------
+// <ValueString::OnValueChanged>
+// A value in a device has changed
+//-----------------------------------------------------------------------------
+void ValueString::OnValueChanged
+(
+	string const& _value
+)
+{
+	if( _value == m_value )
+	{
+		// Value already set
+		return;
+	}
+
+	m_value = _value;
+	Value::OnValueChanged();
 }
 

@@ -107,17 +107,33 @@ bool ValueInt::Set
 	int32 const _value
 )
 {
-	if( IsReadOnly() )
-	{
-		return false;
-	}
-
 	if( _value == m_value )
 	{
+		// Value already set
 		return true;
 	}
 
-	return false;
+	m_pending = _value;
+	return Value::Set();
+}
+
+//-----------------------------------------------------------------------------
+// <ValueInt::OnValueChanged>
+// A value in a device has changed
+//-----------------------------------------------------------------------------
+void ValueInt::OnValueChanged
+(
+	int32 const _value
+)
+{
+	if( _value == m_value )
+	{
+		// Value already set
+		return;
+	}
+
+	m_value = _value;
+	Value::OnValueChanged();
 }
 
 

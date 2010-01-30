@@ -103,6 +103,16 @@ namespace OpenZWave
 		{
 			pfnOnValueChanged_t	m_callback;
 			void*				m_pContext;
+
+			Watcher
+			(
+				pfnOnValueChanged_t _callback,
+				void* _pContext
+			):
+				m_callback( _callback ),
+				m_pContext( _pContext )
+			{
+			}
 		};
 
 		list<Watcher*>			m_watchers;

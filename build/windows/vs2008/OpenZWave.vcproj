@@ -403,6 +403,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\command_classes\AssociationCommandConfiguration.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\h\command_classes\AssociationCommandConfiguration.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\command_classes\Basic.cpp"
 				>
 			</File>

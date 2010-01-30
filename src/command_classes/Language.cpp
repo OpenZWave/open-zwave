@@ -80,23 +80,44 @@ bool Language::HandleMsg
 	uint32 const _instance	// = 0
 )
 {
-    if( LanguageCmd_Report == (LanguageCmd)_pData[0] )
-    {
-		int8 language[4];
-		int8 country[3];
+	Node* pNode = GetNode();
+	if( pNode )
+	{
+		ValueStore* pStore = pNode->GetValueStore();
+		if( pStore )
+		{
+			if( LanguageCmd_Report == (LanguageCmd)_pData[0] )
+			{
+				char language[4];
+				char country[3];
 
-		language[0] = _pData[1];
-		language[1] = _pData[2];
-		language[2] = _pData[3];
-		language[3] = 0;
+				language[0] = _pData[1];
+				language[1] = _pData[2];
+				language[2] = _pData[3];
+				language[3] = 0;
 
-		country[0] = _pData[4];
-		country[1] = _pData[5];
-		country[2] = 0;
+				country[0] = _pData[4];
+				country[1] = _pData[5];
+				country[2] = 0;
+				
+				ValueString* pValue;
 
-		Log::Write( "Received Language report from node %d: Language=%s, Country=%s", GetNodeId(), language, country );
-        return true;
-    }
+				if( pValue = static_cast<ValueString*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, (uint8)ValueIndex_Language ) ) ) )
+				{
+					pValue->OnValueChanged( language );
+				}
+
+				if( pValue = static_cast<ValueString*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, (uint8)ValueIndex_Country ) ) ) )
+				{
+					pValue->OnValueChanged( country );
+				}
+
+				Log::Write( "Received Language report from node %d: Language=%s, Country=%s", GetNodeId(), language, country );
+				return true;
+			}
+		}
+	}
+
     return false;
 }
 
