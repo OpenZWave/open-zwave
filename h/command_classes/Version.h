@@ -54,12 +54,6 @@ namespace OpenZWave
 
 	private:
 		Version( uint8 const _nodeId ): CommandClass( _nodeId ){}
-
-		uint8		m_libraryType;
-		uint8		m_protcolVersion;
-		uint8		m_protocolSubVersion;
-		uint8		m_applicationVersion;
-		uint8		m_applicationSubVersion;
 	};
 
 } // namespace OpenZWave

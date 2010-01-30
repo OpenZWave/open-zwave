@@ -122,26 +122,24 @@ namespace OpenZWave
 	// Z-Wave commands
 	//-----------------------------------------------------------------------------
 	public:	
-		//void SetBasic( uint8 _nodeId, uint8 _level );
-		//void ReplicateController( bool _bBegin );
-		//void ResetController();
-		//void SoftReset();
+		void ResetController();
+		void SoftReset();
 
-		//void SendBasicReport( uint8 _nodeId );
-		//void RequestMultilevelSensorReport( uint8 _nodeId );
-		//
-		//void RequestNodeNeighborUpdate( uint8 _nodeId );
-		//void AssignReturnRoute( uint8 _srcNodeId, uint8 _dstNodeId );
-		//void AddNode( bool _bBegin, bool _bHighpower = false );
-		//void RemoveNode( bool _bBegin );
-		//void SetConfiguration( uint8 _nodeId, uint8 _parameter, uint32 _value );
-		//void SetWakeupInterval( uint8 _nodeId, uint8 _interval, bool _bMulti = false );
+		void RequestNodeNeighborUpdate( uint8 _nodeId );
+		void AssignReturnRoute( uint8 _srcNodeId, uint8 _dstNodeId );
+		
+		void BeginAddNode( bool _bHighpower = false );
+		void EndAddNode();
+		
+		void BeginRemoveNode();
+		void EndRemoveNode();
+
+		void BeginReplicateController();
+		void EndReplicateController();
 
 		void ReadMemory( uint16 offset );
 
-		//void GetMultiInstance( uint8 _nodeId, uint8 _commandClass );
-		//void GetMeter( uint8 _nodeId );
-		//void RequestMultilevelSensorReportInstance( uint8 _nodeId, uint8 _instance );
+		void SetConfiguration( uint8 _nodeId, uint8 _parameter, uint32 _value );
 
 	//-----------------------------------------------------------------------------
 	//	Sending Z-Wave messages

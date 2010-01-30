@@ -51,9 +51,7 @@ namespace OpenZWave
 		virtual void CreateVars( uint8 const _instance );
 
 	private:
-		MeterPulse( uint8 const _nodeId ): CommandClass( _nodeId ), m_count(0){}
-
-		uint32		m_count;
+		MeterPulse( uint8 const _nodeId ): CommandClass( _nodeId ){}
 	};
 
 } // namespace OpenZWave

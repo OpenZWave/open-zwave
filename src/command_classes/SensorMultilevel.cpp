@@ -38,6 +38,12 @@
 
 using namespace OpenZWave;
 
+enum SensorMultilevelCmd
+{
+	SensorMultilevelCmd_Get		= 0x04,
+	SensorMultilevelCmd_Report	= 0x05
+};
+
 
 //-----------------------------------------------------------------------------
 // <SensorMultilevel::RequestState>                                                   
@@ -75,8 +81,6 @@ bool SensorMultilevel::HandleMsg
 		{
 			if (SensorMultilevelCmd_Report == (SensorMultilevelCmd)_pData[0])
 			{
-				m_sensorType = (SensorType)_pData[1];
-
 				uint8 scale;
 				float value = ExtractValue( &_pData[2], &scale );
 
@@ -85,6 +89,61 @@ bool SensorMultilevel::HandleMsg
 
 				if( ValueDecimal* pValue = static_cast<ValueDecimal*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
 				{
+					if( pValue->GetLabel() == "Unknown" )
+					{
+						switch( _pData[1] )
+						{
+							case 0x01:
+							{
+								// Temperature
+								pValue->SetLabel( "Temperature" );
+								break;
+							}
+							case 0x02:
+							{
+								// General
+								pValue->SetLabel( "Sensor" );
+								pValue->SetUnits( "" );
+								break;
+							}
+							case 0x03:
+							{
+								// Luminance
+								pValue->SetLabel( "Luminance" );
+								pValue->SetUnits( "%" );
+								break;
+							}
+							case 0x04:
+							{
+								// Power
+								pValue->SetLabel( "Power" );
+								pValue->SetUnits( "kW" );
+								break;
+							}
+							case 0x05:
+							{
+								// Humidity
+								pValue->SetLabel( "Humidity" );
+								pValue->SetUnits( "%" );
+								break;
+							}
+							case 0x11:
+							{
+								// CO2
+								pValue->SetLabel( "Carbon Monoxide" );
+								pValue->SetUnits( "ppm" );
+								break;
+							}
+						}
+					}
+
+					if( _pData[1] == 0x01 )
+					{
+						// Temperature units can usually be changed on 
+						// the device, so we have to check each time.
+						pValue->SetUnits( scale ? "F" : "C" );
+					}
+
 					pValue->OnValueChanged( valueStr );
 				}
 
@@ -112,7 +171,7 @@ void SensorMultilevel::CreateVars
 		ValueStore* pStore = pNode->GetValueStore();
 		if( pStore )
 		{
-			Value* pValue = new ValueDecimal( GetNodeId(), GetCommandClassId(), _instance, 0, "Sensor", true, "0.0"  );
+			Value* pValue = new ValueDecimal( GetNodeId(), GetCommandClassId(), _instance, 0, "Unknown", true, "0.0"  );
 			pStore->AddValue( pValue );
 		}
 	}

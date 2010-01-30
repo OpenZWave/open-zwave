@@ -1457,65 +1457,7 @@ void Driver::NotifyWatchers
 	}
 }
 
-////-----------------------------------------------------------------------------
-//// <Driver::SetBasic>
-//// 
-////-----------------------------------------------------------------------------
-//void Driver::SetBasic
-//(
-//	uint8 _nodeId, 
-//	uint8 _level
-//)
-//{
-//	Log::Write( "SetBasic: Node=%d, Level=%d", _nodeId, _level );
-//
-//	NodeMapIteratorType it = m_nodeMap.find( _nodeId );
-//	if( it != m_nodeMap.end() )
-//	{
-//		Node* pNode = it->second;							
-//
-//		// Check if it is a setback schedule thermostat
-//		if( ( Node::GenericType_Thermostat == pNode->GetGenericType() ) && ( 3 == pNode->GetSpecificType() ) )
-//		{
-//			// Only set the stateBasic, later gets sent as multi command on wakeup
-//			Log::Write( "Setback schedule override prepared" );
-//			pNode->SetBasicState( (_level == 0) ? 0 : 0xff );
-//		}
-//		else
-//		{
-//			Msg* pMsg = new Msg( "Basic Set", _nodeId, REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
-//			pMsg->Append( _nodeId );
-//			pMsg->Append( 3 );
-//			pMsg->Append( COMMAND_CLASS_BASIC );
-//			pMsg->Append( BASIC_SET );
-//			pMsg->Append( _level );
-//			pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-//			SendMsg( pMsg );
-//		}
-//	}
-//}
-//
-////-----------------------------------------------------------------------------
-//// <Driver::SendBasicReport>
-//// 
-////-----------------------------------------------------------------------------
-//void Driver::SendBasicReport
-//(
-//	uint8 _nodeId
-//)
-//{
-//	Log::Write( "SendBasicReport: Node=%d", _nodeId );
-//
-//	Msg* pMsg = new Msg( "Basic Report", _nodeId, REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
-//	pMsg->Append( _nodeId );
-//	pMsg->Append( 3 );
-//	pMsg->Append( COMMAND_CLASS_BASIC );
-//	pMsg->Append( BASIC_REPORT );
-//	pMsg->Append( 0 );
-//	pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-//	SendMsg( pMsg );
-//}
-//
+
 ////-----------------------------------------------------------------------------
 //// <Driver::GetAssociation>
 //// 
@@ -1612,136 +1554,155 @@ void Driver::NotifyWatchers
 //		SendMsg( pMsg );
 //	}
 //}
-//
-////-----------------------------------------------------------------------------
-//// <Driver::AssignReturnRoute>
-//// 
-////-----------------------------------------------------------------------------
-//void Driver::AssignReturnRoute
-//(
-//	uint8 _nodeId,
-//	uint8 _targetNodeId
-//)
-//{
-//	Msg* pMsg = new Msg( "Assign Return Route", _nodeId, REQUEST, FUNC_ID_ZW_ASSIGN_RETURN_ROUTE, true );		
-//	pMsg->Append( _nodeId );
-//	pMsg->Append( _targetNodeId );
-//	pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-//	SendMsg( pMsg );
-//} 
-//
-////-----------------------------------------------------------------------------
-//// <Driver::ReplicateController>
-//// 
-////-----------------------------------------------------------------------------
-//void Driver::ReplicateController
-//(
-//	bool _bBegin
-//)
-//{
-//	Msg* pMsg;
-//
-//	if( _bBegin )
-//	{
-//		Log::Write( "Replicate controller begin" );
-//		pMsg = new Msg( "Replicate controller begin", 0xff, REQUEST, FUNC_ID_ZW_SET_LEARN_MODE, false, false );
-//		pMsg->Append( 1 );
-//		SendMsg( pMsg );
-//	}
-//	else
-//	{
-//		Log::Write( "Replicate controller end" );
-//		pMsg = new Msg(  "Replicate controller end", 0xff, REQUEST, FUNC_ID_ZW_SET_LEARN_MODE, false, false );
-//		pMsg->Append( 0 );
-//		SendMsg( pMsg );
-//
-//		Log::Write( "Get new init data after replication" );
-//		pMsg = new Msg( "Get new init data after replication", 0xff, REQUEST, FUNC_ID_SERIAL_API_GET_INIT_DATA, false );
-//		SendMsg( pMsg );
-//	}
-//}
-//
-////-----------------------------------------------------------------------------
-//// <Driver::ResetController>
-//// Reset controller and erase all node information
-////-----------------------------------------------------------------------------
-//void Driver::ResetController
-//(
-//)
-//{
-//	Log::Write( "Reset controller and erase all node information");
-//	Msg* pMsg = new Msg( "Reset controller and erase all node information", 0xff, REQUEST, FUNC_ID_ZW_SET_DEFAULT, true );
-//	SendMsg( pMsg );
-//}
 
-////-----------------------------------------------------------------------------
-//// <Driver::SoftReset>
-//// Soft-reset the Z-Wave controller chip
-////-----------------------------------------------------------------------------
-//void Driver::SoftReset
-//(
-//)
-//{
-//	Log::Write( "Soft-resetting the Z-Wave controller chip");
-//	Msg* pMsg = new Msg( "Soft-resetting the Z-Wave controller chip", 0xff, REQUEST, FUNC_ID_SERIAL_API_SOFT_RESET, false, false );
-//	SendMsg( pMsg );
-//}
-//
-////-----------------------------------------------------------------------------
-//// <Driver::AddNode>
-//// Set the controller in and out of AddNode mode
-////-----------------------------------------------------------------------------
-//void Driver::AddNode
-//(
-//	bool _bBegin,
-//	bool _bHighpower // = false
-//)
-//{
-//	Msg* pMsg;
-//
-//	if( _bBegin )
-//	{	
-//		Log::Write( "Add Node - begin" );
-//		pMsg = new Msg( "Add node - begin", 0xff, REQUEST, FUNC_ID_ZW_ADD_NODE_TO_NETWORK, true );
-//		pMsg->Append( _bHighpower ? ADD_NODE_ANY | ADD_NODE_OPTION_HIGH_POWER : ADD_NODE_ANY );
-//	}
-//	else
-//	{
-//		Log::Write( "Add Node - end" );
-//		pMsg = new Msg( "Add node - end", 0xff, REQUEST, FUNC_ID_ZW_ADD_NODE_TO_NETWORK, false, false );
-//		pMsg->Append( ADD_NODE_STOP );
-//	}
-//
-//	SendMsg( pMsg );
-//}
-//
-////-----------------------------------------------------------------------------
-//// <Driver::RemoveNode>
-//// Set the controller in and out of RemoveNode mode
-////-----------------------------------------------------------------------------
-//void Driver::RemoveNode
-//(
-//	bool _bBegin
-//)
-//{
-//	Msg* pMsg;
-//
-//	if( _bBegin )
-//	{	
-//		Log::Write( "Remove Node - begin" );
-//		pMsg = new Msg( "Remove node - begin", 0xff, REQUEST, FUNC_ID_ZW_REMOVE_NODE_FROM_NETWORK, true );
-//		pMsg->Append( REMOVE_NODE_ANY );
-//	}
-//	else
-//	{
-//		Log::Write( "Remove Node - end" );
-//		pMsg = new Msg( "Add node - end", 0xff, REQUEST, FUNC_ID_ZW_REMOVE_NODE_FROM_NETWORK, false, false );
-//		pMsg->Append( REMOVE_NODE_STOP );
-//	}
-//
-//	SendMsg( pMsg );
-//}
-//
+//-----------------------------------------------------------------------------
+// <Driver::ResetController>
+// Reset controller and erase all node information
+//-----------------------------------------------------------------------------
+void Driver::ResetController
+(
+)
+{
+	Log::Write( "Reset controller and erase all node information");
+	Msg* pMsg = new Msg( "Reset controller and erase all node information", 0xff, REQUEST, FUNC_ID_ZW_SET_DEFAULT, true );
+	SendMsg( pMsg );
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::SoftReset>
+// Soft-reset the Z-Wave controller chip
+//-----------------------------------------------------------------------------
+void Driver::SoftReset
+(
+)
+{
+	Log::Write( "Soft-resetting the Z-Wave controller chip");
+	Msg* pMsg = new Msg( "Soft-resetting the Z-Wave controller chip", 0xff, REQUEST, FUNC_ID_SERIAL_API_SOFT_RESET, false, false );
+	SendMsg( pMsg );
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::RequestNodeNeighborUpdate>
+// 
+//-----------------------------------------------------------------------------
+void Driver::RequestNodeNeighborUpdate
+(
+	uint8 _nodeId
+)
+{
+	Log::Write( "Requesting Neighbour Update for node %d", _nodeId );
+	Msg* pMsg = new Msg( "Requesting Neighbour Update", _nodeId, REQUEST, FUNC_ID_ZW_REQUEST_NODE_NEIGHBOR_UPDATE, true );
+	pMsg->Append( _nodeId );
+	SendMsg( pMsg );
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::AssignReturnRoute>
+// 
+//-----------------------------------------------------------------------------
+void Driver::AssignReturnRoute
+(
+	uint8 _nodeId,
+	uint8 _targetNodeId
+)
+{
+	Log::Write( "Assign Return Route for Node %d, Target Node %d", _nodeId, _targetNodeId );
+	Msg* pMsg = new Msg( "Assign Return Route", _nodeId, REQUEST, FUNC_ID_ZW_ASSIGN_RETURN_ROUTE, true );		
+	pMsg->Append( _nodeId );
+	pMsg->Append( _targetNodeId );
+	pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	SendMsg( pMsg );
+} 
+
+//-----------------------------------------------------------------------------
+// <Driver::BeginAddNode>
+// Set the controller into AddNode mode
+//-----------------------------------------------------------------------------
+void Driver::BeginAddNode
+(
+	bool _highPower // = false
+)
+{
+	Log::Write( "Add Node - Begin" );
+	Msg* pMsg = new Msg( "Add Node - Begin", 0xff, REQUEST, FUNC_ID_ZW_ADD_NODE_TO_NETWORK, true );
+	pMsg->Append( _highPower ? ADD_NODE_ANY | ADD_NODE_OPTION_HIGH_POWER : ADD_NODE_ANY );
+	SendMsg( pMsg );
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::EndAddNode>
+// Take the controller out of AddNode mode
+//-----------------------------------------------------------------------------
+void Driver::EndAddNode
+(
+)
+{
+	Log::Write( "Add Node - End" );
+	Msg* pMsg = new Msg( "Add Node - End", 0xff, REQUEST, FUNC_ID_ZW_ADD_NODE_TO_NETWORK, false, false );
+	pMsg->Append( ADD_NODE_STOP );
+	SendMsg( pMsg );
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::BeginRemoveNode>
+// Set the controller into RemoveNode mode
+//-----------------------------------------------------------------------------
+void Driver::BeginRemoveNode
+(
+)
+{
+	Log::Write( "Remove Node - Begin" );
+	Msg* pMsg = new Msg( "Remove Node - Begin", 0xff, REQUEST, FUNC_ID_ZW_REMOVE_NODE_FROM_NETWORK, true );
+	pMsg->Append( REMOVE_NODE_ANY );
+	SendMsg( pMsg );
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::EndRemoveNode>
+// Take the controller out of RemoveNode mode
+//-----------------------------------------------------------------------------
+void Driver::EndRemoveNode
+(
+)
+{
+	Log::Write( "Remove Node - End" );
+	Msg* pMsg = new Msg( "Remove Node - End", 0xff, REQUEST, FUNC_ID_ZW_REMOVE_NODE_FROM_NETWORK, false, false );
+	pMsg->Append( REMOVE_NODE_STOP );
+	SendMsg( pMsg );
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::BeginReplicateController>
+// Set the controller into ReplicateController mode
+//-----------------------------------------------------------------------------
+void Driver::BeginReplicateController
+(
+)
+{
+	Log::Write( "Replicate Controller - Begin" );
+	Msg* pMsg = new Msg( "Replicate Controller - Begin", 0xff, REQUEST, FUNC_ID_ZW_SET_LEARN_MODE, false, false );
+	pMsg->Append( 1 );
+	SendMsg( pMsg );
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::EndReplicateController>
+// Take the controller out of ReplicateController mode
+//-----------------------------------------------------------------------------
+void Driver::EndReplicateController
+(
+)
+{
+	Log::Write( "Replicate Controller - End" );
+	Msg* pMsg = new Msg(  "Replicate Controller - End", 0xff, REQUEST, FUNC_ID_ZW_SET_LEARN_MODE, false, false );
+	pMsg->Append( 0 );
+	SendMsg( pMsg );
+
+	Log::Write( "Get new init data after replication" );
+	pMsg = new Msg( "Get new init data after replication", 0xff, REQUEST, FUNC_ID_SERIAL_API_GET_INIT_DATA, false );
+	SendMsg( pMsg );
+}
+
 ////-----------------------------------------------------------------------------
 //// <Driver::SetConfiguration>
 //// Set a configuration parameter of a device
@@ -1809,182 +1770,6 @@ void Driver::NotifyWatchers
 //	}
 //}
 //
-////-----------------------------------------------------------------------------
-//// <Driver::SetWakeupInterval>
-//// Set the wakeup interval of a sleeping device
-////-----------------------------------------------------------------------------
-//void Driver::SetWakeupInterval
-//(
-//	uint8 _nodeId,
-//	uint8 _interval,	// wakeup interval in minutes
-//	bool _bMulti		// = false
-//)
-//{
-//	uint32 interval = _interval * 60;	// convert minutes to seconds
-//
-//	Log::Write( "SetWakeup: Node=%d, Interval=%d minutes, Multi=%s", _nodeId, interval, _bMulti ? "true" : "false" );
-//
-//	Msg* pMsg = new Msg( "Wakeup Interval Set", _nodeId, REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-//
-//	if( _bMulti )
-//	{
-//		pMsg->Append( _nodeId );
-//		pMsg->Append( 10 );
-//		pMsg->Append( COMMAND_CLASS_MULTI_CMD );
-//		pMsg->Append( MULTI_CMD_ENCAP );
-//		pMsg->Append( 1 );					// 1 command
-//		pMsg->Append( 6 );
-//		pMsg->Append( COMMAND_CLASS_WAKE_UP );
-//		pMsg->Append( WAKE_UP_INTERVAL_SET );
-//		pMsg->Append( (uint8)((interval>>16)&0xff) ); 
-//		pMsg->Append( (uint8)((interval>>8)&0xff) );	 
-//		pMsg->Append( (uint8)(interval&0xff) );		
-//		pMsg->Append( m_nodeId );
-//		pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-//	}
-//	else
-//	{
-//		pMsg->Append( _nodeId );
-//		pMsg->Append( 6 );
-//		pMsg->Append( COMMAND_CLASS_WAKE_UP );
-//		pMsg->Append( WAKE_UP_INTERVAL_SET );
-//		pMsg->Append( (uint8)((interval>>16)&0xff) ); 
-//		pMsg->Append( (uint8)((interval>>8)&0xff) );	 
-//		pMsg->Append( (uint8)(interval&0xff) );		
-//		pMsg->Append( m_nodeId );
-//		pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-//	}
-//
-//	if( IsSleepingNode( _nodeId ) )
-//	{
-//		Log::Write( "Postpone SetWakeupInterval until device wakes up" );
-//		SendSleepingMsg( _nodeId, pMsg );
-//	}
-//	else
-//	{
-//		SendMsg( pMsg );
-//	}
-//}
-//
-////-----------------------------------------------------------------------------
-//// <Driver::RequestNodeNeighborUpdate>
-//// 
-////-----------------------------------------------------------------------------
-//void Driver::RequestNodeNeighborUpdate
-//(
-//	uint8 _nodeId
-//)
-//{
-//	Log::Write( "Requesting Neighbour Update for node %d", _nodeId );
-//
-//	Msg* pMsg = new Msg( "Requesting Neighbour Update", _nodeId, REQUEST, FUNC_ID_ZW_REQUEST_NODE_NEIGHBOR_UPDATE, true );
-//	pMsg->Append( _nodeId );
-//	SendMsg( pMsg );
-//}
-//
-////-----------------------------------------------------------------------------
-//// <Driver::RequestMultilevelSensorReport>
-//// 
-////-----------------------------------------------------------------------------
-//void Driver::RequestMultilevelSensorReport
-//(
-//	uint8 _nodeId
-//)
-//{
-//	Log::Write( "Requesting Multilevel Sensor Report for node %d", _nodeId );
-//
-//	Msg* pMsg = new Msg( "Request Multilevel Sensor Report", _nodeId, REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-//	pMsg->Append( _nodeId );
-//	pMsg->Append( 2 );
-//	pMsg->Append( COMMAND_CLASS_SENSOR_MULTILEVEL );
-//	pMsg->Append( SENSOR_MULTILEVEL_GET );
-//	pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-//	SendMsg( pMsg );
-//}
-//
-////-----------------------------------------------------------------------------
-//// <Driver::RequestMultilevelSensorReportInstance>
-//// 
-////-----------------------------------------------------------------------------
-//void Driver::RequestMultilevelSensorReportInstance
-//(
-//	uint8 _nodeId,
-//	uint8 _instance
-//)
-//{
-//	Log::Write( "Requesting Multilevel Sensor Report Instance for node %d", _nodeId );
-//
-//	Msg* pMsg = new Msg( "Request Multilevel Sensor Report Instance", _nodeId, REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-//	pMsg->Append( _nodeId );
-//	pMsg->Append( 5 );
-//	pMsg->Append( COMMAND_CLASS_MULTI_INSTANCE );
-//	pMsg->Append( MULTI_INSTANCE_CMD_ENCAP );
-//	pMsg->Append( _instance );
-//	pMsg->Append( COMMAND_CLASS_SENSOR_MULTILEVEL );
-//	pMsg->Append( SENSOR_MULTILEVEL_GET );
-//	pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-//	SendMsg( pMsg );
-//}
-//
-////-----------------------------------------------------------------------------
-//// <Driver::GetMultiInstance>
-//// 
-////-----------------------------------------------------------------------------
-//void Driver::GetMultiInstance
-//(
-//	uint8 _nodeId,
-//	uint8 _commandClass
-//)
-//{
-//	Log::Write( "Get Multi Instance for node %d", _nodeId );
-//
-//	Msg* pMsg = new Msg( "Get Multi Instance", _nodeId, REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-//	pMsg->Append( _nodeId );
-//	pMsg->Append( 3 );
-//	pMsg->Append( COMMAND_CLASS_MULTI_INSTANCE );
-//	pMsg->Append( MULTI_INSTANCE_GET );
-//	pMsg->Append( _commandClass );
-//	pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-//	SendMsg( pMsg );
-//}
-//
-////-----------------------------------------------------------------------------
-//// <Driver::GetMeter>
-//// 
-////-----------------------------------------------------------------------------
-//void Driver::GetMeter
-//(
-//	uint8 _nodeId
-//)
-//{
-//	Log::Write( "Get Meter on node %d", _nodeId );
-//
-//	Msg* pMsg = new Msg( "Get Meter", _nodeId, REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-//	pMsg->Append( _nodeId );
-//	pMsg->Append( 2 );
-//	pMsg->Append( COMMAND_CLASS_METER );
-//	pMsg->Append( METER_GET );
-//	pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-//	SendMsg( pMsg );
-//}
-
-//-----------------------------------------------------------------------------
-// <Driver::ReadMemory>
-// 
-//-----------------------------------------------------------------------------
-void Driver::ReadMemory
-(
-	uint16 _offset
-)
-{
-	Log::Write( "Reading eeprom at offset %d", _offset );
-
-	Msg* pMsg = new Msg( "Read Memory", 0xff, REQUEST, FUNC_ID_ZW_READ_MEMORY, false );
-	pMsg->Append( (uint8)((_offset>>8)&0xff) );
-	pMsg->Append( (uint8)(_offset&0xff) );
-	pMsg->Append( 64 );
-	SendMsg( pMsg );
-}
 
 //-----------------------------------------------------------------------------
 // <Driver::UpdateEvents>

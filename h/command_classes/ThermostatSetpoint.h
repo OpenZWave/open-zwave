@@ -54,15 +54,9 @@ namespace OpenZWave
 	private:
 		ThermostatSetpoint( uint8 const _nodeId ): CommandClass( _nodeId ){}
 
-		enum ThermostatSetpointEnum
+		enum
 		{
-			ThermostatSetpoint_Heating1,
-			ThermostatSetpoint_Cooling1,
-			ThermostatSetpoint_Furnace,
-			ThermostatSetpoint_DryAir,
-			ThermostatSetpoint_MoistAir,
-			ThermostatSetpoint_AutoChangeover,
-			ThermostatSetpoint_Count
+			ThermostatSetpoint_Count = 6
 		};
 
 		bool m_supportedSetpoints[ThermostatSetpoint_Count];

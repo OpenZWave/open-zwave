@@ -56,14 +56,7 @@ namespace OpenZWave
 	private:
 		ThermostatFanState( uint8 const _nodeId ): CommandClass( _nodeId ){}
 
-		enum ThermostatFanStateEnum
-		{
-			ThermostatFanState_Idle = 0,
-			ThermostatFanState_RunningLow,
-			ThermostatFanState_RunningHigh
-		};
-
-		vector<string>			m_supportedStates;
+		vector<string>	m_supportedStates;
 	};
 
 } // namespace OpenZWave

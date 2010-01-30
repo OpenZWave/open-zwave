@@ -57,23 +57,7 @@ namespace OpenZWave
 	private:
 		ThermostatMode( uint8 const _nodeId ): CommandClass( _nodeId ){}
 
-		enum ThermostatModeEnum
-		{
-			ThermostatMode_Off = 0,
-			ThermostatMode_Heat,
-			ThermostatMode_Cool,
-			ThermostatMode_Auto,
-			ThermostatMode_AuxHeat,
-			ThermostatMode_Resume,
-			ThermostatMode_FanOnly,
-			ThermostatMode_Furnace,
-			ThermostatMode_DryAir,
-			ThermostatMode_MoistAir,
-			ThermostatMode_AutoChangeover,
-			ThermostatMode_Count
-		};
-
-		vector<string>		m_supportedModes;
+		vector<string>	m_supportedModes;
 	};
 
 } // namespace OpenZWave
