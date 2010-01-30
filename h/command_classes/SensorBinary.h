@@ -52,8 +52,6 @@ namespace OpenZWave
 
 	private:
 		SensorBinary( uint8 const _nodeId ): CommandClass( _nodeId ){}
-
-		bool		m_state;
 	};
 
 } // namespace OpenZWave

@@ -531,6 +531,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\command_classes\Meter.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\h\command_classes\Meter.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\command_classes\MeterPulse.cpp"
 				>
 			</File>

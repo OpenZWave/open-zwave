@@ -87,7 +87,7 @@ bool SwitchBinary::HandleMsg
 					pValue->OnValueChanged( _pData[1] != 0 );
 				}
 
-				Log::Write( "Received SwitchBinary report from node %d: level=%d", GetNodeId(), _pData[1] ? "On" : "Off" );
+				Log::Write( "Received SwitchBinary report from node %d: level=%s", GetNodeId(), _pData[1] ? "On" : "Off" );
 				return true;
 			}
 		}

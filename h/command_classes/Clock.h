@@ -53,10 +53,6 @@ namespace OpenZWave
 
 	private:
 		Clock( uint8 const _nodeId ): CommandClass( _nodeId ){}
-
-		uint8		m_day;
-		uint8		m_hour;
-		uint8		m_minute;
 	};
 
 } // namespace OpenZWave

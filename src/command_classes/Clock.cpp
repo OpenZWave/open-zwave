@@ -119,7 +119,7 @@ bool Clock::HandleMsg
 					pValue->OnValueChanged( minute );
 				}
 
-				Log::Write( "Received Clock report from node %d: %s %.2d:%.2d", GetNodeId(), c_dayNames[m_day], m_hour, m_minute );
+				Log::Write( "Received Clock report from node %d: %s %.2d:%.2d", GetNodeId(), c_dayNames[day], hour, minute );
 				return true;
 			}
 		}

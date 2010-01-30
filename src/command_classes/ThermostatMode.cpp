@@ -135,8 +135,7 @@ bool ThermostatMode::HandleMsg
 					{
 						if( ( _pData[i] & (1<<bit) ) != 0 )
 						{
-							ThermostatModeEnum mode = (ThermostatModeEnum)(i+bit-2);
-							m_supportedModes.push_back( c_modeName[mode] );
+							m_supportedModes.push_back( c_modeName[i+bit-2] );
 						}
 					}
 				}

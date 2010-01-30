@@ -35,14 +35,6 @@ namespace OpenZWave
 	class SwitchAll: public CommandClass
 	{
 	public:
-		enum SwitchAllEnabled
-		{
-			SwitchAllEnabled_None	= 0x00,
-			SwitchAllEnabled_Off	= 0x01,
-			SwitchAllEnabled_On		= 0x02,
-			SwitchAllEnabled_Both	= 0xff
-		};
-
 		static CommandClass* Create( uint8 const _nodeId ){ return new SwitchAll( _nodeId ); }
 		virtual ~SwitchAll(){}
 
@@ -64,8 +56,6 @@ namespace OpenZWave
 
 	private:
 		SwitchAll( uint8 const _nodeId ): CommandClass( _nodeId ){}
-
-		SwitchAllEnabled	m_state;
 	};
 
 } // namespace OpenZWave
