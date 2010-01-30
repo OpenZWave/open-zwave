@@ -101,69 +101,86 @@ bool WakeUp::HandleMsg
 	uint32 const _instance	// = 0
 )
 {
-	if( WakeUpCmd_IntervalReport == (WakeUpCmd)_pData[0] )
-	{	
-		m_interval = ((uint32)_pData[1]) << 16;
-		m_interval |= (((uint32)_pData[2]) << 8);
-		m_interval |= (uint32)_pData[3];
-
-		// Report the new interval to xPL
-		Log::Write( "Received Wakeup Interval report from node %d: Interval=%d", GetNodeId(), m_interval );
-
-		return true;
-	}
-
-	if( WakeUpCmd_Notification == (WakeUpCmd)_pData[0] )
-	{	
-		// The device is awake.
-		Log::Write( "Received Wakeup Notification from node %d", GetNodeId() );
-		
-		// If the device is marked for polling, request the current state
-		if( Node* pNode = GetNode() )
+	Node* pNode = GetNode();
+	if( pNode )
+	{
+		ValueStore* pStore = pNode->GetValueStore();
+		if( pStore )
 		{
-			if( pNode->IsPolled() )
-			{
-				pNode->RequestState();
+			if( WakeUpCmd_IntervalReport == (WakeUpCmd)_pData[0] )
+			{	
+				uint32 interval = ((uint32)_pData[1]) << 16;
+				interval |= (((uint32)_pData[2]) << 8);
+				interval |= (uint32)_pData[3];
+
+				if( ValueInt* pValue = static_cast<ValueInt*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
+				{
+					pValue->OnValueChanged( (int32)interval );
+				}
+
+				Log::Write( "Received Wakeup Interval report from node %d: Interval=%d", GetNodeId(), interval );
+				return true;
+			}
+
+			if( WakeUpCmd_Notification == (WakeUpCmd)_pData[0] )
+			{	
+				// The device is awake.
+				Log::Write( "Received Wakeup Notification from node %d", GetNodeId() );
+				
+				// If the device is marked for polling, request the current state
+				if( pNode->IsPolled() )
+				{
+					pNode->RequestState();
+				}
+				
+				// Send all pending messages
+				SendPending();
+				return true;
 			}
 		}
-		
-		// Send all pending messages
-		SendPending();
-		return true;
 	}
+
 	return false;
 }
 
 //-----------------------------------------------------------------------------
-// <WakeUp::Set>
+// <WakeUp::SetValue>
 // Set the device's wakeup interval
 //-----------------------------------------------------------------------------
-void WakeUp::Set
+bool WakeUp::SetValue
 (
-	uint32 const _interval
+	Value const& _value
 )
 {
-	Msg* pMsg = new Msg( "Wakeup Interval Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-
-	pMsg->Append( GetNodeId() );
-	
-	if( GetNode()->GetCommandClass( MultiCmd::StaticGetCommandClassId() ) )
+	if( ValueInt const* pValue = static_cast<ValueInt const*>(&_value) )
 	{
-		pMsg->Append( 10 );
-		pMsg->Append( MultiCmd::StaticGetCommandClassId() );
-		pMsg->Append( MultiCmd::MultiCmdCmd_Encap );
-		pMsg->Append( 1 );
+		Msg* pMsg = new Msg( "Wakeup Interval Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+
+		pMsg->Append( GetNodeId() );
+		
+		if( GetNode()->GetCommandClass( MultiCmd::StaticGetCommandClassId() ) )
+		{
+			pMsg->Append( 10 );
+			pMsg->Append( MultiCmd::StaticGetCommandClassId() );
+			pMsg->Append( MultiCmd::MultiCmdCmd_Encap );
+			pMsg->Append( 1 );
+		}
+
+		int32 interval = pValue->GetPending();
+
+		pMsg->Append( 6 );
+		pMsg->Append( GetCommandClassId() );
+		pMsg->Append( WakeUpCmd_IntervalSet );
+		pMsg->Append( (uint8)(( interval >> 16 ) & 0xff) ); 
+		pMsg->Append( (uint8)(( interval >> 8 ) & 0xff) );	 
+		pMsg->Append( (uint8)( interval & 0xff ) );		
+		pMsg->Append( GetNodeId() );
+		pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		Driver::Get()->SendMsg( pMsg );
+		return true;
 	}
 
-	pMsg->Append( 6 );
-	pMsg->Append( GetCommandClassId() );
-	pMsg->Append( WakeUpCmd_IntervalSet );
-	pMsg->Append( (uint8)(( _interval >> 16 ) & 0xff) ); 
-	pMsg->Append( (uint8)(( _interval >> 8 ) & 0xff) );	 
-	pMsg->Append( (uint8)( _interval & 0xff ) );		
-	pMsg->Append( GetNodeId() );
-	pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	Driver::Get()->SendMsg( pMsg );
+	return false;
 }
 
 //-----------------------------------------------------------------------------

@@ -112,41 +112,41 @@ bool ThermostatSetpoint::HandleMsg
 	uint32 const _instance	// = 0
 )
 {
-	if( ThermostatSetpointCmd_Report == (ThermostatSetpointCmd)_pData[0] )
+	Node* pNode = GetNode();
+	if( pNode )
 	{
-		// We have received a thermostat setpoint value from the Z-Wave device
-		ThermostatSetpointEnum setpoint = (ThermostatSetpointEnum)_pData[1];
-		
-		uint8 scale;
-		float32 temperature = ExtractValue( &_pData[2], &scale );
-		m_setpoints[setpoint] = temperature;
-		m_scales[setpoint] = (ThermostatSetpointScaleEnum)scale; 
-		
-		// Send an xPL message reporting the setpoint value
-		return true;
-	}
-	else if( _pData[1] == ThermostatSetpointCmd_SupportedReport )
-	{
-		// We have received the supported thermostat setpoints from the Z-Wave device
-		for( uint8 i=0; i<ThermostatSetpoint_Count; ++i )
+		ValueStore* pStore = pNode->GetValueStore();
+		if( pStore )
 		{
-			m_supportedSetpoints[i] = ( ( _pData[2] & (1<<i) ) != 0 );
-			if( m_supportedSetpoints[i] )
+			if( ThermostatSetpointCmd_Report == (ThermostatSetpointCmd)_pData[0] )
 			{
-				Node* pNode = GetNode();
-				if( pNode )
+				// We have received a thermostat setpoint value from the Z-Wave device
+				if( ValueDecimal* pValue = static_cast<ValueDecimal*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, _pData[1] ) ) ) )
 				{
-					ValueStore* pStore = pNode->GetValueStore();
-					if( pStore )
+					uint8 scale;
+					string temperature = ExtractValueAsString( &_pData[2], &scale );
+
+					pValue->SetUnits( scale ? "F" : "C" );
+					pValue->OnValueChanged( temperature );
+				}
+				return true;
+			}
+			else if( _pData[1] == ThermostatSetpointCmd_SupportedReport )
+			{
+				// We have received the supported thermostat setpoints from the Z-Wave device
+				for( uint8 i=0; i<ThermostatSetpoint_Count; ++i )
+				{
+					m_supportedSetpoints[i] = (( _pData[2] & (1<<i) ) != 0 );
+					if( m_supportedSetpoints[i] )
 					{
 						Value* pValue = new ValueDecimal( GetNodeId(), GetCommandClassId(), _instance, i, c_setpointName[i], false, "0.0"  );
 						pStore->AddValue( pValue );
 						pValue->Release();
 					}
 				}
+				return true;
 			}
 		}
-		return true;
 	}
 
 	// Not handled
@@ -154,30 +154,30 @@ bool ThermostatSetpoint::HandleMsg
 }
 
 //-----------------------------------------------------------------------------
-// <ThermostatSetpoint::Set>
+// <ThermostatSetpoint::SetValue>
 // Set a thermostat setpoint temperature
 //-----------------------------------------------------------------------------
-void ThermostatSetpoint::Set
+bool ThermostatSetpoint::SetValue
 (
-	string const& setpoint,
-	float32 const _temperature,
-	ThermostatSetpointScaleEnum const _scale
+	Value const& _value
 )
 {
-	for( int32 i=0; i<ThermostatSetpoint_Count; ++i )
+	if( ValueDecimal const* pValue = static_cast<ValueDecimal const*>(&_value) )
 	{
-		if( !_stricmp( setpoint.c_str(), c_setpointName[i] ) )
-		{
-			Msg* pMsg = new Msg( "Set Thermostat Setpoint", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-			pMsg->Append( GetNodeId() );
-			pMsg->Append( 3 + GetAppendValueSize( _temperature, 0 ) );
-			pMsg->Append( GetCommandClassId() );
-			pMsg->Append( ThermostatSetpointCmd_Set );
-			pMsg->Append( i );
-			AppendValue( pMsg, _temperature, 0, (uint8)_scale );
-			pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-			Driver::Get()->SendMsg( pMsg );
-			return;
-		}
+		float32 value = (float32)atof(  pValue->GetPending().c_str() );
+		uint8 scale = strcmp( "C", pValue->GetUnits().c_str() ) ? 1 : 0;
+
+		Msg* pMsg = new Msg( "Set Thermostat Setpoint", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+		pMsg->Append( GetNodeId() );
+		pMsg->Append( 3 + GetAppendValueSize( value, 0 ) );
+		pMsg->Append( GetCommandClassId() );
+		pMsg->Append( ThermostatSetpointCmd_Set );
+		pMsg->Append( pValue->GetID().GetIndex() );
+		AppendValue( pMsg, value, 0, scale );
+		pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		Driver::Get()->SendMsg( pMsg );
+		return true;
 	}
+
+	return false;
 }

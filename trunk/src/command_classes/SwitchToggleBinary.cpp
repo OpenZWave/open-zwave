@@ -74,22 +74,35 @@ bool SwitchToggleBinary::HandleMsg
 	uint32 const _instance	// = 0
 )
 {
-    if (SwitchToggleBinaryCmd_Report == (SwitchToggleBinaryCmd)_pData[0])
-    {
-		Log::Write( "Received SwitchToggleBinary report from node %d: level=%d", GetNodeId(), _pData[1] );
+	Node* pNode = GetNode();
+	if( pNode )
+	{
+		ValueStore* pStore = pNode->GetValueStore();
+		if( pStore )
+		{
+			if (SwitchToggleBinaryCmd_Report == (SwitchToggleBinaryCmd)_pData[0])
+			{
+				if( ValueBool* pValue = static_cast<ValueBool*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
+				{
+					pValue->OnValueChanged( _pData[1] != 0 );
+				}
 
-		GetNode()->SetLevel( _pData[1] );
-        return true;
-    }
+				Log::Write( "Received SwitchToggleBinary report from node %d: %s", GetNodeId(), _pData[1] ? "On" : "Off" );
+				return true;
+			}
+		}
+	}
+
     return false;
 }
 
 //-----------------------------------------------------------------------------
-// <SwitchToggleBinary::Set>
+// <SwitchToggleBinary::SetValue>
 // Toggle the state of the switch
 //-----------------------------------------------------------------------------
-void SwitchToggleBinary::Set
+bool SwitchToggleBinary::SetValue
 (
+	Value const& _value
 )
 {
 	Log::Write( "SwitchToggleBinary::Set - Toggling the state of node %d", GetNodeId() );
@@ -99,6 +112,7 @@ void SwitchToggleBinary::Set
 	pMsg->Append( GetCommandClassId() );
 	pMsg->Append( SwitchToggleBinaryCmd_Set );
 	pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	return true;
 }
 
 //-----------------------------------------------------------------------------

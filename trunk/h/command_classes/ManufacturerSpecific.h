@@ -49,9 +49,6 @@ namespace OpenZWave
 		virtual string const GetCommandClassName()const{ return StaticGetCommandClassName(); }
 		virtual bool HandleMsg( uint8 const* _pData, uint32 const _length, uint32 const _instance = 0 );
 
-	protected:
-		virtual void CreateVars( uint8 const _instance );
-
 	private:
 		ManufacturerSpecific( uint8 const _nodeId ): CommandClass( _nodeId ){}
 		bool LoadProductXML();
@@ -92,7 +89,7 @@ namespace OpenZWave
 			uint16	m_manufacturerId;
 			uint16	m_productType;
 			uint16	m_productId;
-			string			m_productName;
+			string	m_productName;
 		};
 
 		static map<uint16,string>	s_manufacturerMap;

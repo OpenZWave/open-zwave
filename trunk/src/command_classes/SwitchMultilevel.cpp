@@ -77,33 +77,51 @@ bool SwitchMultilevel::HandleMsg
 	uint32 const _instance	// = 0
 )
 {
-    if (SwitchMultilevelCmd_Report == (SwitchMultilevelCmd)_pData[0])
-    {
-		Log::Write( "Received SwitchMultiLevel report from node %d: level=%d", GetNodeId(), _pData[1] );
+	Node* pNode = GetNode();
+	if( pNode )
+	{
+		ValueStore* pStore = pNode->GetValueStore();
+		if( pStore )
+		{
+			if (SwitchMultilevelCmd_Report == (SwitchMultilevelCmd)_pData[0])
+			{
+				if( ValueByte* pValue = static_cast<ValueByte*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
+				{
+					pValue->OnValueChanged( _pData[1] );
+				}
 
-		GetNode()->SetLevel( _pData[1] );
-        return true;
-    }
+				Log::Write( "Received SwitchMultiLevel report from node %d: level=%d", GetNodeId(), _pData[1] );
+				return true;
+			}
+		}
+	}
+
     return false;
 }
 
 //-----------------------------------------------------------------------------
-// <SwitchMultilevel::Set>
+// <SwitchMultilevel::SetValue>
 // Set the level on a device
 //-----------------------------------------------------------------------------
-void SwitchMultilevel::Set
+bool SwitchMultilevel::SetValue
 (
-	uint8 const _level
+	Value const& _value
 )
 {
-	Log::Write( "SwitchMultilevel::Set - Setting node %d to level %d", GetNodeId(), _level );
-	Msg* pMsg = new Msg( "Basic Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
-	pMsg->Append( GetNodeId() );
-	pMsg->Append( 3 );
-	pMsg->Append( GetCommandClassId() );
-	pMsg->Append( SwitchMultilevelCmd_Set );
-	pMsg->Append( _level );
-	pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	if( ValueByte const* value = static_cast<ValueByte const*>(&_value) )
+	{
+		Log::Write( "SwitchMultilevel::Set - Setting node %d to level %d", GetNodeId(), value->GetPending() );
+		Msg* pMsg = new Msg( "Basic Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
+		pMsg->Append( GetNodeId() );
+		pMsg->Append( 3 );
+		pMsg->Append( GetCommandClassId() );
+		pMsg->Append( SwitchMultilevelCmd_Set );
+		pMsg->Append( value->GetPending() );
+		pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		return true;
+	}
+
+	return false;
 }
 
 //-----------------------------------------------------------------------------

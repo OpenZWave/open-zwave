@@ -26,9 +26,12 @@
 //-----------------------------------------------------------------------------
 
 #include "tinyxml.h"
+#include "Driver.h"
+#include "Node.h"
 #include "Value.h"
 #include "Msg.h"
 #include "Log.h"
+#include "CommandClass.h"
 
 using namespace OpenZWave;
 
@@ -97,6 +100,12 @@ Value::Value
 		m_label = label;
 	}
 
+	char const* units = _pValueElement->Attribute( "units" );
+	if( units )
+	{
+		m_units = units;
+	}
+
 	char const* readOnly = _pValueElement->Attribute( "read_only" );
 	if( readOnly )
 	{
@@ -115,5 +124,43 @@ void Value::WriteXML
 {
 
 }
+
+//-----------------------------------------------------------------------------
+// <Value::Set>
+// Set a new value in the device
+//-----------------------------------------------------------------------------
+bool Value::Set
+(
+)
+{
+	if( IsReadOnly() )
+	{
+		return false;
+	}
+
+	if( Node* pNode = Driver::Get()->GetNode( m_id.GetNodeId() ) )
+	{
+		if( CommandClass* pCC = pNode->GetCommandClass( m_id.GetCommandClassId() ) )
+		{
+			return( pCC->SetValue( *this ) );
+		}
+	}
+
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Value::OnValueChanged>
+// A value in a device has changed
+//-----------------------------------------------------------------------------
+void Value::OnValueChanged
+(
+)
+{
+	// Notify the watchers
+	Driver::Get()->NotifyWatchers( m_id ); 
+}
+
+
 
 

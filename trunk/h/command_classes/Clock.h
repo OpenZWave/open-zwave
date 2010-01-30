@@ -41,13 +41,12 @@ namespace OpenZWave
 		static uint8 const StaticGetCommandClassId(){ return 0x81; }
 		static string const StaticGetCommandClassName(){ return "COMMAND_CLASS_CLOCK"; }
 
-		void Set( uint8	const _day, uint8 const _hour, uint8 const _minute );		// _day value is 1 to 7 (Monday to Sunday)
-
 		// From CommandClass
 		virtual void RequestState();
 		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }
 		virtual string const GetCommandClassName()const{ return StaticGetCommandClassName(); }
 		virtual bool HandleMsg( uint8 const* _pData, uint32 const _length, uint32 const _instance = 0 );
+		virtual bool SetValue( Value const& _value );
 
 	protected:
 		virtual void CreateVars( uint8 const _instance );

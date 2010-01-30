@@ -67,7 +67,6 @@ namespace OpenZWave
 			ThermostatOperatingState_VentOrEconomizer
 		};
 
-		ThermostatOperatingStateEnum	m_state;
 		vector<string>					m_supportedStates;
 	};
 

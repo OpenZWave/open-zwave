@@ -103,32 +103,41 @@ bool ThermostatFanMode::HandleMsg
 	uint32 const _instance	// = 0
 )
 {
-	if( ThermostatFanModeCmd_Report == (ThermostatFanModeCmd)_pData[0] )
+	Node* pNode = GetNode();
+	if( pNode )
 	{
-		// We have received the thermostat mode from the Z-Wave device
-		m_mode = (ThermostatFanModeEnum)_pData[1];
-
-		// Send an xPL message reporting the fan mode
-		return true;
-	}
-	else if( ThermostatFanModeCmd_SupportedReport == (ThermostatFanModeCmd)_pData[0] )
-	{
-		// We have received the supported thermostat modes from the Z-Wave device
-		m_supportedModes.clear();
-		for( uint32 i=1; i<_length; ++i )
+		ValueStore* pStore = pNode->GetValueStore();
+		if( pStore )
 		{
-			for( int32 bit=0; bit<8; ++bit )
+			if( ThermostatFanModeCmd_Report == (ThermostatFanModeCmd)_pData[0] )
 			{
-				if( ( _pData[i] & (1<<bit) ) != 0 )
+				// We have received the thermostat mode from the Z-Wave device
+				if( ValueList* pValueList = static_cast<ValueList*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
 				{
-					ThermostatFanModeEnum mode = (ThermostatFanModeEnum)((8*(i-1))+bit);
-					m_supportedModes.push_back( c_modeName[mode] );
+					pValueList->OnValueChanged( c_modeName[_pData[1]] );
 				}
+				return true;
+			}
+			else if( ThermostatFanModeCmd_SupportedReport == (ThermostatFanModeCmd)_pData[0] )
+			{
+				// We have received the supported thermostat modes from the Z-Wave device
+				m_supportedModes.clear();
+				for( uint32 i=1; i<_length; ++i )
+				{
+					for( int32 bit=0; bit<8; ++bit )
+					{
+						if( ( _pData[i] & (1<<bit) ) != 0 )
+						{
+							ThermostatFanModeEnum mode = (ThermostatFanModeEnum)((8*(i-1))+bit);
+							m_supportedModes.push_back( c_modeName[mode] );
+						}
+					}
+				}
+
+				CreateVars( _instance );
+				return true;
 			}
 		}
-
-		CreateVars( _instance );
-		return true;
 	}
 
 	// Not handled
@@ -136,29 +145,39 @@ bool ThermostatFanMode::HandleMsg
 }
 
 //-----------------------------------------------------------------------------
-// <ThermostatFanMode::Set>
+// <ThermostatFanMode::SetValue>
 // Set the device's thermostat fan mode
 //-----------------------------------------------------------------------------
-void ThermostatFanMode::Set
+bool ThermostatFanMode::SetValue
 (
-	string const& _mode
+	Value const& _value
 )
 {
-	for( int32 i=0; i<ThermostatFanMode_Count; ++i )
+	if( ValueList const* pValue = static_cast<ValueList const*>(&_value) )
 	{
-		if( !_stricmp( _mode.c_str(), c_modeName[i] ) )
+		// Convert the selected option to an index
+		uint8 state = 0;
+		for( int i=0; i<4; ++i )
 		{
-			Msg* pMsg = new Msg( "Set Thermostat Fan Mode", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-			pMsg->Append( GetNodeId() );
-			pMsg->Append( 3 );
-			pMsg->Append( GetCommandClassId() );
-			pMsg->Append( ThermostatFanModeCmd_Set );
-			pMsg->Append( i );
-			pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-			Driver::Get()->SendMsg( pMsg );
-			return;
+			if( !strcmp( c_modeName[i], pValue->GetPending().c_str() ) )
+			{
+				state = i;
+				break;
+			}
 		}
+
+		Msg* pMsg = new Msg( "Set Thermostat Fan Mode", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+		pMsg->Append( GetNodeId() );
+		pMsg->Append( 3 );
+		pMsg->Append( GetCommandClassId() );
+		pMsg->Append( ThermostatFanModeCmd_Set );
+		pMsg->Append( state );
+		pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		Driver::Get()->SendMsg( pMsg );
+		return true;
 	}
+
+	return false;
 }
 
 //-----------------------------------------------------------------------------

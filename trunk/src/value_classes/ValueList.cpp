@@ -122,13 +122,9 @@ bool ValueList::Set
 	string const& _value
 )
 {
-	if( IsReadOnly() )
-	{
-		return false;
-	}
-
 	if( _value == m_value )
 	{
+		// Value already set
 		return true;
 	}
 
@@ -145,12 +141,32 @@ bool ValueList::Set
 
 	if( bFound )
 	{
-		// Set the value
-		return true;
+		m_pending = _value;
+		return Value::Set();
 	}
 
 	return false;
 }
+
+//-----------------------------------------------------------------------------
+// <ValueList::OnValueChanged>
+// A value in a device has changed
+//-----------------------------------------------------------------------------
+void ValueList::OnValueChanged
+(
+	string const& _value
+)
+{
+	if( _value == m_value )
+	{
+		// Value already set
+		return;
+	}
+
+	m_value = _value;
+	Value::OnValueChanged();
+}
+
 
 
 

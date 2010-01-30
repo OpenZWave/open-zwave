@@ -35,33 +35,24 @@ namespace OpenZWave
 	class Lock: public CommandClass
 	{
 	public:
-		enum LockStateEnum
-		{
-			LockState_Unlocked = 0,
-			LockState_Locked
-		};
-
 		static CommandClass* Create( uint8 const _nodeId ){ return new Lock( _nodeId ); }
 		virtual ~Lock(){}
 
 		static uint8 const StaticGetCommandClassId(){ return 0x76; }
 		static string const StaticGetCommandClassName(){ return "COMMAND_CLASS_LOCK"; }
 
-		void Set( LockStateEnum const _state );
-
 		// From CommandClass
 		virtual void RequestState();
 		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }
 		virtual string const GetCommandClassName()const{ return StaticGetCommandClassName(); }
 		virtual bool HandleMsg( uint8 const* _pData, uint32 const _length, uint32 const _instance = 0 );
+		virtual bool SetValue( Value const& _value );
 
 	protected:
 		virtual void CreateVars( uint8 const _instance );
 
 	private:
 		Lock( uint8 const _nodeId ): CommandClass( _nodeId ){}
-
-		LockStateEnum	m_state;
 	};
 
 } // namespace OpenZWave

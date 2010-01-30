@@ -47,7 +47,7 @@ static uint8 const	c_precisionShift	= 0x05;
 //-----------------------------------------------------------------------------
 Node* CommandClass::GetNode
 (
-)
+)const
 {
 	return( Driver::Get()->GetNode( m_nodeId ) );
 }
@@ -117,6 +117,24 @@ float32 CommandClass::ExtractValue
 	}
 
 	return ((float32)(signed long)value) / pow( 10.0f, precision );
+}
+
+//-----------------------------------------------------------------------------
+// <CommandClass::ExtractValue>
+// Read a value from a variable length sequence of bytes
+//-----------------------------------------------------------------------------
+string CommandClass::ExtractValueAsString
+(
+	uint8 const* _pData,
+	uint8* _pScale
+)const
+{
+	float32 value = ExtractValue( _pData, _pScale );
+
+	char str[16];
+	snprintf( str, 16, "%.3f", value );
+
+	return str;
 }
 
 //-----------------------------------------------------------------------------

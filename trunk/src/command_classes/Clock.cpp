@@ -90,36 +90,122 @@ bool Clock::HandleMsg
 {
     if (ClockCmd_Report == (ClockCmd)_pData[0])
     {
-		m_day = _pData[1] >> 5;
-		m_hour = _pData[1] & 0x1f;
-		m_minute = _pData[2];
+		uint8 day = _pData[1] >> 5;
+		uint8 hour = _pData[1] & 0x1f;
+		uint8 minute = _pData[2];
 
-		Log::Write( "Received Clock report from node %d: %s %.2d:%.2d", GetNodeId(), c_dayNames[m_day], m_hour, m_minute );
-        return true;
+		Node* pNode = GetNode();
+		if( pNode )
+		{
+			ValueStore* pStore = pNode->GetValueStore();
+			if( pStore )
+			{
+				// Day
+				if( ValueList* pValueList = static_cast<ValueList*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
+				{
+					pValueList->OnValueChanged( c_dayNames[day] );
+				}
+
+				// Hour
+				ValueByte* pValue;
+				if( pValue = static_cast<ValueByte*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 1 ) ) ) )
+				{
+					pValue->OnValueChanged( hour );
+				}
+
+				// Minute
+				if( pValue = static_cast<ValueByte*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 2 ) ) ) )
+				{
+					pValue->OnValueChanged( minute );
+				}
+
+				Log::Write( "Received Clock report from node %d: %s %.2d:%.2d", GetNodeId(), c_dayNames[m_day], m_hour, m_minute );
+				return true;
+			}
+		}
     }
     return false;
 }
 
 //-----------------------------------------------------------------------------
-// <Clock::Set>
-// Set the device's 
+// <Clock::SetValue>
+// Set a value in the Z-Wave device
 //-----------------------------------------------------------------------------
-void Clock::Set
+bool Clock::SetValue
 (
-	uint8 const _day,		// _day value is 1 to 7 (Monday to Sunday)
-	uint8 const _hour,
-	uint8 const _minute
+	Value const& _value
 )
 {
-    Msg* pMsg = new Msg( "ClockCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-    pMsg->Append( GetNodeId() );
-    pMsg->Append( 4 );
-    pMsg->Append( GetCommandClassId() );
-    pMsg->Append( ClockCmd_Set );
-	pMsg->Append( ( m_day << 5 ) | m_hour );
-	pMsg->Append( m_minute );
-    pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-    Driver::Get()->SendMsg( pMsg );
+	uint8 instance = _value.GetID().GetInstance();
+
+	Node* pNode = GetNode();
+	if( pNode )
+	{
+		ValueStore* pStore = pNode->GetValueStore();
+		if( pStore )
+		{
+			ValueList const* pDayValue = static_cast<ValueList*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), instance, 0 ) ) );
+			ValueByte const* pHourValue = static_cast<ValueByte*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), instance, 1 ) ) );
+			ValueByte const* pMinuteValue = static_cast<ValueByte*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), instance, 2 ) ) );
+
+			if( pDayValue && pHourValue && pMinuteValue )
+			{
+				string dayStr = pDayValue->GetValue();
+				uint8 day = 1;
+				uint8 hour = pHourValue->GetValue();
+				uint8 minute = pMinuteValue->GetValue();
+
+				switch( _value.GetID().GetIndex() )
+				{
+					case 0:
+					{
+						// Day
+						dayStr = pDayValue->GetPending();
+						break;
+					}
+					case 1:
+					{
+						// Hour
+						hour = pHourValue->GetPending();
+						break;
+					}
+					case 2:
+					{
+						// Minute
+						minute = pMinuteValue->GetPending();
+						break;
+					}
+					default:
+					{
+						return false;
+					}
+				}
+
+				// Convert the day string to an index
+				for( int i=1; i<=7; ++i )
+				{
+					if( !strcmp( c_dayNames[i], dayStr.c_str() ) )
+					{
+						day = i;
+						break;
+					}
+				}
+
+				Msg* pMsg = new Msg( "ClockCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+				pMsg->Append( GetNodeId() );
+				pMsg->Append( 4 );
+				pMsg->Append( GetCommandClassId() );
+				pMsg->Append( ClockCmd_Set );
+				pMsg->Append( ( day << 5 ) | hour );
+				pMsg->Append( minute );
+				pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+				Driver::Get()->SendMsg( pMsg );
+				return true;
+			}
+		}
+	}
+
+	return false;
 }
 
 //-----------------------------------------------------------------------------
