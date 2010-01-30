@@ -74,18 +74,19 @@ bool SwitchToggleBinary::HandleMsg
 	uint32 const _instance	// = 0
 )
 {
-	Node* pNode = GetNode();
-	if( pNode )
+	if (SwitchToggleBinaryCmd_Report == (SwitchToggleBinaryCmd)_pData[0])
 	{
-		ValueStore* pStore = pNode->GetValueStore();
-		if( pStore )
+		Node* pNode = GetNode();
+		if( pNode )
 		{
-			if (SwitchToggleBinaryCmd_Report == (SwitchToggleBinaryCmd)_pData[0])
+			ValueStore* pStore = pNode->GetValueStore();
+			if( pStore )
 			{
 				if( ValueBool* pValue = static_cast<ValueBool*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
 				{
 					pValue->OnValueChanged( _pData[1] != 0 );
 				}
+				pNode->ReleaseValueStore();
 
 				Log::Write( "Received SwitchToggleBinary report from node %d: %s", GetNodeId(), _pData[1] ? "On" : "Off" );
 				return true;
@@ -130,9 +131,11 @@ void SwitchToggleBinary::CreateVars
 		ValueStore* pStore = pNode->GetValueStore();
 		if( pStore )
 		{
-			Value* pValue = new ValueBool( GetNodeId(), GetCommandClassId(), _instance, 0, "Toggle Switch", false, false );
+			Value* pValue = new ValueBool( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_User, "Toggle Switch", false, false );
 			pStore->AddValue( pValue );
 			pValue->Release();
+
+			pNode->ReleaseValueStore();
 		}
 	}
 }

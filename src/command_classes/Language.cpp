@@ -80,13 +80,13 @@ bool Language::HandleMsg
 	uint32 const _instance	// = 0
 )
 {
-	Node* pNode = GetNode();
-	if( pNode )
+	if( LanguageCmd_Report == (LanguageCmd)_pData[0] )
 	{
-		ValueStore* pStore = pNode->GetValueStore();
-		if( pStore )
+		Node* pNode = GetNode();
+		if( pNode )
 		{
-			if( LanguageCmd_Report == (LanguageCmd)_pData[0] )
+			ValueStore* pStore = pNode->GetValueStore();
+			if( pStore )
 			{
 				char language[4];
 				char country[3];
@@ -111,6 +111,7 @@ bool Language::HandleMsg
 				{
 					pValue->OnValueChanged( country );
 				}
+				pNode->ReleaseValueStore();
 
 				Log::Write( "Received Language report from node %d: Language=%s, Country=%s", GetNodeId(), language, country );
 				return true;
@@ -138,13 +139,15 @@ void Language::CreateVars
 		{
 			Value* pValue;
 			
-			pValue = new ValueString( GetNodeId(), GetCommandClassId(), _instance, (uint8)ValueIndex_Language, "Language", false, ""  );
+			pValue = new ValueString( GetNodeId(), GetCommandClassId(), _instance, (uint8)ValueIndex_Language, Value::Genre_System, "Language", false, ""  );
 			pStore->AddValue( pValue );
 			pValue->Release();
 
-			pValue = new ValueString( GetNodeId(), GetCommandClassId(), _instance, (uint8)ValueIndex_Country, "Country", false, ""  );
+			pValue = new ValueString( GetNodeId(), GetCommandClassId(), _instance, (uint8)ValueIndex_Country, Value::Genre_System, "Country", false, ""  );
 			pStore->AddValue( pValue );
 			pValue->Release();
+
+			pNode->ReleaseValueStore();
 		}
 	}
 }

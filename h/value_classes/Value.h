@@ -40,7 +40,15 @@ namespace OpenZWave
 		friend class ValueStore;
 
 	public:
-		Value( uint8 const _nodeId, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, string const& _label, bool const _bReadOnly );
+		enum
+		{
+			Genre_All = 0,
+			Genre_User,			// Basic values an ordinary user would be interested in
+			Genre_Config,		// Device-Specific configuration parameters
+			Genre_System		// Values of significance only to users who understand the Z-Wave protocol 
+		};
+
+		Value( uint8 const _nodeId, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, uint32 const _genre, string const& _label, bool const _bReadOnly );
 		Value( TiXmlElement* _pValueElement );
 
 		virtual void WriteXML( TiXmlElement* _pValueElement );
@@ -71,6 +79,7 @@ namespace OpenZWave
 		uint32 AddRef(){ ++m_refs; return m_refs; }
 
 		uint32		m_refs;
+		uint32	m_genre;
 		ValueID		m_id;
 		string		m_label;
 		string		m_units;

@@ -32,6 +32,9 @@
 
 namespace OpenZWave
 {
+	class Value;
+	class ValueStore;
+
 	class Configuration: public CommandClass
 	{
 	public:

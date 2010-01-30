@@ -101,6 +101,8 @@ bool ThermostatFanState::HandleMsg
 	uint32 const _instance	// = 0
 )
 {
+	bool handled = false;
+
 	Node* pNode = GetNode();
 	if( pNode )
 	{
@@ -114,7 +116,7 @@ bool ThermostatFanState::HandleMsg
 				{
 					pValueList->OnValueChanged( c_stateName[_pData[1]] );
 				}
-				return true;
+				handled = true;
 			}
 			else if( _pData[1] == ThermostatFanStateCmd_SupportedReport )
 			{
@@ -132,13 +134,14 @@ bool ThermostatFanState::HandleMsg
 				}
 
 				CreateVars( _instance );
-				return true;
+				handled = true;
 			}
+
+			pNode->ReleaseValueStore();
 		}
 	}
 
-	// Not handled
-	return false;
+	return handled;
 }
 
 //-----------------------------------------------------------------------------
@@ -163,9 +166,11 @@ void ThermostatFanState::CreateVars
 		{
 			Value* pValue;
 			
-			pValue = new ValueList( GetNodeId(), GetCommandClassId(), _instance, 0, "State", true, m_supportedStates, m_supportedStates[0] );
+			pValue = new ValueList( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_User, "State", true, m_supportedStates, m_supportedStates[0] );
 			pStore->AddValue( pValue );
 			pValue->Release();
+
+			pNode->ReleaseValueStore();
 		}
 	}
 }

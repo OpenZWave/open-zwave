@@ -73,13 +73,13 @@ bool Meter::HandleMsg
 	uint32 const _instance	// = 0
 )
 {
-	Node* pNode = GetNode();
-	if( pNode )
+	if (MeterCmd_Report == (MeterCmd)_pData[0])
 	{
-		ValueStore* pStore = pNode->GetValueStore();
-		if( pStore )
+		Node* pNode = GetNode();
+		if( pNode )
 		{
-			if (MeterCmd_Report == (MeterCmd)_pData[0])
+			ValueStore* pStore = pNode->GetValueStore();
+			if( pStore )
 			{
 				uint8 scale;
 				float value = ExtractValue( &_pData[2], &scale );
@@ -119,6 +119,7 @@ bool Meter::HandleMsg
 
 					pValue->OnValueChanged( valueStr );
 				}
+				pNode->ReleaseValueStore();
 
 				Log::Write( "Received Meter report from node %d: value=%s", GetNodeId(), valueStr );
 				return true;
@@ -144,8 +145,10 @@ void Meter::CreateVars
 		ValueStore* pStore = pNode->GetValueStore();
 		if( pStore )
 		{
-			Value* pValue = new ValueDecimal( GetNodeId(), GetCommandClassId(), _instance, 0, "Unknown", true, "0.0"  );
+			Value* pValue = new ValueDecimal( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_User, "Unknown", true, "0.0"  );
 			pStore->AddValue( pValue );
+
+			pNode->ReleaseValueStore();
 		}
 	}
 }

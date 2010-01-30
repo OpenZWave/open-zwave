@@ -42,7 +42,7 @@ namespace OpenZWave
 	class ValueBool: public Value
 	{
 	public:
-		ValueBool( uint8 const _nodeId, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, string const& _label, bool const _bReadOnly, bool const _value );
+		ValueBool( uint8 const _nodeId, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, uint32 const _genre, string const& _label, bool const _bReadOnly, bool const _value );
 		ValueBool( TiXmlElement* _pValueElement );
 		virtual ~ValueBool(){}
 

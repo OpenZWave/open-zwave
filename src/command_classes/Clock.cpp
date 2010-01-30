@@ -119,6 +119,8 @@ bool Clock::HandleMsg
 					pValue->OnValueChanged( minute );
 				}
 
+				pNode->ReleaseValueStore();
+
 				Log::Write( "Received Clock report from node %d: %s %.2d:%.2d", GetNodeId(), c_dayNames[day], hour, minute );
 				return true;
 			}
@@ -136,6 +138,8 @@ bool Clock::SetValue
 	Value const& _value
 )
 {
+	bool ret = false;
+
 	uint8 instance = _value.GetID().GetInstance();
 
 	Node* pNode = GetNode();
@@ -175,10 +179,6 @@ bool Clock::SetValue
 						minute = pMinuteValue->GetPending();
 						break;
 					}
-					default:
-					{
-						return false;
-					}
 				}
 
 				// Convert the day string to an index
@@ -200,12 +200,14 @@ bool Clock::SetValue
 				pMsg->Append( minute );
 				pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 				Driver::Get()->SendMsg( pMsg );
-				return true;
+				ret = true;
 			}
+
+			pNode->ReleaseValueStore();
 		}
 	}
 
-	return false;
+	return ret;
 }
 
 //-----------------------------------------------------------------------------
@@ -230,17 +232,19 @@ void Clock::CreateVars
 			{	
 				items.push_back( c_dayNames[i] ); 
 			}
-			pValue = new ValueList( GetNodeId(), GetCommandClassId(), _instance, 0, "Day", false, items, c_dayNames[1] );
+			pValue = new ValueList( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_User, "Day", false, items, c_dayNames[1] );
 			pStore->AddValue( pValue );
 			pValue->Release();
 
-			pValue = new ValueByte( GetNodeId(), GetCommandClassId(), _instance, 1, "Hour", false, 0 );
+			pValue = new ValueByte( GetNodeId(), GetCommandClassId(), _instance, 1, Value::Genre_User, "Hour", false, 0 );
 			pStore->AddValue( pValue );
 			pValue->Release();
 
-			pValue = new ValueByte( GetNodeId(), GetCommandClassId(), _instance, 2, "Minute", false, 0 );
+			pValue = new ValueByte( GetNodeId(), GetCommandClassId(), _instance, 2, Value::Genre_User, "Minute", false, 0 );
 			pStore->AddValue( pValue );
 			pValue->Release();
+
+			pNode->ReleaseValueStore();
 		}
 	}
 }

@@ -74,13 +74,13 @@ bool MeterPulse::HandleMsg
 	uint32 const _instance	// = 0
 )
 {
-	Node* pNode = GetNode();
-	if( pNode )
+	if( MeterPulseCmd_Report == (MeterPulseCmd)_pData[0] )
 	{
-		ValueStore* pStore = pNode->GetValueStore();
-		if( pStore )
+		Node* pNode = GetNode();
+		if( pNode )
 		{
-			if( MeterPulseCmd_Report == (MeterPulseCmd)_pData[0] )
+			ValueStore* pStore = pNode->GetValueStore();
+			if( pStore )
 			{
  				int32 count = 0;
 				for( uint8 i=0; i<4; ++i )
@@ -93,6 +93,7 @@ bool MeterPulse::HandleMsg
 				{
 					pValue->OnValueChanged( count );
 				}
+				pNode->ReleaseValueStore();
 
 				Log::Write( "Received a meter pulse count from node %d: Count=%d", GetNodeId(), count );
 				return true;
@@ -118,9 +119,11 @@ void MeterPulse::CreateVars
 		ValueStore* pStore = pNode->GetValueStore();
 		if( pStore )
 		{
-			Value* pValue = new ValueInt( GetNodeId(), GetCommandClassId(), _instance, 0, "Count", true, 0 );
+			Value* pValue = new ValueInt( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_User, "Count", true, 0 );
 			pStore->AddValue( pValue );
 			pValue->Release();
+
+			pNode->ReleaseValueStore();
 		}
 	}
 }

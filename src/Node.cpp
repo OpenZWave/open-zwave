@@ -31,6 +31,7 @@
 #include "Driver.h"
 #include "Msg.h"
 #include "Log.h"
+#include "Mutex.h"
 
 #include "tinyxml.h"
 
@@ -55,11 +56,11 @@ Node::Node
 	uint8 const _nodeId
 ):
 	m_nodeId( _nodeId ),
-	m_level( 0 ),
 	m_bPolled( false ),
 	m_bProtocolInfoReceived( false ),
 	m_bNodeInfoReceived( false ),
-	m_pValues( new ValueStore() )
+	m_pValues( new ValueStore() ),
+	m_pValuesMutex( new Mutex() )
 {
 	// Request the node protocol info
 	Driver::Get()->AddInfoRequest( m_nodeId );
@@ -73,7 +74,6 @@ Node::Node
 ( 
 	TiXmlElement* _pNode	
 ):
-	m_level( 0 ),
 	m_bProtocolInfoReceived( true ),
 	m_bNodeInfoReceived( true ),
 	m_pValues( new ValueStore() )
@@ -468,15 +468,26 @@ void Node::SaveStatic
 }
 
 //-----------------------------------------------------------------------------
-// <Node::SetLevel>
-// Set our level and tell xPL
+// <Node::GetValueStore>
+// Get serialized access to the value store object
 //-----------------------------------------------------------------------------
-void Node::SetLevel
-( 
-	uint8 const _level
+ValueStore* Node::GetValueStore
+(
 )
 {
-	m_level = _level;
+	m_pValuesMutex->Lock();
+	return m_pValues;
+}
+
+//-----------------------------------------------------------------------------
+// <Node::ReleaseValueStore>
+// Release the lock on the value store
+//-----------------------------------------------------------------------------
+void Node::ReleaseValueStore
+(
+)
+{
+	m_pValuesMutex->Release();
 }
 
 //-----------------------------------------------------------------------------

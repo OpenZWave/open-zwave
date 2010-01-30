@@ -46,11 +46,13 @@ Value::Value
 	uint8 const _commandClassId,
 	uint8 const _instance,
 	uint8 const _index,
+	uint32 const _genre,
 	string const& _label,
 	bool const _bReadOnly
 ):
 	m_refs( 1 ),
 	m_id( _nodeId, _commandClassId, _instance, _index ),
+	m_genre( _genre ),
 	m_label( _label ),
 	m_bReadOnly( _bReadOnly )
 {
@@ -93,6 +95,11 @@ Value::Value
 	}
 
 	m_id = ValueID( nodeId, commandClassId, instance, index );
+
+	if( TIXML_SUCCESS == _pValueElement->QueryIntAttribute( "genre", &intVal ) )
+	{
+		m_genre = (uint32)intVal;
+	}
 
 	char const* label = _pValueElement->Attribute( "label" );
 	if( label )
