@@ -53,8 +53,6 @@ namespace OpenZWave
 
 	private:
 		Indicator( uint8 const _nodeId ): CommandClass( _nodeId ){}
-
-		uint8		m_indicator;
 	};
 
 } // namespace OpenZWave

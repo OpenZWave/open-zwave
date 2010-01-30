@@ -51,9 +51,7 @@ namespace OpenZWave
 		virtual void CreateVars( uint8 const _instance );
 
 	private:
-		Battery( uint8 const _nodeId ): CommandClass( _nodeId ), m_batteryLevel(100){}
-
-		uint8		m_batteryLevel;
+		Battery( uint8 const _nodeId ): CommandClass( _nodeId ){}
 	};
 
 } // namespace OpenZWave

@@ -52,26 +52,6 @@ namespace OpenZWave
 
 	private:
 		SensorMultilevel( uint8 const _nodeId ): CommandClass( _nodeId ){}
-
-		enum SensorMultilevelCmd
-		{
-			SensorMultilevelCmd_Get		= 0x04,
-			SensorMultilevelCmd_Report	= 0x05
-		};
-
-		enum SensorType
-		{
-			SensorType_Invalid		= 0x00,
-			SensorType_Temperature	= 0x01,
-			SensorType_General		= 0x02,
-			SensorType_Luminance	= 0x03,
-			SensorType_Power		= 0x04,
-			SensorType_Humidity		= 0x05,
-			SensorType_CO2			= 0x11
-		};
-
-		SensorType	m_sensorType;
-		float32		m_value;
 	};
 
 } // namespace OpenZWave

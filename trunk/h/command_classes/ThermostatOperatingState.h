@@ -56,18 +56,7 @@ namespace OpenZWave
 	private:
 		ThermostatOperatingState( uint8 const _nodeId ): CommandClass( _nodeId ){}
 
-		enum ThermostatOperatingStateEnum
-		{
-			ThermostatOperatingState_Idle = 0,
-			ThermostatOperatingState_Heating,
-			ThermostatOperatingState_Cooling,
-			ThermostatOperatingState_FanOnly,
-			ThermostatOperatingState_PendingHeat,
-			ThermostatOperatingState_PendingCool,
-			ThermostatOperatingState_VentOrEconomizer
-		};
-
-		vector<string>					m_supportedStates;
+		vector<string>	m_supportedStates;
 	};
 
 } // namespace OpenZWave

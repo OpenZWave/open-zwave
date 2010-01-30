@@ -130,8 +130,7 @@ bool ThermostatOperatingState::HandleMsg
 					{
 						if( ( _pData[i] & (1<<bit) ) != 0 )
 						{
-							ThermostatOperatingStateEnum mode = (ThermostatOperatingStateEnum)(i+bit-2);
-							m_supportedStates.push_back( c_stateName[mode] );
+							m_supportedStates.push_back( c_stateName[i+bit-2] );
 						}
 					}
 				}

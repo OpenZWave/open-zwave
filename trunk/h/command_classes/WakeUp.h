@@ -64,7 +64,6 @@ namespace OpenZWave
 
 		Mutex		m_mutex;			// Serialize access to the pending queue
 		list<Msg*>	m_pendingQueue;		// Messages waiting to be sent when the device wakes up
-		uint32		m_interval;
 		bool		m_bAwake;
 	};
 

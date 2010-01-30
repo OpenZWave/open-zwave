@@ -48,6 +48,7 @@ using namespace OpenZWave;
 #include "Language.h"
 #include "Lock.h"
 #include "ManufacturerSpecific.h"
+#include "Meter.h"
 #include "MeterPulse.h"
 #include "MultiCmd.h"
 #include "MultiInstance.h"
@@ -142,6 +143,7 @@ void CommandClasses::RegisterCommandClasses
 	cc.Register( Language::StaticGetCommandClassId(), Language::Create );
 	cc.Register( Lock::StaticGetCommandClassId(), Lock::Create );
 	cc.Register( ManufacturerSpecific::StaticGetCommandClassId(), ManufacturerSpecific::Create );
+	cc.Register( Meter::StaticGetCommandClassId(), Meter::Create );
 	cc.Register( MeterPulse::StaticGetCommandClassId(), MeterPulse::Create );
 	cc.Register( MultiCmd::StaticGetCommandClassId(), MultiCmd::Create );
 	cc.Register( MultiInstance::StaticGetCommandClassId(), MultiInstance::Create );

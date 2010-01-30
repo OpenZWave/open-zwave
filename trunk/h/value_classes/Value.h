@@ -51,8 +51,10 @@ namespace OpenZWave
 		virtual string GetAsString()const = 0;
 
 		ValueID const& GetID()const{ return m_id; }
-		string const& GetLabel()const{ return m_label; }
 		bool IsReadOnly()const{ return m_bReadOnly; }
+
+		string const& GetLabel()const{ return m_label; }
+		void SetLabel( string const& _label ){ m_label = _label; }
 
 		string const& GetUnits()const{ return m_units; }
 		void SetUnits( string const& _units ){ m_units = _units; }

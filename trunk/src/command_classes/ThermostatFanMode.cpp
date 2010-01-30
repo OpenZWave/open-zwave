@@ -128,8 +128,7 @@ bool ThermostatFanMode::HandleMsg
 					{
 						if( ( _pData[i] & (1<<bit) ) != 0 )
 						{
-							ThermostatFanModeEnum mode = (ThermostatFanModeEnum)((8*(i-1))+bit);
-							m_supportedModes.push_back( c_modeName[mode] );
+							m_supportedModes.push_back( c_modeName[((i-1)<<3)+bit] );
 						}
 					}
 				}

@@ -56,17 +56,8 @@ namespace OpenZWave
 
 	private:
 		ThermostatFanMode( uint8 const _nodeId ): CommandClass( _nodeId ){}
-
-		enum ThermostatFanModeEnum
-		{
-			ThermostatFanMode_AutoLow = 0,
-			ThermostatFanMode_OnLow,
-			ThermostatFanMode_AutoHigh,
-			ThermostatFanMode_OnHigh,
-			ThermostatFanMode_Count
-		};
-
-		vector<string>			m_supportedModes;
+		
+		vector<string> m_supportedModes;
 	};
 
 } // namespace OpenZWave

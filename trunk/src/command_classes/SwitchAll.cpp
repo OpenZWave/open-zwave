@@ -92,7 +92,7 @@ bool SwitchAll::HandleMsg
 		{
 			if (SwitchAllCmd_Report == (SwitchAllCmd)_pData[0])
 			{
-				char* stateStr = (_pData[1]==SwitchAllEnabled_Both) ? c_switchAllStateName[3] : c_switchAllStateName[_pData[1]];
+				char* stateStr = (_pData[1]==0xff) ? c_switchAllStateName[3] : c_switchAllStateName[_pData[1]];
 
 				if( ValueList* pValue = static_cast<ValueList*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
 				{
