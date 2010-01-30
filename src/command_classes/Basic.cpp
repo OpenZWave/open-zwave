@@ -76,6 +76,8 @@ bool Basic::HandleMsg
 	uint32 const _instance	// = 0
 )
 {
+	bool handled = false;
+
 	Node* pNode = GetNode();
 	if( pNode )
 	{
@@ -91,7 +93,7 @@ bool Basic::HandleMsg
 				}
 
 				Log::Write( "Received Basic report from node %d: level=%d", GetNodeId(), _pData[1] );
-				return true;
+				handled = true;
 			}
 
 			if( BasicCmd_Set == (BasicCmd)_pData[0] )
@@ -103,8 +105,10 @@ bool Basic::HandleMsg
 				}
 
 				Log::Write( "Received Basic set from node %d: level=%d", GetNodeId(), _pData[1] );
-				return true;
+				handled = true;
 			}
+
+			pNode->ReleaseValueStore();
 		}
 	}
 
@@ -151,9 +155,11 @@ void Basic::CreateVars
 		ValueStore* pStore = pNode->GetValueStore();
 		if( pStore )
 		{
-			Value* pValue = new ValueByte( GetNodeId(), GetCommandClassId(), _instance, 0, "Level", false, 0 );
+			Value* pValue = new ValueByte( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_User, "Level", false, 0 );
 			pStore->AddValue( pValue );
 			pValue->Release();
+
+			pNode->ReleaseValueStore();
 		}
 	}
 }

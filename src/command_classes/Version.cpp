@@ -82,6 +82,8 @@ bool Version::HandleMsg
 	uint32 const _instance	// = 0
 )
 {
+	bool handled = false;
+
 	Node* pNode = GetNode();
 	if( pNode )
 	{
@@ -114,10 +116,9 @@ bool Version::HandleMsg
 				}
 
 				Log::Write( "Received Version report from node %d: Library=%s, Protocol=%s, Application=%s", GetNodeId(), library, protocol, application );
-				return true;
+				handled = true;
 			}
-
-			if (VersionCmd_CommandClassReport == (VersionCmd)_pData[0])
+			else if (VersionCmd_CommandClassReport == (VersionCmd)_pData[0])
 			{
 				if( CommandClass* pCommandClass = GetNode()->GetCommandClass( _pData[1] ) )
 				{
@@ -125,12 +126,14 @@ bool Version::HandleMsg
 					Log::Write( "Received Command Class Version report from node %d: CommandClass=%s, Version=%d", GetNodeId(), pCommandClass->GetCommandClassName().c_str(), _pData[2] );
 				}
 
-				return true;
+				handled = true;
 			}
+
+			pNode->ReleaseValueStore();
 		}
 	}
 
-	return false;
+	return handled;
 }
 
 //-----------------------------------------------------------------------------
@@ -169,17 +172,19 @@ void Version::CreateVars
 		{
 			Value* pValue;
 			
-			pValue = new ValueString( GetNodeId(), GetCommandClassId(), _instance, (uint8)ValueIndex_Library, "Library Version", true, "0.0"  );
+			pValue = new ValueString( GetNodeId(), GetCommandClassId(), _instance, (uint8)ValueIndex_Library, Value::Genre_System, "Library Version", true, "0.0"  );
 			pStore->AddValue( pValue );
 			pValue->Release();
 
-			pValue = new ValueString( GetNodeId(), GetCommandClassId(), _instance, (uint8)ValueIndex_Protocol, "Protocol Version", true, "0.0"  );
+			pValue = new ValueString( GetNodeId(), GetCommandClassId(), _instance, (uint8)ValueIndex_Protocol, Value::Genre_System, "Protocol Version", true, "0.0"  );
 			pStore->AddValue( pValue );
 			pValue->Release();
 
-			pValue = new ValueString( GetNodeId(), GetCommandClassId(), _instance, (uint8)ValueIndex_Application, "Application Version", true, "0.0"  );
+			pValue = new ValueString( GetNodeId(), GetCommandClassId(), _instance, (uint8)ValueIndex_Application, Value::Genre_System, "Application Version", true, "0.0"  );
 			pStore->AddValue( pValue );
 			pValue->Release();
+
+			pNode->ReleaseValueStore();
 		}
 	}
 }

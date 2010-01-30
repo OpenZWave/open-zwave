@@ -43,12 +43,13 @@ ValueList::ValueList
 	uint8 const _commandClassId,
 	uint8 const _instance,
 	uint8 const _index,
+	uint32 const _genre,
 	string const& _label,
 	bool const _bReadOnly,
 	vector<string> const& _items,
 	string const& _value
 ):
-	Value( _nodeId, _commandClassId, _instance, _index, _label, _bReadOnly ),
+	Value( _nodeId, _commandClassId, _instance, _index, _genre, _label, _bReadOnly ),
 	m_items( _items ),
 	m_value( _value )
 {

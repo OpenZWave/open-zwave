@@ -74,18 +74,19 @@ bool SwitchBinary::HandleMsg
 	uint32 const _instance	// = 0
 )
 {
-	Node* pNode = GetNode();
-	if( pNode )
+	if (SwitchBinaryCmd_Report == (SwitchBinaryCmd)_pData[0])
 	{
-		ValueStore* pStore = pNode->GetValueStore();
-		if( pStore )
+		Node* pNode = GetNode();
+		if( pNode )
 		{
-			if (SwitchBinaryCmd_Report == (SwitchBinaryCmd)_pData[0])
+			ValueStore* pStore = pNode->GetValueStore();
+			if( pStore )
 			{
 				if( ValueBool* pValue = static_cast<ValueBool*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
 				{
 					pValue->OnValueChanged( _pData[1] != 0 );
 				}
+				pNode->ReleaseValueStore();
 
 				Log::Write( "Received SwitchBinary report from node %d: level=%s", GetNodeId(), _pData[1] ? "On" : "Off" );
 				return true;
@@ -137,9 +138,11 @@ void SwitchBinary::CreateVars
 		ValueStore* pStore = pNode->GetValueStore();
 		if( pStore )
 		{
-			Value* pValue = new ValueBool( GetNodeId(), GetCommandClassId(), _instance, 0, "Switch", false, false );
+			Value* pValue = new ValueBool( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_User, "Switch", false, false );
 			pStore->AddValue( pValue );
 			pValue->Release();
+
+			pNode->ReleaseValueStore();
 		}
 	}
 }

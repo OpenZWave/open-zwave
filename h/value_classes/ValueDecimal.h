@@ -41,7 +41,7 @@ namespace OpenZWave
 	class ValueDecimal: public Value
 	{
 	public:
-		ValueDecimal( uint8 const _nodeId, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, string const& _label, bool const _bReadOnly, string const& _value );
+		ValueDecimal( uint8 const _nodeId, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, uint32 const _genre, string const& _label, bool const _bReadOnly, string const& _value );
 		ValueDecimal( TiXmlElement* _pValueElement );
 		virtual ~ValueDecimal(){}
 

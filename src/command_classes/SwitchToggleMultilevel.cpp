@@ -76,18 +76,19 @@ bool SwitchToggleMultilevel::HandleMsg
 	uint32 const _instance	// = 0
 )
 {
-	Node* pNode = GetNode();
-	if( pNode )
+	if (SwitchToggleMultilevelCmd_Report == (SwitchToggleMultilevelCmd)_pData[0])
 	{
-		ValueStore* pStore = pNode->GetValueStore();
-		if( pStore )
+		Node* pNode = GetNode();
+		if( pNode )
 		{
-			if (SwitchToggleMultilevelCmd_Report == (SwitchToggleMultilevelCmd)_pData[0])
+			ValueStore* pStore = pNode->GetValueStore();
+			if( pStore )
 			{
 				if( ValueByte* pValue = static_cast<ValueByte*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
 				{
 					pValue->OnValueChanged( _pData[1] );
 				}
+				pNode->ReleaseValueStore();
 
 				Log::Write( "Received SwitchToggleMultiLevel report from node %d: level=%d", GetNodeId(), _pData[1] );
 				return true;
@@ -174,9 +175,11 @@ void SwitchToggleMultilevel::CreateVars
 		ValueStore* pStore = pNode->GetValueStore();
 		if( pStore )
 		{
-			Value* pValue = new ValueByte( GetNodeId(), GetCommandClassId(), _instance, 0, "Level", false, 0  );
+			Value* pValue = new ValueByte( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_User, "Level", false, 0  );
 			pStore->AddValue( pValue );
 			pValue->Release();
+
+			pNode->ReleaseValueStore();
 		}
 	}
 }

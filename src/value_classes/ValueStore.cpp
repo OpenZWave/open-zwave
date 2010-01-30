@@ -27,21 +27,9 @@
 
 #include "ValueStore.h"
 #include "Value.h"
-#include "Mutex.h"
 
 using namespace OpenZWave;
 
-
-//-----------------------------------------------------------------------------
-// <ValueStore::ValueStore>
-// Constructor
-//-----------------------------------------------------------------------------
-ValueStore::ValueStore
-(
-)
-{
-	m_pMutex = new Mutex();
-}
 
 //-----------------------------------------------------------------------------
 // <ValueStore::ValueStore>
@@ -51,8 +39,6 @@ ValueStore::~ValueStore
 (
 )
 {
-	delete m_pMutex;
-
 	map<ValueID,Value*>::iterator it = m_values.begin();
 	while( it != m_values.end() )
 	{
@@ -77,8 +63,6 @@ bool ValueStore::AddValue
 
 	bool bRes = false;
 
-	m_pMutex->Lock();
-
 	map<ValueID,Value*>::iterator it = m_values.find( _pValue->GetID() );
 	if( it == m_values.end() )
 	{
@@ -87,7 +71,6 @@ bool ValueStore::AddValue
 		bRes = true;
 	}
 
-	m_pMutex->Release();
 	return bRes;
 }
 
@@ -102,8 +85,6 @@ bool ValueStore::RemoveValue
 {
 	bool bRes = false;
 
-	m_pMutex->Lock();
-
 	map<ValueID,Value*>::iterator it = m_values.find( _id );
 	if( it != m_values.end() )
 	{
@@ -116,7 +97,6 @@ bool ValueStore::RemoveValue
 		bRes = true;
 	}
 
-	m_pMutex->Release();
 	return bRes;
 }
 
@@ -131,8 +111,6 @@ Value* ValueStore::GetValue
 {
 	Value* pValue = NULL;
 
-	m_pMutex->Lock();
-
 	map<ValueID,Value*>::const_iterator it = m_values.find( _id );
 	if( it != m_values.end() )
 	{
@@ -143,34 +121,6 @@ Value* ValueStore::GetValue
 		}
 	}
 
-	m_pMutex->Release();
-
 	return pValue;
-}
-
-//-----------------------------------------------------------------------------
-// <ValueStore::Iterator::Iterator>
-// Iterator constructor
-//-----------------------------------------------------------------------------
-ValueStore::Iterator::Iterator
-(
-	ValueStore* _pStore
-):
-	m_pStore( _pStore )
-{
-	// Prevent modifications to the map while we are iterating
-	m_pStore->m_pMutex->Lock();
-}
-
-//-----------------------------------------------------------------------------
-// <ValueStore::Iterator::~Iterator>
-// Iterator destructor
-//-----------------------------------------------------------------------------
-ValueStore::Iterator::~Iterator
-(
-)
-{
-	// We're done iterating, so modifications to the map are now ok
-	m_pStore->m_pMutex->Release();
 }
 

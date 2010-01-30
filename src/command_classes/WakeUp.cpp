@@ -101,6 +101,8 @@ bool WakeUp::HandleMsg
 	uint32 const _instance	// = 0
 )
 {
+	bool handled = false;
+
 	Node* pNode = GetNode();
 	if( pNode )
 	{
@@ -119,10 +121,9 @@ bool WakeUp::HandleMsg
 				}
 
 				Log::Write( "Received Wakeup Interval report from node %d: Interval=%d", GetNodeId(), interval );
-				return true;
+				handled = true;
 			}
-
-			if( WakeUpCmd_Notification == (WakeUpCmd)_pData[0] )
+			else if( WakeUpCmd_Notification == (WakeUpCmd)_pData[0] )
 			{	
 				// The device is awake.
 				Log::Write( "Received Wakeup Notification from node %d", GetNodeId() );
@@ -135,12 +136,14 @@ bool WakeUp::HandleMsg
 				
 				// Send all pending messages
 				SendPending();
-				return true;
+				handled = true;
 			}
+
+			pNode->ReleaseValueStore();
 		}
 	}
 
-	return false;
+	return handled;
 }
 
 //-----------------------------------------------------------------------------
@@ -246,9 +249,11 @@ void WakeUp::CreateVars
 		ValueStore* pStore = pNode->GetValueStore();
 		if( pStore )
 		{
-			Value* pValue = new ValueInt( GetNodeId(), GetCommandClassId(), _instance, 0, "Wake-up Interval", false, 0 );
+			Value* pValue = new ValueInt( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_System, "Wake-up Interval", false, 0 );
 			pStore->AddValue( pValue );
 			pValue->Release();
+
+			pNode->ReleaseValueStore();
 		}
 	}
 }

@@ -118,9 +118,11 @@ void NodeNaming::CreateVars
 		ValueStore* pStore = pNode->GetValueStore();
 		if( pStore )
 		{
-			Value* pValue = new ValueString( GetNodeId(), GetCommandClassId(), _instance, 0, "Node Name", false, "Unknown"  );
+			Value* pValue = new ValueString( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_System, "Node Name", false, "Unknown"  );
 			pStore->AddValue( pValue );
 			pValue->Release();
+
+			pNode->ReleaseValueStore();
 		}
 	}
 }

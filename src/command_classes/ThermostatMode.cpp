@@ -110,6 +110,7 @@ bool ThermostatMode::HandleMsg
 	uint32 const _instance	// = 0
 )
 {
+	bool handled = false;
 	Node* pNode = GetNode();
 	if( pNode )
 	{
@@ -123,7 +124,7 @@ bool ThermostatMode::HandleMsg
 				{
 					pValueList->OnValueChanged( c_modeName[_pData[1]] );
 				}
-				return true;
+				handled = true;
 			}
 			else if( _pData[1] == ThermostatModeCmd_SupportedReport )
 			{
@@ -141,13 +142,14 @@ bool ThermostatMode::HandleMsg
 				}
 
 				CreateVars( _instance );
-				return true;
+				handled = true;
 			}
+
+			pNode->ReleaseValueStore();
 		}
 	}
 
-	// Not handled
-	return false;
+	return handled;
 }
 
 //-----------------------------------------------------------------------------
@@ -208,9 +210,11 @@ void ThermostatMode::CreateVars
 		{
 			Value* pValue;
 			
-			pValue = new ValueList( GetNodeId(), GetCommandClassId(), _instance, 0, "Mode", false, m_supportedModes, m_supportedModes[0] );
+			pValue = new ValueList( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_User, "Mode", false, m_supportedModes, m_supportedModes[0] );
 			pStore->AddValue( pValue );
 			pValue->Release();
+
+			pNode->ReleaseValueStore();
 		}
 	}
 }
