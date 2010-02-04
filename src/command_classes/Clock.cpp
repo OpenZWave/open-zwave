@@ -103,7 +103,7 @@ bool Clock::HandleMsg
 				// Day
 				if( ValueList* pValueList = static_cast<ValueList*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
 				{
-					pValueList->OnValueChanged( c_dayNames[day] );
+					pValueList->OnValueChanged( day-1 );
 				}
 
 				// Hour
@@ -154,8 +154,7 @@ bool Clock::SetValue
 
 			if( pDayValue && pHourValue && pMinuteValue )
 			{
-				string dayStr = pDayValue->GetValue();
-				uint8 day = 1;
+				uint8 day = pDayValue->GetItem().m_value;
 				uint8 hour = pHourValue->GetValue();
 				uint8 minute = pMinuteValue->GetValue();
 
@@ -164,7 +163,7 @@ bool Clock::SetValue
 					case 0:
 					{
 						// Day
-						dayStr = pDayValue->GetPending();
+						day = pDayValue->GetPending().m_value;
 						break;
 					}
 					case 1:
@@ -177,16 +176,6 @@ bool Clock::SetValue
 					{
 						// Minute
 						minute = pMinuteValue->GetPending();
-						break;
-					}
-				}
-
-				// Convert the day string to an index
-				for( int i=1; i<=7; ++i )
-				{
-					if( !strcmp( c_dayNames[i], dayStr.c_str() ) )
-					{
-						day = i;
 						break;
 					}
 				}
@@ -227,12 +216,16 @@ void Clock::CreateVars
 		{
 			Value* pValue;
 			
-			vector<string> items;
+			vector<ValueList::Item> items;
 			for( int i=1; i<=7; ++i )
 			{	
-				items.push_back( c_dayNames[i] ); 
+				ValueList::Item item;
+				item.m_label = c_dayNames[i];
+				item.m_value = i;
+				items.push_back( item ); 
 			}
-			pValue = new ValueList( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_User, "Day", false, items, c_dayNames[1] );
+
+			pValue = new ValueList( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_User, "Day", false, items, 0 );
 			pStore->AddValue( pValue );
 			pValue->Release();
 

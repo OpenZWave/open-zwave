@@ -31,6 +31,7 @@
 #include <vector>
 #include <string>
 #include "CommandClass.h"
+#include "ValueList.h"
 
 namespace OpenZWave
 {
@@ -57,7 +58,7 @@ namespace OpenZWave
 	private:
 		ThermostatMode( uint8 const _nodeId ): CommandClass( _nodeId ){}
 
-		vector<string>	m_supportedModes;
+		vector<ValueList::Item>	m_supportedModes;
 	};
 
 } // namespace OpenZWave

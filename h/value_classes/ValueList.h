@@ -42,12 +42,20 @@ namespace OpenZWave
 	class ValueList: public Value
 	{
 	public:
-		ValueList( uint8 const _nodeId, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, uint32 const _genre, string const& _label, bool const _bReadOnly, vector<string> const& _items, string const& _value );
+		struct Item
+		{
+			string	m_label;
+			int32	m_value;
+		};
+
+		ValueList( uint8 const _nodeId, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, uint32 const _genre, string const& _label, bool const _bReadOnly, vector<Item> const& _items, int32 const _valueIdx );
 		ValueList( TiXmlElement* _pValueElement );
 		virtual ~ValueList(){}
 
-		bool Set( string const& _value );
-		void OnValueChanged( string const& _value );
+		bool SetByLabel( string const& _label );
+		bool SetByValue( int32 const _value );
+
+		void OnValueChanged( int32 const _valueIdx );
 
 		static uint8 const StaticGetValueTypeId(){ return 0x06; }
 		static string const StaticGetValueTypeName(){ return "VALUE_LIST"; }
@@ -57,15 +65,18 @@ namespace OpenZWave
 		virtual uint8 const GetValueTypeId()const{ return StaticGetValueTypeId(); }
 		virtual string const GetValueTypeName()const{ return StaticGetValueTypeName(); }
 
-		virtual string GetAsString()const{ return m_value; }
+		virtual string GetAsString()const{ return m_items[m_valueIdx].m_label; }
 
-		string GetValue()const{ return m_value; }
-		string GetPending()const{ return m_pending; }
+		Item const& GetItem()const{ return m_items[m_valueIdx]; }
+		Item const& GetPending()const{ return m_items[m_pendingIdx]; }
+
+		int32 const GetItemIdxByLabel( string const& _label );
+		int32 const GetItemIdxByValue( int32 const _value );
 
 	private:
-		vector<string>	m_items;
-		string			m_value;
-		string			m_pending;
+		vector<Item>	m_items;
+		int32			m_valueIdx;
+		int32			m_pendingIdx;
 	};
 
 } // namespace OpenZWave

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ManufacturerSpecificData>
   <Manufacturer id="0001" name="ACT">
-    <Product type="4952" id="3330" name="ZIR010 PIR Motion Sensor" />
+    <Product type="4952" id="3330" name="ZIR010 PIR Motion Sensor" config="Act/ZIR010.xml" />
     <Product type="4457" id="3330" name="ZDW230 Wall Dimmer Module" />
     <Product type="4457" id="3332" name="ZDW232 Wall Dimmer Module" />
-    <Product type="444d" id="3330" name="ZDM230 Wall Dimmer Module" />
+    <Product type="444d" id="3330" name="ZDM230 Wall Dimmer Module" config="Act/ZDM230.xml" />    
     <Product type="5257" id="3330" name="ZRW230 Wall Appliance Module" />
     <Product type="524d" id="3330" name="ZRM230 Wall Appliance Module" />
     <Product type="5457" id="3330" name="ZTW230 Wall Transmitter Module" />

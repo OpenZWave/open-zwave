@@ -35,6 +35,13 @@
 
 using namespace OpenZWave;
 
+static char* const c_genreName[] = 
+{
+	"all",
+	"user",
+	"config",
+	"system"
+};
 
 //-----------------------------------------------------------------------------
 // <Value::Value>
@@ -66,39 +73,21 @@ Value::Value
 (
 	TiXmlElement* _pValueElement
 ):
-	m_refs( 1 )
+	m_refs( 1 ),
+	m_bReadOnly( false ),
+	m_genre( Genre_System )
 {
-	int intVal;
+	char const* id = _pValueElement->Attribute( "id" );
+	m_id = ValueID( id );
 
-	uint8 nodeId = 0;
-	if( TIXML_SUCCESS == _pValueElement->QueryIntAttribute( "node", &intVal ) )
+	char const* genre = _pValueElement->Attribute( "genre" );
+	for( int i=0; i<4; ++i )
 	{
-		nodeId = (uint8)intVal;
-	}
-
-	uint8 commandClassId = 0;
-	if( TIXML_SUCCESS == _pValueElement->QueryIntAttribute( "command_class", &intVal ) )
-	{
-		commandClassId = (uint8)intVal;
-	}
-
-	uint8 instance = 0;
-	if( TIXML_SUCCESS == _pValueElement->QueryIntAttribute( "instance", &intVal ) )
-	{
-		instance = (uint8)intVal;
-	}
-
-	uint8 index = 0;
-	if( TIXML_SUCCESS == _pValueElement->QueryIntAttribute( "index", &intVal ) )
-	{
-		index = (uint8)intVal;
-	}
-
-	m_id = ValueID( nodeId, commandClassId, instance, index );
-
-	if( TIXML_SUCCESS == _pValueElement->QueryIntAttribute( "genre", &intVal ) )
-	{
-		m_genre = (uint32)intVal;
+		if( !strcmp( genre, c_genreName[i] ) )
+		{
+			m_genre = i;
+			break;
+		}
 	}
 
 	char const* label = _pValueElement->Attribute( "label" );
@@ -116,7 +105,7 @@ Value::Value
 	char const* readOnly = _pValueElement->Attribute( "read_only" );
 	if( readOnly )
 	{
-		m_bReadOnly = !strcmp( readOnly, "True" );
+		m_bReadOnly = !strcmp( readOnly, "true" );
 	}
 }
 
@@ -129,7 +118,11 @@ void Value::WriteXML
 	TiXmlElement* _pValueElement
 )
 {
-
+	_pValueElement->SetAttribute( "id", m_id.ToString().c_str() );
+	_pValueElement->SetAttribute( "genre", c_genreName[m_genre] );
+	_pValueElement->SetAttribute( "label", m_label.c_str() );
+	_pValueElement->SetAttribute( "units", m_units.c_str() );
+	_pValueElement->SetAttribute( "read_only", m_bReadOnly ? "true" : "false" );
 }
 
 //-----------------------------------------------------------------------------

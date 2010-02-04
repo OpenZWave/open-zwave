@@ -115,6 +115,10 @@ namespace OpenZWave
 		void RequestState();
 		void RequestStatic();
 
+		// Configuration (Direct)
+		bool SetConfigParam( uint8 const _param, int32 _value );
+		void RequestConfigParam( uint8 const _param );
+
 		// Accessors
 		bool IsListeningDevice()const{ return m_bListening; }
 		bool IsRoutingDevice()const{ return m_bRouting; }

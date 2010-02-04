@@ -93,7 +93,7 @@ bool Protection::HandleMsg
 			{
 				if( ValueList* pValue = static_cast<ValueList*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
 				{
-					pValue->OnValueChanged( c_protectionStateNames[_pData[1]] );
+					pValue->OnValueChanged( (int)_pData[1] );
 				}
 				pNode->ReleaseValueStore();
 
@@ -117,24 +117,15 @@ bool Protection::SetValue
 {
 	if( ValueList const* pValue = static_cast<ValueList const*>(&_value) )
 	{
-		// Convert the selected option to an index
-		uint8 state = 0;
-		for( int i=0; i<3; ++i )
-		{
-			if( !strcmp( c_protectionStateNames[i], pValue->GetPending().c_str() ) )
-			{
-				state = i;
-				break;
-			}
-		}
+		ValueList::Item const& item = pValue->GetPending();
 
-		Log::Write( "Protection::Set - Setting protection state on node %d to '%s'", GetNodeId(), c_protectionStateNames[state] );
+		Log::Write( "Protection::Set - Setting protection state on node %d to '%s'", GetNodeId(), item.m_label.c_str() );
 		Msg* pMsg = new Msg( "Protection Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
 		pMsg->Append( GetNodeId() );
 		pMsg->Append( 3 );
 		pMsg->Append( GetCommandClassId() );
 		pMsg->Append( ProtectionCmd_Set );
-		pMsg->Append( state );
+		pMsg->Append( (uint8)item.m_value );
 		pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 		return true;
 	}
@@ -157,12 +148,17 @@ void Protection::CreateVars
 		ValueStore* pStore = pNode->GetValueStore();
 		if( pStore )
 		{
-			vector<string> items;
-			items.push_back( c_protectionStateNames[0] ); 
-			items.push_back( c_protectionStateNames[1] ); 
-			items.push_back( c_protectionStateNames[2] ); 
+			vector<ValueList::Item> items;
 
-			Value* pValue = new ValueList( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_System, "Protection", false, items, c_protectionStateNames[0] );
+			ValueList::Item item;
+			for( uint8 i=0; i<3; ++i )
+			{
+				item.m_label = c_protectionStateNames[i];
+				item.m_value = i;
+				items.push_back( item ); 
+			}
+
+			Value* pValue = new ValueList( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_System, "Protection", false, items, 0 );
 			pStore->AddValue( pValue );
 			pValue->Release();
 		
