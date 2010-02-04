@@ -79,7 +79,7 @@ namespace OpenZWave
 		uint32 AddRef(){ ++m_refs; return m_refs; }
 
 		uint32		m_refs;
-		uint32	m_genre;
+		uint32		m_genre;
 		ValueID		m_id;
 		string		m_label;
 		string		m_units;

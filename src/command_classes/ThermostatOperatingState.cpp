@@ -118,7 +118,7 @@ bool ThermostatOperatingState::HandleMsg
 				// We have received the thermostat operating state from the Z-Wave device
 				if( ValueList* pValueList = static_cast<ValueList*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
 				{
-					pValueList->OnValueChanged( c_stateName[_pData[1]] );
+					pValueList->OnValueChanged( _pData[1] );
 				}
 				handled = true;
 			}
@@ -132,7 +132,10 @@ bool ThermostatOperatingState::HandleMsg
 					{
 						if( ( _pData[i] & (1<<bit) ) != 0 )
 						{
-							m_supportedStates.push_back( c_stateName[i+bit-2] );
+							ValueList::Item item;
+							item.m_value = i + bit - 2;
+							item.m_label = c_stateName[item.m_value];
+							m_supportedStates.push_back( item );
 						}
 					}
 				}
@@ -170,7 +173,7 @@ void ThermostatOperatingState::CreateVars
 		{
 			Value* pValue;
 			
-			pValue = new ValueList( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_User, "State", true, m_supportedStates, m_supportedStates[0] );
+			pValue = new ValueList( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_User, "State", true, m_supportedStates, 0 );
 			pStore->AddValue( pValue );
 			pValue->Release();
 

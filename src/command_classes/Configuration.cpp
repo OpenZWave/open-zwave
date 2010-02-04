@@ -30,7 +30,12 @@
 #include "Defs.h"
 #include "Msg.h"
 #include "Driver.h"
+#include "Node.h"
 #include "Log.h"
+#include "ValueByte.h"
+#include "ValueInt.h"
+#include "ValueList.h"
+#include "ValueStore.h"
 
 using namespace OpenZWave;
 
@@ -55,6 +60,7 @@ bool Configuration::HandleMsg
 {
     if (ConfigurationCmd_Report == (ConfigurationCmd)_pData[0])
     {
+		// Extract the parameter index and value
 		uint8 parameter = _pData[1];
 		uint8 size = _pData[2] & 0x07;
 		uint32 value = 0;
@@ -62,6 +68,53 @@ bool Configuration::HandleMsg
 		{
 			value <<= 8;
 			value |= (uint32)_pData[i+3];
+		}
+
+		// Get the value object for this parameter, or create one if it does not yet exist
+		ValueID id( GetNodeId(), GetCommandClassId(), _instance, parameter );
+
+		Node* pNode = GetNode();
+		if( pNode )
+		{
+			ValueStore* pStore = pNode->GetValueStore();
+			if( pStore )
+			{
+				if( Value* pValue = pStore->GetValue( id ) )
+				{
+					// Cast the value to the correct type, and change 
+					// its value to the one we just received.
+					uint8 const valueType = pValue->GetValueTypeId();
+					if( valueType == ValueByte::StaticGetValueTypeId() )
+					{
+						ValueByte* pValueByte = static_cast<ValueByte*>( pValue );
+						pValueByte->OnValueChanged( (uint8)value );
+					}
+					else if( valueType == ValueInt::StaticGetValueTypeId() )
+					{
+						ValueInt* pValueInt = static_cast<ValueInt*>( pValue );
+						pValueInt->OnValueChanged( value );
+					}
+					else if( valueType == ValueList::StaticGetValueTypeId() )
+					{
+						ValueList* pValueList = static_cast<ValueList*>( pValue );
+						int32 valueIdx = pValueList->GetItemIdxByValue( value );
+						if( valueIdx >= 0 )
+						{
+							pValueList->OnValueChanged( valueIdx );
+						}
+					}
+				}
+				else
+				{
+					// Create a new value
+					char label[16];
+					snprintf( label, 16, "Parameter #%d", parameter );
+					ValueInt* pValueInt = new ValueInt( GetNodeId(), GetCommandClassId(), _instance, parameter, Value::Genre_Config, label, false, value );
+					pStore->AddValue( pValueInt );
+				}
+
+				pNode->ReleaseValueStore();
+			}
 		}
 
 		Log::Write( "Received Configuration report from node %d: Parameter=%d, Value=%d", GetNodeId(), parameter, (signed long)value );
@@ -77,7 +130,7 @@ bool Configuration::HandleMsg
 //-----------------------------------------------------------------------------
 void Configuration::Get
 (
-	uint8 _parameter
+	uint8 const _parameter
 )
 {
     Msg* pMsg = new Msg( "ConfigurationCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
@@ -96,8 +149,8 @@ void Configuration::Get
 //-----------------------------------------------------------------------------
 void Configuration::Set
 (
-	uint8 _parameter,
-	signed long _value
+	uint8 const _parameter,
+	int32 const _value
 )
 {
 	Log::Write( "Configuration::Set - Node=%d, Parameter=%d, Value=%d", GetNodeId(), _parameter, _value );
