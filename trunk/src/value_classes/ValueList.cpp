@@ -46,12 +46,12 @@ ValueList::ValueList
 	uint32 const _genre,
 	string const& _label,
 	bool const _bReadOnly,
-	vector<string> const& _items,
-	string const& _value
+	vector<Item> const& _items,
+	int32 const _valueIdx
 ):
 	Value( _nodeId, _commandClassId, _instance, _index, _genre, _label, _bReadOnly ),
 	m_items( _items ),
-	m_value( _value )
+	m_valueIdx( _valueIdx )
 {
 }
 
@@ -75,11 +75,16 @@ ValueList::ValueList
 			char const* str = pItemElement->Value();
 			if( str && !strcmp( str, "Item" ) )
 			{
-				char const* itemStr = pItemElement->Attribute( "value" );
-				if( itemStr )
-				{
-					m_items.push_back( itemStr );
-				}
+				char const* labelStr = pItemElement->Attribute( "label" );
+
+				int value = 0;
+				pItemElement->QueryIntAttribute( "value", &value );
+
+				Item item;
+				item.m_label = labelStr;
+				item.m_value = value;
+
+				m_items.push_back( item );
 			}
 		}
 
@@ -87,11 +92,7 @@ ValueList::ValueList
 	}
 
 	// Set the value
-	char const* valueStr = _pValueElement->Attribute( "value" );
-	if( valueStr )
-	{
-		m_value = valueStr;
-	}
+	_pValueElement->QueryIntAttribute( "value", &m_valueIdx );
 }
 
 //-----------------------------------------------------------------------------
@@ -104,49 +105,76 @@ void ValueList::WriteXML
 )
 {
 	Value::WriteXML( _pValueElement );
-	_pValueElement->SetAttribute( "value", m_value.c_str() );
+	
+	
+	char str[16];
+	snprintf( str, 16, "%d", m_valueIdx );
+	_pValueElement->SetAttribute( "value", str );
 
-	for( vector<string>::iterator it = m_items.begin(); it != m_items.end(); ++it )
+	for( vector<Item>::iterator it = m_items.begin(); it != m_items.end(); ++it )
 	{
 		TiXmlElement* pItemElement = new TiXmlElement( "Item" );
-		pItemElement->SetAttribute( "value", (*it).c_str() );
+		pItemElement->SetAttribute( "label", (*it).m_label.c_str() );
+		
+		snprintf( str, 16, "%d", (*it).m_value );
+		pItemElement->SetAttribute( "value", str );
+
 		_pValueElement->LinkEndChild( pItemElement );
 	}
 }
 
 //-----------------------------------------------------------------------------
-// <ValueList::Set>
-// Set a new value in the device
+// <ValueList::SetByLabel>
+// Set a new value in the device, selected by item label
 //-----------------------------------------------------------------------------
-bool ValueList::Set
+bool ValueList::SetByLabel
 (
-	string const& _value
+	string const& _label
 )
 {
-	if( _value == m_value )
+	// Ensure the value is one of the options
+	int32 index = GetItemIdxByLabel( _label );
+	if( index < 0 )
+	{
+		// Item not found
+		return false;
+	}
+
+	if( index == m_valueIdx )
 	{
 		// Value already set
 		return true;
 	}
 
+	m_pendingIdx = index;
+	return Value::Set();
+}
+
+//-----------------------------------------------------------------------------
+// <ValueList::SetByValue>
+// Set a new value in the device, selected by item value
+//-----------------------------------------------------------------------------
+bool ValueList::SetByValue
+(
+	int32 const _value
+)
+{
 	// Ensure the value is one of the options
-	bool bFound = false;
-	for( vector<string>::iterator it = m_items.begin(); it != m_items.end(); ++it )
+	int32 index = GetItemIdxByValue( _value );
+	if( index < 0 )
 	{
-		if( _value == (*it) )
-		{
-			bFound = true;
-			break;
-		}
+		// Item not found
+		return false;
 	}
 
-	if( bFound )
+	if( index == m_valueIdx )
 	{
-		m_pending = _value;
-		return Value::Set();
+		// Value already set
+		return true;
 	}
 
-	return false;
+	m_pendingIdx = index;
+	return Value::Set();
 }
 
 //-----------------------------------------------------------------------------
@@ -155,18 +183,60 @@ bool ValueList::Set
 //-----------------------------------------------------------------------------
 void ValueList::OnValueChanged
 (
-	string const& _value
+	int32 const _valueIdx
 )
 {
-	if( _value == m_value )
+	if( _valueIdx == m_valueIdx )
 	{
 		// Value already set
 		return;
 	}
 
-	m_value = _value;
+	m_valueIdx = _valueIdx;
 	Value::OnValueChanged();
 }
+
+//-----------------------------------------------------------------------------
+// <ValueList::GetItemIdxByLabel>
+// Get the index of an item from its label
+//-----------------------------------------------------------------------------
+int32 const ValueList::GetItemIdxByLabel
+(
+	string const& _label
+)
+{
+	for( int32 i=0; i<(int32)m_items.size(); ++i )
+	{
+		if( _label == m_items[i].m_label )
+		{
+			return i;
+		}
+	}
+
+	return -1;
+}
+
+//-----------------------------------------------------------------------------
+// <ValueList::GetItemIdxByValue>
+// Get the index of an item from its value
+//-----------------------------------------------------------------------------
+int32 const ValueList::GetItemIdxByValue
+(
+	int32 const _value
+)
+{
+	for( int32 i=0; i<(int32)m_items.size(); ++i )
+	{
+		if( _value == m_items[i].m_value )
+		{
+			return i;
+		}
+	}
+
+	return -1;
+}
+
+
 
 
 

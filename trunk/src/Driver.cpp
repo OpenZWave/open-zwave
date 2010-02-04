@@ -25,9 +25,6 @@
 //
 //-----------------------------------------------------------------------------
 
-#include <comutil.h>
-#include <math.h>
-
 #include "Defs.h"
 #include "Driver.h"
 #include "Node.h"
@@ -604,53 +601,53 @@ bool Driver::ReadMsg
 //-----------------------------------------------------------------------------
 void Driver::ProcessMsg
 (
-	uint8* pData
+	uint8* _pData
 )
 {
 	bool bHandleCallback = true;
 
-	if( RESPONSE == pData[0] )
+	if( RESPONSE == _pData[0] )
 	{
-		switch( pData[1] )
+		switch( _pData[1] )
 		{
 			case ZW_GET_VERSION:
 			{
-				Log::Write( "Received reply to ZW_GET_VERSION: %s", ((int8*)&pData[2]) );
+				Log::Write( "Received reply to ZW_GET_VERSION: %s", ((int8*)&_pData[2]) );
 				break;
 			}
 			case FUNC_ID_SERIAL_API_GET_CAPABILITIES:
 			{
-				HandleGetCapabilitiesResponse( pData );
+				HandleGetCapabilitiesResponse( _pData );
 				break;
 			}
 			case FUNC_ID_ZW_ENABLE_SUC:
 			{
-				HandleEnableSUCResponse( pData );
+				HandleEnableSUCResponse( _pData );
 				break;
 			}
 			case FUNC_ID_ZW_SET_SUC_NODE_ID:
 			{
-				HandleSetSUCNodeIdResponse( pData );
+				HandleSetSUCNodeIdResponse( _pData );
 				break;
 			}
 			case FUNC_ID_ZW_GET_SUC_NODE_ID:
 			{
-				HandleGetSUCNodeIdResponse( pData );
+				HandleGetSUCNodeIdResponse( _pData );
 				break;
 			}
 			case ZW_MEMORY_GET_ID:
 			{
-				HandleMemoryGetIdResponse( pData );
+				HandleMemoryGetIdResponse( _pData );
 				break;
 			}
 			case FUNC_ID_SERIAL_API_GET_INIT_DATA:
 			{
-				HandleSerialAPIGetInitDataResponse( pData );
+				HandleSerialAPIGetInitDataResponse( _pData );
 				break;
 			}
 			case FUNC_ID_ZW_GET_NODE_PROTOCOL_INFO:
 			{
-				HandleGetNodeProtocolInfoResponse( pData );
+				HandleGetNodeProtocolInfoResponse( _pData );
 				break;
 			}
 			case FUNC_ID_ZW_REQUEST_NODE_INFO:
@@ -660,44 +657,44 @@ void Driver::ProcessMsg
 			}
 			case FUNC_ID_ZW_SEND_DATA:
 			{
-				HandleSendDataResponse( pData );
+				HandleSendDataResponse( _pData );
 				bHandleCallback = false;			// Skip the callback handling - a subsequent FUNC_ID_ZW_SEND_DATA request will deal with that
 				break;
 			}
 			default:
 			{
-				Log::Write( "TODO: handle response for %d", pData[1] );
+				Log::Write( "TODO: handle response for %d", _pData[1] );
 				break;
 			}
 		}
 	} 
-	else if( REQUEST == pData[0] )
+	else if( REQUEST == _pData[0] )
 	{
-		switch( pData[1] )
+		switch( _pData[1] )
 		{
 			case FUNC_ID_ZW_SEND_DATA:
 			{
-				HandleSendDataRequest( pData );
+				HandleSendDataRequest( _pData );
 				break;
 			}
 			case FUNC_ID_ZW_ADD_NODE_TO_NETWORK:
 			{
-				HandleAddNodeToNetworkRequest( pData );
+				HandleAddNodeToNetworkRequest( _pData );
 				break;
 			}
 			case FUNC_ID_ZW_REMOVE_NODE_FROM_NETWORK:
 			{
-				HandleRemoveNodeFromNetworkRequest( pData );
+				HandleRemoveNodeFromNetworkRequest( _pData );
 				break;
 			}
 			case FUNC_ID_APPLICATION_COMMAND_HANDLER:
 			{
-				HandleApplicationCommandHandlerRequest( pData );
+				HandleApplicationCommandHandlerRequest( _pData );
 				break;
 			}
 			case FUNC_ID_ZW_APPLICATION_UPDATE:
 			{
-				HandleApplicationUpdateRequest( pData );
+				HandleApplicationUpdateRequest( _pData );
 				break;
 			}
 			default:
@@ -712,16 +709,16 @@ void Driver::ProcessMsg
 	{
 		if( m_expectedCallbackId )
 		{
-			if( m_expectedCallbackId == pData[2] )
+			if( m_expectedCallbackId == _pData[2] )
 			{
-				Log::Write( "Message transaction (callback=%d) complete", pData[2] );
+				Log::Write( "Message transaction (callback=%d) complete", _pData[2] );
 				RemoveMsg();
 				m_expectedCallbackId = 0;
 			}
 		}
 		if( m_expectedReply )
 		{
-			if( m_expectedReply == pData[1] )
+			if( m_expectedReply == _pData[1] )
 			{
 				Log::Write( "Message transaction complete" );
 				RemoveMsg();
@@ -739,10 +736,10 @@ void Driver::ProcessMsg
 //-----------------------------------------------------------------------------
 void Driver::HandleGetCapabilitiesResponse
 (
-	uint8* pData
+	uint8* _pData
 )
 {
-	Log::Write( "Received reply to GetCapabilities.  Node ID = %d", pData[2] );
+	Log::Write( "Received reply to GetCapabilities.  Node ID = %d", _pData[2] );
 	//2009-06-14 11:41:14:585 Received: 0x01, 0x2b, 0x01, 0x07, 0x02, 0x52, 0x00, 0x00, 0x00, 0x01, 0x00, 0x01, 0xfe, 0x80, 0xfe, 0x80, 0x03, 0x00, 0x00, 0x00, 0xfb, 0x9f, 0x3b, 0x80, 0x07, 0x00, 0x00, 0x80, 0x00, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x59
 }
 
@@ -752,7 +749,7 @@ void Driver::HandleGetCapabilitiesResponse
 //-----------------------------------------------------------------------------
 void Driver::HandleEnableSUCResponse
 (
-	uint8* pData
+	uint8* _pData
 )
 {
 	Log::Write( "Received reply to Enable SUC." );
@@ -764,7 +761,7 @@ void Driver::HandleEnableSUCResponse
 //-----------------------------------------------------------------------------
 void Driver::HandleSetSUCNodeIdResponse
 (
-	uint8* pData
+	uint8* _pData
 )
 {
 	Log::Write( "Received reply to SET_SUC_NODE_ID." );
@@ -776,12 +773,12 @@ void Driver::HandleSetSUCNodeIdResponse
 //-----------------------------------------------------------------------------
 void Driver::HandleGetSUCNodeIdResponse
 (
-	uint8* pData
+	uint8* _pData
 )
 {
-	Log::Write( "Received reply to GET_SUC_NODE_ID.  Node ID = %d", pData[2] );
+	Log::Write( "Received reply to GET_SUC_NODE_ID.  Node ID = %d", _pData[2] );
 
-	if( pData[2] == 0)
+	if( _pData[2] == 0)
 	{
 		Log::Write( "No SUC, so we become SUC" );
 		
@@ -808,11 +805,11 @@ void Driver::HandleGetSUCNodeIdResponse
 //-----------------------------------------------------------------------------
 void Driver::HandleMemoryGetIdResponse
 (
-	uint8* pData
+	uint8* _pData
 )
 {
-	Log::Write( "Received reply to ZW_MEMORY_GET_ID. Home ID = 0x%02x%02x%02x%02x.  Our node ID = %d", pData[2], pData[3], pData[4], pData[5], pData[6] );
-	m_nodeId = pData[6];
+	Log::Write( "Received reply to ZW_MEMORY_GET_ID. Home ID = 0x%02x%02x%02x%02x.  Our node ID = %d", _pData[2], _pData[3], _pData[4], _pData[5], _pData[6] );
+	m_nodeId = _pData[6];
 }
 
 //-----------------------------------------------------------------------------
@@ -821,20 +818,20 @@ void Driver::HandleMemoryGetIdResponse
 //-----------------------------------------------------------------------------
 void Driver::HandleSerialAPIGetInitDataResponse
 (
-	uint8* pData
+	uint8* _pData
 )
 {
 	int32 i;
 	Log::Write( "Received reply to FUNC_ID_SERIAL_API_GET_INIT_DATA:" );
 	
-	if( pData[4] == NUM_NODE_BITFIELD_BYTES )
+	if( _pData[4] == NUM_NODE_BITFIELD_BYTES )
 	{
 		for( i=0; i<NUM_NODE_BITFIELD_BYTES; ++i)
 		{
 			for( int32 j=0; j<8; ++j )
 			{
 				uint8 nodeId = (i*8)+j+1;
-				if( pData[i+5] & (0x01 << j) )
+				if( _pData[i+5] & (0x01 << j) )
 				{
 					Log::Write( "Found node %d", nodeId );
 
@@ -887,14 +884,14 @@ void Driver::HandleGetNodeProtocolInfoResponse
 //-----------------------------------------------------------------------------
 void Driver::HandleSendDataResponse
 (
-	uint8* pData
+	uint8* _pData
 )
 {
-	if( 0 == pData[2] )
+	if( 0 == _pData[2] )
 	{
 		Log::Write("ERROR: ZW_SEND could not be delivered to Z-Wave stack");
 	}
-	else if( 1 == pData[2] )
+	else if( 1 == _pData[2] )
 	{
 		Log::Write( "ZW_SEND delivered to Z-Wave stack" );
 	}
@@ -910,12 +907,12 @@ void Driver::HandleSendDataResponse
 //-----------------------------------------------------------------------------
 void Driver::HandleSendDataRequest
 (
-	uint8* pData
+	uint8* _pData
 )
 {
-	Log::Write( "ZW_SEND Request with callback ID %d received (expected %d)", pData[2], m_expectedCallbackId );
+	Log::Write( "ZW_SEND Request with callback ID %d received (expected %d)", _pData[2], m_expectedCallbackId );
 
-	if( ( pData[2] != m_expectedCallbackId ) || ( pData[1] != m_expectedReply ) )
+	if( ( _pData[2] != m_expectedCallbackId ) || ( _pData[1] != m_expectedReply ) )
 	{
 		// Wrong callback ID
 		Log::Write( "ERROR: Callback ID is invalid" );
@@ -923,7 +920,7 @@ void Driver::HandleSendDataRequest
 	else 
 	{
 		// Callback ID matches our expectation
-		switch( pData[3] )
+		switch( _pData[3] )
 		{
 			case 0:
 			{
@@ -977,12 +974,12 @@ void Driver::HandleSendDataRequest
 //-----------------------------------------------------------------------------
 void Driver::HandleAddNodeToNetworkRequest
 (
-	uint8* pData
+	uint8* _pData
 )
 {
 	Log::Write( "FUNC_ID_ZW_ADD_NODE_TO_NETWORK:" );
 	
-	switch( pData[3] )
+	switch( _pData[3] )
 	{
 		case ADD_NODE_STATUS_LEARN_READY:
 		{
@@ -997,12 +994,12 @@ void Driver::HandleAddNodeToNetworkRequest
 		case ADD_NODE_STATUS_ADDING_SLAVE:
 		{
 			Log::Write( "ADD_NODE_STATUS_ADDING_SLAVE" );			
-			Log::Write( "Adding node ID %d", pData[4] );
+			Log::Write( "Adding node ID %d", _pData[4] );
 			
-			if( ( pData[7] == 8) && ( pData[8] == 3) )
+			if( ( _pData[7] == 8) && ( _pData[8] == 3) )
 			{
 				Log::Write( "Setback schedule thermostat detected, triggering configuration" );
-				//SetWakeupInterval( pData[4], 15, true );
+				//SetWakeupInterval( _pData[4], 15, true );
 			}
 			
 			// Finish adding node	
@@ -1013,7 +1010,7 @@ void Driver::HandleAddNodeToNetworkRequest
 		{
 			Log::Write( "ADD_NODE_STATUS_ADDING_CONTROLLER");
 			
-			Log::Write( "Adding node ID %d", pData[4] );
+			Log::Write( "Adding node ID %d", _pData[4] );
 			break;
 		}
 		case ADD_NODE_STATUS_PROTOCOL_DONE:
@@ -1047,12 +1044,12 @@ void Driver::HandleAddNodeToNetworkRequest
 //-----------------------------------------------------------------------------
 void Driver::HandleRemoveNodeFromNetworkRequest
 (
-	uint8* pData
+	uint8* _pData
 )
 {
 	Log::Write( "FUNC_ID_ZW_REMOVE_NODE_FROM_NETWORK:" );
 	
-	switch( pData[3] ) 
+	switch( _pData[3] ) 
 	{
 		case REMOVE_NODE_STATUS_LEARN_READY:
 		{

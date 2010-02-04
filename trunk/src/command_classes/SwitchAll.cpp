@@ -92,15 +92,16 @@ bool SwitchAll::HandleMsg
 			ValueStore* pStore = pNode->GetValueStore();
 			if( pStore )
 			{
-				char* stateStr = (_pData[1]==0xff) ? c_switchAllStateName[3] : c_switchAllStateName[_pData[1]];
-
 				if( ValueList* pValue = static_cast<ValueList*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
 				{
-					pValue->OnValueChanged( stateStr );
+					int32 idx = pValue->GetItemIdxByValue( (int32)_pData[1] );
+					if( idx >= 0 )
+					{
+						pValue->OnValueChanged( idx );
+						Log::Write( "Received SwitchAll report from node %d: %s", GetNodeId(), pValue->GetItem().m_label.c_str() );
+					}
 				}
 				pNode->ReleaseValueStore();
-
-				Log::Write( "Received SwitchAll report from node %d: %s", GetNodeId(), stateStr );
 				return true;
 			}
 		}
@@ -120,28 +121,15 @@ bool SwitchAll::SetValue
 {
 	if( ValueList const* pValue = static_cast<ValueList const*>(&_value) )
 	{
-		// Convert the selected option to an index
-		uint8 state = 0;
-		for( int i=0; i<3; ++i )
-		{
-			if( !strcmp( c_switchAllStateName[i], pValue->GetPending().c_str() ) )
-			{
-				state = i;
-				break;
-			}
-		}
-		if( state == 3 )
-		{
-			state = 0xff;
-		}
+		ValueList::Item const& item = pValue->GetPending();
 
-		Log::Write( "SwitchAll::Set - %s on node %d", pValue->GetPending().c_str(), GetNodeId() );
+		Log::Write( "SwitchAll::Set - %s on node %d", pValue->GetPending().m_label.c_str(), GetNodeId() );
 		Msg* pMsg = new Msg( "SwitchAllCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
 		pMsg->Append( GetNodeId() );
 		pMsg->Append( 3 );
 		pMsg->Append( GetCommandClassId() );
 		pMsg->Append( SwitchAllCmd_Set );
-		pMsg->Append( state );
+		pMsg->Append( (uint8)item.m_value );
 		pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 		return true;
 	}
@@ -198,12 +186,15 @@ void SwitchAll::CreateVars
 		ValueStore* pStore = pNode->GetValueStore();
 		if( pStore )
 		{
-			vector<string> items;
+			vector<ValueList::Item> items;
 			for( int i=0; i<4; ++i )
 			{	
-				items.push_back( c_switchAllStateName[i] ); 
+				ValueList::Item item;
+				item.m_label = c_switchAllStateName[i];
+				item.m_value = (i==3) ? 0x000000ff : i;
+				items.push_back( item ); 
 			}
-			Value* pValue = new ValueList( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_System, "Switch All", false, items, c_switchAllStateName[0] );
+			Value* pValue = new ValueList( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_System, "Switch All", false, items, 0 );
 			pStore->AddValue( pValue );
 			pValue->Release();
 

@@ -28,6 +28,7 @@
 #ifndef _ValueID_H
 #define _ValueID_H
 
+#include <string>
 #include "Defs.h"
 
 namespace OpenZWave
@@ -39,7 +40,7 @@ namespace OpenZWave
 		{
 			m_id = (((uint32)_nodeId)<<24) | (((uint32)_commandClassId)<<16)  | (((uint32)_instance)<<8)  | ((uint32)_index);
 		}
-		//ValueID( uint32 const _id ): m_id( _id ){}
+		ValueID( string const& _id );
 		ValueID():m_id(0){}
 		
 		uint8 GetNodeId()const			{ return( (uint8)(m_id>>24) ); }
@@ -50,6 +51,8 @@ namespace OpenZWave
 		bool operator == ( ValueID const& _other )const{ return( m_id == _other.m_id );	}
 		bool operator != ( ValueID const& _other )const{ return( m_id != _other.m_id ); }
 		bool operator < ( ValueID const& _other )const{ return( m_id < _other.m_id ); }
+
+		string ToString()const;
 
 	private:
 		uint32	m_id;

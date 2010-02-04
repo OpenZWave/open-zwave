@@ -37,12 +37,17 @@
 
 #include "CommandClasses.h"
 #include "CommandClass.h"
+#include "Association.h"
 #include "Basic.h"
-#include "WakeUp.h"
+#include "Configuration.h"
 #include "MultiInstance.h"
+#include "WakeUp.h"
 
 #include "ValueID.h"
 #include "Value.h"
+#include "ValueByte.h"
+#include "ValueInt.h"
+#include "ValueList.h"
 #include "ValueStore.h"
 
 using namespace OpenZWave;
@@ -465,6 +470,57 @@ void Node::SaveStatic
 	}
 
 	fprintf( _pFile, "</Node>\n" );
+}
+
+//-----------------------------------------------------------------------------
+// <Node::SetConfigParam>
+// Set a configuration parameter in a device
+//-----------------------------------------------------------------------------
+bool Node::SetConfigParam
+(
+	uint8 const _param,
+	int32 _value
+)
+{
+	// See if there is a value already created for this parameter.  If there is not, we will
+	// send the command directly via the configuration command class.  If the parameter exists
+	// in the device, its response should cause the creation of a value object for future use.
+	if( ValueStore* pStore = GetValueStore() )
+	{
+		ValueID id( m_nodeId, Configuration::StaticGetCommandClassId(), 0, _param );
+		if( Value* pValue = pStore->GetValue( id ) )
+		{
+			uint8 const valueType = pValue->GetValueTypeId();
+			if( valueType == ValueByte::StaticGetValueTypeId() )
+			{
+				ValueByte* pValueByte = static_cast<ValueByte*>( pValue );
+				pValueByte->Set( (uint8)_value );
+				return true;
+			}
+			else if( valueType == ValueInt::StaticGetValueTypeId() )
+			{
+				ValueInt* pValueInt = static_cast<ValueInt*>( pValue );
+				pValueInt->Set( _value );
+				return true;
+			}
+			else if( valueType == ValueList::StaticGetValueTypeId() )
+			{
+				ValueList* pValueList = static_cast<ValueList*>( pValue );
+				pValueList->SetByValue( _value );
+				return true;		
+			}
+		}
+
+		ReleaseValueStore();
+	}
+
+	// Failed to find an existing value object representing this 
+	// configuration parameter, so we try to set the value directly 
+	// through the Configuration command class.
+	if( Configuration* pCC = static_cast<Configuration*>( GetCommandClass( Configuration::StaticGetCommandClassId() ) ) )
+	{
+		pCC->Set( _param, _value );
+	}
 }
 
 //-----------------------------------------------------------------------------

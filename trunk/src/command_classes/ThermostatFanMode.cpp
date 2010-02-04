@@ -116,7 +116,7 @@ bool ThermostatFanMode::HandleMsg
 				// We have received the thermostat mode from the Z-Wave device
 				if( ValueList* pValueList = static_cast<ValueList*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
 				{
-					pValueList->OnValueChanged( c_modeName[_pData[1]] );
+					pValueList->OnValueChanged( (int32)_pData[1] );
 				}
 				handled = true;
 			}
@@ -130,7 +130,10 @@ bool ThermostatFanMode::HandleMsg
 					{
 						if( ( _pData[i] & (1<<bit) ) != 0 )
 						{
-							m_supportedModes.push_back( c_modeName[((i-1)<<3)+bit] );
+							ValueList::Item item;
+							item.m_value = i + bit - 2;
+							item.m_label = c_modeName[item.m_value];
+							m_supportedModes.push_back( item );
 						}
 					}
 				}
@@ -157,16 +160,7 @@ bool ThermostatFanMode::SetValue
 {
 	if( ValueList const* pValue = static_cast<ValueList const*>(&_value) )
 	{
-		// Convert the selected option to an index
-		uint8 state = 0;
-		for( int i=0; i<4; ++i )
-		{
-			if( !strcmp( c_modeName[i], pValue->GetPending().c_str() ) )
-			{
-				state = i;
-				break;
-			}
-		}
+		uint8 state = (uint8)pValue->GetPending().m_value;
 
 		Msg* pMsg = new Msg( "Set Thermostat Fan Mode", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 		pMsg->Append( GetNodeId() );
@@ -204,7 +198,7 @@ void ThermostatFanMode::CreateVars
 		{
 			Value* pValue;
 			
-			pValue = new ValueList( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_User, "Fan Mode", false, m_supportedModes, m_supportedModes[0] );
+			pValue = new ValueList( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_User, "Fan Mode", false, m_supportedModes, 0 );
 			pStore->AddValue( pValue );
 			pValue->Release();
 
