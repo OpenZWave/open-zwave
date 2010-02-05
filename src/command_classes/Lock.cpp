@@ -40,28 +40,28 @@ using namespace OpenZWave;
 
 static enum LockCmd
 {
-    LockCmd_Set		= 0x01,
-    LockCmd_Get		= 0x02,
-    LockCmd_Report	= 0x03
+	LockCmd_Set		= 0x01,
+	LockCmd_Get		= 0x02,
+	LockCmd_Report	= 0x03
 };
 
 
 //-----------------------------------------------------------------------------
-// <Lock::RequestState>                                                   
-// Request current state from the device                                       
+// <Lock::RequestState>												   
+// Request current state from the device									   
 //-----------------------------------------------------------------------------
 void Lock::RequestState
 (
 )
 {
 	Log::Write( "Requesting the lock state from node %d", GetNodeId() );
-    Msg* pMsg = new Msg( "LockCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-    pMsg->Append( GetNodeId() );
-    pMsg->Append( 2 );
-    pMsg->Append( GetCommandClassId() );
-    pMsg->Append( LockCmd_Get );
-    pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-    Driver::Get()->SendMsg( pMsg );
+	Msg* msg = new Msg( "LockCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+	msg->Append( GetNodeId() );
+	msg->Append( 2 );
+	msg->Append( GetCommandClassId() );
+	msg->Append( LockCmd_Get );
+	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	Driver::Get()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -70,33 +70,33 @@ void Lock::RequestState
 //-----------------------------------------------------------------------------
 bool Lock::HandleMsg
 (
-    uint8 const* _pData,
-    uint32 const _length,
+	uint8 const* _data,
+	uint32 const _length,
 	uint32 const _instance	// = 0
 )
 {
-	if( LockCmd_Report == (LockCmd)_pData[0] )
+	if( LockCmd_Report == (LockCmd)_data[0] )
 	{
-		Node* pNode = GetNode();
-		if( pNode )
+		Node* node = GetNode();
+		if( node )
 		{
-			ValueStore* pStore = pNode->GetValueStore();
-			if( pStore )
+			ValueStore* store = node->GetValueStore();
+			if( store )
 			{
 				// We have received a report from the Z-Wave device
-				if( ValueBool* pValue = static_cast<ValueBool*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
+				if( ValueBool* value = static_cast<ValueBool*>( store->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
 				{
-					pValue->OnValueChanged( _pData[1] != 0 );
+					value->OnValueChanged( _data[1] != 0 );
 				}
-				pNode->ReleaseValueStore();
+				node->ReleaseValueStore();
 
-				Log::Write( "Received Lock report from node %d: Lock is %s", GetNodeId(), _pData[1] ? "Locked" : "Unlocked" );
+				Log::Write( "Received Lock report from node %d: Lock is %s", GetNodeId(), _data[1] ? "Locked" : "Unlocked" );
 				return true;
 			}
 		}
 	}
 
-    return false;
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -111,14 +111,14 @@ bool Lock::SetValue
 	if( ValueBool const* value = static_cast<ValueBool const*>(&_value) )
 	{
 		Log::Write( "Lock::Set - Requesting the node %d lock to be %s", GetNodeId(), value->GetPending() ? "Locked" : "Unlocked" );
-		Msg* pMsg = new Msg( "LockCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-		pMsg->Append( GetNodeId() );
-		pMsg->Append( 3 );
-		pMsg->Append( GetCommandClassId() );
-		pMsg->Append( LockCmd_Set );
-		pMsg->Append( value->GetPending() ? 0xff:0x00 );
-		pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-		Driver::Get()->SendMsg( pMsg );
+		Msg* msg = new Msg( "LockCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+		msg->Append( GetNodeId() );
+		msg->Append( 3 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( LockCmd_Set );
+		msg->Append( value->GetPending() ? 0xff:0x00 );
+		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		Driver::Get()->SendMsg( msg );
 		return true;
 	}
 
@@ -134,17 +134,17 @@ void Lock::CreateVars
 	uint8 const _instance
 )
 {
-	Node* pNode = GetNode();
-	if( pNode )
+	Node* node = GetNode();
+	if( node )
 	{
-		ValueStore* pStore = pNode->GetValueStore();
-		if( pStore )
+		ValueStore* store = node->GetValueStore();
+		if( store )
 		{
-			Value* pValue = new ValueBool( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_User, "Locked", false, false );
-			pStore->AddValue( pValue );
-			pValue->Release();
+			Value* value = new ValueBool( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_User, "Locked", false, false );
+			store->AddValue( value );
+			value->Release();
 
-			pNode->ReleaseValueStore();
+			node->ReleaseValueStore();
 		}
 	}
 }

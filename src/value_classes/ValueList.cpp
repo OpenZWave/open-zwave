@@ -61,12 +61,12 @@ ValueList::ValueList
 //-----------------------------------------------------------------------------
 ValueList::ValueList
 (
-	TiXmlElement* _pValueElement
+	TiXmlElement* _valueElement
 ):
-	Value( _pValueElement )
+	Value( _valueElement )
 {
 	// Read the items
-	TiXmlNode const* pItemNode = _pValueElement->FirstChild();
+	TiXmlNode const* pItemNode = _valueElement->FirstChild();
 	while( pItemNode )
 	{
 		TiXmlElement const* pItemElement = pItemNode->ToElement();
@@ -92,7 +92,7 @@ ValueList::ValueList
 	}
 
 	// Set the value
-	_pValueElement->QueryIntAttribute( "value", &m_valueIdx );
+	_valueElement->QueryIntAttribute( "value", &m_valueIdx );
 }
 
 //-----------------------------------------------------------------------------
@@ -101,15 +101,15 @@ ValueList::ValueList
 //-----------------------------------------------------------------------------
 void ValueList::WriteXML
 (
-	TiXmlElement* _pValueElement
+	TiXmlElement* _valueElement
 )
 {
-	Value::WriteXML( _pValueElement );
+	Value::WriteXML( _valueElement );
 	
 	
 	char str[16];
 	snprintf( str, 16, "%d", m_valueIdx );
-	_pValueElement->SetAttribute( "value", str );
+	_valueElement->SetAttribute( "value", str );
 
 	for( vector<Item>::iterator it = m_items.begin(); it != m_items.end(); ++it )
 	{
@@ -119,7 +119,7 @@ void ValueList::WriteXML
 		snprintf( str, 16, "%d", (*it).m_value );
 		pItemElement->SetAttribute( "value", str );
 
-		_pValueElement->LinkEndChild( pItemElement );
+		_valueElement->LinkEndChild( pItemElement );
 	}
 }
 

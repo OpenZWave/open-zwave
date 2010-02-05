@@ -40,26 +40,26 @@ using namespace OpenZWave;
 
 static enum SensorBinaryCmd
 {
-    SensorBinaryCmd_Get		= 0x02,
-    SensorBinaryCmd_Report	= 0x03
+	SensorBinaryCmd_Get		= 0x02,
+	SensorBinaryCmd_Report	= 0x03
 };
 
 
 //-----------------------------------------------------------------------------
-// <SensorBinary::RequestState>                                                   
-// Request current state from the device                                       
+// <SensorBinary::RequestState>												   
+// Request current state from the device									   
 //-----------------------------------------------------------------------------
 void SensorBinary::RequestState
 (
 )
 {
-    Msg* pMsg = new Msg( "SensorBinaryCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-    pMsg->Append( GetNodeId() );
-    pMsg->Append( 2 );
-    pMsg->Append( GetCommandClassId() );
-    pMsg->Append( SensorBinaryCmd_Get );
-    pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-    Driver::Get()->SendMsg( pMsg );
+	Msg* msg = new Msg( "SensorBinaryCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+	msg->Append( GetNodeId() );
+	msg->Append( 2 );
+	msg->Append( GetCommandClassId() );
+	msg->Append( SensorBinaryCmd_Get );
+	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	Driver::Get()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -68,32 +68,32 @@ void SensorBinary::RequestState
 //-----------------------------------------------------------------------------
 bool SensorBinary::HandleMsg
 (
-    uint8 const* _pData,
-    uint32 const _length,
+	uint8 const* _data,
+	uint32 const _length,
 	uint32 const _instance	// = 0
 )
 {
-	if (SensorBinaryCmd_Report == (SensorBinaryCmd)_pData[0])
+	if (SensorBinaryCmd_Report == (SensorBinaryCmd)_data[0])
 	{
-		Node* pNode = GetNode();
-		if( pNode )
+		Node* node = GetNode();
+		if( node )
 		{
-			ValueStore* pStore = pNode->GetValueStore();
-			if( pStore )
+			ValueStore* store = node->GetValueStore();
+			if( store )
 			{
-				if( ValueBool* pValue = static_cast<ValueBool*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
+				if( ValueBool* value = static_cast<ValueBool*>( store->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
 				{
-					pValue->OnValueChanged( _pData[1] != 0 );
+					value->OnValueChanged( _data[1] != 0 );
 				}
-				pNode->ReleaseValueStore();
+				node->ReleaseValueStore();
 
-				Log::Write( "Received SensorBinary report from node %d: State=%s", GetNodeId(), _pData[1] ? "On" : "Off" );
+				Log::Write( "Received SensorBinary report from node %d: State=%s", GetNodeId(), _data[1] ? "On" : "Off" );
 				return true;
 			}
 		}
 	}
 
-    return false;
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -105,17 +105,17 @@ void SensorBinary::CreateVars
 	uint8 const _instance
 )
 {
-	Node* pNode = GetNode();
-	if( pNode )
+	Node* node = GetNode();
+	if( node )
 	{
-		ValueStore* pStore = pNode->GetValueStore();
-		if( pStore )
+		ValueStore* store = node->GetValueStore();
+		if( store )
 		{
-			Value* pValue = new ValueBool( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_User, "Sensor", true, false );
-			pStore->AddValue( pValue );
-			pValue->Release();
+			Value* value = new ValueBool( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_User, "Sensor", true, false );
+			store->AddValue( value );
+			value->Release();
 
-			pNode->ReleaseValueStore();
+			node->ReleaseValueStore();
 		}
 	}
 }

@@ -51,7 +51,7 @@ static enum MultiInstanceAssociationCmd
 //-----------------------------------------------------------------------------
 bool MultiInstanceAssociation::HandleMsg
 (
-	uint8 const* _pData,
+	uint8 const* _data,
 	uint32 const _length,
 	uint32 const _instance	// = 0
 )

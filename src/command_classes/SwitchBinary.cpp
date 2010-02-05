@@ -40,27 +40,27 @@ using namespace OpenZWave;
 
 static enum SwitchBinaryCmd
 {
-    SwitchBinaryCmd_Set		= 0x01,
-    SwitchBinaryCmd_Get		= 0x02,
-    SwitchBinaryCmd_Report	= 0x03
+	SwitchBinaryCmd_Set		= 0x01,
+	SwitchBinaryCmd_Get		= 0x02,
+	SwitchBinaryCmd_Report	= 0x03
 };
 
 
 //-----------------------------------------------------------------------------
-// <SwitchBinary::RequestState>                                                   
-// Request current state from the device                                       
+// <SwitchBinary::RequestState>												   
+// Request current state from the device									   
 //-----------------------------------------------------------------------------
 void SwitchBinary::RequestState
 (
 )
 {
-    Msg* pMsg = new Msg( "SwitchBinaryCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-    pMsg->Append( GetNodeId() );
-    pMsg->Append( 2 );
-    pMsg->Append( GetCommandClassId() );
-    pMsg->Append( SwitchBinaryCmd_Get );
-    pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-    Driver::Get()->SendMsg( pMsg );
+	Msg* msg = new Msg( "SwitchBinaryCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+	msg->Append( GetNodeId() );
+	msg->Append( 2 );
+	msg->Append( GetCommandClassId() );
+	msg->Append( SwitchBinaryCmd_Get );
+	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	Driver::Get()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -69,32 +69,32 @@ void SwitchBinary::RequestState
 //-----------------------------------------------------------------------------
 bool SwitchBinary::HandleMsg
 (
-    uint8 const* _pData,
-    uint32 const _length,
+	uint8 const* _data,
+	uint32 const _length,
 	uint32 const _instance	// = 0
 )
 {
-	if (SwitchBinaryCmd_Report == (SwitchBinaryCmd)_pData[0])
+	if (SwitchBinaryCmd_Report == (SwitchBinaryCmd)_data[0])
 	{
-		Node* pNode = GetNode();
-		if( pNode )
+		Node* node = GetNode();
+		if( node )
 		{
-			ValueStore* pStore = pNode->GetValueStore();
-			if( pStore )
+			ValueStore* store = node->GetValueStore();
+			if( store )
 			{
-				if( ValueBool* pValue = static_cast<ValueBool*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
+				if( ValueBool* value = static_cast<ValueBool*>( store->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
 				{
-					pValue->OnValueChanged( _pData[1] != 0 );
+					value->OnValueChanged( _data[1] != 0 );
 				}
-				pNode->ReleaseValueStore();
+				node->ReleaseValueStore();
 
-				Log::Write( "Received SwitchBinary report from node %d: level=%s", GetNodeId(), _pData[1] ? "On" : "Off" );
+				Log::Write( "Received SwitchBinary report from node %d: level=%s", GetNodeId(), _data[1] ? "On" : "Off" );
 				return true;
 			}
 		}
 	}
 
-    return false;
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -109,14 +109,14 @@ bool SwitchBinary::SetValue
 	if( ValueBool const* value = static_cast<ValueBool const*>(&_value) )
 	{
 		Log::Write( "SwitchBinary::Set - Setting node %d to %s", GetNodeId(), value->GetPending() ? "On" : "Off" );
-		Msg* pMsg = new Msg( "SwitchBinary Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
-		pMsg->Append( GetNodeId() );
-		pMsg->Append( 3 );
-		pMsg->Append( GetCommandClassId() );
-		pMsg->Append( SwitchBinaryCmd_Set );
-		pMsg->Append( value->GetPending() ? 0xff : 0x00 );
-		pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-		Driver::Get()->SendMsg( pMsg );
+		Msg* msg = new Msg( "SwitchBinary Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
+		msg->Append( GetNodeId() );
+		msg->Append( 3 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( SwitchBinaryCmd_Set );
+		msg->Append( value->GetPending() ? 0xff : 0x00 );
+		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		Driver::Get()->SendMsg( msg );
 		return true;
 	}
 
@@ -132,17 +132,17 @@ void SwitchBinary::CreateVars
 	uint8 const _instance
 )
 {
-	Node* pNode = GetNode();
-	if( pNode )
+	Node* node = GetNode();
+	if( node )
 	{
-		ValueStore* pStore = pNode->GetValueStore();
-		if( pStore )
+		ValueStore* store = node->GetValueStore();
+		if( store )
 		{
-			Value* pValue = new ValueBool( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_User, "Switch", false, false );
-			pStore->AddValue( pValue );
-			pValue->Release();
+			Value* value = new ValueBool( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_User, "Switch", false, false );
+			store->AddValue( value );
+			value->Release();
 
-			pNode->ReleaseValueStore();
+			node->ReleaseValueStore();
 		}
 	}
 }

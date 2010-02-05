@@ -36,9 +36,9 @@ using namespace OpenZWave;
 
 static enum ProprietaryCmd
 {
-    ProprietaryCmd_Set		= 0x01,
-    ProprietaryCmd_Get		= 0x02,
-    ProprietaryCmd_Report	= 0x03
+	ProprietaryCmd_Set		= 0x01,
+	ProprietaryCmd_Get		= 0x02,
+	ProprietaryCmd_Report	= 0x03
 };
 
 
@@ -48,15 +48,15 @@ static enum ProprietaryCmd
 //-----------------------------------------------------------------------------
 bool Proprietary::HandleMsg
 (
-    uint8 const* _pData,
-    uint32 const _length,
+	uint8 const* _data,
+	uint32 const _length,
 	uint32 const _instance	// = 0
 )
 {
-    if (ProprietaryCmd_Report == (ProprietaryCmd)_pData[0])
-    {
+	if (ProprietaryCmd_Report == (ProprietaryCmd)_data[0])
+	{
 		return true;
-    }
-    return false;
+	}
+	return false;
 }
 

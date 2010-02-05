@@ -41,28 +41,28 @@ using namespace OpenZWave;
 
 static enum BasicCmd
 {
-    BasicCmd_Set	= 0x01,
-    BasicCmd_Get	= 0x02,
-    BasicCmd_Report	= 0x03
+	BasicCmd_Set	= 0x01,
+	BasicCmd_Get	= 0x02,
+	BasicCmd_Report	= 0x03
 };
 
 
 //-----------------------------------------------------------------------------
-// <Basic::RequestState>                                                   
-// Request current state from the device                                       
+// <Basic::RequestState>												   
+// Request current state from the device									   
 //-----------------------------------------------------------------------------
 void Basic::RequestState
 (
 )
 {
 	Log::Write( "Requesting the basic level from node %d", GetNodeId() );
-    Msg* pMsg = new Msg( "BasicCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-    pMsg->Append( GetNodeId() );
-    pMsg->Append( 2 );
-    pMsg->Append( GetCommandClassId() );
-    pMsg->Append( BasicCmd_Get );
-    pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-    Driver::Get()->SendMsg( pMsg );
+	Msg* msg = new Msg( "BasicCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+	msg->Append( GetNodeId() );
+	msg->Append( 2 );
+	msg->Append( GetCommandClassId() );
+	msg->Append( BasicCmd_Get );
+	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	Driver::Get()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -71,48 +71,48 @@ void Basic::RequestState
 //-----------------------------------------------------------------------------
 bool Basic::HandleMsg
 (
-    uint8 const* _pData,
-    uint32 const _length,
+	uint8 const* _data,
+	uint32 const _length,
 	uint32 const _instance	// = 0
 )
 {
 	bool handled = false;
 
-	Node* pNode = GetNode();
-	if( pNode )
+	Node* node = GetNode();
+	if( node )
 	{
-		ValueStore* pStore = pNode->GetValueStore();
-		if( pStore )
+		ValueStore* store = node->GetValueStore();
+		if( store )
 		{
-			if( BasicCmd_Report == (BasicCmd)_pData[0] )
+			if( BasicCmd_Report == (BasicCmd)_data[0] )
 			{
 				// Level
-				if( ValueByte* pValue = static_cast<ValueByte*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
+				if( ValueByte* value = static_cast<ValueByte*>( store->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
 				{
-					pValue->OnValueChanged( _pData[1] );
+					value->OnValueChanged( _data[1] );
 				}
 
-				Log::Write( "Received Basic report from node %d: level=%d", GetNodeId(), _pData[1] );
+				Log::Write( "Received Basic report from node %d: level=%d", GetNodeId(), _data[1] );
 				handled = true;
 			}
 
-			if( BasicCmd_Set == (BasicCmd)_pData[0] )
+			if( BasicCmd_Set == (BasicCmd)_data[0] )
 			{
 				// Level
-				if( ValueByte* pValue = static_cast<ValueByte*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
+				if( ValueByte* value = static_cast<ValueByte*>( store->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
 				{
-					pValue->OnValueChanged( _pData[1] );
+					value->OnValueChanged( _data[1] );
 				}
 
-				Log::Write( "Received Basic set from node %d: level=%d", GetNodeId(), _pData[1] );
+				Log::Write( "Received Basic set from node %d: level=%d", GetNodeId(), _data[1] );
 				handled = true;
 			}
 
-			pNode->ReleaseValueStore();
+			node->ReleaseValueStore();
 		}
 	}
 
-    return false;
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -127,13 +127,13 @@ bool Basic::SetValue
 	if( ValueByte const* value = static_cast<ValueByte const*>(&_value) )
 	{
 		Log::Write( "Basic::Set - Setting node %d to level %d", GetNodeId(), value->GetPending() );
-		Msg* pMsg = new Msg( "Basic Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
-		pMsg->Append( GetNodeId() );
-		pMsg->Append( 3 );
-		pMsg->Append( GetCommandClassId() );
-		pMsg->Append( BasicCmd_Set );
-		pMsg->Append( value->GetPending() );
-		pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		Msg* msg = new Msg( "Basic Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
+		msg->Append( GetNodeId() );
+		msg->Append( 3 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( BasicCmd_Set );
+		msg->Append( value->GetPending() );
+		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 		return true;
 	}
 
@@ -149,17 +149,17 @@ void Basic::CreateVars
 	uint8 const _instance
 )
 {
-	Node* pNode = GetNode();
-	if( pNode )
+	Node* node = GetNode();
+	if( node )
 	{
-		ValueStore* pStore = pNode->GetValueStore();
-		if( pStore )
+		ValueStore* store = node->GetValueStore();
+		if( store )
 		{
-			Value* pValue = new ValueByte( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_User, "Level", false, 0 );
-			pStore->AddValue( pValue );
-			pValue->Release();
+			Value* value = new ValueByte( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_User, "Level", false, 0 );
+			store->AddValue( value );
+			value->Release();
 
-			pNode->ReleaseValueStore();
+			node->ReleaseValueStore();
 		}
 	}
 }

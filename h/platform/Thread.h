@@ -35,7 +35,7 @@ namespace OpenZWave
 	class Thread
 	{
 	public:
-		typedef void (*pfnThreadProc_t)( void* _pContext );
+		typedef void (*pfnThreadProc_t)( void* _context );
 
 		/**
 		 * Constructor.
@@ -56,11 +56,11 @@ namespace OpenZWave
 		 * @param _pThreadProc pointer to the function to be run.  The function must take a 
 		 * single void pointer as its only argument, and return void.  On entry, the pointer 
 		 * will be set to the context provided to this Start method. 
-		 * @param _pContext pointer allowing any relevant data to be passed to the thread function.
+		 * @param _context pointer allowing any relevant data to be passed to the thread function.
 		 * @return True if the function was successfully started.
 		 * @see Stop, IsRunning
 		 */
-		bool Start( pfnThreadProc_t _pfnThreadProc, void* _pContext );
+		bool Start( pfnThreadProc_t _pfnThreadProc, void* _context );
 
 		/**
 		 * Stop a function running on this thread.  

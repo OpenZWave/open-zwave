@@ -42,7 +42,7 @@ namespace OpenZWave
 	{
 	public:
 		ValueByte( uint8 const _nodeId, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, uint32 const _genre, string const& _label, bool const _bReadOnly, uint8 const _value );
-		ValueByte( TiXmlElement* _pValueElement );
+		ValueByte( TiXmlElement* _valueElement );
 		virtual ~ValueByte(){}
 
 		bool Set( uint8 const _value );
@@ -52,7 +52,7 @@ namespace OpenZWave
 		static string const StaticGetValueTypeName(){ return "VALUE_BYTE"; }
 
 		// From Value
-		virtual void WriteXML( TiXmlElement* _pValueElement );
+		virtual void WriteXML( TiXmlElement* _valueElement );
 		virtual uint8 const GetValueTypeId()const{ return StaticGetValueTypeId(); }
 		virtual string const GetValueTypeName()const{ return StaticGetValueTypeName(); }
 

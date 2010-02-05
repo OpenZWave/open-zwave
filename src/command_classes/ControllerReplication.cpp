@@ -36,23 +36,23 @@ using namespace OpenZWave;
 
 //static enum ControllerReplicationCmd
 //{
-//    CtrlReplicationTransferGroup = 0x31
-//        Sequence number: type=BYTE
-//        Group id: type=BYTE
-//        Node id: type=BYTE
-//    CtrlReplicationTransferGroupName = 0x32
-//        Sequence number: type=BYTE
-//        Group id: type=BYTE
-//        Group name: type=ARRAY
-//    CtrlReplicationTransferScene = 0x33
-//        Sequence number: type=BYTE
-//        Scene id: type=BYTE
-//        Node id: type=BYTE
-//        Level: type=BYTE
-//    CtrlReplicationTransferSceneName = 0x34
-//        Sequence number: type=BYTE
-//        Scene id: type=BYTE
-//        Scene name: type=ARRAY
+//	CtrlReplicationTransferGroup = 0x31
+//		Sequence number: type=BYTE
+//		Group id: type=BYTE
+//		Node id: type=BYTE
+//	CtrlReplicationTransferGroupName = 0x32
+//		Sequence number: type=BYTE
+//		Group id: type=BYTE
+//		Group name: type=ARRAY
+//	CtrlReplicationTransferScene = 0x33
+//		Sequence number: type=BYTE
+//		Scene id: type=BYTE
+//		Node id: type=BYTE
+//		Level: type=BYTE
+//	CtrlReplicationTransferSceneName = 0x34
+//		Sequence number: type=BYTE
+//		Scene id: type=BYTE
+//		Scene name: type=ARRAY
 //};
 
 
@@ -62,12 +62,12 @@ using namespace OpenZWave;
 //-----------------------------------------------------------------------------
 bool ControllerReplication::HandleMsg
 (
-    uint8 const* _pData,
-    uint32 const _length,
-	uint32 const _instance	// = 0    
+	uint8 const* _data,
+	uint32 const _length,
+	uint32 const _instance	// = 0	
 )
 {
-    return false;
+	return false;
 }
 
 

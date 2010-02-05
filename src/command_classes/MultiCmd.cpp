@@ -42,27 +42,27 @@ using namespace OpenZWave;
 //-----------------------------------------------------------------------------
 bool MultiCmd::HandleMsg
 (
-    uint8 const* _pData,
-    uint32 const _length,
+	uint8 const* _data,
+	uint32 const _length,
 	uint32 const _instance	// = 0
 )
 {
-    if( MultiCmdCmd_Encap == (MultiCmdCmd)_pData[0] )
-    {
+	if( MultiCmdCmd_Encap == (MultiCmdCmd)_data[0] )
+	{
 		Log::Write( "Received encapsulated multi-command from node %d", GetNodeId() );
 
-		if( Node const* pNode = GetNode() )
+		if( Node const* node = GetNode() )
 		{
 			// Iterate over commands
 			uint8 base = 2;
-			for( uint8 i=0; i<_pData[1]; ++i )
+			for( uint8 i=0; i<_data[1]; ++i )
 			{
-				uint8 length = _pData[base];
-				uint8 commandClassId = _pData[base+1];
+				uint8 length = _data[base];
+				uint8 commandClassId = _data[base+1];
 
-				if( CommandClass* pCommandClass = pNode->GetCommandClass( commandClassId ) )
+				if( CommandClass* pCommandClass = node->GetCommandClass( commandClassId ) )
 				{
-					pCommandClass->HandleMsg( &_pData[base+2], length-1 );
+					pCommandClass->HandleMsg( &_data[base+2], length-1 );
 				}
 
 				base += (length + 1);
@@ -70,8 +70,8 @@ bool MultiCmd::HandleMsg
 		}
 
 		Log::Write( "End of encapsulated multi-command from node %d", GetNodeId() );
-        return true;
-    }
-    return false;
+		return true;
+	}
+	return false;
 }
 

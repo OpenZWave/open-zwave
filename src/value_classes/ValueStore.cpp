@@ -53,21 +53,21 @@ ValueStore::~ValueStore
 //-----------------------------------------------------------------------------
 bool ValueStore::AddValue
 (
-	Value* _pValue
+	Value* _value
 )
 {
-	if( !_pValue )
+	if( !_value )
 	{
 		return false;
 	}
 
 	bool bRes = false;
 
-	map<ValueID,Value*>::iterator it = m_values.find( _pValue->GetID() );
+	map<ValueID,Value*>::iterator it = m_values.find( _value->GetID() );
 	if( it == m_values.end() )
 	{
-		m_values[_pValue->GetID()] = _pValue;
-		_pValue->AddRef();
+		m_values[_value->GetID()] = _value;
+		_value->AddRef();
 		bRes = true;
 	}
 
@@ -88,10 +88,10 @@ bool ValueStore::RemoveValue
 	map<ValueID,Value*>::iterator it = m_values.find( _id );
 	if( it != m_values.end() )
 	{
-		Value* pValue = it->second;
-		if( pValue )
+		Value* value = it->second;
+		if( value )
 		{
-			pValue->Release();
+			value->Release();
 		}
 		m_values.erase( it );
 		bRes = true;
@@ -109,18 +109,18 @@ Value* ValueStore::GetValue
 	ValueID const& _id
 )const
 {
-	Value* pValue = NULL;
+	Value* value = NULL;
 
 	map<ValueID,Value*>::const_iterator it = m_values.find( _id );
 	if( it != m_values.end() )
 	{
-		pValue = it->second;
-		if( pValue )
+		value = it->second;
+		if( value )
 		{
-			pValue->AddRef();
+			value->AddRef();
 		}
 	}
 
-	return pValue;
+	return value;
 }
 

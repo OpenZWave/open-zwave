@@ -64,14 +64,14 @@ ThreadImpl::~ThreadImpl
 bool ThreadImpl::Start
 (
 	Thread::pfnThreadProc_t _pfnThreadProc, 
-	void* _pContext 
+	void* _context 
 )
 {
 	ResetEvent( m_hExitEvent );
 
 	// Create a thread to run the specified function
 	m_pfnThreadProc = _pfnThreadProc;
-	m_pContext = _pContext;
+	m_context = _context;
 
 	HANDLE hThread = ::CreateThread( NULL, 0, ThreadImpl::ThreadProc, this, CREATE_SUSPENDED, NULL );
 	m_hThread = hThread;
@@ -123,7 +123,7 @@ void ThreadImpl::Run
 )
 {
 	m_bIsRunning = true;
-	m_pfnThreadProc( m_pContext );
+	m_pfnThreadProc( m_context );
 	m_bIsRunning = false;
 }
 

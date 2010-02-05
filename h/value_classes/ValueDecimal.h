@@ -42,7 +42,7 @@ namespace OpenZWave
 	{
 	public:
 		ValueDecimal( uint8 const _nodeId, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, uint32 const _genre, string const& _label, bool const _bReadOnly, string const& _value );
-		ValueDecimal( TiXmlElement* _pValueElement );
+		ValueDecimal( TiXmlElement* _valueElement );
 		virtual ~ValueDecimal(){}
 
 		bool Set( string const& _value );
@@ -52,7 +52,7 @@ namespace OpenZWave
 		static string const StaticGetValueTypeName(){ return "VALUE_DECIMAL"; }
 
 		// From Value
-		virtual void WriteXML( TiXmlElement* _pValueElement );
+		virtual void WriteXML( TiXmlElement* _valueElement );
 		virtual uint8 const GetValueTypeId()const{ return StaticGetValueTypeId(); }
 		virtual string const GetValueTypeName()const{ return StaticGetValueTypeName(); }
 

@@ -34,12 +34,12 @@
 #include <list>
 
 #include "Defs.h"
+#include "ValueID.h"
 
 namespace OpenZWave
 {
 	class Node;
 	class Msg;
-	class ValueID;
 	class Value;
 	class Event;
 	class Mutex;
@@ -48,30 +48,34 @@ namespace OpenZWave
 
 	class Driver
 	{
+	public:
+		struct Notification;
+		typedef void (*pfnOnNotification_t)( Notification const* _pNotification, void* _context );
+
 	//-----------------------------------------------------------------------------
 	// Construction / Destruction
 	//-----------------------------------------------------------------------------
 	public:
-		static Driver* Create( string const& _serialPortName, string const& _configPath );
-		static Driver* Get(){ return s_pInstance; }
+		static Driver* Create( string const& _serialPortName, string const& _configPath, pfnOnNotification_t _callback, void* _context );
+		static Driver* Get(){ return s_instance; }
 		static void Destroy();
 
 		string const& GetConfigPath()const{ return m_configPath; }
 
 	private:
-		Driver( string const& _serialPortName, string const& _configPath );
+		Driver( string const& _serialPortName, string const& _configPath, pfnOnNotification_t _callback, void* _context );
 		virtual ~Driver();
 
-		static void DriverThreadEntryPoint( void* _pContext );
+		static void DriverThreadEntryPoint( void* _context );
 		void DriverThreadProc();
 
 		bool Init( uint32 _attempts );
 
-		Thread*					m_pDriverThread;	// Thread for creating and managing the driver worker threads
-		Event*					m_pExitEvent;		// Event that will be signalled when the threads should exit
-		bool					m_bExit;
+		Thread*					m_driverThread;	// Thread for creating and managing the driver worker threads
+		Event*					m_exitEvent;		// Event that will be signalled when the threads should exit
+		bool					m_exit;
 		string					m_configPath;
-		static Driver*			s_pInstance;
+		static Driver*			s_instance;
 
 	//-----------------------------------------------------------------------------
 	//	Controller
@@ -81,8 +85,8 @@ namespace OpenZWave
 
 	private:
 		string					m_serialPortName;	// name used to open the serial port
-		SerialPort*				m_pSerialPort;
-		Mutex*					m_pSerialMutex;
+		SerialPort*				m_serialPort;
+		Mutex*					m_serialMutex;
 		
 		uint8					m_nodeId;			// PC Controller's Z-Wave node ID
 		Node*					m_nodes[256];		// Z-Wave node details	
@@ -92,30 +96,45 @@ namespace OpenZWave
 	//	Notifications
 	//-----------------------------------------------------------------------------
 	public:
-		typedef void (*pfnOnValueChanged_t)( ValueID const& _id, void* _pContext );
+		enum NotificationType 
+		{
+			NotificationType_Value = 0,		// Value changed
+			NotificationType_Group,			// Group (associations) changed
+			NotificationType_NodeAdded,		// Node has been added (to the driver's list)
+			NotificationType_NodeRemoved	// Node has been removed (from the driver's list)
+		};
 
-		bool AddWatcher( pfnOnValueChanged_t watcher, void* _pContext );
-		bool RemoveWatcher( pfnOnValueChanged_t watcher, void* _pContext );
-		void NotifyWatchers( ValueID const& _id );
+		struct Notification
+		{
+		public:
+			NotificationType	m_type;
+			ValueID				m_id;
+			uint8				m_nodeId;
+			uint8				m_groupIdx;
+		};
+
+		bool AddWatcher( pfnOnNotification_t watcher, void* _context );
+		bool RemoveWatcher( pfnOnNotification_t watcher, void* _context );
+		void NotifyWatchers( Notification const* _pNotification );
 
 	private:
 		struct Watcher
 		{
-			pfnOnValueChanged_t	m_callback;
-			void*				m_pContext;
+			pfnOnNotification_t	m_callback;
+			void*				m_context;
 
 			Watcher
 			(
-				pfnOnValueChanged_t _callback,
-				void* _pContext
+				pfnOnNotification_t _callback,
+				void* _context
 			):
 				m_callback( _callback ),
-				m_pContext( _pContext )
+				m_context( _context )
 			{
 			}
 		};
 
-		list<Watcher*>			m_watchers;
+		list<Watcher*>	m_watchers;
 
 
 	//-----------------------------------------------------------------------------
@@ -145,29 +164,29 @@ namespace OpenZWave
 	//	Sending Z-Wave messages
 	//-----------------------------------------------------------------------------
 	public:
-		void SendMsg( Msg* _pMsg );
+		void SendMsg( Msg* _msg );
 
 	private:
-		static void SendThreadEntryPoint( void* _pContext );
+		static void SendThreadEntryPoint( void* _context );
 		void SendThreadProc();
 
 		void RemoveMsg();
 		void TriggerResend();
 
-		Thread*					m_pSendThread;		// Thread for sending messages to the Z-Wave network	
+		Thread*					m_sendThread;		// Thread for sending messages to the Z-Wave network	
 		deque<Msg*>				m_sendQueue;		// Messages waiting to be sent
-		Mutex*					m_pSendMutex;		// Serialize access to the send and wakeup queues
-		Event*					m_pSendEvent;		// Signalled when there is something waiting to be sent
+		Mutex*					m_sendMutex;		// Serialize access to the send and wakeup queues
+		Event*					m_sendEvent;		// Signalled when there is something waiting to be sent
 
 	//-----------------------------------------------------------------------------
 	//	Receiving Z-Wave messages
 	//-----------------------------------------------------------------------------
 	private:
-		static void ReadThreadEntryPoint( void* _pContext );		
+		static void ReadThreadEntryPoint( void* _context );		
 		void ReadThreadproc();
 
 		bool ReadMsg();
-		void ProcessMsg( uint8* _pData );
+		void ProcessMsg( uint8* _data );
 
 		void HandleGetCapabilitiesResponse( uint8* pData );
 		void HandleEnableSUCResponse( uint8* pData );
@@ -183,8 +202,8 @@ namespace OpenZWave
 		void HandleApplicationCommandHandlerRequest( uint8* pData );
 		void HandleApplicationUpdateRequest( uint8* pData );
 
-		Thread*					m_pReadThread;			// Thread for handling messages received from the Z-Wave network
-		bool					m_bWaitingForAck;		// True when we are waiting for an ACK from the dongle
+		Thread*					m_readThread;			// Thread for handling messages received from the Z-Wave network
+		bool					m_waitingForAck;		// True when we are waiting for an ACK from the dongle
 		uint8					m_expectedCallbackId;	// If non-zero, we wait for a message with this callback Id
 		uint8					m_expectedReply;		// If non-zero, we wait for a message with this function Id
 
@@ -197,12 +216,12 @@ namespace OpenZWave
 		void DisablePoll( uint8 const _id );
 
 	private:
-		static void PollThreadEntryPoint( void* _pContext );
+		static void PollThreadEntryPoint( void* _context );
 		void PollThreadProc();
 
-		Thread*					m_pPollThread;		// Thread for polling devices on the Z-Wave network
+		Thread*					m_pollThread;		// Thread for polling devices on the Z-Wave network
 		list<uint8>				m_pollList;			// List of nodes that need to be polled
-		Mutex*					m_pPollMutex;		// Serialize access to the polling list
+		Mutex*					m_pollMutex;		// Serialize access to the polling list
 		int32					m_pollInterval;		// Time interval during which all nodes must be polled
 
 	//-----------------------------------------------------------------------------
@@ -218,7 +237,7 @@ namespace OpenZWave
 		uint8 GetInfoRequest();
 
 		deque<uint8>			m_infoQueue;		// Queue holding nodes that we wish to interogate for setup details
-		Mutex*					m_pInfoMutex;		// Serialize access to the info queue				
+		Mutex*					m_infoMutex;		// Serialize access to the info queue				
 
 	//-----------------------------------------------------------------------------
 	//	Misc

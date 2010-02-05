@@ -80,10 +80,10 @@ void CommandClass::SetInstances
 //-----------------------------------------------------------------------------
 void CommandClass::SaveStatic
 ( 
-	FILE* _pFile	
+	FILE* _file	
 )
 {
-	fprintf( _pFile, "    <CommandClass id=\"%d\" name=\"%s\" version=\"%d\" />\n", GetNodeId(), GetCommandClassId(), GetCommandClassName().c_str(), GetVersion() );
+	fprintf( _file, "	<CommandClass id=\"%d\" name=\"%s\" version=\"%d\" />\n", GetNodeId(), GetCommandClassId(), GetCommandClassName().c_str(), GetVersion() );
 }
 
 //-----------------------------------------------------------------------------
@@ -92,23 +92,23 @@ void CommandClass::SaveStatic
 //-----------------------------------------------------------------------------
 float32 CommandClass::ExtractValue
 (
-	uint8 const* _pData,
-	uint8* _pScale
+	uint8 const* _data,
+	uint8* _scale
 )const
 {
-	uint8 const size = _pData[0] & c_sizeMask;
-	uint8 const precision = (_pData[0] & c_precisionMask) >> c_precisionShift;
+	uint8 const size = _data[0] & c_sizeMask;
+	uint8 const precision = (_data[0] & c_precisionMask) >> c_precisionShift;
 
-	if( _pScale )
+	if( _scale )
 	{
-		*_pScale = (_pData[0] & c_scaleMask) >> c_scaleShift;
+		*_scale = (_data[0] & c_scaleMask) >> c_scaleShift;
 	}
 
 	uint32 value = 0;
 	for( uint8 i=0; i<size; ++i )
 	{
 		value <<= 8;
-		value |= (uint32)_pData[i];
+		value |= (uint32)_data[i];
 	}
 
 	if( precision == 0 )
@@ -125,11 +125,11 @@ float32 CommandClass::ExtractValue
 //-----------------------------------------------------------------------------
 string CommandClass::ExtractValueAsString
 (
-	uint8 const* _pData,
-	uint8* _pScale
+	uint8 const* _data,
+	uint8* _scale
 )const
 {
-	float32 value = ExtractValue( _pData, _pScale );
+	float32 value = ExtractValue( _data, _scale );
 
 	char str[16];
 	snprintf( str, 16, "%.3f", value );
@@ -143,7 +143,7 @@ string CommandClass::ExtractValueAsString
 //-----------------------------------------------------------------------------
 void CommandClass::AppendValue
 (
-	Msg* _pMsg,
+	Msg* _msg,
 	float32 const _value,
 	uint8 const _precision,
 	uint8 const _scale
@@ -161,11 +161,11 @@ void CommandClass::AppendValue
 		size = 2;
 	}
 
-	_pMsg->Append( (_precision<<c_precisionShift) | (_scale<<c_scaleShift) | size );
+	_msg->Append( (_precision<<c_precisionShift) | (_scale<<c_scaleShift) | size );
 
 	for( int32 i=size-1; i>=0; --i )
 	{
-		_pMsg->Append( (uint8)((iValue >> (size<<3)) & 0xff) );
+		_msg->Append( (uint8)((iValue >> (size<<3)) & 0xff) );
 	}
 }
 
