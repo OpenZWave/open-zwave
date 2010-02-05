@@ -41,9 +41,9 @@ using namespace OpenZWave;
 
 static enum ConfigurationCmd
 {
-    ConfigurationCmd_Set	= 0x04,
-    ConfigurationCmd_Get	= 0x05,
-    ConfigurationCmd_Report	= 0x06
+	ConfigurationCmd_Set	= 0x04,
+	ConfigurationCmd_Get	= 0x05,
+	ConfigurationCmd_Report	= 0x06
 };
 
 
@@ -53,54 +53,54 @@ static enum ConfigurationCmd
 //-----------------------------------------------------------------------------
 bool Configuration::HandleMsg
 (
-    uint8 const* _pData,
-    uint32 const _length,
+	uint8 const* _data,
+	uint32 const _length,
 	uint32 const _instance	// = 0
 )
 {
-    if (ConfigurationCmd_Report == (ConfigurationCmd)_pData[0])
-    {
+	if (ConfigurationCmd_Report == (ConfigurationCmd)_data[0])
+	{
 		// Extract the parameter index and value
-		uint8 parameter = _pData[1];
-		uint8 size = _pData[2] & 0x07;
-		uint32 value = 0;
+		uint8 parameter = _data[1];
+		uint8 size = _data[2] & 0x07;
+		uint32 paramValue = 0;
 		for( uint8 i=0; i<size; ++i )
 		{
-			value <<= 8;
-			value |= (uint32)_pData[i+3];
+			paramValue <<= 8;
+			paramValue |= (uint32)_data[i+3];
 		}
 
 		// Get the value object for this parameter, or create one if it does not yet exist
 		ValueID id( GetNodeId(), GetCommandClassId(), _instance, parameter );
 
-		Node* pNode = GetNode();
-		if( pNode )
+		Node* node = GetNode();
+		if( node )
 		{
-			ValueStore* pStore = pNode->GetValueStore();
-			if( pStore )
+			ValueStore* store = node->GetValueStore();
+			if( store )
 			{
-				if( Value* pValue = pStore->GetValue( id ) )
+				if( Value* value = store->GetValue( id ) )
 				{
 					// Cast the value to the correct type, and change 
 					// its value to the one we just received.
-					uint8 const valueType = pValue->GetValueTypeId();
+					uint8 const valueType = value->GetValueTypeId();
 					if( valueType == ValueByte::StaticGetValueTypeId() )
 					{
-						ValueByte* pValueByte = static_cast<ValueByte*>( pValue );
-						pValueByte->OnValueChanged( (uint8)value );
+						ValueByte* valueByte = static_cast<ValueByte*>( value );
+						valueByte->OnValueChanged( (uint8)paramValue );
 					}
 					else if( valueType == ValueInt::StaticGetValueTypeId() )
 					{
-						ValueInt* pValueInt = static_cast<ValueInt*>( pValue );
-						pValueInt->OnValueChanged( value );
+						ValueInt* valueInt = static_cast<ValueInt*>( value );
+						valueInt->OnValueChanged( paramValue );
 					}
 					else if( valueType == ValueList::StaticGetValueTypeId() )
 					{
-						ValueList* pValueList = static_cast<ValueList*>( pValue );
-						int32 valueIdx = pValueList->GetItemIdxByValue( value );
+						ValueList* valueList = static_cast<ValueList*>( value );
+						int32 valueIdx = valueList->GetItemIdxByValue( paramValue );
 						if( valueIdx >= 0 )
 						{
-							pValueList->OnValueChanged( valueIdx );
+							valueList->OnValueChanged( valueIdx );
 						}
 					}
 				}
@@ -109,38 +109,38 @@ bool Configuration::HandleMsg
 					// Create a new value
 					char label[16];
 					snprintf( label, 16, "Parameter #%d", parameter );
-					ValueInt* pValueInt = new ValueInt( GetNodeId(), GetCommandClassId(), _instance, parameter, Value::Genre_Config, label, false, value );
-					pStore->AddValue( pValueInt );
+					ValueInt* valueInt = new ValueInt( GetNodeId(), GetCommandClassId(), _instance, parameter, Value::Genre_Config, label, false, paramValue );
+					store->AddValue( valueInt );
 				}
 
-				pNode->ReleaseValueStore();
+				node->ReleaseValueStore();
 			}
 		}
 
-		Log::Write( "Received Configuration report from node %d: Parameter=%d, Value=%d", GetNodeId(), parameter, (signed long)value );
-        return true;
-    }
+		Log::Write( "Received Configuration report from node %d: Parameter=%d, Value=%d", GetNodeId(), parameter, paramValue );
+		return true;
+	}
 
 	return false;
 }
 
 //-----------------------------------------------------------------------------
-// <Configuration::Get>                                                   
-// Request current parameter value from the device                                       
+// <Configuration::Get>												   
+// Request current parameter value from the device									   
 //-----------------------------------------------------------------------------
 void Configuration::Get
 (
 	uint8 const _parameter
 )
 {
-    Msg* pMsg = new Msg( "ConfigurationCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-    pMsg->Append( GetNodeId() );
-    pMsg->Append( 3 );
-    pMsg->Append( GetCommandClassId() );
-    pMsg->Append( ConfigurationCmd_Get );
-    pMsg->Append( _parameter );
-    pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-    Driver::Get()->SendMsg( pMsg );
+	Msg* msg = new Msg( "ConfigurationCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+	msg->Append( GetNodeId() );
+	msg->Append( 3 );
+	msg->Append( GetCommandClassId() );
+	msg->Append( ConfigurationCmd_Get );
+	msg->Append( _parameter );
+	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	Driver::Get()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -155,46 +155,46 @@ void Configuration::Set
 {
 	Log::Write( "Configuration::Set - Node=%d, Parameter=%d, Value=%d", GetNodeId(), _parameter, _value );
 
-	Msg* pMsg = new Msg( "ConfigurationCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+	Msg* msg = new Msg( "ConfigurationCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 	if( _value & 0xffff0000 ) 
 	{
 		// four byte value
-		pMsg->Append( GetNodeId() );
-		pMsg->Append( 8 );
-		pMsg->Append( GetCommandClassId() );
-		pMsg->Append( ConfigurationCmd_Set );
-		pMsg->Append( _parameter );
-		pMsg->Append( 4 );
-		pMsg->Append( (uint8)((_value>>24)&0xff) );
-		pMsg->Append( (uint8)((_value>>16)&0xff) );
-		pMsg->Append( (uint8)((_value>>8)&0xff) );
-		pMsg->Append( (_value & 0xff) );
-		pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		msg->Append( GetNodeId() );
+		msg->Append( 8 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( ConfigurationCmd_Set );
+		msg->Append( _parameter );
+		msg->Append( 4 );
+		msg->Append( (uint8)((_value>>24)&0xff) );
+		msg->Append( (uint8)((_value>>16)&0xff) );
+		msg->Append( (uint8)((_value>>8)&0xff) );
+		msg->Append( (_value & 0xff) );
+		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 	}
 	else if( _value & 0x0000ff00 )
 	{
 		// two byte value
-		pMsg->Append( GetNodeId() );
-		pMsg->Append( 6 );
-		pMsg->Append( GetCommandClassId() );
-		pMsg->Append( ConfigurationCmd_Set );
-		pMsg->Append( _parameter );
-		pMsg->Append( 2 );
-		pMsg->Append( (uint8)((_value>>8)&0xff) );
-		pMsg->Append( (uint8)(_value&0xff) );
-		pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		msg->Append( GetNodeId() );
+		msg->Append( 6 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( ConfigurationCmd_Set );
+		msg->Append( _parameter );
+		msg->Append( 2 );
+		msg->Append( (uint8)((_value>>8)&0xff) );
+		msg->Append( (uint8)(_value&0xff) );
+		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 	}
 	else
 	{
 		// one byte value
-		pMsg->Append( GetNodeId() );
-		pMsg->Append( 5 );
-		pMsg->Append( GetCommandClassId() );
-		pMsg->Append( ConfigurationCmd_Set );
-		pMsg->Append( _parameter );
-		pMsg->Append( 1 );
-		pMsg->Append( (uint8)_value );
-		pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		msg->Append( GetNodeId() );
+		msg->Append( 5 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( ConfigurationCmd_Set );
+		msg->Append( _parameter );
+		msg->Append( 1 );
+		msg->Append( (uint8)_value );
+		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 	}
 }
 

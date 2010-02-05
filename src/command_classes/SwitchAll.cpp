@@ -40,11 +40,11 @@ using namespace OpenZWave;
 
 static enum SwitchAllCmd
 {
-    SwitchAllCmd_Set	= 0x01,
-    SwitchAllCmd_Get	= 0x02,
-    SwitchAllCmd_Report	= 0x03,
-    SwitchAllCmd_On		= 0x04,
-    SwitchAllCmd_Off	= 0x05
+	SwitchAllCmd_Set	= 0x01,
+	SwitchAllCmd_Get	= 0x02,
+	SwitchAllCmd_Report	= 0x03,
+	SwitchAllCmd_On		= 0x04,
+	SwitchAllCmd_Off	= 0x05
 };
 
 static char* const c_switchAllStateName[] = 
@@ -57,20 +57,20 @@ static char* const c_switchAllStateName[] =
 
 
 //-----------------------------------------------------------------------------
-// <SwitchAll::RequestState>                                                   
-// Request current state from the device                                       
+// <SwitchAll::RequestState>												   
+// Request current state from the device									   
 //-----------------------------------------------------------------------------
 void SwitchAll::RequestState
 (
 )
 {
-    Msg* pMsg = new Msg( "SwitchAllCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-    pMsg->Append( GetNodeId() );
-    pMsg->Append( 2 );
-    pMsg->Append( GetCommandClassId() );
-    pMsg->Append( SwitchAllCmd_Get );
-    pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-    Driver::Get()->SendMsg( pMsg );
+	Msg* msg = new Msg( "SwitchAllCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+	msg->Append( GetNodeId() );
+	msg->Append( 2 );
+	msg->Append( GetCommandClassId() );
+	msg->Append( SwitchAllCmd_Get );
+	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	Driver::Get()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -79,35 +79,35 @@ void SwitchAll::RequestState
 //-----------------------------------------------------------------------------
 bool SwitchAll::HandleMsg
 (
-    uint8 const* _pData,
-    uint32 const _length,
+	uint8 const* _data,
+	uint32 const _length,
 	uint32 const _instance	// = 0
 )
 {
-	if (SwitchAllCmd_Report == (SwitchAllCmd)_pData[0])
+	if (SwitchAllCmd_Report == (SwitchAllCmd)_data[0])
 	{
-		Node* pNode = GetNode();
-		if( pNode )
+		Node* node = GetNode();
+		if( node )
 		{
-			ValueStore* pStore = pNode->GetValueStore();
-			if( pStore )
+			ValueStore* store = node->GetValueStore();
+			if( store )
 			{
-				if( ValueList* pValue = static_cast<ValueList*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
+				if( ValueList* value = static_cast<ValueList*>( store->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
 				{
-					int32 idx = pValue->GetItemIdxByValue( (int32)_pData[1] );
+					int32 idx = value->GetItemIdxByValue( (int32)_data[1] );
 					if( idx >= 0 )
 					{
-						pValue->OnValueChanged( idx );
-						Log::Write( "Received SwitchAll report from node %d: %s", GetNodeId(), pValue->GetItem().m_label.c_str() );
+						value->OnValueChanged( idx );
+						Log::Write( "Received SwitchAll report from node %d: %s", GetNodeId(), value->GetItem().m_label.c_str() );
 					}
 				}
-				pNode->ReleaseValueStore();
+				node->ReleaseValueStore();
 				return true;
 			}
 		}
 	}
 
-    return false;
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -119,18 +119,18 @@ bool SwitchAll::SetValue
 	Value const& _value
 )
 {
-	if( ValueList const* pValue = static_cast<ValueList const*>(&_value) )
+	if( ValueList const* value = static_cast<ValueList const*>(&_value) )
 	{
-		ValueList::Item const& item = pValue->GetPending();
+		ValueList::Item const& item = value->GetPending();
 
-		Log::Write( "SwitchAll::Set - %s on node %d", pValue->GetPending().m_label.c_str(), GetNodeId() );
-		Msg* pMsg = new Msg( "SwitchAllCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
-		pMsg->Append( GetNodeId() );
-		pMsg->Append( 3 );
-		pMsg->Append( GetCommandClassId() );
-		pMsg->Append( SwitchAllCmd_Set );
-		pMsg->Append( (uint8)item.m_value );
-		pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		Log::Write( "SwitchAll::Set - %s on node %d", value->GetPending().m_label.c_str(), GetNodeId() );
+		Msg* msg = new Msg( "SwitchAllCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
+		msg->Append( GetNodeId() );
+		msg->Append( 3 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( SwitchAllCmd_Set );
+		msg->Append( (uint8)item.m_value );
+		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 		return true;
 	}
 
@@ -146,12 +146,12 @@ void SwitchAll::Off
 )
 {
 	Log::Write( "SwitchAll::Off (Node=%d)", GetNodeId() );
-	Msg* pMsg = new Msg( "SwitchAllCmd_Off", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
-	pMsg->Append( GetNodeId() );
-	pMsg->Append( 2 );
-	pMsg->Append( GetCommandClassId() );
-	pMsg->Append( SwitchAllCmd_Off );
-	pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	Msg* msg = new Msg( "SwitchAllCmd_Off", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
+	msg->Append( GetNodeId() );
+	msg->Append( 2 );
+	msg->Append( GetCommandClassId() );
+	msg->Append( SwitchAllCmd_Off );
+	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 }
 
 //-----------------------------------------------------------------------------
@@ -163,12 +163,12 @@ void SwitchAll::On
 )
 {
 	Log::Write( "SwitchAll::On (Node=%d)", GetNodeId() );
-	Msg* pMsg = new Msg( "SwitchAllCmd_On", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
-	pMsg->Append( GetNodeId() );
-	pMsg->Append( 2 );
-	pMsg->Append( GetCommandClassId() );
-	pMsg->Append( SwitchAllCmd_On );
-	pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	Msg* msg = new Msg( "SwitchAllCmd_On", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
+	msg->Append( GetNodeId() );
+	msg->Append( 2 );
+	msg->Append( GetCommandClassId() );
+	msg->Append( SwitchAllCmd_On );
+	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 }
 
 //-----------------------------------------------------------------------------
@@ -180,11 +180,11 @@ void SwitchAll::CreateVars
 	uint8 const _instance
 )
 {
-	Node* pNode = GetNode();
-	if( pNode )
+	Node* node = GetNode();
+	if( node )
 	{
-		ValueStore* pStore = pNode->GetValueStore();
-		if( pStore )
+		ValueStore* store = node->GetValueStore();
+		if( store )
 		{
 			vector<ValueList::Item> items;
 			for( int i=0; i<4; ++i )
@@ -194,11 +194,11 @@ void SwitchAll::CreateVars
 				item.m_value = (i==3) ? 0x000000ff : i;
 				items.push_back( item ); 
 			}
-			Value* pValue = new ValueList( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_System, "Switch All", false, items, 0 );
-			pStore->AddValue( pValue );
-			pValue->Release();
+			Value* value = new ValueList( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_System, "Switch All", false, items, 0 );
+			store->AddValue( value );
+			value->Release();
 
-			pNode->ReleaseValueStore();
+			node->ReleaseValueStore();
 		}
 	}
 }

@@ -42,34 +42,34 @@ using namespace OpenZWave;
 
 static enum ProtectionCmd
 {
-    ProtectionCmd_Set		= 0x01,
-    ProtectionCmd_Get		= 0x02,
-    ProtectionCmd_Report	= 0x03
+	ProtectionCmd_Set		= 0x01,
+	ProtectionCmd_Get		= 0x02,
+	ProtectionCmd_Report	= 0x03
 };
 
 static char* const c_protectionStateNames[] = 
 {
 	"Unprotected",
-    "Protection by Sequence",
-    "No Operation Possible"
+	"Protection by Sequence",
+	"No Operation Possible"
 };
 
 
 //-----------------------------------------------------------------------------
-// <Protection::RequestState>                                                   
-// Request current state from the device                                       
+// <Protection::RequestState>												   
+// Request current state from the device									   
 //-----------------------------------------------------------------------------
 void Protection::RequestState
 (
 )
 {
-    Msg* pMsg = new Msg( "ProtectionCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-    pMsg->Append( GetNodeId() );
-    pMsg->Append( 2 );
-    pMsg->Append( GetCommandClassId() );
-    pMsg->Append( ProtectionCmd_Get );
-    pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-    Driver::Get()->SendMsg( pMsg );
+	Msg* msg = new Msg( "ProtectionCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+	msg->Append( GetNodeId() );
+	msg->Append( 2 );
+	msg->Append( GetCommandClassId() );
+	msg->Append( ProtectionCmd_Get );
+	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	Driver::Get()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -78,32 +78,32 @@ void Protection::RequestState
 //-----------------------------------------------------------------------------
 bool Protection::HandleMsg
 (
-    uint8 const* _pData,
-    uint32 const _length,
+	uint8 const* _data,
+	uint32 const _length,
 	uint32 const _instance	// = 0
 )
 {
-	if (ProtectionCmd_Report == (ProtectionCmd)_pData[0])
+	if (ProtectionCmd_Report == (ProtectionCmd)_data[0])
 	{
-		Node* pNode = GetNode();
-		if( pNode )
+		Node* node = GetNode();
+		if( node )
 		{
-			ValueStore* pStore = pNode->GetValueStore();
-			if( pStore )
+			ValueStore* store = node->GetValueStore();
+			if( store )
 			{
-				if( ValueList* pValue = static_cast<ValueList*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
+				if( ValueList* value = static_cast<ValueList*>( store->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
 				{
-					pValue->OnValueChanged( (int)_pData[1] );
+					value->OnValueChanged( (int)_data[1] );
 				}
-				pNode->ReleaseValueStore();
+				node->ReleaseValueStore();
 
-				Log::Write( "Received a Protection report from node %d: %s", GetNodeId(), c_protectionStateNames[_pData[1]] );
+				Log::Write( "Received a Protection report from node %d: %s", GetNodeId(), c_protectionStateNames[_data[1]] );
 				return true;
 			}
 		}
 	}
 
-    return false;
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -115,18 +115,18 @@ bool Protection::SetValue
 	Value const& _value
 )
 {
-	if( ValueList const* pValue = static_cast<ValueList const*>(&_value) )
+	if( ValueList const* value = static_cast<ValueList const*>(&_value) )
 	{
-		ValueList::Item const& item = pValue->GetPending();
+		ValueList::Item const& item = value->GetPending();
 
 		Log::Write( "Protection::Set - Setting protection state on node %d to '%s'", GetNodeId(), item.m_label.c_str() );
-		Msg* pMsg = new Msg( "Protection Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
-		pMsg->Append( GetNodeId() );
-		pMsg->Append( 3 );
-		pMsg->Append( GetCommandClassId() );
-		pMsg->Append( ProtectionCmd_Set );
-		pMsg->Append( (uint8)item.m_value );
-		pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		Msg* msg = new Msg( "Protection Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
+		msg->Append( GetNodeId() );
+		msg->Append( 3 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( ProtectionCmd_Set );
+		msg->Append( (uint8)item.m_value );
+		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 		return true;
 	}
 
@@ -142,11 +142,11 @@ void Protection::CreateVars
 	uint8 const _instance
 )
 {
-	Node* pNode = GetNode();
-	if( pNode )
+	Node* node = GetNode();
+	if( node )
 	{
-		ValueStore* pStore = pNode->GetValueStore();
-		if( pStore )
+		ValueStore* store = node->GetValueStore();
+		if( store )
 		{
 			vector<ValueList::Item> items;
 
@@ -158,11 +158,11 @@ void Protection::CreateVars
 				items.push_back( item ); 
 			}
 
-			Value* pValue = new ValueList( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_System, "Protection", false, items, 0 );
-			pStore->AddValue( pValue );
-			pValue->Release();
+			Value* value = new ValueList( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_System, "Protection", false, items, 0 );
+			store->AddValue( value );
+			value->Release();
 		
-			pNode->ReleaseValueStore();
+			node->ReleaseValueStore();
 		}
 	}
 }

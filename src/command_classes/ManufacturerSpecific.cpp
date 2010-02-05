@@ -42,8 +42,8 @@ using namespace OpenZWave;
 
 static enum ManufacturerSpecificCmd
 {
-    ManufacturerSpecificCmd_Get		= 0x04,
-    ManufacturerSpecificCmd_Report	= 0x05
+	ManufacturerSpecificCmd_Get		= 0x04,
+	ManufacturerSpecificCmd_Report	= 0x05
 };
 
 static enum
@@ -63,29 +63,29 @@ bool ManufacturerSpecific::s_bXmlLoaded = false;
 //-----------------------------------------------------------------------------
 void ManufacturerSpecific::SaveStatic
 ( 
-	FILE* _pFile	
+	FILE* _file	
 )
 {
-	fprintf( _pFile, "    <CommandClass id=\"%d\" name=\"%s\" version=\"%d\">\n", GetNodeId(), GetCommandClassId(), GetCommandClassName().c_str(), GetVersion() );
-	fprintf( _pFile, "    </CommandClass>\n" );
+	fprintf( _file, "	<CommandClass id=\"%d\" name=\"%s\" version=\"%d\">\n", GetNodeId(), GetCommandClassId(), GetCommandClassName().c_str(), GetVersion() );
+	fprintf( _file, "	</CommandClass>\n" );
 }
 
 //-----------------------------------------------------------------------------
-// <ManufacturerSpecific::RequestStatic>                                                   
-// Request the static manufacturer specific data                                       
+// <ManufacturerSpecific::RequestStatic>												   
+// Request the static manufacturer specific data									   
 //-----------------------------------------------------------------------------
 void ManufacturerSpecific::RequestStatic
 (
 )
 {
 	Log::Write( "Requesting the manufacturer specific data from node %d", GetNodeId() );
-    Msg* pMsg = new Msg( "ManufacturerSpecificCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-    pMsg->Append( GetNodeId() );
-    pMsg->Append( 2 );
-    pMsg->Append( GetCommandClassId() );
-    pMsg->Append( ManufacturerSpecificCmd_Get );
-    pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-    Driver::Get()->SendMsg( pMsg );
+	Msg* msg = new Msg( "ManufacturerSpecificCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+	msg->Append( GetNodeId() );
+	msg->Append( 2 );
+	msg->Append( GetCommandClassId() );
+	msg->Append( ManufacturerSpecificCmd_Get );
+	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	Driver::Get()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -94,25 +94,25 @@ void ManufacturerSpecific::RequestStatic
 //-----------------------------------------------------------------------------
 bool ManufacturerSpecific::HandleMsg
 (
-    uint8 const* _pData,
-    uint32 const _length,
+	uint8 const* _data,
+	uint32 const _length,
 	uint32 const _instance	// = 0
 )
 {
 	char str[64];
-    if( ManufacturerSpecificCmd_Report == (ManufacturerSpecificCmd)_pData[0] )
-    {
+	if( ManufacturerSpecificCmd_Report == (ManufacturerSpecificCmd)_data[0] )
+	{
 		if( !s_bXmlLoaded )
 		{
 			LoadProductXML();
 		}
 
-		uint16 manufacturerId = (((uint16)_pData[1])<<8) | (uint16)_pData[2];
+		uint16 manufacturerId = (((uint16)_data[1])<<8) | (uint16)_data[2];
 		snprintf( str, sizeof(str), "Unknown: id=%.4x", manufacturerId );
 		string manufacturerName = str;
 
-		uint16 productType = (((uint16)_pData[3])<<8) | (uint16)_pData[4];
-		uint16 productId = (((uint16)_pData[5])<<8) | (uint16)_pData[6];
+		uint16 productType = (((uint16)_data[3])<<8) | (uint16)_data[4];
+		uint16 productId = (((uint16)_data[5])<<8) | (uint16)_data[6];
 
 		snprintf( str, sizeof(str), "Unknown: type=%.4x, id=%.4x", productType, productId );
 		string productName = str;
@@ -133,9 +133,9 @@ bool ManufacturerSpecific::HandleMsg
 		}
 		
 		Log::Write( "Received manufacturer specific report from node %d: Manufacturer=%s, Product=%s", GetNodeId(), manufacturerName.c_str(), productName.c_str() );
-        return true;
-    }
-    return false;
+		return true;
+	}
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -159,18 +159,18 @@ bool ManufacturerSpecific::LoadProductXML
 		return false;
 	}
 
-	TiXmlElement const* pRoot = pDoc->RootElement();
+	TiXmlElement const* root = pDoc->RootElement();
 
 	char const* str;
 	char* pStopChar;
 	
-	TiXmlNode const* pNode = pRoot->FirstChild();
-	while( pNode )
+	TiXmlNode const* node = root->FirstChild();
+	while( node )
 	{
-		str = pNode->Value();
+		str = node->Value();
 		if( str && !strcmp( str, "Manufacturer" ) )
 		{
-			TiXmlElement const* pManufacturerElement = pNode->ToElement();
+			TiXmlElement const* pManufacturerElement = node->ToElement();
 			if( pManufacturerElement )
 			{
 				// Read in the manufacturer attributes
@@ -196,10 +196,10 @@ bool ManufacturerSpecific::LoadProductXML
 				TiXmlNode const* pProductNode = pManufacturerElement->FirstChild();
 				while( pProductNode )
 				{
-					str = pNode->Value();
+					str = node->Value();
 					if( str && !strcmp( str, "Product" ) )
 					{
-						TiXmlElement const* pProductElement = pNode->ToElement();
+						TiXmlElement const* pProductElement = node->ToElement();
 						if( pProductElement )
 						{
 							str = pProductElement->Attribute( "type" );
@@ -239,7 +239,7 @@ bool ManufacturerSpecific::LoadProductXML
 		}
 
 		// Move on to the next manufacturer.
-		pNode = pNode->NextSibling();
+		node = node->NextSibling();
 	}
 
 	return true;

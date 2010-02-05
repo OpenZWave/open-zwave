@@ -40,33 +40,33 @@ using namespace OpenZWave;
 
 static enum AlarmCmd
 {
-    AlarmCmd_Get	= 0x04,
-    AlarmCmd_Report = 0x05
+	AlarmCmd_Get	= 0x04,
+	AlarmCmd_Report = 0x05
 };
 
 static enum
 {
-    ValueIndex_Type	= 0,
-    ValueIndex_Level
+	ValueIndex_Type	= 0,
+	ValueIndex_Level
 };
 
 
 //-----------------------------------------------------------------------------
-// <Alarm::RequestState>                                                   
-// Request current state from the device                                       
+// <Alarm::RequestState>												   
+// Request current state from the device									   
 //-----------------------------------------------------------------------------
 void Alarm::RequestState
 (
 )
 {
 	Log::Write( "Requesting the alarm status from node %d", GetNodeId() );
-    Msg* pMsg = new Msg( "AlarmCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-    pMsg->Append( GetNodeId() );
-    pMsg->Append( 2 );
-    pMsg->Append( GetCommandClassId() );
-    pMsg->Append( AlarmCmd_Get );
-    pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-    Driver::Get()->SendMsg( pMsg );
+	Msg* msg = new Msg( "AlarmCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+	msg->Append( GetNodeId() );
+	msg->Append( 2 );
+	msg->Append( GetCommandClassId() );
+	msg->Append( AlarmCmd_Get );
+	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	Driver::Get()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -75,42 +75,42 @@ void Alarm::RequestState
 //-----------------------------------------------------------------------------
 bool Alarm::HandleMsg
 (
-    uint8 const* _pData,
-    uint32 const _length,
+	uint8 const* _data,
+	uint32 const _length,
 	uint32 const _instance	// = 0
 )
 {
-    if (AlarmCmd_Report == (AlarmCmd)_pData[0])
-    {
-        // We have received a report from the Z-Wave device
+	if (AlarmCmd_Report == (AlarmCmd)_data[0])
+	{
+		// We have received a report from the Z-Wave device
 		// No known mappings for these values yet
-		if( Node* pNode = GetNode() )
+		if( Node* node = GetNode() )
 		{
-			if( ValueStore* pStore = pNode->GetValueStore() )
+			if( ValueStore* store = node->GetValueStore() )
 			{
-				ValueByte* pValue;
+				ValueByte* value;
 
 				// Alarm Type
-				if( pValue = static_cast<ValueByte*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, ValueIndex_Type ) ) ) )
+				if( value = static_cast<ValueByte*>( store->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, ValueIndex_Type ) ) ) )
 				{
-					pValue->OnValueChanged( _pData[1] );
+					value->OnValueChanged( _data[1] );
 				}
 		
 				// Alarm Level
-				if( pValue = static_cast<ValueByte*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, ValueIndex_Level ) ) ) )
+				if( value = static_cast<ValueByte*>( store->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, ValueIndex_Level ) ) ) )
 				{
-					pValue->OnValueChanged( _pData[2] );
+					value->OnValueChanged( _data[2] );
 				}
-				pNode->ReleaseValueStore();
+				node->ReleaseValueStore();
 
-				Log::Write( "Received Alarm report from node %d: type=%d, level=%d", GetNodeId(), _pData[1], _pData[2] );
+				Log::Write( "Received Alarm report from node %d: type=%d, level=%d", GetNodeId(), _data[1], _data[2] );
 			}
 		}
 
-        return true;
+		return true;
 	}
 
-    return false;
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -122,22 +122,22 @@ void Alarm::CreateVars
 	uint8 const _instance
 )
 {
-	Node* pNode = GetNode();
-	if( pNode )
+	Node* node = GetNode();
+	if( node )
 	{
-		if( ValueStore* pStore = pNode->GetValueStore() )
+		if( ValueStore* store = node->GetValueStore() )
 		{
-			Value* pValue;
+			Value* value;
 		
-			pValue = new ValueByte( GetNodeId(), GetCommandClassId(), _instance, ValueIndex_Type, Value::Genre_User, "Alarm Type", true, 0 );
-			pStore->AddValue( pValue );
-			pValue->Release();
+			value = new ValueByte( GetNodeId(), GetCommandClassId(), _instance, ValueIndex_Type, Value::Genre_User, "Alarm Type", true, 0 );
+			store->AddValue( value );
+			value->Release();
 
-			pValue = new ValueByte( GetNodeId(), GetCommandClassId(), _instance, ValueIndex_Level, Value::Genre_User, "Alarm Level", true, 0 );
-			pStore->AddValue( pValue );
-			pValue->Release();
+			value = new ValueByte( GetNodeId(), GetCommandClassId(), _instance, ValueIndex_Level, Value::Genre_User, "Alarm Level", true, 0 );
+			store->AddValue( value );
+			value->Release();
 
-			pNode->ReleaseValueStore();
+			node->ReleaseValueStore();
 		}
 	}
 }

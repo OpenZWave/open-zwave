@@ -40,33 +40,33 @@ using namespace OpenZWave;
 
 static enum AssociationCommandConfigurationCmd
 {
-    AssociationCommandConfigurationCmd_Get	= 0x04,
-    AssociationCommandConfigurationCmd_Report = 0x05
+	AssociationCommandConfigurationCmd_Get	= 0x04,
+	AssociationCommandConfigurationCmd_Report = 0x05
 };
 
 static enum
 {
-    ValueIndex_Type	= 0,
-    ValueIndex_Level
+	ValueIndex_Type	= 0,
+	ValueIndex_Level
 };
 
 
 //-----------------------------------------------------------------------------
-// <AssociationCommandConfiguration::RequestState>                                                   
-// Request current state from the device                                       
+// <AssociationCommandConfiguration::RequestState>												   
+// Request current state from the device									   
 //-----------------------------------------------------------------------------
 void AssociationCommandConfiguration::RequestState
 (
 )
 {
 	Log::Write( "Requesting the AssociationCommandConfiguration status from node %d", GetNodeId() );
-    Msg* pMsg = new Msg( "AssociationCommandConfigurationCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-    pMsg->Append( GetNodeId() );
-    pMsg->Append( 2 );
-    pMsg->Append( GetCommandClassId() );
-    pMsg->Append( AssociationCommandConfigurationCmd_Get );
-    pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-    Driver::Get()->SendMsg( pMsg );
+	Msg* msg = new Msg( "AssociationCommandConfigurationCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+	msg->Append( GetNodeId() );
+	msg->Append( 2 );
+	msg->Append( GetCommandClassId() );
+	msg->Append( AssociationCommandConfigurationCmd_Get );
+	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	Driver::Get()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -75,21 +75,21 @@ void AssociationCommandConfiguration::RequestState
 //-----------------------------------------------------------------------------
 bool AssociationCommandConfiguration::HandleMsg
 (
-    uint8 const* _pData,
-    uint32 const _length,
+	uint8 const* _data,
+	uint32 const _length,
 	uint32 const _instance	// = 0
 )
 {
-    if (AssociationCommandConfigurationCmd_Report == (AssociationCommandConfigurationCmd)_pData[0])
-    {
-        // We have received a report from the Z-Wave device
+	if (AssociationCommandConfigurationCmd_Report == (AssociationCommandConfigurationCmd)_data[0])
+	{
+		// We have received a report from the Z-Wave device
 		// No known mappings for these values yet
-        uint8 AssociationCommandConfigurationType = _pData[1];
-        uint8 AssociationCommandConfigurationLevel = _pData[2];
+		uint8 AssociationCommandConfigurationType = _data[1];
+		uint8 AssociationCommandConfigurationLevel = _data[2];
 		Log::Write( "Received AssociationCommandConfiguration report from node %d: type=%d, level=%d", GetNodeId(), AssociationCommandConfigurationType, AssociationCommandConfigurationLevel );
-        return true;
+		return true;
 	}
-    return false;
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -101,23 +101,23 @@ void AssociationCommandConfiguration::CreateVars
 	uint8 const _instance
 )
 {
-	Node* pNode = GetNode();
-	if( pNode )
+	Node* node = GetNode();
+	if( node )
 	{
-		ValueStore* pStore = pNode->GetValueStore();
-		if( pStore )
+		ValueStore* store = node->GetValueStore();
+		if( store )
 		{
-			Value* pValue;
+			Value* value;
 		
-			pValue = new ValueByte( GetNodeId(), GetCommandClassId(), _instance, ValueIndex_Type, Value::Genre_System, "AssociationCommandConfiguration Type", true, 0 );
-			pStore->AddValue( pValue );
-			pValue->Release();
+			value = new ValueByte( GetNodeId(), GetCommandClassId(), _instance, ValueIndex_Type, Value::Genre_System, "AssociationCommandConfiguration Type", true, 0 );
+			store->AddValue( value );
+			value->Release();
 
-			pValue = new ValueByte( GetNodeId(), GetCommandClassId(), _instance, ValueIndex_Level, Value::Genre_System, "AssociationCommandConfiguration Level", true, 0 );
-			pStore->AddValue( pValue );
-			pValue->Release();
+			value = new ValueByte( GetNodeId(), GetCommandClassId(), _instance, ValueIndex_Level, Value::Genre_System, "AssociationCommandConfiguration Level", true, 0 );
+			store->AddValue( value );
+			value->Release();
 
-			pNode->ReleaseValueStore();
+			node->ReleaseValueStore();
 		}
 	}
 }

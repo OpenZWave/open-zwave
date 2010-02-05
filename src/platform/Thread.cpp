@@ -62,10 +62,10 @@ Thread::~Thread
 bool Thread::Start
 (
 	pfnThreadProc_t _pfnThreadProc, 
-	void* _pContext 
+	void* _context 
 )
 {
-	return( m_pImpl->Start( _pfnThreadProc, _pContext ) );
+	return( m_pImpl->Start( _pfnThreadProc, _context ) );
 }
 
 //-----------------------------------------------------------------------------

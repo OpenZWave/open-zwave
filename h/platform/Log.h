@@ -68,7 +68,7 @@ namespace OpenZWave
 		~Log();
 
 		LogImpl*	m_pImpl;	// Pointer to an object that encapsulates the platform-specific logging implementation.
-		static Log*	s_pInstance;
+		static Log*	s_instance;
 	};
 
 } // namespace OpenZWave

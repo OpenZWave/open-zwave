@@ -45,14 +45,14 @@ namespace OpenZWave
 		CommandClass( uint8	_nodeId ): m_nodeId( _nodeId ), m_version( 1 ), m_instances( 0 ){}
 		virtual ~CommandClass(){}
 
-		virtual void LoadStatic( TiXmlElement const* _pNode ){}
-		virtual void SaveStatic( FILE* _pFile );
+		virtual void LoadStatic( TiXmlElement const* _node ){}
+		virtual void SaveStatic( FILE* _file );
 		virtual void RequestStatic(){}	// For static node data
 		virtual void RequestState(){}	// For dynamic node data
 		
 		virtual uint8 const GetCommandClassId()const = 0;		
 		virtual string const GetCommandClassName()const = 0;
-		virtual bool HandleMsg( uint8 const* _pData, uint32 const _length, uint32 const _instance = 0 ) = 0;
+		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 0 ) = 0;
 		virtual bool SetValue( Value const& _value ){ return false; }
 
 		uint8 GetVersion()const{ return m_version; }
@@ -64,9 +64,9 @@ namespace OpenZWave
 		void SetInstances( uint8 const _instances );
 
 		// Helper methods
-		float32 ExtractValue( uint8 const* _pData, uint8* _pScale )const;
-		string ExtractValueAsString( uint8 const* _pData, uint8* _pScale )const;
-		void AppendValue( Msg* _pMsg, float32 const _value, uint8 const _precision, uint8 const _scale )const;
+		float32 ExtractValue( uint8 const* _data, uint8* _scale )const;
+		string ExtractValueAsString( uint8 const* _data, uint8* _scale )const;
+		void AppendValue( Msg* _msg, float32 const _value, uint8 const _precision, uint8 const _scale )const;
 		uint8 const GetAppendValueSize( float32 const _value, uint8 const _precision )const;
 
 	protected:

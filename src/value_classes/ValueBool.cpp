@@ -59,11 +59,11 @@ ValueBool::ValueBool
 //-----------------------------------------------------------------------------
 ValueBool::ValueBool
 (
-	TiXmlElement* _pValueElement
+	TiXmlElement* _valueElement
 ):
-	Value( _pValueElement )
+	Value( _valueElement )
 {
-	char const* str = _pValueElement->Attribute( "value" );
+	char const* str = _valueElement->Attribute( "value" );
 	if( str )
 	{
 		m_value = !strcmp( str, "True" );
@@ -76,11 +76,11 @@ ValueBool::ValueBool
 //-----------------------------------------------------------------------------
 void ValueBool::WriteXML
 (
-	TiXmlElement* _pValueElement
+	TiXmlElement* _valueElement
 )
 {
-	Value::WriteXML( _pValueElement );
-	_pValueElement->SetAttribute( "value", m_value ? "True" : "False" );
+	Value::WriteXML( _valueElement );
+	_valueElement->SetAttribute( "value", m_value ? "True" : "False" );
 }
 
 //-----------------------------------------------------------------------------

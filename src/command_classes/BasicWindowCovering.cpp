@@ -36,8 +36,8 @@ using namespace OpenZWave;
 
 //static enum BasicWindowCoveringCmd
 //{
-//    BasicWindowCoveringCmd_StartLevelChange = 0x01
-//        : type=STRUCT_BYTE
-//    BasicWindowCoveringCmd_StopLevelChange = 0x02
+//	BasicWindowCoveringCmd_StartLevelChange = 0x01
+//		: type=STRUCT_BYTE
+//	BasicWindowCoveringCmd_StopLevelChange = 0x02
 //};
 

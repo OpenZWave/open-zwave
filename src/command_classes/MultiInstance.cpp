@@ -37,44 +37,44 @@ using namespace OpenZWave;
 
 static enum MultiInstanceCmd
 {
-    MultiInstanceCmd_Get		= 0x04,
-    MultiInstanceCmd_Report		= 0x05,
-    MultiInstanceCmd_CmdEncap	= 0x06
+	MultiInstanceCmd_Get		= 0x04,
+	MultiInstanceCmd_Report		= 0x05,
+	MultiInstanceCmd_CmdEncap	= 0x06
 };
 
 
 //-----------------------------------------------------------------------------
-// <MultiInstance::RequestStatic>                                                   
-// Request the static instance data                                      
+// <MultiInstance::RequestStatic>												   
+// Request the static instance data									  
 //-----------------------------------------------------------------------------
 void MultiInstance::RequestStatic
 (
 )
 {
-	if( Node const* pNode = GetNode() )
+	if( Node const* node = GetNode() )
 	{
-		pNode->RequestInstances();
+		node->RequestInstances();
 	}
 }
 
 //-----------------------------------------------------------------------------
-// <MultiInstance::RequestInstances>                                                   
-// Request number of instances of the specified command class from the device                                       
+// <MultiInstance::RequestInstances>												   
+// Request number of instances of the specified command class from the device									   
 //-----------------------------------------------------------------------------
 void MultiInstance::RequestInstances
 (
-	CommandClass const* _pCommandClass
+	CommandClass const* _commandClass
 )
 {
-	Log::Write( "Requesting the instance-count from node %d for %s", GetNodeId(), _pCommandClass->GetCommandClassName().c_str() );
-    Msg* pMsg = new Msg( "MultiInstanceCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-    pMsg->Append( GetNodeId() );
-    pMsg->Append( 3 );
-    pMsg->Append( GetCommandClassId() );
-    pMsg->Append( MultiInstanceCmd_Get );
-	pMsg->Append( _pCommandClass->GetCommandClassId() );
-    pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-    Driver::Get()->SendMsg( pMsg );
+	Log::Write( "Requesting the instance-count from node %d for %s", GetNodeId(), _commandClass->GetCommandClassName().c_str() );
+	Msg* msg = new Msg( "MultiInstanceCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+	msg->Append( GetNodeId() );
+	msg->Append( 3 );
+	msg->Append( GetCommandClassId() );
+	msg->Append( MultiInstanceCmd_Get );
+	msg->Append( _commandClass->GetCommandClassId() );
+	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	Driver::Get()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -83,19 +83,19 @@ void MultiInstance::RequestInstances
 //-----------------------------------------------------------------------------
 bool MultiInstance::HandleMsg
 (
-    uint8 const* _pData,
-    uint32 const _length,
+	uint8 const* _data,
+	uint32 const _length,
 	uint32 const _instance	// = 0
 )
 {
-	if( Node const* pNode = GetNode() )
+	if( Node const* node = GetNode() )
 	{
-		if( MultiInstanceCmd_Report == (MultiInstanceCmd)_pData[0] )
+		if( MultiInstanceCmd_Report == (MultiInstanceCmd)_data[0] )
 		{
-			uint8 commandClassId = _pData[1];
-			uint8 instances = _pData[2];
+			uint8 commandClassId = _data[1];
+			uint8 instances = _data[2];
 
-			if( CommandClass* pCommandClass = pNode->GetCommandClass( commandClassId ) )
+			if( CommandClass* pCommandClass = node->GetCommandClass( commandClassId ) )
 			{
 				Log::Write( "Received instance-count from node %d for %s: %d", GetNodeId(), pCommandClass->GetCommandClassName().c_str(), instances );
 				pCommandClass->SetInstances( instances );
@@ -103,20 +103,20 @@ bool MultiInstance::HandleMsg
 			return true;
 		}
 	
-		if( MultiInstanceCmd_CmdEncap == (MultiInstanceCmd)_pData[0] )
+		if( MultiInstanceCmd_CmdEncap == (MultiInstanceCmd)_data[0] )
 		{
-			uint8 instance = _pData[1];
-			uint8 commandClassId = _pData[2];
+			uint8 instance = _data[1];
+			uint8 commandClassId = _data[2];
 
-			if( CommandClass* pCommandClass = pNode->GetCommandClass( commandClassId ) )
+			if( CommandClass* pCommandClass = node->GetCommandClass( commandClassId ) )
 			{
 				Log::Write( "Received a multi-instance encapsulated command from node %d: Command Class %s, Instance=%d", GetNodeId(), pCommandClass->GetCommandClassName().c_str(), instance );
-				pCommandClass->HandleMsg( &_pData[3], _length-3, instance );
+				pCommandClass->HandleMsg( &_data[3], _length-3, instance );
 			}
 
 			return true;
 		}
-    }
-    return false;
+	}
+	return false;
 }
 

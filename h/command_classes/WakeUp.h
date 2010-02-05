@@ -45,7 +45,7 @@ namespace OpenZWave
 		static uint8 const StaticGetCommandClassId(){ return 0x84; }		
 		static string const StaticGetCommandClassName(){ return "COMMAND_CLASS_WAKE_UP"; }
 
-		void QueueMsg( Msg* pMsg );
+		void QueueMsg( Msg* msg );
 		void SendPending();
 		bool IsAwake()const{ return m_bAwake; }
 
@@ -53,7 +53,7 @@ namespace OpenZWave
 		virtual void RequestState();
 		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }
 		virtual string const GetCommandClassName()const{ return StaticGetCommandClassName(); }
-		virtual bool HandleMsg( uint8 const* _pData, uint32 const _length, uint32 const _instance = 0 );
+		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 0 );
 		virtual bool SetValue( Value const& _value );
 
 	protected:

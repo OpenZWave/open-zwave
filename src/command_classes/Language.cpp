@@ -40,33 +40,33 @@ using namespace OpenZWave;
 
 static enum LanguageCmd
 {
-    LanguageCmd_Set		= 0x01,
-    LanguageCmd_Get		= 0x02,
-    LanguageCmd_Report	= 0x03
+	LanguageCmd_Set		= 0x01,
+	LanguageCmd_Get		= 0x02,
+	LanguageCmd_Report	= 0x03
 };
 
 static enum
 {
-    ValueIndex_Language	= 0,
-    ValueIndex_Country
+	ValueIndex_Language	= 0,
+	ValueIndex_Country
 };
 
 //-----------------------------------------------------------------------------
-// <Language::RequestState>                                                   
-// Request current state from the device                                       
+// <Language::RequestState>												   
+// Request current state from the device									   
 //-----------------------------------------------------------------------------
 void Language::RequestState
 (
 )
 {
 	Log::Write( "Requesting the language from node %d", GetNodeId() );
-    Msg* pMsg = new Msg( "LanguageCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-    pMsg->Append( GetNodeId() );
-    pMsg->Append( 2 );
-    pMsg->Append( GetCommandClassId() );
-    pMsg->Append( LanguageCmd_Get );
-    pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-    Driver::Get()->SendMsg( pMsg );
+	Msg* msg = new Msg( "LanguageCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+	msg->Append( GetNodeId() );
+	msg->Append( 2 );
+	msg->Append( GetCommandClassId() );
+	msg->Append( LanguageCmd_Get );
+	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	Driver::Get()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -75,43 +75,43 @@ void Language::RequestState
 //-----------------------------------------------------------------------------
 bool Language::HandleMsg
 (
-    uint8 const* _pData,
-    uint32 const _length,
+	uint8 const* _data,
+	uint32 const _length,
 	uint32 const _instance	// = 0
 )
 {
-	if( LanguageCmd_Report == (LanguageCmd)_pData[0] )
+	if( LanguageCmd_Report == (LanguageCmd)_data[0] )
 	{
-		Node* pNode = GetNode();
-		if( pNode )
+		Node* node = GetNode();
+		if( node )
 		{
-			ValueStore* pStore = pNode->GetValueStore();
-			if( pStore )
+			ValueStore* store = node->GetValueStore();
+			if( store )
 			{
 				char language[4];
 				char country[3];
 
-				language[0] = _pData[1];
-				language[1] = _pData[2];
-				language[2] = _pData[3];
+				language[0] = _data[1];
+				language[1] = _data[2];
+				language[2] = _data[3];
 				language[3] = 0;
 
-				country[0] = _pData[4];
-				country[1] = _pData[5];
+				country[0] = _data[4];
+				country[1] = _data[5];
 				country[2] = 0;
 				
-				ValueString* pValue;
+				ValueString* value;
 
-				if( pValue = static_cast<ValueString*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, (uint8)ValueIndex_Language ) ) ) )
+				if( value = static_cast<ValueString*>( store->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, (uint8)ValueIndex_Language ) ) ) )
 				{
-					pValue->OnValueChanged( language );
+					value->OnValueChanged( language );
 				}
 
-				if( pValue = static_cast<ValueString*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, (uint8)ValueIndex_Country ) ) ) )
+				if( value = static_cast<ValueString*>( store->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, (uint8)ValueIndex_Country ) ) ) )
 				{
-					pValue->OnValueChanged( country );
+					value->OnValueChanged( country );
 				}
-				pNode->ReleaseValueStore();
+				node->ReleaseValueStore();
 
 				Log::Write( "Received Language report from node %d: Language=%s, Country=%s", GetNodeId(), language, country );
 				return true;
@@ -119,7 +119,7 @@ bool Language::HandleMsg
 		}
 	}
 
-    return false;
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -131,23 +131,23 @@ void Language::CreateVars
 	uint8 const _instance
 )
 {
-	Node* pNode = GetNode();
-	if( pNode )
+	Node* node = GetNode();
+	if( node )
 	{
-		ValueStore* pStore = pNode->GetValueStore();
-		if( pStore )
+		ValueStore* store = node->GetValueStore();
+		if( store )
 		{
-			Value* pValue;
+			Value* value;
 			
-			pValue = new ValueString( GetNodeId(), GetCommandClassId(), _instance, (uint8)ValueIndex_Language, Value::Genre_System, "Language", false, ""  );
-			pStore->AddValue( pValue );
-			pValue->Release();
+			value = new ValueString( GetNodeId(), GetCommandClassId(), _instance, (uint8)ValueIndex_Language, Value::Genre_System, "Language", false, ""  );
+			store->AddValue( value );
+			value->Release();
 
-			pValue = new ValueString( GetNodeId(), GetCommandClassId(), _instance, (uint8)ValueIndex_Country, Value::Genre_System, "Country", false, ""  );
-			pStore->AddValue( pValue );
-			pValue->Release();
+			value = new ValueString( GetNodeId(), GetCommandClassId(), _instance, (uint8)ValueIndex_Country, Value::Genre_System, "Country", false, ""  );
+			store->AddValue( value );
+			value->Release();
 
-			pNode->ReleaseValueStore();
+			node->ReleaseValueStore();
 		}
 	}
 }

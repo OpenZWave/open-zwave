@@ -40,27 +40,27 @@ using namespace OpenZWave;
 
 static enum MeterPulseCmd
 {
-    MeterPulseCmd_Get		= 0x04,
-    MeterPulseCmd_Report	= 0x05
+	MeterPulseCmd_Get		= 0x04,
+	MeterPulseCmd_Report	= 0x05
 };
 
 
 //-----------------------------------------------------------------------------
-// <MeterPulse::RequestState>                                                   
-// Request current state from the device                                       
+// <MeterPulse::RequestState>												   
+// Request current state from the device									   
 //-----------------------------------------------------------------------------
 void MeterPulse::RequestState
 (
 )
 {
 	Log::Write( "Requesting the meter pulse count from node %d", GetNodeId() );
-    Msg* pMsg = new Msg( "MeterPulseCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-    pMsg->Append( GetNodeId() );
-    pMsg->Append( 2 );
-    pMsg->Append( GetCommandClassId() );
-    pMsg->Append( MeterPulseCmd_Get );
-    pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-    Driver::Get()->SendMsg( pMsg );
+	Msg* msg = new Msg( "MeterPulseCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+	msg->Append( GetNodeId() );
+	msg->Append( 2 );
+	msg->Append( GetCommandClassId() );
+	msg->Append( MeterPulseCmd_Get );
+	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	Driver::Get()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -69,31 +69,31 @@ void MeterPulse::RequestState
 //-----------------------------------------------------------------------------
 bool MeterPulse::HandleMsg
 (
-    uint8 const* _pData,
-    uint32 const _length,
+	uint8 const* _data,
+	uint32 const _length,
 	uint32 const _instance	// = 0
 )
 {
-	if( MeterPulseCmd_Report == (MeterPulseCmd)_pData[0] )
+	if( MeterPulseCmd_Report == (MeterPulseCmd)_data[0] )
 	{
-		Node* pNode = GetNode();
-		if( pNode )
+		Node* node = GetNode();
+		if( node )
 		{
-			ValueStore* pStore = pNode->GetValueStore();
-			if( pStore )
+			ValueStore* store = node->GetValueStore();
+			if( store )
 			{
  				int32 count = 0;
 				for( uint8 i=0; i<4; ++i )
 				{
 					count <<= 8;
-					count |= (uint32)_pData[i+1];
+					count |= (uint32)_data[i+1];
 				}
 
-				if( ValueInt* pValue = static_cast<ValueInt*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
+				if( ValueInt* value = static_cast<ValueInt*>( store->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
 				{
-					pValue->OnValueChanged( count );
+					value->OnValueChanged( count );
 				}
-				pNode->ReleaseValueStore();
+				node->ReleaseValueStore();
 
 				Log::Write( "Received a meter pulse count from node %d: Count=%d", GetNodeId(), count );
 				return true;
@@ -101,7 +101,7 @@ bool MeterPulse::HandleMsg
 		}
 	}
 
-    return false;
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -113,17 +113,17 @@ void MeterPulse::CreateVars
 	uint8 const _instance
 )
 {
-	Node* pNode = GetNode();
-	if( pNode )
+	Node* node = GetNode();
+	if( node )
 	{
-		ValueStore* pStore = pNode->GetValueStore();
-		if( pStore )
+		ValueStore* store = node->GetValueStore();
+		if( store )
 		{
-			Value* pValue = new ValueInt( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_User, "Count", true, 0 );
-			pStore->AddValue( pValue );
-			pValue->Release();
+			Value* value = new ValueInt( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_User, "Count", true, 0 );
+			store->AddValue( value );
+			value->Release();
 
-			pNode->ReleaseValueStore();
+			node->ReleaseValueStore();
 		}
 	}
 }

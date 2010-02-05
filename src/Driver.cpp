@@ -46,7 +46,7 @@
 
 using namespace OpenZWave;
 
-Driver* Driver::s_pInstance = NULL;
+Driver* Driver::s_instance = NULL;
 
 
 //-----------------------------------------------------------------------------
@@ -56,15 +56,17 @@ Driver* Driver::s_pInstance = NULL;
 Driver* Driver::Create
 (
 	string const& _serialPortName,
-	string const& _configPath
+	string const& _configPath,
+	pfnOnNotification_t _callback,
+	void* _context
 )
 {
-	if( NULL == s_pInstance )
+	if( NULL == s_instance )
 	{
-		s_pInstance = new Driver( _serialPortName, _configPath );
+		s_instance = new Driver( _serialPortName, _configPath, _callback, _context );
 	}
 
-	return s_pInstance;
+	return s_instance;
 }
 
 //-----------------------------------------------------------------------------
@@ -75,8 +77,8 @@ void Driver::Destroy
 (
 )
 {
-	delete s_pInstance;
-	s_pInstance = NULL;
+	delete s_instance;
+	s_instance = NULL;
 }
 
 //-----------------------------------------------------------------------------
@@ -86,25 +88,27 @@ void Driver::Destroy
 Driver::Driver
 ( 
 	string const& _serialPortName,
-	string const& _configPath
+	string const& _configPath,
+	pfnOnNotification_t _callback,
+	void* _context
 ):
 	m_serialPortName( _serialPortName ),
 	m_configPath( _configPath ),
 	m_pollInterval( 30 ),					// By default, every polled device is queried once every 30 seconds
-	m_bWaitingForAck( false ),
+	m_waitingForAck( false ),
 	m_expectedReply( 0 ),
 	m_expectedCallbackId( 0 ),
-	m_bExit( false ),
-	m_pDriverThread( new Thread() ),
-	m_pExitEvent( new Event() ),	
-	m_pSerialPort( new SerialPort() ),
-	m_pSerialMutex( new Mutex() ),
-	m_pSendThread( new Thread() ),	
-	m_pSendMutex( new Mutex() ),	
-	m_pSendEvent( new Event() ),	
-	m_pPollThread( new Thread() ),	
-	m_pPollMutex( new Mutex() ),
-	m_pInfoMutex( new Mutex() )
+	m_exit( false ),
+	m_driverThread( new Thread() ),
+	m_exitEvent( new Event() ),	
+	m_serialPort( new SerialPort() ),
+	m_serialMutex( new Mutex() ),
+	m_sendThread( new Thread() ),	
+	m_sendMutex( new Mutex() ),	
+	m_sendEvent( new Event() ),	
+	m_pollThread( new Thread() ),	
+	m_pollMutex( new Mutex() ),
+	m_infoMutex( new Mutex() )
 {
 	// Create the log file
 	Log::Create( "OZW_Log.txt" );
@@ -112,13 +116,16 @@ Driver::Driver
 	CommandClasses::RegisterCommandClasses();
 
 	// Ensure the singleton instance is set
-	s_pInstance = this;
+	s_instance = this;
 
 	// Clear the nodes array
 	memset( m_nodes, 0, sizeof(Node*) * 256 );
 
+	// Add the first watcher
+	AddWatcher( _callback, _context );
+
 	// Start the thread that will handle communications with the Z-Wave network
-	m_pDriverThread->Start( Driver::DriverThreadEntryPoint, this );
+	m_driverThread->Start( Driver::DriverThreadEntryPoint, this );
 }
 
 //-----------------------------------------------------------------------------
@@ -129,21 +136,21 @@ Driver::~Driver
 (
 )
 {
-	m_pExitEvent->Set();
+	m_exitEvent->Set();
 
-	delete m_pPollThread;
-	delete m_pSendThread;
-	delete m_pDriverThread;
+	delete m_pollThread;
+	delete m_sendThread;
+	delete m_driverThread;
 
-	delete m_pSerialPort;
-	delete m_pSerialMutex;
+	delete m_serialPort;
+	delete m_serialMutex;
 	
-	delete m_pSendMutex;
-	delete m_pPollMutex;
-	delete m_pInfoMutex;
+	delete m_sendMutex;
+	delete m_pollMutex;
+	delete m_infoMutex;
 
-	delete m_pSendEvent;
-	delete m_pExitEvent;
+	delete m_sendEvent;
+	delete m_exitEvent;
 }
 
 //-----------------------------------------------------------------------------
@@ -152,13 +159,13 @@ Driver::~Driver
 //-----------------------------------------------------------------------------
 void Driver::DriverThreadEntryPoint
 ( 
-	void* _pContext 
+	void* _context 
 )
 {
-	Driver* pDriver = (Driver*)_pContext;
-	if( pDriver )
+	Driver* driver = (Driver*)_context;
+	if( driver )
 	{
-		pDriver->DriverThreadProc();
+		driver->DriverThreadProc();
 	}
 }
 
@@ -181,19 +188,19 @@ void Driver::DriverThreadProc
 			while( true )
 			{
 				// Get exclusive access to the serial port
-				m_pSerialMutex->Lock();
+				m_serialMutex->Lock();
 					
 				// Consume any available messages
 				while( ReadMsg() );
 
 				// Release our lock on the serial port 
-				m_pSerialMutex->Release();
+				m_serialMutex->Release();
 
 				// Wait for more data to appear at the serial port
-				m_pSerialPort->Wait( Event::Timeout_Infinite );
+				m_serialPort->Wait( Event::Timeout_Infinite );
 				
 				// Check for exit
-				if( m_bExit )
+				if( m_exit )
 				{
 					return;
 				}
@@ -204,7 +211,7 @@ void Driver::DriverThreadProc
 		if( attempts < 25 )		
 		{
 			// Retry every 5 seconds for the first two minutes			
-			if( m_pExitEvent->Wait( 5000 ) )
+			if( m_exitEvent->Wait( 5000 ) )
 			{
 				// Exit signalled.
 				break;
@@ -213,7 +220,7 @@ void Driver::DriverThreadProc
 		else
 		{
 			// Retry every 30 seconds after that
-			if( m_pExitEvent->Wait( 30000 ) )
+			if( m_exitEvent->Wait( 30000 ) )
 			{
 				// Exit signalled.
 				break;
@@ -232,47 +239,47 @@ bool Driver::Init
 )
 {
 	m_nodeId = -1;
-	m_bWaitingForAck = false;
+	m_waitingForAck = false;
 
 	// Open the serial port
 	Log::Write( "Opening serial port %s", m_serialPortName.c_str() );
 
-	if( !m_pSerialPort->Open( m_serialPortName, 115200, SerialPort::Parity_None, SerialPort::StopBits_One ) )
+	if( !m_serialPort->Open( m_serialPortName, 115200, SerialPort::Parity_None, SerialPort::StopBits_One ) )
 	{
 	 	Log::Write( "Failed to init the controller (attempt %d)", _attempts );
 		return false;
 	}
 
 	// Serial port opened successfully, so we need to start all the worker threads
-	m_pSendThread->Start( Driver::SendThreadEntryPoint, this );
-	m_pPollThread->Start( Driver::PollThreadEntryPoint, this );
+	m_sendThread->Start( Driver::SendThreadEntryPoint, this );
+	m_pollThread->Start( Driver::PollThreadEntryPoint, this );
 
 	// Send a NAK to the ZWave device
 	uint8 nak = NAK;
-	m_pSerialPort->Write( &nak, 1 );
+	m_serialPort->Write( &nak, 1 );
 
 	// Send commands to retrieve properties from the Z-Wave interface 
-	Msg* pMsg;
+	Msg* msg;
 
 	Log::Write( "Get version" );
-	pMsg = new Msg( "Get version", 0xff, REQUEST, ZW_GET_VERSION, false );
-	SendMsg( pMsg );
+	msg = new Msg( "Get version", 0xff, REQUEST, ZW_GET_VERSION, false );
+	SendMsg( msg );
 
 	Log::Write( "Get home/node id" );
-	pMsg = new Msg( "Get home/node id", 0xff, REQUEST, ZW_MEMORY_GET_ID, false );
-	SendMsg( pMsg );
+	msg = new Msg( "Get home/node id", 0xff, REQUEST, ZW_MEMORY_GET_ID, false );
+	SendMsg( msg );
 
 	Log::Write( "Get capabilities" );
-	pMsg = new Msg( "Get capabilities", 0xff, REQUEST, FUNC_ID_SERIAL_API_GET_CAPABILITIES, false );
-	SendMsg( pMsg );
+	msg = new Msg( "Get capabilities", 0xff, REQUEST, FUNC_ID_SERIAL_API_GET_CAPABILITIES, false );
+	SendMsg( msg );
 	
 	//Log::Write( "Get SUC node id" );
-	//pMsg = new Msg( "Get SUC node id", 0xff, REQUEST, FUNC_ID_ZW_GET_SUC_NODE_ID, false );
-	//SendMsg( pMsg );
+	//msg = new Msg( "Get SUC node id", 0xff, REQUEST, FUNC_ID_ZW_GET_SUC_NODE_ID, false );
+	//SendMsg( msg );
 	
 	Log::Write( "Get init data" );
-	pMsg = new Msg( "Get init data", 0xff, REQUEST, FUNC_ID_SERIAL_API_GET_INIT_DATA, false );
-	SendMsg( pMsg );
+	msg = new Msg( "Get init data", 0xff, REQUEST, FUNC_ID_SERIAL_API_GET_INIT_DATA, false );
+	SendMsg( msg );
 
 	// Init successful
 	return true;
@@ -288,30 +295,30 @@ bool Driver::Init
 //-----------------------------------------------------------------------------
 void Driver::SendMsg
 ( 
-	Msg* _pMsg
+	Msg* _msg
 )
 {
-	_pMsg->Finalize();
+	_msg->Finalize();
 
-	Node* pNode = m_nodes[_pMsg->GetTargetNodeId()];
-	if( ( pNode ) && ( !pNode->IsListeningDevice() ) )
+	Node* node = m_nodes[_msg->GetTargetNodeId()];
+	if( ( node ) && ( !node->IsListeningDevice() ) )
 	{
-		if( WakeUp* pWakeUp = static_cast<WakeUp*>( pNode->GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
+		if( WakeUp* wakeUp = static_cast<WakeUp*>( node->GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
 		{
-			if( !pWakeUp->IsAwake() )
+			if( !wakeUp->IsAwake() )
 			{
 				Log::Write( "" );
-				Log::Write( "Wake-Up Command: %s", _pMsg->GetAsString().c_str() );
-				pWakeUp->QueueMsg( _pMsg );
+				Log::Write( "Wake-Up Command: %s", _msg->GetAsString().c_str() );
+				wakeUp->QueueMsg( _msg );
 				return;
 			}
 		}
 	}
 
-	Log::Write( "Queuing command: %s", _pMsg->GetAsString().c_str() );
-	m_pSendMutex->Lock();
-	m_sendQueue.push_back( _pMsg );
-	m_pSendMutex->Release();
+	Log::Write( "Queuing command: %s", _msg->GetAsString().c_str() );
+	m_sendMutex->Lock();
+	m_sendQueue.push_back( _msg );
+	m_sendMutex->Release();
 	UpdateEvents();
 }
 
@@ -321,13 +328,13 @@ void Driver::SendMsg
 //-----------------------------------------------------------------------------
 void Driver::SendThreadEntryPoint
 ( 
-	void* _pContext 
+	void* _context 
 )
 {
-	Driver* pDriver = (Driver*)_pContext;
-	if( pDriver )
+	Driver* driver = (Driver*)_context;
+	if( driver )
 	{
-		pDriver->SendThreadProc();
+		driver->SendThreadProc();
 	}
 }
 
@@ -340,41 +347,41 @@ void Driver::SendThreadProc()
 	int32 timeout = Event::Timeout_Infinite;
 	while( true )
 	{
-		bool bEventSet = m_pSendEvent->Wait( timeout );
+		bool eventSet = m_sendEvent->Wait( timeout );
 
 		// Check for exit
-		if( m_bExit )
+		if( m_exit )
 		{
 			return;
 		}
 
-		if( bEventSet )
+		if( eventSet )
 		{
 			// We have a message to send.
 
 			// Get the serial port mutex so we don't conflict with the read thread.
-			m_pSerialMutex->Lock();
+			m_serialMutex->Lock();
 
 			// Get the send mutex so we can access the message queue.
-			m_pSendMutex->Lock();
+			m_sendMutex->Lock();
 
 			if( !m_sendQueue.empty() )
 			{
-				Msg* pMsg = m_sendQueue.front();
+				Msg* msg = m_sendQueue.front();
 				
-				m_expectedCallbackId = pMsg->GetCallbackId();
-				m_expectedReply = pMsg->GetExpectedReply();
-				m_bWaitingForAck = true;
-				m_pSendEvent->Reset();
+				m_expectedCallbackId = msg->GetCallbackId();
+				m_expectedReply = msg->GetExpectedReply();
+				m_waitingForAck = true;
+				m_sendEvent->Reset();
 
 				timeout = 5000;	// retry in 5 seconds
 
-				pMsg->SetSendAttempts( pMsg->GetSendAttempts() + 1 );
+				msg->SetSendAttempts( msg->GetSendAttempts() + 1 );
 
 				Log::Write( "" );
-				Log::Write( "Sending command (Callback ID=%d, Expected Reply=%d) - %s", pMsg->GetCallbackId(), pMsg->GetExpectedReply(), pMsg->GetAsString().c_str() );
+				Log::Write( "Sending command (Callback ID=%d, Expected Reply=%d) - %s", msg->GetCallbackId(), msg->GetExpectedReply(), msg->GetAsString().c_str() );
 
-				m_pSerialPort->Write( pMsg->GetBuffer(), pMsg->GetLength() );
+				m_serialPort->Write( msg->GetBuffer(), msg->GetLength() );
 			}
 			else
 			{
@@ -382,14 +389,14 @@ void Driver::SendThreadProc()
 				uint8 nodeId = GetInfoRequest();
 				if( nodeId != 0xff )
 				{
-					Msg* pMsg = new Msg( "Get Node Protocol Info", nodeId, REQUEST, FUNC_ID_ZW_GET_NODE_PROTOCOL_INFO, false );
-					pMsg->Append( nodeId );	
-					SendMsg( pMsg ); 
+					Msg* msg = new Msg( "Get Node Protocol Info", nodeId, REQUEST, FUNC_ID_ZW_GET_NODE_PROTOCOL_INFO, false );
+					msg->Append( nodeId );	
+					SendMsg( msg ); 
 				}
 			}
 
-			m_pSendMutex->Release();
-			m_pSerialMutex->Release();
+			m_sendMutex->Release();
+			m_serialMutex->Release();
 		}
 		else
 		{
@@ -397,19 +404,19 @@ void Driver::SendThreadProc()
 			timeout = Event::Timeout_Infinite;
 
 			// Get the serial port mutex so we don't conflict with the read thread.
-			m_pSerialMutex->Lock();
+			m_serialMutex->Lock();
 
 			// Get the send mutex so we can access the message queue.
-			m_pSendMutex->Lock();
+			m_sendMutex->Lock();
 
-			if( m_bWaitingForAck || m_expectedCallbackId || m_expectedReply )
+			if( m_waitingForAck || m_expectedCallbackId || m_expectedReply )
 			{
 				// Timed out waiting for a response
 				if( !m_sendQueue.empty() )
 				{
-					Msg* pMsg = m_sendQueue.front();
+					Msg* msg = m_sendQueue.front();
 
-					if( pMsg->GetSendAttempts() > 2 )
+					if( msg->GetSendAttempts() > 2 )
 					{
 						// Give up
 						Log::Write( "ERROR: Dropping command, expected response not received after three attempts");
@@ -418,21 +425,21 @@ void Driver::SendThreadProc()
 					else
 					{
 						// Resend
-						if( pMsg->GetSendAttempts() > 0 )
+						if( msg->GetSendAttempts() > 0 )
 						{
 							Log::Write( "Timeout - resending" );
 						}
 						
-						m_bWaitingForAck = 0;	
+						m_waitingForAck = 0;	
 						m_expectedCallbackId = 0;
 						m_expectedReply = 0;
-						m_pSendEvent->Set();
+						m_sendEvent->Set();
 					}
 				}
 			}
 
-			m_pSendMutex->Release();
-			m_pSerialMutex->Release();
+			m_sendMutex->Release();
+			m_serialMutex->Release();
 		}
 	}
 }
@@ -445,17 +452,17 @@ void Driver::RemoveMsg
 ( 
 )
 {
-	m_pSendMutex->Lock();
+	m_sendMutex->Lock();
 	
 	delete m_sendQueue.front();
 	m_sendQueue.pop_front();
 	if( m_sendQueue.empty() )
 	{
 		//No messages left, so clear the event
-		m_pSendEvent->Reset();
+		m_sendEvent->Reset();
 	}
 	
-	m_pSendMutex->Release();
+	m_sendMutex->Release();
 }
 
 //-----------------------------------------------------------------------------
@@ -466,18 +473,18 @@ void Driver::TriggerResend
 ( 
 )
 {
-	m_pSendMutex->Lock();
+	m_sendMutex->Lock();
 	
-	Msg* pMsg = m_sendQueue.front();
-	pMsg->SetSendAttempts( 0 );
+	Msg* msg = m_sendQueue.front();
+	msg->SetSendAttempts( 0 );
 
-	m_bWaitingForAck = 0;	
+	m_waitingForAck = 0;	
 	m_expectedCallbackId = 0;
 	m_expectedReply = 0;
 
-	m_pSendEvent->Set();
+	m_sendEvent->Set();
 
-	m_pSendMutex->Release();
+	m_sendMutex->Release();
 }
 
 //-----------------------------------------------------------------------------
@@ -492,29 +499,29 @@ bool Driver::ReadMsg
 (
 )
 {
-	uint8 pBuffer[1024];
+	uint8 buffer[1024];
 
-	if( !m_pSerialPort->Read( pBuffer, 1 ) )
+	if( !m_serialPort->Read( buffer, 1 ) )
 	{
 		// Nothing to read
 		return false;
 	}
 
-	switch( pBuffer[0] )
+	switch( buffer[0] )
 	{
 		case SOF:
 		{
 			// Read the length byte
-			m_pSerialPort->Read( &pBuffer[1], 1 );
+			m_serialPort->Read( &buffer[1], 1 );
 
 			// Read the rest of the frame
-			uint32 bytesRemaining = pBuffer[1];
+			uint32 bytesRemaining = buffer[1];
 			while( bytesRemaining )
 			{
-				bytesRemaining -= m_pSerialPort->Read( &pBuffer[2+(uint32)pBuffer[1]-bytesRemaining], bytesRemaining );
+				bytesRemaining -= m_serialPort->Read( &buffer[2+(uint32)buffer[1]-bytesRemaining], bytesRemaining );
 			}
 
-			uint32 length = pBuffer[1] + 2;
+			uint32 length = buffer[1] + 2;
 
 			// Log the data
 			string str = "";
@@ -526,7 +533,7 @@ bool Driver::ReadMsg
 				}
 
 				char byteStr[8];
-				snprintf( byteStr, sizeof(byteStr), "0x%.2x", pBuffer[i] );
+				snprintf( byteStr, sizeof(byteStr), "0x%.2x", buffer[i] );
 				str += byteStr;
 			}
 			Log::Write( "" );
@@ -536,23 +543,23 @@ bool Driver::ReadMsg
 			uint8 checksum = 0xff;
 			for( uint32 i=1; i<(length-1); ++i ) 
 			{
-				checksum ^= pBuffer[i];
+				checksum ^= buffer[i];
 			}
 
-			if( pBuffer[length-1] == checksum )
+			if( buffer[length-1] == checksum )
 			{
 				// Checksum correct - send ACK
 				uint8 ack = ACK;
-				m_pSerialPort->Write( &ack, 1 );
+				m_serialPort->Write( &ack, 1 );
 
 				// Process the received message
-				ProcessMsg( &pBuffer[2] );
+				ProcessMsg( &buffer[2] );
 			}
 			else
 			{
 				Log::Write( "Checksum incorrect - sending NAK" );
 				uint8 nak = NAK;
-				m_pSerialPort->Write( &nak, 1 );
+				m_serialPort->Write( &nak, 1 );
 			}
 			break;
 		}
@@ -574,7 +581,7 @@ bool Driver::ReadMsg
 		case ACK:
 		{
 			Log::Write( "ACK received" );
-			m_bWaitingForAck = false;
+			m_waitingForAck = false;
 			
 			if( ( 0 == m_expectedCallbackId ) && ( 0 == m_expectedReply ) )
 			{
@@ -587,7 +594,7 @@ bool Driver::ReadMsg
 		
 		default:
 		{
-			Log::Write( "ERROR! Out of frame flow! (0x%.2x)", pBuffer[0] );
+			Log::Write( "ERROR! Out of frame flow! (0x%.2x)", buffer[0] );
 			break;
 		}
 	}
@@ -601,53 +608,53 @@ bool Driver::ReadMsg
 //-----------------------------------------------------------------------------
 void Driver::ProcessMsg
 (
-	uint8* _pData
+	uint8* _data
 )
 {
 	bool bHandleCallback = true;
 
-	if( RESPONSE == _pData[0] )
+	if( RESPONSE == _data[0] )
 	{
-		switch( _pData[1] )
+		switch( _data[1] )
 		{
 			case ZW_GET_VERSION:
 			{
-				Log::Write( "Received reply to ZW_GET_VERSION: %s", ((int8*)&_pData[2]) );
+				Log::Write( "Received reply to ZW_GET_VERSION: %s", ((int8*)&_data[2]) );
 				break;
 			}
 			case FUNC_ID_SERIAL_API_GET_CAPABILITIES:
 			{
-				HandleGetCapabilitiesResponse( _pData );
+				HandleGetCapabilitiesResponse( _data );
 				break;
 			}
 			case FUNC_ID_ZW_ENABLE_SUC:
 			{
-				HandleEnableSUCResponse( _pData );
+				HandleEnableSUCResponse( _data );
 				break;
 			}
 			case FUNC_ID_ZW_SET_SUC_NODE_ID:
 			{
-				HandleSetSUCNodeIdResponse( _pData );
+				HandleSetSUCNodeIdResponse( _data );
 				break;
 			}
 			case FUNC_ID_ZW_GET_SUC_NODE_ID:
 			{
-				HandleGetSUCNodeIdResponse( _pData );
+				HandleGetSUCNodeIdResponse( _data );
 				break;
 			}
 			case ZW_MEMORY_GET_ID:
 			{
-				HandleMemoryGetIdResponse( _pData );
+				HandleMemoryGetIdResponse( _data );
 				break;
 			}
 			case FUNC_ID_SERIAL_API_GET_INIT_DATA:
 			{
-				HandleSerialAPIGetInitDataResponse( _pData );
+				HandleSerialAPIGetInitDataResponse( _data );
 				break;
 			}
 			case FUNC_ID_ZW_GET_NODE_PROTOCOL_INFO:
 			{
-				HandleGetNodeProtocolInfoResponse( _pData );
+				HandleGetNodeProtocolInfoResponse( _data );
 				break;
 			}
 			case FUNC_ID_ZW_REQUEST_NODE_INFO:
@@ -657,44 +664,44 @@ void Driver::ProcessMsg
 			}
 			case FUNC_ID_ZW_SEND_DATA:
 			{
-				HandleSendDataResponse( _pData );
+				HandleSendDataResponse( _data );
 				bHandleCallback = false;			// Skip the callback handling - a subsequent FUNC_ID_ZW_SEND_DATA request will deal with that
 				break;
 			}
 			default:
 			{
-				Log::Write( "TODO: handle response for %d", _pData[1] );
+				Log::Write( "TODO: handle response for %d", _data[1] );
 				break;
 			}
 		}
 	} 
-	else if( REQUEST == _pData[0] )
+	else if( REQUEST == _data[0] )
 	{
-		switch( _pData[1] )
+		switch( _data[1] )
 		{
 			case FUNC_ID_ZW_SEND_DATA:
 			{
-				HandleSendDataRequest( _pData );
+				HandleSendDataRequest( _data );
 				break;
 			}
 			case FUNC_ID_ZW_ADD_NODE_TO_NETWORK:
 			{
-				HandleAddNodeToNetworkRequest( _pData );
+				HandleAddNodeToNetworkRequest( _data );
 				break;
 			}
 			case FUNC_ID_ZW_REMOVE_NODE_FROM_NETWORK:
 			{
-				HandleRemoveNodeFromNetworkRequest( _pData );
+				HandleRemoveNodeFromNetworkRequest( _data );
 				break;
 			}
 			case FUNC_ID_APPLICATION_COMMAND_HANDLER:
 			{
-				HandleApplicationCommandHandlerRequest( _pData );
+				HandleApplicationCommandHandlerRequest( _data );
 				break;
 			}
 			case FUNC_ID_ZW_APPLICATION_UPDATE:
 			{
-				HandleApplicationUpdateRequest( _pData );
+				HandleApplicationUpdateRequest( _data );
 				break;
 			}
 			default:
@@ -709,16 +716,16 @@ void Driver::ProcessMsg
 	{
 		if( m_expectedCallbackId )
 		{
-			if( m_expectedCallbackId == _pData[2] )
+			if( m_expectedCallbackId == _data[2] )
 			{
-				Log::Write( "Message transaction (callback=%d) complete", _pData[2] );
+				Log::Write( "Message transaction (callback=%d) complete", _data[2] );
 				RemoveMsg();
 				m_expectedCallbackId = 0;
 			}
 		}
 		if( m_expectedReply )
 		{
-			if( m_expectedReply == _pData[1] )
+			if( m_expectedReply == _data[1] )
 			{
 				Log::Write( "Message transaction complete" );
 				RemoveMsg();
@@ -736,10 +743,10 @@ void Driver::ProcessMsg
 //-----------------------------------------------------------------------------
 void Driver::HandleGetCapabilitiesResponse
 (
-	uint8* _pData
+	uint8* _data
 )
 {
-	Log::Write( "Received reply to GetCapabilities.  Node ID = %d", _pData[2] );
+	Log::Write( "Received reply to GetCapabilities.  Node ID = %d", _data[2] );
 	//2009-06-14 11:41:14:585 Received: 0x01, 0x2b, 0x01, 0x07, 0x02, 0x52, 0x00, 0x00, 0x00, 0x01, 0x00, 0x01, 0xfe, 0x80, 0xfe, 0x80, 0x03, 0x00, 0x00, 0x00, 0xfb, 0x9f, 0x3b, 0x80, 0x07, 0x00, 0x00, 0x80, 0x00, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x59
 }
 
@@ -749,7 +756,7 @@ void Driver::HandleGetCapabilitiesResponse
 //-----------------------------------------------------------------------------
 void Driver::HandleEnableSUCResponse
 (
-	uint8* _pData
+	uint8* _data
 )
 {
 	Log::Write( "Received reply to Enable SUC." );
@@ -761,7 +768,7 @@ void Driver::HandleEnableSUCResponse
 //-----------------------------------------------------------------------------
 void Driver::HandleSetSUCNodeIdResponse
 (
-	uint8* _pData
+	uint8* _data
 )
 {
 	Log::Write( "Received reply to SET_SUC_NODE_ID." );
@@ -773,29 +780,29 @@ void Driver::HandleSetSUCNodeIdResponse
 //-----------------------------------------------------------------------------
 void Driver::HandleGetSUCNodeIdResponse
 (
-	uint8* _pData
+	uint8* _data
 )
 {
-	Log::Write( "Received reply to GET_SUC_NODE_ID.  Node ID = %d", _pData[2] );
+	Log::Write( "Received reply to GET_SUC_NODE_ID.  Node ID = %d", _data[2] );
 
-	if( _pData[2] == 0)
+	if( _data[2] == 0)
 	{
 		Log::Write( "No SUC, so we become SUC" );
 		
-		Msg* pMsg;
+		Msg* msg;
 
-		pMsg = new Msg( "Enable SUC", m_nodeId, REQUEST, FUNC_ID_ZW_ENABLE_SUC, false );
-		pMsg->Append( 1 );	
-//		pMsg->Append( ZW_SUC_FUNC_BASIC_SUC );			// SUC
-		pMsg->Append( ZW_SUC_FUNC_NODEID_SERVER );		// SIS
-		SendMsg( pMsg ); 
+		msg = new Msg( "Enable SUC", m_nodeId, REQUEST, FUNC_ID_ZW_ENABLE_SUC, false );
+		msg->Append( 1 );	
+//		msg->Append( ZW_SUC_FUNC_BASIC_SUC );			// SUC
+		msg->Append( ZW_SUC_FUNC_NODEID_SERVER );		// SIS
+		SendMsg( msg ); 
 
-		pMsg = new Msg( "Set SUC node ID", m_nodeId, REQUEST, FUNC_ID_ZW_SET_SUC_NODE_ID, false );
-		pMsg->Append( m_nodeId );
-		pMsg->Append( 1 );								// TRUE, we want to be SUC/SIS
-		pMsg->Append( 0 );								// no low power
-		pMsg->Append( ZW_SUC_FUNC_NODEID_SERVER );
-		SendMsg( pMsg ); 
+		msg = new Msg( "Set SUC node ID", m_nodeId, REQUEST, FUNC_ID_ZW_SET_SUC_NODE_ID, false );
+		msg->Append( m_nodeId );
+		msg->Append( 1 );								// TRUE, we want to be SUC/SIS
+		msg->Append( 0 );								// no low power
+		msg->Append( ZW_SUC_FUNC_NODEID_SERVER );
+		SendMsg( msg ); 
 	}
 }
 
@@ -805,11 +812,11 @@ void Driver::HandleGetSUCNodeIdResponse
 //-----------------------------------------------------------------------------
 void Driver::HandleMemoryGetIdResponse
 (
-	uint8* _pData
+	uint8* _data
 )
 {
-	Log::Write( "Received reply to ZW_MEMORY_GET_ID. Home ID = 0x%02x%02x%02x%02x.  Our node ID = %d", _pData[2], _pData[3], _pData[4], _pData[5], _pData[6] );
-	m_nodeId = _pData[6];
+	Log::Write( "Received reply to ZW_MEMORY_GET_ID. Home ID = 0x%02x%02x%02x%02x.  Our node ID = %d", _data[2], _data[3], _data[4], _data[5], _data[6] );
+	m_nodeId = _data[6];
 }
 
 //-----------------------------------------------------------------------------
@@ -818,20 +825,20 @@ void Driver::HandleMemoryGetIdResponse
 //-----------------------------------------------------------------------------
 void Driver::HandleSerialAPIGetInitDataResponse
 (
-	uint8* _pData
+	uint8* _data
 )
 {
 	int32 i;
 	Log::Write( "Received reply to FUNC_ID_SERIAL_API_GET_INIT_DATA:" );
 	
-	if( _pData[4] == NUM_NODE_BITFIELD_BYTES )
+	if( _data[4] == NUM_NODE_BITFIELD_BYTES )
 	{
 		for( i=0; i<NUM_NODE_BITFIELD_BYTES; ++i)
 		{
 			for( int32 j=0; j<8; ++j )
 			{
 				uint8 nodeId = (i*8)+j+1;
-				if( _pData[i+5] & (0x01 << j) )
+				if( _data[i+5] & (0x01 << j) )
 				{
 					Log::Write( "Found node %d", nodeId );
 
@@ -858,7 +865,7 @@ void Driver::HandleSerialAPIGetInitDataResponse
 //-----------------------------------------------------------------------------
 void Driver::HandleGetNodeProtocolInfoResponse
 (
-	uint8* _pData
+	uint8* _data
 )
 {
 	uint8 nodeId = GetInfoRequest();
@@ -874,7 +881,7 @@ void Driver::HandleGetNodeProtocolInfoResponse
 	// Update the node with the protocol info
 	if( m_nodes[nodeId] )
 	{
-		m_nodes[nodeId]->UpdateProtocolInfo( &_pData[2] );
+		m_nodes[nodeId]->UpdateProtocolInfo( &_data[2] );
 	}
 }
 
@@ -884,14 +891,14 @@ void Driver::HandleGetNodeProtocolInfoResponse
 //-----------------------------------------------------------------------------
 void Driver::HandleSendDataResponse
 (
-	uint8* _pData
+	uint8* _data
 )
 {
-	if( 0 == _pData[2] )
+	if( 0 == _data[2] )
 	{
 		Log::Write("ERROR: ZW_SEND could not be delivered to Z-Wave stack");
 	}
-	else if( 1 == _pData[2] )
+	else if( 1 == _data[2] )
 	{
 		Log::Write( "ZW_SEND delivered to Z-Wave stack" );
 	}
@@ -907,12 +914,12 @@ void Driver::HandleSendDataResponse
 //-----------------------------------------------------------------------------
 void Driver::HandleSendDataRequest
 (
-	uint8* _pData
+	uint8* _data
 )
 {
-	Log::Write( "ZW_SEND Request with callback ID %d received (expected %d)", _pData[2], m_expectedCallbackId );
+	Log::Write( "ZW_SEND Request with callback ID %d received (expected %d)", _data[2], m_expectedCallbackId );
 
-	if( ( _pData[2] != m_expectedCallbackId ) || ( _pData[1] != m_expectedReply ) )
+	if( ( _data[2] != m_expectedCallbackId ) || ( _data[1] != m_expectedReply ) )
 	{
 		// Wrong callback ID
 		Log::Write( "ERROR: Callback ID is invalid" );
@@ -920,7 +927,7 @@ void Driver::HandleSendDataRequest
 	else 
 	{
 		// Callback ID matches our expectation
-		switch( _pData[3] )
+		switch( _data[3] )
 		{
 			case 0:
 			{
@@ -935,7 +942,7 @@ void Driver::HandleSendDataRequest
 			{
 				// ZW_SEND failed
 				Log::Write( "Error: ZW_SEND failed, removing command" );
-				m_pSendMutex->Lock();
+				m_sendMutex->Lock();
 				if( !m_sendQueue.empty() )
 				{
 					if( m_sendQueue.front()->GetSendAttempts() >= 3 )
@@ -950,9 +957,9 @@ void Driver::HandleSendDataRequest
 					Log::Write( "Error: ZW_SEND failed, retrying" );
 					
 					// Trigger resend
-					m_bWaitingForAck = false;
+					m_waitingForAck = false;
 				}
-				m_pSendMutex->Release();
+				m_sendMutex->Release();
 				
 				m_expectedCallbackId = 0;
 				m_expectedReply = 0;
@@ -974,12 +981,12 @@ void Driver::HandleSendDataRequest
 //-----------------------------------------------------------------------------
 void Driver::HandleAddNodeToNetworkRequest
 (
-	uint8* _pData
+	uint8* _data
 )
 {
 	Log::Write( "FUNC_ID_ZW_ADD_NODE_TO_NETWORK:" );
 	
-	switch( _pData[3] )
+	switch( _data[3] )
 	{
 		case ADD_NODE_STATUS_LEARN_READY:
 		{
@@ -994,12 +1001,12 @@ void Driver::HandleAddNodeToNetworkRequest
 		case ADD_NODE_STATUS_ADDING_SLAVE:
 		{
 			Log::Write( "ADD_NODE_STATUS_ADDING_SLAVE" );			
-			Log::Write( "Adding node ID %d", _pData[4] );
+			Log::Write( "Adding node ID %d", _data[4] );
 			
-			if( ( _pData[7] == 8) && ( _pData[8] == 3) )
+			if( ( _data[7] == 8) && ( _data[8] == 3) )
 			{
 				Log::Write( "Setback schedule thermostat detected, triggering configuration" );
-				//SetWakeupInterval( _pData[4], 15, true );
+				//SetWakeupInterval( _data[4], 15, true );
 			}
 			
 			// Finish adding node	
@@ -1010,7 +1017,7 @@ void Driver::HandleAddNodeToNetworkRequest
 		{
 			Log::Write( "ADD_NODE_STATUS_ADDING_CONTROLLER");
 			
-			Log::Write( "Adding node ID %d", _pData[4] );
+			Log::Write( "Adding node ID %d", _data[4] );
 			break;
 		}
 		case ADD_NODE_STATUS_PROTOCOL_DONE:
@@ -1044,12 +1051,12 @@ void Driver::HandleAddNodeToNetworkRequest
 //-----------------------------------------------------------------------------
 void Driver::HandleRemoveNodeFromNetworkRequest
 (
-	uint8* _pData
+	uint8* _data
 )
 {
 	Log::Write( "FUNC_ID_ZW_REMOVE_NODE_FROM_NETWORK:" );
 	
-	switch( _pData[3] ) 
+	switch( _data[3] ) 
 	{
 		case REMOVE_NODE_STATUS_LEARN_READY:
 		{
@@ -1101,13 +1108,13 @@ void Driver::HandleRemoveNodeFromNetworkRequest
 //-----------------------------------------------------------------------------
 void Driver::HandleApplicationCommandHandlerRequest
 (
-	uint8* _pData
+	uint8* _data
 )
 {
-	uint8 nodeId = _pData[3];
+	uint8 nodeId = _data[3];
 	if( m_nodes[nodeId] )
 	{
-		m_nodes[nodeId]->ApplicationCommandHandler( _pData );
+		m_nodes[nodeId]->ApplicationCommandHandler( _data );
 	}
 }
 
@@ -1117,23 +1124,23 @@ void Driver::HandleApplicationCommandHandlerRequest
 //-----------------------------------------------------------------------------
 void Driver::HandleApplicationUpdateRequest
 (
-	uint8* _pData
+	uint8* _data
 )
 {
-	uint8 nodeId = _pData[3];
+	uint8 nodeId = _data[3];
 
-	switch( _pData[2] )
+	switch( _data[2] )
 	{
 		case UPDATE_STATE_NODE_INFO_RECEIVED:
 		{
 			Log::Write( "UPDATE_STATE_NODE_INFO_RECEIVED from node %d", nodeId );
-			if( Node* pNode = m_nodes[nodeId] )
+			if( Node* node = m_nodes[nodeId] )
 			{
-				pNode->UpdateNodeInfo( &_pData[8], _pData[4] - 3 );
+				node->UpdateNodeInfo( &_data[8], _data[4] - 3 );
 
-				if( !pNode->IsListeningDevice() )
+				if( !node->IsListeningDevice() )
 				{
-					if( WakeUp* pWakeUp = static_cast<WakeUp*>( pNode->GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
+					if( WakeUp* pWakeUp = static_cast<WakeUp*>( node->GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
 					{
 						pWakeUp->SendPending();
 					}
@@ -1177,17 +1184,17 @@ void Driver::EnablePoll
 	uint8 _id
 )
 {
-	Node* pNode = m_nodes[_id];
-	if( !pNode )
+	Node* node = m_nodes[_id];
+	if( !node )
 	{
 		// Node does not exist
 		return;
 	}
 
 	// Set the node state to polled
-	pNode->SetPolled( true );
+	node->SetPolled( true );
 
-	if( !pNode->IsListeningDevice() )
+	if( !node->IsListeningDevice() )
 	{
 		// The device is not awake all the time, so we will request state when 
 		// it wakes up, rather than at polling intervals.  This is handled in
@@ -1196,7 +1203,7 @@ void Driver::EnablePoll
 	}
 
 	// Add the node to the poll list
-	m_pPollMutex->Lock();
+	m_pollMutex->Lock();
 	
 	// See if the node is already in the poll list.
 	for( list<uint8>::iterator it = m_pollList.begin(); it != m_pollList.end(); ++it )
@@ -1204,14 +1211,14 @@ void Driver::EnablePoll
 		if( *it == _id )
 		{
 			// Node is already in the poll list, so we have nothing to do.
-			m_pPollMutex->Release();
+			m_pollMutex->Release();
 			return;	
 		}
 	}
 
 	// Not in the list, so we add it
 	m_pollList.push_back( _id );
-	m_pPollMutex->Release();
+	m_pollMutex->Release();
 }
 
 //-----------------------------------------------------------------------------
@@ -1223,17 +1230,17 @@ void Driver::DisablePoll
 	uint8 _id
 )
 {
-	Node* pNode = m_nodes[_id];
-	if( !pNode )
+	Node* node = m_nodes[_id];
+	if( !node )
 	{
 		// Node does not exist
 		return;
 	}
 
 	// Set the node state to not-polled
-	pNode->SetPolled( false );
+	node->SetPolled( false );
 
-	m_pPollMutex->Lock();
+	m_pollMutex->Lock();
 
 	// Find the node in the poll list.
 	for( list<uint8>::iterator it = m_pollList.begin(); it != m_pollList.end(); ++it )
@@ -1246,7 +1253,7 @@ void Driver::DisablePoll
 		}
 	}
 	
-	m_pPollMutex->Release();
+	m_pollMutex->Release();
 }
 
 //-----------------------------------------------------------------------------
@@ -1255,13 +1262,13 @@ void Driver::DisablePoll
 //-----------------------------------------------------------------------------
 void Driver::PollThreadEntryPoint
 ( 
-	void* _pContext 
+	void* _context 
 )
 {
-	Driver* pDriver = (Driver*)_pContext;
-	if( pDriver )
+	Driver* driver = (Driver*)_context;
+	if( driver )
 	{
-		pDriver->PollThreadProc();
+		driver->PollThreadProc();
 	}
 }
 
@@ -1278,7 +1285,7 @@ void Driver::PollThreadProc()
 		if( !m_pollList.empty() )
 		{
 			// We only bother getting the lock if the pollList is not empty
-			m_pPollMutex->Lock();
+			m_pollMutex->Lock();
 			
 			if( !m_pollList.empty() )
 			{
@@ -1297,11 +1304,11 @@ void Driver::PollThreadProc()
 				//RequestBasicReport( id );
 			}
 
-			m_pPollMutex->Release();
+			m_pollMutex->Release();
 		}
 
 		// Wait for the interval to expire, while watching for exit events
-		if( m_pExitEvent->Wait( pollInterval ) )
+		if( m_exitEvent->Wait( pollInterval ) )
 		{
 			// Exit has been called
 			return;
@@ -1322,10 +1329,10 @@ void Driver::AddInfoRequest
 	uint8 const _nodeId
 )
 {
-	m_pInfoMutex->Lock();
+	m_infoMutex->Lock();
 	m_infoQueue.push_back( _nodeId );
 	UpdateEvents();
-	m_pInfoMutex->Release();
+	m_infoMutex->Release();
 }
 
 //-----------------------------------------------------------------------------
@@ -1336,7 +1343,7 @@ void Driver::RemoveInfoRequest
 ( 
 )
 {
-	m_pInfoMutex->Lock();
+	m_infoMutex->Lock();
 	if( !m_infoQueue.empty() )
 	{
 		m_infoQueue.pop_front();
@@ -1345,7 +1352,7 @@ void Driver::RemoveInfoRequest
 			UpdateEvents();
 		}
 	}
-	m_pInfoMutex->Release();
+	m_infoMutex->Release();
 }
 
 //-----------------------------------------------------------------------------
@@ -1358,12 +1365,12 @@ uint8 Driver::GetInfoRequest
 {
 	uint8 nodeId = 0xff;
 
-	m_pInfoMutex->Lock();
+	m_infoMutex->Lock();
 	if( !m_infoQueue.empty() )
 	{
 		nodeId = m_infoQueue.front();
 	}
-	m_pInfoMutex->Release();
+	m_infoMutex->Release();
 	return nodeId;
 }
 
@@ -1378,9 +1385,9 @@ Value* Driver::GetValue
 {
 	// Get the node that stores this value
 	uint8 nodeId = _id.GetNodeId();
-	if( Node* pNode = m_nodes[nodeId] )
+	if( Node* node = m_nodes[nodeId] )
 	{
-		return( pNode->GetValue( _id ) );
+		return( node->GetValue( _id ) );
 	}
 
 	return NULL;
@@ -1396,21 +1403,21 @@ Value* Driver::GetValue
 //-----------------------------------------------------------------------------
 bool Driver::AddWatcher
 (
-	pfnOnValueChanged_t _pWatcher,
-	void* _pContext
+	pfnOnNotification_t _pWatcher,
+	void* _context
 )
 {
 	// Ensure this watcher is not already on the list
 	for( list<Watcher*>::iterator it = m_watchers.begin(); it != m_watchers.end(); ++it )
 	{
-		if( ((*it)->m_callback == _pWatcher ) && ( (*it)->m_pContext == _pContext ) )
+		if( ((*it)->m_callback == _pWatcher ) && ( (*it)->m_context == _context ) )
 		{
 			// Already in the list
 			return false;
 		}
 	}
 
-	m_watchers.push_back( new Watcher( _pWatcher, _pContext ) );
+	m_watchers.push_back( new Watcher( _pWatcher, _context ) );
 	return true;
 }
 
@@ -1420,14 +1427,14 @@ bool Driver::AddWatcher
 //-----------------------------------------------------------------------------
 bool Driver::RemoveWatcher
 (
-	pfnOnValueChanged_t _pWatcher,
-	void* _pContext
+	pfnOnNotification_t _pWatcher,
+	void* _context
 )
 {
 	list<Watcher*>::iterator it = m_watchers.begin();
 	while( it != m_watchers.end() )
 	{
-		if( ((*it)->m_callback == _pWatcher ) && ( (*it)->m_pContext == _pContext ) )
+		if( ((*it)->m_callback == _pWatcher ) && ( (*it)->m_context == _context ) )
 		{
 			delete (*it);
 			m_watchers.erase( it );
@@ -1444,13 +1451,13 @@ bool Driver::RemoveWatcher
 //-----------------------------------------------------------------------------
 void Driver::NotifyWatchers
 (
-	ValueID const& _id
+	Notification const* _notification
 )
 {
 	for( list<Watcher*>::iterator it = m_watchers.begin(); it != m_watchers.end(); ++it )
 	{
 		Watcher* pWatcher = *it;
-		pWatcher->m_callback( _id, pWatcher->m_pContext );
+		pWatcher->m_callback( _notification, pWatcher->m_context );
 	}
 }
 
@@ -1467,22 +1474,22 @@ void Driver::NotifyWatchers
 //{
 //	Log::Write( "GetAssociation: Node=%d, Group=%d", _nodeId, _group );
 //
-//	Msg* pMsg = new Msg( "Association Get", _nodeId, REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
-//	pMsg->Append( _nodeId );
-//	pMsg->Append( 3 );
-//	pMsg->Append( COMMAND_CLASS_ASSOCIATION );
-//	pMsg->Append( ASSOCIATION_GET );
-//	pMsg->Append( _group );
-//	pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+//	Msg* msg = new Msg( "Association Get", _nodeId, REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
+//	msg->Append( _nodeId );
+//	msg->Append( 3 );
+//	msg->Append( COMMAND_CLASS_ASSOCIATION );
+//	msg->Append( ASSOCIATION_GET );
+//	msg->Append( _group );
+//	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 //
 //	if( IsSleepingNode( _nodeId ) )
 //	{
 //		Log::Write( "Postpone GetAssociation until device wakes up" );
-//		SendSleepingMsg( _nodeId, pMsg );
+//		SendSleepingMsg( _nodeId, msg );
 //	}
 //	else
 //	{
-//		SendMsg( pMsg );
+//		SendMsg( msg );
 //	}
 //}
 //
@@ -1499,23 +1506,23 @@ void Driver::NotifyWatchers
 //{
 //	Log::Write( "SetAssociation: Node=%d, Group=%d, Target=%d", _nodeId, _group, _targetNodeId );
 //
-//	Msg* pMsg = new Msg( "Association Set", _nodeId, REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
-//	pMsg->Append( _nodeId );
-//	pMsg->Append( 4 );
-//	pMsg->Append( COMMAND_CLASS_ASSOCIATION );
-//	pMsg->Append( ASSOCIATION_SET );
-//	pMsg->Append( _group );
-//	pMsg->Append( _targetNodeId );
-//	pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+//	Msg* msg = new Msg( "Association Set", _nodeId, REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
+//	msg->Append( _nodeId );
+//	msg->Append( 4 );
+//	msg->Append( COMMAND_CLASS_ASSOCIATION );
+//	msg->Append( ASSOCIATION_SET );
+//	msg->Append( _group );
+//	msg->Append( _targetNodeId );
+//	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 //
 //	if( IsSleepingNode( _nodeId ) )
 //	{
 //		Log::Write( "Postpone SetAssociation until device wakes up" );
-//		SendSleepingMsg( _nodeId, pMsg );
+//		SendSleepingMsg( _nodeId, msg );
 //	}
 //	else
 //	{
-//		SendMsg( pMsg );
+//		SendMsg( msg );
 //	}
 //}
 //
@@ -1532,23 +1539,23 @@ void Driver::NotifyWatchers
 //{
 //	Log::Write( "RemoveAssociation: Node=%d, Group=%d, Target=%d", _nodeId, _group, _targetNodeId );
 //
-//	Msg* pMsg = new Msg( "Association Remove", _nodeId, REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
-//	pMsg->Append( _nodeId );
-//	pMsg->Append( 4 );
-//	pMsg->Append( COMMAND_CLASS_ASSOCIATION );
-//	pMsg->Append( ASSOCIATION_REMOVE );
-//	pMsg->Append( _group );
-//	pMsg->Append( _targetNodeId );
-//	pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+//	Msg* msg = new Msg( "Association Remove", _nodeId, REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
+//	msg->Append( _nodeId );
+//	msg->Append( 4 );
+//	msg->Append( COMMAND_CLASS_ASSOCIATION );
+//	msg->Append( ASSOCIATION_REMOVE );
+//	msg->Append( _group );
+//	msg->Append( _targetNodeId );
+//	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 //
 //	if( IsSleepingNode( _nodeId ) )
 //	{
 //		Log::Write( "Postpone RemoveAssociation until device wakes up" );
-//		SendSleepingMsg( _nodeId, pMsg );
+//		SendSleepingMsg( _nodeId, msg );
 //	}
 //	else
 //	{
-//		SendMsg( pMsg );
+//		SendMsg( msg );
 //	}
 //}
 
@@ -1561,8 +1568,8 @@ void Driver::ResetController
 )
 {
 	Log::Write( "Reset controller and erase all node information");
-	Msg* pMsg = new Msg( "Reset controller and erase all node information", 0xff, REQUEST, FUNC_ID_ZW_SET_DEFAULT, true );
-	SendMsg( pMsg );
+	Msg* msg = new Msg( "Reset controller and erase all node information", 0xff, REQUEST, FUNC_ID_ZW_SET_DEFAULT, true );
+	SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -1574,8 +1581,8 @@ void Driver::SoftReset
 )
 {
 	Log::Write( "Soft-resetting the Z-Wave controller chip");
-	Msg* pMsg = new Msg( "Soft-resetting the Z-Wave controller chip", 0xff, REQUEST, FUNC_ID_SERIAL_API_SOFT_RESET, false, false );
-	SendMsg( pMsg );
+	Msg* msg = new Msg( "Soft-resetting the Z-Wave controller chip", 0xff, REQUEST, FUNC_ID_SERIAL_API_SOFT_RESET, false, false );
+	SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -1588,9 +1595,9 @@ void Driver::RequestNodeNeighborUpdate
 )
 {
 	Log::Write( "Requesting Neighbour Update for node %d", _nodeId );
-	Msg* pMsg = new Msg( "Requesting Neighbour Update", _nodeId, REQUEST, FUNC_ID_ZW_REQUEST_NODE_NEIGHBOR_UPDATE, true );
-	pMsg->Append( _nodeId );
-	SendMsg( pMsg );
+	Msg* msg = new Msg( "Requesting Neighbour Update", _nodeId, REQUEST, FUNC_ID_ZW_REQUEST_NODE_NEIGHBOR_UPDATE, true );
+	msg->Append( _nodeId );
+	SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -1604,11 +1611,11 @@ void Driver::AssignReturnRoute
 )
 {
 	Log::Write( "Assign Return Route for Node %d, Target Node %d", _nodeId, _targetNodeId );
-	Msg* pMsg = new Msg( "Assign Return Route", _nodeId, REQUEST, FUNC_ID_ZW_ASSIGN_RETURN_ROUTE, true );		
-	pMsg->Append( _nodeId );
-	pMsg->Append( _targetNodeId );
-	pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	SendMsg( pMsg );
+	Msg* msg = new Msg( "Assign Return Route", _nodeId, REQUEST, FUNC_ID_ZW_ASSIGN_RETURN_ROUTE, true );		
+	msg->Append( _nodeId );
+	msg->Append( _targetNodeId );
+	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	SendMsg( msg );
 } 
 
 //-----------------------------------------------------------------------------
@@ -1621,9 +1628,9 @@ void Driver::BeginAddNode
 )
 {
 	Log::Write( "Add Node - Begin" );
-	Msg* pMsg = new Msg( "Add Node - Begin", 0xff, REQUEST, FUNC_ID_ZW_ADD_NODE_TO_NETWORK, true );
-	pMsg->Append( _highPower ? ADD_NODE_ANY | ADD_NODE_OPTION_HIGH_POWER : ADD_NODE_ANY );
-	SendMsg( pMsg );
+	Msg* msg = new Msg( "Add Node - Begin", 0xff, REQUEST, FUNC_ID_ZW_ADD_NODE_TO_NETWORK, true );
+	msg->Append( _highPower ? ADD_NODE_ANY | ADD_NODE_OPTION_HIGH_POWER : ADD_NODE_ANY );
+	SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -1635,9 +1642,9 @@ void Driver::EndAddNode
 )
 {
 	Log::Write( "Add Node - End" );
-	Msg* pMsg = new Msg( "Add Node - End", 0xff, REQUEST, FUNC_ID_ZW_ADD_NODE_TO_NETWORK, false, false );
-	pMsg->Append( ADD_NODE_STOP );
-	SendMsg( pMsg );
+	Msg* msg = new Msg( "Add Node - End", 0xff, REQUEST, FUNC_ID_ZW_ADD_NODE_TO_NETWORK, false, false );
+	msg->Append( ADD_NODE_STOP );
+	SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -1649,9 +1656,9 @@ void Driver::BeginRemoveNode
 )
 {
 	Log::Write( "Remove Node - Begin" );
-	Msg* pMsg = new Msg( "Remove Node - Begin", 0xff, REQUEST, FUNC_ID_ZW_REMOVE_NODE_FROM_NETWORK, true );
-	pMsg->Append( REMOVE_NODE_ANY );
-	SendMsg( pMsg );
+	Msg* msg = new Msg( "Remove Node - Begin", 0xff, REQUEST, FUNC_ID_ZW_REMOVE_NODE_FROM_NETWORK, true );
+	msg->Append( REMOVE_NODE_ANY );
+	SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -1663,9 +1670,9 @@ void Driver::EndRemoveNode
 )
 {
 	Log::Write( "Remove Node - End" );
-	Msg* pMsg = new Msg( "Remove Node - End", 0xff, REQUEST, FUNC_ID_ZW_REMOVE_NODE_FROM_NETWORK, false, false );
-	pMsg->Append( REMOVE_NODE_STOP );
-	SendMsg( pMsg );
+	Msg* msg = new Msg( "Remove Node - End", 0xff, REQUEST, FUNC_ID_ZW_REMOVE_NODE_FROM_NETWORK, false, false );
+	msg->Append( REMOVE_NODE_STOP );
+	SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -1677,9 +1684,9 @@ void Driver::BeginReplicateController
 )
 {
 	Log::Write( "Replicate Controller - Begin" );
-	Msg* pMsg = new Msg( "Replicate Controller - Begin", 0xff, REQUEST, FUNC_ID_ZW_SET_LEARN_MODE, false, false );
-	pMsg->Append( 1 );
-	SendMsg( pMsg );
+	Msg* msg = new Msg( "Replicate Controller - Begin", 0xff, REQUEST, FUNC_ID_ZW_SET_LEARN_MODE, false, false );
+	msg->Append( 1 );
+	SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -1691,13 +1698,13 @@ void Driver::EndReplicateController
 )
 {
 	Log::Write( "Replicate Controller - End" );
-	Msg* pMsg = new Msg(  "Replicate Controller - End", 0xff, REQUEST, FUNC_ID_ZW_SET_LEARN_MODE, false, false );
-	pMsg->Append( 0 );
-	SendMsg( pMsg );
+	Msg* msg = new Msg(  "Replicate Controller - End", 0xff, REQUEST, FUNC_ID_ZW_SET_LEARN_MODE, false, false );
+	msg->Append( 0 );
+	SendMsg( msg );
 
 	Log::Write( "Get new init data after replication" );
-	pMsg = new Msg( "Get new init data after replication", 0xff, REQUEST, FUNC_ID_SERIAL_API_GET_INIT_DATA, false );
-	SendMsg( pMsg );
+	msg = new Msg( "Get new init data after replication", 0xff, REQUEST, FUNC_ID_SERIAL_API_GET_INIT_DATA, false );
+	SendMsg( msg );
 }
 
 ////-----------------------------------------------------------------------------
@@ -1713,57 +1720,57 @@ void Driver::EndReplicateController
 //{
 //	Log::Write( "SetConfiguration: Node=%d, Parameter=%d, Value=%d", _nodeId, _parameter, _value );
 //
-//	Msg* pMsg = new Msg( "Configuration Set", _nodeId, REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+//	Msg* msg = new Msg( "Configuration Set", _nodeId, REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 //
 //	if( _value <= 0xff) 
 //	{
 //		// one byte value
-//		pMsg->Append( _nodeId );
-//		pMsg->Append( 5 );
-//		pMsg->Append( COMMAND_CLASS_CONFIGURATION );
-//		pMsg->Append( CONFIGURATION_SET );
-//		pMsg->Append( _parameter );
-//		pMsg->Append( 1 );
-//		pMsg->Append( (uint8)_value );
-//		pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+//		msg->Append( _nodeId );
+//		msg->Append( 5 );
+//		msg->Append( COMMAND_CLASS_CONFIGURATION );
+//		msg->Append( CONFIGURATION_SET );
+//		msg->Append( _parameter );
+//		msg->Append( 1 );
+//		msg->Append( (uint8)_value );
+//		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 //	}
 //	else if( _value <= 0xffff )
 //	{
 //		// two byte value
-//		pMsg->Append( _nodeId );
-//		pMsg->Append( 6 );
-//		pMsg->Append( COMMAND_CLASS_CONFIGURATION );
-//		pMsg->Append( CONFIGURATION_SET );
-//		pMsg->Append( _parameter );
-//		pMsg->Append( 2 );
-//		pMsg->Append( (uint8)((_value>>8)&0xff) );
-//		pMsg->Append( (uint8)(_value&0xff) );
-//		pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+//		msg->Append( _nodeId );
+//		msg->Append( 6 );
+//		msg->Append( COMMAND_CLASS_CONFIGURATION );
+//		msg->Append( CONFIGURATION_SET );
+//		msg->Append( _parameter );
+//		msg->Append( 2 );
+//		msg->Append( (uint8)((_value>>8)&0xff) );
+//		msg->Append( (uint8)(_value&0xff) );
+//		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 //	}
 //	else
 //	{
 //		// four byte value
-//		pMsg->Append( _nodeId );
-//		pMsg->Append( 8 );
-//		pMsg->Append( COMMAND_CLASS_CONFIGURATION );
-//		pMsg->Append( CONFIGURATION_SET );
-//		pMsg->Append( _parameter );
-//		pMsg->Append( 4 );
-//		pMsg->Append( (uint8)((_value>>24)&0xff) );
-//		pMsg->Append( (uint8)((_value>>16)&0xff) );
-//		pMsg->Append( (uint8)((_value>>8)&0xff) );
-//		pMsg->Append( (_value & 0xff) );
-//		pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+//		msg->Append( _nodeId );
+//		msg->Append( 8 );
+//		msg->Append( COMMAND_CLASS_CONFIGURATION );
+//		msg->Append( CONFIGURATION_SET );
+//		msg->Append( _parameter );
+//		msg->Append( 4 );
+//		msg->Append( (uint8)((_value>>24)&0xff) );
+//		msg->Append( (uint8)((_value>>16)&0xff) );
+//		msg->Append( (uint8)((_value>>8)&0xff) );
+//		msg->Append( (_value & 0xff) );
+//		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 //	}
 //
 //	if( IsSleepingNode( _nodeId ) )
 //	{
 //		Log::Write( "Postpone SetConfiguration until device wakes up" );
-//		SendSleepingMsg( _nodeId, pMsg );
+//		SendSleepingMsg( _nodeId, msg );
 //	}
 //	else
 //	{
-//		SendMsg( pMsg );
+//		SendMsg( msg );
 //	}
 //}
 //
@@ -1776,17 +1783,17 @@ void Driver::UpdateEvents
 (
 )
 {
-	if( m_bWaitingForAck || m_expectedCallbackId || m_expectedReply )
+	if( m_waitingForAck || m_expectedCallbackId || m_expectedReply )
 	{
 		// Waiting for ack, callback or a specific message type, so we can't transmit anything yet.
-		m_pSendEvent->Reset();
+		m_sendEvent->Reset();
 	}
 	else
 	{
 		// Allow transmissions to occur
 		if( ( !m_sendQueue.empty() ) || ( !m_infoQueue.empty() ) )
 		{
-			m_pSendEvent->Set();
+			m_sendEvent->Set();
 		}
 	}
 }

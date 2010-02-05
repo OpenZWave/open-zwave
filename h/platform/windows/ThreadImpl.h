@@ -41,7 +41,7 @@ namespace OpenZWave
 		ThreadImpl();
 		~ThreadImpl();
 
-		bool Start( Thread::pfnThreadProc_t _pfnThreadProc, void* _pContext );
+		bool Start( Thread::pfnThreadProc_t _pfnThreadProc, void* _context );
 		bool Stop();
 		bool IsRunning()const{ return m_bIsRunning; }
 
@@ -51,7 +51,7 @@ namespace OpenZWave
 		HANDLE					m_hThread;
 		HANDLE					m_hExitEvent;
 		Thread::pfnThreadProc_t	m_pfnThreadProc;
-		void*					m_pContext;
+		void*					m_context;
 		bool					m_bIsRunning;
 	};
 

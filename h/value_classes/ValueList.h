@@ -49,7 +49,7 @@ namespace OpenZWave
 		};
 
 		ValueList( uint8 const _nodeId, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, uint32 const _genre, string const& _label, bool const _bReadOnly, vector<Item> const& _items, int32 const _valueIdx );
-		ValueList( TiXmlElement* _pValueElement );
+		ValueList( TiXmlElement* _valueElement );
 		virtual ~ValueList(){}
 
 		bool SetByLabel( string const& _label );
@@ -61,7 +61,7 @@ namespace OpenZWave
 		static string const StaticGetValueTypeName(){ return "VALUE_LIST"; }
 
 		// From Value
-		virtual void WriteXML( TiXmlElement* _pValueElement );
+		virtual void WriteXML( TiXmlElement* _valueElement );
 		virtual uint8 const GetValueTypeId()const{ return StaticGetValueTypeId(); }
 		virtual string const GetValueTypeName()const{ return StaticGetValueTypeName(); }
 

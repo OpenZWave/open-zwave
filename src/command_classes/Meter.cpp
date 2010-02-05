@@ -46,20 +46,20 @@ enum MeterCmd
 };
 
 //-----------------------------------------------------------------------------
-// <Meter::RequestState>                                                   
-// Request current state from the device                                       
+// <Meter::RequestState>												   
+// Request current state from the device									   
 //-----------------------------------------------------------------------------
 void Meter::RequestState
 (
 )
 {
-    Msg* pMsg = new Msg( "MeterCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-    pMsg->Append( GetNodeId() );
-    pMsg->Append( 2 );
-    pMsg->Append( GetCommandClassId() );
-    pMsg->Append( MeterCmd_Get );
-    pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-    Driver::Get()->SendMsg( pMsg );
+	Msg* msg = new Msg( "MeterCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+	msg->Append( GetNodeId() );
+	msg->Append( 2 );
+	msg->Append( GetCommandClassId() );
+	msg->Append( MeterCmd_Get );
+	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	Driver::Get()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -68,58 +68,58 @@ void Meter::RequestState
 //-----------------------------------------------------------------------------
 bool Meter::HandleMsg
 (
-    uint8 const* _pData,
-    uint32 const _length,
+	uint8 const* _data,
+	uint32 const _length,
 	uint32 const _instance	// = 0
 )
 {
-	if (MeterCmd_Report == (MeterCmd)_pData[0])
+	if (MeterCmd_Report == (MeterCmd)_data[0])
 	{
-		Node* pNode = GetNode();
-		if( pNode )
+		Node* node = GetNode();
+		if( node )
 		{
-			ValueStore* pStore = pNode->GetValueStore();
-			if( pStore )
+			ValueStore* store = node->GetValueStore();
+			if( store )
 			{
 				uint8 scale;
-				float value = ExtractValue( &_pData[2], &scale );
+				float value = ExtractValue( &_data[2], &scale );
 
 				char valueStr[16];
 				snprintf( valueStr, 16, "%.3f", value );
 
-				if( ValueDecimal* pValue = static_cast<ValueDecimal*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
+				if( ValueDecimal* value = static_cast<ValueDecimal*>( store->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
 				{
-					if( pValue->GetLabel() == "Unknown" )
+					if( value->GetLabel() == "Unknown" )
 					{
-						switch( _pData[1] )
+						switch( _data[1] )
 						{
 							case 0x01:
 							{
 								// Electricity Meter
-								pValue->SetLabel( "Electricity" );
-								pValue->SetUnits( "kWh" );
+								value->SetLabel( "Electricity" );
+								value->SetUnits( "kWh" );
 								break;
 							}
 							case 0x02:
 							{
 								// Gas Meter
-								pValue->SetLabel( "Gas" );
-								pValue->SetUnits( "" );
+								value->SetLabel( "Gas" );
+								value->SetUnits( "" );
 								break;
 							}
 							case 0x03:
 							{
 								// Water Meter
-								pValue->SetLabel( "Water" );
-								pValue->SetUnits( "" );
+								value->SetLabel( "Water" );
+								value->SetUnits( "" );
 								break;
 							}
 						}
 					}
 
-					pValue->OnValueChanged( valueStr );
+					value->OnValueChanged( valueStr );
 				}
-				pNode->ReleaseValueStore();
+				node->ReleaseValueStore();
 
 				Log::Write( "Received Meter report from node %d: value=%s", GetNodeId(), valueStr );
 				return true;
@@ -127,7 +127,7 @@ bool Meter::HandleMsg
 		}
 	}
 
-    return false;
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -139,16 +139,16 @@ void Meter::CreateVars
 	uint8 const _instance
 )
 {
-	Node* pNode = GetNode();
-	if( pNode )
+	Node* node = GetNode();
+	if( node )
 	{
-		ValueStore* pStore = pNode->GetValueStore();
-		if( pStore )
+		ValueStore* store = node->GetValueStore();
+		if( store )
 		{
-			Value* pValue = new ValueDecimal( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_User, "Unknown", true, "0.0"  );
-			pStore->AddValue( pValue );
+			Value* value = new ValueDecimal( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_User, "Unknown", true, "0.0"  );
+			store->AddValue( value );
 
-			pNode->ReleaseValueStore();
+			node->ReleaseValueStore();
 		}
 	}
 }

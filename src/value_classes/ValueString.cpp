@@ -59,11 +59,11 @@ ValueString::ValueString
 //-----------------------------------------------------------------------------
 ValueString::ValueString
 (
-	TiXmlElement* _pValueElement
+	TiXmlElement* _valueElement
 ):
-	Value( _pValueElement )
+	Value( _valueElement )
 {
-	char const* str = _pValueElement->Attribute( "value" );
+	char const* str = _valueElement->Attribute( "value" );
 	if( str )
 	{
 		m_value = str;
@@ -76,11 +76,11 @@ ValueString::ValueString
 //-----------------------------------------------------------------------------
 void ValueString::WriteXML
 (
-	TiXmlElement* _pValueElement
+	TiXmlElement* _valueElement
 )
 {
-	Value::WriteXML( _pValueElement );
-	_pValueElement->SetAttribute( "value", m_value.c_str() );
+	Value::WriteXML( _valueElement );
+	_valueElement->SetAttribute( "value", m_value.c_str() );
 }
 
 //-----------------------------------------------------------------------------

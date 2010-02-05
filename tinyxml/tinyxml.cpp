@@ -56,8 +56,8 @@ void TiXmlBase::EncodeString( const TIXML_STRING& str, TIXML_STRING* outString )
 	{
 		unsigned char c = (unsigned char) str[i];
 
-		if (    c == '&' 
-		     && i < ( (int)str.length() - 2 )
+		if (	c == '&' 
+			 && i < ( (int)str.length() - 2 )
 			 && str[i+1] == '#'
 			 && str[i+2] == 'x' )
 		{
@@ -415,7 +415,7 @@ const TiXmlNode* TiXmlNode::PreviousSibling( const char * _value ) const
 
 void TiXmlElement::RemoveAttribute( const char * name )
 {
-    #ifdef TIXML_USE_STL
+	#ifdef TIXML_USE_STL
 	TIXML_STRING str( name );
 	TiXmlAttribute* node = attributeSet.Find( str );
 	#else
@@ -716,7 +716,7 @@ void TiXmlElement::SetDoubleAttribute( const char * name, double val )
 
 void TiXmlElement::SetAttribute( const char * cname, const char * cvalue )
 {
-    #ifdef TIXML_USE_STL
+	#ifdef TIXML_USE_STL
 	TIXML_STRING _name( cname );
 	TIXML_STRING _value( cvalue );
 	#else
@@ -773,7 +773,7 @@ void TiXmlElement::Print( FILE* cfile, int depth ) const
 	int i;
 	assert( cfile );
 	for ( i=0; i<depth; i++ ) {
-		fprintf( cfile, "    " );
+		fprintf( cfile, "	" );
 	}
 
 	fprintf( cfile, "<%s", value.c_str() );
@@ -814,7 +814,7 @@ void TiXmlElement::Print( FILE* cfile, int depth ) const
 		}
 		fprintf( cfile, "\n" );
 		for( i=0; i<depth; ++i ) {
-			fprintf( cfile, "    " );
+			fprintf( cfile, "	" );
 		}
 		fprintf( cfile, "</%s>", value.c_str() );
 	}
@@ -902,7 +902,7 @@ TiXmlDocument::TiXmlDocument( const std::string& documentName ) : TiXmlNode( TiX
 {
 	tabsize = 4;
 	useMicrosoftBOM = false;
-    value = documentName;
+	value = documentName;
 	ClearError();
 }
 #endif
@@ -1079,8 +1079,8 @@ bool TiXmlDocument::LoadFile( FILE* file, TiXmlEncoding encoding )
 	Parse( data.c_str(), 0, encoding );
 
 	if (  Error() )
-        return false;
-    else
+		return false;
+	else
 		return true;
 }
 
@@ -1302,7 +1302,7 @@ void TiXmlComment::Print( FILE* cfile, int depth ) const
 	assert( cfile );
 	for ( int i=0; i<depth; i++ )
 	{
-		fprintf( cfile,  "    " );
+		fprintf( cfile,  "	" );
 	}
 	fprintf( cfile, "<!--%s-->", value.c_str() );
 }
@@ -1340,7 +1340,7 @@ void TiXmlText::Print( FILE* cfile, int depth ) const
 		int i;
 		fprintf( cfile, "\n" );
 		for ( i=0; i<depth; i++ ) {
-			fprintf( cfile, "    " );
+			fprintf( cfile, "	" );
 		}
 		fprintf( cfile, "<![CDATA[%s]]>\n", value.c_str() );	// unformatted output
 	}
@@ -1470,7 +1470,7 @@ TiXmlNode* TiXmlDeclaration::Clone() const
 void TiXmlUnknown::Print( FILE* cfile, int depth ) const
 {
 	for ( int i=0; i<depth; i++ )
-		fprintf( cfile, "    " );
+		fprintf( cfile, "	" );
 	fprintf( cfile, "<%s>", value.c_str() );
 }
 
@@ -1515,7 +1515,7 @@ TiXmlAttributeSet::~TiXmlAttributeSet()
 
 void TiXmlAttributeSet::Add( TiXmlAttribute* addMe )
 {
-    #ifdef TIXML_USE_STL
+	#ifdef TIXML_USE_STL
 	assert( !Find( TIXML_STRING( addMe->Name() ) ) );	// Shouldn't be multiply adding to the set.
 	#else
 	assert( !Find( addMe->Name() ) );	// Shouldn't be multiply adding to the set.
@@ -1525,7 +1525,7 @@ void TiXmlAttributeSet::Add( TiXmlAttribute* addMe )
 	addMe->prev = sentinel.prev;
 
 	sentinel.prev->next = addMe;
-	sentinel.prev      = addMe;
+	sentinel.prev	  = addMe;
 }
 
 void TiXmlAttributeSet::Remove( TiXmlAttribute* removeMe )
@@ -1785,7 +1785,7 @@ bool TiXmlPrinter::VisitEnter( const TiXmlElement& element, const TiXmlAttribute
 	else 
 	{
 		buffer += ">";
-		if (    element.FirstChild()->ToText()
+		if (	element.FirstChild()->ToText()
 			  && element.LastChild() == element.FirstChild()
 			  && element.FirstChild()->ToText()->CDATA() == false )
 		{
