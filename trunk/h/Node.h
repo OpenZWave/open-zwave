@@ -37,6 +37,7 @@ class TiXmlElement;
 namespace OpenZWave
 {
 	class CommandClass;
+	class Group;
 	class ValueStore;
 	class ValueID;
 	class Value;
@@ -44,6 +45,29 @@ namespace OpenZWave
 
 	class Node
 	{
+	//-----------------------------------------------------------------------------
+	// Construction
+	//-----------------------------------------------------------------------------
+	public:
+		Node( uint8 const _nodeId );
+		Node( TiXmlElement* _node );
+		virtual ~Node();
+
+	//-----------------------------------------------------------------------------
+	// Initialization
+	//-----------------------------------------------------------------------------
+	public:
+		void UpdateProtocolInfo( uint8 const* _data );
+		void UpdateNodeInfo( uint8 const* _data, uint8 const _length );
+
+	private:
+		bool	m_bProtocolInfoReceived;
+		bool	m_bNodeInfoReceived;
+
+
+	//-----------------------------------------------------------------------------
+	// Capabilities
+	//-----------------------------------------------------------------------------
 	public:
 		// Security flags
 		enum
@@ -99,70 +123,86 @@ namespace OpenZWave
 			NodeBroadcast = 0xff
 		};
 
-		// Construction
-		Node( uint8 const _nodeId );
-		Node( TiXmlElement* _pNode );
-		virtual ~Node();
-
-		void UpdateProtocolInfo( uint8 const* _pData );
-		void UpdateNodeInfo( uint8 const* _pData, uint8 const _length );
-		void ApplicationCommandHandler( uint8 const* _pData );
-
-		// Command Classes
-		CommandClass* GetCommandClass( uint8 const _commandClassId )const;
-		void RequestInstances()const;
-
-		void RequestState();
-		void RequestStatic();
-
-		// Configuration (Direct)
-		bool SetConfigParam( uint8 const _param, int32 _value );
-		void RequestConfigParam( uint8 const _param );
-
-		// Accessors
 		bool IsListeningDevice()const{ return m_bListening; }
 		bool IsRoutingDevice()const{ return m_bRouting; }
 		uint32 GetMaxBaudRate()const{ return m_maxBaudRate; }
 		uint8 GetVersion()const{ return m_version; }
 		uint8 GetSecurity()const{ return m_security; }
+		
 		uint8 GetNodeId()const{ return m_nodeId; }
+		
 		uint8 GetBasic()const{ return m_basic; }
 		uint8 GetGeneric()const{ return m_generic; }
 		uint8 GetSpecific()const{ return m_specific; }
 		string const& GetBasicLabel()const{ return m_basicLabel; }	
 		string const& GetGenericLabel()const{ return m_genericLabel; }	
+		
 		bool IsPolled()const{ return m_bPolled; }
 		void SetPolled( bool _bState ){ m_bPolled = _bState; }
-		Value* GetValue( ValueID const& _id )const;
 
-		ValueStore* GetValueStore();
-		void ReleaseValueStore();
+	private:
+		bool		m_bListening;
+		bool		m_bRouting;
+		uint32		m_maxBaudRate;
+		uint8		m_version;
+		uint8		m_security;
+		uint8		m_nodeId;
+		uint8		m_basic;
+		uint8		m_generic;
+		uint8		m_specific;
+		string		m_basicLabel;
+		string		m_genericLabel;
+		bool		m_bPolled;
+
+
+	//-----------------------------------------------------------------------------
+	// Command Classes
+	//-----------------------------------------------------------------------------
+	public:
+		CommandClass* GetCommandClass( uint8 const _commandClassId )const;
+		void RequestInstances()const;
+		void RequestState();
+		void RequestStatic();
+		void ApplicationCommandHandler( uint8 const* _data );
 
 	private:
 		CommandClass* AddCommandClass( uint8 const _commandClassId );
-		void SaveStatic( FILE* _pFile );
+		void SaveStatic( FILE* _file );
 
 		map<uint8,CommandClass*>		m_commandClassMap;
 
-		bool							m_bListening;
-		bool							m_bRouting;
-		uint32							m_maxBaudRate;
-		uint8							m_version;
-		uint8							m_security;
-		uint8							m_nodeId;
-		uint8							m_basic;
-		uint8							m_generic;
-		uint8							m_specific;
-		string							m_basicLabel;
-		string							m_genericLabel;
 
-		bool							m_bPolled;
+	//-----------------------------------------------------------------------------
+	// Values (handled by the command classes)
+	//-----------------------------------------------------------------------------
+	public:
+		ValueStore* GetValueStore();
+		void ReleaseValueStore();
+		Value* GetValue( ValueID const& _id )const;
 
-		bool							m_bProtocolInfoReceived;
-		bool							m_bNodeInfoReceived;
+	private:
+		ValueStore*	m_values;			// Values reported via command classes
+		Mutex*		m_valuesMutex;		// Serialize access to the store
 
-		ValueStore*						m_pValues;			// Values reported via command classes
-		Mutex*							m_pValuesMutex;		// Serialize access to the store
+
+	//-----------------------------------------------------------------------------
+	// Configuration Parameters (handled by the Configuration command class)
+	//-----------------------------------------------------------------------------
+	public:
+		bool SetConfigParam( uint8 const _param, int32 _value );
+		void RequestConfigParam( uint8 const _param );
+
+
+	//-----------------------------------------------------------------------------
+	// Groups (handled by the Association command class)
+	//-----------------------------------------------------------------------------
+	public:
+		Group const* GetGroup( uint8 const _groupIdx )const{ return m_groups[_groupIdx-1]; }
+		uint8 GetNumGroups()const{ return m_numGroups; }
+
+	private:
+		Group** m_groups;
+		uint8   m_numGroups;
 	};
 
 } //namespace OpenZWave

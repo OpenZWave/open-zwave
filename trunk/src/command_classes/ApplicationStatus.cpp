@@ -36,8 +36,8 @@ using namespace OpenZWave;
 
 static enum ApplicationStatusCmd
 {
-    ApplicationStatusCmd_Busy				= 0x01,
-    ApplicationStatusCmd_RejectedRequest	= 0x02
+	ApplicationStatusCmd_Busy				= 0x01,
+	ApplicationStatusCmd_RejectedRequest	= 0x02
 };
 
 
@@ -47,15 +47,15 @@ static enum ApplicationStatusCmd
 //-----------------------------------------------------------------------------
 bool ApplicationStatus::HandleMsg
 (
-    uint8 const* _pData,
-    uint32 const _length,
+	uint8 const* _data,
+	uint32 const _length,
 	uint32 const _instance	// = 0
 )
 {
-    if( ApplicationStatusCmd_Busy == (ApplicationStatusCmd)_pData[0] )
-    {
+	if( ApplicationStatusCmd_Busy == (ApplicationStatusCmd)_data[0] )
+	{
 		char msg[64];
-		switch( _pData[1] )
+		switch( _data[1] )
 		{
 			case 0:
 			{
@@ -64,7 +64,7 @@ bool ApplicationStatus::HandleMsg
 			}
 			case 1:
 			{
-				snprintf( msg, sizeof(msg), "Try again in %d seconds", _pData[2] );
+				snprintf( msg, sizeof(msg), "Try again in %d seconds", _data[2] );
 				break;
 			}
 			case 2:
@@ -82,9 +82,9 @@ bool ApplicationStatus::HandleMsg
 		return true;
 	}
 
-	if( ApplicationStatusCmd_RejectedRequest == (ApplicationStatusCmd)_pData[0] )
-    {
-		Log::Write( "Received Application Rejected Request from node %d: Status=%d", GetNodeId(), _pData[1] );
+	if( ApplicationStatusCmd_RejectedRequest == (ApplicationStatusCmd)_data[0] )
+	{
+		Log::Write( "Received Application Rejected Request from node %d: Status=%d", GetNodeId(), _data[1] );
 		return true;
 	}
 

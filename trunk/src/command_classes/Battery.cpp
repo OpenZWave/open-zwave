@@ -40,27 +40,27 @@ using namespace OpenZWave;
 
 static enum BatteryCmd
 {
-    BatteryCmd_Get		= 0x02,
-    BatteryCmd_Report	= 0x03
+	BatteryCmd_Get		= 0x02,
+	BatteryCmd_Report	= 0x03
 };
 
 
 //-----------------------------------------------------------------------------
-// <Battery::RequestState>                                                   
-// Request current state from the device                                       
+// <Battery::RequestState>												   
+// Request current state from the device									   
 //-----------------------------------------------------------------------------
 void Battery::RequestState
 (
 )
 {
 	Log::Write( "Requesting the battery level from node %d", GetNodeId() );
-    Msg* pMsg = new Msg( "BatteryCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-    pMsg->Append( GetNodeId() );
-    pMsg->Append( 2 );
-    pMsg->Append( GetCommandClassId() );
-    pMsg->Append( BatteryCmd_Get );
-    pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-    Driver::Get()->SendMsg( pMsg );
+	Msg* msg = new Msg( "BatteryCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+	msg->Append( GetNodeId() );
+	msg->Append( 2 );
+	msg->Append( GetCommandClassId() );
+	msg->Append( BatteryCmd_Get );
+	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	Driver::Get()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -69,40 +69,40 @@ void Battery::RequestState
 //-----------------------------------------------------------------------------
 bool Battery::HandleMsg
 (
-    uint8 const* _pData,
-    uint32 const _length,
+	uint8 const* _data,
+	uint32 const _length,
 	uint32 const _instance	// = 0
 )
 {
-    if (BatteryCmd_Report == (BatteryCmd)_pData[0])
-    {
-        // We have received a battery level report from the Z-Wave device.
+	if (BatteryCmd_Report == (BatteryCmd)_data[0])
+	{
+		// We have received a battery level report from the Z-Wave device.
 		// Devices send 0xff instead of zero for a low battery warning.
-		uint8 batteryLevel = _pData[1];
+		uint8 batteryLevel = _data[1];
 		if( batteryLevel == 0xff )
 		{
 			batteryLevel = 0;
 		}
 
-		Node* pNode = GetNode();
-		if( pNode )
+		Node* node = GetNode();
+		if( node )
 		{
-			ValueStore* pStore = pNode->GetValueStore();
-			if( pStore )
+			ValueStore* store = node->GetValueStore();
+			if( store )
 			{
-				if( ValueByte* pValue = static_cast<ValueByte*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
+				if( ValueByte* value = static_cast<ValueByte*>( store->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
 				{
-					pValue->OnValueChanged( batteryLevel );
+					value->OnValueChanged( batteryLevel );
 				}
 
 				Log::Write( "Received Battery report from node %d: level=%d", GetNodeId(), batteryLevel );
 
-				pNode->ReleaseValueStore();
+				node->ReleaseValueStore();
 				return true;
 			}
 		}
-    }
-    return false;
+	}
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -114,17 +114,17 @@ void Battery::CreateVars
 	uint8 const _instance
 )
 {
-	Node* pNode = GetNode();
-	if( pNode )
+	Node* node = GetNode();
+	if( node )
 	{
-		ValueStore* pStore = pNode->GetValueStore();
-		if( pStore )
+		ValueStore* store = node->GetValueStore();
+		if( store )
 		{
-			Value* pValue = new ValueByte( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_User, "Battery Level", true, 100 );
-			pStore->AddValue( pValue );
-			pValue->Release();
+			Value* value = new ValueByte( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_User, "Battery Level", true, 100 );
+			store->AddValue( value );
+			value->Release();
 
-			pNode->ReleaseValueStore();
+			node->ReleaseValueStore();
 		}
 	}
 }

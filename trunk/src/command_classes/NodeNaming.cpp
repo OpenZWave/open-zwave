@@ -41,28 +41,28 @@ using namespace OpenZWave;
 
 static enum NodeNamingCmd
 {
-    NodeNamingCmd_Set		= 0x01,
-    NodeNamingCmd_Get		= 0x02,
-    NodeNamingCmd_Report	= 0x03
+	NodeNamingCmd_Set		= 0x01,
+	NodeNamingCmd_Get		= 0x02,
+	NodeNamingCmd_Report	= 0x03
 };
 
 
 //-----------------------------------------------------------------------------
-// <NodeNaming::RequestState>                                                   
-// Request current state from the device                                       
+// <NodeNaming::RequestState>												   
+// Request current state from the device									   
 //-----------------------------------------------------------------------------
 void NodeNaming::RequestState
 (
 )
 {
 	Log::Write( "Requesting the name from node %d", GetNodeId() );
-    Msg* pMsg = new Msg( "NodeNamingCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-    pMsg->Append( GetNodeId() );
-    pMsg->Append( 2 );
-    pMsg->Append( GetCommandClassId() );
-    pMsg->Append( NodeNamingCmd_Get );
-    pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-    Driver::Get()->SendMsg( pMsg );
+	Msg* msg = new Msg( "NodeNamingCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+	msg->Append( GetNodeId() );
+	msg->Append( 2 );
+	msg->Append( GetCommandClassId() );
+	msg->Append( NodeNamingCmd_Get );
+	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	Driver::Get()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -71,13 +71,13 @@ void NodeNaming::RequestState
 //-----------------------------------------------------------------------------
 bool NodeNaming::HandleMsg
 (
-    uint8 const* _pData,
-    uint32 const _length,
+	uint8 const* _data,
+	uint32 const _length,
 	uint32 const _instance	// = 0
 )
 {
-    if( NodeNamingCmd_Report == (NodeNamingCmd)_pData[0] )
-    {
+	if( NodeNamingCmd_Report == (NodeNamingCmd)_data[0] )
+	{
 		return true;
 	}
 
@@ -94,13 +94,13 @@ bool NodeNaming::HandleMsg
 //)
 //{
 //	//Log::Write( "NodeNaming::Set - Setting node %d to level %d", GetNodeId(), _level );
-//	//Msg* pMsg = new Msg( "NodeNaming Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
-//	//pMsg->Append( GetNodeId() );
-//	//pMsg->Append( 3 );
-//	//pMsg->Append( GetCommandClassId() );
-//	//pMsg->Append( NodeNamingCmd_Set );
-//	//pMsg->Append( _level );
-//	//pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+//	//Msg* msg = new Msg( "NodeNaming Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
+//	//msg->Append( GetNodeId() );
+//	//msg->Append( 3 );
+//	//msg->Append( GetCommandClassId() );
+//	//msg->Append( NodeNamingCmd_Set );
+//	//msg->Append( _level );
+//	//msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 //}
 
 //-----------------------------------------------------------------------------
@@ -112,17 +112,17 @@ void NodeNaming::CreateVars
 	uint8 const _instance
 )
 {
-	Node* pNode = GetNode();
-	if( pNode )
+	Node* node = GetNode();
+	if( node )
 	{
-		ValueStore* pStore = pNode->GetValueStore();
-		if( pStore )
+		ValueStore* store = node->GetValueStore();
+		if( store )
 		{
-			Value* pValue = new ValueString( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_System, "Node Name", false, "Unknown"  );
-			pStore->AddValue( pValue );
-			pValue->Release();
+			Value* value = new ValueString( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_System, "Node Name", false, "Unknown"  );
+			store->AddValue( value );
+			value->Release();
 
-			pNode->ReleaseValueStore();
+			node->ReleaseValueStore();
 		}
 	}
 }

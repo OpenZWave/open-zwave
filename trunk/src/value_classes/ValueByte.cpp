@@ -59,12 +59,12 @@ ValueByte::ValueByte
 //-----------------------------------------------------------------------------
 ValueByte::ValueByte
 (
-	TiXmlElement* _pValueElement
+	TiXmlElement* _valueElement
 ):
-	Value( _pValueElement )
+	Value( _valueElement )
 {
 	int intVal;
-	if( TIXML_SUCCESS == _pValueElement->QueryIntAttribute( "value", &intVal ) )
+	if( TIXML_SUCCESS == _valueElement->QueryIntAttribute( "value", &intVal ) )
 	{
 		m_value = (uint8)intVal;
 	}
@@ -76,14 +76,14 @@ ValueByte::ValueByte
 //-----------------------------------------------------------------------------
 void ValueByte::WriteXML
 (
-	TiXmlElement* _pValueElement
+	TiXmlElement* _valueElement
 )
 {
-	Value::WriteXML( _pValueElement );
+	Value::WriteXML( _valueElement );
 
 	char str[8];
 	snprintf( str, sizeof(str), "%d", m_value );
-	_pValueElement->SetAttribute( "value", str );
+	_valueElement->SetAttribute( "value", str );
 }
 
 //-----------------------------------------------------------------------------

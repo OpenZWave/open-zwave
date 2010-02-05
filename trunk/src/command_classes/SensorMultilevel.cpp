@@ -46,20 +46,20 @@ enum SensorMultilevelCmd
 
 
 //-----------------------------------------------------------------------------
-// <SensorMultilevel::RequestState>                                                   
-// Request current state from the device                                       
+// <SensorMultilevel::RequestState>												   
+// Request current state from the device									   
 //-----------------------------------------------------------------------------
 void SensorMultilevel::RequestState
 (
 )
 {
-    Msg* pMsg = new Msg( "SensorMultilevelCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-    pMsg->Append( GetNodeId() );
-    pMsg->Append( 2 );
-    pMsg->Append( GetCommandClassId() );
-    pMsg->Append( SensorMultilevelCmd_Get );
-    pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-    Driver::Get()->SendMsg( pMsg );
+	Msg* msg = new Msg( "SensorMultilevelCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+	msg->Append( GetNodeId() );
+	msg->Append( 2 );
+	msg->Append( GetCommandClassId() );
+	msg->Append( SensorMultilevelCmd_Get );
+	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	Driver::Get()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -68,85 +68,85 @@ void SensorMultilevel::RequestState
 //-----------------------------------------------------------------------------
 bool SensorMultilevel::HandleMsg
 (
-    uint8 const* _pData,
-    uint32 const _length,
+	uint8 const* _data,
+	uint32 const _length,
 	uint32 const _instance	// = 0
 )
 {
-	if (SensorMultilevelCmd_Report == (SensorMultilevelCmd)_pData[0])
+	if (SensorMultilevelCmd_Report == (SensorMultilevelCmd)_data[0])
 	{
-		Node* pNode = GetNode();
-		if( pNode )
+		Node* node = GetNode();
+		if( node )
 		{
-			ValueStore* pStore = pNode->GetValueStore();
-			if( pStore )
+			ValueStore* store = node->GetValueStore();
+			if( store )
 			{
 				uint8 scale;
-				float value = ExtractValue( &_pData[2], &scale );
+				float value = ExtractValue( &_data[2], &scale );
 
 				char valueStr[16];
 				snprintf( valueStr, 16, "%.3f", value );
 
-				if( ValueDecimal* pValue = static_cast<ValueDecimal*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
+				if( ValueDecimal* value = static_cast<ValueDecimal*>( store->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
 				{
-					if( pValue->GetLabel() == "Unknown" )
+					if( value->GetLabel() == "Unknown" )
 					{
-						switch( _pData[1] )
+						switch( _data[1] )
 						{
 							case 0x01:
 							{
 								// Temperature
-								pValue->SetLabel( "Temperature" );
+								value->SetLabel( "Temperature" );
 								break;
 							}
 							case 0x02:
 							{
 								// General
-								pValue->SetLabel( "Sensor" );
-								pValue->SetUnits( "" );
+								value->SetLabel( "Sensor" );
+								value->SetUnits( "" );
 								break;
 							}
 							case 0x03:
 							{
 								// Luminance
-								pValue->SetLabel( "Luminance" );
-								pValue->SetUnits( "%" );
+								value->SetLabel( "Luminance" );
+								value->SetUnits( "%" );
 								break;
 							}
 							case 0x04:
 							{
 								// Power
-								pValue->SetLabel( "Power" );
-								pValue->SetUnits( "kW" );
+								value->SetLabel( "Power" );
+								value->SetUnits( "kW" );
 								break;
 							}
 							case 0x05:
 							{
 								// Humidity
-								pValue->SetLabel( "Humidity" );
-								pValue->SetUnits( "%" );
+								value->SetLabel( "Humidity" );
+								value->SetUnits( "%" );
 								break;
 							}
 							case 0x11:
 							{
 								// CO2
-								pValue->SetLabel( "Carbon Monoxide" );
-								pValue->SetUnits( "ppm" );
+								value->SetLabel( "Carbon Monoxide" );
+								value->SetUnits( "ppm" );
 								break;
 							}
 						}
 					}
 
-					if( _pData[1] == 0x01 )
+					if( _data[1] == 0x01 )
 					{
 						// Temperature units can usually be changed on 
 						// the device, so we have to check each time.
-						pValue->SetUnits( scale ? "F" : "C" );
+						value->SetUnits( scale ? "F" : "C" );
 					}
 
-					pValue->OnValueChanged( valueStr );
+					value->OnValueChanged( valueStr );
 				}
-				pNode->ReleaseValueStore();
+				node->ReleaseValueStore();
 
 				Log::Write( "Received SensorMultiLevel report from node %d: value=%s", GetNodeId(), valueStr );
 				return true;
@@ -154,7 +154,7 @@ bool SensorMultilevel::HandleMsg
 		}
 	}
 
-    return false;
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -166,16 +166,16 @@ void SensorMultilevel::CreateVars
 	uint8 const _instance
 )
 {
-	Node* pNode = GetNode();
-	if( pNode )
+	Node* node = GetNode();
+	if( node )
 	{
-		ValueStore* pStore = pNode->GetValueStore();
-		if( pStore )
+		ValueStore* store = node->GetValueStore();
+		if( store )
 		{
-			Value* pValue = new ValueDecimal( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_User, "Unknown", true, "0.0"  );
-			pStore->AddValue( pValue );
+			Value* value = new ValueDecimal( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_User, "Unknown", true, "0.0"  );
+			store->AddValue( value );
 
-			pNode->ReleaseValueStore();
+			node->ReleaseValueStore();
 		}
 	}
 }

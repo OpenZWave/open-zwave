@@ -64,8 +64,8 @@ Node::Node
 	m_bPolled( false ),
 	m_bProtocolInfoReceived( false ),
 	m_bNodeInfoReceived( false ),
-	m_pValues( new ValueStore() ),
-	m_pValuesMutex( new Mutex() )
+	m_values( new ValueStore() ),
+	m_valuesMutex( new Mutex() )
 {
 	// Request the node protocol info
 	Driver::Get()->AddInfoRequest( m_nodeId );
@@ -77,61 +77,61 @@ Node::Node
 //-----------------------------------------------------------------------------
 Node::Node
 ( 
-	TiXmlElement* _pNode	
+	TiXmlElement* _node	
 ):
 	m_bProtocolInfoReceived( true ),
 	m_bNodeInfoReceived( true ),
-	m_pValues( new ValueStore() )
+	m_values( new ValueStore() )
 {
 	char const* str;
 	int intVal;
 
-	if( TIXML_SUCCESS == _pNode->QueryIntAttribute( "id", &intVal ) )
+	if( TIXML_SUCCESS == _node->QueryIntAttribute( "id", &intVal ) )
 	{
 		m_nodeId = (uint8)intVal;
 	}
 
-	if( TIXML_SUCCESS == _pNode->QueryIntAttribute( "basic", &intVal ) )
+	if( TIXML_SUCCESS == _node->QueryIntAttribute( "basic", &intVal ) )
 	{
 		m_basic = (uint8)intVal;
 	}
 
-	str = _pNode->Attribute( "basic_label" );
+	str = _node->Attribute( "basic_label" );
 	if( str )
 	{
 		m_basicLabel = str;
 	}
 
-	if( TIXML_SUCCESS == _pNode->QueryIntAttribute( "generic", &intVal ) )
+	if( TIXML_SUCCESS == _node->QueryIntAttribute( "generic", &intVal ) )
 	{
 		m_generic = (uint8)intVal;
 	}
 
-	str = _pNode->Attribute( "generic_label" );
+	str = _node->Attribute( "generic_label" );
 	if( str )
 	{
 		m_genericLabel = str;
 	}
 
-	if( TIXML_SUCCESS == _pNode->QueryIntAttribute( "specific", &intVal ) )
+	if( TIXML_SUCCESS == _node->QueryIntAttribute( "specific", &intVal ) )
 	{
 		m_specific = (uint8)intVal;
 	}
 
-	str = _pNode->Attribute( "listening" );
+	str = _node->Attribute( "listening" );
 	if( str )
 	{
 		m_bListening = !strcmp( str, "True" );
 	}
 
-	str = _pNode->Attribute( "polled" );
+	str = _node->Attribute( "polled" );
 	if( str )
 	{
 		m_bPolled = !strcmp( str, "True" );
 	}
 
 	// Create the command classes
-	TiXmlNode const* pCommandClassNode = _pNode->FirstChild();
+	TiXmlNode const* pCommandClassNode = _node->FirstChild();
 	while( pCommandClassNode )
 	{
 		TiXmlElement const* pCommandClassElement = pCommandClassNode->ToElement();
@@ -192,7 +192,7 @@ Node::~Node
 		it = m_commandClassMap.erase( it );
 	}
 
-	delete m_pValues;
+	delete m_values;
 }
 
 //-----------------------------------------------------------------------------
@@ -201,7 +201,7 @@ Node::~Node
 //-----------------------------------------------------------------------------
 void Node::UpdateProtocolInfo
 ( 
-	uint8 const* _pData
+	uint8 const* _data
 )
 {
 	if( m_bProtocolInfoReceived )
@@ -215,24 +215,24 @@ void Node::UpdateProtocolInfo
 	Driver::Get()->RemoveInfoRequest();
 
 	// Capabilities
-	m_bListening = (( _pData[0] & 0x80 ) != 0 );
-	m_bRouting = (( _pData[0] & 0x40 ) != 0 );
+	m_bListening = (( _data[0] & 0x80 ) != 0 );
+	m_bRouting = (( _data[0] & 0x40 ) != 0 );
 	
 	m_maxBaudRate = 9600;
-	if( ( _pData[0] & 0x38 ) == 0x10 )
+	if( ( _data[0] & 0x38 ) == 0x10 )
 	{
 		m_maxBaudRate = 40000;
 	}
 
-	m_version = ( _pData[0] & 0x07 ) + 1;
+	m_version = ( _data[0] & 0x07 ) + 1;
 	
 	// Security  
-	m_security = _pData[1];
+	m_security = _data[1];
 
 	// Device types
-	m_basic = _pData[3];
-	m_generic = _pData[4];
-	m_specific = _pData[5];
+	m_basic = _data[3];
+	m_generic = _data[4];
+	m_specific = _data[5];
 
 	switch( m_basic )
 	{
@@ -266,12 +266,12 @@ void Node::UpdateProtocolInfo
 	}
 
 	Log::Write( "Protocol Info for Node %d:", m_nodeId );
-	Log::Write( "  Listening     = %s", m_bListening ? "True" : "False" );
-	Log::Write( "  Routing       = %s", m_bRouting ? "True" : "False" );
+	Log::Write( "  Listening	 = %s", m_bListening ? "True" : "False" );
+	Log::Write( "  Routing	   = %s", m_bRouting ? "True" : "False" );
 	Log::Write( "  Max Baud Rate = %d", m_maxBaudRate );
-	Log::Write( "  Version       = %d", m_version );
-	Log::Write( "  Security      = 0x%.2x", m_security );
-	Log::Write( "  Basic Type    = %s", m_basicLabel.c_str() );
+	Log::Write( "  Version	   = %d", m_version );
+	Log::Write( "  Security	  = 0x%.2x", m_security );
+	Log::Write( "  Basic Type	= %s", m_basicLabel.c_str() );
 	Log::Write( "  Generic Type  = %s", m_genericLabel.c_str() );
 
 	if( !m_bListening )
@@ -284,9 +284,9 @@ void Node::UpdateProtocolInfo
 	}
 
 	// Request the command classes
-	Msg* pMsg = new Msg( "Request Node Info", m_nodeId, REQUEST, FUNC_ID_ZW_REQUEST_NODE_INFO, false, true, FUNC_ID_ZW_APPLICATION_UPDATE );
-	pMsg->Append( m_nodeId );	
-	Driver::Get()->SendMsg( pMsg ); 
+	Msg* msg = new Msg( "Request Node Info", m_nodeId, REQUEST, FUNC_ID_ZW_REQUEST_NODE_INFO, false, true, FUNC_ID_ZW_APPLICATION_UPDATE );
+	msg->Append( m_nodeId );	
+	Driver::Get()->SendMsg( msg ); 
 }
 
 //-----------------------------------------------------------------------------
@@ -295,7 +295,7 @@ void Node::UpdateProtocolInfo
 //-----------------------------------------------------------------------------
 void Node::UpdateNodeInfo
 (
-	uint8 const* _pData,
+	uint8 const* _data,
 	uint8 const _length
 )
 {
@@ -310,7 +310,7 @@ void Node::UpdateNodeInfo
 	int32 i;
 	for( i=0; i<_length; ++i )
 	{
-		if( _pData[i] == 0xef )
+		if( _data[i] == 0xef )
 		{
 			// COMMAND_CLASS_MARK.  
 			// Marks the end of the list of supported command classes.  The remaining classes 
@@ -318,7 +318,7 @@ void Node::UpdateNodeInfo
 			break;
 		}
 
-		if( CommandClass* pCommandClass = AddCommandClass( _pData[i] ) )
+		if( CommandClass* pCommandClass = AddCommandClass( _data[i] ) )
 		{
 			// Start with an instance count of one.  If the device supports COMMMAND_CLASS_MULTI_INSTANCE
 			// then some command class instance counts will increase once the responses to the RequestStatic
@@ -344,16 +344,16 @@ void Node::UpdateNodeInfo
 //-----------------------------------------------------------------------------
 void Node::ApplicationCommandHandler
 (
-	uint8 const* _pData
+	uint8 const* _data
 )
 {
-	if( CommandClass* pCommandClass = GetCommandClass( _pData[5] ) )
+	if( CommandClass* pCommandClass = GetCommandClass( _data[5] ) )
 	{
-		pCommandClass->HandleMsg( &_pData[6], _pData[4] );
+		pCommandClass->HandleMsg( &_data[6], _data[4] );
 	}
 	else
 	{
-		Log::Write( "Node(%d)::ApplicationCommandHandler - Unhandled Command Class 0x%.2x", m_nodeId, _pData[5] );
+		Log::Write( "Node(%d)::ApplicationCommandHandler - Unhandled Command Class 0x%.2x", m_nodeId, _data[5] );
 	}
 }
 
@@ -459,17 +459,17 @@ void Node::RequestStatic
 //-----------------------------------------------------------------------------
 void Node::SaveStatic
 ( 
-	FILE* _pFile	
+	FILE* _file	
 )
 {
-	fprintf( _pFile, "  <Node id=\"%d\" listening=\"%s\" basic=\"%d\" basic_label=\"%s\" generic=\"%d\" generic_label=\"%s\" specific=\"%d\">\n", m_nodeId, m_bListening ? "True" : "False", m_basic, m_basicLabel.c_str(), m_generic, m_genericLabel.c_str(), m_specific );
+	fprintf( _file, "  <Node id=\"%d\" listening=\"%s\" basic=\"%d\" basic_label=\"%s\" generic=\"%d\" generic_label=\"%s\" specific=\"%d\">\n", m_nodeId, m_bListening ? "True" : "False", m_basic, m_basicLabel.c_str(), m_generic, m_genericLabel.c_str(), m_specific );
 
 	for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
 	{
-		it->second->SaveStatic( _pFile );
+		it->second->SaveStatic( _file );
 	}
 
-	fprintf( _pFile, "</Node>\n" );
+	fprintf( _file, "</Node>\n" );
 }
 
 //-----------------------------------------------------------------------------
@@ -485,28 +485,28 @@ bool Node::SetConfigParam
 	// See if there is a value already created for this parameter.  If there is not, we will
 	// send the command directly via the configuration command class.  If the parameter exists
 	// in the device, its response should cause the creation of a value object for future use.
-	if( ValueStore* pStore = GetValueStore() )
+	if( ValueStore* store = GetValueStore() )
 	{
 		ValueID id( m_nodeId, Configuration::StaticGetCommandClassId(), 0, _param );
-		if( Value* pValue = pStore->GetValue( id ) )
+		if( Value* value = store->GetValue( id ) )
 		{
-			uint8 const valueType = pValue->GetValueTypeId();
+			uint8 const valueType = value->GetValueTypeId();
 			if( valueType == ValueByte::StaticGetValueTypeId() )
 			{
-				ValueByte* pValueByte = static_cast<ValueByte*>( pValue );
-				pValueByte->Set( (uint8)_value );
+				ValueByte* valueByte = static_cast<ValueByte*>( value );
+				valueByte->Set( (uint8)_value );
 				return true;
 			}
 			else if( valueType == ValueInt::StaticGetValueTypeId() )
 			{
-				ValueInt* pValueInt = static_cast<ValueInt*>( pValue );
-				pValueInt->Set( _value );
+				ValueInt* valueInt = static_cast<ValueInt*>( value );
+				valueInt->Set( _value );
 				return true;
 			}
 			else if( valueType == ValueList::StaticGetValueTypeId() )
 			{
-				ValueList* pValueList = static_cast<ValueList*>( pValue );
-				pValueList->SetByValue( _value );
+				ValueList* valueList = static_cast<ValueList*>( value );
+				valueList->SetByValue( _value );
 				return true;		
 			}
 		}
@@ -517,10 +517,13 @@ bool Node::SetConfigParam
 	// Failed to find an existing value object representing this 
 	// configuration parameter, so we try to set the value directly 
 	// through the Configuration command class.
-	if( Configuration* pCC = static_cast<Configuration*>( GetCommandClass( Configuration::StaticGetCommandClassId() ) ) )
+	if( Configuration* cc = static_cast<Configuration*>( GetCommandClass( Configuration::StaticGetCommandClassId() ) ) )
 	{
-		pCC->Set( _param, _value );
+		cc->Set( _param, _value );
+		return true;
 	}
+
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -531,8 +534,8 @@ ValueStore* Node::GetValueStore
 (
 )
 {
-	m_pValuesMutex->Lock();
-	return m_pValues;
+	m_valuesMutex->Lock();
+	return m_values;
 }
 
 //-----------------------------------------------------------------------------
@@ -543,7 +546,7 @@ void Node::ReleaseValueStore
 (
 )
 {
-	m_pValuesMutex->Release();
+	m_valuesMutex->Release();
 }
 
 //-----------------------------------------------------------------------------
@@ -555,8 +558,10 @@ Value* Node::GetValue
 	ValueID const& _id
 )const
 {
-	return m_pValues->GetValue( _id );
+	return m_values->GetValue( _id );
 }
+
+
 
 
 

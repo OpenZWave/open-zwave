@@ -71,16 +71,16 @@ Value::Value
 //-----------------------------------------------------------------------------
 Value::Value
 (
-	TiXmlElement* _pValueElement
+	TiXmlElement* _valueElement
 ):
 	m_refs( 1 ),
 	m_bReadOnly( false ),
 	m_genre( Genre_System )
 {
-	char const* id = _pValueElement->Attribute( "id" );
+	char const* id = _valueElement->Attribute( "id" );
 	m_id = ValueID( id );
 
-	char const* genre = _pValueElement->Attribute( "genre" );
+	char const* genre = _valueElement->Attribute( "genre" );
 	for( int i=0; i<4; ++i )
 	{
 		if( !strcmp( genre, c_genreName[i] ) )
@@ -90,19 +90,19 @@ Value::Value
 		}
 	}
 
-	char const* label = _pValueElement->Attribute( "label" );
+	char const* label = _valueElement->Attribute( "label" );
 	if( label )
 	{
 		m_label = label;
 	}
 
-	char const* units = _pValueElement->Attribute( "units" );
+	char const* units = _valueElement->Attribute( "units" );
 	if( units )
 	{
 		m_units = units;
 	}
 
-	char const* readOnly = _pValueElement->Attribute( "read_only" );
+	char const* readOnly = _valueElement->Attribute( "read_only" );
 	if( readOnly )
 	{
 		m_bReadOnly = !strcmp( readOnly, "true" );
@@ -115,14 +115,14 @@ Value::Value
 //-----------------------------------------------------------------------------
 void Value::WriteXML
 (
-	TiXmlElement* _pValueElement
+	TiXmlElement* _valueElement
 )
 {
-	_pValueElement->SetAttribute( "id", m_id.ToString().c_str() );
-	_pValueElement->SetAttribute( "genre", c_genreName[m_genre] );
-	_pValueElement->SetAttribute( "label", m_label.c_str() );
-	_pValueElement->SetAttribute( "units", m_units.c_str() );
-	_pValueElement->SetAttribute( "read_only", m_bReadOnly ? "true" : "false" );
+	_valueElement->SetAttribute( "id", m_id.ToString().c_str() );
+	_valueElement->SetAttribute( "genre", c_genreName[m_genre] );
+	_valueElement->SetAttribute( "label", m_label.c_str() );
+	_valueElement->SetAttribute( "units", m_units.c_str() );
+	_valueElement->SetAttribute( "read_only", m_bReadOnly ? "true" : "false" );
 }
 
 //-----------------------------------------------------------------------------
@@ -138,11 +138,11 @@ bool Value::Set
 		return false;
 	}
 
-	if( Node* pNode = Driver::Get()->GetNode( m_id.GetNodeId() ) )
+	if( Node* node = Driver::Get()->GetNode( m_id.GetNodeId() ) )
 	{
-		if( CommandClass* pCC = pNode->GetCommandClass( m_id.GetCommandClassId() ) )
+		if( CommandClass* cc = node->GetCommandClass( m_id.GetCommandClassId() ) )
 		{
-			return( pCC->SetValue( *this ) );
+			return( cc->SetValue( *this ) );
 		}
 	}
 
@@ -158,7 +158,16 @@ void Value::OnValueChanged
 )
 {
 	// Notify the watchers
-	Driver::Get()->NotifyWatchers( m_id ); 
+	Driver::Notification* notification = new Driver::Notification();
+	
+	notification->m_type = Driver::NotificationType_Value;
+	notification->m_id = m_id;
+	notification->m_nodeId = m_id.GetNodeId();
+	notification->m_groupIdx = 0;
+
+	Driver::Get()->NotifyWatchers( notification ); 
+
+	delete notification;
 }
 
 

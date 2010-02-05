@@ -36,26 +36,26 @@ using namespace OpenZWave;
 
 static enum PowerlevelCmd
 {
-    PowerlevelCmd_Set				= 0x01,
-    PowerlevelCmd_Get				= 0x02,
-    PowerlevelCmd_Report			= 0x03,
-    PowerlevelCmd_TestNodeSet		= 0x04,
-    PowerlevelCmd_TestNodeGet		= 0x05,
-    PowerlevelCmd_TestNodeReport	= 0x06
+	PowerlevelCmd_Set				= 0x01,
+	PowerlevelCmd_Get				= 0x02,
+	PowerlevelCmd_Report			= 0x03,
+	PowerlevelCmd_TestNodeSet		= 0x04,
+	PowerlevelCmd_TestNodeGet		= 0x05,
+	PowerlevelCmd_TestNodeReport	= 0x06
 };
 
 static char* const c_powerLevelNames[] = 
 {
-    "Normal",
-    "-1dB",
-    "-2dB",
-    "-3dB",
-    "-4dB",
-    "-5dB",
-    "-6dB",
-    "-7dB",
-    "-8dB",
-    "-9dB"
+	"Normal",
+	"-1dB",
+	"-2dB",
+	"-3dB",
+	"-4dB",
+	"-5dB",
+	"-6dB",
+	"-7dB",
+	"-8dB",
+	"-9dB"
 };
 
 static char* const c_powerLevelStatusNames[] = 
@@ -72,30 +72,30 @@ static char* const c_powerLevelStatusNames[] =
 //-----------------------------------------------------------------------------
 bool Powerlevel::HandleMsg
 (
-    uint8 const* _pData,
-    uint32 const _length,
+	uint8 const* _data,
+	uint32 const _length,
 	uint32 const _instance	// = 0
 )
 {
-    if( PowerlevelCmd_Report == (PowerlevelCmd)_pData[0] )
-    {
-		PowerLevelEnum powerLevel = (PowerLevelEnum)_pData[1];
-		uint8 timeout = _pData[2];
+	if( PowerlevelCmd_Report == (PowerlevelCmd)_data[0] )
+	{
+		PowerLevelEnum powerLevel = (PowerLevelEnum)_data[1];
+		uint8 timeout = _data[2];
 
 		Log::Write( "Received a PowerLevel report from node %d: PowerLevel=%s, Timeout=%d", GetNodeId(), c_powerLevelNames[powerLevel], timeout );
-        return true;
-    }
+		return true;
+	}
 
-    if( PowerlevelCmd_TestNodeReport == (PowerlevelCmd)_pData[0] )
-    {
-		uint8 testNode = _pData[1];
-		PowerLevelStatusEnum status = (PowerLevelStatusEnum)_pData[2];
-		uint16 ackCount = (((uint16)_pData[3])<<8) | (uint16)_pData[4];
+	if( PowerlevelCmd_TestNodeReport == (PowerlevelCmd)_data[0] )
+	{
+		uint8 testNode = _data[1];
+		PowerLevelStatusEnum status = (PowerLevelStatusEnum)_data[2];
+		uint16 ackCount = (((uint16)_data[3])<<8) | (uint16)_data[4];
 
 		Log::Write( "Received a PowerLevel Test Node report on node %d: Test Node=%d, Status=%s, Test Frame ACK Count=%d", GetNodeId(), testNode, c_powerLevelStatusNames[status], ackCount );
-        return true;
-    }
-    return false;
+		return true;
+	}
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -114,15 +114,15 @@ void Powerlevel::Set
 	}
 
 	Log::Write( "Setting the power level of node %d to %s for %d seconds", GetNodeId(), c_powerLevelNames[_powerLevel], _timeout );
-    Msg* pMsg = new Msg( "PowerlevelCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-    pMsg->Append( GetNodeId() );
-    pMsg->Append( 4 );
-    pMsg->Append( GetCommandClassId() );
-    pMsg->Append( PowerlevelCmd_Set );
-    pMsg->Append( (uint8)_powerLevel );
-    pMsg->Append( _timeout );
-    pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-    Driver::Get()->SendMsg( pMsg );
+	Msg* msg = new Msg( "PowerlevelCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+	msg->Append( GetNodeId() );
+	msg->Append( 4 );
+	msg->Append( GetCommandClassId() );
+	msg->Append( PowerlevelCmd_Set );
+	msg->Append( (uint8)_powerLevel );
+	msg->Append( _timeout );
+	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	Driver::Get()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -142,16 +142,16 @@ void Powerlevel::Test
 	}
 
 	Log::Write( "Running a Power Level Test from node %d: Target Node = %d, Power Level = %s, Number of Frames = %d", GetNodeId(), _testNodeId, c_powerLevelNames[_powerLevel], _numFrames );
-    Msg* pMsg = new Msg( "PowerlevelCmd_TestNodeSet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-    pMsg->Append( GetNodeId() );
-    pMsg->Append( 6 );
-    pMsg->Append( GetCommandClassId() );
-    pMsg->Append( PowerlevelCmd_TestNodeSet );
-    pMsg->Append( _testNodeId );
-    pMsg->Append( (uint8)_powerLevel );
-    pMsg->Append( (uint8)(_numFrames >> 8) );
-    pMsg->Append( (uint8)(_numFrames & 0x00ff) );
-    pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-    Driver::Get()->SendMsg( pMsg );
+	Msg* msg = new Msg( "PowerlevelCmd_TestNodeSet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+	msg->Append( GetNodeId() );
+	msg->Append( 6 );
+	msg->Append( GetCommandClassId() );
+	msg->Append( PowerlevelCmd_TestNodeSet );
+	msg->Append( _testNodeId );
+	msg->Append( (uint8)_powerLevel );
+	msg->Append( (uint8)(_numFrames >> 8) );
+	msg->Append( (uint8)(_numFrames & 0x00ff) );
+	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	Driver::Get()->SendMsg( msg );
 }
 

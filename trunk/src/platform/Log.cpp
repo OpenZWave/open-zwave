@@ -35,7 +35,7 @@
 
 using namespace OpenZWave;
 
-Log* Log::s_pInstance = NULL;
+Log* Log::s_instance = NULL;
 
 
 //-----------------------------------------------------------------------------
@@ -47,12 +47,12 @@ Log* Log::Create
 	string const& _filename 
 )
 {
-	if( NULL == s_pInstance )
+	if( NULL == s_instance )
 	{
-		s_pInstance = new Log( _filename );
+		s_instance = new Log( _filename );
 	}
 
-	return s_pInstance;
+	return s_instance;
 }
 
 //-----------------------------------------------------------------------------
@@ -63,8 +63,8 @@ void Log::Destroy
 (
 )
 {
-	delete s_pInstance;
-	s_pInstance = NULL;
+	delete s_instance;
+	s_instance = NULL;
 }
 
 //-----------------------------------------------------------------------------
@@ -77,11 +77,11 @@ void Log::Write
 	... 
 )
 {
-	if( s_pInstance )
+	if( s_instance )
 	{
 		va_list args;
 		va_start( args, _format );
-		s_pInstance->m_pImpl->Write( _format, args );
+		s_instance->m_pImpl->Write( _format, args );
 		va_end( args );
 	}
 }

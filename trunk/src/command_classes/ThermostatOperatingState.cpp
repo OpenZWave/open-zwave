@@ -67,13 +67,13 @@ void ThermostatOperatingState::RequestStatic
 )
 {
 	// Request the supported modes
-	Msg* pMsg = new Msg( "Request Supported Thermostat Operating States", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-	pMsg->Append( GetNodeId() );
-	pMsg->Append( 2 );
-	pMsg->Append( GetCommandClassId() );
-	pMsg->Append( ThermostatOperatingStateCmd_SupportedGet );
-	pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	Driver::Get()->SendMsg( pMsg);
+	Msg* msg = new Msg( "Request Supported Thermostat Operating States", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+	msg->Append( GetNodeId() );
+	msg->Append( 2 );
+	msg->Append( GetCommandClassId() );
+	msg->Append( ThermostatOperatingStateCmd_SupportedGet );
+	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	Driver::Get()->SendMsg( msg);
 }
 
 //-----------------------------------------------------------------------------
@@ -85,13 +85,13 @@ void ThermostatOperatingState::RequestState
 )
 {
 	// Request the current mode
-	Msg* pMsg = new Msg( "Request Current Thermostat Operating State", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-	pMsg->Append( GetNodeId() );
-	pMsg->Append( 2 );
-	pMsg->Append( GetCommandClassId() );
-	pMsg->Append( ThermostatOperatingStateCmd_Get );
-	pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	Driver::Get()->SendMsg( pMsg );
+	Msg* msg = new Msg( "Request Current Thermostat Operating State", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+	msg->Append( GetNodeId() );
+	msg->Append( 2 );
+	msg->Append( GetCommandClassId() );
+	msg->Append( ThermostatOperatingStateCmd_Get );
+	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	Driver::Get()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -100,29 +100,29 @@ void ThermostatOperatingState::RequestState
 //-----------------------------------------------------------------------------
 bool ThermostatOperatingState::HandleMsg
 (
-	uint8 const* _pData,
-    uint32 const _length,
+	uint8 const* _data,
+	uint32 const _length,
 	uint32 const _instance	// = 0
 )
 {
 	bool handled = false;
 
-	Node* pNode = GetNode();
-	if( pNode )
+	Node* node = GetNode();
+	if( node )
 	{
-		ValueStore* pStore = pNode->GetValueStore();
-		if( pStore )
+		ValueStore* store = node->GetValueStore();
+		if( store )
 		{
-			if( ThermostatOperatingStateCmd_Report == (ThermostatOperatingStateCmd)_pData[0] )
+			if( ThermostatOperatingStateCmd_Report == (ThermostatOperatingStateCmd)_data[0] )
 			{
 				// We have received the thermostat operating state from the Z-Wave device
-				if( ValueList* pValueList = static_cast<ValueList*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
+				if( ValueList* valueList = static_cast<ValueList*>( store->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
 				{
-					pValueList->OnValueChanged( _pData[1] );
+					valueList->OnValueChanged( _data[1] );
 				}
 				handled = true;
 			}
-			else if( _pData[1] == ThermostatOperatingStateCmd_SupportedReport )
+			else if( _data[1] == ThermostatOperatingStateCmd_SupportedReport )
 			{
 				// We have received the supported thermostat modes from the Z-Wave device
 				m_supportedStates.clear();
@@ -130,7 +130,7 @@ bool ThermostatOperatingState::HandleMsg
 				{
 					for( int32 bit=0; bit<8; ++bit )
 					{
-						if( ( _pData[i] & (1<<bit) ) != 0 )
+						if( ( _data[i] & (1<<bit) ) != 0 )
 						{
 							ValueList::Item item;
 							item.m_value = i + bit - 2;
@@ -144,7 +144,7 @@ bool ThermostatOperatingState::HandleMsg
 				handled = true;
 			}
 
-			pNode->ReleaseValueStore();
+			node->ReleaseValueStore();
 		}
 	}
 
@@ -165,19 +165,19 @@ void ThermostatOperatingState::CreateVars
 		return;
 	}
 
-	Node* pNode = GetNode();
-	if( pNode )
+	Node* node = GetNode();
+	if( node )
 	{
-		ValueStore* pStore = pNode->GetValueStore();
-		if( pStore )
+		ValueStore* store = node->GetValueStore();
+		if( store )
 		{
-			Value* pValue;
+			Value* value;
 			
-			pValue = new ValueList( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_User, "State", true, m_supportedStates, 0 );
-			pStore->AddValue( pValue );
-			pValue->Release();
+			value = new ValueList( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_User, "State", true, m_supportedStates, 0 );
+			store->AddValue( value );
+			value->Release();
 
-			pNode->ReleaseValueStore();
+			node->ReleaseValueStore();
 		}
 	}
 }

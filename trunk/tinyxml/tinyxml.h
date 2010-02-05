@@ -373,7 +373,7 @@ protected:
 
 	TiXmlCursor location;
 
-    /// Field containing a generic user pointer
+	/// Field containing a generic user pointer
 	void*			userData;
 	
 	// None of these methods are reliable for any language except English.
@@ -400,9 +400,9 @@ private:
 
 	struct Entity
 	{
-		const char*     str;
+		const char*	 str;
 		unsigned int	strLength;
-		char		    chr;
+		char			chr;
 	};
 	enum
 	{
@@ -429,28 +429,28 @@ class TiXmlNode : public TiXmlBase
 public:
 	#ifdef TIXML_USE_STL	
 
-	    /** An input stream operator, for every class. Tolerant of newlines and
-		    formatting, but doesn't expect them.
-	    */
-	    friend std::istream& operator >> (std::istream& in, TiXmlNode& base);
+		/** An input stream operator, for every class. Tolerant of newlines and
+			formatting, but doesn't expect them.
+		*/
+		friend std::istream& operator >> (std::istream& in, TiXmlNode& base);
 
-	    /** An output stream operator, for every class. Note that this outputs
-		    without any newlines or formatting, as opposed to Print(), which
-		    includes tabs and new lines.
+		/** An output stream operator, for every class. Note that this outputs
+			without any newlines or formatting, as opposed to Print(), which
+			includes tabs and new lines.
 
-		    The operator<< and operator>> are not completely symmetric. Writing
-		    a node to a stream is very well defined. You'll get a nice stream
-		    of output, without any extra whitespace or newlines.
-		    
-		    But reading is not as well defined. (As it always is.) If you create
-		    a TiXmlElement (for example) and read that from an input stream,
-		    the text needs to define an element or junk will result. This is
-		    true of all input streams, but it's worth keeping in mind.
+			The operator<< and operator>> are not completely symmetric. Writing
+			a node to a stream is very well defined. You'll get a nice stream
+			of output, without any extra whitespace or newlines.
+			
+			But reading is not as well defined. (As it always is.) If you create
+			a TiXmlElement (for example) and read that from an input stream,
+			the text needs to define an element or junk will result. This is
+			true of all input streams, but it's worth keeping in mind.
 
-		    A TiXmlDocument will read nodes until it reads a root element, and
+			A TiXmlDocument will read nodes until it reads a root element, and
 			all the children of that root element.
-	    */	
-	    friend std::ostream& operator<< (std::ostream& out, const TiXmlNode& base);
+		*/	
+		friend std::ostream& operator<< (std::ostream& out, const TiXmlNode& base);
 
 		/// Appends the XML node or attribute to a std::string.
 		friend std::string& operator<< (std::string& out, const TiXmlNode& base );
@@ -487,9 +487,9 @@ public:
 	*/
 	const char *Value() const { return value.c_str (); }
 
-    #ifdef TIXML_USE_STL
+	#ifdef TIXML_USE_STL
 	/** Return Value() as a std::string. If you only use STL,
-	    this is more efficient than calling Value().
+		this is more efficient than calling Value().
 		Only available in STL mode.
 	*/
 	const std::string& ValueStr() const { return value; }
@@ -508,7 +508,7 @@ public:
 	*/
 	void SetValue(const char * _value) { value = _value;}
 
-    #ifdef TIXML_USE_STL
+	#ifdef TIXML_USE_STL
 	/// STL std::string form.
 	void SetValue( const std::string& _value )	{ value = _value; }
 	#endif
@@ -537,7 +537,7 @@ public:
 		return const_cast< TiXmlNode* > ((const_cast< const TiXmlNode* >(this))->LastChild( _value ));
 	}
 
-    #ifdef TIXML_USE_STL
+	#ifdef TIXML_USE_STL
 	const TiXmlNode* FirstChild( const std::string& _value ) const	{	return FirstChild (_value.c_str ());	}	///< STL std::string form.
 	TiXmlNode* FirstChild( const std::string& _value )				{	return FirstChild (_value.c_str ());	}	///< STL std::string form.
 	const TiXmlNode* LastChild( const std::string& _value ) const	{	return LastChild (_value.c_str ());	}	///< STL std::string form.
@@ -571,7 +571,7 @@ public:
 		return const_cast< TiXmlNode* >( (const_cast< const TiXmlNode* >(this))->IterateChildren( _value, previous ) );
 	}
 
-    #ifdef TIXML_USE_STL
+	#ifdef TIXML_USE_STL
 	const TiXmlNode* IterateChildren( const std::string& _value, const TiXmlNode* previous ) const	{	return IterateChildren (_value.c_str (), previous);	}	///< STL std::string form.
 	TiXmlNode* IterateChildren( const std::string& _value, const TiXmlNode* previous ) {	return IterateChildren (_value.c_str (), previous);	}	///< STL std::string form.
 	#endif
@@ -621,7 +621,7 @@ public:
 		return const_cast< TiXmlNode* >( (const_cast< const TiXmlNode* >(this))->PreviousSibling( _prev ) );
 	}
 
-    #ifdef TIXML_USE_STL
+	#ifdef TIXML_USE_STL
 	const TiXmlNode* PreviousSibling( const std::string& _value ) const	{	return PreviousSibling (_value.c_str ());	}	///< STL std::string form.
 	TiXmlNode* PreviousSibling( const std::string& _value ) 			{	return PreviousSibling (_value.c_str ());	}	///< STL std::string form.
 	const TiXmlNode* NextSibling( const std::string& _value) const		{	return NextSibling (_value.c_str ());	}	///< STL std::string form.
@@ -656,7 +656,7 @@ public:
 		return const_cast< TiXmlElement* >( (const_cast< const TiXmlNode* >(this))->NextSiblingElement( _next ) );
 	}
 
-    #ifdef TIXML_USE_STL
+	#ifdef TIXML_USE_STL
 	const TiXmlElement* NextSiblingElement( const std::string& _value) const	{	return NextSiblingElement (_value.c_str ());	}	///< STL std::string form.
 	TiXmlElement* NextSiblingElement( const std::string& _value)				{	return NextSiblingElement (_value.c_str ());	}	///< STL std::string form.
 	#endif
@@ -673,7 +673,7 @@ public:
 		return const_cast< TiXmlElement* >( (const_cast< const TiXmlNode* >(this))->FirstChildElement( _value ) );
 	}
 
-    #ifdef TIXML_USE_STL
+	#ifdef TIXML_USE_STL
 	const TiXmlElement* FirstChildElement( const std::string& _value ) const	{	return FirstChildElement (_value.c_str ());	}	///< STL std::string form.
 	TiXmlElement* FirstChildElement( const std::string& _value )				{	return FirstChildElement (_value.c_str ());	}	///< STL std::string form.
 	#endif
@@ -695,19 +695,19 @@ public:
 	/// Returns true if this node has no children.
 	bool NoChildren() const						{ return !firstChild; }
 
-	virtual const TiXmlDocument*    ToDocument()    const { return 0; } ///< Cast to a more defined type. Will return null if not of the requested type.
-	virtual const TiXmlElement*     ToElement()     const { return 0; } ///< Cast to a more defined type. Will return null if not of the requested type.
-	virtual const TiXmlComment*     ToComment()     const { return 0; } ///< Cast to a more defined type. Will return null if not of the requested type.
-	virtual const TiXmlUnknown*     ToUnknown()     const { return 0; } ///< Cast to a more defined type. Will return null if not of the requested type.
-	virtual const TiXmlText*        ToText()        const { return 0; } ///< Cast to a more defined type. Will return null if not of the requested type.
+	virtual const TiXmlDocument*	ToDocument()	const { return 0; } ///< Cast to a more defined type. Will return null if not of the requested type.
+	virtual const TiXmlElement*	 ToElement()	 const { return 0; } ///< Cast to a more defined type. Will return null if not of the requested type.
+	virtual const TiXmlComment*	 ToComment()	 const { return 0; } ///< Cast to a more defined type. Will return null if not of the requested type.
+	virtual const TiXmlUnknown*	 ToUnknown()	 const { return 0; } ///< Cast to a more defined type. Will return null if not of the requested type.
+	virtual const TiXmlText*		ToText()		const { return 0; } ///< Cast to a more defined type. Will return null if not of the requested type.
 	virtual const TiXmlDeclaration* ToDeclaration() const { return 0; } ///< Cast to a more defined type. Will return null if not of the requested type.
 
-	virtual TiXmlDocument*          ToDocument()    { return 0; } ///< Cast to a more defined type. Will return null if not of the requested type.
-	virtual TiXmlElement*           ToElement()	    { return 0; } ///< Cast to a more defined type. Will return null if not of the requested type.
-	virtual TiXmlComment*           ToComment()     { return 0; } ///< Cast to a more defined type. Will return null if not of the requested type.
-	virtual TiXmlUnknown*           ToUnknown()	    { return 0; } ///< Cast to a more defined type. Will return null if not of the requested type.
-	virtual TiXmlText*	            ToText()        { return 0; } ///< Cast to a more defined type. Will return null if not of the requested type.
-	virtual TiXmlDeclaration*       ToDeclaration() { return 0; } ///< Cast to a more defined type. Will return null if not of the requested type.
+	virtual TiXmlDocument*		  ToDocument()	{ return 0; } ///< Cast to a more defined type. Will return null if not of the requested type.
+	virtual TiXmlElement*		   ToElement()		{ return 0; } ///< Cast to a more defined type. Will return null if not of the requested type.
+	virtual TiXmlComment*		   ToComment()	 { return 0; } ///< Cast to a more defined type. Will return null if not of the requested type.
+	virtual TiXmlUnknown*		   ToUnknown()		{ return 0; } ///< Cast to a more defined type. Will return null if not of the requested type.
+	virtual TiXmlText*				ToText()		{ return 0; } ///< Cast to a more defined type. Will return null if not of the requested type.
+	virtual TiXmlDeclaration*	   ToDeclaration() { return 0; } ///< Cast to a more defined type. Will return null if not of the requested type.
 
 	/** Create an exact duplicate of this node and return it. The memory must be deleted
 		by the caller. 
@@ -746,7 +746,7 @@ protected:
 	void CopyTo( TiXmlNode* target ) const;
 
 	#ifdef TIXML_USE_STL
-	    // The real work of the input operator.
+		// The real work of the input operator.
 	virtual void StreamIn( std::istream* in, TIXML_STRING* tag ) = 0;
 	#endif
 
@@ -839,7 +839,7 @@ public:
 	void SetIntValue( int _value );										///< Set the value from an integer.
 	void SetDoubleValue( double _value );								///< Set the value from a double.
 
-    #ifdef TIXML_USE_STL
+	#ifdef TIXML_USE_STL
 	/// STL std::string form.
 	void SetName( const std::string& _name )	{ name = _name; }	
 	/// STL std::string form.	
@@ -999,7 +999,7 @@ public:
 		return result;
 	}
 
-    #ifdef TIXML_USE_STL
+	#ifdef TIXML_USE_STL
 	/** Template form of the attribute query which will try to read the
 		attribute into the specified type. Very easy, very powerful, but
 		be careful to make sure to call this with the correct type.
@@ -1042,7 +1042,7 @@ public:
 	*/
 	void SetAttribute( const char* name, const char * _value );
 
-    #ifdef TIXML_USE_STL
+	#ifdef TIXML_USE_STL
 	const std::string* Attribute( const std::string& name ) const;
 	const std::string* Attribute( const std::string& name, int* i ) const;
 	const std::string* Attribute( const std::string& name, double* d ) const;
@@ -1068,7 +1068,7 @@ public:
 	/** Deletes an attribute with the given name.
 	*/
 	void RemoveAttribute( const char * name );
-    #ifdef TIXML_USE_STL
+	#ifdef TIXML_USE_STL
 	void RemoveAttribute( const std::string& name )	{	RemoveAttribute (name.c_str ());	}	///< STL std::string form.
 	#endif
 
@@ -1121,8 +1121,8 @@ public:
 	*/
 	virtual const char* Parse( const char* p, TiXmlParsingData* data, TiXmlEncoding encoding );
 
-	virtual const TiXmlElement*     ToElement()     const { return this; } ///< Cast to a more defined type. Will return null not of the requested type.
-	virtual TiXmlElement*           ToElement()	          { return this; } ///< Cast to a more defined type. Will return null not of the requested type.
+	virtual const TiXmlElement*	 ToElement()	 const { return this; } ///< Cast to a more defined type. Will return null not of the requested type.
+	virtual TiXmlElement*		   ToElement()			  { return this; } ///< Cast to a more defined type. Will return null not of the requested type.
 
 	/** Walk the XML tree visiting this node and all of its children. 
 	*/
@@ -1239,7 +1239,7 @@ public:
 	virtual const char* Parse( const char* p, TiXmlParsingData* data, TiXmlEncoding encoding );
 
 	virtual const TiXmlText* ToText() const { return this; } ///< Cast to a more defined type. Will return null not of the requested type.
-	virtual TiXmlText*       ToText()       { return this; } ///< Cast to a more defined type. Will return null not of the requested type.
+	virtual TiXmlText*	   ToText()	   { return this; } ///< Cast to a more defined type. Will return null not of the requested type.
 
 	/** Walk the XML tree visiting this node and all of its children. 
 	*/
@@ -1315,7 +1315,7 @@ public:
 	virtual const char* Parse( const char* p, TiXmlParsingData* data, TiXmlEncoding encoding );
 
 	virtual const TiXmlDeclaration* ToDeclaration() const { return this; } ///< Cast to a more defined type. Will return null not of the requested type.
-	virtual TiXmlDeclaration*       ToDeclaration()       { return this; } ///< Cast to a more defined type. Will return null not of the requested type.
+	virtual TiXmlDeclaration*	   ToDeclaration()	   { return this; } ///< Cast to a more defined type. Will return null not of the requested type.
 
 	/** Walk the XML tree visiting this node and all of its children. 
 	*/
@@ -1359,8 +1359,8 @@ public:
 
 	virtual const char* Parse( const char* p, TiXmlParsingData* data, TiXmlEncoding encoding );
 
-	virtual const TiXmlUnknown*     ToUnknown()     const { return this; } ///< Cast to a more defined type. Will return null not of the requested type.
-	virtual TiXmlUnknown*           ToUnknown()	    { return this; } ///< Cast to a more defined type. Will return null not of the requested type.
+	virtual const TiXmlUnknown*	 ToUnknown()	 const { return this; } ///< Cast to a more defined type. Will return null not of the requested type.
+	virtual TiXmlUnknown*		   ToUnknown()		{ return this; } ///< Cast to a more defined type. Will return null not of the requested type.
 
 	/** Walk the XML tree visiting this node and all of its children. 
 	*/
@@ -1525,8 +1525,8 @@ public:
 	// [internal use]
 	void SetError( int err, const char* errorLocation, TiXmlParsingData* prevData, TiXmlEncoding encoding );
 
-	virtual const TiXmlDocument*    ToDocument()    const { return this; } ///< Cast to a more defined type. Will return null not of the requested type.
-	virtual TiXmlDocument*          ToDocument()          { return this; } ///< Cast to a more defined type. Will return null not of the requested type.
+	virtual const TiXmlDocument*	ToDocument()	const { return this; } ///< Cast to a more defined type. Will return null not of the requested type.
+	virtual TiXmlDocument*		  ToDocument()		  { return this; } ///< Cast to a more defined type. Will return null not of the requested type.
 
 	/** Walk the XML tree visiting this node and all of its children. 
 	*/
@@ -1734,7 +1734,7 @@ class TiXmlPrinter : public TiXmlVisitor
 {
 public:
 	TiXmlPrinter() : depth( 0 ), simpleTextPrint( false ),
-					 buffer(), indent( "    " ), lineBreak( "\n" ) {}
+					 buffer(), indent( "	" ), lineBreak( "\n" ) {}
 
 	virtual bool VisitEnter( const TiXmlDocument& doc );
 	virtual bool VisitExit( const TiXmlDocument& doc );

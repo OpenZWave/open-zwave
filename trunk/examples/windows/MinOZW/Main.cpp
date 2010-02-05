@@ -33,17 +33,28 @@
 #include "Windows.h"
 #include "Driver.h"
 #include "Node.h"
-#include "Value_Classes/ValueStore.h"
+#include "ValueStore.h"
 
-/***************************************************************************
-****																	****
-****	main															****
-****																	****
-****	Parses the command line and installs, uninstalls or runs the	****
-****	Service service as appropriate	 								****
-****																	****
-***************************************************************************/
+using namespace OpenZWave;
 
+
+//-----------------------------------------------------------------------------
+// <OnNotification>
+// Callback that is triggered when a value, group or node changes
+//-----------------------------------------------------------------------------
+void OnNotification
+(
+	Driver::Notification const* _notification,
+	void* _context
+)
+{
+	int breakhere = 1;
+}
+
+//-----------------------------------------------------------------------------
+// <main>
+// Create the driver and then wait
+//-----------------------------------------------------------------------------
 int main( int argc, char* argv[] )
 {
 	// Create a Z-Wave Driver
@@ -51,7 +62,7 @@ int main( int argc, char* argv[] )
 	// Modify this line to set the correct serial port for your PC interface.
 	// The second argument is a path for the log file.  If you leave it 
 	// blank, the log file will appear in the program's working directory.
-	OpenZWave::Driver::Create( "\\\\.\\COM2", "" );
+	OpenZWave::Driver::Create( "\\\\.\\COM2", "", OnNotification, NULL );
 	
 	// The driver is a singleton, so once created, you get a pointer to it
 	// from anywhere in your code as follows
@@ -67,5 +78,7 @@ int main( int argc, char* argv[] )
 
 	return 0;
 }
+
+
 
 

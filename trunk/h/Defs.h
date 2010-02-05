@@ -26,7 +26,7 @@
 //-----------------------------------------------------------------------------
 
 #ifndef _Defs_H
-#define _Defs_H                       
+#define _Defs_H					   
 
 #include <assert.h>
 
@@ -37,26 +37,26 @@
 
 // Basic types
 typedef signed char			int8;
-typedef unsigned char       uint8;
+typedef unsigned char		uint8;
 
 typedef signed short		int16;
-typedef unsigned short	    uint16;
+typedef unsigned short		uint16;
 
 typedef signed int			int32;
 typedef unsigned int		uint32;
 
 #ifdef _MSC_VER
 typedef signed __int64		int64;
-typedef unsigned __int64    uint64;
+typedef unsigned __int64	uint64;
 #endif
 
 #ifdef __GNUC__
-typedef signed long long    int64;
+typedef signed long long	int64;
 typedef unsigned long long  uint64;
 #endif
 
-typedef float               float32;
-typedef double              float64;
+typedef float				float32;
+typedef double				float64;
 
 
 // Declare the OpenZWave namespace
@@ -64,7 +64,7 @@ namespace std {}
 namespace OpenZWave
 {
 	// Include the STL namespace
-    using namespace std;
+	using namespace std;
 }
 
 // Modifications for Microsoft compilers
@@ -95,62 +95,62 @@ namespace OpenZWave
 #define ZW_MEMORY_GET_ID						0x20	// response: 4byte home id, node id
 #define ZW_CLOCK_SET							0x30
 
-#define TRANSMIT_OPTION_ACK         			0x01
+#define TRANSMIT_OPTION_ACK		 				0x01
 #define TRANSMIT_OPTION_LOW_POWER   			0x02
 #define TRANSMIT_OPTION_AUTO_ROUTE  			0x04
 #define TRANSMIT_OPTION_FORCE_ROUTE 			0x08
 
-#define TRANSMIT_COMPLETE_OK      				0x00
+#define TRANSMIT_COMPLETE_OK	  				0x00
 #define TRANSMIT_COMPLETE_NO_ACK  				0x01
-#define TRANSMIT_COMPLETE_FAIL    				0x02
+#define TRANSMIT_COMPLETE_FAIL					0x02
 #define TRANSMIT_COMPLETE_NOROUTE 				0x04
 
-#define RECEIVE_STATUS_TYPE_BROAD     			0x04
+#define RECEIVE_STATUS_TYPE_BROAD	 			0x04
 
 #define FUNC_ID_SERIAL_API_GET_INIT_DATA		0x02
-#define FUNC_ID_SERIAL_API_GET_CAPABILITIES     0x07
+#define FUNC_ID_SERIAL_API_GET_CAPABILITIES		0x07
 #define FUNC_ID_SERIAL_API_SOFT_RESET			0x08
 
-#define FUNC_ID_APPLICATION_COMMAND_HANDLER     0x04
+#define FUNC_ID_APPLICATION_COMMAND_HANDLER		0x04
 
 #define FUNC_ID_ZW_GET_VERSION					0x10
-#define FUNC_ID_ZW_SEND_DATA                    0x13
-#define FUNC_ID_ZW_READ_MEMORY                  0x23
-#define FUNC_ID_ZW_GET_NODE_PROTOCOL_INFO       0x41
+#define FUNC_ID_ZW_SEND_DATA					0x13
+#define FUNC_ID_ZW_READ_MEMORY					0x23
+#define FUNC_ID_ZW_GET_NODE_PROTOCOL_INFO		0x41
 #define FUNC_ID_ZW_SET_DEFAULT					0x42
 #define FUNC_ID_ZW_REPLICATION_COMMAND_COMPLETE 0x44
 #define FUNC_ID_ZW_ASSIGN_RETURN_ROUTE			0x46
 #define FUNC_ID_ZW_REQUEST_NODE_NEIGHBOR_UPDATE 0x48
-#define FUNC_ID_ZW_APPLICATION_UPDATE           0x49
+#define FUNC_ID_ZW_APPLICATION_UPDATE			0x49
 #define FUNC_ID_ZW_ADD_NODE_TO_NETWORK			0x4a
 #define FUNC_ID_ZW_REMOVE_NODE_FROM_NETWORK		0x4b
-#define FUNC_ID_ZW_SET_LEARN_MODE               0x50
-#define FUNC_ID_ZW_ENABLE_SUC                   0x52
-#define FUNC_ID_ZW_SET_SUC_NODE_ID              0x54
-#define FUNC_ID_ZW_GET_SUC_NODE_ID              0x56
+#define FUNC_ID_ZW_SET_LEARN_MODE				0x50
+#define FUNC_ID_ZW_ENABLE_SUC					0x52
+#define FUNC_ID_ZW_SET_SUC_NODE_ID				0x54
+#define FUNC_ID_ZW_GET_SUC_NODE_ID				0x56
 #define FUNC_ID_ZW_REQUEST_NODE_INFO			0x60
-#define FUNC_ID_ZW_REMOVE_FAILED_NODE_ID        0x61
+#define FUNC_ID_ZW_REMOVE_FAILED_NODE_ID		0x61
 
 #define ADD_NODE_ANY							0x01
 #define ADD_NODE_STOP							0x05
-#define ADD_NODE_STATUS_LEARN_READY          	0x01
-#define ADD_NODE_STATUS_NODE_FOUND           	0x02
-#define ADD_NODE_STATUS_ADDING_SLAVE         	0x03
-#define ADD_NODE_STATUS_ADDING_CONTROLLER    	0x04
-#define ADD_NODE_STATUS_PROTOCOL_DONE        	0x05
-#define ADD_NODE_STATUS_DONE                 	0x06
-#define ADD_NODE_STATUS_FAILED               	0x07
+#define ADD_NODE_STATUS_LEARN_READY		  		0x01
+#define ADD_NODE_STATUS_NODE_FOUND		   		0x02
+#define ADD_NODE_STATUS_ADDING_SLAVE		 	0x03
+#define ADD_NODE_STATUS_ADDING_CONTROLLER		0x04
+#define ADD_NODE_STATUS_PROTOCOL_DONE			0x05
+#define ADD_NODE_STATUS_DONE				 	0x06
+#define ADD_NODE_STATUS_FAILED			   		0x07
 #define ADD_NODE_OPTION_HIGH_POWER				0x80
 
 #define REMOVE_NODE_ANY							0x01
 #define REMOVE_NODE_STOP						0x05
-#define REMOVE_NODE_STATUS_LEARN_READY          0x01
-#define REMOVE_NODE_STATUS_NODE_FOUND           0x02
-#define REMOVE_NODE_STATUS_ADDING_SLAVE         0x03
-#define REMOVE_NODE_STATUS_ADDING_CONTROLLER    0x04
-#define REMOVE_NODE_STATUS_PROTOCOL_DONE        0x05
-#define REMOVE_NODE_STATUS_DONE                 0x06
-#define REMOVE_NODE_STATUS_FAILED               0x07
+#define REMOVE_NODE_STATUS_LEARN_READY			0x01
+#define REMOVE_NODE_STATUS_NODE_FOUND			0x02
+#define REMOVE_NODE_STATUS_ADDING_SLAVE			0x03
+#define REMOVE_NODE_STATUS_ADDING_CONTROLLER	0x04
+#define REMOVE_NODE_STATUS_PROTOCOL_DONE		0x05
+#define REMOVE_NODE_STATUS_DONE					0x06
+#define REMOVE_NODE_STATUS_FAILED				0x07
 
 #define ZW_SUC_FUNC_BASIC_SUC					0x00
 #define ZW_SUC_FUNC_NODEID_SERVER				0x01
@@ -158,6 +158,6 @@ namespace OpenZWave
 #define UPDATE_STATE_DELETE_DONE				0x20
 #define UPDATE_STATE_NEW_ID_ASSIGNED			0x40
 #define UPDATE_STATE_NODE_INFO_REQ_FAILED		0x81
-#define UPDATE_STATE_NODE_INFO_RECEIVED     	0x84
+#define UPDATE_STATE_NODE_INFO_RECEIVED			0x84
 
 #endif // _Defs_H

@@ -41,9 +41,9 @@ using namespace OpenZWave;
 
 static enum ClockCmd
 {
-    ClockCmd_Set	= 0x04,
-    ClockCmd_Get	= 0x05,
-    ClockCmd_Report	= 0x06
+	ClockCmd_Set	= 0x04,
+	ClockCmd_Get	= 0x05,
+	ClockCmd_Report	= 0x06
 };
 
 static char* const c_dayNames[] = 
@@ -60,21 +60,21 @@ static char* const c_dayNames[] =
 
 
 //-----------------------------------------------------------------------------
-// <Clock::RequestState>                                                   
-// Request current state from the device                                       
+// <Clock::RequestState>												   
+// Request current state from the device									   
 //-----------------------------------------------------------------------------
 void Clock::RequestState
 (
 )
 {
 	Log::Write( "Requesting the clock settings from node %d", GetNodeId() );
-    Msg* pMsg = new Msg( "ClockCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-    pMsg->Append( GetNodeId() );
-    pMsg->Append( 2 );
-    pMsg->Append( GetCommandClassId() );
-    pMsg->Append( ClockCmd_Get );
-    pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-    Driver::Get()->SendMsg( pMsg );
+	Msg* msg = new Msg( "ClockCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+	msg->Append( GetNodeId() );
+	msg->Append( 2 );
+	msg->Append( GetCommandClassId() );
+	msg->Append( ClockCmd_Get );
+	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	Driver::Get()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -83,50 +83,50 @@ void Clock::RequestState
 //-----------------------------------------------------------------------------
 bool Clock::HandleMsg
 (
-    uint8 const* _pData,
-    uint32 const _length,
+	uint8 const* _data,
+	uint32 const _length,
 	uint32 const _instance	// = 0   
 )
 {
-    if (ClockCmd_Report == (ClockCmd)_pData[0])
-    {
-		uint8 day = _pData[1] >> 5;
-		uint8 hour = _pData[1] & 0x1f;
-		uint8 minute = _pData[2];
+	if (ClockCmd_Report == (ClockCmd)_data[0])
+	{
+		uint8 day = _data[1] >> 5;
+		uint8 hour = _data[1] & 0x1f;
+		uint8 minute = _data[2];
 
-		Node* pNode = GetNode();
-		if( pNode )
+		Node* node = GetNode();
+		if( node )
 		{
-			ValueStore* pStore = pNode->GetValueStore();
-			if( pStore )
+			ValueStore* store = node->GetValueStore();
+			if( store )
 			{
 				// Day
-				if( ValueList* pValueList = static_cast<ValueList*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
+				if( ValueList* valueList = static_cast<ValueList*>( store->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
 				{
-					pValueList->OnValueChanged( day-1 );
+					valueList->OnValueChanged( day-1 );
 				}
 
 				// Hour
-				ValueByte* pValue;
-				if( pValue = static_cast<ValueByte*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 1 ) ) ) )
+				ValueByte* value;
+				if( value = static_cast<ValueByte*>( store->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 1 ) ) ) )
 				{
-					pValue->OnValueChanged( hour );
+					value->OnValueChanged( hour );
 				}
 
 				// Minute
-				if( pValue = static_cast<ValueByte*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 2 ) ) ) )
+				if( value = static_cast<ValueByte*>( store->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 2 ) ) ) )
 				{
-					pValue->OnValueChanged( minute );
+					value->OnValueChanged( minute );
 				}
 
-				pNode->ReleaseValueStore();
+				node->ReleaseValueStore();
 
 				Log::Write( "Received Clock report from node %d: %s %.2d:%.2d", GetNodeId(), c_dayNames[day], hour, minute );
 				return true;
 			}
 		}
-    }
-    return false;
+	}
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -142,15 +142,15 @@ bool Clock::SetValue
 
 	uint8 instance = _value.GetID().GetInstance();
 
-	Node* pNode = GetNode();
-	if( pNode )
+	Node* node = GetNode();
+	if( node )
 	{
-		ValueStore* pStore = pNode->GetValueStore();
-		if( pStore )
+		ValueStore* store = node->GetValueStore();
+		if( store )
 		{
-			ValueList const* pDayValue = static_cast<ValueList*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), instance, 0 ) ) );
-			ValueByte const* pHourValue = static_cast<ValueByte*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), instance, 1 ) ) );
-			ValueByte const* pMinuteValue = static_cast<ValueByte*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), instance, 2 ) ) );
+			ValueList const* pDayValue = static_cast<ValueList*>( store->GetValue( ValueID( GetNodeId(), GetCommandClassId(), instance, 0 ) ) );
+			ValueByte const* pHourValue = static_cast<ValueByte*>( store->GetValue( ValueID( GetNodeId(), GetCommandClassId(), instance, 1 ) ) );
+			ValueByte const* pMinuteValue = static_cast<ValueByte*>( store->GetValue( ValueID( GetNodeId(), GetCommandClassId(), instance, 2 ) ) );
 
 			if( pDayValue && pHourValue && pMinuteValue )
 			{
@@ -180,19 +180,19 @@ bool Clock::SetValue
 					}
 				}
 
-				Msg* pMsg = new Msg( "ClockCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-				pMsg->Append( GetNodeId() );
-				pMsg->Append( 4 );
-				pMsg->Append( GetCommandClassId() );
-				pMsg->Append( ClockCmd_Set );
-				pMsg->Append( ( day << 5 ) | hour );
-				pMsg->Append( minute );
-				pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-				Driver::Get()->SendMsg( pMsg );
+				Msg* msg = new Msg( "ClockCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+				msg->Append( GetNodeId() );
+				msg->Append( 4 );
+				msg->Append( GetCommandClassId() );
+				msg->Append( ClockCmd_Set );
+				msg->Append( ( day << 5 ) | hour );
+				msg->Append( minute );
+				msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+				Driver::Get()->SendMsg( msg );
 				ret = true;
 			}
 
-			pNode->ReleaseValueStore();
+			node->ReleaseValueStore();
 		}
 	}
 
@@ -208,13 +208,13 @@ void Clock::CreateVars
 	uint8 const _instance
 )
 {
-	Node* pNode = GetNode();
-	if( pNode )
+	Node* node = GetNode();
+	if( node )
 	{
-		ValueStore* pStore = pNode->GetValueStore();
-		if( pStore )
+		ValueStore* store = node->GetValueStore();
+		if( store )
 		{
-			Value* pValue;
+			Value* value;
 			
 			vector<ValueList::Item> items;
 			for( int i=1; i<=7; ++i )
@@ -225,19 +225,19 @@ void Clock::CreateVars
 				items.push_back( item ); 
 			}
 
-			pValue = new ValueList( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_User, "Day", false, items, 0 );
-			pStore->AddValue( pValue );
-			pValue->Release();
+			value = new ValueList( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_User, "Day", false, items, 0 );
+			store->AddValue( value );
+			value->Release();
 
-			pValue = new ValueByte( GetNodeId(), GetCommandClassId(), _instance, 1, Value::Genre_User, "Hour", false, 0 );
-			pStore->AddValue( pValue );
-			pValue->Release();
+			value = new ValueByte( GetNodeId(), GetCommandClassId(), _instance, 1, Value::Genre_User, "Hour", false, 0 );
+			store->AddValue( value );
+			value->Release();
 
-			pValue = new ValueByte( GetNodeId(), GetCommandClassId(), _instance, 2, Value::Genre_User, "Minute", false, 0 );
-			pStore->AddValue( pValue );
-			pValue->Release();
+			value = new ValueByte( GetNodeId(), GetCommandClassId(), _instance, 2, Value::Genre_User, "Minute", false, 0 );
+			store->AddValue( value );
+			value->Release();
 
-			pNode->ReleaseValueStore();
+			node->ReleaseValueStore();
 		}
 	}
 }

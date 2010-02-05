@@ -47,21 +47,21 @@ static enum HailCmdEnum
 //-----------------------------------------------------------------------------
 bool Hail::HandleMsg
 (
-    uint8 const* _pData,
-    uint32 const _length,
+	uint8 const* _data,
+	uint32 const _length,
 	uint32 const _instance	// = 0
 )
 {
-    if( HailCmd_Hail == _pData[0] )
-    {
-        // We have received a hail from the Z-Wave device
+	if( HailCmd_Hail == _data[0] )
+	{
+		// We have received a hail from the Z-Wave device
 		// Request the a basic report from the node
-		if( Node* pNode = GetNode() )
+		if( Node* node = GetNode() )
 		{
-//			pNode->RequestBasicReport();
+//			node->RequestBasicReport();
 		}
-        return true;
+		return true;
 	}
-    return false;
+	return false;
 }
 

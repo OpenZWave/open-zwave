@@ -48,7 +48,7 @@ namespace OpenZWave
 		ValueStore(){}
 		~ValueStore();
 
-		bool AddValue( Value* _pValue );
+		bool AddValue( Value* _value );
 		bool RemoveValue( ValueID const& _id );
 		Value* GetValue( ValueID const& _id )const;
 

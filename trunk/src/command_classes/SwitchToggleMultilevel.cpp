@@ -40,29 +40,29 @@ using namespace OpenZWave;
 
 static enum SwitchToggleMultilevelCmd
 {
-    SwitchToggleMultilevelCmd_Set				= 0x01,
-    SwitchToggleMultilevelCmd_Get				= 0x02,
-    SwitchToggleMultilevelCmd_Report			= 0x03,
-    SwitchToggleMultilevelCmd_StartLevelChange	= 0x04,
-    SwitchToggleMultilevelCmd_StopLevelChange	= 0x05
+	SwitchToggleMultilevelCmd_Set				= 0x01,
+	SwitchToggleMultilevelCmd_Get				= 0x02,
+	SwitchToggleMultilevelCmd_Report			= 0x03,
+	SwitchToggleMultilevelCmd_StartLevelChange	= 0x04,
+	SwitchToggleMultilevelCmd_StopLevelChange	= 0x05
 };
 
 
 //-----------------------------------------------------------------------------
-// <SwitchToggleMultilevel::RequestState>                                                   
-// Request current state from the device                                       
+// <SwitchToggleMultilevel::RequestState>												   
+// Request current state from the device									   
 //-----------------------------------------------------------------------------
 void SwitchToggleMultilevel::RequestState
 (
 )
 {
-    Msg* pMsg = new Msg( "SwitchToggleMultilevelCmd_StartLevelChange", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-    pMsg->Append( GetNodeId() );
-    pMsg->Append( 2 );
-    pMsg->Append( GetCommandClassId() );
-    pMsg->Append( SwitchToggleMultilevelCmd_StartLevelChange );
-    pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-    Driver::Get()->SendMsg( pMsg );
+	Msg* msg = new Msg( "SwitchToggleMultilevelCmd_StartLevelChange", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+	msg->Append( GetNodeId() );
+	msg->Append( 2 );
+	msg->Append( GetCommandClassId() );
+	msg->Append( SwitchToggleMultilevelCmd_StartLevelChange );
+	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	Driver::Get()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -71,32 +71,32 @@ void SwitchToggleMultilevel::RequestState
 //-----------------------------------------------------------------------------
 bool SwitchToggleMultilevel::HandleMsg
 (
-    uint8 const* _pData,
-    uint32 const _length,
+	uint8 const* _data,
+	uint32 const _length,
 	uint32 const _instance	// = 0
 )
 {
-	if (SwitchToggleMultilevelCmd_Report == (SwitchToggleMultilevelCmd)_pData[0])
+	if (SwitchToggleMultilevelCmd_Report == (SwitchToggleMultilevelCmd)_data[0])
 	{
-		Node* pNode = GetNode();
-		if( pNode )
+		Node* node = GetNode();
+		if( node )
 		{
-			ValueStore* pStore = pNode->GetValueStore();
-			if( pStore )
+			ValueStore* store = node->GetValueStore();
+			if( store )
 			{
-				if( ValueByte* pValue = static_cast<ValueByte*>( pStore->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
+				if( ValueByte* value = static_cast<ValueByte*>( store->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
 				{
-					pValue->OnValueChanged( _pData[1] );
+					value->OnValueChanged( _data[1] );
 				}
-				pNode->ReleaseValueStore();
+				node->ReleaseValueStore();
 
-				Log::Write( "Received SwitchToggleMultiLevel report from node %d: level=%d", GetNodeId(), _pData[1] );
+				Log::Write( "Received SwitchToggleMultiLevel report from node %d: level=%d", GetNodeId(), _data[1] );
 				return true;
 			}
 		}
 	}
 
-    return false;
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -109,12 +109,12 @@ bool SwitchToggleMultilevel::SetValue
 )
 {
 	Log::Write( "SwitchToggleMultilevel::Set - Toggling the state of node %d", GetNodeId() );
-	Msg* pMsg = new Msg( "SwitchToggleMultilevel Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
-	pMsg->Append( GetNodeId() );
-	pMsg->Append( 2 );
-	pMsg->Append( GetCommandClassId() );
-	pMsg->Append( SwitchToggleMultilevelCmd_Set );
-	pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	Msg* msg = new Msg( "SwitchToggleMultilevel Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
+	msg->Append( GetNodeId() );
+	msg->Append( 2 );
+	msg->Append( GetCommandClassId() );
+	msg->Append( SwitchToggleMultilevelCmd_Set );
+	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 	return true;
 }
 
@@ -134,13 +134,13 @@ void SwitchToggleMultilevel::StartLevelChange
 	param |= ( _bRollover ? 0x80 : 0x00 );
 
 	Log::Write( "SwitchMultilevel::StartLevelChange - Starting a level change on node %d, Direction=%d, IgnoreStartLevel=%s and rollover=%s", GetNodeId(), (_direction==SwitchToggleMultilevelDirection_Up) ? "Up" : "Down", _bIgnoreStartLevel ? "True" : "False", _bRollover ? "True" : "False" );
-	Msg* pMsg = new Msg( "SwitchMultilevel StartLevelChange", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
-	pMsg->Append( GetNodeId() );
-	pMsg->Append( 3 );
-	pMsg->Append( GetCommandClassId() );
-	pMsg->Append( SwitchToggleMultilevelCmd_StartLevelChange );
-	pMsg->Append( param );
-	pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	Msg* msg = new Msg( "SwitchMultilevel StartLevelChange", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
+	msg->Append( GetNodeId() );
+	msg->Append( 3 );
+	msg->Append( GetCommandClassId() );
+	msg->Append( SwitchToggleMultilevelCmd_StartLevelChange );
+	msg->Append( param );
+	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 }
 
 //-----------------------------------------------------------------------------
@@ -152,12 +152,12 @@ void SwitchToggleMultilevel::StopLevelChange
 )
 {
 	Log::Write( "SwitchToggleMultilevel::StopLevelChange - Stopping the level change on node %d", GetNodeId() );
-	Msg* pMsg = new Msg( "SwitchToggleMultilevel StopLevelChange", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
-	pMsg->Append( GetNodeId() );
-	pMsg->Append( 2 );
-	pMsg->Append( GetCommandClassId() );
-	pMsg->Append( SwitchToggleMultilevelCmd_StopLevelChange );
-	pMsg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	Msg* msg = new Msg( "SwitchToggleMultilevel StopLevelChange", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
+	msg->Append( GetNodeId() );
+	msg->Append( 2 );
+	msg->Append( GetCommandClassId() );
+	msg->Append( SwitchToggleMultilevelCmd_StopLevelChange );
+	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 }
 
 //-----------------------------------------------------------------------------
@@ -169,17 +169,17 @@ void SwitchToggleMultilevel::CreateVars
 	uint8 const _instance
 )
 {
-	Node* pNode = GetNode();
-	if( pNode )
+	Node* node = GetNode();
+	if( node )
 	{
-		ValueStore* pStore = pNode->GetValueStore();
-		if( pStore )
+		ValueStore* store = node->GetValueStore();
+		if( store )
 		{
-			Value* pValue = new ValueByte( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_User, "Level", false, 0  );
-			pStore->AddValue( pValue );
-			pValue->Release();
+			Value* value = new ValueByte( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_User, "Level", false, 0  );
+			store->AddValue( value );
+			value->Release();
 
-			pNode->ReleaseValueStore();
+			node->ReleaseValueStore();
 		}
 	}
 }

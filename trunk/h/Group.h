@@ -31,21 +31,28 @@
 #include <string>
 #include <map>
 #include "Defs.h"
+#include "tinyxml.h"
 
 namespace OpenZWave
 {
 	class Group
 	{
 	public:
-		Group( string const& _associations );
-		Group( uint8 numAssociations, uint8* _pAssociations );
+		Group( uint8 _groupId, uint8 _numAssociations, uint8* _pAssociations );
+		Group( TiXmlElement* _valueElement );
 
 		~Group(){ delete [] m_pAssociations; }
+
+		void WriteXML( TiXmlElement* _valueElement );
+
+		string const& GetLabel()const{ return m_label; }
 
 		uint32 GetNumAssociations()const{ return m_numAssociations; }
 		uint8 GetAssociation( uint32 _idx )const{ return ( _idx < m_numAssociations ) ? m_pAssociations[_idx] : 0xff; }
 
 	private:
+		string	m_label;
+		uint8	m_groupId;
 		uint32	m_numAssociations;
 		uint8*	m_pAssociations;
 	};
