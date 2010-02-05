@@ -1,0 +1,16 @@
+#OpenZWave Coding Standards
+
+= Style =
+
+Everyone has their own style when writing code - indentation, the use of whitespace and the positioning of braces can be contentious issues.  
+
+There is no "right" way to lay out code, but when working as part of a team or collaboration, it is important that everyone follow the same style as far as possible, in order to maximize the readability of the code for others.
+
+If you contribute to OpenZWave, we ask that you respect the existing style of the code, refrain from reformatting code into their own style and do not start debates on our coding style in the discussion group.
+
+The formal coding standard is described below, but if in doubt, just follow the style of existing code.
+
+
+= Standards =
+
+The standard will be added in the next few days.  Please follow the existing code style in the meantime
