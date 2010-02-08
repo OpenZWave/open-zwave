@@ -429,12 +429,12 @@ void Driver::SendThreadProc()
 						{
 							Log::Write( "Timeout - resending" );
 						}
-						
-						m_waitingForAck = 0;	
-						m_expectedCallbackId = 0;
-						m_expectedReply = 0;
-						m_sendEvent->Set();
 					}
+
+					m_waitingForAck = 0;	
+					m_expectedCallbackId = 0;
+					m_expectedReply = 0;
+					UpdateEvents();
 				}
 			}
 
