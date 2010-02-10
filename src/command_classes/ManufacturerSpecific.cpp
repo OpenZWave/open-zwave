@@ -40,13 +40,13 @@
 
 using namespace OpenZWave;
 
-static enum ManufacturerSpecificCmd
+enum ManufacturerSpecificCmd
 {
 	ManufacturerSpecificCmd_Get		= 0x04,
 	ManufacturerSpecificCmd_Report	= 0x05
 };
 
-static enum
+enum
 {
 	ValueIndex_Manufacturer = 0,
 	ValueIndex_Product
@@ -196,10 +196,10 @@ bool ManufacturerSpecific::LoadProductXML
 				TiXmlNode const* pProductNode = pManufacturerElement->FirstChild();
 				while( pProductNode )
 				{
-					str = node->Value();
+					str = pProductNode->Value();
 					if( str && !strcmp( str, "Product" ) )
 					{
-						TiXmlElement const* pProductElement = node->ToElement();
+						TiXmlElement const* pProductElement = pProductNode->ToElement();
 						if( pProductElement )
 						{
 							str = pProductElement->Attribute( "type" );

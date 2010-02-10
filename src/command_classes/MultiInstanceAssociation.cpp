@@ -34,7 +34,7 @@
 
 using namespace OpenZWave;
 
-static enum MultiInstanceAssociationCmd
+enum MultiInstanceAssociationCmd
 {
 	MultiInstanceAssociationCmd_Set				= 0x01,
 	MultiInstanceAssociationCmd_Get				= 0x02,

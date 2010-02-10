@@ -38,7 +38,7 @@
 
 using namespace OpenZWave;
 
-static enum EnergyProductionCmd
+enum EnergyProductionCmd
 {
 	EnergyProductionCmd_Get		= 0x02,
 	EnergyProductionCmd_Report	= 0x03

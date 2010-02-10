@@ -38,7 +38,7 @@
 
 using namespace OpenZWave;
 
-static enum ThermostatFanStateCmd
+enum ThermostatFanStateCmd
 {
 	ThermostatFanStateCmd_Get				= 0x02,
 	ThermostatFanStateCmd_Report			= 0x03,

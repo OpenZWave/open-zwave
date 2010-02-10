@@ -38,7 +38,7 @@
 
 using namespace OpenZWave;
 
-static enum VersionCmd
+enum VersionCmd
 {
 	VersionCmd_Get					= 0x11,
 	VersionCmd_Report				= 0x12,
@@ -46,7 +46,7 @@ static enum VersionCmd
 	VersionCmd_CommandClassReport	= 0x14
 };
 
-static enum
+enum
 {
 	ValueIndex_Library = 0,
 	ValueIndex_Protocol,

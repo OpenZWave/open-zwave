@@ -55,7 +55,7 @@ string ValueID::ToString
 )const
 {
 	char str[16];
-	snprintf( str, "0x%.8x", m_id );
+	snprintf( str, sizeof(str), "0x%.8x", m_id );
 	return str;
 }
 

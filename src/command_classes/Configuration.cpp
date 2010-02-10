@@ -39,7 +39,7 @@
 
 using namespace OpenZWave;
 
-static enum ConfigurationCmd
+enum ConfigurationCmd
 {
 	ConfigurationCmd_Set	= 0x04,
 	ConfigurationCmd_Get	= 0x05,

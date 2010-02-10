@@ -580,7 +580,7 @@ bool Driver::ReadMsg
 
 		case ACK:
 		{
-			Log::Write( "ACK received" );
+			Log::Write( "ACK received CallbackId %d Reply %d", m_expectedCallbackId, m_expectedReply );
 			m_waitingForAck = false;
 			
 			if( ( 0 == m_expectedCallbackId ) && ( 0 == m_expectedReply ) )

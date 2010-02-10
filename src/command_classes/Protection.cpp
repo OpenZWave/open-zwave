@@ -40,7 +40,7 @@
 
 using namespace OpenZWave;
 
-static enum ProtectionCmd
+enum ProtectionCmd
 {
 	ProtectionCmd_Set		= 0x01,
 	ProtectionCmd_Get		= 0x02,

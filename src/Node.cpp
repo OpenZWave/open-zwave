@@ -186,10 +186,11 @@ Node::~Node
 {
 	// Delete the command classes
 	map<uint8,CommandClass*>::iterator it = m_commandClassMap.begin();
-	while( it != m_commandClassMap.end() )
+	while( !m_commandClassMap.empty() )
 	{
 		delete it->second;
-		it = m_commandClassMap.erase( it );
+		m_commandClassMap.erase( it );
+		it = m_commandClassMap.begin();
 	}
 
 	delete m_values;

@@ -34,7 +34,7 @@
 
 using namespace OpenZWave;
 
-static enum ProprietaryCmd
+enum ProprietaryCmd
 {
 	ProprietaryCmd_Set		= 0x01,
 	ProprietaryCmd_Get		= 0x02,
