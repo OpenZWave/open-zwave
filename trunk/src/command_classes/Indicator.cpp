@@ -38,7 +38,7 @@
 
 using namespace OpenZWave;
 
-static enum IndicatorCmd
+enum IndicatorCmd
 {
 	IndicatorCmd_Set	= 0x01,
 	IndicatorCmd_Get	= 0x02,

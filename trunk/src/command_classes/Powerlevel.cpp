@@ -34,7 +34,7 @@
 
 using namespace OpenZWave;
 
-static enum PowerlevelCmd
+enum PowerlevelCmd
 {
 	PowerlevelCmd_Set				= 0x01,
 	PowerlevelCmd_Get				= 0x02,

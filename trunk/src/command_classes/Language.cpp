@@ -38,14 +38,14 @@
 
 using namespace OpenZWave;
 
-static enum LanguageCmd
+enum LanguageCmd
 {
 	LanguageCmd_Set		= 0x01,
 	LanguageCmd_Get		= 0x02,
 	LanguageCmd_Report	= 0x03
 };
 
-static enum
+enum
 {
 	ValueIndex_Language	= 0,
 	ValueIndex_Country

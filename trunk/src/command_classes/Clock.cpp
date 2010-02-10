@@ -39,7 +39,7 @@
 
 using namespace OpenZWave;
 
-static enum ClockCmd
+enum ClockCmd
 {
 	ClockCmd_Set	= 0x04,
 	ClockCmd_Get	= 0x05,

@@ -39,7 +39,7 @@
 
 using namespace OpenZWave;
 
-static enum WakeUpCmd
+enum WakeUpCmd
 {
 	WakeUpCmd_IntervalSet		= 0x04,
 	WakeUpCmd_IntervalGet		= 0x05,

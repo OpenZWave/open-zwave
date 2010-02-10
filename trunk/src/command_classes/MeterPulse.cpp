@@ -38,7 +38,7 @@
 
 using namespace OpenZWave;
 
-static enum MeterPulseCmd
+enum MeterPulseCmd
 {
 	MeterPulseCmd_Get		= 0x04,
 	MeterPulseCmd_Report	= 0x05

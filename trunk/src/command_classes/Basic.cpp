@@ -39,7 +39,7 @@
 
 using namespace OpenZWave;
 
-static enum BasicCmd
+enum BasicCmd
 {
 	BasicCmd_Set	= 0x01,
 	BasicCmd_Get	= 0x02,

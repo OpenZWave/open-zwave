@@ -38,7 +38,7 @@
 
 using namespace OpenZWave;
 
-static enum SensorBinaryCmd
+enum SensorBinaryCmd
 {
 	SensorBinaryCmd_Get		= 0x02,
 	SensorBinaryCmd_Report	= 0x03

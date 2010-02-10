@@ -34,7 +34,7 @@
 
 using namespace OpenZWave;
 
-static enum AssociationCmd
+enum AssociationCmd
 {
 	AssociationCmd_Set				= 0x01,
 	AssociationCmd_Get				= 0x02,
