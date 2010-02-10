@@ -39,7 +39,7 @@
 
 using namespace OpenZWave;
 
-static enum NodeNamingCmd
+enum NodeNamingCmd
 {
 	NodeNamingCmd_Set		= 0x01,
 	NodeNamingCmd_Get		= 0x02,

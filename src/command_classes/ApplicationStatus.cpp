@@ -34,7 +34,7 @@
 
 using namespace OpenZWave;
 
-static enum ApplicationStatusCmd
+enum ApplicationStatusCmd
 {
 	ApplicationStatusCmd_Busy				= 0x01,
 	ApplicationStatusCmd_RejectedRequest	= 0x02

@@ -38,7 +38,7 @@
 
 using namespace OpenZWave;
 
-static enum LockCmd
+enum LockCmd
 {
 	LockCmd_Set		= 0x01,
 	LockCmd_Get		= 0x02,

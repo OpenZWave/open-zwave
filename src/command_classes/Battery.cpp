@@ -38,7 +38,7 @@
 
 using namespace OpenZWave;
 
-static enum BatteryCmd
+enum BatteryCmd
 {
 	BatteryCmd_Get		= 0x02,
 	BatteryCmd_Report	= 0x03

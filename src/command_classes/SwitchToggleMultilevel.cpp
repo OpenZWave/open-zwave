@@ -38,7 +38,7 @@
 
 using namespace OpenZWave;
 
-static enum SwitchToggleMultilevelCmd
+enum SwitchToggleMultilevelCmd
 {
 	SwitchToggleMultilevelCmd_Set				= 0x01,
 	SwitchToggleMultilevelCmd_Get				= 0x02,

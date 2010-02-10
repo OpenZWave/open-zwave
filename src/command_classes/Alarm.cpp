@@ -38,13 +38,13 @@
 
 using namespace OpenZWave;
 
-static enum AlarmCmd
+enum AlarmCmd
 {
 	AlarmCmd_Get	= 0x04,
 	AlarmCmd_Report = 0x05
 };
 
-static enum
+enum
 {
 	ValueIndex_Type	= 0,
 	ValueIndex_Level

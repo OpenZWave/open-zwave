@@ -38,7 +38,7 @@
 
 using namespace OpenZWave;
 
-static enum SwitchAllCmd
+enum SwitchAllCmd
 {
 	SwitchAllCmd_Set	= 0x01,
 	SwitchAllCmd_Get	= 0x02,

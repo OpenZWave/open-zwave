@@ -40,10 +40,11 @@ ValueStore::~ValueStore
 )
 {
 	map<ValueID,Value*>::iterator it = m_values.begin();
-	while( it != m_values.end() )
+	while( !m_values.empty() )
 	{
 		it->second->Release();
-		it = m_values.erase( it );
+		m_values.erase( it );
+		it = m_values.begin();
 	}
 }
 

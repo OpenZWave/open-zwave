@@ -35,7 +35,7 @@
 
 using namespace OpenZWave;
 
-static enum MultiInstanceCmd
+enum MultiInstanceCmd
 {
 	MultiInstanceCmd_Get		= 0x04,
 	MultiInstanceCmd_Report		= 0x05,

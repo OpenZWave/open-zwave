@@ -35,7 +35,7 @@
 
 using namespace OpenZWave;
 
-static enum HailCmdEnum
+enum HailCmdEnum
 {
 	HailCmd_Hail = 1
 };

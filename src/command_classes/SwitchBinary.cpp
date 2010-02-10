@@ -38,7 +38,7 @@
 
 using namespace OpenZWave;
 
-static enum SwitchBinaryCmd
+enum SwitchBinaryCmd
 {
 	SwitchBinaryCmd_Set		= 0x01,
 	SwitchBinaryCmd_Get		= 0x02,
