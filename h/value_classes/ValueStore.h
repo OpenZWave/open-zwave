@@ -43,7 +43,7 @@ namespace OpenZWave
 		typedef map<ValueID,Value*>::const_iterator Iterator;
 
 		Iterator Begin(){ return m_values.begin(); }
-		Iterator End(){ return m_values.begin(); }
+		Iterator End(){ return m_values.end(); }
 		
 		ValueStore(){}
 		~ValueStore();
