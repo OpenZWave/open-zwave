@@ -339,10 +339,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\value_classes\ValueID.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\h\value_classes\ValueID.h"
 				>
 			</File>
