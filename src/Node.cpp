@@ -300,42 +300,42 @@ void Node::UpdateNodeInfo
 	uint8 const _length
 )
 {
-	if( m_bNodeInfoReceived )
+	if( !m_bNodeInfoReceived )
 	{
-		// We already have this info
-		return;
-	}
-	m_bNodeInfoReceived = true;
+		m_bNodeInfoReceived = true;
 
-	// Add the command classes specified by the device
-	int32 i;
-	for( i=0; i<_length; ++i )
-	{
-		if( _data[i] == 0xef )
+		// Add the command classes specified by the device
+		int32 i;
+		for( i=0; i<_length; ++i )
 		{
-			// COMMAND_CLASS_MARK.  
-			// Marks the end of the list of supported command classes.  The remaining classes 
-			// are those that can be controlled by this device, which we can ignore.
-			break;
+			if( _data[i] == 0xef )
+			{
+				// COMMAND_CLASS_MARK.  
+				// Marks the end of the list of supported command classes.  The remaining classes 
+				// are those that can be controlled by this device, which we can ignore.
+				break;
+			}
+
+			if( CommandClass* pCommandClass = AddCommandClass( _data[i] ) )
+			{
+				// Start with an instance count of one.  If the device supports COMMMAND_CLASS_MULTI_INSTANCE
+				// then some command class instance counts will increase once the responses to the RequestStatic
+				// call at the end of this method have been processed.
+				pCommandClass->SetInstances( 1 );
+			}
 		}
 
-		if( CommandClass* pCommandClass = AddCommandClass( _data[i] ) )
+		Log::Write( "Supported Command Classes for Node %d:", m_nodeId );
+		for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
 		{
-			// Start with an instance count of one.  If the device supports COMMMAND_CLASS_MULTI_INSTANCE
-			// then some command class instance counts will increase once the responses to the RequestStatic
-			// call at the end of this method have been processed.
-			pCommandClass->SetInstances( 1 );
+			Log::Write( "  %s", it->second->GetCommandClassName().c_str() );
 		}
+
+		// Get the static configuration from the node
+		RequestStatic();
 	}
 
-	Log::Write( "Supported Command Classes for Node %d:", m_nodeId );
-	for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
-	{
-		Log::Write( "  %s", it->second->GetCommandClassName().c_str() );
-	}
-
-	// Get the static configuration and current values from the node
-	RequestStatic();
+	// Get the current values from the node
 	RequestState();
 }
 
