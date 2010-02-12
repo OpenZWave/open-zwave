@@ -59,9 +59,10 @@ ValueInt::ValueInt
 //-----------------------------------------------------------------------------
 ValueInt::ValueInt
 (
+	uint8 const _nodeId,
 	TiXmlElement* _valueElement
 ):
-	Value( _valueElement )
+	Value( _nodeId, _valueElement )
 {
 	int intVal;
 	if( TIXML_SUCCESS == _valueElement->QueryIntAttribute( "value", &intVal ) )
@@ -108,12 +109,6 @@ bool ValueInt::Set
 	int32 const _value
 )
 {
-	if( _value == m_value )
-	{
-		// Value already set
-		return true;
-	}
-
 	m_pending = _value;
 	return Value::Set();
 }

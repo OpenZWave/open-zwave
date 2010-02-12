@@ -29,9 +29,10 @@
 #define _ValueInt_H
 
 #include <string>
-#include "tinyxml.h"
 #include "Defs.h"
 #include "Value.h"
+
+class TiXmlElement;
 
 namespace OpenZWave
 {
@@ -42,7 +43,7 @@ namespace OpenZWave
 	{
 	public:
 		ValueInt( uint8 const _nodeId, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, uint32 const _genre, string const& _label, bool const _bReadOnly, int32 const _value );
-		ValueInt( TiXmlElement* _valueElement );
+		ValueInt( uint8 const _nodeId, TiXmlElement* _valueElement );
 		virtual ~ValueInt(){}
 
 		bool Set( int32 const _value );

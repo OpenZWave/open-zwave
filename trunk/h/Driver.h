@@ -81,6 +81,11 @@ namespace OpenZWave
 	//	Controller
 	//-----------------------------------------------------------------------------
 	public:
+		bool IsSlave()const{ return ((m_capabilities & 0x01) != 0); }
+		bool HasTimerSupport()const{ return ((m_capabilities & 0x02) != 0); }
+		bool IsPrimaryController()const{ return ((m_capabilities & 0x04) == 0); }
+		bool IsStaticUpdateController()const{ return ((m_capabilities & 0x08) != 0); }
+
 		Node* GetNode( uint8 _nodeId ){ return m_nodes[_nodeId]; }
 
 	private:
@@ -88,6 +93,7 @@ namespace OpenZWave
 		SerialPort*				m_serialPort;
 		Mutex*					m_serialMutex;
 		
+		uint8					m_capabilities;	
 		uint8					m_nodeId;			// PC Controller's Z-Wave node ID
 		Node*					m_nodes[256];		// Z-Wave node details	
 
