@@ -715,12 +715,14 @@ void Driver::ProcessMsg
 	// Generic callback handling
 	if( bHandleCallback )
 	{
+		bool remove = false;
+
 		if( m_expectedCallbackId )
 		{
 			if( m_expectedCallbackId == _data[2] )
 			{
 				Log::Write( "Message transaction (callback=%d) complete", _data[2] );
-				RemoveMsg();
+				remove = true;
 				m_expectedCallbackId = 0;
 			}
 		}
@@ -729,9 +731,14 @@ void Driver::ProcessMsg
 			if( m_expectedReply == _data[1] )
 			{
 				Log::Write( "Message transaction complete" );
-				RemoveMsg();
+				remove = true;
 				m_expectedReply = 0;
 			}
+		}
+
+		if( remove )
+		{
+			RemoveMsg();
 		}
 
 		UpdateEvents();
