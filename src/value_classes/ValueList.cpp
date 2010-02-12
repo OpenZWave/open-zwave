@@ -61,9 +61,10 @@ ValueList::ValueList
 //-----------------------------------------------------------------------------
 ValueList::ValueList
 (
+	uint8 const _nodeId,
 	TiXmlElement* _valueElement
 ):
-	Value( _valueElement )
+	Value( _nodeId, _valueElement )
 {
 	// Read the items
 	TiXmlNode const* pItemNode = _valueElement->FirstChild();
@@ -138,12 +139,6 @@ bool ValueList::SetByLabel
 	{
 		// Item not found
 		return false;
-	}
-
-	if( index == m_valueIdx )
-	{
-		// Value already set
-		return true;
 	}
 
 	m_pendingIdx = index;

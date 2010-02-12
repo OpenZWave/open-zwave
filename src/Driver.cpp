@@ -108,7 +108,8 @@ Driver::Driver
 	m_sendEvent( new Event() ),	
 	m_pollThread( new Thread() ),	
 	m_pollMutex( new Mutex() ),
-	m_infoMutex( new Mutex() )
+	m_infoMutex( new Mutex() ),
+	m_capabilities( 0 )
 {
 	// Create the log file
 	Log::Create( "OZW_Log.txt" );
@@ -831,6 +832,8 @@ void Driver::HandleSerialAPIGetInitDataResponse
 	int32 i;
 	Log::Write( "Received reply to FUNC_ID_SERIAL_API_GET_INIT_DATA:" );
 	
+	m_capabilities = _data[3];
+
 	if( _data[4] == NUM_NODE_BITFIELD_BYTES )
 	{
 		for( i=0; i<NUM_NODE_BITFIELD_BYTES; ++i)

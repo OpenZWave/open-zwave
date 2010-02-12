@@ -29,9 +29,10 @@
 #define _Value_H
 
 #include <string>
-#include "tinyxml.h"
 #include "Defs.h"
 #include "ValueID.h"
+
+class TiXmlElement;
 
 namespace OpenZWave
 {
@@ -49,7 +50,7 @@ namespace OpenZWave
 		};
 
 		Value( uint8 const _nodeId, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, uint32 const _genre, string const& _label, bool const _bReadOnly );
-		Value( TiXmlElement* _valueElement );
+		Value( uint8 const _nodeId, TiXmlElement* _valueElement );
 
 		virtual void WriteXML( TiXmlElement* _valueElement );
 

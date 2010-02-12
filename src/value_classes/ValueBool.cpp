@@ -59,9 +59,10 @@ ValueBool::ValueBool
 //-----------------------------------------------------------------------------
 ValueBool::ValueBool
 (
+	uint8 const _nodeId,
 	TiXmlElement* _valueElement
 ):
-	Value( _valueElement )
+	Value( _nodeId, _valueElement )
 {
 	char const* str = _valueElement->Attribute( "value" );
 	if( str )
@@ -103,12 +104,6 @@ bool ValueBool::Set
 	bool const _value
 )
 {
-	if( _value == m_value )
-	{
-		// Value already set
-		return true;
-	}
-
 	m_pending = _value;
 	return Value::Set();
 }

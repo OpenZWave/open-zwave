@@ -32,6 +32,8 @@
 #include "Defs.h"
 #include "ValueID.h"
 
+class TiXmlElement;
+
 namespace OpenZWave
 {
 	class Value;

@@ -71,14 +71,34 @@ Value::Value
 //-----------------------------------------------------------------------------
 Value::Value
 (
+	uint8 const _nodeId,
 	TiXmlElement* _valueElement
 ):
 	m_refs( 1 ),
 	m_bReadOnly( false ),
 	m_genre( Genre_System )
 {
-	char const* id = _valueElement->Attribute( "id" );
-	m_id = ValueID( id );
+	int intVal;
+
+	uint8 commandClassId = 0;
+	if( TIXML_SUCCESS == _valueElement->QueryIntAttribute( "command_class", &intVal ) )
+	{
+		commandClassId = (uint8)intVal;
+	}
+
+	uint8 instance = 0;
+	if( TIXML_SUCCESS == _valueElement->QueryIntAttribute( "instance", &intVal ) )
+	{
+		instance = (uint8)intVal;
+	}
+
+	uint8 index = 0;
+	if( TIXML_SUCCESS == _valueElement->QueryIntAttribute( "index", &intVal ) )
+	{
+		index = (uint8)intVal;
+	}
+
+	m_id = ValueID( _nodeId, commandClassId, instance, index );
 
 	char const* genre = _valueElement->Attribute( "genre" );
 	for( int i=0; i<4; ++i )
@@ -118,7 +138,17 @@ void Value::WriteXML
 	TiXmlElement* _valueElement
 )
 {
-	_valueElement->SetAttribute( "id", m_id.ToString().c_str() );
+	char str[8];
+
+	snprintf( str, 8, "%d", m_id.GetCommandClassId() );
+	_valueElement->SetAttribute( "command_class", str );
+
+	snprintf( str, 8, "%d", m_id.GetInstance() );
+	_valueElement->SetAttribute( "instance", str );
+
+	snprintf( str, 8, "%d", m_id.GetIndex() );
+	_valueElement->SetAttribute( "index", str );
+
 	_valueElement->SetAttribute( "genre", c_genreName[m_genre] );
 	_valueElement->SetAttribute( "label", m_label.c_str() );
 	_valueElement->SetAttribute( "units", m_units.c_str() );

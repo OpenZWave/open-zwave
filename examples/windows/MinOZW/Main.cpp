@@ -34,6 +34,8 @@
 #include "Driver.h"
 #include "Node.h"
 #include "ValueStore.h"
+#include "Value.h"
+#include "ValueBool.h"
 
 using namespace OpenZWave;
 
@@ -68,6 +70,28 @@ int main( int argc, char* argv[] )
 	// from anywhere in your code as follows
 	OpenZWave::Driver* pDriver = OpenZWave::Driver::Get();
 
+	Sleep(10000);
+
+	// Example of switching a Binary Switch on and off
+	//if( Node* node = pDriver->GetNode(4) )
+	//{
+	//	if( ValueStore* store = node->GetValueStore() )
+	//	{
+	//		for( ValueStore::Iterator it = store->Begin(); it != store->End(); ++it )
+	//		{
+	//			Value* value = it->second;
+	//			if( value->GetLabel() == "Switch" )
+	//			{
+	//				ValueBool* valueBool = static_cast<ValueBool*>(value);
+	//				valueBool->Set( true );
+	//				Sleep( 5000 );
+	//				valueBool->Set( false );
+	//			}
+	//		}
+	//	}
+	//}
+
+	
 	// Now we just wait forever, while the Driver thread does all the 
 	// initialisation and querying of the Z-Wave network.  In a normal app,
 	// this is where you would go on to handle user input.
