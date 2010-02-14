@@ -301,17 +301,19 @@ void Driver::SendMsg
 {
 	_msg->Finalize();
 
-	Node* node = m_nodes[_msg->GetTargetNodeId()];
-	if( ( node ) && ( !node->IsListeningDevice() ) )
+	if( Node* node = m_nodes[_msg->GetTargetNodeId()] )
 	{
-		if( WakeUp* wakeUp = static_cast<WakeUp*>( node->GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
+		if( !node->IsListeningDevice() )
 		{
-			if( !wakeUp->IsAwake() )
+			if( WakeUp* wakeUp = static_cast<WakeUp*>( node->GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
 			{
-				Log::Write( "" );
-				Log::Write( "Wake-Up Command: %s", _msg->GetAsString().c_str() );
-				wakeUp->QueueMsg( _msg );
-				return;
+				if( !wakeUp->IsAwake() )
+				{
+					Log::Write( "" );
+					Log::Write( "Queuing Wake-Up Command: %s", _msg->GetAsString().c_str() );
+					wakeUp->QueueMsg( _msg );
+					return;
+				}
 			}
 		}
 	}
@@ -428,7 +430,43 @@ void Driver::SendThreadProc()
 						// Resend
 						if( msg->GetSendAttempts() > 0 )
 						{
-							Log::Write( "Timeout - resending" );
+							Log::Write( "Timeout" );
+
+							// The send timed-out.  If the target node is one that goes to
+							// sleep, transfer all messages for the node to its Wake-Up queue
+							uint8 const targetNodeId = msg->GetTargetNodeId();
+							if( Node* node = m_nodes[targetNodeId] )
+							{
+								if( !node->IsListeningDevice() )
+								{
+									if( WakeUp* wakeUp = static_cast<WakeUp*>( node->GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
+									{
+										// Mark the node as asleep
+										wakeUp->SetAwake( false );
+
+										// Move all messages for this node to the wake-up queue									
+										list<Msg*>::iterator it = m_sendQueue.begin();
+										while( it != m_sendQueue.end() )
+										{
+											if( targetNodeId == (*it)->GetTargetNodeId() )
+											{
+												// This message is for the unresponsive node
+												Log::Write( "Node not responding - moving message to Wake-Up queue: %s", msg->GetAsString().c_str() );
+												wakeUp->QueueMsg( *it );
+												m_sendQueue.erase( it++ );
+											}
+											else
+											{
+												++it;
+											}
+										}
+									}
+								}
+								else
+								{
+									Log::Write( "Resending message (attempt %d)", msg->GetSendAttempts() );
+								}
+							}
 						}
 					}
 
@@ -486,6 +524,27 @@ void Driver::TriggerResend
 	m_sendEvent->Set();
 
 	m_sendMutex->Release();
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::SetNodeAwake>
+// Mark a node as being awake
+//-----------------------------------------------------------------------------
+void Driver::SetNodeAwake
+(
+	uint8 const _nodeId
+)
+{
+	if( m_nodes[_nodeId] )
+	{
+		if( !m_nodes[_nodeId]->IsListeningDevice() )
+		{
+			if( WakeUp* pWakeUp = static_cast<WakeUp*>( m_nodes[_nodeId]->GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
+			{
+				pWakeUp->SetAwake( true );
+			}
+		}
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -1012,30 +1071,17 @@ void Driver::HandleAddNodeToNetworkRequest
 		{
 			Log::Write( "ADD_NODE_STATUS_ADDING_SLAVE" );			
 			Log::Write( "Adding node ID %d", _data[4] );
-			
-			if( ( _data[7] == 8) && ( _data[8] == 3) )
-			{
-				Log::Write( "Setback schedule thermostat detected, triggering configuration" );
-				//SetWakeupInterval( _data[4], 15, true );
-			}
-			
-			// Finish adding node	
-			//AddNode( 0, false );
 			break;
 		}
 		case ADD_NODE_STATUS_ADDING_CONTROLLER:
 		{
 			Log::Write( "ADD_NODE_STATUS_ADDING_CONTROLLER");
-			
 			Log::Write( "Adding node ID %d", _data[4] );
 			break;
 		}
 		case ADD_NODE_STATUS_PROTOCOL_DONE:
 		{
 			Log::Write( "ADD_NODE_STATUS_PROTOCOL_DONE" );
-			
-			// we send no replication info for now
-			//AddNode( 0, false );
 			break;
 		}
 		case ADD_NODE_STATUS_DONE:
@@ -1081,7 +1127,6 @@ void Driver::HandleRemoveNodeFromNetworkRequest
 		case REMOVE_NODE_STATUS_ADDING_SLAVE:
 		{
 			Log::Write( "REMOVE_NODE_STATUS_ADDING_SLAVE" );
-			//RemoveNode( 0 );
 			break;
 		}
 		case REMOVE_NODE_STATUS_ADDING_CONTROLLER:
@@ -1092,7 +1137,6 @@ void Driver::HandleRemoveNodeFromNetworkRequest
 		case REMOVE_NODE_STATUS_PROTOCOL_DONE:
 		{
 			Log::Write( "REMOVE_NODE_STATUS_PROTOCOL_DONE" );
-			//RemoveNode( 0 );
 			break;
 		}
 		case REMOVE_NODE_STATUS_DONE:
@@ -1122,6 +1166,8 @@ void Driver::HandleApplicationCommandHandlerRequest
 )
 {
 	uint8 nodeId = _data[3];
+	SetNodeAwake( nodeId );
+
 	if( m_nodes[nodeId] )
 	{
 		m_nodes[nodeId]->ApplicationCommandHandler( _data );
@@ -1138,6 +1184,7 @@ void Driver::HandleApplicationUpdateRequest
 )
 {
 	uint8 nodeId = _data[3];
+	SetNodeAwake( nodeId );
 
 	switch( _data[2] )
 	{
@@ -1147,14 +1194,6 @@ void Driver::HandleApplicationUpdateRequest
 			if( Node* node = m_nodes[nodeId] )
 			{
 				node->UpdateNodeInfo( &_data[8], _data[4] - 3 );
-
-				if( !node->IsListeningDevice() )
-				{
-					if( WakeUp* pWakeUp = static_cast<WakeUp*>( node->GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
-					{
-						pWakeUp->SendPending();
-					}
-				}
 			}
 			break;
 		}
@@ -1203,14 +1242,6 @@ void Driver::EnablePoll
 
 	// Set the node state to polled
 	node->SetPolled( true );
-
-	if( !node->IsListeningDevice() )
-	{
-		// The device is not awake all the time, so we will request state when 
-		// it wakes up, rather than at polling intervals.  This is handled in
-		// WakeUp command class - nothing more for us to do here.
-		return;
-	}
 
 	// Add the node to the poll list
 	m_pollMutex->Lock();
@@ -1310,8 +1341,29 @@ void Driver::PollThreadProc()
 				// can take place within the user-specified interval.
 				pollInterval /= m_pollList.size();
 
-				// Request a report from the node
-				//RequestBasicReport( id );
+				// Request the state of the node
+				if( Node* node = GetNode( id ) )
+				{
+					bool requestState = true;
+					if( !node->IsListeningDevice() )
+					{
+						// The device is not awake all the time.  If it is not awake, we mark it
+						// as requiring a poll.  The poll will be done next time the node wakes up.
+						if( WakeUp* wakeUp = static_cast<WakeUp*>( node->GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
+						{
+							if( !wakeUp->IsAwake() )
+							{
+								wakeUp->SetPollRequired();
+								requestState = false;
+							}
+						}
+					}
+
+					if( requestState )
+					{
+						node->RequestState();
+					}
+				}
 			}
 
 			m_pollMutex->Release();
@@ -1640,6 +1692,21 @@ void Driver::BeginAddNode
 	Log::Write( "Add Node - Begin" );
 	Msg* msg = new Msg( "Add Node - Begin", 0xff, REQUEST, FUNC_ID_ZW_ADD_NODE_TO_NETWORK, true );
 	msg->Append( _highPower ? ADD_NODE_ANY | ADD_NODE_OPTION_HIGH_POWER : ADD_NODE_ANY );
+	SendMsg( msg );
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::BeginAddController>
+// Set the controller into AddController mode
+//-----------------------------------------------------------------------------
+void Driver::BeginAddController
+(
+	bool _highPower // = false
+)
+{
+	Log::Write( "Add Controller - Begin" );
+	Msg* msg = new Msg( "Add Controller - Begin", 0xff, REQUEST, FUNC_ID_ZW_ADD_NODE_TO_NETWORK, true );
+	msg->Append( _highPower ? ADD_NODE_CONTROLLER | ADD_NODE_OPTION_HIGH_POWER : ADD_NODE_CONTROLLER );
 	SendMsg( msg );
 }
 

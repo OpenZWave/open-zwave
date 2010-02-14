@@ -51,14 +51,8 @@ namespace OpenZWave
 		void Set( uint8 const _group, uint8 const _nodeId );
 		void Remove( uint8 const _group, uint8 const _nodeId );
 
-		vector<uint8> const& GetGroup( uint8 const _groupIdx )const{ return m_groups[_groupIdx-1]; }
-		uint8 GetNumGroups()const{ return m_numGroups; }
-
 	private:
-		Association( uint8 const _nodeId ): CommandClass( _nodeId ), m_groups( NULL ){}
-
-		uint8			m_numGroups;
-		vector<uint8>*	m_groups;
+		Association( uint8 const _nodeId ): CommandClass( _nodeId ){}
 	};
 
 } // namespace OpenZWave
