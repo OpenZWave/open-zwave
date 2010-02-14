@@ -58,7 +58,8 @@ WakeUp::WakeUp
 	uint8 const _nodeId 
 ):
 	CommandClass( _nodeId ), 
-	m_bAwake( false )
+	m_awake( true ),
+	m_pollRequired( false )
 {
 }
 
@@ -127,15 +128,7 @@ bool WakeUp::HandleMsg
 			{	
 				// The device is awake.
 				Log::Write( "Received Wakeup Notification from node %d", GetNodeId() );
-				
-				// If the device is marked for polling, request the current state
-				if( node->IsPolled() )
-				{
-					node->RequestState();
-				}
-				
-				// Send all pending messages
-				SendPending();
+				SetAwake( true );				
 				handled = true;
 			}
 
@@ -187,6 +180,38 @@ bool WakeUp::SetValue
 }
 
 //-----------------------------------------------------------------------------
+// <WakeUp::SetAwake>
+// Set whether the device is likely to be awake
+//-----------------------------------------------------------------------------
+void WakeUp::SetAwake
+(
+	bool _state
+)
+{
+	if( m_awake != _state )
+	{
+		m_awake = _state;
+		if( m_awake )
+		{
+			// Device has woken up
+
+			// If the device is marked for polling, request the current state
+			if( m_pollRequired )
+			{
+				if( Node* node = GetNode() )
+				{
+					node->RequestState();
+				}
+				m_pollRequired = false;
+			}
+				
+			// Send all pending messages
+			SendPending();
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
 // <WakeUp::QueueMsg>
 // Add a Z-Wave message to the queue
 //-----------------------------------------------------------------------------
@@ -208,7 +233,7 @@ void WakeUp::SendPending
 (
 )
 {
-	m_bAwake = true;
+	m_awake = true;
 
 	m_mutex.Lock();
 

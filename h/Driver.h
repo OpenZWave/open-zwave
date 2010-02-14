@@ -29,9 +29,9 @@
 #define _Driver_H
 
 #include <string>
-#include <deque>
 #include <map>
 #include <list>
+#include <deque>
 
 #include "Defs.h"
 #include "ValueID.h"
@@ -154,6 +154,7 @@ namespace OpenZWave
 		void AssignReturnRoute( uint8 _srcNodeId, uint8 _dstNodeId );
 		
 		void BeginAddNode( bool _bHighpower = false );
+		void BeginAddController( bool _bHighpower = false );
 		void EndAddNode();
 		
 		void BeginRemoveNode();
@@ -178,9 +179,10 @@ namespace OpenZWave
 
 		void RemoveMsg();
 		void TriggerResend();
+		void SetNodeAwake( uint8 const _nodeId );
 
 		Thread*					m_sendThread;		// Thread for sending messages to the Z-Wave network	
-		deque<Msg*>				m_sendQueue;		// Messages waiting to be sent
+		list<Msg*>				m_sendQueue;		// Messages waiting to be sent
 		Mutex*					m_sendMutex;		// Serialize access to the send and wakeup queues
 		Event*					m_sendEvent;		// Signalled when there is something waiting to be sent
 

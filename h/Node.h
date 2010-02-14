@@ -61,8 +61,8 @@ namespace OpenZWave
 		void UpdateNodeInfo( uint8 const* _data, uint8 const _length );
 
 	private:
-		bool	m_bProtocolInfoReceived;
-		bool	m_bNodeInfoReceived;
+		bool	m_protocolInfoReceived;
+		bool	m_nodeInfoReceived;
 
 
 	//-----------------------------------------------------------------------------
@@ -123,8 +123,8 @@ namespace OpenZWave
 			NodeBroadcast = 0xff
 		};
 
-		bool IsListeningDevice()const{ return m_bListening; }
-		bool IsRoutingDevice()const{ return m_bRouting; }
+		bool IsListeningDevice()const{ return m_listening; }
+		bool IsRoutingDevice()const{ return m_routing; }
 		uint32 GetMaxBaudRate()const{ return m_maxBaudRate; }
 		uint8 GetVersion()const{ return m_version; }
 		uint8 GetSecurity()const{ return m_security; }
@@ -137,12 +137,12 @@ namespace OpenZWave
 		string const& GetBasicLabel()const{ return m_basicLabel; }	
 		string const& GetGenericLabel()const{ return m_genericLabel; }	
 		
-		bool IsPolled()const{ return m_bPolled; }
-		void SetPolled( bool _bState ){ m_bPolled = _bState; }
+		bool IsPolled()const{ return m_polled; }
+		void SetPolled( bool _state ){ m_polled = _state; }
 
 	private:
-		bool		m_bListening;
-		bool		m_bRouting;
+		bool		m_listening;
+		bool		m_routing;
 		uint32		m_maxBaudRate;
 		uint8		m_version;
 		uint8		m_security;
@@ -152,7 +152,7 @@ namespace OpenZWave
 		uint8		m_specific;
 		string		m_basicLabel;
 		string		m_genericLabel;
-		bool		m_bPolled;
+		bool		m_polled;
 
 
 	//-----------------------------------------------------------------------------
@@ -197,8 +197,9 @@ namespace OpenZWave
 	// Groups (handled by the Association command class)
 	//-----------------------------------------------------------------------------
 	public:
-		Group const* GetGroup( uint8 const _groupIdx )const{ return m_groups[_groupIdx-1]; }
+		Group* GetGroup( uint8 const _groupIdx );
 		uint8 GetNumGroups()const{ return m_numGroups; }
+		void SetNumGroups( uint8 const _numGroups );
 
 	private:
 		Group** m_groups;

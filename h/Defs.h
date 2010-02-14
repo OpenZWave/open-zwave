@@ -131,8 +131,93 @@ namespace OpenZWave
 #define FUNC_ID_ZW_REQUEST_NODE_INFO			0x60
 #define FUNC_ID_ZW_REMOVE_FAILED_NODE_ID		0x61
 
+
+//enum ZWFunctions
+//{
+//	CmdNone=0x00,
+//    CmdSerialApiGetInitData=0x02,
+//    CmdSerialApiApplNodeInformation=0x03,
+//    CmdApplicationCommandHandler=0x04,
+//    CmdZWaveGetControllerCapabilities=0x05,
+//    CmdSerialApiSetTimeouts=0x06,
+//    CmdSerialApiGetCapabilities=0x07,
+//    CmdSerialApiSoftReset=0x08,
+//    CmdZWaveSetRFReceiveMode=0x10,
+//    CmdZWaveSetSleepMode=0x11,
+//    CmdZWaveSendNodeInformation=0x12,
+//    CmdZWaveSendData=0x13,
+//    CmdZWaveSendDataMulti=0x14,
+//    CmdZWaveGetVersion=0x15,
+//    CmdZWaveSendDataAbort=0x16,
+//    CmdZWaveRFPowerLevelSet=0x17,
+//    CmdZWaveSendDataMeta=0x18,
+//    CmdMemoryGetId=0x20,
+//    CmdMemoryGetByte=0x21,
+//    CmdMemoryPutByte=0x22,
+//    CmdMemoryGetBuffer=0x23,
+//    CmdMemoryPutBuffer=0x24,
+//    CmdClockSet=0x30,
+//    CmdClockGet=0x31,
+//    CmdClockCompare=0x32,
+//    CmdRtcTimerCreate=0x33,
+//    CmdRtcTimerRead=0x34,
+//    CmdRtcTimerDelete=0x35,
+//    CmdRtcTimerCall=0x36,
+//    CmdZWaveGetNodeProtocolInfo=0x41,
+//    CmdZWaveSetDefault=0x42,
+//    CmdZWaveReplicationCommandComplete=0x44,
+//    CmdZWaveReplicationSendData=0x45,
+//    CmdZWaveAssignReturnRoute=0x46,
+//    CmdZWaveDeleteReturnRoute=0x47,
+//    CmdZWaveRequestNodeNeighborUpdate=0x48,
+//    CmdApplicationControllerUpdate=0x49,
+//    CmdZWaveAddNodeToNetwork=0x4a,
+//    CmdZWaveRemoveNodeFromNetwork=0x4b,
+//    CmdZWaveCreateNewPrimary=0x4c,
+//    CmdZWaveControllerChange=0x4d,
+//    CmdZWaveSetLearnMode=0x50,
+//    CmdZWaveAssignSucReturnRoute=0x51,
+//    CmdZWaveEnableSuc=0x52,
+//    CmdZWaveRequestNetworkUpdate=0x53,
+//    CmdZWaveSetSucNodeId=0x54,
+//    CmdZWaveDeleteSucReturnRoute=0x55,
+//    CmdZWaveGetSucNodeId=0x56,
+//    CmdZWaveSendSucId=0x57,
+//    CmdZWaveRediscoveryNeeded=0x59,
+//    CmdZWaveRequestNodeInfo=0x60,
+//    CmdZWaveRemoveFailedNodeId=0x61,
+//    CmdZWaveIsFailedNode=0x62,
+//    CmdZWaveReplaceFailedNode=0x63,
+//    CmdTimerStart=0x70,
+//    CmdTimerRestart=0x71,
+//    CmdTimerCancel=0x72,
+//    CmdTimerCall=0x73,
+//    CmdGetRoutingTableLine=0x80,
+//    CmdGetTXCounter=0x81,
+//    CmdResetTXCounter=0x82,
+//    CmdStoreNodeInfo=0x83,
+//    CmdStoreHomeId=0x84,
+//    CmdLockRouteResponse=0x90,
+//    CmdZWaveSendDataRouteDemo=0x91,
+//    CmdSerialApiTest=0x95,
+//    CmdSerialApiSlaveNodeInfo=0xa0,
+//    CmdApplicationSlaveCommandHandler=0xa1,
+//    CmdZWaveSendSlaveNodeInfo=0xa2,
+//    CmdZWaveSendSlaveData=0xa3,
+//    CmdZWaveSetSlaveLearnMode=0xa4,
+//    CmdZWaveGetVirtualNodes=0xa5,
+//    CmdZWaveIsVirtualNode=0xa6,
+//    CmdZWaveSetPromiscuousMode=0xd0
+
+
 #define ADD_NODE_ANY							0x01
+#define ADD_NODE_ANY							0x01
+#define ADD_NODE_CONTROLLER						0x02
+#define ADD_NODE_SLAVE							0x03
+#define ADD_NODE_EXISTING						0x04
 #define ADD_NODE_STOP							0x05
+#define ADD_NODE_STOP_FAILED					0x06
+
 #define ADD_NODE_STATUS_LEARN_READY		  		0x01
 #define ADD_NODE_STATUS_NODE_FOUND		   		0x02
 #define ADD_NODE_STATUS_ADDING_SLAVE		 	0x03

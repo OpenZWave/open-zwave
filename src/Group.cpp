@@ -26,55 +26,11 @@
 //-----------------------------------------------------------------------------
 
 #include "Group.h"
+#include "Driver.h"
+#include "Node.h"
+#include "Association.h"
 
 using namespace OpenZWave;
-
-
-////-----------------------------------------------------------------------------
-//// <Group::Group>
-//// Constructor
-////-----------------------------------------------------------------------------
-//Group::Group
-//( 
-//	string const& _associations 
-//):
-//	m_numAssociations( 0 ),
-//	m_pAssociations( NULL )
-//{
-//	uint32 i;
-//
-//	// Convert the string containing a comma separated list of node Ids into an array
-//	if( _associations.size() == 0 )
-//	{
-//		return;
-//	}
-//	
-//	// Count the commas and allocate space for the node Ids
-//	m_numAssociations = 1;
-//	for( i=0; i<_associations.size(); ++i )
-//	{
-//		if( _associations[i] == ',' )
-//		{
-//			++m_numAssociations;
-//		}
-//	}
-//
-//	m_pAssociations = new uint8[m_numAssociations];
-//
-//	// Extract the node Ids
-//	int32 start = 0;
-//	int32 idx = 0;
-//	for( i=0; i<=_associations.size(); ++i )
-//	{
-//		uint8 ch = _associations[i];
-//		if( ( 0 == ch ) || ( ',' == ch ) )
-//		{
-//			string idStr = _associations.substr( start, i-start );
-//			m_pAssociations[idx++] = (uint8)atoi( idStr.c_str() );
-//			start = i+1;
-//		}
-//	}
-//}
 
 
 //-----------------------------------------------------------------------------
@@ -83,19 +39,15 @@ using namespace OpenZWave;
 //-----------------------------------------------------------------------------
 Group::Group
 ( 
-	uint8 _groupId,
-	uint8 _numAssociations, 
-	uint8* _pAssociations
+	uint8 const _nodeId,
+	uint8 const _groupIdx
 ):
-	m_groupId( _groupId ),
-	m_numAssociations( _numAssociations )
+	m_nodeId( _nodeId ),
+	m_groupIdx( _groupIdx )
 {
 	char str[16];
-	snprintf( str, 16, "Group %d", m_groupId );
+	snprintf( str, 16, "Group %d", m_groupIdx );
 	m_label = str;
-
-	m_pAssociations = new uint8[m_numAssociations];
-	memcpy( m_pAssociations, _pAssociations, m_numAssociations );
 }
 
 //-----------------------------------------------------------------------------
@@ -104,13 +56,14 @@ Group::Group
 //-----------------------------------------------------------------------------
 Group::Group
 (
+	uint8 const _nodeId,
 	TiXmlElement* _groupElement
 ):
-	m_pAssociations( NULL )
+	m_nodeId( _nodeId )
 {
 	int intVal;
-	_groupElement->QueryIntAttribute( "id", &intVal );
-	m_groupId = (uint8)intVal;
+	_groupElement->QueryIntAttribute( "index", &intVal );
+	m_groupIdx = (uint8)intVal;
 
 	char const* str = _groupElement->Attribute( "label" );
 	if( str )
@@ -118,28 +71,18 @@ Group::Group
 		m_label = str;
 	}
 
-	_groupElement->QueryIntAttribute( "num_associations", &intVal );
-	m_numAssociations = (uint8)intVal;
-	
-	if( m_numAssociations )
+	// Read the associations for this group
+	TiXmlNode const* pAssociationNode = _groupElement->FirstChild();
+	while( pAssociationNode )
 	{
-		m_pAssociations = new uint8[m_numAssociations];
-
-		// Read the associations for this group
-		TiXmlNode const* pAssociationNode = _groupElement->FirstChild();
-		while( pAssociationNode )
+		TiXmlElement const* pAssociationElement = pAssociationNode->ToElement();
+		if( pAssociationElement )
 		{
-			TiXmlElement const* pAssociationElement = pAssociationNode->ToElement();
-			if( pAssociationElement )
+			char const* elementName = pAssociationElement->Value();
+			if( elementName && !strcmp( elementName, "Association" ) )
 			{
-				char const* elementName = pAssociationElement->Value();
-				if( elementName && !strcmp( elementName, "Association" ) )
-				{
-					int32 idx = 0;
-					pAssociationElement->QueryIntAttribute( "index", &idx );
-					pAssociationElement->QueryIntAttribute( "node", &intVal );
-					m_pAssociations[idx] = (uint8)intVal;
-				}
+				pAssociationElement->QueryIntAttribute( "node", &intVal );
+				m_associations.insert( (uint8)intVal );
 			}
 		}
 	}
@@ -156,25 +99,113 @@ void Group::WriteXML
 {
 	char str[16];
 
-	snprintf( str, 16, "%d", m_groupId );
-	_groupElement->SetAttribute( "id", str );
+	snprintf( str, 16, "%d", m_groupIdx );
+	_groupElement->SetAttribute( "index", str );
 
 	_groupElement->SetAttribute( "label", m_label.c_str() );
 
-	snprintf( str, 16, "%d", m_numAssociations );
-	_groupElement->SetAttribute( "num_associations", str );
-
-	for( uint8 i=0; i<m_numAssociations; ++i )
+	for( Iterator it = Begin(); it != End(); ++it )
 	{
 		TiXmlElement* pAssociationElement = new TiXmlElement( "Association" );
 		
-		snprintf( str, 16, "%d", i );
-		pAssociationElement->SetAttribute( "index", str );
-
-		snprintf( str, 16, "%d", m_pAssociations[i] );
+		snprintf( str, 16, "%d", *it );
 		pAssociationElement->SetAttribute( "node", str );
 
 		_groupElement->LinkEndChild( pAssociationElement );
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <Group::AddNode>
+// Associate a node with this group
+//-----------------------------------------------------------------------------
+void Group::AddNode
+(
+	uint8 const _nodeId
+)
+{
+	if( Node* node = Driver::Get()->GetNode( m_nodeId ) )
+	{
+		if( Association* cc = static_cast<Association*>( node->GetCommandClass( Association::StaticGetCommandClassId() ) ) )
+		{
+			cc->Set( m_groupIdx, _nodeId );
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <Group:RemoveNode>
+// Remove a node from this group
+//-----------------------------------------------------------------------------
+void Group::RemoveNode
+(
+	uint8 const _nodeId
+)
+{
+	if( Node* node = Driver::Get()->GetNode( m_nodeId ) )
+	{
+		if( Association* cc = static_cast<Association*>( node->GetCommandClass( Association::StaticGetCommandClassId() ) ) )
+		{
+			cc->Remove( m_groupIdx, _nodeId );
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <Group::OnGroupChanged>
+// Change the group contents and notify the watchers
+//-----------------------------------------------------------------------------
+void Group::OnGroupChanged
+(
+	uint8 const _numAssociations,
+	uint8 const* _associations
+)
+{
+	bool notify = false;
+
+	// If the number of associations is different, we'll save 
+	// ourselves some work and clear the old set now.
+	if( _numAssociations != m_associations.size() )
+	{
+		m_associations.clear();
+		notify = true;
+	}
+
+	// Add the new associations. 
+	uint8 oldSize = (uint8)m_associations.size();
+
+	uint8 i;
+	for( i=0; i<_numAssociations; ++i )
+	{
+		m_associations.insert( _associations[i] );
+	}
+
+	if( (!notify) && ( oldSize != m_associations.size() ) )
+	{
+		// The number of nodes in the original and new groups is the same, but
+		// the number of associations has grown. There must be different nodes 
+		// in the original and new sets of nodes in the group.  The easiest way
+		// to sort this out is to clear the associations and add the new nodes again.
+		m_associations.clear();
+		for( i=0; i<_numAssociations; ++i )
+		{
+			m_associations.insert( _associations[i] );
+		}
+		notify = true;
+	}
+
+	if( notify )
+	{
+		// Send notification that the group contents have changed
+		Driver::Notification* notification = new Driver::Notification();
+	
+		notification->m_type = Driver::NotificationType_Group;
+		notification->m_id = ValueID();
+		notification->m_nodeId = m_nodeId;
+		notification->m_groupIdx = m_groupIdx;
+
+		Driver::Get()->NotifyWatchers( notification ); 
+		delete notification;
 	}
 }
 

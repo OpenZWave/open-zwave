@@ -30,6 +30,8 @@
 #include "Defs.h"
 #include "Msg.h"
 #include "Driver.h"
+#include "Node.h"
+#include "Group.h"
 #include "Log.h"
 
 using namespace OpenZWave;
@@ -74,74 +76,76 @@ bool Association::HandleMsg
 	uint32 const _instance	// = 0
 )
 {
-	if( AssociationCmd_GroupingsReport == (AssociationCmd)_data[0] )
-	{	
-		// Clear the existing groups
-		delete [] m_groups;
+	bool handled = false;
 
-		// Retreive the number of groups this device supports,
-		// and request the members of each group in turn.
-		m_numGroups = _data[1];
-		m_groups = new vector<uint8>[m_numGroups];
-
-		Log::Write( "Received Association Groupings report from node %d: Number of Groups=%d", GetNodeId(), m_numGroups );
-
-		for( uint8 i=0; i<m_numGroups; ++i )
-		{
-			Msg* msg = new Msg( "Get Associations", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-			msg->Append( GetNodeId() );
-			msg->Append( 3 );
-			msg->Append( GetCommandClassId() );
-			msg->Append( AssociationCmd_Get );
-			msg->Append( i+1 );
-			msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-			Driver::Get()->SendMsg( msg );
-		}
-		return true;
-	}
-
-	if( AssociationCmd_Report == (AssociationCmd)_data[0] )
+	Node* node = GetNode();
+	if( node )
 	{
-		// Get the group memebers
-		uint8 groupIdx = _data[1];
-//		uint8 maxNodes = _data[2];
-		
-		vector<uint8>* group = &m_groups[groupIdx-1];
-		group->clear();
+		if( AssociationCmd_GroupingsReport == (AssociationCmd)_data[0] )
+		{	
+			// Retreive the number of groups this device supports,
+			// and request the members of each group in turn.
+			uint8 numGroups = _data[1];
+			node->SetNumGroups( numGroups );
 
-		uint8 numNodes = _data[3];
+			Log::Write( "Received Association Groupings report from node %d: Number of Groups=%d", GetNodeId(), numGroups );
 
-		Log::Write( "Received Association report from node %d, group %d: Number of associations=%d", GetNodeId(), groupIdx, numNodes );
-
-		for( uint8 i=0; i<numNodes; ++i )
-		{
-			Log::Write( "  Node %d", _data[i+4] );
-			group->push_back( _data[i+4] );
+			for( uint8 i=0; i<numGroups; ++i )
+			{
+				Msg* msg = new Msg( "Get Associations", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+				msg->Append( GetNodeId() );
+				msg->Append( 3 );
+				msg->Append( GetCommandClassId() );
+				msg->Append( AssociationCmd_Get );
+				msg->Append( i+1 );
+				msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+				Driver::Get()->SendMsg( msg );
+			}
+			handled = true;
 		}
-		return true;
+		else if( AssociationCmd_Report == (AssociationCmd)_data[0] )
+		{
+			// Get the group memebers
+			uint8 groupIdx = _data[1];
+	//		uint8 maxNodes = _data[2];
+
+			if( Group* group = node->GetGroup( groupIdx ) )
+			{
+//				uint8 numNodes = _data[3];	- should be this value, but it always appears to be zero.
+				if( _length > 5 )
+				{
+					uint8 numNodes = _length - 5;
+					Log::Write( "Received Association report from node %d, group %d: Number of associations=%d", GetNodeId(), groupIdx, numNodes );
+
+					group->OnGroupChanged( numNodes, &_data[4] );
+				}
+			}
+
+			handled = true;
+		}
 	}
 
-	return false;
+	return handled;
 }
 
 //-----------------------------------------------------------------------------
 // <Association::Set>
-// Set an association between devices
+// Add an association between devices
 //-----------------------------------------------------------------------------
 void Association::Set
 (
-	uint8 _group,
+	uint8 _groupIdx,
 	uint8 _targetNodeId
 )
 {
-	Log::Write( "Association::Set - Node=%d, Group=%d, Target=%d", GetNodeId(), _group, _targetNodeId );
+	Log::Write( "Association::Set - Adding node %d to group %d of node %d", _targetNodeId, _groupIdx, GetNodeId() );
 
 	Msg* msg = new Msg( "Association Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
 	msg->Append( GetNodeId() );
 	msg->Append( 4 );
 	msg->Append( GetCommandClassId() );
 	msg->Append( AssociationCmd_Set );
-	msg->Append( _group );
+	msg->Append( _groupIdx );
 	msg->Append( _targetNodeId );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 	Driver::Get()->SendMsg( msg );
@@ -153,18 +157,18 @@ void Association::Set
 //-----------------------------------------------------------------------------
 void Association::Remove
 (
-	uint8 _group,
+	uint8 _groupIdx,
 	uint8 _targetNodeId
 )
 {
-	Log::Write( "Association::Remove - Node=%d, Group=%d, Target=%d", GetNodeId(), _group, _targetNodeId );
+	Log::Write( "Association::Remove - Removing node %d from group %d of node %d", _targetNodeId, _groupIdx, GetNodeId() );
 
 	Msg* msg = new Msg( "Association Remove", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
 	msg->Append( GetNodeId() );
 	msg->Append( 4 );
 	msg->Append( GetCommandClassId() );
 	msg->Append( AssociationCmd_Remove );
-	msg->Append( _group );
+	msg->Append( _groupIdx );
 	msg->Append( _targetNodeId );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 	Driver::Get()->SendMsg( msg );

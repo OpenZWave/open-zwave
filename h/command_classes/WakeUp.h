@@ -47,7 +47,9 @@ namespace OpenZWave
 
 		void QueueMsg( Msg* msg );
 		void SendPending();
-		bool IsAwake()const{ return m_bAwake; }
+		bool IsAwake()const{ return m_awake; }
+		void SetAwake( bool _state );
+		void SetPollRequired(){ m_pollRequired = true; }
 
 		// From CommandClass
 		virtual void RequestState();
@@ -64,7 +66,8 @@ namespace OpenZWave
 
 		Mutex		m_mutex;			// Serialize access to the pending queue
 		list<Msg*>	m_pendingQueue;		// Messages waiting to be sent when the device wakes up
-		bool		m_bAwake;
+		bool		m_awake;
+		bool		m_pollRequired;
 	};
 
 } // namespace OpenZWave
