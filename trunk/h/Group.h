@@ -29,32 +29,38 @@
 #define _Group_H
 
 #include <string>
-#include <map>
+#include <set>
 #include "Defs.h"
-#include "tinyxml.h"
+
+class TiXmlElement;
 
 namespace OpenZWave
 {
 	class Group
 	{
 	public:
-		Group( uint8 _groupId, uint8 _numAssociations, uint8* _pAssociations );
-		Group( TiXmlElement* _valueElement );
+		typedef set<uint8>::const_iterator Iterator;
 
-		~Group(){ delete [] m_pAssociations; }
+		Iterator Begin(){ return m_associations.begin(); }
+		Iterator End(){ return m_associations.end(); }
+
+		Group( uint8 const _nodeId, uint8 const _groupIdx );
+		Group( uint8 const _nodeId, TiXmlElement* _valueElement );
+		~Group(){}
 
 		void WriteXML( TiXmlElement* _valueElement );
-
 		string const& GetLabel()const{ return m_label; }
 
-		uint32 GetNumAssociations()const{ return m_numAssociations; }
-		uint8 GetAssociation( uint32 _idx )const{ return ( _idx < m_numAssociations ) ? m_pAssociations[_idx] : 0xff; }
+		void AddNode( uint8 const _nodeId );
+		void RemoveNode( uint8 const _nodeId );
+
+		void OnGroupChanged( uint8 const _numAssociations, uint8 const* _associations );
 
 	private:
-		string	m_label;
-		uint8	m_groupId;
-		uint32	m_numAssociations;
-		uint8*	m_pAssociations;
+		string		m_label;
+		uint8		m_nodeId;
+		uint8		m_groupIdx;
+		set<uint8>	m_associations;
 	};
 
 } //namespace OpenZWave

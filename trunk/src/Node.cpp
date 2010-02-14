@@ -37,7 +37,6 @@
 
 #include "CommandClasses.h"
 #include "CommandClass.h"
-#include "Association.h"
 #include "Basic.h"
 #include "Configuration.h"
 #include "MultiInstance.h"
@@ -61,11 +60,13 @@ Node::Node
 	uint8 const _nodeId
 ):
 	m_nodeId( _nodeId ),
-	m_bPolled( false ),
-	m_bProtocolInfoReceived( false ),
-	m_bNodeInfoReceived( false ),
+	m_polled( false ),
+	m_protocolInfoReceived( false ),
+	m_nodeInfoReceived( false ),
 	m_values( new ValueStore() ),
-	m_valuesMutex( new Mutex() )
+	m_valuesMutex( new Mutex() ),
+	m_numGroups( 0 ),
+	m_groups( NULL )
 {
 	// Request the node protocol info
 	Driver::Get()->AddInfoRequest( m_nodeId );
@@ -79,9 +80,12 @@ Node::Node
 ( 
 	TiXmlElement* _node	
 ):
-	m_bProtocolInfoReceived( true ),
-	m_bNodeInfoReceived( true ),
-	m_values( new ValueStore() )
+	m_protocolInfoReceived( true ),
+	m_nodeInfoReceived( true ),
+	m_values( new ValueStore() ),
+	m_valuesMutex( new Mutex() ),
+	m_numGroups( 0 ),
+	m_groups( NULL )
 {
 	char const* str;
 	int intVal;
@@ -121,13 +125,13 @@ Node::Node
 	str = _node->Attribute( "listening" );
 	if( str )
 	{
-		m_bListening = !strcmp( str, "True" );
+		m_listening = !strcmp( str, "True" );
 	}
 
 	str = _node->Attribute( "polled" );
 	if( str )
 	{
-		m_bPolled = !strcmp( str, "True" );
+		m_polled = !strcmp( str, "True" );
 	}
 
 	// Create the command classes
@@ -205,19 +209,19 @@ void Node::UpdateProtocolInfo
 	uint8 const* _data
 )
 {
-	if( m_bProtocolInfoReceived )
+	if( m_protocolInfoReceived )
 	{
 		// We already have this info
 		return;
 	}
-	m_bProtocolInfoReceived = true;
+	m_protocolInfoReceived = true;
 
 	// Remove the protocol info request from the queue
 	Driver::Get()->RemoveInfoRequest();
 
 	// Capabilities
-	m_bListening = (( _data[0] & 0x80 ) != 0 );
-	m_bRouting = (( _data[0] & 0x40 ) != 0 );
+	m_listening = (( _data[0] & 0x80 ) != 0 );
+	m_routing = (( _data[0] & 0x40 ) != 0 );
 	
 	m_maxBaudRate = 9600;
 	if( ( _data[0] & 0x38 ) == 0x10 )
@@ -267,15 +271,15 @@ void Node::UpdateProtocolInfo
 	}
 
 	Log::Write( "Protocol Info for Node %d:", m_nodeId );
-	Log::Write( "  Listening	 = %s", m_bListening ? "True" : "False" );
-	Log::Write( "  Routing	   = %s", m_bRouting ? "True" : "False" );
+	Log::Write( "  Listening	 = %s", m_listening ? "True" : "False" );
+	Log::Write( "  Routing	   = %s", m_routing ? "True" : "False" );
 	Log::Write( "  Max Baud Rate = %d", m_maxBaudRate );
 	Log::Write( "  Version	   = %d", m_version );
 	Log::Write( "  Security	  = 0x%.2x", m_security );
 	Log::Write( "  Basic Type	= %s", m_basicLabel.c_str() );
 	Log::Write( "  Generic Type  = %s", m_genericLabel.c_str() );
 
-	if( !m_bListening )
+	if( !m_listening )
 	{
 		// Device does not always listen, so we need the WakeUp handler
 		if( CommandClass* pCommandClass = AddCommandClass( WakeUp::StaticGetCommandClassId() ) )
@@ -300,9 +304,9 @@ void Node::UpdateNodeInfo
 	uint8 const _length
 )
 {
-	if( !m_bNodeInfoReceived )
+	if( !m_nodeInfoReceived )
 	{
-		m_bNodeInfoReceived = true;
+		m_nodeInfoReceived = true;
 
 		// Add the command classes specified by the device
 		int32 i;
@@ -463,7 +467,7 @@ void Node::SaveStatic
 	FILE* _file	
 )
 {
-	fprintf( _file, "  <Node id=\"%d\" listening=\"%s\" basic=\"%d\" basic_label=\"%s\" generic=\"%d\" generic_label=\"%s\" specific=\"%d\">\n", m_nodeId, m_bListening ? "True" : "False", m_basic, m_basicLabel.c_str(), m_generic, m_genericLabel.c_str(), m_specific );
+	fprintf( _file, "  <Node id=\"%d\" listening=\"%s\" basic=\"%d\" basic_label=\"%s\" generic=\"%d\" generic_label=\"%s\" specific=\"%d\">\n", m_nodeId, m_listening ? "True" : "False", m_basic, m_basicLabel.c_str(), m_generic, m_genericLabel.c_str(), m_specific );
 
 	for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
 	{
@@ -562,6 +566,55 @@ Value* Node::GetValue
 	return m_values->GetValue( _id );
 }
 
+//-----------------------------------------------------------------------------
+// <Node::GetGroup>
+// Get a Group using the same one-based indexing as Z-Wave device instructions
+//-----------------------------------------------------------------------------
+Group* Node::GetGroup
+(
+	uint8 const _groupIdx
+)
+{ 
+	if( ( _groupIdx < 1 ) || ( _groupIdx > m_numGroups ) )
+	{
+		Log::Write( "Node(%d)::GetGroup - Invalid Group Index %d", m_nodeId, _groupIdx );
+		return NULL;
+	}
+
+	return m_groups[_groupIdx-1]; 
+}
+
+//-----------------------------------------------------------------------------
+// <Node::SetNumGroups>
+// Set up the array of group pointers
+//-----------------------------------------------------------------------------
+void Node::SetNumGroups
+(
+	uint8 const _numGroups
+)
+{
+	if( _numGroups == m_numGroups )
+	{
+		// Nothing to do
+		return;
+	}
+
+	// Remove any old groups (in theory this should never need to do anything
+	// since the number of groups a device supports should not change)
+	uint8 i;
+	for( i=0; i<m_numGroups; ++i )
+	{
+		delete m_groups[i];
+	}
+
+	m_numGroups = _numGroups;
+	m_groups = new Group*[_numGroups];
+
+	for( i=0; i<m_numGroups; ++i )
+	{
+		m_groups[i] = new Group( m_nodeId, i+1 ); 
+	}
+}
 
 
 

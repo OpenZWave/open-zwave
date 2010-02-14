@@ -33,6 +33,7 @@
 #include "Windows.h"
 #include "Driver.h"
 #include "Node.h"
+#include "Group.h"
 #include "ValueStore.h"
 #include "Value.h"
 #include "ValueBool.h"
@@ -72,24 +73,47 @@ int main( int argc, char* argv[] )
 
 	Sleep(10000);
 
-	// Example of switching a Binary Switch on and off
-	//if( Node* node = pDriver->GetNode(4) )
-	//{
-	//	if( ValueStore* store = node->GetValueStore() )
-	//	{
-	//		for( ValueStore::Iterator it = store->Begin(); it != store->End(); ++it )
-	//		{
-	//			Value* value = it->second;
-	//			if( value->GetLabel() == "Switch" )
-	//			{
-	//				ValueBool* valueBool = static_cast<ValueBool*>(value);
-	//				valueBool->Set( true );
-	//				Sleep( 5000 );
-	//				valueBool->Set( false );
-	//			}
-	//		}
-	//	}
-	//}
+//	pDriver->BeginAddController();
+//	pDriver->BeginRemoveNode();
+//	pDriver->BeginAddNode();
+//	pDriver->ResetController();
+
+//	if( Node* node = pDriver->GetNode(2) )
+	{
+		// Polling - enable this for devices that do not report state changes
+//		node->SetPolled( true );
+		
+		// Associations
+//		if( Group* group = node->GetGroup(1) )
+//		{
+			// Add node 3 to group 1 of node 2.
+//			group->AddNode(3);
+//		}
+		
+		// Values
+//		if( ValueStore* store = node->GetValueStore() )
+//		{
+//			for( ValueStore::Iterator it = store->Begin(); it != store->End(); ++it )
+//			{
+//				Value* value = it->second;
+				
+				// Here we select a value by its label.  In a real app, the user should be presented with
+				// a UI displaying all the enumerated values from the store (probably filtered by their 
+				// genre - user, system or config).  Each value has a unique ID, so whichever value is
+				// modfied by the user, it should be a simple case to get a pointer to the value object
+				// using Driver::Get()->GetValue( id );  The value pointer can then be cast to the correct
+				// type according to value->GetValueTypeId()
+
+//				if( value->GetLabel() == "Switch" )
+//				{
+//					ValueBool* valueBool = static_cast<ValueBool*>(value);
+//					valueBool->Set( true );
+//					Sleep( 5000 );
+//					valueBool->Set( false );
+//				}
+//			}
+//		}
+	}
 
 	
 	// Now we just wait forever, while the Driver thread does all the 
