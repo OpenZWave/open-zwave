@@ -21,9 +21,9 @@ DEBUG_LDFLAGS	:= -g
 CFLAGS	:= -c $(DEBUG_CFLAGS)
 LDFLAGS	:= $(DEBUG_LDFLAGS)
 
-INCLUDES	:= -I ../../h -I ../../h/command_classes/ -I ../../h/value_classes/ \
-	-I ../../h/platform/ -I ../../h/platform/mac -I ../../tinyxml/
-LIBS := $(wildcard ../../lib/linux/*.a)
+INCLUDES	:= -I ../../../h -I ../../../h/command_classes/ -I ../../../h/value_classes/ \
+	-I ../../../h/platform/ -I ../../../h/platform/mac -I ../../../tinyxml/
+LIBS := $(wildcard ../../../lib/linux/*.a)
 
 %.o : %.cpp
 	$(CXX) $(CFLAGS) $(INCLUDES) -o $@ $<
