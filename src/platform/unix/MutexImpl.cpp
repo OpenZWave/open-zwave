@@ -1,10 +1,10 @@
-//-----------------------------------------------------------------------------
 //
-//	MutexImpl.cpp
+// MutexImpl.cpp
 //
-//	Linux implementation of the cross-platform mutex
+// POSIX implementation of the cross-platform mutex
 //
-//	Copyright (c) 2010 Mal Lansell <openzwave@lansell.org>
+// Copyright (c) 2010, Greg Satz <satz@iranger.com>
+// All rights reserved.
 //
 //	SOFTWARE NOTICE AND LICENSE
 //
@@ -26,8 +26,8 @@
 //-----------------------------------------------------------------------------
 
 #include "Defs.h"
+#include "Log.h"
 #include "MutexImpl.h"
-
 
 using namespace OpenZWave;
 
@@ -39,16 +39,12 @@ MutexImpl::MutexImpl
 (
 )
 {
-	// Create attributes for a recursive mutex
-	pthread_mutexattr_t mta;
-	pthread_mutexattr_init( &mta );
-	pthread_mutexattr_settype( &mta, PTHREAD_MUTEX_RECURSIVE );
+	pthread_mutexattr_t ma;
 
-	// Create the mutex
-	pthread_mutex_init( &m_mutex, &mta );
-	
-	// Cleanup
-	pthread_mutexattr_destroy( &mta );
+	pthread_mutexattr_init ( &ma );
+	pthread_mutexattr_settype( &ma, PTHREAD_MUTEX_RECURSIVE );
+	pthread_mutex_init( &m_criticalSection, &ma );
+	pthread_mutexattr_destroy( &ma );
 }
 
 //-----------------------------------------------------------------------------
@@ -59,27 +55,34 @@ MutexImpl::~MutexImpl
 (
 )
 {
-	pthread_mutex_destroy( &m_mutex );
+	pthread_mutex_destroy( &m_criticalSection );
 }
 
 //-----------------------------------------------------------------------------
 //	<MutexImpl::Lock>
-//	Lock the mutex.  Returns true if successful.
+//	Lock the mutex
 //-----------------------------------------------------------------------------
 bool MutexImpl::Lock
 (
-	bool const _bWait // = true;
+	bool const _bWait
 )
 {
+	int err;
+
 	if( _bWait )
 	{
 		// We will wait for the lock
-		pthread_mutex_lock( &m_mutex );
+	  	err = pthread_mutex_lock( &m_criticalSection );
+		if( err != 0 )
+			Log::Write( "mutex_lock err=%d", err );
 		return true;
 	}
 
 	// Returns immediately, even if the lock was not available.
-	return( !pthread_mutex_trylock( &m_mutex ) );
+	err = pthread_mutex_trylock( &m_criticalSection );
+	if( err != 0 )
+		Log::Write("mutex_trylock err=%d", err);
+	return( err == 0 );
 }
 
 //-----------------------------------------------------------------------------
@@ -90,5 +93,9 @@ void MutexImpl::Release
 (
 )
 {
-	pthread_mutex_unlock( &m_mutex );
+	int err;
+
+	err = pthread_mutex_unlock( &m_criticalSection );
+	if( err != 0 )
+		Log::Write("mutex_unlock err=%d", err);
 }
