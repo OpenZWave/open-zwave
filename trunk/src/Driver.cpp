@@ -572,9 +572,17 @@ bool Driver::ReadMsg
 		case SOF:
 		{
 			// Read the length byte
+#ifdef _MSC_VER
+			// Windows
+			m_serialPort->Read( &buffer[1], 1 );
+#else
+			// Wait needed for Mac version (for now)
 		  	m_serialPort->Wait(500); // half a second
 			if (!m_serialPort->Read( &buffer[1], 1 ))
+			{
 				break; // can't proceed
+			}
+#endif
 
 			// Read the rest of the frame
 			uint32 bytesRemaining = buffer[1];
