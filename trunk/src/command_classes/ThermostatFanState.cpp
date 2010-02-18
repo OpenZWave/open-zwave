@@ -118,18 +118,18 @@ bool ThermostatFanState::HandleMsg
 				}
 				handled = true;
 			}
-			else if( _data[1] == ThermostatFanStateCmd_SupportedReport )
+			else if( ThermostatFanStateCmd_SupportedReport == (ThermostatFanStateCmd)_data[0] )
 			{
 				// We have received the supported thermostat fan states from the Z-Wave device
 				m_supportedStates.clear();
-				for( uint32 i=2; i<_length; ++i )
+				for( uint32 i=1; i<_length; ++i )
 				{
 					for( int32 bit=0; bit<8; ++bit )
 					{
 						if( ( _data[i] & (1<<bit) ) != 0 )
 						{
 							ValueList::Item item;
-							item.m_value = i + bit - 2;
+							item.m_value = (int32)((i-1)<<3) + bit;
 							item.m_label = c_stateName[item.m_value];
 							m_supportedStates.push_back( item );
 						}
