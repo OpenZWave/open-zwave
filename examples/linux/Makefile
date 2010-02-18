@@ -28,10 +28,7 @@ LIBS := $(wildcard ../../lib/linux/*.a)
 %.o : %.cpp
 	$(CXX) $(CFLAGS) $(INCLUDES) -o $@ $<
 
-all: test test1
+all: test
 
 test:	Main.o $(LIBS)
-	$(LD) -o $@ $(LDFLAGS) $< $(LIBS) -pthread
-
-test1:	Main1.o $(LIBS)
 	$(LD) -o $@ $(LDFLAGS) $< $(LIBS) -pthread
