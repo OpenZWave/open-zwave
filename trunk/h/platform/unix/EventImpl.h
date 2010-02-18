@@ -1,10 +1,10 @@
-//-----------------------------------------------------------------------------
 //
-//	MutexImpl.h
+// EventImpl.h
 //
-//	Linux implementation of the cross-platform mutex
+// POSIX implementation of the cross-platform event
 //
-//	Copyright (c) 2010 Mal Lansell <openzwave@lansell.org>
+// Copyright (c) 2010, Greg Satz <satz@iranger.com>
+// All rights reserved.
 //
 //	SOFTWARE NOTICE AND LICENSE
 //
@@ -25,29 +25,34 @@
 //
 //-----------------------------------------------------------------------------
 
-#ifndef _MutexImpl_H
-#define _MutexImpl_H
+#ifndef _EventImpl_H
+#define _EventImpl_H
 
 #include <pthread.h>
-
+#include <errno.h>
 
 namespace OpenZWave
 {
-	class MutexImpl
+	class EventImpl
 	{
 	private:
-		friend class Mutex;
+		friend class Event;
 
-		MutexImpl();
-		~MutexImpl();
+		EventImpl();
+		~EventImpl();
 
-		bool Lock( bool const _bWait = true );
-		void Release();
+		void Set();
+		void Reset();
+		bool Wait( int32 _timeout );
 
-		pthread_mutex_t	m_mutex;
+		pthread_mutex_t lock;
+		pthread_cond_t condition;
+		bool manual_reset;
+		bool is_signaled;
+		unsigned int waiting_threads;
 	};
 
 } // namespace OpenZWave
 
-#endif //_MutexIF_H
+#endif //_EventImpl_H
 
