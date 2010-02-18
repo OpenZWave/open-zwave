@@ -62,7 +62,7 @@ int main( int argc, char* argv[] )
 	// Modify this line to set the correct serial port for your PC interface.
 	// The second argument is a path for the log file.  If you leave it 
 	// blank, the log file will appear in the program's working directory.
-	OpenZWave::Driver::Create( "/dev/ttyUSB0", "../../config/", OnNotification, NULL );
+	OpenZWave::Driver::Create( "/dev/ttyUSB0", "../../../config/", OnNotification, NULL );
 	
 	// The driver is a singleton, so once created, you get a pointer to it
 	// from anywhere in your code as follows
