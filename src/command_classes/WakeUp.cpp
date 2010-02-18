@@ -188,27 +188,24 @@ void WakeUp::SetAwake
 	bool _state
 )
 {
-	if( m_awake != _state )
+	m_awake = _state;
+	if( m_awake )
 	{
-		m_awake = _state;
-		if( m_awake )
+		// If the device is marked for polling, request the current state
+		if( m_pollRequired )
 		{
-			// Device has woken up
-
-			// If the device is marked for polling, request the current state
-			if( m_pollRequired )
+			if( Node* node = GetNode() )
 			{
-				if( Node* node = GetNode() )
-				{
-					node->RequestState();
-				}
-				m_pollRequired = false;
+				node->RequestState();
 			}
-				
-			// Send all pending messages
-			SendPending();
+			m_pollRequired = false;
 		}
+			
+		// Send all pending messages
+		SendPending();
 	}
+
+	Log::Write( "Node %d has been marked as %s", GetNodeId(), m_awake ? "awake" : "asleep" );
 }
 
 //-----------------------------------------------------------------------------

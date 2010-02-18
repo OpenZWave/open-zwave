@@ -115,6 +115,7 @@ bool SwitchToggleMultilevel::SetValue
 	msg->Append( GetCommandClassId() );
 	msg->Append( SwitchToggleMultilevelCmd_Set );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	Driver::Get()->SendMsg( msg );
 	return true;
 }
 

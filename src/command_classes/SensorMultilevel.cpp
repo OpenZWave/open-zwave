@@ -27,6 +27,7 @@
 
 #include "CommandClasses.h"
 #include "SensorMultilevel.h"
+#include "MultiInstance.h"
 #include "Defs.h"
 #include "Msg.h"
 #include "Node.h"
@@ -53,6 +54,7 @@ void SensorMultilevel::RequestState
 (
 )
 {
+	// Instance 0
 	Msg* msg = new Msg( "SensorMultilevelCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 	msg->Append( GetNodeId() );
 	msg->Append( 2 );
@@ -60,6 +62,29 @@ void SensorMultilevel::RequestState
 	msg->Append( SensorMultilevelCmd_Get );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 	Driver::Get()->SendMsg( msg );
+
+	// Any other instances
+	uint8 numInstances = GetInstances();
+	if( numInstances > 1 )
+	{
+		for( uint8 i=1; i<numInstances; ++i )
+		{
+			Log::Write( "MultiInstance request of SensorMultiLevel_Get on %d, instance %d", GetNodeId(), i );
+			Msg* msg = new Msg( "SensorMultilevelCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+			msg->Append( GetNodeId() );
+			msg->Append( 5 );
+			msg->Append( MultiInstance::StaticGetCommandClassId() );
+			msg->Append( MultiInstance::MultiInstanceCmd_CmdEncap );
+			msg->Append( i );
+			msg->Append( GetCommandClassId() );
+			msg->Append( SensorMultilevelCmd_Get );
+			msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+			Driver::Get()->SendMsg( msg );
+		}
+	}
+	else
+	{
+	}
 }
 
 //-----------------------------------------------------------------------------
