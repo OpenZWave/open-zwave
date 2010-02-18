@@ -11,16 +11,16 @@
 //	This file is part of OpenZWave.
 //
 //	OpenZWave is free software: you can redistribute it and/or modify
-//	it under the terms of the GNU General Public License as published by
+//	it under the terms of the GNU Lesser General Public License as published by
 //	the Free Software Foundation, either version 3 of the License, or
 //	(at your option) any later version.
 //
 //	OpenZWave is distributed in the hope that it will be useful,
 //	but WITHOUT ANY WARRANTY; without even the implied warranty of
 //	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//	GNU General Public License for more details.
+//	GNU Lesser General Public License for more details.
 //
-//	You should have received a copy of the GNU General Public License
+//	You should have received a copy of the GNU Lesser General Public License
 //	along with OpenZWave.  If not, see <http://www.gnu.org/licenses/>.
 //
 //-----------------------------------------------------------------------------
@@ -281,7 +281,9 @@ void Node::UpdateProtocolInfo
 
 	if( !m_listening )
 	{
-		// Device does not always listen, so we need the WakeUp handler
+		// Device does not always listen, so we need the WakeUp handler.  We can't 
+		// wait for the command class list because the request for the command
+		// classes may need to go in the wakeup queue itself!
 		if( CommandClass* pCommandClass = AddCommandClass( WakeUp::StaticGetCommandClassId() ) )
 		{
 			pCommandClass->SetInstances( 1 );
@@ -292,6 +294,28 @@ void Node::UpdateProtocolInfo
 	Msg* msg = new Msg( "Request Node Info", m_nodeId, REQUEST, FUNC_ID_ZW_REQUEST_NODE_INFO, false, true, FUNC_ID_ZW_APPLICATION_UPDATE );
 	msg->Append( m_nodeId );	
 	Driver::Get()->SendMsg( msg ); 
+
+	// All nodes are assumed to be awake until we fail to get a reply to a message.  
+	//
+	// Unfortunately, in the case of FUNC_ID_ZW_REQUEST_NODE_INFO, the PC interface responds with a FAILED
+	// message rather than allowing the request to time out.  This means that we always get a response, even if
+	// the node is actually asleep.  
+	//
+	// To get around this, if the node is non-listening, and flagged as awake, we add a copy of the same request
+	// into its wakeup queue, just in case it is not actually awake.
+	if( !IsListeningDevice() )
+	{
+		if( WakeUp* wakeUp = static_cast<WakeUp*>( GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
+		{
+			msg = new Msg( "Request Node Info", m_nodeId, REQUEST, FUNC_ID_ZW_REQUEST_NODE_INFO, false, true, FUNC_ID_ZW_APPLICATION_UPDATE );
+			msg->Append( m_nodeId );	
+			msg->Finalize();
+
+			Log::Write( "" );
+			Log::Write( "Queuing Wake-Up Command: %s", msg->GetAsString().c_str() );
+			wakeUp->QueueMsg( msg );
+		}
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -335,12 +359,10 @@ void Node::UpdateNodeInfo
 			Log::Write( "  %s", it->second->GetCommandClassName().c_str() );
 		}
 
-		// Get the static configuration from the node
+		// Get the static configuration from the node.
+		// The dynamic state data will have been requested during the SetInstances call above.
 		RequestStatic();
 	}
-
-	// Get the current values from the node
-	RequestState();
 }
 
 //-----------------------------------------------------------------------------
