@@ -59,7 +59,9 @@ static char* const c_modeName[] =
 	"Furnace",
 	"Dry Air",
 	"Moist Air",
-	"Auto Changeover"
+	"Auto Changeover",
+	"Heat Econ",
+	"Cool Econ"
 };
 
 
@@ -126,18 +128,18 @@ bool ThermostatMode::HandleMsg
 				}
 				handled = true;
 			}
-			else if( _data[1] == ThermostatModeCmd_SupportedReport )
+			else if( ThermostatModeCmd_SupportedReport == (ThermostatModeCmd)_data[0] )
 			{
 				// We have received the supported thermostat modes from the Z-Wave device
 				m_supportedModes.clear();
-				for( uint32 i=2; i<_length; ++i )
+				for( uint32 i=1; i<_length; ++i )
 				{
 					for( int32 bit=0; bit<8; ++bit )
 					{
 						if( ( _data[i] & (1<<bit) ) != 0 )
 						{
 							ValueList::Item item;
-							item.m_value = i + bit - 2;
+							item.m_value = (int32)((i-1)<<3) + bit;
 							item.m_label = c_modeName[item.m_value];
 							m_supportedModes.push_back( item );
 						}

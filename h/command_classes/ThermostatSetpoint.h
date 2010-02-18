@@ -56,7 +56,21 @@ namespace OpenZWave
 
 		enum
 		{
-			ThermostatSetpoint_Count = 6
+			ThermostatSetpoint_Unused0	= 0,
+			ThermostatSetpoint_Heating1,
+			ThermostatSetpoint_Cooling1,
+			ThermostatSetpoint_Unused3,
+			ThermostatSetpoint_Unused4,
+			ThermostatSetpoint_Unused5,
+			ThermostatSetpoint_Unused6,
+			ThermostatSetpoint_Furnace,
+			ThermostatSetpoint_DryAir,
+			ThermostatSetpoint_MoistAir,
+			ThermostatSetpoint_AutoChangeover,
+			ThermostatSetpoint_HeatingEcon,
+			ThermostatSetpoint_CoolingEcon,
+			ThermostatSetpoint_AwayHeating,
+			ThermostatSetpoint_Count
 		};
 
 		bool m_supportedSetpoints[ThermostatSetpoint_Count];
