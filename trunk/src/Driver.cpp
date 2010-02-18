@@ -103,9 +103,9 @@ Driver::Driver
 	m_exitEvent( new Event() ),	
 	m_serialPort( new SerialPort() ),
 	m_serialMutex( new Mutex() ),
-	m_sendThread( new Thread() ),	
-	m_sendMutex( new Mutex() ),	
-	m_sendEvent( new Event() ),	
+	m_sendThread( new Thread() ),
+	m_sendMutex( new Mutex() ),
+	m_sendEvent( new Event() ),
 	m_pollThread( new Thread() ),	
 	m_pollMutex( new Mutex() ),
 	m_infoMutex( new Mutex() ),
@@ -572,7 +572,9 @@ bool Driver::ReadMsg
 		case SOF:
 		{
 			// Read the length byte
-			m_serialPort->Read( &buffer[1], 1 );
+		  	m_serialPort->Wait(500); // half a second
+			if (!m_serialPort->Read( &buffer[1], 1 ))
+				break; // can't proceed
 
 			// Read the rest of the frame
 			uint32 bytesRemaining = buffer[1];
