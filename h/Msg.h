@@ -28,6 +28,7 @@
 #ifndef _Msg_H
 #define _Msg_H
 
+#include <cstdio>
 #include <string>
 #include "Defs.h"
 

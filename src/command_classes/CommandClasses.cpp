@@ -54,7 +54,7 @@ using namespace OpenZWave;
 #include "MultiInstance.h"
 #include "MultiInstanceAssociation.h"
 #include "NodeNaming.h"
-#include "PowerLevel.h"
+#include "Powerlevel.h"
 #include "Proprietary.h"
 #include "Protection.h"
 #include "SensorBinary.h"
