@@ -117,6 +117,7 @@ bool Indicator::SetValue
 		msg->Append( IndicatorCmd_Set );
 		msg->Append( value->GetPending() ? 0xff: 0x00 );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		Driver::Get()->SendMsg( msg );
 		return true;
 	}
 

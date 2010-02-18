@@ -131,6 +131,7 @@ bool SwitchAll::SetValue
 		msg->Append( SwitchAllCmd_Set );
 		msg->Append( (uint8)item.m_value );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		Driver::Get()->SendMsg( msg );
 		return true;
 	}
 

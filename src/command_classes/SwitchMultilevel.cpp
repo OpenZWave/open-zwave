@@ -119,6 +119,7 @@ bool SwitchMultilevel::SetValue
 		msg->Append( SwitchMultilevelCmd_Set );
 		msg->Append( value->GetPending() );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		Driver::Get()->SendMsg( msg );
 		return true;
 	}
 
