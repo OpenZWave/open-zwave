@@ -131,7 +131,7 @@ bool ThermostatFanMode::HandleMsg
 						if( ( _data[i] & (1<<bit) ) != 0 )
 						{
 							ValueList::Item item;
-							item.m_value = i + bit - 2;
+							item.m_value = (int32)((i-1)<<3) + bit;
 							item.m_label = c_modeName[item.m_value];
 							m_supportedModes.push_back( item );
 						}

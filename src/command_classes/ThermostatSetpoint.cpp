@@ -49,12 +49,20 @@ enum ThermostatSetpointCmd
 
 static char* const c_setpointName[] = 
 {
-	"Heating #1",
-	"Cooling #1",
+	"Unused 0",
+	"Heating 1",
+	"Cooling 1",
+	"Unused 3",
+	"Unused 4",
+	"Unused 5",
+	"Unused 6",
 	"Furnace",
 	"Dry Air",
 	"Moist Air",
-	"Auto Changeover"
+	"Auto Changeover",
+	"Heating Econ",
+	"Cooling Econ",
+	"Away Heating"
 };
 
 
@@ -133,12 +141,26 @@ bool ThermostatSetpoint::HandleMsg
 				}
 				handled = true;
 			}
-			else if( _data[1] == ThermostatSetpointCmd_SupportedReport )
+			else if( ThermostatSetpointCmd_SupportedReport == (ThermostatSetpointCmd)_data[0] )
 			{
 				// We have received the supported thermostat setpoints from the Z-Wave device
-				for( uint8 i=0; i<ThermostatSetpoint_Count; ++i )
+				uint32 i;
+
+				memset( m_supportedSetpoints, 0, sizeof(bool)*ThermostatSetpoint_Count );			
+				for( i=1; i<_length; ++i )
 				{
-					m_supportedSetpoints[i] = (( _data[2] & (1<<i) ) != 0 );
+					for( int32 bit=0; bit<8; ++bit )
+					{
+						if( ( _data[i] & (1<<bit) ) != 0 )
+						{
+							int32 index = (int32)((i-1)<<3) + bit;
+							m_supportedSetpoints[index] = true;
+						}
+					}
+				}
+
+				for( i=0; i<ThermostatSetpoint_Count; ++i )
+				{
 					if( m_supportedSetpoints[i] )
 					{
 						Value* value = new ValueDecimal( GetNodeId(), GetCommandClassId(), _instance, i, Value::Genre_User, c_setpointName[i], false, "0.0"  );
