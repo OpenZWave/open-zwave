@@ -98,12 +98,12 @@ bool MultiInstance::HandleMsg
 	
 		if( MultiInstanceCmd_CmdEncap == (MultiInstanceCmd)_data[0] )
 		{
-			uint8 instance = _data[1];
+			uint8 instance = _data[1] - 1;
 			uint8 commandClassId = _data[2];
 
 			if( CommandClass* pCommandClass = node->GetCommandClass( commandClassId ) )
 			{
-				Log::Write( "Received a multi-instance encapsulated command from node %d: Command Class %s, Instance=%d", GetNodeId(), pCommandClass->GetCommandClassName().c_str(), instance );
+				Log::Write( "Received a multi-instance encapsulated command from node %d: Command Class %s, Instance=%d", GetNodeId(), pCommandClass->GetCommandClassName().c_str(), instance+1 );
 				pCommandClass->HandleMsg( &_data[3], _length-3, instance );
 			}
 
