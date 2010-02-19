@@ -117,7 +117,7 @@ bool SerialPortImpl::Open
 	for( int i = 0; i < NCCS; i++ )
 		tios.c_cc[i] = 0;
 	tios.c_cc[VMIN] = 0;
-	tios.c_cc[VTIME] = 0;
+	tios.c_cc[VTIME] = 1;
 	switch (_baud)
 	{
 		case 300:

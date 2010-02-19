@@ -130,14 +130,18 @@ bool EventImpl::Wait
 
 			time(&now);
 			abstime.tv_sec = now + _timeout / 1000;
-			abstime.tv_nsec = _timeout % 1000 * 1000;
+			abstime.tv_nsec = _timeout % 1000 * 1000 * 1000;
 			while( !is_signaled )
 			{
 				if( pthread_cond_timedwait( &condition, &lock, &abstime ) == ETIMEDOUT )
+				{
 					result = false;
+					break;
+				}
 				else
+				{
 					result = true;
-				break;
+				}
 			}
 		}
 		else
