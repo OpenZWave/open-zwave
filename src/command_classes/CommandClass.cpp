@@ -36,7 +36,7 @@ using namespace OpenZWave;
 
 static uint8 const	c_sizeMask			= 0x07;
 static uint8 const	c_scaleMask			= 0x18;
-static uint8 const	c_scaleShift		= 0x07;
+static uint8 const	c_scaleShift		= 0x03;
 static uint8 const	c_precisionMask		= 0xe0;
 static uint8 const	c_precisionShift	= 0x05;
 
@@ -108,10 +108,24 @@ float32 CommandClass::ExtractValue
 	}
 
 	uint32 value = 0;
-	for( uint8 i=0; i<size; ++i )
+	uint8 i;
+	for( i=0; i<size; ++i )
 	{
 		value <<= 8;
-		value |= (uint32)_data[i];
+		value |= (uint32)_data[i+1];
+	}
+
+	// Deal with sign extension.  Anything larger than a byte is assumed to be signed.
+	if( _data[1] & 0x80 )
+	{
+		if( size == 2 )
+		{
+			value |= 0xffff0000;
+		}
+		else if( size == 3 )
+		{
+			value |= 0xff000000;
+		}
 	}
 
 	if( precision == 0 )
