@@ -172,12 +172,8 @@ Node::Node
 		pCommandClassNode = pCommandClassNode->NextSibling();
 	}
 
-	// Get the current values from the node.  Polled devices will do this every few
-	// seconds anyway, so we only make the request for non-polled devices.
-	if( !IsPolled() )
-	{
-		RequestState();
-	}
+	// Get the current values from the node.
+	RequestState( false );
 }
 
 //-----------------------------------------------------------------------------
@@ -458,11 +454,12 @@ void Node::RequestInstances
 //-----------------------------------------------------------------------------
 void Node::RequestState
 ( 
+	bool const _poll
 )
 {
 	for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
 	{
-		it->second->RequestState();
+		it->second->RequestState( _poll );
 	}
 }
 

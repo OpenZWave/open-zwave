@@ -55,6 +55,7 @@ enum SwitchMultilevelCmd
 //-----------------------------------------------------------------------------
 void SwitchMultilevel::RequestState
 (
+	bool const _poll
 )
 {
 	Msg* msg = new Msg( "SwitchMultilevelCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );

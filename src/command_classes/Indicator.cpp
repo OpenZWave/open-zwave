@@ -52,6 +52,7 @@ enum IndicatorCmd
 //-----------------------------------------------------------------------------
 void Indicator::RequestState
 (
+	bool const _poll
 )
 {
 	Log::Write( "Requesting the indicator from node %d", GetNodeId() );

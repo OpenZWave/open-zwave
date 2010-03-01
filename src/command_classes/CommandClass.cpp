@@ -74,7 +74,7 @@ void CommandClass::SetInstances
 	m_instances = _instances;
 
 	// Request the state of the instances
-	RequestState();
+	RequestState( false );
 }
 
 //-----------------------------------------------------------------------------

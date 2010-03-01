@@ -53,16 +53,20 @@ enum AssociationCmd
 //-----------------------------------------------------------------------------
 void Association::RequestState
 (
+	bool const _poll
 )
 {
-	// Request all the association groups
-	Msg* msg = new Msg( "Get Association Groupings", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-	msg->Append( GetNodeId() );
-	msg->Append( 2 );
-	msg->Append( GetCommandClassId() );
-	msg->Append( AssociationCmd_GroupingsGet );
-	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	Driver::Get()->SendMsg( msg ); 
+	if( !_poll )
+	{
+		// Request all the association groups
+		Msg* msg = new Msg( "Get Association Groupings", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+		msg->Append( GetNodeId() );
+		msg->Append( 2 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( AssociationCmd_GroupingsGet );
+		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		Driver::Get()->SendMsg( msg );
+	}
 }
 
 //-----------------------------------------------------------------------------

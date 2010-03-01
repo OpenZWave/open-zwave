@@ -51,6 +51,7 @@ enum BatteryCmd
 //-----------------------------------------------------------------------------
 void Battery::RequestState
 (
+	bool const _poll
 )
 {
 	Log::Write( "Requesting the battery level from node %d", GetNodeId() );

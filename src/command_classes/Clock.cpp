@@ -65,6 +65,7 @@ static char* const c_dayNames[] =
 //-----------------------------------------------------------------------------
 void Clock::RequestState
 (
+	bool const _poll
 )
 {
 	Log::Write( "Requesting the clock settings from node %d", GetNodeId() );
