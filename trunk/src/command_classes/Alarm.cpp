@@ -57,6 +57,7 @@ enum
 //-----------------------------------------------------------------------------
 void Alarm::RequestState
 (
+	bool const _poll
 )
 {
 	Log::Write( "Requesting the alarm status from node %d", GetNodeId() );

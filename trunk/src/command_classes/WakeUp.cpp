@@ -79,6 +79,7 @@ WakeUp::~WakeUp
 //-----------------------------------------------------------------------------
 void WakeUp::RequestState
 (
+	bool const _poll
 )
 {
 	// We won't get a response until the device next wakes up
@@ -196,7 +197,7 @@ void WakeUp::SetAwake
 		{
 			if( Node* node = GetNode() )
 			{
-				node->RequestState();
+				node->RequestState( true );
 			}
 			m_pollRequired = false;
 		}

@@ -80,6 +80,7 @@ void ThermostatFanMode::RequestStatic
 //-----------------------------------------------------------------------------
 void ThermostatFanMode::RequestState
 (
+	bool const _poll
 )
 {
 	// Request the current fan mode
@@ -117,12 +118,15 @@ bool ThermostatFanMode::HandleMsg
 				if( ValueList* valueList = static_cast<ValueList*>( store->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
 				{
 					valueList->OnValueChanged( (int32)_data[1] );
+					Log::Write( "Received thermostat fan mode from node %d: %s", GetNodeId(), valueList->GetAsString().c_str() );		
 				}
 				handled = true;
 			}
 			else if( ThermostatFanModeCmd_SupportedReport == (ThermostatFanModeCmd)_data[0] )
 			{
-				// We have received the supported thermostat modes from the Z-Wave device
+				// We have received the supported thermostat fan modes from the Z-Wave device
+				Log::Write( "Received supported thermostat fan modes from node %d", GetNodeId() );		
+
 				m_supportedModes.clear();
 				for( uint32 i=1; i<_length; ++i )
 				{
@@ -134,6 +138,8 @@ bool ThermostatFanMode::HandleMsg
 							item.m_value = (int32)((i-1)<<3) + bit;
 							item.m_label = c_modeName[item.m_value];
 							m_supportedModes.push_back( item );
+
+							Log::Write( "    Added fan mode: %s", c_modeName[item.m_value] );
 						}
 					}
 				}

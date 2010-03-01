@@ -54,6 +54,7 @@ enum SwitchToggleMultilevelCmd
 //-----------------------------------------------------------------------------
 void SwitchToggleMultilevel::RequestState
 (
+	bool const _poll
 )
 {
 	Msg* msg = new Msg( "SwitchToggleMultilevelCmd_StartLevelChange", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );

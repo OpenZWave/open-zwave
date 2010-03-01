@@ -51,6 +51,7 @@ enum SensorBinaryCmd
 //-----------------------------------------------------------------------------
 void SensorBinary::RequestState
 (
+	bool const _poll
 )
 {
 	Msg* msg = new Msg( "SensorBinaryCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );

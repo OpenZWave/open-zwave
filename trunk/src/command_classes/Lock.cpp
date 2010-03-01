@@ -52,6 +52,7 @@ enum LockCmd
 //-----------------------------------------------------------------------------
 void Lock::RequestState
 (
+	bool const _poll
 )
 {
 	Log::Write( "Requesting the lock state from node %d", GetNodeId() );

@@ -51,6 +51,7 @@ enum MeterCmd
 //-----------------------------------------------------------------------------
 void Meter::RequestState
 (
+	bool const _poll
 )
 {
 	Msg* msg = new Msg( "MeterCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );

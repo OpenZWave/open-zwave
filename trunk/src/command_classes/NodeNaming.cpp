@@ -53,16 +53,20 @@ enum NodeNamingCmd
 //-----------------------------------------------------------------------------
 void NodeNaming::RequestState
 (
+	bool const _poll
 )
 {
-	Log::Write( "Requesting the name from node %d", GetNodeId() );
-	Msg* msg = new Msg( "NodeNamingCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-	msg->Append( GetNodeId() );
-	msg->Append( 2 );
-	msg->Append( GetCommandClassId() );
-	msg->Append( NodeNamingCmd_Get );
-	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	Driver::Get()->SendMsg( msg );
+	if( !_poll )
+	{
+		Log::Write( "Requesting the name from node %d", GetNodeId() );
+		Msg* msg = new Msg( "NodeNamingCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+		msg->Append( GetNodeId() );
+		msg->Append( 2 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( NodeNamingCmd_Get );
+		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		Driver::Get()->SendMsg( msg );
+	}
 }
 
 //-----------------------------------------------------------------------------

@@ -52,6 +52,7 @@ enum SensorMultilevelCmd
 //-----------------------------------------------------------------------------
 void SensorMultilevel::RequestState
 (
+	bool const _poll
 )
 {
 	// Any other instances

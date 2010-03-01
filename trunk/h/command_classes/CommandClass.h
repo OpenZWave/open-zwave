@@ -48,7 +48,7 @@ namespace OpenZWave
 		virtual void LoadStatic( TiXmlElement const* _node ){}
 		virtual void SaveStatic( FILE* _file );
 		virtual void RequestStatic(){}	// For static node data
-		virtual void RequestState(){}	// For dynamic node data
+		virtual void RequestState( bool const _poll ){}	// For dynamic node data
 		
 		virtual uint8 const GetCommandClassId()const = 0;		
 		virtual string const GetCommandClassName()const = 0;

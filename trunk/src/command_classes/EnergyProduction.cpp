@@ -59,6 +59,7 @@ static char* const c_energyParameterNames[] =
 //-----------------------------------------------------------------------------
 void EnergyProduction::RequestState
 (
+	bool const _poll
 )
 {
 	// Request each of the production values
