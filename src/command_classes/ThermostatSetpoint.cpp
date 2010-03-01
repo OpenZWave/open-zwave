@@ -67,6 +67,19 @@ static char* const c_setpointName[] =
 
 
 //-----------------------------------------------------------------------------
+// <ThermostatSetpoint::ThermostatSetpoint>
+// Constructor
+//-----------------------------------------------------------------------------
+ThermostatSetpoint::ThermostatSetpoint
+(
+	uint8 const _nodeId
+):
+	CommandClass( _nodeId )
+{
+	memset( m_supportedSetpoints, 0, sizeof(bool)*ThermostatSetpoint_Count );
+}
+
+//-----------------------------------------------------------------------------
 // <ThermostatSetpoint::RequestStatic>
 // Get the static thermostat setpoint details from the device
 //-----------------------------------------------------------------------------
@@ -90,6 +103,7 @@ void ThermostatSetpoint::RequestStatic
 //-----------------------------------------------------------------------------
 void ThermostatSetpoint::RequestState
 (
+	bool const _poll
 )
 {
 	for( uint8 i=0; i<ThermostatSetpoint_Count; ++i )
@@ -138,36 +152,40 @@ bool ThermostatSetpoint::HandleMsg
 
 					value->SetUnits( scale ? "F" : "C" );
 					value->OnValueChanged( temperature );
+
+					Log::Write( "Received thermostat setpoint report from node %d: Setpoint %s = %s%s", GetNodeId(), value->GetLabel().c_str(), value->GetAsString().c_str(), value->GetUnits().c_str() );		
 				}
 				handled = true;
 			}
 			else if( ThermostatSetpointCmd_SupportedReport == (ThermostatSetpointCmd)_data[0] )
 			{
 				// We have received the supported thermostat setpoints from the Z-Wave device
-				uint32 i;
+				Log::Write( "Received supported thermostat setpoints from node %d", GetNodeId() );		
 
+				// Parse the data for the supported setpoints
 				memset( m_supportedSetpoints, 0, sizeof(bool)*ThermostatSetpoint_Count );			
-				for( i=1; i<_length; ++i )
+
+				for( uint32 i=1; i<_length; ++i )
 				{
 					for( int32 bit=0; bit<8; ++bit )
 					{
 						if( ( _data[i] & (1<<bit) ) != 0 )
 						{
+							// Add supported setpoint
 							int32 index = (int32)((i-1)<<3) + bit;
 							m_supportedSetpoints[index] = true;
+
+							Value* value = new ValueDecimal( GetNodeId(), GetCommandClassId(), _instance, index, Value::Genre_User, c_setpointName[index], false, "0.0"  );
+							store->AddValue( value );
+							value->Release();
+
+							Log::Write( "    Added setpoint: %s", c_setpointName[index] );
 						}
 					}
 				}
 
-				for( i=0; i<ThermostatSetpoint_Count; ++i )
-				{
-					if( m_supportedSetpoints[i] )
-					{
-						Value* value = new ValueDecimal( GetNodeId(), GetCommandClassId(), _instance, i, Value::Genre_User, c_setpointName[i], false, "0.0"  );
-						store->AddValue( value );
-						value->Release();
-					}
-				}
+				// Request the current state of all the supported setpoints
+				RequestState( false );
 				handled = true;
 			}
 

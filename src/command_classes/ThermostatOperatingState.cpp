@@ -82,6 +82,7 @@ void ThermostatOperatingState::RequestStatic
 //-----------------------------------------------------------------------------
 void ThermostatOperatingState::RequestState
 (
+	bool const _poll
 )
 {
 	// Request the current mode
@@ -119,12 +120,15 @@ bool ThermostatOperatingState::HandleMsg
 				if( ValueList* valueList = static_cast<ValueList*>( store->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
 				{
 					valueList->OnValueChanged( _data[1] );
+					Log::Write( "Received thermostat operating state from node %d: %s", GetNodeId(), valueList->GetAsString().c_str() );		
 				}
 				handled = true;
 			}
 			else if( ThermostatOperatingStateCmd_SupportedReport == (ThermostatOperatingStateCmd)_data[0] )
 			{
-				// We have received the supported thermostat modes from the Z-Wave device
+				// We have received the supported thermostat operating states from the Z-Wave device
+				Log::Write( "Received supported thermostat operating states from node %d", GetNodeId() );		
+
 				m_supportedStates.clear();
 				for( uint32 i=1; i<_length; ++i )
 				{
@@ -136,6 +140,8 @@ bool ThermostatOperatingState::HandleMsg
 							item.m_value = (int32)((i-1)<<3) + bit;
 							item.m_label = c_stateName[item.m_value];
 							m_supportedStates.push_back( item );
+
+							Log::Write( "    Added operating state: %s", c_stateName[item.m_value] );
 						}
 					}
 				}

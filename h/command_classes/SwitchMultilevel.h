@@ -52,7 +52,7 @@ namespace OpenZWave
 		void EnableLevelChange( bool const _bState );
 
 		// From CommandClass
-		virtual void RequestState();
+		virtual void RequestState( bool const _poll );
 		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }
 		virtual string const GetCommandClassName()const{ return StaticGetCommandClassName(); }
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 0 );

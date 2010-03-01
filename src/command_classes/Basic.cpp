@@ -53,6 +53,7 @@ enum BasicCmd
 //-----------------------------------------------------------------------------
 void Basic::RequestState
 (
+	bool const _poll
 )
 {
 	Log::Write( "Requesting the basic level from node %d", GetNodeId() );

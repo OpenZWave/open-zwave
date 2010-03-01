@@ -88,6 +88,7 @@ using namespace OpenZWave;
 ////-----------------------------------------------------------------------------
 //void ClimateControlSchedule::RequestState
 //(
+//	  bool const _poll
 //)
 //{
 //	Msg* msg = new Msg( "ScheduleChangedGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );

@@ -1365,7 +1365,7 @@ void Driver::PollThreadProc()
 
 					if( requestState )
 					{
-						node->RequestState();
+						node->RequestState( true );
 					}
 				}
 			}

@@ -38,21 +38,21 @@ namespace OpenZWave
 	{
 	public:
 		static CommandClass* Create( uint8 const _nodeId ){ return new ThermostatSetpoint( _nodeId ); }
-		virtual ~ThermostatSetpoint(){ memset( m_supportedSetpoints, 0, sizeof(m_supportedSetpoints) ); } 
+		virtual ~ThermostatSetpoint(){} 
 
 		static uint8 const StaticGetCommandClassId(){ return 0x43; }		
 		static string const StaticGetCommandClassName(){ return "COMMAND_CLASS_THERMOSTAT_SETPOINT"; }
 
 		// From CommandClass
 		virtual void RequestStatic();
-		virtual void RequestState();
+		virtual void RequestState( bool const _poll );
 		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }
 		virtual string const GetCommandClassName()const{ return StaticGetCommandClassName(); }
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 0 );
 		virtual bool SetValue( Value const& _value );
 
 	private:
-		ThermostatSetpoint( uint8 const _nodeId ): CommandClass( _nodeId ){}
+		ThermostatSetpoint( uint8 const _nodeId );
 
 		enum
 		{

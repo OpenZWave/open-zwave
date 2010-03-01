@@ -57,16 +57,20 @@ enum
 //-----------------------------------------------------------------------------
 void AssociationCommandConfiguration::RequestState
 (
+	bool const _poll
 )
 {
-	Log::Write( "Requesting the AssociationCommandConfiguration status from node %d", GetNodeId() );
-	Msg* msg = new Msg( "AssociationCommandConfigurationCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-	msg->Append( GetNodeId() );
-	msg->Append( 2 );
-	msg->Append( GetCommandClassId() );
-	msg->Append( AssociationCommandConfigurationCmd_Get );
-	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	Driver::Get()->SendMsg( msg );
+	if( !_poll )
+	{
+		Log::Write( "Requesting the AssociationCommandConfiguration status from node %d", GetNodeId() );
+		Msg* msg = new Msg( "AssociationCommandConfigurationCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+		msg->Append( GetNodeId() );
+		msg->Append( 2 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( AssociationCommandConfigurationCmd_Get );
+		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		Driver::Get()->SendMsg( msg );
+	}
 }
 
 //-----------------------------------------------------------------------------

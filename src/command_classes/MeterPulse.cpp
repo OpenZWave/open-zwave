@@ -51,6 +51,7 @@ enum MeterPulseCmd
 //-----------------------------------------------------------------------------
 void MeterPulse::RequestState
 (
+	bool const _poll
 )
 {
 	Log::Write( "Requesting the meter pulse count from node %d", GetNodeId() );
