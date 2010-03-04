@@ -165,7 +165,7 @@ bool ThermostatSetpoint::HandleMsg
 				// Parse the data for the supported setpoints
 				memset( m_supportedSetpoints, 0, sizeof(bool)*ThermostatSetpoint_Count );			
 
-				for( uint32 i=1; i<_length; ++i )
+				for( uint32 i=1; i<_length-1; ++i )
 				{
 					for( int32 bit=0; bit<8; ++bit )
 					{
@@ -173,13 +173,16 @@ bool ThermostatSetpoint::HandleMsg
 						{
 							// Add supported setpoint
 							int32 index = (int32)((i-1)<<3) + bit;
-							m_supportedSetpoints[index] = true;
+							if( index < ThermostatSetpoint_Count )
+							{
+								m_supportedSetpoints[index] = true;
 
-							Value* value = new ValueDecimal( GetNodeId(), GetCommandClassId(), _instance, index, Value::Genre_User, c_setpointName[index], false, "0.0"  );
-							store->AddValue( value );
-							value->Release();
+								Value* value = new ValueDecimal( GetNodeId(), GetCommandClassId(), _instance, index, Value::Genre_User, c_setpointName[index], false, "0.0"  );
+								store->AddValue( value );
+								value->Release();
 
-							Log::Write( "    Added setpoint: %s", c_setpointName[index] );
+								Log::Write( "    Added setpoint: %s", c_setpointName[index] );
+							}
 						}
 					}
 				}

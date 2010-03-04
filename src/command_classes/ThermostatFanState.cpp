@@ -126,7 +126,7 @@ bool ThermostatFanState::HandleMsg
 				Log::Write( "Received supported thermostat fan states from node %d", GetNodeId() );		
 
 				m_supportedStates.clear();
-				for( uint32 i=1; i<_length; ++i )
+				for( uint32 i=1; i<_length-1; ++i )
 				{
 					for( int32 bit=0; bit<8; ++bit )
 					{
