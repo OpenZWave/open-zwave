@@ -360,7 +360,7 @@ void Node::UpdateNodeInfo
 		RequestStatic();
 	}
 
-	RequestState( false );
+	//RequestState( false );
 }
 
 //-----------------------------------------------------------------------------
