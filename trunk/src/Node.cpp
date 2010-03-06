@@ -359,8 +359,10 @@ void Node::UpdateNodeInfo
 		// The dynamic state data will have been requested during the SetInstances call above.
 		RequestStatic();
 	}
-
-	//RequestState( false );
+	else
+	{
+		RequestState( false );
+	}
 }
 
 //-----------------------------------------------------------------------------
