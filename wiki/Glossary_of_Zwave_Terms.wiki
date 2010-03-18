@@ -1,4 +1,4 @@
-*Association* - The linking together of two nodes (units) so that one node will send information to the other node automatically when a value or level changes. The node doing the sending is the source and the node receiving the information is the destination.
+*Association* - The linking together of two nodes (units) so that one node will send information to the other node automatically when a value or level changes. The node doing the sending is the source and the node receiving the information is the target node.
 
 *Group* - Nodes/Modules that are put into a logical group will collectively operate so when a command is sent to the group such as "turn on", all the modules that are in that group will respond and turn on together. Dimmers will return to their previous level (varies from module to module), and basic binary switches will either turn on or off.
 
