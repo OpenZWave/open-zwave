@@ -1169,12 +1169,52 @@ void Driver::HandleApplicationCommandHandlerRequest
 )
 {
 	uint8 nodeId = _data[3];
-	SetNodeAwake( nodeId );
+	uint8 ClassId = _data[5];
+	uint8 ClassIdMinor = _data[6];
+	uint8 ValueFromDevice = _data[7];
+	CommandClass* pfnDeviceEventVectorClass;
+	uint8 StatusData[10];
 
-	if( m_nodes[nodeId] )
+
+	SetNodeAwake( nodeId );
+   
+	
+	switch (ClassId)
 	{
-		m_nodes[nodeId]->ApplicationCommandHandler( _data );
-	}
+		case COMMAND_CLASS_BASIC:
+			
+			switch (ClassIdMinor)
+			{
+			   	case BASIC_SET:
+					//get the class function pointer
+					pfnDeviceEventVectorClass = CommandClasses::GetMasterCommandClass(ClassId,nodeId) ;
+					StatusData[0] = 0x01; StatusData[1]=ValueFromDevice;
+					pfnDeviceEventVectorClass->HandleMsg( StatusData,0x02,0x00);
+					break;
+				
+				case BASIC_REPORT:
+					break;
+			}
+			break;
+
+		case COMMAND_CLASS_HAIL:
+			
+			pfnDeviceEventVectorClass = CommandClasses::GetMasterCommandClass(ClassId,nodeId) ;
+			StatusData[0] = 0x01; StatusData[1]=ValueFromDevice;
+			pfnDeviceEventVectorClass->HandleMsg( StatusData,0x02,0x00);
+			break;
+		
+		case COMMAND_CLASS_APPLICATION_STATUS:
+			break;	//TODO: Test this class function or implement
+
+		default:
+			
+			if( m_nodes[nodeId] )
+		 	{
+				m_nodes[nodeId]->ApplicationCommandHandler( _data );
+				break;
+			}
+	 }
 }
 
 //-----------------------------------------------------------------------------
