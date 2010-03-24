@@ -118,6 +118,22 @@ CommandClass* CommandClasses::CreateCommandClass
 }
 
 //-----------------------------------------------------------------------------
+//	<CommandClasses::GetMasterCommandClass>
+//	Create a command class object from the master class index
+//-----------------------------------------------------------------------------
+ CommandClass* CommandClasses::GetMasterCommandClass
+(
+	uint8 const _commandClassId,
+	uint8 const _nodeId	  //NOTE:_nodeId is passed through this method as it is used later
+)
+{
+	// Get a pointer from the master command list that is hard generated in code, not the dynamic node related command list
+	pfnCreateCommandClass_t DeviceRequestVector = Get().m_commandClassCreators[_commandClassId];
+	return DeviceRequestVector(_nodeId);
+}
+
+
+//-----------------------------------------------------------------------------
 //	<CommandClasses::RegisterCommandClasses>
 //	Register all our implemented command classes
 //-----------------------------------------------------------------------------
