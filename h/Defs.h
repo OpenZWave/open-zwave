@@ -245,4 +245,12 @@ namespace OpenZWave
 #define UPDATE_STATE_NODE_INFO_REQ_FAILED		0x81
 #define UPDATE_STATE_NODE_INFO_RECEIVED			0x84
 
+//Device request related
+#define BASIC_SET								0x01
+#define BASIC_REPORT							0x03
+
+#define COMMAND_CLASS_BASIC						0x20
+#define COMMAND_CLASS_APPLICATION_STATUS 		0x22
+#define COMMAND_CLASS_HAIL						0x82
+
 #endif // _Defs_H
