@@ -1187,9 +1187,11 @@ void Driver::HandleApplicationCommandHandlerRequest
 			{
 			   	case BASIC_SET:
 					//get the class function pointer
-					pfnDeviceEventVectorClass = CommandClasses::GetMasterCommandClass(ClassId,nodeId) ;
-					StatusData[0] = 0x01; StatusData[1]=ValueFromDevice;
-					pfnDeviceEventVectorClass->HandleMsg( StatusData,0x02,0x00);
+					if (pfnDeviceEventVectorClass = CommandClasses::CreateCommandClass(ClassId,nodeId) );
+					{
+						StatusData[0] = 0x01; StatusData[1]=ValueFromDevice;
+						pfnDeviceEventVectorClass->HandleMsg( StatusData,0x02,0x00);
+					}
 					break;
 				
 				case BASIC_REPORT:
@@ -1199,9 +1201,11 @@ void Driver::HandleApplicationCommandHandlerRequest
 
 		case COMMAND_CLASS_HAIL:
 			
-			pfnDeviceEventVectorClass = CommandClasses::GetMasterCommandClass(ClassId,nodeId) ;
-			StatusData[0] = 0x01; StatusData[1]=ValueFromDevice;
-			pfnDeviceEventVectorClass->HandleMsg( StatusData,0x02,0x00);
+			if (pfnDeviceEventVectorClass = CommandClasses::CreateCommandClass(ClassId,nodeId) );
+					{
+					StatusData[0] = 0x01; StatusData[1]=ValueFromDevice;
+					pfnDeviceEventVectorClass->HandleMsg( StatusData,0x02,0x00);
+					}
 			break;
 		
 		case COMMAND_CLASS_APPLICATION_STATUS:
