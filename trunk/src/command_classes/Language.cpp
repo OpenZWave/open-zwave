@@ -33,7 +33,6 @@
 #include "Driver.h"
 #include "Log.h"
 
-#include "ValueStore.h"
 #include "ValueString.h"
 
 using namespace OpenZWave;
@@ -57,20 +56,17 @@ enum
 //-----------------------------------------------------------------------------
 void Language::RequestState
 (
-	bool const _poll
+	uint8 const _instance
 )
 {
-	if( !_poll )
-	{
-		Log::Write( "Requesting the language from node %d", GetNodeId() );
-		Msg* msg = new Msg( "LanguageCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-		msg->Append( GetNodeId() );
-		msg->Append( 2 );
-		msg->Append( GetCommandClassId() );
-		msg->Append( LanguageCmd_Get );
-		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-		Driver::Get()->SendMsg( msg );
-	}
+	Log::Write( "Requesting the language from node %d", GetNodeId() );
+	Msg* msg = new Msg( "LanguageCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+	msg->Append( GetNodeId() );
+	msg->Append( 2 );
+	msg->Append( GetCommandClassId() );
+	msg->Append( LanguageCmd_Get );
+	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	GetDriver()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -81,45 +77,39 @@ bool Language::HandleMsg
 (
 	uint8 const* _data,
 	uint32 const _length,
-	uint32 const _instance	// = 0
+	uint32 const _instance	// = 1
 )
 {
-	if( LanguageCmd_Report == (LanguageCmd)_data[0] )
+	if( Node* node = GetNode() )
 	{
-		Node* node = GetNode();
-		if( node )
+		if( LanguageCmd_Report == (LanguageCmd)_data[0] )
 		{
-			ValueStore* store = node->GetValueStore();
-			if( store )
+			char language[4];
+			char country[3];
+
+			language[0] = _data[1];
+			language[1] = _data[2];
+			language[2] = _data[3];
+			language[3] = 0;
+
+			country[0] = _data[4];
+			country[1] = _data[5];
+			country[2] = 0;
+			
+			ValueString* value;
+
+			if( value = node->GetValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, (uint8)ValueIndex_Language ) )
 			{
-				char language[4];
-				char country[3];
-
-				language[0] = _data[1];
-				language[1] = _data[2];
-				language[2] = _data[3];
-				language[3] = 0;
-
-				country[0] = _data[4];
-				country[1] = _data[5];
-				country[2] = 0;
-				
-				ValueString* value;
-
-				if( value = static_cast<ValueString*>( store->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, (uint8)ValueIndex_Language ) ) ) )
-				{
-					value->OnValueChanged( language );
-				}
-
-				if( value = static_cast<ValueString*>( store->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, (uint8)ValueIndex_Country ) ) ) )
-				{
-					value->OnValueChanged( country );
-				}
-				node->ReleaseValueStore();
-
-				Log::Write( "Received Language report from node %d: Language=%s, Country=%s", GetNodeId(), language, country );
-				return true;
+				value->OnValueChanged( language );
 			}
+
+			if( value = node->GetValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, (uint8)ValueIndex_Country ) )
+			{
+				value->OnValueChanged( country );
+			}
+
+			Log::Write( "Received Language report from node %d: Language=%s, Country=%s", GetNodeId(), language, country );
+			return true;
 		}
 	}
 
@@ -135,24 +125,10 @@ void Language::CreateVars
 	uint8 const _instance
 )
 {
-	Node* node = GetNode();
-	if( node )
+	if( Node* node = GetNode() )
 	{
-		ValueStore* store = node->GetValueStore();
-		if( store )
-		{
-			Value* value;
-			
-			value = new ValueString( GetNodeId(), GetCommandClassId(), _instance, (uint8)ValueIndex_Language, Value::Genre_System, "Language", false, ""  );
-			store->AddValue( value );
-			value->Release();
-
-			value = new ValueString( GetNodeId(), GetCommandClassId(), _instance, (uint8)ValueIndex_Country, Value::Genre_System, "Country", false, ""  );
-			store->AddValue( value );
-			value->Release();
-
-			node->ReleaseValueStore();
-		}
+		node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, (uint8)ValueIndex_Language, "Language", "", false, ""  );
+		node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, (uint8)ValueIndex_Country, "Country", "", false, ""  );
 	}
 }
 

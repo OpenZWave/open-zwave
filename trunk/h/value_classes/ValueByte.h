@@ -2,7 +2,7 @@
 //
 //	ValueByte.h
 //
-//	Base class for all OpenZWave Value Classes
+//	Represents an 8-bit value
 //
 //	Copyright (c) 2010 Mal Lansell <openzwave@lansell.org>
 //
@@ -42,21 +42,15 @@ namespace OpenZWave
 	class ValueByte: public Value
 	{
 	public:
-		ValueByte( uint8 const _nodeId, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, uint32 const _genre, string const& _label, bool const _bReadOnly, uint8 const _value );
-		ValueByte( uint8 const _nodeId, TiXmlElement* _valueElement );
+		ValueByte( uint8 const _driverId, uint8 const _nodeId, ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, string const& _label, string const& _units, bool const _readOnly, uint8 const _value );
+		ValueByte( uint8 const _driverId, uint8 const _nodeId, TiXmlElement* _valueElement );
 		virtual ~ValueByte(){}
 
 		bool Set( uint8 const _value );
 		void OnValueChanged( uint8 const _value );
 
-		static uint8 const StaticGetValueTypeId(){ return 0x02; }
-		static string const StaticGetValueTypeName(){ return "VALUE_BYTE"; }
-
 		// From Value
 		virtual void WriteXML( TiXmlElement* _valueElement );
-		virtual uint8 const GetValueTypeId()const{ return StaticGetValueTypeId(); }
-		virtual string const GetValueTypeName()const{ return StaticGetValueTypeName(); }
-
 		virtual string GetAsString()const;
 
 		uint8 GetValue()const{ return m_value; }

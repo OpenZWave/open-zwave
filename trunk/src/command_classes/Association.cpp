@@ -53,20 +53,17 @@ enum AssociationCmd
 //-----------------------------------------------------------------------------
 void Association::RequestState
 (
-	bool const _poll
+	uint8 const _instance
 )
 {
-	if( !_poll )
-	{
-		// Request all the association groups
-		Msg* msg = new Msg( "Get Association Groupings", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-		msg->Append( GetNodeId() );
-		msg->Append( 2 );
-		msg->Append( GetCommandClassId() );
-		msg->Append( AssociationCmd_GroupingsGet );
-		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-		Driver::Get()->SendMsg( msg );
-	}
+	// Request all the association groups
+	Msg* msg = new Msg( "Get Association Groupings", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+	msg->Append( GetNodeId() );
+	msg->Append( 2 );
+	msg->Append( GetCommandClassId() );
+	msg->Append( AssociationCmd_GroupingsGet );
+	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	GetDriver()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -77,7 +74,7 @@ bool Association::HandleMsg
 (
 	uint8 const* _data,
 	uint32 const _length,
-	uint32 const _instance	// = 0
+	uint32 const _instance	// = 1
 )
 {
 	bool handled = false;
@@ -103,7 +100,7 @@ bool Association::HandleMsg
 				msg->Append( AssociationCmd_Get );
 				msg->Append( i+1 );
 				msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-				Driver::Get()->SendMsg( msg );
+				GetDriver()->SendMsg( msg );
 			}
 			handled = true;
 		}
@@ -152,7 +149,7 @@ void Association::Set
 	msg->Append( _groupIdx );
 	msg->Append( _targetNodeId );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	Driver::Get()->SendMsg( msg );
+	GetDriver()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -175,6 +172,6 @@ void Association::Remove
 	msg->Append( _groupIdx );
 	msg->Append( _targetNodeId );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	Driver::Get()->SendMsg( msg );
+	GetDriver()->SendMsg( msg );
 }
 

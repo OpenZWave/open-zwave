@@ -36,6 +36,8 @@ class TiXmlElement;
 
 namespace OpenZWave
 {
+	class Node;
+
 	class Group
 	{
 	public:
@@ -44,8 +46,8 @@ namespace OpenZWave
 		Iterator Begin(){ return m_associations.begin(); }
 		Iterator End(){ return m_associations.end(); }
 
-		Group( uint8 const _nodeId, uint8 const _groupIdx );
-		Group( uint8 const _nodeId, TiXmlElement* _valueElement );
+		Group( uint8 const _driverId, uint8 const _nodeId, uint8 const _groupIdx );
+		Group( uint8 const _driverId, uint8 const _nodeId, TiXmlElement* _valueElement );
 		~Group(){}
 
 		void WriteXML( TiXmlElement* _valueElement );
@@ -57,7 +59,10 @@ namespace OpenZWave
 		void OnGroupChanged( uint8 const _numAssociations, uint8 const* _associations );
 
 	private:
+		Node* GetNode()const;
+
 		string		m_label;
+		uint8		m_driverId;
 		uint8		m_nodeId;
 		uint8		m_groupIdx;
 		set<uint8>	m_associations;

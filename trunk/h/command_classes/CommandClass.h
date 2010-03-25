@@ -35,30 +35,37 @@
 
 namespace OpenZWave
 {
+	class Driver;
 	class Msg;
 	class Node;
 	class Value;
+	class ValueID;
 
 	class CommandClass
 	{
 	public:
-		CommandClass( uint8	_nodeId ): m_nodeId( _nodeId ), m_version( 1 ), m_instances( 0 ){}
+		CommandClass( uint8 _driverId, uint8 _nodeId ): m_driverId( _driverId ), m_nodeId( _nodeId ), m_version( 1 ), m_instances( 0 ), m_polledInstances( NULL ){}
 		virtual ~CommandClass(){}
 
 		virtual void LoadStatic( TiXmlElement const* _node ){}
 		virtual void SaveStatic( FILE* _file );
-		virtual void RequestStatic(){}	// For static node data
-		virtual void RequestState( bool const _poll ){}	// For dynamic node data
+		virtual void RequestStatic(){}							// For static node data
+		virtual void RequestState( uint8 const _instance ){}	// For dynamic node data
 		
 		virtual uint8 const GetCommandClassId()const = 0;		
 		virtual string const GetCommandClassName()const = 0;
-		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 0 ) = 0;
+		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 ) = 0;
 		virtual bool SetValue( Value const& _value ){ return false; }
+
+		void Poll();
+		void SetPolled( uint8 const _instance, bool const _state );
+		bool RequiresPolling();
 
 		uint8 GetVersion()const{ return m_version; }
 		uint8 GetInstances()const{ return m_instances; }
 		uint8 GetNodeId()const{ return m_nodeId; }
 		Node* GetNode()const;
+		Driver* GetDriver()const;
 
 		void SetVersion( uint8 const _version ){ m_version = _version; }
 		void SetInstances( uint8 const _instances );
@@ -73,9 +80,11 @@ namespace OpenZWave
 		virtual void CreateVars( uint8 const _instance ){}
 
 	private:
+		uint8	m_driverId;
 		uint8	m_nodeId;
 		uint8	m_version;
 		uint8	m_instances;
+		bool*	m_polledInstances;
 	};
 
 } // namespace OpenZWave

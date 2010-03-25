@@ -35,7 +35,7 @@
 #include "ValueByte.h"
 #include "ValueInt.h"
 #include "ValueList.h"
-#include "ValueStore.h"
+#include "ValueShort.h"
 
 using namespace OpenZWave;
 
@@ -55,70 +55,76 @@ bool Configuration::HandleMsg
 (
 	uint8 const* _data,
 	uint32 const _length,
-	uint32 const _instance	// = 0
+	uint32 const _instance	// = 1
 )
 {
-	if (ConfigurationCmd_Report == (ConfigurationCmd)_data[0])
+	if( Node* node = GetNode() )
 	{
-		// Extract the parameter index and value
-		uint8 parameter = _data[1];
-		uint8 size = _data[2] & 0x07;
-		uint32 paramValue = 0;
-		for( uint8 i=0; i<size; ++i )
+		if (ConfigurationCmd_Report == (ConfigurationCmd)_data[0])
 		{
-			paramValue <<= 8;
-			paramValue |= (uint32)_data[i+3];
-		}
-
-		// Get the value object for this parameter, or create one if it does not yet exist
-		ValueID id( GetNodeId(), GetCommandClassId(), _instance, parameter );
-
-		Node* node = GetNode();
-		if( node )
-		{
-			ValueStore* store = node->GetValueStore();
-			if( store )
+			// Extract the parameter index and value
+			uint8 parameter = _data[1];
+			uint8 size = _data[2] & 0x07;
+			uint32 paramValue = 0;
+			for( uint8 i=0; i<size; ++i )
 			{
-				if( Value* value = store->GetValue( id ) )
+				paramValue <<= 8;
+				paramValue |= (uint32)_data[i+3];
+			}
+
+			char label[16];
+			snprintf( label, 16, "Parameter #%d", parameter );
+
+			switch( size )
+			{
+				case 1:
 				{
-					// Cast the value to the correct type, and change 
-					// its value to the one we just received.
-					uint8 const valueType = value->GetValueTypeId();
-					if( valueType == ValueByte::StaticGetValueTypeId() )
+					if( ValueByte* valueByte = node->GetValueByte( ValueID::ValueGenre_Config, GetCommandClassId(), _instance, parameter ) )
 					{
-						ValueByte* valueByte = static_cast<ValueByte*>( value );
 						valueByte->OnValueChanged( (uint8)paramValue );
 					}
-					else if( valueType == ValueInt::StaticGetValueTypeId() )
+					else
 					{
-						ValueInt* valueInt = static_cast<ValueInt*>( value );
+						// Create a new value
+						node->CreateValueByte( ValueID::ValueGenre_Config, GetCommandClassId(), _instance, parameter, label, "", false, (uint8)paramValue );
+					}
+					break;
+				}
+				case 2:
+				{
+					if( ValueShort* valueShort = node->GetValueShort( ValueID::ValueGenre_Config, GetCommandClassId(), _instance, parameter ) )
+					{
+						valueShort->OnValueChanged( (uint16)paramValue );
+					}
+					else
+					{
+						// Create a new value
+						node->CreateValueShort( ValueID::ValueGenre_Config, GetCommandClassId(), _instance, parameter, label, "", false, (uint16)paramValue );
+					}
+					break;
+				}
+				case 4:
+				{
+					if( ValueInt* valueInt = node->GetValueInt( ValueID::ValueGenre_Config, GetCommandClassId(), _instance, parameter ) )
+					{
 						valueInt->OnValueChanged( paramValue );
 					}
-					else if( valueType == ValueList::StaticGetValueTypeId() )
+					else
 					{
-						ValueList* valueList = static_cast<ValueList*>( value );
-						int32 valueIdx = valueList->GetItemIdxByValue( paramValue );
-						if( valueIdx >= 0 )
-						{
-							valueList->OnValueChanged( valueIdx );
-						}
+						// Create a new value
+						node->CreateValueInt( ValueID::ValueGenre_Config, GetCommandClassId(), _instance, parameter, label, "", false, (int32)paramValue );
 					}
+					break;
 				}
-				else
+				default:
 				{
-					// Create a new value
-					char label[16];
-					snprintf( label, 16, "Parameter #%d", parameter );
-					ValueInt* valueInt = new ValueInt( GetNodeId(), GetCommandClassId(), _instance, parameter, Value::Genre_Config, label, false, paramValue );
-					store->AddValue( valueInt );
+					Log::Write( "Invalid size of %d bytes for configuration parameter %d", size, parameter );
 				}
-
-				node->ReleaseValueStore();
 			}
-		}
 
-		Log::Write( "Received Configuration report from node %d: Parameter=%d, Value=%d", GetNodeId(), parameter, paramValue );
-		return true;
+			Log::Write( "Received Configuration report from node %d: Parameter=%d, Value=%d", GetNodeId(), parameter, paramValue );
+			return true;
+		}
 	}
 
 	return false;
@@ -140,7 +146,7 @@ void Configuration::Get
 	msg->Append( ConfigurationCmd_Get );
 	msg->Append( _parameter );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	Driver::Get()->SendMsg( msg );
+	GetDriver()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------

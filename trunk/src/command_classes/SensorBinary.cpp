@@ -34,7 +34,6 @@
 #include "Log.h"
 
 #include "ValueBool.h"
-#include "ValueStore.h"
 
 using namespace OpenZWave;
 
@@ -51,7 +50,7 @@ enum SensorBinaryCmd
 //-----------------------------------------------------------------------------
 void SensorBinary::RequestState
 (
-	bool const _poll
+	uint8 const _instance
 )
 {
 	Msg* msg = new Msg( "SensorBinaryCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
@@ -60,7 +59,7 @@ void SensorBinary::RequestState
 	msg->Append( GetCommandClassId() );
 	msg->Append( SensorBinaryCmd_Get );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	Driver::Get()->SendMsg( msg );
+	GetDriver()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -71,26 +70,20 @@ bool SensorBinary::HandleMsg
 (
 	uint8 const* _data,
 	uint32 const _length,
-	uint32 const _instance	// = 0
+	uint32 const _instance	// = 1
 )
 {
-	if (SensorBinaryCmd_Report == (SensorBinaryCmd)_data[0])
+	if( Node* node = GetNode() )
 	{
-		Node* node = GetNode();
-		if( node )
+		if (SensorBinaryCmd_Report == (SensorBinaryCmd)_data[0])
 		{
-			ValueStore* store = node->GetValueStore();
-			if( store )
+			if( ValueBool* value = node->GetValueBool(  ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0 ) )
 			{
-				if( ValueBool* value = static_cast<ValueBool*>( store->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
-				{
-					value->OnValueChanged( _data[1] != 0 );
-				}
-				node->ReleaseValueStore();
-
-				Log::Write( "Received SensorBinary report from node %d: State=%s", GetNodeId(), _data[1] ? "On" : "Off" );
-				return true;
+				value->OnValueChanged( _data[1] != 0 );
 			}
+
+			Log::Write( "Received SensorBinary report from node %d: State=%s", GetNodeId(), _data[1] ? "On" : "Off" );
+			return true;
 		}
 	}
 
@@ -106,18 +99,9 @@ void SensorBinary::CreateVars
 	uint8 const _instance
 )
 {
-	Node* node = GetNode();
-	if( node )
+	if( Node* node = GetNode() )
 	{
-		ValueStore* store = node->GetValueStore();
-		if( store )
-		{
-			Value* value = new ValueBool( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_User, "Sensor", true, false );
-			store->AddValue( value );
-			value->Release();
-
-			node->ReleaseValueStore();
-		}
+		node->CreateValueBool(  ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Sensor", "", true, false );
 	}
 }
 

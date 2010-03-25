@@ -2,7 +2,7 @@
 //
 //	ValueList.cpp
 //
-//	Base class for all OpenZWave Value Classes
+//	Represents a list of items
 //
 //	Copyright (c) 2010 Mal Lansell <openzwave@lansell.org>
 //
@@ -39,17 +39,19 @@ using namespace OpenZWave;
 //-----------------------------------------------------------------------------
 ValueList::ValueList
 (
+	uint8 const _driverId,
 	uint8 const _nodeId,
+	ValueID::ValueGenre const _genre,
 	uint8 const _commandClassId,
 	uint8 const _instance,
 	uint8 const _index,
-	uint32 const _genre,
 	string const& _label,
-	bool const _bReadOnly,
+	string const& _units,
+	bool const _readOnly,
 	vector<Item> const& _items,
 	int32 const _valueIdx
 ):
-	Value( _nodeId, _commandClassId, _instance, _index, _genre, _label, _bReadOnly ),
+	Value( _driverId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_List, _label, _units, _readOnly ),
 	m_items( _items ),
 	m_valueIdx( _valueIdx )
 {
@@ -61,10 +63,11 @@ ValueList::ValueList
 //-----------------------------------------------------------------------------
 ValueList::ValueList
 (
+	uint8 const _driverId,
 	uint8 const _nodeId,
 	TiXmlElement* _valueElement
 ):
-	Value( _nodeId, _valueElement )
+	Value( _driverId, _nodeId, _valueElement )
 {
 	// Read the items
 	TiXmlNode const* pItemNode = _valueElement->FirstChild();
@@ -178,16 +181,17 @@ bool ValueList::SetByValue
 //-----------------------------------------------------------------------------
 void ValueList::OnValueChanged
 (
-	int32 const _valueIdx
+	int32 const _value
 )
 {
-	if( _valueIdx == m_valueIdx )
+	int32 idx = GetItemIdxByValue( _value );
+	if( idx == m_valueIdx )
 	{
 		// Value already set
 		return;
 	}
 
-	m_valueIdx = _valueIdx;
+	m_valueIdx = idx;
 	Value::OnValueChanged();
 }
 

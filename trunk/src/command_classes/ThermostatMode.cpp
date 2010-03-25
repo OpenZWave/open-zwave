@@ -34,7 +34,6 @@
 #include "Log.h"
 
 #include "ValueList.h"
-#include "ValueStore.h"
 
 using namespace OpenZWave;
 
@@ -80,7 +79,7 @@ void ThermostatMode::RequestStatic
 	msg->Append( GetCommandClassId() );
 	msg->Append( ThermostatModeCmd_SupportedGet );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	Driver::Get()->SendMsg( msg );
+	GetDriver()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -89,7 +88,7 @@ void ThermostatMode::RequestStatic
 //-----------------------------------------------------------------------------
 void ThermostatMode::RequestState
 (
-	bool const _poll
+	uint8 const _instance
 )
 {
 	// Request the current mode
@@ -99,7 +98,7 @@ void ThermostatMode::RequestState
 	msg->Append( GetCommandClassId() );
 	msg->Append( ThermostatModeCmd_Get );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	Driver::Get()->SendMsg( msg );
+	GetDriver()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -110,53 +109,46 @@ bool ThermostatMode::HandleMsg
 (
 	uint8 const* _data,
 	uint32 const _length,
-	uint32 const _instance	// = 0
+	uint32 const _instance	// = 1
 )
 {
 	bool handled = false;
-	Node* node = GetNode();
-	if( node )
+	if( Node* node = GetNode() )
 	{
-		ValueStore* store = node->GetValueStore();
-		if( store )
+		if( ThermostatModeCmd_Report == (ThermostatModeCmd)_data[0] )
 		{
-			if( ThermostatModeCmd_Report == (ThermostatModeCmd)_data[0] )
+			// We have received the thermostat mode from the Z-Wave device
+			if( ValueList* valueList = node->GetValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0 ) )
 			{
-				// We have received the thermostat mode from the Z-Wave device
-				if( ValueList* valueList = static_cast<ValueList*>( store->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
-				{
-					valueList->OnValueChanged( _data[1] );
-					Log::Write( "Received thermostat mode from node %d: %s", GetNodeId(), valueList->GetAsString().c_str() );		
-				}
-				handled = true;
+				valueList->OnValueChanged( _data[1] );
+				Log::Write( "Received thermostat mode from node %d: %s", GetNodeId(), valueList->GetAsString().c_str() );		
 			}
-			else if( ThermostatModeCmd_SupportedReport == (ThermostatModeCmd)_data[0] )
+			handled = true;
+		}
+		else if( ThermostatModeCmd_SupportedReport == (ThermostatModeCmd)_data[0] )
+		{
+			// We have received the supported thermostat modes from the Z-Wave device
+			Log::Write( "Received supported thermostat modes from node %d", GetNodeId() );		
+
+			m_supportedModes.clear();
+			for( uint32 i=1; i<_length-1; ++i )
 			{
-				// We have received the supported thermostat modes from the Z-Wave device
-				Log::Write( "Received supported thermostat modes from node %d", GetNodeId() );		
-
-				m_supportedModes.clear();
-				for( uint32 i=1; i<_length-1; ++i )
+				for( int32 bit=0; bit<8; ++bit )
 				{
-					for( int32 bit=0; bit<8; ++bit )
+					if( ( _data[i] & (1<<bit) ) != 0 )
 					{
-						if( ( _data[i] & (1<<bit) ) != 0 )
-						{
-							ValueList::Item item;
-							item.m_value = (int32)((i-1)<<3) + bit;
-							item.m_label = c_modeName[item.m_value];
-							m_supportedModes.push_back( item );
+						ValueList::Item item;
+						item.m_value = (int32)((i-1)<<3) + bit;
+						item.m_label = c_modeName[item.m_value];
+						m_supportedModes.push_back( item );
 
-							Log::Write( "    Added mode: %s", c_modeName[item.m_value] );
-						}
+						Log::Write( "    Added mode: %s", c_modeName[item.m_value] );
 					}
 				}
-
-				CreateVars( _instance );
-				handled = true;
 			}
 
-			node->ReleaseValueStore();
+			CreateVars( _instance );
+			handled = true;
 		}
 	}
 
@@ -172,8 +164,9 @@ bool ThermostatMode::SetValue
 	Value const& _value
 )
 {
-	if( ValueList const* value = static_cast<ValueList const*>(&_value) )
+	if( ValueID::ValueType_List == _value.GetID().GetType() )
 	{
+		ValueList const* value = static_cast<ValueList const*>(&_value);
 		uint8 state = (uint8)value->GetPending().m_value;
 
 		Msg* msg = new Msg( "Set Thermostat Mode", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
@@ -183,7 +176,7 @@ bool ThermostatMode::SetValue
 		msg->Append( ThermostatModeCmd_Set );
 		msg->Append( state );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-		Driver::Get()->SendMsg( msg );
+		GetDriver()->SendMsg( msg );
 		return true;
 	}
 
@@ -204,19 +197,8 @@ void ThermostatMode::CreateVars
 		return;
 	}
 
-	Node* node = GetNode();
-	if( node )
+	if( Node* node = GetNode() )
 	{
-		ValueStore* store = node->GetValueStore();
-		if( store )
-		{
-			Value* value;
-			
-			value = new ValueList( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_User, "Mode", false, m_supportedModes, 0 );
-			store->AddValue( value );
-			value->Release();
-
-			node->ReleaseValueStore();
-		}
+		node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Mode", "", false, m_supportedModes, m_supportedModes[0].m_value );
 	}
 }

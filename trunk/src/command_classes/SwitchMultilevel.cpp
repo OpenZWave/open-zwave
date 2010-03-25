@@ -34,7 +34,6 @@
 #include "Log.h"
 
 #include "ValueByte.h"
-#include "ValueStore.h"
 
 using namespace OpenZWave;
 
@@ -55,7 +54,7 @@ enum SwitchMultilevelCmd
 //-----------------------------------------------------------------------------
 void SwitchMultilevel::RequestState
 (
-	bool const _poll
+	uint8 const _instance
 )
 {
 	Msg* msg = new Msg( "SwitchMultilevelCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
@@ -64,7 +63,7 @@ void SwitchMultilevel::RequestState
 	msg->Append( GetCommandClassId() );
 	msg->Append( SwitchMultilevelCmd_Get );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	Driver::Get()->SendMsg( msg );
+	GetDriver()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -75,26 +74,20 @@ bool SwitchMultilevel::HandleMsg
 (
 	uint8 const* _data,
 	uint32 const _length,
-	uint32 const _instance	// = 0
+	uint32 const _instance	// = 1
 )
 {
-	if (SwitchMultilevelCmd_Report == (SwitchMultilevelCmd)_data[0])
+	if( Node* node = GetNode() )
 	{
-		Node* node = GetNode();
-		if( node )
+		if( SwitchMultilevelCmd_Report == (SwitchMultilevelCmd)_data[0] )
 		{
-			ValueStore* store = node->GetValueStore();
-			if( store )
+			if( ValueByte* value = node->GetValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0 ) )
 			{
-				if( ValueByte* value = static_cast<ValueByte*>( store->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
-				{
-					value->OnValueChanged( _data[1] );
-				}
-				node->ReleaseValueStore();
-
-				Log::Write( "Received SwitchMultiLevel report from node %d: level=%d", GetNodeId(), _data[1] );
-				return true;
+				value->OnValueChanged( _data[1] );
 			}
+
+			Log::Write( "Received SwitchMultiLevel report from node %d: level=%d", GetNodeId(), _data[1] );
+			return true;
 		}
 	}
 
@@ -110,8 +103,10 @@ bool SwitchMultilevel::SetValue
 	Value const& _value
 )
 {
-	if( ValueByte const* value = static_cast<ValueByte const*>(&_value) )
+	if( ValueID::ValueType_Byte == _value.GetID().GetType() )
 	{
+		ValueByte const* value = static_cast<ValueByte const*>(&_value);
+
 		Log::Write( "SwitchMultilevel::Set - Setting node %d to level %d", GetNodeId(), value->GetPending() );
 		Msg* msg = new Msg( "Basic Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
 		msg->Append( GetNodeId() );
@@ -120,7 +115,7 @@ bool SwitchMultilevel::SetValue
 		msg->Append( SwitchMultilevelCmd_Set );
 		msg->Append( value->GetPending() );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-		Driver::Get()->SendMsg( msg );
+		GetDriver()->SendMsg( msg );
 		return true;
 	}
 
@@ -197,18 +192,9 @@ void SwitchMultilevel::CreateVars
 	uint8 const _instance
 )
 {
-	Node* node = GetNode();
-	if( node )
+	if( Node* node = GetNode() )
 	{
-		ValueStore* store = node->GetValueStore();
-		if( store )
-		{
-			Value* value = new ValueByte( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_User, "Level", false, 0  );
-			store->AddValue( value );
-			value->Release();
-
-			node->ReleaseValueStore();
-		}
+		node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Level", "", false, 0  );
 	}
 }
 

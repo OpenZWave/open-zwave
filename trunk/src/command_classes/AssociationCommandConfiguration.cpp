@@ -33,21 +33,12 @@
 #include "Driver.h"
 #include "Log.h"
 
-#include "ValueByte.h"
-#include "ValueStore.h"
-
 using namespace OpenZWave;
 
 enum AssociationCommandConfigurationCmd
 {
 	AssociationCommandConfigurationCmd_Get	= 0x04,
 	AssociationCommandConfigurationCmd_Report = 0x05
-};
-
-enum
-{
-	ValueIndex_Type	= 0,
-	ValueIndex_Level
 };
 
 
@@ -57,20 +48,17 @@ enum
 //-----------------------------------------------------------------------------
 void AssociationCommandConfiguration::RequestState
 (
-	bool const _poll
+	uint8 const _instance
 )
 {
-	if( !_poll )
-	{
-		Log::Write( "Requesting the AssociationCommandConfiguration status from node %d", GetNodeId() );
-		Msg* msg = new Msg( "AssociationCommandConfigurationCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-		msg->Append( GetNodeId() );
-		msg->Append( 2 );
-		msg->Append( GetCommandClassId() );
-		msg->Append( AssociationCommandConfigurationCmd_Get );
-		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-		Driver::Get()->SendMsg( msg );
-	}
+	Log::Write( "Requesting the AssociationCommandConfiguration status from node %d", GetNodeId() );
+	Msg* msg = new Msg( "AssociationCommandConfigurationCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+	msg->Append( GetNodeId() );
+	msg->Append( 2 );
+	msg->Append( GetCommandClassId() );
+	msg->Append( AssociationCommandConfigurationCmd_Get );
+	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	GetDriver()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -81,16 +69,11 @@ bool AssociationCommandConfiguration::HandleMsg
 (
 	uint8 const* _data,
 	uint32 const _length,
-	uint32 const _instance	// = 0
+	uint32 const _instance	// = 1
 )
 {
 	if (AssociationCommandConfigurationCmd_Report == (AssociationCommandConfigurationCmd)_data[0])
 	{
-		// We have received a report from the Z-Wave device
-		// No known mappings for these values yet
-		uint8 AssociationCommandConfigurationType = _data[1];
-		uint8 AssociationCommandConfigurationLevel = _data[2];
-		Log::Write( "Received AssociationCommandConfiguration report from node %d: type=%d, level=%d", GetNodeId(), AssociationCommandConfigurationType, AssociationCommandConfigurationLevel );
 		return true;
 	}
 	return false;
@@ -105,24 +88,5 @@ void AssociationCommandConfiguration::CreateVars
 	uint8 const _instance
 )
 {
-	Node* node = GetNode();
-	if( node )
-	{
-		ValueStore* store = node->GetValueStore();
-		if( store )
-		{
-			Value* value;
-		
-			value = new ValueByte( GetNodeId(), GetCommandClassId(), _instance, ValueIndex_Type, Value::Genre_System, "AssociationCommandConfiguration Type", true, 0 );
-			store->AddValue( value );
-			value->Release();
-
-			value = new ValueByte( GetNodeId(), GetCommandClassId(), _instance, ValueIndex_Level, Value::Genre_System, "AssociationCommandConfiguration Level", true, 0 );
-			store->AddValue( value );
-			value->Release();
-
-			node->ReleaseValueStore();
-		}
-	}
 }
 

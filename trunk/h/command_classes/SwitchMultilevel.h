@@ -41,7 +41,7 @@ namespace OpenZWave
 			SwitchMultilevelDirection_Down	= 0x40
 		};
 
-		static CommandClass* Create( uint8 const _nodeId ){ return new SwitchMultilevel( _nodeId ); }
+		static CommandClass* Create( uint8 const _driverId, uint8 const _nodeId ){ return new SwitchMultilevel( _driverId, _nodeId ); }
 		virtual ~SwitchMultilevel(){}
 
 		static uint8 const StaticGetCommandClassId(){ return 0x26; }
@@ -52,17 +52,17 @@ namespace OpenZWave
 		void EnableLevelChange( bool const _bState );
 
 		// From CommandClass
-		virtual void RequestState( bool const _poll );
+		virtual void RequestState( uint8 const _instance );
 		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }
 		virtual string const GetCommandClassName()const{ return StaticGetCommandClassName(); }
-		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 0 );
+		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );
 		virtual bool SetValue( Value const& _value );
 
 	protected:
 		virtual void CreateVars( uint8 const _instance );
 
 	private:
-		SwitchMultilevel( uint8 const _nodeId ): CommandClass( _nodeId ){}
+		SwitchMultilevel( uint8 const _driverId, uint8 const _nodeId ): CommandClass( _driverId, _nodeId ){}
 	};
 
 } // namespace OpenZWave

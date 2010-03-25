@@ -35,7 +35,6 @@
 #include "Log.h"
 
 #include "ValueInt.h"
-#include "ValueStore.h"
 
 using namespace OpenZWave;
 
@@ -55,9 +54,10 @@ enum WakeUpCmd
 //-----------------------------------------------------------------------------
 WakeUp::WakeUp
 ( 
+	uint8 const _driverId,
 	uint8 const _nodeId 
 ):
-	CommandClass( _nodeId ), 
+	CommandClass( _driverId, _nodeId ), 
 	m_awake( true ),
 	m_pollRequired( false )
 {
@@ -79,7 +79,7 @@ WakeUp::~WakeUp
 //-----------------------------------------------------------------------------
 void WakeUp::RequestState
 (
-	bool const _poll
+	uint8 const _instance
 )
 {
 	// We won't get a response until the device next wakes up
@@ -89,7 +89,7 @@ void WakeUp::RequestState
 	msg->Append( GetCommandClassId() );
 	msg->Append( WakeUpCmd_IntervalGet );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	Driver::Get()->SendMsg( msg );
+	GetDriver()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -100,40 +100,33 @@ bool WakeUp::HandleMsg
 (
 	uint8 const* _data,
 	uint32 const _length,
-	uint32 const _instance	// = 0
+	uint32 const _instance	// = 1
 )
 {
 	bool handled = false;
 
-	Node* node = GetNode();
-	if( node )
+	if( Node* node = GetNode() )
 	{
-		ValueStore* store = node->GetValueStore();
-		if( store )
-		{
-			if( WakeUpCmd_IntervalReport == (WakeUpCmd)_data[0] )
-			{	
-				uint32 interval = ((uint32)_data[1]) << 16;
-				interval |= (((uint32)_data[2]) << 8);
-				interval |= (uint32)_data[3];
+		if( WakeUpCmd_IntervalReport == (WakeUpCmd)_data[0] )
+		{	
+			uint32 interval = ((uint32)_data[1]) << 16;
+			interval |= (((uint32)_data[2]) << 8);
+			interval |= (uint32)_data[3];
 
-				if( ValueInt* value = static_cast<ValueInt*>( store->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
-				{
-					value->OnValueChanged( (int32)interval );
-				}
-
-				Log::Write( "Received Wakeup Interval report from node %d: Interval=%d", GetNodeId(), interval );
-				handled = true;
-			}
-			else if( WakeUpCmd_Notification == (WakeUpCmd)_data[0] )
-			{	
-				// The device is awake.
-				Log::Write( "Received Wakeup Notification from node %d", GetNodeId() );
-				SetAwake( true );				
-				handled = true;
+			if( ValueInt* value = node->GetValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 0 ) )
+			{
+				value->OnValueChanged( (int32)interval );
 			}
 
-			node->ReleaseValueStore();
+			Log::Write( "Received Wakeup Interval report from node %d: Interval=%d", GetNodeId(), interval );
+			handled = true;
+		}
+		else if( WakeUpCmd_Notification == (WakeUpCmd)_data[0] )
+		{	
+			// The device is awake.
+			Log::Write( "Received Wakeup Notification from node %d", GetNodeId() );
+			SetAwake( true );				
+			handled = true;
 		}
 	}
 
@@ -149,8 +142,10 @@ bool WakeUp::SetValue
 	Value const& _value
 )
 {
-	if( ValueInt const* value = static_cast<ValueInt const*>(&_value) )
+	if( ValueID::ValueType_Int == _value.GetID().GetType() )
 	{
+		ValueInt const* value = static_cast<ValueInt const*>(&_value);
+	
 		Msg* msg = new Msg( "Wakeup Interval Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 
 		msg->Append( GetNodeId() );
@@ -173,7 +168,7 @@ bool WakeUp::SetValue
 		msg->Append( (uint8)( interval & 0xff ) );		
 		msg->Append( GetNodeId() );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-		Driver::Get()->SendMsg( msg );
+		GetDriver()->SendMsg( msg );
 		return true;
 	}
 
@@ -197,7 +192,7 @@ void WakeUp::SetAwake
 		{
 			if( Node* node = GetNode() )
 			{
-				node->RequestState( true );
+				node->Poll();
 			}
 			m_pollRequired = false;
 		}
@@ -239,7 +234,7 @@ void WakeUp::SendPending
 	while( it != m_pendingQueue.end() )
 	{	
 		Msg* msg = *it;
-		Driver::Get()->SendMsg( msg );
+		GetDriver()->SendMsg( msg );
 		it = m_pendingQueue.erase( it );
 	}
 
@@ -252,7 +247,7 @@ void WakeUp::SendPending
 	//msg->Append( GetCommandClassId() );
 	//msg->Append( WakeUpCmd_NoMoreInformation );
 	//msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	//Driver::Get()->SendMsg( msg ); 
+	//GetDriver()->SendMsg( msg ); 
 	
 	//m_bAwake = false;
 }
@@ -266,18 +261,9 @@ void WakeUp::CreateVars
 	uint8 const _instance
 )
 {
-	Node* node = GetNode();
-	if( node )
+	if( Node* node = GetNode() )
 	{
-		ValueStore* store = node->GetValueStore();
-		if( store )
-		{
-			Value* value = new ValueInt( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_System, "Wake-up Interval", false, 0 );
-			store->AddValue( value );
-			value->Release();
-
-			node->ReleaseValueStore();
-		}
+		node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 0, "Wake-up Interval", "Seconds", false, 3600 );
 	}
 }
 

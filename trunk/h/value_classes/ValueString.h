@@ -2,7 +2,7 @@
 //
 //	ValueString.h
 //
-//	Base class for all OpenZWave Value Classes
+//	Represents a string value
 //
 //	Copyright (c) 2010 Mal Lansell <openzwave@lansell.org>
 //
@@ -42,21 +42,15 @@ namespace OpenZWave
 	class ValueString: public Value
 	{
 	public:
-		ValueString( uint8 const _nodeId, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, uint32 const _genre, string const& _label, bool const _bReadOnly, string const& _value );
-		ValueString( uint8 const _nodeId, TiXmlElement* _valueElement );
+		ValueString( uint8 const _driverId, uint8 const _nodeId, ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, string const& _label, string const& _units, bool const _readOnly, string const& _value );
+		ValueString( uint8 const _driverId, uint8 const _nodeId, TiXmlElement* _valueElement );
 		virtual ~ValueString(){}
 
 		bool Set( string const& _value );
 		void OnValueChanged( string const& _value );
 
-		static uint8 const StaticGetValueTypeId(){ return 0x05; }
-		static string const StaticGetValueTypeName(){ return "VALUE_STRING"; }
-
 		// From Value
 		virtual void WriteXML( TiXmlElement* _valueElement );
-		virtual uint8 const GetValueTypeId()const{ return StaticGetValueTypeId(); }
-		virtual string const GetValueTypeName()const{ return StaticGetValueTypeName(); }
-
 		virtual string GetAsString()const{ return m_value; }
 
 		string GetValue()const{ return m_value; }

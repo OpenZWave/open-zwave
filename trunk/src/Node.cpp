@@ -28,6 +28,7 @@
 #include "Node.h"
 #include "Defs.h"
 #include "Group.h"
+#include "Manager.h"
 #include "Driver.h"
 #include "Msg.h"
 #include "Log.h"
@@ -44,9 +45,13 @@
 
 #include "ValueID.h"
 #include "Value.h"
+#include "ValueBool.h"
 #include "ValueByte.h"
+#include "ValueDecimal.h"
 #include "ValueInt.h"
 #include "ValueList.h"
+#include "ValueShort.h"
+#include "ValueString.h"
 #include "ValueStore.h"
 
 using namespace OpenZWave;
@@ -57,10 +62,11 @@ using namespace OpenZWave;
 //-----------------------------------------------------------------------------
 Node::Node
 ( 
+	uint8 const _driverId, 
 	uint8 const _nodeId
 ):
+	m_driverId( _driverId ),
 	m_nodeId( _nodeId ),
-	m_polled( false ),
 	m_protocolInfoReceived( false ),
 	m_nodeInfoReceived( false ),
 	m_values( new ValueStore() ),
@@ -69,7 +75,7 @@ Node::Node
 	m_groups( NULL )
 {
 	// Request the node protocol info
-	Driver::Get()->AddInfoRequest( m_nodeId );
+	GetDriver()->AddInfoRequest( m_nodeId );
 }
 
 //-----------------------------------------------------------------------------
@@ -78,8 +84,10 @@ Node::Node
 //-----------------------------------------------------------------------------
 Node::Node
 ( 
+	uint8 const _driverId, 
 	TiXmlElement* _node	
 ):
+	m_driverId( _driverId ),
 	m_protocolInfoReceived( true ),
 	m_nodeInfoReceived( true ),
 	m_values( new ValueStore() ),
@@ -128,12 +136,6 @@ Node::Node
 		m_listening = !strcmp( str, "True" );
 	}
 
-	str = _node->Attribute( "polled" );
-	if( str )
-	{
-		m_polled = !strcmp( str, "True" );
-	}
-
 	// Create the command classes
 	TiXmlNode const* pCommandClassNode = _node->FirstChild();
 	while( pCommandClassNode )
@@ -173,7 +175,7 @@ Node::Node
 	}
 
 	// Get the current values from the node.
-	RequestState( false );
+	RequestState();
 }
 
 //-----------------------------------------------------------------------------
@@ -213,7 +215,7 @@ void Node::UpdateProtocolInfo
 	m_protocolInfoReceived = true;
 
 	// Remove the protocol info request from the queue
-	Driver::Get()->RemoveInfoRequest();
+	GetDriver()->RemoveInfoRequest();
 
 	// Capabilities
 	m_listening = (( _data[0] & 0x80 ) != 0 );
@@ -289,7 +291,7 @@ void Node::UpdateProtocolInfo
 	// Request the command classes
 	Msg* msg = new Msg( "Request Node Info", m_nodeId, REQUEST, FUNC_ID_ZW_REQUEST_NODE_INFO, false, true, FUNC_ID_ZW_APPLICATION_UPDATE );
 	msg->Append( m_nodeId );	
-	Driver::Get()->SendMsg( msg ); 
+	GetDriver()->SendMsg( msg ); 
 
 	// All nodes are assumed to be awake until we fail to get a reply to a message.  
 	//
@@ -361,7 +363,7 @@ void Node::UpdateNodeInfo
 	}
 	else
 	{
-		RequestState( false );
+	RequestState();
 	}
 }
 
@@ -419,7 +421,7 @@ CommandClass* Node::AddCommandClass
 	}
 
 	// Create the command class object and add it to our map
-	if( CommandClass* pCommandClass = CommandClasses::CreateCommandClass( _commandClassId, m_nodeId ) )
+	if( CommandClass* pCommandClass = CommandClasses::CreateCommandClass( _commandClassId, m_driverId, m_nodeId ) )
 	{
 		m_commandClassMap[_commandClassId] = pCommandClass;
 		return pCommandClass;
@@ -453,17 +455,50 @@ void Node::RequestInstances
 }
 
 //-----------------------------------------------------------------------------
-// <Node::RequestState>
-// Request the current state
+// <Node::RequiresPolling>
+// Returns whether this node should be polled for value state
 //-----------------------------------------------------------------------------
-void Node::RequestState
+bool Node::RequiresPolling
 ( 
-	bool const _poll
 )
 {
 	for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
 	{
-		it->second->RequestState( _poll );
+		if( it->second->RequiresPolling() )
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Node::Poll>
+// Request the current state of dynamic values marked for polling
+//-----------------------------------------------------------------------------
+void Node::Poll
+( 
+)
+{
+	for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
+	{
+		it->second->Poll();
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <Node::RequestState>
+// Request the current state of all dynamic values in the node
+//-----------------------------------------------------------------------------
+void Node::RequestState
+( 
+)
+{
+	for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
+	{
+		// We pass zero to RequestState to get the state of all instances
+		it->second->RequestState( 0 );
 	}
 }
 
@@ -512,34 +547,29 @@ bool Node::SetConfigParam
 {
 	// See if there is a value already created for this parameter.  If there is not, we will
 	// send the command directly via the configuration command class.  If the parameter exists
-	// in the device, its response should cause the creation of a value object for future use.
-	if( ValueStore* store = GetValueStore() )
+	// in the device, the response from the device will cause the creation of a value object for future use.
+	if( ValueByte* valueByte = GetValueByte( ValueID::ValueGenre_Config, Configuration::StaticGetCommandClassId(), 0, _param ) )
 	{
-		ValueID id( m_nodeId, Configuration::StaticGetCommandClassId(), 0, _param );
-		if( Value* value = store->GetValue( id ) )
-		{
-			uint8 const valueType = value->GetValueTypeId();
-			if( valueType == ValueByte::StaticGetValueTypeId() )
-			{
-				ValueByte* valueByte = static_cast<ValueByte*>( value );
-				valueByte->Set( (uint8)_value );
-				return true;
-			}
-			else if( valueType == ValueInt::StaticGetValueTypeId() )
-			{
-				ValueInt* valueInt = static_cast<ValueInt*>( value );
-				valueInt->Set( _value );
-				return true;
-			}
-			else if( valueType == ValueList::StaticGetValueTypeId() )
-			{
-				ValueList* valueList = static_cast<ValueList*>( value );
-				valueList->SetByValue( _value );
-				return true;		
-			}
-		}
+		valueByte->Set( (uint8)_value );
+		return true;
+	}
 
-		ReleaseValueStore();
+	if( ValueShort* valueShort = GetValueShort( ValueID::ValueGenre_Config, Configuration::StaticGetCommandClassId(), 0, _param ) )
+	{
+		valueShort->Set( (uint16)_value );
+		return true;
+	}
+
+	if( ValueInt* valueInt = GetValueInt( ValueID::ValueGenre_Config, Configuration::StaticGetCommandClassId(), 0, _param ) )
+	{
+		valueInt->Set( (int32)_value );
+		return true;
+	}
+
+	if( ValueList* valueList = GetValueList( ValueID::ValueGenre_Config, Configuration::StaticGetCommandClassId(), 0, _param ) )
+	{
+		valueList->SetByValue( (int32)_value );
+		return true;
 	}
 
 	// Failed to find an existing value object representing this 
@@ -552,6 +582,458 @@ bool Node::SetConfigParam
 	}
 
 	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Node::CreateValueID>
+// Helper to create a ValueID
+//-----------------------------------------------------------------------------
+ValueID Node::CreateValueID
+(
+	ValueID::ValueGenre const _genre,
+	uint8 const _commandClassId,
+	uint8 const _instance,
+	uint8 const _valueIndex,
+	ValueID::ValueType const _type
+)
+{
+	return ValueID( m_driverId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _type );
+}
+
+//-----------------------------------------------------------------------------
+// <Node::CreateValueBool>
+// Helper to create a new bool value and add it to the value store
+//-----------------------------------------------------------------------------
+void Node::CreateValueBool
+(
+	ValueID::ValueGenre const _genre,
+	uint8 const _commandClassId,
+	uint8 const _instance,
+	uint8 const _valueIndex,
+	string const& _label,
+	string const& _units,
+	bool const _readOnly,
+	bool const _default
+)
+{
+	Value* value = new ValueBool( m_driverId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _default );
+	ValueStore* store = GetValueStore();
+	store->AddValue( value );
+	value->Release();
+	ReleaseValueStore();
+}
+
+//-----------------------------------------------------------------------------
+// <Node::CreateValueByte>
+// Helper to create a new byte value and add it to the value store
+//-----------------------------------------------------------------------------
+void Node::CreateValueByte
+(
+	ValueID::ValueGenre const _genre,
+	uint8 const _commandClassId,
+	uint8 const _instance,
+	uint8 const _valueIndex,
+	string const& _label,
+	string const& _units,
+	bool const _readOnly,
+	uint8 const _default
+)
+{
+	Value* value = new ValueByte( m_driverId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _default );
+	ValueStore* store = GetValueStore();
+	store->AddValue( value );
+	value->Release();
+	ReleaseValueStore();
+}
+
+//-----------------------------------------------------------------------------
+// <Node::CreateValueDecimal>
+// Helper to create a new decimal value and add it to the value store
+//-----------------------------------------------------------------------------
+void Node::CreateValueDecimal
+(
+	ValueID::ValueGenre const _genre,
+	uint8 const _commandClassId,
+	uint8 const _instance,
+	uint8 const _valueIndex,
+	string const& _label,
+	string const& _units,
+	bool const _readOnly,
+	string const& _default
+)
+{
+	Value* value = new ValueDecimal( m_driverId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _default );
+	ValueStore* store = GetValueStore();
+	store->AddValue( value );
+	value->Release();
+	ReleaseValueStore();
+}
+
+//-----------------------------------------------------------------------------
+// <Node::CreateValueInt>
+// Helper to create a new int value and add it to the value store
+//-----------------------------------------------------------------------------
+void Node::CreateValueInt
+(
+	ValueID::ValueGenre const _genre,
+	uint8 const _commandClassId,
+	uint8 const _instance,
+	uint8 const _valueIndex,
+	string const& _label,
+	string const& _units,
+	bool const _readOnly,
+	int32 const _default
+)
+{
+	Value* value = new ValueInt( m_driverId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _default );
+	ValueStore* store = GetValueStore();
+	store->AddValue( value );
+	value->Release();
+	ReleaseValueStore();
+}
+
+//-----------------------------------------------------------------------------
+// <Node::CreateValueList>
+// Helper to create a new list value and add it to the value store
+//-----------------------------------------------------------------------------
+void Node::CreateValueList
+(
+	ValueID::ValueGenre const _genre,
+	uint8 const _commandClassId,
+	uint8 const _instance,
+	uint8 const _valueIndex,
+	string const& _label,
+	string const& _units,
+	bool const _readOnly,
+	vector<ValueList::Item> const& _items,
+	int32 const _default
+)
+{
+	Value* value = new ValueList( m_driverId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _items, _default );
+	ValueStore* store = GetValueStore();
+	store->AddValue( value );
+	value->Release();
+	ReleaseValueStore();
+}
+
+//-----------------------------------------------------------------------------
+// <Node::CreateValueShort>
+// Helper to create a new short value and add it to the value store
+//-----------------------------------------------------------------------------
+void Node::CreateValueShort
+(
+	ValueID::ValueGenre const _genre,
+	uint8 const _commandClassId,
+	uint8 const _instance,
+	uint8 const _valueIndex,
+	string const& _label,
+	string const& _units,
+	bool const _readOnly,
+	uint16 const _default
+)
+{
+	Value* value = new ValueShort( m_driverId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _default );
+	ValueStore* store = GetValueStore();
+	store->AddValue( value );
+	value->Release();
+	ReleaseValueStore();
+}
+
+//-----------------------------------------------------------------------------
+// <Node::CreateValueString>
+// Helper to create a new string value and add it to the value store
+//-----------------------------------------------------------------------------
+void Node::CreateValueString
+(
+	ValueID::ValueGenre const _genre,
+	uint8 const _commandClassId,
+	uint8 const _instance,
+	uint8 const _valueIndex,
+	string const& _label,
+	string const& _units,
+	bool const _readOnly,
+	string const& _default
+)
+{
+	Value* value = new ValueString( m_driverId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _default );
+	ValueStore* store = GetValueStore();
+	store->AddValue( value );
+	value->Release();
+	ReleaseValueStore();
+}
+
+//-----------------------------------------------------------------------------
+// <Node::GetValue>
+// Get the value object with the specified ID
+//-----------------------------------------------------------------------------
+Value* Node::GetValue
+(
+	ValueID const& _id
+)
+{
+	Value* value = NULL;
+	ValueStore* store = GetValueStore();
+	value = store->GetValue( _id );
+	ReleaseValueStore();
+	return value;
+}
+
+//-----------------------------------------------------------------------------
+// <Node::GetValue>
+// Get the value object with the specified settings
+//-----------------------------------------------------------------------------
+Value* Node::GetValue
+(
+	ValueID::ValueGenre const _genre,
+	uint8 const _commandClassId,
+	uint8 const _instance,
+	uint8 const _valueIndex,
+	ValueID::ValueType const _type
+)
+{
+	Value* value = NULL;
+	ValueStore* store = GetValueStore();
+	value = store->GetValue( CreateValueID( _genre, _commandClassId, _instance, _valueIndex, _type ) );
+	ReleaseValueStore();
+	return value;
+}
+
+//-----------------------------------------------------------------------------
+// <Node::GetValueBool>
+// Get the value object as a ValueBool
+//-----------------------------------------------------------------------------
+ValueBool* Node::GetValueBool
+(
+	ValueID::ValueGenre const _genre,
+	uint8 const _commandClassId,
+	uint8 const _instance,
+	uint8 const _valueIndex
+)
+{
+	return( static_cast<ValueBool*>( GetValue( _genre, _commandClassId, _instance, _valueIndex, ValueID::ValueType_Bool ) ) );
+}
+
+//-----------------------------------------------------------------------------
+// <Node::GetValueByte>
+// Get the value object as a ValueByte
+//-----------------------------------------------------------------------------
+ValueByte* Node::GetValueByte
+(
+	ValueID::ValueGenre const _genre,
+	uint8 const _commandClassId,
+	uint8 const _instance,
+	uint8 const _valueIndex
+)
+{
+	return( static_cast<ValueByte*>( GetValue( _genre, _commandClassId, _instance, _valueIndex, ValueID::ValueType_Byte ) ) );
+}
+
+//-----------------------------------------------------------------------------
+// <Node::GetValueDecimal>
+// Get the value object as a ValueDecimal
+//-----------------------------------------------------------------------------
+ValueDecimal* Node::GetValueDecimal
+(
+	ValueID::ValueGenre const _genre,
+	uint8 const _commandClassId,
+	uint8 const _instance,
+	uint8 const _valueIndex
+)
+{
+	return( static_cast<ValueDecimal*>( GetValue( _genre, _commandClassId, _instance, _valueIndex, ValueID::ValueType_Decimal ) ) );
+}
+
+//-----------------------------------------------------------------------------
+// <Node::GetValueInt>
+// Get the value object as a ValueInt
+//-----------------------------------------------------------------------------
+ValueInt* Node::GetValueInt
+(
+	ValueID::ValueGenre const _genre,
+	uint8 const _commandClassId,
+	uint8 const _instance,
+	uint8 const _valueIndex
+)
+{
+	return( static_cast<ValueInt*>( GetValue( _genre, _commandClassId, _instance, _valueIndex, ValueID::ValueType_Int ) ) );
+}
+
+//-----------------------------------------------------------------------------
+// <Node::GetValueList>
+// Get the value object as a ValueList
+//-----------------------------------------------------------------------------
+ValueList* Node::GetValueList
+(
+	ValueID::ValueGenre const _genre,
+	uint8 const _commandClassId,
+	uint8 const _instance,
+	uint8 const _valueIndex
+)
+{
+	return( static_cast<ValueList*>( GetValue( _genre, _commandClassId, _instance, _valueIndex, ValueID::ValueType_List ) ) );
+}
+
+//-----------------------------------------------------------------------------
+// <Node::GetValueShort>
+// Get the value object as a ValueShort
+//-----------------------------------------------------------------------------
+ValueShort* Node::GetValueShort
+(
+	ValueID::ValueGenre const _genre,
+	uint8 const _commandClassId,
+	uint8 const _instance,
+	uint8 const _valueIndex
+)
+{
+	return( static_cast<ValueShort*>( GetValue( _genre, _commandClassId, _instance, _valueIndex, ValueID::ValueType_Short ) ) );
+}
+
+//-----------------------------------------------------------------------------
+// <Node::GetValueString>
+// Get the value object as a ValueString
+//-----------------------------------------------------------------------------
+ValueString* Node::GetValueString
+(
+	ValueID::ValueGenre const _genre,
+	uint8 const _commandClassId,
+	uint8 const _instance,
+	uint8 const _valueIndex
+)
+{
+	return( static_cast<ValueString*>( GetValue( _genre, _commandClassId, _instance, _valueIndex, ValueID::ValueType_String ) ) );
+}
+
+//-----------------------------------------------------------------------------
+// <Node::GetValueBool>
+// Get the value object as a ValueBool
+//-----------------------------------------------------------------------------
+ValueBool* Node::GetValueBool
+(
+	ValueID const& _id
+)
+{
+	if( ValueID::ValueType_Bool != _id.GetType() )
+	{
+		// Value is not a bool
+		assert(0);
+		return NULL;
+	}
+
+	return( static_cast<ValueBool*>( GetValue( _id ) ) );
+}
+
+//-----------------------------------------------------------------------------
+// <Node::GetValueByte>
+// Get the value object as a ValueByte
+//-----------------------------------------------------------------------------
+ValueByte* Node::GetValueByte
+(
+	ValueID const& _id
+)
+{
+	if( ValueID::ValueType_Byte != _id.GetType() )
+	{
+		// Value is not a byte
+		assert(0);
+		return NULL;
+	}
+
+	return( static_cast<ValueByte*>( GetValue( _id ) ) );
+}
+
+//-----------------------------------------------------------------------------
+// <Node::GetValueDecimal>
+// Get the value object as a ValueDecimal
+//-----------------------------------------------------------------------------
+ValueDecimal* Node::GetValueDecimal
+(
+	ValueID const& _id
+)
+{
+	if( ValueID::ValueType_Decimal != _id.GetType() )
+	{
+		// Value is not a decimal
+		assert(0);
+		return NULL;
+	}
+
+	return( static_cast<ValueDecimal*>( GetValue( _id ) ) );
+}
+
+//-----------------------------------------------------------------------------
+// <Node::GetValueInt>
+// Get the value object as a ValueInt
+//-----------------------------------------------------------------------------
+ValueInt* Node::GetValueInt
+(
+	ValueID const& _id
+)
+{
+	if( ValueID::ValueType_Int != _id.GetType() )
+	{
+		// Value is not an int
+		assert(0);
+		return NULL;
+	}
+
+	return( static_cast<ValueInt*>( GetValue( _id ) ) );
+}
+
+//-----------------------------------------------------------------------------
+// <Node::GetValueList>
+// Get the value object as a ValueList
+//-----------------------------------------------------------------------------
+ValueList* Node::GetValueList
+(
+	ValueID const& _id
+)
+{
+	if( ValueID::ValueType_List != _id.GetType() )
+	{
+		// Value is not a list
+		assert(0);
+		return NULL;
+	}
+
+	return( static_cast<ValueList*>( GetValue( _id ) ) );
+}
+
+//-----------------------------------------------------------------------------
+// <Node::GetValueShort>
+// Get the value object as a ValueShort
+//-----------------------------------------------------------------------------
+ValueShort* Node::GetValueShort
+(
+	ValueID const& _id
+)
+{
+	if( ValueID::ValueType_Short != _id.GetType() )
+	{
+		// Value is not a string
+		assert(0);
+		return NULL;
+	}
+
+	return( static_cast<ValueShort*>( GetValue( _id ) ) );
+}
+
+//-----------------------------------------------------------------------------
+// <Node::GetValueString>
+// Get the value object as a ValueString
+//-----------------------------------------------------------------------------
+ValueString* Node::GetValueString
+(
+	ValueID const& _id
+)
+{
+	if( ValueID::ValueType_String != _id.GetType() )
+	{
+		// Value is not a string
+		assert(0);
+		return NULL;
+	}
+
+	return( static_cast<ValueString*>( GetValue( _id ) ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -575,18 +1057,6 @@ void Node::ReleaseValueStore
 )
 {
 	m_valuesMutex->Release();
-}
-
-//-----------------------------------------------------------------------------
-// <Node::GetValue>
-// Get the value object with the specified ID
-//-----------------------------------------------------------------------------
-Value* Node::GetValue
-(
-	ValueID const& _id
-)const
-{
-	return m_values->GetValue( _id );
 }
 
 //-----------------------------------------------------------------------------
@@ -635,9 +1105,22 @@ void Node::SetNumGroups
 
 	for( i=0; i<m_numGroups; ++i )
 	{
-		m_groups[i] = new Group( m_nodeId, i+1 ); 
+		m_groups[i] = new Group( m_driverId, m_nodeId, i+1 ); 
 	}
 }
+
+//-----------------------------------------------------------------------------
+// <Node::GetDriver>
+// Get a pointer to our driver
+//-----------------------------------------------------------------------------
+Driver* Node::GetDriver
+(
+)const
+{
+	return( Manager::Get()->GetDriver( m_driverId ) );
+}
+
+
 
 
 
