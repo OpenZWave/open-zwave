@@ -1216,7 +1216,6 @@ void Driver::HandleApplicationCommandHandlerRequest
 			if( m_nodes[nodeId] )
 		 	{
 				m_nodes[nodeId]->ApplicationCommandHandler( _data );
-				break;
 			}
 	 }
 }
