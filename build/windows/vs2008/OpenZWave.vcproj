@@ -171,6 +171,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\Manager.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\h\Manager.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\Msg.cpp"
 				>
 			</File>
@@ -339,6 +347,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\value_classes\ValueID.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\h\value_classes\ValueID.h"
 				>
 			</File>
@@ -356,6 +368,14 @@
 			</File>
 			<File
 				RelativePath="..\..\..\h\value_classes\ValueList.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\value_classes\ValueShort.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\h\value_classes\ValueShort.h"
 				>
 			</File>
 			<File

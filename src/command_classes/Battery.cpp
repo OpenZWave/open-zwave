@@ -34,7 +34,6 @@
 #include "Log.h"
 
 #include "ValueByte.h"
-#include "ValueStore.h"
 
 using namespace OpenZWave;
 
@@ -51,7 +50,7 @@ enum BatteryCmd
 //-----------------------------------------------------------------------------
 void Battery::RequestState
 (
-	bool const _poll
+	uint8 const _instance
 )
 {
 	Log::Write( "Requesting the battery level from node %d", GetNodeId() );
@@ -61,7 +60,7 @@ void Battery::RequestState
 	msg->Append( GetCommandClassId() );
 	msg->Append( BatteryCmd_Get );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	Driver::Get()->SendMsg( msg );
+	GetDriver()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -72,7 +71,7 @@ bool Battery::HandleMsg
 (
 	uint8 const* _data,
 	uint32 const _length,
-	uint32 const _instance	// = 0
+	uint32 const _instance	// = 1
 )
 {
 	if (BatteryCmd_Report == (BatteryCmd)_data[0])
@@ -85,22 +84,15 @@ bool Battery::HandleMsg
 			batteryLevel = 0;
 		}
 
-		Node* node = GetNode();
-		if( node )
+		if( Node* node = GetNode() )
 		{
-			ValueStore* store = node->GetValueStore();
-			if( store )
+			if( ValueByte* value = node->GetValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0 ) )
 			{
-				if( ValueByte* value = static_cast<ValueByte*>( store->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
-				{
-					value->OnValueChanged( batteryLevel );
-				}
-
-				Log::Write( "Received Battery report from node %d: level=%d", GetNodeId(), batteryLevel );
-
-				node->ReleaseValueStore();
-				return true;
+				value->OnValueChanged( batteryLevel );
 			}
+
+			Log::Write( "Received Battery report from node %d: level=%d", GetNodeId(), batteryLevel );
+			return true;
 		}
 	}
 	return false;
@@ -115,18 +107,9 @@ void Battery::CreateVars
 	uint8 const _instance
 )
 {
-	Node* node = GetNode();
-	if( node )
+	if( Node* node = GetNode() )
 	{
-		ValueStore* store = node->GetValueStore();
-		if( store )
-		{
-			Value* value = new ValueByte( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_User, "Battery Level", true, 100 );
-			store->AddValue( value );
-			value->Release();
-
-			node->ReleaseValueStore();
-		}
+		node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Battery Level", "%", true, 100 );
 	}
 }
 

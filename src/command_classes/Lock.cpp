@@ -34,7 +34,6 @@
 #include "Log.h"
 
 #include "ValueBool.h"
-#include "ValueStore.h"
 
 using namespace OpenZWave;
 
@@ -52,7 +51,7 @@ enum LockCmd
 //-----------------------------------------------------------------------------
 void Lock::RequestState
 (
-	bool const _poll
+	uint8 const _instance
 )
 {
 	Log::Write( "Requesting the lock state from node %d", GetNodeId() );
@@ -62,7 +61,7 @@ void Lock::RequestState
 	msg->Append( GetCommandClassId() );
 	msg->Append( LockCmd_Get );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	Driver::Get()->SendMsg( msg );
+	GetDriver()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -73,27 +72,21 @@ bool Lock::HandleMsg
 (
 	uint8 const* _data,
 	uint32 const _length,
-	uint32 const _instance	// = 0
+	uint32 const _instance	// = 1
 )
 {
-	if( LockCmd_Report == (LockCmd)_data[0] )
+	if( Node* node = GetNode() )
 	{
-		Node* node = GetNode();
-		if( node )
+		if( LockCmd_Report == (LockCmd)_data[0] )
 		{
-			ValueStore* store = node->GetValueStore();
-			if( store )
+			// We have received a report from the Z-Wave device
+			if( ValueBool* value = node->GetValueBool( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0 ) )
 			{
-				// We have received a report from the Z-Wave device
-				if( ValueBool* value = static_cast<ValueBool*>( store->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
-				{
-					value->OnValueChanged( _data[1] != 0 );
-				}
-				node->ReleaseValueStore();
-
-				Log::Write( "Received Lock report from node %d: Lock is %s", GetNodeId(), _data[1] ? "Locked" : "Unlocked" );
-				return true;
+				value->OnValueChanged( _data[1] != 0 );
 			}
+
+			Log::Write( "Received Lock report from node %d: Lock is %s", GetNodeId(), _data[1] ? "Locked" : "Unlocked" );
+			return true;
 		}
 	}
 
@@ -109,8 +102,10 @@ bool Lock::SetValue
 	Value const& _value
 )
 {
-	if( ValueBool const* value = static_cast<ValueBool const*>(&_value) )
+	if( ValueID::ValueType_Bool == _value.GetID().GetType() )
 	{
+		ValueBool const* value = static_cast<ValueBool const*>(&_value);
+
 		Log::Write( "Lock::Set - Requesting the node %d lock to be %s", GetNodeId(), value->GetPending() ? "Locked" : "Unlocked" );
 		Msg* msg = new Msg( "LockCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 		msg->Append( GetNodeId() );
@@ -119,7 +114,7 @@ bool Lock::SetValue
 		msg->Append( LockCmd_Set );
 		msg->Append( value->GetPending() ? 0xff:0x00 );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-		Driver::Get()->SendMsg( msg );
+		GetDriver()->SendMsg( msg );
 		return true;
 	}
 
@@ -135,18 +130,9 @@ void Lock::CreateVars
 	uint8 const _instance
 )
 {
-	Node* node = GetNode();
-	if( node )
+	if( Node* node = GetNode() )
 	{
-		ValueStore* store = node->GetValueStore();
-		if( store )
-		{
-			Value* value = new ValueBool( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_User, "Locked", false, false );
-			store->AddValue( value );
-			value->Release();
-
-			node->ReleaseValueStore();
-		}
+		node->CreateValueBool( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Locked", "", false, false );
 	}
 }
 

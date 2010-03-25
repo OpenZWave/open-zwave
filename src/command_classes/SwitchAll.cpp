@@ -34,7 +34,6 @@
 #include "Log.h"
 
 #include "ValueList.h"
-#include "ValueStore.h"
 
 using namespace OpenZWave;
 
@@ -62,19 +61,16 @@ static char* const c_switchAllStateName[] =
 //-----------------------------------------------------------------------------
 void SwitchAll::RequestState
 (
-	bool const _poll
+	uint8 const _instance
 )
 {
-	if( !_poll )
-	{
-		Msg* msg = new Msg( "SwitchAllCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-		msg->Append( GetNodeId() );
-		msg->Append( 2 );
-		msg->Append( GetCommandClassId() );
-		msg->Append( SwitchAllCmd_Get );
-		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-		Driver::Get()->SendMsg( msg );
-	}
+	Msg* msg = new Msg( "SwitchAllCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+	msg->Append( GetNodeId() );
+	msg->Append( 2 );
+	msg->Append( GetCommandClassId() );
+	msg->Append( SwitchAllCmd_Get );
+	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	GetDriver()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -85,29 +81,20 @@ bool SwitchAll::HandleMsg
 (
 	uint8 const* _data,
 	uint32 const _length,
-	uint32 const _instance	// = 0
+	uint32 const _instance	// = 1
 )
 {
-	if (SwitchAllCmd_Report == (SwitchAllCmd)_data[0])
+	if( Node* node = GetNode() )
 	{
-		Node* node = GetNode();
-		if( node )
+		if (SwitchAllCmd_Report == (SwitchAllCmd)_data[0])
 		{
-			ValueStore* store = node->GetValueStore();
-			if( store )
+			if( ValueList* value = node->GetValueList(  ValueID::ValueGenre_System, GetCommandClassId(), _instance, 0 ) )
 			{
-				if( ValueList* value = static_cast<ValueList*>( store->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
-				{
-					int32 idx = value->GetItemIdxByValue( (int32)_data[1] );
-					if( idx >= 0 )
-					{
-						value->OnValueChanged( idx );
-						Log::Write( "Received SwitchAll report from node %d: %s", GetNodeId(), value->GetItem().m_label.c_str() );
-					}
-				}
-				node->ReleaseValueStore();
-				return true;
+				value->OnValueChanged( (int32)_data[1] );
+				Log::Write( "Received SwitchAll report from node %d: %s", GetNodeId(), value->GetItem().m_label.c_str() );
 			}
+
+			return true;
 		}
 	}
 
@@ -123,8 +110,9 @@ bool SwitchAll::SetValue
 	Value const& _value
 )
 {
-	if( ValueList const* value = static_cast<ValueList const*>(&_value) )
+	if( ValueID::ValueType_List == _value.GetID().GetType() )
 	{
+		ValueList const* value = static_cast<ValueList const*>(&_value);
 		ValueList::Item const& item = value->GetPending();
 
 		Log::Write( "SwitchAll::Set - %s on node %d", value->GetPending().m_label.c_str(), GetNodeId() );
@@ -135,7 +123,7 @@ bool SwitchAll::SetValue
 		msg->Append( SwitchAllCmd_Set );
 		msg->Append( (uint8)item.m_value );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-		Driver::Get()->SendMsg( msg );
+		GetDriver()->SendMsg( msg );
 		return true;
 	}
 
@@ -185,26 +173,18 @@ void SwitchAll::CreateVars
 	uint8 const _instance
 )
 {
-	Node* node = GetNode();
-	if( node )
+	if( Node* node = GetNode() )
 	{
-		ValueStore* store = node->GetValueStore();
-		if( store )
-		{
-			vector<ValueList::Item> items;
-			for( int i=0; i<4; ++i )
-			{	
-				ValueList::Item item;
-				item.m_label = c_switchAllStateName[i];
-				item.m_value = (i==3) ? 0x000000ff : i;
-				items.push_back( item ); 
-			}
-			Value* value = new ValueList( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_System, "Switch All", false, items, 0 );
-			store->AddValue( value );
-			value->Release();
-
-			node->ReleaseValueStore();
+		vector<ValueList::Item> items;
+		for( int i=0; i<4; ++i )
+		{	
+			ValueList::Item item;
+			item.m_label = c_switchAllStateName[i];
+			item.m_value = (i==3) ? 0x000000ff : i;
+			items.push_back( item ); 
 		}
+
+		node->CreateValueList(  ValueID::ValueGenre_System, GetCommandClassId(), _instance, 0, "Switch All", "", false, items, 0 );
 	}
 }
 

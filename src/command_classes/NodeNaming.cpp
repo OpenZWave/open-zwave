@@ -35,7 +35,6 @@
 #include "Log.h"
 
 #include "ValueStore.h"
-#include "ValueString.h"
 
 using namespace OpenZWave;
 
@@ -53,20 +52,17 @@ enum NodeNamingCmd
 //-----------------------------------------------------------------------------
 void NodeNaming::RequestState
 (
-	bool const _poll
+	uint8 const _instance
 )
 {
-	if( !_poll )
-	{
-		Log::Write( "Requesting the name from node %d", GetNodeId() );
-		Msg* msg = new Msg( "NodeNamingCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-		msg->Append( GetNodeId() );
-		msg->Append( 2 );
-		msg->Append( GetCommandClassId() );
-		msg->Append( NodeNamingCmd_Get );
-		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-		Driver::Get()->SendMsg( msg );
-	}
+	Log::Write( "Requesting the name from node %d", GetNodeId() );
+	Msg* msg = new Msg( "NodeNamingCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+	msg->Append( GetNodeId() );
+	msg->Append( 2 );
+	msg->Append( GetCommandClassId() );
+	msg->Append( NodeNamingCmd_Get );
+	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	GetDriver()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -77,7 +73,7 @@ bool NodeNaming::HandleMsg
 (
 	uint8 const* _data,
 	uint32 const _length,
-	uint32 const _instance	// = 0
+	uint32 const _instance	// = 1
 )
 {
 	if( NodeNamingCmd_Report == (NodeNamingCmd)_data[0] )
@@ -116,17 +112,8 @@ void NodeNaming::CreateVars
 	uint8 const _instance
 )
 {
-	Node* node = GetNode();
-	if( node )
+	if( Node* node = GetNode() )
 	{
-		ValueStore* store = node->GetValueStore();
-		if( store )
-		{
-			Value* value = new ValueString( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_System, "Node Name", false, "Unknown"  );
-			store->AddValue( value );
-			value->Release();
-
-			node->ReleaseValueStore();
-		}
+		node->CreateValueString(  ValueID::ValueGenre_System, GetCommandClassId(), _instance, 0, "Node Name", "", false, "Unknown" );
 	}
 }

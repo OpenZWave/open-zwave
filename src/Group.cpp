@@ -26,6 +26,7 @@
 //-----------------------------------------------------------------------------
 
 #include "Group.h"
+#include "Manager.h"
 #include "Driver.h"
 #include "Node.h"
 #include "Association.h"
@@ -39,9 +40,11 @@ using namespace OpenZWave;
 //-----------------------------------------------------------------------------
 Group::Group
 ( 
+	uint8 const _driverId,
 	uint8 const _nodeId,
 	uint8 const _groupIdx
 ):
+	m_driverId( _driverId ),
 	m_nodeId( _nodeId ),
 	m_groupIdx( _groupIdx )
 {
@@ -56,9 +59,11 @@ Group::Group
 //-----------------------------------------------------------------------------
 Group::Group
 (
+	uint8 const _driverId,
 	uint8 const _nodeId,
 	TiXmlElement* _groupElement
 ):
+	m_driverId( _driverId ),
 	m_nodeId( _nodeId )
 {
 	int intVal;
@@ -124,7 +129,7 @@ void Group::AddNode
 	uint8 const _nodeId
 )
 {
-	if( Node* node = Driver::Get()->GetNode( m_nodeId ) )
+	if( Node* node = GetNode() )
 	{
 		if( Association* cc = static_cast<Association*>( node->GetCommandClass( Association::StaticGetCommandClassId() ) ) )
 		{
@@ -142,7 +147,7 @@ void Group::RemoveNode
 	uint8 const _nodeId
 )
 {
-	if( Node* node = Driver::Get()->GetNode( m_nodeId ) )
+	if( Node* node = GetNode() )
 	{
 		if( Association* cc = static_cast<Association*>( node->GetCommandClass( Association::StaticGetCommandClassId() ) ) )
 		{
@@ -197,17 +202,34 @@ void Group::OnGroupChanged
 	if( notify )
 	{
 		// Send notification that the group contents have changed
-		Driver::Notification* notification = new Driver::Notification();
+		Manager::Notification* notification = new Manager::Notification();
 	
-		notification->m_type = Driver::NotificationType_Group;
-		notification->m_id = ValueID();
-		notification->m_nodeId = m_nodeId;
+		notification->m_type = Manager::NotificationType_Group;
+		notification->m_id = ValueID( m_driverId, m_nodeId, ValueID::ValueGenre_All, 0, 0, 0, ValueID::ValueType_Byte );
 		notification->m_groupIdx = m_groupIdx;
 
-		Driver::Get()->NotifyWatchers( notification ); 
+		Manager::Get()->NotifyWatchers( notification ); 
 		delete notification;
 	}
 }
+
+//-----------------------------------------------------------------------------
+// <Group::GetNode>
+// Get the node to whch this group belongs
+//-----------------------------------------------------------------------------
+Node* Group::GetNode
+(
+)
+const
+{
+	if( Driver* driver = Manager::Get()->GetDriver( m_driverId ) )
+	{
+		return driver->GetNode( m_nodeId );
+	}
+
+	return NULL;
+}
+
 
 
 

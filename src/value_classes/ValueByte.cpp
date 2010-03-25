@@ -39,16 +39,18 @@ using namespace OpenZWave;
 //-----------------------------------------------------------------------------
 ValueByte::ValueByte
 (
+	uint8 const _driverId,
 	uint8 const _nodeId,
+	ValueID::ValueGenre const _genre,
 	uint8 const _commandClassId,
 	uint8 const _instance,
 	uint8 const _index,
-	uint32 const _genre,
 	string const& _label,
-	bool const _bReadOnly,
+	string const& _units,
+	bool const _readOnly,
 	uint8 const _value
 ):
-	Value( _nodeId, _commandClassId, _instance, _index, _genre, _label, _bReadOnly ),
+	Value( _driverId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Byte, _label, _units, _readOnly ),
 	m_value( _value )
 {
 }
@@ -59,10 +61,11 @@ ValueByte::ValueByte
 //-----------------------------------------------------------------------------
 ValueByte::ValueByte
 (
+	uint8 const _driverId,
 	uint8 const _nodeId,
 	TiXmlElement* _valueElement
 ):
-	Value( _nodeId, _valueElement )
+	Value( _driverId, _nodeId, _valueElement )
 {
 	int intVal;
 	if( TIXML_SUCCESS == _valueElement->QueryIntAttribute( "value", &intVal ) )

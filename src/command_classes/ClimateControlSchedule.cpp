@@ -97,7 +97,7 @@ using namespace OpenZWave;
 //	msg->Append( GetCommandClassId() );
 //	msg->Append( ScheduleChangedGet );
 //	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-//	Driver::Get()->SendMsg( msg );
+//	GetDriver()->SendMsg( msg );
 //}
 //
 ////-----------------------------------------------------------------------------
@@ -108,7 +108,7 @@ using namespace OpenZWave;
 //(
 //	uint8 const* _data,
 //	uint32 const _length,
-//	  uint32 const _instance	// = 0
+//	  uint32 const _instance	// = 1
 //	
 //)
 //{

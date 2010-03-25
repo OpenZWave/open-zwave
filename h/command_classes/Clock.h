@@ -35,24 +35,24 @@ namespace OpenZWave
 	class Clock: public CommandClass
 	{
 	public:
-		static CommandClass* Create( uint8 const _nodeId ){ return new Clock( _nodeId ); }
+		static CommandClass* Create( uint8 const _driverId, uint8 const _nodeId ){ return new Clock( _driverId, _nodeId ); }
 		virtual ~Clock(){}
 
 		static uint8 const StaticGetCommandClassId(){ return 0x81; }
 		static string const StaticGetCommandClassName(){ return "COMMAND_CLASS_CLOCK"; }
 
 		// From CommandClass
-		virtual void RequestState( bool const _poll );
+		virtual void RequestState( uint8 const _instance );
 		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }
 		virtual string const GetCommandClassName()const{ return StaticGetCommandClassName(); }
-		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 0 );
+		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );
 		virtual bool SetValue( Value const& _value );
 
 	protected:
 		virtual void CreateVars( uint8 const _instance );
 
 	private:
-		Clock( uint8 const _nodeId ): CommandClass( _nodeId ){}
+		Clock( uint8 const _driverId, uint8 const _nodeId ): CommandClass( _driverId, _nodeId ){}
 	};
 
 } // namespace OpenZWave

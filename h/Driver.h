@@ -45,37 +45,31 @@ namespace OpenZWave
 	class Mutex;
 	class SerialPort;
 	class Thread;
+	class ValueBool;
+	class ValueByte;
+	class ValueDecimal;
+	class ValueInt;
+	class ValueList;
+	class ValueShort;
+	class ValueString;
 
 	class Driver
 	{
-	public:
-		struct Notification;
-		typedef void (*pfnOnNotification_t)( Notification const* _pNotification, void* _context );
-
 	//-----------------------------------------------------------------------------
 	// Construction / Destruction
 	//-----------------------------------------------------------------------------
 	public:
-		static Driver* Create( string const& _serialPortName, string const& _configPath, pfnOnNotification_t _callback, void* _context );
-		static Driver* Get(){ return s_instance; }
-		static void Destroy();
-
-		string const& GetConfigPath()const{ return m_configPath; }
-
-	private:
-		Driver( string const& _serialPortName, string const& _configPath, pfnOnNotification_t _callback, void* _context );
+		Driver( string const& _serialPortName, uint8 const _driverId );
 		virtual ~Driver();
 
+	private:
 		static void DriverThreadEntryPoint( void* _context );
 		void DriverThreadProc();
-
 		bool Init( uint32 _attempts );
 
 		Thread*					m_driverThread;	// Thread for creating and managing the driver worker threads
 		Event*					m_exitEvent;		// Event that will be signalled when the threads should exit
 		bool					m_exit;
-		string					m_configPath;
-		static Driver*			s_instance;
 
 	//-----------------------------------------------------------------------------
 	//	Controller
@@ -87,85 +81,17 @@ namespace OpenZWave
 		bool IsStaticUpdateController()const{ return ((m_capabilities & 0x08) != 0); }
 
 		Node* GetNode( uint8 _nodeId ){ return m_nodes[_nodeId]; }
+		string GetSerialPortName()const{ return m_serialPortName; }
 
 	private:
 		string					m_serialPortName;	// name used to open the serial port
+		uint8					m_driverId;
 		SerialPort*				m_serialPort;
 		Mutex*					m_serialMutex;
 		
 		uint8					m_capabilities;	
 		uint8					m_nodeId;			// PC Controller's Z-Wave node ID
 		Node*					m_nodes[256];		// Z-Wave node details	
-
-
-	//-----------------------------------------------------------------------------
-	//	Notifications
-	//-----------------------------------------------------------------------------
-	public:
-		enum NotificationType 
-		{
-			NotificationType_Value = 0,		// Value changed
-			NotificationType_Group,			// Group (associations) changed
-			NotificationType_NodeAdded,		// Node has been added (to the driver's list)
-			NotificationType_NodeRemoved	// Node has been removed (from the driver's list)
-		};
-
-		struct Notification
-		{
-		public:
-			NotificationType	m_type;
-			ValueID				m_id;
-			uint8				m_nodeId;
-			uint8				m_groupIdx;
-		};
-
-		bool AddWatcher( pfnOnNotification_t watcher, void* _context );
-		bool RemoveWatcher( pfnOnNotification_t watcher, void* _context );
-		void NotifyWatchers( Notification const* _pNotification );
-
-	private:
-		struct Watcher
-		{
-			pfnOnNotification_t	m_callback;
-			void*				m_context;
-
-			Watcher
-			(
-				pfnOnNotification_t _callback,
-				void* _context
-			):
-				m_callback( _callback ),
-				m_context( _context )
-			{
-			}
-		};
-
-		list<Watcher*>	m_watchers;
-
-
-	//-----------------------------------------------------------------------------
-	// Z-Wave commands
-	//-----------------------------------------------------------------------------
-	public:	
-		void ResetController();
-		void SoftReset();
-
-		void RequestNodeNeighborUpdate( uint8 _nodeId );
-		void AssignReturnRoute( uint8 _srcNodeId, uint8 _dstNodeId );
-		
-		void BeginAddNode( bool _bHighpower = false );
-		void BeginAddController( bool _bHighpower = false );
-		void EndAddNode();
-		
-		void BeginRemoveNode();
-		void EndRemoveNode();
-
-		void BeginReplicateController();
-		void EndReplicateController();
-
-		void ReadMemory( uint16 offset );
-
-		void SetConfiguration( uint8 _nodeId, uint8 _parameter, uint32 _value );
 
 	//-----------------------------------------------------------------------------
 	//	Sending Z-Wave messages
@@ -220,8 +146,8 @@ namespace OpenZWave
 	//-----------------------------------------------------------------------------
 	public:
 		void SetPollInterval( int32 _seconds ){ m_pollInterval = _seconds; }
-		void EnablePoll( uint8 const _id );
-		void DisablePoll( uint8 const _id );
+		bool EnablePoll( ValueID const& _id );
+		bool DisablePoll( ValueID const& _id );
 
 	private:
 		static void PollThreadEntryPoint( void* _context );
@@ -239,13 +165,40 @@ namespace OpenZWave
 		void AddInfoRequest( uint8 const _nodeId );
 		void RemoveInfoRequest();
 
-		Value* GetValue( ValueID const& _id );
+		// Helpers for fetching values
+		ValueBool* GetValueBool( ValueID const& _id );
+		ValueByte* GetValueByte( ValueID const& _id );
+		ValueDecimal* GetValueDecimal( ValueID const& _id );
+		ValueInt* GetValueInt( ValueID const& _id );
+		ValueList* GetValueList( ValueID const& _id );
+		ValueShort* GetValueShort( ValueID const& _id );
+		ValueString* GetValueString( ValueID const& _id );
 
 	private:
 		uint8 GetInfoRequest();
 
 		deque<uint8>			m_infoQueue;		// Queue holding nodes that we wish to interogate for setup details
 		Mutex*					m_infoMutex;		// Serialize access to the info queue				
+
+	//-----------------------------------------------------------------------------
+	// Controller commands
+	//-----------------------------------------------------------------------------
+	public:	
+		void ResetController();
+		void SoftReset();
+
+		void RequestNodeNeighborUpdate( uint8 _nodeId );
+		void AssignReturnRoute( uint8 _srcNodeId, uint8 _dstNodeId );
+		
+		void BeginAddNode( bool _bHighpower = false );
+		void BeginAddController( bool _bHighpower = false );
+		void EndAddNode();
+		
+		void BeginRemoveNode();
+		void EndRemoveNode();
+
+		void BeginReplicateController();
+		void EndReplicateController();
 
 	//-----------------------------------------------------------------------------
 	//	Misc

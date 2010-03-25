@@ -1,8 +1,8 @@
 //-----------------------------------------------------------------------------
 //
-//	ValueInt.h
+//	ValueShort.h
 //
-//	Represents a 32-bit value
+//	Represents a 16-bit value
 //
 //	Copyright (c) 2010 Mal Lansell <openzwave@lansell.org>
 //
@@ -25,8 +25,8 @@
 //
 //-----------------------------------------------------------------------------
 
-#ifndef _ValueInt_H
-#define _ValueInt_H
+#ifndef _ValueShort_H
+#define _ValueShort_H
 
 #include <string>
 #include "Defs.h"
@@ -39,26 +39,26 @@ namespace OpenZWave
 	class Msg;
 	class Node;
 
-	class ValueInt: public Value
+	class ValueShort: public Value
 	{
 	public:
-		ValueInt( uint8 const _driverId, uint8 const _nodeId, ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, string const& _label, string const& _units, bool const _readOnly, int32 const _value );
-		ValueInt( uint8 const _driverId, uint8 const _nodeId, TiXmlElement* _valueElement );
-		virtual ~ValueInt(){}
+		ValueShort( uint8 const _driverId, uint8 const _nodeId, ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, string const& _label, string const& _units, bool const _readOnly, uint16 const _value );
+		ValueShort( uint8 const _driverId, uint8 const _nodeId, TiXmlElement* _valueElement );
+		virtual ~ValueShort(){}
 
-		bool Set( int32 const _value );
-		void OnValueChanged( int32 const _value );
+		bool Set( uint16 const _value );
+		void OnValueChanged( uint16 const _value );
 
 		// From Value
 		virtual void WriteXML( TiXmlElement* _valueElement );
 		virtual string GetAsString()const;
 
-		int32 GetValue()const{ return m_value; }
-		int32 GetPending()const{ return m_pending; }
+		uint16 GetValue()const{ return m_value; }
+		uint16 GetPending()const{ return m_pending; }
 
 	private:
-		int32	m_value;
-		int32	m_pending;
+		uint16	m_value;
+		uint16	m_pending;
 	};
 
 } // namespace OpenZWave

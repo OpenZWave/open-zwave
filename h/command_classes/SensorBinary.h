@@ -35,23 +35,23 @@ namespace OpenZWave
 	class SensorBinary: public CommandClass
 	{
 	public:
-		static CommandClass* Create( uint8 const _nodeId ){ return new SensorBinary( _nodeId ); }
+		static CommandClass* Create( uint8 const _driverId, uint8 const _nodeId ){ return new SensorBinary( _driverId, _nodeId ); }
 		virtual ~SensorBinary(){}
 
 		static uint8 const StaticGetCommandClassId(){ return 0x30; }
 		static string const StaticGetCommandClassName(){ return "COMMAND_CLASS_SENSOR_BINARY"; }
 
 		// From CommandClass
-		virtual void RequestState( bool const _poll );
+		virtual void RequestState( uint8 const _instance );
 		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }
 		virtual string const GetCommandClassName()const{ return StaticGetCommandClassName(); }
-		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 0 );
+		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );
 
 	protected:
 		virtual void CreateVars( uint8 const _instance );
 
 	private:
-		SensorBinary( uint8 const _nodeId ): CommandClass( _nodeId ){}
+		SensorBinary( uint8 const _driverId, uint8 const _nodeId ): CommandClass( _driverId, _nodeId ){}
 	};
 
 } // namespace OpenZWave

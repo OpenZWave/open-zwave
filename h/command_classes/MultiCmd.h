@@ -40,7 +40,7 @@ namespace OpenZWave
 			MultiCmdCmd_Encap = 0x01
 		};
 
-		static CommandClass* Create( uint8 const _nodeId ){ return new MultiCmd( _nodeId ); }
+		static CommandClass* Create( uint8 const _driverId, uint8 const _nodeId ){ return new MultiCmd( _driverId, _nodeId ); }
 		virtual ~MultiCmd(){}
 
 		static uint8 const StaticGetCommandClassId(){ return 0x8f; }
@@ -49,10 +49,10 @@ namespace OpenZWave
 		// From CommandClass
 		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }
 		virtual string const GetCommandClassName()const{ return StaticGetCommandClassName(); }
-		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 0 );
+		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );
 
 	private:
-		MultiCmd( uint8 const _nodeId ): CommandClass( _nodeId ){}
+		MultiCmd( uint8 const _driverId, uint8 const _nodeId ): CommandClass( _driverId, _nodeId ){}
 	};
 
 } // namespace OpenZWave

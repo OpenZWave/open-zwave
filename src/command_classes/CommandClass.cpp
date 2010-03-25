@@ -30,6 +30,7 @@
 #include "CommandClass.h"
 #include "Msg.h"
 #include "Driver.h"
+#include "Manager.h"
 #include "Log.h"
 
 using namespace OpenZWave;
@@ -42,6 +43,17 @@ static uint8 const	c_precisionShift	= 0x05;
 
 
 //-----------------------------------------------------------------------------
+// <CommandClass::GetDriver>
+// Get a pointer to our driver
+//-----------------------------------------------------------------------------
+Driver* CommandClass::GetDriver
+(
+)const
+{
+	return( Manager::Get()->GetDriver( m_driverId ) );
+}
+
+//-----------------------------------------------------------------------------
 // <CommandClass::GetNode>
 // Get a pointer to our node
 //-----------------------------------------------------------------------------
@@ -49,7 +61,7 @@ Node* CommandClass::GetNode
 (
 )const
 {
-	return( Driver::Get()->GetNode( m_nodeId ) );
+	return( GetDriver()->GetNode( m_nodeId ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -64,17 +76,22 @@ void CommandClass::SetInstances
 	// Create a set of reported variables for each new instance
 	if( _instances > m_instances )
 	{
+		// Enlarge the polled instance array
+		bool* newPolledInstances = new bool[_instances];
+		memcpy( newPolledInstances, m_polledInstances, sizeof(bool)*m_instances );
+		delete [] m_polledInstances;
+		m_polledInstances = newPolledInstances;
+
 		// Create the new value instances
 		for( uint8 i=m_instances; i<_instances; ++i )
 		{
-			CreateVars( i );
+			m_polledInstances[i] = false;
+			CreateVars( i+1 );
+			RequestState( i+1 );
 		}
+
+		m_instances = _instances;
 	}
-
-	m_instances = _instances;
-
-	// Request the state of the instances
-	RequestState( false );
 }
 
 //-----------------------------------------------------------------------------
@@ -87,6 +104,60 @@ void CommandClass::SaveStatic
 )
 {
 	fprintf( _file, "	<CommandClass id=\"%d\" name=\"%s\" version=\"%d\" />\n", GetNodeId(), GetCommandClassId(), GetCommandClassName().c_str(), GetVersion() );
+}
+
+//-----------------------------------------------------------------------------
+// <CommandClass::Poll>
+// Request the state of any instance marked for polling
+//-----------------------------------------------------------------------------
+void CommandClass::Poll
+( 
+)
+{
+	for( uint8 i=0; i<m_instances; ++i )
+	{
+		if( m_polledInstances[i] )
+		{
+			RequestState( i+1 );
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <CommandClass::SetPolled>
+// Set the polled state of an instance of this command class
+//-----------------------------------------------------------------------------
+void CommandClass::SetPolled
+(
+	uint8 const _instance,
+	bool const _state
+)
+{
+	if( ( _instance == 0 ) || ( _instance > m_instances ) )
+	{
+		return;
+	}
+
+	m_polledInstances[_instance-1] = _state;
+}
+
+//-----------------------------------------------------------------------------
+// <CommandClass::RequiresPolling>
+// Return whether any instance is set to be polled
+//-----------------------------------------------------------------------------
+bool CommandClass::RequiresPolling
+( 
+)
+{
+	for( uint8 i=0; i<m_instances; ++i )
+	{
+		if( m_polledInstances[i] )
+		{
+			return true;
+		}
+	}
+
+	return false;
 }
 
 //-----------------------------------------------------------------------------

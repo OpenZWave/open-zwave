@@ -44,7 +44,7 @@ bool MultiCmd::HandleMsg
 (
 	uint8 const* _data,
 	uint32 const _length,
-	uint32 const _instance	// = 0
+	uint32 const _instance	// = 1
 )
 {
 	if( MultiCmdCmd_Encap == (MultiCmdCmd)_data[0] )

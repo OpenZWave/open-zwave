@@ -36,7 +36,6 @@
 #include "Log.h"
 
 #include "ValueList.h"
-#include "ValueStore.h"
 
 using namespace OpenZWave;
 
@@ -61,19 +60,16 @@ static char* const c_protectionStateNames[] =
 //-----------------------------------------------------------------------------
 void Protection::RequestState
 (
-	bool const _poll
+	uint8 const _instance
 )
 {
-	if( !_poll )
-	{
-		Msg* msg = new Msg( "ProtectionCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-		msg->Append( GetNodeId() );
-		msg->Append( 2 );
-		msg->Append( GetCommandClassId() );
-		msg->Append( ProtectionCmd_Get );
-		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-		Driver::Get()->SendMsg( msg );
-	}
+	Msg* msg = new Msg( "ProtectionCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+	msg->Append( GetNodeId() );
+	msg->Append( 2 );
+	msg->Append( GetCommandClassId() );
+	msg->Append( ProtectionCmd_Get );
+	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	GetDriver()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -84,26 +80,20 @@ bool Protection::HandleMsg
 (
 	uint8 const* _data,
 	uint32 const _length,
-	uint32 const _instance	// = 0
+	uint32 const _instance	// = 1
 )
 {
-	if (ProtectionCmd_Report == (ProtectionCmd)_data[0])
+	if( Node* node = GetNode() )
 	{
-		Node* node = GetNode();
-		if( node )
+		if (ProtectionCmd_Report == (ProtectionCmd)_data[0])
 		{
-			ValueStore* store = node->GetValueStore();
-			if( store )
+			if( ValueList* value = node->GetValueList(  ValueID::ValueGenre_System, GetCommandClassId(), _instance, 0 ) )
 			{
-				if( ValueList* value = static_cast<ValueList*>( store->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
-				{
-					value->OnValueChanged( (int)_data[1] );
-				}
-				node->ReleaseValueStore();
-
-				Log::Write( "Received a Protection report from node %d: %s", GetNodeId(), c_protectionStateNames[_data[1]] );
-				return true;
+				value->OnValueChanged( (int)_data[1] );
 			}
+
+			Log::Write( "Received a Protection report from node %d: %s", GetNodeId(), c_protectionStateNames[_data[1]] );
+			return true;
 		}
 	}
 
@@ -119,8 +109,9 @@ bool Protection::SetValue
 	Value const& _value
 )
 {
-	if( ValueList const* value = static_cast<ValueList const*>(&_value) )
+	if( ValueID::ValueType_List == _value.GetID().GetType() )
 	{
+		ValueList const* value = static_cast<ValueList const*>(&_value);
 		ValueList::Item const& item = value->GetPending();
 
 		Log::Write( "Protection::Set - Setting protection state on node %d to '%s'", GetNodeId(), item.m_label.c_str() );
@@ -131,7 +122,7 @@ bool Protection::SetValue
 		msg->Append( ProtectionCmd_Set );
 		msg->Append( (uint8)item.m_value );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-		Driver::Get()->SendMsg( msg );
+		GetDriver()->SendMsg( msg );
 		return true;
 	}
 
@@ -147,27 +138,18 @@ void Protection::CreateVars
 	uint8 const _instance
 )
 {
-	Node* node = GetNode();
-	if( node )
+	if( Node* node = GetNode() )
 	{
-		ValueStore* store = node->GetValueStore();
-		if( store )
+		vector<ValueList::Item> items;
+
+		ValueList::Item item;
+		for( uint8 i=0; i<3; ++i )
 		{
-			vector<ValueList::Item> items;
-
-			ValueList::Item item;
-			for( uint8 i=0; i<3; ++i )
-			{
-				item.m_label = c_protectionStateNames[i];
-				item.m_value = i;
-				items.push_back( item ); 
-			}
-
-			Value* value = new ValueList( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_System, "Protection", false, items, 0 );
-			store->AddValue( value );
-			value->Release();
-		
-			node->ReleaseValueStore();
+			item.m_label = c_protectionStateNames[i];
+			item.m_value = i;
+			items.push_back( item ); 
 		}
+
+		node->CreateValueList(  ValueID::ValueGenre_System, GetCommandClassId(), _instance, 0, "Protection", "", false, items, 0 );
 	}
 }

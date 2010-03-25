@@ -34,7 +34,6 @@
 #include "Log.h"
 
 #include "ValueBool.h"
-#include "ValueStore.h"
 
 using namespace OpenZWave;
 
@@ -52,7 +51,7 @@ enum IndicatorCmd
 //-----------------------------------------------------------------------------
 void Indicator::RequestState
 (
-	bool const _poll
+	uint8 const _instance
 )
 {
 	Log::Write( "Requesting the indicator from node %d", GetNodeId() );
@@ -62,7 +61,7 @@ void Indicator::RequestState
 	msg->Append( GetCommandClassId() );
 	msg->Append( IndicatorCmd_Get );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	Driver::Get()->SendMsg( msg );
+	GetDriver()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -73,26 +72,20 @@ bool Indicator::HandleMsg
 (
 	uint8 const* _data,
 	uint32 const _length,
-	uint32 const _instance	// = 0
+	uint32 const _instance	// = 1
 )
 {
 	if( IndicatorCmd_Report == (IndicatorCmd)_data[0] )
 	{
-		Node* node = GetNode();
-		if( node )
+		if( Node* node = GetNode() )
 		{
-			ValueStore* store = node->GetValueStore();
-			if( store )
+			if( ValueBool* value = node->GetValueBool( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0 ) )
 			{
-				if( ValueBool* value = static_cast<ValueBool*>( store->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
-				{
-					value->OnValueChanged( _data[1] != 0 );
-				}
-				node->ReleaseValueStore();
-
-				Log::Write( "Received an Indicator report from node %d: Indicator=%d", GetNodeId(), _data[1] );
-				return true;
+				value->OnValueChanged( _data[1] != 0 );
 			}
+
+			Log::Write( "Received an Indicator report from node %d: Indicator=%d", GetNodeId(), _data[1] );
+			return true;
 		}
 	}
 
@@ -108,8 +101,10 @@ bool Indicator::SetValue
 	Value const& _value
 )
 {
-	if( ValueBool const* value = static_cast<ValueBool const*>(&_value) )
+	if( ValueID::ValueType_Bool == _value.GetID().GetType() )
 	{
+		ValueBool const* value = static_cast<ValueBool const*>(&_value);
+
 		Log::Write( "Indicator::SetValue - Setting indicator on node %d to %s", GetNodeId(), value->GetPending() ? "On" : "Off" );
 		Msg* msg = new Msg( "Basic Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
 		msg->Append( GetNodeId() );
@@ -118,7 +113,7 @@ bool Indicator::SetValue
 		msg->Append( IndicatorCmd_Set );
 		msg->Append( value->GetPending() ? 0xff: 0x00 );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-		Driver::Get()->SendMsg( msg );
+		GetDriver()->SendMsg( msg );
 		return true;
 	}
 
@@ -134,16 +129,9 @@ void Indicator::CreateVars
 	uint8 const _instance
 )
 {
-	Node* node = GetNode();
-	if( node )
+	if( Node* node = GetNode() )
 	{
-		ValueStore* store = node->GetValueStore();
-		if( store )
-		{
-			Value* value = new ValueBool( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_User, "Indicator", false, false );
-			store->AddValue( value );
-			value->Release();
-		}
+		node->CreateValueBool( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Indicator", "", false, false );
 	}
 }
 

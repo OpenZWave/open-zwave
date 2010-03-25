@@ -49,7 +49,7 @@ bool ApplicationStatus::HandleMsg
 (
 	uint8 const* _data,
 	uint32 const _length,
-	uint32 const _instance	// = 0
+	uint32 const _instance	// = 1
 )
 {
 	if( ApplicationStatusCmd_Busy == (ApplicationStatusCmd)_data[0] )

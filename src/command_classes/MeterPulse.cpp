@@ -34,7 +34,6 @@
 #include "Log.h"
 
 #include "ValueInt.h"
-#include "ValueStore.h"
 
 using namespace OpenZWave;
 
@@ -51,7 +50,7 @@ enum MeterPulseCmd
 //-----------------------------------------------------------------------------
 void MeterPulse::RequestState
 (
-	bool const _poll
+	uint8 const _instance
 )
 {
 	Log::Write( "Requesting the meter pulse count from node %d", GetNodeId() );
@@ -61,7 +60,7 @@ void MeterPulse::RequestState
 	msg->Append( GetCommandClassId() );
 	msg->Append( MeterPulseCmd_Get );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	Driver::Get()->SendMsg( msg );
+	GetDriver()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -72,33 +71,27 @@ bool MeterPulse::HandleMsg
 (
 	uint8 const* _data,
 	uint32 const _length,
-	uint32 const _instance	// = 0
+	uint32 const _instance	// = 1
 )
 {
-	if( MeterPulseCmd_Report == (MeterPulseCmd)_data[0] )
+	if( Node* node = GetNode() )
 	{
-		Node* node = GetNode();
-		if( node )
+		if( MeterPulseCmd_Report == (MeterPulseCmd)_data[0] )
 		{
-			ValueStore* store = node->GetValueStore();
-			if( store )
+			int32 count = 0;
+			for( uint8 i=0; i<4; ++i )
 			{
- 				int32 count = 0;
-				for( uint8 i=0; i<4; ++i )
-				{
-					count <<= 8;
-					count |= (uint32)_data[i+1];
-				}
-
-				if( ValueInt* value = static_cast<ValueInt*>( store->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
-				{
-					value->OnValueChanged( count );
-				}
-				node->ReleaseValueStore();
-
-				Log::Write( "Received a meter pulse count from node %d: Count=%d", GetNodeId(), count );
-				return true;
+				count <<= 8;
+				count |= (uint32)_data[i+1];
 			}
+
+			if( ValueInt* value = node->GetValueInt( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0 ) )
+			{
+				value->OnValueChanged( count );
+			}
+
+			Log::Write( "Received a meter pulse count from node %d: Count=%d", GetNodeId(), count );
+			return true;
 		}
 	}
 
@@ -114,18 +107,9 @@ void MeterPulse::CreateVars
 	uint8 const _instance
 )
 {
-	Node* node = GetNode();
-	if( node )
+	if( Node* node = GetNode() )
 	{
-		ValueStore* store = node->GetValueStore();
-		if( store )
-		{
-			Value* value = new ValueInt( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_User, "Count", true, 0 );
-			store->AddValue( value );
-			value->Release();
-
-			node->ReleaseValueStore();
-		}
+		node->CreateValueInt( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Count", "", true, 0 );
 	}
 }
 

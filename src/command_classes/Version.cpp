@@ -33,7 +33,6 @@
 #include "Node.h"
 #include "Log.h"
 
-#include "ValueStore.h"
 #include "ValueString.h"
 
 using namespace OpenZWave;
@@ -68,7 +67,7 @@ void Version::RequestStatic
 	msg->Append( GetCommandClassId() );
 	msg->Append( VersionCmd_Get );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	Driver::Get()->SendMsg( msg );
+	GetDriver()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -79,57 +78,50 @@ bool Version::HandleMsg
 (
 	uint8 const* _data,
 	uint32 const _length,
-	uint32 const _instance	// = 0
+	uint32 const _instance	// = 1
 )
 {
 	bool handled = false;
 
-	Node* node = GetNode();
-	if( node )
+	if( Node* node = GetNode() )
 	{
-		ValueStore* store = node->GetValueStore();
-		if( store )
+		if( VersionCmd_Report == (VersionCmd)_data[0] )
 		{
-			if (VersionCmd_Report == (VersionCmd)_data[0])
+			ValueString* value;
+
+			char library[8];
+			snprintf( library, 8, "%d", _data[1] );
+			if( value = node->GetValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, (uint8)ValueIndex_Library ) )
 			{
-				ValueString* value;
-
-				char library[8];
-				snprintf( library, 8, "%d", _data[1] );
-				if( value = static_cast<ValueString*>( store->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, (uint8)ValueIndex_Library ) ) ) )
-				{
-					value->OnValueChanged( library );
-				}
-
-				char protocol[16];
-				snprintf( protocol, 6, "%d.%d", _data[2], _data[3] );
-				if( value = static_cast<ValueString*>( store->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, (uint8)ValueIndex_Protocol ) ) ) )
-				{
-					value->OnValueChanged( protocol );
-				}
-
-				char application[16];
-				snprintf( application, 6, "%d.%d", _data[4], _data[5] );
-				if( value = static_cast<ValueString*>( store->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, (uint8)ValueIndex_Application ) ) ) )
-				{
-					value->OnValueChanged( application );
-				}
-
-				Log::Write( "Received Version report from node %d: Library=%s, Protocol=%s, Application=%s", GetNodeId(), library, protocol, application );
-				handled = true;
-			}
-			else if (VersionCmd_CommandClassReport == (VersionCmd)_data[0])
-			{
-				if( CommandClass* pCommandClass = GetNode()->GetCommandClass( _data[1] ) )
-				{
-					pCommandClass->SetVersion( _data[2] );				
-					Log::Write( "Received Command Class Version report from node %d: CommandClass=%s, Version=%d", GetNodeId(), pCommandClass->GetCommandClassName().c_str(), _data[2] );
-				}
-
-				handled = true;
+				value->OnValueChanged( library );
 			}
 
-			node->ReleaseValueStore();
+			char protocol[16];
+			snprintf( protocol, 6, "%d.%d", _data[2], _data[3] );
+			if( value = node->GetValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, (uint8)ValueIndex_Protocol ) )
+			{
+				value->OnValueChanged( protocol );
+			}
+
+			char application[16];
+			snprintf( application, 6, "%d.%d", _data[4], _data[5] );
+			if( value = node->GetValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, (uint8)ValueIndex_Application ) )
+			{
+				value->OnValueChanged( application );
+			}
+
+			Log::Write( "Received Version report from node %d: Library=%s, Protocol=%s, Application=%s", GetNodeId(), library, protocol, application );
+			handled = true;
+		}
+		else if (VersionCmd_CommandClassReport == (VersionCmd)_data[0])
+		{
+			if( CommandClass* pCommandClass = GetNode()->GetCommandClass( _data[1] ) )
+			{
+				pCommandClass->SetVersion( _data[2] );				
+				Log::Write( "Received Command Class Version report from node %d: CommandClass=%s, Version=%d", GetNodeId(), pCommandClass->GetCommandClassName().c_str(), _data[2] );
+			}
+
+			handled = true;
 		}
 	}
 
@@ -152,7 +144,7 @@ void Version::RequestCommandClassVersion
 	msg->Append( VersionCmd_CommandClassGet );
 	msg->Append( _commandClassId );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	Driver::Get()->SendMsg( msg );
+	GetDriver()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -164,27 +156,10 @@ void Version::CreateVars
 	uint8 const _instance
 )
 {
-	Node* node = GetNode();
-	if( node )
+	if( Node* node = GetNode() )
 	{
-		ValueStore* store = node->GetValueStore();
-		if( store )
-		{
-			Value* value;
-			
-			value = new ValueString( GetNodeId(), GetCommandClassId(), _instance, (uint8)ValueIndex_Library, Value::Genre_System, "Library Version", true, "0.0"  );
-			store->AddValue( value );
-			value->Release();
-
-			value = new ValueString( GetNodeId(), GetCommandClassId(), _instance, (uint8)ValueIndex_Protocol, Value::Genre_System, "Protocol Version", true, "0.0"  );
-			store->AddValue( value );
-			value->Release();
-
-			value = new ValueString( GetNodeId(), GetCommandClassId(), _instance, (uint8)ValueIndex_Application, Value::Genre_System, "Application Version", true, "0.0"  );
-			store->AddValue( value );
-			value->Release();
-
-			node->ReleaseValueStore();
-		}
+		node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, (uint8)ValueIndex_Library, "Library Version", "", true, "Unknown"  );
+		node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, (uint8)ValueIndex_Protocol, "Protocol Version", "", true, "Unknown"  );
+		node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, (uint8)ValueIndex_Application, "Application Version", "", true, "Unknown"  );
 	}
 }
