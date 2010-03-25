@@ -38,7 +38,7 @@ namespace OpenZWave
 	class ThermostatFanState: public CommandClass
 	{
 	public:
-		static CommandClass* Create( uint8 const _nodeId ){ return new ThermostatFanState( _nodeId ); }
+		static CommandClass* Create( uint8 const _driverId, uint8 const _nodeId ){ return new ThermostatFanState( _driverId, _nodeId ); }
 		virtual ~ThermostatFanState(){}
 
 		static uint8 const StaticGetCommandClassId(){ return 0x45; }		
@@ -46,16 +46,16 @@ namespace OpenZWave
 
 		// From CommandClass
 		virtual void RequestStatic();
-		virtual void RequestState( bool const _poll );
+		virtual void RequestState( uint8 const _instance );
 		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }
 		virtual string const GetCommandClassName()const{ return StaticGetCommandClassName(); }
-		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 0 );
+		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );
 
 	protected:
 		virtual void CreateVars( uint8 const _instance );
 
 	private:
-		ThermostatFanState( uint8 const _nodeId ): CommandClass( _nodeId ){}
+		ThermostatFanState( uint8 const _driverId, uint8 const _nodeId ): CommandClass( _driverId, _nodeId ){}
 
 		vector<ValueList::Item>	m_supportedStates;
 	};

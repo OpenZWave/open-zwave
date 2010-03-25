@@ -31,6 +31,7 @@
 //-----------------------------------------------------------------------------
 
 #include <unistd.h>
+#include "Manager.h"
 #include "Driver.h"
 #include "Node.h"
 #include "ValueStore.h"
@@ -57,16 +58,21 @@ void OnNotification
 //-----------------------------------------------------------------------------
 int main( int argc, char* argv[] )
 {
-	// Create a Z-Wave Driver
+	// Create the OpenZWave Manager.
+	// The argument is a path for the log file.  If you leave it NULL 
+	// the log file will appear in the program's working directory.
+	Manager::Create( "../../../config/" );
 
+	// Add a callback handler to the manager.  The second argument is a context that
+	// is passed to the OnNotification method.  If the OnNotification is a method of
+	// a class, the context would usually be a pointer to that class object, to
+	// avoid the need for the notification handler to be a static.
+	Manager::Get()->AddWatcher( OnNotification, NULL );
+
+	// Add a Z-Wave Driver
 	// Modify this line to set the correct serial port for your PC interface.
-	// The second argument is a path for the log file.  If you leave it 
-	// blank, the log file will appear in the program's working directory.
-	OpenZWave::Driver::Create( "/dev/cu.usbserial", "../../../config/", OnNotification, NULL );
-	
-	// The driver is a singleton, so once created, you get a pointer to it
-	// from anywhere in your code as follows
-	OpenZWave::Driver* pDriver = OpenZWave::Driver::Get();
+	uint8 driverId;
+	Manager::Get()->AddDriver( "/dev/cu.usbserial", &driverId );
 
 	// Now we just wait forever, while the Driver thread does all the 
 	// initialisation and querying of the Z-Wave network.  In a normal app,

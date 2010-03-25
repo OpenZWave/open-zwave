@@ -1,8 +1,8 @@
 //-----------------------------------------------------------------------------
 //
-//	ValueDecimal.cpp
+//	ValueShort.cpp
 //
-//	Represents a value that may have a fractional component
+//	Represents a 16-bit value
 //
 //	Copyright (c) 2010 Mal Lansell <openzwave@lansell.org>
 //
@@ -26,7 +26,7 @@
 //-----------------------------------------------------------------------------
 
 #include "tinyxml.h"
-#include "ValueDecimal.h"
+#include "ValueShort.h"
 #include "Msg.h"
 #include "Log.h"
 
@@ -34,10 +34,10 @@ using namespace OpenZWave;
 
 
 //-----------------------------------------------------------------------------
-// <ValueDecimal::ValueDecimal>
+// <ValueShort::ValueShort>
 // Constructor
 //-----------------------------------------------------------------------------
-ValueDecimal::ValueDecimal
+ValueShort::ValueShort
 (
 	uint8 const _driverId,
 	uint8 const _nodeId,
@@ -48,18 +48,18 @@ ValueDecimal::ValueDecimal
 	string const& _label,
 	string const& _units,
 	bool const _readOnly,
-	string const& _value
+	uint16 const _value
 ):
-	Value( _driverId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Decimal, _label, _units, _readOnly ),
+	Value( _driverId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Byte, _label, _units, _readOnly ),
 	m_value( _value )
 {
 }
 
 //-----------------------------------------------------------------------------
-// <ValueDecimal::ValueDecimal>
+// <ValueShort::ValueShort>
 // Constructor (from XML)
 //-----------------------------------------------------------------------------
-ValueDecimal::ValueDecimal
+ValueShort::ValueShort
 (
 	uint8 const _driverId,
 	uint8 const _nodeId,
@@ -67,33 +67,49 @@ ValueDecimal::ValueDecimal
 ):
 	Value( _driverId, _nodeId, _valueElement )
 {
-	char const* str = _valueElement->Attribute( "value" );
-	if( str )
+	int intVal;
+	if( TIXML_SUCCESS == _valueElement->QueryIntAttribute( "value", &intVal ) )
 	{
-		m_value = str;
+		m_value = (uint16)intVal;
 	}
 }
 
 //-----------------------------------------------------------------------------
-// <ValueDecimal::WriteXML>
+// <ValueShort::WriteXML>
 // Write ourselves to an XML document
 //-----------------------------------------------------------------------------
-void ValueDecimal::WriteXML
+void ValueShort::WriteXML
 (
 	TiXmlElement* _valueElement
 )
 {
 	Value::WriteXML( _valueElement );
-	_valueElement->SetAttribute( "value", m_value.c_str() );
+
+	char str[16];
+	snprintf( str, sizeof(str), "%d", m_value );
+	_valueElement->SetAttribute( "value", str );
 }
 
 //-----------------------------------------------------------------------------
-// <ValueDecimal::Set>
+// <ValueShort::GetAsString>
+// Convert the value to string form
+//-----------------------------------------------------------------------------
+string ValueShort::GetAsString
+(
+)const
+{
+	char str[16];
+	snprintf( str, 16, "%d", m_value );
+	return( str );
+}
+
+//-----------------------------------------------------------------------------
+// <ValueShort::Set>
 // Set a new value in the device
 //-----------------------------------------------------------------------------
-bool ValueDecimal::Set
+bool ValueShort::Set
 (
-	string const& _value
+	uint16 const _value
 )
 {
 	m_pending = _value;
@@ -101,12 +117,12 @@ bool ValueDecimal::Set
 }
 
 //-----------------------------------------------------------------------------
-// <ValueDecimal::OnValueChanged>
+// <ValueShort::OnValueChanged>
 // A value in a device has changed
 //-----------------------------------------------------------------------------
-void ValueDecimal::OnValueChanged
+void ValueShort::OnValueChanged
 (
-	string const& _value
+	uint16 const _value
 )
 {
 	if( _value == m_value )
@@ -118,6 +134,4 @@ void ValueDecimal::OnValueChanged
 	m_value = _value;
 	Value::OnValueChanged();
 }
-
-
 

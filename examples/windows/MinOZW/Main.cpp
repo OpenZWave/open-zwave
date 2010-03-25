@@ -31,7 +31,7 @@
 //-----------------------------------------------------------------------------
 
 #include "Windows.h"
-#include "Driver.h"
+#include "Manager.h"
 #include "Node.h"
 #include "Group.h"
 #include "ValueStore.h"
@@ -47,7 +47,7 @@ using namespace OpenZWave;
 //-----------------------------------------------------------------------------
 void OnNotification
 (
-	Driver::Notification const* _notification,
+	Manager::Notification const* _notification,
 	void* _context
 )
 {
@@ -60,60 +60,28 @@ void OnNotification
 //-----------------------------------------------------------------------------
 int main( int argc, char* argv[] )
 {
-	// Create a Z-Wave Driver
+	// Create the OpenZWave Manager.
+	// The argument is a path for the log file.  If you leave it NULL 
+	// the log file will appear in the program's working directory.
+	Manager::Create( "" );
 
+	// Add a callback handler to the manager.  The second argument is a context that
+	// is passed to the OnNotification method.  If the OnNotification is a method of
+	// a class, the context would usually be a pointer to that class object, to
+	// avoid the need for the notification handler to be a static.
+	Manager::Get()->AddWatcher( OnNotification, NULL );
+
+	// Add a Z-Wave Driver
 	// Modify this line to set the correct serial port for your PC interface.
-	// The second argument is a path for the log file.  If you leave it 
-	// blank, the log file will appear in the program's working directory.
-	OpenZWave::Driver::Create( "\\\\.\\COM2", "", OnNotification, NULL );
+	uint8 driverId;
+	Manager::Get()->AddDriver( "\\\\.\\COM3", &driverId );
 	
-	// The driver is a singleton, so once created, you get a pointer to it
-	// from anywhere in your code as follows
-	OpenZWave::Driver* pDriver = OpenZWave::Driver::Get();
-
 	Sleep(10000);
 
-//	pDriver->BeginAddController();
-//	pDriver->BeginRemoveNode();
-//	pDriver->BeginAddNode();
-//	pDriver->ResetController();
-
-//	if( Node* node = pDriver->GetNode(2) )
-	{
-		// Polling - enable this for devices that do not report state changes
-//		node->SetPolled( true );
-		
-		// Associations
-//		if( Group* group = node->GetGroup(1) )
-//		{
-			// Add node 3 to group 1 of node 2.
-//			group->AddNode(3);
-//		}
-		
-		// Values
-//		if( ValueStore* store = node->GetValueStore() )
-//		{
-//			for( ValueStore::Iterator it = store->Begin(); it != store->End(); ++it )
-//			{
-//				Value* value = it->second;
-				
-				// Here we select a value by its label.  In a real app, the user should be presented with
-				// a UI displaying all the enumerated values from the store (probably filtered by their 
-				// genre - user, system or config).  Each value has a unique ID, so whichever value is
-				// modfied by the user, it should be a simple case to get a pointer to the value object
-				// using Driver::Get()->GetValue( id );  The value pointer can then be cast to the correct
-				// type according to value->GetValueTypeId()
-
-//				if( value->GetLabel() == "Switch" )
-//				{
-//					ValueBool* valueBool = static_cast<ValueBool*>(value);
-//					valueBool->Set( true );
-//					Sleep( 5000 );
-//					valueBool->Set( false );
-//				}
-//			}
-//		}
-	}
+//	Manager::Get()->BeginAddController( driverId );
+//	Manager::Get()->BeginRemoveNode( driverId );
+//	Manager::Get()->BeginAddNode( driverId );
+//	Manager::Get()->ResetController( driverId );
 
 	
 	// Now we just wait forever, while the Driver thread does all the 

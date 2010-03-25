@@ -62,17 +62,17 @@ bool ValueStore::AddValue
 		return false;
 	}
 
-	bool bRes = false;
-
 	map<ValueID,Value*>::iterator it = m_values.find( _value->GetID() );
 	if( it == m_values.end() )
 	{
+		// Value is not already in the store, so go ahead and add it
 		m_values[_value->GetID()] = _value;
 		_value->AddRef();
-		bRes = true;
+		return true;
 	}
 
-	return bRes;
+	// Value is already in the store
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -84,21 +84,17 @@ bool ValueStore::RemoveValue
 	ValueID const& _id
 )
 {
-	bool bRes = false;
-
 	map<ValueID,Value*>::iterator it = m_values.find( _id );
 	if( it != m_values.end() )
 	{
-		Value* value = it->second;
-		if( value )
-		{
-			value->Release();
-		}
+		// Value found, so remove it
+		it->second->Release();
 		m_values.erase( it );
-		bRes = true;
+		return true;
 	}
 
-	return bRes;
+	// Value not found in the store
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -118,6 +114,8 @@ Value* ValueStore::GetValue
 		value = it->second;
 		if( value )
 		{
+			// Add a reference to the value.  The caller must
+			// call Release on the value when they are done with it.
 			value->AddRef();
 		}
 	}

@@ -67,7 +67,7 @@ void MultiInstance::RequestInstances
 	msg->Append( MultiInstanceCmd_Get );
 	msg->Append( _commandClass->GetCommandClassId() );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	Driver::Get()->SendMsg( msg );
+	GetDriver()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -78,7 +78,7 @@ bool MultiInstance::HandleMsg
 (
 	uint8 const* _data,
 	uint32 const _length,
-	uint32 const _instance	// = 0
+	uint32 const _instance	// = 1
 )
 {
 	if( Node const* node = GetNode() )
@@ -98,7 +98,7 @@ bool MultiInstance::HandleMsg
 	
 		if( MultiInstanceCmd_CmdEncap == (MultiInstanceCmd)_data[0] )
 		{
-			uint8 instance = _data[1] - 1;
+			uint8 instance = _data[1];
 			uint8 commandClassId = _data[2];
 
 			if( CommandClass* pCommandClass = node->GetCommandClass( commandClassId ) )

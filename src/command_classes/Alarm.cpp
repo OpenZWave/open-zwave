@@ -34,7 +34,6 @@
 #include "Log.h"
 
 #include "ValueByte.h"
-#include "ValueStore.h"
 
 using namespace OpenZWave;
 
@@ -57,7 +56,7 @@ enum
 //-----------------------------------------------------------------------------
 void Alarm::RequestState
 (
-	bool const _poll
+	uint8 const _instance
 )
 {
 	Log::Write( "Requesting the alarm status from node %d", GetNodeId() );
@@ -67,7 +66,7 @@ void Alarm::RequestState
 	msg->Append( GetCommandClassId() );
 	msg->Append( AlarmCmd_Get );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	Driver::Get()->SendMsg( msg );
+	GetDriver()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -78,7 +77,7 @@ bool Alarm::HandleMsg
 (
 	uint8 const* _data,
 	uint32 const _length,
-	uint32 const _instance	// = 0
+	uint32 const _instance	// = 1
 )
 {
 	if (AlarmCmd_Report == (AlarmCmd)_data[0])
@@ -87,25 +86,21 @@ bool Alarm::HandleMsg
 		// No known mappings for these values yet
 		if( Node* node = GetNode() )
 		{
-			if( ValueStore* store = node->GetValueStore() )
+			ValueByte* value;
+
+			// Alarm Type
+			if( value = node->GetValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueIndex_Type ) )
 			{
-				ValueByte* value;
-
-				// Alarm Type
-				if( value = static_cast<ValueByte*>( store->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, ValueIndex_Type ) ) ) )
-				{
-					value->OnValueChanged( _data[1] );
-				}
-		
-				// Alarm Level
-				if( value = static_cast<ValueByte*>( store->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, ValueIndex_Level ) ) ) )
-				{
-					value->OnValueChanged( _data[2] );
-				}
-				node->ReleaseValueStore();
-
-				Log::Write( "Received Alarm report from node %d: type=%d, level=%d", GetNodeId(), _data[1], _data[2] );
+				value->OnValueChanged( _data[1] );
 			}
+		
+			// Alarm Level
+			if( value = node->GetValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueIndex_Level ) )
+			{
+				value->OnValueChanged( _data[2] );
+			}
+
+			Log::Write( "Received Alarm report from node %d: type=%d, level=%d", GetNodeId(), _data[1], _data[2] );
 		}
 
 		return true;
@@ -123,23 +118,10 @@ void Alarm::CreateVars
 	uint8 const _instance
 )
 {
-	Node* node = GetNode();
-	if( node )
+	if( Node* node = GetNode() )
 	{
-		if( ValueStore* store = node->GetValueStore() )
-		{
-			Value* value;
-		
-			value = new ValueByte( GetNodeId(), GetCommandClassId(), _instance, ValueIndex_Type, Value::Genre_User, "Alarm Type", true, 0 );
-			store->AddValue( value );
-			value->Release();
-
-			value = new ValueByte( GetNodeId(), GetCommandClassId(), _instance, ValueIndex_Level, Value::Genre_User, "Alarm Level", true, 0 );
-			store->AddValue( value );
-			value->Release();
-
-			node->ReleaseValueStore();
-		}
+		node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueIndex_Type, "Alarm Type", "", true, 0 );
+		node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueIndex_Level, "Alarm Level", "", true, 0 );
 	}
 }
 

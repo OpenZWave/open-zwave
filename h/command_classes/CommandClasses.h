@@ -37,10 +37,10 @@ namespace OpenZWave
 	class CommandClasses
 	{
 	public:
-		typedef CommandClass* (*pfnCreateCommandClass_t)( uint8 const _nodeId );
+		typedef CommandClass* (*pfnCreateCommandClass_t)( uint8 const _driverId, uint8 const _nodeId );
 
 		static void RegisterCommandClasses();
-		static CommandClass* CreateCommandClass( uint8 const _commandClassId, uint8 const _nodeId );
+		static CommandClass* CreateCommandClass( uint8 const _commandClassId, uint8 const _driverId, uint8 const _nodeId );
 		
 	private:
 		CommandClasses();										

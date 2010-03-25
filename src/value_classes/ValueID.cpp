@@ -1,8 +1,8 @@
 //-----------------------------------------------------------------------------
 //
-//	MultiInstanceAssociation.cpp
+//	ValueID.cpp
 //
-//	Implementation of the Z-Wave COMMAND_CLASS_MULTI_INSTANCE_ASSOCIATION
+//	Unique identifier for a Value object
 //
 //	Copyright (c) 2010 Mal Lansell <openzwave@lansell.org>
 //
@@ -25,37 +25,8 @@
 //
 //-----------------------------------------------------------------------------
 
-#include "CommandClasses.h"
-#include "MultiInstanceAssociation.h"
-#include "Defs.h"
-#include "Msg.h"
-#include "Driver.h"
-#include "Log.h"
+#include "ValueID.h"
 
 using namespace OpenZWave;
 
-enum MultiInstanceAssociationCmd
-{
-	MultiInstanceAssociationCmd_Set				= 0x01,
-	MultiInstanceAssociationCmd_Get				= 0x02,
-	MultiInstanceAssociationCmd_Report			= 0x03,
-	MultiInstanceAssociationCmd_Remove			= 0x04,
-	MultiInstanceAssociationCmd_GroupingsGet	= 0x05,
-	MultiInstanceAssociationCmd_GroupingsReport	= 0x06
-};
-
-
-//-----------------------------------------------------------------------------
-// <MultiInstanceAssociation::HandleMsg>
-// Handle a message from the Z-Wave network
-//-----------------------------------------------------------------------------
-bool MultiInstanceAssociation::HandleMsg
-(
-	uint8 const* _data,
-	uint32 const _length,
-	uint32 const _instance	// = 1
-)
-{
-	return false;
-}
-
+ValueID const ValueID::g_nullValueID = ValueID();

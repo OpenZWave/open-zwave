@@ -29,29 +29,43 @@
 #define _Node_H
 
 #include <string>
+#include <vector>
 #include <map>
 #include "Defs.h"
+#include "ValueID.h"
+#include "ValueList.h"
 
 class TiXmlElement;
 
 namespace OpenZWave
 {
 	class CommandClass;
+	class Driver;
 	class Group;
 	class ValueStore;
-	class ValueID;
 	class Value;
+	class ValueBool;
+	class ValueByte;
+	class ValueDecimal;
+	class ValueInt;
+	class ValueShort;
+	class ValueString;
 	class Mutex;
 
 	class Node
 	{
+		friend class Driver;
+
 	//-----------------------------------------------------------------------------
 	// Construction
 	//-----------------------------------------------------------------------------
 	public:
-		Node( uint8 const _nodeId );
-		Node( TiXmlElement* _node );
+		Node( uint8 const _driverId, uint8 const _nodeId );
+		Node( uint8 const _driverId, TiXmlElement* _node );
 		virtual ~Node();
+
+	private:
+		Driver* GetDriver()const;
 
 	//-----------------------------------------------------------------------------
 	// Initialization
@@ -137,22 +151,19 @@ namespace OpenZWave
 		string const& GetBasicLabel()const{ return m_basicLabel; }	
 		string const& GetGenericLabel()const{ return m_genericLabel; }	
 		
-		bool IsPolled()const{ return m_polled; }
-		void SetPolled( bool _state ){ m_polled = _state; }
-
 	private:
 		bool		m_listening;
 		bool		m_routing;
 		uint32		m_maxBaudRate;
 		uint8		m_version;
 		uint8		m_security;
+		uint8		m_driverId;
 		uint8		m_nodeId;
 		uint8		m_basic;
 		uint8		m_generic;
 		uint8		m_specific;
 		string		m_basicLabel;
 		string		m_genericLabel;
-		bool		m_polled;
 
 
 	//-----------------------------------------------------------------------------
@@ -161,9 +172,12 @@ namespace OpenZWave
 	public:
 		CommandClass* GetCommandClass( uint8 const _commandClassId )const;
 		void RequestInstances()const;
-		void RequestState( bool const _poll );
+		void RequestState();
 		void RequestStatic();
 		void ApplicationCommandHandler( uint8 const* _data );
+
+		bool RequiresPolling();
+		void Poll();
 
 	private:
 		CommandClass* AddCommandClass( uint8 const _commandClassId );
@@ -176,11 +190,41 @@ namespace OpenZWave
 	// Values (handled by the command classes)
 	//-----------------------------------------------------------------------------
 	public:
-		ValueStore* GetValueStore();
-		void ReleaseValueStore();
-		Value* GetValue( ValueID const& _id )const;
+		ValueID CreateValueID( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex, ValueID::ValueType const _type );
+
+		Value* GetValue( ValueID const& _id );
+		Value* GetValue( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex, ValueID::ValueType const _type );
+
+		// Helpers for creating values
+		void CreateValueBool( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, bool const _default );
+		void CreateValueByte( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, uint8 const _default );
+		void CreateValueDecimal( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, string const& _default );
+		void CreateValueInt( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, int32 const _default );
+		void CreateValueList( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, vector<ValueList::Item> const& _items, int32 const _default );
+		void CreateValueShort( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, uint16 const _default );
+		void CreateValueString( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, string const& _default );
+
+		// Helpers for fetching values
+		ValueBool* GetValueBool( ValueID const& _id );
+		ValueByte* GetValueByte( ValueID const& _id );
+		ValueDecimal* GetValueDecimal( ValueID const& _id );
+		ValueInt* GetValueInt( ValueID const& _id );
+		ValueList* GetValueList( ValueID const& _id );
+		ValueShort* GetValueShort( ValueID const& _id );
+		ValueString* GetValueString( ValueID const& _id );
+
+		ValueBool* GetValueBool( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex );
+		ValueByte* GetValueByte( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex );
+		ValueDecimal* GetValueDecimal( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex );
+		ValueInt* GetValueInt( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex );
+		ValueList* GetValueList( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex );
+		ValueShort* GetValueShort( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex );
+		ValueString* GetValueString( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex );
 
 	private:
+		ValueStore* GetValueStore();
+		void ReleaseValueStore();
+
 		ValueStore*	m_values;			// Values reported via command classes
 		Mutex*		m_valuesMutex;		// Serialize access to the store
 

@@ -74,7 +74,7 @@ bool Powerlevel::HandleMsg
 (
 	uint8 const* _data,
 	uint32 const _length,
-	uint32 const _instance	// = 0
+	uint32 const _instance	// = 1
 )
 {
 	if( PowerlevelCmd_Report == (PowerlevelCmd)_data[0] )
@@ -122,7 +122,7 @@ void Powerlevel::Set
 	msg->Append( (uint8)_powerLevel );
 	msg->Append( _timeout );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	Driver::Get()->SendMsg( msg );
+	GetDriver()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -152,6 +152,6 @@ void Powerlevel::Test
 	msg->Append( (uint8)(_numFrames >> 8) );
 	msg->Append( (uint8)(_numFrames & 0x00ff) );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	Driver::Get()->SendMsg( msg );
+	GetDriver()->SendMsg( msg );
 }
 

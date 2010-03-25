@@ -34,7 +34,6 @@
 #include "Log.h"
 
 #include "ValueDecimal.h"
-#include "ValueStore.h"
 
 using namespace OpenZWave;
 
@@ -59,7 +58,7 @@ static char* const c_energyParameterNames[] =
 //-----------------------------------------------------------------------------
 void EnergyProduction::RequestState
 (
-	bool const _poll
+	uint8 const _instance
 )
 {
 	// Request each of the production values
@@ -77,35 +76,28 @@ bool EnergyProduction::HandleMsg
 (
 	uint8 const* _data,
 	uint32 const _length,
-	uint32 const _instance	// = 0
+	uint32 const _instance	// = 1
 )
 {
 	bool handled = false;
 
-	Node* node = GetNode();
-	if( node )
+	if( Node* node = GetNode() )
 	{
-		ValueStore* store = node->GetValueStore();
-		if( store )
+		if (EnergyProductionCmd_Report == (EnergyProductionCmd)_data[0])
 		{
-			if (EnergyProductionCmd_Report == (EnergyProductionCmd)_data[0])
+			uint8 scale;
+			float32 value = ExtractValue( &_data[2], &scale );
+
+			char valueStr[16];
+			snprintf( valueStr, 16, "%.3f", value );
+
+			if( ValueDecimal* value = node->GetValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, _data[1] ) )
 			{
-				uint8 scale;
-				float32 value = ExtractValue( &_data[2], &scale );
-
-				char valueStr[16];
-				snprintf( valueStr, 16, "%.3f", value );
-
-				if( ValueDecimal* value = static_cast<ValueDecimal*>( store->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, _data[1] ) ) ) )
-				{
-					value->OnValueChanged( valueStr );
-				}
-
-				Log::Write( "Received an Energy production report from node %d: %s = %s", GetNodeId(), c_energyParameterNames[_data[1]], valueStr );
-				handled = true;
+				value->OnValueChanged( valueStr );
 			}
 
-			node->ReleaseValueStore();
+			Log::Write( "Received an Energy production report from node %d: %s = %s", GetNodeId(), c_energyParameterNames[_data[1]], valueStr );
+			handled = true;
 		}
 	}
 
@@ -129,7 +121,7 @@ void EnergyProduction::Get
 	msg->Append( EnergyProductionCmd_Get );
 	msg->Append( _production );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	Driver::Get()->SendMsg( msg );
+	GetDriver()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -141,32 +133,12 @@ void EnergyProduction::CreateVars
 	uint8 const _instance
 )
 {
-	Node* node = GetNode();
-	if( node )
+	if( Node* node = GetNode() )
 	{
-		ValueStore* store = node->GetValueStore();
-		if( store )
-		{
-			Value* value;
-			
-			value = new ValueDecimal( GetNodeId(), GetCommandClassId(), _instance, (uint8)Production_Instant, Value::Genre_User, c_energyParameterNames[Production_Instant], true, "0.0"  );
-			store->AddValue( value );
-			value->Release();
-
-			value = new ValueDecimal( GetNodeId(), GetCommandClassId(), _instance, (uint8)Production_Total, Value::Genre_User, c_energyParameterNames[Production_Total], true, "0.0"  );
-			store->AddValue( value );
-			value->Release();
-
-			value = new ValueDecimal( GetNodeId(), GetCommandClassId(), _instance, (uint8)Production_Today, Value::Genre_User, c_energyParameterNames[Production_Today], true, "0.0"  );
-			store->AddValue( value );
-			value->Release();
-
-			value = new ValueDecimal( GetNodeId(), GetCommandClassId(), _instance, (uint8)Production_Time, Value::Genre_User, c_energyParameterNames[Production_Time], true, "0.0"  );
-			store->AddValue( value );
-			value->Release();
-
-			node->ReleaseValueStore();
-		}
+		node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, (uint8)Production_Instant, c_energyParameterNames[Production_Instant], "W", true, "0.0"  );
+		node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, (uint8)Production_Total, c_energyParameterNames[Production_Total], "kWh", true, "0.0"  );
+		node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, (uint8)Production_Today, c_energyParameterNames[Production_Today], "kWh", true, "0.0"  );
+		node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, (uint8)Production_Time, c_energyParameterNames[Production_Time], "", true, "0.0"  );
 	}
 }
 

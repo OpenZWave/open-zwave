@@ -34,7 +34,6 @@
 #include "Log.h"
 
 #include "ValueList.h"
-#include "ValueStore.h"
 
 using namespace OpenZWave;
 
@@ -69,7 +68,7 @@ void ThermostatFanState::RequestStatic
 	msg->Append( GetCommandClassId() );
 	msg->Append( ThermostatFanStateCmd_SupportedGet );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	Driver::Get()->SendMsg( msg );
+	GetDriver()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -78,7 +77,7 @@ void ThermostatFanState::RequestStatic
 //-----------------------------------------------------------------------------
 void ThermostatFanState::RequestState
 (
-	bool const _poll
+	uint8 const _instance
 )
 {
 	// Request the current mode
@@ -88,7 +87,7 @@ void ThermostatFanState::RequestState
 	msg->Append( GetCommandClassId() );
 	msg->Append( ThermostatFanStateCmd_Get );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	Driver::Get()->SendMsg( msg );
+	GetDriver()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -99,54 +98,47 @@ bool ThermostatFanState::HandleMsg
 (
 	uint8 const* _data,
 	uint32 const _length,
-	uint32 const _instance	// = 0
+	uint32 const _instance	// = 1
 )
 {
 	bool handled = false;
 
-	Node* node = GetNode();
-	if( node )
+	if( Node* node = GetNode() )
 	{
-		ValueStore* store = node->GetValueStore();
-		if( store )
+		if( ThermostatFanStateCmd_Report == (ThermostatFanStateCmd)_data[0] )
 		{
-			if( ThermostatFanStateCmd_Report == (ThermostatFanStateCmd)_data[0] )
+			// We have received the thermostat fan state from the Z-Wave device
+			if( ValueList* valueList = node->GetValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0 ) )
 			{
-				// We have received the thermostat fan state from the Z-Wave device
-				if( ValueList* valueList = static_cast<ValueList*>( store->GetValue( ValueID( GetNodeId(), GetCommandClassId(), _instance, 0 ) ) ) )
-				{
-					valueList->OnValueChanged( _data[1] );
-					Log::Write( "Received thermostat fan state from node %d: %s", GetNodeId(), valueList->GetAsString().c_str() );		
-				}
-				handled = true;
+				valueList->OnValueChanged( _data[1] );
+				Log::Write( "Received thermostat fan state from node %d: %s", GetNodeId(), valueList->GetAsString().c_str() );		
 			}
-			else if( ThermostatFanStateCmd_SupportedReport == (ThermostatFanStateCmd)_data[0] )
+			handled = true;
+		}
+		else if( ThermostatFanStateCmd_SupportedReport == (ThermostatFanStateCmd)_data[0] )
+		{
+			// We have received the supported thermostat fan states from the Z-Wave device
+			Log::Write( "Received supported thermostat fan states from node %d", GetNodeId() );		
+
+			m_supportedStates.clear();
+			for( uint32 i=1; i<_length-1; ++i )
 			{
-				// We have received the supported thermostat fan states from the Z-Wave device
-				Log::Write( "Received supported thermostat fan states from node %d", GetNodeId() );		
-
-				m_supportedStates.clear();
-				for( uint32 i=1; i<_length-1; ++i )
+				for( int32 bit=0; bit<8; ++bit )
 				{
-					for( int32 bit=0; bit<8; ++bit )
+					if( ( _data[i] & (1<<bit) ) != 0 )
 					{
-						if( ( _data[i] & (1<<bit) ) != 0 )
-						{
-							ValueList::Item item;
-							item.m_value = (int32)((i-1)<<3) + bit;
-							item.m_label = c_stateName[item.m_value];
-							m_supportedStates.push_back( item );
+						ValueList::Item item;
+						item.m_value = (int32)((i-1)<<3) + bit;
+						item.m_label = c_stateName[item.m_value];
+						m_supportedStates.push_back( item );
 
-							Log::Write( "    Added fan state: %s", c_stateName[item.m_value] );
-						}
+						Log::Write( "    Added fan state: %s", c_stateName[item.m_value] );
 					}
 				}
-
-				CreateVars( _instance );
-				handled = true;
 			}
 
-			node->ReleaseValueStore();
+			CreateVars( _instance );
+			handled = true;
 		}
 	}
 
@@ -167,20 +159,9 @@ void ThermostatFanState::CreateVars
 		return;
 	}
 
-	Node* node = GetNode();
-	if( node )
+	if( Node* node = GetNode() )
 	{
-		ValueStore* store = node->GetValueStore();
-		if( store )
-		{
-			Value* value;
-			
-			value = new ValueList( GetNodeId(), GetCommandClassId(), _instance, 0, Value::Genre_User, "State", true, m_supportedStates, 0 );
-			store->AddValue( value );
-			value->Release();
-
-			node->ReleaseValueStore();
-		}
+		node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "State", "", true, m_supportedStates, m_supportedStates[0].m_value );
 	}
 }
 

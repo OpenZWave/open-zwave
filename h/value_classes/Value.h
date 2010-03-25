@@ -36,37 +36,30 @@ class TiXmlElement;
 
 namespace OpenZWave
 {
+	class Node;
+
 	class Value
 	{
+		friend class Driver;
 		friend class ValueStore;
 
 	public:
-		enum
-		{
-			Genre_All = 0,
-			Genre_User,			// Basic values an ordinary user would be interested in
-			Genre_Config,		// Device-Specific configuration parameters
-			Genre_System		// Values of significance only to users who understand the Z-Wave protocol 
-		};
-
-		Value( uint8 const _nodeId, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, uint32 const _genre, string const& _label, bool const _bReadOnly );
-		Value( uint8 const _nodeId, TiXmlElement* _valueElement );
+		Value( uint8 const _driverId, uint8 const _nodeId, ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, ValueID::ValueType const _type, string const& _label, string const& _units, bool const _readOnly );
+		Value( uint8 const _driverId, uint8 const _nodeId, TiXmlElement* _valueElement );
 
 		virtual void WriteXML( TiXmlElement* _valueElement );
-
-		virtual uint8 const GetValueTypeId()const = 0;		
-		virtual string const GetValueTypeName()const = 0;
-
 		virtual string GetAsString()const = 0;
 
 		ValueID const& GetID()const{ return m_id; }
-		bool IsReadOnly()const{ return m_bReadOnly; }
+		bool IsReadOnly()const{ return m_readOnly; }
 
 		string const& GetLabel()const{ return m_label; }
 		void SetLabel( string const& _label ){ m_label = _label; }
 
 		string const& GetUnits()const{ return m_units; }
 		void SetUnits( string const& _units ){ m_units = _units; }
+
+		bool IsPolled()const{ return m_poll; }
 
 		uint32 Release(){ if( !(--m_refs) ){ delete this; } return m_refs; }
 
@@ -78,13 +71,15 @@ namespace OpenZWave
 
 	private:
 		uint32 AddRef(){ ++m_refs; return m_refs; }
+		Node* GetNode()const;
+		void SetPolled( bool const _state );
 
 		uint32		m_refs;
-		uint32		m_genre;
 		ValueID		m_id;
 		string		m_label;
 		string		m_units;
-		bool		m_bReadOnly;
+		bool		m_readOnly;
+		bool		m_poll;
 	};
 
 } // namespace OpenZWave

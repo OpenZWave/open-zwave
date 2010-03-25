@@ -26,6 +26,7 @@
 //-----------------------------------------------------------------------------
 
 #include "tinyxml.h"
+#include "Manager.h"
 #include "Driver.h"
 #include "Node.h"
 #include "Value.h"
@@ -43,25 +44,39 @@ static char* const c_genreName[] =
 	"system"
 };
 
+static char* const c_typeName[] = 
+{
+	"Bool",
+	"Byte",
+	"Decimal",
+	"Int",
+	"List",
+	"String"
+};
+
 //-----------------------------------------------------------------------------
 // <Value::Value>
 // Constructor
 //-----------------------------------------------------------------------------
 Value::Value
 (
+	uint8 const _driverId,
 	uint8 const _nodeId,
+	ValueID::ValueGenre const _genre,
 	uint8 const _commandClassId,
 	uint8 const _instance,
 	uint8 const _index,
-	uint32 const _genre,
+	ValueID::ValueType const _type,
 	string const& _label,
-	bool const _bReadOnly
+	string const& _units,
+	bool const _readOnly
 ):
 	m_refs( 1 ),
-	m_id( _nodeId, _commandClassId, _instance, _index ),
-	m_genre( _genre ),
+	m_id( _driverId, _nodeId, _genre, _commandClassId, _instance, _index, _type ),
 	m_label( _label ),
-	m_bReadOnly( _bReadOnly )
+	m_units( _units ),
+	m_readOnly( _readOnly ),
+	m_poll( false )
 {
 }
 
@@ -71,14 +86,26 @@ Value::Value
 //-----------------------------------------------------------------------------
 Value::Value
 (
+	uint8 const _driverId,
 	uint8 const _nodeId,
 	TiXmlElement* _valueElement
 ):
 	m_refs( 1 ),
-	m_bReadOnly( false ),
-	m_genre( Genre_System )
+	m_readOnly( false ),
+	m_poll( false )
 {
 	int intVal;
+
+	ValueID::ValueGenre genre = ValueID::ValueGenre_System;
+	char const* genreStr = _valueElement->Attribute( "genre" );
+	for( int i=0; i<4; ++i )
+	{
+		if( !strcmp( genreStr, c_genreName[i] ) )
+		{
+			genre = (ValueID::ValueGenre)i;
+			break;
+		}
+	}
 
 	uint8 commandClassId = 0;
 	if( TIXML_SUCCESS == _valueElement->QueryIntAttribute( "command_class", &intVal ) )
@@ -98,17 +125,18 @@ Value::Value
 		index = (uint8)intVal;
 	}
 
-	m_id = ValueID( _nodeId, commandClassId, instance, index );
-
-	char const* genre = _valueElement->Attribute( "genre" );
+	ValueID::ValueType type = ValueID::ValueType_Int;
+	char const* typeStr = _valueElement->Attribute( "type" );
 	for( int i=0; i<4; ++i )
 	{
-		if( !strcmp( genre, c_genreName[i] ) )
+		if( !strcmp( typeStr, c_typeName[i] ) )
 		{
-			m_genre = i;
+			type = (ValueID::ValueType)i;
 			break;
 		}
 	}
+
+	m_id = ValueID( _driverId, _nodeId, genre, commandClassId, instance, index, type );
 
 	char const* label = _valueElement->Attribute( "label" );
 	if( label )
@@ -125,7 +153,21 @@ Value::Value
 	char const* readOnly = _valueElement->Attribute( "read_only" );
 	if( readOnly )
 	{
-		m_bReadOnly = !strcmp( readOnly, "true" );
+		m_readOnly = !strcmp( readOnly, "true" );
+	}
+
+	char const* poll = _valueElement->Attribute( "poll" );
+	if( poll )
+	{
+		// Use the Manager Enable/Disable poll methods so that everything gets set up correctly
+		if( strcmp( poll, "true" ) )
+		{
+			Manager::Get()->DisablePoll( m_id );
+		}
+		else
+		{
+			Manager::Get()->EnablePoll( m_id );
+		}
 	}
 }
 
@@ -140,6 +182,8 @@ void Value::WriteXML
 {
 	char str[8];
 
+	_valueElement->SetAttribute( "genre", c_genreName[m_id.GetGenre()] );
+
 	snprintf( str, 8, "%d", m_id.GetCommandClassId() );
 	_valueElement->SetAttribute( "command_class", str );
 
@@ -149,10 +193,12 @@ void Value::WriteXML
 	snprintf( str, 8, "%d", m_id.GetIndex() );
 	_valueElement->SetAttribute( "index", str );
 
-	_valueElement->SetAttribute( "genre", c_genreName[m_genre] );
+	_valueElement->SetAttribute( "type", c_typeName[m_id.GetType()] );
+
 	_valueElement->SetAttribute( "label", m_label.c_str() );
 	_valueElement->SetAttribute( "units", m_units.c_str() );
-	_valueElement->SetAttribute( "read_only", m_bReadOnly ? "true" : "false" );
+	_valueElement->SetAttribute( "read_only", m_readOnly ? "true" : "false" );
+	_valueElement->SetAttribute( "poll", m_poll ? "true" : "false" );
 }
 
 //-----------------------------------------------------------------------------
@@ -168,7 +214,7 @@ bool Value::Set
 		return false;
 	}
 
-	if( Node* node = Driver::Get()->GetNode( m_id.GetNodeId() ) )
+	if( Node* node = GetNode() )
 	{
 		if( CommandClass* cc = node->GetCommandClass( m_id.GetCommandClassId() ) )
 		{
@@ -188,16 +234,57 @@ void Value::OnValueChanged
 )
 {
 	// Notify the watchers
-	Driver::Notification* notification = new Driver::Notification();
+	Manager::Notification* notification = new Manager::Notification();
 	
-	notification->m_type = Driver::NotificationType_Value;
+	notification->m_type = Manager::NotificationType_Value;
 	notification->m_id = m_id;
-	notification->m_nodeId = m_id.GetNodeId();
 	notification->m_groupIdx = 0;
 
-	Driver::Get()->NotifyWatchers( notification ); 
+	Manager::Get()->NotifyWatchers( notification ); 
 
 	delete notification;
+}
+
+//-----------------------------------------------------------------------------
+// <Value::GetNode>
+// Get a pointer to our node
+//-----------------------------------------------------------------------------
+Node* Value::GetNode
+(
+)const
+{
+	if( Driver* driver = Manager::Get()->GetDriver( m_id.GetDriverId() ) )
+	{
+		return driver->GetNode( m_id.GetNodeId() );
+	}
+
+	return NULL;
+}
+
+//-----------------------------------------------------------------------------
+// <Value::SetPolled>
+// Set this value as polled
+//-----------------------------------------------------------------------------
+void Value::SetPolled
+(
+	bool const _state	
+)
+{
+	if( _state != m_poll )
+	{
+		m_poll = _state;
+
+		// Notify the watchers
+		Manager::Notification* notification = new Manager::Notification();
+		
+		notification->m_type = m_poll ? Manager::NotificationType_PollingEnabled : Manager::NotificationType_PollingDisabled;
+		notification->m_id = m_id;
+		notification->m_groupIdx = 0;
+
+		Manager::Get()->NotifyWatchers( notification ); 
+
+		delete notification;
+	}
 }
 
 

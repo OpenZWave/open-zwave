@@ -35,7 +35,7 @@ namespace OpenZWave
 	class ApplicationStatus: public CommandClass
 	{
 	public:
-		static CommandClass* Create( uint8 const _nodeId ){ return new ApplicationStatus( _nodeId ); }
+		static CommandClass* Create( uint8 const _driverId, uint8 const _nodeId ){ return new ApplicationStatus( _driverId, _nodeId ); }
 		virtual ~ApplicationStatus(){}
 
 		static uint8 const StaticGetCommandClassId(){ return 0x22; }		
@@ -44,10 +44,10 @@ namespace OpenZWave
 		// From CommandClass
 		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }		
 		virtual string const GetCommandClassName()const{ return StaticGetCommandClassName(); }
-		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 0 );
+		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );
 
 	private:
-		ApplicationStatus( uint8 const _nodeId ): CommandClass( _nodeId ){}
+		ApplicationStatus( uint8 const _driverId, uint8 const _nodeId ): CommandClass( _driverId, _nodeId ){}
 	};
 
 } // namespace OpenZWave

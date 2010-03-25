@@ -2,7 +2,7 @@
 //
 //	ValueList.h
 //
-//	Base class for all OpenZWave Value Classes
+//	Represents a list of items
 //
 //	Copyright (c) 2010 Mal Lansell <openzwave@lansell.org>
 //
@@ -49,8 +49,8 @@ namespace OpenZWave
 			int32	m_value;
 		};
 
-		ValueList( uint8 const _nodeId, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, uint32 const _genre, string const& _label, bool const _bReadOnly, vector<Item> const& _items, int32 const _valueIdx );
-		ValueList( uint8 const _nodeId, TiXmlElement* _valueElement );
+		ValueList( uint8 const _driverId, uint8 const _nodeId, ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, string const& _label, string const& _units, bool const _readOnly, vector<Item> const& _items, int32 const _valueIdx );
+		ValueList( uint8 const _driverId, uint8 const _nodeId, TiXmlElement* _valueElement );
 		virtual ~ValueList(){}
 
 		bool SetByLabel( string const& _label );
@@ -58,14 +58,8 @@ namespace OpenZWave
 
 		void OnValueChanged( int32 const _valueIdx );
 
-		static uint8 const StaticGetValueTypeId(){ return 0x06; }
-		static string const StaticGetValueTypeName(){ return "VALUE_LIST"; }
-
 		// From Value
 		virtual void WriteXML( TiXmlElement* _valueElement );
-		virtual uint8 const GetValueTypeId()const{ return StaticGetValueTypeId(); }
-		virtual string const GetValueTypeName()const{ return StaticGetValueTypeName(); }
-
 		virtual string GetAsString()const{ return m_items[m_valueIdx].m_label; }
 
 		Item const& GetItem()const{ return m_items[m_valueIdx]; }

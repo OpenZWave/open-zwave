@@ -41,45 +41,18 @@
 
 #include "ValueID.h"
 #include "Value.h"
-#include "ValueStore.h"
+#include "ValueBool.h"
+#include "ValueByte.h"
+#include "ValueDecimal.h"
+#include "ValueInt.h"
+#include "ValueList.h"
+#include "ValueShort.h"
+#include "ValueString.h"
 
+#include "ValueStore.h"
 
 using namespace OpenZWave;
 
-Driver* Driver::s_instance = NULL;
-
-
-//-----------------------------------------------------------------------------
-//	<Driver::Create>
-//	Static creation of the singleton
-//-----------------------------------------------------------------------------
-Driver* Driver::Create
-(
-	string const& _serialPortName,
-	string const& _configPath,
-	pfnOnNotification_t _callback,
-	void* _context
-)
-{
-	if( NULL == s_instance )
-	{
-		s_instance = new Driver( _serialPortName, _configPath, _callback, _context );
-	}
-
-	return s_instance;
-}
-
-//-----------------------------------------------------------------------------
-//	<Driver::Destroy>
-//	Static method to destroy the singleton.
-//-----------------------------------------------------------------------------
-void Driver::Destroy
-(
-)
-{
-	delete s_instance;
-	s_instance = NULL;
-}
 
 //-----------------------------------------------------------------------------
 // <Driver::Driver>
@@ -88,12 +61,10 @@ void Driver::Destroy
 Driver::Driver
 ( 
 	string const& _serialPortName,
-	string const& _configPath,
-	pfnOnNotification_t _callback,
-	void* _context
+	uint8 const _driverId
 ):
 	m_serialPortName( _serialPortName ),
-	m_configPath( _configPath ),
+	m_driverId( _driverId ),
 	m_pollInterval( 30 ),					// By default, every polled device is queried once every 30 seconds
 	m_waitingForAck( false ),
 	m_expectedReply( 0 ),
@@ -111,19 +82,8 @@ Driver::Driver
 	m_infoMutex( new Mutex() ),
 	m_capabilities( 0 )
 {
-	// Create the log file
-	Log::Create( "OZW_Log.txt" );
-
-	CommandClasses::RegisterCommandClasses();
-
-	// Ensure the singleton instance is set
-	s_instance = this;
-
 	// Clear the nodes array
 	memset( m_nodes, 0, sizeof(Node*) * 256 );
-
-	// Add the first watcher
-	AddWatcher( _callback, _context );
 
 	// Start the thread that will handle communications with the Z-Wave network
 	m_driverThread->Start( Driver::DriverThreadEntryPoint, this );
@@ -916,7 +876,7 @@ void Driver::HandleSerialAPIGetInitDataResponse
 
 					// Create the node
 					delete m_nodes[nodeId];
-					m_nodes[nodeId] = new Node( nodeId );
+					m_nodes[nodeId] = new Node( m_driverId, nodeId );
 				}
 				else
 				{
@@ -1182,12 +1142,12 @@ void Driver::HandleApplicationCommandHandlerRequest
 	switch (ClassId)
 	{
 		case COMMAND_CLASS_BASIC:
-			
+		{			
 			switch (ClassIdMinor)
 			{
 			   	case BASIC_SET:
 					//get the class function pointer
-					if (pfnDeviceEventVectorClass = CommandClasses::CreateCommandClass(ClassId,nodeId) );
+					if( pfnDeviceEventVectorClass = CommandClasses::CreateCommandClass( ClassId, m_driverId, nodeId ) )
 					{
 						StatusData[0] = 0x01; StatusData[1]=ValueFromDevice;
 						pfnDeviceEventVectorClass->HandleMsg( StatusData,0x02,0x00);
@@ -1198,26 +1158,28 @@ void Driver::HandleApplicationCommandHandlerRequest
 					break;
 			}
 			break;
-
+		}
 		case COMMAND_CLASS_HAIL:
-			
-			if (pfnDeviceEventVectorClass = CommandClasses::CreateCommandClass(ClassId,nodeId) );
-					{
-					StatusData[0] = 0x01; StatusData[1]=ValueFromDevice;
-					pfnDeviceEventVectorClass->HandleMsg( StatusData,0x02,0x00);
-					}
+		{			
+			if( pfnDeviceEventVectorClass = CommandClasses::CreateCommandClass(ClassId, m_driverId, nodeId ) )
+			{
+				StatusData[0] = 0x01; StatusData[1]=ValueFromDevice;
+				pfnDeviceEventVectorClass->HandleMsg( StatusData,0x02,0x00);
+			}
 			break;
-		
+		}
 		case COMMAND_CLASS_APPLICATION_STATUS:
+		{
 			break;	//TODO: Test this class function or implement
-
+		}
 		default:
-			
+		{			
 			if( m_nodes[nodeId] )
 		 	{
 				m_nodes[nodeId]->ApplicationCommandHandler( _data );
 			}
-	 }
+		}
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -1253,7 +1215,7 @@ void Driver::HandleApplicationUpdateRequest
 		{
 			Log::Write( "** Network change **: ID %d was assigned to a new Z-Wave node", nodeId );
 			delete m_nodes[nodeId];
-			m_nodes[nodeId] = new Node( nodeId );
+			m_nodes[nodeId] = new Node( m_driverId, nodeId );
 			SetNodeAwake( nodeId );
 			break;
 		}
@@ -1275,73 +1237,123 @@ void Driver::HandleApplicationUpdateRequest
 // <Driver::EnablePoll>
 // Enable poll of a node
 //-----------------------------------------------------------------------------
-void Driver::EnablePoll
+bool Driver::EnablePoll
 ( 
-	uint8 _id
+	ValueID const& _id
 )
 {
-	Node* node = m_nodes[_id];
-	if( !node )
+	uint8 nodeId = _id.GetNodeId();
+	if( Node* node = GetNode( nodeId ) )
 	{
-		// Node does not exist
-		return;
-	}
+		uint8 commandClassId = _id.GetCommandClassId();
+		uint8 instance = _id.GetInstance();
 
-	// Set the node state to polled
-	node->SetPolled( true );
-
-	// Add the node to the poll list
-	m_pollMutex->Lock();
-	
-	// See if the node is already in the poll list.
-	for( list<uint8>::iterator it = m_pollList.begin(); it != m_pollList.end(); ++it )
-	{
-		if( *it == _id )
+		// Run through all the values that have the same command class instance, and mark them all
+		// as polled.  This is because value state is requested for a whole command class instance
+		// at once, so polling can only be enabled and disabled on a command class instance basis.
+		ValueStore* store = node->GetValueStore();
+		for( ValueStore::Iterator it = store->Begin(); it != store->End(); ++it )
 		{
-			// Node is already in the poll list, so we have nothing to do.
-			m_pollMutex->Release();
-			return;	
+			if( ( it->first.GetCommandClassId() == commandClassId ) && ( it->first.GetInstance() == instance ) )
+			{
+				it->second->SetPolled( true );
+			}
 		}
+
+		node->ReleaseValueStore();
+
+		// Mark the command class instance as polled
+		if( CommandClass* cc = node->GetCommandClass( commandClassId ) )
+		{
+			cc->SetPolled( instance, true );
+		}
+
+		// Add the node to the polling list
+		m_pollMutex->Lock();
+
+		// See if the node is already in the poll list.
+		for( list<uint8>::iterator it = m_pollList.begin(); it != m_pollList.end(); ++it )
+		{
+			if( *it == nodeId )
+			{
+				// It is already in the poll list, so we have nothing to do.
+				m_pollMutex->Release();
+				return true;
+			}
+		}
+
+		// Not in the list, so we add it
+		m_pollList.push_back( nodeId );
+		m_pollMutex->Release();
+		return true;
 	}
 
-	// Not in the list, so we add it
-	m_pollList.push_back( _id );
-	m_pollMutex->Release();
+	Log::Write( "EnablePoll failed - value not found");
+	return false;
 }
 
 //-----------------------------------------------------------------------------
 // <Driver::DisablePoll>
 // Disable poll of a node
 //-----------------------------------------------------------------------------
-void Driver::DisablePoll
+bool Driver::DisablePoll
 ( 
-	uint8 _id
+	ValueID const& _id
 )
 {
-	Node* node = m_nodes[_id];
-	if( !node )
+	uint8 nodeId = _id.GetNodeId();
+	if( Node* node = GetNode( nodeId ) )
 	{
-		// Node does not exist
-		return;
-	}
+		uint8 commandClassId = _id.GetCommandClassId();
+		uint8 instance = _id.GetInstance();
 
-	// Set the node state to not-polled
-	node->SetPolled( false );
-
-	m_pollMutex->Lock();
-
-	// Find the node in the poll list.
-	for( list<uint8>::iterator it = m_pollList.begin(); it != m_pollList.end(); ++it )
-	{
-		if( *it == _id )
+		// Run through all the values that have the same command class instance, and mark them all as 
+		// not polled.  This is because value state is requested for a whole command class instance at
+		// once, so polling can only be enabled and disabled on a command class instance basis.
+		ValueStore* store = node->GetValueStore();
+		for( ValueStore::Iterator it = store->Begin(); it != store->End(); ++it )
 		{
-			// Remove the node from the poll list.
-			m_pollList.erase( it );		
-			break;
+			if( ( it->first.GetCommandClassId() == commandClassId ) && ( it->first.GetInstance() == instance ) )
+			{
+				it->second->SetPolled( false );
+			}
+		}
+		node->ReleaseValueStore();
+
+		// Mark the command class instance as not polled
+		if( CommandClass* cc = node->GetCommandClass( commandClassId ) )
+		{
+			cc->SetPolled( instance, false );
+		}
+
+		// If there are no command class instances that need polling, remove the node from the polling list
+		if( node->RequiresPolling() )
+		{
+			return true;
+		}
+		else
+		{
+			m_pollMutex->Lock();
+
+			// See if the node is already in the poll list.
+			for( list<uint8>::iterator it = m_pollList.begin(); it != m_pollList.end(); ++it )
+			{
+				if( *it == nodeId )
+				{
+					// Found it
+					m_pollList.erase( it );
+					m_pollMutex->Release();
+					return true;
+				}
+			}
+
+			// Not in the list
+			m_pollMutex->Release();
 		}
 	}
-	
-	m_pollMutex->Release();
+
+	Log::Write( "DisablePoll failed - value not found");
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -1378,18 +1390,18 @@ void Driver::PollThreadProc()
 			if( !m_pollList.empty() )
 			{
 				// Get the next node to be polled
-				uint8 id = m_pollList.front();
+				uint8 nodeId = m_pollList.front();
 			
 				// Move it to the back of the list
 				m_pollList.pop_front();
-				m_pollList.push_back( id );
+				m_pollList.push_back( nodeId );
 
 				// Calculate the time before the next poll, so that all polls 
 				// can take place within the user-specified interval.
 				pollInterval /= m_pollList.size();
 
-				// Request the state of the node
-				if( Node* node = GetNode( id ) )
+				// Request the state of the value from the node to which it belongs
+				if( Node* node = GetNode( nodeId ) )
 				{
 					bool requestState = true;
 					if( !node->IsListeningDevice() )
@@ -1408,7 +1420,8 @@ void Driver::PollThreadProc()
 
 					if( requestState )
 					{
-						node->RequestState( true );
+						// Request an update of the value
+						node->Poll();
 					}
 				}
 			}
@@ -1484,10 +1497,10 @@ uint8 Driver::GetInfoRequest
 }
 
 //-----------------------------------------------------------------------------
-// <Driver::GetValue>
-// Get the value object with the specified ID
+// <Driver::GetValueBool>
+// Get the bool value object with the specified ID
 //-----------------------------------------------------------------------------
-Value* Driver::GetValue
+ValueBool* Driver::GetValueBool
 (
 	ValueID const& _id
 )
@@ -1496,177 +1509,129 @@ Value* Driver::GetValue
 	uint8 nodeId = _id.GetNodeId();
 	if( Node* node = m_nodes[nodeId] )
 	{
-		return( node->GetValue( _id ) );
+		return( node->GetValueBool( _id ) );
 	}
 
 	return NULL;
 }
 
 //-----------------------------------------------------------------------------
-//	Notifications
+// <Driver::GetValueByte>
+// Get the byte value object with the specified ID
 //-----------------------------------------------------------------------------
-
-//-----------------------------------------------------------------------------
-// <Driver::AddWatcher>
-// Add a watcher to the list
-//-----------------------------------------------------------------------------
-bool Driver::AddWatcher
+ValueByte* Driver::GetValueByte
 (
-	pfnOnNotification_t _pWatcher,
-	void* _context
+	ValueID const& _id
 )
 {
-	// Ensure this watcher is not already on the list
-	for( list<Watcher*>::iterator it = m_watchers.begin(); it != m_watchers.end(); ++it )
+	// Get the node that stores this value
+	uint8 nodeId = _id.GetNodeId();
+	if( Node* node = m_nodes[nodeId] )
 	{
-		if( ((*it)->m_callback == _pWatcher ) && ( (*it)->m_context == _context ) )
-		{
-			// Already in the list
-			return false;
-		}
+		return( node->GetValueByte( _id ) );
 	}
 
-	m_watchers.push_back( new Watcher( _pWatcher, _context ) );
-	return true;
+	return NULL;
 }
 
 //-----------------------------------------------------------------------------
-// <Driver::RemoveWatcher>
-// Remove a watcher from the list
+// <Driver::GetValueDecimal>
+// Get the decimal value object with the specified ID
 //-----------------------------------------------------------------------------
-bool Driver::RemoveWatcher
+ValueDecimal* Driver::GetValueDecimal
 (
-	pfnOnNotification_t _pWatcher,
-	void* _context
+	ValueID const& _id
 )
 {
-	list<Watcher*>::iterator it = m_watchers.begin();
-	while( it != m_watchers.end() )
+	// Get the node that stores this value
+	uint8 nodeId = _id.GetNodeId();
+	if( Node* node = m_nodes[nodeId] )
 	{
-		if( ((*it)->m_callback == _pWatcher ) && ( (*it)->m_context == _context ) )
-		{
-			delete (*it);
-			m_watchers.erase( it );
-			return true;
-		}
+		return( node->GetValueDecimal( _id ) );
 	}
 
-	return false;
+	return NULL;
 }
 
 //-----------------------------------------------------------------------------
-// <Driver::NotifyWatchers>
-// Notify any watching objects of a value change
+// <Driver::GetValueInt>
+// Get the int value object with the specified ID
 //-----------------------------------------------------------------------------
-void Driver::NotifyWatchers
+ValueInt* Driver::GetValueInt
 (
-	Notification const* _notification
+	ValueID const& _id
 )
 {
-	for( list<Watcher*>::iterator it = m_watchers.begin(); it != m_watchers.end(); ++it )
+	// Get the node that stores this value
+	uint8 nodeId = _id.GetNodeId();
+	if( Node* node = m_nodes[nodeId] )
 	{
-		Watcher* pWatcher = *it;
-		pWatcher->m_callback( _notification, pWatcher->m_context );
+		return( node->GetValueInt( _id ) );
 	}
+
+	return NULL;
 }
 
+//-----------------------------------------------------------------------------
+// <Driver::GetValueList>
+// Get the list value object with the specified ID
+//-----------------------------------------------------------------------------
+ValueList* Driver::GetValueList
+(
+	ValueID const& _id
+)
+{
+	// Get the node that stores this value
+	uint8 nodeId = _id.GetNodeId();
+	if( Node* node = m_nodes[nodeId] )
+	{
+		return( node->GetValueList( _id ) );
+	}
 
-////-----------------------------------------------------------------------------
-//// <Driver::GetAssociation>
-//// 
-////-----------------------------------------------------------------------------
-//void Driver::GetAssociation
-//(
-//	uint8 _nodeId,
-//	uint8 _group
-//)
-//{
-//	Log::Write( "GetAssociation: Node=%d, Group=%d", _nodeId, _group );
-//
-//	Msg* msg = new Msg( "Association Get", _nodeId, REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
-//	msg->Append( _nodeId );
-//	msg->Append( 3 );
-//	msg->Append( COMMAND_CLASS_ASSOCIATION );
-//	msg->Append( ASSOCIATION_GET );
-//	msg->Append( _group );
-//	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-//
-//	if( IsSleepingNode( _nodeId ) )
-//	{
-//		Log::Write( "Postpone GetAssociation until device wakes up" );
-//		SendSleepingMsg( _nodeId, msg );
-//	}
-//	else
-//	{
-//		SendMsg( msg );
-//	}
-//}
-//
-////-----------------------------------------------------------------------------
-//// <Driver::SetAssociation>
-//// 
-////-----------------------------------------------------------------------------
-//void Driver::SetAssociation
-//(
-//	uint8 _nodeId,
-//	uint8 _group,
-//	uint8 _targetNodeId
-//)
-//{
-//	Log::Write( "SetAssociation: Node=%d, Group=%d, Target=%d", _nodeId, _group, _targetNodeId );
-//
-//	Msg* msg = new Msg( "Association Set", _nodeId, REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
-//	msg->Append( _nodeId );
-//	msg->Append( 4 );
-//	msg->Append( COMMAND_CLASS_ASSOCIATION );
-//	msg->Append( ASSOCIATION_SET );
-//	msg->Append( _group );
-//	msg->Append( _targetNodeId );
-//	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-//
-//	if( IsSleepingNode( _nodeId ) )
-//	{
-//		Log::Write( "Postpone SetAssociation until device wakes up" );
-//		SendSleepingMsg( _nodeId, msg );
-//	}
-//	else
-//	{
-//		SendMsg( msg );
-//	}
-//}
-//
-////-----------------------------------------------------------------------------
-//// <Driver::RemoveAssociation>
-//// 
-////-----------------------------------------------------------------------------
-//void Driver::RemoveAssociation
-//(
-//	uint8 _nodeId,
-//	uint8 _group,
-//	uint8 _targetNodeId
-//)
-//{
-//	Log::Write( "RemoveAssociation: Node=%d, Group=%d, Target=%d", _nodeId, _group, _targetNodeId );
-//
-//	Msg* msg = new Msg( "Association Remove", _nodeId, REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
-//	msg->Append( _nodeId );
-//	msg->Append( 4 );
-//	msg->Append( COMMAND_CLASS_ASSOCIATION );
-//	msg->Append( ASSOCIATION_REMOVE );
-//	msg->Append( _group );
-//	msg->Append( _targetNodeId );
-//	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-//
-//	if( IsSleepingNode( _nodeId ) )
-//	{
-//		Log::Write( "Postpone RemoveAssociation until device wakes up" );
-//		SendSleepingMsg( _nodeId, msg );
-//	}
-//	else
-//	{
-//		SendMsg( msg );
-//	}
-//}
+	return NULL;
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::GetValueShort>
+// Get the short value object with the specified ID
+//-----------------------------------------------------------------------------
+ValueShort* Driver::GetValueShort
+(
+	ValueID const& _id
+)
+{
+	// Get the node that stores this value
+	uint8 nodeId = _id.GetNodeId();
+	if( Node* node = m_nodes[nodeId] )
+	{
+		return( node->GetValueShort( _id ) );
+	}
+
+	return NULL;
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::GetValueString>
+// Get the string value object with the specified ID
+//-----------------------------------------------------------------------------
+ValueString* Driver::GetValueString
+(
+	ValueID const& _id
+)
+{
+	// Get the node that stores this value
+	uint8 nodeId = _id.GetNodeId();
+	if( Node* node = m_nodes[nodeId] )
+	{
+		return( node->GetValueString( _id ) );
+	}
+
+	return NULL;
+}
+
+//-----------------------------------------------------------------------------
+// Controller commands
+//-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
 // <Driver::ResetController>
@@ -1830,74 +1795,6 @@ void Driver::EndReplicateController
 	msg = new Msg( "Get new init data after replication", 0xff, REQUEST, FUNC_ID_SERIAL_API_GET_INIT_DATA, false );
 	SendMsg( msg );
 }
-
-////-----------------------------------------------------------------------------
-//// <Driver::SetConfiguration>
-//// Set a configuration parameter of a device
-////-----------------------------------------------------------------------------
-//void Driver::SetConfiguration
-//(
-//	uint8 _nodeId,
-//	uint8 _parameter,
-//	uint32 _value
-//)
-//{
-//	Log::Write( "SetConfiguration: Node=%d, Parameter=%d, Value=%d", _nodeId, _parameter, _value );
-//
-//	Msg* msg = new Msg( "Configuration Set", _nodeId, REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-//
-//	if( _value <= 0xff) 
-//	{
-//		// one byte value
-//		msg->Append( _nodeId );
-//		msg->Append( 5 );
-//		msg->Append( COMMAND_CLASS_CONFIGURATION );
-//		msg->Append( CONFIGURATION_SET );
-//		msg->Append( _parameter );
-//		msg->Append( 1 );
-//		msg->Append( (uint8)_value );
-//		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-//	}
-//	else if( _value <= 0xffff )
-//	{
-//		// two byte value
-//		msg->Append( _nodeId );
-//		msg->Append( 6 );
-//		msg->Append( COMMAND_CLASS_CONFIGURATION );
-//		msg->Append( CONFIGURATION_SET );
-//		msg->Append( _parameter );
-//		msg->Append( 2 );
-//		msg->Append( (uint8)((_value>>8)&0xff) );
-//		msg->Append( (uint8)(_value&0xff) );
-//		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-//	}
-//	else
-//	{
-//		// four byte value
-//		msg->Append( _nodeId );
-//		msg->Append( 8 );
-//		msg->Append( COMMAND_CLASS_CONFIGURATION );
-//		msg->Append( CONFIGURATION_SET );
-//		msg->Append( _parameter );
-//		msg->Append( 4 );
-//		msg->Append( (uint8)((_value>>24)&0xff) );
-//		msg->Append( (uint8)((_value>>16)&0xff) );
-//		msg->Append( (uint8)((_value>>8)&0xff) );
-//		msg->Append( (_value & 0xff) );
-//		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-//	}
-//
-//	if( IsSleepingNode( _nodeId ) )
-//	{
-//		Log::Write( "Postpone SetConfiguration until device wakes up" );
-//		SendSleepingMsg( _nodeId, msg );
-//	}
-//	else
-//	{
-//		SendMsg( msg );
-//	}
-//}
-//
 
 //-----------------------------------------------------------------------------
 // <Driver::UpdateEvents>

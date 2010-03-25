@@ -2,7 +2,7 @@
 //
 //	ValueStore.cpp
 //
-//	Base class for all OpenZWave Value Classes
+//	Represents a string value
 //
 //	Copyright (c) 2010 Mal Lansell <openzwave@lansell.org>
 //
@@ -39,16 +39,18 @@ using namespace OpenZWave;
 //-----------------------------------------------------------------------------
 ValueString::ValueString
 (
+	uint8 const _driverId,
 	uint8 const _nodeId,
+	ValueID::ValueGenre const _genre,
 	uint8 const _commandClassId,
 	uint8 const _instance,
 	uint8 const _index,
-	uint32 const _genre,
 	string const& _label,
-	bool const _bReadOnly,
+	string const& _units,
+	bool const _readOnly,
 	string const& _value
 ):
-	Value( _nodeId, _commandClassId, _instance, _index, _genre, _label, _bReadOnly ),
+	Value( _driverId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_String, _label, _units, _readOnly ),
 	m_value( _value )
 {
 }
@@ -59,10 +61,11 @@ ValueString::ValueString
 //-----------------------------------------------------------------------------
 ValueString::ValueString
 (
+	uint8 const _driverId,
 	uint8 const _nodeId,
 	TiXmlElement* _valueElement
 ):
-	Value( _nodeId, _valueElement )
+	Value( _driverId, _nodeId, _valueElement )
 {
 	char const* str = _valueElement->Attribute( "value" );
 	if( str )

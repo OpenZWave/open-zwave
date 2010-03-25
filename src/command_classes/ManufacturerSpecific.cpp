@@ -32,6 +32,7 @@
 #include "Defs.h"
 #include "Msg.h"
 #include "Node.h"
+#include "Manager.h"
 #include "Driver.h"
 #include "Log.h"
 
@@ -85,7 +86,7 @@ void ManufacturerSpecific::RequestStatic
 	msg->Append( GetCommandClassId() );
 	msg->Append( ManufacturerSpecificCmd_Get );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	Driver::Get()->SendMsg( msg );
+	GetDriver()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -96,7 +97,7 @@ bool ManufacturerSpecific::HandleMsg
 (
 	uint8 const* _data,
 	uint32 const _length,
-	uint32 const _instance	// = 0
+	uint32 const _instance	// = 1
 )
 {
 	char str[64];
@@ -149,7 +150,7 @@ bool ManufacturerSpecific::LoadProductXML
 	s_bXmlLoaded = true;
 
 	// Parse the Z-Wave manufacturer and product XML file.
-	string filename =  Driver::Get()->GetConfigPath() + "ManufacturerSpecific.xml";
+	string filename =  Manager::Get()->GetConfigPath() + "ManufacturerSpecific.xml";
 
 	TiXmlDocument* pDoc = new TiXmlDocument();
 	if( !pDoc->LoadFile( filename.c_str(), TIXML_ENCODING_UTF8 ) )
