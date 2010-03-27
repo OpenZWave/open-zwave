@@ -45,7 +45,7 @@ using namespace OpenZWave;
 //-----------------------------------------------------------------------------
 void OnNotification
 (
-	Driver::Notification const* _notification,
+	Manager::Notification const* _notification,
 	void* _context
 )
 {
