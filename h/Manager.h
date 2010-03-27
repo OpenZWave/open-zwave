@@ -29,6 +29,7 @@
 #define _Manager_H
 
 #include <string>
+#include <cstring>
 #include <map>
 #include <list>
 #include <deque>
