@@ -45,7 +45,7 @@ using namespace OpenZWave;
 //-----------------------------------------------------------------------------
 void OnNotification
 (
-	Driver::Notification const* _notification,
+	Manager::Notification const* _notification,
 	void* _context
 )
 {
@@ -72,7 +72,7 @@ int main( int argc, char* argv[] )
 	// Add a Z-Wave Driver
 	// Modify this line to set the correct serial port for your PC interface.
 	uint8 driverId;
-	Manager::Get()->AddDriver( "/dev/cu.usbserial", &driverId );
+	Manager::Get()->AddDriver( "/dev/cu.usbserial-FTCDCUU1", &driverId );
 
 	// Now we just wait forever, while the Driver thread does all the 
 	// initialisation and querying of the Z-Wave network.  In a normal app,
