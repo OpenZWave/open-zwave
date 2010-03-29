@@ -211,7 +211,6 @@ namespace OpenZWave
 
 
 #define ADD_NODE_ANY							0x01
-#define ADD_NODE_ANY							0x01
 #define ADD_NODE_CONTROLLER						0x02
 #define ADD_NODE_SLAVE							0x03
 #define ADD_NODE_EXISTING						0x04
