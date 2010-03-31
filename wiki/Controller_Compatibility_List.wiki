@@ -7,7 +7,7 @@ A list of working controllers used with OpenZwave:
 || Aeon || ? || ? ||
 
 
-A list of *non-working* devices tried with OpenZwave:
+A list of *non-working* controllers tried with OpenZwave:
 || *Manufacture* || *Connection Type* || *Speed reported* || *Comment* || 
 || Intermatic HA22 || USB || 96000 ||
 || ThinkEssentials || USB || ? ||
