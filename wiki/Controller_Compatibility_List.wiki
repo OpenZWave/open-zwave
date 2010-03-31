@@ -10,4 +10,4 @@ A list of working controllers used with OpenZwave:
 A list of *non-working* controllers tried with OpenZwave:
 || *Manufacture* || *Connection Type* || *Speed reported* || *Comment* || 
 || Intermatic HA22 || USB || 9600 ||
-|| ThinkEssentials || USB || ? || Probably due to HID device
+|| ThinkEssentials || USB || ? || Probably due to HID device ||
