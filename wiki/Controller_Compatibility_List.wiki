@@ -4,13 +4,10 @@ A list of working controllers used with OpenZwave:
 || Tricklestar || USB || 40000 ||
 || ACT ZCS101 || RS232 || 9600 ||
 || Z-troller || RS232 || 9600 || Original version||
-|| Aeon || ? || ? ||
+|| Aeon || ZStick || USB || 40000
 
 
 A list of *non-working* controllers tried with OpenZwave:
 || *Manufacture* || *Connection Type* || *Speed reported* || *Comment* || 
-|| Intermatic HA22 || USB || 96000 ||
+|| Intermatic HA22 || USB || 9600 ||
 || ThinkEssentials || USB || ? ||
-
-
-= Details =
