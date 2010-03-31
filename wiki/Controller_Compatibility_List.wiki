@@ -4,7 +4,7 @@ A list of working controllers used with OpenZwave:
 || Tricklestar || USB || 40000 ||
 || ACT ZCS101 || RS232 || 9600 ||
 || Z-troller || RS232 || 9600 || Original version||
-|| Aeon || ZStick || USB || 40000 ||
+|| Aeon ZStick || USB || 40000 ||
 
 
 A list of *non-working* controllers tried with OpenZwave:
