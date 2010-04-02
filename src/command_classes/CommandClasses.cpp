@@ -103,7 +103,7 @@ void CommandClasses::Register
 CommandClass* CommandClasses::CreateCommandClass
 (
 	uint8 const _commandClassId,
-	uint8 const _driverId, 
+	uint32 const _homeId, 
 	uint8 const _nodeId
 )
 {
@@ -115,7 +115,7 @@ CommandClass* CommandClasses::CreateCommandClass
 	}
 
 	// Create an instance of the command class
-	return creator( _driverId, _nodeId );
+	return creator( _homeId, _nodeId );
 }
 
 //-----------------------------------------------------------------------------

@@ -42,8 +42,8 @@ namespace OpenZWave
 	class ValueShort: public Value
 	{
 	public:
-		ValueShort( uint8 const _driverId, uint8 const _nodeId, ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, string const& _label, string const& _units, bool const _readOnly, uint16 const _value );
-		ValueShort( uint8 const _driverId, uint8 const _nodeId, TiXmlElement* _valueElement );
+		ValueShort( uint32 const _homeId, uint8 const _nodeId, ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, string const& _label, string const& _units, bool const _readOnly, uint16 const _value );
+		ValueShort( uint32 const _homeId, uint8 const _nodeId, uint8 const _commandClassId, TiXmlElement const* _valueElement );
 		virtual ~ValueShort(){}
 
 		bool Set( uint16 const _value );

@@ -84,36 +84,22 @@ bool NodeNaming::HandleMsg
 	return false;
 }
 
-////-----------------------------------------------------------------------------
-//// <NodeNaming::Set>
-//// Set the level on a device
-////-----------------------------------------------------------------------------
-//void NodeNaming::Set
-//(
-//	uint8 const _level
-//)
-//{
-//	//Log::Write( "NodeNaming::Set - Setting node %d to level %d", GetNodeId(), _level );
-//	//Msg* msg = new Msg( "NodeNaming Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
-//	//msg->Append( GetNodeId() );
-//	//msg->Append( 3 );
-//	//msg->Append( GetCommandClassId() );
-//	//msg->Append( NodeNamingCmd_Set );
-//	//msg->Append( _level );
-//	//msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-//}
-
 //-----------------------------------------------------------------------------
-// <NodeNaming::CreateVars>
-// Create the values managed by this command class
+// <NodeNaming::Set>
+// Set the name of the device
 //-----------------------------------------------------------------------------
-void NodeNaming::CreateVars
+void NodeNaming::Set
 (
-	uint8 const _instance
+	string const& _name
 )
 {
-	if( Node* node = GetNode() )
-	{
-		node->CreateValueString(  ValueID::ValueGenre_System, GetCommandClassId(), _instance, 0, "Node Name", "", false, "Unknown" );
-	}
+	Log::Write( "NodeNaming::Set - Naming node %d as ''", GetNodeId(), _name.c_str() );
+	Msg* msg = new Msg( "NodeNaming Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
+	msg->Append( GetNodeId() );
+	msg->Append( 3 );
+	msg->Append( GetCommandClassId() );
+	msg->Append( NodeNamingCmd_Set );
+	msg->Append( 0 );
+	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 }
+

@@ -42,8 +42,8 @@ namespace OpenZWave
 	class ValueString: public Value
 	{
 	public:
-		ValueString( uint8 const _driverId, uint8 const _nodeId, ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, string const& _label, string const& _units, bool const _readOnly, string const& _value );
-		ValueString( uint8 const _driverId, uint8 const _nodeId, TiXmlElement* _valueElement );
+		ValueString( uint32 const _homeId, uint8 const _nodeId, ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, string const& _label, string const& _units, bool const _readOnly, string const& _value );
+		ValueString( uint32 const _homeId, uint8 const _nodeId, uint8 const _commandClassId, TiXmlElement const* _valueElement );
 		virtual ~ValueString(){}
 
 		bool Set( string const& _value );

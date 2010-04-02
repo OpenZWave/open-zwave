@@ -37,7 +37,7 @@ namespace OpenZWave
 	class ThermostatSetpoint: public CommandClass
 	{
 	public:
-		static CommandClass* Create( uint8 const _driverId, uint8 const _nodeId ){ return new ThermostatSetpoint( _driverId, _nodeId ); }
+		static CommandClass* Create( uint32 const _homeId, uint8 const _nodeId ){ return new ThermostatSetpoint( _homeId, _nodeId ); }
 		virtual ~ThermostatSetpoint(){} 
 
 		static uint8 const StaticGetCommandClassId(){ return 0x43; }		
@@ -52,7 +52,7 @@ namespace OpenZWave
 		virtual bool SetValue( Value const& _value );
 
 	private:
-		ThermostatSetpoint( uint8 const _driverId, uint8 const _nodeId );
+		ThermostatSetpoint( uint32 const _homeId, uint8 const _nodeId );
 
 		enum
 		{

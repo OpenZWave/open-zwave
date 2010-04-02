@@ -39,7 +39,7 @@ using namespace OpenZWave;
 //-----------------------------------------------------------------------------
 ValueInt::ValueInt
 (
-	uint8 const _driverId,
+	uint32 const _homeId,
 	uint8 const _nodeId,
 	ValueID::ValueGenre const _genre,
 	uint8 const _commandClassId,
@@ -50,7 +50,7 @@ ValueInt::ValueInt
 	bool const _readOnly,
 	int32 const _value
 ):
-	Value( _driverId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Int, _label, _units, _readOnly ),
+	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Int, _label, _units, _readOnly ),
 	m_value( _value )
 {
 }
@@ -61,11 +61,12 @@ ValueInt::ValueInt
 //-----------------------------------------------------------------------------
 ValueInt::ValueInt
 (
-	uint8 const _driverId,
+	uint32 const _homeId,
 	uint8 const _nodeId,
-	TiXmlElement* _valueElement
+	uint8 const _commandClassId,
+	TiXmlElement const* _valueElement
 ):
-	Value( _driverId, _nodeId, _valueElement )
+	Value( _homeId, _nodeId, _commandClassId, _valueElement )
 {
 	int intVal;
 	if( TIXML_SUCCESS == _valueElement->QueryIntAttribute( "value", &intVal ) )

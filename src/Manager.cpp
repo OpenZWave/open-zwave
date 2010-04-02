@@ -59,12 +59,13 @@ Manager* Manager::s_instance = NULL;
 //-----------------------------------------------------------------------------
 Manager* Manager::Create
 (
-	string const& _configPath
+	string const& _configPath,
+	string const& _userPath
 )
 {
 	if( NULL == s_instance )
 	{
-		s_instance = new Manager( _configPath );
+		s_instance = new Manager( _configPath, _userPath );
 	}
 
 	return s_instance;
@@ -88,16 +89,16 @@ void Manager::Destroy
 //-----------------------------------------------------------------------------
 Manager::Manager
 ( 
-	string const& _configPath
+	string const& _configPath,
+	string const& _userPath
 ):
 	m_configPath( _configPath ),
+	m_userPath( _userPath ),
 	m_exitEvent( new Event() )
 {
-	// Clear the drivers array
-	memset( m_drivers, 0, sizeof(Driver*)*MaxDrivers );
-
 	// Create the log file
-	Log::Create( "OZW_Log.txt" );
+	string logFilename = _userPath + string( "OZW_Log.txt" );
+	Log::Create( logFilename );
 
 	CommandClasses::RegisterCommandClasses();
 
@@ -113,12 +114,46 @@ Manager::~Manager
 (
 )
 {
-	for( int i=0; i<MaxDrivers; ++i )
+	// Clear the pending list
+	list<Driver*>::iterator pit = m_pendingDrivers.begin();
+	while( !m_pendingDrivers.empty() )
 	{
-		if( m_drivers[i] )
-		{
-			delete m_drivers[i];
-		}
+		delete *pit;
+		m_pendingDrivers.erase( pit );
+		pit = m_pendingDrivers.begin();
+	}
+
+	// Clear the ready map
+	map<uint32,Driver*>::iterator rit = m_readyDrivers.begin();
+	while( !m_readyDrivers.empty() )
+	{
+		delete rit->second;
+		m_readyDrivers.erase( rit );
+		rit = m_readyDrivers.begin();
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Configuration
+//-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+// <Manager::WriteConfig>
+// Save the configuration of a driver to a file
+//-----------------------------------------------------------------------------
+void Manager::WriteConfig
+(
+	uint32 const _homeId
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		driver->WriteConfig();
+		Log::Write( "Manager::WriteConfig completed for driver with home ID of 0x%.8x", _homeId );
+	}
+	else
+	{
+		Log::Write( "Manager::WriteConfig failed - _homeId %d not found", _homeId );
 	}
 }
 
@@ -132,83 +167,133 @@ Manager::~Manager
 //-----------------------------------------------------------------------------
 bool Manager::AddDriver
 (
-	string const& _serialPortName,
-	uint8* o_driverId
+	string const& _serialPortName
 )
 {
-	if( NULL == o_driverId )
-	{
-		Log::Write( "Add Driver failed - o_driverId pointer is NULL" );
-		return false;
-	}
-
 	// Make sure we don't already have a driver for this serial port
-	int firstEmptySlot = -1;
-	for( int i=0; i<MaxDrivers; ++i )
+	
+	// Search the pending list
+	for( list<Driver*>::iterator pit = m_pendingDrivers.begin(); pit != m_pendingDrivers.end(); ++pit )
 	{
-		if( Driver* driver = m_drivers[i] )
+		if( _serialPortName == (*pit)->GetSerialPortName() )
 		{
-			if( driver->GetSerialPortName() == _serialPortName )
-			{
-				Log::Write( "Add Driver failed - Serial Port '%s' already has a driver", _serialPortName.c_str() );
-				return false;
-			}
-		}
-		else if( firstEmptySlot < 0 )
-		{
-			firstEmptySlot = i;
+			Log::Write( "Cannot add driver for serial port %s - driver already exists", _serialPortName.c_str() );
+			return false;
 		}
 	}
 
-	if( firstEmptySlot < 0 )
+	// Search the ready map
+	for( map<uint32,Driver*>::iterator rit = m_readyDrivers.begin(); rit != m_readyDrivers.end(); ++rit )
 	{
-		Log::Write( "Add Driver failed - Maximum number of drivers (%d) already added", MaxDrivers );
-		return false;
+		if( _serialPortName == rit->second->GetSerialPortName() )
+		{
+			Log::Write( "Cannot add driver for serial port %s - driver already exists", _serialPortName.c_str() );
+			return false;
+		}
 	}
 
-	m_drivers[firstEmptySlot] = new Driver( _serialPortName, (uint8)firstEmptySlot );
-	*o_driverId = (uint8)firstEmptySlot;
+	Driver* driver = new Driver( _serialPortName );
+	m_pendingDrivers.push_back( driver );
+	driver->Start();
 
+	Log::Write( "Added driver for serial port %s", _serialPortName.c_str() );
 	return true;
 }
 
 //-----------------------------------------------------------------------------
-// <Manager::AddDriver>
-// Add a new Z-Wave PC Interface
+// <Manager::RemoveDriver>
+// Remove a Z-Wave PC Interface
 //-----------------------------------------------------------------------------
 bool Manager::RemoveDriver
 (
-	uint8 const _driverId
+	string const& _serialPortName
 )
 {
-	if( Driver* driver = GetDriver( _driverId ) )
+	// Search the pending list
+	for( list<Driver*>::iterator pit = m_pendingDrivers.begin(); pit != m_pendingDrivers.end(); ++pit )
 	{
-		delete driver;
-		m_drivers[_driverId] = NULL;
-		return true;
+		if( _serialPortName == (*pit)->GetSerialPortName() )
+		{
+			delete *pit;
+			m_pendingDrivers.erase( pit );
+			Log::Write( "Driver for serial port %s removed", _serialPortName.c_str() );
+			return true;
+		}
 	}
 
-	Log::Write( "RemoveDriver() failed - Driver %d not found", _driverId );
+	// Search the ready map
+	for( map<uint32,Driver*>::iterator rit = m_readyDrivers.begin(); rit != m_readyDrivers.end(); ++rit )
+	{
+		if( _serialPortName == rit->second->GetSerialPortName() )
+		{
+			delete rit->second;
+			m_readyDrivers.erase( rit );
+			Log::Write( "Driver for serial port %s removed", _serialPortName.c_str() );
+			return true;
+		}
+	}
+
+	Log::Write( "Failed to remove driver for serial port %s", _serialPortName.c_str() );
 	return false;
 }
 
 //-----------------------------------------------------------------------------
-// <Manager::AddDriver>
-// Add a new Z-Wave PC Interface
+// <Manager::GetDriver>
+// Get a pointer to the driver for a Z-Wave PC Interface
 //-----------------------------------------------------------------------------
 Driver* Manager::GetDriver
 (
-	uint8 const _driverId
+	uint32 const _homeId
 )
 {
-	if( _driverId >= MaxDrivers )
+	map<uint32,Driver*>::iterator it = m_readyDrivers.find( _homeId );
+	if( it != m_readyDrivers.end() )
 	{
-		assert(0);
-		Log::Write( "GetDriver() failed - _driverId %d is out of range (must be between 0 and %d)", _driverId, MaxDrivers-1 );
-		return NULL;
+		return it->second;
 	}
 
-	return m_drivers[_driverId];
+	assert(0);
+	Log::Write( "Manager::GetDriver failed - Home ID 0x%.8x is unknown", _homeId );
+	return NULL;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::SetDriverReady>
+// Move a driver from pending to ready, and notify any watchers
+//-----------------------------------------------------------------------------
+void Manager::SetDriverReady
+(
+	Driver* _driver
+)
+{
+	// Search the pending list
+	bool found = false;
+	for( list<Driver*>::iterator it = m_pendingDrivers.begin(); it != m_pendingDrivers.end(); ++it )
+	{
+		if( (*it) == _driver )
+		{
+			// Remove the driver from the pending list
+			m_pendingDrivers.erase( it );
+			found = true;
+			break;
+		}
+	}
+
+	if( found )
+	{
+		Log::Write( "Driver with Home ID of 0x%.8x is now ready.", _driver->GetHomeId() );
+
+		// Add the driver to the ready map
+		m_readyDrivers[_driver->GetHomeId()] = _driver;
+
+		// Notify the watchers
+		Notification* notification = new Notification();
+		notification->m_type = NotificationType_DriverReady;
+		notification->m_id = ValueID( _driver->GetHomeId(), 0, ValueID::ValueGenre_All, 0, 0, 0, ValueID::ValueType_Bool );
+		notification->m_groupIdx = 0;
+		Manager::Get()->NotifyWatchers( notification ); 
+		delete notification;
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -217,15 +302,15 @@ Driver* Manager::GetDriver
 //-----------------------------------------------------------------------------
 bool Manager::IsSlave
 (
-	uint8 const _driverId
+	uint32 const _homeId
 )
 {
-	if( Driver* driver = GetDriver( _driverId ) )
+	if( Driver* driver = GetDriver( _homeId ) )
 	{
 		return driver->IsSlave();
 	}
 
-	Log::Write( "IsSlave() failed - _driverId %d not found", _driverId );
+	Log::Write( "IsSlave() failed - _homeId %d not found", _homeId );
 	return false;
 }
 
@@ -235,15 +320,15 @@ bool Manager::IsSlave
 //-----------------------------------------------------------------------------
 bool Manager::HasTimerSupport
 (
-	uint8 const _driverId
+	uint32 const _homeId
 )
 {
-	if( Driver* driver = GetDriver( _driverId ) )
+	if( Driver* driver = GetDriver( _homeId ) )
 	{
 		return driver->HasTimerSupport();
 	}
 
-	Log::Write( "HasTimerSupport() failed - _driverId %d not found", _driverId );
+	Log::Write( "HasTimerSupport() failed - _homeId %d not found", _homeId );
 	return false;
 }
 
@@ -253,15 +338,15 @@ bool Manager::HasTimerSupport
 //-----------------------------------------------------------------------------
 bool Manager::IsPrimaryController
 (
-	uint8 const _driverId
+	uint32 const _homeId
 )
 {
-	if( Driver* driver = GetDriver( _driverId ) )
+	if( Driver* driver = GetDriver( _homeId ) )
 	{
 		return driver->IsPrimaryController();
 	}
 
-	Log::Write( "IsPrimaryController() failed - _driverId %d not found", _driverId );
+	Log::Write( "IsPrimaryController() failed - _homeId %d not found", _homeId );
 	return false;
 }
 
@@ -271,15 +356,15 @@ bool Manager::IsPrimaryController
 //-----------------------------------------------------------------------------
 bool Manager::IsStaticUpdateController
 (
-	uint8 const _driverId
+	uint32 const _homeId
 )
 {
-	if( Driver* driver = GetDriver( _driverId ) )
+	if( Driver* driver = GetDriver( _homeId ) )
 	{
 		return driver->IsStaticUpdateController();
 	}
 
-	Log::Write( "IsStaticUpdateController() failed - _driverId %d not found", _driverId );
+	Log::Write( "IsStaticUpdateController() failed - _homeId %d not found", _homeId );
 	return false;
 }
 
@@ -296,12 +381,14 @@ void Manager::SetPollInterval
 	int32 _seconds
 )
 {
-	for( int i=0; i<MaxDrivers; ++i )
+	for( list<Driver*>::iterator pit = m_pendingDrivers.begin(); pit != m_pendingDrivers.end(); ++pit )
 	{
-		if( Driver* driver = m_drivers[i] )
-		{
-			driver->SetPollInterval( _seconds );
-		}
+		(*pit)->SetPollInterval( _seconds );
+	}
+
+	for( map<uint32,Driver*>::iterator rit = m_readyDrivers.begin(); rit != m_readyDrivers.end(); ++rit )
+	{
+		rit->second->SetPollInterval( _seconds );
 	}
 }
 
@@ -314,7 +401,7 @@ bool Manager::EnablePoll
 	ValueID const& _id 
 )
 {
-	if( Driver* driver = m_drivers[_id.GetDriverId()] )
+	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 	{
 		return( driver->EnablePoll( _id ) );
 	}
@@ -333,7 +420,7 @@ bool Manager::DisablePoll
 	ValueID const& _id 
 )
 {
-	if( Driver* driver = m_drivers[_id.GetDriverId()] )
+	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 	{
 		return( driver->DisablePoll( _id ) );
 	}
@@ -356,7 +443,7 @@ ValueBool* Manager::GetValueBool
 	ValueID const& _id
 )
 {
-	if( Driver* driver = m_drivers[_id.GetDriverId()] )
+	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 	{
 		return driver->GetValueBool( _id );
 	}
@@ -373,7 +460,7 @@ ValueByte* Manager::GetValueByte
 	ValueID const& _id
 )
 {
-	if( Driver* driver = m_drivers[_id.GetDriverId()] )
+	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 	{
 		return driver->GetValueByte( _id );
 	}
@@ -390,7 +477,7 @@ ValueDecimal* Manager::GetValueDecimal
 	ValueID const& _id
 )
 {
-	if( Driver* driver = m_drivers[_id.GetDriverId()] )
+	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 	{
 		return driver->GetValueDecimal( _id );
 	}
@@ -407,7 +494,7 @@ ValueInt* Manager::GetValueInt
 	ValueID const& _id
 )
 {
-	if( Driver* driver = m_drivers[_id.GetDriverId()] )
+	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 	{
 		return driver->GetValueInt( _id );
 	}
@@ -424,7 +511,7 @@ ValueList* Manager::GetValueList
 	ValueID const& _id
 )
 {
-	if( Driver* driver = m_drivers[_id.GetDriverId()] )
+	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 	{
 		return driver->GetValueList( _id );
 	}
@@ -441,7 +528,7 @@ ValueShort* Manager::GetValueShort
 	ValueID const& _id
 )
 {
-	if( Driver* driver = m_drivers[_id.GetDriverId()] )
+	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 	{
 		return driver->GetValueShort( _id );
 	}
@@ -458,7 +545,7 @@ ValueString* Manager::GetValueString
 	ValueID const& _id
 )
 {
-	if( Driver* driver = m_drivers[_id.GetDriverId()] )
+	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 	{
 		return driver->GetValueString( _id );
 	}
@@ -545,10 +632,10 @@ void Manager::NotifyWatchers
 //-----------------------------------------------------------------------------
 void Manager::ResetController
 (
-	uint8 const _driverId
+	uint32 const _homeId
 )
 {
-	if( Driver* driver = GetDriver( _driverId ) )
+	if( Driver* driver = GetDriver( _homeId ) )
 	{
 		driver->ResetController();
 	}
@@ -560,10 +647,10 @@ void Manager::ResetController
 //-----------------------------------------------------------------------------
 void Manager::SoftReset
 (
-	uint8 const _driverId
+	uint32 const _homeId
 )
 {
-	if( Driver* driver = GetDriver( _driverId ) )
+	if( Driver* driver = GetDriver( _homeId ) )
 	{
 		driver->SoftReset();
 	}
@@ -575,11 +662,11 @@ void Manager::SoftReset
 //-----------------------------------------------------------------------------
 void Manager::RequestNodeNeighborUpdate
 (
-	uint8 const _driverId,
+	uint32 const _homeId,
 	uint8 const _nodeId
 )
 {
-	if( Driver* driver = GetDriver( _driverId ) )
+	if( Driver* driver = GetDriver( _homeId ) )
 	{
 		driver->RequestNodeNeighborUpdate( _nodeId );
 	}
@@ -591,12 +678,12 @@ void Manager::RequestNodeNeighborUpdate
 //-----------------------------------------------------------------------------
 void Manager::AssignReturnRoute
 (
-	uint8 const _driverId,
+	uint32 const _homeId,
 	uint8 const _nodeId,
 	uint8 const _targetNodeId
 )
 {
-	if( Driver* driver = GetDriver( _driverId ) )
+	if( Driver* driver = GetDriver( _homeId ) )
 	{
 		driver->AssignReturnRoute( _nodeId, _targetNodeId );
 	}
@@ -608,11 +695,11 @@ void Manager::AssignReturnRoute
 //-----------------------------------------------------------------------------
 void Manager::BeginAddNode
 (
-	uint8 const _driverId,
+	uint32 const _homeId,
 	bool const _highPower // = false
 )
 {
-	if( Driver* driver = GetDriver( _driverId ) )
+	if( Driver* driver = GetDriver( _homeId ) )
 	{
 		driver->BeginAddNode( _highPower );
 	}
@@ -624,11 +711,11 @@ void Manager::BeginAddNode
 //-----------------------------------------------------------------------------
 void Manager::BeginAddController
 (
-	uint8 const _driverId,
+	uint32 const _homeId,
 	bool const _highPower // = false
 )
 {
-	if( Driver* driver = GetDriver( _driverId ) )
+	if( Driver* driver = GetDriver( _homeId ) )
 	{
 		driver->BeginAddController( _highPower );
 	}
@@ -640,10 +727,10 @@ void Manager::BeginAddController
 //-----------------------------------------------------------------------------
 void Manager::EndAddNode
 (
-	uint8 const _driverId
+	uint32 const _homeId
 )
 {
-	if( Driver* driver = GetDriver( _driverId ) )
+	if( Driver* driver = GetDriver( _homeId ) )
 	{
 		driver->EndAddNode();
 	}
@@ -655,10 +742,10 @@ void Manager::EndAddNode
 //-----------------------------------------------------------------------------
 void Manager::BeginRemoveNode
 (
-	uint8 const _driverId
+	uint32 const _homeId
 )
 {
-	if( Driver* driver = GetDriver( _driverId ) )
+	if( Driver* driver = GetDriver( _homeId ) )
 	{
 		driver->BeginRemoveNode();
 	}
@@ -670,10 +757,10 @@ void Manager::BeginRemoveNode
 //-----------------------------------------------------------------------------
 void Manager::EndRemoveNode
 (
-	uint8 const _driverId
+	uint32 const _homeId
 )
 {
-	if( Driver* driver = GetDriver( _driverId ) )
+	if( Driver* driver = GetDriver( _homeId ) )
 	{
 		driver->EndRemoveNode();
 	}
@@ -685,10 +772,10 @@ void Manager::EndRemoveNode
 //-----------------------------------------------------------------------------
 void Manager::BeginReplicateController
 (
-	uint8 const _driverId
+	uint32 const _homeId
 )
 {
-	if( Driver* driver = GetDriver( _driverId ) )
+	if( Driver* driver = GetDriver( _homeId ) )
 	{
 		driver->BeginReplicateController();
 	}
@@ -700,10 +787,10 @@ void Manager::BeginReplicateController
 //-----------------------------------------------------------------------------
 void Manager::EndReplicateController
 (
-	uint8 const _driverId
+	uint32 const _homeId
 )
 {
-	if( Driver* driver = GetDriver( _driverId ) )
+	if( Driver* driver = GetDriver( _homeId ) )
 	{
 		driver->EndReplicateController();
 	}

@@ -42,6 +42,7 @@
 #include "Configuration.h"
 #include "MultiInstance.h"
 #include "WakeUp.h"
+#include "NodeNaming.h"
 
 #include "ValueID.h"
 #include "Value.h"
@@ -62,46 +63,59 @@ using namespace OpenZWave;
 //-----------------------------------------------------------------------------
 Node::Node
 ( 
-	uint8 const _driverId, 
+	uint32 const _homeId, 
 	uint8 const _nodeId
 ):
-	m_driverId( _driverId ),
+	m_homeId( _homeId ),
 	m_nodeId( _nodeId ),
 	m_protocolInfoReceived( false ),
 	m_nodeInfoReceived( false ),
 	m_values( new ValueStore() ),
-	m_valuesMutex( new Mutex() ),
-	m_numGroups( 0 ),
-	m_groups( NULL )
+	m_valuesMutex( new Mutex() )
 {
-	// Request the node protocol info
-	GetDriver()->AddInfoRequest( m_nodeId );
 }
 
 //-----------------------------------------------------------------------------
-// <Node::Node>
-// Constructor (from XML)
+// <Node::~Node>
+// Destructor
 //-----------------------------------------------------------------------------
-Node::Node
+Node::~Node
+(
+)
+{
+	// Delete the command classes
+	map<uint8,CommandClass*>::iterator cit = m_commandClassMap.begin();
+	while( !m_commandClassMap.empty() )
+	{
+		delete cit->second;
+		m_commandClassMap.erase( cit );
+		cit = m_commandClassMap.begin();
+	}
+
+	// Delete the groups
+	map<uint8,Group*>::iterator git = m_groups.begin();
+	while( !m_groups.empty() )
+	{
+		delete git->second;
+		m_groups.erase( git );
+		git = m_groups.begin();
+	}
+
+	// Delete the values
+	delete m_values;
+}
+
+//-----------------------------------------------------------------------------
+// <Node::ReadXML>
+// Read the node config from XML
+//-----------------------------------------------------------------------------
+void Node::ReadXML
 ( 
-	uint8 const _driverId, 
-	TiXmlElement* _node	
-):
-	m_driverId( _driverId ),
-	m_protocolInfoReceived( true ),
-	m_nodeInfoReceived( true ),
-	m_values( new ValueStore() ),
-	m_valuesMutex( new Mutex() ),
-	m_numGroups( 0 ),
-	m_groups( NULL )
+	TiXmlElement const* _node	
+)
 {
 	char const* str;
 	int intVal;
-
-	if( TIXML_SUCCESS == _node->QueryIntAttribute( "id", &intVal ) )
-	{
-		m_nodeId = (uint8)intVal;
-	}
 
 	if( TIXML_SUCCESS == _node->QueryIntAttribute( "basic", &intVal ) )
 	{
@@ -130,72 +144,203 @@ Node::Node
 		m_specific = (uint8)intVal;
 	}
 
+	m_listening = true;
 	str = _node->Attribute( "listening" );
 	if( str )
 	{
-		m_listening = !strcmp( str, "True" );
+		m_listening = !strcmp( str, "true" );
 	}
 
-	// Create the command classes
-	TiXmlNode const* pCommandClassNode = _node->FirstChild();
-	while( pCommandClassNode )
+	m_routing = true;
+	str = _node->Attribute( "routing" );
+	if( str )
 	{
-		TiXmlElement const* pCommandClassElement = pCommandClassNode->ToElement();
-		if( pCommandClassElement )
+		m_routing = !strcmp( str, "true" );
+	}
+
+	m_maxBaudRate = 0;
+	if( TIXML_SUCCESS == _node->QueryIntAttribute( "max_baud_rate", &intVal ) )
+	{
+		m_maxBaudRate = (uint32)intVal;
+	}
+	
+	m_version = 0;
+	if( TIXML_SUCCESS == _node->QueryIntAttribute( "version", &intVal ) )
+	{
+		m_version = (uint8)intVal;
+	}
+
+	m_security = 0;
+	str = _node->Attribute( "security" );
+	if( str )
+	{
+		char* p;
+		m_security = (uint8)strtol( str, &p, 0 );
+	}
+
+	// Read the manufacturer info and create the command classes
+	TiXmlElement const* child = _node->FirstChildElement();
+	while( child )
+	{
+		str = child->Value();
+		if( str )
 		{
-			str = pCommandClassElement->Value();
-			if( str && !strcmp( str, "CommandClass" ) )
+			if( !strcmp( str, "CommandClasses" ) )
 			{
-				if( TIXML_SUCCESS == pCommandClassElement->QueryIntAttribute( "id", &intVal ) )
+				ReadCommandClassesXML( child );
+			}
+			else if( !strcmp( str, "Manufacturer" ) )
+			{
+				str = child->Attribute( "id" );
+				if( str )
 				{
-					uint8 id = (uint8)intVal;
+					m_manufacturerId = str;
+				}
 
-					if( CommandClass* pCommandClass = AddCommandClass( id ) )
+				str = child->Attribute( "name" );
+				if( str )
+				{
+					m_manufacturerName = str;
+				}
+
+				TiXmlElement const* product = child->FirstChildElement();
+				if( !strcmp( product->Value(), "Product" ) )
+				{
+					str = product->Attribute( "type" );
+					if( str )
 					{
-						if( TIXML_SUCCESS == pCommandClassElement->QueryIntAttribute( "version", &intVal ) )
-						{
-							pCommandClass->SetVersion( (uint8)intVal );
-						}
+						m_productType = str;
+					}
 
-						if( TIXML_SUCCESS == pCommandClassElement->QueryIntAttribute( "instances", &intVal ) )
-						{
-							pCommandClass->SetInstances( (uint8)intVal );
-						}
-								
-						// Load the static data for this command class, so we don't 
-						// need to query the device for it.
-						pCommandClass->LoadStatic( pCommandClassElement );
+					str = product->Attribute( "id" );
+					if( str )
+					{
+						m_productId = str;
+					}
+
+					str = product->Attribute( "name" );
+					if( str )
+					{
+						m_productName = str;
 					}
 				}
 			}
 		}
 
-		// Move to the next command class
-		pCommandClassNode = pCommandClassNode->NextSibling();
+		// Move to the next child node
+		child = child->NextSiblingElement();
 	}
-
-	// Get the current values from the node.
-	RequestState();
 }
 
 //-----------------------------------------------------------------------------
-// <Node::~Node>
-// Destructor
+// <Node::ReadCommandClassesXML>
+// Read the command classes from XML
 //-----------------------------------------------------------------------------
-Node::~Node
-(
+void Node::ReadCommandClassesXML
+( 
+	TiXmlElement const* _ccsElement
 )
 {
-	// Delete the command classes
-	map<uint8,CommandClass*>::iterator it = m_commandClassMap.begin();
-	while( !m_commandClassMap.empty() )
-	{
-		delete it->second;
-		m_commandClassMap.erase( it );
-		it = m_commandClassMap.begin();
-	}
+	char const* str;
+	int32 intVal;
 
-	delete m_values;
+	TiXmlElement const* ccElement = _ccsElement->FirstChildElement();
+	while( ccElement )
+	{
+		str = ccElement->Value();
+		if( str && !strcmp( ccElement->Value(), "CommandClass" ) )
+		{
+			if( TIXML_SUCCESS == ccElement->QueryIntAttribute( "id", &intVal ) )
+			{
+				uint8 id = (uint8)intVal;
+
+				// See if it already exists
+				CommandClass* cc = GetCommandClass( id );
+				if( NULL == cc )
+				{
+					// It does not, so we create it
+					cc = AddCommandClass( id );
+				}
+
+				if( NULL != cc )
+				{
+					cc->ReadXML( ccElement );
+				}
+			}
+		}
+
+		ccElement = ccElement->NextSiblingElement();
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <Node::WriteXML>
+// Save the static node configuration data
+//-----------------------------------------------------------------------------
+void Node::WriteXML
+( 
+	TiXmlElement* _driverElement
+)
+{
+	char str[32];
+
+	TiXmlElement* nodeElement = new TiXmlElement( "Node" );
+	_driverElement->LinkEndChild( nodeElement );
+
+	snprintf( str, 32, "%d", m_nodeId );
+	nodeElement->SetAttribute( "id", str );
+
+	nodeElement->SetAttribute( "name", m_nodeName.c_str() );
+
+	snprintf( str, 32, "%d", m_basic );
+	nodeElement->SetAttribute( "basic", str );
+	nodeElement->SetAttribute( "basic_label", m_basicLabel.c_str() );
+
+	snprintf( str, 32, "%d", m_generic );
+	nodeElement->SetAttribute( "generic", str );
+	nodeElement->SetAttribute( "generic_label", m_genericLabel.c_str() );
+
+	snprintf( str, 32, "%d", m_specific );
+	nodeElement->SetAttribute( "specific", str );
+
+	nodeElement->SetAttribute( "listening", m_listening ? "true" : "false" );
+	nodeElement->SetAttribute( "routing", m_routing ? "true" : "false" );
+	
+	snprintf( str, 32, "%d", m_maxBaudRate );
+	nodeElement->SetAttribute( "max_baud_rate", str );
+
+	snprintf( str, 32, "%d", m_version );
+	nodeElement->SetAttribute( "version", str );
+
+	snprintf( str, 32, "0x%.2x", m_security );
+	nodeElement->SetAttribute( "security", str );
+
+	// Write the manufacturer and product data in the same format
+	// as used in the ManyfacturerSpecfic.xml file.  This will 
+	// allow new devices to be added via a simple cut and paste.
+	TiXmlElement* manufacturerElement = new TiXmlElement( "Manufacturer" );
+	nodeElement->LinkEndChild( manufacturerElement );
+
+	manufacturerElement->SetAttribute( "id", m_manufacturerId.c_str() );
+	manufacturerElement->SetAttribute( "name", m_manufacturerName.c_str() );
+
+	TiXmlElement* productElement = new TiXmlElement( "Product" );
+	manufacturerElement->LinkEndChild( productElement );
+
+	productElement->SetAttribute( "type", m_productType.c_str() );
+	productElement->SetAttribute( "id", m_productId.c_str() );
+	productElement->SetAttribute( "name", m_productName.c_str() );
+	
+	// Write the command classes
+	TiXmlElement* ccsElement = new TiXmlElement( "CommandClasses" );
+	nodeElement->LinkEndChild( ccsElement );
+
+	for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
+	{
+		TiXmlElement* ccElement = new TiXmlElement( "CommandClass" );
+		ccsElement->LinkEndChild( ccElement );
+		it->second->WriteXML( ccElement );
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -207,15 +352,15 @@ void Node::UpdateProtocolInfo
 	uint8 const* _data
 )
 {
+	// Remove the protocol info request from the queue
+	GetDriver()->RemoveInfoRequest();
+
 	if( m_protocolInfoReceived )
 	{
 		// We already have this info
 		return;
 	}
 	m_protocolInfoReceived = true;
-
-	// Remove the protocol info request from the queue
-	GetDriver()->RemoveInfoRequest();
 
 	// Capabilities
 	m_listening = (( _data[0] & 0x80 ) != 0 );
@@ -269,8 +414,8 @@ void Node::UpdateProtocolInfo
 	}
 
 	Log::Write( "Protocol Info for Node %d:", m_nodeId );
-	Log::Write( "  Listening	 = %s", m_listening ? "True" : "False" );
-	Log::Write( "  Routing	   = %s", m_routing ? "True" : "False" );
+	Log::Write( "  Listening	 = %s", m_listening ? "true" : "false" );
+	Log::Write( "  Routing	   = %s", m_routing ? "true" : "false" );
 	Log::Write( "  Max Baud Rate = %d", m_maxBaudRate );
 	Log::Write( "  Version	   = %d", m_version );
 	Log::Write( "  Security	  = 0x%.2x", m_security );
@@ -363,7 +508,24 @@ void Node::UpdateNodeInfo
 	}
 	else
 	{
-	RequestState();
+		RequestState();
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <Node::SetNodeName>
+// Set the name of the node
+//-----------------------------------------------------------------------------
+void Node::SetNodeName
+(
+	string const& _nodeName
+)
+{
+	m_nodeName = _nodeName;
+	if( NodeNaming* cc = static_cast<NodeNaming*>( GetCommandClass( NodeNaming::StaticGetCommandClassId() ) ) )
+	{
+		// The node supports naming, so we try to write the name into the device
+		cc->Set( _nodeName );
 	}
 }
 
@@ -421,7 +583,7 @@ CommandClass* Node::AddCommandClass
 	}
 
 	// Create the command class object and add it to our map
-	if( CommandClass* pCommandClass = CommandClasses::CreateCommandClass( _commandClassId, m_driverId, m_nodeId ) )
+	if( CommandClass* pCommandClass = CommandClasses::CreateCommandClass( _commandClassId, m_homeId, m_nodeId ) )
 	{
 		m_commandClassMap[_commandClassId] = pCommandClass;
 		return pCommandClass;
@@ -517,25 +679,6 @@ void Node::RequestStatic
 }
 
 //-----------------------------------------------------------------------------
-// <Node::SaveStatic>
-// Save the static node configuration data
-//-----------------------------------------------------------------------------
-void Node::SaveStatic
-( 
-	FILE* _file	
-)
-{
-	fprintf( _file, "  <Node id=\"%d\" listening=\"%s\" basic=\"%d\" basic_label=\"%s\" generic=\"%d\" generic_label=\"%s\" specific=\"%d\">\n", m_nodeId, m_listening ? "True" : "False", m_basic, m_basicLabel.c_str(), m_generic, m_genericLabel.c_str(), m_specific );
-
-	for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
-	{
-		it->second->SaveStatic( _file );
-	}
-
-	fprintf( _file, "</Node>\n" );
-}
-
-//-----------------------------------------------------------------------------
 // <Node::SetConfigParam>
 // Set a configuration parameter in a device
 //-----------------------------------------------------------------------------
@@ -597,7 +740,7 @@ ValueID Node::CreateValueID
 	ValueID::ValueType const _type
 )
 {
-	return ValueID( m_driverId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _type );
+	return ValueID( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _type );
 }
 
 //-----------------------------------------------------------------------------
@@ -616,7 +759,7 @@ void Node::CreateValueBool
 	bool const _default
 )
 {
-	Value* value = new ValueBool( m_driverId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _default );
+	Value* value = new ValueBool( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _default );
 	ValueStore* store = GetValueStore();
 	store->AddValue( value );
 	value->Release();
@@ -639,7 +782,7 @@ void Node::CreateValueByte
 	uint8 const _default
 )
 {
-	Value* value = new ValueByte( m_driverId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _default );
+	Value* value = new ValueByte( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _default );
 	ValueStore* store = GetValueStore();
 	store->AddValue( value );
 	value->Release();
@@ -662,7 +805,7 @@ void Node::CreateValueDecimal
 	string const& _default
 )
 {
-	Value* value = new ValueDecimal( m_driverId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _default );
+	Value* value = new ValueDecimal( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _default );
 	ValueStore* store = GetValueStore();
 	store->AddValue( value );
 	value->Release();
@@ -685,7 +828,7 @@ void Node::CreateValueInt
 	int32 const _default
 )
 {
-	Value* value = new ValueInt( m_driverId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _default );
+	Value* value = new ValueInt( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _default );
 	ValueStore* store = GetValueStore();
 	store->AddValue( value );
 	value->Release();
@@ -709,7 +852,7 @@ void Node::CreateValueList
 	int32 const _default
 )
 {
-	Value* value = new ValueList( m_driverId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _items, _default );
+	Value* value = new ValueList( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _items, _default );
 	ValueStore* store = GetValueStore();
 	store->AddValue( value );
 	value->Release();
@@ -732,7 +875,7 @@ void Node::CreateValueShort
 	uint16 const _default
 )
 {
-	Value* value = new ValueShort( m_driverId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _default );
+	Value* value = new ValueShort( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _default );
 	ValueStore* store = GetValueStore();
 	store->AddValue( value );
 	value->Release();
@@ -755,11 +898,73 @@ void Node::CreateValueString
 	string const& _default
 )
 {
-	Value* value = new ValueString( m_driverId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _default );
+	Value* value = new ValueString( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _default );
 	ValueStore* store = GetValueStore();
 	store->AddValue( value );
 	value->Release();
 	ReleaseValueStore();
+}
+
+//-----------------------------------------------------------------------------
+// <Node::CreateValueFromXML>
+// Get the value object with the specified ID
+//-----------------------------------------------------------------------------
+void Node::CreateValueFromXML
+( 
+	uint8 const _commandClassId,
+	TiXmlElement const* _valueElement
+)
+{
+	Value* value = NULL;
+
+	// Create the value
+	ValueID::ValueType type = Value::GetTypeEnumFromName( _valueElement->Attribute( "type" ) );
+	switch( type )
+	{
+		case ValueID::ValueType_Bool:
+		{
+			value = new ValueBool( m_homeId, m_nodeId, _commandClassId, _valueElement );
+			break;
+		}
+		case ValueID::ValueType_Byte:
+		{
+			value = new ValueByte( m_homeId, m_nodeId, _commandClassId, _valueElement );
+			break;
+		}
+		case ValueID::ValueType_Decimal:
+		{
+			value = new ValueDecimal( m_homeId, m_nodeId, _commandClassId, _valueElement );
+			break;
+		}
+		case ValueID::ValueType_Int:
+		{
+			value = new ValueInt( m_homeId, m_nodeId, _commandClassId, _valueElement );
+			break;
+		}
+		case ValueID::ValueType_List:
+		{
+			value = new ValueList( m_homeId, m_nodeId, _commandClassId, _valueElement );
+			break;
+		}
+		case ValueID::ValueType_Short:
+		{
+			value = new ValueShort( m_homeId, m_nodeId, _commandClassId, _valueElement );
+			break;
+		}
+		case ValueID::ValueType_String:
+		{
+			value = new ValueString( m_homeId, m_nodeId, _commandClassId, _valueElement );
+			break;
+		}
+	}
+
+	if( value )
+	{
+		ValueStore* store = GetValueStore();
+		store->AddValue( value );
+		value->Release();
+		ReleaseValueStore();
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -1061,51 +1266,59 @@ void Node::ReleaseValueStore
 
 //-----------------------------------------------------------------------------
 // <Node::GetGroup>
-// Get a Group using the same one-based indexing as Z-Wave device instructions
+// Get a Group from the node's map
 //-----------------------------------------------------------------------------
 Group* Node::GetGroup
 (
 	uint8 const _groupIdx
 )
 { 
-	if( ( _groupIdx < 1 ) || ( _groupIdx > m_numGroups ) )
+	map<uint8,Group*>::iterator it = m_groups.find( _groupIdx );
+	if( it == m_groups.end() )
 	{
 		Log::Write( "Node(%d)::GetGroup - Invalid Group Index %d", m_nodeId, _groupIdx );
 		return NULL;
 	}
 
-	return m_groups[_groupIdx-1]; 
+	return it->second; 
 }
 
 //-----------------------------------------------------------------------------
-// <Node::SetNumGroups>
-// Set up the array of group pointers
+// <Node::AddGroup>
+// Add a group into the node's map
 //-----------------------------------------------------------------------------
-void Node::SetNumGroups
-(
-	uint8 const _numGroups
+void Node::AddGroup
+( 
+	Group* _group
+)
+{ 
+	map<uint8,Group*>::iterator it = m_groups.find( _group->GetIdx() );
+	if( it != m_groups.end() )
+	{
+		// There is already a group with this id.  We will replace it.
+		delete it->second;
+		m_groups.erase( it );
+	}
+
+	m_groups[_group->GetIdx()] = _group; 
+}
+
+//-----------------------------------------------------------------------------
+// <Node::WriteGroups>
+// Save the group data
+//-----------------------------------------------------------------------------
+void Node::WriteGroups
+( 
+	TiXmlElement* _associationsElement
 )
 {
-	if( _numGroups == m_numGroups )
+	for( map<uint8,Group*>::iterator it = m_groups.begin(); it != m_groups.end(); ++it )
 	{
-		// Nothing to do
-		return;
-	}
+		Group* group = it->second;
 
-	// Remove any old groups (in theory this should never need to do anything
-	// since the number of groups a device supports should not change)
-	uint8 i;
-	for( i=0; i<m_numGroups; ++i )
-	{
-		delete m_groups[i];
-	}
-
-	m_numGroups = _numGroups;
-	m_groups = new Group*[_numGroups];
-
-	for( i=0; i<m_numGroups; ++i )
-	{
-		m_groups[i] = new Group( m_driverId, m_nodeId, i+1 ); 
+		TiXmlElement* groupElement = new TiXmlElement( "Group" );
+		_associationsElement->LinkEndChild( groupElement );
+		group->WriteXML( groupElement );
 	}
 }
 
@@ -1117,7 +1330,7 @@ Driver* Node::GetDriver
 (
 )const
 {
-	return( Manager::Get()->GetDriver( m_driverId ) );
+	return( Manager::Get()->GetDriver( m_homeId ) );
 }
 
 

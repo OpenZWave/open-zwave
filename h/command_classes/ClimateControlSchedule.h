@@ -35,7 +35,7 @@ namespace OpenZWave
 	class ClimateControlSchedule: public CommandClass
 	{
 	public:
- 		static CommandClass* Create( uint8 const _driverId, uint8 const _nodeId ){ return new ClimateControlSchedule( _driverId, _nodeId ); }
+ 		static CommandClass* Create( uint32 const _homeId, uint8 const _nodeId ){ return new ClimateControlSchedule( _homeId, _nodeId ); }
 		virtual ~ClimateControlSchedule(){}
 
 		static uint8 const StaticGetCommandClassId(){ return 0x46; }
@@ -49,7 +49,7 @@ namespace OpenZWave
 		virtual bool SetValue( Value const& _value );
 
 	private:
-		ClimateControlSchedule( uint8 const _driverId, uint8 const _nodeId ): CommandClass( _driverId, _nodeId ){}
+		ClimateControlSchedule( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
 	};
 
 } // namespace OpenZWave

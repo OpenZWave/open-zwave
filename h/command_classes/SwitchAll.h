@@ -35,7 +35,7 @@ namespace OpenZWave
 	class SwitchAll: public CommandClass
 	{
 	public:
-		static CommandClass* Create( uint8 const _driverId, uint8 const _nodeId ){ return new SwitchAll( _driverId, _nodeId ); }
+		static CommandClass* Create( uint32 const _homeId, uint8 const _nodeId ){ return new SwitchAll( _homeId, _nodeId ); }
 		virtual ~SwitchAll(){}
 
 		static uint8 const StaticGetCommandClassId(){ return 0x27; }
@@ -55,7 +55,7 @@ namespace OpenZWave
 		virtual void CreateVars( uint8 const _instance );
 
 	private:
-		SwitchAll( uint8 const _driverId, uint8 const _nodeId ): CommandClass( _driverId, _nodeId ){}
+		SwitchAll( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
 	};
 
 } // namespace OpenZWave

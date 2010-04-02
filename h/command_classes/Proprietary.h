@@ -35,7 +35,7 @@ namespace OpenZWave
 	class Proprietary: public CommandClass
 	{
 	public:
-		static CommandClass* Create( uint8 const _driverId, uint8 const _nodeId ){ return new Proprietary( _driverId, _nodeId ); }
+		static CommandClass* Create( uint32 const _homeId, uint8 const _nodeId ){ return new Proprietary( _homeId, _nodeId ); }
 		virtual ~Proprietary(){}
 
 		static uint8 const StaticGetCommandClassId(){ return 0x88; }
@@ -47,7 +47,7 @@ namespace OpenZWave
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );
 
 	private:
-		Proprietary( uint8 const _driverId, uint8 const _nodeId ): CommandClass( _driverId, _nodeId ){}
+		Proprietary( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
 	};
 
 } // namespace OpenZWave

@@ -44,8 +44,8 @@ namespace OpenZWave
 		friend class ValueStore;
 
 	public:
-		Value( uint8 const _driverId, uint8 const _nodeId, ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, ValueID::ValueType const _type, string const& _label, string const& _units, bool const _readOnly );
-		Value( uint8 const _driverId, uint8 const _nodeId, TiXmlElement* _valueElement );
+		Value( uint32 const _homeId, uint8 const _nodeId, ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, ValueID::ValueType const _type, string const& _label, string const& _units, bool const _readOnly );
+		Value( uint32 const _homeId, uint8 const _nodeId, uint8 const _commandClassId, TiXmlElement const* _valueElement );
 
 		virtual void WriteXML( TiXmlElement* _valueElement );
 		virtual string GetAsString()const = 0;
@@ -59,9 +59,18 @@ namespace OpenZWave
 		string const& GetUnits()const{ return m_units; }
 		void SetUnits( string const& _units ){ m_units = _units; }
 
+		string const& GetHelp()const{ return m_help; }
+		void SetHelp( string const& _help ){ m_help = _help; }
+
 		bool IsPolled()const{ return m_poll; }
 
 		uint32 Release(){ if( !(--m_refs) ){ delete this; } return m_refs; }
+
+		// Helpers
+		static ValueID::ValueGenre Value::GetGenreEnumFromName( char const* _name );
+		static char const* Value::GetGenreNameFromEnum( ValueID::ValueGenre _genre );
+		static ValueID::ValueType Value::GetTypeEnumFromName( char const* _name );
+		static char const* Value::GetTypeNameFromEnum( ValueID::ValueType _type );
 
 	protected:
 		virtual ~Value(){}
@@ -78,6 +87,7 @@ namespace OpenZWave
 		ValueID		m_id;
 		string		m_label;
 		string		m_units;
+		string		m_help;
 		bool		m_readOnly;
 		bool		m_poll;
 	};

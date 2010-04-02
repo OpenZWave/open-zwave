@@ -36,13 +36,15 @@ namespace OpenZWave
 	class Association: public CommandClass
 	{
 	public:
-		static CommandClass* Create( uint8 const _driverId, uint8 const _nodeId ){ return new Association( _driverId, _nodeId ); }
+		static CommandClass* Create( uint32 const _homeId, uint8 const _nodeId ){ return new Association( _homeId, _nodeId ); }
 		virtual ~Association(){}
 
 		static uint8 const StaticGetCommandClassId(){ return 0x85; }		
 		static string const StaticGetCommandClassName(){ return "COMMAND_CLASS_ASSOCIATION"; }
 
 		// From CommandClass
+		virtual void ReadXML( TiXmlElement const* _ccElement );
+		virtual void WriteXML( TiXmlElement* _ccElement );
 		virtual void RequestState( uint8 const _instance );
 		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }		
 		virtual string const GetCommandClassName()const{ return StaticGetCommandClassName(); }
@@ -52,7 +54,7 @@ namespace OpenZWave
 		void Remove( uint8 const _group, uint8 const _nodeId );
 
 	private:
-		Association( uint8 const _driverId, uint8 const _nodeId ): CommandClass( _driverId, _nodeId ){}
+		Association( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
 	};
 
 } // namespace OpenZWave

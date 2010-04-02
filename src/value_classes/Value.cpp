@@ -46,12 +46,13 @@ static char* const c_genreName[] =
 
 static char* const c_typeName[] = 
 {
-	"Bool",
-	"Byte",
-	"Decimal",
-	"Int",
-	"List",
-	"String"
+	"bool",
+	"byte",
+	"decimal",
+	"int",
+	"list",
+	"short",
+	"string"
 };
 
 //-----------------------------------------------------------------------------
@@ -60,7 +61,7 @@ static char* const c_typeName[] =
 //-----------------------------------------------------------------------------
 Value::Value
 (
-	uint8 const _driverId,
+	uint32 const _homeId,
 	uint8 const _nodeId,
 	ValueID::ValueGenre const _genre,
 	uint8 const _commandClassId,
@@ -72,7 +73,7 @@ Value::Value
 	bool const _readOnly
 ):
 	m_refs( 1 ),
-	m_id( _driverId, _nodeId, _genre, _commandClassId, _instance, _index, _type ),
+	m_id( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, _type ),
 	m_label( _label ),
 	m_units( _units ),
 	m_readOnly( _readOnly ),
@@ -86,9 +87,10 @@ Value::Value
 //-----------------------------------------------------------------------------
 Value::Value
 (
-	uint8 const _driverId,
+	uint32 const _homeId,
 	uint8 const _nodeId,
-	TiXmlElement* _valueElement
+	uint8 const _commandClassId,
+	TiXmlElement const* _valueElement
 ):
 	m_refs( 1 ),
 	m_readOnly( false ),
@@ -96,22 +98,8 @@ Value::Value
 {
 	int intVal;
 
-	ValueID::ValueGenre genre = ValueID::ValueGenre_System;
-	char const* genreStr = _valueElement->Attribute( "genre" );
-	for( int i=0; i<4; ++i )
-	{
-		if( !strcmp( genreStr, c_genreName[i] ) )
-		{
-			genre = (ValueID::ValueGenre)i;
-			break;
-		}
-	}
-
-	uint8 commandClassId = 0;
-	if( TIXML_SUCCESS == _valueElement->QueryIntAttribute( "command_class", &intVal ) )
-	{
-		commandClassId = (uint8)intVal;
-	}
+	ValueID::ValueGenre genre = Value::GetGenreEnumFromName( _valueElement->Attribute( "genre" ) );
+	ValueID::ValueType type = Value::GetTypeEnumFromName( _valueElement->Attribute( "type" ) );
 
 	uint8 instance = 0;
 	if( TIXML_SUCCESS == _valueElement->QueryIntAttribute( "instance", &intVal ) )
@@ -125,18 +113,7 @@ Value::Value
 		index = (uint8)intVal;
 	}
 
-	ValueID::ValueType type = ValueID::ValueType_Int;
-	char const* typeStr = _valueElement->Attribute( "type" );
-	for( int i=0; i<4; ++i )
-	{
-		if( !strcmp( typeStr, c_typeName[i] ) )
-		{
-			type = (ValueID::ValueType)i;
-			break;
-		}
-	}
-
-	m_id = ValueID( _driverId, _nodeId, genre, commandClassId, instance, index, type );
+	m_id = ValueID( _homeId, _nodeId, genre, _commandClassId, instance, index, type );
 
 	char const* label = _valueElement->Attribute( "label" );
 	if( label )
@@ -182,18 +159,14 @@ void Value::WriteXML
 {
 	char str[8];
 
-	_valueElement->SetAttribute( "genre", c_genreName[m_id.GetGenre()] );
-
-	snprintf( str, 8, "%d", m_id.GetCommandClassId() );
-	_valueElement->SetAttribute( "command_class", str );
+	_valueElement->SetAttribute( "type", GetTypeNameFromEnum(m_id.GetType()) );
+	_valueElement->SetAttribute( "genre", GetGenreNameFromEnum(m_id.GetGenre()) );
 
 	snprintf( str, 8, "%d", m_id.GetInstance() );
 	_valueElement->SetAttribute( "instance", str );
 
 	snprintf( str, 8, "%d", m_id.GetIndex() );
 	_valueElement->SetAttribute( "index", str );
-
-	_valueElement->SetAttribute( "type", c_typeName[m_id.GetType()] );
 
 	_valueElement->SetAttribute( "label", m_label.c_str() );
 	_valueElement->SetAttribute( "units", m_units.c_str() );
@@ -236,7 +209,7 @@ void Value::OnValueChanged
 	// Notify the watchers
 	Manager::Notification* notification = new Manager::Notification();
 	
-	notification->m_type = Manager::NotificationType_Value;
+	notification->m_type = Manager::NotificationType_ValueChanged;
 	notification->m_id = m_id;
 	notification->m_groupIdx = 0;
 
@@ -253,7 +226,7 @@ Node* Value::GetNode
 (
 )const
 {
-	if( Driver* driver = Manager::Get()->GetDriver( m_id.GetDriverId() ) )
+	if( Driver* driver = Manager::Get()->GetDriver( m_id.GetHomeId() ) )
 	{
 		return driver->GetNode( m_id.GetNodeId() );
 	}
@@ -287,6 +260,78 @@ void Value::SetPolled
 	}
 }
 
+//-----------------------------------------------------------------------------
+// <Value::GetGenreEnumFromName>
+// Static helper to get a genre enum from a string
+//-----------------------------------------------------------------------------
+ValueID::ValueGenre Value::GetGenreEnumFromName
+(
+	char const* _name	
+)
+{
+	ValueID::ValueGenre genre = ValueID::ValueGenre_System;
+	if( _name )
+	{
+		for( int i=0; i<(int)ValueID::ValueGenre_Count; ++i )
+		{
+			if( !strcmp( _name, c_genreName[i] ) )
+			{
+				genre = (ValueID::ValueGenre)i;
+				break;
+			}
+		}
+	}
 
+	return genre;
+}
+
+//-----------------------------------------------------------------------------
+// <Value::GetGenreNameFromEnum>
+// Static helper to get a genre enum as a string
+//-----------------------------------------------------------------------------
+char const* Value::GetGenreNameFromEnum
+(
+	ValueID::ValueGenre _genre
+)
+{
+	return c_genreName[_genre];
+}
+
+//-----------------------------------------------------------------------------
+// <Value::GetTypeEnumFromName>
+// Static helper to get a type enum from a string
+//-----------------------------------------------------------------------------
+ValueID::ValueType Value::GetTypeEnumFromName
+(
+	char const* _name	
+)
+{
+	ValueID::ValueType type = ValueID::ValueType_Bool;
+	if( _name )
+	{
+		for( int i=0; i<(int)ValueID::ValueType_Count; ++i )
+		{
+			if( !strcmp( _name, c_typeName[i] ) )
+			{
+				type = (ValueID::ValueType)i;
+				break;
+			}
+		}
+	}
+
+	return type;
+}
+
+//-----------------------------------------------------------------------------
+// <Value::GetTypeNameFromEnum>
+// Static helper to get a type enum as a string
+//-----------------------------------------------------------------------------
+char const* Value::GetTypeNameFromEnum
+(
+	ValueID::ValueType _type
+)
+{
+	return c_typeName[_type];
+}
 
 

@@ -35,7 +35,7 @@ namespace OpenZWave
 	class Basic: public CommandClass
 	{
 	public:
-		static CommandClass* Create( uint8 const _driverId, uint8 const _nodeId ){ return new Basic( _driverId, _nodeId ); }
+		static CommandClass* Create( uint32 const _homeId, uint8 const _nodeId ){ return new Basic( _homeId, _nodeId ); }
 		virtual ~Basic(){}
 
 		static uint8 const StaticGetCommandClassId(){ return 0x20; }		
@@ -52,7 +52,7 @@ namespace OpenZWave
 		virtual void CreateVars( uint8 const _instance );
 
 	private:
-		Basic( uint8 const _driverId, uint8 const _nodeId ): CommandClass( _driverId, _nodeId ){}
+		Basic( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
 	};
 
 } // namespace OpenZWave
