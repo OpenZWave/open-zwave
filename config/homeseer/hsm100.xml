@@ -2,7 +2,7 @@
 <Product>
 	<!-- Configuration Parameters -->
 	<CommandClass id="112">
-		<Value type="byte" id="1" genre="config" label="Sensitivity" units="" min="0" max="255">
+		<Value type="byte" index="1" genre="config" label="Sensitivity" units="" min="0" max="255">
 			<Help>
 				Sensitivity sets the amount of motion required for EZMotion to
 				detect motion. A higher value makes it more sensitive and a
@@ -14,7 +14,7 @@
 				200 = Highly sensitive for rooms where people are sitting still.
 			</Help>
 		</Value>
-		<Value type="byte" id="2" genre="config" label="On Time" units="minutes" min="0" max="255">
+		<Value type="byte" index="2" genre="config" label="On Time" units="minutes" min="0" max="255">
 			<Help>
 				On Time sets the number of minutes that the lights stay on when
 				motion has not been detected.
@@ -29,7 +29,7 @@
 				still for a long time.
 			</Help>
 		</Value>
-		<Value type="list" id="3" genre="config" label="LED ON/OFF">
+		<Value type="list" index="3" genre="config" label="LED ON/OFF">
 			<help>
 				LED ON/OFF turns the LED on or off. A slight improvement in
 				battery life is obtained by turning the LED off. Setting LED
@@ -38,7 +38,7 @@
 			<Item label="Off" value="0" />
 			<Item label="On" value="255" />
 		</Value>
-		<Value type="byte" id="4" genre="config" label="Light Threshold" units="%" min="0" max="100">
+		<Value type="byte" index="4" genre="config" label="Light Threshold" units="%" min="0" max="100">
 			<help>
 				Light Threshold is the percentage of light in the room above
 				which the lights will not be turned on. Light Threshold is often
@@ -60,7 +60,7 @@
 				with each room to determine the proper setting.
 			</help>
 		</Value>
-		<Value type="byte" id="5" genre="config" label="Stay Awake" units="" min="0" max="255">
+		<Value type="byte" index="5" genre="config" label="Stay Awake" units="" min="0" max="255">
 			<Help>
 				Setting Stay Awake to a non-zero value will cause EZMotion to
 				always be awake. NOTE: this mode should NOT be used when
@@ -77,7 +77,7 @@
 				routing information will be used now that the listening bit is set.
 			</Help>
 		</Value>
-		<Value type="byte" id="6" genre="config" label="On Value" units="" min="0" max="255">
+		<Value type="byte" index="6" genre="config" label="On Value" units="" min="0" max="255">
 			<Help>
 				On Value is the value sent by the Z-Wave BASIC_SET
 				command when motion is detected.
@@ -91,7 +91,9 @@
 	
 	<!-- Association Groups -->
 	<CommandClass id="133">
-		<Association group="1" label="Motion" />
+    <Associations>
+      <Group index="1" label="Motion" />
+    </Associations>
 	</CommandClass>
 </Product>
 

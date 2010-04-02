@@ -56,7 +56,7 @@ namespace OpenZWave
 			PowerLevelStatus_InProgress
 		};
 
-		static CommandClass* Create( uint8 const _driverId, uint8 const _nodeId ){ return new Powerlevel( _driverId, _nodeId ); }
+		static CommandClass* Create( uint32 const _homeId, uint8 const _nodeId ){ return new Powerlevel( _homeId, _nodeId ); }
 		virtual ~Powerlevel(){}
 
 		static uint8 const StaticGetCommandClassId(){ return 0x73; }
@@ -71,7 +71,7 @@ namespace OpenZWave
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );
 
 	private:	
-		Powerlevel( uint8 const _driverId, uint8 const _nodeId ): CommandClass( _driverId, _nodeId ){}
+		Powerlevel( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
 	};
 
 } // namespace OpenZWave

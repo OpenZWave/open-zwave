@@ -35,7 +35,7 @@ namespace OpenZWave
 	class SwitchBinary: public CommandClass
 	{
 	public:
-		static CommandClass* Create( uint8 const _driverId, uint8 const _nodeId ){ return new SwitchBinary( _driverId, _nodeId ); }
+		static CommandClass* Create( uint32 const _homeId, uint8 const _nodeId ){ return new SwitchBinary( _homeId, _nodeId ); }
 		virtual ~SwitchBinary(){}
 
 		static uint8 const StaticGetCommandClassId(){ return 0x25; }
@@ -52,7 +52,7 @@ namespace OpenZWave
 		virtual void CreateVars( uint8 const _instance );
 
 	private:
-		SwitchBinary( uint8 const _driverId, uint8 const _nodeId ): CommandClass( _driverId, _nodeId ){}
+		SwitchBinary( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
 	};
 
 } // namespace OpenZWave

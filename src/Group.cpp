@@ -40,11 +40,11 @@ using namespace OpenZWave;
 //-----------------------------------------------------------------------------
 Group::Group
 ( 
-	uint8 const _driverId,
+	uint32 const _homeId,
 	uint8 const _nodeId,
 	uint8 const _groupIdx
 ):
-	m_driverId( _driverId ),
+	m_homeId( _homeId ),
 	m_nodeId( _nodeId ),
 	m_groupIdx( _groupIdx )
 {
@@ -59,11 +59,11 @@ Group::Group
 //-----------------------------------------------------------------------------
 Group::Group
 (
-	uint8 const _driverId,
+	uint32 const _homeId,
 	uint8 const _nodeId,
-	TiXmlElement* _groupElement
+	TiXmlElement const* _groupElement
 ):
-	m_driverId( _driverId ),
+	m_homeId( _homeId ),
 	m_nodeId( _nodeId )
 {
 	int intVal;
@@ -77,19 +77,17 @@ Group::Group
 	}
 
 	// Read the associations for this group
-	TiXmlNode const* pAssociationNode = _groupElement->FirstChild();
-	while( pAssociationNode )
+	TiXmlElement const* associationElement = _groupElement->FirstChildElement();
+	while( associationElement )
 	{
-		TiXmlElement const* pAssociationElement = pAssociationNode->ToElement();
-		if( pAssociationElement )
+		char const* elementName = associationElement->Value();
+		if( elementName && !strcmp( elementName, "Node" ) )
 		{
-			char const* elementName = pAssociationElement->Value();
-			if( elementName && !strcmp( elementName, "Association" ) )
-			{
-				pAssociationElement->QueryIntAttribute( "node", &intVal );
-				m_associations.insert( (uint8)intVal );
-			}
+			associationElement->QueryIntAttribute( "id", &intVal );
+			m_associations.insert( (uint8)intVal );
 		}
+
+		associationElement = associationElement->NextSiblingElement();
 	}
 }
 
@@ -111,12 +109,12 @@ void Group::WriteXML
 
 	for( Iterator it = Begin(); it != End(); ++it )
 	{
-		TiXmlElement* pAssociationElement = new TiXmlElement( "Association" );
+		TiXmlElement* associationElement = new TiXmlElement( "Node" );
 		
 		snprintf( str, 16, "%d", *it );
-		pAssociationElement->SetAttribute( "node", str );
+		associationElement->SetAttribute( "id", str );
 
-		_groupElement->LinkEndChild( pAssociationElement );
+		_groupElement->LinkEndChild( associationElement );
 	}
 }
 
@@ -205,7 +203,7 @@ void Group::OnGroupChanged
 		Manager::Notification* notification = new Manager::Notification();
 	
 		notification->m_type = Manager::NotificationType_Group;
-		notification->m_id = ValueID( m_driverId, m_nodeId, ValueID::ValueGenre_All, 0, 0, 0, ValueID::ValueType_Byte );
+		notification->m_id = ValueID( m_homeId, m_nodeId, ValueID::ValueGenre_All, 0, 0, 0, ValueID::ValueType_Byte );
 		notification->m_groupIdx = m_groupIdx;
 
 		Manager::Get()->NotifyWatchers( notification ); 
@@ -222,7 +220,7 @@ Node* Group::GetNode
 )
 const
 {
-	if( Driver* driver = Manager::Get()->GetDriver( m_driverId ) )
+	if( Driver* driver = Manager::Get()->GetDriver( m_homeId ) )
 	{
 		return driver->GetNode( m_nodeId );
 	}

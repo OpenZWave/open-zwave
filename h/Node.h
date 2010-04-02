@@ -55,13 +55,15 @@ namespace OpenZWave
 	class Node
 	{
 		friend class Driver;
+		friend class CommandClass;
+		friend class ManufacturerSpecific;
+		friend class NodeNaming;
 
 	//-----------------------------------------------------------------------------
 	// Construction
 	//-----------------------------------------------------------------------------
 	public:
-		Node( uint8 const _driverId, uint8 const _nodeId );
-		Node( uint8 const _driverId, TiXmlElement* _node );
+		Node( uint32 const _homeId, uint8 const _nodeId );
 		virtual ~Node();
 
 	private:
@@ -150,14 +152,14 @@ namespace OpenZWave
 		uint8 GetSpecific()const{ return m_specific; }
 		string const& GetBasicLabel()const{ return m_basicLabel; }	
 		string const& GetGenericLabel()const{ return m_genericLabel; }	
-		
+
 	private:
 		bool		m_listening;
 		bool		m_routing;
 		uint32		m_maxBaudRate;
 		uint8		m_version;
 		uint8		m_security;
-		uint8		m_driverId;
+		uint32		m_homeId;
 		uint8		m_nodeId;
 		uint8		m_basic;
 		uint8		m_generic;
@@ -165,6 +167,36 @@ namespace OpenZWave
 		string		m_basicLabel;
 		string		m_genericLabel;
 
+	//-----------------------------------------------------------------------------
+	// Device Naming
+	//-----------------------------------------------------------------------------
+	public:
+		// Manufacturer, Product and Name are stored here so they can be set by the
+		// user even if the device does not support the relevant command classes.
+		string const& GetManufacturerName()const{ return m_manufacturerName; }	
+		string const& GetProductName()const{ return m_productName; }	
+		string const& GetNodeName()const{ return m_nodeName; }	
+
+		string const& GetManufacturerId()const{ return m_manufacturerId; }	
+		string const& GetProductType()const{ return m_productType; }	
+		string const& GetProductId()const{ return m_productId; }	
+
+		void SetManufacturerName( string const& _manufacturerName ){ m_manufacturerName = _manufacturerName; }
+		void SetProductName( string const& _productName ){ m_productName = _productName; }
+		void SetNodeName( string const& _nodeName );	
+
+	private:
+		void SetManufacturerId( string const& _manufacturerId ){ m_manufacturerId = _manufacturerId; }
+		void SetProductType( string const& _productType ){ m_productType = _productType; }
+		void SetProductId( string const& _productId ){ m_productId = _productId; }
+		
+		string		m_manufacturerName;
+		string		m_productName;
+		string		m_nodeName;
+
+		string		m_manufacturerId;
+		string		m_productType;
+		string		m_productId;
 
 	//-----------------------------------------------------------------------------
 	// Command Classes
@@ -181,7 +213,9 @@ namespace OpenZWave
 
 	private:
 		CommandClass* AddCommandClass( uint8 const _commandClassId );
-		void SaveStatic( FILE* _file );
+		void ReadXML( TiXmlElement const* _nodeElement );
+		void ReadCommandClassesXML( TiXmlElement const* _ccsElement );
+		void WriteXML( TiXmlElement* _nodeElement );
 
 		map<uint8,CommandClass*>		m_commandClassMap;
 
@@ -203,6 +237,8 @@ namespace OpenZWave
 		void CreateValueList( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, vector<ValueList::Item> const& _items, int32 const _default );
 		void CreateValueShort( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, uint16 const _default );
 		void CreateValueString( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, string const& _default );
+
+		void CreateValueFromXML( uint8 const _commandClassId, TiXmlElement const* _valueElement );
 
 		// Helpers for fetching values
 		ValueBool* GetValueBool( ValueID const& _id );
@@ -241,13 +277,13 @@ namespace OpenZWave
 	// Groups (handled by the Association command class)
 	//-----------------------------------------------------------------------------
 	public:
-		Group* GetGroup( uint8 const _groupIdx );
-		uint8 GetNumGroups()const{ return m_numGroups; }
-		void SetNumGroups( uint8 const _numGroups );
+		Group* GetGroup( uint8 const _groupId );
+		void AddGroup( Group* _group );
+		uint8 GetNumGroups()const{ return m_groups.size(); }
+		void WriteGroups( TiXmlElement* _associationsElement );
 
 	private:
-		Group** m_groups;
-		uint8   m_numGroups;
+		map<uint8,Group*> m_groups;
 	};
 
 } //namespace OpenZWave

@@ -35,7 +35,7 @@ namespace OpenZWave
 	class SwitchToggleBinary: public CommandClass
 	{
 	public:
-		static CommandClass* Create( uint8 const _driverId, uint8 const _nodeId ){ return new SwitchToggleBinary( _driverId, _nodeId ); }
+		static CommandClass* Create( uint32 const _homeId, uint8 const _nodeId ){ return new SwitchToggleBinary( _homeId, _nodeId ); }
 		virtual ~SwitchToggleBinary(){}
 
 		static uint8 const StaticGetCommandClassId(){ return 0x28; }
@@ -52,7 +52,7 @@ namespace OpenZWave
 		virtual void CreateVars( uint8 const _instance );
 
 	private:
-		SwitchToggleBinary( uint8 const _driverId, uint8 const _nodeId ): CommandClass( _driverId, _nodeId ){}
+		SwitchToggleBinary( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
 	};
 
 } // namespace OpenZWave

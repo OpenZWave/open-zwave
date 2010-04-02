@@ -46,11 +46,11 @@ namespace OpenZWave
 		Iterator Begin(){ return m_associations.begin(); }
 		Iterator End(){ return m_associations.end(); }
 
-		Group( uint8 const _driverId, uint8 const _nodeId, uint8 const _groupIdx );
-		Group( uint8 const _driverId, uint8 const _nodeId, TiXmlElement* _valueElement );
+		Group( uint32 const _homeId, uint8 const _nodeId, uint8 const _groupIdx );
+		Group( uint32 const _homeId, uint8 const _nodeId, TiXmlElement const* _valueElement );
 		~Group(){}
 
-		void WriteXML( TiXmlElement* _valueElement );
+		void WriteXML( TiXmlElement* _groupElement );
 		string const& GetLabel()const{ return m_label; }
 
 		void AddNode( uint8 const _nodeId );
@@ -58,11 +58,12 @@ namespace OpenZWave
 
 		void OnGroupChanged( uint8 const _numAssociations, uint8 const* _associations );
 
+		uint8 GetIdx()const{ return m_groupIdx; }
 	private:
 		Node* GetNode()const;
 
 		string		m_label;
-		uint8		m_driverId;
+		uint32		m_homeId;
 		uint8		m_nodeId;
 		uint8		m_groupIdx;
 		set<uint8>	m_associations;

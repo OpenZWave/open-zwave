@@ -35,7 +35,7 @@ namespace OpenZWave
 	class BasicWindowCovering: public CommandClass
 	{
 	public:
-		static CommandClass* Create( uint8 const _driverId, uint8 const _nodeId ){ return new BasicWindowCovering( _driverId, _nodeId ); }
+		static CommandClass* Create( uint32 const _homeId, uint8 const _nodeId ){ return new BasicWindowCovering( _homeId, _nodeId ); }
 		virtual ~BasicWindowCovering(){}
 
 		static uint8 const StaticGetCommandClassId(){ return 0x50; }
@@ -49,7 +49,7 @@ namespace OpenZWave
 		virtual bool SetValue( Value const& _value );
 
 	private:
-		BasicWindowCovering( uint8 const _driverId, uint8 const _nodeId ): CommandClass( _driverId, _nodeId ){}
+		BasicWindowCovering( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
 	};
 
 } // namespace OpenZWave

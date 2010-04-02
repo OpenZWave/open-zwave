@@ -61,6 +61,7 @@ namespace OpenZWave
 		friend class Group;
 		friend class Node;
 		friend class Value;
+		friend class Driver;
 
 	public:
 		struct Notification;
@@ -70,44 +71,47 @@ namespace OpenZWave
 	// Construction
 	//-----------------------------------------------------------------------------
 	public:
-		static Manager* Create( string const& _configPath );
+		static Manager* Create( string const& _configPath, string const& _userPath );
 		static Manager* Get(){ return s_instance; }
 		static void Destroy();
 
 		string const& GetConfigPath()const{ return m_configPath; }
+		string const& GetUserPath()const{ return m_userPath; }
 
 	private:
-		Manager( string const& _configPath );
+		Manager( string const& _configPath, string const& _userPath );
 		virtual ~Manager();
 
 		Event*					m_exitEvent;		// Event that will be signalled when the threads should exit
 		bool					m_exit;
 		string					m_configPath;
+		string					m_userPath;
 		static Manager*			s_instance;
+
+	//-----------------------------------------------------------------------------
+	// Configuration
+	//-----------------------------------------------------------------------------
+	public:
+		void WriteConfig( uint32 const _homeId );
 
 	//-----------------------------------------------------------------------------
 	//	Drivers
 	//-----------------------------------------------------------------------------
 	public:
-		bool AddDriver( string const& _serialPortName, uint8* o_driverId );
-		bool RemoveDriver( uint8 const _driverId );
+		bool AddDriver( string const& _serialPortName );
+		bool RemoveDriver( string const& _serialPortName );
 
-		bool IsSlave( uint8 const _driverId );
-		bool HasTimerSupport( uint8 const _driverId );
-		bool IsPrimaryController( uint8 const _driverId );
-		bool IsStaticUpdateController( uint8 const _driverId );
+		bool IsSlave( uint32 const _homeId );
+		bool HasTimerSupport( uint32 const _homeId );
+		bool IsPrimaryController( uint32 const _homeId );
+		bool IsStaticUpdateController( uint32 const _homeId );
 
 	private:
-		enum
-		{
-			// The maximum number of drivers is limited by the packing of the
-			// driver index into the ValueIDs.  Four bits are currently allocated.
-			MaxDrivers = 16	
-		};
+		Driver* GetDriver( uint32 const _homeId );
+		void SetDriverReady( Driver* _driver );
 
-		Driver* GetDriver( uint8 const _driverId );
-
-		Driver*	m_drivers[MaxDrivers];
+		list<Driver*>		m_pendingDrivers;
+		map<uint32,Driver*>	m_readyDrivers;
 
 	//-----------------------------------------------------------------------------
 	//	Polling Z-Wave devices
@@ -135,12 +139,15 @@ namespace OpenZWave
 	public:
 		enum NotificationType 
 		{
-			NotificationType_Value = 0,			// Value changed
+			NotificationType_ValueAdded = 0,	// Value Added
+			NotificationType_ValueRemoved,		// Value Removed
+			NotificationType_ValueChanged,		// Value Changed
 			NotificationType_Group,				// Group (associations) changed
 			NotificationType_NodeAdded,			// Node has been added
 			NotificationType_NodeRemoved,		// Node has been removed
 			NotificationType_PollingDisabled,	// Polling of this value has been turned off
-			NotificationType_PollingEnabled		// Polling of this value has been turned on
+			NotificationType_PollingEnabled,	// Polling of this value has been turned on
+			NotificationType_DriverReady		// Driver has been added and is ready to use
 		};
 
 		struct Notification
@@ -178,25 +185,25 @@ namespace OpenZWave
 	// Controller commands
 	//-----------------------------------------------------------------------------
 	public:	
-		void ResetController( uint8 const _driverId );
-		void SoftReset( uint8 const _driverId );
+		void ResetController( uint32 const _homeId );
+		void SoftReset( uint32 const _homeId );
 
-		void RequestNodeNeighborUpdate( uint8 const _driverId, uint8 const _nodeId );
-		void AssignReturnRoute( uint8 const _driverId, uint8 const _srcNodeId, uint8 const _dstNodeId );
+		void RequestNodeNeighborUpdate( uint32 const _homeId, uint8 const _nodeId );
+		void AssignReturnRoute( uint32 const _homeId, uint8 const _srcNodeId, uint8 const _dstNodeId );
 		
-		void BeginAddNode( uint8 const _driverId, bool const _bHighpower = false );
-		void BeginAddController( uint8 const _driverId, bool const _bHighpower = false );
-		void EndAddNode( uint8 const _driverId );
+		void BeginAddNode( uint32 const _homeId, bool const _bHighpower = false );
+		void BeginAddController( uint32 const _homeId, bool const _bHighpower = false );
+		void EndAddNode( uint32 const _homeId );
 		
-		void BeginRemoveNode( uint8 const _driverId );
-		void EndRemoveNode( uint8 const _driverId );
+		void BeginRemoveNode( uint32 const _homeId );
+		void EndRemoveNode( uint32 const _homeId );
 
-		void BeginReplicateController( uint8 const _driverId );
-		void EndReplicateController( uint8 const _driverId );
+		void BeginReplicateController( uint32 const _homeId );
+		void EndReplicateController( uint32 const _homeId );
 
-		void ReadMemory( uint8 const _driverId,  uint16 const offset );
+		void ReadMemory( uint32 const _homeId,  uint16 const offset );
 
-		void SetConfiguration( uint8 const _driverId, uint8 const _nodeId, uint8 const _parameter, uint32 const _value );
+		void SetConfiguration( uint32 const _homeId, uint8 const _nodeId, uint8 const _parameter, uint32 const _value );
 
 	};
 

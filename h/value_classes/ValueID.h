@@ -32,6 +32,7 @@
 #include <assert.h>
 #include "Defs.h"
 
+class TiXmlElement;
 
 namespace OpenZWave
 {
@@ -56,9 +57,9 @@ namespace OpenZWave
 		{
 			ValueGenre_All = 0,
 			ValueGenre_User,			// Basic values an ordinary user would be interested in
-			ValueGenre_Config,		// Device-specific configuration parameters
-			ValueGenre_System			// Values of significance only to users who understand the Z-Wave protocol 
-			// No more genres can be added without changing the packing of m_id
+			ValueGenre_Config,			// Device-specific configuration parameters
+			ValueGenre_System,			// Values of significance only to users who understand the Z-Wave protocol 
+			ValueGenre_Count
 		};
 
 		enum ValueType
@@ -69,67 +70,70 @@ namespace OpenZWave
 			ValueType_Int,
 			ValueType_List,
 			ValueType_Short,
-			ValueType_String
-			// Type value cannot exceed 7 without changing the packing of m_id
+			ValueType_String,
+			ValueType_Count
 		};
 
 		// Constructor
 		ValueID
 		( 
-			uint8 const _driverId,
+			uint32 const _homeId,
 			uint8 const	_nodeId,
 			ValueGenre const _genre,
 			uint8 const _commandClassId,
 			uint8 const _instance,
 			uint8 const _valueIndex,
 			ValueType const _type
-		)
+		):
+			m_homeId( _homeId )
 		{
-			assert( _driverId < 16 );
-			assert( ((uint32)_genre) < 4 );
+			assert( ((uint32)_genre) < 16 );
 			assert( _instance < 16 );
-			assert( _valueIndex < 8 );
-			assert( ((uint32)_type) < 8 );
+			assert( _valueIndex < 16 );
+			assert( ((uint32)_type) < 16 );
 
-			m_id = (((uint32)_driverId)<<28)
-				 | (((uint32)_nodeId)<<20) 
-				 | (((uint32)_genre)<<18)
-				 | (((uint32)_commandClassId)<<10)
-				 | (((uint32)_instance)<<6)
-				 | (((uint32)_valueIndex)<<3)
+			m_id = (((uint32)_nodeId)<<24)
+				 | (((uint32)_genre)<<20)
+				 | (((uint32)_commandClassId)<<12)
+				 | (((uint32)_instance)<<8)
+				 | (((uint32)_valueIndex)<<4)
 				 | ((uint32)_type);
 		}
+
+		// Construct from a value XML element
+		ValueID( uint32 const _homeId, uint8 const _nodeId, uint8 const _commandClassId, TiXmlElement const* _valueElement );
 		
 		// Default constructor
-		ValueID():m_id(0){}
+		ValueID():m_homeId(0),m_id(0){}
 
 		// Accessors
-		uint8		GetDriverId()const			{ return( (uint8)		( (m_id & 0xf0000000) >> 28 ) ); }
-		uint8		GetNodeId()const			{ return( (uint8)		( (m_id & 0x0ff00000) >> 20 ) ); }
-		ValueGenre	GetGenre()const				{ return( (ValueGenre)	( (m_id & 0x000c0000) >> 18 ) ); }
-		uint8		GetCommandClassId()const	{ return( (uint8)		( (m_id & 0x0003fc00) >> 10 ) ); }
-		uint8		GetInstance()const			{ return( (uint8)		( (m_id & 0x000003c0) >> 6  ) ); }
-		uint8		GetIndex()const				{ return( (uint8)		( (m_id & 0x00000038) >> 3  ) ); }
-		ValueType	GetType()const				{ return( (ValueType)	(  m_id & 0x00000007        ) ); }
+		uint32		GetHomeId()const			{ return m_homeId; }
+		uint8		GetNodeId()const			{ return( (uint8)		( (m_id & 0xff000000) >> 24 ) ); }
+		ValueGenre	GetGenre()const				{ return( (ValueGenre)	( (m_id & 0x00f00000) >> 20 ) ); }
+		uint8		GetCommandClassId()const	{ return( (uint8)		( (m_id & 0x000ff000) >> 12 ) ); }
+		uint8		GetInstance()const			{ return( (uint8)		( (m_id & 0x00000f00) >> 8  ) ); }
+		uint8		GetIndex()const				{ return( (uint8)		( (m_id & 0x000000f0) >> 4  ) ); }
+		ValueType	GetType()const				{ return( (ValueType)	(  m_id & 0x0000000f        ) ); }
 
 		// Comparison Operators
-		bool operator ==	( ValueID const& _other )const{ return( m_id == _other.m_id ); }
-		bool operator !=	( ValueID const& _other )const{ return( m_id != _other.m_id ); }
-		bool operator <		( ValueID const& _other )const{ return( m_id <  _other.m_id ); }
-		bool operator >		( ValueID const& _other )const{ return( m_id >  _other.m_id ); }
+		bool operator ==	( ValueID const& _other )const{ return( (m_homeId == _other.m_homeId) && (m_id == _other.m_id) ); }
+		bool operator !=	( ValueID const& _other )const{ return( (m_homeId != _other.m_homeId) || (m_id != _other.m_id) ); }
+		bool operator <		( ValueID const& _other )const{ return( (m_homeId == _other.m_homeId) ? (m_id < _other.m_id) : (m_homeId < _other.m_homeId) ); }
+		bool operator >		( ValueID const& _other )const{ return( (m_homeId == _other.m_homeId) ? (m_id > _other.m_id) : (m_homeId > _other.m_homeId) ); }
 
-		static const ValueID	g_nullValueID;
 	private:
 		// ID Packing:
 		// Bits
-		// 28-31:	4 bits. Driver index (i.e. which PC interface handles this value)
-		// 20-27:	8 bits. Node ID of device
-		// 18-19:	2 bits. genre of value value (see ValueGenre enum).
-		// 10-17:	8 bits. ID of command class that created and manages this value.
-		// 06-09:	4 bits. Instance index of the command class.
-		// 03-05:	3 bits. Index of value within all the value created by the command class instance.
-		// 00-02:	3 bits. Type of value (bool, byte, string etc).
+		// 24-31:	8 bits. Node ID of device
+		// 20-23:	4 bits. genre of value value (see ValueGenre enum).
+		// 12-19:	8 bits. ID of command class that created and manages this value.
+		// 08-11:	4 bits. Instance index of the command class.
+		// 04-07:	4 bits. Index of value within all the value created by the command class instance.
+		// 00-03:	4 bits. Type of value (bool, byte, string etc).
 		uint32	m_id;
+
+		// Unique PC interface identifier
+		uint32  m_homeId;
 	};
 
 } // namespace OpenZWave

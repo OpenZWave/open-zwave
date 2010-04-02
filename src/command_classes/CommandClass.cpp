@@ -29,9 +29,11 @@
 #include "tinyxml.h"
 #include "CommandClass.h"
 #include "Msg.h"
+#include "Node.h"
 #include "Driver.h"
 #include "Manager.h"
 #include "Log.h"
+#include "ValueStore.h"
 
 using namespace OpenZWave;
 
@@ -50,7 +52,7 @@ Driver* CommandClass::GetDriver
 (
 )const
 {
-	return( Manager::Get()->GetDriver( m_driverId ) );
+	return( Manager::Get()->GetDriver( m_homeId ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -95,15 +97,89 @@ void CommandClass::SetInstances
 }
 
 //-----------------------------------------------------------------------------
-// <CommandClass::SaveStatic>
-// Save the static node configuration data
+// <CommandClass::ReadXML>
+// Read the saved command class data
 //-----------------------------------------------------------------------------
-void CommandClass::SaveStatic
+void CommandClass::ReadXML
 ( 
-	FILE* _file	
+	TiXmlElement const* _ccElement
 )
 {
-	fprintf( _file, "	<CommandClass id=\"%d\" name=\"%s\" version=\"%d\" />\n", GetNodeId(), GetCommandClassId(), GetCommandClassName().c_str(), GetVersion() );
+	int32 intVal;
+
+	if( TIXML_SUCCESS == _ccElement->QueryIntAttribute( "version", &intVal ) )
+	{
+		SetVersion( (uint8)intVal );
+	}
+
+	uint8 instances = 1;
+	if( TIXML_SUCCESS == _ccElement->QueryIntAttribute( "instances", &intVal ) )
+	{
+		instances = (uint8)intVal;
+	}
+
+	if( instances > m_instances )
+	{
+		// Enlarge the polled instance array
+		bool* newPolledInstances = new bool[instances];
+		memcpy( newPolledInstances, m_polledInstances, sizeof(bool)*m_instances );
+		delete [] m_polledInstances;
+		m_polledInstances = newPolledInstances;
+
+		m_instances = instances;
+	}
+
+	// Read in the saved values
+	TiXmlElement const* child = _ccElement->FirstChildElement();
+	while( child )
+	{
+		char const* str = child->Value();
+		if( str )
+		{
+			if( !strcmp( str, "Value" ) )
+			{
+				GetNode()->CreateValueFromXML( GetCommandClassId(), child );
+			}
+		}
+
+		child = child->NextSiblingElement();
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <CommandClass::WriteXML>
+// Save the static node configuration data
+//-----------------------------------------------------------------------------
+void CommandClass::WriteXML
+( 
+	TiXmlElement* _ccElement
+)
+{
+	char str[32];
+
+	snprintf( str, 32, "%d", GetCommandClassId() );
+	_ccElement->SetAttribute( "id", str );
+	_ccElement->SetAttribute( "name", GetCommandClassName().c_str() );
+
+	snprintf( str, 32, "%d", GetVersion() );
+	_ccElement->SetAttribute( "version", str );
+
+	snprintf( str, 32, "%d", GetInstances() );
+	_ccElement->SetAttribute( "instances", str );
+
+	// Write out the values for this command class
+	ValueStore* store = GetNode()->GetValueStore();
+	for( ValueStore::Iterator it = store->Begin(); it != store->End(); ++it )
+	{
+		Value* value = it->second;
+		if( value->GetID().GetCommandClassId() == GetCommandClassId() )
+		{
+			TiXmlElement* valueElement = new TiXmlElement( "Value" );
+			_ccElement->LinkEndChild( valueElement );
+			value->WriteXML( valueElement );
+		}
+	}
+	GetNode()->ReleaseValueStore();
 }
 
 //-----------------------------------------------------------------------------

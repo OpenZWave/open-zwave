@@ -40,6 +40,7 @@
 
 using namespace OpenZWave;
 
+static uint32 g_homeId = 0;
 
 //-----------------------------------------------------------------------------
 // <OnNotification>
@@ -51,7 +52,14 @@ void OnNotification
 	void* _context
 )
 {
-	int breakhere = 1;
+	if( _notification->m_type == Manager::NotificationType_DriverReady )
+	{
+		g_homeId = _notification->m_id.GetHomeId();
+	}
+	else
+	{
+		int breakhere = 1;
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -61,9 +69,10 @@ void OnNotification
 int main( int argc, char* argv[] )
 {
 	// Create the OpenZWave Manager.
-	// The argument is a path for the log file.  If you leave it NULL 
+	// The first argument is the path to the config files (where the manufacturer_specific.xml file is located
+	// The second argument is the path for saved Z-Wave network state and the log file.  If you leave it NULL 
 	// the log file will appear in the program's working directory.
-	Manager::Create( "" );
+	Manager::Create( "../../../../config/", "" );
 
 	// Add a callback handler to the manager.  The second argument is a context that
 	// is passed to the OnNotification method.  If the OnNotification is a method of
@@ -73,20 +82,18 @@ int main( int argc, char* argv[] )
 
 	// Add a Z-Wave Driver
 	// Modify this line to set the correct serial port for your PC interface.
-	uint8 driverId;
-	Manager::Get()->AddDriver( "\\\\.\\COM3", &driverId );
-	
+	Manager::Get()->AddDriver( "\\\\.\\COM3" );
+
+	// Now we just wait for the driver to become ready, and then write out the loaded config.
+	// In a normal app, we would be handling notifications and building a UI for the user.
+	while( !g_homeId )
+	{
+		Sleep(10000);
+	}
+
 	Sleep(10000);
-
-//	Manager::Get()->BeginAddController( driverId );
-//	Manager::Get()->BeginRemoveNode( driverId );
-//	Manager::Get()->BeginAddNode( driverId );
-//	Manager::Get()->ResetController( driverId );
-
+	Manager::Get()->WriteConfig( g_homeId );
 	
-	// Now we just wait forever, while the Driver thread does all the 
-	// initialisation and querying of the Z-Wave network.  In a normal app,
-	// this is where you would go on to handle user input.
 	while( true )
 	{
 		Sleep(10000);

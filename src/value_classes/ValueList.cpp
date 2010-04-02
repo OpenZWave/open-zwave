@@ -39,7 +39,7 @@ using namespace OpenZWave;
 //-----------------------------------------------------------------------------
 ValueList::ValueList
 (
-	uint8 const _driverId,
+	uint32 const _homeId,
 	uint8 const _nodeId,
 	ValueID::ValueGenre const _genre,
 	uint8 const _commandClassId,
@@ -51,7 +51,7 @@ ValueList::ValueList
 	vector<Item> const& _items,
 	int32 const _valueIdx
 ):
-	Value( _driverId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_List, _label, _units, _readOnly ),
+	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_List, _label, _units, _readOnly ),
 	m_items( _items ),
 	m_valueIdx( _valueIdx )
 {
@@ -63,36 +63,33 @@ ValueList::ValueList
 //-----------------------------------------------------------------------------
 ValueList::ValueList
 (
-	uint8 const _driverId,
+	uint32 const _homeId,
 	uint8 const _nodeId,
-	TiXmlElement* _valueElement
+	uint8 const _commandClassId,
+	TiXmlElement const* _valueElement
 ):
-	Value( _driverId, _nodeId, _valueElement )
+	Value( _homeId, _nodeId, _commandClassId, _valueElement )
 {
 	// Read the items
-	TiXmlNode const* pItemNode = _valueElement->FirstChild();
-	while( pItemNode )
+	TiXmlElement const* itemElement = _valueElement->FirstChildElement();
+	while( itemElement )
 	{
-		TiXmlElement const* pItemElement = pItemNode->ToElement();
-		if( pItemElement )
+		char const* str = itemElement->Value();
+		if( str && !strcmp( str, "Item" ) )
 		{
-			char const* str = pItemElement->Value();
-			if( str && !strcmp( str, "Item" ) )
-			{
-				char const* labelStr = pItemElement->Attribute( "label" );
+			char const* labelStr = itemElement->Attribute( "label" );
 
-				int value = 0;
-				pItemElement->QueryIntAttribute( "value", &value );
+			int value = 0;
+			itemElement->QueryIntAttribute( "value", &value );
 
-				Item item;
-				item.m_label = labelStr;
-				item.m_value = value;
+			Item item;
+			item.m_label = labelStr;
+			item.m_value = value;
 
-				m_items.push_back( item );
-			}
+			m_items.push_back( item );
 		}
 
-		pItemNode = pItemNode->NextSibling();
+		itemElement = itemElement->NextSiblingElement();
 	}
 
 	// Set the value
@@ -109,7 +106,6 @@ void ValueList::WriteXML
 )
 {
 	Value::WriteXML( _valueElement );
-	
 	
 	char str[16];
 	snprintf( str, 16, "%d", m_valueIdx );

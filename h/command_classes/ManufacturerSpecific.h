@@ -36,22 +36,22 @@ namespace OpenZWave
 	class ManufacturerSpecific: public CommandClass
 	{
 	public:
-		static CommandClass* Create( uint8 const _driverId, uint8 const _nodeId ){ return new ManufacturerSpecific( _driverId, _nodeId ); }
+		static CommandClass* Create( uint32 const _homeId, uint8 const _nodeId ){ return new ManufacturerSpecific( _homeId, _nodeId ); }
 		virtual ~ManufacturerSpecific(){}
 
 		static uint8 const StaticGetCommandClassId(){ return 0x72; }
 		static string const StaticGetCommandClassName(){ return "COMMAND_CLASS_MANUFACTURER_SPECIFIC"; }
 
 		// From CommandClass
-		virtual void SaveStatic( FILE* _file );
 		virtual void RequestStatic();
 		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }
 		virtual string const GetCommandClassName()const{ return StaticGetCommandClassName(); }
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );
 
 	private:
-		ManufacturerSpecific( uint8 const _driverId, uint8 const _nodeId ): CommandClass( _driverId, _nodeId ){}
+		ManufacturerSpecific( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
 		bool LoadProductXML();
+		bool LoadConfigXML( string const& _configPath );
 
 		class Product
 		{
@@ -61,11 +61,14 @@ namespace OpenZWave
 				uint16 _manufacturerId,
 				uint16 _productType,
 				uint16 _productId,
-				string const& _productName
-			):	m_manufacturerId( _manufacturerId ),
+				string const& _productName,
+				string const& _configPath
+			):	
+				m_manufacturerId( _manufacturerId ),
 				m_productType( _productType ),
 				m_productId( _productId ),
-				m_productName( _productName )
+				m_productName( _productName ),
+				m_configPath( _configPath )
 			{
 			}
 
@@ -84,12 +87,14 @@ namespace OpenZWave
 			uint16 GetProductType()const{ return m_productType; }
 			uint16 GetProductId()const{ return m_productId; }
 			string GetProductName()const{ return m_productName; }
+			string GetConfigPath()const{ return m_configPath; }
 
 		private:
 			uint16	m_manufacturerId;
 			uint16	m_productType;
 			uint16	m_productId;
 			string	m_productName;
+			string	m_configPath;
 		};
 
 		static map<uint16,string>	s_manufacturerMap;
