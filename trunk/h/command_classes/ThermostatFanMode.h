@@ -38,7 +38,7 @@ namespace OpenZWave
 	class ThermostatFanMode: public CommandClass
 	{
 	public:
-		static CommandClass* Create( uint8 const _driverId, uint8 const _nodeId ){ return new ThermostatFanMode( _driverId, _nodeId ); }
+		static CommandClass* Create( uint32 const _homeId, uint8 const _nodeId ){ return new ThermostatFanMode( _homeId, _nodeId ); }
 		virtual ~ThermostatFanMode(){}
 
 		static uint8 const StaticGetCommandClassId(){ return 0x44; }		
@@ -56,7 +56,7 @@ namespace OpenZWave
 		virtual void CreateVars( uint8 const _instance );
 
 	private:
-		ThermostatFanMode( uint8 const _driverId, uint8 const _nodeId ): CommandClass( _driverId, _nodeId ){}
+		ThermostatFanMode( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
 		
 		vector<ValueList::Item> m_supportedModes;
 	};

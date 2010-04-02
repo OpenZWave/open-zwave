@@ -44,11 +44,11 @@ namespace OpenZWave
 	class CommandClass
 	{
 	public:
-		CommandClass( uint8 _driverId, uint8 _nodeId ): m_driverId( _driverId ), m_nodeId( _nodeId ), m_version( 1 ), m_instances( 0 ), m_polledInstances( NULL ){}
+		CommandClass( uint32 const _homeId, uint8 const _nodeId ): m_homeId( _homeId ), m_nodeId( _nodeId ), m_version( 1 ), m_instances( 0 ), m_polledInstances( NULL ){}
 		virtual ~CommandClass(){}
 
-		virtual void LoadStatic( TiXmlElement const* _node ){}
-		virtual void SaveStatic( FILE* _file );
+		virtual void ReadXML( TiXmlElement const* _ccElement );
+		virtual void WriteXML( TiXmlElement* _ccElement );
 		virtual void RequestStatic(){}							// For static node data
 		virtual void RequestState( uint8 const _instance ){}	// For dynamic node data
 		
@@ -63,6 +63,7 @@ namespace OpenZWave
 
 		uint8 GetVersion()const{ return m_version; }
 		uint8 GetInstances()const{ return m_instances; }
+		uint32 GetHomeId()const{ return m_homeId; }
 		uint8 GetNodeId()const{ return m_nodeId; }
 		Node* GetNode()const;
 		Driver* GetDriver()const;
@@ -80,7 +81,7 @@ namespace OpenZWave
 		virtual void CreateVars( uint8 const _instance ){}
 
 	private:
-		uint8	m_driverId;
+		uint32	m_homeId;
 		uint8	m_nodeId;
 		uint8	m_version;
 		uint8	m_instances;

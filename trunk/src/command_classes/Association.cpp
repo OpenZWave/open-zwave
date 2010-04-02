@@ -25,6 +25,7 @@
 //
 //-----------------------------------------------------------------------------
 
+#include "tinyxml.h"
 #include "CommandClasses.h"
 #include "Association.h"
 #include "Defs.h"
@@ -46,6 +47,61 @@ enum AssociationCmd
 	AssociationCmd_GroupingsReport	= 0x06
 };
 
+
+//-----------------------------------------------------------------------------
+// <Association::ReadXML>
+// Read the saved association data
+//-----------------------------------------------------------------------------
+void Association::ReadXML
+( 
+	TiXmlElement const* _ccElement
+)
+{
+	CommandClass::ReadXML( _ccElement );
+
+	if( Node* node = GetNode() )
+	{
+		TiXmlElement const* associationsElement = _ccElement->FirstChildElement();
+		while( associationsElement )
+		{
+			char const* str = associationsElement->Value();
+			if( str && !strcmp( str, "Associations" ) )
+			{
+				TiXmlElement const* groupElement = associationsElement->FirstChildElement();
+				while( groupElement )
+				{
+					Group* group = new Group( GetHomeId(), GetNodeId(), groupElement );
+					node->AddGroup( group );
+
+					groupElement = groupElement->NextSiblingElement();
+				}
+
+				break;
+			}
+
+			associationsElement = associationsElement->NextSiblingElement();
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <Association::WriteXML>
+// Save the association data
+//-----------------------------------------------------------------------------
+void Association::WriteXML
+( 
+	TiXmlElement* _ccElement
+)
+{
+	CommandClass::WriteXML( _ccElement );
+
+	if( Node* node = GetNode() )
+	{
+		TiXmlElement* associationsElement = new TiXmlElement( "Associations" );
+		_ccElement->LinkEndChild( associationsElement );
+		node->WriteGroups( associationsElement ); 
+	}
+}
 
 //-----------------------------------------------------------------------------
 // <Association::RequestState>
@@ -87,7 +143,6 @@ bool Association::HandleMsg
 			// Retreive the number of groups this device supports,
 			// and request the members of each group in turn.
 			uint8 numGroups = _data[1];
-			node->SetNumGroups( numGroups );
 
 			Log::Write( "Received Association Groupings report from node %d: Number of Groups=%d", GetNodeId(), numGroups );
 
@@ -110,16 +165,21 @@ bool Association::HandleMsg
 			uint8 groupIdx = _data[1];
 	//		uint8 maxNodes = _data[2];
 
-			if( Group* group = node->GetGroup( groupIdx ) )
+			Group* group = node->GetGroup( groupIdx );
+			if( NULL == group )
 			{
-//				uint8 numNodes = _data[3];	- should be this value, but it always appears to be zero.
-				if( _length > 5 )
-				{
-					uint8 numNodes = _length - 5;
-					Log::Write( "Received Association report from node %d, group %d: Number of associations=%d", GetNodeId(), groupIdx, numNodes );
+				// Group has not been created yet
+				group = new Group( GetHomeId(), GetNodeId(), groupIdx );
+				node->AddGroup( group );
+			}
 
-					group->OnGroupChanged( numNodes, &_data[4] );
-				}
+//			uint8 numNodes = _data[3];	- should be this value, but it always appears to be zero.
+			if( _length > 5 )
+			{
+				uint8 numNodes = _length - 5;
+				Log::Write( "Received Association report from node %d, group %d: Number of associations=%d", GetNodeId(), groupIdx, numNodes );
+
+				group->OnGroupChanged( numNodes, &_data[4] );
 			}
 
 			handled = true;

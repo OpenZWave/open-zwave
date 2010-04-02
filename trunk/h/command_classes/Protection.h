@@ -42,7 +42,7 @@ namespace OpenZWave
 			Protection_NOP
 		};
 
-		static CommandClass* Create( uint8 const _driverId, uint8 const _nodeId ){ return new Protection( _driverId, _nodeId ); }
+		static CommandClass* Create( uint32 const _homeId, uint8 const _nodeId ){ return new Protection( _homeId, _nodeId ); }
 		virtual ~Protection(){}
 
 		static uint8 const StaticGetCommandClassId(){ return 0x75; }
@@ -59,7 +59,7 @@ namespace OpenZWave
 		virtual void CreateVars( uint8 const _instance );
 
 	private:
-		Protection( uint8 const _driverId, uint8 const _nodeId ): CommandClass( _driverId, _nodeId ){}
+		Protection( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
 	};
 
 } // namespace OpenZWave

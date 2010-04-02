@@ -35,7 +35,7 @@ namespace OpenZWave
 	class Meter: public CommandClass
 	{
 	public:
-		static CommandClass* Create( uint8 const _driverId, uint8 const _nodeId ){ return new Meter( _driverId, _nodeId ); }
+		static CommandClass* Create( uint32 const _homeId, uint8 const _nodeId ){ return new Meter( _homeId, _nodeId ); }
 		virtual ~Meter(){}
 
 		static uint8 const StaticGetCommandClassId(){ return 0x32; }
@@ -51,7 +51,7 @@ namespace OpenZWave
 		virtual void CreateVars( uint8 const _instance );
 
 	private:
-		Meter( uint8 const _driverId, uint8 const _nodeId ): CommandClass( _driverId, _nodeId ){}
+		Meter( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
 	};
 
 } // namespace OpenZWave

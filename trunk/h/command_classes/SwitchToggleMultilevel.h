@@ -41,7 +41,7 @@ namespace OpenZWave
 			SwitchToggleMultilevelDirection_Down	= 0x40
 		};
 
-		static CommandClass* Create( uint8 const _driverId, uint8 const _nodeId ){ return new SwitchToggleMultilevel( _driverId, _nodeId ); }
+		static CommandClass* Create( uint32 const _homeId, uint8 const _nodeId ){ return new SwitchToggleMultilevel( _homeId, _nodeId ); }
 		virtual ~SwitchToggleMultilevel(){}
 
 		static uint8 const StaticGetCommandClassId(){ return 0x29; }
@@ -61,7 +61,7 @@ namespace OpenZWave
 		virtual void CreateVars( uint8 const _instance );
 
 	private:
-		SwitchToggleMultilevel( uint8 const _driverId, uint8 const _nodeId ): CommandClass( _driverId, _nodeId ){}
+		SwitchToggleMultilevel( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
 	};
 
 } // namespace OpenZWave

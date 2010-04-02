@@ -35,7 +35,7 @@ namespace OpenZWave
 	class NodeNaming: public CommandClass
 	{
 	public:
-		static CommandClass* Create( uint8 const _driverId, uint8 const _nodeId ){ return new NodeNaming( _driverId, _nodeId ); }
+		static CommandClass* Create( uint32 const _homeId, uint8 const _nodeId ){ return new NodeNaming( _homeId, _nodeId ); }
 		virtual ~NodeNaming(){}
 
 		static uint8 const StaticGetCommandClassId(){ return 0x77; }		
@@ -47,11 +47,10 @@ namespace OpenZWave
 		virtual string const GetCommandClassName()const{ return StaticGetCommandClassName(); }
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );
 
-	protected:
-		virtual void CreateVars( uint8 const _instance );
+		void Set( string const& _name );
 
 	private:
-		NodeNaming( uint8 const _driverId, uint8 const _nodeId ): CommandClass( _driverId, _nodeId ){}
+		NodeNaming( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
 	};
 
 } // namespace OpenZWave

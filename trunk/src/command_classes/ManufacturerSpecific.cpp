@@ -47,29 +47,10 @@ enum ManufacturerSpecificCmd
 	ManufacturerSpecificCmd_Report	= 0x05
 };
 
-enum
-{
-	ValueIndex_Manufacturer = 0,
-	ValueIndex_Product
-};
-
 map<uint16,string> ManufacturerSpecific::s_manufacturerMap;
 map<int64,ManufacturerSpecific::Product*> ManufacturerSpecific::s_productMap;
 bool ManufacturerSpecific::s_bXmlLoaded = false;
 
-
-//-----------------------------------------------------------------------------
-// <ManufacturerSpecific::SaveStatic>
-// Save the static node configuration data
-//-----------------------------------------------------------------------------
-void ManufacturerSpecific::SaveStatic
-( 
-	FILE* _file	
-)
-{
-	fprintf( _file, "	<CommandClass id=\"%d\" name=\"%s\" version=\"%d\">\n", GetNodeId(), GetCommandClassId(), GetCommandClassName().c_str(), GetVersion() );
-	fprintf( _file, "	</CommandClass>\n" );
-}
 
 //-----------------------------------------------------------------------------
 // <ManufacturerSpecific::RequestStatic>												   
@@ -118,6 +99,8 @@ bool ManufacturerSpecific::HandleMsg
 		snprintf( str, sizeof(str), "Unknown: type=%.4x, id=%.4x", productType, productId );
 		string productName = str;
 
+		string configPath = "";
+
 		// Try to get the real manufacturer and product names
 		map<uint16,string>::iterator mit = s_manufacturerMap.find( manufacturerId );
 		if( mit != s_manufacturerMap.end() )
@@ -130,12 +113,36 @@ bool ManufacturerSpecific::HandleMsg
 			if( pit != s_productMap.end() )
 			{
 				productName = pit->second->GetProductName();
+				configPath = pit->second->GetConfigPath();
+			}
+		}
+
+		if( Node* node = GetNode() )
+		{
+			// Set the values into the node
+			node->SetManufacturerName( manufacturerName );
+			node->SetProductName( productName );
+
+			snprintf( str, sizeof(str), "%.4x", manufacturerId );
+			node->SetManufacturerId( str );
+
+			snprintf( str, sizeof(str), "%.4x", productType );
+			node->SetProductType( str );
+
+			snprintf( str, sizeof(str), "%.4x", productId );
+			node->SetProductId( str );
+
+			// Attempt to create the config parameters
+			if( configPath.size() > 0 )
+			{
+				LoadConfigXML( configPath );
 			}
 		}
 		
 		Log::Write( "Received manufacturer specific report from node %d: Manufacturer=%s, Product=%s", GetNodeId(), manufacturerName.c_str(), productName.c_str() );
 		return true;
 	}
+	
 	return false;
 }
 
@@ -150,13 +157,13 @@ bool ManufacturerSpecific::LoadProductXML
 	s_bXmlLoaded = true;
 
 	// Parse the Z-Wave manufacturer and product XML file.
-	string filename =  Manager::Get()->GetConfigPath() + "ManufacturerSpecific.xml";
+	string filename =  Manager::Get()->GetConfigPath() + "manufacturer_specific.xml";
 
 	TiXmlDocument* pDoc = new TiXmlDocument();
 	if( !pDoc->LoadFile( filename.c_str(), TIXML_ENCODING_UTF8 ) )
 	{
 		delete pDoc;	
-		Log::Write( "Unable to load ManufacturerSpecific.xml" );
+		Log::Write( "Unable to load manufacturer_specific.xml" );
 		return false;
 	}
 
@@ -165,84 +172,119 @@ bool ManufacturerSpecific::LoadProductXML
 	char const* str;
 	char* pStopChar;
 	
-	TiXmlNode const* node = root->FirstChild();
-	while( node )
+	TiXmlElement const* manufacturerElement = root->FirstChildElement();
+	while( manufacturerElement )
 	{
-		str = node->Value();
+		str = manufacturerElement->Value();
 		if( str && !strcmp( str, "Manufacturer" ) )
 		{
-			TiXmlElement const* pManufacturerElement = node->ToElement();
-			if( pManufacturerElement )
+			// Read in the manufacturer attributes
+			str = manufacturerElement->Attribute( "id" );
+			if( !str )
 			{
-				// Read in the manufacturer attributes
-				str = pManufacturerElement->Attribute( "id" );
-				if( !str )
-				{
-					Log::Write( "Error in ManufacturerSpecific.xml at line %d - missing manufacturer id attribute", pManufacturerElement->Row() );
-					return false;
-				}
-				uint16 manufacturerId = (uint16)strtol( str, &pStopChar, 16 );
+				Log::Write( "Error in manufacturer_specific.xml at line %d - missing manufacturer id attribute", manufacturerElement->Row() );
+				delete pDoc;	
+				return false;
+			}
+			uint16 manufacturerId = (uint16)strtol( str, &pStopChar, 16 );
 
-				str = pManufacturerElement->Attribute( "name" );
-				if( !str )
-				{
-					Log::Write( "Error in ManufacturerSpecific.xml at line %d - missing manufacturer name attribute", pManufacturerElement->Row() );
-					return false;
-				}
-				
-				// Add this manufacturer to the map
-				s_manufacturerMap[manufacturerId] = str;
+			str = manufacturerElement->Attribute( "name" );
+			if( !str )
+			{
+				Log::Write( "Error in manufacturer_specific.xml at line %d - missing manufacturer name attribute", manufacturerElement->Row() );
+				delete pDoc;	
+				return false;
+			}
+			
+			// Add this manufacturer to the map
+			s_manufacturerMap[manufacturerId] = str;
 
-				// Parse all the products for this manufacturer
-				TiXmlNode const* pProductNode = pManufacturerElement->FirstChild();
-				while( pProductNode )
+			// Parse all the products for this manufacturer
+			TiXmlElement const* productElement = manufacturerElement->FirstChildElement();
+			while( productElement )
+			{
+				str = productElement->Value();
+				if( str && !strcmp( str, "Product" ) )
 				{
-					str = pProductNode->Value();
-					if( str && !strcmp( str, "Product" ) )
+					str = productElement->Attribute( "type" );
+					if( !str )
 					{
-						TiXmlElement const* pProductElement = pProductNode->ToElement();
-						if( pProductElement )
-						{
-							str = pProductElement->Attribute( "type" );
-							if( !str )
-							{
-								Log::Write( "Error in ManufacturerSpecific.xml at line %d - missing product type attribute", pProductElement->Row() );
-								return false;
-							}
-							uint16 productType = (uint16)strtol( str, &pStopChar, 16 );
-							
-							str = pProductElement->Attribute( "id" );
-							if( !str )
-							{
-								Log::Write( "Error in ManufacturerSpecific.xml at line %d - missing product id attribute", pProductElement->Row() );
-								return false;
-							}
-							uint16 productId = (uint16)strtol( str, &pStopChar, 16 );
+						Log::Write( "Error in manufacturer_specific.xml at line %d - missing product type attribute", productElement->Row() );
+						delete pDoc;	
+						return false;
+					}
+					uint16 productType = (uint16)strtol( str, &pStopChar, 16 );
+					
+					str = productElement->Attribute( "id" );
+					if( !str )
+					{
+						Log::Write( "Error in manufacturer_specific.xml at line %d - missing product id attribute", productElement->Row() );
+						delete pDoc;	
+						return false;
+					}
+					uint16 productId = (uint16)strtol( str, &pStopChar, 16 );
 
-							str = pProductElement->Attribute( "name" );
-							if( !str )
-							{
-								Log::Write( "Error in ManufacturerSpecific.xml at line %d - missing product name attribute", pProductElement->Row() );
-								return false;
-							}
-							string productName = str;
+					str = productElement->Attribute( "name" );
+					if( !str )
+					{
+						Log::Write( "Error in manufacturer_specific.xml at line %d - missing product name attribute", productElement->Row() );
+						delete pDoc;	
+						return false;
+					}
+					string productName = str;
 
-							// Add the product to the map
-							Product* product = new Product( manufacturerId, productType, productId, productName );
-							s_productMap[product->GetKey()] = product;
-						}
+					// Optional config path
+					string configPath;
+					str = productElement->Attribute( "config" );
+					if( str )
+					{
+						configPath = str;
 					}
 
-					// Move on to the next product.
-					pProductNode = pProductNode->NextSibling();
+					// Add the product to the map
+					Product* product = new Product( manufacturerId, productType, productId, productName, configPath );
+					s_productMap[product->GetKey()] = product;
 				}
+
+				// Move on to the next product.
+				productElement = productElement->NextSiblingElement();
 			}
 		}
 
 		// Move on to the next manufacturer.
-		node = node->NextSibling();
+		manufacturerElement = manufacturerElement->NextSiblingElement();
 	}
 
+	delete pDoc;	
 	return true;
+}
+
+//-----------------------------------------------------------------------------
+// <ManufacturerSpecific::LoadConfigXML>
+// Try to find and load an XML file describing the device's config params
+//-----------------------------------------------------------------------------
+bool ManufacturerSpecific::LoadConfigXML
+(
+	string const& _configPath
+)
+{
+	if( Node* node = GetNode() )
+	{
+		string filename =  Manager::Get()->GetConfigPath() + _configPath;
+
+		TiXmlDocument* doc = new TiXmlDocument();
+		if( !doc->LoadFile( filename.c_str(), TIXML_ENCODING_UTF8 ) )
+		{
+			delete doc;	
+			Log::Write( "Unable to find or load Config Param file %s", filename.c_str() );
+			return false;
+		}
+
+		node->ReadCommandClassesXML( doc->RootElement() );
+		delete doc;	
+		return true;
+	}
+
+	return false;
 }
 

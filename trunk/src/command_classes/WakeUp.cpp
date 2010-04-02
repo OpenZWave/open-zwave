@@ -54,10 +54,10 @@ enum WakeUpCmd
 //-----------------------------------------------------------------------------
 WakeUp::WakeUp
 ( 
-	uint8 const _driverId,
+	uint32 const _homeId,
 	uint8 const _nodeId 
 ):
-	CommandClass( _driverId, _nodeId ), 
+	CommandClass( _homeId, _nodeId ), 
 	m_awake( true ),
 	m_pollRequired( false )
 {

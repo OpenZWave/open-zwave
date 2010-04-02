@@ -55,14 +55,17 @@ namespace OpenZWave
 
 	class Driver
 	{
+		friend class Manager;
+
 	//-----------------------------------------------------------------------------
 	// Construction / Destruction
 	//-----------------------------------------------------------------------------
 	public:
-		Driver( string const& _serialPortName, uint8 const _driverId );
+		Driver( string const& _serialPortName );
 		virtual ~Driver();
 
 	private:
+		void Start();
 		static void DriverThreadEntryPoint( void* _context );
 		void DriverThreadProc();
 		bool Init( uint32 _attempts );
@@ -70,6 +73,14 @@ namespace OpenZWave
 		Thread*					m_driverThread;	// Thread for creating and managing the driver worker threads
 		Event*					m_exitEvent;		// Event that will be signalled when the threads should exit
 		bool					m_exit;
+
+	//-----------------------------------------------------------------------------
+	//	Configuration
+	//-----------------------------------------------------------------------------
+	private:
+		void RequestConfig();	// Get the network configuration from the Z-Wave network
+		bool ReadConfig();		// Read the configuration from a file
+		void WriteConfig();		// Save the configuration to a file
 
 	//-----------------------------------------------------------------------------
 	//	Controller
@@ -81,11 +92,12 @@ namespace OpenZWave
 		bool IsStaticUpdateController()const{ return ((m_capabilities & 0x08) != 0); }
 
 		Node* GetNode( uint8 _nodeId ){ return m_nodes[_nodeId]; }
+		uint32 GetHomeId()const{ return m_homeId; }
 		string GetSerialPortName()const{ return m_serialPortName; }
 
 	private:
 		string					m_serialPortName;	// name used to open the serial port
-		uint8					m_driverId;
+		uint32					m_homeId;
 		SerialPort*				m_serialPort;
 		Mutex*					m_serialMutex;
 		

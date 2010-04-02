@@ -27,6 +27,7 @@
 
 #include "ValueStore.h"
 #include "Value.h"
+#include "Manager.h"
 
 using namespace OpenZWave;
 
@@ -63,16 +64,24 @@ bool ValueStore::AddValue
 	}
 
 	map<ValueID,Value*>::iterator it = m_values.find( _value->GetID() );
-	if( it == m_values.end() )
+	if( it != m_values.end() )
 	{
-		// Value is not already in the store, so go ahead and add it
-		m_values[_value->GetID()] = _value;
-		_value->AddRef();
-		return true;
+		// There is already a value in the store with this ID, so we give up.
+		return false;
 	}
 
-	// Value is already in the store
-	return false;
+	m_values[_value->GetID()] = _value;
+	_value->AddRef();
+
+	// Notify the watchers of the new value
+	Manager::Notification* notification = new Manager::Notification();		
+	notification->m_type = Manager::NotificationType_ValueAdded;
+	notification->m_id = _value->GetID();
+	notification->m_groupIdx = 0;
+	Manager::Get()->NotifyWatchers( notification ); 
+	delete notification;
+
+	return true;
 }
 
 //-----------------------------------------------------------------------------
@@ -90,6 +99,15 @@ bool ValueStore::RemoveValue
 		// Value found, so remove it
 		it->second->Release();
 		m_values.erase( it );
+
+		// Notify the watchers of the new value
+		Manager::Notification* notification = new Manager::Notification();	
+		notification->m_type = Manager::NotificationType_ValueRemoved;
+		notification->m_id = it->second->GetID();
+		notification->m_groupIdx = 0;
+		Manager::Get()->NotifyWatchers( notification ); 
+		delete notification;
+
 		return true;
 	}
 

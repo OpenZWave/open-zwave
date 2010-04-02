@@ -103,7 +103,7 @@ bool MultiInstance::HandleMsg
 
 			if( CommandClass* pCommandClass = node->GetCommandClass( commandClassId ) )
 			{
-				Log::Write( "Received a multi-instance encapsulated command from node %d: Command Class %s, Instance=%d", GetNodeId(), pCommandClass->GetCommandClassName().c_str(), instance+1 );
+				Log::Write( "Received a multi-instance encapsulated command from node %d: Command Class %s, Instance=%d", GetNodeId(), pCommandClass->GetCommandClassName().c_str(), instance );
 				pCommandClass->HandleMsg( &_data[3], _length-3, instance );
 			}
 

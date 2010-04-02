@@ -71,10 +71,10 @@ static char* const c_setpointName[] =
 //-----------------------------------------------------------------------------
 ThermostatSetpoint::ThermostatSetpoint
 (
-	uint8 const _driverId,
+	uint32 const _homeId,
 	uint8 const _nodeId
 ):
-	CommandClass( _driverId, _nodeId )
+	CommandClass( _homeId, _nodeId )
 {
 	memset( m_supportedSetpoints, 0, sizeof(bool)*ThermostatSetpoint_Count );
 }

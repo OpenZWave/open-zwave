@@ -42,8 +42,8 @@ namespace OpenZWave
 	class ValueInt: public Value
 	{
 	public:
-		ValueInt( uint8 const _driverId, uint8 const _nodeId, ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, string const& _label, string const& _units, bool const _readOnly, int32 const _value );
-		ValueInt( uint8 const _driverId, uint8 const _nodeId, TiXmlElement* _valueElement );
+		ValueInt( uint32 const _homeId, uint8 const _nodeId, ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, string const& _label, string const& _units, bool const _readOnly, int32 const _value );
+		ValueInt( uint32 const _homeId, uint8 const _nodeId, uint8 const _commandClassId, TiXmlElement const* _valueElement );
 		virtual ~ValueInt(){}
 
 		bool Set( int32 const _value );

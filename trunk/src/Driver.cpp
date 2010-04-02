@@ -27,6 +27,7 @@
 
 #include "Defs.h"
 #include "Driver.h"
+#include "Manager.h"
 #include "Node.h"
 #include "Msg.h"
 
@@ -60,11 +61,10 @@ using namespace OpenZWave;
 //-----------------------------------------------------------------------------
 Driver::Driver
 ( 
-	string const& _serialPortName,
-	uint8 const _driverId
+	string const& _serialPortName
 ):
 	m_serialPortName( _serialPortName ),
-	m_driverId( _driverId ),
+	m_homeId( 0 ),
 	m_pollInterval( 30 ),					// By default, every polled device is queried once every 30 seconds
 	m_waitingForAck( false ),
 	m_expectedReply( 0 ),
@@ -84,9 +84,6 @@ Driver::Driver
 {
 	// Clear the nodes array
 	memset( m_nodes, 0, sizeof(Node*) * 256 );
-
-	// Start the thread that will handle communications with the Z-Wave network
-	m_driverThread->Start( Driver::DriverThreadEntryPoint, this );
 }
 
 //-----------------------------------------------------------------------------
@@ -112,6 +109,28 @@ Driver::~Driver
 
 	delete m_sendEvent;
 	delete m_exitEvent;
+
+	// Clear the node data
+	for( int i=0; i<256; ++i )
+	{
+		if( m_nodes[i] )
+		{
+			delete m_nodes[i];
+			m_nodes[i] = NULL;
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::Start>
+// Start the driver thread
+//-----------------------------------------------------------------------------
+void Driver::Start
+(
+)
+{
+	// Start the thread that will handle communications with the Z-Wave network
+	m_driverThread->Start( Driver::DriverThreadEntryPoint, this );
 }
 
 //-----------------------------------------------------------------------------
@@ -244,6 +263,147 @@ bool Driver::Init
 
 	// Init successful
 	return true;
+}
+
+//-----------------------------------------------------------------------------
+//	Configuration
+//-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+// <Driver::ReadConfig>
+// Read our configuration from an XML document
+//-----------------------------------------------------------------------------
+bool Driver::ReadConfig
+(
+)
+{
+	char str[32];
+	int32 intVal;
+
+	// Load the XML document that contains the driver configuration
+	snprintf( str, 32, "zwcfg_0x%08x.xml", m_homeId );
+	string filename =  Manager::Get()->GetUserPath() + string(str);
+
+	TiXmlDocument doc;
+	if( !doc.LoadFile( filename.c_str(), TIXML_ENCODING_UTF8 ) )
+	{
+		return false;
+	}
+
+	TiXmlElement const* driverElement = doc.RootElement();
+
+	// Home ID
+	char const* homeIdStr = driverElement->Attribute( "home_id" );
+	if( homeIdStr )
+	{
+		char* p;
+		uint32 homeId = (uint32)strtol( homeIdStr, &p, 0 );
+
+		if( homeId != m_homeId )
+		{
+			Log::Write( "Driver::ReadConfig - Home ID in file %s is incorrect", filename.c_str() );
+			return false;
+		}
+	}
+	else
+	{
+		Log::Write( "Driver::ReadConfig - Home ID is missing from file %s", filename.c_str() );
+		return false;
+	}
+
+	// Node ID
+	if( TIXML_SUCCESS == driverElement->QueryIntAttribute( "node_id", &intVal ) )
+	{
+		if( (uint8)intVal != m_nodeId )
+		{
+			Log::Write( "Driver::ReadConfig - Controller Node ID in file %s is incorrect", filename.c_str() );
+			return false;
+		}
+	}
+	else
+	{
+		Log::Write( "Driver::ReadConfig - Node ID is missing from file %s", filename.c_str() );
+		return false;
+	}
+
+	// Capabilities
+	if( TIXML_SUCCESS == driverElement->QueryIntAttribute( "capabilities", &intVal ) )
+	{
+		m_capabilities = (uint8)intVal;
+	}
+
+	// Poll Interval
+	if( TIXML_SUCCESS == driverElement->QueryIntAttribute( "poll_interval", &intVal ) )
+	{
+		m_pollInterval = intVal;
+	}
+
+	// Read the nodes
+	TiXmlElement const* nodeElement = driverElement->FirstChildElement();
+	while( nodeElement )
+	{
+		char const* str = nodeElement->Value();
+		if( str && !strcmp( str, "Node" ) )
+		{
+			// Get the node Id from the XML
+			if( TIXML_SUCCESS == nodeElement->QueryIntAttribute( "id", &intVal ) )
+			{
+				uint8 nodeId = (uint8)intVal;
+				Node* node = new Node( m_homeId, nodeId );
+				m_nodes[nodeId] = node;
+
+				// Read the rest of the node configuration from the XML
+				node->ReadXML( nodeElement );
+			}
+		}
+
+		nodeElement = nodeElement->NextSiblingElement();
+	}
+
+	return true;
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::WriteConfig>
+// Write ourselves to an XML document
+//-----------------------------------------------------------------------------
+void Driver::WriteConfig
+(
+)
+{
+	char str[32];
+
+	// Create a new XML document to contain the driver configuration
+	TiXmlDocument doc;
+    TiXmlDeclaration* decl = new TiXmlDeclaration( "1.0", "utf-8", "" );
+    TiXmlElement* driverElement = new TiXmlElement( "Driver" );
+    doc.LinkEndChild( decl );
+    doc.LinkEndChild( driverElement );  
+
+	snprintf( str, 32, "0x%.8x", m_homeId );
+	driverElement->SetAttribute( "home_id", str );
+
+	snprintf( str, 32, "%d", m_nodeId );
+	driverElement->SetAttribute( "node_id", str );
+
+	snprintf( str, 32, "%d", m_capabilities );
+	driverElement->SetAttribute( "capabilities", str );
+
+	snprintf( str, 32, "%d", m_pollInterval );
+	driverElement->SetAttribute( "poll_interval", str );
+
+	for( int i=0; i<256; ++i )
+	{
+		if( m_nodes[i] )
+		{
+			m_nodes[i]->WriteXML( driverElement );
+		}
+	}
+
+	snprintf( str, 32, "zwcfg_0x%08x.xml", m_homeId );
+	string filename =  Manager::Get()->GetUserPath() + string(str);
+
+	doc.SaveFile( filename.c_str() );
 }
 
 //-----------------------------------------------------------------------------
@@ -531,6 +691,12 @@ bool Driver::ReadMsg
 	{
 		case SOF:
 		{
+			if( m_waitingForAck )
+			{
+				Log::Write( "SOF received when waiting for ACK...triggering resend" );
+				TriggerResend();
+			}
+
 			// Read the length byte
 			if ( !m_serialPort->Read( &buffer[1], 1 ))
 			{
@@ -776,7 +942,7 @@ void Driver::HandleGetCapabilitiesResponse
 	uint8* _data
 )
 {
-	Log::Write( "Received reply to GetCapabilities.  Node ID = %d", _data[2] );
+	Log::Write( "Received reply to GetCapabilities.  Node ID = %d", _data[0] );
 	//2009-06-14 11:41:14:585 Received: 0x01, 0x2b, 0x01, 0x07, 0x02, 0x52, 0x00, 0x00, 0x00, 0x01, 0x00, 0x01, 0xfe, 0x80, 0xfe, 0x80, 0x03, 0x00, 0x00, 0x00, 0xfb, 0x9f, 0x3b, 0x80, 0x07, 0x00, 0x00, 0x80, 0x00, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x59
 }
 
@@ -846,6 +1012,7 @@ void Driver::HandleMemoryGetIdResponse
 )
 {
 	Log::Write( "Received reply to ZW_MEMORY_GET_ID. Home ID = 0x%02x%02x%02x%02x.  Our node ID = %d", _data[2], _data[3], _data[4], _data[5], _data[6] );
+	m_homeId = (((uint32)_data[2])<<24) | (((uint32)_data[3])<<16) | (((uint32)_data[4])<<8) | ((uint32)_data[5]);
 	m_nodeId = _data[6];
 }
 
@@ -859,8 +1026,25 @@ void Driver::HandleSerialAPIGetInitDataResponse
 )
 {
 	int32 i;
+
+	// Clear any existing node data
+	for( i=0; i<256; ++i )
+	{
+		if( m_nodes[i] )
+		{
+			delete m_nodes[i];
+			m_nodes[i] = NULL;
+		}
+	}
+
+	// Mark the driver as ready (we have to do this first or 
+	// all the code handling notifications will go awry).
+	Manager::Get()->SetDriverReady( this );
+
+	// Read the config file first, to get the last known state
+	ReadConfig();
+
 	Log::Write( "Received reply to FUNC_ID_SERIAL_API_GET_INIT_DATA:" );
-	
 	m_capabilities = _data[3];
 
 	if( _data[4] == NUM_NODE_BITFIELD_BYTES )
@@ -872,16 +1056,30 @@ void Driver::HandleSerialAPIGetInitDataResponse
 				uint8 nodeId = (i*8)+j+1;
 				if( _data[i+5] & (0x01 << j) )
 				{
-					Log::Write( "Found node %d", nodeId );
+					if( NULL == m_nodes[nodeId] )
+					{
+						// This node was not in the config
+						Log::Write( "Found new node %d", nodeId );
 
-					// Create the node
-					delete m_nodes[nodeId];
-					m_nodes[nodeId] = new Node( m_driverId, nodeId );
+						// Create the node
+						m_nodes[nodeId] = new Node( m_homeId, nodeId );
+
+						// Request the node protocol info
+						AddInfoRequest( nodeId );		
+					}
+					else
+					{
+						// The node was read in from the config, so we 
+						// only need to get its current state
+						m_nodes[nodeId]->RequestState();
+					}
 				}
 				else
 				{
 					if( m_nodes[nodeId] )
 					{
+						// This node was in the config, but no longer
+						// exists in the Z-Wave network
 						delete m_nodes[nodeId];
 						m_nodes[nodeId] = NULL;
 					}
@@ -1135,9 +1333,7 @@ void Driver::HandleApplicationCommandHandlerRequest
 	CommandClass* pfnDeviceEventVectorClass;
 	uint8 StatusData[10];
 
-
-	SetNodeAwake( nodeId );
-   
+	SetNodeAwake( nodeId ); 
 	
 	switch (ClassId)
 	{
@@ -1147,7 +1343,7 @@ void Driver::HandleApplicationCommandHandlerRequest
 			{
 			   	case BASIC_SET:
 					//get the class function pointer
-					if( pfnDeviceEventVectorClass = CommandClasses::CreateCommandClass( ClassId, m_driverId, nodeId ) )
+					if( pfnDeviceEventVectorClass = CommandClasses::CreateCommandClass( ClassId, m_homeId, nodeId ) )
 					{
 						StatusData[0] = 0x01; StatusData[1]=ValueFromDevice;
 						pfnDeviceEventVectorClass->HandleMsg( StatusData,0x02,0x00);
@@ -1161,7 +1357,7 @@ void Driver::HandleApplicationCommandHandlerRequest
 		}
 		case COMMAND_CLASS_HAIL:
 		{			
-			if( pfnDeviceEventVectorClass = CommandClasses::CreateCommandClass(ClassId, m_driverId, nodeId ) )
+			if( pfnDeviceEventVectorClass = CommandClasses::CreateCommandClass(ClassId, m_homeId, nodeId ) )
 			{
 				StatusData[0] = 0x01; StatusData[1]=ValueFromDevice;
 				pfnDeviceEventVectorClass->HandleMsg( StatusData,0x02,0x00);
@@ -1215,8 +1411,10 @@ void Driver::HandleApplicationUpdateRequest
 		{
 			Log::Write( "** Network change **: ID %d was assigned to a new Z-Wave node", nodeId );
 			delete m_nodes[nodeId];
-			m_nodes[nodeId] = new Node( m_driverId, nodeId );
-			SetNodeAwake( nodeId );
+			m_nodes[nodeId] = new Node( m_homeId, nodeId );
+
+			// Request the node protocol info
+			AddInfoRequest( nodeId );		
 			break;
 		}
 		case UPDATE_STATE_DELETE_DONE:

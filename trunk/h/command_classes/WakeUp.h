@@ -39,7 +39,7 @@ namespace OpenZWave
 	class WakeUp: public CommandClass
 	{
 	public:
-		static CommandClass* Create( uint8 const _driverId, uint8 const _nodeId ){ return new WakeUp( _driverId, _nodeId ); }
+		static CommandClass* Create( uint32 const _homeId, uint8 const _nodeId ){ return new WakeUp( _homeId, _nodeId ); }
 		virtual ~WakeUp();
 
 		static uint8 const StaticGetCommandClassId(){ return 0x84; }		
@@ -62,7 +62,7 @@ namespace OpenZWave
 		virtual void CreateVars( uint8 const _instance );
 
 	private:
-		WakeUp( uint8 const _driverId, uint8 const _nodeId );
+		WakeUp( uint32 const _homeId, uint8 const _nodeId );
 
 		Mutex		m_mutex;			// Serialize access to the pending queue
 		list<Msg*>	m_pendingQueue;		// Messages waiting to be sent when the device wakes up
