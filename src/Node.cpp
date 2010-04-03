@@ -117,6 +117,9 @@ void Node::ReadXML
 	char const* str;
 	int intVal;
 
+	m_protocolInfoReceived = true;
+	m_nodeInfoReceived = true;
+
 	if( TIXML_SUCCESS == _node->QueryIntAttribute( "basic", &intVal ) )
 	{
 		m_basic = (uint8)intVal;
@@ -471,6 +474,7 @@ void Node::UpdateNodeInfo
 	uint8 const _length
 )
 {
+	
 	if( !m_nodeInfoReceived )
 	{
 		m_nodeInfoReceived = true;
@@ -490,7 +494,7 @@ void Node::UpdateNodeInfo
 			if( CommandClass* pCommandClass = AddCommandClass( _data[i] ) )
 			{
 				// Start with an instance count of one.  If the device supports COMMMAND_CLASS_MULTI_INSTANCE
-				// then some command class instance counts will increase once the responses to the RequestStatic
+				// then some command class instance counts will increase once the responses to the RequestState
 				// call at the end of this method have been processed.
 				pCommandClass->SetInstances( 1 );
 			}
@@ -502,13 +506,21 @@ void Node::UpdateNodeInfo
 			Log::Write( "  %s", it->second->GetCommandClassName().c_str() );
 		}
 
-		// Get the static configuration from the node.
-		// The dynamic state data will have been requested during the SetInstances call above.
-		RequestStatic();
+		// Now request the node state.  We do this in separate calls so that
+		// the static values are in place when the dynamic stuff comes in.  This is
+		// essential for things like thermostat modes, where we need to get the list
+		// of supported modes before receiving the current state.  If the node
+		// supports the multi-instance command class, we hold off requesting the 
+		// non-static state until we receive the instance count for each command class.
+		RequestState( CommandClass::RequestFlag_Static );
+		if( NULL == GetCommandClass( MultiInstance::StaticGetCommandClassId() ) )
+		{
+			RequestState( CommandClass::RequestFlag_Session | CommandClass::RequestFlag_Dynamic );
+		}
 	}
 	else
 	{
-		RequestState();
+		RequestState( CommandClass::RequestFlag_Dynamic );
 	}
 }
 
@@ -617,64 +629,18 @@ void Node::RequestInstances
 }
 
 //-----------------------------------------------------------------------------
-// <Node::RequiresPolling>
-// Returns whether this node should be polled for value state
-//-----------------------------------------------------------------------------
-bool Node::RequiresPolling
-( 
-)
-{
-	for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
-	{
-		if( it->second->RequiresPolling() )
-		{
-			return true;
-		}
-	}
-
-	return false;
-}
-
-//-----------------------------------------------------------------------------
-// <Node::Poll>
-// Request the current state of dynamic values marked for polling
-//-----------------------------------------------------------------------------
-void Node::Poll
-( 
-)
-{
-	for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
-	{
-		it->second->Poll();
-	}
-}
-
-//-----------------------------------------------------------------------------
 // <Node::RequestState>
 // Request the current state of all dynamic values in the node
 //-----------------------------------------------------------------------------
 void Node::RequestState
 ( 
+	uint32 const _requestFlags
 )
 {
+	// Request state from all the command classes
 	for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
 	{
-		// We pass zero to RequestState to get the state of all instances
-		it->second->RequestState( 0 );
-	}
-}
-
-//-----------------------------------------------------------------------------
-// <Node::RequestStatic>
-// Request the static node configuration data
-//-----------------------------------------------------------------------------
-void Node::RequestStatic
-( 
-)
-{
-	for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
-	{
-		it->second->RequestStatic();
+		it->second->RequestState( _requestFlags );
 	}
 }
 

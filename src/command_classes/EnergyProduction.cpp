@@ -58,14 +58,17 @@ static char* const c_energyParameterNames[] =
 //-----------------------------------------------------------------------------
 void EnergyProduction::RequestState
 (
-	uint8 const _instance
+	uint32 const _requestFlags
 )
 {
-	// Request each of the production values
-	Get( Production_Instant );
-	Get( Production_Total );
-	Get( Production_Today );
-	Get( Production_Time );
+	if( _requestFlags & RequestFlag_Dynamic )
+	{
+		// Request each of the production values
+		Get( Production_Instant );
+		Get( Production_Total );
+		Get( Production_Today );
+		Get( Production_Time );
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -114,7 +117,7 @@ void EnergyProduction::Get
 )
 {
 	Log::Write( "Requesting the %s value from node %d", c_energyParameterNames[_production], GetNodeId() );
-	Msg* msg = new Msg( "EnergyProductionCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+	Msg* msg = new Msg( "EnergyProductionCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 	msg->Append( GetNodeId() );
 	msg->Append( 3 );
 	msg->Append( GetCommandClassId() );

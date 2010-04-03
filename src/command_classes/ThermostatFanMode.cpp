@@ -56,40 +56,37 @@ static char* const c_modeName[] =
 
 
 //-----------------------------------------------------------------------------
-// <ThermostatFanMode::RequestStatic>
-// Get the static thermostat fan mode details from the device
-//-----------------------------------------------------------------------------
-void ThermostatFanMode::RequestStatic
-(
-)
-{
-	// Request the supported modes
-	Msg* msg = new Msg( "Request Supported Thermostat Fan Modes", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-	msg->Append( GetNodeId() );
-	msg->Append( 2 );
-	msg->Append( GetCommandClassId() );
-	msg->Append( ThermostatFanModeCmd_SupportedGet );
-	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	GetDriver()->SendMsg( msg );
-}
-
-//-----------------------------------------------------------------------------
 // <ThermostatFanMode::RequestState>
-// Get the dynamic thermostat fan mode details from the device
+// Get the static thermostat fan mode details from the device
 //-----------------------------------------------------------------------------
 void ThermostatFanMode::RequestState
 (
-	uint8 const _instance
+	uint32 const _requestFlags
 )
 {
-	// Request the current fan mode
-	Msg* msg = new Msg( "Request Current Thermostat Fan Mode", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-	msg->Append( GetNodeId() );
-	msg->Append( 2 );
-	msg->Append( GetCommandClassId() );
-	msg->Append( ThermostatFanModeCmd_Get );
-	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	GetDriver()->SendMsg( msg );
+	if( _requestFlags & RequestFlag_Static )
+	{
+		// Request the supported modes
+		Msg* msg = new Msg( "Request Supported Thermostat Fan Modes", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		msg->Append( GetNodeId() );
+		msg->Append( 2 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( ThermostatFanModeCmd_SupportedGet );
+		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		GetDriver()->SendMsg( msg );
+	}
+
+	if( _requestFlags & RequestFlag_Dynamic )
+	{
+		// Request the current fan mode
+		Msg* msg = new Msg( "Request Current Thermostat Fan Mode", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		msg->Append( GetNodeId() );
+		msg->Append( 2 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( ThermostatFanModeCmd_Get );
+		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		GetDriver()->SendMsg( msg );
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -161,7 +158,7 @@ bool ThermostatFanMode::SetValue
 		ValueList const* value = static_cast<ValueList const*>(&_value);
 		uint8 state = (uint8)value->GetPending().m_value;
 
-		Msg* msg = new Msg( "Set Thermostat Fan Mode", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+		Msg* msg = new Msg( "Set Thermostat Fan Mode", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 		msg->Append( GetNodeId() );
 		msg->Append( 3 );
 		msg->Append( GetCommandClassId() );

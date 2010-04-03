@@ -54,20 +54,24 @@ enum
 
 
 //-----------------------------------------------------------------------------
-// <Version::RequestStatic>												   
+// <Version::RequestState>												   
 // Request current state from the device									   
 //-----------------------------------------------------------------------------
-void Version::RequestStatic
+void Version::RequestState
 (
+	uint32 const _requestFlags
 )
 {
-	Msg* msg = new Msg( "VersionCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-	msg->Append( GetNodeId() );
-	msg->Append( 2 );
-	msg->Append( GetCommandClassId() );
-	msg->Append( VersionCmd_Get );
-	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	GetDriver()->SendMsg( msg );
+	if( _requestFlags & RequestFlag_Static )
+	{
+		Msg* msg = new Msg( "VersionCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		msg->Append( GetNodeId() );
+		msg->Append( 2 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( VersionCmd_Get );
+		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		GetDriver()->SendMsg( msg );
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -137,7 +141,7 @@ void Version::RequestCommandClassVersion
 	uint8 const _commandClassId
 )
 {
-	Msg* msg = new Msg( "VersionCmd_CommandClassGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+	Msg* msg = new Msg( "VersionCmd_CommandClassGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 	msg->Append( GetNodeId() );
 	msg->Append( 2 );
 	msg->Append( GetCommandClassId() );

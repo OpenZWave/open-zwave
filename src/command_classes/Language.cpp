@@ -56,17 +56,19 @@ enum
 //-----------------------------------------------------------------------------
 void Language::RequestState
 (
-	uint8 const _instance
+	uint32 const _requestFlags
 )
 {
-	Log::Write( "Requesting the language from node %d", GetNodeId() );
-	Msg* msg = new Msg( "LanguageCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-	msg->Append( GetNodeId() );
-	msg->Append( 2 );
-	msg->Append( GetCommandClassId() );
-	msg->Append( LanguageCmd_Get );
-	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	GetDriver()->SendMsg( msg );
+	if( _requestFlags & RequestFlag_Static )
+	{
+		Msg* msg = new Msg( "LanguageCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		msg->Append( GetNodeId() );
+		msg->Append( 2 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( LanguageCmd_Get );
+		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		GetDriver()->SendMsg( msg );
+	}
 }
 
 //-----------------------------------------------------------------------------

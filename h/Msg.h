@@ -37,7 +37,7 @@ namespace OpenZWave
 	class Msg
 	{
 	public:
-		Msg( string const& _logtext, uint8 _targetNodeId, uint8 const _msgType, uint8 const _function, bool const _bCallbackRequired, bool const _bReplyRequired = true, uint8 const _expectedReply = 0 );
+		Msg( string const& _logtext, uint8 _targetNodeId, uint8 const _msgType, uint8 const _function, bool const _bCallbackRequired, bool const _bReplyRequired = true, uint8 const _expectedReply = 0, uint8 const _expectedCommandClassId = 0 );
 		~Msg(){}
 
 		void Append( uint8 const _data );
@@ -46,6 +46,7 @@ namespace OpenZWave
 		uint8 GetTargetNodeId()const{ return m_targetNodeId; }
 		uint8 GetCallbackId()const{ return m_callbackId; }
 		uint8 GetExpectedReply()const{ return m_expectedReply; }
+		uint8 GetExpectedCommandClassId()const{ return m_expectedCommandClassId; }
 		uint32 GetLength()const{ return m_length; }
 		uint8* GetBuffer(){ return m_buffer; }
 		string GetAsString();
@@ -60,6 +61,7 @@ namespace OpenZWave
 
 		uint8			m_callbackId;
 		uint8			m_expectedReply;
+		uint8			m_expectedCommandClassId;
 		uint8			m_length;
 		uint8			m_buffer[256];
 		

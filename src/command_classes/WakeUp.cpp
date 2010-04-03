@@ -79,17 +79,20 @@ WakeUp::~WakeUp
 //-----------------------------------------------------------------------------
 void WakeUp::RequestState
 (
-	uint8 const _instance
+	uint32 const _requestFlags
 )
 {
-	// We won't get a response until the device next wakes up
-	Msg* msg = new Msg( "WakeUpCmd_IntervalGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-	msg->Append( GetNodeId() );
-	msg->Append( 2 );
-	msg->Append( GetCommandClassId() );
-	msg->Append( WakeUpCmd_IntervalGet );
-	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	GetDriver()->SendMsg( msg );
+	if( _requestFlags & RequestFlag_Session )
+	{
+		// We won't get a response until the device next wakes up
+		Msg* msg = new Msg( "WakeUpCmd_IntervalGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		msg->Append( GetNodeId() );
+		msg->Append( 2 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( WakeUpCmd_IntervalGet );
+		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		GetDriver()->SendMsg( msg );
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -146,7 +149,7 @@ bool WakeUp::SetValue
 	{
 		ValueInt const* value = static_cast<ValueInt const*>(&_value);
 	
-		Msg* msg = new Msg( "Wakeup Interval Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+		Msg* msg = new Msg( "Wakeup Interval Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 
 		msg->Append( GetNodeId() );
 		
@@ -184,7 +187,12 @@ void WakeUp::SetAwake
 	bool _state
 )
 {
-	m_awake = _state;
+	if( m_awake != _state )
+	{
+		m_awake = _state;
+		Log::Write( "Node %d has been marked as %s", GetNodeId(), m_awake ? "awake" : "asleep" );
+	}
+
 	if( m_awake )
 	{
 		// If the device is marked for polling, request the current state
@@ -192,7 +200,7 @@ void WakeUp::SetAwake
 		{
 			if( Node* node = GetNode() )
 			{
-				node->Poll();
+				node->RequestState( RequestFlag_Dynamic );
 			}
 			m_pollRequired = false;
 		}
@@ -200,8 +208,6 @@ void WakeUp::SetAwake
 		// Send all pending messages
 		SendPending();
 	}
-
-	Log::Write( "Node %d has been marked as %s", GetNodeId(), m_awake ? "awake" : "asleep" );
 }
 
 //-----------------------------------------------------------------------------
@@ -241,7 +247,7 @@ void WakeUp::SendPending
 	m_mutex.Release();
 
 	//// Send the device back to sleep
-	//Msg* msg = new Msg( "Wakeup - No More Information", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+	//Msg* msg = new Msg( "Wakeup - No More Information", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 	//msg->Append( GetNodeId() );
 	//msg->Append( 2 );
 	//msg->Append( GetCommandClassId() );

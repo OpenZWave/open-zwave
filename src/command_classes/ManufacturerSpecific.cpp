@@ -53,21 +53,24 @@ bool ManufacturerSpecific::s_bXmlLoaded = false;
 
 
 //-----------------------------------------------------------------------------
-// <ManufacturerSpecific::RequestStatic>												   
-// Request the static manufacturer specific data									   
+// <ManufacturerSpecific::RequestState>												   
+// Request current state from the device									   
 //-----------------------------------------------------------------------------
-void ManufacturerSpecific::RequestStatic
+void ManufacturerSpecific::RequestState
 (
+	uint32 const _requestFlags
 )
 {
-	Log::Write( "Requesting the manufacturer specific data from node %d", GetNodeId() );
-	Msg* msg = new Msg( "ManufacturerSpecificCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-	msg->Append( GetNodeId() );
-	msg->Append( 2 );
-	msg->Append( GetCommandClassId() );
-	msg->Append( ManufacturerSpecificCmd_Get );
-	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	GetDriver()->SendMsg( msg );
+	if( _requestFlags & RequestFlag_Static )
+	{
+		Msg* msg = new Msg( "ManufacturerSpecificCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		msg->Append( GetNodeId() );
+		msg->Append( 2 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( ManufacturerSpecificCmd_Get );
+		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		GetDriver()->SendMsg( msg );
+	}
 }
 
 //-----------------------------------------------------------------------------

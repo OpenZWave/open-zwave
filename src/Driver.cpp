@@ -494,6 +494,7 @@ void Driver::SendThreadProc()
 				
 				m_expectedCallbackId = msg->GetCallbackId();
 				m_expectedReply = msg->GetExpectedReply();
+				m_expectedCommandClassId = msg->GetExpectedCommandClassId();
 				m_waitingForAck = true;
 				m_sendEvent->Reset();
 
@@ -552,40 +553,13 @@ void Driver::SendThreadProc()
 						{
 							Log::Write( "Timeout" );
 
-							// The send timed-out.  If the target node is one that goes to
-							// sleep, transfer all messages for the node to its Wake-Up queue
-							uint8 const targetNodeId = msg->GetTargetNodeId();
-							if( Node* node = m_nodes[targetNodeId] )
+							// In case this is a sleeping node, we first try to move 
+							// its pending messages to its wake-up queue.
+							if( !MoveMessagesToWakeUpQueue( msg->GetTargetNodeId() ) )
 							{
-								if( !node->IsListeningDevice() )
-								{
-									if( WakeUp* wakeUp = static_cast<WakeUp*>( node->GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
-									{
-										// Mark the node as asleep
-										wakeUp->SetAwake( false );
-
-										// Move all messages for this node to the wake-up queue									
-										list<Msg*>::iterator it = m_sendQueue.begin();
-										while( it != m_sendQueue.end() )
-										{
-											if( targetNodeId == (*it)->GetTargetNodeId() )
-											{
-												// This message is for the unresponsive node
-												Log::Write( "Node not responding - moving message to Wake-Up queue: %s", msg->GetAsString().c_str() );
-												wakeUp->QueueMsg( *it );
-												m_sendQueue.erase( it++ );
-											}
-											else
-											{
-												++it;
-											}
-										}
-									}
-								}
-								else
-								{
-									Log::Write( "Resending message (attempt %d)", msg->GetSendAttempts() );
-								}
+								// The attempt failed, so the node is either not a sleeping node, or the move
+								// failed for another reason.  We'll just retry sending the message.
+								Log::Write( "Resending message (attempt %d)", msg->GetSendAttempts() );
 							}
 						}
 					}
@@ -593,6 +567,7 @@ void Driver::SendThreadProc()
 					m_waitingForAck = 0;	
 					m_expectedCallbackId = 0;
 					m_expectedReply = 0;
+					m_expectedCommandClassId = 0;
 					UpdateEvents();
 				}
 			}
@@ -640,10 +615,62 @@ void Driver::TriggerResend
 	m_waitingForAck = 0;	
 	m_expectedCallbackId = 0;
 	m_expectedReply = 0;
+	m_expectedCommandClassId = 0;
 
 	m_sendEvent->Set();
 
 	m_sendMutex->Release();
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::MoveMessagesToWakeUpQueue>
+// Move messages for a sleeping device to its wake-up queue
+//-----------------------------------------------------------------------------
+bool Driver::MoveMessagesToWakeUpQueue
+(
+	uint8 const _targetNodeId
+)
+{
+	// If the target node is one that goes to sleep, transfer
+	// all messages for it to its Wake-Up queue.
+	if( Node* node = m_nodes[_targetNodeId] )
+	{
+		if( !node->IsListeningDevice() )
+		{
+			if( WakeUp* wakeUp = static_cast<WakeUp*>( node->GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
+			{
+				// Mark the node as asleep
+				wakeUp->SetAwake( false );
+
+				// Move all messages for this node to the wake-up queue									
+				m_sendMutex->Lock();
+
+				list<Msg*>::iterator it = m_sendQueue.begin();
+				while( it != m_sendQueue.end() )
+				{
+					if( _targetNodeId == (*it)->GetTargetNodeId() )
+					{
+						// This message is for the unresponsive node
+						Log::Write( "Node not responding - moving message to Wake-Up queue: %s", (*it)->GetAsString().c_str() );
+						wakeUp->QueueMsg( *it );
+						m_sendQueue.erase( it++ );
+					}
+					else
+					{
+						++it;
+					}
+				}
+
+				m_sendMutex->Release();
+				
+				// Move completed successfully
+				return true;
+			}
+		}
+	}
+
+	// Failed to move messages
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -800,7 +827,7 @@ void Driver::ProcessMsg
 	uint8* _data
 )
 {
-	bool bHandleCallback = true;
+	bool handleCallback = true;
 
 	if( RESPONSE == _data[0] )
 	{
@@ -854,7 +881,7 @@ void Driver::ProcessMsg
 			case FUNC_ID_ZW_SEND_DATA:
 			{
 				HandleSendDataResponse( _data );
-				bHandleCallback = false;			// Skip the callback handling - a subsequent FUNC_ID_ZW_SEND_DATA request will deal with that
+				handleCallback = false;			// Skip the callback handling - a subsequent FUNC_ID_ZW_SEND_DATA request will deal with that
 				break;
 			}
 			default:
@@ -870,7 +897,7 @@ void Driver::ProcessMsg
 		{
 			case FUNC_ID_ZW_SEND_DATA:
 			{
-				HandleSendDataRequest( _data );
+				handleCallback = !HandleSendDataRequest( _data );
 				break;
 			}
 			case FUNC_ID_ZW_ADD_NODE_TO_NETWORK:
@@ -901,32 +928,44 @@ void Driver::ProcessMsg
 	}
 
 	// Generic callback handling
-	if( bHandleCallback )
+	if( handleCallback )
 	{
-		bool remove = false;
-
-		if( m_expectedCallbackId )
+		if( ( m_expectedCallbackId || m_expectedReply ) )
 		{
-			if( m_expectedCallbackId == _data[2] )
+			if( m_expectedCallbackId )
 			{
-				Log::Write( "Message transaction (callback=%d) complete", _data[2] );
-				remove = true;
-				m_expectedCallbackId = 0;
+				if( m_expectedCallbackId == _data[2] )
+				{
+					Log::Write( "Expected callbackId was received" );
+					m_expectedCallbackId = 0;
+				}
 			}
-		}
-		if( m_expectedReply )
-		{
-			if( m_expectedReply == _data[1] )
+			if( m_expectedReply )
+			{
+				if( m_expectedReply == _data[1] )
+				{
+					if( m_expectedCommandClassId && ( m_expectedReply == FUNC_ID_APPLICATION_COMMAND_HANDLER ) )
+					{
+						if( m_expectedCommandClassId == _data[5] )
+						{
+							Log::Write( "Expected reply and command class was received" );
+							m_expectedReply = 0;
+							m_expectedCommandClassId = 0;
+						}
+					}
+					else
+					{
+						Log::Write( "Expected reply was received" );
+						m_expectedReply = 0;
+					}
+				}
+			}
+
+			if( !( m_expectedCallbackId || m_expectedReply ) )
 			{
 				Log::Write( "Message transaction complete" );
-				remove = true;
-				m_expectedReply = 0;
+				RemoveMsg();
 			}
-		}
-
-		if( remove )
-		{
-			RemoveMsg();
 		}
 
 		UpdateEvents();
@@ -1071,7 +1110,7 @@ void Driver::HandleSerialAPIGetInitDataResponse
 					{
 						// The node was read in from the config, so we 
 						// only need to get its current state
-						m_nodes[nodeId]->RequestState();
+						m_nodes[nodeId]->RequestState( CommandClass::RequestFlag_Session | CommandClass::RequestFlag_Dynamic );
 					}
 				}
 				else
@@ -1142,14 +1181,16 @@ void Driver::HandleSendDataResponse
 // <Driver::HandleSendDataRequest>
 // Process a request from the Z-Wave PC interface
 //-----------------------------------------------------------------------------
-void Driver::HandleSendDataRequest
+bool Driver::HandleSendDataRequest
 (
 	uint8* _data
 )
 {
+	bool messageRemoved = false;
+
 	Log::Write( "ZW_SEND Request with callback ID %d received (expected %d)", _data[2], m_expectedCallbackId );
 
-	if( ( _data[2] != m_expectedCallbackId ) || ( _data[1] != m_expectedReply ) )
+	if( _data[2] != m_expectedCallbackId )
 	{
 		// Wrong callback ID
 		Log::Write( "ERROR: Callback ID is invalid" );
@@ -1162,37 +1203,52 @@ void Driver::HandleSendDataRequest
 			case 0:
 			{
 				// command reception acknowledged by node
-				Log::Write("ZW_SEND was successful, removing command");
-				RemoveMsg();
+				if( m_expectedReply == 0 )
+				{
+					// We're not waiting for any particular reply, so we're done.
+					Log::Write("ZW_SEND was successful, removing command");	
+					RemoveMsg();
+					messageRemoved = true;
+				}
 				m_expectedCallbackId = 0;
-				m_expectedReply = 0;
 				break;
 			}
 			case 1:
 			{
 				// ZW_SEND failed
-				Log::Write( "Error: ZW_SEND failed, removing command" );
+				Log::Write( "Error: ZW_SEND failed." );
 				m_sendMutex->Lock();
 				if( !m_sendQueue.empty() )
 				{
 					if( m_sendQueue.front()->GetSendAttempts() >= 3 )
 					{
 						// Can't deliver message, so abort
-						Log::Write( "Error: ZW_SEND failed, removing message after three tries" );
+						Log::Write( "Removing message after three tries" );
 						RemoveMsg();
+						messageRemoved = true;
 					}
-				} 
-				else 
-				{
-					Log::Write( "Error: ZW_SEND failed, retrying" );
-					
-					// Trigger resend
-					m_waitingForAck = false;
+					else 
+					{
+						// In case the failure is due to the target being a sleeping node, we 
+						// first try to move its pending messages to its wake-up queue.
+						MoveMessagesToWakeUpQueue( m_sendQueue.front()->GetTargetNodeId() );
+
+						// We need do no more here.  If the move failed, the node is probably not
+						// a sleeping node and the message will automatically be resent.
+					}
 				}
-				m_sendMutex->Release();
-				
+				else
+				{
+					// Message queue should not be empty
+					assert(0);
+				}
+
+				m_waitingForAck = 0;	
 				m_expectedCallbackId = 0;
 				m_expectedReply = 0;
+				m_expectedCommandClassId = 0;
+
+				m_sendMutex->Release();		
 				break;
 			}
 			default:
@@ -1203,6 +1259,8 @@ void Driver::HandleSendDataRequest
 
 		UpdateEvents();
 	}
+
+	return messageRemoved;
 }
 
 //-----------------------------------------------------------------------------
@@ -1433,46 +1491,22 @@ void Driver::HandleApplicationUpdateRequest
 	
 //-----------------------------------------------------------------------------
 // <Driver::EnablePoll>
-// Enable poll of a node
+// Enable polling of a node
 //-----------------------------------------------------------------------------
 bool Driver::EnablePoll
 ( 
-	ValueID const& _id
+	uint8 const _nodeId
 )
 {
-	uint8 nodeId = _id.GetNodeId();
-	if( Node* node = GetNode( nodeId ) )
+	if( Node* node = GetNode( _nodeId ) )
 	{
-		uint8 commandClassId = _id.GetCommandClassId();
-		uint8 instance = _id.GetInstance();
-
-		// Run through all the values that have the same command class instance, and mark them all
-		// as polled.  This is because value state is requested for a whole command class instance
-		// at once, so polling can only be enabled and disabled on a command class instance basis.
-		ValueStore* store = node->GetValueStore();
-		for( ValueStore::Iterator it = store->Begin(); it != store->End(); ++it )
-		{
-			if( ( it->first.GetCommandClassId() == commandClassId ) && ( it->first.GetInstance() == instance ) )
-			{
-				it->second->SetPolled( true );
-			}
-		}
-
-		node->ReleaseValueStore();
-
-		// Mark the command class instance as polled
-		if( CommandClass* cc = node->GetCommandClass( commandClassId ) )
-		{
-			cc->SetPolled( instance, true );
-		}
-
 		// Add the node to the polling list
 		m_pollMutex->Lock();
 
 		// See if the node is already in the poll list.
 		for( list<uint8>::iterator it = m_pollList.begin(); it != m_pollList.end(); ++it )
 		{
-			if( *it == nodeId )
+			if( *it == _nodeId )
 			{
 				// It is already in the poll list, so we have nothing to do.
 				m_pollMutex->Release();
@@ -1481,76 +1515,45 @@ bool Driver::EnablePoll
 		}
 
 		// Not in the list, so we add it
-		m_pollList.push_back( nodeId );
+		m_pollList.push_back( _nodeId );
 		m_pollMutex->Release();
 		return true;
 	}
 
-	Log::Write( "EnablePoll failed - value not found");
+	Log::Write( "EnablePoll failed - node %d not found", _nodeId );
 	return false;
 }
 
 //-----------------------------------------------------------------------------
 // <Driver::DisablePoll>
-// Disable poll of a node
+// Disable polling of a node
 //-----------------------------------------------------------------------------
 bool Driver::DisablePoll
 ( 
-	ValueID const& _id
+	uint8 const _nodeId
 )
 {
-	uint8 nodeId = _id.GetNodeId();
-	if( Node* node = GetNode( nodeId ) )
+	if( Node* node = GetNode( _nodeId ) )
 	{
-		uint8 commandClassId = _id.GetCommandClassId();
-		uint8 instance = _id.GetInstance();
+		m_pollMutex->Lock();
 
-		// Run through all the values that have the same command class instance, and mark them all as 
-		// not polled.  This is because value state is requested for a whole command class instance at
-		// once, so polling can only be enabled and disabled on a command class instance basis.
-		ValueStore* store = node->GetValueStore();
-		for( ValueStore::Iterator it = store->Begin(); it != store->End(); ++it )
+		// See if the node is already in the poll list.
+		for( list<uint8>::iterator it = m_pollList.begin(); it != m_pollList.end(); ++it )
 		{
-			if( ( it->first.GetCommandClassId() == commandClassId ) && ( it->first.GetInstance() == instance ) )
+			if( *it == _nodeId )
 			{
-				it->second->SetPolled( false );
+				// Found it
+				m_pollList.erase( it );
+				m_pollMutex->Release();
+				return true;
 			}
 		}
-		node->ReleaseValueStore();
 
-		// Mark the command class instance as not polled
-		if( CommandClass* cc = node->GetCommandClass( commandClassId ) )
-		{
-			cc->SetPolled( instance, false );
-		}
-
-		// If there are no command class instances that need polling, remove the node from the polling list
-		if( node->RequiresPolling() )
-		{
-			return true;
-		}
-		else
-		{
-			m_pollMutex->Lock();
-
-			// See if the node is already in the poll list.
-			for( list<uint8>::iterator it = m_pollList.begin(); it != m_pollList.end(); ++it )
-			{
-				if( *it == nodeId )
-				{
-					// Found it
-					m_pollList.erase( it );
-					m_pollMutex->Release();
-					return true;
-				}
-			}
-
-			// Not in the list
-			m_pollMutex->Release();
-		}
+		// Not in the list
+		m_pollMutex->Release();
 	}
 
-	Log::Write( "DisablePoll failed - value not found");
+	Log::Write( "DisablePoll failed - node %d not found", _nodeId );
 	return false;
 }
 
@@ -1619,7 +1622,7 @@ void Driver::PollThreadProc()
 					if( requestState )
 					{
 						// Request an update of the value
-						node->Poll();
+						node->RequestState( CommandClass::RequestFlag_Dynamic );
 					}
 				}
 			}

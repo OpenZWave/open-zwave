@@ -54,16 +54,19 @@ enum SwitchMultilevelCmd
 //-----------------------------------------------------------------------------
 void SwitchMultilevel::RequestState
 (
-	uint8 const _instance
+	uint32 const _requestFlags
 )
 {
-	Msg* msg = new Msg( "SwitchMultilevelCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-	msg->Append( GetNodeId() );
-	msg->Append( 2 );
-	msg->Append( GetCommandClassId() );
-	msg->Append( SwitchMultilevelCmd_Get );
-	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	GetDriver()->SendMsg( msg );
+	if( _requestFlags & RequestFlag_Dynamic )
+	{
+		Msg* msg = new Msg( "SwitchMultilevelCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		msg->Append( GetNodeId() );
+		msg->Append( 2 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( SwitchMultilevelCmd_Get );
+		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		GetDriver()->SendMsg( msg );
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -108,7 +111,7 @@ bool SwitchMultilevel::SetValue
 		ValueByte const* value = static_cast<ValueByte const*>(&_value);
 
 		Log::Write( "SwitchMultilevel::Set - Setting node %d to level %d", GetNodeId(), value->GetPending() );
-		Msg* msg = new Msg( "Basic Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
+		Msg* msg = new Msg( "Basic Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );		
 		msg->Append( GetNodeId() );
 		msg->Append( 3 );
 		msg->Append( GetCommandClassId() );

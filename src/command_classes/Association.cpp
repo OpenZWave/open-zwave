@@ -109,17 +109,20 @@ void Association::WriteXML
 //-----------------------------------------------------------------------------
 void Association::RequestState
 (
-	uint8 const _instance
+	uint32 const _requestFlags
 )
 {
-	// Request all the association groups
-	Msg* msg = new Msg( "Get Association Groupings", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-	msg->Append( GetNodeId() );
-	msg->Append( 2 );
-	msg->Append( GetCommandClassId() );
-	msg->Append( AssociationCmd_GroupingsGet );
-	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	GetDriver()->SendMsg( msg );
+	if( _requestFlags & RequestFlag_Session )
+	{
+		// Request all the association groups
+		Msg* msg = new Msg( "Get Association Groupings", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		msg->Append( GetNodeId() );
+		msg->Append( 2 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( AssociationCmd_GroupingsGet );
+		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		GetDriver()->SendMsg( msg );
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -148,7 +151,7 @@ bool Association::HandleMsg
 
 			for( uint8 i=0; i<numGroups; ++i )
 			{
-				Msg* msg = new Msg( "Get Associations", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+				Msg* msg = new Msg( "Get Associations", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 				msg->Append( GetNodeId() );
 				msg->Append( 3 );
 				msg->Append( GetCommandClassId() );
@@ -201,7 +204,7 @@ void Association::Set
 {
 	Log::Write( "Association::Set - Adding node %d to group %d of node %d", _targetNodeId, _groupIdx, GetNodeId() );
 
-	Msg* msg = new Msg( "Association Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
+	Msg* msg = new Msg( "Association Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );		
 	msg->Append( GetNodeId() );
 	msg->Append( 4 );
 	msg->Append( GetCommandClassId() );
@@ -224,7 +227,7 @@ void Association::Remove
 {
 	Log::Write( "Association::Remove - Removing node %d from group %d of node %d", _targetNodeId, _groupIdx, GetNodeId() );
 
-	Msg* msg = new Msg( "Association Remove", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
+	Msg* msg = new Msg( "Association Remove", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );		
 	msg->Append( GetNodeId() );
 	msg->Append( 4 );
 	msg->Append( GetCommandClassId() );
