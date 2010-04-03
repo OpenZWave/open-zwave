@@ -140,4 +140,3 @@ Value* ValueStore::GetValue
 
 	return value;
 }
-

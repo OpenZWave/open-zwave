@@ -65,10 +65,10 @@ namespace OpenZWave
 		uint32 Release(){ if( !(--m_refs) ){ delete this; } return m_refs; }
 
 		// Helpers
-		static ValueID::ValueGenre Value::GetGenreEnumFromName( char const* _name );
-		static char const* Value::GetGenreNameFromEnum( ValueID::ValueGenre _genre );
-		static ValueID::ValueType Value::GetTypeEnumFromName( char const* _name );
-		static char const* Value::GetTypeNameFromEnum( ValueID::ValueType _type );
+		static ValueID::ValueGenre GetGenreEnumFromName( char const* _name );
+		static char const* GetGenreNameFromEnum( ValueID::ValueGenre _genre );
+		static ValueID::ValueType GetTypeEnumFromName( char const* _name );
+		static char const* GetTypeNameFromEnum( ValueID::ValueType _type );
 
 	protected:
 		virtual ~Value(){}

@@ -70,7 +70,7 @@ int main( int argc, char* argv[] )
 	// The first argument is the path to the config files (where the manufacturer_specific.xml file is located
 	// The second argument is the path for saved Z-Wave network state and the log file.  If you leave it NULL 
 	// the log file will appear in the program's working directory.
-	Manager::Create( "../../../config/", "../../../config/" );
+	Manager::Create( "../../../config/", "" );
 
 	// Add a callback handler to the manager.  The second argument is a context that
 	// is passed to the OnNotification method.  If the OnNotification is a method of
@@ -86,17 +86,11 @@ int main( int argc, char* argv[] )
 	// In a normal app, we would be handling notifications and building a UI for the user.
 	while( !g_homeId )
 	{
-		Sleep(10000);
+		sleep(1);
 	}
 
-	Sleep(10000);
+	sleep(1);
 	Manager::Get()->WriteConfig( g_homeId );
-	
-	while( true )
-	{
-		Sleep(10000);
-	}
-	
 	return 0;
 }
 
