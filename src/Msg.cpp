@@ -44,8 +44,9 @@ Msg::Msg
 	uint8 const _msgType,
 	uint8 const _function,
 	bool const _bCallbackRequired,
-	bool const _bReplyRequired, // = true
-	uint8 const _expectedReply	// = 0
+	bool const _bReplyRequired,			// = true
+	uint8 const _expectedReply,			// = 0
+	uint8 const _expectedCommandClassId	// = 0
 ):
 	m_logText( _logText ),
 	m_targetNodeId( _targetNodeId ),
@@ -54,6 +55,7 @@ Msg::Msg
 	m_sendAttempts( 0 ),
 	m_callbackId( 0 ),
 	m_expectedReply( 0 ),
+	m_expectedCommandClassId( _expectedCommandClassId ),
 	m_bFinal( false )
 {
 	if( _bReplyRequired )

@@ -80,45 +80,42 @@ ThermostatSetpoint::ThermostatSetpoint
 }
 
 //-----------------------------------------------------------------------------
-// <ThermostatSetpoint::RequestStatic>
-// Get the static thermostat setpoint details from the device
-//-----------------------------------------------------------------------------
-void ThermostatSetpoint::RequestStatic
-(
-)
-{
-	// Request the supported setpoints
-	Msg* msg = new Msg( "Request Supported Thermostat Setpoints", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-	msg->Append( GetNodeId() );
-	msg->Append( 2 );
-	msg->Append( GetCommandClassId() );
-	msg->Append( ThermostatSetpointCmd_SupportedGet );
-	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	GetDriver()->SendMsg( msg );
-}
-
-//-----------------------------------------------------------------------------
 // <ThermostatSetpoint::RequestState>
-// Get the dynamic thermostat setpoint details from the device
+// Get the static thermostat setpoint details from the device
 //-----------------------------------------------------------------------------
 void ThermostatSetpoint::RequestState
 (
-	uint8 const _instance
+	uint32 const _requestFlags
 )
 {
-	for( uint8 i=0; i<ThermostatSetpoint_Count; ++i )
+	if( _requestFlags & RequestFlag_Static )
 	{
-		if( m_supportedSetpoints[i] )
+		// Request the supported setpoints
+		Msg* msg = new Msg( "Request Supported Thermostat Setpoints", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		msg->Append( GetNodeId() );
+		msg->Append( 2 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( ThermostatSetpointCmd_SupportedGet );
+		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		GetDriver()->SendMsg( msg );
+	}
+
+	if( _requestFlags & RequestFlag_Session )
+	{
+		for( uint8 i=0; i<ThermostatSetpoint_Count; ++i )
 		{
-			// Request the setpoint value
-			Msg* msg = new Msg( "Request Current Thermostat Setpoint", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-			msg->Append( GetNodeId() );
-			msg->Append( 3 );
-			msg->Append( GetCommandClassId() );
-			msg->Append( ThermostatSetpointCmd_Get );
-			msg->Append( i );
-			msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-			GetDriver()->SendMsg( msg );
+			if( m_supportedSetpoints[i] )
+			{
+				// Request the setpoint value
+				Msg* msg = new Msg( "Request Current Thermostat Setpoint", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+				msg->Append( GetNodeId() );
+				msg->Append( 3 );
+				msg->Append( GetCommandClassId() );
+				msg->Append( ThermostatSetpointCmd_Get );
+				msg->Append( i );
+				msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+				GetDriver()->SendMsg( msg );
+			}
 		}
 	}
 }
@@ -204,7 +201,7 @@ bool ThermostatSetpoint::SetValue
 		float32 floatVal = (float32)atof( value->GetPending().c_str() );
 		uint8 scale = strcmp( "C", value->GetUnits().c_str() ) ? 1 : 0;
 
-		Msg* msg = new Msg( "Set Thermostat Setpoint", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+		Msg* msg = new Msg( "Set Thermostat Setpoint", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 		msg->Append( GetNodeId() );
 		msg->Append( 3 + GetAppendValueSize( floatVal, 0 ) );
 		msg->Append( GetCommandClassId() );

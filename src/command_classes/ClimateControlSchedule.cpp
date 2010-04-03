@@ -91,7 +91,7 @@ using namespace OpenZWave;
 //	  bool const _poll
 //)
 //{
-//	Msg* msg = new Msg( "ScheduleChangedGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+//	Msg* msg = new Msg( "ScheduleChangedGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 //	msg->Append( GetNodeId() );
 //	msg->Append( 2 );
 //	msg->Append( GetCommandClassId() );

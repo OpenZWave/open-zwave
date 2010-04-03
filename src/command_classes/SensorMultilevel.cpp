@@ -51,34 +51,18 @@ enum SensorMultilevelCmd
 //-----------------------------------------------------------------------------
 void SensorMultilevel::RequestState
 (
-	uint8 const _instance
+	uint32 const _requestFlags
 )
 {
-	if( _instance )
+	if( _requestFlags & RequestFlag_Dynamic )
 	{
-		// Request the state of a particular instance
-		Log::Write( "MultiInstance request of SensorMultiLevel_Get on %d, instance %d", GetNodeId(), _instance );
-		Msg* msg = new Msg( "SensorMultilevelCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-		msg->Append( GetNodeId() );
-		msg->Append( 5 );
-		msg->Append( MultiInstance::StaticGetCommandClassId() );
-		msg->Append( MultiInstance::MultiInstanceCmd_CmdEncap );
-		msg->Append( _instance );
-		msg->Append( GetCommandClassId() );
-		msg->Append( SensorMultilevelCmd_Get );
-		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-		GetDriver()->SendMsg( msg );
-	}
-	else
-	{
-		// Request the state of all instances
 		uint8 numInstances = GetInstances();
 		if( numInstances > 1 )
 		{
+			// More than one instance - query each one in turn
 			for( uint8 i=0; i<numInstances; ++i )
 			{
-				Log::Write( "MultiInstance request of SensorMultiLevel_Get on %d, instance %d", GetNodeId(), i+1 );
-				Msg* msg = new Msg( "SensorMultilevelCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+				Msg* msg = new Msg( "SensorMultilevelCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 				msg->Append( GetNodeId() );
 				msg->Append( 5 );
 				msg->Append( MultiInstance::StaticGetCommandClassId() );
@@ -92,7 +76,7 @@ void SensorMultilevel::RequestState
 		}
 		else
 		{
-			Msg* msg = new Msg( "SensorMultilevelCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+			Msg* msg = new Msg( "SensorMultilevelCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 			msg->Append( GetNodeId() );
 			msg->Append( 2 );
 			msg->Append( GetCommandClassId() );
