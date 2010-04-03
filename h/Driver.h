@@ -137,6 +137,8 @@ namespace OpenZWave
 
 		void HandleGetCapabilitiesResponse( uint8* pData );
 		void HandleEnableSUCResponse( uint8* pData );
+		void HandleRequestNetworkUpdate( uint8* pData );
+		void HandleControllerChange( uint8* pData );
 		void HandleSetSUCNodeIdResponse( uint8* pData );
 		void HandleGetSUCNodeIdResponse( uint8* pData );
 		void HandleMemoryGetIdResponse( uint8* pData );
@@ -213,6 +215,9 @@ namespace OpenZWave
 
 		void BeginReplicateController();
 		void EndReplicateController();
+
+		void RequestNetworkUpdate();
+		void ControllerChange();
 
 	//-----------------------------------------------------------------------------
 	//	Misc

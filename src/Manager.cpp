@@ -796,3 +796,32 @@ void Manager::EndReplicateController
 	}
 }
 
+//-----------------------------------------------------------------------------
+// <Manager::RequestNetworkUpdate>
+// Request a network update
+//-----------------------------------------------------------------------------
+void Manager::RequestNetworkUpdate
+(
+	uint32 const _homeId
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		driver->RequestNetworkUpdate();
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::ControllerChange>
+// Change primary controllers
+//-----------------------------------------------------------------------------
+void Manager::ControllerChange
+(
+	uint32 const _homeId
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		driver->ControllerChange();
+	}
+}
