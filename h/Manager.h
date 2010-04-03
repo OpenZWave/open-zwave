@@ -201,6 +201,9 @@ namespace OpenZWave
 		void BeginReplicateController( uint32 const _homeId );
 		void EndReplicateController( uint32 const _homeId );
 
+		void RequestNetworkUpdate( uint32 const _homeId );
+		void ControllerChange( uint32 const _homeId );
+
 		void ReadMemory( uint32 const _homeId,  uint16 const offset );
 
 		void SetConfiguration( uint32 const _homeId, uint8 const _nodeId, uint8 const _parameter, uint32 const _value );

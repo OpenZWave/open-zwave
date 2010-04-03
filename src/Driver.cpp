@@ -1,6 +1,6 @@
 //-----------------------------------------------------------------------------
 //
-//	Driver.h
+//	Driver.cpp
 //
 //	Communicates with a Z-Wave network
 //
@@ -848,6 +848,16 @@ void Driver::ProcessMsg
 				HandleEnableSUCResponse( _data );
 				break;
 			}
+			case FUNC_ID_ZW_REQUEST_NETWORK_UPDATE:
+			{
+				HandleRequestNetworkUpdate( _data );
+				break;
+			}
+			case FUNC_ID_ZW_CONTROLLER_CHANGE:
+			{
+				HandleControllerChange( _data );
+				break;
+			}
 			case FUNC_ID_ZW_SET_SUC_NODE_ID:
 			{
 				HandleSetSUCNodeIdResponse( _data );
@@ -995,6 +1005,30 @@ void Driver::HandleEnableSUCResponse
 )
 {
 	Log::Write( "Received reply to Enable SUC." );
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::HandleRequestNetworkUpdate>
+// Process a response from the Z-Wave PC interface
+//-----------------------------------------------------------------------------
+void Driver::HandleRequestNetworkUpdate
+(
+	uint8* _data
+)
+{
+	Log::Write( "Received reply to Request Network Update." );
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::HandleControllerChange>
+// Process a response from the Z-Wave PC interface
+//-----------------------------------------------------------------------------
+void Driver::HandleControllerChange
+(
+	uint8* _data
+)
+{
+	Log::Write( "Received reply to Controller Change." );
 }
 
 //-----------------------------------------------------------------------------
@@ -1959,6 +1993,10 @@ void Driver::EndAddNode
 	Msg* msg = new Msg( "Add Node - End", 0xff, REQUEST, FUNC_ID_ZW_ADD_NODE_TO_NETWORK, false, false );
 	msg->Append( ADD_NODE_STOP );
 	SendMsg( msg );
+
+	Log::Write( "Get new init data after Add Node" );
+	msg = new Msg( "Get new init data after Add Node", 0xff, REQUEST, FUNC_ID_SERIAL_API_GET_INIT_DATA, false );
+	SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -1999,6 +2037,7 @@ void Driver::BeginReplicateController
 {
 	Log::Write( "Replicate Controller - Begin" );
 	Msg* msg = new Msg( "Replicate Controller - Begin", 0xff, REQUEST, FUNC_ID_ZW_SET_LEARN_MODE, false, false );
+	msg->Append( 0xFF );
 	msg->Append( 1 );
 	SendMsg( msg );
 }
@@ -2014,10 +2053,39 @@ void Driver::EndReplicateController
 	Log::Write( "Replicate Controller - End" );
 	Msg* msg = new Msg(  "Replicate Controller - End", 0xff, REQUEST, FUNC_ID_ZW_SET_LEARN_MODE, false, false );
 	msg->Append( 0 );
+	msg->Append( 0 );
 	SendMsg( msg );
 
 	Log::Write( "Get new init data after replication" );
 	msg = new Msg( "Get new init data after replication", 0xff, REQUEST, FUNC_ID_SERIAL_API_GET_INIT_DATA, false );
+	SendMsg( msg );
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::RequestNetworkUpdate>
+// Request a network update from other controllers
+//-----------------------------------------------------------------------------
+void Driver::RequestNetworkUpdate
+(
+)
+{
+	Log::Write( "Request Network update" );
+	Msg* msg = new Msg(  "Request Network Update", 0xff, REQUEST, FUNC_ID_ZW_REQUEST_NETWORK_UPDATE, false, false );
+	msg->Append( 1 );
+	SendMsg( msg );
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::ControllerChange>
+// Change primary controller
+//-----------------------------------------------------------------------------
+void Driver::ControllerChange
+(
+)
+{
+	Log::Write( "Change primary controller" );
+	Msg* msg = new Msg(  "Change Primary Controller", 0xff, REQUEST, FUNC_ID_ZW_CONTROLLER_CHANGE, false, false );
+	msg->Append( 2 );
 	SendMsg( msg );
 }
 
