@@ -441,27 +441,27 @@ void Node::UpdateProtocolInfo
 	msg->Append( m_nodeId );	
 	GetDriver()->SendMsg( msg ); 
 
-	// All nodes are assumed to be awake until we fail to get a reply to a message.  
-	//
-	// Unfortunately, in the case of FUNC_ID_ZW_REQUEST_NODE_INFO, the PC interface responds with a FAILED
-	// message rather than allowing the request to time out.  This means that we always get a response, even if
-	// the node is actually asleep.  
-	//
-	// To get around this, if the node is non-listening, and flagged as awake, we add a copy of the same request
-	// into its wakeup queue, just in case it is not actually awake.
-	if( !IsListeningDevice() )
-	{
-		if( WakeUp* wakeUp = static_cast<WakeUp*>( GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
-		{
-			msg = new Msg( "Request Node Info", m_nodeId, REQUEST, FUNC_ID_ZW_REQUEST_NODE_INFO, false, true, FUNC_ID_ZW_APPLICATION_UPDATE );
-			msg->Append( m_nodeId );	
-			msg->Finalize();
+	//// All nodes are assumed to be awake until we fail to get a reply to a message.  
+	////
+	//// Unfortunately, in the case of FUNC_ID_ZW_REQUEST_NODE_INFO, the PC interface responds with a FAILED
+	//// message rather than allowing the request to time out.  This means that we always get a response, even if
+	//// the node is actually asleep.  
+	////
+	//// To get around this, if the node is non-listening, and flagged as awake, we add a copy of the same request
+	//// into its wakeup queue, just in case it is not actually awake.
+	//if( !IsListeningDevice() )
+	//{
+	//	if( WakeUp* wakeUp = static_cast<WakeUp*>( GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
+	//	{
+	//		msg = new Msg( "Request Node Info", m_nodeId, REQUEST, FUNC_ID_ZW_REQUEST_NODE_INFO, false, true, FUNC_ID_ZW_APPLICATION_UPDATE );
+	//		msg->Append( m_nodeId );	
+	//		msg->Finalize();
 
-			Log::Write( "" );
-			Log::Write( "Queuing Wake-Up Command: %s", msg->GetAsString().c_str() );
-			wakeUp->QueueMsg( msg );
-		}
-	}
+	//		Log::Write( "" );
+	//		Log::Write( "Queuing Wake-Up Command: %s", msg->GetAsString().c_str() );
+	//		wakeUp->QueueMsg( msg );
+	//	}
+	//}
 }
 
 //-----------------------------------------------------------------------------

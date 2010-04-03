@@ -917,7 +917,7 @@ void Driver::ProcessMsg
 			}
 			case FUNC_ID_ZW_APPLICATION_UPDATE:
 			{
-				HandleApplicationUpdateRequest( _data );
+				handleCallback = !HandleApplicationUpdateRequest( _data );
 				break;
 			}
 			default:
@@ -967,9 +967,9 @@ void Driver::ProcessMsg
 				RemoveMsg();
 			}
 		}
-
-		UpdateEvents();
 	}
+
+	UpdateEvents();
 }
 
 //-----------------------------------------------------------------------------
@@ -1440,11 +1440,13 @@ void Driver::HandleApplicationCommandHandlerRequest
 // <Driver::HandleApplicationUpdateRequest>
 // Process a request from the Z-Wave PC interface
 //-----------------------------------------------------------------------------
-void Driver::HandleApplicationUpdateRequest
+bool Driver::HandleApplicationUpdateRequest
 (
 	uint8* _data
 )
 {
+	bool messageRemoved = false;
+
 	uint8 nodeId = _data[3];
 
 	switch( _data[2] )
@@ -1463,6 +1465,26 @@ void Driver::HandleApplicationUpdateRequest
 		case UPDATE_STATE_NODE_INFO_REQ_FAILED:
 		{
 			Log::Write( "FUNC_ID_ZW_APPLICATION_UPDATE: UPDATE_STATE_NODE_INFO_REQ_FAILED received" );
+			
+			// Just in case the failure was due to the node being asleep, we try
+			// to move its pending messages to its wakeup queue.  If it is not
+			// a sleeping device, this will have no effect.
+			m_sendMutex->Lock();
+			if( !m_sendQueue.empty() )
+			{
+				if( MoveMessagesToWakeUpQueue( m_sendQueue.front()->GetTargetNodeId() ) )
+				{
+					// The messages were removed, so set the flag so 
+					// the caller doesn't try to remove it again.
+					messageRemoved = true;
+
+					m_waitingForAck = 0;	
+					m_expectedCallbackId = 0;
+					m_expectedReply = 0;
+					m_expectedCommandClassId = 0;
+				}
+			}
+			m_sendMutex->Release();
 			break;
 		}
 		case UPDATE_STATE_NEW_ID_ASSIGNED:
@@ -1482,7 +1504,9 @@ void Driver::HandleApplicationUpdateRequest
 			m_nodes[nodeId] = NULL;
 			break;
 		}
-	}	
+	}
+
+	return messageRemoved;
 }
 
 //-----------------------------------------------------------------------------
