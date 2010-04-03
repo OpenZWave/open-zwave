@@ -44,22 +44,24 @@ namespace OpenZWave
 	class CommandClass
 	{
 	public:
-		CommandClass( uint32 const _homeId, uint8 const _nodeId ): m_homeId( _homeId ), m_nodeId( _nodeId ), m_version( 1 ), m_instances( 0 ), m_polledInstances( NULL ){}
+		enum
+		{
+			RequestFlag_Static	= 0x00000001,	// Values that never change
+			RequestFlag_Session = 0x00000002,	// Values that change infrequently, and so only need to be requested at start up, or via a manual refresh.
+			RequestFlag_Dynamic	= 0x00000004	// Values that change and will be requested if polling is enabled on the node.
+		};
+
+		CommandClass( uint32 const _homeId, uint8 const _nodeId ): m_homeId( _homeId ), m_nodeId( _nodeId ), m_version( 1 ), m_instances( 0 ){}
 		virtual ~CommandClass(){}
 
 		virtual void ReadXML( TiXmlElement const* _ccElement );
 		virtual void WriteXML( TiXmlElement* _ccElement );
-		virtual void RequestStatic(){}							// For static node data
-		virtual void RequestState( uint8 const _instance ){}	// For dynamic node data
+		virtual void RequestState( uint32 const _requestFlags ){}
 		
 		virtual uint8 const GetCommandClassId()const = 0;		
 		virtual string const GetCommandClassName()const = 0;
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 ) = 0;
 		virtual bool SetValue( Value const& _value ){ return false; }
-
-		void Poll();
-		void SetPolled( uint8 const _instance, bool const _state );
-		bool RequiresPolling();
 
 		uint8 GetVersion()const{ return m_version; }
 		uint8 GetInstances()const{ return m_instances; }
@@ -85,7 +87,6 @@ namespace OpenZWave
 		uint8	m_nodeId;
 		uint8	m_version;
 		uint8	m_instances;
-		bool*	m_polledInstances;
 	};
 
 } // namespace OpenZWave

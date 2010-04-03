@@ -117,6 +117,7 @@ namespace OpenZWave
 
 		void RemoveMsg();
 		void TriggerResend();
+		bool MoveMessagesToWakeUpQueue(	uint8 const _targetNodeId );
 		void SetNodeAwake( uint8 const _nodeId );
 
 		Thread*					m_sendThread;		// Thread for sending messages to the Z-Wave network	
@@ -142,24 +143,25 @@ namespace OpenZWave
 		void HandleSerialAPIGetInitDataResponse( uint8* pData );
 		void HandleGetNodeProtocolInfoResponse( uint8* pData );
 		void HandleSendDataResponse( uint8* pData );
-		void HandleSendDataRequest( uint8* pData );
+		bool HandleSendDataRequest( uint8* pData );
 		void HandleAddNodeToNetworkRequest( uint8* pData );
 		void HandleRemoveNodeFromNetworkRequest( uint8* pData );
 		void HandleApplicationCommandHandlerRequest( uint8* pData );
 		void HandleApplicationUpdateRequest( uint8* pData );
 
-		Thread*					m_readThread;			// Thread for handling messages received from the Z-Wave network
-		bool					m_waitingForAck;		// True when we are waiting for an ACK from the dongle
-		uint8					m_expectedCallbackId;	// If non-zero, we wait for a message with this callback Id
-		uint8					m_expectedReply;		// If non-zero, we wait for a message with this function Id
+		Thread*					m_readThread;				// Thread for handling messages received from the Z-Wave network
+		bool					m_waitingForAck;			// True when we are waiting for an ACK from the dongle
+		uint8					m_expectedCallbackId;		// If non-zero, we wait for a message with this callback Id
+		uint8					m_expectedReply;			// If non-zero, we wait for a message with this function Id
+		uint8					m_expectedCommandClassId;	// If the expected reply is FUNC_ID_APPLICATION_COMMAND_HANDLER, this value stores the command class we're waiting to hear from
 
 	//-----------------------------------------------------------------------------
 	//	Polling Z-Wave devices
 	//-----------------------------------------------------------------------------
 	public:
 		void SetPollInterval( int32 _seconds ){ m_pollInterval = _seconds; }
-		bool EnablePoll( ValueID const& _id );
-		bool DisablePoll( ValueID const& _id );
+		bool EnablePoll( uint8 _nodeId );
+		bool DisablePoll( uint8 _nodeId );
 
 	private:
 		static void PollThreadEntryPoint( void* _context );

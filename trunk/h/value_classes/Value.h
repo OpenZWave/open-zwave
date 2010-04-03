@@ -62,8 +62,6 @@ namespace OpenZWave
 		string const& GetHelp()const{ return m_help; }
 		void SetHelp( string const& _help ){ m_help = _help; }
 
-		bool IsPolled()const{ return m_poll; }
-
 		uint32 Release(){ if( !(--m_refs) ){ delete this; } return m_refs; }
 
 		// Helpers
@@ -81,7 +79,6 @@ namespace OpenZWave
 	private:
 		uint32 AddRef(){ ++m_refs; return m_refs; }
 		Node* GetNode()const;
-		void SetPolled( bool const _state );
 
 		uint32		m_refs;
 		ValueID		m_id;
@@ -89,7 +86,6 @@ namespace OpenZWave
 		string		m_units;
 		string		m_help;
 		bool		m_readOnly;
-		bool		m_poll;
 	};
 
 } // namespace OpenZWave

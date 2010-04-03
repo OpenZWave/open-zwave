@@ -114,7 +114,7 @@ void Powerlevel::Set
 	}
 
 	Log::Write( "Setting the power level of node %d to %s for %d seconds", GetNodeId(), c_powerLevelNames[_powerLevel], _timeout );
-	Msg* msg = new Msg( "PowerlevelCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+	Msg* msg = new Msg( "PowerlevelCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 	msg->Append( GetNodeId() );
 	msg->Append( 4 );
 	msg->Append( GetCommandClassId() );
@@ -142,7 +142,7 @@ void Powerlevel::Test
 	}
 
 	Log::Write( "Running a Power Level Test from node %d: Target Node = %d, Power Level = %s, Number of Frames = %d", GetNodeId(), _testNodeId, c_powerLevelNames[_powerLevel], _numFrames );
-	Msg* msg = new Msg( "PowerlevelCmd_TestNodeSet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+	Msg* msg = new Msg( "PowerlevelCmd_TestNodeSet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 	msg->Append( GetNodeId() );
 	msg->Append( 6 );
 	msg->Append( GetCommandClassId() );

@@ -37,16 +37,20 @@ using namespace OpenZWave;
 
 
 //-----------------------------------------------------------------------------
-// <MultiInstance::RequestStatic>												   
-// Request the static instance data									  
+// <MultiInstance::RequestState>												   
+// Request the current state from the device									  
 //-----------------------------------------------------------------------------
-void MultiInstance::RequestStatic
+void MultiInstance::RequestState
 (
+	uint32 const _requestFlags
 )
 {
-	if( Node const* node = GetNode() )
+	if( _requestFlags & RequestFlag_Static )
 	{
-		node->RequestInstances();
+		if( Node const* node = GetNode() )
+		{
+			node->RequestInstances();
+		}
 	}
 }
 
@@ -59,8 +63,10 @@ void MultiInstance::RequestInstances
 	CommandClass const* _commandClass
 )
 {
-	Log::Write( "Requesting the instance-count from node %d for %s", GetNodeId(), _commandClass->GetCommandClassName().c_str() );
-	Msg* msg = new Msg( "MultiInstanceCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+	char str[128];
+	snprintf( str, 128, "MultiInstanceCmd_Get for %s", _commandClass->GetCommandClassName().c_str() );
+
+	Msg* msg = new Msg( str, GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 	msg->Append( GetNodeId() );
 	msg->Append( 3 );
 	msg->Append( GetCommandClassId() );
@@ -92,6 +98,9 @@ bool MultiInstance::HandleMsg
 			{
 				Log::Write( "Received instance-count from node %d for %s: %d", GetNodeId(), pCommandClass->GetCommandClassName().c_str(), instances );
 				pCommandClass->SetInstances( instances );
+
+				// The request for non-static state was held off until we knew how many instances there were.
+				pCommandClass->RequestState( CommandClass::RequestFlag_Session | CommandClass::RequestFlag_Dynamic );
 			}
 			return true;
 		}

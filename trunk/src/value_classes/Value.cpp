@@ -76,8 +76,7 @@ Value::Value
 	m_id( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, _type ),
 	m_label( _label ),
 	m_units( _units ),
-	m_readOnly( _readOnly ),
-	m_poll( false )
+	m_readOnly( _readOnly )
 {
 }
 
@@ -93,8 +92,7 @@ Value::Value
 	TiXmlElement const* _valueElement
 ):
 	m_refs( 1 ),
-	m_readOnly( false ),
-	m_poll( false )
+	m_readOnly( false )
 {
 	int intVal;
 
@@ -132,20 +130,6 @@ Value::Value
 	{
 		m_readOnly = !strcmp( readOnly, "true" );
 	}
-
-	char const* poll = _valueElement->Attribute( "poll" );
-	if( poll )
-	{
-		// Use the Manager Enable/Disable poll methods so that everything gets set up correctly
-		if( strcmp( poll, "true" ) )
-		{
-			Manager::Get()->DisablePoll( m_id );
-		}
-		else
-		{
-			Manager::Get()->EnablePoll( m_id );
-		}
-	}
 }
 
 //-----------------------------------------------------------------------------
@@ -171,7 +155,6 @@ void Value::WriteXML
 	_valueElement->SetAttribute( "label", m_label.c_str() );
 	_valueElement->SetAttribute( "units", m_units.c_str() );
 	_valueElement->SetAttribute( "read_only", m_readOnly ? "true" : "false" );
-	_valueElement->SetAttribute( "poll", m_poll ? "true" : "false" );
 }
 
 //-----------------------------------------------------------------------------
@@ -232,32 +215,6 @@ Node* Value::GetNode
 	}
 
 	return NULL;
-}
-
-//-----------------------------------------------------------------------------
-// <Value::SetPolled>
-// Set this value as polled
-//-----------------------------------------------------------------------------
-void Value::SetPolled
-(
-	bool const _state	
-)
-{
-	if( _state != m_poll )
-	{
-		m_poll = _state;
-
-		// Notify the watchers
-		Manager::Notification* notification = new Manager::Notification();
-		
-		notification->m_type = m_poll ? Manager::NotificationType_PollingEnabled : Manager::NotificationType_PollingDisabled;
-		notification->m_id = m_id;
-		notification->m_groupIdx = 0;
-
-		Manager::Get()->NotifyWatchers( notification ); 
-
-		delete notification;
-	}
 }
 
 //-----------------------------------------------------------------------------

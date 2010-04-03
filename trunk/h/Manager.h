@@ -118,8 +118,8 @@ namespace OpenZWave
 	//-----------------------------------------------------------------------------
 	public:
 		void SetPollInterval( int32 _seconds );
-		bool EnablePoll( ValueID const& _id );
-		bool DisablePoll( ValueID const& _id );
+		bool EnablePoll( uint32 const _homeId, uint8 const _nodeId );
+		bool DisablePoll( uint32 const _homeId, uint8 const _nodeId );
 
 	//-----------------------------------------------------------------------------
 	//	Retrieving Node information
