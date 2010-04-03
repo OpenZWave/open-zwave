@@ -147,7 +147,7 @@ namespace OpenZWave
 		void HandleAddNodeToNetworkRequest( uint8* pData );
 		void HandleRemoveNodeFromNetworkRequest( uint8* pData );
 		void HandleApplicationCommandHandlerRequest( uint8* pData );
-		void HandleApplicationUpdateRequest( uint8* pData );
+		bool HandleApplicationUpdateRequest( uint8* pData );
 
 		Thread*					m_readThread;				// Thread for handling messages received from the Z-Wave network
 		bool					m_waitingForAck;			// True when we are waiting for an ACK from the dongle
