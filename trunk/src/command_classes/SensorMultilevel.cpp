@@ -62,7 +62,7 @@ void SensorMultilevel::RequestState
 			// More than one instance - query each one in turn
 			for( uint8 i=0; i<numInstances; ++i )
 			{
-				Msg* msg = new Msg( "SensorMultilevelCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+				Msg* msg = new Msg( "SensorMultilevelCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, MultiInstance::StaticGetCommandClassId() );
 				msg->Append( GetNodeId() );
 				msg->Append( 5 );
 				msg->Append( MultiInstance::StaticGetCommandClassId() );
