@@ -104,7 +104,7 @@ bool Protection::HandleMsg
 }
 
 //-----------------------------------------------------------------------------
-// <Protection::Set>
+// <Protection::SetValue>
 // Set the device's protection state
 //-----------------------------------------------------------------------------
 bool Protection::SetValue
@@ -118,7 +118,7 @@ bool Protection::SetValue
 		ValueList::Item const& item = value->GetPending();
 
 		Log::Write( "Protection::Set - Setting protection state on node %d to '%s'", GetNodeId(), item.m_label.c_str() );
-		Msg* msg = new Msg( "Protection Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );		
+		Msg* msg = new Msg( "Protection Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
 		msg->Append( GetNodeId() );
 		msg->Append( 3 );
 		msg->Append( GetCommandClassId() );

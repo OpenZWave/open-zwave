@@ -111,7 +111,7 @@ bool SwitchMultilevel::SetValue
 		ValueByte const* value = static_cast<ValueByte const*>(&_value);
 
 		Log::Write( "SwitchMultilevel::Set - Setting node %d to level %d", GetNodeId(), value->GetPending() );
-		Msg* msg = new Msg( "Basic Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );		
+		Msg* msg = new Msg( "Basic Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
 		msg->Append( GetNodeId() );
 		msg->Append( 3 );
 		msg->Append( GetCommandClassId() );
