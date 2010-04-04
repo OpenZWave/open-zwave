@@ -149,7 +149,7 @@ bool WakeUp::SetValue
 	{
 		ValueInt const* value = static_cast<ValueInt const*>(&_value);
 	
-		Msg* msg = new Msg( "Wakeup Interval Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		Msg* msg = new Msg( "Wakeup Interval Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 
 		msg->Append( GetNodeId() );
 		

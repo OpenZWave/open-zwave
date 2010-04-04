@@ -201,7 +201,7 @@ bool ThermostatSetpoint::SetValue
 		float32 floatVal = (float32)atof( value->GetPending().c_str() );
 		uint8 scale = strcmp( "C", value->GetUnits().c_str() ) ? 1 : 0;
 
-		Msg* msg = new Msg( "Set Thermostat Setpoint", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		Msg* msg = new Msg( "Set Thermostat Setpoint", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 		msg->Append( GetNodeId() );
 		msg->Append( 3 + GetAppendValueSize( floatVal, 0 ) );
 		msg->Append( GetCommandClassId() );

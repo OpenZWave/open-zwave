@@ -172,7 +172,7 @@ bool Clock::SetValue
 				}
 			}
 
-			Msg* msg = new Msg( "ClockCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+			Msg* msg = new Msg( "ClockCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 			msg->Append( GetNodeId() );
 			msg->Append( 4 );
 			msg->Append( GetCommandClassId() );

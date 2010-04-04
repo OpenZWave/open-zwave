@@ -109,7 +109,7 @@ bool Lock::SetValue
 		ValueBool const* value = static_cast<ValueBool const*>(&_value);
 
 		Log::Write( "Lock::Set - Requesting the node %d lock to be %s", GetNodeId(), value->GetPending() ? "Locked" : "Unlocked" );
-		Msg* msg = new Msg( "LockCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		Msg* msg = new Msg( "LockCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 		msg->Append( GetNodeId() );
 		msg->Append( 3 );
 		msg->Append( GetCommandClassId() );

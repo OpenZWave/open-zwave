@@ -119,7 +119,7 @@ bool SwitchAll::SetValue
 		ValueList::Item const& item = value->GetPending();
 
 		Log::Write( "SwitchAll::Set - %s on node %d", value->GetPending().m_label.c_str(), GetNodeId() );
-		Msg* msg = new Msg( "SwitchAllCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );		
+		Msg* msg = new Msg( "SwitchAllCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
 		msg->Append( GetNodeId() );
 		msg->Append( 3 );
 		msg->Append( GetCommandClassId() );
