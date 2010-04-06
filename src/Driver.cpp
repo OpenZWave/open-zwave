@@ -1112,28 +1112,16 @@ void Driver::HandleSerialAPIGetInitDataResponse
 {
 	int32 i;
 
-	// Clear any existing node data
-	for( i=0; i<256; ++i )
+	static bool s_firstTime = true;
+	if( s_firstTime )
 	{
-		if( m_nodes[i] )
-		{
-			Manager::Notification notification;
-			notification.m_type = Manager::NotificationType_NodeRemoved;
-			notification.m_id = ValueID( m_homeId, i );
-			notification.m_groupIdx = 0;
-			Manager::Get()->NotifyWatchers( &notification ); 
+		// Mark the driver as ready (we have to do this first or 
+		// all the code handling notifications will go awry).
+		Manager::Get()->SetDriverReady( this );
 
-			delete m_nodes[i];
-			m_nodes[i] = NULL;
-		}
+		// Read the config file first, to get the last known state
+		ReadConfig();
 	}
-
-	// Mark the driver as ready (we have to do this first or 
-	// all the code handling notifications will go awry).
-	Manager::Get()->SetDriverReady( this );
-
-	// Read the config file first, to get the last known state
-	ReadConfig();
 
 	Log::Write( "Received reply to FUNC_ID_SERIAL_API_GET_INIT_DATA:" );
 	m_capabilities = _data[3];
@@ -1149,7 +1137,7 @@ void Driver::HandleSerialAPIGetInitDataResponse
 				{
 					if( NULL == m_nodes[nodeId] )
 					{
-						// This node was not in the config
+						// This node is new
 						Log::Write( "Found new node %d", nodeId );
 
 						// Create the node
@@ -1166,17 +1154,19 @@ void Driver::HandleSerialAPIGetInitDataResponse
 					}
 					else
 					{
-						// The node was read in from the config, so we 
-						// only need to get its current state
-						m_nodes[nodeId]->RequestState( CommandClass::RequestFlag_Session | CommandClass::RequestFlag_Dynamic );
+						if( s_firstTime )
+						{
+							// The node was read in from the config, so we 
+							// only need to get its current state
+							m_nodes[nodeId]->RequestState( CommandClass::RequestFlag_Session | CommandClass::RequestFlag_Dynamic );
+						}
 					}
 				}
 				else
 				{
 					if( m_nodes[nodeId] )
 					{
-						// This node was in the config, but no longer
-						// exists in the Z-Wave network
+						// This node no longer exists in the Z-Wave network
 						Manager::Notification notification;
 						notification.m_type = Manager::NotificationType_NodeRemoved;
 						notification.m_id = ValueID( m_homeId, nodeId );
@@ -1190,6 +1180,8 @@ void Driver::HandleSerialAPIGetInitDataResponse
 			}
 		}
 	}
+
+	s_firstTime = false;
 }
 
 //-----------------------------------------------------------------------------
@@ -1407,14 +1399,14 @@ void Driver::HandleRemoveNodeFromNetworkRequest
 			Log::Write( "REMOVE_NODE_STATUS_NODE_FOUND" );
 			break;
 		}
-		case REMOVE_NODE_STATUS_ADDING_SLAVE:
+		case REMOVE_NODE_STATUS_REMOVING_SLAVE:
 		{
-			Log::Write( "REMOVE_NODE_STATUS_ADDING_SLAVE" );
+			Log::Write( "REMOVE_NODE_STATUS_REMOVING_SLAVE" );
 			break;
 		}
-		case REMOVE_NODE_STATUS_ADDING_CONTROLLER:
+		case REMOVE_NODE_STATUS_REMOVING_CONTROLLER:
 		{
-			Log::Write( "REMOVE_NODE_STATUS_ADDING_CONTROLLER" );
+			Log::Write( "REMOVE_NODE_STATUS_REMOVING_CONTROLLER" );
 			break;
 		}
 		case REMOVE_NODE_STATUS_PROTOCOL_DONE:
@@ -2067,6 +2059,10 @@ void Driver::EndRemoveNode
 	Log::Write( "Remove Node - End" );
 	Msg* msg = new Msg( "Remove Node - End", 0xff, REQUEST, FUNC_ID_ZW_REMOVE_NODE_FROM_NETWORK, false, false );
 	msg->Append( REMOVE_NODE_STOP );
+	SendMsg( msg );
+
+	Log::Write( "Get new init data after Remove Node" );
+	msg = new Msg( "Get new init data after Remove Node", 0xff, REQUEST, FUNC_ID_SERIAL_API_GET_INIT_DATA, false );
 	SendMsg( msg );
 }
 
