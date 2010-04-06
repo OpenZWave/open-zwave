@@ -57,4 +57,7 @@
     <Product type="0001" id="0004" name="Transmitter 2-Gang Switch" />
     <Product type="0002" id="0001" name="Transmitter Move" />
   </Manufacturer>
+  <Manufacturer id="0086" name="Aeon Labs">
+    <Product type="0002" id="0004" name="Door/Window Sensor" />
+  </Manufacturer>
 </ManufacturerSpecificData>
