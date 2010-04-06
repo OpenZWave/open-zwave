@@ -285,6 +285,13 @@ void Node::WriteXML
 	TiXmlElement* _driverElement
 )
 {
+	if( !(IsListeningDevice() || m_nodeInfoReceived) )
+	{
+		// This is a sleeping node from which we have never had a list of command classes.
+		// We should write nothing out otherwise the list will not be requested in future.
+		return;
+	}
+	
 	char str[32];
 
 	TiXmlElement* nodeElement = new TiXmlElement( "Node" );
@@ -474,7 +481,6 @@ void Node::UpdateNodeInfo
 	uint8 const _length
 )
 {
-	
 	if( !m_nodeInfoReceived )
 	{
 		m_nodeInfoReceived = true;

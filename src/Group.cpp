@@ -200,14 +200,11 @@ void Group::OnGroupChanged
 	if( notify )
 	{
 		// Send notification that the group contents have changed
-		Manager::Notification* notification = new Manager::Notification();
-	
-		notification->m_type = Manager::NotificationType_Group;
-		notification->m_id = ValueID( m_homeId, m_nodeId, ValueID::ValueGenre_All, 0, 0, 0, ValueID::ValueType_Byte );
-		notification->m_groupIdx = m_groupIdx;
-
-		Manager::Get()->NotifyWatchers( notification ); 
-		delete notification;
+		Manager::Notification notification;
+		notification.m_type = Manager::NotificationType_Group;
+		notification.m_id = ValueID( m_homeId, m_nodeId );
+		notification.m_groupIdx = m_groupIdx;
+		Manager::Get()->NotifyWatchers( &notification ); 
 	}
 }
 

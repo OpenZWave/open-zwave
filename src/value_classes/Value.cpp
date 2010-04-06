@@ -190,15 +190,13 @@ void Value::OnValueChanged
 )
 {
 	// Notify the watchers
-	Manager::Notification* notification = new Manager::Notification();
+	Manager::Notification notification;
 	
-	notification->m_type = Manager::NotificationType_ValueChanged;
-	notification->m_id = m_id;
-	notification->m_groupIdx = 0;
+	notification.m_type = Manager::NotificationType_ValueChanged;
+	notification.m_id = m_id;
+	notification.m_groupIdx = 0;
 
-	Manager::Get()->NotifyWatchers( notification ); 
-
-	delete notification;
+	Manager::Get()->NotifyWatchers( &notification ); 
 }
 
 //-----------------------------------------------------------------------------

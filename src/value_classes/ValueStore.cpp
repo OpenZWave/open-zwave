@@ -74,12 +74,11 @@ bool ValueStore::AddValue
 	_value->AddRef();
 
 	// Notify the watchers of the new value
-	Manager::Notification* notification = new Manager::Notification();		
-	notification->m_type = Manager::NotificationType_ValueAdded;
-	notification->m_id = _value->GetID();
-	notification->m_groupIdx = 0;
-	Manager::Get()->NotifyWatchers( notification ); 
-	delete notification;
+	Manager::Notification notification;		
+	notification.m_type = Manager::NotificationType_ValueAdded;
+	notification.m_id = _value->GetID();
+	notification.m_groupIdx = 0;
+	Manager::Get()->NotifyWatchers( &notification ); 
 
 	return true;
 }
@@ -101,12 +100,11 @@ bool ValueStore::RemoveValue
 		m_values.erase( it );
 
 		// Notify the watchers of the new value
-		Manager::Notification* notification = new Manager::Notification();	
-		notification->m_type = Manager::NotificationType_ValueRemoved;
-		notification->m_id = it->second->GetID();
-		notification->m_groupIdx = 0;
-		Manager::Get()->NotifyWatchers( notification ); 
-		delete notification;
+		Manager::Notification notification;	
+		notification.m_type = Manager::NotificationType_ValueRemoved;
+		notification.m_id = it->second->GetID();
+		notification.m_groupIdx = 0;
+		Manager::Get()->NotifyWatchers( &notification ); 
 
 		return true;
 	}
