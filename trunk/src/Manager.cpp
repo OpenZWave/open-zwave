@@ -287,12 +287,11 @@ void Manager::SetDriverReady
 		m_readyDrivers[_driver->GetHomeId()] = _driver;
 
 		// Notify the watchers
-		Notification* notification = new Notification();
-		notification->m_type = NotificationType_DriverReady;
-		notification->m_id = ValueID( _driver->GetHomeId(), 0, ValueID::ValueGenre_All, 0, 0, 0, ValueID::ValueType_Bool );
-		notification->m_groupIdx = 0;
-		Manager::Get()->NotifyWatchers( notification ); 
-		delete notification;
+		Notification notification;
+		notification.m_type = NotificationType_DriverReady;
+		notification.m_id = ValueID( _driver->GetHomeId(), 0 );
+		notification.m_groupIdx = 0;
+		Manager::Get()->NotifyWatchers( &notification ); 
 	}
 }
 
