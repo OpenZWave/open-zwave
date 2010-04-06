@@ -58,6 +58,7 @@
     <Product type="0002" id="0001" name="Transmitter Move" />
   </Manufacturer>
   <Manufacturer id="0086" name="Aeon Labs">
+    <Product type="0001" id="0003" name="Minimote" />
     <Product type="0002" id="0004" name="Door/Window Sensor" />
   </Manufacturer>
 </ManufacturerSpecificData>
