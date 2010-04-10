@@ -32,3 +32,6 @@ all: test
 
 test:	Main.o $(LIBS)
 	$(LD) -o $@ $(LDFLAGS) $< $(LIBS) -pthread
+
+clean:
+	rm -f test Main.o
