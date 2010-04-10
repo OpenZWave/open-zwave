@@ -1454,6 +1454,12 @@ void Driver::HandleApplicationCommandHandlerRequest
 					{
 						StatusData[0] = 0x01; StatusData[1]=ValueFromDevice;
 						pfnDeviceEventVectorClass->HandleMsg( StatusData,0x02,0x00);
+
+						//send notification to application
+						Notification notification(Notification::Type_NodeStatus);
+						notification.SetHomeAndNodeIds(GetHomeId(),nodeId);
+						notification.SetStatus(StatusData[1]);
+						Manager::Get()->NotifyWatchers( &notification );
 					}
 					break;
 				
@@ -1468,6 +1474,12 @@ void Driver::HandleApplicationCommandHandlerRequest
 			{
 				StatusData[0] = 0x01; StatusData[1]=ValueFromDevice;
 				pfnDeviceEventVectorClass->HandleMsg( StatusData,0x02,0x00);
+
+				//send notification to application
+				Notification notification(Notification::Type_NodeStatus);
+				notification.SetHomeAndNodeIds(GetHomeId(),nodeId);
+				notification.SetStatus(StatusData[1]);
+				Manager::Get()->NotifyWatchers( &notification );
 			}
 			break;
 		}
