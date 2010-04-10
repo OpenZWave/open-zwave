@@ -29,6 +29,7 @@
 #include "Manager.h"
 #include "Driver.h"
 #include "Node.h"
+#include "Notification.h"
 #include "Association.h"
 
 using namespace OpenZWave;
@@ -200,10 +201,9 @@ void Group::OnGroupChanged
 	if( notify )
 	{
 		// Send notification that the group contents have changed
-		Manager::Notification notification;
-		notification.m_type = Manager::NotificationType_Group;
-		notification.m_id = ValueID( m_homeId, m_nodeId );
-		notification.m_groupIdx = m_groupIdx;
+		Notification notification( Notification::Type_Group );
+		notification.SetHomeAndNodeIds( m_homeId, m_nodeId );
+		notification.SetGroupIdx( m_groupIdx );
 		Manager::Get()->NotifyWatchers( &notification ); 
 	}
 }

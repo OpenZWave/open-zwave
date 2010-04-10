@@ -28,6 +28,8 @@
 #include "ValueStore.h"
 #include "Value.h"
 #include "Manager.h"
+#include "Notification.h"
+
 
 using namespace OpenZWave;
 
@@ -74,10 +76,8 @@ bool ValueStore::AddValue
 	_value->AddRef();
 
 	// Notify the watchers of the new value
-	Manager::Notification notification;		
-	notification.m_type = Manager::NotificationType_ValueAdded;
-	notification.m_id = _value->GetID();
-	notification.m_groupIdx = 0;
+	Notification notification( Notification::Type_ValueAdded );
+	notification.SetValueId( _value->GetID() );
 	Manager::Get()->NotifyWatchers( &notification ); 
 
 	return true;
@@ -100,10 +100,8 @@ bool ValueStore::RemoveValue
 		m_values.erase( it );
 
 		// Notify the watchers of the new value
-		Manager::Notification notification;	
-		notification.m_type = Manager::NotificationType_ValueRemoved;
-		notification.m_id = it->second->GetID();
-		notification.m_groupIdx = 0;
+		Notification notification( Notification::Type_ValueRemoved );
+		notification.SetValueId( it->second->GetID() );
 		Manager::Get()->NotifyWatchers( &notification ); 
 
 		return true;

@@ -194,6 +194,10 @@
 				RelativePath="..\..\..\h\Node.h"
 				>
 			</File>
+			<File
+				RelativePath="..\..\..\h\Notification.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Platform"

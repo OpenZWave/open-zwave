@@ -30,6 +30,7 @@
 #include "Manager.h"
 #include "Node.h"
 #include "Msg.h"
+#include "Notification.h"
 
 #include "Event.h"
 #include "Mutex.h"
@@ -115,10 +116,8 @@ Driver::~Driver
 	{
 		if( m_nodes[i] )
 		{
-			Manager::Notification notification;
-			notification.m_type = Manager::NotificationType_NodeAdded;
-			notification.m_id = ValueID( m_homeId, i );
-			notification.m_groupIdx = 0;
+			Notification notification( Notification::Type_NodeAdded );
+			notification.SetHomeAndNodeIds( m_homeId, i );
 			Manager::Get()->NotifyWatchers( &notification ); 
 
 			delete m_nodes[i];
@@ -358,10 +357,8 @@ bool Driver::ReadConfig
 				Node* node = new Node( m_homeId, nodeId );
 				m_nodes[nodeId] = node;
 
-				Manager::Notification notification;
-				notification.m_type = Manager::NotificationType_NodeAdded;
-				notification.m_id = ValueID( m_homeId, nodeId );
-				notification.m_groupIdx = 0;
+				Notification notification( Notification::Type_NodeAdded );
+				notification.SetHomeAndNodeIds( m_homeId, nodeId );
 				Manager::Get()->NotifyWatchers( &notification ); 
 
 				// Read the rest of the node configuration from the XML
@@ -1143,10 +1140,8 @@ void Driver::HandleSerialAPIGetInitDataResponse
 						// Create the node
 						m_nodes[nodeId] = new Node( m_homeId, nodeId );
 
-						Manager::Notification notification;
-						notification.m_type = Manager::NotificationType_NodeAdded;
-						notification.m_id = ValueID( m_homeId, nodeId );
-						notification.m_groupIdx = 0;
+						Notification notification( Notification::Type_NodeAdded );
+						notification.SetHomeAndNodeIds( m_homeId, nodeId );
 						Manager::Get()->NotifyWatchers( &notification ); 
 
 						// Request the node protocol info
@@ -1167,10 +1162,8 @@ void Driver::HandleSerialAPIGetInitDataResponse
 					if( m_nodes[nodeId] )
 					{
 						// This node no longer exists in the Z-Wave network
-						Manager::Notification notification;
-						notification.m_type = Manager::NotificationType_NodeRemoved;
-						notification.m_id = ValueID( m_homeId, nodeId );
-						notification.m_groupIdx = 0;
+						Notification notification( Notification::Type_NodeRemoved );
+						notification.SetHomeAndNodeIds( m_homeId, nodeId );
 						Manager::Get()->NotifyWatchers( &notification ); 
 
 						delete m_nodes[nodeId];
@@ -1549,10 +1542,8 @@ bool Driver::HandleApplicationUpdateRequest
 			delete m_nodes[nodeId];
 			m_nodes[nodeId] = new Node( m_homeId, nodeId );
 
-			Manager::Notification notification;
-			notification.m_type = Manager::NotificationType_NodeAdded;
-			notification.m_id = ValueID( m_homeId, nodeId );
-			notification.m_groupIdx = 0;
+			Notification notification( Notification::Type_NodeAdded );
+			notification.SetHomeAndNodeIds( m_homeId, nodeId );
 			Manager::Get()->NotifyWatchers( &notification ); 
 
 			// Request the node protocol info
@@ -1563,10 +1554,8 @@ bool Driver::HandleApplicationUpdateRequest
 		{
 			Log::Write( "** Network change **: Z-Wave node %d was removed", nodeId );
 
-			Manager::Notification notification;
-			notification.m_type = Manager::NotificationType_NodeAdded;
-			notification.m_id = ValueID( m_homeId, nodeId );
-			notification.m_groupIdx = 0;
+			Notification notification( Notification::Type_NodeRemoved );
+			notification.SetHomeAndNodeIds( m_homeId, nodeId );
 			Manager::Get()->NotifyWatchers( &notification ); 
 
 			delete m_nodes[nodeId];
