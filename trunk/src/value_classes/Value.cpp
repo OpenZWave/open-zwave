@@ -29,8 +29,9 @@
 #include "Manager.h"
 #include "Driver.h"
 #include "Node.h"
-#include "Value.h"
+#include "Notification.h"
 #include "Msg.h"
+#include "Value.h"
 #include "Log.h"
 #include "CommandClass.h"
 
@@ -190,12 +191,8 @@ void Value::OnValueChanged
 )
 {
 	// Notify the watchers
-	Manager::Notification notification;
-	
-	notification.m_type = Manager::NotificationType_ValueChanged;
-	notification.m_id = m_id;
-	notification.m_groupIdx = 0;
-
+	Notification notification( Notification::Type_ValueChanged );
+	notification.SetValueId( m_id );
 	Manager::Get()->NotifyWatchers( &notification ); 
 }
 

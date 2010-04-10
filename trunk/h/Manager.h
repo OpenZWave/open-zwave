@@ -54,6 +54,7 @@ namespace OpenZWave
 	class ValueList;
 	class ValueShort;
 	class ValueString;
+	class Notification;
 
 	class Manager
 	{
@@ -64,7 +65,6 @@ namespace OpenZWave
 		friend class Driver;
 
 	public:
-		struct Notification;
 		typedef void (*pfnOnNotification_t)( Notification const* _pNotification, void* _context );
 
 	//-----------------------------------------------------------------------------
@@ -137,27 +137,6 @@ namespace OpenZWave
 	//	Notifications
 	//-----------------------------------------------------------------------------
 	public:
-		enum NotificationType 
-		{
-			NotificationType_ValueAdded = 0,	// Value Added
-			NotificationType_ValueRemoved,		// Value Removed
-			NotificationType_ValueChanged,		// Value Changed
-			NotificationType_Group,				// Group (associations) changed
-			NotificationType_NodeAdded,			// Node has been added
-			NotificationType_NodeRemoved,		// Node has been removed
-			NotificationType_PollingDisabled,	// Polling of this value has been turned off
-			NotificationType_PollingEnabled,	// Polling of this value has been turned on
-			NotificationType_DriverReady		// Driver has been added and is ready to use
-		};
-
-		struct Notification
-		{
-		public:
-			NotificationType	m_type;
-			ValueID				m_id;
-			uint8				m_groupIdx;
-		};
-
 		bool AddWatcher( pfnOnNotification_t watcher, void* _context );
 		bool RemoveWatcher( pfnOnNotification_t watcher, void* _context );
 		void NotifyWatchers( Notification const* _pNotification );

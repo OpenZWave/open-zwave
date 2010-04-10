@@ -29,6 +29,7 @@
 #include "Manager.h"
 #include "Driver.h"
 #include "Node.h"
+#include "Notification.h"
 
 #include "Event.h"
 #include "Log.h"
@@ -287,10 +288,8 @@ void Manager::SetDriverReady
 		m_readyDrivers[_driver->GetHomeId()] = _driver;
 
 		// Notify the watchers
-		Notification notification;
-		notification.m_type = NotificationType_DriverReady;
-		notification.m_id = ValueID( _driver->GetHomeId(), 0 );
-		notification.m_groupIdx = 0;
+		Notification notification( Notification::Type_DriverReady );
+		notification.SetHomeAndNodeIds( _driver->GetHomeId(), 0 );
 		Manager::Get()->NotifyWatchers( &notification ); 
 	}
 }
