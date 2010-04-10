@@ -34,6 +34,7 @@
 #include "Manager.h"
 #include "Node.h"
 #include "Group.h"
+#include "Notification.h"
 #include "ValueStore.h"
 #include "Value.h"
 #include "ValueBool.h"
@@ -42,24 +43,167 @@ using namespace OpenZWave;
 
 static uint32 g_homeId = 0;
 
+typedef struct 
+{
+	uint32			m_homeId;
+	uint8			m_nodeId;
+	bool			m_polled;
+	list<ValueID>	m_values;
+}NodeInfo;
+
+static list<NodeInfo*> g_nodes;
+static CRITICAL_SECTION g_criticalSection;
+
+//-----------------------------------------------------------------------------
+// <GetNodeInfo>
+// Callback that is triggered when a value, group or node changes
+//-----------------------------------------------------------------------------
+NodeInfo* GetNodeInfo
+(
+	Notification const* _notification
+)
+{
+	uint32 const homeId = _notification->GetHomeId();
+	uint8 const nodeId = _notification->GetNodeId();
+	for( list<NodeInfo*>::iterator it = g_nodes.begin(); it != g_nodes.end(); ++it )
+	{
+		NodeInfo* nodeInfo = *it;
+		if( ( nodeInfo->m_homeId == homeId ) && ( nodeInfo->m_nodeId == nodeId ) )
+		{
+			return nodeInfo;
+		}
+	}
+
+	return NULL;
+}
+
 //-----------------------------------------------------------------------------
 // <OnNotification>
 // Callback that is triggered when a value, group or node changes
 //-----------------------------------------------------------------------------
 void OnNotification
 (
-	Manager::Notification const* _notification,
+	Notification const* _notification,
 	void* _context
 )
 {
-	if( _notification->m_type == Manager::NotificationType_DriverReady )
+	// Must do this inside a critical section to avoid conflicts with the main thread
+	EnterCriticalSection( &g_criticalSection );
+
+	switch( _notification->GetType() )
 	{
-		g_homeId = _notification->m_id.GetHomeId();
+		case Notification::Type_ValueAdded:
+		{
+			if( NodeInfo* nodeInfo = GetNodeInfo( _notification ) )
+			{
+				// Add the new value to our list
+				nodeInfo->m_values.push_back( _notification->GetValueID() );
+			}
+			break;
+		}
+
+		case Notification::Type_ValueRemoved:
+		{
+			if( NodeInfo* nodeInfo = GetNodeInfo( _notification ) )
+			{
+				// Remove the value from out list
+				for( list<ValueID>::iterator it = nodeInfo->m_values.begin(); it != nodeInfo->m_values.end(); ++it )
+				{
+					if( (*it) == _notification->GetValueID() )
+					{
+						nodeInfo->m_values.erase( it );
+						break;
+					}
+				}
+			}
+			break;
+		}
+
+		case Notification::Type_ValueChanged:
+		{
+			if( NodeInfo* nodeInfo = GetNodeInfo( _notification ) )
+			{
+				// One of the node values has changed
+				// TBD...
+			}
+			break;
+		}
+
+		case Notification::Type_Group:
+		{
+			if( NodeInfo* nodeInfo = GetNodeInfo( _notification ) )
+			{
+				// One of the node's association groups has changed
+				// TBD...
+			}
+			break;
+		}
+
+		case Notification::Type_NodeAdded:
+		{
+			// Add the new node to our list
+			NodeInfo* nodeInfo = new NodeInfo();
+			nodeInfo->m_homeId = _notification->GetHomeId();
+			nodeInfo->m_nodeId = _notification->GetNodeId();
+			nodeInfo->m_polled = false;		
+			g_nodes.push_back( nodeInfo );
+			break;
+		}
+
+		case Notification::Type_NodeRemoved:
+		{
+			// Remove the node from our list
+			uint32 const homeId = _notification->GetHomeId();
+			uint8 const nodeId = _notification->GetNodeId();
+			for( list<NodeInfo*>::iterator it = g_nodes.begin(); it != g_nodes.end(); ++it )
+			{
+				NodeInfo* nodeInfo = *it;
+				if( ( nodeInfo->m_homeId == homeId ) && ( nodeInfo->m_nodeId == nodeId ) )
+				{
+					g_nodes.erase( it );
+					break;
+				}
+			}
+			break;
+		}
+
+		case Notification::Type_NodeStatus:
+		{
+			if( NodeInfo* nodeInfo = GetNodeInfo( _notification ) )
+			{
+				// We have received an event from the node, caused by a
+				// basic_set or hail message.
+				// TBD...
+			}
+			break;
+		}
+
+		case Notification::Type_PollingDisabled:
+		{
+			if( NodeInfo* nodeInfo = GetNodeInfo( _notification ) )
+			{
+				nodeInfo->m_polled = false;
+			}
+			break;
+		}
+
+		case Notification::Type_PollingEnabled:
+		{
+			if( NodeInfo* nodeInfo = GetNodeInfo( _notification ) )
+			{
+				nodeInfo->m_polled = true;
+			}
+			break;
+		}
+
+		case Notification::Type_DriverReady:
+		{
+			g_homeId = _notification->GetHomeId();
+			break;
+		}
 	}
-	else
-	{
-		int breakhere = 1;
-	}
+
+	LeaveCriticalSection( &g_criticalSection );
 }
 
 //-----------------------------------------------------------------------------
@@ -68,6 +212,8 @@ void OnNotification
 //-----------------------------------------------------------------------------
 int main( int argc, char* argv[] )
 {
+	InitializeCriticalSection( &g_criticalSection );
+
 	// Create the OpenZWave Manager.
 	// The first argument is the path to the config files (where the manufacturer_specific.xml file is located
 	// The second argument is the path for saved Z-Wave network state and the log file.  If you leave it NULL 
@@ -91,14 +237,33 @@ int main( int argc, char* argv[] )
 		Sleep(10000);
 	}
 
+	//Manager::Get()->BeginAddNode( g_homeId );
+	//Sleep(10000);
+	//Manager::Get()->EndAddNode( g_homeId );
+	//Manager::Get()->BeginRemoveNode( g_homeId );
+	//Sleep(10000);
+	//Manager::Get()->EndRemoveNode( g_homeId );
+
+
 	Sleep(10000);
 	Manager::Get()->WriteConfig( g_homeId );
 	
+	// If we want to access our NodeInfo list, that has been built from all the
+	// notification callbacks we received from the library, we have to do so
+	// from inside a Critical Section.  This is because the callbacks occur on other 
+	// threads, and we cannot risk the list being changed while we are using it.  
+	// We must hold the critical section for as short a time as possible, to avoid
+	// stalling the OpenZWave drivers.
 	while( true )
 	{
 		Sleep(10000);
+
+		EnterCriticalSection( &g_criticalSection );
+		// Do stuff
+		LeaveCriticalSection( &g_criticalSection );
 	}
 
+	DeleteCriticalSection( &g_criticalSection );
 	return 0;
 }
 
