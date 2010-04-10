@@ -31,15 +31,52 @@
 //-----------------------------------------------------------------------------
 
 #include <unistd.h>
+#include <pthread.h>
 #include "Manager.h"
-#include "Driver.h"
 #include "Node.h"
+#include "Group.h"
+#include "Notification.h"
 #include "ValueStore.h"
+#include "Value.h"
+#include "ValueBool.h"
 
 using namespace OpenZWave;
 
-
 static uint32 g_homeId = 0;
+
+typedef struct 
+{
+	uint32			m_homeId;
+	uint8			m_nodeId;
+	bool			m_polled;
+	list<ValueID>	m_values;
+}NodeInfo;
+
+static list<NodeInfo*> g_nodes;
+static pthread_mutex_t g_criticalSection;
+
+//-----------------------------------------------------------------------------
+// <GetNodeInfo>
+// Callback that is triggered when a value, group or node changes
+//-----------------------------------------------------------------------------
+NodeInfo* GetNodeInfo
+(
+	Notification const* _notification
+)
+{
+	uint32 const homeId = _notification->GetHomeId();
+	uint8 const nodeId = _notification->GetNodeId();
+	for( list<NodeInfo*>::iterator it = g_nodes.begin(); it != g_nodes.end(); ++it )
+	{
+		NodeInfo* nodeInfo = *it;
+		if( ( nodeInfo->m_homeId == homeId ) && ( nodeInfo->m_nodeId == nodeId ) )
+		{
+			return nodeInfo;
+		}
+	}
+
+	return NULL;
+}
 
 //-----------------------------------------------------------------------------
 // <OnNotification>
@@ -47,18 +84,127 @@ static uint32 g_homeId = 0;
 //-----------------------------------------------------------------------------
 void OnNotification
 (
-	Manager::Notification const* _notification,
+	Notification const* _notification,
 	void* _context
 )
 {
-	if( _notification->m_type == Manager::NotificationType_DriverReady )
+	// Must do this inside a critical section to avoid conflicts with the main thread
+	pthread_mutex_lock( &g_criticalSection );
+
+	switch( _notification->GetType() )
 	{
-		g_homeId = _notification->m_id.GetHomeId();
+		case Notification::Type_ValueAdded:
+		{
+			if( NodeInfo* nodeInfo = GetNodeInfo( _notification ) )
+			{
+				// Add the new value to our list
+				nodeInfo->m_values.push_back( _notification->GetValueID() );
+			}
+			break;
+		}
+
+		case Notification::Type_ValueRemoved:
+		{
+			if( NodeInfo* nodeInfo = GetNodeInfo( _notification ) )
+			{
+				// Remove the value from out list
+				for( list<ValueID>::iterator it = nodeInfo->m_values.begin(); it != nodeInfo->m_values.end(); ++it )
+				{
+					if( (*it) == _notification->GetValueID() )
+					{
+						nodeInfo->m_values.erase( it );
+						break;
+					}
+				}
+			}
+			break;
+		}
+
+		case Notification::Type_ValueChanged:
+		{
+			if( NodeInfo* nodeInfo = GetNodeInfo( _notification ) )
+			{
+				// One of the node values has changed
+				// TBD...
+			}
+			break;
+		}
+
+		case Notification::Type_Group:
+		{
+			if( NodeInfo* nodeInfo = GetNodeInfo( _notification ) )
+			{
+				// One of the node's association groups has changed
+				// TBD...
+			}
+			break;
+		}
+
+		case Notification::Type_NodeAdded:
+		{
+			// Add the new node to our list
+			NodeInfo* nodeInfo = new NodeInfo();
+			nodeInfo->m_homeId = _notification->GetHomeId();
+			nodeInfo->m_nodeId = _notification->GetNodeId();
+			nodeInfo->m_polled = false;		
+			g_nodes.push_back( nodeInfo );
+			break;
+		}
+
+		case Notification::Type_NodeRemoved:
+		{
+			// Remove the node from our list
+			uint32 const homeId = _notification->GetHomeId();
+			uint8 const nodeId = _notification->GetNodeId();
+			for( list<NodeInfo*>::iterator it = g_nodes.begin(); it != g_nodes.end(); ++it )
+			{
+				NodeInfo* nodeInfo = *it;
+				if( ( nodeInfo->m_homeId == homeId ) && ( nodeInfo->m_nodeId == nodeId ) )
+				{
+					g_nodes.erase( it );
+					break;
+				}
+			}
+			break;
+		}
+
+		case Notification::Type_NodeStatus:
+		{
+			if( NodeInfo* nodeInfo = GetNodeInfo( _notification ) )
+			{
+				// We have received an event from the node, caused by a
+				// basic_set or hail message.
+				// TBD...
+			}
+			break;
+		}
+
+		case Notification::Type_PollingDisabled:
+		{
+			if( NodeInfo* nodeInfo = GetNodeInfo( _notification ) )
+			{
+				nodeInfo->m_polled = false;
+			}
+			break;
+		}
+
+		case Notification::Type_PollingEnabled:
+		{
+			if( NodeInfo* nodeInfo = GetNodeInfo( _notification ) )
+			{
+				nodeInfo->m_polled = true;
+			}
+			break;
+		}
+
+		case Notification::Type_DriverReady:
+		{
+			g_homeId = _notification->GetHomeId();
+			break;
+		}
 	}
-	else
-	{
-		int breakhere = 1;
-	}
+
+	pthread_mutex_unlock( &g_criticalSection );
 }
 //-----------------------------------------------------------------------------
 // <main>
@@ -66,6 +212,12 @@ void OnNotification
 //-----------------------------------------------------------------------------
 int main( int argc, char* argv[] )
 {
+	pthread_mutexattr_t mutexattr;
+
+	pthread_mutexattr_settype( &mutexattr, PTHREAD_MUTEX_RECURSIVE );
+	pthread_mutex_init( &g_criticalSection, &mutexattr );
+	pthread_mutexattr_destroy( &mutexattr );
+
 	// Create the OpenZWave Manager.
 	// The first argument is the path to the config files (where the manufacturer_specific.xml file is located
 	// The second argument is the path for saved Z-Wave network state and the log file.  If you leave it NULL 
@@ -89,11 +241,24 @@ int main( int argc, char* argv[] )
 		sleep(1);
 	}
 
-	sleep(1);
+	//Manager::Get()->BeginAddNode( g_homeId );
+	//sleep(10);
+	//Manager::Get()->EndAddNode( g_homeId );
+	//Manager::Get()->BeginRemoveNode( g_homeId );
+	//sleep(10);
+	//Manager::Get()->EndRemoveNode( g_homeId );
+	sleep(10);
 	Manager::Get()->WriteConfig( g_homeId );
+	
+	while( true )
+	{
+		sleep(10);
+
+		pthread_mutex_lock( &g_criticalSection );
+		// Do stuff
+		pthread_mutex_unlock( &g_criticalSection );
+	}
+
+	pthread_mutex_destroy( &g_criticalSection );
 	return 0;
 }
-
-
-
-
