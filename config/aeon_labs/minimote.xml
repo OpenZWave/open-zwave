@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Product>
+	<!-- COMMAND_CLASS_ASSOCIATION_COMMAND_CONFIGURATION.  This class is supported but is missing from the list reported by the Minimote -->
+	<CommandClass id="155">
+	</CommandClass>
+</Product>
+
