@@ -99,12 +99,13 @@ void CommandClass::ReadXML
 {
 	int32 intVal;
 
+	m_version = 1;
 	if( TIXML_SUCCESS == _ccElement->QueryIntAttribute( "version", &intVal ) )
 	{
-		SetVersion( (uint8)intVal );
+		m_version = (uint8)intVal;
 	}
 
-	uint8 m_instances = 1;
+	m_instances = 1;
 	if( TIXML_SUCCESS == _ccElement->QueryIntAttribute( "instances", &intVal ) )
 	{
 		m_instances = (uint8)intVal;
