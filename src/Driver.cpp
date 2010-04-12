@@ -116,7 +116,7 @@ Driver::~Driver
 	{
 		if( m_nodes[i] )
 		{
-			Notification notification( Notification::Type_NodeAdded );
+			Notification notification( Notification::Type_NodeRemoved );
 			notification.SetHomeAndNodeIds( m_homeId, i );
 			Manager::Get()->NotifyWatchers( &notification ); 
 
@@ -1137,14 +1137,7 @@ void Driver::HandleSerialAPIGetInitDataResponse
 						// This node is new
 						Log::Write( "Found new node %d", nodeId );
 
-						// Create the node
-						m_nodes[nodeId] = new Node( m_homeId, nodeId );
-
-						Notification notification( Notification::Type_NodeAdded );
-						notification.SetHomeAndNodeIds( m_homeId, nodeId );
-						Manager::Get()->NotifyWatchers( &notification ); 
-
-						// Request the node protocol info
+						// Create the node and request its info
 						AddInfoRequest( nodeId );		
 					}
 					else
@@ -1551,14 +1544,8 @@ bool Driver::HandleApplicationUpdateRequest
 		case UPDATE_STATE_NEW_ID_ASSIGNED:
 		{
 			Log::Write( "** Network change **: ID %d was assigned to a new Z-Wave node", nodeId );
-			delete m_nodes[nodeId];
-			m_nodes[nodeId] = new Node( m_homeId, nodeId );
-
-			Notification notification( Notification::Type_NodeAdded );
-			notification.SetHomeAndNodeIds( m_homeId, nodeId );
-			Manager::Get()->NotifyWatchers( &notification ); 
-
-			// Request the node protocol info
+			
+			// Request the node protocol info (also removes any existing node and creates a new one)
 			AddInfoRequest( nodeId );		
 			break;
 		}
@@ -1746,6 +1733,25 @@ void Driver::AddInfoRequest
 	uint8 const _nodeId
 )
 {
+	// Delete any existing node and replace it with a new one
+	if( m_nodes[_nodeId] )
+	{
+		// Remove the original node
+		Notification notification( Notification::Type_NodeRemoved );
+		notification.SetHomeAndNodeIds( m_homeId, _nodeId );
+		Manager::Get()->NotifyWatchers( &notification ); 
+	
+		delete m_nodes[_nodeId];
+	}
+
+	// Add the new node
+	m_nodes[_nodeId] = new Node( m_homeId, _nodeId );
+
+	Notification notification( Notification::Type_NodeAdded );
+	notification.SetHomeAndNodeIds( m_homeId, _nodeId );
+	Manager::Get()->NotifyWatchers( &notification ); 
+
+	// Request the node info
 	m_infoMutex->Lock();
 	m_infoQueue.push_back( _nodeId );
 	UpdateEvents();
