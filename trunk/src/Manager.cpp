@@ -433,6 +433,27 @@ bool Manager::DisablePoll
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
+// <Manager::RefreshNodeInfo>
+// Fetch the data for a node from the Z-Wave network
+//-----------------------------------------------------------------------------
+bool Manager::RefreshNodeInfo
+(
+	uint32 const _homeId,
+	uint8 const _nodeId
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		// Cause the node's data to be obtained from the Z-Wave network
+		// in the same way as if it had just been added.
+		driver->AddInfoRequest( _nodeId );
+		return true;
+	}
+
+	return false;
+}
+
+//-----------------------------------------------------------------------------
 // <Manager::GetValueBool>
 // Get the bool value object with the specified ID
 //-----------------------------------------------------------------------------

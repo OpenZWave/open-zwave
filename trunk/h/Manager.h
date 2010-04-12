@@ -125,6 +125,8 @@ namespace OpenZWave
 	//	Retrieving Node information
 	//-----------------------------------------------------------------------------
 	public:
+		bool RefreshNodeInfo( uint32 const _homeId, uint8 const _nodeId );
+
 		ValueBool* GetValueBool( ValueID const& _id );
 		ValueByte* GetValueByte( ValueID const& _id );
 		ValueDecimal* GetValueDecimal( ValueID const& _id );
