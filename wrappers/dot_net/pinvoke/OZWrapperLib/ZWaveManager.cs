@@ -76,26 +76,40 @@ namespace OpenZWaveWrapper
 		// These unmanaged GetValue methods return pointers to Value Objects, these will have to be turned
 		// into value objects on the managed side, so we'll need managed classes for each of the return types
 		//		
-		[DllImport("OpenZwaveDLL.dll", SetLastError=true)]
-		static private extern IntPtr OPENZWAVEDLL_GetValueBoolPtr(IntPtr ptr, IntPtr valueId);
+        [DllImport("OpenZwaveDLL.dll", SetLastError = true)]
+        static private extern IntPtr OPENZWAVEDLL_GetValueBoolPtr(IntPtr ptr,
+            UInt32 homeId, byte nodeId, ZWaveValueId.ValueGenre genre, byte ccId, byte instance,
+            byte valIdx, ZWaveValueId.ValueType type);
 		
 		[DllImport("OpenZwaveDLL.dll", SetLastError=true)]
-		static private extern IntPtr OPENZWAVEDLL_GetValueBytePtr(IntPtr ptr, IntPtr valueId);
+        static private extern IntPtr OPENZWAVEDLL_GetValueBytePtr(IntPtr ptr,
+            UInt32 homeId, byte nodeId, ZWaveValueId.ValueGenre genre, byte ccId, byte instance,
+            byte valIdx, ZWaveValueId.ValueType type);
 		
 		[DllImport("OpenZwaveDLL.dll", SetLastError=true)]
-		static private extern IntPtr OPENZWAVEDLL_GetValueDecimalPtr(IntPtr ptr, IntPtr valueId);
+        static private extern IntPtr OPENZWAVEDLL_GetValueDecimalPtr(IntPtr ptr,
+            UInt32 homeId, byte nodeId, ZWaveValueId.ValueGenre genre, byte ccId, byte instance,
+            byte valIdx, ZWaveValueId.ValueType type);
 		
 		[DllImport("OpenZwaveDLL.dll", SetLastError=true)]
-		static private extern IntPtr OPENZWAVEDLL_GetValueIntPtr(IntPtr ptr, IntPtr valueId);
+        static private extern IntPtr OPENZWAVEDLL_GetValueIntPtr(IntPtr ptr,
+            UInt32 homeId, byte nodeId, ZWaveValueId.ValueGenre genre, byte ccId, byte instance,
+            byte valIdx, ZWaveValueId.ValueType type);
 		
 		[DllImport("OpenZwaveDLL.dll", SetLastError=true)]
-		static private extern IntPtr OPENZWAVEDLL_GetValueListPtr(IntPtr ptr, IntPtr valueId);
+        static private extern IntPtr OPENZWAVEDLL_GetValueListPtr(IntPtr ptr,
+            UInt32 homeId, byte nodeId, ZWaveValueId.ValueGenre genre, byte ccId, byte instance,
+            byte valIdx, ZWaveValueId.ValueType type);
 		
 		[DllImport("OpenZwaveDLL.dll", SetLastError=true)]
-		static private extern IntPtr OPENZWAVEDLL_GetValueShortPtr(IntPtr ptr, IntPtr valueId);
+        static private extern IntPtr OPENZWAVEDLL_GetValueShortPtr(IntPtr ptr,
+            UInt32 homeId, byte nodeId, ZWaveValueId.ValueGenre genre, byte ccId, byte instance,
+            byte valIdx, ZWaveValueId.ValueType type);
 		
 		[DllImport("OpenZwaveDLL.dll", SetLastError=true)]
-		static private extern IntPtr OPENZWAVEDLL_GetValueStringPtr(IntPtr ptr, IntPtr valueId);		
+        static private extern IntPtr OPENZWAVEDLL_GetValueStringPtr(IntPtr ptr,
+            UInt32 homeId, byte nodeId, ZWaveValueId.ValueGenre genre, byte ccId, byte instance,
+            byte valIdx, ZWaveValueId.ValueType type);
 		
 		[DllImport("OpenZwaveDLL.dll", SetLastError=true)]
 		[return : MarshalAs(UnmanagedType.Bool)] private static extern bool OPENZWAVEDLL_AddWatcher(IntPtr ptr,
@@ -231,39 +245,54 @@ namespace OpenZWaveWrapper
 
 		//TODO: For all of these "GetValue*" methods return an object of the correct
 		//      type, not a generic pointer
-		public IntPtr GetValueBool(IntPtr valueId)
+		public IntPtr GetValueBool(ZWaveValueId.VALUEIDSTRUCT valueId)
 		{
-			return OPENZWAVEDLL_GetValueBoolPtr(this.m_pManager, valueId);
+			return OPENZWAVEDLL_GetValueBoolPtr(this.m_pManager, 
+                valueId.homeId, valueId.nodeId, valueId.genre, valueId.commandClassId,
+                valueId.instance, valueId.valueIndex, valueId.type);
 		}
 
-		public IntPtr GetValueByte(IntPtr valueId)
+        public IntPtr GetValueByte(ZWaveValueId.VALUEIDSTRUCT valueId)
 		{
-			return OPENZWAVEDLL_GetValueBytePtr(this.m_pManager, valueId);
+			return OPENZWAVEDLL_GetValueBytePtr(this.m_pManager,
+                valueId.homeId, valueId.nodeId, valueId.genre, valueId.commandClassId,
+                valueId.instance, valueId.valueIndex, valueId.type);
+
 		}
 
-		public IntPtr GetValueDecimal(IntPtr valueId)
+        public IntPtr GetValueDecimal(ZWaveValueId.VALUEIDSTRUCT valueId)
 		{
-			return OPENZWAVEDLL_GetValueDecimalPtr(this.m_pManager, valueId);
+            return OPENZWAVEDLL_GetValueDecimalPtr(this.m_pManager,
+                valueId.homeId, valueId.nodeId, valueId.genre, valueId.commandClassId,
+                valueId.instance, valueId.valueIndex, valueId.type);
 		}
 
-		public IntPtr GetValueInt(IntPtr valueId)
+        public IntPtr GetValueInt(ZWaveValueId.VALUEIDSTRUCT valueId)
 		{
-			return OPENZWAVEDLL_GetValueIntPtr(this.m_pManager, valueId);
+            return OPENZWAVEDLL_GetValueIntPtr(this.m_pManager,
+                valueId.homeId, valueId.nodeId, valueId.genre, valueId.commandClassId,
+                valueId.instance, valueId.valueIndex, valueId.type);
 		}
 
-		public IntPtr GetValueList(IntPtr valueId)
+        public IntPtr GetValueList(ZWaveValueId.VALUEIDSTRUCT valueId)
 		{
-			return OPENZWAVEDLL_GetValueListPtr(this.m_pManager, valueId);
+            return OPENZWAVEDLL_GetValueListPtr(this.m_pManager,
+                valueId.homeId, valueId.nodeId, valueId.genre, valueId.commandClassId,
+                valueId.instance, valueId.valueIndex, valueId.type);
 		}
 
-		public IntPtr GetValueShort(IntPtr valueId)
+        public IntPtr GetValueShort(ZWaveValueId.VALUEIDSTRUCT valueId)
 		{
-			return OPENZWAVEDLL_GetValueShortPtr(this.m_pManager, valueId);
+            return OPENZWAVEDLL_GetValueShortPtr(this.m_pManager,
+                valueId.homeId, valueId.nodeId, valueId.genre, valueId.commandClassId,
+                valueId.instance, valueId.valueIndex, valueId.type);
 		}
 
-		public IntPtr GetValueString(IntPtr valueId)
+        public IntPtr GetValueString(ZWaveValueId.VALUEIDSTRUCT valueId)
 		{
-			return OPENZWAVEDLL_GetValueStringPtr(this.m_pManager, valueId);
+            return OPENZWAVEDLL_GetValueStringPtr(this.m_pManager,
+                valueId.homeId, valueId.nodeId, valueId.genre, valueId.commandClassId,
+                valueId.instance, valueId.valueIndex, valueId.type);
 		}
 		
 		public void ResetController(UInt32 homeId)

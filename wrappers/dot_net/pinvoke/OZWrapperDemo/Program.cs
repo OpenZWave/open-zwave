@@ -72,7 +72,7 @@ namespace OZWrapperDemo
             String strLog =
                       "Notification type: " + notification.Type.ToString() +
                       "  Node: " + notification.NodeId.ToString() +
-                      "  HomeId: " + notification.HomeId.ToString("X8") +
+                      "  HomeId: " + valueId.HomeId.ToString("X8") +
                       "  ValuIdType: " + valueId.Type.ToString();
             if (notification.Type == ZWaveNotification.NotificationType.Type_DriverReady)
             {
@@ -83,15 +83,15 @@ namespace OZWrapperDemo
             switch (valueId.Type)
             {
                 case ZWaveValueId.ValueType.ValueType_Bool:
-                    iptr = manager.GetValueBool(valueId.ValueIdRef);
+                    iptr = manager.GetValueBool(valueId.ValueID);
                     if (iptr != IntPtr.Zero)
                     {
                         ZWaveValueBool zwBool = new ZWaveValueBool(iptr);
-                        strLog += ("\n  Value BoolPtr: " + zwBool.GetAsString());
+                        strLog += ("\n  Value Bool: " + zwBool.GetAsString());
                     }
                     break;
                 case ZWaveValueId.ValueType.ValueType_String:
-                    iptr = manager.GetValueString(valueId.ValueIdRef);
+                    iptr = manager.GetValueString(valueId.ValueID);
                     if (iptr != IntPtr.Zero)
                     {
                         ZWaveValueString zwString = new ZWaveValueString(iptr);
@@ -99,7 +99,7 @@ namespace OZWrapperDemo
                     }
                     break;
                 case ZWaveValueId.ValueType.ValueType_Byte:
-                    iptr = manager.GetValueByte(valueId.ValueIdRef);
+                    iptr = manager.GetValueByte(valueId.ValueID);
                     if (iptr != IntPtr.Zero)
                     {
                         ZWaveValueByte zwByte = new ZWaveValueByte(iptr);
@@ -107,7 +107,7 @@ namespace OZWrapperDemo
                     }
                     break;
                 case ZWaveValueId.ValueType.ValueType_Int:
-                    iptr = manager.GetValueInt(valueId.ValueIdRef);
+                    iptr = manager.GetValueInt(valueId.ValueID);
                     if (iptr != IntPtr.Zero)
                     {
                         ZWaveValueInt zwInt = new ZWaveValueInt(iptr);
@@ -115,7 +115,7 @@ namespace OZWrapperDemo
                     }
                     break;
                 case ZWaveValueId.ValueType.ValueType_Short:
-                    iptr = manager.GetValueShort(valueId.ValueIdRef);
+                    iptr = manager.GetValueShort(valueId.ValueID);
                     if (iptr != IntPtr.Zero)
                     {
                         ZWaveValueShort zwShort = new ZWaveValueShort(iptr);
@@ -123,7 +123,7 @@ namespace OZWrapperDemo
                     }
                     break;
                 case ZWaveValueId.ValueType.ValueType_Decimal:
-                    iptr = manager.GetValueDecimal(valueId.ValueIdRef);
+                    iptr = manager.GetValueDecimal(valueId.ValueID);
                     if (iptr != IntPtr.Zero)
                     {
                         ZWaveValueDecimal zwDec = new ZWaveValueDecimal(iptr);
@@ -131,7 +131,7 @@ namespace OZWrapperDemo
                     }
                     break;
                 case ZWaveValueId.ValueType.ValueType_List:
-                    iptr = manager.GetValueList(valueId.ValueIdRef);
+                    iptr = manager.GetValueList(valueId.ValueID);
                     if (iptr != IntPtr.Zero)
                     {
                         ZWaveValueList zwList = new ZWaveValueList(iptr);

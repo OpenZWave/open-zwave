@@ -138,39 +138,53 @@ OPENZWAVEDLL_API void WINAPI OPENZWAVEDLL_NotifyWatchers(OpenZWave::Manager* pMa
 	pManager->NotifyWatchers(pNotification);
 }
 
-OPENZWAVEDLL_API OpenZWave::ValueBool* WINAPI OPENZWAVEDLL_GetValueBoolPtr(OpenZWave::Manager* pManager, OpenZWave::ValueID const& valueId)
+OPENZWAVEDLL_API OpenZWave::ValueBool* WINAPI OPENZWAVEDLL_GetValueBoolPtr(OpenZWave::Manager* pManager,
+				uint32 homeId, uint8 nodeId, OpenZWave::ValueID::ValueGenre genre, uint8 ccId, uint8 instance, uint8 valIdx, OpenZWave::ValueID::ValueType type)
 {
-	return pManager->GetValueBool(valueId);
+	OpenZWave::ValueID vid(homeId, nodeId, genre, ccId, instance, valIdx, type);
+	return pManager->GetValueBool(vid);
 }
 
-OPENZWAVEDLL_API OpenZWave::ValueByte* WINAPI OPENZWAVEDLL_GetValueBytePtr(OpenZWave::Manager* pManager, OpenZWave::ValueID const& valueId)
+OPENZWAVEDLL_API OpenZWave::ValueByte* WINAPI OPENZWAVEDLL_GetValueBytePtr(OpenZWave::Manager* pManager,
+				uint32 homeId, uint8 nodeId, OpenZWave::ValueID::ValueGenre genre, uint8 ccId, uint8 instance, uint8 valIdx, OpenZWave::ValueID::ValueType type)
 {
-	return pManager->GetValueByte(valueId);
+	OpenZWave::ValueID vid(homeId, nodeId, genre, ccId, instance, valIdx, type);
+	return pManager->GetValueByte(vid);
 }
 
-OPENZWAVEDLL_API OpenZWave::ValueDecimal* WINAPI OPENZWAVEDLL_GetValueDecimalPtr(OpenZWave::Manager* pManager, OpenZWave::ValueID const& valueId)
+OPENZWAVEDLL_API OpenZWave::ValueDecimal* WINAPI OPENZWAVEDLL_GetValueDecimalPtr(OpenZWave::Manager* pManager,
+				uint32 homeId, uint8 nodeId, OpenZWave::ValueID::ValueGenre genre, uint8 ccId, uint8 instance, uint8 valIdx, OpenZWave::ValueID::ValueType type)
 {
-	return pManager->GetValueDecimal(valueId);
+	OpenZWave::ValueID vid(homeId, nodeId, genre, ccId, instance, valIdx, type);
+	return pManager->GetValueDecimal(vid);
 }
 
-OPENZWAVEDLL_API OpenZWave::ValueInt* WINAPI OPENZWAVEDLL_GetValueIntPtr(OpenZWave::Manager* pManager, OpenZWave::ValueID const& valueId)
+OPENZWAVEDLL_API OpenZWave::ValueInt* WINAPI OPENZWAVEDLL_GetValueIntPtr(OpenZWave::Manager* pManager,
+				uint32 homeId, uint8 nodeId, OpenZWave::ValueID::ValueGenre genre, uint8 ccId, uint8 instance, uint8 valIdx, OpenZWave::ValueID::ValueType type)
 {
-	return pManager->GetValueInt(valueId);
+	OpenZWave::ValueID vid(homeId, nodeId, genre, ccId, instance, valIdx, type);
+	return pManager->GetValueInt(vid);
 }
 
-OPENZWAVEDLL_API OpenZWave::ValueList* WINAPI OPENZWAVEDLL_GetValueListPtr(OpenZWave::Manager* pManager, OpenZWave::ValueID const& valueId)
+OPENZWAVEDLL_API OpenZWave::ValueList* WINAPI OPENZWAVEDLL_GetValueListPtr(OpenZWave::Manager* pManager,
+				uint32 homeId, uint8 nodeId, OpenZWave::ValueID::ValueGenre genre, uint8 ccId, uint8 instance, uint8 valIdx, OpenZWave::ValueID::ValueType type)
 {
-	return pManager->GetValueList(valueId);
+	OpenZWave::ValueID vid(homeId, nodeId, genre, ccId, instance, valIdx, type);
+	return pManager->GetValueList(vid);
 }
 
-OPENZWAVEDLL_API OpenZWave::ValueShort* WINAPI OPENZWAVEDLL_GetValueShortPtr(OpenZWave::Manager* pManager, OpenZWave::ValueID const& valueId)
+OPENZWAVEDLL_API OpenZWave::ValueShort* WINAPI OPENZWAVEDLL_GetValueShortPtr(OpenZWave::Manager* pManager,
+				uint32 homeId, uint8 nodeId, OpenZWave::ValueID::ValueGenre genre, uint8 ccId, uint8 instance, uint8 valIdx, OpenZWave::ValueID::ValueType type)
 {
-	return pManager->GetValueShort(valueId);
+	OpenZWave::ValueID vid(homeId, nodeId, genre, ccId, instance, valIdx, type);
+	return pManager->GetValueShort(vid);
 }
 
-OPENZWAVEDLL_API OpenZWave::ValueString* WINAPI OPENZWAVEDLL_GetValueStringPtr(OpenZWave::Manager* pManager, OpenZWave::ValueID const& valueId)
+OPENZWAVEDLL_API OpenZWave::ValueString* WINAPI OPENZWAVEDLL_GetValueStringPtr(OpenZWave::Manager* pManager, 
+				uint32 homeId, uint8 nodeId, OpenZWave::ValueID::ValueGenre genre, uint8 ccId, uint8 instance, uint8 valIdx, OpenZWave::ValueID::ValueType type)
 {
-	return pManager->GetValueString(valueId);
+	OpenZWave::ValueID vid(homeId, nodeId, genre, ccId, instance, valIdx, type);
+	return pManager->GetValueString(vid);
 }
 
 OPENZWAVEDLL_API void WINAPI OPENZWAVEDLL_ResetController(OpenZWave::Manager* pManager, uint32 homeId)
