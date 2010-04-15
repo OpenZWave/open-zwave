@@ -57,13 +57,6 @@ extern "C" OPENZWAVEDLL_API BOOL WINAPI OPENZWAVEDLL_IsStaticUpdateController(Op
 extern "C" OPENZWAVEDLL_API BOOL WINAPI OPENZWAVEDLL_AddWatcher(OpenZWave::Manager* pManager, OpenZWave::Manager::pfnOnNotification_t notifyCB, LPVOID context);
 extern "C" OPENZWAVEDLL_API BOOL WINAPI OPENZWAVEDLL_RemoveWatcher(OpenZWave::Manager* pManager, OpenZWave::Manager::pfnOnNotification_t notifyCB, LPVOID context);
 extern "C" OPENZWAVEDLL_API void WINAPI OPENZWAVEDLL_NotifyWatchers(OpenZWave::Manager* pManager, OpenZWave::Notification* pNotification);
-extern "C" OPENZWAVEDLL_API OpenZWave::ValueBool* WINAPI OPENZWAVEDLL_GetValueBoolPtr(OpenZWave::Manager* pManager, OpenZWave::ValueID const& valueId);
-extern "C" OPENZWAVEDLL_API OpenZWave::ValueByte* WINAPI OPENZWAVEDLL_GetValueBytePtr(OpenZWave::Manager* pManager, OpenZWave::ValueID const& valueId);
-extern "C" OPENZWAVEDLL_API OpenZWave::ValueDecimal* WINAPI OPENZWAVEDLL_GetValueDecimalPtr(OpenZWave::Manager* pManager,  OpenZWave::ValueID const& valueId);
-extern "C" OPENZWAVEDLL_API OpenZWave::ValueInt* WINAPI OPENZWAVEDLL_GetValueIntPtr(OpenZWave::Manager* pManager,  OpenZWave::ValueID const& valueId);
-extern "C" OPENZWAVEDLL_API OpenZWave::ValueList* WINAPI OPENZWAVEDLL_GetValueListPtr(OpenZWave::Manager* pManager,  OpenZWave::ValueID const& valueId);
-extern "C" OPENZWAVEDLL_API OpenZWave::ValueShort* WINAPI OPENZWAVEDLL_GetValueShortPtr(OpenZWave::Manager* pManager,  OpenZWave::ValueID const& valueId);
-extern "C" OPENZWAVEDLL_API OpenZWave::ValueString* WINAPI OPENZWAVEDLL_GetValueStringPtr(OpenZWave::Manager* pManager,  OpenZWave::ValueID const& valueId);
 extern "C" OPENZWAVEDLL_API void WINAPI OPENZWAVEDLL_ResetController(OpenZWave::Manager* pManager, uint32 homeId);
 extern "C" OPENZWAVEDLL_API void WINAPI OPENZWAVEDLL_SoftReset(OpenZWave::Manager* pManager, uint32 homeId);
 extern "C" OPENZWAVEDLL_API void WINAPI OPENZWAVEDLL_RequestNodeNeighborUpdate(OpenZWave::Manager* pManager, uint32 homeId, uint8 nodeId);
@@ -79,6 +72,31 @@ extern "C" OPENZWAVEDLL_API void WINAPI OPENZWAVEDLL_RequestNetworkUpdate(OpenZW
 extern "C" OPENZWAVEDLL_API void WINAPI OPENZWAVEDLL_ControllerChange(OpenZWave::Manager* pManager, uint32 homeId);
 //extern "C" OPENZWAVEDLL_API void WINAPI OPENZWAVEDLL_ReadMemory(OpenZWave::Manager* pManager, uint32 homeId, uint16 offset);
 //extern "C" OPENZWAVEDLL_API void WINAPI OPENZWAVEDLL_SetConfiguration(OpenZWave::Manager* pManager, uint32 homeId, uint8 nodeId, uint8 parameter, uint32 value);
+//typedef struct ValIdStruct
+//{
+//	uint32 homeId;
+//	uint8 nodeId;
+//	OpenZWave::ValueID::ValueGenre genre;
+//	uint8 commandClassId;
+//	uint8 instance;
+//	uint8 valueIndex;
+//	OpenZWave::ValueID::ValueType type;
+//} VALID;
+
+extern "C" OPENZWAVEDLL_API OpenZWave::ValueBool* WINAPI OPENZWAVEDLL_GetValueBoolPtr(OpenZWave::Manager* pManager,
+			uint32 homeId, uint8 nodeId, OpenZWave::ValueID::ValueGenre genre, uint8 ccId, uint8 instance, uint8 valIdx, OpenZWave::ValueID::ValueType type);
+extern "C" OPENZWAVEDLL_API OpenZWave::ValueByte* WINAPI OPENZWAVEDLL_GetValueBytePtr(OpenZWave::Manager* pManager,
+			uint32 homeId, uint8 nodeId, OpenZWave::ValueID::ValueGenre genre, uint8 ccId, uint8 instance, uint8 valIdx, OpenZWave::ValueID::ValueType type);
+extern "C" OPENZWAVEDLL_API OpenZWave::ValueDecimal* WINAPI OPENZWAVEDLL_GetValueDecimalPtr(OpenZWave::Manager* pManager,
+			uint32 homeId, uint8 nodeId, OpenZWave::ValueID::ValueGenre genre, uint8 ccId, uint8 instance, uint8 valIdx, OpenZWave::ValueID::ValueType type);
+extern "C" OPENZWAVEDLL_API OpenZWave::ValueInt* WINAPI OPENZWAVEDLL_GetValueIntPtr(OpenZWave::Manager* pManager,
+			uint32 homeId, uint8 nodeId, OpenZWave::ValueID::ValueGenre genre, uint8 ccId, uint8 instance, uint8 valIdx, OpenZWave::ValueID::ValueType type);
+extern "C" OPENZWAVEDLL_API OpenZWave::ValueList* WINAPI OPENZWAVEDLL_GetValueListPtr(OpenZWave::Manager* pManager,
+			uint32 homeId, uint8 nodeId, OpenZWave::ValueID::ValueGenre genre, uint8 ccId, uint8 instance, uint8 valIdx, OpenZWave::ValueID::ValueType type);
+extern "C" OPENZWAVEDLL_API OpenZWave::ValueShort* WINAPI OPENZWAVEDLL_GetValueShortPtr(OpenZWave::Manager* pManager,
+			uint32 homeId, uint8 nodeId, OpenZWave::ValueID::ValueGenre genre, uint8 ccId, uint8 instance, uint8 valIdx, OpenZWave::ValueID::ValueType type);
+extern "C" OPENZWAVEDLL_API OpenZWave::ValueString* WINAPI OPENZWAVEDLL_GetValueStringPtr(OpenZWave::Manager* pManager,
+			uint32 homeId, uint8 nodeId, OpenZWave::ValueID::ValueGenre genre, uint8 ccId, uint8 instance, uint8 valIdx, OpenZWave::ValueID::ValueType type);
 
 // OpenZWave Notification methods
 //
