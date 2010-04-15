@@ -46,7 +46,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OZWrapperLib">
+    <Reference Include="OZWrapperLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\OZWrapperLib\vs2008\bin\Debug\OZWrapperLib.dll</HintPath>
     </Reference>
     <Reference Include="System" />

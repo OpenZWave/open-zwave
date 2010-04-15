@@ -63,7 +63,6 @@ namespace OpenZWaveWrapper
 		#endregion	PInvokes
 		
 		#region members
-		private IntPtr m_pValueId;
 		
 		public enum ValueType : byte
 		{
@@ -85,7 +84,20 @@ namespace OpenZWaveWrapper
 			ValueGenre_System,			// Values of significance only to users who understand the Z-Wave protocol 
 			ValueGenre_Count
 		};
-		
+
+        public struct VALUEIDSTRUCT
+        {
+            public UInt32 homeId;
+            public byte nodeId;
+            public ValueGenre genre;
+            public byte commandClassId;
+            public byte instance;
+            public byte valueIndex;
+            public ValueType type;
+        };
+
+        private VALUEIDSTRUCT m_valueId;
+
 		#endregion
 		
 		private ZWaveValueId() {} // not implemented
@@ -93,52 +105,70 @@ namespace OpenZWaveWrapper
 		public ZWaveValueId(IntPtr pValueId)
 		{
 			//TODO: throw exception or return return null if pNode is null
-			if (IntPtr.Zero != pValueId)
-			{
-				m_pValueId = pValueId;
-			}
+            if (IntPtr.Zero != pValueId)
+            {
+                // If this is too slow might have to extract the fields
+                // here instead of calling the P/Invoke.
+                m_valueId.homeId = OPENZWAVEDLL_GetHomeId(pValueId);
+                m_valueId.nodeId = OPENZWAVEDLL_GetNodeId(pValueId);
+                m_valueId.genre = OPENZWAVEDLL_GetGenre(pValueId);
+                m_valueId.commandClassId = OPENZWAVEDLL_GetCommandClassId(pValueId);
+                m_valueId.instance = OPENZWAVEDLL_GetInstance(pValueId);
+                m_valueId.valueIndex = OPENZWAVEDLL_GetIndex(pValueId);
+                m_valueId.type = OPENZWAVEDLL_GetType(pValueId);
+            }
+            else
+            {
+                m_valueId.homeId = 0;
+                m_valueId.nodeId = 0;
+                m_valueId.genre = ValueGenre.ValueGenre_All;
+                m_valueId.commandClassId = 0;
+                m_valueId.instance = 0;
+                m_valueId.valueIndex = 0;
+                m_valueId.type = ValueType.ValueType_Bool;
+            }
 		}
 		
-		public IntPtr ValueIdRef
-		{
-			get { return m_pValueId; }
-		}
+        public VALUEIDSTRUCT ValueID
+        {
+            get { return m_valueId; }
+        }
 		
 		#region Wrapper Methods
 		
 		public UInt32 HomeId
 		{
-			get { return OPENZWAVEDLL_GetHomeId(this.m_pValueId); }
+			get { return m_valueId.homeId; }
 		}
 		
 		public byte NodeId
 		{
-			get { return OPENZWAVEDLL_GetNodeId(this.m_pValueId); }
+			get { return m_valueId.nodeId; }
 		}
 		
 		public ValueGenre Genre
 		{
-			get { return OPENZWAVEDLL_GetGenre(this.m_pValueId); }
+			get { return m_valueId.genre; }
 		}
 		
 		public byte CommandClassId
 		{
-			get { return OPENZWAVEDLL_GetCommandClassId(this.m_pValueId); }
+			get { return m_valueId.commandClassId; }
 		}
 		
 		public byte Instance
 		{
-			get { return OPENZWAVEDLL_GetInstance(this.m_pValueId); }
+			get { return m_valueId.instance; }
 		}
 		
 		public byte Index
 		{
-			get { return OPENZWAVEDLL_GetIndex(this.m_pValueId); }
+			get { return m_valueId.valueIndex; }
 		}
 		
 		public ValueType Type
 		{
-			get { return OPENZWAVEDLL_GetType(this.m_pValueId); }
+			get { return m_valueId.type; }
 		}
 		
 		#endregion Wrapper Methods
