@@ -73,6 +73,7 @@ namespace OpenZWave
 		Thread*					m_driverThread;	// Thread for creating and managing the driver worker threads
 		Event*					m_exitEvent;		// Event that will be signalled when the threads should exit
 		bool					m_exit;
+		bool					m_init;
 
 	//-----------------------------------------------------------------------------
 	//	Configuration

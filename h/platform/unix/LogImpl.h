@@ -35,6 +35,8 @@
 
 namespace OpenZWave
 {
+	class Mutex;
+
 	class LogImpl
 	{
 	private:
@@ -45,6 +47,7 @@ namespace OpenZWave
 
 		void Write( char* _format, va_list _args );
 
+		Mutex* m_logMutex;
 		string m_filename;
 	};
 
