@@ -71,14 +71,15 @@ Driver::Driver
 	m_expectedReply( 0 ),
 	m_expectedCallbackId( 0 ),
 	m_exit( false ),
-	m_driverThread( new Thread() ),
+	m_init( false ),
+	m_driverThread( new Thread( "driver" ) ),
 	m_exitEvent( new Event() ),	
 	m_serialPort( new SerialPort() ),
 	m_serialMutex( new Mutex() ),
-	m_sendThread( new Thread() ),
+	m_sendThread( new Thread( "send" ) ),
 	m_sendMutex( new Mutex() ),
 	m_sendEvent( new Event() ),
-	m_pollThread( new Thread() ),	
+	m_pollThread( new Thread( "poll" ) ),
 	m_pollMutex( new Mutex() ),
 	m_infoMutex( new Mutex() ),
 	m_capabilities( 0 )
@@ -95,11 +96,21 @@ Driver::~Driver
 (
 )
 {
+	// The order of the statements below has been achieved by mitigating freed memory
+  	//references using a memory allocator checker. Do not rearrange unless you are
+  	//certain memory won't be referenced out of order. --Greg Satz, April 2010
+  	
+	m_exit = true;
 	m_exitEvent->Set();
+	m_sendEvent->Set();
+	m_serialPort->Close();
+	m_pollThread->Stop();
+	m_sendThread->Stop();
+	m_driverThread->Stop();
 
-	delete m_pollThread;
-	delete m_sendThread;
 	delete m_driverThread;
+	delete m_sendThread;
+	delete m_pollThread;
 
 	delete m_serialPort;
 	delete m_serialMutex;
@@ -1109,8 +1120,7 @@ void Driver::HandleSerialAPIGetInitDataResponse
 {
 	int32 i;
 
-	static bool s_firstTime = true;
-	if( s_firstTime )
+	if( !m_init )
 	{
 		// Mark the driver as ready (we have to do this first or 
 		// all the code handling notifications will go awry).
@@ -1142,7 +1152,7 @@ void Driver::HandleSerialAPIGetInitDataResponse
 					}
 					else
 					{
-						if( s_firstTime )
+						if( !m_init )
 						{
 							// The node was read in from the config, so we 
 							// only need to get its current state
@@ -1167,7 +1177,7 @@ void Driver::HandleSerialAPIGetInitDataResponse
 		}
 	}
 
-	s_firstTime = false;
+	m_init = true;
 }
 
 //-----------------------------------------------------------------------------

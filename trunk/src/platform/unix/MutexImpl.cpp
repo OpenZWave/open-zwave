@@ -74,14 +74,22 @@ bool MutexImpl::Lock
 		// We will wait for the lock
 	  	err = pthread_mutex_lock( &m_criticalSection );
 		if( err != 0 )
-			Log::Write( "mutex_lock err=%d", err );
+		{
+			fprintf( stderr, "mutex_lock mutex %08x err=%d",
+				 &m_criticalSection, err );
+			fflush( stderr );
+		}
 		return true;
 	}
 
 	// Returns immediately, even if the lock was not available.
 	err = pthread_mutex_trylock( &m_criticalSection );
 	if( err != 0 )
-		Log::Write("mutex_trylock err=%d", err);
+	{
+		fprintf( stderr, "mutex_trylock mutex %08x err=%d",
+			 &m_criticalSection, err );
+		fflush( stderr );
+	}
 	return( err == 0 );
 }
 
@@ -97,5 +105,9 @@ void MutexImpl::Release
 
 	err = pthread_mutex_unlock( &m_criticalSection );
 	if( err != 0 )
-		Log::Write("mutex_unlock err=%d", err);
+	{
+		fprintf( stderr, "mutex_unlock mutex %08x err=%d",
+			 &m_criticalSection, err );
+		fflush( stderr );
+	}
 }

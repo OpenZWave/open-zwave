@@ -39,8 +39,9 @@ using namespace OpenZWave;
 //-----------------------------------------------------------------------------
 Thread::Thread
 (
+	string const& _tname
 ):
-	m_pImpl( new ThreadImpl() )
+	m_pImpl( new ThreadImpl( _tname ))
 {
 }
 

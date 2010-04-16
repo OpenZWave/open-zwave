@@ -28,6 +28,7 @@
 #ifndef _MutexImpl_H
 #define _MutexImpl_H
 
+#include <stdio.h>
 #include <pthread.h>
 
 namespace OpenZWave

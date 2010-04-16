@@ -36,9 +36,11 @@ using namespace OpenZWave;
 //-----------------------------------------------------------------------------
 ThreadImpl::ThreadImpl
 (
+	string const& _tname
 ):
 	m_hThread( NULL ),
-	m_bIsRunning( false )
+	m_bIsRunning( false ),
+	m_name( _tname )
 {
 }
 
@@ -74,6 +76,8 @@ bool ThreadImpl::Start
 	m_pContext = _pContext;
 
 	pthread_create ( &m_hThread, &ta, ThreadImpl::ThreadProc, this );
+	fprintf(stderr, "thread %s starting %08x\n", m_name.c_str(), m_hThread);
+	fflush(stderr);
 
 	pthread_attr_destroy ( &ta );
 	return true;
@@ -87,12 +91,16 @@ bool ThreadImpl::Stop
 (
 )
 {
+	fprintf(stderr, "thread %s stopping %08x running %d\n", m_name.c_str(), m_hThread,
+		m_bIsRunning );
+	fflush(stderr);
 	if( !m_bIsRunning )
 	{
 		return false;
 	}
 
 	pthread_cancel( m_hThread );
+	pthread_yield();
 	m_hThread = NULL;
 	m_bIsRunning = false;
 
@@ -125,5 +133,7 @@ void ThreadImpl::Run
 {
 	m_bIsRunning = true;
 	m_pfnThreadProc( m_pContext );
+	fprintf(stderr, "thread %s finished %08x\n", m_name.c_str(), m_hThread);
+	fflush(stderr);
 	m_bIsRunning = false;
 }

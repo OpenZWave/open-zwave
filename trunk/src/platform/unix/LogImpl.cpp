@@ -27,6 +27,7 @@
 
 #include <string>
 #include "Defs.h"
+#include "Mutex.h"
 #include "LogImpl.h"
 
 using namespace OpenZWave;
@@ -39,8 +40,10 @@ LogImpl::LogImpl
 (
  string const& _filename
 ):
+	m_logMutex( new Mutex() ),
 	m_filename( _filename )
 {
+	m_logMutex->Lock();
 	FILE* pFile = fopen( m_filename.c_str(), "w" );
 	if ( pFile != NULL )
 	{
@@ -53,6 +56,8 @@ LogImpl::LogImpl
 			 tm->tm_hour, tm->tm_min, tm->tm_sec );
 		fclose( pFile );
 	}
+	setlinebuf(stdout);	// To prevent buffering and lock contention issues
+	m_logMutex->Release();
 }
 
 //-----------------------------------------------------------------------------
@@ -63,6 +68,7 @@ LogImpl::~LogImpl
 (
 )
 {
+	delete m_logMutex;
 }
 
 //-----------------------------------------------------------------------------
@@ -85,6 +91,7 @@ void LogImpl::Write
 		  tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday,
 		  tm->tm_hour, tm->tm_min, tm->tm_sec, tv.tv_usec / 1000 );
 
+	m_logMutex->Lock();
 	FILE* pFile = fopen( m_filename.c_str(), "a" );
 	if ( pFile != NULL )
 	{
@@ -98,11 +105,13 @@ void LogImpl::Write
 			va_copy( saveargs, _args );
 			vprintf( _format, _args );
 			vfprintf( pFile, _format, saveargs );
+			va_end( saveargs );
 		}
 
-		printf( "\n" );
-		fprintf( pFile, "\n" ); 
+		putchar( '\n' );
+		putc( '\n', pFile ); 
 
 		fclose( pFile );
 	}
+	m_logMutex->Release();
 }
