@@ -28,6 +28,10 @@
 #include "Thread.h"
 #include "ThreadImpl.h"
 
+#ifdef DARWIN
+#define pthread_yield pthread_yield_np
+#endif
+
 using namespace OpenZWave;
 
 //-----------------------------------------------------------------------------
