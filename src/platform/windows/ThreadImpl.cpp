@@ -37,9 +37,11 @@ using namespace OpenZWave;
 //-----------------------------------------------------------------------------
 ThreadImpl::ThreadImpl
 (
+	string const& _tname
 ):
 	m_hThread( INVALID_HANDLE_VALUE ),
-	m_bIsRunning( false )
+	m_bIsRunning( false ),
+	m_name( _tname )
 {
 	// Create an event allowing us to tell the ZWave Thread to exit
 	m_hExitEvent = CreateEvent( NULL, TRUE, FALSE, NULL );

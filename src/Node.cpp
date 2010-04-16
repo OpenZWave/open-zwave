@@ -103,6 +103,7 @@ Node::~Node
 
 	// Delete the values
 	delete m_values;
+	delete m_valuesMutex;
 }
 
 //-----------------------------------------------------------------------------

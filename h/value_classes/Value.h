@@ -62,7 +62,7 @@ namespace OpenZWave
 		string const& GetHelp()const{ return m_help; }
 		void SetHelp( string const& _help ){ m_help = _help; }
 
-		uint32 Release(){ if( !(--m_refs) ){ delete this; } return m_refs; }
+		uint32 Release(){ uint32 t; if( !(t = --m_refs) ){ delete this; } return t; }
 
 		// Helpers
 		static ValueID::ValueGenre GetGenreEnumFromName( char const* _name );

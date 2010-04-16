@@ -25,7 +25,9 @@
 #ifndef _ThreadImpl_H
 #define _ThreadImpl_H
 
+#include <stdio.h>
 #include <pthread.h>
+#include <string>
 
 namespace OpenZWave
 {
@@ -34,7 +36,7 @@ namespace OpenZWave
   private:
     friend class Thread;
 
-    ThreadImpl();
+    ThreadImpl( string const& _tname );
     ~ThreadImpl();
 
     bool Start( Thread::pfnThreadProc_t, void * );
@@ -48,6 +50,7 @@ namespace OpenZWave
     Thread::pfnThreadProc_t	m_pfnThreadProc;
     void *m_pContext;
     bool m_bIsRunning;
+    string m_name;
   };
 } // namespace OpenZWave
 

@@ -28,6 +28,8 @@
 #ifndef _Thread_H
 #define _Thread_H
 
+#include <string>
+
 namespace OpenZWave
 {
 	class ThreadImpl;
@@ -41,7 +43,7 @@ namespace OpenZWave
 		 * Constructor.
 		 * Creates a thread object that can be used to serialize access to a shared resource.
 		 */
-		Thread();
+		Thread( string const& _tname );
 
 		/**
 		 * Destructor.

@@ -28,6 +28,7 @@
 #ifndef _ThreadImpl_H
 #define _ThreadImpl_H
 
+#include <string>
 #include <windows.h>
 #include "Thread.h"
 
@@ -53,6 +54,7 @@ namespace OpenZWave
 		Thread::pfnThreadProc_t	m_pfnThreadProc;
 		void*					m_context;
 		bool					m_bIsRunning;
+		string					m_name;
 	};
 
 } // namespace OpenZWave
