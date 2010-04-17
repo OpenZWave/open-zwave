@@ -39,7 +39,7 @@ namespace OpenZWave
 	private:
 		friend class Thread;
 
-		ThreadImpl();
+		ThreadImpl( string const& _tname );
 		~ThreadImpl();
 
 		bool Start( Thread::pfnThreadProc_t _pfnThreadProc, void* _context );
