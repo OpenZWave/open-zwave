@@ -84,6 +84,7 @@ bool SwitchToggleBinary::HandleMsg
 			if( ValueBool* value = node->GetValueBool( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0 ) )
 			{
 				value->OnValueChanged( _data[1] != 0 );
+				value->Release();
 			}
 
 			Log::Write( "Received SwitchToggleBinary report from node %d: %s", GetNodeId(), _data[1] ? "On" : "Off" );

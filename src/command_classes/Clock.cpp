@@ -104,18 +104,21 @@ bool Clock::HandleMsg
 			if( ValueList* valueList = static_cast<ValueList*>( node->GetValue( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, ValueID::ValueType_List ) ) )
 			{
 				valueList->OnValueChanged( day );
+				valueList->Release();
 			}
 
 			// Hour
 			if( value = static_cast<ValueByte*>( node->GetValue( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 1, ValueID::ValueType_Byte ) ) )
 			{
 				value->OnValueChanged( hour );
+				value->Release();
 			}
 
 			// Minute
 			if( value = static_cast<ValueByte*>( node->GetValue( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 2, ValueID::ValueType_Byte ) ) )
 			{
 				value->OnValueChanged( minute );
+				value->Release();
 			}
 
 			Log::Write( "Received Clock report from node %d: %s %.2d:%.2d", GetNodeId(), c_dayNames[day], hour, minute );

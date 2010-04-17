@@ -3,8 +3,8 @@
 //
 // POSIX implementation of a cross-platform event
 //
-// Copyright (c) 2010, Greg Satz <satz@iranger.com>
-// All rights reserved.
+// This code was based off of code from:
+//   http://www.cs.wustl.edu/~schmidt/win32-cv-2.html
 //
 //	SOFTWARE NOTICE AND LICENSE
 //
@@ -98,7 +98,7 @@ void EventImpl::Reset
 (
 )
 {
-	pthread_mutex_lock (&lock );
+	pthread_mutex_lock ( &lock );
 	is_signaled = false;
 	pthread_mutex_unlock( &lock );
 }

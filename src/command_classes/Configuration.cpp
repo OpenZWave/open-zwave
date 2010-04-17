@@ -82,6 +82,7 @@ bool Configuration::HandleMsg
 					if( ValueByte* valueByte = node->GetValueByte( ValueID::ValueGenre_Config, GetCommandClassId(), _instance, parameter ) )
 					{
 						valueByte->OnValueChanged( (uint8)paramValue );
+						valueByte->Release();
 					}
 					else
 					{
@@ -95,6 +96,7 @@ bool Configuration::HandleMsg
 					if( ValueShort* valueShort = node->GetValueShort( ValueID::ValueGenre_Config, GetCommandClassId(), _instance, parameter ) )
 					{
 						valueShort->OnValueChanged( (uint16)paramValue );
+						valueShort->Release();
 					}
 					else
 					{
@@ -108,6 +110,7 @@ bool Configuration::HandleMsg
 					if( ValueInt* valueInt = node->GetValueInt( ValueID::ValueGenre_Config, GetCommandClassId(), _instance, parameter ) )
 					{
 						valueInt->OnValueChanged( paramValue );
+						valueInt->Release();
 					}
 					else
 					{

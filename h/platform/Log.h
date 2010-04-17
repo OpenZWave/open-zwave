@@ -32,6 +32,7 @@
 
 namespace OpenZWave
 {
+	class Mutex;
 	class LogImpl;
 
 	class Log
@@ -69,6 +70,7 @@ namespace OpenZWave
 
 		LogImpl*	m_pImpl;	// Pointer to an object that encapsulates the platform-specific logging implementation.
 		static Log*	s_instance;
+		Mutex*		m_logMutex;
 	};
 
 } // namespace OpenZWave

@@ -103,11 +103,13 @@ bool Language::HandleMsg
 			if( value = node->GetValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, (uint8)ValueIndex_Language ) )
 			{
 				value->OnValueChanged( language );
+				value->Release();
 			}
 
 			if( value = node->GetValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, (uint8)ValueIndex_Country ) )
 			{
 				value->OnValueChanged( country );
+				value->Release();
 			}
 
 			Log::Write( "Received Language report from node %d: Language=%s, Country=%s", GetNodeId(), language, country );

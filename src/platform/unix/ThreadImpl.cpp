@@ -56,7 +56,8 @@ ThreadImpl::~ThreadImpl
 (
 )
 {
-	Stop();
+	if ( m_bIsRunning )
+		Stop();
 }
 
 //-----------------------------------------------------------------------------
@@ -80,8 +81,8 @@ bool ThreadImpl::Start
 	m_pContext = _pContext;
 
 	pthread_create ( &m_hThread, &ta, ThreadImpl::ThreadProc, this );
-	fprintf(stderr, "thread %s starting %08x\n", m_name.c_str(), m_hThread);
-	fflush(stderr);
+	//fprintf(stderr, "thread %s starting %08x\n", m_name.c_str(), m_hThread);
+	//fflush(stderr);
 
 	pthread_attr_destroy ( &ta );
 	return true;
@@ -95,16 +96,19 @@ bool ThreadImpl::Stop
 (
 )
 {
-	fprintf(stderr, "thread %s stopping %08x running %d\n", m_name.c_str(), m_hThread,
-		m_bIsRunning );
-	fflush(stderr);
+	void *data;
+
+	//fprintf(stderr, "thread %s stopping %08x running %d\n", m_name.c_str(), m_hThread, m_bIsRunning );
+	//fflush(stderr);
 	if( !m_bIsRunning )
 	{
 		return false;
 	}
 
-	pthread_cancel( m_hThread );
-	pthread_yield();
+	// This will kill an app that doesn't catch and ignore it.
+	// We need to find another way to interrupt select.
+	pthread_kill( m_hThread, SIGALRM );
+	pthread_join( m_hThread, &data );
 	m_hThread = NULL;
 	m_bIsRunning = false;
 
@@ -120,10 +124,12 @@ void *ThreadImpl::ThreadProc
 	void* _pArg 
 )
 {
-	pthread_setcancelstate( PTHREAD_CANCEL_ENABLE, NULL );
-	pthread_setcanceltype( PTHREAD_CANCEL_DEFERRED, NULL );
 	ThreadImpl* pImpl = (ThreadImpl*)_pArg;
+	//fprintf(stderr, "thread %s run begin %08x running %d\n", pImpl->m_name.c_str(), pImpl->m_hThread, pImpl->m_bIsRunning );
+	//fflush(stderr);
 	pImpl->Run();
+	//fprintf(stderr, "thread %s run end %08x running %d\n", pImpl->m_name.c_str(), pImpl->m_hThread, pImpl->m_bIsRunning );
+	//fflush(stderr);
 	return 0;
 }
 
@@ -137,7 +143,4 @@ void ThreadImpl::Run
 {
 	m_bIsRunning = true;
 	m_pfnThreadProc( m_pContext );
-	fprintf(stderr, "thread %s finished %08x\n", m_name.c_str(), m_hThread);
-	fflush(stderr);
-	m_bIsRunning = false;
 }

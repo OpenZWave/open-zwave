@@ -97,6 +97,7 @@ bool EnergyProduction::HandleMsg
 			if( ValueDecimal* value = node->GetValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, _data[1] ) )
 			{
 				value->OnValueChanged( valueStr );
+				value->Release();
 			}
 
 			Log::Write( "Received an Energy production report from node %d: %s = %s", GetNodeId(), c_energyParameterNames[_data[1]], valueStr );

@@ -147,6 +147,7 @@ bool ThermostatSetpoint::HandleMsg
 				value->OnValueChanged( temperature );
 
 				Log::Write( "Received thermostat setpoint report from node %d: Setpoint %s = %s%s", GetNodeId(), value->GetLabel().c_str(), value->GetAsString().c_str(), value->GetUnits().c_str() );		
+				value->Release();
 			}
 			handled = true;
 		}
