@@ -88,6 +88,7 @@ bool Basic::HandleMsg
 			if( ValueByte* value = node->GetValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0 ) )
 			{
 				value->OnValueChanged( _data[1] );
+				value->Release();
 			}
 
 			Log::Write( "Received Basic report from node %d: level=%d", GetNodeId(), _data[1] );
@@ -100,6 +101,7 @@ bool Basic::HandleMsg
 			if( ValueByte* value = node->GetValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0 ) )
 			{
 				value->OnValueChanged( _data[1] );
+				value->Release();
 			}
 
 			Log::Write( "Received Basic set from node %d: level=%d", GetNodeId(), _data[1] );

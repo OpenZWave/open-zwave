@@ -98,6 +98,7 @@ bool Version::HandleMsg
 			if( value = node->GetValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, (uint8)ValueIndex_Library ) )
 			{
 				value->OnValueChanged( library );
+				value->Release();
 			}
 
 			char protocol[16];
@@ -105,6 +106,7 @@ bool Version::HandleMsg
 			if( value = node->GetValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, (uint8)ValueIndex_Protocol ) )
 			{
 				value->OnValueChanged( protocol );
+				value->Release();
 			}
 
 			char application[16];
@@ -112,6 +114,7 @@ bool Version::HandleMsg
 			if( value = node->GetValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, (uint8)ValueIndex_Application ) )
 			{
 				value->OnValueChanged( application );
+				value->Release();
 			}
 
 			Log::Write( "Received Version report from node %d: Library=%s, Protocol=%s, Application=%s", GetNodeId(), library, protocol, application );

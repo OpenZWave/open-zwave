@@ -111,6 +111,7 @@ bool ThermostatFanMode::HandleMsg
 			{
 				valueList->OnValueChanged( (int32)_data[1] );
 				Log::Write( "Received thermostat fan mode from node %d: %s", GetNodeId(), valueList->GetAsString().c_str() );		
+				valueList->Release();
 			}
 			handled = true;
 		}

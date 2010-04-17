@@ -90,6 +90,7 @@ bool MeterPulse::HandleMsg
 			if( ValueInt* value = node->GetValueInt( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0 ) )
 			{
 				value->OnValueChanged( count );
+				value->Release();
 			}
 
 			Log::Write( "Received a meter pulse count from node %d: Count=%d", GetNodeId(), count );

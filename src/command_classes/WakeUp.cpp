@@ -119,6 +119,7 @@ bool WakeUp::HandleMsg
 			if( ValueInt* value = node->GetValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 0 ) )
 			{
 				value->OnValueChanged( (int32)interval );
+				value->Release();
 			}
 
 			Log::Write( "Received Wakeup Interval report from node %d: Interval=%d", GetNodeId(), interval );

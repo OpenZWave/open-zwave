@@ -28,6 +28,7 @@
 #include <stdarg.h>
 
 #include "Defs.h"
+#include "Mutex.h"
 #include "Log.h"
 
 #include "LogImpl.h"	// Platform-specific implementation of a log
@@ -79,10 +80,12 @@ void Log::Write
 {
 	if( s_instance )
 	{
+	  	s_instance->m_logMutex->Lock();
 		va_list args;
 		va_start( args, _format );
 		s_instance->m_pImpl->Write( _format, args );
 		va_end( args );
+		s_instance->m_logMutex->Release();
 	}
 }
 
@@ -94,6 +97,7 @@ Log::Log
 (
 	string const& _filename 
 ):
+	m_logMutex( new Mutex() ),
 	m_pImpl( new LogImpl( _filename ) )
 {
 }
@@ -106,5 +110,6 @@ Log::~Log
 (
 )
 {
+	delete m_logMutex;
 	delete m_pImpl;
 }

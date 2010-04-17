@@ -84,6 +84,7 @@ bool Indicator::HandleMsg
 			if( ValueBool* value = node->GetValueBool( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0 ) )
 			{
 				value->OnValueChanged( _data[1] != 0 );
+				value->Release();
 			}
 
 			Log::Write( "Received an Indicator report from node %d: Indicator=%d", GetNodeId(), _data[1] );
