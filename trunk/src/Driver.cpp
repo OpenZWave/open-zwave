@@ -103,16 +103,16 @@ Driver::~Driver
 	m_exit = true;
 	m_exitEvent->Set();
 	m_sendEvent->Set();
-	m_serialPort->Close();
 	m_pollThread->Stop();
 	m_sendThread->Stop();
 	m_driverThread->Stop();
 
-	delete m_driverThread;
-	delete m_sendThread;
-	delete m_pollThread;
-
 	delete m_serialPort;
+
+	delete m_pollThread;
+	delete m_sendThread;
+	delete m_driverThread;
+
 	delete m_serialMutex;
 	
 	delete m_sendMutex;

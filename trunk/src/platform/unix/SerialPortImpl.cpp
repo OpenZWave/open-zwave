@@ -247,11 +247,13 @@ bool SerialPortImpl::Wait
 	{
 		struct timeval when;
 		struct timeval *whenp;
-		fd_set rds;
+		fd_set rds, eds;
 		int err;
 
 		FD_ZERO( &rds );
 		FD_SET( m_hSerialPort, &rds );
+		FD_ZERO( &eds );
+		FD_SET( m_hSerialPort, &eds );
 		if( _timeout == -1 ) // infinite
 			whenp = NULL;
 		else if( _timeout == 0 ) // immediate
@@ -266,12 +268,12 @@ bool SerialPortImpl::Wait
 			when.tv_usec = _timeout % 1000 * 1000;
 			whenp = &when;
 		}
-		err = select( FD_SETSIZE, &rds, NULL, NULL, whenp );
+		err = select( FD_SETSIZE, &rds, NULL, &eds, whenp );
 		if( err > 0 )
 			return true;
 		else if( err < 0 )
 		{
-			Log::Write( "select error %d", errno );
+			//Log::Write( "select error %d", errno );
 		}
 	}
 

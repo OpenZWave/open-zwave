@@ -26,6 +26,7 @@
 #define _ThreadImpl_H
 
 #include <stdio.h>
+#include <signal.h>
 #include <pthread.h>
 #include <string>
 

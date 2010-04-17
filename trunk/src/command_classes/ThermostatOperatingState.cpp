@@ -113,6 +113,7 @@ bool ThermostatOperatingState::HandleMsg
 			{
 				valueList->OnValueChanged( _data[1] );
 				Log::Write( "Received thermostat operating state from node %d: %s", GetNodeId(), valueList->GetAsString().c_str() );		
+				valueList->Release();
 			}
 			handled = true;
 		}

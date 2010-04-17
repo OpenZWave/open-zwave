@@ -91,6 +91,7 @@ bool Battery::HandleMsg
 			if( ValueByte* value = node->GetValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0 ) )
 			{
 				value->OnValueChanged( batteryLevel );
+				value->Release();
 			}
 
 			Log::Write( "Received Battery report from node %d: level=%d", GetNodeId(), batteryLevel );

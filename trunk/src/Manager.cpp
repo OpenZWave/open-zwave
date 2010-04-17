@@ -132,6 +132,8 @@ Manager::~Manager
 		m_readyDrivers.erase( rit );
 		rit = m_readyDrivers.begin();
 	}
+	delete m_exitEvent;
+	Log::Destroy();
 }
 
 //-----------------------------------------------------------------------------

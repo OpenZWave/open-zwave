@@ -93,6 +93,7 @@ bool Protection::HandleMsg
 			if( ValueList* value = node->GetValueList(  ValueID::ValueGenre_System, GetCommandClassId(), _instance, 0 ) )
 			{
 				value->OnValueChanged( (int)_data[1] );
+				value->Release();
 			}
 
 			Log::Write( "Received a Protection report from node %d: %s", GetNodeId(), c_protectionStateNames[_data[1]] );

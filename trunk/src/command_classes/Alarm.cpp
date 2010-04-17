@@ -94,12 +94,14 @@ bool Alarm::HandleMsg
 			if( value = node->GetValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueIndex_Type ) )
 			{
 				value->OnValueChanged( _data[1] );
+				value->Release();
 			}
 		
 			// Alarm Level
 			if( value = node->GetValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueIndex_Level ) )
 			{
 				value->OnValueChanged( _data[2] );
+				value->Release();
 			}
 
 			Log::Write( "Received Alarm report from node %d: type=%d, level=%d", GetNodeId(), _data[1], _data[2] );

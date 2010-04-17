@@ -95,6 +95,7 @@ bool SwitchAll::HandleMsg
 			{
 				value->OnValueChanged( (int32)_data[1] );
 				Log::Write( "Received SwitchAll report from node %d: %s", GetNodeId(), value->GetItem().m_label.c_str() );
+				value->Release();
 			}
 
 			return true;

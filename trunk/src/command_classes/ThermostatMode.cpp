@@ -119,6 +119,7 @@ bool ThermostatMode::HandleMsg
 			{
 				valueList->OnValueChanged( _data[1] );
 				Log::Write( "Received thermostat mode from node %d: %s", GetNodeId(), valueList->GetAsString().c_str() );		
+				valueList->Release();
 			}
 			handled = true;
 		}
