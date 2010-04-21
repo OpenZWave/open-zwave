@@ -71,13 +71,15 @@ Value::Value
 	ValueID::ValueType const _type,
 	string const& _label,
 	string const& _units,
-	bool const _readOnly
+	bool const _readOnly,
+	bool const _isSet
 ):
 	m_refs( 1 ),
 	m_id( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, _type ),
 	m_label( _label ),
 	m_units( _units ),
-	m_readOnly( _readOnly )
+	m_readOnly( _readOnly ),
+	m_isSet( _isSet )
 {
 }
 
@@ -175,6 +177,7 @@ bool Value::Set
 	{
 		if( CommandClass* cc = node->GetCommandClass( m_id.GetCommandClassId() ) )
 		{
+			m_isSet = true;
 			return( cc->SetValue( *this ) );
 		}
 	}
@@ -190,6 +193,7 @@ void Value::OnValueChanged
 (
 )
 {
+	m_isSet = true;
 	// Notify the watchers
 	Notification notification( Notification::Type_ValueChanged );
 	notification.SetValueId( m_id );

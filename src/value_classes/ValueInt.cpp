@@ -50,7 +50,7 @@ ValueInt::ValueInt
 	bool const _readOnly,
 	int32 const _value
 ):
-	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Int, _label, _units, _readOnly ),
+	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Int, _label, _units, _readOnly, false ),
 	m_value( _value )
 {
 }
@@ -72,6 +72,7 @@ ValueInt::ValueInt
 	if( TIXML_SUCCESS == _valueElement->QueryIntAttribute( "value", &intVal ) )
 	{
 		m_value = (int32)intVal;
+		SetIsSet();
 	}
 }
 
@@ -86,9 +87,13 @@ void ValueInt::WriteXML
 {
 	Value::WriteXML( _valueElement );
 
-	char str[16];
-	snprintf( str, sizeof(str), "%d", m_value );
-	_valueElement->SetAttribute( "value", str );
+	if ( !IsSet() )
+		_valueElement->SetAttribute( "value", "" );
+	else {
+		char str[16];
+		snprintf( str, sizeof(str), "%d", m_value );
+		_valueElement->SetAttribute( "value", str );
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -126,7 +131,7 @@ void ValueInt::OnValueChanged
 	int32 const _value
 )
 {
-	if( _value == m_value )
+	if( IsSet() && _value == m_value )
 	{
 		// Value already set
 		return;

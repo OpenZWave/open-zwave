@@ -50,7 +50,7 @@ ValueByte::ValueByte
 	bool const _readOnly,
 	uint8 const _value
 ):
-	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Byte, _label, _units, _readOnly ),
+	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Byte, _label, _units, _readOnly, false ),
 	m_value( _value )
 {
 }
@@ -72,6 +72,7 @@ ValueByte::ValueByte
 	if( TIXML_SUCCESS == _valueElement->QueryIntAttribute( "value", &intVal ) )
 	{
 		m_value = (uint8)intVal;
+		SetIsSet();
 	}
 }
 
@@ -86,9 +87,13 @@ void ValueByte::WriteXML
 {
 	Value::WriteXML( _valueElement );
 
-	char str[8];
-	snprintf( str, sizeof(str), "%d", m_value );
-	_valueElement->SetAttribute( "value", str );
+	if ( !IsSet() )
+		_valueElement->SetAttribute( "value", "" );
+	else {
+		char str[8];
+		snprintf( str, sizeof(str), "%d", m_value );
+		_valueElement->SetAttribute( "value", str );
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -126,7 +131,7 @@ void ValueByte::OnValueChanged
 	uint8 const _value
 )
 {
-	if( _value == m_value )
+	if( IsSet() &&  _value == m_value )
 	{
 		// Value already set
 		return;
@@ -135,4 +140,3 @@ void ValueByte::OnValueChanged
 	m_value = _value;
 	Value::OnValueChanged();
 }
-

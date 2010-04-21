@@ -44,7 +44,7 @@ namespace OpenZWave
 		friend class ValueStore;
 
 	public:
-		Value( uint32 const _homeId, uint8 const _nodeId, ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, ValueID::ValueType const _type, string const& _label, string const& _units, bool const _readOnly );
+		Value( uint32 const _homeId, uint8 const _nodeId, ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, ValueID::ValueType const _type, string const& _label, string const& _units, bool const _readOnly, bool const _isset );
 		Value( uint32 const _homeId, uint8 const _nodeId, uint8 const _commandClassId, TiXmlElement const* _valueElement );
 
 		virtual void WriteXML( TiXmlElement* _valueElement );
@@ -73,7 +73,9 @@ namespace OpenZWave
 	protected:
 		virtual ~Value(){}
 
-		bool Set();				// Fot the user to change a value in a device
+		bool Set();				// For the user to change a value in a device
+		bool IsSet(){ return m_isSet; }		// Is the value set?
+		void SetIsSet() { m_isSet = true; }
 		void OnValueChanged();	// A value in a device has been changed.
 
 	private:
@@ -86,6 +88,7 @@ namespace OpenZWave
 		string		m_units;
 		string		m_help;
 		bool		m_readOnly;
+		bool		m_isSet;
 	};
 
 } // namespace OpenZWave

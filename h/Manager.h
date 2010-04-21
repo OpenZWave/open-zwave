@@ -126,6 +126,9 @@ namespace OpenZWave
 	//-----------------------------------------------------------------------------
 	public:
 		bool RefreshNodeInfo( uint32 const _homeId, uint8 const _nodeId );
+		void RequestState( uint32 const _homeId, uint8 const _nodeId );
+		string GetBasicLabel( uint32 const _homeId, uint8 const _nodeId );
+		string GetGenericLabel( uint32 const _homeId, uint8 const _nodeId );
 
 		ValueBool* GetValueBool( ValueID const& _id );
 		ValueByte* GetValueByte( ValueID const& _id );

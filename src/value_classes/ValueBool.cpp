@@ -50,7 +50,7 @@ ValueBool::ValueBool
 	bool const _readOnly,
 	bool const _value
 ):
-	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Bool, _label, _units, _readOnly ),
+	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Bool, _label, _units, _readOnly, false ),
 	m_value( _value )
 {
 }
@@ -72,6 +72,7 @@ ValueBool::ValueBool
 	if( str )
 	{
 		m_value = !strcmp( str, "True" );
+		SetIsSet();
 	}
 }
 
@@ -85,7 +86,10 @@ void ValueBool::WriteXML
 )
 {
 	Value::WriteXML( _valueElement );
-	_valueElement->SetAttribute( "value", m_value ? "True" : "False" );
+	if ( !IsSet() )
+		_valueElement->SetAttribute( "value", "" );
+	else
+		_valueElement->SetAttribute( "value", m_value ? "True" : "False" );
 }
 
 //-----------------------------------------------------------------------------
@@ -121,7 +125,7 @@ void ValueBool::OnValueChanged
 	bool const _value
 )
 {
-	if( _value == m_value )
+	if( IsSet() &&_value == m_value )
 	{
 		// Value already set
 		return;

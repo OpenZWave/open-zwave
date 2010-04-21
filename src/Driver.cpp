@@ -297,7 +297,7 @@ bool Driver::ReadConfig
 	int32 intVal;
 
 	// Load the XML document that contains the driver configuration
-	snprintf( str, 32, "zwcfg_0x%08x.xml", m_homeId );
+	snprintf( str, sizeof(str), "zwcfg_0x%08x.xml", m_homeId );
 	string filename =  Manager::Get()->GetUserPath() + string(str);
 
 	TiXmlDocument doc;
@@ -395,21 +395,21 @@ void Driver::WriteConfig
 
 	// Create a new XML document to contain the driver configuration
 	TiXmlDocument doc;
-    TiXmlDeclaration* decl = new TiXmlDeclaration( "1.0", "utf-8", "" );
-    TiXmlElement* driverElement = new TiXmlElement( "Driver" );
-    doc.LinkEndChild( decl );
-    doc.LinkEndChild( driverElement );  
+	TiXmlDeclaration* decl = new TiXmlDeclaration( "1.0", "utf-8", "" );
+	TiXmlElement* driverElement = new TiXmlElement( "Driver" );
+	doc.LinkEndChild( decl );
+	doc.LinkEndChild( driverElement );  
 
-	snprintf( str, 32, "0x%.8x", m_homeId );
+	snprintf( str, sizeof(str), "0x%.8x", m_homeId );
 	driverElement->SetAttribute( "home_id", str );
 
-	snprintf( str, 32, "%d", m_nodeId );
+	snprintf( str, sizeof(str), "%d", m_nodeId );
 	driverElement->SetAttribute( "node_id", str );
 
-	snprintf( str, 32, "%d", m_capabilities );
+	snprintf( str, sizeof(str), "%d", m_capabilities );
 	driverElement->SetAttribute( "capabilities", str );
 
-	snprintf( str, 32, "%d", m_pollInterval );
+	snprintf( str, sizeof(str), "%d", m_pollInterval );
 	driverElement->SetAttribute( "poll_interval", str );
 
 	for( int i=0; i<256; ++i )
@@ -420,7 +420,7 @@ void Driver::WriteConfig
 		}
 	}
 
-	snprintf( str, 32, "zwcfg_0x%08x.xml", m_homeId );
+	snprintf( str, sizeof(str), "zwcfg_0x%08x.xml", m_homeId );
 	string filename =  Manager::Get()->GetUserPath() + string(str);
 
 	doc.SaveFile( filename.c_str() );
@@ -1447,30 +1447,30 @@ void Driver::HandleApplicationCommandHandlerRequest
 	
 	switch (ClassId)
 	{
+#ifdef notdef
 		case COMMAND_CLASS_BASIC:
 		{			
 			switch (ClassIdMinor)
 			{
 			   	case BASIC_SET:
+				case BASIC_REPORT:
 					//get the class function pointer
 					if( pfnDeviceEventVectorClass = CommandClasses::CreateCommandClass( ClassId, m_homeId, nodeId ) )
 					{
-						StatusData[0] = 0x01; StatusData[1]=ValueFromDevice;
-						pfnDeviceEventVectorClass->HandleMsg( StatusData,0x02,0x00);
+						StatusData[0] = ClassIdMinor; StatusData[1]=ValueFromDevice;
+						pfnDeviceEventVectorClass->HandleMsg( StatusData,0x02,0x00 );
 
 						//send notification to application
-						Notification notification(Notification::Type_NodeStatus);
-						notification.SetHomeAndNodeIds(GetHomeId(),nodeId);
-						notification.SetStatus(StatusData[1]);
+						Notification notification( Notification::Type_NodeStatus );
+						notification.SetHomeAndNodeIds( GetHomeId(),nodeId );
+						notification.SetStatus( StatusData[1] );
 						Manager::Get()->NotifyWatchers( &notification );
 					}
-					break;
-				
-				case BASIC_REPORT:
 					break;
 			}
 			break;
 		}
+#endif
 		case COMMAND_CLASS_HAIL:
 		{			
 			if( pfnDeviceEventVectorClass = CommandClasses::CreateCommandClass(ClassId, m_homeId, nodeId ) )
@@ -1805,6 +1805,56 @@ uint8 Driver::GetInfoRequest
 	}
 	m_infoMutex->Release();
 	return nodeId;
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::RequestState>
+// Request command class data
+//-----------------------------------------------------------------------------
+void Driver::RequestState
+(
+	 uint8 const _nodeId,
+	 uint32 const _flags
+)
+{
+	if( Node* node = m_nodes[_nodeId] )
+	{
+		node->RequestState( _flags );
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::GetBasicLabel>
+// Get the basic label string value with the specified ID
+//-----------------------------------------------------------------------------
+string Driver::GetBasicLabel
+(
+	uint8 const _nodeId
+)
+{
+	if( Node* node = m_nodes[_nodeId] )
+	{
+		return( node->GetBasicLabel() );
+	}
+
+	return NULL;
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::GetGenericLabel>
+// Get the basic label string value with the specified ID
+//-----------------------------------------------------------------------------
+string Driver::GetGenericLabel
+(
+	uint8 const _nodeId
+)
+{
+	if( Node* node = m_nodes[_nodeId] )
+	{
+		return( node->GetGenericLabel() );
+	}
+
+	return NULL;
 }
 
 //-----------------------------------------------------------------------------
