@@ -35,6 +35,7 @@
 #include "Log.h"
 
 #include "CommandClasses.h"
+#include "CommandClass.h"
 
 #include "ValueID.h"
 #include "ValueBool.h"
@@ -453,6 +454,59 @@ bool Manager::RefreshNodeInfo
 	}
 
 	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::RequestState>
+// Fetch the command class data for a node from the Z-Wave network
+//-----------------------------------------------------------------------------
+void Manager::RequestState
+(
+	uint32 const _homeId,
+	uint8 const _nodeId
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		// Retreive the Node's Session and/or Dynamic data
+		driver->RequestState( _nodeId, CommandClass::RequestFlag_Session | CommandClass::RequestFlag_Dynamic );
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::GetBasicLabel>
+// Get the basiclabel value with the specified ID
+//-----------------------------------------------------------------------------
+string Manager::GetBasicLabel
+(
+	uint32 const _homeId,
+	uint8 const _nodeId
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		return driver->GetBasicLabel( _nodeId );
+	}
+
+	return NULL;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::GetGenericLabel>
+// Get the basiclabel value with the specified ID
+//-----------------------------------------------------------------------------
+string Manager::GetGenericLabel
+(
+	uint32 const _homeId,
+	uint8 const _nodeId
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		return driver->GetGenericLabel( _nodeId );
+	}
+
+	return NULL;
 }
 
 //-----------------------------------------------------------------------------
