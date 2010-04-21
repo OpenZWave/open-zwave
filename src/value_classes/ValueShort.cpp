@@ -50,7 +50,7 @@ ValueShort::ValueShort
 	bool const _readOnly,
 	uint16 const _value
 ):
-	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Byte, _label, _units, _readOnly ),
+	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Byte, _label, _units, _readOnly, false ),
 	m_value( _value )
 {
 }
@@ -72,6 +72,7 @@ ValueShort::ValueShort
 	if( TIXML_SUCCESS == _valueElement->QueryIntAttribute( "value", &intVal ) )
 	{
 		m_value = (uint16)intVal;
+		SetIsSet();
 	}
 }
 
@@ -86,9 +87,13 @@ void ValueShort::WriteXML
 {
 	Value::WriteXML( _valueElement );
 
-	char str[16];
-	snprintf( str, sizeof(str), "%d", m_value );
-	_valueElement->SetAttribute( "value", str );
+	if ( !IsSet() )
+		_valueElement->SetAttribute( "value", "" );
+	else {
+		char str[16];
+		snprintf( str, sizeof(str), "%d", m_value );
+		_valueElement->SetAttribute( "value", str );
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -126,7 +131,7 @@ void ValueShort::OnValueChanged
 	uint16 const _value
 )
 {
-	if( _value == m_value )
+	if( IsSet() && _value == m_value )
 	{
 		// Value already set
 		return;

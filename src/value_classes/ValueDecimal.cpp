@@ -50,7 +50,7 @@ ValueDecimal::ValueDecimal
 	bool const _readOnly,
 	string const& _value
 ):
-	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Decimal, _label, _units, _readOnly ),
+	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Decimal, _label, _units, _readOnly, false ),
 	m_value( _value )
 {
 }
@@ -72,6 +72,7 @@ ValueDecimal::ValueDecimal
 	if( str )
 	{
 		m_value = str;
+		SetIsSet();
 	}
 }
 
@@ -85,7 +86,10 @@ void ValueDecimal::WriteXML
 )
 {
 	Value::WriteXML( _valueElement );
-	_valueElement->SetAttribute( "value", m_value.c_str() );
+	if ( !IsSet() )
+		_valueElement->SetAttribute( "value", "" );
+	else
+		_valueElement->SetAttribute( "value", m_value.c_str() );
 }
 
 //-----------------------------------------------------------------------------
@@ -110,7 +114,7 @@ void ValueDecimal::OnValueChanged
 	string const& _value
 )
 {
-	if( _value == m_value )
+	if( IsSet() && _value == m_value )
 	{
 		// Value already set
 		return;

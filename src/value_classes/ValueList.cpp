@@ -51,7 +51,7 @@ ValueList::ValueList
 	vector<Item> const& _items,
 	int32 const _valueIdx
 ):
-	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_List, _label, _units, _readOnly ),
+	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_List, _label, _units, _readOnly, false ),
 	m_items( _items ),
 	m_valueIdx( _valueIdx )
 {
@@ -94,6 +94,7 @@ ValueList::ValueList
 
 	// Set the value
 	_valueElement->QueryIntAttribute( "value", &m_valueIdx );
+	SetIsSet();
 }
 
 //-----------------------------------------------------------------------------
@@ -181,7 +182,7 @@ void ValueList::OnValueChanged
 )
 {
 	int32 idx = GetItemIdxByValue( _value );
-	if( idx == m_valueIdx )
+	if( IsSet() && idx == m_valueIdx )
 	{
 		// Value already set
 		return;
