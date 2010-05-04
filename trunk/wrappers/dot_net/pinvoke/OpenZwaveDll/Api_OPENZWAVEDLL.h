@@ -70,18 +70,10 @@ extern "C" OPENZWAVEDLL_API void WINAPI OPENZWAVEDLL_BeginReplicateController(Op
 extern "C" OPENZWAVEDLL_API void WINAPI OPENZWAVEDLL_EndReplicateController(OpenZWave::Manager* pManager, uint32 homeId);
 extern "C" OPENZWAVEDLL_API void WINAPI OPENZWAVEDLL_RequestNetworkUpdate(OpenZWave::Manager* pManager, uint32 homeId);
 extern "C" OPENZWAVEDLL_API void WINAPI OPENZWAVEDLL_ControllerChange(OpenZWave::Manager* pManager, uint32 homeId);
+extern "C" OPENZWAVEDLL_API void WINAPI OPENZWAVEDLL_RequestState(OpenZWave::Manager* pManager, uint32 homeId, uint8 nodeId);
+extern "C" OPENZWAVEDLL_API BOOL WINAPI OPENZWAVEDLL_RefreshNodeInfo(OpenZWave::Manager* pManager, uint32 homeId, uint8 nodeId);
 //extern "C" OPENZWAVEDLL_API void WINAPI OPENZWAVEDLL_ReadMemory(OpenZWave::Manager* pManager, uint32 homeId, uint16 offset);
 //extern "C" OPENZWAVEDLL_API void WINAPI OPENZWAVEDLL_SetConfiguration(OpenZWave::Manager* pManager, uint32 homeId, uint8 nodeId, uint8 parameter, uint32 value);
-//typedef struct ValIdStruct
-//{
-//	uint32 homeId;
-//	uint8 nodeId;
-//	OpenZWave::ValueID::ValueGenre genre;
-//	uint8 commandClassId;
-//	uint8 instance;
-//	uint8 valueIndex;
-//	OpenZWave::ValueID::ValueType type;
-//} VALID;
 
 extern "C" OPENZWAVEDLL_API OpenZWave::ValueBool* WINAPI OPENZWAVEDLL_GetValueBoolPtr(OpenZWave::Manager* pManager,
 			uint32 homeId, uint8 nodeId, OpenZWave::ValueID::ValueGenre genre, uint8 ccId, uint8 instance, uint8 valIdx, OpenZWave::ValueID::ValueType type);
