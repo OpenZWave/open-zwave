@@ -161,6 +161,13 @@ namespace OpenZWaveWrapper
 		[DllImport("OpenZwaveDLL.dll", SetLastError=true)]
 		static private extern void OPENZWAVEDLL_ControllerChange(IntPtr ptr, UInt32 homeId);
 
+		[DllImport("OpenZwaveDLL.dll", SetLastError=true)]
+		static private extern void OPENZWAVEDLL_RequestState(IntPtr ptr, UInt32 homeId, byte nodeId);
+		
+		[DllImport("OpenZwaveDLL.dll", SetLastError=true)]
+		[return : MarshalAs(UnmanagedType.Bool)] private static extern bool OPENZWAVEDLL_RefreshNodeInfo(IntPtr ptr, UInt32 homeId, byte nodeId);
+
+
         //[DllImport("OpenZwaveDLL.dll", SetLastError=true)]
         //static private extern void OPENZWAVEDLL_ReadMemory(IntPtr ptr, UInt32 homeId, UInt16 offset);
 
@@ -383,6 +390,16 @@ namespace OpenZWaveWrapper
 		public void ControllerChange(UInt32 homeId)
 		{
 			OPENZWAVEDLL_ControllerChange(this.m_pManager, homeId);
+		}
+		
+		public void RequestState(UInt32 homeId, byte nodeId)
+		{
+			OPENZWAVEDLL_RequestState(this.m_pManager, homeId, nodeId);
+		}
+		
+		public bool RefreshNodeInfo(UInt32 homeId, byte nodeId)
+		{
+			return OPENZWAVEDLL_RefreshNodeInfo(this.m_pManager, homeId, nodeId);
 		}
 
         //public void ReadMemory(UInt32 homeId, UInt16 offset)
