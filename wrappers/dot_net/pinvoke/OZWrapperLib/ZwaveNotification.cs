@@ -36,7 +36,7 @@ namespace OpenZWaveWrapper
 	/// <summary>
 	/// Thin wrapper for the C++ OpenZWave Notification class
 	/// </summary>
-	public class ZWaveNotification : IDisposable
+	public class ZWaveNotification
 	{
 		#region PInvokes
 
@@ -62,8 +62,6 @@ namespace OpenZWaveWrapper
 		
 		#region Members
 		
-		private IntPtr m_pNotify;
-		
 		public enum NotificationType : byte
 		{
 			Type_ValueAdded = 0,	// Value Added
@@ -79,72 +77,74 @@ namespace OpenZWaveWrapper
 		};
 		
 		#endregion Members
+		
+		private NotificationType m_type;
+		private UInt32 m_homeId;
+		private byte m_nodeId;
+		private byte m_status;
+		private byte m_groupIdx;
+		private ZWaveValueId m_valueId;
 				
 		private ZWaveNotification() {} // Not Implemented
 		
 		public ZWaveNotification( IntPtr pNotify)
 		{
-			//TODO: throw exception or return return null if pNode is null
 			if (IntPtr.Zero != pNotify)
 			{
-				m_pNotify = pNotify;
+				m_type = OPENZWAVEDLL_GetNotifyType(pNotify);
+				m_homeId = OPENZWAVEDLL_GetHomeIdFromNotify(pNotify);
+				m_nodeId = OPENZWAVEDLL_GetNodeIdFromNotify(pNotify);
+				if (NotificationType.Type_NodeStatus == m_type)
+					m_status = OPENZWAVEDLL_GetStatus(pNotify);
+				else
+					m_status = 0;
+				if (NotificationType.Type_Group == m_type)
+					m_groupIdx = OPENZWAVEDLL_GetGroupIdx(pNotify);
+				else
+					m_groupIdx = 0;
+				m_valueId = new ZWaveValueId(OPENZWAVEDLL_GetValueID(pNotify));
 			}
-		}
-		public void Dispose()
-		{
-			Dispose(true);
-		}
-		
-		protected virtual void Dispose(bool bDisposing)
-		{
-			if (this.m_pNotify != IntPtr.Zero)
+			else
 			{
-				this.m_pNotify = IntPtr.Zero;
+				m_type = NotificationType.Type_ValueAdded;
+				m_homeId = 0;
+				m_nodeId = 0;
+				m_status = 0;
+				m_groupIdx = 0;
+				m_valueId = new ZWaveValueId(OPENZWAVEDLL_GetValueID(IntPtr.Zero));				
 			}
-			if (bDisposing)
-			{
-				// No need to call the finalizer since we've now cleaned
-				// up the unmanaged memory
-
-				GC.SuppressFinalize(this);
-			}
-		}
-		
-		~ZWaveNotification()
-		{
-			Dispose(false);
 		}
 		
 		#region Wrapper Methods
 				
 		public NotificationType Type
 		{
-			get { return OPENZWAVEDLL_GetNotifyType(this.m_pNotify); }
+			get { return m_type; }
 		}
 					
 		public UInt32 HomeId
 		{
-			get{ return OPENZWAVEDLL_GetHomeIdFromNotify(this.m_pNotify);	}
+			get{ return m_homeId; }
 		}
 					
 		public byte NodeId
 		{
-			get { return OPENZWAVEDLL_GetNodeIdFromNotify(this.m_pNotify); }
+			get { return m_nodeId; }
 		}
 		
-		public IntPtr ValueId
+		public ZWaveValueId ValueId
 		{
-			get { return OPENZWAVEDLL_GetValueID(this.m_pNotify); }
+			get { return m_valueId; }
 		}
 				
 		public byte GroupIdx
 		{
-			get { return OPENZWAVEDLL_GetGroupIdx(this.m_pNotify); }
+			get { return m_groupIdx; }
 		}
 				
 		public byte Status
 		{
-			get { return OPENZWAVEDLL_GetStatus(this.m_pNotify); }
+			get { return m_status; }
 		}
 				
 		#endregion Wrapper Methods
