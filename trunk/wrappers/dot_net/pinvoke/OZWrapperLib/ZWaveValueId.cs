@@ -171,6 +171,43 @@ namespace OpenZWaveWrapper
 			get { return m_valueId.type; }
 		}
 		
+		public static bool operator ==(ZWaveValueId id1, ZWaveValueId id2)
+		{
+			if ((id1.HomeId == id2.HomeId) &&
+			    (id1.NodeId == id2.NodeId) &&
+			    (id1.Genre  == id2.Genre)  &&
+			    (id1.CommandClassId == id2.CommandClassId) &&
+			    (id1.Instance == id2.Instance) &&
+			    (id1.Index == id2.Index) &&
+			    (id1.Instance == id2.Instance)) return true;
+			else
+				return false;
+		}
+		
+		public static bool operator !=(ZWaveValueId id1, ZWaveValueId id2)
+		{
+			if ((id1.HomeId != id2.HomeId) ||
+			    (id1.NodeId != id2.NodeId) ||
+			    (id1.Genre  != id2.Genre)  ||
+			    (id1.CommandClassId != id2.CommandClassId) ||
+			    (id1.Instance != id2.Instance) ||
+			    (id1.Index != id2.Index) ||
+			    (id1.Instance != id2.Instance)) return true;
+			else
+				return false;
+		}
+		
+		public override bool Equals(object o2)
+		{
+			ZWaveValueId id2 = (ZWaveValueId) o2;
+			return (this == id2);
+		}
+		
+		public override int GetHashCode()
+		{
+			return m_valueId.GetHashCode();
+		}
+		
 		#endregion Wrapper Methods
 		
 	}
