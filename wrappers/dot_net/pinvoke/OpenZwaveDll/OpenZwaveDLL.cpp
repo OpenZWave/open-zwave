@@ -251,6 +251,15 @@ OPENZWAVEDLL_API void WINAPI OPENZWAVEDLL_ControllerChange(OpenZWave::Manager* p
 {
 	pManager->ControllerChange(homeId);
 }
+OPENZWAVEDLL_API void WINAPI OPENZWAVEDLL_RequestState(OpenZWave::Manager* pManager, uint32 homeId, uint8 nodeId)
+{
+	pManager->RequestState(homeId, nodeId);
+}
+
+OPENZWAVEDLL_API BOOL WINAPI OPENZWAVEDLL_RefreshNodeInfo(OpenZWave::Manager* pManager, uint32 homeId, uint8 nodeId)
+{
+	return pManager->RefreshNodeInfo(homeId, nodeId);
+}
 
 //OPENZWAVEDLL_API void WINAPI OPENZWAVEDLL_ReadMemory(OpenZWave::Manager* pManager, uint32 homeId, uint16 offset)
 //{
