@@ -1,0 +1,42 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cli", "OpenZWaveDll\cli.vcproj", "{A2971BE1-43AC-44AB-AB4E-4D5C59C0542C}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "cliWrapperTester", "OpenZWaveDllDemo\cliWrapperTester.vbproj", "{C359441D-340F-492C-A6F4-23DDCE0DD6CB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|Mixed Platforms = Debug|Mixed Platforms
+		Debug|Win32 = Debug|Win32
+		Release|Any CPU = Release|Any CPU
+		Release|Mixed Platforms = Release|Mixed Platforms
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A2971BE1-43AC-44AB-AB4E-4D5C59C0542C}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{A2971BE1-43AC-44AB-AB4E-4D5C59C0542C}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{A2971BE1-43AC-44AB-AB4E-4D5C59C0542C}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{A2971BE1-43AC-44AB-AB4E-4D5C59C0542C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A2971BE1-43AC-44AB-AB4E-4D5C59C0542C}.Debug|Win32.Build.0 = Debug|Win32
+		{A2971BE1-43AC-44AB-AB4E-4D5C59C0542C}.Release|Any CPU.ActiveCfg = Release|Win32
+		{A2971BE1-43AC-44AB-AB4E-4D5C59C0542C}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{A2971BE1-43AC-44AB-AB4E-4D5C59C0542C}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{A2971BE1-43AC-44AB-AB4E-4D5C59C0542C}.Release|Win32.ActiveCfg = Release|Win32
+		{A2971BE1-43AC-44AB-AB4E-4D5C59C0542C}.Release|Win32.Build.0 = Release|Win32
+		{C359441D-340F-492C-A6F4-23DDCE0DD6CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C359441D-340F-492C-A6F4-23DDCE0DD6CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C359441D-340F-492C-A6F4-23DDCE0DD6CB}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{C359441D-340F-492C-A6F4-23DDCE0DD6CB}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{C359441D-340F-492C-A6F4-23DDCE0DD6CB}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{C359441D-340F-492C-A6F4-23DDCE0DD6CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C359441D-340F-492C-A6F4-23DDCE0DD6CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C359441D-340F-492C-A6F4-23DDCE0DD6CB}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{C359441D-340F-492C-A6F4-23DDCE0DD6CB}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{C359441D-340F-492C-A6F4-23DDCE0DD6CB}.Release|Win32.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

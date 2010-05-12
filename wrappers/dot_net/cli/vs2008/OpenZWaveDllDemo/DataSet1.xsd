@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="DataSet1" targetNamespace="http://tempuri.org/DataSet1.xsd" xmlns:mstns="http://tempuri.org/DataSet1.xsd" xmlns="http://tempuri.org/DataSet1.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="DataSet1" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:Generator_DataSetName="DataSet1" msprop:Generator_UserDSName="DataSet1" msprop:EnableTableAdapterManager="true">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="Values" msprop:Generator_UserTableName="Values" msprop:Generator_RowDeletedName="ValuesRowDeleted" msprop:Generator_TableClassName="ValuesDataTable" msprop:Generator_RowChangedName="ValuesRowChanged" msprop:Generator_RowClassName="ValuesRow" msprop:Generator_RowChangingName="ValuesRowChanging" msprop:Generator_RowEvArgName="ValuesRowChangeEvent" msprop:Generator_RowEvHandlerName="ValuesRowChangeEventHandler" msprop:Generator_TablePropName="Values" msprop:Generator_TableVarName="tableValues" msprop:Generator_RowDeletingName="ValuesRowDeleting">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="valueId" msdata:Caption="Value Id" msprop:Generator_UserColumnName="valueId" msprop:Generator_ColumnPropNameInRow="valueId" msprop:Generator_ColumnVarNameInTable="columnvalueId" msprop:Generator_ColumnPropNameInTable="valueIdColumn" type="xs:long" />
+              <xs:element name="homeId" msdata:Caption="Home Id" msprop:Generator_UserColumnName="homeId" msprop:Generator_ColumnPropNameInRow="homeId" msprop:Generator_ColumnVarNameInTable="columnhomeId" msprop:Generator_ColumnPropNameInTable="homeIdColumn" type="xs:long" />
+              <xs:element name="nodeid" msdata:Caption="Node Id" msprop:Generator_UserColumnName="nodeid" msprop:Generator_ColumnPropNameInRow="nodeid" msprop:Generator_ColumnVarNameInTable="columnnodeid" msprop:Generator_ColumnPropNameInTable="nodeidColumn" type="xs:short" minOccurs="0" />
+              <xs:element name="label" msdata:Caption="Label" msprop:Generator_UserColumnName="label" msprop:Generator_ColumnPropNameInRow="label" msprop:Generator_ColumnVarNameInTable="columnlabel" msprop:Generator_ColumnPropNameInTable="labelColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="value" msdata:Caption="Value" msprop:Generator_UserColumnName="value" msprop:Generator_ColumnPropNameInRow="value" msprop:Generator_ColumnVarNameInTable="columnvalue" msprop:Generator_ColumnPropNameInTable="valueColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="isreadonly" msdata:Caption="Read Only" msprop:Generator_UserColumnName="isreadonly" msprop:Generator_ColumnPropNameInRow="isreadonly" msprop:Generator_ColumnVarNameInTable="columnisreadonly" msprop:Generator_ColumnPropNameInTable="isreadonlyColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="genre" msdata:Caption="Genre" msprop:Generator_UserColumnName="genre" msprop:Generator_ColumnPropNameInRow="genre" msprop:Generator_ColumnVarNameInTable="columngenre" msprop:Generator_ColumnPropNameInTable="genreColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="datatype" msdata:Caption="Type" msprop:Generator_UserColumnName="datatype" msprop:Generator_ColumnPropNameInRow="datatype" msprop:Generator_ColumnVarNameInTable="columndatatype" msprop:Generator_ColumnPropNameInTable="datatypeColumn" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+    <xs:unique name="Constraint1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:Values" />
+      <xs:field xpath="mstns:homeId" />
+      <xs:field xpath="mstns:valueId" />
+    </xs:unique>
+  </xs:element>
+</xs:schema>
