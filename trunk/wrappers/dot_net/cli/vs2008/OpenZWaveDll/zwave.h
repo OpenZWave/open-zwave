@@ -71,7 +71,7 @@ namespace OpenZWaveDotNET {
 		static uint8 ValueType_String=6;
 		static uint8 ValueType_Count=7;
 
-		ZWValueID( uint32 homeId,uint8 uniqueId):m_homeId( homeId ){ m_id = uniqueId; }
+		ZWValueID( uint32 homeId,uint32 uniqueId):m_homeId( homeId ){ m_id = uniqueId; }
 		ZWValueID():m_homeId(0),m_id(0){}
 		
 		void CloneFrom(ZWValueID^ v2){m_id = v2->m_id; m_homeId = v2->m_homeId;}
