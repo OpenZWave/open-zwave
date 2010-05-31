@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MinOZW", "MinOZW.vcxproj", "{22847D76-B1CF-4921-8B7A-61E248412C4A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{22847D76-B1CF-4921-8B7A-61E248412C4A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{22847D76-B1CF-4921-8B7A-61E248412C4A}.Debug|Win32.Build.0 = Debug|Win32
+		{22847D76-B1CF-4921-8B7A-61E248412C4A}.Release|Win32.ActiveCfg = Release|Win32
+		{22847D76-B1CF-4921-8B7A-61E248412C4A}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
