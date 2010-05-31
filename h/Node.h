@@ -204,6 +204,7 @@ namespace OpenZWave
 	public:
 		CommandClass* GetCommandClass( uint8 const _commandClassId )const;
 		void RequestInstances()const;
+		void RequestVersions()const;
 		void RequestState( uint32 const _requestFlags );
 		void ApplicationCommandHandler( uint8 const* _data );
 

@@ -41,7 +41,7 @@ namespace OpenZWave
 		static uint8 const StaticGetCommandClassId(){ return 0x86; }
 		static string const StaticGetCommandClassName(){ return "COMMAND_CLASS_VERSION"; }
 
-		void RequestCommandClassVersion( uint8 const _commandClassId );
+		void RequestCommandClassVersion( CommandClass const* _commandClass );
 
 		// From CommandClass
 		virtual void RequestState( uint32 const _requestFlags );

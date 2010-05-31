@@ -134,9 +134,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="HTMLPage1.htm" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\OpenZWaveDll\cli.vcproj">
       <Project>{A2971BE1-43AC-44AB-AB4E-4D5C59C0542C}</Project>
       <Name>cli</Name>

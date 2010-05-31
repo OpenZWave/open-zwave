@@ -765,110 +765,41 @@ void Manager::AssignReturnRoute
 } 
 
 //-----------------------------------------------------------------------------
-// <Manager::BeginAddNode>
-// Set the controller into AddNode mode
+// <Manager::BeginControllerCommand>
+// Start the controller performing one of its network management functions
 //-----------------------------------------------------------------------------
-void Manager::BeginAddNode
+bool Manager::BeginControllerCommand
 (
-	uint32 const _homeId,
-	bool const _highPower // = false
+	uint32 const _homeId, 
+	Driver::ControllerCommand _command,
+	Driver::pfnControllerCallback_t _callback,	// = NULL
+	void* _context,								// = NULL
+	bool _highPower								// = false
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
-		driver->BeginAddNode( _highPower );
+		return( driver->BeginControllerCommand( _command, _callback, _context, _highPower ) );
 	}
+
+	return false;
 }
 
 //-----------------------------------------------------------------------------
-// <Manager::BeginAddController>
-// Set the controller into AddController mode
+// <Manager::CancelControllerCommand>
+// Stop the current controller function
 //-----------------------------------------------------------------------------
-void Manager::BeginAddController
-(
-	uint32 const _homeId,
-	bool const _highPower // = false
-)
-{
-	if( Driver* driver = GetDriver( _homeId ) )
-	{
-		driver->BeginAddController( _highPower );
-	}
-}
-
-//-----------------------------------------------------------------------------
-// <Manager::EndAddNode>
-// Take the controller out of AddNode mode
-//-----------------------------------------------------------------------------
-void Manager::EndAddNode
+bool Manager::CancelControllerCommand
 (
 	uint32 const _homeId
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
-		driver->EndAddNode();
+		return( driver->CancelControllerCommand() );
 	}
-}
 
-//-----------------------------------------------------------------------------
-// <Manager::BeginRemoveNode>
-// Set the controller into RemoveNode mode
-//-----------------------------------------------------------------------------
-void Manager::BeginRemoveNode
-(
-	uint32 const _homeId
-)
-{
-	if( Driver* driver = GetDriver( _homeId ) )
-	{
-		driver->BeginRemoveNode();
-	}
-}
-
-//-----------------------------------------------------------------------------
-// <Manager::EndRemoveNode>
-// Take the controller out of RemoveNode mode
-//-----------------------------------------------------------------------------
-void Manager::EndRemoveNode
-(
-	uint32 const _homeId
-)
-{
-	if( Driver* driver = GetDriver( _homeId ) )
-	{
-		driver->EndRemoveNode();
-	}
-}
-
-//-----------------------------------------------------------------------------
-// <Manager::BeginReplicateController>
-// Set the controller into ReplicateController mode
-//-----------------------------------------------------------------------------
-void Manager::BeginReplicateController
-(
-	uint32 const _homeId
-)
-{
-	if( Driver* driver = GetDriver( _homeId ) )
-	{
-		driver->BeginReplicateController();
-	}
-}
-
-//-----------------------------------------------------------------------------
-// <Manager::EndReplicateController>
-// Take the controller out of ReplicateController mode
-//-----------------------------------------------------------------------------
-void Manager::EndReplicateController
-(
-	uint32 const _homeId
-)
-{
-	if( Driver* driver = GetDriver( _homeId ) )
-	{
-		driver->EndReplicateController();
-	}
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -886,17 +817,3 @@ void Manager::RequestNetworkUpdate
 	}
 }
 
-//-----------------------------------------------------------------------------
-// <Manager::ControllerChange>
-// Change primary controllers
-//-----------------------------------------------------------------------------
-void Manager::ControllerChange
-(
-	uint32 const _homeId
-)
-{
-	if( Driver* driver = GetDriver( _homeId ) )
-	{
-		driver->ControllerChange();
-	}
-}

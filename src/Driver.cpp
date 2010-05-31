@@ -40,6 +40,7 @@
 
 #include "CommandClasses.h"
 #include "WakeUp.h"
+#include "ControllerReplication.h"
 
 #include "ValueID.h"
 #include "Value.h"
@@ -54,7 +55,6 @@
 #include "ValueStore.h"
 
 using namespace OpenZWave;
-
 
 //-----------------------------------------------------------------------------
 // <Driver::Driver>
@@ -82,7 +82,14 @@ Driver::Driver
 	m_pollThread( new Thread( "poll" ) ),
 	m_pollMutex( new Mutex() ),
 	m_infoMutex( new Mutex() ),
-	m_capabilities( 0 )
+	m_capabilities( 0 ),
+	m_controllerReplication( NULL ),
+	m_controllerState( ControllerState_Normal ),
+	m_controllerCommand( ControllerCommand_None ),
+	m_controllerCallback( NULL ),
+	m_controllerCallbackContext( NULL ),
+	m_controllerAdded( false ),
+	m_nodeAdded( 0 )
 {
 	// Clear the nodes array
 	memset( m_nodes, 0, sizeof(Node*) * 256 );
@@ -930,6 +937,14 @@ void Driver::ProcessMsg
 				handleCallback = !HandleSendDataRequest( _data );
 				break;
 			}
+			case FUNC_ID_ZW_REPLICATION_COMMAND_COMPLETE:
+			{
+				//if( m_controllerReplication )
+				//{
+				//	m_controllerReplication->SendNextData( m);
+				//}
+				break;
+			}
 			case FUNC_ID_ZW_ADD_NODE_TO_NETWORK:
 			{
 				HandleAddNodeToNetworkRequest( _data );
@@ -938,6 +953,21 @@ void Driver::ProcessMsg
 			case FUNC_ID_ZW_REMOVE_NODE_FROM_NETWORK:
 			{
 				HandleRemoveNodeFromNetworkRequest( _data );
+				break;
+			}
+			case FUNC_ID_ZW_CREATE_NEW_PRIMARY:
+			{
+				HandleCreateNewPrimary( _data );
+				break;
+			}
+			case FUNC_ID_ZW_CONTROLLER_CHANGE:
+			{
+				HandleControllerChange( _data );
+				break;
+			}
+			case FUNC_ID_ZW_SET_LEARN_MODE:
+			{
+				HandleSetLearnMode( _data );
 				break;
 			}
 			case FUNC_ID_APPLICATION_COMMAND_HANDLER:
@@ -1040,18 +1070,6 @@ void Driver::HandleRequestNetworkUpdate
 }
 
 //-----------------------------------------------------------------------------
-// <Driver::HandleControllerChange>
-// Process a response from the Z-Wave PC interface
-//-----------------------------------------------------------------------------
-void Driver::HandleControllerChange
-(
-	uint8* _data
-)
-{
-	Log::Write( "Received reply to Controller Change." );
-}
-
-//-----------------------------------------------------------------------------
 // <Driver::HandleSetSUCNodeIdResponse>
 // Process a response from the Z-Wave PC interface
 //-----------------------------------------------------------------------------
@@ -1107,6 +1125,7 @@ void Driver::HandleMemoryGetIdResponse
 	Log::Write( "Received reply to ZW_MEMORY_GET_ID. Home ID = 0x%02x%02x%02x%02x.  Our node ID = %d", _data[2], _data[3], _data[4], _data[5], _data[6] );
 	m_homeId = (((uint32)_data[2])<<24) | (((uint32)_data[3])<<16) | (((uint32)_data[4])<<8) | ((uint32)_data[5]);
 	m_nodeId = _data[6];
+	m_controllerReplication = static_cast<ControllerReplication*>(ControllerReplication::Create( m_homeId, m_nodeId ));
 }
 
 //-----------------------------------------------------------------------------
@@ -1325,44 +1344,85 @@ void Driver::HandleAddNodeToNetworkRequest
 )
 {
 	Log::Write( "FUNC_ID_ZW_ADD_NODE_TO_NETWORK:" );
-	
+
 	switch( _data[3] )
 	{
 		case ADD_NODE_STATUS_LEARN_READY:
 		{
 			Log::Write( "ADD_NODE_STATUS_LEARN_READY" );
+			m_controllerAdded = false;
+			if( m_controllerCallback )
+			{
+				m_controllerCallback( ControllerState_Waiting, m_controllerCallbackContext );
+			}
 			break;
 		}
 		case ADD_NODE_STATUS_NODE_FOUND:
 		{
 			Log::Write( "ADD_NODE_STATUS_NODE_FOUND" );
+			if( m_controllerCallback )
+			{
+				m_controllerCallback( ControllerState_InProgress, m_controllerCallbackContext );
+			}
 			break;
 		}
 		case ADD_NODE_STATUS_ADDING_SLAVE:
 		{
 			Log::Write( "ADD_NODE_STATUS_ADDING_SLAVE" );			
 			Log::Write( "Adding node ID %d", _data[4] );
+			m_controllerAdded = false;
+			m_nodeAdded = _data[4];
 			break;
 		}
 		case ADD_NODE_STATUS_ADDING_CONTROLLER:
 		{
 			Log::Write( "ADD_NODE_STATUS_ADDING_CONTROLLER");
 			Log::Write( "Adding node ID %d", _data[4] );
+			m_controllerAdded = true;
+			m_nodeAdded = _data[4];
 			break;
 		}
 		case ADD_NODE_STATUS_PROTOCOL_DONE:
 		{
 			Log::Write( "ADD_NODE_STATUS_PROTOCOL_DONE" );
+
+			// If we added a controller, now is the time to replicate our data to it
+			if( m_controllerAdded && m_controllerReplication)
+			{
+				m_controllerReplication->StartReplication( m_nodeAdded );
+			}
 			break;
 		}
 		case ADD_NODE_STATUS_DONE:
 		{
 			Log::Write( "ADD_NODE_STATUS_DONE" );
+			if( m_controllerCallback )
+			{
+				m_controllerCallback( ControllerState_Completed, m_controllerCallbackContext );
+			}
+			m_controllerCommand = ControllerCommand_None;
+
+			Msg* msg = new Msg( "Stop Add Node Mode", 0xff, REQUEST, FUNC_ID_ZW_ADD_NODE_TO_NETWORK, true );
+			msg->Append( ADD_NODE_STOP );
+			SendMsg( msg );
+
+			Log::Write( "Get new init data after adding node(s)" );
+			msg = new Msg( "Get new init data after adding node(s)", 0xff, REQUEST, FUNC_ID_SERIAL_API_GET_INIT_DATA, false );
+			SendMsg( msg );
 			break;
 		}
 		case ADD_NODE_STATUS_FAILED:
 		{
 			Log::Write( "ADD_NODE_STATUS_FAILED" );
+			if( m_controllerCallback )
+			{
+				m_controllerCallback( ControllerState_Failed, m_controllerCallbackContext );
+			}
+			m_controllerCommand = ControllerCommand_None;
+
+			Msg* msg = new Msg( "Failed Stop Add Node Mode", 0xff, REQUEST, FUNC_ID_ZW_ADD_NODE_TO_NETWORK, true );
+			msg->Append( ADD_NODE_STOP_FAILED );
+			SendMsg( msg );
 			break;
 		}
 		default:
@@ -1388,11 +1448,19 @@ void Driver::HandleRemoveNodeFromNetworkRequest
 		case REMOVE_NODE_STATUS_LEARN_READY:
 		{
 			Log::Write( "REMOVE_NODE_STATUS_LEARN_READY" );
+			if( m_controllerCallback )
+			{
+				m_controllerCallback( ControllerState_Waiting, m_controllerCallbackContext );
+			}
 			break;
 		}
 		case REMOVE_NODE_STATUS_NODE_FOUND:
 		{
 			Log::Write( "REMOVE_NODE_STATUS_NODE_FOUND" );
+			if( m_controllerCallback )
+			{
+				m_controllerCallback( ControllerState_InProgress, m_controllerCallbackContext );
+			}
 			break;
 		}
 		case REMOVE_NODE_STATUS_REMOVING_SLAVE:
@@ -1413,15 +1481,144 @@ void Driver::HandleRemoveNodeFromNetworkRequest
 		case REMOVE_NODE_STATUS_DONE:
 		{
 			Log::Write( "REMOVE_NODE_STATUS_DONE" );
+			if( m_controllerCallback )
+			{
+				m_controllerCallback( ControllerState_Completed, m_controllerCallbackContext );
+			}
+			m_controllerCommand = ControllerCommand_None;
+
+			Msg* msg = new Msg( "Stop Remove Node Mode", 0xff, REQUEST, FUNC_ID_ZW_REMOVE_NODE_FROM_NETWORK, true );
+			msg->Append( REMOVE_NODE_STOP );
+			SendMsg( msg );
+
+			Log::Write( "Get new init data after removing node(s)" );
+			msg = new Msg( "Get new init data after removing node(s)", 0xff, REQUEST, FUNC_ID_SERIAL_API_GET_INIT_DATA, false );
+			SendMsg( msg );
 			break;
 		}
 		case REMOVE_NODE_STATUS_FAILED:
 		{
 			Log::Write( "REMOVE_NODE_STATUS_FAILED" );
+			if( m_controllerCallback )
+			{
+				m_controllerCallback( ControllerState_Failed, m_controllerCallbackContext );
+			}
+			m_controllerCommand = ControllerCommand_None;
+
+			Msg* msg = new Msg( "Stop Remove Node Mode", 0xff, REQUEST, FUNC_ID_ZW_REMOVE_NODE_FROM_NETWORK, true );
+			msg->Append( REMOVE_NODE_STOP );
+			SendMsg( msg );
 			break;
 		}
 		default:
 		{
+			break;
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::HandleControllerChange>
+// Process a request from the Z-Wave PC interface
+//-----------------------------------------------------------------------------
+void Driver::HandleControllerChange
+(
+	uint8* _data
+)
+{
+	Log::Write( "FUNC_ID_ZW_CONTROLLER_CHANGE:" );
+	
+	switch( _data[3] ) 
+	{
+		case LEARN_MODE_STARTED:
+		{
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::HandleCreateNewPrimary>
+// Process a request from the Z-Wave PC interface
+//-----------------------------------------------------------------------------
+void Driver::HandleCreateNewPrimary
+(
+	uint8* _data
+)
+{
+	Log::Write( "FUNC_ID_ZW_CREATE_NEW_PRIMARY:" );
+	
+	switch( _data[3] ) 
+	{
+		case LEARN_MODE_STARTED:
+		{
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::HandleSetLearnMode>
+// Process a request from the Z-Wave PC interface
+//-----------------------------------------------------------------------------
+void Driver::HandleSetLearnMode
+(
+	uint8* _data
+)
+{
+	Log::Write( "FUNC_ID_ZW_SET_LEARN_MODE:" );
+	
+	switch( _data[3] ) 
+	{
+		case LEARN_MODE_STARTED:
+		{
+			Log::Write( "LEARN_MODE_STARTED" );
+			if( m_controllerCallback )
+			{
+				m_controllerCallback( ControllerState_Waiting, m_controllerCallbackContext );
+			}
+			break;
+		}
+		case LEARN_MODE_DONE:
+		{
+			Log::Write( "LEARN_MODE_DONE" );
+			if( m_controllerCallback )
+			{
+				m_controllerCallback( ControllerState_Completed, m_controllerCallbackContext );
+			}
+			m_controllerCommand = ControllerCommand_None;
+
+			// Stop learn mode
+			Msg* msg = new Msg( "End Learn Mode", 0xff, REQUEST, FUNC_ID_ZW_SET_LEARN_MODE, false, false );
+			msg->Append( 0 );
+			SendMsg( msg );
+
+			// Rebuild all the node info.  Group and scene data that we stored 
+			// during replication will be applied as we discover each node.
+			RefreshNodeInfo();
+			break;
+		}
+		case LEARN_MODE_FAILED:
+		{
+			Log::Write( "LEARN_MODE_FAILED" );
+			if( m_controllerCallback )
+			{
+				m_controllerCallback( ControllerState_Failed, m_controllerCallbackContext );
+			}
+			m_controllerCommand = ControllerCommand_None;
+
+			// Controller change failed
+			Msg* msg = new Msg(  "Controller change failed", 0xff, REQUEST, FUNC_ID_ZW_CONTROLLER_CHANGE, true, false );
+			msg->Append( CONTROLLER_CHANGE_STOP_FAILED );
+			SendMsg( msg );
+
+			// Rebuild all the node info, since it may have been partially
+			// updated by the failed command.  Group and scene data that we
+			// stored during replication will be applied as we discover each node.
+			RefreshNodeInfo();
+			break;
+		}
+		case LEARN_MODE_DELETED:
+		{
+			Log::Write( "LEARN_MODE_DELETED" );
 			break;
 		}
 	}
@@ -1490,8 +1687,25 @@ void Driver::HandleApplicationCommandHandlerRequest
 		{
 			break;	//TODO: Test this class function or implement
 		}
+		case COMMAND_CLASS_CONTROLLER_REPLICATION:
+		{
+			if( m_controllerReplication && ( ControllerCommand_ReceiveConfiguration == m_controllerCommand ) )
+			{
+				m_controllerReplication->HandleMsg( &_data[6], _data[4] );
+				if( m_controllerCallback )
+				{
+					m_controllerCallback( ControllerState_InProgress, m_controllerCallbackContext );
+				}		
+			}
+			else
+			{
+
+			}
+			break;
+		}
 		default:
 		{			
+			// Allow the node to handle the message itself
 			if( m_nodes[nodeId] )
 		 	{
 				m_nodes[nodeId]->ApplicationCommandHandler( _data );
@@ -1733,6 +1947,35 @@ void Driver::PollThreadProc()
 //-----------------------------------------------------------------------------
 //	Retrieving Node information
 //-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+// <Driver::RefreshNodeInfo>
+// Delete all nodes and fetch new node data from the Z-Wave network
+//-----------------------------------------------------------------------------
+void Driver::RefreshNodeInfo
+(
+)
+{
+	// Delete all the node data
+	for( int i=0; i<256; ++i )
+	{
+		if( m_nodes[i] )
+		{
+			delete m_nodes[i];
+			m_nodes[i] = NULL;
+		}
+	}
+
+	// Notify the user that all node and value information has been deleted
+	Notification notification( Notification::Type_DriverReset );
+	notification.SetHomeAndNodeIds( m_homeId, 0 );
+	Manager::Get()->NotifyWatchers( &notification ); 
+
+	// Fetch new node data from the Z-Wave network
+	Log::Write( "RefreshNodeInfo" );
+	Msg* msg = new Msg( "RefreshNodeInfo", 0xff, REQUEST, FUNC_ID_SERIAL_API_GET_INIT_DATA, false );
+	SendMsg( msg );
+}
 
 //-----------------------------------------------------------------------------
 // <Driver::AddInfoRequest>
@@ -2054,117 +2297,162 @@ void Driver::AssignReturnRoute
 } 
 
 //-----------------------------------------------------------------------------
-// <Driver::BeginAddNode>
-// Set the controller into AddNode mode
+// <Driver::BeginControllerCommand>
+// Start the controller performing one of its network management functions
 //-----------------------------------------------------------------------------
-void Driver::BeginAddNode
-(
-	bool _highPower // = false
+bool Driver::BeginControllerCommand
+( 
+	ControllerCommand _command,
+	pfnControllerCallback_t _callback,
+	void* _context,
+	bool _highPower
 )
 {
-	Log::Write( "Add Node - Begin" );
-	Msg* msg = new Msg( "Add Node - Begin", 0xff, REQUEST, FUNC_ID_ZW_ADD_NODE_TO_NETWORK, true );
-	msg->Append( _highPower ? ADD_NODE_ANY | ADD_NODE_OPTION_HIGH_POWER : ADD_NODE_ANY );
-	SendMsg( msg );
+	if( ControllerCommand_None != m_controllerCommand )
+	{
+		// Already busy doing something else
+		return false;
+	}
+
+	m_controllerCallback = _callback;
+	m_controllerCallbackContext = _context;
+	m_controllerCommand = _command;
+
+	switch( m_controllerCommand )
+	{
+		case ControllerCommand_AddController:
+		{
+			Log::Write( "AddController" );
+			Msg* msg = new Msg( "AddController", 0xff, REQUEST, FUNC_ID_ZW_ADD_NODE_TO_NETWORK, true );
+			msg->Append( _highPower ? ADD_NODE_CONTROLLER | OPTION_HIGH_POWER : ADD_NODE_CONTROLLER );
+			SendMsg( msg );
+			break;
+		}
+		case ControllerCommand_AddDevice:
+		{
+			Log::Write( "AddDevice" );
+			Msg* msg = new Msg( "AddDevice", 0xff, REQUEST, FUNC_ID_ZW_ADD_NODE_TO_NETWORK, true );
+			msg->Append( _highPower ? ADD_NODE_SLAVE | OPTION_HIGH_POWER : ADD_NODE_SLAVE );
+			SendMsg( msg );
+			break;
+		}
+		case ControllerCommand_CreateNewPrimary:
+		{
+			break;
+		}
+		case ControllerCommand_ReceiveConfiguration:
+		{
+			Log::Write( "ReceiveConfiguration" );
+			Msg* msg = new Msg( "ReceiveConfiguration", 0xff, REQUEST, FUNC_ID_ZW_SET_LEARN_MODE, false, false );
+			msg->Append( 0xff );
+			SendMsg( msg );
+			break;
+		}
+		case ControllerCommand_RemoveController:
+		{
+			Log::Write( "RemoveController" );
+			Msg* msg = new Msg( "RemoveController", 0xff, REQUEST, FUNC_ID_ZW_REMOVE_NODE_FROM_NETWORK, true );
+			msg->Append( _highPower ? REMOVE_NODE_ANY | OPTION_HIGH_POWER : REMOVE_NODE_ANY );
+			SendMsg( msg );
+			break;
+		}
+		case ControllerCommand_RemoveDevice:
+		{
+			Log::Write( "RemoveDevice" );
+			Msg* msg = new Msg( "RemoveDevice", 0xff, REQUEST, FUNC_ID_ZW_REMOVE_NODE_FROM_NETWORK, true );
+			msg->Append( _highPower ? REMOVE_NODE_ANY | OPTION_HIGH_POWER : REMOVE_NODE_ANY );
+			SendMsg( msg );
+			break;
+		}
+		case ControllerCommand_ReplaceFailedDevice:
+		{
+			break;
+		}
+		case ControllerCommand_TransferPrimaryRole:
+		{
+			Log::Write( "TransferPrimaryRole" );
+			Msg* msg = new Msg(  "TransferPrimaryRole", 0xff, REQUEST, FUNC_ID_ZW_CONTROLLER_CHANGE, true, false );
+			msg->Append( CONTROLLER_CHANGE_START );
+			SendMsg( msg );
+			break;
+		}
+	}
+
+	return true;
 }
 
 //-----------------------------------------------------------------------------
-// <Driver::BeginAddController>
-// Set the controller into AddController mode
+// <Driver::CancelControllerCommand>
+// Stop the current controller function
 //-----------------------------------------------------------------------------
-void Driver::BeginAddController
-(
-	bool _highPower // = false
+bool Driver::CancelControllerCommand
+( 
 )
 {
-	Log::Write( "Add Controller - Begin" );
-	Msg* msg = new Msg( "Add Controller - Begin", 0xff, REQUEST, FUNC_ID_ZW_ADD_NODE_TO_NETWORK, true );
-	msg->Append( _highPower ? ADD_NODE_CONTROLLER | ADD_NODE_OPTION_HIGH_POWER : ADD_NODE_CONTROLLER );
-	SendMsg( msg );
-}
+	if( ControllerCommand_None == m_controllerCommand )
+	{
+		// Controller is not doing anything
+		return false;
+	}
 
-//-----------------------------------------------------------------------------
-// <Driver::EndAddNode>
-// Take the controller out of AddNode mode
-//-----------------------------------------------------------------------------
-void Driver::EndAddNode
-(
-)
-{
-	Log::Write( "Add Node - End" );
-	Msg* msg = new Msg( "Add Node - End", 0xff, REQUEST, FUNC_ID_ZW_ADD_NODE_TO_NETWORK, false, false );
-	msg->Append( ADD_NODE_STOP );
-	SendMsg( msg );
+	switch( m_controllerCommand )
+	{
+		case ControllerCommand_AddController:
+		{
+			Log::Write( "CancelAddController" );
+			Msg* msg = new Msg( "CancelAddController", 0xff, REQUEST, FUNC_ID_ZW_ADD_NODE_TO_NETWORK, true );
+			msg->Append( ADD_NODE_STOP );
+			SendMsg( msg );
+			break;
+		}
+		case ControllerCommand_AddDevice:
+		{
+			Log::Write( "CancelAddDevice" );
+			Msg* msg = new Msg( "CancelAddDevice", 0xff, REQUEST, FUNC_ID_ZW_ADD_NODE_TO_NETWORK, true );
+			msg->Append( ADD_NODE_STOP );
+			SendMsg( msg );
+			break;
+		}
+		case ControllerCommand_CreateNewPrimary:
+		{
+			break;
+		}
+		case ControllerCommand_ReceiveConfiguration:
+		{
+			Log::Write( "CancelReceiveConfiguration" );
+			Msg* msg = new Msg( "CancelReceiveConfiguration", 0xff, REQUEST, FUNC_ID_ZW_SET_LEARN_MODE, false, false );
+			msg->Append( 0 );
+			SendMsg( msg );
+			break;
+		}
+		case ControllerCommand_RemoveController:
+		{
+			Log::Write( "CancelRemoveController" );
+			Msg* msg = new Msg( "CancelRemoveController", 0xff, REQUEST, FUNC_ID_ZW_REMOVE_NODE_FROM_NETWORK, true );
+			msg->Append( REMOVE_NODE_STOP );
+			SendMsg( msg );
+			break;
+		}
+		case ControllerCommand_RemoveDevice:
+		{
+			Log::Write( "CancelRemoveDevice" );
+			Msg* msg = new Msg( "CancelRemoveDevice", 0xff, REQUEST, FUNC_ID_ZW_REMOVE_NODE_FROM_NETWORK, true );
+			msg->Append( REMOVE_NODE_STOP );
+			SendMsg( msg );
+			break;
+		}
+		case ControllerCommand_ReplaceFailedDevice:
+		{
+			break;
+		}
+		case ControllerCommand_TransferPrimaryRole:
+		{
+			break;
+		}
+	}
 
-	Log::Write( "Get new init data after Add Node" );
-	msg = new Msg( "Get new init data after Add Node", 0xff, REQUEST, FUNC_ID_SERIAL_API_GET_INIT_DATA, false );
-	SendMsg( msg );
-}
-
-//-----------------------------------------------------------------------------
-// <Driver::BeginRemoveNode>
-// Set the controller into RemoveNode mode
-//-----------------------------------------------------------------------------
-void Driver::BeginRemoveNode
-(
-)
-{
-	Log::Write( "Remove Node - Begin" );
-	Msg* msg = new Msg( "Remove Node - Begin", 0xff, REQUEST, FUNC_ID_ZW_REMOVE_NODE_FROM_NETWORK, true );
-	msg->Append( REMOVE_NODE_ANY );
-	SendMsg( msg );
-}
-
-//-----------------------------------------------------------------------------
-// <Driver::EndRemoveNode>
-// Take the controller out of RemoveNode mode
-//-----------------------------------------------------------------------------
-void Driver::EndRemoveNode
-(
-)
-{
-	Log::Write( "Remove Node - End" );
-	Msg* msg = new Msg( "Remove Node - End", 0xff, REQUEST, FUNC_ID_ZW_REMOVE_NODE_FROM_NETWORK, false, false );
-	msg->Append( REMOVE_NODE_STOP );
-	SendMsg( msg );
-
-	Log::Write( "Get new init data after Remove Node" );
-	msg = new Msg( "Get new init data after Remove Node", 0xff, REQUEST, FUNC_ID_SERIAL_API_GET_INIT_DATA, false );
-	SendMsg( msg );
-}
-
-//-----------------------------------------------------------------------------
-// <Driver::BeginReplicateController>
-// Set the controller into ReplicateController mode
-//-----------------------------------------------------------------------------
-void Driver::BeginReplicateController
-(
-)
-{
-	Log::Write( "Replicate Controller - Begin" );
-	Msg* msg = new Msg( "Replicate Controller - Begin", 0xff, REQUEST, FUNC_ID_ZW_SET_LEARN_MODE, false, false );
-	msg->Append( 0xFF );
-	msg->Append( 1 );
-	SendMsg( msg );
-}
-
-//-----------------------------------------------------------------------------
-// <Driver::EndReplicateController>
-// Take the controller out of ReplicateController mode
-//-----------------------------------------------------------------------------
-void Driver::EndReplicateController
-(
-)
-{
-	Log::Write( "Replicate Controller - End" );
-	Msg* msg = new Msg(  "Replicate Controller - End", 0xff, REQUEST, FUNC_ID_ZW_SET_LEARN_MODE, false, false );
-	msg->Append( 0 );
-	msg->Append( 0 );
-	SendMsg( msg );
-
-	Log::Write( "Get new init data after replication" );
-	msg = new Msg( "Get new init data after replication", 0xff, REQUEST, FUNC_ID_SERIAL_API_GET_INIT_DATA, false );
-	SendMsg( msg );
+	m_controllerCommand = ControllerCommand_None;
+	return true;
 }
 
 //-----------------------------------------------------------------------------
@@ -2178,20 +2466,6 @@ void Driver::RequestNetworkUpdate
 	Log::Write( "Request Network update" );
 	Msg* msg = new Msg(  "Request Network Update", 0xff, REQUEST, FUNC_ID_ZW_REQUEST_NETWORK_UPDATE, false, false );
 	msg->Append( 1 );
-	SendMsg( msg );
-}
-
-//-----------------------------------------------------------------------------
-// <Driver::ControllerChange>
-// Change primary controller
-//-----------------------------------------------------------------------------
-void Driver::ControllerChange
-(
-)
-{
-	Log::Write( "Change primary controller" );
-	Msg* msg = new Msg(  "Change Primary Controller", 0xff, REQUEST, FUNC_ID_ZW_CONTROLLER_CHANGE, false, false );
-	msg->Append( 2 );
 	SendMsg( msg );
 }
 
@@ -2217,7 +2491,5 @@ void Driver::UpdateEvents
 		}
 	}
 }
-
-
 
 
