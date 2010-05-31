@@ -40,9 +40,11 @@
 #include "CommandClass.h"
 #include "Basic.h"
 #include "Configuration.h"
+#include "ControllerReplication.h"
 #include "MultiInstance.h"
 #include "WakeUp.h"
 #include "NodeNaming.h"
+#include "Version.h"
 
 #include "ValueID.h"
 #include "Value.h"
@@ -386,7 +388,8 @@ void Node::UpdateProtocolInfo
 	m_version = ( _data[0] & 0x07 ) + 1;
 	
 	// Security  
-	m_security = _data[1];
+	m_security = _data[1] & 0x7f;
+//	m_optional = (( _data[1] & 0x80 ) != 0 );
 
 	// Device types
 	m_basic = _data[3];
@@ -423,6 +426,10 @@ void Node::UpdateProtocolInfo
 		case GenericType_SemiInteroperable:	{ m_genericLabel = "Semi-Interoperable";	break; }
 		case GenericType_NonInteroperable:	{ m_genericLabel = "Non-Interoperable";		break; }
 	}
+
+
+
+
 
 	Log::Write( "Protocol Info for Node %d:", m_nodeId );
 	Log::Write( "  Listening	 = %s", m_listening ? "true" : "false" );
@@ -519,6 +526,8 @@ void Node::UpdateNodeInfo
 		// of supported modes before receiving the current state.  If the node
 		// supports the multi-instance command class, we hold off requesting the 
 		// non-static state until we receive the instance count for each command class.
+		RequestVersions();
+		RequestInstances();
 		RequestState( CommandClass::RequestFlag_Static );
 		if( NULL == GetCommandClass( MultiInstance::StaticGetCommandClassId() ) )
 		{
@@ -563,7 +572,19 @@ void Node::ApplicationCommandHandler
 	}
 	else
 	{
-		Log::Write( "Node(%d)::ApplicationCommandHandler - Unhandled Command Class 0x%.2x", m_nodeId, _data[5] );
+		if( _data[5] == ControllerReplication::StaticGetCommandClassId() )
+		{
+			// This is a controller replication message, and we do not support it.
+			// We have to at least acknowledge the message to avoid locking the sending device.
+			Log::Write( "Node(%d)::ApplicationCommandHandler - Default acknowledgement of controller replication data", m_nodeId );
+
+			Msg* msg = new Msg( "Replication Command Complete", m_nodeId, REQUEST, FUNC_ID_ZW_REPLICATION_COMMAND_COMPLETE, false );
+			GetDriver()->SendMsg( msg );
+		}
+		else
+		{
+			Log::Write( "Node(%d)::ApplicationCommandHandler - Unhandled Command Class 0x%.2x", m_nodeId, _data[5] );
+		}
 	}
 }
 
@@ -630,6 +651,26 @@ void Node::RequestInstances
 			if( it->second != pMultiInstance )
 			{
 				pMultiInstance->RequestInstances( it->second );
+			}
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <Node::RequestVersions>
+// Request the version number of each command class
+//-----------------------------------------------------------------------------
+void Node::RequestVersions
+( 
+)const
+{
+	if( Version* version = static_cast<Version*>( GetCommandClass( Version::StaticGetCommandClassId() ) ) )
+	{
+		for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
+		{
+			if( it->second != version )
+			{
+				version->RequestCommandClassVersion( it->second );
 			}
 		}
 	}

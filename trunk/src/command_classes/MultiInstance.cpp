@@ -37,24 +37,6 @@ using namespace OpenZWave;
 
 
 //-----------------------------------------------------------------------------
-// <MultiInstance::RequestState>												   
-// Request the current state from the device									  
-//-----------------------------------------------------------------------------
-void MultiInstance::RequestState
-(
-	uint32 const _requestFlags
-)
-{
-	if( _requestFlags & RequestFlag_Static )
-	{
-		if( Node const* node = GetNode() )
-		{
-			node->RequestInstances();
-		}
-	}
-}
-
-//-----------------------------------------------------------------------------
 // <MultiInstance::RequestInstances>												   
 // Request number of instances of the specified command class from the device									   
 //-----------------------------------------------------------------------------

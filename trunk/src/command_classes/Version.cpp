@@ -141,15 +141,15 @@ bool Version::HandleMsg
 //-----------------------------------------------------------------------------
 void Version::RequestCommandClassVersion
 (
-	uint8 const _commandClassId
+	CommandClass const* _commandClass
 )
 {
 	Msg* msg = new Msg( "VersionCmd_CommandClassGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 	msg->Append( GetNodeId() );
-	msg->Append( 2 );
+	msg->Append( 3 );
 	msg->Append( GetCommandClassId() );
 	msg->Append( VersionCmd_CommandClassGet );
-	msg->Append( _commandClassId );
+	msg->Append( _commandClass->GetCommandClassId() );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 	GetDriver()->SendMsg( msg );
 }

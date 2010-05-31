@@ -226,21 +226,10 @@ namespace OpenZWaveDotNET {
 		void RequestNodeNeighborUpdate( uint32 homeId, uint8 nodeId )	{Manager::Get()->RequestNodeNeighborUpdate(homeId,nodeId);}
 		void AssignReturnRoute( uint32 homeId, uint8 srcNodeId, uint8 dstNodeId )	{Manager::Get()->AssignReturnRoute(homeId,srcNodeId,dstNodeId);}
 		
-		void BeginAddNode( uint32 homeId, bool bHighpower)	{Manager::Get()->BeginAddNode(homeId,bHighpower);}
-		void BeginAddController( uint32 homeId, bool bHighpower)	{Manager::Get()->BeginAddController(homeId,bHighpower);}
-		void BeginAddNode( uint32 homeId)	{Manager::Get()->BeginAddNode(homeId);}
-		void BeginAddController( uint32 homeId)	{Manager::Get()->BeginAddController(homeId);}
-
-		void EndAddNode( uint32 homeId )	{Manager::Get()->EndAddNode(homeId);}
-		
-		void BeginRemoveNode( uint32 homeId)	{Manager::Get()->BeginRemoveNode(homeId);}
-		void EndRemoveNode( uint32 homeId)	{Manager::Get()->EndRemoveNode(homeId);}
-
-		void BeginReplicateController( uint32 homeId )	{Manager::Get()->BeginReplicateController(homeId);}
-		void EndReplicateController( uint32 homeId )	{Manager::Get()->EndReplicateController(homeId);}
+	//	bool BeginControllerCommand( uint32 const _homeId, Driver::ControllerCommand _command, Driver::pfnControllerCallback_t _callback = NULL, void* _context = NULL, bool _highPower = false ){ return Manager::Get()->BeginControllerCommand( _homeId, _command, _callback, _context, _highPower ); }
+	//	bool CancelControllerCommand( uint32 const _homeId ){ return Manager::Get()->CancelControllerCommand( _homeId ); }
 
 		void RequestNetworkUpdate( uint32 homeId )	{Manager::Get()->RequestNetworkUpdate(homeId);}
-		void ControllerChange( uint32 homeId )	{Manager::Get()->ControllerChange(homeId);}
 
 		//
 		//void ReadMemory( uint32 homeId,  uint16 offset)	{Manager::Get()->ReadMemory(homeId,offset);}

@@ -41,6 +41,9 @@ namespace OpenZWave
 		static uint8 const StaticGetCommandClassId(){ return 0x21; }
 		static string const StaticGetCommandClassName(){ return "COMMAND_CLASS_CONTROLLER_REPLICATION"; }
 
+		void StartReplication( uint8 const _targetNodeId );
+		void SendNextData( uint8 const _targetNodeId );
+
 		// From CommandClass
 		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }
 		virtual string const GetCommandClassName()const{ return StaticGetCommandClassName(); }

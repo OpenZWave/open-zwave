@@ -34,6 +34,30 @@
 
 using namespace OpenZWave;
 
+static enum ClimateControlScheduleCmd
+{
+	ScheduleSet = 0x01,
+	ScheduleGet,
+	ScheduleReport,
+	ScheduleChangedGet,
+	ScheduleChangedReport,
+	ScheduleOverrideSet,
+	ScheduleOverrideGet,
+	ScheduleOverrideReport
+};
+
+static char* const c_dayNames[] = 
+{
+	"Invalid",
+	"Monday",
+	"Tuesday",
+	"Wednesday",
+	"Thursday",
+	"Friday",
+	"Saturday",
+	"Sunday"
+};
+
 //static enum ClimateControlScheduleCmd
 //{
 //	ScheduleSet = 0x01
@@ -80,48 +104,51 @@ using namespace OpenZWave;
 //		Override type: type=STRUCT_BYTE
 //		Override state: type=BYTE
 //};
-//
-//
-////-----------------------------------------------------------------------------
-//// <ClimateControlSchedule::RequestState>												   
-//// Request current state from the device									   
-////-----------------------------------------------------------------------------
-//void ClimateControlSchedule::RequestState
-//(
-//	  bool const _poll
-//)
-//{
-//	Msg* msg = new Msg( "ScheduleChangedGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-//	msg->Append( GetNodeId() );
-//	msg->Append( 2 );
-//	msg->Append( GetCommandClassId() );
-//	msg->Append( ScheduleChangedGet );
-//	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-//	GetDriver()->SendMsg( msg );
-//}
-//
-////-----------------------------------------------------------------------------
-//// <ClimateControlSchedule::HandleMsg>
-//// Handle a message from the Z-Wave network
-////-----------------------------------------------------------------------------
-//bool ClimateControlSchedule::HandleMsg
-//(
-//	uint8 const* _data,
-//	uint32 const _length,
-//	  uint32 const _instance	// = 1
-//	
-//)
-//{
-//	if (ClimateControlScheduleCmd_Report == (ClimateControlScheduleCmd)_data[0])
-//	{
-//		// We have received a report from the Z-Wave device
-//		// ThermostatModeEnum mode = (ThermostatModeEnum)_data[1];
-//		// m_pZone->HvacModeChanged(c_modeName[mode]);
-//		return true;
-//	}
-//	return false;
-//}
-//
+
+
+//-----------------------------------------------------------------------------
+// <ClimateControlSchedule::RequestState>												   
+// Request current state from the device									   
+//-----------------------------------------------------------------------------
+void ClimateControlSchedule::RequestState
+(
+	uint32 const _requestFlags
+)
+{
+	if( _requestFlags & RequestFlag_Session )
+	{
+		// Get the schedules for each day
+		for( int i=1; i<=7; ++i )
+		{
+			char str[64];
+			snprintf( str, 64, "Get climate control schedule for %s", c_dayNames[i] );
+			Msg* msg = new Msg( str, GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+			msg->Append( GetNodeId() );
+			msg->Append( 3 );
+			msg->Append( GetCommandClassId() );
+			msg->Append( ScheduleGet );
+			msg->Append( i );
+			msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+			GetDriver()->SendMsg( msg );
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <ClimateControlSchedule::HandleMsg>
+// Handle a message from the Z-Wave network
+//-----------------------------------------------------------------------------
+bool ClimateControlSchedule::HandleMsg
+(
+	uint8 const* _data,
+	uint32 const _length,
+	  uint32 const _instance	// = 1
+	
+)
+{
+	return false;
+}
+
 ////-----------------------------------------------------------------------------
 //// <ClimateControlSchedule::Set>
 //// Set the device's 
