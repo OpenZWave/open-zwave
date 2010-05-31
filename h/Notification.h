@@ -53,7 +53,8 @@ namespace OpenZWave
 			Type_NodeStatus,		// Node status has changed (usually triggered by receiving a basic_set command from the node)
 			Type_PollingDisabled,	// Polling of this node has been turned off
 			Type_PollingEnabled,	// Polling of this node has been turned on
-			Type_DriverReady		// Driver has been added and is ready to use
+			Type_DriverReady,		// Driver has been added and is ready to use
+			Type_DriverReset		// All nodes and values for this driver have been removed.
 		};
 
 		NotificationType GetType()const{ return m_type; }

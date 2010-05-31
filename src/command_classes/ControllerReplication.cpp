@@ -30,6 +30,7 @@
 #include "Defs.h"
 #include "Msg.h"
 #include "Driver.h"
+#include "Node.h"
 #include "Log.h"
 
 using namespace OpenZWave;
@@ -55,6 +56,14 @@ using namespace OpenZWave;
 //		Scene name: type=ARRAY
 //};
 
+enum ControllerReplicationCmd
+{
+	ControllerReplicationCmd_TransferGroup		= 0x31,
+	ControllerReplicationCmd_TransferGroupName	= 0x32,
+	ControllerReplicationCmd_TransferScene		= 0x33,
+	ControllerReplicationCmd_TransferSceneName	= 0x34
+};
+
 
 //-----------------------------------------------------------------------------
 // <ControllerReplication::HandleMsg>
@@ -64,10 +73,55 @@ bool ControllerReplication::HandleMsg
 (
 	uint8 const* _data,
 	uint32 const _length,
-	uint32 const _instance	// = 1	
+	uint32 const _instance	// = 1
 )
 {
-	return false;
+	switch( _data[0] )
+	{
+		case ControllerReplicationCmd_TransferGroup:
+		{
+			break;
+		}
+		case ControllerReplicationCmd_TransferGroupName:
+		{
+			break;
+		}
+		case  ControllerReplicationCmd_TransferScene:
+		{
+			break;
+		}
+		case ControllerReplicationCmd_TransferSceneName:
+		{
+			break;
+		}
+	}
+
+	Msg* msg = new Msg( "ControllerReplication - Command Complete", GetNodeId(), REQUEST, FUNC_ID_ZW_REPLICATION_COMMAND_COMPLETE, false, false );
+	GetDriver()->SendMsg( msg );
+	return true;
 }
 
+//-----------------------------------------------------------------------------
+// <ControllerReplication::StartReplication>
+// Set up the group and scene data to be sent to the other controller
+//-----------------------------------------------------------------------------
+void ControllerReplication::StartReplication
+(
+	uint8 const _targetNodeId
+)
+{
+	// Set up the groups and scenes to be sent
 
+	SendNextData( _targetNodeId );
+}
+
+//-----------------------------------------------------------------------------
+// <ControllerReplication::SendNextData>
+// Send the next block of replication data
+//-----------------------------------------------------------------------------
+void ControllerReplication::SendNextData
+(
+	uint8 const _targetNodeId
+)
+{
+}

@@ -237,6 +237,13 @@ int main( int argc, char* argv[] )
 		Sleep(10000);
 	}
 
+	//Manager::Get()->ResetController( g_homeId );
+
+	//Sleep(2000);
+
+	//Manager::Get()->BeginControllerCommand( g_homeId, Driver::ControllerCommand_TransferPrimaryRole, NULL, NULL );
+	//Sleep( 20000 );
+
 	//Manager::Get()->BeginAddNode( g_homeId );
 	//Sleep(10000);
 	//Manager::Get()->EndAddNode( g_homeId );
@@ -244,6 +251,12 @@ int main( int argc, char* argv[] )
 	//Sleep(10000);
 	//Manager::Get()->EndRemoveNode( g_homeId );
 
+	//while( true )
+	//{
+	//	Manager::Get()->RefreshNodeInfo( g_homeId, 8 );
+	//	Sleep(5000);
+	//	Manager::Get()->WriteConfig( g_homeId );
+	//}
 
 	Sleep(10000);
 	Manager::Get()->WriteConfig( g_homeId );

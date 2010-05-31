@@ -134,7 +134,7 @@ void CommandClasses::RegisterCommandClasses
 	cc.Register( Basic::StaticGetCommandClassId(), Basic::Create );
 	//cc.Register( BasicWindowCovering::StaticGetCommandClassId(), BasicWindowCovering::Create );
 	cc.Register( Battery::StaticGetCommandClassId(), Battery::Create );
-	//cc.Register( ClimateControlSchedule::StaticGetCommandClassId(), ClimateControlSchedule::Create );
+	cc.Register( ClimateControlSchedule::StaticGetCommandClassId(), ClimateControlSchedule::Create );
 	cc.Register( Clock::StaticGetCommandClassId(), Clock::Create );
 	cc.Register( Configuration::StaticGetCommandClassId(), Configuration::Create );
 	cc.Register( ControllerReplication::StaticGetCommandClassId(), ControllerReplication::Create );

@@ -35,11 +35,11 @@
 #include <deque>
 
 #include "Defs.h"
+#include "Driver.h"
 #include "ValueID.h"
 
 namespace OpenZWave
 {
-	class Driver;
 	class Node;
 	class Msg;
 	class Value;
@@ -58,11 +58,11 @@ namespace OpenZWave
 
 	class Manager
 	{
+		friend class Driver;
 		friend class CommandClass;
 		friend class Group;
 		friend class Node;
 		friend class Value;
-		friend class Driver;
 
 	public:
 		typedef void (*pfnOnNotification_t)( Notification const* _pNotification, void* _context );
@@ -174,24 +174,14 @@ namespace OpenZWave
 
 		void RequestNodeNeighborUpdate( uint32 const _homeId, uint8 const _nodeId );
 		void AssignReturnRoute( uint32 const _homeId, uint8 const _srcNodeId, uint8 const _dstNodeId );
-		
-		void BeginAddNode( uint32 const _homeId, bool const _bHighpower = false );
-		void BeginAddController( uint32 const _homeId, bool const _bHighpower = false );
-		void EndAddNode( uint32 const _homeId );
-		
-		void BeginRemoveNode( uint32 const _homeId );
-		void EndRemoveNode( uint32 const _homeId );
-
-		void BeginReplicateController( uint32 const _homeId );
-		void EndReplicateController( uint32 const _homeId );
 
 		void RequestNetworkUpdate( uint32 const _homeId );
-		void ControllerChange( uint32 const _homeId );
 
+		bool BeginControllerCommand( uint32 const _homeId, Driver::ControllerCommand _command, Driver::pfnControllerCallback_t _callback = NULL, void* _context = NULL, bool _highPower = false );
+		bool CancelControllerCommand( uint32 const _homeId );
+	
 		void ReadMemory( uint32 const _homeId,  uint16 const offset );
-
 		void SetConfiguration( uint32 const _homeId, uint8 const _nodeId, uint8 const _parameter, uint32 const _value );
-
 	};
 
 } // namespace OpenZWave

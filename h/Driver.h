@@ -52,6 +52,7 @@ namespace OpenZWave
 	class ValueList;
 	class ValueShort;
 	class ValueString;
+	class ControllerReplication;
 
 	class Driver
 	{
@@ -105,6 +106,7 @@ namespace OpenZWave
 		uint8					m_capabilities;	
 		uint8					m_nodeId;			// PC Controller's Z-Wave node ID
 		Node*					m_nodes[256];		// Z-Wave node details	
+		ControllerReplication*	m_controllerReplication;
 
 	//-----------------------------------------------------------------------------
 	//	Sending Z-Wave messages
@@ -139,7 +141,6 @@ namespace OpenZWave
 		void HandleGetCapabilitiesResponse( uint8* pData );
 		void HandleEnableSUCResponse( uint8* pData );
 		void HandleRequestNetworkUpdate( uint8* pData );
-		void HandleControllerChange( uint8* pData );
 		void HandleSetSUCNodeIdResponse( uint8* pData );
 		void HandleGetSUCNodeIdResponse( uint8* pData );
 		void HandleMemoryGetIdResponse( uint8* pData );
@@ -148,6 +149,9 @@ namespace OpenZWave
 		void HandleSendDataResponse( uint8* pData );
 		bool HandleSendDataRequest( uint8* pData );
 		void HandleAddNodeToNetworkRequest( uint8* pData );
+		void HandleCreateNewPrimary( uint8* pData );
+		void HandleControllerChange( uint8* pData );
+		void HandleSetLearnMode( uint8* pData );
 		void HandleRemoveNodeFromNetworkRequest( uint8* pData );
 		void HandleApplicationCommandHandlerRequest( uint8* pData );
 		bool HandleApplicationUpdateRequest( uint8* pData );
@@ -195,6 +199,7 @@ namespace OpenZWave
 		ValueString* GetValueString( ValueID const& _id );
 
 	private:
+		void RefreshNodeInfo();						// Delete all nodes and fetch the data from the Z-Wave network again.
 		uint8 GetInfoRequest();
 
 		deque<uint8>			m_infoQueue;		// Queue holding nodes that we wish to interogate for setup details
@@ -209,19 +214,43 @@ namespace OpenZWave
 
 		void RequestNodeNeighborUpdate( uint8 _nodeId );
 		void AssignReturnRoute( uint8 _srcNodeId, uint8 _dstNodeId );
-		
-		void BeginAddNode( bool _bHighpower = false );
-		void BeginAddController( bool _bHighpower = false );
-		void EndAddNode();
-		
-		void BeginRemoveNode();
-		void EndRemoveNode();
-
-		void BeginReplicateController();
-		void EndReplicateController();
-
 		void RequestNetworkUpdate();
-		void ControllerChange();
+
+		// New versions with callbacks
+		enum ControllerCommand
+		{
+			ControllerCommand_None = 0,
+			ControllerCommand_AddController,
+			ControllerCommand_AddDevice,
+			ControllerCommand_CreateNewPrimary,
+			ControllerCommand_ReceiveConfiguration,
+			ControllerCommand_RemoveController,
+			ControllerCommand_RemoveDevice,
+			ControllerCommand_ReplaceFailedDevice,
+			ControllerCommand_TransferPrimaryRole
+		};
+
+		enum ControllerState
+		{
+			ControllerState_Normal = 0,
+			ControllerState_Waiting,
+			ControllerState_InProgress,
+			ControllerState_Completed,
+			ControllerState_Failed
+		};
+
+		typedef void (*pfnControllerCallback_t)( ControllerState _state, void* _context );
+
+		bool BeginControllerCommand( ControllerCommand _command, pfnControllerCallback_t _callback, void* _context, bool _highPower );
+		bool CancelControllerCommand();
+
+	private:
+		ControllerState				m_controllerState;
+		ControllerCommand			m_controllerCommand;
+		pfnControllerCallback_t		m_controllerCallback;
+		void*						m_controllerCallbackContext;
+		bool						m_controllerAdded;
+		uint8						m_nodeAdded;
 
 	//-----------------------------------------------------------------------------
 	//	Misc
