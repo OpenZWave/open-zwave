@@ -74,7 +74,7 @@ void Log::Destroy
 //-----------------------------------------------------------------------------
 void Log::Write
 ( 
-	char* _format,
+	char const* _format,
 	... 
 )
 {

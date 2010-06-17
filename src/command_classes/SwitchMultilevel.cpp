@@ -170,7 +170,7 @@ void SwitchMultilevel::StopLevelChange
 
 //-----------------------------------------------------------------------------
 // <SwitchMultilevel::EnableLevelChange>
-// Enable of disable the level change commands
+// Enable or disable the level change commands
 //-----------------------------------------------------------------------------
 void SwitchMultilevel::EnableLevelChange
 (

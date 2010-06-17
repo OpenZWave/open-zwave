@@ -46,7 +46,7 @@ enum ProtectionCmd
 	ProtectionCmd_Report	= 0x03
 };
 
-static char* const c_protectionStateNames[] = 
+static char const* c_protectionStateNames[] = 
 {
 	"Unprotected",
 	"Protection by Sequence",

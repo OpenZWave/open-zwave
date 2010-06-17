@@ -37,7 +37,7 @@
 
 using namespace OpenZWave;
 
-static char* const c_genreName[] = 
+static char const* c_genreName[] = 
 {
 	"all",
 	"user",
@@ -45,7 +45,7 @@ static char* const c_genreName[] =
 	"system"
 };
 
-static char* const c_typeName[] = 
+static char const* c_typeName[] = 
 {
 	"bool",
 	"byte",

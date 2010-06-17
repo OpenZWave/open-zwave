@@ -68,6 +68,9 @@ namespace OpenZWave
 		int32 const GetItemIdxByLabel( string const& _label );
 		int32 const GetItemIdxByValue( int32 const _value );
 
+		int32 const GetItemCount() { return (int32)m_items.size(); }
+		string const GetItemIdx( int32 const _valueIdx );
+
 	private:
 		vector<Item>	m_items;
 		int32			m_valueIdx;
