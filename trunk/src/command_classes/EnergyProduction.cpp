@@ -43,7 +43,7 @@ enum EnergyProductionCmd
 	EnergyProductionCmd_Report	= 0x03
 };
 
-static char* const c_energyParameterNames[] = 
+static char const* c_energyParameterNames[] = 
 {
 	"Instant energy production",
 	"Total energy production",

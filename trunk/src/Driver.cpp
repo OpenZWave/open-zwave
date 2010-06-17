@@ -129,6 +129,14 @@ Driver::~Driver
 	delete m_sendEvent;
 	delete m_exitEvent;
 
+	// Clear the send Queue
+	while( !m_sendQueue.empty() )
+	{
+		Msg *msg = m_sendQueue.front();
+		m_sendQueue.pop_front();
+		delete msg;
+	}
+
 	// Clear the node data
 	for( int i=0; i<256; ++i )
 	{
@@ -615,8 +623,9 @@ void Driver::RemoveMsg
 {
 	m_sendMutex->Lock();
 	
-	delete m_sendQueue.front();
+	Msg *msg = m_sendQueue.front();
 	m_sendQueue.pop_front();
+	delete msg;
 	if( m_sendQueue.empty() )
 	{
 		//No messages left, so clear the event
@@ -990,6 +999,7 @@ void Driver::ProcessMsg
 	// Generic callback handling
 	if( handleCallback )
 	{
+	  Log::Write("ProcessMsg: m_expectedCallbackId=%x _data[2]=%x m_expectedReply=%x _data[1]=%x m_expectedCommandClassId=%x _data[5]=%x", m_expectedCallbackId, _data[2], m_expectedReply, _data[1], m_expectedCommandClassId, _data[5]);
 		if( ( m_expectedCallbackId || m_expectedReply ) )
 		{
 			if( m_expectedCallbackId )
@@ -1024,6 +1034,19 @@ void Driver::ProcessMsg
 			if( !( m_expectedCallbackId || m_expectedReply ) )
 			{
 				Log::Write( "Message transaction complete" );
+				if( _data[1] == FUNC_ID_ZW_SEND_DATA )
+				{
+					m_sendMutex->Lock();
+					Msg *msg = m_sendQueue.front();
+					uint8 n = msg->GetTargetNodeId();
+					uint8 clsid = msg->GetExpectedCommandClassId();
+					Node *node = m_nodes[n];
+					if( node != NULL )
+					{
+						CommandClass *cc = node->GetCommandClass(clsid);
+					}
+					m_sendMutex->Release();
+				}
 				RemoveMsg();
 			}
 		}
@@ -1041,7 +1064,7 @@ void Driver::HandleGetCapabilitiesResponse
 	uint8* _data
 )
 {
-	Log::Write( "Received reply to GetCapabilities.  Node ID = %d", _data[0] );
+	Log::Write( "Received reply to GetCapabilities. Manufacturer Id 0x%04x Product Type 0x%04x Product Id 0x%04x", _data[4]*256+_data[5], _data[6]*256+_data[7], _data[8]*256+_data[9] );
 	//2009-06-14 11:41:14:585 Received: 0x01, 0x2b, 0x01, 0x07, 0x02, 0x52, 0x00, 0x00, 0x00, 0x01, 0x00, 0x01, 0xfe, 0x80, 0xfe, 0x80, 0x03, 0x00, 0x00, 0x00, 0xfb, 0x9f, 0x3b, 0x80, 0x07, 0x00, 0x00, 0x80, 0x00, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x59
 }
 
@@ -2070,7 +2093,7 @@ void Driver::RequestState
 // <Driver::GetBasicLabel>
 // Get the basic label string value with the specified ID
 //-----------------------------------------------------------------------------
-string Driver::GetBasicLabel
+string const& Driver::GetBasicLabel
 (
 	uint8 const _nodeId
 )
@@ -2087,7 +2110,7 @@ string Driver::GetBasicLabel
 // <Driver::GetGenericLabel>
 // Get the basic label string value with the specified ID
 //-----------------------------------------------------------------------------
-string Driver::GetGenericLabel
+string const& Driver::GetGenericLabel
 (
 	uint8 const _nodeId
 )
@@ -2095,6 +2118,189 @@ string Driver::GetGenericLabel
 	if( Node* node = m_nodes[_nodeId] )
 	{
 		return( node->GetGenericLabel() );
+	}
+
+	return NULL;
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::GetManufacturerName>
+// Get the manufacturer name string value with the specified ID
+//-----------------------------------------------------------------------------
+string const& Driver::GetManufacturerName
+(
+	uint8 const _nodeId
+)
+{
+	if( Node* node = m_nodes[_nodeId] )
+	{
+		return( node->GetManufacturerName() );
+	}
+
+	return NULL;
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::GetProductName>
+// Get the product name string value with the specified ID
+//-----------------------------------------------------------------------------
+string const& Driver::GetProductName
+(
+	uint8 const _nodeId
+)
+{
+	if( Node* node = m_nodes[_nodeId] )
+	{
+		return( node->GetProductName() );
+	}
+
+	return NULL;
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::GetNodeName>
+// Get the node name string value with the specified ID
+//-----------------------------------------------------------------------------
+string const& Driver::GetNodeName
+(
+	uint8 const _nodeId
+)
+{
+	if( Node* node = m_nodes[_nodeId] )
+	{
+		return( node->GetNodeName() );
+	}
+
+	return NULL;
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::GetLocation>
+// Get the node name string value with the specified ID
+//-----------------------------------------------------------------------------
+string const& Driver::GetLocation
+(
+	uint8 const _nodeId
+)
+{
+	if( Node* node = m_nodes[_nodeId] )
+	{
+		return( node->GetLocation() );
+	}
+
+	return NULL;
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::SetManufacturerName>
+// Set the manufacturer name string value with the specified ID
+//-----------------------------------------------------------------------------
+void Driver::SetManufacturerName
+(
+	uint8 const _nodeId,
+	string const& _manufacturerName
+)
+{
+	if( Node* node = m_nodes[_nodeId] )
+	{
+		node->SetManufacturerName( _manufacturerName );
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::SetProductName>
+// Set the product name string value with the specified ID
+//-----------------------------------------------------------------------------
+void Driver::SetProductName
+(
+	uint8 const _nodeId,
+	string const& _productName
+)
+{
+	if( Node* node = m_nodes[_nodeId] )
+	{
+		node->SetProductName( _productName );
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::SetNodeName>
+// Set the node name string value with the specified ID
+//-----------------------------------------------------------------------------
+void Driver::SetNodeName
+(
+	uint8 const _nodeId,
+	string const& _nodeName
+)
+{
+	if( Node* node = m_nodes[_nodeId] )
+	{
+		node->SetNodeName( _nodeName );
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::SetLocation>
+// Set the location string value with the specified ID
+//-----------------------------------------------------------------------------
+void Driver::SetLocation
+(
+	uint8 const _nodeId,
+	string const& _location
+)
+{
+	if( Node* node = m_nodes[_nodeId] )
+	{
+		node->SetLocation( _location );
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::GetManufacturerId>
+// Get the manufacturer Id string value with the specified ID
+//-----------------------------------------------------------------------------
+string const& Driver::GetManufacturerId
+(
+	uint8 const _nodeId
+)
+{
+	if( Node* node = m_nodes[_nodeId] )
+	{
+		return( node->GetManufacturerId() );
+	}
+
+	return NULL;
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::GetProductType>
+// Get the product type string value with the specified ID
+//-----------------------------------------------------------------------------
+string const& Driver::GetProductType
+(
+	uint8 const _nodeId
+)
+{
+	if( Node* node = m_nodes[_nodeId] )
+	{
+		return( node->GetProductType() );
+	}
+
+	return NULL;
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::GetProductId>
+// Get the product Id string value with the specified ID
+//-----------------------------------------------------------------------------
+string const& Driver::GetProductId
+(
+	uint8 const _nodeId
+)
+{
+	if( Node* node = m_nodes[_nodeId] )
+	{
+		return( node->GetProductId() );
 	}
 
 	return NULL;

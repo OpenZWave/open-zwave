@@ -34,7 +34,7 @@
 
 using namespace OpenZWave;
 
-static enum ClimateControlScheduleCmd
+enum ClimateControlScheduleCmd
 {
 	ScheduleSet = 0x01,
 	ScheduleGet,
@@ -46,7 +46,7 @@ static enum ClimateControlScheduleCmd
 	ScheduleOverrideReport
 };
 
-static char* const c_dayNames[] = 
+static char const* c_dayNames[] = 
 {
 	"Invalid",
 	"Monday",
@@ -58,7 +58,7 @@ static char* const c_dayNames[] =
 	"Sunday"
 };
 
-//static enum ClimateControlScheduleCmd
+//enum ClimateControlScheduleCmd
 //{
 //	ScheduleSet = 0x01
 //	ScheduleGet = 0x02

@@ -40,6 +40,9 @@ SerialPortImpl::SerialPortImpl
 )
 {
 	m_hSerialPort = -1;
+#ifdef DEBUG
+	m_hdebug = -1;
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -51,6 +54,9 @@ SerialPortImpl::~SerialPortImpl
 )
 {
 	close( m_hSerialPort );
+#ifdef DEBUG
+	close( m_hdebug );
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -169,6 +175,9 @@ bool SerialPortImpl::Open
 	tcflush( m_hSerialPort, TCIOFLUSH );
 
 	// Open successful
+#ifdef DEBUG
+	m_hdebug = open("data.log", O_WRONLY|O_CREAT, 0666);
+#endif
 	return true;
 
 SerialOpenFailure:
@@ -187,6 +196,10 @@ void SerialPortImpl::Close
 {
 	close( m_hSerialPort );
 	m_hSerialPort = -1;
+#ifdef DEBUG
+	close( m_hdebug );
+	m_hdebug = -1;
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -208,6 +221,17 @@ uint32 SerialPortImpl::Read
 
 	uint32 bytesRead;
 	bytesRead = read( m_hSerialPort, _buffer, _length );
+#ifdef DEBUG
+	if ( m_hdebug >= 0 && bytesRead > 0 )
+	{
+		unsigned int now = htonl(time(NULL));
+		unsigned char c = (char)bytesRead;
+		write( m_hdebug, "r", 1 );
+		write( m_hdebug, &c, 1);
+		write( m_hdebug, &now, sizeof(now));
+		write( m_hdebug, _buffer, bytesRead);
+	}
+#endif
 	return bytesRead;
 }
 
@@ -231,6 +255,17 @@ uint32 SerialPortImpl::Write
 	// Write the data
 	uint32 bytesWritten;
 	bytesWritten = write( m_hSerialPort, _buffer, _length);
+#ifdef DEBUG
+	if ( m_hdebug >= 0 )
+	{
+		unsigned int now = htonl(time(NULL));
+		unsigned char c = (char)bytesWritten;
+		write( m_hdebug, "w", 1 );
+		write( m_hdebug, &c, 1);
+		write( m_hdebug, &now, sizeof(now));
+		write( m_hdebug, _buffer, bytesWritten);
+	}
+#endif
 	return bytesWritten;
 }
 

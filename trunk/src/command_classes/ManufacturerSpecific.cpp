@@ -246,7 +246,16 @@ bool ManufacturerSpecific::LoadProductXML
 
 					// Add the product to the map
 					Product* product = new Product( manufacturerId, productType, productId, productName, configPath );
-					s_productMap[product->GetKey()] = product;
+					if ( s_productMap[product->GetKey()] != NULL )
+					{
+						Product *c = s_productMap[product->GetKey()];
+						Log::Write("Product name collision: %s, type %x id %x manufacturerid %x, collides with %s, type %x id %x manufacturerid %x", productName.c_str(), productType, productId, manufacturerId, c->GetProductName().c_str(), c->GetProductType(), c->GetProductId(), c->GetManufacturerId());
+						delete product;
+					}
+					else
+					{
+						s_productMap[product->GetKey()] = product;
+					}
 				}
 
 				// Move on to the next product.
@@ -260,6 +269,35 @@ bool ManufacturerSpecific::LoadProductXML
 
 	delete pDoc;	
 	return true;
+}
+
+//-----------------------------------------------------------------------------
+// <ManufacturerSpecific::UnloadProductXML>
+// Free the XML that maps manufacturer and product IDs
+//-----------------------------------------------------------------------------
+void ManufacturerSpecific::UnloadProductXML
+(
+)
+{
+	if (s_bXmlLoaded)
+	{
+		map<int64,Product*>::iterator pit = s_productMap.begin();
+		while( !s_productMap.empty() )
+		{
+		  	delete pit->second;
+			s_productMap.erase( pit );
+			pit = s_productMap.begin();
+		}
+
+		map<uint16,string>::iterator mit = s_manufacturerMap.begin();
+		while( !s_manufacturerMap.empty() )
+		{
+			s_manufacturerMap.erase( mit );
+			mit = s_manufacturerMap.begin();
+		}
+
+		s_bXmlLoaded = false;
+	}
 }
 
 //-----------------------------------------------------------------------------

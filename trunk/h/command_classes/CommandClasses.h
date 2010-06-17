@@ -41,7 +41,7 @@ namespace OpenZWave
 
 		static void RegisterCommandClasses();
 		static CommandClass* CreateCommandClass( uint8 const _commandClassId, uint32 const _homeId, uint8 const _nodeId );
-		
+
 	private:
 		CommandClasses();										
 		CommandClasses( CommandClasses const&	);					// prevent copy
@@ -62,6 +62,3 @@ namespace OpenZWave
 
 
 #endif
-
-
-

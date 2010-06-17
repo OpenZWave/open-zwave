@@ -32,10 +32,14 @@
 #include <termios.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <time.h>
 #include <sys/ioctl.h>
+#include <arpa/inet.h>
 
 #include "Defs.h"
 #include "SerialPort.h"
+
+#define DEBUG
 
 namespace OpenZWave
 {
@@ -55,6 +59,10 @@ namespace OpenZWave
 		bool Wait( int32 _timeout );
 
 		int m_hSerialPort;
+
+#ifdef DEBUG
+		int m_hdebug;
+#endif
 	};
 
 } // namespace OpenZWave

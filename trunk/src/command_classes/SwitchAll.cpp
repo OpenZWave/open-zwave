@@ -46,7 +46,7 @@ enum SwitchAllCmd
 	SwitchAllCmd_Off	= 0x05
 };
 
-static char* const c_switchAllStateName[] = 
+static char const* c_switchAllStateName[] = 
 {
 	"Disabled",
 	"Off Enabled",

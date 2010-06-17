@@ -117,7 +117,7 @@ bool Meter::HandleMsg
 				value->Release();
 			}
 
-			Log::Write( "Received Meter report from node %d: value=%s", GetNodeId(), valueStr );
+			Log::Write( "Received Meter report from node %d: value=%s", GetNodeId(), valueStr.c_str() );
 			return true;
 		}
 	}

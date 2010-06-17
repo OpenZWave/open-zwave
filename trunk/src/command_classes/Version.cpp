@@ -94,7 +94,7 @@ bool Version::HandleMsg
 			ValueString* value;
 
 			char library[8];
-			snprintf( library, 8, "%d", _data[1] );
+			snprintf( library, sizeof(library), "%d", _data[1] );
 			if( value = node->GetValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, (uint8)ValueIndex_Library ) )
 			{
 				value->OnValueChanged( library );
@@ -102,7 +102,7 @@ bool Version::HandleMsg
 			}
 
 			char protocol[16];
-			snprintf( protocol, 6, "%d.%d", _data[2], _data[3] );
+			snprintf( protocol, sizeof(protocol), "%d.%d", _data[2], _data[3] );
 			if( value = node->GetValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, (uint8)ValueIndex_Protocol ) )
 			{
 				value->OnValueChanged( protocol );
@@ -110,7 +110,7 @@ bool Version::HandleMsg
 			}
 
 			char application[16];
-			snprintf( application, 6, "%d.%d", _data[4], _data[5] );
+			snprintf( application, sizeof(application), "%d.%d", _data[4], _data[5] );
 			if( value = node->GetValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, (uint8)ValueIndex_Application ) )
 			{
 				value->OnValueChanged( application );

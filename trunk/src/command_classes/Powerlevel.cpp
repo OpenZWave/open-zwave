@@ -44,7 +44,7 @@ enum PowerlevelCmd
 	PowerlevelCmd_TestNodeReport	= 0x06
 };
 
-static char* const c_powerLevelNames[] = 
+static char const* c_powerLevelNames[] = 
 {
 	"Normal",
 	"-1dB",
@@ -58,7 +58,7 @@ static char* const c_powerLevelNames[] =
 	"-9dB"
 };
 
-static char* const c_powerLevelStatusNames[] = 
+static char const* c_powerLevelStatusNames[] = 
 {
 	"Failed",
 	"Success",

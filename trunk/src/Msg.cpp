@@ -158,7 +158,3 @@ string Msg::GetAsString()
 
 	return str;
 }
-
-
-
-

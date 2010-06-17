@@ -62,7 +62,7 @@ namespace OpenZWave
 		 * @param ... a variable number of arguments, to be included in the formatted string.
 		 * @see Create, Destroy
 		 */
-		static void Write( char* _format, ... );
+		static void Write( char const* _format, ... );
 
 	private:
 		Log( string const& _filename );

@@ -45,7 +45,7 @@ enum ThermostatOperatingStateCmd
 	ThermostatOperatingStateCmd_SupportedReport	= 0x05
 };
 
-static char* const c_stateName[] = 
+static char const* c_stateName[] = 
 {
 	"Idle",
 	"Heating",

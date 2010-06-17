@@ -53,11 +53,11 @@ default:	$(LIBDIR)/openzwave.a
 clean:
 	rm -f *.d *.o
 
-include $(tinyxml:.cpp=.d)
-include $(cclasses:.cpp=.d)
-include $(vclasses:.cpp=.d)
-include $(pform:.cpp=.d)
-include $(indep:.cpp=.d)
+-include $(tinyxml:.cpp=.d)
+-include $(cclasses:.cpp=.d)
+-include $(vclasses:.cpp=.d)
+-include $(pform:.cpp=.d)
+-include $(indep:.cpp=.d)
 
 vers.c:
 	echo 'char ozw_vers[] = "OpenZWave version 1.0.'`svnversion ../..`'";' > vers.c
