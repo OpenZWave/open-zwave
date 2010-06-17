@@ -232,8 +232,18 @@ int32 const ValueList::GetItemIdxByValue
 	return -1;
 }
 
-
-
-
-
-
+//-----------------------------------------------------------------------------
+// <ValueList::GetItemIdx>
+// Get Item's label by index.
+//-----------------------------------------------------------------------------
+string const ValueList::GetItemIdx
+(
+	int32 const _valueIdx
+)
+{
+	if (_valueIdx < 0 || _valueIdx >= m_items.size())
+	{
+		return NULL;
+	}
+	return m_items[_valueIdx].m_label;
+}

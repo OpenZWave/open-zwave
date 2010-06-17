@@ -40,7 +40,7 @@ namespace OpenZWave
 		LogImpl( string const& _filename );
 		~LogImpl();
 
-		void Write( char* _format, va_list _args );
+		void Write( char const* _format, va_list _args );
 
 		string m_filename;
 	};

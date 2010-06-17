@@ -45,7 +45,7 @@ enum ClockCmd
 	ClockCmd_Report	= 0x06
 };
 
-static char* const c_dayNames[] = 
+static char const* c_dayNames[] = 
 {
 	"Invalid",
 	"Monday",

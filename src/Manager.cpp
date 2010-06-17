@@ -477,7 +477,7 @@ void Manager::RequestState
 // <Manager::GetBasicLabel>
 // Get the basiclabel value with the specified ID
 //-----------------------------------------------------------------------------
-string Manager::GetBasicLabel
+string const& Manager::GetBasicLabel
 (
 	uint32 const _homeId,
 	uint8 const _nodeId
@@ -495,7 +495,7 @@ string Manager::GetBasicLabel
 // <Manager::GetGenericLabel>
 // Get the basiclabel value with the specified ID
 //-----------------------------------------------------------------------------
-string Manager::GetGenericLabel
+string const& Manager::GetGenericLabel
 (
 	uint32 const _homeId,
 	uint8 const _nodeId
@@ -504,6 +504,201 @@ string Manager::GetGenericLabel
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
 		return driver->GetGenericLabel( _nodeId );
+	}
+
+	return NULL;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::GetManufacturerName>
+// Get the manufacturer name value with the specified ID
+//-----------------------------------------------------------------------------
+string const& Manager::GetManufacturerName
+(
+	uint32 const _homeId,
+	uint8 const _nodeId
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		return driver->GetManufacturerName( _nodeId );
+	}
+
+	return NULL;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::GetProductName>
+// Get the product name value with the specified ID
+//-----------------------------------------------------------------------------
+string const& Manager::GetProductName
+(
+	uint32 const _homeId,
+	uint8 const _nodeId
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		return driver->GetProductName( _nodeId );
+	}
+
+	return NULL;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::GetNodeName>
+// Get the node name value with the specified ID
+//-----------------------------------------------------------------------------
+string const& Manager::GetNodeName
+(
+	uint32 const _homeId,
+	uint8 const _nodeId
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		return driver->GetNodeName( _nodeId );
+	}
+
+	return NULL;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::GetLocation>
+// Get the lcation value with the specified ID
+//-----------------------------------------------------------------------------
+string const& Manager::GetLocation
+(
+	uint32 const _homeId,
+	uint8 const _nodeId
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		return driver->GetLocation( _nodeId );
+	}
+
+	return NULL;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::SetManufacturerName>
+// Set the manufacturer name value with the specified ID
+//-----------------------------------------------------------------------------
+void Manager::SetManufacturerName
+(
+	uint32 const _homeId,
+	uint8 const _nodeId,
+	string const& _manufacturerName
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		driver->SetManufacturerName( _nodeId, _manufacturerName );
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::SetProductName>
+// Set the manufacturer name value with the specified ID
+//-----------------------------------------------------------------------------
+void Manager::SetProductName
+(
+	uint32 const _homeId,
+	uint8 const _nodeId,
+	string const& _productName
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		driver->SetProductName( _nodeId, _productName );
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::SetNodeName>
+// Set the node name value with the specified ID
+//-----------------------------------------------------------------------------
+void Manager::SetNodeName
+(
+	uint32 const _homeId,
+	uint8 const _nodeId,
+	string const& _nodeName
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		driver->SetNodeName( _nodeId, _nodeName );
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::SetLocation>
+// Set the location value with the specified ID
+//-----------------------------------------------------------------------------
+void Manager::SetLocation
+(
+	uint32 const _homeId,
+	uint8 const _nodeId,
+	string const& _location
+
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		driver->SetLocation( _nodeId, _location );
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::GetManufacturerId>
+// Get the manufacturer Id value with the specified ID
+//-----------------------------------------------------------------------------
+string const& Manager::GetManufacturerId
+(
+	uint32 const _homeId,
+	uint8 const _nodeId
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		return driver->GetManufacturerId( _nodeId );
+	}
+
+	return NULL;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::GetProductType>
+// Get the product type value with the specified ID
+//-----------------------------------------------------------------------------
+string const& Manager::GetProductType
+(
+	uint32 const _homeId,
+	uint8 const _nodeId
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		return driver->GetProductType( _nodeId );
+	}
+
+	return NULL;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::GetProductId>
+// Get the product Id value with the specified ID
+//-----------------------------------------------------------------------------
+string const& Manager::GetProductId
+(
+	uint32 const _homeId,
+	uint8 const _nodeId
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		return driver->GetProductId( _nodeId );
 	}
 
 	return NULL;

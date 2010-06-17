@@ -50,7 +50,7 @@ Group::Group
 	m_groupIdx( _groupIdx )
 {
 	char str[16];
-	snprintf( str, 16, "Group %d", m_groupIdx );
+	snprintf( str, sizeof(str), "Group %d", m_groupIdx );
 	m_label = str;
 }
 
@@ -224,8 +224,3 @@ const
 
 	return NULL;
 }
-
-
-
-
-

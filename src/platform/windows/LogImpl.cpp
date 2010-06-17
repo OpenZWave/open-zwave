@@ -68,7 +68,7 @@ LogImpl::~LogImpl
 //-----------------------------------------------------------------------------
 void LogImpl::Write
 ( 
-	char* _format, 
+	char const* _format, 
 	va_list _args
 )
 {

@@ -127,8 +127,22 @@ namespace OpenZWave
 	public:
 		bool RefreshNodeInfo( uint32 const _homeId, uint8 const _nodeId );
 		void RequestState( uint32 const _homeId, uint8 const _nodeId );
-		string GetBasicLabel( uint32 const _homeId, uint8 const _nodeId );
-		string GetGenericLabel( uint32 const _homeId, uint8 const _nodeId );
+		string const& GetBasicLabel( uint32 const _homeId, uint8 const _nodeId );
+		string const& GetGenericLabel( uint32 const _homeId, uint8 const _nodeId );
+
+		string const& GetManufacturerName( uint32 const _homeId, uint8 const _nodeId );
+		string const& GetProductName( uint32 const _homeId, uint8 const _nodeId );
+		string const& GetNodeName( uint32 const _homeId, uint8 const _nodeId );
+		string const& GetLocation( uint32 const _homeId, uint8 const _nodeId );
+
+		void SetManufacturerName( uint32 const _homeId, uint8 const _nodeId, string const& _manufacturerName );
+		void SetProductName( uint32 const _homeId, uint8 const _nodeId, string const& _productName );
+		void SetNodeName( uint32 const _homeId, uint8 const _nodeId, string const& _nodeName );
+		void SetLocation( uint32 const _homeId, uint8 const _nodeId, string const& _location );
+
+		string const& GetManufacturerId( uint32 const _homeId, uint8 const _nodeId );
+		string const& GetProductType( uint32 const _homeId, uint8 const _nodeId );
+		string const& GetProductId( uint32 const _homeId, uint8 const _nodeId );
 
 		ValueBool* GetValueBool( ValueID const& _id );
 		ValueByte* GetValueByte( ValueID const& _id );

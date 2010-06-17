@@ -168,4 +168,3 @@ void CommandClasses::RegisterCommandClasses
 	cc.Register( Version::StaticGetCommandClassId(), Version::Create );
 	cc.Register( WakeUp::StaticGetCommandClassId(), WakeUp::Create );
 }
-

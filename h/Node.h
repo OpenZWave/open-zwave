@@ -176,6 +176,7 @@ namespace OpenZWave
 		string const& GetManufacturerName()const{ return m_manufacturerName; }	
 		string const& GetProductName()const{ return m_productName; }	
 		string const& GetNodeName()const{ return m_nodeName; }	
+		string const& GetLocation()const{ return m_location; }	
 
 		string const& GetManufacturerId()const{ return m_manufacturerId; }	
 		string const& GetProductType()const{ return m_productType; }	
@@ -183,7 +184,8 @@ namespace OpenZWave
 
 		void SetManufacturerName( string const& _manufacturerName ){ m_manufacturerName = _manufacturerName; }
 		void SetProductName( string const& _productName ){ m_productName = _productName; }
-		void SetNodeName( string const& _nodeName );	
+		void SetNodeName( string const& _nodeName );
+		void SetLocation( string const& _location );
 
 	private:
 		void SetManufacturerId( string const& _manufacturerId ){ m_manufacturerId = _manufacturerId; }
@@ -193,6 +195,7 @@ namespace OpenZWave
 		string		m_manufacturerName;
 		string		m_productName;
 		string		m_nodeName;
+		string		m_location;
 
 		string		m_manufacturerId;
 		string		m_productType;

@@ -46,7 +46,7 @@ enum ThermostatModeCmd
 	ThermostatModeCmd_SupportedReport	= 0x05
 };
 
-static char* const c_modeName[] = 
+static char const* c_modeName[] = 
 {
 	"Off",
 	"Heat",

@@ -33,6 +33,7 @@
 #include "Defs.h"
 #include "SerialPort.h"
 
+#define DEBUG
 
 namespace OpenZWave
 {

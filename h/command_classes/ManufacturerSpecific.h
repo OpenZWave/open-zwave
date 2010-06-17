@@ -37,7 +37,7 @@ namespace OpenZWave
 	{
 	public:
 		static CommandClass* Create( uint32 const _homeId, uint8 const _nodeId ){ return new ManufacturerSpecific( _homeId, _nodeId ); }
-		virtual ~ManufacturerSpecific(){}
+		virtual ~ManufacturerSpecific(){ UnloadProductXML(); }
 
 		static uint8 const StaticGetCommandClassId(){ return 0x72; }
 		static string const StaticGetCommandClassName(){ return "COMMAND_CLASS_MANUFACTURER_SPECIFIC"; }
@@ -51,6 +51,7 @@ namespace OpenZWave
 	private:
 		ManufacturerSpecific( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
 		bool LoadProductXML();
+		static void UnloadProductXML();
 		bool LoadConfigXML( string const& _configPath );
 
 		class Product
@@ -79,7 +80,7 @@ namespace OpenZWave
 
 			static int64 GetKey( uint16 _manufacturerId, uint16 _productType, uint16 _productId )
 			{
-				int64 key = (((int64)_manufacturerId)<<16) | (((int64)_productType)<<8) | (int64)_productId;
+				int64 key = (((int64)_manufacturerId)<<32) | (((int64)_productType)<<16) | (int64)_productId;
 				return key;
 			}
 

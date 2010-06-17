@@ -46,7 +46,7 @@ enum ThermostatSetpointCmd
 	ThermostatSetpointCmd_SupportedReport	= 0x05
 };
 
-static char* const c_setpointName[] = 
+static char const* c_setpointName[] = 
 {
 	"Unused 0",
 	"Heating 1",

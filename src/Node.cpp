@@ -70,6 +70,7 @@ Node::Node
 ):
 	m_homeId( _homeId ),
 	m_nodeId( _nodeId ),
+	m_listening( true ),	// assume we start out listening
 	m_protocolInfoReceived( false ),
 	m_nodeInfoReceived( false ),
 	m_values( new ValueStore() ),
@@ -126,6 +127,18 @@ void Node::ReadXML
 	if( TIXML_SUCCESS == _node->QueryIntAttribute( "basic", &intVal ) )
 	{
 		m_basic = (uint8)intVal;
+	}
+
+	str = _node->Attribute( "name" );
+	if( str )
+	{
+		m_nodeName = str;
+	}
+
+	str = _node->Attribute( "location" );
+	if( str )
+	{
+		m_location = str;
 	}
 
 	str = _node->Attribute( "basic_label" );
@@ -304,6 +317,7 @@ void Node::WriteXML
 	nodeElement->SetAttribute( "id", str );
 
 	nodeElement->SetAttribute( "name", m_nodeName.c_str() );
+	nodeElement->SetAttribute( "location", m_location.c_str() );
 
 	snprintf( str, 32, "%d", m_basic );
 	nodeElement->SetAttribute( "basic", str );
@@ -555,6 +569,18 @@ void Node::SetNodeName
 		// The node supports naming, so we try to write the name into the device
 		cc->Set( _nodeName );
 	}
+}
+
+//-----------------------------------------------------------------------------
+// <Node::SetLocation>
+// Set the location of the node
+//-----------------------------------------------------------------------------
+void Node::SetLocation
+(
+	string const& _location
+)
+{
+	m_location = _location;
 }
 
 //-----------------------------------------------------------------------------
