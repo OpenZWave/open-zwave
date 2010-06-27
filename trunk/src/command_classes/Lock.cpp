@@ -77,20 +77,12 @@ bool Lock::HandleMsg
 	uint32 const _instance	// = 1
 )
 {
-	if( Node* node = GetNode() )
+	if( LockCmd_Report == (LockCmd)_data[0] )
 	{
-		if( LockCmd_Report == (LockCmd)_data[0] )
-		{
-			// We have received a report from the Z-Wave device
-			if( ValueBool* value = node->GetValueBool( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0 ) )
-			{
-				value->OnValueChanged( _data[1] != 0 );
-				value->Release();
-			}
+		Log::Write( "Received Lock report from node %d: Lock is %s", GetNodeId(), _data[1] ? "Locked" : "Unlocked" );
 
-			Log::Write( "Received Lock report from node %d: Lock is %s", GetNodeId(), _data[1] ? "Locked" : "Unlocked" );
-			return true;
-		}
+		m_state.GetInstance( _instance )->OnValueChanged( _data[1] != 0 );
+		return true;
 	}
 
 	return false;
@@ -135,7 +127,8 @@ void Lock::CreateVars
 {
 	if( Node* node = GetNode() )
 	{
-		node->CreateValueBool( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Locked", "", false, false );
+		m_state.AddInstance( _instance, node->CreateValueBool( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Locked", "", false, false ) );
+		ReleaseNode();
 	}
 }
 

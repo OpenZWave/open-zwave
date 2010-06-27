@@ -40,27 +40,23 @@ namespace OpenZWave
 
 	class Group
 	{
+		friend class Node;
+		friend class Association;
+
 	public:
-		typedef set<uint8>::const_iterator Iterator;
-
-		Iterator Begin(){ return m_associations.begin(); }
-		Iterator End(){ return m_associations.end(); }
-
 		Group( uint32 const _homeId, uint8 const _nodeId, uint8 const _groupIdx );
 		Group( uint32 const _homeId, uint8 const _nodeId, TiXmlElement const* _valueElement );
 		~Group(){}
 
 		void WriteXML( TiXmlElement* _groupElement );
 		string const& GetLabel()const{ return m_label; }
-
-		void AddNode( uint8 const _nodeId );
-		void RemoveNode( uint8 const _nodeId );
-
-		void OnGroupChanged( uint8 const _numAssociations, uint8 const* _associations );
-
+		uint32 GetAssociations( uint8** o_associations );
 		uint8 GetIdx()const{ return m_groupIdx; }
+
 	private:
-		Node* GetNode()const;
+		void AddAssociation( uint8 const _nodeId );
+		void RemoveAssociation( uint8 const _nodeId );
+		void OnGroupChanged( uint8 const _numAssociations, uint8 const* _associations );
 
 		string		m_label;
 		uint32		m_homeId;

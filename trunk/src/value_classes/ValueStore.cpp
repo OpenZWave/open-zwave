@@ -76,9 +76,12 @@ bool ValueStore::AddValue
 	_value->AddRef();
 
 	// Notify the watchers of the new value
-	Notification notification( Notification::Type_ValueAdded );
-	notification.SetValueId( _value->GetID() );
-	Manager::Get()->NotifyWatchers( &notification ); 
+	if( Driver* driver = Manager::Get()->GetDriver( _value->GetID().GetHomeId() ) )
+	{
+		Notification* notification = new Notification( Notification::Type_ValueAdded );
+		notification->SetValueId( _value->GetID() );
+		driver->QueueNotification( notification );
+	}
 
 	return true;
 }
@@ -100,9 +103,12 @@ bool ValueStore::RemoveValue
 		m_values.erase( it );
 
 		// Notify the watchers of the new value
-		Notification notification( Notification::Type_ValueRemoved );
-		notification.SetValueId( it->second->GetID() );
-		Manager::Get()->NotifyWatchers( &notification ); 
+		if( Driver* driver = Manager::Get()->GetDriver( _id.GetHomeId() ) )
+		{
+			Notification* notification = new Notification( Notification::Type_ValueRemoved );
+			notification->SetValueId( it->second->GetID() );
+			driver->QueueNotification( notification ); 
+		}
 
 		return true;
 	}

@@ -86,17 +86,10 @@ bool Battery::HandleMsg
 			batteryLevel = 0;
 		}
 
-		if( Node* node = GetNode() )
-		{
-			if( ValueByte* value = node->GetValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0 ) )
-			{
-				value->OnValueChanged( batteryLevel );
-				value->Release();
-			}
+		Log::Write( "Received Battery report from node %d: level=%d", GetNodeId(), batteryLevel );
 
-			Log::Write( "Received Battery report from node %d: level=%d", GetNodeId(), batteryLevel );
-			return true;
-		}
+		m_level.GetInstance( _instance )->OnValueChanged( batteryLevel );
+		return true;
 	}
 	return false;
 }
@@ -112,7 +105,8 @@ void Battery::CreateVars
 {
 	if( Node* node = GetNode() )
 	{
-		node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Battery Level", "%", true, 100 );
+		m_level.AddInstance( _instance, node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Battery Level", "%", true, 100 ) );
+		ReleaseNode();
 	}
 }
 

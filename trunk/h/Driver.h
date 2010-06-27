@@ -53,60 +53,66 @@ namespace OpenZWave
 	class ValueShort;
 	class ValueString;
 	class ControllerReplication;
+	class Notification;
 
 	class Driver
 	{
 		friend class Manager;
+		friend class Node;
+		friend class Group;
+		friend class CommandClass;
+		friend class Value;
+		friend class ValueStore;
+		friend class ManufacturerSpecific;
 
 	//-----------------------------------------------------------------------------
 	// Construction / Destruction
 	//-----------------------------------------------------------------------------
-	public:
+	private:
 		Driver( string const& _serialPortName );
 		virtual ~Driver();
 
-	private:
 		void Start();
 		static void DriverThreadEntryPoint( void* _context );
 		void DriverThreadProc();
 		bool Init( uint32 _attempts );
 
-		Thread*					m_driverThread;	// Thread for creating and managing the driver worker threads
-		Event*					m_exitEvent;		// Event that will be signalled when the threads should exit
-		bool					m_exit;
-		bool					m_init;
+		Thread*					m_driverThread;								// Thread for reading from the Z-Wave controller, and for creating and managing the other threads for sending, polling etc.
+		Event*					m_exitEvent;								// Event that will be signalled when the threads should exit
+		bool					m_exit;										// Flag that is set when the application is exiting.
+		bool					m_init;										// Set to true once the driver has been initialised
 
 	//-----------------------------------------------------------------------------
 	//	Configuration
 	//-----------------------------------------------------------------------------
 	private:
-		void RequestConfig();	// Get the network configuration from the Z-Wave network
-		bool ReadConfig();		// Read the configuration from a file
-		void WriteConfig();		// Save the configuration to a file
+		void RequestConfig();												// Get the network configuration from the Z-Wave network
+		bool ReadConfig();													// Read the configuration from a file
+		void WriteConfig();													// Save the configuration to a file
 
 	//-----------------------------------------------------------------------------
 	//	Controller
 	//-----------------------------------------------------------------------------
-	public:
-		bool IsSlave()const{ return ((m_capabilities & 0x01) != 0); }
-		bool HasTimerSupport()const{ return ((m_capabilities & 0x02) != 0); }
+	private:
 		bool IsPrimaryController()const{ return ((m_capabilities & 0x04) == 0); }
 		bool IsStaticUpdateController()const{ return ((m_capabilities & 0x08) != 0); }
-
-		Node* GetNode( uint8 _nodeId ){ return m_nodes[_nodeId]; }
 		uint32 GetHomeId()const{ return m_homeId; }
 		string GetSerialPortName()const{ return m_serialPortName; }
+		Node* GetNode( uint8 _nodeId );
+		void LockNodes();
+		void ReleaseNodes();
 
-	private:
-		string					m_serialPortName;	// name used to open the serial port
-		uint32					m_homeId;
-		SerialPort*				m_serialPort;
-		Mutex*					m_serialMutex;
+		string					m_serialPortName;							// name used to open the serial port.
+		uint32					m_homeId;									// Home ID of the Z-Wave controller.  Not valid until the DriverReady notification has been received.
+		SerialPort*				m_serialPort;								// Handles communications with the controller hardware.
+		Mutex*					m_serialMutex;								// Ensure only one thread at a time can access the serial port.
 		
-		uint8					m_capabilities;	
-		uint8					m_nodeId;			// PC Controller's Z-Wave node ID
-		Node*					m_nodes[256];		// Z-Wave node details	
-		ControllerReplication*	m_controllerReplication;
+		uint8					m_capabilities;								// Set of flags indicating the controller's capabilities (See IsSlave, HasTimerSupport, IsPrimaryController and IsStaticUpdateController above).
+		uint8					m_nodeId;									// Z-Wave Controller's own node ID.
+		Node*					m_nodes[256];								// Array containing all the node objects.
+		Mutex*					m_nodeMutex;								// Serializes access to node data
+
+		ControllerReplication*	m_controllerReplication;					// Controller replication is handled separately from the other command classes, due to older hand-held controllers using invalid node IDs.
 
 	//-----------------------------------------------------------------------------
 	//	Sending Z-Wave messages
@@ -115,26 +121,23 @@ namespace OpenZWave
 		void SendMsg( Msg* _msg );
 
 	private:
-		static void SendThreadEntryPoint( void* _context );
-		void SendThreadProc();
+		static void SendThreadEntryPoint( void* _context );					// Static method called by the m_sendThread object as the entry point for its thread code.  The _context will contain a pointer to this Driver object.
+		void SendThreadProc();												// Implementation of the send thread, called from the static SendThreadEntryPoint.
 
-		void RemoveMsg();
-		void TriggerResend();
-		bool MoveMessagesToWakeUpQueue(	uint8 const _targetNodeId );
-		void SetNodeAwake( uint8 const _nodeId );
+		void RemoveMsg();													// Remove the first message from the send queue.  This happens when the send was successful, or after three failed attempts.
+		void TriggerResend();												// Causes the first message to be sent again, in response to a NAK or CAN from the controller.
+		bool MoveMessagesToWakeUpQueue(	uint8 const _targetNodeId );		// If a node does not respond, and is of a type that can sleep, this method is used to move all its pending messages to another queue ready for when it mext wakes up.
+		void SetNodeAwake( uint8 const _nodeId );							// Used to mark a node as awake when we receive a message from it.
 
-		Thread*					m_sendThread;		// Thread for sending messages to the Z-Wave network	
-		list<Msg*>				m_sendQueue;		// Messages waiting to be sent
-		Mutex*					m_sendMutex;		// Serialize access to the send and wakeup queues
-		Event*					m_sendEvent;		// Signalled when there is something waiting to be sent
+		Thread*					m_sendThread;								// Thread for sending messages to the Z-Wave network	
+		list<Msg*>				m_sendQueue;								// Messages waiting to be sent
+		Mutex*					m_sendMutex;								// Serialize access to the send and wakeup queues
+		Event*					m_sendEvent;								// Signalled when there is something waiting to be sent
 
 	//-----------------------------------------------------------------------------
 	//	Receiving Z-Wave messages
 	//-----------------------------------------------------------------------------
 	private:
-		static void ReadThreadEntryPoint( void* _context );		
-		void ReadThreadproc();
-
 		bool ReadMsg();
 		void ProcessMsg( uint8* _data );
 
@@ -156,73 +159,108 @@ namespace OpenZWave
 		void HandleApplicationCommandHandlerRequest( uint8* pData );
 		bool HandleApplicationUpdateRequest( uint8* pData );
 
-		Thread*					m_readThread;				// Thread for handling messages received from the Z-Wave network
-		bool					m_waitingForAck;			// True when we are waiting for an ACK from the dongle
-		uint8					m_expectedCallbackId;		// If non-zero, we wait for a message with this callback Id
-		uint8					m_expectedReply;			// If non-zero, we wait for a message with this function Id
-		uint8					m_expectedCommandClassId;	// If the expected reply is FUNC_ID_APPLICATION_COMMAND_HANDLER, this value stores the command class we're waiting to hear from
+		Thread*					m_readThread;								// Thread for handling messages received from the Z-Wave network
+		bool					m_waitingForAck;							// True when we are waiting for an ACK from the dongle
+		uint8					m_expectedCallbackId;						// If non-zero, we wait for a message with this callback Id
+		uint8					m_expectedReply;							// If non-zero, we wait for a message with this function Id
+		uint8					m_expectedCommandClassId;					// If the expected reply is FUNC_ID_APPLICATION_COMMAND_HANDLER, this value stores the command class we're waiting to hear from
 
 	//-----------------------------------------------------------------------------
 	//	Polling Z-Wave devices
 	//-----------------------------------------------------------------------------
-	public:
+	private:
 		void SetPollInterval( int32 _seconds ){ m_pollInterval = _seconds; }
 		bool EnablePoll( uint8 _nodeId );
 		bool DisablePoll( uint8 _nodeId );
 
-	private:
 		static void PollThreadEntryPoint( void* _context );
 		void PollThreadProc();
 
-		Thread*					m_pollThread;		// Thread for polling devices on the Z-Wave network
-		list<uint8>				m_pollList;			// List of nodes that need to be polled
-		Mutex*					m_pollMutex;		// Serialize access to the polling list
-		int32					m_pollInterval;		// Time interval during which all nodes must be polled
+		Thread*					m_pollThread;								// Thread for polling devices on the Z-Wave network
+		list<uint8>				m_pollList;									// List of nodes that need to be polled
+		Mutex*					m_pollMutex;								// Serialize access to the polling list
+		int32					m_pollInterval;								// Time interval during which all nodes must be polled
 
 	//-----------------------------------------------------------------------------
 	//	Retrieving Node information
 	//-----------------------------------------------------------------------------
-	public:
-		void AddInfoRequest( uint8 const _nodeId );
-		void RemoveInfoRequest();
-		void RequestState( uint8 const _nodeId, uint32 const _flags );
-		string const& GetBasicLabel( uint8 const _nodeId );
-		string const& GetGenericLabel( uint8 const _nodeId );
-
-		string const& GetManufacturerName( uint8 const _nodeId );
-		string const& GetProductName( uint8 const _nodeId );
-		string const& GetNodeName( uint8 const _nodeId );
-		string const& GetLocation( uint8 const _nodeId );
-
-		void SetManufacturerName( uint8 const _nodeId, string const& _manufacturerName );
-		void SetProductName( uint8 const _nodeId, string const& _productName );
-		void SetNodeName( uint8 const _nodeId, string const& _nodeName );
-		void SetLocation( uint8 const _nodeId, string const& _location );
-
-		string const& GetManufacturerId( uint8 const _nodeId );
-		string const& GetProductType( uint8 const _nodeId );
-		string const& GetProductId( uint8 const _nodeId );
-
-		// Helpers for fetching values
-		ValueBool* GetValueBool( ValueID const& _id );
-		ValueByte* GetValueByte( ValueID const& _id );
-		ValueDecimal* GetValueDecimal( ValueID const& _id );
-		ValueInt* GetValueInt( ValueID const& _id );
-		ValueList* GetValueList( ValueID const& _id );
-		ValueShort* GetValueShort( ValueID const& _id );
-		ValueString* GetValueString( ValueID const& _id );
-
 	private:
-		void RefreshNodeInfo();						// Delete all nodes and fetch the data from the Z-Wave network again.
-		uint8 GetInfoRequest();
+		void AddNodeInfoRequest( uint8 const _nodeId );
+		void RemoveNodeInfoRequest();
+		void RequestNodeState( uint8 const _nodeId, uint32 const _flags );
+		
+		bool IsNodeListeningDevice( uint8 const _nodeId );
+		bool IsNodeRoutingDevice( uint8 const _nodeId );
+		uint32 GetNodeMaxBaudRate( uint8 const _nodeId );
+		uint8 GetNodeVersion( uint8 const _nodeId );
+		uint8 GetNodeSecurity( uint8 const _nodeId );
+		uint8 GetNodeBasic( uint8 const _nodeId );
+		uint8 GetNodeGeneric( uint8 const _nodeId );
+		uint8 GetNodeSpecific( uint8 const _nodeId );
+		string GetNodeType( uint8 const _nodeId );
 
-		deque<uint8>			m_infoQueue;		// Queue holding nodes that we wish to interogate for setup details
-		Mutex*					m_infoMutex;		// Serialize access to the info queue				
+		string GetNodeManufacturerName( uint8 const _nodeId );
+		string GetNodeProductName( uint8 const _nodeId );
+		string GetNodeName( uint8 const _nodeId );
+		string GetNodeLocation( uint8 const _nodeId );
+
+		string GetNodeManufacturerId( uint8 const _nodeId );
+		string GetNodeProductType( uint8 const _nodeId );
+		string GetNodeProductId( uint8 const _nodeId );
+
+		void SetNodeManufacturerName( uint8 const _nodeId, string const& _manufacturerName );
+		void SetNodeProductName( uint8 const _nodeId, string const& _productName );
+		void SetNodeName( uint8 const _nodeId, string const& _nodeName );
+		void SetNodeLocation( uint8 const _nodeId, string const& _location );
+
+		Value* GetValue( ValueID const& _id );
+
+		void RefreshNodeInfo();												// Delete all nodes and fetch the data from the Z-Wave network again.
+		uint8 GetNodeInfoRequest();
+
+		deque<uint8>			m_infoQueue;								// Queue holding nodes that we wish to interogate for setup details
+		Mutex*					m_infoMutex;								// Serialize access to the info queue				
 
 	//-----------------------------------------------------------------------------
 	// Controller commands
 	//-----------------------------------------------------------------------------
 	public:	
+		/** 
+		 * Controller Commands.
+		 * Commands to be used with the BeginControllerCommand method.
+		 * @see Manager::BeginControllerCommand
+	     */
+		enum ControllerCommand
+		{
+			ControllerCommand_None = 0,				/**< No command. */
+			ControllerCommand_AddController,		/**< Add a new controller to the Z-Wave network.  The new controller will be a secondary. */
+			ControllerCommand_AddDevice,			/**< Add a new device (but not a controller) to the Z-Wave network. */
+			ControllerCommand_CreateNewPrimary,		/**< Add a new controller to the Z-Wave network.  The new controller will be the primary, and the current primary will become a secondary controller. */
+			ControllerCommand_ReceiveConfiguration, /**< Receive Z-Wave network configuration information from another controller. */
+			ControllerCommand_RemoveController,		/**< Remove a controller from the Z-Wave network. */
+			ControllerCommand_RemoveDevice,			/**< Remove a new device (but not a controller) from the Z-Wave network. */
+			ControllerCommand_ReplaceFailedDevice,	/**< Replace a non-responding device with another. */
+			ControllerCommand_TransferPrimaryRole	/**< Make a different controller the primary. */
+		};
+
+		/** 
+		 * Controller States.
+		 * States reported via the callback handler passed into the BeginControllerCommand method.
+		 * @see Manager::BeginControllerCommand
+	     */
+		enum ControllerState
+		{
+			ControllerState_Normal = 0,				/**< No command in progress. */
+			ControllerState_Waiting,				/**< Controller is waiting for a user action. */
+			ControllerState_InProgress,				/**< The controller is communicating with the other device to carry out the command. */
+			ControllerState_Completed,			    /**< The command has completed successfully. */
+			ControllerState_Failed					/**< The command has failed. */
+		};
+
+		typedef void (*pfnControllerCallback_t)( ControllerState _state, void* _context );
+
+	private:
+		// The public interface is provided via the wrappers in the Manager class
 		void ResetController();
 		void SoftReset();
 
@@ -230,35 +268,9 @@ namespace OpenZWave
 		void AssignReturnRoute( uint8 _srcNodeId, uint8 _dstNodeId );
 		void RequestNetworkUpdate();
 
-		// New versions with callbacks
-		enum ControllerCommand
-		{
-			ControllerCommand_None = 0,
-			ControllerCommand_AddController,
-			ControllerCommand_AddDevice,
-			ControllerCommand_CreateNewPrimary,
-			ControllerCommand_ReceiveConfiguration,
-			ControllerCommand_RemoveController,
-			ControllerCommand_RemoveDevice,
-			ControllerCommand_ReplaceFailedDevice,
-			ControllerCommand_TransferPrimaryRole
-		};
-
-		enum ControllerState
-		{
-			ControllerState_Normal = 0,
-			ControllerState_Waiting,
-			ControllerState_InProgress,
-			ControllerState_Completed,
-			ControllerState_Failed
-		};
-
-		typedef void (*pfnControllerCallback_t)( ControllerState _state, void* _context );
-
 		bool BeginControllerCommand( ControllerCommand _command, pfnControllerCallback_t _callback, void* _context, bool _highPower );
 		bool CancelControllerCommand();
 
-	private:
 		ControllerState				m_controllerState;
 		ControllerCommand			m_controllerCommand;
 		pfnControllerCallback_t		m_controllerCallback;
@@ -267,10 +279,37 @@ namespace OpenZWave
 		uint8						m_nodeAdded;
 
 	//-----------------------------------------------------------------------------
+	// Configuration Parameters	(wrappers for the Node methods)
+	//-----------------------------------------------------------------------------
+	private:		
+		// The public interface is provided via the wrappers in the Manager class
+		bool SetConfigParam( uint8 const _nodeId, uint8 const _param, int32 _value );
+		void RequestConfigParam( uint8 const _nodeId, uint8 const _param );
+
+	//-----------------------------------------------------------------------------
+	// Groups (wrappers for the Node methods)
+	//-----------------------------------------------------------------------------
+	private:		
+		// The public interface is provided via the wrappers in the Manager class
+		uint8 GetNumGroups( uint8 const _nodeId );
+		uint32 GetAssociations( uint8 const _nodeId, uint8 const _groupIdx, uint8** o_associations );
+		void AddAssociation( uint8 const _nodeId, uint8 const _groupIdx, uint8 const _targetNodeId );
+		void RemoveAssociation( uint8 const _nodeId, uint8 const _groupIdx, uint8 const _targetNodeId );
+
+	//-----------------------------------------------------------------------------
+	//	Notifications
+	//-----------------------------------------------------------------------------
+	private:
+		void QueueNotification( Notification* _notification );				// Adds a notification to the list.  Notifications are queued until a point in the thread where we know we do not have any nodes locked.
+		void NotifyWatchers();												// Passes the notifications to all the registered watcher callbacks in turn.
+
+		list<Notification*>	m_notifications;
+
+	//-----------------------------------------------------------------------------
 	//	Misc
 	//-----------------------------------------------------------------------------
 	private:
-		void UpdateEvents();						// Set and Reset events according to the states of various queues and flags
+		void UpdateEvents();												// Set and Reset events according to the states of various queues and flags
 	};
 
 } // namespace OpenZWave

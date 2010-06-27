@@ -32,6 +32,8 @@
 
 namespace OpenZWave
 {
+	class ValueString;
+
 	class Language: public CommandClass
 	{
 	public:
@@ -52,6 +54,9 @@ namespace OpenZWave
 
 	private:
 		Language( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
+
+		ValueInstances<ValueString>	m_language;
+		ValueInstances<ValueString>	m_country;
 	};
 
 } // namespace OpenZWave

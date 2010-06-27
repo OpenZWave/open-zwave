@@ -32,6 +32,8 @@
 
 namespace OpenZWave
 {
+	class ValueDecimal;
+
 	class EnergyProduction: public CommandClass
 	{
 	public:
@@ -62,6 +64,8 @@ namespace OpenZWave
 
 	private:
 		EnergyProduction( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
+
+		ValueInstances<ValueDecimal>	m_values[4];
 	};
 
 } // namespace OpenZWave

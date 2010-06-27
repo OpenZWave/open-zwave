@@ -69,6 +69,7 @@ bool MultiInstance::HandleMsg
 	uint32 const _instance	// = 1
 )
 {
+	bool handled = false;
 	if( Node const* node = GetNode() )
 	{
 		if( MultiInstanceCmd_Report == (MultiInstanceCmd)_data[0] )
@@ -84,10 +85,10 @@ bool MultiInstance::HandleMsg
 				// The request for non-static state was held off until we knew how many instances there were.
 				pCommandClass->RequestState( CommandClass::RequestFlag_Session | CommandClass::RequestFlag_Dynamic );
 			}
-			return true;
+			
+			handled = true;
 		}
-	
-		if( MultiInstanceCmd_CmdEncap == (MultiInstanceCmd)_data[0] )
+		else if( MultiInstanceCmd_CmdEncap == (MultiInstanceCmd)_data[0] )
 		{
 			uint8 instance = _data[1];
 			uint8 commandClassId = _data[2];
@@ -98,9 +99,12 @@ bool MultiInstance::HandleMsg
 				pCommandClass->HandleMsg( &_data[3], _length-3, instance );
 			}
 
-			return true;
+			handled = true;
 		}
+
+		ReleaseNode();
 	}
-	return false;
+
+	return handled;
 }
 

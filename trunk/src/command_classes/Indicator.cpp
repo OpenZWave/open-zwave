@@ -79,17 +79,10 @@ bool Indicator::HandleMsg
 {
 	if( IndicatorCmd_Report == (IndicatorCmd)_data[0] )
 	{
-		if( Node* node = GetNode() )
-		{
-			if( ValueBool* value = node->GetValueBool( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0 ) )
-			{
-				value->OnValueChanged( _data[1] != 0 );
-				value->Release();
-			}
+		Log::Write( "Received an Indicator report from node %d: Indicator=%d", GetNodeId(), _data[1] );
 
-			Log::Write( "Received an Indicator report from node %d: Indicator=%d", GetNodeId(), _data[1] );
-			return true;
-		}
+		m_state.GetInstance( _instance )->OnValueChanged( _data[1] != 0 );
+		return true;
 	}
 
 	return false;
@@ -134,7 +127,8 @@ void Indicator::CreateVars
 {
 	if( Node* node = GetNode() )
 	{
-		node->CreateValueBool( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Indicator", "", false, false );
+		m_state.AddInstance( _instance, node->CreateValueBool( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Indicator", "", false, false ) );
+		ReleaseNode();
 	}
 }
 

@@ -28,18 +28,20 @@
 #ifndef _Configuration_H
 #define _Configuration_H
 
+#include <list>
 #include "CommandClass.h"
 
 namespace OpenZWave
 {
 	class Value;
-	class ValueStore;
 
 	class Configuration: public CommandClass
 	{
+		friend class Node;
+
 	public:
 		static CommandClass* Create( uint32 const _homeId, uint8 const _nodeId ){ return new Configuration( _homeId, _nodeId ); }
-		virtual ~Configuration(){}
+		virtual ~Configuration();
 
 		static uint8 const StaticGetCommandClassId(){ return 0x70; }
 		static string const StaticGetCommandClassName(){ return "COMMAND_CLASS_CONFIGURATION"; }
@@ -54,6 +56,11 @@ namespace OpenZWave
 
 	private:
 		Configuration( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
+
+		Value* GetParam( uint8 const _paramId );
+		bool AddParam( Value* _value );
+
+		list<Value*>	m_params;
 	};
 
 } // namespace OpenZWave

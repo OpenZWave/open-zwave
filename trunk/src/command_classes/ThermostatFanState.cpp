@@ -98,49 +98,45 @@ bool ThermostatFanState::HandleMsg
 	uint32 const _instance	// = 1
 )
 {
-	bool handled = false;
-
-	if( Node* node = GetNode() )
+	if( ThermostatFanStateCmd_Report == (ThermostatFanStateCmd)_data[0] )
 	{
-		if( ThermostatFanStateCmd_Report == (ThermostatFanStateCmd)_data[0] )
+		// We have received the thermostat fan state from the Z-Wave device
+		if( ValueList* valueList = m_state.GetInstance( _instance ) )
 		{
-			// We have received the thermostat fan state from the Z-Wave device
-			if( ValueList* valueList = node->GetValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0 ) )
-			{
-				valueList->OnValueChanged( _data[1] );
-				Log::Write( "Received thermostat fan state from node %d: %s", GetNodeId(), valueList->GetAsString().c_str() );		
-				valueList->Release();
-			}
-			handled = true;
+			valueList->OnValueChanged( _data[1] );
+			Log::Write( "Received thermostat fan state from node %d: %s", GetNodeId(), valueList->GetItem().m_label.c_str() );		
+			valueList->Release();
 		}
-		else if( ThermostatFanStateCmd_SupportedReport == (ThermostatFanStateCmd)_data[0] )
+		return true;
+	}
+	
+	if( ThermostatFanStateCmd_SupportedReport == (ThermostatFanStateCmd)_data[0] )
+	{
+		// We have received the supported thermostat fan states from the Z-Wave device
+		Log::Write( "Received supported thermostat fan states from node %d", GetNodeId() );		
+
+		m_supportedStates.clear();
+		for( uint32 i=1; i<_length-1; ++i )
 		{
-			// We have received the supported thermostat fan states from the Z-Wave device
-			Log::Write( "Received supported thermostat fan states from node %d", GetNodeId() );		
-
-			m_supportedStates.clear();
-			for( uint32 i=1; i<_length-1; ++i )
+			for( int32 bit=0; bit<8; ++bit )
 			{
-				for( int32 bit=0; bit<8; ++bit )
+				if( ( _data[i] & (1<<bit) ) != 0 )
 				{
-					if( ( _data[i] & (1<<bit) ) != 0 )
-					{
-						ValueList::Item item;
-						item.m_value = (int32)((i-1)<<3) + bit;
-						item.m_label = c_stateName[item.m_value];
-						m_supportedStates.push_back( item );
+					ValueList::Item item;
+					item.m_value = (int32)((i-1)<<3) + bit;
+					item.m_label = c_stateName[item.m_value];
+					m_supportedStates.push_back( item );
 
-						Log::Write( "    Added fan state: %s", c_stateName[item.m_value] );
-					}
+					Log::Write( "    Added fan state: %s", c_stateName[item.m_value] );
 				}
 			}
-
-			CreateVars( _instance );
-			handled = true;
 		}
-	}
 
-	return handled;
+		CreateVars( _instance );
+		return true;
+	}
+		
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -159,7 +155,8 @@ void ThermostatFanState::CreateVars
 
 	if( Node* node = GetNode() )
 	{
-		node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "State", "", true, m_supportedStates, m_supportedStates[0].m_value );
+		m_state.AddInstance( _instance, node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "State", "", true, m_supportedStates, m_supportedStates[0].m_value ) );
+		ReleaseNode();
 	}
 }
 

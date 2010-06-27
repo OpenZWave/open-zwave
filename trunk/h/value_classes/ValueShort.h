@@ -42,23 +42,22 @@ namespace OpenZWave
 	class ValueShort: public Value
 	{
 	public:
-		ValueShort( uint32 const _homeId, uint8 const _nodeId, ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, string const& _label, string const& _units, bool const _readOnly, uint16 const _value );
+		ValueShort( uint32 const _homeId, uint8 const _nodeId, ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, string const& _label, string const& _units, bool const _readOnly, int16 const _value );
 		ValueShort( uint32 const _homeId, uint8 const _nodeId, uint8 const _commandClassId, TiXmlElement const* _valueElement );
 		virtual ~ValueShort(){}
 
-		bool Set( uint16 const _value );
-		void OnValueChanged( uint16 const _value );
+		bool Set( int16 const _value );
+		void OnValueChanged( int16 const _value );
 
 		// From Value
 		virtual void WriteXML( TiXmlElement* _valueElement );
-		virtual string GetAsString()const;
 
-		uint16 GetValue()const{ return m_value; }
-		uint16 GetPending()const{ return m_pending; }
+		int16 GetValue()const{ return m_value; }
+		int16 GetPending()const{ return m_pending; }
 
 	private:
-		uint16	m_value;
-		uint16	m_pending;
+		int16	m_value;
+		int16	m_pending;
 	};
 
 } // namespace OpenZWave

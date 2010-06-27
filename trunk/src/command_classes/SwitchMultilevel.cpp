@@ -80,19 +80,12 @@ bool SwitchMultilevel::HandleMsg
 	uint32 const _instance	// = 1
 )
 {
-	if( Node* node = GetNode() )
+	if( SwitchMultilevelCmd_Report == (SwitchMultilevelCmd)_data[0] )
 	{
-		if( SwitchMultilevelCmd_Report == (SwitchMultilevelCmd)_data[0] )
-		{
-			if( ValueByte* value = node->GetValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0 ) )
-			{
-				value->OnValueChanged( _data[1] );
-				value->Release();
-			}
+		Log::Write( "Received SwitchMultiLevel report from node %d: level=%d", GetNodeId(), _data[1] );
 
-			Log::Write( "Received SwitchMultiLevel report from node %d: level=%d", GetNodeId(), _data[1] );
-			return true;
-		}
+		m_level.GetInstance( _instance )->OnValueChanged( _data[1] );
+		return true;
 	}
 
 	return false;
@@ -198,7 +191,8 @@ void SwitchMultilevel::CreateVars
 {
 	if( Node* node = GetNode() )
 	{
-		node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Level", "", false, 0  );
+		m_level.AddInstance( _instance, node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Level", "", false, 0  ) );
+		ReleaseNode();
 	}
 }
 

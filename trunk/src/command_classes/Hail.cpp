@@ -59,6 +59,7 @@ bool Hail::HandleMsg
 		if( Node* node = GetNode() )
 		{
 //			node->RequestBasicReport();
+			ReleaseNode();
 		}
 		return true;
 	}

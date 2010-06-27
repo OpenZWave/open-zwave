@@ -82,39 +82,25 @@ bool Language::HandleMsg
 	uint32 const _instance	// = 1
 )
 {
-	if( Node* node = GetNode() )
+	if( LanguageCmd_Report == (LanguageCmd)_data[0] )
 	{
-		if( LanguageCmd_Report == (LanguageCmd)_data[0] )
-		{
-			char language[4];
-			char country[3];
+		char language[4];
+		char country[3];
 
-			language[0] = _data[1];
-			language[1] = _data[2];
-			language[2] = _data[3];
-			language[3] = 0;
+		language[0] = _data[1];
+		language[1] = _data[2];
+		language[2] = _data[3];
+		language[3] = 0;
 
-			country[0] = _data[4];
-			country[1] = _data[5];
-			country[2] = 0;
-			
-			ValueString* value;
+		country[0] = _data[4];
+		country[1] = _data[5];
+		country[2] = 0;
 
-			if( value = node->GetValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, (uint8)ValueIndex_Language ) )
-			{
-				value->OnValueChanged( language );
-				value->Release();
-			}
+		Log::Write( "Received Language report from node %d: Language=%s, Country=%s", GetNodeId(), language, country );
 
-			if( value = node->GetValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, (uint8)ValueIndex_Country ) )
-			{
-				value->OnValueChanged( country );
-				value->Release();
-			}
-
-			Log::Write( "Received Language report from node %d: Language=%s, Country=%s", GetNodeId(), language, country );
-			return true;
-		}
+		m_language.GetInstance( _instance )->OnValueChanged( language );
+		m_country.GetInstance( _instance )->OnValueChanged( country );
+		return true;
 	}
 
 	return false;
@@ -131,8 +117,9 @@ void Language::CreateVars
 {
 	if( Node* node = GetNode() )
 	{
-		node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, (uint8)ValueIndex_Language, "Language", "", false, ""  );
-		node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, (uint8)ValueIndex_Country, "Country", "", false, ""  );
+		m_language.AddInstance( _instance, node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, (uint8)ValueIndex_Language, "Language", "", false, "" ) );
+		m_country.AddInstance( _instance, node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, (uint8)ValueIndex_Country, "Country", "", false, "" ) );
+		ReleaseNode();
 	}
 }
 

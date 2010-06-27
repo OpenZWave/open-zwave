@@ -82,6 +82,7 @@ Driver::Driver
 	m_pollThread( new Thread( "poll" ) ),
 	m_pollMutex( new Mutex() ),
 	m_infoMutex( new Mutex() ),
+	m_nodeMutex( new Mutex() ),
 	m_capabilities( 0 ),
 	m_controllerReplication( NULL ),
 	m_controllerState( ControllerState_Normal ),
@@ -140,16 +141,20 @@ Driver::~Driver
 	// Clear the node data
 	for( int i=0; i<256; ++i )
 	{
-		if( m_nodes[i] )
+		if( GetNode( i ) )
 		{
-			Notification notification( Notification::Type_NodeRemoved );
-			notification.SetHomeAndNodeIds( m_homeId, i );
-			Manager::Get()->NotifyWatchers( &notification ); 
+			Notification* notification = new Notification( Notification::Type_NodeRemoved );
+			notification->SetHomeAndNodeIds( m_homeId, i );
+			QueueNotification( notification ); 
 
 			delete m_nodes[i];
 			m_nodes[i] = NULL;
+			ReleaseNodes();
 		}
 	}
+
+	NotifyWatchers();
+	delete m_nodeMutex;
 }
 
 //-----------------------------------------------------------------------------
@@ -206,6 +211,9 @@ void Driver::DriverThreadProc
 
 				// Release our lock on the serial port 
 				m_serialMutex->Release();
+
+				// Send any pending notifications
+				NotifyWatchers();
 
 				// Wait for more data to appear at the serial port
 				m_serialPort->Wait( Event::Timeout_Infinite );
@@ -370,6 +378,7 @@ bool Driver::ReadConfig
 	}
 
 	// Read the nodes
+	LockNodes();
 	TiXmlElement const* nodeElement = driverElement->FirstChildElement();
 	while( nodeElement )
 	{
@@ -383,9 +392,9 @@ bool Driver::ReadConfig
 				Node* node = new Node( m_homeId, nodeId );
 				m_nodes[nodeId] = node;
 
-				Notification notification( Notification::Type_NodeAdded );
-				notification.SetHomeAndNodeIds( m_homeId, nodeId );
-				Manager::Get()->NotifyWatchers( &notification ); 
+				Notification* notification = new Notification( Notification::Type_NodeAdded );
+				notification->SetHomeAndNodeIds( m_homeId, nodeId );
+				QueueNotification( notification ); 
 
 				// Read the rest of the node configuration from the XML
 				node->ReadXML( nodeElement );
@@ -394,7 +403,8 @@ bool Driver::ReadConfig
 
 		nodeElement = nodeElement->NextSiblingElement();
 	}
-
+	
+	ReleaseNodes();
 	return true;
 }
 
@@ -427,6 +437,7 @@ void Driver::WriteConfig
 	snprintf( str, sizeof(str), "%d", m_pollInterval );
 	driverElement->SetAttribute( "poll_interval", str );
 
+	LockNodes();
 	for( int i=0; i<256; ++i )
 	{
 		if( m_nodes[i] )
@@ -434,11 +445,57 @@ void Driver::WriteConfig
 			m_nodes[i]->WriteXML( driverElement );
 		}
 	}
+	ReleaseNodes();
 
 	snprintf( str, sizeof(str), "zwcfg_0x%08x.xml", m_homeId );
 	string filename =  Manager::Get()->GetUserPath() + string(str);
 
 	doc.SaveFile( filename.c_str() );
+}
+
+//-----------------------------------------------------------------------------
+//	Controller
+//-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+// <Driver::GetNode>
+// Locks the nodes and returns a pointer to the requested one
+//-----------------------------------------------------------------------------
+Node* Driver::GetNode
+(
+	uint8 _nodeId
+)
+{
+	LockNodes();
+	if( Node* node = m_nodes[_nodeId] )
+	{
+		return node;
+	}
+
+	ReleaseNodes();
+	return NULL;
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::LockNodes>
+// Lock the nodes so that no other thread can modify them
+//-----------------------------------------------------------------------------
+void Driver::LockNodes
+(
+)
+{
+	m_nodeMutex->Lock();
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::ReleaseNodes>
+// Unlock the nodes so that other threads can modify them
+//-----------------------------------------------------------------------------
+void Driver::ReleaseNodes
+(
+)
+{
+	m_nodeMutex->Release();
 }
 
 //-----------------------------------------------------------------------------
@@ -456,7 +513,7 @@ void Driver::SendMsg
 {
 	_msg->Finalize();
 
-	if( Node* node = m_nodes[_msg->GetTargetNodeId()] )
+	if( Node* node = GetNode(_msg->GetTargetNodeId()) )
 	{
 		if( !node->IsListeningDevice() )
 		{
@@ -467,10 +524,13 @@ void Driver::SendMsg
 					Log::Write( "" );
 					Log::Write( "Queuing Wake-Up Command: %s", _msg->GetAsString().c_str() );
 					wakeUp->QueueMsg( _msg );
+					ReleaseNodes();
 					return;
 				}
 			}
 		}
+
+		ReleaseNodes();
 	}
 
 	Log::Write( "Queuing command: %s", _msg->GetAsString().c_str() );
@@ -545,7 +605,7 @@ void Driver::SendThreadProc()
 			else
 			{
 				// Check for nodes requiring info requests
-				uint8 nodeId = GetInfoRequest();
+				uint8 nodeId = GetNodeInfoRequest();
 				if( nodeId != 0xff )
 				{
 					Msg* msg = new Msg( "Get Node Protocol Info", nodeId, REQUEST, FUNC_ID_ZW_GET_NODE_PROTOCOL_INFO, false );
@@ -669,7 +729,7 @@ bool Driver::MoveMessagesToWakeUpQueue
 {
 	// If the target node is one that goes to sleep, transfer
 	// all messages for it to its Wake-Up queue.
-	if( Node* node = m_nodes[_targetNodeId] )
+	if( Node* node = GetNode(_targetNodeId) )
 	{
 		if( !node->IsListeningDevice() )
 		{
@@ -700,9 +760,12 @@ bool Driver::MoveMessagesToWakeUpQueue
 				m_sendMutex->Release();
 				
 				// Move completed successfully
+				ReleaseNodes();
 				return true;
 			}
 		}
+
+		ReleaseNodes();
 	}
 
 	// Failed to move messages
@@ -718,15 +781,17 @@ void Driver::SetNodeAwake
 	uint8 const _nodeId
 )
 {
-	if( m_nodes[_nodeId] )
+	if( Node* node = GetNode( _nodeId ) )
 	{
-		if( !m_nodes[_nodeId]->IsListeningDevice() )
+		if( !node->IsListeningDevice() )
 		{
-			if( WakeUp* pWakeUp = static_cast<WakeUp*>( m_nodes[_nodeId]->GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
+			if( WakeUp* pWakeUp = static_cast<WakeUp*>( node->GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
 			{
 				pWakeUp->SetAwake( true );
 			}
 		}
+
+		ReleaseNodes();
 	}
 }
 
@@ -999,7 +1064,7 @@ void Driver::ProcessMsg
 	// Generic callback handling
 	if( handleCallback )
 	{
-	  Log::Write("ProcessMsg: m_expectedCallbackId=%x _data[2]=%x m_expectedReply=%x _data[1]=%x m_expectedCommandClassId=%x _data[5]=%x", m_expectedCallbackId, _data[2], m_expectedReply, _data[1], m_expectedCommandClassId, _data[5]);
+		Log::Write("ProcessMsg: m_expectedCallbackId=%x _data[2]=%x m_expectedReply=%x _data[1]=%x m_expectedCommandClassId=%x _data[5]=%x", m_expectedCallbackId, _data[2], m_expectedReply, _data[1], m_expectedCommandClassId, _data[5]);
 		if( ( m_expectedCallbackId || m_expectedReply ) )
 		{
 			if( m_expectedCallbackId )
@@ -1184,13 +1249,13 @@ void Driver::HandleSerialAPIGetInitDataResponse
 				uint8 nodeId = (i*8)+j+1;
 				if( _data[i+5] & (0x01 << j) )
 				{
-					if( NULL == m_nodes[nodeId] )
+					if( NULL == GetNode( nodeId ) )
 					{
 						// This node is new
 						Log::Write( "Found new node %d", nodeId );
 
 						// Create the node and request its info
-						AddInfoRequest( nodeId );		
+						AddNodeInfoRequest( nodeId );		
 					}
 					else
 					{
@@ -1198,21 +1263,26 @@ void Driver::HandleSerialAPIGetInitDataResponse
 						{
 							// The node was read in from the config, so we 
 							// only need to get its current state
-							m_nodes[nodeId]->RequestState( CommandClass::RequestFlag_Session | CommandClass::RequestFlag_Dynamic );
+							if( Node* node = GetNode(nodeId) )
+							{
+								node->RequestState( CommandClass::RequestFlag_Session | CommandClass::RequestFlag_Dynamic );
+								ReleaseNodes();
+							}
 						}
 					}
 				}
 				else
 				{
-					if( m_nodes[nodeId] )
+					if( GetNode(nodeId) )
 					{
 						// This node no longer exists in the Z-Wave network
-						Notification notification( Notification::Type_NodeRemoved );
-						notification.SetHomeAndNodeIds( m_homeId, nodeId );
-						Manager::Get()->NotifyWatchers( &notification ); 
+						Notification* notification = new Notification( Notification::Type_NodeRemoved );
+						notification->SetHomeAndNodeIds( m_homeId, nodeId );
+						QueueNotification( notification ); 
 
 						delete m_nodes[nodeId];
 						m_nodes[nodeId] = NULL;
+						ReleaseNodes();
 					}
 				}
 			}
@@ -1231,7 +1301,7 @@ void Driver::HandleGetNodeProtocolInfoResponse
 	uint8* _data
 )
 {
-	uint8 nodeId = GetInfoRequest();
+	uint8 nodeId = GetNodeInfoRequest();
 
 	if( nodeId == 0xff )
 	{
@@ -1242,9 +1312,10 @@ void Driver::HandleGetNodeProtocolInfoResponse
 	Log::Write("Received reply to FUNC_ID_ZW_GET_NODE_PROTOCOL_INFO for node %d", nodeId );
 
 	// Update the node with the protocol info
-	if( m_nodes[nodeId] )
+	if( Node* node = GetNode( nodeId ) )
 	{
-		m_nodes[nodeId]->UpdateProtocolInfo( &_data[2] );
+		node->UpdateProtocolInfo( &_data[2] );
+		ReleaseNodes();
 	}
 }
 
@@ -1681,10 +1752,10 @@ void Driver::HandleApplicationCommandHandlerRequest
 						pfnDeviceEventVectorClass->HandleMsg( StatusData,0x02,0x00 );
 
 						//send notification to application
-						Notification notification( Notification::Type_NodeStatus );
-						notification.SetHomeAndNodeIds( GetHomeId(),nodeId );
-						notification.SetStatus( StatusData[1] );
-						Manager::Get()->NotifyWatchers( &notification );
+						Notification* notification = new Notification( Notification::Type_NodeStatus );
+						notification->SetHomeAndNodeIds( GetHomeId(),nodeId );
+						notification->SetStatus( StatusData[1] );
+						Manager::Get()->QueueNotification( notification );
 					}
 					break;
 			}
@@ -1699,10 +1770,10 @@ void Driver::HandleApplicationCommandHandlerRequest
 				pfnDeviceEventVectorClass->HandleMsg( StatusData,0x02,0x00);
 
 				//send notification to application
-				Notification notification(Notification::Type_NodeStatus);
-				notification.SetHomeAndNodeIds(GetHomeId(),nodeId);
-				notification.SetStatus(StatusData[1]);
-				Manager::Get()->NotifyWatchers( &notification );
+				Notification* notification = new Notification(Notification::Type_NodeStatus);
+				notification->SetHomeAndNodeIds(GetHomeId(),nodeId);
+				notification->SetStatus(StatusData[1]);
+				QueueNotification( notification );
 			}
 			break;
 		}
@@ -1729,9 +1800,10 @@ void Driver::HandleApplicationCommandHandlerRequest
 		default:
 		{			
 			// Allow the node to handle the message itself
-			if( m_nodes[nodeId] )
+			if( Node* node = GetNode( nodeId)  )
 		 	{
-				m_nodes[nodeId]->ApplicationCommandHandler( _data );
+				node->ApplicationCommandHandler( _data );
+				ReleaseNodes();
 			}
 		}
 	}
@@ -1756,9 +1828,10 @@ bool Driver::HandleApplicationUpdateRequest
 		{
 			Log::Write( "UPDATE_STATE_NODE_INFO_RECEIVED from node %d", nodeId );
 			SetNodeAwake( nodeId );
-			if( Node* node = m_nodes[nodeId] )
+			if( Node* node = GetNode( nodeId ) )
 			{
 				node->UpdateNodeInfo( &_data[8], _data[4] - 3 );
+				ReleaseNodes();
 			}
 			break;
 		}
@@ -1793,19 +1866,21 @@ bool Driver::HandleApplicationUpdateRequest
 			Log::Write( "** Network change **: ID %d was assigned to a new Z-Wave node", nodeId );
 			
 			// Request the node protocol info (also removes any existing node and creates a new one)
-			AddInfoRequest( nodeId );		
+			AddNodeInfoRequest( nodeId );		
 			break;
 		}
 		case UPDATE_STATE_DELETE_DONE:
 		{
 			Log::Write( "** Network change **: Z-Wave node %d was removed", nodeId );
 
-			Notification notification( Notification::Type_NodeRemoved );
-			notification.SetHomeAndNodeIds( m_homeId, nodeId );
-			Manager::Get()->NotifyWatchers( &notification ); 
+			Notification* notification = new Notification( Notification::Type_NodeRemoved );
+			notification->SetHomeAndNodeIds( m_homeId, nodeId );
+			QueueNotification( notification ); 
 
+			LockNodes();
 			delete m_nodes[nodeId];
 			m_nodes[nodeId] = NULL;
+			ReleaseNodes();
 			break;
 		}
 	}
@@ -1838,6 +1913,7 @@ bool Driver::EnablePoll
 			{
 				// It is already in the poll list, so we have nothing to do.
 				m_pollMutex->Release();
+				ReleaseNodes();
 				return true;
 			}
 		}
@@ -1845,6 +1921,7 @@ bool Driver::EnablePoll
 		// Not in the list, so we add it
 		m_pollList.push_back( _nodeId );
 		m_pollMutex->Release();
+		ReleaseNodes();
 		return true;
 	}
 
@@ -1873,12 +1950,14 @@ bool Driver::DisablePoll
 				// Found it
 				m_pollList.erase( it );
 				m_pollMutex->Release();
+				ReleaseNodes();
 				return true;
 			}
 		}
 
 		// Not in the list
 		m_pollMutex->Release();
+		ReleaseNodes();
 	}
 
 	Log::Write( "DisablePoll failed - node %d not found", _nodeId );
@@ -1952,6 +2031,8 @@ void Driver::PollThreadProc()
 						// Request an update of the value
 						node->RequestState( CommandClass::RequestFlag_Dynamic );
 					}
+
+					ReleaseNodes();
 				}
 			}
 
@@ -1980,6 +2061,7 @@ void Driver::RefreshNodeInfo
 )
 {
 	// Delete all the node data
+	LockNodes();
 	for( int i=0; i<256; ++i )
 	{
 		if( m_nodes[i] )
@@ -1988,11 +2070,12 @@ void Driver::RefreshNodeInfo
 			m_nodes[i] = NULL;
 		}
 	}
+	ReleaseNodes();
 
 	// Notify the user that all node and value information has been deleted
-	Notification notification( Notification::Type_DriverReset );
-	notification.SetHomeAndNodeIds( m_homeId, 0 );
-	Manager::Get()->NotifyWatchers( &notification ); 
+	Notification* notification = new Notification( Notification::Type_DriverReset );
+	notification->SetHomeAndNodeIds( m_homeId, 0 );
+	QueueNotification( notification ); 
 
 	// Fetch new node data from the Z-Wave network
 	Log::Write( "RefreshNodeInfo" );
@@ -2001,31 +2084,32 @@ void Driver::RefreshNodeInfo
 }
 
 //-----------------------------------------------------------------------------
-// <Driver::AddInfoRequest>
+// <Driver::AddNodeInfoRequest>
 // Queue a node to be interrogated for its setup details
 //-----------------------------------------------------------------------------
-void Driver::AddInfoRequest
+void Driver::AddNodeInfoRequest
 ( 
 	uint8 const _nodeId
 )
 {
 	// Delete any existing node and replace it with a new one
+	LockNodes();
 	if( m_nodes[_nodeId] )
 	{
 		// Remove the original node
-		Notification notification( Notification::Type_NodeRemoved );
-		notification.SetHomeAndNodeIds( m_homeId, _nodeId );
-		Manager::Get()->NotifyWatchers( &notification ); 
-	
+		Notification* notification = new Notification( Notification::Type_NodeRemoved );
+		notification->SetHomeAndNodeIds( m_homeId, _nodeId );
+		QueueNotification( notification ); 
 		delete m_nodes[_nodeId];
 	}
 
 	// Add the new node
 	m_nodes[_nodeId] = new Node( m_homeId, _nodeId );
+	ReleaseNodes();
 
-	Notification notification( Notification::Type_NodeAdded );
-	notification.SetHomeAndNodeIds( m_homeId, _nodeId );
-	Manager::Get()->NotifyWatchers( &notification ); 
+	Notification* notification = new Notification( Notification::Type_NodeAdded );
+	notification->SetHomeAndNodeIds( m_homeId, _nodeId );
+	QueueNotification( notification ); 
 
 	// Request the node info
 	m_infoMutex->Lock();
@@ -2035,10 +2119,10 @@ void Driver::AddInfoRequest
 }
 
 //-----------------------------------------------------------------------------
-// <Driver::RemoveInfoRequest>
+// <Driver::RemoveNodeInfoRequest>
 // Remove a node from the info queue
 //-----------------------------------------------------------------------------
-void Driver::RemoveInfoRequest
+void Driver::RemoveNodeInfoRequest
 ( 
 )
 {
@@ -2055,10 +2139,10 @@ void Driver::RemoveInfoRequest
 }
 
 //-----------------------------------------------------------------------------
-// <Driver::GetInfoRequest>
+// <Driver::GetNodeInfoRequest>
 // Get the next node that needs its setup info requesting
 //-----------------------------------------------------------------------------
-uint8 Driver::GetInfoRequest
+uint8 Driver::GetNodeInfoRequest
 ( 
 )
 {
@@ -2074,152 +2158,365 @@ uint8 Driver::GetInfoRequest
 }
 
 //-----------------------------------------------------------------------------
-// <Driver::RequestState>
+// <Driver::RequestNodeState>
 // Request command class data
 //-----------------------------------------------------------------------------
-void Driver::RequestState
+void Driver::RequestNodeState
 (
 	 uint8 const _nodeId,
 	 uint32 const _flags
 )
 {
-	if( Node* node = m_nodes[_nodeId] )
+	if( Node* node = GetNode( _nodeId ) )
 	{
 		node->RequestState( _flags );
+		ReleaseNodes();
 	}
 }
 
 //-----------------------------------------------------------------------------
-// <Driver::GetBasicLabel>
-// Get the basic label string value with the specified ID
+// <Driver::IsNodeListeningDevice>
+// Get whether the node is a listening device that does not go to sleep
 //-----------------------------------------------------------------------------
-string const& Driver::GetBasicLabel
+bool Driver::IsNodeListeningDevice
 (
-	uint8 const _nodeId
+	 uint8 const _nodeId
 )
 {
-	if( Node* node = m_nodes[_nodeId] )
+	bool res = false;
+	if( Node* node = GetNode( _nodeId ) )
 	{
-		return( node->GetBasicLabel() );
+		res = node->IsListeningDevice();
+		ReleaseNodes();
 	}
 
-	return NULL;
+	return res;
 }
 
 //-----------------------------------------------------------------------------
-// <Driver::GetGenericLabel>
-// Get the basic label string value with the specified ID
+// <Driver::IsNodeRoutingDevice>
+// Get whether the node is a routing device that passes messages to other nodes
 //-----------------------------------------------------------------------------
-string const& Driver::GetGenericLabel
+bool Driver::IsNodeRoutingDevice
 (
-	uint8 const _nodeId
+	 uint8 const _nodeId
 )
 {
-	if( Node* node = m_nodes[_nodeId] )
+	bool res = false;
+	if( Node* node = GetNode( _nodeId ) )
 	{
-		return( node->GetGenericLabel() );
+		res = node->IsRoutingDevice();
+		ReleaseNodes();
 	}
 
-	return NULL;
+	return res;
 }
 
 //-----------------------------------------------------------------------------
-// <Driver::GetManufacturerName>
-// Get the manufacturer name string value with the specified ID
+// <Driver::GetNodeMaxBaudRate>
+// Get the maximum baud rate of a node's communications
 //-----------------------------------------------------------------------------
-string const& Driver::GetManufacturerName
+uint32 Driver::GetNodeMaxBaudRate
 (
-	uint8 const _nodeId
+	 uint8 const _nodeId
 )
 {
-	if( Node* node = m_nodes[_nodeId] )
+	uint32 baud = 0;
+	if( Node* node = GetNode( _nodeId ) )
 	{
-		return( node->GetManufacturerName() );
+		baud = node->GetMaxBaudRate();
+		ReleaseNodes();
 	}
 
-	return NULL;
+	return baud;
 }
 
 //-----------------------------------------------------------------------------
-// <Driver::GetProductName>
-// Get the product name string value with the specified ID
+// <Driver::GetNodeVersion>
+// Get the version number of a node
 //-----------------------------------------------------------------------------
-string const& Driver::GetProductName
+uint8 Driver::GetNodeVersion
+(
+	 uint8 const _nodeId
+)
+{
+	uint8 version = 0;
+	if( Node* node = GetNode( _nodeId ) )
+	{
+		version = node->GetVersion();
+		ReleaseNodes();
+	}
+
+	return version;
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::GetNodeSecurity>
+// Get the security byte for a node (bit meanings still to be determined)
+//-----------------------------------------------------------------------------
+uint8 Driver::GetNodeSecurity
+(
+	 uint8 const _nodeId
+)
+{
+	uint8 security = 0;
+	if( Node* node = GetNode( _nodeId ) )
+	{
+		security = node->GetSecurity();
+		ReleaseNodes();
+	}
+
+	return security;
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::GetNodeBasic>
+// Get the basic type of a node
+//-----------------------------------------------------------------------------
+uint8 Driver::GetNodeBasic
+(
+	 uint8 const _nodeId
+)
+{
+	uint8 basic = 0;
+	if( Node* node = GetNode( _nodeId ) )
+	{
+		basic = node->GetBasic();
+		ReleaseNodes();
+	}
+
+	return basic;
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::GetNodeGeneric>
+// Get the generic type of a node
+//-----------------------------------------------------------------------------
+uint8 Driver::GetNodeGeneric
+(
+	 uint8 const _nodeId
+)
+{
+	uint8 genericType = 0;
+	if( Node* node = GetNode( _nodeId ) )
+	{
+		genericType = node->GetGeneric();
+		ReleaseNodes();
+	}
+
+	return genericType;
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::GetNodeSpecific>
+// Get the specific type of a node
+//-----------------------------------------------------------------------------
+uint8 Driver::GetNodeSpecific
+(
+	 uint8 const _nodeId
+)
+{
+	uint8 specific = 0;
+	if( Node* node = GetNode( _nodeId ) )
+	{
+		specific = node->GetSpecific();
+		ReleaseNodes();
+	}
+
+	return specific;
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::GetNodeType>
+// Get the basic/generic/specific type of the specified node
+// Returns a copy of the string rather than a const ref for thread safety
+//-----------------------------------------------------------------------------
+string Driver::GetNodeType
 (
 	uint8 const _nodeId
 )
 {
-	if( Node* node = m_nodes[_nodeId] )
+	if( Node* node = GetNode( _nodeId ) )
 	{
-		return( node->GetProductName() );
+		string str = node->GetType();
+		ReleaseNodes();
+		return str;
 	}
 
-	return NULL;
+	return "Unknown";
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::GetNodeManufacturerName>
+// Get the manufacturer name for the node with the specified ID
+// Returns a copy of the string rather than a const ref for thread safety
+//-----------------------------------------------------------------------------
+string Driver::GetNodeManufacturerName
+(
+	uint8 const _nodeId
+)
+{
+	if( Node* node = GetNode( _nodeId ) )
+	{
+		string str = node->GetManufacturerName();
+		ReleaseNodes();
+		return str;
+	}
+
+	return "";
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::GetNodeProductName>
+// Get the product name for the node with the specified ID
+// Returns a copy of the string rather than a const ref for thread safety
+//-----------------------------------------------------------------------------
+string Driver::GetNodeProductName
+(
+	uint8 const _nodeId
+)
+{
+	if( Node* node = GetNode( _nodeId ) )
+	{
+		string str = node->GetProductName();
+		ReleaseNodes();
+		return str;
+	}
+
+	return "";
 }
 
 //-----------------------------------------------------------------------------
 // <Driver::GetNodeName>
-// Get the node name string value with the specified ID
+// Get the user-editable name for the node with the specified ID
+// Returns a copy of the string rather than a const ref for thread safety
 //-----------------------------------------------------------------------------
-string const& Driver::GetNodeName
+string Driver::GetNodeName
+(
+	uint8 const _nodeId
+)
+{
+	if( Node* node = GetNode( _nodeId ) )
+	{
+		string str = node->GetNodeName();
+		ReleaseNodes();
+		return str;
+	}
+
+	return "";
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::GetNodeLocation>
+// Get the user-editable string for location of the specified node
+// Returns a copy of the string rather than a const ref for thread safety
+//-----------------------------------------------------------------------------
+string Driver::GetNodeLocation
+(
+	uint8 const _nodeId
+)
+{
+	if( Node* node = GetNode( _nodeId ) )
+	{
+		string str = node->GetLocation();
+		ReleaseNodes();
+		return str;
+	}
+
+	return "";
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::GetNodeManufacturerId>
+// Get the manufacturer Id string value with the specified ID
+// Returns a copy of the string rather than a const ref for thread safety
+//-----------------------------------------------------------------------------
+string Driver::GetNodeManufacturerId
 (
 	uint8 const _nodeId
 )
 {
 	if( Node* node = m_nodes[_nodeId] )
 	{
-		return( node->GetNodeName() );
+		string str = node->GetManufacturerId();
+		ReleaseNodes();
+		return str;
 	}
 
 	return NULL;
 }
 
 //-----------------------------------------------------------------------------
-// <Driver::GetLocation>
-// Get the node name string value with the specified ID
+// <Driver::GetNodeProductType>
+// Get the product type string value with the specified ID
+// Returns a copy of the string rather than a const ref for thread safety
 //-----------------------------------------------------------------------------
-string const& Driver::GetLocation
+string Driver::GetNodeProductType
 (
 	uint8 const _nodeId
 )
 {
 	if( Node* node = m_nodes[_nodeId] )
 	{
-		return( node->GetLocation() );
+		string str = node->GetProductType();
+		ReleaseNodes();
+		return str;
 	}
 
 	return NULL;
 }
 
 //-----------------------------------------------------------------------------
-// <Driver::SetManufacturerName>
-// Set the manufacturer name string value with the specified ID
+// <Driver::GetNodeProductId>
+// Get the product Id string value with the specified ID
+// Returns a copy of the string rather than a const ref for thread safety
 //-----------------------------------------------------------------------------
-void Driver::SetManufacturerName
+string Driver::GetNodeProductId
+(
+	uint8 const _nodeId
+)
+{
+	if( Node* node = m_nodes[_nodeId] )
+	{
+		string str = node->GetProductId();
+		ReleaseNodes();
+		return str;
+	}
+
+	return NULL;
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::SetNodeManufacturerName>
+// Set the manufacturer name for the node with the specified ID
+//-----------------------------------------------------------------------------
+void Driver::SetNodeManufacturerName
 (
 	uint8 const _nodeId,
 	string const& _manufacturerName
 )
 {
-	if( Node* node = m_nodes[_nodeId] )
+	if( Node* node = GetNode( _nodeId ) )
 	{
 		node->SetManufacturerName( _manufacturerName );
+		ReleaseNodes();
 	}
 }
 
 //-----------------------------------------------------------------------------
-// <Driver::SetProductName>
+// <Driver::SetNodeProductName>
 // Set the product name string value with the specified ID
 //-----------------------------------------------------------------------------
-void Driver::SetProductName
+void Driver::SetNodeProductName
 (
 	uint8 const _nodeId,
 	string const& _productName
 )
 {
-	if( Node* node = m_nodes[_nodeId] )
+	if( Node* node = GetNode( _nodeId ) )
 	{
 		node->SetProductName( _productName );
+		ReleaseNodes();
 	}
 }
 
@@ -2233,207 +2530,43 @@ void Driver::SetNodeName
 	string const& _nodeName
 )
 {
-	if( Node* node = m_nodes[_nodeId] )
+	if( Node* node = GetNode( _nodeId ) )
 	{
 		node->SetNodeName( _nodeName );
+		ReleaseNodes();
 	}
 }
 
 //-----------------------------------------------------------------------------
-// <Driver::SetLocation>
+// <Driver::SetNodeLocation>
 // Set the location string value with the specified ID
 //-----------------------------------------------------------------------------
-void Driver::SetLocation
+void Driver::SetNodeLocation
 (
 	uint8 const _nodeId,
 	string const& _location
 )
 {
-	if( Node* node = m_nodes[_nodeId] )
+	if( Node* node = GetNode( _nodeId ) )
 	{
 		node->SetLocation( _location );
+		ReleaseNodes();
 	}
 }
 
 //-----------------------------------------------------------------------------
-// <Driver::GetManufacturerId>
-// Get the manufacturer Id string value with the specified ID
+// <Driver::GetValue>
+// Get a pointer to a Value object for the specified ValueID
 //-----------------------------------------------------------------------------
-string const& Driver::GetManufacturerId
-(
-	uint8 const _nodeId
-)
-{
-	if( Node* node = m_nodes[_nodeId] )
-	{
-		return( node->GetManufacturerId() );
-	}
-
-	return NULL;
-}
-
-//-----------------------------------------------------------------------------
-// <Driver::GetProductType>
-// Get the product type string value with the specified ID
-//-----------------------------------------------------------------------------
-string const& Driver::GetProductType
-(
-	uint8 const _nodeId
-)
-{
-	if( Node* node = m_nodes[_nodeId] )
-	{
-		return( node->GetProductType() );
-	}
-
-	return NULL;
-}
-
-//-----------------------------------------------------------------------------
-// <Driver::GetProductId>
-// Get the product Id string value with the specified ID
-//-----------------------------------------------------------------------------
-string const& Driver::GetProductId
-(
-	uint8 const _nodeId
-)
-{
-	if( Node* node = m_nodes[_nodeId] )
-	{
-		return( node->GetProductId() );
-	}
-
-	return NULL;
-}
-
-//-----------------------------------------------------------------------------
-// <Driver::GetValueBool>
-// Get the bool value object with the specified ID
-//-----------------------------------------------------------------------------
-ValueBool* Driver::GetValueBool
+Value* Driver::GetValue
 (
 	ValueID const& _id
 )
 {
-	// Get the node that stores this value
-	uint8 nodeId = _id.GetNodeId();
-	if( Node* node = m_nodes[nodeId] )
+	// This method is only called by code that has already locked the node
+	if( Node* node = m_nodes[_id.GetNodeId()] )
 	{
-		return( node->GetValueBool( _id ) );
-	}
-
-	return NULL;
-}
-
-//-----------------------------------------------------------------------------
-// <Driver::GetValueByte>
-// Get the byte value object with the specified ID
-//-----------------------------------------------------------------------------
-ValueByte* Driver::GetValueByte
-(
-	ValueID const& _id
-)
-{
-	// Get the node that stores this value
-	uint8 nodeId = _id.GetNodeId();
-	if( Node* node = m_nodes[nodeId] )
-	{
-		return( node->GetValueByte( _id ) );
-	}
-
-	return NULL;
-}
-
-//-----------------------------------------------------------------------------
-// <Driver::GetValueDecimal>
-// Get the decimal value object with the specified ID
-//-----------------------------------------------------------------------------
-ValueDecimal* Driver::GetValueDecimal
-(
-	ValueID const& _id
-)
-{
-	// Get the node that stores this value
-	uint8 nodeId = _id.GetNodeId();
-	if( Node* node = m_nodes[nodeId] )
-	{
-		return( node->GetValueDecimal( _id ) );
-	}
-
-	return NULL;
-}
-
-//-----------------------------------------------------------------------------
-// <Driver::GetValueInt>
-// Get the int value object with the specified ID
-//-----------------------------------------------------------------------------
-ValueInt* Driver::GetValueInt
-(
-	ValueID const& _id
-)
-{
-	// Get the node that stores this value
-	uint8 nodeId = _id.GetNodeId();
-	if( Node* node = m_nodes[nodeId] )
-	{
-		return( node->GetValueInt( _id ) );
-	}
-
-	return NULL;
-}
-
-//-----------------------------------------------------------------------------
-// <Driver::GetValueList>
-// Get the list value object with the specified ID
-//-----------------------------------------------------------------------------
-ValueList* Driver::GetValueList
-(
-	ValueID const& _id
-)
-{
-	// Get the node that stores this value
-	uint8 nodeId = _id.GetNodeId();
-	if( Node* node = m_nodes[nodeId] )
-	{
-		return( node->GetValueList( _id ) );
-	}
-
-	return NULL;
-}
-
-//-----------------------------------------------------------------------------
-// <Driver::GetValueShort>
-// Get the short value object with the specified ID
-//-----------------------------------------------------------------------------
-ValueShort* Driver::GetValueShort
-(
-	ValueID const& _id
-)
-{
-	// Get the node that stores this value
-	uint8 nodeId = _id.GetNodeId();
-	if( Node* node = m_nodes[nodeId] )
-	{
-		return( node->GetValueShort( _id ) );
-	}
-
-	return NULL;
-}
-
-//-----------------------------------------------------------------------------
-// <Driver::GetValueString>
-// Get the string value object with the specified ID
-//-----------------------------------------------------------------------------
-ValueString* Driver::GetValueString
-(
-	ValueID const& _id
-)
-{
-	// Get the node that stores this value
-	uint8 nodeId = _id.GetNodeId();
-	if( Node* node = m_nodes[nodeId] )
-	{
-		return( node->GetValueString( _id ) );
+		return node->GetValue( _id );
 	}
 
 	return NULL;
@@ -2676,6 +2809,120 @@ void Driver::RequestNetworkUpdate
 }
 
 //-----------------------------------------------------------------------------
+// <Driver::SetConfigParam>
+// Set the value of one of the configuration parameters of a device
+//-----------------------------------------------------------------------------
+bool Driver::SetConfigParam
+(
+	uint8 const _nodeId,
+	uint8 const _param,
+	int32 _value
+)
+{
+	bool res = false;
+	if( Node* node = GetNode( _nodeId ) )
+	{
+		res = node->SetConfigParam( _param, _value );
+		ReleaseNodes();
+	}
+
+	return res;
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::RequestConfigParam>
+// Request the value of one of the configuration parameters of a device
+//-----------------------------------------------------------------------------
+void Driver::RequestConfigParam
+(
+	uint8 const _nodeId,
+	uint8 const _param
+)
+{
+	if( Node* node = GetNode( _nodeId ) )
+	{
+		node->RequestConfigParam( _param );
+		ReleaseNodes();
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::GetNumGroups>
+// Gets the number of association groups reported by this node
+//-----------------------------------------------------------------------------
+uint8 Driver::GetNumGroups
+(
+	uint8 const _nodeId
+)
+{
+	uint8 numGroups = 0;
+	if( Node* node = GetNode( _nodeId ) )
+	{
+		numGroups = node->GetNumGroups();
+		ReleaseNodes();
+	}
+
+	return numGroups;
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::GetAssociations>
+// Gets the associations for a group
+//-----------------------------------------------------------------------------
+uint32 Driver::GetAssociations
+( 
+	uint8 const _nodeId,
+	uint8 const _groupIdx,
+	uint8** o_associations
+)
+{
+	uint32 numAssociations = 0;
+	if( Node* node = GetNode( _nodeId ) )
+	{
+		numAssociations = node->GetAssociations( _groupIdx, o_associations );
+		ReleaseNodes();
+	}
+
+	return numAssociations;
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::AddAssociation>
+// Adds a node to an association group
+//-----------------------------------------------------------------------------
+void Driver::AddAssociation
+(
+	uint8 const _nodeId,
+	uint8 const _groupIdx,
+	uint8 const _targetNodeId
+)
+{
+	if( Node* node = GetNode( _nodeId ) )
+	{
+		node->AddAssociation( _groupIdx, _targetNodeId );
+		ReleaseNodes();
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::RemoveAssociation>
+// Removes a node from an association group
+//-----------------------------------------------------------------------------
+void Driver::RemoveAssociation
+(
+	uint8 const _nodeId,
+	uint8 const _groupIdx,
+	uint8 const _targetNodeId
+)
+{
+	if( Node* node = GetNode( _nodeId ) )
+	{
+		node->RemoveAssociation( _groupIdx, _targetNodeId );
+		ReleaseNodes();
+	}
+}
+
+//-----------------------------------------------------------------------------
 // <Driver::UpdateEvents>
 // Set and reset events according to the states of various queues and flags
 //-----------------------------------------------------------------------------
@@ -2697,5 +2944,39 @@ void Driver::UpdateEvents
 		}
 	}
 }
+
+//-----------------------------------------------------------------------------
+// <Driver::QueueNotification>
+// Add a notification to the queue to be sent at a later, safe time.
+//-----------------------------------------------------------------------------
+void Driver::QueueNotification
+(
+	Notification* _notification
+)
+{
+	m_notifications.push_back( _notification );
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::NotifyWatchers>
+// Notify any watching objects of a value change
+//-----------------------------------------------------------------------------
+void Driver::NotifyWatchers
+(
+)
+{
+	list<Notification*>::iterator nit = m_notifications.begin();
+	while( nit != m_notifications.end() )
+	{
+		Notification* notification = m_notifications.front();
+		m_notifications.pop_front();
+
+		Manager::Get()->NotifyWatchers( notification );
+
+		delete notification;
+		nit = m_notifications.begin();
+	}
+}
+
 
 
