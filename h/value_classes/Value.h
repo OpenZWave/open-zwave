@@ -48,10 +48,10 @@ namespace OpenZWave
 		Value( uint32 const _homeId, uint8 const _nodeId, uint8 const _commandClassId, TiXmlElement const* _valueElement );
 
 		virtual void WriteXML( TiXmlElement* _valueElement );
-		virtual string GetAsString()const = 0;
 
 		ValueID const& GetID()const{ return m_id; }
 		bool IsReadOnly()const{ return m_readOnly; }
+		bool IsSet()const{ return m_isSet; }
 
 		string const& GetLabel()const{ return m_label; }
 		void SetLabel( string const& _label ){ m_label = _label; }
@@ -74,13 +74,11 @@ namespace OpenZWave
 		virtual ~Value(){}
 
 		bool Set();				// For the user to change a value in a device
-		bool IsSet(){ return m_isSet; }		// Is the value set?
 		void SetIsSet() { m_isSet = true; }
 		void OnValueChanged();	// A value in a device has been changed.
 
 	private:
 		uint32 AddRef(){ ++m_refs; return m_refs; }
-		Node* GetNode()const;
 
 		uint32		m_refs;
 		ValueID		m_id;

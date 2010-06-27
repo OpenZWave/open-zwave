@@ -45,7 +45,6 @@ enum BasicCmd
 	BasicCmd_Report	= 0x03
 };
 
-
 //-----------------------------------------------------------------------------
 // <Basic::RequestState>												   
 // Request current state from the device									   
@@ -78,35 +77,21 @@ bool Basic::HandleMsg
 	uint32 const _instance	// = 1
 )
 {
-	bool handled = false;
-
-	if( Node* node = GetNode() )
+	if( BasicCmd_Report == (BasicCmd)_data[0] )
 	{
-		if( BasicCmd_Report == (BasicCmd)_data[0] )
-		{
-			// Level
-			if( ValueByte* value = node->GetValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0 ) )
-			{
-				value->OnValueChanged( _data[1] );
-				value->Release();
-			}
+		// Level
+		Log::Write( "Received Basic report from node %d: level=%d", GetNodeId(), _data[1] );
 
-			Log::Write( "Received Basic report from node %d: level=%d", GetNodeId(), _data[1] );
-			handled = true;
-		}
+		m_level.GetInstance( _instance )->OnValueChanged( _data[1] );
+		return true;
+	}
 
-		if( BasicCmd_Set == (BasicCmd)_data[0] )
-		{
-			// Level
-			if( ValueByte* value = node->GetValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0 ) )
-			{
-				value->OnValueChanged( _data[1] );
-				value->Release();
-			}
-
-			Log::Write( "Received Basic set from node %d: level=%d", GetNodeId(), _data[1] );
-			handled = true;
-		}
+	if( BasicCmd_Set == (BasicCmd)_data[0] )
+	{
+		// Level
+		Log::Write( "Received Basic set from node %d: level=%d", GetNodeId(), _data[1] );
+		m_level.GetInstance( _instance )->OnValueChanged( _data[1] );
+		return true;
 	}
 
 	return false;
@@ -151,6 +136,7 @@ void Basic::CreateVars
 {
 	if( Node* node = GetNode() )
 	{
-		node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Level", "", false, 0 );
+		m_level.AddInstance( _instance, node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Level", "", false, 0 ) );
+		ReleaseNode();
 	}
 }

@@ -34,6 +34,8 @@
 
 namespace OpenZWave
 {
+	class ValueDecimal;
+
 	class ThermostatSetpoint: public CommandClass
 	{
 	public:
@@ -72,7 +74,7 @@ namespace OpenZWave
 			ThermostatSetpoint_Count
 		};
 
-		bool m_supportedSetpoints[ThermostatSetpoint_Count];
+		ValueInstances<ValueDecimal> m_setpoints[ThermostatSetpoint_Count];
 	};
 
 } // namespace OpenZWave

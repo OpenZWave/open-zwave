@@ -72,6 +72,14 @@ using namespace OpenZWave;
 #include "Version.h"
 #include "WakeUp.h"
 
+#include "ValueBool.h"
+#include "ValueByte.h"
+#include "ValueDecimal.h"
+#include "ValueInt.h"
+#include "ValueList.h"
+#include "ValueShort.h"
+#include "ValueString.h"
+
 //-----------------------------------------------------------------------------
 //	<CommandClasses::CommandClasses>
 //	Constructor

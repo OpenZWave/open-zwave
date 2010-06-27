@@ -43,13 +43,6 @@ enum AlarmCmd
 	AlarmCmd_Report = 0x05
 };
 
-enum
-{
-	ValueIndex_Type	= 0,
-	ValueIndex_Level
-};
-
-
 //-----------------------------------------------------------------------------
 // <Alarm::RequestState>												   
 // Request current state from the device									   
@@ -85,28 +78,10 @@ bool Alarm::HandleMsg
 	if (AlarmCmd_Report == (AlarmCmd)_data[0])
 	{
 		// We have received a report from the Z-Wave device
-		// No known mappings for these values yet
-		if( Node* node = GetNode() )
-		{
-			ValueByte* value;
+		Log::Write( "Received Alarm report from node %d: type=%d, level=%d", GetNodeId(), _data[1], _data[2] );
 
-			// Alarm Type
-			if( value = node->GetValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueIndex_Type ) )
-			{
-				value->OnValueChanged( _data[1] );
-				value->Release();
-			}
-		
-			// Alarm Level
-			if( value = node->GetValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueIndex_Level ) )
-			{
-				value->OnValueChanged( _data[2] );
-				value->Release();
-			}
-
-			Log::Write( "Received Alarm report from node %d: type=%d, level=%d", GetNodeId(), _data[1], _data[2] );
-		}
-
+		m_type.GetInstance( _instance )->OnValueChanged( _data[1] );
+		m_level.GetInstance( _instance )->OnValueChanged( _data[2] );
 		return true;
 	}
 
@@ -124,8 +99,9 @@ void Alarm::CreateVars
 {
 	if( Node* node = GetNode() )
 	{
-		node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueIndex_Type, "Alarm Type", "", true, 0 );
-		node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueIndex_Level, "Alarm Level", "", true, 0 );
+		m_type.AddInstance( _instance, node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Alarm Type", "", true, 0 ) );
+		m_level.AddInstance( _instance, node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 1, "Alarm Level", "", true, 0 ) );
+		ReleaseNode();
 	}
 }
 

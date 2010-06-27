@@ -76,19 +76,12 @@ bool SensorBinary::HandleMsg
 	uint32 const _instance	// = 1
 )
 {
-	if( Node* node = GetNode() )
+	if (SensorBinaryCmd_Report == (SensorBinaryCmd)_data[0])
 	{
-		if (SensorBinaryCmd_Report == (SensorBinaryCmd)_data[0])
-		{
-			if( ValueBool* value = node->GetValueBool(  ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0 ) )
-			{
-				value->OnValueChanged( _data[1] != 0 );
-				value->Release();
-			}
+		Log::Write( "Received SensorBinary report from node %d: State=%s", GetNodeId(), _data[1] ? "On" : "Off" );
 
-			Log::Write( "Received SensorBinary report from node %d: State=%s", GetNodeId(), _data[1] ? "On" : "Off" );
-			return true;
-		}
+		m_state.GetInstance( _instance )->OnValueChanged( _data[1] != 0 );
+		return true;
 	}
 
 	return false;
@@ -105,7 +98,8 @@ void SensorBinary::CreateVars
 {
 	if( Node* node = GetNode() )
 	{
-		node->CreateValueBool(  ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Sensor", "", true, false );
+		m_state.AddInstance( _instance, node->CreateValueBool(  ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Sensor", "", true, false ) );
+		ReleaseNode();
 	}
 }
 

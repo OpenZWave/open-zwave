@@ -241,7 +241,7 @@ int main( int argc, char* argv[] )
 
 	//Sleep(2000);
 
-	//Manager::Get()->BeginControllerCommand( g_homeId, Driver::ControllerCommand_TransferPrimaryRole, NULL, NULL );
+	//Manager::Get()->BeginControllerCommand( g_homeId, Driver::ControllerCommand_AddDevice, NULL, NULL );
 	//Sleep( 20000 );
 
 	//Manager::Get()->BeginAddNode( g_homeId );

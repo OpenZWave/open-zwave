@@ -32,6 +32,8 @@
 
 namespace OpenZWave
 {
+	class ValueByte;
+
 	class Basic: public CommandClass
 	{
 	public:
@@ -53,6 +55,8 @@ namespace OpenZWave
 
 	private:
 		Basic( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
+
+		ValueInstances<ValueByte>	m_level;
 	};
 
 } // namespace OpenZWave

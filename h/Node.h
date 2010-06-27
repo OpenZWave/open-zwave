@@ -55,6 +55,7 @@ namespace OpenZWave
 	class Node
 	{
 		friend class Driver;
+		friend class Association;
 		friend class CommandClass;
 		friend class ManufacturerSpecific;
 		friend class NodeNaming;
@@ -150,8 +151,7 @@ namespace OpenZWave
 		uint8 GetBasic()const{ return m_basic; }
 		uint8 GetGeneric()const{ return m_generic; }
 		uint8 GetSpecific()const{ return m_specific; }
-		string const& GetBasicLabel()const{ return m_basicLabel; }	
-		string const& GetGenericLabel()const{ return m_genericLabel; }	
+		string const& GetType()const{ return m_type; }	
 
 	private:
 		bool		m_listening;
@@ -164,30 +164,28 @@ namespace OpenZWave
 		uint8		m_basic;
 		uint8		m_generic;
 		uint8		m_specific;
-		string		m_basicLabel;
-		string		m_genericLabel;
+		string		m_type;			// Label representing the specific/generic/basic value
 
 	//-----------------------------------------------------------------------------
 	// Device Naming
 	//-----------------------------------------------------------------------------
-	public:
+	private:
 		// Manufacturer, Product and Name are stored here so they can be set by the
 		// user even if the device does not support the relevant command classes.
-		string const& GetManufacturerName()const{ return m_manufacturerName; }	
-		string const& GetProductName()const{ return m_productName; }	
-		string const& GetNodeName()const{ return m_nodeName; }	
-		string const& GetLocation()const{ return m_location; }	
+		string GetManufacturerName()const{ return m_manufacturerName; }	
+		string GetProductName()const{ return m_productName; }	
+		string GetNodeName()const{ return m_nodeName; }	
+		string GetLocation()const{ return m_location; }	
 
-		string const& GetManufacturerId()const{ return m_manufacturerId; }	
-		string const& GetProductType()const{ return m_productType; }	
-		string const& GetProductId()const{ return m_productId; }	
+		string GetManufacturerId()const{ return m_manufacturerId; }	
+		string GetProductType()const{ return m_productType; }	
+		string GetProductId()const{ return m_productId; }	
 
 		void SetManufacturerName( string const& _manufacturerName ){ m_manufacturerName = _manufacturerName; }
 		void SetProductName( string const& _productName ){ m_productName = _productName; }
 		void SetNodeName( string const& _nodeName );
 		void SetLocation( string const& _location );
 
-	private:
 		void SetManufacturerId( string const& _manufacturerId ){ m_manufacturerId = _manufacturerId; }
 		void SetProductType( string const& _productType ){ m_productType = _productType; }
 		void SetProductId( string const& _productId ){ m_productId = _productId; }
@@ -233,60 +231,46 @@ namespace OpenZWave
 		Value* GetValue( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex, ValueID::ValueType const _type );
 
 		// Helpers for creating values
-		void CreateValueBool( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, bool const _default );
-		void CreateValueByte( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, uint8 const _default );
-		void CreateValueDecimal( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, string const& _default );
-		void CreateValueInt( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, int32 const _default );
-		void CreateValueList( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, vector<ValueList::Item> const& _items, int32 const _default );
-		void CreateValueShort( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, uint16 const _default );
-		void CreateValueString( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, string const& _default );
+		ValueBool* CreateValueBool( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, bool const _default );
+		ValueByte* CreateValueByte( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, uint8 const _default );
+		ValueDecimal* CreateValueDecimal( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, string const& _default );
+		ValueInt* CreateValueInt( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, int32 const _default );
+		ValueList* CreateValueList( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, vector<ValueList::Item> const& _items, int32 const _default );
+		ValueShort* CreateValueShort( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, uint16 const _default );
+		ValueString* CreateValueString( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, string const& _default );
 
 		void CreateValueFromXML( uint8 const _commandClassId, TiXmlElement const* _valueElement );
 
-		// Helpers for fetching values
-		ValueBool* GetValueBool( ValueID const& _id );
-		ValueByte* GetValueByte( ValueID const& _id );
-		ValueDecimal* GetValueDecimal( ValueID const& _id );
-		ValueInt* GetValueInt( ValueID const& _id );
-		ValueList* GetValueList( ValueID const& _id );
-		ValueShort* GetValueShort( ValueID const& _id );
-		ValueString* GetValueString( ValueID const& _id );
-
-		ValueBool* GetValueBool( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex );
-		ValueByte* GetValueByte( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex );
-		ValueDecimal* GetValueDecimal( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex );
-		ValueInt* GetValueInt( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex );
-		ValueList* GetValueList( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex );
-		ValueShort* GetValueShort( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex );
-		ValueString* GetValueString( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex );
 
 	private:
-		ValueStore* GetValueStore();
-		void ReleaseValueStore();
+		ValueStore* GetValueStore()const{ return m_values; }
 
 		ValueStore*	m_values;			// Values reported via command classes
-		Mutex*		m_valuesMutex;		// Serialize access to the store
 
 
 	//-----------------------------------------------------------------------------
 	// Configuration Parameters (handled by the Configuration command class)
 	//-----------------------------------------------------------------------------
-	public:
+	private:
 		bool SetConfigParam( uint8 const _param, int32 _value );
 		void RequestConfigParam( uint8 const _param );
 
-
 	//-----------------------------------------------------------------------------
-	// Groups (handled by the Association command class)
+	// Groups
 	//-----------------------------------------------------------------------------
-	public:
-		Group* GetGroup( uint8 const _groupId );
-		void AddGroup( Group* _group );
-		uint8 GetNumGroups()const{ return m_groups.size(); }
-		void WriteGroups( TiXmlElement* _associationsElement );
+	private:		
+		// The public interface is provided via the wrappers in the Manager class
+		uint8 GetNumGroups();
+		uint32 GetAssociations( uint8 const _groupIdx, uint8** o_associations );
+		void AddAssociation( uint8 const _groupIdx, uint8 const _targetNodeId );
+		void RemoveAssociation( uint8 const _groupIdx, uint8 const _targetNodeId );
 
-	private:
-		map<uint8,Group*> m_groups;
+		// The following methods are not exposed
+		Group* GetGroup( uint8 const _groupIdx );							// Get a pointer to a Group object.  This must only be called while holding the node Lock.
+		void AddGroup( Group* _group );										// The groups are fixed properties of a device, so there is no need for a matching RemoveGroup.
+		void WriteGroups( TiXmlElement* _associationsElement );				// Write the group data out to XNL
+
+		map<uint8,Group*> m_groups;											// Maps group indices to Group objects.
 	};
 
 } //namespace OpenZWave

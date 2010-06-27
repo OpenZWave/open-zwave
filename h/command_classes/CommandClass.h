@@ -67,8 +67,9 @@ namespace OpenZWave
 		uint8 GetInstances()const{ return m_instances; }
 		uint32 GetHomeId()const{ return m_homeId; }
 		uint8 GetNodeId()const{ return m_nodeId; }
-		Node* GetNode()const;
 		Driver* GetDriver()const;
+		Node* GetNode()const;
+		void ReleaseNode()const;
 
 		void SetVersion( uint8 const _version ){ m_version = _version; }
 		void SetInstances( uint8 const _instances );
@@ -80,6 +81,62 @@ namespace OpenZWave
 		uint8 const GetAppendValueSize( float32 const _value, uint8 const _precision )const;
 
 	protected:
+		template <class T>
+		class ValueInstances
+		{
+		public:
+			ValueInstances(): m_instances(NULL), m_numInstances(0){}
+			~ValueInstances()
+			{
+				for( int i=0; i<m_numInstances; ++i )
+				{
+					if( m_instances[i] )
+					{
+						T* instance = static_cast<T*>( m_instances[i] );
+						instance->Release();
+					}
+				}
+
+				delete [] m_instances;
+			}
+
+			void AddInstance( uint8 _idx, T* _instance )
+			{
+				if( _idx > m_numInstances )
+				{
+					Grow( _idx );
+				}
+
+				if( m_instances[_idx-1] )
+				{
+					m_instances[_idx-1]->Release();
+				}
+				m_instances[_idx-1] = _instance;
+			}
+
+			bool HasInstances()const{ return( m_numInstances != 0 ); }
+
+			T* GetInstance( uint8 _idx )const{ return m_instances[_idx-1]; }
+
+		private:
+			void Grow( uint8 _numInstances )
+			{
+				if( _numInstances > m_numInstances )
+				{
+					// Realloc the array
+					T** newInstances = new T*[_numInstances];
+					memcpy( newInstances, m_instances, sizeof(T*) * m_numInstances );
+					memset( &newInstances[m_numInstances], 0, sizeof(T*) * (_numInstances-m_numInstances) );
+					delete [] m_instances;
+					m_instances = newInstances;
+					m_numInstances = _numInstances;
+				}
+			}
+
+			T**	m_instances;
+			int m_numInstances;
+		};
+
 		virtual void CreateVars( uint8 const _instance ){}
 
 	private:

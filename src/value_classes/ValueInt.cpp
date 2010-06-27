@@ -97,19 +97,6 @@ void ValueInt::WriteXML
 }
 
 //-----------------------------------------------------------------------------
-// <ValueInt::GetAsString>
-// Convert the value to string form
-//-----------------------------------------------------------------------------
-string ValueInt::GetAsString
-(
-)const
-{
-	char str[16];
-	snprintf( str, 16, "%d", m_value );
-	return( string( str ) );
-}
-
-//-----------------------------------------------------------------------------
 // <ValueInt::Set>
 // Set a new value in the device
 //-----------------------------------------------------------------------------

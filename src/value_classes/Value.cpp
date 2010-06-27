@@ -173,12 +173,17 @@ bool Value::Set
 		return false;
 	}
 
-	if( Node* node = GetNode() )
+	if( Driver* driver = Manager::Get()->GetDriver( m_id.GetHomeId() ) )
 	{
-		if( CommandClass* cc = node->GetCommandClass( m_id.GetCommandClassId() ) )
+		if( Node* node = driver->GetNode( m_id.GetNodeId() ) )
 		{
-			m_isSet = true;
-			return( cc->SetValue( *this ) );
+			if( CommandClass* cc = node->GetCommandClass( m_id.GetCommandClassId() ) )
+			{
+				m_isSet = true;
+				return( cc->SetValue( *this ) );
+			}
+
+			driver->ReleaseNodes();
 		}
 	}
 
@@ -193,27 +198,15 @@ void Value::OnValueChanged
 (
 )
 {
-	m_isSet = true;
-	// Notify the watchers
-	Notification notification( Notification::Type_ValueChanged );
-	notification.SetValueId( m_id );
-	Manager::Get()->NotifyWatchers( &notification ); 
-}
-
-//-----------------------------------------------------------------------------
-// <Value::GetNode>
-// Get a pointer to our node
-//-----------------------------------------------------------------------------
-Node* Value::GetNode
-(
-)const
-{
 	if( Driver* driver = Manager::Get()->GetDriver( m_id.GetHomeId() ) )
 	{
-		return driver->GetNode( m_id.GetNodeId() );
+		m_isSet = true;
+	
+		// Notify the watchers
+		Notification* notification = new Notification( Notification::Type_ValueChanged );
+		notification->SetValueId( m_id );
+		driver->QueueNotification( notification ); 
 	}
-
-	return NULL;
 }
 
 //-----------------------------------------------------------------------------

@@ -97,19 +97,6 @@ void ValueByte::WriteXML
 }
 
 //-----------------------------------------------------------------------------
-// <ValueByte::GetAsString>
-// Convert the value to string form
-//-----------------------------------------------------------------------------
-string ValueByte::GetAsString
-(
-)const
-{
-	char str[8];
-	snprintf( str, 8, "%d", m_value );
-	return( str );
-}
-
-//-----------------------------------------------------------------------------
 // <ValueByte::Set>
 // Set a new value in the device
 //-----------------------------------------------------------------------------

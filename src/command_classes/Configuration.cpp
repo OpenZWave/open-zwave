@@ -48,6 +48,20 @@ enum ConfigurationCmd
 
 
 //-----------------------------------------------------------------------------
+// <Configuration::~Configuration>
+// Destructor
+//-----------------------------------------------------------------------------
+Configuration::~Configuration
+(
+)
+{
+	for( list<Value*>::iterator it = m_params.begin(); it != m_params.end(); ++it )
+	{
+		(*it)->Release();
+	}
+}
+
+//-----------------------------------------------------------------------------
 // <Configuration::HandleMsg>
 // Handle a message from the Z-Wave network
 //-----------------------------------------------------------------------------
@@ -58,76 +72,84 @@ bool Configuration::HandleMsg
 	uint32 const _instance	// = 1
 )
 {
-	if( Node* node = GetNode() )
+	if (ConfigurationCmd_Report == (ConfigurationCmd)_data[0])
 	{
-		if (ConfigurationCmd_Report == (ConfigurationCmd)_data[0])
+		// Extract the parameter index and value
+		uint8 parameter = _data[1];
+		uint8 size = _data[2] & 0x07;
+		uint32 paramValue = 0;
+		for( uint8 i=0; i<size; ++i )
 		{
-			// Extract the parameter index and value
-			uint8 parameter = _data[1];
-			uint8 size = _data[2] & 0x07;
-			uint32 paramValue = 0;
-			for( uint8 i=0; i<size; ++i )
-			{
-				paramValue <<= 8;
-				paramValue |= (uint32)_data[i+3];
-			}
-
-			char label[16];
-			snprintf( label, 16, "Parameter #%d", parameter );
-
-			switch( size )
-			{
-				case 1:
-				{
-					if( ValueByte* valueByte = node->GetValueByte( ValueID::ValueGenre_Config, GetCommandClassId(), _instance, parameter ) )
-					{
-						valueByte->OnValueChanged( (uint8)paramValue );
-						valueByte->Release();
-					}
-					else
-					{
-						// Create a new value
-						node->CreateValueByte( ValueID::ValueGenre_Config, GetCommandClassId(), _instance, parameter, label, "", false, (uint8)paramValue );
-					}
-					break;
-				}
-				case 2:
-				{
-					if( ValueShort* valueShort = node->GetValueShort( ValueID::ValueGenre_Config, GetCommandClassId(), _instance, parameter ) )
-					{
-						valueShort->OnValueChanged( (uint16)paramValue );
-						valueShort->Release();
-					}
-					else
-					{
-						// Create a new value
-						node->CreateValueShort( ValueID::ValueGenre_Config, GetCommandClassId(), _instance, parameter, label, "", false, (uint16)paramValue );
-					}
-					break;
-				}
-				case 4:
-				{
-					if( ValueInt* valueInt = node->GetValueInt( ValueID::ValueGenre_Config, GetCommandClassId(), _instance, parameter ) )
-					{
-						valueInt->OnValueChanged( paramValue );
-						valueInt->Release();
-					}
-					else
-					{
-						// Create a new value
-						node->CreateValueInt( ValueID::ValueGenre_Config, GetCommandClassId(), _instance, parameter, label, "", false, (int32)paramValue );
-					}
-					break;
-				}
-				default:
-				{
-					Log::Write( "Invalid size of %d bytes for configuration parameter %d", size, parameter );
-				}
-			}
-
-			Log::Write( "Received Configuration report from node %d: Parameter=%d, Value=%d", GetNodeId(), parameter, paramValue );
-			return true;
+			paramValue <<= 8;
+			paramValue |= (uint32)_data[i+3];
 		}
+
+		char label[16];
+		snprintf( label, 16, "Parameter #%d", parameter );
+
+		switch( size )
+		{
+			case 1:
+			{
+				if( ValueByte* valueByte = static_cast<ValueByte*>( GetParam( parameter ) ) )
+				{
+					valueByte->OnValueChanged( (uint8)paramValue );
+				}
+				else
+				{
+					// Create a new value
+					if( Node* node = GetNode() )
+					{
+						AddParam( node->CreateValueByte( ValueID::ValueGenre_Config, GetCommandClassId(), _instance, parameter, label, "", false, (uint8)paramValue ) );
+						ReleaseNode();
+					}
+				}
+				break;
+			}
+			case 2:
+			{
+				if( ValueShort* valueShort = static_cast<ValueShort*>( GetParam( parameter ) ) )
+				{
+					valueShort->OnValueChanged( (uint16)paramValue );
+					valueShort->Release();
+				}
+				else
+				{
+					// Create a new value
+					if( Node* node = GetNode() )
+					{
+						AddParam( node->CreateValueShort( ValueID::ValueGenre_Config, GetCommandClassId(), _instance, parameter, label, "", false, (uint16)paramValue ) );
+						ReleaseNode();
+					}
+				}
+				break;
+			}
+			case 4:
+			{
+				if( ValueInt* valueInt = static_cast<ValueInt*>( GetParam( parameter ) ) )
+				{
+					valueInt->OnValueChanged( paramValue );
+					valueInt->Release();
+				}
+				else
+				{
+					// Create a new value
+					if( Node* node = GetNode() )
+					{
+						AddParam( node->CreateValueInt( ValueID::ValueGenre_Config, GetCommandClassId(), _instance, parameter, label, "", false, (int32)paramValue ) );
+						ReleaseNode();
+					}
+				}
+				break;
+			}
+			default:
+			{
+				Log::Write( "Invalid size of %d bytes for configuration parameter %d", size, parameter );
+			}
+		}
+
+		Log::Write( "Received Configuration report from node %d: Parameter=%d, Value=%d", GetNodeId(), parameter, paramValue );
+		return true;
 	}
 
 	return false;
@@ -205,5 +227,61 @@ void Configuration::Set
 		msg->Append( (uint8)_value );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 	}
+}
+
+//-----------------------------------------------------------------------------
+// <Configuration::GetParam>
+// Get the value object that represents the specified parameter
+//-----------------------------------------------------------------------------
+Value* Configuration::GetParam
+(
+	uint8 const _paramId
+)
+{
+	for( list<Value*>::iterator it = m_params.begin(); it != m_params.end(); ++it )
+	{
+		Value* value = *it;
+		uint8 idx = value->GetID().GetIndex();
+		if( _paramId == idx )
+		{
+			return value;
+		}
+		if( idx >= _paramId )
+		{
+			// The list is sorted by ascending parameter ID, and
+			// we have passed the point where our parameter would be.
+			break;
+		}
+	}
+
+	// No value for this parameter was found
+	return NULL;
+}
+
+//-----------------------------------------------------------------------------
+// <Configuration::AddParam>
+// Adds a value object representing a parameter to the parameters list
+//-----------------------------------------------------------------------------
+bool Configuration::AddParam
+(
+	Value* _value
+)
+{
+	// First try to insert the new value at the correct position to
+	// maintain a list sorted by ascending parameter ID.
+	uint8 paramId = _value->GetID().GetIndex();
+	for( list<Value*>::iterator it = m_params.begin(); it != m_params.end(); ++it )
+	{
+		Value* value = *it;
+		uint8 idx = value->GetID().GetIndex();
+		if( idx > paramId )
+		{
+			m_params.insert( it, _value );
+			return true;
+		}
+	}
+
+	m_params.push_back( _value );
+	return true;
 }
 

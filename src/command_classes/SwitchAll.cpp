@@ -87,19 +87,15 @@ bool SwitchAll::HandleMsg
 	uint32 const _instance	// = 1
 )
 {
-	if( Node* node = GetNode() )
+	if (SwitchAllCmd_Report == (SwitchAllCmd)_data[0])
 	{
-		if (SwitchAllCmd_Report == (SwitchAllCmd)_data[0])
+		if( ValueList* value = m_state.GetInstance( _instance ) )
 		{
-			if( ValueList* value = node->GetValueList(  ValueID::ValueGenre_System, GetCommandClassId(), _instance, 0 ) )
-			{
-				value->OnValueChanged( (int32)_data[1] );
-				Log::Write( "Received SwitchAll report from node %d: %s", GetNodeId(), value->GetItem().m_label.c_str() );
-				value->Release();
-			}
-
-			return true;
+			value->OnValueChanged( (int32)_data[1] );
+			Log::Write( "Received SwitchAll report from node %d: %s", GetNodeId(), value->GetItem().m_label.c_str() );
 		}
+
+		return true;
 	}
 
 	return false;
@@ -188,7 +184,8 @@ void SwitchAll::CreateVars
 			items.push_back( item ); 
 		}
 
-		node->CreateValueList(  ValueID::ValueGenre_System, GetCommandClassId(), _instance, 0, "Switch All", "", false, items, 0 );
+		m_state.AddInstance( _instance, node->CreateValueList(  ValueID::ValueGenre_System, GetCommandClassId(), _instance, 0, "Switch All", "", false, items, 0 ) );
+		ReleaseNode();
 	}
 }
 

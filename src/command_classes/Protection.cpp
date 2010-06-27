@@ -86,19 +86,12 @@ bool Protection::HandleMsg
 	uint32 const _instance	// = 1
 )
 {
-	if( Node* node = GetNode() )
+	if (ProtectionCmd_Report == (ProtectionCmd)_data[0])
 	{
-		if (ProtectionCmd_Report == (ProtectionCmd)_data[0])
-		{
-			if( ValueList* value = node->GetValueList(  ValueID::ValueGenre_System, GetCommandClassId(), _instance, 0 ) )
-			{
-				value->OnValueChanged( (int)_data[1] );
-				value->Release();
-			}
+		Log::Write( "Received a Protection report from node %d: %s", GetNodeId(), c_protectionStateNames[_data[1]] );
 
-			Log::Write( "Received a Protection report from node %d: %s", GetNodeId(), c_protectionStateNames[_data[1]] );
-			return true;
-		}
+		m_state.GetInstance( _instance )->OnValueChanged( (int)_data[1] );
+		return true;
 	}
 
 	return false;
@@ -154,6 +147,7 @@ void Protection::CreateVars
 			items.push_back( item ); 
 		}
 
-		node->CreateValueList(  ValueID::ValueGenre_System, GetCommandClassId(), _instance, 0, "Protection", "", false, items, 0 );
+		m_state.AddInstance( _instance, node->CreateValueList(  ValueID::ValueGenre_System, GetCommandClassId(), _instance, 0, "Protection", "", false, items, 0 ) );
+		ReleaseNode();
 	}
 }

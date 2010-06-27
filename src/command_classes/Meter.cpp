@@ -76,50 +76,46 @@ bool Meter::HandleMsg
 	uint32 const _instance	// = 1
 )
 {
-	if( Node* node = GetNode() )
+	if (MeterCmd_Report == (MeterCmd)_data[0])
 	{
-		if (MeterCmd_Report == (MeterCmd)_data[0])
-		{
-			uint8 scale;
-			string valueStr = ExtractValueAsString( &_data[2], &scale );
+		uint8 scale;
+		string valueStr = ExtractValueAsString( &_data[2], &scale );
 
-			if( ValueDecimal* value = node->GetValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0 ) )
+		if( ValueDecimal* value = m_value.GetInstance( _instance ) )
+		{
+			if( value->GetLabel() == "Unknown" )
 			{
-				if( value->GetLabel() == "Unknown" )
+				switch( _data[1] )
 				{
-					switch( _data[1] )
+					case 0x01:
 					{
-						case 0x01:
-						{
-							// Electricity Meter
-							value->SetLabel( "Electricity" );
-							value->SetUnits( "kWh" );
-							break;
-						}
-						case 0x02:
-						{
-							// Gas Meter
-							value->SetLabel( "Gas" );
-							value->SetUnits( "" );
-							break;
-						}
-						case 0x03:
-						{
-							// Water Meter
-							value->SetLabel( "Water" );
-							value->SetUnits( "" );
-							break;
-						}
+						// Electricity Meter
+						value->SetLabel( "Electricity" );
+						value->SetUnits( "kWh" );
+						break;
+					}
+					case 0x02:
+					{
+						// Gas Meter
+						value->SetLabel( "Gas" );
+						value->SetUnits( "" );
+						break;
+					}
+					case 0x03:
+					{
+						// Water Meter
+						value->SetLabel( "Water" );
+						value->SetUnits( "" );
+						break;
 					}
 				}
-
-				value->OnValueChanged( valueStr );
-				value->Release();
 			}
 
-			Log::Write( "Received Meter report from node %d: value=%s", GetNodeId(), valueStr.c_str() );
-			return true;
+			value->OnValueChanged( valueStr );
 		}
+
+		Log::Write( "Received Meter report from node %d: value=%s", GetNodeId(), valueStr.c_str() );
+		return true;
 	}
 
 	return false;
@@ -136,7 +132,8 @@ void Meter::CreateVars
 {
 	if( Node* node = GetNode() )
 	{
-		node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Unknown", "", true, "0.0" );
+		m_value.AddInstance( _instance, node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Unknown", "", true, "0.0" ) );
+		ReleaseNode();
 	}
 }
 

@@ -32,6 +32,8 @@
 
 namespace OpenZWave
 {
+	class ValueBool;
+
 	class SwitchToggleBinary: public CommandClass
 	{
 	public:
@@ -53,6 +55,8 @@ namespace OpenZWave
 
 	private:
 		SwitchToggleBinary( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
+
+		ValueInstances<ValueBool>	m_state;
 	};
 
 } // namespace OpenZWave

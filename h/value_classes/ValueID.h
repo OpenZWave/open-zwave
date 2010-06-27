@@ -52,28 +52,110 @@ namespace OpenZWave
 	 */
 	class ValueID
 	{
+		friend class Manager;
+		friend class Driver;
+		friend class Node;
+		friend class Group;
+		friend class Value;
+		friend class ValueStore;
+		friend class Notification;
+		friend class ManufacturerSpecific;
+
 	public:
+		/** 
+		 * Value Genres
+		 * The classification of a value to enable low level system or configuration parameters to be filtered by the application.
+		 * @see GetGenre
+	     */
 		enum ValueGenre
 		{
-			ValueGenre_All = 0,
-			ValueGenre_User,			// Basic values an ordinary user would be interested in
-			ValueGenre_Config,			// Device-specific configuration parameters
-			ValueGenre_System,			// Values of significance only to users who understand the Z-Wave protocol 
-			ValueGenre_Count
+			ValueGenre_All = 0,			/**< Represents all genres. */
+			ValueGenre_User,			/**< Basic values an ordinary user would be interested in. */
+			ValueGenre_Config,			/**< Device-specific configuration parameters.  These cannot be automatically discovered via Z-Wave, and are usually described in the user manual instead. */
+			ValueGenre_System,			/**< Values of significance only to users who understand the Z-Wave protocol */
+			ValueGenre_Count			/**< A count of the number of genres defined.  Not to be used as a genre itself. */
 		};
 
+		/** 
+		 * Value Types
+		 * The type of data represented by the value object.
+		 * @see GetType
+	     */
 		enum ValueType
 		{
-			ValueType_Bool = 0,
-			ValueType_Byte,
-			ValueType_Decimal,
-			ValueType_Int,
-			ValueType_List,
-			ValueType_Short,
-			ValueType_String,
-			ValueType_Count
+			ValueType_Bool = 0,			/**< Boolean, true or false */
+			ValueType_Byte,				/**< 8-bit unsigned value */
+			ValueType_Decimal,			/**< Represents a non-integer value as a string, to avoid floating point accuracy issues. */
+			ValueType_Int,				/**< 32-bit signed value */
+			ValueType_List,				/**< List from which one item can be selected */
+			ValueType_Short,			/**< 16-bit signed value */
+			ValueType_String,			/**< Text string */
+			ValueType_Count				/**< A count of the number of types defined.  Not to be used as a type itself. */
 		};
 
+		/** 
+		 * Get the Home ID of the driver that controls the node containing the value. 
+		 * @return the Home ID.
+	     */
+		uint32 GetHomeId()const{ return m_homeId; }
+
+		/** 
+		 * Get the Home ID of the driver that controls the node containing the value. 
+		 * @return the node id.
+	     */
+		uint8 GetNodeId()const{ return( (uint8)( (m_id & 0xff000000) >> 24 ) ); }
+
+		/** 
+		 * Get the genre of the value.  The genre classifies a value to enable
+		 * low-level system or configuration parameters to be filtered out by the application 
+		 * @return the value's genre.
+		 * @see ValueGenre
+	     */
+		ValueGenre GetGenre()const{ return( (ValueGenre)( (m_id & 0x00f00000) >> 20 ) ); }
+
+		/** 
+		 * Get the Z-Wave command class that created and manages this value.  Knowledge of 
+		 * command classes is not required to use OpenZWave, but this information is
+		 * exposed in case it is of interest.
+		 * @return the value's command class.
+	     */
+		uint8 GetCommandClassId()const{ return( (uint8)( (m_id & 0x000ff000) >> 12 ) ); }
+
+		/** 
+		 * Get the command class instance of this value.  It is possible for there to be
+		 * multiple instances of a command class, although currently it appears that 
+		 * only the SensorMultilevel command class ever does this.  Knowledge of 
+		 * instances and command classes is not required to use OpenZWave, but this 
+		 * information is exposed in case it is of interest.
+		 * @return the instance of the value's command class.
+	     */
+		uint8 GetInstance()const{ return( (uint8)( (m_id & 0x00000f00) >> 8 ) ); }
+
+		/** 
+		 * Get the command class index.  The index is used to identify one of multiple
+		 * values created and managed by a command class.  Knowledge of command classes
+		 * is not required to use OpenZWave, but this information is exposed in case it
+		 * is of interest.
+		 * @return the value index within the command class.
+	     */
+		uint8 GetIndex()const{ return( (uint8)( (m_id & 0x000000f0) >> 4 ) ); }
+
+		/** 
+		 * Get the type of the value.  The type describes the data held by the value
+		 * and enables the user to select the correct value accessor method in the 
+		 * Manager class. 
+		 * @return the value's type.
+		 * @see ValueType, Manager::GetValueAsBool, Manager::GetValueAsByte, Manager::GetValueAsFloat, Manager::GetValueAsInt, Manager::GetValueAsShort, Manager::GetValueAsString, Manager::GetValueListSelection.
+	     */
+		ValueType GetType()const{ return( (ValueType)( m_id & 0x0000000f ) ); }
+
+		// Comparison Operators
+		bool operator ==	( ValueID const& _other )const{ return( (m_homeId == _other.m_homeId) && (m_id == _other.m_id) ); }
+		bool operator !=	( ValueID const& _other )const{ return( (m_homeId != _other.m_homeId) || (m_id != _other.m_id) ); }
+		bool operator <		( ValueID const& _other )const{ return( (m_homeId == _other.m_homeId) ? (m_id < _other.m_id) : (m_homeId < _other.m_homeId) ); }
+		bool operator >		( ValueID const& _other )const{ return( (m_homeId == _other.m_homeId) ? (m_id > _other.m_id) : (m_homeId > _other.m_homeId) ); }
+
+	private:
 		// Constructor
 		ValueID
 		( 
@@ -106,22 +188,6 @@ namespace OpenZWave
 		// Default constructor
 		ValueID():m_homeId(0),m_id(0){}
 
-		// Accessors
-		uint32		GetHomeId()const			{ return m_homeId; }
-		uint8		GetNodeId()const			{ return( (uint8)		( (m_id & 0xff000000) >> 24 ) ); }
-		ValueGenre	GetGenre()const				{ return( (ValueGenre)	( (m_id & 0x00f00000) >> 20 ) ); }
-		uint8		GetCommandClassId()const	{ return( (uint8)		( (m_id & 0x000ff000) >> 12 ) ); }
-		uint8		GetInstance()const			{ return( (uint8)		( (m_id & 0x00000f00) >> 8  ) ); }
-		uint8		GetIndex()const				{ return( (uint8)		( (m_id & 0x000000f0) >> 4  ) ); }
-		ValueType	GetType()const				{ return( (ValueType)	(  m_id & 0x0000000f        ) ); }
-
-		// Comparison Operators
-		bool operator ==	( ValueID const& _other )const{ return( (m_homeId == _other.m_homeId) && (m_id == _other.m_id) ); }
-		bool operator !=	( ValueID const& _other )const{ return( (m_homeId != _other.m_homeId) || (m_id != _other.m_id) ); }
-		bool operator <		( ValueID const& _other )const{ return( (m_homeId == _other.m_homeId) ? (m_id < _other.m_id) : (m_homeId < _other.m_homeId) ); }
-		bool operator >		( ValueID const& _other )const{ return( (m_homeId == _other.m_homeId) ? (m_id > _other.m_id) : (m_homeId > _other.m_homeId) ); }
-
-	private:
 		// ID Packing:
 		// Bits
 		// 24-31:	8 bits. Node ID of device

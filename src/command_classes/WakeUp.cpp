@@ -106,35 +106,26 @@ bool WakeUp::HandleMsg
 	uint32 const _instance	// = 1
 )
 {
-	bool handled = false;
+	if( WakeUpCmd_IntervalReport == (WakeUpCmd)_data[0] )
+	{	
+		uint32 interval = ((uint32)_data[1]) << 16;
+		interval |= (((uint32)_data[2]) << 8);
+		interval |= (uint32)_data[3];
 
-	if( Node* node = GetNode() )
-	{
-		if( WakeUpCmd_IntervalReport == (WakeUpCmd)_data[0] )
-		{	
-			uint32 interval = ((uint32)_data[1]) << 16;
-			interval |= (((uint32)_data[2]) << 8);
-			interval |= (uint32)_data[3];
+		Log::Write( "Received Wakeup Interval report from node %d: Interval=%d", GetNodeId(), interval );
 
-			if( ValueInt* value = node->GetValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 0 ) )
-			{
-				value->OnValueChanged( (int32)interval );
-				value->Release();
-			}
-
-			Log::Write( "Received Wakeup Interval report from node %d: Interval=%d", GetNodeId(), interval );
-			handled = true;
-		}
-		else if( WakeUpCmd_Notification == (WakeUpCmd)_data[0] )
-		{	
-			// The device is awake.
-			Log::Write( "Received Wakeup Notification from node %d", GetNodeId() );
-			SetAwake( true );				
-			handled = true;
-		}
+		m_interval.GetInstance( _instance )->OnValueChanged( (int32)interval );
+		return true;
+	}
+	else if( WakeUpCmd_Notification == (WakeUpCmd)_data[0] )
+	{	
+		// The device is awake.
+		Log::Write( "Received Wakeup Notification from node %d", GetNodeId() );
+		SetAwake( true );				
+		return true;
 	}
 
-	return handled;
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -156,6 +147,7 @@ bool WakeUp::SetValue
 		
 		if( GetNode()->GetCommandClass( MultiCmd::StaticGetCommandClassId() ) )
 		{
+			ReleaseNode();
 			msg->Append( 10 );
 			msg->Append( MultiCmd::StaticGetCommandClassId() );
 			msg->Append( MultiCmd::MultiCmdCmd_Encap );
@@ -202,6 +194,7 @@ void WakeUp::SetAwake
 			if( Node* node = GetNode() )
 			{
 				node->RequestState( RequestFlag_Dynamic );
+				ReleaseNode();
 			}
 			m_pollRequired = false;
 		}
@@ -270,7 +263,8 @@ void WakeUp::CreateVars
 {
 	if( Node* node = GetNode() )
 	{
-		node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 0, "Wake-up Interval", "Seconds", false, 3600 );
+		m_interval.AddInstance( _instance, node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 0, "Wake-up Interval", "Seconds", false, 3600 ) );
+		ReleaseNode();
 	}
 }
 

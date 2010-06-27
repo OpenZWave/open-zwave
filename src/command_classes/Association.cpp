@@ -81,6 +81,8 @@ void Association::ReadXML
 
 			associationsElement = associationsElement->NextSiblingElement();
 		}
+
+		ReleaseNode();
 	}
 }
 
@@ -100,6 +102,7 @@ void Association::WriteXML
 		TiXmlElement* associationsElement = new TiXmlElement( "Associations" );
 		_ccElement->LinkEndChild( associationsElement );
 		node->WriteGroups( associationsElement ); 
+		ReleaseNode();
 	}
 }
 
@@ -138,8 +141,7 @@ bool Association::HandleMsg
 {
 	bool handled = false;
 
-	Node* node = GetNode();
-	if( node )
+	if( Node* node = GetNode() )
 	{
 		if( AssociationCmd_GroupingsReport == (AssociationCmd)_data[0] )
 		{	
@@ -166,7 +168,7 @@ bool Association::HandleMsg
 		{
 			// Get the group memebers
 			uint8 groupIdx = _data[1];
-	//		uint8 maxNodes = _data[2];
+	//		uint8 maxAssociations = _data[2];
 
 			Group* group = node->GetGroup( groupIdx );
 			if( NULL == group )
@@ -176,17 +178,19 @@ bool Association::HandleMsg
 				node->AddGroup( group );
 			}
 
-//			uint8 numNodes = _data[3];	- should be this value, but it always appears to be zero.
+//			uint8 numAssociations = _data[3];	- should be this value, but it always appears to be zero.
 			if( _length > 5 )
 			{
-				uint8 numNodes = _length - 5;
-				Log::Write( "Received Association report from node %d, group %d: Number of associations=%d", GetNodeId(), groupIdx, numNodes );
+				uint8 numAssociations = _length - 5;
+				Log::Write( "Received Association report from node %d, group %d: Number of associations=%d", GetNodeId(), groupIdx, numAssociations );
 
-				group->OnGroupChanged( numNodes, &_data[4] );
+				group->OnGroupChanged( numAssociations, &_data[4] );
 			}
 
 			handled = true;
 		}
+
+		ReleaseNode();
 	}
 
 	return handled;

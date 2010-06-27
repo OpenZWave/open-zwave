@@ -35,6 +35,7 @@
 namespace OpenZWave
 {
 	class Msg;
+	class ValueInt;
 
 	class WakeUp: public CommandClass
 	{
@@ -68,6 +69,8 @@ namespace OpenZWave
 		list<Msg*>	m_pendingQueue;		// Messages waiting to be sent when the device wakes up
 		bool		m_awake;
 		bool		m_pollRequired;
+
+		ValueInstances<ValueInt>	m_interval;
 	};
 
 } // namespace OpenZWave

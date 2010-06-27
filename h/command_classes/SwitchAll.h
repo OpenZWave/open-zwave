@@ -32,6 +32,8 @@
 
 namespace OpenZWave
 {
+	class ValueList;
+
 	class SwitchAll: public CommandClass
 	{
 	public:
@@ -56,6 +58,8 @@ namespace OpenZWave
 
 	private:
 		SwitchAll( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
+
+		ValueInstances<ValueList>	m_state;
 	};
 
 } // namespace OpenZWave

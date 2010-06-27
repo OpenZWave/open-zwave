@@ -31,6 +31,7 @@
 #include "Node.h"
 #include "Notification.h"
 
+#include "Mutex.h"
 #include "Event.h"
 #include "Log.h"
 
@@ -96,7 +97,8 @@ Manager::Manager
 ):
 	m_configPath( _configPath ),
 	m_userPath( _userPath ),
-	m_exitEvent( new Event() )
+	m_exitEvent( new Event() ),
+	m_notificationMutex( new Mutex() )
 {
 	// Create the log file
 	string logFilename = _userPath + string( "OZW_Log.txt" );
@@ -133,7 +135,9 @@ Manager::~Manager
 		m_readyDrivers.erase( rit );
 		rit = m_readyDrivers.begin();
 	}
+	
 	delete m_exitEvent;
+	delete m_notificationMutex;
 	Log::Destroy();
 }
 
@@ -291,46 +295,10 @@ void Manager::SetDriverReady
 		m_readyDrivers[_driver->GetHomeId()] = _driver;
 
 		// Notify the watchers
-		Notification notification( Notification::Type_DriverReady );
-		notification.SetHomeAndNodeIds( _driver->GetHomeId(), 0 );
-		Manager::Get()->NotifyWatchers( &notification ); 
+		Notification* notification = new Notification( Notification::Type_DriverReady );
+		notification->SetHomeAndNodeIds( _driver->GetHomeId(), 0 );
+		_driver->QueueNotification( notification ); 
 	}
-}
-
-//-----------------------------------------------------------------------------
-// <Manager::IsSlave>
-// 
-//-----------------------------------------------------------------------------
-bool Manager::IsSlave
-(
-	uint32 const _homeId
-)
-{
-	if( Driver* driver = GetDriver( _homeId ) )
-	{
-		return driver->IsSlave();
-	}
-
-	Log::Write( "IsSlave() failed - _homeId %d not found", _homeId );
-	return false;
-}
-
-//-----------------------------------------------------------------------------
-// <Manager::HasTimerSupport>
-// 
-//-----------------------------------------------------------------------------
-bool Manager::HasTimerSupport
-(
-	uint32 const _homeId
-)
-{
-	if( Driver* driver = GetDriver( _homeId ) )
-	{
-		return driver->HasTimerSupport();
-	}
-
-	Log::Write( "HasTimerSupport() failed - _homeId %d not found", _homeId );
-	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -449,7 +417,7 @@ bool Manager::RefreshNodeInfo
 	{
 		// Cause the node's data to be obtained from the Z-Wave network
 		// in the same way as if it had just been added.
-		driver->AddInfoRequest( _nodeId );
+		driver->AddNodeInfoRequest( _nodeId );
 		return true;
 	}
 
@@ -457,10 +425,10 @@ bool Manager::RefreshNodeInfo
 }
 
 //-----------------------------------------------------------------------------
-// <Manager::RequestState>
+// <Manager::RequestNodeState>
 // Fetch the command class data for a node from the Z-Wave network
 //-----------------------------------------------------------------------------
-void Manager::RequestState
+void Manager::RequestNodeState
 (
 	uint32 const _homeId,
 	uint8 const _nodeId
@@ -469,15 +437,167 @@ void Manager::RequestState
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
 		// Retreive the Node's Session and/or Dynamic data
-		driver->RequestState( _nodeId, CommandClass::RequestFlag_Session | CommandClass::RequestFlag_Dynamic );
+		driver->RequestNodeState( _nodeId, CommandClass::RequestFlag_Session | CommandClass::RequestFlag_Dynamic );
 	}
 }
 
 //-----------------------------------------------------------------------------
-// <Manager::GetBasicLabel>
-// Get the basiclabel value with the specified ID
+// <Manager::IsNodeListeningDevice>
+// Get whether the node is a listening device that does not go to sleep
 //-----------------------------------------------------------------------------
-string const& Manager::GetBasicLabel
+bool Manager::IsNodeListeningDevice
+(
+	uint32 const _homeId,
+	uint8 const _nodeId
+)
+{
+	bool res = false;
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		res = driver->IsNodeListeningDevice( _nodeId );
+	}
+
+	return res;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::IsNodeRoutingDevice>
+// Get whether the node is a routing device that passes messages to other nodes
+//-----------------------------------------------------------------------------
+bool Manager::IsNodeRoutingDevice
+(
+	uint32 const _homeId,
+	uint8 const _nodeId
+)
+{
+	bool res = false;
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		res = driver->IsNodeRoutingDevice( _nodeId );
+	}
+
+	return res;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::GetNodeMaxBaudRate>
+// Get the maximum baud rate of a node's communications
+//-----------------------------------------------------------------------------
+uint32 Manager::GetNodeMaxBaudRate
+(
+	uint32 const _homeId,
+	uint8 const _nodeId
+)
+{
+	uint32 baud = 0;
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		baud = driver->GetNodeMaxBaudRate( _nodeId );
+	}
+
+	return baud;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::GetNodeVersion>
+// Get the version number of a node
+//-----------------------------------------------------------------------------
+uint8 Manager::GetNodeVersion
+(
+	uint32 const _homeId,
+	uint8 const _nodeId
+)
+{
+	uint8 version = 0;
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		version = driver->GetNodeVersion( _nodeId );
+	}
+
+	return version;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::GetNodeSecurity>
+// Get the security byte for a node (bit meanings still to be determined)
+//-----------------------------------------------------------------------------
+uint8 Manager::GetNodeSecurity
+(
+	uint32 const _homeId,
+	uint8 const _nodeId
+)
+{
+	uint8 security = 0;
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		security = driver->GetNodeSecurity( _nodeId );
+	}
+
+	return security;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::GetNodeBasic>
+// Get the basic type of a node
+//-----------------------------------------------------------------------------
+uint8 Manager::GetNodeBasic
+(
+	uint32 const _homeId,
+	uint8 const _nodeId
+)
+{
+	uint8 basic = 0;
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		basic = driver->GetNodeBasic( _nodeId );
+	}
+
+	return basic;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::GetNodeGeneric>
+// Get the generic type of a node
+//-----------------------------------------------------------------------------
+uint8 Manager::GetNodeGeneric
+(
+	uint32 const _homeId,
+	uint8 const _nodeId
+)
+{
+	uint8 genericType = 0;
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		genericType = driver->GetNodeGeneric( _nodeId );
+	}
+
+	return genericType;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::GetNodeSpecific>
+// Get the specific type of a node
+//-----------------------------------------------------------------------------
+uint8 Manager::GetNodeSpecific
+(
+	uint32 const _homeId,
+	uint8 const _nodeId
+)
+{
+	uint8 specific = 0;
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		specific = driver->GetNodeSpecific( _nodeId );
+	}
+
+	return specific;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::GetNodeType>
+// Get a string describing the type of a node
+//-----------------------------------------------------------------------------
+string Manager::GetNodeType
 (
 	uint32 const _homeId,
 	uint8 const _nodeId
@@ -485,17 +605,17 @@ string const& Manager::GetBasicLabel
 {
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
-		return driver->GetBasicLabel( _nodeId );
+		return driver->GetNodeType( _nodeId );
 	}
 
-	return NULL;
+	return "Unknown";
 }
 
 //-----------------------------------------------------------------------------
-// <Manager::GetGenericLabel>
-// Get the basiclabel value with the specified ID
+// <Manager::GetNodeManufacturerName>
+// Get the manufacturer name of a node
 //-----------------------------------------------------------------------------
-string const& Manager::GetGenericLabel
+string Manager::GetNodeManufacturerName
 (
 	uint32 const _homeId,
 	uint8 const _nodeId
@@ -503,17 +623,17 @@ string const& Manager::GetGenericLabel
 {
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
-		return driver->GetGenericLabel( _nodeId );
+		return driver->GetNodeManufacturerName( _nodeId );
 	}
 
-	return NULL;
+	return "Unknown";
 }
 
 //-----------------------------------------------------------------------------
-// <Manager::GetManufacturerName>
-// Get the manufacturer name value with the specified ID
+// <Manager::GetNodeProductName>
+// Get the product name of a node
 //-----------------------------------------------------------------------------
-string const& Manager::GetManufacturerName
+string Manager::GetNodeProductName
 (
 	uint32 const _homeId,
 	uint8 const _nodeId
@@ -521,35 +641,17 @@ string const& Manager::GetManufacturerName
 {
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
-		return driver->GetManufacturerName( _nodeId );
+		return driver->GetNodeProductName( _nodeId );
 	}
 
-	return NULL;
-}
-
-//-----------------------------------------------------------------------------
-// <Manager::GetProductName>
-// Get the product name value with the specified ID
-//-----------------------------------------------------------------------------
-string const& Manager::GetProductName
-(
-	uint32 const _homeId,
-	uint8 const _nodeId
-)
-{
-	if( Driver* driver = GetDriver( _homeId ) )
-	{
-		return driver->GetProductName( _nodeId );
-	}
-
-	return NULL;
+	return "Unknown";
 }
 
 //-----------------------------------------------------------------------------
 // <Manager::GetNodeName>
-// Get the node name value with the specified ID
+// Get the user-editable name of a node
 //-----------------------------------------------------------------------------
-string const& Manager::GetNodeName
+string Manager::GetNodeName
 (
 	uint32 const _homeId,
 	uint8 const _nodeId
@@ -560,14 +662,14 @@ string const& Manager::GetNodeName
 		return driver->GetNodeName( _nodeId );
 	}
 
-	return NULL;
+	return "Unknown";
 }
 
 //-----------------------------------------------------------------------------
-// <Manager::GetLocation>
-// Get the lcation value with the specified ID
+// <Manager::GetNodeLocation>
+// Get the location of a node
 //-----------------------------------------------------------------------------
-string const& Manager::GetLocation
+string Manager::GetNodeLocation
 (
 	uint32 const _homeId,
 	uint8 const _nodeId
@@ -575,17 +677,17 @@ string const& Manager::GetLocation
 {
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
-		return driver->GetLocation( _nodeId );
+		return driver->GetNodeLocation( _nodeId );
 	}
 
-	return NULL;
+	return "Unknown";
 }
 
 //-----------------------------------------------------------------------------
-// <Manager::SetManufacturerName>
-// Set the manufacturer name value with the specified ID
+// <Manager::SetNodeManufacturerName>
+// Set the manufacturer name a node
 //-----------------------------------------------------------------------------
-void Manager::SetManufacturerName
+void Manager::SetNodeManufacturerName
 (
 	uint32 const _homeId,
 	uint8 const _nodeId,
@@ -594,15 +696,15 @@ void Manager::SetManufacturerName
 {
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
-		driver->SetManufacturerName( _nodeId, _manufacturerName );
+		driver->SetNodeManufacturerName( _nodeId, _manufacturerName );
 	}
 }
 
 //-----------------------------------------------------------------------------
-// <Manager::SetProductName>
-// Set the manufacturer name value with the specified ID
+// <Manager::SetNodeProductName>
+// Set the product name of a node
 //-----------------------------------------------------------------------------
-void Manager::SetProductName
+void Manager::SetNodeProductName
 (
 	uint32 const _homeId,
 	uint8 const _nodeId,
@@ -611,7 +713,7 @@ void Manager::SetProductName
 {
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
-		driver->SetProductName( _nodeId, _productName );
+		driver->SetNodeProductName( _nodeId, _productName );
 	}
 }
 
@@ -633,10 +735,10 @@ void Manager::SetNodeName
 }
 
 //-----------------------------------------------------------------------------
-// <Manager::SetLocation>
-// Set the location value with the specified ID
+// <Manager::SetNodeLocation>
+// Set a string describing the location of a node
 //-----------------------------------------------------------------------------
-void Manager::SetLocation
+void Manager::SetNodeLocation
 (
 	uint32 const _homeId,
 	uint8 const _nodeId,
@@ -646,15 +748,15 @@ void Manager::SetLocation
 {
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
-		driver->SetLocation( _nodeId, _location );
+		driver->SetNodeLocation( _nodeId, _location );
 	}
 }
 
 //-----------------------------------------------------------------------------
-// <Manager::GetManufacturerId>
-// Get the manufacturer Id value with the specified ID
+// <Manager::GetNodeManufacturerId>
+// Get the manufacturer ID value of a node
 //-----------------------------------------------------------------------------
-string const& Manager::GetManufacturerId
+string Manager::GetNodeManufacturerId
 (
 	uint32 const _homeId,
 	uint8 const _nodeId
@@ -662,17 +764,17 @@ string const& Manager::GetManufacturerId
 {
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
-		return driver->GetManufacturerId( _nodeId );
+		return driver->GetNodeManufacturerId( _nodeId );
 	}
 
-	return NULL;
+	return "Unknown";
 }
 
 //-----------------------------------------------------------------------------
-// <Manager::GetProductType>
-// Get the product type value with the specified ID
+// <Manager::GetNodeProductType>
+// Get the product type value of a node
 //-----------------------------------------------------------------------------
-string const& Manager::GetProductType
+string Manager::GetNodeProductType
 (
 	uint32 const _homeId,
 	uint8 const _nodeId
@@ -680,17 +782,17 @@ string const& Manager::GetProductType
 {
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
-		return driver->GetProductType( _nodeId );
+		return driver->GetNodeProductType( _nodeId );
 	}
 
-	return NULL;
+	return "Unknown";
 }
 
 //-----------------------------------------------------------------------------
-// <Manager::GetProductId>
+// <Manager::GetNodeProductId>
 // Get the product Id value with the specified ID
 //-----------------------------------------------------------------------------
-string const& Manager::GetProductId
+string Manager::GetNodeProductId
 (
 	uint32 const _homeId,
 	uint8 const _nodeId
@@ -698,130 +800,841 @@ string const& Manager::GetProductId
 {
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
-		return driver->GetProductId( _nodeId );
+		return driver->GetNodeProductId( _nodeId );
 	}
 
-	return NULL;
+	return "Unknown";
 }
 
 //-----------------------------------------------------------------------------
-// <Manager::GetValueBool>
-// Get the bool value object with the specified ID
+//	Values
 //-----------------------------------------------------------------------------
-ValueBool* Manager::GetValueBool
-(
+
+//-----------------------------------------------------------------------------
+// <Manager::GetValueLabel>
+// Gets the user-friendly label for the value
+//-----------------------------------------------------------------------------
+string Manager::GetValueLabel
+( 
 	ValueID const& _id
 )
 {
+	string label;
 	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 	{
-		return driver->GetValueBool( _id );
+		driver->LockNodes();
+		if( Value* value = driver->GetValue( _id ) )
+		{
+			label = value->GetLabel();
+		}
+		driver->ReleaseNodes();
 	}
 
-	return NULL;
+	return label;
 }
 
 //-----------------------------------------------------------------------------
-// <Manager::GetValueByte>
-// Get the byte value object with the specified ID
+// <Manager::GetValueUnits>
+// Gets the units that the value is measured in
 //-----------------------------------------------------------------------------
-ValueByte* Manager::GetValueByte
-(
+string Manager::GetValueUnits
+( 
 	ValueID const& _id
 )
 {
+	string units;
 	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 	{
-		return driver->GetValueByte( _id );
+		driver->LockNodes();
+		if( Value* value = driver->GetValue( _id ) )
+		{
+			units = value->GetUnits();
+		}
+		driver->ReleaseNodes();
 	}
 
-	return NULL;
+	return units;
 }
 
 //-----------------------------------------------------------------------------
-// <Manager::GetValueDecimal>
-// Get the decimal value object with the specified ID
+// <Manager::GetValueHelp>
+// Gets a help string describing the value's purpose and usage
 //-----------------------------------------------------------------------------
-ValueDecimal* Manager::GetValueDecimal
-(
+string Manager::GetValueHelp
+( 
 	ValueID const& _id
 )
 {
+	string help;
 	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 	{
-		return driver->GetValueDecimal( _id );
+		driver->LockNodes();
+		if( Value* value = driver->GetValue( _id ) )
+		{
+			help = value->GetHelp();
+		}
+		driver->ReleaseNodes();
 	}
 
-	return NULL;
+	return help;
 }
 
 //-----------------------------------------------------------------------------
-// <Manager::GetValueInt>
-// Get the int value object with the specified ID
+// <Manager::IsValueReadOnly>
+// Test whether the value is read-only
 //-----------------------------------------------------------------------------
-ValueInt* Manager::GetValueInt
-(
+bool Manager::IsValueReadOnly
+( 
 	ValueID const& _id
 )
 {
+	bool res = false;
 	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 	{
-		return driver->GetValueInt( _id );
+		driver->LockNodes();
+		if( Value* value = driver->GetValue( _id ) )
+		{
+			res = value->IsReadOnly();
+		}
+		driver->ReleaseNodes();
 	}
 
-	return NULL;
+	return res;
 }
 
 //-----------------------------------------------------------------------------
-// <Manager::GetValueList>
-// Get the list value object with the specified ID
+// <Manager::IsValueSet>
+// Test whether the value has been set by a status message from the device
 //-----------------------------------------------------------------------------
-ValueList* Manager::GetValueList
-(
+bool Manager::IsValueSet
+( 
 	ValueID const& _id
 )
 {
+	bool res = false;
 	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 	{
-		return driver->GetValueList( _id );
+		driver->LockNodes();
+		if( Value* value = driver->GetValue( _id ) )
+		{
+			res = value->IsSet();
+		}
+		driver->ReleaseNodes();
 	}
 
-	return NULL;
+	return res;
 }
 
 //-----------------------------------------------------------------------------
-// <Manager::GetValueShort>
-// Get the short value object with the specified ID
+// <Manager::GetValueAsBool>
+// Gets a value as a bool
 //-----------------------------------------------------------------------------
-ValueShort* Manager::GetValueShort
+bool Manager::GetValueAsBool
 (
-	ValueID const& _id
+	ValueID const& _id,
+	bool* o_value
 )
 {
-	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
+	bool res = false;
+
+	if( o_value )
 	{
-		return driver->GetValueShort( _id );
+		if( ValueID::ValueType_Bool == _id.GetType() )
+		{
+			if( Driver* driver = GetDriver( _id.GetHomeId() ) )
+			{
+				driver->LockNodes();
+				if( ValueBool* value = static_cast<ValueBool*>( driver->GetValue( _id ) ) )
+				{
+					*o_value = value->GetValue();
+					res = true;
+				}
+				driver->ReleaseNodes();
+			}
+		}
 	}
 
-	return NULL;
+	return res;
 }
 
 //-----------------------------------------------------------------------------
-// <Manager::GetValueString>
-// Get the string value object with the specified ID
+// <Manager::GetValueAsByte>
+// Gets a value as an 8-bit unsigned integer
 //-----------------------------------------------------------------------------
-ValueString* Manager::GetValueString
+bool Manager::GetValueAsByte
 (
-	ValueID const& _id
+	ValueID const& _id,
+	uint8* o_value
 )
 {
-	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
+	bool res = false;
+
+	if( o_value )
 	{
-		return driver->GetValueString( _id );
+		if( ValueID::ValueType_Byte == _id.GetType() )
+		{
+			if( Driver* driver = GetDriver( _id.GetHomeId() ) )
+			{
+				driver->LockNodes();
+				if( ValueByte* value = static_cast<ValueByte*>( driver->GetValue( _id ) ) )
+				{
+					*o_value = value->GetValue();
+					res = true;
+				}
+				driver->ReleaseNodes();
+			}
+		}
 	}
 
-	return NULL;
+	return res;
 }
+
+//-----------------------------------------------------------------------------
+// <Manager::GetValueAsFloat>
+// Gets a value as a floating point number
+//-----------------------------------------------------------------------------
+bool Manager::GetValueAsFloat
+(
+	ValueID const& _id,
+	float* o_value
+)
+{
+	bool res = false;
+
+	if( o_value )
+	{
+		if( ValueID::ValueType_Decimal == _id.GetType() )
+		{
+			if( Driver* driver = GetDriver( _id.GetHomeId() ) )
+			{
+				driver->LockNodes();
+				if( ValueDecimal* value = static_cast<ValueDecimal*>( driver->GetValue( _id ) ) )
+				{
+					string str = value->GetValue();
+					*o_value = (float)atof( str.c_str() );
+					res = true;
+				}
+				driver->ReleaseNodes();
+			}
+		}
+	}
+
+	return res;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::GetValueAsInt>
+// Gets a value as a 32-bit signed integer
+//-----------------------------------------------------------------------------
+bool Manager::GetValueAsInt
+(
+	ValueID const& _id,
+	int32* o_value
+)
+{
+	bool res = false;
+
+	if( o_value )
+	{
+		if( ValueID::ValueType_Int == _id.GetType() )
+		{
+			if( Driver* driver = GetDriver( _id.GetHomeId() ) )
+			{
+				driver->LockNodes();
+				if( ValueInt* value = static_cast<ValueInt*>( driver->GetValue( _id ) ) )
+				{
+					*o_value = value->GetValue();
+					res = true;
+				}
+				driver->ReleaseNodes();
+			}
+		}
+	}
+
+	return res;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::GetValueAsShort>
+// Gets a value as a 16-bit signed integer
+//-----------------------------------------------------------------------------
+bool Manager::GetValueAsShort
+(
+	ValueID const& _id,
+	int16* o_value
+)
+{
+	bool res = false;
+
+	if( o_value )
+	{
+		if( ValueID::ValueType_Short == _id.GetType() )
+		{
+			if( Driver* driver = GetDriver( _id.GetHomeId() ) )
+			{
+				driver->LockNodes();
+				if( ValueShort* value = static_cast<ValueShort*>( driver->GetValue( _id ) ) )
+				{
+					*o_value = value->GetValue();
+					res = true;
+				}
+				driver->ReleaseNodes();
+			}
+		}
+	}
+
+	return res;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::GetValueAsString>
+// Creates a string representation of the value, regardless of type
+//-----------------------------------------------------------------------------
+bool Manager::GetValueAsString
+(
+	ValueID const& _id,
+	string* o_value
+)
+{
+	bool res = false;
+	char str[256];
+
+	if( o_value )
+	{
+		if( Driver* driver = GetDriver( _id.GetHomeId() ) )
+		{
+			driver->LockNodes();
+		
+			switch( _id.GetType() )
+			{
+				case ValueID::ValueType_Bool:
+				{
+					if( ValueBool* value = static_cast<ValueBool*>( driver->GetValue( _id ) ) )
+					{
+						*o_value = value->GetValue() ? "True" : "False";
+						res = true;
+					}
+					break;
+				}
+				case ValueID::ValueType_Byte:
+				{
+					if( ValueByte* value = static_cast<ValueByte*>( driver->GetValue( _id ) ) )
+					{
+						snprintf( str, sizeof(str), "%u", value->GetValue() );
+						*o_value = str;
+						res = true;
+					}
+					break;
+				}
+				case ValueID::ValueType_Decimal:
+				{
+					if( ValueDecimal* value = static_cast<ValueDecimal*>( driver->GetValue( _id ) ) )
+					{
+						*o_value = value->GetValue();
+						res = true;
+					}
+					break;
+				}
+				case ValueID::ValueType_Int:
+				{
+					if( ValueInt* value = static_cast<ValueInt*>( driver->GetValue( _id ) ) )
+					{
+						snprintf( str, sizeof(str), "%d", value->GetValue() );
+						*o_value = str;
+						res = true;
+					}
+					break;
+				}
+				case ValueID::ValueType_List:
+				{
+					if( ValueList* value = static_cast<ValueList*>( driver->GetValue( _id ) ) )
+					{
+						ValueList::Item const& item = value->GetItem();
+						*o_value = item.m_label;
+						res = true;
+					}
+					break;
+				}
+				case ValueID::ValueType_Short:
+				{
+					if( ValueShort* value = static_cast<ValueShort*>( driver->GetValue( _id ) ) )
+					{
+						snprintf( str, sizeof(str), "%d", value->GetValue() );
+						*o_value = str;
+						res = true;
+					}
+					break;
+				}
+				case ValueID::ValueType_String:
+				{
+					if( ValueString* value = static_cast<ValueString*>( driver->GetValue( _id ) ) )
+					{
+						*o_value = value->GetValue();
+						res = true;
+					}
+					break;
+				}
+			}
+
+			driver->ReleaseNodes();
+		}
+	}
+
+	return res;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::GetValueListSelection>
+// Gets the selected item from a list value
+//-----------------------------------------------------------------------------
+bool Manager::GetValueListSelection
+(
+	ValueID const& _id,
+	string* o_value
+)
+{
+	bool res = false;
+
+	if( o_value )
+	{
+		if( ValueID::ValueType_Int == _id.GetType() )
+		{
+			if( Driver* driver = GetDriver( _id.GetHomeId() ) )
+			{
+				driver->LockNodes();
+				if( ValueList* value = static_cast<ValueList*>( driver->GetValue( _id ) ) )
+				{
+					ValueList::Item const& item = value->GetItem();
+					*o_value = item.m_label;
+					res = true;
+				}
+				driver->ReleaseNodes();
+			}
+		}
+	}
+
+	return res;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::GetValueListItems>
+// Gets the list of items from a list value
+//-----------------------------------------------------------------------------
+bool Manager::GetValueListItems
+(
+	ValueID const& _id,
+	vector<string>* o_value
+)
+{
+	bool res = false;
+
+	if( o_value )
+	{
+		if( ValueID::ValueType_Int == _id.GetType() )
+		{
+			if( Driver* driver = GetDriver( _id.GetHomeId() ) )
+			{
+				driver->LockNodes();
+				if( ValueList* value = static_cast<ValueList*>( driver->GetValue( _id ) ) )
+				{
+					res = value->GetItemLabels( o_value );
+				}
+				driver->ReleaseNodes();
+			}
+		}
+	}
+
+	return res;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::SetValue>
+// Sets the value from a bool
+//-----------------------------------------------------------------------------
+bool Manager::SetValue
+( 
+	ValueID const& _id, 
+	bool const _value
+)
+{
+	bool res = false;
+
+	if( ValueID::ValueType_Bool == _id.GetType() )
+	{
+		if( Driver* driver = GetDriver( _id.GetHomeId() ) )
+		{
+			driver->LockNodes();
+			if( ValueBool* value = static_cast<ValueBool*>( driver->GetValue( _id ) ) )
+			{
+				res = value->Set( _value );
+			}
+			driver->ReleaseNodes();
+		}
+	}
+
+	return res;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::SetValue>
+// Sets the value from a byte
+//-----------------------------------------------------------------------------
+bool Manager::SetValue
+( 
+	ValueID const& _id, 
+	uint8 const _value
+)
+{
+	bool res = false;
+
+	if( ValueID::ValueType_Byte == _id.GetType() )
+	{
+		if( Driver* driver = GetDriver( _id.GetHomeId() ) )
+		{
+			driver->LockNodes();
+			if( ValueByte* value = static_cast<ValueByte*>( driver->GetValue( _id ) ) )
+			{
+				res = value->Set( _value );
+			}
+			driver->ReleaseNodes();
+		}
+	}
+
+	return res;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::SetValue>
+// Sets the value from a floating point number
+//-----------------------------------------------------------------------------
+bool Manager::SetValue
+( 
+	ValueID const& _id, 
+	float const _value
+)
+{
+	bool res = false;
+
+	if( ValueID::ValueType_Decimal == _id.GetType() )
+	{
+		if( Driver* driver = GetDriver( _id.GetHomeId() ) )
+		{
+			driver->LockNodes();
+			if( ValueDecimal* value = static_cast<ValueDecimal*>( driver->GetValue( _id ) ) )
+			{
+				char str[256];
+				snprintf( str, sizeof(str), "%f", _value );
+				res = value->Set( str );
+			}
+			driver->ReleaseNodes();
+		}
+	}
+
+	return res;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::SetValue>
+// Sets the value from a 32-bit signed integer
+//-----------------------------------------------------------------------------
+bool Manager::SetValue
+( 
+	ValueID const& _id, 
+	int32 const _value
+)
+{
+	bool res = false;
+
+	if( ValueID::ValueType_Int == _id.GetType() )
+	{
+		if( Driver* driver = GetDriver( _id.GetHomeId() ) )
+		{
+			driver->LockNodes();
+			if( ValueInt* value = static_cast<ValueInt*>( driver->GetValue( _id ) ) )
+			{
+				res = value->Set( _value );
+			}
+			driver->ReleaseNodes();
+		}
+	}
+
+	return res;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::SetValue>
+// Sets the value from a 16-bit signed integer
+//-----------------------------------------------------------------------------
+bool Manager::SetValue
+( 
+	ValueID const& _id, 
+	int16 const _value
+)
+{
+	bool res = false;
+
+	if( ValueID::ValueType_Short == _id.GetType() )
+	{
+		if( Driver* driver = GetDriver( _id.GetHomeId() ) )
+		{
+			driver->LockNodes();
+			if( ValueShort* value = static_cast<ValueShort*>( driver->GetValue( _id ) ) )
+			{
+				res = value->Set( _value );
+			}
+			driver->ReleaseNodes();
+		}
+	}
+
+	return res;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::SetValueListSelection>
+// Sets the selected item in a list by value
+//-----------------------------------------------------------------------------
+bool Manager::SetValueListSelection
+(
+	ValueID const& _id,
+	string const& _selectedItem
+)
+{
+	bool res = false;
+
+	if( ValueID::ValueType_Int == _id.GetType() )
+	{
+		if( Driver* driver = GetDriver( _id.GetHomeId() ) )
+		{
+			driver->LockNodes();
+			if( ValueList* value = static_cast<ValueList*>( driver->GetValue( _id ) ) )
+			{
+				res = value->SetByLabel( _selectedItem );
+			}
+			driver->ReleaseNodes();
+		}
+	}
+
+	return res;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::SetValue>
+// Sets the value from a string
+//-----------------------------------------------------------------------------
+bool Manager::SetValue
+( 
+	ValueID const& _id, 
+	string const& _value
+)
+{
+	bool res = false;
+
+	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
+	{
+		driver->LockNodes();
+		
+		switch( _id.GetType() )
+		{
+			case ValueID::ValueType_Bool:
+			{
+				if( ValueBool* value = static_cast<ValueBool*>( driver->GetValue( _id ) ) )
+				{
+					if( !_stricmp( "true", _value.c_str() ) )
+					{
+						res = value->Set( true );
+					}
+					else if( !_stricmp( "false", _value.c_str() ) )
+					{
+						res = value->Set( false );
+					}
+				}
+				break;
+			}
+			case ValueID::ValueType_Byte:
+			{
+				if( ValueByte* value = static_cast<ValueByte*>( driver->GetValue( _id ) ) )
+				{
+					uint32 val = (uint32)atoi( _value.c_str() );
+					if( val < 256 )
+					{
+						res = value->Set( (uint8)val );
+					}
+				}
+				break;
+			}
+			case ValueID::ValueType_Decimal:
+			{
+				if( ValueDecimal* value = static_cast<ValueDecimal*>( driver->GetValue( _id ) ) )
+				{
+					res = value->Set( _value );
+				}
+				break;
+			}
+			case ValueID::ValueType_Int:
+			{
+				if( ValueInt* value = static_cast<ValueInt*>( driver->GetValue( _id ) ) )
+				{
+					int32 val = atoi( _value.c_str() );
+					res = value->Set( val );
+				}
+				break;
+			}
+			case ValueID::ValueType_List:
+			{
+				if( ValueList* value = static_cast<ValueList*>( driver->GetValue( _id ) ) )
+				{
+					res = value->SetByLabel( _value );
+				}
+				break;
+			}
+			case ValueID::ValueType_Short:
+			{
+				if( ValueShort* value = static_cast<ValueShort*>( driver->GetValue( _id ) ) )
+				{
+					int32 val = (uint32)atoi( _value.c_str() );
+					if( ( val < 32768 ) && ( val >= -32768 ) )
+					{
+						res = value->Set( (int16)val );
+					}
+				}
+				break;
+			}
+			case ValueID::ValueType_String:
+			{
+				if( ValueString* value = static_cast<ValueString*>( driver->GetValue( _id ) ) )
+				{
+					res = value->Set( _value );
+				}
+				break;
+			}
+		}
+
+		driver->ReleaseNodes();
+	}
+
+	return res;
+}
+
+//-----------------------------------------------------------------------------
+//	Configuration Parameters
+//-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+// <Manager::SetConfigParam>
+// Set the value of one of the configuration parameters of a device
+//-----------------------------------------------------------------------------
+bool Manager::SetConfigParam
+(
+	uint32 const _homeId, 
+	uint8 const _nodeId,
+	uint8 const _param,
+	int32 _value
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		return driver->SetConfigParam( _nodeId, _param, _value );
+	}
+
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::RequestConfigParam>
+// Request the value of one of the configuration parameters of a device
+//-----------------------------------------------------------------------------
+void Manager::RequestConfigParam
+(
+	uint32 const _homeId, 
+	uint8 const _nodeId,
+	uint8 const _param
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		driver->RequestConfigParam( _nodeId, _param );
+	}
+}
+
+
+//-----------------------------------------------------------------------------
+//	Groups
+//-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+// <Manager::GetNumGroups>
+// Gets the number of association groups reported by this node
+//-----------------------------------------------------------------------------
+uint8 Manager::GetNumGroups
+(
+	uint32 const _homeId, 
+	uint8 const _nodeId
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		return driver->GetNumGroups( _nodeId );
+	}
+
+	return 0;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::GetAssociations>
+// Gets the associations for a group
+//-----------------------------------------------------------------------------
+uint32 Manager::GetAssociations
+( 
+	uint32 const _homeId,
+	uint8 const _nodeId,
+	uint8 const _groupIdx,
+	uint8** o_associations
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		return driver->GetAssociations( _nodeId, _groupIdx, o_associations );
+	}
+
+	return 0;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::AddAssociation>
+// Adds a node to an association group
+//-----------------------------------------------------------------------------
+void Manager::AddAssociation
+(
+	uint32 const _homeId,
+	uint8 const _nodeId,
+	uint8 const _groupIdx,
+	uint8 const _targetNodeId
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		driver->AddAssociation( _nodeId, _groupIdx, _targetNodeId );
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::RemoveAssociation>
+// Removes a node from an association group
+//-----------------------------------------------------------------------------
+void Manager::RemoveAssociation
+(
+	uint32 const _homeId,
+	uint8 const _nodeId,
+	uint8 const _groupIdx,
+	uint8 const _targetNodeId
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		driver->RemoveAssociation( _nodeId, _groupIdx, _targetNodeId );
+	}
+}
+
 
 //-----------------------------------------------------------------------------
 //	Notifications
@@ -833,21 +1646,24 @@ ValueString* Manager::GetValueString
 //-----------------------------------------------------------------------------
 bool Manager::AddWatcher
 (
-	pfnOnNotification_t _pWatcher,
+	pfnOnNotification_t _watcher,
 	void* _context
 )
 {
 	// Ensure this watcher is not already on the list
+	m_notificationMutex->Lock();
 	for( list<Watcher*>::iterator it = m_watchers.begin(); it != m_watchers.end(); ++it )
 	{
-		if( ((*it)->m_callback == _pWatcher ) && ( (*it)->m_context == _context ) )
+		if( ((*it)->m_callback == _watcher ) && ( (*it)->m_context == _context ) )
 		{
 			// Already in the list
+			m_notificationMutex->Release();
 			return false;
 		}
 	}
 
-	m_watchers.push_back( new Watcher( _pWatcher, _context ) );
+	m_watchers.push_back( new Watcher( _watcher, _context ) );
+	m_notificationMutex->Release();
 	return true;
 }
 
@@ -857,21 +1673,24 @@ bool Manager::AddWatcher
 //-----------------------------------------------------------------------------
 bool Manager::RemoveWatcher
 (
-	pfnOnNotification_t _pWatcher,
+	pfnOnNotification_t _watcher,
 	void* _context
 )
 {
+	m_notificationMutex->Lock();
 	list<Watcher*>::iterator it = m_watchers.begin();
 	while( it != m_watchers.end() )
 	{
-		if( ((*it)->m_callback == _pWatcher ) && ( (*it)->m_context == _context ) )
+		if( ((*it)->m_callback == _watcher ) && ( (*it)->m_context == _context ) )
 		{
 			delete (*it);
 			m_watchers.erase( it );
+			m_notificationMutex->Release();
 			return true;
 		}
 	}
 
+	m_notificationMutex->Release();
 	return false;
 }
 
@@ -881,16 +1700,17 @@ bool Manager::RemoveWatcher
 //-----------------------------------------------------------------------------
 void Manager::NotifyWatchers
 (
-	Notification const* _notification
+	Notification* _notification
 )
 {
+	m_notificationMutex->Lock();
 	for( list<Watcher*>::iterator it = m_watchers.begin(); it != m_watchers.end(); ++it )
 	{
 		Watcher* pWatcher = *it;
 		pWatcher->m_callback( _notification, pWatcher->m_context );
 	}
+	m_notificationMutex->Release();
 }
-
 
 //-----------------------------------------------------------------------------
 //	Controller commands
@@ -930,34 +1750,34 @@ void Manager::SoftReset
 // <Manager::RequestNodeNeighborUpdate>
 // 
 //-----------------------------------------------------------------------------
-void Manager::RequestNodeNeighborUpdate
-(
-	uint32 const _homeId,
-	uint8 const _nodeId
-)
-{
-	if( Driver* driver = GetDriver( _homeId ) )
-	{
-		driver->RequestNodeNeighborUpdate( _nodeId );
-	}
-}
+//void Manager::RequestNodeNeighborUpdate
+//(
+//	uint32 const _homeId,
+//	uint8 const _nodeId
+//)
+//{
+//	if( Driver* driver = GetDriver( _homeId ) )
+//	{
+//		driver->RequestNodeNeighborUpdate( _nodeId );
+//	}
+//}
 
 //-----------------------------------------------------------------------------
 // <Manager::AssignReturnRoute>
 // 
 //-----------------------------------------------------------------------------
-void Manager::AssignReturnRoute
-(
-	uint32 const _homeId,
-	uint8 const _nodeId,
-	uint8 const _targetNodeId
-)
-{
-	if( Driver* driver = GetDriver( _homeId ) )
-	{
-		driver->AssignReturnRoute( _nodeId, _targetNodeId );
-	}
-} 
+//void Manager::AssignReturnRoute
+//(
+//	uint32 const _homeId,
+//	uint8 const _nodeId,
+//	uint8 const _targetNodeId
+//)
+//{
+//	if( Driver* driver = GetDriver( _homeId ) )
+//	{
+//		driver->AssignReturnRoute( _nodeId, _targetNodeId );
+//	}
+//} 
 
 //-----------------------------------------------------------------------------
 // <Manager::BeginControllerCommand>
@@ -1001,14 +1821,14 @@ bool Manager::CancelControllerCommand
 // <Manager::RequestNetworkUpdate>
 // Request a network update
 //-----------------------------------------------------------------------------
-void Manager::RequestNetworkUpdate
-(
-	uint32 const _homeId
-)
-{
-	if( Driver* driver = GetDriver( _homeId ) )
-	{
-		driver->RequestNetworkUpdate();
-	}
-}
+//void Manager::RequestNetworkUpdate
+//(
+//	uint32 const _homeId
+//)
+//{
+//	if( Driver* driver = GetDriver( _homeId ) )
+//	{
+//		driver->RequestNetworkUpdate();
+//	}
+//}
 
