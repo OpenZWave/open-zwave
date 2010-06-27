@@ -51,7 +51,6 @@ namespace OpenZWave
 
 		// From Value
 		virtual void WriteXML( TiXmlElement* _valueElement );
-		virtual string GetAsString()const;
 
 		uint8 GetValue()const{ return m_value; }
 		uint8 GetPending()const{ return m_pending; }

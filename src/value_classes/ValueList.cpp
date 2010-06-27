@@ -233,17 +233,30 @@ int32 const ValueList::GetItemIdxByValue
 }
 
 //-----------------------------------------------------------------------------
-// <ValueList::GetItemIdx>
-// Get Item's label by index.
+// <ValueList::GetItemLabels>
+// Fill a vector with the item labels
 //-----------------------------------------------------------------------------
-string const ValueList::GetItemIdx
+bool ValueList::GetItemLabels
 (
-	int32 const _valueIdx
+	vector<string>* o_items
 )
 {
-	if (_valueIdx < 0 || _valueIdx >= m_items.size())
+	if( o_items )
 	{
-		return NULL;
+		for( vector<Item>::iterator it = m_items.begin(); it != m_items.end(); ++it )
+		{
+			o_items->push_back( (*it).m_label );
+		}
+
+		return true;
 	}
-	return m_items[_valueIdx].m_label;
+
+	return false;
 }
+
+
+
+
+
+
+

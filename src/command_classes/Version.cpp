@@ -85,54 +85,41 @@ bool Version::HandleMsg
 	uint32 const _instance	// = 1
 )
 {
-	bool handled = false;
-
-	if( Node* node = GetNode() )
+	if( VersionCmd_Report == (VersionCmd)_data[0] )
 	{
-		if( VersionCmd_Report == (VersionCmd)_data[0] )
+		char library[8];
+		char protocol[16];
+		char application[16];
+
+		snprintf( library, sizeof(library), "%d", _data[1] );
+		snprintf( protocol, sizeof(protocol), "%d.%d", _data[2], _data[3] );
+		snprintf( application, sizeof(application), "%d.%d", _data[4], _data[5] );
+
+		Log::Write( "Received Version report from node %d: Library=%s, Protocol=%s, Application=%s", GetNodeId(), library, protocol, application );
+
+		m_library.GetInstance( _instance )->OnValueChanged( library );
+		m_protocol.GetInstance( _instance )->OnValueChanged( protocol );
+		m_application.GetInstance( _instance )->OnValueChanged( application );
+		return true;
+	}
+	
+	if (VersionCmd_CommandClassReport == (VersionCmd)_data[0])
+	{
+		if( Node* node = GetNode() )
 		{
-			ValueString* value;
-
-			char library[8];
-			snprintf( library, sizeof(library), "%d", _data[1] );
-			if( value = node->GetValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, (uint8)ValueIndex_Library ) )
-			{
-				value->OnValueChanged( library );
-				value->Release();
-			}
-
-			char protocol[16];
-			snprintf( protocol, sizeof(protocol), "%d.%d", _data[2], _data[3] );
-			if( value = node->GetValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, (uint8)ValueIndex_Protocol ) )
-			{
-				value->OnValueChanged( protocol );
-				value->Release();
-			}
-
-			char application[16];
-			snprintf( application, sizeof(application), "%d.%d", _data[4], _data[5] );
-			if( value = node->GetValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, (uint8)ValueIndex_Application ) )
-			{
-				value->OnValueChanged( application );
-				value->Release();
-			}
-
-			Log::Write( "Received Version report from node %d: Library=%s, Protocol=%s, Application=%s", GetNodeId(), library, protocol, application );
-			handled = true;
-		}
-		else if (VersionCmd_CommandClassReport == (VersionCmd)_data[0])
-		{
-			if( CommandClass* pCommandClass = GetNode()->GetCommandClass( _data[1] ) )
+			if( CommandClass* pCommandClass = node->GetCommandClass( _data[1] ) )
 			{
 				pCommandClass->SetVersion( _data[2] );				
 				Log::Write( "Received Command Class Version report from node %d: CommandClass=%s, Version=%d", GetNodeId(), pCommandClass->GetCommandClassName().c_str(), _data[2] );
 			}
 
-			handled = true;
+			ReleaseNode();
 		}
+
+		return true;
 	}
 
-	return handled;
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -165,8 +152,9 @@ void Version::CreateVars
 {
 	if( Node* node = GetNode() )
 	{
-		node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, (uint8)ValueIndex_Library, "Library Version", "", true, "Unknown"  );
-		node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, (uint8)ValueIndex_Protocol, "Protocol Version", "", true, "Unknown"  );
-		node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, (uint8)ValueIndex_Application, "Application Version", "", true, "Unknown"  );
+		m_library.AddInstance( _instance, node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, (uint8)ValueIndex_Library, "Library Version", "", true, "Unknown" ) );
+		m_protocol.AddInstance( _instance, node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, (uint8)ValueIndex_Protocol, "Protocol Version", "", true, "Unknown" ) );
+		m_application.AddInstance( _instance, node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, (uint8)ValueIndex_Application, "Application Version", "", true, "Unknown" ) );
+		ReleaseNode();
 	}
 }

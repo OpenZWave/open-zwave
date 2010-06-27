@@ -108,7 +108,7 @@ void Group::WriteXML
 
 	_groupElement->SetAttribute( "label", m_label.c_str() );
 
-	for( Iterator it = Begin(); it != End(); ++it )
+	for( set<uint8>::iterator it = m_associations.begin(); it != m_associations.end(); ++it )
 	{
 		TiXmlElement* associationElement = new TiXmlElement( "Node" );
 		
@@ -120,37 +120,47 @@ void Group::WriteXML
 }
 
 //-----------------------------------------------------------------------------
-// <Group::AddNode>
+// <Group::AddAssociation>
 // Associate a node with this group
 //-----------------------------------------------------------------------------
-void Group::AddNode
+void Group::AddAssociation
 (
 	uint8 const _nodeId
 )
 {
-	if( Node* node = GetNode() )
+	if( Driver* driver = Manager::Get()->GetDriver( m_homeId ) )
 	{
-		if( Association* cc = static_cast<Association*>( node->GetCommandClass( Association::StaticGetCommandClassId() ) ) )
+		if( Node* node = driver->GetNode( m_nodeId ) )
 		{
-			cc->Set( m_groupIdx, _nodeId );
+			if( Association* cc = static_cast<Association*>( node->GetCommandClass( Association::StaticGetCommandClassId() ) ) )
+			{
+				cc->Set( m_groupIdx, _nodeId );
+			}
+
+			driver->ReleaseNodes();
 		}
 	}
 }
 
 //-----------------------------------------------------------------------------
-// <Group:RemoveNode>
+// <Group:RemoveAssociation>
 // Remove a node from this group
 //-----------------------------------------------------------------------------
-void Group::RemoveNode
+void Group::RemoveAssociation
 (
 	uint8 const _nodeId
 )
 {
-	if( Node* node = GetNode() )
+	if( Driver* driver = Manager::Get()->GetDriver( m_homeId ) )
 	{
-		if( Association* cc = static_cast<Association*>( node->GetCommandClass( Association::StaticGetCommandClassId() ) ) )
+		if( Node* node = driver->GetNode( m_nodeId ) )
 		{
-			cc->Remove( m_groupIdx, _nodeId );
+			if( Association* cc = static_cast<Association*>( node->GetCommandClass( Association::StaticGetCommandClassId() ) ) )
+			{
+				cc->Remove( m_groupIdx, _nodeId );
+			}
+
+			driver->ReleaseNodes();
 		}
 	}
 }
@@ -161,15 +171,15 @@ void Group::RemoveNode
 //-----------------------------------------------------------------------------
 void Group::OnGroupChanged
 (
-	uint8 const _numAssociations,
-	uint8 const* _associations
+	uint8 const _numNodes,
+	uint8 const* _nodes
 )
 {
 	bool notify = false;
 
 	// If the number of associations is different, we'll save 
 	// ourselves some work and clear the old set now.
-	if( _numAssociations != m_associations.size() )
+	if( _numNodes != m_associations.size() )
 	{
 		m_associations.clear();
 		notify = true;
@@ -179,9 +189,9 @@ void Group::OnGroupChanged
 	uint8 oldSize = (uint8)m_associations.size();
 
 	uint8 i;
-	for( i=0; i<_numAssociations; ++i )
+	for( i=0; i<_numNodes; ++i )
 	{
-		m_associations.insert( _associations[i] );
+		m_associations.insert( _nodes[i] );
 	}
 
 	if( (!notify) && ( oldSize != m_associations.size() ) )
@@ -191,9 +201,9 @@ void Group::OnGroupChanged
 		// in the original and new sets of nodes in the group.  The easiest way
 		// to sort this out is to clear the associations and add the new nodes again.
 		m_associations.clear();
-		for( i=0; i<_numAssociations; ++i )
+		for( i=0; i<_numNodes; ++i )
 		{
-			m_associations.insert( _associations[i] );
+			m_associations.insert( _nodes[i] );
 		}
 		notify = true;
 	}
@@ -201,26 +211,37 @@ void Group::OnGroupChanged
 	if( notify )
 	{
 		// Send notification that the group contents have changed
-		Notification notification( Notification::Type_Group );
-		notification.SetHomeAndNodeIds( m_homeId, m_nodeId );
-		notification.SetGroupIdx( m_groupIdx );
-		Manager::Get()->NotifyWatchers( &notification ); 
+		Notification* notification = new Notification( Notification::Type_Group );
+		notification->SetHomeAndNodeIds( m_homeId, m_nodeId );
+		notification->SetGroupIdx( m_groupIdx );
+		Manager::Get()->GetDriver( m_homeId )->QueueNotification( notification ); 
 	}
 }
 
 //-----------------------------------------------------------------------------
-// <Group::GetNode>
-// Get the node to whch this group belongs
+// <Group::GetAssociations>
+// Get a list of associations for this group
 //-----------------------------------------------------------------------------
-Node* Group::GetNode
-(
+uint32 Group::GetAssociations
+( 
+	uint8** o_associations 
 )
-const
 {
-	if( Driver* driver = Manager::Get()->GetDriver( m_homeId ) )
+	uint32 numNodes = m_associations.size();
+	if( !numNodes )
 	{
-		return driver->GetNode( m_nodeId );
+		*o_associations = NULL;
+		return 0;
 	}
 
-	return NULL;
+	uint8* associations = new uint8[numNodes];
+	uint32 i = 0;
+	for( set<uint8>::iterator it = m_associations.begin(); it != m_associations.end(); ++it )
+	{
+		associations[i++] = *it;
+	}
+
+	*o_associations = associations;
+	return numNodes;
 }
+

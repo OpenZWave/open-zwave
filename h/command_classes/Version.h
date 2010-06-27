@@ -32,6 +32,8 @@
 
 namespace OpenZWave
 {
+	class ValueString;
+
 	class Version: public CommandClass
 	{
 	public:
@@ -54,6 +56,10 @@ namespace OpenZWave
 
 	private:
 		Version( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
+
+		ValueInstances<ValueString>	m_library;
+		ValueInstances<ValueString>	m_protocol;
+		ValueInstances<ValueString>	m_application;
 	};
 
 } // namespace OpenZWave

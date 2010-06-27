@@ -98,69 +98,64 @@ bool SensorMultilevel::HandleMsg
 	uint32 const _instance	// = 1
 )
 {
-	if( Node* node = GetNode() )
+	if (SensorMultilevelCmd_Report == (SensorMultilevelCmd)_data[0])
 	{
-		if (SensorMultilevelCmd_Report == (SensorMultilevelCmd)_data[0])
+		uint8 scale;
+		string valueStr = ExtractValueAsString( &_data[2], &scale );
+
+		if( ValueDecimal* value = m_level.GetInstance( _instance ) )
 		{
-			uint8 scale;
-			string valueStr = ExtractValueAsString( &_data[2], &scale );
-
-			if( ValueDecimal* value = node->GetValueDecimal(  ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0 ) )
+			switch( _data[1] )
 			{
-				switch( _data[1] )
+				case 0x01:
 				{
-					case 0x01:
-					{
-						// Temperature
-						value->SetLabel( "Temperature" );
-						value->SetUnits( scale ? "F" : "C" );
-						break;
-					}
-					case 0x02:
-					{
-						// General
-						value->SetLabel( "Sensor" );
-						value->SetUnits( scale ? "" : "%" );
-						break;
-					}
-					case 0x03:
-					{
-						// Luminance
-						value->SetLabel( "Luminance" );
-						value->SetUnits( scale ? "Lux" : "%" );
-						break;
-					}
-					case 0x04:
-					{
-						// Power
-						value->SetLabel( "Power" );
-						value->SetUnits( scale ? "W" : "" );
-						break;
-					}
-					case 0x05:
-					{
-						// Humidity
-						value->SetLabel( "Humidity" );
-						value->SetUnits( "%" );
-						break;
-					}
-					case 0x11:
-					{
-						// CO2
-						value->SetLabel( "Carbon Monoxide" );
-						value->SetUnits( "ppm" );
-						break;
-					}
+					// Temperature
+					value->SetLabel( "Temperature" );
+					value->SetUnits( scale ? "F" : "C" );
+					break;
 				}
-
-				value->OnValueChanged( valueStr );
-
-				Log::Write( "Received SensorMultiLevel report from node %d, instance %d: value=%s%s", GetNodeId(), _instance, valueStr.c_str(), value->GetUnits().c_str() );
-				value->Release();
+				case 0x02:
+				{
+					// General
+					value->SetLabel( "Sensor" );
+					value->SetUnits( scale ? "" : "%" );
+					break;
+				}
+				case 0x03:
+				{
+					// Luminance
+					value->SetLabel( "Luminance" );
+					value->SetUnits( scale ? "Lux" : "%" );
+					break;
+				}
+				case 0x04:
+				{
+					// Power
+					value->SetLabel( "Power" );
+					value->SetUnits( scale ? "W" : "" );
+					break;
+				}
+				case 0x05:
+				{
+					// Humidity
+					value->SetLabel( "Humidity" );
+					value->SetUnits( "%" );
+					break;
+				}
+				case 0x11:
+				{
+					// CO2
+					value->SetLabel( "Carbon Monoxide" );
+					value->SetUnits( "ppm" );
+					break;
+				}
 			}
 
-			return true;
+			Log::Write( "Received SensorMultiLevel report from node %d, instance %d: value=%s%s", GetNodeId(), _instance, valueStr.c_str(), value->GetUnits().c_str() );
+			value->OnValueChanged( valueStr );
 		}
+
+		return true;
 	}
 
 	return false;
@@ -177,7 +172,8 @@ void SensorMultilevel::CreateVars
 {
 	if( Node* node = GetNode() )
 	{
-		node->CreateValueDecimal(  ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Unknown", "", true, "0.0"  );
+		m_level.AddInstance( _instance, node->CreateValueDecimal(  ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Unknown", "", true, "0.0"  ) );
+		ReleaseNode();
 	}
 }
 

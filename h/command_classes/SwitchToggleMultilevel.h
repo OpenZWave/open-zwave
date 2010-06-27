@@ -32,6 +32,8 @@
 
 namespace OpenZWave
 {
+	class ValueByte;
+
 	class SwitchToggleMultilevel: public CommandClass
 	{
 	public:
@@ -62,6 +64,8 @@ namespace OpenZWave
 
 	private:
 		SwitchToggleMultilevel( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
+
+		ValueInstances<ValueByte>	m_level;
 	};
 
 } // namespace OpenZWave

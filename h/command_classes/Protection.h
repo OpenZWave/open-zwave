@@ -32,6 +32,8 @@
 
 namespace OpenZWave
 {
+	class ValueList;
+
 	class Protection: public CommandClass
 	{
 	public:
@@ -60,6 +62,8 @@ namespace OpenZWave
 
 	private:
 		Protection( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
+
+		ValueInstances<ValueList>	m_state;
 	};
 
 } // namespace OpenZWave

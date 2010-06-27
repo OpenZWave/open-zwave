@@ -82,30 +82,18 @@ bool EnergyProduction::HandleMsg
 	uint32 const _instance	// = 1
 )
 {
-	bool handled = false;
-
-	if( Node* node = GetNode() )
+	if (EnergyProductionCmd_Report == (EnergyProductionCmd)_data[0])
 	{
-		if (EnergyProductionCmd_Report == (EnergyProductionCmd)_data[0])
-		{
-			uint8 scale;
-			float32 value = ExtractValue( &_data[2], &scale );
+		uint8 scale;
+		string value = ExtractValueAsString( &_data[2], &scale );
 
-			char valueStr[16];
-			snprintf( valueStr, 16, "%.3f", value );
+		Log::Write( "Received an Energy production report from node %d: %s = %s", GetNodeId(), c_energyParameterNames[_data[1]], value.c_str() );
 
-			if( ValueDecimal* value = node->GetValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, _data[1] ) )
-			{
-				value->OnValueChanged( valueStr );
-				value->Release();
-			}
-
-			Log::Write( "Received an Energy production report from node %d: %s = %s", GetNodeId(), c_energyParameterNames[_data[1]], valueStr );
-			handled = true;
-		}
+		m_values[_data[1]].GetInstance( _instance )->OnValueChanged( value );
+		return true;
 	}
 
-	return handled;
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -139,10 +127,11 @@ void EnergyProduction::CreateVars
 {
 	if( Node* node = GetNode() )
 	{
-		node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, (uint8)Production_Instant, c_energyParameterNames[Production_Instant], "W", true, "0.0"  );
-		node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, (uint8)Production_Total, c_energyParameterNames[Production_Total], "kWh", true, "0.0"  );
-		node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, (uint8)Production_Today, c_energyParameterNames[Production_Today], "kWh", true, "0.0"  );
-		node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, (uint8)Production_Time, c_energyParameterNames[Production_Time], "", true, "0.0"  );
+		m_values[Production_Instant].AddInstance( _instance, node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, (uint8)Production_Instant, c_energyParameterNames[Production_Instant], "W", true, "0.0" ) );
+		m_values[Production_Total].AddInstance( _instance, node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, (uint8)Production_Total, c_energyParameterNames[Production_Total], "kWh", true, "0.0" ) );
+		m_values[Production_Today].AddInstance( _instance, node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, (uint8)Production_Today, c_energyParameterNames[Production_Today], "kWh", true, "0.0" ) );
+		m_values[Production_Time].AddInstance( _instance, node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, (uint8)Production_Time, c_energyParameterNames[Production_Time], "", true, "0.0" ) );
+		ReleaseNode();
 	}
 }
 

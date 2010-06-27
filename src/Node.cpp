@@ -30,6 +30,7 @@
 #include "Group.h"
 #include "Manager.h"
 #include "Driver.h"
+#include "Notification.h"
 #include "Msg.h"
 #include "Log.h"
 #include "Mutex.h"
@@ -73,8 +74,7 @@ Node::Node
 	m_listening( true ),	// assume we start out listening
 	m_protocolInfoReceived( false ),
 	m_nodeInfoReceived( false ),
-	m_values( new ValueStore() ),
-	m_valuesMutex( new Mutex() )
+	m_values( new ValueStore() )
 {
 }
 
@@ -106,7 +106,6 @@ Node::~Node
 
 	// Delete the values
 	delete m_values;
-	delete m_valuesMutex;
 }
 
 //-----------------------------------------------------------------------------
@@ -124,11 +123,6 @@ void Node::ReadXML
 	m_protocolInfoReceived = true;
 	m_nodeInfoReceived = true;
 
-	if( TIXML_SUCCESS == _node->QueryIntAttribute( "basic", &intVal ) )
-	{
-		m_basic = (uint8)intVal;
-	}
-
 	str = _node->Attribute( "name" );
 	if( str )
 	{
@@ -141,10 +135,9 @@ void Node::ReadXML
 		m_location = str;
 	}
 
-	str = _node->Attribute( "basic_label" );
-	if( str )
+	if( TIXML_SUCCESS == _node->QueryIntAttribute( "basic", &intVal ) )
 	{
-		m_basicLabel = str;
+		m_basic = (uint8)intVal;
 	}
 
 	if( TIXML_SUCCESS == _node->QueryIntAttribute( "generic", &intVal ) )
@@ -152,15 +145,15 @@ void Node::ReadXML
 		m_generic = (uint8)intVal;
 	}
 
-	str = _node->Attribute( "generic_label" );
-	if( str )
-	{
-		m_genericLabel = str;
-	}
-
 	if( TIXML_SUCCESS == _node->QueryIntAttribute( "specific", &intVal ) )
 	{
 		m_specific = (uint8)intVal;
+	}
+
+	str = _node->Attribute( "type" );
+	if( str )
+	{
+		m_type = str;
 	}
 
 	m_listening = true;
@@ -196,6 +189,11 @@ void Node::ReadXML
 		char* p;
 		m_security = (uint8)strtol( str, &p, 0 );
 	}
+
+	// Notify the watchers of the protocol info
+	Notification* notification = new Notification( Notification::Type_NodeProtocolInfo );
+	notification->SetHomeAndNodeIds( m_homeId, m_nodeId );
+	GetDriver()->QueueNotification( notification );
 
 	// Read the manufacturer info and create the command classes
 	TiXmlElement const* child = _node->FirstChildElement();
@@ -243,6 +241,11 @@ void Node::ReadXML
 						m_productName = str;
 					}
 				}
+
+				// Notify the watchers of the name changes
+				notification = new Notification( Notification::Type_NodeNaming );
+				notification->SetHomeAndNodeIds( m_homeId, m_nodeId );
+				GetDriver()->QueueNotification( notification );
 			}
 		}
 
@@ -321,14 +324,14 @@ void Node::WriteXML
 
 	snprintf( str, 32, "%d", m_basic );
 	nodeElement->SetAttribute( "basic", str );
-	nodeElement->SetAttribute( "basic_label", m_basicLabel.c_str() );
 
 	snprintf( str, 32, "%d", m_generic );
 	nodeElement->SetAttribute( "generic", str );
-	nodeElement->SetAttribute( "generic_label", m_genericLabel.c_str() );
 
 	snprintf( str, 32, "%d", m_specific );
 	nodeElement->SetAttribute( "specific", str );
+
+	nodeElement->SetAttribute( "type", m_type.c_str() );
 
 	nodeElement->SetAttribute( "listening", m_listening ? "true" : "false" );
 	nodeElement->SetAttribute( "routing", m_routing ? "true" : "false" );
@@ -380,7 +383,7 @@ void Node::UpdateProtocolInfo
 )
 {
 	// Remove the protocol info request from the queue
-	GetDriver()->RemoveInfoRequest();
+	GetDriver()->RemoveNodeInfoRequest();
 
 	if( m_protocolInfoReceived )
 	{
@@ -412,47 +415,42 @@ void Node::UpdateProtocolInfo
 
 	switch( m_basic )
 	{
-		case BasicType_Controller:			{ m_basicLabel = "Controller";				break; }
-		case BasicType_StaticController:	{ m_basicLabel = "Static Controller";		break; }
-		case BasicType_Slave:				{ m_basicLabel = "Slave";					break; }
-		case BasicType_RoutingSlave:		{ m_basicLabel = "Routing Slave";			break; }
+		case BasicType_Controller:			{ m_type = "Controller";				break; }
+		case BasicType_StaticController:	{ m_type = "Static Controller";			break; }
+		case BasicType_Slave:				{ m_type = "Slave";						break; }
+		case BasicType_RoutingSlave:		{ m_type = "Routing Slave";				break; }
 	}
 
 	switch( m_generic )
 	{
-		case GenericType_Controller:		{ m_genericLabel = "Generic Controller";	break; }
-		case GenericType_StaticController:	{ m_genericLabel = "Static Controller";		break; }
-		case GenericType_AVControlPoint:	{ m_genericLabel = "AV Control Point";		break; }
-		case GenericType_Display:			{ m_genericLabel = "Display";				break; }
-		case GenericType_GarageDoor:		{ m_genericLabel = "Garage Door";			break; }
-		case GenericType_Thermostat:		{ m_genericLabel = "Thermostat";			break; }
-		case GenericType_WindowCovering:	{ m_genericLabel = "Window Covering";		break; }
-		case GenericType_RepeaterSlave:		{ m_genericLabel = "Repeater Slave";		break; }
-		case GenericType_SwitchBinary:		{ m_genericLabel = "Binary Switch";			break; }
-		case GenericType_SwitchMultiLevel:	{ m_genericLabel = "Multi-level Switch";	break; }
-		case GenericType_SwitchRemote:		{ m_genericLabel = "Remote Switch";			break; }
-		case GenericType_SwitchToggle:		{ m_genericLabel = "Toggle Switch";			break; }
-		case GenericType_SensorBinary:		{ m_genericLabel = "Binary Sensor";			break; }
-		case GenericType_SensorMultiLevel:	{ m_genericLabel = "Multi-level sensor";	break; }
-		case GenericType_WaterControl:		{ m_genericLabel = "Water Control";			break; }
-		case GenericType_MeterPulse:		{ m_genericLabel = "Meter Pulse";			break; }
-		case GenericType_EntryControl:		{ m_genericLabel = "Entry Control";			break; }
-		case GenericType_SemiInteroperable:	{ m_genericLabel = "Semi-Interoperable";	break; }
-		case GenericType_NonInteroperable:	{ m_genericLabel = "Non-Interoperable";		break; }
+		case GenericType_Controller:		{ m_type = "Generic Controller";		break; }
+		case GenericType_StaticController:	{ m_type = "Static Controller";			break; }
+		case GenericType_AVControlPoint:	{ m_type = "AV Control Point";			break; }
+		case GenericType_Display:			{ m_type = "Display";					break; }
+		case GenericType_GarageDoor:		{ m_type = "Garage Door";				break; }
+		case GenericType_Thermostat:		{ m_type = "Thermostat";				break; }
+		case GenericType_WindowCovering:	{ m_type = "Window Covering";			break; }
+		case GenericType_RepeaterSlave:		{ m_type = "Repeater Slave";			break; }
+		case GenericType_SwitchBinary:		{ m_type = "Binary Switch";				break; }
+		case GenericType_SwitchMultiLevel:	{ m_type = "Multi-level Switch";		break; }
+		case GenericType_SwitchRemote:		{ m_type = "Remote Switch";				break; }
+		case GenericType_SwitchToggle:		{ m_type = "Toggle Switch";				break; }
+		case GenericType_SensorBinary:		{ m_type = "Binary Sensor";				break; }
+		case GenericType_SensorMultiLevel:	{ m_type = "Multi-level sensor";		break; }
+		case GenericType_WaterControl:		{ m_type = "Water Control";				break; }
+		case GenericType_MeterPulse:		{ m_type = "Meter Pulse";				break; }
+		case GenericType_EntryControl:		{ m_type = "Entry Control";				break; }
+		case GenericType_SemiInteroperable:	{ m_type = "Semi-Interoperable";		break; }
+		case GenericType_NonInteroperable:	{ m_type = "Non-Interoperable";			break; }
 	}
 
-
-
-
-
 	Log::Write( "Protocol Info for Node %d:", m_nodeId );
-	Log::Write( "  Listening	 = %s", m_listening ? "true" : "false" );
-	Log::Write( "  Routing	   = %s", m_routing ? "true" : "false" );
+	Log::Write( "  Type          = %s", m_type.c_str() );
+	Log::Write( "  Listening     = %s", m_listening ? "true" : "false" );
+	Log::Write( "  Routing       = %s", m_routing ? "true" : "false" );
 	Log::Write( "  Max Baud Rate = %d", m_maxBaudRate );
-	Log::Write( "  Version	   = %d", m_version );
-	Log::Write( "  Security	  = 0x%.2x", m_security );
-	Log::Write( "  Basic Type	= %s", m_basicLabel.c_str() );
-	Log::Write( "  Generic Type  = %s", m_genericLabel.c_str() );
+	Log::Write( "  Version       = %d", m_version );
+	Log::Write( "  Security      = 0x%.2x", m_security );
 
 	if( !m_listening )
 	{
@@ -469,6 +467,11 @@ void Node::UpdateProtocolInfo
 	Msg* msg = new Msg( "Request Node Info", m_nodeId, REQUEST, FUNC_ID_ZW_REQUEST_NODE_INFO, false, true, FUNC_ID_ZW_APPLICATION_UPDATE );
 	msg->Append( m_nodeId );	
 	GetDriver()->SendMsg( msg ); 
+
+	// Notify the watchers of the protocol info
+	Notification* notification = new Notification( Notification::Type_NodeProtocolInfo );
+	notification->SetHomeAndNodeIds( m_homeId, m_nodeId );
+	GetDriver()->QueueNotification( notification );
 
 	//// All nodes are assumed to be awake until we fail to get a reply to a message.  
 	////
@@ -728,43 +731,65 @@ bool Node::SetConfigParam
 	int32 _value
 )
 {
-	// See if there is a value already created for this parameter.  If there is not, we will
-	// send the command directly via the configuration command class.  If the parameter exists
-	// in the device, the response from the device will cause the creation of a value object for future use.
-	if( ValueByte* valueByte = GetValueByte( ValueID::ValueGenre_Config, Configuration::StaticGetCommandClassId(), 0, _param ) )
-	{
-		valueByte->Set( (uint8)_value );
-		return true;
-	}
-
-	if( ValueShort* valueShort = GetValueShort( ValueID::ValueGenre_Config, Configuration::StaticGetCommandClassId(), 0, _param ) )
-	{
-		valueShort->Set( (uint16)_value );
-		return true;
-	}
-
-	if( ValueInt* valueInt = GetValueInt( ValueID::ValueGenre_Config, Configuration::StaticGetCommandClassId(), 0, _param ) )
-	{
-		valueInt->Set( (int32)_value );
-		return true;
-	}
-
-	if( ValueList* valueList = GetValueList( ValueID::ValueGenre_Config, Configuration::StaticGetCommandClassId(), 0, _param ) )
-	{
-		valueList->SetByValue( (int32)_value );
-		return true;
-	}
-
-	// Failed to find an existing value object representing this 
-	// configuration parameter, so we try to set the value directly 
-	// through the Configuration command class.
 	if( Configuration* cc = static_cast<Configuration*>( GetCommandClass( Configuration::StaticGetCommandClassId() ) ) )
 	{
+		// First try to find an existing value representing the parameter, and set that.
+		if( Value* value = cc->GetParam( _param ) )
+		{
+			switch( value->GetID().GetType() )
+			{
+				case ValueID::ValueType_Byte:
+				{
+					ValueByte* valueByte = static_cast<ValueByte*>( value );
+					valueByte->Set( (uint8)_value );
+					break;
+				}
+				case ValueID::ValueType_Short:
+				{
+					ValueShort* valueShort = static_cast<ValueShort*>( value );
+					valueShort->Set( (uint16)_value );
+					break;
+				}
+				case ValueID::ValueType_Int:
+				{
+					ValueInt* valueInt = static_cast<ValueInt*>( value );
+					valueInt->Set( _value );
+					break;
+				}
+				case ValueID::ValueType_List:
+				{
+					ValueList* valueList = static_cast<ValueList*>( value );
+					valueList->SetByValue( (int32)_value );
+					break;
+				}
+			}
+
+			return true;
+		}
+
+		// Failed to find an existing value object representing this 
+		// configuration parameter, so we try to set the value directly 
+		// through the Configuration command class.
 		cc->Set( _param, _value );
 		return true;
 	}
 
 	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Node::RequestConfigParam>
+// Request the value of a configuration parameter from the device
+//-----------------------------------------------------------------------------
+void Node::RequestConfigParam
+(	
+	uint8 const _param
+)
+{
+	if( Configuration* cc = static_cast<Configuration*>( GetCommandClass( Configuration::StaticGetCommandClassId() ) ) )
+	{
+		cc->Get( _param );
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -787,7 +812,7 @@ ValueID Node::CreateValueID
 // <Node::CreateValueBool>
 // Helper to create a new bool value and add it to the value store
 //-----------------------------------------------------------------------------
-void Node::CreateValueBool
+ValueBool* Node::CreateValueBool
 (
 	ValueID::ValueGenre const _genre,
 	uint8 const _commandClassId,
@@ -799,18 +824,17 @@ void Node::CreateValueBool
 	bool const _default
 )
 {
-	Value* value = new ValueBool( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _default );
+	ValueBool* value = new ValueBool( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _default );
 	ValueStore* store = GetValueStore();
 	store->AddValue( value );
-	value->Release();
-	ReleaseValueStore();
+	return value;
 }
 
 //-----------------------------------------------------------------------------
 // <Node::CreateValueByte>
 // Helper to create a new byte value and add it to the value store
 //-----------------------------------------------------------------------------
-void Node::CreateValueByte
+ValueByte* Node::CreateValueByte
 (
 	ValueID::ValueGenre const _genre,
 	uint8 const _commandClassId,
@@ -822,18 +846,17 @@ void Node::CreateValueByte
 	uint8 const _default
 )
 {
-	Value* value = new ValueByte( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _default );
+	ValueByte* value = new ValueByte( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _default );
 	ValueStore* store = GetValueStore();
 	store->AddValue( value );
-	value->Release();
-	ReleaseValueStore();
+	return value;
 }
 
 //-----------------------------------------------------------------------------
 // <Node::CreateValueDecimal>
 // Helper to create a new decimal value and add it to the value store
 //-----------------------------------------------------------------------------
-void Node::CreateValueDecimal
+ValueDecimal* Node::CreateValueDecimal
 (
 	ValueID::ValueGenre const _genre,
 	uint8 const _commandClassId,
@@ -845,18 +868,17 @@ void Node::CreateValueDecimal
 	string const& _default
 )
 {
-	Value* value = new ValueDecimal( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _default );
+	ValueDecimal* value = new ValueDecimal( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _default );
 	ValueStore* store = GetValueStore();
 	store->AddValue( value );
-	value->Release();
-	ReleaseValueStore();
+	return value;
 }
 
 //-----------------------------------------------------------------------------
 // <Node::CreateValueInt>
 // Helper to create a new int value and add it to the value store
 //-----------------------------------------------------------------------------
-void Node::CreateValueInt
+ValueInt* Node::CreateValueInt
 (
 	ValueID::ValueGenre const _genre,
 	uint8 const _commandClassId,
@@ -868,18 +890,17 @@ void Node::CreateValueInt
 	int32 const _default
 )
 {
-	Value* value = new ValueInt( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _default );
+	ValueInt* value = new ValueInt( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _default );
 	ValueStore* store = GetValueStore();
 	store->AddValue( value );
-	value->Release();
-	ReleaseValueStore();
+	return value;
 }
 
 //-----------------------------------------------------------------------------
 // <Node::CreateValueList>
 // Helper to create a new list value and add it to the value store
 //-----------------------------------------------------------------------------
-void Node::CreateValueList
+ValueList* Node::CreateValueList
 (
 	ValueID::ValueGenre const _genre,
 	uint8 const _commandClassId,
@@ -892,18 +913,17 @@ void Node::CreateValueList
 	int32 const _default
 )
 {
-	Value* value = new ValueList( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _items, _default );
+	ValueList* value = new ValueList( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _items, _default );
 	ValueStore* store = GetValueStore();
 	store->AddValue( value );
-	value->Release();
-	ReleaseValueStore();
+	return value;
 }
 
 //-----------------------------------------------------------------------------
 // <Node::CreateValueShort>
 // Helper to create a new short value and add it to the value store
 //-----------------------------------------------------------------------------
-void Node::CreateValueShort
+ValueShort* Node::CreateValueShort
 (
 	ValueID::ValueGenre const _genre,
 	uint8 const _commandClassId,
@@ -915,18 +935,17 @@ void Node::CreateValueShort
 	uint16 const _default
 )
 {
-	Value* value = new ValueShort( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _default );
+	ValueShort* value = new ValueShort( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _default );
 	ValueStore* store = GetValueStore();
 	store->AddValue( value );
-	value->Release();
-	ReleaseValueStore();
+	return value;
 }
 
 //-----------------------------------------------------------------------------
 // <Node::CreateValueString>
 // Helper to create a new string value and add it to the value store
 //-----------------------------------------------------------------------------
-void Node::CreateValueString
+ValueString* Node::CreateValueString
 (
 	ValueID::ValueGenre const _genre,
 	uint8 const _commandClassId,
@@ -938,11 +957,11 @@ void Node::CreateValueString
 	string const& _default
 )
 {
-	Value* value = new ValueString( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _default );
+	ValueString* value = new ValueString( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _default );
 	ValueStore* store = GetValueStore();
 	store->AddValue( value );
 	value->Release();
-	ReleaseValueStore();
+	return value;
 }
 
 //-----------------------------------------------------------------------------
@@ -1003,7 +1022,6 @@ void Node::CreateValueFromXML
 		ValueStore* store = GetValueStore();
 		store->AddValue( value );
 		value->Release();
-		ReleaseValueStore();
 	}
 }
 
@@ -1016,11 +1034,7 @@ Value* Node::GetValue
 	ValueID const& _id
 )
 {
-	Value* value = NULL;
-	ValueStore* store = GetValueStore();
-	value = store->GetValue( _id );
-	ReleaseValueStore();
-	return value;
+	return GetValueStore()->GetValue( _id );
 }
 
 //-----------------------------------------------------------------------------
@@ -1039,269 +1053,7 @@ Value* Node::GetValue
 	Value* value = NULL;
 	ValueStore* store = GetValueStore();
 	value = store->GetValue( CreateValueID( _genre, _commandClassId, _instance, _valueIndex, _type ) );
-	ReleaseValueStore();
 	return value;
-}
-
-//-----------------------------------------------------------------------------
-// <Node::GetValueBool>
-// Get the value object as a ValueBool
-//-----------------------------------------------------------------------------
-ValueBool* Node::GetValueBool
-(
-	ValueID::ValueGenre const _genre,
-	uint8 const _commandClassId,
-	uint8 const _instance,
-	uint8 const _valueIndex
-)
-{
-	return( static_cast<ValueBool*>( GetValue( _genre, _commandClassId, _instance, _valueIndex, ValueID::ValueType_Bool ) ) );
-}
-
-//-----------------------------------------------------------------------------
-// <Node::GetValueByte>
-// Get the value object as a ValueByte
-//-----------------------------------------------------------------------------
-ValueByte* Node::GetValueByte
-(
-	ValueID::ValueGenre const _genre,
-	uint8 const _commandClassId,
-	uint8 const _instance,
-	uint8 const _valueIndex
-)
-{
-	return( static_cast<ValueByte*>( GetValue( _genre, _commandClassId, _instance, _valueIndex, ValueID::ValueType_Byte ) ) );
-}
-
-//-----------------------------------------------------------------------------
-// <Node::GetValueDecimal>
-// Get the value object as a ValueDecimal
-//-----------------------------------------------------------------------------
-ValueDecimal* Node::GetValueDecimal
-(
-	ValueID::ValueGenre const _genre,
-	uint8 const _commandClassId,
-	uint8 const _instance,
-	uint8 const _valueIndex
-)
-{
-	return( static_cast<ValueDecimal*>( GetValue( _genre, _commandClassId, _instance, _valueIndex, ValueID::ValueType_Decimal ) ) );
-}
-
-//-----------------------------------------------------------------------------
-// <Node::GetValueInt>
-// Get the value object as a ValueInt
-//-----------------------------------------------------------------------------
-ValueInt* Node::GetValueInt
-(
-	ValueID::ValueGenre const _genre,
-	uint8 const _commandClassId,
-	uint8 const _instance,
-	uint8 const _valueIndex
-)
-{
-	return( static_cast<ValueInt*>( GetValue( _genre, _commandClassId, _instance, _valueIndex, ValueID::ValueType_Int ) ) );
-}
-
-//-----------------------------------------------------------------------------
-// <Node::GetValueList>
-// Get the value object as a ValueList
-//-----------------------------------------------------------------------------
-ValueList* Node::GetValueList
-(
-	ValueID::ValueGenre const _genre,
-	uint8 const _commandClassId,
-	uint8 const _instance,
-	uint8 const _valueIndex
-)
-{
-	return( static_cast<ValueList*>( GetValue( _genre, _commandClassId, _instance, _valueIndex, ValueID::ValueType_List ) ) );
-}
-
-//-----------------------------------------------------------------------------
-// <Node::GetValueShort>
-// Get the value object as a ValueShort
-//-----------------------------------------------------------------------------
-ValueShort* Node::GetValueShort
-(
-	ValueID::ValueGenre const _genre,
-	uint8 const _commandClassId,
-	uint8 const _instance,
-	uint8 const _valueIndex
-)
-{
-	return( static_cast<ValueShort*>( GetValue( _genre, _commandClassId, _instance, _valueIndex, ValueID::ValueType_Short ) ) );
-}
-
-//-----------------------------------------------------------------------------
-// <Node::GetValueString>
-// Get the value object as a ValueString
-//-----------------------------------------------------------------------------
-ValueString* Node::GetValueString
-(
-	ValueID::ValueGenre const _genre,
-	uint8 const _commandClassId,
-	uint8 const _instance,
-	uint8 const _valueIndex
-)
-{
-	return( static_cast<ValueString*>( GetValue( _genre, _commandClassId, _instance, _valueIndex, ValueID::ValueType_String ) ) );
-}
-
-//-----------------------------------------------------------------------------
-// <Node::GetValueBool>
-// Get the value object as a ValueBool
-//-----------------------------------------------------------------------------
-ValueBool* Node::GetValueBool
-(
-	ValueID const& _id
-)
-{
-	if( ValueID::ValueType_Bool != _id.GetType() )
-	{
-		// Value is not a bool
-		assert(0);
-		return NULL;
-	}
-
-	return( static_cast<ValueBool*>( GetValue( _id ) ) );
-}
-
-//-----------------------------------------------------------------------------
-// <Node::GetValueByte>
-// Get the value object as a ValueByte
-//-----------------------------------------------------------------------------
-ValueByte* Node::GetValueByte
-(
-	ValueID const& _id
-)
-{
-	if( ValueID::ValueType_Byte != _id.GetType() )
-	{
-		// Value is not a byte
-		assert(0);
-		return NULL;
-	}
-
-	return( static_cast<ValueByte*>( GetValue( _id ) ) );
-}
-
-//-----------------------------------------------------------------------------
-// <Node::GetValueDecimal>
-// Get the value object as a ValueDecimal
-//-----------------------------------------------------------------------------
-ValueDecimal* Node::GetValueDecimal
-(
-	ValueID const& _id
-)
-{
-	if( ValueID::ValueType_Decimal != _id.GetType() )
-	{
-		// Value is not a decimal
-		assert(0);
-		return NULL;
-	}
-
-	return( static_cast<ValueDecimal*>( GetValue( _id ) ) );
-}
-
-//-----------------------------------------------------------------------------
-// <Node::GetValueInt>
-// Get the value object as a ValueInt
-//-----------------------------------------------------------------------------
-ValueInt* Node::GetValueInt
-(
-	ValueID const& _id
-)
-{
-	if( ValueID::ValueType_Int != _id.GetType() )
-	{
-		// Value is not an int
-		assert(0);
-		return NULL;
-	}
-
-	return( static_cast<ValueInt*>( GetValue( _id ) ) );
-}
-
-//-----------------------------------------------------------------------------
-// <Node::GetValueList>
-// Get the value object as a ValueList
-//-----------------------------------------------------------------------------
-ValueList* Node::GetValueList
-(
-	ValueID const& _id
-)
-{
-	if( ValueID::ValueType_List != _id.GetType() )
-	{
-		// Value is not a list
-		assert(0);
-		return NULL;
-	}
-
-	return( static_cast<ValueList*>( GetValue( _id ) ) );
-}
-
-//-----------------------------------------------------------------------------
-// <Node::GetValueShort>
-// Get the value object as a ValueShort
-//-----------------------------------------------------------------------------
-ValueShort* Node::GetValueShort
-(
-	ValueID const& _id
-)
-{
-	if( ValueID::ValueType_Short != _id.GetType() )
-	{
-		// Value is not a string
-		assert(0);
-		return NULL;
-	}
-
-	return( static_cast<ValueShort*>( GetValue( _id ) ) );
-}
-
-//-----------------------------------------------------------------------------
-// <Node::GetValueString>
-// Get the value object as a ValueString
-//-----------------------------------------------------------------------------
-ValueString* Node::GetValueString
-(
-	ValueID const& _id
-)
-{
-	if( ValueID::ValueType_String != _id.GetType() )
-	{
-		// Value is not a string
-		assert(0);
-		return NULL;
-	}
-
-	return( static_cast<ValueString*>( GetValue( _id ) ) );
-}
-
-//-----------------------------------------------------------------------------
-// <Node::GetValueStore>
-// Get serialized access to the value store object
-//-----------------------------------------------------------------------------
-ValueStore* Node::GetValueStore
-(
-)
-{
-	m_valuesMutex->Lock();
-	return m_values;
-}
-
-//-----------------------------------------------------------------------------
-// <Node::ReleaseValueStore>
-// Release the lock on the value store
-//-----------------------------------------------------------------------------
-void Node::ReleaseValueStore
-(
-)
-{
-	m_valuesMutex->Release();
 }
 
 //-----------------------------------------------------------------------------
@@ -1363,6 +1115,61 @@ void Node::WriteGroups
 }
 
 //-----------------------------------------------------------------------------
+// <Node::GetNumGroups>
+// Gets the number of association groups reported by this node
+//-----------------------------------------------------------------------------
+uint8 Node::GetNumGroups
+(
+)
+{
+	return m_groups.size();
+}
+
+//-----------------------------------------------------------------------------
+// <Node::GetAssociations>
+// Gets the associations for a group
+//-----------------------------------------------------------------------------
+uint32 Node::GetAssociations
+(
+	uint8 const _groupIdx,
+	uint8** o_associations
+)
+{
+	uint32 numAssociations = 0;
+	if( Group* group = GetGroup( _groupIdx ) )
+	{
+		numAssociations = group->GetAssociations( o_associations );	
+	}
+
+	return numAssociations;
+}
+
+//-----------------------------------------------------------------------------
+// <Node::AddAssociation>
+// Adds a node to an association group
+//-----------------------------------------------------------------------------
+void Node::AddAssociation
+(
+	uint8 const _groupIdx,
+	uint8 const _targetNodeId
+)
+{
+}
+
+//-----------------------------------------------------------------------------
+// <Node::RemoveAssociation>
+// Removes a node from an association group
+//-----------------------------------------------------------------------------
+void Node::RemoveAssociation
+(
+	uint8 const _groupIdx,
+	uint8 const _targetNodeId
+)
+{
+}
+
+
+//-----------------------------------------------------------------------------
 // <Node::GetDriver>
 // Get a pointer to our driver
 //-----------------------------------------------------------------------------
@@ -1372,6 +1179,8 @@ Driver* Node::GetDriver
 {
 	return( Manager::Get()->GetDriver( m_homeId ) );
 }
+
+
 
 
 

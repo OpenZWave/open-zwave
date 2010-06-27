@@ -76,7 +76,6 @@ ThermostatSetpoint::ThermostatSetpoint
 ):
 	CommandClass( _homeId, _nodeId )
 {
-	memset( m_supportedSetpoints, 0, sizeof(bool)*ThermostatSetpoint_Count );
 }
 
 //-----------------------------------------------------------------------------
@@ -104,7 +103,7 @@ void ThermostatSetpoint::RequestState
 	{
 		for( uint8 i=0; i<ThermostatSetpoint_Count; ++i )
 		{
-			if( m_supportedSetpoints[i] )
+			if( m_setpoints[i].HasInstances() )
 			{
 				// Request the setpoint value
 				Msg* msg = new Msg( "Request Current Thermostat Setpoint", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
@@ -133,32 +132,31 @@ bool ThermostatSetpoint::HandleMsg
 {
 	bool handled = false;
 
-	if( Node* node = GetNode() )
+	if( ThermostatSetpointCmd_Report == (ThermostatSetpointCmd)_data[0] )
 	{
-		if( ThermostatSetpointCmd_Report == (ThermostatSetpointCmd)_data[0] )
+		// We have received a thermostat setpoint value from the Z-Wave device
+		if( ValueDecimal* value = m_setpoints[_data[1]].GetInstance( _instance ) )
 		{
-			// We have received a thermostat setpoint value from the Z-Wave device
-			if( ValueDecimal* value = node->GetValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, _data[1] ) )
-			{
-				uint8 scale;
-				string temperature = ExtractValueAsString( &_data[2], &scale );
+			uint8 scale;
+			string temperature = ExtractValueAsString( &_data[2], &scale );
 
-				value->SetUnits( scale ? "F" : "C" );
-				value->OnValueChanged( temperature );
+			value->SetUnits( scale ? "F" : "C" );
+			value->OnValueChanged( temperature );
 
-				Log::Write( "Received thermostat setpoint report from node %d: Setpoint %s = %s%s", GetNodeId(), value->GetLabel().c_str(), value->GetAsString().c_str(), value->GetUnits().c_str() );		
-				value->Release();
-			}
-			handled = true;
+			Log::Write( "Received thermostat setpoint report from node %d: Setpoint %s = %s%s", GetNodeId(), value->GetLabel().c_str(), value->GetValue().c_str(), value->GetUnits().c_str() );		
 		}
-		else if( ThermostatSetpointCmd_SupportedReport == (ThermostatSetpointCmd)_data[0] )
+
+		return true;
+	}
+			
+	if( ThermostatSetpointCmd_SupportedReport == (ThermostatSetpointCmd)_data[0] )
+	{
+		if( Node* node = GetNode() )
 		{
 			// We have received the supported thermostat setpoints from the Z-Wave device
 			Log::Write( "Received supported thermostat setpoints from node %d", GetNodeId() );		
 
 			// Parse the data for the supported setpoints
-			memset( m_supportedSetpoints, 0, sizeof(bool)*ThermostatSetpoint_Count );			
-
 			for( uint32 i=1; i<_length-1; ++i )
 			{
 				for( int32 bit=0; bit<8; ++bit )
@@ -169,22 +167,22 @@ bool ThermostatSetpoint::HandleMsg
 						int32 index = (int32)((i-1)<<3) + bit;
 						if( index < ThermostatSetpoint_Count )
 						{
-							m_supportedSetpoints[index] = true;
-							node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, index, c_setpointName[index], "C", false, "0.0"  );
-
+							m_setpoints[index].AddInstance( _instance, node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, index, c_setpointName[index], "C", false, "0.0" ) );
 							Log::Write( "    Added setpoint: %s", c_setpointName[index] );
 						}
 					}
 				}
 			}
 
-			// Request the current state of all the supported setpoints
-			RequestState( 0 );
-			handled = true;
+			ReleaseNode();
 		}
+
+		// Request the current state of all the supported setpoints
+		RequestState( 0 );
+		return true;
 	}
 
-	return handled;
+	return false;
 }
 
 //-----------------------------------------------------------------------------

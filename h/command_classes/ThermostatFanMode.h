@@ -35,6 +35,8 @@
 
 namespace OpenZWave
 {
+	class ValueList;
+
 	class ThermostatFanMode: public CommandClass
 	{
 	public:
@@ -57,7 +59,8 @@ namespace OpenZWave
 	private:
 		ThermostatFanMode( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
 		
-		vector<ValueList::Item> m_supportedModes;
+		vector<ValueList::Item>		m_supportedModes;
+		ValueInstances<ValueList>	m_mode;
 	};
 
 } // namespace OpenZWave

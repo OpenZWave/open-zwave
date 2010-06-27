@@ -34,6 +34,7 @@
 #include "Node.h"
 #include "Manager.h"
 #include "Driver.h"
+#include "Notification.h"
 #include "Log.h"
 
 #include "ValueStore.h"
@@ -140,9 +141,16 @@ bool ManufacturerSpecific::HandleMsg
 			{
 				LoadConfigXML( configPath );
 			}
+
+			ReleaseNode();
 		}
 		
 		Log::Write( "Received manufacturer specific report from node %d: Manufacturer=%s, Product=%s", GetNodeId(), manufacturerName.c_str(), productName.c_str() );
+		
+		// Notify the watchers of the name changes
+		Notification* notification = new Notification( Notification::Type_NodeNaming );
+		notification->SetHomeAndNodeIds( GetHomeId(), GetNodeId() );
+		GetDriver()->QueueNotification( notification );
 		return true;
 	}
 	
@@ -316,12 +324,15 @@ bool ManufacturerSpecific::LoadConfigXML
 		TiXmlDocument* doc = new TiXmlDocument();
 		if( !doc->LoadFile( filename.c_str(), TIXML_ENCODING_UTF8 ) )
 		{
+			ReleaseNode();
 			delete doc;	
 			Log::Write( "Unable to find or load Config Param file %s", filename.c_str() );
 			return false;
 		}
 
 		node->ReadCommandClassesXML( doc->RootElement() );
+		ReleaseNode();
+
 		delete doc;	
 		return true;
 	}

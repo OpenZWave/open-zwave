@@ -48,7 +48,7 @@ ValueShort::ValueShort
 	string const& _label,
 	string const& _units,
 	bool const _readOnly,
-	uint16 const _value
+	int16 const _value
 ):
 	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Byte, _label, _units, _readOnly, false ),
 	m_value( _value )
@@ -71,7 +71,7 @@ ValueShort::ValueShort
 	int intVal;
 	if( TIXML_SUCCESS == _valueElement->QueryIntAttribute( "value", &intVal ) )
 	{
-		m_value = (uint16)intVal;
+		m_value = (int16)intVal;
 		SetIsSet();
 	}
 }
@@ -97,25 +97,12 @@ void ValueShort::WriteXML
 }
 
 //-----------------------------------------------------------------------------
-// <ValueShort::GetAsString>
-// Convert the value to string form
-//-----------------------------------------------------------------------------
-string ValueShort::GetAsString
-(
-)const
-{
-	char str[16];
-	snprintf( str, 16, "%d", m_value );
-	return( str );
-}
-
-//-----------------------------------------------------------------------------
 // <ValueShort::Set>
 // Set a new value in the device
 //-----------------------------------------------------------------------------
 bool ValueShort::Set
 (
-	uint16 const _value
+	int16 const _value
 )
 {
 	m_pending = _value;
@@ -128,7 +115,7 @@ bool ValueShort::Set
 //-----------------------------------------------------------------------------
 void ValueShort::OnValueChanged
 (
-	uint16 const _value
+	int16 const _value
 )
 {
 	if( IsSet() && _value == m_value )

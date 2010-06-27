@@ -67,6 +67,17 @@ Node* CommandClass::GetNode
 }
 
 //-----------------------------------------------------------------------------
+// <CommandClass::ReleaseNode>
+// Release the lock on the nodes that would have been taken by the GetNode call
+//-----------------------------------------------------------------------------
+void CommandClass::ReleaseNode
+(
+)const
+{
+	return( GetDriver()->ReleaseNodes() );
+}
+
+//-----------------------------------------------------------------------------
 // <CommandClass::SetInstances>
 // Set the number of instances of this command class that the node contains
 //-----------------------------------------------------------------------------
@@ -121,6 +132,7 @@ void CommandClass::ReadXML
 			if( !strcmp( str, "Value" ) )
 			{
 				GetNode()->CreateValueFromXML( GetCommandClassId(), child );
+				ReleaseNode();
 			}
 		}
 
@@ -161,7 +173,7 @@ void CommandClass::WriteXML
 			value->WriteXML( valueElement );
 		}
 	}
-	GetNode()->ReleaseValueStore();
+	ReleaseNode();
 }
 
 //-----------------------------------------------------------------------------

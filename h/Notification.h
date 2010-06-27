@@ -33,36 +33,89 @@
 
 namespace OpenZWave
 {
+	/** 
+	 * Provides a container for data sent via the notification callback
+	 * handler installed by a call to Manager::AddWatcher.
+	 * <p>
+	 * A notification object is only ever created or deleted internally by
+	 * OpenZWave.
+	 */
 	class Notification
 	{
 		friend class Manager;
 		friend class Driver;
+		friend class Node;
 		friend class Group;
 		friend class Value;
 		friend class ValueStore;
+		friend class ManufacturerSpecific;
 
 	public:
+		/** 
+		 * Notification types.
+		 * Notifications of various Z-Wave events sent to the watchers
+		 * registered with the Manager::AddWatcher method.
+		 * @see Manager::AddWatcher
+	     */
 		enum NotificationType 
 		{
-			Type_ValueAdded = 0,	// Value Added
-			Type_ValueRemoved,		// Value Removed
-			Type_ValueChanged,		// Value Changed
-			Type_Group,				// Group (associations) changed
-			Type_NodeAdded,			// Node has been added
-			Type_NodeRemoved,		// Node has been removed
-			Type_NodeStatus,		// Node status has changed (usually triggered by receiving a basic_set command from the node)
-			Type_PollingDisabled,	// Polling of this node has been turned off
-			Type_PollingEnabled,	// Polling of this node has been turned on
-			Type_DriverReady,		// Driver has been added and is ready to use
-			Type_DriverReset		// All nodes and values for this driver have been removed.
+			Type_ValueAdded = 0,	/**< A new node value has been added to OpenZWave's list. */
+			Type_ValueRemoved,		/**< A node value has been removed from OpenZWave's list.  This only occurs when a node is removed. */
+			Type_ValueChanged,		/**< A node value has been updated from the Z-Wave network. */
+			Type_Group,				/**< The associations for the node have changed. */
+			Type_NodeAdded,			/**< A new node has been added to OpenZWave's list.  This may be due to a device being added to the Z-Wave network, or because the application is initializing itself. */
+			Type_NodeRemoved,		/**< A node has been removed from OpenZWave's list.  This may be due to a device being removed from the Z-Wave network, or because the application is closing. */
+			Type_NodeProtocolInfo,	/**< Basic node information has been receievd, such as whether the node is a listening device, a routing device and its baud rate and basic, generic and specific types. */
+			Type_NodeNaming,		/**< One of the node names has changed (name, manufacturer, product). */
+			Type_NodeStatus,		/**< A node's status has changed.  This is usually triggered by receiving a basic_set command from the node. */
+			Type_PollingDisabled,	/**< Polling of a node has been turned off. */
+			Type_PollingEnabled,	/**< Polling of a node has been turned on. */
+			Type_DriverReady,		/**< A driver has been added and is ready to use.  The notification will contain the driver's Home ID, which is needed to call most of the Manager methods. */
+			Type_DriverReset		/**< All nodes and values for this driver have been removed.  This is sent instead of potentially hundreds of individual node and value notifications. */
 		};
 
+		/** 
+		 * Get the type of this notification.
+		 * @return the notification type.
+		 * @see NotificationType
+	     */
 		NotificationType GetType()const{ return m_type; }
+
+		/** 
+		 * Get the Home ID of the driver sending this notification.
+		 * @return the driver Home ID
+	     */
 		uint32 GetHomeId()const{ return m_valueId.GetHomeId(); }
+
+		/** 
+		 * Get the ID of any node involved in this notification.
+		 * @return the node's ID
+	     */
 		uint8 GetNodeId()const{ return m_valueId.GetNodeId(); }
+		
+		/** 
+		 * Get the unique ValueID of any value involved in this notification.
+		 * @return the value's ValueID
+	     */
 		ValueID const& GetValueID()const{ return m_valueId; }
+		
+		/** 
+		 * Get the index of the association group that has been changed.  Only valid in NotificationType::Type_Group notifications. 
+		 * @return the group index.
+	     */
 		uint8 GetGroupIdx()const{ assert(Type_Group==m_type); return m_byte; } 
+
+		/** 
+		 * Get the status value of a node.  Only valid in NotificationType::Type_NodeStatus notifications. 
+		 * @return the status value.
+	     */
 		uint8 GetStatus()const{ assert(Type_NodeStatus==m_type); return m_byte; } 
+
+		/** 
+		 * Helper function to simplify wrapping the notification class.  Should not normally need to be called.
+		 * @return the internal byte value of the notification.
+	     */
+		uint8 GetByte()const{ return m_byte; } 
 
 	private:
 		Notification( NotificationType _type ): m_type( _type ), m_byte(0){}

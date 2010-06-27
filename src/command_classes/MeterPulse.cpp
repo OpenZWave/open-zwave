@@ -76,26 +76,19 @@ bool MeterPulse::HandleMsg
 	uint32 const _instance	// = 1
 )
 {
-	if( Node* node = GetNode() )
+	if( MeterPulseCmd_Report == (MeterPulseCmd)_data[0] )
 	{
-		if( MeterPulseCmd_Report == (MeterPulseCmd)_data[0] )
+		int32 count = 0;
+		for( uint8 i=0; i<4; ++i )
 		{
-			int32 count = 0;
-			for( uint8 i=0; i<4; ++i )
-			{
-				count <<= 8;
-				count |= (uint32)_data[i+1];
-			}
-
-			if( ValueInt* value = node->GetValueInt( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0 ) )
-			{
-				value->OnValueChanged( count );
-				value->Release();
-			}
-
-			Log::Write( "Received a meter pulse count from node %d: Count=%d", GetNodeId(), count );
-			return true;
+			count <<= 8;
+			count |= (uint32)_data[i+1];
 		}
+
+		Log::Write( "Received a meter pulse count from node %d: Count=%d", GetNodeId(), count );
+
+		m_count.GetInstance( _instance )->OnValueChanged( count );
+		return true;
 	}
 
 	return false;
@@ -112,7 +105,8 @@ void MeterPulse::CreateVars
 {
 	if( Node* node = GetNode() )
 	{
-		node->CreateValueInt( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Count", "", true, 0 );
+		m_count.AddInstance( _instance, node->CreateValueInt( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Count", "", true, 0 ) );
+		ReleaseNode();
 	}
 }
 
