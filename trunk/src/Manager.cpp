@@ -1439,11 +1439,11 @@ bool Manager::SetValue
 			{
 				if( ValueBool* value = static_cast<ValueBool*>( driver->GetValue( _id ) ) )
 				{
-					if( !strcmp( "true", _value.c_str() ) )
+					if( !strcasecmp( "true", _value.c_str() ) )
 					{
 						res = value->Set( true );
 					}
-					else if( !strcmp( "false", _value.c_str() ) )
+					else if( !strcasecmp( "false", _value.c_str() ) )
 					{
 						res = value->Set( false );
 					}
