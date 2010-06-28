@@ -77,6 +77,7 @@ namespace OpenZWave
 
 // Rename safe versions of sprintf etc
 #define snprintf sprintf_s
+#define strcasecmp _stricmp
 
 #endif
 
