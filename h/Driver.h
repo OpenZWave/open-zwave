@@ -64,6 +64,7 @@ namespace OpenZWave
 		friend class Value;
 		friend class ValueStore;
 		friend class ManufacturerSpecific;
+		friend class WakeUp;
 
 	//-----------------------------------------------------------------------------
 	// Construction / Destruction
@@ -97,6 +98,7 @@ namespace OpenZWave
 		bool IsPrimaryController()const{ return ((m_capabilities & 0x04) == 0); }
 		bool IsStaticUpdateController()const{ return ((m_capabilities & 0x08) != 0); }
 		uint32 GetHomeId()const{ return m_homeId; }
+		uint8 GetNodeId()const{ return m_nodeId; }
 		string GetSerialPortName()const{ return m_serialPortName; }
 		Node* GetNode( uint8 _nodeId );
 		void LockNodes();

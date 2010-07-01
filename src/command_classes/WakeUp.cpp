@@ -142,7 +142,6 @@ bool WakeUp::SetValue
 		ValueInt const* value = static_cast<ValueInt const*>(&_value);
 	
 		Msg* msg = new Msg( "Wakeup Interval Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-
 		msg->Append( GetNodeId() );
 		
 		if( GetNode()->GetCommandClass( MultiCmd::StaticGetCommandClassId() ) )
@@ -162,7 +161,7 @@ bool WakeUp::SetValue
 		msg->Append( (uint8)(( interval >> 16 ) & 0xff) ); 
 		msg->Append( (uint8)(( interval >> 8 ) & 0xff) );	 
 		msg->Append( (uint8)( interval & 0xff ) );		
-		msg->Append( GetNodeId() );
+		msg->Append( GetDriver()->GetNodeId() );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 		GetDriver()->SendMsg( msg );
 		return true;
