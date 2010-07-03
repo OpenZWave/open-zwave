@@ -87,7 +87,10 @@ bool MeterPulse::HandleMsg
 
 		Log::Write( "Received a meter pulse count from node %d: Count=%d", GetNodeId(), count );
 
-		m_count.GetInstance( _instance )->OnValueChanged( count );
+		if( ValueInt* value = m_count.GetInstance( _instance ) )
+		{
+			value->OnValueChanged( count );
+		}
 		return true;
 	}
 

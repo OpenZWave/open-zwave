@@ -90,7 +90,10 @@ bool Protection::HandleMsg
 	{
 		Log::Write( "Received a Protection report from node %d: %s", GetNodeId(), c_protectionStateNames[_data[1]] );
 
-		m_state.GetInstance( _instance )->OnValueChanged( (int)_data[1] );
+		if( ValueList* value = m_state.GetInstance( _instance ) )
+		{
+			value->OnValueChanged( (int)_data[1] );
+		}
 		return true;
 	}
 
@@ -109,7 +112,7 @@ bool Protection::SetValue
 	if( ValueID::ValueType_List == _value.GetID().GetType() )
 	{
 		ValueList const* value = static_cast<ValueList const*>(&_value);
-		ValueList::Item const& item = value->GetPending();
+		ValueList::Item const& item = value->GetItem();
 
 		Log::Write( "Protection::Set - Setting protection state on node %d to '%s'", GetNodeId(), item.m_label.c_str() );
 		Msg* msg = new Msg( "Protection Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		

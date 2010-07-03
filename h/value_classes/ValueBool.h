@@ -54,11 +54,9 @@ namespace OpenZWave
 		virtual void WriteXML( TiXmlElement* _valueElement );
 
 		bool GetValue()const{ return m_value; }
-		bool GetPending()const{ return m_pending; }
 
 	private:
 		bool	m_value;
-		bool	m_pending;
 	};
 
 } // namespace OpenZWave

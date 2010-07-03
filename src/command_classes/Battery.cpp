@@ -88,7 +88,10 @@ bool Battery::HandleMsg
 
 		Log::Write( "Received Battery report from node %d: level=%d", GetNodeId(), batteryLevel );
 
-		m_level.GetInstance( _instance )->OnValueChanged( batteryLevel );
+		if( ValueByte* value = m_level.GetInstance( _instance ) )
+		{
+			value->OnValueChanged( batteryLevel );
+		}
 		return true;
 	}
 	return false;

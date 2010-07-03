@@ -141,7 +141,10 @@ bool ValueList::SetByLabel
 		return false;
 	}
 
-	m_pendingIdx = index;
+	// Set the value in our records.
+	OnValueChanged( m_items[index].m_value );
+
+	// Set the value in the device.
 	return Value::Set();
 }
 
@@ -154,21 +157,10 @@ bool ValueList::SetByValue
 	int32 const _value
 )
 {
-	// Ensure the value is one of the options
-	int32 index = GetItemIdxByValue( _value );
-	if( index < 0 )
-	{
-		// Item not found
-		return false;
-	}
+	// Set the value in our records.
+	OnValueChanged( _value );
 
-	if( index == m_valueIdx )
-	{
-		// Value already set
-		return true;
-	}
-
-	m_pendingIdx = index;
+	// Set the value in the device.
 	return Value::Set();
 }
 
@@ -181,14 +173,15 @@ void ValueList::OnValueChanged
 	int32 const _value
 )
 {
-	int32 idx = GetItemIdxByValue( _value );
-	if( IsSet() && idx == m_valueIdx )
+	// Ensure the value is one of the options
+	int32 index = GetItemIdxByValue( _value );
+	if( index < 0 )
 	{
-		// Value already set
+		// Item not found
 		return;
 	}
 
-	m_valueIdx = idx;
+	m_valueIdx = index;
 	Value::OnValueChanged();
 }
 

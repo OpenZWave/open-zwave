@@ -46,6 +46,7 @@ namespace OpenZWave
 		static uint8 const StaticGetCommandClassId(){ return 0x84; }		
 		static string const StaticGetCommandClassName(){ return "COMMAND_CLASS_WAKE_UP"; }
 
+		void Init();	// Starts the process of requesting node state from a sleeping device.
 		void QueueMsg( Msg* msg );
 		void SendPending();
 		bool IsAwake()const{ return m_awake; }
@@ -69,6 +70,8 @@ namespace OpenZWave
 		list<Msg*>	m_pendingQueue;		// Messages waiting to be sent when the device wakes up
 		bool		m_awake;
 		bool		m_pollRequired;
+		bool		m_init;
+		bool		m_notification;
 
 		ValueInstances<ValueInt>	m_interval;
 	};

@@ -527,6 +527,12 @@ void Driver::SendMsg
 					ReleaseNodes();
 					return;
 				}
+
+				if( _msg->IsWakeUpNoMoreInformationCommand() )
+				{
+					// This message will send the node to sleep
+					wakeUp->SetAwake( false );
+				}
 			}
 		}
 
@@ -744,11 +750,21 @@ bool Driver::MoveMessagesToWakeUpQueue
 				list<Msg*>::iterator it = m_sendQueue.begin();
 				while( it != m_sendQueue.end() )
 				{
-					if( _targetNodeId == (*it)->GetTargetNodeId() )
+					Msg* msg = *it;
+					if( _targetNodeId == msg->GetTargetNodeId() )
 					{
 						// This message is for the unresponsive node
-						Log::Write( "Node not responding - moving message to Wake-Up queue: %s", (*it)->GetAsString().c_str() );
-						wakeUp->QueueMsg( *it );
+						// We do not move any "Wake Up No More Information"
+						// commands to the pending queue.
+						if( !msg->IsWakeUpNoMoreInformationCommand() )
+						{
+							Log::Write( "Node not responding - moving message to Wake-Up queue: %s", (*it)->GetAsString().c_str() );
+							wakeUp->QueueMsg( msg );
+						}
+						else
+						{
+							delete msg;
+						}
 						m_sendQueue.erase( it++ );
 					}
 					else
@@ -1248,27 +1264,25 @@ void Driver::HandleSerialAPIGetInitDataResponse
 			{
 				uint8 nodeId = (i*8)+j+1;
 				if( _data[i+5] & (0x01 << j) )
-				{
-					if( NULL == GetNode( nodeId ) )
+				{					
+					if( Node* node = GetNode( nodeId ) )
+					{
+						if( !m_init )
+						{
+							// The node was read in from the config, so we 
+							// only need to get its current state
+							node->RequestState( CommandClass::RequestFlag_Session | CommandClass::RequestFlag_Dynamic );
+						}
+
+						ReleaseNodes();
+					}
+					else
 					{
 						// This node is new
 						Log::Write( "Found new node %d", nodeId );
 
 						// Create the node and request its info
 						AddNodeInfoRequest( nodeId );		
-					}
-					else
-					{
-						if( !m_init )
-						{
-							// The node was read in from the config, so we 
-							// only need to get its current state
-							if( Node* node = GetNode(nodeId) )
-							{
-								node->RequestState( CommandClass::RequestFlag_Session | CommandClass::RequestFlag_Dynamic );
-								ReleaseNodes();
-							}
-						}
 					}
 				}
 				else

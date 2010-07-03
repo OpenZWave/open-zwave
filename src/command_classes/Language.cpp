@@ -98,8 +98,14 @@ bool Language::HandleMsg
 
 		Log::Write( "Received Language report from node %d: Language=%s, Country=%s", GetNodeId(), language, country );
 
-		m_language.GetInstance( _instance )->OnValueChanged( language );
-		m_country.GetInstance( _instance )->OnValueChanged( country );
+		if( ValueString* languageValue = m_language.GetInstance( _instance ) )
+		{
+			languageValue->OnValueChanged( language );
+		}
+		if( ValueString* countryValue = m_country.GetInstance( _instance ) )
+		{
+			countryValue->OnValueChanged( country );
+		}
 		return true;
 	}
 

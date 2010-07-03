@@ -105,11 +105,14 @@ bool ThermostatOperatingState::HandleMsg
 	if( ThermostatOperatingStateCmd_Report == (ThermostatOperatingStateCmd)_data[0] )
 	{
 		// We have received the thermostat operating state from the Z-Wave device
-		if( ValueList* valueList = m_state.GetInstance( _instance ) )
+		if( !m_supportedStates.empty() )
 		{
-			valueList->OnValueChanged( _data[1] );
-			Log::Write( "Received thermostat operating state from node %d: %s", GetNodeId(), valueList->GetItem().m_label.c_str() );		
-			valueList->Release();
+			if( ValueList* valueList = m_state.GetInstance( _instance ) )
+			{
+				valueList->OnValueChanged( _data[1] );
+				Log::Write( "Received thermostat operating state from node %d: %s", GetNodeId(), valueList->GetItem().m_label.c_str() );		
+				valueList->Release();
+			}
 		}
 		return true;
 	}

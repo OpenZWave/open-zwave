@@ -81,7 +81,10 @@ bool Lock::HandleMsg
 	{
 		Log::Write( "Received Lock report from node %d: Lock is %s", GetNodeId(), _data[1] ? "Locked" : "Unlocked" );
 
-		m_state.GetInstance( _instance )->OnValueChanged( _data[1] != 0 );
+		if( ValueBool* value = m_state.GetInstance( _instance ) )
+		{
+			value->OnValueChanged( _data[1] != 0 );
+		}
 		return true;
 	}
 
@@ -101,13 +104,13 @@ bool Lock::SetValue
 	{
 		ValueBool const* value = static_cast<ValueBool const*>(&_value);
 
-		Log::Write( "Lock::Set - Requesting the node %d lock to be %s", GetNodeId(), value->GetPending() ? "Locked" : "Unlocked" );
+		Log::Write( "Lock::Set - Requesting the node %d lock to be %s", GetNodeId(), value->GetValue() ? "Locked" : "Unlocked" );
 		Msg* msg = new Msg( "LockCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 		msg->Append( GetNodeId() );
 		msg->Append( 3 );
 		msg->Append( GetCommandClassId() );
 		msg->Append( LockCmd_Set );
-		msg->Append( value->GetPending() ? 0xff:0x00 );
+		msg->Append( value->GetValue() ? 0xff:0x00 );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 		GetDriver()->SendMsg( msg );
 		return true;

@@ -102,11 +102,14 @@ bool ThermostatFanMode::HandleMsg
 {
 	if( ThermostatFanModeCmd_Report == (ThermostatFanModeCmd)_data[0] )
 	{
-		// We have received the thermostat mode from the Z-Wave device
-		if( ValueList* valueList = m_mode.GetInstance( _instance ) )
+		if( !m_supportedModes.empty() )
 		{
-			valueList->OnValueChanged( (int32)_data[1] );
-			Log::Write( "Received thermostat fan mode from node %d: %s", GetNodeId(), valueList->GetItem().m_label.c_str() );		
+			// We have received the thermostat mode from the Z-Wave device
+			if( ValueList* valueList = m_mode.GetInstance( _instance ) )
+			{
+				valueList->OnValueChanged( (int32)_data[1] );
+				Log::Write( "Received thermostat fan mode from node %d: %s", GetNodeId(), valueList->GetItem().m_label.c_str() );		
+			}
 		}
 		return true;
 	}
@@ -152,7 +155,7 @@ bool ThermostatFanMode::SetValue
 	if( ValueID::ValueType_List == _value.GetID().GetType() )
 	{
 		ValueList const* value = static_cast<ValueList const*>(&_value);
-		uint8 state = (uint8)value->GetPending().m_value;
+		uint8 state = (uint8)value->GetItem().m_value;
 
 		Msg* msg = new Msg( "Set Thermostat Fan Mode", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 		msg->Append( GetNodeId() );

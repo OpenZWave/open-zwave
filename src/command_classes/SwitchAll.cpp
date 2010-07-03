@@ -91,8 +91,8 @@ bool SwitchAll::HandleMsg
 	{
 		if( ValueList* value = m_state.GetInstance( _instance ) )
 		{
-			value->OnValueChanged( (int32)_data[1] );
 			Log::Write( "Received SwitchAll report from node %d: %s", GetNodeId(), value->GetItem().m_label.c_str() );
+			value->OnValueChanged( (int32)_data[1] );
 		}
 
 		return true;
@@ -113,9 +113,9 @@ bool SwitchAll::SetValue
 	if( ValueID::ValueType_List == _value.GetID().GetType() )
 	{
 		ValueList const* value = static_cast<ValueList const*>(&_value);
-		ValueList::Item const& item = value->GetPending();
+		ValueList::Item const& item = value->GetItem();
 
-		Log::Write( "SwitchAll::Set - %s on node %d", value->GetPending().m_label.c_str(), GetNodeId() );
+		Log::Write( "SwitchAll::Set - %s on node %d", item.m_label.c_str(), GetNodeId() );
 		Msg* msg = new Msg( "SwitchAllCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
 		msg->Append( GetNodeId() );
 		msg->Append( 3 );

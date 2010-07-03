@@ -81,7 +81,10 @@ bool Indicator::HandleMsg
 	{
 		Log::Write( "Received an Indicator report from node %d: Indicator=%d", GetNodeId(), _data[1] );
 
-		m_state.GetInstance( _instance )->OnValueChanged( _data[1] != 0 );
+		if( ValueBool* value = m_state.GetInstance( _instance ) )
+		{
+			value->OnValueChanged( _data[1] != 0 );
+		}
 		return true;
 	}
 
@@ -101,13 +104,13 @@ bool Indicator::SetValue
 	{
 		ValueBool const* value = static_cast<ValueBool const*>(&_value);
 
-		Log::Write( "Indicator::SetValue - Setting indicator on node %d to %s", GetNodeId(), value->GetPending() ? "On" : "Off" );
+		Log::Write( "Indicator::SetValue - Setting indicator on node %d to %s", GetNodeId(), value->GetValue() ? "On" : "Off" );
 		Msg* msg = new Msg( "Basic Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
 		msg->Append( GetNodeId() );
 		msg->Append( 3 );
 		msg->Append( GetCommandClassId() );
 		msg->Append( IndicatorCmd_Set );
-		msg->Append( value->GetPending() ? 0xff: 0x00 );
+		msg->Append( value->GetValue() ? 0xff: 0x00 );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 		GetDriver()->SendMsg( msg );
 		return true;
