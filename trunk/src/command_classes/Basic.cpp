@@ -81,8 +81,10 @@ bool Basic::HandleMsg
 	{
 		// Level
 		Log::Write( "Received Basic report from node %d: level=%d", GetNodeId(), _data[1] );
-
-		m_level.GetInstance( _instance )->OnValueChanged( _data[1] );
+		if( ValueByte* value = m_level.GetInstance( _instance ) )
+		{
+			value->OnValueChanged( _data[1] );
+		}
 		return true;
 	}
 
@@ -90,7 +92,10 @@ bool Basic::HandleMsg
 	{
 		// Level
 		Log::Write( "Received Basic set from node %d: level=%d", GetNodeId(), _data[1] );
-		m_level.GetInstance( _instance )->OnValueChanged( _data[1] );
+		if( ValueByte* value = m_level.GetInstance( _instance ) )
+		{
+			value->OnValueChanged( _data[1] );
+		}
 		return true;
 	}
 
@@ -110,13 +115,13 @@ bool Basic::SetValue
 	{
 		ValueByte const* value = static_cast<ValueByte const*>(&_value);
 	
-		Log::Write( "Basic::Set - Setting node %d to level %d", GetNodeId(), value->GetPending() );
+		Log::Write( "Basic::Set - Setting node %d to level %d", GetNodeId(), value->GetValue() );
 		Msg* msg = new Msg( "Basic Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
 		msg->Append( GetNodeId() );
 		msg->Append( 3 );
 		msg->Append( GetCommandClassId() );
 		msg->Append( BasicCmd_Set );
-		msg->Append( value->GetPending() );
+		msg->Append( value->GetValue() );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 		GetDriver()->SendMsg( msg );
 		return true;

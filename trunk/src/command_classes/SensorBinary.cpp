@@ -80,7 +80,10 @@ bool SensorBinary::HandleMsg
 	{
 		Log::Write( "Received SensorBinary report from node %d: State=%s", GetNodeId(), _data[1] ? "On" : "Off" );
 
-		m_state.GetInstance( _instance )->OnValueChanged( _data[1] != 0 );
+		if( ValueBool* value = m_state.GetInstance( _instance ) )
+		{
+			value->OnValueChanged( _data[1] != 0 );
+		}
 		return true;
 	}
 

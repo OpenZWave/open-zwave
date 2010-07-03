@@ -101,11 +101,14 @@ bool ThermostatFanState::HandleMsg
 	if( ThermostatFanStateCmd_Report == (ThermostatFanStateCmd)_data[0] )
 	{
 		// We have received the thermostat fan state from the Z-Wave device
-		if( ValueList* valueList = m_state.GetInstance( _instance ) )
+		if( !m_supportedStates.empty() )
 		{
-			valueList->OnValueChanged( _data[1] );
-			Log::Write( "Received thermostat fan state from node %d: %s", GetNodeId(), valueList->GetItem().m_label.c_str() );		
-			valueList->Release();
+			if( ValueList* valueList = m_state.GetInstance( _instance ) )
+			{
+				valueList->OnValueChanged( _data[1] );
+				Log::Write( "Received thermostat fan state from node %d: %s", GetNodeId(), valueList->GetItem().m_label.c_str() );		
+				valueList->Release();
+			}
 		}
 		return true;
 	}

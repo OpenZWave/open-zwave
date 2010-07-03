@@ -531,24 +531,23 @@ void Node::UpdateNodeInfo
 			}
 		}
 
+		// Write the supported command classes to the log
 		Log::Write( "Supported Command Classes for Node %d:", m_nodeId );
 		for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
 		{
 			Log::Write( "  %s", it->second->GetCommandClassName().c_str() );
 		}
 
-		// Now request the node state.  We do this in separate calls so that
-		// the static values are in place when the dynamic stuff comes in.  This is
-		// essential for things like thermostat modes, where we need to get the list
-		// of supported modes before receiving the current state.  If the node
-		// supports the multi-instance command class, we hold off requesting the 
-		// non-static state until we receive the instance count for each command class.
-		RequestVersions();
-		RequestInstances();
-		RequestState( CommandClass::RequestFlag_Static );
-		if( NULL == GetCommandClass( MultiInstance::StaticGetCommandClassId() ) )
+		// For sleeping devices, we defer the usual requests until we have told the device
+		// to send it's wake-up notifications to the controller.request the wake-up interval first, so
+		// that we can set the controller as the target for wake up notifications.
+		if( WakeUp* wakeUp = static_cast<WakeUp*>( GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
 		{
-			RequestState( CommandClass::RequestFlag_Session | CommandClass::RequestFlag_Dynamic );
+			wakeUp->Init();
+		}
+		else
+		{
+			RequestEntireNodeState();
 		}
 	}
 	else
@@ -663,6 +662,36 @@ CommandClass* Node::AddCommandClass
 	}
 
 	return NULL;
+}
+
+//-----------------------------------------------------------------------------
+// <Node::RequestEntireNodeState>
+// Request the instance count for each command class
+//-----------------------------------------------------------------------------
+void Node::RequestEntireNodeState
+( 
+)
+{
+	// Request the state of all the node's command classes.  We do this in
+	// separate calls so that the static values are in place when the dynamic
+	// stuff comes in.
+	
+	// This is essential for things like thermostat modes, where we need to 
+	// get the list of supported modes before receiving the current state.  
+	
+	// If the node supports the multi-instance command class, we hold off 
+	// requesting the non-static state until we receive the instance count 
+	// for each command class.
+
+	RequestVersions();
+	RequestInstances();
+	
+	RequestState( CommandClass::RequestFlag_Static );
+
+	if( NULL == GetCommandClass( MultiInstance::StaticGetCommandClassId() ) )
+	{
+		RequestState( CommandClass::RequestFlag_Session | CommandClass::RequestFlag_Dynamic );
+	}
 }
 
 //-----------------------------------------------------------------------------

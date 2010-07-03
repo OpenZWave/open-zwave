@@ -83,7 +83,10 @@ bool SwitchToggleMultilevel::HandleMsg
 	{
 		Log::Write( "Received SwitchToggleMultiLevel report from node %d: level=%d", GetNodeId(), _data[1] );
 
-		m_level.GetInstance( _instance )->OnValueChanged( _data[1] );
+		if( ValueByte* value = m_level.GetInstance( _instance ) )
+		{
+			value->OnValueChanged( _data[1] );
+		}
 		return true;
 	}
 

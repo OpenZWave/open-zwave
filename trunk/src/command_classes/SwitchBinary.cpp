@@ -81,7 +81,10 @@ bool SwitchBinary::HandleMsg
 	{
 		Log::Write( "Received SwitchBinary report from node %d: level=%s", GetNodeId(), _data[1] ? "On" : "Off" );
 
-		m_state.GetInstance( _instance )->OnValueChanged( _data[1] != 0 );
+		if( ValueBool* value = m_state.GetInstance( _instance ) )
+		{
+			value->OnValueChanged( _data[1] != 0 );
+		}
 		return true;
 	}
 
@@ -101,13 +104,13 @@ bool SwitchBinary::SetValue
 	{
 		ValueBool const* value = static_cast<ValueBool const*>(&_value);
 
-		Log::Write( "SwitchBinary::Set - Setting node %d to %s", GetNodeId(), value->GetPending() ? "On" : "Off" );
+		Log::Write( "SwitchBinary::Set - Setting node %d to %s", GetNodeId(), value->GetValue() ? "On" : "Off" );
 		Msg* msg = new Msg( "SwitchBinary Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
 		msg->Append( GetNodeId() );
 		msg->Append( 3 );
 		msg->Append( GetCommandClassId() );
 		msg->Append( SwitchBinaryCmd_Set );
-		msg->Append( value->GetPending() ? 0xff : 0x00 );
+		msg->Append( value->GetValue() ? 0xff : 0x00 );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 		GetDriver()->SendMsg( msg );
 		return true;

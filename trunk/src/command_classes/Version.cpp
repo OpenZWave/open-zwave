@@ -97,9 +97,18 @@ bool Version::HandleMsg
 
 		Log::Write( "Received Version report from node %d: Library=%s, Protocol=%s, Application=%s", GetNodeId(), library, protocol, application );
 
-		m_library.GetInstance( _instance )->OnValueChanged( library );
-		m_protocol.GetInstance( _instance )->OnValueChanged( protocol );
-		m_application.GetInstance( _instance )->OnValueChanged( application );
+		if( ValueString* libraryValue = m_library.GetInstance( _instance ) )
+		{
+			libraryValue->OnValueChanged( library );
+		}
+		if( ValueString* protocolValue = m_protocol.GetInstance( _instance ) )
+		{
+			protocolValue->OnValueChanged( protocol );
+		}
+		if( ValueString* applicationValue = m_application.GetInstance( _instance ) )
+		{
+			applicationValue->OnValueChanged( application );
+		}
 		return true;
 	}
 	

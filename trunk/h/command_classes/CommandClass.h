@@ -116,7 +116,10 @@ namespace OpenZWave
 
 			bool HasInstances()const{ return( m_numInstances != 0 ); }
 
-			T* GetInstance( uint8 _idx )const{ return m_instances[_idx-1]; }
+			T* GetInstance( uint8 _idx )
+			{ 
+				return( ( _idx > m_numInstances ) ? NULL : m_instances[_idx-1] ); 
+			}
 
 		private:
 			void Grow( uint8 _numInstances )

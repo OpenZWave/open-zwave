@@ -59,7 +59,9 @@ WakeUp::WakeUp
 ):
 	CommandClass( _homeId, _nodeId ), 
 	m_awake( true ),
-	m_pollRequired( false )
+	m_pollRequired( false ),
+	m_init( false ),
+	m_notification( false )
 {
 }
 
@@ -71,6 +73,24 @@ WakeUp::~WakeUp
 ( 
 )
 {
+}
+
+//-----------------------------------------------------------------------------
+// <WakeUp::Init>
+// Starts the process of requesting node state from a sleeping device
+//-----------------------------------------------------------------------------
+void WakeUp::Init
+( 
+)
+{
+	// Request the wake up interval.  When we receive the response, we
+	// can send a set interval message with the same interval, but with
+	// the target node id set to that of the controller.  This will ensure
+	// that the controller will receive the wake-up notifications from
+	// the device.  Once this is done, we can request the rest of the node
+	// state.
+	m_init = true;
+	RequestState( CommandClass::RequestFlag_Session );
 }
 
 //-----------------------------------------------------------------------------
@@ -108,19 +128,42 @@ bool WakeUp::HandleMsg
 {
 	if( WakeUpCmd_IntervalReport == (WakeUpCmd)_data[0] )
 	{	
-		uint32 interval = ((uint32)_data[1]) << 16;
-		interval |= (((uint32)_data[2]) << 8);
-		interval |= (uint32)_data[3];
+		if( ValueInt* value = m_interval.GetInstance( _instance ) )
+		{
+			uint32 interval = ((uint32)_data[1]) << 16;
+			interval |= (((uint32)_data[2]) << 8);
+			interval |= (uint32)_data[3];
 
-		Log::Write( "Received Wakeup Interval report from node %d: Interval=%d", GetNodeId(), interval );
+			uint8 targetNodeId = _data[4];
 
-		m_interval.GetInstance( _instance )->OnValueChanged( (int32)interval );
+			Log::Write( "Received Wakeup Interval report from node %d: Interval=%d, Target Node=%d", GetNodeId(), interval, targetNodeId );
+
+			value->OnValueChanged( (int32)interval );
+		
+			// Ensure that the target node for wake-up notifications is the controller
+			if( GetDriver()->GetNodeId() != targetNodeId )
+			{
+				SetValue( *value );	
+			}
+
+			// If we are in init mode, now is the time to request the rest of the node state
+			if( m_init )
+			{
+				if( Node* node = GetNode() )
+				{
+					node->RequestEntireNodeState();
+					ReleaseNode();
+				}
+				m_init = false;
+			}
+		}
 		return true;
 	}
 	else if( WakeUpCmd_Notification == (WakeUpCmd)_data[0] )
 	{	
 		// The device is awake.
 		Log::Write( "Received Wakeup Notification from node %d", GetNodeId() );
+		m_notification = true;
 		SetAwake( true );				
 		return true;
 	}
@@ -153,7 +196,7 @@ bool WakeUp::SetValue
 			msg->Append( 1 );
 		}
 
-		int32 interval = value->GetPending();
+		int32 interval = value->GetValue();
 
 		msg->Append( 6 );
 		msg->Append( GetCommandClassId() );
@@ -213,6 +256,21 @@ void WakeUp::QueueMsg
 )
 {
 	m_mutex.Lock();
+
+	// See if there is already a copy of this message in the queue.  If so, 
+	// we delete it.  This is to prevent duplicates building up if the 
+	// device does not wake up very often.  Deleting the original and
+	// adding the copy to the end avoids problems with the order of
+	// commands such as on and off.
+	for( list<Msg*>::iterator it = m_pendingQueue.begin(); it != m_pendingQueue.end(); ++it )
+	{
+		if( *(*it) == *_msg )
+		{
+			// Duplicate found
+			delete *it;
+			m_pendingQueue.erase( it );
+		}
+	}
 	m_pendingQueue.push_back( _msg );
 	m_mutex.Release();
 }
@@ -239,16 +297,18 @@ void WakeUp::SendPending
 
 	m_mutex.Release();
 
-	//// Send the device back to sleep
-	//Msg* msg = new Msg( "Wakeup - No More Information", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-	//msg->Append( GetNodeId() );
-	//msg->Append( 2 );
-	//msg->Append( GetCommandClassId() );
-	//msg->Append( WakeUpCmd_NoMoreInformation );
-	//msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	//GetDriver()->SendMsg( msg ); 
-	
-	//m_bAwake = false;
+	// Send the device back to sleep
+	if( m_notification )
+	{
+		m_notification = false;
+		Msg* msg = new Msg( "Wakeup - No More Information", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+		msg->Append( GetNodeId() );
+		msg->Append( 2 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( WakeUpCmd_NoMoreInformation );
+		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		GetDriver()->SendMsg( msg );
+	}
 }
 
 //-----------------------------------------------------------------------------

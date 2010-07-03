@@ -197,7 +197,7 @@ bool ThermostatSetpoint::SetValue
 	if( ValueID::ValueType_Decimal == _value.GetID().GetType() )
 	{
 		ValueDecimal const* value = static_cast<ValueDecimal const*>(&_value);
-		float32 floatVal = (float32)atof( value->GetPending().c_str() );
+		float32 floatVal = (float32)atof( value->GetValue().c_str() );
 		uint8 scale = strcmp( "C", value->GetUnits().c_str() ) ? 1 : 0;
 
 		Msg* msg = new Msg( "Set Thermostat Setpoint", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );

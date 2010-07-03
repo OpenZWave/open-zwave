@@ -89,7 +89,10 @@ bool EnergyProduction::HandleMsg
 
 		Log::Write( "Received an Energy production report from node %d: %s = %s", GetNodeId(), c_energyParameterNames[_data[1]], value.c_str() );
 
-		m_values[_data[1]].GetInstance( _instance )->OnValueChanged( value );
+		if( ValueDecimal* decimalValue = m_values[_data[1]].GetInstance( _instance ) )
+		{
+			decimalValue->OnValueChanged( value );
+		}
 		return true;
 	}
 

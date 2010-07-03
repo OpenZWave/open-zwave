@@ -81,7 +81,10 @@ bool SwitchToggleBinary::HandleMsg
 	{
 		Log::Write( "Received SwitchToggleBinary report from node %d: %s", GetNodeId(), _data[1] ? "On" : "Off" );
 
-		m_state.GetInstance( _instance )->OnValueChanged( _data[1] != 0 );
+		if( ValueBool* value = m_state.GetInstance( _instance ) )
+		{
+			value->OnValueChanged( _data[1] != 0 );
+		}
 		return true;
 	}
 

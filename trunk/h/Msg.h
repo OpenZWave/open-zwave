@@ -54,6 +54,21 @@ namespace OpenZWave
 		uint8 GetSendAttempts()const{ return m_sendAttempts; }
 		void SetSendAttempts( uint8 _count ){ m_sendAttempts = _count; }
 
+		bool IsWakeUpNoMoreInformationCommand()
+		{
+			return( m_bFinal && (m_length==11) && (m_buffer[3]==0x13) && (m_buffer[6]==0x84) && (m_buffer[7]==0x08) );
+		}
+
+		bool operator == ( Msg const& _other )const
+		{ 
+			if( m_bFinal && _other.m_bFinal )
+			{
+				return( !memcmp( m_buffer, _other.m_buffer, m_length ) ); 
+			}
+
+			return false;
+		}
+
 	private:
 		string			m_logText;
 		bool			m_bFinal;
