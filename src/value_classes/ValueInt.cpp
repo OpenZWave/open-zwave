@@ -105,7 +105,10 @@ bool ValueInt::Set
 	int32 const _value
 )
 {
-	m_pending = _value;
+	// Set the value in our records.
+	OnValueChanged( _value );
+
+	// Set the value in the device.
 	return Value::Set();
 }
 
@@ -118,12 +121,6 @@ void ValueInt::OnValueChanged
 	int32 const _value
 )
 {
-	if( IsSet() && _value == m_value )
-	{
-		// Value already set
-		return;
-	}
-
 	m_value = _value;
 	Value::OnValueChanged();
 }

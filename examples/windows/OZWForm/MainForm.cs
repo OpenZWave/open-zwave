@@ -257,5 +257,10 @@ namespace OZWForm
 
             return null;
         }
+
+        private void SaveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            m_manager.WriteConfig(m_homeId);
+        }
     }
 }

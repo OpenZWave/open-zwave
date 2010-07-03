@@ -80,8 +80,15 @@ bool Alarm::HandleMsg
 		// We have received a report from the Z-Wave device
 		Log::Write( "Received Alarm report from node %d: type=%d, level=%d", GetNodeId(), _data[1], _data[2] );
 
-		m_type.GetInstance( _instance )->OnValueChanged( _data[1] );
-		m_level.GetInstance( _instance )->OnValueChanged( _data[2] );
+		ValueByte* value;
+		if( value = m_type.GetInstance( _instance ) )
+		{
+			value->OnValueChanged( _data[1] );
+		}	
+		if( value = m_level.GetInstance( _instance ) )
+		{
+			value->OnValueChanged( _data[2] );
+		}
 		return true;
 	}
 

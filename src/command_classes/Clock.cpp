@@ -98,9 +98,18 @@ bool Clock::HandleMsg
 
 		Log::Write( "Received Clock report from node %d: %s %.2d:%.2d", GetNodeId(), c_dayNames[day], hour, minute );
 
-		m_day.GetInstance( _instance )->OnValueChanged( day );
-		m_hour.GetInstance( _instance )->OnValueChanged( hour );
-		m_minute.GetInstance( _instance )->OnValueChanged( minute );
+		if( ValueList* valueDay = m_day.GetInstance( _instance ) )
+		{
+			valueDay->OnValueChanged( day );
+		}
+		if( ValueByte* valueHour = m_hour.GetInstance( _instance ) )
+		{
+			valueHour->OnValueChanged( hour );
+		}
+		if( ValueByte* valueMinute = m_minute.GetInstance( _instance ) )
+		{
+			valueMinute->OnValueChanged( minute );
+		}
 		return true;
 	}
 	
@@ -129,28 +138,6 @@ bool Clock::SetValue
 		uint8 day = pDayValue->GetItem().m_value;
 		uint8 hour = pHourValue->GetValue();
 		uint8 minute = pMinuteValue->GetValue();
-
-		switch( _value.GetID().GetIndex() )
-		{
-			case 0:
-			{
-				// Day
-				day = pDayValue->GetPending().m_value;
-				break;
-			}
-			case 1:
-			{
-				// Hour
-				hour = pHourValue->GetPending();
-				break;
-			}
-			case 2:
-			{
-				// Minute
-				minute = pMinuteValue->GetPending();
-				break;
-			}
-		}
 
 		Msg* msg = new Msg( "ClockCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 		msg->Append( GetNodeId() );

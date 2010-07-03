@@ -62,7 +62,6 @@ namespace OpenZWave
 		virtual void WriteXML( TiXmlElement* _valueElement );
 
 		Item const& GetItem()const{ return m_items[m_valueIdx]; }
-		Item const& GetPending()const{ return m_items[m_pendingIdx]; }
 
 		int32 const GetItemIdxByLabel( string const& _label );
 		int32 const GetItemIdxByValue( int32 const _value );
@@ -72,7 +71,6 @@ namespace OpenZWave
 	private:
 		vector<Item>	m_items;
 		int32			m_valueIdx;
-		int32			m_pendingIdx;
 	};
 
 } // namespace OpenZWave
