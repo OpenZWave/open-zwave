@@ -989,7 +989,6 @@ ValueString* Node::CreateValueString
 	ValueString* value = new ValueString( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _default );
 	ValueStore* store = GetValueStore();
 	store->AddValue( value );
-	value->Release();
 	return value;
 }
 
