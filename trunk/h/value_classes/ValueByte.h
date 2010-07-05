@@ -43,13 +43,14 @@ namespace OpenZWave
 	{
 	public:
 		ValueByte( uint32 const _homeId, uint8 const _nodeId, ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, string const& _label, string const& _units, bool const _readOnly, uint8 const _value );
-		ValueByte( uint32 const _homeId, uint8 const _nodeId, uint8 const _commandClassId, TiXmlElement const* _valueElement );
+		ValueByte(){}
 		virtual ~ValueByte(){}
 
 		bool Set( uint8 const _value );
 		void OnValueChanged( uint8 const _value );
 
 		// From Value
+		virtual void ReadXML( uint32 const _homeId, uint8 const _nodeId, uint8 const _commandClassId, TiXmlElement const* _valueElement );
 		virtual void WriteXML( TiXmlElement* _valueElement );
 
 		uint8 GetValue()const{ return m_value; }

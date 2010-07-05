@@ -44,13 +44,14 @@ namespace OpenZWave
 	{
 	public:
 		ValueBool( uint32 const _homeId, uint8 const _nodeId, ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, string const& _label, string const& _units, bool const _readOnly, bool const _value );
-		ValueBool( uint32 const _homeId, uint8 const _nodeId, uint8 const _commandClassId, TiXmlElement const* _valueElement );
+		ValueBool(){}
 		virtual ~ValueBool(){}
 
 		bool Set( bool const _value );
 		void OnValueChanged( bool const _value );
 
 		// From Value
+		virtual void ReadXML( uint32 const _homeId, uint8 const _nodeId, uint8 const _commandClassId, TiXmlElement const* _valueElement );
 		virtual void WriteXML( TiXmlElement* _valueElement );
 
 		bool GetValue()const{ return m_value; }

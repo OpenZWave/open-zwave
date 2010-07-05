@@ -50,7 +50,7 @@ namespace OpenZWave
 		};
 
 		ValueList( uint32 const _homeId, uint8 const _nodeId, ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, string const& _label, string const& _units, bool const _readOnly, vector<Item> const& _items, int32 const _valueIdx );
-		ValueList( uint32 const _homeId, uint8 const _nodeId, uint8 const _commandClassId, TiXmlElement const* _valueElement );
+		ValueList(){}
 		virtual ~ValueList(){}
 
 		bool SetByLabel( string const& _label );
@@ -59,6 +59,7 @@ namespace OpenZWave
 		void OnValueChanged( int32 const _valueIdx );
 
 		// From Value
+		virtual void ReadXML( uint32 const _homeId, uint8 const _nodeId, uint8 const _commandClassId, TiXmlElement const* _valueElement );
 		virtual void WriteXML( TiXmlElement* _valueElement );
 
 		Item const& GetItem()const{ return m_items[m_valueIdx]; }

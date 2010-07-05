@@ -62,6 +62,58 @@ Configuration::~Configuration
 }
 
 //-----------------------------------------------------------------------------
+// <Configuration::ReadXML>
+// Read the saved command class data
+//-----------------------------------------------------------------------------
+void Configuration::ReadXML
+( 
+	TiXmlElement const* _ccElement
+)
+{
+	int32 intVal;
+
+	uint8 version = 1;
+	if( TIXML_SUCCESS == _ccElement->QueryIntAttribute( "version", &intVal ) )
+	{
+		version = (uint8)intVal;
+	}
+	SetVersion( version );
+
+	uint8 instances = 1;
+	if( TIXML_SUCCESS == _ccElement->QueryIntAttribute( "instances", &intVal ) )
+	{
+		instances = (uint8)intVal;
+	}
+
+	// Setting the instance count will create all the values.
+	SetInstances( instances );
+
+	// Apply any differences from the saved XML to the values
+	TiXmlElement const* child = _ccElement->FirstChildElement();
+	while( child )
+	{
+		char const* str = child->Value();
+		if( str )
+		{
+			if( !strcmp( str, "Value" ) )
+			{
+				if( Node* node = GetNode() )
+				{
+					if( Value* value = node->CreateValueFromXML( GetCommandClassId(), child ) )
+					{
+						AddParam( value );
+					}
+
+					ReleaseNode();
+				}
+			}
+		}
+
+		child = child->NextSiblingElement();
+	}
+}
+
+//-----------------------------------------------------------------------------
 // <Configuration::HandleMsg>
 // Handle a message from the Z-Wave network
 //-----------------------------------------------------------------------------

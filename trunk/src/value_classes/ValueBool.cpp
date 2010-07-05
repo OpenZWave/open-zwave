@@ -56,18 +56,19 @@ ValueBool::ValueBool
 }
 
 //-----------------------------------------------------------------------------
-// <ValueBool::ValueBool>
-// Constructor (from XML)
+// <ValueBool::ReadXML>
+// Apply settings from XML
 //-----------------------------------------------------------------------------
-ValueBool::ValueBool
+void ValueBool::ReadXML
 (
 	uint32 const _homeId,
 	uint8 const _nodeId,
 	uint8 const _commandClassId,
 	TiXmlElement const* _valueElement
-):
-	Value( _homeId, _nodeId, _commandClassId, _valueElement )
+)
 {
+	Value::ReadXML( _homeId, _nodeId, _commandClassId, _valueElement );
+
 	char const* str = _valueElement->Attribute( "value" );
 	if( str )
 	{

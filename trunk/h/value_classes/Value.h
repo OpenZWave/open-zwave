@@ -45,8 +45,9 @@ namespace OpenZWave
 
 	public:
 		Value( uint32 const _homeId, uint8 const _nodeId, ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, ValueID::ValueType const _type, string const& _label, string const& _units, bool const _readOnly, bool const _isset );
-		Value( uint32 const _homeId, uint8 const _nodeId, uint8 const _commandClassId, TiXmlElement const* _valueElement );
+		Value();
 
+		virtual void ReadXML( uint32 const _homeId, uint8 const _nodeId, uint8 const _commandClassId, TiXmlElement const* _valueElement );
 		virtual void WriteXML( TiXmlElement* _valueElement );
 
 		ValueID const& GetID()const{ return m_id; }
