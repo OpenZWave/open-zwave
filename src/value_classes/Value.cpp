@@ -89,13 +89,23 @@ Value::Value
 //-----------------------------------------------------------------------------
 Value::Value
 (
+):
+	m_refs( 1 ),
+	m_readOnly( false )
+{
+}
+
+//-----------------------------------------------------------------------------
+// <Value::ReadXML>
+// Apply settings from XML
+//-----------------------------------------------------------------------------
+void Value::ReadXML
+(
 	uint32 const _homeId,
 	uint8 const _nodeId,
 	uint8 const _commandClassId,
 	TiXmlElement const* _valueElement
-):
-	m_refs( 1 ),
-	m_readOnly( false )
+)
 {
 	int intVal;
 

@@ -43,13 +43,14 @@ namespace OpenZWave
 	{
 	public:
 		ValueDecimal( uint32 const _homeId, uint8 const _nodeId, ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, string const& _label, string const& _units, bool const _readOnly, string const& _value );
-		ValueDecimal( uint32 const _homeId, uint8 const _nodeId, uint8 const _commandClassId, TiXmlElement const* _valueElement );
+		ValueDecimal(){}
 		virtual ~ValueDecimal(){}
 
 		bool Set( string const& _value );
 		void OnValueChanged( string const& _value );
 
 		// From Value
+		virtual void ReadXML( uint32 const _homeId, uint8 const _nodeId, uint8 const _commandClassId, TiXmlElement const* _valueElement );
 		virtual void WriteXML( TiXmlElement* _valueElement );
 
 		string GetValue()const{ return m_value; }
