@@ -37,11 +37,37 @@
 
 using namespace OpenZWave;
 
-
 enum MeterCmd
 {
-	MeterCmd_Get	= 0x04,
-	MeterCmd_Report	= 0x05
+	MeterCmd_Get				= 0x01,
+	MeterCmd_Report				= 0x02,
+	MeterCmd_GetSupported		= 0x03,		// Version 2 Only
+	MeterCmd_ReportSupported	= 0x04,		// Version 2 Only
+	MeterCmd_Reset				= 0x05		// Version 2 Only
+};
+
+static char const* c_electricityUnits[] = 
+{
+	"kWh",
+	"kVAh",
+	"W",
+	""
+};
+
+static char const* c_gasUnits[] = 
+{
+	"cubic meters",
+	"cubic feet",
+	"",
+	""
+};
+
+static char const* c_waterUnits[] = 
+{
+	"cubic meters",
+	"cubic feet",
+	"US gallons",
+	""
 };
 
 //-----------------------------------------------------------------------------
@@ -91,21 +117,21 @@ bool Meter::HandleMsg
 					{
 						// Electricity Meter
 						value->SetLabel( "Electricity" );
-						value->SetUnits( "kWh" );
+						value->SetUnits( c_electricityUnits[scale] );
 						break;
 					}
 					case 0x02:
 					{
 						// Gas Meter
 						value->SetLabel( "Gas" );
-						value->SetUnits( "" );
+						value->SetUnits( c_gasUnits[scale] );
 						break;
 					}
 					case 0x03:
 					{
 						// Water Meter
 						value->SetLabel( "Water" );
-						value->SetUnits( "" );
+						value->SetUnits( c_waterUnits[scale] );
 						break;
 					}
 				}
