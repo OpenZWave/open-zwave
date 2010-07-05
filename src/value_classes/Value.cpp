@@ -183,6 +183,7 @@ bool Value::Set
 		return false;
 	}
 
+	bool res = false;
 	if( Driver* driver = Manager::Get()->GetDriver( m_id.GetHomeId() ) )
 	{
 		if( Node* node = driver->GetNode( m_id.GetNodeId() ) )
@@ -190,14 +191,14 @@ bool Value::Set
 			if( CommandClass* cc = node->GetCommandClass( m_id.GetCommandClassId() ) )
 			{
 				m_isSet = true;
-				return( cc->SetValue( *this ) );
+				res = cc->SetValue( *this );
 			}
 
 			driver->ReleaseNodes();
 		}
 	}
 
-	return false;
+	return res;
 }
 
 //-----------------------------------------------------------------------------
