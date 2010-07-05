@@ -56,18 +56,19 @@ ValueByte::ValueByte
 }
 
 //-----------------------------------------------------------------------------
-// <ValueByte::ValueByte>
-// Constructor (from XML)
+// <ValueByte::ReadXML>
+// Apply settings from XML
 //-----------------------------------------------------------------------------
-ValueByte::ValueByte
+void ValueByte::ReadXML
 (
 	uint32 const _homeId,
 	uint8 const _nodeId,
 	uint8 const _commandClassId,
 	TiXmlElement const* _valueElement
-):
-	Value( _homeId, _nodeId, _commandClassId, _valueElement )
+)
 {
+	Value::ReadXML( _homeId, _nodeId, _commandClassId, _valueElement );
+
 	int intVal;
 	if( TIXML_SUCCESS == _valueElement->QueryIntAttribute( "value", &intVal ) )
 	{

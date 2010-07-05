@@ -996,7 +996,7 @@ ValueString* Node::CreateValueString
 // <Node::CreateValueFromXML>
 // Get the value object with the specified ID
 //-----------------------------------------------------------------------------
-void Node::CreateValueFromXML
+Value* Node::CreateValueFromXML
 ( 
 	uint8 const _commandClassId,
 	TiXmlElement const* _valueElement
@@ -1006,50 +1006,66 @@ void Node::CreateValueFromXML
 
 	// Create the value
 	ValueID::ValueType type = Value::GetTypeEnumFromName( _valueElement->Attribute( "type" ) );
+
 	switch( type )
 	{
-		case ValueID::ValueType_Bool:
-		{
-			value = new ValueBool( m_homeId, m_nodeId, _commandClassId, _valueElement );
-			break;
-		}
-		case ValueID::ValueType_Byte:
-		{
-			value = new ValueByte( m_homeId, m_nodeId, _commandClassId, _valueElement );
-			break;
-		}
-		case ValueID::ValueType_Decimal:
-		{
-			value = new ValueDecimal( m_homeId, m_nodeId, _commandClassId, _valueElement );
-			break;
-		}
-		case ValueID::ValueType_Int:
-		{
-			value = new ValueInt( m_homeId, m_nodeId, _commandClassId, _valueElement );
-			break;
-		}
-		case ValueID::ValueType_List:
-		{
-			value = new ValueList( m_homeId, m_nodeId, _commandClassId, _valueElement );
-			break;
-		}
-		case ValueID::ValueType_Short:
-		{
-			value = new ValueShort( m_homeId, m_nodeId, _commandClassId, _valueElement );
-			break;
-		}
-		case ValueID::ValueType_String:
-		{
-			value = new ValueString( m_homeId, m_nodeId, _commandClassId, _valueElement );
-			break;
-		}
+		case ValueID::ValueType_Bool:		{	value = new ValueBool();		break;	}
+		case ValueID::ValueType_Byte:		{	value = new ValueByte();		break;	}
+		case ValueID::ValueType_Decimal:	{	value = new ValueDecimal();		break;	}
+		case ValueID::ValueType_Int:		{	value = new ValueInt();			break;	}
+		case ValueID::ValueType_List:		{	value = new ValueList();		break;	}
+		case ValueID::ValueType_Short:		{	value = new ValueShort();		break;	}
+		case ValueID::ValueType_String:		{	value = new ValueString();		break;	}
 	}
 
 	if( value )
 	{
+		value->ReadXML( m_homeId, m_nodeId, _commandClassId, _valueElement );
+
 		ValueStore* store = GetValueStore();
 		store->AddValue( value );
-		value->Release();
+	}
+
+	return value;
+}
+
+//-----------------------------------------------------------------------------
+// <Node::ReadValueFromXML>
+// Apply XML differences to a value
+//-----------------------------------------------------------------------------
+void Node::ReadValueFromXML
+( 
+	uint8 const _commandClassId,
+	TiXmlElement const* _valueElement
+)
+{
+	int32 intVal;
+
+	ValueID::ValueGenre genre = Value::GetGenreEnumFromName( _valueElement->Attribute( "genre" ) );
+	ValueID::ValueType type = Value::GetTypeEnumFromName( _valueElement->Attribute( "type" ) );
+
+	uint8 instance = 0;
+	if( TIXML_SUCCESS == _valueElement->QueryIntAttribute( "instance", &intVal ) )
+	{
+		instance = (uint8)intVal;
+	}
+
+	uint8 index = 0;
+	if( TIXML_SUCCESS == _valueElement->QueryIntAttribute( "index", &intVal ) )
+	{
+		index = (uint8)intVal;
+	}
+
+	ValueID id = ValueID( m_homeId, m_nodeId, genre, _commandClassId, instance, index, type );
+
+	// Try to get the value from the ValueStore (everything except configuration parameters
+	// should already have been created when the command class instance count was read in)
+	if( ValueStore* store = GetValueStore() )
+	{
+		if( Value* value = store->GetValue( id ) )
+		{
+			value->ReadXML( m_homeId, m_nodeId, _commandClassId, _valueElement );
+		}
 	}
 }
 

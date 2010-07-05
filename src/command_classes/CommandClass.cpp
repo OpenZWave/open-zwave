@@ -116,13 +116,16 @@ void CommandClass::ReadXML
 		m_version = (uint8)intVal;
 	}
 
-	m_instances = 1;
+	uint8 instances = 1;
 	if( TIXML_SUCCESS == _ccElement->QueryIntAttribute( "instances", &intVal ) )
 	{
-		m_instances = (uint8)intVal;
+		instances = (uint8)intVal;
 	}
 
-	// Read in the saved values
+	// Setting the instance count will create all the values.
+	SetInstances( instances );
+
+	// Apply any differences from the saved XML to the values
 	TiXmlElement const* child = _ccElement->FirstChildElement();
 	while( child )
 	{
@@ -131,7 +134,7 @@ void CommandClass::ReadXML
 		{
 			if( !strcmp( str, "Value" ) )
 			{
-				GetNode()->CreateValueFromXML( GetCommandClassId(), child );
+				GetNode()->ReadValueFromXML( GetCommandClassId(), child );
 				ReleaseNode();
 			}
 		}

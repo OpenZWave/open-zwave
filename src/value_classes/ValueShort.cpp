@@ -56,18 +56,19 @@ ValueShort::ValueShort
 }
 
 //-----------------------------------------------------------------------------
-// <ValueShort::ValueShort>
-// Constructor (from XML)
+// <ValueShort::ReadXML>
+// Apply settings from XML
 //-----------------------------------------------------------------------------
-ValueShort::ValueShort
+void ValueShort::ReadXML
 (
 	uint32 const _homeId,
 	uint8 const _nodeId,
 	uint8 const _commandClassId,
 	TiXmlElement const* _valueElement
-):
-	Value( _homeId, _nodeId, _commandClassId, _valueElement )
+)
 {
+	Value::ReadXML( _homeId, _nodeId, _commandClassId, _valueElement );
+
 	int intVal;
 	if( TIXML_SUCCESS == _valueElement->QueryIntAttribute( "value", &intVal ) )
 	{
