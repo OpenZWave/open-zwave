@@ -30,6 +30,7 @@
 
 #include <cstdio>
 #include <string>
+#include <string.h>
 #include "Defs.h"
 
 namespace OpenZWave
