@@ -338,6 +338,60 @@ bool Manager::IsStaticUpdateController
 }
 
 //-----------------------------------------------------------------------------
+// <Manager::IsBridgeController>
+// 
+//-----------------------------------------------------------------------------
+bool Manager::IsBridgeController
+(
+	uint32 const _homeId
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		return driver->IsBridgeController();
+	}
+
+	Log::Write( "IsBridgeController() failed - _homeId %d not found", _homeId );
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::GetLibraryVersion>
+// 
+//-----------------------------------------------------------------------------
+string Manager::GetLibraryVersion
+(
+	uint32 const _homeId
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		return driver->GetLibraryVersion();
+	}
+
+	Log::Write( "GetLibraryVersion() failed - _homeId %d not found", _homeId );
+	return "";
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::GetLibraryTypeName>
+// 
+//-----------------------------------------------------------------------------
+string Manager::GetLibraryTypeName
+(
+	uint32 const _homeId
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		return driver->GetLibraryTypeName();
+	}
+
+	Log::Write( "GetLibraryTypeName() failed - _homeId %d not found", _homeId );
+	return "";
+}
+
+//-----------------------------------------------------------------------------
 //	Polling Z-Wave values
 //-----------------------------------------------------------------------------
 				  		
