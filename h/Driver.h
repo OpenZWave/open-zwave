@@ -97,9 +97,14 @@ namespace OpenZWave
 	private:
 		bool IsPrimaryController()const{ return ((m_capabilities & 0x04) == 0); }
 		bool IsStaticUpdateController()const{ return ((m_capabilities & 0x08) != 0); }
+		bool IsBridgeController()const{ return (m_libraryType == 7); }
+
 		uint32 GetHomeId()const{ return m_homeId; }
 		uint8 GetNodeId()const{ return m_nodeId; }
 		string GetSerialPortName()const{ return m_serialPortName; }
+		string GetLibraryVersion()const{ return m_libraryVersion; }
+		string GetLibraryTypeName()const{ return m_libraryTypeName; }
+
 		Node* GetNode( uint8 _nodeId );
 		void LockNodes();
 		void ReleaseNodes();
@@ -109,6 +114,10 @@ namespace OpenZWave
 		SerialPort*				m_serialPort;								// Handles communications with the controller hardware.
 		Mutex*					m_serialMutex;								// Ensure only one thread at a time can access the serial port.
 		
+		string					m_libraryVersion;							// Verison of the Z-Wave Library used by the controller.
+		string					m_libraryTypeName;							// Name describing the library type.
+		uint8					m_libraryType;								// Type of library used by the controller.
+
 		uint8					m_capabilities;								// Set of flags indicating the controller's capabilities (See IsSlave, HasTimerSupport, IsPrimaryController and IsStaticUpdateController above).
 		uint8					m_nodeId;									// Z-Wave Controller's own node ID.
 		Node*					m_nodes[256];								// Array containing all the node objects.
@@ -143,6 +152,7 @@ namespace OpenZWave
 		bool ReadMsg();
 		void ProcessMsg( uint8* _data );
 
+		void HandleGetVersionResponse( uint8* pData );
 		void HandleGetCapabilitiesResponse( uint8* pData );
 		void HandleEnableSUCResponse( uint8* pData );
 		void HandleRequestNetworkUpdate( uint8* pData );

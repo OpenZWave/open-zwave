@@ -136,7 +136,7 @@ namespace OpenZWaveDotNet
 		 * consists of the 8 digit hexadecimal version of the controller's Home ID, prefixed with the string 'zwcfg_'.
 		 * This convention allows OpenZWave to find the correct configuration file for a controller, even if it is
 		 * attached to a different serial port.
-		 * @param _homeId The Home ID of the Z-Wave controller to save.
+		 * @param homeId The Home ID of the Z-Wave controller to save.
 		 */
 		void WriteConfig(uint32 homeId){ Manager::Get()->WriteConfig(homeId); }
 
@@ -177,7 +177,7 @@ namespace OpenZWaveDotNet
 		 * installed in their final location.
 		 * <p>
 		 * Calls to BeginControllerCommand will fail if the controller is not the primary.
-		 * @param _homeId The Home ID of the Z-Wave controller.
+		 * @param homeId The Home ID of the Z-Wave controller.
 		 * @return true if it is a primary controller, false if not.
 		 */
 		bool IsPrimaryController( uint32 homeId ){ return Manager::Get()->IsPrimaryController(homeId); }
@@ -186,10 +186,46 @@ namespace OpenZWaveDotNet
 		 * Query if the controller is a static update controller.
 		 * A Static Update Controller (SUC) is a controller that must never be moved in normal operation
 		 * and which can be used by other nodes to receive information about network changes.
-		 * @param _homeId The Home ID of the Z-Wave controller.
+		 * @param homeId The Home ID of the Z-Wave controller.
 		 * @return true if it is a static update controller, false if not.
 		 */
 		bool IsStaticUpdateController( uint32 homeId ){ return Manager::Get()->IsStaticUpdateController(homeId); }
+
+		/**
+		 * Query if the controller is using the bridge controller library.
+		 * A bridge controller is able to create virtual nodes that can be associated
+		 * with other controllers to enable events to be passed on.
+		 * @param homeId The Home ID of the Z-Wave controller.
+		 * @return true if it is a bridge controller, false if not.
+		 */
+		bool IsBridgeController( uint32 const homeId ){ return Manager::Get()->IsBridgeController(homeId); }
+
+		/**
+		 * Get the version of the Z-Wave API library used by a controller.
+		 * @param homeId The Home ID of the Z-Wave controller.
+		 * @return a string containing the library version. For example, "Z-Wave 2.48".
+		 */
+		String^ GetLibraryVersion( uint32 const homeId ){ return gcnew String(Manager::Get()->GetLibraryVersion(homeId).c_str()); }
+
+		/**
+		 * Get a string containing the Z-Wave API library type used by a controller.
+		 * The possible library types are:
+		 * - Static Controller
+		 * - Controller
+		 * - Enhanced Slave
+		 * - Slave            
+	     * - Installer
+	     * - Routing Slave
+	     * - Bridge Controller
+		 * - Device Under Test
+		 * The controller should never return a slave library type.
+		 * For a more efficient test of whether a controller is a Bridge Controller, use
+		 * the IsBridgeController method.
+		 * @param homeId The Home ID of the Z-Wave controller.
+		 * @return a string containing the library type.
+		 * @see GetLibraryVersion, IsBridgeController
+		 */
+		String^ GetLibraryTypeName( uint32 const homeId ){ return gcnew String(Manager::Get()->GetLibraryTypeName(homeId).c_str()); }
 
 	//-----------------------------------------------------------------------------
 	//	Polling Z-Wave devices
@@ -210,7 +246,7 @@ namespace OpenZWaveDotNet
 
 		/**
 		 * Enable the polling of a device's state.
-		 * @param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * @param homeId The Home ID of the Z-Wave controller that manages the node.
 		 * @param _nodeId The ID of the node to start polling.
 		 * @return true if polling was enabled.
 		 */
@@ -218,7 +254,7 @@ namespace OpenZWaveDotNet
 
 		/**
 		 * Disable the polling of a device's state.
-		 * @param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * @param homeId The Home ID of the Z-Wave controller that manages the node.
 		 * @param _nodeId The ID of the node to stop polling.
 		 * @return true if polling was disabled.
 		 */
@@ -236,7 +272,7 @@ namespace OpenZWaveDotNet
 		 * This method would normally be called automatically by OpenZWave, but if you know that a node has been
 		 * changed, calling this method will force a refresh of the data held by the library.  This can be especially 
 		 * useful for devices that were asleep when the application was first run.
-		 * @param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * @param homeId The Home ID of the Z-Wave controller that manages the node.
 		 * @param _nodeId The ID of the node to query.
 		 * @return True if the request was sent successfully.
 		 */
@@ -245,7 +281,7 @@ namespace OpenZWaveDotNet
 		/**
 		 * Trigger the fetching of dynamic value data for a node.
 		 * Causes the node's values to be requested from the Z-Wave network.
-		 * @param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * @param homeId The Home ID of the Z-Wave controller that manages the node.
 		 * @param _nodeId The ID of the node to query.
 		 * @return True if the request was sent successfully.
 		 */
@@ -254,7 +290,7 @@ namespace OpenZWaveDotNet
 		/**
 		 * Get a human-readable label describing the node
 		 * The label is taken from the Z-Wave specific, generic or basic type, depending on which of those values are specified by the node.
-		 * @param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * @param homeId The Home ID of the Z-Wave controller that manages the node.
 		 * @param _nodeId The ID of the node to query.
 		 * @return A string containing the label text.
 		 */
@@ -268,7 +304,7 @@ namespace OpenZWaveDotNet
 		 * However, there are some devices that do not support the command class, so to enable the user
 		 * to manually set the name, it is stored with the node data and accessed via this method rather
 		 * than being reported via a command class Value object.
-		 * @param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * @param homeId The Home ID of the Z-Wave controller that manages the node.
 		 * @param _nodeId The ID of the node to query.
 		 * @return A string containing the node's manufacturer name.
 		 * @see SetNodeManufacturerName, GetNodeProductName, SetNodeProductName
@@ -283,7 +319,7 @@ namespace OpenZWaveDotNet
 		 * However, there are some devices that do not support the command class, so to enable the user
 		 * to manually set the name, it is stored with the node data and accessed via this method rather
 		 * than being reported via a command class Value object.
-		 * @param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * @param homeId The Home ID of the Z-Wave controller that manages the node.
 		 * @param _nodeId The ID of the node to query.
 		 * @return A string containing the node's product name.
 		 * @see SetNodeProductName, GetNodeManufacturerName, SetNodeManufacturerName
@@ -297,7 +333,7 @@ namespace OpenZWaveDotNet
 		 * be named, OpenZWave stores it with the node data, and provides access through this method
 		 * and SetNodeName, rather than reporting it via a command class Value object.
 		 * The maximum length of a node name is 16 characters.
-		 * @param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * @param homeId The Home ID of the Z-Wave controller that manages the node.
 		 * @param _nodeId The ID of the node to query.
 		 * @return A string containing the node's name.
 		 * @see SetNodeName, GetNodeLocation, SetNodeLocation
@@ -310,7 +346,7 @@ namespace OpenZWaveDotNet
 		 * commmand class, but many devices do not support it.  So that a node can always report its
 		 * location, OpenZWave stores it with the node data, and provides access through this method
 		 * and SetNodeLocation, rather than reporting it via a command class Value object.
-		 * @param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * @param homeId The Home ID of the Z-Wave controller that manages the node.
 		 * @param _nodeId The ID of the node to query.
 		 * @return A string containing the node's location.
 		 * @see SetNodeLocation, GetNodeName, SetNodeName
@@ -324,7 +360,7 @@ namespace OpenZWaveDotNet
 		 * method will be an empty string if the command class is not supported and cannot be set by the 
 		 * user, the manufacturer ID is still stored with the node data (rather than being reported via a
 		 * command class Value object) to retain a consistent approach with the other manufacturer specific data.
-		 * @param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * @param homeId The Home ID of the Z-Wave controller that manages the node.
 		 * @param _nodeId The ID of the node to query.
 		 * @return A string containing the node's manufacturer ID, or an empty string if the manufactuer
 		 * specific command class is not supported by the device.
@@ -339,7 +375,7 @@ namespace OpenZWaveDotNet
 		 * be an empty string if the command class is not supported and cannot be set by the user, the product
 		 * type is still stored with the node data (rather than being reported via a command class Value object)
 		 * to retain a consistent approach with the other manufacturer specific data.
-		 * @param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * @param homeId The Home ID of the Z-Wave controller that manages the node.
 		 * @param _nodeId The ID of the node to query.
 		 * @return A string containing the node's product type, or an empty string if the manufactuer
 		 * specific command class is not supported by the device.
@@ -354,7 +390,7 @@ namespace OpenZWaveDotNet
 		 * be an empty string if the command class is not supported and cannot be set by the user, the product
 		 * ID is still stored with the node data (rather than being reported via a command class Value object)
 		 * to retain a consistent approach with the other manufacturer specific data.
-		 * @param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * @param homeId The Home ID of the Z-Wave controller that manages the node.
 		 * @param _nodeId The ID of the node to query.
 		 * @return A string containing the node's product ID, or an empty string if the manufactuer
 		 * specific command class is not supported by the device.
@@ -370,7 +406,7 @@ namespace OpenZWaveDotNet
 		 * However, there are some devices that do not support the command class, so to enable the user
 		 * to manually set the name, it is stored with the node data and accessed via this method rather
 		 * than being reported via a command class Value object.
-		 * @param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * @param homeId The Home ID of the Z-Wave controller that manages the node.
 		 * @param _nodeId The ID of the node to query.
 		 * @param _manufacturerName	A string containing the node's manufacturer name.
 		 * @see GetNodeManufacturerName, GetNodeProductName, SetNodeProductName
@@ -385,7 +421,7 @@ namespace OpenZWaveDotNet
 		 * However, there are some devices that do not support the command class, so to enable the user
 		 * to manually set the name, it is stored with the node data and accessed via this method rather
 		 * than being reported via a command class Value object.
-		 * @param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * @param homeId The Home ID of the Z-Wave controller that manages the node.
 		 * @param _nodeId The ID of the node to query.
 		 * @param _productName A string containing the node's product name.
 		 * @see GetNodeProductName, GetNodeManufacturerName, SetNodeManufacturerName
@@ -400,7 +436,7 @@ namespace OpenZWaveDotNet
 		 * and GetNodeName, rather than reporting it via a command class Value object.
 		 * If the device does support the Node Naming command class, the new name will be sent to the node.
 		 * The maximum length of a node name is 16 characters.
-		 * @param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * @param homeId The Home ID of the Z-Wave controller that manages the node.
 		 * @param _nodeId The ID of the node to query.
 		 * @param _nodeName A string containing the node's name.
 		 * @see GetNodeName, GetNodeLocation, SetNodeLocation
@@ -414,7 +450,7 @@ namespace OpenZWaveDotNet
 		 * location, OpenZWave stores it with the node data, and provides access through this method
 		 * and GetNodeLocation, rather than reporting it via a command class Value object.
 		 * If the device does support the Node Naming command class, the new location will be sent to the node.
-		 * @param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * @param homeId The Home ID of the Z-Wave controller that manages the node.
 		 * @param _nodeId The ID of the node to query.
 		 * @param _location A string containing the node's location.
 		 * @see GetNodeLocation, GetNodeName, SetNodeName
@@ -632,7 +668,7 @@ namespace OpenZWaveDotNet
 		 * the device's user manual.
 		 * This method returns immediately, without waiting for confirmation from the device that the
 		 * change has been made.
-		 * @param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * @param homeId The Home ID of the Z-Wave controller that manages the node.
 		 * @param _nodeId The ID of the node to configure.
 		 * @param _param The index of the parameter.
 		 * @param _value The value to which the parameter should be set.
@@ -651,7 +687,7 @@ namespace OpenZWaveDotNet
 		 * device is awake, the value will eventually be reported via a ValueChanged notification callback.
 		 * The ValueID reported in the callback will have an index set the same as _param and a command class
 		 * set to the same value as returned by a call to Configuration::StaticGetCommandClassId. 
-		 * @param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * @param homeId The Home ID of the Z-Wave controller that manages the node.
 		 * @param _nodeId The ID of the node to configure.
 		 * @param _param The index of the parameter.
 		 * @see SetConfigParam, ValueID, Notification
@@ -668,7 +704,7 @@ namespace OpenZWaveDotNet
 		 * Gets the number of association groups reported by this node
 		 * In Z-Wave, groups are numbered starting from one.  For example, if a call to GetNumGroups returns 4, the _groupIdx 
 		 * value to use in calls to GetAssociations, AddAssociation and RemoveAssociation will be a number between 1 and 4.
-		 * @param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * @param homeId The Home ID of the Z-Wave controller that manages the node.
 		 * @param _nodeId The ID of the node whose groups we are interested in.
 		 * @return The number of groups.
 		 * @see GetAssociations, AddAssociation, RemoveAssociation
@@ -679,21 +715,21 @@ namespace OpenZWaveDotNet
 		 * Gets the associations for a group.
 		 * Makes a copy of the list of associated nodes in the group, and returns it in an array of uint8's.
 		 * The caller is responsible for freeing the array memory with a call to delete [].
-		 * @param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * @param homeId The Home ID of the Z-Wave controller that manages the node.
 		 * @param _nodeId The ID of the node whose associations we are interested in.
 		 * @param _groupIdx One-based index of the group (because Z-Wave product manuals use one-based group numbering).
 		 * @param o_associations If the number of associations returned is greater than zero, o_associations will be set to point to an array containing the IDs of the associated nodes.
 		 * @return The number of nodes in the associations array.  If zero, the array will point to NULL, and does not need to be deleted.
 		 * @see GetNumGroups, AddAssociation, RemoveAssociation
 		 */
-		//uint32 GetAssociations( uint32 const _homeId, uint8 const _nodeId, uint8 const _groupIdx, uint8** o_associations );
+		//uint32 GetAssociations( uint32 const homeId, uint8 const _nodeId, uint8 const _groupIdx, uint8** o_associations );
 
 		/**
 		 * Adds a node to an association group.
 		 * Due to the possibility of a device being asleep, the command is assumed to suceeed, and the association data
 		 * held in this class is updated directly.  This will be reverted by a future Association message from the device
 		 * if the Z-Wave message actually failed to get through.  Notification callbacks will be sent in both cases.
-		 * @param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * @param homeId The Home ID of the Z-Wave controller that manages the node.
 		 * @param _nodeId The ID of the node whose associations are to be changed.
 		 * @param _groupIdx One-based index of the group (because Z-Wave product manuals use one-based group numbering).
 		 * @param _targetNodeId Identifier for the node that will be added to the association group.
@@ -706,7 +742,7 @@ namespace OpenZWaveDotNet
 		 * Due to the possibility of a device being asleep, the command is assumed to suceeed, and the association data
 		 * held in this class is updated directly.  This will be reverted by a future Association message from the device
 		 * if the Z-Wave message actually failed to get through.   Notification callbacks will be sent in both cases.
-		 * @param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * @param homeId The Home ID of the Z-Wave controller that manages the node.
 		 * @param _nodeId The ID of the node whose associations are to be changed.
 		 * @param _groupIdx One-based index of the group (because Z-Wave product manuals use one-based group numbering).
 		 * @param _targetNodeId Identifier for the node that will be removed from the association group.
@@ -750,7 +786,7 @@ namespace OpenZWaveDotNet
 		/**
 		 * Hard Reset a PC Z-Wave Controller.
 		 * Resets a controller and erases its network configuration settings.  The controller becomes a primary controller ready to add devices to a new network.
-		 * @param _homeId The Home ID of the Z-Wave controller to be reset.
+		 * @param homeId The Home ID of the Z-Wave controller to be reset.
 		 * @see SoftReset
 		 */
 		void ResetController( uint32 homeId ){ Manager::Get()->ResetController( homeId ); }
@@ -758,14 +794,14 @@ namespace OpenZWaveDotNet
 		/**
 		 * Soft Reset a PC Z-Wave Controller.
 		 * Resets a controller without erasing its network configuration settings.
-		 * @param _homeId The Home ID of the Z-Wave controller to be reset.
+		 * @param homeId The Home ID of the Z-Wave controller to be reset.
 		 * @see SoftReset
 		 */
 		void SoftReset( uint32 homeId ){ Manager::Get()->SoftReset( homeId ); }
 
 		/**
 		 * Start a controller command process.
-		 * @param _homeId The Home ID of the Z-Wave controller.
+		 * @param homeId The Home ID of the Z-Wave controller.
 		 * @param _command The command to be sent to the controller.
 		 * <p> Commands
 		 * - Driver::ControllerCommand_AddController - Add a new secondary controller to the Z-Wave network.
@@ -796,20 +832,20 @@ namespace OpenZWaveDotNet
 		 * operate at normal power levels instead.  Defaults to false.
 		 * @see CancelControllerCommand, Driver::ControllerCommand, Driver::pfnControllerCallback_t, 
 		 */
-		//bool BeginControllerCommand( uint32 const _homeId, Driver::ControllerCommand _command, Driver::pfnControllerCallback_t _callback = NULL, void* _context = NULL, bool _highPower = false );
+		//bool BeginControllerCommand( uint32 const homeId, Driver::ControllerCommand _command, Driver::pfnControllerCallback_t _callback = NULL, void* _context = NULL, bool _highPower = false );
 			
 		/**
 		 * Cancels any in-progress command running on a controller.
-		 * @param _homeId The Home ID of the Z-Wave controller.
+		 * @param homeId The Home ID of the Z-Wave controller.
 		 * @see BeginControllerCommand 
 		 */
 		bool CancelControllerCommand( uint32 homeId ){ return Manager::Get()->CancelControllerCommand( homeId ); }
 
 		// TBD...
-		//void RequestNodeNeighborUpdate( uint32 const _homeId, uint8 const _nodeId );
-		//void AssignReturnRoute( uint32 const _homeId, uint8 const _srcNodeId, uint8 const _dstNodeId );
-		//void RequestNetworkUpdate( uint32 const _homeId );
-		//void ReadMemory( uint32 const _homeId,  uint16 const offset );
+		//void RequestNodeNeighborUpdate( uint32 const homeId, uint8 const _nodeId );
+		//void AssignReturnRoute( uint32 const homeId, uint8 const _srcNodeId, uint8 const _dstNodeId );
+		//void RequestNetworkUpdate( uint32 const homeId );
+		//void ReadMemory( uint32 const homeId,  uint16 const offset );
 	/*@}*/
 
 	public:

@@ -56,6 +56,19 @@
 
 using namespace OpenZWave;
 
+static char const* c_libraryTypeNames[] = 
+{
+	"Unknown",
+	"Static Controller",
+	"Controller",       
+	"Enhanced Slave",   
+	"Slave",            
+	"Installer",
+	"Routing Slave",
+	"Bridge Controller",    
+	"Device Under Test"
+};
+
 //-----------------------------------------------------------------------------
 // <Driver::Driver>
 // Constructor
@@ -952,7 +965,7 @@ void Driver::ProcessMsg
 		{
 			case ZW_GET_VERSION:
 			{
-				Log::Write( "Received reply to ZW_GET_VERSION: %s", ((int8*)&_data[2]) );
+				HandleGetVersionResponse( _data );
 				break;
 			}
 			case FUNC_ID_SERIAL_API_GET_CAPABILITIES:
@@ -1134,6 +1147,25 @@ void Driver::ProcessMsg
 	}
 
 	UpdateEvents();
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::HandleGetVersionResponse>
+// Process a response from the Z-Wave PC interface
+//-----------------------------------------------------------------------------
+void Driver::HandleGetVersionResponse
+(
+	uint8* _data
+)
+{
+	m_libraryVersion = (char*)&_data[2];
+	
+	uint8 m_libraryType = _data[m_libraryVersion.size()+3];
+	if( m_libraryType < 9 )
+	{
+		m_libraryTypeName = c_libraryTypeNames[m_libraryType];
+	}
+	Log::Write( "Received reply to ZW_GET_VERSION: %s library, version %s", m_libraryTypeName.c_str(), m_libraryVersion.c_str() );
 }
 
 //-----------------------------------------------------------------------------
