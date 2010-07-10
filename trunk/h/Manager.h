@@ -229,6 +229,42 @@ namespace OpenZWave
 		 */
 		bool IsStaticUpdateController( uint32 const _homeId );
 
+		/**
+		 * Query if the controller is using the bridge controller library.
+		 * A bridge controller is able to create virtual nodes that can be associated
+		 * with other controllers to enable events to be passed on.
+		 * @param _homeId The Home ID of the Z-Wave controller.
+		 * @return true if it is a bridge controller, false if not.
+		 */
+		bool IsBridgeController( uint32 const _homeId );
+
+		/**
+		 * Get the version of the Z-Wave API library used by a controller.
+		 * @param _homeId The Home ID of the Z-Wave controller.
+		 * @return a string containing the library version. For example, "Z-Wave 2.48".
+		 */
+		string GetLibraryVersion( uint32 const _homeId );
+
+		/**
+		 * Get a string containing the Z-Wave API library type used by a controller.
+		 * The possible library types are:
+		 * - Static Controller
+		 * - Controller
+		 * - Enhanced Slave
+		 * - Slave            
+	     * - Installer
+	     * - Routing Slave
+	     * - Bridge Controller
+		 * - Device Under Test
+		 * The controller should never return a slave library type.
+		 * For a more efficient test of whether a controller is a Bridge Controller, use
+		 * the IsBridgeController method.
+		 * @param _homeId The Home ID of the Z-Wave controller.
+		 * @return a string containing the library type.
+		 * @see GetLibraryVersion, IsBridgeController
+		 */
+		string GetLibraryTypeName( uint32 const _homeId );
+
 	private:
 		Driver* GetDriver( uint32 const _homeId );							// Get a pointer to a Driver object from the HomeID.  Only to be used by OpenZWave.
 		void SetDriverReady( Driver* _driver );								// Indicate that the Driver is ready to be used, and send the notification callback.
