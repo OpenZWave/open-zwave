@@ -1198,6 +1198,10 @@ void Node::AddAssociation
 	uint8 const _targetNodeId
 )
 {
+    if( Group* group = GetGroup( _groupIdx ) )
+	{
+		group->AddAssociation( _targetNodeId );
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -1210,6 +1214,10 @@ void Node::RemoveAssociation
 	uint8 const _targetNodeId
 )
 {
+    if( Group* group = GetGroup( _groupIdx ) )
+	{
+		group->RemoveAssociation( _targetNodeId );
+	}
 }
 
 
