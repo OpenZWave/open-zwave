@@ -155,8 +155,20 @@ namespace OpenZWave
 		bool operator <		( ValueID const& _other )const{ return( (m_homeId == _other.m_homeId) ? (m_id < _other.m_id) : (m_homeId < _other.m_homeId) ); }
 		bool operator >		( ValueID const& _other )const{ return( (m_homeId == _other.m_homeId) ? (m_id > _other.m_id) : (m_homeId > _other.m_homeId) ); }
 
-	private:
-		// Constructor
+		/**
+		 * Construct a value ID from its component parts.
+		 * This method is public only to allow ValueIDs to be saved and recreated by the application.
+		 * Only ValueIDs that have been reported by OpenZWave notifications should ever be used.
+		 * @param _homeId Home ID of the PC Z-Wave Controller that manages the device.
+		 * @param _nodeId Node ID of the device reporting the value.
+		 * @param _genre classification of the value to enable low level system or configuration parameters to be filtered out.
+		 * @param _commandClassId ID of command class that creates and manages this value.
+		 * @param _instance Instance index of the command class.
+		 * @param _valueIndex Index of the value within all the values created by the command class instance.
+		 * @param _type Type of value (bool, byte, string etc).
+		 * @return The ValueID.
+		 * @see ValueID
+		 */
 		ValueID
 		( 
 			uint32 const _homeId,
@@ -182,6 +194,7 @@ namespace OpenZWave
 				 | ((uint32)_type);
 		}
 
+	private:
 		// Construct a value id for use in notifications
 		ValueID( uint32 const _homeId, uint8 const _nodeId ): m_homeId( _homeId ){ m_id = ((uint32)_nodeId)<<24; }
 
@@ -191,7 +204,7 @@ namespace OpenZWave
 		// ID Packing:
 		// Bits
 		// 24-31:	8 bits. Node ID of device
-		// 20-23:	4 bits. genre of value value (see ValueGenre enum).
+		// 20-23:	4 bits. genre of value (see ValueGenre enum).
 		// 12-19:	8 bits. ID of command class that created and manages this value.
 		// 08-11:	4 bits. Instance index of the command class.
 		// 04-07:	4 bits. Index of value within all the value created by the command class instance.

@@ -64,16 +64,47 @@ namespace OpenZWaveDotNet
 			String	= ValueID::ValueType_String
 		};
 
-		ZWValueID( ValueID const& valueId ){ m_valueId = new ValueID( valueId ); }
+		/**
+		 * Create a ZWValue ID from its component parts.
+		 * This method is provided only to allow ValueIDs to be saved and recreated by the application.  Only
+		 * ValueIDs that have been reported by OpenZWave notifications should ever be used.
+		 * @param homeId Home ID of the PC Z-Wave Controller that manages the device.
+		 * @param nodeId Node ID of the device reporting the value.
+		 * @param genre classification of the value to enable low level system or configuration parameters to be filtered out.
+		 * @param commandClassId ID of command class that creates and manages this value.
+		 * @param instance Instance index of the command class.
+		 * @param valueIndex Index of the value within all the values created by the command class instance.
+		 * @param type Type of value (bool, byte, string etc).
+		 * @return The ValueID.
+		 * @see ValueID
+		 */
+		ZWValueID
+		( 
+			uint32 homeId,
+			uint8 nodeId,
+			ZWValueID::ValueGenre genre,
+			uint8 commandClassId,
+			uint8 instance,
+			uint8 valueIndex,
+			ZWValueID::ValueType type
+		)
+		{
+			m_valueId = new ValueID( homeId, nodeId, (ValueID::ValueGenre)genre, commandClassId, instance, valueIndex, (ValueID::ValueType)type );
+		}
+
+		ZWValueID( ValueID const& valueId )
+		{ 
+			m_valueId = new ValueID( valueId );
+		}
 
 		ValueID CreateUnmanagedValueID(){ return ValueID( *m_valueId ); }
 
 		uint32		GetHomeId()			{ return m_valueId->GetHomeId(); }
-		uint32		GetNodeId()			{ return m_valueId->GetNodeId(); }
+		uint8		GetNodeId()			{ return m_valueId->GetNodeId(); }
 		ValueGenre	GetGenre()			{ return (ValueGenre)Enum::ToObject( ValueGenre::typeid, m_valueId->GetGenre() ); }
-		uint32		GetCommandClassId()	{ return m_valueId->GetCommandClassId(); }
-		uint32		GetInstance()		{ return m_valueId->GetInstance(); }
-		uint32		GetIndex()			{ return m_valueId->GetIndex(); }
+		uint8		GetCommandClassId()	{ return m_valueId->GetCommandClassId(); }
+		uint8		GetInstance()		{ return m_valueId->GetInstance(); }
+		uint8		GetIndex()			{ return m_valueId->GetIndex(); }
 		ValueType	GetType()			{ return (ValueType)Enum::ToObject( ValueType::typeid, m_valueId->GetType() ); }
 		
 		// Comparison Operators
