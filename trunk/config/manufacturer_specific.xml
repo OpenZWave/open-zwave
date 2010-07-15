@@ -40,6 +40,9 @@
   </Manufacturer>
   <Manufacturer id="0064" name="Popp / Düwi">
   </Manufacturer>
+  <Manufacturer id="006f" name="Home Manageables">
+    <Product type="0102" id="0001" name="Door/Window Sensor" />
+  </Manufacturer>
   <Manufacturer id="0077" name="Innovus">
     <Product type="0002" id="0001" name="SmoothRemote Controller" />
     <Product type="0001" id="0002" name="RAone SmartPower Wall Appliance Module" />
