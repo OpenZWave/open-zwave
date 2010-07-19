@@ -62,6 +62,7 @@ namespace OpenZWave
 		virtual string const GetCommandClassName()const = 0;
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 ) = 0;
 		virtual bool SetValue( Value const& _value ){ return false; }
+		virtual void SetVersion( uint8 const _version ){ m_version = _version; }
 
 		uint8 GetVersion()const{ return m_version; }
 		uint8 GetInstances()const{ return m_instances; }
@@ -71,7 +72,6 @@ namespace OpenZWave
 		Node* GetNode()const;
 		void ReleaseNode()const;
 
-		void SetVersion( uint8 const _version ){ m_version = _version; }
 		void SetInstances( uint8 const _instances );
 
 		// Helper methods

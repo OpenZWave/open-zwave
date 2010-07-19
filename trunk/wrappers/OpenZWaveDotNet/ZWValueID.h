@@ -50,7 +50,8 @@ namespace OpenZWaveDotNet
 			All		= ValueID::ValueGenre_All,
 			User	= ValueID::ValueGenre_User,	
 			Config	= ValueID::ValueGenre_Config,	
-			System	= ValueID::ValueGenre_System
+			System	= ValueID::ValueGenre_System,
+			Basic	= ValueID::ValueGenre_Basic
 		};
 
 		enum class ValueType
@@ -61,7 +62,8 @@ namespace OpenZWaveDotNet
 			Int		= ValueID::ValueType_Int,
 			List	= ValueID::ValueType_List,
 			Short	= ValueID::ValueType_Short,
-			String	= ValueID::ValueType_String
+			String	= ValueID::ValueType_String,
+			Trigger = ValueID::ValueType_Button
 		};
 
 		/**

@@ -463,6 +463,7 @@ namespace OpenZWaveDotNet
 	//-----------------------------------------------------------------------------
 	/*@{*/
 	public:
+
 		/**
 		 * Gets the user-friendly label for the value.
 		 * @param _id The unique identifier of the value.
@@ -507,7 +508,7 @@ namespace OpenZWaveDotNet
 		 * Gets a value as a bool.
 		 * @param _id The unique identifier of the value.
 		 * @param o_value Pointer to a bool that will be filled with the value.
-		 * @return true if the value was obtained.  Returns false if the value is not a ValueID::ValueType_Bool. The type can be tested with a call to ValueID::GetType.
+		 * @return true if the value was obtained.  Returns false if the value is not a ZWValueID::ValueType_Bool. The type can be tested with a call to ZWValueID::GetType.
 		 * @see ValueID::GetType, GetValueAsByte, GetValueAsFloat, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListSelection, GetValueListItems 
 		 */
 		bool GetValueAsBool( ZWValueID^ id, bool* o_value ){ return Manager::Get()->GetValueAsBool(id->CreateUnmanagedValueID(), o_value); }
@@ -516,7 +517,7 @@ namespace OpenZWaveDotNet
 		 * Gets a value as an 8-bit unsigned integer.
 		 * @param _id The unique identifier of the value.
 		 * @param o_value Pointer to a uint8 that will be filled with the value.
-		 * @return true if the value was obtained.  Returns false if the value is not a ValueID::ValueType_Byte. The type can be tested with a call to ValueID::GetType
+		 * @return true if the value was obtained.  Returns false if the value is not a ZWValueID::ValueType_Byte. The type can be tested with a call to ZWValueID::GetType
 		 * @see ValueID::GetType, GetValueAsBool, GetValueAsFloat, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListSelection, GetValueListItems 
 		 */
 		bool GetValueAsByte( ZWValueID^ id, uint8* o_value ){ return Manager::Get()->GetValueAsByte(id->CreateUnmanagedValueID(), o_value); }
@@ -525,7 +526,7 @@ namespace OpenZWaveDotNet
 		 * Gets a value as a float.
 		 * @param _id The unique identifier of the value.
 		 * @param o_value Pointer to a float that will be filled with the value.
-		 * @return true if the value was obtained.  Returns false if the value is not a ValueID::ValueType_Decimal. The type can be tested with a call to ValueID::GetType
+		 * @return true if the value was obtained.  Returns false if the value is not a ZWValueID::ValueType_Decimal. The type can be tested with a call to ZWValueID::GetType
 		 * @see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListSelection, GetValueListItems 
 		 */
 		bool GetValueAsFloat( ZWValueID^ id, float* o_value ){ return Manager::Get()->GetValueAsFloat(id->CreateUnmanagedValueID(), o_value); }
@@ -534,7 +535,7 @@ namespace OpenZWaveDotNet
 		 * Gets a value as a 32-bit signed integer.
 		 * @param _id The unique identifier of the value.
 		 * @param o_value Pointer to an int32 that will be filled with the value.
-		 * @return true if the value was obtained.  Returns false if the value is not a ValueID::ValueType_Int. The type can be tested with a call to ValueID::GetType
+		 * @return true if the value was obtained.  Returns false if the value is not a ZWValueID::ValueType_Int. The type can be tested with a call to ZWValueID::GetType
 		 * @see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsFloat, GetValueAsShort, GetValueAsString, GetValueListSelection, GetValueListItems 
 		 */
 		bool GetValueAsInt( ZWValueID^ id, int32* o_value ){ return Manager::Get()->GetValueAsInt(id->CreateUnmanagedValueID(), o_value); }
@@ -543,7 +544,7 @@ namespace OpenZWaveDotNet
 		 * Gets a value as a 16-bit signed integer.
 		 * @param _id The unique identifier of the value.
 		 * @param o_value Pointer to an int16 that will be filled with the value.
-		 * @return true if the value was obtained.  Returns false if the value is not a ValueID::ValueType_Short. The type can be tested with a call to ValueID::GetType
+		 * @return true if the value was obtained.  Returns false if the value is not a ZWValueID::ValueType_Short. The type can be tested with a call to ZWValueID::GetType
 		 * @see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsFloat, GetValueAsInt, GetValueAsString, GetValueListSelection, GetValueListItems 
 		 */
 		bool GetValueAsShort( ZWValueID^ id, int16* o_value ){ return Manager::Get()->GetValueAsShort(id->CreateUnmanagedValueID(), o_value); }
@@ -562,7 +563,7 @@ namespace OpenZWaveDotNet
 		 * Gets the selected item from a list value.
 		 * @param _id The unique identifier of the value.
 		 * @param o_value Pointer to a string that will be filled with the selected item.
-		 * @return true if the value was obtained.  Returns false if the value is not a ValueID::ValueType_List. The type can be tested with a call to ValueID::GetType
+		 * @return true if the value was obtained.  Returns false if the value is not a ZWValueID::ValueType_List. The type can be tested with a call to ZWValueID::GetType
 		 * @see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsFloat, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListItems 
 		 */
 		//bool GetValueListSelection( ZWValueID^ id, String^ o_value ){ return Manager::Get()->GetValueListSelection(id->CreateUnmanagedValueID(), o_value); }
@@ -571,7 +572,7 @@ namespace OpenZWaveDotNet
 		 * Gets the list of items from a list value.
 		 * @param _id The unique identifier of the value.
 		 * @param o_value Pointer to a vector of strings that will be filled with list items. The vector will be cleared before the items are added.
-		 * @return true if the list items were obtained.  Returns false if the value is not a ValueID::ValueType_List. The type can be tested with a call to ValueID::GetType
+		 * @return true if the list items were obtained.  Returns false if the value is not a ZWValueID::ValueType_List. The type can be tested with a call to ZWValueID::GetType
 		 * @see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsFloat, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListSelection 
 		 */
 		//bool GetValueListItems( ValueID const& _id, vector<string>* o_value );
@@ -583,7 +584,7 @@ namespace OpenZWaveDotNet
 		 * if the Z-Wave message actually failed to get through.  Notification callbacks will be sent in both cases.
 		 * @param _id The unique identifier of the bool value.
 		 * @param o_value The new value of the bool.
-		 * @return true if the value was set.  Returns false if the value is not a ValueID::ValueType_Bool. The type can be tested with a call to ValueID::GetType
+		 * @return true if the value was set.  Returns false if the value is not a ZWValueID::ValueType_Bool. The type can be tested with a call to ZWValueID::GetType
 		 */
 		bool SetValue( ZWValueID^ id, bool value ){ return Manager::Get()->SetValue(id->CreateUnmanagedValueID(), value); }
 
@@ -594,7 +595,7 @@ namespace OpenZWaveDotNet
 		 * if the Z-Wave message actually failed to get through.  Notification callbacks will be sent in both cases.
 		 * @param _id The unique identifier of the byte value.
 		 * @param o_value The new value of the byte.
-		 * @return true if the value was set.  Returns false if the value is not a ValueID::ValueType_Byte. The type can be tested with a call to ValueID::GetType
+		 * @return true if the value was set.  Returns false if the value is not a ZWValueID::ValueType_Byte. The type can be tested with a call to ZWValueID::GetType
 		 */
 		bool SetValue( ZWValueID^ id, uint8 value ){ return Manager::Get()->SetValue(id->CreateUnmanagedValueID(), value); }
 
@@ -606,7 +607,7 @@ namespace OpenZWaveDotNet
 		 * if the Z-Wave message actually failed to get through.  Notification callbacks will be sent in both cases.
 		 * @param _id The unique identifier of the decimal value.
 		 * @param o_value The new value of the decimal.
-		 * @return true if the value was set.  Returns false if the value is not a ValueID::ValueType_Decimal. The type can be tested with a call to ValueID::GetType
+		 * @return true if the value was set.  Returns false if the value is not a ZWValueID::ValueType_Decimal. The type can be tested with a call to ZWValueID::GetType
 		 */
 		bool SetValue( ZWValueID^ id, float value ){ return Manager::Get()->SetValue(id->CreateUnmanagedValueID(), value); }
 		
@@ -617,7 +618,7 @@ namespace OpenZWaveDotNet
 		 * if the Z-Wave message actually failed to get through.  Notification callbacks will be sent in both cases.
 		 * @param _id The unique identifier of the integer value.
 		 * @param o_value The new value of the integer.
-		 * @return true if the value was set.  Returns false if the value is not a ValueID::ValueType_Int. The type can be tested with a call to ValueID::GetType
+		 * @return true if the value was set.  Returns false if the value is not a ZWValueID::ValueType_Int. The type can be tested with a call to ZWValueID::GetType
 		 */
 		bool SetValue( ZWValueID^ id, int32 value ){ return Manager::Get()->SetValue(id->CreateUnmanagedValueID(), value); }
 
@@ -628,7 +629,7 @@ namespace OpenZWaveDotNet
 		 * if the Z-Wave message actually failed to get through.  Notification callbacks will be sent in both cases.
 		 * @param _id The unique identifier of the integer value.
 		 * @param o_value The new value of the integer.
-		 * @return true if the value was set.  Returns false if the value is not a ValueID::ValueType_Short. The type can be tested with a call to ValueID::GetType
+		 * @return true if the value was set.  Returns false if the value is not a ZWValueID::ValueType_Short. The type can be tested with a call to ZWValueID::GetType
 		 */
 		bool SetValue( ZWValueID^ id, int16 value ){ return Manager::Get()->SetValue(id->CreateUnmanagedValueID(), value); }
 
@@ -650,10 +651,27 @@ namespace OpenZWaveDotNet
 		 * if the Z-Wave message actually failed to get through.  Notification callbacks will be sent in both cases.
 		 * @param _id The unique identifier of the list value.
 		 * @param o_value A string matching the new selected item in the list.
-		 * @return true if the value was set.  Returns false if the selection is not in the list, or if the value is not a ValueID::ValueType_List.
-		 * The type can be tested with a call to ValueID::GetType
+		 * @return true if the value was set.  Returns false if the selection is not in the list, or if the value is not a ZWValueID::ValueType_List.
+		 * The type can be tested with a call to ZWValueID::GetType
 		 */
 		bool SetValueListSelection( ZWValueID^ id, String^ selectedItem ){ return Manager::Get()->SetValueListSelection(id->CreateUnmanagedValueID(), (const char*)(Marshal::StringToHGlobalAnsi(selectedItem)).ToPointer()); }
+	
+		/**
+		 * Starts an activity in a device.
+		 * Since buttons are write-only values that do not report a state, no notification callbacks are sent.
+		 * @param _id The unique identifier of the integer value.
+		 * @return true if the activity was started.  Returns false if the value is not a ZWValueID::ValueType_Button. The type can be tested with a call to ZWValueID::GetType
+		 */
+		bool PressButton( ZWValueID^ id ){ return Manager::Get()->PressButton(id->CreateUnmanagedValueID()); }
+
+		/**
+		 * Stops an activity in a device.
+		 * Since buttons are write-only values that do not report a state, no notification callbacks are sent.
+		 * @param _id The unique identifier of the integer value.
+		 * @return true if the activity was stopped.  Returns false if the value is not a ZWValueID::ValueType_Button. The type can be tested with a call to ZWValueID::GetType
+		 */
+		bool ReleaseButton( ZWValueID^ id ){ return Manager::Get()->ReleaseButton(id->CreateUnmanagedValueID()); }
+		
 	/*@}*/
 
 	//-----------------------------------------------------------------------------
@@ -842,9 +860,9 @@ namespace OpenZWaveDotNet
 		bool CancelControllerCommand( uint32 homeId ){ return Manager::Get()->CancelControllerCommand( homeId ); }
 
 		// TBD...
-		//void RequestNodeNeighborUpdate( uint32 const homeId, uint8 const _nodeId );
+		void RequestNodeNeighborUpdate( uint32 const homeId, uint8 const _nodeId ){ Manager::Get()->RequestNodeNeighborUpdate( homeId, _nodeId ); }
 		//void AssignReturnRoute( uint32 const homeId, uint8 const _srcNodeId, uint8 const _dstNodeId );
-		//void RequestNetworkUpdate( uint32 const homeId );
+		void RequestNetworkUpdate( uint32 const homeId ){ Manager::Get()->RequestNetworkUpdate( homeId ); }
 		//void ReadMemory( uint32 const homeId,  uint16 const offset );
 	/*@}*/
 
