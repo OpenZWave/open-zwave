@@ -96,7 +96,8 @@ Driver::Driver
 	m_pollMutex( new Mutex() ),
 	m_infoMutex( new Mutex() ),
 	m_nodeMutex( new Mutex() ),
-	m_capabilities( 0 ),
+	m_initCaps( 0 ),
+	m_controllerCaps( 0 ),
 	m_controllerReplication( NULL ),
 	m_controllerState( ControllerState_Normal ),
 	m_controllerCommand( ControllerCommand_None ),
@@ -293,24 +294,28 @@ bool Driver::Init
 	// Send commands to retrieve properties from the Z-Wave interface 
 	Msg* msg;
 
-	Log::Write( "Get version" );
-	msg = new Msg( "Get version", 0xff, REQUEST, ZW_GET_VERSION, false );
+	Log::Write( "Get Version" );
+	msg = new Msg( "FUNC_ID_ZW_GET_VERSION", 0xff, REQUEST, FUNC_ID_ZW_GET_VERSION, false );
 	SendMsg( msg );
 
-	Log::Write( "Get home/node id" );
-	msg = new Msg( "Get home/node id", 0xff, REQUEST, ZW_MEMORY_GET_ID, false );
+	Log::Write( "Get Home and Node IDs" );
+	msg = new Msg( "FUNC_ID_ZW_MEMORY_GET_ID", 0xff, REQUEST, FUNC_ID_ZW_MEMORY_GET_ID, false );
 	SendMsg( msg );
 
-	Log::Write( "Get capabilities" );
-	msg = new Msg( "Get capabilities", 0xff, REQUEST, FUNC_ID_SERIAL_API_GET_CAPABILITIES, false );
+	Log::Write( "Get Controller Capabilities" );
+	msg = new Msg( "FUNC_ID_SERIAL_API_GET_CAPABILITIES", 0xff, REQUEST, FUNC_ID_ZW_GET_CONTROLLER_CAPABILITIES, false );
 	SendMsg( msg );
-	
+
+	Log::Write( "Get Serial API Capabilities" );
+	msg = new Msg( "FUNC_ID_SERIAL_API_GET_CAPABILITIES", 0xff, REQUEST, FUNC_ID_SERIAL_API_GET_CAPABILITIES, false );
+	SendMsg( msg );
+
 	//Log::Write( "Get SUC node id" );
 	//msg = new Msg( "Get SUC node id", 0xff, REQUEST, FUNC_ID_ZW_GET_SUC_NODE_ID, false );
 	//SendMsg( msg );
 	
-	Log::Write( "Get init data" );
-	msg = new Msg( "Get init data", 0xff, REQUEST, FUNC_ID_SERIAL_API_GET_INIT_DATA, false );
+	Log::Write( "Get Init Data" );
+	msg = new Msg( "FUNC_ID_SERIAL_API_GET_INIT_DATA", 0xff, REQUEST, FUNC_ID_SERIAL_API_GET_INIT_DATA, false );
 	SendMsg( msg );
 
 	// Init successful
@@ -379,9 +384,14 @@ bool Driver::ReadConfig
 	}
 
 	// Capabilities
-	if( TIXML_SUCCESS == driverElement->QueryIntAttribute( "capabilities", &intVal ) )
+	if( TIXML_SUCCESS == driverElement->QueryIntAttribute( "api_capabilities", &intVal ) )
 	{
-		m_capabilities = (uint8)intVal;
+		m_initCaps = (uint8)intVal;
+	}
+
+	if( TIXML_SUCCESS == driverElement->QueryIntAttribute( "controller_capabilities", &intVal ) )
+	{
+		m_controllerCaps = (uint8)intVal;
 	}
 
 	// Poll Interval
@@ -444,8 +454,11 @@ void Driver::WriteConfig
 	snprintf( str, sizeof(str), "%d", m_nodeId );
 	driverElement->SetAttribute( "node_id", str );
 
-	snprintf( str, sizeof(str), "%d", m_capabilities );
-	driverElement->SetAttribute( "capabilities", str );
+	snprintf( str, sizeof(str), "%d", m_initCaps );
+	driverElement->SetAttribute( "api_capabilities", str );
+
+	snprintf( str, sizeof(str), "%d", m_controllerCaps );
+	driverElement->SetAttribute( "controller_capabilities", str );
 
 	snprintf( str, sizeof(str), "%d", m_pollInterval );
 	driverElement->SetAttribute( "poll_interval", str );
@@ -963,14 +976,19 @@ void Driver::ProcessMsg
 	{
 		switch( _data[1] )
 		{
-			case ZW_GET_VERSION:
+			case FUNC_ID_ZW_GET_VERSION:
 			{
 				HandleGetVersionResponse( _data );
 				break;
 			}
+			case FUNC_ID_ZW_GET_CONTROLLER_CAPABILITIES:
+			{
+				HandleGetControllerCapabilitiesResponse( _data );
+				break;
+			}
 			case FUNC_ID_SERIAL_API_GET_CAPABILITIES:
 			{
-				HandleGetCapabilitiesResponse( _data );
+				HandleGetSerialAPICapabilitiesResponse( _data );
 				break;
 			}
 			case FUNC_ID_ZW_ENABLE_SUC:
@@ -998,7 +1016,7 @@ void Driver::ProcessMsg
 				HandleGetSUCNodeIdResponse( _data );
 				break;
 			}
-			case ZW_MEMORY_GET_ID:
+			case FUNC_ID_ZW_MEMORY_GET_ID:
 			{
 				HandleMemoryGetIdResponse( _data );
 				break;
@@ -1165,20 +1183,75 @@ void Driver::HandleGetVersionResponse
 	{
 		m_libraryTypeName = c_libraryTypeNames[m_libraryType];
 	}
-	Log::Write( "Received reply to ZW_GET_VERSION: %s library, version %s", m_libraryTypeName.c_str(), m_libraryVersion.c_str() );
+	Log::Write( "Received reply to FUNC_ID_ZW_GET_VERSION:" );
+	Log::Write( "    %s library, version %s", m_libraryTypeName.c_str(), m_libraryVersion.c_str() );
 }
 
 //-----------------------------------------------------------------------------
-// <Driver::HandleGetCapabilitiesResponse>
+// <Driver::HandleGetControllerCapabilitiesResponse>
 // Process a response from the Z-Wave PC interface
 //-----------------------------------------------------------------------------
-void Driver::HandleGetCapabilitiesResponse
+void Driver::HandleGetControllerCapabilitiesResponse
 (
 	uint8* _data
 )
 {
-	Log::Write( "Received reply to GetCapabilities. Manufacturer Id 0x%04x Product Type 0x%04x Product Id 0x%04x", _data[4]*256+_data[5], _data[6]*256+_data[7], _data[8]*256+_data[9] );
-	//2009-06-14 11:41:14:585 Received: 0x01, 0x2b, 0x01, 0x07, 0x02, 0x52, 0x00, 0x00, 0x00, 0x01, 0x00, 0x01, 0xfe, 0x80, 0xfe, 0x80, 0x03, 0x00, 0x00, 0x00, 0xfb, 0x9f, 0x3b, 0x80, 0x07, 0x00, 0x00, 0x80, 0x00, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x59
+	m_controllerCaps = _data[2];
+
+	Log::Write( "Received reply to FUNC_ID_ZW_GET_CONTROLLER_CAPABILITIES:" );
+
+	if( m_controllerCaps & ControllerCaps_SIS )
+	{
+		Log::Write( "    There is a SUC ID Server (SIS) in this network." );
+		Log::Write( "    The PC controller is an inclusion controller" );
+
+		if( m_controllerCaps & ControllerCaps_RealPrimary )
+		{
+			Log::Write( "    and was the primary before the SIS was added." );
+		}
+		else
+		{
+			Log::Write( "    and was a secondary before the SIS was added." );
+		}
+	}
+	else
+	{
+		Log::Write( "    There is no SUC ID Server in the network." );
+		if( m_controllerCaps & ControllerCaps_Secondary )
+		{
+			Log::Write( "    The PC controller is a secondary controller." );
+		}
+		else
+		{
+			Log::Write( "    The PC controller is a primary controller." );
+		}
+	}
+
+	if( m_controllerCaps & ControllerCaps_SIS )
+	{
+		Log::Write( "    The PC controller is also a Static Update Controller." );
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::HandleGetSerialAPICapabilitiesResponse>
+// Process a response from the Z-Wave PC interface
+//-----------------------------------------------------------------------------
+void Driver::HandleGetSerialAPICapabilitiesResponse
+(
+	uint8* _data
+)
+{
+	Log::Write( "Received reply to FUNC_ID_SERIAL_API_GET_CAPABILITIES" );
+	Log::Write( "    Application Version:  %d", _data[2] );
+	Log::Write( "    Application Revision: %d", _data[3] );
+	Log::Write( "    Manufacturer ID:      0x%.2x%.2x", _data[4], _data[5] );
+	Log::Write( "    Product Type:         0x%.2x%.2x", _data[6], _data[7] );
+	Log::Write( "    Product ID:           0x%.2x%.2x", _data[8], _data[9] );
+
+	// _data[10] to _data[41] are a 256-bit bitmask with one bit set for 
+	// each FUNC_ID_ method supported by the controller.
+	// Bit 0 is FUNC_ID_ 1.  So FUNC_ID_SERIAL_API_GET_CAPABILITIES (0x07) will be bit 6 of the first byte.
 }
 
 //-----------------------------------------------------------------------------
@@ -1258,7 +1331,7 @@ void Driver::HandleMemoryGetIdResponse
 	uint8* _data
 )
 {
-	Log::Write( "Received reply to ZW_MEMORY_GET_ID. Home ID = 0x%02x%02x%02x%02x.  Our node ID = %d", _data[2], _data[3], _data[4], _data[5], _data[6] );
+	Log::Write( "Received reply to FUNC_ID_ZW_MEMORY_GET_ID. Home ID = 0x%02x%02x%02x%02x.  Our node ID = %d", _data[2], _data[3], _data[4], _data[5], _data[6] );
 	m_homeId = (((uint32)_data[2])<<24) | (((uint32)_data[3])<<16) | (((uint32)_data[4])<<8) | ((uint32)_data[5]);
 	m_nodeId = _data[6];
 	m_controllerReplication = static_cast<ControllerReplication*>(ControllerReplication::Create( m_homeId, m_nodeId ));
@@ -1286,7 +1359,8 @@ void Driver::HandleSerialAPIGetInitDataResponse
 	}
 
 	Log::Write( "Received reply to FUNC_ID_SERIAL_API_GET_INIT_DATA:" );
-	m_capabilities = _data[3];
+	m_initVersion = _data[2];
+	m_initCaps = _data[3];
 
 	if( _data[4] == NUM_NODE_BITFIELD_BYTES )
 	{
@@ -2657,6 +2731,11 @@ void Driver::RequestNodeNeighborUpdate
 	uint8 _nodeId
 )
 {
+	if( IsInclusionController() )
+	{
+		// We must call Request Network Update first, to ensure we have
+		// an up-to-date routing table from the SIS.
+	}
 	Log::Write( "Requesting Neighbour Update for node %d", _nodeId );
 	Msg* msg = new Msg( "Requesting Neighbour Update", _nodeId, REQUEST, FUNC_ID_ZW_REQUEST_NODE_NEIGHBOR_UPDATE, true );
 	msg->Append( _nodeId );

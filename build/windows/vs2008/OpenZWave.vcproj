@@ -335,6 +335,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\value_classes\ValueButton.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\h\value_classes\ValueButton.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\value_classes\ValueByte.cpp"
 				>
 			</File>

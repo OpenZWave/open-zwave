@@ -652,8 +652,8 @@ namespace OpenZWave
 		 * Gets a value as a 16-bit signed integer.
 		 * @param _id The unique identifier of the value.
 		 * @param o_value Pointer to an int16 that will be filled with the value.
-		 * @return true if the value was obtained.  Returns false if the value is not a ValueID::ValueType_Short. The type can be tested with a call to ValueID::GetType
-		 * @see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsFloat, GetValueAsInt, GetValueAsString, GetValueListSelection, GetValueListItems 
+		 * @return true if the value was obtained.  Returns false if the value is not a ValueID::ValueType_Short. The type can be tested with a call to ValueID::GetType.
+		 * @see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsFloat, GetValueAsInt, GetValueAsString, GetValueListSelection, GetValueListItems. 
 		 */
 		bool GetValueAsShort( ValueID const& _id, int16* o_value );
 		
@@ -663,7 +663,7 @@ namespace OpenZWave
 		 * @param _id The unique identifier of the value.
 		 * @param o_value Pointer to a string that will be filled with the value.
 		 * @return true if the value was obtained.</returns>
-		 * @see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsFloat, GetValueAsInt, GetValueAsShort, GetValueListSelection, GetValueListItems 
+		 * @see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsFloat, GetValueAsInt, GetValueAsShort, GetValueListSelection, GetValueListItems. 
 		 */
 		bool GetValueAsString( ValueID const& _id, string* o_value );
 		
@@ -671,8 +671,8 @@ namespace OpenZWave
 		 * Gets the selected item from a list value.
 		 * @param _id The unique identifier of the value.
 		 * @param o_value Pointer to a string that will be filled with the selected item.
-		 * @return true if the value was obtained.  Returns false if the value is not a ValueID::ValueType_List. The type can be tested with a call to ValueID::GetType
-		 * @see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsFloat, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListItems 
+		 * @return true if the value was obtained.  Returns false if the value is not a ValueID::ValueType_List. The type can be tested with a call to ValueID::GetType.
+		 * @see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsFloat, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListItems. 
 		 */
 		bool GetValueListSelection( ValueID const& _id, string* o_value );
 
@@ -680,8 +680,8 @@ namespace OpenZWave
 		 * Gets the list of items from a list value.
 		 * @param _id The unique identifier of the value.
 		 * @param o_value Pointer to a vector of strings that will be filled with list items. The vector will be cleared before the items are added.
-		 * @return true if the list items were obtained.  Returns false if the value is not a ValueID::ValueType_List. The type can be tested with a call to ValueID::GetType
-		 * @see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsFloat, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListSelection 
+		 * @return true if the list items were obtained.  Returns false if the value is not a ValueID::ValueType_List. The type can be tested with a call to ValueID::GetType.
+		 * @see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsFloat, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListSelection. 
 		 */
 		bool GetValueListItems( ValueID const& _id, vector<string>* o_value );
 
@@ -692,7 +692,7 @@ namespace OpenZWave
 		 * if the Z-Wave message actually failed to get through.  Notification callbacks will be sent in both cases.
 		 * @param _id The unique identifier of the bool value.
 		 * @param o_value The new value of the bool.
-		 * @return true if the value was set.  Returns false if the value is not a ValueID::ValueType_Bool. The type can be tested with a call to ValueID::GetType
+		 * @return true if the value was set.  Returns false if the value is not a ValueID::ValueType_Bool. The type can be tested with a call to ValueID::GetType.
 		 */
 		bool SetValue( ValueID const& _id, bool const _value );
 
@@ -703,7 +703,7 @@ namespace OpenZWave
 		 * if the Z-Wave message actually failed to get through.  Notification callbacks will be sent in both cases.
 		 * @param _id The unique identifier of the byte value.
 		 * @param o_value The new value of the byte.
-		 * @return true if the value was set.  Returns false if the value is not a ValueID::ValueType_Byte. The type can be tested with a call to ValueID::GetType
+		 * @return true if the value was set.  Returns false if the value is not a ValueID::ValueType_Byte. The type can be tested with a call to ValueID::GetType.
 		 */
 		bool SetValue( ValueID const& _id, uint8 const _value );
 
@@ -715,7 +715,7 @@ namespace OpenZWave
 		 * if the Z-Wave message actually failed to get through.  Notification callbacks will be sent in both cases.
 		 * @param _id The unique identifier of the decimal value.
 		 * @param o_value The new value of the decimal.
-		 * @return true if the value was set.  Returns false if the value is not a ValueID::ValueType_Decimal. The type can be tested with a call to ValueID::GetType
+		 * @return true if the value was set.  Returns false if the value is not a ValueID::ValueType_Decimal. The type can be tested with a call to ValueID::GetType.
 		 */
 		bool SetValue( ValueID const& _id, float const _value );
 		
@@ -726,7 +726,7 @@ namespace OpenZWave
 		 * if the Z-Wave message actually failed to get through.  Notification callbacks will be sent in both cases.
 		 * @param _id The unique identifier of the integer value.
 		 * @param o_value The new value of the integer.
-		 * @return true if the value was set.  Returns false if the value is not a ValueID::ValueType_Int. The type can be tested with a call to ValueID::GetType
+		 * @return true if the value was set.  Returns false if the value is not a ValueID::ValueType_Int. The type can be tested with a call to ValueID::GetType.
 		 */
 		bool SetValue( ValueID const& _id, int32 const _value );
 
@@ -737,7 +737,7 @@ namespace OpenZWave
 		 * if the Z-Wave message actually failed to get through.  Notification callbacks will be sent in both cases.
 		 * @param _id The unique identifier of the integer value.
 		 * @param o_value The new value of the integer.
-		 * @return true if the value was set.  Returns false if the value is not a ValueID::ValueType_Short. The type can be tested with a call to ValueID::GetType
+		 * @return true if the value was set.  Returns false if the value is not a ValueID::ValueType_Short. The type can be tested with a call to ValueID::GetType.
 		 */
 		bool SetValue( ValueID const& _id, int16 const _value );
 
@@ -748,7 +748,7 @@ namespace OpenZWave
 		 * if the Z-Wave message actually failed to get through.  Notification callbacks will be sent in both cases.
 		 * @param _id The unique identifier of the integer value.
 		 * @param o_value The new value of the string.
-		 * @return true if the value was set.  Returns false if the value could not be parsed into the correct type for the value.</returns>
+		 * @return true if the value was set.  Returns false if the value could not be parsed into the correct type for the value.
 		 */
 		bool SetValue( ValueID const& _id, string const& _value );
 
@@ -763,6 +763,23 @@ namespace OpenZWave
 		 * The type can be tested with a call to ValueID::GetType
 		 */
 		bool SetValueListSelection( ValueID const& _id, string const& _selectedItem );
+
+		/**
+		 * Starts an activity in a device.
+		 * Since buttons are write-only values that do not report a state, no notification callbacks are sent.
+		 * @param _id The unique identifier of the integer value.
+		 * @return true if the activity was started.  Returns false if the value is not a ValueID::ValueType_Button. The type can be tested with a call to ValueID::GetType.
+		 */
+		bool PressButton( ValueID const& _id );
+
+		/**
+		 * Stops an activity in a device.
+		 * Since buttons are write-only values that do not report a state, no notification callbacks are sent.
+		 * @param _id The unique identifier of the integer value.
+		 * @return true if the activity was stopped.  Returns false if the value is not a ValueID::ValueType_Button. The type can be tested with a call to ValueID::GetType.
+		 */
+		bool ReleaseButton( ValueID const& _id );
+		
 	/*@}*/
 
 	//-----------------------------------------------------------------------------
@@ -973,9 +990,9 @@ namespace OpenZWave
 		bool CancelControllerCommand( uint32 const _homeId );
 
 		// TBD...
-		//void RequestNodeNeighborUpdate( uint32 const _homeId, uint8 const _nodeId );
+		void RequestNodeNeighborUpdate( uint32 const _homeId, uint8 const _nodeId );
 		//void AssignReturnRoute( uint32 const _homeId, uint8 const _srcNodeId, uint8 const _dstNodeId );
-		//void RequestNetworkUpdate( uint32 const _homeId );
+		void RequestNetworkUpdate( uint32 const _homeId );
 		//void ReadMemory( uint32 const _homeId,  uint16 const offset );
 	/*@}*/
 	};

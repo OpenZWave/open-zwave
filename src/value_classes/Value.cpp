@@ -42,7 +42,8 @@ static char const* c_genreName[] =
 	"all",
 	"user",
 	"config",
-	"system"
+	"system",
+	"basic"
 };
 
 static char const* c_typeName[] = 
@@ -53,7 +54,8 @@ static char const* c_typeName[] =
 	"int",
 	"list",
 	"short",
-	"string"
+	"string",
+	"trigger"
 };
 
 //-----------------------------------------------------------------------------

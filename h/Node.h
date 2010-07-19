@@ -45,6 +45,7 @@ namespace OpenZWave
 	class ValueStore;
 	class Value;
 	class ValueBool;
+	class ValueButton;
 	class ValueByte;
 	class ValueDecimal;
 	class ValueInt;
@@ -97,41 +98,6 @@ namespace OpenZWave
 			SecurityFlag_Sensor250ms			= 0x20,
 			SecurityFlag_Sensor1000ms			= 0x40,
 			SecurityFlag_OptionalFunctionality	= 0x80
-		};
-
-		// Basic Types
-		enum
-		{
-			BasicType_Unknown					= 0x00,
-			BasicType_Controller				= 0x01,
-			BasicType_StaticController			= 0x02,
-			BasicType_Slave						= 0x03,
-			BasicType_RoutingSlave				= 0x04
-		};
-
-		// Generic Types
-		enum
-		{
-			GenericType_Unknown					= 0x00,
-			GenericType_Controller				= 0x01,
-			GenericType_StaticController		= 0x02,
-			GenericType_AVControlPoint			= 0x03,
-			GenericType_Display					= 0x06,
-			GenericType_GarageDoor				= 0x07,
-			GenericType_Thermostat				= 0x08,
-			GenericType_WindowCovering			= 0x09,
-			GenericType_RepeaterSlave			= 0x0f,
-			GenericType_SwitchBinary			= 0x10,
-			GenericType_SwitchMultiLevel		= 0x11,
-			GenericType_SwitchRemote			= 0x12,
-			GenericType_SwitchToggle			= 0x13,
-			GenericType_SensorBinary			= 0x20,
-			GenericType_SensorMultiLevel		= 0x21,
-			GenericType_WaterControl			= 0x22,
-			GenericType_MeterPulse				= 0x30,
-			GenericType_EntryControl			= 0x40,
-			GenericType_SemiInteroperable		= 0x50,
-			GenericType_NonInteroperable		= 0xff
 		};
 
 		// Node Ids
@@ -234,6 +200,7 @@ namespace OpenZWave
 
 		// Helpers for creating values
 		ValueBool* CreateValueBool( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, bool const _default );
+		ValueButton* CreateValueButton( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex, string const& _label );
 		ValueByte* CreateValueByte( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, uint8 const _default );
 		ValueDecimal* CreateValueDecimal( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, string const& _default );
 		ValueInt* CreateValueInt( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, int32 const _default );
@@ -274,6 +241,49 @@ namespace OpenZWave
 		void WriteGroups( TiXmlElement* _associationsElement );				// Write the group data out to XNL
 
 		map<uint8,Group*> m_groups;											// Maps group indices to Group objects.
+
+	//-----------------------------------------------------------------------------
+	// Device Classes (static data read from the device_classes.xml file)
+	//-----------------------------------------------------------------------------
+	private:
+		// Container for device class info
+		class DeviceClass
+		{
+		public:
+			DeviceClass( TiXmlElement const* _el );
+			~DeviceClass(){ delete [] m_mandatoryCommandClasses; }
+
+			uint8 const*	GetMandatoryCommandClasses(){ return m_mandatoryCommandClasses; }
+			uint8			GetBasicMapping(){ return m_basicMapping; }
+			string const&	GetLabel(){ return m_label; }
+
+		private:
+			uint8*			m_mandatoryCommandClasses;						// Zero terminated array of mandatory command classes for this device type.
+			uint8			m_basicMapping;									// Command class that COMMAND_CLASS_BASIC maps on to, or zero if there is no mapping.
+			string			m_label;										// Descriptive label for the device.
+		};
+
+		// Container for generic device class info
+		class GenericDeviceClass : public DeviceClass
+		{
+		public:
+			GenericDeviceClass( TiXmlElement const* _el );
+			~GenericDeviceClass();
+
+			DeviceClass* GetSpecificDeviceClass( uint8 const& _specific );
+
+		private:
+			map<uint8,DeviceClass*>	m_specificDeviceClasses;
+		};
+
+
+		bool SetDeviceClasses( uint8 const _basic, uint8 const _generic, uint8 const _specific );	// Set the device class data for the node
+		bool AddMandatoryCommandClasses( uint8 const* _commandClasses );							// Add mandatory command classes as specified in the device_classes.xml to the node.
+		void ReadDeviceClasses();																	// Read the static device class data from the device_classes.xml file
+
+		static bool								s_deviceClassesLoaded;		// True if the xml file has alreayd been loaded
+		static map<uint8,string>				s_basicDeviceClasses;		// Map of basic device classes.
+		static map<uint8,GenericDeviceClass*>	s_genericDeviceClasses;		// Map of generic device classes.
 	};
 
 } //namespace OpenZWave

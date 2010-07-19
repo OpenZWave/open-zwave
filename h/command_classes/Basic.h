@@ -43,6 +43,8 @@ namespace OpenZWave
 		static uint8 const StaticGetCommandClassId(){ return 0x20; }		
 		static string const StaticGetCommandClassName(){ return "COMMAND_CLASS_BASIC"; }
 
+		bool SetMapping( uint8 const _commandClassId );	// Map COMMAND_CLASS_BASIC messages to another command class
+
 		// From CommandClass
 		virtual void RequestState( uint32 const _requestFlags );
 		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }		
@@ -56,6 +58,7 @@ namespace OpenZWave
 	private:
 		Basic( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
 
+		uint8						m_mapping;
 		ValueInstances<ValueByte>	m_level;
 	};
 

@@ -95,9 +95,29 @@ namespace OpenZWave
 	//	Controller
 	//-----------------------------------------------------------------------------
 	private:
-		bool IsPrimaryController()const{ return ((m_capabilities & 0x04) == 0); }
-		bool IsStaticUpdateController()const{ return ((m_capabilities & 0x08) != 0); }
+		// Controller Capabilities (return in FUNC_ID_ZW_GET_CONTROLLER_CAPABILITIES)
+		enum
+		{
+			ControllerCaps_Secondary		= 0x01,		// The controller is a secondary.
+			ControllerCaps_OnOtherNetwork	= 0x02,		// The controller is not using its default HomeID.
+			ControllerCaps_SIS				= 0x04,		// There is a SUC ID Server on the network.
+			ControllerCaps_RealPrimary		= 0x08,		// Controller was the primary before the SIS was added.
+			ControllerCaps_SUC				= 0x10		// Controller is a static update controller.
+		};
+
+		// Init Capabilities (return in FUNC_ID_SERIAL_API_GET_INIT_DATA)
+		enum
+		{
+			InitCaps_Slave					= 0x01,		// 
+			InitCaps_TimerSupport			= 0x02,		// Controller supports timers.
+			InitCaps_Secondary				= 0x04,		// Controller is a secondary.
+			InitCaps_SUC					= 0x08,		// Controller is a static update controller.
+		};
+
+		bool IsPrimaryController()const{ return ((m_initCaps & InitCaps_Secondary) == 0); }
+		bool IsStaticUpdateController()const{ return ((m_initCaps & InitCaps_SUC) != 0); }
 		bool IsBridgeController()const{ return (m_libraryType == 7); }
+		bool IsInclusionController()const{ return ((m_controllerCaps & ControllerCaps_SIS) != 0); }
 
 		uint32 GetHomeId()const{ return m_homeId; }
 		uint8 GetNodeId()const{ return m_nodeId; }
@@ -118,7 +138,9 @@ namespace OpenZWave
 		string					m_libraryTypeName;							// Name describing the library type.
 		uint8					m_libraryType;								// Type of library used by the controller.
 
-		uint8					m_capabilities;								// Set of flags indicating the controller's capabilities (See IsSlave, HasTimerSupport, IsPrimaryController and IsStaticUpdateController above).
+		uint8					m_initVersion;								// Version of the Serial API used by the controller.
+		uint8					m_initCaps;									// Set of flags indicating the serial API capabilities (See IsSlave, HasTimerSupport, IsPrimaryController and IsStaticUpdateController above).
+		uint8					m_controllerCaps;							// Set of flags indicating the controller's capabilities (See IsInclusionController above).
 		uint8					m_nodeId;									// Z-Wave Controller's own node ID.
 		Node*					m_nodes[256];								// Array containing all the node objects.
 		Mutex*					m_nodeMutex;								// Serializes access to node data
@@ -153,7 +175,8 @@ namespace OpenZWave
 		void ProcessMsg( uint8* _data );
 
 		void HandleGetVersionResponse( uint8* pData );
-		void HandleGetCapabilitiesResponse( uint8* pData );
+		void HandleGetControllerCapabilitiesResponse( uint8* pData );
+		void HandleGetSerialAPICapabilitiesResponse( uint8* pData );
 		void HandleEnableSUCResponse( uint8* pData );
 		void HandleRequestNetworkUpdate( uint8* pData );
 		void HandleSetSUCNodeIdResponse( uint8* pData );

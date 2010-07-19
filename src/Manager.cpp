@@ -40,6 +40,7 @@
 
 #include "ValueID.h"
 #include "ValueBool.h"
+#include "ValueButton.h"
 #include "ValueByte.h"
 #include "ValueDecimal.h"
 #include "ValueInt.h"
@@ -1570,6 +1571,60 @@ bool Manager::SetValue
 }
 
 //-----------------------------------------------------------------------------
+// <Manager::PressButton>
+// Starts an activity in a device.
+//-----------------------------------------------------------------------------
+bool Manager::PressButton
+( 
+	ValueID const& _id
+)
+{
+	bool res = false;
+
+	if( ValueID::ValueType_Button == _id.GetType() )
+	{
+		if( Driver* driver = GetDriver( _id.GetHomeId() ) )
+		{
+			driver->LockNodes();
+			if( ValueButton* value = static_cast<ValueButton*>( driver->GetValue( _id ) ) )
+			{
+				res = value->PressButton();
+			}
+			driver->ReleaseNodes();
+		}
+	}
+
+	return res;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::ReleaseButton>
+// Stops an activity in a device.
+//-----------------------------------------------------------------------------
+bool Manager::ReleaseButton
+( 
+	ValueID const& _id
+)
+{
+	bool res = false;
+
+	if( ValueID::ValueType_Button == _id.GetType() )
+	{
+		if( Driver* driver = GetDriver( _id.GetHomeId() ) )
+		{
+			driver->LockNodes();
+			if( ValueButton* value = static_cast<ValueButton*>( driver->GetValue( _id ) ) )
+			{
+				res = value->ReleaseButton();
+			}
+			driver->ReleaseNodes();
+		}
+	}
+
+	return res;
+}
+
+//-----------------------------------------------------------------------------
 //	Configuration Parameters
 //-----------------------------------------------------------------------------
 
@@ -1804,17 +1859,33 @@ void Manager::SoftReset
 // <Manager::RequestNodeNeighborUpdate>
 // 
 //-----------------------------------------------------------------------------
-//void Manager::RequestNodeNeighborUpdate
-//(
-//	uint32 const _homeId,
-//	uint8 const _nodeId
-//)
-//{
-//	if( Driver* driver = GetDriver( _homeId ) )
-//	{
-//		driver->RequestNodeNeighborUpdate( _nodeId );
-//	}
-//}
+void Manager::RequestNodeNeighborUpdate
+(
+	uint32 const _homeId,
+	uint8 const _nodeId
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		driver->RequestNodeNeighborUpdate( _nodeId );
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::RequestNetworkUpdate>
+// Request a network update
+//-----------------------------------------------------------------------------
+void Manager::RequestNetworkUpdate
+(
+	uint32 const _homeId
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		driver->RequestNetworkUpdate();
+	}
+}
+
 
 //-----------------------------------------------------------------------------
 // <Manager::AssignReturnRoute>
@@ -1871,18 +1942,4 @@ bool Manager::CancelControllerCommand
 	return false;
 }
 
-//-----------------------------------------------------------------------------
-// <Manager::RequestNetworkUpdate>
-// Request a network update
-//-----------------------------------------------------------------------------
-//void Manager::RequestNetworkUpdate
-//(
-//	uint32 const _homeId
-//)
-//{
-//	if( Driver* driver = GetDriver( _homeId ) )
-//	{
-//		driver->RequestNetworkUpdate();
-//	}
-//}
 
