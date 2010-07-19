@@ -28,11 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.NodeGridView = new System.Windows.Forms.DataGridView();
+            this.NodeContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.requestNodeNeighborUpdateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuBar = new System.Windows.Forms.MenuStrip();
             this.FileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.SaveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.NodeGridView)).BeginInit();
+            this.NodeContextMenuStrip.SuspendLayout();
             this.MenuBar.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -44,11 +48,29 @@
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.NodeGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.NodeGridView.ContextMenuStrip = this.NodeContextMenuStrip;
             this.NodeGridView.Location = new System.Drawing.Point(13, 37);
+            this.NodeGridView.MultiSelect = false;
             this.NodeGridView.Name = "NodeGridView";
             this.NodeGridView.ReadOnly = true;
+            this.NodeGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.NodeGridView.Size = new System.Drawing.Size(609, 343);
             this.NodeGridView.TabIndex = 0;
+            this.NodeGridView.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.NodeGridView_CellMouseDown);
+            // 
+            // NodeContextMenuStrip
+            // 
+            this.NodeContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.requestNodeNeighborUpdateToolStripMenuItem});
+            this.NodeContextMenuStrip.Name = "NodeContextMenuStrip";
+            this.NodeContextMenuStrip.Size = new System.Drawing.Size(243, 26);
+            // 
+            // requestNodeNeighborUpdateToolStripMenuItem
+            // 
+            this.requestNodeNeighborUpdateToolStripMenuItem.Name = "requestNodeNeighborUpdateToolStripMenuItem";
+            this.requestNodeNeighborUpdateToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
+            this.requestNodeNeighborUpdateToolStripMenuItem.Text = "Request Node Neighbor Update";
+            this.requestNodeNeighborUpdateToolStripMenuItem.Click += new System.EventHandler(this.RequestNodeNeighborUpdateToolStripMenuItem_Click);
             // 
             // MenuBar
             // 
@@ -71,7 +93,7 @@
             // SaveToolStripMenuItem
             // 
             this.SaveToolStripMenuItem.Name = "SaveToolStripMenuItem";
-            this.SaveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.SaveToolStripMenuItem.Size = new System.Drawing.Size(98, 22);
             this.SaveToolStripMenuItem.Text = "&Save";
             this.SaveToolStripMenuItem.Click += new System.EventHandler(this.SaveToolStripMenuItem_Click);
             // 
@@ -86,6 +108,7 @@
             this.Name = "MainForm";
             this.Text = "OpenZWave Test";
             ((System.ComponentModel.ISupportInitialize)(this.NodeGridView)).EndInit();
+            this.NodeContextMenuStrip.ResumeLayout(false);
             this.MenuBar.ResumeLayout(false);
             this.MenuBar.PerformLayout();
             this.ResumeLayout(false);
@@ -99,6 +122,8 @@
         private System.Windows.Forms.MenuStrip MenuBar;
         private System.Windows.Forms.ToolStripMenuItem FileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem SaveToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip NodeContextMenuStrip;
+        private System.Windows.Forms.ToolStripMenuItem requestNodeNeighborUpdateToolStripMenuItem;
     }
 }
 

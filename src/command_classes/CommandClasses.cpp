@@ -73,6 +73,7 @@ using namespace OpenZWave;
 #include "WakeUp.h"
 
 #include "ValueBool.h"
+#include "ValueButton.h"
 #include "ValueByte.h"
 #include "ValueDecimal.h"
 #include "ValueInt.h"

@@ -141,7 +141,33 @@ void Basic::CreateVars
 {
 	if( Node* node = GetNode() )
 	{
-		m_level.AddInstance( _instance, node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Level", "", false, 0 ) );
+		m_level.AddInstance( _instance, node->CreateValueByte( ValueID::ValueGenre_Basic, GetCommandClassId(), _instance, 0, "Level", "", false, 0  ) );
 		ReleaseNode();
 	}
+}
+
+//-----------------------------------------------------------------------------
+// <Basic::SetMapping>
+// Map COMMAND_CLASS_BASIC messages to another command class
+//-----------------------------------------------------------------------------
+bool Basic::SetMapping
+(
+	uint8 const _commandClassId
+)
+{
+	bool res = false;
+
+	if( Node const* node = GetNode() )
+	{
+		if( CommandClass* cc = node->GetCommandClass( _commandClassId ) )
+		{
+			Log::Write( "COMMAND_CLASS_BASIC will be mapped to %s", cc->GetCommandClassName().c_str() );
+			m_mapping = _commandClassId;
+			res = true;
+		}
+
+		ReleaseNode();
+	}
+
+	return res;
 }

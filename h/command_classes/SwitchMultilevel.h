@@ -32,26 +32,18 @@
 
 namespace OpenZWave
 {
+	class ValueBool;
+	class ValueButton;
 	class ValueByte;
 
 	class SwitchMultilevel: public CommandClass
 	{
 	public:
-		enum SwitchMultilevelDirection
-		{
-			SwitchMultilevelDirection_Up	= 0x00,
-			SwitchMultilevelDirection_Down	= 0x40
-		};
-
 		static CommandClass* Create( uint32 const _homeId, uint8 const _nodeId ){ return new SwitchMultilevel( _homeId, _nodeId ); }
 		virtual ~SwitchMultilevel(){}
 
 		static uint8 const StaticGetCommandClassId(){ return 0x26; }
 		static string const StaticGetCommandClassName(){ return "COMMAND_CLASS_SWITCH_MULTILEVEL"; }
-
-		void StartLevelChange( SwitchMultilevelDirection const _direction, bool const _bIgnoreStartLevel, bool const _bRollover );
-		void StopLevelChange();
-		void EnableLevelChange( bool const _bState );
 
 		// From CommandClass
 		virtual void RequestState( uint32 const _requestFlags );
@@ -59,14 +51,35 @@ namespace OpenZWave
 		virtual string const GetCommandClassName()const{ return StaticGetCommandClassName(); }
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );
 		virtual bool SetValue( Value const& _value );
+		virtual void SetVersion( uint8 const _version );
 
 	protected:
 		virtual void CreateVars( uint8 const _instance );
 
 	private:
+		enum SwitchMultilevelDirection
+		{
+			SwitchMultilevelDirection_Up = 0,
+			SwitchMultilevelDirection_Down,
+			SwitchMultilevelDirection_Inc,
+			SwitchMultilevelDirection_Dec
+		};
+
 		SwitchMultilevel( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
 
-		ValueInstances<ValueByte>	m_level;
+		bool SetLevel( uint8 const _instance, uint8 const _level );
+		bool StartLevelChange( uint8 const _instance, SwitchMultilevelDirection const _direction );
+		bool StopLevelChange();
+
+		ValueInstances<ValueByte>		m_level;
+		ValueInstances<ValueButton>		m_bright;
+		ValueInstances<ValueButton>		m_dim;
+		ValueInstances<ValueBool>		m_ignoreStartLevel;
+		ValueInstances<ValueByte>		m_startLevel;
+		ValueInstances<ValueByte>		m_duration;
+		ValueInstances<ValueByte>		m_step;
+		ValueInstances<ValueButton>		m_inc;
+		ValueInstances<ValueButton>		m_dec;
 	};
 
 } // namespace OpenZWave

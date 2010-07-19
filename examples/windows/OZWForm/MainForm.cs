@@ -15,6 +15,7 @@ namespace OZWForm
         private UInt32 m_homeId = 0;
         private ZWNotification m_notification = null;
         private BindingList<Node> m_nodeList = new BindingList<Node>();
+        private Byte m_rightClickNode = 0xff;
 
         public MainForm()
         {
@@ -156,7 +157,7 @@ namespace OZWForm
 	        {
 		        case ZWNotification.Type.ValueAdded:
 		        {
-			        break;
+                    break;
 		        }
 
 		        case ZWNotification.Type.ValueRemoved:
@@ -261,6 +262,23 @@ namespace OZWForm
         private void SaveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             m_manager.WriteConfig(m_homeId);
+        }
+
+        private void NodeGridView_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if ((e.RowIndex >= 0) && (e.Button == System.Windows.Forms.MouseButtons.Right))
+            {
+                // Highlight the clicked row
+                NodeGridView.Rows[e.RowIndex].Selected = true;
+
+                // Store the index of the selected node
+                m_rightClickNode = Convert.ToByte(NodeGridView.Rows[e.RowIndex].Cells["Node"].Value);
+            }
+        }
+
+        private void RequestNodeNeighborUpdateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            m_manager.RequestNodeNeighborUpdate(m_homeId, m_rightClickNode);
         }
     }
 }

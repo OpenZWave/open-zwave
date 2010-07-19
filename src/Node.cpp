@@ -50,6 +50,7 @@
 #include "ValueID.h"
 #include "Value.h"
 #include "ValueBool.h"
+#include "ValueButton.h"
 #include "ValueByte.h"
 #include "ValueDecimal.h"
 #include "ValueInt.h"
@@ -59,6 +60,14 @@
 #include "ValueStore.h"
 
 using namespace OpenZWave;
+
+//-----------------------------------------------------------------------------
+// Statics
+//-----------------------------------------------------------------------------
+bool Node::s_deviceClassesLoaded = false;
+map<uint8,string> Node::s_basicDeviceClasses;
+map<uint8,Node::GenericDeviceClass*> Node::s_genericDeviceClasses;
+
 
 //-----------------------------------------------------------------------------
 // <Node::Node>
@@ -87,21 +96,19 @@ Node::~Node
 )
 {
 	// Delete the command classes
-	map<uint8,CommandClass*>::iterator cit = m_commandClassMap.begin();
 	while( !m_commandClassMap.empty() )
 	{
-		delete cit->second;
-		m_commandClassMap.erase( cit );
-		cit = m_commandClassMap.begin();
+		map<uint8,CommandClass*>::iterator it = m_commandClassMap.begin();
+		delete it->second;
+		m_commandClassMap.erase( it );
 	}
 
 	// Delete the groups
-	map<uint8,Group*>::iterator git = m_groups.begin();
 	while( !m_groups.empty() )
 	{
-		delete git->second;
-		m_groups.erase( git );
-		git = m_groups.begin();
+		map<uint8,Group*>::iterator it = m_groups.begin();
+		delete it->second;
+		m_groups.erase( it );
 	}
 
 	// Delete the values
@@ -406,51 +413,17 @@ void Node::UpdateProtocolInfo
 	
 	// Security  
 	m_security = _data[1] & 0x7f;
-//	m_optional = (( _data[1] & 0x80 ) != 0 );
-
-	// Device types
-	m_basic = _data[3];
-	m_generic = _data[4];
-	m_specific = _data[5];
-
-	switch( m_basic )
-	{
-		case BasicType_Controller:			{ m_type = "Controller";				break; }
-		case BasicType_StaticController:	{ m_type = "Static Controller";			break; }
-		case BasicType_Slave:				{ m_type = "Slave";						break; }
-		case BasicType_RoutingSlave:		{ m_type = "Routing Slave";				break; }
-	}
-
-	switch( m_generic )
-	{
-		case GenericType_Controller:		{ m_type = "Generic Controller";		break; }
-		case GenericType_StaticController:	{ m_type = "Static Controller";			break; }
-		case GenericType_AVControlPoint:	{ m_type = "AV Control Point";			break; }
-		case GenericType_Display:			{ m_type = "Display";					break; }
-		case GenericType_GarageDoor:		{ m_type = "Garage Door";				break; }
-		case GenericType_Thermostat:		{ m_type = "Thermostat";				break; }
-		case GenericType_WindowCovering:	{ m_type = "Window Covering";			break; }
-		case GenericType_RepeaterSlave:		{ m_type = "Repeater Slave";			break; }
-		case GenericType_SwitchBinary:		{ m_type = "Binary Switch";				break; }
-		case GenericType_SwitchMultiLevel:	{ m_type = "Multi-level Switch";		break; }
-		case GenericType_SwitchRemote:		{ m_type = "Remote Switch";				break; }
-		case GenericType_SwitchToggle:		{ m_type = "Toggle Switch";				break; }
-		case GenericType_SensorBinary:		{ m_type = "Binary Sensor";				break; }
-		case GenericType_SensorMultiLevel:	{ m_type = "Multi-level sensor";		break; }
-		case GenericType_WaterControl:		{ m_type = "Water Control";				break; }
-		case GenericType_MeterPulse:		{ m_type = "Meter Pulse";				break; }
-		case GenericType_EntryControl:		{ m_type = "Entry Control";				break; }
-		case GenericType_SemiInteroperable:	{ m_type = "Semi-Interoperable";		break; }
-		case GenericType_NonInteroperable:	{ m_type = "Non-Interoperable";			break; }
-	}
+	bool optional = (( _data[1] & 0x80 ) != 0 );	// True if the device reports command classes
 
 	Log::Write( "Protocol Info for Node %d:", m_nodeId );
-	Log::Write( "  Type          = %s", m_type.c_str() );
 	Log::Write( "  Listening     = %s", m_listening ? "true" : "false" );
 	Log::Write( "  Routing       = %s", m_routing ? "true" : "false" );
 	Log::Write( "  Max Baud Rate = %d", m_maxBaudRate );
 	Log::Write( "  Version       = %d", m_version );
 	Log::Write( "  Security      = 0x%.2x", m_security );
+
+	// Set up the device class based data for the node, including mandatory command classes
+	SetDeviceClasses( _data[3], _data[4], _data[5] );
 
 	if( !m_listening )
 	{
@@ -460,40 +433,43 @@ void Node::UpdateProtocolInfo
 		if( CommandClass* pCommandClass = AddCommandClass( WakeUp::StaticGetCommandClassId() ) )
 		{
 			pCommandClass->SetInstances( 1 );
+			Log::Write( "  %s", pCommandClass->GetCommandClassName().c_str() );
 		}
 	}
 
-	// Request the command classes
-	Msg* msg = new Msg( "Request Node Info", m_nodeId, REQUEST, FUNC_ID_ZW_REQUEST_NODE_INFO, false, true, FUNC_ID_ZW_APPLICATION_UPDATE );
-	msg->Append( m_nodeId );	
-	GetDriver()->SendMsg( msg ); 
+	if( optional )
+	{
+		// There may be optional command classes in addition to the mandatory ones,  
+		// so we request the command class list.  We will wait until we handle the 
+		// response in Node::UpdateNodeInfo before requesting the node state.
+		Msg* msg = new Msg( "Request Node Info", m_nodeId, REQUEST, FUNC_ID_ZW_REQUEST_NODE_INFO, false, true, FUNC_ID_ZW_APPLICATION_UPDATE );
+		msg->Append( m_nodeId );	
+		GetDriver()->SendMsg( msg ); 
+	}
+	else
+	{
+		// That's all the command class info we're going 
+		// to get, so start the process of querying state now.
+		m_nodeInfoReceived = true;
+
+		Log::Write( "No optional command classes for Node %d", m_nodeId );
+
+		// For sleeping devices, we defer the usual requests until we have told
+		// the device to send it's wake-up notifications to the controller.
+		if( WakeUp* wakeUp = static_cast<WakeUp*>( GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
+		{
+			wakeUp->Init();
+		}
+		else
+		{
+			RequestEntireNodeState();
+		}
+	}
 
 	// Notify the watchers of the protocol info
 	Notification* notification = new Notification( Notification::Type_NodeProtocolInfo );
 	notification->SetHomeAndNodeIds( m_homeId, m_nodeId );
 	GetDriver()->QueueNotification( notification );
-
-	//// All nodes are assumed to be awake until we fail to get a reply to a message.  
-	////
-	//// Unfortunately, in the case of FUNC_ID_ZW_REQUEST_NODE_INFO, the PC interface responds with a FAILED
-	//// message rather than allowing the request to time out.  This means that we always get a response, even if
-	//// the node is actually asleep.  
-	////
-	//// To get around this, if the node is non-listening, and flagged as awake, we add a copy of the same request
-	//// into its wakeup queue, just in case it is not actually awake.
-	//if( !IsListeningDevice() )
-	//{
-	//	if( WakeUp* wakeUp = static_cast<WakeUp*>( GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
-	//	{
-	//		msg = new Msg( "Request Node Info", m_nodeId, REQUEST, FUNC_ID_ZW_REQUEST_NODE_INFO, false, true, FUNC_ID_ZW_APPLICATION_UPDATE );
-	//		msg->Append( m_nodeId );	
-	//		msg->Finalize();
-
-	//		Log::Write( "" );
-	//		Log::Write( "Queuing Wake-Up Command: %s", msg->GetAsString().c_str() );
-	//		wakeUp->QueueMsg( msg );
-	//	}
-	//}
 }
 
 //-----------------------------------------------------------------------------
@@ -511,7 +487,11 @@ void Node::UpdateNodeInfo
 		m_nodeInfoReceived = true;
 
 		// Add the command classes specified by the device
-		int32 i;
+		Log::Write( "Optional command classes for node %d:", m_nodeId );
+		
+		bool newCommandClasses = false;
+		uint32 i;
+
 		for( i=0; i<_length; ++i )
 		{
 			if( _data[i] == 0xef )
@@ -522,25 +502,26 @@ void Node::UpdateNodeInfo
 				break;
 			}
 
-			if( CommandClass* pCommandClass = AddCommandClass( _data[i] ) )
+			if( CommandClass* commandClass = AddCommandClass( _data[i] ) )
 			{
 				// Start with an instance count of one.  If the device supports COMMMAND_CLASS_MULTI_INSTANCE
 				// then some command class instance counts will increase once the responses to the RequestState
 				// call at the end of this method have been processed.
-				pCommandClass->SetInstances( 1 );
+				commandClass->SetInstances( 1 );
+
+				Log::Write( "  %s", commandClass->GetCommandClassName().c_str() );
+				newCommandClasses = true;
 			}
 		}
 
-		// Write the supported command classes to the log
-		Log::Write( "Supported Command Classes for Node %d:", m_nodeId );
-		for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
+		if( !newCommandClasses )
 		{
-			Log::Write( "  %s", it->second->GetCommandClassName().c_str() );
+			// No additional command classes over the mandatory ones.
+			Log::Write( "  None" );
 		}
 
-		// For sleeping devices, we defer the usual requests until we have told the device
-		// to send it's wake-up notifications to the controller.request the wake-up interval first, so
-		// that we can set the controller as the target for wake up notifications.
+		// For sleeping devices, we defer the usual requests until we have told
+		// the device to send it's wake-up notifications to the controller.
 		if( WakeUp* wakeUp = static_cast<WakeUp*>( GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
 		{
 			wakeUp->Init();
@@ -860,6 +841,25 @@ ValueBool* Node::CreateValueBool
 }
 
 //-----------------------------------------------------------------------------
+// <Node::CreateValueButton>
+// Helper to create a new trigger value and add it to the value store
+//-----------------------------------------------------------------------------
+ValueButton* Node::CreateValueButton
+(
+	ValueID::ValueGenre const _genre,
+	uint8 const _commandClassId,
+	uint8 const _instance,
+	uint8 const _valueIndex,
+	string const& _label
+)
+{
+	ValueButton* value = new ValueButton( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label );
+	ValueStore* store = GetValueStore();
+	store->AddValue( value );
+	return value;
+}
+
+//-----------------------------------------------------------------------------
 // <Node::CreateValueByte>
 // Helper to create a new byte value and add it to the value store
 //-----------------------------------------------------------------------------
@@ -1016,6 +1016,7 @@ Value* Node::CreateValueFromXML
 		case ValueID::ValueType_List:		{	value = new ValueList();		break;	}
 		case ValueID::ValueType_Short:		{	value = new ValueShort();		break;	}
 		case ValueID::ValueType_String:		{	value = new ValueString();		break;	}
+		case ValueID::ValueType_Button:		{	value = new ValueButton();		break;	}
 	}
 
 	if( value )
@@ -1231,6 +1232,315 @@ Driver* Node::GetDriver
 {
 	return( Manager::Get()->GetDriver( m_homeId ) );
 }
+
+//-----------------------------------------------------------------------------
+// Device Classes
+//-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+// <Node::SetDeviceClasses>
+// Set the device class data for the node
+//-----------------------------------------------------------------------------
+bool Node::SetDeviceClasses
+( 
+	uint8 const _basic,
+	uint8 const _generic,
+	uint8 const _specific
+)
+{
+	m_basic = _basic;
+	m_generic = _generic;
+	m_specific = _specific;
+
+	// Read in the device class data if it has not been read already. 
+	if( !s_deviceClassesLoaded )
+	{
+		ReadDeviceClasses();
+	}
+
+	// Get the basic device class label
+	map<uint8,string>::iterator bit = s_basicDeviceClasses.find( _basic );
+	if( bit != s_basicDeviceClasses.end() )
+	{
+		m_type = bit->second;
+		Log::Write( "Node(%d) Basic device class    (0x%.2x) - %s", m_nodeId, m_basic, m_type.c_str() );
+	}
+	else
+	{
+		Log::Write( "Node(%d) Basic device class unknown", m_nodeId );
+	}
+
+	// Apply any Generic device class data
+	uint8 basicMapping = 0;
+	map<uint8,GenericDeviceClass*>::iterator git = s_genericDeviceClasses.find( _generic );
+	if( git != s_genericDeviceClasses.end() )
+	{
+		GenericDeviceClass* genericDeviceClass = git->second;
+		m_type = genericDeviceClass->GetLabel();
+
+		Log::Write( "Node(%d) Generic device Class  (0x%.2x) - %s", m_nodeId, m_generic, m_type.c_str() );
+
+		// Add the mandatory command classes for this generic class type
+		AddMandatoryCommandClasses( genericDeviceClass->GetMandatoryCommandClasses() );
+		
+		// Get the command class that COMMAND_CLASS_BASIC maps to.
+		basicMapping = genericDeviceClass->GetBasicMapping();
+
+		// Apply any Specific device class data
+		if( DeviceClass* specificDeviceClass = genericDeviceClass->GetSpecificDeviceClass( _specific ) )
+		{
+			m_type = specificDeviceClass->GetLabel();
+
+			Log::Write( "Node(%d) Specific device class (0x%.2x) - %s", m_nodeId, m_specific, m_type.c_str() );
+
+			// Add the mandatory command classes for this specific class type
+			AddMandatoryCommandClasses( specificDeviceClass->GetMandatoryCommandClasses() );
+			
+			if( specificDeviceClass->GetBasicMapping() )
+			{
+				// Override the generic device class basic mapping with the specific device class one.
+				basicMapping = specificDeviceClass->GetBasicMapping();
+			}
+		}
+		else
+		{
+			Log::Write( "Node(%d) No specific device class defined", m_nodeId );
+		}
+	}
+	else
+	{
+		Log::Write( "Node(%d) No generic or specific device classes defined", m_nodeId );
+	}
+
+	// Apply any COMMAND_CLASS_BASIC remapping
+	if( Basic* cc = static_cast<Basic*>( GetCommandClass( Basic::StaticGetCommandClassId() ) ) )
+	{
+		cc->SetMapping( basicMapping );
+	}
+
+	// Write the mandatory command classes to the log
+	if( !m_commandClassMap.empty() )
+	{
+		Log::Write( "Mandatory Command Classes for Node %d:", m_nodeId );
+		for( map<uint8,CommandClass*>::const_iterator cit = m_commandClassMap.begin(); cit != m_commandClassMap.end(); ++cit )
+		{
+			Log::Write( "  %s", cit->second->GetCommandClassName().c_str() );
+		}
+	}
+
+	return true;
+}
+
+//-----------------------------------------------------------------------------
+// <Node::AddMandatoryCommandClasses>
+// Add mandatory command classes to the node
+//-----------------------------------------------------------------------------
+bool Node::AddMandatoryCommandClasses
+(
+	uint8 const* _commandClasses
+)
+{
+	if( NULL == _commandClasses )
+	{
+		// No command classes to add
+		return false;
+	}
+
+	int i=0;
+	while( uint8 cc = _commandClasses[i++] )
+	{
+		if( cc == 0xef )
+		{
+			// COMMAND_CLASS_MARK.  
+			// Marks the end of the list of supported command classes.  The remaining classes 
+			// are those that can be controlled by this device, which we can ignore.
+			break;
+		}
+
+		if( CommandClass* commandClass = AddCommandClass( cc ) )
+		{
+			// Start with an instance count of one.  If the device supports COMMMAND_CLASS_MULTI_INSTANCE
+			// then some command class instance counts will increase.
+			commandClass->SetInstances( 1 );
+		}
+	}
+
+	return true;
+}
+
+//-----------------------------------------------------------------------------
+// <Node::ReadDeviceClasses>
+// Read the static device class data from the device_classes.xml file
+//-----------------------------------------------------------------------------
+void Node::ReadDeviceClasses
+(
+)
+{
+	// Load the XML document that contains the device class information
+	string filename =  Manager::Get()->GetConfigPath() + string("device_classes.xml");
+
+	TiXmlDocument doc;
+	if( !doc.LoadFile( filename.c_str(), TIXML_ENCODING_UTF8 ) )
+	{
+		Log::Write( "Failed to load device_classes.xml" );
+		Log::Write( "Check that the config path provided when creating the Manager points to the correct location." );
+		return;
+	}
+
+	TiXmlElement const* deviceClassesElement = doc.RootElement();
+
+	// Read the basic and generic device classes
+	TiXmlElement const* child = deviceClassesElement->FirstChildElement();
+	while( child )
+	{
+		char const* str = child->Value();
+		if( str )
+		{
+			char const* keyStr = child->Attribute( "key" );
+			if( keyStr )
+			{
+				char* pStop;
+				uint8 key = (uint8)strtol( keyStr, &pStop, 16 );
+
+				if( !strcmp( str, "Generic" ) )
+				{
+					s_genericDeviceClasses[key] = new GenericDeviceClass( child ); 
+				}
+				else if( !strcmp( str, "Basic" ) )
+				{
+					char const* label = child->Attribute( "label" );
+					if( label )
+					{
+						s_basicDeviceClasses[key] = label;
+					}
+				}
+			}
+		}
+
+		child = child->NextSiblingElement();
+	}
+
+	s_deviceClassesLoaded = true;
+}
+
+//-----------------------------------------------------------------------------
+// <DeviceClass::DeviceClass>
+// Constructor
+//-----------------------------------------------------------------------------
+Node::DeviceClass::DeviceClass
+(
+	TiXmlElement const* _el
+):
+	m_mandatoryCommandClasses(NULL),
+	m_basicMapping(0)
+{
+	char const* str = _el->Attribute( "label" );
+	if( str )
+	{
+		m_label = str;
+	}
+
+	str = _el->Attribute( "command_classes" );
+	if( str )
+	{
+		// Parse the comma delimted command class 
+		// list into a temporary vector.
+		vector<uint8> ccs;
+		char* pos = const_cast<char*>(str);
+		while( *pos )
+		{
+			ccs.push_back( (uint8)strtol( pos, &pos, 16 ) );
+			if( (*pos) == ',' )
+			{
+				++pos;
+			}
+		}
+
+		// Copy the vector contents into an array.
+		uint32 numCCs = ccs.size(); 
+		m_mandatoryCommandClasses = new uint8[numCCs+1];
+		m_mandatoryCommandClasses[numCCs] = 0;	// Zero terminator
+
+		for( uint32 i=0; i<numCCs; ++i )
+		{
+			m_mandatoryCommandClasses[i] = ccs[i];
+		}
+	}
+
+	str = _el->Attribute( "basic" );
+	if( str )
+	{
+		char* pStop;
+		m_basicMapping = (uint8)strtol( str, &pStop, 16 );
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <Node::GenericDeviceClass::GenericDeviceClass>
+// Constructor
+//-----------------------------------------------------------------------------
+Node::GenericDeviceClass::GenericDeviceClass
+(
+	TiXmlElement const* _el
+):
+	DeviceClass( _el )
+{
+	// Add any specific device classes
+	TiXmlElement const* child = _el->FirstChildElement();
+	while( child )
+	{
+		char const* str = child->Value();
+		if( str && !strcmp( str, "Specific" ) )
+		{
+			char const* keyStr = child->Attribute( "key" );
+			if( keyStr )
+			{
+				char* pStop;
+				uint8 key = (uint8)strtol( keyStr, &pStop, 16 );
+				
+				m_specificDeviceClasses[key] = new DeviceClass( child ); 
+			}
+		}
+
+		child = child->NextSiblingElement();
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <Node::GenericDeviceClass::~GenericDeviceClass>
+// Destructor
+//-----------------------------------------------------------------------------
+Node::GenericDeviceClass::~GenericDeviceClass
+(
+)
+{
+	while( !m_specificDeviceClasses.empty() )
+	{
+		map<uint8,DeviceClass*>::iterator it = m_specificDeviceClasses.begin();
+		delete it->second;
+		m_specificDeviceClasses.erase( it );
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <Node::GenericDeviceClass::GetSpecificDeviceClass>
+// Get a specific device class object
+//-----------------------------------------------------------------------------
+Node::DeviceClass* Node::GenericDeviceClass::GetSpecificDeviceClass
+(
+	uint8 const& _specific
+)
+{
+	map<uint8,DeviceClass*>::iterator it = m_specificDeviceClasses.find( _specific );
+	if( it != m_specificDeviceClasses.end() )
+	{
+		return it->second;
+	}
+
+	return NULL;
+}
+
+
 
 
 

@@ -73,6 +73,7 @@ namespace OpenZWave
 			ValueGenre_User,			/**< Basic values an ordinary user would be interested in. */
 			ValueGenre_Config,			/**< Device-specific configuration parameters.  These cannot be automatically discovered via Z-Wave, and are usually described in the user manual instead. */
 			ValueGenre_System,			/**< Values of significance only to users who understand the Z-Wave protocol */
+			ValueGenre_Basic,			/**< The 'level' as controlled by basic commands.  Usually duplicated by another command class. */
 			ValueGenre_Count			/**< A count of the number of genres defined.  Not to be used as a genre itself. */
 		};
 
@@ -90,6 +91,7 @@ namespace OpenZWave
 			ValueType_List,				/**< List from which one item can be selected */
 			ValueType_Short,			/**< 16-bit signed value */
 			ValueType_String,			/**< Text string */
+			ValueType_Button,			/**< A write-only value that is the equivalent of pressing a button to send a command to a device */
 			ValueType_Count				/**< A count of the number of types defined.  Not to be used as a type itself. */
 		};
 
