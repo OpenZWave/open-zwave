@@ -23,4 +23,4 @@ Before the "break;" in that block, add a line that says:
     Manager::Get()->AddAssociation(nodeInfo->m_homeId, nodeInfo->m_nodeId, 1, 1);
 }}}
     _Note: this is too early in the code, so it will only work the *second* time OZW detects your sensor. You might as well just put it in the main thread until I find a better place for it._
-Rebuild the example program, run it, and push the button on the back of your sensor again. If everything worked correctly, you should now be getting log messages immediately every time your sensor changes state (unfortunately, those log messages will probably be "Unhandled Command Class" warnings until that's implemented in open-zwave).
+Rebuild the example program, run it, and push the button on the back of your sensor again. If everything worked correctly, you should now be getting log messages immediately every time your sensor changes state.
