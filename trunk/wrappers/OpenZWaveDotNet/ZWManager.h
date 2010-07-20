@@ -507,83 +507,83 @@ namespace OpenZWaveDotNet
 		/**
 		 * Gets a value as a bool.
 		 * @param _id The unique identifier of the value.
-		 * @param o_value Pointer to a bool that will be filled with the value.
+		 * @param o_value a Boolean that will be filled with the value.
 		 * @return true if the value was obtained.  Returns false if the value is not a ZWValueID::ValueType_Bool. The type can be tested with a call to ZWValueID::GetType.
-		 * @see ValueID::GetType, GetValueAsByte, GetValueAsFloat, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListSelection, GetValueListItems 
+		 * @see ValueID::GetType, GetValueAsByte, GetValueAsDecimal, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListSelection, GetValueListItems 
 		 */
-		bool GetValueAsBool( ZWValueID^ id, bool* o_value ){ return Manager::Get()->GetValueAsBool(id->CreateUnmanagedValueID(), o_value); }
+		bool GetValueAsBool( ZWValueID^ id, [Out] System::Boolean %o_value );
 
 		/**
 		 * Gets a value as an 8-bit unsigned integer.
 		 * @param _id The unique identifier of the value.
-		 * @param o_value Pointer to a uint8 that will be filled with the value.
+		 * @param o_value a Byte that will be filled with the value.
 		 * @return true if the value was obtained.  Returns false if the value is not a ZWValueID::ValueType_Byte. The type can be tested with a call to ZWValueID::GetType
-		 * @see ValueID::GetType, GetValueAsBool, GetValueAsFloat, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListSelection, GetValueListItems 
+		 * @see ValueID::GetType, GetValueAsBool, GetValueAsDecimal, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListSelection, GetValueListItems 
 		 */
-		bool GetValueAsByte( ZWValueID^ id, uint8* o_value ){ return Manager::Get()->GetValueAsByte(id->CreateUnmanagedValueID(), o_value); }
+		bool GetValueAsByte( ZWValueID^ id, [Out] System::Byte %o_value );
 
 		/**
-		 * Gets a value as a float.
+		 * Gets a value as a decimal.
 		 * @param _id The unique identifier of the value.
-		 * @param o_value Pointer to a float that will be filled with the value.
+		 * @param o_value a Decimal that will be filled with the value.
 		 * @return true if the value was obtained.  Returns false if the value is not a ZWValueID::ValueType_Decimal. The type can be tested with a call to ZWValueID::GetType
 		 * @see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListSelection, GetValueListItems 
 		 */
-		bool GetValueAsFloat( ZWValueID^ id, float* o_value ){ return Manager::Get()->GetValueAsFloat(id->CreateUnmanagedValueID(), o_value); }
+		bool GetValueAsDecimal( ZWValueID^ id, [Out] System::Decimal %o_value );
 
 		/**
 		 * Gets a value as a 32-bit signed integer.
 		 * @param _id The unique identifier of the value.
-		 * @param o_value Pointer to an int32 that will be filled with the value.
+		 * @param o_value an Int32 that will be filled with the value.
 		 * @return true if the value was obtained.  Returns false if the value is not a ZWValueID::ValueType_Int. The type can be tested with a call to ZWValueID::GetType
-		 * @see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsFloat, GetValueAsShort, GetValueAsString, GetValueListSelection, GetValueListItems 
+		 * @see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsDecimal, GetValueAsShort, GetValueAsString, GetValueListSelection, GetValueListItems 
 		 */
-		bool GetValueAsInt( ZWValueID^ id, int32* o_value ){ return Manager::Get()->GetValueAsInt(id->CreateUnmanagedValueID(), o_value); }
+		bool GetValueAsInt( ZWValueID^ id, [Out] System::Int32 %o_value );
 
 		/**
 		 * Gets a value as a 16-bit signed integer.
 		 * @param _id The unique identifier of the value.
-		 * @param o_value Pointer to an int16 that will be filled with the value.
+		 * @param o_value an Int16 that will be filled with the value.
 		 * @return true if the value was obtained.  Returns false if the value is not a ZWValueID::ValueType_Short. The type can be tested with a call to ZWValueID::GetType
-		 * @see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsFloat, GetValueAsInt, GetValueAsString, GetValueListSelection, GetValueListItems 
+		 * @see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsDecimal, GetValueAsInt, GetValueAsString, GetValueListSelection, GetValueListItems 
 		 */
-		bool GetValueAsShort( ZWValueID^ id, int16* o_value ){ return Manager::Get()->GetValueAsShort(id->CreateUnmanagedValueID(), o_value); }
+		bool GetValueAsShort( ZWValueID^ id, [Out] System::Int16 %o_value );
 		
 		/**
 		 * Gets a value as a string.
 		 * Creates a string representation of a value, regardless of type.
 		 * @param _id The unique identifier of the value.
-		 * @param o_value Pointer to a string that will be filled with the value.
+		 * @param o_value a String that will be filled with the value.
 		 * @return true if the value was obtained.</returns>
-		 * @see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsFloat, GetValueAsInt, GetValueAsShort, GetValueListSelection, GetValueListItems 
+		 * @see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsDecimal, GetValueAsInt, GetValueAsShort, GetValueListSelection, GetValueListItems 
 		 */
-		//bool GetValueAsString( ZWValueID^ id, String^ o_value ){ return Manager::Get()->GetValueAsString(id->CreateUnmanagedValueID(), o_value); }
+		bool GetValueAsString( ZWValueID^ id, [Out] String^ %o_value );
 		
 		/**
 		 * Gets the selected item from a list value.
 		 * @param _id The unique identifier of the value.
-		 * @param o_value Pointer to a string that will be filled with the selected item.
+		 * @param o_value a String that will be filled with the selected item.
 		 * @return true if the value was obtained.  Returns false if the value is not a ZWValueID::ValueType_List. The type can be tested with a call to ZWValueID::GetType
-		 * @see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsFloat, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListItems 
+		 * @see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsDecimal, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListItems 
 		 */
-		//bool GetValueListSelection( ZWValueID^ id, String^ o_value ){ return Manager::Get()->GetValueListSelection(id->CreateUnmanagedValueID(), o_value); }
+		bool GetValueListSelection( ZWValueID^ id, [Out] String^ %o_value );
 
 		/**
 		 * Gets the list of items from a list value.
-		 * @param _id The unique identifier of the value.
-		 * @param o_value Pointer to a vector of strings that will be filled with list items. The vector will be cleared before the items are added.
+		 * @param id The unique identifier of the value.
+		 * @param o_value List that will be filled with list items.
 		 * @return true if the list items were obtained.  Returns false if the value is not a ZWValueID::ValueType_List. The type can be tested with a call to ZWValueID::GetType
-		 * @see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsFloat, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListSelection 
+		 * @see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsDecimal, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListSelection 
 		 */
-		//bool GetValueListItems( ValueID const& _id, vector<string>* o_value );
+		bool GetValueListItems( ZWValueID^ id, [Out] List<String^>^ %o_value );
 
 		/**
 		 * Sets the state of a bool.
 		 * Due to the possibility of a device being asleep, the command is assumed to suceeed, and the value
 		 * held by the node is updated directly.  This will be reverted by a future status message from the device
 		 * if the Z-Wave message actually failed to get through.  Notification callbacks will be sent in both cases.
-		 * @param _id The unique identifier of the bool value.
-		 * @param o_value The new value of the bool.
+		 * @param id The unique identifier of the bool value.
+		 * @param value The new value of the bool.
 		 * @return true if the value was set.  Returns false if the value is not a ZWValueID::ValueType_Bool. The type can be tested with a call to ZWValueID::GetType
 		 */
 		bool SetValue( ZWValueID^ id, bool value ){ return Manager::Get()->SetValue(id->CreateUnmanagedValueID(), value); }
@@ -593,8 +593,8 @@ namespace OpenZWaveDotNet
 		 * Due to the possibility of a device being asleep, the command is assumed to suceeed, and the value
 		 * held by the node is updated directly.  This will be reverted by a future status message from the device
 		 * if the Z-Wave message actually failed to get through.  Notification callbacks will be sent in both cases.
-		 * @param _id The unique identifier of the byte value.
-		 * @param o_value The new value of the byte.
+		 * @param id The unique identifier of the byte value.
+		 * @param value The new value of the byte.
 		 * @return true if the value was set.  Returns false if the value is not a ZWValueID::ValueType_Byte. The type can be tested with a call to ZWValueID::GetType
 		 */
 		bool SetValue( ZWValueID^ id, uint8 value ){ return Manager::Get()->SetValue(id->CreateUnmanagedValueID(), value); }
@@ -605,8 +605,8 @@ namespace OpenZWaveDotNet
 		 * Due to the possibility of a device being asleep, the command is assumed to suceeed, and the value
 		 * held by the node is updated directly.  This will be reverted by a future status message from the device
 		 * if the Z-Wave message actually failed to get through.  Notification callbacks will be sent in both cases.
-		 * @param _id The unique identifier of the decimal value.
-		 * @param o_value The new value of the decimal.
+		 * @param id The unique identifier of the decimal value.
+		 * @param value The new value of the decimal.
 		 * @return true if the value was set.  Returns false if the value is not a ZWValueID::ValueType_Decimal. The type can be tested with a call to ZWValueID::GetType
 		 */
 		bool SetValue( ZWValueID^ id, float value ){ return Manager::Get()->SetValue(id->CreateUnmanagedValueID(), value); }
@@ -616,8 +616,8 @@ namespace OpenZWaveDotNet
 		 * Due to the possibility of a device being asleep, the command is assumed to suceeed, and the value
 		 * held by the node is updated directly.  This will be reverted by a future status message from the device
 		 * if the Z-Wave message actually failed to get through.  Notification callbacks will be sent in both cases.
-		 * @param _id The unique identifier of the integer value.
-		 * @param o_value The new value of the integer.
+		 * @param id The unique identifier of the integer value.
+		 * @param value The new value of the integer.
 		 * @return true if the value was set.  Returns false if the value is not a ZWValueID::ValueType_Int. The type can be tested with a call to ZWValueID::GetType
 		 */
 		bool SetValue( ZWValueID^ id, int32 value ){ return Manager::Get()->SetValue(id->CreateUnmanagedValueID(), value); }
@@ -627,8 +627,8 @@ namespace OpenZWaveDotNet
 		 * Due to the possibility of a device being asleep, the command is assumed to suceeed, and the value
 		 * held by the node is updated directly.  This will be reverted by a future status message from the device
 		 * if the Z-Wave message actually failed to get through.  Notification callbacks will be sent in both cases.
-		 * @param _id The unique identifier of the integer value.
-		 * @param o_value The new value of the integer.
+		 * @param id The unique identifier of the integer value.
+		 * @param value The new value of the integer.
 		 * @return true if the value was set.  Returns false if the value is not a ZWValueID::ValueType_Short. The type can be tested with a call to ZWValueID::GetType
 		 */
 		bool SetValue( ZWValueID^ id, int16 value ){ return Manager::Get()->SetValue(id->CreateUnmanagedValueID(), value); }
@@ -638,8 +638,8 @@ namespace OpenZWaveDotNet
 		 * Due to the possibility of a device being asleep, the command is assumed to suceeed, and the value
 		 * held by the node is updated directly.  This will be reverted by a future status message from the device
 		 * if the Z-Wave message actually failed to get through.  Notification callbacks will be sent in both cases.
-		 * @param _id The unique identifier of the integer value.
-		 * @param o_value The new value of the string.
+		 * @param id The unique identifier of the integer value.
+		 * @param value The new value of the string.
 		 * @return true if the value was set.  Returns false if the value could not be parsed into the correct type for the value.</returns>
 		 */
 		bool SetValue( ZWValueID^ id, String^ value ){ return Manager::Get()->SetValue(id->CreateUnmanagedValueID(), string((const char*)((Marshal::StringToHGlobalAnsi(value)).ToPointer())) ); }
@@ -649,8 +649,8 @@ namespace OpenZWaveDotNet
 		 * Due to the possibility of a device being asleep, the command is assumed to suceeed, and the value
 		 * held by the node is updated directly.  This will be reverted by a future status message from the device
 		 * if the Z-Wave message actually failed to get through.  Notification callbacks will be sent in both cases.
-		 * @param _id The unique identifier of the list value.
-		 * @param o_value A string matching the new selected item in the list.
+		 * @param id The unique identifier of the list value.
+		 * @param value A string matching the new selected item in the list.
 		 * @return true if the value was set.  Returns false if the selection is not in the list, or if the value is not a ZWValueID::ValueType_List.
 		 * The type can be tested with a call to ZWValueID::GetType
 		 */
@@ -659,7 +659,7 @@ namespace OpenZWaveDotNet
 		/**
 		 * Starts an activity in a device.
 		 * Since buttons are write-only values that do not report a state, no notification callbacks are sent.
-		 * @param _id The unique identifier of the integer value.
+		 * @param id The unique identifier of the integer value.
 		 * @return true if the activity was started.  Returns false if the value is not a ZWValueID::ValueType_Button. The type can be tested with a call to ZWValueID::GetType
 		 */
 		bool PressButton( ZWValueID^ id ){ return Manager::Get()->PressButton(id->CreateUnmanagedValueID()); }
@@ -667,7 +667,7 @@ namespace OpenZWaveDotNet
 		/**
 		 * Stops an activity in a device.
 		 * Since buttons are write-only values that do not report a state, no notification callbacks are sent.
-		 * @param _id The unique identifier of the integer value.
+		 * @param id The unique identifier of the integer value.
 		 * @return true if the activity was stopped.  Returns false if the value is not a ZWValueID::ValueType_Button. The type can be tested with a call to ZWValueID::GetType
 		 */
 		bool ReleaseButton( ZWValueID^ id ){ return Manager::Get()->ReleaseButton(id->CreateUnmanagedValueID()); }
