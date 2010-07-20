@@ -65,3 +65,160 @@ void ZWManager::OnNotificationFromUnmanaged
 	ZWNotification^ notification = gcnew ZWNotification( _notification );
 	OnZWNotification(notification);
 }
+
+//-----------------------------------------------------------------------------
+// <ZWManager::GetValueAsBool>
+// Gets a value as a Bool
+//-----------------------------------------------------------------------------
+bool ZWManager::GetValueAsBool
+( 
+	ZWValueID^ id, 
+	[Out] System::Boolean %o_value
+)
+{ 
+	bool value;
+	if( Manager::Get()->GetValueAsBool(id->CreateUnmanagedValueID(), &value ) )
+	{
+		o_value = value;
+		return true;
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <ZWManager::GetValueAsByte>
+// Gets a value as a Byte
+//-----------------------------------------------------------------------------
+bool ZWManager::GetValueAsByte
+( 
+	ZWValueID^ id,
+	[Out] System::Byte %o_value
+)
+{ 
+	uint8 value;
+	if( Manager::Get()->GetValueAsByte(id->CreateUnmanagedValueID(), &value ) )
+	{
+		o_value = value;
+		return true;
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <ZWManager::GetValueAsDecimal>
+// Gets a value as a Decimal
+//-----------------------------------------------------------------------------
+bool ZWManager::GetValueAsDecimal
+( 
+	ZWValueID^ id,
+	[Out] System::Decimal %o_value
+)
+{ 
+	string value;
+	if( Manager::Get()->GetValueAsString(id->CreateUnmanagedValueID(), &value ) )
+	{
+		String^ decimal = gcnew String(value.c_str());
+		o_value = Decimal::Parse( decimal );
+		return true;
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <ZWManager::GetValueAsInt>
+// Gets a value as an Int32
+//-----------------------------------------------------------------------------
+bool ZWManager::GetValueAsInt
+( 
+	ZWValueID^ id,
+	[Out] System::Int32 %o_value
+)
+{ 
+	int32 value;
+	if( Manager::Get()->GetValueAsInt(id->CreateUnmanagedValueID(), &value ) )
+	{
+		o_value = value;
+		return true;
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <ZWManager::GetValueAsShort>
+// Gets a value as an Int16
+//-----------------------------------------------------------------------------
+bool ZWManager::GetValueAsShort
+( 
+	ZWValueID^ id,
+	[Out] System::Int16 %o_value
+)
+{ 
+	int16 value;
+	if( Manager::Get()->GetValueAsShort(id->CreateUnmanagedValueID(), &value ) )
+	{
+		o_value = value;
+		return true;
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <ZWManager::GetValueAsString>
+// Gets a value as a String
+//-----------------------------------------------------------------------------
+bool ZWManager::GetValueAsString
+( 
+	ZWValueID^ id, 
+	[Out] String^ %o_value 
+)
+{ 
+	string value;
+	if( Manager::Get()->GetValueAsString(id->CreateUnmanagedValueID(), &value ) )
+	{
+		o_value = gcnew String(value.c_str());
+		return true;
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <ZWManager::GetValueListSelection>
+// Gets the selected item from a list value
+//-----------------------------------------------------------------------------
+bool ZWManager::GetValueListSelection
+( 
+	ZWValueID^ id, 
+	[Out] String^ %o_value 
+)
+{ 
+	string value;
+	if( Manager::Get()->GetValueListSelection(id->CreateUnmanagedValueID(), &value ) )
+	{
+		o_value = gcnew String(value.c_str());
+		return true;
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <ZWManager::GetValueListItems>
+// Gets the list of items from a list value
+//-----------------------------------------------------------------------------
+bool ZWManager::GetValueListItems
+( 
+	ZWValueID^ id, 
+	[Out] List<String^>^ %o_value
+)
+{
+	vector<string> items;
+	if( Manager::Get()->GetValueListItems(id->CreateUnmanagedValueID(), &items ) )
+	{
+		o_value = gcnew List<String^>();
+		for( vector<string>::iterator it=items.begin(); it!=items.end(); ++it )
+		{
+			o_value->Add( gcnew String( (*it).c_str() ) );		
+		}
+		return true;
+	}
+	return false;
+}
