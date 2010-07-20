@@ -682,12 +682,17 @@ void Driver::SendThreadProc()
 
 							// In case this is a sleeping node, we first try to move 
 							// its pending messages to its wake-up queue.
+
+							// We can't have the send mutex locked until deeper into the move 
+							// messages method to avoid deadlocks with the node mutex.
+							m_sendMutex->Release();
 							if( !MoveMessagesToWakeUpQueue( msg->GetTargetNodeId() ) )
 							{
 								// The attempt failed, so the node is either not a sleeping node, or the move
 								// failed for another reason.  We'll just retry sending the message.
 								Log::Write( "Resending message (attempt %d)", msg->GetSendAttempts() );
 							}
+							m_sendMutex->Lock();
 						}
 					}
 
