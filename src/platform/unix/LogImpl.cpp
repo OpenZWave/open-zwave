@@ -92,17 +92,23 @@ void LogImpl::Write
 		// Log to screen and file
 		if( _format && ( _format[0] != 0 ) )
 		{
-			printf( "%s", timeStr );
+#ifdef LOG_STDERR
+			fprintf( stderr, "%s", timeStr );
+#endif
 			fprintf( pFile, "%s", timeStr );
 
 			va_list saveargs;
 			va_copy( saveargs, _args );
-			vprintf( _format, _args );
+#ifdef LOG_STDERR
+			vfprintf( stderr, _format, _args );
+#endif
 			vfprintf( pFile, _format, saveargs );
 			va_end( saveargs );
 		}
 
-		putchar( '\n' );
+#ifdef LOG_STDERR
+		putc( '\n', stderr );
+#endif
 		putc( '\n', pFile ); 
 
 		fclose( pFile );
