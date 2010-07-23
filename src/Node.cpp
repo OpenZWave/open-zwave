@@ -413,7 +413,11 @@ void Node::UpdateProtocolInfo
 	
 	// Security  
 	m_security = _data[1] & 0x7f;
-	bool optional = (( _data[1] & 0x80 ) != 0 );	// True if the device reports command classes
+
+    // Optional flag is true if the device reports optional command classes.
+    // NOTE: We stopped using this because not all devices report it properly,
+    // and now just request the optional classes regardless.
+	// bool optional = (( _data[1] & 0x80 ) != 0 );	
 
 	Log::Write( "Protocol Info for Node %d:", m_nodeId );
 	Log::Write( "  Listening     = %s", m_listening ? "true" : "false" );
@@ -437,34 +441,12 @@ void Node::UpdateProtocolInfo
 		}
 	}
 
-	if( optional )
-	{
-		// There may be optional command classes in addition to the mandatory ones,  
-		// so we request the command class list.  We will wait until we handle the 
-		// response in Node::UpdateNodeInfo before requesting the node state.
-		Msg* msg = new Msg( "Request Node Info", m_nodeId, REQUEST, FUNC_ID_ZW_REQUEST_NODE_INFO, false, true, FUNC_ID_ZW_APPLICATION_UPDATE );
-		msg->Append( m_nodeId );	
-		GetDriver()->SendMsg( msg ); 
-	}
-	else
-	{
-		// That's all the command class info we're going 
-		// to get, so start the process of querying state now.
-		m_nodeInfoReceived = true;
-
-		Log::Write( "No optional command classes for Node %d", m_nodeId );
-
-		// For sleeping devices, we defer the usual requests until we have told
-		// the device to send it's wake-up notifications to the controller.
-		if( WakeUp* wakeUp = static_cast<WakeUp*>( GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
-		{
-			wakeUp->Init();
-		}
-		else
-		{
-			RequestEntireNodeState();
-		}
-	}
+	// There may be optional command classes in addition to the mandatory ones,  
+	// so we request the command class list.  We will wait until we handle the 
+	// response in Node::UpdateNodeInfo before requesting the node state.
+	Msg* msg = new Msg( "Request Node Info", m_nodeId, REQUEST, FUNC_ID_ZW_REQUEST_NODE_INFO, false, true, FUNC_ID_ZW_APPLICATION_UPDATE );
+	msg->Append( m_nodeId );	
+	GetDriver()->SendMsg( msg ); 
 
 	// Notify the watchers of the protocol info
 	Notification* notification = new Notification( Notification::Type_NodeProtocolInfo );
