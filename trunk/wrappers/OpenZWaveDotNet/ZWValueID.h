@@ -47,11 +47,10 @@ namespace OpenZWaveDotNet
 	public:
 		enum class ValueGenre
 		{
-			All		= ValueID::ValueGenre_All,
+			Basic	= ValueID::ValueGenre_Basic,
 			User	= ValueID::ValueGenre_User,	
 			Config	= ValueID::ValueGenre_Config,	
-			System	= ValueID::ValueGenre_System,
-			Basic	= ValueID::ValueGenre_Basic
+			System	= ValueID::ValueGenre_System
 		};
 
 		enum class ValueType
@@ -98,6 +97,13 @@ namespace OpenZWaveDotNet
 		{ 
 			m_valueId = new ValueID( valueId );
 		}
+
+
+		~ZWValueID()
+		{ 
+			delete m_valueId;
+		}
+
 
 		ValueID CreateUnmanagedValueID(){ return ValueID( *m_valueId ); }
 

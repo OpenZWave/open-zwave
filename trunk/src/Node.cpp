@@ -785,6 +785,28 @@ void Node::RequestConfigParam
 }
 
 //-----------------------------------------------------------------------------
+// <Node::SetLevel>
+// Helper method to set a device's basic level
+//-----------------------------------------------------------------------------
+void Node::SetLevel
+(
+	uint8 const _level
+)
+{
+	// Level is 0-99, with 0 = off and 99 = fully on. 255 = turn on at last level.
+	uint8 adjustedLevel = _level;
+	if( ( _level > 99 ) && ( _level < 255 ) )
+	{
+		adjustedLevel = 99;
+	}
+
+	if( Basic* cc = static_cast<Basic*>( GetCommandClass( Basic::StaticGetCommandClassId() ) ) )
+	{
+		cc->Set( adjustedLevel );
+	}
+}
+
+//-----------------------------------------------------------------------------
 // <Node::CreateValueID>
 // Helper to create a ValueID
 //-----------------------------------------------------------------------------

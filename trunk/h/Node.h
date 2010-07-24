@@ -188,6 +188,11 @@ namespace OpenZWave
 
 		map<uint8,CommandClass*>		m_commandClassMap;
 
+	//-----------------------------------------------------------------------------
+	// Basic commands (helpers that go through the basic command class)
+	//-----------------------------------------------------------------------------
+	public:
+		void SetLevel( uint8 const _level );
 
 	//-----------------------------------------------------------------------------
 	// Values (handled by the command classes)
@@ -211,12 +216,10 @@ namespace OpenZWave
 		void ReadValueFromXML( uint8 const _commandClassId, TiXmlElement const* _valueElement );
 		Value* CreateValueFromXML( uint8 const _commandClassId, TiXmlElement const* _valueElement );
 
-
 	private:
 		ValueStore* GetValueStore()const{ return m_values; }
 
 		ValueStore*	m_values;			// Values reported via command classes
-
 
 	//-----------------------------------------------------------------------------
 	// Configuration Parameters (handled by the Configuration command class)

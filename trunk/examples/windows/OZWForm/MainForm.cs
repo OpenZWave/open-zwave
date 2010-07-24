@@ -11,12 +11,13 @@ namespace OZWForm
 {
     public partial class MainForm : Form
     {
-        private ZWManager m_manager = null;
+        static private ZWManager m_manager = null;
+        static private ManagedControllerStateChangedHandler m_controllerStateChangedHandler = new ManagedControllerStateChangedHandler(MainForm.MyControllerStateChangedHandler);
+
         private UInt32 m_homeId = 0;
         private ZWNotification m_notification = null;
         private BindingList<Node> m_nodeList = new BindingList<Node>();
         private Byte m_rightClickNode = 0xff;
-
         public MainForm()
         {
             // Initialize the form
@@ -136,7 +137,7 @@ namespace OZWForm
             // Create the OpenZWave Manager
             m_manager = new ZWManager();
             m_manager.Create(@"F:\Projects\OpenZWave\config\", @"");
-            m_manager.m_event += new ManagedWatchersHandler(NotificationHandler);
+            m_manager.OnNotification += new ManagedNotificationsHandler(NotificationHandler);
             
             // Add a driver
             m_manager.AddDriver(@"\\.\COM3");
@@ -157,6 +158,13 @@ namespace OZWForm
 	        {
 		        case ZWNotification.Type.ValueAdded:
 		        {
+                    //ZWValueID id = m_notification.GetValueID();
+                    //if (id.GetType() == ZWValueID.ValueType.Byte)
+                    //{
+                    //    Byte value;
+                    //    m_manager.GetValueAsByte(id, out value);
+                    //    m_manager.SetValue(id, (Byte)0);
+                    //}
                     break;
 		        }
 
@@ -280,5 +288,131 @@ namespace OZWForm
         {
             m_manager.RequestNodeNeighborUpdate(m_homeId, m_rightClickNode);
         }
+
+        private void PowerOnToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            m_manager.SetNodeOn(m_homeId, m_rightClickNode);
+        }
+
+        private void PowerOffToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            m_manager.SetNodeOff(m_homeId, m_rightClickNode);
+        }
+
+        private void createNewPrmaryControllerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+		    m_manager.OnControllerStateChanged += m_controllerStateChangedHandler;
+            if (!m_manager.BeginControllerCommand(m_homeId, ZWControllerCommand.RemoveDevice, false))
+            {
+                m_manager.OnControllerStateChanged -= m_controllerStateChangedHandler;
+            }
+        }
+
+        private void addControllerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+		    m_manager.OnControllerStateChanged += m_controllerStateChangedHandler;
+            if (!m_manager.BeginControllerCommand(m_homeId, ZWControllerCommand.AddController, false))
+            {
+                m_manager.OnControllerStateChanged -= m_controllerStateChangedHandler;
+            }
+        }
+
+        private void addDeviceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+		    m_manager.OnControllerStateChanged += m_controllerStateChangedHandler;
+            if (!m_manager.BeginControllerCommand(m_homeId, ZWControllerCommand.AddDevice, false))
+            {
+                m_manager.OnControllerStateChanged -= m_controllerStateChangedHandler;
+            }
+        }
+
+        private void removeControllerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+		    m_manager.OnControllerStateChanged += m_controllerStateChangedHandler;
+            if (!m_manager.BeginControllerCommand(m_homeId, ZWControllerCommand.RemoveController, false))
+            {
+                m_manager.OnControllerStateChanged -= m_controllerStateChangedHandler;
+            }
+        }
+
+        private void removeDeviceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+		    m_manager.OnControllerStateChanged += m_controllerStateChangedHandler;
+            if (!m_manager.BeginControllerCommand(m_homeId, ZWControllerCommand.RemoveDevice, false))
+            {
+                m_manager.OnControllerStateChanged -= m_controllerStateChangedHandler;
+            }
+        }
+
+        private void transferPrimaryRoleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+		    m_manager.OnControllerStateChanged += m_controllerStateChangedHandler;
+            if (!m_manager.BeginControllerCommand(m_homeId, ZWControllerCommand.TransferPrimaryRole, false))
+            {
+                m_manager.OnControllerStateChanged -= m_controllerStateChangedHandler;
+            }
+        }
+
+        private void receiveConfigurationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+		    m_manager.OnControllerStateChanged += m_controllerStateChangedHandler;
+            if (!m_manager.BeginControllerCommand(m_homeId, ZWControllerCommand.ReceiveConfiguration, false))
+            {
+                m_manager.OnControllerStateChanged -= m_controllerStateChangedHandler;
+            }
+        }
+
+        private void replaceFailedDeviceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+		    m_manager.OnControllerStateChanged += m_controllerStateChangedHandler;
+            if (!m_manager.BeginControllerCommand(m_homeId, ZWControllerCommand.ReplaceFailedDevice, false))
+            {
+                m_manager.OnControllerStateChanged -= m_controllerStateChangedHandler;
+            }
+        }
+
+        private void cancelControllerCommandToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            m_manager.CancelControllerCommand(m_homeId);
+        }
+
+        public static void MyControllerStateChangedHandler(ZWControllerState state)
+	    {
+		    // Handle the controller state notifications here.
+            bool complete = false;
+            switch (state)
+		    {
+		        case ZWControllerState.Waiting:
+		        {
+	                // Display a message to tell the user to press the include button on the controller
+		            break;
+		        }
+		        case ZWControllerState.InProgress:
+		        {
+		            // Tell the user that the controller has been found and the adding process is in progress.
+		            break;
+		        }
+		        case ZWControllerState.Completed:
+		        {
+		            // Tell the user that the controller has been successfully added.
+		            // The command is now complete
+		            complete = true;
+		            break;
+		        }
+		        case ZWControllerState.Failed:
+		        {
+		            // Tell the user that the controller addition process has failed.
+		            // The command is now complete
+		            complete = true;
+		            break;
+		        }
+		    }
+    		
+		    if( complete )
+		    {
+		        // Remove the event handler
+		        m_manager.OnControllerStateChanged -= m_controllerStateChangedHandler;
+		    }
+		 }
     }
 }
