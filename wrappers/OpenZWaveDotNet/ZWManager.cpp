@@ -47,9 +47,13 @@ void ZWManager::Create
 
 	// Add a notification handler
 	m_onNotification = gcnew OnNotificationFromUnmanagedDelegate( this, &ZWManager::OnNotificationFromUnmanaged );
-	m_gch = GCHandle::Alloc( m_onNotification ); 
+	m_gchNotification = GCHandle::Alloc( m_onNotification ); 
 	IntPtr ip = Marshal::GetFunctionPointerForDelegate( m_onNotification );
 	Manager::Get()->AddWatcher( (Manager::pfnOnNotification_t)ip.ToPointer(), NULL );
+
+	// Add a controller state changed handler
+	m_onStateChanged = gcnew OnControllerStateChangedFromUnmanagedDelegate( this, &ZWManager::OnControllerStateChangedFromUnmanaged );
+	m_gchControllerState = GCHandle::Alloc( m_onStateChanged ); 
 }
 
 //-----------------------------------------------------------------------------
@@ -63,7 +67,20 @@ void ZWManager::OnNotificationFromUnmanaged
 )
 {
 	ZWNotification^ notification = gcnew ZWNotification( _notification );
-	OnZWNotification(notification);
+	ZWOnNotification(notification);
+}
+
+//-----------------------------------------------------------------------------
+//	<ZWManager::OnControllerStateChangedFromUnmanaged>
+//	Trigger an event from the unmanaged controller state callback
+//-----------------------------------------------------------------------------
+void ZWManager::OnControllerStateChangedFromUnmanaged
+(
+	Driver::ControllerState _state,
+	void* _context
+)
+{
+	ZWOnControllerStateChanged( (ZWControllerState)_state );
 }
 
 //-----------------------------------------------------------------------------
@@ -207,18 +224,61 @@ bool ZWManager::GetValueListSelection
 bool ZWManager::GetValueListItems
 ( 
 	ZWValueID^ id, 
-	[Out] List<String^>^ %o_value
+	[Out] array<String^>^ %o_value
 )
 {
 	vector<string> items;
 	if( Manager::Get()->GetValueListItems(id->CreateUnmanagedValueID(), &items ) )
 	{
-		o_value = gcnew List<String^>();
-		for( vector<string>::iterator it=items.begin(); it!=items.end(); ++it )
+		o_value = gcnew array<String^>(items.size());
+		for( uint32 i=0; i<items.size(); ++i )
 		{
-			o_value->Add( gcnew String( (*it).c_str() ) );		
+			o_value[i] = gcnew String( items[i].c_str() );		
 		}
 		return true;
 	}
 	return false;
 }
+
+//-----------------------------------------------------------------------------
+// <ZWManager::GetAssociations>
+// Gets the associations for a group
+//-----------------------------------------------------------------------------
+uint32 ZWManager::GetAssociations
+( 
+	uint32 homeId,
+	uint8 nodeId,
+	uint8 groupIdx,
+	[Out] array<Byte>^ %o_associations
+)
+{
+	uint8* associations;
+	uint32 numAssociations = Manager::Get()->GetAssociations( homeId, nodeId, groupIdx, &associations );
+	if( numAssociations )
+	{
+		o_associations = gcnew array<Byte>(numAssociations);
+		for( uint32 i=0; i<numAssociations; ++i )
+		{
+			o_associations[i] = associations[i];		
+		}
+		delete [] associations;
+	}
+
+	return numAssociations;
+}
+
+//-----------------------------------------------------------------------------
+// <ZWManager::BeginControllerCommand>
+// Start a controller command process
+//-----------------------------------------------------------------------------
+bool ZWManager::BeginControllerCommand
+(
+	uint32 homeId,
+	ZWControllerCommand command,
+	bool highPower
+)
+{
+	IntPtr ip = Marshal::GetFunctionPointerForDelegate( m_onStateChanged );
+	return( Manager::Get()->BeginControllerCommand( homeId, (Driver::ControllerCommand)command, (Driver::pfnControllerCallback_t)ip.ToPointer(), NULL, highPower ) );
+}
+

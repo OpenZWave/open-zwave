@@ -52,6 +52,8 @@ namespace OpenZWave
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );
 		virtual bool SetValue( Value const& _value );
 
+		void Set( uint8 const _level );
+
 	protected:
 		virtual void CreateVars( uint8 const _instance );
 

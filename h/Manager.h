@@ -198,7 +198,7 @@ namespace OpenZWave
 		/**
 		 * Removes the driver for a Z-Wave controller, and closes the serial port.
 		 * Drivers do not need to be explicitly removed before calling Destroy - this is handled automatically.
-		 * @paaram _serialPortName The same string as was passed in the original call to AddDriver.
+		 * @param _serialPortName The same string as was passed in the original call to AddDriver.
 		 * @returns True if the driver was removed, false if it could not be found.
 		 * @see Destroy, AddDriver
 		 */
@@ -565,6 +565,42 @@ namespace OpenZWave
 		 * @see GetNodeLocation, GetNodeName, SetNodeName
 		 */
 		void SetNodeLocation( uint32 const _homeId, uint8 const _nodeId, string const& _location );
+
+		/**
+		 * Turns a node on
+		 * This is a helper method to simplify basic control of a node.  It is the equivalent of
+		 * changing the level reported by the node's Basic command class to 255, and will generate a 
+		 * ValueChanged notification from that class.  This command will turn on the device at its
+		 * last known level, if supported by the device, otherwise it will turn	it on at 100%.
+		 * @param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * @param _nodeId The ID of the node to be changed.
+		 * @see SetNodeOff, SetNodeLevel
+		 */
+		void SetNodeOn( uint32 const _homeId, uint8 const _nodeId );
+
+		/**
+		 * Turns a node off
+		 * This is a helper method to simplify basic control of a node.  It is the equivalent of
+		 * changing the level reported by the node's Basic command class to zero, and will generate
+		 * a ValueChanged notification from that class.
+		 * @param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * @param _nodeId The ID of the node to be changed.
+		 * @see SetNodeOn, SetNodeLevel
+		 */
+		void SetNodeOff( uint32 const _homeId, uint8 const _nodeId );
+
+		/**
+		 * Sets the basic level of a node
+		 * This is a helper method to simplify basic control of a node.  It is the equivalent of
+		 * changing the value reported by the node's Basic command class and will generate a 
+		 * ValueChanged notification from that class.
+		 * @param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * @param _nodeId The ID of the node to be changed.
+		 * @param _level The level to set the node.  Valid values are 0-99 and 255.  Zero is off and
+		 * 99 is fully on.  255 will turn on the device at its last known level (if supported).
+		 * @see SetNodeOn, SetNodeOff
+		 */
+		void SetNodeLevel( uint32 const _homeId, uint8 const _nodeId, uint8 const _level );
 	/*@}*/
 
 	//-----------------------------------------------------------------------------
@@ -691,7 +727,7 @@ namespace OpenZWave
 		 * held by the node is updated directly.  This will be reverted by a future status message from the device
 		 * if the Z-Wave message actually failed to get through.  Notification callbacks will be sent in both cases.
 		 * @param _id The unique identifier of the bool value.
-		 * @param o_value The new value of the bool.
+		 * @param _value The new value of the bool.
 		 * @return true if the value was set.  Returns false if the value is not a ValueID::ValueType_Bool. The type can be tested with a call to ValueID::GetType.
 		 */
 		bool SetValue( ValueID const& _id, bool const _value );
@@ -702,7 +738,7 @@ namespace OpenZWave
 		 * held by the node is updated directly.  This will be reverted by a future status message from the device
 		 * if the Z-Wave message actually failed to get through.  Notification callbacks will be sent in both cases.
 		 * @param _id The unique identifier of the byte value.
-		 * @param o_value The new value of the byte.
+		 * @param _value The new value of the byte.
 		 * @return true if the value was set.  Returns false if the value is not a ValueID::ValueType_Byte. The type can be tested with a call to ValueID::GetType.
 		 */
 		bool SetValue( ValueID const& _id, uint8 const _value );
@@ -714,7 +750,7 @@ namespace OpenZWave
 		 * held by the node is updated directly.  This will be reverted by a future status message from the device
 		 * if the Z-Wave message actually failed to get through.  Notification callbacks will be sent in both cases.
 		 * @param _id The unique identifier of the decimal value.
-		 * @param o_value The new value of the decimal.
+		 * @param _value The new value of the decimal.
 		 * @return true if the value was set.  Returns false if the value is not a ValueID::ValueType_Decimal. The type can be tested with a call to ValueID::GetType.
 		 */
 		bool SetValue( ValueID const& _id, float const _value );
@@ -725,7 +761,7 @@ namespace OpenZWave
 		 * held by the node is updated directly.  This will be reverted by a future status message from the device
 		 * if the Z-Wave message actually failed to get through.  Notification callbacks will be sent in both cases.
 		 * @param _id The unique identifier of the integer value.
-		 * @param o_value The new value of the integer.
+		 * @param _value The new value of the integer.
 		 * @return true if the value was set.  Returns false if the value is not a ValueID::ValueType_Int. The type can be tested with a call to ValueID::GetType.
 		 */
 		bool SetValue( ValueID const& _id, int32 const _value );
@@ -736,7 +772,7 @@ namespace OpenZWave
 		 * held by the node is updated directly.  This will be reverted by a future status message from the device
 		 * if the Z-Wave message actually failed to get through.  Notification callbacks will be sent in both cases.
 		 * @param _id The unique identifier of the integer value.
-		 * @param o_value The new value of the integer.
+		 * @param _value The new value of the integer.
 		 * @return true if the value was set.  Returns false if the value is not a ValueID::ValueType_Short. The type can be tested with a call to ValueID::GetType.
 		 */
 		bool SetValue( ValueID const& _id, int16 const _value );
@@ -747,7 +783,7 @@ namespace OpenZWave
 		 * held by the node is updated directly.  This will be reverted by a future status message from the device
 		 * if the Z-Wave message actually failed to get through.  Notification callbacks will be sent in both cases.
 		 * @param _id The unique identifier of the integer value.
-		 * @param o_value The new value of the string.
+		 * @param _value The new value of the string.
 		 * @return true if the value was set.  Returns false if the value could not be parsed into the correct type for the value.
 		 */
 		bool SetValue( ValueID const& _id, string const& _value );
@@ -758,7 +794,7 @@ namespace OpenZWave
 		 * held by the node is updated directly.  This will be reverted by a future status message from the device
 		 * if the Z-Wave message actually failed to get through.  Notification callbacks will be sent in both cases.
 		 * @param _id The unique identifier of the list value.
-		 * @param o_value A string matching the new selected item in the list.
+		 * @param _selectedItem A string matching the new selected item in the list.
 		 * @return true if the value was set.  Returns false if the selection is not in the list, or if the value is not a ValueID::ValueType_List.
 		 * The type can be tested with a call to ValueID::GetType
 		 */
@@ -951,6 +987,15 @@ namespace OpenZWave
 		 * Start a controller command process.
 		 * @param _homeId The Home ID of the Z-Wave controller.
 		 * @param _command The command to be sent to the controller.
+		 * @param _callback pointer to a function that will be called at various stages during the command process
+		 * @param _context pointer to user defined data that will be passed into to the callback function.  Defaults to NULL.
+		 * @param _highPower used only with the AddDevice, AddController, RemoveDevice and RemoveController commands. 
+		 * Usually when adding or removing devices, the controller operates at low power so that the controller must
+		 * be physically close to the device for security reasons.  If _highPower is true, the controller will 
+		 * operate at normal power levels instead.  Defaults to false.
+		 * @return true if the command was accepted and has started.
+		 * @see CancelControllerCommand, Driver::ControllerCommand, Driver::pfnControllerCallback_t, 
+		 * to notify the user of progress or to request actions on the user's part.  Defaults to NULL.
 		 * <p> Commands
 		 * - Driver::ControllerCommand_AddController - Add a new secondary controller to the Z-Wave network.
 		 * - Driver::ControllerCommand_AddDevice - Add a new device (but not a controller) to the Z-Wave network.
@@ -961,8 +1006,6 @@ namespace OpenZWave
 		 * - Driver::ControllerCommand_ReplaceFailedDevice (Not yet implemented) - 
 		 * - Driver:: ControllerCommand_TransferPrimaryRole	(Not yet implemented) - Add a new controller to the network and
 		 * make it the primary.  The existing primary will become a secondary controller.  
-		 * @param _callback pointer to a function that will be called at various stages during the command process
-		 * to notify the user of progress or to request actions on the user's part.  Defaults to NULL.
 		 * <p> Callbacks
 		 * - Driver::ControllerState_Waiting, the controller is waiting for a user action.  A notice should be displayed 
 		 * to the user at this point, telling them what to do next.
@@ -973,18 +1016,13 @@ namespace OpenZWave
 		 * - Driver::ControllerState_InProgress - the controller is in the process of adding or removing the chosen node.
 		 * - Driver::ControllerState_Complete - the controller has finished adding or removing the node, and the command is complete.
 		 * - Driver::ControllerState_Failed - will be sent if the command fails for any reason.
-		 * @param _context pointer to user defined data that will be passed into to the callback function.  Defaults to NULL.
-		 * @param _highPower used only with the AddDevice, AddController, RemoveDevice and RemoveController commands. 
-		 * Usually when adding or removing devices, the controller operates at low power so that the controller must
-		 * be physically close to the device for security reasons.  If _highPower is true, the controller will 
-		 * operate at normal power levels instead.  Defaults to false.
-		 * @see CancelControllerCommand, Driver::ControllerCommand, Driver::pfnControllerCallback_t, 
 		 */
 		bool BeginControllerCommand( uint32 const _homeId, Driver::ControllerCommand _command, Driver::pfnControllerCallback_t _callback = NULL, void* _context = NULL, bool _highPower = false );
 			
 		/**
 		 * Cancels any in-progress command running on a controller.
 		 * @param _homeId The Home ID of the Z-Wave controller.
+		 * @return true if a command was running and was cancelled.
 		 * @see BeginControllerCommand 
 		 */
 		bool CancelControllerCommand( uint32 const _homeId );

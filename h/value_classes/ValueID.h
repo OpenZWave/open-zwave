@@ -69,11 +69,10 @@ namespace OpenZWave
 	     */
 		enum ValueGenre
 		{
-			ValueGenre_All = 0,			/**< Represents all genres. */
+			ValueGenre_Basic = 0,		/**< The 'level' as controlled by basic commands.  Usually duplicated by another command class. */
 			ValueGenre_User,			/**< Basic values an ordinary user would be interested in. */
 			ValueGenre_Config,			/**< Device-specific configuration parameters.  These cannot be automatically discovered via Z-Wave, and are usually described in the user manual instead. */
 			ValueGenre_System,			/**< Values of significance only to users who understand the Z-Wave protocol */
-			ValueGenre_Basic,			/**< The 'level' as controlled by basic commands.  Usually duplicated by another command class. */
 			ValueGenre_Count			/**< A count of the number of genres defined.  Not to be used as a genre itself. */
 		};
 
@@ -113,7 +112,7 @@ namespace OpenZWave
 		 * @return the value's genre.
 		 * @see ValueGenre
 	     */
-		ValueGenre GetGenre()const{ return( (ValueGenre)( (m_id & 0x00f00000) >> 20 ) ); }
+		ValueGenre GetGenre()const{ return( (ValueGenre)( (m_id & 0x00c00000) >> 22 ) ); }
 
 		/** 
 		 * Get the Z-Wave command class that created and manages this value.  Knowledge of 
@@ -121,7 +120,7 @@ namespace OpenZWave
 		 * exposed in case it is of interest.
 		 * @return the value's command class.
 	     */
-		uint8 GetCommandClassId()const{ return( (uint8)( (m_id & 0x000ff000) >> 12 ) ); }
+		uint8 GetCommandClassId()const{ return( (uint8)( (m_id & 0x003fc000) >> 14 ) ); }
 
 		/** 
 		 * Get the command class instance of this value.  It is possible for there to be
@@ -131,7 +130,7 @@ namespace OpenZWave
 		 * information is exposed in case it is of interest.
 		 * @return the instance of the value's command class.
 	     */
-		uint8 GetInstance()const{ return( (uint8)( (m_id & 0x00000f00) >> 8 ) ); }
+		uint8 GetInstance()const{ return( (uint8)( (m_id & 0x00003800) >> 11 ) ); }
 
 		/** 
 		 * Get the command class index.  The index is used to identify one of multiple
@@ -140,7 +139,7 @@ namespace OpenZWave
 		 * is of interest.
 		 * @return the value index within the command class.
 	     */
-		uint8 GetIndex()const{ return( (uint8)( (m_id & 0x000000f0) >> 4 ) ); }
+		uint8 GetIndex()const{ return( (uint8)( (m_id & 0x000007f8) >> 3 ) ); }
 
 		/** 
 		 * Get the type of the value.  The type describes the data held by the value
@@ -149,7 +148,7 @@ namespace OpenZWave
 		 * @return the value's type.
 		 * @see ValueType, Manager::GetValueAsBool, Manager::GetValueAsByte, Manager::GetValueAsFloat, Manager::GetValueAsInt, Manager::GetValueAsShort, Manager::GetValueAsString, Manager::GetValueListSelection.
 	     */
-		ValueType GetType()const{ return( (ValueType)( m_id & 0x0000000f ) ); }
+		ValueType GetType()const{ return( (ValueType)( m_id & 0x00000007 ) ); }
 
 		// Comparison Operators
 		bool operator ==	( ValueID const& _other )const{ return( (m_homeId == _other.m_homeId) && (m_id == _other.m_id) ); }
@@ -183,16 +182,13 @@ namespace OpenZWave
 		):
 			m_homeId( _homeId )
 		{
-			assert( ((uint32)_genre) < 16 );
-			assert( _instance < 16 );
-			assert( _valueIndex < 16 );
-			assert( ((uint32)_type) < 16 );
+			assert( _instance < 8 );
 
 			m_id = (((uint32)_nodeId)<<24)
-				 | (((uint32)_genre)<<20)
-				 | (((uint32)_commandClassId)<<12)
-				 | (((uint32)_instance)<<8)
-				 | (((uint32)_valueIndex)<<4)
+				 | (((uint32)_genre)<<22)
+				 | (((uint32)_commandClassId)<<14)
+				 | ((((uint32)_instance)&7)<<11)
+				 | (((uint32)_valueIndex)<<3)
 				 | ((uint32)_type);
 		}
 
@@ -206,11 +202,11 @@ namespace OpenZWave
 		// ID Packing:
 		// Bits
 		// 24-31:	8 bits. Node ID of device
-		// 20-23:	4 bits. genre of value (see ValueGenre enum).
-		// 12-19:	8 bits. ID of command class that created and manages this value.
-		// 08-11:	4 bits. Instance index of the command class.
-		// 04-07:	4 bits. Index of value within all the value created by the command class instance.
-		// 00-03:	4 bits. Type of value (bool, byte, string etc).
+		// 22-23:	2 bits. genre of value (see ValueGenre enum).
+		// 14-21:	8 bits. ID of command class that created and manages this value.
+		// 11-13:	3 bits. Instance index of the command class.
+		// 03-10:	8 bits. Index of value within all the value created by the command class instance.
+		// 00-02:	3 bits. Type of value (bool, byte, string etc).
 		uint32	m_id;
 
 		// Unique PC interface identifier
