@@ -141,8 +141,25 @@ void Basic::CreateVars
 {
 	if( Node* node = GetNode() )
 	{
-		m_level.AddInstance( _instance, node->CreateValueByte( ValueID::ValueGenre_Basic, GetCommandClassId(), _instance, 0, "Level", "", false, 0  ) );
+		m_level.AddInstance( _instance, node->CreateValueByte( ValueID::ValueGenre_Basic, GetCommandClassId(), _instance, 0, "Basic", "", false, 0  ) );
 		ReleaseNode();
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <Basic::Set>
+// Helper method to set the level
+//-----------------------------------------------------------------------------
+void Basic::Set
+(
+	uint8 const _level
+)
+{
+	// This may look like a long winded way to do this, but
+	// it ensures that all the proper notifications get sent.
+	if( ValueByte* value = m_level.GetInstance( 1 ) )
+	{
+		value->Set( _level );
 	}
 }
 

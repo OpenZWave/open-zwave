@@ -247,6 +247,7 @@ namespace OpenZWave
 		void SetNodeProductName( uint8 const _nodeId, string const& _productName );
 		void SetNodeName( uint8 const _nodeId, string const& _nodeName );
 		void SetNodeLocation( uint8 const _nodeId, string const& _location );
+		void SetNodeLevel( uint8 const _nodeId, uint8 const _level );
 
 		Value* GetValue( ValueID const& _id );
 
@@ -311,7 +312,7 @@ namespace OpenZWave
 		pfnControllerCallback_t		m_controllerCallback;
 		void*						m_controllerCallbackContext;
 		bool						m_controllerAdded;
-		uint8						m_nodeAdded;
+		uint8						m_controllerCommandNode;
 
 	//-----------------------------------------------------------------------------
 	// Configuration Parameters	(wrappers for the Node methods)

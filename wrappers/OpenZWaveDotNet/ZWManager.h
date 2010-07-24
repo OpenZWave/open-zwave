@@ -38,6 +38,7 @@
 #include "Manager.h"
 #include "ValueID.h"
 #include "Notification.h"
+#include "Driver.h"
 
 using namespace System;
 using namespace System::Threading;
@@ -48,40 +49,120 @@ using namespace OpenZWave;
 
 namespace OpenZWaveDotNet
 {
-	// Delegates for handling notification callbacks
-	public delegate void ManagedWatchersHandler(ZWNotification^ notification);
+	// Delegate for handling notification callbacks
+	public delegate void ManagedNotificationsHandler(ZWNotification^ notification);
 
 	[UnmanagedFunctionPointer(CallingConvention::Cdecl)]
 	private delegate void OnNotificationFromUnmanagedDelegate(Notification* _notification, void* _context);
+
+	// Delegate for handling controller command callbacks
+	public enum class ZWControllerState
+	{
+		Normal		= Driver::ControllerState_Normal,								/**< No command in progress. */
+		Waiting		= Driver::ControllerState_Waiting,								/**< Controller is waiting for a user action. */
+		InProgress	= Driver::ControllerState_InProgress,							/**< The controller is communicating with the other device to carry out the command. */
+		Completed	= Driver::ControllerState_Completed,							/**< The command has completed successfully. */
+		Failed		= Driver::ControllerState_Failed								/**< The command has failed. */
+	};
+
+	public enum class ZWControllerCommand
+	{
+		None					= Driver::ControllerCommand_None,					/**< No command. */
+		AddController			= Driver::ControllerCommand_AddController,			/**< Add a new controller to the Z-Wave network.  The new controller will be a secondary. */
+		AddDevice				= Driver::ControllerCommand_AddDevice,				/**< Add a new device (but not a controller) to the Z-Wave network. */
+		CreateNewPrimary		= Driver::ControllerCommand_CreateNewPrimary,		/**< Add a new controller to the Z-Wave network.  The new controller will be the primary, and the current primary will become a secondary controller. */
+		ReceiveConfiguration	= Driver::ControllerCommand_ReceiveConfiguration,	/**< Receive Z-Wave network configuration information from another controller. */
+		RemoveController		= Driver::ControllerCommand_RemoveController,		/**< Remove a controller from the Z-Wave network. */
+		RemoveDevice			= Driver::ControllerCommand_RemoveDevice,			/**< Remove a new device (but not a controller) from the Z-Wave network. */
+		ReplaceFailedDevice		= Driver::ControllerCommand_ReplaceFailedDevice,	/**< Replace a non-responding device with another. */
+		TransferPrimaryRole		= Driver::ControllerCommand_TransferPrimaryRole		/**< Make a different controller the primary. */
+	};
+
+	public delegate void ManagedControllerStateChangedHandler( ZWControllerState _state);
+
+	[UnmanagedFunctionPointer(CallingConvention::Cdecl)]
+	private delegate void OnControllerStateChangedFromUnmanagedDelegate(Driver::ControllerState _state, void* _context);
 
 	public ref class ZWManager
 	{
 	//-----------------------------------------------------------------------------
 	// Events
 	//-----------------------------------------------------------------------------
-	public:
-		ManagedWatchersHandler^ m_event;
-		event ManagedWatchersHandler^ OnZWNotification
+	private:
+		ManagedNotificationsHandler^ m_notificationEvent;
+		event ManagedNotificationsHandler^ ZWOnNotification
 		{
-			void add( ManagedWatchersHandler ^ d )
+			void add( ManagedNotificationsHandler ^ d )
 			{ 
-				m_event += d;
+				m_notificationEvent += d;
 			} 
 			
-			void remove(ManagedWatchersHandler ^ d)
+			void remove(ManagedNotificationsHandler ^ d)
 			{ 
-				m_event -= d;
+				m_notificationEvent -= d;
 			} 
 			
 			void raise(ZWNotification^ notification)
 			{ 
-				ManagedWatchersHandler^ tmp = m_event; 
+				ManagedNotificationsHandler^ tmp = m_notificationEvent; 
 				if (tmp)
 				{ 
 					tmp->Invoke( notification );
 				} 
 			} 
+		}
+
+	public:
+		property ManagedNotificationsHandler^ OnNotification
+		{
+			ManagedNotificationsHandler^ get()
+			{
+				return m_notificationEvent;
+			}
+			void set( ManagedNotificationsHandler^ value )
+			{
+				m_notificationEvent = value;
+			}
+		}
+
+	private:
+		ManagedControllerStateChangedHandler^ m_controllerStateChangedEvent;
+		event ManagedControllerStateChangedHandler^ ZWOnControllerStateChanged
+		{
+			void add( ManagedControllerStateChangedHandler ^ d )
+			{ 
+				m_controllerStateChangedEvent += d;
+			} 
+			
+			void remove(ManagedControllerStateChangedHandler ^ d)
+			{ 
+				m_controllerStateChangedEvent -= d;
+			} 
+			
+			void raise(ZWControllerState state)
+			{ 
+				ManagedControllerStateChangedHandler^ tmp = m_controllerStateChangedEvent; 
+				if (tmp)
+				{ 
+					tmp->Invoke( state );
+				} 
+			} 
 		} 
+
+		ManagedControllerStateChangedHandler^ m_onControllerStateChanged;
+
+	public:
+		property ManagedControllerStateChangedHandler^ OnControllerStateChanged
+		{
+			ManagedControllerStateChangedHandler^ get()
+			{
+				return m_controllerStateChangedEvent;
+			}
+			void set( ManagedControllerStateChangedHandler^ value )
+			{
+				m_controllerStateChangedEvent = value;
+			}
+		}
 
 	//-----------------------------------------------------------------------------
 	// Construction
@@ -456,6 +537,43 @@ namespace OpenZWaveDotNet
 		 * @see GetNodeLocation, GetNodeName, SetNodeName
 		 */
 		void SetNodeLocation( uint32 homeId, uint8 nodeId, String^ _location ){ Manager::Get()->SetNodeLocation( homeId, nodeId, (const char*)(Marshal::StringToHGlobalAnsi(_location)).ToPointer()); }
+	
+		/**
+		 * Turns a node on
+		 * This is a helper method to simplify basic control of a node.  It is the equivalent of
+		 * changing the level reported by the node's Basic command class to 255, and will generate a 
+		 * ValueChanged notification from that class.  This command will turn on the device at its
+		 * last known level, if supported by the device, otherwise it will turn	it on at 100%.
+		 * @param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * @param _nodeId The ID of the node to be changed.
+		 * @see SetNodeOff, SetNodeLevel
+		 */
+		void SetNodeOn( uint32 homeId, uint8 nodeId ){ Manager::Get()->SetNodeOn( homeId, nodeId ); }
+
+		/**
+		 * Turns a node off
+		 * This is a helper method to simplify basic control of a node.  It is the equivalent of
+		 * changing the level reported by the node's Basic command class to zero, and will generate
+		 * a ValueChanged notification from that class.
+		 * @param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * @param _nodeId The ID of the node to be changed.
+		 * @see SetNodeOn, SetNodeLevel
+		 */
+		void SetNodeOff( uint32 homeId, uint8 nodeId ){ Manager::Get()->SetNodeOff( homeId, nodeId ); }
+
+		/**
+		 * Sets the basic level of a node
+		 * This is a helper method to simplify basic control of a node.  It is the equivalent of
+		 * changing the value reported by the node's Basic command class and will generate a 
+		 * ValueChanged notification from that class.
+		 * @param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * @param _nodeId The ID of the node to be changed.
+		 * @param _level The level to set the node.  Valid values are 0-99 and 255.  Zero is off and
+		 * 99 is fully on.  255 will turn on the device at its last known level (if supported).
+		 * @see SetNodeOn, SetNodeOff
+		 */
+		void SetNodeLevel( uint32 homeId, uint8 nodeId, uint8 level ){ Manager::Get()->SetNodeLevel( homeId, nodeId, level ); }
+		
 	/*@}*/
 
 	//-----------------------------------------------------------------------------
@@ -575,7 +693,7 @@ namespace OpenZWaveDotNet
 		 * @return true if the list items were obtained.  Returns false if the value is not a ZWValueID::ValueType_List. The type can be tested with a call to ZWValueID::GetType
 		 * @see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsDecimal, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListSelection 
 		 */
-		bool GetValueListItems( ZWValueID^ id, [Out] List<String^>^ %o_value );
+		bool GetValueListItems( ZWValueID^ id, [Out] array<String^>^ %o_value );
 
 		/**
 		 * Sets the state of a bool.
@@ -740,7 +858,7 @@ namespace OpenZWaveDotNet
 		 * @return The number of nodes in the associations array.  If zero, the array will point to NULL, and does not need to be deleted.
 		 * @see GetNumGroups, AddAssociation, RemoveAssociation
 		 */
-		//uint32 GetAssociations( uint32 const homeId, uint8 const _nodeId, uint8 const _groupIdx, uint8** o_associations );
+		uint32 GetAssociations( uint32 const homeId, uint8 const nodeId, uint8 const groupIdx, [Out] array<Byte>^ %o_associations );
 
 		/**
 		 * Adds a node to an association group.
@@ -770,33 +888,6 @@ namespace OpenZWaveDotNet
 	/*@}*/
 
 	//-----------------------------------------------------------------------------
-	//	Notifications
-	//-----------------------------------------------------------------------------
-	/*@{*/
-	public:
-		/**
-		 * Add a notification watcher.
-		 * In OpenZWave, all feedback from the Z-Wave network is sent to the application via callbacks.
-		 * This method allows the application to add a notification callback handler, known as a "watcher" to OpenZWave.
-		 * An application needs only add a single watcher - all notifications will be reported to it.
-		 * @param _watcher pointer to a function that will be called by the notification system.
-		 * @param _context pointer to user defined data that will be passed to the watcher function with each notification.
-		 * @return true if the watcher was successfully added.
-		 * @see RemoveWatcher, Notification
-		 */
-		//bool AddWatcher( pfnOnNotification_t _watcher, void* _context );
-
-		/**
-		 * Remove a notification watcher.
-		 * @param _watcher pointer to a function that must match that passed to a previous call to AddWatcher
-		 * @param _context pointer to user defined data that must match the one passed in that same previous call to AddWatcher.
-		 * @return true if the watcher was successfully removed.
-		 * @see AddWatcher, Notification
-		 */
-		//bool RemoveWatcher( pfnOnNotification_t _watcher, void* _context );
-	/*@}*/
-
-	//-----------------------------------------------------------------------------
 	// Controller commands
 	//-----------------------------------------------------------------------------
 	/*@{*/
@@ -820,41 +911,96 @@ namespace OpenZWaveDotNet
 		/**
 		 * Start a controller command process.
 		 * @param homeId The Home ID of the Z-Wave controller.
-		 * @param _command The command to be sent to the controller.
-		 * <p> Commands
-		 * - Driver::ControllerCommand_AddController - Add a new secondary controller to the Z-Wave network.
-		 * - Driver::ControllerCommand_AddDevice - Add a new device (but not a controller) to the Z-Wave network.
-		 * - Driver::ControllerCommand_CreateNewPrimary (Not yet implemented)
-		 * - Driver::ControllerCommand_ReceiveConfiguration -   
-		 * - Driver::ControllerCommand_RemoveController - remove a controller from the Z-Wave network.
-		 * - Driver::ControllerCommand_RemoveDevice - remove a device (but not a controller) from the Z-Wave network.
-		 * - Driver::ControllerCommand_ReplaceFailedDevice (Not yet implemented) - 
-		 * - Driver:: ControllerCommand_TransferPrimaryRole	(Not yet implemented) - Add a new controller to the network and
+		 * @param command The command to be sent to the controller.
+		 * @param highPower used only with the AddDevice, AddController, RemoveDevice and RemoveController commands. 
+		 * Usually when adding or removing devices, the controller operates at low power so that the controller must
+		 * be physically close to the device for security reasons.  If _highPower is true, the controller will 
+		 * operate at normal power levels instead.
+		 * @return true if the command was accepted and has started.
+		 * @see CancelControllerCommand
+		 * <p> Controller Commands
+		 * - ZWControllerCommand.AddController - Add a new secondary controller to the Z-Wave network.
+		 * - ZWControllerCommand.AddDevice - Add a new device (but not a controller) to the Z-Wave network.
+		 * - ZWControllerCommand.CreateNewPrimary (Not yet implemented)
+		 * - ZWControllerCommand.ReceiveConfiguration -   
+		 * - ZWControllerCommand.RemoveController - remove a controller from the Z-Wave network.
+		 * - ZWControllerCommand.RemoveDevice - remove a device (but not a controller) from the Z-Wave network.
+		 * - ZWControllerCommand.ReplaceFailedDevice (Not yet implemented) - 
+		 * - ZWControllerCommand.TransferPrimaryRole (Not yet implemented) - Add a new controller to the network and
 		 * make it the primary.  The existing primary will become a secondary controller.  
-		 * @param _callback pointer to a function that will be called at various stages during the command process
-		 * to notify the user of progress or to request actions on the user's part.  Defaults to NULL.
-		 * <p> Callbacks
-		 * - Driver::ControllerState_Waiting, the controller is waiting for a user action.  A notice should be displayed 
+		 * <p>These processes are asynchronous, and at various stages OpenZWave will trigger a callback
+		 * to notify the user of progress or to request actions on the user's part.
+		 * <p> Controller States
+		 * - ZWControllerState.Waiting, the controller is waiting for a user action.  A notice should be displayed 
 		 * to the user at this point, telling them what to do next.
 		 * For the add, remove, replace and transfer primary role commands, the user needs to be told to press the 
 		 * inclusion button on the device that  is going to be added or removed.  For ControllerCommand_ReceiveConfiguration, 
 		 * they must set their other controller to send its data, and for ControllerCommand_CreateNewPrimary, set the other
 		 * controller to learn new data.
-		 * - Driver::ControllerState_InProgress - the controller is in the process of adding or removing the chosen node.
-		 * - Driver::ControllerState_Complete - the controller has finished adding or removing the node, and the command is complete.
-		 * - Driver::ControllerState_Failed - will be sent if the command fails for any reason.
-		 * @param _context pointer to user defined data that will be passed into to the callback function.  Defaults to NULL.
-		 * @param _highPower used only with the AddDevice, AddController, RemoveDevice and RemoveController commands. 
-		 * Usually when adding or removing devices, the controller operates at low power so that the controller must
-		 * be physically close to the device for security reasons.  If _highPower is true, the controller will 
-		 * operate at normal power levels instead.  Defaults to false.
-		 * @see CancelControllerCommand, Driver::ControllerCommand, Driver::pfnControllerCallback_t, 
+		 * - ZWControllerState.InProgress - the controller is in the process of adding or removing the chosen node.
+		 * - ZWControllerState.Complete - the controller has finished adding or removing the node, and the command is complete.
+		 * - ZWControllerState.Failed - will be sent if the command fails for any reason.
+		 * <p>To register for these notifications, create an event handler with the same signature as
+		 * the ManagedControllerStateChangedHandler delegate.  Just before calling the BeginControllerCommand
+		 * method, subscribe to the OnControllerStateChanged event.  Once the command has completed, remember
+		 * to unsubscribe from the event.
+		 * /code
+		 * private UInt32 m_homeId;
+		 * private ZWManager m_manager;
+		 * private ManagedControllerStateChangedHandler m_myEventHandler = new ManagedControllerStateChangedHandler( MyControllerStateChangedHandler );
+		 *
+		 * public void MyAddControllerMethod()
+		 * {
+		 *     m_manager.OnControllerStateChanged += m_myEventHandler;
+		 *     m_manager.BeginControllerCommand( m_homeId, ZWControllerCommand::AddController, false );		
+		 * }
+		 *
+		 * public void MyControllerStateChangedHandler( ZWControllerState state )
+		 * {
+		 *     // Handle the controller state notifications here.
+		 *     bool complete = false;
+		 *     switch( state )
+		 *     {
+		 *         case ZWControllerState::Waiting:
+		 *         {
+	     *             // Display a message to tell the user to press the include button on the controller
+		 *             break;
+		 *         }
+		 *         case ZWControllerState::InProgress:
+		 *         {
+		 *             // Tell the user that the controller has been found and the adding process is in progress.
+		 *             break;
+		 *         }
+		 *         case ZWControllerState::Completed:
+		 *         {
+		 *             // Tell the user that the controller has been successfully added.
+		 *             // The command is now complete
+		 *             complete = true;
+		 *             break;
+		 *         }
+		 *         case ZWControllerState::Failed:
+		 *         {
+		 *             // Tell the user that the controller addition process has failed.
+		 *             // The command is now complete
+		 *             complete = true;
+		 *             break;
+		 *         }
+		 *     }
+		 *
+		 *     if( complete )
+		 *     {
+		 *         // Remove the event handler
+		 *         m_manager.OnControllerStateChanged -= m_myEventHandler;
+		 *     }
+		 * }
+		 * /endcode
 		 */
-		//bool BeginControllerCommand( uint32 const homeId, Driver::ControllerCommand _command, Driver::pfnControllerCallback_t _callback = NULL, void* _context = NULL, bool _highPower = false );
+		bool BeginControllerCommand( uint32 homeId, ZWControllerCommand command, bool highPower );
 			
 		/**
 		 * Cancels any in-progress command running on a controller.
 		 * @param homeId The Home ID of the Z-Wave controller.
+		 * @return true if a command was running and was cancelled.
 		 * @see BeginControllerCommand 
 		 */
 		bool CancelControllerCommand( uint32 homeId ){ return Manager::Get()->CancelControllerCommand( homeId ); }
@@ -867,17 +1013,17 @@ namespace OpenZWaveDotNet
 	/*@}*/
 
 	public:
-		ZWManager()
-		{
-			m_criticalSection = gcnew Object();
-		}
+		ZWManager(){}
 
 	private:
 
-		void  OnNotificationFromUnmanaged(Notification* _notification,void* _context);	// Forward notification to managed delegates hooked via Event addhandler 
+		void  OnNotificationFromUnmanaged(Notification* _notification,void* _context);					// Forward notification to managed delegates hooked via Event addhandler 
+		void  OnControllerStateChangedFromUnmanaged(Driver::ControllerState _state,void* _context);		// Forward controller state change to managed delegates hooked via Event addhandler 
 
-		GCHandle								m_gch;
-		OnNotificationFromUnmanagedDelegate^	m_onNotification;
-		Object^									m_criticalSection;
-	};
+		GCHandle										m_gchNotification;
+		OnNotificationFromUnmanagedDelegate^			m_onNotification;
+
+		GCHandle										m_gchControllerState;
+		OnControllerStateChangedFromUnmanagedDelegate^	m_onStateChanged;
+};
 }

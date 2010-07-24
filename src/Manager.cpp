@@ -862,6 +862,49 @@ string Manager::GetNodeProductId
 }
 
 //-----------------------------------------------------------------------------
+// <Manager::SetNodeOn>
+// Helper method to turn a node on
+//-----------------------------------------------------------------------------
+void Manager::SetNodeOn
+(
+	uint32 const _homeId,
+	uint8 const _nodeId
+)
+{
+	SetNodeLevel( _homeId, _nodeId, 0xff );
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::SetNodeOff>
+// Helper method to turn a node off
+//-----------------------------------------------------------------------------
+void Manager::SetNodeOff
+(
+	uint32 const _homeId,
+	uint8 const _nodeId
+)
+{
+	SetNodeLevel( _homeId, _nodeId, 0 );
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::SetNodeLevel>
+// Helper method to set the basic level of a node
+//-----------------------------------------------------------------------------
+void Manager::SetNodeLevel
+(
+	uint32 const _homeId,
+	uint8 const _nodeId,
+	uint8 const _level
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		return driver->SetNodeLevel( _nodeId, _level );
+	}
+}
+
+//-----------------------------------------------------------------------------
 //	Values
 //-----------------------------------------------------------------------------
 

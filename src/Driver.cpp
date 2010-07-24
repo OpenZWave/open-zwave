@@ -104,7 +104,7 @@ Driver::Driver
 	m_controllerCallback( NULL ),
 	m_controllerCallbackContext( NULL ),
 	m_controllerAdded( false ),
-	m_nodeAdded( 0 )
+	m_controllerCommandNode( 0 )
 {
 	// Clear the nodes array
 	memset( m_nodes, 0, sizeof(Node*) * 256 );
@@ -1590,7 +1590,7 @@ void Driver::HandleAddNodeToNetworkRequest
 			Log::Write( "ADD_NODE_STATUS_ADDING_SLAVE" );			
 			Log::Write( "Adding node ID %d", _data[4] );
 			m_controllerAdded = false;
-			m_nodeAdded = _data[4];
+			m_controllerCommandNode = _data[4];
 			break;
 		}
 		case ADD_NODE_STATUS_ADDING_CONTROLLER:
@@ -1598,50 +1598,50 @@ void Driver::HandleAddNodeToNetworkRequest
 			Log::Write( "ADD_NODE_STATUS_ADDING_CONTROLLER");
 			Log::Write( "Adding node ID %d", _data[4] );
 			m_controllerAdded = true;
-			m_nodeAdded = _data[4];
+			m_controllerCommandNode = _data[4];
 			break;
 		}
 		case ADD_NODE_STATUS_PROTOCOL_DONE:
 		{
 			Log::Write( "ADD_NODE_STATUS_PROTOCOL_DONE" );
 
-			// If we added a controller, now is the time to replicate our data to it
 			if( m_controllerAdded && m_controllerReplication)
 			{
-				m_controllerReplication->StartReplication( m_nodeAdded );
+				// We added a controller, now is the time to replicate our data to it
+				m_controllerReplication->StartReplication( m_controllerCommandNode );
+			}
+			else
+			{
+				// We added a device.
+				// Get the controller out of add mode to avoid accidentally adding other devices.
+				Msg* msg = new Msg( "Stop Add Node Mode", 0xff, REQUEST, FUNC_ID_ZW_ADD_NODE_TO_NETWORK, true );
+				msg->Append( ADD_NODE_STOP );
+				SendMsg( msg );
 			}
 			break;
 		}
 		case ADD_NODE_STATUS_DONE:
 		{
 			Log::Write( "ADD_NODE_STATUS_DONE" );
+
+			AddNodeInfoRequest( m_controllerCommandNode );
+
 			if( m_controllerCallback )
 			{
 				m_controllerCallback( ControllerState_Completed, m_controllerCallbackContext );
 			}
 			m_controllerCommand = ControllerCommand_None;
-
-			Msg* msg = new Msg( "Stop Add Node Mode", 0xff, REQUEST, FUNC_ID_ZW_ADD_NODE_TO_NETWORK, true );
-			msg->Append( ADD_NODE_STOP );
-			SendMsg( msg );
-
-			Log::Write( "Get new init data after adding node(s)" );
-			msg = new Msg( "Get new init data after adding node(s)", 0xff, REQUEST, FUNC_ID_SERIAL_API_GET_INIT_DATA, false );
-			SendMsg( msg );
 			break;
 		}
 		case ADD_NODE_STATUS_FAILED:
 		{
 			Log::Write( "ADD_NODE_STATUS_FAILED" );
+
 			if( m_controllerCallback )
 			{
 				m_controllerCallback( ControllerState_Failed, m_controllerCallbackContext );
 			}
 			m_controllerCommand = ControllerCommand_None;
-
-			Msg* msg = new Msg( "Failed Stop Add Node Mode", 0xff, REQUEST, FUNC_ID_ZW_ADD_NODE_TO_NETWORK, true );
-			msg->Append( ADD_NODE_STOP_FAILED );
-			SendMsg( msg );
 			break;
 		}
 		default:
@@ -1685,34 +1685,33 @@ void Driver::HandleRemoveNodeFromNetworkRequest
 		case REMOVE_NODE_STATUS_REMOVING_SLAVE:
 		{
 			Log::Write( "REMOVE_NODE_STATUS_REMOVING_SLAVE" );
+			m_controllerCommandNode = _data[4];
 			break;
 		}
 		case REMOVE_NODE_STATUS_REMOVING_CONTROLLER:
 		{
 			Log::Write( "REMOVE_NODE_STATUS_REMOVING_CONTROLLER" );
-			break;
-		}
-		case REMOVE_NODE_STATUS_PROTOCOL_DONE:
-		{
-			Log::Write( "REMOVE_NODE_STATUS_PROTOCOL_DONE" );
+			m_controllerCommandNode = _data[4];
 			break;
 		}
 		case REMOVE_NODE_STATUS_DONE:
 		{
 			Log::Write( "REMOVE_NODE_STATUS_DONE" );
+			
+			Notification* notification = new Notification( Notification::Type_NodeRemoved );
+			notification->SetHomeAndNodeIds( m_homeId, m_controllerCommandNode );
+			QueueNotification( notification ); 
+			
+			LockNodes();
+			delete m_nodes[m_controllerCommandNode];
+			m_nodes[m_controllerCommandNode] = NULL;
+			ReleaseNodes();
+
 			if( m_controllerCallback )
 			{
 				m_controllerCallback( ControllerState_Completed, m_controllerCallbackContext );
 			}
 			m_controllerCommand = ControllerCommand_None;
-
-			Msg* msg = new Msg( "Stop Remove Node Mode", 0xff, REQUEST, FUNC_ID_ZW_REMOVE_NODE_FROM_NETWORK, true );
-			msg->Append( REMOVE_NODE_STOP );
-			SendMsg( msg );
-
-			Log::Write( "Get new init data after removing node(s)" );
-			msg = new Msg( "Get new init data after removing node(s)", 0xff, REQUEST, FUNC_ID_SERIAL_API_GET_INIT_DATA, false );
-			SendMsg( msg );
 			break;
 		}
 		case REMOVE_NODE_STATUS_FAILED:
@@ -1723,10 +1722,6 @@ void Driver::HandleRemoveNodeFromNetworkRequest
 				m_controllerCallback( ControllerState_Failed, m_controllerCallbackContext );
 			}
 			m_controllerCommand = ControllerCommand_None;
-
-			Msg* msg = new Msg( "Stop Remove Node Mode", 0xff, REQUEST, FUNC_ID_ZW_REMOVE_NODE_FROM_NETWORK, true );
-			msg->Append( REMOVE_NODE_STOP );
-			SendMsg( msg );
 			break;
 		}
 		default:
@@ -2675,6 +2670,23 @@ void Driver::SetNodeLocation
 	if( Node* node = GetNode( _nodeId ) )
 	{
 		node->SetLocation( _location );
+		ReleaseNodes();
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::SetNodeLevel>
+// Helper to set the node level through the basic command class
+//-----------------------------------------------------------------------------
+void Driver::SetNodeLevel
+( 
+	uint8 const _nodeId,
+	uint8 const _level
+)
+{
+	if( Node* node = GetNode( _nodeId ) )
+	{
+		node->SetLevel( _level );
 		ReleaseNodes();
 	}
 }

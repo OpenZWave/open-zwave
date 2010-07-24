@@ -29,6 +29,7 @@
 #include "ValueBool.h"
 #include "Driver.h"
 #include "Node.h"
+#include "Log.h"
 
 using namespace OpenZWave;
 
