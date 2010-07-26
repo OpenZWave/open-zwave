@@ -1960,6 +1960,17 @@ bool Driver::HandleApplicationUpdateRequest
 		{
 			Log::Write( "FUNC_ID_ZW_APPLICATION_UPDATE: UPDATE_STATE_NODE_INFO_REQ_FAILED received" );
 			
+			// In case the device does not report any optional command classes,
+			// we mark the ones we do have so that their static data is requested.
+			if( Node* node = GetNode( nodeId ) )
+			{
+				if( !node->NodeInfoReceived() )
+				{
+					node->SetStaticRequests();
+					node->RequestEntireNodeState();
+				}
+			}
+
 			// Just in case the failure was due to the node being asleep, we try
 			// to move its pending messages to its wakeup queue.  If it is not
 			// a sleeping device, this will have no effect.

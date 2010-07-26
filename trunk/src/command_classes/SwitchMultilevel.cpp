@@ -140,6 +140,7 @@ bool SwitchMultilevel::HandleMsg
 		uint8 switchType2 = _data[2] & 0x1f;
 		
 		Log::Write( "Received SwitchMultiLevel supported report from node %d: Switch1=%s/%s, Switch2=%s/%s", GetNodeId(), c_switchLabelsPos[switchType1], c_switchLabelsNeg[switchType1], c_switchLabelsPos[switchType2], c_switchLabelsNeg[switchType2] );
+		ClearStaticRequest( StaticRequest_Version );
 
 		// Set the labels on the values
 		ValueButton* button;
@@ -194,6 +195,10 @@ void SwitchMultilevel::SetVersion
 		msg->Append( SwitchMultilevelCmd_SupportedGet );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 		GetDriver()->SendMsg( msg );
+
+		// Set the request flag again - it will be cleared when we get a
+		// response to the SwitchMultilevelCmd_SupportedGet message.
+		SetStaticRequest( StaticRequest_Version );
 	}
 }
 

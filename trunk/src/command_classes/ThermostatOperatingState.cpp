@@ -66,7 +66,7 @@ void ThermostatOperatingState::RequestState
 	uint32 const _requestFlags
 )
 {
-	if( _requestFlags & RequestFlag_Static )
+	if( ( _requestFlags & RequestFlag_Static ) && HasStaticRequest( StaticRequest_Values ) )
 	{
 		// Request the supported states
 		Msg* msg = new Msg( "Request Supported Thermostat Operating States", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
@@ -139,6 +139,7 @@ bool ThermostatOperatingState::HandleMsg
 			}
 		}
 
+		ClearStaticRequest( StaticRequest_Values );
 		CreateVars( _instance );
 		return true;
 	}

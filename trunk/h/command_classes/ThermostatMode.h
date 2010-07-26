@@ -57,7 +57,7 @@ namespace OpenZWave
 		virtual void CreateVars( uint8 const _instance );
 
 	private:
-		ThermostatMode( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
+		ThermostatMode( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){ SetStaticRequest( StaticRequest_Values ); }
 
 		vector<ValueList::Item>		m_supportedModes;
 		ValueInstances<ValueList>	m_mode;

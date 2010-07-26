@@ -62,7 +62,7 @@ void Version::RequestState
 	uint32 const _requestFlags
 )
 {
-	if( _requestFlags & RequestFlag_Static )
+	if( ( _requestFlags & RequestFlag_Static ) && HasStaticRequest( StaticRequest_Values ) )
 	{
 		Msg* msg = new Msg( "VersionCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 		msg->Append( GetNodeId() );
@@ -96,6 +96,7 @@ bool Version::HandleMsg
 		snprintf( application, sizeof(application), "%d.%d", _data[4], _data[5] );
 
 		Log::Write( "Received Version report from node %d: Library=%s, Protocol=%s, Application=%s", GetNodeId(), library, protocol, application );
+		ClearStaticRequest( StaticRequest_Values );
 
 		if( ValueString* libraryValue = m_library.GetInstance( _instance ) )
 		{
@@ -109,6 +110,7 @@ bool Version::HandleMsg
 		{
 			applicationValue->OnValueChanged( application );
 		}
+
 		return true;
 	}
 	
@@ -118,8 +120,9 @@ bool Version::HandleMsg
 		{
 			if( CommandClass* pCommandClass = node->GetCommandClass( _data[1] ) )
 			{
-				pCommandClass->SetVersion( _data[2] );				
 				Log::Write( "Received Command Class Version report from node %d: CommandClass=%s, Version=%d", GetNodeId(), pCommandClass->GetCommandClassName().c_str(), _data[2] );
+				pCommandClass->ClearStaticRequest( StaticRequest_Version );
+				pCommandClass->SetVersion( _data[2] );
 			}
 
 			ReleaseNode();

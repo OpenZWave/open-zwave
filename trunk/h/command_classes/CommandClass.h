@@ -51,7 +51,7 @@ namespace OpenZWave
 			RequestFlag_Dynamic	= 0x00000004	// Values that change and will be requested if polling is enabled on the node.
 		};
 
-		CommandClass( uint32 const _homeId, uint8 const _nodeId ): m_homeId( _homeId ), m_nodeId( _nodeId ), m_version( 1 ), m_instances( 0 ){}
+		CommandClass( uint32 const _homeId, uint8 const _nodeId );
 		virtual ~CommandClass(){}
 
 		virtual void ReadXML( TiXmlElement const* _ccElement );
@@ -147,6 +147,24 @@ namespace OpenZWave
 		uint8	m_nodeId;
 		uint8	m_version;
 		uint8	m_instances;
+
+	//-----------------------------------------------------------------------------
+	// Record which items of static data have been read from the device
+	//-----------------------------------------------------------------------------
+	public:
+		enum StaticRequest
+		{
+			StaticRequest_Instances		= 0x01,
+			StaticRequest_Values		= 0x02,
+			StaticRequest_Version		= 0x04
+		};
+
+		bool HasStaticRequest( uint8 _request ){ return( (m_staticRequests & _request) != 0 ); }
+		void SetStaticRequest( uint8 _request ){ m_staticRequests |= _request; }
+		void ClearStaticRequest( uint8 _request ){ m_staticRequests &= ~_request; }
+
+	private:
+		uint8   m_staticRequests;		
 	};
 
 } // namespace OpenZWave
