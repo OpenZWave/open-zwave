@@ -64,7 +64,7 @@ void ThermostatFanMode::RequestState
 	uint32 const _requestFlags
 )
 {
-	if( _requestFlags & RequestFlag_Static )
+	if( ( _requestFlags & RequestFlag_Static ) && HasStaticRequest( StaticRequest_Values ) )
 	{
 		// Request the supported modes
 		Msg* msg = new Msg( "Request Supported Thermostat Fan Modes", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
@@ -136,6 +136,7 @@ bool ThermostatFanMode::HandleMsg
 			}
 		}
 
+		ClearStaticRequest( StaticRequest_Values );
 		CreateVars( _instance );
 		return true;
 	}

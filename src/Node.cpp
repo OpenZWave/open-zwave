@@ -128,7 +128,6 @@ void Node::ReadXML
 	int intVal;
 
 	m_protocolInfoReceived = true;
-	m_nodeInfoReceived = true;
 
 	str = _node->Attribute( "name" );
 	if( str )
@@ -195,6 +194,13 @@ void Node::ReadXML
 	{
 		char* p;
 		m_security = (uint8)strtol( str, &p, 0 );
+	}
+
+	m_nodeInfoReceived = false;
+	str = _node->Attribute( "node_info" );
+	if( str )
+	{
+		m_nodeInfoReceived = !strcmp( str, "true" );
 	}
 
 	// Notify the watchers of the protocol info
@@ -311,13 +317,6 @@ void Node::WriteXML
 	TiXmlElement* _driverElement
 )
 {
-	if( !(IsListeningDevice() || m_nodeInfoReceived) )
-	{
-		// This is a sleeping node from which we have never had a list of command classes.
-		// We should write nothing out otherwise the list will not be requested in future.
-		return;
-	}
-	
 	char str[32];
 
 	TiXmlElement* nodeElement = new TiXmlElement( "Node" );
@@ -351,6 +350,8 @@ void Node::WriteXML
 
 	snprintf( str, 32, "0x%.2x", m_security );
 	nodeElement->SetAttribute( "security", str );
+
+	nodeElement->SetAttribute( "node_info", m_nodeInfoReceived ? "true" : "false" );
 
 	// Write the manufacturer and product data in the same format
 	// as used in the ManyfacturerSpecfic.xml file.  This will 
@@ -502,6 +503,8 @@ void Node::UpdateNodeInfo
 			Log::Write( "  None" );
 		}
 
+		SetStaticRequests();
+
 		// For sleeping devices, we defer the usual requests until we have told
 		// the device to send it's wake-up notifications to the controller.
 		if( WakeUp* wakeUp = static_cast<WakeUp*>( GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
@@ -516,6 +519,39 @@ void Node::UpdateNodeInfo
 	else
 	{
 		RequestState( CommandClass::RequestFlag_Dynamic );
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <Node::SetStaticRequests>
+// The first time we hear from a node, we set flags to indicate the
+// need to request certain static data from the device.  This is so that
+// we can track which data has been received, and which has not.
+//-----------------------------------------------------------------------------
+void Node::SetStaticRequests
+(
+)
+{
+	uint8 request = 0;
+
+	if( GetCommandClass( MultiInstance::StaticGetCommandClassId() ) )
+	{
+		// Request instances
+		request |= (uint8)CommandClass::StaticRequest_Instances;
+	}
+
+	if( GetCommandClass( Version::StaticGetCommandClassId() ) )
+	{
+		// Request instances
+		request |= (uint8)CommandClass::StaticRequest_Version;
+	}
+
+	if( request )
+	{
+		for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
+		{
+			it->second->SetStaticRequest( request );
+		}
 	}
 }
 
@@ -669,9 +705,10 @@ void Node::RequestInstances
 	{
 		for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
 		{
-			if( it->second != pMultiInstance )
+			CommandClass* cc = it->second;
+			if( cc->HasStaticRequest( CommandClass::StaticRequest_Instances ) )
 			{
-				pMultiInstance->RequestInstances( it->second );
+				pMultiInstance->RequestInstances( cc );
 			}
 		}
 	}
@@ -689,9 +726,10 @@ void Node::RequestVersions
 	{
 		for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
 		{
-			if( it->second != version )
+			CommandClass* cc = it->second;
+			if( cc->HasStaticRequest( CommandClass::StaticRequest_Version ) )
 			{
-				version->RequestCommandClassVersion( it->second );
+				version->RequestCommandClassVersion( cc );
 			}
 		}
 	}

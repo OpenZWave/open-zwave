@@ -62,7 +62,7 @@ void ManufacturerSpecific::RequestState
 	uint32 const _requestFlags
 )
 {
-	if( _requestFlags & RequestFlag_Static )
+	if( ( _requestFlags & RequestFlag_Static ) && HasStaticRequest( StaticRequest_Values ) )
 	{
 		Msg* msg = new Msg( "ManufacturerSpecificCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 		msg->Append( GetNodeId() );
@@ -146,11 +146,13 @@ bool ManufacturerSpecific::HandleMsg
 		}
 		
 		Log::Write( "Received manufacturer specific report from node %d: Manufacturer=%s, Product=%s", GetNodeId(), manufacturerName.c_str(), productName.c_str() );
+		ClearStaticRequest( StaticRequest_Values );
 		
 		// Notify the watchers of the name changes
 		Notification* notification = new Notification( Notification::Type_NodeNaming );
 		notification->SetHomeAndNodeIds( GetHomeId(), GetNodeId() );
 		GetDriver()->QueueNotification( notification );
+
 		return true;
 	}
 	
