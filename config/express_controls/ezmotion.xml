@@ -91,7 +91,9 @@
 	
 	<!-- Association Groups -->
 	<CommandClass id="133">
-		<Association group="1" label="Motion" />
+		<Associations>
+			<Group index="1" label="Motion" />
+		</Associations>
 	</CommandClass>
 </Product>
 
