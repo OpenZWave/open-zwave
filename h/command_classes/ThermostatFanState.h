@@ -56,7 +56,7 @@ namespace OpenZWave
 		virtual void CreateVars( uint8 const _instance );
 
 	private:
-		ThermostatFanState( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
+		ThermostatFanState( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){ SetStaticRequest( StaticRequest_Values ); }
 
 		vector<ValueList::Item>		m_supportedStates;
 		ValueInstances<ValueList>	m_state;

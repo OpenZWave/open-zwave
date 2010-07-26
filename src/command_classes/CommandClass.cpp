@@ -45,6 +45,23 @@ static uint8 const	c_precisionShift	= 0x05;
 
 
 //-----------------------------------------------------------------------------
+// <CommandClass::CommandClass>
+// Constructor
+//-----------------------------------------------------------------------------
+CommandClass::CommandClass
+(
+	uint32 const _homeId, 
+	uint8 const _nodeId 
+): 
+	m_homeId( _homeId ),
+	m_nodeId( _nodeId ),
+	m_version( 1 ),
+	m_instances( 0 ),
+	m_staticRequests( 0 )
+{
+}
+
+//-----------------------------------------------------------------------------
 // <CommandClass::GetDriver>
 // Get a pointer to our driver
 //-----------------------------------------------------------------------------
@@ -122,6 +139,12 @@ void CommandClass::ReadXML
 		instances = (uint8)intVal;
 	}
 
+	m_staticRequests = 0;
+	if( TIXML_SUCCESS == _ccElement->QueryIntAttribute( "request_flags", &intVal ) )
+	{
+		m_staticRequests = (uint8)intVal;
+	}
+
 	// Setting the instance count will create all the values.
 	SetInstances( instances );
 
@@ -163,6 +186,12 @@ void CommandClass::WriteXML
 
 	snprintf( str, 32, "%d", GetInstances() );
 	_ccElement->SetAttribute( "instances", str );
+
+	if( m_staticRequests )
+	{
+		snprintf( str, 32, "%d", m_staticRequests );
+		_ccElement->SetAttribute( "request_flags", str );
+	}
 
 	// Write out the values for this command class
 	ValueStore* store = GetNode()->GetValueStore();

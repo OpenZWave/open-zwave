@@ -59,7 +59,7 @@ void Language::RequestState
 	uint32 const _requestFlags
 )
 {
-	if( _requestFlags & RequestFlag_Static )
+	if( ( _requestFlags & RequestFlag_Static ) && HasStaticRequest( StaticRequest_Values ) )
 	{
 		Msg* msg = new Msg( "LanguageCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 		msg->Append( GetNodeId() );
@@ -97,6 +97,7 @@ bool Language::HandleMsg
 		country[2] = 0;
 
 		Log::Write( "Received Language report from node %d: Language=%s, Country=%s", GetNodeId(), language, country );
+		ClearStaticRequest( StaticRequest_Values );
 
 		if( ValueString* languageValue = m_language.GetInstance( _instance ) )
 		{
@@ -106,6 +107,7 @@ bool Language::HandleMsg
 		{
 			countryValue->OnValueChanged( country );
 		}
+
 		return true;
 	}
 

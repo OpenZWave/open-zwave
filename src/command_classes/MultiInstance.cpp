@@ -81,6 +81,7 @@ bool MultiInstance::HandleMsg
 			{
 				Log::Write( "Received instance-count from node %d for %s: %d", GetNodeId(), pCommandClass->GetCommandClassName().c_str(), instances );
 				pCommandClass->SetInstances( instances );
+				pCommandClass->ClearStaticRequest( StaticRequest_Instances );
 
 				// The request for non-static state was held off until we knew how many instances there were.
 				pCommandClass->RequestState( CommandClass::RequestFlag_Session | CommandClass::RequestFlag_Dynamic );

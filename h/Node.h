@@ -77,6 +77,8 @@ namespace OpenZWave
 	public:
 		void UpdateProtocolInfo( uint8 const* _data );
 		void UpdateNodeInfo( uint8 const* _data, uint8 const _length );
+		bool NodeInfoReceived()const{ return m_nodeInfoReceived; }
+		void SetStaticRequests();
 
 	private:
 		bool	m_protocolInfoReceived;

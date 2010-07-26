@@ -76,6 +76,7 @@ ThermostatSetpoint::ThermostatSetpoint
 ):
 	CommandClass( _homeId, _nodeId )
 {
+	SetStaticRequest( StaticRequest_Values ); 
 }
 
 //-----------------------------------------------------------------------------
@@ -87,7 +88,7 @@ void ThermostatSetpoint::RequestState
 	uint32 const _requestFlags
 )
 {
-	if( _requestFlags & RequestFlag_Static )
+	if( ( _requestFlags & RequestFlag_Static ) && HasStaticRequest( StaticRequest_Values ) )
 	{
 		// Request the supported setpoints
 		Msg* msg = new Msg( "Request Supported Thermostat Setpoints", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
@@ -176,6 +177,8 @@ bool ThermostatSetpoint::HandleMsg
 
 			ReleaseNode();
 		}
+
+		ClearStaticRequest( StaticRequest_Values );
 
 		// Request the current state of all the supported setpoints
 		RequestState( 0 );
