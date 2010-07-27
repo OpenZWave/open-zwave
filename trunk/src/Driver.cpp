@@ -303,7 +303,7 @@ bool Driver::Init
 	SendMsg( msg );
 
 	Log::Write( "Get Controller Capabilities" );
-	msg = new Msg( "FUNC_ID_SERIAL_API_GET_CAPABILITIES", 0xff, REQUEST, FUNC_ID_ZW_GET_CONTROLLER_CAPABILITIES, false );
+	msg = new Msg( "FUNC_ID_ZW_GET_CONTROLLER_CAPABILITIES", 0xff, REQUEST, FUNC_ID_ZW_GET_CONTROLLER_CAPABILITIES, false );
 	SendMsg( msg );
 
 	Log::Write( "Get Serial API Capabilities" );
