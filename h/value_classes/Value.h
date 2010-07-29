@@ -63,6 +63,9 @@ namespace OpenZWave
 		string const& GetHelp()const{ return m_help; }
 		void SetHelp( string const& _help ){ m_help = _help; }
 
+		virtual bool GetAsInt( int32& _value ) const = 0;
+		virtual bool SetFromInt( int32 const _value ) = 0;
+
 		uint32 Release(){ uint32 t; if( !(t = --m_refs) ){ delete this; } return t; }
 
 		// Helpers

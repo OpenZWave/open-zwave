@@ -766,34 +766,7 @@ bool Node::SetConfigParam
 		// First try to find an existing value representing the parameter, and set that.
 		if( Value* value = cc->GetParam( _param ) )
 		{
-			switch( value->GetID().GetType() )
-			{
-				case ValueID::ValueType_Byte:
-				{
-					ValueByte* valueByte = static_cast<ValueByte*>( value );
-					valueByte->Set( (uint8)_value );
-					break;
-				}
-				case ValueID::ValueType_Short:
-				{
-					ValueShort* valueShort = static_cast<ValueShort*>( value );
-					valueShort->Set( (uint16)_value );
-					break;
-				}
-				case ValueID::ValueType_Int:
-				{
-					ValueInt* valueInt = static_cast<ValueInt*>( value );
-					valueInt->Set( _value );
-					break;
-				}
-				case ValueID::ValueType_List:
-				{
-					ValueList* valueList = static_cast<ValueList*>( value );
-					valueList->SetByValue( (int32)_value );
-					break;
-				}
-			}
-
+			value->SetFromInt( _value );
 			return true;
 		}
 
