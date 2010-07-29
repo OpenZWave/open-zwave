@@ -208,6 +208,31 @@ bool Configuration::HandleMsg
 }
 
 //-----------------------------------------------------------------------------
+// <Configuration::SetValue>
+// Set a value in the Z-Wave device
+//-----------------------------------------------------------------------------
+bool Configuration::SetValue
+(
+	Value const& _value
+)
+{
+	bool ret = false;
+
+	uint8 param = _value.GetID().GetIndex();
+	int32 int_value = 0;
+	if ( _value.GetAsInt(int_value) ) {
+		Set(param, int_value);
+		ret = true;
+	}
+	else
+	{
+		Log::Write( "Configuration::Set failed (bad value or value type) - Node=%d, Parameter=%d", GetNodeId(), param );
+	}
+
+	return ret;
+}
+
+//-----------------------------------------------------------------------------
 // <Configuration::Get>												   
 // Request current parameter value from the device									   
 //-----------------------------------------------------------------------------
@@ -238,47 +263,36 @@ void Configuration::Set
 {
 	Log::Write( "Configuration::Set - Node=%d, Parameter=%d, Value=%d", GetNodeId(), _parameter, _value );
 
-	Msg* msg = new Msg( "ConfigurationCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+	int n_bytes = 0;
 	if( _value & 0xffff0000 ) 
 	{
-		// four byte value
-		msg->Append( GetNodeId() );
-		msg->Append( 8 );
-		msg->Append( GetCommandClassId() );
-		msg->Append( ConfigurationCmd_Set );
-		msg->Append( _parameter );
-		msg->Append( 4 );
-		msg->Append( (uint8)((_value>>24)&0xff) );
-		msg->Append( (uint8)((_value>>16)&0xff) );
-		msg->Append( (uint8)((_value>>8)&0xff) );
-		msg->Append( (_value & 0xff) );
-		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		n_bytes = 4;
 	}
 	else if( _value & 0x0000ff00 )
 	{
-		// two byte value
-		msg->Append( GetNodeId() );
-		msg->Append( 6 );
-		msg->Append( GetCommandClassId() );
-		msg->Append( ConfigurationCmd_Set );
-		msg->Append( _parameter );
-		msg->Append( 2 );
-		msg->Append( (uint8)((_value>>8)&0xff) );
-		msg->Append( (uint8)(_value&0xff) );
-		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		n_bytes = 2;
 	}
 	else
 	{
-		// one byte value
-		msg->Append( GetNodeId() );
-		msg->Append( 5 );
-		msg->Append( GetCommandClassId() );
-		msg->Append( ConfigurationCmd_Set );
-		msg->Append( _parameter );
-		msg->Append( 1 );
-		msg->Append( (uint8)_value );
-		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		n_bytes = 1;
 	}
+	Msg* msg = new Msg( "ConfigurationCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+	msg->Append( GetNodeId() );
+	msg->Append( 4 + n_bytes );
+	msg->Append( GetCommandClassId() );
+	msg->Append( ConfigurationCmd_Set );
+	msg->Append( _parameter );
+	msg->Append( n_bytes );
+	if ( n_bytes > 2 ) {
+		msg->Append( (uint8)((_value>>24)&0xff) );
+		msg->Append( (uint8)((_value>>16)&0xff) );
+	}
+	if ( n_bytes > 1 ) {
+		msg->Append( (uint8)((_value>>8)&0xff) );
+	}
+	msg->Append( (uint8)(_value&0xff) );
+	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	GetDriver()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
