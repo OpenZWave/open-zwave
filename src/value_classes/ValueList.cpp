@@ -95,8 +95,12 @@ void ValueList::ReadXML
 	}
 
 	// Set the value
-	_valueElement->QueryIntAttribute( "value", &m_valueIdx );
-	SetIsSet();
+	int intVal;
+	if ( TIXML_SUCCESS == _valueElement->QueryIntAttribute( "value", &intVal ) )
+	{
+		m_valueIdx = (int32)intVal;
+		SetIsSet();
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -110,8 +114,11 @@ void ValueList::WriteXML
 {
 	Value::WriteXML( _valueElement );
 	
-	char str[16];
-	snprintf( str, 16, "%d", m_valueIdx );
+	char str[16] = "";
+	if ( IsSet() )
+    {
+		snprintf( str, 16, "%d", m_valueIdx );
+    }
 	_valueElement->SetAttribute( "value", str );
 
 	for( vector<Item>::iterator it = m_items.begin(); it != m_items.end(); ++it )
