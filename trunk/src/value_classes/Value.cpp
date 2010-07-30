@@ -93,7 +93,8 @@ Value::Value
 (
 ):
 	m_refs( 1 ),
-	m_readOnly( false )
+	m_readOnly( false ),
+	m_isSet( false )
 {
 }
 
