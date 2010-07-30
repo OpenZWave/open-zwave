@@ -170,7 +170,7 @@ bool Configuration::HandleMsg
 				case ValueID::ValueType_Short:
 				{
 					ValueShort* valueShort = static_cast<ValueShort*>( value );
-					valueShort->OnValueChanged( (uint16)paramValue );
+					valueShort->OnValueChanged( (int16)paramValue );
 					valueShort->Release();
 					break;
 				}
@@ -200,7 +200,7 @@ bool Configuration::HandleMsg
 					}
 					case 2:
 					{
-						AddParam( node->CreateValueShort( ValueID::ValueGenre_Config, GetCommandClassId(), _instance, parameter, label, "", false, (uint16)paramValue ) );
+						AddParam( node->CreateValueShort( ValueID::ValueGenre_Config, GetCommandClassId(), _instance, parameter, label, "", false, (int16)paramValue ) );
 						break;
 					}
 					case 4:
