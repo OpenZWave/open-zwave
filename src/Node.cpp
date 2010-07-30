@@ -976,7 +976,7 @@ ValueShort* Node::CreateValueShort
 	string const& _label,
 	string const& _units,
 	bool const _readOnly,
-	uint16 const _default
+	int16 const _default
 )
 {
 	ValueShort* value = new ValueShort( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _default );
