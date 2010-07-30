@@ -32,6 +32,7 @@
 #include "Driver.h"
 #include "Node.h"
 #include "Log.h"
+#include "ValueBool.h"
 #include "ValueByte.h"
 #include "ValueInt.h"
 #include "ValueList.h"
@@ -129,74 +130,90 @@ bool Configuration::HandleMsg
 		// Extract the parameter index and value
 		uint8 parameter = _data[1];
 		uint8 size = _data[2] & 0x07;
-		uint32 paramValue = 0;
+		int32 paramValue = 0;
 		for( uint8 i=0; i<size; ++i )
 		{
 			paramValue <<= 8;
-			paramValue |= (uint32)_data[i+3];
+			paramValue |= (int32)_data[i+3];
 		}
 
-		char label[16];
-		snprintf( label, 16, "Parameter #%d", parameter );
-
-		switch( size )
-		{
-			case 1:
-			{
-				if( ValueByte* valueByte = static_cast<ValueByte*>( GetParam( parameter ) ) )
+		if ( Value* value = GetParam( parameter ) ) {
+			switch ( value->GetID().GetType() ) {
+				case ValueID::ValueType_Bool:
 				{
+					ValueBool* valueBool = static_cast<ValueBool*>( value );
+					valueBool->OnValueChanged( paramValue != 0 );
+					valueBool->Release();
+					break;
+				}
+				case ValueID::ValueType_Byte:
+				{
+					ValueByte* valueByte = static_cast<ValueByte*>( value );
 					valueByte->OnValueChanged( (uint8)paramValue );
+					valueByte->Release();
+					break;
 				}
-				else
+				case ValueID::ValueType_Int:
 				{
-					// Create a new value
-					if( Node* node = GetNode() )
-					{
-						AddParam( node->CreateValueByte( ValueID::ValueGenre_Config, GetCommandClassId(), _instance, parameter, label, "", false, (uint8)paramValue ) );
-						ReleaseNode();
-					}
-				}
-				break;
-			}
-			case 2:
-			{
-				if( ValueShort* valueShort = static_cast<ValueShort*>( GetParam( parameter ) ) )
-				{
-					valueShort->OnValueChanged( (uint16)paramValue );
-					valueShort->Release();
-				}
-				else
-				{
-					// Create a new value
-					if( Node* node = GetNode() )
-					{
-						AddParam( node->CreateValueShort( ValueID::ValueGenre_Config, GetCommandClassId(), _instance, parameter, label, "", false, (uint16)paramValue ) );
-						ReleaseNode();
-					}
-				}
-				break;
-			}
-			case 4:
-			{
-				if( ValueInt* valueInt = static_cast<ValueInt*>( GetParam( parameter ) ) )
-				{
+					ValueInt* valueInt = static_cast<ValueInt*>( value );
 					valueInt->OnValueChanged( paramValue );
 					valueInt->Release();
+					break;
 				}
-				else
+				case ValueID::ValueType_List:
 				{
-					// Create a new value
-					if( Node* node = GetNode() )
+					ValueList* valueList = static_cast<ValueList*>( value );
+					valueList->OnValueChanged( paramValue );
+					valueList->Release();
+					break;
+				}
+				case ValueID::ValueType_Short:
+				{
+					ValueShort* valueShort = static_cast<ValueShort*>( value );
+					valueShort->OnValueChanged( (uint16)paramValue );
+					valueShort->Release();
+					break;
+				}
+				case ValueID::ValueType_Decimal:
+				case ValueID::ValueType_String:
+				case ValueID::ValueType_Button:
+				default:
+				{
+					Log::Write( "Invalid type for configuration parameter %d", parameter );
+				}
+			}
+		}
+		else
+		{
+			char label[16];
+			snprintf( label, 16, "Parameter #%d", parameter );
+
+			// Create a new value
+			if( Node* node = GetNode() )
+			{
+				switch( size )
+				{
+					case 1:
+					{
+						AddParam( node->CreateValueByte( ValueID::ValueGenre_Config, GetCommandClassId(), _instance, parameter, label, "", false, (uint8)paramValue ) );
+						break;
+					}
+					case 2:
+					{
+						AddParam( node->CreateValueShort( ValueID::ValueGenre_Config, GetCommandClassId(), _instance, parameter, label, "", false, (uint16)paramValue ) );
+						break;
+					}
+					case 4:
 					{
 						AddParam( node->CreateValueInt( ValueID::ValueGenre_Config, GetCommandClassId(), _instance, parameter, label, "", false, (int32)paramValue ) );
-						ReleaseNode();
+						break;
+					}
+					default:
+					{
+						Log::Write( "Invalid size of %d bytes for configuration parameter %d", size, parameter );
 					}
 				}
-				break;
-			}
-			default:
-			{
-				Log::Write( "Invalid size of %d bytes for configuration parameter %d", size, parameter );
+				ReleaseNode();
 			}
 		}
 
