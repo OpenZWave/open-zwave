@@ -25,6 +25,7 @@
 //
 //-----------------------------------------------------------------------------
 
+#include <string>
 #include "CommandClasses.h"
 #include "ThermostatFanMode.h"
 #include "Defs.h"
@@ -46,7 +47,7 @@ enum ThermostatFanModeCmd
 	ThermostatFanModeCmd_SupportedReport	= 0x05
 };
 
-static char* const c_modeName[] = 
+static string const c_modeName[] = 
 {
 	"Auto Low",
 	"On Low",
@@ -131,7 +132,7 @@ bool ThermostatFanMode::HandleMsg
 					item.m_label = c_modeName[item.m_value];
 					m_supportedModes.push_back( item );
 
-					Log::Write( "    Added fan mode: %s", c_modeName[item.m_value] );
+					Log::Write( "    Added fan mode: %s", c_modeName[item.m_value].c_str() );
 				}
 			}
 		}

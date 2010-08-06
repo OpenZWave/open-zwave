@@ -131,8 +131,6 @@ bool ThermostatSetpoint::HandleMsg
 	uint32 const _instance	// = 1
 )
 {
-	bool handled = false;
-
 	if( ThermostatSetpointCmd_Report == (ThermostatSetpointCmd)_data[0] )
 	{
 		// We have received a thermostat setpoint value from the Z-Wave device

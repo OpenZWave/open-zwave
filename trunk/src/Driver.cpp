@@ -77,28 +77,28 @@ Driver::Driver
 ( 
 	string const& _serialPortName
 ):
-	m_serialPortName( _serialPortName ),
-	m_homeId( 0 ),
-	m_pollInterval( 30 ),					// By default, every polled device is queried once every 30 seconds
-	m_waitingForAck( false ),
-	m_expectedReply( 0 ),
-	m_expectedCallbackId( 0 ),
-	m_exit( false ),
-	m_init( false ),
 	m_driverThread( new Thread( "driver" ) ),
 	m_exitEvent( new Event() ),	
+	m_exit( false ),
+	m_init( false ),
+	m_serialPortName( _serialPortName ),
+	m_homeId( 0 ),
 	m_serialPort( new SerialPort() ),
 	m_serialMutex( new Mutex() ),
+	m_initCaps( 0 ),
+	m_controllerCaps( 0 ),
+	m_nodeMutex( new Mutex() ),
+	m_controllerReplication( NULL ),
 	m_sendThread( new Thread( "send" ) ),
 	m_sendMutex( new Mutex() ),
 	m_sendEvent( new Event() ),
+	m_waitingForAck( false ),
+	m_expectedCallbackId( 0 ),
+	m_expectedReply( 0 ),
 	m_pollThread( new Thread( "poll" ) ),
 	m_pollMutex( new Mutex() ),
+	m_pollInterval( 30 ),					// By default, every polled device is queried once every 30 seconds
 	m_infoMutex( new Mutex() ),
-	m_nodeMutex( new Mutex() ),
-	m_initCaps( 0 ),
-	m_controllerCaps( 0 ),
-	m_controllerReplication( NULL ),
 	m_controllerState( ControllerState_Normal ),
 	m_controllerCommand( ControllerCommand_None ),
 	m_controllerCallback( NULL ),
@@ -2868,6 +2868,11 @@ bool Driver::BeginControllerCommand
 			SendMsg( msg );
 			break;
 		}
+		case ControllerCommand_None:
+		default:
+		{
+			break;
+		}
 	}
 
 	return true;
@@ -2938,6 +2943,11 @@ bool Driver::CancelControllerCommand
 			break;
 		}
 		case ControllerCommand_TransferPrimaryRole:
+		{
+			break;
+		}
+		case ControllerCommand_None:
+		default:
 		{
 			break;
 		}

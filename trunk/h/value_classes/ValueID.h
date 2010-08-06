@@ -197,7 +197,7 @@ namespace OpenZWave
 		ValueID( uint32 const _homeId, uint8 const _nodeId ): m_homeId( _homeId ){ m_id = ((uint32)_nodeId)<<24; }
 
 		// Default constructor
-		ValueID():m_homeId(0),m_id(0){}
+		ValueID():m_id(0),m_homeId(0){}
 
 		// ID Packing:
 		// Bits
