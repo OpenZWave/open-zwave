@@ -49,14 +49,14 @@ Msg::Msg
 	uint8 const _expectedCommandClassId	// = 0
 ):
 	m_logText( _logText ),
-	m_targetNodeId( _targetNodeId ),
+	m_bFinal( false ),
 	m_bCallbackRequired( _bCallbackRequired ),
-	m_length( 4 ),
-	m_sendAttempts( 0 ),
 	m_callbackId( 0 ),
 	m_expectedReply( 0 ),
 	m_expectedCommandClassId( _expectedCommandClassId ),
-	m_bFinal( false )
+	m_length( 4 ),
+	m_targetNodeId( _targetNodeId ),
+	m_sendAttempts( 0 )
 {
 	if( _bReplyRequired )
 	{

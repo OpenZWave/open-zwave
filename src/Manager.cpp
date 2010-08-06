@@ -96,9 +96,9 @@ Manager::Manager
 	string const& _configPath,
 	string const& _userPath
 ):
+	m_exitEvent( new Event() ),
 	m_configPath( _configPath ),
 	m_userPath( _userPath ),
-	m_exitEvent( new Event() ),
 	m_notificationMutex( new Mutex() )
 {
 	// Create the log file

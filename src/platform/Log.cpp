@@ -97,8 +97,8 @@ Log::Log
 (
 	string const& _filename 
 ):
-	m_logMutex( new Mutex() ),
-	m_pImpl( new LogImpl( _filename ) )
+	m_pImpl( new LogImpl( _filename ) ),
+	m_logMutex( new Mutex() )
 {
 }
 
