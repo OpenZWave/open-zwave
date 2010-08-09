@@ -56,6 +56,20 @@ ValueBool::ValueBool
 {
 }
 
+bool ValueBool::SetFromString
+(
+	string const& _value
+)
+{
+	if ( !strcasecmp( "true", _value.c_str() ) ) {
+		return Set( true );
+	}
+	else if ( !strcasecmp( "false", _value.c_str() ) ) {
+		return Set( false );
+	}
+	return false;
+}
+
 //-----------------------------------------------------------------------------
 // <ValueBool::ReadXML>
 // Apply settings from XML
