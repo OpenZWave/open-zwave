@@ -25,6 +25,7 @@
 //
 //-----------------------------------------------------------------------------
 
+#include <sstream>
 #include "tinyxml.h"
 #include "ValueInt.h"
 #include "Msg.h"
@@ -53,6 +54,24 @@ ValueInt::ValueInt
 	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Int, _label, _units, _readOnly, false ),
 	m_value( _value )
 {
+}
+
+string const ValueInt::GetAsString
+(
+) const
+{
+	stringstream ss;
+	ss << GetValue();
+	return ss.str();
+}
+
+bool ValueInt::SetFromString
+(
+	string const& _value
+)
+{
+	int32 val = atoi( _value.c_str() );
+	return Set( val );
 }
 
 //-----------------------------------------------------------------------------

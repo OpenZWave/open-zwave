@@ -25,6 +25,7 @@
 //
 //-----------------------------------------------------------------------------
 
+#include <sstream>
 #include "tinyxml.h"
 #include "ValueByte.h"
 #include "Msg.h"
@@ -53,6 +54,28 @@ ValueByte::ValueByte
 	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Byte, _label, _units, _readOnly, false ),
 	m_value( _value )
 {
+}
+
+string const ValueByte::GetAsString
+(
+) const
+{
+	stringstream ss;
+	ss << GetValue();
+	return ss.str();
+}
+
+bool ValueByte::SetFromString
+(
+	string const& _value
+)
+{
+	uint32 val = (uint32)atoi( _value.c_str() );
+	if( val < 256 )
+	{
+		return Set( (uint8)val );
+	}
+	return false;
 }
 
 //-----------------------------------------------------------------------------

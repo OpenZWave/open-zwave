@@ -53,6 +53,8 @@ namespace OpenZWave
 		// From Value
 		virtual bool GetAsInt( int32& _value ) const { _value = (int32)( GetValue() ? 1 : 0 ); return true; }
 		virtual bool SetFromInt( int32 const _value ) { Set( _value != 0 ); return true; }
+		virtual string const GetAsString() const { return ( GetValue() ? "True" : "False" ); }
+		virtual bool SetFromString( string const& _value );
 		virtual void ReadXML( uint32 const _homeId, uint8 const _nodeId, uint8 const _commandClassId, TiXmlElement const* _valueElement );
 		virtual void WriteXML( TiXmlElement* _valueElement );
 

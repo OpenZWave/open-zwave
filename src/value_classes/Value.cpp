@@ -272,7 +272,7 @@ ValueID::ValueType Value::GetTypeEnumFromName
 	ValueID::ValueType type = ValueID::ValueType_Bool;
 	if( _name )
 	{
-		for( int i=0; i<(int)ValueID::ValueType_Count; ++i )
+		for( int i=0; i<=(int)ValueID::ValueType_Max; ++i )
 		{
 			if( !strcmp( _name, c_typeName[i] ) )
 			{
