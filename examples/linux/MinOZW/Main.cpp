@@ -32,7 +32,6 @@
 
 #include <unistd.h>
 #include <pthread.h>
-#include <iostream>
 #include "Manager.h"
 #include "Node.h"
 #include "Group.h"
@@ -248,19 +247,7 @@ int main( int argc, char* argv[] )
 	//Manager::Get()->BeginRemoveNode( g_homeId );
 	//sleep(10);
 	//Manager::Get()->EndRemoveNode( g_homeId );
-    //Manager::Get()->RemoveAssociation( g_homeId, 5, 1, 1);
 	sleep(10);
-    //Manager::Get()->SetConfigParam( g_homeId, 6, 18, 0);
-    //std::cout << "Setting config param..." << std::endl;
-	//sleep(5);
-    Manager::Get()->RequestConfigParam( g_homeId, 5, 1);
-    Manager::Get()->RequestConfigParam( g_homeId, 5, 2);
-    Manager::Get()->RequestConfigParam( g_homeId, 5, 3);
-    Manager::Get()->RequestConfigParam( g_homeId, 5, 4);
-    Manager::Get()->RequestConfigParam( g_homeId, 5, 5);
-    Manager::Get()->RequestConfigParam( g_homeId, 5, 6);
-    Manager::Get()->RequestConfigParam( g_homeId, 6, 17);
-    Manager::Get()->RequestConfigParam( g_homeId, 6, 18);
 	Manager::Get()->WriteConfig( g_homeId );
 	
 	while( true )
@@ -270,8 +257,6 @@ int main( int argc, char* argv[] )
 		pthread_mutex_lock( &g_criticalSection );
 		// Do stuff
 		pthread_mutex_unlock( &g_criticalSection );
-
-        Manager::Get()->WriteConfig( g_homeId );
 	}
 
 	pthread_mutex_destroy( &g_criticalSection );
