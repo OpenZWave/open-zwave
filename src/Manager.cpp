@@ -1195,7 +1195,6 @@ bool Manager::GetValueAsString
 )
 {
 	bool res = false;
-	char str[256];
 
 	if( o_value )
 	{
@@ -1203,75 +1202,10 @@ bool Manager::GetValueAsString
 		{
 			driver->LockNodes();
 		
-			switch( _id.GetType() )
+			if( Value* value = driver->GetValue( _id ) )
 			{
-				case ValueID::ValueType_Bool:
-				{
-					if( ValueBool* value = static_cast<ValueBool*>( driver->GetValue( _id ) ) )
-					{
-						*o_value = value->GetValue() ? "True" : "False";
-						res = true;
-					}
-					break;
-				}
-				case ValueID::ValueType_Byte:
-				{
-					if( ValueByte* value = static_cast<ValueByte*>( driver->GetValue( _id ) ) )
-					{
-						snprintf( str, sizeof(str), "%u", value->GetValue() );
-						*o_value = str;
-						res = true;
-					}
-					break;
-				}
-				case ValueID::ValueType_Decimal:
-				{
-					if( ValueDecimal* value = static_cast<ValueDecimal*>( driver->GetValue( _id ) ) )
-					{
-						*o_value = value->GetValue();
-						res = true;
-					}
-					break;
-				}
-				case ValueID::ValueType_Int:
-				{
-					if( ValueInt* value = static_cast<ValueInt*>( driver->GetValue( _id ) ) )
-					{
-						snprintf( str, sizeof(str), "%d", value->GetValue() );
-						*o_value = str;
-						res = true;
-					}
-					break;
-				}
-				case ValueID::ValueType_List:
-				{
-					if( ValueList* value = static_cast<ValueList*>( driver->GetValue( _id ) ) )
-					{
-						ValueList::Item const& item = value->GetItem();
-						*o_value = item.m_label;
-						res = true;
-					}
-					break;
-				}
-				case ValueID::ValueType_Short:
-				{
-					if( ValueShort* value = static_cast<ValueShort*>( driver->GetValue( _id ) ) )
-					{
-						snprintf( str, sizeof(str), "%d", value->GetValue() );
-						*o_value = str;
-						res = true;
-					}
-					break;
-				}
-				case ValueID::ValueType_String:
-				{
-					if( ValueString* value = static_cast<ValueString*>( driver->GetValue( _id ) ) )
-					{
-						*o_value = value->GetValue();
-						res = true;
-					}
-					break;
-				}
+				*o_value = value->GetAsString();
+				res = true;
 			}
 
 			driver->ReleaseNodes();
@@ -1531,80 +1465,9 @@ bool Manager::SetValue
 	{
 		driver->LockNodes();
 		
-		switch( _id.GetType() )
+		if( Value* value = driver->GetValue( _id ) )
 		{
-			case ValueID::ValueType_Bool:
-			{
-				if( ValueBool* value = static_cast<ValueBool*>( driver->GetValue( _id ) ) )
-				{
-					if( !strcasecmp( "true", _value.c_str() ) )
-					{
-						res = value->Set( true );
-					}
-					else if( !strcasecmp( "false", _value.c_str() ) )
-					{
-						res = value->Set( false );
-					}
-				}
-				break;
-			}
-			case ValueID::ValueType_Byte:
-			{
-				if( ValueByte* value = static_cast<ValueByte*>( driver->GetValue( _id ) ) )
-				{
-					uint32 val = (uint32)atoi( _value.c_str() );
-					if( val < 256 )
-					{
-						res = value->Set( (uint8)val );
-					}
-				}
-				break;
-			}
-			case ValueID::ValueType_Decimal:
-			{
-				if( ValueDecimal* value = static_cast<ValueDecimal*>( driver->GetValue( _id ) ) )
-				{
-					res = value->Set( _value );
-				}
-				break;
-			}
-			case ValueID::ValueType_Int:
-			{
-				if( ValueInt* value = static_cast<ValueInt*>( driver->GetValue( _id ) ) )
-				{
-					int32 val = atoi( _value.c_str() );
-					res = value->Set( val );
-				}
-				break;
-			}
-			case ValueID::ValueType_List:
-			{
-				if( ValueList* value = static_cast<ValueList*>( driver->GetValue( _id ) ) )
-				{
-					res = value->SetByLabel( _value );
-				}
-				break;
-			}
-			case ValueID::ValueType_Short:
-			{
-				if( ValueShort* value = static_cast<ValueShort*>( driver->GetValue( _id ) ) )
-				{
-					int32 val = (uint32)atoi( _value.c_str() );
-					if( ( val < 32768 ) && ( val >= -32768 ) )
-					{
-						res = value->Set( (int16)val );
-					}
-				}
-				break;
-			}
-			case ValueID::ValueType_String:
-			{
-				if( ValueString* value = static_cast<ValueString*>( driver->GetValue( _id ) ) )
-				{
-					res = value->Set( _value );
-				}
-				break;
-			}
+			res = value->SetFromString( _value );
 		}
 
 		driver->ReleaseNodes();
