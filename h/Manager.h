@@ -993,8 +993,9 @@ namespace OpenZWave
 		 * Usually when adding or removing devices, the controller operates at low power so that the controller must
 		 * be physically close to the device for security reasons.  If _highPower is true, the controller will 
 		 * operate at normal power levels instead.  Defaults to false.
+		 * @param _nodeId used only with the ReplaceFailedNode command, to specify the node that is going to be replaced.
 		 * @return true if the command was accepted and has started.
-		 * @see CancelControllerCommand, Driver::ControllerCommand, Driver::pfnControllerCallback_t, 
+		 * @see CancelControllerCommand, HasNodeFailed, MarkNodeAsFailed, Driver::ControllerCommand, Driver::pfnControllerCallback_t, 
 		 * to notify the user of progress or to request actions on the user's part.  Defaults to NULL.
 		 * <p> Commands
 		 * - Driver::ControllerCommand_AddController - Add a new secondary controller to the Z-Wave network.
@@ -1003,7 +1004,12 @@ namespace OpenZWave
 		 * - Driver::ControllerCommand_ReceiveConfiguration -   
 		 * - Driver::ControllerCommand_RemoveController - remove a controller from the Z-Wave network.
 		 * - Driver::ControllerCommand_RemoveDevice - remove a device (but not a controller) from the Z-Wave network.
-		 * - Driver::ControllerCommand_ReplaceFailedDevice (Not yet implemented) - 
+ 		 * - Driver::ControllerCommand_MarkNodeAsFailed - move a node to the controller's list of failed nodes.  The node must actually
+		 * have failed or have been disabled since the command will fail if it responds.  A node must be in the controller's failed nodes list
+		 * for ControllerCommand_ReplaceFailedNode to work.
+		 * - Driver::ControllerCommand_HasNodeFailed - Check whether a node is in the controller's failed nodes list.
+		 * - Driver::ControllerCommand_ReplaceFailedNode - replace a failed device with another. If the node is not in 
+		 * the controller's failed nodes list, or the node responds, this command will fail.
 		 * - Driver:: ControllerCommand_TransferPrimaryRole	(Not yet implemented) - Add a new controller to the network and
 		 * make it the primary.  The existing primary will become a secondary controller.  
 		 * <p> Callbacks
@@ -1013,11 +1019,11 @@ namespace OpenZWave
 		 * inclusion button on the device that  is going to be added or removed.  For ControllerCommand_ReceiveConfiguration, 
 		 * they must set their other controller to send its data, and for ControllerCommand_CreateNewPrimary, set the other
 		 * controller to learn new data.
-		 * - Driver::ControllerState_InProgress - the controller is in the process of adding or removing the chosen node.
+		 * - Driver::ControllerState_InProgress - the controller is in the process of adding or removing the chosen node.  It is now too late to cancel the command.
 		 * - Driver::ControllerState_Complete - the controller has finished adding or removing the node, and the command is complete.
 		 * - Driver::ControllerState_Failed - will be sent if the command fails for any reason.
 		 */
-		bool BeginControllerCommand( uint32 const _homeId, Driver::ControllerCommand _command, Driver::pfnControllerCallback_t _callback = NULL, void* _context = NULL, bool _highPower = false );
+		bool BeginControllerCommand( uint32 const _homeId, Driver::ControllerCommand _command, Driver::pfnControllerCallback_t _callback = NULL, void* _context = NULL, bool _highPower = false, uint8 _nodeId = 0xff );
 			
 		/**
 		 * Cancels any in-progress command running on a controller.
@@ -1038,4 +1044,3 @@ namespace OpenZWave
 } // namespace OpenZWave
 
 #endif // _Manager_H
-

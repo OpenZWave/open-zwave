@@ -174,25 +174,30 @@ namespace OpenZWave
 		bool ReadMsg();
 		void ProcessMsg( uint8* _data );
 
-		void HandleGetVersionResponse( uint8* pData );
-		void HandleGetControllerCapabilitiesResponse( uint8* pData );
-		void HandleGetSerialAPICapabilitiesResponse( uint8* pData );
-		void HandleEnableSUCResponse( uint8* pData );
-		void HandleRequestNetworkUpdate( uint8* pData );
-		void HandleSetSUCNodeIdResponse( uint8* pData );
-		void HandleGetSUCNodeIdResponse( uint8* pData );
-		void HandleMemoryGetIdResponse( uint8* pData );
-		void HandleSerialAPIGetInitDataResponse( uint8* pData );
-		void HandleGetNodeProtocolInfoResponse( uint8* pData );
-		void HandleSendDataResponse( uint8* pData );
-		bool HandleSendDataRequest( uint8* pData );
-		void HandleAddNodeToNetworkRequest( uint8* pData );
-		void HandleCreateNewPrimary( uint8* pData );
-		void HandleControllerChange( uint8* pData );
-		void HandleSetLearnMode( uint8* pData );
-		void HandleRemoveNodeFromNetworkRequest( uint8* pData );
-		void HandleApplicationCommandHandlerRequest( uint8* pData );
-		bool HandleApplicationUpdateRequest( uint8* pData );
+		void HandleGetVersionResponse( uint8* _data );
+		void HandleGetControllerCapabilitiesResponse( uint8* _data );
+		void HandleGetSerialAPICapabilitiesResponse( uint8* _data );
+		void HandleEnableSUCResponse( uint8* _data );
+		void HandleRequestNetworkUpdate( uint8* _data );
+		void HandleSetSUCNodeIdResponse( uint8* _data );
+		void HandleGetSUCNodeIdResponse( uint8* _data );
+		void HandleMemoryGetIdResponse( uint8* _data );
+		void HandleSerialAPIGetInitDataResponse( uint8* _data );
+		void HandleGetNodeProtocolInfoResponse( uint8* _data );
+		bool HandleRemoveFailedNodeResponse( uint8* _data );
+		void HandleIsFailedNodeResponse( uint8* _data );
+		bool HandleReplaceFailedNodeResponse( uint8* _data );
+		void HandleSendDataResponse( uint8* _data );
+		bool HandleSendDataRequest( uint8* _data );
+		void HandleAddNodeToNetworkRequest( uint8* _data );
+		void HandleCreateNewPrimary( uint8* _data );
+		void HandleControllerChange( uint8* _data );
+		void HandleSetLearnMode( uint8* _data );
+		void HandleRemoveFailedNodeRequest( uint8* _data );
+		void HandleReplaceFailedNodeRequest( uint8* _data );
+		void HandleRemoveNodeFromNetworkRequest( uint8* _data );
+		void HandleApplicationCommandHandlerRequest( uint8* _data );
+		bool HandleApplicationUpdateRequest( uint8* _data );
 
 		Thread*					m_readThread;								// Thread for handling messages received from the Z-Wave network
 		bool					m_waitingForAck;							// True when we are waiting for an ACK from the dongle
@@ -275,7 +280,9 @@ namespace OpenZWave
 			ControllerCommand_ReceiveConfiguration, /**< Receive Z-Wave network configuration information from another controller. */
 			ControllerCommand_RemoveController,		/**< Remove a controller from the Z-Wave network. */
 			ControllerCommand_RemoveDevice,			/**< Remove a new device (but not a controller) from the Z-Wave network. */
-			ControllerCommand_ReplaceFailedDevice,	/**< Replace a non-responding device with another. */
+			ControllerCommand_MarkNodeAsFailed,		/**< Move a node to the controller's failed nodes list. This command will only work if the node cannot respond. */
+			ControllerCommand_HasNodeFailed,		/**< Check whether a node is in the controller's failed nodes list. */
+			ControllerCommand_ReplaceFailedNode,	/**< Replace a non-responding node with another. The node must be in the controller's list of failed nodes for this command to succeed. */
 			ControllerCommand_TransferPrimaryRole	/**< Make a different controller the primary. */
 		};
 
@@ -290,7 +297,9 @@ namespace OpenZWave
 			ControllerState_Waiting,				/**< Controller is waiting for a user action. */
 			ControllerState_InProgress,				/**< The controller is communicating with the other device to carry out the command. */
 			ControllerState_Completed,			    /**< The command has completed successfully. */
-			ControllerState_Failed					/**< The command has failed. */
+			ControllerState_Failed,					/**< The command has failed. */
+			ControllerState_NodeOK,					/**< Used only with ControllerCommand_HasNodeFailed to indicate that the controller thinks the node is OK. */
+			ControllerState_NodeFailed				/**< Used only with ControllerCommand_HasNodeFailed to indicate that the controller thinks the node has failed. */
 		};
 
 		typedef void (*pfnControllerCallback_t)( ControllerState _state, void* _context );
@@ -304,7 +313,7 @@ namespace OpenZWave
 		void AssignReturnRoute( uint8 _srcNodeId, uint8 _dstNodeId );
 		void RequestNetworkUpdate();
 
-		bool BeginControllerCommand( ControllerCommand _command, pfnControllerCallback_t _callback, void* _context, bool _highPower );
+		bool BeginControllerCommand( ControllerCommand _command, pfnControllerCallback_t _callback, void* _context, bool _highPower, uint8 _nodeId );
 		bool CancelControllerCommand();
 
 		ControllerState				m_controllerState;
