@@ -275,10 +275,10 @@ bool ZWManager::BeginControllerCommand
 (
 	uint32 homeId,
 	ZWControllerCommand command,
-	bool highPower
+	bool highPower,
+	uint8 nodeId
 )
 {
 	IntPtr ip = Marshal::GetFunctionPointerForDelegate( m_onStateChanged );
-	return( Manager::Get()->BeginControllerCommand( homeId, (Driver::ControllerCommand)command, (Driver::pfnControllerCallback_t)ip.ToPointer(), NULL, highPower ) );
+	return( Manager::Get()->BeginControllerCommand( homeId, (Driver::ControllerCommand)command, (Driver::pfnControllerCallback_t)ip.ToPointer(), NULL, highPower, nodeId ) );
 }
-

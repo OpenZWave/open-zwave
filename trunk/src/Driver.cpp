@@ -77,28 +77,28 @@ Driver::Driver
 ( 
 	string const& _serialPortName
 ):
-	m_driverThread( new Thread( "driver" ) ),
-	m_exitEvent( new Event() ),	
-	m_exit( false ),
-	m_init( false ),
 	m_serialPortName( _serialPortName ),
 	m_homeId( 0 ),
+	m_pollInterval( 30 ),					// By default, every polled device is queried once every 30 seconds
+	m_waitingForAck( false ),
+	m_expectedReply( 0 ),
+	m_expectedCallbackId( 0 ),
+	m_exit( false ),
+	m_init( false ),
+	m_driverThread( new Thread( "driver" ) ),
+	m_exitEvent( new Event() ),	
 	m_serialPort( new SerialPort() ),
 	m_serialMutex( new Mutex() ),
-	m_initCaps( 0 ),
-	m_controllerCaps( 0 ),
-	m_nodeMutex( new Mutex() ),
-	m_controllerReplication( NULL ),
 	m_sendThread( new Thread( "send" ) ),
 	m_sendMutex( new Mutex() ),
 	m_sendEvent( new Event() ),
-	m_waitingForAck( false ),
-	m_expectedCallbackId( 0 ),
-	m_expectedReply( 0 ),
 	m_pollThread( new Thread( "poll" ) ),
 	m_pollMutex( new Mutex() ),
-	m_pollInterval( 30 ),					// By default, every polled device is queried once every 30 seconds
 	m_infoMutex( new Mutex() ),
+	m_nodeMutex( new Mutex() ),
+	m_initCaps( 0 ),
+	m_controllerCaps( 0 ),
+	m_controllerReplication( NULL ),
 	m_controllerState( ControllerState_Normal ),
 	m_controllerCommand( ControllerCommand_None ),
 	m_controllerCallback( NULL ),
@@ -1036,6 +1036,27 @@ void Driver::ProcessMsg
 				HandleGetNodeProtocolInfoResponse( _data );
 				break;
 			}
+			case FUNC_ID_ZW_REMOVE_FAILED_NODE_ID:
+			{
+				if( !HandleRemoveFailedNodeResponse( _data ) )
+				{
+					m_expectedCallbackId = _data[2];	// The callback message won't be coming, so we force the transaction to complete
+				}
+				break;
+			}
+			case FUNC_ID_ZW_IS_FAILED_NODE_ID:
+			{
+				HandleIsFailedNodeResponse( _data );
+				break;
+			}
+			case FUNC_ID_ZW_REPLACE_FAILED_NODE:
+			{
+				if( !HandleReplaceFailedNodeResponse( _data ) )
+				{
+					m_expectedCallbackId = _data[2];	// The callback message won't be coming, so we force the transaction to complete
+				}
+				break;
+			}
 			case FUNC_ID_ZW_REQUEST_NODE_INFO:
 			{
 				Log::Write("Received reply to FUNC_ID_ZW_REQUEST_NODE_INFO" );
@@ -1094,6 +1115,16 @@ void Driver::ProcessMsg
 			case FUNC_ID_ZW_SET_LEARN_MODE:
 			{
 				HandleSetLearnMode( _data );
+				break;
+			}
+			case FUNC_ID_ZW_REMOVE_FAILED_NODE_ID:
+			{
+				HandleRemoveFailedNodeRequest( _data );
+				break;
+			}
+			case FUNC_ID_ZW_REPLACE_FAILED_NODE:
+			{
+				HandleReplaceFailedNodeRequest( _data );
 				break;
 			}
 			case FUNC_ID_APPLICATION_COMMAND_HANDLER:
@@ -1378,6 +1409,7 @@ void Driver::HandleSerialAPIGetInitDataResponse
 				{					
 					if( Node* node = GetNode( nodeId ) )
 					{
+						Log::Write( "  Node %d - Known", nodeId );
 						if( !m_init )
 						{
 							// The node was read in from the config, so we 
@@ -1390,7 +1422,7 @@ void Driver::HandleSerialAPIGetInitDataResponse
 					else
 					{
 						// This node is new
-						Log::Write( "Found new node %d", nodeId );
+						Log::Write( "  Node %.3d - New", nodeId );
 
 						// Create the node and request its info
 						AddNodeInfoRequest( nodeId );		
@@ -1400,6 +1432,8 @@ void Driver::HandleSerialAPIGetInitDataResponse
 				{
 					if( GetNode(nodeId) )
 					{
+						Log::Write( "  Node %.3d: Removed", nodeId );
+
 						// This node no longer exists in the Z-Wave network
 						Notification* notification = new Notification( Notification::Type_NodeRemoved );
 						notification->SetHomeAndNodeIds( m_homeId, nodeId );
@@ -1442,6 +1476,86 @@ void Driver::HandleGetNodeProtocolInfoResponse
 		node->UpdateProtocolInfo( &_data[2] );
 		ReleaseNodes();
 	}
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::HandleRemoveFailedNodeResponse>
+// Process a response from the Z-Wave PC interface
+//-----------------------------------------------------------------------------
+bool Driver::HandleRemoveFailedNodeResponse
+(
+	uint8* _data
+)
+{
+	bool res = true;
+	ControllerState state = ControllerState_InProgress;
+	if( _data[2] )
+	{
+		// Failed
+		Log::Write("Received reply to FUNC_ID_ZW_REMOVE_FAILED_NODE_ID - command failed" );
+		state = ControllerState_Failed;
+		m_controllerCommand = ControllerCommand_None;
+		res = false;
+	}
+	else
+	{
+		Log::Write("Received reply to FUNC_ID_ZW_REMOVE_FAILED_NODE_ID - command in progress" );
+	}
+
+	if( m_controllerCallback )
+	{
+		m_controllerCallback( state, m_controllerCallbackContext );
+	}
+	return res; 
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::HandleIsFailedNodeResponse>
+// Process a response from the Z-Wave PC interface
+//-----------------------------------------------------------------------------
+void Driver::HandleIsFailedNodeResponse
+(
+	uint8* _data
+)
+{
+	Log::Write("Received reply to FUNC_ID_ZW_IS_FAILED_NODE_ID - node %d has %s", m_controllerCommandNode, _data[2] ? "failed" : "not failed" );
+	if( m_controllerCallback )
+	{
+		m_controllerCallback( _data[2] ? ControllerState_NodeFailed : ControllerState_NodeOK, m_controllerCallbackContext );
+	}
+
+	m_controllerCommand = ControllerCommand_None;
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::HandleReplaceFailedNodeResponse>
+// Process a response from the Z-Wave PC interface
+//-----------------------------------------------------------------------------
+bool Driver::HandleReplaceFailedNodeResponse
+(
+	uint8* _data
+)
+{
+	bool res = true;
+	ControllerState state = ControllerState_InProgress;
+	if( _data[2] )
+	{
+		// Command failed
+		Log::Write("Received reply to FUNC_ID_ZW_REPLACE_FAILED_NODE - command failed" );
+		state = ControllerState_Failed;
+		m_controllerCommand = ControllerCommand_None;
+		res = false;
+	}
+	else
+	{
+		Log::Write("Received reply to FUNC_ID_ZW_REPLACE_FAILED_NODE - command in progress" );
+	}
+
+	if( m_controllerCallback )
+	{
+		m_controllerCallback( state, m_controllerCallbackContext );
+	}
+	return res;
 }
 
 //-----------------------------------------------------------------------------
@@ -1835,6 +1949,97 @@ void Driver::HandleSetLearnMode
 			Log::Write( "LEARN_MODE_DELETED" );
 			break;
 		}
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::HandleRemoveFailedNodeRequest>
+// Process a request from the Z-Wave PC interface
+//-----------------------------------------------------------------------------
+void Driver::HandleRemoveFailedNodeRequest
+(
+	uint8* _data
+)
+{
+	ControllerState state = ControllerState_Completed;
+	switch( _data[3] )
+	{
+		case FAILED_NODE_OK:
+		{
+			Log::Write("Received reply to FUNC_ID_ZW_REMOVE_FAILED_NODE_ID - Node %d is OK, so command failed", m_controllerCommandNode );
+			state = ControllerState_NodeOK;
+			break;
+		}
+		case FAILED_NODE_REMOVED:
+		{
+			Log::Write("Received reply to FUNC_ID_ZW_REMOVE_FAILED_NODE_ID - node %d successfully moved to failed nodes list", m_controllerCommandNode );
+			state = ControllerState_Completed;
+			m_controllerCommand = ControllerCommand_None;
+			break;
+		}
+		case FAILED_NODE_NOT_REMOVED:
+		{
+			Log::Write("Received reply to FUNC_ID_ZW_REMOVE_FAILED_NODE_ID - unable to move node %d to failed nodes list", m_controllerCommandNode );
+			state = ControllerState_Failed;
+			m_controllerCommand = ControllerCommand_None;
+			break;
+		}
+	}
+
+	if( m_controllerCallback )
+	{
+		m_controllerCallback( state, m_controllerCallbackContext );
+	}
+	m_controllerCommand = ControllerCommand_None;
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::HandleReplaceFailedNodeRequest>
+// Process a request from the Z-Wave PC interface
+//-----------------------------------------------------------------------------
+void Driver::HandleReplaceFailedNodeRequest
+(
+	uint8* _data
+)
+{
+	ControllerState state = ControllerState_Completed;
+	switch( _data[3] )
+	{
+		case FAILED_NODE_OK:
+		{
+			Log::Write("Received reply to FUNC_ID_ZW_REPLACE_FAILED_NODE - Node %d is OK, so command failed", m_controllerCommandNode );
+			state = ControllerState_NodeOK;
+			m_controllerCommand = ControllerCommand_None;
+			break;
+		}
+		case FAILED_NODE_REPLACE_WAITING:
+		{
+			Log::Write("Received reply to FUNC_ID_ZW_REPLACE_FAILED_NODE - Waiting for new node" );
+			state = ControllerState_Waiting;
+			break;
+		}
+		case FAILED_NODE_REPLACE_DONE:
+		{
+			Log::Write("Received reply to FUNC_ID_ZW_REPLACE_FAILED_NODE - node %d successfully replaced", m_controllerCommandNode );
+			state = ControllerState_Completed;
+			m_controllerCommand = ControllerCommand_None;
+
+			// Request new node info for this device
+			AddNodeInfoRequest( m_controllerCommandNode );
+			break;
+		}
+		case FAILED_NODE_REPLACE_FAILED:
+		{
+			Log::Write("Received reply to FUNC_ID_ZW_REPLACE_FAILED_NODE - node %d replacement failed", m_controllerCommandNode );
+			state = ControllerState_Failed;
+			m_controllerCommand = ControllerCommand_None;
+			break;
+		}
+	}
+
+	if( m_controllerCallback )
+	{
+		m_controllerCallback( state, m_controllerCallbackContext );
 	}
 }
 
@@ -2797,7 +3002,8 @@ bool Driver::BeginControllerCommand
 	ControllerCommand _command,
 	pfnControllerCallback_t _callback,
 	void* _context,
-	bool _highPower
+	bool _highPower,
+	uint8 _nodeId
 )
 {
 	if( ControllerCommand_None != m_controllerCommand )
@@ -2856,8 +3062,33 @@ bool Driver::BeginControllerCommand
 			SendMsg( msg );
 			break;
 		}
-		case ControllerCommand_ReplaceFailedDevice:
+		case ControllerCommand_HasNodeFailed:
 		{
+			m_controllerCommandNode = _nodeId;
+			Log::Write( "Requesting whether node %d has failed", _nodeId );
+			Msg* msg = new Msg( "Has Node Failed?", 0xff, REQUEST, FUNC_ID_ZW_IS_FAILED_NODE_ID, false );		
+			msg->Append( _nodeId );
+			msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+			SendMsg( msg );
+			break;
+		}
+		case ControllerCommand_MarkNodeAsFailed:
+		{
+			m_controllerCommandNode = _nodeId;
+			Log::Write( "Marking node %d as having failed", _nodeId );
+			Msg* msg = new Msg( "Mark Node As Failed", 0xff, REQUEST, FUNC_ID_ZW_REMOVE_FAILED_NODE_ID, true );		
+			msg->Append( _nodeId );
+			msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+			SendMsg( msg );
+			break;
+		}
+		case ControllerCommand_ReplaceFailedNode:
+		{
+			m_controllerCommandNode = _nodeId;
+			Log::Write( "Replace Failed Node %d", _nodeId );
+			Msg* msg = new Msg( "ReplaceFailedNode", 0xff, REQUEST, FUNC_ID_ZW_REPLACE_FAILED_NODE, true );
+			msg->Append( _nodeId );
+			SendMsg( msg );
 			break;
 		}
 		case ControllerCommand_TransferPrimaryRole:
@@ -2866,11 +3097,6 @@ bool Driver::BeginControllerCommand
 			Msg* msg = new Msg(  "TransferPrimaryRole", 0xff, REQUEST, FUNC_ID_ZW_CONTROLLER_CHANGE, true, false );
 			msg->Append( CONTROLLER_CHANGE_START );
 			SendMsg( msg );
-			break;
-		}
-		case ControllerCommand_None:
-		default:
-		{
 			break;
 		}
 	}
@@ -2938,16 +3164,14 @@ bool Driver::CancelControllerCommand
 			SendMsg( msg );
 			break;
 		}
-		case ControllerCommand_ReplaceFailedDevice:
+		case ControllerCommand_MarkNodeAsFailed:
+		case ControllerCommand_HasNodeFailed:
+		case ControllerCommand_ReplaceFailedNode:
 		{
-			break;
+			// Cannot cancel
+			return false;
 		}
 		case ControllerCommand_TransferPrimaryRole:
-		{
-			break;
-		}
-		case ControllerCommand_None:
-		default:
 		{
 			break;
 		}
@@ -3140,6 +3364,4 @@ void Driver::NotifyWatchers
 		nit = m_notifications.begin();
 	}
 }
-
-
 

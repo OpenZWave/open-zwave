@@ -181,6 +181,10 @@ uint32 SerialPortImpl::Read
 		{
 			GetOverlappedResult( m_hSerialPort, &m_overlapped, &bytesRead, TRUE );
 		}
+		else
+		{
+			Log::Write( "Error: Serial port read (0x%.8x)", GetLastError() );
+		}
 	}
 
 	return (uint32)bytesRead;
@@ -259,5 +263,3 @@ bool SerialPortImpl::Wait
 
 	return false;
 }
-
-
