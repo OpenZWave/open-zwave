@@ -62,7 +62,9 @@ namespace OpenZWaveDotNet
 		Waiting		= Driver::ControllerState_Waiting,								/**< Controller is waiting for a user action. */
 		InProgress	= Driver::ControllerState_InProgress,							/**< The controller is communicating with the other device to carry out the command. */
 		Completed	= Driver::ControllerState_Completed,							/**< The command has completed successfully. */
-		Failed		= Driver::ControllerState_Failed								/**< The command has failed. */
+		Failed		= Driver::ControllerState_Failed,								/**< The command has failed. */
+		NodeOK		= Driver::ControllerState_NodeOK,								/**< Used with the HasNodeFailed, MarkNodeAsFailed and ReplaceFailedNode commands to indicate that the controller thinks the node is OK. */
+		NodeFailed	= Driver::ControllerState_NodeFailed							/**< Used only with HasNodeFailed to indicate that the controller thinks the node has failed. */
 	};
 
 	public enum class ZWControllerCommand
@@ -74,7 +76,9 @@ namespace OpenZWaveDotNet
 		ReceiveConfiguration	= Driver::ControllerCommand_ReceiveConfiguration,	/**< Receive Z-Wave network configuration information from another controller. */
 		RemoveController		= Driver::ControllerCommand_RemoveController,		/**< Remove a controller from the Z-Wave network. */
 		RemoveDevice			= Driver::ControllerCommand_RemoveDevice,			/**< Remove a new device (but not a controller) from the Z-Wave network. */
-		ReplaceFailedDevice		= Driver::ControllerCommand_ReplaceFailedDevice,	/**< Replace a non-responding device with another. */
+		MarkNodeAsFailed		= Driver::ControllerCommand_MarkNodeAsFailed,		/**< Move a node to the controller's failed nodes list. This command will only work if the node cannot respond. */
+		HasNodeFailed			= Driver::ControllerCommand_HasNodeFailed,			/**< Check whether a node is in the controller's failed nodes list. */
+		ReplaceFailedNode		= Driver::ControllerCommand_ReplaceFailedNode,		/**< Replace a non-responding device with another. */
 		TransferPrimaryRole		= Driver::ControllerCommand_TransferPrimaryRole		/**< Make a different controller the primary. */
 	};
 
@@ -915,17 +919,24 @@ namespace OpenZWaveDotNet
 		 * @param highPower used only with the AddDevice, AddController, RemoveDevice and RemoveController commands. 
 		 * Usually when adding or removing devices, the controller operates at low power so that the controller must
 		 * be physically close to the device for security reasons.  If _highPower is true, the controller will 
-		 * operate at normal power levels instead.
+		 * operate at normal power levels instead.  Defaults to false.
+		 * @param _nodeId used only with the ReplaceFailedNode command, to specify the node that is going to be replaced.
 		 * @return true if the command was accepted and has started.
-		 * @see CancelControllerCommand
-		 * <p> Controller Commands
+		 * @see CancelControllerCommand, HasNodeFailed, MarkNodeAsFailed, Driver::ControllerCommand, Driver::pfnControllerCallback_t, 
+		 * to notify the user of progress or to request actions on the user's part.  Defaults to NULL.
+		 * <p> Commands
 		 * - ZWControllerCommand.AddController - Add a new secondary controller to the Z-Wave network.
 		 * - ZWControllerCommand.AddDevice - Add a new device (but not a controller) to the Z-Wave network.
 		 * - ZWControllerCommand.CreateNewPrimary (Not yet implemented)
 		 * - ZWControllerCommand.ReceiveConfiguration -   
 		 * - ZWControllerCommand.RemoveController - remove a controller from the Z-Wave network.
 		 * - ZWControllerCommand.RemoveDevice - remove a device (but not a controller) from the Z-Wave network.
-		 * - ZWControllerCommand.ReplaceFailedDevice (Not yet implemented) - 
+ 		 * - ZWControllerCommand.MarkNodeAsFailed - move a node to the controller's list of failed nodes.  The node must actually
+		 * have failed or have been disabled since the command will fail if it responds.  A node must be in the controller's failed nodes list
+		 * for ControllerCommand_ReplaceFailedNode to work.
+		 * - ZWControllerCommand.HasNodeFailed - Check whether a node is in the controller's failed nodes list.
+		 * - ZWControllerCommand.ReplaceFailedNode - replace a failed device with another. If the node is not in 
+		 * the controller's failed nodes list, or the node responds, this command will fail.
 		 * - ZWControllerCommand.TransferPrimaryRole (Not yet implemented) - Add a new controller to the network and
 		 * make it the primary.  The existing primary will become a secondary controller.  
 		 * <p>These processes are asynchronous, and at various stages OpenZWave will trigger a callback
@@ -985,6 +996,20 @@ namespace OpenZWaveDotNet
 		 *             complete = true;
 		 *             break;
 		 *         }
+		 *         case ZWControllerState::NodeOK:
+		 *         {
+		 *             // Tell the user that the node referenced by one of the Failed commands is actually working.
+		 *             // The command is now complete
+		 *             complete = true;
+		 *             break;
+		 *         }
+		 *         case ZWControllerState::Failed:
+		 *         {
+		 *             // Tell the user that the node referenced in the HasNodeFailed command has failed.
+		 *             // The command is now complete
+		 *             complete = true;
+		 *             break;
+		 *         }
 		 *     }
 		 *
 		 *     if( complete )
@@ -995,7 +1020,7 @@ namespace OpenZWaveDotNet
 		 * }
 		 * /endcode
 		 */
-		bool BeginControllerCommand( uint32 homeId, ZWControllerCommand command, bool highPower );
+		bool BeginControllerCommand( uint32 homeId, ZWControllerCommand command, bool highPower, uint8 nodeId );
 			
 		/**
 		 * Cancels any in-progress command running on a controller.
@@ -1025,5 +1050,5 @@ namespace OpenZWaveDotNet
 
 		GCHandle										m_gchControllerState;
 		OnControllerStateChangedFromUnmanagedDelegate^	m_onStateChanged;
-};
+	};
 }

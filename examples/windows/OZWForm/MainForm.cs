@@ -12,7 +12,6 @@ namespace OZWForm
     public partial class MainForm : Form
     {
         static private ZWManager m_manager = null;
-        static private ManagedControllerStateChangedHandler m_controllerStateChangedHandler = new ManagedControllerStateChangedHandler(MainForm.MyControllerStateChangedHandler);
 
         private UInt32 m_homeId = 0;
         private ZWNotification m_notification = null;
@@ -138,7 +137,7 @@ namespace OZWForm
             m_manager = new ZWManager();
             m_manager.Create(@"F:\Projects\OpenZWave\config\", @"");
             m_manager.OnNotification += new ManagedNotificationsHandler(NotificationHandler);
-            
+
             // Add a driver
             m_manager.AddDriver(@"\\.\COM3");
         }
@@ -155,106 +154,106 @@ namespace OZWForm
         private void NotificationHandler()
         {
             switch (m_notification.GetType())
-	        {
-		        case ZWNotification.Type.ValueAdded:
-		        {
-                    //ZWValueID id = m_notification.GetValueID();
-                    //if (id.GetType() == ZWValueID.ValueType.Byte)
-                    //{
-                    //    Byte value;
-                    //    m_manager.GetValueAsByte(id, out value);
-                    //    m_manager.SetValue(id, (Byte)0);
-                    //}
-                    break;
-		        }
-
-		        case ZWNotification.Type.ValueRemoved:
-		        {
-			        break;
-		        }
-
-		        case ZWNotification.Type.ValueChanged:
-		        {
-			        break;
-		        }
-
-		        case ZWNotification.Type.Group:
-		        {
-			        break;
-		        }
-
-		        case ZWNotification.Type.NodeAdded:
-		        {
-			        // Add the new node to our list
-                    Node node = new Node();
-                    node.ID = m_notification.GetNodeId();
-                    node.HomeID = m_notification.GetHomeId();
-                    m_nodeList.Add( node );
-			        break;
-		        }
-
-		        case ZWNotification.Type.NodeRemoved:
-		        {
-                    foreach (Node node in m_nodeList)
+            {
+                case ZWNotification.Type.ValueAdded:
                     {
-                        if (node.ID == m_notification.GetNodeId())
-                        {
-                            m_nodeList.Remove(node);
-                            break;
-                        }
+                        //ZWValueID id = m_notification.GetValueID();
+                        //if (id.GetType() == ZWValueID.ValueType.Byte)
+                        //{
+                        //    Byte value;
+                        //    m_manager.GetValueAsByte(id, out value);
+                        //    m_manager.SetValue(id, (Byte)0);
+                        //}
+                        break;
                     }
-			        break;
-		        }
+
+                case ZWNotification.Type.ValueRemoved:
+                    {
+                        break;
+                    }
+
+                case ZWNotification.Type.ValueChanged:
+                    {
+                        break;
+                    }
+
+                case ZWNotification.Type.Group:
+                    {
+                        break;
+                    }
+
+                case ZWNotification.Type.NodeAdded:
+                    {
+                        // Add the new node to our list
+                        Node node = new Node();
+                        node.ID = m_notification.GetNodeId();
+                        node.HomeID = m_notification.GetHomeId();
+                        m_nodeList.Add(node);
+                        break;
+                    }
+
+                case ZWNotification.Type.NodeRemoved:
+                    {
+                        foreach (Node node in m_nodeList)
+                        {
+                            if (node.ID == m_notification.GetNodeId())
+                            {
+                                m_nodeList.Remove(node);
+                                break;
+                            }
+                        }
+                        break;
+                    }
 
                 case ZWNotification.Type.NodeProtocolInfo:
-                {
-                    Node node = GetNode(m_notification.GetHomeId(), m_notification.GetNodeId());
-                    if (node != null)
                     {
-                        node.Label = m_manager.GetNodeType(m_homeId, node.ID);
+                        Node node = GetNode(m_notification.GetHomeId(), m_notification.GetNodeId());
+                        if (node != null)
+                        {
+                            node.Label = m_manager.GetNodeType(m_homeId, node.ID);
+                        }
+                        break;
                     }
-                    break;
-                }
 
                 case ZWNotification.Type.NodeNaming:
-                {
-                    Node node = GetNode(m_notification.GetHomeId(), m_notification.GetNodeId());
-                    if (node != null)
                     {
-                        node.Manufacturer = m_manager.GetNodeManufacturerName(m_homeId, node.ID);
-                        node.Product = m_manager.GetNodeProductName(m_homeId, node.ID);
+                        Node node = GetNode(m_notification.GetHomeId(), m_notification.GetNodeId());
+                        if (node != null)
+                        {
+                            node.Manufacturer = m_manager.GetNodeManufacturerName(m_homeId, node.ID);
+                            node.Product = m_manager.GetNodeProductName(m_homeId, node.ID);
+                        }
+                        break;
                     }
-                    break;
-                }
 
                 case ZWNotification.Type.NodeStatus:
-		        {
-			        break;
-		        }
+                    {
+                        break;
+                    }
 
-		        case ZWNotification.Type.PollingDisabled:
-		        {
-			        break;
-		        }
+                case ZWNotification.Type.PollingDisabled:
+                    {
+                        break;
+                    }
 
-		        case ZWNotification.Type.PollingEnabled:
-		        {
-			        break;
-		        }
+                case ZWNotification.Type.PollingEnabled:
+                    {
+                        break;
+                    }
 
-		        case ZWNotification.Type.DriverReady:
-		        {
-                    m_homeId = m_notification.GetHomeId();
-			        break;
-		        }
-	        }
+                case ZWNotification.Type.DriverReady:
+                    {
+                        m_homeId = m_notification.GetHomeId();
+                        break;
+                    }
+            }
 
             //NodeGridView.Refresh();
             NodeGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
             NodeGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
         }
 
-        private Node GetNode( UInt32 homeId, Byte nodeId )
+        private Node GetNode(UInt32 homeId, Byte nodeId)
         {
             foreach (Node node in m_nodeList)
             {
@@ -299,120 +298,61 @@ namespace OZWForm
             m_manager.SetNodeOff(m_homeId, m_rightClickNode);
         }
 
+        private void hasNodeFailedToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DoCommand(ZWControllerCommand.HasNodeFailed);
+        }
+
+        private void markNodeAsFailedToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DoCommand(ZWControllerCommand.MarkNodeAsFailed);
+        }
+
+        private void replaceFailedNodeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DoCommand(ZWControllerCommand.ReplaceFailedNode);
+        }
+
         private void createNewPrmaryControllerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-		    m_manager.OnControllerStateChanged += m_controllerStateChangedHandler;
-            if (!m_manager.BeginControllerCommand(m_homeId, ZWControllerCommand.RemoveDevice, false))
-            {
-                m_manager.OnControllerStateChanged -= m_controllerStateChangedHandler;
-            }
+            DoCommand( ZWControllerCommand.CreateNewPrimary);
         }
 
         private void addControllerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-		    m_manager.OnControllerStateChanged += m_controllerStateChangedHandler;
-            if (!m_manager.BeginControllerCommand(m_homeId, ZWControllerCommand.AddController, false))
-            {
-                m_manager.OnControllerStateChanged -= m_controllerStateChangedHandler;
-            }
+            DoCommand(ZWControllerCommand.AddController);
         }
 
         private void addDeviceToolStripMenuItem_Click(object sender, EventArgs e)
         {
-		    m_manager.OnControllerStateChanged += m_controllerStateChangedHandler;
-            if (!m_manager.BeginControllerCommand(m_homeId, ZWControllerCommand.AddDevice, false))
-            {
-                m_manager.OnControllerStateChanged -= m_controllerStateChangedHandler;
-            }
+            DoCommand(ZWControllerCommand.AddDevice);
         }
 
         private void removeControllerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-		    m_manager.OnControllerStateChanged += m_controllerStateChangedHandler;
-            if (!m_manager.BeginControllerCommand(m_homeId, ZWControllerCommand.RemoveController, false))
-            {
-                m_manager.OnControllerStateChanged -= m_controllerStateChangedHandler;
-            }
+            DoCommand(ZWControllerCommand.RemoveController);
         }
 
         private void removeDeviceToolStripMenuItem_Click(object sender, EventArgs e)
         {
-		    m_manager.OnControllerStateChanged += m_controllerStateChangedHandler;
-            if (!m_manager.BeginControllerCommand(m_homeId, ZWControllerCommand.RemoveDevice, false))
-            {
-                m_manager.OnControllerStateChanged -= m_controllerStateChangedHandler;
-            }
+            DoCommand(ZWControllerCommand.RemoveDevice);
         }
 
         private void transferPrimaryRoleToolStripMenuItem_Click(object sender, EventArgs e)
         {
-		    m_manager.OnControllerStateChanged += m_controllerStateChangedHandler;
-            if (!m_manager.BeginControllerCommand(m_homeId, ZWControllerCommand.TransferPrimaryRole, false))
-            {
-                m_manager.OnControllerStateChanged -= m_controllerStateChangedHandler;
-            }
+            DoCommand(ZWControllerCommand.TransferPrimaryRole);
         }
 
         private void receiveConfigurationToolStripMenuItem_Click(object sender, EventArgs e)
         {
-		    m_manager.OnControllerStateChanged += m_controllerStateChangedHandler;
-            if (!m_manager.BeginControllerCommand(m_homeId, ZWControllerCommand.ReceiveConfiguration, false))
-            {
-                m_manager.OnControllerStateChanged -= m_controllerStateChangedHandler;
-            }
+            DoCommand(ZWControllerCommand.ReceiveConfiguration);
         }
 
-        private void replaceFailedDeviceToolStripMenuItem_Click(object sender, EventArgs e)
+        private void DoCommand(ZWControllerCommand command)
         {
-		    m_manager.OnControllerStateChanged += m_controllerStateChangedHandler;
-            if (!m_manager.BeginControllerCommand(m_homeId, ZWControllerCommand.ReplaceFailedDevice, false))
-            {
-                m_manager.OnControllerStateChanged -= m_controllerStateChangedHandler;
-            }
+            ControllerCommandDlg dlg = new ControllerCommandDlg(this, m_manager, m_homeId, command, m_rightClickNode);
+            dlg.ShowDialog(this);
+            dlg.Dispose();
         }
-
-        private void cancelControllerCommandToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            m_manager.CancelControllerCommand(m_homeId);
-        }
-
-        public static void MyControllerStateChangedHandler(ZWControllerState state)
-	    {
-		    // Handle the controller state notifications here.
-            bool complete = false;
-            switch (state)
-		    {
-		        case ZWControllerState.Waiting:
-		        {
-	                // Display a message to tell the user to press the include button on the controller
-		            break;
-		        }
-		        case ZWControllerState.InProgress:
-		        {
-		            // Tell the user that the controller has been found and the adding process is in progress.
-		            break;
-		        }
-		        case ZWControllerState.Completed:
-		        {
-		            // Tell the user that the controller has been successfully added.
-		            // The command is now complete
-		            complete = true;
-		            break;
-		        }
-		        case ZWControllerState.Failed:
-		        {
-		            // Tell the user that the controller addition process has failed.
-		            // The command is now complete
-		            complete = true;
-		            break;
-		        }
-		    }
-    		
-		    if( complete )
-		    {
-		        // Remove the event handler
-		        m_manager.OnControllerStateChanged -= m_controllerStateChangedHandler;
-		    }
-		 }
     }
 }

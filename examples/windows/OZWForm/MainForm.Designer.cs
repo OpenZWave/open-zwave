@@ -49,9 +49,10 @@
             this.transferPrimaryRoleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.receiveConfigurationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.replaceFailedDeviceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.cancelControllerCommandToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.hasNodeFailedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.markNodeAsFailedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.replaceFailedNodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.NodeGridView)).BeginInit();
             this.NodeContextMenuStrip.SuspendLayout();
             this.MenuBar.SuspendLayout();
@@ -81,9 +82,13 @@
             this.PowerOnToolStripMenuItem,
             this.PowerOffToolStripMenuItem,
             this.toolStripSeparator4,
-            this.requestNodeNeighborUpdateToolStripMenuItem});
+            this.requestNodeNeighborUpdateToolStripMenuItem,
+            this.toolStripSeparator5,
+            this.hasNodeFailedToolStripMenuItem,
+            this.markNodeAsFailedToolStripMenuItem,
+            this.replaceFailedNodeToolStripMenuItem});
             this.NodeContextMenuStrip.Name = "NodeContextMenuStrip";
-            this.NodeContextMenuStrip.Size = new System.Drawing.Size(243, 76);
+            this.NodeContextMenuStrip.Size = new System.Drawing.Size(243, 170);
             // 
             // PowerOnToolStripMenuItem
             // 
@@ -149,10 +154,7 @@
             this.toolStripSeparator2,
             this.transferPrimaryRoleToolStripMenuItem,
             this.receiveConfigurationToolStripMenuItem,
-            this.toolStripSeparator3,
-            this.replaceFailedDeviceToolStripMenuItem,
-            this.toolStripSeparator5,
-            this.cancelControllerCommandToolStripMenuItem});
+            this.toolStripSeparator3});
             this.controllerToolStripMenuItem.Name = "controllerToolStripMenuItem";
             this.controllerToolStripMenuItem.Size = new System.Drawing.Size(72, 20);
             this.controllerToolStripMenuItem.Text = "Controller";
@@ -221,24 +223,31 @@
             this.toolStripSeparator3.Name = "toolStripSeparator3";
             this.toolStripSeparator3.Size = new System.Drawing.Size(229, 6);
             // 
-            // replaceFailedDeviceToolStripMenuItem
-            // 
-            this.replaceFailedDeviceToolStripMenuItem.Name = "replaceFailedDeviceToolStripMenuItem";
-            this.replaceFailedDeviceToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
-            this.replaceFailedDeviceToolStripMenuItem.Text = "Replace Failed Device";
-            this.replaceFailedDeviceToolStripMenuItem.Click += new System.EventHandler(this.replaceFailedDeviceToolStripMenuItem_Click);
-            // 
-            // cancelControllerCommandToolStripMenuItem
-            // 
-            this.cancelControllerCommandToolStripMenuItem.Name = "cancelControllerCommandToolStripMenuItem";
-            this.cancelControllerCommandToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
-            this.cancelControllerCommandToolStripMenuItem.Text = "Cancel Controller Command";
-            this.cancelControllerCommandToolStripMenuItem.Click += new System.EventHandler(this.cancelControllerCommandToolStripMenuItem_Click);
-            // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(229, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(239, 6);
+            // 
+            // hasNodeFailedToolStripMenuItem
+            // 
+            this.hasNodeFailedToolStripMenuItem.Name = "hasNodeFailedToolStripMenuItem";
+            this.hasNodeFailedToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
+            this.hasNodeFailedToolStripMenuItem.Text = "Has Node Failed";
+            this.hasNodeFailedToolStripMenuItem.Click += new System.EventHandler(this.hasNodeFailedToolStripMenuItem_Click);
+            // 
+            // markNodeAsFailedToolStripMenuItem
+            // 
+            this.markNodeAsFailedToolStripMenuItem.Name = "markNodeAsFailedToolStripMenuItem";
+            this.markNodeAsFailedToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
+            this.markNodeAsFailedToolStripMenuItem.Text = "Mark Node as Failed";
+            this.markNodeAsFailedToolStripMenuItem.Click += new System.EventHandler(this.markNodeAsFailedToolStripMenuItem_Click);
+            // 
+            // replaceFailedNodeToolStripMenuItem
+            // 
+            this.replaceFailedNodeToolStripMenuItem.Name = "replaceFailedNodeToolStripMenuItem";
+            this.replaceFailedNodeToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
+            this.replaceFailedNodeToolStripMenuItem.Text = "Replace Failed Node";
+            this.replaceFailedNodeToolStripMenuItem.Click += new System.EventHandler(this.replaceFailedNodeToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -275,7 +284,6 @@
         private System.Windows.Forms.ToolStripMenuItem removeDeviceToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem transferPrimaryRoleToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem receiveConfigurationToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem replaceFailedDeviceToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
@@ -283,7 +291,9 @@
         private System.Windows.Forms.ToolStripMenuItem PowerOffToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
-        private System.Windows.Forms.ToolStripMenuItem cancelControllerCommandToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem hasNodeFailedToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem markNodeAsFailedToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem replaceFailedNodeToolStripMenuItem;
     }
 }
 
