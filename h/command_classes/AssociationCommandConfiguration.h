@@ -29,6 +29,10 @@
 #define _AssociationCommandConfiguration_H
 
 #include "CommandClass.h"
+#include "ValueBool.h"
+#include "ValueByte.h"
+#include "ValueShort.h"
+
 
 namespace OpenZWave
 {
@@ -40,6 +44,9 @@ namespace OpenZWave
 
 		static uint8 const StaticGetCommandClassId(){ return 0x9b; }		
 		static string const StaticGetCommandClassName(){ return "COMMAND_CLASS_ASSOCIATION_COMMAND_CONFIGURATION"; }
+	
+		void RequestCommands( uint8 const _groupIdx, uint8 const _nodeId );
+		void SetCommand( uint8 const _groupIdx, uint8 const _nodeId, uint8 const _length, uint8 const* _data );
 
 		// From CommandClass
 		virtual void RequestState( uint32 const _requestFlags );
@@ -52,6 +59,12 @@ namespace OpenZWave
 
 	private:
 		AssociationCommandConfiguration( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
+
+		ValueInstances<ValueByte>	m_maxCommandLength;
+		ValueInstances<ValueBool>	m_commandsAreValues;
+		ValueInstances<ValueBool>	m_commandsAreConfigurable;
+		ValueInstances<ValueShort>	m_numFreeCommands;
+		ValueInstances<ValueShort>	m_maxCommands;
 	};
 
 } // namespace OpenZWave

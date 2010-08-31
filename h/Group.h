@@ -29,7 +29,8 @@
 #define _Group_H
 
 #include <string>
-#include <set>
+#include <vector>
+#include <map>
 #include "Defs.h"
 
 class TiXmlElement;
@@ -43,12 +44,20 @@ namespace OpenZWave
 		friend class Node;
 		friend class Association;
 
+	//-----------------------------------------------------------------------------
+	// Construction
+	//-----------------------------------------------------------------------------
 	public:
 		Group( uint32 const _homeId, uint8 const _nodeId, uint8 const _groupIdx );
 		Group( uint32 const _homeId, uint8 const _nodeId, TiXmlElement const* _valueElement );
 		~Group(){}
 
 		void WriteXML( TiXmlElement* _groupElement );
+		
+	//-----------------------------------------------------------------------------
+	// Association methods	(COMMAND_CLASS_ASSOCIATION)
+	//-----------------------------------------------------------------------------
+	public:
 		string const& GetLabel()const{ return m_label; }
 		uint32 GetAssociations( uint8** o_associations );
 		uint8 GetIdx()const{ return m_groupIdx; }
@@ -58,11 +67,36 @@ namespace OpenZWave
 		void RemoveAssociation( uint8 const _nodeId );
 		void OnGroupChanged( uint8 const _numAssociations, uint8 const* _associations );
 
-		string		m_label;
-		uint32		m_homeId;
-		uint8		m_nodeId;
-		uint8		m_groupIdx;
-		set<uint8>	m_associations;
+	//-----------------------------------------------------------------------------
+	// Command methods (COMMAND_CLASS_ASSOCIATION_COMMAND_CONFIGURATION)
+	//-----------------------------------------------------------------------------
+	public:
+		bool ClearCommands( uint8 const _nodeId );
+		bool AddCommand( uint8 const _nodeId, uint8 const _length, uint8 const* _data );
+
+	private:
+		class AssociationCommand
+		{
+		public:
+			AssociationCommand( uint8 const _length, uint8 const* _data );
+			~AssociationCommand();
+
+		private:
+			uint8	m_length;
+			uint8*	m_data;
+		};
+
+		typedef vector<AssociationCommand>	AssociationCommandVec;
+
+	//-----------------------------------------------------------------------------
+	// Member variables
+	//-----------------------------------------------------------------------------
+	private:
+		string								m_label;
+		uint32								m_homeId;
+		uint8								m_nodeId;
+		uint8								m_groupIdx;
+		map<uint8,AssociationCommandVec>	m_associations;
 	};
 
 } //namespace OpenZWave

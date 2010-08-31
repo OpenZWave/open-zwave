@@ -57,6 +57,7 @@ namespace OpenZWave
 	{
 		friend class Driver;
 		friend class Association;
+		friend class AssociationCommandConfiguration;
 		friend class CommandClass;
 		friend class ManufacturerSpecific;
 		friend class NodeNaming;

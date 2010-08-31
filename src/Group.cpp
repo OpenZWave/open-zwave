@@ -25,12 +25,14 @@
 //
 //-----------------------------------------------------------------------------
 
+#include <cstring>
 #include "Group.h"
 #include "Manager.h"
 #include "Driver.h"
 #include "Node.h"
 #include "Notification.h"
 #include "Association.h"
+#include "AssociationCommandConfiguration.h"
 
 using namespace OpenZWave;
 
@@ -85,7 +87,7 @@ Group::Group
 		if( elementName && !strcmp( elementName, "Node" ) )
 		{
 			associationElement->QueryIntAttribute( "id", &intVal );
-			m_associations.insert( (uint8)intVal );
+			m_associations[(uint8)intVal] = AssociationCommandVec();
 		}
 
 		associationElement = associationElement->NextSiblingElement();
@@ -108,11 +110,11 @@ void Group::WriteXML
 
 	_groupElement->SetAttribute( "label", m_label.c_str() );
 
-	for( set<uint8>::iterator it = m_associations.begin(); it != m_associations.end(); ++it )
+	for( map<uint8,AssociationCommandVec>::iterator it = m_associations.begin(); it != m_associations.end(); ++it )
 	{
 		TiXmlElement* associationElement = new TiXmlElement( "Node" );
 		
-		snprintf( str, 16, "%d", *it );
+		snprintf( str, 16, "%d", it->first );
 		associationElement->SetAttribute( "id", str );
 
 		_groupElement->LinkEndChild( associationElement );
@@ -191,7 +193,7 @@ void Group::OnGroupChanged
 	uint8 i;
 	for( i=0; i<_numNodes; ++i )
 	{
-		m_associations.insert( _nodes[i] );
+		m_associations[_nodes[i]] = AssociationCommandVec();
 	}
 
 	if( (!notify) && ( oldSize != m_associations.size() ) )
@@ -203,13 +205,30 @@ void Group::OnGroupChanged
 		m_associations.clear();
 		for( i=0; i<_numNodes; ++i )
 		{
-			m_associations.insert( _nodes[i] );
+			m_associations[_nodes[i]] = AssociationCommandVec();
 		}
 		notify = true;
 	}
 
 	if( notify )
 	{
+		// If the node supports COMMAND_CLASS_ASSOCIATION_COMMAND_CONFIGURATION, we need to request the command data.
+		if( Driver* driver = Manager::Get()->GetDriver( m_homeId ) )
+		{
+			if( Node* node = driver->GetNode( m_nodeId ) )
+			{
+				if( AssociationCommandConfiguration* cc = static_cast<AssociationCommandConfiguration*>( node->GetCommandClass( AssociationCommandConfiguration::StaticGetCommandClassId() ) ) )
+				{
+					for( map<uint8,AssociationCommandVec>::iterator it = m_associations.begin(); it != m_associations.end(); ++it )
+					{
+						cc->RequestCommands( m_groupIdx, it->first );
+					}
+				}
+
+				driver->ReleaseNodes();
+			}
+		}
+
 		// Send notification that the group contents have changed
 		Notification* notification = new Notification( Notification::Type_Group );
 		notification->SetHomeAndNodeIds( m_homeId, m_nodeId );
@@ -236,12 +255,83 @@ uint32 Group::GetAssociations
 
 	uint8* associations = new uint8[numNodes];
 	uint32 i = 0;
-	for( set<uint8>::iterator it = m_associations.begin(); it != m_associations.end(); ++it )
+	for( map<uint8,AssociationCommandVec>::iterator it = m_associations.begin(); it != m_associations.end(); ++it )
 	{
-		associations[i++] = *it;
+		associations[i++] = it->first;
 	}
 
 	*o_associations = associations;
 	return numNodes;
 }
+
+//-----------------------------------------------------------------------------
+// Command methods (COMMAND_CLASS_ASSOCIATION_COMMAND_CONFIGURATION)
+//-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+// <Group::ClearCommands>
+// Clear all the commands for the specified node
+//-----------------------------------------------------------------------------
+bool Group::ClearCommands
+( 
+	uint8 const _nodeId
+)
+{
+	map<uint8,AssociationCommandVec>::iterator it = m_associations.find( _nodeId );
+	if( it != m_associations.end() )
+	{
+		it->second.clear();
+		return true;
+	}
+
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Group::AddCommand>
+// Add a command to the list for the specified node
+//-----------------------------------------------------------------------------
+bool Group::AddCommand
+(
+	uint8 const _nodeId,
+	uint8 const _length,
+	uint8 const* _data
+)
+{
+	map<uint8,AssociationCommandVec>::iterator it = m_associations.find( _nodeId );
+	if( it != m_associations.end() )
+	{
+		it->second.push_back( AssociationCommand( _length, _data ) );
+		return true;
+	}
+
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Group::AssociationCommand::AssociationCommand>
+// Constructor
+//-----------------------------------------------------------------------------
+Group::AssociationCommand::AssociationCommand
+(
+	uint8 const _length,
+	uint8 const* _data
+):
+	m_length( _length )
+{
+	m_data = new uint8[_length];
+	memcpy( m_data, _data, _length );
+}
+
+//-----------------------------------------------------------------------------
+// <Group::AssociationCommand::AssociationCommand>
+// Destructor
+//-----------------------------------------------------------------------------
+Group::AssociationCommand::~AssociationCommand
+(
+)
+{
+	delete [] m_data;
+}
+
 
