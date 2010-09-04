@@ -55,6 +55,7 @@
 #include "ValueDecimal.h"
 #include "ValueInt.h"
 #include "ValueList.h"
+#include "ValueSchedule.h"
 #include "ValueShort.h"
 #include "ValueString.h"
 #include "ValueStore.h"
@@ -505,9 +506,10 @@ void Node::UpdateNodeInfo
 
 		SetStaticRequests();
 
-		// For sleeping devices, we defer the usual requests until we have told
-		// the device to send it's wake-up notifications to the controller.
-		if( WakeUp* wakeUp = static_cast<WakeUp*>( GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
+		// For sleeping devices other than controllers, we need to defer the usual requests until
+		// we have told the device to send it's wake-up notifications to the PC controller.
+		WakeUp* wakeUp = static_cast<WakeUp*>( GetCommandClass( WakeUp::StaticGetCommandClassId() ) );
+		if( wakeUp && ( GetBasic() >= 0x03 ) )
 		{
 			wakeUp->Init();
 		}
@@ -542,7 +544,7 @@ void Node::SetStaticRequests
 
 	if( GetCommandClass( Version::StaticGetCommandClassId() ) )
 	{
-		// Request instances
+		// Request versions
 		request |= (uint8)CommandClass::StaticRequest_Version;
 	}
 
@@ -964,6 +966,27 @@ ValueList* Node::CreateValueList
 }
 
 //-----------------------------------------------------------------------------
+// <Node::CreateValueSchedule>
+// Helper to create a new schedule value and add it to the value store
+//-----------------------------------------------------------------------------
+ValueSchedule* Node::CreateValueSchedule
+(
+	ValueID::ValueGenre const _genre,
+	uint8 const _commandClassId,
+	uint8 const _instance,
+	uint8 const _valueIndex,
+	string const& _label,
+	string const& _units,
+	bool const _readOnly
+)
+{
+	ValueSchedule* value = new ValueSchedule( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly );
+	ValueStore* store = GetValueStore();
+	store->AddValue( value );
+	return value;
+}
+
+//-----------------------------------------------------------------------------
 // <Node::CreateValueShort>
 // Helper to create a new short value and add it to the value store
 //-----------------------------------------------------------------------------
@@ -1029,6 +1052,7 @@ Value* Node::CreateValueFromXML
 		case ValueID::ValueType_Decimal:	{	value = new ValueDecimal();		break;	}
 		case ValueID::ValueType_Int:		{	value = new ValueInt();			break;	}
 		case ValueID::ValueType_List:		{	value = new ValueList();		break;	}
+		case ValueID::ValueType_Schedule:	{	value = new ValueSchedule();	break;	}
 		case ValueID::ValueType_Short:		{	value = new ValueShort();		break;	}
 		case ValueID::ValueType_String:		{	value = new ValueString();		break;	}
 		case ValueID::ValueType_Button:		{	value = new ValueButton();		break;	}

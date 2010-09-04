@@ -58,6 +58,7 @@ namespace OpenZWave
 	class ValueString;
 
 	/** 
+	 * \nosubgrouping
 	 * A singleton class providing the main public interface to OpenZWave.
 	 * The Manager class exposes all the functionality required to add
 	 * Z-Wave support to an application.  It handles the sending and receiving
@@ -106,6 +107,9 @@ namespace OpenZWave
 	//-----------------------------------------------------------------------------
 	// Construction
 	//-----------------------------------------------------------------------------
+	/** @name Construction
+	 *  For creating and destroying the Manager singleton.
+	 */
 	/*@{*/
 	public:
    		/**
@@ -148,6 +152,7 @@ namespace OpenZWave
 		 * @see Create
 		 */
 		string const& GetUserPath()const{ return m_userPath; }
+	/*@}*/
 
 	private:
 		Manager( string const& _configPath, string const& _userPath );		// Constructor, to be called only via the static Create method.
@@ -158,11 +163,14 @@ namespace OpenZWave
 		string					m_configPath;								// Path to the OpenZWave library config folder, which contains XML descriptions of Z-Wave manufacturers and products.
 		string					m_userPath;									// Path to the application's user data folder where the OpenZWave should store the Z-Wave network configuration and state.
 		static Manager*			s_instance;									// Pointer to the instance of the Manager singleton.
-	/*@}*/
 
 	//-----------------------------------------------------------------------------
 	// Configuration
 	//-----------------------------------------------------------------------------
+	/** @name Configuration
+	 *  For saving the Z-Wave network configuration so that the entire network does not need to be 
+	 *  polled every time the application starts.
+	 */
 	/*@{*/
 	public:
 		/**
@@ -176,10 +184,15 @@ namespace OpenZWave
 		 * @param _homeId The Home ID of the Z-Wave controller to save.
 		 */
 		void WriteConfig( uint32 const _homeId );
+	/*@}*/
 
 	//-----------------------------------------------------------------------------
 	//	Drivers
 	//-----------------------------------------------------------------------------
+	/** @name Drivers
+	 *  Methods for adding and removing drivers and obtaining basic controller information.
+	 */
+	/*@{*/
 	public:
 		/**
 		 * Creates a new driver for a Z-Wave controller.
@@ -264,6 +277,7 @@ namespace OpenZWave
 		 * @see GetLibraryVersion, IsBridgeController
 		 */
 		string GetLibraryTypeName( uint32 const _homeId );
+	/*@}*/
 
 	private:
 		Driver* GetDriver( uint32 const _homeId );							// Get a pointer to a Driver object from the HomeID.  Only to be used by OpenZWave.
@@ -275,6 +289,12 @@ namespace OpenZWave
 	//-----------------------------------------------------------------------------
 	//	Polling Z-Wave devices
 	//-----------------------------------------------------------------------------
+	/** @name Polling Z-Wave devices
+	 *  Methods for controlling the polling of Z-Wave devices.  Modern devices will not
+	 *  require polling.  Some old devices need to be polled as the only way to detect
+	 *  status changes.
+	 */
+	/*@{*/
 	public:
 		/**
 		 * Set the time period between polls of a node's state.
@@ -309,6 +329,9 @@ namespace OpenZWave
 	//-----------------------------------------------------------------------------
 	//	Node information
 	//-----------------------------------------------------------------------------
+	/** @name Node information
+	 *  Methods for accessing information on indivdual nodes.
+	 */
 	/*@{*/
 	public:
 		/**
@@ -606,6 +629,10 @@ namespace OpenZWave
 	//-----------------------------------------------------------------------------
 	// Values
 	//-----------------------------------------------------------------------------
+	/** @name Values
+	 *  Methods for accessing device values.  All the methods require a ValueID, which will have been provided
+	 *  in the ValueAdded Notification callback when the the value was first discovered by OpenZWave.
+	 */
 	/*@{*/
 	public:
 		/**
@@ -631,7 +658,23 @@ namespace OpenZWave
 		 * @see ValueID
 		 */
 		string GetValueHelp( ValueID const& _id );
-		
+
+		/**
+		 * Gets the minimum that this value may contain.
+		 * @param _id The unique identifier of the value.
+		 * @return The value minimum.
+		 * @see ValueID
+		 */
+		int32 GetValueMin( ValueID const& _id );
+
+		/**
+		 * Gets the maximum that this value may contain.
+		 * @param _id The unique identifier of the value.
+		 * @return The value maximum.
+		 * @see ValueID
+		 */
+		int32 GetValueMax( ValueID const& _id );
+
 		/**
 		 * Test whether the value is read-only.
 		 * @param _id The unique identifier of the value.
@@ -815,12 +858,100 @@ namespace OpenZWave
 		 * @return true if the activity was stopped.  Returns false if the value is not a ValueID::ValueType_Button. The type can be tested with a call to ValueID::GetType.
 		 */
 		bool ReleaseButton( ValueID const& _id );
+	/*@}*/
+
+	//-----------------------------------------------------------------------------
+	// Climate Control Schedules
+	//-----------------------------------------------------------------------------
+	/** @name Climate Control Schedules
+	 *  Methods for accessing schedule values.  All the methods require a ValueID, which will have been provided
+	 *  in the ValueAdded Notification callback when the the value was first discovered by OpenZWave.
+	 *  <p>The ValueType_Schedule is a specialized Value used to simplify access to the switch point schedule
+	 *  information held by a setback thermostat that supports the Climate Control Schedule command class.
+	 *  Each schedule contains up to nine switch points for a single day, consisting of a time in
+	 *  hours and minutes (24 hour clock) and a setback in tenths of a degree Celsius.  The setback value can
+	 *  range from -128 (-12.8C) to 120 (12.0C).  There are two special setback values - 121 is used to set
+	 *  Frost Protection mode, and 122 is used to set Energy Saving mode.
+	 *  <p>The switch point methods only modify OpenZWave's copy of the schedule information.  Once all changes
+	 *  have been made, they are sent to the device by calling SetSchedule.
+	 */
+	/*@{*/
+
+		/**
+		 * Get the number of switch points defined in a schedule.
+		 * @param _id The unique identifier of the schedule value.
+		 * @return the number of switch points defined in this schedule.  Returns zero if the value is not a ValueID::ValueType_Schedule. The type can be tested with a call to ValueID::GetType.
+		 */
+		uint8 GetNumSwitchPoints( ValueID const& _id );
+
+		/**
+		 * Set a switch point in the schedule.
+		 * Inserts a new switch point into the schedule, unless a switch point already exists at the specified
+		 * time in which case that switch point is updated with the new setback value instead.
+		 * A maximum of nine switch points can be set in the schedule.
+		 * @param _id The unique identifier of the schedule value.
+		 * @param _hours The hours part of the time when the switch point will trigger.  The time is set using
+		 * the 24-hour clock, so this value must be between 0 and 23.
+		 * @param _minutes The minutes part of the time when the switch point will trigger.  This value must be
+		 * between 0 and 59.
+		 * @param _setback The setback in tenths of a degree Celsius.  The setback value can range from -128 (-12.8C)
+		 * to 120 (12.0C).  There are two special setback values - 121 is used to set Frost Protection mode, and
+		 * 122 is used to set Energy Saving mode.
+		 * @return true if successful.  Returns false if the value is not a ValueID::ValueType_Schedule. The type can be tested with a call to ValueID::GetType.
+		 * @see GetNumSwitchPoints, RemoveSwitchPoint, ClearSwitchPoints
+		 */
+		bool SetSwitchPoint( ValueID const& _id, uint8 const _hours, uint8 const _minutes, int8 const _setback );
+
+		/**
+		 * Remove a switch point from the schedule.
+		 * Removes the switch point at the specified time from the schedule.
+		 * @param _id The unique identifier of the schedule value.
+		 * @param _hours The hours part of the time when the switch point will trigger.  The time is set using
+		 * the 24-hour clock, so this value must be between 0 and 23.
+		 * @param _minutes The minutes part of the time when the switch point will trigger.  This value must be
+		 * between 0 and 59.
+		 * @return true if successful.  Returns false if the value is not a ValueID::ValueType_Schedule or if there 
+		 * is not switch point with the specified time values. The type can be tested with a call to ValueID::GetType.
+		 * @see GetNumSwitchPoints, SetSwitchPoint, ClearSwitchPoints
+		 */
+		bool RemoveSwitchPoint( ValueID const& _id, uint8 const _hours, uint8 const _minutes );
+
+		/**
+		 * Clears all switch points from the schedule.
+		 * @param _id The unique identifier of the schedule value.
+		 * @see GetNumSwitchPoints, SetSwitchPoint, RemoveSwitchPoint
+		 */
+		void ClearSwitchPoints( ValueID const& _id );
+		
+		/**
+		 * Gets switch point data from the schedule.
+		 * Retrieves the time and setback values from a switch point in the schedule.
+		 * @param _id The unique identifier of the schedule value.
+		 * @param _idx The index of the switch point, between zero and one less than the value
+		 * returned by GetNumSwitchPoints.
+		 * @param o_hours a pointer to a uint8 that will be filled with the hours part of the switch point data.
+		 * @param o_minutes a pointer to a uint8 that will be filled with the minutes part of the switch point data.
+		 * @param o_setback a pointer to an int8 that will be filled with the setback value.  This can range from -128
+		 * (-12.8C)to 120 (12.0C).  There are two special setback values - 121 is used to set Frost Protection mode, and
+		 * 122 is used to set Energy Saving mode.
+		 * @return true if successful.  Returns false if the value is not a ValueID::ValueType_Schedule. The type can be tested with a call to ValueID::GetType.
+		 * @see GetNumSwitchPoints
+		 */
+		bool GetSwitchPoint( ValueID const& _id, uint8 const _idx, uint8* o_hours, uint8* o_minutes, int8* o_setback );
 		
 	/*@}*/
 
 	//-----------------------------------------------------------------------------
-	// Configuration Parameters	(wrappers for the Node methods)
+	// Configuration Parameters
 	//-----------------------------------------------------------------------------
+	/** @name Configuration Parameters
+	 *  Methods for accessing device configuration parameters.
+	 *  Configuration parameters are values that are managed by the Configuration command class.
+	 *	The values are device-specific and are not reported by the devices. Information on parameters
+	 *  is provided only in the device user manual.
+	 *  <p>An ongoing task for the OpenZWave project is to create XML files describing the available
+	 *  parameters for every Z-Wave.  See the config folder in the project source code for examples.
+	 */
 	/*@{*/
 	public:		
 		/**
@@ -860,6 +991,9 @@ namespace OpenZWave
 	//-----------------------------------------------------------------------------
 	// Groups (wrappers for the Node methods)
 	//-----------------------------------------------------------------------------
+	/** @name Groups
+	 *  Methods for accessing device association groups.
+	 */
 	/*@{*/
 	public:		
 		/**
@@ -916,6 +1050,9 @@ namespace OpenZWave
 	//-----------------------------------------------------------------------------
 	//	Notifications
 	//-----------------------------------------------------------------------------
+	/** @name Notifications
+	 *  For notification of changes to the Z-Wave network or device values and associations.
+	 */
 	/*@{*/
 	public:
 		/**
@@ -938,6 +1075,7 @@ namespace OpenZWave
 		 * @see AddWatcher, Notification
 		 */
 		bool RemoveWatcher( pfnOnNotification_t _watcher, void* _context );
+	/*@}*/
 
 	private:
 		void NotifyWatchers( Notification* _notification );					// Passes the notifications to all the registered watcher callbacks in turn.
@@ -960,11 +1098,13 @@ namespace OpenZWave
 
 		list<Watcher*>		m_watchers;										// List of all the registered watchers.
 		Mutex*				m_notificationMutex;
-	/*@}*/
 
 	//-----------------------------------------------------------------------------
 	// Controller commands
 	//-----------------------------------------------------------------------------
+	/** @name Controller Commands
+	 *  Commands for Z-Wave network management using the PC Controller.
+	 */
 	/*@{*/
 	public:	
 		/**

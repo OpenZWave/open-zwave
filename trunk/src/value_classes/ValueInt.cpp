@@ -26,6 +26,7 @@
 //-----------------------------------------------------------------------------
 
 #include <sstream>
+#include <limits.h>
 #include "tinyxml.h"
 #include "ValueInt.h"
 #include "Msg.h"
@@ -54,6 +55,8 @@ ValueInt::ValueInt
 	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Int, _label, _units, _readOnly, false ),
 	m_value( _value )
 {
+	m_min = INT_MIN;
+	m_max = INT_MAX;
 }
 
 string const ValueInt::GetAsString

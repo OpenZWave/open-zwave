@@ -25,6 +25,8 @@
 //
 //-----------------------------------------------------------------------------
 
+#include <Windows.h>
+
 #include "Defs.h"
 #include "Driver.h"
 #include "Manager.h"
@@ -44,15 +46,6 @@
 
 #include "ValueID.h"
 #include "Value.h"
-#include "ValueBool.h"
-#include "ValueByte.h"
-#include "ValueDecimal.h"
-#include "ValueInt.h"
-#include "ValueList.h"
-#include "ValueShort.h"
-#include "ValueString.h"
-
-#include "ValueStore.h"
 
 using namespace OpenZWave;
 
@@ -553,12 +546,6 @@ void Driver::SendMsg
 					ReleaseNodes();
 					return;
 				}
-
-				if( _msg->IsWakeUpNoMoreInformationCommand() )
-				{
-					// This message will send the node to sleep
-					wakeUp->SetAwake( false );
-				}
 			}
 		}
 
@@ -820,29 +807,6 @@ bool Driver::MoveMessagesToWakeUpQueue
 }
 
 //-----------------------------------------------------------------------------
-// <Driver::SetNodeAwake>
-// Mark a node as being awake
-//-----------------------------------------------------------------------------
-void Driver::SetNodeAwake
-(
-	uint8 const _nodeId
-)
-{
-	if( Node* node = GetNode( _nodeId ) )
-	{
-		if( !node->IsListeningDevice() )
-		{
-			if( WakeUp* pWakeUp = static_cast<WakeUp*>( node->GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
-			{
-				pWakeUp->SetAwake( true );
-			}
-		}
-
-		ReleaseNodes();
-	}
-}
-
-//-----------------------------------------------------------------------------
 //	Receiving Z-Wave messages
 //-----------------------------------------------------------------------------
 
@@ -871,7 +835,6 @@ bool Driver::ReadMsg
 				Log::Write( "SOF received when waiting for ACK...triggering resend" );
 				TriggerResend();
 			}
-
 			// Read the length byte
 			if ( !m_serialPort->Read( &buffer[1], 1 ))
 			{
@@ -958,7 +921,11 @@ bool Driver::ReadMsg
 		
 		default:
 		{
-			Log::Write( "ERROR! Out of frame flow! (0x%.2x)", buffer[0] );
+			Log::Write( "ERROR! Out of frame flow! (0x%.2x).  Flushing buffers and sending NAK.", buffer[0] );
+			m_serialPort->Flush();
+
+			uint8 nak = NAK;
+			m_serialPort->Write( &nak, 1 );
 			break;
 		}
 	}
@@ -2059,8 +2026,6 @@ void Driver::HandleApplicationCommandHandlerRequest
 	CommandClass* pfnDeviceEventVectorClass;
 	uint8 StatusData[10];
 
-	SetNodeAwake( nodeId ); 
-	
 	switch (ClassId)
 	{
 #ifdef notdef
@@ -2152,7 +2117,6 @@ bool Driver::HandleApplicationUpdateRequest
 		case UPDATE_STATE_NODE_INFO_RECEIVED:
 		{
 			Log::Write( "UPDATE_STATE_NODE_INFO_RECEIVED from node %d", nodeId );
-			SetNodeAwake( nodeId );
 			if( Node* node = GetNode( nodeId ) )
 			{
 				node->UpdateNodeInfo( &_data[8], _data[4] - 3 );
