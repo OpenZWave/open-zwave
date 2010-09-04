@@ -45,13 +45,6 @@ namespace OpenZWave
 	class Mutex;
 	class SerialPort;
 	class Thread;
-	class ValueBool;
-	class ValueByte;
-	class ValueDecimal;
-	class ValueInt;
-	class ValueList;
-	class ValueShort;
-	class ValueString;
 	class ControllerReplication;
 	class Notification;
 
@@ -160,7 +153,6 @@ namespace OpenZWave
 		void RemoveMsg();													// Remove the first message from the send queue.  This happens when the send was successful, or after three failed attempts.
 		void TriggerResend();												// Causes the first message to be sent again, in response to a NAK or CAN from the controller.
 		bool MoveMessagesToWakeUpQueue(	uint8 const _targetNodeId );		// If a node does not respond, and is of a type that can sleep, this method is used to move all its pending messages to another queue ready for when it mext wakes up.
-		void SetNodeAwake( uint8 const _nodeId );							// Used to mark a node as awake when we receive a message from it.
 
 		Thread*					m_sendThread;								// Thread for sending messages to the Z-Wave network	
 		list<Msg*>				m_sendQueue;								// Messages waiting to be sent

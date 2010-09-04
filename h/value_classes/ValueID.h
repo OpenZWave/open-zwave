@@ -88,6 +88,7 @@ namespace OpenZWave
 			ValueType_Decimal,			/**< Represents a non-integer value as a string, to avoid floating point accuracy issues. */
 			ValueType_Int,				/**< 32-bit signed value */
 			ValueType_List,				/**< List from which one item can be selected */
+			ValueType_Schedule,			/**< Complex type used with the Climate Control Schedule command class */
 			ValueType_Short,			/**< 16-bit signed value */
 			ValueType_String,			/**< Text string */
 			ValueType_Button,			/**< A write-only value that is the equivalent of pressing a button to send a command to a device */
@@ -139,7 +140,7 @@ namespace OpenZWave
 		 * is of interest.
 		 * @return the value index within the command class.
 	     */
-		uint8 GetIndex()const{ return( (uint8)( (m_id & 0x000007f8) >> 3 ) ); }
+		uint8 GetIndex()const{ return( (uint8)( (m_id & 0x000007f0) >> 4 ) ); }
 
 		/** 
 		 * Get the type of the value.  The type describes the data held by the value
@@ -148,7 +149,7 @@ namespace OpenZWave
 		 * @return the value's type.
 		 * @see ValueType, Manager::GetValueAsBool, Manager::GetValueAsByte, Manager::GetValueAsFloat, Manager::GetValueAsInt, Manager::GetValueAsShort, Manager::GetValueAsString, Manager::GetValueListSelection.
 	     */
-		ValueType GetType()const{ return( (ValueType)( m_id & 0x00000007 ) ); }
+		ValueType GetType()const{ return( (ValueType)( m_id & 0x0000000f ) ); }
 
 		// Comparison Operators
 		bool operator ==	( ValueID const& _other )const{ return( (m_homeId == _other.m_homeId) && (m_id == _other.m_id) ); }
@@ -183,12 +184,13 @@ namespace OpenZWave
 			m_homeId( _homeId )
 		{
 			assert( _instance < 8 );
+			assert( _valueIndex < 128 );
 
 			m_id = (((uint32)_nodeId)<<24)
 				 | (((uint32)_genre)<<22)
 				 | (((uint32)_commandClassId)<<14)
-				 | ((((uint32)_instance)&7)<<11)
-				 | (((uint32)_valueIndex)<<3)
+				 | ((((uint32)_instance)&0x07)<<11)
+				 | ((((uint32)_valueIndex)&0x7f)<<4)
 				 | ((uint32)_type);
 		}
 
@@ -205,8 +207,8 @@ namespace OpenZWave
 		// 22-23:	2 bits. genre of value (see ValueGenre enum).
 		// 14-21:	8 bits. ID of command class that created and manages this value.
 		// 11-13:	3 bits. Instance index of the command class.
-		// 03-10:	8 bits. Index of value within all the value created by the command class instance.
-		// 00-02:	3 bits. Type of value (bool, byte, string etc).
+		// 04-10:	7 bits. Index of value within all the value created by the command class instance.
+		// 00-03:	4 bits. Type of value (bool, byte, string etc).
 		uint32	m_id;
 
 		// Unique PC interface identifier

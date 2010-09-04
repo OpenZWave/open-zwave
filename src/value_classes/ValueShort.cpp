@@ -26,6 +26,7 @@
 //-----------------------------------------------------------------------------
 
 #include <sstream>
+#include <limits.h>
 #include "tinyxml.h"
 #include "ValueShort.h"
 #include "Msg.h"
@@ -54,6 +55,8 @@ ValueShort::ValueShort
 	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Byte, _label, _units, _readOnly, false ),
 	m_value( _value )
 {
+	m_min = SHRT_MIN;
+	m_max = SHRT_MAX;
 }
 
 string const ValueShort::GetAsString

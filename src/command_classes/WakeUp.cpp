@@ -322,7 +322,10 @@ void WakeUp::CreateVars
 {
 	if( Node* node = GetNode() )
 	{
-		m_interval.AddInstance( _instance, node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 0, "Wake-up Interval", "Seconds", false, 3600 ) );
+		if( node->GetBasic() >= 0x03 )	// We don't add the interval value for controllers, because they don't appear to ever wake up on their own.
+		{
+			m_interval.AddInstance( _instance, node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 0, "Wake-up Interval", "Seconds", false, 3600 ) );
+		}
 		ReleaseNode();
 	}
 }

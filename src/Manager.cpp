@@ -45,6 +45,7 @@
 #include "ValueDecimal.h"
 #include "ValueInt.h"
 #include "ValueList.h"
+#include "ValueSchedule.h"
 #include "ValueShort.h"
 #include "ValueString.h"
 
@@ -978,6 +979,52 @@ string Manager::GetValueHelp
 }
 
 //-----------------------------------------------------------------------------
+// <Manager::GetValueMin>
+// Gets the minimum for a value
+//-----------------------------------------------------------------------------
+int32 Manager::GetValueMin
+( 
+	ValueID const& _id
+)
+{
+	int32 limit = 0;
+	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
+	{
+		driver->LockNodes();
+		if( Value* value = driver->GetValue( _id ) )
+		{
+			limit = value->GetMin();
+		}
+		driver->ReleaseNodes();
+	}
+
+	return limit;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::GetValueMax>
+// Gets the maximum for a value
+//-----------------------------------------------------------------------------
+int32 Manager::GetValueMax
+( 
+	ValueID const& _id
+)
+{
+	int32 limit = 0;
+	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
+	{
+		driver->LockNodes();
+		if( Value* value = driver->GetValue( _id ) )
+		{
+			limit = value->GetMax();
+		}
+		driver->ReleaseNodes();
+	}
+
+	return limit;
+}
+
+//-----------------------------------------------------------------------------
 // <Manager::IsValueReadOnly>
 // Test whether the value is read-only
 //-----------------------------------------------------------------------------
@@ -1659,6 +1706,157 @@ bool Manager::ReleaseButton
 			if( ValueButton* value = static_cast<ValueButton*>( driver->GetValue( _id ) ) )
 			{
 				res = value->ReleaseButton();
+			}
+			driver->ReleaseNodes();
+		}
+	}
+
+	return res;
+}
+
+//-----------------------------------------------------------------------------
+// Climate Control Schedules
+//-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+// <Manager::GetNumSwitchPoints>
+// Get the number of switch points defined in a schedule
+//-----------------------------------------------------------------------------
+uint8 Manager::GetNumSwitchPoints
+(
+	ValueID const& _id
+)
+{
+	bool res = false;
+
+	uint8 numSwitchPoints = 0;
+	if( ValueID::ValueType_Schedule == _id.GetType() )
+	{
+		if( Driver* driver = GetDriver( _id.GetHomeId() ) )
+		{
+			driver->LockNodes();
+			if( ValueSchedule* value = static_cast<ValueSchedule*>( driver->GetValue( _id ) ) )
+			{
+				numSwitchPoints = value->GetNumSwitchPoints();
+			}
+			driver->ReleaseNodes();
+		}
+	}
+
+	return numSwitchPoints;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::SetSwitchPoint>
+// Set a switch point in the schedule
+//-----------------------------------------------------------------------------
+bool Manager::SetSwitchPoint
+(
+	ValueID const& _id,
+	uint8 const _hours,
+	uint8 const _minutes,
+	int8 const _setback
+)
+{
+	bool res = false;
+
+	if( ValueID::ValueType_Schedule == _id.GetType() )
+	{
+		if( Driver* driver = GetDriver( _id.GetHomeId() ) )
+		{
+			driver->LockNodes();
+			if( ValueSchedule* value = static_cast<ValueSchedule*>( driver->GetValue( _id ) ) )
+			{
+				res = value->SetSwitchPoint( _hours, _minutes, _setback );
+			}
+			driver->ReleaseNodes();
+		}
+	}
+
+	return res;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::RemoveSwitchPoint>
+// Remove a switch point from the schedule
+//-----------------------------------------------------------------------------
+bool Manager::RemoveSwitchPoint
+(
+	ValueID const& _id,
+	uint8 const _hours,
+	uint8 const _minutes
+)
+{
+	bool res = false;
+
+	if( ValueID::ValueType_Schedule == _id.GetType() )
+	{
+		if( Driver* driver = GetDriver( _id.GetHomeId() ) )
+		{
+			driver->LockNodes();
+			if( ValueSchedule* value = static_cast<ValueSchedule*>( driver->GetValue( _id ) ) )
+			{
+				uint8 idx;
+				res = value->FindSwitchPoint( _hours, _minutes, &idx );
+
+				if( res )
+				{
+					res = value->RemoveSwitchPoint( idx );
+				}
+			}
+			driver->ReleaseNodes();
+		}
+	}
+
+	return res;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::ClearSwitchPoints>
+// Clears all switch points from the schedule
+//-----------------------------------------------------------------------------
+void Manager::ClearSwitchPoints
+(
+	ValueID const& _id
+)
+{
+	if( ValueID::ValueType_Schedule == _id.GetType() )
+	{
+		if( Driver* driver = GetDriver( _id.GetHomeId() ) )
+		{
+			driver->LockNodes();
+			if( ValueSchedule* value = static_cast<ValueSchedule*>( driver->GetValue( _id ) ) )
+			{
+				value->ClearSwitchPoints();
+			}
+			driver->ReleaseNodes();
+		}
+	}
+}
+		
+//-----------------------------------------------------------------------------
+// <Manager::GetSwitchPoint>
+// Gets switch point data from the schedule
+//-----------------------------------------------------------------------------
+bool Manager::GetSwitchPoint
+( 
+	ValueID const& _id,
+	uint8 const _idx,
+	uint8* o_hours,
+	uint8* o_minutes,
+	int8* o_setback
+)
+{
+	bool res = false;
+
+	if( ValueID::ValueType_Schedule == _id.GetType() )
+	{
+		if( Driver* driver = GetDriver( _id.GetHomeId() ) )
+		{
+			driver->LockNodes();
+			if( ValueSchedule* value = static_cast<ValueSchedule*>( driver->GetValue( _id ) ) )
+			{
+				res = value->GetSwitchPoint( _idx, o_hours, o_minutes, o_setback );
 			}
 			driver->ReleaseNodes();
 		}

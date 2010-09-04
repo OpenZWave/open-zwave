@@ -32,6 +32,10 @@
 
 namespace OpenZWave
 {
+	class ValueSchedule;
+	class ValueList;
+	class ValueByte;
+
 	class ClimateControlSchedule: public CommandClass
 	{
 	public:
@@ -42,13 +46,24 @@ namespace OpenZWave
 		static string const StaticGetCommandClassName(){ return "COMMAND_CLASS_CLIMATE_CONTROL_SCHEDULE"; }
 
 		// From CommandClass
+		virtual void ReadXML( TiXmlElement const* _ccElement );
+		virtual void WriteXML( TiXmlElement* _ccElement );
 		virtual void RequestState( uint32 const _requestFlags );
 		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }
 		virtual string const GetCommandClassName()const{ return StaticGetCommandClassName(); }
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );
+		virtual bool SetValue( Value const& _value );
+
+	protected:
+		virtual void CreateVars( uint8 const _instance );
 
 	private:
-		ClimateControlSchedule( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
+		ClimateControlSchedule( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ), m_changeCounter( 0 ){}
+
+		uint8							m_changeCounter;
+		ValueInstances<ValueSchedule>	m_schedules[7];
+		ValueInstances<ValueList>		m_overrideState;
+		ValueInstances<ValueByte>		m_overrideSetback;
 	};
 
 } // namespace OpenZWave

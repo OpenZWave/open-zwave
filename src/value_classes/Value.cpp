@@ -81,7 +81,9 @@ Value::Value
 	m_label( _label ),
 	m_units( _units ),
 	m_readOnly( _readOnly ),
-	m_isSet( _isSet )
+	m_isSet( _isSet ),
+	m_min( 0 ),
+	m_max( 0 )
 {
 }
 
@@ -94,7 +96,9 @@ Value::Value
 ):
 	m_refs( 1 ),
 	m_readOnly( false ),
-	m_isSet( false )
+	m_isSet( false ),
+	m_min( 0 ),
+	m_max( 0 )
 {
 }
 
@@ -146,6 +150,29 @@ void Value::ReadXML
 	{
 		m_readOnly = !strcmp( readOnly, "true" );
 	}
+
+	if( TIXML_SUCCESS == _valueElement->QueryIntAttribute( "min", &intVal ) )
+	{
+		m_min = intVal;
+	}
+
+	if( TIXML_SUCCESS == _valueElement->QueryIntAttribute( "max", &intVal ) )
+	{
+		m_max = intVal;
+	}
+
+	TiXmlElement const* helpElement = _valueElement->FirstChildElement();
+	while( helpElement )
+	{
+		char const* str = helpElement->Value();
+		if( str && !strcmp( str, "Help" ) )
+		{
+			m_help = helpElement->GetText();
+			break;
+		}
+
+		helpElement = helpElement->NextSiblingElement();
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -157,20 +184,35 @@ void Value::WriteXML
 	TiXmlElement* _valueElement
 )
 {
-	char str[8];
+	char str[16];
 
 	_valueElement->SetAttribute( "type", GetTypeNameFromEnum(m_id.GetType()) );
 	_valueElement->SetAttribute( "genre", GetGenreNameFromEnum(m_id.GetGenre()) );
 
-	snprintf( str, 8, "%d", m_id.GetInstance() );
+	snprintf( str, 16, "%d", m_id.GetInstance() );
 	_valueElement->SetAttribute( "instance", str );
 
-	snprintf( str, 8, "%d", m_id.GetIndex() );
+	snprintf( str, 16, "%d", m_id.GetIndex() );
 	_valueElement->SetAttribute( "index", str );
 
 	_valueElement->SetAttribute( "label", m_label.c_str() );
 	_valueElement->SetAttribute( "units", m_units.c_str() );
 	_valueElement->SetAttribute( "read_only", m_readOnly ? "true" : "false" );
+
+	snprintf( str, 16, "%d", m_min );
+	_valueElement->SetAttribute( "min", str );
+
+	snprintf( str, 16, "%d", m_max );
+	_valueElement->SetAttribute( "max", str );
+
+	if( m_help != "" )
+	{
+		TiXmlElement* helpElement = new TiXmlElement( "Help" );
+		_valueElement->LinkEndChild( helpElement );
+
+		TiXmlText* textElement = new TiXmlText( m_help.c_str() );
+		helpElement->LinkEndChild( textElement );
+	}
 }
 
 //-----------------------------------------------------------------------------

@@ -54,6 +54,8 @@ ValueByte::ValueByte
 	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Byte, _label, _units, _readOnly, false ),
 	m_value( _value )
 {
+	m_min = 0;
+	m_max = 255;
 }
 
 string const ValueByte::GetAsString
