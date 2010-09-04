@@ -78,6 +78,7 @@ using namespace OpenZWave;
 #include "ValueDecimal.h"
 #include "ValueInt.h"
 #include "ValueList.h"
+#include "ValueSchedule.h"
 #include "ValueShort.h"
 #include "ValueString.h"
 
@@ -141,7 +142,7 @@ void CommandClasses::RegisterCommandClasses
 	cc.Register( Association::StaticGetCommandClassId(), Association::Create );
 	cc.Register( AssociationCommandConfiguration::StaticGetCommandClassId(), AssociationCommandConfiguration::Create );
 	cc.Register( Basic::StaticGetCommandClassId(), Basic::Create );
-	//cc.Register( BasicWindowCovering::StaticGetCommandClassId(), BasicWindowCovering::Create );
+	cc.Register( BasicWindowCovering::StaticGetCommandClassId(), BasicWindowCovering::Create );
 	cc.Register( Battery::StaticGetCommandClassId(), Battery::Create );
 	cc.Register( ClimateControlSchedule::StaticGetCommandClassId(), ClimateControlSchedule::Create );
 	cc.Register( Clock::StaticGetCommandClassId(), Clock::Create );

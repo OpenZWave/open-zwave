@@ -241,6 +241,34 @@ bool ZWManager::GetValueListItems
 }
 
 //-----------------------------------------------------------------------------
+// <ZWManager::GetSwitchPoint>
+// Gets switch point data from the schedule
+//-----------------------------------------------------------------------------
+bool ZWManager::GetSwitchPoint
+( 
+	ZWValueID^ id,
+	uint8 idx,
+	[Out] System::Byte %o_hours,
+	[Out] System::Byte %o_minutes,
+	[Out] System::SByte %o_setback
+)
+{
+	uint8 hours;
+	uint8 minutes;
+	int8 setback;
+
+	if( Manager::Get()->GetSwitchPoint(id->CreateUnmanagedValueID(), idx, &hours, &minutes, &setback ) )
+	{
+		o_hours = hours;
+		o_minutes = minutes;
+		o_setback = setback;
+		return true;
+	}
+
+	return false;
+}
+
+//-----------------------------------------------------------------------------
 // <ZWManager::GetAssociations>
 // Gets the associations for a group
 //-----------------------------------------------------------------------------

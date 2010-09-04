@@ -63,6 +63,9 @@ namespace OpenZWave
 		string const& GetHelp()const{ return m_help; }
 		void SetHelp( string const& _help ){ m_help = _help; }
 
+		int32 GetMin()const{ return m_min; }
+		int32 GetMax()const{ return m_max; }
+
 		virtual bool GetAsInt( int32& _value ) const = 0;
 		virtual bool SetFromInt( int32 const _value ) = 0;
 		virtual string const GetAsString() const { return ""; }
@@ -82,6 +85,9 @@ namespace OpenZWave
 		bool Set();				// For the user to change a value in a device
 		void SetIsSet() { m_isSet = true; }
 		void OnValueChanged();	// A value in a device has been changed.
+
+		int32		m_min;
+		int32		m_max;
 
 	private:
 		uint32 AddRef(){ ++m_refs; return m_refs; }
