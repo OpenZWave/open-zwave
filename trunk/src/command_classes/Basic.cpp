@@ -139,10 +139,9 @@ void Basic::CreateVars
 	uint8 const _instance
 )
 {
-	if( Node* node = GetNode() )
+	if( Node* node = GetNodeUnsafe() )
 	{
 		m_level.AddInstance( _instance, node->CreateValueByte( ValueID::ValueGenre_Basic, GetCommandClassId(), _instance, 0, "Basic", "", false, 0  ) );
-		ReleaseNode();
 	}
 }
 
@@ -174,7 +173,7 @@ bool Basic::SetMapping
 {
 	bool res = false;
 
-	if( Node const* node = GetNode() )
+	if( Node const* node = GetNodeUnsafe() )
 	{
 		if( CommandClass* cc = node->GetCommandClass( _commandClassId ) )
 		{
@@ -182,8 +181,6 @@ bool Basic::SetMapping
 			m_mapping = _commandClassId;
 			res = true;
 		}
-
-		ReleaseNode();
 	}
 
 	return res;

@@ -163,7 +163,7 @@ void Clock::CreateVars
 	uint8 const _instance
 )
 {
-	if( Node* node = GetNode() )
+	if( Node* node = GetNodeUnsafe() )
 	{
 		vector<ValueList::Item> items;
 		for( int i=1; i<=7; ++i )
@@ -177,7 +177,6 @@ void Clock::CreateVars
 		m_day.AddInstance( _instance, node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Day", "", false, items, 0 ) );
 		m_hour.AddInstance( _instance, node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 1, "Hour", "", false, 12 ) );
 		m_minute.AddInstance( _instance, node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 2, "Minute", "", false, 0 ) );
-		ReleaseNode();
 	}
 }
 

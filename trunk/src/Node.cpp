@@ -1152,7 +1152,6 @@ Group* Node::GetGroup
 	map<uint8,Group*>::iterator it = m_groups.find( _groupIdx );
 	if( it == m_groups.end() )
 	{
-		Log::Write( "Node(%d)::GetGroup - Invalid Group Index %d", m_nodeId, _groupIdx );
 		return NULL;
 	}
 

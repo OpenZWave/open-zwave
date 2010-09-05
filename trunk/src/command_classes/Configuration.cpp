@@ -98,14 +98,12 @@ void Configuration::ReadXML
 		{
 			if( !strcmp( str, "Value" ) )
 			{
-				if( Node* node = GetNode() )
+				if( Node* node = GetNodeUnsafe() )
 				{
 					if( Value* value = node->CreateValueFromXML( GetCommandClassId(), child ) )
 					{
 						AddParam( value );
 					}
-
-					ReleaseNode();
 				}
 			}
 		}
@@ -189,7 +187,7 @@ bool Configuration::HandleMsg
 			snprintf( label, 16, "Parameter #%d", parameter );
 
 			// Create a new value
-			if( Node* node = GetNode() )
+			if( Node* node = GetNodeUnsafe() )
 			{
 				switch( size )
 				{
@@ -213,7 +211,6 @@ bool Configuration::HandleMsg
 						Log::Write( "Invalid size of %d bytes for configuration parameter %d", size, parameter );
 					}
 				}
-				ReleaseNode();
 			}
 		}
 

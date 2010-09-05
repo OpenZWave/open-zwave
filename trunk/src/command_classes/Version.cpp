@@ -116,7 +116,7 @@ bool Version::HandleMsg
 	
 	if (VersionCmd_CommandClassReport == (VersionCmd)_data[0])
 	{
-		if( Node* node = GetNode() )
+		if( Node* node = GetNodeUnsafe() )
 		{
 			if( CommandClass* pCommandClass = node->GetCommandClass( _data[1] ) )
 			{
@@ -124,8 +124,6 @@ bool Version::HandleMsg
 				pCommandClass->ClearStaticRequest( StaticRequest_Version );
 				pCommandClass->SetVersion( _data[2] );
 			}
-
-			ReleaseNode();
 		}
 
 		return true;
@@ -162,11 +160,10 @@ void Version::CreateVars
 	uint8 const _instance
 )
 {
-	if( Node* node = GetNode() )
+	if( Node* node = GetNodeUnsafe() )
 	{
 		m_library.AddInstance( _instance, node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, (uint8)ValueIndex_Library, "Library Version", "", true, "Unknown" ) );
 		m_protocol.AddInstance( _instance, node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, (uint8)ValueIndex_Protocol, "Protocol Version", "", true, "Unknown" ) );
 		m_application.AddInstance( _instance, node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, (uint8)ValueIndex_Application, "Application Version", "", true, "Unknown" ) );
-		ReleaseNode();
 	}
 }

@@ -64,7 +64,9 @@ namespace OpenZWave
 		{ 
 			if( m_bFinal && _other.m_bFinal )
 			{
-				return( !memcmp( m_buffer, _other.m_buffer, m_length ) ); 
+				// Do not include the callback Id or checksum in the comparison.
+				uint8 length = m_length - (m_bCallbackRequired ? 2: 1 );
+				return( !memcmp( m_buffer, _other.m_buffer, length ) ); 
 			}
 
 			return false;

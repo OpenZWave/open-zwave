@@ -474,7 +474,7 @@ void SwitchMultilevel::CreateVars
 	uint8 const _instance
 )
 {
-	if( Node* node = GetNode() )
+	if( Node* node = GetNodeUnsafe() )
 	{
 		switch( GetVersion() )
 		{
@@ -500,8 +500,6 @@ void SwitchMultilevel::CreateVars
 				break;
 			}
 		}
-
-		ReleaseNode();
 	}
 }
 

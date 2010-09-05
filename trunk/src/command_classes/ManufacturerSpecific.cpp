@@ -121,7 +121,7 @@ bool ManufacturerSpecific::HandleMsg
 			}
 		}
 
-		if( Node* node = GetNode() )
+		if( Node* node = GetNodeUnsafe() )
 		{
 			// Set the values into the node
 			node->SetManufacturerName( manufacturerName );
@@ -141,8 +141,6 @@ bool ManufacturerSpecific::HandleMsg
 			{
 				LoadConfigXML( configPath );
 			}
-
-			ReleaseNode();
 		}
 		
 		Log::Write( "Received manufacturer specific report from node %d: Manufacturer=%s, Product=%s", GetNodeId(), manufacturerName.c_str(), productName.c_str() );
@@ -319,21 +317,19 @@ bool ManufacturerSpecific::LoadConfigXML
 	string const& _configPath
 )
 {
-	if( Node* node = GetNode() )
+	if( Node* node = GetNodeUnsafe() )
 	{
 		string filename =  Manager::Get()->GetConfigPath() + _configPath;
 
 		TiXmlDocument* doc = new TiXmlDocument();
 		if( !doc->LoadFile( filename.c_str(), TIXML_ENCODING_UTF8 ) )
 		{
-			ReleaseNode();
 			delete doc;	
 			Log::Write( "Unable to find or load Config Param file %s", filename.c_str() );
 			return false;
 		}
 
 		node->ReadCommandClassesXML( doc->RootElement() );
-		ReleaseNode();
 
 		delete doc;	
 		return true;

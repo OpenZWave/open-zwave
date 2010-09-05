@@ -128,13 +128,12 @@ void EnergyProduction::CreateVars
 	uint8 const _instance
 )
 {
-	if( Node* node = GetNode() )
+	if( Node* node = GetNodeUnsafe() )
 	{
 		m_values[Production_Instant].AddInstance( _instance, node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, (uint8)Production_Instant, c_energyParameterNames[Production_Instant], "W", true, "0.0" ) );
 		m_values[Production_Total].AddInstance( _instance, node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, (uint8)Production_Total, c_energyParameterNames[Production_Total], "kWh", true, "0.0" ) );
 		m_values[Production_Today].AddInstance( _instance, node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, (uint8)Production_Today, c_energyParameterNames[Production_Today], "kWh", true, "0.0" ) );
 		m_values[Production_Time].AddInstance( _instance, node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, (uint8)Production_Time, c_energyParameterNames[Production_Time], "", true, "0.0" ) );
-		ReleaseNode();
 	}
 }
 

@@ -123,11 +123,10 @@ void Language::CreateVars
 	uint8 const _instance
 )
 {
-	if( Node* node = GetNode() )
+	if( Node* node = GetNodeUnsafe() )
 	{
 		m_language.AddInstance( _instance, node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, (uint8)ValueIndex_Language, "Language", "", false, "" ) );
 		m_country.AddInstance( _instance, node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, (uint8)ValueIndex_Country, "Country", "", false, "" ) );
-		ReleaseNode();
 	}
 }
 

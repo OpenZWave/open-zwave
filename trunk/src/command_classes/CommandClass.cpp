@@ -74,24 +74,13 @@ Driver* CommandClass::GetDriver
 
 //-----------------------------------------------------------------------------
 // <CommandClass::GetNode>
-// Get a pointer to our node
+// Get a pointer to our node without locking the mutex
 //-----------------------------------------------------------------------------
-Node* CommandClass::GetNode
+Node* CommandClass::GetNodeUnsafe
 (
 )const
 {
-	return( GetDriver()->GetNode( m_nodeId ) );
-}
-
-//-----------------------------------------------------------------------------
-// <CommandClass::ReleaseNode>
-// Release the lock on the nodes that would have been taken by the GetNode call
-//-----------------------------------------------------------------------------
-void CommandClass::ReleaseNode
-(
-)const
-{
-	return( GetDriver()->ReleaseNodes() );
+	return( GetDriver()->GetNodeUnsafe( m_nodeId ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -157,8 +146,7 @@ void CommandClass::ReadXML
 		{
 			if( !strcmp( str, "Value" ) )
 			{
-				GetNode()->ReadValueFromXML( GetCommandClassId(), child );
-				ReleaseNode();
+				GetNodeUnsafe()->ReadValueFromXML( GetCommandClassId(), child );
 			}
 		}
 
@@ -194,7 +182,7 @@ void CommandClass::WriteXML
 	}
 
 	// Write out the values for this command class
-	ValueStore* store = GetNode()->GetValueStore();
+	ValueStore* store = GetNodeUnsafe()->GetValueStore();
 	for( ValueStore::Iterator it = store->Begin(); it != store->End(); ++it )
 	{
 		Value* value = it->second;
@@ -205,7 +193,6 @@ void CommandClass::WriteXML
 			value->WriteXML( valueElement );
 		}
 	}
-	ReleaseNode();
 }
 
 //-----------------------------------------------------------------------------

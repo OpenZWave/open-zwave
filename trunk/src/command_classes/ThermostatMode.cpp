@@ -196,9 +196,8 @@ void ThermostatMode::CreateVars
 		return;
 	}
 
-	if( Node* node = GetNode() )
+	if( Node* node = GetNodeUnsafe() )
 	{
 		m_mode.AddInstance( _instance, node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Mode", "", false, m_supportedModes, m_supportedModes[0].m_value ) );
-		ReleaseNode();
 	}
 }
