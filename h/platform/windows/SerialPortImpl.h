@@ -53,7 +53,6 @@ namespace OpenZWave
 		bool Wait( int32 _timeout );
 
 		HANDLE				m_hSerialPort;
-		OVERLAPPED			m_overlapped;
 	};
 
 } // namespace OpenZWave

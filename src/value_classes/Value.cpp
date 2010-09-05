@@ -231,15 +231,13 @@ bool Value::Set
 	bool res = false;
 	if( Driver* driver = Manager::Get()->GetDriver( m_id.GetHomeId() ) )
 	{
-		if( Node* node = driver->GetNode( m_id.GetNodeId() ) )
+		if( Node* node = driver->GetNodeUnsafe( m_id.GetNodeId() ) )
 		{
 			if( CommandClass* cc = node->GetCommandClass( m_id.GetCommandClassId() ) )
 			{
 				m_isSet = true;
 				res = cc->SetValue( *this );
 			}
-
-			driver->ReleaseNodes();
 		}
 	}
 

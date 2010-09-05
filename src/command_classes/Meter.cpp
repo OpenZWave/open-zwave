@@ -156,10 +156,9 @@ void Meter::CreateVars
 	uint8 const _instance
 )
 {
-	if( Node* node = GetNode() )
+	if( Node* node = GetNodeUnsafe() )
 	{
 		m_value.AddInstance( _instance, node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Unknown", "", true, "0.0" ) );
-		ReleaseNode();
 	}
 }
 

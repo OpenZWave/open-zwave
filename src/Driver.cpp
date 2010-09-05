@@ -80,11 +80,10 @@ Driver::Driver
 	m_init( false ),
 	m_driverThread( new Thread( "driver" ) ),
 	m_exitEvent( new Event() ),	
+	m_wakeEvent( new Event() ),	
 	m_serialPort( new SerialPort() ),
-	m_serialMutex( new Mutex() ),
-	m_sendThread( new Thread( "send" ) ),
+	m_serialThread( new Thread( "serial" ) ),
 	m_sendMutex( new Mutex() ),
-	m_sendEvent( new Event() ),
 	m_pollThread( new Thread( "poll" ) ),
 	m_pollMutex( new Mutex() ),
 	m_infoMutex( new Mutex() ),
@@ -114,27 +113,24 @@ Driver::~Driver
 	// The order of the statements below has been achieved by mitigating freed memory
   	//references using a memory allocator checker. Do not rearrange unless you are
   	//certain memory won't be referenced out of order. --Greg Satz, April 2010
-  	
 	m_exit = true;
 	m_exitEvent->Set();
-	m_sendEvent->Set();
+	m_wakeEvent->Set();
 	m_pollThread->Stop();
-	m_sendThread->Stop();
+	m_serialThread->Stop();
 	m_driverThread->Stop();
 
 	delete m_serialPort;
 
 	delete m_pollThread;
-	delete m_sendThread;
+	delete m_serialThread;
 	delete m_driverThread;
 
-	delete m_serialMutex;
-	
 	delete m_sendMutex;
 	delete m_pollMutex;
 	delete m_infoMutex;
 
-	delete m_sendEvent;
+	delete m_wakeEvent;
 	delete m_exitEvent;
 
 	// Clear the send Queue
@@ -146,9 +142,10 @@ Driver::~Driver
 	}
 
 	// Clear the node data
+	LockNodes();
 	for( int i=0; i<256; ++i )
 	{
-		if( GetNode( i ) )
+		if( GetNodeUnsafe( i ) )
 		{
 			Notification* notification = new Notification( Notification::Type_NodeRemoved );
 			notification->SetHomeAndNodeIds( m_homeId, i );
@@ -156,9 +153,9 @@ Driver::~Driver
 
 			delete m_nodes[i];
 			m_nodes[i] = NULL;
-			ReleaseNodes();
 		}
 	}
+	ReleaseNodes();
 
 	NotifyWatchers();
 	delete m_nodeMutex;
@@ -210,26 +207,97 @@ void Driver::DriverThreadProc
 			// Wait for messages from the Z-Wave network
 			while( true )
 			{
-				// Get exclusive access to the serial port
-				m_serialMutex->Lock();
-					
-				// Consume any available messages
-				while( ReadMsg() );
-
-				// Release our lock on the serial port 
-				m_serialMutex->Release();
-
-				// Send any pending notifications
-				NotifyWatchers();
-
-				// Wait for more data to appear at the serial port
-				m_serialPort->Wait( Event::Timeout_Infinite );
-				
 				// Check for exit
 				if( m_exit )
 				{
 					return;
 				}
+
+				// Consume any available messages
+				bool workDone = ReadMsg();
+
+				// Send any pending notifications
+				NotifyWatchers();
+
+				int32 timeout = 5000;	// Set the timeout for replies to 5 seconds
+
+				if( !( m_waitingForAck || m_expectedCallbackId || m_expectedReply ) )
+				{
+					// We are not waiting for an ACK, callback or a specific message
+					// type, so we are free to send any queued messages.
+					workDone |= WriteMsg();
+					timeout = Event::Timeout_Infinite;
+				}
+
+				if( !workDone )
+				{
+					// We had nothing to do this frame, so wait for something to occur
+					if( !m_wakeEvent->Wait( timeout ) )
+					{
+						// Timeout expired.  If we were waiting for a response to our message, we're done.
+						if( m_waitingForAck || m_expectedCallbackId || m_expectedReply )
+						{
+							// Timed out waiting for a response
+							if( !m_sendQueue.empty() )
+							{
+								m_sendMutex->Lock();
+								Msg* msg = m_sendQueue.front();
+								m_sendMutex->Release();
+
+								if( msg->GetSendAttempts() > 2 )
+								{
+									// Give up
+									Log::Write( "ERROR: Dropping command, expected response not received after three attempts");
+									RemoveMsg();
+								}
+								else
+								{
+									// Resend
+									if( msg->GetSendAttempts() > 0 )
+									{
+										Log::Write( "Timeout" );
+
+										uint8 targetNode = m_sendQueue.front()->GetTargetNodeId();
+										if( Node* node = GetNodeUnsafe( targetNode ) )
+										{
+											if( !node->IsListeningDevice() )
+											{
+												// Node is a sleeping device.  If we're not waiting for a callback,
+												// we'll just dump the message.  This deals with certain remote
+												// controls that respond to the ZW_SEND but fail to then reply.
+												if( m_expectedCallbackId )
+												{
+													// We assume the node is asleep
+													MoveMessagesToWakeUpQueue( targetNode );
+												}
+												else
+												{
+													Log::Write( "ERROR: Dropping command, node did not reply");
+													RemoveMsg();
+												}
+											}
+											else
+											{
+												// Node is listening, so we'll just retry sending the message.
+												Log::Write( "Resending message (attempt %d)", msg->GetSendAttempts() );
+											}
+										}
+									}
+								}
+							}
+
+							m_waitingForAck = 0;	
+							m_expectedCallbackId = 0;
+							m_expectedReply = 0;
+							m_expectedCommandClassId = 0;
+						}
+
+					}
+					else
+					{
+						m_wakeEvent->Reset();
+					}
+				}			
 			}
 		}
 
@@ -277,7 +345,7 @@ bool Driver::Init
 	}
 
 	// Serial port opened successfully, so we need to start all the worker threads
-	m_sendThread->Start( Driver::SendThreadEntryPoint, this );
+	m_serialThread->Start( Driver::SerialThreadEntryPoint, this );
 	m_pollThread->Start( Driver::PollThreadEntryPoint, this );
 
 	// Send a NAK to the ZWave device
@@ -477,6 +545,23 @@ void Driver::WriteConfig
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
+// <Driver::GetNodeUnsafe>
+// Returns a pointer to the requested node without locking.
+// Only to be used by main thread code.
+//-----------------------------------------------------------------------------
+Node* Driver::GetNodeUnsafe
+(
+	uint8 _nodeId
+)
+{
+	if( Node* node = m_nodes[_nodeId] )
+	{
+		return node;
+	}
+	return NULL;
+}
+
+//-----------------------------------------------------------------------------
 // <Driver::GetNode>
 // Locks the nodes and returns a pointer to the requested one
 //-----------------------------------------------------------------------------
@@ -556,145 +641,47 @@ void Driver::SendMsg
 	m_sendMutex->Lock();
 	m_sendQueue.push_back( _msg );
 	m_sendMutex->Release();
-	UpdateEvents();
+	m_wakeEvent->Set();
 }
 
 //-----------------------------------------------------------------------------
-// <Driver::SendThreadEntryPoint>
-// Entry point of the thread for sending Z-Wave messages
+// <Driver::WriteMsg>
+// Transmit a queued message to the Z-Wave controller
 //-----------------------------------------------------------------------------
-void Driver::SendThreadEntryPoint
-( 
-	void* _context 
-)
+bool Driver::WriteMsg()
 {
-	Driver* driver = (Driver*)_context;
-	if( driver )
+	bool dataWritten = false;
+	if( !m_sendQueue.empty() )
 	{
-		driver->SendThreadProc();
-	}
-}
-
-//-----------------------------------------------------------------------------
-// <Driver::SendThreadProc>
-// Thread for sending Z-Wave messages
-//-----------------------------------------------------------------------------
-void Driver::SendThreadProc()
-{
-	int32 timeout = Event::Timeout_Infinite;
-	while( true )
-	{
-		bool eventSet = m_sendEvent->Wait( timeout );
-
-		// Check for exit
-		if( m_exit )
-		{
-			return;
-		}
-
-		if( eventSet )
-		{
-			// We have a message to send.
-
-			// Get the serial port mutex so we don't conflict with the read thread.
-			m_serialMutex->Lock();
-
-			// Get the send mutex so we can access the message queue.
-			m_sendMutex->Lock();
-
-			if( !m_sendQueue.empty() )
-			{
-				Msg* msg = m_sendQueue.front();
+		m_sendMutex->Lock();
+		Msg* msg = m_sendQueue.front();
+		m_sendMutex->Release();
 				
-				m_expectedCallbackId = msg->GetCallbackId();
-				m_expectedReply = msg->GetExpectedReply();
-				m_expectedCommandClassId = msg->GetExpectedCommandClassId();
-				m_waitingForAck = true;
-				m_sendEvent->Reset();
+		m_expectedCallbackId = msg->GetCallbackId();
+		m_expectedReply = msg->GetExpectedReply();
+		m_expectedCommandClassId = msg->GetExpectedCommandClassId();
+		m_waitingForAck = true;
 
-				timeout = 5000;	// retry in 5 seconds
+		msg->SetSendAttempts( msg->GetSendAttempts() + 1 );
 
-				msg->SetSendAttempts( msg->GetSendAttempts() + 1 );
-
-				Log::Write( "" );
-				Log::Write( "Sending command (Callback ID=%d, Expected Reply=%d) - %s", msg->GetCallbackId(), msg->GetExpectedReply(), msg->GetAsString().c_str() );
-
-				m_serialPort->Write( msg->GetBuffer(), msg->GetLength() );
-			}
-			else
-			{
-				// Check for nodes requiring info requests
-				uint8 nodeId = GetNodeInfoRequest();
-				if( nodeId != 0xff )
-				{
-					Msg* msg = new Msg( "Get Node Protocol Info", nodeId, REQUEST, FUNC_ID_ZW_GET_NODE_PROTOCOL_INFO, false );
-					msg->Append( nodeId );	
-					SendMsg( msg ); 
-				}
-			}
-
-			m_sendMutex->Release();
-			m_serialMutex->Release();
-		}
-		else
+		Log::Write( "" );
+		Log::Write( "Sending command (Callback ID=0x%.2x, Expected Reply=0x%.2x) - %s", msg->GetCallbackId(), msg->GetExpectedReply(), msg->GetAsString().c_str() );
+		m_serialPort->Write( msg->GetBuffer(), msg->GetLength() );
+		dataWritten = true;
+	}
+	else
+	{
+		// Check for nodes requiring info requests
+		uint8 nodeId = GetNodeInfoRequest();
+		if( nodeId != 0xff )
 		{
-			// Timed out.  Set the timeout back to infinity
-			timeout = Event::Timeout_Infinite;
-
-			// Get the serial port mutex so we don't conflict with the read thread.
-			m_serialMutex->Lock();
-
-			// Get the send mutex so we can access the message queue.
-			m_sendMutex->Lock();
-
-			if( m_waitingForAck || m_expectedCallbackId || m_expectedReply )
-			{
-				// Timed out waiting for a response
-				if( !m_sendQueue.empty() )
-				{
-					Msg* msg = m_sendQueue.front();
-
-					if( msg->GetSendAttempts() > 2 )
-					{
-						// Give up
-						Log::Write( "ERROR: Dropping command, expected response not received after three attempts");
-						RemoveMsg();
-					}
-					else
-					{
-						// Resend
-						if( msg->GetSendAttempts() > 0 )
-						{
-							Log::Write( "Timeout" );
-
-							// In case this is a sleeping node, we first try to move 
-							// its pending messages to its wake-up queue.
-
-							// We can't have the send mutex locked until deeper into the move 
-							// messages method to avoid deadlocks with the node mutex.
-							m_sendMutex->Release();
-							if( !MoveMessagesToWakeUpQueue( msg->GetTargetNodeId() ) )
-							{
-								// The attempt failed, so the node is either not a sleeping node, or the move
-								// failed for another reason.  We'll just retry sending the message.
-								Log::Write( "Resending message (attempt %d)", msg->GetSendAttempts() );
-							}
-							m_sendMutex->Lock();
-						}
-					}
-
-					m_waitingForAck = 0;	
-					m_expectedCallbackId = 0;
-					m_expectedReply = 0;
-					m_expectedCommandClassId = 0;
-					UpdateEvents();
-				}
-			}
-
-			m_sendMutex->Release();
-			m_serialMutex->Release();
+			Msg* msg = new Msg( "Get Node Protocol Info", nodeId, REQUEST, FUNC_ID_ZW_GET_NODE_PROTOCOL_INFO, false );
+			msg->Append( nodeId );	
+			SendMsg( msg ); 
 		}
 	}
+
+	return dataWritten;
 }
 
 //-----------------------------------------------------------------------------
@@ -710,12 +697,7 @@ void Driver::RemoveMsg
 	Msg *msg = m_sendQueue.front();
 	m_sendQueue.pop_front();
 	delete msg;
-	if( m_sendQueue.empty() )
-	{
-		//No messages left, so clear the event
-		m_sendEvent->Reset();
-	}
-	
+
 	m_sendMutex->Release();
 }
 
@@ -737,7 +719,7 @@ void Driver::TriggerResend
 	m_expectedReply = 0;
 	m_expectedCommandClassId = 0;
 
-	m_sendEvent->Set();
+	m_wakeEvent->Set();
 
 	m_sendMutex->Release();
 }
@@ -753,7 +735,7 @@ bool Driver::MoveMessagesToWakeUpQueue
 {
 	// If the target node is one that goes to sleep, transfer
 	// all messages for it to its Wake-Up queue.
-	if( Node* node = GetNode(_targetNodeId) )
+	if( Node* node = GetNodeUnsafe(_targetNodeId) )
 	{
 		if( !node->IsListeningDevice() )
 		{
@@ -794,12 +776,9 @@ bool Driver::MoveMessagesToWakeUpQueue
 				m_sendMutex->Release();
 				
 				// Move completed successfully
-				ReleaseNodes();
 				return true;
 			}
 		}
-
-		ReleaseNodes();
 	}
 
 	// Failed to move messages
@@ -832,14 +811,10 @@ bool Driver::ReadMsg
 		{
 			if( m_waitingForAck )
 			{
-				Log::Write( "SOF received when waiting for ACK...triggering resend" );
-				TriggerResend();
+				Log::Write( "Unsolicited message received while waiting for ACK." );
 			}
-			// Read the length byte
-			if ( !m_serialPort->Read( &buffer[1], 1 ))
-			{
-				break; // can't proceed
-			}
+			// Read the length byte.  Keep trying until we get it.
+			while( !m_serialPort->Read( &buffer[1], 1 ));
 
 			// Read the rest of the frame
 			uint32 bytesRemaining = buffer[1];
@@ -914,16 +889,13 @@ bool Driver::ReadMsg
 			{
 				// Remove the message from the queue, now that it has been acknowledged.
 				RemoveMsg();
-				UpdateEvents();
 			}
 			break;
 		}
 		
 		default:
 		{
-			Log::Write( "ERROR! Out of frame flow! (0x%.2x).  Flushing buffers and sending NAK.", buffer[0] );
-			m_serialPort->Flush();
-
+			Log::Write( "ERROR! Out of frame flow! (0x%.2x).  Sending NAK.", buffer[0] );
 			uint8 nak = NAK;
 			m_serialPort->Write( &nak, 1 );
 			break;
@@ -1114,7 +1086,6 @@ void Driver::ProcessMsg
 	// Generic callback handling
 	if( handleCallback )
 	{
-		Log::Write("ProcessMsg: m_expectedCallbackId=%x _data[2]=%x m_expectedReply=%x _data[1]=%x m_expectedCommandClassId=%x _data[5]=%x", m_expectedCallbackId, _data[2], m_expectedReply, _data[1], m_expectedCommandClassId, _data[5]);
 		if( ( m_expectedCallbackId || m_expectedReply ) )
 		{
 			if( m_expectedCallbackId )
@@ -1166,8 +1137,6 @@ void Driver::ProcessMsg
 			}
 		}
 	}
-
-	UpdateEvents();
 }
 
 //-----------------------------------------------------------------------------
@@ -1438,10 +1407,9 @@ void Driver::HandleGetNodeProtocolInfoResponse
 	Log::Write("Received reply to FUNC_ID_ZW_GET_NODE_PROTOCOL_INFO for node %d", nodeId );
 
 	// Update the node with the protocol info
-	if( Node* node = GetNode( nodeId ) )
+	if( Node* node = GetNodeUnsafe( nodeId ) )
 	{
 		node->UpdateProtocolInfo( &_data[2] );
-		ReleaseNodes();
 	}
 }
 
@@ -1627,8 +1595,6 @@ bool Driver::HandleSendDataRequest
 				Log::Write( "ERROR: ZW_SEND Response is invalid" );
 			}
 		}
-
-		UpdateEvents();
 	}
 
 	return messageRemoved;
@@ -2090,10 +2056,9 @@ void Driver::HandleApplicationCommandHandlerRequest
 		default:
 		{			
 			// Allow the node to handle the message itself
-			if( Node* node = GetNode( nodeId)  )
+			if( Node* node = GetNodeUnsafe( nodeId)  )
 		 	{
 				node->ApplicationCommandHandler( _data );
-				ReleaseNodes();
 			}
 		}
 	}
@@ -2117,10 +2082,9 @@ bool Driver::HandleApplicationUpdateRequest
 		case UPDATE_STATE_NODE_INFO_RECEIVED:
 		{
 			Log::Write( "UPDATE_STATE_NODE_INFO_RECEIVED from node %d", nodeId );
-			if( Node* node = GetNode( nodeId ) )
+			if( Node* node = GetNodeUnsafe( nodeId ) )
 			{
 				node->UpdateNodeInfo( &_data[8], _data[4] - 3 );
-				ReleaseNodes();
 			}
 			break;
 		}
@@ -2131,7 +2095,7 @@ bool Driver::HandleApplicationUpdateRequest
 			
 			// In case the device does not report any optional command classes,
 			// we mark the ones we do have so that their static data is requested.
-			if( Node* node = GetNode( nodeId ) )
+			if( Node* node = GetNodeUnsafe( nodeId ) )
 			{
 				if( !node->NodeInfoReceived() )
 				{
@@ -2349,6 +2313,48 @@ void Driver::PollThreadProc()
 }
 
 //-----------------------------------------------------------------------------
+//	Serial Port Thread - watching for data arriving
+//-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+// <Driver::SerialThreadEntryPoint>
+// Entry point of the thread for watching the serial port for new data
+//-----------------------------------------------------------------------------
+void Driver::SerialThreadEntryPoint
+( 
+	void* _context 
+)
+{
+	Driver* driver = (Driver*)_context;
+	if( driver )
+	{
+		driver->SerialThreadProc();
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::SerialThreadProc>
+// Thread for watching the serial port for new data
+//-----------------------------------------------------------------------------
+void Driver::SerialThreadProc()
+{
+	while( 1 )
+	{
+		if( m_exit )
+		{
+			return;
+		}
+
+		// Wait for data to arrive at the serial port
+		if( m_serialPort->Wait( Event::Timeout_Infinite ) )
+		{
+			// New data has arrived, so wake the driver thread
+			m_wakeEvent->Set();
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
 //	Retrieving Node information
 //-----------------------------------------------------------------------------
 
@@ -2414,8 +2420,9 @@ void Driver::AddNodeInfoRequest
 	// Request the node info
 	m_infoMutex->Lock();
 	m_infoQueue.push_back( _nodeId );
-	UpdateEvents();
 	m_infoMutex->Release();
+
+	m_wakeEvent->Set();
 }
 
 //-----------------------------------------------------------------------------
@@ -2430,10 +2437,6 @@ void Driver::RemoveNodeInfoRequest
 	if( !m_infoQueue.empty() )
 	{
 		m_infoQueue.pop_front();
-		if( m_infoQueue.empty() )
-		{
-			UpdateEvents();
-		}
 	}
 	m_infoMutex->Release();
 }
@@ -2467,10 +2470,9 @@ void Driver::RequestNodeState
 	 uint32 const _flags
 )
 {
-	if( Node* node = GetNode( _nodeId ) )
+	if( Node* node = GetNodeUnsafe( _nodeId ) )
 	{
 		node->RequestState( _flags );
-		ReleaseNodes();
 	}
 }
 
@@ -3270,29 +3272,6 @@ void Driver::RemoveAssociation
 	{
 		node->RemoveAssociation( _groupIdx, _targetNodeId );
 		ReleaseNodes();
-	}
-}
-
-//-----------------------------------------------------------------------------
-// <Driver::UpdateEvents>
-// Set and reset events according to the states of various queues and flags
-//-----------------------------------------------------------------------------
-void Driver::UpdateEvents
-(
-)
-{
-	if( m_waitingForAck || m_expectedCallbackId || m_expectedReply )
-	{
-		// Waiting for ack, callback or a specific message type, so we can't transmit anything yet.
-		m_sendEvent->Reset();
-	}
-	else
-	{
-		// Allow transmissions to occur
-		if( ( !m_sendQueue.empty() ) || ( !m_infoQueue.empty() ) )
-		{
-			m_sendEvent->Set();
-		}
 	}
 }
 

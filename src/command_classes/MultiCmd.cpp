@@ -51,7 +51,7 @@ bool MultiCmd::HandleMsg
 	{
 		Log::Write( "Received encapsulated multi-command from node %d", GetNodeId() );
 
-		if( Node const* node = GetNode() )
+		if( Node const* node = GetNodeUnsafe() )
 		{
 			// Iterate over commands
 			uint8 base = 2;
@@ -67,8 +67,6 @@ bool MultiCmd::HandleMsg
 
 				base += (length + 1);
 			}
-
-			ReleaseNode();
 		}
 
 		Log::Write( "End of encapsulated multi-command from node %d", GetNodeId() );

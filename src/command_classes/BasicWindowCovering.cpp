@@ -108,11 +108,10 @@ void BasicWindowCovering::CreateVars
 	uint8 const _instance
 )
 {
-	if( Node* node = GetNode() )
+	if( Node* node = GetNodeUnsafe() )
 	{
 		m_open.AddInstance( _instance, node->CreateValueButton( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Open" ) );
 		m_close.AddInstance( _instance, node->CreateValueButton( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 1, "Close" ) );
-		ReleaseNode();
 	}
 }
 

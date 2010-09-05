@@ -59,7 +59,7 @@ namespace OpenZWave
 		Mutex& operator = ( Mutex const& );		// declared but not implemented, to prevent assignment
 
 		MutexImpl*	m_pImpl;					// Pointer to an object that encapsulates the platform-specific implementation of a mutex.
-		int m_lockCount;
+		int			m_lockCount;
 	};
 
 } // namespace OpenZWave

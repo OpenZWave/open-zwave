@@ -150,7 +150,7 @@ bool ThermostatSetpoint::HandleMsg
 			
 	if( ThermostatSetpointCmd_SupportedReport == (ThermostatSetpointCmd)_data[0] )
 	{
-		if( Node* node = GetNode() )
+		if( Node* node = GetNodeUnsafe() )
 		{
 			// We have received the supported thermostat setpoints from the Z-Wave device
 			Log::Write( "Received supported thermostat setpoints from node %d", GetNodeId() );		
@@ -172,8 +172,6 @@ bool ThermostatSetpoint::HandleMsg
 					}
 				}
 			}
-
-			ReleaseNode();
 		}
 
 		ClearStaticRequest( StaticRequest_Values );

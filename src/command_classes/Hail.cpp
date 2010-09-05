@@ -56,10 +56,9 @@ bool Hail::HandleMsg
 	{
 		// We have received a hail from the Z-Wave device
 		// Request the a basic report from the node
-		if( Node* node = GetNode() )
+		if( Node* node = GetNodeUnsafe() )
 		{
 //			node->RequestBasicReport();
-			ReleaseNode();
 		}
 		return true;
 	}
