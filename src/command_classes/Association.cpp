@@ -59,7 +59,7 @@ void Association::ReadXML
 {
 	CommandClass::ReadXML( _ccElement );
 
-	if( Node* node = GetNode() )
+	if( Node* node = GetNodeUnsafe() )
 	{
 		TiXmlElement const* associationsElement = _ccElement->FirstChildElement();
 		while( associationsElement )
@@ -81,8 +81,6 @@ void Association::ReadXML
 
 			associationsElement = associationsElement->NextSiblingElement();
 		}
-
-		ReleaseNode();
 	}
 }
 
@@ -97,12 +95,11 @@ void Association::WriteXML
 {
 	CommandClass::WriteXML( _ccElement );
 
-	if( Node* node = GetNode() )
+	if( Node* node = GetNodeUnsafe() )
 	{
 		TiXmlElement* associationsElement = new TiXmlElement( "Associations" );
 		_ccElement->LinkEndChild( associationsElement );
 		node->WriteGroups( associationsElement ); 
-		ReleaseNode();
 	}
 }
 
@@ -141,7 +138,7 @@ bool Association::HandleMsg
 {
 	bool handled = false;
 
-	if( Node* node = GetNode() )
+	if( Node* node = GetNodeUnsafe() )
 	{
 		if( AssociationCmd_GroupingsReport == (AssociationCmd)_data[0] )
 		{	
@@ -179,18 +176,25 @@ bool Association::HandleMsg
 			}
 
 //			uint8 numAssociations = _data[3];	- should be this value, but it always appears to be zero.
-			if( _length > 5 )
+			if( _length >= 5 )
 			{
 				uint8 numAssociations = _length - 5;
+
 				Log::Write( "Received Association report from node %d, group %d: Number of associations=%d", GetNodeId(), groupIdx, numAssociations );
+				if( numAssociations )
+				{
+					Log::Write( "  The group contains:", GetNodeId(), groupIdx, numAssociations );
+					for( uint8 i=0; i<numAssociations; ++i )
+					{
+						Log::Write( "    Node %d", _data[i+4] );
+					}
+				}
 
 				group->OnGroupChanged( numAssociations, &_data[4] );
 			}
 
 			handled = true;
 		}
-
-		ReleaseNode();
 	}
 
 	return handled;

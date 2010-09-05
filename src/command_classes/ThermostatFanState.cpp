@@ -157,10 +157,9 @@ void ThermostatFanState::CreateVars
 		return;
 	}
 
-	if( Node* node = GetNode() )
+	if( Node* node = GetNodeUnsafe() )
 	{
 		m_state.AddInstance( _instance, node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "State", "", true, m_supportedStates, m_supportedStates[0].m_value ) );
-		ReleaseNode();
 	}
 }
 

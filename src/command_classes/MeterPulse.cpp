@@ -106,10 +106,9 @@ void MeterPulse::CreateVars
 	uint8 const _instance
 )
 {
-	if( Node* node = GetNode() )
+	if( Node* node = GetNodeUnsafe() )
 	{
 		m_count.AddInstance( _instance, node->CreateValueInt( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Count", "", true, 0 ) );
-		ReleaseNode();
 	}
 }
 

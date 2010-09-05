@@ -41,9 +41,6 @@ SerialPortImpl::SerialPortImpl
 (
 )
 {
-	// Init an OVERLAPPED object to be used when reading or writing the serial port
-	memset( &m_overlapped, 0, sizeof(m_overlapped) );
-	m_overlapped.hEvent = CreateEvent( NULL, FALSE, FALSE, NULL );
 }
 
 //-----------------------------------------------------------------------------
@@ -55,7 +52,6 @@ SerialPortImpl::~SerialPortImpl
 )
 {
 	CloseHandle( m_hSerialPort );
-	CloseHandle( m_overlapped.hEvent );
 }
 
 //-----------------------------------------------------------------------------
@@ -173,13 +169,17 @@ uint32 SerialPortImpl::Read
 		return 0;
 	}
 
+	OVERLAPPED overlapped;
+	memset( &overlapped, 0, sizeof(overlapped) );
+	overlapped.hEvent = CreateEvent( NULL, FALSE, FALSE, NULL );
+
 	DWORD bytesRead;
-	if( !::ReadFile( m_hSerialPort, _buffer, _length, &bytesRead, &m_overlapped ) )
+	if( !::ReadFile( m_hSerialPort, _buffer, _length, &bytesRead, &overlapped ) )
 	{
 		//Wait for the read to complete
 		if( ERROR_IO_PENDING == GetLastError() )
 		{
-			GetOverlappedResult( m_hSerialPort, &m_overlapped, &bytesRead, TRUE );
+			GetOverlappedResult( m_hSerialPort, &overlapped, &bytesRead, TRUE );
 		}
 		else
 		{
@@ -187,6 +187,7 @@ uint32 SerialPortImpl::Read
 		}
 	}
 
+	CloseHandle( overlapped.hEvent );
 	return (uint32)bytesRead;
 }
 
@@ -208,16 +209,25 @@ uint32 SerialPortImpl::Write
 	}
 
 	// Write the data
+	OVERLAPPED overlapped;
+	memset( &overlapped, 0, sizeof(overlapped) );
+	overlapped.hEvent = CreateEvent( NULL, FALSE, FALSE, NULL );
+
 	DWORD bytesWritten;
-	if( !::WriteFile( m_hSerialPort, _buffer, _length, &bytesWritten, &m_overlapped ) )
+	if( !::WriteFile( m_hSerialPort, _buffer, _length, &bytesWritten, &overlapped ) )
 	{
 		//Wait for the write to complete
 		if( ERROR_IO_PENDING == GetLastError() )
 		{
-			GetOverlappedResult( m_hSerialPort, &m_overlapped, &bytesWritten, TRUE );
+			GetOverlappedResult( m_hSerialPort, &overlapped, &bytesWritten, TRUE );
+		}
+		else
+		{
+			Log::Write( "Error: Serial port write (0x%.8x)", GetLastError() );
 		}
 	}
 
+	CloseHandle( overlapped.hEvent );
 	return (uint32)bytesWritten;
 }
 
@@ -242,8 +252,7 @@ bool SerialPortImpl::Wait
 		{
 			if( ERROR_IO_PENDING == GetLastError() )
 			{
-				// Wait for either some data to arrive or 
-				// the signal that this thread should exit.
+				// Wait for some data to arrive
 				if( WAIT_TIMEOUT == ::WaitForSingleObject( overlapped.hEvent, _timeout ) )
 				{
 					::CancelIo( m_hSerialPort );
@@ -263,3 +272,4 @@ bool SerialPortImpl::Wait
 
 	return false;
 }
+

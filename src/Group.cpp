@@ -132,14 +132,12 @@ void Group::AddAssociation
 {
 	if( Driver* driver = Manager::Get()->GetDriver( m_homeId ) )
 	{
-		if( Node* node = driver->GetNode( m_nodeId ) )
+		if( Node* node = driver->GetNodeUnsafe( m_nodeId ) )
 		{
 			if( Association* cc = static_cast<Association*>( node->GetCommandClass( Association::StaticGetCommandClassId() ) ) )
 			{
 				cc->Set( m_groupIdx, _nodeId );
 			}
-
-			driver->ReleaseNodes();
 		}
 	}
 }
@@ -155,14 +153,12 @@ void Group::RemoveAssociation
 {
 	if( Driver* driver = Manager::Get()->GetDriver( m_homeId ) )
 	{
-		if( Node* node = driver->GetNode( m_nodeId ) )
+		if( Node* node = driver->GetNodeUnsafe( m_nodeId ) )
 		{
 			if( Association* cc = static_cast<Association*>( node->GetCommandClass( Association::StaticGetCommandClassId() ) ) )
 			{
 				cc->Remove( m_groupIdx, _nodeId );
 			}
-
-			driver->ReleaseNodes();
 		}
 	}
 }
@@ -215,7 +211,7 @@ void Group::OnGroupChanged
 		// If the node supports COMMAND_CLASS_ASSOCIATION_COMMAND_CONFIGURATION, we need to request the command data.
 		if( Driver* driver = Manager::Get()->GetDriver( m_homeId ) )
 		{
-			if( Node* node = driver->GetNode( m_nodeId ) )
+			if( Node* node = driver->GetNodeUnsafe( m_nodeId ) )
 			{
 				if( AssociationCommandConfiguration* cc = static_cast<AssociationCommandConfiguration*>( node->GetCommandClass( AssociationCommandConfiguration::StaticGetCommandClassId() ) ) )
 				{
@@ -224,8 +220,6 @@ void Group::OnGroupChanged
 						cc->RequestCommands( m_groupIdx, it->first );
 					}
 				}
-
-				driver->ReleaseNodes();
 			}
 		}
 

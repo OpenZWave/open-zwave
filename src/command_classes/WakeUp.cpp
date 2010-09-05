@@ -149,10 +149,9 @@ bool WakeUp::HandleMsg
 			// If we are in init mode, now is the time to request the rest of the node state
 			if( m_init )
 			{
-				if( Node* node = GetNode() )
+				if( Node* node = GetNodeUnsafe() )
 				{
 					node->RequestEntireNodeState();
-					ReleaseNode();
 				}
 				m_init = false;
 			}
@@ -187,9 +186,8 @@ bool WakeUp::SetValue
 		Msg* msg = new Msg( "Wakeup Interval Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 		msg->Append( GetNodeId() );
 		
-		if( GetNode()->GetCommandClass( MultiCmd::StaticGetCommandClassId() ) )
+		if( GetNodeUnsafe()->GetCommandClass( MultiCmd::StaticGetCommandClassId() ) )
 		{
-			ReleaseNode();
 			msg->Append( 10 );
 			msg->Append( MultiCmd::StaticGetCommandClassId() );
 			msg->Append( MultiCmd::MultiCmdCmd_Encap );
@@ -233,10 +231,9 @@ void WakeUp::SetAwake
 		// If the device is marked for polling, request the current state
 		if( m_pollRequired )
 		{
-			if( Node* node = GetNode() )
+			if( Node* node = GetNodeUnsafe() )
 			{
 				node->RequestState( RequestFlag_Dynamic );
-				ReleaseNode();
 			}
 			m_pollRequired = false;
 		}
@@ -266,9 +263,11 @@ void WakeUp::QueueMsg
 	{
 		if( *(*it) == *_msg )
 		{
+			list<Msg*>::iterator duplicate = it--;
+
 			// Duplicate found
-			delete *it;
-			m_pendingQueue.erase( it );
+			delete *duplicate;
+			m_pendingQueue.erase( duplicate );
 		}
 	}
 	m_pendingQueue.push_back( _msg );
@@ -320,13 +319,12 @@ void WakeUp::CreateVars
 	uint8 const _instance
 )
 {
-	if( Node* node = GetNode() )
+	if( Node* node = GetNodeUnsafe() )
 	{
 		if( node->GetBasic() >= 0x03 )	// We don't add the interval value for controllers, because they don't appear to ever wake up on their own.
 		{
 			m_interval.AddInstance( _instance, node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 0, "Wake-up Interval", "Seconds", false, 3600 ) );
 		}
-		ReleaseNode();
 	}
 }
 

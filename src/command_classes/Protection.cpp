@@ -138,7 +138,7 @@ void Protection::CreateVars
 	uint8 const _instance
 )
 {
-	if( Node* node = GetNode() )
+	if( Node* node = GetNodeUnsafe() )
 	{
 		vector<ValueList::Item> items;
 
@@ -151,6 +151,5 @@ void Protection::CreateVars
 		}
 
 		m_state.AddInstance( _instance, node->CreateValueList(  ValueID::ValueGenre_System, GetCommandClassId(), _instance, 0, "Protection", "", false, items, 0 ) );
-		ReleaseNode();
 	}
 }

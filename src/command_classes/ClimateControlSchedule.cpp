@@ -356,7 +356,7 @@ void ClimateControlSchedule::CreateVars
 	uint8 const _instance
 )
 {
-	if( Node* node = GetNode() )
+	if( Node* node = GetNodeUnsafe() )
 	{
 		// Add a ValueSchedule for each day of the week.
 		for( uint8 i=0; i<7; ++i )
@@ -377,8 +377,6 @@ void ClimateControlSchedule::CreateVars
 
 		m_overrideState.AddInstance( _instance, node->CreateValueList(  ValueID::ValueGenre_User, GetCommandClassId(), _instance, 8, "Override State", "", false, items, 0 ) );
 		m_overrideSetback.AddInstance( _instance, node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Override Setback", "", false, 0  ) );
- 
-		ReleaseNode();
 	}
 }
 

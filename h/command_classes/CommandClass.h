@@ -69,7 +69,7 @@ namespace OpenZWave
 		uint32 GetHomeId()const{ return m_homeId; }
 		uint8 GetNodeId()const{ return m_nodeId; }
 		Driver* GetDriver()const;
-		Node* GetNode()const;
+		Node* GetNodeUnsafe()const;
 		void ReleaseNode()const;
 
 		void SetInstances( uint8 const _instances );

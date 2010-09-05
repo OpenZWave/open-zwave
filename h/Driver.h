@@ -72,7 +72,8 @@ namespace OpenZWave
 		bool Init( uint32 _attempts );
 
 		Thread*					m_driverThread;								// Thread for reading from the Z-Wave controller, and for creating and managing the other threads for sending, polling etc.
-		Event*					m_exitEvent;								// Event that will be signalled when the threads should exit
+		Event*					m_wakeEvent;								// Event that will be signalled when we should check for new work
+		Event*					m_exitEvent;								// Event that will be signalled when the application is exiting
 		bool					m_exit;										// Flag that is set when the application is exiting.
 		bool					m_init;										// Set to true once the driver has been initialised
 
@@ -118,14 +119,18 @@ namespace OpenZWave
 		string GetLibraryVersion()const{ return m_libraryVersion; }
 		string GetLibraryTypeName()const{ return m_libraryTypeName; }
 
+		Node* GetNodeUnsafe( uint8 _nodeId );								// Version of GetNode that does not use a mutex.  Only to be used by driver thread code that knows the node cannot be removed while accessing it.
 		Node* GetNode( uint8 _nodeId );
 		void LockNodes();
 		void ReleaseNodes();
 
+		static void SerialThreadEntryPoint( void* _context );
+		void SerialThreadProc();
+
 		string					m_serialPortName;							// name used to open the serial port.
 		uint32					m_homeId;									// Home ID of the Z-Wave controller.  Not valid until the DriverReady notification has been received.
 		SerialPort*				m_serialPort;								// Handles communications with the controller hardware.
-		Mutex*					m_serialMutex;								// Ensure only one thread at a time can access the serial port.
+		Thread*					m_serialThread;								// Watches for data arriving at the serial port.
 		
 		string					m_libraryVersion;							// Verison of the Z-Wave Library used by the controller.
 		string					m_libraryTypeName;							// Name describing the library type.
@@ -147,17 +152,13 @@ namespace OpenZWave
 		void SendMsg( Msg* _msg );
 
 	private:
-		static void SendThreadEntryPoint( void* _context );					// Static method called by the m_sendThread object as the entry point for its thread code.  The _context will contain a pointer to this Driver object.
-		void SendThreadProc();												// Implementation of the send thread, called from the static SendThreadEntryPoint.
-
+		bool WriteMsg();
 		void RemoveMsg();													// Remove the first message from the send queue.  This happens when the send was successful, or after three failed attempts.
 		void TriggerResend();												// Causes the first message to be sent again, in response to a NAK or CAN from the controller.
 		bool MoveMessagesToWakeUpQueue(	uint8 const _targetNodeId );		// If a node does not respond, and is of a type that can sleep, this method is used to move all its pending messages to another queue ready for when it mext wakes up.
 
-		Thread*					m_sendThread;								// Thread for sending messages to the Z-Wave network	
 		list<Msg*>				m_sendQueue;								// Messages waiting to be sent
 		Mutex*					m_sendMutex;								// Serialize access to the send and wakeup queues
-		Event*					m_sendEvent;								// Signalled when there is something waiting to be sent
 
 	//-----------------------------------------------------------------------------
 	//	Receiving Z-Wave messages
@@ -341,12 +342,6 @@ namespace OpenZWave
 		void NotifyWatchers();												// Passes the notifications to all the registered watcher callbacks in turn.
 
 		list<Notification*>	m_notifications;
-
-	//-----------------------------------------------------------------------------
-	//	Misc
-	//-----------------------------------------------------------------------------
-	private:
-		void UpdateEvents();												// Set and Reset events according to the states of various queues and flags
 	};
 
 } // namespace OpenZWave

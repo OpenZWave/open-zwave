@@ -128,9 +128,8 @@ void SwitchBinary::CreateVars
 	uint8 const _instance
 )
 {
-	if( Node* node = GetNode() )
+	if( Node* node = GetNodeUnsafe() )
 	{
 		m_state.AddInstance( _instance, node->CreateValueBool( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Switch", "", false, false ) );
-		ReleaseNode();
 	}
 }

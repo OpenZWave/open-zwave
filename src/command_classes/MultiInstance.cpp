@@ -70,7 +70,7 @@ bool MultiInstance::HandleMsg
 )
 {
 	bool handled = false;
-	if( Node const* node = GetNode() )
+	if( Node const* node = GetNodeUnsafe() )
 	{
 		if( MultiInstanceCmd_Report == (MultiInstanceCmd)_data[0] )
 		{
@@ -102,8 +102,6 @@ bool MultiInstance::HandleMsg
 
 			handled = true;
 		}
-
-		ReleaseNode();
 	}
 
 	return handled;

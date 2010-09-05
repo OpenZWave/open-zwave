@@ -156,7 +156,7 @@ bool AssociationCommandConfiguration::HandleMsg
 		Log::Write( "Received AssociationCommandConfiguration Report from node %d:", GetNodeId() );
 		Log::Write( "    Commands for node %d in group %d,", nodeIdx, groupIdx );
 
-		if( Node* node = GetNode() )
+		if( Node* node = GetNodeUnsafe() )
 		{
 			Group* group = node->GetGroup( groupIdx );
 			if( NULL == group )
@@ -192,14 +192,13 @@ void AssociationCommandConfiguration::CreateVars
 	uint8 const _instance
 )
 {
-	if( Node* node = GetNode() )
+	if( Node* node = GetNodeUnsafe() )
 	{
 		m_maxCommandLength.AddInstance			( _instance, node->CreateValueByte(	 ValueID::ValueGenre_System, GetCommandClassId(), _instance, 0, "Max Command Length", "", true, 0  ) );
 		m_commandsAreValues.AddInstance			( _instance, node->CreateValueBool(  ValueID::ValueGenre_System, GetCommandClassId(), _instance, 1, "Commands are Values", "", true, false  ) );
 		m_commandsAreConfigurable.AddInstance	( _instance, node->CreateValueBool(  ValueID::ValueGenre_System, GetCommandClassId(), _instance, 2, "Commands are Configurable", "", true, false  ) );
 		m_numFreeCommands.AddInstance			( _instance, node->CreateValueShort( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 3, "Free Commands", "", true, 0  ) );
 		m_maxCommands.AddInstance				( _instance, node->CreateValueShort( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 4, "Max Commands", "", true, 0  ) );
-		ReleaseNode();
 	}
 }
 

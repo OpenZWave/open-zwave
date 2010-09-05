@@ -173,7 +173,7 @@ void SwitchAll::CreateVars
 	uint8 const _instance
 )
 {
-	if( Node* node = GetNode() )
+	if( Node* node = GetNodeUnsafe() )
 	{
 		vector<ValueList::Item> items;
 		for( int i=0; i<4; ++i )
@@ -185,7 +185,6 @@ void SwitchAll::CreateVars
 		}
 
 		m_state.AddInstance( _instance, node->CreateValueList(  ValueID::ValueGenre_System, GetCommandClassId(), _instance, 0, "Switch All", "", false, items, 0 ) );
-		ReleaseNode();
 	}
 }
 

@@ -104,11 +104,10 @@ void Alarm::CreateVars
 	uint8 const _instance
 )
 {
-	if( Node* node = GetNode() )
+	if( Node* node = GetNodeUnsafe() )
 	{
 		m_type.AddInstance( _instance, node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Alarm Type", "", true, 0 ) );
 		m_level.AddInstance( _instance, node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 1, "Alarm Level", "", true, 0 ) );
-		ReleaseNode();
 	}
 }
 

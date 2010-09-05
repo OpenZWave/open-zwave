@@ -69,7 +69,7 @@ bool Mutex::Lock
 	if( res )
 	{
 		++m_lockCount;
-		if( m_lockCount > 1 )
+		if( m_lockCount > 3 )
 		{
 			int breakhere = 1;
 		}
