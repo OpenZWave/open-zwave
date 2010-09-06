@@ -25,8 +25,6 @@
 //
 //-----------------------------------------------------------------------------
 
-#include <Windows.h>
-
 #include "Defs.h"
 #include "Driver.h"
 #include "Manager.h"
