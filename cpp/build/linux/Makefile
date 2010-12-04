@@ -7,11 +7,11 @@
 .SUFFIXES:	.d .cpp .o .a
 .PHONY:	default clean
 
-CC     := (CROSS_COMPILE)gcc
-CXX    := (CROSS_COMPILE)g++
-LD     := (CROSS_COMPILE)g++
-AR     := (CROSS_COMPILE)ar rc
-RANLIB := (CROSS_COMPILE)ranlib
+CC     := $(CROSS_COMPILE)gcc
+CXX    := $(CROSS_COMPILE)g++
+LD     := $(CROSS_COMPILE)g++
+AR     := $(CROSS_COMPILE)ar rc
+RANLIB := $(CROSS_COMPILE)ranlib
 
 DEBUG_CFLAGS    := -Wall -Wno-format -g -DDEBUG -DLOG_STDERR
 RELEASE_CFLAGS  := -Wall -Wno-unknown-pragmas -Wno-format -O3
