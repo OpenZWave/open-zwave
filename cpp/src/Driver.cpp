@@ -1361,7 +1361,7 @@ void Driver::HandleSerialAPIGetInitDataResponse
 						{
 							// The node was read in from the config, so we 
 							// only need to get its current state
-							AddNodeQuery( nodeId, Node::QueryStage_Session );
+							AddNodeQuery( nodeId, Node::QueryStage_Associations );
 						}
 
 						ReleaseNodes();
@@ -2538,7 +2538,7 @@ void Driver::RequestNodeState
 	 uint8 const _nodeId
 )
 {
-	AddNodeQuery( _nodeId, Node::QueryStage_Session );
+	AddNodeQuery( _nodeId, Node::QueryStage_Associations );
 }
 
 //-----------------------------------------------------------------------------
