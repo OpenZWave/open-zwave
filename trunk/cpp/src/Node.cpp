@@ -974,7 +974,7 @@ void Node::RemoveCommandClass
 	uint8 const _commandClassId
 )
 {
-	map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.find( _commandClassId );
+	map<uint8,CommandClass*>::iterator it = m_commandClassMap.find( _commandClassId );
 	if( it == m_commandClassMap.end() )
 	{
 		// Class is not found
