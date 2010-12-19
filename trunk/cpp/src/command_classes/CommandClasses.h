@@ -28,6 +28,8 @@
 #ifndef _CommandClasses_H
 #define _CommandClasses_H
 
+#include <string>
+#include <map>
 #include "Defs.h"
 
 namespace OpenZWave
@@ -42,6 +44,8 @@ namespace OpenZWave
 		static void RegisterCommandClasses();
 		static CommandClass* CreateCommandClass( uint8 const _commandClassId, uint32 const _homeId, uint8 const _nodeId );
 
+		static bool IsSupported( uint8 const _commandClassId );
+
 	private:
 		CommandClasses();										
 		CommandClasses( CommandClasses const&	);					// prevent copy
@@ -53,9 +57,18 @@ namespace OpenZWave
 			return instance;
 		}
 
-		void Register( uint8 const _commandClassId, pfnCreateCommandClass_t _create );
+		void Register( uint8 const _commandClassId, string const& _commandClassName, pfnCreateCommandClass_t _create );
+		void ParseCommandClassOption( string const& _optionStr, bool const _include );
+		uint8 GetCommandClassId( string const& _name );
 
 		pfnCreateCommandClass_t m_commandClassCreators[256];
+		map<string,uint8>		m_namesToIDs;
+
+		// m_supportedCommandClasses uses single bits to mark whether OpenZWave supports a command class
+		// Checking this is not the same as looking for non-NULL entried in m_commandClassCreators, since
+		// this may be modified by the program options --Include and --Ingnore to filter out support
+		// for unwanted command classes.
+		uint32					m_supportedCommandClasses[8];
 	};
 
 } // namespace OpenZWave

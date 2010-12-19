@@ -51,7 +51,7 @@ enum SwitchToggleMultilevelCmd
 // <SwitchToggleMultilevel::RequestState>												   
 // Request current state from the device									   
 //-----------------------------------------------------------------------------
-void SwitchToggleMultilevel::RequestState
+bool SwitchToggleMultilevel::RequestState
 (
 	uint32 const _requestFlags
 )
@@ -65,7 +65,10 @@ void SwitchToggleMultilevel::RequestState
 		msg->Append( SwitchToggleMultilevelCmd_StartLevelChange );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 		GetDriver()->SendMsg( msg );
+		return true;
 	}
+
+	return false;
 }
 
 //-----------------------------------------------------------------------------

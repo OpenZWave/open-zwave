@@ -52,7 +52,7 @@ enum AssociationCommandConfigurationCmd
 // <AssociationCommandConfiguration::RequestState>												   
 // Request current state from the device									   
 //-----------------------------------------------------------------------------
-void AssociationCommandConfiguration::RequestState
+bool AssociationCommandConfiguration::RequestState
 (
 	uint32 const _requestFlags
 )
@@ -66,7 +66,10 @@ void AssociationCommandConfiguration::RequestState
 		msg->Append( AssociationCommandConfigurationCmd_SupportedRecordsGet );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 		GetDriver()->SendMsg( msg );
+		return true;
 	}
+
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -119,27 +122,27 @@ bool AssociationCommandConfiguration::HandleMsg
 		ValueByte* valueByte;
 		ValueShort* valueShort;
 
-		if( valueByte = m_maxCommandLength.GetInstance( _instance ) )
+		if( ( valueByte = m_maxCommandLength.GetInstance( _instance ) ) != NULL)
 		{
 			valueByte->OnValueChanged( maxCommandLength );
 		}
 
-		if( valueBool = m_commandsAreValues.GetInstance( _instance ) )
+		if( ( valueBool = m_commandsAreValues.GetInstance( _instance ) ) != NULL)
 		{
 			valueBool->OnValueChanged( commandsAreValues );
 		}
 
-		if( valueBool = m_commandsAreConfigurable.GetInstance( _instance ) )
+		if( ( valueBool = m_commandsAreConfigurable.GetInstance( _instance ) ) != NULL)
 		{
 			valueBool->OnValueChanged( commandsAreConfigurable );
 		}
 
-		if( valueShort = m_numFreeCommands.GetInstance( _instance ) )
+		if( ( valueShort = m_numFreeCommands.GetInstance( _instance ) ) != NULL)
 		{
 			valueShort->OnValueChanged( numFreeCommands );
 		}
 
-		if( valueShort = m_maxCommands.GetInstance( _instance ) )
+		if( ( valueShort = m_maxCommands.GetInstance( _instance ) ) != NULL)
 		{
 			valueShort->OnValueChanged( maxCommands );
 		}

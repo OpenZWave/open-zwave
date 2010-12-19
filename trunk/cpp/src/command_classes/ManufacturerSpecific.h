@@ -43,7 +43,7 @@ namespace OpenZWave
 		static string const StaticGetCommandClassName(){ return "COMMAND_CLASS_MANUFACTURER_SPECIFIC"; }
 
 		// From CommandClass
-		virtual void RequestState( uint32 const _requestFlags );
+		virtual bool RequestState( uint32 const _requestFlags );
 		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }
 		virtual string const GetCommandClassName()const{ return StaticGetCommandClassName(); }
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );
@@ -52,7 +52,7 @@ namespace OpenZWave
 		ManufacturerSpecific( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){ SetStaticRequest( StaticRequest_Values ); }
 		bool LoadProductXML();
 		static void UnloadProductXML();
-		bool LoadConfigXML( string const& _configPath );
+		bool LoadConfigXML( string const& _configXML );
 
 		class Product
 		{

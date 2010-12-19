@@ -49,7 +49,7 @@ enum LockCmd
 // <Lock::RequestState>												   
 // Request current state from the device									   
 //-----------------------------------------------------------------------------
-void Lock::RequestState
+bool Lock::RequestState
 (
 	uint32 const _requestFlags
 )
@@ -63,7 +63,10 @@ void Lock::RequestState
 		msg->Append( LockCmd_Get );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 		GetDriver()->SendMsg( msg );
+		return true;
 	}
+
+	return false;
 }
 
 //-----------------------------------------------------------------------------

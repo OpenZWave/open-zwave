@@ -49,7 +49,7 @@ enum SensorMultilevelCmd
 // <SensorMultilevel::RequestState>												   
 // Request current state from the device									   
 //-----------------------------------------------------------------------------
-void SensorMultilevel::RequestState
+bool SensorMultilevel::RequestState
 (
 	uint32 const _requestFlags
 )
@@ -73,6 +73,7 @@ void SensorMultilevel::RequestState
 				msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 				GetDriver()->SendMsg( msg );
 			}
+			return true;
 		}
 		else
 		{
@@ -83,8 +84,11 @@ void SensorMultilevel::RequestState
 			msg->Append( SensorMultilevelCmd_Get );
 			msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 			GetDriver()->SendMsg( msg );
+			return true;
 		}
 	}
+
+	return false;
 }
 
 //-----------------------------------------------------------------------------

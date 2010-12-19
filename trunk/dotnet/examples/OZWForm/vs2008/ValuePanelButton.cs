@@ -35,6 +35,8 @@ namespace OZWForm
             this.ValueButtonButton.TabIndex = 1;
             this.ValueButtonButton.Text = "Label";
             this.ValueButtonButton.UseVisualStyleBackColor = true;
+            this.ValueButtonButton.KeyUp += new System.Windows.Forms.KeyEventHandler(this.ValueButtonButton_KeyUp);
+            this.ValueButtonButton.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ValueButtonButton_KeyDown);
             // 
             // ValuePanelButton
             // 
@@ -46,6 +48,16 @@ namespace OZWForm
             this.ResumeLayout(false);
             this.PerformLayout();
 
+        }
+
+        private void ValueButtonButton_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
+        {
+            MainForm.Manager.PressButton(ValueID);
+        }
+
+        private void ValueButtonButton_KeyUp(object sender, System.Windows.Forms.KeyEventArgs e)
+        {
+            MainForm.Manager.ReleaseButton(ValueID);
         }
     }
 }

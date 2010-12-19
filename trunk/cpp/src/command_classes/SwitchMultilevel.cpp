@@ -95,7 +95,7 @@ static char const* c_switchLabelsNeg[] =
 // <SwitchMultilevel::RequestState>												   
 // Request current state from the device									   
 //-----------------------------------------------------------------------------
-void SwitchMultilevel::RequestState
+bool SwitchMultilevel::RequestState
 (
 	uint32 const _requestFlags
 )
@@ -109,7 +109,10 @@ void SwitchMultilevel::RequestState
 		msg->Append( SwitchMultilevelCmd_Get );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 		GetDriver()->SendMsg( msg );
+		return true;
 	}
+
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -147,11 +150,11 @@ bool SwitchMultilevel::HandleMsg
 
 		if( switchType1 )
 		{
-			if( button = m_bright.GetInstance( _instance ) )
+			if( (button = m_bright.GetInstance( _instance ) ) != NULL )
 			{
 				button->SetLabel( c_switchLabelsPos[switchType1] );
 			}
-			if( button = m_dim.GetInstance( _instance ) )
+			if( (button = m_dim.GetInstance( _instance ) ) != NULL )
 			{
 				button->SetLabel( c_switchLabelsNeg[switchType1] );
 			}
@@ -159,11 +162,11 @@ bool SwitchMultilevel::HandleMsg
 		
 		if( switchType2 )
 		{
-			if( button = m_inc.GetInstance( _instance ) )
+			if( (button = m_inc.GetInstance( _instance ) ) != NULL )
 			{
 				button->SetLabel( c_switchLabelsPos[switchType2] );
 			}
-			if( button = m_dec.GetInstance( _instance ) )
+			if( (button = m_dec.GetInstance( _instance ) ) != NULL )
 			{
 				button->SetLabel( c_switchLabelsNeg[switchType2] );
 			}
@@ -213,6 +216,8 @@ bool SwitchMultilevel::SetValue
 {
 	bool res = false;
 	uint8 instance = _value.GetID().GetInstance();
+
+fprintf(stderr, "SwitchMultilevel::SetValue\n");
 
 	switch( _value.GetID().GetIndex() )
 	{

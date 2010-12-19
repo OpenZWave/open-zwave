@@ -48,7 +48,7 @@ enum MeterPulseCmd
 // <MeterPulse::RequestState>												   
 // Request current state from the device									   
 //-----------------------------------------------------------------------------
-void MeterPulse::RequestState
+bool MeterPulse::RequestState
 (
 	uint32 const _requestFlags
 )
@@ -62,7 +62,10 @@ void MeterPulse::RequestState
 		msg->Append( MeterPulseCmd_Get );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 		GetDriver()->SendMsg( msg );
+		return true;
 	}
+
+	return false;
 }
 
 //-----------------------------------------------------------------------------

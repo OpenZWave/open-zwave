@@ -48,7 +48,7 @@ namespace OpenZWave
 	// Construction
 	//-----------------------------------------------------------------------------
 	public:
-		Group( uint32 const _homeId, uint8 const _nodeId, uint8 const _groupIdx );
+		Group( uint32 const _homeId, uint8 const _nodeId, uint8 const _groupIdx, uint8 const _maxAssociations );
 		Group( uint32 const _homeId, uint8 const _nodeId, TiXmlElement const* _valueElement );
 		~Group(){}
 
@@ -60,12 +60,13 @@ namespace OpenZWave
 	public:
 		string const& GetLabel()const{ return m_label; }
 		uint32 GetAssociations( uint8** o_associations );
+		uint8 GetMaxAssociations()const{ return m_maxAssociations; }
 		uint8 GetIdx()const{ return m_groupIdx; }
 
 	private:
 		void AddAssociation( uint8 const _nodeId );
 		void RemoveAssociation( uint8 const _nodeId );
-		void OnGroupChanged( uint8 const _numAssociations, uint8 const* _associations );
+		void OnGroupChanged( vector<uint8> const& _associations );
 
 	//-----------------------------------------------------------------------------
 	// Command methods (COMMAND_CLASS_ASSOCIATION_COMMAND_CONFIGURATION)
@@ -96,6 +97,7 @@ namespace OpenZWave
 		uint32								m_homeId;
 		uint8								m_nodeId;
 		uint8								m_groupIdx;
+		uint8								m_maxAssociations;
 		map<uint8,AssociationCommandVec>	m_associations;
 	};
 

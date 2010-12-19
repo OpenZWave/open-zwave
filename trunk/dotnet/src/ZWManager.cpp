@@ -36,14 +36,10 @@ using namespace Runtime::InteropServices;
 //-----------------------------------------------------------------------------
 void ZWManager::Create
 (
-	String^ configPath,
-	String^	userPath
 )
 {
 	// Create the Manager singleton
-	const char* config = (const char*)(Marshal::StringToHGlobalAnsi(configPath)).ToPointer();
-	const char* user = (const char*)(Marshal::StringToHGlobalAnsi(userPath)).ToPointer();
-	Manager::Create( config, user );
+	Manager::Create();
 
 	// Add a notification handler
 	m_onNotification = gcnew OnNotificationFromUnmanagedDelegate( this, &ZWManager::OnNotificationFromUnmanaged );

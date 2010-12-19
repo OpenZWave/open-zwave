@@ -53,6 +53,7 @@ static char const* c_typeName[] =
 	"decimal",
 	"int",
 	"list",
+    "schedule",
 	"short",
 	"string",
 	"trigger"
@@ -76,14 +77,14 @@ Value::Value
 	bool const _readOnly,
 	bool const _isSet
 ):
+    m_min( 0 ),
+    m_max( 0 ),
 	m_refs( 1 ),
 	m_id( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, _type ),
 	m_label( _label ),
 	m_units( _units ),
 	m_readOnly( _readOnly ),
-	m_isSet( _isSet ),
-	m_min( 0 ),
-	m_max( 0 )
+	m_isSet( _isSet )
 {
 }
 
@@ -94,11 +95,11 @@ Value::Value
 Value::Value
 (
 ):
+    m_min( 0 ),
+    m_max( 0 ),
 	m_refs( 1 ),
 	m_readOnly( false ),
-	m_isSet( false ),
-	m_min( 0 ),
-	m_max( 0 )
+	m_isSet( false )
 {
 }
 

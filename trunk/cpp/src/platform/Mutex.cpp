@@ -42,7 +42,6 @@ Mutex::Mutex
 ):
 	m_pImpl( new MutexImpl() )
 {
-	m_lockCount = 0;
 }
 
 //-----------------------------------------------------------------------------
@@ -65,16 +64,7 @@ bool Mutex::Lock
 	bool const _bWait // = true;
 )
 {
-	bool res = m_pImpl->Lock( _bWait );
-	if( res )
-	{
-		++m_lockCount;
-		if( m_lockCount > 3 )
-		{
-			int breakhere = 1;
-		}
-	}
-	return res;
+	return m_pImpl->Lock( _bWait );
 }
 
 //-----------------------------------------------------------------------------
@@ -86,5 +76,4 @@ void Mutex::Release
 )
 {
 	m_pImpl->Release();
-	--m_lockCount;
 }

@@ -39,7 +39,8 @@
 #include "Defs.h"
 #include "SerialPort.h"
 
-#define DEBUG
+// Use a less general name than 'DEBUG' as this is just bound to clash
+//#define OZW_DEBUG
 
 namespace OpenZWave
 {
@@ -60,7 +61,7 @@ namespace OpenZWave
 
 		int m_hSerialPort;
 
-#ifdef DEBUG
+#ifdef OZW_DEBUG
 		int m_hdebug;
 #endif
 	};

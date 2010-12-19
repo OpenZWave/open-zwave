@@ -2,7 +2,7 @@
 //
 //	Manager.h
 //
-//	Handles Z-Wave interfaces
+//	The main public interface to OpenZWave.
 //
 //	Copyright (c) 2010 Mal Lansell <openzwave@lansell.org>
 //
@@ -41,6 +41,7 @@
 
 namespace OpenZWave
 {
+	class Options;
 	class Node;
 	class Msg;
 	class Value;
@@ -114,15 +115,16 @@ namespace OpenZWave
 	public:
    		/**
 		 * Creates the Manager singleton object.  
-		 * The Manager provides the public interface to OpenZWave, exposing all the functionality required to add Z-Wave support to an application.
-		 * There can be only one Manager in an OpenZWave application.  Once the Manager has been created, call AddWatcher to install a notification
-		 * callback handler, and then call the AddDriver method for each attached PC Z-Wave controller in turn.
-		 * @param _configPath a string containing the path to the OpenZWave library config folder, which contains XML descriptions of Z-Wave manufacturers and products.
-		 * @param _userPath a string containing the path to the application's user data folder where the OpenZWave should store the Z-Wave network configuration and state.
-		 * @return a pointer to the newly created Manager object.
-		 * @see Get, Destroy, AddWatcher, AddDriver
+		 * The Manager provides the public interface to OpenZWave, exposing all the functionality required 
+		 * to add Z-Wave support to an application. There can be only one Manager in an OpenZWave application.  
+		 * An Options object must be created and Locked first, otherwise the call to Manager::Create will 
+		 * fail. Once the Manager has been created, call AddWatcher to install a notification callback handler,
+		 * and then call the AddDriver method for each attached PC Z-Wave controller in turn.
+		 * @param _options a locked Options object containing all the application's configurable option values.
+		 * @return a pointer to the newly created Manager object, or NULL if creation failed.
+		 * @see Options, Get, Destroy, AddWatcher, AddDriver
 		 */
-		static Manager* Create( string const& _configPath, string const& _userPath );
+		static Manager* Create();
 
 		/**
 		 * Gets a pointer to the Manager object.
@@ -136,32 +138,14 @@ namespace OpenZWave
 		 * @see Create, Get
 		 */
 		static void Destroy();
-
-		/**
-		 * Get the path to the OpenZWave library config folder.
-		 * Gets the string that was passed into the Manager::Create method as the _configPath argument.  
-		 * @return A string containing the path of the OpenZWave library config folder.
-		 * @see Create
-		 */
-		string const& GetConfigPath()const{ return m_configPath; }
-
-		/**
-		 * Get the path to the application's user data folder.
-		 * Gets the string that was passed into the Manager::Create method as the _userPath argument.  
-		 * @return A string containing the path of the application's user data folder.
-		 * @see Create
-		 */
-		string const& GetUserPath()const{ return m_userPath; }
 	/*@}*/
 
 	private:
-		Manager( string const& _configPath, string const& _userPath );		// Constructor, to be called only via the static Create method.
+        Manager();															// Constructor, to be called only via the static Create method.
 		virtual ~Manager();													// Destructor, to be called only via the static Destroy method.
 
 		Event*					m_exitEvent;								// Event that will be signalled when the threads should exit
 		bool					m_exit;										// Flag indicating that program exit is in progress.
-		string					m_configPath;								// Path to the OpenZWave library config folder, which contains XML descriptions of Z-Wave manufacturers and products.
-		string					m_userPath;									// Path to the application's user data folder where the OpenZWave should store the Z-Wave network configuration and state.
 		static Manager*			s_instance;									// Pointer to the instance of the Manager singleton.
 
 	//-----------------------------------------------------------------------------
@@ -184,8 +168,18 @@ namespace OpenZWave
 		 * @param _homeId The Home ID of the Z-Wave controller to save.
 		 */
 		void WriteConfig( uint32 const _homeId );
+
+		/**
+		 * Gets a pointer to the locked Options object.
+		 * @return pointer to the Options object.
+		 * @see Create
+		 */
+		Options* GetOptions()const{ return m_options; }
 	/*@}*/
 
+	private:
+		Options*	m_options;												// Pointer to the locked Options object that was passed in during creation.
+	
 	//-----------------------------------------------------------------------------
 	//	Drivers
 	//-----------------------------------------------------------------------------
@@ -624,6 +618,24 @@ namespace OpenZWave
 		 * @see SetNodeOn, SetNodeOff
 		 */
 		void SetNodeLevel( uint32 const _homeId, uint8 const _nodeId, uint8 const _level );
+
+        /**
+         * Get whether the node information has been received
+         * @param _homeId The Home ID of the Z-Wave controller that manages the node.
+         * @param _nodeId The ID of the node to query.
+         * @return True if the node information has been received yet
+         */
+        bool IsNodeInfoReceived( uint32 const _homeId, uint8 const _nodeId );
+
+        /**
+         * Get whether the node has the defined class available or not
+         * @param _homeId The Home ID of the Z-Wave controller that manages the node.
+         * @param _nodeId The ID of the node to query.
+         * @param _commandClassId Id of the class to test for
+         * @return True if the node does have the class instantiated, will return name & version
+         */
+        bool GetNodeClassInformation( uint32 const _homeId, uint8 const _nodeId, uint8 const _commandClassId,
+                                      string *_className = NULL, uint8 *_classVersion = NULL);
 	/*@}*/
 
 	//-----------------------------------------------------------------------------
@@ -1003,7 +1015,7 @@ namespace OpenZWave
 		 * @param _homeId The Home ID of the Z-Wave controller that manages the node.
 		 * @param _nodeId The ID of the node whose groups we are interested in.
 		 * @return The number of groups.
-		 * @see GetAssociations, AddAssociation, RemoveAssociation
+		 * @see GetAssociations, GetMaxAssociations, AddAssociation, RemoveAssociation
 		 */
 		uint8 GetNumGroups( uint32 const _homeId, uint8 const _nodeId );
 
@@ -1016,9 +1028,19 @@ namespace OpenZWave
 		 * @param _groupIdx One-based index of the group (because Z-Wave product manuals use one-based group numbering).
 		 * @param o_associations If the number of associations returned is greater than zero, o_associations will be set to point to an array containing the IDs of the associated nodes.
 		 * @return The number of nodes in the associations array.  If zero, the array will point to NULL, and does not need to be deleted.
-		 * @see GetNumGroups, AddAssociation, RemoveAssociation
+		 * @see GetNumGroups, AddAssociation, RemoveAssociation, GetMaxAssociations
 		 */
 		uint32 GetAssociations( uint32 const _homeId, uint8 const _nodeId, uint8 const _groupIdx, uint8** o_associations );
+
+		/**
+		 * Gets the maximum number of associations for a group.
+		 * @param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * @param _nodeId The ID of the node whose associations we are interested in.
+		 * @param _groupIdx one-based index of the group (because Z-Wave product manuals use one-based group numbering).
+		 * @return The maximum number of nodes that can be associated into the group.
+		 * @see GetNumGroups, AddAssociation, RemoveAssociation, GetAssociations
+		 */
+		uint8 GetMaxAssociations( uint32 const _homeId, uint8 const _nodeId, uint8 const _groupIdx );
 
 		/**
 		 * Adds a node to an association group.
@@ -1029,7 +1051,7 @@ namespace OpenZWave
 		 * @param _nodeId The ID of the node whose associations are to be changed.
 		 * @param _groupIdx One-based index of the group (because Z-Wave product manuals use one-based group numbering).
 		 * @param _targetNodeId Identifier for the node that will be added to the association group.
-		 * @see GetNumGroups, GetAssociations, RemoveAssociation
+		 * @see GetNumGroups, GetAssociations, GetMaxAssociations, RemoveAssociation
 		 */
 		void AddAssociation( uint32 const _homeId, uint8 const _nodeId, uint8 const _groupIdx, uint8 const _targetNodeId );
 
@@ -1042,7 +1064,7 @@ namespace OpenZWave
 		 * @param _nodeId The ID of the node whose associations are to be changed.
 		 * @param _groupIdx One-based index of the group (because Z-Wave product manuals use one-based group numbering).
 		 * @param _targetNodeId Identifier for the node that will be removed from the association group.
-		 * @see GetNumGroups, GetAssociations, AddAssociation
+		 * @see GetNumGroups, GetAssociations, GetMaxAssociations, AddAssociation
 		 */
 		void RemoveAssociation( uint32 const _homeId, uint8 const _nodeId, uint8 const _groupIdx, uint8 const _targetNodeId );
 	/*@}*/

@@ -48,7 +48,7 @@ enum BatteryCmd
 // <Battery::RequestState>												   
 // Request current state from the device									   
 //-----------------------------------------------------------------------------
-void Battery::RequestState
+bool Battery::RequestState
 (
 	uint32 const _requestFlags
 )
@@ -62,7 +62,10 @@ void Battery::RequestState
 		msg->Append( BatteryCmd_Get );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 		GetDriver()->SendMsg( msg );
+		return true;
 	}
+
+	return false;
 }
 
 //-----------------------------------------------------------------------------

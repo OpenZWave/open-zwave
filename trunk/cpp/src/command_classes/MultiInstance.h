@@ -48,7 +48,7 @@ namespace OpenZWave
 		static uint8 const StaticGetCommandClassId(){ return 0x60; }
 		static string const StaticGetCommandClassName(){ return "COMMAND_CLASS_MULTI_INSTANCE"; }
 
-		void RequestInstances( CommandClass const* _commandClass );
+		bool RequestInstances( CommandClass const* _commandClass );
 
 		// From CommandClass
 		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }

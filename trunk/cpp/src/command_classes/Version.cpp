@@ -57,7 +57,7 @@ enum
 // <Version::RequestState>												   
 // Request current state from the device									   
 //-----------------------------------------------------------------------------
-void Version::RequestState
+bool Version::RequestState
 (
 	uint32 const _requestFlags
 )
@@ -71,7 +71,10 @@ void Version::RequestState
 		msg->Append( VersionCmd_Get );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 		GetDriver()->SendMsg( msg );
+		return true;
 	}
+
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -85,38 +88,38 @@ bool Version::HandleMsg
 	uint32 const _instance	// = 1
 )
 {
-	if( VersionCmd_Report == (VersionCmd)_data[0] )
+	if( Node* node = GetNodeUnsafe() )
 	{
-		char library[8];
-		char protocol[16];
-		char application[16];
-
-		snprintf( library, sizeof(library), "%d", _data[1] );
-		snprintf( protocol, sizeof(protocol), "%d.%d", _data[2], _data[3] );
-		snprintf( application, sizeof(application), "%d.%d", _data[4], _data[5] );
-
-		Log::Write( "Received Version report from node %d: Library=%s, Protocol=%s, Application=%s", GetNodeId(), library, protocol, application );
-		ClearStaticRequest( StaticRequest_Values );
-
-		if( ValueString* libraryValue = m_library.GetInstance( _instance ) )
+		if( VersionCmd_Report == (VersionCmd)_data[0] )
 		{
-			libraryValue->OnValueChanged( library );
-		}
-		if( ValueString* protocolValue = m_protocol.GetInstance( _instance ) )
-		{
-			protocolValue->OnValueChanged( protocol );
-		}
-		if( ValueString* applicationValue = m_application.GetInstance( _instance ) )
-		{
-			applicationValue->OnValueChanged( application );
-		}
+			char library[8];
+			char protocol[16];
+			char application[16];
 
-		return true;
-	}
+			snprintf( library, sizeof(library), "%d", _data[1] );
+			snprintf( protocol, sizeof(protocol), "%d.%d", _data[2], _data[3] );
+			snprintf( application, sizeof(application), "%d.%d", _data[4], _data[5] );
+
+			Log::Write( "Received Version report from node %d: Library=%s, Protocol=%s, Application=%s", GetNodeId(), library, protocol, application );
+			ClearStaticRequest( StaticRequest_Values );
+
+			if( ValueString* libraryValue = m_library.GetInstance( _instance ) )
+			{
+				libraryValue->OnValueChanged( library );
+			}
+			if( ValueString* protocolValue = m_protocol.GetInstance( _instance ) )
+			{
+				protocolValue->OnValueChanged( protocol );
+			}
+			if( ValueString* applicationValue = m_application.GetInstance( _instance ) )
+			{
+				applicationValue->OnValueChanged( application );
+			}
+
+			return true;
+		}
 	
-	if (VersionCmd_CommandClassReport == (VersionCmd)_data[0])
-	{
-		if( Node* node = GetNodeUnsafe() )
+		if (VersionCmd_CommandClassReport == (VersionCmd)_data[0])
 		{
 			if( CommandClass* pCommandClass = node->GetCommandClass( _data[1] ) )
 			{
@@ -136,19 +139,25 @@ bool Version::HandleMsg
 // <Version::RequestCommandClassVersion>
 // Request the version of a command class used by the device 
 //-----------------------------------------------------------------------------
-void Version::RequestCommandClassVersion
+bool Version::RequestCommandClassVersion
 (
 	CommandClass const* _commandClass
 )
 {
-	Msg* msg = new Msg( "VersionCmd_CommandClassGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-	msg->Append( GetNodeId() );
-	msg->Append( 3 );
-	msg->Append( GetCommandClassId() );
-	msg->Append( VersionCmd_CommandClassGet );
-	msg->Append( _commandClass->GetCommandClassId() );
-	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	GetDriver()->SendMsg( msg );
+	if( _commandClass->HasStaticRequest( StaticRequest_Version ) )
+	{
+		Msg* msg = new Msg( "VersionCmd_CommandClassGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		msg->Append( GetNodeId() );
+		msg->Append( 3 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( VersionCmd_CommandClassGet );
+		msg->Append( _commandClass->GetCommandClassId() );
+		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		GetDriver()->SendMsg( msg );
+		return true;
+	}
+
+	return false;
 }
 
 //-----------------------------------------------------------------------------

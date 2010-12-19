@@ -33,33 +33,31 @@
             // 
             // NodeLayoutPanel
             // 
-            this.NodeLayoutPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
             this.NodeLayoutPanel.AutoScroll = true;
+            this.NodeLayoutPanel.AutoSize = true;
             this.NodeLayoutPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.NodeLayoutPanel.ColumnCount = 1;
-            this.NodeLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.NodeLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.NodeLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.NodeLayoutPanel.Location = new System.Drawing.Point(12, 12);
             this.NodeLayoutPanel.Name = "NodeLayoutPanel";
             this.NodeLayoutPanel.RowCount = 1;
-            this.NodeLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.NodeLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.NodeLayoutPanel.Size = new System.Drawing.Size(502, 305);
+            this.NodeLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.NodeLayoutPanel.Size = new System.Drawing.Size(0, 0);
             this.NodeLayoutPanel.TabIndex = 0;
             // 
             // NodeForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScroll = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(526, 329);
+            this.ClientSize = new System.Drawing.Size(526, 323);
             this.Controls.Add(this.NodeLayoutPanel);
             this.Name = "NodeForm";
             this.ShowInTaskbar = false;
             this.Text = "NodeForm";
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
