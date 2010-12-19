@@ -11,7 +11,7 @@
   </Generic>
   <Generic key="0x02" label="Static Controller" command_classes="0xef,0x20">
     <Specific key="0x01" label="Static PC Controller" />
-    <Specific key="0x02" label="Static Scene Controller" command_classes="0x20,0x2d,0x72,0x85,0xef,0x2b" />
+    <Specific key="0x02" label="Static Scene Controller" command_classes="0x2d,0x72,0x85,0xef,0x2b" />
     <Specific key="0x03" label="Static Installer Tool" command_classes="0x21,0x72,0x86,0x8f,0xef,0x21,0x60,0x70,0x72,0x84,0x85,0x86,0x8e" />
   </Generic>
   <Generic key="0x03" label="AV Control Point" command_classes="0x20">
@@ -69,14 +69,14 @@
   <Generic key="0x16" label="Ventilation" command_classes="0x20">
     <Specific key="0x01" label="Residential Heat Recovery Ventilation" command_classes="0x37,0x39,0x72,0x86" basic="0x39"/>
   </Generic>
-  <Generic key="0x20" label="Binary Sensor" command_classes="0x20,0x30" basic="0x30">
+  <Generic key="0x20" label="Binary Sensor" command_classes="0x30,0xef,0x20" basic="0x30">
     <Specific key="0x01" label="Routing Binary Sensor" />
   </Generic>
-  <Generic key="0x21" label="Multilevel Sensor" command_classes="0x20,0x31" basic="0x31">
+  <Generic key="0x21" label="Multilevel Sensor" command_classes="0x31,0xef,0x20" basic="0x31">
     <Specific key="0x01" label="Routing Multilevel Sensor" />
   </Generic>
-  <Generic key="0x30" label="Pulse Meter" command_classes="0x20,0x35" basic="0x35"/>
-  <Generic key="0x31" label="Meter" command_classes="0x20">
+  <Generic key="0x30" label="Pulse Meter" command_classes="0x35,0xef,0x20" basic="0x35"/>
+  <Generic key="0x31" label="Meter" command_classes="0xef,0x20">
     <Specific key="0x01" label="Simple Meter" command_classes="0x32,0x72,0x86" basic="0x32" />
   </Generic>
   <Generic key="0x40" label="Entry Control" command_classes="0x20">
@@ -87,7 +87,7 @@
   <Generic key="0x50" label="Semi Interoperable" command_classes="0x20,0x72,0x86,0x88">
     <Specific key="0x01" label="Energy Production" command_classes="0x90" />
   </Generic>
-  <Generic key="0xa1" label="Alarm Sensor" command_classes="0x20,0xef,0x20" basic="0x71">
+  <Generic key="0xa1" label="Alarm Sensor" command_classes="0xef,0x20" basic="0x71">
     <Specific key="0x01" label="Basic Routing Alarm Sensor" command_classes="0x71,0x72,0x85,0x86,0xef,0x71" />
     <Specific key="0x02" label="Routing Alarm Sensor" command_classes="0x71,0x72,0x80,0x85,0x86,0xef,0x71" />
     <Specific key="0x03" label="Basic Zensor Alarm Sensor" command_classes="0x71,0x72,0x86,0xef,0x71" />

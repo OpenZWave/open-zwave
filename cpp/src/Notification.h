@@ -48,6 +48,7 @@ namespace OpenZWave
 		friend class Group;
 		friend class Value;
 		friend class ValueStore;
+		friend class Basic;
 		friend class ManufacturerSpecific;
 
 	public:
@@ -67,7 +68,7 @@ namespace OpenZWave
 			Type_NodeRemoved,		/**< A node has been removed from OpenZWave's list.  This may be due to a device being removed from the Z-Wave network, or because the application is closing. */
 			Type_NodeProtocolInfo,	/**< Basic node information has been receievd, such as whether the node is a listening device, a routing device and its baud rate and basic, generic and specific types. It is after this notification that you can call Manager::GetNodeType to obtain a label containing the device description. */
 			Type_NodeNaming,		/**< One of the node names has changed (name, manufacturer, product). */
-			Type_NodeStatus,		/**< A node's status has changed.  This is usually triggered by receiving a basic_set command from the node. */
+			Type_NodeEvent,			/**< A node has triggered an event.  This is commonly caused when a node sends a Basic_Set command to the controller.  The event value is stored in the notification. */
 			Type_PollingDisabled,	/**< Polling of a node has been successfully turned off by a call to Manager::DisablePoll */
 			Type_PollingEnabled,	/**< Polling of a node has been successfully turned on by a call to Manager::EnablePoll */
 			Type_DriverReady,		/**< A driver for a PC Z-Wave controller has been added and is ready to use.  The notification will contain the controller's Home ID, which is needed to call most of the Manager methods. */
@@ -107,10 +108,10 @@ namespace OpenZWave
 		uint8 GetGroupIdx()const{ assert(Type_Group==m_type); return m_byte; } 
 
 		/** 
-		 * Get the status value of a node.  Only valid in NotificationType::Type_NodeStatus notifications. 
-		 * @return the status value.
+		 * Get the event value of a notification.  Only valid in NotificationType::Type_NodeEvent notifications. 
+		 * @return the event value.
 	     */
-		uint8 GetStatus()const{ assert(Type_NodeStatus==m_type); return m_byte; } 
+		uint8 GetEvent()const{ assert(Type_NodeEvent==m_type); return m_byte; } 
 
 		/** 
 		 * Helper function to simplify wrapping the notification class.  Should not normally need to be called.
@@ -125,7 +126,7 @@ namespace OpenZWave
 		void SetHomeAndNodeIds( uint32 const _homeId, uint8 const _nodeId ){ m_valueId = ValueID( _homeId, _nodeId ); }
 		void SetValueId( ValueID const& _valueId ){ m_valueId = _valueId; }
 		void SetGroupIdx( uint8 const _groupIdx ){ assert(Type_Group==m_type); m_byte = _groupIdx; }
-		void SetStatus( uint8 const _status ){ assert(Type_NodeStatus==m_type); m_byte = _status; }
+		void SetEvent( uint8 const _event ){ assert(Type_NodeEvent==m_type); m_byte = _event; }
 
 		NotificationType	m_type;
 		ValueID				m_valueId;
