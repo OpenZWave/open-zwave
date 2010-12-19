@@ -261,6 +261,7 @@ namespace OpenZWave
 	private:
 		bool SetConfigParam( uint8 const _param, int32 _value );
 		void RequestConfigParam( uint8 const _param );
+		void RequestAllConfigParams();
 
 	//-----------------------------------------------------------------------------
 	// Groups
