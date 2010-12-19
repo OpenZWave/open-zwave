@@ -210,6 +210,9 @@ namespace OZWForm
                         node.ID = m_notification.GetNodeId();
                         node.HomeID = m_notification.GetHomeId();
                         m_nodeList.Add(node);
+
+                        // Request refreshed config param values
+                        m_manager.RequestAllConfigParams(node.HomeID, node.ID);
                         break;
                     }
 
@@ -381,6 +384,7 @@ namespace OZWForm
             Node node = GetNode(m_homeId, m_rightClickNode);
             if (node != null)
             {
+                // Show the form
                 NodeForm dlg = new NodeForm( node );
                 dlg.ShowDialog(this);
                 dlg.Dispose();

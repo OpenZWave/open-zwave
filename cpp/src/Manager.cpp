@@ -1047,6 +1047,7 @@ string Manager::GetValueUnits
 		if( Value* value = driver->GetValue( _id ) )
 		{
 			units = value->GetUnits();
+            value->Release();
 		}
 		driver->ReleaseNodes();
 	}
@@ -1070,6 +1071,7 @@ string Manager::GetValueHelp
 		if( Value* value = driver->GetValue( _id ) )
 		{
 			help = value->GetHelp();
+            value->Release();
 		}
 		driver->ReleaseNodes();
 	}
@@ -1093,6 +1095,7 @@ int32 Manager::GetValueMin
 		if( Value* value = driver->GetValue( _id ) )
 		{
 			limit = value->GetMin();
+            value->Release();
 		}
 		driver->ReleaseNodes();
 	}
@@ -1116,6 +1119,7 @@ int32 Manager::GetValueMax
 		if( Value* value = driver->GetValue( _id ) )
 		{
 			limit = value->GetMax();
+            value->Release();
 		}
 		driver->ReleaseNodes();
 	}
@@ -1163,6 +1167,7 @@ bool Manager::IsValueSet
 		if( Value* value = driver->GetValue( _id ) )
 		{
 			res = value->IsSet();
+            value->Release();
 		}
 		driver->ReleaseNodes();
 	}
@@ -2069,6 +2074,21 @@ void Manager::RequestConfigParam
 	}
 }
 
+//-----------------------------------------------------------------------------
+// <Manager::RequestAllConfigParams>
+// Request the values of all of the known configuration parameters of a device
+//-----------------------------------------------------------------------------
+void Manager::RequestAllConfigParams
+(
+	uint32 const _homeId, 
+	uint8 const _nodeId
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		driver->RequestAllConfigParams( _nodeId );
+	}
+}
 
 //-----------------------------------------------------------------------------
 //	Groups

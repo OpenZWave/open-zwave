@@ -817,6 +817,14 @@ namespace OpenZWaveDotNet
 		 * @see SetConfigParam, ValueID, Notification
 		 */
 		void RequestConfigParam( uint32 homeId, uint8 nodeId, uint8 param ){ Manager::Get()->RequestConfigParam( homeId, nodeId, param ); }
+
+		/**
+		 * Request the values of all known configurable parameters from a device.
+		 * @param homeId The Home ID of the Z-Wave controller that manages the node.
+		 * @param _nodeId The ID of the node to configure.
+		 * @see SetConfigParam, RequestConfigParam, ValueID, Notification
+		 */
+		void RequestAllConfigParams( uint32 homeId, uint8 nodeId ){ Manager::Get()->RequestAllConfigParams( homeId, nodeId ); }
 	/*@}*/
 
 	//-----------------------------------------------------------------------------

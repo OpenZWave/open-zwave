@@ -1048,6 +1048,20 @@ void Node::RequestConfigParam
 }
 
 //-----------------------------------------------------------------------------
+// <Node::RequestAllConfigParams>
+// Request the values of all known configuration parameters from the device
+//-----------------------------------------------------------------------------
+void Node::RequestAllConfigParams
+(	
+)
+{
+	if( Configuration* cc = static_cast<Configuration*>( GetCommandClass( Configuration::StaticGetCommandClassId() ) ) )
+	{
+		cc->RequestAllParamValues();
+	}
+}
+
+//-----------------------------------------------------------------------------
 // <Node::SetLevel>
 // Helper method to set a device's basic level
 //-----------------------------------------------------------------------------
