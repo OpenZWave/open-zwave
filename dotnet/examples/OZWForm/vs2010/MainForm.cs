@@ -247,7 +247,7 @@ namespace OZWForm
                         break;
                     }
 
-                case ZWNotification.Type.NodeStatus:
+                case ZWNotification.Type.NodeEvent:
                     {
                         break;
                     }

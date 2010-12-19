@@ -32,6 +32,7 @@
 #include "Msg.h"
 #include "Node.h"
 #include "Driver.h"
+#include "Notification.h"
 #include "Log.h"
 
 #include "ValueByte.h"
@@ -93,12 +94,13 @@ bool Basic::HandleMsg
 
 	if( BasicCmd_Set == (BasicCmd)_data[0] )
 	{
-		// Level
-		Log::Write( "Received Basic set from node %d: level=%d", GetNodeId(), _data[1] );
-		if( ValueByte* value = m_level.GetInstance( _instance ) )
-		{
-			value->OnValueChanged( _data[1] );
-		}
+		// Commmand received from the node.  Handle as a notifcation event
+		Log::Write( "Received Basic set from node %d: level=%d.  Sending event notification.", GetNodeId(), _data[1] );
+
+		Notification* notification = new Notification( Notification::Type_NodeEvent );
+		notification->SetHomeAndNodeIds( GetHomeId(), GetNodeId() );
+		notification->SetEvent( _data[1] );
+		GetDriver()->QueueNotification( notification );
 		return true;
 	}
 

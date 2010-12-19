@@ -40,8 +40,9 @@
 #include "Log.h"
 
 #include "CommandClasses.h"
-#include "WakeUp.h"
+#include "ApplicationStatus.h"
 #include "ControllerReplication.h"
+#include "WakeUp.h"
 
 #include "ValueID.h"
 #include "Value.h"
@@ -2000,82 +2001,33 @@ void Driver::HandleApplicationCommandHandlerRequest
 )
 {
 	uint8 nodeId = _data[3];
-	uint8 ClassId = _data[5];
-#ifdef notdef
-	uint8 ClassIdMinor = _data[6];
-	CommandClass* pfnDeviceEventVectorClass;
-	uint8 StatusData[10];
-#endif
-	uint8 ValueFromDevice = _data[7];
+	uint8 classId = _data[5];
 
-	switch (ClassId)
+	if( ApplicationStatus::StaticGetCommandClassId() == classId )
 	{
-#ifdef notdef
-		case COMMAND_CLASS_BASIC:
-		{			
-			switch (ClassIdMinor)
-			{
-			   	case BASIC_SET:
-				case BASIC_REPORT:
-					//get the class function pointer
-					if( pfnDeviceEventVectorClass = CommandClasses::CreateCommandClass( ClassId, m_homeId, nodeId ) )
-					{
-						StatusData[0] = ClassIdMinor; StatusData[1]=ValueFromDevice;
-						pfnDeviceEventVectorClass->HandleMsg( StatusData,0x02,0x00 );
-
-						//send notification to application
-						Notification* notification = new Notification( Notification::Type_NodeStatus );
-						notification->SetHomeAndNodeIds( GetHomeId(),nodeId );
-						notification->SetStatus( StatusData[1] );
-						Manager::Get()->QueueNotification( notification );
-					}
-					break;
-			}
-			break;
-		}
-#endif
-		//case COMMAND_CLASS_HAIL:	This command class should be handled in the standard way.
-		//{			
-		//	if( (pfnDeviceEventVectorClass = CommandClasses::CreateCommandClass(ClassId, m_homeId, nodeId ) ) != NULL )
-		//	{
-		//		StatusData[0] = 0x01; StatusData[1]=ValueFromDevice;
-		//		pfnDeviceEventVectorClass->HandleMsg( StatusData,0x02,0x00);
-
-		//		//send notification to application
-		//		Notification* notification = new Notification(Notification::Type_NodeStatus);
-		//		notification->SetHomeAndNodeIds(GetHomeId(),nodeId);
-		//		notification->SetStatus(StatusData[1]);
-		//		QueueNotification( notification );
-		//	}
-		//	break;
-		//}
-		case COMMAND_CLASS_APPLICATION_STATUS:
+		//TODO: Test this class function or implement
+	}
+	else if( ControllerReplication::StaticGetCommandClassId() == classId )
+	{
+		if( m_controllerReplication && ( ControllerCommand_ReceiveConfiguration == m_controllerCommand ) )
 		{
-			break;	//TODO: Test this class function or implement
+			m_controllerReplication->HandleMsg( &_data[6], _data[4] );
+			if( m_controllerCallback )
+			{
+				m_controllerCallback( ControllerState_InProgress, m_controllerCallbackContext );
+			}		
 		}
-		case COMMAND_CLASS_CONTROLLER_REPLICATION:
+		else
 		{
-			if( m_controllerReplication && ( ControllerCommand_ReceiveConfiguration == m_controllerCommand ) )
-			{
-				m_controllerReplication->HandleMsg( &_data[6], _data[4] );
-				if( m_controllerCallback )
-				{
-					m_controllerCallback( ControllerState_InProgress, m_controllerCallbackContext );
-				}		
-			}
-			else
-			{
 
-			}
-			break;
 		}
-		default:
-		{			
-			// Allow the node to handle the message itself
-			if( Node* node = GetNodeUnsafe( nodeId)  )
-		 	{
-				node->ApplicationCommandHandler( _data );
-			}
+	}
+	else
+	{
+		// Allow the node to handle the message itself
+		if( Node* node = GetNodeUnsafe( nodeId)  )
+	 	{
+			node->ApplicationCommandHandler( _data );
 		}
 	}
 }

@@ -780,20 +780,29 @@ void Node::UpdateNodeInfo
 		bool newCommandClasses = false;
 		uint32 i;
 
+		bool afterMark = false;
 		for( i=0; i<_length; ++i )
 		{
 			if( _data[i] == 0xef )
 			{
 				// COMMAND_CLASS_MARK.  
 				// Marks the end of the list of supported command classes.  The remaining classes 
-				// are those that can be controlled by this device, which we can ignore.
-				break;
+				// are those that can be controlled by the device.  These classes are created 
+				// without values.  Messages received cause notification events instead.
+				afterMark = true;
+				continue;
 			}
 
 			if( CommandClasses::IsSupported( _data[i] ) )
             {
                 if( CommandClass* pCommandClass = AddCommandClass( _data[i] ) )
 				{
+					// If this class came after the COMMAND_CLASS_MARK, then we do not create values.
+					if( afterMark )
+					{
+						pCommandClass->SetNoValues();
+					}
+
 					// Start with an instance count of one.  If the device supports COMMMAND_CLASS_MULTI_INSTANCE
 					// then some command class instance counts will increase once the responses to the RequestState
 					// call at the end of this method have been processed.
