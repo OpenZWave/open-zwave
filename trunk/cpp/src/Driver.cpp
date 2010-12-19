@@ -3258,6 +3258,22 @@ void Driver::RequestConfigParam
 }
 
 //-----------------------------------------------------------------------------
+// <Driver::RequestAllConfigParams>
+// Request the values of all of the known configuration parameters of a device
+//-----------------------------------------------------------------------------
+void Driver::RequestAllConfigParams
+(
+	uint8 const _nodeId
+)
+{
+	if( Node* node = GetNode( _nodeId ) )
+	{
+		node->RequestAllConfigParams();
+		ReleaseNodes();
+	}
+}
+
+//-----------------------------------------------------------------------------
 // <Driver::GetNumGroups>
 // Gets the number of association groups reported by this node
 //-----------------------------------------------------------------------------

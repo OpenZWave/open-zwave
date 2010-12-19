@@ -980,7 +980,7 @@ namespace OpenZWave
 		 * @return true if the a message setting the value was sent to the device.
 		 * @see RequestConfigParam
 		 */
-		bool SetConfigParam(  uint32 const _homeId, uint8 const _nodeId, uint8 const _param, int32 _value );
+		bool SetConfigParam( uint32 const _homeId, uint8 const _nodeId, uint8 const _param, int32 _value );
 
 		/**
 		 * Request the value of a configurable parameter from a device.
@@ -997,7 +997,15 @@ namespace OpenZWave
 		 * @param _param The index of the parameter.
 		 * @see SetConfigParam, ValueID, Notification
 		 */
-		void RequestConfigParam(  uint32 const _homeId, uint8 const _nodeId, uint8 const _param );
+		void RequestConfigParam( uint32 const _homeId, uint8 const _nodeId, uint8 const _param );
+
+		/**
+		 * Request the values of all known configurable parameters from a device.
+		 * @param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * @param _nodeId The ID of the node to configure.
+		 * @see SetConfigParam, ValueID, Notification
+		 */
+		void RequestAllConfigParams( uint32 const _homeId, uint8 const _nodeId );
 	/*@}*/
 
 	//-----------------------------------------------------------------------------

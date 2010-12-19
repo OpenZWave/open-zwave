@@ -63,6 +63,23 @@ Configuration::~Configuration
 }
 
 //-----------------------------------------------------------------------------
+// <Configuration::RequestAllParamValues>
+// Fetch the current values for the known parameters.
+//-----------------------------------------------------------------------------
+void Configuration::RequestAllParamValues
+(
+)
+{
+	// Fetch the current values for the parameters.  We don't do this automatically
+	// at start-up because the parameters should only be needed if the user wants
+	// to look at the device properties.
+	for( list<Value*>::iterator it = m_params.begin(); it != m_params.end(); ++it )
+	{
+		Get( (*it)->GetID().GetIndex() );
+	}
+}
+
+//-----------------------------------------------------------------------------
 // <Configuration::ReadXML>
 // Read the saved command class data
 //-----------------------------------------------------------------------------
@@ -135,41 +152,38 @@ bool Configuration::HandleMsg
 			paramValue |= (int32)_data[i+3];
 		}
 
-		if ( Value* value = GetParam( parameter ) ) {
-			switch ( value->GetID().GetType() ) {
+		if ( Value* value = GetParam( parameter ) ) 
+		{
+			switch ( value->GetID().GetType() ) 
+			{
 				case ValueID::ValueType_Bool:
 				{
 					ValueBool* valueBool = static_cast<ValueBool*>( value );
 					valueBool->OnValueChanged( paramValue != 0 );
-					valueBool->Release();
 					break;
 				}
 				case ValueID::ValueType_Byte:
 				{
 					ValueByte* valueByte = static_cast<ValueByte*>( value );
 					valueByte->OnValueChanged( (uint8)paramValue );
-					valueByte->Release();
 					break;
 				}
 				case ValueID::ValueType_Int:
 				{
 					ValueInt* valueInt = static_cast<ValueInt*>( value );
 					valueInt->OnValueChanged( paramValue );
-					valueInt->Release();
 					break;
 				}
 				case ValueID::ValueType_List:
 				{
 					ValueList* valueList = static_cast<ValueList*>( value );
 					valueList->OnValueChanged( paramValue );
-					valueList->Release();
 					break;
 				}
 				case ValueID::ValueType_Short:
 				{
 					ValueShort* valueShort = static_cast<ValueShort*>( value );
 					valueShort->OnValueChanged( (int16)paramValue );
-					valueShort->Release();
 					break;
 				}
 				case ValueID::ValueType_Decimal:
