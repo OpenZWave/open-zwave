@@ -57,6 +57,7 @@ namespace OpenZWave
 	class Node
 	{
 		friend class Driver;
+		friend class Group;
 		friend class Association;
 		friend class AssociationCommandConfiguration;
 		friend class CommandClass;
@@ -271,6 +272,7 @@ namespace OpenZWave
 		uint8 GetMaxAssociations( uint8 const _groupIdx );
 		void AddAssociation( uint8 const _groupIdx, uint8 const _targetNodeId );
 		void RemoveAssociation( uint8 const _groupIdx, uint8 const _targetNodeId );
+		void AutoAssociate();
 
 		// The following methods are not exposed
 		Group* GetGroup( uint8 const _groupIdx );							// Get a pointer to a Group object.  This must only be called while holding the node Lock.

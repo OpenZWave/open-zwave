@@ -1558,6 +1558,33 @@ void Node::RemoveAssociation
 	}
 }
 
+//-----------------------------------------------------------------------------
+// <Node::AutoAssociate>
+// Automatically associate the controller with certain groups
+//-----------------------------------------------------------------------------
+void Node::AutoAssociate
+(
+)
+{
+	bool autoAssociate = false;
+	Options::Get()->GetOptionAsBool( "Associate", &autoAssociate );
+	if( autoAssociate )
+	{
+		// Try to automatically associate with any groups that have been flagged.
+		uint8 controllerNodeId = GetDriver()->GetNodeId();
+
+		for( map<uint8,Group*>::iterator it = m_groups.begin(); it != m_groups.end(); ++it )
+		{
+			Group* group = it->second;
+			if( group->IsAuto() && !group->Contains( controllerNodeId ) )
+			{
+				// Associate the controller into the group
+				Log::Write( "Adding the controller to group %d (%s) of node %d", group->GetIdx(), group->GetLabel().c_str(), GetNodeId() );
+				group->AddAssociation( controllerNodeId );
+			}
+		}
+	}
+}
 
 //-----------------------------------------------------------------------------
 // <Node::GetDriver>
