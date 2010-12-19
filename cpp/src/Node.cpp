@@ -417,8 +417,9 @@ void Node::ReadXML
 	str = _node->Attribute( "query_stage" );
 	if( str )
 	{
-		m_queryStage = QueryStage_Session;	// After restoring state from a file, we need to at least refresh the session and dynamic values
-		for( uint32 i=0; i<(uint32)QueryStage_Session; ++i )
+		// After restoring state from a file, we need to at least refresh the association, session and dynamic values.
+		m_queryStage = QueryStage_Associations;			
+		for( uint32 i=0; i<(uint32)QueryStage_Associations; ++i )
 		{
 			if( !strcmp( str, c_queryStageNames[i] ) )
 			{
