@@ -51,11 +51,37 @@ Group::Group
 	m_homeId( _homeId ),
 	m_nodeId( _nodeId ),
 	m_groupIdx( _groupIdx ),
-	m_maxAssociations( _maxAssociations )
+	m_maxAssociations( _maxAssociations ),
+	m_auto( false )
 {
 	char str[16];
 	snprintf( str, sizeof(str), "Group %d", m_groupIdx );
 	m_label = str;
+
+	// Auto-association by default is with group 1 or 255, with group 1 taking precedence.
+	// Group 255 is always created first, so if this is group 1, we need to turn off the
+	// auto flag in group 255.  All this messing about is to support the various behaviours
+	// of certain Cooper devices.
+	if( _groupIdx == 255 )
+	{
+		m_auto = true;
+	}
+	else if( _groupIdx == 1 )
+	{
+		m_auto = true;
+
+		// Clear the flag from Group 255, if it exists.
+		if( Driver* driver = Manager::Get()->GetDriver( m_homeId ) )
+		{
+			if( Node* node = driver->GetNodeUnsafe( m_nodeId ) )
+			{
+				if( Group* group = node->GetGroup( 255 ) )
+				{
+					group->SetAuto( false );
+				}
+			}
+		}	
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -71,9 +97,12 @@ Group::Group
 	m_homeId( _homeId ),
 	m_nodeId( _nodeId ),
 	m_groupIdx( 0 ),
-	m_maxAssociations( 0 )
+	m_maxAssociations( 0 ),
+	m_auto( false )
 {
 	int intVal;
+	char const* str;
+
 	if( TIXML_SUCCESS == _groupElement->QueryIntAttribute( "index", &intVal ) )
 	{
 		m_groupIdx = (uint8)intVal;
@@ -84,7 +113,13 @@ Group::Group
 		m_maxAssociations = (uint8)intVal;
 	}
 
-	char const* str = _groupElement->Attribute( "label" );
+	str = _groupElement->Attribute( "auto" );
+	if( str )
+	{
+		m_auto = !strcmp( str, "true" );
+	}
+
+	str = _groupElement->Attribute( "label" );
 	if( str )
 	{
 		m_label = str;
@@ -123,6 +158,7 @@ void Group::WriteXML
 	_groupElement->SetAttribute( "max_associations", str );
 
 	_groupElement->SetAttribute( "label", m_label.c_str() );
+	_groupElement->SetAttribute( "auto", m_auto ? "true" : "false" );
 
 	for( map<uint8,AssociationCommandVec>::iterator it = m_associations.begin(); it != m_associations.end(); ++it )
 	{
@@ -133,6 +169,19 @@ void Group::WriteXML
 
 		_groupElement->LinkEndChild( associationElement );
 	}
+}
+
+//-----------------------------------------------------------------------------
+// <Group::Contains>
+// Whether a group contains a particular node
+//-----------------------------------------------------------------------------
+bool Group::Contains
+(
+	uint8 const _nodeId
+)
+{
+	map<uint8,AssociationCommandVec>::iterator it = m_associations.find( _nodeId );
+	return( it != m_associations.end() );
 }
 
 //-----------------------------------------------------------------------------
