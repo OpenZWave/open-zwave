@@ -96,6 +96,7 @@ void ValueList::ReadXML
 
 	// Set the value
 	int intVal;
+	m_valueIdx = 0;
 	if ( TIXML_SUCCESS == _valueElement->QueryIntAttribute( "value", &intVal ) )
 	{
 		m_valueIdx = (int32)intVal;
