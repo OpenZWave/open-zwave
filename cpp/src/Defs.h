@@ -29,6 +29,7 @@
 #define _Defs_H					   
 
 #include <assert.h>
+#include <list>
 
 #ifdef NULL
 #undef NULL
@@ -57,7 +58,6 @@ typedef unsigned long long  uint64;
 
 typedef float				float32;
 typedef double				float64;
-
 
 // Declare the OpenZWave namespace
 namespace std {}

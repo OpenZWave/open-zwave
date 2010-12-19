@@ -50,7 +50,7 @@ enum NodeNamingCmd
 // <NodeNaming::RequestState>												   
 // Request current state from the device									   
 //-----------------------------------------------------------------------------
-void NodeNaming::RequestState
+bool NodeNaming::RequestState
 (
 	uint32 const _requestFlags
 )
@@ -64,7 +64,10 @@ void NodeNaming::RequestState
 		msg->Append( NodeNamingCmd_Get );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 		GetDriver()->SendMsg( msg );
+		return true;
 	}
+
+	return false;
 }
 
 //-----------------------------------------------------------------------------

@@ -56,7 +56,7 @@ namespace OpenZWave
 
 		virtual void ReadXML( TiXmlElement const* _ccElement );
 		virtual void WriteXML( TiXmlElement* _ccElement );
-		virtual void RequestState( uint32 const _requestFlags ){}
+		virtual bool RequestState( uint32 const _requestFlags ){ return false; }
 		
 		virtual uint8 const GetCommandClassId()const = 0;		
 		virtual string const GetCommandClassName()const = 0;
@@ -159,9 +159,9 @@ namespace OpenZWave
 			StaticRequest_Version		= 0x04
 		};
 
-		bool HasStaticRequest( uint8 _request ){ return( (m_staticRequests & _request) != 0 ); }
+		bool HasStaticRequest( uint8 _request )const{ return( (m_staticRequests & _request) != 0 ); }
 		void SetStaticRequest( uint8 _request ){ m_staticRequests |= _request; }
-		void ClearStaticRequest( uint8 _request ){ m_staticRequests &= ~_request; }
+		void ClearStaticRequest( uint8 _request );
 
 	private:
 		uint8   m_staticRequests;		

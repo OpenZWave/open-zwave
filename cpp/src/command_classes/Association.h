@@ -45,16 +45,22 @@ namespace OpenZWave
 		// From CommandClass
 		virtual void ReadXML( TiXmlElement const* _ccElement );
 		virtual void WriteXML( TiXmlElement* _ccElement );
-		virtual void RequestState( uint32 const _requestFlags );
+		virtual bool RequestState( uint32 const _requestFlags );
 		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }		
 		virtual string const GetCommandClassName()const{ return StaticGetCommandClassName(); }
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );
 
+		void RequestAllGroups();
 		void Set( uint8 const _group, uint8 const _nodeId );
 		void Remove( uint8 const _group, uint8 const _nodeId );
 
 	private:
-		Association( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
+		Association( uint32 const _homeId, uint8 const _nodeId );
+		void QueryGroup( uint8 _groupIdx );
+
+		bool			m_queryAll;			// When true, once a group has been queried, we request the next one.
+		uint8			m_numGroups;		// Number of groups supported by the device.  255 is reported by certain manufacturers and requires special handling.
+		vector<uint8>	m_pendingMembers;	// Used to build a list of group members from multiple reports
 	};
 
 } // namespace OpenZWave

@@ -31,14 +31,13 @@
 #include <string>
 #include <map>
 #include <list>
-#include <deque>
 
 #include "Defs.h"
 #include "ValueID.h"
+#include "Node.h"
 
 namespace OpenZWave
 {
-	class Node;
 	class Msg;
 	class Value;
 	class Event;
@@ -58,12 +57,13 @@ namespace OpenZWave
 		friend class ValueStore;
 		friend class ManufacturerSpecific;
 		friend class WakeUp;
+		friend class Hail;
 
 	//-----------------------------------------------------------------------------
 	// Construction / Destruction
 	//-----------------------------------------------------------------------------
 	private:
-		Driver( string const& _serialPortName );
+        Driver( string const& _serialPortName );
 		virtual ~Driver();
 
 		void Start();
@@ -218,9 +218,13 @@ namespace OpenZWave
 	//	Retrieving Node information
 	//-----------------------------------------------------------------------------
 	private:
-		void AddNodeInfoRequest( uint8 const _nodeId );
-		void RemoveNodeInfoRequest();
-		void RequestNodeState( uint8 const _nodeId, uint32 const _flags );
+		void InitNode( uint8 const _nodeId );
+		void AddNodeQuery( uint8 const _nodeId, Node::QueryStage const _stage );
+		void RemoveNodeQuery( uint8 const _nodeId );
+		uint8 GetCurrentNodeQuery();
+
+		void InitAllNodes();												// Delete all nodes and fetch the data from the Z-Wave network again.
+		void RequestNodeState( uint8 const _nodeId );
 		
 		bool IsNodeListeningDevice( uint8 const _nodeId );
 		bool IsNodeRoutingDevice( uint8 const _nodeId );
@@ -246,14 +250,13 @@ namespace OpenZWave
 		void SetNodeName( uint8 const _nodeId, string const& _nodeName );
 		void SetNodeLocation( uint8 const _nodeId, string const& _location );
 		void SetNodeLevel( uint8 const _nodeId, uint8 const _level );
+        void SetNodeOn( uint8 const _nodeId );
+        void SetNodeOff( uint8 const _nodeId );
 
 		Value* GetValue( ValueID const& _id );
 
-		void RefreshNodeInfo();												// Delete all nodes and fetch the data from the Z-Wave network again.
-		uint8 GetNodeInfoRequest();
-
-		deque<uint8>			m_infoQueue;								// Queue holding nodes that we wish to interogate for setup details
-		Mutex*					m_infoMutex;								// Serialize access to the info queue				
+		list<uint8>				m_nodeQueries;								// Queue holding nodes that we wish to interogate for setup details
+		Mutex*					m_queryMutex;								// Serialize access to the info queue				
 
 	//-----------------------------------------------------------------------------
 	// Controller commands
@@ -331,6 +334,7 @@ namespace OpenZWave
 		// The public interface is provided via the wrappers in the Manager class
 		uint8 GetNumGroups( uint8 const _nodeId );
 		uint32 GetAssociations( uint8 const _nodeId, uint8 const _groupIdx, uint8** o_associations );
+		uint8 GetMaxAssociations( uint8 const _nodeId, uint8 const _groupIdx );
 		void AddAssociation( uint8 const _nodeId, uint8 const _groupIdx, uint8 const _targetNodeId );
 		void RemoveAssociation( uint8 const _nodeId, uint8 const _groupIdx, uint8 const _targetNodeId );
 

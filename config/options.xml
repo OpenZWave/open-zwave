@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Options>
+  <Option name="logging" value="true" />
+  <Option name="Associate" value="true" />
+  <Option name="NotifyTransactions" value="false" />
+</Options>

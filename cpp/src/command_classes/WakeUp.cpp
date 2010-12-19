@@ -97,7 +97,7 @@ void WakeUp::Init
 // <WakeUp::RequestState>
 // Nothing to do for wakeup
 //-----------------------------------------------------------------------------
-void WakeUp::RequestState
+bool WakeUp::RequestState
 (
 	uint32 const _requestFlags
 )
@@ -112,7 +112,10 @@ void WakeUp::RequestState
 		msg->Append( WakeUpCmd_IntervalGet );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 		GetDriver()->SendMsg( msg );
+		return true;
 	}
+
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -151,7 +154,7 @@ bool WakeUp::HandleMsg
 			{
 				if( Node* node = GetNodeUnsafe() )
 				{
-					node->RequestEntireNodeState();
+					node->QueryStageComplete( Node::QueryStage_WakeUp );
 				}
 				m_init = false;
 			}
@@ -231,10 +234,7 @@ void WakeUp::SetAwake
 		// If the device is marked for polling, request the current state
 		if( m_pollRequired )
 		{
-			if( Node* node = GetNodeUnsafe() )
-			{
-				node->RequestState( RequestFlag_Dynamic );
-			}
+			GetDriver()->AddNodeQuery( GetNodeId(), Node::QueryStage_Dynamic );
 			m_pollRequired = false;
 		}
 			
@@ -259,15 +259,18 @@ void WakeUp::QueueMsg
 	// device does not wake up very often.  Deleting the original and
 	// adding the copy to the end avoids problems with the order of
 	// commands such as on and off.
-	for( list<Msg*>::iterator it = m_pendingQueue.begin(); it != m_pendingQueue.end(); ++it )
+	list<Msg*>::iterator it = m_pendingQueue.begin();
+	while( it != m_pendingQueue.end() )
 	{
 		if( *(*it) == *_msg )
 		{
-			list<Msg*>::iterator duplicate = it--;
-
 			// Duplicate found
-			delete *duplicate;
-			m_pendingQueue.erase( duplicate );
+			delete *it;
+			m_pendingQueue.erase( it++ );
+		}
+		else
+		{
+			++it;
 		}
 	}
 	m_pendingQueue.push_back( _msg );
@@ -285,7 +288,6 @@ void WakeUp::SendPending
 	m_awake = true;
 
 	m_mutex.Lock();
-
 	list<Msg*>::iterator it = m_pendingQueue.begin();
 	while( it != m_pendingQueue.end() )
 	{	
@@ -293,11 +295,19 @@ void WakeUp::SendPending
 		GetDriver()->SendMsg( msg );
 		it = m_pendingQueue.erase( it );
 	}
-
 	m_mutex.Release();
 
-	// Send the device back to sleep
-	if( m_notification )
+	// Send the device back to sleep, unless we have outstanding queries.
+	bool sendToSleep = m_notification;
+	if( Node* node = GetNodeUnsafe() )
+	{
+		if( !node->AllQueriesCompleted() )
+		{
+			sendToSleep = false;
+		}
+	}
+
+	if( sendToSleep )
 	{
 		m_notification = false;
 		Msg* msg = new Msg( "Wakeup - No More Information", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );

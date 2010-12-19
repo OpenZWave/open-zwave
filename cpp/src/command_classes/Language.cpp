@@ -54,7 +54,7 @@ enum
 // <Language::RequestState>												   
 // Request current state from the device									   
 //-----------------------------------------------------------------------------
-void Language::RequestState
+bool Language::RequestState
 (
 	uint32 const _requestFlags
 )
@@ -68,7 +68,10 @@ void Language::RequestState
 		msg->Append( LanguageCmd_Get );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 		GetDriver()->SendMsg( msg );
+		return true;
 	}
+
+	return false;
 }
 
 //-----------------------------------------------------------------------------

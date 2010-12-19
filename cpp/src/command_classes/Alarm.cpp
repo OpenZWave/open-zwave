@@ -47,7 +47,7 @@ enum AlarmCmd
 // <Alarm::RequestState>												   
 // Request current state from the device									   
 //-----------------------------------------------------------------------------
-void Alarm::RequestState
+bool Alarm::RequestState
 (
 	uint32 const _requestFlags
 )
@@ -61,7 +61,10 @@ void Alarm::RequestState
 		msg->Append( AlarmCmd_Get );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 		GetDriver()->SendMsg( msg );
+		return true;
 	}
+
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -81,11 +84,11 @@ bool Alarm::HandleMsg
 		Log::Write( "Received Alarm report from node %d: type=%d, level=%d", GetNodeId(), _data[1], _data[2] );
 
 		ValueByte* value;
-		if( value = m_type.GetInstance( _instance ) )
+		if( ( value = m_type.GetInstance( _instance ) ) != NULL )
 		{
 			value->OnValueChanged( _data[1] );
 		}	
-		if( value = m_level.GetInstance( _instance ) )
+		if( ( value = m_level.GetInstance( _instance ) ) != NULL )
 		{
 			value->OnValueChanged( _data[2] );
 		}

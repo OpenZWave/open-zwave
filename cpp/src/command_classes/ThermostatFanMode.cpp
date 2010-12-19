@@ -60,11 +60,12 @@ static string const c_modeName[] =
 // <ThermostatFanMode::RequestState>
 // Get the static thermostat fan mode details from the device
 //-----------------------------------------------------------------------------
-void ThermostatFanMode::RequestState
+bool ThermostatFanMode::RequestState
 (
 	uint32 const _requestFlags
 )
 {
+	bool requests = false;
 	if( ( _requestFlags & RequestFlag_Static ) && HasStaticRequest( StaticRequest_Values ) )
 	{
 		// Request the supported modes
@@ -75,6 +76,7 @@ void ThermostatFanMode::RequestState
 		msg->Append( ThermostatFanModeCmd_SupportedGet );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 		GetDriver()->SendMsg( msg );
+		requests = true;
 	}
 
 	if( _requestFlags & RequestFlag_Dynamic )
@@ -87,7 +89,10 @@ void ThermostatFanMode::RequestState
 		msg->Append( ThermostatFanModeCmd_Get );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 		GetDriver()->SendMsg( msg );
+		requests = true;
 	}
+
+	return requests;
 }
 
 //-----------------------------------------------------------------------------

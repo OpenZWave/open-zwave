@@ -29,6 +29,8 @@
 #include "Log.h"
 #include "MutexImpl.h"
 
+#include <errno.h>
+
 using namespace OpenZWave;
 
 //-----------------------------------------------------------------------------
@@ -106,8 +108,8 @@ void MutexImpl::Release
 	err = pthread_mutex_unlock( &m_criticalSection );
 	if( err != 0 )
 	{
-		fprintf( stderr, "mutex_unlock mutex %08x err=%d",
-			 &m_criticalSection, err );
+		fprintf( stderr, "mutex_unlock mutex %08x err=%d %d",
+			 &m_criticalSection, err, errno );
 		fflush( stderr );
 	}
 }

@@ -98,11 +98,7 @@ bool ValueStore::RemoveValue
 	map<ValueID,Value*>::iterator it = m_values.find( _id );
 	if( it != m_values.end() )
 	{
-		// Value found, so remove it
-		it->second->Release();
-		m_values.erase( it );
-
-		// Notify the watchers of the new value
+		// First notify the watchers
 		if( Driver* driver = Manager::Get()->GetDriver( _id.GetHomeId() ) )
 		{
 			Notification* notification = new Notification( Notification::Type_ValueRemoved );
@@ -110,11 +106,51 @@ bool ValueStore::RemoveValue
 			driver->QueueNotification( notification ); 
 		}
 
+		// Now release and remove the value from the store
+		it->second->Release();
+		m_values.erase( it );
+
 		return true;
 	}
 
 	// Value not found in the store
 	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <ValueStore::RemoveCommandClassValues>
+// Remove all the values associated with a command class from the store
+//-----------------------------------------------------------------------------
+void ValueStore::RemoveCommandClassValues
+(
+	uint8 const _commandClassId
+)
+{
+	map<ValueID,Value*>::iterator it = m_values.begin();
+	while( it != m_values.end() )
+	{
+		ValueID const& valueId = it->first;
+		if( _commandClassId == valueId.GetCommandClassId() )
+		{
+			// The value belongs to the specified command class
+			
+			// First notify the watchers
+			if( Driver* driver = Manager::Get()->GetDriver( valueId.GetHomeId() ) )
+			{
+				Notification* notification = new Notification( Notification::Type_ValueRemoved );
+				notification->SetValueId( valueId );
+				driver->QueueNotification( notification ); 
+			}
+
+			// Now release and remove the value from the store
+			it->second->Release();
+			m_values.erase( it++ );
+		}
+		else
+		{
+			++it;
+		}
+	}
 }
 
 //-----------------------------------------------------------------------------

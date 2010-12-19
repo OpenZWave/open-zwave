@@ -11,6 +11,12 @@ namespace OZWForm
 {
     public partial class MainForm : Form
     {
+        static private ZWOptions m_options = null;
+        static public ZWOptions Options
+        {
+            get { return m_options; }
+        }
+
         static private ZWManager m_manager = null;
         static public ZWManager Manager
         {
@@ -136,14 +142,22 @@ namespace OZWForm
             bs.DataSource = m_nodeList;
             NodeGridView.DataSource = bs;
 
+            // Create the Options
+            m_options = new ZWOptions();
+            m_options.Create(@"D:\Projects\OpenZWave\config\", @"", @"");
+
+            // Add any app specific options here...
+
+            // Lock the options
+            m_options.Lock();
 
             // Create the OpenZWave Manager
             m_manager = new ZWManager();
-            m_manager.Create(@"F:\Projects\OpenZWave\config\", @"");
+            m_manager.Create();
             m_manager.OnNotification += new ManagedNotificationsHandler(NotificationHandler);
 
             // Add a driver
-            m_manager.AddDriver(@"\\.\COM3");
+            m_manager.AddDriver(@"\\.\COM4");
         }
 
         public void NotificationHandler(ZWNotification notification)

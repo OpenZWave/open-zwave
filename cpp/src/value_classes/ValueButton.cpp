@@ -48,7 +48,7 @@ ValueButton::ValueButton
 	uint8 const _index,
 	string const& _label
 ):
-	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Bool, _label, "", false, true ),
+    Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Button, _label, "", false, true ),
 	m_pressed( false )
 {
 }

@@ -28,6 +28,7 @@
 #include "Node.h"
 #include "Defs.h"
 #include "Group.h"
+#include "Options.h"
 #include "Manager.h"
 #include "Driver.h"
 #include "Notification.h"
@@ -39,13 +40,16 @@
 
 #include "CommandClasses.h"
 #include "CommandClass.h"
+#include "Association.h"
 #include "Basic.h"
 #include "Configuration.h"
 #include "ControllerReplication.h"
+#include "ManufacturerSpecific.h"
 #include "MultiInstance.h"
 #include "WakeUp.h"
 #include "NodeNaming.h"
 #include "Version.h"
+#include "SwitchAll.h"
 
 #include "ValueID.h"
 #include "Value.h"
@@ -69,6 +73,21 @@ bool Node::s_deviceClassesLoaded = false;
 map<uint8,string> Node::s_basicDeviceClasses;
 map<uint8,Node::GenericDeviceClass*> Node::s_genericDeviceClasses;
 
+static char const* c_queryStageNames[] = 
+{
+	"None",
+	"ProtocolInfo",
+	"WakeUp",
+	"NodeInfo",
+	"ManufacturerSpecific",
+	"Versions",
+	"Instances",
+	"Static",
+	"Associations",
+	"Session",
+	"Dynamic",
+	"Complete"
+};
 
 //-----------------------------------------------------------------------------
 // <Node::Node>
@@ -79,12 +98,13 @@ Node::Node
 	uint32 const _homeId, 
 	uint8 const _nodeId
 ):
-	m_protocolInfoReceived( false ),
-	m_nodeInfoReceived( false ),
 	m_listening( true ),	// assume we start out listening
 	m_homeId( _homeId ),
 	m_nodeId( _nodeId ),
-	m_values( new ValueStore() )
+	m_values( new ValueStore() ),
+	m_queryStage( QueryStage_None ),
+	m_queryPending( false ),
+	m_queryRetries( 0 )
 {
 }
 
@@ -117,6 +137,272 @@ Node::~Node
 }
 
 //-----------------------------------------------------------------------------
+// <Node::AdvanceQueries>
+// Proceed through the initialisation process
+//-----------------------------------------------------------------------------
+void Node::AdvanceQueries
+(
+)
+{
+	// For OpenZWave to discover everything about a node, we have to follow a certain
+	// order of queries, because the results of one stage may affect what is requested
+	// in the next stage.  The stage is saved with the node data, so that any incomplete
+	// queries can be restarted the next time the application runs.
+	// The individual command classes also store some state as to whether they have
+	// had a response to certain queries.  This state is initilized by the SetStaticRequests
+	// call in QueryStage_None.  It is also saved, so we do not need to request state 
+	// from every commaned class if some have previously responded. 
+	while( !m_queryPending )
+	{
+		switch( m_queryStage )
+		{
+			case QueryStage_None:
+			{
+				// Init the node query process
+				m_queryStage = QueryStage_ProtocolInfo;
+				m_queryRetries = 0;
+				break;
+			}
+			case QueryStage_ProtocolInfo:
+			{
+				Log::Write( "Node %d: QueryStage_ProtocolInfo", m_nodeId );
+				Msg* msg = new Msg( "Get Node Protocol Info", m_nodeId, REQUEST, FUNC_ID_ZW_GET_NODE_PROTOCOL_INFO, false );
+				msg->Append( m_nodeId );	
+				GetDriver()->SendMsg( msg ); 
+				m_queryPending = true;
+				break;
+			}
+			case QueryStage_WakeUp:
+			{
+				// For sleeping devices other than controllers, we need to defer the usual requests until
+				// we have told the device to send it's wake-up notifications to the PC controller.
+				WakeUp* wakeUp = static_cast<WakeUp*>( GetCommandClass( WakeUp::StaticGetCommandClassId() ) );
+				if( wakeUp && ( GetBasic() >= 0x03 ) )
+				{
+					Log::Write( "Node %d: QueryStage_WakeUp", m_nodeId );
+					wakeUp->Init();
+					m_queryPending = true;
+				}
+				else
+				{
+					m_queryStage = QueryStage_NodeInfo;
+					m_queryRetries = 0;
+				}
+				break;
+			}
+			case QueryStage_NodeInfo:
+			{
+				Log::Write( "Node %d: QueryStage_NodeInfo", m_nodeId );
+				Msg* msg = new Msg( "Request Node Info", m_nodeId, REQUEST, FUNC_ID_ZW_REQUEST_NODE_INFO, false, true, FUNC_ID_ZW_APPLICATION_UPDATE );
+				msg->Append( m_nodeId );	
+				GetDriver()->SendMsg( msg ); 
+				m_queryPending = true;
+				break;
+			}
+			case QueryStage_ManufacturerSpecific:
+			{
+				// Manufacturer Specific data is requested before the other command class data so 
+				// that we can modify the supported command classes list through the product XML files.
+				ManufacturerSpecific* cc = static_cast<ManufacturerSpecific*>( GetCommandClass( ManufacturerSpecific::StaticGetCommandClassId() ) );
+				if( cc  )
+				{
+					Log::Write( "Node %d: QueryStage_ManufacturerSpecific", m_nodeId );
+					m_queryPending = cc->RequestState( CommandClass::RequestFlag_Static );
+				}
+				if( !m_queryPending )
+				{
+					m_queryStage = QueryStage_Versions;
+					m_queryRetries = 0;
+				}
+				break;
+			}
+			case QueryStage_Versions:
+			{
+				Version* vcc = static_cast<Version*>( GetCommandClass( Version::StaticGetCommandClassId() ) );
+				if( vcc )
+				{
+					Log::Write( "Node %d: QueryStage_Versions", m_nodeId );
+
+					for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
+					{
+						// Get the command class version data, one at a time
+						if( vcc->RequestCommandClassVersion( it->second ) )
+						{
+							m_queryPending = true;
+							break;
+						}
+					}
+				}
+				if( !m_queryPending )
+				{
+					m_queryStage = QueryStage_Instances;
+					m_queryRetries = 0;
+				}
+				break;
+			}
+			case QueryStage_Instances:
+			{
+				MultiInstance* micc = static_cast<MultiInstance*>( GetCommandClass( MultiInstance::StaticGetCommandClassId() ) );
+				if( micc )
+				{
+					Log::Write( "Node %d: QueryStage_Instances", m_nodeId );
+
+					// Get the instance count for each command class one at a time
+					for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
+					{
+						if( micc->RequestInstances( it->second ) )
+						{
+							m_queryPending = true;
+							break;
+						}
+					}
+				}
+				if( !m_queryPending )
+				{
+					m_queryStage = QueryStage_Static;
+					m_queryRetries = 0;
+				}
+				break;
+			}
+			case QueryStage_Static:
+			{
+				// Request the static values from the command classes in turn
+				for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
+				{
+					m_queryPending |= it->second->RequestState( CommandClass::RequestFlag_Static );
+				}
+
+				if( m_queryPending )
+				{
+					Log::Write( "Node %d: QueryStage_Static", m_nodeId );
+				}
+				else
+				{
+					m_queryStage = QueryStage_Associations;
+					m_queryRetries = 0;
+				}
+				break;
+			}
+			case QueryStage_Associations:
+			{
+				Association* acc = static_cast<Association*>( GetCommandClass( Association::StaticGetCommandClassId() ) );
+				if( acc )
+				{
+					Log::Write( "Node %d: QueryStage_Associations", m_nodeId );
+					acc->RequestAllGroups();
+					m_queryPending = true;
+				}
+				else
+				{
+					m_queryStage = QueryStage_Session;
+					m_queryRetries = 0;
+				}
+				break;
+			}
+			case QueryStage_Session:
+			{
+				// Request the session values from the command classes in turn
+				Log::Write( "Node %d: QueryStage_Session", m_nodeId );
+				for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
+				{
+					it->second->RequestState( CommandClass::RequestFlag_Session );
+				}
+				m_queryStage = QueryStage_Dynamic;
+				m_queryRetries = 0;
+				break;
+			}
+			case QueryStage_Dynamic:
+			{
+				// Request the dynamic values from the node, that can change at any time
+				Log::Write( "Node %d: QueryStage_Dynamic", m_nodeId );
+				for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
+				{
+					it->second->RequestState( CommandClass::RequestFlag_Dynamic );
+				}
+				m_queryStage = QueryStage_Complete;
+				m_queryRetries = 0;
+				break;
+			}
+			case QueryStage_Complete:
+			{
+				// All done
+				Log::Write( "Node %d: QueryStage_Complete", m_nodeId );
+				return;
+			}
+			default:
+			{
+				break;
+			}
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <Node::QueryStageComplete>
+// We are done with a stage in the query process
+//-----------------------------------------------------------------------------
+void Node::QueryStageComplete
+(
+	QueryStage const _stage
+)
+{
+	// Check that we are actually on the specified stage
+	if( _stage != m_queryStage )
+	{
+		return;
+	}
+
+	// Move to the next stage
+	m_queryPending = false;
+	m_queryStage = (QueryStage)((uint32)m_queryStage + 1);
+	m_queryRetries = 0;
+}
+
+//-----------------------------------------------------------------------------
+// <Node::QueryStageRetry>
+// Retry a stage up to the specified maximum
+//-----------------------------------------------------------------------------
+void Node::QueryStageRetry
+(
+	QueryStage const _stage,
+	uint8 const _maxAttempts // = 0
+)
+{
+	// Check that we are actually on the specified stage
+	if( _stage != m_queryStage )
+	{
+		return;
+	}
+
+	++m_queryRetries;
+	if( _maxAttempts && ( m_queryRetries >= _maxAttempts ) )
+	{
+		// We've retried too many times.  Move to the next stage
+		QueryStageComplete( _stage );
+	}
+	else
+	{
+		m_queryPending = false;
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <Node::GoBackToQueryStage>
+// Set the query stage (but only to an earlier stage)
+//-----------------------------------------------------------------------------
+void Node::GoBackToQueryStage
+(
+	QueryStage const _stage
+)
+{
+	if( (int)_stage < (int)m_queryStage )
+	{
+		m_queryStage = _stage;
+		m_queryPending = false;
+	}
+}
+
+//-----------------------------------------------------------------------------
 // <Node::ReadXML>
 // Read the node config from XML
 //-----------------------------------------------------------------------------
@@ -128,7 +414,29 @@ void Node::ReadXML
 	char const* str;
 	int intVal;
 
-	m_protocolInfoReceived = true;
+	str = _node->Attribute( "query_stage" );
+	if( str )
+	{
+		m_queryStage = QueryStage_Session;	// After restoring state from a file, we need to at least refresh the session and dynamic values
+		for( uint32 i=0; i<(uint32)QueryStage_Session; ++i )
+		{
+			if( !strcmp( str, c_queryStageNames[i] ) )
+			{
+				m_queryStage = (QueryStage)i;
+				break;
+			}
+		}
+	}
+
+	if( ProtocolInfoReceived() )
+	{
+		// Notify the watchers of the protocol info.
+		// We do the notification here so that it gets into the queue ahead of
+		// any other notifications generated by adding command classes etc.
+		Notification* notification = new Notification( Notification::Type_NodeProtocolInfo );
+		notification->SetHomeAndNodeIds( m_homeId, m_nodeId );
+		GetDriver()->QueueNotification( notification );
+	}
 
 	str = _node->Attribute( "name" );
 	if( str )
@@ -197,18 +505,6 @@ void Node::ReadXML
 		m_security = (uint8)strtol( str, &p, 0 );
 	}
 
-	m_nodeInfoReceived = false;
-	str = _node->Attribute( "node_info" );
-	if( str )
-	{
-		m_nodeInfoReceived = !strcmp( str, "true" );
-	}
-
-	// Notify the watchers of the protocol info
-	Notification* notification = new Notification( Notification::Type_NodeProtocolInfo );
-	notification->SetHomeAndNodeIds( m_homeId, m_nodeId );
-	GetDriver()->QueueNotification( notification );
-
 	// Read the manufacturer info and create the command classes
 	TiXmlElement const* child = _node->FirstChildElement();
 	while( child )
@@ -257,7 +553,7 @@ void Node::ReadXML
 				}
 
 				// Notify the watchers of the name changes
-				notification = new Notification( Notification::Type_NodeNaming );
+				Notification* notification = new Notification( Notification::Type_NodeNaming );
 				notification->SetHomeAndNodeIds( m_homeId, m_nodeId );
 				GetDriver()->QueueNotification( notification );
 			}
@@ -290,17 +586,33 @@ void Node::ReadCommandClassesXML
 			{
 				uint8 id = (uint8)intVal;
 
-				// See if it already exists
-				CommandClass* cc = GetCommandClass( id );
-				if( NULL == cc )
+				// Check whether this command class is to be removed (product XMLs might
+				// request this if a class is not implemented properly by the device)
+				bool remove = false;
+				char const* action = ccElement->Attribute( "action" );
+				if( action && !strcasecmp( action, "remove" ) )
 				{
-					// It does not, so we create it
-					cc = AddCommandClass( id );
-				}
+					remove = true;
+				}		
 
-				if( NULL != cc )
+				CommandClass* cc = GetCommandClass( id );
+				if( remove )
+				{	
+					// Remove support for the command class
+					RemoveCommandClass( id );
+				}
+				else
 				{
-					cc->ReadXML( ccElement );
+					if( NULL == cc )
+					{
+						// Command class support does not exist yet, so we create it
+						cc = AddCommandClass( id );
+					}
+
+					if( NULL != cc )
+					{
+						cc->ReadXML( ccElement );
+					}
 				}
 			}
 		}
@@ -352,7 +664,7 @@ void Node::WriteXML
 	snprintf( str, 32, "0x%.2x", m_security );
 	nodeElement->SetAttribute( "security", str );
 
-	nodeElement->SetAttribute( "node_info", m_nodeInfoReceived ? "true" : "false" );
+	nodeElement->SetAttribute( "query_stage", c_queryStageNames[m_queryStage] );
 
 	// Write the manufacturer and product data in the same format
 	// as used in the ManyfacturerSpecfic.xml file.  This will 
@@ -391,15 +703,18 @@ void Node::UpdateProtocolInfo
 	uint8 const* _data
 )
 {
-	// Remove the protocol info request from the queue
-	GetDriver()->RemoveNodeInfoRequest();
-
-	if( m_protocolInfoReceived )
+	if( ProtocolInfoReceived() )
 	{
 		// We already have this info
 		return;
 	}
-	m_protocolInfoReceived = true;
+
+	// Notify the watchers of the protocol info.
+	// We do the notification here so that it gets into the queue ahead of
+	// any other notifications generated by adding command classes etc.
+	Notification* notification = new Notification( Notification::Type_NodeProtocolInfo );
+	notification->SetHomeAndNodeIds( m_homeId, m_nodeId );
+	GetDriver()->QueueNotification( notification );
 
 	// Capabilities
 	m_listening = (( _data[0] & 0x80 ) != 0 );
@@ -443,17 +758,7 @@ void Node::UpdateProtocolInfo
 		}
 	}
 
-	// There may be optional command classes in addition to the mandatory ones,  
-	// so we request the command class list.  We will wait until we handle the 
-	// response in Node::UpdateNodeInfo before requesting the node state.
-	Msg* msg = new Msg( "Request Node Info", m_nodeId, REQUEST, FUNC_ID_ZW_REQUEST_NODE_INFO, false, true, FUNC_ID_ZW_APPLICATION_UPDATE );
-	msg->Append( m_nodeId );	
-	GetDriver()->SendMsg( msg ); 
-
-	// Notify the watchers of the protocol info
-	Notification* notification = new Notification( Notification::Type_NodeProtocolInfo );
-	notification->SetHomeAndNodeIds( m_homeId, m_nodeId );
-	GetDriver()->QueueNotification( notification );
+	QueryStageComplete( QueryStage_ProtocolInfo );
 }
 
 //-----------------------------------------------------------------------------
@@ -466,10 +771,8 @@ void Node::UpdateNodeInfo
 	uint8 const _length
 )
 {
-	if( !m_nodeInfoReceived )
+	if( !NodeInfoReceived() )
 	{
-		m_nodeInfoReceived = true;
-
 		// Add the command classes specified by the device
 		Log::Write( "Optional command classes for node %d:", m_nodeId );
 		
@@ -486,15 +789,21 @@ void Node::UpdateNodeInfo
 				break;
 			}
 
-			if( CommandClass* commandClass = AddCommandClass( _data[i] ) )
-			{
-				// Start with an instance count of one.  If the device supports COMMMAND_CLASS_MULTI_INSTANCE
-				// then some command class instance counts will increase once the responses to the RequestState
-				// call at the end of this method have been processed.
-				commandClass->SetInstances( 1 );
-
-				Log::Write( "  %s", commandClass->GetCommandClassName().c_str() );
-				newCommandClasses = true;
+			if( CommandClasses::IsSupported( _data[i] ) )
+            {
+                if( CommandClass* pCommandClass = AddCommandClass( _data[i] ) )
+				{
+					// Start with an instance count of one.  If the device supports COMMMAND_CLASS_MULTI_INSTANCE
+					// then some command class instance counts will increase once the responses to the RequestState
+					// call at the end of this method have been processed.
+                    pCommandClass->SetInstances( 1 );
+					newCommandClasses = true;
+					Log::Write( "  %s", pCommandClass->GetCommandClassName().c_str() );
+                }
+            }
+            else
+            {
+                Log::Write( "Node(%d)::CommandClass 0x%.2x - NOT REQUIRED", m_nodeId, _data[i] );
 			}
 		}
 
@@ -505,22 +814,12 @@ void Node::UpdateNodeInfo
 		}
 
 		SetStaticRequests();
-
-		// For sleeping devices other than controllers, we need to defer the usual requests until
-		// we have told the device to send it's wake-up notifications to the PC controller.
-		WakeUp* wakeUp = static_cast<WakeUp*>( GetCommandClass( WakeUp::StaticGetCommandClassId() ) );
-		if( wakeUp && ( GetBasic() >= 0x03 ) )
-		{
-			wakeUp->Init();
-		}
-		else
-		{
-			RequestEntireNodeState();
-		}
+		QueryStageComplete( QueryStage_NodeInfo );
 	}
 	else
 	{
-		RequestState( CommandClass::RequestFlag_Dynamic );
+		// We probably only need to do the dynamic stuff
+		GetDriver()->AddNodeQuery( m_nodeId, QueryStage_Dynamic );
 	}
 }
 
@@ -666,91 +965,32 @@ CommandClass* Node::AddCommandClass
 }
 
 //-----------------------------------------------------------------------------
-// <Node::RequestEntireNodeState>
-// Request the instance count for each command class
+// <Node::RemoveCommandClass>
+// Remove a command class from the node
 //-----------------------------------------------------------------------------
-void Node::RequestEntireNodeState
+void Node::RemoveCommandClass
 ( 
+	uint8 const _commandClassId
 )
 {
-	// Request the state of all the node's command classes.  We do this in
-	// separate calls so that the static values are in place when the dynamic
-	// stuff comes in.
-	
-	// This is essential for things like thermostat modes, where we need to 
-	// get the list of supported modes before receiving the current state.  
-	
-	// If the node supports the multi-instance command class, we hold off 
-	// requesting the non-static state until we receive the instance count 
-	// for each command class.
-
-	RequestVersions();
-	RequestInstances();
-	
-	RequestState( CommandClass::RequestFlag_Static );
-
-	if( NULL == GetCommandClass( MultiInstance::StaticGetCommandClassId() ) )
+	map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.find( _commandClassId );
+	if( it == m_commandClassMap.end() )
 	{
-		RequestState( CommandClass::RequestFlag_Session | CommandClass::RequestFlag_Dynamic );
+		// Class is not found
+		return;
 	}
-}
 
-//-----------------------------------------------------------------------------
-// <Node::RequestInstances>
-// Request the instance count for each command class
-//-----------------------------------------------------------------------------
-void Node::RequestInstances
-( 
-)const
-{
-	if( MultiInstance* pMultiInstance = static_cast<MultiInstance*>( GetCommandClass( MultiInstance::StaticGetCommandClassId() ) ) )
+	// Remove all the values associated with this class
+	if( ValueStore* store = GetValueStore() )
 	{
-		for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
-		{
-			CommandClass* cc = it->second;
-			if( cc->HasStaticRequest( CommandClass::StaticRequest_Instances ) )
-			{
-				pMultiInstance->RequestInstances( cc );
-			}
-		}
+		store->RemoveCommandClassValues( _commandClassId );
 	}
-}
 
-//-----------------------------------------------------------------------------
-// <Node::RequestVersions>
-// Request the version number of each command class
-//-----------------------------------------------------------------------------
-void Node::RequestVersions
-( 
-)const
-{
-	if( Version* version = static_cast<Version*>( GetCommandClass( Version::StaticGetCommandClassId() ) ) )
-	{
-		for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
-		{
-			CommandClass* cc = it->second;
-			if( cc->HasStaticRequest( CommandClass::StaticRequest_Version ) )
-			{
-				version->RequestCommandClassVersion( cc );
-			}
-		}
-	}
-}
+	// Destroy the command class object and remove it from our map
+	Log::Write( "Node(%d)::RemoveCommandClass - Removed support for %s", m_nodeId, it->second->GetCommandClassName().c_str() );
 
-//-----------------------------------------------------------------------------
-// <Node::RequestState>
-// Request the current state of all dynamic values in the node
-//-----------------------------------------------------------------------------
-void Node::RequestState
-( 
-	uint32 const _requestFlags
-)
-{
-	// Request state from all the command classes
-	for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
-	{
-		it->second->RequestState( _requestFlags );
-	}
+	delete it->second;
+	m_commandClassMap.erase( it );
 }
 
 //-----------------------------------------------------------------------------
@@ -817,6 +1057,46 @@ void Node::SetLevel
 	{
 		cc->Set( adjustedLevel );
 	}
+}
+
+//-----------------------------------------------------------------------------
+// <Node::SetNodeOn>
+// Helper method to set a device to be on
+//-----------------------------------------------------------------------------
+void Node::SetNodeOn
+(
+)
+{
+    // Level is 0-99, with 0 = off and 99 = fully on. 255 = turn on at last level.
+
+    if( Basic* cc = static_cast<Basic*>( GetCommandClass( Basic::StaticGetCommandClassId() ) ) )
+    {
+        cc->Set( 99 );
+    }
+    else if (SwitchAll *sa = static_cast<SwitchAll*>( GetCommandClass( SwitchAll::StaticGetCommandClassId() ) ) )
+    {
+        sa->On();
+    }
+}
+
+//-----------------------------------------------------------------------------
+// <Node::SetNodeOff>
+// Helper method to set a device to be off
+//-----------------------------------------------------------------------------
+void Node::SetNodeOff
+(
+)
+{
+    // Level is 0-99, with 0 = off and 99 = fully on. 255 = turn on at last level.
+
+    if( Basic* cc = static_cast<Basic*>( GetCommandClass( Basic::StaticGetCommandClassId() ) ) )
+    {
+        cc->Set( 0 );
+    }
+    else if (SwitchAll *sa = static_cast<SwitchAll*>( GetCommandClass( SwitchAll::StaticGetCommandClassId() ) ) )
+    {
+        sa->Off();
+    }
 }
 
 //-----------------------------------------------------------------------------
@@ -1228,6 +1508,24 @@ uint32 Node::GetAssociations
 }
 
 //-----------------------------------------------------------------------------
+// <Node::GetAssociations>
+// Gets the maximum number of associations for a group
+//-----------------------------------------------------------------------------
+uint8 Node::GetMaxAssociations
+(
+	uint8 const _groupIdx
+)
+{
+	uint8 maxAssociations = 0;
+	if( Group* group = GetGroup( _groupIdx ) )
+	{
+		maxAssociations = group->GetMaxAssociations();	
+	}
+
+	return maxAssociations;
+}
+
+//-----------------------------------------------------------------------------
 // <Node::AddAssociation>
 // Adds a node to an association group
 //-----------------------------------------------------------------------------
@@ -1395,11 +1693,14 @@ bool Node::AddMandatoryCommandClasses
 			break;
 		}
 
-		if( CommandClass* commandClass = AddCommandClass( cc ) )
-		{
-			// Start with an instance count of one.  If the device supports COMMMAND_CLASS_MULTI_INSTANCE
-			// then some command class instance counts will increase.
-			commandClass->SetInstances( 1 );
+		if( CommandClasses::IsSupported( cc ) )
+        {
+			if( CommandClass* commandClass = AddCommandClass( cc ) )
+			{
+				// Start with an instance count of one.  If the device supports COMMMAND_CLASS_MULTI_INSTANCE
+				// then some command class instance counts will increase.
+				commandClass->SetInstances( 1 );
+			}
 		}
 	}
 
@@ -1415,7 +1716,10 @@ void Node::ReadDeviceClasses
 )
 {
 	// Load the XML document that contains the device class information
-	string filename =  Manager::Get()->GetConfigPath() + string("device_classes.xml");
+	string configPath;
+	Options::Get()->GetOptionAsString( "ConfigPath", &configPath );
+
+	string filename =  configPath + string("device_classes.xml");
 
 	TiXmlDocument doc;
 	if( !doc.LoadFile( filename.c_str(), TIXML_ENCODING_UTF8 ) )

@@ -204,6 +204,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\src\ZWOptions.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\ZWOptions.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\src\ZWValueID.h"
 				>
 			</File>

@@ -74,7 +74,7 @@ static char const* c_waterUnits[] =
 // <Meter::RequestState>												   
 // Request current state from the device									   
 //-----------------------------------------------------------------------------
-void Meter::RequestState
+bool Meter::RequestState
 (
 	uint32 const _requestFlags
 )
@@ -88,7 +88,10 @@ void Meter::RequestState
 		msg->Append( MeterCmd_Get );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 		GetDriver()->SendMsg( msg );
+		return true;
 	}
+
+	return false;
 }
 
 //-----------------------------------------------------------------------------

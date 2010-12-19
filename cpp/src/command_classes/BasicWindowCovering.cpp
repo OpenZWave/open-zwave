@@ -51,7 +51,7 @@ bool BasicWindowCovering::SetValue
 	Value const& _value
 )
 {
-	bool res = false;
+//	bool res = false;
 	uint8 instance = _value.GetID().GetInstance();
 
 	uint8 action;

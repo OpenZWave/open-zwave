@@ -32,6 +32,7 @@
 #include "Defs.h"
 #include "Msg.h"
 #include "Node.h"
+#include "Options.h"
 #include "Manager.h"
 #include "Driver.h"
 #include "Notification.h"
@@ -57,7 +58,7 @@ bool ManufacturerSpecific::s_bXmlLoaded = false;
 // <ManufacturerSpecific::RequestState>												   
 // Request current state from the device									   
 //-----------------------------------------------------------------------------
-void ManufacturerSpecific::RequestState
+bool ManufacturerSpecific::RequestState
 (
 	uint32 const _requestFlags
 )
@@ -71,7 +72,10 @@ void ManufacturerSpecific::RequestState
 		msg->Append( ManufacturerSpecificCmd_Get );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 		GetDriver()->SendMsg( msg );
+		return true;
 	}
+
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -141,10 +145,11 @@ bool ManufacturerSpecific::HandleMsg
 			{
 				LoadConfigXML( configPath );
 			}
+
+			Log::Write( "Received manufacturer specific report from node %d: Manufacturer=%s, Product=%s", GetNodeId(), manufacturerName.c_str(), productName.c_str() );
+			ClearStaticRequest( StaticRequest_Values );
+			node->QueryStageComplete( Node::QueryStage_ManufacturerSpecific );
 		}
-		
-		Log::Write( "Received manufacturer specific report from node %d: Manufacturer=%s, Product=%s", GetNodeId(), manufacturerName.c_str(), productName.c_str() );
-		ClearStaticRequest( StaticRequest_Values );
 		
 		// Notify the watchers of the name changes
 		Notification* notification = new Notification( Notification::Type_NodeNaming );
@@ -168,7 +173,10 @@ bool ManufacturerSpecific::LoadProductXML
 	s_bXmlLoaded = true;
 
 	// Parse the Z-Wave manufacturer and product XML file.
-	string filename =  Manager::Get()->GetConfigPath() + "manufacturer_specific.xml";
+	string configPath;
+	Options::Get()->GetOptionAsString( "ConfigPath", &configPath );
+
+	string filename =  configPath + "manufacturer_specific.xml";
 
 	TiXmlDocument* pDoc = new TiXmlDocument();
 	if( !pDoc->LoadFile( filename.c_str(), TIXML_ENCODING_UTF8 ) )
@@ -314,12 +322,15 @@ void ManufacturerSpecific::UnloadProductXML
 //-----------------------------------------------------------------------------
 bool ManufacturerSpecific::LoadConfigXML
 (
-	string const& _configPath
+	string const& _configXML
 )
 {
 	if( Node* node = GetNodeUnsafe() )
 	{
-		string filename =  Manager::Get()->GetConfigPath() + _configPath;
+		string configPath;
+		Options::Get()->GetOptionAsString( "ConfigPath", &configPath );
+		
+		string filename =  configPath + _configXML;
 
 		TiXmlDocument* doc = new TiXmlDocument();
 		if( !doc->LoadFile( filename.c_str(), TIXML_ENCODING_UTF8 ) )

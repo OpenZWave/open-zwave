@@ -62,7 +62,7 @@ static char const* c_dayNames[] =
 // <Clock::RequestState>												   
 // Request current state from the device									   
 //-----------------------------------------------------------------------------
-void Clock::RequestState
+bool Clock::RequestState
 (
 	uint32 const _requestFlags
 )
@@ -76,7 +76,10 @@ void Clock::RequestState
 		msg->Append( ClockCmd_Get );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 		GetDriver()->SendMsg( msg );
+		return true;
 	}
+
+	return false;
 }
 
 //-----------------------------------------------------------------------------

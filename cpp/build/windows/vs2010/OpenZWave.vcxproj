@@ -89,6 +89,7 @@
     <ClInclude Include="..\..\..\src\Msg.h" />
     <ClInclude Include="..\..\..\src\Node.h" />
     <ClInclude Include="..\..\..\src\Notification.h" />
+    <ClInclude Include="..\..\..\src\Options.h" />
     <ClInclude Include="..\..\..\src\platform\Event.h" />
     <ClInclude Include="..\..\..\src\platform\Log.h" />
     <ClInclude Include="..\..\..\src\platform\Mutex.h" />
@@ -99,6 +100,7 @@
     <ClInclude Include="..\..\..\src\platform\windows\MutexImpl.h" />
     <ClInclude Include="..\..\..\src\platform\windows\SerialPortImpl.h" />
     <ClInclude Include="..\..\..\src\platform\windows\ThreadImpl.h" />
+    <ClInclude Include="..\..\..\src\Utils.h" />
     <ClInclude Include="..\..\..\src\value_classes\ValueButton.h" />
     <ClInclude Include="..\..\..\src\value_classes\ValueSchedule.h" />
     <ClInclude Include="..\..\..\tinyxml\tinystr.h" />
@@ -162,6 +164,7 @@
     <ClCompile Include="..\..\..\src\Manager.cpp" />
     <ClCompile Include="..\..\..\src\Msg.cpp" />
     <ClCompile Include="..\..\..\src\Node.cpp" />
+    <ClCompile Include="..\..\..\src\Options.cpp" />
     <ClCompile Include="..\..\..\src\platform\Event.cpp" />
     <ClCompile Include="..\..\..\src\platform\Log.cpp" />
     <ClCompile Include="..\..\..\src\platform\Mutex.cpp" />
@@ -172,6 +175,7 @@
     <ClCompile Include="..\..\..\src\platform\windows\MutexImpl.cpp" />
     <ClCompile Include="..\..\..\src\platform\windows\SerialPortImpl.cpp" />
     <ClCompile Include="..\..\..\src\platform\windows\ThreadImpl.cpp" />
+    <ClCompile Include="..\..\..\src\Utils.cpp" />
     <ClCompile Include="..\..\..\src\value_classes\ValueButton.cpp" />
     <ClCompile Include="..\..\..\src\value_classes\ValueSchedule.cpp" />
     <ClCompile Include="..\..\..\tinyxml\tinystr.cpp" />

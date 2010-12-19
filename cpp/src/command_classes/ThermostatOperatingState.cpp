@@ -61,11 +61,12 @@ static char const* c_stateName[] =
 // <ThermostatOperatingState::RequestState>
 // Get the static thermostat mode details from the device
 //-----------------------------------------------------------------------------
-void ThermostatOperatingState::RequestState
+bool ThermostatOperatingState::RequestState
 (
 	uint32 const _requestFlags
 )
 {
+	bool requests = false;
 	if( ( _requestFlags & RequestFlag_Static ) && HasStaticRequest( StaticRequest_Values ) )
 	{
 		// Request the supported states
@@ -76,6 +77,7 @@ void ThermostatOperatingState::RequestState
 		msg->Append( ThermostatOperatingStateCmd_SupportedGet );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 		GetDriver()->SendMsg( msg);
+		requests = true;
 	}
 
 	if( _requestFlags & RequestFlag_Dynamic )
@@ -88,7 +90,10 @@ void ThermostatOperatingState::RequestState
 		msg->Append( ThermostatOperatingStateCmd_Get );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 		GetDriver()->SendMsg( msg );
+		requests = true;
 	}
+
+	return requests;
 }
 
 //-----------------------------------------------------------------------------

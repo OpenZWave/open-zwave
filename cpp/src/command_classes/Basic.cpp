@@ -49,7 +49,7 @@ enum BasicCmd
 // <Basic::RequestState>												   
 // Request current state from the device									   
 //-----------------------------------------------------------------------------
-void Basic::RequestState
+bool Basic::RequestState
 (
 	uint32 const _requestFlags
 )
@@ -63,7 +63,10 @@ void Basic::RequestState
 		msg->Append( BasicCmd_Get );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 		GetDriver()->SendMsg( msg );
+		return true;
 	}
+
+	return false;
 }
 
 //-----------------------------------------------------------------------------

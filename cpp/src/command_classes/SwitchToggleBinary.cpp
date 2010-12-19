@@ -49,7 +49,7 @@ enum SwitchToggleBinaryCmd
 // <SwitchToggleBinary::RequestState>												   
 // Request current state from the device									   
 //-----------------------------------------------------------------------------
-void SwitchToggleBinary::RequestState
+bool SwitchToggleBinary::RequestState
 (
 	uint32 const _requestFlags
 )
@@ -63,7 +63,10 @@ void SwitchToggleBinary::RequestState
 		msg->Append( SwitchToggleBinaryCmd_Get );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 		GetDriver()->SendMsg( msg );
+		return true;
 	}
+
+	return false;
 }
 
 //-----------------------------------------------------------------------------

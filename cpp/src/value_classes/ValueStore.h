@@ -54,6 +54,8 @@ namespace OpenZWave
 		bool RemoveValue( ValueID const& _id );
 		Value* GetValue( ValueID const& _id )const;
 
+		void RemoveCommandClassValues( uint8 const _commandClassId );		// Remove all the values associated with a command class
+
 	private:
 		map<ValueID,Value*>	m_values;
 	};

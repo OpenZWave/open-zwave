@@ -103,11 +103,13 @@
   <ItemGroup>
     <ClCompile Include="..\..\src\AssemblyInfo.cpp" />
     <ClCompile Include="..\..\src\ZWManager.cpp" />
+    <ClCompile Include="..\..\src\ZWOptions.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\resource.h" />
     <ClInclude Include="..\..\src\ZWManager.h" />
     <ClInclude Include="..\..\src\ZWNotification.h" />
+    <ClInclude Include="..\..\src\ZWOptions.h" />
     <ClInclude Include="..\..\src\ZWValueID.h" />
   </ItemGroup>
   <ItemGroup>

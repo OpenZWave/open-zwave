@@ -40,22 +40,28 @@ using namespace OpenZWave;
 // <MultiInstance::RequestInstances>												   
 // Request number of instances of the specified command class from the device									   
 //-----------------------------------------------------------------------------
-void MultiInstance::RequestInstances
+bool MultiInstance::RequestInstances
 (
 	CommandClass const* _commandClass
 )
 {
-	char str[128];
-	snprintf( str, 128, "MultiInstanceCmd_Get for %s", _commandClass->GetCommandClassName().c_str() );
+	if( _commandClass->HasStaticRequest( StaticRequest_Instances ) )
+	{
+		char str[128];
+		snprintf( str, 128, "MultiInstanceCmd_Get for %s", _commandClass->GetCommandClassName().c_str() );
 
-	Msg* msg = new Msg( str, GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-	msg->Append( GetNodeId() );
-	msg->Append( 3 );
-	msg->Append( GetCommandClassId() );
-	msg->Append( MultiInstanceCmd_Get );
-	msg->Append( _commandClass->GetCommandClassId() );
-	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	GetDriver()->SendMsg( msg );
+		Msg* msg = new Msg( str, GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		msg->Append( GetNodeId() );
+		msg->Append( 3 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( MultiInstanceCmd_Get );
+		msg->Append( _commandClass->GetCommandClassId() );
+		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		GetDriver()->SendMsg( msg );
+		return true;
+	}
+
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -70,7 +76,7 @@ bool MultiInstance::HandleMsg
 )
 {
 	bool handled = false;
-	if( Node const* node = GetNodeUnsafe() )
+	if( Node* node = GetNodeUnsafe() )
 	{
 		if( MultiInstanceCmd_Report == (MultiInstanceCmd)_data[0] )
 		{
@@ -82,9 +88,6 @@ bool MultiInstance::HandleMsg
 				Log::Write( "Received instance-count from node %d for %s: %d", GetNodeId(), pCommandClass->GetCommandClassName().c_str(), instances );
 				pCommandClass->SetInstances( instances );
 				pCommandClass->ClearStaticRequest( StaticRequest_Instances );
-
-				// The request for non-static state was held off until we knew how many instances there were.
-				pCommandClass->RequestState( CommandClass::RequestFlag_Session | CommandClass::RequestFlag_Dynamic );
 			}
 			
 			handled = true;
