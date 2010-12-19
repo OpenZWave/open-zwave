@@ -168,7 +168,7 @@ void OnNotification
 			break;
 		}
 
-		case Notification::Type_NodeStatus:
+		case Notification::Type_NodeEvent:
 		{
 			if( NodeInfo* nodeInfo = GetNodeInfo( _notification ) )
 			{

@@ -57,7 +57,8 @@ CommandClass::CommandClass
 	m_nodeId( _nodeId ),
 	m_version( 1 ),
 	m_instances( 0 ),
-	m_staticRequests( 0 )
+	m_staticRequests( 0 ),
+	m_createVars( true )
 {
 }
 
@@ -96,9 +97,12 @@ void CommandClass::SetInstances
 	if( _instances > m_instances )
 	{
 		// Create the new value instances
-		for( uint8 i=m_instances; i<_instances; ++i )
-		{
-			CreateVars( i+1 );
+		if( m_createVars )
+		{	
+			for( uint8 i=m_instances; i<_instances; ++i )
+			{
+				CreateVars( i+1 );
+			}
 		}
 
 		m_instances = _instances;
@@ -115,6 +119,7 @@ void CommandClass::ReadXML
 )
 {
 	int32 intVal;
+	char const* str;
 
 	m_version = 1;
 	if( TIXML_SUCCESS == _ccElement->QueryIntAttribute( "version", &intVal ) )
@@ -134,6 +139,13 @@ void CommandClass::ReadXML
 		m_staticRequests = (uint8)intVal;
 	}
 
+	m_createVars = true;
+	str = _ccElement->Attribute( "create_vars" );
+	if( str )
+	{
+		m_createVars = !strcmp( str, "true" );
+	}
+
 	// Setting the instance count will create all the values.
 	SetInstances( instances );
 
@@ -141,7 +153,7 @@ void CommandClass::ReadXML
 	TiXmlElement const* child = _ccElement->FirstChildElement();
 	while( child )
 	{
-		char const* str = child->Value();
+		str = child->Value();
 		if( str )
 		{
 			if( !strcmp( str, "Value" ) )
@@ -179,6 +191,11 @@ void CommandClass::WriteXML
 	{
 		snprintf( str, 32, "%d", m_staticRequests );
 		_ccElement->SetAttribute( "request_flags", str );
+	}
+
+	if( !m_createVars )
+	{
+		_ccElement->SetAttribute( "create_vars", "false" );
 	}
 
 	// Write out the values for this command class

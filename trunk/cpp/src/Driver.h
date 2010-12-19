@@ -56,6 +56,7 @@ namespace OpenZWave
 		friend class Value;
 		friend class ValueStore;
 		friend class Association;
+		friend class Basic;
 		friend class ManufacturerSpecific;
 		friend class WakeUp;
 		friend class Hail;
