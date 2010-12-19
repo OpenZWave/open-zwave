@@ -82,6 +82,10 @@ using namespace OpenZWave;
 #include "ValueShort.h"
 #include "ValueString.h"
 
+#include "Manager.h"
+#include "Options.h"
+#include "Utils.h"
+
 //-----------------------------------------------------------------------------
 //	<CommandClasses::CommandClasses>
 //	Constructor
@@ -91,6 +95,20 @@ CommandClasses::CommandClasses
 )
 { 
 	memset( m_commandClassCreators, 0, sizeof(pfnCreateCommandClass_t)*256 );
+	memset( m_supportedCommandClasses, 0, sizeof(uint32)*8 );
+}
+
+//-----------------------------------------------------------------------------
+//	<CommandClasses::IsSupported>
+//	Static method to determine whether a command class is supported
+//-----------------------------------------------------------------------------
+bool CommandClasses::IsSupported
+( 
+	uint8 const _commandClassId
+)
+{
+	// Test the bit representing the command class
+	return( (Get().m_supportedCommandClasses[_commandClassId>>5] & (1u<<(_commandClassId&0x1f))) != 0 );
 }
 
 //-----------------------------------------------------------------------------
@@ -100,10 +118,16 @@ CommandClasses::CommandClasses
 void CommandClasses::Register
 ( 
 	uint8 const _commandClassId, 
+	string const& _commandClassName,
 	pfnCreateCommandClass_t _creator
 )
 {
 	m_commandClassCreators[_commandClassId] = _creator;
+	
+	// Set the bit representing the command class
+	Get().m_supportedCommandClasses[_commandClassId>>5] |= (1u<<(_commandClassId&0x1f));
+
+	m_namesToIDs[_commandClassName] = _commandClassId;
 }
 
 //-----------------------------------------------------------------------------
@@ -137,44 +161,129 @@ void CommandClasses::RegisterCommandClasses
 )
 {
 	CommandClasses& cc = Get();
-	cc.Register( Alarm::StaticGetCommandClassId(), Alarm::Create );
-	cc.Register( ApplicationStatus::StaticGetCommandClassId(), ApplicationStatus::Create );
-	cc.Register( Association::StaticGetCommandClassId(), Association::Create );
-	cc.Register( AssociationCommandConfiguration::StaticGetCommandClassId(), AssociationCommandConfiguration::Create );
-	cc.Register( Basic::StaticGetCommandClassId(), Basic::Create );
-	cc.Register( BasicWindowCovering::StaticGetCommandClassId(), BasicWindowCovering::Create );
-	cc.Register( Battery::StaticGetCommandClassId(), Battery::Create );
-	cc.Register( ClimateControlSchedule::StaticGetCommandClassId(), ClimateControlSchedule::Create );
-	cc.Register( Clock::StaticGetCommandClassId(), Clock::Create );
-	cc.Register( Configuration::StaticGetCommandClassId(), Configuration::Create );
-	cc.Register( ControllerReplication::StaticGetCommandClassId(), ControllerReplication::Create );
-	cc.Register( EnergyProduction::StaticGetCommandClassId(), EnergyProduction::Create );
-	cc.Register( Hail::StaticGetCommandClassId(), Hail::Create );
-	cc.Register( Indicator::StaticGetCommandClassId(), Indicator::Create );
-	cc.Register( Language::StaticGetCommandClassId(), Language::Create );
-	cc.Register( Lock::StaticGetCommandClassId(), Lock::Create );
-	cc.Register( ManufacturerSpecific::StaticGetCommandClassId(), ManufacturerSpecific::Create );
-	cc.Register( Meter::StaticGetCommandClassId(), Meter::Create );
-	cc.Register( MeterPulse::StaticGetCommandClassId(), MeterPulse::Create );
-	cc.Register( MultiCmd::StaticGetCommandClassId(), MultiCmd::Create );
-	cc.Register( MultiInstance::StaticGetCommandClassId(), MultiInstance::Create );
-	cc.Register( MultiInstanceAssociation::StaticGetCommandClassId(), MultiInstanceAssociation::Create );
-	cc.Register( NodeNaming::StaticGetCommandClassId(), NodeNaming::Create );
-	cc.Register( Powerlevel::StaticGetCommandClassId(), Powerlevel::Create );
-	cc.Register( Proprietary::StaticGetCommandClassId(), Proprietary::Create );
-	cc.Register( Protection::StaticGetCommandClassId(), Protection::Create );
-	cc.Register( SensorBinary::StaticGetCommandClassId(), SensorBinary::Create );
-	cc.Register( SensorMultilevel::StaticGetCommandClassId(), SensorMultilevel::Create );
-	cc.Register( SwitchAll::StaticGetCommandClassId(), SwitchAll::Create );
-	cc.Register( SwitchBinary::StaticGetCommandClassId(), SwitchBinary::Create );
-	cc.Register( SwitchMultilevel::StaticGetCommandClassId(), SwitchMultilevel::Create );
-	cc.Register( SwitchToggleBinary::StaticGetCommandClassId(), SwitchToggleBinary::Create );
-	cc.Register( SwitchToggleMultilevel::StaticGetCommandClassId(), SwitchToggleMultilevel::Create );
-	cc.Register( ThermostatFanMode::StaticGetCommandClassId(), ThermostatFanMode::Create );
-	cc.Register( ThermostatFanState::StaticGetCommandClassId(), ThermostatFanState::Create );
-	cc.Register( ThermostatMode::StaticGetCommandClassId(), ThermostatMode::Create );
-	cc.Register( ThermostatOperatingState::StaticGetCommandClassId(), ThermostatOperatingState::Create );
-	cc.Register( ThermostatSetpoint::StaticGetCommandClassId(), ThermostatSetpoint::Create );
-	cc.Register( Version::StaticGetCommandClassId(), Version::Create );
-	cc.Register( WakeUp::StaticGetCommandClassId(), WakeUp::Create );
+	cc.Register( Alarm::StaticGetCommandClassId(), Alarm::StaticGetCommandClassName(), Alarm::Create );
+	cc.Register( ApplicationStatus::StaticGetCommandClassId(), ApplicationStatus::StaticGetCommandClassName(), ApplicationStatus::Create );
+	cc.Register( Association::StaticGetCommandClassId(), Association::StaticGetCommandClassName(), Association::Create );
+	cc.Register( AssociationCommandConfiguration::StaticGetCommandClassId(), AssociationCommandConfiguration::StaticGetCommandClassName(), AssociationCommandConfiguration::Create );
+	cc.Register( Basic::StaticGetCommandClassId(), Basic::StaticGetCommandClassName(), Basic::Create );
+	cc.Register( BasicWindowCovering::StaticGetCommandClassId(), BasicWindowCovering::StaticGetCommandClassName(), BasicWindowCovering::Create );
+	cc.Register( Battery::StaticGetCommandClassId(), Battery::StaticGetCommandClassName(), Battery::Create );
+	cc.Register( ClimateControlSchedule::StaticGetCommandClassId(), ClimateControlSchedule::StaticGetCommandClassName(), ClimateControlSchedule::Create );
+	cc.Register( Clock::StaticGetCommandClassId(), Clock::StaticGetCommandClassName(), Clock::Create );
+	cc.Register( Configuration::StaticGetCommandClassId(), Configuration::StaticGetCommandClassName(), Configuration::Create );
+	cc.Register( ControllerReplication::StaticGetCommandClassId(), ControllerReplication::StaticGetCommandClassName(), ControllerReplication::Create );
+	cc.Register( EnergyProduction::StaticGetCommandClassId(), EnergyProduction::StaticGetCommandClassName(), EnergyProduction::Create );
+	cc.Register( Hail::StaticGetCommandClassId(), Hail::StaticGetCommandClassName(), Hail::Create );
+	cc.Register( Indicator::StaticGetCommandClassId(), Indicator::StaticGetCommandClassName(), Indicator::Create );
+	cc.Register( Language::StaticGetCommandClassId(), Language::StaticGetCommandClassName(), Language::Create );
+	cc.Register( Lock::StaticGetCommandClassId(), Lock::StaticGetCommandClassName(), Lock::Create );
+	cc.Register( ManufacturerSpecific::StaticGetCommandClassId(), ManufacturerSpecific::StaticGetCommandClassName(), ManufacturerSpecific::Create );
+	cc.Register( Meter::StaticGetCommandClassId(), Meter::StaticGetCommandClassName(), Meter::Create );
+	cc.Register( MeterPulse::StaticGetCommandClassId(), MeterPulse::StaticGetCommandClassName(), MeterPulse::Create );
+	cc.Register( MultiCmd::StaticGetCommandClassId(), MultiCmd::StaticGetCommandClassName(), MultiCmd::Create );
+	cc.Register( MultiInstance::StaticGetCommandClassId(), MultiInstance::StaticGetCommandClassName(), MultiInstance::Create );
+	cc.Register( MultiInstanceAssociation::StaticGetCommandClassId(), MultiInstanceAssociation::StaticGetCommandClassName(), MultiInstanceAssociation::Create );
+	cc.Register( NodeNaming::StaticGetCommandClassId(), NodeNaming::StaticGetCommandClassName(), NodeNaming::Create );
+	cc.Register( Powerlevel::StaticGetCommandClassId(), Powerlevel::StaticGetCommandClassName(), Powerlevel::Create );
+	cc.Register( Proprietary::StaticGetCommandClassId(), Proprietary::StaticGetCommandClassName(), Proprietary::Create );
+	cc.Register( Protection::StaticGetCommandClassId(), Protection::StaticGetCommandClassName(), Protection::Create );
+	cc.Register( SensorBinary::StaticGetCommandClassId(), SensorBinary::StaticGetCommandClassName(), SensorBinary::Create );
+	cc.Register( SensorMultilevel::StaticGetCommandClassId(), SensorMultilevel::StaticGetCommandClassName(), SensorMultilevel::Create );
+	cc.Register( SwitchAll::StaticGetCommandClassId(), SwitchAll::StaticGetCommandClassName(), SwitchAll::Create );
+	cc.Register( SwitchBinary::StaticGetCommandClassId(), SwitchBinary::StaticGetCommandClassName(), SwitchBinary::Create );
+	cc.Register( SwitchMultilevel::StaticGetCommandClassId(), SwitchMultilevel::StaticGetCommandClassName(), SwitchMultilevel::Create );
+	cc.Register( SwitchToggleBinary::StaticGetCommandClassId(), SwitchToggleBinary::StaticGetCommandClassName(), SwitchToggleBinary::Create );
+	cc.Register( SwitchToggleMultilevel::StaticGetCommandClassId(), SwitchToggleMultilevel::StaticGetCommandClassName(), SwitchToggleMultilevel::Create );
+	cc.Register( ThermostatFanMode::StaticGetCommandClassId(), ThermostatFanMode::StaticGetCommandClassName(), ThermostatFanMode::Create );
+	cc.Register( ThermostatFanState::StaticGetCommandClassId(), ThermostatFanState::StaticGetCommandClassName(), ThermostatFanState::Create );
+	cc.Register( ThermostatMode::StaticGetCommandClassId(), ThermostatMode::StaticGetCommandClassName(), ThermostatMode::Create );
+	cc.Register( ThermostatOperatingState::StaticGetCommandClassId(), ThermostatOperatingState::StaticGetCommandClassName(), ThermostatOperatingState::Create );
+	cc.Register( ThermostatSetpoint::StaticGetCommandClassId(), ThermostatSetpoint::StaticGetCommandClassName(), ThermostatSetpoint::Create );
+	cc.Register( Version::StaticGetCommandClassId(), Version::StaticGetCommandClassName(), Version::Create );
+	cc.Register( WakeUp::StaticGetCommandClassId(), WakeUp::StaticGetCommandClassName(), WakeUp::Create );
+
+	// Now all the command classes have been registered, we can modify the
+	// supported command classes array according to the program options.
+	string str;
+	Options::Get()->GetOptionAsString( "Include", &str );
+	if( str != "" )
+	{
+		// The include list has entries, so we assume that it is a
+		// complete list of what should be supported.
+		// Any existing support is cleared first.
+		memset( cc.m_supportedCommandClasses, 0, sizeof(uint32)*8 );
+		cc.ParseCommandClassOption( str, true );		
+	}
+
+	// Apply the excluded command class option
+	Options::Get()->GetOptionAsString( "Exclude", &str );
+	if( str != "" )
+	{
+		cc.ParseCommandClassOption( str, false );		
+	}
 }
+
+//-----------------------------------------------------------------------------
+//	<CommandClasses::ParseCommandClassOption>
+//	Parse a comma delimited list of included/excluded command classes
+//-----------------------------------------------------------------------------
+void CommandClasses::ParseCommandClassOption
+(
+	string const& _optionStr,
+	bool const _include
+)
+{
+	int pos = 0;
+	int start = 0;
+	bool parsing = true;
+	while( parsing )
+	{
+		string ccStr;
+
+		pos = _optionStr.find_first_of( ",", start );
+		if( string::npos == pos )
+		{
+			ccStr = _optionStr.substr( start );
+			parsing = false;
+		}
+		else
+		{
+			ccStr = _optionStr.substr( start, pos-start );
+			start = pos + 1;
+		}
+
+		if( ccStr != "" )
+		{
+			uint8 ccIdx = GetCommandClassId( ccStr );
+			if( _include )
+			{
+				m_supportedCommandClasses[ccIdx>>5] |= (1u<<(ccIdx&0x1f));
+			}
+			else
+			{
+				m_supportedCommandClasses[ccIdx>>5] &= ~(1u<<(ccIdx&0x1f));
+			}
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
+//	<CommandClasses::GetCommandClassId>
+//	Convert a command class name (e.g COMMAND_CLASS_BASIC) into its 8-bit ID
+//-----------------------------------------------------------------------------
+uint8 CommandClasses::GetCommandClassId
+( 
+	string const& _name
+)
+{
+	string upperName = ToUpper( _name );
+	map<string,uint8>::iterator it = m_namesToIDs.find( upperName );
+	if( it != m_namesToIDs.end() )
+	{
+		return it->second;
+	}
+
+	return 0xff;
+}
+
+

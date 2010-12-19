@@ -27,6 +27,7 @@
 
 #include "Defs.h"
 #include "Driver.h"
+#include "Options.h"
 #include "Manager.h"
 #include "Node.h"
 #include "Msg.h"
@@ -44,6 +45,8 @@
 
 #include "ValueID.h"
 #include "Value.h"
+
+#include <algorithm>
 
 using namespace OpenZWave;
 
@@ -68,33 +71,33 @@ Driver::Driver
 ( 
 	string const& _serialPortName
 ):
-	m_serialPortName( _serialPortName ),
-	m_homeId( 0 ),
-	m_pollInterval( 30 ),					// By default, every polled device is queried once every 30 seconds
-	m_waitingForAck( false ),
-	m_expectedReply( 0 ),
-	m_expectedCallbackId( 0 ),
-	m_exit( false ),
-	m_init( false ),
 	m_driverThread( new Thread( "driver" ) ),
-	m_exitEvent( new Event() ),	
 	m_wakeEvent( new Event() ),	
+    m_exitEvent( new Event() ), 
+    m_exit( false ),
+    m_init( false ),
+    m_serialPortName( _serialPortName ),
+    m_homeId( 0 ),
 	m_serialPort( new SerialPort() ),
 	m_serialThread( new Thread( "serial" ) ),
+    m_initCaps( 0 ),
+    m_controllerCaps( 0 ),
+    m_nodeMutex( new Mutex() ),
+    m_controllerReplication( NULL ),
 	m_sendMutex( new Mutex() ),
+    m_waitingForAck( false ),
+    m_expectedCallbackId( 0 ),
+    m_expectedReply( 0 ),
 	m_pollThread( new Thread( "poll" ) ),
 	m_pollMutex( new Mutex() ),
-	m_infoMutex( new Mutex() ),
-	m_nodeMutex( new Mutex() ),
-	m_initCaps( 0 ),
-	m_controllerCaps( 0 ),
-	m_controllerReplication( NULL ),
+    m_pollInterval( 30 ),                   // By default, every polled device is queried once every 30 seconds
+	m_queryMutex( new Mutex() ),
 	m_controllerState( ControllerState_Normal ),
 	m_controllerCommand( ControllerCommand_None ),
 	m_controllerCallback( NULL ),
 	m_controllerCallbackContext( NULL ),
 	m_controllerAdded( false ),
-	m_controllerCommandNode( 0 )
+    m_controllerCommandNode( 0 )
 {
 	// Clear the nodes array
 	memset( m_nodes, 0, sizeof(Node*) * 256 );
@@ -126,7 +129,7 @@ Driver::~Driver
 
 	delete m_sendMutex;
 	delete m_pollMutex;
-	delete m_infoMutex;
+	delete m_queryMutex;
 
 	delete m_wakeEvent;
 	delete m_exitEvent;
@@ -157,6 +160,9 @@ Driver::~Driver
 
 	NotifyWatchers();
 	delete m_nodeMutex;
+    
+    // Unsure at what point this is safe to do?
+    delete m_controllerReplication;
 }
 
 //-----------------------------------------------------------------------------
@@ -397,8 +403,11 @@ bool Driver::ReadConfig
 	int32 intVal;
 
 	// Load the XML document that contains the driver configuration
+	string userPath;
+	Options::Get()->GetOptionAsString( "UserPath", &userPath );
+	
 	snprintf( str, sizeof(str), "zwcfg_0x%08x.xml", m_homeId );
-	string filename =  Manager::Get()->GetUserPath() + string(str);
+	string filename =  userPath + string(str);
 
 	TiXmlDocument doc;
 	if( !doc.LoadFile( filename.c_str(), TIXML_ENCODING_UTF8 ) )
@@ -532,8 +541,11 @@ void Driver::WriteConfig
 	}
 	ReleaseNodes();
 
+	string userPath;
+	Options::Get()->GetOptionAsString( "UserPath", &userPath );
+
 	snprintf( str, sizeof(str), "zwcfg_0x%08x.xml", m_homeId );
-	string filename =  Manager::Get()->GetUserPath() + string(str);
+	string filename =  userPath + string(str);
 
 	doc.SaveFile( filename.c_str() );
 }
@@ -669,13 +681,18 @@ bool Driver::WriteMsg()
 	}
 	else
 	{
-		// Check for nodes requiring info requests
-		uint8 nodeId = GetNodeInfoRequest();
+		// Check for nodes requiring queries
+		uint8 nodeId = GetCurrentNodeQuery();
 		if( nodeId != 0xff )
 		{
-			Msg* msg = new Msg( "Get Node Protocol Info", nodeId, REQUEST, FUNC_ID_ZW_GET_NODE_PROTOCOL_INFO, false );
-			msg->Append( nodeId );	
-			SendMsg( msg ); 
+			if( Node* node = GetNodeUnsafe( nodeId ) )
+			{
+				node->AdvanceQueries();
+				if( node->AllQueriesCompleted() )
+				{
+					RemoveNodeQuery( nodeId );
+				}
+			}
 		}
 	}
 
@@ -763,7 +780,7 @@ bool Driver::MoveMessagesToWakeUpQueue
 						{
 							delete msg;
 						}
-						m_sendQueue.erase( it++ );
+						it = m_sendQueue.erase( it );
 					}
 					else
 					{
@@ -1118,20 +1135,16 @@ void Driver::ProcessMsg
 			if( !( m_expectedCallbackId || m_expectedReply ) )
 			{
 				Log::Write( "Message transaction complete" );
-				if( _data[1] == FUNC_ID_ZW_SEND_DATA )
-				{
-					m_sendMutex->Lock();
-					Msg *msg = m_sendQueue.front();
-					uint8 n = msg->GetTargetNodeId();
-					uint8 clsid = msg->GetExpectedCommandClassId();
-					Node *node = m_nodes[n];
-					if( node != NULL )
-					{
-						CommandClass *cc = node->GetCommandClass(clsid);
-					}
-					m_sendMutex->Release();
-				}
 				RemoveMsg();
+
+				bool notify = false;
+				Options::Get()->GetOptionAsBool( "NotifyTransactions", &notify );
+				if( notify )
+				{
+					Notification notification( Notification::Type_MsgComplete );
+					notification.SetHomeAndNodeIds( m_homeId, 0xff );
+					Manager::Get()->NotifyWatchers( &notification );
+				}
 			}
 		}
 	}
@@ -1348,7 +1361,7 @@ void Driver::HandleSerialAPIGetInitDataResponse
 						{
 							// The node was read in from the config, so we 
 							// only need to get its current state
-							node->RequestState( CommandClass::RequestFlag_Session | CommandClass::RequestFlag_Dynamic );
+							AddNodeQuery( nodeId, Node::QueryStage_Session );
 						}
 
 						ReleaseNodes();
@@ -1359,7 +1372,7 @@ void Driver::HandleSerialAPIGetInitDataResponse
 						Log::Write( "  Node %.3d - New", nodeId );
 
 						// Create the node and request its info
-						AddNodeInfoRequest( nodeId );		
+						InitNode( nodeId );		
 					}
 				}
 				else
@@ -1394,7 +1407,7 @@ void Driver::HandleGetNodeProtocolInfoResponse
 	uint8* _data
 )
 {
-	uint8 nodeId = GetNodeInfoRequest();
+	uint8 nodeId = GetCurrentNodeQuery();
 
 	if( nodeId == 0xff )
 	{
@@ -1568,7 +1581,10 @@ bool Driver::HandleSendDataRequest
 					{
 						// In case the failure is due to the target being a sleeping node, we 
 						// first try to move its pending messages to its wake-up queue.
-						MoveMessagesToWakeUpQueue( m_sendQueue.front()->GetTargetNodeId() );
+						if( MoveMessagesToWakeUpQueue( m_sendQueue.front()->GetTargetNodeId() ) )
+						{
+							messageRemoved = true;
+						}
 
 						// We need do no more here.  If the move failed, the node is probably not
 						// a sleeping node and the message will automatically be resent.
@@ -1669,7 +1685,7 @@ void Driver::HandleAddNodeToNetworkRequest
 		{
 			Log::Write( "ADD_NODE_STATUS_DONE" );
 
-			AddNodeInfoRequest( m_controllerCommandNode );
+			InitNode( m_controllerCommandNode );
 
 			if( m_controllerCallback )
 			{
@@ -1852,7 +1868,7 @@ void Driver::HandleSetLearnMode
 
 			// Rebuild all the node info.  Group and scene data that we stored 
 			// during replication will be applied as we discover each node.
-			RefreshNodeInfo();
+			InitAllNodes();
 			break;
 		}
 		case LEARN_MODE_FAILED:
@@ -1872,7 +1888,7 @@ void Driver::HandleSetLearnMode
 			// Rebuild all the node info, since it may have been partially
 			// updated by the failed command.  Group and scene data that we
 			// stored during replication will be applied as we discover each node.
-			RefreshNodeInfo();
+			InitAllNodes();
 			break;
 		}
 		case LEARN_MODE_DELETED:
@@ -1956,7 +1972,7 @@ void Driver::HandleReplaceFailedNodeRequest
 			m_controllerCommand = ControllerCommand_None;
 
 			// Request new node info for this device
-			AddNodeInfoRequest( m_controllerCommandNode );
+			InitNode( m_controllerCommandNode );
 			break;
 		}
 		case FAILED_NODE_REPLACE_FAILED:
@@ -1985,10 +2001,12 @@ void Driver::HandleApplicationCommandHandlerRequest
 {
 	uint8 nodeId = _data[3];
 	uint8 ClassId = _data[5];
+#ifdef notdef
 	uint8 ClassIdMinor = _data[6];
-	uint8 ValueFromDevice = _data[7];
 	CommandClass* pfnDeviceEventVectorClass;
 	uint8 StatusData[10];
+#endif
+	uint8 ValueFromDevice = _data[7];
 
 	switch (ClassId)
 	{
@@ -2016,21 +2034,21 @@ void Driver::HandleApplicationCommandHandlerRequest
 			break;
 		}
 #endif
-		case COMMAND_CLASS_HAIL:
-		{			
-			if( pfnDeviceEventVectorClass = CommandClasses::CreateCommandClass(ClassId, m_homeId, nodeId ) )
-			{
-				StatusData[0] = 0x01; StatusData[1]=ValueFromDevice;
-				pfnDeviceEventVectorClass->HandleMsg( StatusData,0x02,0x00);
+		//case COMMAND_CLASS_HAIL:	This command class should be handled in the standard way.
+		//{			
+		//	if( (pfnDeviceEventVectorClass = CommandClasses::CreateCommandClass(ClassId, m_homeId, nodeId ) ) != NULL )
+		//	{
+		//		StatusData[0] = 0x01; StatusData[1]=ValueFromDevice;
+		//		pfnDeviceEventVectorClass->HandleMsg( StatusData,0x02,0x00);
 
-				//send notification to application
-				Notification* notification = new Notification(Notification::Type_NodeStatus);
-				notification->SetHomeAndNodeIds(GetHomeId(),nodeId);
-				notification->SetStatus(StatusData[1]);
-				QueueNotification( notification );
-			}
-			break;
-		}
+		//		//send notification to application
+		//		Notification* notification = new Notification(Notification::Type_NodeStatus);
+		//		notification->SetHomeAndNodeIds(GetHomeId(),nodeId);
+		//		notification->SetStatus(StatusData[1]);
+		//		QueueNotification( notification );
+		//	}
+		//	break;
+		//}
 		case COMMAND_CLASS_APPLICATION_STATUS:
 		{
 			break;	//TODO: Test this class function or implement
@@ -2090,37 +2108,23 @@ bool Driver::HandleApplicationUpdateRequest
 		case UPDATE_STATE_NODE_INFO_REQ_FAILED:
 		{
 			Log::Write( "FUNC_ID_ZW_APPLICATION_UPDATE: UPDATE_STATE_NODE_INFO_REQ_FAILED received" );
-			
-			// In case the device does not report any optional command classes,
-			// we mark the ones we do have so that their static data is requested.
-			if( Node* node = GetNodeUnsafe( nodeId ) )
+	
+			// Note: Unhelpfully, the nodeId is always zero in this message.  Hwoever, we
+			// only ever do this request from a node query, so we can use that instead.
+			Node* node = GetNodeUnsafe( GetCurrentNodeQuery() );
+			if( node )
 			{
-				if( !node->NodeInfoReceived() )
-				{
-					node->SetStaticRequests();
-					node->RequestEntireNodeState();
-				}
-			}
+				// Retry the query up to three times
+				node->QueryStageRetry( Node::QueryStage_NodeInfo, 3 );
 
-			// Just in case the failure was due to the node being asleep, we try
-			// to move its pending messages to its wakeup queue.  If it is not
-			// a sleeping device, this will have no effect.
-			m_sendMutex->Lock();
-			if( !m_sendQueue.empty() )
-			{
-				if( MoveMessagesToWakeUpQueue( m_sendQueue.front()->GetTargetNodeId() ) )
+				// Just in case the failure was due to the node being asleep, we try
+				// to move its pending messages to its wakeup queue.  If it is not
+				// a sleeping device, this will have no effect.
+				if( MoveMessagesToWakeUpQueue( node->GetNodeId() ) )
 				{
-					// The messages were removed, so set the flag so 
-					// the caller doesn't try to remove it again.
 					messageRemoved = true;
-
-					m_waitingForAck = 0;	
-					m_expectedCallbackId = 0;
-					m_expectedReply = 0;
-					m_expectedCommandClassId = 0;
 				}
 			}
-			m_sendMutex->Release();
 			break;
 		}
 		case UPDATE_STATE_NEW_ID_ASSIGNED:
@@ -2128,7 +2132,7 @@ bool Driver::HandleApplicationUpdateRequest
 			Log::Write( "** Network change **: ID %d was assigned to a new Z-Wave node", nodeId );
 			
 			// Request the node protocol info (also removes any existing node and creates a new one)
-			AddNodeInfoRequest( nodeId );		
+			InitNode( nodeId );		
 			break;
 		}
 		case UPDATE_STATE_DELETE_DONE:
@@ -2147,6 +2151,14 @@ bool Driver::HandleApplicationUpdateRequest
 		}
 	}
 
+	if( messageRemoved )
+	{
+		m_waitingForAck = 0;	
+		m_expectedCallbackId = 0;
+		m_expectedReply = 0;
+		m_expectedCommandClassId = 0;
+	}
+
 	return messageRemoved;
 }
 
@@ -2163,7 +2175,8 @@ bool Driver::EnablePoll
 	uint8 const _nodeId
 )
 {
-	if( Node* node = GetNode( _nodeId ) )
+    Node* node = GetNode( _nodeId );
+	if( node != NULL )
 	{
 		// Add the node to the polling list
 		m_pollMutex->Lock();
@@ -2200,7 +2213,8 @@ bool Driver::DisablePoll
 	uint8 const _nodeId
 )
 {
-	if( Node* node = GetNode( _nodeId ) )
+    Node* node = GetNode( _nodeId );
+	if(node != NULL)
 	{
 		m_pollMutex->Lock();
 
@@ -2291,7 +2305,7 @@ void Driver::PollThreadProc()
 					if( requestState )
 					{
 						// Request an update of the value
-						node->RequestState( CommandClass::RequestFlag_Dynamic );
+						AddNodeQuery( nodeId, Node::QueryStage_Dynamic );
 					}
 
 					ReleaseNodes();
@@ -2357,10 +2371,10 @@ void Driver::SerialThreadProc()
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-// <Driver::RefreshNodeInfo>
+// <Driver::InitAllNodes>
 // Delete all nodes and fetch new node data from the Z-Wave network
 //-----------------------------------------------------------------------------
-void Driver::RefreshNodeInfo
+void Driver::InitAllNodes
 (
 )
 {
@@ -2382,16 +2396,15 @@ void Driver::RefreshNodeInfo
 	QueueNotification( notification ); 
 
 	// Fetch new node data from the Z-Wave network
-	Log::Write( "RefreshNodeInfo" );
-	Msg* msg = new Msg( "RefreshNodeInfo", 0xff, REQUEST, FUNC_ID_SERIAL_API_GET_INIT_DATA, false );
+	Msg* msg = new Msg( "InitAllNodes", 0xff, REQUEST, FUNC_ID_SERIAL_API_GET_INIT_DATA, false );
 	SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
-// <Driver::AddNodeInfoRequest>
+// <Driver::InitNode>
 // Queue a node to be interrogated for its setup details
 //-----------------------------------------------------------------------------
-void Driver::AddNodeInfoRequest
+void Driver::InitNode
 ( 
 	uint8 const _nodeId
 )
@@ -2416,46 +2429,104 @@ void Driver::AddNodeInfoRequest
 	QueueNotification( notification ); 
 
 	// Request the node info
-	m_infoMutex->Lock();
-	m_infoQueue.push_back( _nodeId );
-	m_infoMutex->Release();
-
-	m_wakeEvent->Set();
+	AddNodeQuery( _nodeId, Node::QueryStage_None );
 }
 
 //-----------------------------------------------------------------------------
-// <Driver::RemoveNodeInfoRequest>
-// Remove a node from the info queue
+// <Driver::GetCurrentNodeQuery>
+// Get the awake node that is nearest the front of the list for queries
 //-----------------------------------------------------------------------------
-void Driver::RemoveNodeInfoRequest
-( 
-)
-{
-	m_infoMutex->Lock();
-	if( !m_infoQueue.empty() )
-	{
-		m_infoQueue.pop_front();
-	}
-	m_infoMutex->Release();
-}
-
-//-----------------------------------------------------------------------------
-// <Driver::GetNodeInfoRequest>
-// Get the next node that needs its setup info requesting
-//-----------------------------------------------------------------------------
-uint8 Driver::GetNodeInfoRequest
+uint8 Driver::GetCurrentNodeQuery
 ( 
 )
 {
 	uint8 nodeId = 0xff;
 
-	m_infoMutex->Lock();
-	if( !m_infoQueue.empty() )
+	m_queryMutex->Lock();
+	for( list<uint8>::iterator it = m_nodeQueries.begin(); it != m_nodeQueries.end(); ++it )
 	{
-		nodeId = m_infoQueue.front();
+		if( Node* node = GetNodeUnsafe( *it ) )
+		{
+			if( !node->IsListeningDevice() )
+			{
+				if( WakeUp* wakeUp = static_cast<WakeUp*>( node->GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
+				{
+					if( !wakeUp->IsAwake() )
+					{
+						// Node is asleep
+						continue;
+					}
+				}
+			}
+
+			// Found a node that is awake
+			nodeId = *it;
+			break;
+		}
 	}
-	m_infoMutex->Release();
+	m_queryMutex->Release();
 	return nodeId;
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::AddNodeQuery>
+// Add a node to the query queue
+//-----------------------------------------------------------------------------
+void Driver::AddNodeQuery
+(
+	uint8 const _nodeId,
+	Node::QueryStage const _stage
+)
+{
+	if( Node* node = m_nodes[_nodeId] )
+	{
+		m_queryMutex->Lock();
+
+		// Add the node to the queue if is not already there
+		bool found = false;
+		for( list<uint8>::iterator it = m_nodeQueries.begin(); it != m_nodeQueries.end(); ++it )
+		{
+			if( _nodeId == *it )
+			{
+				found = true;
+				break;
+			}
+		}
+		if( !found )
+		{
+			m_nodeQueries.push_back( _nodeId );
+		}
+
+		// Set the query stage in the node
+		node->GoBackToQueryStage( _stage );
+
+		m_queryMutex->Release();
+		m_wakeEvent->Set();
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::RemoveNodeQuery>
+// Remove a node to the query queue
+//-----------------------------------------------------------------------------
+void Driver::RemoveNodeQuery
+(
+	uint8 const _nodeId
+)
+{
+	m_queryMutex->Lock();
+
+	for( list<uint8>::iterator it = m_nodeQueries.begin(); it != m_nodeQueries.end(); ++it )
+	{
+		if( _nodeId == *it )
+		{
+			// Found
+			m_nodeQueries.erase( it );
+			break;
+		}
+	}
+
+	m_queryMutex->Release();
 }
 
 //-----------------------------------------------------------------------------
@@ -2464,14 +2535,10 @@ uint8 Driver::GetNodeInfoRequest
 //-----------------------------------------------------------------------------
 void Driver::RequestNodeState
 (
-	 uint8 const _nodeId,
-	 uint32 const _flags
+	 uint8 const _nodeId
 )
 {
-	if( Node* node = GetNodeUnsafe( _nodeId ) )
-	{
-		node->RequestState( _flags );
-	}
+	AddNodeQuery( _nodeId, Node::QueryStage_Session );
 }
 
 //-----------------------------------------------------------------------------
@@ -2872,6 +2939,38 @@ void Driver::SetNodeLevel
 }
 
 //-----------------------------------------------------------------------------
+// <Driver::SetNodeOn>
+// Helper to set the node on through the basic command class or SwitchAll class
+//-----------------------------------------------------------------------------
+void Driver::SetNodeOn
+( 
+    uint8 const _nodeId
+)
+{
+    if( Node* node = GetNode( _nodeId ) )
+    {
+        node->SetNodeOn();
+        ReleaseNodes();
+    }
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::SetNodeOff>
+// Helper to set the node off through the basic command class or SwitchAll class
+//-----------------------------------------------------------------------------
+void Driver::SetNodeOff
+( 
+    uint8 const _nodeId
+)
+{
+    if( Node* node = GetNode( _nodeId ) )
+    {
+        node->SetNodeOff();
+        ReleaseNodes();
+    }
+}
+
+//-----------------------------------------------------------------------------
 // <Driver::GetValue>
 // Get a pointer to a Value object for the specified ValueID
 //-----------------------------------------------------------------------------
@@ -2953,7 +3052,6 @@ void Driver::AssignReturnRoute
 	Msg* msg = new Msg( "Assign Return Route", _nodeId, REQUEST, FUNC_ID_ZW_ASSIGN_RETURN_ROUTE, true );		
 	msg->Append( _nodeId );
 	msg->Append( _targetNodeId );
-	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 	SendMsg( msg );
 } 
 
@@ -3063,6 +3161,11 @@ bool Driver::BeginControllerCommand
 			SendMsg( msg );
 			break;
 		}
+        case ControllerCommand_None:
+        {
+            // To keep gcc quiet
+            break;
+        }
 	}
 
 	return true;
@@ -3139,6 +3242,11 @@ bool Driver::CancelControllerCommand
 		{
 			break;
 		}
+        case ControllerCommand_None:
+        {
+            // To keep gcc quiet
+            break;
+        }
 	}
 
 	m_controllerCommand = ControllerCommand_None;
@@ -3235,6 +3343,26 @@ uint32 Driver::GetAssociations
 	}
 
 	return numAssociations;
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::GetMaxAssociations>
+// Gets the maximum number of associations for a group
+//-----------------------------------------------------------------------------
+uint8 Driver::GetMaxAssociations
+( 
+	uint8 const _nodeId,
+	uint8 const _groupIdx
+)
+{
+	uint8 maxAssociations = 0;
+	if( Node* node = GetNode( _nodeId ) )
+	{
+		maxAssociations = node->GetMaxAssociations( _groupIdx );
+		ReleaseNodes();
+	}
+
+	return maxAssociations;
 }
 
 //-----------------------------------------------------------------------------

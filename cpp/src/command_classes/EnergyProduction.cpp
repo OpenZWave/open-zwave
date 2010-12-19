@@ -56,7 +56,7 @@ static char const* c_energyParameterNames[] =
 // <EnergyProduction::RequestState>												   
 // Request current state from the device									   
 //-----------------------------------------------------------------------------
-void EnergyProduction::RequestState
+bool EnergyProduction::RequestState
 (
 	uint32 const _requestFlags
 )
@@ -68,7 +68,10 @@ void EnergyProduction::RequestState
 		Get( Production_Total );
 		Get( Production_Today );
 		Get( Production_Time );
+		return true;
 	}
+
+	return false;
 }
 
 //-----------------------------------------------------------------------------

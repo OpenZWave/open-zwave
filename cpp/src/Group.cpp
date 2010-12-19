@@ -45,11 +45,13 @@ Group::Group
 ( 
 	uint32 const _homeId,
 	uint8 const _nodeId,
-	uint8 const _groupIdx
+	uint8 const _groupIdx,
+	uint8 const _maxAssociations
 ):
 	m_homeId( _homeId ),
 	m_nodeId( _nodeId ),
-	m_groupIdx( _groupIdx )
+	m_groupIdx( _groupIdx ),
+	m_maxAssociations( _maxAssociations )
 {
 	char str[16];
 	snprintf( str, sizeof(str), "Group %d", m_groupIdx );
@@ -67,11 +69,20 @@ Group::Group
 	TiXmlElement const* _groupElement
 ):
 	m_homeId( _homeId ),
-	m_nodeId( _nodeId )
+	m_nodeId( _nodeId ),
+	m_groupIdx( 0 ),
+	m_maxAssociations( 0 )
 {
 	int intVal;
-	_groupElement->QueryIntAttribute( "index", &intVal );
-	m_groupIdx = (uint8)intVal;
+	if( TIXML_SUCCESS == _groupElement->QueryIntAttribute( "index", &intVal ) )
+	{
+		m_groupIdx = (uint8)intVal;
+	}
+
+	if( TIXML_SUCCESS == _groupElement->QueryIntAttribute( "max_associations", &intVal ) )
+	{
+		m_maxAssociations = (uint8)intVal;
+	}
 
 	char const* str = _groupElement->Attribute( "label" );
 	if( str )
@@ -107,6 +118,9 @@ void Group::WriteXML
 
 	snprintf( str, 16, "%d", m_groupIdx );
 	_groupElement->SetAttribute( "index", str );
+
+	snprintf( str, 16, "%d", m_maxAssociations );
+	_groupElement->SetAttribute( "max_associations", str );
 
 	_groupElement->SetAttribute( "label", m_label.c_str() );
 
@@ -169,15 +183,14 @@ void Group::RemoveAssociation
 //-----------------------------------------------------------------------------
 void Group::OnGroupChanged
 (
-	uint8 const _numNodes,
-	uint8 const* _nodes
+	vector<uint8> const& _associations
 )
 {
 	bool notify = false;
 
 	// If the number of associations is different, we'll save 
 	// ourselves some work and clear the old set now.
-	if( _numNodes != m_associations.size() )
+	if( _associations.size() != m_associations.size() )
 	{
 		m_associations.clear();
 		notify = true;
@@ -187,9 +200,9 @@ void Group::OnGroupChanged
 	uint8 oldSize = (uint8)m_associations.size();
 
 	uint8 i;
-	for( i=0; i<_numNodes; ++i )
+	for( i=0; i<_associations.size(); ++i )
 	{
-		m_associations[_nodes[i]] = AssociationCommandVec();
+		m_associations[_associations[i]] = AssociationCommandVec();
 	}
 
 	if( (!notify) && ( oldSize != m_associations.size() ) )
@@ -199,9 +212,9 @@ void Group::OnGroupChanged
 		// in the original and new sets of nodes in the group.  The easiest way
 		// to sort this out is to clear the associations and add the new nodes again.
 		m_associations.clear();
-		for( i=0; i<_numNodes; ++i )
+		for( i=0; i<_associations.size(); ++i )
 		{
-			m_associations[_nodes[i]] = AssociationCommandVec();
+			m_associations[_associations[i]] = AssociationCommandVec();
 		}
 		notify = true;
 	}

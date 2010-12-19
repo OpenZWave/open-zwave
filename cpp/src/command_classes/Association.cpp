@@ -49,6 +49,22 @@ enum AssociationCmd
 
 
 //-----------------------------------------------------------------------------
+// <Association::Association>
+// Constructor
+//-----------------------------------------------------------------------------
+Association::Association
+( 
+	uint32 const _homeId,
+	uint8 const _nodeId
+): 
+	CommandClass( _homeId, _nodeId ),
+	m_queryAll(false),
+	m_numGroups(0)
+{
+	SetStaticRequest( StaticRequest_Values );
+}
+
+//-----------------------------------------------------------------------------
 // <Association::ReadXML>
 // Read the saved association data
 //-----------------------------------------------------------------------------
@@ -67,6 +83,12 @@ void Association::ReadXML
 			char const* str = associationsElement->Value();
 			if( str && !strcmp( str, "Associations" ) )
 			{
+				int intVal;
+				if( TIXML_SUCCESS == associationsElement->QueryIntAttribute( "num_groups", &intVal ) )
+				{
+					m_numGroups = (uint8)intVal;
+				}
+
 				TiXmlElement const* groupElement = associationsElement->FirstChildElement();
 				while( groupElement )
 				{
@@ -98,6 +120,11 @@ void Association::WriteXML
 	if( Node* node = GetNodeUnsafe() )
 	{
 		TiXmlElement* associationsElement = new TiXmlElement( "Associations" );
+
+		char str[8];
+		snprintf( str, 8, "%d", m_numGroups );
+		associationsElement->SetAttribute( "num_groups", str );
+
 		_ccElement->LinkEndChild( associationsElement );
 		node->WriteGroups( associationsElement ); 
 	}
@@ -107,14 +134,14 @@ void Association::WriteXML
 // <Association::RequestState>
 // Nothing to do for Association
 //-----------------------------------------------------------------------------
-void Association::RequestState
+bool Association::RequestState
 (
 	uint32 const _requestFlags
 )
 {
-	if( _requestFlags & RequestFlag_Session )
+	if( ( _requestFlags & RequestFlag_Static ) && HasStaticRequest( StaticRequest_Values ) )
 	{
-		// Request all the association groups
+		// Request the supported group info
 		Msg* msg = new Msg( "Get Association Groupings", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 		msg->Append( GetNodeId() );
 		msg->Append( 2 );
@@ -122,6 +149,34 @@ void Association::RequestState
 		msg->Append( AssociationCmd_GroupingsGet );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 		GetDriver()->SendMsg( msg );
+		return true;
+	}
+
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Association::RequestAllGroups>
+// Request the contents of each group in turn
+//-----------------------------------------------------------------------------
+void Association::RequestAllGroups
+(
+)
+{
+	m_queryAll = true;
+
+	// Request the contents of the individual groups in turn.
+	if( m_numGroups == 0xff )
+	{
+		// We start with group 255, and will then move to group 1, 2 etc and stop when we find a group with a maxAssociations of zero.
+		Log::Write( "Number of association groups reported for node %d is 255, which requires special case handling.", GetNodeId() );
+		QueryGroup( 0xff );	
+	}
+	else
+	{
+		// We start with group 1, and will then move to group 2, 3 etc and stop when the group index is greater than m_numGroups.
+		Log::Write( "Number of association groups reported for node %d is %d.", GetNodeId(), m_numGroups );
+		QueryGroup( 1 );
 	}
 }
 
@@ -142,55 +197,90 @@ bool Association::HandleMsg
 	{
 		if( AssociationCmd_GroupingsReport == (AssociationCmd)_data[0] )
 		{	
-			// Retreive the number of groups this device supports,
-			// and request the members of each group in turn.
-			uint8 numGroups = _data[1];
-
-			Log::Write( "Received Association Groupings report from node %d: Number of Groups=%d", GetNodeId(), numGroups );
-
-			for( uint8 i=0; i<numGroups; ++i )
-			{
-				Msg* msg = new Msg( "Get Associations", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-				msg->Append( GetNodeId() );
-				msg->Append( 3 );
-				msg->Append( GetCommandClassId() );
-				msg->Append( AssociationCmd_Get );
-				msg->Append( i+1 );
-				msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-				GetDriver()->SendMsg( msg );
-			}
+			// Retrieve the number of groups this device supports.
+			// The groups will be queried with the session data.
+			m_numGroups = _data[1];
+			Log::Write( "Received Association Groupings report from node %d.  Number of groups is %d", GetNodeId(), m_numGroups );
+			ClearStaticRequest( StaticRequest_Values );
 			handled = true;
 		}
 		else if( AssociationCmd_Report == (AssociationCmd)_data[0] )
 		{
-			// Get the group memebers
+			// Get the group info
 			uint8 groupIdx = _data[1];
-	//		uint8 maxAssociations = _data[2];
+			uint8 maxAssociations = _data[2];		// If the maxAssociations is zero, this is not a supported group.
+			uint8 numReportsToFollow = _data[3];	// If a device supports a lot of associations, they may come in more than one message.
 
-			Group* group = node->GetGroup( groupIdx );
-			if( NULL == group )
+			if( maxAssociations )
 			{
-				// Group has not been created yet
-				group = new Group( GetHomeId(), GetNodeId(), groupIdx );
-				node->AddGroup( group );
-			}
-
-//			uint8 numAssociations = _data[3];	- should be this value, but it always appears to be zero.
-			if( _length >= 5 )
-			{
-				uint8 numAssociations = _length - 5;
-
-				Log::Write( "Received Association report from node %d, group %d: Number of associations=%d", GetNodeId(), groupIdx, numAssociations );
-				if( numAssociations )
+				if( _length >= 5 )
 				{
-					Log::Write( "  The group contains:", GetNodeId(), groupIdx, numAssociations );
-					for( uint8 i=0; i<numAssociations; ++i )
+					uint8 numAssociations = _length - 5;
+
+					Log::Write( "Received Association report from node %d, group %d, containing %d associations", GetNodeId(), groupIdx, numAssociations );
+					if( numAssociations )
 					{
-						Log::Write( "    Node %d", _data[i+4] );
+						Log::Write( "  The group contains:" );
+						for( uint8 i=0; i<numAssociations; ++i )
+						{
+							Log::Write( "    Node %d", _data[i+4] );
+							m_pendingMembers.push_back( _data[i+4] );
+						}
 					}
 				}
 
-				group->OnGroupChanged( numAssociations, &_data[4] );
+				if( numReportsToFollow )
+				{
+					// We're expecting more reports for this group
+					Log::Write( "%d more association reports expected for node %d, group %d", numReportsToFollow, GetNodeId(), groupIdx );
+					return true;
+				}
+				else
+				{
+					// No more reports to come for this group, so we can apply the pending list
+					Group* group = node->GetGroup( groupIdx );
+					if( NULL == group )
+					{
+						// Group has not been created yet
+						group = new Group( GetHomeId(), GetNodeId(), groupIdx, maxAssociations );
+						node->AddGroup( group );
+					}
+
+					// Update the group with its new contents
+					group->OnGroupChanged( m_pendingMembers );
+					m_pendingMembers.clear();
+				}
+			}
+			else
+			{
+				// maxAssociations is zero, so we've reached the end of the query process
+				Log::Write( "Max associations for node %d, group %d is zero.  Querying associations for this node is complete.", GetNodeId(), groupIdx );
+				node->QueryStageComplete( Node::QueryStage_Associations );
+				m_queryAll = false;
+			}
+
+			if( m_queryAll )
+			{
+				// Work out which is the next group we will query.
+				// If we are currently on group 255, the next group will be 1.
+				uint8 nextGroup = groupIdx + 1;
+				if( !nextGroup )
+				{
+					nextGroup = 1;
+				}
+
+				if( nextGroup <= m_numGroups )
+				{
+					// Query the next group
+					QueryGroup( nextGroup );
+				}
+				else
+				{
+					// We're all done
+					Log::Write( "Querying associations for node %d is complete.", GetNodeId() );
+					node->QueryStageComplete( Node::QueryStage_Associations );
+					m_queryAll = false;
+				}
 			}
 
 			handled = true;
@@ -198,6 +288,26 @@ bool Association::HandleMsg
 	}
 
 	return handled;
+}
+
+//-----------------------------------------------------------------------------
+// <Association::QueryGroup>
+// Request details of an association group
+//-----------------------------------------------------------------------------
+void Association::QueryGroup
+(
+	uint8 _groupIdx
+)
+{
+	Log::Write( "Get Associations for group %d of node %d", _groupIdx, GetNodeId() );
+	Msg* msg = new Msg( "Get Associations", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+	msg->Append( GetNodeId() );
+	msg->Append( 3 );
+	msg->Append( GetCommandClassId() );
+	msg->Append( AssociationCmd_Get );
+	msg->Append( _groupIdx );
+	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	GetDriver()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -212,7 +322,7 @@ void Association::Set
 {
 	Log::Write( "Association::Set - Adding node %d to group %d of node %d", _targetNodeId, _groupIdx, GetNodeId() );
 
-	Msg* msg = new Msg( "Association Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );		
+	Msg* msg = new Msg( "Association Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
 	msg->Append( GetNodeId() );
 	msg->Append( 4 );
 	msg->Append( GetCommandClassId() );
@@ -235,7 +345,7 @@ void Association::Remove
 {
 	Log::Write( "Association::Remove - Removing node %d from group %d of node %d", _targetNodeId, _groupIdx, GetNodeId() );
 
-	Msg* msg = new Msg( "Association Remove", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );		
+	Msg* msg = new Msg( "Association Remove", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
 	msg->Append( GetNodeId() );
 	msg->Append( 4 );
 	msg->Append( GetCommandClassId() );

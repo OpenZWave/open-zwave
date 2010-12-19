@@ -40,7 +40,7 @@ SerialPortImpl::SerialPortImpl
 )
 {
 	m_hSerialPort = -1;
-#ifdef DEBUG
+#ifdef OZW_DEBUG
 	m_hdebug = -1;
 #endif
 }
@@ -53,8 +53,10 @@ SerialPortImpl::~SerialPortImpl
 (
 )
 {
+    if(m_hSerialPort >= 0)
 	close( m_hSerialPort );
-#ifdef DEBUG
+#ifdef OZW_DEBUG
+    if(m_hdebug >= 0)
 	close( m_hdebug );
 #endif
 }
@@ -175,13 +177,14 @@ bool SerialPortImpl::Open
 	tcflush( m_hSerialPort, TCIOFLUSH );
 
 	// Open successful
-#ifdef DEBUG
+#ifdef OZW_DEBUG
 	m_hdebug = open("data.log", O_WRONLY|O_CREAT, 0666);
 #endif
 	return true;
 
 SerialOpenFailure:
  	Log::Write( "Failed to open serial port %s", _serialPortName.c_str() );
+    if(m_hSerialPort >= 0)
 	close( m_hSerialPort );
 	return false;
 }
@@ -196,7 +199,7 @@ void SerialPortImpl::Close
 {
 	close( m_hSerialPort );
 	m_hSerialPort = -1;
-#ifdef DEBUG
+#ifdef OZW_DEBUG
 	close( m_hdebug );
 	m_hdebug = -1;
 #endif
@@ -221,7 +224,7 @@ uint32 SerialPortImpl::Read
 
 	uint32 bytesRead;
 	bytesRead = read( m_hSerialPort, _buffer, _length );
-#ifdef DEBUG
+#ifdef OZW_DEBUG
 	if ( m_hdebug >= 0 && bytesRead > 0 )
 	{
 		unsigned int now = htonl(time(NULL));
@@ -255,7 +258,7 @@ uint32 SerialPortImpl::Write
 	// Write the data
 	uint32 bytesWritten;
 	bytesWritten = write( m_hSerialPort, _buffer, _length);
-#ifdef DEBUG
+#ifdef OZW_DEBUG
 	if ( m_hdebug >= 0 )
 	{
 		unsigned int now = htonl(time(NULL));
@@ -303,7 +306,14 @@ bool SerialPortImpl::Wait
 			when.tv_usec = _timeout % 1000 * 1000;
 			whenp = &when;
 		}
-		err = select( FD_SETSIZE, &rds, NULL, &eds, whenp );
+
+        int oldstate;
+        pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, &oldstate);
+
+        err = select( m_hSerialPort + 1, &rds, NULL, &eds, whenp );
+
+        pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, &oldstate);
+
 		if( err > 0 )
 			return true;
 		else if( err < 0 )

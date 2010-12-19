@@ -83,11 +83,12 @@ ThermostatSetpoint::ThermostatSetpoint
 // <ThermostatSetpoint::RequestState>
 // Get the static thermostat setpoint details from the device
 //-----------------------------------------------------------------------------
-void ThermostatSetpoint::RequestState
+bool ThermostatSetpoint::RequestState
 (
 	uint32 const _requestFlags
 )
 {
+	bool requests = false;
 	if( ( _requestFlags & RequestFlag_Static ) && HasStaticRequest( StaticRequest_Values ) )
 	{
 		// Request the supported setpoints
@@ -98,6 +99,7 @@ void ThermostatSetpoint::RequestState
 		msg->Append( ThermostatSetpointCmd_SupportedGet );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 		GetDriver()->SendMsg( msg );
+		requests = true;
 	}
 
 	if( _requestFlags & RequestFlag_Session )
@@ -117,7 +119,10 @@ void ThermostatSetpoint::RequestState
 				GetDriver()->SendMsg( msg );
 			}
 		}
+		requests = true;
 	}
+
+	return requests;
 }
 
 //-----------------------------------------------------------------------------

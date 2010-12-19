@@ -42,10 +42,15 @@ namespace OZWForm
             // 
             this.ValueShortNumericUpDown.Location = new System.Drawing.Point(3, 6);
             this.ValueShortNumericUpDown.Maximum = new decimal(new int[] {
-            255,
+            32767,
             0,
             0,
             0});
+            this.ValueShortNumericUpDown.Minimum = new decimal(new int[] {
+            32768,
+            0,
+            0,
+            -2147483648});
             this.ValueShortNumericUpDown.Name = "ValueShortNumericUpDown";
             this.ValueShortNumericUpDown.Size = new System.Drawing.Size(59, 20);
             this.ValueShortNumericUpDown.TabIndex = 0;

@@ -183,29 +183,13 @@ namespace OpenZWaveDotNet
 		 * @return a pointer to the newly created Manager object.
 		 * @see Destroy, AddWatcher, AddDriver
 		 */
-		void Create( String^ _configPath, String^ _userPath );
+		void Create();
 
 		/**
 		 * Deletes the Manager and cleans up any associated objects.  
 		 * @see Create, Get
 		 */
 		void Destroy(){ Manager::Get()->Destroy(); }
-
-		/**
-		 * Get the path to the OpenZWave library config folder.
-		 * Gets the string that was passed into the Manager::Create method as the _configPath argument.  
-		 * @return A string containing the path of the OpenZWave library config folder.
-		 * @see Create
-		 */
-		String^ GetConfigPath(){ return gcnew String(Manager::Get()->GetConfigPath().c_str()); }
-
-		/**
-		 * Get the path to the application's user data folder.
-		 * Gets the string that was passed into the Manager::Create method as the _userPath argument.  
-		 * @return A string containing the path of the application's user data folder.
-		 * @see Create
-		 */
-		String^ GetUserPath(){ return gcnew String(Manager::Get()->GetUserPath().c_str()); }
 	/*@}*/					   
 
 	//-----------------------------------------------------------------------------
@@ -364,7 +348,7 @@ namespace OpenZWaveDotNet
 		bool RefreshNodeInfo( uint32 homeId, uint8 nodeId ){ return Manager::Get()->RefreshNodeInfo(homeId,nodeId); }
  		
 		/**
-		 * Trigger the fetching of dynamic value data for a node.
+		 * Trigger the fetching of session and dynamic value data for a node.
 		 * Causes the node's values to be requested from the Z-Wave network.
 		 * @param homeId The Home ID of the Z-Wave controller that manages the node.
 		 * @param _nodeId The ID of the node to query.
@@ -863,6 +847,16 @@ namespace OpenZWaveDotNet
 		 * @see GetNumGroups, AddAssociation, RemoveAssociation
 		 */
 		uint32 GetAssociations( uint32 const homeId, uint8 const nodeId, uint8 const groupIdx, [Out] array<Byte>^ %o_associations );
+
+		/**
+		 * Gets the maximum number of associations for a group.
+		 * @param homeId The Home ID of the Z-Wave controller that manages the node.
+		 * @param _nodeId The ID of the node whose associations we are interested in.
+		 * @param _groupIdx one-based index of the group (because Z-Wave product manuals use one-based group numbering).
+		 * @return The maximum number of nodes that can be associated into the group.
+		 * @see GetNumGroups, AddAssociation, RemoveAssociation
+		 */
+		uint8 GetMaxAssociations( uint32 const homeId, uint8 const nodeId, uint8 const groupIdx ){ return Manager::Get()->GetMaxAssociations( homeId, nodeId, groupIdx ); }
 
 		/**
 		 * Adds a node to an association group.

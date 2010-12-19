@@ -58,7 +58,7 @@ static char const* c_protectionStateNames[] =
 // <Protection::RequestState>												   
 // Request current state from the device									   
 //-----------------------------------------------------------------------------
-void Protection::RequestState
+bool Protection::RequestState
 (
 	uint32 const _requestFlags
 )
@@ -72,7 +72,10 @@ void Protection::RequestState
 		msg->Append( ProtectionCmd_Get );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 		GetDriver()->SendMsg( msg );
+		return true;
 	}
+
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -94,6 +97,7 @@ bool Protection::HandleMsg
 		{
 			value->OnValueChanged( (int)_data[1] );
 		}
+
 		return true;
 	}
 

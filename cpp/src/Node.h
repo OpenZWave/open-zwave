@@ -77,15 +77,40 @@ namespace OpenZWave
 	// Initialization
 	//-----------------------------------------------------------------------------
 	public:
+		enum QueryStage														
+		{
+			QueryStage_None,
+			QueryStage_ProtocolInfo,
+			QueryStage_WakeUp,
+			QueryStage_NodeInfo,
+			QueryStage_ManufacturerSpecific,
+			QueryStage_Versions,
+			QueryStage_Instances,
+			QueryStage_Static,
+			QueryStage_Associations,
+			QueryStage_Session,
+			QueryStage_Dynamic,
+			QueryStage_Complete
+		};
+
+		void AdvanceQueries();
+		void QueryStageComplete( QueryStage const _stage );
+		void QueryStageRetry( QueryStage const _stage, uint8 const _maxAttempts = 0 );	    // maxAttempts of zero means no limit
+		void GoBackToQueryStage( QueryStage const _stage );									// Used to move back to repeat from an earlier stage. 
+
 		void UpdateProtocolInfo( uint8 const* _data );
 		void UpdateNodeInfo( uint8 const* _data, uint8 const _length );
-		bool NodeInfoReceived()const{ return m_nodeInfoReceived; }
-		void SetStaticRequests();
+
+		bool ProtocolInfoReceived()const{ return (uint32)m_queryStage > (uint32)QueryStage_ProtocolInfo; }
+		bool NodeInfoReceived()const{ return( (uint32)m_queryStage > (uint32)QueryStage_NodeInfo ); }
+		bool AllQueriesCompleted()const{ return( QueryStage_Complete == m_queryStage ); }
 
 	private:
-		bool	m_protocolInfoReceived;
-		bool	m_nodeInfoReceived;
+		void SetStaticRequests();
 
+		QueryStage	m_queryStage;
+		bool		m_queryPending;
+		uint8		m_queryRetries;
 
 	//-----------------------------------------------------------------------------
 	// Capabilities
@@ -174,11 +199,6 @@ namespace OpenZWave
 	//-----------------------------------------------------------------------------
 	public:
 		CommandClass* GetCommandClass( uint8 const _commandClassId )const;
-		
-		void RequestEntireNodeState();
-		void RequestInstances()const;
-		void RequestVersions()const;
-		void RequestState( uint32 const _requestFlags );
 		void ApplicationCommandHandler( uint8 const* _data );
 
 		bool RequiresPolling();
@@ -186,6 +206,7 @@ namespace OpenZWave
 
 	private:
 		CommandClass* AddCommandClass( uint8 const _commandClassId );
+		void RemoveCommandClass( uint8 const _commandClassId );
 		void ReadXML( TiXmlElement const* _nodeElement );
 		void ReadCommandClassesXML( TiXmlElement const* _ccsElement );
 		void WriteXML( TiXmlElement* _nodeElement );
@@ -197,6 +218,13 @@ namespace OpenZWave
 	//-----------------------------------------------------------------------------
 	public:
 		void SetLevel( uint8 const _level );
+
+	//-----------------------------------------------------------------------------
+    // On/Off commands (helpers that go through the basic or switchall command class)
+    //-----------------------------------------------------------------------------
+    public:
+        void SetNodeOn();
+        void SetNodeOff();
 
 	//-----------------------------------------------------------------------------
 	// Values (handled by the command classes)
@@ -240,6 +268,7 @@ namespace OpenZWave
 		// The public interface is provided via the wrappers in the Manager class
 		uint8 GetNumGroups();
 		uint32 GetAssociations( uint8 const _groupIdx, uint8** o_associations );
+		uint8 GetMaxAssociations( uint8 const _groupIdx );
 		void AddAssociation( uint8 const _groupIdx, uint8 const _targetNodeId );
 		void RemoveAssociation( uint8 const _groupIdx, uint8 const _targetNodeId );
 

@@ -55,14 +55,15 @@ namespace OpenZWaveDotNet
 
 		enum class ValueType
 		{
-			Bool	= ValueID::ValueType_Bool,
-			Byte	= ValueID::ValueType_Byte,
-			Decimal	= ValueID::ValueType_Decimal,
-			Int		= ValueID::ValueType_Int,
-			List	= ValueID::ValueType_List,
-			Short	= ValueID::ValueType_Short,
-			String	= ValueID::ValueType_String,
-			Trigger = ValueID::ValueType_Button
+			Bool		= ValueID::ValueType_Bool,
+			Byte		= ValueID::ValueType_Byte,
+			Decimal		= ValueID::ValueType_Decimal,
+			Int			= ValueID::ValueType_Int,
+			List		= ValueID::ValueType_List,
+			Schedule	= ValueID::ValueType_Schedule,
+			Short		= ValueID::ValueType_Short,
+			String		= ValueID::ValueType_String,
+			Button		= ValueID::ValueType_Button
 		};
 
 		/**

@@ -59,7 +59,7 @@ static char const* c_switchAllStateName[] =
 // <SwitchAll::RequestState>												   
 // Request current state from the device									   
 //-----------------------------------------------------------------------------
-void SwitchAll::RequestState
+bool SwitchAll::RequestState
 (
 	uint32 const _requestFlags
 )
@@ -73,7 +73,10 @@ void SwitchAll::RequestState
 		msg->Append( SwitchAllCmd_Get );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 		GetDriver()->SendMsg( msg );
+		return true;
 	}
+
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -145,6 +148,7 @@ void SwitchAll::Off
 	msg->Append( GetCommandClassId() );
 	msg->Append( SwitchAllCmd_Off );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+    GetDriver()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -162,6 +166,7 @@ void SwitchAll::On
 	msg->Append( GetCommandClassId() );
 	msg->Append( SwitchAllCmd_On );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+    GetDriver()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------

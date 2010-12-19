@@ -23,6 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -47,6 +48,15 @@
     <Compile Include="ControllerCommandDlg.Designer.cs">
       <DependentUpon>ControllerCommandDlg.cs</DependentUpon>
     </Compile>
+    <Compile Include="ValuePanelDecimal.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ValuePanelList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ValuePanelString.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -64,6 +74,15 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="ControllerCommandDlg.resx">
       <DependentUpon>ControllerCommandDlg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ValuePanelDecimal.resx">
+      <DependentUpon>ValuePanelDecimal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ValuePanelList.resx">
+      <DependentUpon>ValuePanelList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ValuePanelString.resx">
+      <DependentUpon>ValuePanelString.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>

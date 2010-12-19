@@ -35,31 +35,41 @@ namespace OpenZWave
 	class Mutex
 	{
 	public:
-
-		/// <summary>	Constructor. </summary>
-		/// <remarks>	Creates a mutex object that can be used to serialize access to a shared resource. </remarks>
+		/**
+		 * Constructor.
+		 * Creates a mutex object that can be used to serialize access to a shared resource.
+		 */
 		Mutex();
 
-		/// <summary>	Destructor. </summary>
-		/// <remarks>	Destroys the mutex object. </remarks>
+		/**
+		 * Destructor.
+		 * Destroys the mutex object.
+		 */
 		~Mutex();
 
-		/// <summary>	Attempt to lock the mutex. </summary>
-		/// <remarks>	There must be a matching call to Release for every call to Lock.</remarks>
-		/// <param name="_bWait">	Defaults to true.  Set this argument to false if the method should return immediately, even if the lock is not available. </param>
-		/// <returns>	true if the lock was obtained. </returns>
+		/**
+		 * Lock the mutex.
+		 * Attempts to lock the mutex.
+		 * There must be a matching call to Release for every call to Lock.
+		 * @param _bWait Defaults to true.  Set this argument to false if the method should return
+		 * immediately, even if the lock is not available.
+		 * @return True if the lock was obtained.
+		 * @see Release
+		 */
 		bool Lock( bool const _bWait = true );
 
-		/// <summary>	Releases the mutex. </summary>
-		/// <remarks>	There must be a matching call to Release for every call to Lock. </remarks>
+		/**
+		 * Releases the lock on the mutex.
+		 * There must be a matching call to Release for every call to Lock.
+		 * @see Lock
+		 */
 		void Release();
 
 	private:
-		Mutex( Mutex const&	);					// declared but not implemented, to prevent copying
-		Mutex& operator = ( Mutex const& );		// declared but not implemented, to prevent assignment
+		Mutex( Mutex const&	);					// prevent copy
+		Mutex& operator = ( Mutex const& );		// prevent assignment
 
 		MutexImpl*	m_pImpl;					// Pointer to an object that encapsulates the platform-specific implementation of a mutex.
-		int			m_lockCount;
 	};
 
 } // namespace OpenZWave

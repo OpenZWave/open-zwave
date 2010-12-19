@@ -240,6 +240,12 @@
     <ClInclude Include="..\..\..\src\platform\windows\EventImpl.h">
       <Filter>Platform\Windows</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\Options.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Utils.h">
+      <Filter>Main</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\Driver.cpp">
@@ -457,6 +463,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\value_classes\ValueSchedule.cpp">
       <Filter>Value Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Options.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Utils.cpp">
+      <Filter>Main</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

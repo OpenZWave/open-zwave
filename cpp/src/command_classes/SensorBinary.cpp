@@ -48,7 +48,7 @@ enum SensorBinaryCmd
 // <SensorBinary::RequestState>												   
 // Request current state from the device									   
 //-----------------------------------------------------------------------------
-void SensorBinary::RequestState
+bool SensorBinary::RequestState
 (
 	uint32 const _requestFlags
 )
@@ -62,7 +62,10 @@ void SensorBinary::RequestState
 		msg->Append( SensorBinaryCmd_Get );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 		GetDriver()->SendMsg( msg );
+		return true;
 	}
+
+	return false;
 }
 
 //-----------------------------------------------------------------------------

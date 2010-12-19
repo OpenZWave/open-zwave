@@ -109,7 +109,7 @@ void ClimateControlSchedule::WriteXML
 // <ClimateControlSchedule::RequestState>												   
 // Request current state from the device									   
 //-----------------------------------------------------------------------------
-void ClimateControlSchedule::RequestState
+bool ClimateControlSchedule::RequestState
 (
 	uint32 const _requestFlags
 )
@@ -124,7 +124,10 @@ void ClimateControlSchedule::RequestState
 		msg->Append( ClimateControlScheduleCmd_ChangedGet );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 		GetDriver()->SendMsg( msg );
+		return true;
 	}
+
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -280,7 +283,7 @@ bool ClimateControlSchedule::SetValue
 	Value const& _value
 )
 {
-	bool res = false;
+//	bool res = false;
 	uint8 instance = _value.GetID().GetInstance();
 	uint8 idx = _value.GetID().GetIndex();
 

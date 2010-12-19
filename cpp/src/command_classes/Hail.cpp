@@ -54,12 +54,9 @@ bool Hail::HandleMsg
 {
 	if( HailCmd_Hail == _data[0] )
 	{
-		// We have received a hail from the Z-Wave device
-		// Request the a basic report from the node
-		if( Node* node = GetNodeUnsafe() )
-		{
-//			node->RequestBasicReport();
-		}
+		// We have received a hail from the Z-Wave device.
+		// Request an update of the dynamic values.
+		GetDriver()->AddNodeQuery( GetNodeId(), Node::QueryStage_Dynamic );
 		return true;
 	}
 	return false;

@@ -49,7 +49,7 @@ enum IndicatorCmd
 // <Indicator::RequestState>												   
 // Request current state from the device									   
 //-----------------------------------------------------------------------------
-void Indicator::RequestState
+bool Indicator::RequestState
 (
 	uint32 const _requestFlags
 )
@@ -63,7 +63,10 @@ void Indicator::RequestState
 		msg->Append( IndicatorCmd_Get );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 		GetDriver()->SendMsg( msg );
+		return true;
 	}
+
+	return false;
 }
 
 //-----------------------------------------------------------------------------

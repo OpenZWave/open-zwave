@@ -48,7 +48,7 @@ namespace OpenZWave
 		// From CommandClass
 		virtual void ReadXML( TiXmlElement const* _ccElement );
 		virtual void WriteXML( TiXmlElement* _ccElement );
-		virtual void RequestState( uint32 const _requestFlags );
+		virtual bool RequestState( uint32 const _requestFlags );
 		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }
 		virtual string const GetCommandClassName()const{ return StaticGetCommandClassName(); }
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );

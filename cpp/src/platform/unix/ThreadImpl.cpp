@@ -107,8 +107,11 @@ bool ThreadImpl::Stop
 
 	// This will kill an app that doesn't catch and ignore it.
 	// We need to find another way to interrupt select.
-	pthread_kill( m_hThread, SIGALRM );
+//	pthread_kill( m_hThread, SIGALRM );
+
+    pthread_cancel(m_hThread);
 	pthread_join( m_hThread, &data );
+
 	m_hThread = NULL;
 	m_bIsRunning = false;
 
