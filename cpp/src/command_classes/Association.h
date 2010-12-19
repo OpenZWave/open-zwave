@@ -57,6 +57,7 @@ namespace OpenZWave
 	private:
 		Association( uint32 const _homeId, uint8 const _nodeId );
 		void QueryGroup( uint8 _groupIdx );
+		void AutoAssociate();
 
 		bool			m_queryAll;			// When true, once a group has been queried, we request the next one.
 		uint8			m_numGroups;		// Number of groups supported by the device.  255 is reported by certain manufacturers and requires special handling.

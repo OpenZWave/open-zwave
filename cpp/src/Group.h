@@ -62,8 +62,12 @@ namespace OpenZWave
 		uint32 GetAssociations( uint8** o_associations );
 		uint8 GetMaxAssociations()const{ return m_maxAssociations; }
 		uint8 GetIdx()const{ return m_groupIdx; }
+		bool Contains( uint8 const _nodeId );
 
 	private:
+		bool IsAuto()const{ return m_auto; }
+		void SetAuto( bool const _state ){ m_auto = _state; }
+
 		void AddAssociation( uint8 const _nodeId );
 		void RemoveAssociation( uint8 const _nodeId );
 		void OnGroupChanged( vector<uint8> const& _associations );
@@ -98,6 +102,7 @@ namespace OpenZWave
 		uint8								m_nodeId;
 		uint8								m_groupIdx;
 		uint8								m_maxAssociations;
+		bool								m_auto;				// If true, the controller will automatically be associated with the group
 		map<uint8,AssociationCommandVec>	m_associations;
 	};
 

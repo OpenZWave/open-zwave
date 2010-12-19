@@ -55,6 +55,7 @@ namespace OpenZWave
 		friend class CommandClass;
 		friend class Value;
 		friend class ValueStore;
+		friend class Association;
 		friend class ManufacturerSpecific;
 		friend class WakeUp;
 		friend class Hail;

@@ -192,6 +192,7 @@ bool Association::HandleMsg
 )
 {
 	bool handled = false;
+	uint32 i;
 
 	if( Node* node = GetNodeUnsafe() )
 	{
@@ -221,7 +222,7 @@ bool Association::HandleMsg
 					if( numAssociations )
 					{
 						Log::Write( "  The group contains:" );
-						for( uint8 i=0; i<numAssociations; ++i )
+						for( i=0; i<numAssociations; ++i )
 						{
 							Log::Write( "    Node %d", _data[i+4] );
 							m_pendingMembers.push_back( _data[i+4] );
@@ -255,6 +256,7 @@ bool Association::HandleMsg
 			{
 				// maxAssociations is zero, so we've reached the end of the query process
 				Log::Write( "Max associations for node %d, group %d is zero.  Querying associations for this node is complete.", GetNodeId(), groupIdx );
+				node->AutoAssociate();
 				node->QueryStageComplete( Node::QueryStage_Associations );
 				m_queryAll = false;
 			}
@@ -278,6 +280,7 @@ bool Association::HandleMsg
 				{
 					// We're all done
 					Log::Write( "Querying associations for node %d is complete.", GetNodeId() );
+					node->AutoAssociate();
 					node->QueryStageComplete( Node::QueryStage_Associations );
 					m_queryAll = false;
 				}
