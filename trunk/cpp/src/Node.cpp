@@ -1734,6 +1734,7 @@ bool Node::AddMandatoryCommandClasses
 	}
 
 	int i=0;
+	bool afterMark = false;
 	while( uint8 cc = _commandClasses[i++] )
 	{
 		if( cc == 0xef )
@@ -1741,6 +1742,7 @@ bool Node::AddMandatoryCommandClasses
 			// COMMAND_CLASS_MARK.  
 			// Marks the end of the list of supported command classes.  The remaining classes 
 			// are those that can be controlled by this device, which we can ignore.
+			afterMark = true;
 			break;
 		}
 
@@ -1748,6 +1750,12 @@ bool Node::AddMandatoryCommandClasses
         {
 			if( CommandClass* commandClass = AddCommandClass( cc ) )
 			{
+				// If this class came after the COMMAND_CLASS_MARK, then we do not create values.
+				if( afterMark )
+				{
+					commandClass->SetNoValues();
+				}
+
 				// Start with an instance count of one.  If the device supports COMMMAND_CLASS_MULTI_INSTANCE
 				// then some command class instance counts will increase.
 				commandClass->SetInstances( 1 );
