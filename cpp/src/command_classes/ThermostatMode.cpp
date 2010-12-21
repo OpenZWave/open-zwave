@@ -60,7 +60,8 @@ static char const* c_modeName[] =
 	"Moist Air",
 	"Auto Changeover",
 	"Heat Econ",
-	"Cool Econ"
+	"Cool Econ",
+	"Away"
 };
 
 
@@ -121,7 +122,7 @@ bool ThermostatMode::HandleMsg
 		{
 			if( ValueList* valueList = m_mode.GetInstance( _instance ) )
 			{
-				valueList->OnValueChanged( _data[1] );
+				valueList->OnValueChanged( _data[1]&0x1f );
 				Log::Write( "Received thermostat mode from node %d: %s", GetNodeId(), valueList->GetItem().m_label.c_str() );		
 				valueList->Release();
 			}
