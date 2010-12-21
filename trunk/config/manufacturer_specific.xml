@@ -21,6 +21,7 @@
     <Product type="0003" id="0003" name="HA-03WD Lamp Module" />
   </Manufacturer>
   <Manufacturer id="0008" name="Wayne Dalton">
+    <Product type="0007" id="0020" name="WDTC-20 Thermostat" />
   </Manufacturer>
   <Manufacturer id="0012" name="E Housekeeper">
     <Product type="0001" id="0001" name="Switchkeeper Plug-in Appliance Module" />
