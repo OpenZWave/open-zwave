@@ -33,16 +33,14 @@
 #include "Driver.h"
 #include "Log.h"
 
-#include "ValueList.h"
+#include "ValueString.h"
 
 using namespace OpenZWave;
 
 enum ThermostatOperatingStateCmd
 {
 	ThermostatOperatingStateCmd_Get				= 0x02,
-	ThermostatOperatingStateCmd_Report			= 0x03,
-	ThermostatOperatingStateCmd_SupportedGet	= 0x04,
-	ThermostatOperatingStateCmd_SupportedReport	= 0x05
+	ThermostatOperatingStateCmd_Report			= 0x03
 };
 
 static char const* c_stateName[] = 
@@ -50,10 +48,19 @@ static char const* c_stateName[] =
 	"Idle",
 	"Heating",
 	"Cooling",
-	"FanOnly",
-	"PendingHeat",
-	"PendingCool",
-	"VentOrEconomizer"
+	"Fan Only",
+	"Pending Heat",
+	"Pending Cool",
+	"Vent / Economizer",
+	"State 07",				// Undefined states.  May be used in the future.
+	"State 08", 
+	"State 09", 
+	"State 10", 
+	"State 11", 
+	"State 12", 
+	"State 13", 
+	"State 14", 
+	"State 15"
 };
 
 
@@ -66,20 +73,6 @@ bool ThermostatOperatingState::RequestState
 	uint32 const _requestFlags
 )
 {
-	bool requests = false;
-	if( ( _requestFlags & RequestFlag_Static ) && HasStaticRequest( StaticRequest_Values ) )
-	{
-		// Request the supported states
-		Msg* msg = new Msg( "Request Supported Thermostat Operating States", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-		msg->Append( GetNodeId() );
-		msg->Append( 2 );
-		msg->Append( GetCommandClassId() );
-		msg->Append( ThermostatOperatingStateCmd_SupportedGet );
-		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-		GetDriver()->SendMsg( msg);
-		requests = true;
-	}
-
 	if( _requestFlags & RequestFlag_Dynamic )
 	{
 		// Request the current state
@@ -90,10 +83,10 @@ bool ThermostatOperatingState::RequestState
 		msg->Append( ThermostatOperatingStateCmd_Get );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 		GetDriver()->SendMsg( msg );
-		requests = true;
+		return true;
 	}
 
-	return requests;
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -110,42 +103,12 @@ bool ThermostatOperatingState::HandleMsg
 	if( ThermostatOperatingStateCmd_Report == (ThermostatOperatingStateCmd)_data[0] )
 	{
 		// We have received the thermostat operating state from the Z-Wave device
-		if( !m_supportedStates.empty() )
+		if( ValueString* valueString = m_state.GetInstance( _instance ) )
 		{
-			if( ValueList* valueList = m_state.GetInstance( _instance ) )
-			{
-				valueList->OnValueChanged( _data[1] );
-				Log::Write( "Received thermostat operating state from node %d: %s", GetNodeId(), valueList->GetItem().m_label.c_str() );		
-				valueList->Release();
-			}
+			valueString->OnValueChanged( c_stateName[_data[1]&0x0f] );
+			Log::Write( "Received thermostat operating state from node %d: %s", GetNodeId(), valueString->GetValue().c_str() );		
+			valueString->Release();
 		}
-		return true;
-	}
-	
-	if( ThermostatOperatingStateCmd_SupportedReport == (ThermostatOperatingStateCmd)_data[0] )
-	{
-		// We have received the supported thermostat operating states from the Z-Wave device
-		Log::Write( "Received supported thermostat operating states from node %d", GetNodeId() );		
-
-		m_supportedStates.clear();
-		for( uint32 i=1; i<_length-1; ++i )
-		{
-			for( int32 bit=0; bit<8; ++bit )
-			{
-				if( ( _data[i] & (1<<bit) ) != 0 )
-				{
-					ValueList::Item item;
-					item.m_value = (int32)((i-1)<<3) + bit;
-					item.m_label = c_stateName[item.m_value];
-					m_supportedStates.push_back( item );
-
-					Log::Write( "    Added operating state: %s", c_stateName[item.m_value] );
-				}
-			}
-		}
-
-		ClearStaticRequest( StaticRequest_Values );
-		CreateVars( _instance );
 		return true;
 	}
 
@@ -161,14 +124,9 @@ void ThermostatOperatingState::CreateVars
 	uint8 const _instance
 )
 {
-	if( m_supportedStates.empty() )
-	{
-		return;
-	}
-
 	if( Node* node = GetNodeUnsafe() )
 	{
-		m_state.AddInstance( _instance, node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "State", "", true, m_supportedStates, m_supportedStates[0].m_value ) );
+		m_state.AddInstance( _instance, node->CreateValueString( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Operating State", "", true, c_stateName[0] ) );
 	}
 }
 
