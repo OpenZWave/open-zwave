@@ -81,6 +81,12 @@ namespace OpenZWave
 		 */
 		bool IsRunning()const;
 
+		/**
+		 * Causes the thread to sleep for the specified number of milliseconds.
+		 * @param _millisecs Number of milliseconds to sleep.
+		 */
+		void Sleep( uint32 _millisecs );
+
 	private:
 		ThreadImpl*	m_pImpl;	// Pointer to an object that encapsulates the platform-specific implementation of a thread.
 	};

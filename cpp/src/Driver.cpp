@@ -829,14 +829,38 @@ bool Driver::ReadMsg
 			{
 				Log::Write( "Unsolicited message received while waiting for ACK." );
 			}
+
 			// Read the length byte.  Keep trying until we get it.
-			while( !m_serialPort->Read( &buffer[1], 1 ));
+			uint8 loops = 0;
+			while( true )
+			{
+				if( m_serialPort->Read( &buffer[1], 1 )) break;
+				m_driverThread->Sleep(10);
+				if( ++loops == 10 ) break;
+			}
+			if( loops == 10 )
+			{
+				Log::Write( "100ms passed without finding the length byte...aborting frame read");
+				break;
+			}
 
 			// Read the rest of the frame
+			loops = 0;
 			uint32 bytesRemaining = buffer[1];
-			while( bytesRemaining )
+			do
 			{
 				bytesRemaining -= m_serialPort->Read( &buffer[2+(uint32)buffer[1]-bytesRemaining], bytesRemaining );
+				if( bytesRemaining ) 
+				{
+					m_driverThread->Sleep(10);
+					if( ++loops == 50 ) break;
+				}
+			}
+			while( bytesRemaining );
+			if( loops == 50 )
+			{
+				Log::Write( "500ms passed without reading the rest of the frame...aborting frame read" );
+				break;
 			}
 
 			uint32 length = buffer[1] + 2;

@@ -91,3 +91,15 @@ bool Thread::IsRunning
 	return( m_pImpl->IsRunning() );
 }
 
+//-----------------------------------------------------------------------------
+//	<Thread::Sleep>
+//	Causes the thread to sleep for the specified number of milliseconds.
+//-----------------------------------------------------------------------------
+void Thread::Sleep
+(
+	uint32 _milliseconds
+) 
+{
+	return( m_pImpl->msSleep( _milliseconds ) );
+}
+
