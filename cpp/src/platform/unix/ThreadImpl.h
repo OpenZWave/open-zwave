@@ -43,6 +43,7 @@ namespace OpenZWave
     bool Start( Thread::pfnThreadProc_t, void * );
     bool Stop();
     bool IsRunning() const { return m_bIsRunning; }
+	void msSleep( uint32 _millisecs );
 
     void Run();
     static void *ThreadProc (void *parg);
