@@ -654,6 +654,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\command_classes\SensorAlarm.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\command_classes\SensorAlarm.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\command_classes\SensorBinary.cpp"
 				>
 			</File>
