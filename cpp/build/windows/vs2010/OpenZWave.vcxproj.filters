@@ -246,6 +246,9 @@
     <ClInclude Include="..\..\..\src\Utils.h">
       <Filter>Main</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\command_classes\SensorAlarm.h">
+      <Filter>Command Classes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\Driver.cpp">
@@ -469,6 +472,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\Utils.cpp">
       <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\command_classes\SensorAlarm.cpp">
+      <Filter>Command Classes</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

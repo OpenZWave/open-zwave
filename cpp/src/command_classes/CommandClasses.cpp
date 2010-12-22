@@ -57,6 +57,7 @@ using namespace OpenZWave;
 #include "Powerlevel.h"
 #include "Proprietary.h"
 #include "Protection.h"
+#include "SensorAlarm.h"
 #include "SensorBinary.h"
 #include "SensorMultilevel.h"
 #include "SwitchAll.h"
@@ -187,6 +188,7 @@ void CommandClasses::RegisterCommandClasses
 	cc.Register( Powerlevel::StaticGetCommandClassId(), Powerlevel::StaticGetCommandClassName(), Powerlevel::Create );
 	cc.Register( Proprietary::StaticGetCommandClassId(), Proprietary::StaticGetCommandClassName(), Proprietary::Create );
 	cc.Register( Protection::StaticGetCommandClassId(), Protection::StaticGetCommandClassName(), Protection::Create );
+	cc.Register( SensorAlarm::StaticGetCommandClassId(), SensorAlarm::StaticGetCommandClassName(), SensorAlarm::Create );
 	cc.Register( SensorBinary::StaticGetCommandClassId(), SensorBinary::StaticGetCommandClassName(), SensorBinary::Create );
 	cc.Register( SensorMultilevel::StaticGetCommandClassId(), SensorMultilevel::StaticGetCommandClassName(), SensorMultilevel::Create );
 	cc.Register( SwitchAll::StaticGetCommandClassId(), SwitchAll::StaticGetCommandClassName(), SwitchAll::Create );
