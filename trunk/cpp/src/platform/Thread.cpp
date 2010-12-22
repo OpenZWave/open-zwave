@@ -100,6 +100,6 @@ void Thread::Sleep
 	uint32 _milliseconds
 ) 
 {
-	return( m_pImpl->msSleep( _milliseconds ) );
+	return( m_pImpl->Sleep( _milliseconds ) );
 }
 

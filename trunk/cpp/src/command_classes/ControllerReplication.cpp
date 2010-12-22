@@ -107,11 +107,14 @@ bool ControllerReplication::HandleMsg
 //-----------------------------------------------------------------------------
 void ControllerReplication::StartReplication
 (
-	uint8 const _targetNodeId
+	uint8 const _targetNodeId,
+	uint8 const _funcId
 )
 {
-	// Set up the groups and scenes to be sent
+	// Store the Z-Wave command we should use when replication has completed.
+	m_funcId = _funcId;	
 
+	// Set up the groups and scenes to be sent
 	SendNextData( _targetNodeId );
 }
 
@@ -124,4 +127,13 @@ void ControllerReplication::SendNextData
 	uint8 const _targetNodeId
 )
 {
+	// To do: Send scene and group data from the controller.
+	// It may well be that we never need to implement this - scenes will be handled 
+	// by OpenZWave, not the Z-Wave scene classes, and PC controllers don't seem
+	// to hold any associations.
+
+	// For now, we stop the replication process.
+	Msg* msg = new Msg( "Add Node Stop", 0xff, REQUEST, m_funcId, true );
+	msg->Append( ADD_NODE_STOP );
+	GetDriver()->SendMsg( msg );
 }

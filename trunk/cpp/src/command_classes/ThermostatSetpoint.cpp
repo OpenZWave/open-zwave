@@ -180,9 +180,6 @@ bool ThermostatSetpoint::HandleMsg
 		}
 
 		ClearStaticRequest( StaticRequest_Values );
-
-		// Request the current state of all the supported setpoints
-		RequestState( 0 );
 		return true;
 	}
 

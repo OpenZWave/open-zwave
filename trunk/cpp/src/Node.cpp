@@ -746,19 +746,6 @@ void Node::UpdateProtocolInfo
 
 	// Set up the device class based data for the node, including mandatory command classes
 	SetDeviceClasses( _data[3], _data[4], _data[5] );
-
-	if( !m_listening )
-	{
-		// Device does not always listen, so we need the WakeUp handler.  We can't 
-		// wait for the command class list because the request for the command
-		// classes may need to go in the wakeup queue itself!
-		if( CommandClass* pCommandClass = AddCommandClass( WakeUp::StaticGetCommandClassId() ) )
-		{
-			pCommandClass->SetInstances( 1 );
-			Log::Write( "  %s", pCommandClass->GetCommandClassName().c_str() );
-		}
-	}
-
 	QueryStageComplete( QueryStage_ProtocolInfo );
 }
 
@@ -790,6 +777,13 @@ void Node::UpdateNodeInfo
 				// are those that can be controlled by the device.  These classes are created 
 				// without values.  Messages received cause notification events instead.
 				afterMark = true;
+
+				if( !newCommandClasses )
+				{
+					Log::Write( "  None" );
+				}
+				Log::Write( "Optional command classes controlled by node %d:", m_nodeId );
+				newCommandClasses = false;
 				continue;
 			}
 
@@ -800,7 +794,7 @@ void Node::UpdateNodeInfo
 					// If this class came after the COMMAND_CLASS_MARK, then we do not create values.
 					if( afterMark )
 					{
-						pCommandClass->SetNoValues();
+						pCommandClass->SetAfterMark();
 					}
 
 					// Start with an instance count of one.  If the device supports COMMMAND_CLASS_MULTI_INSTANCE
@@ -1092,14 +1086,9 @@ void Node::SetNodeOn
 )
 {
     // Level is 0-99, with 0 = off and 99 = fully on. 255 = turn on at last level.
-
     if( Basic* cc = static_cast<Basic*>( GetCommandClass( Basic::StaticGetCommandClassId() ) ) )
     {
-        cc->Set( 99 );
-    }
-    else if (SwitchAll *sa = static_cast<SwitchAll*>( GetCommandClass( SwitchAll::StaticGetCommandClassId() ) ) )
-    {
-        sa->On();
+        cc->Set( 255 );
     }
 }
 
@@ -1112,14 +1101,9 @@ void Node::SetNodeOff
 )
 {
     // Level is 0-99, with 0 = off and 99 = fully on. 255 = turn on at last level.
-
     if( Basic* cc = static_cast<Basic*>( GetCommandClass( Basic::StaticGetCommandClassId() ) ) )
     {
         cc->Set( 0 );
-    }
-    else if (SwitchAll *sa = static_cast<SwitchAll*>( GetCommandClass( SwitchAll::StaticGetCommandClassId() ) ) )
-    {
-        sa->Off();
     }
 }
 
@@ -1699,6 +1683,18 @@ bool Node::SetDeviceClasses
 		Log::Write( "Node(%d) No generic or specific device classes defined", m_nodeId );
 	}
 
+	// Deal with sleeping devices
+	if( !m_listening )
+	{
+		// Device does not always listen, so we need the WakeUp handler.  We can't 
+		// wait for the command class list because the request for the command
+		// classes may need to go in the wakeup queue itself!
+		if( CommandClass* pCommandClass = AddCommandClass( WakeUp::StaticGetCommandClassId() ) )
+		{
+			pCommandClass->SetInstances( 1 );
+		}
+	}
+
 	// Apply any COMMAND_CLASS_BASIC remapping
 	if( Basic* cc = static_cast<Basic*>( GetCommandClass( Basic::StaticGetCommandClassId() ) ) )
 	{
@@ -1708,10 +1704,36 @@ bool Node::SetDeviceClasses
 	// Write the mandatory command classes to the log
 	if( !m_commandClassMap.empty() )
 	{
+		map<uint8,CommandClass*>::const_iterator cit;
+
 		Log::Write( "Mandatory Command Classes for Node %d:", m_nodeId );
-		for( map<uint8,CommandClass*>::const_iterator cit = m_commandClassMap.begin(); cit != m_commandClassMap.end(); ++cit )
+		bool reportedClasses = false;
+		for( cit = m_commandClassMap.begin(); cit != m_commandClassMap.end(); ++cit )
 		{
-			Log::Write( "  %s", cit->second->GetCommandClassName().c_str() );
+			if( cit->second->IsAfterMark() )
+			{
+				Log::Write( "  %s", cit->second->GetCommandClassName().c_str() );
+				reportedClasses = true;
+			}
+		}
+		if( !reportedClasses )
+		{
+			Log::Write( "  None" );
+		}
+
+		Log::Write( "Mandatory Command Classes controlled by Node %d:", m_nodeId );
+		reportedClasses = false;
+		for( cit = m_commandClassMap.begin(); cit != m_commandClassMap.end(); ++cit )
+		{
+			if( !cit->second->IsAfterMark() )
+			{
+				Log::Write( "  %s", cit->second->GetCommandClassName().c_str() );
+				reportedClasses = true;
+			}
+		}
+		if( !reportedClasses )
+		{
+			Log::Write( "  None" );
 		}
 	}
 
@@ -1753,7 +1775,7 @@ bool Node::AddMandatoryCommandClasses
 				// If this class came after the COMMAND_CLASS_MARK, then we do not create values.
 				if( afterMark )
 				{
-					commandClass->SetNoValues();
+					commandClass->SetAfterMark();
 				}
 
 				// Start with an instance count of one.  If the device supports COMMMAND_CLASS_MULTI_INSTANCE
