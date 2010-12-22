@@ -86,11 +86,11 @@ namespace OZWForm
                     this.label1.Text = "Testing whether the node has failed.\nThis command cannot be cancelled.";
                     break;
                 }
-                case ZWControllerCommand.MarkNodeAsFailed:
+                case ZWControllerCommand.RemoveFailedNode:
                 {
                     this.ButtonCancel.Enabled = false;
-                    this.Text = "Mark Node as Failed";
-                    this.label1.Text = "Marking the node as failed.\nThis command cannot be cancelled.";
+                    this.Text = "Remove Failed Node";
+                    this.label1.Text = "Removing the failed node from the controller's list.\nThis command cannot be cancelled.";
                     break;
                 }
                 case ZWControllerCommand.ReplaceFailedNode:

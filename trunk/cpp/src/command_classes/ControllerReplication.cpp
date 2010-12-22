@@ -76,6 +76,9 @@ bool ControllerReplication::HandleMsg
 	uint32 const _instance	// = 1
 )
 {
+	// When creating replication messages, use FUNC_ID_ZW_SEND_REPLICATION_DATA instead of FUNC_ID_ZW_SEND_DATA
+	// e.g. Msg* msg = new Msg( "TransferGroup", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_REPLICATION_DATA, true, false );
+
 	switch( _data[0] )
 	{
 		case ControllerReplicationCmd_TransferGroup:
