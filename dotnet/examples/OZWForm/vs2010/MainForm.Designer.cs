@@ -35,6 +35,8 @@
             this.PowerOffToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.requestNodeNeighborUpdateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.assignReturnRouteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteReturnRouteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.hasNodeFailedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.markNodeAsFailedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -46,15 +48,16 @@
             this.SaveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.controllerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createNewPrmaryControllerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.transferPrimaryRoleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addControllerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addDeviceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.removeControllerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeDeviceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.transferPrimaryRoleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.receiveConfigurationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.requestNetworkUpdateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.NodeGridView)).BeginInit();
             this.NodeContextMenuStrip.SuspendLayout();
             this.MenuBar.SuspendLayout();
@@ -85,6 +88,8 @@
             this.PowerOffToolStripMenuItem,
             this.toolStripSeparator4,
             this.requestNodeNeighborUpdateToolStripMenuItem,
+            this.assignReturnRouteToolStripMenuItem,
+            this.deleteReturnRouteToolStripMenuItem,
             this.toolStripSeparator5,
             this.hasNodeFailedToolStripMenuItem,
             this.markNodeAsFailedToolStripMenuItem,
@@ -92,7 +97,7 @@
             this.toolStripSeparator6,
             this.propertiesToolStripMenuItem});
             this.NodeContextMenuStrip.Name = "NodeContextMenuStrip";
-            this.NodeContextMenuStrip.Size = new System.Drawing.Size(243, 198);
+            this.NodeContextMenuStrip.Size = new System.Drawing.Size(243, 242);
             // 
             // PowerOnToolStripMenuItem
             // 
@@ -118,7 +123,21 @@
             this.requestNodeNeighborUpdateToolStripMenuItem.Name = "requestNodeNeighborUpdateToolStripMenuItem";
             this.requestNodeNeighborUpdateToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
             this.requestNodeNeighborUpdateToolStripMenuItem.Text = "Request Node Neighbor Update";
-            this.requestNodeNeighborUpdateToolStripMenuItem.Click += new System.EventHandler(this.RequestNodeNeighborUpdateToolStripMenuItem_Click);
+            this.requestNodeNeighborUpdateToolStripMenuItem.Click += new System.EventHandler(this.requestNodeNeighborUpdateToolStripMenuItem_Click);
+            // 
+            // assignReturnRouteToolStripMenuItem
+            // 
+            this.assignReturnRouteToolStripMenuItem.Name = "assignReturnRouteToolStripMenuItem";
+            this.assignReturnRouteToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
+            this.assignReturnRouteToolStripMenuItem.Text = "Assign Return Route";
+            this.assignReturnRouteToolStripMenuItem.Click += new System.EventHandler(this.assignReturnRouteToolStripMenuItem_Click);
+            // 
+            // deleteReturnRouteToolStripMenuItem
+            // 
+            this.deleteReturnRouteToolStripMenuItem.Name = "deleteReturnRouteToolStripMenuItem";
+            this.deleteReturnRouteToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
+            this.deleteReturnRouteToolStripMenuItem.Text = "Delete All Return Routes";
+            this.deleteReturnRouteToolStripMenuItem.Click += new System.EventHandler(this.deleteReturnRouteToolStripMenuItem_Click);
             // 
             // toolStripSeparator5
             // 
@@ -136,7 +155,7 @@
             // 
             this.markNodeAsFailedToolStripMenuItem.Name = "markNodeAsFailedToolStripMenuItem";
             this.markNodeAsFailedToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
-            this.markNodeAsFailedToolStripMenuItem.Text = "Mark Node as Failed";
+            this.markNodeAsFailedToolStripMenuItem.Text = "Remove Failed Node";
             this.markNodeAsFailedToolStripMenuItem.Click += new System.EventHandler(this.markNodeAsFailedToolStripMenuItem_Click);
             // 
             // replaceFailedNodeToolStripMenuItem
@@ -188,15 +207,16 @@
             // 
             this.controllerToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.createNewPrmaryControllerToolStripMenuItem,
+            this.transferPrimaryRoleToolStripMenuItem,
             this.addControllerToolStripMenuItem,
             this.addDeviceToolStripMenuItem,
             this.toolStripSeparator1,
             this.removeControllerToolStripMenuItem,
             this.removeDeviceToolStripMenuItem,
             this.toolStripSeparator2,
-            this.transferPrimaryRoleToolStripMenuItem,
             this.receiveConfigurationToolStripMenuItem,
-            this.toolStripSeparator3});
+            this.toolStripSeparator3,
+            this.requestNetworkUpdateToolStripMenuItem});
             this.controllerToolStripMenuItem.Name = "controllerToolStripMenuItem";
             this.controllerToolStripMenuItem.Size = new System.Drawing.Size(72, 20);
             this.controllerToolStripMenuItem.Text = "Controller";
@@ -207,6 +227,13 @@
             this.createNewPrmaryControllerToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
             this.createNewPrmaryControllerToolStripMenuItem.Text = "Create New Prmary Controller";
             this.createNewPrmaryControllerToolStripMenuItem.Click += new System.EventHandler(this.createNewPrmaryControllerToolStripMenuItem_Click);
+            // 
+            // transferPrimaryRoleToolStripMenuItem
+            // 
+            this.transferPrimaryRoleToolStripMenuItem.Name = "transferPrimaryRoleToolStripMenuItem";
+            this.transferPrimaryRoleToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
+            this.transferPrimaryRoleToolStripMenuItem.Text = "Transfer Primary Role";
+            this.transferPrimaryRoleToolStripMenuItem.Click += new System.EventHandler(this.transferPrimaryRoleToolStripMenuItem_Click);
             // 
             // addControllerToolStripMenuItem
             // 
@@ -246,13 +273,6 @@
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             this.toolStripSeparator2.Size = new System.Drawing.Size(229, 6);
             // 
-            // transferPrimaryRoleToolStripMenuItem
-            // 
-            this.transferPrimaryRoleToolStripMenuItem.Name = "transferPrimaryRoleToolStripMenuItem";
-            this.transferPrimaryRoleToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
-            this.transferPrimaryRoleToolStripMenuItem.Text = "Transfer Primary Role";
-            this.transferPrimaryRoleToolStripMenuItem.Click += new System.EventHandler(this.transferPrimaryRoleToolStripMenuItem_Click);
-            // 
             // receiveConfigurationToolStripMenuItem
             // 
             this.receiveConfigurationToolStripMenuItem.Name = "receiveConfigurationToolStripMenuItem";
@@ -264,6 +284,13 @@
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
             this.toolStripSeparator3.Size = new System.Drawing.Size(229, 6);
+            // 
+            // requestNetworkUpdateToolStripMenuItem
+            // 
+            this.requestNetworkUpdateToolStripMenuItem.Name = "requestNetworkUpdateToolStripMenuItem";
+            this.requestNetworkUpdateToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
+            this.requestNetworkUpdateToolStripMenuItem.Text = "Request Network Update";
+            this.requestNetworkUpdateToolStripMenuItem.Click += new System.EventHandler(this.requestNetworkUpdateToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -312,6 +339,9 @@
         private System.Windows.Forms.ToolStripMenuItem replaceFailedNodeToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
         private System.Windows.Forms.ToolStripMenuItem propertiesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem requestNetworkUpdateToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem assignReturnRouteToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem deleteReturnRouteToolStripMenuItem;
     }
 }
 

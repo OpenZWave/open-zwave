@@ -307,11 +307,6 @@ namespace OZWForm
             }
         }
 
-        private void RequestNodeNeighborUpdateToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            m_manager.RequestNodeNeighborUpdate(m_homeId, m_rightClickNode);
-        }
-
         private void PowerOnToolStripMenuItem_Click(object sender, EventArgs e)
         {
             m_manager.SetNodeOn(m_homeId, m_rightClickNode);
@@ -329,7 +324,7 @@ namespace OZWForm
 
         private void markNodeAsFailedToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DoCommand(ZWControllerCommand.MarkNodeAsFailed);
+            DoCommand(ZWControllerCommand.RemoveFailedNode);
         }
 
         private void replaceFailedNodeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -372,6 +367,26 @@ namespace OZWForm
             DoCommand(ZWControllerCommand.ReceiveConfiguration);
         }
 
+        private void requestNetworkUpdateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DoCommand(ZWControllerCommand.RequestNetworkUpdate);
+        }
+
+        private void requestNodeNeighborUpdateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DoCommand(ZWControllerCommand.RequestNodeNeighborUpdate);
+        }
+
+        private void assignReturnRouteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DoCommand(ZWControllerCommand.AssignReturnRoute);
+        }
+
+        private void deleteReturnRouteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DoCommand(ZWControllerCommand.DeleteAllReturnRoutes);
+        }
+
         private void DoCommand(ZWControllerCommand command)
         {
             ControllerCommandDlg dlg = new ControllerCommandDlg(this, m_manager, m_homeId, command, m_rightClickNode);
@@ -389,6 +404,6 @@ namespace OZWForm
                 dlg.ShowDialog(this);
                 dlg.Dispose();
             }
-        }   
+        }
     }
 }

@@ -2299,55 +2299,6 @@ void Manager::SoftReset
 }
 
 //-----------------------------------------------------------------------------
-// <Manager::RequestNodeNeighborUpdate>
-// 
-//-----------------------------------------------------------------------------
-void Manager::RequestNodeNeighborUpdate
-(
-	uint32 const _homeId,
-	uint8 const _nodeId
-)
-{
-	if( Driver* driver = GetDriver( _homeId ) )
-	{
-		driver->RequestNodeNeighborUpdate( _nodeId );
-	}
-}
-
-//-----------------------------------------------------------------------------
-// <Manager::RequestNetworkUpdate>
-// Request a network update
-//-----------------------------------------------------------------------------
-void Manager::RequestNetworkUpdate
-(
-	uint32 const _homeId
-)
-{
-	if( Driver* driver = GetDriver( _homeId ) )
-	{
-		driver->RequestNetworkUpdate();
-	}
-}
-
-
-//-----------------------------------------------------------------------------
-// <Manager::AssignReturnRoute>
-// 
-//-----------------------------------------------------------------------------
-//void Manager::AssignReturnRoute
-//(
-//	uint32 const _homeId,
-//	uint8 const _nodeId,
-//	uint8 const _targetNodeId
-//)
-//{
-//	if( Driver* driver = GetDriver( _homeId ) )
-//	{
-//		driver->AssignReturnRoute( _nodeId, _targetNodeId );
-//	}
-//} 
-
-//-----------------------------------------------------------------------------
 // <Manager::BeginControllerCommand>
 // Start the controller performing one of its network management functions
 //-----------------------------------------------------------------------------

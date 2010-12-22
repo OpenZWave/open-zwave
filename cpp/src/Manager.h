@@ -1165,7 +1165,7 @@ namespace OpenZWave
 		 * operate at normal power levels instead.  Defaults to false.
 		 * @param _nodeId used only with the ReplaceFailedNode command, to specify the node that is going to be replaced.
 		 * @return true if the command was accepted and has started.
-		 * @see CancelControllerCommand, HasNodeFailed, MarkNodeAsFailed, Driver::ControllerCommand, Driver::pfnControllerCallback_t, 
+		 * @see CancelControllerCommand, HasNodeFailed, RemoveFailedNode, Driver::ControllerCommand, Driver::pfnControllerCallback_t, 
 		 * to notify the user of progress or to request actions on the user's part.  Defaults to NULL.
 		 * <p> Commands
 		 * - Driver::ControllerCommand_AddController - Add a new secondary controller to the Z-Wave network.
@@ -1174,7 +1174,7 @@ namespace OpenZWave
 		 * - Driver::ControllerCommand_ReceiveConfiguration -   
 		 * - Driver::ControllerCommand_RemoveController - remove a controller from the Z-Wave network.
 		 * - Driver::ControllerCommand_RemoveDevice - remove a device (but not a controller) from the Z-Wave network.
- 		 * - Driver::ControllerCommand_MarkNodeAsFailed - move a node to the controller's list of failed nodes.  The node must actually
+ 		 * - Driver::ControllerCommand_RemoveFailedNode - move a node to the controller's list of failed nodes.  The node must actually
 		 * have failed or have been disabled since the command will fail if it responds.  A node must be in the controller's failed nodes list
 		 * for ControllerCommand_ReplaceFailedNode to work.
 		 * - Driver::ControllerCommand_HasNodeFailed - Check whether a node is in the controller's failed nodes list.
@@ -1182,6 +1182,10 @@ namespace OpenZWave
 		 * the controller's failed nodes list, or the node responds, this command will fail.
 		 * - Driver:: ControllerCommand_TransferPrimaryRole	(Not yet implemented) - Add a new controller to the network and
 		 * make it the primary.  The existing primary will become a secondary controller.  
+		 * - Driver::ControllerCommand_RequestNetworkUpdate - Update the controller with network information from the SUC/SIS.
+		 * - Driver::ControllerCommand_RequestNodeNeighborUpdate - Get a node to rebuild it's neighbour list.  This method also does ControllerCommand_RequestNodeNeighbors afterwards.
+		 * - Driver::ControllerCommand_AssignReturnRoute - Assign a network return route to a device.
+		 * - Driver::ControllerCommand_DeleteAllReturnRoutes - Delete all network return routes from a device.
 		 * <p> Callbacks
 		 * - Driver::ControllerState_Waiting, the controller is waiting for a user action.  A notice should be displayed 
 		 * to the user at this point, telling them what to do next.
@@ -1202,12 +1206,6 @@ namespace OpenZWave
 		 * @see BeginControllerCommand 
 		 */
 		bool CancelControllerCommand( uint32 const _homeId );
-
-		// TBD...
-		void RequestNodeNeighborUpdate( uint32 const _homeId, uint8 const _nodeId );
-		//void AssignReturnRoute( uint32 const _homeId, uint8 const _srcNodeId, uint8 const _dstNodeId );
-		void RequestNetworkUpdate( uint32 const _homeId );
-		//void ReadMemory( uint32 const _homeId,  uint16 const offset );
 	/*@}*/
 	};
 

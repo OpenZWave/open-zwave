@@ -63,23 +63,27 @@ namespace OpenZWaveDotNet
 		InProgress	= Driver::ControllerState_InProgress,							/**< The controller is communicating with the other device to carry out the command. */
 		Completed	= Driver::ControllerState_Completed,							/**< The command has completed successfully. */
 		Failed		= Driver::ControllerState_Failed,								/**< The command has failed. */
-		NodeOK		= Driver::ControllerState_NodeOK,								/**< Used with the HasNodeFailed, MarkNodeAsFailed and ReplaceFailedNode commands to indicate that the controller thinks the node is OK. */
+		NodeOK		= Driver::ControllerState_NodeOK,								/**< Used with the HasNodeFailed, RemoveFailedNode and ReplaceFailedNode commands to indicate that the controller thinks the node is OK. */
 		NodeFailed	= Driver::ControllerState_NodeFailed							/**< Used only with HasNodeFailed to indicate that the controller thinks the node has failed. */
 	};
 
 	public enum class ZWControllerCommand
 	{
-		None					= Driver::ControllerCommand_None,					/**< No command. */
-		AddController			= Driver::ControllerCommand_AddController,			/**< Add a new controller to the Z-Wave network.  The new controller will be a secondary. */
-		AddDevice				= Driver::ControllerCommand_AddDevice,				/**< Add a new device (but not a controller) to the Z-Wave network. */
-		CreateNewPrimary		= Driver::ControllerCommand_CreateNewPrimary,		/**< Add a new controller to the Z-Wave network.  The new controller will be the primary, and the current primary will become a secondary controller. */
-		ReceiveConfiguration	= Driver::ControllerCommand_ReceiveConfiguration,	/**< Receive Z-Wave network configuration information from another controller. */
-		RemoveController		= Driver::ControllerCommand_RemoveController,		/**< Remove a controller from the Z-Wave network. */
-		RemoveDevice			= Driver::ControllerCommand_RemoveDevice,			/**< Remove a new device (but not a controller) from the Z-Wave network. */
-		MarkNodeAsFailed		= Driver::ControllerCommand_MarkNodeAsFailed,		/**< Move a node to the controller's failed nodes list. This command will only work if the node cannot respond. */
-		HasNodeFailed			= Driver::ControllerCommand_HasNodeFailed,			/**< Check whether a node is in the controller's failed nodes list. */
-		ReplaceFailedNode		= Driver::ControllerCommand_ReplaceFailedNode,		/**< Replace a non-responding device with another. */
-		TransferPrimaryRole		= Driver::ControllerCommand_TransferPrimaryRole		/**< Make a different controller the primary. */
+		None						= Driver::ControllerCommand_None,						/**< No command. */
+		AddController				= Driver::ControllerCommand_AddController,				/**< Add a new controller to the Z-Wave network.  The new controller will be a secondary. */
+		AddDevice					= Driver::ControllerCommand_AddDevice,					/**< Add a new device (but not a controller) to the Z-Wave network. */
+		CreateNewPrimary			= Driver::ControllerCommand_CreateNewPrimary,			/**< Add a new controller to the Z-Wave network.  The new controller will be the primary, and the current primary will become a secondary controller. */
+		ReceiveConfiguration		= Driver::ControllerCommand_ReceiveConfiguration,		/**< Receive Z-Wave network configuration information from another controller. */
+		RemoveController			= Driver::ControllerCommand_RemoveController,			/**< Remove a controller from the Z-Wave network. */
+		RemoveDevice				= Driver::ControllerCommand_RemoveDevice,				/**< Remove a new device (but not a controller) from the Z-Wave network. */
+		RemoveFailedNode			= Driver::ControllerCommand_RemoveFailedNode,			/**< Move a node to the controller's failed nodes list. This command will only work if the node cannot respond. */
+		HasNodeFailed				= Driver::ControllerCommand_HasNodeFailed,				/**< Check whether a node is in the controller's failed nodes list. */
+		ReplaceFailedNode			= Driver::ControllerCommand_ReplaceFailedNode,			/**< Replace a non-responding device with another. */
+		TransferPrimaryRole			= Driver::ControllerCommand_TransferPrimaryRole,		/**< Make a different controller the primary. */
+		RequestNetworkUpdate		= Driver::ControllerCommand_RequestNetworkUpdate,		/**< Request network information from the SUC/SIS. */
+		RequestNodeNeighborUpdate	= Driver::ControllerCommand_RequestNodeNeighborUpdate,	/**< Get a node to rebuild it's neighbour list.  This method also does ControllerCommand_RequestNodeNeighbors */
+		AssignReturnRoute			= Driver::ControllerCommand_AssignReturnRoute,			/**< Assign a network return route to a device. */
+		DeleteAllReturnRoutes		= Driver::ControllerCommand_DeleteAllReturnRoutes		/**< Delete all network return routes from a device. */
 	};
 
 	public delegate void ManagedControllerStateChangedHandler( ZWControllerState _state);
@@ -924,7 +928,7 @@ namespace OpenZWaveDotNet
 		 * operate at normal power levels instead.  Defaults to false.
 		 * @param _nodeId used only with the ReplaceFailedNode command, to specify the node that is going to be replaced.
 		 * @return true if the command was accepted and has started.
-		 * @see CancelControllerCommand, HasNodeFailed, MarkNodeAsFailed, Driver::ControllerCommand, Driver::pfnControllerCallback_t, 
+		 * @see CancelControllerCommand, HasNodeFailed, RemoveFailedNode, Driver::ControllerCommand, Driver::pfnControllerCallback_t, 
 		 * to notify the user of progress or to request actions on the user's part.  Defaults to NULL.
 		 * <p> Commands
 		 * - ZWControllerCommand.AddController - Add a new secondary controller to the Z-Wave network.
@@ -933,7 +937,7 @@ namespace OpenZWaveDotNet
 		 * - ZWControllerCommand.ReceiveConfiguration -   
 		 * - ZWControllerCommand.RemoveController - remove a controller from the Z-Wave network.
 		 * - ZWControllerCommand.RemoveDevice - remove a device (but not a controller) from the Z-Wave network.
- 		 * - ZWControllerCommand.MarkNodeAsFailed - move a node to the controller's list of failed nodes.  The node must actually
+ 		 * - ZWControllerCommand.RemoveFailedNode - move a node to the controller's list of failed nodes.  The node must actually
 		 * have failed or have been disabled since the command will fail if it responds.  A node must be in the controller's failed nodes list
 		 * for ControllerCommand_ReplaceFailedNode to work.
 		 * - ZWControllerCommand.HasNodeFailed - Check whether a node is in the controller's failed nodes list.
@@ -941,6 +945,10 @@ namespace OpenZWaveDotNet
 		 * the controller's failed nodes list, or the node responds, this command will fail.
 		 * - ZWControllerCommand.TransferPrimaryRole (Not yet implemented) - Add a new controller to the network and
 		 * make it the primary.  The existing primary will become a secondary controller.  
+		 * - ZWControllerCommand.RequestNetworkUpdate - Update the controller with network information from the SUC/SIS.
+		 * - ZWControllerCommand.RequestNodeNeighborUpdate - Get a node to rebuild it's neighbour list.  This method also does ControllerCommand_RequestNodeNeighbors afterwards.
+		 * - ZWControllerCommand.AssignReturnRoute - Assign network routes to a device.
+		 * - ZWControllerCommand.DeleteReturnRoute - Delete network routes from a device.
 		 * <p>These processes are asynchronous, and at various stages OpenZWave will trigger a callback
 		 * to notify the user of progress or to request actions on the user's part.
 		 * <p> Controller States
@@ -1031,12 +1039,6 @@ namespace OpenZWaveDotNet
 		 * @see BeginControllerCommand 
 		 */
 		bool CancelControllerCommand( uint32 homeId ){ return Manager::Get()->CancelControllerCommand( homeId ); }
-
-		// TBD...
-		void RequestNodeNeighborUpdate( uint32 const homeId, uint8 const _nodeId ){ Manager::Get()->RequestNodeNeighborUpdate( homeId, _nodeId ); }
-		//void AssignReturnRoute( uint32 const homeId, uint8 const _srcNodeId, uint8 const _dstNodeId );
-		void RequestNetworkUpdate( uint32 const homeId ){ Manager::Get()->RequestNetworkUpdate( homeId ); }
-		//void ReadMemory( uint32 const homeId,  uint16 const offset );
 	/*@}*/
 
 	public:

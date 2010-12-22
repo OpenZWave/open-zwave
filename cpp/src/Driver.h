@@ -173,7 +173,6 @@ namespace OpenZWave
 		void HandleGetControllerCapabilitiesResponse( uint8* _data );
 		void HandleGetSerialAPICapabilitiesResponse( uint8* _data );
 		void HandleEnableSUCResponse( uint8* _data );
-		void HandleRequestNetworkUpdate( uint8* _data );
 		void HandleSetSUCNodeIdResponse( uint8* _data );
 		void HandleGetSUCNodeIdResponse( uint8* _data );
 		void HandleMemoryGetIdResponse( uint8* _data );
@@ -182,8 +181,13 @@ namespace OpenZWave
 		bool HandleRemoveFailedNodeResponse( uint8* _data );
 		void HandleIsFailedNodeResponse( uint8* _data );
 		bool HandleReplaceFailedNodeResponse( uint8* _data );
-		void HandleSendDataResponse( uint8* _data );
-		bool HandleSendDataRequest( uint8* _data );
+		bool HandleAssignReturnRouteResponse( uint8* _data );
+		bool HandleDeleteReturnRouteResponse( uint8* _data );
+		void HandleSendDataResponse( uint8* _data, bool _replication );
+		bool HandleNetworkUpdateResponse( uint8* _data );
+		void HandleGetRoutingInfoResponse( uint8* _data );
+
+		bool HandleSendDataRequest( uint8* _data, bool _replication );
 		void HandleAddNodeToNetworkRequest( uint8* _data );
 		void HandleCreateNewPrimaryRequest( uint8* _data );
 		void HandleControllerChangeRequest( uint8* _data );
@@ -192,6 +196,10 @@ namespace OpenZWave
 		void HandleReplaceFailedNodeRequest( uint8* _data );
 		void HandleRemoveNodeFromNetworkRequest( uint8* _data );
 		void HandleApplicationCommandHandlerRequest( uint8* _data );
+		void HandleAssignReturnRouteRequest( uint8* _data );
+		void HandleDeleteReturnRouteRequest( uint8* _data );
+		void HandleNodeNeighborUpdateRequest( uint8* _data );
+		void HandleNetworkUpdateRequest( uint8* _data );
 		bool HandleApplicationUpdateRequest( uint8* _data );
 
 		void CommonAddNodeStatusRequestHandler( uint8 _funcId, uint8* _data );
@@ -273,17 +281,21 @@ namespace OpenZWave
 	     */
 		enum ControllerCommand
 		{
-			ControllerCommand_None = 0,				/**< No command. */
-			ControllerCommand_AddController,		/**< Add a new controller to the Z-Wave network.  The new controller will be a secondary. */
-			ControllerCommand_AddDevice,			/**< Add a new device (but not a controller) to the Z-Wave network. */
-			ControllerCommand_CreateNewPrimary,		/**< Add a new controller to the Z-Wave network.  The new controller will be the primary, and the current primary will become a secondary controller. */
-			ControllerCommand_ReceiveConfiguration, /**< Receive Z-Wave network configuration information from another controller. */
-			ControllerCommand_RemoveController,		/**< Remove a controller from the Z-Wave network. */
-			ControllerCommand_RemoveDevice,			/**< Remove a new device (but not a controller) from the Z-Wave network. */
-			ControllerCommand_MarkNodeAsFailed,		/**< Move a node to the controller's failed nodes list. This command will only work if the node cannot respond. */
-			ControllerCommand_HasNodeFailed,		/**< Check whether a node is in the controller's failed nodes list. */
-			ControllerCommand_ReplaceFailedNode,	/**< Replace a non-responding node with another. The node must be in the controller's list of failed nodes for this command to succeed. */
-			ControllerCommand_TransferPrimaryRole	/**< Make a different controller the primary. */
+			ControllerCommand_None = 0,						/**< No command. */
+			ControllerCommand_AddController,				/**< Add a new controller to the Z-Wave network.  The new controller will be a secondary. */
+			ControllerCommand_AddDevice,					/**< Add a new device (but not a controller) to the Z-Wave network. */
+			ControllerCommand_CreateNewPrimary,				/**< Add a new controller to the Z-Wave network.  The new controller will be the primary, and the current primary will become a secondary controller. */
+			ControllerCommand_ReceiveConfiguration,			/**< Receive Z-Wave network configuration information from another controller. */
+			ControllerCommand_RemoveController,				/**< Remove a controller from the Z-Wave network. */
+			ControllerCommand_RemoveDevice,					/**< Remove a new device (but not a controller) from the Z-Wave network. */
+			ControllerCommand_RemoveFailedNode,				/**< Move a node to the controller's failed nodes list. This command will only work if the node cannot respond. */
+			ControllerCommand_HasNodeFailed,				/**< Check whether a node is in the controller's failed nodes list. */
+			ControllerCommand_ReplaceFailedNode,			/**< Replace a non-responding node with another. The node must be in the controller's list of failed nodes for this command to succeed. */
+			ControllerCommand_TransferPrimaryRole,			/**< Make a different controller the primary. */
+			ControllerCommand_RequestNetworkUpdate,			/**< Request network information from the SUC/SIS. */
+			ControllerCommand_RequestNodeNeighborUpdate,	/**< Get a node to rebuild it's neighbour list.  This method also does ControllerCommand_RequestNodeNeighbors */
+			ControllerCommand_AssignReturnRoute,			/**< Assign a network return routes to a device. */
+			ControllerCommand_DeleteAllReturnRoutes			/**< Delete all return routes from a device. */
 		};
 
 		/** 
@@ -308,10 +320,7 @@ namespace OpenZWave
 		// The public interface is provided via the wrappers in the Manager class
 		void ResetController();
 		void SoftReset();
-
-		void RequestNodeNeighborUpdate( uint8 _nodeId );
-		void AssignReturnRoute( uint8 _srcNodeId, uint8 _dstNodeId );
-		void RequestNetworkUpdate();
+		void RequestNodeNeighbors( uint8 const _nodeId );
 
 		bool BeginControllerCommand( ControllerCommand _command, pfnControllerCallback_t _callback, void* _context, bool _highPower, uint8 _nodeId );
 		bool CancelControllerCommand();
