@@ -185,14 +185,16 @@ namespace OpenZWave
 		void HandleSendDataResponse( uint8* _data );
 		bool HandleSendDataRequest( uint8* _data );
 		void HandleAddNodeToNetworkRequest( uint8* _data );
-		void HandleCreateNewPrimary( uint8* _data );
-		void HandleControllerChange( uint8* _data );
-		void HandleSetLearnMode( uint8* _data );
+		void HandleCreateNewPrimaryRequest( uint8* _data );
+		void HandleControllerChangeRequest( uint8* _data );
+		void HandleSetLearnModeRequest( uint8* _data );
 		void HandleRemoveFailedNodeRequest( uint8* _data );
 		void HandleReplaceFailedNodeRequest( uint8* _data );
 		void HandleRemoveNodeFromNetworkRequest( uint8* _data );
 		void HandleApplicationCommandHandlerRequest( uint8* _data );
 		bool HandleApplicationUpdateRequest( uint8* _data );
+
+		void CommonAddNodeStatusRequestHandler( uint8 _funcId, uint8* _data );
 
 		Thread*					m_readThread;								// Thread for handling messages received from the Z-Wave network
 		bool					m_waitingForAck;							// True when we are waiting for an ACK from the dongle
