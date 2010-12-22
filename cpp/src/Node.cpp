@@ -77,6 +77,7 @@ static char const* c_queryStageNames[] =
 {
 	"None",
 	"ProtocolInfo",
+	"Neighbors",
 	"WakeUp",
 	"NodeInfo",
 	"ManufacturerSpecific",
@@ -169,6 +170,13 @@ void Node::AdvanceQueries
 				Msg* msg = new Msg( "Get Node Protocol Info", m_nodeId, REQUEST, FUNC_ID_ZW_GET_NODE_PROTOCOL_INFO, false );
 				msg->Append( m_nodeId );	
 				GetDriver()->SendMsg( msg ); 
+				m_queryPending = true;
+				break;
+			}
+			case QueryStage_Neighbors:
+			{
+				Log::Write( "Node %d: QueryStage_Neighbors", m_nodeId );
+				GetDriver()->RequestNodeNeighbors( m_nodeId );
 				m_queryPending = true;
 				break;
 			}

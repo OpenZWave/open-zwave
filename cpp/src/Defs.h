@@ -140,6 +140,7 @@ namespace OpenZWave
 #define FUNC_ID_ZW_REMOVE_FAILED_NODE_ID			0x61
 #define FUNC_ID_ZW_IS_FAILED_NODE_ID                0x62
 #define FUNC_ID_ZW_REPLACE_FAILED_NODE              0x63
+#define FUNC_ID_ZW_GET_ROUTING_INFO		            0x80
 
 #define ADD_NODE_ANY								0x01
 #define ADD_NODE_CONTROLLER							0x02
@@ -190,8 +191,14 @@ namespace OpenZWave
 #define FAILED_NODE_REPLACE_DONE					0x04
 #define FAILED_NODE_REPLACE_FAILED					0x05
 
-#define ZW_SUC_FUNC_BASIC_SUC						0x00
-#define ZW_SUC_FUNC_NODEID_SERVER					0x01
+#define SUC_UPDATE_DONE								0x00
+#define SUC_UPDATE_ABORT							0x01
+#define SUC_UPDATE_WAIT								0x02
+#define SUC_UPDATE_DISABLED							0x03
+#define SUC_UPDATE_OVERFLOW							0x04
+
+#define SUC_FUNC_BASIC_SUC							0x00
+#define SUC_FUNC_NODEID_SERVER						0x01
 
 #define UPDATE_STATE_NODE_INFO_RECEIVED				0x84
 #define UPDATE_STATE_NODE_INFO_REQ_DONE				0x82

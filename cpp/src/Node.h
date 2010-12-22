@@ -82,6 +82,7 @@ namespace OpenZWave
 		{
 			QueryStage_None,
 			QueryStage_ProtocolInfo,
+			QueryStage_Neighbors,
 			QueryStage_WakeUp,
 			QueryStage_NodeInfo,
 			QueryStage_ManufacturerSpecific,
@@ -160,7 +161,8 @@ namespace OpenZWave
 		uint8		m_basic;
 		uint8		m_generic;
 		uint8		m_specific;
-		string		m_type;			// Label representing the specific/generic/basic value
+		string		m_type;				// Label representing the specific/generic/basic value
+		uint8		m_neighbors[29];	// Bitmask containing the neighbouring nodes
 
 	//-----------------------------------------------------------------------------
 	// Device Naming
