@@ -103,15 +103,15 @@ bool ThreadImpl::Stop
 }
 
 //-----------------------------------------------------------------------------
-//	<ThreadImpl::msSleep>
+//	<ThreadImpl::Sleep>
 //	Cause thread to sleep for the specified number of milliseconds
 //-----------------------------------------------------------------------------
-void ThreadImpl::msSleep
+void ThreadImpl::Sleep
 (
 	uint32 _millisecs
 )
 {
-	Sleep(_millisecs);
+	::Sleep(_millisecs);
 }
 
 //-----------------------------------------------------------------------------

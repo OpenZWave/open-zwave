@@ -45,7 +45,7 @@ namespace OpenZWave
 		bool Start( Thread::pfnThreadProc_t _pfnThreadProc, void* _context );
 		bool Stop();
 		bool IsRunning()const{ return m_bIsRunning; }
-		void msSleep( uint32 _milliseconds );
+		void Sleep( uint32 _milliseconds );
 
 		void Run();
 		static DWORD WINAPI ThreadProc( void* _pArg );

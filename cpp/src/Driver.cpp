@@ -834,9 +834,16 @@ bool Driver::ReadMsg
 			uint8 loops = 0;
 			while( true )
 			{
-				if( m_serialPort->Read( &buffer[1], 1 )) break;
-				m_driverThread->Sleep(10);
-				if( ++loops == 10 ) break;
+				if( m_serialPort->Read( &buffer[1], 1 )) 
+				{
+					break;
+				}
+				
+				m_driverThread->Sleep( 10 );
+				if( ++loops == 10 )
+				{
+					break;
+				}
 			}
 			if( loops == 10 )
 			{
@@ -852,11 +859,15 @@ bool Driver::ReadMsg
 				bytesRemaining -= m_serialPort->Read( &buffer[2+(uint32)buffer[1]-bytesRemaining], bytesRemaining );
 				if( bytesRemaining ) 
 				{
-					m_driverThread->Sleep(10);
-					if( ++loops == 50 ) break;
+					m_driverThread->Sleep( 10 );
+					if( ++loops == 50 )
+					{
+						break;
+					}
 				}
 			}
 			while( bytesRemaining );
+			
 			if( loops == 50 )
 			{
 				Log::Write( "500ms passed without reading the rest of the frame...aborting frame read" );
@@ -985,11 +996,6 @@ void Driver::ProcessMsg
 				HandleRequestNetworkUpdate( _data );
 				break;
 			}
-			case FUNC_ID_ZW_CONTROLLER_CHANGE:
-			{
-				HandleControllerChange( _data );
-				break;
-			}
 			case FUNC_ID_ZW_SET_SUC_NODE_ID:
 			{
 				HandleSetSUCNodeIdResponse( _data );
@@ -1083,17 +1089,17 @@ void Driver::ProcessMsg
 			}
 			case FUNC_ID_ZW_CREATE_NEW_PRIMARY:
 			{
-				HandleCreateNewPrimary( _data );
+				HandleCreateNewPrimaryRequest( _data );
 				break;
 			}
 			case FUNC_ID_ZW_CONTROLLER_CHANGE:
 			{
-				HandleControllerChange( _data );
+				HandleControllerChangeRequest( _data );
 				break;
 			}
 			case FUNC_ID_ZW_SET_LEARN_MODE:
 			{
-				HandleSetLearnMode( _data );
+				HandleSetLearnModeRequest( _data );
 				break;
 			}
 			case FUNC_ID_ZW_REMOVE_FAILED_NODE_ID:
@@ -1208,36 +1214,26 @@ void Driver::HandleGetControllerCapabilitiesResponse
 
 	Log::Write( "Received reply to FUNC_ID_ZW_GET_CONTROLLER_CAPABILITIES:" );
 
+	char str[256];
+	snprintf( str, 256, "    The PC controller is a %s%s%s controller%s", 
+		( m_controllerCaps & ControllerCaps_Secondary ) ? "secondary" : "primary",
+		( m_controllerCaps & ControllerCaps_SIS ) ? ", inclusion," : "",
+		( m_controllerCaps & ControllerCaps_SUC ) ? " static update controller (SUC)" : " controller",
+		( m_controllerCaps & ControllerCaps_OnOtherNetwork ) ? " which is using a Home ID from another network." : "." );
+
+	Log::Write( str );
+
 	if( m_controllerCaps & ControllerCaps_SIS )
 	{
-		Log::Write( "    There is a SUC ID Server (SIS) in this network." );
-		Log::Write( "    The PC controller is an inclusion controller" );
-
+		Log::Write( "    There is a SUC ID Server (SIS) in this network" );
 		if( m_controllerCaps & ControllerCaps_RealPrimary )
 		{
-			Log::Write( "    and was the primary before the SIS was added." );
-		}
-		else
-		{
-			Log::Write( "    and was a secondary before the SIS was added." );
+			Log::Write( "    and the PC controller was the original primary before the SIS was added." );
 		}
 	}
 	else
 	{
-		Log::Write( "    There is no SUC ID Server in the network." );
-		if( m_controllerCaps & ControllerCaps_Secondary )
-		{
-			Log::Write( "    The PC controller is a secondary controller." );
-		}
-		else
-		{
-			Log::Write( "    The PC controller is a primary controller." );
-		}
-	}
-
-	if( m_controllerCaps & ControllerCaps_SIS )
-	{
-		Log::Write( "    The PC controller is also a Static Update Controller." );
+		Log::Write( "    There is no SUC ID Server (SIS) in this network." );
 	}
 }
 
@@ -1649,92 +1645,7 @@ void Driver::HandleAddNodeToNetworkRequest
 )
 {
 	Log::Write( "FUNC_ID_ZW_ADD_NODE_TO_NETWORK:" );
-
-	switch( _data[3] )
-	{
-		case ADD_NODE_STATUS_LEARN_READY:
-		{
-			Log::Write( "ADD_NODE_STATUS_LEARN_READY" );
-			m_controllerAdded = false;
-			if( m_controllerCallback )
-			{
-				m_controllerCallback( ControllerState_Waiting, m_controllerCallbackContext );
-			}
-			break;
-		}
-		case ADD_NODE_STATUS_NODE_FOUND:
-		{
-			Log::Write( "ADD_NODE_STATUS_NODE_FOUND" );
-			if( m_controllerCallback )
-			{
-				m_controllerCallback( ControllerState_InProgress, m_controllerCallbackContext );
-			}
-			break;
-		}
-		case ADD_NODE_STATUS_ADDING_SLAVE:
-		{
-			Log::Write( "ADD_NODE_STATUS_ADDING_SLAVE" );			
-			Log::Write( "Adding node ID %d", _data[4] );
-			m_controllerAdded = false;
-			m_controllerCommandNode = _data[4];
-			break;
-		}
-		case ADD_NODE_STATUS_ADDING_CONTROLLER:
-		{
-			Log::Write( "ADD_NODE_STATUS_ADDING_CONTROLLER");
-			Log::Write( "Adding node ID %d", _data[4] );
-			m_controllerAdded = true;
-			m_controllerCommandNode = _data[4];
-			break;
-		}
-		case ADD_NODE_STATUS_PROTOCOL_DONE:
-		{
-			Log::Write( "ADD_NODE_STATUS_PROTOCOL_DONE" );
-
-			if( m_controllerAdded && m_controllerReplication)
-			{
-				// We added a controller, now is the time to replicate our data to it
-				m_controllerReplication->StartReplication( m_controllerCommandNode );
-			}
-			else
-			{
-				// We added a device.
-				// Get the controller out of add mode to avoid accidentally adding other devices.
-				Msg* msg = new Msg( "Stop Add Node Mode", 0xff, REQUEST, FUNC_ID_ZW_ADD_NODE_TO_NETWORK, true );
-				msg->Append( ADD_NODE_STOP );
-				SendMsg( msg );
-			}
-			break;
-		}
-		case ADD_NODE_STATUS_DONE:
-		{
-			Log::Write( "ADD_NODE_STATUS_DONE" );
-
-			InitNode( m_controllerCommandNode );
-
-			if( m_controllerCallback )
-			{
-				m_controllerCallback( ControllerState_Completed, m_controllerCallbackContext );
-			}
-			m_controllerCommand = ControllerCommand_None;
-			break;
-		}
-		case ADD_NODE_STATUS_FAILED:
-		{
-			Log::Write( "ADD_NODE_STATUS_FAILED" );
-
-			if( m_controllerCallback )
-			{
-				m_controllerCallback( ControllerState_Failed, m_controllerCallbackContext );
-			}
-			m_controllerCommand = ControllerCommand_None;
-			break;
-		}
-		default:
-		{
-			break;
-		}
-	}
+	CommonAddNodeStatusRequestHandler( FUNC_ID_ZW_ADD_NODE_TO_NETWORK, _data );
 }
 
 //-----------------------------------------------------------------------------
@@ -1818,48 +1729,36 @@ void Driver::HandleRemoveNodeFromNetworkRequest
 }
 
 //-----------------------------------------------------------------------------
-// <Driver::HandleControllerChange>
+// <Driver::HandleControllerChangeRequest>
 // Process a request from the Z-Wave PC interface
 //-----------------------------------------------------------------------------
-void Driver::HandleControllerChange
+void Driver::HandleControllerChangeRequest
 (
 	uint8* _data
 )
 {
 	Log::Write( "FUNC_ID_ZW_CONTROLLER_CHANGE:" );
-	
-	switch( _data[3] ) 
-	{
-		case LEARN_MODE_STARTED:
-		{
-		}
-	}
+	CommonAddNodeStatusRequestHandler( FUNC_ID_ZW_CONTROLLER_CHANGE, _data );
 }
 
 //-----------------------------------------------------------------------------
-// <Driver::HandleCreateNewPrimary>
+// <Driver::HandleCreateNewPrimaryRequest>
 // Process a request from the Z-Wave PC interface
 //-----------------------------------------------------------------------------
-void Driver::HandleCreateNewPrimary
+void Driver::HandleCreateNewPrimaryRequest
 (
 	uint8* _data
 )
 {
 	Log::Write( "FUNC_ID_ZW_CREATE_NEW_PRIMARY:" );
-	
-	switch( _data[3] ) 
-	{
-		case LEARN_MODE_STARTED:
-		{
-		}
-	}
+	CommonAddNodeStatusRequestHandler( FUNC_ID_ZW_CREATE_NEW_PRIMARY, _data );
 }
 
 //-----------------------------------------------------------------------------
-// <Driver::HandleSetLearnMode>
+// <Driver::HandleSetLearnModeRequest>
 // Process a request from the Z-Wave PC interface
 //-----------------------------------------------------------------------------
-void Driver::HandleSetLearnMode
+void Driver::HandleSetLearnModeRequest
 (
 	uint8* _data
 )
@@ -2136,6 +2035,107 @@ bool Driver::HandleApplicationUpdateRequest
 	}
 
 	return messageRemoved;
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::CommonAddNodeStatusRequestHandler>
+// Handle common AddNode processing for many similar commands
+//-----------------------------------------------------------------------------
+void Driver::CommonAddNodeStatusRequestHandler
+(
+	uint8 _funcId,
+	uint8* _data
+)
+{
+	switch( _data[3] )
+	{
+		case ADD_NODE_STATUS_LEARN_READY:
+		{
+			Log::Write( "ADD_NODE_STATUS_LEARN_READY" );
+			m_controllerAdded = false;
+			if( m_controllerCallback )
+			{
+				m_controllerCallback( ControllerState_Waiting, m_controllerCallbackContext );
+			}
+			break;
+		}
+		case ADD_NODE_STATUS_NODE_FOUND:
+		{
+			Log::Write( "ADD_NODE_STATUS_NODE_FOUND" );
+			if( m_controllerCallback )
+			{
+				m_controllerCallback( ControllerState_InProgress, m_controllerCallbackContext );
+			}
+			break;
+		}
+		case ADD_NODE_STATUS_ADDING_SLAVE:
+		{
+			Log::Write( "ADD_NODE_STATUS_ADDING_SLAVE" );			
+			Log::Write( "Adding node ID %d", _data[4] );
+			m_controllerAdded = false;
+			m_controllerCommandNode = _data[4];
+			break;
+		}
+		case ADD_NODE_STATUS_ADDING_CONTROLLER:
+		{
+			Log::Write( "ADD_NODE_STATUS_ADDING_CONTROLLER");
+			Log::Write( "Adding node ID %d", _data[4] );
+			m_controllerAdded = true;
+			m_controllerCommandNode = _data[4];
+			break;
+		}
+		case ADD_NODE_STATUS_PROTOCOL_DONE:
+		{
+			Log::Write( "ADD_NODE_STATUS_PROTOCOL_DONE" );
+			if( m_controllerAdded && m_controllerReplication)
+			{
+				// We added a controller, now is the time to replicate our data to it
+				m_controllerReplication->StartReplication( m_controllerCommandNode, _funcId );
+			}
+			else
+			{
+				// We added a device.
+				// Get the controller out of add mode to avoid accidentally adding other devices.
+				Msg* msg = new Msg( "Add Node Mode Stop", 0xff, REQUEST, _funcId, true );
+				msg->Append( ADD_NODE_STOP );
+				SendMsg( msg );
+			}
+			break;
+		}
+		case ADD_NODE_STATUS_DONE:
+		{
+			Log::Write( "ADD_NODE_STATUS_DONE" );
+			InitNode( m_controllerCommandNode );
+			if( m_controllerCallback )
+			{
+				m_controllerCallback( ControllerState_Completed, m_controllerCallbackContext );
+			}
+			m_controllerCommand = ControllerCommand_None;
+
+			// If the added device was a controller, we should check whether to make it a SUC or SIS
+			// TBD...
+			break;
+		}
+		case ADD_NODE_STATUS_FAILED:
+		{
+			Log::Write( "ADD_NODE_STATUS_FAILED" );
+			if( m_controllerCallback )
+			{
+				m_controllerCallback( ControllerState_Failed, m_controllerCallbackContext );
+			}
+			m_controllerCommand = ControllerCommand_None;
+
+			// Get the controller out of add mode to avoid accidentally adding other devices.
+			Msg* msg = new Msg( "Add Node Stop (Failed)", 0xff, REQUEST, _funcId, true );
+			msg->Append( ADD_NODE_STOP_FAILED );
+			SendMsg( msg );
+			break;
+		}
+		default:
+		{
+			break;
+		}
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -3074,6 +3074,10 @@ bool Driver::BeginControllerCommand
 		}
 		case ControllerCommand_CreateNewPrimary:
 		{
+			Log::Write( "CreateNewPrimary" );
+			Msg* msg = new Msg( "CreateNewPrimary", 0xff, REQUEST, FUNC_ID_ZW_CREATE_NEW_PRIMARY, true, false );
+			msg->Append( CREATE_PRIMARY_START );
+			SendMsg( msg );
 			break;
 		}
 		case ControllerCommand_ReceiveConfiguration:
@@ -3132,7 +3136,7 @@ bool Driver::BeginControllerCommand
 		case ControllerCommand_TransferPrimaryRole:
 		{
 			Log::Write( "TransferPrimaryRole" );
-			Msg* msg = new Msg(  "TransferPrimaryRole", 0xff, REQUEST, FUNC_ID_ZW_CONTROLLER_CHANGE, true, false );
+			Msg* msg = new Msg( "TransferPrimaryRole", 0xff, REQUEST, FUNC_ID_ZW_CONTROLLER_CHANGE, true, false );
 			msg->Append( CONTROLLER_CHANGE_START );
 			SendMsg( msg );
 			break;

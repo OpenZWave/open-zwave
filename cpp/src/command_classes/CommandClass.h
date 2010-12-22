@@ -73,7 +73,8 @@ namespace OpenZWave
 		void ReleaseNode()const;
 
 		void SetInstances( uint8 const _instances );
-		void SetNoValues(){ m_createVars = false; }
+		void SetAfterMark(){ m_afterMark = false; }
+		bool IsAfterMark()const{ return m_afterMark; }
 
 		// Helper methods
 		float32 ExtractValue( uint8 const* _data, uint8* _scale )const;
@@ -148,7 +149,7 @@ namespace OpenZWave
 		uint8	m_nodeId;
 		uint8	m_version;
 		uint8	m_instances;
-		bool	m_createVars;		// Set to true if the command class should not create any values.
+		bool	m_afterMark;		// Set to true if the command class is listed after COMMAND_CLASS_MARK, and should not create any values.
 
 	//-----------------------------------------------------------------------------
 	// Record which items of static data have been read from the device
