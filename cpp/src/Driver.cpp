@@ -933,7 +933,7 @@ bool Driver::ReadMsg
 
 		case ACK:
 		{
-			Log::Write( "ACK received CallbackId %d Reply %d", m_expectedCallbackId, m_expectedReply );
+			Log::Write( "ACK received CallbackId 0x%.2x Reply 0x%.2x", m_expectedCallbackId, m_expectedReply );
 			m_waitingForAck = false;
 			
 			if( ( 0 == m_expectedCallbackId ) && ( 0 == m_expectedReply ) )
@@ -1095,7 +1095,7 @@ void Driver::ProcessMsg
 			}
 			default:
 			{
-				Log::Write( "TODO: handle response for %d", _data[1] );
+				Log::Write( "TODO: handle response for 0x%.2x", _data[1] );
 				break;
 			}
 		}
@@ -1731,7 +1731,7 @@ bool Driver::HandleSendDataRequest
 {
 	bool messageRemoved = false;
 
-	Log::Write( "%s Request with callback ID %d received (expected %d)", _replication ? "ZW_REPLICATION_SEND_DATA" : "ZW_SEND_DATA", _data[2], m_expectedCallbackId );
+	Log::Write( "%s Request with callback ID 0x%.2x received (expected 0x%.2x)", _replication ? "ZW_REPLICATION_SEND_DATA" : "ZW_SEND_DATA", _data[2], m_expectedCallbackId );
 
 	if( _data[2] != m_expectedCallbackId )
 	{

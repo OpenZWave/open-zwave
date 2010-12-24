@@ -47,6 +47,9 @@ namespace OpenZWave
 	class ControllerReplication;
 	class Notification;
 
+	/** @brief The Driver class handles communication between OpenZWave 
+	 *  and a device attached via a serial port (typically a controller).
+	 */
 	class Driver
 	{
 		friend class Manager;
@@ -65,27 +68,71 @@ namespace OpenZWave
 	// Construction / Destruction
 	//-----------------------------------------------------------------------------
 	private:
+		/** 
+		 *  Creates threads, events and initializes member variables and the node array.
+		 */
         Driver( string const& _serialPortName );
+		/** Sets "exit" flags and stops the three background threads (pollThread, serialThread
+		 *  and driverThread).  Then clears out the send queue and node array.  Notifies
+		 *  watchers and exits.
+		 */
 		virtual ~Driver();
 
+		/**
+		 *  Start the driverThread
+		 */
 		void Start();
+		/**
+		 *  Entry point for driverThread
+		 */
 		static void DriverThreadEntryPoint( void* _context );
+		/**
+		 *  ThreadProc for driverThread.  This is where all the "action" takes place.  
+		 *  @n@n
+		 *  First, the thread is initialized by calling Init().  If Init() fails, it will be retried 
+		 *  every 5 seconds for the first two minutes and every 30 seconds thereafter.
+		 *  @n@n
+		 *  After the thread is successfully initialized, the thread enters a loop with the
+		 *  following elements:
+		 *  - Confirm that m_exit is still false (or exit from the thread if it is true)
+		 *  - Call ReadMsg() to consume any available messages from the controller
+		 *  - Call NotifyWatchers() to send any pending notifications
+		 *  - If the thread is not waiting for an ACK, a callback or a message reply, send [any][the next] queued message[s]
+		 *  - If there was no message read or sent (workDone=false), sleep for 5 seconds.  If nothing happened
+		 *  within this time frame and something was expected (ACK, callback or reply), retrieve the
+		 *  last message from the send queue and examine GetSendAttempts().  If greater than 2, give up
+		 *  and remove the message from the queue.  Otherwise, resend the message.
+		 *  - If something did happen [reset m_wakeEvent]
+		 */
 		void DriverThreadProc();
+		/**
+		 *  Initialize the controller.  Open the specified serial port, start the serialThread 
+		 *  and pollThread, then send a NAK to the device [presumably to flush it].
+		 *  @n@n
+		 *  Then queue the commands to retrieve the Z-Wave interface:
+		 *  - Get version
+		 *  - Get home and node IDs
+		 *  - Get controller capabilities
+		 *  - Get serial API capabilties
+		 *  - [Get SUC node ID]
+		 *  - Get init data [identifying the nodes on the network]
+		 *  Init() will return false if the serial port could not be opened.
+		 */
 		bool Init( uint32 _attempts );
 
-		Thread*					m_driverThread;								// Thread for reading from the Z-Wave controller, and for creating and managing the other threads for sending, polling etc.
-		Event*					m_wakeEvent;								// Event that will be signalled when we should check for new work
-		Event*					m_exitEvent;								// Event that will be signalled when the application is exiting
-		bool					m_exit;										// Flag that is set when the application is exiting.
-		bool					m_init;										// Set to true once the driver has been initialised
+		Thread*					m_driverThread;		/**< Thread for reading from the Z-Wave controller, and for creating and managing the other threads for sending, polling etc. */
+		Event*					m_wakeEvent;		/**< Event that will be signalled when we should check for new work */
+		Event*					m_exitEvent;		/**< Event that will be signalled when the application is exiting */
+		bool					m_exit;				/**< Flag that is set when the application is exiting. */
+		bool					m_init;				/**< Set to true once the driver has been initialised */
 
 	//-----------------------------------------------------------------------------
 	//	Configuration
 	//-----------------------------------------------------------------------------
 	private:
-		void RequestConfig();												// Get the network configuration from the Z-Wave network
-		bool ReadConfig();													// Read the configuration from a file
-		void WriteConfig();													// Save the configuration to a file
+		void RequestConfig();						/**< Get the network configuration from the Z-Wave network */
+		bool ReadConfig();							/**< Read the configuration from a file */
+		void WriteConfig();							/**< Save the configuration to a file */
 
 	//-----------------------------------------------------------------------------
 	//	Controller
@@ -94,20 +141,20 @@ namespace OpenZWave
 		// Controller Capabilities (return in FUNC_ID_ZW_GET_CONTROLLER_CAPABILITIES)
 		enum
 		{
-			ControllerCaps_Secondary		= 0x01,		// The controller is a secondary.
-			ControllerCaps_OnOtherNetwork	= 0x02,		// The controller is not using its default HomeID.
-			ControllerCaps_SIS				= 0x04,		// There is a SUC ID Server on the network.
-			ControllerCaps_RealPrimary		= 0x08,		// Controller was the primary before the SIS was added.
-			ControllerCaps_SUC				= 0x10		// Controller is a static update controller.
+			ControllerCaps_Secondary		= 0x01,		/**< The controller is a secondary. */
+			ControllerCaps_OnOtherNetwork	= 0x02,		/**< The controller is not using its default HomeID. */
+			ControllerCaps_SIS				= 0x04,		/**< There is a SUC ID Server on the network. */
+			ControllerCaps_RealPrimary		= 0x08,		/**< Controller was the primary before the SIS was added. */
+			ControllerCaps_SUC				= 0x10		/**< Controller is a static update controller. */
 		};
 
 		// Init Capabilities (return in FUNC_ID_SERIAL_API_GET_INIT_DATA)
 		enum
 		{
-			InitCaps_Slave					= 0x01,		// 
-			InitCaps_TimerSupport			= 0x02,		// Controller supports timers.
-			InitCaps_Secondary				= 0x04,		// Controller is a secondary.
-			InitCaps_SUC					= 0x08,		// Controller is a static update controller.
+			InitCaps_Slave					= 0x01,		/**<  */
+			InitCaps_TimerSupport			= 0x02,		/**< Controller supports timers. */
+			InitCaps_Secondary				= 0x04,		/**< Controller is a secondary. */
+			InitCaps_SUC					= 0x08,		/**< Controller is a static update controller. */
 		};
 
 		bool IsPrimaryController()const{ return ((m_initCaps & InitCaps_Secondary) == 0); }
@@ -121,9 +168,33 @@ namespace OpenZWave
 		string GetLibraryVersion()const{ return m_libraryVersion; }
 		string GetLibraryTypeName()const{ return m_libraryTypeName; }
 
-		Node* GetNodeUnsafe( uint8 _nodeId );								// Version of GetNode that does not use a mutex.  Only to be used by driver thread code that knows the node cannot be removed while accessing it.
+		/**
+		 *  A version of GetNode that does not have the protective "lock" and "release" requirement.  
+		 *  This function can be used within driverThread, which "knows" that the node will not be
+		 *  changed or deleted while it is being used.
+		 *  @param _nodeId The nodeId (index into the node array) identifying the node to be returned
+		 *  @return
+		 *  A pointer to the specified node (if it exists) or NULL if not.
+		 *  @see GetNode
+		 */
+		Node* GetNodeUnsafe( uint8 _nodeId );
+		/**
+		 *  Locks the node array and returns the specified node (if it exists).  If a node is returned,
+		 *  the lock must be released after the node has been processed via a call to ReleaseNodes().
+		 *  If the node specified by _nodeId does not exist, the lock is released and NULL is returned.
+		 *  @param _nodeId The nodeId (index into the node array) identifying the node to be returned
+		 *  @return
+		 *  A pointer to the specified node (if it exists) or NULL if not.
+		 *  @see LockNodes, ReleaseNodes
+		 */
 		Node* GetNode( uint8 _nodeId );
+		/**
+		 *  Lock the nodes so no other thread can modify them.
+		 */
 		void LockNodes();
+		/**
+		 *  Release the lock on the nodes so other threads can modify them.
+		 */
 		void ReleaseNodes();
 
 		static void SerialThreadEntryPoint( void* _context );
@@ -154,6 +225,23 @@ namespace OpenZWave
 		void SendMsg( Msg* _msg );
 
 	private:
+		/**
+		 *  If there are messages in the send queue (m_sendQueue), gets the next message in the
+		 *  queue and writes it to the serial port.  In sending the message, SendMsg also initializes
+		 *  variables tracking the message's callback ID (m_expectedCallbackId), expected reply
+		 *  (m_expectedReply) and expected command class ID (m_expectedCommandClassId).  It also
+		 *  sets m_waitingForAck to true and increments the message's send attempts counter.
+		 *  @n@n
+		 *  If there are no messages in the send queue, then SendMsg checks the query queue to
+		 *  see if there are any outstanding queries that can be processed (target node not asleep).
+		 *  If so, it retrieves the Node object that needs to be queried and calls that node's
+		 *  AdvanceQueries member function.  If this call results in all of the node's queries to be
+		 *  completed, SendMsg will remove the node query item from the query queue.
+		 *  @return TRUE if data was written, FALSE if not
+		 *  @see Msg, m_sendQueue, m_expectedCallbackId, m_expectedReply, m_expectedCommandClassId,
+		 *  m_waitingForAck, Msg::GetSendAttempts, Node::AdvanceQueries, GetCurrentNodeQuery,
+		 *  RemoveNodeQuery, Node::AllQueriesCompleted
+		 */
 		bool WriteMsg();
 		void RemoveMsg();													// Remove the first message from the send queue.  This happens when the send was successful, or after three failed attempts.
 		void TriggerResend();												// Causes the first message to be sent again, in response to a NAK or CAN from the controller.
@@ -176,6 +264,18 @@ namespace OpenZWave
 		void HandleSetSUCNodeIdResponse( uint8* _data );
 		void HandleGetSUCNodeIdResponse( uint8* _data );
 		void HandleMemoryGetIdResponse( uint8* _data );
+		/**
+		 *  Process a response to a FUNC_ID_SERIAL_API_GET_INIT_DATA request.
+		 *  @n@n
+		 *  The response message contains a bitmap identifying which of the 232 possible nodes
+		 *  in the network are actually present.  These bitmap values are compared with the
+		 *  node map (read in from TODOxxx.xml) to see if the node has already been registered
+		 *  by the OpenZWave library.  If it has (the log will show it as "Known") and this is 
+		 *  the first time this message was sent (m_init is false), then AddNodeQuery() is called
+		 *  to retrieve its current state.  If this is a "New" node to OpenZWave, then InitNode()
+		 *  is called.
+		 *  @see AddNodeQuery, InitNode, GetNode, ReleaseNodes
+		 */
 		void HandleSerialAPIGetInitDataResponse( uint8* _data );
 		void HandleGetNodeProtocolInfoResponse( uint8* _data );
 		bool HandleRemoveFailedNodeResponse( uint8* _data );
@@ -230,9 +330,39 @@ namespace OpenZWave
 	//	Retrieving Node information
 	//-----------------------------------------------------------------------------
 	private:
+		/**
+		 *  Creates a new Node object (deleting any previous Node object with the same nodeId) and
+		 *  queues a full query of the node's parameters (starting at the beginning of the query
+		 *  stages--Node::QueryStage_None).  This function will send Notification::Type_NodeAdded
+		 *  and Notification::Type_NodeRemoved messages to identify these modifications.
+		 *  @param _nodeId The node ID of the node to create and query.
+		 *  @see Notification::Type_NodeAdded, Notification::Type_NodeRemoved, Node::QueryStage_None, 
+		 *  AddNodeQuery
+		 */
 		void InitNode( uint8 const _nodeId );
+		/**
+		 *  Adds an existing node to the query queue if it is not already there.
+		 *  @param _nodeId The node ID of the node to query.
+		 *  @param _stage The Node::QueryStage at which to start querying.  This allows OpenZWave to 
+		 *  either continue an interrupted query at the required stage or to start the update at a
+		 *  late stage (for example, to read dynamic data that will have changed since OpenZWave was
+		 *  last run).
+		 *  @see Node::QueryStage, Node::GoBackToQueryStage, m_nodeQueries
+		 */
 		void AddNodeQuery( uint8 const _nodeId, Node::QueryStage const _stage );
+		/**
+		 *  Removes the specified node from the node query queue.
+		 *  @param _nodeId The node ID of the node to remove from the queue.
+		 *  @see m_nodeQueries
+		 */
 		void RemoveNodeQuery( uint8 const _nodeId );
+		/** 
+		 *  Gets the "awake" node that is nearest the front of the queue of nodes to be queried.
+		 *  This function iterates through the m_nodeQueries queue and will return the nodeId of the
+		 *  first node it finds that is either always "listening" or isn't always listening but 
+		 *  happens to be awake.
+		 *  @return Node ID of a node in the query queue.
+		 */
 		uint8 GetCurrentNodeQuery();
 
 		void InitAllNodes();												// Delete all nodes and fetch the data from the Z-Wave network again.
@@ -267,8 +397,8 @@ namespace OpenZWave
 
 		Value* GetValue( ValueID const& _id );
 
-		list<uint8>				m_nodeQueries;								// Queue holding nodes that we wish to interogate for setup details
-		Mutex*					m_queryMutex;								// Serialize access to the info queue				
+		list<uint8>				m_nodeQueries;		/**< Queue of node IDs of nodes that we wish to interrogate for setup details */
+		Mutex*					m_queryMutex;		/**< Serialize access to the info queue */
 
 	//-----------------------------------------------------------------------------
 	// Controller commands
