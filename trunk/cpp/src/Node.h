@@ -95,9 +95,31 @@ namespace OpenZWave
 			QueryStage_Complete
 		};
 
+		/**
+		 * This function advances the query process (see Remarks below for more detail on the 
+		 * process).  It iterates through the various query stages enumerated in Node::QueryStage.
+		 * 
+		 * @remark
+		 * For OpenZWave to discover everything about a node, we have to follow a certain
+		 * order of queries, because the results of one stage may affect what is requested
+		 * in the next stage.  The stage is saved with the node data, so that any incomplete
+		 * queries can be restarted the next time the application runs.
+		 * @n@n
+		 * The individual command classes also store some state information as to whether 
+		 * they have had a response to certain queries.  This state information is 
+		 * initilized by the SetStaticRequests 
+		 * call in QueryStage_None.  It is also saved, so we do not need to request state 
+		 * from every commaned class if some have previously responded. 
+		 */
 		void AdvanceQueries();
 		void QueryStageComplete( QueryStage const _stage );
 		void QueryStageRetry( QueryStage const _stage, uint8 const _maxAttempts = 0 );	    // maxAttempts of zero means no limit
+		/**
+		 * This function sets the query stage for the node (but only to an earlier stage).  If
+		 * a later stage is specified, it is ignored.
+		 * @param _stage The desired query stage.
+		 * @see m_queryStage, m_queryPending
+		 */
 		void GoBackToQueryStage( QueryStage const _stage );									// Used to move back to repeat from an earlier stage. 
 
 		void UpdateProtocolInfo( uint8 const* _data );
@@ -158,7 +180,7 @@ namespace OpenZWave
 		uint8		m_security;
 		uint32		m_homeId;
 		uint8		m_nodeId;
-		uint8		m_basic;
+		uint8		m_basic;		//*< Basic device class (0x01-Controller, 0x02-Static Controller, 0x03-Slave, 0x04-Routing Slave
 		uint8		m_generic;
 		uint8		m_specific;
 		string		m_type;				// Label representing the specific/generic/basic value
@@ -201,6 +223,12 @@ namespace OpenZWave
 	// Command Classes
 	//-----------------------------------------------------------------------------
 	public:
+		/**
+		 * This function retrieves a pointer to the requested command class object.
+		 * @param _commandClassId Class ID (a single byte value) identifying the command class requested.
+		 * @return Pointer to the requested CommandClass object.
+		 * @see CommandClass, m_commandClassMap
+		 */
 		CommandClass* GetCommandClass( uint8 const _commandClassId )const;
 		void ApplicationCommandHandler( uint8 const* _data );
 
@@ -208,13 +236,28 @@ namespace OpenZWave
 		void Poll();
 
 	private:
+		/**
+		 * Creates the specified command class object and adds it to the node (via the 
+		 * m_commandClassMap) if it doesn't exist.
+		 * No new object is created if it already exists for this node.
+		 * @param _commandClassId Class ID (a single byte value) identifying the command class requested.
+		 * @return Pointer to the CommandClass object just added to the map (NULL if the object 
+		 * was already there or if the CommandClass object creation failed).
+		 * @see CommandClass, CommandClasses::CreateCommandClass, m_commandClassMap
+		 */
 		CommandClass* AddCommandClass( uint8 const _commandClassId );
+		/**
+		 * Removes a command class object from the node (via the m_commandClassMap).  Before removing the 
+		 * object, this function also removes any values stored in the object's ValueStore.
+		 * @param _commandClassId Class ID (a single byte value) identifying the command class to be removed.
+		 * @see m_commandClassMap, ValueStore, GetValueStore, ValueStore::RemoveCommandClassValues
+		 */
 		void RemoveCommandClass( uint8 const _commandClassId );
 		void ReadXML( TiXmlElement const* _nodeElement );
 		void ReadCommandClassesXML( TiXmlElement const* _ccsElement );
 		void WriteXML( TiXmlElement* _nodeElement );
 
-		map<uint8,CommandClass*>		m_commandClassMap;
+		map<uint8,CommandClass*>		m_commandClassMap;	/**< Map of command class ids and pointers to associated command class objects */
 
 	//-----------------------------------------------------------------------------
 	// Basic commands (helpers that go through the basic command class)
