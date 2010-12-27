@@ -37,6 +37,8 @@ namespace OpenZWave
 {
 	class ValueList;
 
+	/** \brief Implements COMMAND_CLASS_THERMOSTAT_FAN_MODE (0x44), a Z-Wave device command class.
+	 */
 	class ThermostatFanMode: public CommandClass
 	{
 	public:

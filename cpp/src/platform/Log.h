@@ -35,6 +35,8 @@ namespace OpenZWave
 	class Mutex;
 	class LogImpl;
 
+	/** \brief Implements a platform-independent log...written to the console and, optionally, a file.
+	 */
 	class Log
 	{
 	public:

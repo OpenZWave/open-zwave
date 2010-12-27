@@ -40,6 +40,8 @@ namespace OpenZWave
 	class Node;
 	class CommandClass;
 
+	/** \brief Button value ???.
+	 */
 	class ValueButton: public Value
 	{
 	public:

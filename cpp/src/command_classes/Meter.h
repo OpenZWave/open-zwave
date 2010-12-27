@@ -34,6 +34,8 @@ namespace OpenZWave
 {
 	class ValueDecimal;
 
+	/** \brief Implements COMMAND_CLASS_METER (0x32), a Z-Wave device command class.
+	 */
 	class Meter: public CommandClass
 	{
 	public:

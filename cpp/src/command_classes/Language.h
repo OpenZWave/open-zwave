@@ -34,6 +34,8 @@ namespace OpenZWave
 {
 	class ValueString;
 
+	/** \brief Implements COMMAND_CLASS_LANGUAGE (0x89), a Z-Wave device command class.
+	 */
 	class Language: public CommandClass
 	{
 	public:

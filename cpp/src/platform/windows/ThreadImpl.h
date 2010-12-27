@@ -34,6 +34,8 @@
 
 namespace OpenZWave
 {
+	/** \brief Windows-specific implementation of the Thread class.
+	 */
 	class ThreadImpl
 	{
 	private:

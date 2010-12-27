@@ -39,6 +39,8 @@ namespace OpenZWave
 	class Msg;
 	class Node;
 
+	/** \brief Integer value sent to/received from a node.
+	 */
 	class ValueInt: public Value
 	{
 	public:

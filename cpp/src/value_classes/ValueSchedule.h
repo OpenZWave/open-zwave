@@ -39,6 +39,8 @@ namespace OpenZWave
 	class Msg;
 	class Node;
 
+	/** \brief Schedule sent to/received from a node.
+	 */
 	class ValueSchedule: public Value
 	{
 	public:

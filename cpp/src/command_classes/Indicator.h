@@ -32,8 +32,10 @@
 
 namespace OpenZWave
 {
-	class ValueBool;
+	class ValueByte;
 
+	/** \brief Implements COMMAND_CLASS_INDICATOR (0x87), a Z-Wave device command class.
+	 */
 	class Indicator: public CommandClass
 	{
 	public:
@@ -56,7 +58,7 @@ namespace OpenZWave
 	private:
 		Indicator( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
 
-		ValueInstances<ValueBool>	m_state;
+		ValueInstances<ValueByte>	m_state;
 	};
 
 } // namespace OpenZWave

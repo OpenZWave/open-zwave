@@ -36,6 +36,8 @@ namespace OpenZWave
 	class ValueButton;
 	class ValueByte;
 
+	/** \brief Implements COMMAND_CLASS_SWITCH_MULTILEVEL (0x26), a Z-Wave device command class.
+	 */
 	class SwitchMultilevel: public CommandClass
 	{
 	public:

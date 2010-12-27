@@ -33,7 +33,7 @@
 #include "Driver.h"
 #include "Log.h"
 
-#include "ValueBool.h"
+#include "ValueByte.h"
 
 using namespace OpenZWave;
 
@@ -84,7 +84,7 @@ bool Indicator::HandleMsg
 	{
 		Log::Write( "Received an Indicator report from node %d: Indicator=%d", GetNodeId(), _data[1] );
 
-		if( ValueBool* value = m_state.GetInstance( _instance ) )
+		if( ValueByte* value = m_state.GetInstance( _instance ) )
 		{
 			value->OnValueChanged( _data[1] != 0 );
 		}
@@ -103,17 +103,17 @@ bool Indicator::SetValue
 	Value const& _value
 )
 {
-	if( ValueID::ValueType_Bool == _value.GetID().GetType() )
+	if( ValueID::ValueType_Byte == _value.GetID().GetType() )
 	{
-		ValueBool const* value = static_cast<ValueBool const*>(&_value);
+		ValueByte const* value = static_cast<ValueByte const*>(&_value);
 
-		Log::Write( "Indicator::SetValue - Setting indicator on node %d to %s", GetNodeId(), value->GetValue() ? "On" : "Off" );
+		Log::Write( "Indicator::SetValue - Setting indicator on node %d to %d", GetNodeId(), value->GetValue());
 		Msg* msg = new Msg( "Basic Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
 		msg->Append( GetNodeId() );
 		msg->Append( 3 );
 		msg->Append( GetCommandClassId() );
 		msg->Append( IndicatorCmd_Set );
-		msg->Append( value->GetValue() ? 0xff: 0x00 );
+		msg->Append( value->GetValue() );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 		GetDriver()->SendMsg( msg );
 		return true;
@@ -133,7 +133,7 @@ void Indicator::CreateVars
 {
 	if( Node* node = GetNodeUnsafe() )
 	{
-		m_state.AddInstance( _instance, node->CreateValueBool( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Indicator", "", false, false ) );
+		m_state.AddInstance( _instance, node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Indicator", "", false, false ) );
 	}
 }
 

@@ -54,6 +54,9 @@ namespace OpenZWave
 	class ValueString;
 	class Mutex;
 
+	/** \brief The Node class describes a Z-Wave node object...typically a device on the 
+	 *  Z-Wave network.
+	 */
 	class Node
 	{
 		friend class Driver;
@@ -68,10 +71,20 @@ namespace OpenZWave
 	// Construction
 	//-----------------------------------------------------------------------------
 	public:
+		/** Constructor initializes the node object, associating it with a specific
+		 *  network (_homeId) and network node (_nodeId).
+		 *  @param _homeId The homeId of the network to which this node is connected.
+		 *  @param _nodeId The nodeId of this node.
+		 */
 		Node( uint32 const _homeId, uint8 const _nodeId );
+		/** Destructor cleans up memory allocated to node and its child objects. 
+		*/
 		virtual ~Node();
 
 	private:
+		/** Returns a pointer to the driver (interface with a Z-Wave controller) 
+		 *  associated with this node.
+		*/
 		Driver* GetDriver()const;
 
 	//-----------------------------------------------------------------------------
@@ -80,19 +93,19 @@ namespace OpenZWave
 	public:
 		enum QueryStage														
 		{
-			QueryStage_None,
-			QueryStage_ProtocolInfo,
-			QueryStage_Neighbors,
-			QueryStage_WakeUp,
-			QueryStage_NodeInfo,
-			QueryStage_ManufacturerSpecific,
-			QueryStage_Versions,
-			QueryStage_Instances,
-			QueryStage_Static,
-			QueryStage_Associations,
-			QueryStage_Session,
-			QueryStage_Dynamic,
-			QueryStage_Complete
+			QueryStage_None,					/**< Query process hasn't started for this node */
+			QueryStage_ProtocolInfo,			/**< Retrieve protocol information */
+			QueryStage_Neighbors,				/**< Retrieve node neighbor list */
+			QueryStage_WakeUp,					/**< Wake up */
+			QueryStage_NodeInfo,				/**< Retrieve node info ??? */
+			QueryStage_ManufacturerSpecific,	/**< Retrieve manufacturer-specific information */
+			QueryStage_Versions,				/**< Retrieve software/hardware version information */
+			QueryStage_Instances,				/**< Retrieve information about running instances ??? */
+			QueryStage_Static,					/**< Retrieve static information (doesn't change) */
+			QueryStage_Associations,			/**< Retrieve information about associations */
+			QueryStage_Session,					/**< Retrieve session information (changes infrequently) */
+			QueryStage_Dynamic,					/**< Retrieve dynamic information (changes frequently) */
+			QueryStage_Complete					/**< Query process is completed for this node */
 		};
 
 		/**
@@ -104,15 +117,28 @@ namespace OpenZWave
 		 * order of queries, because the results of one stage may affect what is requested
 		 * in the next stage.  The stage is saved with the node data, so that any incomplete
 		 * queries can be restarted the next time the application runs.
-		 * @n@n
+		 * <p>
 		 * The individual command classes also store some state information as to whether 
 		 * they have had a response to certain queries.  This state information is 
 		 * initilized by the SetStaticRequests 
 		 * call in QueryStage_None.  It is also saved, so we do not need to request state 
-		 * from every commaned class if some have previously responded. 
+		 * from every command class if some have previously responded. 
 		 */
 		void AdvanceQueries();
+		/** 
+		 *  Signal that a specific query stage has been completed for this node.  This will
+		 *  only work if the query process for this node is indeed at the specified stage.  
+		 *  Otherwise, the function returns with no action.
+		 *  @param _stage The current stage of the query process.
+		 */
 		void QueryStageComplete( QueryStage const _stage );
+		/** 
+		 *  Retry the specified query stage (up to _maxAttempts retries).  This will
+		 *  only work if the query process for this node is indeed at the specified stage.  
+		 *  Otherwise, the function returns with no action.
+		 *  @param _stage The query stage to retry.
+		 *  @param _maxAttempts 
+		 */
 		void QueryStageRetry( QueryStage const _stage, uint8 const _maxAttempts = 0 );	    // maxAttempts of zero means no limit
 		/**
 		 * This function sets the query stage for the node (but only to an earlier stage).  If
@@ -122,6 +148,17 @@ namespace OpenZWave
 		 */
 		void GoBackToQueryStage( QueryStage const _stage );									// Used to move back to repeat from an earlier stage. 
 
+		/**
+		 *  This function handles a response to the FUNC_ID_ZW_GET_NODE_PROTOCOL_INFO
+		 *  command for this node.  If protocol information has already been retrieved
+		 *  for the node, the function simply returns.  Otherwise, it populates several
+		 *  member variables about the device at this node:
+		 *  - m_listening (whether it is always listening or whether it "sleeps"
+		 *  - m_routing (whether it is a routing node (capable of passing commands along to other nodes in the network) or not
+		 *  - m_maxBaudRate (the maximum baud rate at which this device can communicate)
+		 *  - m_version (TODO)
+		 *  - m_security (
+		 */
 		void UpdateProtocolInfo( uint8 const* _data );
 		void UpdateNodeInfo( uint8 const* _data, uint8 const _length );
 

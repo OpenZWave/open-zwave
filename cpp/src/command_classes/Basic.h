@@ -34,6 +34,8 @@ namespace OpenZWave
 {
 	class ValueByte;
 
+	/** \brief Implements COMMAND_CLASS_BASIC (0x20), a Z-Wave device command class.
+	 */
 	class Basic: public CommandClass
 	{
 	public:

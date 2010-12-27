@@ -38,6 +38,8 @@ namespace OpenZWave
 {
 	class Node;
 
+	/** \brief Base class for values associated with a node.
+	 */
 	class Value
 	{
 		friend class Driver;

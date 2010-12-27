@@ -34,6 +34,8 @@ namespace OpenZWave
 {
 	class ValueBool;
 
+	/** \brief Implements COMMAND_CLASS_SWITCH_BINARY (0x25), a Z-Wave device command class.
+	 */
 	class SwitchBinary: public CommandClass
 	{
 	public:

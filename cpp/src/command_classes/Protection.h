@@ -34,6 +34,8 @@ namespace OpenZWave
 {
 	class ValueList;
 
+	/** \brief Implements COMMAND_CLASS_PROTECTION (0x75), a Z-Wave device command class.
+	 */
 	class Protection: public CommandClass
 	{
 	public:

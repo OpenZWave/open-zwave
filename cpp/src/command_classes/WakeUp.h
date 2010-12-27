@@ -37,6 +37,8 @@ namespace OpenZWave
 	class Msg;
 	class ValueInt;
 
+	/** \brief Implements COMMAND_CLASS_WAKE_UP (0x84), a Z-Wave device command class.
+	 */
 	class WakeUp: public CommandClass
 	{
 	public:

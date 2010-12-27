@@ -32,6 +32,8 @@
 
 namespace OpenZWave
 {
+	/** \brief Implements COMMAND_CLASS_NODE_NAMING (0x77), a Z-Wave device command class.
+	 */
 	class NodeNaming: public CommandClass
 	{
 	public:

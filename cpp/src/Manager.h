@@ -58,40 +58,51 @@ namespace OpenZWave
 	class ValueShort;
 	class ValueString;
 
-	/** 
-	 * \nosubgrouping
-	 * A singleton class providing the main public interface to OpenZWave.
-	 * The Manager class exposes all the functionality required to add
-	 * Z-Wave support to an application.  It handles the sending and receiving
-	 * of Z-Wave messages as well as the configuration of a Z-Wave network
-	 * and its devices, freeing the library user from the burden of learning
-	 * the low-level details of the Z-Wave protocol.
-	 * <p>
-	 * All Z-Wave functionality is accessed via the Manager class.  While this
-	 * does not make for the most efficient code structure, it does enable 
-	 * the library to handle potentially complex and hard-to-debug issues 
-	 * such as multi-threading and object lifespans behind the scenes.
-	 * Application development is therefore simplified and less prone to bugs.
-	 * <p>
-	 * There can be only one instance of the Manager class, and all applications
-	 * will start by calling Manager::Create static method to create that instance.
-	 * From then on, a call to the Manager::Get static method will return the
-	 * pointer to the Manager object.  On application exit, Manager::Destroy
-	 * should be called to allow OpenZWave to clean up and delete any other
-	 * objects it has created.
-	 * <p>
-	 * Once the Manager has been created, a call should be made to Manager::AddWatcher
-	 * to install a notification callback handler.  This handler will receive
-	 * notifications of Z-Wave network changes and updates to device values, and is
-	 * an essential element of OpenZWave.
- 	 * <p>
-	 * Next, a call should be made to Manager::AddDriver for each Z-Wave controller 
-	 * attached to the PC.  Each Driver will handle the sending and receiving of 
-	 * messages for all the devices in its controller's Z-Wave network.  The Driver
-	 * will read any previously saved configuration and then query the Z-Wave network
-	 * for any missing information.  Once that process is complete, a DriverReady
-	 * notification callback will be sent containing the Home ID of the controller,
-	 * which is required by most of the other Manager class methods.
+	/** \brief
+	 *   The main public interface to OpenZWave.
+	 *
+	 *	 \nosubgrouping
+	 *   A singleton class providing the main public interface to OpenZWave.
+	 *   The Manager class exposes all the functionality required to add
+	 *   Z-Wave support to an application.  It handles the sending and receiving
+	 *   of Z-Wave messages as well as the configuration of a Z-Wave network
+	 *   and its devices, freeing the library user from the burden of learning
+	 *   the low-level details of the Z-Wave protocol.
+	 *   <p>
+	 *   All Z-Wave functionality is accessed via the Manager class.  While this
+	 *   does not make for the most efficient code structure, it does enable 
+	 *   the library to handle potentially complex and hard-to-debug issues 
+	 *   such as multi-threading and object lifespans behind the scenes.
+	 *   Application development is therefore simplified and less prone to bugs.
+	 *   <p>
+	 *   There can be only one instance of the Manager class, and all applications
+	 *   will start by calling Manager::Create static method to create that instance.
+	 *   From then on, a call to the Manager::Get static method will return the
+	 *   pointer to the Manager object.  On application exit, Manager::Destroy
+	 *   should be called to allow OpenZWave to clean up and delete any other
+	 *   objects it has created.
+	 *   <p>
+	 *   Once the Manager has been created, a call should be made to Manager::AddWatcher
+	 *   to install a notification callback handler.  This handler will receive
+	 *   notifications of Z-Wave network changes and updates to device values, and is
+	 *   an essential element of OpenZWave.
+ 	 *   <p>
+	 *   Next, a call should be made to Manager::AddDriver for each Z-Wave controller 
+	 *   attached to the PC.  Each Driver will handle the sending and receiving of 
+	 *   messages for all the devices in its controller's Z-Wave network.  The Driver
+	 *   will read any previously saved configuration and then query the Z-Wave controller
+	 *   for any missing information.  Once that process is complete, a DriverReady
+	 *   notification callback will be sent containing the Home ID of the controller,
+	 *   which is required by most of the other Manager class methods.
+	 *	 <p>
+	 *	 [After the DriverReady notification is sent, the Driver will poll each node on 
+	 *   the network to update information about each node.  After all "awake" nodes
+	 *   have been polled, an "AllAwakeNodesQueried" notification is sent.  This is when
+	 *   a client application can expect all of the node information (both static
+	 *   information, like the physical device's capabilities, session information
+	 *   (like [associations and/or names] and dynamic information (like temperature or 
+	 *   on/off state) to be available.  Finally, after all nodes (whether listening or
+	 *   sleeping) have been polled, an "AllNodesQueried" notification is sent.]
 	 */
 	class Manager
 	{
@@ -114,7 +125,7 @@ namespace OpenZWave
 	/*@{*/
 	public:
    		/**
-		 * Creates the Manager singleton object.  
+		 * \brief Creates the Manager singleton object.  
 		 * The Manager provides the public interface to OpenZWave, exposing all the functionality required 
 		 * to add Z-Wave support to an application. There can be only one Manager in an OpenZWave application.  
 		 * An Options object must be created and Locked first, otherwise the call to Manager::Create will 
@@ -127,14 +138,14 @@ namespace OpenZWave
 		static Manager* Create();
 
 		/**
-		 * Gets a pointer to the Manager object.
+		 * \brief Gets a pointer to the Manager object.
 		 * @return pointer to the Manager object, or NULL if Create has not yet been called.
 		 * @see Create, Destroy
 		 */
 		static Manager* Get(){ return s_instance; }
 		
 		/**
-		 * Deletes the Manager and cleans up any associated objects.  
+		 * \brief Deletes the Manager and cleans up any associated objects.  
 		 * @see Create, Get
 		 */
 		static void Destroy();
@@ -158,7 +169,7 @@ namespace OpenZWave
 	/*@{*/
 	public:
 		/**
-		 * Saves the configuration of a PC Controller's Z-Wave network to the application's user data folder.
+		 * \brief Saves the configuration of a PC Controller's Z-Wave network to the application's user data folder.
 		 * This method does not normally need to be called, since OpenZWave will save the state automatically
 		 * during the shutdown process.  It is provided here only as an aid to development.
 		 * The configuration of each PC Controller's Z-Wave network is stored in a separate file.  The filename 
@@ -170,7 +181,7 @@ namespace OpenZWave
 		void WriteConfig( uint32 const _homeId );
 
 		/**
-		 * Gets a pointer to the locked Options object.
+		 * \brief Gets a pointer to the locked Options object.
 		 * @return pointer to the Options object.
 		 * @see Create
 		 */
@@ -189,7 +200,7 @@ namespace OpenZWave
 	/*@{*/
 	public:
 		/**
-		 * Creates a new driver for a Z-Wave controller.
+		 * \brief Creates a new driver for a Z-Wave controller.
 		 * This method creates a Driver object for handling communications with a single Z-Wave controller.  In the background, the  
 		 * driver first tries to read configuration data saved during a previous run.  It then queries the controller directly for any
 		 * missing information, and a refresh of the list of nodes that it controls.  Once this information
@@ -203,7 +214,7 @@ namespace OpenZWave
 		bool AddDriver( string const& _serialPortName );
 
 		/**
-		 * Removes the driver for a Z-Wave controller, and closes the serial port.
+		 * \brief Removes the driver for a Z-Wave controller, and closes the serial port.
 		 * Drivers do not need to be explicitly removed before calling Destroy - this is handled automatically.
 		 * @param _serialPortName The same string as was passed in the original call to AddDriver.
 		 * @returns True if the driver was removed, false if it could not be found.
@@ -212,7 +223,7 @@ namespace OpenZWave
 		bool RemoveDriver( string const& _serialPortName );
 
 		/**
-		 * Query if the controller is a primary controller.
+		 * \brief Query if the controller is a primary controller.
 		 * The primary controller is the main device used to configure and control a Z-Wave network.
 		 * There can only be one primary controller - all other controllers are secondary controllers.
 		 * <p> 
@@ -228,7 +239,7 @@ namespace OpenZWave
 		bool IsPrimaryController( uint32 const _homeId );
 
 		/**
-		 * Query if the controller is a static update controller.
+		 * \brief Query if the controller is a static update controller.
 		 * A Static Update Controller (SUC) is a controller that must never be moved in normal operation
 		 * and which can be used by other nodes to receive information about network changes.
 		 * @param _homeId The Home ID of the Z-Wave controller.
@@ -237,7 +248,7 @@ namespace OpenZWave
 		bool IsStaticUpdateController( uint32 const _homeId );
 
 		/**
-		 * Query if the controller is using the bridge controller library.
+		 * \brief Query if the controller is using the bridge controller library.
 		 * A bridge controller is able to create virtual nodes that can be associated
 		 * with other controllers to enable events to be passed on.
 		 * @param _homeId The Home ID of the Z-Wave controller.
@@ -246,14 +257,14 @@ namespace OpenZWave
 		bool IsBridgeController( uint32 const _homeId );
 
 		/**
-		 * Get the version of the Z-Wave API library used by a controller.
+		 * \brief Get the version of the Z-Wave API library used by a controller.
 		 * @param _homeId The Home ID of the Z-Wave controller.
 		 * @return a string containing the library version. For example, "Z-Wave 2.48".
 		 */
 		string GetLibraryVersion( uint32 const _homeId );
 
 		/**
-		 * Get a string containing the Z-Wave API library type used by a controller.
+		 * \brief Get a string containing the Z-Wave API library type used by a controller.
 		 * The possible library types are:
 		 * - Static Controller
 		 * - Controller
@@ -274,11 +285,11 @@ namespace OpenZWave
 	/*@}*/
 
 	private:
-		Driver* GetDriver( uint32 const _homeId );							// Get a pointer to a Driver object from the HomeID.  Only to be used by OpenZWave.
-		void SetDriverReady( Driver* _driver );								// Indicate that the Driver is ready to be used, and send the notification callback.
+		Driver* GetDriver( uint32 const _homeId );	/**< Get a pointer to a Driver object from the HomeID.  Only to be used by OpenZWave. */
+		void SetDriverReady( Driver* _driver );		/**< Indicate that the Driver is ready to be used, and send the notification callback. */
 
-		list<Driver*>		m_pendingDrivers;								// Drivers that are in the process of reading saved data and querying their Z-Wave network for basic information.
-		map<uint32,Driver*>	m_readyDrivers;									// Drivers that are ready to be used by the application.
+		list<Driver*>		m_pendingDrivers;		/**< Drivers that are in the process of reading saved data and querying their Z-Wave network for basic information. */
+		map<uint32,Driver*>	m_readyDrivers;			/**< Drivers that are ready to be used by the application. */
 
 	//-----------------------------------------------------------------------------
 	//	Polling Z-Wave devices
@@ -291,7 +302,7 @@ namespace OpenZWave
 	/*@{*/
 	public:
 		/**
-		 * Set the time period between polls of a node's state.
+		 * \brief Set the time period between polls of a node's state.
 		 * Due to patent concerns, some devices do not report state changes automatically to the controller.
 		 * These devices need to have their state polled at regular intervals.  The length of the interval
 		 * is the same for all devices.  To even out the Z-Wave network traffic generated by polling, OpenZWave
@@ -304,7 +315,7 @@ namespace OpenZWave
 		void SetPollInterval( int32 _seconds );
 
 		/**
-		 * Enable the polling of a device's state.
+		 * \brief Enable the polling of a device's state.
 		 * @param _homeId The Home ID of the Z-Wave controller that manages the node.
 		 * @param _nodeId The ID of the node to start polling.
 		 * @return true if polling was enabled.
@@ -312,7 +323,7 @@ namespace OpenZWave
 		bool EnablePoll( uint32 const _homeId, uint8 const _nodeId );
 
 		/**
-		 * Disable the polling of a device's state.
+		 * \brief Disable the polling of a device's state.
 		 * @param _homeId The Home ID of the Z-Wave controller that manages the node.
 		 * @param _nodeId The ID of the node to stop polling.
 		 * @return true if polling was disabled.
@@ -329,7 +340,7 @@ namespace OpenZWave
 	/*@{*/
 	public:
 		/**
-		 * Trigger the fetching of fixed data about a node.
+		 * \brief Trigger the fetching of fixed data about a node.
 		 * Causes the node's data to be obtained from the Z-Wave network in the same way as if it had just been added.
 		 * This method would normally be called automatically by OpenZWave, but if you know that a node has been
 		 * changed, calling this method will force a refresh of the data held by the library.  This can be especially 
@@ -341,7 +352,7 @@ namespace OpenZWave
 		bool RefreshNodeInfo( uint32 const _homeId, uint8 const _nodeId );
 
 		/**
-		 * Trigger the fetching of dynamic value data for a node.
+		 * \brief Trigger the fetching of dynamic value data for a node.
 		 * Causes the node's values to be requested from the Z-Wave network.
 		 * @param _homeId The Home ID of the Z-Wave controller that manages the node.
 		 * @param _nodeId The ID of the node to query.
@@ -350,7 +361,7 @@ namespace OpenZWave
 		void RequestNodeState( uint32 const _homeId, uint8 const _nodeId );
 
 		/**
-		 * Get whether the node is a listening device that does not go to sleep
+		 * \brief Get whether the node is a listening device that does not go to sleep
 		 * @param _homeId The Home ID of the Z-Wave controller that manages the node.
 		 * @param _nodeId The ID of the node to query.
 		 * @return True if it is a listening node.
@@ -358,7 +369,7 @@ namespace OpenZWave
 		bool IsNodeListeningDevice( uint32 const _homeId, uint8 const _nodeId );
 
 		/**
-		 * Get whether the node is a routing device that passes messages to other nodes
+		 * \brief Get whether the node is a routing device that passes messages to other nodes
 		 * @param _homeId The Home ID of the Z-Wave controller that manages the node.
 		 * @param _nodeId The ID of the node to query.
 		 * @return True if the node is a routing device
@@ -366,7 +377,7 @@ namespace OpenZWave
 		bool IsNodeRoutingDevice( uint32 const _homeId, uint8 const _nodeId );
 
 		/**
-		 * Get the maximum baud rate of a node's communications
+		 * \brief Get the maximum baud rate of a node's communications
 		 * @param _homeId The Home ID of the Z-Wave controller that manages the node.
 		 * @param _nodeId The ID of the node to query.
 		 * @return the baud rate in bits per second.
@@ -374,7 +385,7 @@ namespace OpenZWave
 		uint32 GetNodeMaxBaudRate( uint32 const _homeId, uint8 const _nodeId );
 
 		/**
-		 * Get the version number of a node
+		 * \brief Get the version number of a node
 		 * @param _homeId The Home ID of the Z-Wave controller that manages the node.
 		 * @param _nodeId The ID of the node to query.
 		 * @return the node's version number
@@ -382,7 +393,7 @@ namespace OpenZWave
 		uint8 GetNodeVersion( uint32 const _homeId, uint8 const _nodeId );
 
 		/**
-		 * Get the security byte for a node.  Bit meanings are still to be determined.
+		 * \brief Get the security byte for a node.  Bit meanings are still to be determined.
 		 * @param _homeId The Home ID of the Z-Wave controller that manages the node.
 		 * @param _nodeId The ID of the node to query.
 		 * @return the node's security byte
@@ -390,7 +401,7 @@ namespace OpenZWave
 		uint8 GetNodeSecurity( uint32 const _homeId, uint8 const _nodeId );
 		
 		/**
-		 * Get the basic type of a node.
+		 * \brief Get the basic type of a node.
 		 * @param _homeId The Home ID of the Z-Wave controller that manages the node.
 		 * @param _nodeId The ID of the node to query.
 		 * @return the node's basic type.
@@ -398,7 +409,7 @@ namespace OpenZWave
 		uint8 GetNodeBasic( uint32 const _homeId, uint8 const _nodeId );
 		
 		/**
-		 * Get the generic type of a node.
+		 * \brief Get the generic type of a node.
 		 * @param _homeId The Home ID of the Z-Wave controller that manages the node.
 		 * @param _nodeId The ID of the node to query.
 		 * @return the node's generic type.
@@ -406,7 +417,7 @@ namespace OpenZWave
 		uint8 GetNodeGeneric( uint32 const _homeId, uint8 const _nodeId );
 		
 		/**
-		 * Get the specific type of a node.
+		 * \brief Get the specific type of a node.
 		 * @param _homeId The Home ID of the Z-Wave controller that manages the node.
 		 * @param _nodeId The ID of the node to query.
 		 * @return the node's specific type.
@@ -414,7 +425,7 @@ namespace OpenZWave
 		uint8 GetNodeSpecific( uint32 const _homeId, uint8 const _nodeId );
 
 		/**
-		 * Get a human-readable label describing the node
+		 * \brief Get a human-readable label describing the node
 		 * The label is taken from the Z-Wave specific, generic or basic type, depending on which of those values are specified by the node.
 		 * @param _homeId The Home ID of the Z-Wave controller that manages the node.
 		 * @param _nodeId The ID of the node to query.
@@ -423,7 +434,7 @@ namespace OpenZWave
 		string GetNodeType( uint32 const _homeId, uint8 const _nodeId );
 
 		/**
-		 * Get the manufacturer name of a device
+		 * \brief Get the manufacturer name of a device
 		 * The manufacturer name would normally be handled by the Manufacturer Specific commmand class,
 		 * taking the manufacturer ID reported by the device and using it to look up the name from the
 		 * manufacturer_specific.xml file in the OpenZWave config folder.
@@ -438,7 +449,7 @@ namespace OpenZWave
 		string GetNodeManufacturerName( uint32 const _homeId, uint8 const _nodeId );
 
 		/**
-		 * Get the product name of a device
+		 * \brief Get the product name of a device
 		 * The product name would normally be handled by the Manufacturer Specific commmand class,
 		 * taking the product Type and ID reported by the device and using it to look up the name from the
 		 * manufacturer_specific.xml file in the OpenZWave config folder.
@@ -453,7 +464,7 @@ namespace OpenZWave
 		string GetNodeProductName( uint32 const _homeId, uint8 const _nodeId );
 
 		/**
-		 * Get the name of a node
+		 * \brief Get the name of a node
 		 * The node name is a user-editable label for the node that would normally be handled by the
 		 * Node Naming commmand class, but many devices do not support it.  So that a node can always
 		 * be named, OpenZWave stores it with the node data, and provides access through this method
@@ -467,7 +478,7 @@ namespace OpenZWave
 		string GetNodeName( uint32 const _homeId, uint8 const _nodeId );
 
 		/**
-		 * Get the location of a node
+		 * \brief Get the location of a node
 		 * The node location is a user-editable string that would normally be handled by the Node Naming
 		 * commmand class, but many devices do not support it.  So that a node can always report its
 		 * location, OpenZWave stores it with the node data, and provides access through this method
@@ -480,7 +491,7 @@ namespace OpenZWave
 		string GetNodeLocation( uint32 const _homeId, uint8 const _nodeId );
 
 		/**
-		 * Get the manufacturer ID of a device
+		 * \brief Get the manufacturer ID of a device
 		 * The manufacturer ID is a four digit hex code and would normally be handled by the Manufacturer
 		 * Specific commmand class, but not all devices support it.  Although the value reported by this
 		 * method will be an empty string if the command class is not supported and cannot be set by the 
@@ -495,7 +506,7 @@ namespace OpenZWave
 		string GetNodeManufacturerId( uint32 const _homeId, uint8 const _nodeId );
 
 		/**
-		 * Get the product type of a device
+		 * \brief Get the product type of a device
 		 * The product type is a four digit hex code and would normally be handled by the Manufacturer Specific
 		 * commmand class, but not all devices support it.  Although the value reported by this method will
 		 * be an empty string if the command class is not supported and cannot be set by the user, the product
@@ -510,7 +521,7 @@ namespace OpenZWave
 		string GetNodeProductType( uint32 const _homeId, uint8 const _nodeId );
 
 		/**
-		 * Get the product ID of a device
+		 * \brief Get the product ID of a device
 		 * The product ID is a four digit hex code and would normally be handled by the Manufacturer Specific
 		 * commmand class, but not all devices support it.  Although the value reported by this method will
 		 * be an empty string if the command class is not supported and cannot be set by the user, the product
@@ -525,7 +536,7 @@ namespace OpenZWave
 		string GetNodeProductId( uint32 const _homeId, uint8 const _nodeId );
 
 		/**
-		 * Set the manufacturer name of a device
+		 * \brief Set the manufacturer name of a device
 		 * The manufacturer name would normally be handled by the Manufacturer Specific commmand class,
 		 * taking the manufacturer ID reported by the device and using it to look up the name from the
 		 * manufacturer_specific.xml file in the OpenZWave config folder.
@@ -540,7 +551,7 @@ namespace OpenZWave
 		void SetNodeManufacturerName( uint32 const _homeId, uint8 const _nodeId, string const& _manufacturerName );
 		
 		/**
-		 * Set the product name of a device
+		 * \brief Set the product name of a device
 		 * The product name would normally be handled by the Manufacturer Specific commmand class,
 		 * taking the product Type and ID reported by the device and using it to look up the name from the
 		 * manufacturer_specific.xml file in the OpenZWave config folder.
@@ -555,7 +566,7 @@ namespace OpenZWave
 		void SetNodeProductName( uint32 const _homeId, uint8 const _nodeId, string const& _productName );
 
 		/**
-		 * Set the name of a node
+		 * \brief Set the name of a node
 		 * The node name is a user-editable label for the node that would normally be handled by the
 		 * Node Naming commmand class, but many devices do not support it.  So that a node can always
 		 * be named, OpenZWave stores it with the node data, and provides access through this method
@@ -570,7 +581,7 @@ namespace OpenZWave
 		void SetNodeName( uint32 const _homeId, uint8 const _nodeId, string const& _nodeName );
 
 		/**
-		 * Set the location of a node
+		 * \brief Set the location of a node
 		 * The node location is a user-editable string that would normally be handled by the Node Naming
 		 * commmand class, but many devices do not support it.  So that a node can always report its
 		 * location, OpenZWave stores it with the node data, and provides access through this method
@@ -584,7 +595,7 @@ namespace OpenZWave
 		void SetNodeLocation( uint32 const _homeId, uint8 const _nodeId, string const& _location );
 
 		/**
-		 * Turns a node on
+		 * \brief Turns a node on
 		 * This is a helper method to simplify basic control of a node.  It is the equivalent of
 		 * changing the level reported by the node's Basic command class to 255, and will generate a 
 		 * ValueChanged notification from that class.  This command will turn on the device at its
@@ -596,7 +607,7 @@ namespace OpenZWave
 		void SetNodeOn( uint32 const _homeId, uint8 const _nodeId );
 
 		/**
-		 * Turns a node off
+		 * \brief Turns a node off
 		 * This is a helper method to simplify basic control of a node.  It is the equivalent of
 		 * changing the level reported by the node's Basic command class to zero, and will generate
 		 * a ValueChanged notification from that class.
@@ -607,7 +618,7 @@ namespace OpenZWave
 		void SetNodeOff( uint32 const _homeId, uint8 const _nodeId );
 
 		/**
-		 * Sets the basic level of a node
+		 * \brief Sets the basic level of a node
 		 * This is a helper method to simplify basic control of a node.  It is the equivalent of
 		 * changing the value reported by the node's Basic command class and will generate a 
 		 * ValueChanged notification from that class.
@@ -620,7 +631,7 @@ namespace OpenZWave
 		void SetNodeLevel( uint32 const _homeId, uint8 const _nodeId, uint8 const _level );
 
         /**
-         * Get whether the node information has been received
+         * \brief Get whether the node information has been received
          * @param _homeId The Home ID of the Z-Wave controller that manages the node.
          * @param _nodeId The ID of the node to query.
          * @return True if the node information has been received yet
@@ -628,7 +639,7 @@ namespace OpenZWave
         bool IsNodeInfoReceived( uint32 const _homeId, uint8 const _nodeId );
 
         /**
-         * Get whether the node has the defined class available or not
+         * \brief Get whether the node has the defined class available or not
          * @param _homeId The Home ID of the Z-Wave controller that manages the node.
          * @param _nodeId The ID of the node to query.
          * @param _commandClassId Id of the class to test for
@@ -648,7 +659,7 @@ namespace OpenZWave
 	/*@{*/
 	public:
 		/**
-		 * Gets the user-friendly label for the value.
+		 * \brief Gets the user-friendly label for the value.
 		 * @param _id The unique identifier of the value.
 		 * @return The value label.
 		 * @see ValueID
@@ -656,7 +667,7 @@ namespace OpenZWave
 		string GetValueLabel( ValueID const& _id );
 
 		/**
-		 * Gets the units that the value is measured in.
+		 * \brief Gets the units that the value is measured in.
 		 * @param _id The unique identifier of the value.
 		 * @return The value units.
 		 * @see ValueID
@@ -664,7 +675,7 @@ namespace OpenZWave
 		string GetValueUnits( ValueID const& _id );
 		
 		/**
-		 * Gets a help string describing the value's purpose and usage.
+		 * \brief Gets a help string describing the value's purpose and usage.
 		 * @param _id The unique identifier of the value.
 		 * @return The value help text.
 		 * @see ValueID
@@ -672,7 +683,7 @@ namespace OpenZWave
 		string GetValueHelp( ValueID const& _id );
 
 		/**
-		 * Gets the minimum that this value may contain.
+		 * \brief Gets the minimum that this value may contain.
 		 * @param _id The unique identifier of the value.
 		 * @return The value minimum.
 		 * @see ValueID
@@ -680,7 +691,7 @@ namespace OpenZWave
 		int32 GetValueMin( ValueID const& _id );
 
 		/**
-		 * Gets the maximum that this value may contain.
+		 * \brief Gets the maximum that this value may contain.
 		 * @param _id The unique identifier of the value.
 		 * @return The value maximum.
 		 * @see ValueID
@@ -688,7 +699,7 @@ namespace OpenZWave
 		int32 GetValueMax( ValueID const& _id );
 
 		/**
-		 * Test whether the value is read-only.
+		 * \brief Test whether the value is read-only.
 		 * @param _id The unique identifier of the value.
 		 * @return true if the value cannot be changed by the user.	
 		 * @see ValueID
@@ -696,7 +707,7 @@ namespace OpenZWave
 		bool IsValueReadOnly( ValueID const& _id );
 
 		/**
-		 * Test whether the value has been set.
+		 * \brief Test whether the value has been set.
 		 * @param _id The unique identifier of the value.
 		 * @return true if the value has actually been set by a status message from the device, rather than simply being the default.	
 		 * @see ValueID
@@ -704,7 +715,7 @@ namespace OpenZWave
 		bool IsValueSet( ValueID const& _id );
 
 		/**
-		 * Gets a value as a bool.
+		 * \brief Gets a value as a bool.
 		 * @param _id The unique identifier of the value.
 		 * @param o_value Pointer to a bool that will be filled with the value.
 		 * @return true if the value was obtained.  Returns false if the value is not a ValueID::ValueType_Bool. The type can be tested with a call to ValueID::GetType.
@@ -713,7 +724,7 @@ namespace OpenZWave
 		bool GetValueAsBool( ValueID const& _id, bool* o_value );
 
 		/**
-		 * Gets a value as an 8-bit unsigned integer.
+		 * \brief Gets a value as an 8-bit unsigned integer.
 		 * @param _id The unique identifier of the value.
 		 * @param o_value Pointer to a uint8 that will be filled with the value.
 		 * @return true if the value was obtained.  Returns false if the value is not a ValueID::ValueType_Byte. The type can be tested with a call to ValueID::GetType
@@ -722,7 +733,7 @@ namespace OpenZWave
 		bool GetValueAsByte( ValueID const& _id, uint8* o_value );
 
 		/**
-		 * Gets a value as a float.
+		 * \brief Gets a value as a float.
 		 * @param _id The unique identifier of the value.
 		 * @param o_value Pointer to a float that will be filled with the value.
 		 * @return true if the value was obtained.  Returns false if the value is not a ValueID::ValueType_Decimal. The type can be tested with a call to ValueID::GetType
@@ -731,7 +742,7 @@ namespace OpenZWave
 		bool GetValueAsFloat( ValueID const& _id, float* o_value );
 
 		/**
-		 * Gets a value as a 32-bit signed integer.
+		 * \brief Gets a value as a 32-bit signed integer.
 		 * @param _id The unique identifier of the value.
 		 * @param o_value Pointer to an int32 that will be filled with the value.
 		 * @return true if the value was obtained.  Returns false if the value is not a ValueID::ValueType_Int. The type can be tested with a call to ValueID::GetType
@@ -740,7 +751,7 @@ namespace OpenZWave
 		bool GetValueAsInt( ValueID const& _id, int32* o_value );
 
 		/**
-		 * Gets a value as a 16-bit signed integer.
+		 * \brief Gets a value as a 16-bit signed integer.
 		 * @param _id The unique identifier of the value.
 		 * @param o_value Pointer to an int16 that will be filled with the value.
 		 * @return true if the value was obtained.  Returns false if the value is not a ValueID::ValueType_Short. The type can be tested with a call to ValueID::GetType.
@@ -749,7 +760,7 @@ namespace OpenZWave
 		bool GetValueAsShort( ValueID const& _id, int16* o_value );
 		
 		/**
-		 * Gets a value as a string.
+		 * \brief Gets a value as a string.
 		 * Creates a string representation of a value, regardless of type.
 		 * @param _id The unique identifier of the value.
 		 * @param o_value Pointer to a string that will be filled with the value.
@@ -759,7 +770,7 @@ namespace OpenZWave
 		bool GetValueAsString( ValueID const& _id, string* o_value );
 		
 		/**
-		 * Gets the selected item from a list value.
+		 * \brief Gets the selected item from a list value.
 		 * @param _id The unique identifier of the value.
 		 * @param o_value Pointer to a string that will be filled with the selected item.
 		 * @return true if the value was obtained.  Returns false if the value is not a ValueID::ValueType_List. The type can be tested with a call to ValueID::GetType.
@@ -768,7 +779,7 @@ namespace OpenZWave
 		bool GetValueListSelection( ValueID const& _id, string* o_value );
 
 		/**
-		 * Gets the list of items from a list value.
+		 * \brief Gets the list of items from a list value.
 		 * @param _id The unique identifier of the value.
 		 * @param o_value Pointer to a vector of strings that will be filled with list items. The vector will be cleared before the items are added.
 		 * @return true if the list items were obtained.  Returns false if the value is not a ValueID::ValueType_List. The type can be tested with a call to ValueID::GetType.
@@ -777,7 +788,7 @@ namespace OpenZWave
 		bool GetValueListItems( ValueID const& _id, vector<string>* o_value );
 
 		/**
-		 * Sets the state of a bool.
+		 * \brief Sets the state of a bool.
 		 * Due to the possibility of a device being asleep, the command is assumed to suceeed, and the value
 		 * held by the node is updated directly.  This will be reverted by a future status message from the device
 		 * if the Z-Wave message actually failed to get through.  Notification callbacks will be sent in both cases.
@@ -788,7 +799,7 @@ namespace OpenZWave
 		bool SetValue( ValueID const& _id, bool const _value );
 
 		/**
-		 * Sets the value of a byte.
+		 * \brief Sets the value of a byte.
 		 * Due to the possibility of a device being asleep, the command is assumed to suceeed, and the value
 		 * held by the node is updated directly.  This will be reverted by a future status message from the device
 		 * if the Z-Wave message actually failed to get through.  Notification callbacks will be sent in both cases.
@@ -799,9 +810,9 @@ namespace OpenZWave
 		bool SetValue( ValueID const& _id, uint8 const _value );
 
 		/**
-		 * Sets the value of a decimal.
+		 * \brief Sets the value of a decimal.
 		 * It is usually better to handle decimal values using strings rather than floats, to avoid floating point accuracy issues.
-		 * Due to the possibility of a device being asleep, the command is assumed to suceeed, and the value
+		 * Due to the possibility of a device being asleep, the command is assumed to succeed, and the value
 		 * held by the node is updated directly.  This will be reverted by a future status message from the device
 		 * if the Z-Wave message actually failed to get through.  Notification callbacks will be sent in both cases.
 		 * @param _id The unique identifier of the decimal value.
@@ -811,7 +822,7 @@ namespace OpenZWave
 		bool SetValue( ValueID const& _id, float const _value );
 		
 		/**
-		 * Sets the value of a 32-bit signed integer.
+		 * \brief Sets the value of a 32-bit signed integer.
 		 * Due to the possibility of a device being asleep, the command is assumed to suceeed, and the value
 		 * held by the node is updated directly.  This will be reverted by a future status message from the device
 		 * if the Z-Wave message actually failed to get through.  Notification callbacks will be sent in both cases.
@@ -822,7 +833,7 @@ namespace OpenZWave
 		bool SetValue( ValueID const& _id, int32 const _value );
 
 		/**
-		 * Sets the value of a 16-bit signed integer.
+		 * \brief Sets the value of a 16-bit signed integer.
 		 * Due to the possibility of a device being asleep, the command is assumed to suceeed, and the value
 		 * held by the node is updated directly.  This will be reverted by a future status message from the device
 		 * if the Z-Wave message actually failed to get through.  Notification callbacks will be sent in both cases.
@@ -833,7 +844,7 @@ namespace OpenZWave
 		bool SetValue( ValueID const& _id, int16 const _value );
 
 		/**
-		 * Sets the value from a string, regardless of type.
+		 * \brief Sets the value from a string, regardless of type.
 		 * Due to the possibility of a device being asleep, the command is assumed to suceeed, and the value
 		 * held by the node is updated directly.  This will be reverted by a future status message from the device
 		 * if the Z-Wave message actually failed to get through.  Notification callbacks will be sent in both cases.
@@ -844,7 +855,7 @@ namespace OpenZWave
 		bool SetValue( ValueID const& _id, string const& _value );
 
 		/**
-		 * Sets the selected item in a list.
+		 * \brief Sets the selected item in a list.
 		 * Due to the possibility of a device being asleep, the command is assumed to suceeed, and the value
 		 * held by the node is updated directly.  This will be reverted by a future status message from the device
 		 * if the Z-Wave message actually failed to get through.  Notification callbacks will be sent in both cases.
@@ -856,7 +867,7 @@ namespace OpenZWave
 		bool SetValueListSelection( ValueID const& _id, string const& _selectedItem );
 
 		/**
-		 * Starts an activity in a device.
+		 * \brief Starts an activity in a device.
 		 * Since buttons are write-only values that do not report a state, no notification callbacks are sent.
 		 * @param _id The unique identifier of the integer value.
 		 * @return true if the activity was started.  Returns false if the value is not a ValueID::ValueType_Button. The type can be tested with a call to ValueID::GetType.
@@ -864,7 +875,7 @@ namespace OpenZWave
 		bool PressButton( ValueID const& _id );
 
 		/**
-		 * Stops an activity in a device.
+		 * \brief Stops an activity in a device.
 		 * Since buttons are write-only values that do not report a state, no notification callbacks are sent.
 		 * @param _id The unique identifier of the integer value.
 		 * @return true if the activity was stopped.  Returns false if the value is not a ValueID::ValueType_Button. The type can be tested with a call to ValueID::GetType.
@@ -890,14 +901,14 @@ namespace OpenZWave
 	/*@{*/
 
 		/**
-		 * Get the number of switch points defined in a schedule.
+		 * \brief Get the number of switch points defined in a schedule.
 		 * @param _id The unique identifier of the schedule value.
 		 * @return the number of switch points defined in this schedule.  Returns zero if the value is not a ValueID::ValueType_Schedule. The type can be tested with a call to ValueID::GetType.
 		 */
 		uint8 GetNumSwitchPoints( ValueID const& _id );
 
 		/**
-		 * Set a switch point in the schedule.
+		 * \brief Set a switch point in the schedule.
 		 * Inserts a new switch point into the schedule, unless a switch point already exists at the specified
 		 * time in which case that switch point is updated with the new setback value instead.
 		 * A maximum of nine switch points can be set in the schedule.
@@ -915,7 +926,7 @@ namespace OpenZWave
 		bool SetSwitchPoint( ValueID const& _id, uint8 const _hours, uint8 const _minutes, int8 const _setback );
 
 		/**
-		 * Remove a switch point from the schedule.
+		 * \brief Remove a switch point from the schedule.
 		 * Removes the switch point at the specified time from the schedule.
 		 * @param _id The unique identifier of the schedule value.
 		 * @param _hours The hours part of the time when the switch point will trigger.  The time is set using
@@ -929,14 +940,14 @@ namespace OpenZWave
 		bool RemoveSwitchPoint( ValueID const& _id, uint8 const _hours, uint8 const _minutes );
 
 		/**
-		 * Clears all switch points from the schedule.
+		 * \brief Clears all switch points from the schedule.
 		 * @param _id The unique identifier of the schedule value.
 		 * @see GetNumSwitchPoints, SetSwitchPoint, RemoveSwitchPoint
 		 */
 		void ClearSwitchPoints( ValueID const& _id );
 		
 		/**
-		 * Gets switch point data from the schedule.
+		 * \brief Gets switch point data from the schedule.
 		 * Retrieves the time and setback values from a switch point in the schedule.
 		 * @param _id The unique identifier of the schedule value.
 		 * @param _idx The index of the switch point, between zero and one less than the value
@@ -967,7 +978,7 @@ namespace OpenZWave
 	/*@{*/
 	public:		
 		/**
-		 * Set the value of a configurable parameter in a device.
+		 * \brief Set the value of a configurable parameter in a device.
 		 * Some devices have various parameters that can be configured to control the device behaviour.
 		 * These are not reported by the device over the Z-Wave network, but can usually be found in
 		 * the device's user manual.
@@ -983,7 +994,7 @@ namespace OpenZWave
 		bool SetConfigParam( uint32 const _homeId, uint8 const _nodeId, uint8 const _param, int32 _value );
 
 		/**
-		 * Request the value of a configurable parameter from a device.
+		 * \brief Request the value of a configurable parameter from a device.
 		 * Some devices have various parameters that can be configured to control the device behaviour.
 		 * These are not reported by the device over the Z-Wave network, but can usually be found in
 		 * the device's user manual.
@@ -1000,7 +1011,7 @@ namespace OpenZWave
 		void RequestConfigParam( uint32 const _homeId, uint8 const _nodeId, uint8 const _param );
 
 		/**
-		 * Request the values of all known configurable parameters from a device.
+		 * \brief Request the values of all known configurable parameters from a device.
 		 * @param _homeId The Home ID of the Z-Wave controller that manages the node.
 		 * @param _nodeId The ID of the node to configure.
 		 * @see SetConfigParam, ValueID, Notification
@@ -1017,7 +1028,7 @@ namespace OpenZWave
 	/*@{*/
 	public:		
 		/**
-		 * Gets the number of association groups reported by this node
+		 * \brief Gets the number of association groups reported by this node
 		 * In Z-Wave, groups are numbered starting from one.  For example, if a call to GetNumGroups returns 4, the _groupIdx 
 		 * value to use in calls to GetAssociations, AddAssociation and RemoveAssociation will be a number between 1 and 4.
 		 * @param _homeId The Home ID of the Z-Wave controller that manages the node.
@@ -1028,7 +1039,7 @@ namespace OpenZWave
 		uint8 GetNumGroups( uint32 const _homeId, uint8 const _nodeId );
 
 		/**
-		 * Gets the associations for a group.
+		 * \brief Gets the associations for a group.
 		 * Makes a copy of the list of associated nodes in the group, and returns it in an array of uint8's.
 		 * The caller is responsible for freeing the array memory with a call to delete [].
 		 * @param _homeId The Home ID of the Z-Wave controller that manages the node.
@@ -1041,7 +1052,7 @@ namespace OpenZWave
 		uint32 GetAssociations( uint32 const _homeId, uint8 const _nodeId, uint8 const _groupIdx, uint8** o_associations );
 
 		/**
-		 * Gets the maximum number of associations for a group.
+		 * \brief Gets the maximum number of associations for a group.
 		 * @param _homeId The Home ID of the Z-Wave controller that manages the node.
 		 * @param _nodeId The ID of the node whose associations we are interested in.
 		 * @param _groupIdx one-based index of the group (because Z-Wave product manuals use one-based group numbering).
@@ -1051,7 +1062,7 @@ namespace OpenZWave
 		uint8 GetMaxAssociations( uint32 const _homeId, uint8 const _nodeId, uint8 const _groupIdx );
 
 		/**
-		 * Adds a node to an association group.
+		 * \brief Adds a node to an association group.
 		 * Due to the possibility of a device being asleep, the command is assumed to suceeed, and the association data
 		 * held in this class is updated directly.  This will be reverted by a future Association message from the device
 		 * if the Z-Wave message actually failed to get through.  Notification callbacks will be sent in both cases.
@@ -1064,7 +1075,7 @@ namespace OpenZWave
 		void AddAssociation( uint32 const _homeId, uint8 const _nodeId, uint8 const _groupIdx, uint8 const _targetNodeId );
 
 		/**
-		 * Removes a node from an association group.
+		 * \brief Removes a node from an association group.
 		 * Due to the possibility of a device being asleep, the command is assumed to suceeed, and the association data
 		 * held in this class is updated directly.  This will be reverted by a future Association message from the device
 		 * if the Z-Wave message actually failed to get through.   Notification callbacks will be sent in both cases.
@@ -1086,7 +1097,7 @@ namespace OpenZWave
 	/*@{*/
 	public:
 		/**
-		 * Add a notification watcher.
+		 * \brief Add a notification watcher.
 		 * In OpenZWave, all feedback from the Z-Wave network is sent to the application via callbacks.
 		 * This method allows the application to add a notification callback handler, known as a "watcher" to OpenZWave.
 		 * An application needs only add a single watcher - all notifications will be reported to it.
@@ -1098,7 +1109,7 @@ namespace OpenZWave
 		bool AddWatcher( pfnOnNotification_t _watcher, void* _context );
 
 		/**
-		 * Remove a notification watcher.
+		 * \brief Remove a notification watcher.
 		 * @param _watcher pointer to a function that must match that passed to a previous call to AddWatcher
 		 * @param _context pointer to user defined data that must match the one passed in that same previous call to AddWatcher.
 		 * @return true if the watcher was successfully removed.
@@ -1138,7 +1149,7 @@ namespace OpenZWave
 	/*@{*/
 	public:	
 		/**
-		 * Hard Reset a PC Z-Wave Controller.
+		 * \brief Hard Reset a PC Z-Wave Controller.
 		 * Resets a controller and erases its network configuration settings.  The controller becomes a primary controller ready to add devices to a new network.
 		 * @param _homeId The Home ID of the Z-Wave controller to be reset.
 		 * @see SoftReset
@@ -1146,7 +1157,7 @@ namespace OpenZWave
 		void ResetController( uint32 const _homeId );
 
 		/**
-		 * Soft Reset a PC Z-Wave Controller.
+		 * \brief Soft Reset a PC Z-Wave Controller.
 		 * Resets a controller without erasing its network configuration settings.
 		 * @param _homeId The Home ID of the Z-Wave controller to be reset.
 		 * @see SoftReset
@@ -1154,7 +1165,7 @@ namespace OpenZWave
 		void SoftReset( uint32 const _homeId );
 
 		/**
-		 * Start a controller command process.
+		 * \brief Start a controller command process.
 		 * @param _homeId The Home ID of the Z-Wave controller.
 		 * @param _command The command to be sent to the controller.
 		 * @param _callback pointer to a function that will be called at various stages during the command process
@@ -1200,7 +1211,7 @@ namespace OpenZWave
 		bool BeginControllerCommand( uint32 const _homeId, Driver::ControllerCommand _command, Driver::pfnControllerCallback_t _callback = NULL, void* _context = NULL, bool _highPower = false, uint8 _nodeId = 0xff );
 			
 		/**
-		 * Cancels any in-progress command running on a controller.
+		 * \brief Cancels any in-progress command running on a controller.
 		 * @param _homeId The Home ID of the Z-Wave controller.
 		 * @return true if a command was running and was cancelled.
 		 * @see BeginControllerCommand 

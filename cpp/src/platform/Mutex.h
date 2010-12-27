@@ -32,6 +32,8 @@ namespace OpenZWave
 {
 	class MutexImpl;
 
+	/** \brief Implements a platform-independent mutex--for serializing access to a shared resource.
+	 */
 	class Mutex
 	{
 	public:

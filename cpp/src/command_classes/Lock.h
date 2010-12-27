@@ -34,6 +34,8 @@ namespace OpenZWave
 {
 	class ValueBool;
 
+	/** \brief Implements COMMAND_CLASS_LOCK (0x76), a Z-Wave device command class.
+	 */
 	class Lock: public CommandClass
 	{
 	public:

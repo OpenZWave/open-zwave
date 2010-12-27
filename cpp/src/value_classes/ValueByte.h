@@ -39,6 +39,8 @@ namespace OpenZWave
 	class Msg;
 	class Node;
 
+	/** \brief Byte value sent to/received from a node.
+	 */
 	class ValueByte: public Value
 	{
 	public:
