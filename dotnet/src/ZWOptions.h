@@ -83,31 +83,31 @@ namespace OpenZWaveDotNet
 	public:
    		/**
 		 * Creates an object to manage the program options.  
-		 * @param _configPath a string containing the path to the OpenZWave library config
+		 * \param _configPath a string containing the path to the OpenZWave library config
 		 * folder, which contains XML descriptions of Z-Wave manufacturers and products.
-		 * @param _userPath a string containing the path to the application's user data
+		 * \param _userPath a string containing the path to the application's user data
 		 * folder where the OpenZWave should store the Z-Wave network configuration and state.
 		 * The _userPath is also the folder where OpenZWave will look for the file Options.xml
 		 * which contains program option values.  The file should be in the form outlined below,
 		 * with one or more Option elements containing a name and value attribute.  Multiple
 		 * values with the same option name should be listed separately. Note that option names
 		 * are case insensitive.
-		 * @code
+		 * \code
 		 * <?xml version="1.0" encoding="utf-8"?>
 		 * <Options>
 		 *   <Option name="logging" value="true" />
 		 *   <Option name="ignore" value="COMMAND_CLASS_BASIC" />
 		 *   <Option name="ignore" value="COMMAND_CLASS_VERSION" />
 		 * </Options>
-		 * @endcode  
-		 * @param _commandLine a string containing the program's command line options.
+		 * \endcode  
+		 * \param _commandLine a string containing the program's command line options.
 		 * Command line options are parsed after the options.xml file, and so take precedence.
 		 * Options are identified by a leading -- (two minus signs). The following items
 		 * in the string are treated as values for this option, until the next -- is
 		 * reached. For boolean options only, it is possible to omit the value, in which case
 		 * the value is assumed to be "true".  Note that option names are case insensitive, and
 		 * that option values should be separated by a space.
-		 * @see Get, Destroy, AddOption, GetOptionAs, Lock
+		 * \see Get, Destroy, AddOption, GetOptionAs, Lock
 		 */
 		void Create( String^ _configPath, String^ _userPath, String^ _commandLine );
 
@@ -116,10 +116,10 @@ namespace OpenZWaveDotNet
 		 * The application is responsible for destroying the Options object,
 		 * but this must not be done until after the Manager object has been
 		 * destroyed.
-		 * @param _options Pointer to the Options object to be destroyed.
-		 * @return true if the Options object was destroyed.  If the manager 
+		 * \param _options Pointer to the Options object to be destroyed.
+		 * \return true if the Options object was destroyed.  If the manager 
 		 * object still exists, this call will return false.
-		 * @see Create, Get
+		 * \see Create, Get
 		 */
 		bool Destroy(){ return Options::Destroy(); }
 
@@ -129,7 +129,7 @@ namespace OpenZWaveDotNet
 		 * marks the options as locked.  Once locked, no more calls to AddOption
 		 * can be made.
 		 * The options must be locked before the Manager::Create method is called.
-		 * @see AddOption
+		 * \see AddOption
 		 */
 		bool Lock(){ return Options::Get()->Lock(); }
 
@@ -137,9 +137,9 @@ namespace OpenZWaveDotNet
 		 * Add a boolean option to the program.
 		 * Adds an option to the program whose value can then be read from a file or command line.
 		 * All calls to AddOptionInt must be made before Lock.
-		 * @param _name the name of the option.  Option names are case insensitive and must be unique.
-		 * @param _default the default value for this option.
-		 * @see GetOptionAsBool
+		 * \param _name the name of the option.  Option names are case insensitive and must be unique.
+		 * \param _default the default value for this option.
+		 * \see GetOptionAsBool
 		 */
 		bool AddOptionBool( String^ _name, bool _default );
 
@@ -147,9 +147,9 @@ namespace OpenZWaveDotNet
 		 * Add an integer option to the program.
 		 * Adds an option to the program whose value can then be read from a file or command line.
 		 * All calls to AddOptionInt must be made before Lock.
-		 * @param _name the name of the option.  Option names are case insensitive and must be unique.
-		 * @param _default the default value for this option.
-		 * @see GetOptionAsInt
+		 * \param _name the name of the option.  Option names are case insensitive and must be unique.
+		 * \param _default the default value for this option.
+		 * \see GetOptionAsInt
 		 */
 		bool AddOptionInt( String^ _name, int32 _default );
 
@@ -157,58 +157,58 @@ namespace OpenZWaveDotNet
 		 * Add a string option to the program.
 		 * Adds an option to the program whose value can then be read from a file or command line.
 		 * All calls to AddOptionString must be made before Lock.
-		 * @param _name the name of the option.  Option names are case insensitive and must be unique.
-		 * @param _default the default value for this option.
-		 * @param _append Setting append to true will cause values read from the command line
+		 * \param _name the name of the option.  Option names are case insensitive and must be unique.
+		 * \param _default the default value for this option.
+		 * \param _append Setting append to true will cause values read from the command line
 		 * or XML file to be concatenated into a comma delimited list.  If _append is false,
 		 * newer values will overwrite older ones.
-		 * @see GetOptionAsString
+		 * \see GetOptionAsString
 		 */
 		bool AddOptionString( String^ _name, String^ _default, bool _append );
 
 		/**
 		 * Get the value of a boolean option.
-		 * @param _name the name of the option.  Option names are case insensitive.
-		 * @param o_value the item that will be filled with the option value.
-		 * @return true if the option value was fetched successfully, false if the 
+		 * \param _name the name of the option.  Option names are case insensitive.
+		 * \param o_value the item that will be filled with the option value.
+		 * \return true if the option value was fetched successfully, false if the 
 		 * option does not exist, or does not contain a boolean value
-		 * @see AddOptionBool, GetOptionType
+		 * \see AddOptionBool, GetOptionType
 		 */
 		bool GetOptionAsBool( String^ _name, [Out] System::Boolean %o_value );
 
 		/**
 		 * Get the value of an integer option.
-		 * @param _name the name of the option.  Option names are case insensitive.
-		 * @param o_value the item that will be filled with the option value.
-		 * @return true if the option value was fetched successfully, false if the 
+		 * \param _name the name of the option.  Option names are case insensitive.
+		 * \param o_value the item that will be filled with the option value.
+		 * \return true if the option value was fetched successfully, false if the 
 		 * option does not exist, or does not contain an integer value
-		 * @see AddOptionInt, GetOptionType
+		 * \see AddOptionInt, GetOptionType
 		 */
 		bool GetOptionAsInt( String^ _name, [Out] System::Int32 %o_value );
 
 		/**
 		 * Get the value of a string option.
-		 * @param _name the name of the option.  Option names are case insensitive.
-		 * @param o_value the item that will be filled with the option value.
-		 * @return true if the option value was fetched successfully, false if the 
+		 * \param _name the name of the option.  Option names are case insensitive.
+		 * \param o_value the item that will be filled with the option value.
+		 * \return true if the option value was fetched successfully, false if the 
 		 * option does not exist, or does not contain a string value
-		 * @see AddOptionString, GetOptionType 
+		 * \see AddOptionString, GetOptionType 
 		 */
 		bool GetOptionAsString( String^ _name, [Out] String^ %o_value );
 
 		/**
 		 * Get the type of value stored in an option.
-		 * @param _name the name of the option.  Option names are case insensitive.
-		 * @return An enum value representing the type of the option value.  If the
+		 * \param _name the name of the option.  Option names are case insensitive.
+		 * \return An enum value representing the type of the option value.  If the
 		 * option does not exist, OptionType_Invalid is returned.
-		 * @see GetOptionAsBool, GetOptionAsInt, GetOptionAsString
+		 * \see GetOptionAsBool, GetOptionAsInt, GetOptionAsString
 		 */
 		ZWOptionType GetOptionType( String^ _name );
 
 		/**
 		 * Test whether the options have been locked.
-		 * @return true if the options have been locked.
-		 * @see Lock
+		 * \return true if the options have been locked.
+		 * \see Lock
 		 */
 		bool AreLocked(){ return Options::Get()->AreLocked(); }
 	};

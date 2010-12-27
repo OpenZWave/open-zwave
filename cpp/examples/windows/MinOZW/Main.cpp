@@ -43,6 +43,7 @@
 using namespace OpenZWave;
 
 static uint32 g_homeId = 0;
+bool g_nodesQueried = false;
 
 typedef struct 
 {
@@ -57,7 +58,7 @@ static CRITICAL_SECTION g_criticalSection;
 
 //-----------------------------------------------------------------------------
 // <GetNodeInfo>
-// Callback that is triggered when a value, group or node changes
+// Return the NodeInfo object associated with this notification
 //-----------------------------------------------------------------------------
 NodeInfo* GetNodeInfo
 (
@@ -95,6 +96,7 @@ void OnNotification
 	{
 		case Notification::Type_ValueAdded:
 		{
+			printf( "\nNotification:  ValueAdded" );
 			if( NodeInfo* nodeInfo = GetNodeInfo( _notification ) )
 			{
 				// Add the new value to our list
@@ -105,6 +107,7 @@ void OnNotification
 
 		case Notification::Type_ValueRemoved:
 		{
+			printf( "\nNotification:  ValueRemoved" );
 			if( NodeInfo* nodeInfo = GetNodeInfo( _notification ) )
 			{
 				// Remove the value from out list
@@ -124,14 +127,65 @@ void OnNotification
 		{
 			if( NodeInfo* nodeInfo = GetNodeInfo( _notification ) )
 			{
-				// One of the node values has changed
-				// TBD...
+				printf( "\nValue changed." );
+				printf( "\nHome ID: 0x%.8x  Node ID: %d,  Polled: %s", nodeInfo->m_homeId, nodeInfo->m_nodeId, nodeInfo->m_polled?"true":"false" );
+				ValueID valueid = _notification->GetValueID();
+				printf( "\nValue is: \n part of command class: 0x%.2x\n of genre: %d\n with index %d\n and type %d", 
+					valueid.GetCommandClassId(), valueid.GetGenre(), valueid.GetIndex(), valueid.GetInstance(), valueid.GetType() );
+				switch( valueid.GetType() )
+				{
+				case ValueID::ValueType_Bool:
+					bool bTestBool;
+					Manager::Get()->GetValueAsBool( valueid, &bTestBool );
+					printf( "\nValue is: %s", bTestBool?"true":"false" );
+					break;
+/*				case ValueID::ValueType_Button:
+					printf( "\nButton value not implemented" );
+					break;
+*/
+				case ValueID::ValueType_Byte:
+					uint8 bTestByte;
+					Manager::Get()->GetValueAsByte( valueid, &bTestByte );
+					printf( "\nValue is: 0x%.2x", bTestByte );
+					break;
+				case ValueID::ValueType_Decimal:
+					float bTestFloat;
+					Manager::Get()->GetValueAsFloat( valueid, &bTestFloat );
+					printf( "\nValue is: %.2f", bTestFloat );
+					break;
+				case ValueID::ValueType_Int:
+					int32 bTestInt;
+					Manager::Get()->GetValueAsInt( valueid, &bTestInt );
+					printf( "\nValue is: %d", bTestInt );
+					break;
+				case ValueID::ValueType_List:
+				case ValueID::ValueType_Max:
+				case ValueID::ValueType_Schedule:
+				case ValueID::ValueType_Short:
+					int16 bTestShort;
+					Manager::Get()->GetValueAsShort( valueid, &bTestShort );
+					printf( "\nValue is: %d", bTestShort );
+					break;
+				case ValueID::ValueType_String:
+					string bTestString;
+					Manager::Get()->GetValueAsString( valueid, &bTestString );
+					printf( "\nValue is: %s", bTestString.c_str() );
+					break;
+					break;
+				}
+			}
+			else
+			{
+				// ValueChanged notification for a node that doesn't appear to exist in our g_nodes list
+				printf( "\nERROR: Value changed notification for an unidentified node." );
 			}
 			break;
 		}
 
 		case Notification::Type_Group:
 		{
+			printf( "Notification:  Group\n" );
+
 			if( NodeInfo* nodeInfo = GetNodeInfo( _notification ) )
 			{
 				// One of the node's association groups has changed
@@ -142,6 +196,7 @@ void OnNotification
 
 		case Notification::Type_NodeAdded:
 		{
+			printf( "Notification:  NodeAdded\n" );
 			// Add the new node to our list
 			NodeInfo* nodeInfo = new NodeInfo();
 			nodeInfo->m_homeId = _notification->GetHomeId();
@@ -153,6 +208,7 @@ void OnNotification
 
 		case Notification::Type_NodeRemoved:
 		{
+			printf( "Notification:  NodeRemoved\n" );
 			// Remove the node from our list
 			uint32 const homeId = _notification->GetHomeId();
 			uint8 const nodeId = _notification->GetNodeId();
@@ -170,6 +226,7 @@ void OnNotification
 
 		case Notification::Type_NodeEvent:
 		{
+			printf( "Notification:  Event\n" );
 			if( NodeInfo* nodeInfo = GetNodeInfo( _notification ) )
 			{
 				// We have received an event from the node, caused by a
@@ -181,6 +238,7 @@ void OnNotification
 
 		case Notification::Type_PollingDisabled:
 		{
+			printf( "Notification:  PollingDisabled\n" );
 			if( NodeInfo* nodeInfo = GetNodeInfo( _notification ) )
 			{
 				nodeInfo->m_polled = false;
@@ -190,6 +248,7 @@ void OnNotification
 
 		case Notification::Type_PollingEnabled:
 		{
+			printf( "Notification:  PollingEnabled\n" );
 			if( NodeInfo* nodeInfo = GetNodeInfo( _notification ) )
 			{
 				nodeInfo->m_polled = true;
@@ -199,9 +258,25 @@ void OnNotification
 
 		case Notification::Type_DriverReady:
 		{
+			printf( "Notification:  DriverReady\n" );
 			g_homeId = _notification->GetHomeId();
 			break;
 		}
+
+		case Notification::Type_AllNodesQueried:
+		{
+			printf( "Notificaton:  AllNodesQueried\n" );
+			g_nodesQueried = true;
+			break;
+		}
+
+		case Notification::Type_AwakeNodesQueried:
+		{
+			printf( "Notificaton:  AwakeNodesQueried\n" );
+			g_nodesQueried = true;
+			break;
+		}
+
 	}
 
 	LeaveCriticalSection( &g_criticalSection );
@@ -232,37 +307,24 @@ int main( int argc, char* argv[] )
 
 	// Add a Z-Wave Driver
 	// Modify this line to set the correct serial port for your PC interface.
-	Manager::Get()->AddDriver( "\\\\.\\COM4" );
+	Manager::Get()->AddDriver( "\\\\.\\COM3" );
 
-	// Now we just wait for the driver to become ready, and then write out the loaded config.
+	// Now we just wait for the driver to become ready.
 	// In a normal app, we would be handling notifications and building a UI for the user.
 	while( !g_homeId )
 	{
-		Sleep(10000);
+		Sleep( 1000 );
 	}
 
-	//Manager::Get()->ResetController( g_homeId );
-
-	//Sleep(2000);
-
-	//Manager::Get()->BeginControllerCommand( g_homeId, Driver::ControllerCommand_AddDevice, NULL, NULL );
-	//Sleep( 20000 );
-
-	//Manager::Get()->BeginAddNode( g_homeId );
-	//Sleep(10000);
-	//Manager::Get()->EndAddNode( g_homeId );
-	//Manager::Get()->BeginRemoveNode( g_homeId );
-	//Sleep(10000);
-	//Manager::Get()->EndRemoveNode( g_homeId );
-
-	//while( true )
-	//{
-	//	Manager::Get()->RefreshNodeInfo( g_homeId, 8 );
-	//	Sleep(5000);
-	//	Manager::Get()->WriteConfig( g_homeId );
-	//}
-
-	Sleep(10000);
+	// Since the configuration file contains command class information that is only 
+	// known after the nodes on the network are queried, wait until all of the nodes 
+	// on the network have been queried (at least the "listening" ones) before
+	// writing the configuration file.  (Maybe write again after sleeping nodes have
+	// been queried as well.)
+	while( !g_nodesQueried )
+	{
+		Sleep( 1000 );
+	}
 	Manager::Get()->WriteConfig( g_homeId );
 	
 	// If we want to access our NodeInfo list, that has been built from all the
@@ -273,17 +335,13 @@ int main( int argc, char* argv[] )
 	// stalling the OpenZWave drivers.
 	while( true )
 	{
-		Sleep(10000);
-
 		EnterCriticalSection( &g_criticalSection );
 		// Do stuff
+		Sleep(6000);
 		LeaveCriticalSection( &g_criticalSection );
 	}
 
+	// program exit (clean up)
 	DeleteCriticalSection( &g_criticalSection );
 	return 0;
 }
-
-
-
-

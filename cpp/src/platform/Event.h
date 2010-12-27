@@ -57,25 +57,25 @@ namespace OpenZWave
 
 		/**
 		 * Set the event to signalled.
-		 * @see Reset, Wait
+		 * \see Reset, Wait
 		 */
 		void Set();
 
 		/**
 		 * Set the event to not signalled.
-		 * @see Set, Wait
+		 * \see Set, Wait
 		 */
 		void Reset();
 
 		/**
 		 * Waits for an event to become signalled.
 		 * Waits for an event to become signalled, or for the wait to time-out.
-		 * @param _timeout maximum time in milliseconds to wait for the event
+		 * \param _timeout maximum time in milliseconds to wait for the event
 		 * to become signalled. If the timeout is zero, the method will 
 		 * return immediately.  If the timeout is Timeout_Infinite, the 
 		 * method will not return until the event is signalled.
-		 * @return the state of the event.  True if it is signalled, false otherwise.
-		 * @see Set, Reset
+		 * \return the state of the event.  True if it is signalled, false otherwise.
+		 * \see Set, Reset
 		 */
 		bool Wait( int32 _timeout );
 
