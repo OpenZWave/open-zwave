@@ -41,14 +41,16 @@ namespace OpenZWave
 	class Value;
 	class ValueID;
 
+	/** \brief Base class for all Z-Wave command classes.
+	 */
 	class CommandClass
 	{
 	public:
 		enum
 		{
-			RequestFlag_Static	= 0x00000001,	// Values that never change
-			RequestFlag_Session = 0x00000002,	// Values that change infrequently, and so only need to be requested at start up, or via a manual refresh.
-			RequestFlag_Dynamic	= 0x00000004	// Values that change and will be requested if polling is enabled on the node.
+			RequestFlag_Static	= 0x00000001,	/**< Values that never change. */
+			RequestFlag_Session = 0x00000002,	/**< Values that change infrequently, and so only need to be requested at start up, or via a manual refresh. */
+			RequestFlag_Dynamic	= 0x00000004	/**< Values that change and will be requested if polling is enabled on the node. */
 		};
 
 		CommandClass( uint32 const _homeId, uint8 const _nodeId );
@@ -79,10 +81,21 @@ namespace OpenZWave
 		// Helper methods
 		float32 ExtractValue( uint8 const* _data, uint8* _scale )const;
 		string ExtractValueAsString( uint8 const* _data, uint8* _scale )const;
+		/**
+		 *  Append a floating-point value to a message.
+		 *  @param _msg The message to which the value should be appended.
+		 *  @param _value A signed floating point value to be appended.
+		 *  @param _precision The number of digits after the decimal point.
+		 *  @param _scale A byte indicating the scale corresponding to this value (e.g., 1=F and 0=C for temperatures).
+		 *  @see Msg
+		 */
 		void AppendValue( Msg* _msg, float32 const _value, uint8 const _precision, uint8 const _scale )const;
 		uint8 const GetAppendValueSize( float32 const _value, uint8 const _precision )const;
 
 	protected:
+		/** \brief
+		 *   Manages an array of "instances" which hold instance-specific values (???) 
+		 */
 		template <class T>
 		class ValueInstances
 		{

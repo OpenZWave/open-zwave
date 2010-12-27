@@ -32,6 +32,8 @@
 
 namespace OpenZWave
 {
+	/** \brief Implements COMMAND_CLASS_APPLICATION_STATUS (0x22), a Z-Wave device command class.
+	 */
 	class ApplicationStatus: public CommandClass
 	{
 	public:

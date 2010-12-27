@@ -97,8 +97,8 @@ bool Version::HandleMsg
 			char application[16];
 
 			snprintf( library, sizeof(library), "%d", _data[1] );
-			snprintf( protocol, sizeof(protocol), "%d.%d", _data[2], _data[3] );
-			snprintf( application, sizeof(application), "%d.%d", _data[4], _data[5] );
+			snprintf( protocol, sizeof(protocol), "%d.%.2d", _data[2], _data[3] );
+			snprintf( application, sizeof(application), "%d.%.2d", _data[4], _data[5] );
 
 			Log::Write( "Received Version report from node %d: Library=%s, Protocol=%s, Application=%s", GetNodeId(), library, protocol, application );
 			ClearStaticRequest( StaticRequest_Values );

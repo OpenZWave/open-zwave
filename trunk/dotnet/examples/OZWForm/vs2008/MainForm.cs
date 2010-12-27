@@ -84,29 +84,29 @@ namespace OZWForm
             column.ToolTipText = "The product name of the Z-Wave device.";
             NodeGridView.Columns.Add(column);
 
-            //// Poll Interval
-            //column = new DataGridViewTextBoxColumn();
-            //column.DataPropertyName = "PollInterval";
-            //column.Name = "Poll Interval";
-            //column.ReadOnly = false;
-            //column.Frozen = false;
-            //column.Resizable = DataGridViewTriState.True;
-            //column.SortMode = DataGridViewColumnSortMode.NotSortable;
-            //column.ToolTipText = "Polling interval in seconds, or zero for no polling.\nNewer devices should not need to be polled for\nyour PC to know their current state.\nFor those that do requre polling, the interval should\nbe as long as possible to reduce network traffic.";
-            //dataGridView1.Columns.Add(column);
+/*            // Poll Interval
+            column = new DataGridViewTextBoxColumn();
+            column.DataPropertyName = "PollInterval";
+            column.Name = "Poll Interval";
+            column.ReadOnly = false;
+            column.Frozen = false;
+            column.Resizable = DataGridViewTriState.True;
+            column.SortMode = DataGridViewColumnSortMode.NotSortable;
+            column.ToolTipText = "Polling interval in seconds, or zero for no polling.\nNewer devices should not need to be polled for\nyour PC to know their current state.\nFor those that do requre polling, the interval should\nbe as long as possible to reduce network traffic.";
+            NodeGridView.Columns.Add(column);
+*/
+/*            // Schema
+            column = new DataGridViewTextBoxColumn();
+            column.DataPropertyName = "Schema";
+            column.Name = "Schema";
+            column.ReadOnly = true;
+            column.Frozen = false;
+            column.Resizable = DataGridViewTriState.True;
+            column.SortMode = DataGridViewColumnSortMode.NotSortable;
+            column.ToolTipText = "The xPL message schema family that will be used\nif the 'Use zwave.basic' option is not checked.\nThe schema is chosen automatically according to\nthe Z-Wave device type, and cannot be changed.";
+            NodeGridView.Columns.Add(column);
 
-            //// Schema
-            //column = new DataGridViewTextBoxColumn();
-            //column.DataPropertyName = "Schema";
-            //column.Name = "Schema";
-            //column.ReadOnly = true;
-            //column.Frozen = false;
-            //column.Resizable = DataGridViewTriState.True;
-            //column.SortMode = DataGridViewColumnSortMode.NotSortable;
-            //column.ToolTipText = "The xPL message schema family that will be used\nif the 'Use zwave.basic' option is not checked.\nThe schema is chosen automatically according to\nthe Z-Wave device type, and cannot be changed.";
-            //dataGridView1.Columns.Add(column);
-
-            //// ZWaveBasic
+            // ZWaveBasic
             //check = new DataGridViewCheckBoxColumn();
             //check.DataPropertyName = "ZWaveBasic";
             //check.Name = "Use zwave.basic";
@@ -114,29 +114,29 @@ namespace OZWForm
             //check.Resizable = DataGridViewTriState.True;
             //check.SortMode = DataGridViewColumnSortMode.NotSortable;
             //check.ToolTipText = "If the box is checked, the device will send and respond to\nnative zwave.basic messages rather than those of the\ngeneric schema family listed under the Schema column.";
-            //dataGridView1.Columns.Add(check);
+            //NodeGridView.Columns.Add(check);
+*/
+            // Level
+            column = new DataGridViewTextBoxColumn();
+            column.DataPropertyName = "Level";
+            column.Name = "Level";
+            column.ReadOnly = false;
+            column.Frozen = false;
+            column.Resizable = DataGridViewTriState.True;
+            column.SortMode = DataGridViewColumnSortMode.NotSortable;
+            column.ToolTipText = "Current level of the device";
+            NodeGridView.Columns.Add(column);
 
-            //// Level
-            //column = new DataGridViewTextBoxColumn();
-            //column.DataPropertyName = "Level";
-            //column.Name = "Level";
-            //column.ReadOnly = false;
-            //column.Frozen = false;
-            //column.Resizable = DataGridViewTriState.True;
-            //column.SortMode = DataGridViewColumnSortMode.NotSortable;
-            //column.ToolTipText = "Current level of the device";
-            //dataGridView1.Columns.Add(column);
-
-            //// On-Off button
-            //DataGridViewButtonColumn buttonColumn = new DataGridViewButtonColumn();
-            //buttonColumn.DataPropertyName = "ButtonText";
-            //buttonColumn.Name = "Power";
-            //buttonColumn.ReadOnly = false;
-            //buttonColumn.Frozen = false;
-            //buttonColumn.Resizable = DataGridViewTriState.True;
-            //buttonColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
-            //buttonColumn.ToolTipText = "Click a button to turn a light on or off";
-            //dataGridView1.Columns.Add(buttonColumn);
+            // On-Off button
+            DataGridViewButtonColumn buttonColumn = new DataGridViewButtonColumn();
+            buttonColumn.DataPropertyName = "ButtonText";
+            buttonColumn.Name = "Power";
+            buttonColumn.ReadOnly = false;
+            buttonColumn.Frozen = false;
+            buttonColumn.Resizable = DataGridViewTriState.True;
+            buttonColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
+            buttonColumn.ToolTipText = "Click a button to turn a light on or off";
+            NodeGridView.Columns.Add(buttonColumn);
 
             BindingSource bs = new BindingSource();
             bs.DataSource = m_nodeList;
@@ -257,17 +257,29 @@ namespace OZWForm
 
                 case ZWNotification.Type.PollingDisabled:
                     {
+                        Console.WriteLine("Polling disabled notification");
                         break;
                     }
 
                 case ZWNotification.Type.PollingEnabled:
                     {
+                        Console.WriteLine("Polling disabled notification");
                         break;
                     }
 
                 case ZWNotification.Type.DriverReady:
                     {
                         m_homeId = m_notification.GetHomeId();
+                        break;
+                    }
+                case ZWNotification.Type.AllNodesQueried:
+                    {
+                        MessageBox.Show("All nodes queried");
+                        break;
+                    }
+                case ZWNotification.Type.AwakeNodesQueried:
+                    {
+                        MessageBox.Show("Awake nodes queried (but some sleeping nodes have not been queried)");
                         break;
                     }
             }

@@ -40,9 +40,13 @@ namespace OpenZWave
 	class Msg;
 	class Node;
 
+	/** \brief List of values sent to/received from a node.
+	 */
 	class ValueList: public Value
 	{
 	public:
+		/** \brief An item (element) in the list of values.
+		*/
 		struct Item
 		{
 			string	m_label;

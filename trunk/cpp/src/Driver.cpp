@@ -77,6 +77,8 @@ Driver::Driver
     m_exitEvent( new Event() ), 
     m_exit( false ),
     m_init( false ),
+	m_awakeNodesQueried( false ),
+	m_allNodesQueried( false ),
     m_serialPortName( _serialPortName ),
     m_homeId( 0 ),
 	m_serialPort( new SerialPort() ),
@@ -2741,12 +2743,16 @@ uint8 Driver::GetCurrentNodeQuery
 )
 {
 	uint8 nodeId = 0xff;
+	bool sleepingNodes = false;
 
-	m_queryMutex->Lock();
+	m_queryMutex->Lock();			// make sure there are not changes to the query list while processing
+
+	// search for the next query for an awake node
 	for( list<uint8>::iterator it = m_nodeQueries.begin(); it != m_nodeQueries.end(); ++it )
 	{
 		if( Node* node = GetNodeUnsafe( *it ) )
 		{
+			// this node can sleep, so check to see if it is awake
 			if( !node->IsListeningDevice() )
 			{
 				if( WakeUp* wakeUp = static_cast<WakeUp*>( node->GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
@@ -2754,6 +2760,7 @@ uint8 Driver::GetCurrentNodeQuery
 					if( !wakeUp->IsAwake() )
 					{
 						// Node is asleep
+						sleepingNodes = true;
 						continue;
 					}
 				}
@@ -2765,6 +2772,31 @@ uint8 Driver::GetCurrentNodeQuery
 		}
 	}
 	m_queryMutex->Release();
+
+	// if this is the first (initialization) run of the queries, check to see if it has completed
+	if( !m_allNodesQueried )
+		if( nodeId == 0xff )	// no node was found (either we're done or all remaining nodes to query are asleep)
+		{
+			if( sleepingNodes ) 
+			{
+				Log::Write( "Node query processing complete except for sleeping nodes." );
+				Notification* notification = new Notification( Notification::Type_AwakeNodesQueried );
+				notification->SetHomeAndNodeIds( m_homeId, nodeId );
+				QueueNotification( notification ); 
+
+				m_awakeNodesQueried = true;
+			}
+			else 
+			{
+				Log::Write( "Node query processing complete." );
+				Notification* notification = new Notification( Notification::Type_AllNodesQueried );
+				notification->SetHomeAndNodeIds( m_homeId, nodeId );
+				QueueNotification( notification ); 
+
+				m_awakeNodesQueried = true;
+				m_allNodesQueried = true;
+			}
+		}
 	return nodeId;
 }
 

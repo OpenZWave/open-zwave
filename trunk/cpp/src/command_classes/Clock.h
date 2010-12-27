@@ -35,6 +35,8 @@ namespace OpenZWave
 	class ValueByte;
 	class ValueList;
 
+	/** \brief Implements COMMAND_CLASS_CLOCK (0x81), a Z-Wave device command class.
+	 */
 	class Clock: public CommandClass
 	{
 	public:

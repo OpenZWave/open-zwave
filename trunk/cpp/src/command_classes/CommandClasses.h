@@ -36,6 +36,8 @@ namespace OpenZWave
 {
 	class CommandClass;
 
+	/** \brief Manages a map of command classes supported by a specific Z-Wave node.
+	 */
 	class CommandClasses
 	{
 	public:

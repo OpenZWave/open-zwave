@@ -39,6 +39,8 @@ namespace OpenZWave
 {
 	class Node;
 
+	/** \brief Manages a group of devices (various nodes associated with each other).
+	 */
 	class Group
 	{
 		friend class Node;

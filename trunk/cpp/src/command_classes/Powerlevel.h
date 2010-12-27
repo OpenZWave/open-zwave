@@ -32,6 +32,8 @@
 
 namespace OpenZWave
 {
+	/** \brief Implements COMMAND_CLASS_POWERLEVEL (0x73), a Z-Wave device command class.
+	 */
 	class Powerlevel: public CommandClass
 	{
 	public:

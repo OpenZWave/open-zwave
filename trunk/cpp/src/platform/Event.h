@@ -32,6 +32,8 @@ namespace OpenZWave
 {
 	class EventImpl;
 
+	/** \brief Platform-independent definition of event objects.
+	 */
 	class Event
 	{
 	public:

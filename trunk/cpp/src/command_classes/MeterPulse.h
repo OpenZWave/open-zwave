@@ -34,6 +34,8 @@ namespace OpenZWave
 {
 	class ValueInt;
 
+	/** \brief Implements COMMAND_CLASS_METER_PULSE (0x35), a Z-Wave device command class.
+	 */
 	class MeterPulse: public CommandClass
 	{
 	public:

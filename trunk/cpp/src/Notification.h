@@ -33,12 +33,11 @@
 
 namespace OpenZWave
 {
-	/** 
-	 * Provides a container for data sent via the notification callback
-	 * handler installed by a call to Manager::AddWatcher.
-	 * <p>
-	 * A notification object is only ever created or deleted internally by
-	 * OpenZWave.
+	/** \brief Provides a container for data sent via the notification callback
+	 *    handler installed by a call to Manager::AddWatcher.
+	 *
+	 *    A notification object is only ever created or deleted internally by
+	 *    OpenZWave.
 	 */
 	class Notification
 	{
@@ -73,7 +72,9 @@ namespace OpenZWave
 			Type_PollingEnabled,	/**< Polling of a node has been successfully turned on by a call to Manager::EnablePoll */
 			Type_DriverReady,		/**< A driver for a PC Z-Wave controller has been added and is ready to use.  The notification will contain the controller's Home ID, which is needed to call most of the Manager methods. */
 			Type_DriverReset,		/**< All nodes and values for this driver have been removed.  This is sent instead of potentially hundreds of individual node and value notifications. */
-            Type_MsgComplete        /**< The last message that was sent is now complete. */
+            Type_MsgComplete,       /**< The last message that was sent is now complete. */
+			Type_AwakeNodesQueried,	/**< All awake nodes have been queried, so client application can expected complete data for these nodes. */
+			Type_AllNodesQueried	/**< All nodes have been queried, so client application can expected complete data. */
 		};
 
 		/** 

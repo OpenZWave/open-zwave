@@ -39,6 +39,8 @@ namespace OpenZWave
 	class Msg;
 	class Node;
 
+	/** \brief Decimal value sent to/received from a node.
+	 */
 	class ValueDecimal: public Value
 	{
 	public:

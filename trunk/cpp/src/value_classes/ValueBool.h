@@ -40,6 +40,8 @@ namespace OpenZWave
 	class Node;
 	class CommandClass;
 
+	/** \brief Boolean value sent to/received from a node.
+	 */
 	class ValueBool: public Value
 	{
 	public:

@@ -32,6 +32,8 @@
 
 namespace OpenZWave
 {
+	/** \brief Implements COMMAND_CLASS_MULTI_INSTANCE (0x60), a Z-Wave device command class.
+	 */
 	class MultiInstance: public CommandClass
 	{
 	public:

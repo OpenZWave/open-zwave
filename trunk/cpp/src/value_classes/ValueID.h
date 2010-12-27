@@ -36,8 +36,8 @@ class TiXmlElement;
 
 namespace OpenZWave
 {
-	/** 
-	 * Provides a unique ID for a value reported by a Z-Wave device.
+	/** \brief Provides a unique ID for a value reported by a Z-Wave device.
+	 * 
 	 * The ValueID is used to uniquely identify a value reported by a 
 	 * Z-Wave device.
 	 * <p>

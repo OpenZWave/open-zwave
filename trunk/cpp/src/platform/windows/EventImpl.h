@@ -33,6 +33,8 @@
 
 namespace OpenZWave
 {
+	/** \brief Windows-specific implementation of the Event class.
+	 */
 	class EventImpl
 	{
 	private:
