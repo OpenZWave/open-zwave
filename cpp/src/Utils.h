@@ -36,17 +36,17 @@ namespace OpenZWave
 {
 	/**
 	 * Convert a string to all upper-case.
-	 * @param _str the string to be converted.
-	 * @return the upper-case string.
-	 * @see ToLower, Trim
+	 * \param _str the string to be converted.
+	 * \return the upper-case string.
+	 * \see ToLower, Trim
 	 */
 	string ToUpper( string const& _str );
 
 	/**
 	 * Convert a string to all lower-case.
-	 * @param _str the string to be converted.
-	 * @return the lower-case string.
-	 * @see ToUpper, Trim
+	 * \param _str the string to be converted.
+	 * \return the lower-case string.
+	 * \see ToUpper, Trim
 	 */
 	string ToLower( string const& _str );
 

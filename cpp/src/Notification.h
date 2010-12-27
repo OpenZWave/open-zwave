@@ -55,7 +55,7 @@ namespace OpenZWave
 		 * Notification types.
 		 * Notifications of various Z-Wave events sent to the watchers
 		 * registered with the Manager::AddWatcher method.
-		 * @see Manager::AddWatcher
+		 * \see Manager::AddWatcher
 	     */
 		enum NotificationType 
 		{
@@ -79,44 +79,44 @@ namespace OpenZWave
 
 		/** 
 		 * Get the type of this notification.
-		 * @return the notification type.
-		 * @see NotificationType
+		 * \return the notification type.
+		 * \see NotificationType
 	     */
 		NotificationType GetType()const{ return m_type; }
 
 		/** 
 		 * Get the Home ID of the driver sending this notification.
-		 * @return the driver Home ID
+		 * \return the driver Home ID
 	     */
 		uint32 GetHomeId()const{ return m_valueId.GetHomeId(); }
 
 		/** 
 		 * Get the ID of any node involved in this notification.
-		 * @return the node's ID
+		 * \return the node's ID
 	     */
 		uint8 GetNodeId()const{ return m_valueId.GetNodeId(); }
 		
 		/** 
 		 * Get the unique ValueID of any value involved in this notification.
-		 * @return the value's ValueID
+		 * \return the value's ValueID
 	     */
 		ValueID const& GetValueID()const{ return m_valueId; }
 		
 		/** 
 		 * Get the index of the association group that has been changed.  Only valid in NotificationType::Type_Group notifications. 
-		 * @return the group index.
+		 * \return the group index.
 	     */
 		uint8 GetGroupIdx()const{ assert(Type_Group==m_type); return m_byte; } 
 
 		/** 
 		 * Get the event value of a notification.  Only valid in NotificationType::Type_NodeEvent notifications. 
-		 * @return the event value.
+		 * \return the event value.
 	     */
 		uint8 GetEvent()const{ assert(Type_NodeEvent==m_type); return m_byte; } 
 
 		/** 
 		 * Helper function to simplify wrapping the notification class.  Should not normally need to be called.
-		 * @return the internal byte value of the notification.
+		 * \return the internal byte value of the notification.
 	     */
 		uint8 GetByte()const{ return m_byte; } 
 

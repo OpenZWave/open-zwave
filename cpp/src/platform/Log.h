@@ -44,8 +44,8 @@ namespace OpenZWave
 		 * Create a log.
 		 * Creates the cross-platform logging singleton.
 		 * Any previous log will be cleared.
-		 * @return a pointer to the logging object.
-		 * @see Destroy, Write
+		 * \return a pointer to the logging object.
+		 * \see Destroy, Write
 		 */
 		static Log* Create( string const& _filename );
 
@@ -53,16 +53,16 @@ namespace OpenZWave
 		 * Destroys the log.
 		 * Destroys the logging singleton.  The log can no longer
 		 * be written to without another call to Create.
-		 * @see Create, Write
+		 * \see Create, Write
 		 */
 		static void Destroy();
 
 		/**
 		 * Write an entry to the log.
 		 * Writes a formatted string to the log.
-		 * @param _format.  A string formatted in the same manner as used with printf etc.
-		 * @param ... a variable number of arguments, to be included in the formatted string.
-		 * @see Create, Destroy
+		 * \param _format.  A string formatted in the same manner as used with printf etc.
+		 * \param ... a variable number of arguments, to be included in the formatted string.
+		 * \see Create, Destroy
 		 */
 		static void Write( char const* _format, ... );
 

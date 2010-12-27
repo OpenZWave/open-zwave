@@ -57,12 +57,12 @@ namespace OpenZWave
 		 * Start running a function on this thread.  
 		 * Attempts to start a function running on this thread.  The call will fail if another 
 		 * function is already running.
-		 * @param _pThreadProc pointer to the function to be run.  The function must take a 
+		 * \param _pThreadProc pointer to the function to be run.  The function must take a 
 		 * single void pointer as its only argument, and return void.  On entry, the pointer 
 		 * will be set to the context provided to this Start method. 
-		 * @param _context pointer allowing any relevant data to be passed to the thread function.
-		 * @return True if the function was successfully started.
-		 * @see Stop, IsRunning
+		 * \param _context pointer allowing any relevant data to be passed to the thread function.
+		 * \return True if the function was successfully started.
+		 * \see Stop, IsRunning
 		 */
 		bool Start( pfnThreadProc_t _pfnThreadProc, void* _context );
 
@@ -70,22 +70,22 @@ namespace OpenZWave
 		 * Stop a function running on this thread.  
 		 * Attempts to stop a function running on this thread.  The call will fail if no 
 		 * function is running.
-		 * @return True if the function was successfully stopped.
-		 * @see Start, IsRunning
+		 * \return True if the function was successfully stopped.
+		 * \see Start, IsRunning
 		 */
 		bool Stop();
 
 		/**
 		 * Tests whether a function is running on this thread.
 		 * Enables the caller to test whether a function running on this thread has completed.
-		 * @return true if the function is running, false if it has completed.
-		 * @see Start, Stop
+		 * \return true if the function is running, false if it has completed.
+		 * \see Start, Stop
 		 */
 		bool IsRunning()const;
 
 		/**
 		 * Causes the thread to sleep for the specified number of milliseconds.
-		 * @param _millisecs Number of milliseconds to sleep.
+		 * \param _millisecs Number of milliseconds to sleep.
 		 */
 		void Sleep( uint32 _millisecs );
 

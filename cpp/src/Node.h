@@ -73,8 +73,8 @@ namespace OpenZWave
 	public:
 		/** Constructor initializes the node object, associating it with a specific
 		 *  network (_homeId) and network node (_nodeId).
-		 *  @param _homeId The homeId of the network to which this node is connected.
-		 *  @param _nodeId The nodeId of this node.
+		 *  \param _homeId The homeId of the network to which this node is connected.
+		 *  \param _nodeId The nodeId of this node.
 		 */
 		Node( uint32 const _homeId, uint8 const _nodeId );
 		/** Destructor cleans up memory allocated to node and its child objects. 
@@ -112,7 +112,7 @@ namespace OpenZWave
 		 * This function advances the query process (see Remarks below for more detail on the 
 		 * process).  It iterates through the various query stages enumerated in Node::QueryStage.
 		 * 
-		 * @remark
+		 * \remark
 		 * For OpenZWave to discover everything about a node, we have to follow a certain
 		 * order of queries, because the results of one stage may affect what is requested
 		 * in the next stage.  The stage is saved with the node data, so that any incomplete
@@ -129,22 +129,22 @@ namespace OpenZWave
 		 *  Signal that a specific query stage has been completed for this node.  This will
 		 *  only work if the query process for this node is indeed at the specified stage.  
 		 *  Otherwise, the function returns with no action.
-		 *  @param _stage The current stage of the query process.
+		 *  \param _stage The current stage of the query process.
 		 */
 		void QueryStageComplete( QueryStage const _stage );
 		/** 
 		 *  Retry the specified query stage (up to _maxAttempts retries).  This will
 		 *  only work if the query process for this node is indeed at the specified stage.  
 		 *  Otherwise, the function returns with no action.
-		 *  @param _stage The query stage to retry.
-		 *  @param _maxAttempts 
+		 *  \param _stage The query stage to retry.
+		 *  \param _maxAttempts 
 		 */
 		void QueryStageRetry( QueryStage const _stage, uint8 const _maxAttempts = 0 );	    // maxAttempts of zero means no limit
 		/**
 		 * This function sets the query stage for the node (but only to an earlier stage).  If
 		 * a later stage is specified, it is ignored.
-		 * @param _stage The desired query stage.
-		 * @see m_queryStage, m_queryPending
+		 * \param _stage The desired query stage.
+		 * \see m_queryStage, m_queryPending
 		 */
 		void GoBackToQueryStage( QueryStage const _stage );									// Used to move back to repeat from an earlier stage. 
 
@@ -262,9 +262,9 @@ namespace OpenZWave
 	public:
 		/**
 		 * This function retrieves a pointer to the requested command class object.
-		 * @param _commandClassId Class ID (a single byte value) identifying the command class requested.
-		 * @return Pointer to the requested CommandClass object.
-		 * @see CommandClass, m_commandClassMap
+		 * \param _commandClassId Class ID (a single byte value) identifying the command class requested.
+		 * \return Pointer to the requested CommandClass object.
+		 * \see CommandClass, m_commandClassMap
 		 */
 		CommandClass* GetCommandClass( uint8 const _commandClassId )const;
 		void ApplicationCommandHandler( uint8 const* _data );
@@ -277,17 +277,17 @@ namespace OpenZWave
 		 * Creates the specified command class object and adds it to the node (via the 
 		 * m_commandClassMap) if it doesn't exist.
 		 * No new object is created if it already exists for this node.
-		 * @param _commandClassId Class ID (a single byte value) identifying the command class requested.
-		 * @return Pointer to the CommandClass object just added to the map (NULL if the object 
+		 * \param _commandClassId Class ID (a single byte value) identifying the command class requested.
+		 * \return Pointer to the CommandClass object just added to the map (NULL if the object 
 		 * was already there or if the CommandClass object creation failed).
-		 * @see CommandClass, CommandClasses::CreateCommandClass, m_commandClassMap
+		 * \see CommandClass, CommandClasses::CreateCommandClass, m_commandClassMap
 		 */
 		CommandClass* AddCommandClass( uint8 const _commandClassId );
 		/**
 		 * Removes a command class object from the node (via the m_commandClassMap).  Before removing the 
 		 * object, this function also removes any values stored in the object's ValueStore.
-		 * @param _commandClassId Class ID (a single byte value) identifying the command class to be removed.
-		 * @see m_commandClassMap, ValueStore, GetValueStore, ValueStore::RemoveCommandClassValues
+		 * \param _commandClassId Class ID (a single byte value) identifying the command class to be removed.
+		 * \see m_commandClassMap, ValueStore, GetValueStore, ValueStore::RemoveCommandClassValues
 		 */
 		void RemoveCommandClass( uint8 const _commandClassId );
 		void ReadXML( TiXmlElement const* _nodeElement );

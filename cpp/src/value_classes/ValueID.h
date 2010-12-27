@@ -65,7 +65,7 @@ namespace OpenZWave
 		/** 
 		 * Value Genres
 		 * The classification of a value to enable low level system or configuration parameters to be filtered by the application.
-		 * @see GetGenre
+		 * \see GetGenre
 	     */
 		enum ValueGenre
 		{
@@ -79,7 +79,7 @@ namespace OpenZWave
 		/** 
 		 * Value Types
 		 * The type of data represented by the value object.
-		 * @see GetType
+		 * \see GetType
 	     */
 		enum ValueType
 		{
@@ -97,21 +97,21 @@ namespace OpenZWave
 
 		/** 
 		 * Get the Home ID of the driver that controls the node containing the value. 
-		 * @return the Home ID.
+		 * \return the Home ID.
 	     */
 		uint32 GetHomeId()const{ return m_homeId; }
 
 		/** 
 		 * Get the Home ID of the driver that controls the node containing the value. 
-		 * @return the node id.
+		 * \return the node id.
 	     */
 		uint8 GetNodeId()const{ return( (uint8)( (m_id & 0xff000000) >> 24 ) ); }
 
 		/** 
 		 * Get the genre of the value.  The genre classifies a value to enable
 		 * low-level system or configuration parameters to be filtered out by the application 
-		 * @return the value's genre.
-		 * @see ValueGenre
+		 * \return the value's genre.
+		 * \see ValueGenre
 	     */
 		ValueGenre GetGenre()const{ return( (ValueGenre)( (m_id & 0x00c00000) >> 22 ) ); }
 
@@ -119,7 +119,7 @@ namespace OpenZWave
 		 * Get the Z-Wave command class that created and manages this value.  Knowledge of 
 		 * command classes is not required to use OpenZWave, but this information is
 		 * exposed in case it is of interest.
-		 * @return the value's command class.
+		 * \return the value's command class.
 	     */
 		uint8 GetCommandClassId()const{ return( (uint8)( (m_id & 0x003fc000) >> 14 ) ); }
 
@@ -129,7 +129,7 @@ namespace OpenZWave
 		 * only the SensorMultilevel command class ever does this.  Knowledge of 
 		 * instances and command classes is not required to use OpenZWave, but this 
 		 * information is exposed in case it is of interest.
-		 * @return the instance of the value's command class.
+		 * \return the instance of the value's command class.
 	     */
 		uint8 GetInstance()const{ return( (uint8)( (m_id & 0x00003800) >> 11 ) ); }
 
@@ -138,7 +138,7 @@ namespace OpenZWave
 		 * values created and managed by a command class.  Knowledge of command classes
 		 * is not required to use OpenZWave, but this information is exposed in case it
 		 * is of interest.
-		 * @return the value index within the command class.
+		 * \return the value index within the command class.
 	     */
 		uint8 GetIndex()const{ return( (uint8)( (m_id & 0x000007f0) >> 4 ) ); }
 
@@ -146,8 +146,8 @@ namespace OpenZWave
 		 * Get the type of the value.  The type describes the data held by the value
 		 * and enables the user to select the correct value accessor method in the 
 		 * Manager class. 
-		 * @return the value's type.
-		 * @see ValueType, Manager::GetValueAsBool, Manager::GetValueAsByte, Manager::GetValueAsFloat, Manager::GetValueAsInt, Manager::GetValueAsShort, Manager::GetValueAsString, Manager::GetValueListSelection.
+		 * \return the value's type.
+		 * \see ValueType, Manager::GetValueAsBool, Manager::GetValueAsByte, Manager::GetValueAsFloat, Manager::GetValueAsInt, Manager::GetValueAsShort, Manager::GetValueAsString, Manager::GetValueListSelection.
 	     */
 		ValueType GetType()const{ return( (ValueType)( m_id & 0x0000000f ) ); }
 
@@ -161,15 +161,15 @@ namespace OpenZWave
 		 * Construct a value ID from its component parts.
 		 * This method is public only to allow ValueIDs to be saved and recreated by the application.
 		 * Only ValueIDs that have been reported by OpenZWave notifications should ever be used.
-		 * @param _homeId Home ID of the PC Z-Wave Controller that manages the device.
-		 * @param _nodeId Node ID of the device reporting the value.
-		 * @param _genre classification of the value to enable low level system or configuration parameters to be filtered out.
-		 * @param _commandClassId ID of command class that creates and manages this value.
-		 * @param _instance Instance index of the command class.
-		 * @param _valueIndex Index of the value within all the values created by the command class instance.
-		 * @param _type Type of value (bool, byte, string etc).
-		 * @return The ValueID.
-		 * @see ValueID
+		 * \param _homeId Home ID of the PC Z-Wave Controller that manages the device.
+		 * \param _nodeId Node ID of the device reporting the value.
+		 * \param _genre classification of the value to enable low level system or configuration parameters to be filtered out.
+		 * \param _commandClassId ID of command class that creates and manages this value.
+		 * \param _instance Instance index of the command class.
+		 * \param _valueIndex Index of the value within all the values created by the command class instance.
+		 * \param _type Type of value (bool, byte, string etc).
+		 * \return The ValueID.
+		 * \see ValueID
 		 */
 		ValueID
 		( 

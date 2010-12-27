@@ -53,17 +53,17 @@ namespace OpenZWave
 		 * Lock the mutex.
 		 * Attempts to lock the mutex.
 		 * There must be a matching call to Release for every call to Lock.
-		 * @param _bWait Defaults to true.  Set this argument to false if the method should return
+		 * \param _bWait Defaults to true.  Set this argument to false if the method should return
 		 * immediately, even if the lock is not available.
-		 * @return True if the lock was obtained.
-		 * @see Release
+		 * \return True if the lock was obtained.
+		 * \see Release
 		 */
 		bool Lock( bool const _bWait = true );
 
 		/**
 		 * Releases the lock on the mutex.
 		 * There must be a matching call to Release for every call to Lock.
-		 * @see Lock
+		 * \see Lock
 		 */
 		void Release();
 
