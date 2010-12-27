@@ -124,7 +124,7 @@ struct TiXmlCursor
 
 	You should never change the document from a callback.
 
-	@sa TiXmlNode::Accept()
+	\see TiXmlNode::Accept()
 */
 class TiXmlVisitor
 {
@@ -177,7 +177,7 @@ const TiXmlEncoding TIXML_DEFAULT_ENCODING = TIXML_ENCODING_UNKNOWN;
 	In XML, the document and elements can contain
 	other elements and other types of nodes.
 
-	@verbatim
+	\verbatim
 	A Document can contain:	Element	(container or leaf)
 							Comment (leaf)
 							Unknown (leaf)
@@ -190,7 +190,7 @@ const TiXmlEncoding TIXML_DEFAULT_ENCODING = TIXML_ENCODING_UNKNOWN;
 							Unknown (leaf)
 
 	A Decleration contains: Attributes (not on tree)
-	@endverbatim
+	\endverbatim
 */
 class TiXmlBase
 {
@@ -240,7 +240,7 @@ public:
 		There is a minor performance cost to computing the row and column. Computation
 		can be disabled if TiXmlDocument::SetTabSize() is called with 0 as the value.
 
-		@sa TiXmlDocument::SetTabSize()
+		\see TiXmlDocument::SetTabSize()
 	*/
 	int Row() const			{ return location.row + 1; }
 	int Column() const		{ return location.col + 1; }	///< See Row()
@@ -475,13 +475,13 @@ public:
 
 	/** The meaning of 'value' changes for the specific type of
 		TiXmlNode.
-		@verbatim
+		\verbatim
 		Document:	filename of the xml file
 		Element:	name of the element
 		Comment:	the comment text
 		Unknown:	the tag contents
 		Text:		the text string
-		@endverbatim
+		\endverbatim
 
 		The subclasses will wrap this function.
 	*/
@@ -498,13 +498,13 @@ public:
 	const TIXML_STRING& ValueTStr() const { return value; }
 
 	/** Changes the value of the node. Defined as:
-		@verbatim
+		\verbatim
 		Document:	filename of the xml file
 		Element:	name of the element
 		Comment:	the comment text
 		Unknown:	the tag contents
 		Text:		the text string
-		@endverbatim
+		\endverbatim
 	*/
 	void SetValue(const char * _value) { value = _value;}
 
@@ -546,15 +546,15 @@ public:
 
 	/** An alternate way to walk the children of a node.
 		One way to iterate over nodes is:
-		@verbatim
+		\verbatim
 			for( child = parent->FirstChild(); child; child = child->NextSibling() )
-		@endverbatim
+		\endverbatim
 
 		IterateChildren does the same thing with the syntax:
-		@verbatim
+		\verbatim
 			child = 0;
 			while( child = parent->IterateChildren( child ) )
-		@endverbatim
+		\endverbatim
 
 		IterateChildren takes the previous child as input and finds
 		the next one. If the previous child is null, it returns the
@@ -589,7 +589,7 @@ public:
 		and avoids an extra copy, but should be used with care as it
 		uses a different memory model than the other insert functions.
 
-		@sa InsertEndChild
+		\sa InsertEndChild
 	*/
 	TiXmlNode* LinkEndChild( TiXmlNode* addThis );
 
@@ -730,11 +730,11 @@ public:
 		Which are both good references for "visiting".
 
 		An example of using Accept():
-		@verbatim
+		\verbatim
 		TiXmlPrinter printer;
 		tinyxmlDoc.Accept( &printer );
 		const char* xmlcstr = printer.CStr();
-		@endverbatim
+		\endverbatim
 	*/
 	virtual bool Accept( TiXmlVisitor* visitor ) const = 0;
 
@@ -773,7 +773,7 @@ private:
 /** An attribute is a name-value pair. Elements have an arbitrary
 	number of attributes, each with a unique name.
 
-	@note The attributes are not TiXmlNodes, since they are not
+	\note The attributes are not TiXmlNodes, since they are not
 		  part of the tinyXML document object model. There are other
 		  suggested ways to look at this problem.
 */
@@ -1006,7 +1006,7 @@ public:
 		
 		NOTE: This method doesn't work correctly for 'string' types.
 
-		@return TIXML_SUCCESS, TIXML_WRONG_TYPE, or TIXML_NO_ATTRIBUTE
+		\return TIXML_SUCCESS, TIXML_WRONG_TYPE, or TIXML_NO_ATTRIBUTE
 	*/
 	template< typename T > int QueryValueAttribute( const std::string& name, T* outValue ) const
 	{
@@ -1085,24 +1085,24 @@ public:
 		returns the character string of the Text node, else null is returned.
 
 		This is a convenient method for getting the text of simple contained text:
-		@verbatim
+		\verbatim
 		<foo>This is text</foo>
 		const char* str = fooElement->GetText();
-		@endverbatim
+		\endverbatim
 
 		'str' will be a pointer to "This is text". 
 		
 		Note that this function can be misleading. If the element foo was created from
 		this XML:
-		@verbatim
+		\verbatim
 		<foo><b>This is text</b></foo> 
-		@endverbatim
+		\endverbatim
 
 		then the value of str would be null. The first child node isn't a text node, it is
 		another element. From this XML:
-		@verbatim
+		\verbatim
 		<foo>This is <b>text</b></foo> 
-		@endverbatim
+		\endverbatim
 		GetText() will return "This is ".
 
 		WARNING: GetText() accesses a child node - don't become confused with the 
@@ -1262,9 +1262,9 @@ private:
 
 
 /** In correct XML the declaration is the first entry in the file.
-	@verbatim
+	\verbatim
 		<?xml version="1.0" standalone="yes"?>
-	@endverbatim
+	\endverbatim
 
 	TinyXml will happily read or write files without a declaration,
 	however. There are 3 possible attributes to the declaration:
@@ -1468,7 +1468,7 @@ public:
 		(memory errors, for example, have no row/column) or the parser lost the error. (An
 		error in the error reporting, in that case.)
 
-		@sa SetTabSize, Row, Column
+		\see SetTabSize, Row, Column
 	*/
 	int ErrorRow() const	{ return errorLocation.row+1; }
 	int ErrorCol() const	{ return errorLocation.col+1; }	///< The column where the error occured. See ErrorRow()
@@ -1489,13 +1489,13 @@ public:
 		Note that row and column tracking is not supported when using operator>>.
 
 		The tab size needs to be enabled before the parse or load. Correct usage:
-		@verbatim
+		\verbatim
 		TiXmlDocument doc;
 		doc.SetTabSize( 8 );
 		doc.Load( "myfile.xml" );
-		@endverbatim
+		\endverbatim
 
-		@sa Row, Column
+		\see Row, Column
 	*/
 	void SetTabSize( int _tabsize )		{ tabsize = _tabsize; }
 
@@ -1557,19 +1557,19 @@ private:
 	DOM structure. It is a separate utility class.
 
 	Take an example:
-	@verbatim
+	\verbatim
 	<Document>
 		<Element attributeA = "valueA">
 			<Child attributeB = "value1" />
 			<Child attributeB = "value2" />
 		</Element>
 	<Document>
-	@endverbatim
+	\endverbatim
 
 	Assuming you want the value of "attributeB" in the 2nd "Child" element, it's very 
 	easy to write a *lot* of code that looks like:
 
-	@verbatim
+	\verbatim
 	TiXmlElement* root = document.FirstChildElement( "Document" );
 	if ( root )
 	{
@@ -1583,30 +1583,30 @@ private:
 				if ( child2 )
 				{
 					// Finally do something useful.
-	@endverbatim
+	\endverbatim
 
 	And that doesn't even cover "else" cases. TiXmlHandle addresses the verbosity
 	of such code. A TiXmlHandle checks for null	pointers so it is perfectly safe 
 	and correct to use:
 
-	@verbatim
+	\verbatim
 	TiXmlHandle docHandle( &document );
 	TiXmlElement* child2 = docHandle.FirstChild( "Document" ).FirstChild( "Element" ).Child( "Child", 1 ).ToElement();
 	if ( child2 )
 	{
 		// do something useful
-	@endverbatim
+	\endverbatim
 
 	Which is MUCH more concise and useful.
 
 	It is also safe to copy handles - internally they are nothing more than node pointers.
-	@verbatim
+	\verbatim
 	TiXmlHandle handleCopy = handle;
-	@endverbatim
+	\endverbatim
 
 	What they should not be used for is iteration:
 
-	@verbatim
+	\verbatim
 	int i=0; 
 	while ( true )
 	{
@@ -1616,20 +1616,20 @@ private:
 		// do something
 		++i;
 	}
-	@endverbatim
+	\endverbatim
 
 	It seems reasonable, but it is in fact two embedded while loops. The Child method is 
 	a linear walk to find the element, so this code would iterate much more than it needs 
 	to. Instead, prefer:
 
-	@verbatim
+	\verbatim
 	TiXmlElement* child = docHandle.FirstChild( "Document" ).FirstChild( "Element" ).FirstChild( "Child" ).ToElement();
 
 	for( child; child; child=child->NextSiblingElement() )
 	{
 		// do something
 	}
-	@endverbatim
+	\endverbatim
 */
 class TiXmlHandle
 {
@@ -1689,19 +1689,19 @@ public:
 	*/
 	TiXmlUnknown* ToUnknown() const		{ return ( ( node && node->ToUnknown() ) ? node->ToUnknown() : 0 ); }
 
-	/** @deprecated use ToNode. 
+	/** \deprecated use ToNode. 
 		Return the handle as a TiXmlNode. This may return null.
 	*/
 	TiXmlNode* Node() const			{ return ToNode(); } 
-	/** @deprecated use ToElement. 
+	/** \deprecated use ToElement. 
 		Return the handle as a TiXmlElement. This may return null.
 	*/
 	TiXmlElement* Element() const	{ return ToElement(); }
-	/**	@deprecated use ToText()
+	/**	\deprecated use ToText()
 		Return the handle as a TiXmlText. This may return null.
 	*/
 	TiXmlText* Text() const			{ return ToText(); }
-	/** @deprecated use ToUnknown()
+	/** \deprecated use ToUnknown()
 		Return the handle as a TiXmlUnknown. This may return null.
 	*/
 	TiXmlUnknown* Unknown() const	{ return ToUnknown(); }
@@ -1722,13 +1722,13 @@ private:
 	be accessed via the CStr(), Str(), and Size() methods.
 
 	TiXmlPrinter uses the Visitor API.
-	@verbatim
+	\verbatim
 	TiXmlPrinter printer;
 	printer.SetIndent( "\t" );
 
 	doc.Accept( &printer );
 	fprintf( stdout, "%s", printer.CStr() );
-	@endverbatim
+	\endverbatim
 */
 class TiXmlPrinter : public TiXmlVisitor
 {

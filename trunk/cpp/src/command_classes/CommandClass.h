@@ -83,11 +83,11 @@ namespace OpenZWave
 		string ExtractValueAsString( uint8 const* _data, uint8* _scale )const;
 		/**
 		 *  Append a floating-point value to a message.
-		 *  @param _msg The message to which the value should be appended.
-		 *  @param _value A signed floating point value to be appended.
-		 *  @param _precision The number of digits after the decimal point.
-		 *  @param _scale A byte indicating the scale corresponding to this value (e.g., 1=F and 0=C for temperatures).
-		 *  @see Msg
+		 *  \param _msg The message to which the value should be appended.
+		 *  \param _value A signed floating point value to be appended.
+		 *  \param _precision The number of digits after the decimal point.
+		 *  \param _scale A byte indicating the scale corresponding to this value (e.g., 1=F and 0=C for temperatures).
+		 *  \see Msg
 		 */
 		void AppendValue( Msg* _msg, float32 const _value, uint8 const _precision, uint8 const _scale )const;
 		uint8 const GetAppendValueSize( float32 const _value, uint8 const _precision )const;
@@ -101,6 +101,10 @@ namespace OpenZWave
 		{
 		public:
 			ValueInstances(): m_instances(NULL), m_numInstances(0){}
+			/** 
+			 * \brief Destructor.  Iterate through the instance list and release memory allocated to each.
+			 * \see m_instances, m_numInstances
+			 */
 			~ValueInstances()
 			{
 				for( int i=0; i<m_numInstances; ++i )
@@ -115,6 +119,12 @@ namespace OpenZWave
 				delete [] m_instances;
 			}
 
+			/**
+			 * \brief Add an instance to the instance list.
+			 * \param _idx 1-based index of the instance to add.
+			 * \param _instance Pointer to the instance object to add.
+			 * \see m_instances, m_numInstances
+			 */
 			void AddInstance( uint8 _idx, T* _instance )
 			{
 				if( _idx > m_numInstances )

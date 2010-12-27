@@ -144,7 +144,7 @@ namespace OZWForm
 
             // Create the Options
             m_options = new ZWOptions();
-            m_options.Create(@"D:\Projects\OpenZWave\config\", @"", @"");
+            m_options.Create(@"..\..\..\..\..\..\config\", @"", @"");
 
             // Add any app specific options here...
 
@@ -157,7 +157,7 @@ namespace OZWForm
             m_manager.OnNotification += new ManagedNotificationsHandler(NotificationHandler);
 
             // Add a driver
-            m_manager.AddDriver(@"\\.\COM4");
+            m_manager.AddDriver(@"\\.\COM3");
         }
 
         public void NotificationHandler(ZWNotification notification)
@@ -275,6 +275,7 @@ namespace OZWForm
                 case ZWNotification.Type.AllNodesQueried:
                     {
                         MessageBox.Show("All nodes queried");
+ //                       m_manager.EnablePoll(m_homeId, 7);
                         break;
                     }
                 case ZWNotification.Type.AwakeNodesQueried:

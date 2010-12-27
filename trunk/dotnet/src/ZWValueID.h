@@ -70,15 +70,15 @@ namespace OpenZWaveDotNet
 		 * Create a ZWValue ID from its component parts.
 		 * This method is provided only to allow ValueIDs to be saved and recreated by the application.  Only
 		 * ValueIDs that have been reported by OpenZWave notifications should ever be used.
-		 * @param homeId Home ID of the PC Z-Wave Controller that manages the device.
-		 * @param nodeId Node ID of the device reporting the value.
-		 * @param genre classification of the value to enable low level system or configuration parameters to be filtered out.
-		 * @param commandClassId ID of command class that creates and manages this value.
-		 * @param instance Instance index of the command class.
-		 * @param valueIndex Index of the value within all the values created by the command class instance.
-		 * @param type Type of value (bool, byte, string etc).
-		 * @return The ValueID.
-		 * @see ValueID
+		 * \param homeId Home ID of the PC Z-Wave Controller that manages the device.
+		 * \param nodeId Node ID of the device reporting the value.
+		 * \param genre classification of the value to enable low level system or configuration parameters to be filtered out.
+		 * \param commandClassId ID of command class that creates and manages this value.
+		 * \param instance Instance index of the command class.
+		 * \param valueIndex Index of the value within all the values created by the command class instance.
+		 * \param type Type of value (bool, byte, string etc).
+		 * \return The ValueID.
+		 * \see ValueID
 		 */
 		ZWValueID
 		( 

@@ -174,20 +174,20 @@ namespace OpenZWave
 		 *  A version of GetNode that does not have the protective "lock" and "release" requirement.  
 		 *  This function can be used within driverThread, which "knows" that the node will not be
 		 *  changed or deleted while it is being used.
-		 *  @param _nodeId The nodeId (index into the node array) identifying the node to be returned
-		 *  @return
+		 *  \param _nodeId The nodeId (index into the node array) identifying the node to be returned
+		 *  \return
 		 *  A pointer to the specified node (if it exists) or NULL if not.
-		 *  @see GetNode
+		 *  \see GetNode
 		 */
 		Node* GetNodeUnsafe( uint8 _nodeId );
 		/**
 		 *  Locks the node array and returns the specified node (if it exists).  If a node is returned,
 		 *  the lock must be released after the node has been processed via a call to ReleaseNodes().
 		 *  If the node specified by _nodeId does not exist, the lock is released and NULL is returned.
-		 *  @param _nodeId The nodeId (index into the node array) identifying the node to be returned
-		 *  @return
+		 *  \param _nodeId The nodeId (index into the node array) identifying the node to be returned
+		 *  \return
 		 *  A pointer to the specified node (if it exists) or NULL if not.
-		 *  @see LockNodes, ReleaseNodes
+		 *  \see LockNodes, ReleaseNodes
 		 */
 		Node* GetNode( uint8 _nodeId );
 		/**
@@ -239,8 +239,8 @@ namespace OpenZWave
 		 *  If so, it retrieves the Node object that needs to be queried and calls that node's
 		 *  AdvanceQueries member function.  If this call results in all of the node's queries to be
 		 *  completed, SendMsg will remove the node query item from the query queue.
-		 *  @return TRUE if data was written, FALSE if not
-		 *  @see Msg, m_sendQueue, m_expectedCallbackId, m_expectedReply, m_expectedCommandClassId,
+		 *  \return TRUE if data was written, FALSE if not
+		 *  \see Msg, m_sendQueue, m_expectedCallbackId, m_expectedReply, m_expectedCommandClassId,
 		 *  m_waitingForAck, Msg::GetSendAttempts, Node::AdvanceQueries, GetCurrentNodeQuery,
 		 *  RemoveNodeQuery, Node::AllQueriesCompleted
 		 */
@@ -276,7 +276,7 @@ namespace OpenZWave
 		 *  the first time this message was sent (m_init is false), then AddNodeQuery() is called
 		 *  to retrieve its current state.  If this is a "New" node to OpenZWave, then InitNode()
 		 *  is called.
-		 *  @see AddNodeQuery, InitNode, GetNode, ReleaseNodes
+		 *  \see AddNodeQuery, InitNode, GetNode, ReleaseNodes
 		 */
 		void HandleSerialAPIGetInitDataResponse( uint8* _data );
 		void HandleGetNodeProtocolInfoResponse( uint8* _data );
@@ -337,25 +337,25 @@ namespace OpenZWave
 		 *  queues a full query of the node's parameters (starting at the beginning of the query
 		 *  stages--Node::QueryStage_None).  This function will send Notification::Type_NodeAdded
 		 *  and Notification::Type_NodeRemoved messages to identify these modifications.
-		 *  @param _nodeId The node ID of the node to create and query.
-		 *  @see Notification::Type_NodeAdded, Notification::Type_NodeRemoved, Node::QueryStage_None, 
+		 *  \param _nodeId The node ID of the node to create and query.
+		 *  \see Notification::Type_NodeAdded, Notification::Type_NodeRemoved, Node::QueryStage_None, 
 		 *  AddNodeQuery
 		 */
 		void InitNode( uint8 const _nodeId );
 		/**
 		 *  Adds an existing node to the query queue if it is not already there.
-		 *  @param _nodeId The node ID of the node to query.
-		 *  @param _stage The Node::QueryStage at which to start querying.  This allows OpenZWave to 
+		 *  \param _nodeId The node ID of the node to query.
+		 *  \param _stage The Node::QueryStage at which to start querying.  This allows OpenZWave to 
 		 *  either continue an interrupted query at the required stage or to start the update at a
 		 *  late stage (for example, to read dynamic data that will have changed since OpenZWave was
 		 *  last run).
-		 *  @see Node::QueryStage, Node::GoBackToQueryStage, m_nodeQueries
+		 *  \see Node::QueryStage, Node::GoBackToQueryStage, m_nodeQueries
 		 */
 		void AddNodeQuery( uint8 const _nodeId, Node::QueryStage const _stage );
 		/**
 		 *  Removes the specified node from the node query queue.
-		 *  @param _nodeId The node ID of the node to remove from the queue.
-		 *  @see m_nodeQueries
+		 *  \param _nodeId The node ID of the node to remove from the queue.
+		 *  \see m_nodeQueries
 		 */
 		void RemoveNodeQuery( uint8 const _nodeId );
 		/** 
@@ -363,7 +363,7 @@ namespace OpenZWave
 		 *  This function iterates through the m_nodeQueries queue and will return the nodeId of the
 		 *  first node it finds that is either always "listening" or isn't always listening but 
 		 *  happens to be awake.
-		 *  @return Node ID of a node in the query queue.
+		 *  \return Node ID of a node in the query queue.
 		 */
 		uint8 GetCurrentNodeQuery();
 
@@ -409,7 +409,7 @@ namespace OpenZWave
 		/** 
 		 * Controller Commands.
 		 * Commands to be used with the BeginControllerCommand method.
-		 * @see Manager::BeginControllerCommand
+		 * \see Manager::BeginControllerCommand
 	     */
 		enum ControllerCommand
 		{
@@ -433,7 +433,7 @@ namespace OpenZWave
 		/** 
 		 * Controller States.
 		 * States reported via the callback handler passed into the BeginControllerCommand method.
-		 * @see Manager::BeginControllerCommand
+		 * \see Manager::BeginControllerCommand
 	     */
 		enum ControllerState
 		{
