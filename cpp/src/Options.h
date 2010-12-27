@@ -36,8 +36,8 @@
 
 namespace OpenZWave
 {
-	/** 
-	 * \nosubgrouping
+	/** \brief Manages library options read from XML files or the command line.
+	 *
 	 * A class that manages program options read from XML files or the command line.
 	 * The OpenZWave Manager class requires a complete and locked Options
 	 * object when created.  The Options are therefore one of the first things that

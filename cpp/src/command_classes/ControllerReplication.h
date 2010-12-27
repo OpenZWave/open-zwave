@@ -32,6 +32,8 @@
 
 namespace OpenZWave
 {
+	/** \brief Implements COMMAND_CLASS_CONTROLLER_REPLICATION (0x21), a Z-Wave device command class.
+	 */
 	class ControllerReplication: public CommandClass
 	{
 	public:

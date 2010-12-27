@@ -36,6 +36,9 @@
 
 namespace OpenZWave
 {
+	/** \brief Implements COMMAND_CLASS_ASSOCIATION_COMMAND_CONFIGURATION (0x9b), a Z-Wave device command class.
+	 */
+
 	class AssociationCommandConfiguration: public CommandClass
 	{
 	public:

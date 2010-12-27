@@ -34,6 +34,8 @@ namespace OpenZWave
 {
 	class ValueBool;
 
+	/** \brief Implements COMMAND_CLASS_SENSOR_BINARY (0x30), a Z-Wave device command class.
+	 */
 	class SensorBinary: public CommandClass
 	{
 	public:

@@ -34,6 +34,8 @@ namespace OpenZWave
 {
 	class ValueButton;
 
+	/** \brief Implements COMMAND_CLASS_BASIC_WINDOW_COVERING (0x50), a Z-Wave device command class.
+	 */
 	class BasicWindowCovering: public CommandClass
 	{
 	public:

@@ -34,6 +34,8 @@ namespace OpenZWave
 {
 	class ThreadImpl;
 
+	/** \brief Implements a platform-independent thread management class.
+	 */
 	class Thread
 	{
 	public:

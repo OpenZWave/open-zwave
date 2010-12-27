@@ -47,7 +47,7 @@ namespace OpenZWave
 	class ControllerReplication;
 	class Notification;
 
-	/** @brief The Driver class handles communication between OpenZWave 
+	/** \brief The Driver class handles communication between OpenZWave 
 	 *  and a device attached via a serial port (typically a controller).
 	 */
 	class Driver
@@ -88,10 +88,10 @@ namespace OpenZWave
 		static void DriverThreadEntryPoint( void* _context );
 		/**
 		 *  ThreadProc for driverThread.  This is where all the "action" takes place.  
-		 *  @n@n
+		 *  <p>
 		 *  First, the thread is initialized by calling Init().  If Init() fails, it will be retried 
 		 *  every 5 seconds for the first two minutes and every 30 seconds thereafter.
-		 *  @n@n
+		 *  <p>
 		 *  After the thread is successfully initialized, the thread enters a loop with the
 		 *  following elements:
 		 *  - Confirm that m_exit is still false (or exit from the thread if it is true)
@@ -108,7 +108,7 @@ namespace OpenZWave
 		/**
 		 *  Initialize the controller.  Open the specified serial port, start the serialThread 
 		 *  and pollThread, then send a NAK to the device [presumably to flush it].
-		 *  @n@n
+		 *  <p>
 		 *  Then queue the commands to retrieve the Z-Wave interface:
 		 *  - Get version
 		 *  - Get home and node IDs
@@ -120,11 +120,13 @@ namespace OpenZWave
 		 */
 		bool Init( uint32 _attempts );
 
-		Thread*					m_driverThread;		/**< Thread for reading from the Z-Wave controller, and for creating and managing the other threads for sending, polling etc. */
-		Event*					m_wakeEvent;		/**< Event that will be signalled when we should check for new work */
-		Event*					m_exitEvent;		/**< Event that will be signalled when the application is exiting */
-		bool					m_exit;				/**< Flag that is set when the application is exiting. */
-		bool					m_init;				/**< Set to true once the driver has been initialised */
+		Thread*					m_driverThread;			/**< Thread for reading from the Z-Wave controller, and for creating and managing the other threads for sending, polling etc. */
+		Event*					m_wakeEvent;			/**< Event that will be signalled when we should check for new work */
+		Event*					m_exitEvent;			/**< Event that will be signalled when the application is exiting */
+		bool					m_exit;					/**< Flag that is set when the application is exiting. */
+		bool					m_init;					/**< Set to true once the driver has been initialised */
+		bool					m_awakeNodesQueried;	/**< Set to true once the driver has polled all awake nodes */
+		bool					m_allNodesQueried;		/**< Set to true once the driver has polled all nodes */
 
 	//-----------------------------------------------------------------------------
 	//	Configuration
@@ -231,7 +233,7 @@ namespace OpenZWave
 		 *  variables tracking the message's callback ID (m_expectedCallbackId), expected reply
 		 *  (m_expectedReply) and expected command class ID (m_expectedCommandClassId).  It also
 		 *  sets m_waitingForAck to true and increments the message's send attempts counter.
-		 *  @n@n
+		 *  <p>
 		 *  If there are no messages in the send queue, then SendMsg checks the query queue to
 		 *  see if there are any outstanding queries that can be processed (target node not asleep).
 		 *  If so, it retrieves the Node object that needs to be queried and calls that node's
@@ -266,10 +268,10 @@ namespace OpenZWave
 		void HandleMemoryGetIdResponse( uint8* _data );
 		/**
 		 *  Process a response to a FUNC_ID_SERIAL_API_GET_INIT_DATA request.
-		 *  @n@n
+		 *  <p>
 		 *  The response message contains a bitmap identifying which of the 232 possible nodes
 		 *  in the network are actually present.  These bitmap values are compared with the
-		 *  node map (read in from TODOxxx.xml) to see if the node has already been registered
+		 *  node map (read in from zwcfg_0x[homeid].xml) to see if the node has already been registered
 		 *  by the OpenZWave library.  If it has (the log will show it as "Known") and this is 
 		 *  the first time this message was sent (m_init is false), then AddNodeQuery() is called
 		 *  to retrieve its current state.  If this is a "New" node to OpenZWave, then InitNode()

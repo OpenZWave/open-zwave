@@ -35,6 +35,8 @@ namespace OpenZWave
 {
 	class SerialPortImpl;
 
+	/** \brief Implements a platform-independent serial port access class.
+	 */
 	class SerialPort
 	{
 	public:

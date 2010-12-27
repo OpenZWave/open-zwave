@@ -36,6 +36,8 @@ namespace OpenZWave
 {
 	class ValueByte;
 
+	/** \brief Implements COMMAND_CLASS_SENSOR_ALARM (0x9c), a Z-Wave device command class.
+	 */
 	class SensorAlarm: public CommandClass
 	{
 	public:

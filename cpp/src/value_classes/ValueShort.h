@@ -39,6 +39,8 @@ namespace OpenZWave
 	class Msg;
 	class Node;
 
+	/** \brief Short value sent to/received from a node.
+	 */
 	class ValueShort: public Value
 	{
 	public:

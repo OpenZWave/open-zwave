@@ -32,6 +32,8 @@
 
 namespace OpenZWave
 {
+	/** \brief Implements COMMAND_CLASS_PROPRIETARY (0x88), a Z-Wave device command class.
+	 */
 	class Proprietary: public CommandClass
 	{
 	public:

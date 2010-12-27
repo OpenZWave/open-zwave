@@ -32,6 +32,8 @@
 
 namespace OpenZWave
 {
+	/** \brief Windows-specific implementation of the Log class.
+	 */
 	class LogImpl
 	{
 	private:

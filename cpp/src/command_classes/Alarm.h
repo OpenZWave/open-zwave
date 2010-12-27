@@ -34,19 +34,26 @@ namespace OpenZWave
 {
 	class ValueByte;
 
+	/** \brief Implements COMMAND_CLASS_ALARM (0x71), a Z-Wave device command class.
+	 */
 	class Alarm: public CommandClass
 	{
 	public:
 		static CommandClass* Create( uint32 const _homeId, uint8 const _nodeId ){ return new Alarm( _homeId, _nodeId ); }
 		virtual ~Alarm(){}
 
+		/** \brief Get command class ID (1 byte) identifying this command class. */
 		static uint8 const StaticGetCommandClassId(){ return 0x71; }		
+		/** \brief Get a string containing the name of this command class. */
 		static string const StaticGetCommandClassName(){ return "COMMAND_CLASS_ALARM"; }
 
 		// From CommandClass
 		virtual bool RequestState( uint32 const _requestFlags );
-		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }		
+		/** \brief Get command class ID (1 byte) identifying this command class. (Inherited from CommandClass) */
+		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }
+		/** \brief Get a string containing the name of this command class. (Inherited from CommandClass) */
 		virtual string const GetCommandClassName()const{ return StaticGetCommandClassName(); }
+		/** \brief Handle a response to a message associated with this command class. (Inherited from CommandClass) */
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );
 
 	protected:
@@ -55,7 +62,7 @@ namespace OpenZWave
 	private:
 		Alarm( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
 
-		ValueInstances<ValueByte>	m_type;
+		ValueInstances<ValueByte>	m_type;	
 		ValueInstances<ValueByte>	m_level;
 	};
 

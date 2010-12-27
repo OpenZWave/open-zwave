@@ -37,6 +37,8 @@
 
 namespace OpenZWave
 {
+	/** \brief Windows-specific implementation of the SerialPort class.
+	 */
 	class SerialPortImpl
 	{
 	private:

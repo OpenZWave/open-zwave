@@ -305,7 +305,7 @@ void CommandClass::AppendValue
 
 	for( int32 i=size-1; i>=0; --i )
 	{
-		_msg->Append( (uint8)((iValue >> (size<<3)) & 0xff) );
+		_msg->Append( (uint8)((iValue >> (i<<3)) & 0xff) );
 	}
 }
 
