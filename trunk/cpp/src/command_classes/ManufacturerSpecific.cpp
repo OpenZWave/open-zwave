@@ -97,10 +97,12 @@ bool ManufacturerSpecific::HandleMsg
 			LoadProductXML();
 		}
 
+		// first two bytes are manufacturer id code
 		uint16 manufacturerId = (((uint16)_data[1])<<8) | (uint16)_data[2];
 		snprintf( str, sizeof(str), "Unknown: id=%.4x", manufacturerId );
 		string manufacturerName = str;
 
+		// next four are product type and product id
 		uint16 productType = (((uint16)_data[3])<<8) | (uint16)_data[4];
 		uint16 productId = (((uint16)_data[5])<<8) | (uint16)_data[6];
 
