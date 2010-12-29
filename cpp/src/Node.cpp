@@ -166,6 +166,7 @@ void Node::AdvanceQueries
 			}
 			case QueryStage_ProtocolInfo:
 			{
+				// determines, among other things, whether this node is a listener, its maximum baud rate and its device classes
 				Log::Write( "Node %d: QueryStage_ProtocolInfo", m_nodeId );
 				Msg* msg = new Msg( "Get Node Protocol Info", m_nodeId, REQUEST, FUNC_ID_ZW_GET_NODE_PROTOCOL_INFO, false );
 				msg->Append( m_nodeId );	
@@ -175,6 +176,7 @@ void Node::AdvanceQueries
 			}
 			case QueryStage_Neighbors:
 			{
+				// retrieves this node's neighbors and stores the neighbor bitmap in the node object
 				Log::Write( "Node %d: QueryStage_Neighbors", m_nodeId );
 				GetDriver()->RequestNodeNeighbors( m_nodeId );
 				m_queryPending = true;
@@ -185,14 +187,18 @@ void Node::AdvanceQueries
 				// For sleeping devices other than controllers, we need to defer the usual requests until
 				// we have told the device to send it's wake-up notifications to the PC controller.
 				WakeUp* wakeUp = static_cast<WakeUp*>( GetCommandClass( WakeUp::StaticGetCommandClassId() ) );
+
+				// if this device is a "sleeping device" and not a controller
 				if( wakeUp && ( GetBasic() >= 0x03 ) )
 				{
+					// start the process of requesting node state from this sleeping device
 					Log::Write( "Node %d: QueryStage_WakeUp", m_nodeId );
 					wakeUp->Init();
 					m_queryPending = true;
 				}
 				else
 				{
+					// this is not a sleeping device, so move to the NodeInfo stage
 					m_queryStage = QueryStage_NodeInfo;
 					m_queryRetries = 0;
 				}
@@ -200,6 +206,7 @@ void Node::AdvanceQueries
 			}
 			case QueryStage_NodeInfo:
 			{
+				// obtain from the node a list of command classes that it 1) supports and 2) controls (separated by a mark in the buffer)
 				Log::Write( "Node %d: QueryStage_NodeInfo", m_nodeId );
 				Msg* msg = new Msg( "Request Node Info", m_nodeId, REQUEST, FUNC_ID_ZW_REQUEST_NODE_INFO, false, true, FUNC_ID_ZW_APPLICATION_UPDATE );
 				msg->Append( m_nodeId );	
@@ -209,6 +216,7 @@ void Node::AdvanceQueries
 			}
 			case QueryStage_ManufacturerSpecific:
 			{
+				// Obtain manufacturer, product type and product ID code from the node device
 				// Manufacturer Specific data is requested before the other command class data so 
 				// that we can modify the supported command classes list through the product XML files.
 				ManufacturerSpecific* cc = static_cast<ManufacturerSpecific*>( GetCommandClass( ManufacturerSpecific::StaticGetCommandClassId() ) );
@@ -226,14 +234,16 @@ void Node::AdvanceQueries
 			}
 			case QueryStage_Versions:
 			{
+				// Get the version information (if the device supports COMMAND_CLASS_VERSION
 				Version* vcc = static_cast<Version*>( GetCommandClass( Version::StaticGetCommandClassId() ) );
+				// if this node supports VERSION
 				if( vcc )
 				{
 					Log::Write( "Node %d: QueryStage_Versions", m_nodeId );
 
 					for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
 					{
-						// Get the command class version data, one at a time
+						// Get the version for each supported command class
 						if( vcc->RequestCommandClassVersion( it->second ) )
 						{
 							m_queryPending = true;
@@ -241,6 +251,7 @@ void Node::AdvanceQueries
 						}
 					}
 				}
+				// advance to Instances stage when finished
 				if( !m_queryPending )
 				{
 					m_queryStage = QueryStage_Instances;
@@ -250,12 +261,12 @@ void Node::AdvanceQueries
 			}
 			case QueryStage_Instances:
 			{
+				// if the device at this node supports multiple instances, obtain a list of these instances
 				MultiInstance* micc = static_cast<MultiInstance*>( GetCommandClass( MultiInstance::StaticGetCommandClassId() ) );
 				if( micc )
 				{
 					Log::Write( "Node %d: QueryStage_Instances", m_nodeId );
 
-					// Get the instance count for each command class one at a time
 					for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
 					{
 						if( micc->RequestInstances( it->second ) )
@@ -265,6 +276,7 @@ void Node::AdvanceQueries
 						}
 					}
 				}
+				// when done, advance to the Static stage
 				if( !m_queryPending )
 				{
 					m_queryStage = QueryStage_Static;
@@ -274,7 +286,8 @@ void Node::AdvanceQueries
 			}
 			case QueryStage_Static:
 			{
-				// Request the static values from the command classes in turn
+				// Request any other static values associated with each command class supported by this node
+				// examples are supported thermostat operating modes, setpoints and fan modes
 				for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
 				{
 					m_queryPending |= it->second->RequestState( CommandClass::RequestFlag_Static );
@@ -286,6 +299,7 @@ void Node::AdvanceQueries
 				}
 				else
 				{
+					// when all (if any) static information has been retrieved, advance to the Associations stage
 					m_queryStage = QueryStage_Associations;
 					m_queryRetries = 0;
 				}
@@ -293,6 +307,7 @@ void Node::AdvanceQueries
 			}
 			case QueryStage_Associations:
 			{
+				// if this device supports COMMAND_CLASS_ASSOCIATION, determine to which groups this node belong
 				Association* acc = static_cast<Association*>( GetCommandClass( Association::StaticGetCommandClassId() ) );
 				if( acc )
 				{
@@ -302,6 +317,7 @@ void Node::AdvanceQueries
 				}
 				else
 				{
+					// if this device doesn't support Associations, move to retrieve Session information
 					m_queryStage = QueryStage_Session;
 					m_queryRetries = 0;
 				}
@@ -310,11 +326,13 @@ void Node::AdvanceQueries
 			case QueryStage_Session:
 			{
 				// Request the session values from the command classes in turn
+				// examples of Session information are: current thermostat setpoints, node names and climate control schedules
 				Log::Write( "Node %d: QueryStage_Session", m_nodeId );
 				for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
 				{
 					it->second->RequestState( CommandClass::RequestFlag_Session );
 				}
+				// advance to Dynamic information stage
 				m_queryStage = QueryStage_Dynamic;
 				m_queryRetries = 0;
 				break;
@@ -322,6 +340,7 @@ void Node::AdvanceQueries
 			case QueryStage_Dynamic:
 			{
 				// Request the dynamic values from the node, that can change at any time
+				// Examples include on/off state, heating mode, temperature, etc.
 				Log::Write( "Node %d: QueryStage_Dynamic", m_nodeId );
 				for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
 				{
@@ -408,6 +427,18 @@ void Node::GoBackToQueryStage
 		m_queryStage = _stage;
 		m_queryPending = false;
 	}
+}
+
+//-----------------------------------------------------------------------------
+// <Node::GetQueryStageName>
+// Gets the query stage name
+//-----------------------------------------------------------------------------
+string Node::GetQueryStageName
+(
+	QueryStage const _stage
+)
+{
+	return c_queryStageNames[_stage];
 }
 
 //-----------------------------------------------------------------------------
@@ -930,7 +961,7 @@ void Node::ApplicationCommandHandler
 
 //-----------------------------------------------------------------------------
 // <Node::GetCommandClass>
-// Get the specified command class object
+// Get the specified command class object if supported, otherwise NULL
 //-----------------------------------------------------------------------------
 CommandClass* Node::GetCommandClass
 (

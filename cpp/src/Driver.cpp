@@ -53,15 +53,15 @@ using namespace OpenZWave;
 
 static char const* c_libraryTypeNames[] = 
 {
-	"Unknown",
-	"Static Controller",
-	"Controller",       
-	"Enhanced Slave",   
-	"Slave",            
-	"Installer",
-	"Routing Slave",
-	"Bridge Controller",    
-	"Device Under Test"
+	"Unknown",					// library type 0
+	"Static Controller",		// library type 1
+	"Controller",       		// library type 2
+	"Enhanced Slave",   		// library type 3
+	"Slave",            		// library type 4
+	"Installer",				// library type 5
+	"Routing Slave",			// library type 6
+	"Bridge Controller",    	// library type 7
+	"Device Under Test"			// library type 8
 };
 
 //-----------------------------------------------------------------------------
@@ -256,6 +256,16 @@ void Driver::DriverThreadProc
 									// Give up
 									Log::Write( "ERROR: Dropping command, expected response not received after three attempts");
 									RemoveMsg();
+
+									uint8 targetNode = m_sendQueue.front()->GetTargetNodeId();
+									if( Node* node = GetNodeUnsafe( targetNode ) )
+									{
+										if (node->m_queryPending)
+										{
+											Log::Write( "Command was dropped during node query stage %s, advancing to next stage", node->GetQueryStageName( node->m_queryStage ).c_str() );
+											node->QueryStageComplete(node->m_queryStage);
+										}
+									}
 								}
 								else
 								{
@@ -281,6 +291,11 @@ void Driver::DriverThreadProc
 												{
 													Log::Write( "ERROR: Dropping command, node did not reply");
 													RemoveMsg();
+													if (node->m_queryPending)
+													{
+														Log::Write( "Command was dropped during node query stage %s, advancing to next stage", node->GetQueryStageName( node->m_queryStage ).c_str() );
+														node->QueryStageComplete(node->m_queryStage);
+													}
 												}
 											}
 											else
@@ -1706,8 +1721,18 @@ void Driver::HandleGetRoutingInfoResponse
 
 	if( Node* node = GetNode( m_controllerCommandNode ) )
 	{
+		// copy the 29-byte bitmap received (29*8=232 possible nodes) into this node's neighbors member variable
 		memcpy( node->m_neighbors, &_data[2], 29 );
 		ReleaseNodes();
+#ifdef _DEBUG
+		Log::Write( "Neighbors to this node are:" );
+		for( int by=0; by<29; by++ )
+			for( int bi=0; bi<8; bi++ )
+			{
+				if( (_data[2+by] & (0x01<<bi)) )
+					Log::Write( "\tNode %d", (by<<3)+bi+1 );
+			}
+#endif
 
 		// Can do this unsafe
 		node->QueryStageComplete( Node::QueryStage_Neighbors );
@@ -2310,7 +2335,7 @@ bool Driver::HandleApplicationUpdateRequest
 		{
 			Log::Write( "FUNC_ID_ZW_APPLICATION_UPDATE: UPDATE_STATE_NODE_INFO_REQ_FAILED received" );
 	
-			// Note: Unhelpfully, the nodeId is always zero in this message.  Hwoever, we
+			// Note: Unhelpfully, the nodeId is always zero in this message.  However, we
 			// only ever do this request from a node query, so we can use that instead.
 			Node* node = GetNodeUnsafe( GetCurrentNodeQuery() );
 			if( node )
@@ -2607,6 +2632,7 @@ void Driver::PollThreadProc()
 					if( requestState )
 					{
 						// Request an update of the value
+						Log::Write( "Polling dynamic information from node %d",nodeId );
 						AddNodeQuery( nodeId, Node::QueryStage_Dynamic );
 					}
 
@@ -3364,7 +3390,7 @@ void Driver::RequestNodeNeighbors
 	// the reply will be copied into the relevant Node object for later use.
 	m_controllerCommandNode = _nodeId;
 	Log::Write( "Requesting routing info (neighbor list) for Node %d", _nodeId );
-	Msg* msg = new Msg( "Get Routing Info", _nodeId, REQUEST, FUNC_ID_ZW_GET_ROUTING_INFO, false, false );
+	Msg* msg = new Msg( "Get Routing Info", _nodeId, REQUEST, FUNC_ID_ZW_GET_ROUTING_INFO, false );
 	msg->Append( _nodeId );
 	msg->Append( 1 );		// Exclude bad links
 	msg->Append( 1 );		// Exclude non-routing neighbors

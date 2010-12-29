@@ -96,10 +96,10 @@ namespace OpenZWave
 			QueryStage_None,					/**< Query process hasn't started for this node */
 			QueryStage_ProtocolInfo,			/**< Retrieve protocol information */
 			QueryStage_Neighbors,				/**< Retrieve node neighbor list */
-			QueryStage_WakeUp,					/**< Wake up */
-			QueryStage_NodeInfo,				/**< Retrieve node info ??? */
-			QueryStage_ManufacturerSpecific,	/**< Retrieve manufacturer-specific information */
-			QueryStage_Versions,				/**< Retrieve software/hardware version information */
+			QueryStage_WakeUp,					/**< Start wake up process if a sleeping node*/
+			QueryStage_NodeInfo,				/**< Retrieve info about supported, controlled command classes */
+			QueryStage_ManufacturerSpecific,	/**< Retrieve manufacturer name and product ids */
+			QueryStage_Versions,				/**< Retrieve version information */
 			QueryStage_Instances,				/**< Retrieve information about running instances ??? */
 			QueryStage_Static,					/**< Retrieve static information (doesn't change) */
 			QueryStage_Associations,			/**< Retrieve information about associations */
@@ -107,6 +107,7 @@ namespace OpenZWave
 			QueryStage_Dynamic,					/**< Retrieve dynamic information (changes frequently) */
 			QueryStage_Complete					/**< Query process is completed for this node */
 		};
+
 
 		/**
 		 * This function advances the query process (see Remarks below for more detail on the 
@@ -147,7 +148,13 @@ namespace OpenZWave
 		 * \see m_queryStage, m_queryPending
 		 */
 		void GoBackToQueryStage( QueryStage const _stage );									// Used to move back to repeat from an earlier stage. 
-
+		/**
+		 * Returns the specified query stage string.
+		 * \param _stage The query stage.
+		 * \return Specified query stage string.
+		 * \see m_queryStage, m_queryPending
+		 */
+		string GetQueryStageName( QueryStage const _stage );
 		/**
 		 *  This function handles a response to the FUNC_ID_ZW_GET_NODE_PROTOCOL_INFO
 		 *  command for this node.  If protocol information has already been retrieved
@@ -261,9 +268,9 @@ namespace OpenZWave
 	//-----------------------------------------------------------------------------
 	public:
 		/**
-		 * This function retrieves a pointer to the requested command class object.
+		 * This function retrieves a pointer to the requested command class object (if supported by this node).
 		 * \param _commandClassId Class ID (a single byte value) identifying the command class requested.
-		 * \return Pointer to the requested CommandClass object.
+		 * \return Pointer to the requested CommandClass object if supported, otherwise NULL.
 		 * \see CommandClass, m_commandClassMap
 		 */
 		CommandClass* GetCommandClass( uint8 const _commandClassId )const;
