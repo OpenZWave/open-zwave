@@ -255,9 +255,9 @@ void Driver::DriverThreadProc
 								{
 									// Give up
 									Log::Write( "ERROR: Dropping command, expected response not received after three attempts");
+									uint8 targetNode = msg->GetTargetNodeId();
 									RemoveMsg();
 
-									uint8 targetNode = msg->GetTargetNodeId();
 									if( Node* node = GetNodeUnsafe( targetNode ) )
 									{
 										if (node->m_queryPending)
