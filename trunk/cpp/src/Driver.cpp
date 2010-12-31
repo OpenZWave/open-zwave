@@ -2803,7 +2803,7 @@ uint8 Driver::GetCurrentNodeQuery
 	if( !m_allNodesQueried )
 		if( nodeId == 0xff )	// no node was found (either we're done or all remaining nodes to query are asleep)
 		{
-			if( sleepingNodes ) 
+			if( sleepingNodes && !m_awakeNodesQueried ) 
 			{
 				Log::Write( "Node query processing complete except for sleeping nodes." );
 				Notification* notification = new Notification( Notification::Type_AwakeNodesQueried );
