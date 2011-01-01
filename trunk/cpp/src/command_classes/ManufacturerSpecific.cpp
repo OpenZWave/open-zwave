@@ -130,8 +130,18 @@ bool ManufacturerSpecific::HandleMsg
 		if( Node* node = GetNodeUnsafe() )
 		{
 			// Set the values into the node
-			node->SetManufacturerName( manufacturerName );
-			node->SetProductName( productName );
+
+			// Only set the manufacturer and product name if they are
+			// empty - we don't want to overwrite any user defined names.
+			if( node->GetManufacturerName() == "" )
+			{
+				node->SetManufacturerName( manufacturerName );
+			}
+
+			if( node->GetProductName() == "" )
+			{
+				node->SetProductName( productName );
+			}
 
 			snprintf( str, sizeof(str), "%.4x", manufacturerId );
 			node->SetManufacturerId( str );

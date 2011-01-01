@@ -51,6 +51,15 @@
 
 using namespace OpenZWave;
 
+// Version numbering for saved configurations. Any change that will invalidate
+// previously saved configurations must be accompanied by an increment to the
+// version number, and a comment explaining the date of, and reason for, the change.
+//
+// Version 01: 12-31-2010 - Introduced config version numbering due to ValueID format change.
+//
+uint32 const c_configVersion = 1;
+
+
 static char const* c_libraryTypeNames[] = 
 {
 	"Unknown",					// library type 0
@@ -435,6 +444,21 @@ bool Driver::ReadConfig
 
 	TiXmlElement const* driverElement = doc.RootElement();
 
+	// Version
+	if( TIXML_SUCCESS == driverElement->QueryIntAttribute( "version", &intVal ) )
+	{
+		if( (uint32)intVal != c_configVersion )
+		{
+			Log::Write( "Driver::ReadConfig - %s is from an older version of OpenZWave and cannot be loaded.", filename.c_str() );
+			return false;
+		}
+	}
+	else
+	{
+		Log::Write( "Driver::ReadConfig - %s is from an older version of OpenZWave and cannot be loaded.", filename.c_str() );
+		return false;
+	}
+
 	// Home ID
 	char const* homeIdStr = driverElement->Attribute( "home_id" );
 	if( homeIdStr )
@@ -533,6 +557,9 @@ void Driver::WriteConfig
 	TiXmlElement* driverElement = new TiXmlElement( "Driver" );
 	doc.LinkEndChild( decl );
 	doc.LinkEndChild( driverElement );  
+
+	snprintf( str, sizeof(str), "%d", c_configVersion );
+	driverElement->SetAttribute( "version", str );
 
 	snprintf( str, sizeof(str), "0x%.8x", m_homeId );
 	driverElement->SetAttribute( "home_id", str );
@@ -1297,25 +1324,24 @@ void Driver::HandleGetControllerCapabilitiesResponse
 	Log::Write( "Received reply to FUNC_ID_ZW_GET_CONTROLLER_CAPABILITIES:" );
 
 	char str[256];
-	snprintf( str, 256, "    The PC controller is a %s%s%s controller%s", 
-		( m_controllerCaps & ControllerCaps_Secondary ) ? "secondary" : "primary",
-		( m_controllerCaps & ControllerCaps_SIS ) ? ", inclusion," : "",
-		( m_controllerCaps & ControllerCaps_SUC ) ? " static update controller (SUC)" : " controller",
-		( m_controllerCaps & ControllerCaps_OnOtherNetwork ) ? " which is using a Home ID from another network." : "." );
-
-	Log::Write( str );
-
 	if( m_controllerCaps & ControllerCaps_SIS )
 	{
-		Log::Write( "    There is a SUC ID Server (SIS) in this network" );
-		if( m_controllerCaps & ControllerCaps_RealPrimary )
-		{
-			Log::Write( "    and the PC controller was the original primary before the SIS was added." );
-		}
+		Log::Write( "    There is a SUC ID Server (SIS) in this network." );
+		snprintf( str, 256, "    The PC controller is an inclusion %s%s%s", 
+			( m_controllerCaps & ControllerCaps_SUC ) ? " static update controller (SUC)" : " controller",
+			( m_controllerCaps & ControllerCaps_OnOtherNetwork ) ? " which is using a Home ID from another network" : "",
+			( m_controllerCaps & ControllerCaps_RealPrimary ) ? " and was the original primary before the SIS was added." : "." );
+		Log::Write( str );
+
 	}
 	else
 	{
 		Log::Write( "    There is no SUC ID Server (SIS) in this network." );
+		snprintf( str, 256, "    The PC controller is a %s%s%s", 
+			( m_controllerCaps & ControllerCaps_Secondary ) ? "secondary" : "primary",
+			( m_controllerCaps & ControllerCaps_SUC ) ? " static update controller (SUC)" : " controller",
+			( m_controllerCaps & ControllerCaps_OnOtherNetwork ) ? " which is using a Home ID from another network." : "." );
+		Log::Write( str );
 	}
 }
 
@@ -2321,16 +2347,38 @@ bool Driver::HandleApplicationUpdateRequest
 
 	switch( _data[2] )
 	{
-		case UPDATE_STATE_NODE_INFO_RECEIVED:
+		case UPDATE_STATE_SUC_ID:
 		{
-			Log::Write( "UPDATE_STATE_NODE_INFO_RECEIVED from node %d", nodeId );
-			if( Node* node = GetNodeUnsafe( nodeId ) )
-			{
-				node->UpdateNodeInfo( &_data[8], _data[4] - 3 );
-			}
+			Log::Write( "UPDATE_STATE_SUC_ID from node %d", nodeId );
 			break;
 		}
+		case UPDATE_STATE_DELETE_DONE:
+		{
+			Log::Write( "** Network change **: Z-Wave node %d was removed", nodeId );
 
+			Notification* notification = new Notification( Notification::Type_NodeRemoved );
+			notification->SetHomeAndNodeIds( m_homeId, nodeId );
+			QueueNotification( notification ); 
+
+			LockNodes();
+			delete m_nodes[nodeId];
+			m_nodes[nodeId] = NULL;
+			ReleaseNodes();
+			break;
+		}
+		case UPDATE_STATE_NEW_ID_ASSIGNED:
+		{
+			Log::Write( "** Network change **: ID %d was assigned to a new Z-Wave node", nodeId );
+			
+			// Request the node protocol info (also removes any existing node and creates a new one)
+			InitNode( nodeId );		
+			break;
+		}
+		case UPDATE_STATE_ROUTING_PENDING:
+		{
+			Log::Write( "UPDATE_STATE_ROUTING_PENDING from node %d", nodeId );
+			break;
+		}
 		case UPDATE_STATE_NODE_INFO_REQ_FAILED:
 		{
 			Log::Write( "FUNC_ID_ZW_APPLICATION_UPDATE: UPDATE_STATE_NODE_INFO_REQ_FAILED received" );
@@ -2353,26 +2401,18 @@ bool Driver::HandleApplicationUpdateRequest
 			}
 			break;
 		}
-		case UPDATE_STATE_NEW_ID_ASSIGNED:
+		case UPDATE_STATE_NODE_INFO_REQ_DONE:
 		{
-			Log::Write( "** Network change **: ID %d was assigned to a new Z-Wave node", nodeId );
-			
-			// Request the node protocol info (also removes any existing node and creates a new one)
-			InitNode( nodeId );		
+			Log::Write( "UPDATE_STATE_NODE_INFO_REQ_DONE from node %d", nodeId );
 			break;
 		}
-		case UPDATE_STATE_DELETE_DONE:
+		case UPDATE_STATE_NODE_INFO_RECEIVED:
 		{
-			Log::Write( "** Network change **: Z-Wave node %d was removed", nodeId );
-
-			Notification* notification = new Notification( Notification::Type_NodeRemoved );
-			notification->SetHomeAndNodeIds( m_homeId, nodeId );
-			QueueNotification( notification ); 
-
-			LockNodes();
-			delete m_nodes[nodeId];
-			m_nodes[nodeId] = NULL;
-			ReleaseNodes();
+			Log::Write( "UPDATE_STATE_NODE_INFO_RECEIVED from node %d", nodeId );
+			if( Node* node = GetNodeUnsafe( nodeId ) )
+			{
+				node->UpdateNodeInfo( &_data[8], _data[4] - 3 );
+			}
 			break;
 		}
 	}
@@ -3511,7 +3551,7 @@ bool Driver::BeginControllerCommand
 		{
 			m_controllerCommandNode = _nodeId;
 			Log::Write( "RequestNetworkUpdate" );
-			Msg* msg = new Msg( "RequestNetworkUpdate", _nodeId, REQUEST, FUNC_ID_ZW_REQUEST_NETWORK_UPDATE, true );
+			Msg* msg = new Msg( "RequestNetworkUpdate", 0xff, REQUEST, FUNC_ID_ZW_REQUEST_NETWORK_UPDATE, true );
 			SendMsg( msg );
 			break;
 		}

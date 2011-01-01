@@ -136,7 +136,7 @@ void ControllerReplication::SendNextData
 	// to hold any associations.
 
 	// For now, we stop the replication process.
-	Msg* msg = new Msg( "Add Node Stop", 0xff, REQUEST, m_funcId, true );
+	Msg* msg = new Msg( "Replication Stop", 0xff, REQUEST, m_funcId, true );
 	msg->Append( ADD_NODE_STOP );
 	GetDriver()->SendMsg( msg );
 }

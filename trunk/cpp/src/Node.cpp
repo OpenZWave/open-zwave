@@ -912,7 +912,7 @@ void Node::SetNodeName
 	if( NodeNaming* cc = static_cast<NodeNaming*>( GetCommandClass( NodeNaming::StaticGetCommandClassId() ) ) )
 	{
 		// The node supports naming, so we try to write the name into the device
-		cc->Set( _nodeName );
+		cc->SetName( _nodeName );
 	}
 }
 
@@ -926,6 +926,11 @@ void Node::SetLocation
 )
 {
 	m_location = _location;
+	if( NodeNaming* cc = static_cast<NodeNaming*>( GetCommandClass( NodeNaming::StaticGetCommandClassId() ) ) )
+	{
+		// The node supports naming, so we try to write the location into the device
+		cc->SetLocation( _location );
+	}
 }
 
 //-----------------------------------------------------------------------------
