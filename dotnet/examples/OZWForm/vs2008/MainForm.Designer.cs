@@ -75,11 +75,11 @@
             this.NodeGridView.Location = new System.Drawing.Point(13, 37);
             this.NodeGridView.MultiSelect = false;
             this.NodeGridView.Name = "NodeGridView";
-            this.NodeGridView.ReadOnly = true;
-            this.NodeGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.NodeGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.NodeGridView.Size = new System.Drawing.Size(609, 343);
             this.NodeGridView.TabIndex = 0;
             this.NodeGridView.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.NodeGridView_CellMouseDown);
+            this.NodeGridView.CellParsing += new System.Windows.Forms.DataGridViewCellParsingEventHandler(this.NodeGridView_CellParsing);
             // 
             // NodeContextMenuStrip
             // 
@@ -97,7 +97,7 @@
             this.toolStripSeparator6,
             this.propertiesToolStripMenuItem});
             this.NodeContextMenuStrip.Name = "NodeContextMenuStrip";
-            this.NodeContextMenuStrip.Size = new System.Drawing.Size(243, 242);
+            this.NodeContextMenuStrip.Size = new System.Drawing.Size(243, 220);
             // 
             // PowerOnToolStripMenuItem
             // 

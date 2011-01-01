@@ -49,6 +49,7 @@ namespace OpenZWave
 		friend class ValueStore;
 		friend class Basic;
 		friend class ManufacturerSpecific;
+		friend class NodeNaming;
 
 	public:
 		/** 

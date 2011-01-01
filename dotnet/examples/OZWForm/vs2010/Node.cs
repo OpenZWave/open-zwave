@@ -21,6 +21,20 @@ namespace OZWForm
             set { m_homeId = value; }
         }
 
+        private String m_name = "";
+        public String Name
+        {
+            get { return m_name; }
+            set { m_name = value; }
+        }
+
+        private String m_location = "";
+        public String Location
+        {
+            get { return m_location; }
+            set { m_location = value; }
+        }
+
         private String m_label = "";
         public String Label
         {

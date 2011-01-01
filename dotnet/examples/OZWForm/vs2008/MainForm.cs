@@ -52,6 +52,26 @@ namespace OZWForm
             column.ToolTipText = "The Z-Wave node ID of the device.\nThis value is not editable.";
             NodeGridView.Columns.Add(column);
 
+            // Location
+            column = new DataGridViewTextBoxColumn();
+            column.DataPropertyName = "Location";
+            column.Name = "Location";
+            column.Frozen = false;
+            column.Resizable = DataGridViewTriState.True;
+            column.SortMode = DataGridViewColumnSortMode.NotSortable;
+            column.ToolTipText = "The user-defined location of the Z-Wave device.";
+            NodeGridView.Columns.Add(column);
+
+            // Name
+            column = new DataGridViewTextBoxColumn();
+            column.DataPropertyName = "Name";
+            column.Name = "Name";
+            column.Frozen = false;
+            column.Resizable = DataGridViewTriState.True;
+            column.SortMode = DataGridViewColumnSortMode.NotSortable;
+            column.ToolTipText = "The user-defined name for the Z-Wave device.";
+            NodeGridView.Columns.Add(column);
+
             // Device Type
             column = new DataGridViewTextBoxColumn();
             column.DataPropertyName = "Label";
@@ -120,7 +140,6 @@ namespace OZWForm
             column = new DataGridViewTextBoxColumn();
             column.DataPropertyName = "Level";
             column.Name = "Level";
-            column.ReadOnly = false;
             column.Frozen = false;
             column.Resizable = DataGridViewTriState.True;
             column.SortMode = DataGridViewColumnSortMode.NotSortable;
@@ -131,7 +150,6 @@ namespace OZWForm
             DataGridViewButtonColumn buttonColumn = new DataGridViewButtonColumn();
             buttonColumn.DataPropertyName = "ButtonText";
             buttonColumn.Name = "Power";
-            buttonColumn.ReadOnly = false;
             buttonColumn.Frozen = false;
             buttonColumn.Resizable = DataGridViewTriState.True;
             buttonColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
@@ -157,7 +175,7 @@ namespace OZWForm
             m_manager.OnNotification += new ManagedNotificationsHandler(NotificationHandler);
 
             // Add a driver
-            m_manager.AddDriver(@"\\.\COM3");
+            m_manager.AddDriver(@"\\.\COM4");
         }
 
         public void NotificationHandler(ZWNotification notification)
@@ -246,6 +264,8 @@ namespace OZWForm
                         {
                             node.Manufacturer = m_manager.GetNodeManufacturerName(m_homeId, node.ID);
                             node.Product = m_manager.GetNodeProductName(m_homeId, node.ID);
+                            node.Location = m_manager.GetNodeLocation(m_homeId, node.ID);
+                            node.Name = m_manager.GetNodeName(m_homeId, node.ID);
                         }
                         break;
                     }
@@ -416,6 +436,45 @@ namespace OZWForm
                 NodeForm dlg = new NodeForm( node );
                 dlg.ShowDialog(this);
                 dlg.Dispose();
+            }
+        }
+
+        private void NodeGridView_CellParsing(object sender, DataGridViewCellParsingEventArgs e)
+        {
+            if ((e.RowIndex < 0) || (e.ColumnIndex < 0))
+            {
+                // Invalid cell
+                return;
+            }
+
+            if (e.ColumnIndex == 1)
+            {
+                // Location
+                Byte nodeId = Convert.ToByte(NodeGridView.Rows[e.RowIndex].Cells["Node"].Value);
+                Node node = GetNode(m_homeId, nodeId);
+                if (node != null)
+                {
+                    String newLocation = e.Value.ToString();
+                    if (newLocation != node.Location)
+                    {
+                        m_manager.SetNodeLocation(m_homeId, node.ID, newLocation);
+                    }
+                }
+            }
+
+            if (e.ColumnIndex == 2)
+            {
+                // Name
+                Byte nodeId = Convert.ToByte(NodeGridView.Rows[e.RowIndex].Cells["Node"].Value);
+                Node node = GetNode(m_homeId, nodeId);
+                if (node != null)
+                {
+                    String newName = e.Value.ToString();
+                    if (newName != node.Name)
+                    {
+                        m_manager.SetNodeName(m_homeId, node.ID, newName);
+                    }
+                }
             }
         }
     }

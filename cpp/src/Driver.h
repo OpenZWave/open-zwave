@@ -61,6 +61,7 @@ namespace OpenZWave
 		friend class Association;
 		friend class Basic;
 		friend class ManufacturerSpecific;
+		friend class NodeNaming;
 		friend class WakeUp;
 		friend class Hail;
 
@@ -132,9 +133,9 @@ namespace OpenZWave
 	//	Configuration
 	//-----------------------------------------------------------------------------
 	private:
-		void RequestConfig();						/**< Get the network configuration from the Z-Wave network */
-		bool ReadConfig();							/**< Read the configuration from a file */
-		void WriteConfig();							/**< Save the configuration to a file */
+		void RequestConfig();							// Get the network configuration from the Z-Wave network
+		bool ReadConfig();								// Read the configuration from a file
+		void WriteConfig();								// Save the configuration to a file
 
 	//-----------------------------------------------------------------------------
 	//	Controller
