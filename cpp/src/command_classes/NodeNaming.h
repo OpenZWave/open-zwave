@@ -49,10 +49,14 @@ namespace OpenZWave
 		virtual string const GetCommandClassName()const{ return StaticGetCommandClassName(); }
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );
 
-		void Set( string const& _name );
+		void SetName( string const& _name );
+		void SetLocation( string const& _location );
 
 	private:
 		NodeNaming( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
+
+		string ExtractString( uint8 const* _data, uint32 const _length );
+		uint32 ConvertUFT16ToUTF8( uint16 _utf16, char* _buffer, uint32 pos );
 	};
 
 } // namespace OpenZWave

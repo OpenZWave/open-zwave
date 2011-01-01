@@ -131,16 +131,17 @@ namespace OpenZWave
 		 * information is exposed in case it is of interest.
 		 * \return the instance of the value's command class.
 	     */
-		uint8 GetInstance()const{ return( (uint8)( (m_id & 0x00003800) >> 11 ) ); }
+		uint8 GetInstance()const{ return( (uint8)( (m_id & 0x00003000) >> 12 ) ); }
 
 		/** 
-		 * Get the command class index.  The index is used to identify one of multiple
-		 * values created and managed by a command class.  Knowledge of command classes
-		 * is not required to use OpenZWave, but this information is exposed in case it
-		 * is of interest.
+		 * Get the value index.  The index is used to identify one of multiple
+		 * values created and managed by a command class.  In the case of configurable
+		 * parameters (handled by the configuration command class), the index is the
+		 * same as the parameter ID.  Knowledge of command classes is not required
+		 * to use OpenZWave, but this information is exposed in case it is of interest.
 		 * \return the value index within the command class.
 	     */
-		uint8 GetIndex()const{ return( (uint8)( (m_id & 0x000007f0) >> 4 ) ); }
+		uint8 GetIndex()const{ return( (uint8)( (m_id & 0x00000ff0) >> 4 ) ); }
 
 		/** 
 		 * Get the type of the value.  The type describes the data held by the value
@@ -183,14 +184,13 @@ namespace OpenZWave
 		):
 			m_homeId( _homeId )
 		{
-			assert( _instance < 8 );
-			assert( _valueIndex < 128 );
+			assert( _instance < 4 );
 
 			m_id = (((uint32)_nodeId)<<24)
 				 | (((uint32)_genre)<<22)
 				 | (((uint32)_commandClassId)<<14)
-				 | ((((uint32)_instance)&0x07)<<11)
-				 | ((((uint32)_valueIndex)&0x7f)<<4)
+				 | ((((uint32)_instance)&0x03)<<12)
+				 | (((uint32)_valueIndex)<<4)
 				 | ((uint32)_type);
 		}
 
@@ -206,8 +206,12 @@ namespace OpenZWave
 		// 24-31:	8 bits. Node ID of device
 		// 22-23:	2 bits. genre of value (see ValueGenre enum).
 		// 14-21:	8 bits. ID of command class that created and manages this value.
-		// 11-13:	3 bits. Instance index of the command class.
-		// 04-10:	7 bits. Index of value within all the value created by the command class instance.
+		// 12-13:	2 bits. Instance index of the command class.
+		// 04-11:	8 bits. Index of value within all the value created by the command class
+		//                  instance (in configuration parameters, this is also the parameter ID).
+		//                  If we need to free up bits for other purposes, we could potentially
+		//					reduce the number used by the index to 5 bits, but we would need to
+		//					add a map of index to parameter ID in the configuration command class.
 		// 00-03:	4 bits. Type of value (bool, byte, string etc).
 		uint32	m_id;
 
