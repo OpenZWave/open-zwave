@@ -28,6 +28,8 @@ namespace OZWForm
             {
                 ValueShortNumericUpDown.Value = Convert.ToDecimal(value);
             }
+
+            SendChanges = true;
         }
 
         private void InitializeComponent()
@@ -42,10 +44,15 @@ namespace OZWForm
             // 
             this.ValueShortNumericUpDown.Location = new System.Drawing.Point(3, 6);
             this.ValueShortNumericUpDown.Maximum = new decimal(new int[] {
-            255,
+            32767,
             0,
             0,
             0});
+            this.ValueShortNumericUpDown.Minimum = new decimal(new int[] {
+            32768,
+            0,
+            0,
+            -2147483648});
             this.ValueShortNumericUpDown.Name = "ValueShortNumericUpDown";
             this.ValueShortNumericUpDown.Size = new System.Drawing.Size(59, 20);
             this.ValueShortNumericUpDown.TabIndex = 0;
@@ -86,8 +93,11 @@ namespace OZWForm
 
         private void ValueShortButtonSet_Click(object sender, EventArgs e)
         {
-            Int16 value = Convert.ToInt16(ValueShortNumericUpDown.Value);
-            MainForm.Manager.SetValue(ValueID, value);
+            if (SendChanges)
+            {
+                Int16 value = Convert.ToInt16(ValueShortNumericUpDown.Value);
+                MainForm.Manager.SetValue(ValueID, value);
+            }
         }
     }
 }

@@ -27,6 +27,8 @@ namespace OZWForm
             {
                 ValueDecimalTextBox.Text = value.ToString();
             }
+
+            SendChanges = true;
         }
 
         private void InitializeComponent()
@@ -79,8 +81,11 @@ namespace OZWForm
 
         private void ValueDecimalButtonSet_Click(object sender, EventArgs e)
         {
-            float value = Convert.ToSingle(ValueDecimalTextBox.Text);
-            MainForm.Manager.SetValue(ValueID, value);
+            if (SendChanges)
+            {
+                float value = Convert.ToSingle(ValueDecimalTextBox.Text);
+                MainForm.Manager.SetValue(ValueID, value);
+            }
         }
     }
 }

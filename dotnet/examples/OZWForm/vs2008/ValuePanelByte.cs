@@ -28,6 +28,8 @@ namespace OZWForm
             {
                 ValueByteNumericUpDown.Value = Convert.ToDecimal(value);
             }
+
+            SendChanges = true;
         }
 
         private void InitializeComponent()
@@ -86,8 +88,11 @@ namespace OZWForm
 
         private void ValueByteButtonSet_Click(object sender, EventArgs e)
         {
-            Byte value = Convert.ToByte(ValueByteNumericUpDown.Value);
-            MainForm.Manager.SetValue(ValueID, value);
+            if (SendChanges)
+            {
+                Byte value = Convert.ToByte(ValueByteNumericUpDown.Value);
+                MainForm.Manager.SetValue(ValueID, value);
+            }
         }
     }
 }

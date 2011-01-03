@@ -19,6 +19,8 @@ namespace OZWForm
             {
                 ValueButtonButton.Enabled = false;
             }
+
+            SendChanges = true;
         }
 
         private void InitializeComponent()
@@ -52,12 +54,18 @@ namespace OZWForm
 
         private void ValueButtonButton_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
         {
-            MainForm.Manager.PressButton(ValueID);
+            if (SendChanges)
+            {
+                MainForm.Manager.PressButton(ValueID);
+            }
         }
 
         private void ValueButtonButton_KeyUp(object sender, System.Windows.Forms.KeyEventArgs e)
         {
-            MainForm.Manager.ReleaseButton(ValueID);
+            if (SendChanges)
+            {
+                MainForm.Manager.ReleaseButton(ValueID);
+            }
         }
     }
 }

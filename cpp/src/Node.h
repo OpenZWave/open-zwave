@@ -105,6 +105,7 @@ namespace OpenZWave
 			QueryStage_Associations,			/**< Retrieve information about associations */
 			QueryStage_Session,					/**< Retrieve session information (changes infrequently) */
 			QueryStage_Dynamic,					/**< Retrieve dynamic information (changes frequently) */
+			QueryStage_Configuration,			/**< Retrieve configurable parameter information (only done on request) */
 			QueryStage_Complete					/**< Query process is completed for this node */
 		};
 
@@ -178,6 +179,7 @@ namespace OpenZWave
 
 		QueryStage	m_queryStage;
 		bool		m_queryPending;
+		bool		m_queryConfiguration;
 		uint8		m_queryRetries;
 
 	//-----------------------------------------------------------------------------
