@@ -28,6 +28,8 @@ namespace OZWForm
             {
                 ValueShortNumericUpDown.Value = Convert.ToDecimal(value);
             }
+
+            SendChanges = true;
         }
 
         private void InitializeComponent()
@@ -91,8 +93,11 @@ namespace OZWForm
 
         private void ValueShortButtonSet_Click(object sender, EventArgs e)
         {
-            Int16 value = Convert.ToInt16(ValueShortNumericUpDown.Value);
-            MainForm.Manager.SetValue(ValueID, value);
+            if (SendChanges)
+            {
+                Int16 value = Convert.ToInt16(ValueShortNumericUpDown.Value);
+                MainForm.Manager.SetValue(ValueID, value);
+            }
         }
     }
 }

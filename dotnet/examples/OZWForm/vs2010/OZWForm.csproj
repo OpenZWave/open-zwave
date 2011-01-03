@@ -95,6 +95,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConfigurationWakeUpDlg.cs" />
+    <Compile Include="ConfigurationWakeUpDlg.Designer.cs">
+      <DependentUpon>ConfigurationWakeUpDlg.cs</DependentUpon>
+    </Compile>
     <Compile Include="ControllerCommandDlg.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -116,6 +120,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="ConfigurationWakeUpDlg.resx">
+      <DependentUpon>ConfigurationWakeUpDlg.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ControllerCommandDlg.resx">
       <DependentUpon>ControllerCommandDlg.cs</DependentUpon>
     </EmbeddedResource>

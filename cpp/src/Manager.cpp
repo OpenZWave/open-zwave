@@ -2086,7 +2086,7 @@ void Manager::RequestAllConfigParams
 {
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
-		driver->RequestAllConfigParams( _nodeId );
+		driver->AddNodeQuery( _nodeId, Node::QueryStage_Configuration );
 	}
 }
 

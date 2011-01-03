@@ -70,6 +70,7 @@ namespace OpenZWaveDotNet
 			PollingEnabled		= Notification::Type_PollingEnabled,	
 			DriverReady			= Notification::Type_DriverReady,		
 			DriverReset			= Notification::Type_DriverReset,
+			NodeQueriesComplete = Notification::Type_NodeQueriesComplete,
 			AwakeNodesQueried	= Notification::Type_AwakeNodesQueried,
 			AllNodesQueried		= Notification::Type_AllNodesQueried
 		};

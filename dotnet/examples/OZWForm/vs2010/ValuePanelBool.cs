@@ -25,6 +25,8 @@ namespace OZWForm
             {
                 ValueCheckBox.Checked = state;
             }
+
+            SendChanges = true;
         }
 
         private void InitializeComponent()
@@ -57,7 +59,10 @@ namespace OZWForm
 
         private void ValueCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            MainForm.Manager.SetValue(ValueID, ValueCheckBox.Checked);
+            if (SendChanges)
+            {
+                MainForm.Manager.SetValue(ValueID, ValueCheckBox.Checked);
+            }
         }
     }
 }
