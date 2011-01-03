@@ -28,6 +28,8 @@ namespace OZWForm
             {
                 ValueIntNumericUpDown.Value = Convert.ToDecimal(value);
             }
+
+            SendChanges = true;
         }
 
         private void InitializeComponent()
@@ -92,8 +94,11 @@ namespace OZWForm
 
         private void ValueIntButtonSet_Click(object sender, EventArgs e)
         {
-            Int32 value = Convert.ToInt32(ValueIntNumericUpDown.Value);
-            MainForm.Manager.SetValue(ValueID, value);
+            if (SendChanges)
+            {
+                Int32 value = Convert.ToInt32(ValueIntNumericUpDown.Value);
+                MainForm.Manager.SetValue(ValueID, value);
+            }
         }
     }
 }

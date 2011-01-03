@@ -48,6 +48,12 @@
     <Compile Include="ControllerCommandDlg.Designer.cs">
       <DependentUpon>ControllerCommandDlg.cs</DependentUpon>
     </Compile>
+    <Compile Include="ConfigurationWakeUpDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ConfigurationWakeUpDlg.Designer.cs">
+      <DependentUpon>ConfigurationWakeUpDlg.cs</DependentUpon>
+    </Compile>
     <Compile Include="ValuePanelDecimal.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -74,6 +80,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="ControllerCommandDlg.resx">
       <DependentUpon>ControllerCommandDlg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ConfigurationWakeUpDlg.resx">
+      <DependentUpon>ConfigurationWakeUpDlg.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ValuePanelDecimal.resx">
       <DependentUpon>ValuePanelDecimal.cs</DependentUpon>

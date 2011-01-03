@@ -472,7 +472,6 @@ namespace OpenZWave
 		// The public interface is provided via the wrappers in the Manager class
 		bool SetConfigParam( uint8 const _nodeId, uint8 const _param, int32 _value );
 		void RequestConfigParam( uint8 const _nodeId, uint8 const _param );
-		void RequestAllConfigParams( uint8 const _nodeId );
 
 	//-----------------------------------------------------------------------------
 	// Groups (wrappers for the Node methods)

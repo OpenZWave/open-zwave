@@ -17,6 +17,13 @@ namespace OZWForm
             get { return m_valueID; }
         }
 
+        private bool m_sendChanges = false;
+        public bool SendChanges
+        {
+            get { return m_sendChanges; }
+            set { m_sendChanges = value; }
+        }
+
         private ValuePanel()
         {
         }

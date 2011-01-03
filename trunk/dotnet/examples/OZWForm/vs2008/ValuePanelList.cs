@@ -36,6 +36,8 @@ namespace OZWForm
             {
                 ValueListComboBox.Text = value;
             }
+
+            SendChanges = true;
         }
 
         private void InitializeComponent()
@@ -79,7 +81,10 @@ namespace OZWForm
 
         private void ValueListComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            MainForm.Manager.SetValueListSelection(ValueID, ValueListComboBox.Text);
+            if (SendChanges)
+            {
+                MainForm.Manager.SetValueListSelection(ValueID, ValueListComboBox.Text);
+            }
         }
     }
 }

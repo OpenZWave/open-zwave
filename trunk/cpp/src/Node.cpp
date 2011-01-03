@@ -87,6 +87,7 @@ static char const* c_queryStageNames[] =
 	"Associations",
 	"Session",
 	"Dynamic",
+	"Configuration",
 	"Complete"
 };
 
@@ -105,6 +106,7 @@ Node::Node
 	m_values( new ValueStore() ),
 	m_queryStage( QueryStage_None ),
 	m_queryPending( false ),
+	m_queryConfiguration( false ),
 	m_queryRetries( 0 )
 {
 }
@@ -346,8 +348,25 @@ void Node::AdvanceQueries
 				{
 					it->second->RequestState( CommandClass::RequestFlag_Dynamic );
 				}
+				
+				// If querying of the configurable parameters has been requested, we do that next, otherwise we're done.
+				m_queryStage = m_queryConfiguration ? QueryStage_Configuration : QueryStage_Complete; 
+				m_queryRetries = 0;
+				break;
+			}
+			case QueryStage_Configuration:
+			{
+				// Request the configurable parameter values from the node.
+				Configuration* ccc = static_cast<Configuration*>( GetCommandClass( Configuration::StaticGetCommandClassId() ) );
+				if( ccc )
+				{
+					Log::Write( "Node %d: QueryStage_Configuration", m_nodeId );
+					ccc->RequestAllParamValues();
+				}
+
 				m_queryStage = QueryStage_Complete;
 				m_queryRetries = 0;
+				m_queryConfiguration = false;
 				break;
 			}
 			case QueryStage_Complete:
@@ -426,6 +445,11 @@ void Node::GoBackToQueryStage
 	{
 		m_queryStage = _stage;
 		m_queryPending = false;
+	}
+
+	if( QueryStage_Configuration == _stage )
+	{
+		m_queryConfiguration = true;
 	}
 }
 

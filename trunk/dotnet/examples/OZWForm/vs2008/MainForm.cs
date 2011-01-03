@@ -228,9 +228,6 @@ namespace OZWForm
                         node.ID = m_notification.GetNodeId();
                         node.HomeID = m_notification.GetHomeId();
                         m_nodeList.Add(node);
-
-                        // Request refreshed config param values
-                        m_manager.RequestAllConfigParams(node.HomeID, node.ID);
                         break;
                     }
 
@@ -290,6 +287,10 @@ namespace OZWForm
                 case ZWNotification.Type.DriverReady:
                     {
                         m_homeId = m_notification.GetHomeId();
+                        break;
+                    }
+                case ZWNotification.Type.NodeQueriesComplete:
+                    {
                         break;
                     }
                 case ZWNotification.Type.AllNodesQueried:
@@ -432,10 +433,16 @@ namespace OZWForm
             Node node = GetNode(m_homeId, m_rightClickNode);
             if (node != null)
             {
-                // Show the form
-                NodeForm dlg = new NodeForm( node );
-                dlg.ShowDialog(this);
-                dlg.Dispose();
+                // Wait for refreshed config param values
+                ConfigurationWakeUpDlg configDlg = new ConfigurationWakeUpDlg( m_manager, node.HomeID, node.ID);
+                if (DialogResult.OK == configDlg.ShowDialog(this))
+                {
+                    // Show the form
+                    NodeForm dlg = new NodeForm(node);
+                    dlg.ShowDialog(this);
+                    dlg.Dispose();
+                }
+                configDlg.Dispose();
             }
         }
 

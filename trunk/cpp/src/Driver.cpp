@@ -732,10 +732,21 @@ bool Driver::WriteMsg()
 		{
 			if( Node* node = GetNodeUnsafe( nodeId ) )
 			{
-				node->AdvanceQueries();
+				// We check the complete state before the advance.  This is essential so that on the advance
+				// when the state is set to complete, we get a chance to add messages to the send queue and
+				// then wait for them to complete before sending the notification.
 				if( node->AllQueriesCompleted() )
 				{
+					// Notify the watchers that the queries are complete for this node
+					Notification* notification = new Notification( Notification::Type_NodeQueriesComplete );
+					notification->SetHomeAndNodeIds( m_homeId, nodeId );
+					QueueNotification( notification ); 
+
 					RemoveNodeQuery( nodeId );
+				}
+				else
+				{
+					node->AdvanceQueries();
 				}
 			}
 		}
@@ -2841,6 +2852,7 @@ uint8 Driver::GetCurrentNodeQuery
 
 	// if this is the first (initialization) run of the queries, check to see if it has completed
 	if( !m_allNodesQueried )
+	{
 		if( nodeId == 0xff )	// no node was found (either we're done or all remaining nodes to query are asleep)
 		{
 			if( sleepingNodes && !m_awakeNodesQueried ) 
@@ -2863,6 +2875,7 @@ uint8 Driver::GetCurrentNodeQuery
 				m_allNodesQueried = true;
 			}
 		}
+	}
 	return nodeId;
 }
 
@@ -3717,22 +3730,6 @@ void Driver::RequestConfigParam
 	if( Node* node = GetNode( _nodeId ) )
 	{
 		node->RequestConfigParam( _param );
-		ReleaseNodes();
-	}
-}
-
-//-----------------------------------------------------------------------------
-// <Driver::RequestAllConfigParams>
-// Request the values of all of the known configuration parameters of a device
-//-----------------------------------------------------------------------------
-void Driver::RequestAllConfigParams
-(
-	uint8 const _nodeId
-)
-{
-	if( Node* node = GetNode( _nodeId ) )
-	{
-		node->RequestAllConfigParams();
 		ReleaseNodes();
 	}
 }

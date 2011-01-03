@@ -26,6 +26,8 @@ namespace OZWForm
             {
                 ValueStringTextBox.Text = value;
             }
+
+            SendChanges = true;
         }
 
         private void InitializeComponent()
