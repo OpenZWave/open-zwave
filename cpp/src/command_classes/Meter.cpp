@@ -108,7 +108,7 @@ bool Meter::HandleMsg
 	if (MeterCmd_Report == (MeterCmd)_data[0])
 	{
 		uint8 scale;
-		string valueStr = ExtractValueAsString( &_data[2], &scale );
+		string valueStr = ExtractValue( &_data[2], &scale );
 
 		if( ValueDecimal* value = m_value.GetInstance( _instance ) )
 		{

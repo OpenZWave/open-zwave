@@ -26,6 +26,7 @@
 //-----------------------------------------------------------------------------
 
 #include <math.h>
+#include <locale.h>
 #include "tinyxml.h"
 #include "CommandClass.h"
 #include "Msg.h"
@@ -216,7 +217,7 @@ void CommandClass::WriteXML
 // <CommandClass::ExtractValue>
 // Read a value from a variable length sequence of bytes
 //-----------------------------------------------------------------------------
-float32 CommandClass::ExtractValue
+string CommandClass::ExtractValue
 (
 	uint8 const* _data,
 	uint8* _scale
@@ -238,43 +239,71 @@ float32 CommandClass::ExtractValue
 		value |= (uint32)_data[i+1];
 	}
 
-	// Deal with sign extension.  Anything larger than a byte is assumed to be signed.
+	// Deal with sign extension.  All values are signed
+	string res;
 	if( _data[1] & 0x80 )
 	{
-		if( size == 2 )
+		res = "-";
+
+		// MSB is signed
+		if( size == 1 )
+		{
+			value |= 0xffffff00;
+		}
+		else if( size == 2 )
 		{
 			value |= 0xffff0000;
 		}
-		else if( size == 3 )
-		{
-			value |= 0xff000000;
-		}
 	}
+
+	// Convert the integer to a decimal string.  We avoid
+	// using floats to prevent accuracy issues.
+	char numBuf[12];
 
 	if( precision == 0 )
 	{
-		return (float32)(signed long)value;
+		// The precision is zero, so we can just print the number directly into the string.
+		snprintf( numBuf, 12, "%d", (signed long)value );
+		res = numBuf;
+	}
+	else
+	{
+		// We'll need to insert a decimal point and include any necessary leading zeros.
+
+		// Fill the buffer with the value padded with leading zeros.
+		snprintf( numBuf, 12, "%011d", (signed long)value );
+
+		// Calculate the position of the decimal point in the buffer
+		int32 decimal = 10-precision;
+
+		// Shift the characters to make space for the decimal point.
+		// We don't worry about overwriting any minus sign since that is
+		// already written into the res string. While we're shifting, we 
+		// also look for the real starting position of the number so we 
+		// can copy it into the res string later.
+		int32 start = -1;
+		for( int32 i=0; i<decimal; ++i )
+		{
+			numBuf[i] = numBuf[i+1];
+			if( ( start<0 ) && ( numBuf[i] != '0' ) )
+			{
+				start = i;
+			}
+		}
+		if( start<0 )
+		{
+			start = decimal-1;
+		}
+
+		// Insert the decimal point
+		struct lconv const* locale = localeconv();
+		numBuf[decimal] = *(locale->decimal_point);
+
+		// Copy the buffer into res
+		res += &numBuf[start];
 	}
 
-	return ((float32)(signed long)value) / pow( 10.0f, precision );
-}
-
-//-----------------------------------------------------------------------------
-// <CommandClass::ExtractValue>
-// Read a value from a variable length sequence of bytes
-//-----------------------------------------------------------------------------
-string CommandClass::ExtractValueAsString
-(
-	uint8 const* _data,
-	uint8* _scale
-)const
-{
-	float32 value = ExtractValue( _data, _scale );
-
-	char str[16];
-	snprintf( str, 16, "%.3f", value );
-
-	return str;
+	return res;
 }
 
 //-----------------------------------------------------------------------------
@@ -284,28 +313,20 @@ string CommandClass::ExtractValueAsString
 void CommandClass::AppendValue
 (
 	Msg* _msg,
-	float32 const _value,
-	uint8 const _precision,
+	string const& _value,
 	uint8 const _scale
 )const
 {
-	int32 iValue = _precision ? (int32)(_value * pow( 10.0f, _precision )) : (int32)_value;
+	uint8 precision;
+	uint8 size;
+	int32 val = ValueToInteger( _value, &precision, &size );
 
-	uint8 size = 1;
-	if( iValue & 0xffff0000 )
-	{
-		size = 4;
-	}
-	else if( iValue & 0x0000ff00 )
-	{
-		size = 2;
-	}
+	_msg->Append( (precision<<c_precisionShift) | (_scale<<c_scaleShift) | size );
 
-	_msg->Append( (_precision<<c_precisionShift) | (_scale<<c_scaleShift) | size );
-
-	for( int32 i=size-1; i>=0; --i )
+	int32 shift = (size-1)<<3;
+	for( int32 i=size; i>0; --i, shift-=8 )
 	{
-		_msg->Append( (uint8)((iValue >> (i<<3)) & 0xff) );
+		_msg->Append( (uint8)(val >> shift) );
 	}
 }
 
@@ -315,23 +336,82 @@ void CommandClass::AppendValue
 //-----------------------------------------------------------------------------
 uint8 const CommandClass::GetAppendValueSize
 (
-	float32 const _value,
-	uint8 const _precision
+	string const& _value
 )const
 {
-	int32 iValue = _precision ? (int32)(_value * pow( 10.0f, _precision )) : (int32)_value;
+	uint8 size;
+	ValueToInteger( _value, NULL, &size );
+	return size;
+}
 
-	uint8 size = 1;
-	if( iValue & 0xffff0000 )
+//-----------------------------------------------------------------------------
+// <CommandClass::ValueToInteger>
+// Convert a decimal string to an integer and report the precision and
+// number of bytes required to store the value.
+//-----------------------------------------------------------------------------
+int32 CommandClass::ValueToInteger
+(
+	string const& _value,
+	uint8* o_precision,
+	uint8* o_size
+)const
+{
+	int32 val;
+	
+	// Find the decimal point
+	int32 pos = _value.find_first_of( "." );
+	if( pos == string::npos )
 	{
-		size = 4;
+		// No decimal point
+		if( o_precision )
+		{
+			*o_precision = 0;
+		}
+
+		// Convert the string to an integer
+		val = atol( _value.c_str() );
 	}
-	else if( iValue & 0x0000ff00 )
+	else
 	{
-		size = 2;
+		// Remove the decimal point and convert to an integer
+		if( o_precision )
+		{
+			*o_precision = (_value.size()-pos)-1;
+		}
+
+		string str = _value.substr( 0, pos ) + _value.substr( pos+1 );
+		val = atol( str.c_str() );
 	}
 
-	return size + 1;
+	if( o_size )
+	{
+		// Work out the size as either 1, 2 or 4 bytes
+		*o_size = 4;
+		if( val < 0 )
+		{
+			if( ( val & 0xffffff80 ) == 0xffffff80 )
+			{
+				*o_size = 1;
+			}
+			else if( ( val & 0xffff8000 ) == 0xffff8000 )
+			{
+				*o_size = 2;
+			}
+		}
+		else
+		{
+			if( ( val & 0xffffff00 ) == 0 )
+			{
+				*o_size = 1;
+			}
+			else if( ( val & 0xffff0000 ) == 0 )
+			{
+				*o_size = 2;
+			}
+		}
+	}
+
+	return val;
 }
 
 //-----------------------------------------------------------------------------
