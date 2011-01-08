@@ -44,6 +44,68 @@ enum SensorMultilevelCmd
 	SensorMultilevelCmd_Report	= 0x05
 };
 
+enum SensorType
+{
+	SensorType_Temperature = 1,
+	SensorType_General,
+	SensorType_Luminance,
+	SensorType_Power,
+	SensorType_RelativeHumidity,
+	SensorType_Velocity,
+	SensorType_Direction,
+	SensorType_AtmosphericPressure,
+	SensorType_BarometricPressure,
+	SensorType_SolarRadiation,
+	SensorType_DewPoint,
+	SensorType_RainRate,
+	SensorType_TideLevel,
+	SensorType_Weight,
+	SensorType_Voltage,
+	SensorType_Current,
+	SensorType_CO2,
+	SensorType_AirFlow,
+	SensorType_TankCapacity,
+	SensorType_Distance
+};
+
+static char const* c_sensorTypeNames[] = 
+{
+	"Undefined",
+	"Temperature",
+	"General",
+	"Luminance",
+	"Power",
+	"Relative Humidity",
+	"Velocity",
+	"Direction",
+	"Atmospheric Pressure",
+	"Barometric Pressure",
+	"Solar Radiation",
+	"Dew Point",
+	"Rain Rate",
+	"Tide Level",
+	"Weight",
+	"Voltage",
+	"Current",
+	"CO2 Level",
+	"Air Flow",
+	"Tank Capacity",
+	"Distance"
+};
+
+static char const* c_tankCapcityUnits[] = 
+{
+	"l",
+	"cbm",
+	"gal"
+};
+
+static char const* c_distanceUnits[] = 
+{
+	"m",
+	"cm",
+	"ft"
+};
 
 //-----------------------------------------------------------------------------
 // <SensorMultilevel::RequestState>												   
@@ -105,54 +167,34 @@ bool SensorMultilevel::HandleMsg
 	if (SensorMultilevelCmd_Report == (SensorMultilevelCmd)_data[0])
 	{
 		uint8 scale;
-		string valueStr = ExtractValueAsString( &_data[2], &scale );
+		string valueStr = ExtractValue( &_data[2], &scale );
 
 		if( ValueDecimal* value = m_level.GetInstance( _instance ) )
 		{
+			value->SetLabel( c_sensorTypeNames[_data[1]] );
 			switch( _data[1] )
 			{
-				case 0x01:
-				{
-					// Temperature
-					value->SetLabel( "Temperature" );
-					value->SetUnits( scale ? "F" : "C" );
-					break;
-				}
-				case 0x02:
-				{
-					// General
-					value->SetLabel( "Sensor" );
-					value->SetUnits( scale ? "" : "%" );
-					break;
-				}
-				case 0x03:
-				{
-					// Luminance
-					value->SetLabel( "Luminance" );
-					value->SetUnits( scale ? "Lux" : "%" );
-					break;
-				}
-				case 0x04:
-				{
-					// Power
-					value->SetLabel( "Power" );
-					value->SetUnits( scale ? "W" : "" );
-					break;
-				}
-				case 0x05:
-				{
-					// Humidity
-					value->SetLabel( "Humidity" );
-					value->SetUnits( "%" );
-					break;
-				}
-				case 0x11:
-				{
-					// CO2
-					value->SetLabel( "Carbon Monoxide" );
-					value->SetUnits( "ppm" );
-					break;
-				}
+				case SensorType_Temperature:			value->SetUnits( scale ? "F" : "C" );			break;
+				case SensorType_General:				value->SetUnits( scale ? "" : "%" );			break;
+				case SensorType_Luminance:				value->SetUnits( scale ? "lux" : "%" );			break;
+				case SensorType_Power:					value->SetUnits( scale ? "BTU/h" : "W" );		break;
+				case SensorType_RelativeHumidity:		value->SetUnits( "%" );							break;
+				case SensorType_Velocity:				value->SetUnits( scale ? "mph" : "m/s" );		break;
+				case SensorType_Direction:				value->SetUnits( "" );							break;
+				case SensorType_AtmosphericPressure:	value->SetUnits( scale ? "inHg" : "kPa" );		break;
+				case SensorType_BarometricPressure:		value->SetUnits( scale ? "inHg" : "kPa" );		break;
+				case SensorType_SolarRadiation:			value->SetUnits( "W/m2" );						break;
+				case SensorType_DewPoint:				value->SetUnits( scale ? "in/h" : "mm/h" );		break;
+				case SensorType_RainRate:				value->SetUnits( scale ? "F" : "C" );			break;
+				case SensorType_TideLevel:				value->SetUnits( scale ? "ft" : "m" );			break;
+				case SensorType_Weight:					value->SetUnits( scale ? "lb" : "kg" );			break;
+				case SensorType_Voltage:				value->SetUnits( scale ? "mV" : "V" );			break;
+				case SensorType_Current:				value->SetUnits( scale ? "mA" : "A" );			break;
+				case SensorType_CO2:					value->SetUnits( "ppm" );						break;
+				case SensorType_AirFlow:				value->SetUnits( scale ? "cfm" : "m3/h" );		break;
+				case SensorType_TankCapacity:			value->SetUnits( c_tankCapcityUnits[scale] );	break;
+				case SensorType_Distance:				value->SetUnits( c_distanceUnits[scale] );		break;
+				default:																				break;
 			}
 
 			Log::Write( "Received SensorMultiLevel report from node %d, instance %d: value=%s%s", GetNodeId(), _instance, valueStr.c_str(), value->GetUnits().c_str() );
