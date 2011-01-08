@@ -79,18 +79,18 @@ namespace OpenZWave
 		bool IsAfterMark()const{ return m_afterMark; }
 
 		// Helper methods
-		float32 ExtractValue( uint8 const* _data, uint8* _scale )const;
-		string ExtractValueAsString( uint8 const* _data, uint8* _scale )const;
+		string ExtractValue( uint8 const* _data, uint8* _scale )const;
+
 		/**
 		 *  Append a floating-point value to a message.
 		 *  \param _msg The message to which the value should be appended.
-		 *  \param _value A signed floating point value to be appended.
-		 *  \param _precision The number of digits after the decimal point.
+		 *  \param _value A string containing a decimal number to be appended.
 		 *  \param _scale A byte indicating the scale corresponding to this value (e.g., 1=F and 0=C for temperatures).
 		 *  \see Msg
 		 */
-		void AppendValue( Msg* _msg, float32 const _value, uint8 const _precision, uint8 const _scale )const;
-		uint8 const GetAppendValueSize( float32 const _value, uint8 const _precision )const;
+		void AppendValue( Msg* _msg, string const& _value, uint8 const _scale )const;
+		uint8 const GetAppendValueSize( string const& _value )const;
+		int32 ValueToInteger( string const& _value, uint8* o_precision, uint8* o_size )const;
 
 	protected:
 		/** \brief

@@ -142,7 +142,7 @@ bool ThermostatSetpoint::HandleMsg
 		if( ValueDecimal* value = m_setpoints[_data[1]].GetInstance( _instance ) )
 		{
 			uint8 scale;
-			string temperature = ExtractValueAsString( &_data[2], &scale );
+			string temperature = ExtractValue( &_data[2], &scale );
 
 			value->SetUnits( scale ? "F" : "C" );
 			value->OnValueChanged( temperature );
@@ -198,16 +198,15 @@ bool ThermostatSetpoint::SetValue
 	if( ValueID::ValueType_Decimal == _value.GetID().GetType() )
 	{
 		ValueDecimal const* value = static_cast<ValueDecimal const*>(&_value);
-		float32 floatVal = (float32)atof( value->GetValue().c_str() );
 		uint8 scale = strcmp( "C", value->GetUnits().c_str() ) ? 1 : 0;
 
 		Msg* msg = new Msg( "Set Thermostat Setpoint", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 		msg->Append( GetNodeId() );
-		msg->Append( 3 + GetAppendValueSize( floatVal, 0 ) );
+		msg->Append( 3 + GetAppendValueSize( value->GetValue() ) );
 		msg->Append( GetCommandClassId() );
 		msg->Append( ThermostatSetpointCmd_Set );
 		msg->Append( value->GetID().GetIndex() );
-		AppendValue( msg, floatVal, 0, scale );
+		AppendValue( msg, value->GetValue(), scale );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 		GetDriver()->SendMsg( msg );
 		return true;
