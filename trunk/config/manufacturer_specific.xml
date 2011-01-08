@@ -42,8 +42,8 @@
     <Product type="0001" id="0001" name="ASR-RF Thermostat Receiver" />
   </Manufacturer>
   <Manufacturer id="0060" name="Everspring">
-    <Product type="0202" id="0001" name="SM103 Door/Window Magnetic Sensor" />
-    <Product type="0101" id="0001" name="SP103 PIR Motion Sensor" />
+    <Product type="0002" id="0001" name="SM103 Door/Window Magnetic Sensor" config="everspring/sm103.xml"/>
+    <Product type="0001" id="0001" name="SP103 PIR Motion Sensor" />
   </Manufacturer>
   <Manufacturer id="0063" name="GE">
     <Product type="5250" id="3030" name="GE 45603 Plugin Appliance Module" />
