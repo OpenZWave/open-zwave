@@ -737,11 +737,6 @@ bool Driver::WriteMsg()
 				// then wait for them to complete before sending the notification.
 				if( node->AllQueriesCompleted() )
 				{
-					// Notify the watchers that the queries are complete for this node
-					Notification* notification = new Notification( Notification::Type_NodeQueriesComplete );
-					notification->SetHomeAndNodeIds( m_homeId, nodeId );
-					QueueNotification( notification ); 
-
 					RemoveNodeQuery( nodeId );
 				}
 				else
@@ -3214,7 +3209,7 @@ string Driver::GetNodeManufacturerId
 	uint8 const _nodeId
 )
 {
-	if( Node* node = m_nodes[_nodeId] )
+	if( Node* node = GetNode( _nodeId ) )
 	{
 		string str = node->GetManufacturerId();
 		ReleaseNodes();
@@ -3840,6 +3835,7 @@ void Driver::QueueNotification
 )
 {
 	m_notifications.push_back( _notification );
+	m_wakeEvent->Set();
 }
 
 //-----------------------------------------------------------------------------
