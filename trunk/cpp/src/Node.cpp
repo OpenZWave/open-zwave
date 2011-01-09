@@ -373,6 +373,10 @@ void Node::AdvanceQueries
 			{
 				// All done
 				Log::Write( "Node %d: QueryStage_Complete", m_nodeId );
+				// Notify the watchers that the queries are complete for this node
+				Notification* notification = new Notification( Notification::Type_NodeQueriesComplete );
+				notification->SetHomeAndNodeIds( m_homeId, m_nodeId );
+				GetDriver()->QueueNotification( notification ); 
 				return;
 			}
 			default:
