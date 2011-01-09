@@ -20,6 +20,7 @@ namespace OZWForm
             if (MainForm.Manager.IsValueReadOnly(valueID))
             {
                 ValueDecimalTextBox.Enabled = false;
+				ValueDecimalButtonSet.Enabled = false;
             }
 
             Decimal value;
