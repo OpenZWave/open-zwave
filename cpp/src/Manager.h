@@ -175,7 +175,7 @@ namespace OpenZWave
 		 * The configuration of each PC Controller's Z-Wave network is stored in a separate file.  The filename 
 		 * consists of the 8 digit hexadecimal version of the controller's Home ID, prefixed with the string 'zwcfg_'.
 		 * This convention allows OpenZWave to find the correct configuration file for a controller, even if it is
-		 * attached to a different serial port.
+		 * attached to a different serial port, USB device path, etc.
 		 * \param _homeId The Home ID of the Z-Wave controller to save.
 		 */
 		void WriteConfig( uint32 const _homeId );
@@ -206,21 +206,21 @@ namespace OpenZWave
 		 * missing information, and a refresh of the list of nodes that it controls.  Once this information
 		 * has been received, a DriverReady notification callback is sent, containing the Home ID of the controller.  This Home ID is
 		 * required by most of the OpenZWave Manager class methods.
-		 * \param _serialPortName The string used to open the serial port.  On Windows this might be something like
+		 * @param _controllerPath The string used to open the controller.  On Windows this might be something like
 		 * "\\.\COM3", or on Linux "/dev/ttyUSB0".
 		 * \return True if a new driver was created, false if a driver for the controller already exists.
 		 * \see Create, Get, RemoveDriver
 		 */
-		bool AddDriver( string const& _serialPortName );
+        bool AddDriver( string const& _controllerPath, Driver::ControllerInterface const& _interface = Driver::ControllerInterface_Serial);
 
 		/**
-		 * \brief Removes the driver for a Z-Wave controller, and closes the serial port.
+		 * \brief Removes the driver for a Z-Wave controller, and closes the controller.
 		 * Drivers do not need to be explicitly removed before calling Destroy - this is handled automatically.
-		 * \param _serialPortName The same string as was passed in the original call to AddDriver.
-		 * \returns True if the driver was removed, false if it could not be found.
-		 * \see Destroy, AddDriver
+		 * @param _controllerPath The same string as was passed in the original call to AddDriver.
+		 * @returns True if the driver was removed, false if it could not be found.
+		 * @see Destroy, AddDriver
 		 */
-		bool RemoveDriver( string const& _serialPortName );
+		bool RemoveDriver( string const& _controllerPath );
 
 		/**
 		 * \brief Query if the controller is a primary controller.
