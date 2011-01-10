@@ -200,17 +200,18 @@ void Manager::WriteConfig
 //-----------------------------------------------------------------------------
 bool Manager::AddDriver
 (
-	string const& _serialPortName
+	string const& _controllerPath,
+    Driver::ControllerInterface const& _interface
 )
 {
-	// Make sure we don't already have a driver for this serial port
+	// Make sure we don't already have a driver for this controller
 	
 	// Search the pending list
 	for( list<Driver*>::iterator pit = m_pendingDrivers.begin(); pit != m_pendingDrivers.end(); ++pit )
 	{
-		if( _serialPortName == (*pit)->GetSerialPortName() )
+		if( _controllerPath == (*pit)->GetControllerPath() )
 		{
-			Log::Write( "Cannot add driver for serial port %s - driver already exists", _serialPortName.c_str() );
+			Log::Write( "Cannot add driver for controller %s - driver already exists", _controllerPath.c_str() );
 			return false;
 		}
 	}
@@ -218,18 +219,18 @@ bool Manager::AddDriver
 	// Search the ready map
 	for( map<uint32,Driver*>::iterator rit = m_readyDrivers.begin(); rit != m_readyDrivers.end(); ++rit )
 	{
-		if( _serialPortName == rit->second->GetSerialPortName() )
+		if( _controllerPath == rit->second->GetControllerPath() )
 		{
-			Log::Write( "Cannot add driver for serial port %s - driver already exists", _serialPortName.c_str() );
+			Log::Write( "Cannot add driver for controller %s - driver already exists", _controllerPath.c_str() );
 			return false;
 		}
 	}
 
-    Driver* driver = new Driver( _serialPortName );
+    Driver* driver = new Driver( _controllerPath, _interface );
 	m_pendingDrivers.push_back( driver );
 	driver->Start();
 
-	Log::Write( "Added driver for serial port %s", _serialPortName.c_str() );
+	Log::Write( "Added driver for controller %s", _controllerPath.c_str() );
 	return true;
 }
 
@@ -239,17 +240,17 @@ bool Manager::AddDriver
 //-----------------------------------------------------------------------------
 bool Manager::RemoveDriver
 (
-	string const& _serialPortName
+	string const& _controllerPath
 )
 {
 	// Search the pending list
 	for( list<Driver*>::iterator pit = m_pendingDrivers.begin(); pit != m_pendingDrivers.end(); ++pit )
 	{
-		if( _serialPortName == (*pit)->GetSerialPortName() )
+		if( _controllerPath == (*pit)->GetControllerPath() )
 		{
 			delete *pit;
 			m_pendingDrivers.erase( pit );
-			Log::Write( "Driver for serial port %s removed", _serialPortName.c_str() );
+			Log::Write( "Driver for controller %s removed", _controllerPath.c_str() );
 			return true;
 		}
 	}
@@ -257,16 +258,16 @@ bool Manager::RemoveDriver
 	// Search the ready map
 	for( map<uint32,Driver*>::iterator rit = m_readyDrivers.begin(); rit != m_readyDrivers.end(); ++rit )
 	{
-		if( _serialPortName == rit->second->GetSerialPortName() )
+		if( _controllerPath == rit->second->GetControllerPath() )
 		{
 			delete rit->second;
 			m_readyDrivers.erase( rit );
-			Log::Write( "Driver for serial port %s removed", _serialPortName.c_str() );
+			Log::Write( "Driver for controller %s removed", _controllerPath.c_str() );
 			return true;
 		}
 	}
 
-	Log::Write( "Failed to remove driver for serial port %s", _serialPortName.c_str() );
+	Log::Write( "Failed to remove driver for controller %s", _controllerPath.c_str() );
 	return false;
 }
 

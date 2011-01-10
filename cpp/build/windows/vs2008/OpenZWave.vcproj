@@ -226,6 +226,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\platform\IController.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\platform\Log.cpp"
 				>
 			</File>
@@ -242,11 +246,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\platform\SerialPort.cpp"
+				RelativePath="..\..\..\src\platform\SerialController.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\platform\SerialPort.h"
+				RelativePath="..\..\..\src\platform\SerialController.h"
 				>
 			</File>
 			<File
@@ -285,11 +289,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\src\platform\windows\SerialPortImpl.cpp"
+					RelativePath="..\..\..\src\platform\windows\SerialControllerImpl.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\src\platform\windows\SerialPortImpl.h"
+					RelativePath="..\..\..\src\platform\windows\SerialControllerImpl.h"
 					>
 				</File>
 				<File

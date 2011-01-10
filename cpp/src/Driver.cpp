@@ -35,7 +35,8 @@
 
 #include "Event.h"
 #include "Mutex.h"
-#include "SerialPort.h"
+#include "IController.h"
+#include "SerialController.h"
 #include "Thread.h"
 #include "Log.h"
 
@@ -79,19 +80,20 @@ static char const* c_libraryTypeNames[] =
 //-----------------------------------------------------------------------------
 Driver::Driver
 ( 
-	string const& _serialPortName
+	string const& _controllerPath,
+    ControllerInterface const& _interface
 ):
 	m_driverThread( new Thread( "driver" ) ),
 	m_wakeEvent( new Event() ),	
     m_exitEvent( new Event() ), 
     m_exit( false ),
     m_init( false ),
+    m_controllerPath( _controllerPath ),
 	m_awakeNodesQueried( false ),
 	m_allNodesQueried( false ),
-    m_serialPortName( _serialPortName ),
     m_homeId( 0 ),
-	m_serialPort( new SerialPort() ),
-	m_serialThread( new Thread( "serial" ) ),
+	m_controller( (IController*) new SerialController() ),  // TODO: use factory to get the right object
+	m_controllerThread( new Thread( "serial" ) ),
     m_initCaps( 0 ),
     m_controllerCaps( 0 ),
     m_nodeMutex( new Mutex() ),
@@ -130,13 +132,13 @@ Driver::~Driver
 	m_exitEvent->Set();
 	m_wakeEvent->Set();
 	m_pollThread->Stop();
-	m_serialThread->Stop();
+	m_controllerThread->Stop();
 	m_driverThread->Stop();
 
-	delete m_serialPort;
+	delete m_controller;
 
 	delete m_pollThread;
-	delete m_serialThread;
+	delete m_controllerThread;
 	delete m_driverThread;
 
 	delete m_sendMutex;
@@ -366,22 +368,22 @@ bool Driver::Init
 	m_nodeId = -1;
 	m_waitingForAck = false;
 
-	// Open the serial port
-	Log::Write( "Opening serial port %s", m_serialPortName.c_str() );
+	// Open the controller
+	Log::Write( "Opening controller %s", m_controllerPath.c_str() );
 
-	if( !m_serialPort->Open( m_serialPortName, 115200, SerialPort::Parity_None, SerialPort::StopBits_One ) )
+	if( !m_controller->Open( m_controllerPath ) )
 	{
 	 	Log::Write( "Failed to init the controller (attempt %d)", _attempts );
 		return false;
 	}
 
-	// Serial port opened successfully, so we need to start all the worker threads
-	m_serialThread->Start( Driver::SerialThreadEntryPoint, this );
+	// Controller opened successfully, so we need to start all the worker threads
+	m_controllerThread->Start( Driver::ControllerThreadEntryPoint, this );
 	m_pollThread->Start( Driver::PollThreadEntryPoint, this );
 
 	// Send a NAK to the ZWave device
 	uint8 nak = NAK;
-	m_serialPort->Write( &nak, 1 );
+	m_controller->Write( &nak, 1 );
 
 	// Send commands to retrieve properties from the Z-Wave interface 
 	Msg* msg;
@@ -721,7 +723,7 @@ bool Driver::WriteMsg()
 
 		Log::Write( "" );
 		Log::Write( "Sending command (Callback ID=0x%.2x, Expected Reply=0x%.2x) - %s", msg->GetCallbackId(), msg->GetExpectedReply(), msg->GetAsString().c_str() );
-		m_serialPort->Write( msg->GetBuffer(), msg->GetLength() );
+		m_controller->Write( msg->GetBuffer(), msg->GetLength() );
 		dataWritten = true;
 	}
 	else
@@ -865,7 +867,7 @@ bool Driver::ReadMsg
 {
 	uint8 buffer[1024];
 
-	if( !m_serialPort->Read( buffer, 1 ) )
+	if( !m_controller->Read( buffer, 1 ) )
 	{
 		// Nothing to read
 		return false;
@@ -884,7 +886,7 @@ bool Driver::ReadMsg
 			uint8 loops = 0;
 			while( true )
 			{
-				if( m_serialPort->Read( &buffer[1], 1 )) 
+				if( m_controller->Read( &buffer[1], 1 )) 
 				{
 					break;
 				}
@@ -906,7 +908,7 @@ bool Driver::ReadMsg
 			uint32 bytesRemaining = buffer[1];
 			do
 			{
-				bytesRemaining -= m_serialPort->Read( &buffer[2+(uint32)buffer[1]-bytesRemaining], bytesRemaining );
+				bytesRemaining -= m_controller->Read( &buffer[2+(uint32)buffer[1]-bytesRemaining], bytesRemaining );
 				if( bytesRemaining ) 
 				{
 					m_driverThread->Sleep( 10 );
@@ -953,7 +955,7 @@ bool Driver::ReadMsg
 			{
 				// Checksum correct - send ACK
 				uint8 ack = ACK;
-				m_serialPort->Write( &ack, 1 );
+				m_controller->Write( &ack, 1 );
 
 				// Process the received message
 				ProcessMsg( &buffer[2] );
@@ -962,7 +964,7 @@ bool Driver::ReadMsg
 			{
 				Log::Write( "Checksum incorrect - sending NAK" );
 				uint8 nak = NAK;
-				m_serialPort->Write( &nak, 1 );
+				m_controller->Write( &nak, 1 );
 			}
 			break;
 		}
@@ -998,7 +1000,7 @@ bool Driver::ReadMsg
 		{
 			Log::Write( "ERROR! Out of frame flow! (0x%.2x).  Sending NAK.", buffer[0] );
 			uint8 nak = NAK;
-			m_serialPort->Write( &nak, 1 );
+			m_controller->Write( &nak, 1 );
 			break;
 		}
 	}
@@ -2703,10 +2705,10 @@ void Driver::PollThreadProc()
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-// <Driver::SerialThreadEntryPoint>
-// Entry point of the thread for watching the serial port for new data
+// <Driver::ControllerThreadEntryPoint>
+// Entry point of the thread for watching the controller for new data
 //-----------------------------------------------------------------------------
-void Driver::SerialThreadEntryPoint
+void Driver::ControllerThreadEntryPoint
 ( 
 	void* _context 
 )
@@ -2714,15 +2716,15 @@ void Driver::SerialThreadEntryPoint
 	Driver* driver = (Driver*)_context;
 	if( driver )
 	{
-		driver->SerialThreadProc();
+		driver->ControllerThreadProc();
 	}
 }
 
 //-----------------------------------------------------------------------------
-// <Driver::SerialThreadProc>
-// Thread for watching the serial port for new data
+// <Driver::ControllerThreadProc>
+// Thread for watching the controller for new data
 //-----------------------------------------------------------------------------
-void Driver::SerialThreadProc()
+void Driver::ControllerThreadProc()
 {
 	while( 1 )
 	{
@@ -2731,8 +2733,8 @@ void Driver::SerialThreadProc()
 			return;
 		}
 
-		// Wait for data to arrive at the serial port
-		if( m_serialPort->Wait( Event::Timeout_Infinite ) )
+		// Wait for data to arrive at the controller
+		if( m_controller->Wait( Event::Timeout_Infinite ) )
 		{
 			// New data has arrived, so wake the driver thread
 			m_wakeEvent->Set();

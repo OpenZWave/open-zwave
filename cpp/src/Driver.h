@@ -42,7 +42,8 @@ namespace OpenZWave
 	class Value;
 	class Event;
 	class Mutex;
-	class SerialPort;
+    class IController;
+	class SerialController;
 	class Thread;
 	class ControllerReplication;
 	class Notification;
@@ -66,13 +67,23 @@ namespace OpenZWave
 		friend class Hail;
 
 	//-----------------------------------------------------------------------------
+	//	Controller Interfaces
+	//-----------------------------------------------------------------------------
+	public:
+		enum ControllerInterface
+		{
+			ControllerInterface_Serial = 0,
+			ControllerInterface_UsbHid
+		};
+
+	//-----------------------------------------------------------------------------
 	// Construction / Destruction
 	//-----------------------------------------------------------------------------
 	private:
 		/** 
 		 *  Creates threads, events and initializes member variables and the node array.
 		 */
-        Driver( string const& _serialPortName );
+        Driver( string const& _controllerPath, ControllerInterface const& _interface );
 		/** Sets "exit" flags and stops the three background threads (pollThread, serialThread
 		 *  and driverThread).  Then clears out the send queue and node array.  Notifies
 		 *  watchers and exits.
@@ -167,7 +178,7 @@ namespace OpenZWave
 
 		uint32 GetHomeId()const{ return m_homeId; }
 		uint8 GetNodeId()const{ return m_nodeId; }
-		string GetSerialPortName()const{ return m_serialPortName; }
+		string GetControllerPath()const{ return m_controllerPath; }
 		string GetLibraryVersion()const{ return m_libraryVersion; }
 		string GetLibraryTypeName()const{ return m_libraryTypeName; }
 
@@ -200,13 +211,14 @@ namespace OpenZWave
 		 */
 		void ReleaseNodes();
 
-		static void SerialThreadEntryPoint( void* _context );
-		void SerialThreadProc();
+		static void ControllerThreadEntryPoint( void* _context );
+		void ControllerThreadProc();
 
-		string					m_serialPortName;							// name used to open the serial port.
+		ControllerInterface     m_controllerInterfaceType;                  // Specifies the controller's hardware interface
+        string					m_controllerPath;							// name or path used to open the controller hardware.
+		IController*			m_controller;								// Handles communications with the controller hardware.
 		uint32					m_homeId;									// Home ID of the Z-Wave controller.  Not valid until the DriverReady notification has been received.
-		SerialPort*				m_serialPort;								// Handles communications with the controller hardware.
-		Thread*					m_serialThread;								// Watches for data arriving at the serial port.
+		Thread*					m_controllerThread;								// Watches for data arriving at the controller.
 		
 		string					m_libraryVersion;							// Verison of the Z-Wave Library used by the controller.
 		string					m_libraryTypeName;							// Name describing the library type.
