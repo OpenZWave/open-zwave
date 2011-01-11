@@ -95,7 +95,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConfigurationWakeUpDlg.cs" />
+    <Compile Include="ConfigurationWakeUpDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="ConfigurationWakeUpDlg.Designer.cs">
       <DependentUpon>ConfigurationWakeUpDlg.cs</DependentUpon>
     </Compile>
