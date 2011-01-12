@@ -1462,10 +1462,23 @@ void Node::ReadValueFromXML
 	// should already have been created when the command class instance count was read in)
 	if( ValueStore* store = GetValueStore() )
 	{
-		if( Value* value = store->GetValue( id ) )
+		Value* value = store->GetValue( id );
+
+		if( !value )
 		{
-			value->ReadXML( m_homeId, m_nodeId, _commandClassId, _valueElement );
+			// if the value doesn't exist, add a new one to the store
+			// so far, this two-argument CreateVars is for ThermostatSetpoint only
+			// but maybe others will need it as we test more devices(?)
+			CommandClass* pCommandClass = GetCommandClass(_commandClassId);
+			if( pCommandClass )
+				pCommandClass->CreateVars( instance, index );
+
+			// try to get value again (to confirm GetCommandClass and CreateVars worked
+			value = store->GetValue( id );
 		}
+
+		if( value )
+			value->ReadXML( m_homeId, m_nodeId, _commandClassId, _valueElement );
 	}
 }
 

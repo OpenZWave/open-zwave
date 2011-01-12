@@ -196,13 +196,26 @@ void ThermostatMode::CreateVars
 	uint8 const _instance
 )
 {
-	if( m_supportedModes.empty() )
-	{
-		return;
-	}
+	// There are three ways to get here...each needs to be handled differently:
+	//	QueryStage_ProtocolInfo:	
+	//		Don't know what's supported yet, so do nothing
+	//	QueryStage_Associations:	
+	//		Need to create the instance so the values can be read from the xml file 
+	//		(Associations is first stage for a node in ReadXML)
+	//	QueryStage_Static:
+	//		Need to create the instance (processing SupportedReport)
 
 	if( Node* node = GetNodeUnsafe() )
 	{
-		m_mode.AddInstance( _instance, node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Mode", "", false, m_supportedModes, m_supportedModes[0].m_value ) );
+		if( node->GetCurrentQueryStage() == Node::QueryStage_ProtocolInfo )
+			// this call is from QueryStage_ProtocolInfo,
+			// so just return (don't know which modes are supported yet)
+			return;
+
+		int32 defaultValue = 0;
+		if( !m_supportedModes.empty() )
+			defaultValue = m_supportedModes[0].m_value;
+
+		m_mode.AddInstance( _instance, node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Mode", "", false, m_supportedModes, defaultValue ) );
 	}
 }
