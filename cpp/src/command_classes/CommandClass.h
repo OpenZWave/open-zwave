@@ -167,6 +167,10 @@ namespace OpenZWave
 
 		virtual void CreateVars( uint8 const _instance ){}
 
+	public:
+		virtual void CreateVars( uint8 const _instance, uint8 const _index ){}
+
+
 	private:
 		uint32	m_homeId;
 		uint8	m_nodeId;
