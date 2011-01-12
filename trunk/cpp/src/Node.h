@@ -150,6 +150,12 @@ namespace OpenZWave
 		 */
 		void GoBackToQueryStage( QueryStage const _stage );									// Used to move back to repeat from an earlier stage. 
 		/**
+		 * Returns the current query stage enum.
+		 * \return Enum value with the current query stage.
+		 * \see m_queryStage
+		 */
+		Node::QueryStage GetCurrentQueryStage() { return m_queryStage; }
+		/**
 		 * Returns the specified query stage string.
 		 * \param _stage The query stage.
 		 * \return Specified query stage string.

@@ -214,3 +214,19 @@ bool ThermostatSetpoint::SetValue
 
 	return false;
 }
+
+//-----------------------------------------------------------------------------
+// <ThermostatSetpoint::CreateVars>
+// Create the values managed by this command class
+//-----------------------------------------------------------------------------
+void ThermostatSetpoint::CreateVars
+(
+	uint8 const _instance,
+	uint8 const _index
+)
+{
+	if( Node* node = GetNodeUnsafe() )
+	{
+		m_setpoints[_index].AddInstance( _instance, node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, _index, "Setpoint", "C", false, "0.0"  ) );
+	}
+}
