@@ -1459,26 +1459,18 @@ void Node::ReadValueFromXML
 	ValueID id = ValueID( m_homeId, m_nodeId, genre, _commandClassId, instance, index, type );
 
 	// Try to get the value from the ValueStore (everything except configuration parameters
-	// should already have been created when the command class instance count was read in)
+	// should already have been created when the command class instance count was read in).
+	// Create it if it doesn't already exist.
 	if( ValueStore* store = GetValueStore() )
 	{
-		Value* value = store->GetValue( id );
-
-		if( !value )
+		if( Value* value = store->GetValue( id.GetValueStoreKey() ) )
 		{
-			// if the value doesn't exist, add a new one to the store
-			// so far, this two-argument CreateVars is for ThermostatSetpoint only
-			// but maybe others will need it as we test more devices(?)
-			CommandClass* pCommandClass = GetCommandClass(_commandClassId);
-			if( pCommandClass )
-				pCommandClass->CreateVars( instance, index );
-
-			// try to get value again (to confirm GetCommandClass and CreateVars worked
-			value = store->GetValue( id );
-		}
-
-		if( value )
 			value->ReadXML( m_homeId, m_nodeId, _commandClassId, _valueElement );
+		}
+		else
+		{
+			CreateValueFromXML( _commandClassId, _valueElement );
+		}
 	}
 }
 
@@ -1491,7 +1483,7 @@ Value* Node::GetValue
 	ValueID const& _id
 )
 {
-	return GetValueStore()->GetValue( _id );
+	return GetValueStore()->GetValue( _id.GetValueStoreKey() );
 }
 
 //-----------------------------------------------------------------------------
@@ -1500,16 +1492,14 @@ Value* Node::GetValue
 //-----------------------------------------------------------------------------
 Value* Node::GetValue
 (
-	ValueID::ValueGenre const _genre,
 	uint8 const _commandClassId,
 	uint8 const _instance,
-	uint8 const _valueIndex,
-	ValueID::ValueType const _type
+	uint8 const _valueIndex
 )
 {
 	Value* value = NULL;
 	ValueStore* store = GetValueStore();
-	value = store->GetValue( CreateValueID( _genre, _commandClassId, _instance, _valueIndex, _type ) );
+	value = store->GetValue( ValueID::GetValueStoreKey( _commandClassId, _instance, _valueIndex ) );
 	return value;
 }
 
@@ -1795,7 +1785,7 @@ bool Node::SetDeviceClasses
 		bool reportedClasses = false;
 		for( cit = m_commandClassMap.begin(); cit != m_commandClassMap.end(); ++cit )
 		{
-			if( cit->second->IsAfterMark() )
+			if( !cit->second->IsAfterMark() )
 			{
 				Log::Write( "  %s", cit->second->GetCommandClassName().c_str() );
 				reportedClasses = true;
@@ -1810,7 +1800,7 @@ bool Node::SetDeviceClasses
 		reportedClasses = false;
 		for( cit = m_commandClassMap.begin(); cit != m_commandClassMap.end(); ++cit )
 		{
-			if( !cit->second->IsAfterMark() )
+			if( cit->second->IsAfterMark() )
 			{
 				Log::Write( "  %s", cit->second->GetCommandClassName().c_str() );
 				reportedClasses = true;
