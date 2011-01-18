@@ -257,7 +257,7 @@ bool Association::HandleMsg
 				// maxAssociations is zero, so we've reached the end of the query process
 				Log::Write( "Max associations for node %d, group %d is zero.  Querying associations for this node is complete.", GetNodeId(), groupIdx );
 				node->AutoAssociate();
-				node->QueryStageComplete( Node::QueryStage_Associations );
+//				node->QueryStageComplete( Node::QueryStage_Associations );
 				m_queryAll = false;
 			}
 
@@ -281,7 +281,7 @@ bool Association::HandleMsg
 					// We're all done
 					Log::Write( "Querying associations for node %d is complete.", GetNodeId() );
 					node->AutoAssociate();
-					node->QueryStageComplete( Node::QueryStage_Associations );
+//					node->QueryStageComplete( Node::QueryStage_Associations );
 					m_queryAll = false;
 				}
 			}

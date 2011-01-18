@@ -274,7 +274,7 @@ void Driver::DriverThreadProc
 										if (node->m_queryPending)
 										{
 											Log::Write( "Command was dropped during node query stage %s, advancing to next stage", node->GetQueryStageName( node->m_queryStage ).c_str() );
-											node->QueryStageComplete(node->m_queryStage);
+//											node->QueryStageComplete(node->m_queryStage);
 										}
 									}
 								}
@@ -305,7 +305,7 @@ void Driver::DriverThreadProc
 													if (node->m_queryPending)
 													{
 														Log::Write( "Command was dropped during node query stage %s, advancing to next stage", node->GetQueryStageName( node->m_queryStage ).c_str() );
-														node->QueryStageComplete(node->m_queryStage);
+//														node->QueryStageComplete(node->m_queryStage);
 													}
 												}
 											}
@@ -760,9 +760,40 @@ void Driver::RemoveMsg
 ( 
 )
 {
+	// get current message from the queue
 	m_sendMutex->Lock();
-	
 	Msg *msg = m_sendQueue.front();
+
+	// if this is the last message in the queue for this node and it's not a "retry"
+	// then signal that this query stage is complete
+	uint8 nodeId = msg->GetTargetNodeId();
+	if( nodeId != 0xff )
+	{
+		// check to see if this is a "retry."  If so, don't signal query stage complete
+		Node* node = GetNodeUnsafe( nodeId );
+		if( !node->m_queryRetries )
+		{
+			// look for more messages for this node in the send queue (to see if query stage is complete)
+			bool bMoreForThisNode = false;
+			list<Msg*>::iterator it = m_sendQueue.begin();
+			++it;
+			while( it != m_sendQueue.end() )
+			{
+				Msg* msg = *it;
+				if( msg->GetTargetNodeId() == nodeId )
+				{
+					bMoreForThisNode = true;
+					break;
+				}
+				++it;
+			}
+
+			// if there are no more messages for this node in the queue, signal complete
+			if( !bMoreForThisNode ) 
+				node->QueryStageComplete( node->m_queryStage );
+		}
+	}
+
 	m_sendQueue.pop_front();
 	delete msg;
 
@@ -1769,7 +1800,7 @@ void Driver::HandleGetRoutingInfoResponse
 #endif
 
 		// Can do this unsafe
-		node->QueryStageComplete( Node::QueryStage_Neighbors );
+//		node->QueryStageComplete( Node::QueryStage_Neighbors );
 	}
 
 

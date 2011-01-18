@@ -185,7 +185,6 @@ namespace OpenZWave
 
 		QueryStage	m_queryStage;
 		bool		m_queryPending;
-		bool		m_queryConfiguration;
 		uint8		m_queryRetries;
 
 	//-----------------------------------------------------------------------------
@@ -284,9 +283,6 @@ namespace OpenZWave
 		CommandClass* GetCommandClass( uint8 const _commandClassId )const;
 		void ApplicationCommandHandler( uint8 const* _data );
 
-		bool RequiresPolling();
-		void Poll();
-
 	private:
 		/**
 		 * Creates the specified command class object and adds it to the node (via the 
@@ -343,6 +339,9 @@ namespace OpenZWave
 		ValueSchedule* CreateValueSchedule( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex, string const& _label, string const& _units, bool const _readOnly );
 		ValueShort* CreateValueShort( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, int16 const _default );
 		ValueString* CreateValueString( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, string const& _default );
+
+		// helpers for removing values
+		void RemoveValueList( ValueList* _value );
 
 		void ReadValueFromXML( uint8 const _commandClassId, TiXmlElement const* _valueElement );
 		Value* CreateValueFromXML( uint8 const _commandClassId, TiXmlElement const* _valueElement );

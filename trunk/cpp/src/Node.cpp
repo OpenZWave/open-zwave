@@ -106,7 +106,6 @@ Node::Node
 	m_values( new ValueStore() ),
 	m_queryStage( QueryStage_None ),
 	m_queryPending( false ),
-	m_queryConfiguration( false ),
 	m_queryRetries( 0 )
 {
 }
@@ -188,13 +187,14 @@ void Node::AdvanceQueries
 			{
 				// For sleeping devices other than controllers, we need to defer the usual requests until
 				// we have told the device to send it's wake-up notifications to the PC controller.
+				Log::Write( "Node %d: QueryStage_WakeUp", m_nodeId );
+
 				WakeUp* wakeUp = static_cast<WakeUp*>( GetCommandClass( WakeUp::StaticGetCommandClassId() ) );
 
 				// if this device is a "sleeping device" and not a controller
 				if( wakeUp && ( GetBasic() >= 0x03 ) )
 				{
 					// start the process of requesting node state from this sleeping device
-					Log::Write( "Node %d: QueryStage_WakeUp", m_nodeId );
 					wakeUp->Init();
 					m_queryPending = true;
 				}
@@ -221,10 +221,10 @@ void Node::AdvanceQueries
 				// Obtain manufacturer, product type and product ID code from the node device
 				// Manufacturer Specific data is requested before the other command class data so 
 				// that we can modify the supported command classes list through the product XML files.
+				Log::Write( "Node %d: QueryStage_ManufacturerSpecific", m_nodeId );
 				ManufacturerSpecific* cc = static_cast<ManufacturerSpecific*>( GetCommandClass( ManufacturerSpecific::StaticGetCommandClassId() ) );
 				if( cc  )
 				{
-					Log::Write( "Node %d: QueryStage_ManufacturerSpecific", m_nodeId );
 					m_queryPending = cc->RequestState( CommandClass::RequestFlag_Static );
 				}
 				if( !m_queryPending )
@@ -237,11 +237,11 @@ void Node::AdvanceQueries
 			case QueryStage_Versions:
 			{
 				// Get the version information (if the device supports COMMAND_CLASS_VERSION
+				Log::Write( "Node %d: QueryStage_Versions", m_nodeId );
 				Version* vcc = static_cast<Version*>( GetCommandClass( Version::StaticGetCommandClassId() ) );
 				// if this node supports VERSION
 				if( vcc )
 				{
-					Log::Write( "Node %d: QueryStage_Versions", m_nodeId );
 
 					for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
 					{
@@ -264,11 +264,10 @@ void Node::AdvanceQueries
 			case QueryStage_Instances:
 			{
 				// if the device at this node supports multiple instances, obtain a list of these instances
+				Log::Write( "Node %d: QueryStage_Instances", m_nodeId );
 				MultiInstance* micc = static_cast<MultiInstance*>( GetCommandClass( MultiInstance::StaticGetCommandClassId() ) );
 				if( micc )
 				{
-					Log::Write( "Node %d: QueryStage_Instances", m_nodeId );
-
 					for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
 					{
 						if( micc->RequestInstances( it->second ) )
@@ -290,16 +289,13 @@ void Node::AdvanceQueries
 			{
 				// Request any other static values associated with each command class supported by this node
 				// examples are supported thermostat operating modes, setpoints and fan modes
+				Log::Write( "Node %d: QueryStage_Static", m_nodeId );
 				for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
 				{
 					m_queryPending |= it->second->RequestState( CommandClass::RequestFlag_Static );
 				}
 
-				if( m_queryPending )
-				{
-					Log::Write( "Node %d: QueryStage_Static", m_nodeId );
-				}
-				else
+				if( !m_queryPending )
 				{
 					// when all (if any) static information has been retrieved, advance to the Associations stage
 					m_queryStage = QueryStage_Associations;
@@ -310,10 +306,10 @@ void Node::AdvanceQueries
 			case QueryStage_Associations:
 			{
 				// if this device supports COMMAND_CLASS_ASSOCIATION, determine to which groups this node belong
+				Log::Write( "Node %d: QueryStage_Associations", m_nodeId );
 				Association* acc = static_cast<Association*>( GetCommandClass( Association::StaticGetCommandClassId() ) );
 				if( acc )
 				{
-					Log::Write( "Node %d: QueryStage_Associations", m_nodeId );
 					acc->RequestAllGroups();
 					m_queryPending = true;
 				}
@@ -332,11 +328,13 @@ void Node::AdvanceQueries
 				Log::Write( "Node %d: QueryStage_Session", m_nodeId );
 				for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
 				{
-					it->second->RequestState( CommandClass::RequestFlag_Session );
+					m_queryPending |= it->second->RequestState( CommandClass::RequestFlag_Session );
 				}
-				// advance to Dynamic information stage
-				m_queryStage = QueryStage_Dynamic;
-				m_queryRetries = 0;
+				if( !m_queryPending )
+				{
+					m_queryStage = QueryStage_Dynamic;
+					m_queryRetries = 0;
+				}
 				break;
 			}
 			case QueryStage_Dynamic:
@@ -346,27 +344,30 @@ void Node::AdvanceQueries
 				Log::Write( "Node %d: QueryStage_Dynamic", m_nodeId );
 				for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
 				{
-					it->second->RequestState( CommandClass::RequestFlag_Dynamic );
+					m_queryPending |= it->second->RequestState( CommandClass::RequestFlag_Dynamic );
 				}
-				
-				// If querying of the configurable parameters has been requested, we do that next, otherwise we're done.
-				m_queryStage = m_queryConfiguration ? QueryStage_Configuration : QueryStage_Complete; 
-				m_queryRetries = 0;
+				if( !m_queryPending )
+				{
+					m_queryStage = QueryStage_Configuration; 
+					m_queryRetries = 0;
+				}
 				break;
 			}
 			case QueryStage_Configuration:
 			{
 				// Request the configurable parameter values from the node.
+				Log::Write( "Node %d: QueryStage_Configuration", m_nodeId );
 				Configuration* ccc = static_cast<Configuration*>( GetCommandClass( Configuration::StaticGetCommandClassId() ) );
 				if( ccc )
 				{
-					Log::Write( "Node %d: QueryStage_Configuration", m_nodeId );
 					ccc->RequestAllParamValues();
+					m_queryPending = true;
 				}
-
-				m_queryStage = QueryStage_Complete;
-				m_queryRetries = 0;
-				m_queryConfiguration = false;
+				if( !m_queryPending )
+				{
+					m_queryStage = QueryStage_Complete;
+					m_queryRetries = 0;
+				}
 				break;
 			}
 			case QueryStage_Complete:
@@ -427,13 +428,11 @@ void Node::QueryStageRetry
 	++m_queryRetries;
 	if( _maxAttempts && ( m_queryRetries >= _maxAttempts ) )
 	{
-		// We've retried too many times.  Move to the next stage
-		QueryStageComplete( _stage );
+		// We've retried too many times.  Move to the next stage.
+		// Setting m_queryRetries to 0 will make it look like the stage succeeded.
+		m_queryRetries = 0;
 	}
-	else
-	{
-		m_queryPending = false;
-	}
+	m_queryPending = false;
 }
 
 //-----------------------------------------------------------------------------
@@ -449,11 +448,6 @@ void Node::GoBackToQueryStage
 	{
 		m_queryStage = _stage;
 		m_queryPending = false;
-	}
-
-	if( QueryStage_Configuration == _stage )
-	{
-		m_queryConfiguration = true;
 	}
 }
 
@@ -813,7 +807,7 @@ void Node::UpdateProtocolInfo
 
 	// Set up the device class based data for the node, including mandatory command classes
 	SetDeviceClasses( _data[3], _data[4], _data[5] );
-	QueryStageComplete( QueryStage_ProtocolInfo );
+//	QueryStageComplete( QueryStage_ProtocolInfo );
 }
 
 //-----------------------------------------------------------------------------
@@ -885,7 +879,7 @@ void Node::UpdateNodeInfo
 		}
 
 		SetStaticRequests();
-		QueryStageComplete( QueryStage_NodeInfo );
+//		QueryStageComplete( QueryStage_NodeInfo );
 	}
 	else
 	{
@@ -1388,6 +1382,20 @@ ValueString* Node::CreateValueString
 	ValueStore* store = GetValueStore();
 	store->AddValue( value );
 	return value;
+}
+
+//-----------------------------------------------------------------------------
+// <Node::RemoveValueList>
+// Helper to remove an existing list value from the value store
+//-----------------------------------------------------------------------------
+void Node::RemoveValueList
+(
+	ValueList* _value
+)
+{
+	ValueStore* store = GetValueStore();
+	store->RemoveValue( _value->GetID() );
+	delete _value;
 }
 
 //-----------------------------------------------------------------------------
