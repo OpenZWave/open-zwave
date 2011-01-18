@@ -199,23 +199,35 @@ void ThermostatMode::CreateVars
 	// There are three ways to get here...each needs to be handled differently:
 	//	QueryStage_ProtocolInfo:	
 	//		Don't know what's supported yet, so do nothing
-	//	QueryStage_Associations:	
+	//	QueryStage_NodeInfo:	
 	//		Need to create the instance so the values can be read from the xml file 
-	//		(Associations is first stage for a node in ReadXML)
 	//	QueryStage_Static:
-	//		Need to create the instance (processing SupportedReport)
+	//		Need to create the instance (processing SupportedReport) if it doesn't exist
+	//		If it does, populate with the appropriate values
 
 	if( Node* node = GetNodeUnsafe() )
 	{
-		if( node->GetCurrentQueryStage() == Node::QueryStage_ProtocolInfo )
+		Node::QueryStage qs = node->GetCurrentQueryStage();
+		if( qs == Node::QueryStage_ProtocolInfo )
 			// this call is from QueryStage_ProtocolInfo,
 			// so just return (don't know which modes are supported yet)
 			return;
 
+		// identify the lowest supported mode as the "default" (or default to 0 if no supported modes identified yet)
 		int32 defaultValue = 0;
 		if( !m_supportedModes.empty() )
 			defaultValue = m_supportedModes[0].m_value;
 
-		m_mode.AddInstance( _instance, node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Mode", "", false, m_supportedModes, defaultValue ) );
+		if( qs == Node::QueryStage_Static )
+		{
+			// This instance might already have been created (in NodeInfo, in preparation for loading the values
+			// from zwcfg xml file).  So, if the instance already exists, we delete its value and add a new one below
+			ValueList* vl = m_mode.GetInstance( _instance );
+			if( vl )
+				node->RemoveValueList( vl );
+		}
+
+		ValueList* vl2 = node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Mode", "", false, m_supportedModes, defaultValue );
+		m_mode.AddInstance( _instance, vl2 );
 	}
 }

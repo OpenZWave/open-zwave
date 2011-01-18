@@ -160,7 +160,7 @@ bool ManufacturerSpecific::HandleMsg
 
 			Log::Write( "Received manufacturer specific report from node %d: Manufacturer=%s, Product=%s", GetNodeId(), manufacturerName.c_str(), productName.c_str() );
 			ClearStaticRequest( StaticRequest_Values );
-			node->QueryStageComplete( Node::QueryStage_ManufacturerSpecific );
+//			node->QueryStageComplete( Node::QueryStage_ManufacturerSpecific );
 		}
 		
 		// Notify the watchers of the name changes
