@@ -1481,7 +1481,7 @@ bool Manager::GetValueAsString
 
 //-----------------------------------------------------------------------------
 // <Manager::GetValueListSelection>
-// Gets the selected item from a list value
+// Gets the selected item from a list value (returning a string)
 //-----------------------------------------------------------------------------
 bool Manager::GetValueListSelection
 (
@@ -1502,6 +1502,40 @@ bool Manager::GetValueListSelection
 				{
 					ValueList::Item const& item = value->GetItem();
 					*o_value = item.m_label;
+                    value->Release();
+					res = true;
+				}
+				driver->ReleaseNodes();
+			}
+		}
+	}
+
+	return res;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::GetValueListSelection>
+// Gets the selected item from a list value (returning the index)
+//-----------------------------------------------------------------------------
+bool Manager::GetValueListSelection
+(
+	ValueID const& _id,
+	int32* o_value
+)
+{
+	bool res = false;
+
+	if( o_value )
+	{
+		if( ValueID::ValueType_List == _id.GetType() )
+		{
+			if( Driver* driver = GetDriver( _id.GetHomeId() ) )
+			{
+				driver->LockNodes();
+				if( ValueList* value = static_cast<ValueList*>( driver->GetValue( _id ) ) )
+				{
+					ValueList::Item const& item = value->GetItem();
+					*o_value = item.m_value;
                     value->Release();
 					res = true;
 				}

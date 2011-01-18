@@ -196,7 +196,7 @@ bool ZWManager::GetValueAsString
 
 //-----------------------------------------------------------------------------
 // <ZWManager::GetValueListSelection>
-// Gets the selected item from a list value
+// Gets the selected item from a list value (returning a string)
 //-----------------------------------------------------------------------------
 bool ZWManager::GetValueListSelection
 ( 
@@ -208,6 +208,25 @@ bool ZWManager::GetValueListSelection
 	if( Manager::Get()->GetValueListSelection(id->CreateUnmanagedValueID(), &value ) )
 	{
 		o_value = gcnew String(value.c_str());
+		return true;
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <ZWManager::GetValueListSelection>
+// Gets the selected item from a list value (returning the value)
+//-----------------------------------------------------------------------------
+bool ZWManager::GetValueListSelection
+( 
+	ZWValueID^ id, 
+	[Out] System::Int32 %o_value 
+)
+{ 
+	Int32 value;
+	if( Manager::Get()->GetValueListSelection(id->CreateUnmanagedValueID(), &value ) )
+	{
+		o_value = value;
 		return true;
 	}
 	return false;

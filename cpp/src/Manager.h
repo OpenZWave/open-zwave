@@ -770,13 +770,22 @@ namespace OpenZWave
 		bool GetValueAsString( ValueID const& _id, string* o_value );
 		
 		/**
-		 * \brief Gets the selected item from a list value.
+		 * \brief Gets the selected item from a list (as a string).
 		 * \param _id The unique identifier of the value.
 		 * \param o_value Pointer to a string that will be filled with the selected item.
-		 * \return true if the value was obtained.  Returns false if the value is not a ValueID::ValueType_List. The type can be tested with a call to ValueID::GetType.
+		 * \return True if the value was obtained.  Returns false if the value is not a ValueID::ValueType_List. The type can be tested with a call to ValueID::GetType.
 		 * \see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsFloat, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListItems. 
 		 */
 		bool GetValueListSelection( ValueID const& _id, string* o_value );
+
+		/**
+		 * \brief Gets the selected item from a list (as an integer).
+		 * \param _id The unique identifier of the value.
+		 * \param o_value Pointer to an integer that will be filled with the selected item.
+		 * \return True if the value was obtained.  Returns false if the value is not a ValueID::ValueType_List. The type can be tested with a call to ValueID::GetType.
+		 * \see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsFloat, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListItems. 
+		 */
+		bool GetValueListSelection( ValueID const& _id, int32* o_value );
 
 		/**
 		 * \brief Gets the list of items from a list value.
