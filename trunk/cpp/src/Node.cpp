@@ -106,6 +106,7 @@ Node::Node
 	m_values( new ValueStore() ),
 	m_queryStage( QueryStage_None ),
 	m_queryPending( false ),
+	m_queryConfiguration( false ),
 	m_queryRetries( 0 )
 {
 }
@@ -357,16 +358,20 @@ void Node::AdvanceQueries
 			{
 				// Request the configurable parameter values from the node.
 				Log::Write( "Node %d: QueryStage_Configuration", m_nodeId );
-				Configuration* ccc = static_cast<Configuration*>( GetCommandClass( Configuration::StaticGetCommandClassId() ) );
-				if( ccc )
+				if( m_queryConfiguration )
 				{
-					ccc->RequestAllParamValues();
-					m_queryPending = true;
+					Configuration* ccc = static_cast<Configuration*>( GetCommandClass( Configuration::StaticGetCommandClassId() ) );
+					if( ccc )
+					{
+						ccc->RequestAllParamValues();
+						m_queryPending = true;
+					}
 				}
 				if( !m_queryPending )
 				{
 					m_queryStage = QueryStage_Complete;
 					m_queryRetries = 0;
+					m_queryConfiguration = false;
 				}
 				break;
 			}
@@ -448,6 +453,11 @@ void Node::GoBackToQueryStage
 	{
 		m_queryStage = _stage;
 		m_queryPending = false;
+	}
+
+	if( QueryStage_Configuration == _stage )
+	{
+		m_queryConfiguration = true;
 	}
 }
 
