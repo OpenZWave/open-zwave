@@ -185,6 +185,7 @@ namespace OpenZWave
 
 		QueryStage	m_queryStage;
 		bool		m_queryPending;
+		bool		m_queryConfiguration;
 		uint8		m_queryRetries;
 
 	//-----------------------------------------------------------------------------
