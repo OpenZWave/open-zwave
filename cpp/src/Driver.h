@@ -330,14 +330,16 @@ namespace OpenZWave
 	//-----------------------------------------------------------------------------
 	private:
 		void SetPollInterval( int32 _seconds ){ m_pollInterval = _seconds; }
-		bool EnablePoll( uint8 _nodeId );
-		bool DisablePoll( uint8 _nodeId );
+//		bool EnablePoll( uint8 _nodeId );
+		bool EnablePoll( ValueID _valueId );
+//		bool DisablePoll( uint8 _nodeId );
+		bool DisablePoll( ValueID _valueId );
 
 		static void PollThreadEntryPoint( void* _context );
 		void PollThreadProc();
 
 		Thread*					m_pollThread;								// Thread for polling devices on the Z-Wave network
-		list<uint8>				m_pollList;									// List of nodes that need to be polled
+		list<ValueID>			m_pollList;									// List of nodes that need to be polled
 		Mutex*					m_pollMutex;								// Serialize access to the polling list
 		int32					m_pollInterval;								// Time interval during which all nodes must be polled
 

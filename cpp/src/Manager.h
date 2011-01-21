@@ -316,19 +316,17 @@ namespace OpenZWave
 
 		/**
 		 * \brief Enable the polling of a device's state.
-		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
-		 * \param _nodeId The ID of the node to start polling.
-		 * \return true if polling was enabled.
+		 * \param _valueId The ID of the value to start polling.
+		 * \return True if polling was enabled.
 		 */
-		bool EnablePoll( uint32 const _homeId, uint8 const _nodeId );
+		bool EnablePoll( ValueID const _valueId );
 
 		/**
 		 * \brief Disable the polling of a device's state.
-		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
-		 * \param _nodeId The ID of the node to stop polling.
-		 * \return true if polling was disabled.
+		 * \param _valueId The ID of the value to stop polling.
+		 * \return True if polling was disabled.
 		 */
-		bool DisablePoll( uint32 const _homeId, uint8 const _nodeId );
+		bool DisablePoll( ValueID const _valueId );
 	/*@}*/
 
 	//-----------------------------------------------------------------------------

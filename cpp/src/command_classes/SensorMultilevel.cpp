@@ -124,33 +124,55 @@ bool SensorMultilevel::RequestState
 			// More than one instance - query each one in turn
 			for( uint8 i=0; i<numInstances; ++i )
 			{
-				Msg* msg = new Msg( "SensorMultilevelCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, MultiInstance::StaticGetCommandClassId() );
-				msg->Append( GetNodeId() );
-				msg->Append( 5 );
-				msg->Append( MultiInstance::StaticGetCommandClassId() );
-				msg->Append( MultiInstance::MultiInstanceCmd_CmdEncap );
-				msg->Append( i+1 );
-				msg->Append( GetCommandClassId() );
-				msg->Append( SensorMultilevelCmd_Get );
-				msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-				GetDriver()->SendMsg( msg );
+				RequestValue( i+1 );		// increase by 1 so a one-instance value can be equal to 0
 			}
 			return true;
 		}
 		else
 		{
-			Msg* msg = new Msg( "SensorMultilevelCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-			msg->Append( GetNodeId() );
-			msg->Append( 2 );
-			msg->Append( GetCommandClassId() );
-			msg->Append( SensorMultilevelCmd_Get );
-			msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-			GetDriver()->SendMsg( msg );
+			RequestValue();
 			return true;
 		}
 	}
 
 	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <SensorMultilevel::RequestValue>												   
+// Request current value from the device									   
+//-----------------------------------------------------------------------------
+void SensorMultilevel::RequestValue
+(
+	uint8 const _index		// = 0
+)
+{
+	if( _index > 0 )
+	{
+		Msg* msg = new Msg( "SensorMultilevelCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, MultiInstance::StaticGetCommandClassId() );
+		msg->Append( GetNodeId() );
+		msg->Append( 5 );
+		msg->Append( MultiInstance::StaticGetCommandClassId() );
+		msg->Append( MultiInstance::MultiInstanceCmd_CmdEncap );
+		msg->Append( _index );		// already increased by 1
+		msg->Append( GetCommandClassId() );
+		msg->Append( SensorMultilevelCmd_Get );
+		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		GetDriver()->SendMsg( msg );
+		return;
+	}
+
+	if( _index == 0 )
+	{
+		Msg* msg = new Msg( "SensorMultilevelCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		msg->Append( GetNodeId() );
+		msg->Append( 2 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( SensorMultilevelCmd_Get );
+		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		GetDriver()->SendMsg( msg );
+		return;
+	}
 }
 
 //-----------------------------------------------------------------------------

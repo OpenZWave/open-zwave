@@ -53,10 +53,9 @@ namespace OpenZWave
 		static uint8 const StaticGetCommandClassId(){ return 0x90; }
 		static string const StaticGetCommandClassName(){ return "COMMAND_CLASS_ENERGY_PRODUCTION"; }
 
-		void Get( ProductionEnum _production );
-
 		// From CommandClass
 		virtual bool RequestState( uint32 const _requestFlags );
+		virtual void RequestValue( uint8 const _index = 0 );
 		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }
 		virtual string const GetCommandClassName()const{ return StaticGetCommandClassName(); }
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );

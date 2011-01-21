@@ -1113,7 +1113,7 @@ void Node::RequestConfigParam
 {
 	if( Configuration* cc = static_cast<Configuration*>( GetCommandClass( Configuration::StaticGetCommandClassId() ) ) )
 	{
-		cc->Get( _param );
+		cc->RequestValue( _param );
 	}
 }
 

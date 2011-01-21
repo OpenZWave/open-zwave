@@ -353,20 +353,18 @@ namespace OpenZWaveDotNet
 		/**
 		 * \brief Enable the polling of a device's state.
 		 *
-		 * \param homeId The Home ID of the Z-Wave controller that manages the node.
-		 * \param nodeId The ID of the node to start polling.
-		 * \return true if polling was enabled.
+		 * \param valueId The ID of the value to start polling.
+		 * \return True if polling was enabled.
 		 */
-		bool EnablePoll( uint32 homeId, uint8 nodeId ){ return Manager::Get()->EnablePoll(homeId,nodeId); }
+		bool EnablePoll( ZWValueID^ valueId ){ return Manager::Get()->EnablePoll(valueId->CreateUnmanagedValueID()); }
 
 		/**
 		 * \brief Disable the polling of a device's state.
 		 *
-		 * \param homeId The Home ID of the Z-Wave controller that manages the node.
-		 * \param nodeId The ID of the node to stop polling.
-		 * \return true if polling was disabled.
+		 * \param valueId The ID of the value to stop polling.
+		 * \return True if polling was disabled.
 		 */
-		bool DisablePoll( uint32 homeId, uint8 nodeId ){ return Manager::Get()->DisablePoll(homeId,nodeId); }
+		bool DisablePoll( ZWValueID^ valueId ){ return Manager::Get()->DisablePoll(valueId->CreateUnmanagedValueID()); }
 	/*@}*/
 
 	//-----------------------------------------------------------------------------

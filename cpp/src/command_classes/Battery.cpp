@@ -43,7 +43,6 @@ enum BatteryCmd
 	BatteryCmd_Report	= 0x03
 };
 
-
 //-----------------------------------------------------------------------------
 // <Battery::RequestState>												   
 // Request current state from the device									   
@@ -55,17 +54,29 @@ bool Battery::RequestState
 {
 	if( _requestFlags & RequestFlag_Dynamic )
 	{
-		Msg* msg = new Msg( "BatteryCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-		msg->Append( GetNodeId() );
-		msg->Append( 2 );
-		msg->Append( GetCommandClassId() );
-		msg->Append( BatteryCmd_Get );
-		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-		GetDriver()->SendMsg( msg );
+		RequestValue();
 		return true;
 	}
 
 	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Battery::RequestValue>												   
+// Request current value from the device									   
+//-----------------------------------------------------------------------------
+void Battery::RequestValue
+(
+	uint8 const _index		// = 0
+)
+{
+	Msg* msg = new Msg( "BatteryCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+	msg->Append( GetNodeId() );
+	msg->Append( 2 );
+	msg->Append( GetCommandClassId() );
+	msg->Append( BatteryCmd_Get );
+	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	GetDriver()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------

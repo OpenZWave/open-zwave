@@ -43,7 +43,6 @@ enum MeterPulseCmd
 	MeterPulseCmd_Report	= 0x05
 };
 
-
 //-----------------------------------------------------------------------------
 // <MeterPulse::RequestState>												   
 // Request current state from the device									   
@@ -55,17 +54,29 @@ bool MeterPulse::RequestState
 {
 	if( _requestFlags & RequestFlag_Dynamic )
 	{
-		Msg* msg = new Msg( "MeterPulseCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-		msg->Append( GetNodeId() );
-		msg->Append( 2 );
-		msg->Append( GetCommandClassId() );
-		msg->Append( MeterPulseCmd_Get );
-		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-		GetDriver()->SendMsg( msg );
+		RequestValue();
 		return true;
 	}
 
 	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <MeterPulse::RequestValue>												   
+// Request current value from the device									   
+//-----------------------------------------------------------------------------
+void MeterPulse::RequestValue
+(
+	uint8 const _index		// = 0
+)
+{
+	Msg* msg = new Msg( "MeterPulseCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+	msg->Append( GetNodeId() );
+	msg->Append( 2 );
+	msg->Append( GetCommandClassId() );
+	msg->Append( MeterPulseCmd_Get );
+	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	GetDriver()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------

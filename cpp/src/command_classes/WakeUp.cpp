@@ -104,18 +104,30 @@ bool WakeUp::RequestState
 {
 	if( _requestFlags & RequestFlag_Session )
 	{
-		// We won't get a response until the device next wakes up
-		Msg* msg = new Msg( "WakeUpCmd_IntervalGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-		msg->Append( GetNodeId() );
-		msg->Append( 2 );
-		msg->Append( GetCommandClassId() );
-		msg->Append( WakeUpCmd_IntervalGet );
-		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-		GetDriver()->SendMsg( msg );
+		RequestValue();
 		return true;
 	}
 
 	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <WakeUp::RequestValue>
+// Nothing to do for wakeup
+//-----------------------------------------------------------------------------
+void WakeUp::RequestValue
+(
+	int8 const _index		// = 0
+)
+{
+	// We won't get a response until the device next wakes up
+	Msg* msg = new Msg( "WakeUpCmd_IntervalGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+	msg->Append( GetNodeId() );
+	msg->Append( 2 );
+	msg->Append( GetCommandClassId() );
+	msg->Append( WakeUpCmd_IntervalGet );
+	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	GetDriver()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------

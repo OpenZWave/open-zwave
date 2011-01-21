@@ -51,7 +51,6 @@ static char const* c_energyParameterNames[] =
 	"Total production time"
 };
 
-
 //-----------------------------------------------------------------------------
 // <EnergyProduction::RequestState>												   
 // Request current state from the device									   
@@ -64,14 +63,34 @@ bool EnergyProduction::RequestState
 	if( _requestFlags & RequestFlag_Dynamic )
 	{
 		// Request each of the production values
-		Get( Production_Instant );
-		Get( Production_Total );
-		Get( Production_Today );
-		Get( Production_Time );
+		RequestValue( Production_Instant );
+		RequestValue( Production_Total );
+		RequestValue( Production_Today );
+		RequestValue( Production_Time );
 		return true;
 	}
 
 	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <EnergyProduction::RequestValue>												   
+// Request current production from the device									   
+//-----------------------------------------------------------------------------
+void EnergyProduction::RequestValue
+(
+	uint8 const _index		// =0
+)
+{
+	Log::Write( "Requesting the %s value from node %d", c_energyParameterNames[_index], GetNodeId() );
+	Msg* msg = new Msg( "EnergyProductionCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+	msg->Append( GetNodeId() );
+	msg->Append( 3 );
+	msg->Append( GetCommandClassId() );
+	msg->Append( EnergyProductionCmd_Get );
+	msg->Append( _index );
+	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	GetDriver()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -100,26 +119,6 @@ bool EnergyProduction::HandleMsg
 	}
 
 	return false;
-}
-
-//-----------------------------------------------------------------------------
-// <EnergyProduction::Get>												   
-// Request current production from the device									   
-//-----------------------------------------------------------------------------
-void EnergyProduction::Get
-(
-	ProductionEnum _production
-)
-{
-	Log::Write( "Requesting the %s value from node %d", c_energyParameterNames[_production], GetNodeId() );
-	Msg* msg = new Msg( "EnergyProductionCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-	msg->Append( GetNodeId() );
-	msg->Append( 3 );
-	msg->Append( GetCommandClassId() );
-	msg->Append( EnergyProductionCmd_Get );
-	msg->Append( _production );
-	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	GetDriver()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------

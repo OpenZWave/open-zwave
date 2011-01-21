@@ -53,7 +53,6 @@ static char const* c_protectionStateNames[] =
 	"No Operation Possible"
 };
 
-
 //-----------------------------------------------------------------------------
 // <Protection::RequestState>												   
 // Request current state from the device									   
@@ -65,17 +64,29 @@ bool Protection::RequestState
 {
 	if( _requestFlags & RequestFlag_Session )
 	{
-		Msg* msg = new Msg( "ProtectionCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-		msg->Append( GetNodeId() );
-		msg->Append( 2 );
-		msg->Append( GetCommandClassId() );
-		msg->Append( ProtectionCmd_Get );
-		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-		GetDriver()->SendMsg( msg );
+		RequestValue();
 		return true;
 	}
 
 	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Protection::RequestValue>												   
+// Request current value from the device									   
+//-----------------------------------------------------------------------------
+void Protection::RequestValue
+(
+	uint8 const _index		// = 0
+)
+{
+	Msg* msg = new Msg( "ProtectionCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+	msg->Append( GetNodeId() );
+	msg->Append( 2 );
+	msg->Append( GetCommandClassId() );
+	msg->Append( ProtectionCmd_Get );
+	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	GetDriver()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------

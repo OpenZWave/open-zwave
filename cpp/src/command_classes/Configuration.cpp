@@ -75,7 +75,7 @@ void Configuration::RequestAllParamValues
 	// to look at the device properties.
 	for( list<Value*>::iterator it = m_params.begin(); it != m_params.end(); ++it )
 	{
-		Get( (*it)->GetID().GetIndex() );
+		RequestValue( (*it)->GetID().GetIndex() );
 	}
 }
 
@@ -261,10 +261,10 @@ bool Configuration::SetValue
 }
 
 //-----------------------------------------------------------------------------
-// <Configuration::Get>												   
+// <Configuration::RequestValue>												   
 // Request current parameter value from the device									   
 //-----------------------------------------------------------------------------
-void Configuration::Get
+void Configuration::RequestValue
 (
 	uint8 const _parameter
 )
