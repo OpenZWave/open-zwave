@@ -2574,39 +2574,48 @@ void Driver::CommonAddNodeStatusRequestHandler
 	
 //-----------------------------------------------------------------------------
 // <Driver::EnablePoll>
-// Enable polling of a node
+// Enable polling of a value
 //-----------------------------------------------------------------------------
 bool Driver::EnablePoll
 ( 
-	uint8 const _nodeId
+	ValueID const _valueId
 )
 {
-    Node* node = GetNode( _nodeId );
+	// confirm that this node exists
+	uint8 nodeId = _valueId.GetNodeId();
+    Node* node = GetNode( nodeId );
 	if( node != NULL )
 	{
-		// Add the node to the polling list
-		m_pollMutex->Lock();
-
-		// See if the node is already in the poll list.
-		for( list<uint8>::iterator it = m_pollList.begin(); it != m_pollList.end(); ++it )
+		// confirm that this value is in the node's value store
+		if( Value* value = node->GetValue( _valueId ) )
 		{
-			if( *it == _nodeId )
+			// Add the valueid to the polling list
+			m_pollMutex->Lock();
+
+			// See if the node is already in the poll list.
+			for( list<ValueID>::iterator it = m_pollList.begin(); it != m_pollList.end(); ++it )
 			{
-				// It is already in the poll list, so we have nothing to do.
-				m_pollMutex->Release();
-				ReleaseNodes();
-				return true;
+				if( *it == _valueId )
+				{
+					// It is already in the poll list, so we have nothing to do.
+					m_pollMutex->Release();
+					ReleaseNodes();
+					return true;
+				}
 			}
+
+			// Not in the list, so we add it
+			m_pollList.push_back( _valueId );
+			m_pollMutex->Release();
+			ReleaseNodes();
+			return true;
 		}
 
-		// Not in the list, so we add it
-		m_pollList.push_back( _nodeId );
-		m_pollMutex->Release();
-		ReleaseNodes();
-		return true;
+		Log::Write( "EnablePoll failed - value not found for node %d", nodeId );
+		return false;
 	}
 
-	Log::Write( "EnablePoll failed - node %d not found", _nodeId );
+	Log::Write( "EnablePoll failed - node %d not found", nodeId );
 	return false;
 }
 
@@ -2616,18 +2625,19 @@ bool Driver::EnablePoll
 //-----------------------------------------------------------------------------
 bool Driver::DisablePoll
 ( 
-	uint8 const _nodeId
+	ValueID const _valueId
 )
 {
-    Node* node = GetNode( _nodeId );
-	if(node != NULL)
+	uint8 nodeId = _valueId.GetNodeId();
+    Node* node = GetNode( nodeId );
+	if( node != NULL)
 	{
 		m_pollMutex->Lock();
 
-		// See if the node is already in the poll list.
-		for( list<uint8>::iterator it = m_pollList.begin(); it != m_pollList.end(); ++it )
+		// See if the value is already in the poll list.
+		for( list<ValueID>::iterator it = m_pollList.begin(); it != m_pollList.end(); ++it )
 		{
-			if( *it == _nodeId )
+			if( *it == _valueId )
 			{
 				// Found it
 				m_pollList.erase( it );
@@ -2642,7 +2652,7 @@ bool Driver::DisablePoll
 		ReleaseNodes();
 	}
 
-	Log::Write( "DisablePoll failed - node %d not found", _nodeId );
+	Log::Write( "DisablePoll failed - node %d not found", nodeId );
 	return false;
 }
 
@@ -2680,18 +2690,18 @@ void Driver::PollThreadProc()
 			if( !m_pollList.empty() )
 			{
 				// Get the next node to be polled
-				uint8 nodeId = m_pollList.front();
+				ValueID valueId = m_pollList.front();
 			
 				// Move it to the back of the list
 				m_pollList.pop_front();
-				m_pollList.push_back( nodeId );
+				m_pollList.push_back( valueId );
 
 				// Calculate the time before the next poll, so that all polls 
 				// can take place within the user-specified interval.
 				pollInterval /= m_pollList.size();
 
 				// Request the state of the value from the node to which it belongs
-				if( Node* node = GetNode( nodeId ) )
+				if( Node* node = GetNode( valueId.GetNodeId() ) )
 				{
 					bool requestState = true;
 					if( !node->IsListeningDevice() )
@@ -2711,8 +2721,12 @@ void Driver::PollThreadProc()
 					if( requestState )
 					{
 						// Request an update of the value
-						Log::Write( "Polling dynamic information from node %d",nodeId );
-						AddNodeQuery( nodeId, Node::QueryStage_Dynamic );
+						CommandClass* cc = node->GetCommandClass( valueId.GetCommandClassId() );
+						uint8 index = valueId.GetIndex();
+						Log::Write( "Polling node %d: %s index = %d", node->m_nodeId, cc->GetCommandClassName().c_str(), index );
+						Log::Write( "Send queue has %d messages", m_sendQueue.size() );
+						cc->RequestValue( valueId.GetIndex() );
+						Log::Write( "Send queue has %d messages", m_sendQueue.size() );
 					}
 
 					ReleaseNodes();

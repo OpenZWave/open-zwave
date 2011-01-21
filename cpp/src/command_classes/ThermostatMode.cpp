@@ -64,7 +64,6 @@ static char const* c_modeName[] =
 	"Away"
 };
 
-
 //-----------------------------------------------------------------------------
 // <ThermostatMode::RequestState>
 // Get the static thermostat mode details from the device
@@ -77,6 +76,32 @@ bool ThermostatMode::RequestState
 	bool requests = false;
 	if( ( _requestFlags & RequestFlag_Static ) && HasStaticRequest( StaticRequest_Values ) )
 	{
+		// request supported mode list
+		RequestValue( ThermostatModeCmd_SupportedGet );
+		requests = true;
+	}
+
+	if( _requestFlags & RequestFlag_Dynamic )
+	{
+		// Request the current mode
+		RequestValue();
+		requests = true;
+	}
+
+	return requests;
+}
+
+//-----------------------------------------------------------------------------
+// <ThermostatMode::RequestValue>
+// Get the static thermostat mode details from the device
+//-----------------------------------------------------------------------------
+void ThermostatMode::RequestValue
+(
+	uint8 const _index		// = 0
+)
+{
+	if( _index == ThermostatModeCmd_SupportedGet )
+	{
 		// Request the supported modes
 		Msg* msg = new Msg( "Request Supported Thermostat Modes", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 		msg->Append( GetNodeId() );
@@ -85,10 +110,10 @@ bool ThermostatMode::RequestState
 		msg->Append( ThermostatModeCmd_SupportedGet );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 		GetDriver()->SendMsg( msg );
-		requests = true;
+		return;
 	}
 
-	if( _requestFlags & RequestFlag_Dynamic )
+	if( _index == 0 )		// get current mode
 	{
 		// Request the current mode
 		Msg* msg = new Msg( "Request Current Thermostat Mode", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
@@ -98,10 +123,8 @@ bool ThermostatMode::RequestState
 		msg->Append( ThermostatModeCmd_Get );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 		GetDriver()->SendMsg( msg );
-		requests = true;
+		return;
 	}
-
-	return requests;
 }
 
 //-----------------------------------------------------------------------------
@@ -118,13 +141,10 @@ bool ThermostatMode::HandleMsg
 	if( ThermostatModeCmd_Report == (ThermostatModeCmd)_data[0] )
 	{
 		// We have received the thermostat mode from the Z-Wave device
-		if( !m_supportedModes.empty() )
+		if( ValueList* valueList = m_mode.GetInstance( _instance ) )
 		{
-			if( ValueList* valueList = m_mode.GetInstance( _instance ) )
-			{
-				valueList->OnValueChanged( _data[1]&0x1f );
-				Log::Write( "Received thermostat mode from node %d: %s", GetNodeId(), valueList->GetItem().m_label.c_str() );		
-			}
+			valueList->OnValueChanged( _data[1]&0x1f );
+			Log::Write( "Received thermostat mode from node %d: %s", GetNodeId(), valueList->GetItem().m_label.c_str() );		
 		}
 		return true;
 	}
@@ -132,6 +152,8 @@ bool ThermostatMode::HandleMsg
 	if( ThermostatModeCmd_SupportedReport == (ThermostatModeCmd)_data[0] )
 	{
 		// We have received the supported thermostat modes from the Z-Wave device
+		// these values are used to populate m_supportedModes which, in turn, is used to "seed" the values
+		// for each m_modes instance
 		Log::Write( "Received supported thermostat modes from node %d", GetNodeId() );		
 
 		m_supportedModes.clear();

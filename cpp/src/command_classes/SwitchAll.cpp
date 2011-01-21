@@ -54,7 +54,6 @@ static char const* c_switchAllStateName[] =
 	"On and Off Enabled"
 };
 
-
 //-----------------------------------------------------------------------------
 // <SwitchAll::RequestState>												   
 // Request current state from the device									   
@@ -66,17 +65,29 @@ bool SwitchAll::RequestState
 {
 	if( _requestFlags & RequestFlag_Session )
 	{
-		Msg* msg = new Msg( "SwitchAllCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-		msg->Append( GetNodeId() );
-		msg->Append( 2 );
-		msg->Append( GetCommandClassId() );
-		msg->Append( SwitchAllCmd_Get );
-		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-		GetDriver()->SendMsg( msg );
+		RequestValue();
 		return true;
 	}
 
 	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <SwitchAll::RequestValue>												   
+// Request current value from the device									   
+//-----------------------------------------------------------------------------
+void SwitchAll::RequestValue
+(
+	int8 const _index		// = 0
+)
+{
+	Msg* msg = new Msg( "SwitchAllCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+	msg->Append( GetNodeId() );
+	msg->Append( 2 );
+	msg->Append( GetCommandClassId() );
+	msg->Append( SwitchAllCmd_Get );
+	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	GetDriver()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------

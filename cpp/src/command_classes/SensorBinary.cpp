@@ -43,7 +43,6 @@ enum SensorBinaryCmd
 	SensorBinaryCmd_Report	= 0x03
 };
 
-
 //-----------------------------------------------------------------------------
 // <SensorBinary::RequestState>												   
 // Request current state from the device									   
@@ -55,17 +54,29 @@ bool SensorBinary::RequestState
 {
 	if( _requestFlags & RequestFlag_Dynamic )
 	{
-		Msg* msg = new Msg( "SensorBinaryCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-		msg->Append( GetNodeId() );
-		msg->Append( 2 );
-		msg->Append( GetCommandClassId() );
-		msg->Append( SensorBinaryCmd_Get );
-		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-		GetDriver()->SendMsg( msg );
+		RequestValue();
 		return true;
 	}
 
 	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <SensorBinary::RequestValue>												   
+// Request current value from the device									   
+//-----------------------------------------------------------------------------
+void SensorBinary::RequestValue
+(
+	uint8 const _index		// = 0
+)
+{
+	Msg* msg = new Msg( "SensorBinaryCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+	msg->Append( GetNodeId() );
+	msg->Append( 2 );
+	msg->Append( GetCommandClassId() );
+	msg->Append( SensorBinaryCmd_Get );
+	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	GetDriver()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------

@@ -44,7 +44,6 @@ enum SwitchToggleBinaryCmd
 	SwitchToggleBinaryCmd_Report	= 0x03
 };
 
-
 //-----------------------------------------------------------------------------
 // <SwitchToggleBinary::RequestState>												   
 // Request current state from the device									   
@@ -56,17 +55,29 @@ bool SwitchToggleBinary::RequestState
 {
 	if( _requestFlags & RequestFlag_Dynamic )
 	{
-		Msg* msg = new Msg( "SwitchToggleBinaryCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-		msg->Append( GetNodeId() );
-		msg->Append( 2 );
-		msg->Append( GetCommandClassId() );
-		msg->Append( SwitchToggleBinaryCmd_Get );
-		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-		GetDriver()->SendMsg( msg );
+		RequestValue();
 		return true;
 	}
 
 	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <SwitchToggleBinary::RequestValue>												   
+// Request current value from the device									   
+//-----------------------------------------------------------------------------
+void SwitchToggleBinary::RequestValue
+(
+	uint8 const _index		// = 0
+)
+{
+	Msg* msg = new Msg( "SwitchToggleBinaryCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+	msg->Append( GetNodeId() );
+	msg->Append( 2 );
+	msg->Append( GetCommandClassId() );
+	msg->Append( SwitchToggleBinaryCmd_Get );
+	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	GetDriver()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------

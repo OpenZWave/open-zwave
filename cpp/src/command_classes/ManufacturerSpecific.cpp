@@ -53,7 +53,6 @@ map<uint16,string> ManufacturerSpecific::s_manufacturerMap;
 map<int64,ManufacturerSpecific::Product*> ManufacturerSpecific::s_productMap;
 bool ManufacturerSpecific::s_bXmlLoaded = false;
 
-
 //-----------------------------------------------------------------------------
 // <ManufacturerSpecific::RequestState>												   
 // Request current state from the device									   
@@ -65,17 +64,29 @@ bool ManufacturerSpecific::RequestState
 {
 	if( ( _requestFlags & RequestFlag_Static ) && HasStaticRequest( StaticRequest_Values ) )
 	{
-		Msg* msg = new Msg( "ManufacturerSpecificCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-		msg->Append( GetNodeId() );
-		msg->Append( 2 );
-		msg->Append( GetCommandClassId() );
-		msg->Append( ManufacturerSpecificCmd_Get );
-		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-		GetDriver()->SendMsg( msg );
+		RequestValue();
 		return true;
 	}
 
 	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <ManufacturerSpecific::RequestValue>												   
+// Request current value from the device									   
+//-----------------------------------------------------------------------------
+void ManufacturerSpecific::RequestValue
+(
+	uint8 const _index		// = 0
+)
+{
+	Msg* msg = new Msg( "ManufacturerSpecificCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+	msg->Append( GetNodeId() );
+	msg->Append( 2 );
+	msg->Append( GetCommandClassId() );
+	msg->Append( ManufacturerSpecificCmd_Get );
+	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	GetDriver()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
