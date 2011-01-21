@@ -82,14 +82,7 @@ bool SensorAlarm::RequestState
 	bool requests = false;
 	if( ( _requestFlags & RequestFlag_Static ) && HasStaticRequest( StaticRequest_Values ) )
 	{
-		// Request the supported setpoints
-		Msg* msg = new Msg( "Request Supported Alarm Types", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-		msg->Append( GetNodeId() );
-		msg->Append( 2 );
-		msg->Append( GetCommandClassId() );
-		msg->Append( SensorAlarmCmd_SupportedGet );
-		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-		GetDriver()->SendMsg( msg );
+		RequestValue();
 		requests = true;
 	}
 
@@ -99,21 +92,50 @@ bool SensorAlarm::RequestState
 		{
 			if( m_alarmTypes[i].HasInstances() )
 			{
-				// Request the setpoint value
-				Msg* msg = new Msg( "Request alarm state", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-				msg->Append( GetNodeId() );
-				msg->Append( 3 );
-				msg->Append( GetCommandClassId() );
-				msg->Append( SensorAlarmCmd_Get );
-				msg->Append( i );
-				msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-				GetDriver()->SendMsg( msg );
+				// Request the value
+				RequestValue( i+1 );	// increment by 1 so supportedGet can be equal to zero
 			}
 		}
 		requests = true;
 	}
 
 	return requests;
+}
+
+//-----------------------------------------------------------------------------
+// <SensorAlarm::RequestValue>
+// Get the sensor alarm details from the device
+//-----------------------------------------------------------------------------
+void SensorAlarm::RequestValue
+(
+	uint8 const _index		// = 0
+)
+{
+	if( _index == 0 )	// supportedGet
+	{
+		// Request the supported setpoints
+		Msg* msg = new Msg( "Request Supported Alarm Types", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		msg->Append( GetNodeId() );
+		msg->Append( 2 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( SensorAlarmCmd_SupportedGet );
+		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		GetDriver()->SendMsg( msg );
+		return;
+	}
+
+	if( _index >= 0 )
+	{
+		// Request the setpoint value
+		Msg* msg = new Msg( "Request alarm state", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		msg->Append( GetNodeId() );
+		msg->Append( 3 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( SensorAlarmCmd_Get );
+		msg->Append( _index-1 );				// "undo" the increment to get back to zero-based value
+		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		GetDriver()->SendMsg( msg );
+	}
 }
 
 //-----------------------------------------------------------------------------

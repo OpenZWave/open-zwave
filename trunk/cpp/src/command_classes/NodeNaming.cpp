@@ -208,37 +208,59 @@ bool NodeNaming::RequestState
 	{
 		if( Node* node = GetNodeUnsafe() )
 		{
-			Msg* msg;
-			
 			if( node->m_nodeName == "" )
 			{
 				// If we don't already have a user-defined name, fetch it from the device
-				msg = new Msg( "NodeNamingCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-				msg->Append( GetNodeId() );
-				msg->Append( 2 );
-				msg->Append( GetCommandClassId() );
-				msg->Append( NodeNamingCmd_Get );
-				msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-				GetDriver()->SendMsg( msg );
+				RequestValue( NodeNamingCmd_Get );
 				res = true;
 			}
 
 			if( node->m_location == "" )
 			{
-				// If we don't already have a user-defined name, fetch it from the device
-				msg = new Msg( "NodeNamingCmd_LocationGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-				msg->Append( GetNodeId() );
-				msg->Append( 2 );
-				msg->Append( GetCommandClassId() );
-				msg->Append( NodeNamingCmd_LocationGet );
-				msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-				GetDriver()->SendMsg( msg );
+				// If we don't already have a user-defined location, fetch it from the device
+				RequestValue( NodeNamingCmd_LocationGet );
 				res = true;
 			}
 		}
 	}
 
 	return res;
+}
+
+//-----------------------------------------------------------------------------
+// <NodeNaming::RequestValue>												   
+// Request current value from the device									   
+//-----------------------------------------------------------------------------
+void NodeNaming::RequestValue
+(
+	uint8 const _index		// = 0
+)
+{
+	Msg* msg;
+
+	if( _index == NodeNamingCmd_Get )
+	{
+		msg = new Msg( "NodeNamingCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		msg->Append( GetNodeId() );
+		msg->Append( 2 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( NodeNamingCmd_Get );
+		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		GetDriver()->SendMsg( msg );
+		return;
+	}
+
+	if( _index == NodeNamingCmd_LocationGet )
+	{
+		// If we don't already have a user-defined name, fetch it from the device
+		msg = new Msg( "NodeNamingCmd_LocationGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		msg->Append( GetNodeId() );
+		msg->Append( 2 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( NodeNamingCmd_LocationGet );
+		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		GetDriver()->SendMsg( msg );
+	}
 }
 
 //-----------------------------------------------------------------------------

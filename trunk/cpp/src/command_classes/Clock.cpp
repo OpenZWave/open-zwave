@@ -57,7 +57,6 @@ static char const* c_dayNames[] =
 	"Sunday"
 };
 
-
 //-----------------------------------------------------------------------------
 // <Clock::RequestState>												   
 // Request current state from the device									   
@@ -69,17 +68,29 @@ bool Clock::RequestState
 {
 	if( _requestFlags & RequestFlag_Dynamic )
 	{
-		Msg* msg = new Msg( "ClockCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-		msg->Append( GetNodeId() );
-		msg->Append( 2 );
-		msg->Append( GetCommandClassId() );
-		msg->Append( ClockCmd_Get );
-		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-		GetDriver()->SendMsg( msg );
+		RequestValue();
 		return true;
 	}
 
 	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Clock::RequestValue>												   
+// Request current value from the device									   
+//-----------------------------------------------------------------------------
+void Clock::RequestValue
+(
+	uint8 const _index		// = 0
+)
+{
+	Msg* msg = new Msg( "ClockCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+	msg->Append( GetNodeId() );
+	msg->Append( 2 );
+	msg->Append( GetCommandClassId() );
+	msg->Append( ClockCmd_Get );
+	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	GetDriver()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------

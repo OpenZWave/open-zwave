@@ -55,7 +55,6 @@ static string const c_modeName[] =
 	"On High"
 };
 
-
 //-----------------------------------------------------------------------------
 // <ThermostatFanMode::RequestState>
 // Get the static thermostat fan mode details from the device
@@ -69,6 +68,32 @@ bool ThermostatFanMode::RequestState
 	if( ( _requestFlags & RequestFlag_Static ) && HasStaticRequest( StaticRequest_Values ) )
 	{
 		// Request the supported modes
+		RequestValue( ThermostatFanModeCmd_SupportedGet );
+		requests = true;
+	}
+
+	if( _requestFlags & RequestFlag_Dynamic )
+	{
+		// Request the current fan mode
+		RequestValue( ThermostatFanModeCmd_Get );
+		requests = true;
+	}
+
+	return requests;
+}
+
+//-----------------------------------------------------------------------------
+// <ThermostatFanMode::RequestValue>
+// Get the thermostat fan mode details from the device
+//-----------------------------------------------------------------------------
+void ThermostatFanMode::RequestValue
+(
+	uint8 const _index		// = 0
+)
+{
+	if( _index == ThermostatFanModeCmd_SupportedGet )
+	{
+		// Request the supported modes
 		Msg* msg = new Msg( "Request Supported Thermostat Fan Modes", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 		msg->Append( GetNodeId() );
 		msg->Append( 2 );
@@ -76,10 +101,10 @@ bool ThermostatFanMode::RequestState
 		msg->Append( ThermostatFanModeCmd_SupportedGet );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 		GetDriver()->SendMsg( msg );
-		requests = true;
+		return;
 	}
 
-	if( _requestFlags & RequestFlag_Dynamic )
+	if( _index == ThermostatFanModeCmd_Get )
 	{
 		// Request the current fan mode
 		Msg* msg = new Msg( "Request Current Thermostat Fan Mode", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
@@ -89,10 +114,8 @@ bool ThermostatFanMode::RequestState
 		msg->Append( ThermostatFanModeCmd_Get );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 		GetDriver()->SendMsg( msg );
-		requests = true;
+		return;
 	}
-
-	return requests;
 }
 
 //-----------------------------------------------------------------------------

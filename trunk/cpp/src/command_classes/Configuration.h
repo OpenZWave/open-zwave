@@ -50,7 +50,7 @@ namespace OpenZWave
 
 		void RequestAllParamValues();
 
-		void Get( uint8 const _parameter );
+		void RequestValue( uint8 const _parameter );
 		void Set( uint8 const _parameter, int32 const _value );
 
 		// From CommandClass

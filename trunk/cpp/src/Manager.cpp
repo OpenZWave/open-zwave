@@ -447,16 +447,15 @@ void Manager::SetPollInterval
 //-----------------------------------------------------------------------------
 bool Manager::EnablePoll
 ( 
-	uint32 const _homeId,
-	uint8 const _nodeId 
+	ValueID const _valueId
 )
 {
-	if( Driver* driver = GetDriver( _homeId ) )
+	if( Driver* driver = GetDriver( _valueId.GetHomeId() ) )
 	{
-		return( driver->EnablePoll( _nodeId ) );
+		return( driver->EnablePoll( _valueId ) );
 	}
 
-	Log::Write( "EnablePoll failed - Driver with Home ID 0x%.8x is not available", _homeId );
+	Log::Write( "EnablePoll failed - Driver with Home ID 0x%.8x is not available", _valueId.GetHomeId() );
 	return false;
 }
 
@@ -466,16 +465,15 @@ bool Manager::EnablePoll
 //-----------------------------------------------------------------------------
 bool Manager::DisablePoll
 ( 
-	uint32 const _homeId,
-	uint8 const _nodeId 
+	ValueID const _valueId
 )
 {
-	if( Driver* driver = GetDriver( _homeId ) )
+	if( Driver* driver = GetDriver( _valueId.GetHomeId() ) )
 	{
-		return( driver->DisablePoll( _nodeId ) );
+		return( driver->DisablePoll( _valueId ) );
 	}
 
-	Log::Write( "DisablePoll failed - Driver with Home ID 0x%.8x is not available", _homeId );
+	Log::Write( "DisablePoll failed - Driver with Home ID 0x%.8x is not available", _valueId.GetHomeId() );
 	return false;
 }
 
