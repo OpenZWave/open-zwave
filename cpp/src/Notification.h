@@ -64,6 +64,7 @@ namespace OpenZWave
 			Type_ValueRemoved,			/**< A node value has been removed from OpenZWave's list.  This only occurs when a node is removed. */
 			Type_ValueChanged,			/**< A node value has been updated from the Z-Wave network. */
 			Type_Group,					/**< The associations for the node have changed. The application should rebuild any group information it holds about the node. */
+			Type_NodeNew,				/**< A new node has been found (not already stored in zwcfg*.xml file) */
 			Type_NodeAdded,				/**< A new node has been added to OpenZWave's list.  This may be due to a device being added to the Z-Wave network, or because the application is initializing itself. */
 			Type_NodeRemoved,			/**< A node has been removed from OpenZWave's list.  This may be due to a device being removed from the Z-Wave network, or because the application is closing. */
 			Type_NodeProtocolInfo,		/**< Basic node information has been receievd, such as whether the node is a listening device, a routing device and its baud rate and basic, generic and specific types. It is after this notification that you can call Manager::GetNodeType to obtain a label containing the device description. */
