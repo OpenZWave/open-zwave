@@ -61,6 +61,7 @@ namespace OpenZWaveDotNet
 			ValueRemoved		= Notification::Type_ValueRemoved,		
 			ValueChanged		= Notification::Type_ValueChanged,		
 			Group				= Notification::Type_Group,				
+			NodeNew				= Notification::Type_NodeNew,
 			NodeAdded			= Notification::Type_NodeAdded,			
 			NodeRemoved			= Notification::Type_NodeRemoved,		
 			NodeProtocolInfo	= Notification::Type_NodeProtocolInfo,

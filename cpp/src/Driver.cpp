@@ -1557,6 +1557,9 @@ void Driver::HandleSerialAPIGetInitDataResponse
 					{
 						// This node is new
 						Log::Write( "  Node %.3d - New", nodeId );
+						Notification* notification = new Notification( Notification::Type_NodeNew );
+						notification->SetHomeAndNodeIds( m_homeId, nodeId );
+						QueueNotification( notification ); 
 
 						// Create the node and request its info
 						InitNode( nodeId );		
@@ -1566,9 +1569,8 @@ void Driver::HandleSerialAPIGetInitDataResponse
 				{
 					if( GetNode(nodeId) )
 					{
-						Log::Write( "  Node %.3d: Removed", nodeId );
-
 						// This node no longer exists in the Z-Wave network
+						Log::Write( "  Node %.3d: Removed", nodeId );
 						Notification* notification = new Notification( Notification::Type_NodeRemoved );
 						notification->SetHomeAndNodeIds( m_homeId, nodeId );
 						QueueNotification( notification ); 
@@ -2724,9 +2726,7 @@ void Driver::PollThreadProc()
 						CommandClass* cc = node->GetCommandClass( valueId.GetCommandClassId() );
 						uint8 index = valueId.GetIndex();
 						Log::Write( "Polling node %d: %s index = %d", node->m_nodeId, cc->GetCommandClassName().c_str(), index );
-						Log::Write( "Send queue has %d messages", m_sendQueue.size() );
 						cc->RequestValue( valueId.GetIndex() );
-						Log::Write( "Send queue has %d messages", m_sendQueue.size() );
 					}
 
 					ReleaseNodes();
