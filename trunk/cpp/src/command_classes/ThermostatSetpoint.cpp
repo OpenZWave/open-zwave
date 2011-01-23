@@ -221,7 +221,7 @@ bool ThermostatSetpoint::SetValue
 
 		Msg* msg = new Msg( "Set Thermostat Setpoint", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 		msg->Append( GetNodeId() );
-		msg->Append( 3 + GetAppendValueSize( value->GetValue() ) );
+		msg->Append( 4 + GetAppendValueSize( value->GetValue() ) );
 		msg->Append( GetCommandClassId() );
 		msg->Append( ThermostatSetpointCmd_Set );
 		msg->Append( value->GetID().GetIndex() );
