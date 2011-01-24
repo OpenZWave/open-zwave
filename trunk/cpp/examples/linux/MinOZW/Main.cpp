@@ -238,6 +238,7 @@ int main( int argc, char* argv[] )
 	// Add a Z-Wave Driver
 	// Modify this line to set the correct serial port for your PC interface.
 	Manager::Get()->AddDriver( "/dev/ttyUSB0" );
+	//Manager::Get()->AddDriver( "HID Controller", Driver::ControllerInterface_Hid );
 
 	// Now we just wait for the driver to become ready, and then write out the loaded config.
 	// In a normal app, we would be handling notifications and building a UI for the user.

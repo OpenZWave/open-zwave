@@ -33,14 +33,35 @@
 
 namespace OpenZWave
 {
+    class Msg;
+
     class IController
 	{
 	public:
+		/**
+		 * ReadPacketSegment enum
+		 * Signals the IController::Read() which part of the rx packet is being retrieved by the caller.
+         * This is used by controllers that must internally read the entire rx packet in one operation.
+		 */
+		enum ReadPacketSegment
+		{
+			ReadPacketSegment_FrameType = 0,
+            ReadPacketSegment_FrameLength,
+            ReadPacketSegment_FrameData
+		};
+
 		/**
 		 * Destructor.
 		 * Destroys the controller object.
 		 */
         virtual ~IController() {};
+
+		/**
+		 * Retrieves an array of Msg object pointers in the correct order needed to initialize the IController implementation.
+		 * @return Array of Msg object pointers.
+		 * @see Driver::Init
+		 */
+		virtual list<Msg*>* const GetMsgInitializationSequence( ) = 0;
 
 		/**
 		 * Open a controller.
@@ -66,7 +87,7 @@ namespace OpenZWave
 		 * @return The number of bytes read.
 		 * @see Write, Open, Close
 		 */
-		virtual uint32 Read( uint8* _buffer, uint32 _length ) = 0;
+		virtual uint32 Read( uint8* _buffer, uint32 _length, ReadPacketSegment _segment ) = 0;
 
 		/**
 		 * Write to a controller.

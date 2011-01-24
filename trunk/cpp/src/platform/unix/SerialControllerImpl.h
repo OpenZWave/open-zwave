@@ -55,7 +55,7 @@ namespace OpenZWave
 		bool Open( string const& _SerialControllerName, uint32 const _baud, SerialController::Parity const _parity, SerialController::StopBits const _stopBits );
 		void Close();
 
-		uint32 Read( uint8* _buffer, uint32 _length );
+		uint32 Read( uint8* _buffer, uint32 _length, IController::ReadPacketSegment _segment );
 		uint32 Write( uint8* _buffer, uint32 _length );
 		bool Wait( int32 _timeout );
 

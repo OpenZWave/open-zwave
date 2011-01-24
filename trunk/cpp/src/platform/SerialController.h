@@ -34,6 +34,7 @@
 
 namespace OpenZWave
 {
+    class Msg;
 	class SerialControllerImpl;
 
     class SerialController : IController
@@ -60,6 +61,13 @@ namespace OpenZWave
 		 * Creates an object that represents a serial port.
 		 */
 		SerialController();
+
+		/**
+		 * Retrieves an array of Msg object pointers in the correct order needed to initialize the IController implementation.
+		 * @return Array of Msg object pointers.
+		 * @see Driver::Init
+		 */
+		list<Msg*>* const GetMsgInitializationSequence( );
 
 		/**
 		 * Destructor.
@@ -119,7 +127,7 @@ namespace OpenZWave
 		 * @return The number of bytes read.
 		 * @see Write, Open, Close
 		 */
-		uint32 Read( uint8* _buffer, uint32 _length );
+		uint32 Read( uint8* _buffer, uint32 _length, ReadPacketSegment _segment );
 
 		/**
 		 * Write to a serial port.
@@ -143,6 +151,7 @@ namespace OpenZWave
 		bool Wait( int32 _timeout );
 
     protected:
+        list<Msg*>* const           m_pMsgInitializationSequence;
         uint32                      m_baud;
         SerialController::Parity    m_parity;
         SerialController::StopBits  m_stopBits;
