@@ -4,6 +4,8 @@
 
 # GNU make only
 
+# Requires libudev-dev
+
 .SUFFIXES:	.d .cpp .o .a
 .PHONY:	default clean
 
@@ -25,7 +27,7 @@ LDFLAGS	:= $(DEBUG_LDFLAGS)
 LIBDIR	:= ../../lib/linux
 
 INCLUDES	:= -I ../../src -I ../../src/command_classes/ -I ../../src/value_classes/ \
-	-I ../../src/platform/ -I ../../src/platform/unix -I ../../tinyxml/ -I ../../hidapi/hidapi
+	-I ../../src/platform/ -I ../../src/platform/unix -I ../../tinyxml/ -I ../../hidapi/hidapi/
 SOURCES		:= ../../src ../../src/command_classes ../../tinyxml ../../hidapi/linux \
 	../../src/value_classes ../../src/platform ../../src/platform/unix
 
@@ -39,7 +41,7 @@ VPATH = ../../src:../../src/command_classes:../../tinyxml:../../hidapi/linux:\
 	rm -f $@.$$$$
 
 tinyxml := $(notdir $(wildcard ../../tinyxml/*.cpp))
-hidapi := $(notdir $(wildcard ../../hidapi/linux/*.cpp))
+hidapi := $(notdir $(wildcard ../../hidapi/linux/hid.c)) # we do not want the libusb version
 cclasses := $(notdir $(wildcard ../../src/command_classes/*.cpp))
 vclasses := $(notdir $(wildcard ../../src/value_classes/*.cpp))
 pform := $(notdir $(wildcard ../../src/platform/*.cpp)) \
@@ -49,13 +51,16 @@ indep := $(notdir $(wildcard ../../src/*.cpp))
 %.o : %.cpp
 	$(CXX) $(CFLAGS) $(INCLUDES) -o $@ $<
 
+%.o : %.c
+	$(CC) $(CFLAGS) $(INCLUDES) -o $@ $<
+
 default:	$(LIBDIR)/openzwave.a
 
 clean:
 	rm -f *.d *.o
 
 -include $(tinyxml:.cpp=.d)
--include $(hidapi:.cpp=.d)
+-include $(hidapi:.c=.d)
 -include $(cclasses:.cpp=.d)
 -include $(vclasses:.cpp=.d)
 -include $(pform:.cpp=.d)
@@ -67,6 +72,7 @@ vers.c:
 vers.o:	vers.c
 
 $(LIBDIR)/openzwave.a:	$(patsubst %.cpp,%.o,$(tinyxml)) \
+			$(patsubst %.c,%.o,$(hidapi)) \
 			$(patsubst %.cpp,%.o,$(cclasses)) \
 			$(patsubst %.cpp,%.o,$(vclasses)) \
 			$(patsubst %.cpp,%.o,$(pform)) \
