@@ -39,7 +39,7 @@ VPATH = ../../src:../../src/command_classes:../../tinyxml:../../hidapi/mac:\
 	rm -f $@.$$$$
 
 tinyxml := $(notdir $(wildcard ../../tinyxml/*.cpp))
-hidapi := $(notdir $(wildcard ../../hidapi/mac/*.cpp))
+hidapi := $(notdir $(wildcard ../../hidapi/mac/*.c))
 cclasses := $(notdir $(wildcard ../../src/command_classes/*.cpp))
 vclasses := $(notdir $(wildcard ../../src/value_classes/*.cpp))
 pform := $(notdir $(wildcard ../../src/platform/*.cpp)) \
@@ -49,13 +49,16 @@ indep := $(notdir $(wildcard ../../src/*.cpp))
 %.o : %.cpp
 	$(CXX) $(CFLAGS) $(INCLUDES) -o $@ $<
 
+%.o : %.c
+	$(CC) $(CFLAGS) $(INCLUDES) -o $@ $<
+
 default:	$(LIBDIR)/openzwave.a
 
 clean:
 	rm -f *.d *.o
 
 -include $(tinyxml:.cpp=.d)
--include $(hidapi:.cpp=.d)
+-include $(hidapi:.c=.d)
 -include $(cclasses:.cpp=.d)
 -include $(vclasses:.cpp=.d)
 -include $(pform:.cpp=.d)
@@ -67,6 +70,7 @@ vers.c:
 vers.o:	vers.c
 
 $(LIBDIR)/openzwave.a:	$(patsubst %.cpp,%.o,$(tinyxml)) \
+			$(patsubst %.c,%.o,$(hidapi)) \
 			$(patsubst %.cpp,%.o,$(cclasses)) \
 			$(patsubst %.cpp,%.o,$(vclasses)) \
 			$(patsubst %.cpp,%.o,$(pform)) \
