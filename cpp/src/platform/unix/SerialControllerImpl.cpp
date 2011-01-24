@@ -212,7 +212,8 @@ void SerialControllerImpl::Close
 uint32 SerialControllerImpl::Read
 (
 	uint8* _buffer,
-	uint32 _length
+	uint32 _length,
+	IController::ReadPacketSegment _segment
 )
 {
 	if( -1 == m_hSerialController )

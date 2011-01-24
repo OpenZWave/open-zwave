@@ -37,6 +37,7 @@
 #include "Mutex.h"
 #include "IController.h"
 #include "SerialController.h"
+#include "HidController.h"
 #include "Thread.h"
 #include "Log.h"
 
@@ -92,7 +93,6 @@ Driver::Driver
 	m_awakeNodesQueried( false ),
 	m_allNodesQueried( false ),
     m_homeId( 0 ),
-	m_controller( (IController*) new SerialController() ),  // TODO: use factory to get the right object
 	m_controllerThread( new Thread( "serial" ) ),
     m_initCaps( 0 ),
     m_controllerCaps( 0 ),
@@ -115,6 +115,25 @@ Driver::Driver
 {
 	// Clear the nodes array
 	memset( m_nodes, 0, sizeof(Node*) * 256 );
+    
+    switch (_interface)
+    {
+    case ControllerInterface_Serial:
+        {
+            m_controller = (IController*) new SerialController();
+            break;
+        }
+    case ControllerInterface_Hid:
+        {
+            m_controller = (IController*) new HidController();
+            break;
+        }
+    default:
+        {
+            m_controller = (IController*) new SerialController();
+            break;
+        }
+    }
 }
 
 //-----------------------------------------------------------------------------
@@ -385,32 +404,12 @@ bool Driver::Init
 	uint8 nak = NAK;
 	m_controller->Write( &nak, 1 );
 
-	// Send commands to retrieve properties from the Z-Wave interface 
-	Msg* msg;
-
-	Log::Write( "Get Version" );
-	msg = new Msg( "FUNC_ID_ZW_GET_VERSION", 0xff, REQUEST, FUNC_ID_ZW_GET_VERSION, false );
-	SendMsg( msg );
-
-	Log::Write( "Get Home and Node IDs" );
-	msg = new Msg( "FUNC_ID_ZW_MEMORY_GET_ID", 0xff, REQUEST, FUNC_ID_ZW_MEMORY_GET_ID, false );
-	SendMsg( msg );
-
-	Log::Write( "Get Controller Capabilities" );
-	msg = new Msg( "FUNC_ID_ZW_GET_CONTROLLER_CAPABILITIES", 0xff, REQUEST, FUNC_ID_ZW_GET_CONTROLLER_CAPABILITIES, false );
-	SendMsg( msg );
-
-	Log::Write( "Get Serial API Capabilities" );
-	msg = new Msg( "FUNC_ID_SERIAL_API_GET_CAPABILITIES", 0xff, REQUEST, FUNC_ID_SERIAL_API_GET_CAPABILITIES, false );
-	SendMsg( msg );
-
-	//Log::Write( "Get SUC node id" );
-	//msg = new Msg( "Get SUC node id", 0xff, REQUEST, FUNC_ID_ZW_GET_SUC_NODE_ID, false );
-	//SendMsg( msg );
-	
-	Log::Write( "Get Init Data" );
-	msg = new Msg( "FUNC_ID_SERIAL_API_GET_INIT_DATA", 0xff, REQUEST, FUNC_ID_SERIAL_API_GET_INIT_DATA, false );
-	SendMsg( msg );
+    // Get/set ZWave controller information in its preferred initialization order
+    list<Msg*>* const pMsgInitArray = m_controller->GetMsgInitializationSequence();
+    for (list<Msg*>::iterator it = pMsgInitArray->begin(); it != pMsgInitArray->end(); it++)
+    {
+        SendMsg(*it);
+    }
 
 	// Init successful
 	return true;
@@ -898,7 +897,7 @@ bool Driver::ReadMsg
 {
 	uint8 buffer[1024];
 
-	if( !m_controller->Read( buffer, 1 ) )
+    if( !m_controller->Read( buffer, 1, IController::ReadPacketSegment_FrameType ) )
 	{
 		// Nothing to read
 		return false;
@@ -917,7 +916,7 @@ bool Driver::ReadMsg
 			uint8 loops = 0;
 			while( true )
 			{
-				if( m_controller->Read( &buffer[1], 1 )) 
+                if( m_controller->Read( &buffer[1], 1, IController::ReadPacketSegment_FrameLength )) 
 				{
 					break;
 				}
@@ -939,7 +938,7 @@ bool Driver::ReadMsg
 			uint32 bytesRemaining = buffer[1];
 			do
 			{
-				bytesRemaining -= m_controller->Read( &buffer[2+(uint32)buffer[1]-bytesRemaining], bytesRemaining );
+                bytesRemaining -= m_controller->Read( &buffer[2+(uint32)buffer[1]-bytesRemaining], bytesRemaining, IController::ReadPacketSegment_FrameData );
 				if( bytesRemaining ) 
 				{
 					m_driverThread->Sleep( 10 );
@@ -1174,6 +1173,26 @@ void Driver::ProcessMsg
 			case FUNC_ID_ZW_GET_ROUTING_INFO:
 			{
 				HandleGetRoutingInfoResponse( _data );
+				break;
+			}
+			case FUNC_ID_ZW_R_F_POWER_LEVEL_SET:
+			{
+				HandleRfPowerLevelSetResponse( _data );
+                break;
+			}
+			case FUNC_ID_ZW_READ_MEMORY:
+			{
+				HandleReadMemoryResponse( _data );
+                break;
+			}
+			case FUNC_ID_SERIAL_API_SET_TIMEOUTS:
+			{
+                HandleSerialApiSetTimeoutsResponse( _data );
+				break;
+			}
+			case FUNC_ID_MEMORY_GET_BYTE:
+			{
+				HandleMemoryGetByteResponse( _data );
 				break;
 			}
 			default:
@@ -3906,3 +3925,67 @@ void Driver::NotifyWatchers
 	}
 }
 
+//-----------------------------------------------------------------------------
+// <Driver::HandleRfPowerLevelSetResponse>
+// Process a response from the Z-Wave PC interface
+//-----------------------------------------------------------------------------
+bool Driver::HandleRfPowerLevelSetResponse
+(
+	uint8* _data
+)
+{
+	bool res = true;
+    // the meaning of this command is currently unclear, and there
+    // isn't any returned response data, so just log the function call
+	Log::Write("Received reply to FUNC_ID_ZW_R_F_POWER_LEVEL_SET");
+
+	return res; 
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::HandleSerialApiSetTimeoutsResponse>
+// Process a response from the Z-Wave PC interface
+//-----------------------------------------------------------------------------
+bool Driver::HandleSerialApiSetTimeoutsResponse
+(
+	uint8* _data
+)
+{
+    // the meaning of this command and its response is currently unclear
+    bool res = true;
+	Log::Write("Received reply to FUNC_ID_SERIAL_API_SET_TIMEOUTS");
+    return res;
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::HandleMemoryGetByteResponse>
+// Process a response from the Z-Wave PC interface
+//-----------------------------------------------------------------------------
+bool Driver::HandleMemoryGetByteResponse
+(
+	uint8* _data
+)
+{
+	bool res = true;
+    // the meaning of this command and its response is currently unclear
+    // it seems to return three bytes of data, so print them out
+    Log::Write("Received reply to FUNC_ID_ZW_MEMORY_GET_BYTE, returned data: 0x%02hx 0x%02hx 0x%02hx",
+               _data[0], _data[1], _data[2]);
+
+	return res; 
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::HandleReadMemoryResponse>
+// Process a response from the Z-Wave PC interface
+//-----------------------------------------------------------------------------
+bool Driver::HandleReadMemoryResponse
+(
+	uint8* _data
+)
+{
+    // the meaning of this command and its response is currently unclear
+	bool res = true;
+	Log::Write("Received reply to FUNC_ID_MEMORY_GET_BYTE");
+	return res; 
+}
