@@ -4,6 +4,8 @@
 
 # GNU make only
 
+# requires libudev-dev
+
 .SUFFIXES:	.cpp .o .a .s
 
 CC     := gcc
@@ -31,7 +33,7 @@ LIBS := $(wildcard ../../../lib/linux/*.a)
 all: test
 
 test:	Main.o $(LIBS)
-	$(LD) -o $@ $(LDFLAGS) $< $(LIBS) -pthread
+	$(LD) -o $@ $(LDFLAGS) $< $(LIBS) -pthread -ludev
 
 clean:
 	rm -f test Main.o
