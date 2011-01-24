@@ -476,7 +476,11 @@ int HID_API_EXPORT hid_send_feature_report(hid_device *dev, const unsigned char 
 {
 	int res;
 
+#ifdef notdef
 	res = ioctl(dev->device_handle, HIDIOCSFEATURE(length), data);
+#else
+	res = -1;
+#endif
 	if (res < 0)
 		perror("ioctl (SFEATURE)");
 
@@ -487,7 +491,11 @@ int HID_API_EXPORT hid_get_feature_report(hid_device *dev, unsigned char *data, 
 {
 	int res;
 
+#ifdef notdef
 	res = ioctl(dev->device_handle, HIDIOCGFEATURE(length), data);
+#else
+	res = -1;
+#endif
 	if (res < 0)
 		perror("ioctl (GFEATURE)");
 
