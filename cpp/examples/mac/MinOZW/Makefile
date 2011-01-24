@@ -31,7 +31,7 @@ LIBS := $(wildcard ../../../lib/mac/*.a)
 all: test
 
 test:	Main.o $(LIBS)
-	$(LD) -o $@ $(LDFLAGS) $< $(LIBS)
+	$(LD) -o $@ $(LDFLAGS) $< $(LIBS) -framework IOKit -framework CoreFoundation
 
 clean:
 	rm -f test Main.o
