@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\src;..\..\..\src\command_classes;..\..\..\src\value_classes;..\..\..\src\platform;..\..\..\src\platform\windows;..\..\..\tinyxml"
+				AdditionalIncludeDirectories="..\..\..\src;..\..\..\src\command_classes;..\..\..\src\value_classes;..\..\..\src\platform;..\..\..\src\platform\windows;..\..\..\tinyxml;..\..\..\hidapi\hidapi"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -62,6 +62,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
+				AdditionalDependencies="setupapi.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -106,7 +107,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="..\..\..\src;..\..\..\src\command_classes;..\..\..\src\value_classes;..\..\..\src\platform;..\..\..\src\platform\windows;..\..\..\tinyxml"
+				AdditionalIncludeDirectories="..\..\..\src;..\..\..\src\command_classes;..\..\..\src\value_classes;..\..\..\src\platform;..\..\..\src\platform\windows;..\..\..\tinyxml;..\..\..\hidapi\hidapi"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -125,6 +126,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
+				AdditionalDependencies="setupapi.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -226,6 +228,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\platform\HidController.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\platform\HidController.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\platform\IController.h"
 				>
 			</File>
@@ -270,6 +280,14 @@
 				</File>
 				<File
 					RelativePath="..\..\..\src\platform\windows\EventImpl.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\platform\windows\HidControllerImpl.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\platform\windows\HidControllerImpl.h"
 					>
 				</File>
 				<File
@@ -775,6 +793,18 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\command_classes\WakeUp.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="HIDAPI"
+			>
+			<File
+				RelativePath="..\..\..\hidapi\windows\hid.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\hidapi\hidapi\hidapi.h"
 				>
 			</File>
 		</Filter>

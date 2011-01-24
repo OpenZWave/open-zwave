@@ -25,11 +25,11 @@ LDFLAGS	:= $(DEBUG_LDFLAGS)
 LIBDIR	:= ../../lib/mac
 
 INCLUDES	:= -I ../../src -I ../../src/command_classes/ -I ../../src/value_classes/ \
-	-I ../../src/platform/ -I ../../src/platform/unix -I ../../tinyxml/
-SOURCES		:= ../../src ../../src/command_classes ../../tinyxml \
+	-I ../../src/platform/ -I ../../src/platform/unix -I ../../tinyxml/ -I ../../hidapi/hidapi/
+SOURCES		:= ../../src ../../src/command_classes ../../tinyxml ../../hidapi/mac\
 	../../src/value_classes ../../src/platform ../../src/platform/unix
 
-VPATH = ../../src:../../src/command_classes:../../tinyxml:\
+VPATH = ../../src:../../src/command_classes:../../tinyxml:../../hidapi/mac:\
 	../../src/value_classes:../../src/platform:../../src/platform/unix
 
 %.d : %.cpp
@@ -39,6 +39,7 @@ VPATH = ../../src:../../src/command_classes:../../tinyxml:\
 	rm -f $@.$$$$
 
 tinyxml := $(notdir $(wildcard ../../tinyxml/*.cpp))
+hidapi := $(notdir $(wildcard ../../hidapi/mac/*.cpp))
 cclasses := $(notdir $(wildcard ../../src/command_classes/*.cpp))
 vclasses := $(notdir $(wildcard ../../src/value_classes/*.cpp))
 pform := $(notdir $(wildcard ../../src/platform/*.cpp)) \
@@ -54,6 +55,7 @@ clean:
 	rm -f *.d *.o
 
 -include $(tinyxml:.cpp=.d)
+-include $(hidapi:.cpp=.d)
 -include $(cclasses:.cpp=.d)
 -include $(vclasses:.cpp=.d)
 -include $(pform:.cpp=.d)

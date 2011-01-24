@@ -73,7 +73,7 @@ namespace OpenZWave
 		enum ControllerInterface
 		{
 			ControllerInterface_Serial = 0,
-			ControllerInterface_UsbHid
+			ControllerInterface_Hid
 		};
 
 	//-----------------------------------------------------------------------------
@@ -316,6 +316,10 @@ namespace OpenZWave
 		void HandleNodeNeighborUpdateRequest( uint8* _data );
 		void HandleNetworkUpdateRequest( uint8* _data );
 		bool HandleApplicationUpdateRequest( uint8* _data );
+		bool HandleRfPowerLevelSetResponse( uint8* _data );
+		bool HandleSerialApiSetTimeoutsResponse( uint8* _data );
+		bool HandleMemoryGetByteResponse( uint8* _data );
+		bool HandleReadMemoryResponse( uint8* _data );
 
 		void CommonAddNodeStatusRequestHandler( uint8 _funcId, uint8* _data );
 

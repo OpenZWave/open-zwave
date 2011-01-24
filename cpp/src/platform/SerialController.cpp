@@ -26,6 +26,7 @@
 //-----------------------------------------------------------------------------
 
 #include "Defs.h"
+#include "Msg.h"
 #include "SerialController.h"
 
 #include "SerialControllerImpl.h"	// Platform-specific implementation of a serial port
@@ -44,8 +45,15 @@ SerialController::SerialController
 	m_bOpen( false ),
     m_baud ( 115200 ),
     m_parity ( SerialController::Parity_None ),
-    m_stopBits ( SerialController::StopBits_One )
+    m_stopBits ( SerialController::StopBits_One ),
+    m_pMsgInitializationSequence( new list<Msg*> )
 {
+    m_pMsgInitializationSequence->push_back(new Msg( "FUNC_ID_ZW_GET_VERSION", 0xff, REQUEST, FUNC_ID_ZW_GET_VERSION, false ));
+    m_pMsgInitializationSequence->push_back(new Msg( "FUNC_ID_ZW_MEMORY_GET_ID", 0xff, REQUEST, FUNC_ID_ZW_MEMORY_GET_ID, false ));
+    m_pMsgInitializationSequence->push_back(new Msg( "FUNC_ID_ZW_GET_CONTROLLER_CAPABILITIES", 0xff, REQUEST, FUNC_ID_ZW_GET_CONTROLLER_CAPABILITIES, false ));
+    m_pMsgInitializationSequence->push_back(new Msg( "FUNC_ID_SERIAL_API_GET_CAPABILITIES", 0xff, REQUEST, FUNC_ID_SERIAL_API_GET_CAPABILITIES, false ));
+    //m_pMsgInitializationSequence->push_back(new Msg( "FUNC_ID_ZW_GET_SUC_NODE_ID", 0xff, REQUEST, FUNC_ID_ZW_GET_SUC_NODE_ID, false ));
+    m_pMsgInitializationSequence->push_back(new Msg( "FUNC_ID_SERIAL_API_GET_INIT_DATA", 0xff, REQUEST, FUNC_ID_SERIAL_API_GET_INIT_DATA, false ));
 }
 
 //-----------------------------------------------------------------------------
@@ -57,6 +65,17 @@ SerialController::~SerialController
 )
 {
 	delete m_pImpl;
+}
+
+//-----------------------------------------------------------------------------
+//  <SerialController::GetMsgInitializationSequence>
+//  Retrieves an array of Msg object pointers in the correct order needed to initialize the SerialController implementation.
+//-----------------------------------------------------------------------------
+list<Msg*>* const SerialController::GetMsgInitializationSequence
+(
+)
+{
+	return m_pMsgInitializationSequence;
 }
 
 //-----------------------------------------------------------------------------
@@ -162,7 +181,8 @@ bool SerialController::Close
 uint32 SerialController::Read
 (
 	uint8* _buffer,
-	uint32 _length
+	uint32 _length,
+    ReadPacketSegment _segment
 )
 {
 	if( !m_bOpen )
@@ -170,7 +190,7 @@ uint32 SerialController::Read
 		return 0;
 	}
 
-	return( m_pImpl->Read( _buffer, _length ) );
+	return( m_pImpl->Read( _buffer, _length, _segment ) );
 }
 
 //-----------------------------------------------------------------------------
