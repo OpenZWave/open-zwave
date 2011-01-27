@@ -56,6 +56,84 @@ static string const c_modeName[] =
 };
 
 //-----------------------------------------------------------------------------
+// <ThermostatFanMode::ReadXML>
+// Read the supported modes
+//-----------------------------------------------------------------------------
+void ThermostatFanMode::ReadXML
+( 
+	TiXmlElement const* _ccElement
+)
+{
+	CommandClass::ReadXML( _ccElement );
+
+	if( Node* node = GetNodeUnsafe() )
+	{
+		vector<ValueList::Item>	supportedModes;
+
+		TiXmlElement const* supportedModesElement = _ccElement->FirstChildElement( "SupportedModes" );
+		if( supportedModesElement )
+		{
+			TiXmlElement const* modeElement = supportedModesElement->FirstChildElement();
+			while( modeElement )
+			{
+				char const* str = modeElement->Value();
+				if( str && !strcmp( str, "Mode" ) )
+				{
+					int index;
+					if( TIXML_SUCCESS == modeElement->QueryIntAttribute( "index", &index ) )
+					{
+						ValueList::Item item;
+						item.m_value = index;
+						item.m_label = c_modeName[index];
+						supportedModes.push_back( item );					
+					}
+				}
+
+				modeElement = modeElement->NextSiblingElement();
+			}
+		}
+
+		if( !supportedModes.empty() )
+		{
+			m_supportedModes = supportedModes;
+			ClearStaticRequest( StaticRequest_Values );
+			CreateVars( 1 ); 
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <ThermostatFanMode::WriteXML>
+// Save the supported modes
+//-----------------------------------------------------------------------------
+void ThermostatFanMode::WriteXML
+( 
+	TiXmlElement* _ccElement
+)
+{
+	CommandClass::WriteXML( _ccElement );
+
+	if( Node* node = GetNodeUnsafe() )
+	{
+		TiXmlElement* supportedModesElement = new TiXmlElement( "SupportedModes" );
+		_ccElement->LinkEndChild( supportedModesElement );
+
+		for( vector<ValueList::Item>::iterator it = m_supportedModes.begin(); it != m_supportedModes.end(); ++it )
+		{
+			ValueList::Item const& item = *it;
+
+			TiXmlElement* modeElement = new TiXmlElement( "Mode" );
+			supportedModesElement->LinkEndChild( modeElement );
+
+			char str[8];
+			snprintf( str, 8, "%d", item.m_value );
+			modeElement->SetAttribute( "index", str );
+			modeElement->SetAttribute( "label", item.m_label.c_str() );
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
 // <ThermostatFanMode::RequestState>
 // Get the static thermostat fan mode details from the device
 //-----------------------------------------------------------------------------
@@ -134,7 +212,7 @@ bool ThermostatFanMode::HandleMsg
 		if( !m_supportedModes.empty() )
 		{
 			// We have received the thermostat mode from the Z-Wave device
-			if( ValueList* valueList = m_mode.GetInstance( _instance ) )
+			if( ValueList* valueList = static_cast<ValueList*>( GetValue( _instance, 0 ) ) )
 			{
 				valueList->OnValueChanged( (int32)_data[1] );
 				Log::Write( "Received thermostat fan mode from node %d: %s", GetNodeId(), valueList->GetItem().m_label.c_str() );		
@@ -217,7 +295,7 @@ void ThermostatFanMode::CreateVars
 
 	if( Node* node = GetNodeUnsafe() )
 	{
-		m_mode.AddInstance( _instance, node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Fan Mode", "", false, m_supportedModes, m_supportedModes[0].m_value ) );
+		node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Fan Mode", "", false, m_supportedModes, m_supportedModes[0].m_value );
 	}
 }
 

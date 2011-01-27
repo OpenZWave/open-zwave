@@ -95,7 +95,7 @@ bool Indicator::HandleMsg
 	{
 		Log::Write( "Received an Indicator report from node %d: Indicator=%d", GetNodeId(), _data[1] );
 
-		if( ValueByte* value = m_state.GetInstance( _instance ) )
+		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, 0 ) ) )
 		{
 			value->OnValueChanged( _data[1] != 0 );
 		}
@@ -144,7 +144,7 @@ void Indicator::CreateVars
 {
 	if( Node* node = GetNodeUnsafe() )
 	{
-		m_state.AddInstance( _instance, node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Indicator", "", false, false ) );
+		node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Indicator", "", false, false );
 	}
 }
 

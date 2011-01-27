@@ -50,6 +50,12 @@ enum ClimateControlScheduleCmd
 	ClimateControlScheduleCmd_OverrideReport
 };
 
+enum
+{
+	ClimateControlScheduleIndex_OverrideState = 8,
+	ClimateControlScheduleIndex_OverrideSetback = 9
+};
+
 static char const* c_dayNames[] = 
 {
 	"Invalid",
@@ -160,7 +166,7 @@ bool ClimateControlSchedule::HandleMsg
 
 		Log::Write( "Received climate control schedule report for %s from node %d:", c_dayNames[day], GetNodeId() );
 
-		if( ValueSchedule* value = m_schedules[day-1].GetInstance( _instance ) )
+		if( ValueSchedule* value = static_cast<ValueSchedule*>( GetValue( _instance, day ) ) )
 		{
 			// Remove any existing data
 			value->ClearSwitchPoints();
@@ -254,7 +260,7 @@ bool ClimateControlSchedule::HandleMsg
 		Log::Write( "Received climate control schedule override report from node %d:", GetNodeId() );
 		Log::Write( "  Override State: %s:", c_overrideStateNames[overrideState] );
 
-		if( ValueList* valueList = m_overrideState.GetInstance( _instance ) )
+		if( ValueList* valueList = static_cast<ValueList*>( GetValue( _instance, ClimateControlScheduleIndex_OverrideState ) ) )
 		{
 			valueList->OnValueChanged( (int)overrideState );
 		}
@@ -276,7 +282,7 @@ bool ClimateControlSchedule::HandleMsg
 			}
 		}
 
-		if( ValueByte* valueByte = m_overrideSetback.GetInstance( _instance ) )
+		if( ValueByte* valueByte = static_cast<ValueByte*>( GetValue( _instance, ClimateControlScheduleIndex_OverrideSetback ) ) )
 		{
 			valueByte->OnValueChanged( setback );
 		}
@@ -341,8 +347,8 @@ bool ClimateControlSchedule::SetValue
 	else
 	{
 		// Set an override
-		ValueList const* state = m_overrideState.GetInstance( instance );
-		ValueByte const* setback = m_overrideSetback.GetInstance( instance );
+		ValueList* state = static_cast<ValueList*>( GetValue( instance, ClimateControlScheduleIndex_OverrideState ) );
+		ValueByte* setback = static_cast<ValueByte*>( GetValue( instance, ClimateControlScheduleIndex_OverrideSetback ) );
 
 		if( state && setback )
 		{
@@ -377,7 +383,7 @@ void ClimateControlSchedule::CreateVars
 		// Add a ValueSchedule for each day of the week.
 		for( uint8 i=0; i<7; ++i )
 		{
-			m_schedules[i].AddInstance( _instance, node->CreateValueSchedule( ValueID::ValueGenre_User, GetCommandClassId(), _instance, i+1, c_dayNames[i+1], "", false ) );
+			node->CreateValueSchedule( ValueID::ValueGenre_User, GetCommandClassId(), _instance, i+1, c_dayNames[i+1], "", false );
 		}
 
 		// Add values for the override state and setback
@@ -391,8 +397,8 @@ void ClimateControlSchedule::CreateVars
 			items.push_back( item ); 
 		}
 
-		m_overrideState.AddInstance( _instance, node->CreateValueList(  ValueID::ValueGenre_User, GetCommandClassId(), _instance, 8, "Override State", "", false, items, 0 ) );
-		m_overrideSetback.AddInstance( _instance, node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Override Setback", "", false, 0  ) );
+		node->CreateValueList(  ValueID::ValueGenre_User, GetCommandClassId(), _instance, ClimateControlScheduleIndex_OverrideState, "Override State", "", false, items, 0 );
+		node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ClimateControlScheduleIndex_OverrideSetback, "Override Setback", "", false, 0  );
 	}
 }
 

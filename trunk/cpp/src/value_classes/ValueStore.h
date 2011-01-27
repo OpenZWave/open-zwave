@@ -44,7 +44,7 @@ namespace OpenZWave
 	{
 	public:
 		
-		typedef map<ValueID,Value*>::const_iterator Iterator;
+		typedef map<uint32,Value*>::const_iterator Iterator;
 
 		Iterator Begin(){ return m_values.begin(); }
 		Iterator End(){ return m_values.end(); }
@@ -53,13 +53,13 @@ namespace OpenZWave
 		~ValueStore();
 
 		bool AddValue( Value* _value );
-		bool RemoveValue( ValueID const& _id );
-		Value* GetValue( ValueID const& _id )const;
+		bool RemoveValue( uint32 const& _key );
+		Value* GetValue( uint32 const& _key )const;
 
 		void RemoveCommandClassValues( uint8 const _commandClassId );		// Remove all the values associated with a command class
 
 	private:
-		map<ValueID,Value*>	m_values;
+		map<uint32,Value*>	m_values;
 	};
 
 } // namespace OpenZWave

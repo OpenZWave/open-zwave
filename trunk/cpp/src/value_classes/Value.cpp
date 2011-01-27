@@ -120,7 +120,7 @@ void Value::ReadXML
 	ValueID::ValueGenre genre = Value::GetGenreEnumFromName( _valueElement->Attribute( "genre" ) );
 	ValueID::ValueType type = Value::GetTypeEnumFromName( _valueElement->Attribute( "type" ) );
 
-	uint8 instance = 0;
+	uint8 instance = 1;
 	if( TIXML_SUCCESS == _valueElement->QueryIntAttribute( "instance", &intVal ) )
 	{
 		instance = (uint8)intVal;

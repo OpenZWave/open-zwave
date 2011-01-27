@@ -60,8 +60,6 @@ namespace OpenZWave
 
 	private:
 		ThermostatFanState( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
-
-		ValueInstances<ValueString>	m_state;
 	};
 
 } // namespace OpenZWave

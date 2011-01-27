@@ -46,6 +46,25 @@ enum ThermostatSetpointCmd
 	ThermostatSetpointCmd_SupportedReport	= 0x05
 };
 
+enum
+{
+	ThermostatSetpoint_Unused0	= 0,
+	ThermostatSetpoint_Heating1,
+	ThermostatSetpoint_Cooling1,
+	ThermostatSetpoint_Unused3,
+	ThermostatSetpoint_Unused4,
+	ThermostatSetpoint_Unused5,
+	ThermostatSetpoint_Unused6,
+	ThermostatSetpoint_Furnace,
+	ThermostatSetpoint_DryAir,
+	ThermostatSetpoint_MoistAir,
+	ThermostatSetpoint_AutoChangeover,
+	ThermostatSetpoint_HeatingEcon,
+	ThermostatSetpoint_CoolingEcon,
+	ThermostatSetpoint_AwayHeating,
+	ThermostatSetpoint_Count
+};
+
 static char const* c_setpointName[] = 
 {
 	"Unused 0",
@@ -63,7 +82,6 @@ static char const* c_setpointName[] =
 	"Cooling Econ",
 	"Away Heating"
 };
-
 
 //-----------------------------------------------------------------------------
 // <ThermostatSetpoint::ThermostatSetpoint>
@@ -129,7 +147,7 @@ void ThermostatSetpoint::RequestValue
 		return;
 	}
 
-	if( m_setpoints[_index].HasInstances() )
+	if( GetValue( 1, _index ) )
 	{
 		// Request the setpoint value
 		Msg* msg = new Msg( "Request Current Thermostat Setpoint", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
@@ -158,7 +176,7 @@ bool ThermostatSetpoint::HandleMsg
 	if( ThermostatSetpointCmd_Report == (ThermostatSetpointCmd)_data[0] )
 	{
 		// We have received a thermostat setpoint value from the Z-Wave device
-		if( ValueDecimal* value = m_setpoints[_data[1]].GetInstance( _instance ) )
+		if( ValueDecimal* value = static_cast<ValueDecimal*>( GetValue( _instance, _data[1] ) ) )
 		{
 			uint8 scale;
 			string temperature = ExtractValue( &_data[2], &scale );
@@ -190,7 +208,7 @@ bool ThermostatSetpoint::HandleMsg
 						int32 index = (int32)((i-1)<<3) + bit;
 						if( index < ThermostatSetpoint_Count )
 						{
-							m_setpoints[index].AddInstance( _instance, node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, index, c_setpointName[index], "C", false, "0.0" ) );
+							node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, index, c_setpointName[index], "C", false, "0.0" );
 							Log::Write( "    Added setpoint: %s", c_setpointName[index] );
 						}
 					}
@@ -246,6 +264,6 @@ void ThermostatSetpoint::CreateVars
 {
 	if( Node* node = GetNodeUnsafe() )
 	{
-		m_setpoints[_index].AddInstance( _instance, node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, _index, "Setpoint", "C", false, "0.0"  ) );
+		node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, _index, "Setpoint", "C", false, "0.0"  );
 	}
 }

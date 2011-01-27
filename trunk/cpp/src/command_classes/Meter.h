@@ -57,8 +57,6 @@ namespace OpenZWave
 
 	private:
 		Meter( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
-
-		ValueInstances<ValueDecimal>	m_value;
 	};
 
 } // namespace OpenZWave

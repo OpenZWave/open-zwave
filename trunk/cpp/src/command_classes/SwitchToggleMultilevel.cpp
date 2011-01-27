@@ -98,7 +98,7 @@ bool SwitchToggleMultilevel::HandleMsg
 	{
 		Log::Write( "Received SwitchToggleMultiLevel report from node %d: level=%d", GetNodeId(), _data[1] );
 
-		if( ValueByte* value = m_level.GetInstance( _instance ) )
+		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, 0 ) ) )
 		{
 			value->OnValueChanged( _data[1] );
 		}
@@ -181,7 +181,7 @@ void SwitchToggleMultilevel::CreateVars
 {
 	if( Node* node = GetNodeUnsafe() )
 	{
-		m_level.AddInstance( _instance, node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Level", "", false, 0  ) );
+		node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Level", "", false, 0  );
 	}
 }
 

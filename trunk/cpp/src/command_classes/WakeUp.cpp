@@ -143,7 +143,7 @@ bool WakeUp::HandleMsg
 {
 	if( WakeUpCmd_IntervalReport == (WakeUpCmd)_data[0] )
 	{	
-		if( ValueInt* value = m_interval.GetInstance( _instance ) )
+		if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, 0 ) ) )
 		{
 			uint32 interval = ((uint32)_data[1]) << 16;
 			interval |= (((uint32)_data[2]) << 8);
@@ -345,7 +345,7 @@ void WakeUp::CreateVars
 	{
 		if( node->GetBasic() >= 0x03 )	// We don't add the interval value for controllers, because they don't appear to ever wake up on their own.
 		{
-			m_interval.AddInstance( _instance, node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 0, "Wake-up Interval", "Seconds", false, 3600 ) );
+			node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 0, "Wake-up Interval", "Seconds", false, 3600 );
 		}
 	}
 }

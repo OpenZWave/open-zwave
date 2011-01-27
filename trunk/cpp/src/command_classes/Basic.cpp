@@ -96,7 +96,7 @@ bool Basic::HandleMsg
 	{
 		// Level
 		Log::Write( "Received Basic report from node %d: level=%d", GetNodeId(), _data[1] );
-		if( ValueByte* value = m_level.GetInstance( _instance ) )
+		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, 0 ) ) )
 		{
 			value->OnValueChanged( _data[1] );
 		}
@@ -157,7 +157,7 @@ void Basic::CreateVars
 {
 	if( Node* node = GetNodeUnsafe() )
 	{
-		m_level.AddInstance( _instance, node->CreateValueByte( ValueID::ValueGenre_Basic, GetCommandClassId(), _instance, 0, "Basic", "", false, 0  ) );
+		node->CreateValueByte( ValueID::ValueGenre_Basic, GetCommandClassId(), _instance, 0, "Basic", "", false, 0  );
 	}
 }
 
@@ -172,7 +172,7 @@ void Basic::Set
 {
 	// This may look like a long winded way to do this, but
 	// it ensures that all the proper notifications get sent.
-	if( ValueByte* value = m_level.GetInstance( 1 ) )
+	if( ValueByte* value = static_cast<ValueByte*>( GetValue( 1, 0 ) ) )
 	{
 		value->Set( _level );
 	}

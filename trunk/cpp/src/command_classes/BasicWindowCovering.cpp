@@ -42,6 +42,12 @@ enum BasicWindowCoveringCmd
 	BasicWindowCoveringCmd_StopLevelChange	= 0x02
 };
 
+enum
+{
+	BasicWindowCoveringIndex_Open = 0,
+	BasicWindowCoveringIndex_Close
+};
+
 //-----------------------------------------------------------------------------
 // <BasicWindowCovering::SetValue>
 // Set a value on the Z-Wave device
@@ -51,49 +57,42 @@ bool BasicWindowCovering::SetValue
 	Value const& _value
 )
 {
-//	bool res = false;
-	uint8 instance = _value.GetID().GetInstance();
+	if( ValueID::ValueType_Button == _value.GetID().GetType() )
+	{
+		ValueButton const* button = static_cast<ValueButton const*>(&_value);
 
-	uint8 action;
-	ValueButton const* button = NULL;
+		uint8 action = 0x40;
+		if( button->GetID().GetIndex() )	// Open is index zero, so non-zero is close.
+		{
+			// Close
+			action = 0;
+		}
 
-	if( _value.GetID().GetIndex() )
-	{
-		// Close
-		action = 0;
-		button = m_close.GetInstance( instance );
-	}
-	else
-	{
-		// Open
-		action = 0x40;
-		button = m_open.GetInstance( instance );
-	}
-
-	if( button && button->IsPressed() )
-	{
-		Log::Write( "BasicWindowCovering - Start Level Change (%s) on node %d", action ? "Open" : "Close", GetNodeId() );
-		Msg* msg = new Msg( "Basic Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
-		msg->Append( GetNodeId() );
-		msg->Append( 3 );
-		msg->Append( GetCommandClassId() );
-		msg->Append( BasicWindowCoveringCmd_StartLevelChange );
-		msg->Append( 0x40 );
-		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-		GetDriver()->SendMsg( msg );
-		return true;
-	}
-	else
-	{
-		Log::Write( "BasicWindowCovering - Stop Level Change on node %d", GetNodeId() );
-		Msg* msg = new Msg( "Basic Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
-		msg->Append( GetNodeId() );
-		msg->Append( 2 );
-		msg->Append( GetCommandClassId() );
-		msg->Append( BasicWindowCoveringCmd_StopLevelChange );
-		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-		GetDriver()->SendMsg( msg );
-		return true;
+		if( button && button->IsPressed() )
+		{
+			Log::Write( "BasicWindowCovering - Start Level Change (%s) on node %d", action ? "Open" : "Close", GetNodeId() );
+			Msg* msg = new Msg( "Basic Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
+			msg->Append( GetNodeId() );
+			msg->Append( 3 );
+			msg->Append( GetCommandClassId() );
+			msg->Append( BasicWindowCoveringCmd_StartLevelChange );
+			msg->Append( action );
+			msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+			GetDriver()->SendMsg( msg );
+			return true;
+		}
+		else
+		{
+			Log::Write( "BasicWindowCovering - Stop Level Change on node %d", GetNodeId() );
+			Msg* msg = new Msg( "Basic Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
+			msg->Append( GetNodeId() );
+			msg->Append( 2 );
+			msg->Append( GetCommandClassId() );
+			msg->Append( BasicWindowCoveringCmd_StopLevelChange );
+			msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+			GetDriver()->SendMsg( msg );
+			return true;
+		}
 	}
 
 	return false;
@@ -110,8 +109,8 @@ void BasicWindowCovering::CreateVars
 {
 	if( Node* node = GetNodeUnsafe() )
 	{
-		m_open.AddInstance( _instance, node->CreateValueButton( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Open" ) );
-		m_close.AddInstance( _instance, node->CreateValueButton( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 1, "Close" ) );
+		node->CreateValueButton( ValueID::ValueGenre_User, GetCommandClassId(), _instance, BasicWindowCoveringIndex_Open, "Open" );
+		node->CreateValueButton( ValueID::ValueGenre_User, GetCommandClassId(), _instance, BasicWindowCoveringIndex_Close, "Close" );
 	}
 }
 

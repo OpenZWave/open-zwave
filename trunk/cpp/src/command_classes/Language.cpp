@@ -46,8 +46,8 @@ enum LanguageCmd
 
 enum
 {
-	ValueIndex_Language	= 0,
-	ValueIndex_Country
+	LanguageIndex_Language	= 0,
+	LanguageIndex_Country
 };
 
 //-----------------------------------------------------------------------------
@@ -114,11 +114,11 @@ bool Language::HandleMsg
 		Log::Write( "Received Language report from node %d: Language=%s, Country=%s", GetNodeId(), language, country );
 		ClearStaticRequest( StaticRequest_Values );
 
-		if( ValueString* languageValue = m_language.GetInstance( _instance ) )
+		if( ValueString* languageValue = static_cast<ValueString*>( GetValue( _instance, LanguageIndex_Language ) ) )
 		{
 			languageValue->OnValueChanged( language );
 		}
-		if( ValueString* countryValue = m_country.GetInstance( _instance ) )
+		if( ValueString* countryValue = static_cast<ValueString*>( GetValue( _instance, LanguageIndex_Country ) ) )
 		{
 			countryValue->OnValueChanged( country );
 		}
@@ -140,8 +140,8 @@ void Language::CreateVars
 {
 	if( Node* node = GetNodeUnsafe() )
 	{
-		m_language.AddInstance( _instance, node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, (uint8)ValueIndex_Language, "Language", "", false, "" ) );
-		m_country.AddInstance( _instance, node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, (uint8)ValueIndex_Country, "Country", "", false, "" ) );
+		node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, (uint8)LanguageIndex_Language, "Language", "", false, "" );
+		node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, (uint8)LanguageIndex_Country, "Country", "", false, "" );
 	}
 }
 
