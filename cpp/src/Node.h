@@ -328,7 +328,7 @@ namespace OpenZWave
 		ValueID CreateValueID( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex, ValueID::ValueType const _type );
 
 		Value* GetValue( ValueID const& _id );
-		Value* GetValue( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex, ValueID::ValueType const _type );
+		Value* GetValue( uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex );
 
 		// Helpers for creating values
 		ValueBool* CreateValueBool( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, bool const _default );
@@ -358,7 +358,7 @@ namespace OpenZWave
 	private:
 		bool SetConfigParam( uint8 const _param, int32 _value );
 		void RequestConfigParam( uint8 const _param );
-		void RequestAllConfigParams();
+		bool RequestAllConfigParams();
 
 	//-----------------------------------------------------------------------------
 	// Groups

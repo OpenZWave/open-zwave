@@ -58,8 +58,6 @@ namespace OpenZWave
 
 	private:
 		Indicator( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
-
-		ValueInstances<ValueByte>	m_state;
 	};
 
 } // namespace OpenZWave

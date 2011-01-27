@@ -82,7 +82,7 @@ bool SensorAlarm::RequestState
 	bool requests = false;
 	if( ( _requestFlags & RequestFlag_Static ) && HasStaticRequest( StaticRequest_Values ) )
 	{
-		RequestValue();
+		RequestValue( 0xff );
 		requests = true;
 	}
 
@@ -90,10 +90,10 @@ bool SensorAlarm::RequestState
 	{
 		for( uint8 i=0; i<SensorAlarm_Count; ++i )
 		{
-			if( m_alarmTypes[i].HasInstances() )
+			if( NULL != GetValue( 1, i ) )
 			{
-				// Request the value
-				RequestValue( i+1 );	// increment by 1 so supportedGet can be equal to zero
+				// There is a value for this alarm type, so request it
+				RequestValue( i );
 			}
 		}
 		requests = true;
@@ -111,7 +111,7 @@ void SensorAlarm::RequestValue
 	uint8 const _index		// = 0
 )
 {
-	if( _index == 0 )	// supportedGet
+	if( _index == 0xff )
 	{
 		// Request the supported setpoints
 		Msg* msg = new Msg( "Request Supported Alarm Types", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
@@ -123,8 +123,7 @@ void SensorAlarm::RequestValue
 		GetDriver()->SendMsg( msg );
 		return;
 	}
-
-	if( _index >= 0 )
+	else
 	{
 		// Request the setpoint value
 		Msg* msg = new Msg( "Request alarm state", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
@@ -132,7 +131,7 @@ void SensorAlarm::RequestValue
 		msg->Append( 3 );
 		msg->Append( GetCommandClassId() );
 		msg->Append( SensorAlarmCmd_Get );
-		msg->Append( _index-1 );				// "undo" the increment to get back to zero-based value
+		msg->Append( _index );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 		GetDriver()->SendMsg( msg );
 	}
@@ -152,7 +151,7 @@ bool SensorAlarm::HandleMsg
 	if( SensorAlarmCmd_Report == (SensorAlarmCmd)_data[0] )
 	{
 		// We have received an alarm state report from the Z-Wave device
-		if( ValueByte* value = m_alarmTypes[_data[2]].GetInstance( _instance ) )
+		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, _data[2] ) ) )
 		{
 			uint8 sourceNodeId = _data[1];
 			uint8 state = _data[3];
@@ -184,7 +183,7 @@ bool SensorAlarm::HandleMsg
 						int32 index = (int32)(i<<3) + bit;
 						if( index < SensorAlarm_Count )
 						{
-							m_alarmTypes[index].AddInstance( _instance, node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, index, c_alarmTypeName[index], "", true, 0 ) );
+							node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, index, c_alarmTypeName[index], "", true, 0 );
 							Log::Write( "    Added alarm type: %s", c_alarmTypeName[index] );
 						}
 					}

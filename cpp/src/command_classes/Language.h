@@ -57,9 +57,6 @@ namespace OpenZWave
 
 	private:
 		Language( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){ SetStaticRequest( StaticRequest_Values ); }
-
-		ValueInstances<ValueString>	m_language;
-		ValueInstances<ValueString>	m_country;
 	};
 
 } // namespace OpenZWave

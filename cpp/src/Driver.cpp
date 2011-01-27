@@ -57,9 +57,10 @@ using namespace OpenZWave;
 // previously saved configurations must be accompanied by an increment to the
 // version number, and a comment explaining the date of, and reason for, the change.
 //
-// Version 01: 12-31-2010 - Introduced config version numbering due to ValueID format change.
+// 01: 12-31-2010 - Introduced config version numbering due to ValueID format change.
+// 02: 01-12-2011 - Command class m_afterMark sense corrected, and attribute named to match.
 //
-uint32 const c_configVersion = 1;
+uint32 const c_configVersion = 2;
 
 
 static char const* c_libraryTypeNames[] = 
@@ -733,16 +734,10 @@ bool Driver::WriteMsg()
 		{
 			if( Node* node = GetNodeUnsafe( nodeId ) )
 			{
-				// We check the complete state before the advance.  This is essential so that on the advance
-				// when the state is set to complete, we get a chance to add messages to the send queue and
-				// then wait for them to complete before sending the notification.
+				node->AdvanceQueries();
 				if( node->AllQueriesCompleted() )
 				{
 					RemoveNodeQuery( nodeId );
-				}
-				else
-				{
-					node->AdvanceQueries();
 				}
 			}
 		}
@@ -789,7 +784,9 @@ void Driver::RemoveMsg
 
 			// if there are no more messages for this node in the queue, signal complete
 			if( !bMoreForThisNode ) 
+			{
 				node->QueryStageComplete( node->m_queryStage );
+			}
 		}
 	}
 

@@ -52,8 +52,6 @@ namespace OpenZWave
 		void OnValueChanged( int32 const _value );
 
 		// From Value
-		virtual bool GetAsInt( int32& _value ) const { _value = GetValue(); return true; }
-		virtual bool SetFromInt( int32 const _value ) { Set( _value ); return true; }
 		virtual string const GetAsString() const;
 		virtual bool SetFromString( string const& _value );
 		virtual void ReadXML( uint32 const _homeId, uint8 const _nodeId, uint8 const _commandClassId, TiXmlElement const* _valueElement );

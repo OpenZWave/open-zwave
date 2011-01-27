@@ -68,8 +68,6 @@ namespace OpenZWave
 		int32 GetMin()const{ return m_min; }
 		int32 GetMax()const{ return m_max; }
 
-		virtual bool GetAsInt( int32& _value ) const = 0;
-		virtual bool SetFromInt( int32 const _value ) = 0;
 		virtual string const GetAsString() const { return ""; }
 		virtual bool SetFromString( string const& _value ) { return false; }
 

@@ -62,11 +62,7 @@ namespace OpenZWave
 
 	private:
 		ClimateControlSchedule( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ), m_changeCounter( 0 ){}
-
-		uint8							m_changeCounter;
-		ValueInstances<ValueSchedule>	m_schedules[7];
-		ValueInstances<ValueList>		m_overrideState;
-		ValueInstances<ValueByte>		m_overrideSetback;
+		uint8	m_changeCounter;
 	};
 
 } // namespace OpenZWave

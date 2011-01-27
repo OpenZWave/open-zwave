@@ -95,7 +95,7 @@ bool SwitchToggleBinary::HandleMsg
 	{
 		Log::Write( "Received SwitchToggleBinary report from node %d: %s", GetNodeId(), _data[1] ? "On" : "Off" );
 
-		if( ValueBool* value = m_state.GetInstance( _instance ) )
+		if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, 0 ) ) )
 		{
 			value->OnValueChanged( _data[1] != 0 );
 		}
@@ -136,7 +136,7 @@ void SwitchToggleBinary::CreateVars
 {
 	if( Node* node = GetNodeUnsafe() )
 	{
-		m_state.AddInstance( _instance, node->CreateValueBool( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Toggle Switch", "", false, false ) );
+		node->CreateValueBool( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Toggle Switch", "", false, false );
 	}
 }
 

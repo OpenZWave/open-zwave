@@ -94,7 +94,7 @@ bool SensorBinary::HandleMsg
 	{
 		Log::Write( "Received SensorBinary report from node %d: State=%s", GetNodeId(), _data[1] ? "On" : "Off" );
 
-		if( ValueBool* value = m_state.GetInstance( _instance ) )
+		if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, 0 ) ) )
 		{
 			value->OnValueChanged( _data[1] != 0 );
 		}
@@ -115,7 +115,7 @@ void SensorBinary::CreateVars
 {
 	if( Node* node = GetNodeUnsafe() )
 	{
-		m_state.AddInstance( _instance, node->CreateValueBool(  ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Sensor", "", true, false ) );
+		node->CreateValueBool(  ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Sensor", "", true, false );
 	}
 }
 

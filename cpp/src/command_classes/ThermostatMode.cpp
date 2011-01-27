@@ -65,6 +65,84 @@ static char const* c_modeName[] =
 };
 
 //-----------------------------------------------------------------------------
+// <ThermostatMode::ReadXML>
+// Read the supported modes
+//-----------------------------------------------------------------------------
+void ThermostatMode::ReadXML
+( 
+	TiXmlElement const* _ccElement
+)
+{
+	CommandClass::ReadXML( _ccElement );
+
+	if( Node* node = GetNodeUnsafe() )
+	{
+		vector<ValueList::Item>	supportedModes;
+
+		TiXmlElement const* supportedModesElement = _ccElement->FirstChildElement( "SupportedModes" );
+		if( supportedModesElement )
+		{
+			TiXmlElement const* modeElement = supportedModesElement->FirstChildElement();
+			while( modeElement )
+			{
+				char const* str = modeElement->Value();
+				if( str && !strcmp( str, "Mode" ) )
+				{
+					int index;
+					if( TIXML_SUCCESS == modeElement->QueryIntAttribute( "index", &index ) )
+					{
+						ValueList::Item item;
+						item.m_value = index;
+						item.m_label = c_modeName[index];
+						supportedModes.push_back( item );					
+					}
+				}
+
+				modeElement = modeElement->NextSiblingElement();
+			}
+		}
+
+		if( !supportedModes.empty() )
+		{
+			m_supportedModes = supportedModes;
+			ClearStaticRequest( StaticRequest_Values );
+			CreateVars( 1 ); 
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <ThermostatMode::WriteXML>
+// Save the supported modes
+//-----------------------------------------------------------------------------
+void ThermostatMode::WriteXML
+( 
+	TiXmlElement* _ccElement
+)
+{
+	CommandClass::WriteXML( _ccElement );
+
+	if( Node* node = GetNodeUnsafe() )
+	{
+		TiXmlElement* supportedModesElement = new TiXmlElement( "SupportedModes" );
+		_ccElement->LinkEndChild( supportedModesElement );
+
+		for( vector<ValueList::Item>::iterator it = m_supportedModes.begin(); it != m_supportedModes.end(); ++it )
+		{
+			ValueList::Item const& item = *it;
+
+			TiXmlElement* modeElement = new TiXmlElement( "Mode" );
+			supportedModesElement->LinkEndChild( modeElement );
+
+			char str[8];
+			snprintf( str, 8, "%d", item.m_value );
+			modeElement->SetAttribute( "index", str );
+			modeElement->SetAttribute( "label", item.m_label.c_str() );
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
 // <ThermostatMode::RequestState>
 // Get the static thermostat mode details from the device
 //-----------------------------------------------------------------------------
@@ -141,7 +219,7 @@ bool ThermostatMode::HandleMsg
 	if( ThermostatModeCmd_Report == (ThermostatModeCmd)_data[0] )
 	{
 		// We have received the thermostat mode from the Z-Wave device
-		if( ValueList* valueList = m_mode.GetInstance( _instance ) )
+		if( ValueList* valueList = static_cast<ValueList*>( GetValue( _instance, 0 ) ) )
 		{
 			valueList->OnValueChanged( _data[1]&0x1f );
 			Log::Write( "Received thermostat mode from node %d: %s", GetNodeId(), valueList->GetItem().m_label.c_str() );		
@@ -231,25 +309,29 @@ void ThermostatMode::CreateVars
 	{
 		Node::QueryStage qs = node->GetCurrentQueryStage();
 		if( qs == Node::QueryStage_ProtocolInfo )
+		{
 			// this call is from QueryStage_ProtocolInfo,
 			// so just return (don't know which modes are supported yet)
 			return;
+		}
 
 		// identify the lowest supported mode as the "default" (or default to 0 if no supported modes identified yet)
 		int32 defaultValue = 0;
 		if( !m_supportedModes.empty() )
+		{
 			defaultValue = m_supportedModes[0].m_value;
+		}
 
 		if( qs == Node::QueryStage_Static )
 		{
 			// This instance might already have been created (in NodeInfo, in preparation for loading the values
 			// from zwcfg xml file).  So, if the instance already exists, we delete its value and add a new one below
-			ValueList* vl = m_mode.GetInstance( _instance );
-			if( vl )
-				node->RemoveValueList( vl );
+			if( ValueList* valueList = static_cast<ValueList*>( GetValue( _instance, 0 ) ) )
+			{
+				node->RemoveValueList( valueList );
+			}
 		}
 
-		ValueList* vl2 = node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Mode", "", false, m_supportedModes, defaultValue );
-		m_mode.AddInstance( _instance, vl2 );
+		node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Mode", "", false, m_supportedModes, defaultValue );
 	}
 }

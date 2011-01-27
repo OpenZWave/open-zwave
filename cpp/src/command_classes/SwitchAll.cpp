@@ -103,7 +103,7 @@ bool SwitchAll::HandleMsg
 {
 	if (SwitchAllCmd_Report == (SwitchAllCmd)_data[0])
 	{
-		if( ValueList* value = m_state.GetInstance( _instance ) )
+		if( ValueList* value = static_cast<ValueList*>( GetValue( _instance, 0 ) ) )
 		{
 			Log::Write( "Received SwitchAll report from node %d: %s", GetNodeId(), value->GetItem().m_label.c_str() );
 			value->OnValueChanged( (int32)_data[1] );
@@ -200,7 +200,7 @@ void SwitchAll::CreateVars
 			items.push_back( item ); 
 		}
 
-		m_state.AddInstance( _instance, node->CreateValueList(  ValueID::ValueGenre_System, GetCommandClassId(), _instance, 0, "Switch All", "", false, items, 0 ) );
+		node->CreateValueList(  ValueID::ValueGenre_System, GetCommandClassId(), _instance, 0, "Switch All", "", false, items, 0 );
 	}
 }
 

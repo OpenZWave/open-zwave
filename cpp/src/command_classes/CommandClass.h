@@ -39,7 +39,6 @@ namespace OpenZWave
 	class Msg;
 	class Node;
 	class Value;
-	class ValueID;
 
 	/** \brief Base class for all Z-Wave command classes.
 	 */
@@ -73,10 +72,10 @@ namespace OpenZWave
 		uint8 GetNodeId()const{ return m_nodeId; }
 		Driver* GetDriver()const;
 		Node* GetNodeUnsafe()const;
-		void ReleaseNode()const;
+		Value* GetValue( uint8 const _instance, uint8 const _index );
 
 		void SetInstances( uint8 const _instances );
-		void SetAfterMark(){ m_afterMark = false; }
+		void SetAfterMark(){ m_afterMark = true; }
 		bool IsAfterMark()const{ return m_afterMark; }
 
 		// Helper methods
@@ -94,78 +93,6 @@ namespace OpenZWave
 		int32 ValueToInteger( string const& _value, uint8* o_precision, uint8* o_size )const;
 
 	protected:
-		/** \brief
-		 *   Manages an array of "instances" which hold instance-specific values (???) 
-		 */
-		template <class T>
-		class ValueInstances
-		{
-		public:
-			ValueInstances(): m_instances(NULL), m_numInstances(0){}
-			/** 
-			 * \brief Destructor.  Iterate through the instance list and release memory allocated to each.
-			 * \see m_instances, m_numInstances
-			 */
-			~ValueInstances()
-			{
-				for( int i=0; i<m_numInstances; ++i )
-				{
-					if( m_instances[i] )
-					{
-						T* instance = static_cast<T*>( m_instances[i] );
-						instance->Release();
-					}
-				}
-
-				delete [] m_instances;
-			}
-
-			/**
-			 * \brief Add an instance to the instance list.
-			 * \param _idx 1-based index of the instance to add.
-			 * \param _instance Pointer to the instance object to add.
-			 * \see m_instances, m_numInstances
-			 */
-			void AddInstance( uint8 _idx, T* _instance )
-			{
-				if( _idx > m_numInstances )
-				{
-					Grow( _idx );
-				}
-
-				if( m_instances[_idx-1] )
-				{
-					m_instances[_idx-1]->Release();
-				}
-				m_instances[_idx-1] = _instance;
-			}
-
-			bool HasInstances()const{ return( m_numInstances != 0 ); }
-
-			T* GetInstance( uint8 _idx )
-			{ 
-				return( ( _idx > m_numInstances ) ? NULL : m_instances[_idx-1] ); 
-			}
-
-		private:
-			void Grow( uint8 _numInstances )
-			{
-				if( _numInstances > m_numInstances )
-				{
-					// Realloc the array
-					T** newInstances = new T*[_numInstances];
-					memcpy( newInstances, m_instances, sizeof(T*) * m_numInstances );
-					memset( &newInstances[m_numInstances], 0, sizeof(T*) * (_numInstances-m_numInstances) );
-					delete [] m_instances;
-					m_instances = newInstances;
-					m_numInstances = _numInstances;
-				}
-			}
-
-			T**	m_instances;
-			int m_numInstances;
-		};
-
 		virtual void CreateVars( uint8 const _instance ){}
 
 	public:

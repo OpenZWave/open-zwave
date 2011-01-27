@@ -19,6 +19,9 @@
     <Filter Include="Command Classes">
       <UniqueIdentifier>{8a2f2f41-ba21-4299-b85d-cd7511e1de0e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="HIDAPI">
+      <UniqueIdentifier>{e7067898-f602-4a8b-af4b-8bcedcd0d0c0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\tinyxml\tinystr.h">
@@ -252,6 +255,15 @@
     <ClInclude Include="..\..\..\src\platform\windows\SerialControllerImpl.h">
       <Filter>Platform\Windows</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\hidapi\hidapi\hidapi.h">
+      <Filter>HIDAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\platform\HidController.h">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\platform\windows\HidControllerImpl.h">
+      <Filter>Platform\Windows</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\Driver.cpp">
@@ -477,6 +489,15 @@
       <Filter>Platform</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\platform\windows\SerialControllerImpl.cpp">
+      <Filter>Platform\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\hidapi\windows\hid.cpp">
+      <Filter>HIDAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\platform\HidController.cpp">
+      <Filter>Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\platform\windows\HidControllerImpl.cpp">
       <Filter>Platform\Windows</Filter>
     </ClCompile>
   </ItemGroup>

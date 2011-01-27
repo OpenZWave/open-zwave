@@ -57,8 +57,6 @@ namespace OpenZWave
 
 	private:
 		SensorMultilevel( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
-
-		ValueInstances<ValueDecimal>	m_level;
 	};
 
 } // namespace OpenZWave

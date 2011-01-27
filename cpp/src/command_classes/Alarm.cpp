@@ -43,6 +43,12 @@ enum AlarmCmd
 	AlarmCmd_Report = 0x05
 };
 
+enum
+{
+	AlarmIndex_Type = 0,
+	AlarmIndex_Level
+};
+
 //-----------------------------------------------------------------------------
 // <Alarm::RequestState>												   
 // Request current state from the device									   
@@ -96,11 +102,11 @@ bool Alarm::HandleMsg
 		Log::Write( "Received Alarm report from node %d: type=%d, level=%d", GetNodeId(), _data[1], _data[2] );
 
 		ValueByte* value;
-		if( ( value = m_type.GetInstance( _instance ) ) != NULL )
+		if( value = static_cast<ValueByte*>( GetValue( _instance, AlarmIndex_Type ) ) )
 		{
 			value->OnValueChanged( _data[1] );
 		}	
-		if( ( value = m_level.GetInstance( _instance ) ) != NULL )
+		if( value = static_cast<ValueByte*>( GetValue( _instance, AlarmIndex_Level ) ) )
 		{
 			value->OnValueChanged( _data[2] );
 		}
@@ -121,8 +127,8 @@ void Alarm::CreateVars
 {
 	if( Node* node = GetNodeUnsafe() )
 	{
-		m_type.AddInstance( _instance, node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Alarm Type", "", true, 0 ) );
-		m_level.AddInstance( _instance, node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 1, "Alarm Level", "", true, 0 ) );
+		node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, AlarmIndex_Type, "Alarm Type", "", true, 0 );
+		node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, AlarmIndex_Level, "Alarm Level", "", true, 0 );
 	}
 }
 

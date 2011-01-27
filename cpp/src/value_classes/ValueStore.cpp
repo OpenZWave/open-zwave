@@ -42,7 +42,7 @@ ValueStore::~ValueStore
 (
 )
 {
-	map<ValueID,Value*>::iterator it = m_values.begin();
+	map<uint32,Value*>::iterator it = m_values.begin();
 	while( !m_values.empty() )
 	{
 		it->second->Release();
@@ -65,14 +65,15 @@ bool ValueStore::AddValue
 		return false;
 	}
 
-	map<ValueID,Value*>::iterator it = m_values.find( _value->GetID() );
+	uint32 key = _value->GetID().GetValueStoreKey();
+	map<uint32,Value*>::iterator it = m_values.find( key );
 	if( it != m_values.end() )
 	{
-		// There is already a value in the store with this ID, so we give up.
+		// There is already a value in the store with this key, so we give up.
 		return false;
 	}
 
-	m_values[_value->GetID()] = _value;
+	m_values[key] = _value;
 	_value->AddRef();
 
 	// Notify the watchers of the new value
@@ -92,22 +93,25 @@ bool ValueStore::AddValue
 //-----------------------------------------------------------------------------
 bool ValueStore::RemoveValue
 (
-	ValueID const& _id
+	uint32 const& _key
 )
 {
-	map<ValueID,Value*>::iterator it = m_values.find( _id );
+	map<uint32,Value*>::iterator it = m_values.find( _key );
 	if( it != m_values.end() )
 	{
+		Value* value = it->second;
+		ValueID const& valueId = value->GetID();
+
 		// First notify the watchers
-		if( Driver* driver = Manager::Get()->GetDriver( _id.GetHomeId() ) )
+		if( Driver* driver = Manager::Get()->GetDriver( valueId.GetHomeId() ) )
 		{
 			Notification* notification = new Notification( Notification::Type_ValueRemoved );
-			notification->SetValueId( it->second->GetID() );
+			notification->SetValueId( valueId );
 			driver->QueueNotification( notification ); 
 		}
 
 		// Now release and remove the value from the store
-		it->second->Release();
+		value->Release();
 		m_values.erase( it );
 
 		return true;
@@ -116,6 +120,16 @@ bool ValueStore::RemoveValue
 	// Value not found in the store
 	return false;
 }
+
+////-----------------------------------------------------------------------------
+//// <ValueStore::RemoveValue>
+//// Remove a value from the store
+////-----------------------------------------------------------------------------
+//bool ValueStore::RemoveValue
+//(
+//	ValueID const& _id
+//)
+
 
 //-----------------------------------------------------------------------------
 // <ValueStore::RemoveCommandClassValues>
@@ -126,10 +140,11 @@ void ValueStore::RemoveCommandClassValues
 	uint8 const _commandClassId
 )
 {
-	map<ValueID,Value*>::iterator it = m_values.begin();
+	map<uint32,Value*>::iterator it = m_values.begin();
 	while( it != m_values.end() )
 	{
-		ValueID const& valueId = it->first;
+		Value* value = it->second;
+		ValueID const& valueId = value->GetID();
 		if( _commandClassId == valueId.GetCommandClassId() )
 		{
 			// The value belongs to the specified command class
@@ -143,7 +158,7 @@ void ValueStore::RemoveCommandClassValues
 			}
 
 			// Now release and remove the value from the store
-			it->second->Release();
+			value->Release();
 			m_values.erase( it++ );
 		}
 		else
@@ -159,12 +174,12 @@ void ValueStore::RemoveCommandClassValues
 //-----------------------------------------------------------------------------
 Value* ValueStore::GetValue
 (
-	ValueID const& _id
+	uint32 const& _key
 )const
 {
 	Value* value = NULL;
 
-	map<ValueID,Value*>::const_iterator it = m_values.find( _id );
+	map<uint32,Value*>::const_iterator it = m_values.find( _key );
 	if( it != m_values.end() )
 	{
 		value = it->second;
@@ -178,3 +193,13 @@ Value* ValueStore::GetValue
 
 	return value;
 }
+
+////-----------------------------------------------------------------------------
+//// <ValueStore::GetValue>
+//// Get a value from the store
+////-----------------------------------------------------------------------------
+//Value* ValueStore::GetValue
+//(
+//	ValueID const& _id
+//)const
+

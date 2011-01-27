@@ -75,8 +75,6 @@ namespace OpenZWave
 		bool		m_pollRequired;
 		bool		m_init;
 		bool		m_notification;
-
-		ValueInstances<ValueInt>	m_interval;
 	};
 
 } // namespace OpenZWave

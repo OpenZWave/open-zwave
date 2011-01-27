@@ -47,88 +47,6 @@ enum ConfigurationCmd
 	ConfigurationCmd_Report	= 0x06
 };
 
-
-//-----------------------------------------------------------------------------
-// <Configuration::~Configuration>
-// Destructor
-//-----------------------------------------------------------------------------
-Configuration::~Configuration
-(
-)
-{
-	for( list<Value*>::iterator it = m_params.begin(); it != m_params.end(); ++it )
-	{
-		(*it)->Release();
-	}
-}
-
-//-----------------------------------------------------------------------------
-// <Configuration::RequestAllParamValues>
-// Fetch the current values for the known parameters.
-//-----------------------------------------------------------------------------
-void Configuration::RequestAllParamValues
-(
-)
-{
-	// Fetch the current values for the parameters.  We don't do this automatically
-	// at start-up because the parameters should only be needed if the user wants
-	// to look at the device properties.
-	for( list<Value*>::iterator it = m_params.begin(); it != m_params.end(); ++it )
-	{
-		RequestValue( (*it)->GetID().GetIndex() );
-	}
-}
-
-//-----------------------------------------------------------------------------
-// <Configuration::ReadXML>
-// Read the saved command class data
-//-----------------------------------------------------------------------------
-void Configuration::ReadXML
-( 
-	TiXmlElement const* _ccElement
-)
-{
-	int32 intVal;
-
-	uint8 version = 1;
-	if( TIXML_SUCCESS == _ccElement->QueryIntAttribute( "version", &intVal ) )
-	{
-		version = (uint8)intVal;
-	}
-	SetVersion( version );
-
-	uint8 instances = 1;
-	if( TIXML_SUCCESS == _ccElement->QueryIntAttribute( "instances", &intVal ) )
-	{
-		instances = (uint8)intVal;
-	}
-
-	// Setting the instance count will create all the values.
-	SetInstances( instances );
-
-	// Apply any differences from the saved XML to the values
-	TiXmlElement const* child = _ccElement->FirstChildElement();
-	while( child )
-	{
-		char const* str = child->Value();
-		if( str )
-		{
-			if( !strcmp( str, "Value" ) )
-			{
-				if( Node* node = GetNodeUnsafe() )
-				{
-					if( Value* value = node->CreateValueFromXML( GetCommandClassId(), child ) )
-					{
-						AddParam( value );
-					}
-				}
-			}
-		}
-
-		child = child->NextSiblingElement();
-	}
-}
-
 //-----------------------------------------------------------------------------
 // <Configuration::HandleMsg>
 // Handle a message from the Z-Wave network
@@ -152,32 +70,14 @@ bool Configuration::HandleMsg
 			paramValue |= (int32)_data[i+3];
 		}
 
-		if ( Value* value = GetParam( parameter ) ) 
+		if ( Value* value = GetValue( 1, parameter ) ) 
 		{
 			switch ( value->GetID().GetType() ) 
 			{
-				case ValueID::ValueType_Bool:
-				{
-					ValueBool* valueBool = static_cast<ValueBool*>( value );
-					valueBool->OnValueChanged( paramValue != 0 );
-					break;
-				}
 				case ValueID::ValueType_Byte:
 				{
 					ValueByte* valueByte = static_cast<ValueByte*>( value );
 					valueByte->OnValueChanged( (uint8)paramValue );
-					break;
-				}
-				case ValueID::ValueType_Int:
-				{
-					ValueInt* valueInt = static_cast<ValueInt*>( value );
-					valueInt->OnValueChanged( paramValue );
-					break;
-				}
-				case ValueID::ValueType_List:
-				{
-					ValueList* valueList = static_cast<ValueList*>( value );
-					valueList->OnValueChanged( paramValue );
 					break;
 				}
 				case ValueID::ValueType_Short:
@@ -186,9 +86,12 @@ bool Configuration::HandleMsg
 					valueShort->OnValueChanged( (int16)paramValue );
 					break;
 				}
-				case ValueID::ValueType_Decimal:
-				case ValueID::ValueType_String:
-				case ValueID::ValueType_Button:
+				case ValueID::ValueType_Int:
+				{
+					ValueInt* valueInt = static_cast<ValueInt*>( value );
+					valueInt->OnValueChanged( paramValue );
+					break;
+				}
 				default:
 				{
 					Log::Write( "Invalid type for configuration parameter %d", parameter );
@@ -207,17 +110,17 @@ bool Configuration::HandleMsg
 				{
 					case 1:
 					{
-						AddParam( node->CreateValueByte( ValueID::ValueGenre_Config, GetCommandClassId(), _instance, parameter, label, "", false, (uint8)paramValue ) );
+						node->CreateValueByte( ValueID::ValueGenre_Config, GetCommandClassId(), _instance, parameter, label, "", false, (uint8)paramValue );
 						break;
 					}
 					case 2:
 					{
-						AddParam( node->CreateValueShort( ValueID::ValueGenre_Config, GetCommandClassId(), _instance, parameter, label, "", false, (int16)paramValue ) );
+						node->CreateValueShort( ValueID::ValueGenre_Config, GetCommandClassId(), _instance, parameter, label, "", false, (int16)paramValue );
 						break;
 					}
 					case 4:
 					{
-						AddParam( node->CreateValueInt( ValueID::ValueGenre_Config, GetCommandClassId(), _instance, parameter, label, "", false, (int32)paramValue ) );
+						node->CreateValueInt( ValueID::ValueGenre_Config, GetCommandClassId(), _instance, parameter, label, "", false, (int32)paramValue );
 						break;
 					}
 					default:
@@ -244,20 +147,34 @@ bool Configuration::SetValue
 	Value const& _value
 )
 {
-	bool ret = false;
-
 	uint8 param = _value.GetID().GetIndex();
-	int32 int_value = 0;
-	if ( _value.GetAsInt(int_value) ) {
-		Set(param, int_value);
-		ret = true;
-	}
-	else
+	switch( _value.GetID().GetType() )
 	{
-		Log::Write( "Configuration::Set failed (bad value or value type) - Node=%d, Parameter=%d", GetNodeId(), param );
+		case ValueID::ValueType_Byte:
+		{
+			ValueByte const& valueByte = static_cast<ValueByte const&>( _value );
+			Set( param, (int32)valueByte.GetValue() );
+			return true;
+		}
+		case ValueID::ValueType_Short:
+		{
+			ValueShort const& valueShort = static_cast<ValueShort const&>( _value );
+			Set( param, (int32)valueShort.GetValue() );
+			return true;
+		}
+		case ValueID::ValueType_Int:
+		{
+			ValueInt const& valueInt = static_cast<ValueInt const&>( _value );
+			Set( param, valueInt.GetValue() );
+			return true;
+		}
+		default:
+		{
+		}
 	}
 
-	return ret;
+	Log::Write( "Configuration::Set failed (bad value or value type) - Node=%d, Parameter=%d", GetNodeId(), param );
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -291,91 +208,49 @@ void Configuration::Set
 {
 	Log::Write( "Configuration::Set - Node=%d, Parameter=%d, Value=%d", GetNodeId(), _parameter, _value );
 
-	int n_bytes = 0;
-	if( _value & 0xffff0000 ) 
+	int size = 4;
+	if( _value < 0 )
 	{
-		n_bytes = 4;
-	}
-	else if( _value & 0x0000ff00 )
-	{
-		n_bytes = 2;
+		if( ( _value & 0xffffff80 ) == 0xffffff80 )
+		{
+			size = 1;
+		}
+		else if( ( _value & 0xffff8000 ) == 0xffff8000 )
+		{
+			size = 2;
+		}
 	}
 	else
 	{
-		n_bytes = 1;
+		if( ( _value & 0xffffff00 ) == 0 )
+		{
+			size = 1;
+		}
+		else if( ( _value & 0xffff0000 ) == 0 )
+		{
+			size = 2;
+		}
 	}
+
 	Msg* msg = new Msg( "ConfigurationCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 	msg->Append( GetNodeId() );
-	msg->Append( 4 + n_bytes );
+	msg->Append( 4 + size );
 	msg->Append( GetCommandClassId() );
 	msg->Append( ConfigurationCmd_Set );
 	msg->Append( _parameter );
-	msg->Append( n_bytes );
-	if ( n_bytes > 2 ) {
-		msg->Append( (uint8)((_value>>24)&0xff) );
-		msg->Append( (uint8)((_value>>16)&0xff) );
+	msg->Append( size );
+	if( size > 2 )
+	{
+		msg->Append( (uint8)(_value>>24) );
+		msg->Append( (uint8)(_value>>16) );
 	}
-	if ( n_bytes > 1 ) {
-		msg->Append( (uint8)((_value>>8)&0xff) );
+	if( size > 1 ) 
+	{
+		msg->Append( (uint8)(_value>>8) );
 	}
-	msg->Append( (uint8)(_value&0xff) );
+	msg->Append( (uint8)_value );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 	GetDriver()->SendMsg( msg );
 }
 
-//-----------------------------------------------------------------------------
-// <Configuration::GetParam>
-// Get the value object that represents the specified parameter
-//-----------------------------------------------------------------------------
-Value* Configuration::GetParam
-(
-	uint8 const _paramId
-)
-{
-	for( list<Value*>::iterator it = m_params.begin(); it != m_params.end(); ++it )
-	{
-		Value* value = *it;
-		uint8 idx = value->GetID().GetIndex();
-		if( _paramId == idx )
-		{
-			return value;
-		}
-		if( idx >= _paramId )
-		{
-			// The list is sorted by ascending parameter ID, and
-			// we have passed the point where our parameter would be.
-			break;
-		}
-	}
-
-	// No value for this parameter was found
-	return NULL;
-}
-
-//-----------------------------------------------------------------------------
-// <Configuration::AddParam>
-// Adds a value object representing a parameter to the parameters list
-//-----------------------------------------------------------------------------
-bool Configuration::AddParam
-(
-	Value* _value
-)
-{
-	// First try to insert the new value at the correct position to
-	// maintain a list sorted by ascending parameter ID.
-	uint8 paramId = _value->GetID().GetIndex();
-	for( list<Value*>::iterator it = m_params.begin(); it != m_params.end(); ++it )
-	{
-		Value* value = *it;
-		uint8 idx = value->GetID().GetIndex();
-		if( idx > paramId )
-		{
-			m_params.insert( it, _value );
-			return true;
-		}
-	}
-
-	m_params.push_back( _value );
-	return true;
-}
 

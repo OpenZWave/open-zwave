@@ -73,16 +73,6 @@ namespace OpenZWave
 		bool SetLevel( uint8 const _instance, uint8 const _level );
 		bool StartLevelChange( uint8 const _instance, SwitchMultilevelDirection const _direction );
 		bool StopLevelChange();
-
-		ValueInstances<ValueByte>		m_level;
-		ValueInstances<ValueButton>		m_bright;
-		ValueInstances<ValueButton>		m_dim;
-		ValueInstances<ValueBool>		m_ignoreStartLevel;
-		ValueInstances<ValueByte>		m_startLevel;
-		ValueInstances<ValueByte>		m_duration;
-		ValueInstances<ValueByte>		m_step;
-		ValueInstances<ValueButton>		m_inc;
-		ValueInstances<ValueButton>		m_dec;
 	};
 
 } // namespace OpenZWave

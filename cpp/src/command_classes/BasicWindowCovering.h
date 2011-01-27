@@ -56,9 +56,6 @@ namespace OpenZWave
 
 	private:
 		BasicWindowCovering( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
-
-		ValueInstances<ValueButton>		m_open;
-		ValueInstances<ValueButton>		m_close;
 	};
 
 } // namespace OpenZWave
