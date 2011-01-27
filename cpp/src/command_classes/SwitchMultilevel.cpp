@@ -50,6 +50,19 @@ enum SwitchMultilevelCmd
 	SwitchMultilevelCmd_SupportedReport			= 0x07
 };
 
+enum
+{
+	SwitchMultilevelIndex_Level = 0,
+	SwitchMultilevelIndex_Bright,
+	SwitchMultilevelIndex_Dim,
+	SwitchMultilevelIndex_IgnoreStartLevel,
+	SwitchMultilevelIndex_StartLevel,
+	SwitchMultilevelIndex_Duration,
+	SwitchMultilevelIndex_Step,
+	SwitchMultilevelIndex_Inc,
+	SwitchMultilevelIndex_Dec
+};
+
 static uint8 c_directionParams[] = 
 { 
 	0x18, 
@@ -141,7 +154,7 @@ bool SwitchMultilevel::HandleMsg
 	{
 		Log::Write( "Received SwitchMultiLevel report from node %d: level=%d", GetNodeId(), _data[1] );
 
-		if( ValueByte* value = m_level.GetInstance( _instance ) )
+		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, SwitchMultilevelIndex_Level ) ) )
 		{
 			value->OnValueChanged( _data[1] );
 		}
@@ -161,11 +174,11 @@ bool SwitchMultilevel::HandleMsg
 
 		if( switchType1 )
 		{
-			if( (button = m_bright.GetInstance( _instance ) ) != NULL )
+			if( NULL != ( button = static_cast<ValueButton*>( GetValue( _instance, SwitchMultilevelIndex_Bright ) ) ) )
 			{
 				button->SetLabel( c_switchLabelsPos[switchType1] );
 			}
-			if( (button = m_dim.GetInstance( _instance ) ) != NULL )
+			if( NULL != ( button = static_cast<ValueButton*>( GetValue( _instance, SwitchMultilevelIndex_Dim ) ) ) )
 			{
 				button->SetLabel( c_switchLabelsNeg[switchType1] );
 			}
@@ -173,11 +186,11 @@ bool SwitchMultilevel::HandleMsg
 		
 		if( switchType2 )
 		{
-			if( (button = m_inc.GetInstance( _instance ) ) != NULL )
+			if( NULL != ( button = static_cast<ValueButton*>( GetValue( _instance, SwitchMultilevelIndex_Inc ) ) ) )
 			{
 				button->SetLabel( c_switchLabelsPos[switchType2] );
 			}
-			if( (button = m_dec.GetInstance( _instance ) ) != NULL )
+			if( NULL != ( button = static_cast<ValueButton*>( GetValue( _instance, SwitchMultilevelIndex_Dec ) ) ) )
 			{
 				button->SetLabel( c_switchLabelsNeg[switchType2] );
 			}
@@ -228,23 +241,21 @@ bool SwitchMultilevel::SetValue
 	bool res = false;
 	uint8 instance = _value.GetID().GetInstance();
 
-fprintf(stderr, "SwitchMultilevel::SetValue\n");
-
 	switch( _value.GetID().GetIndex() )
 	{
 		case 0:
 		{
 			// Level
-			if( ValueByte const* level = m_level.GetInstance( instance ) )
+			if( ValueByte* value = static_cast<ValueByte*>( GetValue( instance, SwitchMultilevelIndex_Level ) ) )
 			{
-				res = SetLevel( instance, level->GetValue() );
+				res = SetLevel( instance, value->GetValue() );
 			}
 			break;
 		}
 		case 1:
 		{
 			// Bright
-			if( ValueButton const* button = m_bright.GetInstance( instance ) )
+			if( ValueButton* button = static_cast<ValueButton*>( GetValue( instance, SwitchMultilevelIndex_Bright ) ) )
 			{
 				if( button->IsPressed() )
 				{
@@ -260,7 +271,7 @@ fprintf(stderr, "SwitchMultilevel::SetValue\n");
 		case 2:
 		{
 			// Dim
-			if( ValueButton const* button = m_dim.GetInstance( instance ) )
+			if( ValueButton* button = static_cast<ValueButton*>( GetValue( instance, SwitchMultilevelIndex_Dim ) ) )
 			{
 				if( button->IsPressed() )
 				{
@@ -304,7 +315,7 @@ fprintf(stderr, "SwitchMultilevel::SetValue\n");
 		case 7:
 		{
 			// Inc
-			if( ValueButton const* button = m_inc.GetInstance( instance ) )
+			if( ValueButton* button = static_cast<ValueButton*>( GetValue( instance, SwitchMultilevelIndex_Inc ) ) )
 			{
 				if( button->IsPressed() )
 				{
@@ -320,7 +331,7 @@ fprintf(stderr, "SwitchMultilevel::SetValue\n");
 		case 8:
 		{
 			// Dec
-			if( ValueButton const* button = m_dec.GetInstance( instance ) )
+			if( ValueButton* button = static_cast<ValueButton*>( GetValue( instance, SwitchMultilevelIndex_Dec ) ) )
 			{
 				if( button->IsPressed() )
 				{
@@ -352,7 +363,7 @@ bool SwitchMultilevel::SetLevel
 	Msg* msg = new Msg( "SwitchMultiLevel Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
 	msg->Append( GetNodeId() );
 	
-	if( ValueByte const* durationValue = m_duration.GetInstance( _instance ) )
+	if( ValueByte* durationValue = static_cast<ValueByte*>( GetValue( _instance, SwitchMultilevelIndex_Duration ) ) )
 	{
 		uint8 duration = durationValue->GetValue();
 		if( duration == 0xff )
@@ -403,7 +414,7 @@ bool SwitchMultilevel::StartLevelChange
 	uint8 direction = c_directionParams[_direction];
 	Log::Write( "  Direction:          %s", c_directionDebugLabels[_direction] );
 
-	if( ValueBool const* ignoreStartLevel = m_ignoreStartLevel.GetInstance( _instance ) )
+	if( ValueBool* ignoreStartLevel = static_cast<ValueBool*>( GetValue( _instance, SwitchMultilevelIndex_IgnoreStartLevel ) ) )
 	{
 		if( ignoreStartLevel->GetValue() )
 		{
@@ -414,14 +425,14 @@ bool SwitchMultilevel::StartLevelChange
 	Log::Write( "  Ignore Start Level: %s", (direction & 0x20) ? "True" : "False" );
 
 	uint8 startLevel = 0;
-	if( ValueByte const* startLevelValue = m_startLevel.GetInstance( _instance ) )
+	if( ValueByte* startLevelValue = static_cast<ValueByte*>( GetValue( _instance, SwitchMultilevelIndex_StartLevel ) ) )
 	{
 		startLevel = startLevelValue->GetValue();
 	}
 	Log::Write( "  Start Level:        %d", startLevel );
 
 	uint8 duration = 0;
-	if( ValueByte const* durationValue = m_duration.GetInstance( _instance ) )
+	if( ValueByte* durationValue = static_cast<ValueByte*>( GetValue( _instance, SwitchMultilevelIndex_Duration ) ) )
 	{
 		length = 5;
 		duration = durationValue->GetValue();
@@ -431,7 +442,7 @@ bool SwitchMultilevel::StartLevelChange
 	uint8 step = 0;
 	if( ( SwitchMultilevelDirection_Inc == _direction ) || ( SwitchMultilevelDirection_Dec == _direction ) )
 	{
-		if( ValueByte const* stepValue = m_step.GetInstance( _instance ) )
+		if( ValueByte* stepValue = static_cast<ValueByte*>( GetValue( _instance, SwitchMultilevelIndex_Step ) ) )
 		{
 			length = 6;
 			step = stepValue->GetValue();
@@ -496,23 +507,23 @@ void SwitchMultilevel::CreateVars
 		{
 			case 3:
 			{
-				m_step.AddInstance( _instance, node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 6, "Step Size", "", false, 0 ) );
-				m_inc.AddInstance( _instance, node->CreateValueButton( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 7, "Inc" ) );
-				m_dec.AddInstance( _instance, node->CreateValueButton( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 8, "Dec" ) );
+				node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, SwitchMultilevelIndex_Step, "Step Size", "", false, 0 );
+				node->CreateValueButton( ValueID::ValueGenre_User, GetCommandClassId(), _instance, SwitchMultilevelIndex_Inc, "Inc" );
+				node->CreateValueButton( ValueID::ValueGenre_User, GetCommandClassId(), _instance, SwitchMultilevelIndex_Dec, "Dec" );
 				// Fall through to version 2
 			}
 			case 2:
 			{
-				m_duration.AddInstance( _instance, node->CreateValueByte( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 5, "Dimming Duration", "", false, 0xff ) );
+				node->CreateValueByte( ValueID::ValueGenre_System, GetCommandClassId(), _instance, SwitchMultilevelIndex_Duration, "Dimming Duration", "", false, 0xff );
 				// Fall through to version 1
 			}
 			case 1:
 			{
-				m_level.AddInstance( _instance, node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Level", "", false, 0 ) );
-				m_bright.AddInstance( _instance, node->CreateValueButton( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 1, "Bright" ) );
-				m_dim.AddInstance( _instance, node->CreateValueButton( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 2, "Dim" ) );
-				m_ignoreStartLevel.AddInstance( _instance, node->CreateValueBool( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 3, "Ignore Start Level", "", false, true ) );
-				m_startLevel.AddInstance( _instance, node->CreateValueByte( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 4, "Start Level", "", false, 0 ) );
+				node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, SwitchMultilevelIndex_Level, "Level", "", false, 0 );
+				node->CreateValueButton( ValueID::ValueGenre_User, GetCommandClassId(), _instance, SwitchMultilevelIndex_Bright, "Bright" );
+				node->CreateValueButton( ValueID::ValueGenre_User, GetCommandClassId(), _instance, SwitchMultilevelIndex_Dim, "Dim" );
+				node->CreateValueBool( ValueID::ValueGenre_System, GetCommandClassId(), _instance, SwitchMultilevelIndex_IgnoreStartLevel, "Ignore Start Level", "", false, true );
+				node->CreateValueByte( ValueID::ValueGenre_System, GetCommandClassId(), _instance, SwitchMultilevelIndex_StartLevel, "Start Level", "", false, 0 );
 				break;
 			}
 		}

@@ -59,7 +59,7 @@ CommandClass::CommandClass
 	m_version( 1 ),
 	m_instances( 0 ),
 	m_staticRequests( 0 ),
-	m_afterMark( true )
+	m_afterMark( false )
 {
 }
 
@@ -86,6 +86,24 @@ Node* CommandClass::GetNodeUnsafe
 }
 
 //-----------------------------------------------------------------------------
+// <CommandClass::GetValue>
+// Get a pointer to a value by its instance and index
+//-----------------------------------------------------------------------------
+Value* CommandClass::GetValue
+(
+	uint8 const _instance,
+	uint8 const _index
+)
+{
+	Value* value = NULL;
+	if( Node* node = GetNodeUnsafe() )
+	{
+		value = node->GetValue( GetCommandClassId(), _instance, _index );
+	}
+	return value;
+}
+
+//-----------------------------------------------------------------------------
 // <CommandClass::SetInstances>
 // Set the number of instances of this command class that the node contains
 //-----------------------------------------------------------------------------
@@ -98,7 +116,7 @@ void CommandClass::SetInstances
 	if( _instances > m_instances )
 	{
 		// Create the new value instances
-		if( m_afterMark )
+		if( !m_afterMark )
 		{	
 			for( uint8 i=m_instances; i<_instances; ++i )
 			{
@@ -140,8 +158,8 @@ void CommandClass::ReadXML
 		m_staticRequests = (uint8)intVal;
 	}
 
-	m_afterMark = true;
-	str = _ccElement->Attribute( "create_vars" );
+	m_afterMark = false;
+	str = _ccElement->Attribute( "after_mark" );
 	if( str )
 	{
 		m_afterMark = !strcmp( str, "true" );
@@ -194,9 +212,9 @@ void CommandClass::WriteXML
 		_ccElement->SetAttribute( "request_flags", str );
 	}
 
-	if( !m_afterMark )
+	if( m_afterMark )
 	{
-		_ccElement->SetAttribute( "create_vars", "false" );
+		_ccElement->SetAttribute( "after_mark", "true" );
 	}
 
 	// Write out the values for this command class

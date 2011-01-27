@@ -63,12 +63,6 @@ namespace OpenZWave
 
 	private:
 		AssociationCommandConfiguration( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
-
-		ValueInstances<ValueByte>	m_maxCommandLength;
-		ValueInstances<ValueBool>	m_commandsAreValues;
-		ValueInstances<ValueBool>	m_commandsAreConfigurable;
-		ValueInstances<ValueShort>	m_numFreeCommands;
-		ValueInstances<ValueShort>	m_maxCommands;
 	};
 
 } // namespace OpenZWave

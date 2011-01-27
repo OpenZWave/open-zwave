@@ -43,19 +43,15 @@ namespace OpenZWave
 
 	public:
 		static CommandClass* Create( uint32 const _homeId, uint8 const _nodeId ){ return new Configuration( _homeId, _nodeId ); }
-		virtual ~Configuration();
+		virtual ~Configuration(){}
 
 		static uint8 const StaticGetCommandClassId(){ return 0x70; }
 		static string const StaticGetCommandClassName(){ return "COMMAND_CLASS_CONFIGURATION"; }
-
-		void RequestAllParamValues();
 
 		void RequestValue( uint8 const _parameter );
 		void Set( uint8 const _parameter, int32 const _value );
 
 		// From CommandClass
-		virtual void ReadXML( TiXmlElement const* _ccElement );
-
 		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }
 		virtual string const GetCommandClassName()const{ return StaticGetCommandClassName(); }
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );
@@ -63,11 +59,6 @@ namespace OpenZWave
 
 	private:
 		Configuration( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
-
-		Value* GetParam( uint8 const _paramId );
-		bool AddParam( Value* _value );
-
-		list<Value*>	m_params;
 	};
 
 } // namespace OpenZWave

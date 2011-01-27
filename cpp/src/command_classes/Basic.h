@@ -64,7 +64,6 @@ namespace OpenZWave
 		Basic( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
 
 		uint8						m_mapping;
-		ValueInstances<ValueByte>	m_level;
 	};
 
 } // namespace OpenZWave

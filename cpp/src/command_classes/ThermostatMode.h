@@ -49,6 +49,8 @@ namespace OpenZWave
 		static string const StaticGetCommandClassName(){ return "COMMAND_CLASS_THERMOSTAT_MODE"; }
 
 		// From CommandClass
+		virtual void ReadXML( TiXmlElement const* _ccElement );
+		virtual void WriteXML( TiXmlElement* _ccElement );
 		virtual bool RequestState( uint32 const _requestFlags );
 		virtual void RequestValue( uint8 const _index = 0 );
 		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }
@@ -63,7 +65,6 @@ namespace OpenZWave
 		ThermostatMode( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){ SetStaticRequest( StaticRequest_Values ); }
 
 		vector<ValueList::Item>		m_supportedModes;
-		ValueInstances<ValueList>	m_mode;
 	};
 
 } // namespace OpenZWave

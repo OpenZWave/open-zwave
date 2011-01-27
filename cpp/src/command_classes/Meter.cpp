@@ -122,7 +122,7 @@ bool Meter::HandleMsg
 		uint8 scale;
 		string valueStr = ExtractValue( &_data[2], &scale );
 
-		if( ValueDecimal* value = m_value.GetInstance( _instance ) )
+		if( ValueDecimal* value = static_cast<ValueDecimal*>( GetValue( _instance, 0 ) ) )
 		{
 			if( value->GetLabel() == "Unknown" )
 			{
@@ -173,7 +173,7 @@ void Meter::CreateVars
 {
 	if( Node* node = GetNodeUnsafe() )
 	{
-		m_value.AddInstance( _instance, node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Unknown", "", true, "0.0" ) );
+		node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Unknown", "", true, "0.0" );
 	}
 }
 

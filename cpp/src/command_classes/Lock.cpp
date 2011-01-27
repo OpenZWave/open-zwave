@@ -95,7 +95,7 @@ bool Lock::HandleMsg
 	{
 		Log::Write( "Received Lock report from node %d: Lock is %s", GetNodeId(), _data[1] ? "Locked" : "Unlocked" );
 
-		if( ValueBool* value = m_state.GetInstance( _instance ) )
+		if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, 0 ) ) )
 		{
 			value->OnValueChanged( _data[1] != 0 );
 		}
@@ -144,7 +144,7 @@ void Lock::CreateVars
 {
 	if( Node* node = GetNodeUnsafe() )
 	{
-		m_state.AddInstance( _instance, node->CreateValueBool( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Locked", "", false, false ) );
+		node->CreateValueBool( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Locked", "", false, false );
 	}
 }
 

@@ -102,7 +102,7 @@ bool Battery::HandleMsg
 
 		Log::Write( "Received Battery report from node %d: level=%d", GetNodeId(), batteryLevel );
 
-		if( ValueByte* value = m_level.GetInstance( _instance ) )
+		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, 0 ) ) )
 		{
 			value->OnValueChanged( batteryLevel );
 		}
@@ -122,7 +122,7 @@ void Battery::CreateVars
 {
 	if( Node* node = GetNodeUnsafe() )
 	{
-		m_level.AddInstance( _instance, node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Battery Level", "%", true, 100 ) );
+		node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Battery Level", "%", true, 100 );
 	}
 }
 

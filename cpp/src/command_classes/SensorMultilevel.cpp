@@ -191,7 +191,7 @@ bool SensorMultilevel::HandleMsg
 		uint8 scale;
 		string valueStr = ExtractValue( &_data[2], &scale );
 
-		if( ValueDecimal* value = m_level.GetInstance( _instance ) )
+		if( ValueDecimal* value = static_cast<ValueDecimal*>( GetValue( _instance, 0 ) ) )
 		{
 			value->SetLabel( c_sensorTypeNames[_data[1]] );
 			switch( _data[1] )
@@ -240,7 +240,7 @@ void SensorMultilevel::CreateVars
 {
 	if( Node* node = GetNodeUnsafe() )
 	{
-		m_level.AddInstance( _instance, node->CreateValueDecimal(  ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Unknown", "", true, "0.0"  ) );
+		node->CreateValueDecimal(  ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Unknown", "", true, "0.0"  );
 	}
 }
 

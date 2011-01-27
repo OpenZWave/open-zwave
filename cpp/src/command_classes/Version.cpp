@@ -47,11 +47,10 @@ enum VersionCmd
 
 enum
 {
-	ValueIndex_Library = 0,
-	ValueIndex_Protocol,
-	ValueIndex_Application
+	VersionIndex_Library = 0,
+	VersionIndex_Protocol,
+	VersionIndex_Application
 };
-
 
 //-----------------------------------------------------------------------------
 // <Version::RequestState>												   
@@ -115,15 +114,15 @@ bool Version::HandleMsg
 			Log::Write( "Received Version report from node %d: Library=%s, Protocol=%s, Application=%s", GetNodeId(), library, protocol, application );
 			ClearStaticRequest( StaticRequest_Values );
 
-			if( ValueString* libraryValue = m_library.GetInstance( _instance ) )
+			if( ValueString* libraryValue = static_cast<ValueString*>( GetValue( _instance, VersionIndex_Library ) ) )
 			{
 				libraryValue->OnValueChanged( library );
 			}
-			if( ValueString* protocolValue = m_protocol.GetInstance( _instance ) )
+			if( ValueString* protocolValue = static_cast<ValueString*>( GetValue( _instance, VersionIndex_Protocol ) ) )
 			{
 				protocolValue->OnValueChanged( protocol );
 			}
-			if( ValueString* applicationValue = m_application.GetInstance( _instance ) )
+			if( ValueString* applicationValue = static_cast<ValueString*>( GetValue( _instance, VersionIndex_Application ) ) )
 			{
 				applicationValue->OnValueChanged( application );
 			}
@@ -183,8 +182,8 @@ void Version::CreateVars
 {
 	if( Node* node = GetNodeUnsafe() )
 	{
-		m_library.AddInstance( _instance, node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, (uint8)ValueIndex_Library, "Library Version", "", true, "Unknown" ) );
-		m_protocol.AddInstance( _instance, node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, (uint8)ValueIndex_Protocol, "Protocol Version", "", true, "Unknown" ) );
-		m_application.AddInstance( _instance, node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, (uint8)ValueIndex_Application, "Application Version", "", true, "Unknown" ) );
+		node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, VersionIndex_Library, "Library Version", "", true, "Unknown" );
+		node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, VersionIndex_Protocol, "Protocol Version", "", true, "Unknown" );
+		node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, VersionIndex_Application, "Application Version", "", true, "Unknown" );
 	}
 }

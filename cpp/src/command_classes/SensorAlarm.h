@@ -67,8 +67,6 @@ namespace OpenZWave
 			SensorAlarm_Flood,
 			SensorAlarm_Count
 		};
-
-		ValueInstances<ValueByte> m_alarmTypes[SensorAlarm_Count];
 	};
 
 } // namespace OpenZWave

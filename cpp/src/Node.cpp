@@ -360,26 +360,23 @@ void Node::AdvanceQueries
 				Log::Write( "Node %d: QueryStage_Configuration", m_nodeId );
 				if( m_queryConfiguration )
 				{
-					Configuration* ccc = static_cast<Configuration*>( GetCommandClass( Configuration::StaticGetCommandClassId() ) );
-					if( ccc )
+					if( RequestAllConfigParams() )
 					{
-						ccc->RequestAllParamValues();
 						m_queryPending = true;
 					}
+					m_queryConfiguration = false;
 				}
 				if( !m_queryPending )
 				{
 					m_queryStage = QueryStage_Complete;
 					m_queryRetries = 0;
-					m_queryConfiguration = false;
 				}
 				break;
 			}
 			case QueryStage_Complete:
 			{
-				// All done
-				Log::Write( "Node %d: QueryStage_Complete", m_nodeId );
 				// Notify the watchers that the queries are complete for this node
+				Log::Write( "Node %d: QueryStage_Complete", m_nodeId );
 				Notification* notification = new Notification( Notification::Type_NodeQueriesComplete );
 				notification->SetHomeAndNodeIds( m_homeId, m_nodeId );
 				GetDriver()->QueueNotification( notification ); 
@@ -408,10 +405,13 @@ void Node::QueryStageComplete
 		return;
 	}
 
-	// Move to the next stage
-	m_queryPending = false;
-	m_queryStage = (QueryStage)((uint32)m_queryStage + 1);
-	m_queryRetries = 0;
+	if( m_queryStage != QueryStage_Complete )
+	{
+		// Move to the next stage
+		m_queryPending = false;
+		m_queryStage = (QueryStage)((uint32)m_queryStage + 1);
+		m_queryRetries = 0;
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -1086,9 +1086,33 @@ bool Node::SetConfigParam
 	if( Configuration* cc = static_cast<Configuration*>( GetCommandClass( Configuration::StaticGetCommandClassId() ) ) )
 	{
 		// First try to find an existing value representing the parameter, and set that.
-		if( Value* value = cc->GetParam( _param ) )
+		if( Value* value = cc->GetValue( 1, _param ) )
 		{
-			value->SetFromInt( _value );
+			switch( value->GetID().GetType() )
+			{
+				case ValueID::ValueType_Byte:
+				{
+					ValueByte* valueByte = static_cast<ValueByte*>( value );
+					valueByte->Set( (uint8)_value );
+					break;
+				}
+				case ValueID::ValueType_Short:
+				{
+					ValueShort* valueShort = static_cast<ValueShort*>( value );
+					valueShort->Set( (uint16)_value );
+					break;
+				}
+				case ValueID::ValueType_Int:
+				{
+					ValueInt* valueInt = static_cast<ValueInt*>( value );
+					valueInt->Set( _value );
+					break;
+				}
+				default:
+				{
+				}
+			}
+
 			return true;
 		}
 
@@ -1121,14 +1145,26 @@ void Node::RequestConfigParam
 // <Node::RequestAllConfigParams>
 // Request the values of all known configuration parameters from the device
 //-----------------------------------------------------------------------------
-void Node::RequestAllConfigParams
+bool Node::RequestAllConfigParams
 (	
 )
 {
+	bool res = false;
 	if( Configuration* cc = static_cast<Configuration*>( GetCommandClass( Configuration::StaticGetCommandClassId() ) ) )
 	{
-		cc->RequestAllParamValues();
+		// Go through all the values in the value store, and request all those which are in the Configuration command class
+		for( ValueStore::Iterator it = m_values->Begin(); it != m_values->End(); ++it )
+		{
+			Value* value = it->second;
+			if( value->GetID().GetCommandClassId() == Configuration::StaticGetCommandClassId() )
+			{
+				cc->RequestValue( value->GetID().GetIndex() );
+				res = true;
+			}
+		}
 	}
+
+	return res;
 }
 
 //-----------------------------------------------------------------------------
@@ -1404,7 +1440,7 @@ void Node::RemoveValueList
 )
 {
 	ValueStore* store = GetValueStore();
-	store->RemoveValue( _value->GetID() );
+	store->RemoveValue( _value->GetID().GetValueStoreKey() );
 	delete _value;
 }
 
@@ -1477,26 +1513,18 @@ void Node::ReadValueFromXML
 	ValueID id = ValueID( m_homeId, m_nodeId, genre, _commandClassId, instance, index, type );
 
 	// Try to get the value from the ValueStore (everything except configuration parameters
-	// should already have been created when the command class instance count was read in)
+	// should already have been created when the command class instance count was read in).
+	// Create it if it doesn't already exist.
 	if( ValueStore* store = GetValueStore() )
 	{
-		Value* value = store->GetValue( id );
-
-		if( !value )
+		if( Value* value = store->GetValue( id.GetValueStoreKey() ) )
 		{
-			// if the value doesn't exist, add a new one to the store
-			// so far, this two-argument CreateVars is for ThermostatSetpoint only
-			// but maybe others will need it as we test more devices(?)
-			CommandClass* pCommandClass = GetCommandClass(_commandClassId);
-			if( pCommandClass )
-				pCommandClass->CreateVars( instance, index );
-
-			// try to get value again (to confirm GetCommandClass and CreateVars worked
-			value = store->GetValue( id );
-		}
-
-		if( value )
 			value->ReadXML( m_homeId, m_nodeId, _commandClassId, _valueElement );
+		}
+		else
+		{
+			CreateValueFromXML( _commandClassId, _valueElement );
+		}
 	}
 }
 
@@ -1509,7 +1537,7 @@ Value* Node::GetValue
 	ValueID const& _id
 )
 {
-	return GetValueStore()->GetValue( _id );
+	return GetValueStore()->GetValue( _id.GetValueStoreKey() );
 }
 
 //-----------------------------------------------------------------------------
@@ -1518,16 +1546,14 @@ Value* Node::GetValue
 //-----------------------------------------------------------------------------
 Value* Node::GetValue
 (
-	ValueID::ValueGenre const _genre,
 	uint8 const _commandClassId,
 	uint8 const _instance,
-	uint8 const _valueIndex,
-	ValueID::ValueType const _type
+	uint8 const _valueIndex
 )
 {
 	Value* value = NULL;
 	ValueStore* store = GetValueStore();
-	value = store->GetValue( CreateValueID( _genre, _commandClassId, _instance, _valueIndex, _type ) );
+	value = store->GetValue( ValueID::GetValueStoreKey( _commandClassId, _instance, _valueIndex ) );
 	return value;
 }
 
@@ -1813,7 +1839,7 @@ bool Node::SetDeviceClasses
 		bool reportedClasses = false;
 		for( cit = m_commandClassMap.begin(); cit != m_commandClassMap.end(); ++cit )
 		{
-			if( cit->second->IsAfterMark() )
+			if( !cit->second->IsAfterMark() )
 			{
 				Log::Write( "  %s", cit->second->GetCommandClassName().c_str() );
 				reportedClasses = true;
@@ -1828,7 +1854,7 @@ bool Node::SetDeviceClasses
 		reportedClasses = false;
 		for( cit = m_commandClassMap.begin(); cit != m_commandClassMap.end(); ++cit )
 		{
-			if( !cit->second->IsAfterMark() )
+			if( cit->second->IsAfterMark() )
 			{
 				Log::Write( "  %s", cit->second->GetCommandClassName().c_str() );
 				reportedClasses = true;
@@ -1868,7 +1894,7 @@ bool Node::AddMandatoryCommandClasses
 			// Marks the end of the list of supported command classes.  The remaining classes 
 			// are those that can be controlled by this device, which we can ignore.
 			afterMark = true;
-			break;
+			continue;
 		}
 
 		if( CommandClasses::IsSupported( cc ) )

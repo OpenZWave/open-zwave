@@ -39,14 +39,6 @@ namespace OpenZWave
 	class EnergyProduction: public CommandClass
 	{
 	public:
-		enum ProductionEnum
-		{
-			Production_Instant = 0,
-			Production_Total,
-			Production_Today,
-			Production_Time
-		};
-
  		static CommandClass* Create( uint32 const _homeId, uint8 const _nodeId ){ return new EnergyProduction( _homeId, _nodeId ); }
 		virtual ~EnergyProduction(){}
 
@@ -65,8 +57,6 @@ namespace OpenZWave
 
 	private:
 		EnergyProduction( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
-
-		ValueInstances<ValueDecimal>	m_values[4];
 	};
 
 } // namespace OpenZWave

@@ -45,6 +45,13 @@ enum ClockCmd
 	ClockCmd_Report	= 0x06
 };
 
+enum
+{
+	ClockIndex_Day = 0,
+	ClockIndex_Hour,
+	ClockIndex_Minute
+};
+
 static char const* c_dayNames[] = 
 {
 	"Invalid",
@@ -112,17 +119,18 @@ bool Clock::HandleMsg
 
 		Log::Write( "Received Clock report from node %d: %s %.2d:%.2d", GetNodeId(), c_dayNames[day], hour, minute );
 
-		if( ValueList* valueDay = m_day.GetInstance( _instance ) )
+
+		if( ValueList* dayValue = static_cast<ValueList*>( GetValue( _instance, ClockIndex_Day ) ) )
 		{
-			valueDay->OnValueChanged( day );
+			dayValue->OnValueChanged( day );
 		}
-		if( ValueByte* valueHour = m_hour.GetInstance( _instance ) )
+		if( ValueByte* hourValue = static_cast<ValueByte*>( GetValue( _instance, ClockIndex_Hour ) ) )
 		{
-			valueHour->OnValueChanged( hour );
+			hourValue->OnValueChanged( hour );
 		}
-		if( ValueByte* valueMinute = m_minute.GetInstance( _instance ) )
+		if( ValueByte* minuteValue = static_cast<ValueByte*>( GetValue( _instance, ClockIndex_Minute ) ) )
 		{
-			valueMinute->OnValueChanged( minute );
+			minuteValue->OnValueChanged( minute );
 		}
 		return true;
 	}
@@ -143,15 +151,15 @@ bool Clock::SetValue
 
 	uint8 instance = _value.GetID().GetInstance();
 
-	ValueList const* pDayValue = m_day.GetInstance( instance );
-	ValueByte const* pHourValue = m_hour.GetInstance( instance );
-	ValueByte const* pMinuteValue = m_minute.GetInstance( instance );
+	ValueList const* dayValue = static_cast<ValueList*>( GetValue( instance, ClockIndex_Day ) );
+	ValueByte const* hourValue = static_cast<ValueByte*>( GetValue( instance, ClockIndex_Hour ) );
+	ValueByte const* minuteValue = static_cast<ValueByte*>( GetValue( instance, ClockIndex_Minute ) );
 
-	if( pDayValue && pHourValue && pMinuteValue )
+	if( dayValue && hourValue && minuteValue )
 	{
-		uint8 day = pDayValue->GetItem().m_value;
-		uint8 hour = pHourValue->GetValue();
-		uint8 minute = pMinuteValue->GetValue();
+		uint8 day = dayValue->GetItem().m_value;
+		uint8 hour = hourValue->GetValue();
+		uint8 minute = minuteValue->GetValue();
 
 		Msg* msg = new Msg( "ClockCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 		msg->Append( GetNodeId() );
@@ -188,9 +196,9 @@ void Clock::CreateVars
 			items.push_back( item ); 
 		}
 
-		m_day.AddInstance( _instance, node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Day", "", false, items, 0 ) );
-		m_hour.AddInstance( _instance, node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 1, "Hour", "", false, 12 ) );
-		m_minute.AddInstance( _instance, node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 2, "Minute", "", false, 0 ) );
+		node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ClockIndex_Day, "Day", "", false, items, 0 );
+		node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ClockIndex_Hour, "Hour", "", false, 12 );
+		node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ClockIndex_Minute, "Minute", "", false, 0 );
 	}
 }
 

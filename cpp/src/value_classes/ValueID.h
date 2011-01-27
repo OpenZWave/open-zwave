@@ -56,6 +56,7 @@ namespace OpenZWave
 		friend class Driver;
 		friend class Node;
 		friend class Group;
+		friend class CommandClass;
 		friend class Value;
 		friend class ValueStore;
 		friend class Notification;
@@ -200,6 +201,29 @@ namespace OpenZWave
 
 		// Default constructor
 		ValueID():m_id(0),m_homeId(0){}
+
+		// Not all parts of the ValueID are necessary to uniquely identify the value.  In the case of a 
+		// Node's ValueStore, we can ignore the home ID, node ID, genre and type and still be left with
+		// a unique integer than can be used as a key to look up values.  The two GetValueStoreKey methods
+		// below are helpers to enable command classes to easily access their values from the ValueStore.
+
+		// Get the key from our own m_id
+		uint32 GetValueStoreKey()const
+		{ 
+			return m_id & 0x003ffff0;
+		}
+
+		// Generate a key from its component parts
+		static uint32 GetValueStoreKey( uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex )
+		{ 
+			assert( _instance < 4 );
+
+			uint32 key = (((uint32)_commandClassId)<<14)
+				 | ((((uint32)_instance)&0x03)<<12)
+				 | (((uint32)_valueIndex)<<4);
+			
+			return key;
+		}
 
 		// ID Packing:
 		// Bits

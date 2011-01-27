@@ -103,8 +103,7 @@ bool Protection::HandleMsg
 	if (ProtectionCmd_Report == (ProtectionCmd)_data[0])
 	{
 		Log::Write( "Received a Protection report from node %d: %s", GetNodeId(), c_protectionStateNames[_data[1]] );
-
-		if( ValueList* value = m_state.GetInstance( _instance ) )
+		if( ValueList* value = static_cast<ValueList*>( GetValue( _instance, 0 ) ) )
 		{
 			value->OnValueChanged( (int)_data[1] );
 		}
@@ -165,6 +164,6 @@ void Protection::CreateVars
 			items.push_back( item ); 
 		}
 
-		m_state.AddInstance( _instance, node->CreateValueList(  ValueID::ValueGenre_System, GetCommandClassId(), _instance, 0, "Protection", "", false, items, 0 ) );
+		node->CreateValueList(  ValueID::ValueGenre_System, GetCommandClassId(), _instance, 0, "Protection", "", false, items, 0 );
 	}
 }
