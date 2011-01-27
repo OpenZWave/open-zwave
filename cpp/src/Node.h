@@ -176,8 +176,8 @@ namespace OpenZWave
 		void UpdateProtocolInfo( uint8 const* _data );
 		void UpdateNodeInfo( uint8 const* _data, uint8 const _length );
 
-		bool ProtocolInfoReceived()const{ return (uint32)m_queryStage > (uint32)QueryStage_ProtocolInfo; }
-		bool NodeInfoReceived()const{ return( (uint32)m_queryStage > (uint32)QueryStage_NodeInfo ); }
+		bool ProtocolInfoReceived()const{ return m_protocolInfoReceived; }
+		bool NodeInfoReceived()const{ return m_nodeInfoReceived; }
 		bool AllQueriesCompleted()const{ return( QueryStage_Complete == m_queryStage ); }
 
 	private:
@@ -187,6 +187,8 @@ namespace OpenZWave
 		bool		m_queryPending;
 		bool		m_queryConfiguration;
 		uint8		m_queryRetries;
+		bool		m_protocolInfoReceived;
+		bool		m_nodeInfoReceived;
 
 	//-----------------------------------------------------------------------------
 	// Capabilities
