@@ -78,7 +78,7 @@ bool SwitchAll::RequestState
 //-----------------------------------------------------------------------------
 void SwitchAll::RequestValue
 (
-	int8 const _index		// = 0
+	uint8 const _index		// = 0
 )
 {
 	Msg* msg = new Msg( "SwitchAllCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
