@@ -257,6 +257,13 @@ namespace OpenZWaveDotNet
 		bool RemoveDriver( String^ serialPortName ){ return Manager::Get()->RemoveDriver((const char*)(Marshal::StringToHGlobalAnsi(serialPortName)).ToPointer()); }
 
 		/**
+		 * \brief Get the node ID of the Z-Wave controller.
+		 * \param homeId The Home ID of the Z-Wave controller.
+		 * \return the node ID of the Z-Wave controller.
+		 */
+		uint8 GetControllerNodeId( uint32 homeId ){ return Manager::Get()->GetControllerNodeId(homeId); }
+
+		/**
 		 * \brief Query if the controller is a primary controller.
 		 *
 		 * The primary controller is the main device used to configure and control a Z-Wave network.
