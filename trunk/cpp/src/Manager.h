@@ -223,6 +223,13 @@ namespace OpenZWave
 		bool RemoveDriver( string const& _controllerPath );
 
 		/**
+		 * \brief Get the node ID of the Z-Wave controller.
+		 * \param _homeId The Home ID of the Z-Wave controller.
+		 * \return the node ID of the Z-Wave controller.
+		 */
+		uint8 GetControllerNodeId( uint32 const _homeId );
+
+		/**
 		 * \brief Query if the controller is a primary controller.
 		 * The primary controller is the main device used to configure and control a Z-Wave network.
 		 * There can only be one primary controller - all other controllers are secondary controllers.

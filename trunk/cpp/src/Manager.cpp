@@ -328,6 +328,24 @@ void Manager::SetDriverReady
 }
 
 //-----------------------------------------------------------------------------
+// <Manager::GetControllerNodeId>
+// 
+//-----------------------------------------------------------------------------
+uint8 Manager::GetControllerNodeId
+(
+	uint32 const _homeId
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		return driver->GetNodeId();
+	}
+
+	Log::Write( "GetControllerNodeId() failed - _homeId %d not found", _homeId );
+	return 0xff;
+}
+
+//-----------------------------------------------------------------------------
 // <Manager::IsPrimaryController>
 // 
 //-----------------------------------------------------------------------------
