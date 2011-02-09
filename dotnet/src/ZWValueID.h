@@ -115,6 +115,7 @@ namespace OpenZWaveDotNet
 		uint8		GetInstance()		{ return m_valueId->GetInstance(); }
 		uint8		GetIndex()			{ return m_valueId->GetIndex(); }
 		ValueType	GetType()			{ return (ValueType)Enum::ToObject( ValueType::typeid, m_valueId->GetType() ); }
+		uint32		GetId()				{ return m_valueId->GetId(); }
 
 		// Comparison Operators
 		bool operator ==	( ZWValueID^ _other ){ return( (*m_valueId) == (*_other->m_valueId) ); }

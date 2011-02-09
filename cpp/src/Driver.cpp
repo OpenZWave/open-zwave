@@ -294,7 +294,6 @@ void Driver::DriverThreadProc
 										if (node->m_queryPending)
 										{
 											Log::Write( "Command was dropped during node query stage %s, advancing to next stage", node->GetQueryStageName( node->m_queryStage ).c_str() );
-//											node->QueryStageComplete(node->m_queryStage);
 										}
 									}
 								}
@@ -348,6 +347,7 @@ void Driver::DriverThreadProc
 					}
 					else
 					{
+						// m_wakeEvent exited as a result of a "Set," not a timeout, so reset the event
 						m_wakeEvent->Reset();
 					}
 				}			
@@ -696,7 +696,12 @@ void Driver::SendMsg
 
 	Log::Write( "Queuing command: %s", _msg->GetAsString().c_str() );
 	m_sendMutex->Lock();
-	m_sendQueue.push_back( _msg );
+	if( IsControllerCommand( _msg->GetExpectedReply() ) )
+		// give priority to controller commands by putting at front of queue (right behind the current message)
+		m_sendQueue.push_front( _msg );
+	else
+		// everything else goes to back of queue
+		m_sendQueue.push_back( _msg );
 	m_sendMutex->Release();
 	m_wakeEvent->Set();
 }
@@ -708,23 +713,33 @@ void Driver::SendMsg
 bool Driver::WriteMsg()
 {
 	bool dataWritten = false;
+
 	if( !m_sendQueue.empty() )
 	{
+		// there are messages to send, so get the one at the front of the queue
 		m_sendMutex->Lock();
 		Msg* msg = m_sendQueue.front();
 		m_sendMutex->Release();
-				
-		m_expectedCallbackId = msg->GetCallbackId();
-		m_expectedReply = msg->GetExpectedReply();
-		m_expectedCommandClassId = msg->GetExpectedCommandClassId();
-		m_waitingForAck = true;
+		
+		// only send new messages if 1) there is no controller command executing or 2) there is one
+		// in process, but this is also a controller command
+		uint8 msgcmd = msg->GetExpectedReply();
+		if(( m_controllerCommand == ControllerCommand_None ) || IsControllerCommand( msgcmd ) )
+		{
+			m_expectedCallbackId = msg->GetCallbackId();
+			m_expectedCommandClassId = msg->GetExpectedCommandClassId();
+			m_expectedReply = msgcmd;
+			m_waitingForAck = true;
 
-		msg->SetSendAttempts( msg->GetSendAttempts() + 1 );
+			msg->SetSendAttempts( msg->GetSendAttempts() + 1 );
 
-		Log::Write( "" );
-		Log::Write( "Sending command (Callback ID=0x%.2x, Expected Reply=0x%.2x) - %s", msg->GetCallbackId(), msg->GetExpectedReply(), msg->GetAsString().c_str() );
-		m_controller->Write( msg->GetBuffer(), msg->GetLength() );
-		dataWritten = true;
+			Log::Write( "" );
+			Log::Write( "Sending command (Callback ID=0x%.2x, Expected Reply=0x%.2x) - %s", msg->GetCallbackId(), msg->GetExpectedReply(), msg->GetAsString().c_str() );
+			m_controller->Write( msg->GetBuffer(), msg->GetLength() );
+			dataWritten = true;
+		}
+		else
+			Log::Write("Not sending a queued message because controller is busy.  m_controllerCommand = %d",m_controllerCommand);
 	}
 	else
 	{
@@ -877,6 +892,31 @@ bool Driver::MoveMessagesToWakeUpQueue
 	}
 
 	// Failed to move messages
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::IsControllerCommand>
+// Identify controller (as opposed to node) commands...especially blocking ones
+//-----------------------------------------------------------------------------
+bool Driver::IsControllerCommand
+(
+	const uint8 _command
+)
+{
+	// ranges of commands are used to enhance performance
+	// the commands identified as "Controller Commands" needs to be reviewed as we
+	// understand the protocol better and implement handlers
+	if( ( _command >= FUNC_ID_ZW_SET_DEFAULT ) && 
+		( _command <= FUNC_ID_ZW_REQUEST_NODE_NEIGHBOR_UPDATE ) )
+			return true;
+	if( ( _command >= FUNC_ID_ZW_ADD_NODE_TO_NETWORK ) &&
+		( _command <= FUNC_ID_ZW_CONTROLLER_CHANGE ) )
+			return true;
+	if( ( _command >= FUNC_ID_ZW_REMOVE_FAILED_NODE_ID ) &&
+		( _command <= FUNC_ID_ZW_REPLACE_FAILED_NODE ) )
+			return true;
+
 	return false;
 }
 
@@ -1808,7 +1848,7 @@ void Driver::HandleGetRoutingInfoResponse
 		memcpy( node->m_neighbors, &_data[2], 29 );
 		ReleaseNodes();
 #ifdef _DEBUG
-		Log::Write( "Neighbors to this node are:" );
+		Log::Write( "Neighbors of this node are:" );
 		for( int by=0; by<29; by++ )
 			for( int bi=0; bi<8; bi++ )
 			{
@@ -1816,9 +1856,6 @@ void Driver::HandleGetRoutingInfoResponse
 					Log::Write( "\tNode %d", (by<<3)+bi+1 );
 			}
 #endif
-
-		// Can do this unsafe
-//		node->QueryStageComplete( Node::QueryStage_Neighbors );
 	}
 
 
@@ -2553,7 +2590,8 @@ void Driver::CommonAddNodeStatusRequestHandler
 		case ADD_NODE_STATUS_DONE:
 		{
 			Log::Write( "ADD_NODE_STATUS_DONE" );
-			InitNode( m_controllerCommandNode );
+			if( m_controllerCommandNode != 0xff )
+				InitNode( m_controllerCommandNode );
 			if( m_controllerCallback )
 			{
 				m_controllerCallback( ControllerState_Completed, m_controllerCallbackContext );
@@ -2572,6 +2610,9 @@ void Driver::CommonAddNodeStatusRequestHandler
 				m_controllerCallback( ControllerState_Failed, m_controllerCallbackContext );
 			}
 			m_controllerCommand = ControllerCommand_None;
+
+			// Remove the AddNode command from the queue
+			RemoveMsg();
 
 			// Get the controller out of add mode to avoid accidentally adding other devices.
 			Msg* msg = new Msg( "Add Node Stop (Failed)", 0xff, REQUEST, _funcId, true );
@@ -2913,17 +2954,22 @@ uint8 Driver::GetCurrentNodeQuery
 	{
 		if( nodeId == 0xff )	// no node was found (either we're done or all remaining nodes to query are asleep)
 		{
-			if( sleepingNodes && !m_awakeNodesQueried ) 
+			if( sleepingNodes )
 			{
-				Log::Write( "Node query processing complete except for sleeping nodes." );
-				Notification* notification = new Notification( Notification::Type_AwakeNodesQueried );
-				notification->SetHomeAndNodeIds( m_homeId, nodeId );
-				QueueNotification( notification ); 
+				if (!m_awakeNodesQueried ) 
+				{
+					// only sleeping nodes remain, so signal awake nodes queried complete
+					Log::Write( "Node query processing complete except for sleeping nodes." );
+					Notification* notification = new Notification( Notification::Type_AwakeNodesQueried );
+					notification->SetHomeAndNodeIds( m_homeId, nodeId );
+					QueueNotification( notification ); 
 
-				m_awakeNodesQueried = true;
+					m_awakeNodesQueried = true;
+				}
 			}
-			else 
+			else
 			{
+				// no sleeping nodes, no more nodes in the queue, so...All done
 				Log::Write( "Node query processing complete." );
 				Notification* notification = new Notification( Notification::Type_AllNodesQueried );
 				notification->SetHomeAndNodeIds( m_homeId, nodeId );
@@ -3180,6 +3226,26 @@ string Driver::GetNodeType
 	}
 
 	return "Unknown";
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::GetNodeNeighbors>
+// Gets the neighbors for a node
+//-----------------------------------------------------------------------------
+uint32 Driver::GetNodeNeighbors
+( 
+	uint8 const _nodeId,
+	uint8** o_neighbors
+)
+{
+	uint32 numNeighbors = 0;
+	if( Node* node = GetNode( _nodeId ) )
+	{
+		numNeighbors = node->GetNeighbors(o_neighbors );
+		ReleaseNodes();
+	}
+
+	return numNeighbors;
 }
 
 //-----------------------------------------------------------------------------
@@ -3683,6 +3749,7 @@ bool Driver::CancelControllerCommand
 		case ControllerCommand_AddController:
 		{
 			Log::Write( "CancelAddController" );
+			m_controllerCommandNode = 0xff;		// identify the fact that there is no new node to initialize
 			Msg* msg = new Msg( "CancelAddController", 0xff, REQUEST, FUNC_ID_ZW_ADD_NODE_TO_NETWORK, true );
 			msg->Append( ADD_NODE_STOP );
 			SendMsg( msg );
@@ -3691,6 +3758,7 @@ bool Driver::CancelControllerCommand
 		case ControllerCommand_AddDevice:
 		{
 			Log::Write( "CancelAddDevice" );
+			m_controllerCommandNode = 0xff;		// identify the fact that there is no new node to initialize
 			Msg* msg = new Msg( "CancelAddDevice", 0xff, REQUEST, FUNC_ID_ZW_ADD_NODE_TO_NETWORK, true );
 			msg->Append( ADD_NODE_STOP );
 			SendMsg( msg );

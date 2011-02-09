@@ -439,6 +439,15 @@ namespace OpenZWave
 		string GetNodeType( uint32 const _homeId, uint8 const _nodeId );
 
 		/**
+		 * \brief Get the bitmap of this node's neighbors
+		 *
+		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param _nodeId The ID of the node to query.
+		 * \param _nodeNeighbors An array of 29 uint8s to hold the neighbor bitmap
+		 */
+		uint32 GetNodeNeighbors( uint32 const _homeId, uint8 const _nodeId, uint8** _nodeNeighbors );
+
+		/**
 		 * \brief Get the manufacturer name of a device
 		 * The manufacturer name would normally be handled by the Manufacturer Specific commmand class,
 		 * taking the manufacturer ID reported by the device and using it to look up the name from the
