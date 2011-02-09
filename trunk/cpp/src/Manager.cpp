@@ -708,6 +708,23 @@ string Manager::GetNodeType
 }
 
 //-----------------------------------------------------------------------------
+// <Manager::GetNodeNeighbors>
+// Get the bitmap of this node's neighbors
+//-----------------------------------------------------------------------------
+uint32 Manager::GetNodeNeighbors
+(
+	uint32 const _homeId,
+	uint8 const _nodeId,
+	uint8** o_neighbors
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+		return driver->GetNodeNeighbors( _nodeId, o_neighbors );
+
+	return 0;
+}
+
+//-----------------------------------------------------------------------------
 // <Manager::GetNodeManufacturerName>
 // Get the manufacturer name of a node
 //-----------------------------------------------------------------------------
