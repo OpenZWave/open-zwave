@@ -95,7 +95,6 @@ namespace OpenZWave
 		{
 			QueryStage_None,					/**< Query process hasn't started for this node */
 			QueryStage_ProtocolInfo,			/**< Retrieve protocol information */
-			QueryStage_Neighbors,				/**< Retrieve node neighbor list */
 			QueryStage_WakeUp,					/**< Start wake up process if a sleeping node*/
 			QueryStage_NodeInfo,				/**< Retrieve info about supported, controlled command classes */
 			QueryStage_ManufacturerSpecific,	/**< Retrieve manufacturer name and product ids */
@@ -103,6 +102,7 @@ namespace OpenZWave
 			QueryStage_Instances,				/**< Retrieve information about running instances ??? */
 			QueryStage_Static,					/**< Retrieve static information (doesn't change) */
 			QueryStage_Associations,			/**< Retrieve information about associations */
+			QueryStage_Neighbors,				/**< Retrieve node neighbor list */
 			QueryStage_Session,					/**< Retrieve session information (changes infrequently) */
 			QueryStage_Dynamic,					/**< Retrieve dynamic information (changes frequently) */
 			QueryStage_Configuration,			/**< Retrieve configurable parameter information (only done on request) */
@@ -225,6 +225,7 @@ namespace OpenZWave
 		uint8 GetGeneric()const{ return m_generic; }
 		uint8 GetSpecific()const{ return m_specific; }
 		string const& GetType()const{ return m_type; }	
+		uint32 GetNeighbors( uint8** o_associations );
 
 	private:
 		bool		m_listening;

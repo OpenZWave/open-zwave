@@ -77,7 +77,6 @@ static char const* c_queryStageNames[] =
 {
 	"None",
 	"ProtocolInfo",
-	"Neighbors",
 	"WakeUp",
 	"NodeInfo",
 	"ManufacturerSpecific",
@@ -85,6 +84,7 @@ static char const* c_queryStageNames[] =
 	"Instances",
 	"Static",
 	"Associations",
+	"Neighbors",
 	"Session",
 	"Dynamic",
 	"Configuration",
@@ -182,17 +182,9 @@ void Node::AdvanceQueries
 				else
 				{
 					// This stage has been done already, so move to the Neighbours stage
-					m_queryStage = QueryStage_Neighbors;
+					m_queryStage = QueryStage_WakeUp;
 					m_queryRetries = 0;
 				}
-				break;
-			}
-			case QueryStage_Neighbors:
-			{
-				// retrieves this node's neighbors and stores the neighbor bitmap in the node object
-				Log::Write( "Node %d: QueryStage_Neighbors", m_nodeId );
-				GetDriver()->RequestNodeNeighbors( m_nodeId );
-				m_queryPending = true;
 				break;
 			}
 			case QueryStage_WakeUp:
@@ -340,9 +332,17 @@ void Node::AdvanceQueries
 				else
 				{
 					// if this device doesn't support Associations, move to retrieve Session information
-					m_queryStage = QueryStage_Session;
+					m_queryStage = QueryStage_Neighbors;
 					m_queryRetries = 0;
 				}
+				break;
+			}
+			case QueryStage_Neighbors:
+			{
+				// retrieves this node's neighbors and stores the neighbor bitmap in the node object
+				Log::Write( "Node %d: QueryStage_Neighbors", m_nodeId );
+				GetDriver()->RequestNodeNeighbors( m_nodeId );
+				m_queryPending = true;
 				break;
 			}
 			case QueryStage_Session:
@@ -500,6 +500,48 @@ string Node::GetQueryStageName
 )
 {
 	return c_queryStageNames[_stage];
+}
+
+//-----------------------------------------------------------------------------
+// <Node::GetNeighbors>
+// Gets the neighbors of a node
+//-----------------------------------------------------------------------------
+uint32 Node::GetNeighbors
+(
+	uint8** o_neighbors
+)
+{
+	// determine how many neighbors there are
+	int i;
+	uint32 numNeighbors = 0;
+	for( i = 0; i < 29; i++ )
+	{
+		for( unsigned char mask = 0x80; mask != 0; mask >>= 1 )
+			if( m_neighbors[i] & mask )
+				numNeighbors++;
+	}
+
+	// handle the possibility that no neighbors are reported
+	if( !numNeighbors )
+	{
+		*o_neighbors = NULL;
+		return 0;
+	}
+
+	// create and populate an array with neighbor node ids
+	uint8* neighbors = new uint8[numNeighbors];
+	uint32 index = 0;
+	for( int by=0; by<29; by++ )
+	{
+		for( int bi=0; bi<8; bi++ )
+		{
+			if( (m_neighbors[by] & (0x01<<bi)) )
+				neighbors[index++] = ( (by<<3) + bi + 1 );
+		}
+	}
+
+	*o_neighbors = neighbors;
+	return numNeighbors;
 }
 
 //-----------------------------------------------------------------------------
@@ -1680,7 +1722,7 @@ uint32 Node::GetAssociations
 }
 
 //-----------------------------------------------------------------------------
-// <Node::GetAssociations>
+// <Node::GetMaxAssociations>
 // Gets the maximum number of associations for a group
 //-----------------------------------------------------------------------------
 uint8 Node::GetMaxAssociations

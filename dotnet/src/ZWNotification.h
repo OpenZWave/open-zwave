@@ -88,7 +88,8 @@ namespace OpenZWaveDotNet
 		uint8 GetNodeId(){ return m_valueId->GetNodeId(); }
 		ZWValueID^ GetValueID(){ return m_valueId; }
 		uint8 GetGroupIdx(){ assert(Type::Group==m_type); return m_byte; } 
-		uint8 GetEvent(){ assert(Type::NodeEvent==m_type); return m_byte; } 
+		uint8 GetEvent(){ assert(Type::NodeEvent==m_type); return m_byte; }
+		uint8 GetByte(){ return m_byte; }
 
 	internal:
 		Type		m_type;

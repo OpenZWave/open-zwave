@@ -176,6 +176,7 @@ namespace OpenZWave
 		bool IsBridgeController()const{ return (m_libraryType == 7); }
 		bool IsInclusionController()const{ return ((m_controllerCaps & ControllerCaps_SIS) != 0); }
 
+
 		uint32 GetHomeId()const{ return m_homeId; }
 		uint8 GetNodeId()const{ return m_nodeId; }
 		string GetControllerPath()const{ return m_controllerPath; }
@@ -261,6 +262,7 @@ namespace OpenZWave
 		void RemoveMsg();													// Remove the first message from the send queue.  This happens when the send was successful, or after three failed attempts.
 		void TriggerResend();												// Causes the first message to be sent again, in response to a NAK or CAN from the controller.
 		bool MoveMessagesToWakeUpQueue(	uint8 const _targetNodeId );		// If a node does not respond, and is of a type that can sleep, this method is used to move all its pending messages to another queue ready for when it mext wakes up.
+		bool IsControllerCommand( uint8 const _command );					// identify controller commands
 
 		list<Msg*>				m_sendQueue;								// Messages waiting to be sent
 		Mutex*					m_sendMutex;								// Serialize access to the send and wakeup queues
@@ -334,9 +336,7 @@ namespace OpenZWave
 	//-----------------------------------------------------------------------------
 	private:
 		void SetPollInterval( int32 _seconds ){ m_pollInterval = _seconds; }
-//		bool EnablePoll( uint8 _nodeId );
 		bool EnablePoll( ValueID _valueId );
-//		bool DisablePoll( uint8 _nodeId );
 		bool DisablePoll( ValueID _valueId );
 
 		static void PollThreadEntryPoint( void* _context );
@@ -398,6 +398,7 @@ namespace OpenZWave
 		uint8 GetNodeGeneric( uint8 const _nodeId );
 		uint8 GetNodeSpecific( uint8 const _nodeId );
 		string GetNodeType( uint8 const _nodeId );
+		uint32 GetNodeNeighbors( uint8 const _nodeId, uint8** o_neighbors );
 
 		string GetNodeManufacturerName( uint8 const _nodeId );
 		string GetNodeProductName( uint8 const _nodeId );

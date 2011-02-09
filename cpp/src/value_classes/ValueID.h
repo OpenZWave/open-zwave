@@ -153,6 +153,8 @@ namespace OpenZWave
 	     */
 		ValueType GetType()const{ return( (ValueType)( m_id & 0x0000000f ) ); }
 
+		uint32 GetId()const{ return (uint32) m_id;}
+
 		// Comparison Operators
 		bool operator ==	( ValueID const& _other )const{ return( (m_homeId == _other.m_homeId) && (m_id == _other.m_id) ); }
 		bool operator !=	( ValueID const& _other )const{ return( (m_homeId != _other.m_homeId) || (m_id != _other.m_id) ); }

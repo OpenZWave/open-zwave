@@ -424,6 +424,30 @@ namespace OpenZWaveDotNet
 		bool IsNodeRoutingDevice( uint32 const homeId, uint8 const nodeId ){ return Manager::Get()->IsNodeRoutingDevice(homeId,nodeId); }
 
 		/**
+		 * \brief Get the maximum baud rate of a node's communications
+		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param _nodeId The ID of the node to query.
+		 * \return the baud rate in bits per second.
+		 */
+		uint32 GetNodeMaxBaudRate( uint32 const homeId, uint8 const nodeId ){ return Manager::Get()->GetNodeMaxBaudRate(homeId, nodeId); }
+
+		/**
+		 * \brief Get the version number of a node
+		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param _nodeId The ID of the node to query.
+		 * \return the node's version number
+		 */
+		uint8 GetNodeVersion( uint32 const homeId, uint8 const nodeId ){ return Manager::Get()->GetNodeVersion(homeId, nodeId); }
+
+		/**
+		 * \brief Get the security byte for a node.  Bit meanings are still to be determined.
+		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param _nodeId The ID of the node to query.
+		 * \return the node's security byte
+		 */
+		uint8 GetNodeSecurity( uint32 const homeId, uint8 const nodeId ){ return Manager::Get()->GetNodeSecurity(homeId, nodeId); }
+		
+		/**
 		 * \brief Get a node's "basic" type.
 		 * \param homeId The Home ID of the Z-Wave controller that manages the node.
 		 * \param nodeId The ID of the node to query.
@@ -456,6 +480,15 @@ namespace OpenZWaveDotNet
 		 * \return A string containing the label text.
 		 */
 		String^ GetNodeType( uint32 homeId, uint8 nodeId ){ return gcnew String(Manager::Get()->GetNodeType(homeId,nodeId).c_str()); }
+
+		/**
+		 * \brief Get the bitmap of this node's neighbors
+		 *
+		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param _nodeId The ID of the node to query.
+		 * \param _nodeNeighbors An array of 29 uint8s to hold the neighbor bitmap
+		 */
+		uint32 GetNodeNeighbors( uint32 const homeId, uint8 const nodeId, [Out] array<Byte>^ %o_associations );
 
 		/**
 		 * \brief Get the manufacturer name of a device.

@@ -256,6 +256,32 @@ bool ZWManager::GetValueListItems
 }
 
 //-----------------------------------------------------------------------------
+// <ZWManager::GetNeighbors>
+// Gets the neighbors for a node
+//-----------------------------------------------------------------------------
+uint32 ZWManager::GetNodeNeighbors
+( 
+	uint32 homeId,
+	uint8 nodeId,
+	[Out] array<Byte>^ %o_neighbors
+)
+{
+	uint8* neighbors;
+	uint32 numNeighbors = Manager::Get()->GetNodeNeighbors( homeId, nodeId, &neighbors );
+	if( numNeighbors )
+	{
+		o_neighbors = gcnew array<Byte>(numNeighbors);
+		for( uint32 i=0; i<numNeighbors; ++i )
+		{
+			o_neighbors[i] = neighbors[i];		
+		}
+		delete [] neighbors;
+	}
+
+	return numNeighbors;
+}
+
+//-----------------------------------------------------------------------------
 // <ZWManager::GetAssociations>
 // Gets the associations for a group
 //-----------------------------------------------------------------------------
