@@ -45,6 +45,7 @@
 #include "ApplicationStatus.h"
 #include "ControllerReplication.h"
 #include "WakeUp.h"
+#include "SwitchAll.h"
 
 #include "ValueID.h"
 #include "Value.h"
@@ -3475,7 +3476,7 @@ void Driver::SetNodeLevel
 
 //-----------------------------------------------------------------------------
 // <Driver::SetNodeOn>
-// Helper to set the node on through the basic command class or SwitchAll class
+// Helper to set the node on through the basic command class
 //-----------------------------------------------------------------------------
 void Driver::SetNodeOn
 ( 
@@ -3491,7 +3492,7 @@ void Driver::SetNodeOn
 
 //-----------------------------------------------------------------------------
 // <Driver::SetNodeOff>
-// Helper to set the node off through the basic command class or SwitchAll class
+// Helper to set the node off through the basic command class
 //-----------------------------------------------------------------------------
 void Driver::SetNodeOff
 ( 
@@ -3820,6 +3821,58 @@ bool Driver::CancelControllerCommand
 
 	m_controllerCommand = ControllerCommand_None;
 	return true;
+}
+
+//-----------------------------------------------------------------------------
+//	SwitchAll
+//-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+// <Driver::SwitchAllOn>
+// All devices that support the SwitchAll command class will be turned on
+//-----------------------------------------------------------------------------
+void Driver::SwitchAllOn
+(
+)
+{
+	SwitchAll::On( this, 0xff );
+
+	LockNodes();
+	for( int i=0; i<256; ++i )
+	{
+		if( GetNodeUnsafe( i ) )
+		{
+			if( m_nodes[i]->GetCommandClass( SwitchAll::StaticGetCommandClassId() ) )
+			{
+				SwitchAll::On( this, (uint8)i );
+			}
+		}
+	}
+	ReleaseNodes();
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::SwitchAllOff>
+// All devices that support the SwitchAll command class will be turned off
+//-----------------------------------------------------------------------------
+void Driver::SwitchAllOff
+(
+)
+{
+	SwitchAll::Off( this, 0xff );
+
+	LockNodes();
+	for( int i=0; i<256; ++i )
+	{
+		if( GetNodeUnsafe( i ) )
+		{
+			if( m_nodes[i]->GetCommandClass( SwitchAll::StaticGetCommandClassId() ) )
+			{
+				SwitchAll::Off( this, (uint8)i );
+			}
+		}
+	}
+	ReleaseNodes();
 }
 
 //-----------------------------------------------------------------------------

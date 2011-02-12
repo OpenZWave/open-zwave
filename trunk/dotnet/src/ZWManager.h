@@ -956,6 +956,112 @@ namespace OpenZWaveDotNet
 	/*@}*/
 
 	//-----------------------------------------------------------------------------
+	// Climate Control Schedules
+	//-----------------------------------------------------------------------------
+	/** \name Climate Control Schedules
+	 *  Methods for accessing schedule values.  All the methods require a ValueID, which will have been provided
+	 *  in the ValueAdded Notification callback when the the value was first discovered by OpenZWave.
+	 *  <p>The ValueType_Schedule is a specialized Value used to simplify access to the switch point schedule
+	 *  information held by a setback thermostat that supports the Climate Control Schedule command class.
+	 *  Each schedule contains up to nine switch points for a single day, consisting of a time in
+	 *  hours and minutes (24 hour clock) and a setback in tenths of a degree Celsius.  The setback value can
+	 *  range from -128 (-12.8C) to 120 (12.0C).  There are two special setback values - 121 is used to set
+	 *  Frost Protection mode, and 122 is used to set Energy Saving mode.
+	 *  <p>The switch point methods only modify OpenZWave's copy of the schedule information.  Once all changes
+	 *  have been made, they are sent to the device by calling SetSchedule.
+	 */
+	/*@{*/
+
+		/**
+		 * \brief Get the number of switch points defined in a schedule.
+		 * \param _id The unique identifier of the schedule value.
+		 * \return the number of switch points defined in this schedule.  Returns zero if the value is not a ValueID::ValueType_Schedule. The type can be tested with a call to ValueID::GetType.
+		 */
+		uint8 GetNumSwitchPoints( ZWValueID^ id ){ return Manager::Get()->GetNumSwitchPoints( id->CreateUnmanagedValueID() ); }
+
+		/**
+		 * \brief Set a switch point in the schedule.
+		 * Inserts a new switch point into the schedule, unless a switch point already exists at the specified
+		 * time in which case that switch point is updated with the new setback value instead.
+		 * A maximum of nine switch points can be set in the schedule.
+		 * \param id The unique identifier of the schedule value.
+		 * \param hours The hours part of the time when the switch point will trigger.  The time is set using
+		 * the 24-hour clock, so this value must be between 0 and 23.
+		 * \param minutes The minutes part of the time when the switch point will trigger.  This value must be
+		 * between 0 and 59.
+		 * \param setback The setback in tenths of a degree Celsius.  The setback value can range from -128 (-12.8C)
+		 * to 120 (12.0C).  There are two special setback values - 121 is used to set Frost Protection mode, and
+		 * 122 is used to set Energy Saving mode.
+		 * \return true if successful.  Returns false if the value is not a ValueID::ValueType_Schedule. The type can be tested with a call to ValueID::GetType.
+		 * \see GetNumSwitchPoints, RemoveSwitchPoint, ClearSwitchPoints
+		 */
+		bool SetSwitchPoint( ZWValueID^ id, uint8 hours, uint8 minutes, int8 setback ){ return Manager::Get()->SetSwitchPoint( id->CreateUnmanagedValueID(), hours, minutes, setback ); }
+
+		/**
+		 * \brief Remove a switch point from the schedule.
+		 * Removes the switch point at the specified time from the schedule.
+		 * \param id The unique identifier of the schedule value.
+		 * \param hours The hours part of the time when the switch point will trigger.  The time is set using
+		 * the 24-hour clock, so this value must be between 0 and 23.
+		 * \param minutes The minutes part of the time when the switch point will trigger.  This value must be
+		 * between 0 and 59.
+		 * \return true if successful.  Returns false if the value is not a ValueID::ValueType_Schedule or if there 
+		 * is not switch point with the specified time values. The type can be tested with a call to ValueID::GetType.
+		 * \see GetNumSwitchPoints, SetSwitchPoint, ClearSwitchPoints
+		 */
+		bool RemoveSwitchPoint( ZWValueID^ id, uint8 hours, uint8 minutes ){ return Manager::Get()->RemoveSwitchPoint( id->CreateUnmanagedValueID(), hours, minutes ); }
+
+		/**
+		 * \brief Clears all switch points from the schedule.
+		 * \param id The unique identifier of the schedule value.
+		 * \see GetNumSwitchPoints, SetSwitchPoint, RemoveSwitchPoint
+		 */
+		void ClearSwitchPoints( ZWValueID^ id ){ Manager::Get()->ClearSwitchPoints( id->CreateUnmanagedValueID() ); }
+		
+		/**
+		 * \brief Gets switch point data from the schedule.
+		 * Retrieves the time and setback values from a switch point in the schedule.
+		 * \param _id The unique identifier of the schedule value.
+		 * \param _idx The index of the switch point, between zero and one less than the value
+		 * returned by GetNumSwitchPoints.
+		 * \param o_hours a pointer to a uint8 that will be filled with the hours part of the switch point data.
+		 * \param o_minutes a pointer to a uint8 that will be filled with the minutes part of the switch point data.
+		 * \param o_setback a pointer to an int8 that will be filled with the setback value.  This can range from -128
+		 * (-12.8C)to 120 (12.0C).  There are two special setback values - 121 is used to set Frost Protection mode, and
+		 * 122 is used to set Energy Saving mode.
+		 * \return true if successful.  Returns false if the value is not a ValueID::ValueType_Schedule. The type can be tested with a call to ValueID::GetType.
+		 * \see GetNumSwitchPoints
+		 */
+		bool GetSwitchPoint( ZWValueID^ id, uint8 idx, [Out] System::Byte %o_value, [Out] System::Byte %o_minutes, [Out] System::SByte %o_setback );
+		
+	/*@}*/
+
+	//-----------------------------------------------------------------------------
+	// SwitchAll
+	//-----------------------------------------------------------------------------
+	/** \name SwitchAll
+	 *  Methods for switching all devices on or off together.  The devices must support
+	 *	the SwitchAll command class.  The command is first broadcast to all nodes, and
+	 *	then followed up with individual commands to each node (because broadcasts are
+	 *	not routed, the message might not otherwise reach all the nodes).
+	 */
+	/*@{*/
+
+		/**
+		 * \brief Switch all devices on.
+		 * All devices that support the SwitchAll command class will be turned on.
+		 */
+		void SwitchAllOn( uint32 homeId ){ Manager::Get()->SwitchAllOn( homeId ); }
+
+		/**
+		 * \brief Switch all devices off.
+		 * All devices that support the SwitchAll command class will be turned off.
+		 */
+		void SwitchAllOff( uint32 homeId ){ Manager::Get()->SwitchAllOff( homeId ); }
+
+	/*@}*/
+
+	//-----------------------------------------------------------------------------
 	// Configuration Parameters
 	//-----------------------------------------------------------------------------
 	/** \name Configuration Parameters
