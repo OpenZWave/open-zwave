@@ -988,6 +988,31 @@ namespace OpenZWave
 	/*@}*/
 
 	//-----------------------------------------------------------------------------
+	// SwitchAll
+	//-----------------------------------------------------------------------------
+	/** \name SwitchAll
+	 *  Methods for switching all devices on or off together.  The devices must support
+	 *	the SwitchAll command class.  The command is first broadcast to all nodes, and
+	 *	then followed up with individual commands to each node (because broadcasts are
+	 *	not routed, the message might not otherwise reach all the nodes).
+	 */
+	/*@{*/
+
+		/**
+		 * \brief Switch all devices on.
+		 * All devices that support the SwitchAll command class will be turned on.
+		 */
+		void SwitchAllOn( uint32 const _homeId );
+
+		/**
+		 * \brief Switch all devices off.
+		 * All devices that support the SwitchAll command class will be turned off.
+		 */
+		void SwitchAllOff( uint32 const _homeId );
+
+	/*@}*/
+
+	//-----------------------------------------------------------------------------
 	// Configuration Parameters
 	//-----------------------------------------------------------------------------
 	/** \name Configuration Parameters

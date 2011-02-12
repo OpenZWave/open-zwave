@@ -150,34 +150,38 @@ bool SwitchAll::SetValue
 //-----------------------------------------------------------------------------
 void SwitchAll::Off
 (
+	Driver* _driver,
+	uint8 const _nodeId 
 )
 {
-	Log::Write( "SwitchAll::Off (Node=%d)", GetNodeId() );
-	Msg* msg = new Msg( "SwitchAllCmd_Off", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
-	msg->Append( GetNodeId() );
+	Log::Write( "SwitchAll::Off (Node=%d)", _nodeId );
+	Msg* msg = new Msg( "SwitchAllCmd_Off", _nodeId, REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
+	msg->Append( _nodeId );
 	msg->Append( 2 );
-	msg->Append( GetCommandClassId() );
+	msg->Append( StaticGetCommandClassId() );
 	msg->Append( SwitchAllCmd_Off );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-    GetDriver()->SendMsg( msg );
+    _driver->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
 // <SwitchAll::On>
-// Set the device's response to SWITCH_ALL commands 
+// Send a command to switch all devices on 
 //-----------------------------------------------------------------------------
 void SwitchAll::On
 (
+	Driver* _driver,
+	uint8 const _nodeId 
 )
 {
-	Log::Write( "SwitchAll::On (Node=%d)", GetNodeId() );
-	Msg* msg = new Msg( "SwitchAllCmd_On", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
-	msg->Append( GetNodeId() );
+	Log::Write( "SwitchAll::On (Node=%d)", _nodeId );
+	Msg* msg = new Msg( "SwitchAllCmd_On", _nodeId, REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
+	msg->Append( _nodeId );
 	msg->Append( 2 );
-	msg->Append( GetCommandClassId() );
+	msg->Append( StaticGetCommandClassId() );
 	msg->Append( SwitchAllCmd_On );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-    GetDriver()->SendMsg( msg );
+    _driver->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
