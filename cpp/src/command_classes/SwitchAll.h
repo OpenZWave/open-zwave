@@ -45,8 +45,8 @@ namespace OpenZWave
 		static uint8 const StaticGetCommandClassId(){ return 0x27; }
 		static string const StaticGetCommandClassName(){ return "COMMAND_CLASS_SWITCH_ALL"; }
 
-		void On();
-		void Off();
+		static void On( Driver* _driver, uint8 const _nodeId );
+		static void Off( Driver* _driver, uint8 const _nodeId );
 
 		// From CommandClass
 		virtual bool RequestState( uint32 const _requestFlags );

@@ -2106,6 +2106,40 @@ bool Manager::GetSwitchPoint
 }
 
 //-----------------------------------------------------------------------------
+//	SwitchAll
+//-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+// <Manager::SwitchAllOn>
+// All devices that support the SwitchAll command class will be turned on
+//-----------------------------------------------------------------------------
+void Manager::SwitchAllOn
+(
+	uint32 const _homeId
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		return driver->SwitchAllOn();
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::SwitchAllOff>
+// All devices that support the SwitchAll command class will be turned off
+//-----------------------------------------------------------------------------
+void Manager::SwitchAllOff
+(
+	uint32 const _homeId
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		return driver->SwitchAllOff();
+	}
+}
+
+//-----------------------------------------------------------------------------
 //	Configuration Parameters
 //-----------------------------------------------------------------------------
 

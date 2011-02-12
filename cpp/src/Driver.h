@@ -484,6 +484,15 @@ namespace OpenZWave
 		bool						m_controllerAdded;
 		uint8						m_controllerCommandNode;
 
+
+	//-----------------------------------------------------------------------------
+	// SwitchAll
+	//-----------------------------------------------------------------------------
+	private:		
+		// The public interface is provided via the wrappers in the Manager class
+		void SwitchAllOn();
+		void SwitchAllOff();
+
 	//-----------------------------------------------------------------------------
 	// Configuration Parameters	(wrappers for the Node methods)
 	//-----------------------------------------------------------------------------
