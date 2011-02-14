@@ -3359,7 +3359,7 @@ string Driver::GetNodeProductType
 	uint8 const _nodeId
 )
 {
-	if( Node* node = m_nodes[_nodeId] )
+	if( Node* node = GetNode( _nodeId ) )
 	{
 		string str = node->GetProductType();
 		ReleaseNodes();
@@ -3379,7 +3379,7 @@ string Driver::GetNodeProductId
 	uint8 const _nodeId
 )
 {
-	if( Node* node = m_nodes[_nodeId] )
+	if( Node* node = GetNode( _nodeId ) )
 	{
 		string str = node->GetProductId();
 		ReleaseNodes();
