@@ -167,7 +167,9 @@ Driver::~Driver
 	delete m_queryMutex;
 
 	delete m_wakeEvent;
+	m_wakeEvent = NULL;
 	delete m_exitEvent;
+	m_exitEvent = NULL;
 
 	// Clear the send Queue
 	while( !m_sendQueue.empty() )
@@ -704,7 +706,8 @@ void Driver::SendMsg
 		// everything else goes to back of queue
 		m_sendQueue.push_back( _msg );
 	m_sendMutex->Release();
-	m_wakeEvent->Set();
+	if ( m_wakeEvent )
+		m_wakeEvent->Set();
 }
 
 //-----------------------------------------------------------------------------
