@@ -706,8 +706,7 @@ void Driver::SendMsg
 		// everything else goes to back of queue
 		m_sendQueue.push_back( _msg );
 	m_sendMutex->Release();
-	if ( m_wakeEvent )
-		m_wakeEvent->Set();
+	m_wakeEvent->Set();
 }
 
 //-----------------------------------------------------------------------------
@@ -4022,7 +4021,8 @@ void Driver::QueueNotification
 )
 {
 	m_notifications.push_back( _notification );
-	m_wakeEvent->Set();
+	if ( m_wakeEvent )
+		m_wakeEvent->Set();
 }
 
 //-----------------------------------------------------------------------------
