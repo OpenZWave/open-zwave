@@ -91,7 +91,7 @@ namespace OZWForm
                     this.ButtonCancel.Enabled = false;
                     this.Text = "Remove Failed Node";
                     this.label1.Text = "Removing the failed node from the controller's list.\nThis command cannot be cancelled.";
-                    break;
+					break;
                 }
                 case ZWControllerCommand.ReplaceFailedNode:
                 {

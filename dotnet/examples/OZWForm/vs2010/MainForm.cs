@@ -162,7 +162,7 @@ namespace OZWForm
 
             // Create the Options
             m_options = new ZWOptions();
-            m_options.Create(@"..\..\..\..\..\..\..\config\", @"", @"");
+            m_options.Create(@"..\..\..\..\..\..\config\", @"", @"");
 
             // Add any app specific options here...
 
@@ -223,13 +223,27 @@ namespace OZWForm
 
                 case ZWNotification.Type.NodeAdded:
                     {
-                        // Add the new node to our list
-                        Node node = new Node();
-                        node.ID = m_notification.GetNodeId();
-                        node.HomeID = m_notification.GetHomeId();
-                        m_nodeList.Add(node);
+						// if this node was in zwcfg*.xml, this is the first node notification
+						// if not, the NodeNew notification should already have been received
+						if (GetNode(m_notification.GetHomeId(), m_notification.GetNodeId()) == null)
+						{
+							Node node = new Node();
+	                        node.ID = m_notification.GetNodeId();
+		                    node.HomeID = m_notification.GetHomeId();
+			                m_nodeList.Add(node);
+						}
                         break;
                     }
+
+				case ZWNotification.Type.NodeNew:
+					{
+						// Add the new node to our list (and flag as uninitialized)
+						Node node = new Node();
+						node.ID = m_notification.GetNodeId();
+						node.HomeID = m_notification.GetHomeId();
+						m_nodeList.Add(node);
+						break;
+					}
 
                 case ZWNotification.Type.NodeRemoved:
                     {
@@ -291,12 +305,21 @@ namespace OZWForm
                     }
                 case ZWNotification.Type.NodeQueriesComplete:
                     {
-                        break;
+						// as an example, enable query of BASIC info (CommandClass = 0x20)
+						Node node = GetNode(m_notification.GetHomeId(), m_notification.GetNodeId());
+						if (node != null)
+						{
+							foreach (ZWValueID vid in node.Values)
+							{
+								if (vid.GetCommandClassId() == 0x20)	// remove this "if" to poll all values
+									m_manager.EnablePoll(vid);
+							}
+						}
+						break;
                     }
                 case ZWNotification.Type.AllNodesQueried:
                     {
                         MessageBox.Show("All nodes queried");
- //                       m_manager.EnablePoll(m_homeId, 7);
                         break;
                     }
                 case ZWNotification.Type.AwakeNodesQueried:

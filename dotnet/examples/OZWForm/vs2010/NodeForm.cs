@@ -30,14 +30,50 @@ namespace OZWForm
             foreach (ZWValueID valueID in node.Values)
             {
                 Control control = null;
-                if (valueID.GetType() == ZWValueID.ValueType.Bool)
+                switch (valueID.GetType())
                 {
-                    control = new ValuePanelBool(valueID);
+                    case ZWValueID.ValueType.Bool:
+                    {
+                        control = new ValuePanelBool(valueID);
+                        break;
+                    }
+                    case ZWValueID.ValueType.Button:
+                    {
+                        control = new ValuePanelButton(valueID);
+                        break;
+                    }
+                    case ZWValueID.ValueType.Byte:
+                    {
+                        control = new ValuePanelByte(valueID);
+                        break;
+                    }
+                    case ZWValueID.ValueType.Decimal:
+                    {
+                        control = new ValuePanelDecimal(valueID);
+                        break;
+                    }
+                    case ZWValueID.ValueType.Int:
+                    {
+                        control = new ValuePanelInt(valueID);
+                        break;
+                    }
+                    case ZWValueID.ValueType.List:
+                    {
+                        control = new ValuePanelList(valueID);
+                        break;
+                    }
+                    case ZWValueID.ValueType.Short:
+                    {
+                        control = new ValuePanelShort(valueID);
+                        break;
+                    }
+                    case ZWValueID.ValueType.String:
+                    {
+                        control = new ValuePanelString(valueID);
+                        break;
+                    }
                 }
-                else if (valueID.GetType() == ZWValueID.ValueType.Byte)
-                {
-                    control = new ValuePanelByte(valueID);
-                }
+
                 if (control != null)
                 {
                     NodeLayoutPanel.Controls.Add(control);
