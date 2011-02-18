@@ -59,6 +59,7 @@ namespace OpenZWave
 	 */
 	class Node
 	{
+		friend class Manager;
 		friend class Driver;
 		friend class Group;
 		friend class Association;
