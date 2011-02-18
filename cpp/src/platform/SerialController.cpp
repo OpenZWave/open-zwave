@@ -64,6 +64,7 @@ SerialController::~SerialController
 (
 )
 {
+	delete m_pMsgInitializationSequence;
 	delete m_pImpl;
 }
 
