@@ -1,6 +1,6 @@
 //-----------------------------------------------------------------------------
 //
-//	Manager.h
+//	Manager.cpp
 //
 //	The main public interface to OpenZWave.
 //
@@ -161,6 +161,14 @@ Manager::~Manager
 		list<Watcher*>::iterator it = m_watchers.begin();
 		delete *it;
 		m_watchers.erase( it );
+	}
+
+	// Clear the generic device class list
+	while( !Node::s_genericDeviceClasses.empty() )
+	{
+		map<uint8,Node::GenericDeviceClass*>::iterator git = Node::s_genericDeviceClasses.begin();
+		delete git->second;
+		Node::s_genericDeviceClasses.erase( git );
 	}
 
 	Log::Destroy();
