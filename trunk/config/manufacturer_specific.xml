@@ -45,6 +45,7 @@
   <Manufacturer id="0060" name="Everspring">
     <Product type="0002" id="0001" name="SM103 Door/Window Magnetic Sensor" config="everspring/sm103.xml"/>
     <Product type="0001" id="0001" name="SP103 PIR Motion Sensor" />
+    <Product type="0202" id="0001" name="HRDS1 Door/Window Magnetic Sensor" config="everspring/sm103.xml"/>
   </Manufacturer>
   <Manufacturer id="0063" name="GE">
     <Product type="5250" id="3030" name="GE 45603 Plugin Appliance Module" />

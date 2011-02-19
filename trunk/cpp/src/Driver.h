@@ -225,6 +225,10 @@ namespace OpenZWave
 		string					m_libraryTypeName;							// Name describing the library type.
 		uint8					m_libraryType;								// Type of library used by the controller.
 
+		uint16					m_manufacturerId;
+		uint16					m_productType;
+		uint16					m_productId;
+
 		uint8					m_initVersion;								// Version of the Serial API used by the controller.
 		uint8					m_initCaps;									// Set of flags indicating the serial API capabilities (See IsSlave, HasTimerSupport, IsPrimaryController and IsStaticUpdateController above).
 		uint8					m_controllerCaps;							// Set of flags indicating the controller's capabilities (See IsInclusionController above).
