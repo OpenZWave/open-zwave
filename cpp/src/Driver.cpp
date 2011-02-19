@@ -1462,6 +1462,9 @@ void Driver::HandleGetSerialAPICapabilitiesResponse
 	// _data[10] to _data[41] are a 256-bit bitmask with one bit set for 
 	// each FUNC_ID_ method supported by the controller.
 	// Bit 0 is FUNC_ID_ 1.  So FUNC_ID_SERIAL_API_GET_CAPABILITIES (0x07) will be bit 6 of the first byte.
+	m_manufacturerId = (((uint16)_data[4])<<8) | (uint16)_data[5];
+	m_productType = (((uint16)_data[6])<<8) | (uint16)_data[7];
+	m_productId = (((uint16)_data[8])<<8) | (uint16)_data[9];
 }
 
 //-----------------------------------------------------------------------------
@@ -2903,6 +2906,32 @@ void Driver::InitNode
 
 	// Add the new node
 	m_nodes[_nodeId] = new Node( m_homeId, _nodeId );
+	// Do controller specific node initializations
+	if( _nodeId == m_nodeId )
+	{
+		char str[64];
+
+		snprintf( str, sizeof(str), "%.4x", m_manufacturerId );
+		m_nodes[_nodeId]->SetManufacturerId( str );
+
+		snprintf( str, sizeof(str), "%.4x", m_productType );
+		m_nodes[_nodeId]->SetProductType( str );
+
+		snprintf( str, sizeof(str), "%.4x", m_productId );
+		m_nodes[_nodeId]->SetProductId( str );
+
+		snprintf( str, sizeof(str), "Unknown: id=%.4x", m_manufacturerId );
+		if( m_nodes[_nodeId]->GetManufacturerName() == "" )
+		{
+			m_nodes[_nodeId]->SetManufacturerName( str );
+		}
+
+		snprintf( str, sizeof(str), "Unknown: type=%.4x, id=%.4x", m_productType, m_productId );
+		if( m_nodes[_nodeId]->GetProductName() == "" )
+		{
+			m_nodes[_nodeId]->SetProductName( str );
+		}
+	}
 	ReleaseNodes();
 
 	Notification* notification = new Notification( Notification::Type_NodeAdded );
