@@ -87,16 +87,17 @@ bool EnergyProduction::RequestState
 //-----------------------------------------------------------------------------
 void EnergyProduction::RequestValue
 (
-	uint8 const _index		// = 0
+	uint8 const _valueEnum,		// one of EnergyProductionIndex enums
+	uint8 const _dummy
 )
 {
-	Log::Write( "Requesting the %s value from node %d", c_energyParameterNames[_index], GetNodeId() );
+	Log::Write( "Requesting the %s value from node %d", c_energyParameterNames[_valueEnum], GetNodeId() );
 	Msg* msg = new Msg( "EnergyProductionCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 	msg->Append( GetNodeId() );
 	msg->Append( 3 );
 	msg->Append( GetCommandClassId() );
 	msg->Append( EnergyProductionCmd_Get );
-	msg->Append( _index );
+	msg->Append( _valueEnum );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 	GetDriver()->SendMsg( msg );
 }

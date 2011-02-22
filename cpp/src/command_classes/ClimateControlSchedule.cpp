@@ -136,7 +136,8 @@ bool ClimateControlSchedule::RequestState
 //-----------------------------------------------------------------------------
 void ClimateControlSchedule::RequestValue
 (
-	uint8 const _index		// = 0
+	uint8 const _dummy1,	// = 0 (not used)
+	uint8 const _dummy2		// = 0 (not used)
 )
 {
 	// See if the schedule has changed since last time

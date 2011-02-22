@@ -144,17 +144,18 @@ bool SensorMultilevel::RequestState
 //-----------------------------------------------------------------------------
 void SensorMultilevel::RequestValue
 (
-	uint8 const _index		// = 0
+	uint8 const _dummy,		// = 0 (not used)
+	uint8 const _instance
 )
 {
-	if( _index > 0 )
+	if( _instance > 0 )
 	{
 		Msg* msg = new Msg( "SensorMultilevelCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, MultiInstance::StaticGetCommandClassId() );
 		msg->Append( GetNodeId() );
 		msg->Append( 5 );
 		msg->Append( MultiInstance::StaticGetCommandClassId() );
 		msg->Append( MultiInstance::MultiInstanceCmd_CmdEncap );
-		msg->Append( _index );		// already increased by 1
+		msg->Append( _instance );		// already increased by 1
 		msg->Append( GetCommandClassId() );
 		msg->Append( SensorMultilevelCmd_Get );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
@@ -162,7 +163,7 @@ void SensorMultilevel::RequestValue
 		return;
 	}
 
-	if( _index == 0 )
+	if( _instance == 0 )
 	{
 		Msg* msg = new Msg( "SensorMultilevelCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 		msg->Append( GetNodeId() );

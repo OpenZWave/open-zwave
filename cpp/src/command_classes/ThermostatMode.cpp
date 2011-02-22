@@ -175,10 +175,11 @@ bool ThermostatMode::RequestState
 //-----------------------------------------------------------------------------
 void ThermostatMode::RequestValue
 (
-	uint8 const _index		// = 0
+	uint8 const _getTypeEnum,
+	uint8 const _dummy			// = 0 (not used)
 )
 {
-	if( _index == ThermostatModeCmd_SupportedGet )
+	if( _getTypeEnum == ThermostatModeCmd_SupportedGet )
 	{
 		// Request the supported modes
 		Msg* msg = new Msg( "Request Supported Thermostat Modes", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
@@ -191,7 +192,7 @@ void ThermostatMode::RequestValue
 		return;
 	}
 
-	if( _index == 0 )		// get current mode
+	if( _getTypeEnum == 0 )		// get current mode
 	{
 		// Request the current mode
 		Msg* msg = new Msg( "Request Current Thermostat Mode", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );

@@ -76,7 +76,8 @@ bool Version::RequestState
 //-----------------------------------------------------------------------------
 void Version::RequestValue
 (
-	uint8 const _index		// = 0
+	uint8 const _dummy1,		// = 0
+	uint8 const _dummy2			// = 0
 )
 {
 	Msg* msg = new Msg( "VersionCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );

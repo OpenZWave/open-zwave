@@ -131,10 +131,11 @@ bool ThermostatSetpoint::RequestState
 //-----------------------------------------------------------------------------
 void ThermostatSetpoint::RequestValue
 (
-	uint8 const _index		// = 0
+	uint8 const _setPointIndex,
+	uint8 const _dummy			// = 0 (not used)
 )
 {
-	if( _index == 0xff )		// check for supportedget
+	if( _setPointIndex == 0xff )		// check for supportedget
 	{
 		// Request the supported setpoints
 		Msg* msg = new Msg( "Request Supported Thermostat Setpoints", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
@@ -147,7 +148,7 @@ void ThermostatSetpoint::RequestValue
 		return;
 	}
 
-	if( GetValue( 1, _index ) )
+	if( GetValue( 1, _setPointIndex ) )
 	{
 		// Request the setpoint value
 		Msg* msg = new Msg( "Request Current Thermostat Setpoint", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
@@ -155,7 +156,7 @@ void ThermostatSetpoint::RequestValue
 		msg->Append( 3 );
 		msg->Append( GetCommandClassId() );
 		msg->Append( ThermostatSetpointCmd_Get );
-		msg->Append( _index );
+		msg->Append( _setPointIndex );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 		GetDriver()->SendMsg( msg );
 		return;

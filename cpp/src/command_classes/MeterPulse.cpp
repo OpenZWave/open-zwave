@@ -67,7 +67,8 @@ bool MeterPulse::RequestState
 //-----------------------------------------------------------------------------
 void MeterPulse::RequestValue
 (
-	uint8 const _index		// = 0
+	uint8 const _dummy1,	// = 0 (not used)
+	uint8 const _dummy2		// = 0 (not used)
 )
 {
 	Msg* msg = new Msg( "MeterPulseCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );

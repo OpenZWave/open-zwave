@@ -2788,8 +2788,9 @@ void Driver::PollThreadProc()
 						// Request an update of the value
 						CommandClass* cc = node->GetCommandClass( valueId.GetCommandClassId() );
 						uint8 index = valueId.GetIndex();
-						Log::Write( "Polling node %d: %s index = %d", node->m_nodeId, cc->GetCommandClassName().c_str(), index );
-						cc->RequestValue( valueId.GetIndex() );
+						uint8 instance = valueId.GetInstance();
+						Log::Write( "Polling node %d: %s index = %d instance = %d", node->m_nodeId, cc->GetCommandClassName().c_str(), index, instance );
+						cc->RequestValue( index, instance );
 					}
 
 					ReleaseNodes();
