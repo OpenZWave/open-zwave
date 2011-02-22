@@ -117,7 +117,8 @@ bool WakeUp::RequestState
 //-----------------------------------------------------------------------------
 void WakeUp::RequestValue
 (
-	uint8 const _index		// = 0
+	uint8 const _dummy1,	// = 0
+	uint8 const _dummy2		// = 0
 )
 {
 	// We won't get a response until the device next wakes up

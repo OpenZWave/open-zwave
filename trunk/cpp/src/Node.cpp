@@ -1214,7 +1214,7 @@ void Node::RequestConfigParam
 {
 	if( Configuration* cc = static_cast<Configuration*>( GetCommandClass( Configuration::StaticGetCommandClassId() ) ) )
 	{
-		cc->RequestValue( _param );
+		cc->RequestValue( _param, 0 );
 	}
 }
 
@@ -1235,7 +1235,7 @@ bool Node::RequestAllConfigParams
 			Value* value = it->second;
 			if( value->GetID().GetCommandClassId() == Configuration::StaticGetCommandClassId() )
 			{
-				cc->RequestValue( value->GetID().GetIndex() );
+				cc->RequestValue( value->GetID().GetIndex(), value->GetID().GetInstance() );
 				res = true;
 			}
 		}
