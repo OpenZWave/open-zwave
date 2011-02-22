@@ -233,12 +233,13 @@ bool NodeNaming::RequestState
 //-----------------------------------------------------------------------------
 void NodeNaming::RequestValue
 (
-	uint8 const _index		// = 0
+	uint8 const _getTypeEnum,
+	uint8 const _dummy			// = 0 (not used)
 )
 {
 	Msg* msg;
 
-	if( _index == NodeNamingCmd_Get )
+	if( _getTypeEnum == NodeNamingCmd_Get )
 	{
 		msg = new Msg( "NodeNamingCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 		msg->Append( GetNodeId() );
@@ -250,7 +251,7 @@ void NodeNaming::RequestValue
 		return;
 	}
 
-	if( _index == NodeNamingCmd_LocationGet )
+	if( _getTypeEnum == NodeNamingCmd_LocationGet )
 	{
 		// If we don't already have a user-defined name, fetch it from the device
 		msg = new Msg( "NodeNamingCmd_LocationGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );

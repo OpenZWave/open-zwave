@@ -183,7 +183,8 @@ bool Configuration::SetValue
 //-----------------------------------------------------------------------------
 void Configuration::RequestValue
 (
-	uint8 const _parameter
+	uint8 const _parameter,		// parameter number is encoded as the Index portion of ValueID
+	uint8 const _dummy
 )
 {
 	Msg* msg = new Msg( "ConfigurationCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );

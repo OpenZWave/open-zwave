@@ -108,10 +108,11 @@ bool SensorAlarm::RequestState
 //-----------------------------------------------------------------------------
 void SensorAlarm::RequestValue
 (
-	uint8 const _index		// = 0
+	uint8 const _alarmType,
+	uint8 const _dummy		// = 0 (not used)
 )
 {
-	if( _index == 0xff )
+	if( _alarmType == 0xff )
 	{
 		// Request the supported setpoints
 		Msg* msg = new Msg( "Request Supported Alarm Types", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
@@ -131,7 +132,7 @@ void SensorAlarm::RequestValue
 		msg->Append( 3 );
 		msg->Append( GetCommandClassId() );
 		msg->Append( SensorAlarmCmd_Get );
-		msg->Append( _index );
+		msg->Append( _alarmType );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 		GetDriver()->SendMsg( msg );
 	}

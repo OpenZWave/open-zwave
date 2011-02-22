@@ -49,7 +49,7 @@ namespace OpenZWave
 
 		// From CommandClass
 		virtual bool RequestState( uint32 const _requestFlags );
-		virtual void RequestValue( uint8 const _index = 0 );
+		virtual void RequestValue( uint8 const _dummy1 = 0, uint8 const _dummy2 = 0 );
 		/** \brief Get command class ID (1 byte) identifying this command class. (Inherited from CommandClass) */
 		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }
 		/** \brief Get a string containing the name of this command class. (Inherited from CommandClass) */

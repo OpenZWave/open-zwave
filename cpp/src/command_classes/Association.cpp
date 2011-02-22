@@ -155,7 +155,8 @@ bool Association::RequestState
 //-----------------------------------------------------------------------------
 void Association::RequestValue
 (
-	uint8 const _index		// = 0
+	uint8 const _dummy1,	// = 0 (not used)
+	uint8 const _dummy2		// = 0 (not used)
 )
 {
 	// Request the supported group info
