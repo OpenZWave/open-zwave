@@ -448,6 +448,26 @@ string Manager::GetLibraryTypeName
 //-----------------------------------------------------------------------------
 				  		
 //-----------------------------------------------------------------------------
+// <Manager::GetPollInterval>
+// Return the polling interval
+//-----------------------------------------------------------------------------
+int32 Manager::GetPollInterval
+(
+)
+{
+	for( map<uint32,Driver*>::iterator rit = m_readyDrivers.begin(); rit != m_readyDrivers.end(); ++rit )
+	{
+		return rit->second->GetPollInterval();
+	}
+	for( list<Driver*>::iterator pit = m_pendingDrivers.begin(); pit != m_pendingDrivers.end(); ++pit )
+	{
+		return (*pit)->GetPollInterval();
+	}
+	return 0;
+
+}
+
+//-----------------------------------------------------------------------------
 // <Manager::SetPollInterval>
 // Set the polling interval on all drivers
 //-----------------------------------------------------------------------------
@@ -2263,6 +2283,25 @@ uint8 Manager::GetMaxAssociations
 	}
 
 	return 0;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::GetGroupLabel>
+// Gets the label for a particular group
+//-----------------------------------------------------------------------------
+string const& Manager::GetGroupLabel
+( 
+	uint32 const _homeId,
+	uint8 const _nodeId,
+	uint8 const _groupIdx
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		return driver->GetGroupLabel( _nodeId, _groupIdx );
+	}
+
+	return "";
 }
 
 //-----------------------------------------------------------------------------

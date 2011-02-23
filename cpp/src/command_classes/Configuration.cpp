@@ -168,6 +168,12 @@ bool Configuration::SetValue
 			Set( param, valueInt.GetValue() );
 			return true;
 		}
+		case ValueID::ValueType_List:
+		{
+			ValueList const& valueList = static_cast<ValueList const&>( _value );
+			Set( param, valueList.GetItem().m_value );
+			return true;
+		}
 		default:
 		{
 		}
