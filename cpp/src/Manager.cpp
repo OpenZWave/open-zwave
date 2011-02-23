@@ -2290,7 +2290,7 @@ uint8 Manager::GetMaxAssociations
 // <Manager::GetGroupLabel>
 // Gets the label for a particular group
 //-----------------------------------------------------------------------------
-string const Manager::GetGroupLabel
+string Manager::GetGroupLabel
 ( 
 	uint32 const _homeId,
 	uint8 const _nodeId,

@@ -1743,7 +1743,7 @@ uint8 Node::GetMaxAssociations
 // <Node::GetGroupLabel>
 // Gets the label for a particular group
 //-----------------------------------------------------------------------------
-string const Node::GetGroupLabel
+string Node::GetGroupLabel
 (
 	uint8 const _groupIdx
 )

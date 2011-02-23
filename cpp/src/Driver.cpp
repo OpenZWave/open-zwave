@@ -4037,7 +4037,7 @@ uint8 Driver::GetMaxAssociations
 // <Driver::GetGroupLabel>
 // Gets the label for a particular group
 //-----------------------------------------------------------------------------
-string const Driver::GetGroupLabel
+string Driver::GetGroupLabel
 ( 
 	uint8 const _nodeId,
 	uint8 const _groupIdx
