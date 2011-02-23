@@ -1740,6 +1740,24 @@ uint8 Node::GetMaxAssociations
 }
 
 //-----------------------------------------------------------------------------
+// <Node::GetGroupLabel>
+// Gets the label for a particular group
+//-----------------------------------------------------------------------------
+string const& Node::GetGroupLabel
+(
+	uint8 const _groupIdx
+)
+{
+	string label = "";
+	if( Group* group = GetGroup( _groupIdx ) )
+	{
+		label = group->GetLabel();
+	}
+
+	return label;
+}
+
+//-----------------------------------------------------------------------------
 // <Node::AddAssociation>
 // Adds a node to an association group
 //-----------------------------------------------------------------------------

@@ -339,6 +339,7 @@ namespace OpenZWave
 	//	Polling Z-Wave devices
 	//-----------------------------------------------------------------------------
 	private:
+		int32 GetPollInterval(){ return m_pollInterval ; }
 		void SetPollInterval( int32 _seconds ){ m_pollInterval = _seconds; }
 		bool EnablePoll( ValueID _valueId );
 		bool DisablePoll( ValueID _valueId );
@@ -513,6 +514,7 @@ namespace OpenZWave
 		uint8 GetNumGroups( uint8 const _nodeId );
 		uint32 GetAssociations( uint8 const _nodeId, uint8 const _groupIdx, uint8** o_associations );
 		uint8 GetMaxAssociations( uint8 const _nodeId, uint8 const _groupIdx );
+		string const& GetGroupLabel( uint8 const _nodeId, uint8 const _groupIdx );
 		void AddAssociation( uint8 const _nodeId, uint8 const _groupIdx, uint8 const _targetNodeId );
 		void RemoveAssociation( uint8 const _nodeId, uint8 const _groupIdx, uint8 const _targetNodeId );
 
