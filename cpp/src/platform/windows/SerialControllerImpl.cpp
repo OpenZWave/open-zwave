@@ -66,7 +66,7 @@ bool SerialControllerImpl::Open
 	SerialController::StopBits const _stopBits
 )
 {
-	Log::Write( "Open serial port %s", _SerialControllerName.c_str() );
+	Log::Write( "  Open serial port %s", _SerialControllerName.c_str() );
 
 	m_hSerialController = CreateFile( _SerialControllerName.c_str(), 
 							 GENERIC_READ | GENERIC_WRITE, 
