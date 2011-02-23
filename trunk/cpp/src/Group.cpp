@@ -102,6 +102,7 @@ Group::Group
 {
 	int intVal;
 	char const* str;
+	vector<uint8> pending;
 
 	if( TIXML_SUCCESS == _groupElement->QueryIntAttribute( "index", &intVal ) )
 	{
@@ -133,10 +134,14 @@ Group::Group
 		if( elementName && !strcmp( elementName, "Node" ) )
 		{
 			associationElement->QueryIntAttribute( "id", &intVal );
-			m_associations[(uint8)intVal] = AssociationCommandVec();
+			pending.push_back( (uint8)intVal );
 		}
 
 		associationElement = associationElement->NextSiblingElement();
+	}
+	if ( pending.size() > 0 )
+	{
+        	OnGroupChanged( pending );
 	}
 }
 

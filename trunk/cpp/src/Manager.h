@@ -309,6 +309,11 @@ namespace OpenZWave
 	/*@{*/
 	public:
 		/**
+		 * \brief Get the time period between polls of a node's state.
+		 */
+		int32 GetPollInterval();
+
+		/**
 		 * \brief Set the time period between polls of a node's state.
 		 * Due to patent concerns, some devices do not report state changes automatically to the controller.
 		 * These devices need to have their state polled at regular intervals.  The length of the interval
@@ -1110,6 +1115,16 @@ namespace OpenZWave
 		uint8 GetMaxAssociations( uint32 const _homeId, uint8 const _nodeId, uint8 const _groupIdx );
 
 		/**
+		 * \brief Returns a label for the particular group of a node.
+		 * This label is populated by the device specific configuration files.
+		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param _nodeId The ID of the node whose associations are to be changed.
+		 * \param _groupIdx One-based index of the group (because Z-Wave product manuals use one-based group numbering).
+		 * \see GetNumGroups, GetAssociations, GetMaxAssociations, AddAssociation
+		 */
+		string const& GetGroupLabel( uint32 const _homeId, uint8 const _nodeId, uint8 const _groupIdx );
+
+		/**
 		 * \brief Adds a node to an association group.
 		 * Due to the possibility of a device being asleep, the command is assumed to suceeed, and the association data
 		 * held in this class is updated directly.  This will be reverted by a future Association message from the device
@@ -1134,6 +1149,7 @@ namespace OpenZWave
 		 * \see GetNumGroups, GetAssociations, GetMaxAssociations, AddAssociation
 		 */
 		void RemoveAssociation( uint32 const _homeId, uint8 const _nodeId, uint8 const _groupIdx, uint8 const _targetNodeId );
+
 	/*@}*/
 
 	//-----------------------------------------------------------------------------

@@ -914,7 +914,7 @@ bool Driver::IsControllerCommand
 		( _command <= FUNC_ID_ZW_REQUEST_NODE_NEIGHBOR_UPDATE ) )
 			return true;
 	if( ( _command >= FUNC_ID_ZW_ADD_NODE_TO_NETWORK ) &&
-		( _command <= FUNC_ID_ZW_CONTROLLER_CHANGE ) )
+		( _command <= FUNC_ID_ZW_SET_LEARN_MODE ) )
 			return true;
 	if( ( _command >= FUNC_ID_ZW_REMOVE_FAILED_NODE_ID ) &&
 		( _command <= FUNC_ID_ZW_REPLACE_FAILED_NODE ) )
@@ -4003,6 +4003,26 @@ uint8 Driver::GetMaxAssociations
 	}
 
 	return maxAssociations;
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::GetGroupLabel>
+// Gets the label for a particular group
+//-----------------------------------------------------------------------------
+string const& Driver::GetGroupLabel
+( 
+	uint8 const _nodeId,
+	uint8 const _groupIdx
+)
+{
+	string label = "";
+	if( Node* node = GetNode( _nodeId ) )
+	{
+		label = node->GetGroupLabel( _groupIdx );
+		ReleaseNodes();
+	}
+
+	return label;
 }
 
 //-----------------------------------------------------------------------------
