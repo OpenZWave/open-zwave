@@ -885,12 +885,12 @@ void Node::UpdateProtocolInfo
     // and now just request the optional classes regardless.
 	// bool optional = (( _data[1] & 0x80 ) != 0 );	
 
-	Log::Write( "Protocol Info for Node %d:", m_nodeId );
-	Log::Write( "  Listening     = %s", m_listening ? "true" : "false" );
-	Log::Write( "  Routing       = %s", m_routing ? "true" : "false" );
-	Log::Write( "  Max Baud Rate = %d", m_maxBaudRate );
-	Log::Write( "  Version       = %d", m_version );
-	Log::Write( "  Security      = 0x%.2x", m_security );
+	Log::Write( "  Protocol Info for Node %d:", m_nodeId );
+	Log::Write( "    Listening     = %s", m_listening ? "true" : "false" );
+	Log::Write( "    Routing       = %s", m_routing ? "true" : "false" );
+	Log::Write( "    Max Baud Rate = %d", m_maxBaudRate );
+	Log::Write( "    Version       = %d", m_version );
+	Log::Write( "    Security      = 0x%.2x", m_security );
 
 	// Set up the device class based data for the node, including mandatory command classes
 	SetDeviceClasses( _data[3], _data[4], _data[5] );
@@ -910,7 +910,7 @@ void Node::UpdateNodeInfo
 	if( !NodeInfoReceived() )
 	{
 		// Add the command classes specified by the device
-		Log::Write( "Optional command classes for node %d:", m_nodeId );
+		Log::Write( "  Optional command classes for node %d:", m_nodeId );
 		
 		bool newCommandClasses = false;
 		uint32 i;
@@ -928,9 +928,9 @@ void Node::UpdateNodeInfo
 
 				if( !newCommandClasses )
 				{
-					Log::Write( "  None" );
+					Log::Write( "    None" );
 				}
-				Log::Write( "Optional command classes controlled by node %d:", m_nodeId );
+				Log::Write( "  Optional command classes controlled by node %d:", m_nodeId );
 				newCommandClasses = false;
 				continue;
 			}
@@ -950,19 +950,19 @@ void Node::UpdateNodeInfo
 					// call at the end of this method have been processed.
                     pCommandClass->SetInstances( 1 );
 					newCommandClasses = true;
-					Log::Write( "  %s", pCommandClass->GetCommandClassName().c_str() );
+					Log::Write( "    %s", pCommandClass->GetCommandClassName().c_str() );
                 }
             }
             else
             {
-                Log::Write( "Node(%d)::CommandClass 0x%.2x - NOT REQUIRED", m_nodeId, _data[i] );
+                Log::Write( "  Node(%d)::CommandClass 0x%.2x - NOT REQUIRED", m_nodeId, _data[i] );
 			}
 		}
 
 		if( !newCommandClasses )
 		{
 			// No additional command classes over the mandatory ones.
-			Log::Write( "  None" );
+			Log::Write( "    None" );
 		}
 
 		SetStaticRequests();
@@ -1743,7 +1743,7 @@ uint8 Node::GetMaxAssociations
 // <Node::GetGroupLabel>
 // Gets the label for a particular group
 //-----------------------------------------------------------------------------
-string const& Node::GetGroupLabel
+string const Node::GetGroupLabel
 (
 	uint8 const _groupIdx
 )
@@ -1858,11 +1858,11 @@ bool Node::SetDeviceClasses
 	if( bit != s_basicDeviceClasses.end() )
 	{
 		m_type = bit->second;
-		Log::Write( "Node(%d) Basic device class    (0x%.2x) - %s", m_nodeId, m_basic, m_type.c_str() );
+		Log::Write( "  Node(%d) Basic device class    (0x%.2x) - %s", m_nodeId, m_basic, m_type.c_str() );
 	}
 	else
 	{
-		Log::Write( "Node(%d) Basic device class unknown", m_nodeId );
+		Log::Write( "  Node(%d) Basic device class unknown", m_nodeId );
 	}
 
 	// Apply any Generic device class data
@@ -1873,7 +1873,7 @@ bool Node::SetDeviceClasses
 		GenericDeviceClass* genericDeviceClass = git->second;
 		m_type = genericDeviceClass->GetLabel();
 
-		Log::Write( "Node(%d) Generic device Class  (0x%.2x) - %s", m_nodeId, m_generic, m_type.c_str() );
+		Log::Write( "  Node(%d) Generic device Class  (0x%.2x) - %s", m_nodeId, m_generic, m_type.c_str() );
 
 		// Add the mandatory command classes for this generic class type
 		AddMandatoryCommandClasses( genericDeviceClass->GetMandatoryCommandClasses() );
@@ -1886,7 +1886,7 @@ bool Node::SetDeviceClasses
 		{
 			m_type = specificDeviceClass->GetLabel();
 
-			Log::Write( "Node(%d) Specific device class (0x%.2x) - %s", m_nodeId, m_specific, m_type.c_str() );
+			Log::Write( "  Node(%d) Specific device class (0x%.2x) - %s", m_nodeId, m_specific, m_type.c_str() );
 
 			// Add the mandatory command classes for this specific class type
 			AddMandatoryCommandClasses( specificDeviceClass->GetMandatoryCommandClasses() );
@@ -1899,12 +1899,12 @@ bool Node::SetDeviceClasses
 		}
 		else
 		{
-			Log::Write( "Node(%d) No specific device class defined", m_nodeId );
+			Log::Write( "  Node(%d) No specific device class defined", m_nodeId );
 		}
 	}
 	else
 	{
-		Log::Write( "Node(%d) No generic or specific device classes defined", m_nodeId );
+		Log::Write( "  Node(%d) No generic or specific device classes defined", m_nodeId );
 	}
 
 	// Deal with sleeping devices
@@ -1930,34 +1930,34 @@ bool Node::SetDeviceClasses
 	{
 		map<uint8,CommandClass*>::const_iterator cit;
 
-		Log::Write( "Mandatory Command Classes for Node %d:", m_nodeId );
+		Log::Write( "  Mandatory Command Classes for Node %d:", m_nodeId );
 		bool reportedClasses = false;
 		for( cit = m_commandClassMap.begin(); cit != m_commandClassMap.end(); ++cit )
 		{
 			if( !cit->second->IsAfterMark() )
 			{
-				Log::Write( "  %s", cit->second->GetCommandClassName().c_str() );
+				Log::Write( "    %s", cit->second->GetCommandClassName().c_str() );
 				reportedClasses = true;
 			}
 		}
 		if( !reportedClasses )
 		{
-			Log::Write( "  None" );
+			Log::Write( "    None" );
 		}
 
-		Log::Write( "Mandatory Command Classes controlled by Node %d:", m_nodeId );
+		Log::Write( "  Mandatory Command Classes controlled by Node %d:", m_nodeId );
 		reportedClasses = false;
 		for( cit = m_commandClassMap.begin(); cit != m_commandClassMap.end(); ++cit )
 		{
 			if( cit->second->IsAfterMark() )
 			{
-				Log::Write( "  %s", cit->second->GetCommandClassName().c_str() );
+				Log::Write( "    %s", cit->second->GetCommandClassName().c_str() );
 				reportedClasses = true;
 			}
 		}
 		if( !reportedClasses )
 		{
-			Log::Write( "  None" );
+			Log::Write( "    None" );
 		}
 	}
 

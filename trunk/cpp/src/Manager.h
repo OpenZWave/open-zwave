@@ -1122,7 +1122,7 @@ namespace OpenZWave
 		 * \param _groupIdx One-based index of the group (because Z-Wave product manuals use one-based group numbering).
 		 * \see GetNumGroups, GetAssociations, GetMaxAssociations, AddAssociation
 		 */
-		string const& GetGroupLabel( uint32 const _homeId, uint8 const _nodeId, uint8 const _groupIdx );
+		string const GetGroupLabel( uint32 const _homeId, uint8 const _nodeId, uint8 const _groupIdx );
 
 		/**
 		 * \brief Adds a node to an association group.

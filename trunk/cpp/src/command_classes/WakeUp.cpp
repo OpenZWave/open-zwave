@@ -146,6 +146,15 @@ bool WakeUp::HandleMsg
 	{	
 		if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, 0 ) ) )
 		{
+			// some interval reports received are validly formatted (proper checksum, etc.) but only have length
+			// of 3 (0x84 (classid), 0x06 (IntervalReport), 0x00).  Not sure what this means
+			if( _length < 6 )
+			{
+				Log::Write( "" );
+				Log::Write("**TODO: Determine what this response means: WakeUpCmd_IntervalReport with len = %d", _length );
+				return false;
+			}
+
 			uint32 interval = ((uint32)_data[1]) << 16;
 			interval |= (((uint32)_data[2]) << 8);
 			interval |= (uint32)_data[3];
@@ -212,7 +221,7 @@ bool WakeUp::SetValue
 
 		int32 interval = value->GetValue();
 
-		msg->Append( 6 );
+		msg->Append( 6 );	// length of command bytes following
 		msg->Append( GetCommandClassId() );
 		msg->Append( WakeUpCmd_IntervalSet );
 		msg->Append( (uint8)(( interval >> 16 ) & 0xff) ); 
@@ -239,7 +248,7 @@ void WakeUp::SetAwake
 	if( m_awake != _state )
 	{
 		m_awake = _state;
-		Log::Write( "Node %d has been marked as %s", GetNodeId(), m_awake ? "awake" : "asleep" );
+		Log::Write( "  Node %d has been marked as %s", GetNodeId(), m_awake ? "awake" : "asleep" );
 	}
 
 	if( m_awake )
@@ -323,7 +332,7 @@ void WakeUp::SendPending
 	if( sendToSleep )
 	{
 		m_notification = false;
-		Msg* msg = new Msg( "Wakeup - No More Information", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+		Msg* msg = new Msg( "Wakeup - No More Information  (send to sleep)", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 		msg->Append( GetNodeId() );
 		msg->Append( 2 );
 		msg->Append( GetCommandClassId() );
