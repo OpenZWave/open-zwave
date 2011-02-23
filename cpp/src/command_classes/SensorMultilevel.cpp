@@ -124,7 +124,7 @@ bool SensorMultilevel::RequestState
 			// More than one instance - query each one in turn
 			for( uint8 i=0; i<numInstances; ++i )
 			{
-				RequestValue( i+1 );		// increase by 1 so a one-instance value can be equal to 0
+				RequestValue( 0, i+1 );		// increase by 1 so a one-instance value can be equal to 0
 			}
 			return true;
 		}

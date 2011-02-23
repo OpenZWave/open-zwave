@@ -392,7 +392,7 @@ bool Driver::Init
 	m_waitingForAck = false;
 
 	// Open the controller
-	Log::Write( "Opening controller %s", m_controllerPath.c_str() );
+	Log::Write( "  Opening controller %s", m_controllerPath.c_str() );
 
 	if( !m_controller->Open( m_controllerPath ) )
 	{
@@ -1011,8 +1011,7 @@ bool Driver::ReadMsg
 				snprintf( byteStr, sizeof(byteStr), "0x%.2x", buffer[i] );
 				str += byteStr;
 			}
-			Log::Write( "" );
-			Log::Write( "Received: %s", str.c_str() );
+			Log::Write( "  Received: %s", str.c_str() );
 
 			// Verify checksum
 			uint8 checksum = 0xff;
@@ -1055,7 +1054,7 @@ bool Driver::ReadMsg
 
 		case ACK:
 		{
-			Log::Write( "ACK received CallbackId 0x%.2x Reply 0x%.2x", m_expectedCallbackId, m_expectedReply );
+			Log::Write( "  ACK received CallbackId 0x%.2x Reply 0x%.2x", m_expectedCallbackId, m_expectedReply );
 			m_waitingForAck = false;
 			
 			if( ( 0 == m_expectedCallbackId ) && ( 0 == m_expectedReply ) )
@@ -1095,16 +1094,19 @@ void Driver::ProcessMsg
 		{
 			case FUNC_ID_SERIAL_API_GET_INIT_DATA:
 			{
+				Log::Write( "" );
 				HandleSerialAPIGetInitDataResponse( _data );
 				break;
 			}
 			case FUNC_ID_ZW_GET_CONTROLLER_CAPABILITIES:
 			{
+				Log::Write( "" );
 				HandleGetControllerCapabilitiesResponse( _data );
 				break;
 			}
 			case FUNC_ID_SERIAL_API_GET_CAPABILITIES:
 			{
+				Log::Write( "" );
 				HandleGetSerialAPICapabilitiesResponse( _data );
 				break;
 			}
@@ -1116,16 +1118,19 @@ void Driver::ProcessMsg
 			}
 			case FUNC_ID_ZW_GET_VERSION:
 			{
+				Log::Write( "" );
 				HandleGetVersionResponse( _data );
 				break;
 			}
 			case FUNC_ID_ZW_MEMORY_GET_ID:
 			{
+				Log::Write( "" );
 				HandleMemoryGetIdResponse( _data );
 				break;
 			}
 			case FUNC_ID_ZW_GET_NODE_PROTOCOL_INFO:
 			{
+				Log::Write( "" );
 				HandleGetNodeProtocolInfoResponse( _data );
 				break;
 			}
@@ -1137,6 +1142,7 @@ void Driver::ProcessMsg
 			}
 			case FUNC_ID_ZW_ASSIGN_RETURN_ROUTE:
 			{
+				Log::Write( "" );
 				if( !HandleAssignReturnRouteResponse( _data ) )
 				{
 					m_expectedCallbackId = _data[2];	// The callback message won't be coming, so we force the transaction to complete
@@ -1147,6 +1153,7 @@ void Driver::ProcessMsg
 			}
 			case FUNC_ID_ZW_DELETE_RETURN_ROUTE:
 			{
+				Log::Write( "" );
 				if( !HandleDeleteReturnRouteResponse( _data ) )
 				{
 					m_expectedCallbackId = _data[2];	// The callback message won't be coming, so we force the transaction to complete
@@ -1157,11 +1164,13 @@ void Driver::ProcessMsg
 			}
 			case FUNC_ID_ZW_ENABLE_SUC:
 			{
+				Log::Write( "" );
 				HandleEnableSUCResponse( _data );
 				break;
 			}
 			case FUNC_ID_ZW_REQUEST_NETWORK_UPDATE:
 			{
+				Log::Write( "" );
 				if( !HandleNetworkUpdateResponse( _data ) )
 				{
 					m_expectedCallbackId = _data[2];	// The callback message won't be coming, so we force the transaction to complete
@@ -1172,21 +1181,25 @@ void Driver::ProcessMsg
 			}
 			case FUNC_ID_ZW_SET_SUC_NODE_ID:
 			{
+				Log::Write( "" );
 				HandleSetSUCNodeIdResponse( _data );
 				break;
 			}
 			case FUNC_ID_ZW_GET_SUC_NODE_ID:
 			{
+				Log::Write( "" );
 				HandleGetSUCNodeIdResponse( _data );
 				break;
 			}
 			case FUNC_ID_ZW_REQUEST_NODE_INFO:
 			{
+				Log::Write( "" );
 				Log::Write("Received reply to FUNC_ID_ZW_REQUEST_NODE_INFO" );
 				break;
 			}
 			case FUNC_ID_ZW_REMOVE_FAILED_NODE_ID:
 			{
+				Log::Write( "" );
 				if( !HandleRemoveFailedNodeResponse( _data ) )
 				{
 					m_expectedCallbackId = _data[2];	// The callback message won't be coming, so we force the transaction to complete
@@ -1197,11 +1210,13 @@ void Driver::ProcessMsg
 			}
 			case FUNC_ID_ZW_IS_FAILED_NODE_ID:
 			{
+				Log::Write( "" );
 				HandleIsFailedNodeResponse( _data );
 				break;
 			}
 			case FUNC_ID_ZW_REPLACE_FAILED_NODE:
 			{
+				Log::Write( "" );
 				if( !HandleReplaceFailedNodeResponse( _data ) )
 				{
 					m_expectedCallbackId = _data[2];	// The callback message won't be coming, so we force the transaction to complete
@@ -1212,38 +1227,45 @@ void Driver::ProcessMsg
 			}
 			case FUNC_ID_ZW_GET_ROUTING_INFO:
 			{
+				Log::Write( "" );
 				HandleGetRoutingInfoResponse( _data );
 				break;
 			}
 			case FUNC_ID_ZW_R_F_POWER_LEVEL_SET:
 			{
+				Log::Write( "" );
 				HandleRfPowerLevelSetResponse( _data );
                 break;
 			}
 			case FUNC_ID_ZW_READ_MEMORY:
 			{
+				Log::Write( "" );
 				HandleReadMemoryResponse( _data );
                 break;
 			}
 			case FUNC_ID_SERIAL_API_SET_TIMEOUTS:
 			{
+				Log::Write( "" );
                 HandleSerialApiSetTimeoutsResponse( _data );
 				break;
 			}
 			case FUNC_ID_MEMORY_GET_BYTE:
 			{
+				Log::Write( "" );
 				HandleMemoryGetByteResponse( _data );
 				break;
 			}
 			default:
 			{
-				Log::Write( "TODO: handle response for 0x%.2x", _data[1] );
+				Log::Write( "" );
+				Log::Write( "**TODO: handle response for 0x%.2x**", _data[1] );
 				break;
 			}
 		}
 	} 
 	else if( REQUEST == _data[0] )
 	{
+		Log::Write( "" );
 		switch( _data[1] )
 		{
 			case FUNC_ID_APPLICATION_COMMAND_HANDLER:
@@ -1345,7 +1367,7 @@ void Driver::ProcessMsg
 			{
 				if( m_expectedCallbackId == _data[2] )
 				{
-					Log::Write( "Expected callbackId was received" );
+					Log::Write( "  Expected callbackId was received" );
 					m_expectedCallbackId = 0;
 				}
 			}
@@ -1357,14 +1379,14 @@ void Driver::ProcessMsg
 					{
 						if( m_expectedCommandClassId == _data[5] )
 						{
-							Log::Write( "Expected reply and command class was received" );
+							Log::Write( "  Expected reply and command class was received" );
 							m_expectedReply = 0;
 							m_expectedCommandClassId = 0;
 						}
 					}
 					else
 					{
-						Log::Write( "Expected reply was received" );
+						Log::Write( "  Expected reply was received" );
 						m_expectedReply = 0;
 					}
 				}
@@ -1372,7 +1394,7 @@ void Driver::ProcessMsg
 
 			if( !( m_expectedCallbackId || m_expectedReply ) )
 			{
-				Log::Write( "Message transaction complete" );
+				Log::Write( "  Message transaction complete" );
 				RemoveMsg();
 
 				bool notify = false;
@@ -1535,7 +1557,7 @@ void Driver::HandleGetSUCNodeIdResponse
 
 	if( _data[2] == 0)
 	{
-		Log::Write( "No SUC, so we become SUC" );
+		Log::Write( "  No SUC, so we become SUC" );
 		
 		Msg* msg;
 
@@ -1605,7 +1627,7 @@ void Driver::HandleSerialAPIGetInitDataResponse
 				{					
 					if( Node* node = GetNode( nodeId ) )
 					{
-						Log::Write( "  Node %d - Known", nodeId );
+						Log::Write( "    Node %d - Known", nodeId );
 						if( !m_init )
 						{
 							// The node was read in from the config, so we 
@@ -1618,7 +1640,7 @@ void Driver::HandleSerialAPIGetInitDataResponse
 					else
 					{
 						// This node is new
-						Log::Write( "  Node %.3d - New", nodeId );
+						Log::Write( "    Node %.3d - New", nodeId );
 						Notification* notification = new Notification( Notification::Type_NodeNew );
 						notification->SetHomeAndNodeIds( m_homeId, nodeId );
 						QueueNotification( notification ); 
@@ -1632,7 +1654,7 @@ void Driver::HandleSerialAPIGetInitDataResponse
 					if( GetNode(nodeId) )
 					{
 						// This node no longer exists in the Z-Wave network
-						Log::Write( "  Node %.3d: Removed", nodeId );
+						Log::Write( "    Node %.3d: Removed", nodeId );
 						Notification* notification = new Notification( Notification::Type_NodeRemoved );
 						notification->SetHomeAndNodeIds( m_homeId, nodeId );
 						QueueNotification( notification ); 
@@ -1829,7 +1851,7 @@ void Driver::HandleSendDataResponse
 {
 	if( _data[2] )
 	{
-		Log::Write( "%s delivered to Z-Wave stack", _replication ? "ZW_REPLICATION_SEND_DATA" : "ZW_SEND_DATA" );
+		Log::Write( "  %s delivered to Z-Wave stack", _replication ? "ZW_REPLICATION_SEND_DATA" : "ZW_SEND_DATA" );
 	}
 	else
 	{
@@ -1853,15 +1875,21 @@ void Driver::HandleGetRoutingInfoResponse
 		// copy the 29-byte bitmap received (29*8=232 possible nodes) into this node's neighbors member variable
 		memcpy( node->m_neighbors, &_data[2], 29 );
 		ReleaseNodes();
-#ifdef _DEBUG
-		Log::Write( "Neighbors of this node are:" );
+		Log::Write( "    Neighbors of this node are:" );
+		bool bNeighbors = false;
 		for( int by=0; by<29; by++ )
+		{
 			for( int bi=0; bi<8; bi++ )
 			{
 				if( (_data[2+by] & (0x01<<bi)) )
-					Log::Write( "\tNode %d", (by<<3)+bi+1 );
+				{
+					Log::Write( "    Node %d", (by<<3)+bi+1 );
+					bNeighbors = true;
+				}
 			}
-#endif
+		}
+		if( !bNeighbors )
+			Log::Write( "    (none reported)" );
 	}
 
 
@@ -1884,7 +1912,7 @@ bool Driver::HandleSendDataRequest
 {
 	bool messageRemoved = false;
 
-	Log::Write( "%s Request with callback ID 0x%.2x received (expected 0x%.2x)", _replication ? "ZW_REPLICATION_SEND_DATA" : "ZW_SEND_DATA", _data[2], m_expectedCallbackId );
+	Log::Write( "  %s Request with callback ID 0x%.2x received (expected 0x%.2x)", _replication ? "ZW_REPLICATION_SEND_DATA" : "ZW_SEND_DATA", _data[2], m_expectedCallbackId );
 
 	if( _data[2] != m_expectedCallbackId )
 	{
@@ -4009,7 +4037,7 @@ uint8 Driver::GetMaxAssociations
 // <Driver::GetGroupLabel>
 // Gets the label for a particular group
 //-----------------------------------------------------------------------------
-string const& Driver::GetGroupLabel
+string const Driver::GetGroupLabel
 ( 
 	uint8 const _nodeId,
 	uint8 const _groupIdx

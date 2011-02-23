@@ -324,6 +324,7 @@ void Manager::SetDriverReady
 	if( found )
 	{
 		Log::Write( "Driver with Home ID of 0x%.8x is now ready.", _driver->GetHomeId() );
+		Log::Write( "" );
 
 		// Add the driver to the ready map
 		m_readyDrivers[_driver->GetHomeId()] = _driver;
@@ -2289,7 +2290,7 @@ uint8 Manager::GetMaxAssociations
 // <Manager::GetGroupLabel>
 // Gets the label for a particular group
 //-----------------------------------------------------------------------------
-string const& Manager::GetGroupLabel
+string const Manager::GetGroupLabel
 ( 
 	uint32 const _homeId,
 	uint8 const _nodeId,
