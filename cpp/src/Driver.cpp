@@ -706,7 +706,12 @@ void Driver::SendMsg
 		// everything else goes to back of queue
 		m_sendQueue.push_back( _msg );
 	m_sendMutex->Release();
-	m_wakeEvent->Set();
+
+	// if the controller isn't already in the middle of another "dialogue" indicate that there is something to do
+	if( !m_waitingForAck && !m_expectedCallbackId && !m_expectedReply )
+	{
+		m_wakeEvent->Set();
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -1265,11 +1270,11 @@ void Driver::ProcessMsg
 	} 
 	else if( REQUEST == _data[0] )
 	{
-		Log::Write( "" );
 		switch( _data[1] )
 		{
 			case FUNC_ID_APPLICATION_COMMAND_HANDLER:
 			{
+				Log::Write( "" );
 				HandleApplicationCommandHandlerRequest( _data );
 				break;
 			}
@@ -1282,6 +1287,7 @@ void Driver::ProcessMsg
 			{
 				if( m_controllerReplication )
 				{
+					Log::Write( "" );
 					m_controllerReplication->SendNextData( m_controllerCommandNode );
 				}
 				break;
@@ -1293,61 +1299,73 @@ void Driver::ProcessMsg
 			}
 			case FUNC_ID_ZW_ASSIGN_RETURN_ROUTE:
 			{
+				Log::Write( "" );
 				HandleAssignReturnRouteRequest( _data );
 				break;
 			}
 			case FUNC_ID_ZW_DELETE_RETURN_ROUTE:
 			{
+				Log::Write( "" );
 				HandleDeleteReturnRouteRequest( _data );
 				break;
 			}
 			case FUNC_ID_ZW_REQUEST_NODE_NEIGHBOR_UPDATE:
 			{
+				Log::Write( "" );
 				HandleNodeNeighborUpdateRequest( _data );
 				break;
 			}
 			case FUNC_ID_ZW_APPLICATION_UPDATE:
 			{
+				Log::Write( "" );
 				handleCallback = !HandleApplicationUpdateRequest( _data );
 				break;
 			}
 			case FUNC_ID_ZW_ADD_NODE_TO_NETWORK:
 			{
+				Log::Write( "" );
 				HandleAddNodeToNetworkRequest( _data );
 				break;
 			}
 			case FUNC_ID_ZW_REMOVE_NODE_FROM_NETWORK:
 			{
+				Log::Write( "" );
 				HandleRemoveNodeFromNetworkRequest( _data );
 				break;
 			}
 			case FUNC_ID_ZW_CREATE_NEW_PRIMARY:
 			{
+				Log::Write( "" );
 				HandleCreateNewPrimaryRequest( _data );
 				break;
 			}
 			case FUNC_ID_ZW_CONTROLLER_CHANGE:
 			{
+				Log::Write( "" );
 				HandleControllerChangeRequest( _data );
 				break;
 			}
 			case FUNC_ID_ZW_SET_LEARN_MODE:
 			{
+				Log::Write( "" );
 				HandleSetLearnModeRequest( _data );
 				break;
 			}
 			case FUNC_ID_ZW_REQUEST_NETWORK_UPDATE:
 			{
+				Log::Write( "" );
 				HandleNetworkUpdateRequest( _data );
 				break;
 			}
 			case FUNC_ID_ZW_REMOVE_FAILED_NODE_ID:
 			{
+				Log::Write( "" );
 				HandleRemoveFailedNodeRequest( _data );
 				break;
 			}
 			case FUNC_ID_ZW_REPLACE_FAILED_NODE:
 			{
+				Log::Write( "" );
 				HandleReplaceFailedNodeRequest( _data );
 				break;
 			}
@@ -1390,11 +1408,14 @@ void Driver::ProcessMsg
 						m_expectedReply = 0;
 					}
 				}
+				else
+					Log::Write( "  Still waiting for reply 0x%.2x", m_expectedReply );
 			}
 
 			if( !( m_expectedCallbackId || m_expectedReply ) )
 			{
 				Log::Write( "  Message transaction complete" );
+				Log::Write( "" );
 				RemoveMsg();
 
 				bool notify = false;

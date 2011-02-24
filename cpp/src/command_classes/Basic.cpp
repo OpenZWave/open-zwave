@@ -194,7 +194,7 @@ bool Basic::SetMapping
 	{
 		if( CommandClass* cc = node->GetCommandClass( _commandClassId ) )
 		{
-			Log::Write( "COMMAND_CLASS_BASIC will be mapped to %s", cc->GetCommandClassName().c_str() );
+			Log::Write( "    COMMAND_CLASS_BASIC will be mapped to %s", cc->GetCommandClassName().c_str() );
 			m_mapping = _commandClassId;
 			res = true;
 		}
