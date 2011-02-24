@@ -183,7 +183,7 @@ void ThermostatFanMode::RequestValue
 		return;
 	}
 
-	if( _getTypeEnum == ThermostatFanModeCmd_Get )
+	if( _getTypeEnum == ThermostatFanModeCmd_Get || _getTypeEnum == 0 )
 	{
 		// Request the current fan mode
 		Msg* msg = new Msg( "Request Current Thermostat Fan Mode", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );

@@ -18,7 +18,13 @@ namespace OZWForm
             m_node = node;
             InitializeComponent();
 
-            if( node.Manufacturer != "" )
+			// load all possible configuration parameters
+			for (byte i = 0; i <= 10; i++)
+			{
+				MainForm.Manager.RequestConfigParam(node.HomeID, node.ID, i);
+			}
+
+			if (node.Manufacturer != "")
             {
                 this.Text = "Node " + node.ID.ToString() + ": " + node.Manufacturer + " " + node.Product;
             }
@@ -79,6 +85,7 @@ namespace OZWForm
                     NodeLayoutPanel.Controls.Add(control);
                 }
             }
+
         }
-    }
+	}
 }

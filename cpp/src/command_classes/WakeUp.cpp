@@ -151,7 +151,7 @@ bool WakeUp::HandleMsg
 			if( _length < 6 )
 			{
 				Log::Write( "" );
-				Log::Write("**TODO: Determine what this response means: WakeUpCmd_IntervalReport with len = %d", _length );
+				Log::Write("Unusual response: WakeUpCmd_IntervalReport with len = %d.  Ignored.", _length );
 				return false;
 			}
 
