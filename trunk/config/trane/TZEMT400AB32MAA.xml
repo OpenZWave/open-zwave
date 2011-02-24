@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Product>
+	<!-- Trane Thermostat Model TZEMT400AB32MAA -->
+
+	<!-- Configuration Parameters -->
+	<CommandClass id="112">
+	</CommandClass>
+	
+	<!-- Association Groups -->
+	<CommandClass id="133">
+	</CommandClass>
+</Product>
+

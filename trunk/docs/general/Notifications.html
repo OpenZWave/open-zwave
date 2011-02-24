@@ -29,6 +29,17 @@
   </table>
   <table width="700" border="0" cellpadding="0" cellspacing="0">
     <tr>
+      <td><p class="Heading2">Important Note </p>
+          <p class="BodyText">You should be aware that notifications are <u><strong>blocking</strong></u>. That is, when a notification is sent to an application, the OpenZWave library will wait until the callback function returns. So, for example, if you put a modal dialog box (for Windows users) in the notification handler in your application, OpenZWave will essentially stop communicating with the Z-Wave controller until the dialog box is dismissed and the notification handler returns. </p>
+          <p class="BodyText">This  &quot;feature&quot; may be changed in the future, but for now developers must be aware of this issue. <br />
+            <br />
+            <br />
+          </p>
+        </td>
+    </tr>
+  </table>
+  <table width="700" border="0" cellpadding="0" cellspacing="0">
+    <tr>
       <td><p class=Heading2>Format</p>
         <p class="BodyText">The table
           presented below lists notifications in the order they might typically be

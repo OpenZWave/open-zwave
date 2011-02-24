@@ -213,7 +213,18 @@ namespace OZWForm
 
                 case ZWNotification.Type.ValueChanged:
                     {
-                        break;
+/*						Console.WriteLine("Value Changed");
+						ZWValueID v = m_notification.GetValueID();
+						Console.WriteLine("  Node : " + v.GetNodeId().ToString());
+						Console.WriteLine("  CC   : " + v.GetCommandClassId().ToString());
+						Console.WriteLine("  Type : " + v.GetType().ToString());
+						Console.WriteLine("  Index: " + v.GetIndex().ToString());
+						Console.WriteLine("  Inst : " + v.GetInstance().ToString());
+						Console.WriteLine("  Value: " + GetValue(v).ToString());
+						Console.WriteLine("  Label: " + m_manager.GetValueLabel(v));
+						Console.WriteLine("  Help : " + m_manager.GetValueHelp(v));
+						Console.WriteLine("  Units: " + m_manager.GetValueUnits(v));
+*/						break;
                     }
 
                 case ZWNotification.Type.Group:
@@ -301,7 +312,8 @@ namespace OZWForm
                 case ZWNotification.Type.DriverReady:
                     {
                         m_homeId = m_notification.GetHomeId();
-                        break;
+						toolStripStatusLabel1.Text = "Initializing...driver with Home ID 0x" + m_homeId.ToString("X8") + " is ready.";
+						break;
                     }
                 case ZWNotification.Type.NodeQueriesComplete:
                     {
@@ -311,20 +323,21 @@ namespace OZWForm
 						{
 							foreach (ZWValueID vid in node.Values)
 							{
-//								if (vid.GetCommandClassId() == 0x20)	// remove this "if" to poll all values
+//								if (vid.GetCommandClassId() == 0x84)	// remove this "if" to poll all values
 									m_manager.EnablePoll(vid);
 							}
 						}
+						toolStripStatusLabel1.Text = "Initializing...node " + node.ID + " query complete.";
 						break;
                     }
                 case ZWNotification.Type.AllNodesQueried:
                     {
-                        MessageBox.Show("All nodes queried");
+						toolStripStatusLabel1.Text = "Ready:  All nodes queried.";
                         break;
                     }
                 case ZWNotification.Type.AwakeNodesQueried:
                     {
-                        MessageBox.Show("Awake nodes queried (but some sleeping nodes have not been queried)");
+						toolStripStatusLabel1.Text = "Ready:  Awake nodes queried (but not some sleeping nodes).";
                         break;
                     }
             }
@@ -507,5 +520,50 @@ namespace OZWForm
                 }
             }
         }
+
+		string GetValue(ZWValueID v)
+		{
+			switch (v.GetType())
+			{
+				case ZWValueID.ValueType.Bool:
+					bool r1;
+					m_manager.GetValueAsBool(v, out r1);
+					return r1.ToString();
+				case ZWValueID.ValueType.Byte:
+					byte r2;
+					m_manager.GetValueAsByte(v, out r2);
+					return r2.ToString();
+				case ZWValueID.ValueType.Decimal:
+					decimal r3;
+					m_manager.GetValueAsDecimal(v, out r3);
+					return r3.ToString();
+				case ZWValueID.ValueType.Int:
+					Int32 r4;
+					m_manager.GetValueAsInt(v, out r4);
+					return r4.ToString();
+				case ZWValueID.ValueType.List:
+					string[] r5;
+					m_manager.GetValueListItems(v, out r5);
+					string r6 = "";
+					foreach (string s in r5)
+					{
+						r6 += s;
+						r6 += "/";
+					}
+					return r6;
+				case ZWValueID.ValueType.Schedule:
+					return "Schedule";
+				case ZWValueID.ValueType.Short:
+					short r7;
+					m_manager.GetValueAsShort(v, out r7);
+					return r7.ToString();
+				case ZWValueID.ValueType.String:
+					string r8;
+					m_manager.GetValueAsString(v, out r8);
+					return r8;
+				default:
+					return "";
+			}
+		}
     }
 }
