@@ -343,6 +343,7 @@ namespace OpenZWave
 		void SetPollInterval( int32 _seconds ){ m_pollInterval = _seconds; }
 		bool EnablePoll( ValueID _valueId );
 		bool DisablePoll( ValueID _valueId );
+		bool isPolled( ValueID _valueId );
 
 		static void PollThreadEntryPoint( void* _context );
 		void PollThreadProc();

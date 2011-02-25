@@ -339,6 +339,13 @@ namespace OpenZWave
 		 * \return True if polling was disabled.
 		 */
 		bool DisablePoll( ValueID const _valueId );
+
+		/**
+		 * \brief Determine the polling of a device's state.
+		 * \param _valueId The ID of the value to check polling.
+		 * \return True if polling is active.
+		 */
+		bool isPolled( ValueID const _valueId );
 	/*@}*/
 
 	//-----------------------------------------------------------------------------

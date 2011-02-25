@@ -2743,7 +2743,7 @@ bool Driver::DisablePoll
 )
 {
 	uint8 nodeId = _valueId.GetNodeId();
-    Node* node = GetNode( nodeId );
+	Node* node = GetNode( nodeId );
 	if( node != NULL)
 	{
 		m_pollMutex->Lock();
@@ -2764,9 +2764,48 @@ bool Driver::DisablePoll
 		// Not in the list
 		m_pollMutex->Release();
 		ReleaseNodes();
+		Log::Write( "DisablePoll failed - value not on list");
+		return false;
 	}
 
 	Log::Write( "DisablePoll failed - node %d not found", nodeId );
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::isPolled>
+// Check polling status of a value
+//-----------------------------------------------------------------------------
+bool Driver::isPolled
+( 
+	ValueID const _valueId
+)
+{
+	uint8 nodeId = _valueId.GetNodeId();
+	Node* node = GetNode( nodeId );
+	if( node != NULL)
+	{
+		m_pollMutex->Lock();
+
+		// See if the value is already in the poll list.
+		for( list<ValueID>::iterator it = m_pollList.begin(); it != m_pollList.end(); ++it )
+		{
+			if( *it == _valueId )
+			{
+				// Found it
+				m_pollMutex->Release();
+				ReleaseNodes();
+				return true;
+			}
+		}
+
+		// Not in the list
+		m_pollMutex->Release();
+		ReleaseNodes();
+		return false;
+	}
+
+	Log::Write( "isPolled failed - node %d not found", nodeId );
 	return false;
 }
 
