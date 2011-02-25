@@ -525,6 +525,24 @@ bool Manager::DisablePoll
 }
 
 //-----------------------------------------------------------------------------
+// <Manager::isPolled>
+// Check polling status of a value
+//-----------------------------------------------------------------------------
+bool Manager::isPolled
+( 
+	ValueID const _valueId
+)
+{
+	if( Driver* driver = GetDriver( _valueId.GetHomeId() ) )
+	{
+		return( driver->isPolled( _valueId ) );
+	}
+
+	Log::Write( "isPolled failed - Driver with Home ID 0x%.8x is not available", _valueId.GetHomeId() );
+	return false;
+}
+
+//-----------------------------------------------------------------------------
 //	Retrieving Node information
 //-----------------------------------------------------------------------------
 
