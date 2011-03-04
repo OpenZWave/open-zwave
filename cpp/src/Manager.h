@@ -693,6 +693,14 @@ namespace OpenZWave
 		string GetValueLabel( ValueID const& _id );
 
 		/**
+		 * \brief Sets the user-friendly label for the value.
+		 * \param _id The unique identifier of the value.
+		 * \param _value The new value of the label.
+		 * \see ValueID
+		 */
+		void SetValueLabel( ValueID const& _id, string const& _value );
+
+		/**
 		 * \brief Gets the units that the value is measured in.
 		 * \param _id The unique identifier of the value.
 		 * \return The value units.
@@ -701,12 +709,28 @@ namespace OpenZWave
 		string GetValueUnits( ValueID const& _id );
 		
 		/**
+		 * \brief Sets the units that the value is measured in.
+		 * \param _id The unique identifier of the value.
+		 * \param _value The new value of the units.
+		 * \see ValueID
+		 */
+		void SetValueUnits( ValueID const& _id, string const& _value );
+		
+		/**
 		 * \brief Gets a help string describing the value's purpose and usage.
 		 * \param _id The unique identifier of the value.
 		 * \return The value help text.
 		 * \see ValueID
 		 */
 		string GetValueHelp( ValueID const& _id );
+
+		/**
+		 * \brief Sets a help string describing the value's purpose and usage.
+		 * \param _id The unique identifier of the value.
+		 * \param _value The new value of the help text.
+		 * \see ValueID
+		 */
+		void SetValueHelp( ValueID const& _id, string const& _value );
 
 		/**
 		 * \brief Gets the minimum that this value may contain.
