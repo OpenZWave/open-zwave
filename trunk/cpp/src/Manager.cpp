@@ -1117,6 +1117,28 @@ string Manager::GetValueLabel
 }
 
 //-----------------------------------------------------------------------------
+// <Manager::SetValueLabel>
+// Sets the user-friendly label for the value
+//-----------------------------------------------------------------------------
+void Manager::SetValueLabel
+( 
+	ValueID const& _id,
+	string const& _value
+)
+{
+	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
+	{
+		driver->LockNodes();
+		if( Value* value = driver->GetValue( _id ) )
+		{
+			value->SetLabel( _value );
+			value->Release();
+		}
+		driver->ReleaseNodes();
+	}
+}
+
+//-----------------------------------------------------------------------------
 // <Manager::GetValueUnits>
 // Gets the units that the value is measured in
 //-----------------------------------------------------------------------------
@@ -1141,6 +1163,28 @@ string Manager::GetValueUnits
 }
 
 //-----------------------------------------------------------------------------
+// <Manager::SetValueUnits>
+// Sets the units that the value is measured in
+//-----------------------------------------------------------------------------
+void Manager::SetValueUnits
+( 
+ 	ValueID const& _id,
+	string const& _value
+)
+{
+	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
+	{
+		driver->LockNodes();
+		if( Value* value = driver->GetValue( _id ) )
+		{
+			value->SetUnits( _value );
+			value->Release();
+		}
+		driver->ReleaseNodes();
+	}
+}
+
+//-----------------------------------------------------------------------------
 // <Manager::GetValueHelp>
 // Gets a help string describing the value's purpose and usage
 //-----------------------------------------------------------------------------
@@ -1162,6 +1206,28 @@ string Manager::GetValueHelp
 	}
 
 	return help;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::SetValueHelp>
+// Sets a help string describing the value's purpose and usage
+//-----------------------------------------------------------------------------
+void Manager::SetValueHelp
+( 
+	ValueID const& _id,
+	string const& _value
+)
+{
+	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
+	{
+		driver->LockNodes();
+		if( Value* value = driver->GetValue( _id ) )
+		{
+			value->SetHelp( _value );
+			value->Release();
+		}
+		driver->ReleaseNodes();
+	}
 }
 
 //-----------------------------------------------------------------------------
