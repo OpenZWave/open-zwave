@@ -189,7 +189,7 @@ namespace OpenZWave
 	/*@}*/
 
 	private:
-		Options*	m_options;												// Pointer to the locked Options object that was passed in during creation.
+		Options*	m_options;			// Pointer to the locked Options object that was passed in during creation.
 	
 	//-----------------------------------------------------------------------------
 	//	Drivers
