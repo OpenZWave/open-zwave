@@ -1408,8 +1408,6 @@ void Driver::ProcessMsg
 						m_expectedReply = 0;
 					}
 				}
-				else
-					Log::Write( "  Still waiting for reply 0x%.2x", m_expectedReply );
 			}
 
 			if( !( m_expectedCallbackId || m_expectedReply ) )
@@ -2687,6 +2685,15 @@ void Driver::CommonAddNodeStatusRequestHandler
 		case ADD_NODE_STATUS_DONE:
 		{
 			Log::Write( "ADD_NODE_STATUS_DONE" );
+
+			// not sure at this point what the extra two bytes after _data[3] are for...
+			// so far they're generally both 0x00.  So flag with a log message if they aren't
+			// for diagnostic purposes
+			if( _data[4] || _data[5] )
+			{
+				Log::Write( "WARNING:  Unusual payload in response (usually 06 00 00)" );
+			}
+
 			if( m_controllerCommandNode != 0xff )
 				InitNode( m_controllerCommandNode );
 			if( m_controllerCallback )
@@ -2919,7 +2926,7 @@ void Driver::PollThreadProc()
 						CommandClass* cc = node->GetCommandClass( valueId.GetCommandClassId() );
 						uint8 index = valueId.GetIndex();
 						uint8 instance = valueId.GetInstance();
-						Log::Write( "Polling node %d: %s index = %d instance = %d", node->m_nodeId, cc->GetCommandClassName().c_str(), index, instance );
+						Log::Write( "Polling node %d: %s index = %d instance = %d (send queue has %d messages)", node->m_nodeId, cc->GetCommandClassName().c_str(), index, instance, m_sendQueue.size() );
 						cc->RequestValue( index, instance );
 					}
 

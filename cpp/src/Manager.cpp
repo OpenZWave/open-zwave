@@ -1804,6 +1804,20 @@ bool Manager::SetValue
 			{
 				char str[256];
 				snprintf( str, sizeof(str), "%f", _value );
+
+				// remove trailing zeros (and the decimal point, if present)
+				int nLen;
+				for( nLen = strlen( str ) - 1; nLen > 0; nLen-- )
+				{
+					if( str[nLen] == '0' ) 
+						str[nLen] = 0;
+					else
+						break;
+				}
+				if( (str[nLen] == '.') || (str[nLen] == ',') )
+					str[nLen] = 0;
+
+				// now set the value
 				res = value->Set( str );
                 value->Release();
 			}
