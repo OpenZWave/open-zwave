@@ -784,7 +784,7 @@ void Driver::RemoveMsg
 	// if this is the last message in the queue for this node and it's not a "retry"
 	// then signal that this query stage is complete
 	uint8 nodeId = msg->GetTargetNodeId();
-	if( nodeId != 0xff )
+	if( nodeId != 0xff  && nodeId != 0 )
 	{
 		// check to see if this is a "retry."  If so, don't signal query stage complete
 		Node* node = GetNodeUnsafe( nodeId );
@@ -2100,6 +2100,7 @@ void Driver::HandleRemoveNodeFromNetworkRequest
 		case REMOVE_NODE_STATUS_REMOVING_SLAVE:
 		{
 			Log::Write( "REMOVE_NODE_STATUS_REMOVING_SLAVE" );
+			Log::Write( "Removing node ID %d", _data[4] );
 			m_controllerCommandNode = _data[4];
 			break;
 		}
@@ -2107,6 +2108,47 @@ void Driver::HandleRemoveNodeFromNetworkRequest
 		{
 			Log::Write( "REMOVE_NODE_STATUS_REMOVING_CONTROLLER" );
 			m_controllerCommandNode = _data[4];
+			if( m_controllerCommandNode == 0 ) // Some controllers don't return node number
+			{
+				if( _data[5] >= 3 )
+				{
+					for( int i=0; i<256; i++ )
+					{
+						if( m_nodes[i] == NULL )
+						{
+							continue;
+						}
+						// Ignore primary controller
+						if( m_nodes[i]->m_nodeId == m_nodeId )
+						{
+							continue;
+						}
+						// See if we can match another way
+						if( m_nodes[i]->m_basic == _data[6] &&
+						    m_nodes[i]->m_generic == _data[7] &&
+						    m_nodes[i]->m_specific == _data[8] )
+						{
+							if( m_controllerCommandNode != 0 )
+							{
+								Log::Write( "Alternative controller lookup found more then one match. Using the first one found.");
+							}
+							else
+							{
+								m_controllerCommandNode = m_nodes[i]->m_nodeId;
+							}
+						}
+					}
+				}
+				else
+				{
+					Log::Write( "Node is 0 but not enough data to perform alternative match.");
+				}
+			}
+			else
+			{
+				m_controllerCommandNode = _data[4];
+			}
+			Log::Write( "Removing controller ID %d", m_controllerCommandNode );
 			break;
 		}
 		case REMOVE_NODE_STATUS_DONE:
@@ -2619,7 +2661,7 @@ void Driver::CommonAddNodeStatusRequestHandler
 		case ADD_NODE_STATUS_ADDING_CONTROLLER:
 		{
 			Log::Write( "ADD_NODE_STATUS_ADDING_CONTROLLER");
-			Log::Write( "Adding node ID %d", _data[4] );
+			Log::Write( "Adding controller ID %d", _data[4] );
 			m_controllerAdded = true;
 			m_controllerCommandNode = _data[4];
 			break;
@@ -3747,7 +3789,7 @@ bool Driver::BeginControllerCommand
 		case ControllerCommand_ReceiveConfiguration:
 		{
 			Log::Write( "ReceiveConfiguration" );
-			Msg* msg = new Msg( "ReceiveConfiguration", 0xff, REQUEST, FUNC_ID_ZW_SET_LEARN_MODE, false, false );
+			Msg* msg = new Msg( "ReceiveConfiguration", 0xff, REQUEST, FUNC_ID_ZW_SET_LEARN_MODE, true );
 			msg->Append( 0xff );
 			SendMsg( msg );
 			break;
