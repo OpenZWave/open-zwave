@@ -357,6 +357,7 @@ bool ManufacturerSpecific::LoadConfigXML
 		string filename =  configPath + _configXML;
 
 		TiXmlDocument* doc = new TiXmlDocument();
+		Log::Write( "  Opening config param file %s", filename.c_str() );
 		if( !doc->LoadFile( filename.c_str(), TIXML_ENCODING_UTF8 ) )
 		{
 			delete doc;	

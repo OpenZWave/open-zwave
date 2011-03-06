@@ -62,6 +62,7 @@ Options* Options::Create
 		s_instance->AddOptionString(	"Exclude",				string(""),		true );		// Remove support for the listed command classes.
 		s_instance->AddOptionString(	"Include",				string(""),		true );		// Only handle the specified command classes.  The Exclude option is ignored if anything is listed here.
 		s_instance->AddOptionBool(		"NotifyTransactions",	false );					// Notifications when transaction complete is reported.
+		s_instance->AddOptionString(	"Interface",			string(""),		true );		// Identify the serial port to be accessed (TODO: change the code so more than one serial port can be specified and HID)
 	}
 
 	return s_instance;
