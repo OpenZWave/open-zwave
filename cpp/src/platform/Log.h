@@ -58,6 +58,13 @@ namespace OpenZWave
 		static void Destroy();
 
 		/**
+		 * Set a flag to wether or not actually write to log.
+		 * \param dologging.  set a flag to say whether or not to actually
+		 write to the log
+		*/
+		static void SetLoggingState(bool dologging);
+
+		/**
 		 * Write an entry to the log.
 		 * Writes a formatted string to the log.
 		 * \param _format.  A string formatted in the same manner as used with printf etc.
