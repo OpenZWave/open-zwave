@@ -20,6 +20,7 @@
   </Manufacturer>
   <Manufacturer id="0005" name="Intermatic">
     <Product type="0003" id="0003" name="HA-03WD Lamp Module" />
+    <Product type="0004" id="0003" name="HA-04C Outdoor Module" />
   </Manufacturer>
   <Manufacturer id="0008" name="Wayne Dalton">
     <Product type="0007" id="0020" name="WDTC-20 Thermostat" />
@@ -29,8 +30,11 @@
   </Manufacturer>
   <Manufacturer id="001a" name="Cooper">
     <Product type="4449" id="0002" name="RF9534DS Wall Dimmer Module" />
+    <Product type="5244" id="0000" name="RF9505-TWS Split Control Duplex Receptacle" />
   </Manufacturer>
   <Manufacturer id="001d" name="Leviton">
+    <Product type="0301" id="0206" name="RZS15-1LX Binary Scene Switch" />
+    <Product type="0401" id="0206" name="RZI10-1LX Multilevel Scene Switch" />
   </Manufacturer>
   <Manufacturer id="001e" name="Homeseer">
     <Product type="0002" id="0001" name="HSM100 Wireless Multi-Sensor" config="homeseer/hsm100.xml" />
