@@ -37,7 +37,7 @@
 using namespace OpenZWave;
 
 Log* Log::s_instance = NULL;
-
+static bool s_dologging;
 
 //-----------------------------------------------------------------------------
 //	<Log::Create>
@@ -51,6 +51,7 @@ Log* Log::Create
 	if( NULL == s_instance )
 	{
 		s_instance = new Log( _filename );
+		s_dologging = true; // default logging to true so no change to what people experience now
 	}
 
 	return s_instance;
@@ -69,6 +70,18 @@ void Log::Destroy
 }
 
 //-----------------------------------------------------------------------------
+//	<Log::SetLogggingState>
+//	Set flag to actually write to log or skip it
+//-----------------------------------------------------------------------------
+void Log::SetLoggingState
+(
+	bool dologging
+)
+{
+	s_dologging = dologging;
+}
+
+//-----------------------------------------------------------------------------
 //	<Log::Write>
 //	Write to the log
 //-----------------------------------------------------------------------------
@@ -78,7 +91,7 @@ void Log::Write
 	... 
 )
 {
-	if( s_instance )
+	if( s_instance && s_dologging )
 	{
 	  	s_instance->m_logMutex->Lock();
 		va_list args;
