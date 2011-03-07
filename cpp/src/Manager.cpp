@@ -1806,16 +1806,20 @@ bool Manager::SetValue
 				snprintf( str, sizeof(str), "%f", _value );
 
 				// remove trailing zeros (and the decimal point, if present)
+				// TODO: better way of figuring out which locale is being used ('.' or ',' to separate decimals)
 				int nLen;
-				for( nLen = strlen( str ) - 1; nLen > 0; nLen-- )
+				if( ( strchr( str, '.' ) != NULL) || (strchr( str, ',' ) != NULL ) )
 				{
-					if( str[nLen] == '0' ) 
+					for( nLen = strlen( str ) - 1; nLen > 0; nLen-- )
+					{
+						if( str[nLen] == '0' ) 
+							str[nLen] = 0;
+						else
+							break;
+					}
+					if( (str[nLen] == '.') || (str[nLen] == ',') )
 						str[nLen] = 0;
-					else
-						break;
 				}
-				if( (str[nLen] == '.') || (str[nLen] == ',') )
-					str[nLen] = 0;
 
 				// now set the value
 				res = value->Set( str );
