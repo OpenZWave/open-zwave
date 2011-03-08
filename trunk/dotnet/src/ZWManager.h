@@ -199,6 +199,20 @@ namespace OpenZWaveDotNet
 		 * \see Create, Get
 		 */
 		void Destroy(){ Manager::Get()->Destroy(); }
+
+		/**
+		 * \brief Sets the library logging state.
+		 * \param _bLog True to enable logging; false to disable logging.
+		 * \see GetLoggingState
+		 */
+		void SetLoggingState(bool bState){ Manager::Get()->SetLoggingState(bState); }
+
+		/**
+		 * \brief Gets the current library logging state.
+		 * \return True if logging is enabled; false otherwise
+		 * \see SetLoggingState
+		 */
+		bool GetLoggingState() { return Manager::Get()->GetLoggingState(); }
 	/*@}*/					   
 
 	//-----------------------------------------------------------------------------
