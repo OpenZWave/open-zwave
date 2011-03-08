@@ -75,10 +75,21 @@ void Log::Destroy
 //-----------------------------------------------------------------------------
 void Log::SetLoggingState
 (
-	bool dologging
+	bool _dologging
 )
 {
-	s_dologging = dologging;
+	s_dologging = _dologging;
+}
+
+//-----------------------------------------------------------------------------
+//	<Log::GetLogggingState>
+//	Return a flag to indicate whether logging is enabled
+//-----------------------------------------------------------------------------
+bool Log::GetLoggingState
+(
+)
+{
+	return s_dologging;
 }
 
 //-----------------------------------------------------------------------------

@@ -58,11 +58,16 @@ namespace OpenZWave
 		static void Destroy();
 
 		/**
-		 * Set a flag to wether or not actually write to log.
-		 * \param dologging.  set a flag to say whether or not to actually
-		 write to the log
+		 * \brief Enable or disable library logging.
+		 * \param _dologging  If true, logging is enabled; if false, disabled
 		*/
-		static void SetLoggingState(bool dologging);
+		static void SetLoggingState(bool _dologging);
+
+		/**
+		 * \brief Determine whether logging is enabled or not.
+		 * \param _dologging  If true, logging is enabled; if false, disabled
+		*/
+		static bool GetLoggingState();
 
 		/**
 		 * Write an entry to the log.
