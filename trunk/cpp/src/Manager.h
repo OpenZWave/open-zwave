@@ -150,20 +150,6 @@ namespace OpenZWave
 		 * \see Create, Get
 		 */
 		static void Destroy();
-
-		/**
-		 * \brief Sets the library logging state.
-		 * \param _bLog True to enable logging; false to disable logging.
-		 * \see GetLoggingState
-		 */
-		static void SetLoggingState(bool _bLog) { Log::SetLoggingState( _bLog ); }
-
-		/**
-		 * \brief Gets the current library logging state.
-		 * \return True if logging is enabled; false otherwise
-		 * \see SetLoggingState
-		 */
-		static bool GetLoggingState() { return Log::GetLoggingState(); }
 	/*@}*/
 
 	private:
