@@ -37,7 +37,11 @@
     <Product type="0401" id="0206" name="RZI10-1LX Multilevel Scene Switch" />
   </Manufacturer>
   <Manufacturer id="001e" name="Homeseer">
+    <Product type="0001" id="0002" name="ZTroller" config="homeseer/ztroller.xml" />
     <Product type="0002" id="0001" name="HSM100 Wireless Multi-Sensor" config="homeseer/hsm100.xml" />
+  </Manufacturer>
+  <Manufacturer id="0020" name="General Electric">
+    <Product type="8007" id="1390" name="Wireless Lighting Control" />
   </Manufacturer>
   <Manufacturer id="0033" name="Electronic Solutions Inc">
     <Product type="5250" id="02" name="DBMZ Motor Control" />   
