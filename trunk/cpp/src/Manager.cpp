@@ -331,7 +331,7 @@ void Manager::SetDriverReady
 
 		// Notify the watchers
 		Notification* notification = new Notification( Notification::Type_DriverReady );
-		notification->SetHomeAndNodeIds( _driver->GetHomeId(), 0 );
+		notification->SetHomeAndNodeIds( _driver->GetHomeId(), _driver->GetNodeId() );
 		_driver->QueueNotification( notification ); 
 	}
 }
