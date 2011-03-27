@@ -32,10 +32,12 @@
   <Manufacturer id="001a" name="Cooper">
     <Product type="4449" id="0002" name="RF9534DS Wall Dimmer Module" />
     <Product type="5244" id="0000" name="RF9505-TWS Split Control Duplex Receptacle" />
-  </Manufacturer>
+  </Manufacturer> 
   <Manufacturer id="001d" name="Leviton">
     <Product type="0301" id="0206" name="RZS15-1LX Binary Scene Switch" />
+    <Product type="0301" id="0209" name="VRS15-1LZ Binary Scene Switch" />
     <Product type="0401" id="0206" name="RZI10-1LX Multilevel Scene Switch" />
+    <Product type="0401" id="0209" name="VRI06-1L Multilevel Scene Switch" />
   </Manufacturer>
   <Manufacturer id="001e" name="Homeseer">
     <Product type="0001" id="0002" name="ZTroller" config="homeseer/ztroller.xml" />
