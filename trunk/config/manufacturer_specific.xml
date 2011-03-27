@@ -21,6 +21,7 @@
   <Manufacturer id="0005" name="Intermatic">
     <Product type="0003" id="0003" name="HA-03WD Lamp Module" />
     <Product type="0004" id="0003" name="HA-04C Outdoor Module" />
+    <Product type="0005" id="0003" name="HA-05C Lamp Screw In Module" /
   </Manufacturer>
   <Manufacturer id="0008" name="Wayne Dalton">
     <Product type="0007" id="0020" name="WDTC-20 Thermostat" />
@@ -57,6 +58,7 @@
   </Manufacturer>
   <Manufacturer id="0063" name="GE">
     <Product type="5250" id="3030" name="GE 45603 Plugin Appliance Module" />
+    <Product type="5250" id="3130" name="GE 45604 Outdoor Module" />
   </Manufacturer>
   <Manufacturer id="0064" name="Popp / Düwi">
   </Manufacturer>
