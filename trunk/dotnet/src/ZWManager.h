@@ -39,6 +39,7 @@
 #include "ValueID.h"
 #include "Notification.h"
 #include "Driver.h"
+#include "Log.h"
 
 using namespace System;
 using namespace System::Threading;
