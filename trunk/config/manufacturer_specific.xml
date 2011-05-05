@@ -98,6 +98,9 @@
 	<Manufacturer id="0035" name="Embedit A/S">
 	</Manufacturer>
 	<Manufacturer id="0060" name="Everspring">
+	  <Product type="000C" id="0001" name="SE812 Siren" />
+	  <Product type="000D" id="0001" name="SF812 Smoke Alarm" />
+	  <Product type="0006" id="0001" name="ST814 Temperature and Humidity Sensor" />
 	</Manufacturer>
 	<Manufacturer id="0036" name="Exceptional Innv">
 	</Manufacturer>
@@ -182,6 +185,7 @@
 	<Manufacturer id="0025" name="Loudwater Tech">
 	</Manufacturer>
 	<Manufacturer id="0071" name="LS Control">
+	  <Product type="0002" id="035D" name="ES 861 Temperature Sensor" />
 	</Manufacturer>
 	<Manufacturer id="003d" name="Marmitek BV">
 	</Manufacturer>
@@ -212,6 +216,7 @@
 	<Manufacturer id="0041" name="OpenPeak Inc.">
 	</Manufacturer>
 	<Manufacturer id="0064" name="Popp / Düwi">
+	  <Product type="3001" id="0000" name="Plugin Switch" />
 	</Manufacturer>
 	<Manufacturer id="0016" name="PowerLynx">
 	</Manufacturer>
