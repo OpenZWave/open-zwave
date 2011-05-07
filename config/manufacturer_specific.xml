@@ -163,6 +163,7 @@
 	<Manufacturer id="0013" name="Internet Dom">
 	</Manufacturer>
 	<Manufacturer id="0063" name="GE">
+	  <Product type="4457" id="3230" name="ZW3003 3-Way Dimmer Switch" />
 	  <Product type="5250" id="3030" name="GE 45603 Plugin Appliance Module" />
 	  <Product type="5250" id="3130" name="GE 45604 Outdoor Module" />
 	</Manufacturer>
