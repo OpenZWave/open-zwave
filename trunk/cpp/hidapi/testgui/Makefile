@@ -3,9 +3,20 @@
 OS=$(shell uname)
 
 ifeq ($(OS), Darwin)
-FILE=Makefile.mac
-else
-FILE=Makefile.linux
+	FILE=Makefile.mac
+endif
+
+ifneq (,$(findstring MINGW,$(OS)))
+	FILE=Makefile.mingw
+endif
+
+ifeq ($(OS), Linux)
+	FILE=Makefile.linux
+endif
+
+ifeq ($(FILE), )
+all:
+	$(error Your platform ${OS} is not supported at this time.)
 endif
 
 include $(FILE)

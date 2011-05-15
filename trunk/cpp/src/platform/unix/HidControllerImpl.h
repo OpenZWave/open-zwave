@@ -50,33 +50,35 @@ namespace OpenZWave
 		bool Open( string const& _HidControllerName, uint32 const _vendorId, uint32 const _productId, string const& _serialNumber );
 		void Close();
 
-        uint32 Read( uint8* _buffer, uint32 _length, IController::ReadPacketSegment _segment );
+		uint32 Read( uint8* _buffer, uint32 _length, IController::ReadPacketSegment _segment );
 		uint32 Write( uint8* _buffer, uint32 _length );
 		bool Wait( int32 _timeout );
 
 
-        // helpers for internal use only
+		// helpers for internal use only
 
-        /**
-		* Read bytes from the specified HID feature report
-        * @param _buffer Buffer array for receiving the feature report bytes.
-        * @param _length Length of the buffer array.
-        * @param _reportId ID of the report to read.
-		* @return Actual number of bytes retrieved, or -1 on error.
-		*/
-        int GetFeatureReport( uint32 _length, uint8 _reportId, uint8* _buffer );
+		/**
+		 * Read bytes from the specified HID feature report
+		 * @param _buffer Buffer array for receiving the feature report bytes.
+		 * @param _length Length of the buffer array.
+		 * @param _reportId ID of the report to read.
+		 * @return Actual number of bytes retrieved, or -1 on error.
+		 */
+		int GetFeatureReport( uint32 _length, uint8 _reportId, uint8* _buffer );
 
-        /**
-		* Write bytes to the specified HID feature report
-		* @param _data Bytes to be written to the feature report.
-		* @param _length Length of bytes to be written.
-		* @return Actal number of bytes written, or -1 on error.
-		*/
-        int SendFeatureReport( uint32 _length, const uint8* _data );
+		/**
+		 * Write bytes to the specified HID feature report
+		 * @param _data Bytes to be written to the feature report.
+		 * @param _length Length of bytes to be written.
+		 * @return Actal number of bytes written, or -1 on error.
+		 */
+		int SendFeatureReport( uint32 _length, const uint8* _data );
 
-        hid_device*         m_hHidController;
-        bool                m_hidControllerOpen;
-        uint8*              m_hidFeatureReportReadBuffer;
+		hid_device*         m_hHidController;
+		bool                m_hidControllerOpen;
+		uint8*              m_hidFeatureReportReadBuffer;
+		int		    m_hidFeatureReportReadBufferBytes;
+		uint8*		    m_hidFeatureReportReadBufferPtr;
 	};
 
 } // namespace OpenZWave

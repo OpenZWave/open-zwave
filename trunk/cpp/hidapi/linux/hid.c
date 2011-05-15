@@ -295,6 +295,14 @@ struct hid_device_info  HID_API_EXPORT *hid_enumerate(unsigned short vendor_id, 
 			/* VID/PID */
 			cur_dev->vendor_id = dev_vid;
 			cur_dev->product_id = dev_pid;
+
+			/* Release Number */
+			str = udev_device_get_sysattr_value(dev, "bcdDevice");
+			cur_dev->release_number = (str)? strtol(str, NULL, 16): 0x0;
+			
+			/* Interface Number (Unsupported on Linux/hidraw) */
+			cur_dev->interface_number = -1;
+
 		}
 		else
 			goto next;
@@ -476,11 +484,7 @@ int HID_API_EXPORT hid_send_feature_report(hid_device *dev, const unsigned char 
 {
 	int res;
 
-#ifdef notdef
 	res = ioctl(dev->device_handle, HIDIOCSFEATURE(length), data);
-#else
-	res = -1;
-#endif
 	if (res < 0)
 		perror("ioctl (SFEATURE)");
 
@@ -491,11 +495,7 @@ int HID_API_EXPORT hid_get_feature_report(hid_device *dev, unsigned char *data, 
 {
 	int res;
 
-#ifdef notdef
 	res = ioctl(dev->device_handle, HIDIOCGFEATURE(length), data);
-#else
-	res = -1;
-#endif
 	if (res < 0)
 		perror("ioctl (GFEATURE)");
 
