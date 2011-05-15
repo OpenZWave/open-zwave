@@ -50,30 +50,9 @@ HidController::HidController
 {
     m_pMsgInitializationSequence->push_back(new Msg( "FUNC_ID_ZW_GET_VERSION", 0xff, REQUEST, FUNC_ID_ZW_GET_VERSION, false ));
     m_pMsgInitializationSequence->push_back(new Msg( "FUNC_ID_ZW_MEMORY_GET_ID", 0xff, REQUEST, FUNC_ID_ZW_MEMORY_GET_ID, false ));
-    m_pMsgInitializationSequence->push_back(new Msg( "FUNC_ID_SERIAL_API_SET_TIMEOUTS", 0xff, REQUEST, FUNC_ID_SERIAL_API_SET_TIMEOUTS, false ));
-    m_pMsgInitializationSequence->back()->Append(0x0F);
-    m_pMsgInitializationSequence->back()->Append(0x0A);  // callback?  doesn't look like it
-    m_pMsgInitializationSequence->back()->Finalize();
-    m_pMsgInitializationSequence->push_back(new Msg( "FUNC_ID_ZW_R_F_POWER_LEVEL_SET", 0xff, REQUEST, FUNC_ID_ZW_R_F_POWER_LEVEL_SET, false ));
-    m_pMsgInitializationSequence->back()->Append(0x00);
-    m_pMsgInitializationSequence->back()->Finalize();
+    m_pMsgInitializationSequence->push_back(new Msg( "FUNC_ID_ZW_GET_CONTROLLER_CAPABILITIES", 0xff, REQUEST, FUNC_ID_ZW_GET_CONTROLLER_CAPABILITIES, false ));
     m_pMsgInitializationSequence->push_back(new Msg( "FUNC_ID_SERIAL_API_GET_CAPABILITIES", 0xff, REQUEST, FUNC_ID_SERIAL_API_GET_CAPABILITIES, false ));
     m_pMsgInitializationSequence->push_back(new Msg( "FUNC_ID_SERIAL_API_GET_INIT_DATA", 0xff, REQUEST, FUNC_ID_SERIAL_API_GET_INIT_DATA, false ));
-    m_pMsgInitializationSequence->push_back(new Msg( "FUNC_ID_ZW_GET_CONTROLLER_CAPABILITIES", 0xff, REQUEST, FUNC_ID_ZW_GET_CONTROLLER_CAPABILITIES, false ));
-    //m_pMsgInitializationSequence->push_back(new Msg( "FUNC_ID_ZW_GET_SUC_NODE_ID", 0xff, REQUEST, FUNC_ID_ZW_GET_SUC_NODE_ID, false ));
-    m_pMsgInitializationSequence->push_back(new Msg( "FUNC_ID_MEMORY_GET_BYTE", 0xff, REQUEST, FUNC_ID_MEMORY_GET_BYTE, false ));
-    m_pMsgInitializationSequence->back()->Append(0x00);
-    m_pMsgInitializationSequence->back()->Append(0x00);
-    m_pMsgInitializationSequence->back()->Finalize();
-    m_pMsgInitializationSequence->push_back(new Msg( "FUNC_ID_MEMORY_GET_BYTE", 0xff, REQUEST, FUNC_ID_MEMORY_GET_BYTE, false ));
-    m_pMsgInitializationSequence->back()->Append(0x00);
-    m_pMsgInitializationSequence->back()->Append(0x01);
-    m_pMsgInitializationSequence->back()->Finalize();
-    m_pMsgInitializationSequence->push_back(new Msg( "FUNC_ID_ZW_READ_MEMORY", 0xff, REQUEST, FUNC_ID_ZW_READ_MEMORY, false ));
-    m_pMsgInitializationSequence->back()->Append(0x00);
-    m_pMsgInitializationSequence->back()->Append(0x02);
-    m_pMsgInitializationSequence->back()->Append(0x09);  // callback?  doesn't look like it
-    m_pMsgInitializationSequence->back()->Finalize();
 }
 
 //-----------------------------------------------------------------------------
