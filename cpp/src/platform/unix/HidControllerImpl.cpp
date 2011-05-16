@@ -226,7 +226,7 @@ uint32 HidControllerImpl::Read
 		return 0;
 	}
 
-#ifdef DEBUG
+#ifdef HIDDEBUG
 	Log::Write("HID read requested %d", _length);
 #endif
 	if ( m_hidFeatureReportReadBufferPtr == NULL )
@@ -238,7 +238,7 @@ uint32 HidControllerImpl::Read
 		memset( m_hidFeatureReportReadBuffer, 0, PACKET_BUFFER_LENGTH );
 		m_hidFeatureReportReadBufferBytes = GetFeatureReport( FEATURE_REPORT_LENGTH, 0x5, m_hidFeatureReportReadBuffer );
 		CHECK_HIDAPI_RESULT( m_hidFeatureReportReadBufferBytes, HidPortError );
-#ifdef DEBUG
+#ifdef HIDDEBUG
 		char nstr[16];
 		snprintf( nstr, sizeof(nstr), "%d", m_hidFeatureReportReadBufferBytes );
 		string str = "HID read(";
@@ -269,7 +269,7 @@ uint32 HidControllerImpl::Read
 	m_hidFeatureReportReadBufferBytes -= _length;
 	if ( m_hidFeatureReportReadBufferBytes == 0 )
     		m_hidFeatureReportReadBufferPtr = NULL;
-#ifdef DEBUG
+#ifdef HIDDEBUG
 	Log::Write( "HID read returning %d", _length );
 #endif
 	return _length;

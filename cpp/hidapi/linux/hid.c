@@ -43,6 +43,15 @@
 
 #include "hidapi.h"
 
+/*
+ * Added here until linux/hidraw.h has them. These definitions require a version
+ * 2.6.39 based kernel as well.
+ */
+#ifndef HIDIOCSFEATURE
+#define HIDIOCSFEATURE(len)    _IOC(_IOC_WRITE|_IOC_READ, 'H', 0x06, len)
+#define HIDIOCGFEATURE(len)    _IOC(_IOC_WRITE|_IOC_READ, 'H', 0x07, len)
+#endif
+
 struct hid_device_ {
 	int device_handle;
 	int blocking;
