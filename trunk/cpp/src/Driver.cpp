@@ -778,6 +778,8 @@ void Driver::RemoveMsg
 )
 {
 	// get current message from the queue
+  	if ( m_sendQueue.size() == 0 )
+		return;
 	m_sendMutex->Lock();
 	Msg *msg = m_sendQueue.front();
 
@@ -788,7 +790,7 @@ void Driver::RemoveMsg
 	{
 		// check to see if this is a "retry."  If so, don't signal query stage complete
 		Node* node = GetNodeUnsafe( nodeId );
-		if( !node->m_queryRetries )
+		if( node != NULL && !node->m_queryRetries )
 		{
 			// look for more messages for this node in the send queue (to see if query stage is complete)
 			bool bMoreForThisNode = false;
@@ -2081,6 +2083,7 @@ void Driver::HandleRemoveNodeFromNetworkRequest
 		case REMOVE_NODE_STATUS_LEARN_READY:
 		{
 			Log::Write( "REMOVE_NODE_STATUS_LEARN_READY" );
+			m_controllerCommandNode = 0;
 			if( m_controllerCallback )
 			{
 				m_controllerCallback( ControllerState_Waiting, m_controllerCallbackContext );
@@ -2154,14 +2157,23 @@ void Driver::HandleRemoveNodeFromNetworkRequest
 		{
 			Log::Write( "REMOVE_NODE_STATUS_DONE" );
 			
-			Notification* notification = new Notification( Notification::Type_NodeRemoved );
-			notification->SetHomeAndNodeIds( m_homeId, m_controllerCommandNode );
-			QueueNotification( notification ); 
+			if ( m_controllerCommandNode == 0 ) // never received "removing" update
+			{
+				if ( _data[4] != 0 ) // but message has the clue
+					m_controllerCommandNode = _data[4];
+			}
+
+			if ( m_controllerCommandNode != 0 )
+			{
+				Notification* notification = new Notification( Notification::Type_NodeRemoved );
+				notification->SetHomeAndNodeIds( m_homeId, m_controllerCommandNode );
+				QueueNotification( notification ); 
 			
-			LockNodes();
-			delete m_nodes[m_controllerCommandNode];
-			m_nodes[m_controllerCommandNode] = NULL;
-			ReleaseNodes();
+				LockNodes();
+				delete m_nodes[m_controllerCommandNode];
+				m_nodes[m_controllerCommandNode] = NULL;
+				ReleaseNodes();
+			}
 
 			if( m_controllerCallback )
 			{
@@ -2686,14 +2698,6 @@ void Driver::CommonAddNodeStatusRequestHandler
 		case ADD_NODE_STATUS_DONE:
 		{
 			Log::Write( "ADD_NODE_STATUS_DONE" );
-
-			// not sure at this point what the extra two bytes after _data[3] are for...
-			// so far they're generally both 0x00.  So flag with a log message if they aren't
-			// for diagnostic purposes
-			if( _data[4] || _data[5] )
-			{
-				Log::Write( "WARNING:  Unusual payload in response (usually 06 00 00)" );
-			}
 
 			if( m_controllerCommandNode != 0xff )
 				InitNode( m_controllerCommandNode );
