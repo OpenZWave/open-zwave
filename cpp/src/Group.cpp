@@ -249,6 +249,14 @@ void Group::OnGroupChanged
 		m_associations.clear();
 		notify = true;
 	}
+	else
+	{
+		// Handle initial group creation case
+		if ( _associations.size() == 0 && m_associations.size() == 0 )
+		{
+			notify = true;
+		}
+	}
 
 	// Add the new associations. 
 	uint8 oldSize = (uint8)m_associations.size();
