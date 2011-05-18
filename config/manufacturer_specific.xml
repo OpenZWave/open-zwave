@@ -160,6 +160,7 @@
 	  <Product type="0003" id="0003" name="HA-03WD Lamp Module" />
 	  <Product type="0004" id="0003" name="HA-04C Outdoor Module" />
 	  <Product type="0005" id="0003" name="HA-05C Lamp Screw In Module" />
+	  <Product type="4341" id="8900" name="CA8900 Digital Thermostat" />
 	</Manufacturer>
 	<Manufacturer id="0013" name="Internet Dom">
 	</Manufacturer>
