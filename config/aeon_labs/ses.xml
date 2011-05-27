@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Product>
+  <!-- Configuration Parameters -->
+  <CommandClass id="112">
+    <Value type="byte" index="1" genre="config" label="Report type" units="" min="0" max="1" value="0">
+      <Help>
+	Defines the value type to be sent as a Sensor Report.
+      </Help>
+    </Value>
+    <Value type="short" index="2" genre="config" label="Blinking behavior" units="" min="0" max="65535" value="0">
+      <Help>
+	This is actually a double byte value. The LSB defines the total time the device needs to blink in seconds. The MSB defines the on/off interval of the blink in tenths of seconds.
+      </Help>
+    </Value>
+    <Value type="byte" index="80" genre="config" label="Notification status" units="" value="0">
+      <Help>
+	Defines the automated status notification of an associated device when status changes. 0 is off. 1 is hail sent and 2 is basic report sent.
+      </Help>
+    </Value>
+    <Value type="bool" index="90" genre="config" label="" units="" value="false">
+      <Help>
+	Disables automated sending of a report triggered by minimal change of value.
+      </Help>
+    </Value>
+    <Value type="short" index="91" genre="config" label="Wattage threshold" units="watts" min="0" max="32000" value="50">
+      <Help>
+	The minimum change in wattage for a report to be sent.
+      </Help>
+    </Value>
+    <Value type="byte" index="92" genre="config" label="Wattage threshold percent" units="%" min="0" max="99" value="10">
+      <Help>
+	Minimum change in percent of wattage to send a report.
+      </Help>
+    </Value>
+    <Value type="int" index="101" genre="config" label="Report type G1" units="" value="8">
+      <Help>
+	Defines the type of report sent for reporting group 1. 2 is multisensor report. 4 is meter report for watts. 8 is meter report for kilowatts.
+      </Help>
+    </Value>
+    <Value type="int" index="102" genre="config" label="Report type G2" units="" value="0">
+      <Help>
+	Defines the type of report sent for reporting group 2. 2 is multisensor report. 4 is meter report for watts. 8 is meter report for kilowatts.
+      </Help>
+    </Value>
+    <Value type="int" index="103" genre="config" label="Report type G3" units="" value="0">
+      <Help>
+	Defines the type of report sent for reporting group 3. 2 is multisensor report. 4 is meter report for watts. 8 is meter report for kilowatts.
+      </Help>
+    </Value>
+    <Value type="int" index="111" genre="config" label="Send interval G1" units="seconds" min="0" max="65535" value="720">
+      <Help>
+	Defines the time interval when the defined report for group 1 is sent.
+      </Help>
+    </Value>
+    <Value type="int" index="112" genre="config" label="Send interval G2" units="seconds" min="0" max="65535" value="720">
+      <Help>
+	Defines the time interval when the defined report for group 2 is sent.
+      </Help>
+    </Value>
+    <Value type="int" index="113" genre="config" label="Send interval G3" units="seconds" min="0" max="65535" value="720">
+      <Help>
+	Defines the time interval when the defined report for group 3 is sent.
+      </Help>
+    </Value>
+  </CommandClass>
+
+  <!-- Association Groups -->
+  <CommandClass id="133">
+    <Associations num_groups="1">
+      <Group index="1" max_associations="5" label="Report" auto="true" />
+    </Associations>
+  </CommandClass>
+</Product>
+
