@@ -10,6 +10,7 @@
 	  <Product type="4349" id="3130" name="ZCS101 Serial Interface" />
 	  <Product type="4952" id="3030" name="ZIR000 PIR Motion Sensor" config="act/zir010.xml" />
 	  <Product type="4952" id="3330" name="ZIR010 PIR Motion Sensor" config="act/zir010.xml" />
+	  <Product type="4952" id="3130" name="ZIR010 PIR Motion Sensor" config="act/zir010.xml" />
 	  <Product type="4450" id="3030" name="ZDP100 Plugin Lamp Module" />
 	  <Product type="4457" id="3330" name="ZDW230 Wall Dimmer Module" />
 	  <Product type="4457" id="3332" name="ZDW232 Wall Dimmer Module" />
@@ -24,6 +25,7 @@
 	<Manufacturer id="0086" name="Aeon Labs">
 	  <Product type="0001" id="0001" name="Z-Stick" />
 	  <Product type="0001" id="0002" name="Z-Stick S2" />
+	  <Product type="0002" id="0001" name="Z-Stick S2" />
 	  <Product type="0001" id="0003" name="Minimote" config="aeon_labs/minimote.xml" />
 	  <Product type="0002" id="0004" name="Door/Window Sensor" />
 	  <Product type="0002" id="0005" name="Multi Sensor" />
@@ -98,10 +100,13 @@
 	<Manufacturer id="0035" name="Embedit A/S">
 	</Manufacturer>
 	<Manufacturer id="0060" name="Everspring">
+	  <Product type="0004" id="0001" name="AN157 Plug-in Appliance Module" />
 	  <Product type="000C" id="0001" name="SE812 Siren" />
 	  <Product type="000D" id="0001" name="SF812 Smoke Alarm" />
-	  <Product type="0006" id="0001" name="ST814 Temperature and Humidity Sensor" config="everspring/st814.xml" />
 	  <Product type="0202" id="0001" name="SM103 Door/Window Sensor" config="everspring/sm103.xml" />
+	  <Product type="0002" id="0001" name="SM103 Door/Window Sensor" config="everspring/sm103.xml" />
+	  <Product type="0101" id="0001" name="SP103 PIR Motion Sensor" config="everspring/sp103.xml" />
+	  <Product type="0006" id="0001" name="ST814 Temperature and Humidity Sensor" config="everspring/st814.xml" />
 	</Manufacturer>
 	<Manufacturer id="0036" name="Exceptional Innv">
 	</Manufacturer>
