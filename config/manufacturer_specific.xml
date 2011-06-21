@@ -80,6 +80,7 @@
 	</Manufacturer>
 	<Manufacturer id="0002" name="Danfoss">
 	  <Product type="0064" id="0001" name="RA Plus-W Radiator Thermostat" />
+	  <Product type="8005" id="0001" name="Living Connect Radiator Thermostat" config="danfoss/living.xml" />
 	</Manufacturer>
 	<Manufacturer id="0031" name="Destiny Networks">
 	</Manufacturer>
@@ -172,9 +173,10 @@
 	<Manufacturer id="0013" name="Internet Dom">
 	</Manufacturer>
 	<Manufacturer id="0063" name="GE">
-	  <Product type="4457" id="3230" name="ZW3003 3-Way Dimmer Switch" />
+	  <Product type="4457" id="3230" name="GE 45606 2-Way Dimmer Switch" />
 	  <Product type="5250" id="3030" name="GE 45603 Plugin Appliance Module" />
 	  <Product type="5250" id="3130" name="GE 45604 Outdoor Module" />
+	  <Product type="4457" id="3033" name="GE 45613 3-Way Dimmer Switch" />
 	</Manufacturer>
 	<Manufacturer id="003b" name="Schlage">
 	</Manufacturer>
