@@ -206,7 +206,7 @@ bool ManufacturerSpecific::LoadProductXML
 	if( !pDoc->LoadFile( filename.c_str(), TIXML_ENCODING_UTF8 ) )
 	{
 		delete pDoc;	
-		Log::Write( "Unable to load manufacturer_specific.xml" );
+		Log::Write( "Unable to load %s", filename.c_str() );
 		return false;
 	}
 

@@ -716,6 +716,7 @@ namespace OpenZWaveDotNet
 		 */
 		void SetNodeLevel( uint32 homeId, uint8 nodeId, uint8 level ){ Manager::Get()->SetNodeLevel( homeId, nodeId, level ); }
 		
+		bool GetNodeClassInformation(uint32 homeId, uint8 nodeId, uint8 commandClassId, [Out] String^ %className, [Out] System::Byte %classVersion);
 	/*@}*/
 
 	//-----------------------------------------------------------------------------
