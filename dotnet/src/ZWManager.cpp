@@ -350,3 +350,23 @@ bool ZWManager::BeginControllerCommand
 	IntPtr ip = Marshal::GetFunctionPointerForDelegate( m_onStateChanged );
 	return( Manager::Get()->BeginControllerCommand( homeId, (Driver::ControllerCommand)command, (Driver::pfnControllerCallback_t)ip.ToPointer(), NULL, highPower, nodeId ) );
 }
+
+bool ZWManager::GetNodeClassInformation
+(
+	uint32 homeId, 
+	uint8 nodeId, 
+	uint8 commandClassId, 
+	[Out] String^ %o_name, 
+	[Out] System::Byte %o_version
+)
+{
+	string value;
+	uint8 version;
+	if (Manager::Get()->GetNodeClassInformation(homeId, nodeId, commandClassId, &value, &version))
+	{
+		o_name = gcnew String(value.c_str());
+		o_version = version;
+		return true;
+	}
+	return false;
+}
