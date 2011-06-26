@@ -14,7 +14,7 @@ AR     := ar rc
 RANLIB := ranlib
 
 DEBUG_CFLAGS    := -Wall -Wno-format -g -DDEBUG -DLOG_STDERR
-RELEASE_CFLAGS  := -Wall -Wno-unknown-pragmas -Wno-format -O3
+RELEASE_CFLAGS  := -Wall -Wno-unknown-pragmas -Wno-format -O3 -DNDEBUG
 
 DEBUG_LDFLAGS	:= -g
 
