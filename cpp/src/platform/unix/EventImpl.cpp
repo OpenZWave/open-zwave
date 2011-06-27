@@ -142,7 +142,7 @@ bool EventImpl::Wait
             {
                 // Yes it did so bump our seconds and modulo
                 now.tv_usec %= (1000 * 1000);
-                now.tv_sec++;
+                abstime.tv_sec++;
             }
             
             abstime.tv_nsec = now.tv_usec * 1000;
