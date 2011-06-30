@@ -242,6 +242,8 @@
 	<Manufacturer id="5254" name="Remotec">
 	</Manufacturer>
 	<Manufacturer id="0010" name="RCS">
+	  <Product type="0001" id="0002" name="TZ43 Thermostat" />
+	  <Product type="504d" id="3132" name="PM12-ZW Z-Wave Power Monitoring Module" />
 	</Manufacturer>
 	<Manufacturer id="0065" name="RS Scene">
 	</Manufacturer>
@@ -262,8 +264,6 @@
 	<Manufacturer id="0047" name="Somfy">
 	</Manufacturer>
 	<Manufacturer id="0009" name="Sylvania">
-	</Manufacturer>
-	<Manufacturer id="0010" name="Techniku">
 	</Manufacturer>
 	<Manufacturer id="0012" name="Tell It Online">
 	</Manufacturer>
