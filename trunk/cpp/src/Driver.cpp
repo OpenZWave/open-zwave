@@ -88,32 +88,32 @@ Driver::Driver
 ):
 	m_driverThread( new Thread( "driver" ) ),
 	m_wakeEvent( new Event() ),	
-    m_exitEvent( new Event() ), 
-    m_exit( false ),
-    m_init( false ),
-    m_controllerPath( _controllerPath ),
+	m_exitEvent( new Event() ), 
+	m_exit( false ),
+	m_init( false ),
+	m_controllerPath( _controllerPath ),
 	m_awakeNodesQueried( false ),
 	m_allNodesQueried( false ),
-    m_homeId( 0 ),
+	m_homeId( 0 ),
 	m_controllerThread( new Thread( "serial" ) ),
-    m_initCaps( 0 ),
-    m_controllerCaps( 0 ),
-    m_nodeMutex( new Mutex() ),
-    m_controllerReplication( NULL ),
+	m_initCaps( 0 ),
+	m_controllerCaps( 0 ),
+	m_nodeMutex( new Mutex() ),
+	m_controllerReplication( NULL ),
 	m_sendMutex( new Mutex() ),
-    m_waitingForAck( false ),
-    m_expectedCallbackId( 0 ),
-    m_expectedReply( 0 ),
+	m_waitingForAck( false ),
+	m_expectedCallbackId( 0 ),
+	m_expectedReply( 0 ),
 	m_pollThread( new Thread( "poll" ) ),
 	m_pollMutex( new Mutex() ),
-    m_pollInterval( 30 ),                   // By default, every polled device is queried once every 30 seconds
+	m_pollInterval( 30 ),                   // By default, every polled device is queried once every 30 seconds
 	m_queryMutex( new Mutex() ),
 	m_controllerState( ControllerState_Normal ),
 	m_controllerCommand( ControllerCommand_None ),
 	m_controllerCallback( NULL ),
 	m_controllerCallbackContext( NULL ),
 	m_controllerAdded( false ),
-    m_controllerCommandNode( 0 )
+	m_controllerCommandNode( 0 )
 {
 	// Clear the nodes array
 	memset( m_nodes, 0, sizeof(Node*) * 256 );
@@ -289,16 +289,7 @@ void Driver::DriverThreadProc
 								{
 									// Give up
 									Log::Write( "ERROR: Dropping command, expected response not received after three attempts");
-									uint8 targetNode = msg->GetTargetNodeId();
 									RemoveMsg();
-
-									if( Node* node = GetNodeUnsafe( targetNode ) )
-									{
-										if (node->m_queryPending)
-										{
-											Log::Write( "Command was dropped during node query stage %s, advancing to next stage", node->GetQueryStageName( node->m_queryStage ).c_str() );
-										}
-									}
 								}
 								else
 								{
@@ -324,11 +315,6 @@ void Driver::DriverThreadProc
 												{
 													Log::Write( "ERROR: Dropping command, node did not reply");
 													RemoveMsg();
-													if (node->m_queryPending)
-													{
-														Log::Write( "Command was dropped during node query stage %s, advancing to next stage", node->GetQueryStageName( node->m_queryStage ).c_str() );
-//														node->QueryStageComplete(node->m_queryStage);
-													}
 												}
 											}
 											else
