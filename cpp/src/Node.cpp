@@ -157,6 +157,11 @@ void Node::AdvanceQueries
 	// had a response to certain queries.  This state is initilized by the SetStaticRequests
 	// call in QueryStage_None.  It is also saved, so we do not need to request state 
 	// from every commaned class if some have previously responded. 
+	//
+	// Each stage must generate all the messages for its particular	stage as
+	// assumptions are made in later code (RemoveMsg) that this is the case. This means
+	// each stage is only visited once.
+
 	while( !m_queryPending )
 	{
 		switch( m_queryStage )
@@ -259,11 +264,7 @@ void Node::AdvanceQueries
 					for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
 					{
 						// Get the version for each supported command class
-						if( vcc->RequestCommandClassVersion( it->second ) )
-						{
-							m_queryPending = true;
-							break;
-						}
+						m_queryPending |= vcc->RequestCommandClassVersion( it->second );
 					}
 				}
 				// advance to Instances stage when finished
@@ -283,11 +284,7 @@ void Node::AdvanceQueries
 				{
 					for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
 					{
-						if( micc->RequestInstances( it->second ) )
-						{
-							m_queryPending = true;
-							break;
-						}
+						m_queryPending |= micc->RequestInstances( it->second );
 					}
 				}
 				// when done, advance to the Static stage
@@ -459,8 +456,7 @@ void Node::QueryStageRetry
 		return;
 	}
 
-	++m_queryRetries;
-	if( _maxAttempts && ( m_queryRetries >= _maxAttempts ) )
+	if( _maxAttempts && ( ++m_queryRetries >= _maxAttempts ) )
 	{
 		// We've retried too many times.  Move to the next stage.
 		// Setting m_queryRetries to 0 will make it look like the stage succeeded.
@@ -1767,7 +1763,7 @@ void Node::AddAssociation
 	uint8 const _targetNodeId
 )
 {
-    if( Group* group = GetGroup( _groupIdx ) )
+	if( Group* group = GetGroup( _groupIdx ) )
 	{
 		group->AddAssociation( _targetNodeId );
 	}
@@ -1783,7 +1779,7 @@ void Node::RemoveAssociation
 	uint8 const _targetNodeId
 )
 {
-    if( Group* group = GetGroup( _groupIdx ) )
+	if( Group* group = GetGroup( _groupIdx ) )
 	{
 		group->RemoveAssociation( _targetNodeId );
 	}
