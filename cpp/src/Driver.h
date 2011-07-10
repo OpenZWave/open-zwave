@@ -42,7 +42,7 @@ namespace OpenZWave
 	class Value;
 	class Event;
 	class Mutex;
-    class IController;
+	class IController;
 	class SerialController;
 	class Thread;
 	class ControllerReplication;
@@ -83,7 +83,7 @@ namespace OpenZWave
 		/** 
 		 *  Creates threads, events and initializes member variables and the node array.
 		 */
-        Driver( string const& _controllerPath, ControllerInterface const& _interface );
+		Driver( string const& _controllerPath, ControllerInterface const& _interface );
 		/** Sets "exit" flags and stops the three background threads (pollThread, serialThread
 		 *  and driverThread).  Then clears out the send queue and node array.  Notifies
 		 *  watchers and exits.
@@ -216,7 +216,7 @@ namespace OpenZWave
 		void ControllerThreadProc();
 
 		ControllerInterface     m_controllerInterfaceType;                  // Specifies the controller's hardware interface
-        string					m_controllerPath;							// name or path used to open the controller hardware.
+		string					m_controllerPath;							// name or path used to open the controller hardware.
 		IController*			m_controller;								// Handles communications with the controller hardware.
 		uint32					m_homeId;									// Home ID of the Z-Wave controller.  Not valid until the DriverReady notification has been received.
 		Thread*					m_controllerThread;								// Watches for data arriving at the controller.
@@ -420,8 +420,8 @@ namespace OpenZWave
 		void SetNodeName( uint8 const _nodeId, string const& _nodeName );
 		void SetNodeLocation( uint8 const _nodeId, string const& _location );
 		void SetNodeLevel( uint8 const _nodeId, uint8 const _level );
-        void SetNodeOn( uint8 const _nodeId );
-        void SetNodeOff( uint8 const _nodeId );
+		void SetNodeOn( uint8 const _nodeId );
+		void SetNodeOff( uint8 const _nodeId );
 
 		Value* GetValue( ValueID const& _id );
 

@@ -35,6 +35,7 @@
 #include "Node.h"
 #include "Notification.h"
 #include "Options.h"
+#include "Scene.h"
 
 #include "Mutex.h"
 #include "Event.h"
@@ -104,7 +105,7 @@ void Manager::Destroy
 Manager::Manager
 (
 ):
-    m_exitEvent( new Event() ),
+	m_exitEvent( new Event() ),
 	m_notificationMutex( new Mutex() )
 {
 	// Set the locale
@@ -126,6 +127,7 @@ Manager::Manager
 	}
 
 	CommandClasses::RegisterCommandClasses();
+	Scene::ReadScenes();
 }
 
 //-----------------------------------------------------------------------------
@@ -196,6 +198,7 @@ void Manager::WriteConfig
 	{
 		Log::Write( "Manager::WriteConfig failed - _homeId %d not found", _homeId );
 	}
+	Scene::WriteXML( "zwscene.xml" );
 }
 
 //-----------------------------------------------------------------------------
@@ -294,8 +297,8 @@ Driver* Manager::GetDriver
 		return it->second;
 	}
 
-	assert(0);
 	Log::Write( "Manager::GetDriver failed - Home ID 0x%.8x is unknown", _homeId );
+	assert(0);
 	return NULL;
 }
 
@@ -1108,7 +1111,7 @@ string Manager::GetValueLabel
 		if( Value* value = driver->GetValue( _id ) )
 		{
 			label = value->GetLabel();
-            value->Release();
+			value->Release();
 		}
 		driver->ReleaseNodes();
 	}
@@ -1715,7 +1718,7 @@ bool Manager::GetValueListItems
 				if( ValueList* value = static_cast<ValueList*>( driver->GetValue( _id ) ) )
 				{
 					res = value->GetItemLabels( o_value );
-                    value->Release();
+					value->Release();
 				}
 				driver->ReleaseNodes();
 			}
@@ -1745,7 +1748,7 @@ bool Manager::SetValue
 			if( ValueBool* value = static_cast<ValueBool*>( driver->GetValue( _id ) ) )
 			{
 				res = value->Set( _value );
-                value->Release();
+				value->Release();
 			}
 			driver->ReleaseNodes();
 		}
@@ -2590,6 +2593,681 @@ bool Manager::CancelControllerCommand
 		return( driver->CancelControllerCommand() );
 	}
 
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::GetNumScenes>
+// Return the number of defined scenes.
+//-----------------------------------------------------------------------------
+uint8 Manager::GetNumScenes
+(
+)
+{
+	return Scene::s_sceneCnt;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::GetAllScenes>
+// Return an array of all Scene Ids
+//-----------------------------------------------------------------------------
+uint8 Manager::GetAllScenes
+(
+	uint8** _sceneIds
+)
+{
+	*_sceneIds = NULL;
+	return Scene::GetAllScenes( _sceneIds );
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::CreateScene>
+// Create a new scene and return new Scene ID.
+//-----------------------------------------------------------------------------
+uint8 Manager::CreateScene
+(
+)
+{
+	for( int i = 1; i < 256; i++ )
+	{
+		Scene* scene = Scene::Get( i );
+		if( scene != NULL )
+		{
+			continue;
+		}
+		new Scene( i );
+		return i;
+	}
+	return 0;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::RemoveScene>
+// Remove scene and delete its contents
+//-----------------------------------------------------------------------------
+bool Manager::RemoveScene
+(
+	uint8 const _sceneId
+)
+{
+	Scene *scene = Scene::Get( _sceneId );
+	if( scene != NULL )
+	{
+		delete scene;
+		return true;
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::AddSceneValue>
+// Add a bool ValueID/value pair to the scene
+//-----------------------------------------------------------------------------
+bool Manager::AddSceneValue
+(
+	uint8 const _sceneId,
+	ValueID const& _valueId,
+	bool const _value
+)
+{
+	Scene *scene = Scene::Get( _sceneId );
+	if( scene != NULL )
+	{
+		return scene->AddValue( _valueId, _value ? "True" : "False");
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::AddSceneValue>
+// Add a byte ValueID/value pair to the scene
+//-----------------------------------------------------------------------------
+bool Manager::AddSceneValue
+(
+	uint8 const _sceneId,
+	ValueID const& _valueId,
+	uint8 const _value
+)
+{
+	Scene *scene = Scene::Get( _sceneId );
+	if( scene != NULL )
+	{
+		char str[16];
+		snprintf( str, sizeof(str), "%d", _value );
+		return scene->AddValue( _valueId, str );
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::AddSceneValue>
+// Add a decimal ValueID/value pair to the scene
+//-----------------------------------------------------------------------------
+bool Manager::AddSceneValue
+(
+	uint8 const _sceneId,
+	ValueID const& _valueId,
+	float const _value
+)
+{
+	Scene *scene = Scene::Get( _sceneId );
+	if( scene != NULL )
+	{
+		char str[16];
+		snprintf( str, sizeof(str), "%f", _value );
+		return scene->AddValue( _valueId, str );
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::AddSceneValue>
+// Add an integer ValueID/value pair to the scene
+//-----------------------------------------------------------------------------
+bool Manager::AddSceneValue
+(
+	uint8 const _sceneId,
+	ValueID const& _valueId,
+	int32 const _value
+)
+{
+	Scene *scene = Scene::Get( _sceneId );
+	if( scene != NULL )
+	{
+		char str[16];
+		snprintf( str, sizeof(str), "%d", _value );
+		return scene->AddValue( _valueId, str );
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::AddSceneValue>
+// Add a short ValueID/value pair to the scene
+//-----------------------------------------------------------------------------
+bool Manager::AddSceneValue
+(
+	uint8 const _sceneId,
+	ValueID const& _valueId,
+	int16 const _value
+)
+{
+	Scene *scene = Scene::Get( _sceneId );
+	if( scene != NULL )
+	{
+		char str[16];
+		snprintf( str, sizeof(str), "%d", _value );
+		return scene->AddValue( _valueId, str );
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::AddSceneValue>
+// Add a string ValueID/value pair to the scene
+//-----------------------------------------------------------------------------
+bool Manager::AddSceneValue
+(
+	uint8 const _sceneId,
+	ValueID const& _valueId,
+	string const& _value
+)
+{
+	Scene *scene = Scene::Get( _sceneId );
+	if( scene != NULL )
+	{
+		return scene->AddValue( _valueId, _value );
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::AddSceneValueListSelection>
+// Add a list selection item ValueID/value pair to the scene (as string)
+//-----------------------------------------------------------------------------
+bool Manager::AddSceneValueListSelection
+(
+	uint8 const _sceneId,
+	ValueID const& _valueId,
+	string const& _value
+)
+{
+	Scene *scene = Scene::Get( _sceneId );
+	if( scene != NULL )
+	{
+		return scene->AddValue( _valueId, _value );
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::AddSceneValueListSelection>
+// Add a list selection item ValueID/value pair to the scene (as integer)
+//-----------------------------------------------------------------------------
+bool Manager::AddSceneValueListSelection
+(
+	uint8 const _sceneId,
+	ValueID const& _valueId,
+	int32 const _value
+)
+{
+	Scene *scene = Scene::Get( _sceneId );
+	if( scene != NULL )
+	{
+		char str[16];
+		snprintf( str, sizeof(str), "%d", _value );
+		return scene->AddValue( _valueId, str );
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::RemoveSceneValue>
+// Remove a ValueID/value pair from the scene
+//-----------------------------------------------------------------------------
+bool Manager::RemoveSceneValue
+(
+	uint8 const _sceneId,
+	ValueID const& _valueId
+)
+{
+	Scene *scene = Scene::Get( _sceneId );
+	if( scene != NULL )
+	{
+		return scene->RemoveValue( _valueId );
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::SceneGetValues>
+// Return a scene's Value ID 
+//-----------------------------------------------------------------------------
+int Manager::SceneGetValues
+(
+	uint8 const _sceneId,
+	vector<ValueID>* o_value
+)
+{
+	o_value->clear();
+	Scene *scene = Scene::Get( _sceneId );
+	if( scene != NULL )
+	{
+		return scene->GetValues( o_value );
+	}
+	return 0;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::SceneGetValueAsBool>
+// Return a scene's Value ID bool value
+//-----------------------------------------------------------------------------
+bool Manager::SceneGetValueAsBool
+(
+	uint8 const _sceneId,
+	ValueID const& _valueId,
+	bool* o_value
+)
+{
+	Scene *scene = Scene::Get( _sceneId );
+	if( scene != NULL )
+	{
+		string str;
+		if( scene->GetValue( _valueId, &str ) )
+		{
+			*o_value = !strcasecmp( "true", str.c_str() );
+			return true;
+		}
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::SceneGetValueAsByte>
+// Return a scene's Value ID byte value
+//-----------------------------------------------------------------------------
+bool Manager::SceneGetValueAsByte
+(
+	uint8 const _sceneId,
+	ValueID const& _valueId,
+	uint8* o_value
+)
+{
+	Scene *scene = Scene::Get( _sceneId );
+	if( scene != NULL )
+	{
+		string str;
+		if( scene->GetValue( _valueId, &str ) )
+		{
+			*o_value = (uint8)atoi( str.c_str() );
+			return true;
+		}
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::SceneGetValueAsFloat>
+// Return a scene's Value ID float value
+//-----------------------------------------------------------------------------
+bool Manager::SceneGetValueAsFloat
+(
+	uint8 const _sceneId,
+	ValueID const& _valueId,
+	float* o_value
+)
+{
+	Scene *scene = Scene::Get( _sceneId );
+	if( scene != NULL )
+	{
+		string str;
+		if( scene->GetValue( _valueId, &str ) )
+		{
+			*o_value = (float)atof( str.c_str() );
+			return true;
+		}
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::SceneGetValueAsInt>
+// Return a scene's Value ID integer value
+//-----------------------------------------------------------------------------
+bool Manager::SceneGetValueAsInt
+(
+	uint8 const _sceneId,
+	ValueID const& _valueId,
+	int32* o_value
+)
+{
+	Scene *scene = Scene::Get( _sceneId );
+	if( scene != NULL )
+	{
+		string str;
+		if( scene->GetValue( _valueId, &str ) )
+		{
+			*o_value = (int32)atoi( str.c_str() );
+			return true;
+		}
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::SceneGetValueAsShort>
+// Return a scene's Value ID short value
+//-----------------------------------------------------------------------------
+bool Manager::SceneGetValueAsShort
+(
+	uint8 const _sceneId,
+	ValueID const& _valueId,
+	int16* o_value
+)
+{
+	Scene *scene = Scene::Get( _sceneId );
+	if( scene != NULL )
+	{
+		string str;
+		if( scene->GetValue( _valueId, &str ) )
+		{
+			*o_value = (int16)atoi( str.c_str() );
+			return true;
+		}
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::SceneGetValueAsString>
+// Return a scene's Value ID string value
+//-----------------------------------------------------------------------------
+bool Manager::SceneGetValueAsString
+(
+	uint8 const _sceneId,
+	ValueID const& _valueId,
+	string* o_value
+)
+{
+	Scene *scene = Scene::Get( _sceneId );
+	if( scene != NULL )
+	{
+		if( scene->GetValue( _valueId, o_value ) )
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::SceneGetValueListSelection>
+// Return a scene's Value ID list selection (as string) value
+//-----------------------------------------------------------------------------
+bool Manager::SceneGetValueListSelection
+(
+	uint8 const _sceneId,
+	ValueID const& _valueId,
+	string* o_value
+)
+{
+	Scene *scene = Scene::Get( _sceneId );
+	if( scene != NULL )
+	{
+		if( scene->GetValue( _valueId, o_value ) )
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::SceneGetValueListSelection>
+// Return a scene's Value ID list selection (as integer) value
+//-----------------------------------------------------------------------------
+bool Manager::SceneGetValueListSelection
+(
+	uint8 const _sceneId,
+	ValueID const& _valueId,
+	int32* o_value
+)
+{
+	Scene *scene = Scene::Get( _sceneId );
+	if( scene != NULL )
+	{
+		string str;
+		if( scene->GetValue( _valueId, &str ) )
+		{
+			*o_value = (int32)atoi( str.c_str() );
+			return true;
+		}
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::SetSceneValue>
+// Set a scene's ValueID bool value.
+//-----------------------------------------------------------------------------
+bool Manager::SetSceneValue
+(
+	uint8 const _sceneId,
+	ValueID const& _valueId,
+	bool const _value
+)
+{
+	Scene *scene = Scene::Get( _sceneId );
+	if( scene != NULL )
+	{
+	  return scene->SetValue( _valueId, _value ? "True" : "False" );
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::SetSceneValue>
+// Set a scene's ValueID byte value.
+//-----------------------------------------------------------------------------
+bool Manager::SetSceneValue
+(
+	uint8 const _sceneId,
+	ValueID const& _valueId,
+	uint8 const _value
+)
+{
+	Scene *scene = Scene::Get( _sceneId );
+	if( scene != NULL )
+	{
+		char str[16];
+		snprintf( str, sizeof(str), "%d", _value );
+		return scene->SetValue( _valueId, str );
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::SetSceneValue>
+// Set a scene's ValueID float value.
+//-----------------------------------------------------------------------------
+bool Manager::SetSceneValue
+(
+	uint8 const _sceneId,
+	ValueID const& _valueId,
+	float const _value
+)
+{
+	Scene *scene = Scene::Get( _sceneId );
+	if( scene != NULL )
+	{
+		char str[16];
+		snprintf( str, sizeof(str), "%f", _value );
+		return scene->SetValue( _valueId, str );
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::SetSceneValue>
+// Set a scene's ValueID integer value.
+//-----------------------------------------------------------------------------
+bool Manager::SetSceneValue
+(
+	uint8 const _sceneId,
+	ValueID const& _valueId,
+	int32 const _value
+)
+{
+	Scene *scene = Scene::Get( _sceneId );
+	if( scene != NULL )
+	{
+		char str[16];
+		snprintf( str, sizeof(str), "%d", _value );
+		return scene->SetValue( _valueId, str );
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::SetSceneValue>
+// Set a scene's ValueID short value.
+//-----------------------------------------------------------------------------
+bool Manager::SetSceneValue
+(
+	uint8 const _sceneId,
+	ValueID const& _valueId,
+	int16 const _value
+)
+{
+	Scene *scene = Scene::Get( _sceneId );
+	if( scene != NULL )
+	{
+		char str[16];
+		snprintf( str, sizeof(str), "%d", _value );
+		return scene->SetValue( _valueId, str );
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::SetSceneValue>
+// Set a scene's ValueID string value.
+//-----------------------------------------------------------------------------
+bool Manager::SetSceneValue
+(
+	uint8 const _sceneId,
+	ValueID const& _valueId,
+	string const& _value
+)
+{
+	Scene *scene = Scene::Get( _sceneId );
+	if( scene != NULL )
+	{
+		return scene->SetValue( _valueId, _value );
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::SetSceneValueListSelection>
+// Set a scene's ValueID list item value (as string).
+//-----------------------------------------------------------------------------
+bool Manager::SetSceneValueListSelection
+(
+	uint8 const _sceneId,
+	ValueID const& _valueId,
+	string const& _value
+)
+{
+	Scene *scene = Scene::Get( _sceneId );
+	if( scene != NULL )
+	{
+		return scene->SetValue( _valueId, _value );
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::SetSceneValueListSelection>
+// Set a scene's ValueID list item value (as integer).
+//-----------------------------------------------------------------------------
+bool Manager::SetSceneValueListSelection
+(
+	uint8 const _sceneId,
+	ValueID const& _valueId,
+	int32 const _value
+)
+{
+	Scene *scene = Scene::Get( _sceneId );
+	if( scene != NULL )
+	{
+		char str[16];
+		snprintf( str, sizeof(str), "%d", _value );
+		return scene->SetValue( _valueId, str );
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::GetSceneLabel>
+// Return a scene's label
+//-----------------------------------------------------------------------------
+string Manager::GetSceneLabel
+(
+	uint8 const _sceneId
+)
+{
+	Scene *scene = Scene::Get( _sceneId );
+	if( scene != NULL )
+	{
+		return scene->GetLabel();
+	}
+	return NULL;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::SetSceneLabel>
+// Set a scene's label
+//-----------------------------------------------------------------------------
+void Manager::SetSceneLabel
+(
+	uint8 const _sceneId,
+	string const& _value
+)
+{
+	Scene *scene = Scene::Get( _sceneId );
+	if( scene != NULL )
+	{
+		scene->SetLabel( _value );
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::SceneExists>
+// Check if a Scene ID exists
+//-----------------------------------------------------------------------------
+bool Manager::SceneExists
+(
+	uint8 const _sceneId
+)
+{
+	return Scene::Get( _sceneId ) != NULL;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::ActivateScene>
+// Perform all the settings for the given Scene ID
+//-----------------------------------------------------------------------------
+bool Manager::ActivateScene
+(
+	uint8 const _sceneId
+)
+{
+  	Scene *scene = Scene::Get( _sceneId );
+	if( scene != NULL )
+	{
+		return scene->Activate();
+	}
 	return false;
 }
 

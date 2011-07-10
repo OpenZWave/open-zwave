@@ -5,7 +5,7 @@
 # GNU make only
 
 .SUFFIXES:	.d .cpp .o .a
-.PHONY:	default clean
+.PHONY:	default clean verscheck
 
 CC     := gcc
 CXX    := g++
@@ -64,7 +64,7 @@ clean:
 -include $(pform:.cpp=.d)
 -include $(indep:.cpp=.d)
 
-vers.c:
+vers.c:	verscheck
 	echo 'char ozw_vers[] = "OpenZWave version 1.0.'`svnversion ../..`'";' > vers.c
 
 vers.o:	vers.c
