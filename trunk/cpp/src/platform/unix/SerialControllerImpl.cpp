@@ -75,13 +75,18 @@ bool SerialControllerImpl::Open
 {
 	Log::Write( "Open serial port %s", _SerialControllerName.c_str() );
 
-	m_hSerialController = open( _SerialControllerName.c_str(), O_RDWR | O_NOCTTY | O_EXLOCK, 0 );
+	m_hSerialController = open( _SerialControllerName.c_str(), O_RDWR | O_NOCTTY, 0 );
 
 	if( -1 == m_hSerialController )
 	{
 		//Error
 		Log::Write( "Cannot open serial port %s. Error code %d", _SerialControllerName.c_str(), errno );
 		goto SerialOpenFailure;
+	}
+
+	if( flock( m_hSerialController, LOCK_EX) == -1 )
+	{
+		Log::Write( "Cannot get exclusive lock for serial port %s. Error code %d", _SerialControllerName.c_str(), errno );
 	}
 
 	int bits;
