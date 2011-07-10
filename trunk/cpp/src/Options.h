@@ -220,9 +220,9 @@ namespace OpenZWave
 			friend class Options;
 
 		public:
-			Option( string const& _name, bool const _value ): m_name( _name ), m_valueBool( _value ), m_type( Options::OptionType_Bool ), m_append( false ){}
-			Option( string const& _name, int32 const _value ): m_name( _name ), m_valueInt( _value ), m_type( Options::OptionType_Int ), m_append( false ){}
-			Option( string const& _name, string const& _value, bool const _append ): m_name( _name ), m_valueString( _value ), m_type( Options::OptionType_String ), m_append( _append ){}
+			Option( string const& _name, bool const _value ):  m_type( Options::OptionType_Bool ), m_name( _name ), m_valueBool( _value ),  m_append( false ){}
+			Option( string const& _name, int32 const _value ): m_type( Options::OptionType_Int ), m_name( _name ), m_valueInt( _value ) , m_append( false ){}
+			Option( string const& _name, string const& _value, bool const _append ): m_type( Options::OptionType_String ), m_name( _name ), m_valueString( _value ), m_append( _append ){}
 			
 			bool SetValueFromString( string const& _value );
 
