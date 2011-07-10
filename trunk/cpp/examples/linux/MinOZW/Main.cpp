@@ -55,6 +55,8 @@ typedef struct
 
 static list<NodeInfo*> g_nodes;
 static pthread_mutex_t g_criticalSection;
+static pthread_cond_t  initCond  = PTHREAD_COND_INITIALIZER;
+static pthread_mutex_t initMutex = PTHREAD_MUTEX_INITIALIZER;
 
 //-----------------------------------------------------------------------------
 // <GetNodeInfo>
@@ -127,6 +129,7 @@ void OnNotification
 			{
 				// One of the node values has changed
 				// TBD...
+				nodeInfo = nodeInfo;
 			}
 			break;
 		}
@@ -137,6 +140,7 @@ void OnNotification
 			{
 				// One of the node's association groups has changed
 				// TBD...
+				nodeInfo = nodeInfo;
 			}
 			break;
 		}
@@ -175,7 +179,7 @@ void OnNotification
 			{
 				// We have received an event from the node, caused by a
 				// basic_set or hail message.
-				// TBD...
+				nodeInfo = nodeInfo;
 			}
 			break;
 		}
@@ -203,6 +207,16 @@ void OnNotification
 			g_homeId = _notification->GetHomeId();
 			break;
 		}
+		
+		case Notification::Type_AllNodesQueried:
+		case Notification::Type_AwakeNodesQueried:
+			{
+				pthread_cond_broadcast(&initCond);
+			}
+
+		default:
+		{
+		}
 	}
 
 	pthread_mutex_unlock( &g_criticalSection );
@@ -215,11 +229,13 @@ int main( int argc, char* argv[] )
 {
 	pthread_mutexattr_t mutexattr;
 
-    pthread_mutexattr_init ( &mutexattr );
+	pthread_mutexattr_init ( &mutexattr );
 	pthread_mutexattr_settype( &mutexattr, PTHREAD_MUTEX_RECURSIVE );
 	pthread_mutex_init( &g_criticalSection, &mutexattr );
-	pthread_mutexattr_destroy( &mutexattr );
-
+	pthread_mutexattr_destroy(&mutexattr);
+	
+	pthread_mutex_lock(&initMutex);
+	
 	// Create the OpenZWave Manager.
 	// The first argument is the path to the config files (where the manufacturer_specific.xml file is located
 	// The second argument is the path for saved Z-Wave network state and the log file.  If you leave it NULL 
@@ -237,33 +253,33 @@ int main( int argc, char* argv[] )
 
 	// Add a Z-Wave Driver
 	// Modify this line to set the correct serial port for your PC interface.
-	Manager::Get()->AddDriver( "/dev/ttyUSB0" );
+	Manager::Get()->AddDriver((argc > 1) ? argv[1] : "/dev/ttyUSB0");
 	//Manager::Get()->AddDriver( "HID Controller", Driver::ControllerInterface_Hid );
 
 	// Now we just wait for the driver to become ready, and then write out the loaded config.
 	// In a normal app, we would be handling notifications and building a UI for the user.
-	while( !g_homeId )
-	{
-		sleep(1);
-	}
-
+	pthread_cond_wait(&initCond, &initMutex);
+	
 	//Manager::Get()->BeginAddNode( g_homeId );
 	//sleep(10);
 	//Manager::Get()->EndAddNode( g_homeId );
 	//Manager::Get()->BeginRemoveNode( g_homeId );
 	//sleep(10);
 	//Manager::Get()->EndRemoveNode( g_homeId );
-	sleep(10);
+	//sleep(10);
+	
 	Manager::Get()->WriteConfig( g_homeId );
 	
 	while( true )
 	{
 		sleep(10);
-
+		
 		pthread_mutex_lock( &g_criticalSection );
 		// Do stuff
 		pthread_mutex_unlock( &g_criticalSection );
 	}
+
+	Manager::Destroy();
 
 	pthread_mutex_destroy( &g_criticalSection );
 	return 0;
