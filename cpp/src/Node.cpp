@@ -100,16 +100,16 @@ Node::Node
 	uint32 const _homeId, 
 	uint8 const _nodeId
 ):
-	m_listening( true ),	// assume we start out listening
-	m_homeId( _homeId ),
-	m_nodeId( _nodeId ),
-	m_values( new ValueStore() ),
 	m_queryStage( QueryStage_None ),
 	m_queryPending( false ),
 	m_queryConfiguration( false ),
 	m_queryRetries( 0 ),
 	m_protocolInfoReceived( false ),
-	m_nodeInfoReceived( false )
+	m_nodeInfoReceived( false ),
+	m_listening( true ),	// assume we start out listening
+	m_homeId( _homeId ),
+	m_nodeId( _nodeId ),
+	m_values( new ValueStore() )
 {
 }
 
