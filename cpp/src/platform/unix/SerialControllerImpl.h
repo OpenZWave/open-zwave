@@ -33,6 +33,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <time.h>
+#include <sys/file.h>
 #include <sys/ioctl.h>
 #include <arpa/inet.h>
 
