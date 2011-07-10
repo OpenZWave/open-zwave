@@ -59,7 +59,8 @@ CommandClass::CommandClass
 	m_version( 1 ),
 	m_instances( 0 ),
 	m_staticRequests( 0 ),
-	m_afterMark( false )
+	m_afterMark( false ),
+	m_createVars( true )
 {
 }
 
@@ -120,7 +121,10 @@ void CommandClass::SetInstances
 		{	
 			for( uint8 i=m_instances; i<_instances; ++i )
 			{
-				CreateVars( i+1 );
+				if( IsCreateVars() )
+				{
+					CreateVars( i+1 );
+				}
 			}
 		}
 
@@ -163,6 +167,13 @@ void CommandClass::ReadXML
 	if( str )
 	{
 		m_afterMark = !strcmp( str, "true" );
+	}
+
+	m_createVars = false;
+	str = _ccElement->Attribute( "create_vars" );
+	if( str )
+	{
+		m_createVars = !strcmp( str, "true" );
 	}
 
 	// Setting the instance count will create all the values.
@@ -215,6 +226,11 @@ void CommandClass::WriteXML
 	if( m_afterMark )
 	{
 		_ccElement->SetAttribute( "after_mark", "true" );
+	}
+
+	if( m_createVars )
+	{
+		_ccElement->SetAttribute( "create_vars", "true" );
 	}
 
 	// Write out the values for this command class

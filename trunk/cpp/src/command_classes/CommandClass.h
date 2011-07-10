@@ -77,6 +77,7 @@ namespace OpenZWave
 		void SetInstances( uint8 const _instances );
 		void SetAfterMark(){ m_afterMark = true; }
 		bool IsAfterMark()const{ return m_afterMark; }
+		bool IsCreateVars()const{ return m_createVars; }
 
 		// Helper methods
 		string ExtractValue( uint8 const* _data, uint8* _scale )const;
@@ -105,6 +106,7 @@ namespace OpenZWave
 		uint8	m_version;
 		uint8	m_instances;
 		bool	m_afterMark;		// Set to true if the command class is listed after COMMAND_CLASS_MARK, and should not create any values.
+		bool	m_createVars;		// Do we want to create variables
 
 	//-----------------------------------------------------------------------------
 	// Record which items of static data have been read from the device
