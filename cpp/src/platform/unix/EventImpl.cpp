@@ -127,36 +127,36 @@ bool EventImpl::Wait
 		waiting_threads++;
 		if( _timeout > 0 )
 		{
-            struct timeval now;
+			struct timeval now;
 			struct timespec abstime;
 
-            gettimeofday(&now, NULL);
+			gettimeofday(&now, NULL);
             
-            abstime.tv_sec = now.tv_sec + (_timeout / 1000);
+			abstime.tv_sec = now.tv_sec + (_timeout / 1000);
 
-            // Now add the remainder of our timeout to the microseconds part of 'now'
-            now.tv_usec += (_timeout % 1000) * 1000;
+			// Now add the remainder of our timeout to the microseconds part of 'now'
+			now.tv_usec += (_timeout % 1000) * 1000;
 
-            // Careful now! Did it wrap?
-            if(now.tv_usec > (1000 * 1000))
-            {
-                // Yes it did so bump our seconds and modulo
-                now.tv_usec %= (1000 * 1000);
-                abstime.tv_sec++;
-            }
+			// Careful now! Did it wrap?
+			if(now.tv_usec > (1000 * 1000))
+			{
+				// Yes it did so bump our seconds and modulo
+				now.tv_usec %= (1000 * 1000);
+				abstime.tv_sec++;
+			}
             
-            abstime.tv_nsec = now.tv_usec * 1000;
+			abstime.tv_nsec = now.tv_usec * 1000;
             
 			while( !is_signaled )
 			{
-                int oldstate;
-                pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, &oldstate);
+				int oldstate;
+				pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, &oldstate);
 
 				int pr = pthread_cond_timedwait( &condition, &lock, &abstime );
 
-                pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, &oldstate);
+				pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, &oldstate);
 
-                if (pr == ETIMEDOUT)
+				if (pr == ETIMEDOUT)
 				{
 					result = false;
 					break;
@@ -171,12 +171,12 @@ bool EventImpl::Wait
 		{
 			while( !is_signaled )
 			{
-                int oldstate;
-                pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, &oldstate);
+				int oldstate;
+				pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, &oldstate);
 
 				pthread_cond_wait( &condition, &lock );
 
-                pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, &oldstate);
+				pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, &oldstate);
 			}
 		}
 		waiting_threads--;

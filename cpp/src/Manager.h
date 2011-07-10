@@ -152,7 +152,7 @@ namespace OpenZWave
 	/*@}*/
 
 	private:
-        Manager();															// Constructor, to be called only via the static Create method.
+		Manager();															// Constructor, to be called only via the static Create method.
 		virtual ~Manager();													// Destructor, to be called only via the static Destroy method.
 
 		Event*					m_exitEvent;								// Event that will be signalled when the threads should exit
@@ -211,7 +211,7 @@ namespace OpenZWave
 		 * \return True if a new driver was created, false if a driver for the controller already exists.
 		 * \see Create, Get, RemoveDriver
 		 */
-        bool AddDriver( string const& _controllerPath, Driver::ControllerInterface const& _interface = Driver::ControllerInterface_Serial);
+		bool AddDriver( string const& _controllerPath, Driver::ControllerInterface const& _interface = Driver::ControllerInterface_Serial);
 
 		/**
 		 * \brief Removes the driver for a Z-Wave controller, and closes the controller.
@@ -277,9 +277,9 @@ namespace OpenZWave
 		 * - Controller
 		 * - Enhanced Slave
 		 * - Slave            
-	     * - Installer
-	     * - Routing Slave
-	     * - Bridge Controller
+		 * - Installer
+		 * - Routing Slave
+		 * - Bridge Controller
 		 * - Device Under Test
 		 * The controller should never return a slave library type.
 		 * For a more efficient test of whether a controller is a Bridge Controller, use
@@ -656,23 +656,23 @@ namespace OpenZWave
 		 */
 		void SetNodeLevel( uint32 const _homeId, uint8 const _nodeId, uint8 const _level );
 
-        /**
-         * \brief Get whether the node information has been received
-         * \param _homeId The Home ID of the Z-Wave controller that manages the node.
-         * \param _nodeId The ID of the node to query.
-         * \return True if the node information has been received yet
-         */
-        bool IsNodeInfoReceived( uint32 const _homeId, uint8 const _nodeId );
+		/**
+		 * \brief Get whether the node information has been received
+		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param _nodeId The ID of the node to query.
+		 * \return True if the node information has been received yet
+		 */
+		bool IsNodeInfoReceived( uint32 const _homeId, uint8 const _nodeId );
 
-        /**
-         * \brief Get whether the node has the defined class available or not
-         * \param _homeId The Home ID of the Z-Wave controller that manages the node.
-         * \param _nodeId The ID of the node to query.
-         * \param _commandClassId Id of the class to test for
-         * \return True if the node does have the class instantiated, will return name & version
-         */
-        bool GetNodeClassInformation( uint32 const _homeId, uint8 const _nodeId, uint8 const _commandClassId,
-                                      string *_className = NULL, uint8 *_classVersion = NULL);
+		/**
+		 * \brief Get whether the node has the defined class available or not
+		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param _nodeId The ID of the node to query.
+		 * \param _commandClassId Id of the class to test for
+		 * \return True if the node does have the class instantiated, will return name & version
+		 */
+		bool GetNodeClassInformation( uint32 const _homeId, uint8 const _nodeId, uint8 const _commandClassId,
+					      string *_className = NULL, uint8 *_classVersion = NULL);
 	/*@}*/
 
 	//-----------------------------------------------------------------------------
@@ -1304,7 +1304,7 @@ namespace OpenZWave
 		 * - Driver::ControllerState_Failed - will be sent if the command fails for any reason.
 		 */
 		bool BeginControllerCommand( uint32 const _homeId, Driver::ControllerCommand _command, Driver::pfnControllerCallback_t _callback = NULL, void* _context = NULL, bool _highPower = false, uint8 _nodeId = 0xff );
-			
+
 		/**
 		 * \brief Cancels any in-progress command running on a controller.
 		 * \param _homeId The Home ID of the Z-Wave controller.
@@ -1312,6 +1312,337 @@ namespace OpenZWave
 		 * \see BeginControllerCommand 
 		 */
 		bool CancelControllerCommand( uint32 const _homeId );
+	/*@}*/
+
+	//-----------------------------------------------------------------------------
+	// Scene commands
+	//-----------------------------------------------------------------------------
+	/** \name Scene Commands
+	 *  Commands for Z-Wave scene interface.
+	 */
+	/*@{*/
+	public:	
+		/**
+		 * \brief Gets the number of scenes that have been defined.
+		 * \return The number of scenes.
+		 * \see GetAllScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
+		 */
+		uint8 GetNumScenes( );
+
+		/**
+		 * \brief Gets a list of all the SceneIds.
+		 * \param _sceneIds is a pointer to an array of integers.
+		 * \return The number of scenes. If zero, _sceneIds will be NULL and doesn't need to be freed.
+		 * \see GetNumScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
+		 */
+		uint8 GetAllScenes( uint8** _sceneIds );
+
+		/**
+		 * \brief Create a new Scene passing in Scene ID
+		 * \return uint8 Scene ID used to reference the scene. 0 is failure result.
+		 * \see GetNumScenes, GetAllScenes, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
+
+		 */
+		uint8 CreateScene();
+
+		/**
+		 * \brief Remove an existing Scene.
+		 * \param _sceneId is an integer representing the unique Scene ID to be removed.
+		 * \return true if scene was removed.
+		 * \see GetNumScenes, GetAllScenes, CreateScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
+		 */
+		bool RemoveScene( uint8 const _sceneId );
+
+		/**
+		 * \brief Add a bool Value ID to an existing scene.
+		 * \param _sceneId is an integer representing the unique Scene ID.
+		 * \param _valueId is the Value ID to be added.
+		 * \param _value is the bool value to be saved.
+		 * \return true if Value ID was added.
+		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
+		 */
+		bool AddSceneValue( uint8 const _sceneId, ValueID const& _valueId, bool const _value );
+
+		/**
+		 * \brief Add a byte Value ID to an existing scene.
+		 * \param _sceneId is an integer representing the unique Scene ID.
+		 * \param _valueId is the Value ID to be added.
+		 * \param _value is the byte value to be saved.
+		 * \return true if Value ID was added.
+		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
+		 */
+		bool AddSceneValue( uint8 const _sceneId, ValueID const& _valueId, uint8 const _value );
+
+		/**
+		 * \brief Add a decimal Value ID to an existing scene.
+		 * \param _sceneId is an integer representing the unique Scene ID.
+		 * \param _valueId is the Value ID to be added.
+		 * \param _value is the float value to be saved.
+		 * \return true if Value ID was added.
+		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
+		 */
+		bool AddSceneValue( uint8 const _sceneId, ValueID const& _valueId, float const _value );
+
+		/**
+		 * \brief Add a 32-bit signed integer Value ID to an existing scene.
+		 * \param _sceneId is an integer representing the unique Scene ID.
+		 * \param _valueId is the Value ID to be added.
+		 * \param _value is the int32 value to be saved.
+		 * \return true if Value ID was added.
+		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
+		 */
+		bool AddSceneValue( uint8 const _sceneId, ValueID const& _valueId, int32 const _value );
+
+		/**
+		 * \brief Add a 16-bit signed integer Value ID to an existing scene.
+		 * \param _sceneId is an integer representing the unique Scene ID.
+		 * \param _valueId is the Value ID to be added.
+		 * \param _value is the int16 value to be saved.
+		 * \return true if Value ID was added.
+		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
+		 */
+		bool AddSceneValue( uint8 const _sceneId, ValueID const& _valueId, int16 const _value );
+
+		/**
+		 * \brief Add a string Value ID to an existing scene.
+		 * \param _sceneId is an integer representing the unique Scene ID.
+		 * \param _valueId is the Value ID to be added.
+		 * \param _value is the string value to be saved.
+		 * \return true if Value ID was added.
+		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
+		 */
+		bool AddSceneValue( uint8 const _sceneId, ValueID const& _valueId, string const& _value );
+
+		/**
+		 * \brief Add the selected item list Value ID to an existing scene (as a string).
+		 * \param _sceneId is an integer representing the unique Scene ID.
+		 * \param _valueId is the Value ID to be added.
+		 * \param _value is the string value to be saved.
+		 * \return true if Value ID was added.
+		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
+		 */
+		bool AddSceneValueListSelection( uint8 const _sceneId, ValueID const& _valueId, string const& _value );
+
+		/**
+		 * \brief Add the selected item list Value ID to an existing scene (as a integer).
+		 * \param _sceneId is an integer representing the unique Scene ID.
+		 * \param _valueId is the Value ID to be added.
+		 * \param _value is the integer value to be saved.
+		 * \return true if Value ID was added.
+		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
+		 */
+		bool AddSceneValueListSelection( uint8 const _sceneId, ValueID const& _valueId, int32 const _value );
+
+		/**
+		 * \brief Remove the Value ID from an existing scene.
+		 * \param _sceneId is an integer representing the unique Scene ID.
+		 * \param _valueId is the Value ID to be removed.
+		 * \return true if Value ID was removed.
+		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, AddSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
+		 */
+		bool RemoveSceneValue( uint8 const _sceneId, ValueID const& _valueId );
+
+		/**
+		 * \brief Retrieves the scene's list of values.
+		 * \param _sceneId The Scene ID of the scene to retrieve the value from.
+		 * \param o_value Pointer to an array of ValueIDs if return is non-zero.
+		 * \return The number of nodes in the o_value array. If zero, the array will point to NULL and does not need to be deleted.
+		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
+		 */
+		int SceneGetValues( uint8 const _sceneId, vector<ValueID>* o_value );
+
+		/**
+		 * \brief Retrieves a scene's value as a bool.
+		 * \param _sceneId The Scene ID of the scene to retrieve the value from.
+		 * \param _valueId The Value ID of the value to retrieve.
+		 * \param o_value Pointer to a bool that will be filled with the returned value.
+		 * \return true if the value was obtained.
+		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
+		 */
+		bool SceneGetValueAsBool( uint8 const _sceneId, ValueID const& _valueId, bool* o_value );
+
+		/**
+		 * \brief Retrieves a scene's value as an 8-bit unsigned integer.
+		 * \param _sceneId The Scene ID of the scene to retrieve the value from.
+		 * \param _valueId The Value ID of the value to retrieve.
+		 * \param o_value Pointer to a uint8 that will be filled with the returned value.
+		 * \return true if the value was obtained.
+		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
+		 */
+		bool SceneGetValueAsByte( uint8 const _sceneId, ValueID const& _valueId, uint8* o_value );
+
+		/**
+		 * \brief Retrieves a scene's value as a float.
+		 * \param _sceneId The Scene ID of the scene to retrieve the value from.
+		 * \param _valueId The Value ID of the value to retrieve.
+		 * \param o_value Pointer to a float that will be filled with the returned value.
+		 * \return true if the value was obtained.
+		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
+		 */
+		bool SceneGetValueAsFloat( uint8 const _sceneId, ValueID const& _valueId, float* o_value );
+
+		/**
+		 * \brief Retrieves a scene's value as a 32-bit signed integer.
+		 * \param _sceneId The Scene ID of the scene to retrieve the value from.
+		 * \param _valueId The Value ID of the value to retrieve.
+		 * \param o_value Pointer to a int32 that will be filled with the returned value.
+		 * \return true if the value was obtained.
+		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
+		 */
+		bool SceneGetValueAsInt( uint8 const _sceneId, ValueID const& _valueId, int32* o_value );
+
+		/**
+		 * \brief Retrieves a scene's value as a 16-bit signed integer.
+		 * \param _sceneId The Scene ID of the scene to retrieve the value from.
+		 * \param _valueId The Value ID of the value to retrieve.
+		 * \param o_value Pointer to a int16 that will be filled with the returned value.
+		 * \return true if the value was obtained.
+		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
+		 */
+		bool SceneGetValueAsShort( uint8 const _sceneId, ValueID const& _valueId, int16* o_value );
+
+		/**
+		 * \brief Retrieves a scene's value as a string.
+		 * \param _sceneId The Scene ID of the scene to retrieve the value from.
+		 * \param _valueId The Value ID of the value to retrieve.
+		 * \param o_value Pointer to a string that will be filled with the returned value.
+		 * \return true if the value was obtained.
+		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
+		 */
+		bool SceneGetValueAsString( uint8 const _sceneId, ValueID const& _valueId, string* o_value );
+
+		/**
+		 * \brief Retrieves a scene's value as a list (as a string).
+		 * \param _sceneId The Scene ID of the scene to retrieve the value from.
+		 * \param _valueId The Value ID of the value to retrieve.
+		 * \param o_value Pointer to a string that will be filled with the returned value.
+		 * \return true if the value was obtained.
+		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
+		 */
+		bool SceneGetValueListSelection( uint8 const _sceneId, ValueID const& _valueId, string* o_value );
+
+		/**
+		 * \brief Retrieves a scene's value as a list (as a integer).
+		 * \param _sceneId The Scene ID of the scene to retrieve the value from.
+		 * \param _valueId The Value ID of the value to retrieve.
+		 * \param o_value Pointer to a integer that will be filled with the returned value.
+		 * \return true if the value was obtained.
+		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
+		 */
+		bool SceneGetValueListSelection( uint8 const _sceneId, ValueID const& _valueId, int32* o_value );
+
+		/**
+		 * \brief Set a bool Value ID to an existing scene's ValueID
+		 * \param _sceneId is an integer representing the unique Scene ID.
+		 * \param _valueId is the Value ID to be added.
+		 * \param _value is the bool value to be saved.
+		 * \return true if Value ID was added.
+		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
+		 */
+		bool SetSceneValue( uint8 const _sceneId, ValueID const& _valueId, bool const _value );
+
+		/**
+		 * \brief Set a byte Value ID to an existing scene's ValueID
+		 * \param _sceneId is an integer representing the unique Scene ID.
+		 * \param _valueId is the Value ID to be added.
+		 * \param _value is the byte value to be saved.
+		 * \return true if Value ID was added.
+		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
+		 */
+		bool SetSceneValue( uint8 const _sceneId, ValueID const& _valueId, uint8 const _value );
+
+		/**
+		 * \brief Set a decimal Value ID to an existing scene's ValueID
+		 * \param _sceneId is an integer representing the unique Scene ID.
+		 * \param _valueId is the Value ID to be added.
+		 * \param _value is the float value to be saved.
+		 * \return true if Value ID was added.
+		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
+		 */
+		bool SetSceneValue( uint8 const _sceneId, ValueID const& _valueId, float const _value );
+
+		/**
+		 * \brief Set a 32-bit signed integer Value ID to an existing scene's ValueID
+		 * \param _sceneId is an integer representing the unique Scene ID.
+		 * \param _valueId is the Value ID to be added.
+		 * \param _value is the int32 value to be saved.
+		 * \return true if Value ID was added.
+		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
+		 */
+		bool SetSceneValue( uint8 const _sceneId, ValueID const& _valueId, int32 const _value );
+
+		/**
+		 * \brief Set a 16-bit integer Value ID to an existing scene's ValueID
+		 * \param _sceneId is an integer representing the unique Scene ID.
+		 * \param _valueId is the Value ID to be added.
+		 * \param _value is the int16 value to be saved.
+		 * \return true if Value ID was added.
+		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
+		 */
+		bool SetSceneValue( uint8 const _sceneId, ValueID const& _valueId, int16 const _value );
+
+		/**
+		 * \brief Set a string Value ID to an existing scene's ValueID
+		 * \param _sceneId is an integer representing the unique Scene ID.
+		 * \param _valueId is the Value ID to be added.
+		 * \param _value is the string value to be saved.
+		 * \return true if Value ID was added.
+		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
+		 */
+		bool SetSceneValue( uint8 const _sceneId, ValueID const& _valueId, string const& _value );
+
+		/**
+		 * \brief Set the list selected item Value ID to an existing scene's ValueID (as a string).
+		 * \param _sceneId is an integer representing the unique Scene ID.
+		 * \param _valueId is the Value ID to be added.
+		 * \param _value is the string value to be saved.
+		 * \return true if Value ID was added.
+		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
+		 */
+		bool SetSceneValueListSelection( uint8 const _sceneId, ValueID const& _valueId, string const& _value );
+
+		/**
+		 * \brief Set the list selected item Value ID to an existing scene's ValueID (as a integer).
+		 * \param _sceneId is an integer representing the unique Scene ID.
+		 * \param _valueId is the Value ID to be added.
+		 * \param _value is the integer value to be saved.
+		 * \return true if Value ID was added.
+		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
+		 */
+		bool SetSceneValueListSelection( uint8 const _sceneId, ValueID const& _valueId, int32 const _value );
+
+		/**
+		 * \brief Returns a label for the particular scene.
+		 * \param _sceneId The Scene ID
+		 * \return The label string.
+		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, SetSceneLabel, SceneExists, ActivateScene
+		 */
+		string GetSceneLabel( uint8 const _sceneId );
+
+		/**
+		 * \brief Sets a label for the particular scene.
+		 * \param _sceneId The Scene ID
+		 * \param _value The new value of the label.
+		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SceneExists, ActivateScene
+		 */
+		void SetSceneLabel( uint8 const _sceneId, string const& _value );
+
+		/**
+		 * \brief Check if a Scene ID is defined.
+		 * \param _sceneId The Scene ID.
+		 * \return true if Scene ID exists.
+		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, ActivateScene
+		 */
+		bool SceneExists( uint8 const _sceneId );
+
+		/**
+		 * \brief Activate given scene to perform all its actions.
+		 * \param _sceneId The Scene ID.
+		 * \return true if it is successful.
+		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists
+		 */
+		bool ActivateScene( uint8 const _sceneId );
+
 	/*@}*/
 	};
 

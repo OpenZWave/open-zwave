@@ -75,7 +75,7 @@ bool SerialControllerImpl::Open
 {
 	Log::Write( "Open serial port %s", _SerialControllerName.c_str() );
 
-	m_hSerialController = open( _SerialControllerName.c_str(), O_RDWR | O_NOCTTY, 0 );
+	m_hSerialController = open( _SerialControllerName.c_str(), O_RDWR | O_NOCTTY | O_EXLOCK, 0 );
 
 	if( -1 == m_hSerialController )
 	{

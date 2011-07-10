@@ -162,7 +162,7 @@ void SwitchAll::Off
 	msg->Append( StaticGetCommandClassId() );
 	msg->Append( SwitchAllCmd_Off );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-    _driver->SendMsg( msg );
+	_driver->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
@@ -182,7 +182,7 @@ void SwitchAll::On
 	msg->Append( StaticGetCommandClassId() );
 	msg->Append( SwitchAllCmd_On );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-    _driver->SendMsg( msg );
+	_driver->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
