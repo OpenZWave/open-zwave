@@ -51,16 +51,16 @@ static uint8 const	c_precisionShift	= 0x05;
 //-----------------------------------------------------------------------------
 CommandClass::CommandClass
 (
-	uint32 const _homeId, 
-	uint8 const _nodeId 
-): 
+	uint32 const _homeId,
+	uint8 const _nodeId
+):
 	m_homeId( _homeId ),
 	m_nodeId( _nodeId ),
 	m_version( 1 ),
 	m_instances( 0 ),
-	m_staticRequests( 0 ),
 	m_afterMark( false ),
-	m_createVars( true )
+	m_createVars( true ),
+	m_staticRequests( 0 )
 {
 }
 
@@ -393,7 +393,7 @@ int32 CommandClass::ValueToInteger
 	int32 val;
 	
 	// Find the decimal point
-	int32 pos = _value.find_first_of( "." );
+	uint32 pos = _value.find_first_of( "." );
 	if( pos == string::npos )
 	{
 		// No decimal point

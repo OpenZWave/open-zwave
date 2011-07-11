@@ -41,12 +41,13 @@ using namespace OpenZWave;
 HidController::HidController
 (
 ):
-	m_pImpl( new HidControllerImpl() ),
-	m_bOpen( false ),
+  m_pMsgInitializationSequence( new list<Msg*> ),
   m_vendorId ( 0x1b5f /* Wayne Dalton */ ),
   m_productId ( 0x1 /* ControlThink ThinkStick */ ),
   m_serialNumber ( "" ),
-  m_pMsgInitializationSequence( new list<Msg*> )
+	m_pImpl( new HidControllerImpl() ),
+	m_bOpen( false )
+
 {
     m_pMsgInitializationSequence->push_back(new Msg( "FUNC_ID_ZW_GET_VERSION", 0xff, REQUEST, FUNC_ID_ZW_GET_VERSION, false ));
     m_pMsgInitializationSequence->push_back(new Msg( "FUNC_ID_ZW_MEMORY_GET_ID", 0xff, REQUEST, FUNC_ID_ZW_MEMORY_GET_ID, false ));

@@ -176,6 +176,7 @@ bool WakeUp::HandleMsg
 			{
 				if( Node* node = GetNodeUnsafe() )
 				{
+					node = node;
 //					node->QueryStageComplete( Node::QueryStage_WakeUp );
 				}
 				m_init = false;

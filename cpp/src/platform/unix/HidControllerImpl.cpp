@@ -49,8 +49,8 @@ HidControllerImpl::HidControllerImpl
 (
 ) :
   	m_hidControllerOpen( false ),
-	m_hidFeatureReportReadBufferPtr( NULL ),
-	m_hidFeatureReportReadBuffer( new uint8[PACKET_BUFFER_LENGTH] )
+	m_hidFeatureReportReadBuffer( new uint8[PACKET_BUFFER_LENGTH] ),
+	m_hidFeatureReportReadBufferPtr( NULL )
 {
 }
 
@@ -262,7 +262,7 @@ uint32 HidControllerImpl::Read
 	if ( m_hidFeatureReportReadBufferPtr == NULL )
     		return 0;
 
-	if ( _length > m_hidFeatureReportReadBufferBytes )
+	if ( _length > (uint32)m_hidFeatureReportReadBufferBytes )
     		_length = m_hidFeatureReportReadBufferBytes;
 	memcpy( _buffer, m_hidFeatureReportReadBufferPtr, _length );
 	m_hidFeatureReportReadBufferPtr += _length;
