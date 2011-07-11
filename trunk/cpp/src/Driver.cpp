@@ -91,9 +91,9 @@ Driver::Driver
 	m_exitEvent( new Event() ), 
 	m_exit( false ),
 	m_init( false ),
-	m_controllerPath( _controllerPath ),
 	m_awakeNodesQueried( false ),
 	m_allNodesQueried( false ),
+	m_controllerPath( _controllerPath ),
 	m_homeId( 0 ),
 	m_controllerThread( new Thread( "serial" ) ),
 	m_initCaps( 0 ),
@@ -1635,6 +1635,7 @@ void Driver::HandleSerialAPIGetInitDataResponse
 				{					
 					if( Node* node = GetNode( nodeId ) )
 					{
+						node = node;
 						Log::Write( "    Node %d - Known", nodeId );
 						if( !m_init )
 						{
@@ -2743,6 +2744,7 @@ bool Driver::EnablePoll
 		// confirm that this value is in the node's value store
 		if( Value* value = node->GetValue( _valueId ) )
 		{
+			value = value;
 			// Add the valueid to the polling list
 			m_pollMutex->Lock();
 
@@ -3972,11 +3974,16 @@ bool Driver::CancelControllerCommand
 			SendMsg( msg );
 			break;
 		}
-        case ControllerCommand_None:
-        {
-            // To keep gcc quiet
-            break;
-        }
+		
+		case ControllerCommand_None:
+		case ControllerCommand_RequestNetworkUpdate:
+		case ControllerCommand_RequestNodeNeighborUpdate:
+		case ControllerCommand_AssignReturnRoute:
+		case ControllerCommand_DeleteAllReturnRoutes:
+		{
+			// To keep gcc quiet
+      break;
+     }
 	}
 
 	m_controllerCommand = ControllerCommand_None;

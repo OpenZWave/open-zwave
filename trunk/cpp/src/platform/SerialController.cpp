@@ -41,12 +41,12 @@ using namespace OpenZWave;
 SerialController::SerialController
 (
 ):
+	m_pMsgInitializationSequence( new list<Msg*> ),
+	m_baud ( 115200 ),
+	m_parity ( SerialController::Parity_None ),
+	m_stopBits ( SerialController::StopBits_One ),
 	m_pImpl( new SerialControllerImpl() ),
-	m_bOpen( false ),
-    m_baud ( 115200 ),
-    m_parity ( SerialController::Parity_None ),
-    m_stopBits ( SerialController::StopBits_One ),
-    m_pMsgInitializationSequence( new list<Msg*> )
+	m_bOpen( false )
 {
     m_pMsgInitializationSequence->push_back(new Msg( "FUNC_ID_ZW_GET_VERSION", 0xff, REQUEST, FUNC_ID_ZW_GET_VERSION, false ));
     m_pMsgInitializationSequence->push_back(new Msg( "FUNC_ID_ZW_MEMORY_GET_ID", 0xff, REQUEST, FUNC_ID_ZW_MEMORY_GET_ID, false ));

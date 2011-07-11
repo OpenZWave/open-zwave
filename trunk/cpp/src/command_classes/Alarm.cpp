@@ -50,8 +50,8 @@ enum
 };
 
 //-----------------------------------------------------------------------------
-// <Alarm::RequestState>												   
-// Request current state from the device									   
+// <Alarm::RequestState>
+// Request current state from the device
 //-----------------------------------------------------------------------------
 bool Alarm::RequestState
 (
@@ -103,11 +103,11 @@ bool Alarm::HandleMsg
 		Log::Write( "Received Alarm report from node %d: type=%d, level=%d", GetNodeId(), _data[1], _data[2] );
 
 		ValueByte* value;
-		if( value = static_cast<ValueByte*>( GetValue( _instance, AlarmIndex_Type ) ) )
+		if( (value = static_cast<ValueByte*>( GetValue( _instance, AlarmIndex_Type ) )) )
 		{
 			value->OnValueChanged( _data[1] );
-		}	
-		if( value = static_cast<ValueByte*>( GetValue( _instance, AlarmIndex_Level ) ) )
+		}
+		if( (value = static_cast<ValueByte*>( GetValue( _instance, AlarmIndex_Level ) )) )
 		{
 			value->OnValueChanged( _data[2] );
 		}

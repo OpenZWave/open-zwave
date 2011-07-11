@@ -73,11 +73,6 @@ hid_device *new_hid_device()
 	return dev;
 }
 
-static void register_error(hid_device *device, const char *op)
-{
-
-}
-
 /* Get an attribute value from a udev_device and return it as a whar_t
    string. The returned string must be freed with free() when done.*/
 static wchar_t *copy_udev_string(struct udev_device *dev, const char *udev_name)
@@ -161,7 +156,7 @@ static int uses_numbered_reports(__u8 *report_descriptor, __u32 size) {
 static int get_device_string(hid_device *dev, const char *key, wchar_t *string, size_t maxlen)
 {
 	struct udev *udev;
-	struct udev_device *udev_dev, *parent;
+	struct udev_device *udev_dev, *parent = NULL;
 	struct stat s;
 	int ret = -1;
 	

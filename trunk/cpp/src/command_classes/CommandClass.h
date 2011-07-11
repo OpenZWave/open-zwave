@@ -59,8 +59,8 @@ namespace OpenZWave
 		virtual void WriteXML( TiXmlElement* _ccElement );
 		virtual bool RequestState( uint32 const _requestFlags ){ return false; }
 		virtual void RequestValue( uint8 const _index, uint8 const _instance ) { return; }
-		
-		virtual uint8 const GetCommandClassId()const = 0;		
+
+		virtual uint8 const GetCommandClassId()const = 0;
 		virtual string const GetCommandClassName()const = 0;
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 ) = 0;
 		virtual bool SetValue( Value const& _value ){ return false; }
@@ -124,7 +124,7 @@ namespace OpenZWave
 		void ClearStaticRequest( uint8 _request );
 
 	private:
-		uint8   m_staticRequests;		
+		uint8   m_staticRequests;
 	};
 
 } // namespace OpenZWave

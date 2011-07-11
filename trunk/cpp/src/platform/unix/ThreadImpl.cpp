@@ -42,7 +42,7 @@ ThreadImpl::ThreadImpl
 (
 	string const& _tname
 ):
-	m_hThread( NULL ),
+//	m_hThread( NULL ),
 	m_bIsRunning( false ),
 	m_name( _tname )
 {
@@ -112,7 +112,7 @@ bool ThreadImpl::Stop
 	pthread_cancel(m_hThread);
 	pthread_join( m_hThread, &data );
 
-	m_hThread = NULL;
+	//m_hThread = NULL;
 	m_bIsRunning = false;
 
 	return true;

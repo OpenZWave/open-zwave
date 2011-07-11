@@ -99,9 +99,9 @@ Options::Options
 	string const& _userPath,
 	string const& _commandLine
 ):
-	m_locked( false ),
 	m_xml( _userPath + "options.xml" ),
-	m_commandLine( _commandLine )
+	m_commandLine( _commandLine ),
+	m_locked( false )
 {
 }
 
@@ -325,7 +325,7 @@ bool Options::ParseOptionsString
 {
 	bool res = true;
 
-	int pos = 0;
+	uint32 pos = 0;
 	int start = 0;
 	while( 1 )
 	{
