@@ -145,27 +145,27 @@ bool AssociationCommandConfiguration::HandleMsg
 		ValueByte* valueByte;
 		ValueShort* valueShort;
 
-		if( valueByte = static_cast<ValueByte*>( GetValue( _instance, AssociationCommandConfigurationIndex_MaxCommandLength ) ) )
+		if( (valueByte = static_cast<ValueByte*>( GetValue( _instance, AssociationCommandConfigurationIndex_MaxCommandLength ) )) )
 		{
 			valueByte->OnValueChanged( maxCommandLength );
 		}
 
-		if( valueBool = static_cast<ValueBool*>( GetValue( _instance, AssociationCommandConfigurationIndex_CommandsAreValues ) ) )
+		if( (valueBool = static_cast<ValueBool*>( GetValue( _instance, AssociationCommandConfigurationIndex_CommandsAreValues ) )) )
 		{
 			valueBool->OnValueChanged( commandsAreValues );
 		}
 
-		if( valueBool = static_cast<ValueBool*>( GetValue( _instance, AssociationCommandConfigurationIndex_CommandsAreConfigurable ) ) )
+		if( (valueBool = static_cast<ValueBool*>( GetValue( _instance, AssociationCommandConfigurationIndex_CommandsAreConfigurable ) )) )
 		{
 			valueBool->OnValueChanged( commandsAreConfigurable );
 		}
 
-		if( valueShort = static_cast<ValueShort*>( GetValue( _instance, AssociationCommandConfigurationIndex_NumFreeCommands ) ) )
+		if( (valueShort = static_cast<ValueShort*>( GetValue( _instance, AssociationCommandConfigurationIndex_NumFreeCommands ) )) )
 		{
 			valueShort->OnValueChanged( numFreeCommands );
 		}
 
-		if( valueShort = static_cast<ValueShort*>( GetValue( _instance, AssociationCommandConfigurationIndex_MaxCommands ) ) )
+		if( (valueShort = static_cast<ValueShort*>( GetValue( _instance, AssociationCommandConfigurationIndex_MaxCommands ) )) )
 		{
 			valueShort->OnValueChanged( maxCommands );
 		}
