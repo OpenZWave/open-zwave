@@ -293,7 +293,7 @@ namespace OpenZWave
 
 	private:
 		Driver* GetDriver( uint32 const _homeId );	/**< Get a pointer to a Driver object from the HomeID.  Only to be used by OpenZWave. */
-		void SetDriverReady( Driver* _driver );		/**< Indicate that the Driver is ready to be used, and send the notification callback. */
+		void SetDriverReady( Driver* _driver, bool success );		/**< Indicate that the Driver is ready to be used, and send the notification callback. */
 
 		list<Driver*>		m_pendingDrivers;		/**< Drivers that are in the process of reading saved data and querying their Z-Wave network for basic information. */
 		map<uint32,Driver*>	m_readyDrivers;			/**< Drivers that are ready to be used by the application. */
@@ -1039,7 +1039,7 @@ namespace OpenZWave
 		 * All devices that support the SwitchAll command class will be turned on.
 		 */
 		void SwitchAllOn( uint32 const _homeId );
-
+	
 		/**
 		 * \brief Switch all devices off.
 		 * All devices that support the SwitchAll command class will be turned off.

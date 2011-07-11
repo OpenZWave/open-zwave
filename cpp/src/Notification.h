@@ -73,8 +73,9 @@ namespace OpenZWave
 			Type_PollingDisabled,		/**< Polling of a node has been successfully turned off by a call to Manager::DisablePoll */
 			Type_PollingEnabled,		/**< Polling of a node has been successfully turned on by a call to Manager::EnablePoll */
 			Type_DriverReady,			/**< A driver for a PC Z-Wave controller has been added and is ready to use.  The notification will contain the controller's Home ID, which is needed to call most of the Manager methods. */
+			Type_DriverFailed,	/**<Driver failed to load */
 			Type_DriverReset,			/**< All nodes and values for this driver have been removed.  This is sent instead of potentially hundreds of individual node and value notifications. */
-            Type_MsgComplete,			/**< The last message that was sent is now complete. */
+			Type_MsgComplete,			/**< The last message that was sent is now complete. */
 			Type_NodeQueriesComplete,	/**< The initialisation queries on a node have been completed. */
 			Type_AwakeNodesQueried,		/**< All awake nodes have been queried, so client application can expected complete data for these nodes. */
 			Type_AllNodesQueried		/**< All nodes have been queried, so client application can expected complete data. */
