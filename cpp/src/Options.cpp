@@ -63,6 +63,7 @@ Options* Options::Create
 		s_instance->AddOptionString(	"Include",				string(""),		true );		// Only handle the specified command classes.  The Exclude option is ignored if anything is listed here.
 		s_instance->AddOptionBool(		"NotifyTransactions",	false );					// Notifications when transaction complete is reported.
 		s_instance->AddOptionString(	"Interface",			string(""),		true );		// Identify the serial port to be accessed (TODO: change the code so more than one serial port can be specified and HID)
+		s_instance->AddOptionInt(			"DriverMaxAttempts", 0);
 	}
 
 	return s_instance;
@@ -73,7 +74,7 @@ Options* Options::Create
 // Static method to create an Options object
 //-----------------------------------------------------------------------------
 bool Options::Destroy
-( 
+(
 )
 {
 	if( Manager::Get() )
