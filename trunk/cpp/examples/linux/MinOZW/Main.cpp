@@ -44,8 +44,9 @@
 using namespace OpenZWave;
 
 static uint32 g_homeId = 0;
+static bool   g_initFailed = false;
 
-typedef struct 
+typedef struct
 {
 	uint32			m_homeId;
 	uint8			m_nodeId;
@@ -208,11 +209,20 @@ void OnNotification
 			break;
 		}
 		
+
+		case Notification::Type_DriverFailed:
+		{
+			g_initFailed = true;
+			pthread_cond_broadcast(&initCond);
+			break;
+		}
+
+	  case Notification::Type_AwakeNodesQueried:
 		case Notification::Type_AllNodesQueried:
-		case Notification::Type_AwakeNodesQueried:
-			{
+		{
 				pthread_cond_broadcast(&initCond);
-			}
+				break;
+		}
 
 		default:
 		{
@@ -229,7 +239,7 @@ int main( int argc, char* argv[] )
 {
 	pthread_mutexattr_t mutexattr;
 
-	pthread_mutexattr_init ( &mutexattr );
+  pthread_mutexattr_init ( &mutexattr );
 	pthread_mutexattr_settype( &mutexattr, PTHREAD_MUTEX_RECURSIVE );
 	pthread_mutex_init( &g_criticalSection, &mutexattr );
 	pthread_mutexattr_destroy(&mutexattr);
@@ -253,30 +263,35 @@ int main( int argc, char* argv[] )
 
 	// Add a Z-Wave Driver
 	// Modify this line to set the correct serial port for your PC interface.
-	Manager::Get()->AddDriver((argc > 1) ? argv[1] : "/dev/ttyUSB0");
+	
+	string port = "/dev/ttyUSB0";
+	
+	Manager::Get()->AddDriver((argc > 1) ? argv[1] : port);
 	//Manager::Get()->AddDriver( "HID Controller", Driver::ControllerInterface_Hid );
 
 	// Now we just wait for the driver to become ready, and then write out the loaded config.
 	// In a normal app, we would be handling notifications and building a UI for the user.
 	pthread_cond_wait(&initCond, &initMutex);
 	
-	//Manager::Get()->BeginAddNode( g_homeId );
-	//sleep(10);
-	//Manager::Get()->EndAddNode( g_homeId );
-	//Manager::Get()->BeginRemoveNode( g_homeId );
-	//sleep(10);
-	//Manager::Get()->EndRemoveNode( g_homeId );
-	//sleep(10);
-	
-	Manager::Get()->WriteConfig( g_homeId );
-	
-	while( true )
-	{
-		sleep(10);
+	if (!g_initFailed) {
 		
-		pthread_mutex_lock( &g_criticalSection );
-		// Do stuff
-		pthread_mutex_unlock( &g_criticalSection );
+		//Manager::Get()->BeginAddNode( g_homeId );
+		//sleep(10);
+		//Manager::Get()->EndAddNode( g_homeId );
+		//Manager::Get()->BeginRemoveNode( g_homeId );
+		//sleep(10);
+		//Manager::Get()->EndRemoveNode( g_homeId );
+		//sleep(10);
+		
+		Manager::Get()->WriteConfig(g_homeId);
+	
+		while(true)
+		{
+			pthread_mutex_lock( &g_criticalSection );
+			// Do stuff
+			pthread_mutex_unlock( &g_criticalSection );
+			sleep(5);
+		}
 	}
 
 	Manager::Destroy();

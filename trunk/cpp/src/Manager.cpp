@@ -308,7 +308,8 @@ Driver* Manager::GetDriver
 //-----------------------------------------------------------------------------
 void Manager::SetDriverReady
 (
-	Driver* _driver
+	Driver* _driver,
+	bool success
 )
 {
 	// Search the pending list
@@ -326,14 +327,16 @@ void Manager::SetDriverReady
 
 	if( found )
 	{
-		Log::Write( "Driver with Home ID of 0x%.8x is now ready.", _driver->GetHomeId() );
-		Log::Write( "" );
+		if (success) {
+			Log::Write( "Driver with Home ID of 0x%.8x is now ready.", _driver->GetHomeId() );
+			Log::Write( "" );
+		}
 
 		// Add the driver to the ready map
 		m_readyDrivers[_driver->GetHomeId()] = _driver;
 
 		// Notify the watchers
-		Notification* notification = new Notification( Notification::Type_DriverReady );
+		Notification* notification = new Notification(success ? Notification::Type_DriverReady : Notification::Type_DriverFailed );
 		notification->SetHomeAndNodeIds( _driver->GetHomeId(), _driver->GetNodeId() );
 		_driver->QueueNotification( notification ); 
 	}

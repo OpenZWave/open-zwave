@@ -339,14 +339,23 @@ void Driver::DriverThreadProc
 						// m_wakeEvent exited as a result of a "Set," not a timeout, so reset the event
 						m_wakeEvent->Reset();
 					}
-				}			
+				}
 			}
 		}
 
 		++attempts;
-		if( attempts < 25 )		
+		uint32 maxAttempts = 0;
+		Options::Get()->GetOptionAsInt("DriverMaxAttempts", (int32 *)&maxAttempts);
+		if (maxAttempts && attempts >= maxAttempts)
 		{
-			// Retry every 5 seconds for the first two minutes			
+			Manager::Get()->Manager::SetDriverReady(this, false);
+			NotifyWatchers();
+			break;
+		}
+
+		if( attempts < 25 )
+		{
+			// Retry every 5 seconds for the first two minutes
 			if( m_exitEvent->Wait( 5000 ) )
 			{
 				// Exit signalled.
@@ -1614,7 +1623,7 @@ void Driver::HandleSerialAPIGetInitDataResponse
 	{
 		// Mark the driver as ready (we have to do this first or 
 		// all the code handling notifications will go awry).
-		Manager::Get()->SetDriverReady( this );
+		Manager::Get()->SetDriverReady( this, true );
 
 		// Read the config file first, to get the last known state
 		ReadConfig();
