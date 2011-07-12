@@ -370,3 +370,214 @@ bool ZWManager::GetNodeClassInformation
 	}
 	return false;
 }
+
+//-----------------------------------------------------------------------------
+// <ZWManager::GetAllScenes>
+// Gets a list of all the SceneIds
+//-----------------------------------------------------------------------------
+uint8 ZWManager::GetAllScenes
+(
+	[Out] array<Byte>^ o_sceneIds
+)
+{
+	uint8* sceneIds;
+	uint32 numScenes = Manager::Get()->GetAllScenes( &sceneIds );
+	if( numScenes )
+	{
+		o_sceneIds = gcnew array<Byte>(numScenes);
+		for( uint32 i=0; i<numScenes; ++i )
+		{
+			o_sceneIds[i] = sceneIds[i];		
+		}
+		delete [] sceneIds;
+	}
+
+	return numScenes;
+}
+
+//-----------------------------------------------------------------------------
+// <ZWManager::SceneGetValues>
+// Retrieves the scene's list of values
+//-----------------------------------------------------------------------------
+int ZWManager::SceneGetValues
+(
+	uint8 sceneId,
+	[Out] array<ZWValueID ^>^ %o_values
+)
+{
+	vector<ValueID> values;
+	uint32 numValues = Manager::Get()->SceneGetValues( sceneId, &values );
+	if( numValues )
+	{
+		o_values = gcnew array<ZWValueID ^>(numValues);
+		for( uint32 i=0; i<numValues; ++i )
+		{
+			o_values[i] = gcnew ZWValueID(values[i]);		
+		}
+	}
+
+	return numValues;
+}
+
+//-----------------------------------------------------------------------------
+// <ZWManager::SceneGetValueAsBool>
+// Retrieves a scene's value as a bool
+//-----------------------------------------------------------------------------
+bool ZWManager::SceneGetValueAsBool
+(
+	uint8 sceneId,
+	ZWValueID^ valueId,
+	[Out] System::Boolean %o_value
+)
+{
+	bool value;
+	if( Manager::Get()->SceneGetValueAsBool( sceneId, valueId->CreateUnmanagedValueID(), &value ) )
+	{
+		o_value = value;
+		return true;
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <ZWManager::SceneGetValueAsByte>
+// Retrieves a scene's value as an 8-bit unsigned integer
+//-----------------------------------------------------------------------------
+bool ZWManager::SceneGetValueAsByte
+(
+	uint8 sceneId,
+	ZWValueID^ valueId,
+	[Out] System::Byte %o_value
+)
+{
+	uint8 value;
+	if( Manager::Get()->SceneGetValueAsByte( sceneId, valueId->CreateUnmanagedValueID(), &value ) )
+	{
+		o_value = value;
+		return true;
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <ZWManager::SceneGetValueAsDecimal>
+// Retrieves a scene's value as a decimal
+//-----------------------------------------------------------------------------
+bool ZWManager::SceneGetValueAsDecimal
+(
+	uint8 sceneId,
+	ZWValueID^ valueId,
+	[Out] System::Decimal %o_value
+)
+{
+	string value;
+	if( Manager::Get()->SceneGetValueAsString( sceneId, valueId->CreateUnmanagedValueID(), &value ) )
+	{
+		String^ decimal = gcnew String(value.c_str());
+		o_value = Decimal::Parse( decimal );
+		return true;
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <ZWManager::SceneGetValueAsInt>
+// Retrieves a scene's value as a 32-bit signed integer
+//-----------------------------------------------------------------------------
+bool ZWManager::SceneGetValueAsInt
+(
+	uint8 sceneId,
+	ZWValueID^ valueId,
+	[Out] System::Int32 %o_value
+)
+{
+	int32 value;
+	if( Manager::Get()->SceneGetValueAsInt( sceneId, valueId->CreateUnmanagedValueID(), &value ) )
+	{
+		o_value = value;
+		return true;
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <ZWManager::SceneGetValueAsShort>
+// Retrieves a scene's value as a 16-bit signed integer
+//-----------------------------------------------------------------------------
+bool ZWManager::SceneGetValueAsShort
+(
+	uint8 sceneId,
+	ZWValueID^ valueId,
+	[Out] System::Int16 %o_value
+)
+{
+	int16 value;
+	if( Manager::Get()->SceneGetValueAsShort( sceneId, valueId->CreateUnmanagedValueID(), &value ) )
+	{
+		o_value = value;
+		return true;
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <ZWManager::SceneGetValueAsString>
+// Retrieves a scene's value as a string
+//-----------------------------------------------------------------------------
+bool ZWManager::SceneGetValueAsString
+(
+	uint8 sceneId,
+	ZWValueID^ valueId,
+	[Out] String^ %o_value
+)
+{
+	string value;
+	if( Manager::Get()->SceneGetValueAsString( sceneId, valueId->CreateUnmanagedValueID(), &value ) )
+	{
+		o_value = gcnew String(value.c_str());
+		return true;
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <ZWManager::SceneGetValueListSelection>
+// Retrieves a scene's value in a list (as a string)
+//-----------------------------------------------------------------------------
+bool ZWManager::SceneGetValueListSelection
+(
+	uint8 sceneId,
+	ZWValueID^ valueId,
+	[Out] String^ %o_value
+)
+{
+	string value;
+	if( Manager::Get()->SceneGetValueListSelection( sceneId, valueId->CreateUnmanagedValueID(), &value ) )
+	{
+		o_value = gcnew String(value.c_str());
+		return true;
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <ZWManager::SceneGetValueListSelection>
+// Retrieves a scene's value in a list (as a integer)
+//-----------------------------------------------------------------------------
+bool ZWManager::SceneGetValueListSelection
+(
+	uint8 sceneId,
+	ZWValueID^ valueId,
+	System::Int32 %o_value
+)
+{
+	int32 value;
+	if( Manager::Get()->SceneGetValueListSelection( sceneId, valueId->CreateUnmanagedValueID(), &value ) )
+	{
+		o_value = value;
+		return true;
+	}
+	return false;
+}
+
+
