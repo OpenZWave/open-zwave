@@ -90,6 +90,69 @@ void ManufacturerSpecific::RequestValue
 	GetDriver()->SendMsg( msg );
 }
 
+string ManufacturerSpecific::SetProductDetails
+(
+	Node* node,
+	uint16 manufacturerId,
+	uint16 productType,
+	uint16 productId
+)
+{
+	char str[64];
+
+	if (!s_bXmlLoaded) LoadProductXML();
+	
+	snprintf( str, sizeof(str), "Unknown: id=%.4x", manufacturerId );
+	string manufacturerName = str;
+	
+	snprintf( str, sizeof(str), "Unknown: type=%.4x, id=%.4x", productType, productId );
+	string productName = str;	
+	
+	string configPath = "";
+	
+	// Try to get the real manufacturer and product names
+	map<uint16,string>::iterator mit = s_manufacturerMap.find( manufacturerId );
+	if( mit != s_manufacturerMap.end() )
+	{
+		// Replace the id with the real name
+		manufacturerName = mit->second;
+
+		// Get the product
+		map<int64,Product*>::iterator pit = s_productMap.find( Product::GetKey( manufacturerId, productType, productId ) );
+		if( pit != s_productMap.end() )
+		{
+			productName = pit->second->GetProductName();
+			configPath = pit->second->GetConfigPath();
+		}
+	}
+
+	// Set the values into the node
+
+	// Only set the manufacturer and product name if they are
+	// empty - we don't want to overwrite any user defined names.
+	if( node->GetManufacturerName() == "" )
+	{
+		node->SetManufacturerName( manufacturerName );
+	}
+
+	if( node->GetProductName() == "" )
+	{
+		node->SetProductName( productName );
+	}
+
+	snprintf( str, sizeof(str), "%.4x", manufacturerId );
+	node->SetManufacturerId( str );
+
+	snprintf( str, sizeof(str), "%.4x", productType );
+	node->SetProductType( str );
+
+	snprintf( str, sizeof(str), "%.4x", productId );
+	node->SetProductId( str );
+	
+	return configPath;
+}
+
+
 //-----------------------------------------------------------------------------
 // <ManufacturerSpecific::HandleMsg>
 // Handle a message from the Z-Wave network
@@ -101,76 +164,27 @@ bool ManufacturerSpecific::HandleMsg
 	uint32 const _instance	// = 1
 )
 {
-	char str[64];
 	if( ManufacturerSpecificCmd_Report == (ManufacturerSpecificCmd)_data[0] )
 	{
-		if( !s_bXmlLoaded )
-		{
-			LoadProductXML();
-		}
 
 		// first two bytes are manufacturer id code
 		uint16 manufacturerId = (((uint16)_data[1])<<8) | (uint16)_data[2];
-		snprintf( str, sizeof(str), "Unknown: id=%.4x", manufacturerId );
-		string manufacturerName = str;
 
 		// next four are product type and product id
 		uint16 productType = (((uint16)_data[3])<<8) | (uint16)_data[4];
 		uint16 productId = (((uint16)_data[5])<<8) | (uint16)_data[6];
 
-		snprintf( str, sizeof(str), "Unknown: type=%.4x, id=%.4x", productType, productId );
-		string productName = str;
-
-		string configPath = "";
-
-		// Try to get the real manufacturer and product names
-		map<uint16,string>::iterator mit = s_manufacturerMap.find( manufacturerId );
-		if( mit != s_manufacturerMap.end() )
-		{
-			// Replace the id with the real name
-			manufacturerName = mit->second;
-
-			// Get the product
-			map<int64,Product*>::iterator pit = s_productMap.find( Product::GetKey( manufacturerId, productType, productId ) );
-			if( pit != s_productMap.end() )
-			{
-				productName = pit->second->GetProductName();
-				configPath = pit->second->GetConfigPath();
-			}
-		}
-
 		if( Node* node = GetNodeUnsafe() )
 		{
-			// Set the values into the node
-
-			// Only set the manufacturer and product name if they are
-			// empty - we don't want to overwrite any user defined names.
-			if( node->GetManufacturerName() == "" )
-			{
-				node->SetManufacturerName( manufacturerName );
-			}
-
-			if( node->GetProductName() == "" )
-			{
-				node->SetProductName( productName );
-			}
-
-			snprintf( str, sizeof(str), "%.4x", manufacturerId );
-			node->SetManufacturerId( str );
-
-			snprintf( str, sizeof(str), "%.4x", productType );
-			node->SetProductType( str );
-
-			snprintf( str, sizeof(str), "%.4x", productId );
-			node->SetProductId( str );
-
 			// Attempt to create the config parameters
+			string configPath = SetProductDetails( node, manufacturerId, productType, productId);
 			if( configPath.size() > 0 )
 			{
 				LoadConfigXML( configPath );
 			}
 
-			Log::Write( "Received manufacturer specific report from node %d: Manufacturer=%s, Product=%s", GetNodeId(), manufacturerName.c_str(), productName.c_str() );
+			Log::Write( "Received manufacturer specific report from node %d: Manufacturer=%s, Product=%s", 
+									GetNodeId(), node->GetManufacturerName().c_str(), node->GetProductName().c_str() );
 			ClearStaticRequest( StaticRequest_Values );
 //			node->QueryStageComplete( Node::QueryStage_ManufacturerSpecific );
 		}
