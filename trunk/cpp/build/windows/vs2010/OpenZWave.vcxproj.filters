@@ -264,6 +264,9 @@
     <ClInclude Include="..\..\..\src\platform\windows\HidControllerImpl.h">
       <Filter>Platform\Windows</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\Scene.h">
+      <Filter>Main</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\Driver.cpp">
@@ -499,6 +502,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\platform\windows\HidControllerImpl.cpp">
       <Filter>Platform\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Scene.cpp">
+      <Filter>Main</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
