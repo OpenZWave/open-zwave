@@ -51,9 +51,11 @@ namespace OpenZWave
 		virtual string const GetCommandClassName()const{ return StaticGetCommandClassName(); }
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );
 
+		static string SetProductDetails( Node *_node, uint16 _manufacturerId, uint16 _productType, uint16 _productId );
+		
 	private:
 		ManufacturerSpecific( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){ SetStaticRequest( StaticRequest_Values ); }
-		bool LoadProductXML();
+		static bool LoadProductXML();
 		static void UnloadProductXML();
 		bool LoadConfigXML( string const& _configXML );
 

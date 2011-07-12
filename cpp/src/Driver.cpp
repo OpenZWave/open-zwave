@@ -46,6 +46,7 @@
 #include "ControllerReplication.h"
 #include "WakeUp.h"
 #include "SwitchAll.h"
+#include "ManufacturerSpecific.h"
 
 #include "ValueID.h"
 #include "Value.h"
@@ -445,20 +446,12 @@ bool Driver::ReadConfig
 	TiXmlElement const* driverElement = doc.RootElement();
 
 	// Version
-	if( TIXML_SUCCESS == driverElement->QueryIntAttribute( "version", &intVal ) )
-	{
-		if( (uint32)intVal != c_configVersion )
-		{
-			Log::Write( "Driver::ReadConfig - %s is from an older version of OpenZWave and cannot be loaded.", filename.c_str() );
-			return false;
-		}
-	}
-	else
+	if( TIXML_SUCCESS != driverElement->QueryIntAttribute( "version", &intVal ) || (uint32)intVal != c_configVersion )
 	{
 		Log::Write( "Driver::ReadConfig - %s is from an older version of OpenZWave and cannot be loaded.", filename.c_str() );
 		return false;
 	}
-
+	
 	// Home ID
 	char const* homeIdStr = driverElement->Attribute( "home_id" );
 	if( homeIdStr )
@@ -3049,28 +3042,7 @@ void Driver::InitNode
 	// Do controller specific node initializations
 	if( _nodeId == m_nodeId )
 	{
-		char str[64];
-
-		snprintf( str, sizeof(str), "%.4x", m_manufacturerId );
-		m_nodes[_nodeId]->SetManufacturerId( str );
-
-		snprintf( str, sizeof(str), "%.4x", m_productType );
-		m_nodes[_nodeId]->SetProductType( str );
-
-		snprintf( str, sizeof(str), "%.4x", m_productId );
-		m_nodes[_nodeId]->SetProductId( str );
-
-		snprintf( str, sizeof(str), "Unknown: id=%.4x", m_manufacturerId );
-		if( m_nodes[_nodeId]->GetManufacturerName() == "" )
-		{
-			m_nodes[_nodeId]->SetManufacturerName( str );
-		}
-
-		snprintf( str, sizeof(str), "Unknown: type=%.4x, id=%.4x", m_productType, m_productId );
-		if( m_nodes[_nodeId]->GetProductName() == "" )
-		{
-			m_nodes[_nodeId]->SetProductName( str );
-		}
+		ManufacturerSpecific::SetProductDetails(m_nodes[_nodeId], m_manufacturerId, m_productType, m_productId);
 	}
 	ReleaseNodes();
 
