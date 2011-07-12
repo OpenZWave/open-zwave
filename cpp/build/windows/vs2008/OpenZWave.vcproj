@@ -207,6 +207,14 @@
 				RelativePath="..\..\..\src\Options.h"
 				>
 			</File>
+                        <File
+                                RelativePath="..\..\..\src\Scene.cpp"
+                                >
+                        </File>
+                        <File
+                                RelativePath="..\..\..\src\Scene.h"
+                                >
+                        </File>
 			<File
 				RelativePath="..\..\..\src\Utils.cpp"
 				>
