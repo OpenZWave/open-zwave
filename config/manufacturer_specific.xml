@@ -299,6 +299,7 @@
 	<Manufacturer id="004e" name="Zdata">
 	</Manufacturer>
 	<Manufacturer id="0000" name="Zensys">
+	  <Product type="0001" id="0001" name="Controller" />
 	</Manufacturer>
 	<Manufacturer id="004f" name="Z-Wave Technologia">
 	</Manufacturer>
