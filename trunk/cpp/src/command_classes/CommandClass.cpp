@@ -144,7 +144,6 @@ void CommandClass::ReadXML
 	int32 intVal;
 	char const* str;
 
-	m_version = 1;
 	if( TIXML_SUCCESS == _ccElement->QueryIntAttribute( "version", &intVal ) )
 	{
 		m_version = (uint8)intVal;
@@ -156,20 +155,17 @@ void CommandClass::ReadXML
 		instances = (uint8)intVal;
 	}
 
-	m_staticRequests = 0;
 	if( TIXML_SUCCESS == _ccElement->QueryIntAttribute( "request_flags", &intVal ) )
 	{
 		m_staticRequests = (uint8)intVal;
 	}
 
-	m_afterMark = false;
 	str = _ccElement->Attribute( "after_mark" );
 	if( str )
 	{
 		m_afterMark = !strcmp( str, "true" );
 	}
 
-	m_createVars = false;
 	str = _ccElement->Attribute( "create_vars" );
 	if( str )
 	{
