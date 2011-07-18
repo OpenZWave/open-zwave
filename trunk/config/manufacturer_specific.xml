@@ -107,6 +107,7 @@
 	  <Product type="0202" id="0001" name="SM103 Door/Window Sensor" config="everspring/sm103.xml" />
 	  <Product type="0002" id="0001" name="SM103 Door/Window Sensor" config="everspring/sm103.xml" />
 	  <Product type="0101" id="0001" name="SP103 PIR Motion Sensor" config="everspring/sp103.xml" />
+	  <Product type="0001" id="0002" name="SP814 Motion Detector" config="everspring/sp814.xml" />
 	  <Product type="0006" id="0001" name="ST814 Temperature and Humidity Sensor" config="everspring/st814.xml" />
 	</Manufacturer>
 	<Manufacturer id="0036" name="Exceptional Innv">
