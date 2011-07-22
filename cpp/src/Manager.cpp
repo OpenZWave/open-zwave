@@ -451,6 +451,24 @@ string Manager::GetLibraryTypeName
 }
 
 //-----------------------------------------------------------------------------
+// <Manager::GetSendQueueCount>
+// 
+//-----------------------------------------------------------------------------
+int32 Manager::GetSendQueueCount
+(
+	uint32 const _homeId
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		return driver->GetSendQueueCount();
+	}
+
+	Log::Write( "GetSendQueueCount() failed - _homeId %d not found", _homeId );
+	return -1;
+}
+
+//-----------------------------------------------------------------------------
 //	Polling Z-Wave values
 //-----------------------------------------------------------------------------
 				  		

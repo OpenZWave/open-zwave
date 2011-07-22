@@ -289,6 +289,13 @@ namespace OpenZWave
 		 * \see GetLibraryVersion, IsBridgeController
 		 */
 		string GetLibraryTypeName( uint32 const _homeId );
+
+		/**
+		 * \brief Get count of messages in the outgoing send queue.
+		 * \param _homeId The Home ID of the Z-Wave controller.
+		 * \return a integer message count
+		 */
+		int32 GetSendQueueCount( uint32 const _homeId );
 	/*@}*/
 
 	private:
