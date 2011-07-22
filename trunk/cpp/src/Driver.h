@@ -182,6 +182,7 @@ namespace OpenZWave
 		string GetControllerPath()const{ return m_controllerPath; }
 		string GetLibraryVersion()const{ return m_libraryVersion; }
 		string GetLibraryTypeName()const{ return m_libraryTypeName; }
+		int32 GetSendQueueCount()const{ return m_sendQueue.size(); }
 
 		/**
 		 *  A version of GetNode that does not have the protective "lock" and "release" requirement.  
