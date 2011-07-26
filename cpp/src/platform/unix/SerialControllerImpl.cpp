@@ -29,6 +29,8 @@
 #include "SerialControllerImpl.h"
 #include "Log.h"
 
+#include <libudev.h>
+
 using namespace OpenZWave;
 
 //-----------------------------------------------------------------------------
@@ -61,6 +63,64 @@ SerialControllerImpl::~SerialControllerImpl
 #endif
 }
 
+bool SerialControllerImpl::FindUSB
+(
+	string &usbdevice
+)
+{
+	struct udev *udev;
+	struct udev_enumerate *enumerate;
+	struct udev_list_entry *devices, *dev_list_entry;
+	struct udev_device *dev, *parent;
+	bool found = false;
+	
+	string vendor  = usbdevice.substr(0, 4);
+ 	string product = usbdevice.substr(5, 4);
+	
+	udev = udev_new();
+	if (!udev) {
+		Log::Write("Can't create udev");
+		return false;
+	}
+
+	enumerate = udev_enumerate_new(udev);
+	udev_enumerate_add_match_subsystem(enumerate, "tty");
+	udev_enumerate_scan_devices(enumerate);
+	devices = udev_enumerate_get_list_entry(enumerate);
+	
+	udev_list_entry_foreach(dev_list_entry, devices) {
+		const char *path = udev_list_entry_get_name(dev_list_entry);
+		dev = udev_device_new_from_syspath(udev, path);
+		
+		parent = udev_device_get_parent_with_subsystem_devtype(dev, "usb", "usb_device");
+		
+		if (parent) {
+			Log::Write("USB: %s %s", udev_device_get_sysattr_value(parent, "idVendor"),
+								               udev_device_get_sysattr_value(parent, "idProduct"));
+			if (strcasecmp(udev_device_get_sysattr_value(parent, "idVendor"), vendor.c_str()) == 0 &&
+				  strcasecmp(udev_device_get_sysattr_value(parent, "idProduct"), product.c_str()) == 0) {
+				Log::Write("Found USB serial device at %s", udev_device_get_devnode(dev));
+				usbdevice = udev_device_get_devnode(dev);
+				found = true;
+			}
+		}
+		udev_device_unref(dev);
+		
+		if (found) break;
+	}
+	
+	udev_enumerate_unref(enumerate);
+
+	udev_unref(udev);
+	
+	if (!found) {
+		Log::Write("No serial USB device matching %s", usbdevice.c_str());
+	}
+	
+	return found;
+}
+
+
 //-----------------------------------------------------------------------------
 // <SerialControllerImpl::Open>
 // Open the serial port 
@@ -73,20 +133,29 @@ bool SerialControllerImpl::Open
 	SerialController::StopBits const _stopBits
 )
 {
-	Log::Write( "Open serial port %s", _SerialControllerName.c_str() );
-
-	m_hSerialController = open( _SerialControllerName.c_str(), O_RDWR | O_NOCTTY, 0 );
+	string device = _SerialControllerName;
+	
+	Log::Write( "Open serial port %s",device.c_str() );
+	
+	if (device.find(':') == 4) {
+		if (!FindUSB(device)) {
+			return false;
+		}
+	}
+	
+	
+	m_hSerialController = open( device.c_str(), O_RDWR | O_NOCTTY, 0 );
 
 	if( -1 == m_hSerialController )
 	{
 		//Error
-		Log::Write( "Cannot open serial port %s. Error code %d", _SerialControllerName.c_str(), errno );
+		Log::Write( "Cannot open serial port %s. Error code %d", device.c_str(), errno );
 		goto SerialOpenFailure;
 	}
 
 	if( flock( m_hSerialController, LOCK_EX) == -1 )
 	{
-		Log::Write( "Cannot get exclusive lock for serial port %s. Error code %d", _SerialControllerName.c_str(), errno );
+		Log::Write( "Cannot get exclusive lock for serial port %s. Error code %d", device.c_str(), errno );
 	}
 
 	int bits;
@@ -188,7 +257,7 @@ bool SerialControllerImpl::Open
 	return true;
 
 SerialOpenFailure:
- 	Log::Write( "Failed to open serial port %s", _SerialControllerName.c_str() );
+ 	Log::Write( "Failed to open serial port %s", device.c_str() );
     if(m_hSerialController >= 0)
 	close( m_hSerialController );
 	return false;

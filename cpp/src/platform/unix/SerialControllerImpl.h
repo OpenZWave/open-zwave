@@ -53,6 +53,7 @@ namespace OpenZWave
 		SerialControllerImpl();
 		~SerialControllerImpl();
 
+		static bool FindUSB( string &usbdevice );
 		bool Open( string const& _SerialControllerName, uint32 const _baud, SerialController::Parity const _parity, SerialController::StopBits const _stopBits );
 		void Close();
 
