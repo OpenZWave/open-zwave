@@ -29,7 +29,9 @@
 #include "SerialControllerImpl.h"
 #include "Log.h"
 
+#ifdef __linux__
 #include <libudev.h>
+#endif
 
 using namespace OpenZWave;
 
@@ -63,6 +65,7 @@ SerialControllerImpl::~SerialControllerImpl
 #endif
 }
 
+#ifdef __linux__
 bool SerialControllerImpl::FindUSB
 (
 	string &usbdevice
@@ -119,6 +122,7 @@ bool SerialControllerImpl::FindUSB
 	
 	return found;
 }
+#endif
 
 
 //-----------------------------------------------------------------------------
@@ -137,11 +141,14 @@ bool SerialControllerImpl::Open
 	
 	Log::Write( "Open serial port %s",device.c_str() );
 	
+#ifdef __linux__
 	if (device.find(':') == 4) {
 		if (!FindUSB(device)) {
 			return false;
 		}
 	}
+#endif
+
 	
 	
 	m_hSerialController = open( device.c_str(), O_RDWR | O_NOCTTY, 0 );
