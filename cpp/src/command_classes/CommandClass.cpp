@@ -57,7 +57,6 @@ CommandClass::CommandClass
 	m_homeId( _homeId ),
 	m_nodeId( _nodeId ),
 	m_version( 1 ),
-	m_instances( 0 ),
 	m_afterMark( false ),
 	m_createVars( true ),
 	m_staticRequests( 0 )
@@ -106,29 +105,39 @@ Value* CommandClass::GetValue
 
 //-----------------------------------------------------------------------------
 // <CommandClass::SetInstances>
-// Set the number of instances of this command class that the node contains
+// Instances as set by the MultiInstance V1 command class
 //-----------------------------------------------------------------------------
 void CommandClass::SetInstances
 ( 
 	uint8 const _instances
 )
 {
-	// Create a set of reported variables for each new instance
-	if( _instances > m_instances )
-	{
-		// Create the new value instances
-		if( !m_afterMark )
-		{	
-			for( uint8 i=m_instances; i<_instances; ++i )
-			{
-				if( IsCreateVars() )
-				{
-					CreateVars( i+1 );
-				}
-			}
+	// Ensure we have a set of reported variables for each new instance
+	if( !m_afterMark )
+	{	
+		for( uint8 i=0; i<_instances; ++i )
+		{
+			SetInstance( i+1 );
 		}
+	}
+}
 
-		m_instances = _instances;
+//-----------------------------------------------------------------------------
+// <CommandClass::SetInstance>
+// Instances as set by the MultiChannel (i.e. MultiInstance V2) command class
+//-----------------------------------------------------------------------------
+void CommandClass::SetInstance
+( 
+	uint8 const _endPoint
+)
+{
+	if( !m_instances.IsSet( _endPoint ) )
+	{
+		m_instances.Set( _endPoint );
+		if( IsCreateVars() )
+		{
+			CreateVars( _endPoint );
+		}
 	}
 }
 
@@ -182,8 +191,18 @@ void CommandClass::ReadXML
 		str = child->Value();
 		if( str )
 		{
-			if( !strcmp( str, "Value" ) )
+			if( !strcmp( str, "Instance" ) )
 			{
+				// Add an instance to the command class
+				if( TIXML_SUCCESS == child->QueryIntAttribute( "index", &intVal ) )
+				{
+					uint8 instance = (uint8)intVal;
+					SetInstance( instance );
+				}
+			}
+			else if( !strcmp( str, "Value" ) )
+			{
+				// Apply any differences from the saved XML to the value
 				GetNodeUnsafe()->ReadValueFromXML( GetCommandClassId(), child );
 			}
 		}
@@ -210,9 +229,6 @@ void CommandClass::WriteXML
 	snprintf( str, 32, "%d", GetVersion() );
 	_ccElement->SetAttribute( "version", str );
 
-	snprintf( str, 32, "%d", GetInstances() );
-	_ccElement->SetAttribute( "instances", str );
-
 	if( m_staticRequests )
 	{
 		snprintf( str, 32, "%d", m_staticRequests );
@@ -227,6 +243,16 @@ void CommandClass::WriteXML
 	if( m_createVars )
 	{
 		_ccElement->SetAttribute( "create_vars", "true" );
+	}
+
+	// Write out the instances
+	for( Bitfield::Iterator it = m_instances.Begin(); it != m_instances.End(); ++ it )
+	{
+		TiXmlElement* instanceElement = new TiXmlElement( "Instance" );
+		_ccElement->LinkEndChild( instanceElement );
+
+		snprintf( str, 32, "%d", *it );
+		instanceElement->SetAttribute( "index", str );
 	}
 
 	// Write out the values for this command class

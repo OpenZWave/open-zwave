@@ -29,6 +29,7 @@
 #include "SensorMultilevel.h"
 #include "MultiInstance.h"
 #include "Defs.h"
+#include "Bitfield.h"
 #include "Msg.h"
 #include "Node.h"
 #include "Driver.h"
@@ -118,13 +119,15 @@ bool SensorMultilevel::RequestState
 {
 	if( _requestFlags & RequestFlag_Dynamic )
 	{
-		uint8 numInstances = GetInstances();
-		if( numInstances > 1 )
+		if( Node* node = GetNodeUnsafe() )
 		{
-			// More than one instance - query each one in turn
-			for( uint8 i=0; i<numInstances; ++i )
+			if( MultiInstance* multiInstance = static_cast<MultiInstance*>( node->GetCommandClass( MultiInstance::StaticGetCommandClassId() ) ) )
 			{
-				RequestValue( 0, i+1 );		// increase by 1 so a one-instance value can be equal to 0
+				Bitfield const* instances = GetInstances();
+				for( Bitfield::Iterator it = instances->Begin(); it != instances->End(); ++it )
+				{
+					RequestValue( 0, (uint8)*it );
+				}
 			}
 			return true;
 		}
@@ -148,21 +151,20 @@ void SensorMultilevel::RequestValue
 	uint8 const _instance
 )
 {
-	if( GetInstances() > 1 )
+	if( _instance > 1 )
 	{
-		Msg* msg = new Msg( "SensorMultilevelCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, MultiInstance::StaticGetCommandClassId() );
-		msg->Append( GetNodeId() );
-		msg->Append( 5 );
-		msg->Append( MultiInstance::StaticGetCommandClassId() );
-		msg->Append( MultiInstance::MultiInstanceCmd_CmdEncap );
-		msg->Append( _instance );		// already increased by 1
-		msg->Append( GetCommandClassId() );
-		msg->Append( SensorMultilevelCmd_Get );
-		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-		GetDriver()->SendMsg( msg );
-		return;
+		if( Node* node = GetNodeUnsafe() )
+		{
+			if( MultiInstance* multiInstance = static_cast<MultiInstance*>( node->GetCommandClass( MultiInstance::StaticGetCommandClassId() ) ) )
+			{
+				Log::Write( "Sending SensorMultilevelCmd_Get to node %d for instance/endpoint %d", GetNodeId(), _instance );
+				uint8 data[2];
+				data[0] = GetCommandClassId();
+				data[1] = SensorMultilevelCmd_Get;
+				multiInstance->SendEncap( data, 2, _instance );
+			}
+		}
 	}
-
 	else
 	{
 		Msg* msg = new Msg( "SensorMultilevelCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
@@ -172,7 +174,6 @@ void SensorMultilevel::RequestValue
 		msg->Append( SensorMultilevelCmd_Get );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 		GetDriver()->SendMsg( msg );
-		return;
 	}
 }
 

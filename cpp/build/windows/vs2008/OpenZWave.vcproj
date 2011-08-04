@@ -152,6 +152,10 @@
 			Name="Main"
 			>
 			<File
+				RelativePath="..\..\..\src\Bitfield.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\Defs.h"
 				>
 			</File>
@@ -207,16 +211,16 @@
 				RelativePath="..\..\..\src\Options.h"
 				>
 			</File>
-                        <File
-                                RelativePath="..\..\..\src\Scene.cpp"
-                                >
-                        </File>
-                        <File
-                                RelativePath="..\..\..\src\Scene.h"
-                                >
-                        </File>
 			<File
 				RelativePath="..\..\..\src\Scene.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\Scene.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\Scene.h"
 				>
 			</File>
 			<File

@@ -267,6 +267,10 @@
     <ClInclude Include="..\..\..\src\Scene.h">
       <Filter>Main</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\Scene.h" />
+    <ClInclude Include="..\..\..\src\Bitfield.h">
+      <Filter>Main</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\Driver.cpp">
@@ -506,5 +510,6 @@
     <ClCompile Include="..\..\..\src\Scene.cpp">
       <Filter>Main</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\Scene.cpp" />
   </ItemGroup>
 </Project>
