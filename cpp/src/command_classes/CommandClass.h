@@ -32,6 +32,7 @@
 #include <vector>
 #include "tinyxml.h"
 #include "Defs.h"
+#include "Bitfield.h"
 
 namespace OpenZWave
 {
@@ -66,8 +67,12 @@ namespace OpenZWave
 		virtual bool SetValue( Value const& _value ){ return false; }
 		virtual void SetVersion( uint8 const _version ){ m_version = _version; }
 
+		// The highest version number of the command class implemented by OpenZWave.  We only need
+		// to do version gets on command classes that override this with a number greater than one.
+		virtual uint8 GetMaxVersion(){ return 1; }
+
 		uint8 GetVersion()const{ return m_version; }
-		uint8 GetInstances()const{ return m_instances; }
+		Bitfield const* GetInstances()const{ return &m_instances; }
 		uint32 GetHomeId()const{ return m_homeId; }
 		uint8 GetNodeId()const{ return m_nodeId; }
 		Driver* GetDriver()const;
@@ -75,6 +80,7 @@ namespace OpenZWave
 		Value* GetValue( uint8 const _instance, uint8 const _index );
 
 		void SetInstances( uint8 const _instances );
+		void SetInstance( uint8 const _endPoint );
 		void SetAfterMark(){ m_afterMark = true; }
 		bool IsAfterMark()const{ return m_afterMark; }
 		bool IsCreateVars()const{ return m_createVars; }
@@ -101,12 +107,12 @@ namespace OpenZWave
 
 
 	private:
-		uint32	m_homeId;
-		uint8	m_nodeId;
-		uint8	m_version;
-		uint8	m_instances;
-		bool	m_afterMark;		// Set to true if the command class is listed after COMMAND_CLASS_MARK, and should not create any values.
-		bool	m_createVars;		// Do we want to create variables
+		uint32		m_homeId;
+		uint8		m_nodeId;
+		uint8		m_version;
+		Bitfield	m_instances;
+		bool		m_afterMark;		// Set to true if the command class is listed after COMMAND_CLASS_MARK, and should not create any values.
+		bool		m_createVars;		// Do we want to create variables
 
 	//-----------------------------------------------------------------------------
 	// Record which items of static data have been read from the device

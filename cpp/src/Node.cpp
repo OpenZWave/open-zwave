@@ -260,11 +260,15 @@ void Node::AdvanceQueries
 				// if this node supports VERSION
 				if( vcc )
 				{
-
 					for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
 					{
-						// Get the version for each supported command class
-						m_queryPending |= vcc->RequestCommandClassVersion( it->second );
+						CommandClass* cc = it->second;
+						if( cc->GetMaxVersion() > 1 )
+						{
+							// Get the version for each supported command class that
+							// we have implemented at greater than version one.
+							m_queryPending |= vcc->RequestCommandClassVersion( it->second );
+						}
 					}
 				}
 				// advance to Instances stage when finished
@@ -276,7 +280,7 @@ void Node::AdvanceQueries
 				break;
 			}
 			case QueryStage_Instances:
-			{
+			{																   
 				// if the device at this node supports multiple instances, obtain a list of these instances
 				Log::Write( "Node %d: QueryStage_Instances", m_nodeId );
 				MultiInstance* micc = static_cast<MultiInstance*>( GetCommandClass( MultiInstance::StaticGetCommandClassId() ) );
@@ -944,7 +948,7 @@ void Node::UpdateNodeInfo
 					// Start with an instance count of one.  If the device supports COMMMAND_CLASS_MULTI_INSTANCE
 					// then some command class instance counts will increase once the responses to the RequestState
 					// call at the end of this method have been processed.
-                    pCommandClass->SetInstances( 1 );
+                    pCommandClass->SetInstance( 1 );
 					newCommandClasses = true;
 					Log::Write( "    %s", pCommandClass->GetCommandClassName().c_str() );
                 }
@@ -1829,6 +1833,41 @@ Driver* Node::GetDriver
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
+// <Node::GetEndPointDeviceClassLabel>
+// Use the device class data to get a label for a MultiChannel EndPoint.
+//-----------------------------------------------------------------------------
+string Node::GetEndPointDeviceClassLabel
+( 
+	uint8 const _generic,
+	uint8 const _specific
+)
+{
+	string label;
+
+	// Read in the device class data if it has not been read already. 
+	if( !s_deviceClassesLoaded )
+	{
+		ReadDeviceClasses();
+	}
+
+	// Get the Generic device class label
+	map<uint8,GenericDeviceClass*>::iterator git = s_genericDeviceClasses.find( _generic );
+	if( git != s_genericDeviceClasses.end() )
+	{
+		GenericDeviceClass* genericDeviceClass = git->second;
+		label = genericDeviceClass->GetLabel();
+
+		// Override with any specific device class label
+		if( DeviceClass* specificDeviceClass = genericDeviceClass->GetSpecificDeviceClass( _specific ) )
+		{
+			label = specificDeviceClass->GetLabel();
+		}
+	}
+
+	return label;
+}
+
+//-----------------------------------------------------------------------------
 // <Node::SetDeviceClasses>
 // Set the device class data for the node
 //-----------------------------------------------------------------------------
@@ -1911,7 +1950,7 @@ bool Node::SetDeviceClasses
 		// classes may need to go in the wakeup queue itself!
 		if( CommandClass* pCommandClass = AddCommandClass( WakeUp::StaticGetCommandClassId() ) )
 		{
-			pCommandClass->SetInstances( 1 );
+			pCommandClass->SetInstance( 1 );
 		}
 	}
 
@@ -2000,7 +2039,7 @@ bool Node::AddMandatoryCommandClasses
 
 				// Start with an instance count of one.  If the device supports COMMMAND_CLASS_MULTI_INSTANCE
 				// then some command class instance counts will increase.
-				commandClass->SetInstances( 1 );
+				commandClass->SetInstance( 1 );
 			}
 		}
 	}
