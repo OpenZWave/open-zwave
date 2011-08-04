@@ -28,6 +28,7 @@
 #ifndef _MultiInstance_H
 #define _MultiInstance_H
 
+#include <set>
 #include "CommandClass.h"
 
 namespace OpenZWave
@@ -37,18 +38,11 @@ namespace OpenZWave
 	class MultiInstance: public CommandClass
 	{
 	public:
-		enum MultiInstanceCmd
-		{
-			MultiInstanceCmd_Get		= 0x04,
-			MultiInstanceCmd_Report		= 0x05,
-			MultiInstanceCmd_CmdEncap	= 0x06
-		};
-
 		static CommandClass* Create( uint32 const _homeId, uint8 const _nodeId ){ return new MultiInstance( _homeId, _nodeId ); }
 		virtual ~MultiInstance(){}
 
 		static uint8 const StaticGetCommandClassId(){ return 0x60; }
-		static string const StaticGetCommandClassName(){ return "COMMAND_CLASS_MULTI_INSTANCE"; }
+		static string const StaticGetCommandClassName(){ return "COMMAND_CLASS_MULTI_INSTANCE/CHANNEL"; }
 
 		bool RequestInstances( CommandClass const* _commandClass );
 
@@ -56,9 +50,28 @@ namespace OpenZWave
 		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }
 		virtual string const GetCommandClassName()const{ return StaticGetCommandClassName(); }
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );
+		virtual uint8 GetMaxVersion(){ return 2; }
+
+		void SendEncap( uint8 const* _data, uint32 const _length, uint32 const _instance );
 
 	private:
 		MultiInstance( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
+
+		void HandleMultiInstanceReport( uint8 const* _data, uint32 const _length );
+		void HandleMultiInstanceEncap( uint8 const* _data, uint32 const _length );
+		void HandleMultiChannelEndPointReport( uint8 const* _data, uint32 const _length );
+		void HandleMultiChannelCapabilityReport( uint8 const* _data, uint32 const _length );
+		void HandleMultiChannelEndPointFindReport( uint8 const* _data, uint32 const _length );
+		void HandleMultiChannelEncap( uint8 const* _data, uint32 const _length );
+
+		bool		m_numEndPointsCanChange;
+		bool		m_endPointsAreSameClass;
+		uint8		m_numEndpoints;
+		
+		// Finding endpoints
+		uint8		m_endPointFindIndex;
+		uint8		m_numEndPointsFound;
+		set<uint8>	m_endPointCommandClasses;
 	};
 
 } // namespace OpenZWave

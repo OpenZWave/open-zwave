@@ -162,7 +162,7 @@ namespace OZWForm
 
             // Create the Options
             m_options = new ZWOptions();
-            m_options.Create(@"..\..\..\..\..\..\config\", @"", @"");
+            m_options.Create(@"..\..\..\..\..\..\..\config\", @"", @"");
 
             // Add any app specific options here...
 

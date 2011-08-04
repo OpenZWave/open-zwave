@@ -343,6 +343,14 @@ namespace OpenZWaveDotNet
 		 * \see GetLibraryVersion, IsBridgeController
 		 */
 		String^ GetLibraryTypeName( uint32 const homeId ){ return gcnew String(Manager::Get()->GetLibraryTypeName(homeId).c_str()); }
+
+		/**
+		 * \brief Get count of messages in the outgoing send queue.
+		 * \param homeId The Home ID of the Z-Wave controller.
+		 * \return a integer message count
+		 */
+		int32 GetSendQueueCount( uint32 const homeId ){ return Manager::Get()->GetSendQueueCount( homeId ); }
+
 	/*@}*/					   
 
 	//-----------------------------------------------------------------------------

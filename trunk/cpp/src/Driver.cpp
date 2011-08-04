@@ -61,8 +61,9 @@ using namespace OpenZWave;
 //
 // 01: 12-31-2010 - Introduced config version numbering due to ValueID format change.
 // 02: 01-12-2011 - Command class m_afterMark sense corrected, and attribute named to match.
+// 03: 08-04-2011 - Changed command class instance handling for non-sequential MultiChannel endpoints.
 //
-uint32 const c_configVersion = 2;
+uint32 const c_configVersion = 3;
 
 
 static char const* c_libraryTypeNames[] = 
@@ -121,17 +122,17 @@ Driver::Driver
     
     switch (_interface)
     {
-    case ControllerInterface_Serial:
+		case ControllerInterface_Serial:
         {
             m_controller = (IController*) new SerialController();
             break;
         }
-    case ControllerInterface_Hid:
+		case ControllerInterface_Hid:
         {
             m_controller = (IController*) new HidController();
             break;
         }
-    default:
+		default:
         {
             m_controller = (IController*) new SerialController();
             break;
@@ -147,6 +148,9 @@ Driver::~Driver
 (
 )
 {
+	// Save the driver config before deleting anything else
+	WriteConfig();
+
 	// The order of the statements below has been achieved by mitigating freed memory
   	//references using a memory allocator checker. Do not rearrange unless you are
   	//certain memory won't be referenced out of order. --Greg Satz, April 2010
@@ -3067,7 +3071,7 @@ uint8 Driver::GetCurrentNodeQuery
 
 	m_queryMutex->Lock();			// make sure there are not changes to the query list while processing
 
-	// search for the next query for an awake node
+	// Search for the next query for an awake node
 	for( list<uint8>::iterator it = m_nodeQueries.begin(); it != m_nodeQueries.end(); ++it )
 	{
 		if( Node* node = GetNodeUnsafe( *it ) )
@@ -3087,8 +3091,19 @@ uint8 Driver::GetCurrentNodeQuery
 			}
 
 			// Found a node that is awake
-			nodeId = *it;
-			break;
+		
+			// If the node has not yet passed the ManufacturerSpecifc stage, we make it the priority...
+			if( node->GetCurrentQueryStage() <= Node::QueryStage_ManufacturerSpecific )
+			{
+				nodeId = *it;
+				break;
+			}
+
+			//...otherwise we stick with the first one in the list
+			if( nodeId == 0xff )
+			{
+				nodeId = *it;
+			}
 		}
 	}
 	m_queryMutex->Release();
