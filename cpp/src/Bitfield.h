@@ -110,7 +110,7 @@ namespace OpenZWave
 			}
 
 		private:
-			Iterator( Bitfield const* _bitfield, uint32 _idx ): m_bitfield( _bitfield ), m_idx( _idx )
+			Iterator( Bitfield const* _bitfield, uint32 _idx ): m_idx( _idx ), m_bitfield( _bitfield )
 			{
 				// If this is a begin iterator, move it to the first set bit
 				if( ( _idx == 0 ) && ( !m_bitfield->IsSet(0) ) )
