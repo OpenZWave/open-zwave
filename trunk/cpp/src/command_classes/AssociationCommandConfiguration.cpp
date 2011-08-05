@@ -69,7 +69,7 @@ bool AssociationCommandConfiguration::RequestState
 {
 	if( _requestFlags & RequestFlag_Session )
 	{
-		RequestValue();
+		RequestValue( _requestFlags );
 		return true;
 	}
 
@@ -82,6 +82,7 @@ bool AssociationCommandConfiguration::RequestState
 //-----------------------------------------------------------------------------
 void AssociationCommandConfiguration::RequestValue
 (
+	uint32 const _requestFlags,
 	uint8 const _dummy1,	// = 0 (not used)
 	uint8 const _dummy2		// = 0 (not used)
 )

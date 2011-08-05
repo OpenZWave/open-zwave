@@ -64,7 +64,7 @@ bool Protection::RequestState
 {
 	if( _requestFlags & RequestFlag_Session )
 	{
-		RequestValue();
+		RequestValue( _requestFlags );
 		return true;
 	}
 
@@ -77,6 +77,7 @@ bool Protection::RequestState
 //-----------------------------------------------------------------------------
 void Protection::RequestValue
 (
+	uint32 const _requestFlags,
 	uint8 const _dummy1,	// = 0 (not used)
 	uint8 const _dummy2		// = 0 (not used)
 )

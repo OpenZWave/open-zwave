@@ -44,7 +44,7 @@ namespace OpenZWave
 		static uint8 const StaticGetCommandClassId(){ return 0x60; }
 		static string const StaticGetCommandClassName(){ return "COMMAND_CLASS_MULTI_INSTANCE/CHANNEL"; }
 
-		bool RequestInstances( CommandClass const* _commandClass );
+		bool RequestInstances();
 
 		// From CommandClass
 		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }
@@ -52,7 +52,7 @@ namespace OpenZWave
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );
 		virtual uint8 GetMaxVersion(){ return 2; }
 
-		void SendEncap( uint8 const* _data, uint32 const _length, uint32 const _instance );
+		void SendEncap( uint8 const* _data, uint32 const _length, uint32 const _instance, uint32 const _requestFlags );
 
 	private:
 		MultiInstance( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}

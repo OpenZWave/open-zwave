@@ -82,7 +82,7 @@ bool SensorAlarm::RequestState
 	bool requests = false;
 	if( ( _requestFlags & RequestFlag_Static ) && HasStaticRequest( StaticRequest_Values ) )
 	{
-		RequestValue( 0xff );
+		RequestValue( _requestFlags, 0xff );
 		requests = true;
 	}
 
@@ -93,7 +93,7 @@ bool SensorAlarm::RequestState
 			if( NULL != GetValue( 1, i ) )
 			{
 				// There is a value for this alarm type, so request it
-				RequestValue( i );
+				RequestValue( _requestFlags, i );
 			}
 		}
 		requests = true;
@@ -108,6 +108,7 @@ bool SensorAlarm::RequestState
 //-----------------------------------------------------------------------------
 void SensorAlarm::RequestValue
 (
+	uint32 const _requestFlags,
 	uint8 const _alarmType,
 	uint8 const _dummy		// = 0 (not used)
 )
@@ -121,6 +122,10 @@ void SensorAlarm::RequestValue
 		msg->Append( GetCommandClassId() );
 		msg->Append( SensorAlarmCmd_SupportedGet );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		if( _requestFlags & RequestFlag_LowPriority )
+		{
+			msg->SetPriority( Msg::MsgPriority_Low );
+		}
 		GetDriver()->SendMsg( msg );
 		return;
 	}
@@ -134,6 +139,10 @@ void SensorAlarm::RequestValue
 		msg->Append( SensorAlarmCmd_Get );
 		msg->Append( _alarmType );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		if( _requestFlags & RequestFlag_LowPriority )
+		{
+			msg->SetPriority( Msg::MsgPriority_Low );
+		}
 		GetDriver()->SendMsg( msg );
 	}
 }

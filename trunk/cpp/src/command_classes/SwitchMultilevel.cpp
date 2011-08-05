@@ -114,7 +114,7 @@ bool SwitchMultilevel::RequestState
 {
 	if( _requestFlags & RequestFlag_Dynamic )
 	{
-		RequestValue();
+		RequestValue( _requestFlags );
 		return true;
 	}
 
@@ -127,6 +127,7 @@ bool SwitchMultilevel::RequestState
 //-----------------------------------------------------------------------------
 void SwitchMultilevel::RequestValue
 (
+	uint32 const _requestFlags,
 	uint8 const _dummy1,	// = 0 (not used)
 	uint8 const _dummy2		// = 0 (not used)
 )

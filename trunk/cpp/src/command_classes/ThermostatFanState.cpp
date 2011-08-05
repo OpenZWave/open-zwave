@@ -75,7 +75,7 @@ bool ThermostatFanState::RequestState
 	if( _requestFlags & RequestFlag_Dynamic )
 	{
 		// Request the current state
-		RequestValue();
+		RequestValue( _requestFlags );
 		return true;
 	}
 	return false;
@@ -87,6 +87,7 @@ bool ThermostatFanState::RequestState
 //-----------------------------------------------------------------------------
 void ThermostatFanState::RequestValue
 (
+	uint32 const _requestFlags,
 	uint8 const _dummy1,	// = 0 (not used)
 	uint8 const _dummy2		// = 0 (not used)
 )

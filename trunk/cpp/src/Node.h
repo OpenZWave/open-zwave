@@ -34,6 +34,7 @@
 #include "Defs.h"
 #include "ValueID.h"
 #include "ValueList.h"
+#include "Msg.h"
 
 class TiXmlElement;
 
@@ -101,7 +102,7 @@ namespace OpenZWave
 			QueryStage_NodeInfo,				/**< Retrieve info about supported, controlled command classes */
 			QueryStage_ManufacturerSpecific,	/**< Retrieve manufacturer name and product ids */
 			QueryStage_Versions,				/**< Retrieve version information */
-			QueryStage_Instances,				/**< Retrieve information about running instances ??? */
+			QueryStage_Instances,				/**< Retrieve information about multiple command class instances */
 			QueryStage_Static,					/**< Retrieve static information (doesn't change) */
 			QueryStage_Associations,			/**< Retrieve information about associations */
 			QueryStage_Neighbors,				/**< Retrieve node neighbor list */
@@ -363,7 +364,7 @@ namespace OpenZWave
 	private:
 		bool SetConfigParam( uint8 const _param, int32 _value );
 		void RequestConfigParam( uint8 const _param );
-		bool RequestAllConfigParams();
+		bool RequestAllConfigParams( uint32 const _requestFlags );
 
 	//-----------------------------------------------------------------------------
 	// Groups

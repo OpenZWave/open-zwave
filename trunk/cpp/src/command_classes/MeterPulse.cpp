@@ -54,7 +54,7 @@ bool MeterPulse::RequestState
 {
 	if( _requestFlags & RequestFlag_Dynamic )
 	{
-		RequestValue();
+		RequestValue( _requestFlags );
 		return true;
 	}
 
@@ -67,6 +67,7 @@ bool MeterPulse::RequestState
 //-----------------------------------------------------------------------------
 void MeterPulse::RequestValue
 (
+	uint32 const _requestFlags,
 	uint8 const _dummy1,	// = 0 (not used)
 	uint8 const _dummy2		// = 0 (not used)
 )

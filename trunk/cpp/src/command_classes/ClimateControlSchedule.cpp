@@ -123,7 +123,7 @@ bool ClimateControlSchedule::RequestState
 	if( _requestFlags & RequestFlag_Session )
 	{
 		// See if the schedule has changed since last time
-		RequestValue();
+		RequestValue( _requestFlags );
 		return true;
 	}
 
@@ -136,6 +136,7 @@ bool ClimateControlSchedule::RequestState
 //-----------------------------------------------------------------------------
 void ClimateControlSchedule::RequestValue
 (
+	uint32 const _requestFlags,
 	uint8 const _dummy1,	// = 0 (not used)
 	uint8 const _dummy2		// = 0 (not used)
 )

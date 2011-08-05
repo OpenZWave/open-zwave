@@ -104,7 +104,7 @@ bool WakeUp::RequestState
 {
 	if( _requestFlags & RequestFlag_Session )
 	{
-		RequestValue();
+		RequestValue( _requestFlags );
 		return true;
 	}
 
@@ -117,6 +117,7 @@ bool WakeUp::RequestState
 //-----------------------------------------------------------------------------
 void WakeUp::RequestValue
 (
+	uint32 const _requestFlags,
 	uint8 const _dummy1,	// = 0
 	uint8 const _dummy2		// = 0
 )
