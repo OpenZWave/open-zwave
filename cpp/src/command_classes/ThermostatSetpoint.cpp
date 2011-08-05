@@ -109,7 +109,7 @@ bool ThermostatSetpoint::RequestState
 	bool requests = false;
 	if( ( _requestFlags & RequestFlag_Static ) && HasStaticRequest( StaticRequest_Values ) )
 	{
-		RequestValue( 0xff );
+		RequestValue( _requestFlags, 0xff );
 		requests = true;
 	}
 
@@ -117,7 +117,7 @@ bool ThermostatSetpoint::RequestState
 	{
 		for( uint8 i=0; i<ThermostatSetpoint_Count; ++i )
 		{
-			RequestValue( i );
+			RequestValue( _requestFlags, i );
 		}
 		requests = true;
 	}
@@ -131,6 +131,7 @@ bool ThermostatSetpoint::RequestState
 //-----------------------------------------------------------------------------
 void ThermostatSetpoint::RequestValue
 (
+	uint32 const _requestFlags,
 	uint8 const _setPointIndex,
 	uint8 const _dummy			// = 0 (not used)
 )
@@ -145,6 +146,10 @@ void ThermostatSetpoint::RequestValue
 		msg->Append( ThermostatSetpointCmd_SupportedGet );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 		GetDriver()->SendMsg( msg );
+		if( _requestFlags & RequestFlag_LowPriority )
+		{
+			msg->SetPriority( Msg::MsgPriority_Low );
+		}
 		return;
 	}
 
@@ -159,6 +164,10 @@ void ThermostatSetpoint::RequestValue
 		msg->Append( _setPointIndex );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 		GetDriver()->SendMsg( msg );
+		if( _requestFlags & RequestFlag_LowPriority )
+		{
+			msg->SetPriority( Msg::MsgPriority_Low );
+		}
 		return;
 	}
 }

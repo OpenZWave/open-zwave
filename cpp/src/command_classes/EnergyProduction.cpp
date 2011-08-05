@@ -71,10 +71,10 @@ bool EnergyProduction::RequestState
 	if( _requestFlags & RequestFlag_Dynamic )
 	{
 		// Request each of the production values
-		RequestValue( EnergyProductionIndex_Instant );
-		RequestValue( EnergyProductionIndex_Total );
-		RequestValue( EnergyProductionIndex_Today );
-		RequestValue( EnergyProductionIndex_Time );
+		RequestValue( _requestFlags, EnergyProductionIndex_Instant );
+		RequestValue( _requestFlags, EnergyProductionIndex_Total );
+		RequestValue( _requestFlags, EnergyProductionIndex_Today );
+		RequestValue( _requestFlags, EnergyProductionIndex_Time );
 		return true;
 	}
 
@@ -87,6 +87,7 @@ bool EnergyProduction::RequestState
 //-----------------------------------------------------------------------------
 void EnergyProduction::RequestValue
 (
+	uint32 const _requestFlags,
 	uint8 const _valueEnum,		// one of EnergyProductionIndex enums
 	uint8 const _dummy
 )
@@ -99,6 +100,11 @@ void EnergyProduction::RequestValue
 	msg->Append( EnergyProductionCmd_Get );
 	msg->Append( _valueEnum );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+
+	if( _requestFlags & RequestFlag_LowPriority )
+	{
+		msg->SetPriority( Msg::MsgPriority_Low );
+	}
 	GetDriver()->SendMsg( msg );
 }
 

@@ -48,18 +48,18 @@ namespace OpenZWave
 		virtual void ReadXML( TiXmlElement const* _ccElement );
 		virtual void WriteXML( TiXmlElement* _ccElement );
 		virtual bool RequestState( uint32 const _requestFlags );
-		virtual void RequestValue( uint8 const _dummy1 = 0, uint8 const _dummy2 = 0 );
+		virtual void RequestValue( uint32 const _requestFlags, uint8 const _dummy1 = 0, uint8 const _dummy2 = 0 );
 		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }		
 		virtual string const GetCommandClassName()const{ return StaticGetCommandClassName(); }
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );
 
-		void RequestAllGroups();
+		void RequestAllGroups( uint32 const _requestFlags );
 		void Set( uint8 const _group, uint8 const _nodeId );
 		void Remove( uint8 const _group, uint8 const _nodeId );
 
 	private:
 		Association( uint32 const _homeId, uint8 const _nodeId );
-		void QueryGroup( uint8 _groupIdx );
+		void QueryGroup( uint8 _groupIdx, uint32 const _requestFlags );
 		void AutoAssociate();
 
 		bool			m_queryAll;			// When true, once a group has been queried, we request the next one.

@@ -157,14 +157,14 @@ bool ThermostatMode::RequestState
 	if( ( _requestFlags & RequestFlag_Static ) && HasStaticRequest( StaticRequest_Values ) )
 	{
 		// request supported mode list
-		RequestValue( ThermostatModeCmd_SupportedGet );
+		RequestValue( _requestFlags, ThermostatModeCmd_SupportedGet );
 		requests = true;
 	}
 
 	if( _requestFlags & RequestFlag_Dynamic )
 	{
 		// Request the current mode
-		RequestValue();
+		RequestValue( _requestFlags );
 		requests = true;
 	}
 
@@ -177,6 +177,7 @@ bool ThermostatMode::RequestState
 //-----------------------------------------------------------------------------
 void ThermostatMode::RequestValue
 (
+	uint32 const _requestFlags,
 	uint8 const _getTypeEnum,
 	uint8 const _dummy			// = 0 (not used)
 )
@@ -190,6 +191,10 @@ void ThermostatMode::RequestValue
 		msg->Append( GetCommandClassId() );
 		msg->Append( ThermostatModeCmd_SupportedGet );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		if( _requestFlags & RequestFlag_LowPriority )
+		{
+			msg->SetPriority( Msg::MsgPriority_Low );
+		}
 		GetDriver()->SendMsg( msg );
 		return;
 	}
@@ -203,6 +208,10 @@ void ThermostatMode::RequestValue
 		msg->Append( GetCommandClassId() );
 		msg->Append( ThermostatModeCmd_Get );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		if( _requestFlags & RequestFlag_LowPriority )
+		{
+			msg->SetPriority( Msg::MsgPriority_Low );
+		}
 		GetDriver()->SendMsg( msg );
 		return;
 	}

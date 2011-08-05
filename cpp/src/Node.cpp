@@ -257,7 +257,6 @@ void Node::AdvanceQueries
 				// Get the version information (if the device supports COMMAND_CLASS_VERSION
 				Log::Write( "Node %d: QueryStage_Versions", m_nodeId );
 				Version* vcc = static_cast<Version*>( GetCommandClass( Version::StaticGetCommandClassId() ) );
-				// if this node supports VERSION
 				if( vcc )
 				{
 					for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
@@ -286,16 +285,19 @@ void Node::AdvanceQueries
 				MultiInstance* micc = static_cast<MultiInstance*>( GetCommandClass( MultiInstance::StaticGetCommandClassId() ) );
 				if( micc )
 				{
-					for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
-					{
-						m_queryPending |= micc->RequestInstances( it->second );
-					}
+					m_queryPending = micc->RequestInstances();
 				}
+
 				// when done, advance to the Static stage
 				if( !m_queryPending )
 				{
 					m_queryStage = QueryStage_Static;
 					m_queryRetries = 0;
+
+					Log::Write( "Node %d: Essential node queries are complete", m_nodeId );
+					Notification* notification = new Notification( Notification::Type_EssentialNodeQueriesComplete );
+					notification->SetHomeAndNodeIds( m_homeId, m_nodeId );
+					GetDriver()->QueueNotification( notification ); 
 				}
 				break;
 			}
@@ -308,7 +310,7 @@ void Node::AdvanceQueries
 				{
 					if( !it->second->IsAfterMark() )
 					{
-						m_queryPending |= it->second->RequestState( CommandClass::RequestFlag_Static );
+						m_queryPending |= it->second->RequestState( CommandClass::RequestFlag_Static | CommandClass::RequestFlag_LowPriority );
 					}
 				}
 
@@ -327,7 +329,7 @@ void Node::AdvanceQueries
 				Association* acc = static_cast<Association*>( GetCommandClass( Association::StaticGetCommandClassId() ) );
 				if( acc )
 				{
-					acc->RequestAllGroups();
+					acc->RequestAllGroups( CommandClass::RequestFlag_LowPriority );
 					m_queryPending = true;
 				}
 				else
@@ -342,7 +344,7 @@ void Node::AdvanceQueries
 			{
 				// retrieves this node's neighbors and stores the neighbor bitmap in the node object
 				Log::Write( "Node %d: QueryStage_Neighbors", m_nodeId );
-				GetDriver()->RequestNodeNeighbors( m_nodeId );
+				GetDriver()->RequestNodeNeighbors( m_nodeId, CommandClass::RequestFlag_LowPriority );
 				m_queryPending = true;
 				break;
 			}
@@ -355,7 +357,7 @@ void Node::AdvanceQueries
 				{
 					if( !it->second->IsAfterMark() )
 					{
-						m_queryPending |= it->second->RequestState( CommandClass::RequestFlag_Session );
+						m_queryPending |= it->second->RequestState( CommandClass::RequestFlag_Session | CommandClass::RequestFlag_LowPriority );
 					}
 				}
 				if( !m_queryPending )
@@ -374,7 +376,7 @@ void Node::AdvanceQueries
 				{
 					if( !it->second->IsAfterMark() )
 					{
-						m_queryPending |= it->second->RequestState( CommandClass::RequestFlag_Dynamic );
+						m_queryPending |= it->second->RequestState( CommandClass::RequestFlag_Dynamic | CommandClass::RequestFlag_LowPriority );
 					}
 				}
 				if( !m_queryPending )
@@ -390,7 +392,7 @@ void Node::AdvanceQueries
 				Log::Write( "Node %d: QueryStage_Configuration", m_nodeId );
 				if( m_queryConfiguration )
 				{
-					if( RequestAllConfigParams() )
+					if( RequestAllConfigParams( CommandClass::RequestFlag_LowPriority) )
 					{
 						m_queryPending = true;
 					}
@@ -585,6 +587,13 @@ void Node::ReadXML
 	if( m_queryStage > QueryStage_NodeInfo )
 	{
 		m_nodeInfoReceived = true;
+	}
+
+	if( m_queryStage > QueryStage_Instances )
+	{
+		Notification* notification = new Notification( Notification::Type_EssentialNodeQueriesComplete );
+		notification->SetHomeAndNodeIds( m_homeId, m_nodeId );
+		GetDriver()->QueueNotification( notification ); 
 	}
 
 	str = _node->Attribute( "name" );
@@ -1214,7 +1223,7 @@ void Node::RequestConfigParam
 {
 	if( Configuration* cc = static_cast<Configuration*>( GetCommandClass( Configuration::StaticGetCommandClassId() ) ) )
 	{
-		cc->RequestValue( _param, 0 );
+		cc->RequestValue( 0, _param, 0 );
 	}
 }
 
@@ -1223,7 +1232,8 @@ void Node::RequestConfigParam
 // Request the values of all known configuration parameters from the device
 //-----------------------------------------------------------------------------
 bool Node::RequestAllConfigParams
-(	
+(
+	uint32 const _requestFlags
 )
 {
 	bool res = false;
@@ -1235,7 +1245,7 @@ bool Node::RequestAllConfigParams
 			Value* value = it->second;
 			if( value->GetID().GetCommandClassId() == Configuration::StaticGetCommandClassId() )
 			{
-				cc->RequestValue( value->GetID().GetIndex(), value->GetID().GetInstance() );
+				cc->RequestValue( _requestFlags, value->GetID().GetIndex(), value->GetID().GetInstance() );
 				res = true;
 			}
 		}

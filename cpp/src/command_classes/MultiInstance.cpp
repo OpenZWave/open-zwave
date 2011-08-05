@@ -96,44 +96,53 @@ char const* c_genericClassName[] =
 //-----------------------------------------------------------------------------
 bool MultiInstance::RequestInstances
 (
-	CommandClass const* _commandClass
 )
 {
-	if( _commandClass->HasStaticRequest( StaticRequest_Instances ) )
+	bool res = false;
+
+	if( GetVersion() == 1 )
 	{
-		if( GetVersion() == 1 )
+		if( Node* node = GetNodeUnsafe() )
 		{
 			// MULTI_INSTANCE
 			char str[128];
-			snprintf( str, 128, "MultiInstanceCmd_Get for %s", _commandClass->GetCommandClassName().c_str() );
+			for( map<uint8,CommandClass*>::const_iterator it = node->m_commandClassMap.begin(); it != node->m_commandClassMap.end(); ++it )
+			{
+				CommandClass* cc = it->second;
+ 				if( cc->HasStaticRequest( StaticRequest_Instances ) )
+				{
+					snprintf( str, 128, "MultiInstanceCmd_Get for %s", cc->GetCommandClassName().c_str() );
 
-			Msg* msg = new Msg( str, GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-			msg->Append( GetNodeId() );
-			msg->Append( 3 );
-			msg->Append( GetCommandClassId() );
-			msg->Append( MultiInstanceCmd_Get );
-			msg->Append( _commandClass->GetCommandClassId() );
-			msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-			GetDriver()->SendMsg( msg );
+					Msg* msg = new Msg( str, GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+					msg->Append( GetNodeId() );
+					msg->Append( 3 );
+					msg->Append( GetCommandClassId() );
+					msg->Append( MultiInstanceCmd_Get );
+					msg->Append( cc->GetCommandClassId() );
+					msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+					GetDriver()->SendMsg( msg );
+					res = true;
+				}
+			}
 		}
-		else
-		{
-			// MULTI_CHANNEL
-			char str[128];
-			snprintf( str, 128, "MultiChannelCmd_EndPointGet for %s", _commandClass->GetCommandClassName().c_str() );
+	}
+	else
+	{
+		// MULTI_CHANNEL
+		char str[128];
+		snprintf( str, 128, "MultiChannelCmd_EndPointGet for node %d", GetNodeId() );
 
-			Msg* msg = new Msg( str, GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-			msg->Append( GetNodeId() );
-			msg->Append( 2 );
-			msg->Append( GetCommandClassId() );
-			msg->Append( MultiChannelCmd_EndPointGet );
-			msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-			GetDriver()->SendMsg( msg );
-		}
-		return true;
+		Msg* msg = new Msg( str, GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		msg->Append( GetNodeId() );
+		msg->Append( 2 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( MultiChannelCmd_EndPointGet );
+		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		GetDriver()->SendMsg( msg );
+		res = true;
 	}
 
-	return false;
+	return res;
 }
 
 //-----------------------------------------------------------------------------
@@ -294,7 +303,7 @@ void MultiInstance::HandleMultiChannelEndPointReport
 		m_numEndPointsFound = 0;
 
 		char str[128];
-		snprintf( str, 128, "MultiChannelCmd_EndPointFind for generic device class 0x.2x (%s)", c_genericClass[m_endPointFindIndex], c_genericClassName[m_endPointFindIndex] );
+		snprintf( str, 128, "MultiChannelCmd_EndPointFind for generic device class 0x%.2x (%s)", c_genericClass[m_endPointFindIndex], c_genericClassName[m_endPointFindIndex] );
 		Msg* msg = new Msg( str, GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 		msg->Append( GetNodeId() );
 		msg->Append( 4 );
@@ -324,7 +333,7 @@ void MultiInstance::HandleMultiChannelCapabilityReport
 
 		Log::Write( "Received MultiChannelCapabilityReport from node %d for endpoint %d", GetNodeId(), endPoint );
 		Log::Write( "	 Endpoint is%sdynamic, and is a %s", dynamic ? " " : " not ", node->GetEndPointDeviceClassLabel( _data[2], _data[3] ).c_str() );
-		Log::Write( "    Command classes supported by the endpoint are:", GetNodeId(), endPoint );
+		Log::Write( "    Command classes supported by the endpoint are:" );
 
 		// Store the command classes for later use
 		m_endPointCommandClasses.clear();
@@ -348,12 +357,12 @@ void MultiInstance::HandleMultiChannelCapabilityReport
 
 		if( ( endPoint == 1 ) && m_endPointsAreSameClass )
 		{
-			Log::Write( "All endpoints in this device are the same.  Searching for other endpoints..." );
+			Log::Write( "All endpoints in this device are the same as endpoint 1.  Searching for the other endpoints..." );
 	
 			// All end points have the same command classes.
 			// We just need to find them...
 			char str[128];
-			snprintf( str, 128, "MultiChannelCmd_EndPointFind for generic device class 0x.2x (%s)", c_genericClass[m_endPointFindIndex], c_genericClassName[m_endPointFindIndex] );
+			snprintf( str, 128, "MultiChannelCmd_EndPointFind for generic device class 0x%.2x", _data[2] );
 			Msg* msg = new Msg( str, GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 			msg->Append( GetNodeId() );
 			msg->Append( 4 );
@@ -442,7 +451,7 @@ void MultiInstance::HandleMultiChannelEndPointFindReport
 				if( c_genericClass[m_endPointFindIndex] > 0 )
 				{
 					char str[128];
-					snprintf( str, 128, "MultiChannelCmd_EndPointFind for generic device class 0x.2x (%s)", c_genericClass[m_endPointFindIndex], c_genericClassName[m_endPointFindIndex] );
+					snprintf( str, 128, "MultiChannelCmd_EndPointFind for generic device class 0x%.2x (%s)", c_genericClass[m_endPointFindIndex], c_genericClassName[m_endPointFindIndex] );
 					Msg* msg = new Msg( str, GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 					msg->Append( GetNodeId() );
 					msg->Append( 4 );
@@ -488,7 +497,8 @@ void MultiInstance::SendEncap
 (
 	uint8 const* _data,
 	uint32 const _length,
-	uint32 const _instance
+	uint32 const _instance,
+	uint32 const _requestFlags
 )
 {
 	char str[128];
@@ -522,6 +532,11 @@ void MultiInstance::SendEncap
 	}
 
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+
+	if( _requestFlags && CommandClass::RequestFlag_LowPriority )
+	{
+		msg->SetPriority( Msg::MsgPriority_Low );
+	}
 	GetDriver()->SendMsg( msg );
 }
 

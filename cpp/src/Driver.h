@@ -479,7 +479,7 @@ namespace OpenZWave
 		// The public interface is provided via the wrappers in the Manager class
 		void ResetController();
 		void SoftReset();
-		void RequestNodeNeighbors( uint8 const _nodeId );
+		void RequestNodeNeighbors( uint8 const _nodeId, uint32 const _requestFlags );
 
 		bool BeginControllerCommand( ControllerCommand _command, pfnControllerCallback_t _callback, void* _context, bool _highPower, uint8 _nodeId );
 		bool CancelControllerCommand();

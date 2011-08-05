@@ -692,11 +692,34 @@ void Driver::SendMsg
 	Log::Write( "Queuing command: %s", _msg->GetAsString().c_str() );
 	m_sendMutex->Lock();
 	if( IsControllerCommand( _msg->GetExpectedReply() ) )
+	{
 		// give priority to controller commands by putting at front of queue (right behind the current message)
+		_msg->SetPriority( Msg::MsgPriority_Normal );
 		m_sendQueue.push_front( _msg );
+	}
 	else
-		// everything else goes to back of queue
-		m_sendQueue.push_back( _msg );
+	{
+		if( Msg::MsgPriority_Low == _msg->GetPriority() )
+		{
+			// Low priority messages go to the back of the queue
+			m_sendQueue.push_back( _msg );
+		}
+		else
+		{
+			// Normal priority messages go in front of the first low priority message we find
+			list<Msg*>::iterator it;
+			for( it = m_sendQueue.begin(); it != m_sendQueue.end(); ++it )
+			{
+				if( Msg::MsgPriority_Low == (*it)->GetPriority() )
+				{
+					// Insert before this one
+					break;
+				}
+			}
+			
+			m_sendQueue.insert( it, _msg ); 
+		}
+	}
 	m_sendMutex->Release();
 
 	// if the controller isn't already in the middle of another "dialogue" indicate that there is something to do
@@ -2507,7 +2530,7 @@ void Driver::HandleNodeNeighborUpdateRequest
 
 			// We now request the neighbour information from the
 			// controller and store it in our node object.
-			RequestNodeNeighbors( m_controllerCommandNode );
+			RequestNodeNeighbors( m_controllerCommandNode, 0 );
 			break;
 		}
 		case REQUEST_NEIGHBOR_UPDATE_FAILED:
@@ -2926,7 +2949,7 @@ void Driver::PollThreadProc()
 						uint8 index = valueId.GetIndex();
 						uint8 instance = valueId.GetInstance();
 						Log::Write( "Polling node %d: %s index = %d instance = %d (send queue has %d messages)", node->m_nodeId, cc->GetCommandClassName().c_str(), index, instance, m_sendQueue.size() );
-						cc->RequestValue( index, instance );
+						cc->RequestValue( 0, index, instance );
 					}
 
 					ReleaseNodes();
@@ -3092,8 +3115,8 @@ uint8 Driver::GetCurrentNodeQuery
 
 			// Found a node that is awake
 		
-			// If the node has not yet passed the ManufacturerSpecifc stage, we make it the priority...
-			if( node->GetCurrentQueryStage() <= Node::QueryStage_ManufacturerSpecific )
+			// If the node has not yet passed the Instaces stage, we make it the priority...
+			if( node->GetCurrentQueryStage() <= Node::QueryStage_Instances )
 			{
 				nodeId = *it;
 				break;
@@ -3718,7 +3741,8 @@ void Driver::SoftReset
 //-----------------------------------------------------------------------------
 void Driver::RequestNodeNeighbors
 ( 
-	uint8 const _nodeId
+	uint8 const _nodeId,
+	uint32 const _requestFlags
 )
 {
 	// Note: This is not the same as RequestNodeNeighbourUpdate.  This method
@@ -3730,6 +3754,11 @@ void Driver::RequestNodeNeighbors
 	msg->Append( _nodeId );
 	msg->Append( 1 );		// Exclude bad links
 	msg->Append( 1 );		// Exclude non-routing neighbors
+
+	if( _requestFlags && CommandClass::RequestFlag_LowPriority )
+	{
+		msg->SetPriority( Msg::MsgPriority_Low );
+	}
 	SendMsg( msg );
 }
 
