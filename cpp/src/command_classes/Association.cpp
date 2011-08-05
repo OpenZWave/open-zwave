@@ -142,7 +142,7 @@ bool Association::RequestState
 	if( ( _requestFlags & RequestFlag_Static ) && HasStaticRequest( StaticRequest_Values ) )
 	{
 		// Request the supported group info
-		RequestValue();
+		RequestValue( _requestFlags );
 		return true;
 	}
 
@@ -155,6 +155,7 @@ bool Association::RequestState
 //-----------------------------------------------------------------------------
 void Association::RequestValue
 (
+	uint32 const _requestFlags,
 	uint8 const _dummy1,	// = 0 (not used)
 	uint8 const _dummy2		// = 0 (not used)
 )
@@ -175,6 +176,7 @@ void Association::RequestValue
 //-----------------------------------------------------------------------------
 void Association::RequestAllGroups
 (
+	uint32 const _requestFlags
 )
 {
 	m_queryAll = true;
@@ -184,13 +186,13 @@ void Association::RequestAllGroups
 	{
 		// We start with group 255, and will then move to group 1, 2 etc and stop when we find a group with a maxAssociations of zero.
 		Log::Write( "Number of association groups reported for node %d is 255, which requires special case handling.", GetNodeId() );
-		QueryGroup( 0xff );	
+		QueryGroup( 0xff, _requestFlags );	
 	}
 	else
 	{
 		// We start with group 1, and will then move to group 2, 3 etc and stop when the group index is greater than m_numGroups.
 		Log::Write( "Number of association groups reported for node %d is %d.", GetNodeId(), m_numGroups );
-		QueryGroup( 1 );
+		QueryGroup( 1, _requestFlags );
 	}
 }
 
@@ -288,7 +290,7 @@ bool Association::HandleMsg
 				if( nextGroup <= m_numGroups )
 				{
 					// Query the next group
-					QueryGroup( nextGroup );
+					QueryGroup( nextGroup, RequestFlag_LowPriority );
 				}
 				else
 				{
@@ -313,7 +315,8 @@ bool Association::HandleMsg
 //-----------------------------------------------------------------------------
 void Association::QueryGroup
 (
-	uint8 _groupIdx
+	uint8 _groupIdx,
+	uint32 const _requestFlags
 )
 {
 	Log::Write( "Get Associations for group %d of node %d", _groupIdx, GetNodeId() );
@@ -324,6 +327,10 @@ void Association::QueryGroup
 	msg->Append( AssociationCmd_Get );
 	msg->Append( _groupIdx );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	if( _requestFlags && CommandClass::RequestFlag_LowPriority )
+	{
+		msg->SetPriority( Msg::MsgPriority_Low );
+	}
 	GetDriver()->SendMsg( msg );
 }
 

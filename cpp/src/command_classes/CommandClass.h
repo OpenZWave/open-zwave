@@ -48,9 +48,10 @@ namespace OpenZWave
 	public:
 		enum
 		{
-			RequestFlag_Static	= 0x00000001,	/**< Values that never change. */
-			RequestFlag_Session = 0x00000002,	/**< Values that change infrequently, and so only need to be requested at start up, or via a manual refresh. */
-			RequestFlag_Dynamic	= 0x00000004	/**< Values that change and will be requested if polling is enabled on the node. */
+			RequestFlag_Static		= 0x00000001,	/**< Values that never change. */
+			RequestFlag_Session		= 0x00000002,	/**< Values that change infrequently, and so only need to be requested at start up, or via a manual refresh. */
+			RequestFlag_Dynamic		= 0x00000004,	/**< Values that change and will be requested if polling is enabled on the node. */
+			RequestFlag_LowPriority	= 0x00000008	/**< Indictates that the request should be made with low priority messages */
 		};
 
 		CommandClass( uint32 const _homeId, uint8 const _nodeId );
@@ -59,7 +60,7 @@ namespace OpenZWave
 		virtual void ReadXML( TiXmlElement const* _ccElement );
 		virtual void WriteXML( TiXmlElement* _ccElement );
 		virtual bool RequestState( uint32 const _requestFlags ){ return false; }
-		virtual void RequestValue( uint8 const _index, uint8 const _instance ) { return; }
+		virtual void RequestValue( uint32 const _requestFlags, uint8 const _index, uint8 const _instance ) { return; }
 
 		virtual uint8 const GetCommandClassId()const = 0;
 		virtual string const GetCommandClassName()const = 0;

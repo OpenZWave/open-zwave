@@ -57,23 +57,24 @@ namespace OpenZWaveDotNet
 	public:
 		enum class Type
 		{
-			ValueAdded			= Notification::Type_ValueAdded,	
-			ValueRemoved		= Notification::Type_ValueRemoved,		
-			ValueChanged		= Notification::Type_ValueChanged,		
-			Group				= Notification::Type_Group,				
-			NodeNew				= Notification::Type_NodeNew,
-			NodeAdded			= Notification::Type_NodeAdded,			
-			NodeRemoved			= Notification::Type_NodeRemoved,		
-			NodeProtocolInfo	= Notification::Type_NodeProtocolInfo,
-			NodeNaming			= Notification::Type_NodeNaming,
-			NodeEvent			= Notification::Type_NodeEvent,
-			PollingDisabled		= Notification::Type_PollingDisabled,	
-			PollingEnabled		= Notification::Type_PollingEnabled,	
-			DriverReady			= Notification::Type_DriverReady,		
-			DriverReset			= Notification::Type_DriverReset,
-			NodeQueriesComplete = Notification::Type_NodeQueriesComplete,
-			AwakeNodesQueried	= Notification::Type_AwakeNodesQueried,
-			AllNodesQueried		= Notification::Type_AllNodesQueried
+			ValueAdded						= Notification::Type_ValueAdded,	
+			ValueRemoved					= Notification::Type_ValueRemoved,		
+			ValueChanged					= Notification::Type_ValueChanged,		
+			Group							= Notification::Type_Group,				
+			NodeNew							= Notification::Type_NodeNew,
+			NodeAdded						= Notification::Type_NodeAdded,			
+			NodeRemoved						= Notification::Type_NodeRemoved,		
+			NodeProtocolInfo				= Notification::Type_NodeProtocolInfo,
+			NodeNaming						= Notification::Type_NodeNaming,
+			NodeEvent						= Notification::Type_NodeEvent,
+			PollingDisabled					= Notification::Type_PollingDisabled,	
+			PollingEnabled					= Notification::Type_PollingEnabled,	
+			DriverReady						= Notification::Type_DriverReady,		
+			DriverReset						= Notification::Type_DriverReset,
+			EssentialNodeQueriesComplete	= Notification::Type_EssentialNodeQueriesComplete,
+			NodeQueriesComplete				= Notification::Type_NodeQueriesComplete,
+			AwakeNodesQueried				= Notification::Type_AwakeNodesQueried,
+			AllNodesQueried					= Notification::Type_AllNodesQueried
 		};
 
 		ZWNotification( Notification* notification )

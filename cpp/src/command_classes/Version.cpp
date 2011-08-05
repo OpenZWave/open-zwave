@@ -63,7 +63,7 @@ bool Version::RequestState
 {
 	if( ( _requestFlags & RequestFlag_Static ) && HasStaticRequest( StaticRequest_Values ) )
 	{
-		RequestValue();
+		RequestValue( _requestFlags );
 		return true;
 	}
 
@@ -76,6 +76,7 @@ bool Version::RequestState
 //-----------------------------------------------------------------------------
 void Version::RequestValue
 (
+	uint32 const _requestFlags,
 	uint8 const _dummy1,		// = 0
 	uint8 const _dummy2			// = 0
 )

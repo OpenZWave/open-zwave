@@ -211,14 +211,14 @@ bool NodeNaming::RequestState
 			if( node->m_nodeName == "" )
 			{
 				// If we don't already have a user-defined name, fetch it from the device
-				RequestValue( NodeNamingCmd_Get );
+				RequestValue( _requestFlags, NodeNamingCmd_Get );
 				res = true;
 			}
 
 			if( node->m_location == "" )
 			{
 				// If we don't already have a user-defined location, fetch it from the device
-				RequestValue( NodeNamingCmd_LocationGet );
+				RequestValue( _requestFlags, NodeNamingCmd_LocationGet );
 				res = true;
 			}
 		}
@@ -233,6 +233,7 @@ bool NodeNaming::RequestState
 //-----------------------------------------------------------------------------
 void NodeNaming::RequestValue
 (
+	uint32 const _requestFlags,
 	uint8 const _getTypeEnum,
 	uint8 const _dummy			// = 0 (not used)
 )
@@ -247,6 +248,10 @@ void NodeNaming::RequestValue
 		msg->Append( GetCommandClassId() );
 		msg->Append( NodeNamingCmd_Get );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		if( _requestFlags & RequestFlag_LowPriority )
+		{
+			msg->SetPriority( Msg::MsgPriority_Low );
+		}
 		GetDriver()->SendMsg( msg );
 		return;
 	}
@@ -260,6 +265,10 @@ void NodeNaming::RequestValue
 		msg->Append( GetCommandClassId() );
 		msg->Append( NodeNamingCmd_LocationGet );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		if( _requestFlags & RequestFlag_LowPriority )
+		{
+			msg->SetPriority( Msg::MsgPriority_Low );
+		}
 		GetDriver()->SendMsg( msg );
 	}
 }

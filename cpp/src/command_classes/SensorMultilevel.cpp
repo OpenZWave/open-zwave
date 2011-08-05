@@ -127,14 +127,14 @@ bool SensorMultilevel::RequestState
 				Bitfield const* instances = GetInstances();
 				for( Bitfield::Iterator it = instances->Begin(); it != instances->End(); ++it )
 				{
-					RequestValue( 0, (uint8)*it );
+					RequestValue( _requestFlags, 0, (uint8)*it );
 				}
 			}
 			return true;
 		}
 		else
 		{
-			RequestValue();
+			RequestValue( _requestFlags );
 			return true;
 		}
 	}
@@ -148,6 +148,7 @@ bool SensorMultilevel::RequestState
 //-----------------------------------------------------------------------------
 void SensorMultilevel::RequestValue
 (
+	uint32 const _requestFlags,
 	uint8 const _dummy,		// = 0 (not used)
 	uint8 const _instance
 )
@@ -162,7 +163,7 @@ void SensorMultilevel::RequestValue
 				uint8 data[2];
 				data[0] = GetCommandClassId();
 				data[1] = SensorMultilevelCmd_Get;
-				multiInstance->SendEncap( data, 2, _instance );
+				multiInstance->SendEncap( data, 2, _instance, _requestFlags );
 			}
 		}
 	}
@@ -174,6 +175,10 @@ void SensorMultilevel::RequestValue
 		msg->Append( GetCommandClassId() );
 		msg->Append( SensorMultilevelCmd_Get );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		if( _requestFlags & RequestFlag_LowPriority )
+		{
+			msg->SetPriority( Msg::MsgPriority_Low );
+		}
 		GetDriver()->SendMsg( msg );
 	}
 }

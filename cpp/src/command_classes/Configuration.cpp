@@ -189,6 +189,7 @@ bool Configuration::SetValue
 //-----------------------------------------------------------------------------
 void Configuration::RequestValue
 (
+	uint32 const _requestFlags,
 	uint8 const _parameter,		// parameter number is encoded as the Index portion of ValueID
 	uint8 const _dummy
 )
