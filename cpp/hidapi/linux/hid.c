@@ -36,8 +36,6 @@
 #include <sys/utsname.h>
 #include <fcntl.h>
 
-#define LIBUDEV_I_KNOW_THE_API_IS_SUBJECT_TO_CHANGE
-
 /* Linux */
 #include <linux/hidraw.h>
 #include <linux/version.h>
