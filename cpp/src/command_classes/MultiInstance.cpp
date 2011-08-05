@@ -148,7 +148,8 @@ bool MultiInstance::HandleMsg
 )
 {
 	bool handled = false;
-	if( Node* node = GetNodeUnsafe() )
+	Node* node = GetNodeUnsafe();
+	if( node != NULL )
 	{
 		handled = true;
 		switch( (MultiInstanceCmd)_data[0] )
