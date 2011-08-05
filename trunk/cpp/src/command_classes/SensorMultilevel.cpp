@@ -121,7 +121,8 @@ bool SensorMultilevel::RequestState
 	{
 		if( Node* node = GetNodeUnsafe() )
 		{
-			if( MultiInstance* multiInstance = static_cast<MultiInstance*>( node->GetCommandClass( MultiInstance::StaticGetCommandClassId() ) ) )
+			MultiInstance* multiInstance = static_cast<MultiInstance*>( node->GetCommandClass( MultiInstance::StaticGetCommandClassId() ) );
+			if( multiInstance != NULL )
 			{
 				Bitfield const* instances = GetInstances();
 				for( Bitfield::Iterator it = instances->Begin(); it != instances->End(); ++it )
