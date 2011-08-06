@@ -157,7 +157,7 @@ Manager::~Manager
 	delete m_exitEvent;
 	delete m_notificationMutex;
 
-    // Clear the watchers list
+	// Clear the watchers list
 	while( !m_watchers.empty() )
 	{
 		list<Watcher*>::iterator it = m_watchers.begin();
@@ -212,7 +212,7 @@ void Manager::WriteConfig
 bool Manager::AddDriver
 (
 	string const& _controllerPath,
-    Driver::ControllerInterface const& _interface
+	Driver::ControllerInterface const& _interface
 )
 {
 	// Make sure we don't already have a driver for this controller
@@ -237,7 +237,7 @@ bool Manager::AddDriver
 		}
 	}
 
-    Driver* driver = new Driver( _controllerPath, _interface );
+	Driver* driver = new Driver( _controllerPath, _interface );
 	m_pendingDrivers.push_back( driver );
 	driver->Start();
 
@@ -790,7 +790,9 @@ uint32 Manager::GetNodeNeighbors
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
+	{
 		return driver->GetNodeNeighbors( _nodeId, o_neighbors );
+	}
 
 	return 0;
 }
@@ -1000,10 +1002,10 @@ void Manager::SetNodeOn
 	uint8 const _nodeId
 )
 {
-    if( Driver* driver = GetDriver( _homeId ) )
-    {
-        return driver->SetNodeOn( _nodeId );
-    }
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		driver->SetNodeOn( _nodeId );
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -1016,10 +1018,10 @@ void Manager::SetNodeOff
 	uint8 const _nodeId
 )
 {
-    if( Driver* driver = GetDriver( _homeId ) )
-    {
-        return driver->SetNodeOff( _nodeId );
-    }
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		driver->SetNodeOff( _nodeId );
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -1028,28 +1030,28 @@ void Manager::SetNodeOff
 //-----------------------------------------------------------------------------
 bool Manager::IsNodeInfoReceived
 (
-    uint32 const _homeId,
-    uint8 const _nodeId
+	uint32 const _homeId,
+	uint8 const _nodeId
 )
 {
-    bool result = false;
+	bool result = false;
 
-    if( Driver* driver = GetDriver( _homeId ) )
-    {
-        Node *node;
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		Node *node;
 
-        // Need to lock and unlock nodes to check this information
-        driver->LockNodes();
+		// Need to lock and unlock nodes to check this information
+		driver->LockNodes();
 
-        if( (node = driver->GetNodeUnsafe( _nodeId ) ) != NULL)
-        {
-            result = (node->NodeInfoReceived());
-        }
+		if( (node = driver->GetNodeUnsafe( _nodeId ) ) != NULL)
+		{
+			result = (node->NodeInfoReceived());
+		}
 
-        driver->ReleaseNodes();            
-    }
+		driver->ReleaseNodes();            
+	}
     
-    return result;
+	return result;
 }
 
 //-----------------------------------------------------------------------------
@@ -1060,39 +1062,42 @@ bool Manager::GetNodeClassInformation
 (
 	uint32 const _homeId,
 	uint8 const _nodeId,
-    uint8 const _commandClassId,
-    string *_className,
-    uint8 *_classVersion
+	uint8 const _commandClassId,
+	string *_className,
+	uint8 *_classVersion
 )
 {
-    bool result = false;
+	bool result = false;
     
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
-        Node *node;
+	        Node *node;
 
-        // Need to lock and unlock nodes to check this information
-        driver->LockNodes();
+	        // Need to lock and unlock nodes to check this information
+	        driver->LockNodes();
 
-        if( (node = driver->GetNodeUnsafe( _nodeId ) ) != NULL)
-        {
-            CommandClass *cc;
-            if ((node->NodeInfoReceived()) &&
-                ((cc = node->GetCommandClass(_commandClassId)) != NULL))
-            {
-                if(_className)
-                    *_className = cc->GetCommandClassName();
-                if(_classVersion)
-                    *_classVersion = cc->GetVersion();
-                // Positive result
-                result = true;
-            }
-        }
+	        if( (node = driver->GetNodeUnsafe( _nodeId ) ) != NULL)
+	        {
+			CommandClass *cc;
+			if( ( node->NodeInfoReceived() ) && ( ( cc = node->GetCommandClass(_commandClassId)) != NULL ) )
+			{
+				if( _className )
+				{
+					*_className = cc->GetCommandClassName();
+				}
+				if( _classVersion )
+				{
+					*_classVersion = cc->GetVersion();
+				}
+				// Positive result
+				result = true;
+			}
+		}
 
-        driver->ReleaseNodes();
+		driver->ReleaseNodes();
 	}
     
-    return result;
+	return result;
 }
 
 //-----------------------------------------------------------------------------
@@ -1178,7 +1183,7 @@ string Manager::GetValueUnits
 		if( Value* value = driver->GetValue( _id ) )
 		{
 			units = value->GetUnits();
-            value->Release();
+			value->Release();
 		}
 		driver->ReleaseNodes();
 	}
@@ -1224,7 +1229,7 @@ string Manager::GetValueHelp
 		if( Value* value = driver->GetValue( _id ) )
 		{
 			help = value->GetHelp();
-            value->Release();
+			value->Release();
 		}
 		driver->ReleaseNodes();
 	}
@@ -1270,7 +1275,7 @@ int32 Manager::GetValueMin
 		if( Value* value = driver->GetValue( _id ) )
 		{
 			limit = value->GetMin();
-            value->Release();
+			value->Release();
 		}
 		driver->ReleaseNodes();
 	}
@@ -1294,7 +1299,7 @@ int32 Manager::GetValueMax
 		if( Value* value = driver->GetValue( _id ) )
 		{
 			limit = value->GetMax();
-            value->Release();
+			value->Release();
 		}
 		driver->ReleaseNodes();
 	}
@@ -1318,7 +1323,7 @@ bool Manager::IsValueReadOnly
 		if( Value* value = driver->GetValue( _id ) )
 		{
 			res = value->IsReadOnly();
-            value->Release();
+			value->Release();
 		}
 		driver->ReleaseNodes();
 	}
@@ -1342,7 +1347,7 @@ bool Manager::IsValueSet
 		if( Value* value = driver->GetValue( _id ) )
 		{
 			res = value->IsSet();
-            value->Release();
+			value->Release();
 		}
 		driver->ReleaseNodes();
 	}
@@ -1372,21 +1377,21 @@ bool Manager::GetValueAsBool
 				if( ValueBool* value = static_cast<ValueBool*>( driver->GetValue( _id ) ) )
 				{
 					*o_value = value->GetValue();
-                    value->Release();
+					value->Release();
 					res = true;
 				}
 				driver->ReleaseNodes();
 			}
 		}
-        else if( ValueID::ValueType_Button == _id.GetType() )
-        {
-            if( Driver* driver = GetDriver( _id.GetHomeId() ) )
-            {
-                driver->LockNodes();
-                if( ValueButton* value = static_cast<ValueButton*>( driver->GetValue( _id ) ) )
-                {
-                    *o_value = value->IsPressed();
-                    value->Release();
+		else if( ValueID::ValueType_Button == _id.GetType() )
+		{
+			if( Driver* driver = GetDriver( _id.GetHomeId() ) )
+			{
+			    	driver->LockNodes();
+				if( ValueButton* value = static_cast<ValueButton*>( driver->GetValue( _id ) ) )
+				{
+					*o_value = value->IsPressed();
+					value->Release();
 					res = true;
 				}
 				driver->ReleaseNodes();
@@ -1419,7 +1424,7 @@ bool Manager::GetValueAsByte
 				if( ValueByte* value = static_cast<ValueByte*>( driver->GetValue( _id ) ) )
 				{
 					*o_value = value->GetValue();
-                    value->Release();
+					value->Release();
 					res = true;
 				}
 				driver->ReleaseNodes();
@@ -1453,7 +1458,7 @@ bool Manager::GetValueAsFloat
 				{
 					string str = value->GetValue();
 					*o_value = (float)atof( str.c_str() );
-                    value->Release();
+					value->Release();
 					res = true;
 				}
 				driver->ReleaseNodes();
@@ -1486,7 +1491,7 @@ bool Manager::GetValueAsInt
 				if( ValueInt* value = static_cast<ValueInt*>( driver->GetValue( _id ) ) )
 				{
 					*o_value = value->GetValue();
-                    value->Release();
+					value->Release();
 					res = true;
 				}
 				driver->ReleaseNodes();
@@ -1519,7 +1524,7 @@ bool Manager::GetValueAsShort
 				if( ValueShort* value = static_cast<ValueShort*>( driver->GetValue( _id ) ) )
 				{
 					*o_value = value->GetValue();
-                    value->Release();
+					value->Release();
 					res = true;
 				}
 				driver->ReleaseNodes();
@@ -1556,7 +1561,7 @@ bool Manager::GetValueAsString
 					if( ValueBool* value = static_cast<ValueBool*>( driver->GetValue( _id ) ) )
 					{
 						*o_value = value->GetValue() ? "True" : "False";
-                        value->Release();
+						value->Release();
 						res = true;
 					}
 					break;
@@ -1567,7 +1572,7 @@ bool Manager::GetValueAsString
 					{
 						snprintf( str, sizeof(str), "%u", value->GetValue() );
 						*o_value = str;
-                        value->Release();
+						value->Release();
 						res = true;
 					}
 					break;
@@ -1577,7 +1582,7 @@ bool Manager::GetValueAsString
 					if( ValueDecimal* value = static_cast<ValueDecimal*>( driver->GetValue( _id ) ) )
 					{
 						*o_value = value->GetValue();
-                        value->Release();
+						value->Release();
 						res = true;
 					}
 					break;
@@ -1588,7 +1593,7 @@ bool Manager::GetValueAsString
 					{
 						snprintf( str, sizeof(str), "%d", value->GetValue() );
 						*o_value = str;
-                        value->Release();
+						value->Release();
 						res = true;
 					}
 					break;
@@ -1599,7 +1604,7 @@ bool Manager::GetValueAsString
 					{
 						ValueList::Item const& item = value->GetItem();
 						*o_value = item.m_label;
-                        value->Release();
+						value->Release();
 						res = true;
 					}
 					break;
@@ -1610,7 +1615,7 @@ bool Manager::GetValueAsString
 					{
 						snprintf( str, sizeof(str), "%d", value->GetValue() );
 						*o_value = str;
-                        value->Release();
+						value->Release();
 						res = true;
 					}
 					break;
@@ -1620,26 +1625,26 @@ bool Manager::GetValueAsString
 					if( ValueString* value = static_cast<ValueString*>( driver->GetValue( _id ) ) )
 					{
 						*o_value = value->GetValue();
-                        value->Release();
+						value->Release();
 						res = true;
 					}
 					break;
 				}
-                case ValueID::ValueType_Button:
-                {
-                    if( ValueButton* value = static_cast<ValueButton*>( driver->GetValue( _id ) ) )
-                    {
-                        *o_value = value->IsPressed() ? "True" : "False";
-                        value->Release();
-                        res = true;
-                    }
-                    break;
-                }
-                default:
-                {
-                    // To keep GCC happy
-                    break;
-                }
+				case ValueID::ValueType_Button:
+				{
+					if( ValueButton* value = static_cast<ValueButton*>( driver->GetValue( _id ) ) )
+					{
+						*o_value = value->IsPressed() ? "True" : "False";
+						value->Release();
+						res = true;
+					}
+					break;
+				}
+				default:
+				{
+					// To keep GCC happy
+					break;
+				}
 			}
 
 			driver->ReleaseNodes();
@@ -1671,9 +1676,12 @@ bool Manager::GetValueListSelection
 				if( ValueList* value = static_cast<ValueList*>( driver->GetValue( _id ) ) )
 				{
 					ValueList::Item const& item = value->GetItem();
-					*o_value = item.m_label;
-                    value->Release();
-					res = true;
+					if( &item != NULL )
+					{
+						*o_value = item.m_label;
+						res = true;
+					}
+					value->Release();
 				}
 				driver->ReleaseNodes();
 			}
@@ -1706,7 +1714,7 @@ bool Manager::GetValueListSelection
 				{
 					ValueList::Item const& item = value->GetItem();
 					*o_value = item.m_value;
-                    value->Release();
+					value->Release();
 					res = true;
 				}
 				driver->ReleaseNodes();
@@ -1798,7 +1806,7 @@ bool Manager::SetValue
 			if( ValueByte* value = static_cast<ValueByte*>( driver->GetValue( _id ) ) )
 			{
 				res = value->Set( _value );
-                value->Release();
+				value->Release();
 			}
 			driver->ReleaseNodes();
 		}
@@ -1847,7 +1855,7 @@ bool Manager::SetValue
 
 				// now set the value
 				res = value->Set( str );
-                value->Release();
+				value->Release();
 			}
 			driver->ReleaseNodes();
 		}
@@ -1876,7 +1884,7 @@ bool Manager::SetValue
 			if( ValueInt* value = static_cast<ValueInt*>( driver->GetValue( _id ) ) )
 			{
 				res = value->Set( _value );
-                value->Release();
+				value->Release();
 			}
 			driver->ReleaseNodes();
 		}
@@ -1905,7 +1913,7 @@ bool Manager::SetValue
 			if( ValueShort* value = static_cast<ValueShort*>( driver->GetValue( _id ) ) )
 			{
 				res = value->Set( _value );
-                value->Release();
+				value->Release();
 			}
 			driver->ReleaseNodes();
 		}
@@ -1926,7 +1934,7 @@ bool Manager::SetValueListSelection
 {
 	bool res = false;
 
-    if( ValueID::ValueType_List == _id.GetType() )
+	if( ValueID::ValueType_List == _id.GetType() )
 	{
 		if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 		{
@@ -1934,7 +1942,7 @@ bool Manager::SetValueListSelection
 			if( ValueList* value = static_cast<ValueList*>( driver->GetValue( _id ) ) )
 			{
 				res = value->SetByLabel( _selectedItem );
-                value->Release();
+				value->Release();
 			}
 			driver->ReleaseNodes();
 		}
@@ -1973,7 +1981,7 @@ bool Manager::SetValue
 					{
 						res = value->Set( false );
 					}
-                    value->Release();
+					value->Release();
 				}
 				break;
 			}
@@ -1986,7 +1994,7 @@ bool Manager::SetValue
 					{
 						res = value->Set( (uint8)val );
 					}
-                    value->Release();
+					value->Release();
 				}
 				break;
 			}
@@ -1995,7 +2003,7 @@ bool Manager::SetValue
 				if( ValueDecimal* value = static_cast<ValueDecimal*>( driver->GetValue( _id ) ) )
 				{
 					res = value->Set( _value );
-                    value->Release();
+					value->Release();
 				}
 				break;
 			}
@@ -2005,7 +2013,7 @@ bool Manager::SetValue
 				{
 					int32 val = atoi( _value.c_str() );
 					res = value->Set( val );
-                    value->Release();
+					value->Release();
 				}
 				break;
 			}
@@ -2014,7 +2022,7 @@ bool Manager::SetValue
 				if( ValueList* value = static_cast<ValueList*>( driver->GetValue( _id ) ) )
 				{
 					res = value->SetByLabel( _value );
-                    value->Release();
+					value->Release();
 				}
 				break;
 			}
@@ -2027,7 +2035,7 @@ bool Manager::SetValue
 					{
 						res = value->Set( (int16)val );
 					}
-                    value->Release();
+					value->Release();
 				}
 				break;
 			}
@@ -2036,15 +2044,15 @@ bool Manager::SetValue
 				if( ValueString* value = static_cast<ValueString*>( driver->GetValue( _id ) ) )
 				{
 					res = value->Set( _value );
-                    value->Release();
+					value->Release();
 				}
 				break;
 			}
-            default:
-            {
-                // To keep GCC happy
-                break;
-            }
+			default:
+			{
+				// To keep GCC happy
+				break;
+			}
 		}
 
 		driver->ReleaseNodes();
@@ -2072,7 +2080,7 @@ bool Manager::PressButton
 			if( ValueButton* value = static_cast<ValueButton*>( driver->GetValue( _id ) ) )
 			{
 				res = value->PressButton();
-                value->Release();
+				value->Release();
 			}
 			driver->ReleaseNodes();
 		}
@@ -2100,7 +2108,7 @@ bool Manager::ReleaseButton
 			if( ValueButton* value = static_cast<ValueButton*>( driver->GetValue( _id ) ) )
 			{
 				res = value->ReleaseButton();
-                value->Release();
+				value->Release();
 			}
 			driver->ReleaseNodes();
 		}
@@ -2133,6 +2141,7 @@ uint8 Manager::GetNumSwitchPoints
 			if( ValueSchedule* value = static_cast<ValueSchedule*>( driver->GetValue( _id ) ) )
 			{
 				numSwitchPoints = value->GetNumSwitchPoints();
+				value->Release();
 			}
 			driver->ReleaseNodes();
 		}
@@ -2163,6 +2172,7 @@ bool Manager::SetSwitchPoint
 			if( ValueSchedule* value = static_cast<ValueSchedule*>( driver->GetValue( _id ) ) )
 			{
 				res = value->SetSwitchPoint( _hours, _minutes, _setback );
+				value->Release();
 			}
 			driver->ReleaseNodes();
 		}
@@ -2198,6 +2208,7 @@ bool Manager::RemoveSwitchPoint
 				{
 					res = value->RemoveSwitchPoint( idx );
 				}
+				value->Release();
 			}
 			driver->ReleaseNodes();
 		}
@@ -2223,6 +2234,7 @@ void Manager::ClearSwitchPoints
 			if( ValueSchedule* value = static_cast<ValueSchedule*>( driver->GetValue( _id ) ) )
 			{
 				value->ClearSwitchPoints();
+				value->Release();
 			}
 			driver->ReleaseNodes();
 		}
@@ -2252,6 +2264,7 @@ bool Manager::GetSwitchPoint
 			if( ValueSchedule* value = static_cast<ValueSchedule*>( driver->GetValue( _id ) ) )
 			{
 				res = value->GetSwitchPoint( _idx, o_hours, o_minutes, o_setback );
+				value->Release();
 			}
 			driver->ReleaseNodes();
 		}
