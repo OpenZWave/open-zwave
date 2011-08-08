@@ -181,23 +181,35 @@ void Meter::RequestValue
 	uint8 const _dummy2		// = 0 (not used)
 )
 {
-	Msg* msg = new Msg( "MeterCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-	msg->Append( GetNodeId() );
 	if( GetVersion() == 1 )
 	{
+		Msg* msg = new Msg( "MeterCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		msg->Append( GetNodeId() );
 		msg->Append( 2 );
 		msg->Append( GetCommandClassId() );
 		msg->Append( MeterCmd_Get );
+		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		GetDriver()->SendMsg( msg );
 	}
 	else
 	{
-		msg->Append( 3 );
-		msg->Append( GetCommandClassId() );
-		msg->Append( MeterCmd_Get );
-		msg->Append( (uint8)(m_scale<<3) );
+		for( uint8 i=0; i<8; ++i )
+		{
+			uint8 baseIndex = i<<2;
+
+			if( GetValue( 0, baseIndex ) ) 
+			{
+				Msg* msg = new Msg( "MeterCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+				msg->Append( GetNodeId() );
+				msg->Append( 3 );
+				msg->Append( GetCommandClassId() );
+				msg->Append( MeterCmd_Get );
+				msg->Append( (uint8)(i<<3) );
+				msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+				GetDriver()->SendMsg( msg );
+			}
+		}
 	}
-	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	GetDriver()->SendMsg( msg );
 }
 
 //-----------------------------------------------------------------------------
