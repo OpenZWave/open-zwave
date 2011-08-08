@@ -326,8 +326,8 @@ bool Options::ParseOptionsString
 {
 	bool res = true;
 
-	uint32 pos = 0;
-	int start = 0;
+	size_t pos = 0;
+	size_t start = 0;
 	while( 1 )
 	{
 		pos = _commandLine.find_first_of( "--", start );
