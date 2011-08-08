@@ -276,7 +276,8 @@ void CommandClass::WriteXML
 string CommandClass::ExtractValue
 (
 	uint8 const* _data,
-	uint8* _scale
+	uint8* _scale,
+	uint8 _valueOffset // = 1
 )const
 {
 	uint8 const size = _data[0] & c_sizeMask;
@@ -292,7 +293,7 @@ string CommandClass::ExtractValue
 	for( i=0; i<size; ++i )
 	{
 		value <<= 8;
-		value |= (uint32)_data[i+1];
+		value |= (uint32)_data[i+(uint32)_valueOffset];
 	}
 
 	// Deal with sign extension.  All values are signed
