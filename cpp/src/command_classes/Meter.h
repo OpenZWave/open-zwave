@@ -51,12 +51,19 @@ namespace OpenZWave
 		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }
 		virtual string const GetCommandClassName()const{ return StaticGetCommandClassName(); }
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );
+		virtual bool SetValue( Value const& _value );
+		virtual uint8 GetMaxVersion(){ return 3; }
 
 	protected:
 		virtual void CreateVars( uint8 const _instance );
 
 	private:
-		Meter( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
+		Meter( uint32 const _homeId, uint8 const _nodeId );
+
+		bool HandleSupportedReport( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );
+		bool HandleReport( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );
+
+		uint32	m_scale;
 	};
 
 } // namespace OpenZWave

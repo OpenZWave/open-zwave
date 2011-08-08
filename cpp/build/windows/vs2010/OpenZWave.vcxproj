@@ -96,7 +96,6 @@
     <ClInclude Include="..\..\..\src\Node.h" />
     <ClInclude Include="..\..\..\src\Notification.h" />
     <ClInclude Include="..\..\..\src\Options.h" />
-    <ClInclude Include="..\..\..\src\Scene.h" />
     <ClInclude Include="..\..\..\src\platform\Event.h" />
     <ClInclude Include="..\..\..\src\platform\HidController.h" />
     <ClInclude Include="..\..\..\src\platform\IController.h" />
@@ -178,7 +177,6 @@
     <ClCompile Include="..\..\..\src\Msg.cpp" />
     <ClCompile Include="..\..\..\src\Node.cpp" />
     <ClCompile Include="..\..\..\src\Options.cpp" />
-    <ClCompile Include="..\..\..\src\Scene.cpp" />
     <ClCompile Include="..\..\..\src\platform\Event.cpp" />
     <ClCompile Include="..\..\..\src\platform\HidController.cpp" />
     <ClCompile Include="..\..\..\src\platform\Log.cpp" />

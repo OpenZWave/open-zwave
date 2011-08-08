@@ -34,6 +34,10 @@
 #include "Log.h"
 
 #include "ValueDecimal.h"
+#include "ValueList.h"
+#include "ValueButton.h"
+#include "ValueInt.h"
+#include "ValueBool.h"
 
 using namespace OpenZWave;
 
@@ -41,9 +45,32 @@ enum MeterCmd
 {
 	MeterCmd_Get				= 0x01,
 	MeterCmd_Report				= 0x02,
-	MeterCmd_GetSupported		= 0x03,		// Version 2 Only
-	MeterCmd_ReportSupported	= 0x04,		// Version 2 Only
-	MeterCmd_Reset				= 0x05		// Version 2 Only
+	// Version 2
+	MeterCmd_SupportedGet		= 0x03,
+	MeterCmd_SupportedReport	= 0x04,
+	MeterCmd_Reset				= 0x05
+};
+
+enum MeterType
+{
+	MeterType_Electric = 1,
+	MeterType_Gas,
+	MeterType_Water
+};
+
+enum
+{
+	MeterIndex_Exporting = 32,
+	MeterIndex_Reset
+};
+
+
+static char const* c_meterTypes[] = 
+{
+	"Unknown",
+	"Electric",
+	"Gas",
+	"Water"
 };
 
 static char const* c_electricityUnits[] = 
@@ -51,6 +78,10 @@ static char const* c_electricityUnits[] =
 	"kWh",
 	"kVAh",
 	"W",
+	"pulses",
+	"V",
+	"A",
+	"Power Factor",
 	""
 };
 
@@ -58,6 +89,10 @@ static char const* c_gasUnits[] =
 {
 	"cubic meters",
 	"cubic feet",
+	"",
+	"pulses"
+	"",
+	"",
 	"",
 	""
 };
@@ -67,8 +102,39 @@ static char const* c_waterUnits[] =
 	"cubic meters",
 	"cubic feet",
 	"US gallons",
+	"pulses"
+	"",
+	"",
+	"",
 	""
 };
+
+static char const* c_electricityLabels[] = 
+{
+	"Energy",
+	"Energy",
+	"Power",
+	"Count",
+	"Voltage",
+	"Current",
+	"Power Factor",
+	"Unknown"
+};
+
+//-----------------------------------------------------------------------------
+// <Meter::Meter>												   
+// Constructor
+//-----------------------------------------------------------------------------
+Meter::Meter
+(
+	uint32 const _homeId,
+	uint8 const _nodeId
+):
+	CommandClass( _homeId, _nodeId ),
+	m_scale( 0 )
+{
+	SetStaticRequest( StaticRequest_Values );
+}
 
 //-----------------------------------------------------------------------------
 // <Meter::RequestState>												   
@@ -79,13 +145,29 @@ bool Meter::RequestState
 	uint32 const _requestFlags
 )
 {
+	bool res = false;
+	if( GetVersion() > 1 )
+	{
+		if( _requestFlags & RequestFlag_Static )
+		{
+ 			Msg* msg = new Msg( "MeterCmd_SupportedGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+			msg->Append( GetNodeId() );
+			msg->Append( 2 );
+			msg->Append( GetCommandClassId() );
+			msg->Append( MeterCmd_SupportedGet );
+			msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+			GetDriver()->SendMsg( msg );
+			res = true;
+		}
+	}
+
 	if( _requestFlags & RequestFlag_Dynamic )
 	{
 		RequestValue( _requestFlags );
-		return true;
+		res = true;
 	}
 
-	return false;
+	return res;
 }
 
 //-----------------------------------------------------------------------------
@@ -101,9 +183,19 @@ void Meter::RequestValue
 {
 	Msg* msg = new Msg( "MeterCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 	msg->Append( GetNodeId() );
-	msg->Append( 2 );
-	msg->Append( GetCommandClassId() );
-	msg->Append( MeterCmd_Get );
+	if( GetVersion() == 1 )
+	{
+		msg->Append( 2 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( MeterCmd_Get );
+	}
+	else
+	{
+		msg->Append( 3 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( MeterCmd_Get );
+		msg->Append( (uint8)(m_scale<<3) );
+	}
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 	GetDriver()->SendMsg( msg );
 }
@@ -119,46 +211,237 @@ bool Meter::HandleMsg
 	uint32 const _instance	// = 1
 )
 {
-	if (MeterCmd_Report == (MeterCmd)_data[0])
+	bool handled = false;
+	if (MeterCmd_SupportedReport == (MeterCmd)_data[0])
 	{
-		uint8 scale;
-		string valueStr = ExtractValue( &_data[2], &scale );
+		handled = HandleSupportedReport( _data, _length, _instance );
+	}
+	else if (MeterCmd_Report == (MeterCmd)_data[0])
+	{
+		handled = HandleReport( _data, _length, _instance );
+	}
 
-		if( ValueDecimal* value = static_cast<ValueDecimal*>( GetValue( _instance, 0 ) ) )
+	return handled;
+}
+
+//-----------------------------------------------------------------------------
+// <Meter::HandleSupportedReport>
+// Create the values for this command class based on the reported parameters
+//-----------------------------------------------------------------------------
+bool Meter::HandleSupportedReport
+(
+	uint8 const* _data,
+	uint32 const _length,
+	uint32 const _instance
+)
+{
+	bool canReset = ((_data[1] & 0x80) != 0);
+	MeterType meterType = (MeterType)(_data[1] & 0x1f);
+
+	if( Node* node = GetNodeUnsafe() )
+	{
+		string valueLabel;
+
+		// Create the list of supported scales
+		uint8 scaleSupported = _data[2];
+		if( GetVersion() == 2 )
 		{
-			if( value->GetLabel() == "Unknown" )
+			// Only four scales are allowed in version 2
+			scaleSupported &= 0x0f;
+		}
+
+		for( uint8 i=0; i<8; ++i )
+		{
+			if( scaleSupported & (1<<i) )
 			{
-				switch( _data[1] )
+				uint8 baseIndex = i<<2;		// We leave space between the value indices to insert previous and time delta values if we need to later on.
+				switch( meterType )
 				{
-					case 0x01:
+					case MeterType_Electric:
 					{
-						// Electricity Meter
-						value->SetLabel( "Electricity" );
-						value->SetUnits( c_electricityUnits[scale] );
+						node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, baseIndex, c_electricityLabels[i], c_electricityUnits[i], true, "0.0" );
 						break;
 					}
-					case 0x02:
+					case MeterType_Gas:
 					{
-						// Gas Meter
-						value->SetLabel( "Gas" );
-						value->SetUnits( c_gasUnits[scale] );
+						node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, baseIndex, "Gas", c_gasUnits[i], true, "0.0" );
 						break;
 					}
-					case 0x03:
+					case MeterType_Water:
 					{
-						// Water Meter
-						value->SetLabel( "Water" );
-						value->SetUnits( c_waterUnits[scale] );
+						node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, baseIndex, "Water", c_waterUnits[i], true, "0.0" );
+						break;
+					}
+					default:
+					{
 						break;
 					}
 				}
 			}
-
-			value->OnValueChanged( valueStr );
 		}
 
-		Log::Write( "Received Meter report from node %d: value=%s", GetNodeId(), valueStr.c_str() );
-		return true;
+		// Create the export flag
+		node->CreateValueBool( ValueID::ValueGenre_User, GetCommandClassId(), _instance, MeterIndex_Exporting, "Exporting", "", true, false );
+
+		// Create the reset button
+		node->CreateValueButton( ValueID::ValueGenre_System, GetCommandClassId(), _instance, MeterIndex_Reset, "Reset" );
+	}
+
+	return true;
+}
+
+//-----------------------------------------------------------------------------
+// <Meter::HandleReport>
+// Read the reported meter value
+//-----------------------------------------------------------------------------
+bool Meter::HandleReport
+(
+	uint8 const* _data,
+	uint32 const _length,
+	uint32 const _instance
+)
+{
+	// Import or Export (only valid in version > 1)
+	bool exporting = false;
+	if( GetVersion() > 1 )
+	{
+		exporting = ((_data[1] & 0x60) == 0x40 );
+		if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, MeterIndex_Exporting ) ) )
+		{
+			value->OnValueChanged( exporting );
+		}
+	}
+
+	// Get the value and scale
+	uint8 scale;
+	string valueStr = ExtractValue( &_data[2], &scale );
+
+	uint8 baseIndex = 0;
+	if( GetVersion() > 2 )
+	{
+		// In version 3, an extra scale bit is stored in the meter type byte.
+		scale |= ((_data[1]&0x80)>>5);
+		baseIndex = scale << 2;
+	}
+
+	if( GetVersion() == 1 )
+	{
+		// In version 1, we don't know the scale until we get the first value report
+		string label;
+		string units;
+
+		switch( (MeterType)(_data[1] & 0x1f) )
+		{ 
+			case MeterType_Electric:
+			{
+				// Electricity Meter
+				label = c_electricityLabels[scale];
+				units = c_electricityUnits[scale];
+				break;
+			}
+			case MeterType_Gas:
+			{
+				// Gas Meter
+				label = "Gas";
+				units = c_gasUnits[scale];
+				break;
+			}
+			case MeterType_Water:
+			{
+				// Water Meter
+				label = "Water";
+				units = c_waterUnits[scale];
+				break;
+			}
+			default:
+			{
+				break;
+			}
+		}
+
+		if( ValueDecimal* value = static_cast<ValueDecimal*>( GetValue( _instance, 0 ) ) )
+		{
+			Log::Write( "Received Meter report from node %d: %s=%s%s", GetNodeId(), label.c_str(), valueStr.c_str(), units.c_str() );
+			value->SetLabel( label );
+			value->SetUnits( units );
+			value->OnValueChanged( valueStr );
+		}
+	}
+	else
+	{
+		// Version 2 and above
+		if( ValueDecimal* value = static_cast<ValueDecimal*>( GetValue( _instance, baseIndex ) ) )
+		{
+			Log::Write( "Received Meter report from node %d: %s%s=%s%s", GetNodeId(), exporting ? "Exporting ": "", value->GetLabel().c_str(), valueStr.c_str(), value->GetUnits().c_str() );
+			value->OnValueChanged( valueStr );
+
+			// Read any previous value and time delta
+			uint8 size = _data[2] & 0x07;
+			uint16 delta = (((uint16)_data[3+size])<<8) + (uint16)+_data[4+size];
+
+			if( delta )
+			{
+				// There is only a previous value if the time delta is non-zero
+				ValueDecimal* previous = static_cast<ValueDecimal*>( GetValue( _instance, baseIndex+1 ) );
+				if( NULL == previous )
+				{
+					// We need to create a value to hold the previous
+					if( Node* node = GetNodeUnsafe() )
+					{
+						previous = node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, baseIndex+1, "Previous Reading", value->GetUnits().c_str(), true, "0.0" );
+					}
+				}
+				if( previous )
+				{
+					valueStr = ExtractValue( &_data[2], &scale, 3+size );
+					Log::Write( "    Previous value was %s%s, received %d seconds ago.", valueStr.c_str(), previous->GetUnits().c_str(), delta );
+					previous->OnValueChanged( valueStr );
+				}
+
+				// Time delta
+				ValueInt* interval = static_cast<ValueInt*>( GetValue( _instance, baseIndex+2 ) );
+				if( NULL == interval )
+				{
+					// We need to create a value to hold the time delta
+					if( Node* node = GetNodeUnsafe() )
+					{
+						interval = node->CreateValueInt( ValueID::ValueGenre_User, GetCommandClassId(), _instance, baseIndex+2, "Interval", "seconds", true, 0 );
+					}
+				}
+				if( interval )
+				{
+		 			interval->OnValueChanged( (int32)delta );
+				}
+			}
+		}
+	}
+ 
+	return true;
+}
+
+//-----------------------------------------------------------------------------
+// <Meter::SetValue>
+// Set the device's scale, or reset its accumulated values.
+//-----------------------------------------------------------------------------
+bool Meter::SetValue
+(
+	Value const& _value
+)
+{
+	if( MeterIndex_Reset == _value.GetID().GetIndex() )
+	{
+		ValueButton const* button = static_cast<ValueButton const*>(&_value);
+		if( button->IsPressed() )
+		{
+			Msg* msg = new Msg( "MeterCmd_Reset", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+			msg->Append( GetNodeId() );
+			msg->Append( 2 );
+			msg->Append( GetCommandClassId() );
+			msg->Append( MeterCmd_Reset );
+			msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+			GetDriver()->SendMsg( msg );
+			return true;
+		}
 	}
 
 	return false;
@@ -173,9 +456,14 @@ void Meter::CreateVars
 	uint8 const _instance
 )
 {
-	if( Node* node = GetNodeUnsafe() )
+	// Only Version 1 command classes create a default value for each instance.
+	// Later versions create values depending on the contents of the MeterCmd_ReportSupported message.
+	if( GetVersion() == 1 )
 	{
-		node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Unknown", "", true, "0.0" );
+		if( Node* node = GetNodeUnsafe() )
+		{
+			node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Unknown", "", true, "0.0" );
+		}
 	}
 }
 
