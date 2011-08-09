@@ -203,9 +203,9 @@ void Clock::CreateVars
 			items.push_back( item ); 
 		}
 
-		node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ClockIndex_Day, "Day", "", false, items, 0 );
-		node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ClockIndex_Hour, "Hour", "", false, 12 );
-		node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ClockIndex_Minute, "Minute", "", false, 0 );
+		node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ClockIndex_Day, "Day", "", false, false, items, 0 );
+		node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ClockIndex_Hour, "Hour", "", false, false, 12 );
+		node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ClockIndex_Minute, "Minute", "", false, false, 0 );
 	}
 }
 

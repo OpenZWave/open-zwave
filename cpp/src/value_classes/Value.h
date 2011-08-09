@@ -46,7 +46,7 @@ namespace OpenZWave
 		friend class ValueStore;
 
 	public:
-		Value( uint32 const _homeId, uint8 const _nodeId, ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, ValueID::ValueType const _type, string const& _label, string const& _units, bool const _readOnly, bool const _isset );
+		Value( uint32 const _homeId, uint8 const _nodeId, ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, ValueID::ValueType const _type, string const& _label, string const& _units, bool const _readOnly, bool const _writeOnly, bool const _isset );
 		Value();
 
 		virtual void ReadXML( uint32 const _homeId, uint8 const _nodeId, uint8 const _commandClassId, TiXmlElement const* _valueElement );
@@ -54,6 +54,7 @@ namespace OpenZWave
 
 		ValueID const& GetID()const{ return m_id; }
 		bool IsReadOnly()const{ return m_readOnly; }
+		bool IsWriteOnly()const{ return m_writeOnly; }
 		bool IsSet()const{ return m_isSet; }
 
 		string const& GetLabel()const{ return m_label; }
@@ -80,7 +81,7 @@ namespace OpenZWave
 		static char const* GetTypeNameFromEnum( ValueID::ValueType _type );
 
 	protected:
-		virtual ~Value(){}
+		virtual ~Value();
 
 		bool Set();				// For the user to change a value in a device
 		void SetIsSet() { m_isSet = true; }
@@ -98,7 +99,11 @@ namespace OpenZWave
 		string		m_units;
 		string		m_help;
 		bool		m_readOnly;
+		bool		m_writeOnly;
 		bool		m_isSet;
+		uint8		m_affectsLength;
+		uint8*		m_affects;
+		bool		m_affectsAll;
 	};
 
 } // namespace OpenZWave

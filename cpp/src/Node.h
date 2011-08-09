@@ -63,6 +63,8 @@ namespace OpenZWave
 		friend class Manager;
 		friend class Driver;
 		friend class Group;
+		friend class Value;
+		friend class ValueButton;
 		friend class Alarm;
 		friend class Association;
 		friend class AssociationCommandConfiguration;
@@ -72,6 +74,7 @@ namespace OpenZWave
 		friend class Clock;
 		friend class CommandClass;
 		friend class EnergyProduction;
+		friend class Hail;
 		friend class Indicator;
 		friend class Language;
 		friend class Lock;
@@ -349,11 +352,11 @@ namespace OpenZWave
 		void SetLevel( uint8 const _level );
 
 	//-----------------------------------------------------------------------------
-    // On/Off commands (helpers that go through the basic or switchall command class)
-    //-----------------------------------------------------------------------------
-    public:
-        void SetNodeOn();
-        void SetNodeOff();
+	// On/Off commands (helpers that go through the basic or switchall command class)
+	//-----------------------------------------------------------------------------
+	public:
+		void SetNodeOn();
+		void SetNodeOff();
 
 	//-----------------------------------------------------------------------------
 	// Values (handled by the command classes)
@@ -365,15 +368,15 @@ namespace OpenZWave
 		Value* GetValue( uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex );
 
 		// Helpers for creating values
-		ValueBool* CreateValueBool( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, bool const _default );
+		ValueBool* CreateValueBool( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, bool const _writeOnly, bool const _default );
 		ValueButton* CreateValueButton( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex, string const& _label );
-		ValueByte* CreateValueByte( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, uint8 const _default );
-		ValueDecimal* CreateValueDecimal( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, string const& _default );
-		ValueInt* CreateValueInt( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, int32 const _default );
-		ValueList* CreateValueList( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, vector<ValueList::Item> const& _items, int32 const _default );
-		ValueSchedule* CreateValueSchedule( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex, string const& _label, string const& _units, bool const _readOnly );
-		ValueShort* CreateValueShort( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, int16 const _default );
-		ValueString* CreateValueString( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, string const& _default );
+		ValueByte* CreateValueByte( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, bool const _writeOnly, uint8 const _default );
+		ValueDecimal* CreateValueDecimal( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, bool const _writeOnly, string const& _default );
+		ValueInt* CreateValueInt( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, bool const _writeOnly, int32 const _default );
+		ValueList* CreateValueList( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, bool const _writeOnly, vector<ValueList::Item> const& _items, int32 const _default );
+		ValueSchedule* CreateValueSchedule( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, bool const _writeOnly );
+		ValueShort* CreateValueShort( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, bool const _writeOnly, int16 const _default );
+		ValueString* CreateValueString( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, bool const _writeOnly, string const& _default );
 
 		// helpers for removing values
 		void RemoveValueList( ValueList* _value );
@@ -394,6 +397,11 @@ namespace OpenZWave
 		void RequestConfigParam( uint8 const _param );
 		bool RequestAllConfigParams( uint32 const _requestFlags );
 
+	//-----------------------------------------------------------------------------
+	// Dynamic Values (used by query and other command classes for updating)
+	//-----------------------------------------------------------------------------
+	private:
+		bool RequestDynamicValues();
 	//-----------------------------------------------------------------------------
 	// Groups
 	//-----------------------------------------------------------------------------

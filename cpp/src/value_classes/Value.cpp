@@ -75,6 +75,7 @@ Value::Value
 	string const& _label,
 	string const& _units,
 	bool const _readOnly,
+	bool const _writeOnly,
 	bool const _isSet
 ):
 	m_min( 0 ),
@@ -84,7 +85,10 @@ Value::Value
 	m_label( _label ),
 	m_units( _units ),
 	m_readOnly( _readOnly ),
-	m_isSet( _isSet )
+	m_writeOnly( _writeOnly ),
+	m_isSet( _isSet ),
+	m_affectsLength( 0 ),
+	m_affectsAll( false )
 {
 }
 
@@ -99,8 +103,26 @@ Value::Value
 	m_max( 0 ),
 	m_refs( 1 ),
 	m_readOnly( false ),
-	m_isSet( false )
+	m_writeOnly( false ),
+	m_isSet( false ),
+	m_affectsLength( 0 ),
+	m_affectsAll( false )
 {
+}
+
+//-----------------------------------------------------------------------------
+// <Value::~Value>
+// Destructor
+//-----------------------------------------------------------------------------
+Value::~Value
+(
+)
+{
+	Log::Write("Value::~Value called");
+	if( m_affectsLength > 0 )
+	{
+		delete [] m_affects;
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -152,6 +174,57 @@ void Value::ReadXML
 		m_readOnly = !strcmp( readOnly, "true" );
 	}
 
+	char const* writeOnly = _valueElement->Attribute( "write_only" );
+	if( writeOnly )
+	{
+		m_writeOnly = !strcmp( writeOnly, "true" );
+	}
+
+	char const* affects = _valueElement->Attribute( "affects" );
+	if( affects )
+	{
+		if ( m_affectsLength != 0 )
+		{
+			delete [] m_affects;
+		}
+		m_affectsLength = 0;
+		if( !strcmp( affects, "all" ) )
+		{
+			m_affectsAll = true;
+		}
+		else
+		{
+			int len = strlen( affects );
+			if( len > 0 )
+			{
+				for( int i = 0; i < len; i++ )
+				{
+					if( affects[i] == ',' )
+					{
+						m_affectsLength++;
+					}
+					else if(affects[i] < '0' || affects[i] > '9')
+					{
+						Log::Write( "Improperly formatted affects data: \"%s\"", affects);
+						break;
+					}
+				}
+				m_affectsLength++;
+				m_affects = new uint8[m_affectsLength];
+				int j = 0;
+				for( int i = 0; i < m_affectsLength; i++ )
+				{
+					m_affects[i] = atoi( &affects[j] );
+					while( j < len && affects[j] != ',' )
+					{
+						j++;
+					}
+					j++;
+				}
+			}
+		}
+	}
+
 	if( TIXML_SUCCESS == _valueElement->QueryIntAttribute( "min", &intVal ) )
 	{
 		m_min = intVal;
@@ -190,21 +263,42 @@ void Value::WriteXML
 	_valueElement->SetAttribute( "type", GetTypeNameFromEnum(m_id.GetType()) );
 	_valueElement->SetAttribute( "genre", GetGenreNameFromEnum(m_id.GetGenre()) );
 
-	snprintf( str, 16, "%d", m_id.GetInstance() );
+	snprintf( str, sizeof(str), "%d", m_id.GetInstance() );
 	_valueElement->SetAttribute( "instance", str );
 
-	snprintf( str, 16, "%d", m_id.GetIndex() );
+	snprintf( str, sizeof(str), "%d", m_id.GetIndex() );
 	_valueElement->SetAttribute( "index", str );
 
 	_valueElement->SetAttribute( "label", m_label.c_str() );
 	_valueElement->SetAttribute( "units", m_units.c_str() );
 	_valueElement->SetAttribute( "read_only", m_readOnly ? "true" : "false" );
+	_valueElement->SetAttribute( "write_only", m_writeOnly ? "true" : "false" );
 
-	snprintf( str, 16, "%d", m_min );
+	snprintf( str, sizeof(str), "%d", m_min );
 	_valueElement->SetAttribute( "min", str );
 
-	snprintf( str, 16, "%d", m_max );
+	snprintf( str, sizeof(str), "%d", m_max );
 	_valueElement->SetAttribute( "max", str );
+
+	if( m_affectsAll )
+	{
+		_valueElement->SetAttribute( "affects", "all" );
+	}
+	else if( m_affectsLength > 0 )
+	{
+		string s;
+		for( int i = 0; i < m_affectsLength; i++ )
+		{
+			snprintf( str, sizeof(str), "%d", m_affects[i] );
+		  	s = s + str;
+			if( i + 1 < m_affectsLength )
+			{
+				s = s + ",";
+			}
+			
+		}
+		_valueElement->SetAttribute( "affects", s.c_str() );
+	}
 
 	if( m_help != "" )
 	{
@@ -230,14 +324,31 @@ bool Value::Set
 	}
 
 	bool res = false;
+	Node* node = NULL;
 	if( Driver* driver = Manager::Get()->GetDriver( m_id.GetHomeId() ) )
 	{
-		if( Node* node = driver->GetNodeUnsafe( m_id.GetNodeId() ) )
+		node = driver->GetNodeUnsafe( m_id.GetNodeId() );
+		if( node != NULL )
 		{
 			if( CommandClass* cc = node->GetCommandClass( m_id.GetCommandClassId() ) )
 			{
 				m_isSet = true;
 				res = cc->SetValue( *this );
+			}
+		}
+	}
+
+	if( IsWriteOnly() && node != NULL )
+	{
+		if( m_affectsAll )
+		{
+			node->RequestAllConfigParams( CommandClass::RequestFlag_LowPriority );
+		}
+		else if( m_affectsLength > 0 )
+		{
+			for( int i = 0; i < m_affectsLength; i++ )
+			{
+				node->RequestConfigParam( m_affects[i] );
 			}
 		}
 	}
@@ -253,6 +364,11 @@ void Value::OnValueChanged
 (
 )
 {
+	if( IsWriteOnly() )
+	{
+		return;
+	}
+
 	if( Driver* driver = Manager::Get()->GetDriver( m_id.GetHomeId() ) )
 	{
 		m_isSet = true;

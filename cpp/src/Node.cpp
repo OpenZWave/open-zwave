@@ -374,13 +374,8 @@ void Node::AdvanceQueries
 				// Request the dynamic values from the node, that can change at any time
 				// Examples include on/off state, heating mode, temperature, etc.
 				Log::Write( "Node %d: QueryStage_Dynamic", m_nodeId );
-				for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
-				{
-					if( !it->second->IsAfterMark() )
-					{
-						m_queryPending |= it->second->RequestState( CommandClass::RequestFlag_Dynamic | CommandClass::RequestFlag_LowPriority );
-					}
-				}
+				m_queryPending = RequestDynamicValues();
+
 				if( !m_queryPending )
 				{
 					m_queryStage = QueryStage_Configuration; 
@@ -1262,6 +1257,26 @@ bool Node::RequestAllConfigParams
 }
 
 //-----------------------------------------------------------------------------
+// <Node::RequestDynamicValues>
+// Request an update of all known dynamic values from the device
+//-----------------------------------------------------------------------------
+bool Node::RequestDynamicValues
+(	
+)
+{
+	bool res = false;
+	for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
+	{
+		if( !it->second->IsAfterMark() )
+		{
+			res |= it->second->RequestState( CommandClass::RequestFlag_Dynamic );
+		}
+	}
+
+	return res;
+}
+
+//-----------------------------------------------------------------------------
 // <Node::SetLevel>
 // Helper method to set a device's basic level
 //-----------------------------------------------------------------------------
@@ -1342,10 +1357,11 @@ ValueBool* Node::CreateValueBool
 	string const& _label,
 	string const& _units,
 	bool const _readOnly,
+	bool const _writeOnly,
 	bool const _default
 )
 {
-	ValueBool* value = new ValueBool( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _default );
+  	ValueBool* value = new ValueBool( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default );
 	ValueStore* store = GetValueStore();
 	store->AddValue( value );
 	return value;
@@ -1383,10 +1399,11 @@ ValueByte* Node::CreateValueByte
 	string const& _label,
 	string const& _units,
 	bool const _readOnly,
+	bool const _writeOnly,
 	uint8 const _default
 )
 {
-	ValueByte* value = new ValueByte( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _default );
+  	ValueByte* value = new ValueByte( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default );
 	ValueStore* store = GetValueStore();
 	store->AddValue( value );
 	return value;
@@ -1405,10 +1422,11 @@ ValueDecimal* Node::CreateValueDecimal
 	string const& _label,
 	string const& _units,
 	bool const _readOnly,
+	bool const _writeOnly,
 	string const& _default
 )
 {
-	ValueDecimal* value = new ValueDecimal( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _default );
+  	ValueDecimal* value = new ValueDecimal( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default );
 	ValueStore* store = GetValueStore();
 	store->AddValue( value );
 	return value;
@@ -1427,10 +1445,11 @@ ValueInt* Node::CreateValueInt
 	string const& _label,
 	string const& _units,
 	bool const _readOnly,
+	bool const _writeOnly,
 	int32 const _default
 )
 {
-	ValueInt* value = new ValueInt( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _default );
+  	ValueInt* value = new ValueInt( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default );
 	ValueStore* store = GetValueStore();
 	store->AddValue( value );
 	return value;
@@ -1449,11 +1468,12 @@ ValueList* Node::CreateValueList
 	string const& _label,
 	string const& _units,
 	bool const _readOnly,
+	bool const _writeOnly,
 	vector<ValueList::Item> const& _items,
 	int32 const _default
 )
 {
-	ValueList* value = new ValueList( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _items, _default );
+  	ValueList* value = new ValueList( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _items, _default );
 	ValueStore* store = GetValueStore();
 	store->AddValue( value );
 	return value;
@@ -1471,10 +1491,11 @@ ValueSchedule* Node::CreateValueSchedule
 	uint8 const _valueIndex,
 	string const& _label,
 	string const& _units,
-	bool const _readOnly
+	bool const _readOnly,
+	bool const _writeOnly
 )
 {
-	ValueSchedule* value = new ValueSchedule( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly );
+	ValueSchedule* value = new ValueSchedule( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly );
 	ValueStore* store = GetValueStore();
 	store->AddValue( value );
 	return value;
@@ -1493,10 +1514,11 @@ ValueShort* Node::CreateValueShort
 	string const& _label,
 	string const& _units,
 	bool const _readOnly,
+	bool const _writeOnly,
 	int16 const _default
 )
 {
-	ValueShort* value = new ValueShort( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _default );
+  	ValueShort* value = new ValueShort( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default );
 	ValueStore* store = GetValueStore();
 	store->AddValue( value );
 	return value;
@@ -1515,10 +1537,11 @@ ValueString* Node::CreateValueString
 	string const& _label,
 	string const& _units,
 	bool const _readOnly,
+	bool const _writeOnly,
 	string const& _default
 )
 {
-	ValueString* value = new ValueString( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _default );
+  	ValueString* value = new ValueString( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default );
 	ValueStore* store = GetValueStore();
 	store->AddValue( value );
 	return value;
