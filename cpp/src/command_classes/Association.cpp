@@ -219,6 +219,8 @@ bool Association::HandleMsg
 			m_numGroups = _data[1];
 			Log::Write( "Received Association Groupings report from node %d.  Number of groups is %d", GetNodeId(), m_numGroups );
 			ClearStaticRequest( StaticRequest_Values );
+			if( node->m_queryPending )
+				node->m_queryStageCompleted = true;
 			handled = true;
 		}
 		else if( AssociationCmd_Report == (AssociationCmd)_data[0] )
@@ -273,7 +275,6 @@ bool Association::HandleMsg
 				// maxAssociations is zero, so we've reached the end of the query process
 				Log::Write( "Max associations for node %d, group %d is zero.  Querying associations for this node is complete.", GetNodeId(), groupIdx );
 				node->AutoAssociate();
-				node->m_queryStageCompleted = true;
 				m_queryAll = false;
 			}
 
@@ -297,11 +298,12 @@ bool Association::HandleMsg
 					// We're all done
 					Log::Write( "Querying associations for node %d is complete.", GetNodeId() );
 					node->AutoAssociate();
-					node->m_queryStageCompleted = true;
 					m_queryAll = false;
 				}
 			}
 
+			if( node->m_queryPending )
+				node->m_queryStageCompleted = true;
 			handled = true;
 		}
 	}
