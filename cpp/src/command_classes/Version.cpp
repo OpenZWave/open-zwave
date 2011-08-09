@@ -129,6 +129,11 @@ bool Version::HandleMsg
 				applicationValue->OnValueChanged( application );
 			}
 
+			Node* node = GetNodeUnsafe();
+			if( node != NULL && node->m_queryPending )
+			{
+				node->m_queryStageCompleted = true;
+			}
 			return true;
 		}
 	
@@ -139,6 +144,7 @@ bool Version::HandleMsg
 				Log::Write( "Received Command Class Version report from node %d: CommandClass=%s, Version=%d", GetNodeId(), pCommandClass->GetCommandClassName().c_str(), _data[2] );
 				pCommandClass->ClearStaticRequest( StaticRequest_Version );
 				pCommandClass->SetVersion( _data[2] );
+				node->m_queryStageCompleted = true;
 			}
 		}
 

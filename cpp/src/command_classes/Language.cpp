@@ -125,6 +125,11 @@ bool Language::HandleMsg
 			countryValue->OnValueChanged( country );
 		}
 
+		if( Node* node = GetNodeUnsafe() )
+		{
+			node->m_queryStageCompleted = true;
+		}
+
 		return true;
 	}
 

@@ -63,12 +63,39 @@ namespace OpenZWave
 		friend class Manager;
 		friend class Driver;
 		friend class Group;
+		friend class Alarm;
 		friend class Association;
 		friend class AssociationCommandConfiguration;
+		friend class Basic;
+		friend class Battery;
+		friend class ClimateControlSchedule;
+		friend class Clock;
 		friend class CommandClass;
+		friend class EnergyProduction;
+		friend class Indicator;
+		friend class Language;
+		friend class Lock;
 		friend class ManufacturerSpecific;
+		friend class Meter;
+		friend class MeterPulse;
 		friend class MultiInstance;
 		friend class NodeNaming;
+		friend class Protection;
+		friend class SensorAlarm;
+		friend class SensorBinary;
+		friend class SensorMultilevel;
+		friend class SwitchAll;
+		friend class SwitchBinary;
+		friend class SwitchMultilevel;
+		friend class SwitchToggleBinary;
+		friend class SwitchToggleMultilevel;
+		friend class ThermostatFanMode;
+		friend class ThermostatFanState;
+		friend class ThermostatMode;
+		friend class ThermostatOperatingState;
+		friend class ThermostatSetpoint;
+		friend class Version;
+		friend class WakeUp;
 
 	//-----------------------------------------------------------------------------
 	// Construction
@@ -190,6 +217,7 @@ namespace OpenZWave
 		bool		m_queryPending;
 		bool		m_queryConfiguration;
 		uint8		m_queryRetries;
+		bool		m_queryStageCompleted;
 		bool		m_protocolInfoReceived;
 		bool		m_nodeInfoReceived;
 

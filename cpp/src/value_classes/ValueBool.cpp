@@ -90,6 +90,10 @@ void ValueBool::ReadXML
 		m_value = !strcmp( str, "True" );
 		SetIsSet();
 	}
+	else
+	{
+		Log::Write( "Missing default boolean value from xml configuration: node %d, class 0x%02x, instance %d, index %d", _nodeId,  _commandClassId, GetID().GetInstance(), GetID().GetIndex() );
+	}
 }
 
 //-----------------------------------------------------------------------------

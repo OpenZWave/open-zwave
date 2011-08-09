@@ -106,6 +106,11 @@ bool MeterPulse::HandleMsg
 		{
 			value->OnValueChanged( count );
 		}
+		Node* node = GetNodeUnsafe();
+		if( node != NULL && node->m_queryPending )
+		{
+			node->m_queryStageCompleted = true;
+		}
 		return true;
 	}
 

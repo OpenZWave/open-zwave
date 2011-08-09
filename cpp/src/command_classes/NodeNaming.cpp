@@ -309,6 +309,11 @@ bool NodeNaming::HandleMsg
 				updated = true;
 			}
 		}
+
+		if( node->m_queryPending )
+		{
+			node->m_queryStageCompleted = true;
+		}
 	}
 
 	if( updated )

@@ -170,6 +170,11 @@ bool AssociationCommandConfiguration::HandleMsg
 		{
 			valueShort->OnValueChanged( maxCommands );
 		}
+		Node* node = GetNodeUnsafe();
+		if( node != NULL && node->m_queryPending )
+		{
+			node->m_queryStageCompleted = true;
+		}
 		return true;
 	}
 	
@@ -203,6 +208,12 @@ bool AssociationCommandConfiguration::HandleMsg
 					start += length;
 				}
 			}
+		}
+
+		Node* node = GetNodeUnsafe();
+		if( node != NULL && node->m_queryPending )
+		{
+			node->m_queryStageCompleted = true;
 		}
 
 		return true;
