@@ -92,9 +92,43 @@ ThermostatSetpoint::ThermostatSetpoint
 	uint32 const _homeId,
 	uint8 const _nodeId
 ):
-	CommandClass( _homeId, _nodeId )
+	CommandClass( _homeId, _nodeId ), m_setPointBase( 1 )
 {
 	SetStaticRequest( StaticRequest_Values ); 
+}
+
+//-----------------------------------------------------------------------------
+// <ThermostatSetpoint::ReadXML>
+// Read the saved change-counter value
+//-----------------------------------------------------------------------------
+void ThermostatSetpoint::ReadXML
+( 
+	TiXmlElement const* _ccElement
+)
+{
+	CommandClass::ReadXML( _ccElement );
+
+	int intVal;
+	if( TIXML_SUCCESS == _ccElement->QueryIntAttribute( "base", &intVal ) )
+	{
+		m_setPointBase = (uint8)intVal;
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <ThermostatSetpoint::WriteXML>
+// Write the change-counter value
+//-----------------------------------------------------------------------------
+void ThermostatSetpoint::WriteXML
+( 
+	TiXmlElement* _ccElement
+)
+{
+	CommandClass::WriteXML( _ccElement );
+
+	char str[8];
+	snprintf( str, 8, "%d", m_setPointBase );
+	_ccElement->SetAttribute( "base", str );
 }
 
 //-----------------------------------------------------------------------------
@@ -216,7 +250,8 @@ bool ThermostatSetpoint::HandleMsg
 			// Parse the data for the supported setpoints
 			for( uint32 i=1; i<_length-1; ++i )
 			{
-				for( int32 bit=0; bit<8; ++bit )
+				int32 bit = m_setPointBase;
+				for( ; bit<8; ++bit )
 				{
 					if( ( _data[i] & (1<<bit) ) != 0 )
 					{
@@ -224,7 +259,7 @@ bool ThermostatSetpoint::HandleMsg
 						int32 index = (int32)((i-1)<<3) + bit;
 						if( index < ThermostatSetpoint_Count )
 						{
-							node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, index, c_setpointName[index], "C", false, "0.0" );
+						  	node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, index, c_setpointName[index], "C", false, false, "0.0" );
 							Log::Write( "    Added setpoint: %s", c_setpointName[index] );
 						}
 					}
@@ -281,6 +316,6 @@ void ThermostatSetpoint::CreateVars
 {
 	if( Node* node = GetNodeUnsafe() )
 	{
-		node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, _index, "Setpoint", "C", false, "0.0"  );
+	  	node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, _index, "Setpoint", "C", false, false, "0.0"  );
 	}
 }

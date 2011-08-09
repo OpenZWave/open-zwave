@@ -48,9 +48,10 @@ ValueSchedule::ValueSchedule
 	uint8 const _index,
 	string const& _label,
 	string const& _units,
-	bool const _readOnly
+	bool const _readOnly,
+	bool const _writeOnly
 ):
-	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Byte, _label, _units, _readOnly, false )
+  	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Byte, _label, _units, _readOnly, _writeOnly, false )
 {
 }
 

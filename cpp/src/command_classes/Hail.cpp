@@ -56,7 +56,11 @@ bool Hail::HandleMsg
 	{
 		// We have received a hail from the Z-Wave device.
 		// Request an update of the dynamic values.
-		GetDriver()->AddNodeQuery( GetNodeId(), Node::QueryStage_Dynamic );
+		Log::Write( "Received Hail command from node %d", GetNodeId() );
+		if( Node* node = GetNodeUnsafe() )
+		{
+			node->RequestDynamicValues();
+		}
 		return true;
 	}
 	return false;

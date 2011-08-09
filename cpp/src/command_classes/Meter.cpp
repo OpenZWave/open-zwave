@@ -271,17 +271,17 @@ bool Meter::HandleSupportedReport
 				{
 					case MeterType_Electric:
 					{
-						node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, baseIndex, c_electricityLabels[i], c_electricityUnits[i], true, "0.0" );
+						node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, baseIndex, c_electricityLabels[i], c_electricityUnits[i], true, false, "0.0" );
 						break;
 					}
 					case MeterType_Gas:
 					{
-						node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, baseIndex, "Gas", c_gasUnits[i], true, "0.0" );
+						node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, baseIndex, "Gas", c_gasUnits[i], true, false, "0.0" );
 						break;
 					}
 					case MeterType_Water:
 					{
-						node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, baseIndex, "Water", c_waterUnits[i], true, "0.0" );
+						node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, baseIndex, "Water", c_waterUnits[i], true, false, "0.0" );
 						break;
 					}
 					default:
@@ -293,10 +293,15 @@ bool Meter::HandleSupportedReport
 		}
 
 		// Create the export flag
-		node->CreateValueBool( ValueID::ValueGenre_User, GetCommandClassId(), _instance, MeterIndex_Exporting, "Exporting", "", true, false );
+		node->CreateValueBool( ValueID::ValueGenre_User, GetCommandClassId(), _instance, MeterIndex_Exporting, "Exporting", "", true, false, false );
 
 		// Create the reset button
 		node->CreateValueButton( ValueID::ValueGenre_System, GetCommandClassId(), _instance, MeterIndex_Reset, "Reset" );
+
+		if( node->m_queryPending )
+		{
+			node->m_queryStageCompleted = true;
+		}
 	}
 
 	return true;
@@ -400,7 +405,7 @@ bool Meter::HandleReport
 					// We need to create a value to hold the previous
 					if( Node* node = GetNodeUnsafe() )
 					{
-						previous = node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, baseIndex+1, "Previous Reading", value->GetUnits().c_str(), true, "0.0" );
+						previous = node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, baseIndex+1, "Previous Reading", value->GetUnits().c_str(), true, false, "0.0" );
 					}
 				}
 				if( previous )
@@ -417,7 +422,7 @@ bool Meter::HandleReport
 					// We need to create a value to hold the time delta
 					if( Node* node = GetNodeUnsafe() )
 					{
-						interval = node->CreateValueInt( ValueID::ValueGenre_User, GetCommandClassId(), _instance, baseIndex+2, "Interval", "seconds", true, 0 );
+						interval = node->CreateValueInt( ValueID::ValueGenre_User, GetCommandClassId(), _instance, baseIndex+2, "Interval", "seconds", true, false, 0 );
 					}
 				}
 				if( interval )
@@ -480,10 +485,7 @@ void Meter::CreateVars
 	{
 		if( Node* node = GetNodeUnsafe() )
 		{
-			node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Unknown", "", true, "0.0" );
+			node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Unknown", "", true, false, "0.0" );
 		}
 	}
 }
-
-
-
