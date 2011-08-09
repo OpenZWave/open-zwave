@@ -231,6 +231,11 @@ bool SensorMultilevel::HandleMsg
 			value->OnValueChanged( valueStr );
 		}
 
+		Node* node = GetNodeUnsafe();
+		if( node != NULL && node->m_queryPending )
+		{
+			node->m_queryStageCompleted = true;
+		}
 		return true;
 	}
 

@@ -60,7 +60,6 @@ WakeUp::WakeUp
 	CommandClass( _homeId, _nodeId ), 
 	m_awake( true ),
 	m_pollRequired( false ),
-	m_init( false ),
 	m_notification( false )
 {
 }
@@ -89,7 +88,6 @@ void WakeUp::Init
 	// that the controller will receive the wake-up notifications from
 	// the device.  Once this is done, we can request the rest of the node
 	// state.
-	m_init = true;
 	RequestState( CommandClass::RequestFlag_Session );
 }
 
@@ -172,15 +170,10 @@ bool WakeUp::HandleMsg
 				SetValue( *value );	
 			}
 
-			// If we are in init mode, now is the time to request the rest of the node state
-			if( m_init )
+			Node* node = GetNodeUnsafe();
+			if( node != NULL && node->m_queryPending )
 			{
-				if( Node* node = GetNodeUnsafe() )
-				{
-					node = node;
-//					node->QueryStageComplete( Node::QueryStage_WakeUp );
-				}
-				m_init = false;
+				node->m_queryStageCompleted = true;
 			}
 		}
 		return true;

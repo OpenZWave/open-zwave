@@ -65,13 +65,13 @@ enum
 };
 
 
-static char const* c_meterTypes[] = 
-{
-	"Unknown",
-	"Electric",
-	"Gas",
-	"Water"
-};
+//static char const* c_meterTypes[] = 
+//{
+//	"Unknown",
+//	"Electric",
+//	"Gas",
+//	"Water"
+//};
 
 static char const* c_electricityUnits[] = 
 {
@@ -247,7 +247,7 @@ bool Meter::HandleSupportedReport
 	uint32 const _instance
 )
 {
-	bool canReset = ((_data[1] & 0x80) != 0);
+	//bool canReset = ((_data[1] & 0x80) != 0);
 	MeterType meterType = (MeterType)(_data[1] & 0x1f);
 
 	if( Node* node = GetNodeUnsafe() )
@@ -428,6 +428,12 @@ bool Meter::HandleReport
 		}
 	}
  
+	Node* node = GetNodeUnsafe();
+	if( node != NULL && node->m_queryPending )
+	{
+		node->m_queryStageCompleted = true;
+	}
+
 	return true;
 }
 

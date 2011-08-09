@@ -101,6 +101,11 @@ bool Indicator::HandleMsg
 		{
 			value->OnValueChanged( _data[1] != 0 );
 		}
+		Node* node = GetNodeUnsafe();
+		if( node != NULL && node->m_queryPending )
+		{
+			node->m_queryStageCompleted = true;
+		}
 		return true;
 	}
 

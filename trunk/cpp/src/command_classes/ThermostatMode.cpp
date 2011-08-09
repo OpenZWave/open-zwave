@@ -236,6 +236,11 @@ bool ThermostatMode::HandleMsg
 			valueList->OnValueChanged( _data[1]&0x1f );
 			Log::Write( "Received thermostat mode from node %d: %s", GetNodeId(), valueList->GetItem().m_label.c_str() );		
 		}
+		Node* node = GetNodeUnsafe();
+		if( node != NULL && node->m_queryPending )
+		{
+			node->m_queryStageCompleted = true;
+		}
 		return true;
 	}
 	
@@ -265,6 +270,10 @@ bool ThermostatMode::HandleMsg
 
 		ClearStaticRequest( StaticRequest_Values );
 		CreateVars( _instance );
+		if( Node* node = GetNodeUnsafe() )
+		{
+			node->m_queryStageCompleted = true;
+		}
 		return true;
 	}
 		
