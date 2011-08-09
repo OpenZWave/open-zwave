@@ -50,9 +50,10 @@ ValueInt::ValueInt
 	string const& _label,
 	string const& _units,
 	bool const _readOnly,
+	bool const _writeOnly,
 	int32 const _value
 ):
-	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Int, _label, _units, _readOnly, false ),
+  	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Int, _label, _units, _readOnly, _writeOnly, false ),
 	m_value( _value )
 {
 	m_min = INT_MIN;

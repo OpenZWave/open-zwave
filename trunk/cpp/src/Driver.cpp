@@ -324,6 +324,10 @@ void Driver::DriverThreadProc
 												else
 												{
 													Log::Write( "ERROR: Dropping command, node did not reply");
+													if( node != NULL && node->m_queryPending )
+													{
+														node->m_queryStageCompleted = true;
+													}
 													RemoveMsg();
 												}
 											}
@@ -1276,7 +1280,7 @@ void Driver::ProcessMsg
 			case FUNC_ID_SERIAL_API_SET_TIMEOUTS:
 			{
 				Log::Write( "" );
-                HandleSerialApiSetTimeoutsResponse( _data );
+				HandleSerialApiSetTimeoutsResponse( _data );
 				break;
 			}
 			case FUNC_ID_MEMORY_GET_BYTE:

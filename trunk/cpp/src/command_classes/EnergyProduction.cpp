@@ -151,10 +151,10 @@ void EnergyProduction::CreateVars
 {
 	if( Node* node = GetNodeUnsafe() )
 	{
-		node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, (uint8)EnergyProductionIndex_Instant, c_energyParameterNames[EnergyProductionIndex_Instant], "W", true, "0.0" );
-		node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, (uint8)EnergyProductionIndex_Total, c_energyParameterNames[EnergyProductionIndex_Total], "kWh", true, "0.0" );
-		node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, (uint8)EnergyProductionIndex_Today, c_energyParameterNames[EnergyProductionIndex_Today], "kWh", true, "0.0" );
-		node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, (uint8)EnergyProductionIndex_Time, c_energyParameterNames[EnergyProductionIndex_Time], "", true, "0.0" );
+	  	node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, (uint8)EnergyProductionIndex_Instant, c_energyParameterNames[EnergyProductionIndex_Instant], "W", true, false, "0.0" );
+		node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, (uint8)EnergyProductionIndex_Total, c_energyParameterNames[EnergyProductionIndex_Total], "kWh", true, false, "0.0" );
+		node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, (uint8)EnergyProductionIndex_Today, c_energyParameterNames[EnergyProductionIndex_Today], "kWh", true, false, "0.0" );
+		node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, (uint8)EnergyProductionIndex_Time, c_energyParameterNames[EnergyProductionIndex_Time], "", true, false, "0.0" );
 	}
 }
 

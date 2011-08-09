@@ -110,17 +110,17 @@ bool Configuration::HandleMsg
 				{
 					case 1:
 					{
-						node->CreateValueByte( ValueID::ValueGenre_Config, GetCommandClassId(), _instance, parameter, label, "", false, (uint8)paramValue );
+					  	node->CreateValueByte( ValueID::ValueGenre_Config, GetCommandClassId(), _instance, parameter, label, "", false, false, (uint8)paramValue );
 						break;
 					}
 					case 2:
 					{
-						node->CreateValueShort( ValueID::ValueGenre_Config, GetCommandClassId(), _instance, parameter, label, "", false, (int16)paramValue );
+					  	node->CreateValueShort( ValueID::ValueGenre_Config, GetCommandClassId(), _instance, parameter, label, "", false, false, (int16)paramValue );
 						break;
 					}
 					case 4:
 					{
-						node->CreateValueInt( ValueID::ValueGenre_Config, GetCommandClassId(), _instance, parameter, label, "", false, (int32)paramValue );
+					  	node->CreateValueInt( ValueID::ValueGenre_Config, GetCommandClassId(), _instance, parameter, label, "", false, false, (int32)paramValue );
 						break;
 					}
 					default:

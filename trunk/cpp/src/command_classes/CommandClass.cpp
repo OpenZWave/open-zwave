@@ -38,8 +38,8 @@
 
 using namespace OpenZWave;
 
-static uint8 const	c_sizeMask			= 0x07;
-static uint8 const	c_scaleMask			= 0x18;
+static uint8 const	c_sizeMask		= 0x07;
+static uint8 const	c_scaleMask		= 0x18;
 static uint8 const	c_scaleShift		= 0x03;
 static uint8 const	c_precisionMask		= 0xe0;
 static uint8 const	c_precisionShift	= 0x05;
@@ -298,7 +298,7 @@ string CommandClass::ExtractValue
 
 	// Deal with sign extension.  All values are signed
 	string res;
-	if( _data[1] & 0x80 )
+	if( _data[_valueOffset] & 0x80 )
 	{
 		res = "-";
 

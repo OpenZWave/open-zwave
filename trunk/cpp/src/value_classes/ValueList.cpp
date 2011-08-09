@@ -48,10 +48,11 @@ ValueList::ValueList
 	string const& _label,
 	string const& _units,
 	bool const _readOnly,
+	bool const _writeOnly,
 	vector<Item> const& _items,
 	int32 const _valueIdx
 ):
-	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_List, _label, _units, _readOnly, false ),
+	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_List, _label, _units, _readOnly, _writeOnly, false ),
 	m_items( _items ),
 	m_valueIdx( _valueIdx )
 {

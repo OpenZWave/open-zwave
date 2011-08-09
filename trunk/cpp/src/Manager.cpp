@@ -1332,6 +1332,30 @@ bool Manager::IsValueReadOnly
 }
 
 //-----------------------------------------------------------------------------
+// <Manager::IsValueWriteOnly>
+// Test whether the value is write-only
+//-----------------------------------------------------------------------------
+bool Manager::IsValueWriteOnly
+( 
+	ValueID const& _id
+)
+{
+	bool res = false;
+	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
+	{
+		driver->LockNodes();
+		if( Value* value = driver->GetValue( _id ) )
+		{
+			res = value->IsWriteOnly();
+			value->Release();
+		}
+		driver->ReleaseNodes();
+	}
+
+	return res;
+}
+
+//-----------------------------------------------------------------------------
 // <Manager::IsValueSet>
 // Test whether the value has been set by a status message from the device
 //-----------------------------------------------------------------------------

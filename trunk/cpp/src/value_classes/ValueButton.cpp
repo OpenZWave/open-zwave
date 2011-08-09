@@ -27,6 +27,7 @@
 
 #include "tinyxml.h"
 #include "ValueButton.h"
+#include "Manager.h"
 #include "Driver.h"
 #include "Node.h"
 #include "Log.h"
@@ -48,7 +49,7 @@ ValueButton::ValueButton
 	uint8 const _index,
 	string const& _label
 ):
-    Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Button, _label, "", false, true ),
+	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Button, _label, "", false, true, true ),
 	m_pressed( false )
 {
 }
@@ -104,7 +105,15 @@ bool ValueButton::ReleaseButton
 {
 	// Set the value in the device.
 	m_pressed = false;
-	return Value::Set();
+	bool res = Value::Set();
+	if( Driver* driver = Manager::Get()->GetDriver( GetID().GetHomeId() ) )
+	{
+		if( Node* node = driver->GetNodeUnsafe( GetID().GetNodeId() ) )
+		{
+			node->RequestDynamicValues();
+		}
+	}
+	return res;
 }
 
 

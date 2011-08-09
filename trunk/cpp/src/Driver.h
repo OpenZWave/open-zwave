@@ -59,12 +59,12 @@ namespace OpenZWave
 		friend class CommandClass;
 		friend class Value;
 		friend class ValueStore;
+		friend class ValueButton;
 		friend class Association;
 		friend class Basic;
 		friend class ManufacturerSpecific;
 		friend class NodeNaming;
 		friend class WakeUp;
-		friend class Hail;
 
 	//-----------------------------------------------------------------------------
 	//	Controller Interfaces

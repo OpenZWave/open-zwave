@@ -48,6 +48,8 @@ namespace OpenZWave
 		static string const StaticGetCommandClassName(){ return "COMMAND_CLASS_THERMOSTAT_SETPOINT"; }
 
 		// From CommandClass
+		virtual void ReadXML( TiXmlElement const* _ccElement );
+		virtual void WriteXML( TiXmlElement* _ccElement );
 		virtual bool RequestState( uint32 const _requestFlags );
 		virtual void RequestValue( uint32 const _requestFlags, uint8 const _setPointIndex = 0, uint8 const _dummy = 0 );
 		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }
@@ -60,6 +62,7 @@ namespace OpenZWave
 
 	private:
 		ThermostatSetpoint( uint32 const _homeId, uint8 const _nodeId );
+		uint8 m_setPointBase;
 	};
 
 } // namespace OpenZWave
