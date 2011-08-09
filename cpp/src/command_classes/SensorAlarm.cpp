@@ -171,6 +171,12 @@ bool SensorAlarm::HandleMsg
 			Log::Write( "Received alarm state report from node %d: %s = %d", sourceNodeId, value->GetLabel().c_str(), state );		
 		}
 
+		Node* node = GetNodeUnsafe();
+		if( node != NULL && node->m_queryPending )
+		{
+			node->m_queryStageCompleted = true;
+		}
+
 		return true;
 	}
 			
@@ -199,6 +205,7 @@ bool SensorAlarm::HandleMsg
 					}
 				}
 			}
+			node->m_queryStageCompleted = true;
 		}
 
 		ClearStaticRequest( StaticRequest_Values );

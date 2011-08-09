@@ -290,10 +290,16 @@ void Driver::DriverThreadProc
 								Msg* msg = m_sendQueue.front();
 								m_sendMutex->Release();
 
+								uint8 targetNode = m_sendQueue.front()->GetTargetNodeId();
+								Node* node = GetNodeUnsafe( targetNode );
 								if( msg->GetSendAttempts() > 2 )
 								{
 									// Give up
 									Log::Write( "ERROR: Dropping command, expected response not received after three attempts");
+									if( node != NULL && node->m_queryPending )
+									{
+										node->m_queryStageCompleted = true;
+									}
 									RemoveMsg();
 								}
 								else
@@ -303,8 +309,7 @@ void Driver::DriverThreadProc
 									{
 										Log::Write( "Timeout" );
 
-										uint8 targetNode = m_sendQueue.front()->GetTargetNodeId();
-										if( Node* node = GetNodeUnsafe( targetNode ) )
+										if( node != NULL )
 										{
 											if( !node->IsListeningDevice() )
 											{
@@ -792,6 +797,7 @@ void Driver::RemoveMsg
 ( 
 )
 {
+	Log::Write("RemoveMsg %d", m_sendQueue.size());
 	// get current message from the queue
   	if ( m_sendQueue.size() == 0 )
 		return;
@@ -805,7 +811,7 @@ void Driver::RemoveMsg
 	{
 		// check to see if this is a "retry."  If so, don't signal query stage complete
 		Node* node = GetNodeUnsafe( nodeId );
-		if( node != NULL && !node->m_queryRetries )
+		if( node != NULL && node->m_queryStageCompleted )
 		{
 			// look for more messages for this node in the send queue (to see if query stage is complete)
 			bool bMoreForThisNode = false;
@@ -822,6 +828,7 @@ void Driver::RemoveMsg
 				++it;
 			}
 
+			Log::Write("bMoreForThisNode = %d", bMoreForThisNode);
 			// if there are no more messages for this node in the queue, signal complete
 			if( !bMoreForThisNode ) 
 			{
@@ -960,7 +967,7 @@ bool Driver::ReadMsg
 {
 	uint8 buffer[1024];
 
-    if( !m_controller->Read( buffer, 1, IController::ReadPacketSegment_FrameType ) )
+	if( !m_controller->Read( buffer, 1, IController::ReadPacketSegment_FrameType ) )
 	{
 		// Nothing to read
 		return false;
@@ -979,7 +986,7 @@ bool Driver::ReadMsg
 			uint8 loops = 0;
 			while( true )
 			{
-                if( m_controller->Read( &buffer[1], 1, IController::ReadPacketSegment_FrameLength )) 
+				if( m_controller->Read( &buffer[1], 1, IController::ReadPacketSegment_FrameLength )) 
 				{
 					break;
 				}
@@ -1001,7 +1008,7 @@ bool Driver::ReadMsg
 			uint32 bytesRemaining = buffer[1];
 			do
 			{
-                bytesRemaining -= m_controller->Read( &buffer[2+(uint32)buffer[1]-bytesRemaining], bytesRemaining, IController::ReadPacketSegment_FrameData );
+				bytesRemaining -= m_controller->Read( &buffer[2+(uint32)buffer[1]-bytesRemaining], bytesRemaining, IController::ReadPacketSegment_FrameData );
 				if( bytesRemaining ) 
 				{
 					m_driverThread->Sleep( 10 );
@@ -1928,6 +1935,9 @@ void Driver::HandleGetRoutingInfoResponse
 		}
 		if( !bNeighbors )
 			Log::Write( "    (none reported)" );
+
+		if( node->m_queryPending )
+			node->m_queryStageCompleted = true;
 	}
 
 
@@ -1971,6 +1981,12 @@ bool Driver::HandleSendDataRequest
 				{
 					// Can't deliver message, so abort
 					Log::Write( "Removing message after three tries" );
+					uint8 targetNode = m_sendQueue.front()->GetTargetNodeId();
+					Node* node = GetNodeUnsafe( targetNode );
+					if( node != NULL && node->m_queryPending )
+					{
+						node->m_queryStageCompleted = true;
+					}
 					RemoveMsg();
 					messageRemoved = true;
 				}

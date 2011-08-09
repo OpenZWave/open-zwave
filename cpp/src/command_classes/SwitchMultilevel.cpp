@@ -160,6 +160,11 @@ bool SwitchMultilevel::HandleMsg
 		{
 			value->OnValueChanged( _data[1] );
 		}
+		Node* node = GetNodeUnsafe();
+		if( node != NULL && node->m_queryPending )
+		{
+			node->m_queryStageCompleted = true;
+		}
 		return true;
 	}
 
@@ -196,6 +201,11 @@ bool SwitchMultilevel::HandleMsg
 			{
 				button->SetLabel( c_switchLabelsNeg[switchType2] );
 			}
+		}
+		Node* node = GetNodeUnsafe();
+		if( node != NULL && node->m_queryPending )
+		{
+			node->m_queryStageCompleted = true;
 		}
 		return true;
 	}

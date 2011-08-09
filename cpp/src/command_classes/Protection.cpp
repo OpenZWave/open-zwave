@@ -110,6 +110,12 @@ bool Protection::HandleMsg
 			value->OnValueChanged( (int)_data[1] );
 		}
 
+		Node* node = GetNodeUnsafe();
+		if( node != NULL && node->m_queryPending )
+		{
+			node->m_queryStageCompleted = true;
+		}
+
 		return true;
 	}
 

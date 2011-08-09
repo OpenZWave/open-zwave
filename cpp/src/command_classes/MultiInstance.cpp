@@ -111,7 +111,7 @@ bool MultiInstance::RequestInstances
 				CommandClass* cc = it->second;
  				if( cc->HasStaticRequest( StaticRequest_Instances ) )
 				{
-					snprintf( str, 128, "MultiInstanceCmd_Get for %s", cc->GetCommandClassName().c_str() );
+					snprintf( str, sizeof( str ), "MultiInstanceCmd_Get for %s", cc->GetCommandClassName().c_str() );
 
 					Msg* msg = new Msg( str, GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 					msg->Append( GetNodeId() );
@@ -130,7 +130,7 @@ bool MultiInstance::RequestInstances
 	{
 		// MULTI_CHANNEL
 		char str[128];
-		snprintf( str, 128, "MultiChannelCmd_EndPointGet for node %d", GetNodeId() );
+		snprintf( str, sizeof( str ), "MultiChannelCmd_EndPointGet for node %d", GetNodeId() );
 
 		Msg* msg = new Msg( str, GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 		msg->Append( GetNodeId() );
@@ -228,6 +228,7 @@ void MultiInstance::HandleMultiInstanceReport
 			Log::Write( "Received MultiInstanceReport from node %d for %s: Number of instances = %d", GetNodeId(), pCommandClass->GetCommandClassName().c_str(), instances );
 			pCommandClass->SetInstances( instances );
 			pCommandClass->ClearStaticRequest( StaticRequest_Instances );
+			node->m_queryStageCompleted = true;
 		}
 	}
 }
@@ -279,7 +280,7 @@ void MultiInstance::HandleMultiChannelEndPointReport
 	
 		// Send a single capability request to endpoint 1 (since all classes are the same)
 		char str[128];
-		snprintf( str, 128, "MultiChannelCmd_CapabilityGet for endpoint 1" );
+		snprintf( str, sizeof( str ), "MultiChannelCmd_CapabilityGet for endpoint 1" );
 		Msg* msg = new Msg( str, GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 		msg->Append( GetNodeId() );
 		msg->Append( 3 );
@@ -362,7 +363,7 @@ void MultiInstance::HandleMultiChannelCapabilityReport
 			// All end points have the same command classes.
 			// We just need to find them...
 			char str[128];
-			snprintf( str, 128, "MultiChannelCmd_EndPointFind for generic device class 0x%.2x", _data[2] );
+			snprintf( str, sizeof( str ), "MultiChannelCmd_EndPointFind for generic device class 0x%.2x", _data[2] );
 			Msg* msg = new Msg( str, GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 			msg->Append( GetNodeId() );
 			msg->Append( 4 );
@@ -385,6 +386,7 @@ void MultiInstance::HandleMultiChannelCapabilityReport
 					cc->SetInstance( endPoint );
 				}
 			}
+			node->m_queryStageCompleted = true;
 		}
 	}
 }
@@ -420,6 +422,7 @@ void MultiInstance::HandleMultiChannelEndPointFindReport
 						cc->SetInstance( endPoint );
 					}
 				}
+				node->m_queryStageCompleted = true;
 			}
 		}
 		else

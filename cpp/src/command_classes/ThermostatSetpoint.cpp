@@ -197,6 +197,12 @@ bool ThermostatSetpoint::HandleMsg
 			Log::Write( "Received thermostat setpoint report from node %d: Setpoint %s = %s%s", GetNodeId(), value->GetLabel().c_str(), value->GetValue().c_str(), value->GetUnits().c_str() );		
 		}
 
+		Node* node = GetNodeUnsafe();
+		if( node != NULL && node->m_queryPending )
+		{
+			node->m_queryStageCompleted = true;
+		}
+
 		return true;
 	}
 			
@@ -224,6 +230,7 @@ bool ThermostatSetpoint::HandleMsg
 					}
 				}
 			}
+			node->m_queryStageCompleted = true;
 		}
 
 		ClearStaticRequest( StaticRequest_Values );

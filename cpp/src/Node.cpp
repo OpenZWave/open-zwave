@@ -104,6 +104,7 @@ Node::Node
 	m_queryPending( false ),
 	m_queryConfiguration( false ),
 	m_queryRetries( 0 ),
+	m_queryStageCompleted( false ),
 	m_protocolInfoReceived( false ),
 	m_nodeInfoReceived( false ),
 	m_listening( true ),	// assume we start out listening
@@ -162,6 +163,7 @@ void Node::AdvanceQueries
 	// assumptions are made in later code (RemoveMsg) that this is the case. This means
 	// each stage is only visited once.
 
+	Log::Write("AdvanceQueries node %d %s m_queryStageCompleted %d m_queryRetries %d m_queryPending %d", this->m_nodeId, c_queryStageNames[m_queryStage], m_queryStageCompleted, m_queryRetries, m_queryPending);
 	while( !m_queryPending )
 	{
 		switch( m_queryStage )
@@ -431,6 +433,7 @@ void Node::QueryStageComplete
 	QueryStage const _stage
 )
 {
+	Log::Write("QueryStageComplete %s %s completed %d", c_queryStageNames[m_queryStage], c_queryStageNames[_stage], m_queryStageCompleted);
 	// Check that we are actually on the specified stage
 	if( _stage != m_queryStage )
 	{
@@ -441,9 +444,11 @@ void Node::QueryStageComplete
 	{
 		// Move to the next stage
 		m_queryPending = false;
+		m_queryStageCompleted = false;
 		m_queryStage = (QueryStage)((uint32)m_queryStage + 1);
 		m_queryRetries = 0;
 	}
+	Log::Write("QueryStageComplete %s m_queryPending %d m_queryRetries %d", c_queryStageNames[m_queryStage], m_queryPending, m_queryRetries);
 }
 
 //-----------------------------------------------------------------------------
@@ -456,6 +461,7 @@ void Node::QueryStageRetry
 	uint8 const _maxAttempts // = 0
 )
 {
+	Log::Write("QueryStageRetry stage %s requested stage %s max %d retries %d pending %d", c_queryStageNames[_stage], c_queryStageNames[m_queryStage], _maxAttempts, m_queryRetries, m_queryPending);
 	// Check that we are actually on the specified stage
 	if( _stage != m_queryStage )
 	{
@@ -465,8 +471,7 @@ void Node::QueryStageRetry
 	if( _maxAttempts && ( ++m_queryRetries >= _maxAttempts ) )
 	{
 		// We've retried too many times.  Move to the next stage.
-		// Setting m_queryRetries to 0 will make it look like the stage succeeded.
-		m_queryRetries = 0;
+		m_queryStageCompleted = true;
 	}
 	m_queryPending = false;
 }
@@ -889,9 +894,9 @@ void Node::UpdateProtocolInfo
 	// Security  
 	m_security = _data[1] & 0x7f;
 
-    // Optional flag is true if the device reports optional command classes.
-    // NOTE: We stopped using this because not all devices report it properly,
-    // and now just request the optional classes regardless.
+	// Optional flag is true if the device reports optional command classes.
+	// NOTE: We stopped using this because not all devices report it properly,
+	// and now just request the optional classes regardless.
 	// bool optional = (( _data[1] & 0x80 ) != 0 );	
 
 	Log::Write( "  Protocol Info for Node %d:", m_nodeId );
@@ -904,6 +909,7 @@ void Node::UpdateProtocolInfo
 	// Set up the device class based data for the node, including mandatory command classes
 	SetDeviceClasses( _data[3], _data[4], _data[5] );
 	m_protocolInfoReceived = true;
+	m_queryStageCompleted = true;
 }
 
 //-----------------------------------------------------------------------------
@@ -945,8 +951,8 @@ void Node::UpdateNodeInfo
 			}
 
 			if( CommandClasses::IsSupported( _data[i] ) )
-            {
-                if( CommandClass* pCommandClass = AddCommandClass( _data[i] ) )
+			{
+				if( CommandClass* pCommandClass = AddCommandClass( _data[i] ) )
 				{
 					// If this class came after the COMMAND_CLASS_MARK, then we do not create values.
 					if( afterMark )
@@ -957,14 +963,14 @@ void Node::UpdateNodeInfo
 					// Start with an instance count of one.  If the device supports COMMMAND_CLASS_MULTI_INSTANCE
 					// then some command class instance counts will increase once the responses to the RequestState
 					// call at the end of this method have been processed.
-                    pCommandClass->SetInstance( 1 );
+					pCommandClass->SetInstance( 1 );
 					newCommandClasses = true;
 					Log::Write( "    %s", pCommandClass->GetCommandClassName().c_str() );
-                }
-            }
-            else
-            {
-                Log::Write( "  Node(%d)::CommandClass 0x%.2x - NOT REQUIRED", m_nodeId, _data[i] );
+				}
+			}
+			else
+			{
+				Log::Write( "  Node(%d)::CommandClass 0x%.2x - NOT REQUIRED", m_nodeId, _data[i] );
 			}
 		}
 
@@ -975,6 +981,7 @@ void Node::UpdateNodeInfo
 		}
 
 		SetStaticRequests();
+		m_queryStageCompleted = true;
 		m_nodeInfoReceived = true;
 	}
 	else
