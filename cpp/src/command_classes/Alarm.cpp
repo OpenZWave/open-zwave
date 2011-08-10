@@ -60,8 +60,7 @@ bool Alarm::RequestState
 {
 	if( _requestFlags & RequestFlag_Dynamic )
 	{
-		RequestValue( _requestFlags );
-		return true;
+		return RequestValue( _requestFlags );
 	}
 
 	return false;
@@ -71,7 +70,7 @@ bool Alarm::RequestState
 // <Alarm::RequestValue>												   
 // Request current value from the device									   
 //-----------------------------------------------------------------------------
-void Alarm::RequestValue
+bool Alarm::RequestValue
 (
 	uint32 const _requestFlags,
 	uint8 const _dummy1,	// = 0 (not used)
@@ -85,6 +84,7 @@ void Alarm::RequestValue
 	msg->Append( AlarmCmd_Get );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 	GetDriver()->SendMsg( msg );
+	return true;
 }
 
 //-----------------------------------------------------------------------------

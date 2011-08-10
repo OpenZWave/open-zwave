@@ -61,8 +61,7 @@ bool Language::RequestState
 {
 	if( ( _requestFlags & RequestFlag_Static ) && HasStaticRequest( StaticRequest_Values ) )
 	{
-		RequestValue( _requestFlags );
-		return true;
+		return RequestValue( _requestFlags );
 	}
 
 	return false;
@@ -72,7 +71,7 @@ bool Language::RequestState
 // <Language::RequestValue>												   
 // Request current value from the device									   
 //-----------------------------------------------------------------------------
-void Language::RequestValue
+bool Language::RequestValue
 (
 	uint32 const _requestFlags,
 	uint8 const _dummy1,	// = 0 (not used)
@@ -86,6 +85,7 @@ void Language::RequestValue
 	msg->Append( LanguageCmd_Get );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 	GetDriver()->SendMsg( msg );
+	return true;
 }
 
 //-----------------------------------------------------------------------------

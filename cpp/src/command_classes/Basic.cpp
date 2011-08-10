@@ -57,8 +57,7 @@ bool Basic::RequestState
 {
 	if( _requestFlags & RequestFlag_Dynamic )
 	{
-		RequestValue( _requestFlags );
-		return true;
+		return RequestValue( _requestFlags );
 	}
 	return false;
 }
@@ -67,7 +66,7 @@ bool Basic::RequestState
 // <Basic::RequestValue>												   
 // Request current state from the device									   
 //-----------------------------------------------------------------------------
-void Basic::RequestValue
+bool Basic::RequestValue
 (
 	uint32 const _requestFlags,
 	uint8 const _dummy1,	// = 0 (not used)
@@ -81,6 +80,7 @@ void Basic::RequestValue
 	msg->Append( BasicCmd_Get );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 	GetDriver()->SendMsg( msg );
+	return true;
 }
 
 //-----------------------------------------------------------------------------

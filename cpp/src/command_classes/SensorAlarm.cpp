@@ -82,8 +82,7 @@ bool SensorAlarm::RequestState
 	bool requests = false;
 	if( ( _requestFlags & RequestFlag_Static ) && HasStaticRequest( StaticRequest_Values ) )
 	{
-		RequestValue( _requestFlags, 0xff );
-		requests = true;
+		requests = RequestValue( _requestFlags, 0xff );
 	}
 
 	if( _requestFlags & RequestFlag_Dynamic )
@@ -93,10 +92,9 @@ bool SensorAlarm::RequestState
 			if( NULL != GetValue( 1, i ) )
 			{
 				// There is a value for this alarm type, so request it
-				RequestValue( _requestFlags, i );
+				requests = RequestValue( _requestFlags, i );
 			}
 		}
-		requests = true;
 	}
 
 	return requests;
@@ -106,7 +104,7 @@ bool SensorAlarm::RequestState
 // <SensorAlarm::RequestValue>
 // Get the sensor alarm details from the device
 //-----------------------------------------------------------------------------
-void SensorAlarm::RequestValue
+bool SensorAlarm::RequestValue
 (
 	uint32 const _requestFlags,
 	uint8 const _alarmType,
@@ -127,7 +125,6 @@ void SensorAlarm::RequestValue
 			msg->SetPriority( Msg::MsgPriority_Low );
 		}
 		GetDriver()->SendMsg( msg );
-		return;
 	}
 	else
 	{
@@ -145,6 +142,7 @@ void SensorAlarm::RequestValue
 		}
 		GetDriver()->SendMsg( msg );
 	}
+	return true;
 }
 
 //-----------------------------------------------------------------------------

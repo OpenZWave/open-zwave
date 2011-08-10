@@ -63,8 +63,7 @@ bool Version::RequestState
 {
 	if( ( _requestFlags & RequestFlag_Static ) && HasStaticRequest( StaticRequest_Values ) )
 	{
-		RequestValue( _requestFlags );
-		return true;
+		return RequestValue( _requestFlags );
 	}
 
 	return false;
@@ -74,7 +73,7 @@ bool Version::RequestState
 // <Version::RequestValue>												   
 // Request current value from the device									   
 //-----------------------------------------------------------------------------
-void Version::RequestValue
+bool Version::RequestValue
 (
 	uint32 const _requestFlags,
 	uint8 const _dummy1,		// = 0
@@ -88,6 +87,7 @@ void Version::RequestValue
 	msg->Append( VersionCmd_Get );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 	GetDriver()->SendMsg( msg );
+	return true;
 }
 
 //-----------------------------------------------------------------------------

@@ -117,6 +117,7 @@ bool SensorMultilevel::RequestState
 	uint32 const _requestFlags
 )
 {
+	bool res = false;
 	if( _requestFlags & RequestFlag_Dynamic )
 	{
 		if( Node* node = GetNodeUnsafe() )
@@ -127,26 +128,24 @@ bool SensorMultilevel::RequestState
 				Bitfield const* instances = GetInstances();
 				for( Bitfield::Iterator it = instances->Begin(); it != instances->End(); ++it )
 				{
-					RequestValue( _requestFlags, 0, (uint8)*it );
+					res |= RequestValue( _requestFlags, 0, (uint8)*it );
 				}
 			}
-			return true;
 		}
 		else
 		{
-			RequestValue( _requestFlags );
-			return true;
+			res = RequestValue( _requestFlags );
 		}
 	}
 
-	return false;
+	return res;
 }
 
 //-----------------------------------------------------------------------------
 // <SensorMultilevel::RequestValue>												   
 // Request current value from the device									   
 //-----------------------------------------------------------------------------
-void SensorMultilevel::RequestValue
+bool SensorMultilevel::RequestValue
 (
 	uint32 const _requestFlags,
 	uint8 const _dummy,		// = 0 (not used)
@@ -180,6 +179,7 @@ void SensorMultilevel::RequestValue
 		}
 		GetDriver()->SendMsg( msg );
 	}
+	return true;
 }
 
 //-----------------------------------------------------------------------------

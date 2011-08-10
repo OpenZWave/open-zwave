@@ -163,7 +163,7 @@ void Node::AdvanceQueries
 	// assumptions are made in later code (RemoveMsg) that this is the case. This means
 	// each stage is only visited once.
 
-	Log::Write("AdvanceQueries node %d %s m_queryStageCompleted %d m_queryRetries %d m_queryPending %d", this->m_nodeId, c_queryStageNames[m_queryStage], m_queryStageCompleted, m_queryRetries, m_queryPending);
+	Log::Write("AdvanceQueries node %d %s m_queryStageCompleted %d m_queryRetries %d m_queryPending %d", m_nodeId, c_queryStageNames[m_queryStage], m_queryStageCompleted, m_queryRetries, m_queryPending);
 	while( !m_queryPending )
 	{
 		switch( m_queryStage )
@@ -417,6 +417,7 @@ void Node::AdvanceQueries
 			}
 		}
 	}
+	Log::Write("AdvanceQueries exit node %d %s m_queryStageCompleted %d m_queryRetries %d m_queryPending %d", m_nodeId, c_queryStageNames[m_queryStage], m_queryStageCompleted, m_queryRetries, m_queryPending);
 }
 
 //-----------------------------------------------------------------------------
@@ -428,7 +429,7 @@ void Node::QueryStageComplete
 	QueryStage const _stage
 )
 {
-	Log::Write("QueryStageComplete %s %s completed %d", c_queryStageNames[m_queryStage], c_queryStageNames[_stage], m_queryStageCompleted);
+	Log::Write("QueryStageComplete node %d %s %s completed %d", m_nodeId, c_queryStageNames[m_queryStage], c_queryStageNames[_stage], m_queryStageCompleted);
 	// Check that we are actually on the specified stage
 	if( _stage != m_queryStage )
 	{

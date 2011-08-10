@@ -75,8 +75,7 @@ bool Clock::RequestState
 {
 	if( _requestFlags & RequestFlag_Dynamic )
 	{
-		RequestValue( _requestFlags );
-		return true;
+		return RequestValue( _requestFlags );
 	}
 
 	return false;
@@ -86,7 +85,7 @@ bool Clock::RequestState
 // <Clock::RequestValue>												   
 // Request current value from the device									   
 //-----------------------------------------------------------------------------
-void Clock::RequestValue
+bool Clock::RequestValue
 (
 	uint32 const _requestFlags,
 	uint8 const _dummy1,	// = 0 (not used)
@@ -100,6 +99,7 @@ void Clock::RequestValue
 	msg->Append( ClockCmd_Get );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 	GetDriver()->SendMsg( msg );
+	return true;
 }
 
 //-----------------------------------------------------------------------------

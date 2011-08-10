@@ -102,8 +102,7 @@ bool WakeUp::RequestState
 {
 	if( _requestFlags & RequestFlag_Session )
 	{
-		RequestValue( _requestFlags );
-		return true;
+		return RequestValue( _requestFlags );
 	}
 
 	return false;
@@ -113,7 +112,7 @@ bool WakeUp::RequestState
 // <WakeUp::RequestValue>
 // Nothing to do for wakeup
 //-----------------------------------------------------------------------------
-void WakeUp::RequestValue
+bool WakeUp::RequestValue
 (
 	uint32 const _requestFlags,
 	uint8 const _dummy1,	// = 0
@@ -128,6 +127,7 @@ void WakeUp::RequestValue
 	msg->Append( WakeUpCmd_IntervalGet );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 	GetDriver()->SendMsg( msg );
+	return true;
 }
 
 //-----------------------------------------------------------------------------
