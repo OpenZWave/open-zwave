@@ -509,7 +509,7 @@ void MultiInstance::SendEncap
 	if( GetVersion() == 1 )
 	{
 		// MultiInstance
-		snprintf( str, 128, "Sending MultiInstanceCmd_Encap to node %d, instance %d", GetNodeId(), _instance );
+		snprintf( str, sizeof( str ), "MultiInstanceCmd_Encap (Instance=%d)", _instance );
 		msg = new Msg( str, GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 		msg->Append( GetNodeId() );
 		msg->Append( 3+_length );
@@ -519,7 +519,7 @@ void MultiInstance::SendEncap
 	else
 	{
 		// MultiChannel
-		snprintf( str, 128, "Sending MultiChannelCmd_Encap to node %d, instance %d", GetNodeId(), _instance );
+		snprintf( str, sizeof( str ), "MultiChannelCmd_Encap (Instance=%d)", _instance );
 		msg = new Msg( str, GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 		msg->Append( GetNodeId() );
 		msg->Append( 4+_length );

@@ -101,8 +101,8 @@ namespace OpenZWave
 
 			bool operator ==(const Iterator &rhs)
 			{
-	            return m_idx == rhs.m_idx;
-		    }
+				return m_idx == rhs.m_idx;
+			}
 
 			bool operator !=(const Iterator &rhs)
 			{
