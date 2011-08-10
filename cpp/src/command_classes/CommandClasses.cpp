@@ -235,7 +235,7 @@ void CommandClasses::ParseCommandClassOption
 	bool const _include
 )
 {
-	uint8 pos = 0;
+	size_t pos = 0;
 	uint8 start = 0;
 	bool parsing = true;
 	while( parsing )

@@ -75,8 +75,7 @@ bool ThermostatFanState::RequestState
 	if( _requestFlags & RequestFlag_Dynamic )
 	{
 		// Request the current state
-		RequestValue( _requestFlags );
-		return true;
+		return RequestValue( _requestFlags );
 	}
 	return false;
 }
@@ -85,7 +84,7 @@ bool ThermostatFanState::RequestState
 // <ThermostatFanState::RequestValue>
 // Get the thermostat fan state details from the device
 //-----------------------------------------------------------------------------
-void ThermostatFanState::RequestValue
+bool ThermostatFanState::RequestValue
 (
 	uint32 const _requestFlags,
 	uint8 const _dummy1,	// = 0 (not used)
@@ -100,6 +99,7 @@ void ThermostatFanState::RequestValue
 	msg->Append( ThermostatFanStateCmd_Get );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 	GetDriver()->SendMsg( msg );
+	return true;
 }
 
 //-----------------------------------------------------------------------------
