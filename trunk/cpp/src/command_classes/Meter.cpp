@@ -27,7 +27,9 @@
 
 #include "CommandClasses.h"
 #include "Meter.h"
+#include "MultiInstance.h"
 #include "Defs.h"
+#include "Bitfield.h"
 #include "Msg.h"
 #include "Node.h"
 #include "Driver.h"
@@ -65,13 +67,13 @@ enum
 };
 
 
-//static char const* c_meterTypes[] = 
-//{
-//	"Unknown",
-//	"Electric",
-//	"Gas",
-//	"Water"
-//};
+static char const* c_meterTypes[] = 
+{
+	"Unknown",
+	"Electric",
+	"Gas",
+	"Water"
+};
 
 static char const* c_electricityUnits[] = 
 {
@@ -193,20 +195,42 @@ void Meter::RequestValue
 	}
 	else
 	{
-		for( uint8 i=0; i<8; ++i )
+		if( Node* node = GetNodeUnsafe() )
 		{
-			uint8 baseIndex = i<<2;
-
-			if( GetValue( 0, baseIndex ) ) 
+			Bitfield const* instances = GetInstances();
+			MultiInstance* multiInstance = static_cast<MultiInstance*>( node->GetCommandClass( MultiInstance::StaticGetCommandClassId() ) );
+			if( multiInstance != NULL || instances->GetNumSetBits() == 1 )
 			{
-				Msg* msg = new Msg( "MeterCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-				msg->Append( GetNodeId() );
-				msg->Append( 3 );
-				msg->Append( GetCommandClassId() );
-				msg->Append( MeterCmd_Get );
-				msg->Append( (uint8)(i<<3) );
-				msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-				GetDriver()->SendMsg( msg );
+				for( Bitfield::Iterator it = instances->Begin(); it != instances->End(); ++it)
+				{
+					for( uint8 i=0; i<8; ++i )
+					{
+						uint8 baseIndex = i<<2;
+
+						if( GetValue( *it, baseIndex ) )
+						{
+							if( *it == 1 )
+							{
+								Msg* msg = new Msg( "MeterCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+								msg->Append( GetNodeId() );
+								msg->Append( 3 );
+								msg->Append( GetCommandClassId() );
+								msg->Append( MeterCmd_Get );
+								msg->Append( (uint8)( i << 3 ) );
+								msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+								GetDriver()->SendMsg( msg );
+							}
+							else
+							{
+								uint8 data[3];
+								data[0] = GetCommandClassId();
+								data[1] = MeterCmd_Get;
+								data[2] = (uint8)( i << 3 );
+								multiInstance->SendEncap(data, 3, (uint8)*it, _requestFlags);
+							}
+						}
+					}
+				}
 			}
 		}
 	}
@@ -247,13 +271,17 @@ bool Meter::HandleSupportedReport
 	uint32 const _instance
 )
 {
-	//bool canReset = ((_data[1] & 0x80) != 0);
+	bool canReset = ((_data[1] & 0x80) != 0);
 	MeterType meterType = (MeterType)(_data[1] & 0x1f);
 
+	ClearStaticRequest( StaticRequest_Version );
 	if( Node* node = GetNodeUnsafe() )
 	{
+		string msg;
 		string valueLabel;
 
+		msg = c_meterTypes[meterType];
+		msg += ": ";
 		// Create the list of supported scales
 		uint8 scaleSupported = _data[2];
 		if( GetVersion() == 2 )
@@ -271,17 +299,47 @@ bool Meter::HandleSupportedReport
 				{
 					case MeterType_Electric:
 					{
-						node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, baseIndex, c_electricityLabels[i], c_electricityUnits[i], true, false, "0.0" );
+						if( ValueDecimal* value = static_cast<ValueDecimal*>( GetValue( _instance, baseIndex ) ) )
+						{
+							value->SetLabel( c_electricityLabels[i] );
+							value->SetUnits( c_electricityUnits[i] );
+						}
+						else
+						{
+							node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, baseIndex, c_electricityLabels[i], c_electricityUnits[i], true, false, "0.0" );
+						}
+						msg += c_electricityUnits[i];
+						msg += " ";
 						break;
 					}
 					case MeterType_Gas:
 					{
-						node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, baseIndex, "Gas", c_gasUnits[i], true, false, "0.0" );
+						if( ValueDecimal* value = static_cast<ValueDecimal*>( GetValue( _instance, baseIndex ) ) )
+						{
+							value->SetLabel( "Gas" );
+							value->SetUnits( c_gasUnits[i] );
+						}
+						else
+						{
+							node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, baseIndex, "Gas", c_gasUnits[i], true, false, "0.0" );
+						}
+						msg += c_gasUnits[i];
+						msg += " ";
 						break;
 					}
 					case MeterType_Water:
 					{
-						node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, baseIndex, "Water", c_waterUnits[i], true, false, "0.0" );
+						if( ValueDecimal* value = static_cast<ValueDecimal*>( GetValue( _instance, baseIndex ) ) )
+						{
+							value->SetLabel( "Water" );
+							value->SetUnits( c_waterUnits[i] );
+						}
+						else
+						{
+							node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, baseIndex, "Water", c_waterUnits[i], true, false, "0.0" );
+						}
+						msg += c_waterUnits[i];
+						msg += " ";
 						break;
 					}
 					default:
@@ -296,15 +354,21 @@ bool Meter::HandleSupportedReport
 		node->CreateValueBool( ValueID::ValueGenre_User, GetCommandClassId(), _instance, MeterIndex_Exporting, "Exporting", "", true, false, false );
 
 		// Create the reset button
-		node->CreateValueButton( ValueID::ValueGenre_System, GetCommandClassId(), _instance, MeterIndex_Reset, "Reset" );
+		if( canReset )
+		{
+			node->CreateValueButton( ValueID::ValueGenre_System, GetCommandClassId(), _instance, MeterIndex_Reset, "Reset" );
+		}
 
 		if( node->m_queryPending )
 		{
 			node->m_queryStageCompleted = true;
 		}
+
+		Log::Write( "Received Meter supported report from node %d, %s", GetNodeId(), msg.c_str() );
+		return true;
 	}
 
-	return true;
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -332,14 +396,6 @@ bool Meter::HandleReport
 	// Get the value and scale
 	uint8 scale;
 	string valueStr = ExtractValue( &_data[2], &scale );
-
-	uint8 baseIndex = 0;
-	if( GetVersion() > 2 )
-	{
-		// In version 3, an extra scale bit is stored in the meter type byte.
-		scale |= ((_data[1]&0x80)>>5);
-		baseIndex = scale << 2;
-	}
 
 	if( GetVersion() == 1 )
 	{
@@ -387,6 +443,14 @@ bool Meter::HandleReport
 	else
 	{
 		// Version 2 and above
+		uint8 baseIndex = scale << 2;
+		if( GetVersion() > 2 )
+		{
+			// In version 3, an extra scale bit is stored in the meter type byte.
+			scale |= ((_data[1]&0x80)>>5);
+			baseIndex = scale << 2;
+		}
+
 		if( ValueDecimal* value = static_cast<ValueDecimal*>( GetValue( _instance, baseIndex ) ) )
 		{
 			Log::Write( "Received Meter report from node %d: %s%s=%s%s", GetNodeId(), exporting ? "Exporting ": "", value->GetLabel().c_str(), valueStr.c_str(), value->GetUnits().c_str() );
@@ -394,7 +458,7 @@ bool Meter::HandleReport
 
 			// Read any previous value and time delta
 			uint8 size = _data[2] & 0x07;
-			uint16 delta = (((uint16)_data[3+size])<<8) + (uint16)+_data[4+size];
+			uint16 delta = (uint16)( (_data[3+size]<<8) | _data[4+size]);
 
 			if( delta )
 			{
@@ -486,6 +550,32 @@ void Meter::CreateVars
 		if( Node* node = GetNodeUnsafe() )
 		{
 			node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Unknown", "", true, false, "0.0" );
+		}
+	}
+	else if( _instance > 1 )
+	{
+		// For v2 & higher devices with MultiInstance support we arrive here.
+		// For instances that are the same we can just clone instance 1s variables.
+		// This code assumes the instances are the same since we currently have no way
+		// tell the difference.
+
+		if( Node* node = GetNodeUnsafe() )
+		{
+			for( uint8 i=0; i<8; ++i )
+			{
+				uint8 baseIndex = i<<2;
+				if( ValueDecimal* value = static_cast<ValueDecimal*>( GetValue( 1, baseIndex ) ) )
+				{
+					node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, baseIndex, value->GetLabel().c_str(), value->GetUnits().c_str(), true, false, "0.0" );
+				}
+			}
+
+			// Create the export flag
+			node->CreateValueBool( ValueID::ValueGenre_User, GetCommandClassId(), _instance, MeterIndex_Exporting, "Exporting", "", true, false, false );
+			if( GetValue( 1, MeterIndex_Reset) != NULL )
+			{
+				node->CreateValueButton( ValueID::ValueGenre_System, GetCommandClassId(), _instance, MeterIndex_Reset, "Reset" );
+			}
 		}
 	}
 }
