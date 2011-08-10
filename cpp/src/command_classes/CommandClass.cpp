@@ -416,7 +416,7 @@ int32 CommandClass::ValueToInteger
 	int32 val;
 	
 	// Find the decimal point
-	uint32 pos = _value.find_first_of( "." );
+	size_t pos = _value.find_first_of( "." );
 	if( pos == string::npos )
 	{
 		// No decimal point

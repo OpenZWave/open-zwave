@@ -159,7 +159,6 @@ void SensorMultilevel::RequestValue
 		{
 			if( MultiInstance* multiInstance = static_cast<MultiInstance*>( node->GetCommandClass( MultiInstance::StaticGetCommandClassId() ) ) )
 			{
-				Log::Write( "Sending SensorMultilevelCmd_Get to node %d for instance/endpoint %d", GetNodeId(), _instance );
 				uint8 data[2];
 				data[0] = GetCommandClassId();
 				data[1] = SensorMultilevelCmd_Get;
