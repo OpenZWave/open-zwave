@@ -187,7 +187,7 @@ bool Configuration::SetValue
 // <Configuration::RequestValue>												   
 // Request current parameter value from the device									   
 //-----------------------------------------------------------------------------
-void Configuration::RequestValue
+bool Configuration::RequestValue
 (
 	uint32 const _requestFlags,
 	uint8 const _parameter,		// parameter number is encoded as the Index portion of ValueID
@@ -202,6 +202,7 @@ void Configuration::RequestValue
 	msg->Append( _parameter );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 	GetDriver()->SendMsg( msg );
+	return true;
 }
 
 //-----------------------------------------------------------------------------

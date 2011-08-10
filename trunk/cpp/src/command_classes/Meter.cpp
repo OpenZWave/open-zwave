@@ -165,8 +165,7 @@ bool Meter::RequestState
 
 	if( _requestFlags & RequestFlag_Dynamic )
 	{
-		RequestValue( _requestFlags );
-		res = true;
+		res = RequestValue( _requestFlags );
 	}
 
 	return res;
@@ -176,13 +175,15 @@ bool Meter::RequestState
 // <Meter::RequestValue>												   
 // Request current value from the device									   
 //-----------------------------------------------------------------------------
-void Meter::RequestValue
+bool Meter::RequestValue
 (
 	uint32 const _requestFlags,
 	uint8 const _dummy1,	// = 0 (not used)
 	uint8 const _dummy2		// = 0 (not used)
 )
 {
+	bool res = false;
+
 	if( GetVersion() == 1 )
 	{
 		Msg* msg = new Msg( "MeterCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
@@ -191,7 +192,12 @@ void Meter::RequestValue
 		msg->Append( GetCommandClassId() );
 		msg->Append( MeterCmd_Get );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		if( _requestFlags & RequestFlag_LowPriority )
+		{
+			msg->SetPriority( Msg::MsgPriority_Low );
+		}
 		GetDriver()->SendMsg( msg );
+		res = true;
 	}
 	else
 	{
@@ -218,7 +224,12 @@ void Meter::RequestValue
 								msg->Append( MeterCmd_Get );
 								msg->Append( (uint8)( i << 3 ) );
 								msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+								if( _requestFlags & RequestFlag_LowPriority )
+								{
+									msg->SetPriority( Msg::MsgPriority_Low );
+								}
 								GetDriver()->SendMsg( msg );
+								res = true;
 							}
 							else
 							{
@@ -234,6 +245,7 @@ void Meter::RequestValue
 			}
 		}
 	}
+	return res;
 }
 
 //-----------------------------------------------------------------------------
@@ -308,8 +320,9 @@ bool Meter::HandleSupportedReport
 						{
 							node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, baseIndex, c_electricityLabels[i], c_electricityUnits[i], true, false, "0.0" );
 						}
+						if( i != 0 )
+							msg += ", ";
 						msg += c_electricityUnits[i];
-						msg += " ";
 						break;
 					}
 					case MeterType_Gas:
@@ -323,8 +336,9 @@ bool Meter::HandleSupportedReport
 						{
 							node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, baseIndex, "Gas", c_gasUnits[i], true, false, "0.0" );
 						}
+						if( i != 0 )
+							msg += ", ";
 						msg += c_gasUnits[i];
-						msg += " ";
 						break;
 					}
 					case MeterType_Water:
@@ -338,8 +352,9 @@ bool Meter::HandleSupportedReport
 						{
 							node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, baseIndex, "Water", c_waterUnits[i], true, false, "0.0" );
 						}
+						if( i != 0 )
+							msg += ", ";
 						msg += c_waterUnits[i];
-						msg += " ";
 						break;
 					}
 					default:

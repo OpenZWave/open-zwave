@@ -142,8 +142,7 @@ bool Association::RequestState
 	if( ( _requestFlags & RequestFlag_Static ) && HasStaticRequest( StaticRequest_Values ) )
 	{
 		// Request the supported group info
-		RequestValue( _requestFlags );
-		return true;
+		return RequestValue( _requestFlags );
 	}
 
 	return false;
@@ -153,7 +152,7 @@ bool Association::RequestState
 // <Association::RequestValue>
 // Nothing to do for Association
 //-----------------------------------------------------------------------------
-void Association::RequestValue
+bool Association::RequestValue
 (
 	uint32 const _requestFlags,
 	uint8 const _dummy1,	// = 0 (not used)
@@ -168,6 +167,7 @@ void Association::RequestValue
 	msg->Append( AssociationCmd_GroupingsGet );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 	GetDriver()->SendMsg( msg );
+	return true;
 }
 
 //-----------------------------------------------------------------------------

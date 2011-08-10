@@ -211,15 +211,13 @@ bool NodeNaming::RequestState
 			if( node->m_nodeName == "" )
 			{
 				// If we don't already have a user-defined name, fetch it from the device
-				RequestValue( _requestFlags, NodeNamingCmd_Get );
-				res = true;
+				res = RequestValue( _requestFlags, NodeNamingCmd_Get );
 			}
 
 			if( node->m_location == "" )
 			{
 				// If we don't already have a user-defined location, fetch it from the device
-				RequestValue( _requestFlags, NodeNamingCmd_LocationGet );
-				res = true;
+				res = RequestValue( _requestFlags, NodeNamingCmd_LocationGet );
 			}
 		}
 	}
@@ -231,7 +229,7 @@ bool NodeNaming::RequestState
 // <NodeNaming::RequestValue>												   
 // Request current value from the device									   
 //-----------------------------------------------------------------------------
-void NodeNaming::RequestValue
+bool NodeNaming::RequestValue
 (
 	uint32 const _requestFlags,
 	uint8 const _getTypeEnum,
@@ -253,7 +251,7 @@ void NodeNaming::RequestValue
 			msg->SetPriority( Msg::MsgPriority_Low );
 		}
 		GetDriver()->SendMsg( msg );
-		return;
+		return true;
 	}
 
 	if( _getTypeEnum == NodeNamingCmd_LocationGet )
@@ -270,7 +268,9 @@ void NodeNaming::RequestValue
 			msg->SetPriority( Msg::MsgPriority_Low );
 		}
 		GetDriver()->SendMsg( msg );
+		return true;
 	}
+	return false;
 }
 
 //-----------------------------------------------------------------------------

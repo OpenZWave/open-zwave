@@ -148,15 +148,13 @@ bool ThermostatFanMode::RequestState
 	if( ( _requestFlags & RequestFlag_Static ) && HasStaticRequest( StaticRequest_Values ) )
 	{
 		// Request the supported modes
-		RequestValue( _requestFlags, ThermostatFanModeCmd_SupportedGet );
-		requests = true;
+		requests = RequestValue( _requestFlags, ThermostatFanModeCmd_SupportedGet );
 	}
 
 	if( _requestFlags & RequestFlag_Dynamic )
 	{
 		// Request the current fan mode
-		RequestValue( _requestFlags, ThermostatFanModeCmd_Get );
-		requests = true;
+		requests = RequestValue( _requestFlags, ThermostatFanModeCmd_Get );
 	}
 
 	return requests;
@@ -166,7 +164,7 @@ bool ThermostatFanMode::RequestState
 // <ThermostatFanMode::RequestValue>
 // Get the thermostat fan mode details from the device
 //-----------------------------------------------------------------------------
-void ThermostatFanMode::RequestValue
+bool ThermostatFanMode::RequestValue
 (
 	uint32 const _requestFlags,
 	uint8 const _getTypeEnum,
@@ -187,7 +185,7 @@ void ThermostatFanMode::RequestValue
 			msg->SetPriority( Msg::MsgPriority_Low );
 		}
 		GetDriver()->SendMsg( msg );
-		return;
+		return true;
 	}
 
 	if( _getTypeEnum == ThermostatFanModeCmd_Get || _getTypeEnum == 0 )
@@ -204,8 +202,9 @@ void ThermostatFanMode::RequestValue
 			msg->SetPriority( Msg::MsgPriority_Low );
 		}
 		GetDriver()->SendMsg( msg );
-		return;
+		return true;
 	}
+	return false;
 }
 
 //-----------------------------------------------------------------------------

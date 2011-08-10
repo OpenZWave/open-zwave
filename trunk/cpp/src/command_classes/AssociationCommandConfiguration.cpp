@@ -69,8 +69,7 @@ bool AssociationCommandConfiguration::RequestState
 {
 	if( _requestFlags & RequestFlag_Session )
 	{
-		RequestValue( _requestFlags );
-		return true;
+		return RequestValue( _requestFlags );
 	}
 
 	return false;
@@ -80,7 +79,7 @@ bool AssociationCommandConfiguration::RequestState
 // <AssociationCommandConfiguration::RequestValue>												   
 // Request current value from the device									   
 //-----------------------------------------------------------------------------
-void AssociationCommandConfiguration::RequestValue
+bool AssociationCommandConfiguration::RequestValue
 (
 	uint32 const _requestFlags,
 	uint8 const _dummy1,	// = 0 (not used)
@@ -94,6 +93,7 @@ void AssociationCommandConfiguration::RequestValue
 	msg->Append( AssociationCommandConfigurationCmd_SupportedRecordsGet );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 	GetDriver()->SendMsg( msg );
+	return true;
 }
 
 //-----------------------------------------------------------------------------

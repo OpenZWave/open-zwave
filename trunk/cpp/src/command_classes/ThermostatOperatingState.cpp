@@ -74,8 +74,7 @@ bool ThermostatOperatingState::RequestState
 {
 	if( _requestFlags & RequestFlag_Dynamic )
 	{
-		RequestValue( _requestFlags );
-		return true;
+		return RequestValue( _requestFlags );
 	}
 	return false;
 }
@@ -84,7 +83,7 @@ bool ThermostatOperatingState::RequestState
 // <ThermostatOperatingState::RequestValue>
 // Get a thermostat mode value from the device
 //-----------------------------------------------------------------------------
-void ThermostatOperatingState::RequestValue
+bool ThermostatOperatingState::RequestValue
 (
 	uint32 const _requestFlags,
 	uint8 const _dummy1,	// = 0 (not used)
@@ -98,6 +97,7 @@ void ThermostatOperatingState::RequestValue
 	msg->Append( ThermostatOperatingStateCmd_Get );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 	GetDriver()->SendMsg( msg );
+	return true;
 }
 
 //-----------------------------------------------------------------------------

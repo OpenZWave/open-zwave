@@ -157,15 +157,13 @@ bool ThermostatMode::RequestState
 	if( ( _requestFlags & RequestFlag_Static ) && HasStaticRequest( StaticRequest_Values ) )
 	{
 		// request supported mode list
-		RequestValue( _requestFlags, ThermostatModeCmd_SupportedGet );
-		requests = true;
+		requests = RequestValue( _requestFlags, ThermostatModeCmd_SupportedGet );
 	}
 
 	if( _requestFlags & RequestFlag_Dynamic )
 	{
 		// Request the current mode
-		RequestValue( _requestFlags );
-		requests = true;
+		requests = RequestValue( _requestFlags );
 	}
 
 	return requests;
@@ -175,7 +173,7 @@ bool ThermostatMode::RequestState
 // <ThermostatMode::RequestValue>
 // Get the static thermostat mode details from the device
 //-----------------------------------------------------------------------------
-void ThermostatMode::RequestValue
+bool ThermostatMode::RequestValue
 (
 	uint32 const _requestFlags,
 	uint8 const _getTypeEnum,
@@ -196,7 +194,7 @@ void ThermostatMode::RequestValue
 			msg->SetPriority( Msg::MsgPriority_Low );
 		}
 		GetDriver()->SendMsg( msg );
-		return;
+		return true;
 	}
 
 	if( _getTypeEnum == 0 )		// get current mode
@@ -213,8 +211,9 @@ void ThermostatMode::RequestValue
 			msg->SetPriority( Msg::MsgPriority_Low );
 		}
 		GetDriver()->SendMsg( msg );
-		return;
+		return true;
 	}
+	return false;
 }
 
 //-----------------------------------------------------------------------------

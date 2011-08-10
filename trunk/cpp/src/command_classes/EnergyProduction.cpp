@@ -85,7 +85,7 @@ bool EnergyProduction::RequestState
 // <EnergyProduction::RequestValue>												   
 // Request current production from the device									   
 //-----------------------------------------------------------------------------
-void EnergyProduction::RequestValue
+bool EnergyProduction::RequestValue
 (
 	uint32 const _requestFlags,
 	uint8 const _valueEnum,		// one of EnergyProductionIndex enums
@@ -106,6 +106,7 @@ void EnergyProduction::RequestValue
 		msg->SetPriority( Msg::MsgPriority_Low );
 	}
 	GetDriver()->SendMsg( msg );
+	return true;
 }
 
 //-----------------------------------------------------------------------------

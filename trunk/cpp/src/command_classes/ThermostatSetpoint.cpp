@@ -143,17 +143,15 @@ bool ThermostatSetpoint::RequestState
 	bool requests = false;
 	if( ( _requestFlags & RequestFlag_Static ) && HasStaticRequest( StaticRequest_Values ) )
 	{
-		RequestValue( _requestFlags, 0xff );
-		requests = true;
+		requests = RequestValue( _requestFlags, 0xff );
 	}
 
 	if( _requestFlags & RequestFlag_Session )
 	{
 		for( uint8 i=0; i<ThermostatSetpoint_Count; ++i )
 		{
-			RequestValue( _requestFlags, i );
+			requests |= RequestValue( _requestFlags, i );
 		}
-		requests = true;
 	}
 
 	return requests;
@@ -163,7 +161,7 @@ bool ThermostatSetpoint::RequestState
 // <ThermostatSetpoint::RequestValue>												   
 // Request current state from the device									   
 //-----------------------------------------------------------------------------
-void ThermostatSetpoint::RequestValue
+bool ThermostatSetpoint::RequestValue
 (
 	uint32 const _requestFlags,
 	uint8 const _setPointIndex,
@@ -184,7 +182,7 @@ void ThermostatSetpoint::RequestValue
 		{
 			msg->SetPriority( Msg::MsgPriority_Low );
 		}
-		return;
+		return true;
 	}
 
 	if( GetValue( 1, _setPointIndex ) )
@@ -202,8 +200,9 @@ void ThermostatSetpoint::RequestValue
 		{
 			msg->SetPriority( Msg::MsgPriority_Low );
 		}
-		return;
+		return true;
 	}
+	return false;
 }
 
 //-----------------------------------------------------------------------------

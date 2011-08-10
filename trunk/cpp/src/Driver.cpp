@@ -290,7 +290,7 @@ void Driver::DriverThreadProc
 								Msg* msg = m_sendQueue.front();
 								m_sendMutex->Release();
 
-								uint8 targetNode = m_sendQueue.front()->GetTargetNodeId();
+								uint8 targetNode = msg->GetTargetNodeId();
 								Node* node = GetNodeUnsafe( targetNode );
 								if( msg->GetSendAttempts() > 2 )
 								{
