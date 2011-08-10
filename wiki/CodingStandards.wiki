@@ -1,4 +1,4 @@
-#OpenZWave Coding Standards
+#summary OpenZWave Coding Standards
 
 = Style =
 
