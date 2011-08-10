@@ -1,0 +1,5 @@
+#summary Other projects that depend on open-zwave.
+
+  * [http://code.google.com/p/openzwave-control-panel/ openzwave-control-panel]
+  * [http://projects.maartendamen.com/projects/pyopenzwave/ py-openzwave] ([http://github.com/maartendamen/py-openzwave github])
+  * [http://code.google.com/p/py-openzwave-extension/ py-openzwave-extension]
