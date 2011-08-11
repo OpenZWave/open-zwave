@@ -137,20 +137,21 @@ void ThermostatSetpoint::WriteXML
 //-----------------------------------------------------------------------------
 bool ThermostatSetpoint::RequestState
 (
-	uint32 const _requestFlags
+	uint32 const _requestFlags,
+	uint8 const _instance
 )
 {
 	bool requests = false;
 	if( ( _requestFlags & RequestFlag_Static ) && HasStaticRequest( StaticRequest_Values ) )
 	{
-		requests = RequestValue( _requestFlags, 0xff );
+		requests |= RequestValue( _requestFlags, 0xff, _instance );
 	}
 
 	if( _requestFlags & RequestFlag_Session )
 	{
 		for( uint8 i=0; i<ThermostatSetpoint_Count; ++i )
 		{
-			requests |= RequestValue( _requestFlags, i );
+			requests |= RequestValue( _requestFlags, i, _instance );
 		}
 	}
 
@@ -165,13 +166,14 @@ bool ThermostatSetpoint::RequestValue
 (
 	uint32 const _requestFlags,
 	uint8 const _setPointIndex,
-	uint8 const _dummy			// = 0 (not used)
+	uint8 const _instance
 )
 {
 	if( _setPointIndex == 0xff )		// check for supportedget
 	{
 		// Request the supported setpoints
 		Msg* msg = new Msg( "Request Supported Thermostat Setpoints", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		msg->SetInstance( this, _instance );
 		msg->Append( GetNodeId() );
 		msg->Append( 2 );
 		msg->Append( GetCommandClassId() );
@@ -189,6 +191,7 @@ bool ThermostatSetpoint::RequestValue
 	{
 		// Request the setpoint value
 		Msg* msg = new Msg( "Request Current Thermostat Setpoint", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		msg->SetInstance( this, _instance );
 		msg->Append( GetNodeId() );
 		msg->Append( 3 );
 		msg->Append( GetCommandClassId() );
@@ -289,6 +292,7 @@ bool ThermostatSetpoint::SetValue
 		uint8 scale = strcmp( "C", value->GetUnits().c_str() ) ? 1 : 0;
 
 		Msg* msg = new Msg( "Set Thermostat Setpoint", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+		msg->SetInstance( this, _value.GetID().GetInstance() );
 		msg->Append( GetNodeId() );
 		msg->Append( 4 + GetAppendValueSize( value->GetValue() ) );
 		msg->Append( GetCommandClassId() );

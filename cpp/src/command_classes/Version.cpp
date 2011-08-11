@@ -58,12 +58,13 @@ enum
 //-----------------------------------------------------------------------------
 bool Version::RequestState
 (
-	uint32 const _requestFlags
+	uint32 const _requestFlags,
+	uint8 const _instance
 )
 {
 	if( ( _requestFlags & RequestFlag_Static ) && HasStaticRequest( StaticRequest_Values ) )
 	{
-		return RequestValue( _requestFlags );
+		return RequestValue( _requestFlags, 0, _instance );
 	}
 
 	return false;
@@ -77,9 +78,15 @@ bool Version::RequestValue
 (
 	uint32 const _requestFlags,
 	uint8 const _dummy1,		// = 0
-	uint8 const _dummy2			// = 0
+	uint8 const _instance
 )
 {
+	if( _instance != 1 )
+	{
+		// This command class doesn't work with multiple instances
+		return false;
+	}
+
 	Msg* msg = new Msg( "VersionCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 	msg->Append( GetNodeId() );
 	msg->Append( 2 );

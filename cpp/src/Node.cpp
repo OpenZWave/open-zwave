@@ -245,7 +245,7 @@ void Node::AdvanceQueries
 				ManufacturerSpecific* cc = static_cast<ManufacturerSpecific*>( GetCommandClass( ManufacturerSpecific::StaticGetCommandClassId() ) );
 				if( cc  )
 				{
-					m_queryPending = cc->RequestState( CommandClass::RequestFlag_Static );
+					m_queryPending = cc->RequestState( CommandClass::RequestFlag_Static, 1 );
 				}
 				if( !m_queryPending )
 				{
@@ -312,7 +312,7 @@ void Node::AdvanceQueries
 				{
 					if( !it->second->IsAfterMark() )
 					{
-						m_queryPending |= it->second->RequestState( CommandClass::RequestFlag_Static | CommandClass::RequestFlag_LowPriority );
+						m_queryPending |= it->second->RequestStateForAllInstances( CommandClass::RequestFlag_Static | CommandClass::RequestFlag_LowPriority );
 					}
 				}
 
@@ -359,7 +359,7 @@ void Node::AdvanceQueries
 				{
 					if( !it->second->IsAfterMark() )
 					{
-						m_queryPending |= it->second->RequestState( CommandClass::RequestFlag_Session | CommandClass::RequestFlag_LowPriority );
+						m_queryPending |= it->second->RequestStateForAllInstances( CommandClass::RequestFlag_Session | CommandClass::RequestFlag_LowPriority );
 					}
 				}
 				if( !m_queryPending )
@@ -1226,7 +1226,7 @@ void Node::RequestConfigParam
 {
 	if( Configuration* cc = static_cast<Configuration*>( GetCommandClass( Configuration::StaticGetCommandClassId() ) ) )
 	{
-		cc->RequestValue( 0, _param, 0 );
+		cc->RequestValue( 0, _param, 1 );
 	}
 }
 
@@ -1270,7 +1270,7 @@ bool Node::RequestDynamicValues
 	{
 		if( !it->second->IsAfterMark() )
 		{
-			res |= it->second->RequestState( CommandClass::RequestFlag_Dynamic );
+			res |= it->second->RequestStateForAllInstances( CommandClass::RequestFlag_Dynamic );
 		}
 	}
 

@@ -38,6 +38,22 @@ namespace OpenZWave
 	class MultiInstance: public CommandClass
 	{
 	public:
+		enum MultiInstanceCmd
+		{
+			MultiInstanceCmd_Get				= 0x04,
+			MultiInstanceCmd_Report				= 0x05,
+			MultiInstanceCmd_Encap				= 0x06,
+
+			// Version 2
+			MultiChannelCmd_EndPointGet			= 0x07,
+			MultiChannelCmd_EndPointReport		= 0x08,
+			MultiChannelCmd_CapabilityGet		= 0x09,
+			MultiChannelCmd_CapabilityReport	= 0x0a,
+			MultiChannelCmd_EndPointFind		= 0x0b,
+			MultiChannelCmd_EndPointFindReport	= 0x0c,
+			MultiChannelCmd_Encap				= 0x0d
+		};
+
 		static CommandClass* Create( uint32 const _homeId, uint8 const _nodeId ){ return new MultiInstance( _homeId, _nodeId ); }
 		virtual ~MultiInstance(){}
 

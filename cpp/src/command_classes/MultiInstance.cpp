@@ -35,22 +35,6 @@
 
 using namespace OpenZWave;
 
-enum MultiInstanceCmd
-{
-	MultiInstanceCmd_Get				= 0x04,
-	MultiInstanceCmd_Report				= 0x05,
-	MultiInstanceCmd_Encap				= 0x06,
-
-	// Version 2
-	MultiChannelCmd_EndPointGet			= 0x07,
-	MultiChannelCmd_EndPointReport		= 0x08,
-	MultiChannelCmd_CapabilityGet		= 0x09,
-	MultiChannelCmd_CapabilityReport	= 0x0a,
-	MultiChannelCmd_EndPointFind		= 0x0b,
-	MultiChannelCmd_EndPointFindReport	= 0x0c,
-	MultiChannelCmd_Encap				= 0x0d
-};
-
 // Reduced set of Generic Device classes sorted to reduce
 // the likely number of calls to MultiChannelCmd_EndPointFind.
 uint8 const c_genericClass[] =
@@ -337,11 +321,18 @@ void MultiInstance::HandleMultiChannelCapabilityReport
 		Log::Write( "    Command classes supported by the endpoint are:" );
 
 		// Store the command classes for later use
+		bool afterMark = false;
 		m_endPointCommandClasses.clear();
 		uint8 numCommandClasses = _length - 5;
 		for( uint8 i=0; i<numCommandClasses; ++i )
 		{
 			uint8 commandClassId = _data[i+4];
+			if( commandClassId == 0xef )
+			{
+				afterMark = true;
+				continue;
+			}
+
 			m_endPointCommandClasses.insert( commandClassId );
 
 			// Ensure the node supports this command class
@@ -349,6 +340,10 @@ void MultiInstance::HandleMultiChannelCapabilityReport
 			if( !cc )
 			{
 				cc = node->AddCommandClass( commandClassId );
+				if( afterMark )
+				{
+					cc->SetAfterMark();
+				}
 			}
 			if( cc )
 			{

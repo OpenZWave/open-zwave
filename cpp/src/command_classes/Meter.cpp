@@ -144,7 +144,8 @@ Meter::Meter
 //-----------------------------------------------------------------------------
 bool Meter::RequestState
 (
-	uint32 const _requestFlags
+	uint32 const _requestFlags,
+	uint8 const _instance
 )
 {
 	bool res = false;
@@ -153,6 +154,7 @@ bool Meter::RequestState
 		if( _requestFlags & RequestFlag_Static )
 		{
  			Msg* msg = new Msg( "MeterCmd_SupportedGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+			msg->SetInstance( this, _instance );
 			msg->Append( GetNodeId() );
 			msg->Append( 2 );
 			msg->Append( GetCommandClassId() );
@@ -165,7 +167,7 @@ bool Meter::RequestState
 
 	if( _requestFlags & RequestFlag_Dynamic )
 	{
-		res = RequestValue( _requestFlags );
+		res |= RequestValue( _requestFlags, 0, _instance );
 	}
 
 	return res;
@@ -179,73 +181,22 @@ bool Meter::RequestValue
 (
 	uint32 const _requestFlags,
 	uint8 const _dummy1,	// = 0 (not used)
-	uint8 const _dummy2		// = 0 (not used)
+	uint8 const _instance
 )
 {
-	bool res = false;
-
-	if( GetVersion() == 1 )
+	Msg* msg = new Msg( "MeterCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+	msg->SetInstance( this, _instance );
+	msg->Append( GetNodeId() );
+	msg->Append( 2 );
+	msg->Append( GetCommandClassId() );
+	msg->Append( MeterCmd_Get );
+	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	if( _requestFlags & RequestFlag_LowPriority )
 	{
-		Msg* msg = new Msg( "MeterCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-		msg->Append( GetNodeId() );
-		msg->Append( 2 );
-		msg->Append( GetCommandClassId() );
-		msg->Append( MeterCmd_Get );
-		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-		if( _requestFlags & RequestFlag_LowPriority )
-		{
-			msg->SetPriority( Msg::MsgPriority_Low );
-		}
-		GetDriver()->SendMsg( msg );
-		res = true;
+		msg->SetPriority( Msg::MsgPriority_Low );
 	}
-	else
-	{
-		if( Node* node = GetNodeUnsafe() )
-		{
-			Bitfield const* instances = GetInstances();
-			MultiInstance* multiInstance = static_cast<MultiInstance*>( node->GetCommandClass( MultiInstance::StaticGetCommandClassId() ) );
-			if( multiInstance != NULL || instances->GetNumSetBits() == 1 )
-			{
-				for( Bitfield::Iterator it = instances->Begin(); it != instances->End(); ++it)
-				{
-					for( uint8 i=0; i<8; ++i )
-					{
-						uint8 baseIndex = i<<2;
-
-						if( GetValue( *it, baseIndex ) )
-						{
-							if( *it == 1 )
-							{
-								Msg* msg = new Msg( "MeterCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-								msg->Append( GetNodeId() );
-								msg->Append( 3 );
-								msg->Append( GetCommandClassId() );
-								msg->Append( MeterCmd_Get );
-								msg->Append( (uint8)( i << 3 ) );
-								msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-								if( _requestFlags & RequestFlag_LowPriority )
-								{
-									msg->SetPriority( Msg::MsgPriority_Low );
-								}
-								GetDriver()->SendMsg( msg );
-								res = true;
-							}
-							else
-							{
-								uint8 data[3];
-								data[0] = GetCommandClassId();
-								data[1] = MeterCmd_Get;
-								data[2] = (uint8)( i << 3 );
-								multiInstance->SendEncap(data, 3, (uint8)*it, _requestFlags);
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-	return res;
+	GetDriver()->SendMsg( msg );
+	return true;
 }
 
 //-----------------------------------------------------------------------------
@@ -536,6 +487,7 @@ bool Meter::SetValue
 		if( button->IsPressed() )
 		{
 			Msg* msg = new Msg( "MeterCmd_Reset", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+			msg->SetInstance( this, _value.GetID().GetInstance() ); 
 			msg->Append( GetNodeId() );
 			msg->Append( 2 );
 			msg->Append( GetCommandClassId() );
