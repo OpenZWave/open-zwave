@@ -88,7 +88,7 @@ void WakeUp::Init
 	// that the controller will receive the wake-up notifications from
 	// the device.  Once this is done, we can request the rest of the node
 	// state.
-	RequestState( CommandClass::RequestFlag_Session );
+	RequestState( CommandClass::RequestFlag_Session, 1 );
 }
 
 //-----------------------------------------------------------------------------
@@ -97,12 +97,13 @@ void WakeUp::Init
 //-----------------------------------------------------------------------------
 bool WakeUp::RequestState
 (
-	uint32 const _requestFlags
+	uint32 const _requestFlags,
+	uint8 const _instance
 )
 {
 	if( _requestFlags & RequestFlag_Session )
 	{
-		return RequestValue( _requestFlags );
+		return RequestValue( _requestFlags, 0, _instance );
 	}
 
 	return false;
@@ -116,9 +117,15 @@ bool WakeUp::RequestValue
 (
 	uint32 const _requestFlags,
 	uint8 const _dummy1,	// = 0
-	uint8 const _dummy2		// = 0
+	uint8 const _instance
 )
 {
+	if( _instance != 1 )
+	{
+		// This command class doesn't work with multiple instances
+		return false;
+	}
+
 	// We won't get a response until the device next wakes up
 	Msg* msg = new Msg( "WakeUpCmd_IntervalGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 	msg->Append( GetNodeId() );

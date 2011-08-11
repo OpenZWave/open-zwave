@@ -50,12 +50,13 @@ enum IndicatorCmd
 //-----------------------------------------------------------------------------
 bool Indicator::RequestState
 (
-	uint32 const _requestFlags
+	uint32 const _requestFlags,
+	uint8 const _instance
 )
 {
 	if( _requestFlags & RequestFlag_Dynamic )
 	{
-		return RequestValue( _requestFlags );
+		return RequestValue( _requestFlags, 0, _instance );
 	}
 
 	return false;
@@ -69,10 +70,11 @@ bool Indicator::RequestValue
 (
 	uint32 const _requestFlags,
 	uint8 const _dummy1,	// = 0 (not used)
-	uint8 const _dummy2		// = 0 (not used)
+	uint8 const _instance
 )
 {
 	Msg* msg = new Msg( "IndicatorCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+	msg->SetInstance( this, _instance );
 	msg->Append( GetNodeId() );
 	msg->Append( 2 );
 	msg->Append( GetCommandClassId() );
@@ -127,6 +129,7 @@ bool Indicator::SetValue
 
 		Log::Write( "Indicator::SetValue - Setting indicator on node %d to %d", GetNodeId(), value->GetValue());
 		Msg* msg = new Msg( "Basic Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
+		msg->SetInstance( this, _value.GetID().GetInstance() );
 		msg->Append( GetNodeId() );
 		msg->Append( 3 );
 		msg->Append( GetCommandClassId() );

@@ -46,7 +46,7 @@ namespace OpenZWave
 		static string const StaticGetCommandClassName(){ return "COMMAND_CLASS_SENSOR_MULTILEVEL"; }
 
 		// From CommandClass
-		virtual bool RequestState( uint32 const _requestFlags );
+		virtual bool RequestState( uint32 const _requestFlags, uint8 const _instance );
 		virtual bool RequestValue( uint32 const _requestFlags, uint8 const _dummy = 0, uint8 const _instance = 0 );
 		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }
 		virtual string const GetCommandClassName()const{ return StaticGetCommandClassName(); }

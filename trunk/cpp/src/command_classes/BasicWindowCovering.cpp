@@ -72,6 +72,7 @@ bool BasicWindowCovering::SetValue
 		{
 			Log::Write( "BasicWindowCovering - Start Level Change (%s) on node %d", action ? "Open" : "Close", GetNodeId() );
 			Msg* msg = new Msg( "Basic Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
+			msg->SetInstance( this, _value.GetID().GetInstance() );
 			msg->Append( GetNodeId() );
 			msg->Append( 3 );
 			msg->Append( GetCommandClassId() );
@@ -85,6 +86,7 @@ bool BasicWindowCovering::SetValue
 		{
 			Log::Write( "BasicWindowCovering - Stop Level Change on node %d", GetNodeId() );
 			Msg* msg = new Msg( "Basic Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
+			msg->SetInstance( this, _value.GetID().GetInstance() );
 			msg->Append( GetNodeId() );
 			msg->Append( 2 );
 			msg->Append( GetCommandClassId() );

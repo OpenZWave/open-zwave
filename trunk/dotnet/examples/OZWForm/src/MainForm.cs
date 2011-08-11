@@ -318,15 +318,15 @@ namespace OZWForm
                 case ZWNotification.Type.NodeQueriesComplete:
                     {
 						// as an example, enable query of BASIC info (CommandClass = 0x20)
-						Node node = GetNode(m_notification.GetHomeId(), m_notification.GetNodeId());
-						if (node != null)
-						{
-							foreach (ZWValueID vid in node.Values)
-							{
-//								if (vid.GetCommandClassId() == 0x84)	// remove this "if" to poll all values
-									m_manager.EnablePoll(vid);
-							}
-						}
+                        Node node = GetNode(m_notification.GetHomeId(), m_notification.GetNodeId());
+                        //if (node != null)
+                        //{
+                        //    foreach (ZWValueID vid in node.Values)
+                        //    {
+                        //        if (vid.GetCommandClassId() == 0x84)	// remove this "if" to poll all values
+                        //            m_manager.EnablePoll(vid);
+                        //    }
+                        //}
 						toolStripStatusLabel1.Text = "Initializing...node " + node.ID + " query complete.";
 						break;
                     }

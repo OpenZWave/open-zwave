@@ -76,13 +76,14 @@ SensorAlarm::SensorAlarm
 //-----------------------------------------------------------------------------
 bool SensorAlarm::RequestState
 (
-	uint32 const _requestFlags
+	uint32 const _requestFlags,
+	uint8 const _instance
 )
 {
 	bool requests = false;
 	if( ( _requestFlags & RequestFlag_Static ) && HasStaticRequest( StaticRequest_Values ) )
 	{
-		requests = RequestValue( _requestFlags, 0xff );
+		requests = RequestValue( _requestFlags, 0xff, _instance );
 	}
 
 	if( _requestFlags & RequestFlag_Dynamic )
@@ -92,7 +93,7 @@ bool SensorAlarm::RequestState
 			if( NULL != GetValue( 1, i ) )
 			{
 				// There is a value for this alarm type, so request it
-				requests = RequestValue( _requestFlags, i );
+				requests |= RequestValue( _requestFlags, i, _instance );
 			}
 		}
 	}
@@ -108,13 +109,14 @@ bool SensorAlarm::RequestValue
 (
 	uint32 const _requestFlags,
 	uint8 const _alarmType,
-	uint8 const _dummy		// = 0 (not used)
+	uint8 const _instance
 )
 {
 	if( _alarmType == 0xff )
 	{
-		// Request the supported setpoints
+		// Request the supported alarm types
 		Msg* msg = new Msg( "Request Supported Alarm Types", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		msg->SetInstance( this, _instance );
 		msg->Append( GetNodeId() );
 		msg->Append( 2 );
 		msg->Append( GetCommandClassId() );
@@ -128,8 +130,9 @@ bool SensorAlarm::RequestValue
 	}
 	else
 	{
-		// Request the setpoint value
+		// Request the alarm state
 		Msg* msg = new Msg( "Request alarm state", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		msg->SetInstance( this, _instance );
 		msg->Append( GetNodeId() );
 		msg->Append( 3 );
 		msg->Append( GetCommandClassId() );

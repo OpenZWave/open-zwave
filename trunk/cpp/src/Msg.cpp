@@ -27,6 +27,8 @@
 
 #include "Defs.h"
 #include "Msg.h"
+#include "Node.h"
+#include "MultiInstance.h"
 
 using namespace OpenZWave;
 
@@ -57,7 +59,8 @@ Msg::Msg
 	m_length( 4 ),
 	m_targetNodeId( _targetNodeId ),
 	m_sendAttempts( 0 ),
-	m_priority( MsgPriority_Normal )
+	m_priority( MsgPriority_Normal ),
+	m_instance( 1 )
 {
 	if( _bReplyRequired )
 	{
@@ -71,6 +74,35 @@ Msg::Msg
 	m_buffer[3] = _function;
 }
 
+//-----------------------------------------------------------------------------
+// <Msg::SetInstance>
+// Used to enable wrapping with MultiInstance/MultiChannel during finalize.
+//-----------------------------------------------------------------------------
+void Msg::SetInstance
+(
+	CommandClass* _cc,
+	uint8 const _instance
+)
+{
+	if( _instance > 1 )
+	{
+		// Determine whether we should encapsulate the message in MultiInstance or MultiCommand
+		if( Node* node = _cc->GetNodeUnsafe() )
+		{
+			MultiInstance* micc = static_cast<MultiInstance*>( node->GetCommandClass( MultiInstance::StaticGetCommandClassId() ) );
+			if( micc )
+			{
+				m_expectedCommandClassId = MultiInstance::StaticGetCommandClassId();
+				m_instance = _instance;
+				if( micc->GetVersion() > 1 )
+				{
+					// Set the top bit to indicate MultiChannel rather than MultiInstance					
+					m_instance |= 0x80;
+				}
+			}
+		}	
+	}
+}
 
 //-----------------------------------------------------------------------------
 // <Msg::Append>
@@ -84,7 +116,6 @@ void Msg::Append
 	m_buffer[m_length++] = _data;
 }
 
- 
 //-----------------------------------------------------------------------------
 // <Msg::Finalize>
 // Fill in the length and checksum values for the message
@@ -95,6 +126,12 @@ void Msg::Finalize()
 	{
 		// Already finalized
 		return;
+	}
+
+	// Deal with encapsulation
+	if( m_instance != 1 )
+	{
+		Encap();
 	}
 
 	// Add the callback id
@@ -159,3 +196,56 @@ string Msg::GetAsString()
 
 	return str;
 }
+
+//-----------------------------------------------------------------------------
+// <Msg::Encap>
+// Encapsulate the data inside a MultiInstance/Multicommand message
+//-----------------------------------------------------------------------------
+void Msg::Encap
+(
+)
+{
+	char str[256];
+	if( m_buffer[3]	!= FUNC_ID_ZW_SEND_DATA )
+	{
+		return;
+	}
+
+	// Insert the encap header
+	if( m_instance & 0x80 )
+	{
+		// MultiChannel
+		for( uint32 i=m_length-1; i>=6; --i )
+		{
+			m_buffer[i+4] = m_buffer[i];
+		}
+
+		m_buffer[5] += 4;
+		m_buffer[6] = MultiInstance::StaticGetCommandClassId();
+		m_buffer[7] = MultiInstance::MultiChannelCmd_Encap;
+		m_buffer[8] = 0;
+		m_buffer[9] = m_instance & 0x7f;
+		m_length += 4;
+
+		snprintf( str, 256, "MultiChannel Encapsulated (instance=%d): %s", m_instance&0x7f, m_logText.c_str() );
+		m_logText = str;
+	}
+	else
+	{
+		// MultiInstance
+		for( uint32 i=m_length-1; i>=6; --i )
+		{
+			m_buffer[i+3] = m_buffer[i];
+		}
+
+		m_buffer[5] += 3;
+		m_buffer[6] = MultiInstance::StaticGetCommandClassId();
+		m_buffer[7] = MultiInstance::MultiInstanceCmd_Encap;
+		m_buffer[8] = m_instance;
+		m_length += 3;
+
+		snprintf( str, 256, "MultiInstance Encapsulated (instance=%d): %s", m_instance&0x7f, m_logText.c_str() );
+		m_logText = str;
+	}
+}
+

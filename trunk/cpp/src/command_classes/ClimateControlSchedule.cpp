@@ -117,13 +117,14 @@ void ClimateControlSchedule::WriteXML
 //-----------------------------------------------------------------------------
 bool ClimateControlSchedule::RequestState
 (
-	uint32 const _requestFlags
+	uint32 const _requestFlags,
+	uint8 const _instance
 )
 {
 	if( _requestFlags & RequestFlag_Session )
 	{
 		// See if the schedule has changed since last time
-		return RequestValue( _requestFlags );
+		return RequestValue( _requestFlags, 0, _instance );
 	}
 
 	return false;
@@ -137,11 +138,12 @@ bool ClimateControlSchedule::RequestValue
 (
 	uint32 const _requestFlags,
 	uint8 const _dummy1,	// = 0 (not used)
-	uint8 const _dummy2		// = 0 (not used)
+	uint8 const _instance
 )
 {
 	// See if the schedule has changed since last time
 	Msg* msg = new Msg( "ClimateControlScheduleCmd_ChangedGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+	msg->SetInstance( this, _instance );
 	msg->Append( GetNodeId() );
 	msg->Append( 2 );
 	msg->Append( GetCommandClassId() );
@@ -323,6 +325,7 @@ bool ClimateControlSchedule::SetValue
 		snprintf( str, 64, "Set the climate control schedule for %s on node %d", c_dayNames[idx], GetNodeId() );
 
 		Msg* msg = new Msg( str, GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		msg->SetInstance( this, instance );
 		msg->Append( GetNodeId() );
 		msg->Append( 30 );
 		msg->Append( GetCommandClassId() );
@@ -363,6 +366,7 @@ bool ClimateControlSchedule::SetValue
 			ValueList::Item const& item = state->GetItem();
 
 			Msg* msg = new Msg( "Set climate control schedule override state", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+			msg->SetInstance( this, instance );
 			msg->Append( GetNodeId() );
 			msg->Append( 4 );
 			msg->Append( GetCommandClassId() );

@@ -114,31 +114,16 @@ static char const* c_distanceUnits[] =
 //-----------------------------------------------------------------------------
 bool SensorMultilevel::RequestState
 (
-	uint32 const _requestFlags
+	uint32 const _requestFlags,
+	uint8 const _instance
 )
 {
-	bool res = false;
 	if( _requestFlags & RequestFlag_Dynamic )
 	{
-		if( Node* node = GetNodeUnsafe() )
-		{
-			MultiInstance* multiInstance = static_cast<MultiInstance*>( node->GetCommandClass( MultiInstance::StaticGetCommandClassId() ) );
-			if( multiInstance != NULL )
-			{
-				Bitfield const* instances = GetInstances();
-				for( Bitfield::Iterator it = instances->Begin(); it != instances->End(); ++it )
-				{
-					res |= RequestValue( _requestFlags, 0, (uint8)*it );
-				}
-			}
-		}
-		else
-		{
-			res = RequestValue( _requestFlags );
-		}
+		return RequestValue( _requestFlags, 0, _instance );
 	}
 
-	return res;
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -152,33 +137,18 @@ bool SensorMultilevel::RequestValue
 	uint8 const _instance
 )
 {
-	if( _instance > 1 )
+	Msg* msg = new Msg( "SensorMultilevelCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+	msg->SetInstance( this, _instance );
+	msg->Append( GetNodeId() );
+	msg->Append( 2 );
+	msg->Append( GetCommandClassId() );
+	msg->Append( SensorMultilevelCmd_Get );
+	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	if( _requestFlags & RequestFlag_LowPriority )
 	{
-		if( Node* node = GetNodeUnsafe() )
-		{
-			if( MultiInstance* multiInstance = static_cast<MultiInstance*>( node->GetCommandClass( MultiInstance::StaticGetCommandClassId() ) ) )
-			{
-				uint8 data[2];
-				data[0] = GetCommandClassId();
-				data[1] = SensorMultilevelCmd_Get;
-				multiInstance->SendEncap( data, 2, _instance, _requestFlags );
-			}
-		}
+		msg->SetPriority( Msg::MsgPriority_Low );
 	}
-	else
-	{
-		Msg* msg = new Msg( "SensorMultilevelCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-		msg->Append( GetNodeId() );
-		msg->Append( 2 );
-		msg->Append( GetCommandClassId() );
-		msg->Append( SensorMultilevelCmd_Get );
-		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-		if( _requestFlags & RequestFlag_LowPriority )
-		{
-			msg->SetPriority( Msg::MsgPriority_Low );
-		}
-		GetDriver()->SendMsg( msg );
-	}
+	GetDriver()->SendMsg( msg );
 	return true;
 }
 

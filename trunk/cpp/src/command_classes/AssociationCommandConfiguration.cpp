@@ -64,12 +64,13 @@ enum
 //-----------------------------------------------------------------------------
 bool AssociationCommandConfiguration::RequestState
 (
-	uint32 const _requestFlags
+	uint32 const _requestFlags,
+	uint8 const _instance
 )
 {
 	if( _requestFlags & RequestFlag_Session )
 	{
-		return RequestValue( _requestFlags );
+		return RequestValue( _requestFlags, 0, _instance );
 	}
 
 	return false;
@@ -83,9 +84,15 @@ bool AssociationCommandConfiguration::RequestValue
 (
 	uint32 const _requestFlags,
 	uint8 const _dummy1,	// = 0 (not used)
-	uint8 const _dummy2		// = 0 (not used)
+	uint8 const _instance
 )
 {
+	if( _instance != 1 )
+	{
+		// This command class doesn't work with multiple instances
+		return false;
+	}
+
 	Msg* msg = new Msg( "AssociationCommandConfigurationCmd_SupportedRecordsGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 	msg->Append( GetNodeId() );
 	msg->Append( 2 );
