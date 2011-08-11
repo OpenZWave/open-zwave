@@ -141,20 +141,21 @@ void ThermostatFanMode::WriteXML
 //-----------------------------------------------------------------------------
 bool ThermostatFanMode::RequestState
 (
-	uint32 const _requestFlags
+	uint32 const _requestFlags,
+	uint8 const _instance
 )
 {
 	bool requests = false;
 	if( ( _requestFlags & RequestFlag_Static ) && HasStaticRequest( StaticRequest_Values ) )
 	{
 		// Request the supported modes
-		requests = RequestValue( _requestFlags, ThermostatFanModeCmd_SupportedGet );
+		requests |= RequestValue( _requestFlags, ThermostatFanModeCmd_SupportedGet, _instance );
 	}
 
 	if( _requestFlags & RequestFlag_Dynamic )
 	{
 		// Request the current fan mode
-		requests = RequestValue( _requestFlags, ThermostatFanModeCmd_Get );
+		requests |= RequestValue( _requestFlags, ThermostatFanModeCmd_Get, _instance );
 	}
 
 	return requests;
@@ -168,13 +169,14 @@ bool ThermostatFanMode::RequestValue
 (
 	uint32 const _requestFlags,
 	uint8 const _getTypeEnum,
-	uint8 const _dummy			// = 0 (not used)
+	uint8 const _instance
 )
 {
 	if( _getTypeEnum == ThermostatFanModeCmd_SupportedGet )
 	{
 		// Request the supported modes
 		Msg* msg = new Msg( "Request Supported Thermostat Fan Modes", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		msg->SetInstance( this, _instance );
 		msg->Append( GetNodeId() );
 		msg->Append( 2 );
 		msg->Append( GetCommandClassId() );
@@ -192,6 +194,7 @@ bool ThermostatFanMode::RequestValue
 	{
 		// Request the current fan mode
 		Msg* msg = new Msg( "Request Current Thermostat Fan Mode", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		msg->SetInstance( this, _instance );
 		msg->Append( GetNodeId() );
 		msg->Append( 2 );
 		msg->Append( GetCommandClassId() );
@@ -286,6 +289,7 @@ bool ThermostatFanMode::SetValue
 		uint8 state = (uint8)value->GetItem().m_value;
 
 		Msg* msg = new Msg( "Set Thermostat Fan Mode", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+		msg->SetInstance( this, _value.GetID().GetInstance() );
 		msg->Append( GetNodeId() );
 		msg->Append( 3 );
 		msg->Append( GetCommandClassId() );

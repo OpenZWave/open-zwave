@@ -70,12 +70,13 @@ static char const* c_dayNames[] =
 //-----------------------------------------------------------------------------
 bool Clock::RequestState
 (
-	uint32 const _requestFlags
+	uint32 const _requestFlags,
+	uint8 const _instance
 )
 {
 	if( _requestFlags & RequestFlag_Dynamic )
 	{
-		return RequestValue( _requestFlags );
+		return RequestValue( _requestFlags, 0, _instance );
 	}
 
 	return false;
@@ -89,10 +90,11 @@ bool Clock::RequestValue
 (
 	uint32 const _requestFlags,
 	uint8 const _dummy1,	// = 0 (not used)
-	uint8 const _dummy2		// = 0 (not used)
+	uint8 const _instance
 )
 {
 	Msg* msg = new Msg( "ClockCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+	msg->SetInstance( this, _instance );
 	msg->Append( GetNodeId() );
 	msg->Append( 2 );
 	msg->Append( GetCommandClassId() );
@@ -169,6 +171,7 @@ bool Clock::SetValue
 		uint8 minute = minuteValue->GetValue();
 
 		Msg* msg = new Msg( "ClockCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+		msg->SetInstance( this, instance );
 		msg->Append( GetNodeId() );
 		msg->Append( 4 );
 		msg->Append( GetCommandClassId() );

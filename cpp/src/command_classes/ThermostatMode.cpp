@@ -150,20 +150,21 @@ void ThermostatMode::WriteXML
 //-----------------------------------------------------------------------------
 bool ThermostatMode::RequestState
 (
-	uint32 const _requestFlags
+	uint32 const _requestFlags,
+	uint8 const _instance
 )
 {
 	bool requests = false;
 	if( ( _requestFlags & RequestFlag_Static ) && HasStaticRequest( StaticRequest_Values ) )
 	{
 		// request supported mode list
-		requests = RequestValue( _requestFlags, ThermostatModeCmd_SupportedGet );
+		requests |= RequestValue( _requestFlags, ThermostatModeCmd_SupportedGet, _instance );
 	}
 
 	if( _requestFlags & RequestFlag_Dynamic )
 	{
 		// Request the current mode
-		requests = RequestValue( _requestFlags );
+		requests |= RequestValue( _requestFlags, 0, _instance );
 	}
 
 	return requests;
@@ -177,13 +178,14 @@ bool ThermostatMode::RequestValue
 (
 	uint32 const _requestFlags,
 	uint8 const _getTypeEnum,
-	uint8 const _dummy			// = 0 (not used)
+	uint8 const _instance
 )
 {
 	if( _getTypeEnum == ThermostatModeCmd_SupportedGet )
 	{
 		// Request the supported modes
 		Msg* msg = new Msg( "Request Supported Thermostat Modes", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		msg->SetInstance( this, _instance );
 		msg->Append( GetNodeId() );
 		msg->Append( 2 );
 		msg->Append( GetCommandClassId() );
@@ -201,6 +203,7 @@ bool ThermostatMode::RequestValue
 	{
 		// Request the current mode
 		Msg* msg = new Msg( "Request Current Thermostat Mode", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		msg->SetInstance( this, _instance );
 		msg->Append( GetNodeId() );
 		msg->Append( 2 );
 		msg->Append( GetCommandClassId() );

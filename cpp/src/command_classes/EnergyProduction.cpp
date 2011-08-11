@@ -65,20 +65,21 @@ static char const* c_energyParameterNames[] =
 //-----------------------------------------------------------------------------
 bool EnergyProduction::RequestState
 (
-	uint32 const _requestFlags
+	uint32 const _requestFlags,
+	uint8 const _instance
 )
 {
+	bool request = false;
 	if( _requestFlags & RequestFlag_Dynamic )
 	{
 		// Request each of the production values
-		RequestValue( _requestFlags, EnergyProductionIndex_Instant );
-		RequestValue( _requestFlags, EnergyProductionIndex_Total );
-		RequestValue( _requestFlags, EnergyProductionIndex_Today );
-		RequestValue( _requestFlags, EnergyProductionIndex_Time );
-		return true;
+		request |= RequestValue( _requestFlags, EnergyProductionIndex_Instant, _instance );
+		request |= RequestValue( _requestFlags, EnergyProductionIndex_Total, _instance );
+		request |= RequestValue( _requestFlags, EnergyProductionIndex_Today, _instance );
+		request |= RequestValue( _requestFlags, EnergyProductionIndex_Time, _instance );
 	}
 
-	return false;
+	return request;
 }
 
 //-----------------------------------------------------------------------------
@@ -89,11 +90,12 @@ bool EnergyProduction::RequestValue
 (
 	uint32 const _requestFlags,
 	uint8 const _valueEnum,		// one of EnergyProductionIndex enums
-	uint8 const _dummy
+	uint8 const _instance
 )
 {
 	Log::Write( "Requesting the %s value from node %d", c_energyParameterNames[_valueEnum], GetNodeId() );
 	Msg* msg = new Msg( "EnergyProductionCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+	msg->SetInstance( this, _instance );
 	msg->Append( GetNodeId() );
 	msg->Append( 3 );
 	msg->Append( GetCommandClassId() );

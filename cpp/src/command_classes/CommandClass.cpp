@@ -29,6 +29,7 @@
 #include <locale.h>
 #include "tinyxml.h"
 #include "CommandClass.h"
+#include "MultiInstance.h"
 #include "Msg.h"
 #include "Node.h"
 #include "Driver.h"
@@ -503,3 +504,34 @@ void CommandClass::ClearStaticRequest
 		}
 	}
 }
+
+//-----------------------------------------------------------------------------
+// <CommandClass::RequestStateForAllInstances>												   
+// Request current state from the device									   
+//-----------------------------------------------------------------------------
+bool CommandClass::RequestStateForAllInstances
+(
+	uint32 const _requestFlags
+)
+{
+	bool res = false;
+	if( Node* node = GetNodeUnsafe() )
+	{
+		MultiInstance* multiInstance = static_cast<MultiInstance*>( node->GetCommandClass( MultiInstance::StaticGetCommandClassId() ) );
+		if( multiInstance != NULL )
+		{
+			for( Bitfield::Iterator it = m_instances.Begin(); it != m_instances.End(); ++it )
+			{
+				res |= RequestState( _requestFlags, (uint8)*it );
+			}
+		}
+		else
+		{
+			res = RequestState( _requestFlags, 1 );
+		}
+	}
+
+	return res;
+}
+
+

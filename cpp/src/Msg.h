@@ -35,6 +35,8 @@
 
 namespace OpenZWave
 {
+	class CommandClass;
+
 	/** \brief Message object to be passed to and from devices on the Z-Wave network.
 	 */
 	class Msg
@@ -48,6 +50,8 @@ namespace OpenZWave
 
 		Msg( string const& _logtext, uint8 _targetNodeId, uint8 const _msgType, uint8 const _function, bool const _bCallbackRequired, bool const _bReplyRequired = true, uint8 const _expectedReply = 0, uint8 const _expectedCommandClassId = 0 );
 		~Msg(){}
+
+		void SetInstance( CommandClass* _cc, uint8 const _instance );	// Used to enable wrapping with MultiInstance/MultiChannel during finalize.
 
 		void Append( uint8 const _data );
 		void Finalize();
@@ -84,6 +88,8 @@ namespace OpenZWave
 		}
 
 	private:
+		void Encap();						// Encapsulate the data inside a MultiInstance/Multicommand message
+
 		string			m_logText;
 		bool			m_bFinal;
 		bool			m_bCallbackRequired;
@@ -96,6 +102,8 @@ namespace OpenZWave
 		
 		uint8			m_targetNodeId;
 		uint8			m_sendAttempts;
+
+		uint8			m_instance;			// If this value is not one, the message must be wrapped in a multiInstance or multiChannel command class
 
 		MsgPriority		m_priority;			// Defaults to MsgPriority_Normal
 

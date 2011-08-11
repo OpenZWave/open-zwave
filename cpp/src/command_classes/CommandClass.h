@@ -59,7 +59,7 @@ namespace OpenZWave
 
 		virtual void ReadXML( TiXmlElement const* _ccElement );
 		virtual void WriteXML( TiXmlElement* _ccElement );
-		virtual bool RequestState( uint32 const _requestFlags ){ return false; }
+		virtual bool RequestState( uint32 const _requestFlags, uint8 const _instance ){ return false; }
 		virtual bool RequestValue( uint32 const _requestFlags, uint8 const _index, uint8 const _instance ) { return false; }
 
 		virtual uint8 const GetCommandClassId()const = 0;
@@ -67,6 +67,8 @@ namespace OpenZWave
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 ) = 0;
 		virtual bool SetValue( Value const& _value ){ return false; }
 		virtual void SetVersion( uint8 const _version ){ m_version = _version; }
+
+		bool RequestStateForAllInstances( uint32 const _requestFlags );
 
 		// The highest version number of the command class implemented by OpenZWave.  We only need
 		// to do version gets on command classes that override this with a number greater than one.
