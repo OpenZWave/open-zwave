@@ -184,19 +184,30 @@ bool Meter::RequestValue
 	uint8 const _instance
 )
 {
-	Msg* msg = new Msg( "MeterCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-	msg->SetInstance( this, _instance );
-	msg->Append( GetNodeId() );
-	msg->Append( 2 );
-	msg->Append( GetCommandClassId() );
-	msg->Append( MeterCmd_Get );
-	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	if( _requestFlags & RequestFlag_LowPriority )
+	bool res = false;
+	for( uint8 i=0; i<8; ++i )
 	{
-		msg->SetPriority( Msg::MsgPriority_Low );
+		uint8 baseIndex = i<<2;
+
+		if( GetValue( _instance, baseIndex ) )
+		{
+			Msg* msg = new Msg( "MeterCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+			msg->SetInstance( this, _instance );
+			msg->Append( GetNodeId() );
+			msg->Append( 3 );
+			msg->Append( GetCommandClassId() );
+			msg->Append( MeterCmd_Get );
+			msg->Append( (uint8)( i << 3 ) );
+			msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+			if( _requestFlags & RequestFlag_LowPriority )
+			{
+				msg->SetPriority( Msg::MsgPriority_Low );
+			}
+			GetDriver()->SendMsg( msg );
+			res |= true;
+		}
 	}
-	GetDriver()->SendMsg( msg );
-	return true;
+	return res;
 }
 
 //-----------------------------------------------------------------------------
@@ -510,39 +521,8 @@ void Meter::CreateVars
 	uint8 const _instance
 )
 {
-	// Only Version 1 command classes create a default value for each instance.
-	// Later versions create values depending on the contents of the MeterCmd_ReportSupported message.
-	if( GetVersion() == 1 )
+	if( Node* node = GetNodeUnsafe() )
 	{
-		if( Node* node = GetNodeUnsafe() )
-		{
-			node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Unknown", "", true, false, "0.0" );
-		}
-	}
-	else if( _instance > 1 )
-	{
-		// For v2 & higher devices with MultiInstance support we arrive here.
-		// For instances that are the same we can just clone instance 1s variables.
-		// This code assumes the instances are the same since we currently have no way
-		// tell the difference.
-
-		if( Node* node = GetNodeUnsafe() )
-		{
-			for( uint8 i=0; i<8; ++i )
-			{
-				uint8 baseIndex = i<<2;
-				if( ValueDecimal* value = static_cast<ValueDecimal*>( GetValue( 1, baseIndex ) ) )
-				{
-					node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, baseIndex, value->GetLabel().c_str(), value->GetUnits().c_str(), true, false, "0.0" );
-				}
-			}
-
-			// Create the export flag
-			node->CreateValueBool( ValueID::ValueGenre_User, GetCommandClassId(), _instance, MeterIndex_Exporting, "Exporting", "", true, false, false );
-			if( GetValue( 1, MeterIndex_Reset) != NULL )
-			{
-				node->CreateValueButton( ValueID::ValueGenre_System, GetCommandClassId(), _instance, MeterIndex_Reset, "Reset" );
-			}
-		}
+		node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Unknown", "", true, false, "0.0" );
 	}
 }
