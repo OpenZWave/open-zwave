@@ -95,6 +95,7 @@ Driver::Driver
 	m_init( false ),
 	m_awakeNodesQueried( false ),
 	m_allNodesQueried( false ),
+	m_notifytransactions( false ),
 	m_controllerPath( _controllerPath ),
 	m_homeId( 0 ),
 	m_controllerThread( new Thread( "serial" ) ),
@@ -1445,9 +1446,7 @@ void Driver::ProcessMsg
 				Log::Write( "" );
 				RemoveMsg();
 
-				bool notify = false;
-				Options::Get()->GetOptionAsBool( "NotifyTransactions", &notify );
-				if( notify )
+				if( m_notifytransactions )
 				{
 					Notification notification( Notification::Type_MsgComplete );
 					notification.SetHomeAndNodeIds( m_homeId, 0xff );

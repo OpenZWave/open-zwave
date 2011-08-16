@@ -139,6 +139,7 @@ namespace OpenZWave
 		bool					m_init;					/**< Set to true once the driver has been initialised */
 		bool					m_awakeNodesQueried;	/**< Set to true once the driver has polled all awake nodes */
 		bool					m_allNodesQueried;		/**< Set to true once the driver has polled all nodes */
+		bool					m_notifytransactions; 
 
 	//-----------------------------------------------------------------------------
 	//	Configuration
