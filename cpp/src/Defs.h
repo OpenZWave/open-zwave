@@ -106,44 +106,46 @@ namespace OpenZWave
 
 #define RECEIVE_STATUS_TYPE_BROAD	 				0x04
 
-#define FUNC_ID_SERIAL_API_GET_INIT_DATA			0x02
-#define FUNC_ID_APPLICATION_COMMAND_HANDLER			0x04
+#define FUNC_ID_SERIAL_API_GET_INIT_DATA		0x02
+#define FUNC_ID_APPLICATION_COMMAND_HANDLER		0x04
 #define FUNC_ID_ZW_GET_CONTROLLER_CAPABILITIES		0x05
-#define FUNC_ID_SERIAL_API_SET_TIMEOUTS 			0x06
-#define FUNC_ID_SERIAL_API_GET_CAPABILITIES			0x07
-#define FUNC_ID_SERIAL_API_SOFT_RESET				0x08
+#define FUNC_ID_SERIAL_API_SET_TIMEOUTS 		0x06
+#define FUNC_ID_SERIAL_API_GET_CAPABILITIES		0x07
+#define FUNC_ID_SERIAL_API_SOFT_RESET			0x08
 
-#define FUNC_ID_ZW_SEND_DATA						0x13
-#define FUNC_ID_ZW_GET_VERSION						0x15
-#define FUNC_ID_ZW_R_F_POWER_LEVEL_SET              0x17
-#define FUNC_ID_ZW_MEMORY_GET_ID					0x20
-#define FUNC_ID_MEMORY_GET_BYTE                     0x21
-#define FUNC_ID_ZW_READ_MEMORY						0x23
+#define FUNC_ID_ZW_SEND_DATA				0x13
+#define FUNC_ID_ZW_GET_VERSION				0x15
+#define FUNC_ID_ZW_R_F_POWER_LEVEL_SET			0x17
+#define FUNC_ID_ZW_MEMORY_GET_ID			0x20
+#define FUNC_ID_MEMORY_GET_BYTE				0x21
+#define FUNC_ID_ZW_READ_MEMORY				0x23
 
-#define FUNC_ID_ZW_SET_LEARN_NODE_STATE				0x40	// Not implemented
-#define FUNC_ID_ZW_GET_NODE_PROTOCOL_INFO			0x41	// Get protocol info (baud rate, listening, etc.) for a given node
-#define FUNC_ID_ZW_SET_DEFAULT						0x42	// Reset controller and node info to default (original) values
-#define FUNC_ID_ZW_NEW_CONTROLLER					0x43	// Not implemented
+#define FUNC_ID_ZW_SET_LEARN_NODE_STATE			0x40	// Not implemented
+#define FUNC_ID_ZW_GET_NODE_PROTOCOL_INFO		0x41	// Get protocol info (baud rate, listening, etc.) for a given node
+#define FUNC_ID_ZW_SET_DEFAULT				0x42	// Reset controller and node info to default (original) values
+#define FUNC_ID_ZW_NEW_CONTROLLER			0x43	// Not implemented
 #define FUNC_ID_ZW_REPLICATION_COMMAND_COMPLETE		0x44	// Replication isn't implemented (yet)
-#define FUNC_ID_ZW_REPLICATION_SEND_DATA			0x45	// Replication isn't implemented (yet)
-#define FUNC_ID_ZW_ASSIGN_RETURN_ROUTE				0x46	// Assign a return route from the specified node to the controller
-#define FUNC_ID_ZW_DELETE_RETURN_ROUTE				0x47	// Delete all return routes from the specified node
+#define FUNC_ID_ZW_REPLICATION_SEND_DATA		0x45	// Replication isn't implemented (yet)
+#define FUNC_ID_ZW_ASSIGN_RETURN_ROUTE			0x46	// Assign a return route from the specified node to the controller
+#define FUNC_ID_ZW_DELETE_RETURN_ROUTE			0x47	// Delete all return routes from the specified node
 #define FUNC_ID_ZW_REQUEST_NODE_NEIGHBOR_UPDATE		0x48	// Ask the specified node to update its neighbors (then read them from the controller)
-#define FUNC_ID_ZW_APPLICATION_UPDATE				0x49	// Get a list of supported (and controller) command classes
-#define FUNC_ID_ZW_ADD_NODE_TO_NETWORK				0x4a	// Control the addnode (or addcontroller) process...start, stop, etc.
-#define FUNC_ID_ZW_REMOVE_NODE_FROM_NETWORK			0x4b	// Control the removenode (or removecontroller) process...start, stop, etc.
-#define FUNC_ID_ZW_CREATE_NEW_PRIMARY				0x4c	// Control the createnewprimary process...start, stop, etc.
-#define FUNC_ID_ZW_CONTROLLER_CHANGE				0x4d	// Control the transferprimary process...start, stop, etc.
-#define FUNC_ID_ZW_SET_LEARN_MODE					0x50	// Put a controller into learn mode for replication/ receipt of configuration info
-#define FUNC_ID_ZW_ENABLE_SUC						0x52	// Make a controller a Static Update Controller
-#define FUNC_ID_ZW_REQUEST_NETWORK_UPDATE			0x53	// Network update for a SUC(?)
-#define FUNC_ID_ZW_SET_SUC_NODE_ID					0x54	// Identify a Static Update Controller node id
-#define FUNC_ID_ZW_GET_SUC_NODE_ID					0x56	// Try to retrieve a Static Update Controller node id (zero if no SUC present)
-#define FUNC_ID_ZW_REQUEST_NODE_INFO				0x60	// Get info (supported command classes) for the specified node
-#define FUNC_ID_ZW_REMOVE_FAILED_NODE_ID			0x61	// Mark a specified node id as failed
-#define FUNC_ID_ZW_IS_FAILED_NODE_ID                0x62	// Check to see if a specified node has failed
-#define FUNC_ID_ZW_REPLACE_FAILED_NODE              0x63	// Remove a failed node from the controller's list (?)
-#define FUNC_ID_ZW_GET_ROUTING_INFO		            0x80	// Get a specified node's neighbor information from the controller
+#define FUNC_ID_ZW_APPLICATION_UPDATE			0x49	// Get a list of supported (and controller) command classes
+#define FUNC_ID_ZW_ADD_NODE_TO_NETWORK			0x4a	// Control the addnode (or addcontroller) process...start, stop, etc.
+#define FUNC_ID_ZW_REMOVE_NODE_FROM_NETWORK		0x4b	// Control the removenode (or removecontroller) process...start, stop, etc.
+#define FUNC_ID_ZW_CREATE_NEW_PRIMARY			0x4c	// Control the createnewprimary process...start, stop, etc.
+#define FUNC_ID_ZW_CONTROLLER_CHANGE			0x4d	// Control the transferprimary process...start, stop, etc.
+#define FUNC_ID_ZW_SET_LEARN_MODE			0x50	// Put a controller into learn mode for replication/ receipt of configuration info
+#define FUNC_ID_ZW_ENABLE_SUC				0x52	// Make a controller a Static Update Controller
+#define FUNC_ID_ZW_REQUEST_NETWORK_UPDATE		0x53	// Network update for a SUC(?)
+#define FUNC_ID_ZW_SET_SUC_NODE_ID			0x54	// Identify a Static Update Controller node id
+#define FUNC_ID_ZW_GET_SUC_NODE_ID			0x56	// Try to retrieve a Static Update Controller node id (zero if no SUC present)
+#define FUNC_ID_ZW_REQUEST_NODE_INFO			0x60	// Get info (supported command classes) for the specified node
+#define FUNC_ID_ZW_REMOVE_FAILED_NODE_ID		0x61	// Mark a specified node id as failed
+#define FUNC_ID_ZW_IS_FAILED_NODE_ID			0x62	// Check to see if a specified node has failed
+#define FUNC_ID_ZW_REPLACE_FAILED_NODE			0x63	// Remove a failed node from the controller's list (?)
+#define FUNC_ID_ZW_GET_ROUTING_INFO			0x80	// Get a specified node's neighbor information from the controller
+#define FUNC_ID_ZW_SET_PROMISCUOUS_MODE			0xD0	// Set controller into promiscuous mode to listen to all frames
+#define FUNC_ID_PROMISCUOUS_APPLICATION_COMMAND_HANDLER		0xD1
 
 #define ADD_NODE_ANY								0x01
 #define ADD_NODE_CONTROLLER							0x02

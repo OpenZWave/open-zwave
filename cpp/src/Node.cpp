@@ -517,6 +517,11 @@ uint32 Node::GetNeighbors
 	// determine how many neighbors there are
 	int i;
 	uint32 numNeighbors = 0;
+	if( m_queryStage < QueryStage_Session )
+	{
+		*o_neighbors = NULL;
+		return 0;
+	}
 	for( i = 0; i < 29; i++ )
 	{
 		for( unsigned char mask = 0x80; mask != 0; mask >>= 1 )

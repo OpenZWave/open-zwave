@@ -89,26 +89,26 @@ bool HidControllerImpl::Open
 	m_hHidController = hid_open( _vendorId, _productId, NULL );
 	if ( !m_hHidController )
 	{   
-		Log::Write( "Cannot find specified HID port with VID:%04hx and PID:0x%04hx.\n", _vendorId, _productId );
+		Log::Write( "Cannot find specified HID port with VID:%04hx and PID:0x%04hx.", _vendorId, _productId );
 
 		// Enumerate connected HIDs for debugging purposes
 		// Note: most OS intentionally hide keyboard/mouse devices from HID access
 		struct hid_device_info *devices, *currentDevice;
-		devices = hid_enumerate(0x0, 0x0);
+		devices = hid_enumerate( 0x0, 0x0 );
 		currentDevice = devices;
 
-		Log::Write( "Enumerating connected HIDs:\n" );
-		while (currentDevice)
-			{
-			  Log::Write( "\tVID:%04hx\tPID:0x%04hx\tSN:%ls\tMfg:%ls\tProd:%ls\tPath:%s\n",
-				      currentDevice->vendor_id,
-				      currentDevice->product_id,
-				      currentDevice->serial_number,
-				      currentDevice->manufacturer_string,
-				      currentDevice->product_string,
-				      currentDevice->path);
-			  currentDevice = currentDevice->next;
-			}
+		Log::Write( "Enumerating connected HIDs:" );
+		while( currentDevice )
+		{
+			Log::Write( "\tVID:%04hx\tPID:0x%04hx\tSN:%ls\tMfg:%ls\tProd:%ls\tPath:%s",
+				    currentDevice->vendor_id,
+				    currentDevice->product_id,
+				    currentDevice->serial_number,
+				    currentDevice->manufacturer_string,
+				    currentDevice->product_string,
+				    currentDevice->path);
+			currentDevice = currentDevice->next;
+		}
 		hid_free_enumeration( devices );
 
 		goto HidOpenFailure;
@@ -222,7 +222,7 @@ uint32 HidControllerImpl::Read
   	if( !m_hidControllerOpen )
 	{
 	  	//Error
-		Log::Write( "Error: HID port must be opened before reading\n" );
+		Log::Write( "Error: HID port must be opened before reading" );
 		return 0;
 	}
 
@@ -275,8 +275,7 @@ uint32 HidControllerImpl::Read
 	return _length;
 HidPortError:
 	//Error
-	Log::Write( "Error: HID port returned error reading rest of packet: 0x%08hx, HIDAPI error string:", m_hidFeatureReportReadBufferBytes );
-	Log::Write("%ls\n", hid_error(m_hHidController));
+	Log::Write( "Error: HID port returned error reading rest of packet: %d, HIDAPI error string: %ls", m_hidFeatureReportReadBufferBytes, hid_error(m_hHidController));
 	return 0;
 }
 
@@ -293,14 +292,14 @@ uint32 HidControllerImpl::Write
 	if( !m_hidControllerOpen )
 	{
 		//Error
-		Log::Write( "Error: HID port must be opened before writing\n" );
+		Log::Write( "Error: HID port must be opened before writing" );
 		return 0;
 	}
 
 	if ( FEATURE_REPORT_LENGTH - 2 < _length)
 	  {
 		//Error
-		Log::Write( "Error: Write buffer length %d exceeded feature report data capacity %d\n",
+		Log::Write( "Error: Write buffer length %d exceeded feature report data capacity %d",
                     _length,
                     FEATURE_REPORT_LENGTH - 2 );
 		return 0;
@@ -320,9 +319,7 @@ uint32 HidControllerImpl::Write
 	if (bytesSent < 2)
 	{
 		//Error
-        	Log::Write( "Error: HID port returned error sending bytes: 0x%08hx, HIDAPI error string:", bytesSent );
-		const wchar_t* errString = hid_error( m_hHidController );
-		Log::Write( "%ls\n", errString );
+		Log::Write( "Error: HID port returned error sending bytes: %d, HIDAPI error string: %ls", bytesSent, hid_error( m_hHidController ) );
 		return 0;
 	}
 
@@ -373,18 +370,13 @@ bool HidControllerImpl::Wait
 				default:
 				{
 	                		//Error
-					Log::Write( "Error: HID port returned unexpected input report data in byte 2 during Wait(): 0x%08hx\n", inputReport[2] );
+					Log::Write( "Error: HID port returned unexpected input report data in byte 2 during Wait(): 0x%08hx", inputReport[2] );
 					return false;
 					break;
 				}
 			}
 			// continue looping until some rx feature report data is reported via input report
 		}
-
-        	//Error
-		Log::Write( "Error: HID port returned error reading input bytes: 0x%08hx, HIDAPI error string:", hidApiResult );
-		const wchar_t* errString = hid_error( m_hHidController );
-		Log::Write( "%ls\n", errString );
 	}
 
 	return false;
@@ -406,7 +398,7 @@ int HidControllerImpl::GetFeatureReport
 	result = hid_get_feature_report( m_hHidController, _buffer, _length );
 	if (result < 0)
 	{
-        	Log::Write( "Error: HID GetFeatureReport on ID 0x%hx returned (0x%.8x)\n", _reportId, result );
+        	Log::Write( "Error: HID GetFeatureReport on ID 0x%hx returned (0x%.8x)", _reportId, result );
 	}
 	return result;
 }
@@ -426,7 +418,7 @@ int HidControllerImpl::SendFeatureReport
 	result = hid_send_feature_report( m_hHidController, _data, _length );
 	if (result < 0)
 	{
-        	Log::Write( "Error: HID SendFeatureReport on ID 0x%hx returned (0x%.8x)\n", _data[0], result );
+        	Log::Write( "Error: HID SendFeatureReport on ID 0x%hx returned (0x%.8x)", _data[0], result );
 	}
 	return result;
 }

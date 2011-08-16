@@ -116,29 +116,39 @@ Driver::Driver
 	m_controllerCallback( NULL ),
 	m_controllerCallbackContext( NULL ),
 	m_controllerAdded( false ),
-	m_controllerCommandNode( 0 )
+	m_controllerCommandNode( 0 ),
+	m_SOFCnt( 0 ),
+	m_ACKWaiting( 0 ),
+	m_readAborts( 0 ),
+	m_badChecksum( 0 ),
+	m_readCnt( 0 ),
+	m_writeCnt( 0 ),
+	m_CANCnt( 0 ),
+	m_NAKCnt( 0 ),
+	m_ACKCnt( 0 ),
+	m_OOFCnt( 0 )
 {
 	// Clear the nodes array
 	memset( m_nodes, 0, sizeof(Node*) * 256 );
     
-    switch (_interface)
-    {
+	switch (_interface)
+	{
 		case ControllerInterface_Serial:
-        {
-            m_controller = (IController*) new SerialController();
-            break;
-        }
+		{
+			m_controller = (IController*) new SerialController();
+			break;
+		}
 		case ControllerInterface_Hid:
-        {
-            m_controller = (IController*) new HidController();
-            break;
-        }
+		{
+			m_controller = (IController*) new HidController();
+			break;
+		}
 		default:
-        {
-            m_controller = (IController*) new SerialController();
-            break;
-        }
-    }
+		{
+			m_controller = (IController*) new SerialController();
+			break;
+		}
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -159,10 +169,11 @@ Driver::~Driver
 	m_exitEvent->Set();
 	m_wakeEvent->Set();
 	m_pollThread->Stop();
-	m_controllerThread->Stop();
-	m_driverThread->Stop();
 
 	delete m_controller;
+
+	m_controllerThread->Stop();
+	m_driverThread->Stop();
 
 	delete m_pollThread;
 	delete m_controllerThread;
@@ -301,6 +312,7 @@ void Driver::DriverThreadProc
 									{
 										node->m_queryStageCompleted = true;
 									}
+									m_dropped++;
 									RemoveMsg();
 								}
 								else
@@ -329,6 +341,7 @@ void Driver::DriverThreadProc
 													{
 														node->m_queryStageCompleted = true;
 													}
+													m_dropped++;
 													RemoveMsg();
 												}
 											}
@@ -336,7 +349,8 @@ void Driver::DriverThreadProc
 											{
 												// Node is listening, so we'll just retry sending the message.
 												Log::Write( "Resending message (attempt %d)", msg->GetSendAttempts() );
-											}
+												m_retries++;
+}
 										}
 									}
 								}
@@ -418,12 +432,16 @@ bool Driver::Init
 	uint8 nak = NAK;
 	m_controller->Write( &nak, 1 );
 
-    // Get/set ZWave controller information in its preferred initialization order
-    list<Msg*>* const pMsgInitArray = m_controller->GetMsgInitializationSequence();
-    for (list<Msg*>::iterator it = pMsgInitArray->begin(); it != pMsgInitArray->end(); it++)
-    {
-        SendMsg(*it);
-    }
+	// Get/set ZWave controller information in its preferred initialization order
+	list<Msg*>* const pMsgInitArray = m_controller->GetMsgInitializationSequence();
+	for (list<Msg*>::iterator it = pMsgInitArray->begin(); it != pMsgInitArray->end(); it++)
+	{
+		SendMsg(*it);
+	}
+	//If we ever want promiscuous mode uncomment this code.
+	//Msg* msg = new Msg( "FUNC_ID_ZW_SET_PROMISCUOUS_MODE", 0xff, REQUEST, FUNC_ID_ZW_SET_PROMISCUOUS_MODE, false, false );
+	//msg->Append( 0xff );
+	//SendMsg( msg );
 
 	// Init successful
 	return true;
@@ -769,6 +787,7 @@ bool Driver::WriteMsg()
 			Log::Write( "" );
 			Log::Write( "Sending command (Callback ID=0x%.2x, Expected Reply=0x%.2x) - %s", msg->GetCallbackId(), msg->GetExpectedReply(), msg->GetAsString().c_str() );
 			m_controller->Write( msg->GetBuffer(), msg->GetLength() );
+			m_writeCnt++;
 			dataWritten = true;
 		}
 		else
@@ -945,14 +964,16 @@ bool Driver::IsControllerCommand
 	// ranges of commands are used to enhance performance
 	// the commands identified as "Controller Commands" needs to be reviewed as we
 	// understand the protocol better and implement handlers
-	if( ( _command >= FUNC_ID_ZW_SET_DEFAULT ) && 
-		( _command <= FUNC_ID_ZW_REQUEST_NODE_NEIGHBOR_UPDATE ) )
+	if( ( _command >= FUNC_ID_ZW_SET_DEFAULT ) && // 0x42
+		( _command <= FUNC_ID_ZW_REQUEST_NODE_NEIGHBOR_UPDATE ) ) // 0x48
 			return true;
-	if( ( _command >= FUNC_ID_ZW_ADD_NODE_TO_NETWORK ) &&
-		( _command <= FUNC_ID_ZW_SET_LEARN_MODE ) )
+	if( ( _command >= FUNC_ID_ZW_ADD_NODE_TO_NETWORK ) && // 0x4a
+		( _command <= FUNC_ID_ZW_SET_LEARN_MODE ) )   // 0x50
 			return true;
-	if( ( _command >= FUNC_ID_ZW_REMOVE_FAILED_NODE_ID ) &&
-		( _command <= FUNC_ID_ZW_REPLACE_FAILED_NODE ) )
+	if( ( _command >= FUNC_ID_ZW_REMOVE_FAILED_NODE_ID ) && // 0x61
+		( _command <= FUNC_ID_ZW_REPLACE_FAILED_NODE ) ) // 0x63
+			return true;
+	if( _command == FUNC_ID_ZW_GET_ROUTING_INFO ) // 0x80
 			return true;
 
 	return false;
@@ -982,9 +1003,11 @@ bool Driver::ReadMsg
 	{
 		case SOF:
 		{
+			m_SOFCnt++;
 			if( m_waitingForAck )
 			{
 				Log::Write( "Unsolicited message received while waiting for ACK." );
+				m_ACKWaiting++;
 			}
 
 			// Read the length byte.  Keep trying until we get it.
@@ -1005,6 +1028,7 @@ bool Driver::ReadMsg
 			if( loops == 10 )
 			{
 				Log::Write( "100ms passed without finding the length byte...aborting frame read");
+				m_readAborts++;
 				break;
 			}
 
@@ -1028,6 +1052,7 @@ bool Driver::ReadMsg
 			if( loops == 50 )
 			{
 				Log::Write( "500ms passed without reading the rest of the frame...aborting frame read" );
+				m_readAborts++;
 				break;
 			}
 
@@ -1061,12 +1086,14 @@ bool Driver::ReadMsg
 				uint8 ack = ACK;
 				m_controller->Write( &ack, 1 );
 
+				m_readCnt++;
 				// Process the received message
 				ProcessMsg( &buffer[2] );
 			}
 			else
 			{
 				Log::Write( "Checksum incorrect - sending NAK" );
+				m_badChecksum++;
 				uint8 nak = NAK;
 				m_controller->Write( &nak, 1 );
 			}
@@ -1076,6 +1103,7 @@ bool Driver::ReadMsg
 		case CAN:
 		{
 			Log::Write( "CAN received...triggering resend" );
+			m_CANCnt++;
 			TriggerResend();
 			break;
 		}
@@ -1083,6 +1111,7 @@ bool Driver::ReadMsg
 		case NAK:
 		{
 			Log::Write( "NAK received...triggering resend" );
+			m_NAKCnt++;
 			TriggerResend();
 			break;
 		}
@@ -1090,6 +1119,7 @@ bool Driver::ReadMsg
 		case ACK:
 		{
 			Log::Write( "  ACK received CallbackId 0x%.2x Reply 0x%.2x", m_expectedCallbackId, m_expectedReply );
+			m_ACKCnt++;
 			m_waitingForAck = false;
 			
 			if( ( 0 == m_expectedCallbackId ) && ( 0 == m_expectedReply ) )
@@ -1103,6 +1133,7 @@ bool Driver::ReadMsg
 		default:
 		{
 			Log::Write( "ERROR! Out of frame flow! (0x%.2x).  Sending NAK.", buffer[0] );
+			m_OOFCnt++;
 			uint8 nak = NAK;
 			m_controller->Write( &nak, 1 );
 			break;
@@ -1397,6 +1428,12 @@ void Driver::ProcessMsg
 			{
 				Log::Write( "" );
 				HandleReplaceFailedNodeRequest( _data );
+				break;
+			}
+			case FUNC_ID_PROMISCUOUS_APPLICATION_COMMAND_HANDLER:
+			{
+				Log::Write( "" );
+				HandlePromiscuousApplicationCommandHandlerRequest( _data );
 				break;
 			}
 			default:
@@ -1990,6 +2027,7 @@ bool Driver::HandleSendDataRequest
 					{
 						node->m_queryStageCompleted = true;
 					}
+					m_dropped++;
 					RemoveMsg();
 					messageRemoved = true;
 				}
@@ -2459,6 +2497,21 @@ void Driver::HandleApplicationCommandHandlerRequest
 			node->ApplicationCommandHandler( _data );
 		}
 	}
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::HandlePromiscuousApplicationCommandHandlerRequest>
+// Process a request from the Z-Wave PC interface when in promiscuous mode.
+//-----------------------------------------------------------------------------
+void Driver::HandlePromiscuousApplicationCommandHandlerRequest
+(
+	uint8* _data
+)
+{
+	//uint8 nodeId = _data[3];
+	//uint8 len = _data[4];
+	//uint8 classId = _data[5];
+	//uint8 destNodeId = _data[5+len];
 }
 
 //-----------------------------------------------------------------------------
@@ -4338,4 +4391,28 @@ bool Driver::HandleReadMemoryResponse
 	bool res = true;
 	Log::Write("Received reply to FUNC_ID_MEMORY_GET_BYTE");
 	return res; 
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::GetDriverStatistics>
+// Return driver statistics
+//-----------------------------------------------------------------------------
+void Driver::GetDriverStatistics
+(
+	DriverData* _data
+)
+{
+	_data->s_SOFCnt = m_SOFCnt;
+	_data->s_ACKWaiting = m_ACKWaiting;
+	_data->s_readAborts = m_readAborts;
+	_data->s_badChecksum = m_badChecksum;
+	_data->s_readCnt = m_readCnt;
+	_data->s_writeCnt = m_writeCnt;
+	_data->s_writeCnt = m_writeCnt;
+	_data->s_CANCnt = m_CANCnt;
+	_data->s_NAKCnt = m_NAKCnt;
+	_data->s_ACKCnt = m_ACKCnt;
+	_data->s_OOFCnt = m_OOFCnt;
+	_data->s_dropped = m_dropped;
+	_data->s_retries = m_retries;
 }
