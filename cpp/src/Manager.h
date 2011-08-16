@@ -1305,7 +1305,7 @@ namespace OpenZWave
 		 * - Driver:: ControllerCommand_TransferPrimaryRole	(Not yet implemented) - Add a new controller to the network and
 		 * make it the primary.  The existing primary will become a secondary controller.  
 		 * - Driver::ControllerCommand_RequestNetworkUpdate - Update the controller with network information from the SUC/SIS.
-		 * - Driver::ControllerCommand_RequestNodeNeighborUpdate - Get a node to rebuild it's neighbour list.  This method also does ControllerCommand_RequestNodeNeighbors afterwards.
+		 * - Driver::ControllerCommand_RequestNodeNeighborUpdate - Get a node to rebuild its neighbour list.  This method also does ControllerCommand_RequestNodeNeighbors afterwards.
 		 * - Driver::ControllerCommand_AssignReturnRoute - Assign a network return route to a device.
 		 * - Driver::ControllerCommand_DeleteAllReturnRoutes - Delete all network return routes from a device.
 		 * <p> Callbacks

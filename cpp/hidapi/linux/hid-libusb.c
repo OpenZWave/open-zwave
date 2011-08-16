@@ -244,7 +244,7 @@ static int get_usage(uint8_t *report_descriptor, size_t size,
 		if (usage_page_found && usage_found)
 			return 0; /* success */
 		
-		/* Skip over this key and it's associated data */
+		/* Skip over this key and its associated data */
 		i += data_len + key_size;
 	}
 	
