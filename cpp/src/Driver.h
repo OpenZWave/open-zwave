@@ -453,7 +453,7 @@ namespace OpenZWave
 			ControllerCommand_ReplaceFailedNode,			/**< Replace a non-responding node with another. The node must be in the controller's list of failed nodes for this command to succeed. */
 			ControllerCommand_TransferPrimaryRole,			/**< Make a different controller the primary. */
 			ControllerCommand_RequestNetworkUpdate,			/**< Request network information from the SUC/SIS. */
-			ControllerCommand_RequestNodeNeighborUpdate,	/**< Get a node to rebuild it's neighbour list.  This method also does ControllerCommand_RequestNodeNeighbors */
+			ControllerCommand_RequestNodeNeighborUpdate,	/**< Get a node to rebuild its neighbour list.  This method also does ControllerCommand_RequestNodeNeighbors */
 			ControllerCommand_AssignReturnRoute,			/**< Assign a network return routes to a device. */
 			ControllerCommand_DeleteAllReturnRoutes			/**< Delete all return routes from a device. */
 		};
