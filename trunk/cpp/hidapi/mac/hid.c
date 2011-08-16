@@ -42,6 +42,7 @@ struct hid_device_ {
 	int uses_numbered_reports;
 	int disconnected;
 	CFStringRef run_loop_mode;
+	CFRunLoopRef runloopref;
 	uint8_t *input_report_buf;
 	struct input_report *input_reports;
 	pthread_mutex_t mutex;
@@ -624,7 +625,8 @@ int HID_API_EXPORT hid_read(hid_device *dev, unsigned char *data, size_t length)
 	   Need to get some from the OS. */
 
 	/* Move the device's run loop to this thread. */
-	IOHIDDeviceScheduleWithRunLoop(dev->device_handle, CFRunLoopGetCurrent(), dev->run_loop_mode);
+	dev->runloopref = CFRunLoopGetCurrent();
+	IOHIDDeviceScheduleWithRunLoop(dev->device_handle, dev->runloopref, dev->run_loop_mode);
 	
 	if (dev->blocking) {
 		/* Run the Run Loop until it stops timing out. In other
@@ -633,7 +635,7 @@ int HID_API_EXPORT hid_read(hid_device *dev, unsigned char *data, size_t length)
 		SInt32 code;
 		while (1) {
 			code = CFRunLoopRunInMode(dev->run_loop_mode, 1000, TRUE);
-			
+
 			/* Return if the device has been disconnected */
 			if (code == kCFRunLoopRunFinished) {
 				dev->disconnected = 1;
@@ -729,6 +731,8 @@ void HID_API_EXPORT hid_close(hid_device *dev)
 	if (!dev)
 		return;
 	
+	CFRunLoopStop(dev->runloopref);
+
 	/* Close the OS handle to the device, but only if it's not
 	   been unplugged. If it's been unplugged, then calling
 	   IOHIDDeviceClose() will crash. */

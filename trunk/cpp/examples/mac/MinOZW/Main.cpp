@@ -34,6 +34,7 @@
 #include <pthread.h>
 #include "Options.h"
 #include "Manager.h"
+#include "Driver.h"
 #include "Node.h"
 #include "Group.h"
 #include "Notification.h"
@@ -44,8 +45,9 @@
 using namespace OpenZWave;
 
 static uint32 g_homeId = 0;
+static bool   g_initFailed = false;
 
-typedef struct 
+typedef struct
 {
 	uint32			m_homeId;
 	uint8			m_nodeId;
@@ -55,6 +57,8 @@ typedef struct
 
 static list<NodeInfo*> g_nodes;
 static pthread_mutex_t g_criticalSection;
+static pthread_cond_t  initCond  = PTHREAD_COND_INITIALIZER;
+static pthread_mutex_t initMutex = PTHREAD_MUTEX_INITIALIZER;
 
 //-----------------------------------------------------------------------------
 // <GetNodeInfo>
@@ -127,6 +131,7 @@ void OnNotification
 			{
 				// One of the node values has changed
 				// TBD...
+				nodeInfo = nodeInfo;
 			}
 			break;
 		}
@@ -137,6 +142,7 @@ void OnNotification
 			{
 				// One of the node's association groups has changed
 				// TBD...
+				nodeInfo = nodeInfo;
 			}
 			break;
 		}
@@ -176,6 +182,7 @@ void OnNotification
 				// We have received an event from the node, caused by a
 				// basic_set or hail message.
 				// TBD...
+				nodeInfo = nodeInfo;
 			}
 			break;
 		}
@@ -203,11 +210,29 @@ void OnNotification
 			g_homeId = _notification->GetHomeId();
 			break;
 		}
+
+
+		case Notification::Type_DriverFailed:
+		{
+			g_initFailed = true;
+			pthread_cond_broadcast(&initCond);
+			break;
+		}
+
+		case Notification::Type_AwakeNodesQueried:
+		case Notification::Type_AllNodesQueried:
+		{
+				pthread_cond_broadcast(&initCond);
+				break;
+		}
+
+		default:
+		{
+		}
 	}
 
 	pthread_mutex_unlock( &g_criticalSection );
 }
-
 //-----------------------------------------------------------------------------
 // <main>
 // Create the driver and then wait
@@ -216,9 +241,12 @@ int main( int argc, char* argv[] )
 {
 	pthread_mutexattr_t mutexattr;
 
+	pthread_mutexattr_init ( &mutexattr );
 	pthread_mutexattr_settype( &mutexattr, PTHREAD_MUTEX_RECURSIVE );
 	pthread_mutex_init( &g_criticalSection, &mutexattr );
 	pthread_mutexattr_destroy( &mutexattr );
+
+	pthread_mutex_lock( &initMutex );
 
 	// Create the OpenZWave Manager.
 	// The first argument is the path to the config files (where the manufacturer_specific.xml file is located
@@ -237,33 +265,47 @@ int main( int argc, char* argv[] )
 
 	// Add a Z-Wave Driver
 	// Modify this line to set the correct serial port for your PC interface.
-	Manager::Get()->AddDriver( "/dev/cu.usbserial");
+
+	string port = "/dev/cu.usbserial";
+
+	Manager::Get()->AddDriver( ( argc > 1 ) ? argv[1] : port );
 	//Manager::Get()->AddDriver( "HID Controller", Driver::ControllerInterface_Hid );
 
 	// Now we just wait for the driver to become ready, and then write out the loaded config.
 	// In a normal app, we would be handling notifications and building a UI for the user.
-	while( !g_homeId )
+	pthread_cond_wait( &initCond, &initMutex );
+
+	if( !g_initFailed )
 	{
-		sleep(1);
+
+		//Manager::Get()->BeginAddNode( g_homeId );
+		//sleep(10);
+		//Manager::Get()->EndAddNode( g_homeId );
+		//Manager::Get()->BeginRemoveNode( g_homeId );
+		//sleep(10);
+		//Manager::Get()->EndRemoveNode( g_homeId );
+		//sleep(10);
+
+		Manager::Get()->WriteConfig( g_homeId );
+
+		Driver::DriverData data;
+		Manager::Get()->GetDriverStatistics( g_homeId, &data );
+		printf("SOF: %d ACK Waiting: %d Read Aborts: %d Bad Checksums: %d\n", data.s_SOFCnt, data.s_ACKWaiting, data.s_readAborts, data.s_badChecksum);
+		printf("Reads: %d Writes: %d CAN: %d NAK: %d ACK: %d Out of Frame: %d\n", data.s_readCnt, data.s_writeCnt, data.s_CANCnt, data.s_NAKCnt, data.s_ACKCnt, data.s_OOFCnt);
+		printf("Dropped: %d Retries: %d\n", data.s_dropped, data.s_retries);
+
+		while( true )
+		{
+			sleep(10);
+
+			pthread_mutex_lock( &g_criticalSection );
+			// Do stuff
+			pthread_mutex_unlock( &g_criticalSection );
+			sleep(5);
+		}
 	}
 
-	//Manager::Get()->BeginAddNode( g_homeId );
-	//sleep(10);
-	//Manager::Get()->EndAddNode( g_homeId );
-	//Manager::Get()->BeginRemoveNode( g_homeId );
-	//sleep(10);
-	//Manager::Get()->EndRemoveNode( g_homeId );
-	sleep(10);
-	Manager::Get()->WriteConfig( g_homeId );
-	
-	while( true )
-	{
-		sleep(10);
-
-		pthread_mutex_lock( &g_criticalSection );
-		// Do stuff
-		pthread_mutex_unlock( &g_criticalSection );
-	}
+	Manager::Destroy();
 
 	pthread_mutex_destroy( &g_criticalSection );
 	return 0;

@@ -319,6 +319,7 @@ namespace OpenZWave
 		void HandleReplaceFailedNodeRequest( uint8* _data );
 		void HandleRemoveNodeFromNetworkRequest( uint8* _data );
 		void HandleApplicationCommandHandlerRequest( uint8* _data );
+		void HandlePromiscuousApplicationCommandHandlerRequest( uint8* _data );
 		void HandleAssignReturnRouteRequest( uint8* _data );
 		void HandleDeleteReturnRouteRequest( uint8* _data );
 		void HandleNodeNeighborUpdateRequest( uint8* _data );
@@ -529,9 +530,44 @@ namespace OpenZWave
 		void NotifyWatchers();												// Passes the notifications to all the registered watcher callbacks in turn.
 
 		list<Notification*>	m_notifications;
+
+	//-----------------------------------------------------------------------------
+	//	Statistics
+	//-----------------------------------------------------------------------------
+	public:
+		struct DriverData
+		{
+			uint32 s_SOFCnt;			// Number of SOF bytes received
+			uint32 s_ACKWaiting;			// Number of unsolcited messages while waiting for an ACK
+			uint32 s_readAborts;			// Number of times read were aborted due to timeouts
+			uint32 s_badChecksum;			// Number of bad checksums
+			uint32 s_readCnt;			// Number of messages successfully read
+			uint32 s_writeCnt;			// Number of messages successfully sent
+			uint32 s_CANCnt;			// Number of CAN bytes received
+			uint32 s_NAKCnt;			// Number of NAK bytes received
+			uint32 s_ACKCnt;			// Number of ACK bytes received
+			uint32 s_OOFCnt;			// Number of bytes out of framing
+			uint32 s_dropped;			// Number of messages dropped & not delivered
+			uint32 s_retries;			// Number of messages retransmitted
+		};
+
+	private:
+		void GetDriverStatistics( DriverData* _data );
+
+		uint32 m_SOFCnt;			// Number of SOF bytes received
+		uint32 m_ACKWaiting;			// Number of unsolcited messages while waiting for an ACK
+		uint32 m_readAborts;			// Number of times read were aborted due to timeouts
+		uint32 m_badChecksum;			// Number of bad checksums
+		uint32 m_readCnt;			// Number of messages successfully read
+		uint32 m_writeCnt;			// Number of messages successfully sent
+		uint32 m_CANCnt;			// Number of CAN bytes received
+		uint32 m_NAKCnt;			// Number of NAK bytes received
+		uint32 m_ACKCnt;			// Number of ACK bytes received
+		uint32 m_OOFCnt;			// Number of bytes out of framing
+		uint32 m_dropped;			// Number of messages dropped & not delivered
+		uint32 m_retries;			// Number of messages retransmitted
 	};
 
 } // namespace OpenZWave
 
 #endif // _Driver_H
-

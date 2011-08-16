@@ -3329,3 +3329,20 @@ bool Manager::ActivateScene
 	return false;
 }
 
+//-----------------------------------------------------------------------------
+// <Manager::DriverStatistics>
+// Retrieve driver based counters.
+//-----------------------------------------------------------------------------
+void Manager::GetDriverStatistics
+(
+	uint32 const _homeId,
+	Driver::DriverData* _data
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		driver->GetDriverStatistics( _data );
+	}
+
+}
+
