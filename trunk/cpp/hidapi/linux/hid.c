@@ -143,7 +143,7 @@ static int uses_numbered_reports(__u8 *report_descriptor, __u32 size) {
 			key_size = 1;
 		}
 		
-		/* Skip over this key and it's associated data */
+		/* Skip over this key and its associated data */
 		i += data_len + key_size;
 	}
 	

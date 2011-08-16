@@ -82,7 +82,7 @@ namespace OpenZWaveDotNet
 		ReplaceFailedNode			= Driver::ControllerCommand_ReplaceFailedNode,			/**< Replace a non-responding device with another. */
 		TransferPrimaryRole			= Driver::ControllerCommand_TransferPrimaryRole,		/**< Make a different controller the primary. */
 		RequestNetworkUpdate		= Driver::ControllerCommand_RequestNetworkUpdate,		/**< Request network information from the SUC/SIS. */
-		RequestNodeNeighborUpdate	= Driver::ControllerCommand_RequestNodeNeighborUpdate,	/**< Get a node to rebuild it's neighbour list.  This method also does ControllerCommand_RequestNodeNeighbors */
+		RequestNodeNeighborUpdate	= Driver::ControllerCommand_RequestNodeNeighborUpdate,	/**< Get a node to rebuild its neighbour list.  This method also does ControllerCommand_RequestNodeNeighbors */
 		AssignReturnRoute			= Driver::ControllerCommand_AssignReturnRoute,			/**< Assign a network return route to a device. */
 		DeleteAllReturnRoutes		= Driver::ControllerCommand_DeleteAllReturnRoutes		/**< Delete all network return routes from a device. */
 	};
@@ -1272,7 +1272,7 @@ namespace OpenZWaveDotNet
 		 * - ZWControllerCommand.TransferPrimaryRole (Not yet implemented) - Add a new controller to the network and
 		 * make it the primary.  The existing primary will become a secondary controller.  
 		 * - ZWControllerCommand.RequestNetworkUpdate - Update the controller with network information from the SUC/SIS.
-		 * - ZWControllerCommand.RequestNodeNeighborUpdate - Get a node to rebuild it's neighbour list.  This method also does ControllerCommand_RequestNodeNeighbors afterwards.
+		 * - ZWControllerCommand.RequestNodeNeighborUpdate - Get a node to rebuild its neighbour list.  This method also does ControllerCommand_RequestNodeNeighbors afterwards.
 		 * - ZWControllerCommand.AssignReturnRoute - Assign network routes to a device.
 		 * - ZWControllerCommand.DeleteReturnRoute - Delete network routes from a device.
 		 * <p>These processes are asynchronous, and at various stages OpenZWave will trigger a callback
