@@ -166,48 +166,53 @@ bool SensorMultilevel::HandleMsg
 	if (SensorMultilevelCmd_Report == (SensorMultilevelCmd)_data[0])
 	{
 		uint8 scale;
+		uint8 sensorType = _data[1];
 		string valueStr = ExtractValue( &_data[2], &scale );
 
-		if( ValueDecimal* value = static_cast<ValueDecimal*>( GetValue( _instance, 0 ) ) )
+		Node* node = GetNodeUnsafe();
+		if( node != NULL )
 		{
-			value->SetLabel( c_sensorTypeNames[_data[1]] );
-			switch( _data[1] )
+			ValueDecimal* value = static_cast<ValueDecimal*>( GetValue( _instance, sensorType ) );
+			if( value == NULL)
 			{
-				case SensorType_Temperature:			value->SetUnits( scale ? "F" : "C" );			break;
-				case SensorType_General:				value->SetUnits( scale ? "" : "%" );			break;
-				case SensorType_Luminance:				value->SetUnits( scale ? "lux" : "%" );			break;
-				case SensorType_Power:					value->SetUnits( scale ? "BTU/h" : "W" );		break;
-				case SensorType_RelativeHumidity:		value->SetUnits( "%" );							break;
-				case SensorType_Velocity:				value->SetUnits( scale ? "mph" : "m/s" );		break;
-				case SensorType_Direction:				value->SetUnits( "" );							break;
-				case SensorType_AtmosphericPressure:	value->SetUnits( scale ? "inHg" : "kPa" );		break;
-				case SensorType_BarometricPressure:		value->SetUnits( scale ? "inHg" : "kPa" );		break;
-				case SensorType_SolarRadiation:			value->SetUnits( "W/m2" );						break;
-				case SensorType_DewPoint:				value->SetUnits( scale ? "in/h" : "mm/h" );		break;
-				case SensorType_RainRate:				value->SetUnits( scale ? "F" : "C" );			break;
-				case SensorType_TideLevel:				value->SetUnits( scale ? "ft" : "m" );			break;
-				case SensorType_Weight:					value->SetUnits( scale ? "lb" : "kg" );			break;
-				case SensorType_Voltage:				value->SetUnits( scale ? "mV" : "V" );			break;
-				case SensorType_Current:				value->SetUnits( scale ? "mA" : "A" );			break;
-				case SensorType_CO2:					value->SetUnits( "ppm" );						break;
-				case SensorType_AirFlow:				value->SetUnits( scale ? "cfm" : "m3/h" );		break;
-				case SensorType_TankCapacity:			value->SetUnits( c_tankCapcityUnits[scale] );	break;
-				case SensorType_Distance:				value->SetUnits( c_distanceUnits[scale] );		break;
-				default:																				break;
+				char const* units = "";
+				switch( sensorType )
+				{
+					case SensorType_Temperature:		units = scale ? "F" : "C";			break;
+					case SensorType_General:		units = scale ? "" : "%";			break;
+					case SensorType_Luminance:		units = scale ? "lux" : "%";			break;
+					case SensorType_Power:			units = scale ? "BTU/h" : "W";			break;
+					case SensorType_RelativeHumidity:	units = "%";					break;
+					case SensorType_Velocity:		units = scale ? "mph" : "m/s";			break;
+					case SensorType_Direction:		units = "";					break;
+					case SensorType_AtmosphericPressure:	units = scale ? "inHg" : "kPa";			break;
+					case SensorType_BarometricPressure:	units = scale ? "inHg" : "kPa";			break;
+					case SensorType_SolarRadiation:		units = "W/m2";					break;
+					case SensorType_DewPoint:		units = scale ? "in/h" : "mm/h";		break;
+					case SensorType_RainRate:		units = scale ? "F" : "C";			break;
+					case SensorType_TideLevel:		units = scale ? "ft" : "m";			break;
+					case SensorType_Weight:			units = scale ? "lb" : "kg";			break;
+					case SensorType_Voltage:		units = scale ? "mV" : "V";			break;
+					case SensorType_Current:		units = scale ? "mA" : "A";			break;
+					case SensorType_CO2:			units = "ppm";					break;
+					case SensorType_AirFlow:		units = scale ? "cfm" : "m3/h";			break;
+					case SensorType_TankCapacity:		units = c_tankCapcityUnits[scale];		break;
+					case SensorType_Distance:		units = c_distanceUnits[scale];			break;
+					default:										break;
+				}
+				value = node->CreateValueDecimal(  ValueID::ValueGenre_User, GetCommandClassId(), _instance, sensorType, c_sensorTypeNames[sensorType], units, true, false, "0.0"  );
 			}
 
 			Log::Write( "Received SensorMultiLevel report from node %d, instance %d: value=%s%s", GetNodeId(), _instance, valueStr.c_str(), value->GetUnits().c_str() );
 			value->OnValueChanged( valueStr );
-		}
 
-		Node* node = GetNodeUnsafe();
-		if( node != NULL && node->m_queryPending )
-		{
-			node->m_queryStageCompleted = true;
+			if( node->m_queryPending )
+			{
+				node->m_queryStageCompleted = true;
+			}
+			return true;
 		}
-		return true;
 	}
-
 	return false;
 }
 
@@ -220,10 +225,7 @@ void SensorMultilevel::CreateVars
 	uint8 const _instance
 )
 {
-	if( Node* node = GetNodeUnsafe() )
-	{
-	  	node->CreateValueDecimal(  ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Unknown", "", true, false, "0.0"  );
-	}
+	// Don't create anything here. We do it in the report.
 }
 
 

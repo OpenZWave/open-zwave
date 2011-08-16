@@ -1660,8 +1660,24 @@ namespace OpenZWave
 		bool ActivateScene( uint8 const _sceneId );
 
 	/*@}*/
-	};
 
+	//-----------------------------------------------------------------------------
+	// Statistics interface
+	//-----------------------------------------------------------------------------
+	/** \name Statistics retrieval interface
+	 *  Commands for Z-Wave statistics interface.
+	 */
+	/*@{*/
+	public:	
+		/**
+		 * \brief Retrieve statistics from driver
+		 * \param _homeId The Home ID of the driver to obtain counters
+		 * \param _data Pointer to structure DriverData to return values
+		 */
+		void GetDriverStatistics( uint32 const _homeId, Driver::DriverData* _data );
+
+	};
+	/*@}*/
 } // namespace OpenZWave
 
 #endif // _Manager_H

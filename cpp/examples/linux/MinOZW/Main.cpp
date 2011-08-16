@@ -34,6 +34,7 @@
 #include <pthread.h>
 #include "Options.h"
 #include "Manager.h"
+#include "Driver.h"
 #include "Node.h"
 #include "Group.h"
 #include "Notification.h"
@@ -180,6 +181,7 @@ void OnNotification
 			{
 				// We have received an event from the node, caused by a
 				// basic_set or hail message.
+				// TBD...
 				nodeInfo = nodeInfo;
 			}
 			break;
@@ -208,7 +210,7 @@ void OnNotification
 			g_homeId = _notification->GetHomeId();
 			break;
 		}
-		
+
 
 		case Notification::Type_DriverFailed:
 		{
@@ -217,7 +219,7 @@ void OnNotification
 			break;
 		}
 
-	  case Notification::Type_AwakeNodesQueried:
+		case Notification::Type_AwakeNodesQueried:
 		case Notification::Type_AllNodesQueried:
 		{
 				pthread_cond_broadcast(&initCond);
@@ -239,13 +241,13 @@ int main( int argc, char* argv[] )
 {
 	pthread_mutexattr_t mutexattr;
 
-  pthread_mutexattr_init ( &mutexattr );
+	pthread_mutexattr_init ( &mutexattr );
 	pthread_mutexattr_settype( &mutexattr, PTHREAD_MUTEX_RECURSIVE );
 	pthread_mutex_init( &g_criticalSection, &mutexattr );
-	pthread_mutexattr_destroy(&mutexattr);
-	
-	pthread_mutex_lock(&initMutex);
-	
+	pthread_mutexattr_destroy( &mutexattr );
+
+	pthread_mutex_lock( &initMutex );
+
 	// Create the OpenZWave Manager.
 	// The first argument is the path to the config files (where the manufacturer_specific.xml file is located
 	// The second argument is the path for saved Z-Wave network state and the log file.  If you leave it NULL 
@@ -263,18 +265,19 @@ int main( int argc, char* argv[] )
 
 	// Add a Z-Wave Driver
 	// Modify this line to set the correct serial port for your PC interface.
-	
+
 	string port = "/dev/ttyUSB0";
-	
-	Manager::Get()->AddDriver((argc > 1) ? argv[1] : port);
+
+	Manager::Get()->AddDriver( ( argc > 1 ) ? argv[1] : port );
 	//Manager::Get()->AddDriver( "HID Controller", Driver::ControllerInterface_Hid );
 
 	// Now we just wait for the driver to become ready, and then write out the loaded config.
 	// In a normal app, we would be handling notifications and building a UI for the user.
-	pthread_cond_wait(&initCond, &initMutex);
-	
-	if (!g_initFailed) {
-		
+	pthread_cond_wait( &initCond, &initMutex );
+
+	if( !g_initFailed )
+	{
+
 		//Manager::Get()->BeginAddNode( g_homeId );
 		//sleep(10);
 		//Manager::Get()->EndAddNode( g_homeId );
@@ -282,11 +285,19 @@ int main( int argc, char* argv[] )
 		//sleep(10);
 		//Manager::Get()->EndRemoveNode( g_homeId );
 		//sleep(10);
-		
-		Manager::Get()->WriteConfig(g_homeId);
-	
-		while(true)
+
+		Manager::Get()->WriteConfig( g_homeId );
+
+		Driver::DriverData data;
+		Manager::Get()->GetDriverStatistics( g_homeId, &data );
+		printf("SOF: %d ACK Waiting: %d Read Aborts: %d Bad Checksums: %d\n", data.s_SOFCnt, data.s_ACKWaiting, data.s_readAborts, data.s_badChecksum);
+		printf("Reads: %d Writes: %d CAN: %d NAK: %d ACK: %d Out of Frame: %d\n", data.s_readCnt, data.s_writeCnt, data.s_CANCnt, data.s_NAKCnt, data.s_ACKCnt, data.s_OOFCnt);
+		printf("Dropped: %d Retries: %d\n", data.s_dropped, data.s_retries);
+
+		while( true )
 		{
+			sleep(10);
+
 			pthread_mutex_lock( &g_criticalSection );
 			// Do stuff
 			pthread_mutex_unlock( &g_criticalSection );
