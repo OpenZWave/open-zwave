@@ -245,7 +245,7 @@
 	</Manufacturer>
 	<Manufacturer id="0010" name="RCS">
 	  <Product type="0001" id="0002" name="TZ43 Thermostat" />
-	  <Product type="504d" id="3132" name="PM12-ZW Z-Wave Power Monitoring Module" />
+	  <Product type="504d" id="3132" name="PM12-ZW Z-Wave Power Monitoring Module config="rcs/pm12-zw.xml" />
 	</Manufacturer>
 	<Manufacturer id="0065" name="RS Scene">
 	</Manufacturer>
