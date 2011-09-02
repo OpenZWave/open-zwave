@@ -66,8 +66,8 @@ bool SwitchToggleMultilevel::RequestState
 }
 
 //-----------------------------------------------------------------------------
-// <SwitchToggleMultilevel::RequestValue>												   
-// Request current value from the device									   
+// <SwitchToggleMultilevel::RequestValue>
+// Request current value from the device
 //-----------------------------------------------------------------------------
 bool SwitchToggleMultilevel::RequestValue
 (
@@ -81,7 +81,7 @@ bool SwitchToggleMultilevel::RequestValue
 	msg->Append( GetNodeId() );
 	msg->Append( 2 );
 	msg->Append( GetCommandClassId() );
-	msg->Append( SwitchToggleMultilevelCmd_StartLevelChange );
+	msg->Append( SwitchToggleMultilevelCmd_Get );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 	GetDriver()->SendMsg( msg );
 	return true;
