@@ -110,7 +110,12 @@ Node::Node
 	m_listening( true ),	// assume we start out listening
 	m_homeId( _homeId ),
 	m_nodeId( _nodeId ),
-	m_values( new ValueStore() )
+	m_values( new ValueStore() ),
+	m_writeCnt( 0 ),
+	m_readCnt( 0 ),
+	m_dropped( 0 ),
+	m_retries( 0 ),
+	m_averageRTT( 0 )
 {
 }
 
@@ -1174,7 +1179,8 @@ void Node::RemoveCommandClass
 bool Node::SetConfigParam
 (
 	uint8 const _param,
-	int32 _value
+	int32 _value,
+	uint8 const _size
 )
 {
 	if( Configuration* cc = static_cast<Configuration*>( GetCommandClass( Configuration::StaticGetCommandClassId() ) ) )
@@ -1211,9 +1217,9 @@ bool Node::SetConfigParam
 		}
 
 		// Failed to find an existing value object representing this 
-		// configuration parameter, so we try to set the value directly 
-		// through the Configuration command class.
-		cc->Set( _param, _value );
+		// configuration parameter, so we try using the default or
+		// included size through the Configuration command class.
+		cc->Set( _param, _value, _size );
 		return true;
 	}
 

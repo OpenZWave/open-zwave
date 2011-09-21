@@ -126,7 +126,9 @@ Driver::Driver
 	m_CANCnt( 0 ),
 	m_NAKCnt( 0 ),
 	m_ACKCnt( 0 ),
-	m_OOFCnt( 0 )
+	m_OOFCnt( 0 ),
+	m_controllerReadCnt( 0 ),
+	m_controllerWriteCnt( 0 )
 {
 	// Clear the nodes array
 	memset( m_nodes, 0, sizeof(Node*) * 256 );
@@ -788,6 +790,19 @@ bool Driver::WriteMsg()
 			Log::Write( "Sending command (Callback ID=0x%.2x, Expected Reply=0x%.2x) - %s", msg->GetCallbackId(), msg->GetExpectedReply(), msg->GetAsString().c_str() );
 			m_controller->Write( msg->GetBuffer(), msg->GetLength() );
 			m_writeCnt++;
+			uint8 nodeId = msg->GetTargetNodeId();
+			if( nodeId == 0xff )
+			{
+				m_controllerWriteCnt++;
+			}
+			else
+			{
+				Node* node = GetNodeUnsafe( nodeId );
+				if( node != NULL )
+				{
+					node->m_writeCnt++;
+				}
+			}
 			dataWritten = true;
 		}
 		else
@@ -4147,13 +4162,14 @@ bool Driver::SetConfigParam
 (
 	uint8 const _nodeId,
 	uint8 const _param,
-	int32 _value
+	int32 _value,
+	uint8 _size
 )
 {
 	bool res = false;
 	if( Node* node = GetNode( _nodeId ) )
 	{
-		res = node->SetConfigParam( _param, _value );
+		res = node->SetConfigParam( _param, _value, _size );
 		ReleaseNodes();
 	}
 
@@ -4408,11 +4424,12 @@ void Driver::GetDriverStatistics
 	_data->s_badChecksum = m_badChecksum;
 	_data->s_readCnt = m_readCnt;
 	_data->s_writeCnt = m_writeCnt;
-	_data->s_writeCnt = m_writeCnt;
 	_data->s_CANCnt = m_CANCnt;
 	_data->s_NAKCnt = m_NAKCnt;
 	_data->s_ACKCnt = m_ACKCnt;
 	_data->s_OOFCnt = m_OOFCnt;
 	_data->s_dropped = m_dropped;
 	_data->s_retries = m_retries;
+	_data->s_controllerReadCnt = m_controllerReadCnt;
+	_data->s_controllerWriteCnt = m_controllerWriteCnt;
 }
