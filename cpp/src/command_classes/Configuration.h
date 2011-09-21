@@ -49,7 +49,7 @@ namespace OpenZWave
 		static string const StaticGetCommandClassName(){ return "COMMAND_CLASS_CONFIGURATION"; }
 
 		bool RequestValue( uint32 const _requestFlags, uint8 const _parameter, uint8 const _dummy );
-		void Set( uint8 const _parameter, int32 const _value );
+		void Set( uint8 const _parameter, int32 const _value, uint8 const _size );
 
 		// From CommandClass
 		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }

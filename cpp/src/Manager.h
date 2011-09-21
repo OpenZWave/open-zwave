@@ -1088,10 +1088,11 @@ namespace OpenZWave
 		 * \param _nodeId The ID of the node to configure.
 		 * \param _param The index of the parameter.
 		 * \param _value The value to which the parameter should be set.
+		 * \param _size Is an optional number of bytes to be sent for the paramter _value. Defaults to 2.
 		 * \return true if the a message setting the value was sent to the device.
 		 * \see RequestConfigParam
 		 */
-		bool SetConfigParam( uint32 const _homeId, uint8 const _nodeId, uint8 const _param, int32 _value );
+		bool SetConfigParam( uint32 const _homeId, uint8 const _nodeId, uint8 const _param, int32 _value, uint8 const _size = 2 );
 
 		/**
 		 * \brief Request the value of a configurable parameter from a device.

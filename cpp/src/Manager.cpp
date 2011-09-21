@@ -2344,12 +2344,13 @@ bool Manager::SetConfigParam
 	uint32 const _homeId, 
 	uint8 const _nodeId,
 	uint8 const _param,
-	int32 _value
+	int32 _value,
+	uint8 const _size
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
-		return driver->SetConfigParam( _nodeId, _param, _value );
+		return driver->SetConfigParam( _nodeId, _param, _value, _size );
 	}
 
 	return false;

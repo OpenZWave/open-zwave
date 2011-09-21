@@ -393,7 +393,7 @@ namespace OpenZWave
 	// Configuration Parameters (handled by the Configuration command class)
 	//-----------------------------------------------------------------------------
 	private:
-		bool SetConfigParam( uint8 const _param, int32 _value );
+		bool SetConfigParam( uint8 const _param, int32 _value, uint8 const _size );
 		void RequestConfigParam( uint8 const _param );
 		bool RequestAllConfigParams( uint32 const _requestFlags );
 
@@ -465,6 +465,16 @@ namespace OpenZWave
 		static bool								s_deviceClassesLoaded;		// True if the xml file has alreayd been loaded
 		static map<uint8,string>				s_basicDeviceClasses;		// Map of basic device classes.
 		static map<uint8,GenericDeviceClass*>	s_genericDeviceClasses;		// Map of generic device classes.
+
+	//-----------------------------------------------------------------------------
+	//	Statistics
+	//-----------------------------------------------------------------------------
+	private:
+		uint32 m_writeCnt;				// Number of messages sent to this node.
+		uint32 m_readCnt;				// Number of messages received from this node.
+		uint32 m_dropped;				// Number of messages dropped and not delivered.
+		uint32 m_retries;				// Number of retransmitted messages;
+		uint32 m_averageRTT;				// Average round trip time.
 	};
 
 } //namespace OpenZWave
