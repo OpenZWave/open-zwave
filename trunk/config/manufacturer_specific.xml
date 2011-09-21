@@ -194,7 +194,7 @@
 	  <Product type="0101" id="0206" name="RZP15-1LW Binary Scene Switch" />
 	  <Product type="0301" id="0206" name="RZS15-1LX Binary Scene Switch" />
 	  <Product type="0301" id="0209" name="VRS15-1LZ Binary Scene Switch" />
-	  <Product type="0401" id="0206" name="RZI10-1LX Multilevel Scene Switch" />
+	  <Product type="0401" id="0206" name="RZI10-1LX Multilevel Scene Switch" config="leviton/rzi10.xml" />
 	  <Product type="0401" id="0209" name="VRI06-1LX Multilevel Scene Switch" />
 	  <Product type="1001" id="0209" name="VRF01-1LZ Multilevel Scene Switch - 1.5A Fan" />e
 	</Manufacturer>
