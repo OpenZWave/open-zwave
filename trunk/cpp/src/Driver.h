@@ -507,7 +507,7 @@ namespace OpenZWave
 	//-----------------------------------------------------------------------------
 	private:		
 		// The public interface is provided via the wrappers in the Manager class
-		bool SetConfigParam( uint8 const _nodeId, uint8 const _param, int32 _value );
+		bool SetConfigParam( uint8 const _nodeId, uint8 const _param, int32 _value, uint8 const _size );
 		void RequestConfigParam( uint8 const _nodeId, uint8 const _param );
 
 	//-----------------------------------------------------------------------------
@@ -549,6 +549,8 @@ namespace OpenZWave
 			uint32 s_OOFCnt;			// Number of bytes out of framing
 			uint32 s_dropped;			// Number of messages dropped & not delivered
 			uint32 s_retries;			// Number of messages retransmitted
+			uint32 s_controllerReadCnt;		// Number of controller messages read
+			uint32 s_controllerWriteCnt;		// Number of controller messages sent
 		};
 
 	private:
@@ -565,7 +567,9 @@ namespace OpenZWave
 		uint32 m_ACKCnt;			// Number of ACK bytes received
 		uint32 m_OOFCnt;			// Number of bytes out of framing
 		uint32 m_dropped;			// Number of messages dropped & not delivered
-		uint32 m_retries;			// Number of messages retransmitted
+		uint32 m_retries;			// Number of retransmitted messages
+		uint32 m_controllerReadCnt;		// Number of messages read from controller
+		uint32 m_controllerWriteCnt;		// Number of messages written to the controller
 	};
 
 } // namespace OpenZWave

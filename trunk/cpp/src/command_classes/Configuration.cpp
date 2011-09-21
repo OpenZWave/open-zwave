@@ -153,25 +153,25 @@ bool Configuration::SetValue
 		case ValueID::ValueType_Byte:
 		{
 			ValueByte const& valueByte = static_cast<ValueByte const&>( _value );
-			Set( param, (int32)valueByte.GetValue() );
+			Set( param, (int32)valueByte.GetValue(), 1 );
 			return true;
 		}
 		case ValueID::ValueType_Short:
 		{
 			ValueShort const& valueShort = static_cast<ValueShort const&>( _value );
-			Set( param, (int32)valueShort.GetValue() );
+			Set( param, (int32)valueShort.GetValue(), 2 );
 			return true;
 		}
 		case ValueID::ValueType_Int:
 		{
 			ValueInt const& valueInt = static_cast<ValueInt const&>( _value );
-			Set( param, valueInt.GetValue() );
+			Set( param, valueInt.GetValue(), 4 );
 			return true;
 		}
 		case ValueID::ValueType_List:
 		{
 			ValueList const& valueList = static_cast<ValueList const&>( _value );
-			Set( param, valueList.GetItem().m_value );
+			Set( param, valueList.GetItem().m_value, 2 );
 			return true;
 		}
 		default:
@@ -212,48 +212,25 @@ bool Configuration::RequestValue
 void Configuration::Set
 (
 	uint8 const _parameter,
-	int32 const _value
+	int32 const _value,
+	uint8 const _size
 )
 {
-	Log::Write( "Configuration::Set - Node=%d, Parameter=%d, Value=%d", GetNodeId(), _parameter, _value );
-
-	int size = 4;
-	if( _value < 0 )
-	{
-		if( ( _value & 0xffffff80 ) == 0xffffff80 )
-		{
-			size = 1;
-		}
-		else if( ( _value & 0xffff8000 ) == 0xffff8000 )
-		{
-			size = 2;
-		}
-	}
-	else
-	{
-		if( ( _value & 0xffffff00 ) == 0 )
-		{
-			size = 1;
-		}
-		else if( ( _value & 0xffff0000 ) == 0 )
-		{
-			size = 2;
-		}
-	}
+	Log::Write( "Configuration::Set - Node=%d, Parameter=%d, Value=%d Size=%d", GetNodeId(), _parameter, _value, _size );
 
 	Msg* msg = new Msg( "ConfigurationCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 	msg->Append( GetNodeId() );
-	msg->Append( 4 + size );
+	msg->Append( 4 + _size );
 	msg->Append( GetCommandClassId() );
 	msg->Append( ConfigurationCmd_Set );
 	msg->Append( _parameter );
-	msg->Append( size );
-	if( size > 2 )
+	msg->Append( _size );
+	if( _size > 2 )
 	{
 		msg->Append( (uint8)(_value>>24) );
 		msg->Append( (uint8)(_value>>16) );
 	}
-	if( size > 1 ) 
+	if( _size > 1 ) 
 	{
 		msg->Append( (uint8)(_value>>8) );
 	}
@@ -261,5 +238,3 @@ void Configuration::Set
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 	GetDriver()->SendMsg( msg );
 }
-
-

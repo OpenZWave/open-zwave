@@ -82,7 +82,7 @@ void Log::SetLoggingState
 }
 
 //-----------------------------------------------------------------------------
-//	<Log::GetLogggingState>
+//	<Log::GetLoggingState>
 //	Return a flag to indicate whether logging is enabled
 //-----------------------------------------------------------------------------
 bool Log::GetLoggingState
