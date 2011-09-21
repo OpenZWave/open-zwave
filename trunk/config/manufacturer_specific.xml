@@ -18,6 +18,7 @@
 	  <Product type="5250" id="3030" name="ZRP100 Plugin Appliance Module" />
 	  <Product type="5250" id="3130" name="ZRP110 Exterior Appliance Module" config="act/zrp110.xml" />
 	  <Product type="5257" id="3330" name="ZRW230 Wall Appliance Module" />
+	  <Product type="5246" id="3133" name="LFM-20 Relay Fixture Module" />
 	  <Product type="524d" id="3330" name="ZRM230 Wall Appliance Module" />
 	  <Product type="5457" id="3330" name="ZTW230 Wall Transmitter Module" />
 	  <Product type="544d" id="3330" name="ZTM230 Wall Transmitter Module" />
@@ -137,6 +138,7 @@
 	</Manufacturer>
 	<Manufacturer id="006f" name="Home Manageables">
 	  <Product type="0102" id="0001" name="Door/Window Sensor" />
+	  <Product type="0104" id="0001" name="HM-AM001 Plugin Appliance Module" />
 	</Manufacturer>
 	<Manufacturer id="0080" name="Homepro">
 	</Manufacturer>
@@ -193,7 +195,8 @@
 	  <Product type="0301" id="0206" name="RZS15-1LX Binary Scene Switch" />
 	  <Product type="0301" id="0209" name="VRS15-1LZ Binary Scene Switch" />
 	  <Product type="0401" id="0206" name="RZI10-1LX Multilevel Scene Switch" />
-	  <Product type="0401" id="0209" name="VRI06-1L Multilevel Scene Switch" />
+	  <Product type="0401" id="0209" name="VRI06-1LX Multilevel Scene Switch" />
+	  <Product type="1001" id="0209" name="VRF01-1LZ Multilevel Scene Switch - 1.5A Fan" />e
 	</Manufacturer>
 	<Manufacturer id="007f" name="Logitech">
 	</Manufacturer>
