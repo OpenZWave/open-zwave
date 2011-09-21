@@ -120,8 +120,8 @@ bool Version::RequestState
 }
 
 //-----------------------------------------------------------------------------
-// <Version::RequestValue>												   
-// Request current value from the device									   
+// <Version::RequestValue>
+// Request current value from the device
 //-----------------------------------------------------------------------------
 bool Version::RequestValue
 (
@@ -219,17 +219,20 @@ bool Version::RequestCommandClassVersion
 	CommandClass const* _commandClass
 )
 {
-	if( _commandClass->HasStaticRequest( StaticRequest_Version ) )
+	if( m_classGetSupported )
 	{
-		Msg* msg = new Msg( "VersionCmd_CommandClassGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-		msg->Append( GetNodeId() );
-		msg->Append( 3 );
-		msg->Append( GetCommandClassId() );
-		msg->Append( VersionCmd_CommandClassGet );
-		msg->Append( _commandClass->GetCommandClassId() );
-		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-		GetDriver()->SendMsg( msg );
-		return true;
+		if( _commandClass->HasStaticRequest( StaticRequest_Version ) )
+		{
+			Msg* msg = new Msg( "VersionCmd_CommandClassGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+			msg->Append( GetNodeId() );
+			msg->Append( 3 );
+			msg->Append( GetCommandClassId() );
+			msg->Append( VersionCmd_CommandClassGet );
+			msg->Append( _commandClass->GetCommandClassId() );
+			msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+			GetDriver()->SendMsg( msg );
+			return true;
+		}
 	}
 
 	return false;
