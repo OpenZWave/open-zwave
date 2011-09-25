@@ -737,8 +737,11 @@ void Driver::SendMsg
 		else
 		{
 			// Normal priority messages go in front of the first low priority message we find
-			list<Msg*>::iterator it;
-			for( it = m_sendQueue.begin(); it != m_sendQueue.end(); ++it )
+		  	// but skip the first message in case it is completed and will be removed.
+			list<Msg*>::iterator it = m_sendQueue.begin();
+			if( it != m_sendQueue.end() )
+				it++;
+			for( ; it != m_sendQueue.end(); ++it )
 			{
 				if( Msg::MsgPriority_Low == (*it)->GetPriority() )
 				{
