@@ -43,7 +43,7 @@ LogImpl::LogImpl
 	m_filename( _filename )
 {
 	FILE* pFile = NULL;
-	if( !fopen_s( &pFile, m_filename.c_str(), "w" ) )
+	if( !(pFile = fopen(m_filename.c_str(), "w" )) )
 	{
 		SYSTEMTIME time;
 		::GetLocalTime( &time );
@@ -79,7 +79,7 @@ void LogImpl::Write
 	sprintf_s( timeStr, sizeof(timeStr), "%04d-%02d-%02d %02d:%02d:%02d:%03d ", time.wYear, time.wMonth, time.wDay, time.wHour, time.wMinute, time.wSecond, time.wMilliseconds );
 
 	FILE* pFile = NULL;
-	if( !fopen_s( &pFile, m_filename.c_str(), "a" ) )
+	if( !(pFile = fopen(m_filename.c_str(), "a" )) )
 	{
 		// Log to screen and file
 		if( _format && ( _format[0] != 0 ) )

@@ -30,7 +30,6 @@
 
 #include <assert.h>
 #include <list>
-#include <stdio.h>
 
 #ifdef NULL
 #undef NULL
@@ -85,20 +84,8 @@ namespace OpenZWave
 // Modifications for MiNGW32 compiler
 #ifdef MINGW
 
-// Replace "safe" versions of sprintf and fopen_s
+// Replace "safe" versions of sprintf
 #define sprintf_s snprintf
-
-typedef int errno_t; 
-extern errno_t fopen_s(FILE **pFile, const char *filename, const char *mode) 
-{ 
-    FILE *fd; 
-    fd = fopen(filename, mode); 
-    if( !fd ) { 
-        return 2; /* No such file or directory (dummy) */ 
-    } 
-    *pFile = fd; 
-    return 0; 
-}
 
 #endif
 
