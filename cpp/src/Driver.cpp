@@ -3317,18 +3317,6 @@ void Driver::RemoveNodeQuery
 }
 
 //-----------------------------------------------------------------------------
-// <Driver::RequestNodeState>
-// Request command class data
-//-----------------------------------------------------------------------------
-void Driver::RequestNodeState
-(
-	 uint8 const _nodeId
-)
-{
-	AddNodeQuery( _nodeId, Node::QueryStage_Associations );
-}
-
-//-----------------------------------------------------------------------------
 // <Driver::IsNodeListeningDevice>
 // Get whether the node is a listening device that does not go to sleep
 //-----------------------------------------------------------------------------
