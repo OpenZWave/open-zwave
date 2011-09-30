@@ -396,7 +396,6 @@ namespace OpenZWave
 		uint8 GetCurrentNodeQuery();
 
 		void InitAllNodes();												// Delete all nodes and fetch the data from the Z-Wave network again.
-		void RequestNodeState( uint8 const _nodeId );
 		
 		bool IsNodeListeningDevice( uint8 const _nodeId );
 		bool IsNodeRoutingDevice( uint8 const _nodeId );
