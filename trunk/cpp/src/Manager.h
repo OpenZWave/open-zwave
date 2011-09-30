@@ -368,8 +368,9 @@ namespace OpenZWave
 		 * \brief Trigger the fetching of fixed data about a node.
 		 * Causes the node's data to be obtained from the Z-Wave network in the same way as if it had just been added.
 		 * This method would normally be called automatically by OpenZWave, but if you know that a node has been
-		 * changed, calling this method will force a refresh of the data held by the library.  This can be especially 
-		 * useful for devices that were asleep when the application was first run.
+		 * changed, calling this method will force a refresh of all of the data held by the library.  This can be especially 
+		 * useful for devices that were asleep when the application was first run. This is the
+		 * same as the query state starting from the beginning.
 		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
 		 * \param _nodeId The ID of the node to query.
 		 * \return True if the request was sent successfully.
@@ -378,12 +379,23 @@ namespace OpenZWave
 
 		/**
 		 * \brief Trigger the fetching of dynamic value data for a node.
-		 * Causes the node's values to be requested from the Z-Wave network.
+		 * Causes the node's values to be requested from the Z-Wave network. This is the
+		 * same as the query state starting from the associations state.
 		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
 		 * \param _nodeId The ID of the node to query.
 		 * \return True if the request was sent successfully.
 		 */
-		void RequestNodeState( uint32 const _homeId, uint8 const _nodeId );
+		bool RequestNodeState( uint32 const _homeId, uint8 const _nodeId );
+
+		/**
+		 * \brief Trigger the fetching of just the dynamic value data for a node.
+		 * Causes the node's values to be requested from the Z-Wave network. This is the
+		 * same as the query state starting from the dynamic state.
+		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param _nodeId The ID of the node to query.
+		 * \return True if the request was sent successfully.
+		 */
+		bool RequestNodeDynamic( uint32 const _homeId, uint8 const _nodeId );
 
 		/**
 		 * \brief Get whether the node is a listening device that does not go to sleep

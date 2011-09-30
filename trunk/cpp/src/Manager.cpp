@@ -595,7 +595,7 @@ bool Manager::RefreshNodeInfo
 // <Manager::RequestNodeState>
 // Fetch the command class data for a node from the Z-Wave network
 //-----------------------------------------------------------------------------
-void Manager::RequestNodeState
+bool Manager::RequestNodeState
 (
 	uint32 const _homeId,
 	uint8 const _nodeId
@@ -604,8 +604,29 @@ void Manager::RequestNodeState
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
 		// Retreive the Node's session and dynamic data
-		driver->RequestNodeState( _nodeId );
+		driver->AddNodeQuery( _nodeId, Node::QueryStage_Associations );
+		return true;
 	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::RequestNodeDynamic>
+// Fetch only the dynamic command class data for a node from the Z-Wave network
+//-----------------------------------------------------------------------------
+bool Manager::RequestNodeDynamic
+(
+	uint32 const _homeId,
+	uint8 const _nodeId
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		// Retreive the Node's dynamic data
+		driver->AddNodeQuery( _nodeId, Node::QueryStage_Associations );
+		return true;
+	}
+	return false;
 }
 
 //-----------------------------------------------------------------------------
