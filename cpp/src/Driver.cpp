@@ -921,8 +921,8 @@ bool Driver::MoveMessagesToWakeUpQueue
 	// all messages for it to its Wake-Up queue.
 	if( Node* node = GetNodeUnsafe(_targetNodeId) )
 	{
-	  // Exclude controllers from battery check
-	  if( !node->IsListeningDevice() && node->GetBasic() != 0x01 && node->GetBasic() != 0x02 )
+		// Exclude controllers from battery check
+		if( !node->IsListeningDevice() && node->GetBasic() != 0x01 && node->GetBasic() != 0x02 && node->GetGeneric() != 0x01 && node->GetGeneric() != 0x02 )
 		{
 			if( WakeUp* wakeUp = static_cast<WakeUp*>( node->GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
 			{
