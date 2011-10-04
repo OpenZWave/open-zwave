@@ -169,10 +169,10 @@
 	  <Product type="0003" id="0003" name="HA-03WD Lamp Module" />
 	  <Product type="0004" id="0003" name="HA-04C Outdoor Module" />
 	  <Product type="0005" id="0003" name="HA-05C Lamp Screw In Module" />
-    <Product type="4341" id="3500" name="CA3560 Split-Duplex Receptacle" />
-    <Product type="4341" id="8900" name="CA8900 Digital Thermostat" />
-    <Product type="4341" id="9000" name="CA9000 PIR Occupancy Sensor" />
-  </Manufacturer>
+	  <Product type="4341" id="3500" name="CA3560 Split-Duplex Receptacle" />
+	  <Product type="4341" id="8900" name="CA8900 Digital Thermostat" />
+	  <Product type="4341" id="9000" name="CA9000 PIR Occupancy Sensor" />
+	</Manufacturer>
 	<Manufacturer id="0013" name="Internet Dom">
 	</Manufacturer>
 	<Manufacturer id="0063" name="GE">
@@ -180,6 +180,7 @@
 	  <Product type="4457" id="3230" name="GE 45606 2-Way Dimmer Switch" />
 	  <Product type="5250" id="3030" name="GE 45603 Plugin Appliance Module" />
 	  <Product type="5250" id="3130" name="GE 45604 Outdoor Module" />
+          <Product type="5257" id="3533" name="GE 45609 On/Off Relay Switch" />
 	  <Product type="4457" id="3033" name="GE 45613 3-Way Dimmer Switch" />
 	</Manufacturer>
 	<Manufacturer id="003b" name="Schlage">
@@ -196,6 +197,8 @@
 	  <Product type="0301" id="0209" name="VRS15-1LZ Binary Scene Switch" />
 	  <Product type="0401" id="0206" name="RZI10-1LX Multilevel Scene Switch" config="leviton/rzi10.xml" />
 	  <Product type="0401" id="0209" name="VRI06-1LX Multilevel Scene Switch" config="leviton/vri06.xml" />
+          <Product type="0702" id="0261" name="VRCZ4-M0Z 4-Button Zone Controller" />
+          <Product type="0c01" id="0206" name="VRCPG-SG RF Handheld Remote Controller" />
 	  <Product type="1001" id="0209" name="VRF01-1LZ Multilevel Scene Switch - 1.5A Fan" config="leviton/vrf01.xml" />
 	</Manufacturer>
 	<Manufacturer id="007f" name="Logitech">
