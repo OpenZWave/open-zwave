@@ -78,8 +78,8 @@ void LogImpl::Write
 	char timeStr[32];
 	sprintf_s( timeStr, sizeof(timeStr), "%04d-%02d-%02d %02d:%02d:%02d:%03d ", time.wYear, time.wMonth, time.wDay, time.wHour, time.wMinute, time.wSecond, time.wMilliseconds );
 
-	FILE* pFile = NULL;
-	if( !(pFile = fopen(m_filename.c_str(), "a" )) )
+	FILE* pFile = fopen(m_filename.c_str(), "a" );
+	if( pFile != NULL )
 	{
 		// Log to screen and file
 		if( _format && ( _format[0] != 0 ) )
