@@ -251,6 +251,11 @@
 	</Manufacturer>
 	<Manufacturer id="0010" name="RCS">
 	  <Product type="0001" id="0002" name="TZ43 Thermostat" />
+	  <Product type="0001" id="0005" name="TZ43-IHD SMUD Thermostat" />
+	  <Product type="0001" id="0007" name="TZ45-IHD SMUD Thermostat" />
+	  <Product type="0001" id="0009" name="TZ45 Thermostat" />
+	  <Product type="0001" id="000a" name="TZ4Z-IHD RCS Thermostat" />
+	  <Product type="454d" id="3532" name="PM52-ZW Z-Wave Home Energy Meter" />
 	  <Product type="504d" id="3132" name="PM12-ZW Z-Wave Power Monitoring Module" config="rcs/pm12-zw.xml" />
 	</Manufacturer>
 	<Manufacturer id="0065" name="RS Scene">
@@ -279,6 +284,7 @@
 	</Manufacturer>
 	<Manufacturer id="008b" name="Trane">
 	  <Product type="5452" id="5431" name="Model TZEMT400AB32MAA" config="trane/TZEMT400AB32MAA.xml" />
+	  <Product type="5452" id="5433" name="Model TZEMT400BB32MAA" config="trane/TZEMT400AB32MAA.xml" />
 	</Manufacturer>
 	<Manufacturer id="006b" name="Tricklestar">
 	</Manufacturer>
