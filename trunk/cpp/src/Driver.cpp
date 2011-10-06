@@ -2996,7 +2996,7 @@ void Driver::PollThreadProc()
 	{
 		int32 pollInterval = m_pollInterval * 1000;	// Get the time in milliseconds in which we are to poll all the devices
 
-		if( !m_pollList.empty() )
+		if( !m_pollList.empty() && m_awakeNodesQueried)
 		{
 			// We only bother getting the lock if the pollList is not empty
 			m_pollMutex->Lock();
