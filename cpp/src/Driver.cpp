@@ -3493,7 +3493,7 @@ string Driver::GetNodeType
 // Gets the neighbors for a node
 //-----------------------------------------------------------------------------
 uint32 Driver::GetNodeNeighbors
-( 
+(
 	uint8 const _nodeId,
 	uint8** o_neighbors
 )
@@ -3605,7 +3605,7 @@ string Driver::GetNodeManufacturerId
 		return str;
 	}
 
-	return NULL;
+	return "";
 }
 
 //-----------------------------------------------------------------------------
@@ -3625,7 +3625,7 @@ string Driver::GetNodeProductType
 		return str;
 	}
 
-	return NULL;
+	return "";
 }
 
 //-----------------------------------------------------------------------------
@@ -3645,7 +3645,7 @@ string Driver::GetNodeProductId
 		return str;
 	}
 
-	return NULL;
+	return "";
 }
 
 //-----------------------------------------------------------------------------
