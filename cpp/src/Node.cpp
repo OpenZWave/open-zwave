@@ -78,8 +78,9 @@ static char const* c_queryStageNames[] =
 	"None",
 	"ProtocolInfo",
 	"WakeUp",
+	"ManufacturerSpecific1",
 	"NodeInfo",
-	"ManufacturerSpecific",
+	"ManufacturerSpecific2",
 	"Versions",
 	"Instances",
 	"Static",
@@ -107,6 +108,8 @@ Node::Node
 	m_queryStageCompleted( false ),
 	m_protocolInfoReceived( false ),
 	m_nodeInfoReceived( false ),
+	m_manufacturerSpecificClassReceived( false ),
+	m_nodeInfoSupported( true ),
 	m_listening( true ),	// assume we start out listening
 	m_homeId( _homeId ),
 	m_nodeId( _nodeId ),
@@ -216,7 +219,25 @@ void Node::AdvanceQueries
 				}
 				else
 				{
-					// this is not a sleeping device, so move to the NodeInfo stage
+					// this is not a sleeping device, so move to the ManufacturerSpecific1 stage
+					m_queryStage = QueryStage_ManufacturerSpecific1;
+					m_queryRetries = 0;
+				}
+				break;
+			}
+			case QueryStage_ManufacturerSpecific1:
+			{
+				// Obtain manufacturer, product type and product ID code from the node device
+				// Manufacturer Specific data is requested before the other command class data so 
+				// that we can modify the supported command classes list through the product XML files.
+				Log::Write( "Node %d: QueryStage_ManufacturerSpecific1", m_nodeId );
+				ManufacturerSpecific* cc = static_cast<ManufacturerSpecific*>( GetCommandClass( ManufacturerSpecific::StaticGetCommandClassId() ) );
+				if( cc  )
+				{
+					m_queryPending = cc->RequestState( CommandClass::RequestFlag_Static, 1 );
+				}
+				if( !m_queryPending )
+				{
 					m_queryStage = QueryStage_NodeInfo;
 					m_queryRetries = 0;
 				}
@@ -224,7 +245,7 @@ void Node::AdvanceQueries
 			}
 			case QueryStage_NodeInfo:
 			{
-				if( !NodeInfoReceived() )
+				if( !NodeInfoReceived() && !IsController() && m_nodeInfoSupported )
 				{
 					// obtain from the node a list of command classes that it 1) supports and 2) controls (separated by a mark in the buffer)
 					Log::Write( "Node %d: QueryStage_NodeInfo", m_nodeId );
@@ -236,23 +257,31 @@ void Node::AdvanceQueries
 				else
 				{
 					// This stage has been done already, so move to the Manufacturer Specific stage
-					m_queryStage = QueryStage_ManufacturerSpecific;
+					m_queryStage = QueryStage_ManufacturerSpecific2;
 					m_queryRetries = 0;
 				}
 				break;
 			}
-			case QueryStage_ManufacturerSpecific:
+			case QueryStage_ManufacturerSpecific2:
 			{
-				// Obtain manufacturer, product type and product ID code from the node device
-				// Manufacturer Specific data is requested before the other command class data so 
-				// that we can modify the supported command classes list through the product XML files.
-				Log::Write( "Node %d: QueryStage_ManufacturerSpecific", m_nodeId );
-				ManufacturerSpecific* cc = static_cast<ManufacturerSpecific*>( GetCommandClass( ManufacturerSpecific::StaticGetCommandClassId() ) );
-				if( cc  )
+				if( !m_manufacturerSpecificClassReceived )
 				{
-					m_queryPending = cc->RequestState( CommandClass::RequestFlag_Static, 1 );
+					// Obtain manufacturer, product type and product ID code from the node device
+					// Manufacturer Specific data is requested before the other command class data so 
+					// that we can modify the supported command classes list through the product XML files.
+					Log::Write( "Node %d: QueryStage_ManufacturerSpecific2", m_nodeId );
+					ManufacturerSpecific* cc = static_cast<ManufacturerSpecific*>( GetCommandClass( ManufacturerSpecific::StaticGetCommandClassId() ) );
+					if( cc  )
+					{
+						m_queryPending = cc->RequestState( CommandClass::RequestFlag_Static, 1 );
+					}
+					if( !m_queryPending )
+					{
+						m_queryStage = QueryStage_Versions;
+						m_queryRetries = 0;
+					}
 				}
-				if( !m_queryPending )
+				else
 				{
 					m_queryStage = QueryStage_Versions;
 					m_queryRetries = 0;
@@ -674,6 +703,13 @@ void Node::ReadXML
 		m_security = (uint8)strtol( str, &p, 0 );
 	}
 
+	m_nodeInfoSupported = true;
+	str = _node->Attribute( "nodeinfosupported" );
+	if( str )
+	{
+		m_nodeInfoSupported = !strcmp( str, "true" );
+	}
+
 	// Read the manufacturer info and create the command classes
 	TiXmlElement const* child = _node->FirstChildElement();
 	while( child )
@@ -730,6 +766,23 @@ void Node::ReadXML
 
 		// Move to the next child node
 		child = child->NextSiblingElement();
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <Node::ReadDeviceProtocolXML>
+// Read the device's protocol configuration from XML
+//-----------------------------------------------------------------------------
+void Node::ReadDeviceProtocolXML
+( 
+	TiXmlElement const* _ccsElement
+)
+{
+	char const* str = _ccsElement->Attribute( "nodeinfosupported" );
+
+	if( str )
+	{
+		m_nodeInfoSupported = !strcmp( str, "true" );
 	}
 }
 
@@ -832,6 +885,11 @@ void Node::WriteXML
 
 	snprintf( str, 32, "0x%.2x", m_security );
 	nodeElement->SetAttribute( "security", str );
+
+	if( !m_nodeInfoSupported )
+	{
+		nodeElement->SetAttribute( "nodeinfosupported", "false" );
+	}
 
 	nodeElement->SetAttribute( "query_stage", c_queryStageNames[m_queryStage] );
 

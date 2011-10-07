@@ -18,7 +18,7 @@
 	  <Product type="5250" id="3030" name="ZRP100 Plugin Appliance Module" />
 	  <Product type="5250" id="3130" name="ZRP110 Exterior Appliance Module" config="act/zrp110.xml" />
 	  <Product type="5257" id="3330" name="ZRW230 Wall Appliance Module" />
-	  <Product type="5246" id="3133" name="LFM-20 Relay Fixture Module" />
+	  <Product type="5246" id="3133" name="LFM-20 Relay Fixture Module" config="act/lfm20.xml" />
 	  <Product type="524d" id="3330" name="ZRM230 Wall Appliance Module" />
 	  <Product type="5457" id="3330" name="ZTW230 Wall Transmitter Module" />
 	  <Product type="544d" id="3330" name="ZTM230 Wall Transmitter Module" />
@@ -198,8 +198,10 @@
 	  <Product type="0401" id="0206" name="RZI10-1LX Multilevel Scene Switch" config="leviton/rzi10.xml" />
 	  <Product type="0401" id="0209" name="VRI06-1LX Multilevel Scene Switch" config="leviton/vri06.xml" />
           <Product type="0702" id="0261" name="VRCZ4-M0Z 4-Button Zone Controller" />
+	  <Product type="0b02" id="030b" name="VRC0P-1LW Plug-in Serial Interface Module" />
           <Product type="0c01" id="0206" name="VRCPG-SG RF Handheld Remote Controller" />
 	  <Product type="1001" id="0209" name="VRF01-1LZ Multilevel Scene Switch - 1.5A Fan" config="leviton/vrf01.xml" />
+	  <Product type="1102" id="0243" name="VRCS2-MRZ 2-Button Scene Controller with Switches" />
 	</Manufacturer>
 	<Manufacturer id="007f" name="Logitech">
 	</Manufacturer>
@@ -284,7 +286,7 @@
 	</Manufacturer>
 	<Manufacturer id="008b" name="Trane">
 	  <Product type="5452" id="5431" name="Model TZEMT400AB32MAA" config="trane/TZEMT400AB32MAA.xml" />
-	  <Product type="5452" id="5433" name="Model TZEMT400BB32MAA" config="trane/TZEMT400AB32MAA.xml" />
+	  <Product type="5452" id="5433" name="Model TZEMT400BB32MAA" config="trane/TZEMT400BB32MAA.xml" />
 	</Manufacturer>
 	<Manufacturer id="006b" name="Tricklestar">
 	</Manufacturer>
