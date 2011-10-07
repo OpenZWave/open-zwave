@@ -195,6 +195,7 @@ bool ManufacturerSpecific::HandleMsg
 									GetNodeId(), node->GetManufacturerName().c_str(), node->GetProductName().c_str() );
 			ClearStaticRequest( StaticRequest_Values );
 			node->m_queryStageCompleted = true;
+			node->m_manufacturerSpecificClassReceived = true;
 		}
 		
 		// Notify the watchers of the name changes
@@ -387,6 +388,7 @@ bool ManufacturerSpecific::LoadConfigXML
 			return false;
 		}
 
+		node->ReadDeviceProtocolXML( doc->RootElement() );
 		node->ReadCommandClassesXML( doc->RootElement() );
 
 		delete doc;	
