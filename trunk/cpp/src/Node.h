@@ -129,8 +129,9 @@ namespace OpenZWave
 			QueryStage_None,					/**< Query process hasn't started for this node */
 			QueryStage_ProtocolInfo,			/**< Retrieve protocol information */
 			QueryStage_WakeUp,					/**< Start wake up process if a sleeping node*/
+			QueryStage_ManufacturerSpecific1,	/**< Retrieve manufacturer name and product ids if ProtocolInfo lets us */
 			QueryStage_NodeInfo,				/**< Retrieve info about supported, controlled command classes */
-			QueryStage_ManufacturerSpecific,	/**< Retrieve manufacturer name and product ids */
+			QueryStage_ManufacturerSpecific2,	/**< Retrieve manufacturer name and product ids */
 			QueryStage_Versions,				/**< Retrieve version information */
 			QueryStage_Instances,				/**< Retrieve information about multiple command class instances */
 			QueryStage_Static,					/**< Retrieve static information (doesn't change) */
@@ -223,6 +224,8 @@ namespace OpenZWave
 		bool		m_queryStageCompleted;
 		bool		m_protocolInfoReceived;
 		bool		m_nodeInfoReceived;
+		bool		m_manufacturerSpecificClassReceived;
+		bool		m_nodeInfoSupported;
 
 	//-----------------------------------------------------------------------------
 	// Capabilities
@@ -260,6 +263,7 @@ namespace OpenZWave
 		uint8 GetSpecific()const{ return m_specific; }
 		string const& GetType()const{ return m_type; }	
 		uint32 GetNeighbors( uint8** o_associations );
+		bool IsController()const{ return ( m_basic == 0x01 || m_basic == 0x02 ) && ( m_generic == 0x01 || m_generic == 0x02 ); }
 
 	private:
 		bool		m_listening;
@@ -340,6 +344,7 @@ namespace OpenZWave
 		 */
 		void RemoveCommandClass( uint8 const _commandClassId );
 		void ReadXML( TiXmlElement const* _nodeElement );
+		void ReadDeviceProtocolXML( TiXmlElement const* _ccsElement );
 		void ReadCommandClassesXML( TiXmlElement const* _ccsElement );
 		void WriteXML( TiXmlElement* _nodeElement );
 
