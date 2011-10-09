@@ -1248,6 +1248,12 @@ bool Node::SetConfigParam
 		{
 			switch( value->GetID().GetType() )
 			{
+				case ValueID::ValueType_Bool:
+				{
+					ValueBool* valueBool = static_cast<ValueBool*>( value );
+					valueBool->Set( (bool)_value );
+					break;
+				}
 				case ValueID::ValueType_Byte:
 				{
 					ValueByte* valueByte = static_cast<ValueByte*>( value );

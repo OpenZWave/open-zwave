@@ -74,6 +74,12 @@ bool Configuration::HandleMsg
 		{
 			switch ( value->GetID().GetType() ) 
 			{
+				case ValueID::ValueType_Bool:
+				{
+					ValueBool* valueBool = static_cast<ValueBool*>( value );
+					valueBool->OnValueChanged( (bool)paramValue );
+					break;
+				}
 				case ValueID::ValueType_Byte:
 				{
 					ValueByte* valueByte = static_cast<ValueByte*>( value );
@@ -156,6 +162,12 @@ bool Configuration::SetValue
 	uint8 param = _value.GetID().GetIndex();
 	switch( _value.GetID().GetType() )
 	{
+		case ValueID::ValueType_Bool:
+		{
+			ValueBool const& valueBool = static_cast<ValueBool const&>( _value );
+			Set( param, (int32)valueBool.GetValue(), 1 );
+			return true;
+		}
 		case ValueID::ValueType_Byte:
 		{
 			ValueByte const& valueByte = static_cast<ValueByte const&>( _value );
