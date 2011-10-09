@@ -2,7 +2,7 @@
 //
 //	HidControllerImpl.cpp
 //
-//	Windows handler for accessing the HID port using HIDAPI.
+//	POSIX handler for accessing the HID port using HIDAPI.
 //
 //	Copyright (c) 2010 Jason Frazier <frazierjason@gmail.com>
 //

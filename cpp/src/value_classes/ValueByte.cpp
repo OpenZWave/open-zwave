@@ -2,7 +2,7 @@
 //
 //	ValueByte.cpp
 //
-//	Base class for all OpenZWave Value Classes
+//	Represents an 8-bit value
 //
 //	Copyright (c) 2010 Mal Lansell <openzwave@lansell.org>
 //
