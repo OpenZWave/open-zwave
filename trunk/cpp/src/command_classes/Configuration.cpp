@@ -92,9 +92,15 @@ bool Configuration::HandleMsg
 					valueInt->OnValueChanged( paramValue );
 					break;
 				}
+				case ValueID::ValueType_List:
+				{
+					ValueList* valueList = static_cast<ValueList*>( value );
+					valueList->OnValueChanged( paramValue );
+					break;
+				}
 				default:
 				{
-					Log::Write( "Invalid type for configuration parameter %d", parameter );
+					Log::Write( "Invalid type (%d) for configuration parameter %d", value->GetID().GetType(), parameter );
 				}
 			}
 		}
