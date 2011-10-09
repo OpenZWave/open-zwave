@@ -2,7 +2,7 @@
 //
 //	ValueSchedule.h
 //
-//	Represents a 16-bit value
+//	A one day schedule for the Climate Control Schedule command class
 //
 //	Copyright (c) 2010 Mal Lansell <openzwave@lansell.org>
 //
