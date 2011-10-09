@@ -2,24 +2,29 @@
 <Product>
   <!-- Configuration Parameters -->
   <CommandClass id="112">
-    <Value type="byte" index="1" genre="config" label="Report type" units="" min="0" max="1" value="0">
+    <Value type="list" index="1" genre="config" label="Report type" units="" min="0" max="1" value="0">
       <Help>
-	Defines the contents of Multilevel Sensor Report after Multilevel Sensor Get received. 0 is power. 1 is voltage.
+	Defines the contents of Multilevel Sensor Report after Multilevel Sensor Get received.
       </Help>
+      <Item label="Power" value="0" />
+      <Item label="Voltage" value="1" />
     </Value>
     <Value type="short" index="2" genre="config" label="Blinking behavior" units="" min="0" max="65535" value="0">
       <Help>
 	This is actually a double byte value. The LSB defines the total time the device needs to blink in seconds. The MSB defines the on/off interval of the blink in tenths of seconds.
       </Help>
     </Value>
-    <Value type="byte" index="80" genre="config" label="Notification status" units="" value="0">
+    <Value type="list" index="80" genre="config" label="Notification status" units="" value="0">
       <Help>
-	Enables automatic notifications to associated devices whenever there is a state change. 0 is none. 1 hail command class. 2 is basic command class report.
+	Enables automatic notifications to associated devices whenever there is a state change.
       </Help>
+      <Item label="None" value="0" />
+      <Item label="Hail" value="1" />
+      <Item label="Basic" value="2" />
     </Value>
-    <Value type="byte" index="90" genre="config" label="Enable Wattage Reports" units="" value="0">
+    <Value type="bool" index="90" genre="config" label="Enable Wattage Reports" units="" value="0">
       <Help>
-	Enable/disable Wattage threshold and percent. 0=disabled. 1=enabled.
+	Enable/disable Wattage threshold and percent.
       </Help>
     </Value>
     <Value type="short" index="91" genre="config" label="Wattage threshold" units="watts" min="0" max="32000" value="50">
@@ -32,7 +37,7 @@
 	Minimum change in percent of wattage to send a report.
       </Help>
     </Value>
-    <Value type="byte" index="100" genre="config" label="Default Group Reports" units="" write_only="true" value="0" affects="101,102,103">
+    <Value type="button" index="100" genre="config" label="Default Group Reports" units="" write_only="true" value="0" affects="101,102,103">
       <Help>
 	Set report types for groups 1, 2 and 3 to default. Reverts to 0
 	after set.
@@ -104,7 +109,7 @@
 	Multilevel Sensor Report Command(wattage) automatically.
       </Help>
     </Value>
-    <Value type="byte" index="110" genre="config" label="Default Group Time" units="" write_only="true" value="0" affects="111,112,113">
+    <Value type="button" index="110" genre="config" label="Default Group Time" units="" write_only="true" value="0" affects="111,112,113">
       <Help>
 	Set time interval for sending reports for groups 1, 2 and 3 to default.
       </Help>
@@ -129,7 +134,7 @@
 	Device tag.
       </Help>
     </Value>
-    <Value type="byte" index="255" genre="config" label="Reset device"
+    <Value type="button" index="255" genre="config" label="Reset device"
 	   units="" write_only="true" value="0">
       <Help>
 	Reset to the default configuration.
@@ -140,7 +145,9 @@
   <!-- Association Groups -->
   <CommandClass id="133">
     <Associations num_groups="1">
-      <Group index="1" max_associations="5" label="Report" auto="true" />
+      <Group index="1" max_associations="5" label="Report G1" auto="true" />
+      <Group index="2" max_associations="5" label="Report G2" auto="true" />
+      <Group index="3" max_associations="5" label="Report G3" auto="true" />
     </Associations>
   </CommandClass>
 </Product>
