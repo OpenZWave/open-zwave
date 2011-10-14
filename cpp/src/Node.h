@@ -285,12 +285,12 @@ namespace OpenZWave
 	private:
 		// Manufacturer, Product and Name are stored here so they can be set by the
 		// user even if the device does not support the relevant command classes.
-		string GetManufacturerName()const{ return m_manufacturerName; }	
+		string GetManufacturerName()const{ return m_manufacturerName; }
 		string GetProductName()const{ return m_productName; }	
 		string GetNodeName()const{ return m_nodeName; }	
 		string GetLocation()const{ return m_location; }	
 
-		string GetManufacturerId()const{ return m_manufacturerId; }	
+		string GetManufacturerId()const{ return m_manufacturerId; }
 		string GetProductType()const{ return m_productType; }	
 		string GetProductId()const{ return m_productId; }	
 
