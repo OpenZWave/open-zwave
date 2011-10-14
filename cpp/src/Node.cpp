@@ -283,6 +283,11 @@ void Node::AdvanceQueries
 				}
 				else
 				{
+					ManufacturerSpecific* cc = static_cast<ManufacturerSpecific*>( GetCommandClass( ManufacturerSpecific::StaticGetCommandClassId() ) );
+					if( cc  )
+					{
+						cc->ReLoadConfigXML();
+					}
 					m_queryStage = QueryStage_Versions;
 					m_queryRetries = 0;
 				}

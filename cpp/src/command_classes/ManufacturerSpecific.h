@@ -53,6 +53,8 @@ namespace OpenZWave
 
 		static string SetProductDetails( Node *_node, uint16 _manufacturerId, uint16 _productType, uint16 _productId );
 		
+		void ReLoadConfigXML();
+
 	private:
 		ManufacturerSpecific( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){ SetStaticRequest( StaticRequest_Values ); }
 		static bool LoadProductXML();

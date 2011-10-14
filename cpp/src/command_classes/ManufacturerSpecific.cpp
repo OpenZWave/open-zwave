@@ -109,7 +109,7 @@ string ManufacturerSpecific::SetProductDetails
 	char str[64];
 
 	if (!s_bXmlLoaded) LoadProductXML();
-	
+
 	snprintf( str, sizeof(str), "Unknown: id=%.4x", manufacturerId );
 	string manufacturerName = str;
 	
@@ -388,8 +388,19 @@ bool ManufacturerSpecific::LoadConfigXML
 			return false;
 		}
 
-		node->ReadDeviceProtocolXML( doc->RootElement() );
-		node->ReadCommandClassesXML( doc->RootElement() );
+		Node::QueryStage qs = node->GetCurrentQueryStage();
+		if( qs == Node::QueryStage_ManufacturerSpecific1 )
+		{
+			node->ReadDeviceProtocolXML( doc->RootElement() );
+		}
+		else
+		{
+			if( !node->m_manufacturerSpecificClassReceived )
+			{
+				node->ReadDeviceProtocolXML( doc->RootElement() );
+			}
+			node->ReadCommandClassesXML( doc->RootElement() );
+		}
 
 		delete doc;	
 		return true;
@@ -398,3 +409,34 @@ bool ManufacturerSpecific::LoadConfigXML
 	return false;
 }
 
+//-----------------------------------------------------------------------------
+// <ManufacturerSpecific::ReLoadConfigXML>
+// Reload previously discovered device configuration.
+//-----------------------------------------------------------------------------
+void ManufacturerSpecific::ReLoadConfigXML
+(
+)
+{
+	if (!s_bXmlLoaded) LoadProductXML();
+
+	if( Node* node = GetNodeUnsafe() )
+	{
+		uint16 manufacturerId = (uint16)strtol( node->GetManufacturerId().c_str(), NULL, 16 );
+		uint16 productType = (uint16)strtol( node->GetProductType().c_str(), NULL, 16 );
+		uint16 productId = (uint16)strtol( node->GetProductId().c_str(), NULL, 16 );
+
+		map<uint16,string>::iterator mit = s_manufacturerMap.find( manufacturerId );
+		if( mit != s_manufacturerMap.end() )
+		{
+			map<int64,Product*>::iterator pit = s_productMap.find( Product::GetKey( manufacturerId, productType, productId ) );
+			if( pit != s_productMap.end() )
+			{
+				string configPath = pit->second->GetConfigPath();
+				if( configPath.size() > 0 )
+				{
+					LoadConfigXML( configPath );
+				}
+			}
+		}
+	}
+}
