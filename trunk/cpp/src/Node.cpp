@@ -1277,6 +1277,12 @@ bool Node::SetConfigParam
 					valueInt->Set( _value );
 					break;
 				}
+				case ValueID::ValueType_List:
+				{
+					ValueList* valueList = static_cast<ValueList*>( value );
+					valueList->SetByValue( _value );
+					break;
+				}
 				default:
 				{
 				}
