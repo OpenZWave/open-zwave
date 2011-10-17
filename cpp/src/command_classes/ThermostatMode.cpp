@@ -262,10 +262,18 @@ bool ThermostatMode::HandleMsg
 				{
 					ValueList::Item item;
 					item.m_value = (int32)((i-1)<<3) + bit;
-					item.m_label = c_modeName[item.m_value];
-					m_supportedModes.push_back( item );
+					
+					if ((size_t)item.m_value >= sizeof(c_modeName)/sizeof(*c_modeName))
+					{
+						Log::Write("Received unknown thermostat mode: 0x%x", item.m_value);
+					}
+					else
+					{
+						item.m_label = c_modeName[item.m_value];
+						m_supportedModes.push_back( item );
 
-					Log::Write( "    Added mode: %s", c_modeName[item.m_value] );
+						Log::Write( "    Added mode: %s", c_modeName[item.m_value] );
+					}
 				}
 			}
 		}
