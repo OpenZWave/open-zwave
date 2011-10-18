@@ -253,7 +253,7 @@
 	</Manufacturer>
 	<Manufacturer id="0010" name="RCS">
 	  <Product type="0001" id="0002" name="TZ43 Thermostat" />
-	  <Product type="0001" id="0005" name="TZ43-IHD SMUD Thermostat" />
+	  <Product type="0001" id="0005" name="TZ43-IHD SMUD Thermostat" config="rcs/therm0005.xml" />
 	  <Product type="0001" id="0007" name="TZ45-IHD SMUD Thermostat" config="rcs/therm0007.xml" />
 	  <Product type="0001" id="0009" name="TZ45 Thermostat" />
 	  <Product type="0001" id="000a" name="TZ4Z-IHD RCS Thermostat" />
