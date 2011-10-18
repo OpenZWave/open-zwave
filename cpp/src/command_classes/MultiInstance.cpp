@@ -75,8 +75,8 @@ char const* c_genericClassName[] =
 };
 
 //-----------------------------------------------------------------------------
-// <MultiInstance::RequestInstances>												   
-// Request number of instances of the specified command class from the device									   
+// <MultiInstance::RequestInstances>
+// Request number of instances of the specified command class from the device
 //-----------------------------------------------------------------------------
 bool MultiInstance::RequestInstances
 (
@@ -260,7 +260,7 @@ void MultiInstance::HandleMultiChannelEndPointReport
 
 	if( m_endPointsAreSameClass )
 	{
-		Log::Write( "Received MultiChannelEndPointReport from node %d.  All endpoints are the same.", GetNodeId() );
+		Log::Write( "Received MultiChannelEndPointReport from node %d.  All %d endpoints are the same.", GetNodeId(), m_numEndpoints );
 	
 		// Send a single capability request to endpoint 1 (since all classes are the same)
 		char str[128];
