@@ -65,6 +65,7 @@ using namespace OpenZWave;
 //
 uint32 const c_configVersion = 3;
 
+#define MAX_TRIES 3
 
 static char const* c_libraryTypeNames[] = 
 {
@@ -167,8 +168,8 @@ Driver::~Driver
 	WriteConfig();
 
 	// The order of the statements below has been achieved by mitigating freed memory
-  	//references using a memory allocator checker. Do not rearrange unless you are
-  	//certain memory won't be referenced out of order. --Greg Satz, April 2010
+	//references using a memory allocator checker. Do not rearrange unless you are
+	//certain memory won't be referenced out of order. --Greg Satz, April 2010
 	m_exit = true;
 	m_exitEvent->Set();
 	m_wakeEvent->Set();
@@ -282,6 +283,7 @@ void Driver::DriverThreadProc
 				NotifyWatchers();
 
 				int32 timeout = 5000;	// Set the timeout for replies to 5 seconds
+				m_commandStart = time(NULL);
 
 				if( !( m_waitingForAck || m_expectedCallbackId || m_expectedReply ) )
 				{
@@ -308,16 +310,18 @@ void Driver::DriverThreadProc
 
 								uint8 targetNode = msg->GetTargetNodeId();
 								Node* node = GetNodeUnsafe( targetNode );
-								if( msg->GetSendAttempts() > 2 )
+								if( msg->GetSendAttempts() >= MAX_TRIES )
 								{
 									// Give up
-									Log::Write( "ERROR: Dropping command, expected response not received after three attempts");
+									Log::Write( "ERROR: Dropping command, expected response not received after %d attempt(s)", MAX_TRIES);
 									if( node != NULL && node->m_queryPending )
 									{
 										node->m_queryStageCompleted = true;
 									}
 									m_dropped++;
-									RemoveMsg();
+									while (m_sendQueue.size()) RemoveMsg();
+									m_timeoutLost += time(NULL) - m_commandStart;
+									Log::Write("Lost to timeouts: %d\n", m_timeoutLost);
 								}
 								else
 								{
@@ -340,7 +344,7 @@ void Driver::DriverThreadProc
 												}
 												else
 												{
-													Log::Write( "ERROR: Dropping command, node did not reply");
+													Log::Write( "ERROR: Dropping command, node %d did not reply", node->m_nodeId);
 													if( node != NULL && node->m_queryPending )
 													{
 														node->m_queryStageCompleted = true;
@@ -372,7 +376,7 @@ void Driver::DriverThreadProc
 						// m_wakeEvent exited as a result of a "Set," not a timeout, so reset the event
 						m_wakeEvent->Reset();
 					}
-				}
+				}			
 			}
 		}
 
@@ -385,7 +389,7 @@ void Driver::DriverThreadProc
 			NotifyWatchers();
 			break;
 		}
-
+			
 		if( attempts < 25 )
 		{
 			// Retry every 5 seconds for the first two minutes
@@ -406,6 +410,7 @@ void Driver::DriverThreadProc
 		}
 	}
 }
+
 
 //-----------------------------------------------------------------------------
 // <Driver::Init>
@@ -435,7 +440,7 @@ bool Driver::Init
 	// Send a NAK to the ZWave device
 	uint8 nak = NAK;
 	m_controller->Write( &nak, 1 );
-
+ 
 	// Get/set ZWave controller information in its preferred initialization order
 	list<Msg*>* const pMsgInitArray = m_controller->GetMsgInitializationSequence();
 	for (list<Msg*>::iterator it = pMsgInitArray->begin(); it != pMsgInitArray->end(); it++)
@@ -446,7 +451,7 @@ bool Driver::Init
 	//Msg* msg = new Msg( "FUNC_ID_ZW_SET_PROMISCUOUS_MODE", 0xff, REQUEST, FUNC_ID_ZW_SET_PROMISCUOUS_MODE, false, false );
 	//msg->Append( 0xff );
 	//SendMsg( msg );
-
+	
 	// Init successful
 	return true;
 }
@@ -580,6 +585,11 @@ void Driver::WriteConfig
 {
 	char str[32];
 
+	if (!m_homeId) {
+		Log::Write("Warning: Tried to write driver config with no home ID set");
+		return;
+	}
+	
 	// Create a new XML document to contain the driver configuration
 	TiXmlDocument doc;
 	TiXmlDeclaration* decl = new TiXmlDeclaration( "1.0", "utf-8", "" );
@@ -2042,7 +2052,7 @@ bool Driver::HandleSendDataRequest
 				if( m_sendQueue.front()->GetSendAttempts() >= 3 )
 				{
 					// Can't deliver message, so abort
-					Log::Write( "Removing message after three tries" );
+					Log::Write( "Removing message after %d tries", MAX_TRIES );
 					uint8 targetNode = m_sendQueue.front()->GetTargetNodeId();
 					Node* node = GetNodeUnsafe( targetNode );
 					if( node != NULL && node->m_queryPending )
@@ -2701,7 +2711,7 @@ bool Driver::HandleApplicationUpdateRequest
 			if( node )
 			{
 				// Retry the query up to three times
-				node->QueryStageRetry( Node::QueryStage_NodeInfo, 3 );
+				node->QueryStageRetry( Node::QueryStage_NodeInfo, MAX_TRIES );
 
 				// Just in case the failure was due to the node being asleep, we try
 				// to move its pending messages to its wakeup queue.  If it is not
@@ -3209,7 +3219,7 @@ uint8 Driver::GetCurrentNodeQuery
 
 			// Found a node that is awake
 		
-			// If the node has not yet passed the Instaces stage, we make it the priority...
+			// If the node has not yet passed the Instances stage, we make it the priority...
 			if( node->GetCurrentQueryStage() <= Node::QueryStage_Instances )
 			{
 				nodeId = *it;
