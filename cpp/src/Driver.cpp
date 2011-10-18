@@ -151,6 +151,8 @@ Driver::Driver
 			break;
 		}
 	}
+
+	Options::Get()->GetOptionAsBool( "NotifyTransactions", &m_notifytransactions );
 }
 
 //-----------------------------------------------------------------------------
