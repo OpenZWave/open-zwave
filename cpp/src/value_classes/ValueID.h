@@ -132,7 +132,7 @@ namespace OpenZWave
 		 * information is exposed in case it is of interest.
 		 * \return the instance of the value's command class.
 	     */
-		uint8 GetInstance()const{ return( (uint8)( (m_id & 0x00003000) >> 12 ) ); }
+		uint8 GetInstance()const{ return( (uint8)( ( (m_id1 & 0xff000000) ) >> 24 ) ); }
 
 		/** 
 		 * Get the value index.  The index is used to identify one of multiple
@@ -153,13 +153,47 @@ namespace OpenZWave
 	     */
 		ValueType GetType()const{ return( (ValueType)( m_id & 0x0000000f ) ); }
 
-		uint32 GetId()const{ return (uint32) m_id;}
+		uint64 GetId()const{ return (uint64) ( ( (uint64)m_id1 << 32 ) | m_id );}
 
 		// Comparison Operators
-		bool operator ==	( ValueID const& _other )const{ return( (m_homeId == _other.m_homeId) && (m_id == _other.m_id) ); }
-		bool operator !=	( ValueID const& _other )const{ return( (m_homeId != _other.m_homeId) || (m_id != _other.m_id) ); }
-		bool operator <		( ValueID const& _other )const{ return( (m_homeId == _other.m_homeId) ? (m_id < _other.m_id) : (m_homeId < _other.m_homeId) ); }
-		bool operator >		( ValueID const& _other )const{ return( (m_homeId == _other.m_homeId) ? (m_id > _other.m_id) : (m_homeId > _other.m_homeId) ); }
+		bool operator ==	( ValueID const& _other )const{ return( ( m_homeId == _other.m_homeId ) && ( m_id == _other.m_id ) && ( m_id1 == _other.m_id1 ) ); }
+		bool operator !=	( ValueID const& _other )const{ return( ( m_homeId != _other.m_homeId ) || ( m_id != _other.m_id ) || ( m_id1 != _other.m_id1 ) ); }
+		bool operator <		( ValueID const& _other )const
+		{
+			if( m_homeId == _other.m_homeId )
+			{
+				if( m_id == _other.m_id )
+				{
+					return( m_id1 < _other.m_id1 );
+				}
+				else
+				{
+					return( m_id < _other.m_id );
+				}
+			}
+			else
+			{
+				return( m_homeId < _other.m_homeId );
+			}
+		}
+		bool operator >		( ValueID const& _other )const
+		{
+			if( m_homeId == _other.m_homeId )
+			{
+				if( m_id == _other.m_id )
+				{
+					return( m_id1 > _other.m_id1 );
+				}
+				else
+				{
+					return( m_id > _other.m_id );
+				}
+			}
+			else
+			{
+				return( m_homeId > _other.m_homeId );
+			}
+		}
 
 		/**
 		 * Construct a value ID from its component parts.
@@ -187,14 +221,12 @@ namespace OpenZWave
 		):
 			m_homeId( _homeId )
 		{
-			assert( _instance < 4 );
-
 			m_id = (((uint32)_nodeId)<<24)
 				 | (((uint32)_genre)<<22)
 				 | (((uint32)_commandClassId)<<14)
-				 | ((((uint32)_instance)&0x03)<<12)
 				 | (((uint32)_valueIndex)<<4)
 				 | ((uint32)_type);
+			m_id1 = (((uint32)_instance)<<24);
 		}
 
 	private:
@@ -212,16 +244,15 @@ namespace OpenZWave
 		// Get the key from our own m_id
 		uint32 GetValueStoreKey()const
 		{ 
-			return m_id & 0x003ffff0;
+			return ( ( m_id & 0x003ffff0 ) | ( m_id1 & 0xff000000 ) );
 		}
 
 		// Generate a key from its component parts
 		static uint32 GetValueStoreKey( uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex )
 		{ 
-			assert( _instance < 4 );
 
-			uint32 key = (((uint32)_commandClassId)<<14)
-				 | ((((uint32)_instance)&0x03)<<12)
+			uint32 key = (((uint32)_instance)<<24)
+				 | (((uint32)_commandClassId)<<14)
 				 | (((uint32)_valueIndex)<<4);
 			
 			return key;
@@ -232,14 +263,16 @@ namespace OpenZWave
 		// 24-31:	8 bits. Node ID of device
 		// 22-23:	2 bits. genre of value (see ValueGenre enum).
 		// 14-21:	8 bits. ID of command class that created and manages this value.
-		// 12-13:	2 bits. Instance index of the command class.
+		// 12-13:	2 bits. Unused.
 		// 04-11:	8 bits. Index of value within all the value created by the command class
 		//                  instance (in configuration parameters, this is also the parameter ID).
-		//                  If we need to free up bits for other purposes, we could potentially
-		//					reduce the number used by the index to 5 bits, but we would need to
-		//					add a map of index to parameter ID in the configuration command class.
 		// 00-03:	4 bits. Type of value (bool, byte, string etc).
 		uint32	m_id;
+
+		// ID1 Packing:
+		// Bits
+		// 24-31	8 bits. Instance Index of the command class.
+		uint32	m_id1;
 
 		// Unique PC interface identifier
 		uint32  m_homeId;
@@ -248,6 +281,3 @@ namespace OpenZWave
 } // namespace OpenZWave
 
 #endif
-
-
-
