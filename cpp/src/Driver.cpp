@@ -319,6 +319,7 @@ void Driver::DriverThreadProc
 										node->m_queryStageCompleted = true;
 									}
 									m_dropped++;
+									RemoveMsg();
 									m_timeoutLost += time(NULL) - m_commandStart;
 									Log::Write("Lost to timeouts: %d\n", m_timeoutLost);
 								}
