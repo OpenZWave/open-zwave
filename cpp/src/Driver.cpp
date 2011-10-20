@@ -108,6 +108,8 @@ Driver::Driver
 	m_waitingForAck( false ),
 	m_expectedCallbackId( 0 ),
 	m_expectedReply( 0 ),
+	m_expectedCommandClassId( 0 ),
+	m_expectedNodeId( 0 ),
 	m_pollThread( new Thread( "poll" ) ),
 	m_pollMutex( new Mutex() ),
 	m_pollInterval( 30 ),                   // By default, every polled device is queried once every 30 seconds
@@ -368,6 +370,7 @@ void Driver::DriverThreadProc
 							m_expectedCallbackId = 0;
 							m_expectedReply = 0;
 							m_expectedCommandClassId = 0;
+							m_expectedNodeId = 0;
 						}
 
 					}
@@ -796,6 +799,7 @@ bool Driver::WriteMsg()
 		{
 			m_expectedCallbackId = msg->GetCallbackId();
 			m_expectedCommandClassId = msg->GetExpectedCommandClassId();
+			m_expectedNodeId = msg->GetTargetNodeId();
 			m_expectedReply = msgcmd;
 			m_waitingForAck = true;
 
@@ -914,6 +918,7 @@ void Driver::TriggerResend
 	m_expectedCallbackId = 0;
 	m_expectedReply = 0;
 	m_expectedCommandClassId = 0;
+	m_expectedNodeId = 0;
 
 	m_wakeEvent->Set();
 
@@ -1246,6 +1251,7 @@ void Driver::ProcessMsg
 					m_expectedCallbackId = _data[2];	// The callback message won't be coming, so we force the transaction to complete
 					m_expectedReply = 0;
 					m_expectedCommandClassId = 0;
+					m_expectedNodeId = 0;
 				}
 				break;
 			}
@@ -1257,6 +1263,7 @@ void Driver::ProcessMsg
 					m_expectedCallbackId = _data[2];	// The callback message won't be coming, so we force the transaction to complete
 					m_expectedReply = 0;
 					m_expectedCommandClassId = 0;
+					m_expectedNodeId = 0;
 				}
 				break;
 			}
@@ -1274,6 +1281,7 @@ void Driver::ProcessMsg
 					m_expectedCallbackId = _data[2];	// The callback message won't be coming, so we force the transaction to complete
 					m_expectedReply = 0;
 					m_expectedCommandClassId = 0;
+					m_expectedNodeId = 0;
 				}
 				break;
 			}
@@ -1303,6 +1311,7 @@ void Driver::ProcessMsg
 					m_expectedCallbackId = _data[2];	// The callback message won't be coming, so we force the transaction to complete
 					m_expectedReply = 0;
 					m_expectedCommandClassId = 0;
+					m_expectedNodeId = 0;
 				}
 				break;
 			}
@@ -1320,6 +1329,7 @@ void Driver::ProcessMsg
 					m_expectedCallbackId = _data[2];	// The callback message won't be coming, so we force the transaction to complete
 					m_expectedReply = 0;
 					m_expectedCommandClassId = 0;
+					m_expectedNodeId = 0;
 				}
 				break;
 			}
@@ -1494,11 +1504,12 @@ void Driver::ProcessMsg
 				{
 					if( m_expectedCommandClassId && ( m_expectedReply == FUNC_ID_APPLICATION_COMMAND_HANDLER ) )
 					{
-						if( m_expectedCommandClassId == _data[5] )
+						if( m_expectedCommandClassId == _data[5] && m_expectedNodeId == _data[3] )
 						{
 							Log::Write( "  Expected reply and command class was received" );
 							m_expectedReply = 0;
 							m_expectedCommandClassId = 0;
+							m_expectedNodeId = 0;
 						}
 					}
 					else
@@ -2089,6 +2100,7 @@ bool Driver::HandleSendDataRequest
 			m_expectedCallbackId = 0;
 			m_expectedReply = 0;
 			m_expectedCommandClassId = 0;
+			m_expectedNodeId = 0;
 
 			m_sendMutex->Release();		
 		}
@@ -2745,6 +2757,7 @@ bool Driver::HandleApplicationUpdateRequest
 		m_expectedCallbackId = 0;
 		m_expectedReply = 0;
 		m_expectedCommandClassId = 0;
+		m_expectedNodeId = 0;
 	}
 
 	return messageRemoved;
