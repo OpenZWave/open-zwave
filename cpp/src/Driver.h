@@ -337,6 +337,7 @@ namespace OpenZWave
 		uint8					m_expectedCallbackId;						// If non-zero, we wait for a message with this callback Id
 		uint8					m_expectedReply;							// If non-zero, we wait for a message with this function Id
 		uint8					m_expectedCommandClassId;					// If the expected reply is FUNC_ID_APPLICATION_COMMAND_HANDLER, this value stores the command class we're waiting to hear from
+		uint8					m_expectedNodeId;							// If we are waiting for a FUNC_ID_APPLICATION_COMMAND_HANDLER, make sure we only accept it from this node.
 
 	//-----------------------------------------------------------------------------
 	//	Polling Z-Wave devices
