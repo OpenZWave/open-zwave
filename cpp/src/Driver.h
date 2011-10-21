@@ -570,8 +570,8 @@ namespace OpenZWave
 		uint32 m_retries;			// Number of retransmitted messages
 		uint32 m_controllerReadCnt;		// Number of messages read from controller
 		uint32 m_controllerWriteCnt;		// Number of messages written to the controller
-		time_t m_commandStart;			// Start time of last command
-		time_t m_timeoutLost;				// Cumulative time lost to timeouts
+		//time_t m_commandStart;			// Start time of last command
+		//time_t m_timeoutLost;				// Cumulative time lost to timeouts
 	};
 
 } // namespace OpenZWave

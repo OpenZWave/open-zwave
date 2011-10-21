@@ -285,7 +285,7 @@ void Driver::DriverThreadProc
 				NotifyWatchers();
 
 				int32 timeout = 5000;	// Set the timeout for replies to 5 seconds
-				m_commandStart = time(NULL);
+				//m_commandStart = time(NULL);
 
 				if( !( m_waitingForAck || m_expectedCallbackId || m_expectedReply ) )
 				{
@@ -322,8 +322,8 @@ void Driver::DriverThreadProc
 									}
 									m_dropped++;
 									RemoveMsg();
-									m_timeoutLost += time(NULL) - m_commandStart;
-									Log::Write("Lost to timeouts: %d\n", m_timeoutLost);
+									//m_timeoutLost += time(NULL) - m_commandStart;
+									//Log::Write("Lost to timeouts: %d\n", m_timeoutLost);
 								}
 								else
 								{
