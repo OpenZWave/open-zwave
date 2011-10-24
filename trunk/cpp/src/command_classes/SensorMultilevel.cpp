@@ -166,8 +166,9 @@ bool SensorMultilevel::HandleMsg
 	if (SensorMultilevelCmd_Report == (SensorMultilevelCmd)_data[0])
 	{
 		uint8 scale;
+		uint8 precision;
 		uint8 sensorType = _data[1];
-		string valueStr = ExtractValue( &_data[2], &scale );
+		string valueStr = ExtractValue( &_data[2], &scale, &precision );
 
 		Node* node = GetNodeUnsafe();
 		if( node != NULL )
@@ -205,6 +206,10 @@ bool SensorMultilevel::HandleMsg
 
 			Log::Write( "Received SensorMultiLevel report from node %d, instance %d: value=%s%s", GetNodeId(), _instance, valueStr.c_str(), value->GetUnits().c_str() );
 			value->OnValueChanged( valueStr );
+			if( value->GetPrecision() != precision )
+			{
+				value->SetPrecision( precision );
+			}
 
 			if( node->m_queryPending )
 			{

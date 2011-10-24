@@ -372,7 +372,8 @@ bool Meter::HandleReport
 
 	// Get the value and scale
 	uint8 scale;
-	string valueStr = ExtractValue( &_data[2], &scale );
+	uint8 precision;
+	string valueStr = ExtractValue( &_data[2], &scale, &precision );
 
 	if( GetVersion() == 1 )
 	{
@@ -415,6 +416,10 @@ bool Meter::HandleReport
 			value->SetLabel( label );
 			value->SetUnits( units );
 			value->OnValueChanged( valueStr );
+			if( value->GetPrecision() != precision )
+			{
+				value->SetPrecision( precision );
+			}
 		}
 	}
 	else
@@ -432,6 +437,10 @@ bool Meter::HandleReport
 		{
 			Log::Write( "Received Meter report from node %d: %s%s=%s%s", GetNodeId(), exporting ? "Exporting ": "", value->GetLabel().c_str(), valueStr.c_str(), value->GetUnits().c_str() );
 			value->OnValueChanged( valueStr );
+			if( value->GetPrecision() != precision )
+			{
+				value->SetPrecision( precision );
+			}
 
 			// Read any previous value and time delta
 			uint8 size = _data[2] & 0x07;
@@ -451,9 +460,13 @@ bool Meter::HandleReport
 				}
 				if( previous )
 				{
-					valueStr = ExtractValue( &_data[2], &scale, 3+size );
+					valueStr = ExtractValue( &_data[2], &scale, &precision, 3+size );
 					Log::Write( "    Previous value was %s%s, received %d seconds ago.", valueStr.c_str(), previous->GetUnits().c_str(), delta );
 					previous->OnValueChanged( valueStr );
+					if( previous->GetPrecision() != precision )
+					{
+						previous->SetPrecision( precision );
+					}
 				}
 
 				// Time delta
