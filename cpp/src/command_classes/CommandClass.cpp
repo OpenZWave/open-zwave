@@ -278,6 +278,7 @@ string CommandClass::ExtractValue
 (
 	uint8 const* _data,
 	uint8* _scale,
+	uint8* _precision,
 	uint8 _valueOffset // = 1
 )const
 {
@@ -287,6 +288,11 @@ string CommandClass::ExtractValue
 	if( _scale )
 	{
 		*_scale = (_data[0] & c_scaleMask) >> c_scaleShift;
+	}
+
+	if( _precision )
+	{
+		*_precision = precision;
 	}
 
 	uint32 value = 0;

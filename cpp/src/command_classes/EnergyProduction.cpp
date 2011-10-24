@@ -125,12 +125,17 @@ bool EnergyProduction::HandleMsg
 	if (EnergyProductionCmd_Report == (EnergyProductionCmd)_data[0])
 	{
 		uint8 scale;
-		string value = ExtractValue( &_data[2], &scale );
+		uint8 precision;
+		string value = ExtractValue( &_data[2], &scale, &precision );
 
 		Log::Write( "Received an Energy production report from node %d: %s = %s", GetNodeId(), c_energyParameterNames[_data[1]], value.c_str() );
 		if( ValueDecimal* decimalValue = static_cast<ValueDecimal*>( GetValue( _instance, _data[1] ) ) )
 		{
 			decimalValue->OnValueChanged( value );
+			if( decimalValue->GetPrecision() != precision )
+			{
+				decimalValue->SetPrecision( precision );
+			}
 		}
 		Node* node = GetNodeUnsafe();
 		if( node != NULL && node->m_queryPending )

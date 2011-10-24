@@ -89,7 +89,7 @@ namespace OpenZWave
 		bool IsCreateVars()const{ return m_createVars; }
 
 		// Helper methods
-		string ExtractValue( uint8 const* _data, uint8* _scale, uint8 _valueOffset = 1 )const;
+		string ExtractValue( uint8 const* _data, uint8* _scale, uint8* _precision, uint8 _valueOffset = 1 )const;
 
 		/**
 		 *  Append a floating-point value to a message.

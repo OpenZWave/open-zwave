@@ -225,10 +225,15 @@ bool ThermostatSetpoint::HandleMsg
 		if( ValueDecimal* value = static_cast<ValueDecimal*>( GetValue( _instance, _data[1] ) ) )
 		{
 			uint8 scale;
-			string temperature = ExtractValue( &_data[2], &scale );
+			uint8 precision;
+			string temperature = ExtractValue( &_data[2], &scale, &precision );
 
 			value->SetUnits( scale ? "F" : "C" );
 			value->OnValueChanged( temperature );
+			if( value->GetPrecision() != precision )
+			{
+				value->SetPrecision( precision );
+			}
 
 			Log::Write( "Received thermostat setpoint report from node %d: Setpoint %s = %s%s", GetNodeId(), value->GetLabel().c_str(), value->GetValue().c_str(), value->GetUnits().c_str() );		
 		}
