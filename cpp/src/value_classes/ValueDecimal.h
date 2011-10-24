@@ -43,6 +43,11 @@ namespace OpenZWave
 	 */
 	class ValueDecimal: public Value
 	{
+		friend class EnergyProduction;
+		friend class Meter;
+		friend class SensorMultilevel;
+		friend class ThermostatSetpoint;
+
 	public:
 	  	ValueDecimal( uint32 const _homeId, uint8 const _nodeId, ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, string const& _label, string const& _units, bool const _readOnly, bool const _writeOnly, string const& _value );
 		ValueDecimal(){}
@@ -58,9 +63,13 @@ namespace OpenZWave
 		virtual void WriteXML( TiXmlElement* _valueElement );
 
 		string GetValue()const{ return m_value; }
+		uint8 GetPrecision()const{ return m_precision; }
 
 	private:
+		void SetPrecision( uint8 _precision ){ m_precision = _precision; }
+
 		string	m_value;
+		uint8	m_precision;
 	};
 
 } // namespace OpenZWave

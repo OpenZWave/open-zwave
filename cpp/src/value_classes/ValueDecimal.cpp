@@ -52,7 +52,8 @@ ValueDecimal::ValueDecimal
 	string const& _value
 ):
   	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Decimal, _label, _units, _readOnly, _writeOnly, false ),
-	m_value( _value )
+	m_value( _value ),
+	m_precision( 0 )
 {
 }
 

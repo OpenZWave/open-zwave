@@ -1969,7 +1969,11 @@ string Node::GetEndPointDeviceClassLabel
 	uint8 const _specific
 )
 {
+	char str[32];
 	string label;
+
+	snprintf( str, sizeof(str), "Generic 0x%.2x Specific 0x%.2x", _generic, _specific );
+	label = str;
 
 	// Read in the device class data if it has not been read already. 
 	if( !s_deviceClassesLoaded )

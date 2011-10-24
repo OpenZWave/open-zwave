@@ -1803,6 +1803,39 @@ bool Manager::GetValueListItems
 }
 
 //-----------------------------------------------------------------------------
+// <Manager::GetValueFloatPrecision>
+// Gets a value's scale as a uint8
+//-----------------------------------------------------------------------------
+bool Manager::GetValueFloatPrecision
+(
+	ValueID const& _id,
+	uint8* o_value
+)
+{
+	bool res = false;
+
+	if( o_value )
+	{
+		if( ValueID::ValueType_Decimal == _id.GetType() )
+		{
+			if( Driver* driver = GetDriver( _id.GetHomeId() ) )
+			{
+				driver->LockNodes();
+				if( ValueDecimal* value = static_cast<ValueDecimal*>( driver->GetValue( _id ) ) )
+				{
+					*o_value = value->GetPrecision();
+					value->Release();
+					res = true;
+				}
+				driver->ReleaseNodes();
+			}
+		}
+	}
+
+	return res;
+}
+
+//-----------------------------------------------------------------------------
 // <Manager::SetValue>
 // Sets the value from a bool
 //-----------------------------------------------------------------------------

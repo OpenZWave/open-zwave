@@ -875,6 +875,15 @@ namespace OpenZWave
 		bool GetValueListItems( ValueID const& _id, vector<string>* o_value );
 
 		/**
+		 * \brief Gets a float value's precision.
+		 * \param _id The unique identifier of the value.
+		 * \param o_value Pointer to a uint8 that will be filled with the precision value.
+		 * \return true if the value was obtained.  Returns false if the value is not a ValueID::ValueType_Decimal. The type can be tested with a call to ValueID::GetType
+		 * \see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListSelection, GetValueListItems 
+		 */
+		bool GetValueFloatPrecision( ValueID const& _id, uint8* o_value );
+
+		/**
 		 * \brief Sets the state of a bool.
 		 * Due to the possibility of a device being asleep, the command is assumed to suceeed, and the value
 		 * held by the node is updated directly.  This will be reverted by a future status message from the device
