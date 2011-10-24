@@ -225,7 +225,7 @@ bool ThermostatSetpoint::HandleMsg
 		if( ValueDecimal* value = static_cast<ValueDecimal*>( GetValue( _instance, _data[1] ) ) )
 		{
 			uint8 scale;
-			uint8 precision;
+			uint8 precision = 0;
 			string temperature = ExtractValue( &_data[2], &scale, &precision );
 
 			value->SetUnits( scale ? "F" : "C" );

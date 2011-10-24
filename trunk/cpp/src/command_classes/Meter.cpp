@@ -372,7 +372,7 @@ bool Meter::HandleReport
 
 	// Get the value and scale
 	uint8 scale;
-	uint8 precision;
+	uint8 precision = 0;
 	string valueStr = ExtractValue( &_data[2], &scale, &precision );
 
 	if( GetVersion() == 1 )
@@ -460,6 +460,7 @@ bool Meter::HandleReport
 				}
 				if( previous )
 				{
+					precision = 0;
 					valueStr = ExtractValue( &_data[2], &scale, &precision, 3+size );
 					Log::Write( "    Previous value was %s%s, received %d seconds ago.", valueStr.c_str(), previous->GetUnits().c_str(), delta );
 					previous->OnValueChanged( valueStr );
