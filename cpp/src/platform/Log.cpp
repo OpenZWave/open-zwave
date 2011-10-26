@@ -37,6 +37,7 @@
 using namespace OpenZWave;
 
 Log* Log::s_instance = NULL;
+i_LogImpl* Log::m_pImpl = NULL;
 static bool s_dologging;
 
 //-----------------------------------------------------------------------------
@@ -45,7 +46,7 @@ static bool s_dologging;
 //-----------------------------------------------------------------------------
 Log* Log::Create
 (
-	string const& _filename 
+	string const& _filename
 )
 {
 	if( NULL == s_instance )
@@ -58,6 +59,25 @@ Log* Log::Create
 }
 
 //-----------------------------------------------------------------------------
+//	<Log::Create>
+//	Static creation of the singleton
+//-----------------------------------------------------------------------------
+Log* Log::Create
+(
+	i_LogImpl *LogClass
+)
+{
+	if (NULL == s_instance )
+	{
+		s_instance = new Log( "" );
+		s_dologging = true;
+	}
+	SetLoggingClass( LogClass );
+	return s_instance;
+}
+
+
+//-----------------------------------------------------------------------------
 //	<Log::Destroy>
 //	Static method to destroy the logging singleton.
 //-----------------------------------------------------------------------------
@@ -67,6 +87,20 @@ void Log::Destroy
 {
 	delete s_instance;
 	s_instance = NULL;
+}
+
+//-----------------------------------------------------------------------------
+//	<Log::Create>
+//	Static creation of the singleton
+//-----------------------------------------------------------------------------
+bool Log::SetLoggingClass
+(
+	i_LogImpl *LogClass
+)
+{
+	delete m_pImpl;
+	m_pImpl = LogClass;
+	return true;
 }
 
 //-----------------------------------------------------------------------------
@@ -97,12 +131,12 @@ bool Log::GetLoggingState
 //	Write to the log
 //-----------------------------------------------------------------------------
 void Log::Write
-( 
+(
 	char const* _format,
-	... 
+	...
 )
 {
-	if( s_instance && s_dologging )
+	if( s_instance && s_dologging && s_instance->m_pImpl )
 	{
 	  	s_instance->m_logMutex->Lock();
 		va_list args;
@@ -119,11 +153,12 @@ void Log::Write
 //-----------------------------------------------------------------------------
 Log::Log
 (
-	string const& _filename 
+	string const& _filename
 ):
-	m_pImpl( new LogImpl( _filename ) ),
 	m_logMutex( new Mutex() )
 {
+	m_pImpl = new LogImpl( _filename );
+
 }
 
 //-----------------------------------------------------------------------------

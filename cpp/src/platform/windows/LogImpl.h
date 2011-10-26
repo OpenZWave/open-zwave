@@ -29,12 +29,13 @@
 #define _LogImpl_H
 
 #include <string>
+#include "Log.h"
 
 namespace OpenZWave
 {
 	/** \brief Windows-specific implementation of the Log class.
 	 */
-	class LogImpl
+	class LogImpl : public i_LogImpl
 	{
 	private:
 		friend class Log;
