@@ -28,12 +28,20 @@
 #ifndef _Log_H
 #define _Log_H
 
+#include <stdarg.h>
 #include <string>
 
 namespace OpenZWave
 {
 	class Mutex;
-	class LogImpl;
+	class i_LogImpl
+	{
+	public:
+		i_LogImpl() { } ;
+		virtual ~i_LogImpl() { } ;
+		virtual void Write( char const* _format, va_list _args ) = 0;
+	};
+
 
 	/** \brief Implements a platform-independent log...written to the console and, optionally, a file.
 	 */
@@ -50,12 +58,30 @@ namespace OpenZWave
 		static Log* Create( string const& _filename );
 
 		/**
+		 * Create a log.
+		 * Creates the cross-platform logging singleton.
+		 * Any previous log will be cleared.
+		 * \param LogClass a Logging Class that inherits the i_LogImpl Class to use to Log
+		 * \return a pointer to the logging object.
+		 * \see Destroy, Write
+		 */
+
+		static Log* Create( i_LogImpl *LogClass );
+
+		/**
 		 * Destroys the log.
 		 * Destroys the logging singleton.  The log can no longer
 		 * be written to without another call to Create.
 		 * \see Create, Write
 		 */
 		static void Destroy();
+
+		/**
+		 * \brief Set the Logging Implmentation Class to replace the standard File/Console Loggin
+		 * \param LogClass A Logging Class that inherits the i_LogImpl Class used to Log to
+		 * \return Bool Value indicating success or failure
+		 */
+		static bool SetLoggingClass(i_LogImpl *LogClass );
 
 		/**
 		 * \brief Enable or disable library logging.
@@ -82,7 +108,7 @@ namespace OpenZWave
 		Log( string const& _filename );
 		~Log();
 
-		LogImpl*	m_pImpl;	// Pointer to an object that encapsulates the platform-specific logging implementation.
+		static i_LogImpl*	m_pImpl;	// Pointer to an object that encapsulates the platform-specific logging implementation.
 		static Log*	s_instance;
 		Mutex*		m_logMutex;
 	};
