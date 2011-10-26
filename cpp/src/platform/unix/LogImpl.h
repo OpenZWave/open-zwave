@@ -32,10 +32,11 @@
 #include <stdarg.h>
 #include <time.h>
 #include <sys/time.h>
+#include "Log.h"
 
 namespace OpenZWave
 {
-	class LogImpl
+	class LogImpl : public i_LogImpl
 	{
 	private:
 		friend class Log;
