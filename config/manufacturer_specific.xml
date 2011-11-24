@@ -167,6 +167,7 @@
 	<Manufacturer id="001c" name="IntelliCon">
 	</Manufacturer>
 	<Manufacturer id="0005" name="Intermatic">
+	  <Product type="0002" id="0003" name="HA-02 Appliance Module" />
 	  <Product type="0003" id="0003" name="HA-03WD Lamp Module" />
 	  <Product type="0004" id="0003" name="HA-04C Outdoor Module" />
 	  <Product type="0005" id="0003" name="HA-05C Lamp Screw In Module" />
