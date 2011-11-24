@@ -1005,7 +1005,7 @@ bool Driver::IsControllerCommand
 		( _command <= FUNC_ID_ZW_REQUEST_NODE_NEIGHBOR_UPDATE ) ) // 0x48
 		return true;
 	if( ( _command >= FUNC_ID_ZW_ADD_NODE_TO_NETWORK ) && // 0x4a
-		( _command <= FUNC_ID_ZW_SET_LEARN_MODE ) )   // 0x50
+		( _command <= FUNC_ID_ZW_GET_SUC_NODE_ID ) )   // 0x56
 		return true;
 	if( ( _command >= FUNC_ID_ZW_REMOVE_FAILED_NODE_ID ) && // 0x61
 		( _command <= FUNC_ID_ZW_REPLACE_FAILED_NODE ) ) // 0x63

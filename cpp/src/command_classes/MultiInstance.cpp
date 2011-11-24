@@ -340,7 +340,7 @@ void MultiInstance::HandleMultiChannelCapabilityReport
 			if( !cc )
 			{
 				cc = node->AddCommandClass( commandClassId );
-				if( afterMark )
+				if( cc && afterMark )
 				{
 					cc->SetAfterMark();
 				}
