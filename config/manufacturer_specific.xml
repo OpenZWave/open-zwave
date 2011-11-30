@@ -150,8 +150,9 @@
 	  <Product type="0011" id="0001" name="TH8320ZW1000 Touchscreen Thermostat" />
 	</Manufacturer>
 	<Manufacturer id="0059" name="Horstmann">
-	  <Product type="0001" id="0002" name="AS2-RF Thermostat Transmitter" />
 	  <Product type="0001" id="0001" name="ASR-RF Thermostat Receiver" />
+	  <Product type="0001" id="0002" name="AS2-RF Thermostat Transmitter" />
+	  <Product type="0003" id="0001" name="ASR-ZW Thermostat Receiver" />
 	</Manufacturer>
 	<Manufacturer id="0011" name="iCOM Tech">
 	</Manufacturer>
