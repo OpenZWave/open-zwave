@@ -253,6 +253,7 @@
 	<Manufacturer id="0100" name="Reitz-Group.de">
 	</Manufacturer>
 	<Manufacturer id="5254" name="Remotec">
+	  <Product type="0000" id="531f" name="Z-URC" config="remotec/zurc.xml" />
 	</Manufacturer>
 	<Manufacturer id="0010" name="RCS">
 	  <Product type="0001" id="0002" name="TZ43 Thermostat" />
@@ -322,5 +323,8 @@
 	<Manufacturer id="004f" name="Z-Wave Technologia">
 	</Manufacturer>
 	<Manufacturer id="0021" name="Zykronix">
+	</Manufacturer>
+	<Manufacturer id="010f" name="FIBARO System">
+	  <Product type="0100" id="0104" name="FGD211 Universal Dimmer 500W" />
 	</Manufacturer>
 </ManufacturerSpecificData>
