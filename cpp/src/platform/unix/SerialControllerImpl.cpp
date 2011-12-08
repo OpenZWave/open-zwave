@@ -57,6 +57,7 @@ SerialControllerImpl::~SerialControllerImpl
 (
 )
 {
+	flock(m_hSerialController, LOCK_UN);
     if(m_hSerialController >= 0)
 	close( m_hSerialController );
 #ifdef OZW_DEBUG
