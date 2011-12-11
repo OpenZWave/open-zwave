@@ -4,5 +4,5 @@
   * [http://www.opensourceautomation.com Open Source Automation]
   * [http://projects.maartendamen.com/projects/pyopenzwave/ py-openzwave] ([http://github.com/maartendamen/py-openzwave github])
   * [http://code.google.com/p/py-openzwave-extension/ py-openzwave-extension]
-  * [https://github.com/ekarak/Thrift4OZW Thrift4OZW]
+  * [https://github.com/ekarak/Thrift4OZW Thrift4OZW] - An external interface to OpenZWave using Thrift & STOMP
   * [http://code.google.com/p/zvirtualscenes/ zVirtualScenes] - A software scene controller for ZWave devices
