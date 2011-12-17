@@ -121,6 +121,11 @@ void ThermostatMode::WriteXML
 	TiXmlElement* _ccElement
 )
 {
+	if( m_supportedModes.empty() )
+	{
+		return;
+	}
+
 	CommandClass::WriteXML( _ccElement );
 
 	if( Node* node = GetNodeUnsafe() )
@@ -236,8 +241,10 @@ bool ThermostatMode::HandleMsg
 		if( ValueList* valueList = static_cast<ValueList*>( GetValue( _instance, 0 ) ) )
 		{
 			valueList->OnValueChanged( _data[1]&0x1f );
-			Log::Write( "Received thermostat mode from node %d: %s", GetNodeId(), valueList->GetItem().m_label.c_str() );		
+			Log::Write( "Received thermostat mode from node %d: %s", GetNodeId(), valueList->GetItem().m_label.c_str() );
 		}
+		else
+			Log::Write( "Received thermostat mode from node %d: index %d", GetNodeId(), _data[1]&0x1f );
 		Node* node = GetNodeUnsafe();
 		if( node != NULL && node->m_queryPending )
 		{
