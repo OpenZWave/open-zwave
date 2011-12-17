@@ -241,7 +241,11 @@ void Value::ReadXML
 		char const* str = helpElement->Value();
 		if( str && !strcmp( str, "Help" ) )
 		{
-			m_help = helpElement->GetText();
+			str = helpElement->GetText();
+			if( str )
+			{
+				m_help = str;
+			}
 			break;
 		}
 
