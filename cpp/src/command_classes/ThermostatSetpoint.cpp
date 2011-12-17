@@ -257,13 +257,12 @@ bool ThermostatSetpoint::HandleMsg
 			// Parse the data for the supported setpoints
 			for( uint32 i=1; i<_length-1; ++i )
 			{
-				int32 bit = m_setPointBase;
-				for( ; bit<8; ++bit )
+				for( int32 bit=0; bit<8; ++bit )
 				{
 					if( ( _data[i] & (1<<bit) ) != 0 )
 					{
 						// Add supported setpoint
-						int32 index = (int32)((i-1)<<3) + bit;
+						int32 index = (int32)((i-1)<<3) + bit + m_setPointBase;
 						if( index < ThermostatSetpoint_Count )
 						{
 						  	node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, index, c_setpointName[index], "C", false, false, "0.0" );
