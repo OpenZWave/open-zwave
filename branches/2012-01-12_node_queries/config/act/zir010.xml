@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Product>
+	<!-- Configuration Parameters -->
+	<CommandClass id="112">
+		<Value type="list" index="17" genre="config" label="Mode" value="0" >
+			<Item label="Lighting" value="0" />
+			<Item label="Alarm" value="1" />
+			<Item label="Sensor" value="2" />
+		</Value>
+		<Value type="byte" index="18" genre="config" label="Off/Idle Delay" units="minutes" min="0" max="255" value="0" />
+		<Value type="list" index="19" genre="config" label="Unsolicited Commands" value="1" >
+			<Item label="No" value="0" />
+			<Item label="Yes" value="1" />
+		</Value>
+		<Value type="byte" index="22" genre="config" label="Awake Time" units="seconds" min="15" max="45" value="30" />
+	</CommandClass>
+	
+	<!-- Association Groups -->
+	<CommandClass id="133">
+		<Associations num_groups="3">
+			<Group index="1" max_associations="5" label="Motion" auto="true"/>
+			<Group index="2" max_associations="5" label="Tamper" />
+			<Group index="3" max_associations="5" label="Battery" auto="true" />
+		</Associations>
+	</CommandClass>
+</Product>
+
