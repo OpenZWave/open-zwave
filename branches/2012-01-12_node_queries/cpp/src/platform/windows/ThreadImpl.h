@@ -4,7 +4,8 @@
 //
 //	Windows implementation of a cross-platform thread
 //
-//	Copyright (c) 2010 Mal Lansell <openzwave@lansell.org>
+//	Copyright (c) 2010 Mal Lansell <mal@lansell.org>
+//	All rights reserved.
 //
 //	SOFTWARE NOTICE AND LICENSE
 //
@@ -24,7 +25,6 @@
 //	along with OpenZWave.  If not, see <http://www.gnu.org/licenses/>.
 //
 //-----------------------------------------------------------------------------
-
 #ifndef _ThreadImpl_H
 #define _ThreadImpl_H
 
@@ -34,6 +34,9 @@
 
 namespace OpenZWave
 {
+	class Thread;
+	class Event;
+
 	/** \brief Windows-specific implementation of the Thread class.
 	 */
 	class ThreadImpl
@@ -41,19 +44,21 @@ namespace OpenZWave
 	private:
 		friend class Thread;
 
-		ThreadImpl( string const& _tname );
+		ThreadImpl( Thread* _owner, string const& _name );
 		~ThreadImpl();
 
-		bool Start( Thread::pfnThreadProc_t _pfnThreadProc, void* _context );
-		bool Stop();
-		bool IsRunning()const{ return m_bIsRunning; }
+		bool Start( Thread::pfnThreadProc_t _pfnThreadProc, Event* _exitEvent, void* _context );
 		void Sleep( uint32 _milliseconds );
+		bool Terminate();
+
+		bool IsSignalled();
 
 		void Run();
 		static DWORD WINAPI ThreadProc( void* _pArg );
 
+		Thread*					m_owner;
 		HANDLE					m_hThread;
-		HANDLE					m_hExitEvent;
+		Event*					m_exitEvent;
 		Thread::pfnThreadProc_t	m_pfnThreadProc;
 		void*					m_context;
 		bool					m_bIsRunning;

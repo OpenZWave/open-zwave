@@ -4,7 +4,8 @@
 //
 //	Cross-platform message and error logging
 //
-//	Copyright (c) 2010 Mal Lansell <openzwave@lansell.org>
+//	Copyright (c) 2010 Mal Lansell <mal@lansell.org>
+//	All rights reserved.
 //
 //	SOFTWARE NOTICE AND LICENSE
 //
@@ -24,7 +25,6 @@
 //	along with OpenZWave.  If not, see <http://www.gnu.org/licenses/>.
 //
 //-----------------------------------------------------------------------------
-
 #include <stdarg.h>
 
 #include "Defs.h"
@@ -143,7 +143,7 @@ void Log::Write
 		va_start( args, _format );
 		s_instance->m_pImpl->Write( _format, args );
 		va_end( args );
-		s_instance->m_logMutex->Release();
+		s_instance->m_logMutex->Unlock();
 	}
 }
 
@@ -169,6 +169,6 @@ Log::~Log
 (
 )
 {
-	delete m_logMutex;
+	m_logMutex->Release();
 	delete m_pImpl;
 }

@@ -137,13 +137,14 @@ void Association::WriteXML
 bool Association::RequestState
 (
 	uint32 const _requestFlags,
-	uint8 const _instance
+	uint8 const _instance,
+	Driver::MsgQueue const _queue
 )
 {
 	if( ( _requestFlags & RequestFlag_Static ) && HasStaticRequest( StaticRequest_Values ) )
 	{
 		// Request the supported group info
-		return RequestValue( _requestFlags, 0, _instance );
+		return RequestValue( _requestFlags, 0, _instance, _queue );
 	}
 
 	return false;
@@ -157,7 +158,8 @@ bool Association::RequestValue
 (
 	uint32 const _requestFlags,
 	uint8 const _dummy1,	// = 0 (not used)
-	uint8 const _instance
+	uint8 const _instance,
+	Driver::MsgQueue const _queue
 )
 {
 	if( _instance != 1 )
@@ -173,7 +175,7 @@ bool Association::RequestValue
 	msg->Append( GetCommandClassId() );
 	msg->Append( AssociationCmd_GroupingsGet );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	GetDriver()->SendMsg( msg );
+	GetDriver()->SendMsg( msg, _queue );
 	return true;
 }
 
@@ -226,8 +228,6 @@ bool Association::HandleMsg
 			m_numGroups = _data[1];
 			Log::Write( "Received Association Groupings report from node %d.  Number of groups is %d", GetNodeId(), m_numGroups );
 			ClearStaticRequest( StaticRequest_Values );
-			if( node->m_queryPending )
-				node->m_queryStageCompleted = true;
 			handled = true;
 		}
 		else if( AssociationCmd_Report == (AssociationCmd)_data[0] )
@@ -309,8 +309,6 @@ bool Association::HandleMsg
 				}
 			}
 
-			if( node->m_queryPending )
-				node->m_queryStageCompleted = true;
 			handled = true;
 		}
 	}
@@ -336,11 +334,7 @@ void Association::QueryGroup
 	msg->Append( AssociationCmd_Get );
 	msg->Append( _groupIdx );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	if( _requestFlags && CommandClass::RequestFlag_LowPriority )
-	{
-		msg->SetPriority( Msg::MsgPriority_Low );
-	}
-	GetDriver()->SendMsg( msg );
+	GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 }
 
 //-----------------------------------------------------------------------------
@@ -363,7 +357,7 @@ void Association::Set
 	msg->Append( _groupIdx );
 	msg->Append( _targetNodeId );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	GetDriver()->SendMsg( msg );
+	GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 }
 
 //-----------------------------------------------------------------------------
@@ -386,6 +380,6 @@ void Association::Remove
 	msg->Append( _groupIdx );
 	msg->Append( _targetNodeId );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	GetDriver()->SendMsg( msg );
+	GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 }
 

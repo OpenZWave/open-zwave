@@ -4,7 +4,8 @@
 //
 //	Windows implementation of message and error logging
 //
-//	Copyright (c) 2010 Mal Lansell <openzwave@lansell.org>
+//	Copyright (c) 2010 Mal Lansell <mal@lansell.org>
+//	All rights reserved.
 //
 //	SOFTWARE NOTICE AND LICENSE
 //
@@ -24,10 +25,10 @@
 //	along with OpenZWave.  If not, see <http://www.gnu.org/licenses/>.
 //
 //-----------------------------------------------------------------------------
-
 #ifndef _LogImpl_H
 #define _LogImpl_H
 
+#include "Defs.h"
 #include <string>
 #include "Log.h"
 

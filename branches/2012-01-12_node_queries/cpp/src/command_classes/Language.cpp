@@ -57,12 +57,13 @@ enum
 bool Language::RequestState
 (
 	uint32 const _requestFlags,
-	uint8 const _instance
+	uint8 const _instance,
+	Driver::MsgQueue const _queue
 )
 {
 	if( ( _requestFlags & RequestFlag_Static ) && HasStaticRequest( StaticRequest_Values ) )
 	{
-		return RequestValue( _requestFlags, 0, _instance );
+		return RequestValue( _requestFlags, 0, _instance, _queue );
 	}
 
 	return false;
@@ -76,7 +77,8 @@ bool Language::RequestValue
 (
 	uint32 const _requestFlags,
 	uint8 const _dummy1,	// = 0 (not used)
-	uint8 const _instance
+	uint8 const _instance,
+	Driver::MsgQueue const _queue
 )
 {
 	if( _instance != 1 )
@@ -91,7 +93,7 @@ bool Language::RequestValue
 	msg->Append( GetCommandClassId() );
 	msg->Append( LanguageCmd_Get );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	GetDriver()->SendMsg( msg );
+	GetDriver()->SendMsg( msg, _queue );
 	return true;
 }
 
@@ -131,12 +133,6 @@ bool Language::HandleMsg
 		{
 			countryValue->OnValueChanged( country );
 		}
-
-		if( Node* node = GetNodeUnsafe() )
-		{
-			node->m_queryStageCompleted = true;
-		}
-
 		return true;
 	}
 

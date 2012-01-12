@@ -4,7 +4,8 @@
 //
 //	Windows implementation of a cross-platform thread
 //
-//	Copyright (c) 2010 Mal Lansell <openzwave@lansell.org>
+//	Copyright (c) 2010 Mal Lansell <mal@lansell.org>
+//	All rights reserved.
 //
 //	SOFTWARE NOTICE AND LICENSE
 //
@@ -24,8 +25,9 @@
 //	along with OpenZWave.  If not, see <http://www.gnu.org/licenses/>.
 //
 //-----------------------------------------------------------------------------
-
 #include "Defs.h"
+#include "Event.h"
+#include "Thread.h"
 #include "ThreadImpl.h"
 
 using namespace OpenZWave;
@@ -37,14 +39,15 @@ using namespace OpenZWave;
 //-----------------------------------------------------------------------------
 ThreadImpl::ThreadImpl
 (
-	string const& _tname
+	Thread* _owner,
+	string const& _name
 ):
+	m_owner( _owner ),
 	m_hThread( INVALID_HANDLE_VALUE ),
 	m_bIsRunning( false ),
-	m_name( _tname )
+	m_name( _name )
 {
-	// Create an event allowing us to tell the ZWave Thread to exit
-	m_hExitEvent = CreateEvent( NULL, TRUE, FALSE, NULL );
+
 }
 
 //-----------------------------------------------------------------------------
@@ -55,8 +58,6 @@ ThreadImpl::~ThreadImpl
 (
 )
 {
-	Stop();
-	CloseHandle( m_hExitEvent );
 }
 
 //-----------------------------------------------------------------------------
@@ -65,40 +66,21 @@ ThreadImpl::~ThreadImpl
 //-----------------------------------------------------------------------------
 bool ThreadImpl::Start
 (
-	Thread::pfnThreadProc_t _pfnThreadProc, 
+	Thread::pfnThreadProc_t _pfnThreadProc,
+	Event* _exitEvent,
 	void* _context 
 )
 {
-	ResetEvent( m_hExitEvent );
-
 	// Create a thread to run the specified function
 	m_pfnThreadProc = _pfnThreadProc;
 	m_context = _context;
+	m_exitEvent = _exitEvent;
+	m_exitEvent->Reset();
 
 	HANDLE hThread = ::CreateThread( NULL, 0, ThreadImpl::ThreadProc, this, CREATE_SUSPENDED, NULL );
 	m_hThread = hThread;
 
 	::ResumeThread( hThread );
-	return true;
-}
-
-//-----------------------------------------------------------------------------
-//	<ThreadImpl::Stop>
-//	Stop a function running on this thread
-//-----------------------------------------------------------------------------
-bool ThreadImpl::Stop
-(
-)
-{
-	if( !m_bIsRunning )
-	{
-		return false;
-	}
-
-	::TerminateThread( m_hThread, 0 );
-	CloseHandle( m_hThread );
-	m_hThread = INVALID_HANDLE_VALUE;
-
 	return true;
 }
 
@@ -112,6 +94,36 @@ void ThreadImpl::Sleep
 )
 {
 	::Sleep(_millisecs);
+}
+
+//-----------------------------------------------------------------------------
+//	<ThreadImpl::Terminate>
+//	Force the thread to stop
+//-----------------------------------------------------------------------------
+bool ThreadImpl::Terminate
+(
+)
+{
+	if( !m_bIsRunning )
+	{
+		return false;
+	}
+
+	// This can cause all sorts of trouble if the thread is holding a lock.
+	TerminateThread( m_hThread, 0 );
+	m_hThread = INVALID_HANDLE_VALUE;
+	return true;
+}
+
+//-----------------------------------------------------------------------------
+//	<ThreadImpl::IsSignalled>
+//	Test whether the thread has completed
+//-----------------------------------------------------------------------------
+bool ThreadImpl::IsSignalled
+(
+)
+{
+	return !m_bIsRunning;
 }
 
 //-----------------------------------------------------------------------------
@@ -137,7 +149,10 @@ void ThreadImpl::Run
 )
 {
 	m_bIsRunning = true;
-	m_pfnThreadProc( m_context );
+	m_pfnThreadProc( m_exitEvent, m_context );
 	m_bIsRunning = false;
+	
+	// Let any watchers know that the thread has finished running.
+	m_owner->Notify();
 }
 

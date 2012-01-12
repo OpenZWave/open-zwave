@@ -43,19 +43,22 @@ namespace OpenZWave
 {
 	class HidControllerImpl
 	{
+	public:
+		void ReadThreadProc();
+
 	private:
 		friend class HidController;
 
-		HidControllerImpl();
+		HidControllerImpl( HidController* _owner );
 		~HidControllerImpl();
 
 		bool Open( string const& _HidControllerName, uint32 const _vendorId, uint32 const _productId, string const& _serialNumber );
 		void Close();
 
-        uint32 Read( uint8* _buffer, uint32 _length, IController::ReadPacketSegment _segment );
 		uint32 Write( uint8* _buffer, uint32 _length );
-		bool Wait( int32 _timeout );
-
+		
+		bool Init( uint32 const _attempts );
+		void Read();
 
         // helpers for internal use only
 
@@ -78,7 +81,15 @@ namespace OpenZWave
 
 		hid_device*			m_hHidController;
         bool                m_hidControllerOpen;
-        uint8*              m_hidFeatureReportReadBuffer;
+
+		string				m_hidControllerName;
+		uint32				m_vendorId;
+		uint32				m_productId;
+		string				m_serialNumber;
+
+		HidController*		m_owner;
+		HANDLE				m_hThread;
+		HANDLE				m_hExit;
 	};
 
 } // namespace OpenZWave

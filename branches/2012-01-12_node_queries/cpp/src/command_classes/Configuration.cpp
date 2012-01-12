@@ -77,7 +77,7 @@ bool Configuration::HandleMsg
 				case ValueID::ValueType_Bool:
 				{
 					ValueBool* valueBool = static_cast<ValueBool*>( value );
-					valueBool->OnValueChanged( (bool)paramValue );
+					valueBool->OnValueChanged( paramValue != 0 );
 					break;
 				}
 				case ValueID::ValueType_Byte:
@@ -208,8 +208,7 @@ bool Configuration::SetValue
 bool Configuration::RequestValue
 (
 	uint32 const _requestFlags,
-	uint8 const _parameter,		// parameter number is encoded as the Index portion of ValueID
-	uint8 const _instance
+	uint8 const _parameter			// parameter number is encoded as the Index portion of ValueID
 )
 {
 	Msg* msg = new Msg( "ConfigurationCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
@@ -219,7 +218,7 @@ bool Configuration::RequestValue
 	msg->Append( ConfigurationCmd_Get );
 	msg->Append( _parameter );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	GetDriver()->SendMsg( msg );
+	GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 	return true;
 }
 
@@ -254,5 +253,5 @@ void Configuration::Set
 	}
 	msg->Append( (uint8)_value );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	GetDriver()->SendMsg( msg );
+	GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 }

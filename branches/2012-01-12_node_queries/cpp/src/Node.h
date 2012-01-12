@@ -126,7 +126,6 @@ namespace OpenZWave
 	public:
 		enum QueryStage														
 		{
-			QueryStage_None,					/**< Query process hasn't started for this node */
 			QueryStage_ProtocolInfo,			/**< Retrieve protocol information */
 			QueryStage_WakeUp,					/**< Start wake up process if a sleeping node*/
 			QueryStage_ManufacturerSpecific1,	/**< Retrieve manufacturer name and product ids if ProtocolInfo lets us */
@@ -140,7 +139,8 @@ namespace OpenZWave
 			QueryStage_Session,					/**< Retrieve session information (changes infrequently) */
 			QueryStage_Dynamic,					/**< Retrieve dynamic information (changes frequently) */
 			QueryStage_Configuration,			/**< Retrieve configurable parameter information (only done on request) */
-			QueryStage_Complete					/**< Query process is completed for this node */
+			QueryStage_Complete,				/**< Query process is completed for this node */
+			QueryStage_None						/**< Query process hasn't started for this node */
 		};
 
 
@@ -156,11 +156,12 @@ namespace OpenZWave
 		 * <p>
 		 * The individual command classes also store some state information as to whether 
 		 * they have had a response to certain queries.  This state information is 
-		 * initilized by the SetStaticRequests 
-		 * call in QueryStage_None.  It is also saved, so we do not need to request state 
-		 * from every command class if some have previously responded. 
+		 * initilized by the SetStaticRequests call in QueryStage_None.  It is also saved,
+		 * so we do not need to request state  from every command class if some have previously
+		 * responded. 
 		 */
 		void AdvanceQueries();
+
 		/** 
 		 *  Signal that a specific query stage has been completed for this node.  This will
 		 *  only work if the query process for this node is indeed at the specified stage.  
@@ -168,6 +169,7 @@ namespace OpenZWave
 		 *  \param _stage The current stage of the query process.
 		 */
 		void QueryStageComplete( QueryStage const _stage );
+
 		/** 
 		 *  Retry the specified query stage (up to _maxAttempts retries).  This will
 		 *  only work if the query process for this node is indeed at the specified stage.  
@@ -176,19 +178,22 @@ namespace OpenZWave
 		 *  \param _maxAttempts 
 		 */
 		void QueryStageRetry( QueryStage const _stage, uint8 const _maxAttempts = 0 );	    // maxAttempts of zero means no limit
+
 		/**
-		 * This function sets the query stage for the node (but only to an earlier stage).  If
-		 * a later stage is specified, it is ignored.
+		 * This function sets the query stage for the node (but only to an earlier stage).
+		 * If a later stage is specified than the current one, it is ignored.
 		 * \param _stage The desired query stage.
 		 * \see m_queryStage, m_queryPending
 		 */
-		void GoBackToQueryStage( QueryStage const _stage );									// Used to move back to repeat from an earlier stage. 
+		void SetQueryStage( QueryStage const _stage );	 
+
 		/**
 		 * Returns the current query stage enum.
 		 * \return Enum value with the current query stage.
 		 * \see m_queryStage
 		 */
 		Node::QueryStage GetCurrentQueryStage() { return m_queryStage; }
+
 		/**
 		 * Returns the specified query stage string.
 		 * \param _stage The query stage.
@@ -196,6 +201,7 @@ namespace OpenZWave
 		 * \see m_queryStage, m_queryPending
 		 */
 		string GetQueryStageName( QueryStage const _stage );
+
 		/**
 		 *  This function handles a response to the FUNC_ID_ZW_GET_NODE_PROTOCOL_INFO
 		 *  command for this node.  If protocol information has already been retrieved
@@ -221,7 +227,6 @@ namespace OpenZWave
 		bool		m_queryPending;
 		bool		m_queryConfiguration;
 		uint8		m_queryRetries;
-		bool		m_queryStageCompleted;
 		bool		m_protocolInfoReceived;
 		bool		m_nodeInfoReceived;
 		bool		m_manufacturerSpecificClassReceived;

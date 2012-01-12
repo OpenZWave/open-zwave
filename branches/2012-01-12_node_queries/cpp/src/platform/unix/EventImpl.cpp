@@ -1,10 +1,11 @@
+//-----------------------------------------------------------------------------
 //
-// EventImpl.cpp
+//	EventImpl.cpp
 //
-// POSIX implementation of a cross-platform event
+//	POSIX implementation of a cross-platform event
 //
-// This code was based off of code from:
-//   http://www.cs.wustl.edu/~schmidt/win32-cv-2.html
+//	Copyright (c) 2010, Greg Satz <satz@iranger.com>
+//	All rights reserved.
 //
 //	SOFTWARE NOTICE AND LICENSE
 //
@@ -24,7 +25,6 @@
 //	along with OpenZWave.  If not, see <http://www.gnu.org/licenses/>.
 //
 //-----------------------------------------------------------------------------
-
 #include "Defs.h"
 #include "EventImpl.h"
 
@@ -38,21 +38,21 @@ using namespace OpenZWave;
 //-----------------------------------------------------------------------------
 EventImpl::EventImpl
 (
-)
+):
+	m_manualReset( true ),
+	m_isSignaled( false ),
+	m_waitingThreads( 0 )
 {
-	// Create a manual reset event
-	manual_reset = true;
-	is_signaled = false;
-	waiting_threads = 0;
 	pthread_mutexattr_t ma;
 	pthread_mutexattr_init( &ma );
 	pthread_mutexattr_settype( &ma, PTHREAD_MUTEX_ERRORCHECK );
-	pthread_mutex_init( &lock, &ma );
+	pthread_mutex_init( &m_lock, &ma );
 	pthread_mutexattr_destroy( &ma );
+	
 	pthread_condattr_t ca;
 	pthread_condattr_init( &ca );
 	pthread_condattr_setpshared( &ca, PTHREAD_PROCESS_PRIVATE );
-	pthread_cond_init( &condition, &ca );
+	pthread_cond_init( &m_condition, &ca );
 	pthread_condattr_destroy( &ca );
 }
 
@@ -64,8 +64,8 @@ EventImpl::~EventImpl
 (
 )
 {
-	pthread_mutex_destroy( &lock );
-	pthread_cond_destroy( &condition );
+	pthread_mutex_destroy( &m_lock );
+	pthread_cond_destroy( &m_condition );
 }
 
 //-----------------------------------------------------------------------------
@@ -76,20 +76,24 @@ void EventImpl::Set
 (
 )
 {
-	pthread_mutex_lock( &lock );
-	if( manual_reset )
+	pthread_mutex_lock( &m_lock );
+	if( m_manualReset )
 	{
-	  is_signaled = true;
-	  pthread_cond_broadcast( &condition );
+		m_isSignaled = true;
+		pthread_cond_broadcast( &m_condition );
 	}
 	else
 	{
-	  if( waiting_threads == 0 )
-	    is_signaled = true;
-	  else
-	    pthread_cond_signal( &condition );
+		if( !m_waitingThreads )
+		{
+			m_isSignaled = true;
+		}
+		else
+		{
+			pthread_cond_signal( &m_condition );
+		}
 	}
-	pthread_mutex_unlock( &lock );
+	pthread_mutex_unlock( &m_lock );
 }
 
 //-----------------------------------------------------------------------------
@@ -100,9 +104,20 @@ void EventImpl::Reset
 (
 )
 {
-	pthread_mutex_lock ( &lock );
-	is_signaled = false;
-	pthread_mutex_unlock( &lock );
+	pthread_mutex_lock ( &m_lock );
+	m_isSignaled = false;
+	pthread_mutex_unlock( &m_lock );
+}
+
+//-----------------------------------------------------------------------------
+//	<EventImpl::IsSignalled>
+//	Test whether the event is set
+//-----------------------------------------------------------------------------
+bool EventImpl::IsSignalled
+(
+)
+{
+	return m_isSignaled;
 }
 
 //-----------------------------------------------------------------------------
@@ -116,18 +131,24 @@ bool EventImpl::Wait
 {
 	bool result = true;
 
-	pthread_mutex_lock( &lock );
-	if( is_signaled )
+	pthread_mutex_lock( &m_lock );
+	if( m_isSignaled )
 	{
-		if ( !manual_reset )
-			is_signaled = false;
+		if ( !m_manualReset )
+		{
+			m_isSignaled = false;
+		}
 	}
 	else
 	{
-		waiting_threads++;
-		if( _timeout > 0 )
+		++m_waitingThreads;
+        if( _timeout == 0 )
 		{
-			struct timeval now;
+            result = m_isSignaled;
+        }
+        else if( _timeout > 0 )
+		{
+            struct timeval now;
 			struct timespec abstime;
 
 			gettimeofday(&now, NULL);
@@ -147,16 +168,16 @@ bool EventImpl::Wait
             
 			abstime.tv_nsec = now.tv_usec * 1000;
             
-			while( !is_signaled )
+			while( !m_isSignaled )
 			{
 				int oldstate;
 				pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, &oldstate);
 
-				int pr = pthread_cond_timedwait( &condition, &lock, &abstime );
+				int pr = pthread_cond_timedwait( &m_condition, &m_lock, &abstime );
 
 				pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, &oldstate);
 
-				if (pr == ETIMEDOUT)
+                if( pr == ETIMEDOUT )
 				{
 					result = false;
 					break;
@@ -169,19 +190,20 @@ bool EventImpl::Wait
 		}
 		else
 		{
-			while( !is_signaled )
+			while( !m_isSignaled )
 			{
 				int oldstate;
 				pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, &oldstate);
 
-				pthread_cond_wait( &condition, &lock );
+				pthread_cond_wait( &m_condition, &m_lock );
 
 				pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, &oldstate);
 			}
 		}
-		waiting_threads--;
+		--m_waitingThreads;
 	}
-	pthread_mutex_unlock( &lock );
+
+	pthread_mutex_unlock( &m_lock );
 	return result;
 }
 

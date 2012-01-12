@@ -75,7 +75,6 @@ map<uint8,Node::GenericDeviceClass*> Node::s_genericDeviceClasses;
 
 static char const* c_queryStageNames[] = 
 {
-	"None",
 	"ProtocolInfo",
 	"WakeUp",
 	"ManufacturerSpecific1",
@@ -89,7 +88,8 @@ static char const* c_queryStageNames[] =
 	"Session",
 	"Dynamic",
 	"Configuration",
-	"Complete"
+	"Complete",
+	"None"
 };
 
 //-----------------------------------------------------------------------------
@@ -105,7 +105,6 @@ Node::Node
 	m_queryPending( false ),
 	m_queryConfiguration( false ),
 	m_queryRetries( 0 ),
-	m_queryStageCompleted( false ),
 	m_protocolInfoReceived( false ),
 	m_nodeInfoReceived( false ),
 	m_manufacturerSpecificClassReceived( false ),
@@ -170,8 +169,6 @@ void Node::AdvanceQueries
 	// Each stage must generate all the messages for its particular	stage as
 	// assumptions are made in later code (RemoveMsg) that this is the case. This means
 	// each stage is only visited once.
-
-	Log::Write("AdvanceQueries node %d %s m_queryStageCompleted %d m_queryRetries %d m_queryPending %d", m_nodeId, c_queryStageNames[m_queryStage], m_queryStageCompleted, m_queryRetries, m_queryPending);
 	while( !m_queryPending )
 	{
 		switch( m_queryStage )
@@ -191,7 +188,7 @@ void Node::AdvanceQueries
 					Log::Write( "Node %d: QueryStage_ProtocolInfo", m_nodeId );
 					Msg* msg = new Msg( "Get Node Protocol Info", m_nodeId, REQUEST, FUNC_ID_ZW_GET_NODE_PROTOCOL_INFO, false );
 					msg->Append( m_nodeId );	
-					GetDriver()->SendMsg( msg ); 
+					GetDriver()->SendMsg( msg, Driver::MsgQueue_Query );
 					m_queryPending = true;
 				}
 				else
@@ -234,7 +231,7 @@ void Node::AdvanceQueries
 				ManufacturerSpecific* cc = static_cast<ManufacturerSpecific*>( GetCommandClass( ManufacturerSpecific::StaticGetCommandClassId() ) );
 				if( cc  )
 				{
-					m_queryPending = cc->RequestState( CommandClass::RequestFlag_Static, 1 );
+					m_queryPending = cc->RequestState( CommandClass::RequestFlag_Static, 1, Driver::MsgQueue_Query );
 				}
 				if( !m_queryPending )
 				{
@@ -251,7 +248,7 @@ void Node::AdvanceQueries
 					Log::Write( "Node %d: QueryStage_NodeInfo", m_nodeId );
 					Msg* msg = new Msg( "Request Node Info", m_nodeId, REQUEST, FUNC_ID_ZW_REQUEST_NODE_INFO, false, true, FUNC_ID_ZW_APPLICATION_UPDATE );
 					msg->Append( m_nodeId );	
-					GetDriver()->SendMsg( msg ); 
+					GetDriver()->SendMsg( msg, Driver::MsgQueue_Query ); 
 					m_queryPending = true;
 				}
 				else
@@ -273,7 +270,7 @@ void Node::AdvanceQueries
 					ManufacturerSpecific* cc = static_cast<ManufacturerSpecific*>( GetCommandClass( ManufacturerSpecific::StaticGetCommandClassId() ) );
 					if( cc  )
 					{
-						m_queryPending = cc->RequestState( CommandClass::RequestFlag_Static, 1 );
+						m_queryPending = cc->RequestState( CommandClass::RequestFlag_Static, 1, Driver::MsgQueue_Query );
 					}
 					if( !m_queryPending )
 					{
@@ -351,7 +348,7 @@ void Node::AdvanceQueries
 				{
 					if( !it->second->IsAfterMark() )
 					{
-						m_queryPending |= it->second->RequestStateForAllInstances( CommandClass::RequestFlag_Static | CommandClass::RequestFlag_LowPriority );
+						m_queryPending |= it->second->RequestStateForAllInstances( CommandClass::RequestFlag_Static, Driver::MsgQueue_Query );
 					}
 				}
 
@@ -398,7 +395,7 @@ void Node::AdvanceQueries
 				{
 					if( !it->second->IsAfterMark() )
 					{
-						m_queryPending |= it->second->RequestStateForAllInstances( CommandClass::RequestFlag_Session | CommandClass::RequestFlag_LowPriority );
+						m_queryPending |= it->second->RequestStateForAllInstances( CommandClass::RequestFlag_Session, Driver::MsgQueue_Query );
 					}
 				}
 				if( !m_queryPending )
@@ -448,6 +445,9 @@ void Node::AdvanceQueries
 				Notification* notification = new Notification( Notification::Type_NodeQueriesComplete );
 				notification->SetHomeAndNodeIds( m_homeId, m_nodeId );
 				GetDriver()->QueueNotification( notification ); 
+
+				// Check whether all nodes are now complete
+				GetDriver()->CheckCompletedNodeQueries();
 				return;
 			}
 			default:
@@ -456,7 +456,10 @@ void Node::AdvanceQueries
 			}
 		}
 	}
-	Log::Write("AdvanceQueries exit node %d %s m_queryStageCompleted %d m_queryRetries %d m_queryPending %d", m_nodeId, c_queryStageNames[m_queryStage], m_queryStageCompleted, m_queryRetries, m_queryPending);
+
+	// Add a marker to the query queue so this advance method
+	// gets called again once this stage has completed.
+	GetDriver()->SendQueryStageComplete( m_nodeId, m_queryStage, Driver::MsgQueue_Query );
 }
 
 //-----------------------------------------------------------------------------
@@ -468,7 +471,6 @@ void Node::QueryStageComplete
 	QueryStage const _stage
 )
 {
-	Log::Write("QueryStageComplete node %d %s %s completed %d", m_nodeId, c_queryStageNames[m_queryStage], c_queryStageNames[_stage], m_queryStageCompleted);
 	// Check that we are actually on the specified stage
 	if( _stage != m_queryStage )
 	{
@@ -479,11 +481,9 @@ void Node::QueryStageComplete
 	{
 		// Move to the next stage
 		m_queryPending = false;
-		m_queryStageCompleted = false;
 		m_queryStage = (QueryStage)((uint32)m_queryStage + 1);
 		m_queryRetries = 0;
 	}
-	Log::Write("QueryStageComplete %s m_queryPending %d m_queryRetries %d", c_queryStageNames[m_queryStage], m_queryPending, m_queryRetries);
 }
 
 //-----------------------------------------------------------------------------
@@ -497,6 +497,7 @@ void Node::QueryStageRetry
 )
 {
 	Log::Write("QueryStageRetry stage %s requested stage %s max %d retries %d pending %d", c_queryStageNames[_stage], c_queryStageNames[m_queryStage], _maxAttempts, m_queryRetries, m_queryPending);
+	
 	// Check that we are actually on the specified stage
 	if( _stage != m_queryStage )
 	{
@@ -506,30 +507,34 @@ void Node::QueryStageRetry
 	if( _maxAttempts && ( ++m_queryRetries >= _maxAttempts ) )
 	{
 		// We've retried too many times.  Move to the next stage.
-		m_queryStageCompleted = true;
+		m_queryStage = (Node::QueryStage)((uint32)(m_queryStage + 1));
 	}
 	m_queryPending = false;
 }
 
 //-----------------------------------------------------------------------------
-// <Node::GoBackToQueryStage>
+// <Node::SetQueryStage>
 // Set the query stage (but only to an earlier stage)
 //-----------------------------------------------------------------------------
-void Node::GoBackToQueryStage
+void Node::SetQueryStage
 (
 	QueryStage const _stage
 )
 {
-	if( (int)_stage < (int)m_queryStage )
+	if( (int)_stage >= (int)m_queryStage )
 	{
-		m_queryStage = _stage;
-		m_queryPending = false;
+		return;
 	}
-
+		
+	m_queryStage = _stage;
+	m_queryPending = false;
+	
 	if( QueryStage_Configuration == _stage )
 	{
 		m_queryConfiguration = true;
 	}
+
+	AdvanceQueries();
 }
 
 //-----------------------------------------------------------------------------
@@ -607,38 +612,43 @@ void Node::ReadXML
 	if( str )
 	{
 		// After restoring state from a file, we need to at least refresh the association, session and dynamic values.
-		m_queryStage = QueryStage_Associations;			
+		QueryStage queryStage = QueryStage_Associations;			
 		for( uint32 i=0; i<(uint32)QueryStage_Associations; ++i )
 		{
 			if( !strcmp( str, c_queryStageNames[i] ) )
 			{
-				m_queryStage = (QueryStage)i;
+				queryStage = (QueryStage)i;
 				break;
 			}
 		}
+
+		SetQueryStage( queryStage );
 	}
 
-	if( m_queryStage > QueryStage_ProtocolInfo )
+	if( m_queryStage != QueryStage_None )
 	{
-		// Notify the watchers of the protocol info.
-		// We do the notification here so that it gets into the queue ahead of
-		// any other notifications generated by adding command classes etc.
-		m_protocolInfoReceived = true;
-		Notification* notification = new Notification( Notification::Type_NodeProtocolInfo );
-		notification->SetHomeAndNodeIds( m_homeId, m_nodeId );
-		GetDriver()->QueueNotification( notification );
-	}
+		if( m_queryStage > QueryStage_ProtocolInfo )
+		{
+			// Notify the watchers of the protocol info.
+			// We do the notification here so that it gets into the queue ahead of
+			// any other notifications generated by adding command classes etc.
+			m_protocolInfoReceived = true;
+			Notification* notification = new Notification( Notification::Type_NodeProtocolInfo );
+			notification->SetHomeAndNodeIds( m_homeId, m_nodeId );
+			GetDriver()->QueueNotification( notification );
+		}
 
-	if( m_queryStage > QueryStage_NodeInfo )
-	{
-		m_nodeInfoReceived = true;
-	}
+		if( m_queryStage > QueryStage_NodeInfo )
+		{
+			m_nodeInfoReceived = true;
+		}
 
-	if( m_queryStage > QueryStage_Instances )
-	{
-		Notification* notification = new Notification( Notification::Type_EssentialNodeQueriesComplete );
-		notification->SetHomeAndNodeIds( m_homeId, m_nodeId );
-		GetDriver()->QueueNotification( notification ); 
+		if( m_queryStage > QueryStage_Instances )
+		{
+			Notification* notification = new Notification( Notification::Type_EssentialNodeQueriesComplete );
+			notification->SetHomeAndNodeIds( m_homeId, m_nodeId );
+			GetDriver()->QueueNotification( notification ); 
+		}
 	}
 
 	str = _node->Attribute( "name" );
@@ -978,7 +988,6 @@ void Node::UpdateProtocolInfo
 	// Set up the device class based data for the node, including mandatory command classes
 	SetDeviceClasses( _data[3], _data[4], _data[5] );
 	m_protocolInfoReceived = true;
-	m_queryStageCompleted = true;
 }
 
 //-----------------------------------------------------------------------------
@@ -1050,13 +1059,12 @@ void Node::UpdateNodeInfo
 		}
 
 		SetStaticRequests();
-		m_queryStageCompleted = true;
 		m_nodeInfoReceived = true;
 	}
 	else
 	{
 		// We probably only need to do the dynamic stuff
-		GetDriver()->AddNodeQuery( m_nodeId, QueryStage_Dynamic );
+		SetQueryStage( QueryStage_Dynamic );
 	}
 }
 
@@ -1149,7 +1157,7 @@ void Node::ApplicationCommandHandler
 			Log::Write( "Node(%d)::ApplicationCommandHandler - Default acknowledgement of controller replication data", m_nodeId );
 
 			Msg* msg = new Msg( "Replication Command Complete", m_nodeId, REQUEST, FUNC_ID_ZW_REPLICATION_COMMAND_COMPLETE, false );
-			GetDriver()->SendMsg( msg );
+			GetDriver()->SendMsg( msg, Driver::MsgQueue_Command );
 		}
 		else
 		{
@@ -1256,7 +1264,7 @@ bool Node::SetConfigParam
 				case ValueID::ValueType_Bool:
 				{
 					ValueBool* valueBool = static_cast<ValueBool*>( value );
-					valueBool->Set( (bool)_value );
+					valueBool->Set( _value != 0 );
 					break;
 				}
 				case ValueID::ValueType_Byte:
@@ -1312,7 +1320,7 @@ void Node::RequestConfigParam
 {
 	if( Configuration* cc = static_cast<Configuration*>( GetCommandClass( Configuration::StaticGetCommandClassId() ) ) )
 	{
-		cc->RequestValue( 0, _param, 1 );
+		cc->RequestValue( 0, _param );
 	}
 }
 
@@ -1334,7 +1342,7 @@ bool Node::RequestAllConfigParams
 			Value* value = it->second;
 			if( value->GetID().GetCommandClassId() == Configuration::StaticGetCommandClassId() )
 			{
-				cc->RequestValue( _requestFlags, value->GetID().GetIndex(), value->GetID().GetInstance() );
+				cc->RequestValue( _requestFlags, value->GetID().GetIndex() );
 				res = true;
 			}
 		}
@@ -1356,7 +1364,7 @@ bool Node::RequestDynamicValues
 	{
 		if( !it->second->IsAfterMark() )
 		{
-			res |= it->second->RequestStateForAllInstances( CommandClass::RequestFlag_Dynamic );
+			res |= it->second->RequestStateForAllInstances( CommandClass::RequestFlag_Dynamic, Driver::MsgQueue_Send );
 		}
 	}
 

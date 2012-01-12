@@ -4,7 +4,8 @@
 //
 //	Cross-platform mutex
 //
-//	Copyright (c) 2010 Mal Lansell <openzwave@lansell.org>
+//	Copyright (c) 2010 Mal Lansell <mal@lansell.org>
+//	All rights reserved.
 //
 //	SOFTWARE NOTICE AND LICENSE
 //
@@ -24,9 +25,10 @@
 //	along with OpenZWave.  If not, see <http://www.gnu.org/licenses/>.
 //
 //-----------------------------------------------------------------------------
-
 #ifndef _Mutex_H
 #define _Mutex_H
+
+#include "Wait.h"
 
 namespace OpenZWave
 {
@@ -34,7 +36,7 @@ namespace OpenZWave
 
 	/** \brief Implements a platform-independent mutex--for serializing access to a shared resource.
 	 */
-	class Mutex
+	class Mutex: public Wait
 	{
 	public:
 		/**
@@ -42,12 +44,6 @@ namespace OpenZWave
 		 * Creates a mutex object that can be used to serialize access to a shared resource.
 		 */
 		Mutex();
-
-		/**
-		 * Destructor.
-		 * Destroys the mutex object.
-		 */
-		~Mutex();
 
 		/**
 		 * Lock the mutex.
@@ -65,7 +61,19 @@ namespace OpenZWave
 		 * There must be a matching call to Release for every call to Lock.
 		 * \see Lock
 		 */
-		void Release();
+		void Unlock();
+
+	protected:
+		/**
+		 * Used by the Wait class to test whether the mutex is free.
+		 */
+		virtual bool IsSignalled();
+
+		/**
+		 * Destructor.
+		 * Destroys the mutex object.
+		 */
+		~Mutex();
 
 	private:
 		Mutex( Mutex const&	);					// prevent copy

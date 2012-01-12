@@ -35,6 +35,7 @@
 #include "Defs.h"
 #include "ValueID.h"
 #include "Node.h"
+#include "TimeStamp.h"
 
 namespace OpenZWave
 {
@@ -42,8 +43,7 @@ namespace OpenZWave
 	class Value;
 	class Event;
 	class Mutex;
-	class IController;
-	class SerialController;
+	class Controller;
 	class Thread;
 	class ControllerReplication;
 	class Notification;
@@ -97,7 +97,7 @@ namespace OpenZWave
 		/**
 		 *  Entry point for driverThread
 		 */
-		static void DriverThreadEntryPoint( void* _context );
+		static void DriverThreadEntryPoint( Event* _exitEvent, void* _context );
 		/**
 		 *  ThreadProc for driverThread.  This is where all the "action" takes place.  
 		 *  <p>
@@ -116,7 +116,7 @@ namespace OpenZWave
 		 *  and remove the message from the queue.  Otherwise, resend the message.
 		 *  - If something did happen [reset m_wakeEvent]
 		 */
-		void DriverThreadProc();
+		void DriverThreadProc( Event* _exitEvent );
 		/**
 		 *  Initialize the controller.  Open the specified serial port, start the serialThread 
 		 *  and pollThread, then send a NAK to the device [presumably to flush it].
@@ -133,8 +133,6 @@ namespace OpenZWave
 		bool Init( uint32 _attempts );
 
 		Thread*					m_driverThread;			/**< Thread for reading from the Z-Wave controller, and for creating and managing the other threads for sending, polling etc. */
-		Event*					m_wakeEvent;			/**< Event that will be signalled when we should check for new work */
-		Event*					m_exitEvent;			/**< Event that will be signalled when the application is exiting */
 		bool					m_exit;					/**< Flag that is set when the application is exiting. */
 		bool					m_init;					/**< Set to true once the driver has been initialised */
 		bool					m_awakeNodesQueried;	/**< Set to true once the driver has polled all awake nodes */
@@ -183,7 +181,15 @@ namespace OpenZWave
 		string GetControllerPath()const{ return m_controllerPath; }
 		string GetLibraryVersion()const{ return m_libraryVersion; }
 		string GetLibraryTypeName()const{ return m_libraryTypeName; }
-		int32 GetSendQueueCount()const{ return m_sendQueue.size(); }
+		int32 GetSendQueueCount()const
+		{
+			int32 count = 0;
+			for( int32 i=0; i<MsgQueue_Count; ++i )
+			{
+				count += m_msgQueue[i].size();
+			}
+			return count; 
+		}
 
 		/**
 		 *  A version of GetNode that does not have the protective "lock" and "release" requirement.  
@@ -214,14 +220,10 @@ namespace OpenZWave
 		 */
 		void ReleaseNodes();
 
-		static void ControllerThreadEntryPoint( void* _context );
-		void ControllerThreadProc();
-
 		ControllerInterface     m_controllerInterfaceType;                  // Specifies the controller's hardware interface
 		string					m_controllerPath;							// name or path used to open the controller hardware.
-		IController*			m_controller;								// Handles communications with the controller hardware.
+		Controller*				m_controller;								// Handles communications with the controller hardware.
 		uint32					m_homeId;									// Home ID of the Z-Wave controller.  Not valid until the DriverReady notification has been received.
-		Thread*					m_controllerThread;								// Watches for data arriving at the controller.
 		
 		string					m_libraryVersion;							// Verison of the Z-Wave Library used by the controller.
 		string					m_libraryTypeName;							// Name describing the library type.
@@ -244,7 +246,17 @@ namespace OpenZWave
 	//	Sending Z-Wave messages
 	//-----------------------------------------------------------------------------
 	public:
-		void SendMsg( Msg* _msg );
+		enum MsgQueue
+		{
+			MsgQueue_Command = 0,
+			MsgQueue_WakeUp,
+			MsgQueue_Send,
+			MsgQueue_Query,
+			MsgQueue_Poll,
+			MsgQueue_Count		// Number of message queues
+		};
+
+		void SendMsg( Msg* _msg, MsgQueue const _queue );
 
 	private:
 		/**
@@ -264,14 +276,73 @@ namespace OpenZWave
 		 *  m_waitingForAck, Msg::GetSendAttempts, Node::AdvanceQueries, GetCurrentNodeQuery,
 		 *  RemoveNodeQuery, Node::AllQueriesCompleted
 		 */
-		bool WriteMsg();
-		void RemoveMsg();													// Remove the first message from the send queue.  This happens when the send was successful, or after three failed attempts.
-		void TriggerResend();												// Causes the first message to be sent again, in response to a NAK or CAN from the controller.
+		bool WriteNextMsg( MsgQueue const _queue );							// Extracts the first message from the queue, and makes it the current one.
+		bool WriteMsg();													// Sends the current message to the Z-Wave network
+		void RemoveCurrentMsg();											// Deletes the current message and cleans up the callback etc states
 		bool MoveMessagesToWakeUpQueue(	uint8 const _targetNodeId );		// If a node does not respond, and is of a type that can sleep, this method is used to move all its pending messages to another queue ready for when it mext wakes up.
 		bool IsControllerCommand( uint8 const _command );					// identify controller commands
+		void SendQueryStageComplete( uint8 const _nodeId, Node::QueryStage const _stage, MsgQueue const _queue );
+		void CheckCompletedNodeQueries();									// Send notifications if all awake and/or sleeping nodes have completed their queries
 
-		list<Msg*>				m_sendQueue;								// Messages waiting to be sent
-		Mutex*					m_sendMutex;								// Serialize access to the send and wakeup queues
+		// Requests to be sent to nodes are assigned to one of five queues.
+		// From highest to lowest priority, these are
+		//
+		// 1)	The command queue, for controller commands.  This is the highest
+		//		priority send queue, because the controller command processes are not
+		//		permitted to be interupted by other requests.
+		//
+		// 2)	The wakup queue.  This holds messages that have been held for a 
+		//		sleeping device that has now woken up.  These gwt a high priority
+		//		because such devices do not stay awake for very long.
+		//
+		// 3)	The send queue.  This is for normal messages, usually triggered by
+		//		a user interaction with the application.
+		//
+		// 4)	The query queue.  For node query messages sent when a new node is
+		//		discovered.  The query process generates a large number of requests,
+		//		so the query queue has a low priority to avoid making the system
+		//		unresponsive.
+		//
+		// 5)   The poll queue.  Requests to devices that need their state polling
+		//		at regular intervals.  These are of the lowest priority, and are only
+		//		sent when nothing else is going on
+		enum MsgQueueCmd
+		{
+			MsgQueueCmd_SendMsg = 0,
+			MsgQueueCmd_QueryStageComplete
+		};
+		
+		class MsgQueueItem
+		{
+		public:
+			bool operator == ( MsgQueueItem const& _other )const
+			{
+				if( _other.m_command == m_command )
+				{
+					if( m_command == MsgQueueCmd_SendMsg )
+					{
+						return( (*_other.m_msg) == (*m_msg) );
+					}
+					else
+					{
+						return( (_other.m_nodeId == m_nodeId) && (_other.m_queryStage == m_queryStage) );
+					}
+				}
+
+				return false;
+			}
+
+			MsgQueueCmd			m_command;
+			Msg*				m_msg;
+			uint8				m_nodeId;
+			Node::QueryStage	m_queryStage;
+		};
+
+		list<MsgQueueItem>		m_msgQueue[MsgQueue_Count];
+		Event*					m_queueEvent[MsgQueue_Count];				// Events for each queue, which are signalled when the queue is not empty
+		Mutex*					m_sendMutex;								// Serialize access to the queues
+		Msg*					m_currentMsg;
+		TimeStamp				m_resendTimeStamp;
 
 	//-----------------------------------------------------------------------------
 	//	Receiving Z-Wave messages
@@ -310,7 +381,7 @@ namespace OpenZWave
 		bool HandleNetworkUpdateResponse( uint8* _data );
 		void HandleGetRoutingInfoResponse( uint8* _data );
 
-		bool HandleSendDataRequest( uint8* _data, bool _replication );
+		void HandleSendDataRequest( uint8* _data, bool _replication );
 		void HandleAddNodeToNetworkRequest( uint8* _data );
 		void HandleCreateNewPrimaryRequest( uint8* _data );
 		void HandleControllerChangeRequest( uint8* _data );
@@ -349,8 +420,8 @@ namespace OpenZWave
 		bool DisablePoll( ValueID _valueId );
 		bool isPolled( ValueID _valueId );
 
-		static void PollThreadEntryPoint( void* _context );
-		void PollThreadProc();
+		static void PollThreadEntryPoint( Event* _exitEvent, void* _context );
+		void PollThreadProc( Event* _exitEvent );
 
 		Thread*					m_pollThread;								// Thread for polling devices on the Z-Wave network
 		list<ValueID>			m_pollList;									// List of nodes that need to be polled
@@ -368,33 +439,8 @@ namespace OpenZWave
 		 *  and Notification::Type_NodeRemoved messages to identify these modifications.
 		 *  \param _nodeId The node ID of the node to create and query.
 		 *  \see Notification::Type_NodeAdded, Notification::Type_NodeRemoved, Node::QueryStage_None, 
-		 *  AddNodeQuery
 		 */
 		void InitNode( uint8 const _nodeId );
-		/**
-		 *  Adds an existing node to the query queue if it is not already there.
-		 *  \param _nodeId The node ID of the node to query.
-		 *  \param _stage The Node::QueryStage at which to start querying.  This allows OpenZWave to 
-		 *  either continue an interrupted query at the required stage or to start the update at a
-		 *  late stage (for example, to read dynamic data that will have changed since OpenZWave was
-		 *  last run).
-		 *  \see Node::QueryStage, Node::GoBackToQueryStage, m_nodeQueries
-		 */
-		void AddNodeQuery( uint8 const _nodeId, Node::QueryStage const _stage );
-		/**
-		 *  Removes the specified node from the node query queue.
-		 *  \param _nodeId The node ID of the node to remove from the queue.
-		 *  \see m_nodeQueries
-		 */
-		void RemoveNodeQuery( uint8 const _nodeId );
-		/** 
-		 *  Gets the "awake" node that is nearest the front of the queue of nodes to be queried.
-		 *  This function iterates through the m_nodeQueries queue and will return the nodeId of the
-		 *  first node it finds that is either always "listening" or isn't always listening but 
-		 *  happens to be awake.
-		 *  \return Node ID of a node in the query queue.
-		 */
-		uint8 GetCurrentNodeQuery();
 
 		void InitAllNodes();												// Delete all nodes and fetch the data from the Z-Wave network again.
 		
@@ -427,9 +473,6 @@ namespace OpenZWave
 		void SetNodeOff( uint8 const _nodeId );
 
 		Value* GetValue( ValueID const& _id );
-
-		list<uint8>				m_nodeQueries;		/**< Queue of node IDs of nodes that we wish to interrogate for setup details */
-		Mutex*					m_queryMutex;		/**< Serialize access to the info queue */
 
 	//-----------------------------------------------------------------------------
 	// Controller commands

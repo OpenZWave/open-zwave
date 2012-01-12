@@ -61,12 +61,13 @@ static char const* c_switchAllStateName[] =
 bool SwitchAll::RequestState
 (
 	uint32 const _requestFlags,
-	uint8 const _instance
+	uint8 const _instance,
+	Driver::MsgQueue const _queue
 )
 {
 	if( _requestFlags & RequestFlag_Session )
 	{
-		return RequestValue( _requestFlags, 0, _instance );
+		return RequestValue( _requestFlags, 0, _instance, _queue );
 	}
 
 	return false;
@@ -80,7 +81,8 @@ bool SwitchAll::RequestValue
 (
 	uint32 const _requestFlags,
 	uint8 const _dummy1,	// = 0 (not used)
-	uint8 const _instance
+	uint8 const _instance,
+	Driver::MsgQueue const _queue
 )
 {
 	Msg* msg = new Msg( "SwitchAllCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
@@ -90,7 +92,7 @@ bool SwitchAll::RequestValue
 	msg->Append( GetCommandClassId() );
 	msg->Append( SwitchAllCmd_Get );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	GetDriver()->SendMsg( msg );
+	GetDriver()->SendMsg( msg, _queue );
 	return true;
 }
 
@@ -112,13 +114,7 @@ bool SwitchAll::HandleMsg
 			value->OnValueChanged( (int32)_data[1] );
 			Log::Write( "Received SwitchAll report from node %d: %s", GetNodeId(), value->GetItem().m_label.c_str() );
 		}
-
-		Node* node = GetNodeUnsafe();
-		if( node != NULL && node->m_queryPending )
-		{
-			node->m_queryStageCompleted = true;
-		}
-		return true;
+ 		return true;
 	}
 
 	return false;
@@ -147,7 +143,7 @@ bool SwitchAll::SetValue
 		msg->Append( SwitchAllCmd_Set );
 		msg->Append( (uint8)item.m_value );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-		GetDriver()->SendMsg( msg );
+		GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 		return true;
 	}
 
@@ -171,7 +167,7 @@ void SwitchAll::Off
 	msg->Append( StaticGetCommandClassId() );
 	msg->Append( SwitchAllCmd_Off );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	_driver->SendMsg( msg );
+	_driver->SendMsg( msg, Driver::MsgQueue_Send );
 }
 
 //-----------------------------------------------------------------------------
@@ -191,7 +187,7 @@ void SwitchAll::On
 	msg->Append( StaticGetCommandClassId() );
 	msg->Append( SwitchAllCmd_On );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	_driver->SendMsg( msg );
+	_driver->SendMsg( msg, Driver::MsgQueue_Send );
 }
 
 //-----------------------------------------------------------------------------

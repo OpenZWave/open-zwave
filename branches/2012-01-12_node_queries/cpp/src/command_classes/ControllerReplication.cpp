@@ -100,7 +100,7 @@ bool ControllerReplication::HandleMsg
 	}
 
 	Msg* msg = new Msg( "ControllerReplication - Command Complete", GetNodeId(), REQUEST, FUNC_ID_ZW_REPLICATION_COMMAND_COMPLETE, false, false );
-	GetDriver()->SendMsg( msg );
+	GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 	return true;
 }
 
@@ -138,5 +138,5 @@ void ControllerReplication::SendNextData
 	// For now, we stop the replication process.
 	Msg* msg = new Msg( "Replication Stop", 0xff, REQUEST, m_funcId, true );
 	msg->Append( ADD_NODE_STOP );
-	GetDriver()->SendMsg( msg );
+	GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 }

@@ -1,10 +1,11 @@
+//-----------------------------------------------------------------------------
 //
-// EventImpl.h
+//	EventImpl.h
 //
-// POSIX implementation of the cross-platform event
+//	POSIX implementation of a cross-platform event
 //
-// Copyright (c) 2010, Greg Satz <satz@iranger.com>
-// All rights reserved.
+//	Copyright (c) 2010, Greg Satz <satz@iranger.com>
+//	All rights reserved.
 //
 //	SOFTWARE NOTICE AND LICENSE
 //
@@ -24,7 +25,6 @@
 //	along with OpenZWave.  If not, see <http://www.gnu.org/licenses/>.
 //
 //-----------------------------------------------------------------------------
-
 #ifndef _EventImpl_H
 #define _EventImpl_H
 
@@ -37,19 +37,23 @@ namespace OpenZWave
 	{
 	private:
 		friend class Event;
+		friend class SocketImpl;
+		friend class Wait;
 
 		EventImpl();
 		~EventImpl();
 
 		void Set();
 		void Reset();
-		bool Wait( int32 _timeout );
+		
+		bool Wait( int32 _timeout );	// The wait method is to be used only by the Wait::Multiple method
+		bool IsSignalled();
 
-		pthread_mutex_t lock;
-		pthread_cond_t condition;
-		bool manual_reset;
-		bool is_signaled;
-		unsigned int waiting_threads;
+		pthread_mutex_t		m_lock;
+		pthread_cond_t		m_condition;
+		bool				m_manualReset;
+		bool				m_isSignaled;
+		unsigned int		m_waitingThreads;
 	};
 
 } // namespace OpenZWave

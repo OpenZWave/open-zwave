@@ -154,8 +154,8 @@ Manager::~Manager
 		m_readyDrivers.erase( it );
 	}
 	
-	delete m_exitEvent;
-	delete m_notificationMutex;
+	m_exitEvent->Release();
+	m_notificationMutex->Release();
 
 	// Clear the watchers list
 	while( !m_watchers.empty() )
@@ -584,8 +584,13 @@ bool Manager::RefreshNodeInfo
 	{
 		// Cause the node's data to be obtained from the Z-Wave network
 		// in the same way as if it had just been added.
-		driver->AddNodeQuery( _nodeId, Node::QueryStage_None );
-		return true;
+		Node* node = driver->GetNode( _nodeId );
+		if( node )
+		{
+			node->SetQueryStage( Node::QueryStage_ProtocolInfo );
+			driver->ReleaseNodes();
+			return true;
+		}
 	}
 
 	return false;
@@ -604,8 +609,13 @@ bool Manager::RequestNodeState
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
 		// Retreive the Node's session and dynamic data
-		driver->AddNodeQuery( _nodeId, Node::QueryStage_Associations );
-		return true;
+		Node* node = driver->GetNode( _nodeId );
+		if( node )
+		{
+			node->SetQueryStage( Node::QueryStage_Associations );
+			driver->ReleaseNodes();
+			return true;
+		}
 	}
 	return false;
 }
@@ -623,8 +633,13 @@ bool Manager::RequestNodeDynamic
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
 		// Retreive the Node's dynamic data
-		driver->AddNodeQuery( _nodeId, Node::QueryStage_Associations );
-		return true;
+		Node* node = driver->GetNode( _nodeId );
+		if( node )
+		{
+			node->SetQueryStage( Node::QueryStage_Dynamic );
+			driver->ReleaseNodes();
+			return true;
+		}
 	}
 	return false;
 }
@@ -2439,7 +2454,12 @@ void Manager::RequestAllConfigParams
 {
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
-		driver->AddNodeQuery( _nodeId, Node::QueryStage_Configuration );
+		Node* node = driver->GetNode( _nodeId );
+		if( node )
+		{
+			node->SetQueryStage( Node::QueryStage_Configuration );
+			driver->ReleaseNodes();
+		}
 	}
 }
 
@@ -2581,13 +2601,13 @@ bool Manager::AddWatcher
 		if( ((*it)->m_callback == _watcher ) && ( (*it)->m_context == _context ) )
 		{
 			// Already in the list
-			m_notificationMutex->Release();
+			m_notificationMutex->Unlock();
 			return false;
 		}
 	}
 
 	m_watchers.push_back( new Watcher( _watcher, _context ) );
-	m_notificationMutex->Release();
+	m_notificationMutex->Unlock();
 	return true;
 }
 
@@ -2609,12 +2629,12 @@ bool Manager::RemoveWatcher
 		{
 			delete (*it);
 			m_watchers.erase( it );
-			m_notificationMutex->Release();
+			m_notificationMutex->Unlock();
 			return true;
 		}
 	}
 
-	m_notificationMutex->Release();
+	m_notificationMutex->Unlock();
 	return false;
 }
 
@@ -2633,7 +2653,7 @@ void Manager::NotifyWatchers
 		Watcher* pWatcher = *it;
 		pWatcher->m_callback( _notification, pWatcher->m_context );
 	}
-	m_notificationMutex->Release();
+	m_notificationMutex->Unlock();
 }
 
 //-----------------------------------------------------------------------------

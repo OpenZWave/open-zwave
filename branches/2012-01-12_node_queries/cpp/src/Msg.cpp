@@ -59,8 +59,7 @@ Msg::Msg
 	m_length( 4 ),
 	m_targetNodeId( _targetNodeId ),
 	m_sendAttempts( 0 ),
-	m_instance( 1 ),
-	m_priority( MsgPriority_Normal )
+	m_instance( 1 )
 {
 	if( _bReplyRequired )
 	{

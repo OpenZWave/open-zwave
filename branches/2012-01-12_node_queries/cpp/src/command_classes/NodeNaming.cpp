@@ -201,7 +201,8 @@ uint16 const c_extendedAsciiToUnicode[] =
 bool NodeNaming::RequestState
 (
 	uint32 const _requestFlags,
-	uint8 const _instance
+	uint8 const _instance,
+	Driver::MsgQueue const _queue
 )
 {
 	bool res = false;
@@ -212,13 +213,13 @@ bool NodeNaming::RequestState
 			if( node->m_nodeName == "" )
 			{
 				// If we don't already have a user-defined name, fetch it from the device
-				res |= RequestValue( _requestFlags, NodeNamingCmd_Get, _instance );
+				res |= RequestValue( _requestFlags, NodeNamingCmd_Get, _instance, _queue );
 			}
 
 			if( node->m_location == "" )
 			{
 				// If we don't already have a user-defined location, fetch it from the device
-				res |= RequestValue( _requestFlags, NodeNamingCmd_LocationGet, _instance );
+				res |= RequestValue( _requestFlags, NodeNamingCmd_LocationGet, _instance, _queue );
 			}
 		}
 	}
@@ -234,7 +235,8 @@ bool NodeNaming::RequestValue
 (
 	uint32 const _requestFlags,
 	uint8 const _getTypeEnum,
-	uint8 const _instance
+	uint8 const _instance,
+	Driver::MsgQueue const _queue
 )
 {
 	if( _instance != 1 )
@@ -252,11 +254,7 @@ bool NodeNaming::RequestValue
 		msg->Append( GetCommandClassId() );
 		msg->Append( NodeNamingCmd_Get );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-		if( _requestFlags & RequestFlag_LowPriority )
-		{
-			msg->SetPriority( Msg::MsgPriority_Low );
-		}
-		GetDriver()->SendMsg( msg );
+		GetDriver()->SendMsg( msg, _queue );
 		return true;
 	}
 
@@ -269,11 +267,7 @@ bool NodeNaming::RequestValue
 		msg->Append( GetCommandClassId() );
 		msg->Append( NodeNamingCmd_LocationGet );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-		if( _requestFlags & RequestFlag_LowPriority )
-		{
-			msg->SetPriority( Msg::MsgPriority_Low );
-		}
-		GetDriver()->SendMsg( msg );
+		GetDriver()->SendMsg( msg, _queue );
 		return true;
 	}
 	return false;
@@ -315,12 +309,7 @@ bool NodeNaming::HandleMsg
 				updated = true;
 			}
 		}
-
-		if( node->m_queryPending )
-		{
-			node->m_queryStageCompleted = true;
-		}
-	}
+ 	}
 
 	if( updated )
 	{
@@ -361,7 +350,7 @@ void NodeNaming::SetName
 	}
 
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	GetDriver()->SendMsg( msg );
+	GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 }
 
 //-----------------------------------------------------------------------------
@@ -393,7 +382,7 @@ void NodeNaming::SetLocation
 	}
 
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	GetDriver()->SendMsg( msg );
+	GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 }
 
 //-----------------------------------------------------------------------------

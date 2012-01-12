@@ -104,7 +104,7 @@ bool MultiInstance::RequestInstances
 					msg->Append( MultiInstanceCmd_Get );
 					msg->Append( cc->GetCommandClassId() );
 					msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-					GetDriver()->SendMsg( msg );
+					GetDriver()->SendMsg( msg, Driver::MsgQueue_Query );
 					res = true;
 				}
 			}
@@ -122,7 +122,7 @@ bool MultiInstance::RequestInstances
 		msg->Append( GetCommandClassId() );
 		msg->Append( MultiChannelCmd_EndPointGet );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-		GetDriver()->SendMsg( msg );
+		GetDriver()->SendMsg( msg, Driver::MsgQueue_Query );
 		res = true;
 	}
 
@@ -212,7 +212,6 @@ void MultiInstance::HandleMultiInstanceReport
 			Log::Write( "Received MultiInstanceReport from node %d for %s: Number of instances = %d", GetNodeId(), pCommandClass->GetCommandClassName().c_str(), instances );
 			pCommandClass->SetInstances( instances );
 			pCommandClass->ClearStaticRequest( StaticRequest_Instances );
-			node->m_queryStageCompleted = true;
 		}
 	}
 }
@@ -272,7 +271,7 @@ void MultiInstance::HandleMultiChannelEndPointReport
 		msg->Append( MultiChannelCmd_CapabilityGet );
 		msg->Append( 1 );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-		GetDriver()->SendMsg( msg );
+		GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 	}
 	else
 	{
@@ -297,7 +296,7 @@ void MultiInstance::HandleMultiChannelEndPointReport
 		msg->Append( c_genericClass[m_endPointFindIndex] );		// Generic device class
 		msg->Append( 0xff );									// Any specific device class
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-		GetDriver()->SendMsg( msg );
+		GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 	}
 }
 
@@ -367,7 +366,7 @@ void MultiInstance::HandleMultiChannelCapabilityReport
 			msg->Append( _data[2] );	// Generic device class
 			msg->Append( 0xff );		// Any specific device class
 			msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-			GetDriver()->SendMsg( msg );
+			GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 		}
 		else
 		{
@@ -381,7 +380,6 @@ void MultiInstance::HandleMultiChannelCapabilityReport
 					cc->SetInstance( endPoint );
 				}
 			}
-			node->m_queryStageCompleted = true;
 		}
 	}
 }
@@ -417,7 +415,6 @@ void MultiInstance::HandleMultiChannelEndPointFindReport
 						cc->SetInstance( endPoint );
 					}
 				}
-				node->m_queryStageCompleted = true;
 			}
 		}
 		else
@@ -432,7 +429,7 @@ void MultiInstance::HandleMultiChannelEndPointFindReport
 			msg->Append( MultiChannelCmd_CapabilityGet );
 			msg->Append( endPoint );
 			msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-			GetDriver()->SendMsg( msg );
+			GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 		}
 	}
 
@@ -458,7 +455,7 @@ void MultiInstance::HandleMultiChannelEndPointFindReport
 					msg->Append( c_genericClass[m_endPointFindIndex] );		// Generic device class
 					msg->Append( 0xff );									// Any specific device class
 					msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-					GetDriver()->SendMsg( msg );
+					GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 				}
 			}
 		}
@@ -530,12 +527,7 @@ void MultiInstance::SendEncap
 	}
 
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-
-	if( _requestFlags && CommandClass::RequestFlag_LowPriority )
-	{
-		msg->SetPriority( Msg::MsgPriority_Low );
-	}
-	GetDriver()->SendMsg( msg );
+	GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 }
 
 
