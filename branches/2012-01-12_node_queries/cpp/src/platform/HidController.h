@@ -31,19 +31,18 @@
 #include <string>
 #include "Defs.h"
 #include "Controller.h"
+#include "hidapi.h"
 
 namespace OpenZWave
 {
 	class Driver;
     class Msg;
-	class HidControllerImpl;
+	class Thread;
+	class Event;
 
     class HidController: public Controller
 	{
-		friend class HidControllerImpl;
-
 	public:
-
 		/**
 		 * Constructor.
 		 * Creates an object that represents a HID port.
@@ -115,13 +114,38 @@ namespace OpenZWave
 		uint32 Write( uint8* _buffer, uint32 _length );
 
     private:
-        uint32                      m_vendorId;
-        uint32                      m_productId;
-        string                      m_serialNumber;
-		string						m_hidControllerName;
+		bool Init( uint32 const _attempts );
+		void Read();
 
-		HidControllerImpl*	        m_pImpl;	// Pointer to an object that encapsulates the platform-specific implementation of the HID port.
-		bool			            m_bOpen;
+        // helpers for internal use only
+
+        /**
+		* Read bytes from the specified HID feature report
+        * @param _buffer Buffer array for receiving the feature report bytes.
+        * @param _length Length of the buffer array.
+        * @param _reportId ID of the report to read.
+		* @return Actual number of bytes retrieved, or -1 on error.
+		*/
+        int GetFeatureReport( uint32 _length, uint8 _reportId, uint8* _buffer );
+
+        /**
+		* Write bytes to the specified HID feature report
+		* @param _data Bytes to be written to the feature report.
+		* @param _length Length of bytes to be written.
+		* @return Actal number of bytes written, or -1 on error.
+		*/
+        int SendFeatureReport( uint32 _length, const uint8* _data );
+
+		static void ThreadEntryPoint( Event* _exitEvent, void* _context );
+		void ThreadProc( Event* _exitEvent );
+
+		hid_device*		m_hHidController;
+		Thread*			m_thread;
+        uint32          m_vendorId;
+        uint32          m_productId;
+        string          m_serialNumber;
+		string			m_hidControllerName;
+		bool			m_bOpen;
 	};
 
 } // namespace OpenZWave

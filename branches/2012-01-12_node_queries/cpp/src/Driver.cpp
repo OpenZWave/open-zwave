@@ -139,14 +139,14 @@ Driver::Driver
 	// Clear the nodes array
 	memset( m_nodes, 0, sizeof(Node*) * 256 );
     
-	if( ControllerInterface_Hid == _interface )
+//	if( ControllerInterface_Hid == _interface )
 	{
 		m_controller = new HidController();
 	}
-	else
-	{
-		m_controller = new SerialController();
-	}
+//	else
+//	{
+//		m_controller = new SerialController();
+//	}
 	m_controller->SetSignalThreshold( 1 );
 
 	Options::Get()->GetOptionAsBool( "NotifyTransactions", &m_notifytransactions );

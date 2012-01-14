@@ -108,7 +108,6 @@
     <ClInclude Include="..\..\..\src\platform\TimeStamp.h" />
     <ClInclude Include="..\..\..\src\platform\Wait.h" />
     <ClInclude Include="..\..\..\src\platform\windows\EventImpl.h" />
-    <ClInclude Include="..\..\..\src\platform\windows\HidControllerImpl.h" />
     <ClInclude Include="..\..\..\src\platform\windows\LogImpl.h" />
     <ClInclude Include="..\..\..\src\platform\windows\MutexImpl.h" />
     <ClInclude Include="..\..\..\src\platform\windows\SerialControllerImpl.h" />
@@ -194,7 +193,6 @@
     <ClCompile Include="..\..\..\src\platform\TimeStamp.cpp" />
     <ClCompile Include="..\..\..\src\platform\Wait.cpp" />
     <ClCompile Include="..\..\..\src\platform\windows\EventImpl.cpp" />
-    <ClCompile Include="..\..\..\src\platform\windows\HidControllerImpl.cpp" />
     <ClCompile Include="..\..\..\src\platform\windows\LogImpl.cpp" />
     <ClCompile Include="..\..\..\src\platform\windows\MutexImpl.cpp" />
     <ClCompile Include="..\..\..\src\platform\windows\SerialControllerImpl.cpp" />

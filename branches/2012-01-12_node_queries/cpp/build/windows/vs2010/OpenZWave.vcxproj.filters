@@ -258,9 +258,6 @@
     <ClInclude Include="..\..\..\src\platform\HidController.h">
       <Filter>Platform</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\platform\windows\HidControllerImpl.h">
-      <Filter>Platform\Windows</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\Scene.h" />
     <ClInclude Include="..\..\..\src\Bitfield.h">
       <Filter>Main</Filter>
@@ -521,9 +518,6 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\platform\HidController.cpp">
       <Filter>Platform</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\platform\windows\HidControllerImpl.cpp">
-      <Filter>Platform\Windows</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\Scene.cpp" />
     <ClCompile Include="..\..\..\src\Scene.cpp">
