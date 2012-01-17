@@ -42,7 +42,7 @@
 #include "Thread.h"
 
 // Use a less general name than 'DEBUG' as this is just bound to clash
-#define OZW_DEBUG
+//#define OZW_DEBUG
 
 namespace OpenZWave
 {

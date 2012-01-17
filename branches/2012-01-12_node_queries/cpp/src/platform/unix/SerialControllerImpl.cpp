@@ -377,8 +377,6 @@ void SerialControllerImpl::Read
 {
 	uint8 buffer[256];
 	
-	Log::Write("read");
-	
 	while (!m_exit) {
 	
 		if (!Wait(5000)) continue;
@@ -401,9 +399,6 @@ void SerialControllerImpl::Read
 			m_owner->Put( buffer, bytesRead);
 		}
 	}
-
- Log::Write("read done");
-	//return bytesRead;
 }
 
 //-----------------------------------------------------------------------------
