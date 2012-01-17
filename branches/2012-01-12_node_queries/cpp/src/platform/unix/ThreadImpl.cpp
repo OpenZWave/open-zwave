@@ -46,7 +46,7 @@ ThreadImpl::ThreadImpl
 	string const& _tname
 ):
     m_owner( _owner ),
-	m_hThread( NULL ),
+//	m_hThread( NULL ),  /* p_thread_t isn't a pointer in Linux, so can't do this */
 	m_bIsRunning( false ),
 	m_name( _tname )
 {
