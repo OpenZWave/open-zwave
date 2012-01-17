@@ -263,7 +263,7 @@ void Driver::DriverThreadProc
 		if( Init( attempts ) )
 		{
 			// Driver has been initialised
-			Wait* waitObjects[6];
+			Wait* waitObjects[7];
 			waitObjects[0] = _exitEvent;						// Thread must exit.
 			waitObjects[1] = m_controller;						// Controller has received data.
 			waitObjects[2] = m_queueEvent[MsgQueue_Command];	// A controller command is in progress.
