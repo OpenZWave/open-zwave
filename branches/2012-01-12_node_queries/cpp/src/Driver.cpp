@@ -139,14 +139,14 @@ Driver::Driver
 	// Clear the nodes array
 	memset( m_nodes, 0, sizeof(Node*) * 256 );
     
-//	if( ControllerInterface_Hid == _interface )
+	if( ControllerInterface_Hid == _interface )
 	{
 		m_controller = new HidController();
 	}
-//	else
-//	{
-//		m_controller = new SerialController();
-//	}
+	else
+	{
+		m_controller = new SerialController();
+	}
 	m_controller->SetSignalThreshold( 1 );
 
 	Options::Get()->GetOptionAsBool( "NotifyTransactions", &m_notifytransactions );
@@ -2084,10 +2084,14 @@ void Driver::HandleSendDataRequest
 	else 
 	{
 		// Callback ID matches our expectation
-		if( _data[3] )
+		if( _data[3] & TRANSMIT_COMPLETE_NOROUTE )
 		{
-			// Failed
-			Log::Write( "Error: %s failed.", _replication ? "ZW_REPLICATION_SEND_DATA" : "ZW_SEND_DATA" );
+			Log::Write( "Error: %s failed.  No route available.", _replication ? "ZW_REPLICATION_SEND_DATA" : "ZW_SEND_DATA" );
+			RemoveCurrentMsg();
+		}
+		else if( _data[3] & TRANSMIT_COMPLETE_NO_ACK )
+		{
+			Log::Write( "Error: %s failed. No ACK received - device may be asleep.", _replication ? "ZW_REPLICATION_SEND_DATA" : "ZW_SEND_DATA" );
 			if( m_currentMsg )
 			{
 				if( !_replication )
@@ -2098,11 +2102,14 @@ void Driver::HandleSendDataRequest
 					{
 						return;
 					}
-				}
 
-				// Retry the send
-				WriteMsg();
+					Log::Write( "  Device is not a sleeping node - retrying the send." );
+				}
 			}
+		}
+		else if( _data[3] & TRANSMIT_COMPLETE_FAIL )
+		{
+			Log::Write( "Error: %s failed. Network is busy.", _replication ? "ZW_REPLICATION_SEND_DATA" : "ZW_SEND_DATA" );
 		}
 		else
 		{

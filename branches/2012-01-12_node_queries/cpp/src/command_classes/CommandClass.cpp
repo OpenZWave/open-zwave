@@ -488,27 +488,6 @@ void CommandClass::ClearStaticRequest
 )
 { 
 	m_staticRequests &= ~_request;
-	
-	if( Node* node = GetNodeUnsafe() )
-	{
-		if( _request & StaticRequest_Version )
-		{
-			node->QueryStageRetry( Node::QueryStage_Versions );
-			return;
-		}
-
-		if( _request & StaticRequest_Instances )
-		{
-			node->QueryStageRetry( Node::QueryStage_Instances );
-			return;
-		}
-
-		if( _request & StaticRequest_Values )
-		{
-			node->QueryStageRetry( Node::QueryStage_Static );
-			return;
-		}
-	}
 }
 
 //-----------------------------------------------------------------------------

@@ -249,7 +249,7 @@
 	</Manufacturer>
 	<Manufacturer id="0041" name="OpenPeak Inc.">
 	</Manufacturer>
-	<Manufacturer id="0064" name="Popp / Düwi">
+	<Manufacturer id="0064" name="Popp / DÃ¼wi">
 	  <Product type="3001" id="0000" name="Plugin Switch" />
 	</Manufacturer>
 	<Manufacturer id="0016" name="PowerLynx">
@@ -267,7 +267,7 @@
 	  <Product type="0001" id="0002" name="TZ43 Thermostat" />
 	  <Product type="0001" id="0005" name="TZ43-IHD SMUD Thermostat" config="rcs/therm0005.xml" />
 	  <Product type="0001" id="0007" name="TZ45-IHD SMUD Thermostat" config="rcs/therm0007.xml" />
-	  <Product type="0001" id="0009" name="TZ45 Thermostat config="rcs/therm0009.xml" />
+	  <Product type="0001" id="0009" name="TZ45 Thermostat" config="rcs/therm0009.xml" />
 	  <Product type="0001" id="000a" name="TZ4Z-IHD RCS Thermostat" />
 	  <Product type="454d" id="3532" name="EM52-ZW Z-Wave Home Energy Meter" config="rcs/em52-zw.xml" />
 	  <Product type="504d" id="3132" name="PM12-ZW Z-Wave Power Monitoring Module" config="rcs/pm12-zw.xml" />
@@ -334,6 +334,6 @@
 	</Manufacturer>
 	<Manufacturer id="010f" name="FIBARO System">
 	  <Product type="0100" id="0104" name="FGD211 Universal Dimmer 500W" />
-	  <Product type="0400" id="0104" name="FGS211 Switch 3KW"  config="fibaro/fgs211.xml" />
+	  <Product type="0400" id="0104" name="FGS211 Switch 3KW" config="fibaro/fgs211.xml" />
 	</Manufacturer>
 </ManufacturerSpecificData>
