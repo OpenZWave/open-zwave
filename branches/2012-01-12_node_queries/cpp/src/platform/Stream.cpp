@@ -28,6 +28,8 @@
 #include "Stream.h"
 #include "Mutex.h"
 
+#include <string.h>
+
 using namespace OpenZWave;
 
 //-----------------------------------------------------------------------------
@@ -39,10 +41,10 @@ Stream::Stream
 	uint32 _bufferSize
 ):
 	m_bufferSize( _bufferSize ),
+	m_signalSize(1),
+	m_dataSize(0),
 	m_head(0),
 	m_tail(0),
-	m_dataSize(0),
-	m_signalSize(1),
 	m_mutex( new Mutex() )
 {
 	m_buffer = new uint8[m_bufferSize];
