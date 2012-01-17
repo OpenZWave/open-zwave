@@ -2074,8 +2074,6 @@ void Driver::HandleSendDataRequest
 	bool _replication
 )
 {
-	bool messageRemoved = false;
-
 	Log::Write( "  %s Request with callback ID 0x%.2x received (expected 0x%.2x)", _replication ? "ZW_REPLICATION_SEND_DATA" : "ZW_SEND_DATA", _data[2], m_expectedCallbackId );
 
 	if( _data[2] != m_expectedCallbackId )
