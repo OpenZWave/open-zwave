@@ -188,8 +188,6 @@
           <Product type="5257" id="3533" name="GE 45609 On/Off Relay Switch" />
 	  <Product type="4457" id="3033" name="GE 45613 3-Way Dimmer Switch" />
 	</Manufacturer>
-	<Manufacturer id="003b" name="Schlage">
-	</Manufacturer>
 	<Manufacturer id="0091" name="Kamstrup">
 	</Manufacturer>
 	<Manufacturer id="0090" name="Kwikset">
@@ -275,6 +273,9 @@
 	<Manufacturer id="0065" name="RS Scene">
 	</Manufacturer>
 	<Manufacturer id="0030" name="HomeSeer Tech">
+	</Manufacturer>
+	<Manufacturer id="003b" name="Schlage">
+	  <Product type="634b" id="504c" name="FE599GR Wireless Door Lock" />
 	</Manufacturer>
 	<Manufacturer id="001f" name="Scientia Tech">
 	</Manufacturer>
