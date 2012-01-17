@@ -331,7 +331,7 @@ bool HidController::Init
         memset(serialHex, 0, serialLength + 1);
         for (size_t i = 0; i < serialLength; ++i)
         {
-            sprintf_s(&serialHex[i], serialLength - i + 1, "%hx", hidInfoString[i] & 0x0f);
+            snprintf(&serialHex[i], serialLength - i + 1, "%hx", hidInfoString[i] & 0x0f);
         }
         Log::Write( "\tSerial #:     %ls   --> %s", hidInfoString, serialHex );
     }
