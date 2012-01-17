@@ -35,13 +35,18 @@
 
 using namespace OpenZWave;
 
+static void SerialReadThreadEntryPoint(	Event* _exitEvent, void* _context );
+
 //-----------------------------------------------------------------------------
 // <SerialControllerImpl::SerialControllerImpl>
 // Constructor
 //-----------------------------------------------------------------------------
 SerialControllerImpl::SerialControllerImpl
 (
-)
+	SerialController* _owner
+):
+	m_owner( _owner ),
+	m_exit( false )
 {
 	m_hSerialController = -1;
 #ifdef OZW_DEBUG
@@ -60,11 +65,13 @@ SerialControllerImpl::~SerialControllerImpl
 	flock(m_hSerialController, LOCK_UN);
     if(m_hSerialController >= 0)
 	close( m_hSerialController );
+	m_exit = true;
 #ifdef OZW_DEBUG
     if(m_hdebug >= 0)
 	close( m_hdebug );
 #endif
 }
+
 
 #ifdef __linux__
 bool SerialControllerImpl::FindUSB
@@ -131,14 +138,32 @@ bool SerialControllerImpl::FindUSB
 // Open the serial port 
 //-----------------------------------------------------------------------------
 bool SerialControllerImpl::Open
-( 
-	string const& _SerialControllerName,
-	uint32 const _baud,
-	SerialController::Parity const _parity,
-	SerialController::StopBits const _stopBits
+(
 )
 {
-	string device = _SerialControllerName;
+	// Try to init the serial port
+	if( !Init( 1 ) )
+	{
+		// Failed.  We bail to allow the app a chance to take over, rather than retry
+		// automatically.  Automatic retries only occur after a successful init.
+		return false;
+	}
+
+  Log::Write("start serial thread");
+
+	m_serialThread = new Thread( "serial" );
+	m_serialThread->Start( SerialReadThreadEntryPoint, this);
+
+	return true;
+}
+	
+	
+bool SerialControllerImpl::Init
+(
+	uint32 const _attempts
+)
+{  
+	string device = m_owner->m_serialControllerName;
 	
 	Log::Write( "Open serial port %s",device.c_str() );
 	
@@ -149,7 +174,6 @@ bool SerialControllerImpl::Open
 		}
 	}
 #endif
-
 	
 	
 	m_hSerialController = open( device.c_str(), O_RDWR | O_NOCTTY, 0 );
@@ -176,7 +200,7 @@ bool SerialControllerImpl::Open
 
 	bzero( &tios, sizeof(tios) );
 	tcgetattr( m_hSerialController, &tios );
-	switch (_parity)
+	switch (m_owner->m_parity)
 	{
 		case SerialController::Parity_None:
 			tios.c_iflag = IGNPAR;
@@ -189,7 +213,7 @@ bool SerialControllerImpl::Open
 			Log::Write( "Parity not supported" );
 			goto SerialOpenFailure;
 	}
-	switch (_stopBits)
+	switch (m_owner->m_stopBits)
 	{
 		case SerialController::StopBits_One:
 			break;		// default
@@ -208,7 +232,7 @@ bool SerialControllerImpl::Open
 		tios.c_cc[i] = 0;
 	tios.c_cc[VMIN] = 0;
 	tios.c_cc[VTIME] = 1;
-	switch (_baud)
+	switch (m_owner->m_baud)
 	{
 		case 300:
 			cfsetspeed( &tios, B300 );
@@ -285,40 +309,101 @@ void SerialControllerImpl::Close
 	close( m_hdebug );
 	m_hdebug = -1;
 #endif
+	m_serialThread->Stop();
+	m_serialThread->Release();
+}
+
+//-----------------------------------------------------------------------------
+// <SerialReadThreadEntryPoint>
+// Entry point of the thread for receiving data from the serial port
+//-----------------------------------------------------------------------------
+static void SerialReadThreadEntryPoint
+(
+	Event* _exitEvent,
+	void* _context
+)
+{
+	SerialControllerImpl* impl = (SerialControllerImpl*)_context;
+	if( impl )
+	{
+		impl->ReadThreadProc( _exitEvent );
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <SerialControllerImpl::ReadThreadProc>
+// Handle receiving data
+//-----------------------------------------------------------------------------
+void SerialControllerImpl::ReadThreadProc
+(
+	Event *_exitEvent
+)
+{
+	uint32 attempts = 0;
+	while( true )
+	{
+		// Init must have been called successfully during Open, so we
+		// don't do it again until the end of the loop
+		if(m_hSerialController != -1)
+		{
+			// Enter read loop.  Call will only return if
+			// an exit is requested or an error occurs
+			Read();
+
+			// Reset the attempts, so we get a rapid retry for temporary errors
+			attempts = 0;
+		}
+
+		if( attempts < 25 )		
+		{
+			sleep(5);
+		}
+		else
+		{
+			sleep(30);
+		}
+
+		Init( ++attempts );
+	}
 }
 
 //-----------------------------------------------------------------------------
 // <SerialControllerImpl::Read>
 // Read data from the serial port
 //-----------------------------------------------------------------------------
-uint32 SerialControllerImpl::Read
+void SerialControllerImpl::Read
 (
-	uint8* _buffer,
-	uint32 _length,
-	IController::ReadPacketSegment _segment
 )
 {
-	if( -1 == m_hSerialController )
-	{
-		//Error
-		Log::Write( "Error: Serial port must be opened before reading" );
-		return 0;
+	uint8 buffer[256];
+	
+	Log::Write("read");
+	
+	while (!m_exit) {
+	
+		if (!Wait(5000)) continue;
+		
+		int32 bytesRead;
+		bytesRead = read( m_hSerialController, buffer, sizeof(buffer) );
+#ifdef OZW_DEBUG
+		if ( m_hdebug >= 0 && bytesRead > 0 )
+		{
+			unsigned int now = htonl(time(NULL));
+			unsigned char c = (char)bytesRead;
+			write( m_hdebug, "r", 1 );
+			write( m_hdebug, &c, 1);
+			write( m_hdebug, &now, sizeof(now));
+			write( m_hdebug, buffer, bytesRead);
+		}
+#endif
+
+		if (bytesRead > 0) {
+			m_owner->Put( buffer, bytesRead);
+		}
 	}
 
-	uint32 bytesRead;
-	bytesRead = read( m_hSerialController, _buffer, _length );
-#ifdef OZW_DEBUG
-	if ( m_hdebug >= 0 && bytesRead > 0 )
-	{
-		unsigned int now = htonl(time(NULL));
-		unsigned char c = (char)bytesRead;
-		write( m_hdebug, "r", 1 );
-		write( m_hdebug, &c, 1);
-		write( m_hdebug, &now, sizeof(now));
-		write( m_hdebug, _buffer, bytesRead);
-	}
-#endif
-	return bytesRead;
+ Log::Write("read done");
+	//return bytesRead;
 }
 
 //-----------------------------------------------------------------------------
@@ -390,12 +475,12 @@ bool SerialControllerImpl::Wait
 			whenp = &when;
 		}
 
-        int oldstate;
-        pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, &oldstate);
+		int oldstate;
+		pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, &oldstate);
 
-        err = select( m_hSerialController + 1, &rds, NULL, &eds, whenp );
+		err = select( m_hSerialController + 1, &rds, NULL, &eds, whenp );
 
-        pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, &oldstate);
+		pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, &oldstate);
 
 		if( err > 0 )
 			return true;
@@ -407,4 +492,3 @@ bool SerialControllerImpl::Wait
 
 	return false;
 }
-
