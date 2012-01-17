@@ -86,6 +86,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\hidapi\hidapi\hidapi.h" />
+    <ClInclude Include="..\..\..\src\AES.h" />
     <ClInclude Include="..\..\..\src\Bitfield.h" />
     <ClInclude Include="..\..\..\src\command_classes\SensorAlarm.h" />
     <ClInclude Include="..\..\..\src\Defs.h" />
@@ -176,6 +177,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\hidapi\windows\hid.cpp" />
+    <ClCompile Include="..\..\..\src\AES.cpp" />
+    <ClCompile Include="..\..\..\src\command_classes\Security.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\SensorAlarm.cpp" />
     <ClCompile Include="..\..\..\src\Driver.cpp" />
     <ClCompile Include="..\..\..\src\Group.cpp" />

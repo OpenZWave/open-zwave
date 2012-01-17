@@ -248,7 +248,8 @@ namespace OpenZWave
 	public:
 		enum MsgQueue
 		{
-			MsgQueue_Command = 0,
+			MsgQueue_Security = 0,
+			MsgQueue_Command,
 			MsgQueue_WakeUp,
 			MsgQueue_Send,
 			MsgQueue_Query,
@@ -259,23 +260,6 @@ namespace OpenZWave
 		void SendMsg( Msg* _msg, MsgQueue const _queue );
 
 	private:
-		/**
-		 *  If there are messages in the send queue (m_sendQueue), gets the next message in the
-		 *  queue and writes it to the serial port.  In sending the message, SendMsg also initializes
-		 *  variables tracking the message's callback ID (m_expectedCallbackId), expected reply
-		 *  (m_expectedReply) and expected command class ID (m_expectedCommandClassId).  It also
-		 *  sets m_waitingForAck to true and increments the message's send attempts counter.
-		 *  <p>
-		 *  If there are no messages in the send queue, then SendMsg checks the query queue to
-		 *  see if there are any outstanding queries that can be processed (target node not asleep).
-		 *  If so, it retrieves the Node object that needs to be queried and calls that node's
-		 *  AdvanceQueries member function.  If this call results in all of the node's queries to be
-		 *  completed, SendMsg will remove the node query item from the query queue.
-		 *  \return TRUE if data was written, FALSE if not
-		 *  \see Msg, m_sendQueue, m_expectedCallbackId, m_expectedReply, m_expectedCommandClassId,
-		 *  m_waitingForAck, Msg::GetSendAttempts, Node::AdvanceQueries, GetCurrentNodeQuery,
-		 *  RemoveNodeQuery, Node::AllQueriesCompleted
-		 */
 		bool WriteNextMsg( MsgQueue const _queue );							// Extracts the first message from the queue, and makes it the current one.
 		bool WriteMsg();													// Sends the current message to the Z-Wave network
 		void RemoveCurrentMsg();											// Deletes the current message and cleans up the callback etc states
@@ -287,29 +271,35 @@ namespace OpenZWave
 		// Requests to be sent to nodes are assigned to one of five queues.
 		// From highest to lowest priority, these are
 		//
-		// 1)	The command queue, for controller commands.  This is the highest
+		// 1)	The security queue, for handling encrypted messages.  This is the
+		//		highest priority send queue, because the security process inserts
+		//		messages to handle the encryption process that must be sent before
+		//		a new message can be wrapped.
+		//
+		// 2)	The command queue, for controller commands.  This is the next highest
 		//		priority send queue, because the controller command processes are not
 		//		permitted to be interupted by other requests.
 		//
-		// 2)	The wakup queue.  This holds messages that have been held for a 
+		// 3)	The wakup queue.  This holds messages that have been held for a 
 		//		sleeping device that has now woken up.  These gwt a high priority
 		//		because such devices do not stay awake for very long.
 		//
-		// 3)	The send queue.  This is for normal messages, usually triggered by
+		// 4)	The send queue.  This is for normal messages, usually triggered by
 		//		a user interaction with the application.
 		//
-		// 4)	The query queue.  For node query messages sent when a new node is
+		// 5)	The query queue.  For node query messages sent when a new node is
 		//		discovered.  The query process generates a large number of requests,
 		//		so the query queue has a low priority to avoid making the system
 		//		unresponsive.
 		//
-		// 5)   The poll queue.  Requests to devices that need their state polling
+		// 6)   The poll queue.  Requests to devices that need their state polling
 		//		at regular intervals.  These are of the lowest priority, and are only
 		//		sent when nothing else is going on
 		enum MsgQueueCmd
 		{
 			MsgQueueCmd_SendMsg = 0,
-			MsgQueueCmd_QueryStageComplete
+			MsgQueueCmd_QueryStageComplete,
+			MsgQueueCmd_SecureProcessComplete
 		};
 		
 		class MsgQueueItem
@@ -321,11 +311,18 @@ namespace OpenZWave
 				{
 					if( m_command == MsgQueueCmd_SendMsg )
 					{
+						// MsgQueueCmd_SendMsg
 						return( (*_other.m_msg) == (*m_msg) );
+					}
+					else if( m_command == MsgQueueCmd_QueryStageComplete )
+					{
+						// MsgQueueCmd_QueryStageComplete
+						return( (_other.m_nodeId == m_nodeId) && (_other.m_queryStage == m_queryStage) );
 					}
 					else
 					{
-						return( (_other.m_nodeId == m_nodeId) && (_other.m_queryStage == m_queryStage) );
+						// MsgQueueCmd_SecureProcessComplete
+						return( (_other.m_nodeId == m_nodeId) && ((*_other.m_msg) == (*m_msg)) );
 					}
 				}
 

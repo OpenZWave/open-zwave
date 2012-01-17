@@ -289,6 +289,9 @@
     <ClInclude Include="..\..\..\src\platform\Stream.h">
       <Filter>Platform</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\AES.h">
+      <Filter>Main</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\Driver.cpp">
@@ -546,6 +549,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\platform\Stream.cpp">
       <Filter>Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\command_classes\Security.cpp">
+      <Filter>Command Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\AES.cpp">
+      <Filter>Main</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
