@@ -61,7 +61,8 @@ WakeUp::WakeUp
 	m_mutex( new Mutex() ),
 	m_awake( true ),
 	m_pollRequired( false ),
-	m_notification( false ) {
+	m_notification( false )
+{
 }
 
 //-----------------------------------------------------------------------------

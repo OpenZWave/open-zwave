@@ -39,43 +39,33 @@
 
 #include "Defs.h"
 #include "SerialController.h"
-#include "Thread.h"
-
-// Use a less general name than 'DEBUG' as this is just bound to clash
-//#define OZW_DEBUG
 
 namespace OpenZWave
 {
 	class SerialControllerImpl
 	{
 	public:
-		void ReadThreadProc(Event *_exitEvent);
-		
+		void ReadThreadProc( Event* _exitEvent );
+
 	private:
 		friend class SerialController;
 
 		SerialControllerImpl( SerialController* _owner );
 		~SerialControllerImpl();
-		
-		static bool FindUSB( string &usbdevice );
 
 		bool Open();
 		void Close();
 
-		bool Init( uint32 const _attempts );
-		void Read();
-		bool Wait( int32 );
 		uint32 Write( uint8* _buffer, uint32 _length );
 
-		int m_hSerialController;
-		SerialController*			m_owner;
+		bool Init( uint32 const _attempts );
+		void Read();
 
-		Thread *m_serialThread;
-		bool m_exit;
-    
-#ifdef OZW_DEBUG
-		int m_hdebug;
-#endif
+		SerialController*	m_owner;
+		int			m_hSerialController;
+		Thread*			m_pThread;
+
+		static void SerialReadThreadEntryPoint( Event* _exitEvent, void* _content );
 	};
 
 } // namespace OpenZWave

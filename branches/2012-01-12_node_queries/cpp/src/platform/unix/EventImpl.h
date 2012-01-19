@@ -51,8 +51,8 @@ namespace OpenZWave
 
 		pthread_mutex_t		m_lock;
 		pthread_cond_t		m_condition;
-		bool				m_manualReset;
-		bool				m_isSignaled;
+		bool			m_manualReset;
+		bool			m_isSignaled;
 		unsigned int		m_waitingThreads;
 	};
 

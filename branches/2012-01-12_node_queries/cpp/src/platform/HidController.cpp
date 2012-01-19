@@ -89,7 +89,7 @@ void HidController::PlayInitSequence
 //-----------------------------------------------------------------------------
 bool HidController::SetVendorId
 (
-    uint32 const _vendorId
+	uint32 const _vendorId
 )
 {
 	if( m_bOpen )
@@ -97,8 +97,8 @@ bool HidController::SetVendorId
 		return false;
 	}
 
-    m_vendorId = _vendorId;
-    return true;
+	m_vendorId = _vendorId;
+	return true;
 }
 
 //-----------------------------------------------------------------------------
@@ -107,7 +107,7 @@ bool HidController::SetVendorId
 //-----------------------------------------------------------------------------
 bool HidController::SetProductId
 (
-    uint32 const _productId
+	uint32 const _productId
 )
 {
 	if( m_bOpen )
@@ -115,8 +115,8 @@ bool HidController::SetProductId
 		return false;
 	}
 
-    m_productId = _productId;
-    return true;
+	m_productId = _productId;
+	return true;
 }
 
 //-----------------------------------------------------------------------------
@@ -125,7 +125,7 @@ bool HidController::SetProductId
 //-----------------------------------------------------------------------------
 bool HidController::SetSerialNumber
 (
-    string const& _serialNumber
+	string const& _serialNumber
 )
 {
 	if( m_bOpen )
@@ -133,8 +133,8 @@ bool HidController::SetSerialNumber
 		return false;
 	}
 
-    m_serialNumber = _serialNumber;
-    return true;
+	m_serialNumber = _serialNumber;
+	return true;
 }
 
 //-----------------------------------------------------------------------------

@@ -33,8 +33,6 @@
 #include "Defs.h"
 #include "SerialController.h"
 
-#define DEBUG
-
 namespace OpenZWave
 {
 	class SerialControllerImpl

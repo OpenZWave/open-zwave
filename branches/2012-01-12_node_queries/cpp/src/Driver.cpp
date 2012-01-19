@@ -88,7 +88,7 @@ static char const* c_libraryTypeNames[] =
 Driver::Driver
 ( 
 	string const& _controllerPath,
-    ControllerInterface const& _interface
+	ControllerInterface const& _interface
 ):
 	m_driverThread( new Thread( "driver" ) ),
 	m_exit( false ),

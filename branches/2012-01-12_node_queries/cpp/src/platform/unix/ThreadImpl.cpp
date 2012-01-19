@@ -42,10 +42,10 @@ using namespace OpenZWave;
 //-----------------------------------------------------------------------------
 ThreadImpl::ThreadImpl
 (
-    Thread* _owner,
+	Thread* _owner,
 	string const& _tname
 ):
-    m_owner( _owner ),
+	m_owner( _owner ),
 //	m_hThread( NULL ),  /* p_thread_t isn't a pointer in Linux, so can't do this */
 	m_bIsRunning( false ),
 	m_name( _tname )
@@ -68,8 +68,8 @@ ThreadImpl::~ThreadImpl
 //-----------------------------------------------------------------------------
 bool ThreadImpl::Start
 (
-    Thread::pfnThreadProc_t _pfnThreadProc,
-    Event* _exitEvent,
+	Thread::pfnThreadProc_t _pfnThreadProc,
+	Event* _exitEvent,
 	void* _pContext 
 )
 {
@@ -82,8 +82,8 @@ bool ThreadImpl::Start
 	// Create a thread to run the specified function
 	m_pfnThreadProc = _pfnThreadProc;
 	m_pContext = _pContext;
-    m_exitEvent = _exitEvent;
-    m_exitEvent->Reset();
+	m_exitEvent = _exitEvent;
+	m_exitEvent->Reset();
 
 	pthread_create ( &m_hThread, &ta, ThreadImpl::ThreadProc, this );
 	//fprintf(stderr, "thread %s starting %08x\n", m_name.c_str(), m_hThread);
@@ -173,8 +173,8 @@ void ThreadImpl::Run
 {
 	m_bIsRunning = true;
 	m_pfnThreadProc( m_exitEvent, m_pContext );
-    m_bIsRunning = false;
+	m_bIsRunning = false;
     
-    // Let any watchers know that the thread has finished running
-    m_owner->Notify();
+	// Let any watchers know that the thread has finished running
+	m_owner->Notify();
 }

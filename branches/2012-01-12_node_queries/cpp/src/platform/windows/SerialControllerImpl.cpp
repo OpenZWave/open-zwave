@@ -84,7 +84,7 @@ bool SerialControllerImpl::Open
 }
 
 //-----------------------------------------------------------------------------
-// <SerialControllerImpl::Open>
+// <SerialControllerImpl::Close>
 // Close the serial port 
 //-----------------------------------------------------------------------------
 void SerialControllerImpl::Close

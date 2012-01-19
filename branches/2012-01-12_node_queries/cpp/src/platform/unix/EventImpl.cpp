@@ -148,7 +148,7 @@ bool EventImpl::Wait
         }
         else if( _timeout > 0 )
 		{
-            struct timeval now;
+			struct timeval now;
 			struct timespec abstime;
 
 			gettimeofday(&now, NULL);
@@ -177,7 +177,7 @@ bool EventImpl::Wait
 
 				pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, &oldstate);
 
-                if( pr == ETIMEDOUT )
+				if( pr == ETIMEDOUT )
 				{
 					result = false;
 					break;

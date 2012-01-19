@@ -85,7 +85,7 @@ bool Thread::Stop
 	if( Wait::Single( this, timeout ) < 0 )
 	{
 		// Timed out
-        m_pImpl->Terminate();
+	        m_pImpl->Terminate();
 		return false;
 	}
 
