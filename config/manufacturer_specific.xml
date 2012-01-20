@@ -2,6 +2,9 @@
 <ManufacturerSpecificData>
 	<Manufacturer id="0040" name="2B Electronics">
 	</Manufacturer>
+	<Manufacturer id="0098" name="2GIG Technologies">
+	  <Product type="1e12" id="015c" name="CT30 Thermostat" config="2gig/ct30.xml" />
+	</Manufacturer>
 	<Manufacturer id="002a" name="3e Technologies">
 	</Manufacturer>
 	<Manufacturer id="0022" name="A-1 Components">
