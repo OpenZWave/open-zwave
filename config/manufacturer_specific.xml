@@ -15,6 +15,7 @@
 	  <Product type="4952" id="3330" name="ZIR010 PIR Motion Sensor" config="act/zir010.xml" />
 	  <Product type="4952" id="3130" name="ZIR010 PIR Motion Sensor" config="act/zir010.xml" />
 	  <Product type="4450" id="3030" name="ZDP100 Plugin Lamp Module" />
+	  <Product type="4457" id="3033" name="ZDW103 Wall Dimmer Module" config="act/zdw103.xml" />
 	  <Product type="4457" id="3330" name="ZDW230 Wall Dimmer Module" />
 	  <Product type="4457" id="3332" name="ZDW232 Wall Dimmer Module" />
 	  <Product type="444d" id="3330" name="ZDM230 Wall Dimmer Module" config="act/zdm230.xml" />
@@ -22,6 +23,7 @@
 	  <Product type="5250" id="3130" name="ZRP110 Exterior Appliance Module" config="act/zrp110.xml" />
 	  <Product type="5257" id="3330" name="ZRW230 Wall Appliance Module" />
 	  <Product type="5246" id="3133" name="LFM-20 Relay Fixture Module" config="act/lfm20.xml" />
+	  <Product type="5257" id="3033" name="ZRW103 Wall Switch Module" config="act/zrw103.xml" />
 	  <Product type="524d" id="3330" name="ZRM230 Wall Appliance Module" />
 	  <Product type="5457" id="3330" name="ZTW230 Wall Transmitter Module" />
 	  <Product type="544d" id="3330" name="ZTM230 Wall Transmitter Module" />
