@@ -256,6 +256,7 @@ namespace OpenZWave
 		};
 
 		bool IsListeningDevice()const{ return m_listening; }
+		bool IsFrequentListener()const{ return !m_listening && m_frequentListening; }
 		bool IsRoutingDevice()const{ return m_routing; }
 		uint32 GetMaxBaudRate()const{ return m_maxBaudRate; }
 		uint8 GetVersion()const{ return m_version; }
@@ -272,6 +273,7 @@ namespace OpenZWave
 
 	private:
 		bool		m_listening;
+		bool		m_frequentListening;
 		bool		m_routing;
 		uint32		m_maxBaudRate;
 		uint8		m_version;

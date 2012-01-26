@@ -776,7 +776,7 @@ bool Driver::WriteNextMsg
 		}
 		m_sendMutex->Unlock();
 
-		Log::Write( "Query Stage Complete (%s)", node->GetQueryStageName( stage ).c_str() );
+		Log::Write( "Node %d: Query Stage Complete (%s)", node->GetNodeId(), node->GetQueryStageName( stage ).c_str() );
 
 		if( node != NULL )
 		{	
@@ -881,7 +881,7 @@ bool Driver::MoveMessagesToWakeUpQueue
 	if( Node* node = GetNodeUnsafe(_targetNodeId) )
 	{
 		// Exclude controllers from battery check
-		if( !node->IsListeningDevice() && !node->IsController() )
+		if( !node->IsListeningDevice() && !node->IsFrequentListener() && !node->IsController() )
 		{
 			if( WakeUp* wakeUp = static_cast<WakeUp*>( node->GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
 			{

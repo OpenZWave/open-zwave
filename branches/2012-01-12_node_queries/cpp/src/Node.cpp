@@ -110,6 +110,8 @@ Node::Node
 	m_manufacturerSpecificClassReceived( false ),
 	m_nodeInfoSupported( true ),
 	m_listening( true ),	// assume we start out listening
+	m_frequentListening( false ),
+	m_routing( false ),
 	m_homeId( _homeId ),
 	m_nodeId( _nodeId ),
 	m_values( new ValueStore() ),
@@ -691,6 +693,13 @@ void Node::ReadXML
 		m_listening = !strcmp( str, "true" );
 	}
 
+	m_frequentListening = false;
+	str = _node->Attribute( "frequentListening" );
+	if( str )
+	{
+		m_frequentListening = !strcmp( str, "true" );
+	}
+
 	m_routing = true;
 	str = _node->Attribute( "routing" );
 	if( str )
@@ -890,6 +899,7 @@ void Node::WriteXML
 	nodeElement->SetAttribute( "type", m_type.c_str() );
 
 	nodeElement->SetAttribute( "listening", m_listening ? "true" : "false" );
+	nodeElement->SetAttribute( "frequentListening", m_frequentListening ? "true" : "false" );
 	nodeElement->SetAttribute( "routing", m_routing ? "true" : "false" );
 	
 	snprintf( str, 32, "%d", m_maxBaudRate );
@@ -970,8 +980,10 @@ void Node::UpdateProtocolInfo
 
 	m_version = ( _data[0] & 0x07 ) + 1;
 	
+	// Frequent Listener
+	m_frequentListening = _data[1] & 0x30;
 	// Security  
-	m_security = _data[1] & 0x7f;
+	m_security = _data[1] & 0x0f;
 
 	// Optional flag is true if the device reports optional command classes.
 	// NOTE: We stopped using this because not all devices report it properly,
@@ -979,7 +991,7 @@ void Node::UpdateProtocolInfo
 	// bool optional = (( _data[1] & 0x80 ) != 0 );	
 
 	Log::Write( "  Protocol Info for Node %d:", m_nodeId );
-	Log::Write( "    Listening     = %s", m_listening ? "true" : "false" );
+	Log::Write( "    Listening     = %s%s", m_listening ? "true" : "false", IsFrequentListener() ? ", frequent" : "" );
 	Log::Write( "    Routing       = %s", m_routing ? "true" : "false" );
 	Log::Write( "    Max Baud Rate = %d", m_maxBaudRate );
 	Log::Write( "    Version       = %d", m_version );
