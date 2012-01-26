@@ -523,17 +523,15 @@ void Node::SetQueryStage
 	QueryStage const _stage
 )
 {
-	if( (int)_stage >= (int)m_queryStage )
+	if( (int)_stage < (int)m_queryStage )
 	{
-		return;
-	}
-		
-	m_queryStage = _stage;
-	m_queryPending = false;
+		m_queryStage = _stage;
+		m_queryPending = false;
 	
-	if( QueryStage_Configuration == _stage )
-	{
-		m_queryConfiguration = true;
+		if( QueryStage_Configuration == _stage )
+		{
+			m_queryConfiguration = true;
+		}
 	}
 
 	AdvanceQueries();
@@ -981,7 +979,8 @@ void Node::UpdateProtocolInfo
 	m_version = ( _data[0] & 0x07 ) + 1;
 	
 	// Frequent Listener
-	m_frequentListening = _data[1] & 0x30;
+	m_frequentListening = ((_data[1] & 0x30) != 0);
+
 	// Security  
 	m_security = _data[1] & 0x0f;
 
