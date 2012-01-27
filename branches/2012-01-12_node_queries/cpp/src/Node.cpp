@@ -978,11 +978,11 @@ void Node::UpdateProtocolInfo
 
 	m_version = ( _data[0] & 0x07 ) + 1;
 	
-	// Frequent Listener
-	m_frequentListening = ((_data[1] & 0x30) != 0);
+	// Frequent Listener, bit 6 is 1000ms, bit 5 is 250ms
+	m_frequentListening = (( _data[1] & 0x60 ) != 0 );
 
 	// Security  
-	m_security = _data[1] & 0x0f;
+	m_security = _data[1] & 0x1f;
 
 	// Optional flag is true if the device reports optional command classes.
 	// NOTE: We stopped using this because not all devices report it properly,
