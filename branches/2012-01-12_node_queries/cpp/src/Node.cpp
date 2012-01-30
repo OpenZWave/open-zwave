@@ -717,12 +717,11 @@ void Node::ReadXML
 		m_version = (uint8)intVal;
 	}
 
-	m_security = 0;
+	m_security = false;
 	str = _node->Attribute( "security" );
 	if( str )
 	{
-		char* p;
-		m_security = (uint8)strtol( str, &p, 0 );
+		m_security = !strcmp( str, "true" );
 	}
 
 	m_nodeInfoSupported = true;
@@ -906,8 +905,10 @@ void Node::WriteXML
 	snprintf( str, 32, "%d", m_version );
 	nodeElement->SetAttribute( "version", str );
 
-	snprintf( str, 32, "0x%.2x", m_security );
-	nodeElement->SetAttribute( "security", str );
+	if( m_security )
+        {
+		nodeElement->SetAttribute( "security", "true" );
+	}
 
 	if( !m_nodeInfoSupported )
 	{
@@ -978,11 +979,10 @@ void Node::UpdateProtocolInfo
 
 	m_version = ( _data[0] & 0x07 ) + 1;
 	
-	// Frequent Listener, bit 6 is 1000ms, bit 5 is 250ms
-	m_frequentListening = (( _data[1] & 0x60 ) != 0 );
+	m_frequentListening = (( _data[1] & SecurityFlag_BeamCapability ) != 0 );
 
 	// Security  
-	m_security = _data[1] & 0x1f;
+	m_security = (( _data[1] & SecurityFlag_Security ) != 0 );
 
 	// Optional flag is true if the device reports optional command classes.
 	// NOTE: We stopped using this because not all devices report it properly,
@@ -990,11 +990,17 @@ void Node::UpdateProtocolInfo
 	// bool optional = (( _data[1] & 0x80 ) != 0 );	
 
 	Log::Write( "  Protocol Info for Node %d:", m_nodeId );
-	Log::Write( "    Listening     = %s%s", m_listening ? "true" : "false", IsFrequentListener() ? ", frequent" : "" );
+	if( m_listening )
+		Log::Write( "    Listening     = true" );
+	else
+	{
+		Log::Write( "    Listening     = false" );
+		Log::Write( "    Frequent      = %s", m_frequentListening ? "true" : "false" );
+	}
 	Log::Write( "    Routing       = %s", m_routing ? "true" : "false" );
 	Log::Write( "    Max Baud Rate = %d", m_maxBaudRate );
 	Log::Write( "    Version       = %d", m_version );
-	Log::Write( "    Security      = 0x%.2x", m_security );
+	Log::Write( "    Security      = %s", m_security ? "true" : "false" );
 
 	// Set up the device class based data for the node, including mandatory command classes
 	SetDeviceClasses( _data[3], _data[4], _data[5] );

@@ -881,7 +881,7 @@ bool Driver::MoveMessagesToWakeUpQueue
 	if( Node* node = GetNodeUnsafe(_targetNodeId) )
 	{
 		// Exclude controllers from battery check
-		if( !node->IsListeningDevice() && !node->IsFrequentListener() && !node->IsController() )
+		if( !node->IsListeningDevice() && !node->IsFrequentListeningDevice() && !node->IsController() )
 		{
 			if( WakeUp* wakeUp = static_cast<WakeUp*>( node->GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
 			{
@@ -3181,6 +3181,25 @@ bool Driver::IsNodeListeningDevice
 }
 
 //-----------------------------------------------------------------------------
+// <Driver::IsNodeFrequentListeningDevice>
+// Get whether the node is a listening device that does not go to sleep
+//-----------------------------------------------------------------------------
+bool Driver::IsNodeFrequentListeningDevice
+(
+	 uint8 const _nodeId
+)
+{
+	bool res = false;
+	if( Node* node = GetNode( _nodeId ) )
+	{
+		res = node->IsFrequentListeningDevice();
+		ReleaseNodes();
+	}
+
+	return res;
+}
+
+//-----------------------------------------------------------------------------
 // <Driver::IsNodeRoutingDevice>
 // Get whether the node is a routing device that passes messages to other nodes
 //-----------------------------------------------------------------------------
@@ -3197,6 +3216,25 @@ bool Driver::IsNodeRoutingDevice
 	}
 
 	return res;
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::IsNodeSecurityDevice>
+// Get the security attribute for a node
+//-----------------------------------------------------------------------------
+bool Driver::IsNodeSecurityDevice
+(
+	 uint8 const _nodeId
+)
+{
+	bool security = false;
+	if( Node* node = GetNode( _nodeId ) )
+	{
+		security = node->IsSecurityDevice();
+		ReleaseNodes();
+	}
+
+	return security;
 }
 
 //-----------------------------------------------------------------------------
@@ -3235,25 +3273,6 @@ uint8 Driver::GetNodeVersion
 	}
 
 	return version;
-}
-
-//-----------------------------------------------------------------------------
-// <Driver::GetNodeSecurity>
-// Get the security byte for a node (bit meanings still to be determined)
-//-----------------------------------------------------------------------------
-uint8 Driver::GetNodeSecurity
-(
-	 uint8 const _nodeId
-)
-{
-	uint8 security = 0;
-	if( Node* node = GetNode( _nodeId ) )
-	{
-		security = node->GetSecurity();
-		ReleaseNodes();
-	}
-
-	return security;
 }
 
 //-----------------------------------------------------------------------------

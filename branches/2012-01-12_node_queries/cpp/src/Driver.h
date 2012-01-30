@@ -445,10 +445,11 @@ namespace OpenZWave
 		void InitAllNodes();												// Delete all nodes and fetch the data from the Z-Wave network again.
 		
 		bool IsNodeListeningDevice( uint8 const _nodeId );
+		bool IsNodeFrequentListeningDevice( uint8 const _nodeId );
 		bool IsNodeRoutingDevice( uint8 const _nodeId );
+		bool IsNodeSecurityDevice( uint8 const _nodeId );
 		uint32 GetNodeMaxBaudRate( uint8 const _nodeId );
 		uint8 GetNodeVersion( uint8 const _nodeId );
-		uint8 GetNodeSecurity( uint8 const _nodeId );
 		uint8 GetNodeBasic( uint8 const _nodeId );
 		uint8 GetNodeGeneric( uint8 const _nodeId );
 		uint8 GetNodeSpecific( uint8 const _nodeId );

@@ -664,6 +664,25 @@ bool Manager::IsNodeListeningDevice
 }
 
 //-----------------------------------------------------------------------------
+// <Manager::IsNodeFrequentListeningDevice>
+// Get whether the node is a listening device that does not go to sleep
+//-----------------------------------------------------------------------------
+bool Manager::IsNodeFrequentListeningDevice
+(
+	uint32 const _homeId,
+	uint8 const _nodeId
+)
+{
+	bool res = false;
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		res = driver->IsNodeFrequentListeningDevice( _nodeId );
+	}
+
+	return res;
+}
+
+//-----------------------------------------------------------------------------
 // <Manager::IsNodeRoutingDevice>
 // Get whether the node is a routing device that passes messages to other nodes
 //-----------------------------------------------------------------------------
@@ -680,6 +699,25 @@ bool Manager::IsNodeRoutingDevice
 	}
 
 	return res;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::IsNodeSecurityDevice>
+// Get the security attribute for a node.
+//-----------------------------------------------------------------------------
+bool Manager::IsNodeSecurityDevice
+(
+	uint32 const _homeId,
+	uint8 const _nodeId
+)
+{
+	bool security = 0;
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		security = driver->IsNodeSecurityDevice( _nodeId );
+	}
+
+	return security;
 }
 
 //-----------------------------------------------------------------------------
@@ -718,25 +756,6 @@ uint8 Manager::GetNodeVersion
 	}
 
 	return version;
-}
-
-//-----------------------------------------------------------------------------
-// <Manager::GetNodeSecurity>
-// Get the security byte for a node (bit meanings still to be determined)
-//-----------------------------------------------------------------------------
-uint8 Manager::GetNodeSecurity
-(
-	uint32 const _homeId,
-	uint8 const _nodeId
-)
-{
-	uint8 security = 0;
-	if( Driver* driver = GetDriver( _homeId ) )
-	{
-		security = driver->GetNodeSecurity( _nodeId );
-	}
-
-	return security;
 }
 
 //-----------------------------------------------------------------------------

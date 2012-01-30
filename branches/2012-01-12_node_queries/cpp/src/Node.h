@@ -211,7 +211,9 @@ namespace OpenZWave
 		 *  - m_routing (whether it is a routing node (capable of passing commands along to other nodes in the network) or not
 		 *  - m_maxBaudRate (the maximum baud rate at which this device can communicate)
 		 *  - m_version (TODO)
-		 *  - m_security (
+		 *  - m_security (whether device supports security features)
+		 *  - m_listening (device is powered and listening constantly)
+		 *  - m_frequentListening (device can be woken up with a beam)
 		 */
 		void UpdateProtocolInfo( uint8 const* _data );
 		void UpdateNodeInfo( uint8 const* _data, uint8 const _length );
@@ -246,7 +248,7 @@ namespace OpenZWave
 			SecurityFlag_BeamCapability			= 0x10,
 			SecurityFlag_Sensor250ms			= 0x20,
 			SecurityFlag_Sensor1000ms			= 0x40,
-			SecurityFlag_OptionalFunctionality	= 0x80
+			SecurityFlag_OptionalFunctionality		= 0x80
 		};
 
 		// Node Ids
@@ -256,11 +258,11 @@ namespace OpenZWave
 		};
 
 		bool IsListeningDevice()const{ return m_listening; }
-		bool IsFrequentListener()const{ return !m_listening && m_frequentListening; }
+		bool IsFrequentListeningDevice()const{ return m_frequentListening; }
 		bool IsRoutingDevice()const{ return m_routing; }
+		bool IsSecurityDevice()const{ return m_security; }
 		uint32 GetMaxBaudRate()const{ return m_maxBaudRate; }
 		uint8 GetVersion()const{ return m_version; }
-		uint8 GetSecurity()const{ return m_security; }
 		
 		uint8 GetNodeId()const{ return m_nodeId; }
 		
@@ -277,7 +279,7 @@ namespace OpenZWave
 		bool		m_routing;
 		uint32		m_maxBaudRate;
 		uint8		m_version;
-		uint8		m_security;
+		bool		m_security;
 		uint32		m_homeId;
 		uint8		m_nodeId;
 		uint8		m_basic;		//*< Basic device class (0x01-Controller, 0x02-Static Controller, 0x03-Slave, 0x04-Routing Slave
