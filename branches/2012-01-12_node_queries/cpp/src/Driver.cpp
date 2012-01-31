@@ -3200,6 +3200,25 @@ bool Driver::IsNodeFrequentListeningDevice
 }
 
 //-----------------------------------------------------------------------------
+// <Driver::IsNodeBeamingDevice>
+// Get whether the node is a beam capable device.
+//-----------------------------------------------------------------------------
+bool Driver::IsNodeBeamingDevice
+(
+	 uint8 const _nodeId
+)
+{
+	bool res = false;
+	if( Node* node = GetNode( _nodeId ) )
+	{
+		res = node->IsBeamingDevice();
+		ReleaseNodes();
+	}
+
+	return res;
+}
+
+//-----------------------------------------------------------------------------
 // <Driver::IsNodeRoutingDevice>
 // Get whether the node is a routing device that passes messages to other nodes
 //-----------------------------------------------------------------------------

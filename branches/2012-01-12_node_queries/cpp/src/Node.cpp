@@ -111,6 +111,7 @@ Node::Node
 	m_nodeInfoSupported( true ),
 	m_listening( true ),	// assume we start out listening
 	m_frequentListening( false ),
+	m_beaming( false ),
 	m_routing( false ),
 	m_homeId( _homeId ),
 	m_nodeId( _nodeId ),
@@ -698,6 +699,13 @@ void Node::ReadXML
 		m_frequentListening = !strcmp( str, "true" );
 	}
 
+	m_beaming = false;
+	str = _node->Attribute( "beaming" );
+	if( str )
+	{
+		m_beaming = !strcmp( str, "true" );
+	}
+
 	m_routing = true;
 	str = _node->Attribute( "routing" );
 	if( str )
@@ -897,6 +905,7 @@ void Node::WriteXML
 
 	nodeElement->SetAttribute( "listening", m_listening ? "true" : "false" );
 	nodeElement->SetAttribute( "frequentListening", m_frequentListening ? "true" : "false" );
+	nodeElement->SetAttribute( "beaming", m_beaming ? "true" : "false" );
 	nodeElement->SetAttribute( "routing", m_routing ? "true" : "false" );
 	
 	snprintf( str, 32, "%d", m_maxBaudRate );
@@ -979,7 +988,8 @@ void Node::UpdateProtocolInfo
 
 	m_version = ( _data[0] & 0x07 ) + 1;
 	
-	m_frequentListening = (( _data[1] & SecurityFlag_BeamCapability ) != 0 );
+	m_frequentListening = (( _data[1] & ( SecurityFlag_Sensor250ms | SecurityFlag_Sensor1000ms )) != 0 );
+	m_beaming = (( _data[1] & SecurityFlag_BeamCapability ) != 0 );
 
 	// Security  
 	m_security = (( _data[1] & SecurityFlag_Security ) != 0 );
@@ -997,6 +1007,7 @@ void Node::UpdateProtocolInfo
 		Log::Write( "    Listening     = false" );
 		Log::Write( "    Frequent      = %s", m_frequentListening ? "true" : "false" );
 	}
+	Log::Write( "    Beaming       = %s", m_beaming ? "true" : "false" );
 	Log::Write( "    Routing       = %s", m_routing ? "true" : "false" );
 	Log::Write( "    Max Baud Rate = %d", m_maxBaudRate );
 	Log::Write( "    Version       = %d", m_version );

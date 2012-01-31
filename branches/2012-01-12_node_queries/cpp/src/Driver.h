@@ -446,6 +446,7 @@ namespace OpenZWave
 		
 		bool IsNodeListeningDevice( uint8 const _nodeId );
 		bool IsNodeFrequentListeningDevice( uint8 const _nodeId );
+		bool IsNodeBeamingDevice( uint8 const _nodeId );
 		bool IsNodeRoutingDevice( uint8 const _nodeId );
 		bool IsNodeSecurityDevice( uint8 const _nodeId );
 		uint32 GetNodeMaxBaudRate( uint8 const _nodeId );

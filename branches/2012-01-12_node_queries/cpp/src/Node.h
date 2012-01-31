@@ -214,6 +214,7 @@ namespace OpenZWave
 		 *  - m_security (whether device supports security features)
 		 *  - m_listening (device is powered and listening constantly)
 		 *  - m_frequentListening (device can be woken up with a beam)
+		 *  - m_beaming (device is beam capable)
 		 */
 		void UpdateProtocolInfo( uint8 const* _data );
 		void UpdateNodeInfo( uint8 const* _data, uint8 const _length );
@@ -259,6 +260,7 @@ namespace OpenZWave
 
 		bool IsListeningDevice()const{ return m_listening; }
 		bool IsFrequentListeningDevice()const{ return m_frequentListening; }
+		bool IsBeamingDevice()const{ return m_beaming; }
 		bool IsRoutingDevice()const{ return m_routing; }
 		bool IsSecurityDevice()const{ return m_security; }
 		uint32 GetMaxBaudRate()const{ return m_maxBaudRate; }
@@ -276,6 +278,7 @@ namespace OpenZWave
 	private:
 		bool		m_listening;
 		bool		m_frequentListening;
+		bool		m_beaming;
 		bool		m_routing;
 		uint32		m_maxBaudRate;
 		uint8		m_version;

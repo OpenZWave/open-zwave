@@ -415,6 +415,14 @@ namespace OpenZWave
 		bool IsNodeFrequentListeningDevice( uint32 const _homeId, uint8 const _nodeId );
 
 		/**
+		 * \brief Get whether the node is a beam capable device.
+		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param _nodeId The ID of the node to query.
+		 * \return True if it is a frequent listening node.
+		 */
+		bool IsNodeBeamingDevice( uint32 const _homeId, uint8 const _nodeId );
+
+		/**
 		 * \brief Get whether the node is a routing device that passes messages to other nodes
 		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
 		 * \param _nodeId The ID of the node to query.

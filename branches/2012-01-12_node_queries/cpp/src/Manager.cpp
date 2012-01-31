@@ -683,6 +683,25 @@ bool Manager::IsNodeFrequentListeningDevice
 }
 
 //-----------------------------------------------------------------------------
+// <Manager::IsNodeBeamingDevice>
+// Get whether the node is a beam capable device.
+//-----------------------------------------------------------------------------
+bool Manager::IsNodeBeamingDevice
+(
+	uint32 const _homeId,
+	uint8 const _nodeId
+)
+{
+	bool res = false;
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		res = driver->IsNodeBeamingDevice( _nodeId );
+	}
+
+	return res;
+}
+
+//-----------------------------------------------------------------------------
 // <Manager::IsNodeRoutingDevice>
 // Get whether the node is a routing device that passes messages to other nodes
 //-----------------------------------------------------------------------------
