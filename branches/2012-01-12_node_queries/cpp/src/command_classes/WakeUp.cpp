@@ -291,7 +291,10 @@ void WakeUp::QueueMsg
 		if( item == _item )
 		{
 			// Duplicate found
-			delete item.m_msg;
+			if( Driver::MsgQueueCmd_SendMsg == item.m_command )
+			{
+				delete item.m_msg;
+			}
 			m_pendingQueue.erase( it++ );
 		}
 		else
