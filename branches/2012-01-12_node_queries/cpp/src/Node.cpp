@@ -1094,6 +1094,12 @@ void Node::UpdateNodeInfo
 		// We probably only need to do the dynamic stuff
 		SetQueryStage( QueryStage_Dynamic );
 	}
+
+	// Treat the node info frame as a sign that the node is awake
+	if( WakeUp* wakeUp = static_cast<WakeUp*>( GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
+	{
+		wakeUp->SetAwake( true );
+	}
 }
 
 //-----------------------------------------------------------------------------
