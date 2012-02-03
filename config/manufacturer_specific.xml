@@ -109,7 +109,7 @@
 	<Manufacturer id="0060" name="Everspring">
 	  <Product type="0004" id="0001" name="AN157 Plug-in Appliance Module" />
 	  <Product type="000C" id="0001" name="SE812 Siren" />
-	  <Product type="000D" id="0001" name="SF812 Smoke Alarm" />
+	  <Product type="000D" id="0001" name="SF812 Smoke Alarm" config="everspring/sf812.xml" />
 	  <Product type="0202" id="0001" name="SM103 Door/Window Sensor" config="everspring/sm103.xml" />
 	  <Product type="0002" id="0001" name="SM103 Door/Window Sensor" config="everspring/sm103.xml" />
 	  <Product type="0101" id="0001" name="SP103 PIR Motion Sensor" config="everspring/sp103.xml" />
@@ -252,7 +252,7 @@
 	</Manufacturer>
 	<Manufacturer id="0041" name="OpenPeak Inc.">
 	</Manufacturer>
-	<Manufacturer id="0064" name="Popp / Düwi">
+	<Manufacturer id="0064" name="Popp / Dï¿½wi">
 	  <Product type="3001" id="0000" name="Plugin Switch" />
 	</Manufacturer>
 	<Manufacturer id="0016" name="PowerLynx">
