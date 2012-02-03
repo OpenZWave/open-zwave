@@ -2,7 +2,7 @@
 <Product>
 	<!-- Configuration Parameters -->
 	<CommandClass id="112">
-		<Value type="byte" index="1" genre="config" label="Sensitivity" units="" min="0" max="255">
+		<Value type="byte" index="1" genre="config" label="Sensitivity" units="" min="0" max="255" value="200">
 			<Help>
 				Sensitivity sets the amount of motion required for EZMotion to
 				detect motion. A higher value makes it more sensitive and a
@@ -11,10 +11,10 @@
 				Recommended values:
 				10 = Pet Immune.
 				100 = Medium sensitivity for hallways.
-				200 = Highly sensitive for rooms where people are sitting still.
+				200(default) = Highly sensitive for rooms where people are sitting still.
 			</Help>
 		</Value>
-		<Value type="byte" index="2" genre="config" label="On Time" units="minutes" min="0" max="255">
+		<Value type="byte" index="2" genre="config" label="On Time" units="minutes" min="0" max="255" value="20">
 			<Help>
 				On Time sets the number of minutes that the lights stay on when
 				motion has not been detected.
@@ -29,16 +29,17 @@
 				still for a long time.
 			</Help>
 		</Value>
-		<Value type="list" index="3" genre="config" label="LED ON/OFF">
+		<Value type="list" index="3" genre="config" label="LED ON/OFF" value="255">
 			<help>
 				LED ON/OFF turns the LED on or off. A slight improvement in
 				battery life is obtained by turning the LED off. Setting LED
 				ON/OFF to zero will turn the LED off and 255 turns it on.
+				Default is On (255).
 			</help>
 			<Item label="Off" value="0" />
 			<Item label="On" value="255" />
 		</Value>
-		<Value type="byte" index="4" genre="config" label="Light Threshold" units="%" min="0" max="100">
+		<Value type="byte" index="4" genre="config" label="Light Threshold" units="%" min="0" max="100" value="100">
 			<help>
 				Light Threshold is the percentage of light in the room above
 				which the lights will not be turned on. Light Threshold is often
@@ -52,7 +53,7 @@
 				automatically turn on the lights in a room that has motion in it
 				and that the amount of natural light has dropped below Light
 				Threshold.
-				A value of 100% turns off this feature.
+				A value of 100% turns off this feature (default).
 				Recommended values:
 				Usually a value between 40% and 60% will prevent the lights
 				from coming on in a reasonably well light room and will turn
@@ -60,7 +61,7 @@
 				with each room to determine the proper setting.
 			</help>
 		</Value>
-		<Value type="byte" index="5" genre="config" label="Stay Awake" units="" min="0" max="255">
+		<Value type="byte" index="5" genre="config" label="Stay Awake" units="" min="0" max="255" value="0">
 			<Help>
 				Setting Stay Awake to a non-zero value will cause EZMotion to
 				always be awake. NOTE: this mode should NOT be used when
@@ -75,16 +76,17 @@
 				Stay Awake to a non-zero value, then reset EZMotion (Exclude
 				from the network), then add it back to the network. The new
 				routing information will be used now that the listening bit is set.
+				Defaults to 0.
 			</Help>
 		</Value>
-		<Value type="byte" index="6" genre="config" label="On Value" units="" min="0" max="255">
+		<Value type="byte" index="6" genre="config" label="On Value" units="" min="0" max="255" value="255">
 			<Help>
 				On Value is the value sent by the Z-Wave BASIC_SET
 				command when motion is detected.
 				A value of 0 will turn the lights off (not recommended).
 				A value between 1 and 100 will set the dim level to between 1%
 				and 100%.
-				A value of 255 will turn the light on.
+				A value of 255 will turn the light on (default).
 			</Help>
 		</Value>
 	</CommandClass>
