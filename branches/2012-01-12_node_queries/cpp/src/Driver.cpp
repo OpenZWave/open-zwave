@@ -768,7 +768,6 @@ bool Driver::WriteNextMsg
 		// Move to the next query stage
 		m_currentMsg = NULL;
 		Node::QueryStage stage = item.m_queryStage;
-		Node* node = GetNodeUnsafe( item.m_nodeId );
 		m_msgQueue[_queue].pop_front();
 		if( m_msgQueue[_queue].empty() )
 		{
@@ -776,10 +775,10 @@ bool Driver::WriteNextMsg
 		}
 		m_sendMutex->Unlock();
 
-		Log::Write( "Node %d: Query Stage Complete (%s)", node->GetNodeId(), node->GetQueryStageName( stage ).c_str() );
-
+		Node* node = GetNodeUnsafe( item.m_nodeId );
 		if( node != NULL )
 		{	
+			Log::Write( "Node %d: Query Stage Complete (%s)", node->GetNodeId(), node->GetQueryStageName( stage ).c_str() );
 			node->QueryStageComplete( stage );
 			node->AdvanceQueries();
 			return true;
