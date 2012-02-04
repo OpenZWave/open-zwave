@@ -43,8 +43,8 @@ enum ThermostatFanModeCmd
 	ThermostatFanModeCmd_Set				= 0x01,
 	ThermostatFanModeCmd_Get				= 0x02,
 	ThermostatFanModeCmd_Report				= 0x03,
-	ThermostatFanModeCmd_SupportedGet		= 0x04,
-	ThermostatFanModeCmd_SupportedReport	= 0x05
+	ThermostatFanModeCmd_SupportedGet			= 0x04,
+	ThermostatFanModeCmd_SupportedReport			= 0x05
 };
 
 static string const c_modeName[] = 
@@ -52,7 +52,10 @@ static string const c_modeName[] =
 	"Auto Low",
 	"On Low",
 	"Auto High",
-	"On High"
+	"On High",
+	"Unknown 4",
+	"Unknown 5",
+	"Circulate"
 };
 
 //-----------------------------------------------------------------------------
