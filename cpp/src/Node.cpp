@@ -111,6 +111,7 @@ Node::Node
 	m_manufacturerSpecificClassReceived( false ),
 	m_nodeInfoSupported( true ),
 	m_listening( true ),	// assume we start out listening
+	m_routing( false ),
 	m_homeId( _homeId ),
 	m_nodeId( _nodeId ),
 	m_values( new ValueStore() ),
@@ -144,6 +145,13 @@ Node::~Node
 		map<uint8,Group*>::iterator it = m_groups.begin();
 		delete it->second;
 		m_groups.erase( it );
+	}
+
+	// Delete the button map
+	while( !m_buttonMap.empty() )
+	{
+		map<uint8,uint8>::iterator it = m_buttonMap.begin();
+		m_buttonMap.erase( it );
 	}
 
 	// Delete the values
@@ -211,7 +219,7 @@ void Node::AdvanceQueries
 				WakeUp* wakeUp = static_cast<WakeUp*>( GetCommandClass( WakeUp::StaticGetCommandClassId() ) );
 
 				// if this device is a "sleeping device" and not a controller
-				if( wakeUp && ( GetBasic() >= 0x03 ) )
+				if( wakeUp && !IsController() )
 				{
 					// start the process of requesting node state from this sleeping device
 					wakeUp->Init();
@@ -938,6 +946,13 @@ void Node::UpdateProtocolInfo
 	if( ProtocolInfoReceived() )
 	{
 		// We already have this info
+		return;
+	}
+
+	if( _data[4] == 0 )
+	{
+		// Node doesn't exist if Generic class is zero.
+		Log::Write( "  Protocol Info for Node %d reports node nonexistent", m_nodeId );
 		return;
 	}
 

@@ -69,15 +69,24 @@ uint32 const c_configVersion = 3;
 
 static char const* c_libraryTypeNames[] = 
 {
-	"Unknown",					// library type 0
+	"Unknown",			// library type 0
 	"Static Controller",		// library type 1
 	"Controller",       		// library type 2
 	"Enhanced Slave",   		// library type 3
 	"Slave",            		// library type 4
-	"Installer",				// library type 5
-	"Routing Slave",			// library type 6
+	"Installer",			// library type 5
+	"Routing Slave",		// library type 6
 	"Bridge Controller",    	// library type 7
-	"Device Under Test"			// library type 8
+	"Device Under Test"		// library type 8
+};
+
+static char const* c_transmitStatusNames[] =
+{
+	"Transmit OK",
+	"No acknowledgement",
+	"Network busy",
+	"Routing not available",
+	"No route"
 };
 
 //-----------------------------------------------------------------------------
@@ -120,6 +129,8 @@ Driver::Driver
 	m_controllerCallbackContext( NULL ),
 	m_controllerAdded( false ),
 	m_controllerCommandNode( 0 ),
+	m_controllerCommandArg( 0 ),
+	m_virtualNeighborsReceived( false ),
 	m_SOFCnt( 0 ),
 	m_ACKWaiting( 0 ),
 	m_readAborts( 0 ),
@@ -450,6 +461,7 @@ bool Driver::Init
 	{
 		SendMsg(*it);
 	}
+
 	//If we ever want promiscuous mode uncomment this code.
 	//Msg* msg = new Msg( "FUNC_ID_ZW_SET_PROMISCUOUS_MODE", 0xff, REQUEST, FUNC_ID_ZW_SET_PROMISCUOUS_MODE, false, false );
 	//msg->Append( 0xff );
@@ -736,37 +748,32 @@ void Driver::SendMsg
 
 	Log::Write( "Queuing command: %s", _msg->GetAsString().c_str() );
 	m_sendMutex->Lock();
-	if( IsControllerCommand( _msg->GetExpectedReply() ) )
+	if( IsControllerCommand( ( _msg->GetBuffer() )[3] ) )
 	{
 		// give priority to controller commands by putting at front of queue (right behind the current message)
 		_msg->SetPriority( Msg::MsgPriority_Normal );
-		m_sendQueue.push_front( _msg );
+	}
+	if( Msg::MsgPriority_Low == _msg->GetPriority() )
+	{
+		// Low priority messages go to the back of the queue
+		m_sendQueue.push_back( _msg );
 	}
 	else
 	{
-		if( Msg::MsgPriority_Low == _msg->GetPriority() )
+		// Normal priority messages go in front of the first low priority message we find
+	  	// but skip the first message in case it is completed and will be removed.
+		list<Msg*>::iterator it = m_sendQueue.begin();
+		if( it != m_sendQueue.end() )
+			it++;
+		for( ; it != m_sendQueue.end(); ++it )
 		{
-			// Low priority messages go to the back of the queue
-			m_sendQueue.push_back( _msg );
-		}
-		else
-		{
-			// Normal priority messages go in front of the first low priority message we find
-		  	// but skip the first message in case it is completed and will be removed.
-			list<Msg*>::iterator it = m_sendQueue.begin();
-			if( it != m_sendQueue.end() )
-				it++;
-			for( ; it != m_sendQueue.end(); ++it )
+			if( Msg::MsgPriority_Low == (*it)->GetPriority() )
 			{
-				if( Msg::MsgPriority_Low == (*it)->GetPriority() )
-				{
-					// Insert before this one
-					break;
-				}
+				// Insert before this one
+				break;
 			}
-			
-			m_sendQueue.insert( it, _msg ); 
 		}
+		m_sendQueue.insert( it, _msg ); 
 	}
 	m_sendMutex->Release();
 
@@ -794,13 +801,13 @@ bool Driver::WriteMsg()
 		
 		// only send new messages if 1) there is no controller command executing or 2) there is one
 		// in process, but this is also a controller command
-		uint8 msgcmd = msg->GetExpectedReply();
-		if(( m_controllerCommand == ControllerCommand_None ) || IsControllerCommand( msgcmd ) )
+		uint8* msgcmd = msg->GetBuffer();
+		if(( m_controllerCommand == ControllerCommand_None ) || IsControllerCommand( msgcmd[3] ) )
 		{
 			m_expectedCallbackId = msg->GetCallbackId();
 			m_expectedCommandClassId = msg->GetExpectedCommandClassId();
 			m_expectedNodeId = msg->GetTargetNodeId();
-			m_expectedReply = msgcmd;
+			m_expectedReply = msg->GetExpectedReply();
 			m_waitingForAck = true;
 
 			msg->SetSendAttempts( msg->GetSendAttempts() + 1 );
@@ -825,7 +832,7 @@ bool Driver::WriteMsg()
 			dataWritten = true;
 		}
 		else
-			Log::Write("Not sending a queued message because controller is busy.  m_controllerCommand = %d",m_controllerCommand);
+			Log::Write("Not sending a queued message 0x%02x because controller is busy.  m_controllerCommand = %d", msgcmd[3], m_controllerCommand);
 	}
 	else
 	{
@@ -1002,15 +1009,22 @@ bool Driver::IsControllerCommand
 	if( _command == FUNC_ID_SERIAL_API_SOFT_RESET ) // 0x08
 		return true;
 	if( ( _command >= FUNC_ID_ZW_SET_DEFAULT ) && // 0x42
-		( _command <= FUNC_ID_ZW_REQUEST_NODE_NEIGHBOR_UPDATE ) ) // 0x48
+	    ( _command <= FUNC_ID_ZW_REQUEST_NODE_NEIGHBOR_UPDATE ) ) // 0x48
 		return true;
 	if( ( _command >= FUNC_ID_ZW_ADD_NODE_TO_NETWORK ) && // 0x4a
-		( _command <= FUNC_ID_ZW_GET_SUC_NODE_ID ) )   // 0x56
+	    ( _command <= FUNC_ID_ZW_GET_SUC_NODE_ID ) )   // 0x56
 		return true;
 	if( ( _command >= FUNC_ID_ZW_REMOVE_FAILED_NODE_ID ) && // 0x61
-		( _command <= FUNC_ID_ZW_REPLACE_FAILED_NODE ) ) // 0x63
+	    ( _command <= FUNC_ID_ZW_REPLACE_FAILED_NODE ) ) // 0x63
 		return true;
 	if( _command == FUNC_ID_ZW_GET_ROUTING_INFO ) // 0x80
+		return true;
+	if( _command == FUNC_ID_SERIAL_API_SLAVE_NODE_INFO ) // 0xA0
+		return true;
+	if( _command == FUNC_ID_ZW_SEND_SLAVE_NODE_INFO ) // 0xA2
+		return true;
+	if( ( _command >= FUNC_ID_ZW_SET_SLAVE_LEARN_MODE ) && // 0xA4
+	    ( _command <= FUNC_ID_ZW_IS_VIRTUAL_NODE ) ) // 0xA6
 		return true;
 
 	return false;
@@ -1300,7 +1314,14 @@ void Driver::ProcessMsg
 			case FUNC_ID_ZW_REQUEST_NODE_INFO:
 			{
 				Log::Write( "" );
-				Log::Write("Received reply to FUNC_ID_ZW_REQUEST_NODE_INFO" );
+				if( _data[2] )
+				{
+					Log::Write("FUNC_ID_ZW_REQUEST_NODE_INFO Request successful." );
+				}
+				else
+				{
+					Log::Write("FUNC_ID_ZW_REQUEST_NODE_INFO Request failed." );
+				}
 				break;
 			}
 			case FUNC_ID_ZW_REMOVE_FAILED_NODE_ID:
@@ -1343,13 +1364,13 @@ void Driver::ProcessMsg
 			{
 				Log::Write( "" );
 				HandleRfPowerLevelSetResponse( _data );
-                break;
+				break;
 			}
 			case FUNC_ID_ZW_READ_MEMORY:
 			{
 				Log::Write( "" );
 				HandleReadMemoryResponse( _data );
-                break;
+				break;
 			}
 			case FUNC_ID_SERIAL_API_SET_TIMEOUTS:
 			{
@@ -1361,6 +1382,36 @@ void Driver::ProcessMsg
 			{
 				Log::Write( "" );
 				HandleMemoryGetByteResponse( _data );
+				break;
+			}
+			case FUNC_ID_ZW_GET_VIRTUAL_NODES:
+			{
+				Log::Write( "" );
+				HandleGetVirtualNodesResponse( _data );
+				break;
+			}
+			case FUNC_ID_ZW_SET_SLAVE_LEARN_MODE:
+			{
+				Log::Write( "" );
+				if( !HandleSetSlaveLearnModeResponse( _data ) )
+				{
+					m_expectedCallbackId = _data[2];	// The callback message won't be coming, so we force the transaction to complete
+					m_expectedReply = 0;
+					m_expectedCommandClassId = 0;
+					m_expectedNodeId = 0;
+				}
+				break;
+			}
+			case FUNC_ID_ZW_SEND_SLAVE_NODE_INFO:
+			{
+				Log::Write( "" );
+				if( !HandleSendSlaveNodeInfoResponse( _data ) )
+				{
+					m_expectedCallbackId = _data[2];	// The callback message won't be coming, so we force the transaction to complete
+					m_expectedReply = 0;
+					m_expectedCommandClassId = 0;
+					m_expectedNodeId = 0;
+				}
 				break;
 			}
 			default:
@@ -1470,6 +1521,24 @@ void Driver::ProcessMsg
 			{
 				Log::Write( "" );
 				HandleReplaceFailedNodeRequest( _data );
+				break;
+			}
+			case FUNC_ID_ZW_SET_SLAVE_LEARN_MODE:
+			{
+				Log::Write( "" );
+				HandleSetSlaveLearnModeRequest( _data );
+				break;
+			}
+			case FUNC_ID_ZW_SEND_SLAVE_NODE_INFO:
+			{
+				Log::Write( "" );
+				HandleSendSlaveNodeInfoRequest( _data );
+				break;
+			}
+			case FUNC_ID_APPLICATION_SLAVE_COMMAND_HANDLER:
+			{
+				Log::Write( "" );
+				HandleApplicationSlaveCommandRequest( _data );
 				break;
 			}
 			case FUNC_ID_PROMISCUOUS_APPLICATION_COMMAND_HANDLER:
@@ -1752,31 +1821,35 @@ void Driver::HandleSerialAPIGetInitDataResponse
 				uint8 nodeId = (i*8)+j+1;
 				if( _data[i+5] & (0x01 << j) )
 				{					
-					if( Node* node = GetNode( nodeId ) )
+					if( IsVirtualNode( nodeId ) )
 					{
-						node = node;
-						Log::Write( "    Node %d - Known", nodeId );
-						if( !m_init )
-						{
-							// The node was read in from the config, so we 
-							// only need to get its current state
-							AddNodeQuery( nodeId, Node::QueryStage_Associations );
-						}
-
-						ReleaseNodes();
+						Log::Write( "    Node %.3d - Viritual (ignored)", nodeId );
 					}
 					else
-					{
-						// This node is new
-						Log::Write( "    Node %.3d - New", nodeId );
-						Notification* notification = new Notification( Notification::Type_NodeNew );
-						notification->SetHomeAndNodeIds( m_homeId, nodeId );
-						QueueNotification( notification ); 
+						if( GetNode( nodeId ) != NULL )
+						{
+							Log::Write( "    Node %.3d - Known", nodeId );
+							if( !m_init )
+							{
+								// The node was read in from the config, so we 
+								// only need to get its current state
+								AddNodeQuery( nodeId, Node::QueryStage_Associations );
+							}
 
-						// Create the node and request its info
-						InitNode( nodeId );		
+							ReleaseNodes();
+						}
+						else
+						{
+							// This node is new
+							Log::Write( "    Node %.3d - New", nodeId );
+							Notification* notification = new Notification( Notification::Type_NodeNew );
+							notification->SetHomeAndNodeIds( m_homeId, nodeId );
+							QueueNotification( notification ); 
+
+							// Create the node and request its info
+							InitNode( nodeId );
+						}
 					}
-				}
 				else
 				{
 					if( GetNode(nodeId) )
@@ -2056,7 +2129,7 @@ bool Driver::HandleSendDataRequest
 		if( _data[3] )
 		{
 			// Failed
-			Log::Write( "Error: %s failed.", _replication ? "ZW_REPLICATION_SEND_DATA" : "ZW_SEND_DATA" );
+			Log::Write( "Error: %s failed: %s.", _replication ? "ZW_REPLICATION_SEND_DATA" : "ZW_SEND_DATA", c_transmitStatusNames[_data[3]] );
 			m_sendMutex->Lock();
 			if( !m_sendQueue.empty() )
 			{
@@ -2570,7 +2643,7 @@ void Driver::HandleAssignReturnRouteRequest
 	if( _data[3] )
 	{
 		// Failed
-		Log::Write("Received reply to FUNC_ID_ZW_ASSIGN_RETURN_ROUTE for node %d - FAILED", m_controllerCommandNode );
+		Log::Write("Received reply to FUNC_ID_ZW_ASSIGN_RETURN_ROUTE for node %d - FAILED: %s", m_controllerCommandNode, c_transmitStatusNames[_data[3]] );
 		if( m_controllerCallback )
 		{
 			m_controllerCallback( ControllerState_Failed, m_controllerCallbackContext );
@@ -2601,7 +2674,7 @@ void Driver::HandleDeleteReturnRouteRequest
 	if( _data[3] )
 	{
 		// Failed
-		Log::Write("Received reply to FUNC_ID_ZW_DELETE_RETURN_ROUTE for node %d - FAILED", m_controllerCommandNode );
+		Log::Write("Received reply to FUNC_ID_ZW_DELETE_RETURN_ROUTE for node %d - FAILED: %s", m_controllerCommandNode, c_transmitStatusNames[_data[3]] );
 		if( m_controllerCallback )
 		{
 			m_controllerCallback( ControllerState_Failed, m_controllerCallbackContext );
@@ -3877,7 +3950,8 @@ bool Driver::BeginControllerCommand
 	pfnControllerCallback_t _callback,
 	void* _context,
 	bool _highPower,
-	uint8 _nodeId
+	uint8 _nodeId,
+	uint8 _arg
 )
 {
 	if( ControllerCommand_None != m_controllerCommand )
@@ -3886,6 +3960,7 @@ bool Driver::BeginControllerCommand
 		return false;
 	}
 
+	bool res = true;
 	m_controllerCallback = _callback;
 	m_controllerCallbackContext = _context;
 	m_controllerCommand = _command;
@@ -3946,7 +4021,6 @@ bool Driver::BeginControllerCommand
 			Log::Write( "Requesting whether node %d has failed", _nodeId );
 			Msg* msg = new Msg( "Has Node Failed?", 0xff, REQUEST, FUNC_ID_ZW_IS_FAILED_NODE_ID, false );		
 			msg->Append( _nodeId );
-			msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 			SendMsg( msg );
 			break;
 		}
@@ -3956,7 +4030,6 @@ bool Driver::BeginControllerCommand
 			Log::Write( "Marking node %d as having failed", _nodeId );
 			Msg* msg = new Msg( "Mark Node As Failed", 0xff, REQUEST, FUNC_ID_ZW_REMOVE_FAILED_NODE_ID, true );		
 			msg->Append( _nodeId );
-			msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 			SendMsg( msg );
 			break;
 		}
@@ -4013,14 +4086,111 @@ bool Driver::BeginControllerCommand
 			SendMsg( msg );
 			break;
 		}
-        case ControllerCommand_None:
-        {
-            // To keep gcc quiet
-            break;
-        }
+		case ControllerCommand_CreateButton:
+		{
+			Node* node = GetNodeUnsafe( _nodeId );
+			if( node != NULL )
+			{
+				if( node->m_buttonMap.find( _arg ) == node->m_buttonMap.end() && m_virtualNeighborsReceived )
+				{
+					bool found = false;
+					for( int by=0; by<29 && !found; by++ )
+					{
+						for( int bi=0; bi<8 && !found; bi++ )
+						{
+							if( (m_virtualNeighbors[by] & (0x01<<bi)) )
+							{
+								uint8 n = (by << 3) + bi + 1;
+								map<uint8,uint8>::iterator it = node->m_buttonMap.begin();
+								for( ; it != node->m_buttonMap.end(); it++ )
+								{
+									// is virtual node already in map?
+									if( it->second == n )
+										break;
+								}
+								if( it == node->m_buttonMap.end() ) // found unused virtual node
+								{
+									node->m_buttonMap[_arg] = n;
+									Notification* notification = new Notification( Notification::Type_CreateButton );
+									notification->SetHomeAndNodeIds( m_homeId, _nodeId );
+									notification->SetButtonId( _arg );
+									QueueNotification( notification ); 
+									found = true;
+								}
+							}
+						}
+					}
+					if( !found ) // create a new virtual node
+					{
+						m_controllerCommandNode = _nodeId;
+						m_controllerCommandArg = _arg;
+						Log::Write( "AddVirtualNode" );
+						Msg* msg = new Msg( "Slave Node Information", 0xff, REQUEST, FUNC_ID_SERIAL_API_SLAVE_NODE_INFO, false, false );
+						msg->Append( 0 );    // node 0
+						msg->Append( 1 ); // listening
+						msg->Append( 0x09 );	  // genericType window covering
+						msg->Append( 0x00 );	  // specificType undefined
+						msg->Append( 0 ); // length
+						SendMsg( msg );
+						msg = new Msg( "Add Virtual Node", 0xff, REQUEST, FUNC_ID_ZW_SET_SLAVE_LEARN_MODE, true );
+						msg->Append( 0 );		// node 0 to add
+						if( IsPrimaryController() || IsInclusionController() )
+							msg->Append( SLAVE_LEARN_MODE_ADD );
+						else
+							msg->Append( SLAVE_LEARN_MODE_ENABLE );
+						SendMsg( msg );
+					}
+				}
+				else
+					res = false; // button id already used
+			}
+			else
+				res = false; // node not found
+			break;
+		}
+		case ControllerCommand_DeleteButton:
+		{
+			Node* node = GetNodeUnsafe( _nodeId );
+			if( node != NULL )
+			{
+				// Make sure button is allocated to a virtual node.
+				m_controllerCommandNode = _nodeId;
+				if( node->m_buttonMap.find( _arg ) != node->m_buttonMap.end() )
+				{
+#ifdef notdef
+					// We would need a reference count to decide when to free virtual nodes
+					// We could do this by making the bitmap if virtual nodes into a map that also holds a reference count.
+					Log::Write( "RemoveVirtualNode %d", _nodeId );
+					Msg* msg = new Msg( "Remove Virtual Node", 0xff, REQUEST, FUNC_ID_ZW_SET_SLAVE_LEARN_MODE, true );
+					msg->Append( _nodeId );		// from the node
+					if( IsPrimaryController() || IsInclusionController() )
+						msg->Append( SLAVE_LEARN_MODE_REMOVE );
+					else
+						msg->Append( SLAVE_LEARN_MODE_ENABLE );
+					SendMsg( msg );
+#endif
+					node->m_buttonMap.erase( _arg );
+					
+					Notification* notification = new Notification( Notification::Type_DeleteButton );
+					notification->SetHomeAndNodeIds( m_homeId, m_controllerCommandNode );
+					notification->SetButtonId( _arg );
+					QueueNotification( notification );
+				}
+				else
+					res = false; // button id not found
+			}
+			else
+				res = false; // node not found
+			break;
+		}
+        	case ControllerCommand_None:
+		{
+			// To keep gcc quiet
+			break;
+		}
 	}
 
-	return true;
+	return res;
 }
 
 //-----------------------------------------------------------------------------
@@ -4104,7 +4274,18 @@ bool Driver::CancelControllerCommand
 			SendMsg( msg );
 			break;
 		}
-		
+		case ControllerCommand_CreateButton:
+		case ControllerCommand_DeleteButton:
+		{
+			if( !( IsPrimaryController() || IsInclusionController() ) && m_controllerCommandNode != 0 )
+			{
+				Msg* msg = new Msg( "Set Slave Learn Mode Off ", 0xff, REQUEST, FUNC_ID_ZW_SET_SLAVE_LEARN_MODE, true );
+				msg->Append( 0 );	// filler node id
+				msg->Append( SLAVE_LEARN_MODE_DISABLE );
+				SendMsg( msg );
+			}
+			break;
+		}
 		case ControllerCommand_None:
 		case ControllerCommand_RequestNetworkUpdate:
 		case ControllerCommand_RequestNodeNeighborUpdate:
@@ -4112,8 +4293,8 @@ bool Driver::CancelControllerCommand
 		case ControllerCommand_DeleteAllReturnRoutes:
 		{
 			// To keep gcc quiet
-      break;
-     }
+			break;
+		}
 	}
 
 	m_controllerCommand = ControllerCommand_None;
@@ -4425,6 +4606,278 @@ bool Driver::HandleReadMemoryResponse
 	bool res = true;
 	Log::Write("Received reply to FUNC_ID_MEMORY_GET_BYTE");
 	return res; 
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::HandleGetVirtualNodesResponse>
+// Process a response from the Z-Wave PC interface
+//-----------------------------------------------------------------------------
+void Driver::HandleGetVirtualNodesResponse
+(
+	uint8* _data
+)
+{
+	Log::Write("Received reply to FUNC_ID_ZW_GET_VIRTUAL_NODES" );
+	memcpy( m_virtualNeighbors, &_data[2], 29 );
+	m_virtualNeighborsReceived = true;
+	bool bNeighbors = false;
+	for( int by=0; by<29; by++ )
+	{
+		for( int bi=0; bi<8; bi++ )
+		{
+			if( (_data[2+by] & (0x01<<bi)) )
+			{
+				Log::Write( "    Node %d", (by<<3)+bi+1 );
+				bNeighbors = true;
+			}
+		}
+	}
+	if( !bNeighbors )
+		Log::Write( "    (none reported)" );
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::GetVirtualNeighbors>
+// Gets the virtual neighbors for a network
+//-----------------------------------------------------------------------------
+uint32 Driver::GetVirtualNeighbors
+(
+	uint8** o_neighbors
+)
+{
+	int i;
+	uint32 numNeighbors = 0;
+	if( !m_virtualNeighborsReceived )
+	{
+		*o_neighbors = NULL;
+		return 0;
+	}
+	for( i = 0; i < 29; i++ )
+	{
+		for( unsigned char mask = 0x80; mask != 0; mask >>= 1 )
+			if( m_virtualNeighbors[i] & mask )
+				numNeighbors++;
+	}
+
+	// handle the possibility that no neighbors are reported
+	if( !numNeighbors )
+	{
+		*o_neighbors = NULL;
+		return 0;
+	}
+
+	// create and populate an array with neighbor node ids
+	uint8* neighbors = new uint8[numNeighbors];
+	uint32 index = 0;
+	for( int by=0; by<29; by++ )
+	{
+		for( int bi=0; bi<8; bi++ )
+		{
+			if( (m_virtualNeighbors[by] & (0x01<<bi)) )
+				neighbors[index++] = ( (by<<3) + bi + 1 );
+		}
+	}
+
+	*o_neighbors = neighbors;
+	return numNeighbors;
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::RequestVirtualNeighbors>
+// Get the virtual neighbour information from the controller
+//-----------------------------------------------------------------------------
+void Driver::RequestVirtualNeighbors
+( 
+	uint32 const _requestFlags
+)
+{
+	Msg* msg = new Msg( "Get Virtual Neighbor List", 0xff, REQUEST, FUNC_ID_ZW_GET_VIRTUAL_NODES, false );
+	if( _requestFlags && CommandClass::RequestFlag_LowPriority )
+	{
+		msg->SetPriority( Msg::MsgPriority_Low );
+	}
+	SendMsg( msg );
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::HandleSetSlaveLearnModeResponse>
+// Process a response from the Z-Wave PC interface
+//-----------------------------------------------------------------------------
+bool Driver::HandleSetSlaveLearnModeResponse
+(
+	uint8* _data
+)
+{
+	bool res = true;
+	ControllerState state = ControllerState_InProgress;
+	if( _data[2] )
+	{
+		Log::Write("Received reply to FUNC_ID_ZW_SET_SLAVE_LEARN_MODE - command in progress" );
+#ifdef notdef
+		// We need to do this when we support non-primary/non-inclusion mode.
+		// Consider retransmitting this frame in case it is lost...
+		if( !( IsPrimaryController() || IsInclusionController() ) )
+		{
+			Msg* msg = new Msg( "Send Virtual Node Information", 0xff, REQUEST, FUNC_ID_ZW_SEND_SLAVE_NODE_INFO, true );
+			msg->Append( m_controllerCommandNode );
+			msg->Append( Node::NodeBroadcast ); // broadcast
+			msg->Append( TRANSMIT_OPTION_ACK );
+			SendMsg( msg );
+		}
+#endif
+	}
+	else
+	{
+		// Failed
+		Log::Write("Received reply to FUNC_ID_ZW_SET_SLAVE_LEARN_MODE - command failed" );
+		state = ControllerState_Failed;
+		m_controllerCommand = ControllerCommand_None;
+		res = false;
+		if( !( IsPrimaryController() || IsInclusionController() ) )
+		{
+			Msg* msg = new Msg( "Set Slave Learn Mode Off ", 0xff, REQUEST, FUNC_ID_ZW_SET_SLAVE_LEARN_MODE, true );
+			msg->Append( 0 );
+			msg->Append( SLAVE_LEARN_MODE_DISABLE );
+			SendMsg( msg );
+		}
+	}
+
+	if( m_controllerCallback )
+	{
+		m_controllerCallback( state, m_controllerCallbackContext );
+	}
+	return res; 
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::HandleSetSlaveLearnModeRequest>
+// Process a request from the Z-Wave PC interface
+//-----------------------------------------------------------------------------
+void Driver::HandleSetSlaveLearnModeRequest
+(
+	uint8* _data
+)
+{
+	ControllerState state = ControllerState_Completed;
+	switch( _data[3] )
+	{
+		case SLAVE_ASSIGN_COMPLETE:
+		{
+			Log::Write( "SLAVE_ASSIGN_COMPLETE" );
+			if( _data[4] == 0 ) // original node is 0 so adding
+			{
+				Log::Write( "Adding virtual node ID %d", _data[5] );
+				InitNode( _data[5] );
+			}
+			else if( _data[5] == 0 )
+			{
+				Log::Write( "Removing virtual node ID %d", _data[4] );
+			}
+			m_controllerAdded = false;
+			break;
+		}
+		case SLAVE_ASSIGN_NODEID_DONE:
+		{
+			Log::Write( "SLAVE_ASSIGN_NODEID_DONE" );
+			if( _data[4] == 0 ) // original node is 0 so adding
+			{
+				Log::Write( "Adding virtual node ID %d", _data[5] );
+				InitNode( _data[5] );
+				Node* node = GetNodeUnsafe( m_controllerCommandNode );
+				if( node != NULL )
+				{
+					node->m_buttonMap[m_controllerCommandArg] = _data[5];
+					Notification* notification = new Notification( Notification::Type_CreateButton );
+					notification->SetHomeAndNodeIds( m_homeId, m_controllerCommandNode );
+					notification->SetButtonId( m_controllerCommandArg );
+					QueueNotification( notification ); 
+				}
+			}
+			else if( _data[5] == 0 )
+			{
+				Log::Write( "Removing virtual node ID %d", _data[4] );
+			}
+			m_controllerAdded = false;
+			break;
+		}
+		case SLAVE_ASSIGN_RANGE_INFO_UPDATE:
+		{
+			Log::Write( "SLAVE_ASSIGN_RANGE_INFO_UPDATE" );
+			m_controllerAdded = false;
+			break;
+		}
+	}
+
+	if( m_controllerCallback )
+	{
+		m_controllerCallback( state, m_controllerCallbackContext );
+	}
+	m_controllerCommand = ControllerCommand_None;
+
+	if( !( IsPrimaryController() || IsInclusionController() ) )
+	{
+		Msg* msg = new Msg( "Set Slave Learn Mode Off ", 0xff, REQUEST, FUNC_ID_ZW_SET_SLAVE_LEARN_MODE, true );
+		msg->Append( 0 );	// filler node id
+		msg->Append( SLAVE_LEARN_MODE_DISABLE );
+		SendMsg( msg );
+	}
+	RequestVirtualNeighbors( 0 );
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::HandleSendSlaveNodeInfoResponse>
+// Process a response from the Z-Wave PC interface
+//-----------------------------------------------------------------------------
+bool Driver::HandleSendSlaveNodeInfoResponse
+(
+	uint8* _data
+)
+{
+	bool res = true;
+	ControllerState state = ControllerState_InProgress;
+	if( _data[2] )
+	{
+		Log::Write("Received reply to FUNC_ID_ZW_SEND_SLAVE_NODE_INFO - command in progress" );
+	}
+	else
+	{
+		// Failed
+		Log::Write("Received reply to FUNC_ID_ZW_SEND_SLAVE_NODE_INFO - command failed" );
+		state = ControllerState_Failed;
+		m_controllerCommand = ControllerCommand_None;
+		res = false;
+	}
+
+	if( m_controllerCallback )
+	{
+		m_controllerCallback( state, m_controllerCallbackContext );
+	}
+	return res; 
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::HandleSendSlaveNodeInfoRequest>
+// Process a request from the Z-Wave PC interface
+//-----------------------------------------------------------------------------
+void Driver::HandleSendSlaveNodeInfoRequest
+(
+	uint8* _data
+)
+{
+	Log::Write( "SEND_SLAVE_NODE_INFO_COMPLETE %s", c_transmitStatusNames[_data[3]] );
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::HandleApplicationSlaveCommandRequest>
+// Process a request from the Z-Wave PC interface
+//-----------------------------------------------------------------------------
+void Driver::HandleApplicationSlaveCommandRequest
+(
+	uint8* _data
+)
+{
+	Log::Write( "APPLICATION_SLAVE_COMMAND_HANDLER rxStatus %x dest %d source %d len %d", _data[2], _data[3], _data[4], _data[5] );
+	// Send notification here
 }
 
 //-----------------------------------------------------------------------------
