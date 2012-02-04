@@ -139,10 +139,8 @@ Group::Group
 
 		associationElement = associationElement->NextSiblingElement();
 	}
-	if ( pending.size() > 0 )
-	{
-        	OnGroupChanged( pending );
-	}
+
+	OnGroupChanged( pending );
 }
 
 //-----------------------------------------------------------------------------
