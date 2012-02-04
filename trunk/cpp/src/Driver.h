@@ -156,11 +156,11 @@ namespace OpenZWave
 		// Controller Capabilities (return in FUNC_ID_ZW_GET_CONTROLLER_CAPABILITIES)
 		enum
 		{
-			ControllerCaps_Secondary		= 0x01,		/**< The controller is a secondary. */
+			ControllerCaps_Secondary	= 0x01,		/**< The controller is a secondary. */
 			ControllerCaps_OnOtherNetwork	= 0x02,		/**< The controller is not using its default HomeID. */
-			ControllerCaps_SIS				= 0x04,		/**< There is a SUC ID Server on the network. */
-			ControllerCaps_RealPrimary		= 0x08,		/**< Controller was the primary before the SIS was added. */
-			ControllerCaps_SUC				= 0x10		/**< Controller is a static update controller. */
+			ControllerCaps_SIS		= 0x04,		/**< There is a SUC ID Server on the network. */
+			ControllerCaps_RealPrimary	= 0x08,		/**< Controller was the primary before the SIS was added. */
+			ControllerCaps_SUC		= 0x10		/**< Controller is a static update controller. */
 		};
 
 		// Init Capabilities (return in FUNC_ID_SERIAL_API_GET_INIT_DATA)
@@ -329,6 +329,12 @@ namespace OpenZWave
 		bool HandleSerialApiSetTimeoutsResponse( uint8* _data );
 		bool HandleMemoryGetByteResponse( uint8* _data );
 		bool HandleReadMemoryResponse( uint8* _data );
+		void HandleGetVirtualNodesResponse( uint8* _data );
+		bool HandleSetSlaveLearnModeResponse( uint8* _data );
+		void HandleSetSlaveLearnModeRequest( uint8* _data );
+		bool HandleSendSlaveNodeInfoResponse( uint8* _data );
+		void HandleSendSlaveNodeInfoRequest( uint8* _data );
+		void HandleApplicationSlaveCommandRequest( uint8* _data );
 
 		void CommonAddNodeStatusRequestHandler( uint8 _funcId, uint8* _data );
 
@@ -439,24 +445,26 @@ namespace OpenZWave
 		 * Controller Commands.
 		 * Commands to be used with the BeginControllerCommand method.
 		 * \see Manager::BeginControllerCommand
-	     */
+		 */
 		enum ControllerCommand
 		{
-			ControllerCommand_None = 0,						/**< No command. */
+			ControllerCommand_None = 0,					/**< No command. */
 			ControllerCommand_AddController,				/**< Add a new controller to the Z-Wave network.  The new controller will be a secondary. */
 			ControllerCommand_AddDevice,					/**< Add a new device (but not a controller) to the Z-Wave network. */
 			ControllerCommand_CreateNewPrimary,				/**< Add a new controller to the Z-Wave network.  The new controller will be the primary, and the current primary will become a secondary controller. */
-			ControllerCommand_ReceiveConfiguration,			/**< Receive Z-Wave network configuration information from another controller. */
+			ControllerCommand_ReceiveConfiguration,				/**< Receive Z-Wave network configuration information from another controller. */
 			ControllerCommand_RemoveController,				/**< Remove a controller from the Z-Wave network. */
 			ControllerCommand_RemoveDevice,					/**< Remove a new device (but not a controller) from the Z-Wave network. */
 			ControllerCommand_RemoveFailedNode,				/**< Move a node to the controller's failed nodes list. This command will only work if the node cannot respond. */
 			ControllerCommand_HasNodeFailed,				/**< Check whether a node is in the controller's failed nodes list. */
-			ControllerCommand_ReplaceFailedNode,			/**< Replace a non-responding node with another. The node must be in the controller's list of failed nodes for this command to succeed. */
-			ControllerCommand_TransferPrimaryRole,			/**< Make a different controller the primary. */
-			ControllerCommand_RequestNetworkUpdate,			/**< Request network information from the SUC/SIS. */
-			ControllerCommand_RequestNodeNeighborUpdate,	/**< Get a node to rebuild its neighbour list.  This method also does ControllerCommand_RequestNodeNeighbors */
-			ControllerCommand_AssignReturnRoute,			/**< Assign a network return routes to a device. */
-			ControllerCommand_DeleteAllReturnRoutes			/**< Delete all return routes from a device. */
+			ControllerCommand_ReplaceFailedNode,				/**< Replace a non-responding node with another. The node must be in the controller's list of failed nodes for this command to succeed. */
+			ControllerCommand_TransferPrimaryRole,				/**< Make a different controller the primary. */
+			ControllerCommand_RequestNetworkUpdate,				/**< Request network information from the SUC/SIS. */
+			ControllerCommand_RequestNodeNeighborUpdate,			/**< Get a node to rebuild its neighbour list.  This method also does ControllerCommand_RequestNodeNeighbors */
+			ControllerCommand_AssignReturnRoute,				/**< Assign a network return routes to a device. */
+			ControllerCommand_DeleteAllReturnRoutes,			/**< Delete all return routes from a device. */
+			ControllerCommand_CreateButton,					/**< Create an event that tracks handheld button presses */
+			ControllerCommand_DeleteButton					/**< Delete event that tracks handheld button presses */
 		};
 
 		/** 
@@ -483,16 +491,37 @@ namespace OpenZWave
 		void SoftReset();
 		void RequestNodeNeighbors( uint8 const _nodeId, uint32 const _requestFlags );
 
-		bool BeginControllerCommand( ControllerCommand _command, pfnControllerCallback_t _callback, void* _context, bool _highPower, uint8 _nodeId );
+		bool BeginControllerCommand( ControllerCommand _command, pfnControllerCallback_t _callback, void* _context, bool _highPower, uint8 _nodeId, uint8 _arg );
 		bool CancelControllerCommand();
 
 		ControllerState				m_controllerState;
 		ControllerCommand			m_controllerCommand;
-		pfnControllerCallback_t		m_controllerCallback;
-		void*						m_controllerCallbackContext;
-		bool						m_controllerAdded;
-		uint8						m_controllerCommandNode;
+		pfnControllerCallback_t			m_controllerCallback;
+		void*					m_controllerCallbackContext;
+		bool					m_controllerAdded;
+		uint8					m_controllerCommandNode;
+		uint8					m_controllerCommandArg;
 
+
+
+	//-----------------------------------------------------------------------------
+	// Virtual Node commands
+	//-----------------------------------------------------------------------------
+	public:	
+		/** 
+		 * Virtual Node Commands.
+		 * Commands to be used with virtual nodes.
+		 */
+	private:
+		// The public interface is provided via the wrappers in the Manager class
+		uint32 GetVirtualNeighbors( uint8** o_neighbors );
+		void RequestVirtualNeighbors( uint32 const _requestFlags );
+		bool IsVirtualNode( uint8 const _nodeId )const{  return (( m_virtualNeighbors[_nodeId >> 3] & 1 << (( _nodeId - 1 ) & 0x07 )) != 0 ); }
+
+;
+
+		bool		m_virtualNeighborsReceived;
+		uint8		m_virtualNeighbors[29];		// Bitmask containing virtual neighbors
 
 	//-----------------------------------------------------------------------------
 	// SwitchAll

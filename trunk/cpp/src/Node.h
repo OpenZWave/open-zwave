@@ -126,12 +126,12 @@ namespace OpenZWave
 	public:
 		enum QueryStage														
 		{
-			QueryStage_None,					/**< Query process hasn't started for this node */
+			QueryStage_None,				/**< Query process hasn't started for this node */
 			QueryStage_ProtocolInfo,			/**< Retrieve protocol information */
-			QueryStage_WakeUp,					/**< Start wake up process if a sleeping node*/
-			QueryStage_ManufacturerSpecific1,	/**< Retrieve manufacturer name and product ids if ProtocolInfo lets us */
+			QueryStage_WakeUp,				/**< Start wake up process if a sleeping node*/
+			QueryStage_ManufacturerSpecific1,		/**< Retrieve manufacturer name and product ids if ProtocolInfo lets us */
 			QueryStage_NodeInfo,				/**< Retrieve info about supported, controlled command classes */
-			QueryStage_ManufacturerSpecific2,	/**< Retrieve manufacturer name and product ids */
+			QueryStage_ManufacturerSpecific2,		/**< Retrieve manufacturer name and product ids */
 			QueryStage_Versions,				/**< Retrieve version information */
 			QueryStage_Instances,				/**< Retrieve information about multiple command class instances */
 			QueryStage_Static,					/**< Retrieve static information (doesn't change) */
@@ -212,6 +212,7 @@ namespace OpenZWave
 
 		bool ProtocolInfoReceived()const{ return m_protocolInfoReceived; }
 		bool NodeInfoReceived()const{ return m_nodeInfoReceived; }
+
 		bool AllQueriesCompleted()const{ return( QueryStage_Complete == m_queryStage ); }
 
 	private:
@@ -276,8 +277,9 @@ namespace OpenZWave
 		uint8		m_basic;		//*< Basic device class (0x01-Controller, 0x02-Static Controller, 0x03-Slave, 0x04-Routing Slave
 		uint8		m_generic;
 		uint8		m_specific;
-		string		m_type;				// Label representing the specific/generic/basic value
+		string		m_type;			// Label representing the specific/generic/basic value
 		uint8		m_neighbors[29];	// Bitmask containing the neighbouring nodes
+		map<uint8,uint8>	m_buttonMap;	// Map button IDs into virtual node numbers
 
 	//-----------------------------------------------------------------------------
 	// Device Naming
@@ -485,4 +487,3 @@ namespace OpenZWave
 } //namespace OpenZWave
 
 #endif //_Node_H
-
