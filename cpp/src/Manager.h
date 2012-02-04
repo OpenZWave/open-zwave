@@ -1330,6 +1330,8 @@ namespace OpenZWave
 		 * - Driver::ControllerCommand_RequestNodeNeighborUpdate - Get a node to rebuild its neighbour list.  This method also does ControllerCommand_RequestNodeNeighbors afterwards.
 		 * - Driver::ControllerCommand_AssignReturnRoute - Assign a network return route to a device.
 		 * - Driver::ControllerCommand_DeleteAllReturnRoutes - Delete all network return routes from a device.
+		 * - Driver::ControllerCommand_CreateButton - Create a handheld button event.
+		 * - Driver::ControllerCommand_DeleteButton - Delete a handheld button event.
 		 * <p> Callbacks
 		 * - Driver::ControllerState_Waiting, the controller is waiting for a user action.  A notice should be displayed 
 		 * to the user at this point, telling them what to do next.
@@ -1341,7 +1343,7 @@ namespace OpenZWave
 		 * - Driver::ControllerState_Complete - the controller has finished adding or removing the node, and the command is complete.
 		 * - Driver::ControllerState_Failed - will be sent if the command fails for any reason.
 		 */
-		bool BeginControllerCommand( uint32 const _homeId, Driver::ControllerCommand _command, Driver::pfnControllerCallback_t _callback = NULL, void* _context = NULL, bool _highPower = false, uint8 _nodeId = 0xff );
+		bool BeginControllerCommand( uint32 const _homeId, Driver::ControllerCommand _command, Driver::pfnControllerCallback_t _callback = NULL, void* _context = NULL, bool _highPower = false, uint8 _nodeId = 0xff, uint8 _arg = 0 );
 
 		/**
 		 * \brief Cancels any in-progress command running on a controller.

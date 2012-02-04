@@ -2681,12 +2681,13 @@ bool Manager::BeginControllerCommand
 	Driver::pfnControllerCallback_t _callback,	// = NULL
 	void* _context,								// = NULL
 	bool _highPower,							// = false
-	uint8 _nodeId								// = 0xff
+	uint8 _nodeId,								// = 0xff
+	uint8 _arg								// = 0
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
-		return( driver->BeginControllerCommand( _command, _callback, _context, _highPower, _nodeId ) );
+		return( driver->BeginControllerCommand( _command, _callback, _context, _highPower, _nodeId, _arg ) );
 	}
 
 	return false;
@@ -3400,4 +3401,3 @@ void Manager::GetDriverStatistics
 	}
 
 }
-

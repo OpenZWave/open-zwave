@@ -60,26 +60,30 @@ namespace OpenZWave
 	     */
 		enum NotificationType 
 		{
-			Type_ValueAdded = 0,				/**< A new node value has been added to OpenZWave's list. These notifications occur after a node has been discovered, and details of its command classes have been received.  Each command class may generate one or more values depending on the complexity of the item being represented.  */
+			Type_ValueAdded = 0,					/**< A new node value has been added to OpenZWave's list. These notifications occur after a node has been discovered, and details of its command classes have been received.  Each command class may generate one or more values depending on the complexity of the item being represented.  */
 			Type_ValueRemoved,					/**< A node value has been removed from OpenZWave's list.  This only occurs when a node is removed. */
 			Type_ValueChanged,					/**< A node value has been updated from the Z-Wave network. */
-			Type_Group,							/**< The associations for the node have changed. The application should rebuild any group information it holds about the node. */
+			Type_Group,						/**< The associations for the node have changed. The application should rebuild any group information it holds about the node. */
 			Type_NodeNew,						/**< A new node has been found (not already stored in zwcfg*.xml file) */
 			Type_NodeAdded,						/**< A new node has been added to OpenZWave's list.  This may be due to a device being added to the Z-Wave network, or because the application is initializing itself. */
 			Type_NodeRemoved,					/**< A node has been removed from OpenZWave's list.  This may be due to a device being removed from the Z-Wave network, or because the application is closing. */
-			Type_NodeProtocolInfo,				/**< Basic node information has been receievd, such as whether the node is a listening device, a routing device and its baud rate and basic, generic and specific types. It is after this notification that you can call Manager::GetNodeType to obtain a label containing the device description. */
+			Type_NodeProtocolInfo,					/**< Basic node information has been receievd, such as whether the node is a listening device, a routing device and its baud rate and basic, generic and specific types. It is after this notification that you can call Manager::GetNodeType to obtain a label containing the device description. */
 			Type_NodeNaming,					/**< One of the node names has changed (name, manufacturer, product). */
 			Type_NodeEvent,						/**< A node has triggered an event.  This is commonly caused when a node sends a Basic_Set command to the controller.  The event value is stored in the notification. */
-			Type_PollingDisabled,				/**< Polling of a node has been successfully turned off by a call to Manager::DisablePoll */
-			Type_PollingEnabled,				/**< Polling of a node has been successfully turned on by a call to Manager::EnablePoll */
+			Type_PollingDisabled,					/**< Polling of a node has been successfully turned off by a call to Manager::DisablePoll */
+			Type_PollingEnabled,					/**< Polling of a node has been successfully turned on by a call to Manager::EnablePoll */
+			Type_CreateButton,					/**< Handheld controller button event created */
+			Type_DeleteButton,					/**< Handheld controller button event deleted */
+			Type_ButtonOn,						/**< Handheld controller button on pressed event */
+			Type_ButtonOff,						/**< Handheld controller button off pressed event */
 			Type_DriverReady,					/**< A driver for a PC Z-Wave controller has been added and is ready to use.  The notification will contain the controller's Home ID, which is needed to call most of the Manager methods. */
 			Type_DriverFailed,					/**< Driver failed to load */
 			Type_DriverReset,					/**< All nodes and values for this driver have been removed.  This is sent instead of potentially hundreds of individual node and value notifications. */
 			Type_MsgComplete,					/**< The last message that was sent is now complete. */
-			Type_EssentialNodeQueriesComplete,	/**< The queries on a node that are essential to its operation have been completed. The node can now handle incoming messages. */
-			Type_NodeQueriesComplete,			/**< All the initialisation queries on a node have been completed. */
-			Type_AwakeNodesQueried,				/**< All awake nodes have been queried, so client application can expected complete data for these nodes. */
-			Type_AllNodesQueried				/**< All nodes have been queried, so client application can expected complete data. */
+			Type_EssentialNodeQueriesComplete,			/**< The queries on a node that are essential to its operation have been completed. The node can now handle incoming messages. */
+			Type_NodeQueriesComplete,				/**< All the initialisation queries on a node have been completed. */
+			Type_AwakeNodesQueried,					/**< All awake nodes have been queried, so client application can expected complete data for these nodes. */
+			Type_AllNodesQueried					/**< All nodes have been queried, so client application can expected complete data. */
 		};
 
 		/** 
@@ -120,6 +124,13 @@ namespace OpenZWave
 		uint8 GetEvent()const{ assert(Type_NodeEvent==m_type); return m_byte; } 
 
 		/** 
+		 * Get the button id of a notification.  Only valid in NotificationType::Type_CreateButton, DeleteButton
+		 * and ButtonPressed notifications. 
+		 * \return the button id.
+	     */
+		uint8 GetButtonID()const{ assert(Type_CreateButton==m_type || Type_DeleteButton==m_type || Type_ButtonOn==m_type || Type_ButtonOff==m_type); return m_byte; } 
+
+		/** 
 		 * Helper function to simplify wrapping the notification class.  Should not normally need to be called.
 		 * \return the internal byte value of the notification.
 	     */
@@ -133,8 +144,9 @@ namespace OpenZWave
 		void SetValueId( ValueID const& _valueId ){ m_valueId = _valueId; }
 		void SetGroupIdx( uint8 const _groupIdx ){ assert(Type_Group==m_type); m_byte = _groupIdx; }
 		void SetEvent( uint8 const _event ){ assert(Type_NodeEvent==m_type); m_byte = _event; }
+		void SetButtonId( uint8 const _buttonId ){ assert(Type_CreateButton==m_type||Type_DeleteButton==m_type||Type_ButtonOn==m_type||Type_ButtonOff==m_type); m_byte = _buttonId; }
 
-		NotificationType	m_type;
+		NotificationType		m_type;
 		ValueID				m_valueId;
 		uint8				m_byte;
 	};
