@@ -1,10 +1,11 @@
+//----------------------------------------------------------------------------
 //
-// ThreadImpl.cpp
+//  ThreadImpl.h
 //
-// PThreads implementation of a cross-platform thread
+//	POSIX implementation of a cross-platform thread
 //
-// Copyright (c) 2010, Greg Satz <satz@iranger.com>
-// All rights reserved.
+//	Copyright (c) 2010, Greg Satz <satz@iranger.com>
+//	All rights reserved.
 //
 //	SOFTWARE NOTICE AND LICENSE
 //
@@ -23,8 +24,9 @@
 //	You should have received a copy of the GNU Lesser General Public License
 //	along with OpenZWave.  If not, see <http://www.gnu.org/licenses/>.
 //
-
+//-----------------------------------------------------------------------------
 #include "Defs.h"
+#include "Event.h"
 #include "Thread.h"
 #include "ThreadImpl.h"
 
@@ -40,9 +42,11 @@ using namespace OpenZWave;
 //-----------------------------------------------------------------------------
 ThreadImpl::ThreadImpl
 (
+	Thread* _owner,
 	string const& _tname
 ):
-//	m_hThread( NULL ),
+	m_owner( _owner ),
+//	m_hThread( NULL ),  /* p_thread_t isn't a pointer in Linux, so can't do this */
 	m_bIsRunning( false ),
 	m_name( _tname )
 {
@@ -56,8 +60,6 @@ ThreadImpl::~ThreadImpl
 (
 )
 {
-	if ( m_bIsRunning )
-		Stop();
 }
 
 //-----------------------------------------------------------------------------
@@ -66,7 +68,8 @@ ThreadImpl::~ThreadImpl
 //-----------------------------------------------------------------------------
 bool ThreadImpl::Start
 (
-	Thread::pfnThreadProc_t _pfnThreadProc, 
+	Thread::pfnThreadProc_t _pfnThreadProc,
+	Event* _exitEvent,
 	void* _pContext 
 )
 {
@@ -79,6 +82,8 @@ bool ThreadImpl::Start
 	// Create a thread to run the specified function
 	m_pfnThreadProc = _pfnThreadProc;
 	m_pContext = _pContext;
+	m_exitEvent = _exitEvent;
+	m_exitEvent->Reset();
 
 	pthread_create ( &m_hThread, &ta, ThreadImpl::ThreadProc, this );
 	//fprintf(stderr, "thread %s starting %08x\n", m_name.c_str(), m_hThread);
@@ -89,14 +94,14 @@ bool ThreadImpl::Start
 }
 
 //-----------------------------------------------------------------------------
-//	<ThreadImpl::Stop>
-//	Stop a function running on this thread
+//	<ThreadImpl::Terminate>
+//	End this thread
 //-----------------------------------------------------------------------------
-bool ThreadImpl::Stop
+bool ThreadImpl::Terminate
 (
 )
 {
-	void *data;
+	void* data;
 
 	//fprintf(stderr, "thread %s stopping %08x running %d\n", m_name.c_str(), m_hThread, m_bIsRunning );
 	//fflush(stderr);
@@ -114,7 +119,6 @@ bool ThreadImpl::Stop
 
 	//m_hThread = NULL;
 	m_bIsRunning = false;
-
 	return true;
 }
 
@@ -128,6 +132,17 @@ void ThreadImpl::Sleep
 )
 {
 	usleep( _millisecs*1000 );
+}
+
+//-----------------------------------------------------------------------------
+//	<ThreadImpl::IsSignalled>
+//	Test whether the thread has completed
+//-----------------------------------------------------------------------------
+bool ThreadImpl::IsSignalled
+(
+)
+{
+	return !m_bIsRunning;
 }
 
 //-----------------------------------------------------------------------------
@@ -157,5 +172,9 @@ void ThreadImpl::Run
 )
 {
 	m_bIsRunning = true;
-	m_pfnThreadProc( m_pContext );
+	m_pfnThreadProc( m_exitEvent, m_pContext );
+	m_bIsRunning = false;
+    
+	// Let any watchers know that the thread has finished running
+	m_owner->Notify();
 }

@@ -50,12 +50,13 @@ enum BatteryCmd
 bool Battery::RequestState
 (
 	uint32 const _requestFlags,
-	uint8 const _instance
+	uint8 const _instance,
+	Driver::MsgQueue const _queue
 )
 {
 	if( _requestFlags & RequestFlag_Dynamic )
 	{
-		return RequestValue( _requestFlags, 0, _instance );
+		return RequestValue( _requestFlags, 0, _instance, _queue );
 	}
 
 	return false;
@@ -69,7 +70,8 @@ bool Battery::RequestValue
 (
 	uint32 const _requestFlags,
 	uint8 const _dummy1,	// = 0 (not used)
-	uint8 const _instance
+	uint8 const _instance,
+	Driver::MsgQueue const _queue
 )
 {
 	if( _instance != 1 )
@@ -84,7 +86,7 @@ bool Battery::RequestValue
 	msg->Append( GetCommandClassId() );
 	msg->Append( BatteryCmd_Get );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	GetDriver()->SendMsg( msg );
+	GetDriver()->SendMsg( msg, _queue );
 	return true;
 }
 
@@ -114,11 +116,6 @@ bool Battery::HandleMsg
 		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, 0 ) ) )
 		{
 			value->OnValueChanged( batteryLevel );
-		}
-		Node* node = GetNodeUnsafe();
-		if( node != NULL && node->m_queryPending )
-		{
-			node->m_queryStageCompleted = true;
 		}
 		return true;
 	}

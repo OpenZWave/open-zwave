@@ -187,12 +187,12 @@
 	<Manufacturer id="0013" name="Internet Dom">
 	</Manufacturer>
 	<Manufacturer id="0063" name="GE">
-		<Product type="4450" id="3030" name="GE 45602 Lamp Dimmer Module"/>
-		<Product type="4457" id="3230" name="GE 45606 2-Way Dimmer Switch"/>
+		<Product type="4450" id="3030" name="GE 45602 Lamp Dimmer Module" config="ge/dimmer_module.xml"/>
+		<Product type="4457" id="3230" name="GE 45606 2-Way Dimmer Switch" config="ge/dimmer.xml"/>
 		<Product type="5250" id="3030" name="GE 45603 Plugin Appliance Module"/>
 		<Product type="5250" id="3130" name="GE 45604 Outdoor Module"/>
-		<Product type="5257" id="3533" name="GE 45609 On/Off Relay Switch"/>
-		<Product type="4457" id="3033" name="GE 45613 3-Way Dimmer Switch"/>
+		<Product type="5257" id="3533" name="GE 45609 On/Off Relay Switch" config="ge/relay.xml"/>
+		<Product type="4457" id="3033" name="GE 45613 3-Way Dimmer Switch" config="ge/dimmer.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0091" name="Kamstrup">
 	</Manufacturer>
@@ -253,8 +253,8 @@
 	</Manufacturer>
 	<Manufacturer id="0041" name="OpenPeak Inc.">
 	</Manufacturer>
-	<Manufacturer id="0064" name="Popp / Dï¿½wi">
-		<Product type="3001" id="0000" name="Plugin Switch"/>
+	<Manufacturer id="0064" name="Popp / Düwi">
+	  <Product type="3001" id="0000" name="Plugin Switch" />
 	</Manufacturer>
 	<Manufacturer id="0016" name="PowerLynx">
 	</Manufacturer>
@@ -268,13 +268,13 @@
 		<Product type="0000" id="531f" name="Z-URC" config="remotec/zurc.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0010" name="RCS">
-		<Product type="0001" id="0002" name="TZ43 Thermostat"/>
-		<Product type="0001" id="0005" name="TZ43-IHD SMUD Thermostat" config="rcs/therm0005.xml"/>
-		<Product type="0001" id="0007" name="TZ45-IHD SMUD Thermostat" config="rcs/therm0007.xml"/>
-		<Product type="0001" id="0009" name="TZ45 Thermostat" config="rcs/therm0009.xml"/>
-		<Product type="0001" id="000a" name="TZ4Z-IHD RCS Thermostat"/>
-		<Product type="454d" id="3532" name="EM52-ZW Z-Wave Home Energy Meter" config="rcs/em52-zw.xml"/>
-		<Product type="504d" id="3132" name="PM12-ZW Z-Wave Power Monitoring Module" config="rcs/pm12-zw.xml"/>
+	  <Product type="0001" id="0002" name="TZ43 Thermostat" />
+	  <Product type="0001" id="0005" name="TZ43-IHD SMUD Thermostat" config="rcs/therm0005.xml" />
+	  <Product type="0001" id="0007" name="TZ45-IHD SMUD Thermostat" config="rcs/therm0007.xml" />
+	  <Product type="0001" id="0009" name="TZ45 Thermostat" config="rcs/therm0009.xml" />
+	  <Product type="0001" id="000a" name="TZ4Z-IHD RCS Thermostat" />
+	  <Product type="454d" id="3532" name="EM52-ZW Z-Wave Home Energy Meter" config="rcs/em52-zw.xml" />
+	  <Product type="504d" id="3132" name="PM12-ZW Z-Wave Power Monitoring Module" config="rcs/pm12-zw.xml" />
 	</Manufacturer>
 	<Manufacturer id="0065" name="RS Scene">
 	</Manufacturer>
@@ -340,8 +340,8 @@
 	<Manufacturer id="0021" name="Zykronix">
 	</Manufacturer>
 	<Manufacturer id="010f" name="FIBARO System">
-		<Product type="0100" id="0104" name="FGD211 Universal Dimmer 500W"/>
-		<Product type="0400" id="0104" name="FGS211 Switch 3KW" config="fibaro/fgs211.xml"/>
+	  <Product type="0100" id="0104" name="FGD211 Universal Dimmer 500W" />
+	  <Product type="0400" id="0104" name="FGS211 Switch 3KW" config="fibaro/fgs211.xml" />
 	</Manufacturer>
 	<Manufacturer id="0110" name="Frostdale">
 		<Product type="2411" id="0001" name="Nanogrid: FDN2nxx light switch - where n is 1, 2, 3 or 4 buttons"/>

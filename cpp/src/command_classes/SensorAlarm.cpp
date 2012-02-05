@@ -77,13 +77,14 @@ SensorAlarm::SensorAlarm
 bool SensorAlarm::RequestState
 (
 	uint32 const _requestFlags,
-	uint8 const _instance
+	uint8 const _instance,
+	Driver::MsgQueue const _queue
 )
 {
 	bool requests = false;
 	if( ( _requestFlags & RequestFlag_Static ) && HasStaticRequest( StaticRequest_Values ) )
 	{
-		requests = RequestValue( _requestFlags, 0xff, _instance );
+		requests = RequestValue( _requestFlags, 0xff, _instance, _queue );
 	}
 
 	if( _requestFlags & RequestFlag_Dynamic )
@@ -93,7 +94,7 @@ bool SensorAlarm::RequestState
 			if( NULL != GetValue( 1, i ) )
 			{
 				// There is a value for this alarm type, so request it
-				requests |= RequestValue( _requestFlags, i, _instance );
+				requests |= RequestValue( _requestFlags, i, _instance, _queue );
 			}
 		}
 	}
@@ -109,7 +110,8 @@ bool SensorAlarm::RequestValue
 (
 	uint32 const _requestFlags,
 	uint8 const _alarmType,
-	uint8 const _instance
+	uint8 const _instance,
+	Driver::MsgQueue const _queue
 )
 {
 	if( _alarmType == 0xff )
@@ -122,11 +124,7 @@ bool SensorAlarm::RequestValue
 		msg->Append( GetCommandClassId() );
 		msg->Append( SensorAlarmCmd_SupportedGet );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-		if( _requestFlags & RequestFlag_LowPriority )
-		{
-			msg->SetPriority( Msg::MsgPriority_Low );
-		}
-		GetDriver()->SendMsg( msg );
+		GetDriver()->SendMsg( msg, _queue );
 	}
 	else
 	{
@@ -139,11 +137,7 @@ bool SensorAlarm::RequestValue
 		msg->Append( SensorAlarmCmd_Get );
 		msg->Append( _alarmType );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-		if( _requestFlags & RequestFlag_LowPriority )
-		{
-			msg->SetPriority( Msg::MsgPriority_Low );
-		}
-		GetDriver()->SendMsg( msg );
+		GetDriver()->SendMsg( msg, _queue );
 	}
 	return true;
 }
@@ -170,12 +164,6 @@ bool SensorAlarm::HandleMsg
 
 			value->OnValueChanged( state );
 			Log::Write( "Received alarm state report from node %d: %s = %d", sourceNodeId, value->GetLabel().c_str(), state );		
-		}
-
-		Node* node = GetNodeUnsafe();
-		if( node != NULL && node->m_queryPending )
-		{
-			node->m_queryStageCompleted = true;
 		}
 
 		return true;
@@ -206,7 +194,6 @@ bool SensorAlarm::HandleMsg
 					}
 				}
 			}
-			node->m_queryStageCompleted = true;
 		}
 
 		ClearStaticRequest( StaticRequest_Values );

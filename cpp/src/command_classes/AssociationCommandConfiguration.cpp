@@ -65,12 +65,13 @@ enum
 bool AssociationCommandConfiguration::RequestState
 (
 	uint32 const _requestFlags,
-	uint8 const _instance
+	uint8 const _instance,
+	Driver::MsgQueue const _queue
 )
 {
 	if( _requestFlags & RequestFlag_Session )
 	{
-		return RequestValue( _requestFlags, 0, _instance );
+		return RequestValue( _requestFlags, 0, _instance, _queue );
 	}
 
 	return false;
@@ -84,7 +85,8 @@ bool AssociationCommandConfiguration::RequestValue
 (
 	uint32 const _requestFlags,
 	uint8 const _dummy1,	// = 0 (not used)
-	uint8 const _instance
+	uint8 const _instance,
+	Driver::MsgQueue const _queue
 )
 {
 	if( _instance != 1 )
@@ -99,7 +101,7 @@ bool AssociationCommandConfiguration::RequestValue
 	msg->Append( GetCommandClassId() );
 	msg->Append( AssociationCommandConfigurationCmd_SupportedRecordsGet );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	GetDriver()->SendMsg( msg );
+	GetDriver()->SendMsg( msg, _queue );
 	return true;
 }
 
@@ -121,7 +123,7 @@ void AssociationCommandConfiguration::RequestCommands
 	msg->Append( _groupIdx );
 	msg->Append( _nodeId );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	GetDriver()->SendMsg( msg );
+	GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 }
 
 //-----------------------------------------------------------------------------
@@ -177,11 +179,6 @@ bool AssociationCommandConfiguration::HandleMsg
 		{
 			valueShort->OnValueChanged( maxCommands );
 		}
-		Node* node = GetNodeUnsafe();
-		if( node != NULL && node->m_queryPending )
-		{
-			node->m_queryStageCompleted = true;
-		}
 		return true;
 	}
 	
@@ -215,12 +212,6 @@ bool AssociationCommandConfiguration::HandleMsg
 					start += length;
 				}
 			}
-		}
-
-		Node* node = GetNodeUnsafe();
-		if( node != NULL && node->m_queryPending )
-		{
-			node->m_queryStageCompleted = true;
 		}
 
 		return true;
@@ -274,7 +265,7 @@ void AssociationCommandConfiguration::SetCommand
 	}
 
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	GetDriver()->SendMsg( msg );
+	GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 }
 
 

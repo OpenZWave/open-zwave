@@ -138,20 +138,21 @@ void ThermostatSetpoint::WriteXML
 bool ThermostatSetpoint::RequestState
 (
 	uint32 const _requestFlags,
-	uint8 const _instance
+	uint8 const _instance,
+	Driver::MsgQueue const _queue
 )
 {
 	bool requests = false;
 	if( ( _requestFlags & RequestFlag_Static ) && HasStaticRequest( StaticRequest_Values ) )
 	{
-		requests |= RequestValue( _requestFlags, 0xff, _instance );
+		requests |= RequestValue( _requestFlags, 0xff, _instance, _queue );
 	}
 
 	if( _requestFlags & RequestFlag_Session )
 	{
 		for( uint8 i=0; i<ThermostatSetpoint_Count; ++i )
 		{
-			requests |= RequestValue( _requestFlags, i, _instance );
+			requests |= RequestValue( _requestFlags, i, _instance, _queue );
 		}
 	}
 
@@ -166,7 +167,8 @@ bool ThermostatSetpoint::RequestValue
 (
 	uint32 const _requestFlags,
 	uint8 const _setPointIndex,
-	uint8 const _instance
+	uint8 const _instance,
+	Driver::MsgQueue const _queue
 )
 {
 	if( _setPointIndex == 0xff )		// check for supportedget
@@ -179,11 +181,7 @@ bool ThermostatSetpoint::RequestValue
 		msg->Append( GetCommandClassId() );
 		msg->Append( ThermostatSetpointCmd_SupportedGet );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-		GetDriver()->SendMsg( msg );
-		if( _requestFlags & RequestFlag_LowPriority )
-		{
-			msg->SetPriority( Msg::MsgPriority_Low );
-		}
+		GetDriver()->SendMsg( msg, _queue );
 		return true;
 	}
 
@@ -198,11 +196,7 @@ bool ThermostatSetpoint::RequestValue
 		msg->Append( ThermostatSetpointCmd_Get );
 		msg->Append( _setPointIndex );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-		GetDriver()->SendMsg( msg );
-		if( _requestFlags & RequestFlag_LowPriority )
-		{
-			msg->SetPriority( Msg::MsgPriority_Low );
-		}
+		GetDriver()->SendMsg( msg, _queue );
 		return true;
 	}
 	return false;
@@ -237,13 +231,6 @@ bool ThermostatSetpoint::HandleMsg
 
 			Log::Write( "Received thermostat setpoint report from node %d: Setpoint %s = %s%s", GetNodeId(), value->GetLabel().c_str(), value->GetValue().c_str(), value->GetUnits().c_str() );		
 		}
-
-		Node* node = GetNodeUnsafe();
-		if( node != NULL && node->m_queryPending )
-		{
-			node->m_queryStageCompleted = true;
-		}
-
 		return true;
 	}
 			
@@ -271,7 +258,6 @@ bool ThermostatSetpoint::HandleMsg
 					}
 				}
 			}
-			node->m_queryStageCompleted = true;
 		}
 
 		ClearStaticRequest( StaticRequest_Values );
@@ -304,7 +290,7 @@ bool ThermostatSetpoint::SetValue
 		msg->Append( value->GetID().GetIndex() );
 		AppendValue( msg, value->GetValue(), scale );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-		GetDriver()->SendMsg( msg );
+		GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 		return true;
 	}
 

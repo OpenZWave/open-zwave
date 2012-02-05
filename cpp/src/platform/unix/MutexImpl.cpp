@@ -1,10 +1,11 @@
+//----------------------------------------------------------------------------
 //
-// MutexImpl.cpp
+//  MutexImpl.cpp
 //
-// POSIX implementation of the cross-platform mutex
+//  POSIX implementation of the cross-platform mutex
 //
-// Copyright (c) 2010, Greg Satz <satz@iranger.com>
-// All rights reserved.
+//	Copyright (c) 2010, Greg Satz <satz@iranger.com>
+//	All rights reserved.
 //
 //	SOFTWARE NOTICE AND LICENSE
 //
@@ -39,7 +40,8 @@ using namespace OpenZWave;
 //-----------------------------------------------------------------------------
 MutexImpl::MutexImpl
 (
-)
+):
+	m_lockCount( 0 )
 {
 	pthread_mutexattr_t ma;
 
@@ -69,47 +71,52 @@ bool MutexImpl::Lock
 	bool const _bWait
 )
 {
-	int err;
-
 	if( _bWait )
 	{
 		// We will wait for the lock
-	  	err = pthread_mutex_lock( &m_criticalSection );
-		if( err != 0 )
-		{
-			fprintf( stderr, "mutex_lock mutex %08x err=%d",
-				 &m_criticalSection, err );
-			fflush( stderr );
-		}
+	  	pthread_mutex_lock( &m_criticalSection );
+		++m_lockCount;
 		return true;
 	}
 
 	// Returns immediately, even if the lock was not available.
-	err = pthread_mutex_trylock( &m_criticalSection );
-	if( err != 0 )
+	if( pthread_mutex_trylock( &m_criticalSection ) )
 	{
-		fprintf( stderr, "mutex_trylock mutex %08x err=%d",
-			 &m_criticalSection, err );
-		fflush( stderr );
+		return false;
 	}
-	return( err == 0 );
+	
+	++m_lockCount;
+	return true;
 }
 
 //-----------------------------------------------------------------------------
-//	<MutexImpl::Release>
+//	<MutexImpl::Unlock>
 //	Release our lock on the mutex
 //-----------------------------------------------------------------------------
-void MutexImpl::Release
+void MutexImpl::Unlock
 (
 )
 {
-	int err;
-
-	err = pthread_mutex_unlock( &m_criticalSection );
-	if( err != 0 )
+	if( !m_lockCount )
 	{
-		fprintf( stderr, "mutex_unlock mutex %08x err=%d %d",
-			 &m_criticalSection, err, errno );
-		fflush( stderr );
+		// No locks - we have a mismatched lock/release pair
+		assert(0);
+	}
+	else
+	{
+		pthread_mutex_unlock( &m_criticalSection );
+		--m_lockCount;
 	}
 }
+
+//-----------------------------------------------------------------------------
+//	<MutexImpl::IsSignalled>
+//	Test whether the mutex is free
+//-----------------------------------------------------------------------------
+bool MutexImpl::IsSignalled
+(
+)
+{
+	return( 0 == m_lockCount );
+}
+

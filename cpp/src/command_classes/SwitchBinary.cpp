@@ -51,12 +51,13 @@ enum SwitchBinaryCmd
 bool SwitchBinary::RequestState
 (
 	uint32 const _requestFlags,
-	uint8 const _instance
+	uint8 const _instance,
+	Driver::MsgQueue const _queue
 )
 {
 	if( _requestFlags & RequestFlag_Dynamic )
 	{
-		return RequestValue( _requestFlags, 0, _instance );
+		return RequestValue( _requestFlags, 0, _instance, _queue );
 	}
 
 	return false;
@@ -70,7 +71,8 @@ bool SwitchBinary::RequestValue
 (
 	uint32 const _requestFlags,
 	uint8 const _dummy1,	// = 0 (not used)
-	uint8 const _instance
+	uint8 const _instance,
+	Driver::MsgQueue const _queue
 )
 {
 	Msg* msg = new Msg( "SwitchBinaryCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
@@ -80,7 +82,7 @@ bool SwitchBinary::RequestValue
 	msg->Append( GetCommandClassId() );
 	msg->Append( SwitchBinaryCmd_Get );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	GetDriver()->SendMsg( msg );
+	GetDriver()->SendMsg( msg, _queue );
 	return true;
 }
 
@@ -102,11 +104,6 @@ bool SwitchBinary::HandleMsg
 		if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, 0 ) ) )
 		{
 			value->OnValueChanged( _data[1] != 0 );
-		}
-		Node* node = GetNodeUnsafe();
-		if( node != NULL && node->m_queryPending )
-		{
-			node->m_queryStageCompleted = true;
 		}
 		return true;
 	}
@@ -136,7 +133,7 @@ bool SwitchBinary::SetValue
 		msg->Append( SwitchBinaryCmd_Set );
 		msg->Append( value->GetValue() ? 0xff : 0x00 );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-		GetDriver()->SendMsg( msg );
+		GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 		return true;
 	}
 

@@ -4,7 +4,8 @@
 //
 //	Windows Implementation of the cross-platform mutex
 //
-//	Copyright (c) 2010 Mal Lansell <openzwave@lansell.org>
+//	Copyright (c) 2010 Mal Lansell <mal@lansell.org>
+//	All rights reserved.
 //
 //	SOFTWARE NOTICE AND LICENSE
 //
@@ -24,7 +25,6 @@
 //	along with OpenZWave.  If not, see <http://www.gnu.org/licenses/>.
 //
 //-----------------------------------------------------------------------------
-
 #ifndef _MutexImpl_H
 #define _MutexImpl_H
 
@@ -44,9 +44,12 @@ namespace OpenZWave
 		~MutexImpl();
 
 		bool Lock( bool const _bWait = true );
-		void Release();
+		void Unlock();
 
-		CRITICAL_SECTION m_criticalSection;
+		bool IsSignalled();
+
+		CRITICAL_SECTION	m_criticalSection;
+		uint32				m_lockCount;				// Keep track of the locks (there can be more than one if they occur on the same thread.
 	};
 
 } // namespace OpenZWave

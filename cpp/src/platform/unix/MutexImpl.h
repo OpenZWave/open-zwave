@@ -1,10 +1,11 @@
+//----------------------------------------------------------------------------
 //
-// MutexImpl.h
+//  MutexImpl.h
 //
-// POSIX implementation of the cross-platform mutex
+//  POSIX implementation of the cross-platform mutex
 //
-// Copyright (c) 2010, Greg Satz <satz@iranger.com>
-// All rights reserved.
+//	Copyright (c) 2010, Greg Satz <satz@iranger.com>
+//	All rights reserved.
 //
 //	SOFTWARE NOTICE AND LICENSE
 //
@@ -24,7 +25,6 @@
 //	along with OpenZWave.  If not, see <http://www.gnu.org/licenses/>.
 //
 //-----------------------------------------------------------------------------
-
 #ifndef _MutexImpl_H
 #define _MutexImpl_H
 
@@ -42,9 +42,12 @@ namespace OpenZWave
 		~MutexImpl();
 
 		bool Lock( bool const _bWait = true );
-		void Release();
+		void Unlock();
 
-		pthread_mutex_t m_criticalSection;
+		bool IsSignalled();
+
+		uint32				m_lockCount;				// Keep track of the locks (there can be more than one if they occur on the same thread.
+		pthread_mutex_t		m_criticalSection;
 	};
 
 } // namespace OpenZWave

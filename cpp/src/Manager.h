@@ -406,6 +406,23 @@ namespace OpenZWave
 		bool IsNodeListeningDevice( uint32 const _homeId, uint8 const _nodeId );
 
 		/**
+		 * \brief Get whether the node is a frequent listening device that goes to sleep but
+		 * can be woken up by a beam. Useful to determine node and controller consistency.
+		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param _nodeId The ID of the node to query.
+		 * \return True if it is a frequent listening node.
+		 */
+		bool IsNodeFrequentListeningDevice( uint32 const _homeId, uint8 const _nodeId );
+
+		/**
+		 * \brief Get whether the node is a beam capable device.
+		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param _nodeId The ID of the node to query.
+		 * \return True if it is a frequent listening node.
+		 */
+		bool IsNodeBeamingDevice( uint32 const _homeId, uint8 const _nodeId );
+
+		/**
 		 * \brief Get whether the node is a routing device that passes messages to other nodes
 		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
 		 * \param _nodeId The ID of the node to query.
@@ -413,6 +430,14 @@ namespace OpenZWave
 		 */
 		bool IsNodeRoutingDevice( uint32 const _homeId, uint8 const _nodeId );
 
+		/**
+		 * \brief Get the security attribute for a node. True if node supports security features.
+		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param _nodeId The ID of the node to query.
+		 * \return true if security features implemented.
+		 */
+		bool IsNodeSecurityDevice( uint32 const _homeId, uint8 const _nodeId );
+		
 		/**
 		 * \brief Get the maximum baud rate of a node's communications
 		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
@@ -429,14 +454,6 @@ namespace OpenZWave
 		 */
 		uint8 GetNodeVersion( uint32 const _homeId, uint8 const _nodeId );
 
-		/**
-		 * \brief Get the security byte for a node.  Bit meanings are still to be determined.
-		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
-		 * \param _nodeId The ID of the node to query.
-		 * \return the node's security byte
-		 */
-		uint8 GetNodeSecurity( uint32 const _homeId, uint8 const _nodeId );
-		
 		/**
 		 * \brief Get the basic type of a node.
 		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.

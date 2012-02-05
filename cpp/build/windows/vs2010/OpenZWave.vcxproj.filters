@@ -246,9 +246,6 @@
     <ClInclude Include="..\..\..\src\command_classes\SensorAlarm.h">
       <Filter>Command Classes</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\platform\IController.h">
-      <Filter>Platform</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\platform\SerialController.h">
       <Filter>Platform</Filter>
     </ClInclude>
@@ -261,15 +258,33 @@
     <ClInclude Include="..\..\..\src\platform\HidController.h">
       <Filter>Platform</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\platform\windows\HidControllerImpl.h">
-      <Filter>Platform\Windows</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\Scene.h" />
     <ClInclude Include="..\..\..\src\Bitfield.h">
       <Filter>Main</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\Scene.h">
       <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\platform\TimeStamp.h">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\platform\Wait.h">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\platform\windows\TimeStampImpl.h">
+      <Filter>Platform\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\platform\windows\WaitImpl.h">
+      <Filter>Platform\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\platform\Ref.h">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\platform\Controller.h">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\platform\Stream.h">
+      <Filter>Platform</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -504,12 +519,27 @@
     <ClCompile Include="..\..\..\src\platform\HidController.cpp">
       <Filter>Platform</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\platform\windows\HidControllerImpl.cpp">
-      <Filter>Platform\Windows</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\Scene.cpp" />
     <ClCompile Include="..\..\..\src\Scene.cpp">
       <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\platform\TimeStamp.cpp">
+      <Filter>Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\platform\Wait.cpp">
+      <Filter>Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\platform\windows\TimeStampImpl.cpp">
+      <Filter>Platform\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\platform\windows\WaitImpl.cpp">
+      <Filter>Platform\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\platform\Controller.cpp">
+      <Filter>Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\platform\Stream.cpp">
+      <Filter>Platform</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

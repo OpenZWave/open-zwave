@@ -30,12 +30,13 @@
 
 #include <list>
 #include "CommandClass.h"
-#include "Mutex.h"
+#include "Driver.h"
 
 namespace OpenZWave
 {
 	class Msg;
 	class ValueInt;
+	class Mutex;
 
 	/** \brief Implements COMMAND_CLASS_WAKE_UP (0x84), a Z-Wave device command class.
 	 */
@@ -49,15 +50,15 @@ namespace OpenZWave
 		static string const StaticGetCommandClassName(){ return "COMMAND_CLASS_WAKE_UP"; }
 
 		void Init();	// Starts the process of requesting node state from a sleeping device.
-		void QueueMsg( Msg* msg );
+		void QueueMsg( Driver::MsgQueueItem const& _item );
 		void SendPending();
 		bool IsAwake()const{ return m_awake; }
 		void SetAwake( bool _state );
 		void SetPollRequired(){ m_pollRequired = true; }
 
 		// From CommandClass
-		virtual bool RequestState( uint32 const _requestFlags, uint8 const _instance );
-		virtual bool RequestValue( uint32 const _requestFlags, uint8 const _index, uint8 const _instance );
+		virtual bool RequestState( uint32 const _requestFlags, uint8 const _instance, Driver::MsgQueue const _queue );
+		virtual bool RequestValue( uint32 const _requestFlags, uint8 const _index, uint8 const _instance, Driver::MsgQueue const _queue );
 		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }
 		virtual string const GetCommandClassName()const{ return StaticGetCommandClassName(); }
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );
@@ -70,11 +71,11 @@ namespace OpenZWave
 	private:
 		WakeUp( uint32 const _homeId, uint8 const _nodeId );
 
-		Mutex		m_mutex;			// Serialize access to the pending queue
-		list<Msg*>	m_pendingQueue;		// Messages waiting to be sent when the device wakes up
-		bool		m_awake;
-		bool		m_pollRequired;
-		bool		m_notification;
+		Mutex*						m_mutex;			// Serialize access to the pending queue
+		list<Driver::MsgQueueItem>	m_pendingQueue;		// Messages waiting to be sent when the device wakes up
+		bool						m_awake;
+		bool						m_pollRequired;
+		bool						m_notification;
 	};
 
 } // namespace OpenZWave
