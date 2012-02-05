@@ -42,12 +42,6 @@ namespace OpenZWave
 	class Msg
 	{
 	public:
-		enum MsgPriority
-		{
-			MsgPriority_Low = 0,		// Used for node queries after the initial essential ones.
-			MsgPriority_Normal = 1		// All other messages.
-		};
-
 		Msg( string const& _logtext, uint8 _targetNodeId, uint8 const _msgType, uint8 const _function, bool const _bCallbackRequired, bool const _bReplyRequired = true, uint8 const _expectedReply = 0, uint8 const _expectedCommandClassId = 0 );
 		~Msg(){}
 
@@ -66,9 +60,6 @@ namespace OpenZWave
 
 		uint8 GetSendAttempts()const{ return m_sendAttempts; }
 		void SetSendAttempts( uint8 _count ){ m_sendAttempts = _count; }
-
-		void SetPriority( MsgPriority const _priority ){ m_priority = _priority; }
-		MsgPriority GetPriority()const{ return m_priority; }
 
 		bool IsWakeUpNoMoreInformationCommand()
 		{
@@ -104,8 +95,6 @@ namespace OpenZWave
 		uint8			m_sendAttempts;
 
 		uint8			m_instance;			// If this value is not one, the message must be wrapped in a multiInstance or multiChannel command class
-
-		MsgPriority		m_priority;			// Defaults to MsgPriority_Normal
 
 		static uint8	s_nextCallbackId;	// counter to get a unique callback id
 	};

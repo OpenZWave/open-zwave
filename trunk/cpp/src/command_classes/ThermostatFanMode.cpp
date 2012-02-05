@@ -145,20 +145,21 @@ void ThermostatFanMode::WriteXML
 bool ThermostatFanMode::RequestState
 (
 	uint32 const _requestFlags,
-	uint8 const _instance
+	uint8 const _instance,
+	Driver::MsgQueue const _queue
 )
 {
 	bool requests = false;
 	if( ( _requestFlags & RequestFlag_Static ) && HasStaticRequest( StaticRequest_Values ) )
 	{
 		// Request the supported modes
-		requests |= RequestValue( _requestFlags, ThermostatFanModeCmd_SupportedGet, _instance );
+		requests |= RequestValue( _requestFlags, ThermostatFanModeCmd_SupportedGet, _instance, _queue );
 	}
 
 	if( _requestFlags & RequestFlag_Dynamic )
 	{
 		// Request the current fan mode
-		requests |= RequestValue( _requestFlags, ThermostatFanModeCmd_Get, _instance );
+		requests |= RequestValue( _requestFlags, ThermostatFanModeCmd_Get, _instance, _queue );
 	}
 
 	return requests;
@@ -172,7 +173,8 @@ bool ThermostatFanMode::RequestValue
 (
 	uint32 const _requestFlags,
 	uint8 const _getTypeEnum,
-	uint8 const _instance
+	uint8 const _instance,
+	Driver::MsgQueue const _queue
 )
 {
 	if( _getTypeEnum == ThermostatFanModeCmd_SupportedGet )
@@ -185,11 +187,7 @@ bool ThermostatFanMode::RequestValue
 		msg->Append( GetCommandClassId() );
 		msg->Append( ThermostatFanModeCmd_SupportedGet );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-		if( _requestFlags & RequestFlag_LowPriority )
-		{
-			msg->SetPriority( Msg::MsgPriority_Low );
-		}
-		GetDriver()->SendMsg( msg );
+		GetDriver()->SendMsg( msg, _queue );
 		return true;
 	}
 
@@ -203,11 +201,7 @@ bool ThermostatFanMode::RequestValue
 		msg->Append( GetCommandClassId() );
 		msg->Append( ThermostatFanModeCmd_Get );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-		if( _requestFlags & RequestFlag_LowPriority )
-		{
-			msg->SetPriority( Msg::MsgPriority_Low );
-		}
-		GetDriver()->SendMsg( msg );
+		GetDriver()->SendMsg( msg, _queue );
 		return true;
 	}
 	return false;
@@ -234,11 +228,6 @@ bool ThermostatFanMode::HandleMsg
 				valueList->OnValueChanged( (int32)_data[1] );
 				Log::Write( "Received thermostat fan mode from node %d: %s", GetNodeId(), valueList->GetItem().m_label.c_str() );		
 			}
-		}
-		Node* node = GetNodeUnsafe();
-		if( node != NULL && node->m_queryPending )
-		{
-			node->m_queryStageCompleted = true;
 		}
 		return true;
 	}
@@ -275,10 +264,6 @@ bool ThermostatFanMode::HandleMsg
 
 		ClearStaticRequest( StaticRequest_Values );
 		CreateVars( _instance );
-		if( Node* node = GetNodeUnsafe() )
-		{
-			node->m_queryStageCompleted = true;
-		}
 		return true;
 	}
 
@@ -307,7 +292,7 @@ bool ThermostatFanMode::SetValue
 		msg->Append( ThermostatFanModeCmd_Set );
 		msg->Append( state );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-		GetDriver()->SendMsg( msg );
+		GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 		return true;
 	}
 

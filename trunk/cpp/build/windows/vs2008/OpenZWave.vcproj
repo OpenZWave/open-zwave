@@ -216,14 +216,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\Scene.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\Scene.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\src\Scene.h"
 				>
 			</File>
@@ -240,6 +232,14 @@
 			Name="Platform"
 			>
 			<File
+				RelativePath="..\..\..\src\platform\Controller.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\platform\Controller.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\platform\Event.cpp"
 				>
 			</File>
@@ -253,10 +253,6 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\platform\HidController.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\platform\IController.h"
 				>
 			</File>
 			<File
@@ -276,6 +272,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\platform\Ref.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\platform\SerialController.cpp"
 				>
 			</File>
@@ -284,11 +284,35 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\platform\Stream.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\platform\Stream.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\platform\Thread.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\..\..\src\platform\Thread.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\platform\TimeStamp.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\platform\TimeStamp.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\platform\Wait.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\platform\Wait.h"
 				>
 			</File>
 			<Filter
@@ -300,14 +324,6 @@
 				</File>
 				<File
 					RelativePath="..\..\..\src\platform\windows\EventImpl.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\src\platform\windows\HidControllerImpl.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\src\platform\windows\HidControllerImpl.h"
 					>
 				</File>
 				<File
@@ -340,6 +356,22 @@
 				</File>
 				<File
 					RelativePath="..\..\..\src\platform\windows\ThreadImpl.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\platform\windows\TimeStampImpl.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\platform\windows\TimeStampImpl.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\platform\windows\WaitImpl.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\platform\windows\WaitImpl.h"
 					>
 				</File>
 			</Filter>

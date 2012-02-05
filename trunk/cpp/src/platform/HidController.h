@@ -30,17 +30,19 @@
 
 #include <string>
 #include "Defs.h"
-#include "IController.h"
+#include "Controller.h"
+#include "hidapi.h"
 
 namespace OpenZWave
 {
-    class Msg;
-	class HidControllerImpl;
+	class Driver;
+	class Msg;
+	class Thread;
+	class Event;
 
-    class HidController : IController
+    class HidController: public Controller
 	{
 	public:
-
 		/**
 		 * Constructor.
 		 * Creates an object that represents a HID port.
@@ -51,14 +53,14 @@ namespace OpenZWave
 		 * Destructor.
 		 * Destroys the HID port object.
 		 */
-		~HidController();
+		virtual ~HidController();
 
 		/**
-		 * Retrieves an array of Msg object pointers in the correct order needed to initialize the IController implementation.
-		 * @return Array of Msg object pointers.
+		 * Queues up the controller's initialization commands.
+		 * @param _driver Pointer to the driver object used to send the commands.
 		 * @see Driver::Init
 		 */
-		list<Msg*>* const GetMsgInitializationSequence( );
+		void PlayInitSequence( Driver* _driver );
 
 		/**
 		 * Set the USB vendor ID search value.  The HID port must be closed for the setting to be accepted.
@@ -91,7 +93,7 @@ namespace OpenZWave
 		 * @return True if the port was opened and configured successfully.
 		 * @see Close, Read, Write
 		 */
-		bool Open( string const& _HidControllerName );
+		bool Open( string const& _hidControllerName );
 
 		/**
 		 * Close a HID port.
@@ -100,16 +102,6 @@ namespace OpenZWave
 		 * @see Open
 		 */
 		bool Close();
-
-		/**
-		 * Read from a HID port.
-		 * Attempts to read data from an open HID port.
-		 * @param _buffer Pointer to a block of memory large enough to hold the requested data.
-		 * @param _length Length in bytes of the data to be read.
-		 * @return The number of bytes read.
-		 * @see Write, Open, Close
-		 */
-		uint32 Read( uint8* _buffer, uint32 _length, ReadPacketSegment _segment );
 
 		/**
 		 * Write to a HID port.
@@ -121,27 +113,39 @@ namespace OpenZWave
 		 */
 		uint32 Write( uint8* _buffer, uint32 _length );
 
-		/**
-		 * Waits for data to arrive at the HID port
-		 * @param _timeout maximum time in milliseconds to wait for the event
-		 * to become signalled. If the timeout is zero, the method will 
-		 * return immediately.  If the timeout is Event::Timeout_Infinite, the 
-		 * method will not return until the event is signalled.
-		 * @return true if data is available, false if the wait timed out.
-		 * @see Set, Reset
-		 */
-		bool Wait( int32 _timeout );
-
-    protected:
-        list<Msg*>* const           m_pMsgInitializationSequence;
-        uint32                      m_vendorId;
-        uint32                      m_productId;
-        string                      m_serialNumber;
-
 	private:
-		HidControllerImpl*	        m_pImpl;	// Pointer to an object that encapsulates the platform-specific implementation of the HID port.
-		bool			            m_bOpen;
+		bool Init( uint32 const _attempts );
+		void Read();
 
+	        // helpers for internal use only
+
+	        /**
+		* Read bytes from the specified HID feature report
+	        * @param _buffer Buffer array for receiving the feature report bytes.
+	        * @param _length Length of the buffer array.
+	        * @param _reportId ID of the report to read.
+		* @return Actual number of bytes retrieved, or -1 on error.
+		*/
+	        int GetFeatureReport( uint32 _length, uint8 _reportId, uint8* _buffer );
+
+	        /**
+		* Write bytes to the specified HID feature report
+		* @param _data Bytes to be written to the feature report.
+		* @param _length Length of bytes to be written.
+		* @return Actal number of bytes written, or -1 on error.
+		*/
+	        int SendFeatureReport( uint32 _length, const uint8* _data );
+
+		static void ThreadEntryPoint( Event* _exitEvent, void* _context );
+		void ThreadProc( Event* _exitEvent );
+
+		hid_device*		m_hHidController;
+		Thread*			m_thread;
+	        uint32          	m_vendorId;
+	        uint32          	m_productId;
+	        string          	m_serialNumber;
+		string			m_hidControllerName;
+		bool			m_bOpen;
 	};
 
 } // namespace OpenZWave

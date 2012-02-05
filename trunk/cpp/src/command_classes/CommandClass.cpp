@@ -488,27 +488,6 @@ void CommandClass::ClearStaticRequest
 )
 { 
 	m_staticRequests &= ~_request;
-	
-	if( Node* node = GetNodeUnsafe() )
-	{
-		if( _request & StaticRequest_Version )
-		{
-			node->QueryStageRetry( Node::QueryStage_Versions );
-			return;
-		}
-
-		if( _request & StaticRequest_Instances )
-		{
-			node->QueryStageRetry( Node::QueryStage_Instances );
-			return;
-		}
-
-		if( _request & StaticRequest_Values )
-		{
-			node->QueryStageRetry( Node::QueryStage_Static );
-			return;
-		}
-	}
 }
 
 //-----------------------------------------------------------------------------
@@ -517,7 +496,8 @@ void CommandClass::ClearStaticRequest
 //-----------------------------------------------------------------------------
 bool CommandClass::RequestStateForAllInstances
 (
-	uint32 const _requestFlags
+	uint32 const _requestFlags,
+	Driver::MsgQueue const _queue
 )
 {
 	bool res = false;
@@ -528,12 +508,12 @@ bool CommandClass::RequestStateForAllInstances
 		{
 			for( Bitfield::Iterator it = m_instances.Begin(); it != m_instances.End(); ++it )
 			{
-				res |= RequestState( _requestFlags, (uint8)*it );
+				res |= RequestState( _requestFlags, (uint8)*it, _queue );
 			}
 		}
 		else
 		{
-			res = RequestState( _requestFlags, 1 );
+			res = RequestState( _requestFlags, 1, _queue );
 		}
 	}
 

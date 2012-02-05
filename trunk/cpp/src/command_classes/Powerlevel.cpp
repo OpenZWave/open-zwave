@@ -122,7 +122,7 @@ void Powerlevel::Set
 	msg->Append( (uint8)_powerLevel );
 	msg->Append( _timeout );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	GetDriver()->SendMsg( msg );
+	GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 }
 
 //-----------------------------------------------------------------------------
@@ -152,6 +152,6 @@ void Powerlevel::Test
 	msg->Append( (uint8)(_numFrames >> 8) );
 	msg->Append( (uint8)(_numFrames & 0x00ff) );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	GetDriver()->SendMsg( msg );
+	GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 }
 

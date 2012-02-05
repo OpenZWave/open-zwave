@@ -13,7 +13,7 @@
 			<Item label="Yes" value="1" />
 		</Value>
 		<Value type="list" index="4" genre="config" label="Invert Switch" value="0">
-			<Help>Change the top of the switch to OFF and the bottom of the switch to ON. Note: If you invert the switches and also install the product upside down, remember the load will now be controlled by the right, not the left switch.</Help>
+			<Help>Change the top of the switch to OFF and the bottom of the switch to ON.</Help>
 			<Item label="No" value="0" />
 			<Item label="Yes" value="1" />
 		</Value>

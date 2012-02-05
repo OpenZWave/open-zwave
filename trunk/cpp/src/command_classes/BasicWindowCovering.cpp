@@ -79,7 +79,7 @@ bool BasicWindowCovering::SetValue
 			msg->Append( BasicWindowCoveringCmd_StartLevelChange );
 			msg->Append( action );
 			msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-			GetDriver()->SendMsg( msg );
+			GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 			return true;
 		}
 		else
@@ -92,7 +92,7 @@ bool BasicWindowCovering::SetValue
 			msg->Append( GetCommandClassId() );
 			msg->Append( BasicWindowCoveringCmd_StopLevelChange );
 			msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-			GetDriver()->SendMsg( msg );
+			GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 			return true;
 		}
 	}

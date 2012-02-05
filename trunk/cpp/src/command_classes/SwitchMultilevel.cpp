@@ -110,12 +110,13 @@ static char const* c_switchLabelsNeg[] =
 bool SwitchMultilevel::RequestState
 (
 	uint32 const _requestFlags,
-	uint8 const _instance
+	uint8 const _instance,
+	Driver::MsgQueue const _queue
 )
 {
 	if( _requestFlags & RequestFlag_Dynamic )
 	{
-		return RequestValue( _requestFlags, 0, _instance );
+		return RequestValue( _requestFlags, 0, _instance, _queue );
 	}
 
 	return false;
@@ -129,7 +130,8 @@ bool SwitchMultilevel::RequestValue
 (
 	uint32 const _requestFlags,
 	uint8 const _dummy1,	// = 0 (not used)
-	uint8 const _instance
+	uint8 const _instance,
+	Driver::MsgQueue const _queue
 )
 {
 	Msg* msg = new Msg( "SwitchMultilevelCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
@@ -139,7 +141,7 @@ bool SwitchMultilevel::RequestValue
 	msg->Append( GetCommandClassId() );
 	msg->Append( SwitchMultilevelCmd_Get );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	GetDriver()->SendMsg( msg );
+	GetDriver()->SendMsg( msg, _queue );
 	return true;
 }
 
@@ -161,11 +163,6 @@ bool SwitchMultilevel::HandleMsg
 		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, SwitchMultilevelIndex_Level ) ) )
 		{
 			value->OnValueChanged( _data[1] );
-		}
-		Node* node = GetNodeUnsafe();
-		if( node != NULL && node->m_queryPending )
-		{
-			node->m_queryStageCompleted = true;
 		}
 		return true;
 	}
@@ -204,11 +201,6 @@ bool SwitchMultilevel::HandleMsg
 				button->SetLabel( c_switchLabelsNeg[switchType2] );
 			}
 		}
-		Node* node = GetNodeUnsafe();
-		if( node != NULL && node->m_queryPending )
-		{
-			node->m_queryStageCompleted = true;
-		}
 		return true;
 	}
 
@@ -235,7 +227,7 @@ void SwitchMultilevel::SetVersion
 		msg->Append( GetCommandClassId() );
 		msg->Append( SwitchMultilevelCmd_SupportedGet );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-		GetDriver()->SendMsg( msg );
+		GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 
 		// Set the request flag again - it will be cleared when we get a
 		// response to the SwitchMultilevelCmd_SupportedGet message.
@@ -409,7 +401,7 @@ bool SwitchMultilevel::SetLevel
 	}
 
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	GetDriver()->SendMsg( msg );
+	GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 	return true;
 }
 
@@ -485,7 +477,7 @@ bool SwitchMultilevel::StartLevelChange
 	}
 
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	GetDriver()->SendMsg( msg );
+	GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 	return true;
 }
 
@@ -506,7 +498,7 @@ bool SwitchMultilevel::StopLevelChange
 	msg->Append( GetCommandClassId() );
 	msg->Append( SwitchMultilevelCmd_StopLevelChange );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	GetDriver()->SendMsg( msg );
+	GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 	return true;
 }
 

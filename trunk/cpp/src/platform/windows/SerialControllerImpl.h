@@ -33,26 +33,31 @@
 #include "Defs.h"
 #include "SerialController.h"
 
-#define DEBUG
-
 namespace OpenZWave
 {
 	class SerialControllerImpl
 	{
+	public:
+		void ReadThreadProc();
+
 	private:
 		friend class SerialController;
 
-		SerialControllerImpl();
+		SerialControllerImpl( SerialController* _owner );
 		~SerialControllerImpl();
 
-		bool Open( string const& _SerialControllerName, uint32 const _baud, SerialController::Parity const _parity, SerialController::StopBits const _stopBits );
+		bool Open();
 		void Close();
 
-		uint32 Read( uint8* _buffer, uint32 _length, IController::ReadPacketSegment _segment );
 		uint32 Write( uint8* _buffer, uint32 _length );
-		bool Wait( int32 _timeout );
+		
+		bool Init( uint32 const _attempts );
+		void Read();
 
-		HANDLE				m_hSerialController;
+		SerialController*			m_owner;
+		HANDLE						m_hThread;
+		HANDLE						m_hExit;
+		HANDLE						m_hSerialController;
 	};
 
 } // namespace OpenZWave

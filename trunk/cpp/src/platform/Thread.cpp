@@ -4,7 +4,8 @@
 //
 //	Cross-platform threads
 //
-//	Copyright (c) 2010 Mal Lansell <openzwave@lansell.org>
+//	Copyright (c) 2010 Mal Lansell <mal@lansell.org>
+//	All rights reserved.
 //
 //	SOFTWARE NOTICE AND LICENSE
 //
@@ -24,10 +25,9 @@
 //	along with OpenZWave.  If not, see <http://www.gnu.org/licenses/>.
 //
 //-----------------------------------------------------------------------------
-
 #include "Defs.h"
+#include "Event.h"
 #include "Thread.h"
-
 #include "ThreadImpl.h"	// Platform-specific implementation of a thread
 
 using namespace OpenZWave;
@@ -39,10 +39,11 @@ using namespace OpenZWave;
 //-----------------------------------------------------------------------------
 Thread::Thread
 (
-	string const& _tname
-):
-	m_pImpl( new ThreadImpl( _tname ))
+	string const& _name
+)
 {
+	m_exitEvent = new Event();
+	m_pImpl = new ThreadImpl( this, _name );
 }
 
 //-----------------------------------------------------------------------------
@@ -54,6 +55,7 @@ Thread::~Thread
 )
 {
 	delete m_pImpl;
+	m_exitEvent->Release();
 }
 
 //-----------------------------------------------------------------------------
@@ -66,7 +68,7 @@ bool Thread::Start
 	void* _context 
 )
 {
-	return( m_pImpl->Start( _pfnThreadProc, _context ) );
+	return( m_pImpl->Start( _pfnThreadProc, m_exitEvent, _context ) );
 }
 
 //-----------------------------------------------------------------------------
@@ -77,18 +79,17 @@ bool Thread::Stop
 (
 )
 {
-	return( m_pImpl->Stop() );
-}
+	int32 timeout = 2000;	// Give the thread 2 seconds to exit
+	m_exitEvent->Set();
+	
+	if( Wait::Single( this, timeout ) < 0 )
+	{
+		// Timed out
+	        m_pImpl->Terminate();
+		return false;
+	}
 
-//-----------------------------------------------------------------------------
-//	<Thread::IsRunning>
-//	Test whether a function is running on this thread
-//-----------------------------------------------------------------------------
-bool Thread::IsRunning
-(
-)const
-{
-	return( m_pImpl->IsRunning() );
+	return true;
 }
 
 //-----------------------------------------------------------------------------
@@ -102,4 +103,16 @@ void Thread::Sleep
 {
 	return( m_pImpl->Sleep( _milliseconds ) );
 }
+
+//-----------------------------------------------------------------------------
+//	<Thread::IsSignalled>
+//	Test whether the event is set
+//-----------------------------------------------------------------------------
+bool Thread::IsSignalled
+(
+)
+{
+	return m_pImpl->IsSignalled();
+}
+
 

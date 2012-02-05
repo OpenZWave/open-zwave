@@ -145,7 +145,8 @@ Meter::Meter
 bool Meter::RequestState
 (
 	uint32 const _requestFlags,
-	uint8 const _instance
+	uint8 const _instance,
+	Driver::MsgQueue const _queue
 )
 {
 	bool res = false;
@@ -160,14 +161,14 @@ bool Meter::RequestState
 			msg->Append( GetCommandClassId() );
 			msg->Append( MeterCmd_SupportedGet );
 			msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-			GetDriver()->SendMsg( msg );
+			GetDriver()->SendMsg( msg, _queue );
 			res = true;
 		}
 	}
 
 	if( _requestFlags & RequestFlag_Dynamic )
 	{
-		res |= RequestValue( _requestFlags, 0, _instance );
+		res |= RequestValue( _requestFlags, 0, _instance, _queue );
 	}
 
 	return res;
@@ -181,7 +182,8 @@ bool Meter::RequestValue
 (
 	uint32 const _requestFlags,
 	uint8 const _dummy1,	// = 0 (not used)
-	uint8 const _instance
+	uint8 const _instance,
+	Driver::MsgQueue const _queue
 )
 {
 	bool res = false;
@@ -199,11 +201,7 @@ bool Meter::RequestValue
 			msg->Append( MeterCmd_Get );
 			msg->Append( (uint8)( i << 3 ) );
 			msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-			if( _requestFlags & RequestFlag_LowPriority )
-			{
-				msg->SetPriority( Msg::MsgPriority_Low );
-			}
-			GetDriver()->SendMsg( msg );
+			GetDriver()->SendMsg( msg, _queue );
 			res |= true;
 		}
 	}
@@ -334,11 +332,6 @@ bool Meter::HandleSupportedReport
 		if( canReset )
 		{
 			node->CreateValueButton( ValueID::ValueGenre_System, GetCommandClassId(), _instance, MeterIndex_Reset, "Reset" );
-		}
-
-		if( node->m_queryPending )
-		{
-			node->m_queryStageCompleted = true;
 		}
 
 		Log::Write( "Received Meter supported report from node %d, %s", GetNodeId(), msg.c_str() );
@@ -488,12 +481,6 @@ bool Meter::HandleReport
 		}
 	}
  
-	Node* node = GetNodeUnsafe();
-	if( node != NULL && node->m_queryPending )
-	{
-		node->m_queryStageCompleted = true;
-	}
-
 	return true;
 }
 
@@ -518,7 +505,7 @@ bool Meter::SetValue
 			msg->Append( GetCommandClassId() );
 			msg->Append( MeterCmd_Reset );
 			msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-			GetDriver()->SendMsg( msg );
+			GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 			return true;
 		}
 	}

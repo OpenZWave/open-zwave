@@ -33,7 +33,7 @@
 #include "Driver.h"
 #include "Node.h"
 #include "Log.h"
-
+#include "Mutex.h"
 #include "ValueInt.h"
 
 using namespace OpenZWave;
@@ -58,6 +58,7 @@ WakeUp::WakeUp
 	uint8 const _nodeId 
 ):
 	CommandClass( _homeId, _nodeId ), 
+	m_mutex( new Mutex() ),
 	m_awake( true ),
 	m_pollRequired( false ),
 	m_notification( false )
@@ -72,6 +73,7 @@ WakeUp::~WakeUp
 ( 
 )
 {
+	m_mutex->Release();
 }
 
 //-----------------------------------------------------------------------------
@@ -88,7 +90,7 @@ void WakeUp::Init
 	// that the controller will receive the wake-up notifications from
 	// the device.  Once this is done, we can request the rest of the node
 	// state.
-	RequestState( CommandClass::RequestFlag_Session, 1 );
+	RequestState( CommandClass::RequestFlag_Session, 1, Driver::MsgQueue_Send );
 }
 
 //-----------------------------------------------------------------------------
@@ -98,12 +100,13 @@ void WakeUp::Init
 bool WakeUp::RequestState
 (
 	uint32 const _requestFlags,
-	uint8 const _instance
+	uint8 const _instance,
+	Driver::MsgQueue const _queue
 )
 {
 	if( _requestFlags & RequestFlag_Session )
 	{
-		return RequestValue( _requestFlags, 0, _instance );
+		return RequestValue( _requestFlags, 0, _instance, _queue );
 	}
 
 	return false;
@@ -117,7 +120,8 @@ bool WakeUp::RequestValue
 (
 	uint32 const _requestFlags,
 	uint8 const _dummy1,	// = 0
-	uint8 const _instance
+	uint8 const _instance,
+	Driver::MsgQueue const _queue
 )
 {
 	if( _instance != 1 )
@@ -133,7 +137,7 @@ bool WakeUp::RequestValue
 	msg->Append( GetCommandClassId() );
 	msg->Append( WakeUpCmd_IntervalGet );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	GetDriver()->SendMsg( msg );
+	GetDriver()->SendMsg( msg, _queue );
 	return true;
 }
 
@@ -176,13 +180,7 @@ bool WakeUp::HandleMsg
 			{
 				SetValue( *value );	
 			}
-
-			Node* node = GetNodeUnsafe();
-			if( node != NULL && node->m_queryPending )
-			{
-				node->m_queryStageCompleted = true;
-			}
-		}
+ 		}
 		return true;
 	}
 	else if( WakeUpCmd_Notification == (WakeUpCmd)_data[0] )
@@ -231,7 +229,7 @@ bool WakeUp::SetValue
 		msg->Append( (uint8)( interval & 0xff ) );		
 		msg->Append( GetDriver()->GetNodeId() );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-		GetDriver()->SendMsg( msg );
+		GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 		return true;
 	}
 
@@ -258,7 +256,10 @@ void WakeUp::SetAwake
 		// If the device is marked for polling, request the current state
 		if( m_pollRequired )
 		{
-			GetDriver()->AddNodeQuery( GetNodeId(), Node::QueryStage_Dynamic );
+			if( Node* node = GetNodeUnsafe() )
+			{
+				node->SetQueryStage( Node::QueryStage_Dynamic );
+			}
 			m_pollRequired = false;
 		}
 			
@@ -273,23 +274,27 @@ void WakeUp::SetAwake
 //-----------------------------------------------------------------------------
 void WakeUp::QueueMsg
 (
-	Msg* _msg
+	Driver::MsgQueueItem const& _item
 )
 {
-	m_mutex.Lock();
+	m_mutex->Lock();
 
 	// See if there is already a copy of this message in the queue.  If so, 
 	// we delete it.  This is to prevent duplicates building up if the 
 	// device does not wake up very often.  Deleting the original and
 	// adding the copy to the end avoids problems with the order of
 	// commands such as on and off.
-	list<Msg*>::iterator it = m_pendingQueue.begin();
+	list<Driver::MsgQueueItem>::iterator it = m_pendingQueue.begin();
 	while( it != m_pendingQueue.end() )
 	{
-		if( *(*it) == *_msg )
+		Driver::MsgQueueItem const& item = *it;
+		if( item == _item )
 		{
 			// Duplicate found
-			delete *it;
+			if( Driver::MsgQueueCmd_SendMsg == item.m_command )
+			{
+				delete item.m_msg;
+			}
 			m_pendingQueue.erase( it++ );
 		}
 		else
@@ -297,8 +302,8 @@ void WakeUp::QueueMsg
 			++it;
 		}
 	}
-	m_pendingQueue.push_back( _msg );
-	m_mutex.Release();
+	m_pendingQueue.push_back( _item );
+	m_mutex->Unlock();
 }
 
 //-----------------------------------------------------------------------------
@@ -311,15 +316,22 @@ void WakeUp::SendPending
 {
 	m_awake = true;
 
-	m_mutex.Lock();
-	list<Msg*>::iterator it = m_pendingQueue.begin();
+	m_mutex->Lock();
+	list<Driver::MsgQueueItem>::iterator it = m_pendingQueue.begin();
 	while( it != m_pendingQueue.end() )
 	{	
-		Msg* msg = *it;
-		GetDriver()->SendMsg( msg );
+		Driver::MsgQueueItem const& item = *it;
+		if( Driver::MsgQueueCmd_SendMsg == item.m_command )
+		{
+			GetDriver()->SendMsg( item.m_msg, Driver::MsgQueue_WakeUp );
+		}
+		else if( Driver::MsgQueueCmd_QueryStageComplete == item.m_command )
+		{
+			GetDriver()->SendQueryStageComplete( item.m_nodeId, item.m_queryStage, Driver::MsgQueue_WakeUp );
+		}
 		it = m_pendingQueue.erase( it );
 	}
-	m_mutex.Release();
+	m_mutex->Unlock();
 
 	// Send the device back to sleep, unless we have outstanding queries.
 	bool sendToSleep = m_notification;
@@ -340,7 +352,7 @@ void WakeUp::SendPending
 		msg->Append( GetCommandClassId() );
 		msg->Append( WakeUpCmd_NoMoreInformation );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-		GetDriver()->SendMsg( msg );
+		GetDriver()->SendMsg( msg, Driver::MsgQueue_WakeUp );
 	}
 }
 

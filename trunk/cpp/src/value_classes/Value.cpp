@@ -118,7 +118,6 @@ Value::~Value
 (
 )
 {
-	Log::Write("Value::~Value called");
 	if( m_affectsLength > 0 )
 	{
 		delete [] m_affects;

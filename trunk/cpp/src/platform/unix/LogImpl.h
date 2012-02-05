@@ -1,10 +1,10 @@
+//----------------------------------------------------------------------------
+//  LogImpl.h
 //
-// LogImpl.h
+//  Unix implementation of message and error logging
 //
-// Unix implementation of message and error logging
-//
-// Copyright (c) 2010, Greg Satz <satz@iranger.com>
-// All rights reserved.
+//	Copyright (c) 2010, Greg Satz <satz@iranger.com>
+//	All rights reserved.
 //
 //	SOFTWARE NOTICE AND LICENSE
 //
@@ -24,7 +24,6 @@
 //	along with OpenZWave.  If not, see <http://www.gnu.org/licenses/>.
 //
 //-----------------------------------------------------------------------------
-
 #ifndef _LogImpl_H
 #define _LogImpl_H
 

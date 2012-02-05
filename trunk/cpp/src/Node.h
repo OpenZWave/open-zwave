@@ -126,12 +126,11 @@ namespace OpenZWave
 	public:
 		enum QueryStage														
 		{
-			QueryStage_None,				/**< Query process hasn't started for this node */
 			QueryStage_ProtocolInfo,			/**< Retrieve protocol information */
-			QueryStage_WakeUp,				/**< Start wake up process if a sleeping node*/
-			QueryStage_ManufacturerSpecific1,		/**< Retrieve manufacturer name and product ids if ProtocolInfo lets us */
+			QueryStage_WakeUp,					/**< Start wake up process if a sleeping node*/
+			QueryStage_ManufacturerSpecific1,	/**< Retrieve manufacturer name and product ids if ProtocolInfo lets us */
 			QueryStage_NodeInfo,				/**< Retrieve info about supported, controlled command classes */
-			QueryStage_ManufacturerSpecific2,		/**< Retrieve manufacturer name and product ids */
+			QueryStage_ManufacturerSpecific2,	/**< Retrieve manufacturer name and product ids */
 			QueryStage_Versions,				/**< Retrieve version information */
 			QueryStage_Instances,				/**< Retrieve information about multiple command class instances */
 			QueryStage_Static,					/**< Retrieve static information (doesn't change) */
@@ -140,7 +139,8 @@ namespace OpenZWave
 			QueryStage_Session,					/**< Retrieve session information (changes infrequently) */
 			QueryStage_Dynamic,					/**< Retrieve dynamic information (changes frequently) */
 			QueryStage_Configuration,			/**< Retrieve configurable parameter information (only done on request) */
-			QueryStage_Complete					/**< Query process is completed for this node */
+			QueryStage_Complete,				/**< Query process is completed for this node */
+			QueryStage_None						/**< Query process hasn't started for this node */
 		};
 
 
@@ -156,11 +156,12 @@ namespace OpenZWave
 		 * <p>
 		 * The individual command classes also store some state information as to whether 
 		 * they have had a response to certain queries.  This state information is 
-		 * initilized by the SetStaticRequests 
-		 * call in QueryStage_None.  It is also saved, so we do not need to request state 
-		 * from every command class if some have previously responded. 
+		 * initilized by the SetStaticRequests call in QueryStage_None.  It is also saved,
+		 * so we do not need to request state  from every command class if some have previously
+		 * responded. 
 		 */
 		void AdvanceQueries();
+
 		/** 
 		 *  Signal that a specific query stage has been completed for this node.  This will
 		 *  only work if the query process for this node is indeed at the specified stage.  
@@ -168,6 +169,7 @@ namespace OpenZWave
 		 *  \param _stage The current stage of the query process.
 		 */
 		void QueryStageComplete( QueryStage const _stage );
+
 		/** 
 		 *  Retry the specified query stage (up to _maxAttempts retries).  This will
 		 *  only work if the query process for this node is indeed at the specified stage.  
@@ -176,19 +178,22 @@ namespace OpenZWave
 		 *  \param _maxAttempts 
 		 */
 		void QueryStageRetry( QueryStage const _stage, uint8 const _maxAttempts = 0 );	    // maxAttempts of zero means no limit
+
 		/**
-		 * This function sets the query stage for the node (but only to an earlier stage).  If
-		 * a later stage is specified, it is ignored.
+		 * This function sets the query stage for the node (but only to an earlier stage).
+		 * If a later stage is specified than the current one, it is ignored.
 		 * \param _stage The desired query stage.
 		 * \see m_queryStage, m_queryPending
 		 */
-		void GoBackToQueryStage( QueryStage const _stage );									// Used to move back to repeat from an earlier stage. 
+		void SetQueryStage( QueryStage const _stage );	 
+
 		/**
 		 * Returns the current query stage enum.
 		 * \return Enum value with the current query stage.
 		 * \see m_queryStage
 		 */
 		Node::QueryStage GetCurrentQueryStage() { return m_queryStage; }
+
 		/**
 		 * Returns the specified query stage string.
 		 * \param _stage The query stage.
@@ -196,6 +201,7 @@ namespace OpenZWave
 		 * \see m_queryStage, m_queryPending
 		 */
 		string GetQueryStageName( QueryStage const _stage );
+
 		/**
 		 *  This function handles a response to the FUNC_ID_ZW_GET_NODE_PROTOCOL_INFO
 		 *  command for this node.  If protocol information has already been retrieved
@@ -205,7 +211,10 @@ namespace OpenZWave
 		 *  - m_routing (whether it is a routing node (capable of passing commands along to other nodes in the network) or not
 		 *  - m_maxBaudRate (the maximum baud rate at which this device can communicate)
 		 *  - m_version (TODO)
-		 *  - m_security (
+		 *  - m_security (whether device supports security features)
+		 *  - m_listening (device is powered and listening constantly)
+		 *  - m_frequentListening (device can be woken up with a beam)
+		 *  - m_beaming (device is beam capable)
 		 */
 		void UpdateProtocolInfo( uint8 const* _data );
 		void UpdateNodeInfo( uint8 const* _data, uint8 const _length );
@@ -222,7 +231,6 @@ namespace OpenZWave
 		bool		m_queryPending;
 		bool		m_queryConfiguration;
 		uint8		m_queryRetries;
-		bool		m_queryStageCompleted;
 		bool		m_protocolInfoReceived;
 		bool		m_nodeInfoReceived;
 		bool		m_manufacturerSpecificClassReceived;
@@ -242,7 +250,7 @@ namespace OpenZWave
 			SecurityFlag_BeamCapability			= 0x10,
 			SecurityFlag_Sensor250ms			= 0x20,
 			SecurityFlag_Sensor1000ms			= 0x40,
-			SecurityFlag_OptionalFunctionality	= 0x80
+			SecurityFlag_OptionalFunctionality		= 0x80
 		};
 
 		// Node Ids
@@ -252,10 +260,12 @@ namespace OpenZWave
 		};
 
 		bool IsListeningDevice()const{ return m_listening; }
+		bool IsFrequentListeningDevice()const{ return m_frequentListening; }
+		bool IsBeamingDevice()const{ return m_beaming; }
 		bool IsRoutingDevice()const{ return m_routing; }
+		bool IsSecurityDevice()const{ return m_security; }
 		uint32 GetMaxBaudRate()const{ return m_maxBaudRate; }
 		uint8 GetVersion()const{ return m_version; }
-		uint8 GetSecurity()const{ return m_security; }
 		
 		uint8 GetNodeId()const{ return m_nodeId; }
 		
@@ -268,10 +278,12 @@ namespace OpenZWave
 
 	private:
 		bool		m_listening;
+		bool		m_frequentListening;
+		bool		m_beaming;
 		bool		m_routing;
 		uint32		m_maxBaudRate;
 		uint8		m_version;
-		uint8		m_security;
+		bool		m_security;
 		uint32		m_homeId;
 		uint8		m_nodeId;
 		uint8		m_basic;		//*< Basic device class (0x01-Controller, 0x02-Static Controller, 0x03-Slave, 0x04-Routing Slave

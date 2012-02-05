@@ -4,7 +4,8 @@
 //
 //	Windows implementation of a cross-platform event
 //
-//	Copyright (c) 2010 Mal Lansell <openzwave@lansell.org>
+//	Copyright (c) 2010 Mal Lansell <mal@lansell.org>
+//	All rights reserved.
 //
 //	SOFTWARE NOTICE AND LICENSE
 //
@@ -24,7 +25,6 @@
 //	along with OpenZWave.  If not, see <http://www.gnu.org/licenses/>.
 //
 //-----------------------------------------------------------------------------
-
 #ifndef _EventImpl_H
 #define _EventImpl_H
 
@@ -39,13 +39,17 @@ namespace OpenZWave
 	{
 	private:
 		friend class Event;
+		friend class SocketImpl;
+		friend class Wait;
 
 		EventImpl();
 		~EventImpl();
 
 		void Set();
 		void Reset();
-		bool Wait( int32 _timeout );
+
+		bool Wait( int32 _timeout );	// The wait method is to be used only by the Wait::Multiple method
+		bool IsSignalled();
 
 		HANDLE	m_hEvent;
 	};

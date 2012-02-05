@@ -4,7 +4,8 @@
 //
 //	Windows Implementation of the cross-platform mutex
 //
-//	Copyright (c) 2010 Mal Lansell <openzwave@lansell.org>
+//	Copyright (c) 2010 Mal Lansell <mal@lansell.org>
+//	All rights reserved.
 //
 //	SOFTWARE NOTICE AND LICENSE
 //
@@ -24,7 +25,6 @@
 //	along with OpenZWave.  If not, see <http://www.gnu.org/licenses/>.
 //
 //-----------------------------------------------------------------------------
-
 #include "Defs.h"
 #include "MutexImpl.h"
 
@@ -37,7 +37,8 @@ using namespace OpenZWave;
 //-----------------------------------------------------------------------------
 MutexImpl::MutexImpl
 (
-)
+):
+	m_lockCount( 0 )
 {
 	InitializeCriticalSection( &m_criticalSection );
 }
@@ -66,20 +67,48 @@ bool MutexImpl::Lock
 	{
 		// We will wait for the lock
 		EnterCriticalSection( &m_criticalSection );
+		++m_lockCount;
 		return true;
 	}
 
 	// Returns immediately, even if the lock was not available.
-	return( TryEnterCriticalSection( &m_criticalSection ) != 0 );
+	if( TryEnterCriticalSection( &m_criticalSection ) )
+	{
+		++m_lockCount;
+		return true;
+	}
+
+	return false;
 }
 
 //-----------------------------------------------------------------------------
-//	<MutexImpl::Release>
+//	<MutexImpl::Unlock>
 //	Release our lock on the mutex
 //-----------------------------------------------------------------------------
-void MutexImpl::Release
+void MutexImpl::Unlock
 (
 )
 {
-	LeaveCriticalSection( &m_criticalSection );
+	if( !m_lockCount )
+	{
+		// No locks - we have a mismatched lock/release pair
+		assert(0);
+	}
+	else
+	{
+		--m_lockCount;
+		LeaveCriticalSection( &m_criticalSection );
+	}
 }
+
+//-----------------------------------------------------------------------------
+//	<MutexImpl::IsSignalled>
+//	Test whether the mutex is free
+//-----------------------------------------------------------------------------
+bool MutexImpl::IsSignalled
+(
+)
+{
+	return( 0 == m_lockCount );
+}
+
