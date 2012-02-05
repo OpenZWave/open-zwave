@@ -4,7 +4,8 @@
 //
 //	Cross-platform threads
 //
-//	Copyright (c) 2010 Mal Lansell <openzwave@lansell.org>
+//	Copyright (c) 2010 Mal Lansell <mal@lansell.org>
+//	All rights reserved.
 //
 //	SOFTWARE NOTICE AND LICENSE
 //
@@ -24,34 +25,30 @@
 //	along with OpenZWave.  If not, see <http://www.gnu.org/licenses/>.
 //
 //-----------------------------------------------------------------------------
-
 #ifndef _Thread_H
 #define _Thread_H
 
 #include <string>
+#include "Defs.h"
+#include "Wait.h"
 
 namespace OpenZWave
 {
 	class ThreadImpl;
+	class Event;
 
 	/** \brief Implements a platform-independent thread management class.
 	 */
-	class Thread
+	class Thread: public Wait
 	{
 	public:
-		typedef void (*pfnThreadProc_t)( void* _context );
+		typedef void (*pfnThreadProc_t)( Event* _exitEvent, void* _context );
 
 		/**
 		 * Constructor.
 		 * Creates a thread object that can be used to serialize access to a shared resource.
 		 */
-		Thread( string const& _tname );
-
-		/**
-		 * Destructor.
-		 * Destroys the Thread object.
-		 */
-		~Thread();
+		Thread( string const& _name );
 
 		/**
 		 * Start running a function on this thread.  
@@ -76,21 +73,26 @@ namespace OpenZWave
 		bool Stop();
 
 		/**
-		 * Tests whether a function is running on this thread.
-		 * Enables the caller to test whether a function running on this thread has completed.
-		 * \return true if the function is running, false if it has completed.
-		 * \see Start, Stop
-		 */
-		bool IsRunning()const;
-
-		/**
 		 * Causes the thread to sleep for the specified number of milliseconds.
 		 * \param _millisecs Number of milliseconds to sleep.
 		 */
 		void Sleep( uint32 _millisecs );
 
+	protected:
+		/**
+		 * Used by the Wait class to test whether the thread has been completed.
+		 */
+		virtual bool IsSignalled();
+
+		/**
+		 * Destructor.
+		 * Destroys the Thread object.
+		 */
+		virtual ~Thread();
+
 	private:
 		ThreadImpl*	m_pImpl;	// Pointer to an object that encapsulates the platform-specific implementation of a thread.
+		Event*		m_exitEvent;
 	};
 
 } // namespace OpenZWave

@@ -429,6 +429,16 @@ namespace OpenZWaveDotNet
 		void RequestNodeState( uint32 homeId, uint8 nodeId ){ Manager::Get()->RequestNodeState(homeId,nodeId); }
 
 		/**
+		 * \brief Trigger the fetching of just the dynamic value data for a node.
+		 * Causes the node's values to be requested from the Z-Wave network. This is the
+		 * same as the query state starting from the dynamic state.
+		 * \param homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param nodeId The ID of the node to query.
+		 * \return True if the request was sent successfully.
+		 */
+		bool RequestNodeDynamic( uint32 const homeId, uint8 const nodeId ){ return Manager::Get()->RequestNodeDynamic(homeId, nodeId); }
+
+		/**
 		 * \brief Get whether the node is a listening device that does not go to sleep.
 		 *
 		 * \param homeId The Home ID of the Z-Wave controller that manages the node.
@@ -436,6 +446,23 @@ namespace OpenZWaveDotNet
 		 * \return True if it is a listening node.
 		 */
 		bool IsNodeListeningDevice( uint32 const homeId, uint8 const nodeId ){ return Manager::Get()->IsNodeListeningDevice(homeId,nodeId); }
+
+		/**
+		 * \brief Get whether the node is a frequent listening device that goes to sleep but
+		 * can be woken up by a beam. Useful to determine node and controller consistency.
+		 * \param homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param nodeId The ID of the node to query.
+		 * \return True if it is a frequent listening node.
+		 */
+		bool IsNodeFrequentListeningDevice( uint32 const homeId, uint8 const nodeId ){ return Manager::Get()->IsNodeFrequentListeningDevice(homeId, nodeId); }
+
+		/**
+		 * \brief Get whether the node is a beam capable device.
+		 * \param homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param nodeId The ID of the node to query.
+		 * \return True if it is a frequent listening node.
+		 */
+		bool IsNodeBeamingDevice( uint32 const homeId, uint8 const nodeId ){ return Manager::Get()->IsNodeBeamingDevice(homeId, nodeId); }
 
 		/**
 		 * \brief Get whether the node is a routing device that passes messages to other nodes.
@@ -447,29 +474,29 @@ namespace OpenZWaveDotNet
 		bool IsNodeRoutingDevice( uint32 const homeId, uint8 const nodeId ){ return Manager::Get()->IsNodeRoutingDevice(homeId,nodeId); }
 
 		/**
+		 * \brief Get the security attribute for a node. True if node supports security features.
+		 * \param homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param nodeId The ID of the node to query.
+		 * \return true if security features implemented.
+		 */
+		bool IsNodeSecurityDevice( uint32 const homeId, uint8 const nodeId ){ return Manager::Get()->IsNodeSecurityDevice(homeId, nodeId); }
+		
+		/**
 		 * \brief Get the maximum baud rate of a node's communications
-		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
-		 * \param _nodeId The ID of the node to query.
+		 * \param homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param nodeId The ID of the node to query.
 		 * \return the baud rate in bits per second.
 		 */
 		uint32 GetNodeMaxBaudRate( uint32 const homeId, uint8 const nodeId ){ return Manager::Get()->GetNodeMaxBaudRate(homeId, nodeId); }
 
 		/**
 		 * \brief Get the version number of a node
-		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
-		 * \param _nodeId The ID of the node to query.
+		 * \param homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param nodeId The ID of the node to query.
 		 * \return the node's version number
 		 */
 		uint8 GetNodeVersion( uint32 const homeId, uint8 const nodeId ){ return Manager::Get()->GetNodeVersion(homeId, nodeId); }
 
-		/**
-		 * \brief Get the security byte for a node.  Bit meanings are still to be determined.
-		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
-		 * \param _nodeId The ID of the node to query.
-		 * \return the node's security byte
-		 */
-		uint8 GetNodeSecurity( uint32 const homeId, uint8 const nodeId ){ return Manager::Get()->GetNodeSecurity(homeId, nodeId); }
-		
 		/**
 		 * \brief Get a node's "basic" type.
 		 * \param homeId The Home ID of the Z-Wave controller that manages the node.

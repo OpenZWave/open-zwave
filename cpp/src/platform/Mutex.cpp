@@ -4,7 +4,8 @@
 //
 //	Cross-platform mutex
 //
-//	Copyright (c) 2010 Mal Lansell <openzwave@lansell.org>
+//	Copyright (c) 2010 Mal Lansell <mal@lansell.org>
+//	All rights reserved.
 //
 //	SOFTWARE NOTICE AND LICENSE
 //
@@ -24,7 +25,6 @@
 //	along with OpenZWave.  If not, see <http://www.gnu.org/licenses/>.
 //
 //-----------------------------------------------------------------------------
-
 #include "Defs.h"
 #include "Mutex.h"
 
@@ -68,12 +68,30 @@ bool Mutex::Lock
 }
 
 //-----------------------------------------------------------------------------
-//	<Mutex::Release>
+//	<Mutex::Unlock>
 //	Release our lock on the mutex
 //-----------------------------------------------------------------------------
-void Mutex::Release
+void Mutex::Unlock
 (
 )
 {
-	m_pImpl->Release();
+	m_pImpl->Unlock();
+
+	if( IsSignalled() )
+	{
+		// The mutex has no owners, so notify the watchers
+		Notify();
+	}
 }
+
+//-----------------------------------------------------------------------------
+//	<Mutex::IsSignalled>
+//	Test whether the event is set
+//-----------------------------------------------------------------------------
+bool Mutex::IsSignalled
+(
+)
+{
+	return m_pImpl->IsSignalled();
+}
+

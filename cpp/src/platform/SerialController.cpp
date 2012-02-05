@@ -27,8 +27,8 @@
 
 #include "Defs.h"
 #include "Msg.h"
+#include "Driver.h"
 #include "SerialController.h"
-
 #include "SerialControllerImpl.h"	// Platform-specific implementation of a serial port
 
 using namespace OpenZWave;
@@ -41,20 +41,12 @@ using namespace OpenZWave;
 SerialController::SerialController
 (
 ):
-	m_pMsgInitializationSequence( new list<Msg*> ),
 	m_baud ( 115200 ),
 	m_parity ( SerialController::Parity_None ),
 	m_stopBits ( SerialController::StopBits_One ),
-	m_pImpl( new SerialControllerImpl() ),
 	m_bOpen( false )
 {
-    m_pMsgInitializationSequence->push_back(new Msg( "FUNC_ID_ZW_GET_VERSION", 0xff, REQUEST, FUNC_ID_ZW_GET_VERSION, false ));
-    m_pMsgInitializationSequence->push_back(new Msg( "FUNC_ID_ZW_MEMORY_GET_ID", 0xff, REQUEST, FUNC_ID_ZW_MEMORY_GET_ID, false ));
-    m_pMsgInitializationSequence->push_back(new Msg( "FUNC_ID_ZW_GET_CONTROLLER_CAPABILITIES", 0xff, REQUEST, FUNC_ID_ZW_GET_CONTROLLER_CAPABILITIES, false ));
-    m_pMsgInitializationSequence->push_back(new Msg( "FUNC_ID_SERIAL_API_GET_CAPABILITIES", 0xff, REQUEST, FUNC_ID_SERIAL_API_GET_CAPABILITIES, false ));
-    //m_pMsgInitializationSequence->push_back(new Msg( "FUNC_ID_ZW_GET_SUC_NODE_ID", 0xff, REQUEST, FUNC_ID_ZW_GET_SUC_NODE_ID, false ));
-    m_pMsgInitializationSequence->push_back(new Msg( "FUNC_ID_ZW_GET_VIRTUAL_NODES", 0xff, REQUEST, FUNC_ID_ZW_GET_VIRTUAL_NODES, false ));
-    m_pMsgInitializationSequence->push_back(new Msg( "FUNC_ID_SERIAL_API_GET_INIT_DATA", 0xff, REQUEST, FUNC_ID_SERIAL_API_GET_INIT_DATA, false ));
+	m_pImpl = new SerialControllerImpl( this );
 }
 
 //-----------------------------------------------------------------------------
@@ -65,24 +57,31 @@ SerialController::~SerialController
 (
 )
 {
-	delete m_pMsgInitializationSequence;
 	delete m_pImpl;
 }
 
 //-----------------------------------------------------------------------------
-//  <SerialController::GetMsgInitializationSequence>
-//  Retrieves an array of Msg object pointers in the correct order needed to initialize the SerialController implementation.
+//  <SerialController::PlayInitSequence>
+//  Queues up the controller's initialization commands.
 //-----------------------------------------------------------------------------
-list<Msg*>* const SerialController::GetMsgInitializationSequence
+void SerialController::PlayInitSequence
 (
+	Driver* _driver
 )
 {
-	return m_pMsgInitializationSequence;
+	_driver->SendMsg( new Msg( "FUNC_ID_ZW_GET_VERSION", 0xff, REQUEST, FUNC_ID_ZW_GET_VERSION, false ), Driver::MsgQueue_Command );
+    _driver->SendMsg( new Msg( "FUNC_ID_ZW_MEMORY_GET_ID", 0xff, REQUEST, FUNC_ID_ZW_MEMORY_GET_ID, false ), Driver::MsgQueue_Command);
+    _driver->SendMsg( new Msg( "FUNC_ID_ZW_GET_CONTROLLER_CAPABILITIES", 0xff, REQUEST, FUNC_ID_ZW_GET_CONTROLLER_CAPABILITIES, false ), Driver::MsgQueue_Command);
+    _driver->SendMsg( new Msg( "FUNC_ID_SERIAL_API_GET_CAPABILITIES", 0xff, REQUEST, FUNC_ID_SERIAL_API_GET_CAPABILITIES, false ), Driver::MsgQueue_Command);
+    //_driver->SendMsg( new Msg( "FUNC_ID_ZW_GET_SUC_NODE_ID", 0xff, REQUEST, FUNC_ID_ZW_GET_SUC_NODE_ID, false ), Driver::MsgQueue_Command);
+    _driver->SendMsg( new Msg( "FUNC_ID_ZW_GET_VIRTUAL_NODES", 0xff, REQUEST, FUNC_ID_ZW_GET_VIRTUAL_NODES, false ), Driver::MsgQueue_Command);
+    _driver->SendMsg( new Msg( "FUNC_ID_SERIAL_API_GET_INIT_DATA", 0xff, REQUEST, FUNC_ID_SERIAL_API_GET_INIT_DATA, false ), Driver::MsgQueue_Command);
 }
 
 //-----------------------------------------------------------------------------
 //  <SerialController::SetBaud>
-//  Set the serial port baud rate.  The serial port must be closed for the setting to be accepted.
+//  Set the serial port baud rate.  
+//  The serial port must be closed for the setting to be accepted.
 //-----------------------------------------------------------------------------
 bool SerialController::SetBaud
 (
@@ -100,7 +99,8 @@ bool SerialController::SetBaud
 
 //-----------------------------------------------------------------------------
 //  <SerialController::SetParity>
-//  Set the serial port parity.  The serial port must be closed for the setting to be accepted.
+//  Set the serial port parity.
+//  The serial port must be closed for the setting to be accepted.
 //-----------------------------------------------------------------------------
 bool SerialController::SetParity
 (
@@ -118,7 +118,8 @@ bool SerialController::SetParity
 
 //-----------------------------------------------------------------------------
 //  <SerialController::SetStopBits>
-//  Set the serial port stop bits.  The serial port must be closed for the setting to be accepted.
+//  Set the serial port stop bits.
+//  The serial port must be closed for the setting to be accepted.
 //-----------------------------------------------------------------------------
 bool SerialController::SetStopBits
 (
@@ -140,10 +141,7 @@ bool SerialController::SetStopBits
 //-----------------------------------------------------------------------------
 bool SerialController::Open
 (
-	string const& _SerialControllerName /*,
-	uint32 const _baud,
-	Parity const _parity,
-	StopBits const _stopBits */
+	string const& _serialControllerName
 )
 {
 	if( m_bOpen )
@@ -151,10 +149,8 @@ bool SerialController::Open
 		return false;
 	}
 
-	m_bOpen = m_pImpl->Open( _SerialControllerName, m_baud, m_parity, m_stopBits );
-
-	// Create a thread to watch for incoming data
-
+	m_serialControllerName = _serialControllerName; 
+	m_bOpen = m_pImpl->Open();
 	return m_bOpen;
 }
 
@@ -177,25 +173,6 @@ bool SerialController::Close
 }
 
 //-----------------------------------------------------------------------------
-//	<SerialController::Read>
-//	Read data from an open serial port
-//-----------------------------------------------------------------------------
-uint32 SerialController::Read
-(
-	uint8* _buffer,
-	uint32 _length,
-    ReadPacketSegment _segment
-)
-{
-	if( !m_bOpen )
-	{
-		return 0;
-	}
-
-	return( m_pImpl->Read( _buffer, _length, _segment ) );
-}
-
-//-----------------------------------------------------------------------------
 //	<SerialController::Write>
 //	Write data to an open serial port
 //-----------------------------------------------------------------------------
@@ -213,20 +190,5 @@ uint32 SerialController::Write
 	return( m_pImpl->Write( _buffer, _length ) );
 }
 
-//-----------------------------------------------------------------------------
-//	<SerialController::Wait>
-//	Wait for incoming data to arrive at the serial port
-//-----------------------------------------------------------------------------
-bool SerialController::Wait
-(
-	int32 _timeout
-)
-{
-	if( !m_bOpen )
-	{
-		return false;
-	}
 
-	return( m_pImpl->Wait( _timeout ) );
-}
 

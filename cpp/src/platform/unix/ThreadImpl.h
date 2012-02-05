@@ -1,10 +1,13 @@
+//----------------------------------------------------------------------------
 //
-// ThreadImpl.h
+//  ThreadImpl.h
 //
-// PThreads implementation of a cross-platform thread
+//	POSIX implementation of a cross-platform thread
 //
-// Copyright (c) 2010, Greg Satz <satz@iranger.com>
-// All rights reserved.
+//	Copyright (c) 2010, Greg Satz <satz@iranger.com>
+//	All rights reserved.
+//
+//	SOFTWARE NOTICE AND LICENSE
 //
 //	This file is part of OpenZWave.
 //
@@ -21,7 +24,7 @@
 //	You should have received a copy of the GNU Lesser General Public License
 //	along with OpenZWave.  If not, see <http://www.gnu.org/licenses/>.
 //
-
+//-----------------------------------------------------------------------------
 #ifndef _ThreadImpl_H
 #define _ThreadImpl_H
 
@@ -32,28 +35,33 @@
 
 namespace OpenZWave
 {
-  class ThreadImpl
-  {
-  private:
-    friend class Thread;
+    class Thread;
+    class Event;
+    
+    class ThreadImpl
+    {
+    private:
+        friend class Thread;
 
-    ThreadImpl( string const& _tname );
-    ~ThreadImpl();
+        ThreadImpl( Thread* _owner, string const& _tname );
+        ~ThreadImpl();
 
-    bool Start( Thread::pfnThreadProc_t, void * );
-    bool Stop();
-    bool IsRunning() const { return m_bIsRunning; }
-	void Sleep( uint32 _millisecs );
+        bool Start( Thread::pfnThreadProc_t _pfnThreadProc, Event* _exitEvent, void* _context );
+        void Sleep( uint32 _millisecs );
+        bool IsSignalled();
+        bool Terminate();
 
-    void Run();
-    static void *ThreadProc (void *parg);
+        void Run();
+        static void* ThreadProc( void *parg);
 
-    pthread_t m_hThread;
-    Thread::pfnThreadProc_t	m_pfnThreadProc;
-    void *m_pContext;
-    bool m_bIsRunning;
-    string m_name;
-  };
+        Thread*                 m_owner;
+        Event*                  m_exitEvent;
+        pthread_t               m_hThread;
+        Thread::pfnThreadProc_t	m_pfnThreadProc;
+        void*                   m_pContext;
+        bool                    m_bIsRunning;
+        string                  m_name;
+    };
 } // namespace OpenZWave
 
 #endif //_ThreadImpl_H

@@ -4,7 +4,8 @@
 //
 //	Windows implementation of message and error logging
 //
-//	Copyright (c) 2010 Mal Lansell <openzwave@lansell.org>
+//	Copyright (c) 2010 Mal Lansell <mal@lansell.org>
+//	All rights reserved.
 //
 //	SOFTWARE NOTICE AND LICENSE
 //
@@ -24,7 +25,6 @@
 //	along with OpenZWave.  If not, see <http://www.gnu.org/licenses/>.
 //
 //-----------------------------------------------------------------------------
-
 #include <windows.h>
 
 #include "Defs.h"
@@ -42,8 +42,8 @@ LogImpl::LogImpl
 ):
 	m_filename( _filename )
 {
-	FILE* pFile = NULL;
-	if( !(pFile = fopen(m_filename.c_str(), "w" )) )
+	FILE* pFile;
+	if( !fopen_s( &pFile, m_filename.c_str(), "w" ) )
 	{
 		SYSTEMTIME time;
 		::GetLocalTime( &time );
@@ -78,8 +78,8 @@ void LogImpl::Write
 	char timeStr[32];
 	sprintf_s( timeStr, sizeof(timeStr), "%04d-%02d-%02d %02d:%02d:%02d:%03d ", time.wYear, time.wMonth, time.wDay, time.wHour, time.wMinute, time.wSecond, time.wMilliseconds );
 
-	FILE* pFile = fopen(m_filename.c_str(), "a" );
-	if( pFile != NULL )
+	FILE* pFile;
+	if( !fopen_s( &pFile, m_filename.c_str(), "a" ) )
 	{
 		// Log to screen and file
 		if( _format && ( _format[0] != 0 ) )

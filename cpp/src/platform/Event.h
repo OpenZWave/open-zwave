@@ -4,7 +4,8 @@
 //
 //	Cross-platform manual-reset event
 //
-//	Copyright (c) 2010 Mal Lansell <openzwave@lansell.org>
+//	Copyright (c) 2010 Mal Lansell <mal@lansell.org>
+//	All rights reserved.
 //
 //	SOFTWARE NOTICE AND LICENSE
 //
@@ -24,9 +25,10 @@
 //	along with OpenZWave.  If not, see <http://www.gnu.org/licenses/>.
 //
 //-----------------------------------------------------------------------------
-
 #ifndef _Event_H
 #define _Event_H
+
+#include "Wait.h"
 
 namespace OpenZWave
 {
@@ -34,26 +36,17 @@ namespace OpenZWave
 
 	/** \brief Platform-independent definition of event objects.
 	 */
-	class Event
+	class Event: public Wait
 	{
-	public:
-		enum
-		{
-			Timeout_Immediate = 0,
-			Timeout_Infinite = -1
-		};
+		friend class SerialControllerImpl;
+		friend class Wait;
 
+	public:
 		/**
 		 * Constructor.
 		 * Creates a cross-platform event object equivalent to the Windows manual-reset event
 		 */
 		Event();
-
-		/**
-		 * Destructor.
-		 * Destroys the event object.
-		 */
-		~Event();
 
 		/**
 		 * Set the event to signalled.
@@ -67,17 +60,22 @@ namespace OpenZWave
 		 */
 		void Reset();
 
+	protected:
 		/**
-		 * Waits for an event to become signalled.
-		 * Waits for an event to become signalled, or for the wait to time-out.
-		 * \param _timeout maximum time in milliseconds to wait for the event
-		 * to become signalled. If the timeout is zero, the method will 
-		 * return immediately.  If the timeout is Timeout_Infinite, the 
-		 * method will not return until the event is signalled.
-		 * \return the state of the event.  True if it is signalled, false otherwise.
-		 * \see Set, Reset
+		 * Used by the Wait class to test whether the event is set.
+		 */
+		virtual bool IsSignalled();
+
+		/**
+		 * Used by the Wait::Multiple method.
 		 */
 		bool Wait( int32 _timeout );
+
+		/**
+		 * Destructor.
+		 * Destroys the event object.
+		 */
+		~Event();
 
 	private:
 		Event( Event const&	);					// prevent copy

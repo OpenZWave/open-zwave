@@ -30,15 +30,18 @@
 
 #include <string>
 #include "Defs.h"
-#include "IController.h"
+#include "Controller.h"
 
 namespace OpenZWave
 {
+	class Driver;
     class Msg;
 	class SerialControllerImpl;
 
-    class SerialController : IController
+    class SerialController: public Controller
 	{
+		friend class SerialControllerImpl;
+
 	public:
 		enum Parity
 		{
@@ -63,17 +66,17 @@ namespace OpenZWave
 		SerialController();
 
 		/**
-		 * Retrieves an array of Msg object pointers in the correct order needed to initialize the IController implementation.
-		 * @return Array of Msg object pointers.
-		 * @see Driver::Init
-		 */
-		list<Msg*>* const GetMsgInitializationSequence( );
-
-		/**
 		 * Destructor.
 		 * Destroys the serial port object.
 		 */
-		~SerialController();
+		virtual ~SerialController();
+
+		/**
+		 * Queues up the controller's initialization commands.
+		 * @param _driver Pointer to the driver object used to send the commands.
+		 * @see Driver::Init
+		 */
+		void PlayInitSequence( Driver* _driver );
 
 		/**
 		 * Set the serial port baud rate.  The serial port must be closed for the setting to be accepted.
@@ -103,13 +106,10 @@ namespace OpenZWave
 		 * Open a serial port.
 		 * Attempts to open a serial port and initialize it with the specified paramters.
 		 * @param _SerialControllerName The name of the port to open.  For example, ttyS1 on Linux, or \\.\COM2 in Windows.
-		 * @param _baud Integer containing the baud-rate of the serial connection.  Most Z-Wave interfaces run at 115200 baud.
-		 * @param _parity Boolean set to true if there the data contains a parity bits.
- 		 * @param _stopBits Integer containing the number of stop-bits, usually one or two.
 		 * @return True if the port was opened and configured successfully.
 		 * @see Close, Read, Write
 		 */
-		bool Open( string const& _SerialControllerName /*, uint32 const _baud, Parity const _parity, StopBits const _stopBits */ );
+		bool Open( string const& _SerialControllerName );
 
 		/**
 		 * Close a serial port.
@@ -118,16 +118,6 @@ namespace OpenZWave
 		 * @see Open
 		 */
 		bool Close();
-
-		/**
-		 * Read from a serial port.
-		 * Attempts to read data from an open serial port.
-		 * @param _buffer Pointer to a block of memory large enough to hold the requested data.
-		 * @param _length Length in bytes of the data to be read.
-		 * @return The number of bytes read.
-		 * @see Write, Open, Close
-		 */
-		uint32 Read( uint8* _buffer, uint32 _length, ReadPacketSegment _segment );
 
 		/**
 		 * Write to a serial port.
@@ -139,27 +129,14 @@ namespace OpenZWave
 		 */
 		uint32 Write( uint8* _buffer, uint32 _length );
 
-		/**
-		 * Waits for data to arrive at the serial port
-		 * @param _timeout maximum time in milliseconds to wait for the event
-		 * to become signalled. If the timeout is zero, the method will 
-		 * return immediately.  If the timeout is Event::Timeout_Infinite, the 
-		 * method will not return until the event is signalled.
-		 * @return true if data is available, false if the wait timed out.
-		 * @see Set, Reset
-		 */
-		bool Wait( int32 _timeout );
-
-    protected:
-        list<Msg*>* const           m_pMsgInitializationSequence;
+   	private:
         uint32                      m_baud;
         SerialController::Parity    m_parity;
         SerialController::StopBits  m_stopBits;
+		string						m_serialControllerName;
 
-	private:
 		SerialControllerImpl*	    m_pImpl;	// Pointer to an object that encapsulates the platform-specific implementation of the serial port.
 		bool			            m_bOpen;
-
 	};
 
 } // namespace OpenZWave

@@ -60,12 +60,13 @@ bool ManufacturerSpecific::s_bXmlLoaded = false;
 bool ManufacturerSpecific::RequestState
 (
 	uint32 const _requestFlags,
-	uint8 const _instance
+	uint8 const _instance,
+	Driver::MsgQueue const _queue
 )
 {
 	if( ( _requestFlags & RequestFlag_Static ) && HasStaticRequest( StaticRequest_Values ) )
 	{
-		return RequestValue( _requestFlags, 0, _instance );
+		return RequestValue( _requestFlags, 0, _instance, _queue );
 	}
 
 	return false;
@@ -79,7 +80,8 @@ bool ManufacturerSpecific::RequestValue
 (
 	uint32 const _requestFlags,
 	uint8 const _dummy1,	// = 0 (not used)
-	uint8 const _instance
+	uint8 const _instance,
+	Driver::MsgQueue const _queue
 )
 {
 	if( _instance != 1 )
@@ -94,7 +96,7 @@ bool ManufacturerSpecific::RequestValue
 	msg->Append( GetCommandClassId() );
 	msg->Append( ManufacturerSpecificCmd_Get );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	GetDriver()->SendMsg( msg );
+	GetDriver()->SendMsg( msg, _queue );
 	return true;
 }
 
@@ -194,7 +196,6 @@ bool ManufacturerSpecific::HandleMsg
 			Log::Write( "Received manufacturer specific report from node %d: Manufacturer=%s, Product=%s", 
 									GetNodeId(), node->GetManufacturerName().c_str(), node->GetProductName().c_str() );
 			ClearStaticRequest( StaticRequest_Values );
-			node->m_queryStageCompleted = true;
 			node->m_manufacturerSpecificClassReceived = true;
 		}
 		

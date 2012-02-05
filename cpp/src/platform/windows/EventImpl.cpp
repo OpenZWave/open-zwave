@@ -4,7 +4,8 @@
 //
 //	Windows implementation of a cross-platform event
 //
-//	Copyright (c) 2010 Mal Lansell <openzwave@lansell.org>
+//	Copyright (c) 2010 Mal Lansell <mal@lansell.org>
+//	All rights reserved.
 //
 //	SOFTWARE NOTICE AND LICENSE
 //
@@ -24,7 +25,6 @@
 //	along with OpenZWave.  If not, see <http://www.gnu.org/licenses/>.
 //
 //-----------------------------------------------------------------------------
-
 #include <windows.h>
 
 #include "Defs.h"
@@ -79,6 +79,17 @@ void EventImpl::Reset
 }
 
 //-----------------------------------------------------------------------------
+//	<EventImpl::IsSignalled>
+//	Test whether the event is set
+//-----------------------------------------------------------------------------
+bool EventImpl::IsSignalled
+(
+)
+{
+	return( WAIT_OBJECT_0 == WaitForSingleObject( m_hEvent, 0 ) );
+}
+
+//-----------------------------------------------------------------------------
 //	<EventImpl::Wait>
 //	Wait for the event to become signalled
 //-----------------------------------------------------------------------------
@@ -89,4 +100,3 @@ bool EventImpl::Wait
 {
 	return( WAIT_TIMEOUT != ::WaitForSingleObject( m_hEvent, (DWORD)_timeout ) );
 }
-

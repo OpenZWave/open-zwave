@@ -4,7 +4,8 @@
 //
 //	Cross-platform event
 //
-//	Copyright (c) 2010 Mal Lansell <openzwave@lansell.org>
+//	Copyright (c) 2010 Mal Lansell <mal@lansell.org>
+//	All rights reserved.
 //
 //	SOFTWARE NOTICE AND LICENSE
 //
@@ -24,12 +25,9 @@
 //	along with OpenZWave.  If not, see <http://www.gnu.org/licenses/>.
 //
 //-----------------------------------------------------------------------------
-
 #include "Defs.h"
 #include "Event.h"
-
 #include "EventImpl.h"	// Platform-specific implementation of an event
-
 
 using namespace OpenZWave;
 
@@ -64,6 +62,7 @@ void Event::Set
 )
 {
 	m_pImpl->Set();
+	Notify();			// Notify any watchers that the event is now set
 }
 
 //-----------------------------------------------------------------------------
@@ -78,6 +77,17 @@ void Event::Reset
 }
 
 //-----------------------------------------------------------------------------
+//	<Event::IsSignalled>
+//	Test whether the event is set
+//-----------------------------------------------------------------------------
+bool Event::IsSignalled
+(
+)
+{
+	return m_pImpl->IsSignalled();
+}
+
+//-----------------------------------------------------------------------------
 //	<Event::Wait>
 //	Wait for the event to become signalled
 //-----------------------------------------------------------------------------
@@ -88,4 +98,5 @@ bool Event::Wait
 {
 	return m_pImpl->Wait( _timeout );
 }
+
 

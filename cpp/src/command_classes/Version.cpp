@@ -108,12 +108,13 @@ void Version::WriteXML
 bool Version::RequestState
 (
 	uint32 const _requestFlags,
-	uint8 const _instance
+	uint8 const _instance,
+	Driver::MsgQueue const _queue
 )
 {
 	if( ( _requestFlags & RequestFlag_Static ) && HasStaticRequest( StaticRequest_Values ) )
 	{
-		return RequestValue( _requestFlags, 0, _instance );
+		return RequestValue( _requestFlags, 0, _instance, _queue );
 	}
 
 	return false;
@@ -127,7 +128,8 @@ bool Version::RequestValue
 (
 	uint32 const _requestFlags,
 	uint8 const _dummy1,		// = 0
-	uint8 const _instance
+	uint8 const _instance,
+	Driver::MsgQueue const _queue
 )
 {
 	if( _instance != 1 )
@@ -142,7 +144,7 @@ bool Version::RequestValue
 	msg->Append( GetCommandClassId() );
 	msg->Append( VersionCmd_Get );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	GetDriver()->SendMsg( msg );
+	GetDriver()->SendMsg( msg, _queue );
 	return true;
 }
 
@@ -185,11 +187,6 @@ bool Version::HandleMsg
 				applicationValue->OnValueChanged( application );
 			}
 
-			Node* node = GetNodeUnsafe();
-			if( node != NULL && node->m_queryPending )
-			{
-				node->m_queryStageCompleted = true;
-			}
 			return true;
 		}
 	
@@ -200,7 +197,6 @@ bool Version::HandleMsg
 				Log::Write( "Received Command Class Version report from node %d: CommandClass=%s, Version=%d", GetNodeId(), pCommandClass->GetCommandClassName().c_str(), _data[2] );
 				pCommandClass->ClearStaticRequest( StaticRequest_Version );
 				pCommandClass->SetVersion( _data[2] );
-				node->m_queryStageCompleted = true;
 			}
 		}
 
@@ -230,7 +226,7 @@ bool Version::RequestCommandClassVersion
 			msg->Append( VersionCmd_CommandClassGet );
 			msg->Append( _commandClass->GetCommandClassId() );
 			msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-			GetDriver()->SendMsg( msg );
+			GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 			return true;
 		}
 	}
