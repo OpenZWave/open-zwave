@@ -124,11 +124,11 @@ namespace OpenZWave
 		uint8 GetEvent()const{ assert(Type_NodeEvent==m_type); return m_byte; } 
 
 		/** 
-		 * Get the button id of a notification.  Only valid in NotificationType::Type_CreateButton, DeleteButton
-		 * and ButtonPressed notifications. 
+		 * Get the button id of a notification.  Only valid in NotificationType::Type_CreateButton, DeleteButton,
+		 * ButtonOn and ButtonOff notifications. 
 		 * \return the button id.
 	     */
-		uint8 GetButtonID()const{ assert(Type_CreateButton==m_type || Type_DeleteButton==m_type || Type_ButtonOn==m_type || Type_ButtonOff==m_type); return m_byte; } 
+		uint8 GetButtonId()const{ assert(Type_CreateButton==m_type || Type_DeleteButton==m_type || Type_ButtonOn==m_type || Type_ButtonOff==m_type); return m_byte; } 
 
 		/** 
 		 * Helper function to simplify wrapping the notification class.  Should not normally need to be called.

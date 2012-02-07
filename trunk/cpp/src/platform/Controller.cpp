@@ -24,9 +24,28 @@
 //	along with OpenZWave.  If not, see <http://www.gnu.org/licenses/>.
 //
 //-----------------------------------------------------------------------------
+#include "Defs.h"
+#include "Driver.h"
 #include "Controller.h"
 
 using namespace OpenZWave;
+
+//-----------------------------------------------------------------------------
+// <Controller::PlayInitSequence>
+//  Queues up the controller's initialization commands.
+//-----------------------------------------------------------------------------
+void Controller::PlayInitSequence
+(
+	Driver* _driver
+)
+{
+	_driver->SendMsg( new Msg( "FUNC_ID_ZW_GET_VERSION", 0xff, REQUEST, FUNC_ID_ZW_GET_VERSION, false ), Driver::MsgQueue_Command );
+	_driver->SendMsg( new Msg( "FUNC_ID_ZW_MEMORY_GET_ID", 0xff, REQUEST, FUNC_ID_ZW_MEMORY_GET_ID, false ), Driver::MsgQueue_Command);
+	_driver->SendMsg( new Msg( "FUNC_ID_ZW_GET_CONTROLLER_CAPABILITIES", 0xff, REQUEST, FUNC_ID_ZW_GET_CONTROLLER_CAPABILITIES, false ), Driver::MsgQueue_Command);
+	_driver->SendMsg( new Msg( "FUNC_ID_SERIAL_API_GET_CAPABILITIES", 0xff, REQUEST, FUNC_ID_SERIAL_API_GET_CAPABILITIES, false ), Driver::MsgQueue_Command);
+	//_driver->SendMsg( new Msg( "FUNC_ID_ZW_GET_SUC_NODE_ID", 0xff, REQUEST, FUNC_ID_ZW_GET_SUC_NODE_ID, false ), Driver::MsgQueue_Command);
+	// FUNC_ID_ZW_GET_VIRTUAL_NODES & FUNC_ID_SERIAL_API_GET_INIT_DATA has moved into the handler for FUNC_ID_SERIAL_API_GET_CAPABILITIES
+}
 
 //-----------------------------------------------------------------------------
 //	<Controller::Read>

@@ -72,13 +72,6 @@ namespace OpenZWave
 		virtual ~SerialController();
 
 		/**
-		 * Queues up the controller's initialization commands.
-		 * @param _driver Pointer to the driver object used to send the commands.
-		 * @see Driver::Init
-		 */
-		void PlayInitSequence( Driver* _driver );
-
-		/**
 		 * Set the serial port baud rate.  The serial port must be closed for the setting to be accepted.
 		 * @param _baud Integer containing the expected baud-rate of the serial connection.  Most Z-Wave interfaces run at 115200 baud.
 		 * @return True if the baud value was accepted.

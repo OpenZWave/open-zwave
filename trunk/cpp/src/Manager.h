@@ -1347,8 +1347,8 @@ namespace OpenZWave
 		 * - Driver::ControllerCommand_RequestNodeNeighborUpdate - Get a node to rebuild its neighbour list.  This method also does ControllerCommand_RequestNodeNeighbors afterwards.
 		 * - Driver::ControllerCommand_AssignReturnRoute - Assign a network return route to a device.
 		 * - Driver::ControllerCommand_DeleteAllReturnRoutes - Delete all network return routes from a device.
-		 * - Driver::ControllerCommand_CreateButton - Create a handheld button event.
-		 * - Driver::ControllerCommand_DeleteButton - Delete a handheld button event.
+		 * - Driver::ControllerCommand_CreateButton - Create a handheld button id.
+		 * - Driver::ControllerCommand_DeleteButton - Delete a handheld button id.
 		 * <p> Callbacks
 		 * - Driver::ControllerState_Waiting, the controller is waiting for a user action.  A notice should be displayed 
 		 * to the user at this point, telling them what to do next.
