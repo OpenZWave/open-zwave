@@ -61,7 +61,7 @@ namespace OpenZWave
 		 * @param Pointer to the driver object that will handle the messages.
 		 * @see Driver::Init
 		 */
-		virtual void PlayInitSequence( Driver* _driver ) = 0;
+		void PlayInitSequence( Driver* _driver );
 
 		/**
 		 * Open a controller.

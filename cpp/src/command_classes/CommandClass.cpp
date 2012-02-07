@@ -491,8 +491,8 @@ void CommandClass::ClearStaticRequest
 }
 
 //-----------------------------------------------------------------------------
-// <CommandClass::RequestStateForAllInstances>												   
-// Request current state from the device									   
+// <CommandClass::RequestStateForAllInstances>
+// Request current state from the device
 //-----------------------------------------------------------------------------
 bool CommandClass::RequestStateForAllInstances
 (
@@ -501,19 +501,22 @@ bool CommandClass::RequestStateForAllInstances
 )
 {
 	bool res = false;
-	if( Node* node = GetNodeUnsafe() )
+	if( m_createVars )
 	{
-		MultiInstance* multiInstance = static_cast<MultiInstance*>( node->GetCommandClass( MultiInstance::StaticGetCommandClassId() ) );
-		if( multiInstance != NULL )
+		if( Node* node = GetNodeUnsafe() )
 		{
-			for( Bitfield::Iterator it = m_instances.Begin(); it != m_instances.End(); ++it )
+			MultiInstance* multiInstance = static_cast<MultiInstance*>( node->GetCommandClass( MultiInstance::StaticGetCommandClassId() ) );
+			if( multiInstance != NULL )
 			{
-				res |= RequestState( _requestFlags, (uint8)*it, _queue );
+				for( Bitfield::Iterator it = m_instances.Begin(); it != m_instances.End(); ++it )
+				{
+					res |= RequestState( _requestFlags, (uint8)*it, _queue );
+				}
 			}
-		}
-		else
-		{
-			res = RequestState( _requestFlags, 1, _queue );
+			else
+			{
+				res = RequestState( _requestFlags, 1, _queue );
+			}
 		}
 	}
 

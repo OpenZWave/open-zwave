@@ -25,9 +25,7 @@
 //
 //-----------------------------------------------------------------------------
 
-#include "Defs.h"
 #include "Msg.h"
-#include "Driver.h"
 #include "Thread.h"
 #include "Event.h"
 #include "Log.h"
@@ -65,23 +63,6 @@ HidController::~HidController
 (
 )
 {
-}
-
-//-----------------------------------------------------------------------------
-//  <HidController::PlayInitSequence>
-//  Queues up the controller's initialization commands.
-//-----------------------------------------------------------------------------
-void HidController::PlayInitSequence
-(
-	Driver* _driver
-)
-{
-	_driver->SendMsg( new Msg( "FUNC_ID_ZW_GET_VERSION", 0xff, REQUEST, FUNC_ID_ZW_GET_VERSION, false ), Driver::MsgQueue_Command );
-    _driver->SendMsg( new Msg( "FUNC_ID_ZW_MEMORY_GET_ID", 0xff, REQUEST, FUNC_ID_ZW_MEMORY_GET_ID, false ), Driver::MsgQueue_Command);
-    _driver->SendMsg( new Msg( "FUNC_ID_ZW_GET_CONTROLLER_CAPABILITIES", 0xff, REQUEST, FUNC_ID_ZW_GET_CONTROLLER_CAPABILITIES, false ), Driver::MsgQueue_Command);
-    _driver->SendMsg( new Msg( "FUNC_ID_SERIAL_API_GET_CAPABILITIES", 0xff, REQUEST, FUNC_ID_SERIAL_API_GET_CAPABILITIES, false ), Driver::MsgQueue_Command);
-    _driver->SendMsg( new Msg( "FUNC_ID_ZW_GET_VIRTUAL_NODES", 0xff, REQUEST, FUNC_ID_ZW_GET_VIRTUAL_NODES, false ), Driver::MsgQueue_Command);
-    _driver->SendMsg( new Msg( "FUNC_ID_SERIAL_API_GET_INIT_DATA", 0xff, REQUEST, FUNC_ID_SERIAL_API_GET_INIT_DATA, false ), Driver::MsgQueue_Command);
 }
 
 //-----------------------------------------------------------------------------

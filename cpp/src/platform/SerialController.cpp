@@ -25,9 +25,9 @@
 //
 //-----------------------------------------------------------------------------
 
-#include "Defs.h"
+#include "Event.h"
+#include "Thread.h" 
 #include "Msg.h"
-#include "Driver.h"
 #include "SerialController.h"
 #include "SerialControllerImpl.h"	// Platform-specific implementation of a serial port
 
@@ -58,24 +58,6 @@ SerialController::~SerialController
 )
 {
 	delete m_pImpl;
-}
-
-//-----------------------------------------------------------------------------
-//  <SerialController::PlayInitSequence>
-//  Queues up the controller's initialization commands.
-//-----------------------------------------------------------------------------
-void SerialController::PlayInitSequence
-(
-	Driver* _driver
-)
-{
-	_driver->SendMsg( new Msg( "FUNC_ID_ZW_GET_VERSION", 0xff, REQUEST, FUNC_ID_ZW_GET_VERSION, false ), Driver::MsgQueue_Command );
-    _driver->SendMsg( new Msg( "FUNC_ID_ZW_MEMORY_GET_ID", 0xff, REQUEST, FUNC_ID_ZW_MEMORY_GET_ID, false ), Driver::MsgQueue_Command);
-    _driver->SendMsg( new Msg( "FUNC_ID_ZW_GET_CONTROLLER_CAPABILITIES", 0xff, REQUEST, FUNC_ID_ZW_GET_CONTROLLER_CAPABILITIES, false ), Driver::MsgQueue_Command);
-    _driver->SendMsg( new Msg( "FUNC_ID_SERIAL_API_GET_CAPABILITIES", 0xff, REQUEST, FUNC_ID_SERIAL_API_GET_CAPABILITIES, false ), Driver::MsgQueue_Command);
-    //_driver->SendMsg( new Msg( "FUNC_ID_ZW_GET_SUC_NODE_ID", 0xff, REQUEST, FUNC_ID_ZW_GET_SUC_NODE_ID, false ), Driver::MsgQueue_Command);
-    _driver->SendMsg( new Msg( "FUNC_ID_ZW_GET_VIRTUAL_NODES", 0xff, REQUEST, FUNC_ID_ZW_GET_VIRTUAL_NODES, false ), Driver::MsgQueue_Command);
-    _driver->SendMsg( new Msg( "FUNC_ID_SERIAL_API_GET_INIT_DATA", 0xff, REQUEST, FUNC_ID_SERIAL_API_GET_INIT_DATA, false ), Driver::MsgQueue_Command);
 }
 
 //-----------------------------------------------------------------------------
