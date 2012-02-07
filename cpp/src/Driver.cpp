@@ -409,7 +409,6 @@ bool Driver::Init
 	// Get/set ZWave controller information in its preferred initialization order
 	m_controller->PlayInitSequence( this );
 
-
 	//If we ever want promiscuous mode uncomment this code.
 	//Msg* msg = new Msg( "FUNC_ID_ZW_SET_PROMISCUOUS_MODE", 0xff, REQUEST, FUNC_ID_ZW_SET_PROMISCUOUS_MODE, false, false );
 	//msg->Append( 0xff );
@@ -1656,7 +1655,7 @@ void Driver::HandleGetVersionResponse
 {
 	m_libraryVersion = (char*)&_data[2];
 	
-	uint8 m_libraryType = _data[m_libraryVersion.size()+3];
+	m_libraryType = _data[m_libraryVersion.size()+3];
 	if( m_libraryType < 9 )
 	{
 		m_libraryTypeName = c_libraryTypeNames[m_libraryType];
@@ -1722,6 +1721,13 @@ void Driver::HandleGetSerialAPICapabilitiesResponse
 	m_manufacturerId = (((uint16)_data[4])<<8) | (uint16)_data[5];
 	m_productType = (((uint16)_data[6])<<8) | (uint16)_data[7];
 	m_productId = (((uint16)_data[8])<<8) | (uint16)_data[9];
+	memcpy( m_apiMask, &_data[10], sizeof( m_apiMask ) );
+
+	if( IsBridgeController() )
+	{
+		SendMsg( new Msg( "FUNC_ID_ZW_GET_VIRTUAL_NODES", 0xff, REQUEST, FUNC_ID_ZW_GET_VIRTUAL_NODES, false ), Driver::MsgQueue_Command);
+	}
+	SendMsg( new Msg( "FUNC_ID_SERIAL_API_GET_INIT_DATA", 0xff, REQUEST, FUNC_ID_SERIAL_API_GET_INIT_DATA, false ), Driver::MsgQueue_Command);
 }
 
 //-----------------------------------------------------------------------------
@@ -1862,7 +1868,7 @@ void Driver::HandleSerialAPIGetInitDataResponse
 				{					
 					if( IsVirtualNode( nodeId ) )
 					{
-						Log::Write( "    Node %.3d - Viritual (ignored)", nodeId );
+						Log::Write( "    Node %.3d - Virtual (ignored)", nodeId );
 					}
 					else
 					{
@@ -3789,16 +3795,19 @@ void Driver::RequestNodeNeighbors
 	uint32 const _requestFlags
 )
 {
-	// Note: This is not the same as RequestNodeNeighbourUpdate.  This method
-	// merely requests the controller's current neighbour information and
-	// the reply will be copied into the relevant Node object for later use.
-	m_controllerCommandNode = _nodeId;
-	Log::Write( "Requesting routing info (neighbor list) for Node %d", _nodeId );
-	Msg* msg = new Msg( "Get Routing Info", _nodeId, REQUEST, FUNC_ID_ZW_GET_ROUTING_INFO, false );
-	msg->Append( _nodeId );
-	msg->Append( 1 );		// Exclude bad links
-	msg->Append( 1 );		// Exclude non-routing neighbors
-	SendMsg( msg, MsgQueue_Command );
+	if( IsAPICallSupported( FUNC_ID_ZW_GET_ROUTING_INFO ) )
+	{
+		// Note: This is not the same as RequestNodeNeighbourUpdate.  This method
+		// merely requests the controller's current neighbour information and
+		// the reply will be copied into the relevant Node object for later use.
+		m_controllerCommandNode = _nodeId;
+		Log::Write( "Requesting routing info (neighbor list) for Node %d", _nodeId );
+		Msg* msg = new Msg( "Get Routing Info", _nodeId, REQUEST, FUNC_ID_ZW_GET_ROUTING_INFO, false );
+		msg->Append( _nodeId );
+		msg->Append( 1 );		// Exclude bad links
+		msg->Append( 1 );		// Exclude non-routing neighbors
+		SendMsg( msg, MsgQueue_Command );
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -3949,104 +3958,112 @@ bool Driver::BeginControllerCommand
 		}
 		case ControllerCommand_CreateButton:
 		{
-			Node* node = GetNodeUnsafe( _nodeId );
-			if( node != NULL )
+			if( IsBridgeController() )
 			{
-				if( node->m_buttonMap.find( _arg ) == node->m_buttonMap.end() && m_virtualNeighborsReceived )
+				Node* node = GetNodeUnsafe( _nodeId );
+				if( node != NULL )
 				{
-					bool found = false;
-					for( int by=0; by<29 && !found; by++ )
+					if( node->m_buttonMap.find( _arg ) == node->m_buttonMap.end() && m_virtualNeighborsReceived )
 					{
-						for( int bi=0; bi<8 && !found; bi++ )
+						bool found = false;
+						for( uint8 n = 1; n <= 232 && !found; n++ )
 						{
-							if( (m_virtualNeighbors[by] & (0x01<<bi)) )
+							if( !IsVirtualNode( n ))
+								continue;
+
+							map<uint8,uint8>::iterator it = node->m_buttonMap.begin();
+							for( ; it != node->m_buttonMap.end(); it++ )
 							{
-								uint8 n = (by << 3) + bi + 1;
-								map<uint8,uint8>::iterator it = node->m_buttonMap.begin();
-								for( ; it != node->m_buttonMap.end(); it++ )
-								{
-									// is virtual node already in map?
-									if( it->second == n )
-										break;
-								}
-								if( it == node->m_buttonMap.end() ) // found unused virtual node
-								{
-									node->m_buttonMap[_arg] = n;
-									Notification* notification = new Notification( Notification::Type_CreateButton );
-									notification->SetHomeAndNodeIds( m_homeId, _nodeId );
-									notification->SetButtonId( _arg );
-									QueueNotification( notification ); 
-									found = true;
-								}
+								// is virtual node already in map?
+								if( it->second == n )
+									break;
+							}
+							if( it == node->m_buttonMap.end() ) // found unused virtual node
+							{
+								node->m_buttonMap[_arg] = n;
+								SaveButtons();
+								SendVirtualNodeInfo( n, _nodeId );
+								Notification* notification = new Notification( Notification::Type_CreateButton );
+								notification->SetHomeAndNodeIds( m_homeId, _nodeId );
+								notification->SetButtonId( _arg );
+								QueueNotification( notification ); 
+								found = true;
 							}
 						}
-					}
-					if( !found ) // create a new virtual node
-					{
-						m_controllerCommandNode = _nodeId;
-						m_controllerCommandArg = _arg;
-						Log::Write( "AddVirtualNode" );
-						Msg* msg = new Msg( "Slave Node Information", 0xff, REQUEST, FUNC_ID_SERIAL_API_SLAVE_NODE_INFO, false, false );
-						msg->Append( 0 );		// node 0
-						msg->Append( 1 );		// listening
-						msg->Append( 0x09 );	// genericType window covering
-						msg->Append( 0x00 );	// specificType undefined
-						msg->Append( 0 );		// length
-						SendMsg( msg, MsgQueue_Command );
+						if( !found ) // create a new virtual node
+						{
+							m_controllerCommandNode = _nodeId;
+							m_controllerCommandArg = _arg;
+							Log::Write( "AddVirtualNode" );
+							Msg* msg = new Msg( "Slave Node Information", 0xff, REQUEST, FUNC_ID_SERIAL_API_SLAVE_NODE_INFO, false, false );
+							msg->Append( 0 );		// node 0
+							msg->Append( 1 );		// listening
+							msg->Append( 0x09 );		// genericType window covering
+							msg->Append( 0x00 );		// specificType undefined
+							msg->Append( 0 );		// length
+							SendMsg( msg, MsgQueue_Command );
 
-						msg = new Msg( "Add Virtual Node", 0xff, REQUEST, FUNC_ID_ZW_SET_SLAVE_LEARN_MODE, true );
-						msg->Append( 0 );		// node 0 to add
-						if( IsPrimaryController() || IsInclusionController() )
-						{
-							msg->Append( SLAVE_LEARN_MODE_ADD );
+							msg = new Msg( "Add Virtual Node", 0xff, REQUEST, FUNC_ID_ZW_SET_SLAVE_LEARN_MODE, true );
+							msg->Append( 0 );		// node 0 to add
+							if( IsPrimaryController() || IsInclusionController() )
+							{
+								msg->Append( SLAVE_LEARN_MODE_ADD );
+							}
+							else
+							{
+								msg->Append( SLAVE_LEARN_MODE_ENABLE );
+							}
+							SendMsg( msg, MsgQueue_Command );
 						}
-						else
-						{
-							msg->Append( SLAVE_LEARN_MODE_ENABLE );
-						}
-						SendMsg( msg, MsgQueue_Command );
 					}
+					else
+						res = false; // button id already used
 				}
 				else
-					res = false; // button id already used
-			}
-			else
-				res = false; // node not found
+					res = false; // node not found
+			} else
+				res = false; // not bridge controller
 			break;
 		}
 		case ControllerCommand_DeleteButton:
 		{
-			Node* node = GetNodeUnsafe( _nodeId );
-			if( node != NULL )
+			if( IsBridgeController() )
 			{
-				// Make sure button is allocated to a virtual node.
-				m_controllerCommandNode = _nodeId;
-				if( node->m_buttonMap.find( _arg ) != node->m_buttonMap.end() )
+				Node* node = GetNodeUnsafe( _nodeId );
+				if( node != NULL )
 				{
+					// Make sure button is allocated to a virtual node.
+					m_controllerCommandNode = _nodeId;
+					if( node->m_buttonMap.find( _arg ) != node->m_buttonMap.end() )
+					{
 #ifdef notdef
-					// We would need a reference count to decide when to free virtual nodes
-					// We could do this by making the bitmap if virtual nodes into a map that also holds a reference count.
-					Log::Write( "RemoveVirtualNode %d", _nodeId );
-					Msg* msg = new Msg( "Remove Virtual Node", 0xff, REQUEST, FUNC_ID_ZW_SET_SLAVE_LEARN_MODE, true );
-					msg->Append( _nodeId );		// from the node
-					if( IsPrimaryController() || IsInclusionController() )
-						msg->Append( SLAVE_LEARN_MODE_REMOVE );
-					else
-						msg->Append( SLAVE_LEARN_MODE_ENABLE );
-					SendMsg( msg );
+						// We would need a reference count to decide when to free virtual nodes
+						// We could do this by making the bitmap if virtual nodes into a map that also holds a reference count.
+						Log::Write( "RemoveVirtualNode %d", _nodeId );
+						Msg* msg = new Msg( "Remove Virtual Node", 0xff, REQUEST, FUNC_ID_ZW_SET_SLAVE_LEARN_MODE, true );
+						msg->Append( _nodeId );		// from the node
+						if( IsPrimaryController() || IsInclusionController() )
+							msg->Append( SLAVE_LEARN_MODE_REMOVE );
+						else
+							msg->Append( SLAVE_LEARN_MODE_ENABLE );
+						SendMsg( msg );
 #endif
-					node->m_buttonMap.erase( _arg );
+						node->m_buttonMap.erase( _arg );
+						SaveButtons();
 					
-					Notification* notification = new Notification( Notification::Type_DeleteButton );
-					notification->SetHomeAndNodeIds( m_homeId, m_controllerCommandNode );
-					notification->SetButtonId( _arg );
-					QueueNotification( notification );
+						Notification* notification = new Notification( Notification::Type_DeleteButton );
+						notification->SetHomeAndNodeIds( m_homeId, m_controllerCommandNode );
+						notification->SetButtonId( _arg );
+						QueueNotification( notification );
+					}
+					else
+						res = false; // button id not found
 				}
 				else
-					res = false; // button id not found
+					res = false; // node not found
 			}
 			else
-				res = false; // node not found
+				res = false; // not bridge controller
 			break;
 		}
         	case ControllerCommand_None:
@@ -4560,6 +4577,154 @@ void Driver::RequestVirtualNeighbors
 }
 
 //-----------------------------------------------------------------------------
+// <Driver::SendVirtualNodeInfo>
+// Send node info frame on behalf of a virtual node.
+//-----------------------------------------------------------------------------
+void Driver::SendVirtualNodeInfo
+(
+	uint8 const _FromNodeId,
+	uint8 const _ToNodeId
+)
+{
+	Log::Write( "SendVirtualNodeInfo %d to %d", _FromNodeId, _ToNodeId );
+	Msg* msg = new Msg( "Send Virtual Node Info", _ToNodeId, REQUEST, FUNC_ID_ZW_SEND_SLAVE_NODE_INFO, true );
+	msg->Append( _FromNodeId );		// from the virtual node
+	msg->Append( _ToNodeId );		// to the handheld controller
+	msg->Append( TRANSMIT_OPTION_ACK );
+	SendMsg( msg, MsgQueue_Command );
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::SaveButtons>
+// Save button info into file.
+//-----------------------------------------------------------------------------
+void Driver::SaveButtons
+( 
+)
+{
+	char str[16];
+
+	// Create a new XML document to contain the driver configuration
+	TiXmlDocument doc;
+	TiXmlDeclaration* decl = new TiXmlDeclaration( "1.0", "utf-8", "" );
+	TiXmlElement* nodesElement = new TiXmlElement( "Nodes" );
+	doc.LinkEndChild( decl );
+	doc.LinkEndChild( nodesElement );
+
+	snprintf( str, sizeof(str), "%d", 1 );
+	nodesElement->SetAttribute( "version", str);
+
+	LockNodes();
+	for( int i = 1; i < 256; i++ )
+	{
+		if( m_nodes[i] == NULL || m_nodes[i]->m_buttonMap.empty() )
+		{
+			continue;
+		}
+
+		TiXmlElement* nodeElement = new TiXmlElement( "Node" );
+
+		snprintf( str, sizeof(str), "%d", i );
+		nodeElement->SetAttribute( "id", str );
+
+		for( map<uint8,uint8>::iterator it = m_nodes[i]->m_buttonMap.begin(); it != m_nodes[i]->m_buttonMap.end(); ++it )
+		{
+			TiXmlElement* valueElement = new TiXmlElement( "Button" );
+
+			snprintf( str, sizeof(str), "%d", it->first );
+			valueElement->SetAttribute( "id", str );
+
+			snprintf( str, sizeof(str), "%d", it->second );
+			TiXmlText* textElement = new TiXmlText( str );
+			valueElement->LinkEndChild( textElement );
+
+			nodeElement->LinkEndChild( valueElement );
+		}
+
+		nodesElement->LinkEndChild( nodeElement );
+	}
+	ReleaseNodes();
+
+	string userPath;
+	Options::Get()->GetOptionAsString( "UserPath", &userPath );
+
+	string filename =  userPath + "zwbutton.xml";
+
+	doc.SaveFile( filename.c_str() );
+}
+//-----------------------------------------------------------------------------
+// <Driver::ReadButtons>
+// Read button info from file.
+//-----------------------------------------------------------------------------
+void Driver::ReadButtons
+( 
+)
+{
+	int32 intVal;
+	int32 nodeId;
+	int32 buttonId;
+
+	// Load the XML document that contains the driver configuration
+	string userPath;
+	Options::Get()->GetOptionAsString( "UserPath", &userPath );
+	
+	string filename =  userPath + "zwbutton.xml";
+
+	TiXmlDocument doc;
+	if( !doc.LoadFile( filename.c_str(), TIXML_ENCODING_UTF8 ) )
+	{
+		return;
+	}
+
+	TiXmlElement const* nodesElement = doc.RootElement();
+
+	// Version
+	if( TIXML_SUCCESS == nodesElement->QueryIntAttribute( "version", &intVal ) )
+	{
+		if( (uint32)intVal != 1 )
+		{
+			Log::Write( "Driver::ReadButtons - %s is from an older version of OpenZWave and cannot be loaded.", "zwbutton.xml" );
+			return;
+		}
+	}
+	else
+	{
+		Log::Write( "Driver::ReadButtons - %s is from an older version of OpenZWave and cannot be loaded.", "zwbutton.xml" );
+		return;
+	}
+
+	TiXmlElement const* nodeElement = nodesElement->FirstChildElement();
+	while( nodeElement )
+	{
+		Node* node = NULL;
+		if( TIXML_SUCCESS == nodeElement->QueryIntAttribute( "id", &intVal ) )
+		{
+			node = GetNodeUnsafe( intVal );
+		}
+		if( node != NULL )
+		{
+			// Read the ValueId for this scene
+			TiXmlElement const* buttonElement = nodeElement->FirstChildElement();
+			while( buttonElement )
+			{
+				if (TIXML_SUCCESS != buttonElement->QueryIntAttribute( "id", &buttonId ) )
+					buttonId = 0;
+				char const* str = buttonElement->Value();
+				if( str )
+				{
+					char *p;
+					nodeId = (int32)strtol( str, &p, 0 );
+				}
+				else
+					nodeId = 0;
+				node->m_buttonMap[buttonId] = nodeId;
+				buttonElement = buttonElement->NextSiblingElement();
+			}
+		}
+		nodeElement = nodeElement->NextSiblingElement();
+	}
+}
+//-----------------------------------------------------------------------------
 // <Driver::HandleSetSlaveLearnModeResponse>
 // Process a response from the Z-Wave PC interface
 //-----------------------------------------------------------------------------
@@ -4573,18 +4738,6 @@ bool Driver::HandleSetSlaveLearnModeResponse
 	if( _data[2] )
 	{
 		Log::Write("Received reply to FUNC_ID_ZW_SET_SLAVE_LEARN_MODE - command in progress" );
-#ifdef notdef
-		// We need to do this when we support non-primary/non-inclusion mode.
-		// Consider retransmitting this frame in case it is lost...
-		if( !( IsPrimaryController() || IsInclusionController() ) )
-		{
-			Msg* msg = new Msg( "Send Virtual Node Information", 0xff, REQUEST, FUNC_ID_ZW_SEND_SLAVE_NODE_INFO, true );
-			msg->Append( m_controllerCommandNode );
-			msg->Append( Node::NodeBroadcast ); // broadcast
-			msg->Append( TRANSMIT_OPTION_ACK );
-			SendMsg( msg );
-		}
-#endif
 	}
 	else
 	{
@@ -4629,11 +4782,11 @@ void Driver::HandleSetSlaveLearnModeRequest
 				Log::Write( "Adding virtual node ID %d", _data[5] );
 				InitNode( _data[5] );
 			}
-			else if( _data[5] == 0 )
-			{
-				Log::Write( "Removing virtual node ID %d", _data[4] );
-			}
-			m_controllerAdded = false;
+			else
+				if( _data[5] == 0 )
+				{
+					Log::Write( "Removing virtual node ID %d", _data[4] );
+				}
 			break;
 		}
 		case SLAVE_ASSIGN_NODEID_DONE:
@@ -4642,31 +4795,33 @@ void Driver::HandleSetSlaveLearnModeRequest
 			if( _data[4] == 0 ) // original node is 0 so adding
 			{
 				Log::Write( "Adding virtual node ID %d", _data[5] );
-				InitNode( _data[5] );
 				Node* node = GetNodeUnsafe( m_controllerCommandNode );
 				if( node != NULL )
 				{
 					node->m_buttonMap[m_controllerCommandArg] = _data[5];
+					SaveButtons();
+					state = ControllerState_Waiting;
+					SendVirtualNodeInfo( _data[5], m_controllerCommandNode );
 					Notification* notification = new Notification( Notification::Type_CreateButton );
 					notification->SetHomeAndNodeIds( m_homeId, m_controllerCommandNode );
 					notification->SetButtonId( m_controllerCommandArg );
 					QueueNotification( notification ); 
 				}
 			}
-			else if( _data[5] == 0 )
-			{
-				Log::Write( "Removing virtual node ID %d", _data[4] );
-			}
-			m_controllerAdded = false;
+			else
+				if( _data[5] == 0 )
+				{
+					Log::Write( "Removing virtual node ID %d", _data[4] );
+				}
 			break;
 		}
 		case SLAVE_ASSIGN_RANGE_INFO_UPDATE:
 		{
 			Log::Write( "SLAVE_ASSIGN_RANGE_INFO_UPDATE" );
-			m_controllerAdded = false;
 			break;
 		}
 	}
+	m_controllerAdded = false;
 
 	if( m_controllerCallback )
 	{

@@ -165,7 +165,7 @@ namespace OpenZWave
 		enum
 		{
 			InitCaps_Slave					= 0x01,		/**<  */
-			InitCaps_TimerSupport			= 0x02,		/**< Controller supports timers. */
+			InitCaps_TimerSupport				= 0x02,		/**< Controller supports timers. */
 			InitCaps_Secondary				= 0x04,		/**< Controller is a secondary. */
 			InitCaps_SUC					= 0x08,		/**< Controller is a static update controller. */
 		};
@@ -232,6 +232,7 @@ namespace OpenZWave
 		uint16					m_manufacturerId;
 		uint16					m_productType;
 		uint16					m_productId;
+		uint8					m_apiMask[32];
 
 		uint8					m_initVersion;								// Version of the Serial API used by the controller.
 		uint8					m_initCaps;									// Set of flags indicating the serial API capabilities (See IsSlave, HasTimerSupport, IsPrimaryController and IsStaticUpdateController above).
@@ -482,6 +483,8 @@ namespace OpenZWave
 
 		Value* GetValue( ValueID const& _id );
 
+		bool IsAPICallSupported( uint8 const _apinum )const{ return (( m_apiMask[( _apinum - 1 ) >> 3] & ( 1 << (( _apinum - 1 ) & 0x07 ))) != 0 ); }
+
 	//-----------------------------------------------------------------------------
 	// Controller commands
 	//-----------------------------------------------------------------------------
@@ -508,8 +511,8 @@ namespace OpenZWave
 			ControllerCommand_RequestNodeNeighborUpdate,			/**< Get a node to rebuild its neighbour list.  This method also does ControllerCommand_RequestNodeNeighbors */
 			ControllerCommand_AssignReturnRoute,				/**< Assign a network return routes to a device. */
 			ControllerCommand_DeleteAllReturnRoutes,			/**< Delete all return routes from a device. */
-			ControllerCommand_CreateButton,					/**< Create an event that tracks handheld button presses */
-			ControllerCommand_DeleteButton					/**< Delete event that tracks handheld button presses */
+			ControllerCommand_CreateButton,					/**< Create an id that tracks handheld button presses */
+			ControllerCommand_DeleteButton					/**< Delete id that tracks handheld button presses */
 		};
 
 		/** 
@@ -522,7 +525,7 @@ namespace OpenZWave
 			ControllerState_Normal = 0,				/**< No command in progress. */
 			ControllerState_Waiting,				/**< Controller is waiting for a user action. */
 			ControllerState_InProgress,				/**< The controller is communicating with the other device to carry out the command. */
-			ControllerState_Completed,			    /**< The command has completed successfully. */
+			ControllerState_Completed,			    	/**< The command has completed successfully. */
 			ControllerState_Failed,					/**< The command has failed. */
 			ControllerState_NodeOK,					/**< Used only with ControllerCommand_HasNodeFailed to indicate that the controller thinks the node is OK. */
 			ControllerState_NodeFailed				/**< Used only with ControllerCommand_HasNodeFailed to indicate that the controller thinks the node has failed. */
@@ -558,10 +561,12 @@ namespace OpenZWave
 		 * Commands to be used with virtual nodes.
 		 */
 	private:
-		// The public interface is provided via the wrappers in the Manager class
 		uint32 GetVirtualNeighbors( uint8** o_neighbors );
 		void RequestVirtualNeighbors( MsgQueue const _queue );
-		bool IsVirtualNode( uint8 const _nodeId )const{  return (( m_virtualNeighbors[_nodeId >> 3] & 1 << (( _nodeId - 1 ) & 0x07 )) != 0 ); }
+		bool IsVirtualNode( uint8 const _nodeId )const{  return (( m_virtualNeighbors[( _nodeId - 1 ) >> 3] & 1 << (( _nodeId - 1 ) & 0x07 )) != 0 ); }
+		void SendVirtualNodeInfo( uint8 const _fromNodeId, uint8 const _ToNodeId );
+		void SaveButtons();
+		void ReadButtons();
 
 		bool		m_virtualNeighborsReceived;
 		uint8		m_virtualNeighbors[NUM_NODE_BITFIELD_BYTES];		// Bitmask containing virtual neighbors

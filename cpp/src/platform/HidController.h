@@ -56,13 +56,6 @@ namespace OpenZWave
 		virtual ~HidController();
 
 		/**
-		 * Queues up the controller's initialization commands.
-		 * @param _driver Pointer to the driver object used to send the commands.
-		 * @see Driver::Init
-		 */
-		void PlayInitSequence( Driver* _driver );
-
-		/**
 		 * Set the USB vendor ID search value.  The HID port must be closed for the setting to be accepted.
 		 * @param _baud Vendor ID value to match when enumerating USB HID devices.
 		 * @return True if the vendor ID value was accepted.
