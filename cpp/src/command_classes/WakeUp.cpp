@@ -106,7 +106,11 @@ bool WakeUp::RequestState
 {
 	if( _requestFlags & RequestFlag_Session )
 	{
-		return RequestValue( _requestFlags, 0, _instance, _queue );
+		Node* node = GetNodeUnsafe();
+		if( node != NULL && !node->IsController() )
+		{
+			return RequestValue( _requestFlags, 0, _instance, _queue );
+		}
 	}
 
 	return false;

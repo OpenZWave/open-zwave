@@ -1029,6 +1029,11 @@ void Node::UpdateProtocolInfo
 
 	// Set up the device class based data for the node, including mandatory command classes
 	SetDeviceClasses( _data[3], _data[4], _data[5] );
+	// Do this for every controller. A little extra work but it won't be a large file.
+	if( IsController() )
+	{
+		GetDriver()->ReadButtons( m_nodeId );
+	}
 	m_protocolInfoReceived = true;
 }
 

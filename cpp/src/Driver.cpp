@@ -3980,13 +3980,10 @@ bool Driver::BeginControllerCommand
 							}
 							if( it == node->m_buttonMap.end() ) // found unused virtual node
 							{
+								m_controllerCommandNode = _nodeId;
+								m_controllerCommandArg = _arg;
 								node->m_buttonMap[_arg] = n;
-								SaveButtons();
 								SendVirtualNodeInfo( n, _nodeId );
-								Notification* notification = new Notification( Notification::Type_CreateButton );
-								notification->SetHomeAndNodeIds( m_homeId, _nodeId );
-								notification->SetButtonId( _arg );
-								QueueNotification( notification ); 
 								found = true;
 							}
 						}
@@ -4160,12 +4157,9 @@ bool Driver::CancelControllerCommand
 		case ControllerCommand_CreateButton:
 		case ControllerCommand_DeleteButton:
 		{
-			if( !( IsPrimaryController() || IsInclusionController() ) && m_controllerCommandNode != 0 )
+			if( m_controllerCommandNode != 0 )
 			{
-				Msg* msg = new Msg( "Set Slave Learn Mode Off ", 0xff, REQUEST, FUNC_ID_ZW_SET_SLAVE_LEARN_MODE, true );
-				msg->Append( 0 );	// filler node id
-				msg->Append( SLAVE_LEARN_MODE_DISABLE );
-				SendMsg( msg, MsgQueue_Command );
+				SendSlaveLearnModeOff();
 			}
 			break;
 		}
@@ -4586,12 +4580,31 @@ void Driver::SendVirtualNodeInfo
 	uint8 const _ToNodeId
 )
 {
-	Log::Write( "SendVirtualNodeInfo %d to %d", _FromNodeId, _ToNodeId );
-	Msg* msg = new Msg( "Send Virtual Node Info", _ToNodeId, REQUEST, FUNC_ID_ZW_SEND_SLAVE_NODE_INFO, true );
+	char str[80];
+
+	snprintf( str, sizeof(str), "Send Virtual Node Info from %d to %d", _FromNodeId, _ToNodeId );
+	Msg* msg = new Msg( str, 0xff, REQUEST, FUNC_ID_ZW_SEND_SLAVE_NODE_INFO, true );
 	msg->Append( _FromNodeId );		// from the virtual node
 	msg->Append( _ToNodeId );		// to the handheld controller
 	msg->Append( TRANSMIT_OPTION_ACK );
 	SendMsg( msg, MsgQueue_Command );
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::SendSlaveLearnModeOff>
+// Disable Slave Learn Mode.
+//-----------------------------------------------------------------------------
+void Driver::SendSlaveLearnModeOff
+(
+)
+{
+	if( !( IsPrimaryController() || IsInclusionController() ) )
+	{
+		Msg* msg = new Msg( "Set Slave Learn Mode Off ", 0xff, REQUEST, FUNC_ID_ZW_SET_SLAVE_LEARN_MODE, true );
+		msg->Append( 0 );	// filler node id
+		msg->Append( SLAVE_LEARN_MODE_DISABLE );
+		SendMsg( msg, MsgQueue_Command  );
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -4654,15 +4667,17 @@ void Driver::SaveButtons
 }
 //-----------------------------------------------------------------------------
 // <Driver::ReadButtons>
-// Read button info from file.
+// Read button info per node from file.
 //-----------------------------------------------------------------------------
 void Driver::ReadButtons
 ( 
+	uint8 const _nodeId
 )
 {
 	int32 intVal;
 	int32 nodeId;
 	int32 buttonId;
+	char const* str;
 
 	// Load the XML document that contains the driver configuration
 	string userPath;
@@ -4673,10 +4688,17 @@ void Driver::ReadButtons
 	TiXmlDocument doc;
 	if( !doc.LoadFile( filename.c_str(), TIXML_ENCODING_UTF8 ) )
 	{
+		Log::Write( "Driver::ReadButtons - zwbutton.xml file not found.");
 		return;
 	}
 
 	TiXmlElement const* nodesElement = doc.RootElement();
+	str = nodesElement->Value();
+	if( str && strcmp( str, "Nodes" ))
+	{
+		Log::Write( "Driver::ReadButtons - zwbutton.xml is malformed");
+		return;
+	}
 
 	// Version
 	if( TIXML_SUCCESS == nodesElement->QueryIntAttribute( "version", &intVal ) )
@@ -4689,36 +4711,52 @@ void Driver::ReadButtons
 	}
 	else
 	{
-		Log::Write( "Driver::ReadButtons - %s is from an older version of OpenZWave and cannot be loaded.", "zwbutton.xml" );
+		Log::Write( "Driver::ReadButtons - zwbutton.xml is from an older version of OpenZWave and cannot be loaded." );
 		return;
 	}
 
 	TiXmlElement const* nodeElement = nodesElement->FirstChildElement();
 	while( nodeElement )
 	{
-		Node* node = NULL;
-		if( TIXML_SUCCESS == nodeElement->QueryIntAttribute( "id", &intVal ) )
+		str = nodeElement->Value();
+		if( str && !strcmp( str, "Node" ))
 		{
-			node = GetNodeUnsafe( intVal );
-		}
-		if( node != NULL )
-		{
-			// Read the ValueId for this scene
-			TiXmlElement const* buttonElement = nodeElement->FirstChildElement();
-			while( buttonElement )
+			Node* node = NULL;
+			if( TIXML_SUCCESS == nodeElement->QueryIntAttribute( "id", &intVal ) )
 			{
-				if (TIXML_SUCCESS != buttonElement->QueryIntAttribute( "id", &buttonId ) )
-					buttonId = 0;
-				char const* str = buttonElement->Value();
-				if( str )
+				if( _nodeId == intVal )
 				{
-					char *p;
-					nodeId = (int32)strtol( str, &p, 0 );
+					node = GetNodeUnsafe( intVal );
 				}
-				else
-					nodeId = 0;
-				node->m_buttonMap[buttonId] = nodeId;
-				buttonElement = buttonElement->NextSiblingElement();
+			}
+			if( node != NULL )
+			{
+				TiXmlElement const* buttonElement = nodeElement->FirstChildElement();
+				while( buttonElement )
+				{
+					str = buttonElement->Value();
+					if( str && !strcmp( str, "Button"))
+					{
+						if (TIXML_SUCCESS != buttonElement->QueryIntAttribute( "id", &buttonId ) )
+						{
+							Log::Write( "Driver::ReadButtons - cannot find Button Id for node %d", _nodeId );
+							return;
+						}
+						str = buttonElement->GetText();
+						if( str )
+						{
+							char *p;
+							nodeId = (int32)strtol( str, &p, 0 );
+						}
+						else
+						{
+							Log::Write( "Driver::ReadButtons - missing virtual node value for node %d button id %d", _nodeId, buttonId );
+							return;
+						}
+						node->m_buttonMap[buttonId] = nodeId;
+					}
+					buttonElement = buttonElement->NextSiblingElement();
+				}
 			}
 		}
 		nodeElement = nodeElement->NextSiblingElement();
@@ -4746,13 +4784,7 @@ bool Driver::HandleSetSlaveLearnModeResponse
 		state = ControllerState_Failed;
 		m_controllerCommand = ControllerCommand_None;
 		res = false;
-		if( !( IsPrimaryController() || IsInclusionController() ) )
-		{
-			Msg* msg = new Msg( "Set Slave Learn Mode Off ", 0xff, REQUEST, FUNC_ID_ZW_SET_SLAVE_LEARN_MODE, true );
-			msg->Append( 0 );
-			msg->Append( SLAVE_LEARN_MODE_DISABLE );
-			SendMsg( msg, MsgQueue_Command );
-		}
+		SendSlaveLearnModeOff();
 	}
 
 	if( m_controllerCallback )
@@ -4771,7 +4803,9 @@ void Driver::HandleSetSlaveLearnModeRequest
 	uint8* _data
 )
 {
-	ControllerState state = ControllerState_Completed;
+	ControllerState state = ControllerState_Waiting;
+
+	SendSlaveLearnModeOff();
 	switch( _data[3] )
 	{
 		case SLAVE_ASSIGN_COMPLETE:
@@ -4780,7 +4814,12 @@ void Driver::HandleSetSlaveLearnModeRequest
 			if( _data[4] == 0 ) // original node is 0 so adding
 			{
 				Log::Write( "Adding virtual node ID %d", _data[5] );
-				InitNode( _data[5] );
+				Node* node = GetNodeUnsafe( m_controllerCommandNode );
+				if( node != NULL )
+				{
+					node->m_buttonMap[m_controllerCommandArg] = _data[5];
+					SendVirtualNodeInfo( _data[5], m_controllerCommandNode );
+				}
 			}
 			else
 				if( _data[5] == 0 )
@@ -4799,13 +4838,7 @@ void Driver::HandleSetSlaveLearnModeRequest
 				if( node != NULL )
 				{
 					node->m_buttonMap[m_controllerCommandArg] = _data[5];
-					SaveButtons();
-					state = ControllerState_Waiting;
 					SendVirtualNodeInfo( _data[5], m_controllerCommandNode );
-					Notification* notification = new Notification( Notification::Type_CreateButton );
-					notification->SetHomeAndNodeIds( m_homeId, m_controllerCommandNode );
-					notification->SetButtonId( m_controllerCommandArg );
-					QueueNotification( notification ); 
 				}
 			}
 			else
@@ -4827,16 +4860,6 @@ void Driver::HandleSetSlaveLearnModeRequest
 	{
 		m_controllerCallback( state, m_controllerCallbackContext );
 	}
-	m_controllerCommand = ControllerCommand_None;
-
-	if( !( IsPrimaryController() || IsInclusionController() ) )
-	{
-		Msg* msg = new Msg( "Set Slave Learn Mode Off ", 0xff, REQUEST, FUNC_ID_ZW_SET_SLAVE_LEARN_MODE, true );
-		msg->Append( 0 );	// filler node id
-		msg->Append( SLAVE_LEARN_MODE_DISABLE );
-		SendMsg( msg, MsgQueue_Command  );
-	}
-	RequestVirtualNeighbors( MsgQueue_Send );
 }
 
 //-----------------------------------------------------------------------------
@@ -4860,6 +4883,12 @@ bool Driver::HandleSendSlaveNodeInfoResponse
 		Log::Write("Received reply to FUNC_ID_ZW_SEND_SLAVE_NODE_INFO - command failed" );
 		state = ControllerState_Failed;
 		m_controllerCommand = ControllerCommand_None;
+		// Undo button map settings
+		Node* node = GetNodeUnsafe( m_controllerCommandNode );
+		if( node != NULL )
+		{
+			node->m_buttonMap.erase( m_controllerCommandArg );
+		}
 		res = false;
 	}
 
@@ -4880,6 +4909,31 @@ void Driver::HandleSendSlaveNodeInfoRequest
 )
 {
 	Log::Write( "SEND_SLAVE_NODE_INFO_COMPLETE %s", c_transmitStatusNames[_data[3]] );
+	if( _data[3] == 0 )	// finish up
+	{
+		ControllerState state = ControllerState_Completed;
+
+		SaveButtons();
+		Notification* notification = new Notification( Notification::Type_CreateButton );
+		notification->SetHomeAndNodeIds( m_homeId, m_controllerCommandNode );
+		notification->SetButtonId( m_controllerCommandArg );
+		QueueNotification( notification );
+
+		if( m_controllerCallback )
+		{
+			m_controllerCallback( state, m_controllerCallbackContext );
+		}
+		m_controllerCommand = ControllerCommand_None;
+		RequestVirtualNeighbors( MsgQueue_Send );
+	}
+	else			// error. try again
+	{
+		Node* node = GetNodeUnsafe( m_controllerCommandNode );
+		if( node != NULL)
+		{
+			SendVirtualNodeInfo( node->m_buttonMap[m_controllerCommandArg], m_controllerCommandNode );
+		}
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -4892,7 +4946,31 @@ void Driver::HandleApplicationSlaveCommandRequest
 )
 {
 	Log::Write( "APPLICATION_SLAVE_COMMAND_HANDLER rxStatus %x dest %d source %d len %d", _data[2], _data[3], _data[4], _data[5] );
-	// Send notification here
+	Node* node = GetNodeUnsafe( _data[4] );
+	if( node != NULL && _data[5] == 3 && _data[6] == 0x20 && _data[7] == 0x01 ) // only support Basic Set for now
+	{
+		map<uint8,uint8>::iterator it = node->m_buttonMap.begin();
+		for( ; it != node->m_buttonMap.end(); it++ )
+		{
+			if( it->second == _data[3] )
+				break;
+		}
+		if( it != node->m_buttonMap.end() )
+		{
+			Notification *notification;
+			if( _data[8] == 0 )
+			{
+				notification = new Notification( Notification::Type_ButtonOff );
+			}
+			else
+			{
+				notification = new Notification( Notification::Type_ButtonOn );
+			}
+			notification->SetHomeAndNodeIds( m_homeId, _data[4] );
+			notification->SetButtonId( it->first );
+			QueueNotification( notification );
+		}
+	}
 }
 
 //-----------------------------------------------------------------------------

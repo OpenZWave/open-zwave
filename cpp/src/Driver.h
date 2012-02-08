@@ -565,8 +565,9 @@ namespace OpenZWave
 		void RequestVirtualNeighbors( MsgQueue const _queue );
 		bool IsVirtualNode( uint8 const _nodeId )const{  return (( m_virtualNeighbors[( _nodeId - 1 ) >> 3] & 1 << (( _nodeId - 1 ) & 0x07 )) != 0 ); }
 		void SendVirtualNodeInfo( uint8 const _fromNodeId, uint8 const _ToNodeId );
+		void SendSlaveLearnModeOff();
 		void SaveButtons();
-		void ReadButtons();
+		void ReadButtons( uint8 const _nodeId );
 
 		bool		m_virtualNeighborsReceived;
 		uint8		m_virtualNeighbors[NUM_NODE_BITFIELD_BYTES];		// Bitmask containing virtual neighbors
