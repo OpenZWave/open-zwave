@@ -4754,6 +4754,10 @@ void Driver::ReadButtons
 							return;
 						}
 						node->m_buttonMap[buttonId] = nodeId;
+						Notification* notification = new Notification( Notification::Type_CreateButton );
+						notification->SetHomeAndNodeIds( m_homeId, nodeId );
+						notification->SetButtonId( buttonId );
+						QueueNotification( notification );
 					}
 					buttonElement = buttonElement->NextSiblingElement();
 				}
