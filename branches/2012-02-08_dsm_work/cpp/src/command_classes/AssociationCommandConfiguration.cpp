@@ -230,11 +230,11 @@ void AssociationCommandConfiguration::CreateVars
 {
 	if( Node* node = GetNodeUnsafe() )
 	{
-	  	node->CreateValueByte (	ValueID::ValueGenre_System, GetCommandClassId(), _instance, AssociationCommandConfigurationIndex_MaxCommandLength,			"Max Command Length",			"", true, false, 0 );
-		node->CreateValueBool ( ValueID::ValueGenre_System, GetCommandClassId(), _instance, AssociationCommandConfigurationIndex_CommandsAreValues,			"Commands are Values",			"", true, false, false );
-		node->CreateValueBool ( ValueID::ValueGenre_System, GetCommandClassId(), _instance, AssociationCommandConfigurationIndex_CommandsAreConfigurable,	"Commands are Configurable",	"", true, false, false );
-		node->CreateValueShort( ValueID::ValueGenre_System, GetCommandClassId(), _instance, AssociationCommandConfigurationIndex_NumFreeCommands,			"Free Commands",				"", true, false, 0 );
-		node->CreateValueShort( ValueID::ValueGenre_System, GetCommandClassId(), _instance, AssociationCommandConfigurationIndex_MaxCommands,				"Max Commands",					"", true, false, 0 );
+	  	node->CreateValueByte (	ValueID::ValueGenre_System, GetCommandClassId(), _instance, AssociationCommandConfigurationIndex_MaxCommandLength,			"Max Command Length",			"", true, false, 0, 0 );
+		node->CreateValueBool ( ValueID::ValueGenre_System, GetCommandClassId(), _instance, AssociationCommandConfigurationIndex_CommandsAreValues,			"Commands are Values",			"", true, false, false, 0 );
+		node->CreateValueBool ( ValueID::ValueGenre_System, GetCommandClassId(), _instance, AssociationCommandConfigurationIndex_CommandsAreConfigurable,	"Commands are Configurable",	"", true, false, false, 0 );
+		node->CreateValueShort( ValueID::ValueGenre_System, GetCommandClassId(), _instance, AssociationCommandConfigurationIndex_NumFreeCommands,			"Free Commands",				"", true, false, 0, 0 );
+		node->CreateValueShort( ValueID::ValueGenre_System, GetCommandClassId(), _instance, AssociationCommandConfigurationIndex_MaxCommands,				"Max Commands",					"", true, false, 0, 0 );
 	}
 }
 

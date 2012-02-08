@@ -45,7 +45,7 @@ namespace OpenZWave
 	class ValueBool: public Value
 	{
 	public:
-		ValueBool( uint32 const _homeId, uint8 const _nodeId, ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, string const& _label, string const& _units, bool const _readOnly, bool const _writeOnly, bool const _value );
+		ValueBool( uint32 const _homeId, uint8 const _nodeId, ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, string const& _label, string const& _units, bool const _readOnly, bool const _writeOnly, bool const _value, uint8 const _pollIntensity );
 		ValueBool(){}
 		virtual ~ValueBool(){}
 
@@ -61,7 +61,9 @@ namespace OpenZWave
 		bool GetValue()const{ return m_value; }
 
 	private:
-		bool	m_value;
+		bool	m_value;				// the current index in the m_items vector
+		bool	m_valueCheck;			// the previous value (used for double-checking spurious value reads)
+		bool	m_newValue;				// a new value to be set on the appropriate device
 	};
 
 } // namespace OpenZWave

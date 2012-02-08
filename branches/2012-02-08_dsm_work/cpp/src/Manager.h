@@ -455,6 +455,14 @@ namespace OpenZWave
 		uint8 GetNodeVersion( uint32 const _homeId, uint8 const _nodeId );
 
 		/**
+		 * \brief Get the security byte of a node
+		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param _nodeId The ID of the node to query.
+		 * \return the node's security byte
+		 */
+		uint8 GetNodeSecurity( uint32 const _homeId, uint8 const _nodeId );
+
+		/**
 		 * \brief Get the basic type of a node.
 		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
 		 * \param _nodeId The ID of the node to query.
@@ -810,6 +818,14 @@ namespace OpenZWave
 		bool IsValueSet( ValueID const& _id );
 
 		/**
+		 * \brief Test whether the value is currently being polled.
+		 * \param _id The unique identifier of the value.
+		 * \return true if the value is being polled, otherwise false.	
+		 * \see ValueID
+		 */
+		bool IsValuePolled( ValueID const& _id );
+
+		/**
 		 * \brief Gets a value as a bool.
 		 * \param _id The unique identifier of the value.
 		 * \param o_value Pointer to a bool that will be filled with the value.
@@ -978,6 +994,8 @@ namespace OpenZWave
 		 * The type can be tested with a call to ValueID::GetType
 		 */
 		bool SetValueListSelection( ValueID const& _id, string const& _selectedItem );
+
+		bool RefreshValue( ValueID const& _id);
 
 		/**
 		 * \brief Starts an activity in a device.

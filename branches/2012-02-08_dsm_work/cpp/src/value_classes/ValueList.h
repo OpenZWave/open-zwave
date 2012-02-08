@@ -53,7 +53,7 @@ namespace OpenZWave
 			int32	m_value;
 		};
 
-		ValueList( uint32 const _homeId, uint8 const _nodeId, ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, string const& _label, string const& _units, bool const _readOnly, bool const _writeOnly, vector<Item> const& _items, int32 const _valueIdx );
+		ValueList( uint32 const _homeId, uint8 const _nodeId, ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, string const& _label, string const& _units, bool const _readOnly, bool const _writeOnly, vector<Item> const& _items, int32 const _valueIdx, uint8 const _pollIntensity );
 		ValueList(){}
 		virtual ~ValueList(){}
 
@@ -69,6 +69,7 @@ namespace OpenZWave
 		virtual void WriteXML( TiXmlElement* _valueElement );
 
 		Item const& GetItem()const{ return m_items[m_valueIdx]; }
+		Item const& GetNewItem()const{ return m_items[m_newValueIdx]; }
 
 		int32 const GetItemIdxByLabel( string const& _label );
 		int32 const GetItemIdxByValue( int32 const _value );
@@ -77,7 +78,9 @@ namespace OpenZWave
 
 	private:
 		vector<Item>	m_items;
-		int32			m_valueIdx;
+		int32			m_valueIdx;					// the current index in the m_items vector
+		int32			m_valueIdxCheck;			// the previous index in the m_items vector (used for double-checking spurious value reads)
+		int32			m_newValueIdx;				// a new value to be set on the appropriate device
 	};
 
 } // namespace OpenZWave

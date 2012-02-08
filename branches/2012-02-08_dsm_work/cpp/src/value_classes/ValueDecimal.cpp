@@ -29,6 +29,9 @@
 #include "ValueDecimal.h"
 #include "Msg.h"
 #include "Log.h"
+// todo check this
+#include "Manager.h"
+#include "time.h"
 
 using namespace OpenZWave;
 
@@ -49,9 +52,10 @@ ValueDecimal::ValueDecimal
 	string const& _units,
 	bool const _readOnly,
 	bool const _writeOnly,
-	string const& _value
+	string const& _value,
+	uint8 const _pollIntensity
 ):
-  	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Decimal, _label, _units, _readOnly, _writeOnly, false ),
+  	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Decimal, _label, _units, _readOnly, _writeOnly, false, _pollIntensity ),
 	m_value( _value ),
 	m_precision( 0 )
 {
@@ -75,7 +79,7 @@ void ValueDecimal::ReadXML
 	if( str )
 	{
 		m_value = str;
-		SetIsSet();
+//		SetIsSet();
 	}
 	else
 	{
@@ -109,7 +113,7 @@ bool ValueDecimal::Set
 )
 {
 	// Set the value in our records.
-	OnValueChanged( _value );
+//	OnValueChanged( _value );
 
 	// Set the value in the device.
 	return Value::Set();
@@ -124,8 +128,62 @@ void ValueDecimal::OnValueChanged
 	string const& _value
 )
 {
-	m_value = _value;
-	Value::OnValueChanged();
+	// if this is the first read of a value, assume it is valid (and notify as a change)
+	if (!IsSet())
+	{
+		Log::Write("Initial read of value");			
+		SetIsSet();
+		m_value = _value;
+		Value::OnValueChanged();
+		return;
+	}
+	else
+		Log::Write("Refreshed Value: old value=%s, new value=%s",m_value.c_str(), _value.c_str());
+	m_refreshTime = time( NULL );
+
+//	Log::Write("IsCheckingChange() is %s",IsCheckingChange()?"true":"false");
+	if (IsCheckingChange())
+		if (strcmp(m_value.c_str(), _value.c_str())==0)
+		{
+			Log::Write("ERROR: Spurious value change was noted.");
+			SetCheckingChange(false);
+		}
+
+	// see if the reported value has changed
+	if (strcmp(m_value.c_str(), _value.c_str())!=0)
+	{
+		// if strings are not equal, and this is the first indication of a change, check it again
+		if (!IsCheckingChange())
+		{
+			// identify this as a second refresh of the value and send the refresh request
+			Log::Write("Changed value (possible)--rechecking");
+			SetCheckingChange( true );
+			m_valueCheck = _value;
+			Manager::Get()->RefreshValue( GetID() );
+			return;
+		}
+		else
+		{
+			// this is a "checked" value
+			if (strcmp(m_valueCheck.c_str(),_value.c_str()) == 0)
+			{
+				// same as the changed value being checked?  if so, confirm the change
+				Log::Write("Changed value--confirmed");
+				SetCheckingChange( false );
+				m_value = _value;
+				Value::OnValueChanged();
+			}
+			else
+			{
+				// the second read is different than both the original value and the checked value...retry
+				Log::Write("Changed value (changed again)--rechecking");
+				SetCheckingChange( true );
+				m_valueCheck = _value;
+				Manager::Get()->RefreshValue( GetID() );
+				return;
+			}
+		}
+	}
 }
 
 

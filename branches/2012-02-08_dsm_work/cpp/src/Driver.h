@@ -65,6 +65,8 @@ namespace OpenZWave
 		friend class ManufacturerSpecific;
 		friend class NodeNaming;
 		friend class WakeUp;
+		//dsm
+		friend class LogImpl;
 
 	//-----------------------------------------------------------------------------
 	//	Controller Interfaces
@@ -431,7 +433,12 @@ namespace OpenZWave
 		void PollThreadProc( Event* _exitEvent );
 
 		Thread*					m_pollThread;								// Thread for polling devices on the Z-Wave network
-		list<ValueID>			m_pollList;									// List of nodes that need to be polled
+		struct PollEntry
+		{
+			ValueID	m_id;
+			uint8	m_pollCounter;
+		};
+		list<PollEntry>			m_pollList;									// List of nodes that need to be polled
 		Mutex*					m_pollMutex;								// Serialize access to the polling list
 		int32					m_pollInterval;								// Time interval during which all nodes must be polled
 
@@ -458,6 +465,7 @@ namespace OpenZWave
 		bool IsNodeSecurityDevice( uint8 const _nodeId );
 		uint32 GetNodeMaxBaudRate( uint8 const _nodeId );
 		uint8 GetNodeVersion( uint8 const _nodeId );
+		uint8 GetNodeSecurity( uint8 const _nodeId );
 		uint8 GetNodeBasic( uint8 const _nodeId );
 		uint8 GetNodeGeneric( uint8 const _nodeId );
 		uint8 GetNodeSpecific( uint8 const _nodeId );

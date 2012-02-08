@@ -373,7 +373,7 @@ void WakeUp::CreateVars
 	{
 		if( !node->IsController() )	// We don't add the interval value for controllers, because they don't appear to ever wake up on their own.
 		{
-		  	node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 0, "Wake-up Interval", "Seconds", false, false, 3600 );
+		  	node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 0, "Wake-up Interval", "Seconds", false, false, 3600, 0 );
 		}
 	}
 }

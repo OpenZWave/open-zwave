@@ -60,6 +60,7 @@ namespace OpenZWaveDotNet
 			ValueAdded						= Notification::Type_ValueAdded,	
 			ValueRemoved					= Notification::Type_ValueRemoved,		
 			ValueChanged					= Notification::Type_ValueChanged,		
+			ValueRefreshed					= Notification::Type_ValueRefreshed,
 			Group							= Notification::Type_Group,				
 			NodeNew							= Notification::Type_NodeNew,
 			NodeAdded						= Notification::Type_NodeAdded,			
@@ -74,7 +75,8 @@ namespace OpenZWaveDotNet
 			EssentialNodeQueriesComplete	= Notification::Type_EssentialNodeQueriesComplete,
 			NodeQueriesComplete				= Notification::Type_NodeQueriesComplete,
 			AwakeNodesQueried				= Notification::Type_AwakeNodesQueried,
-			AllNodesQueried					= Notification::Type_AllNodesQueried
+			AllNodesQueried					= Notification::Type_AllNodesQueried,
+			LogWritten						= Notification::Type_LogWritten
 		};
 
 		ZWNotification( Notification* notification )
@@ -82,6 +84,7 @@ namespace OpenZWaveDotNet
 			m_type = (Type)Enum::ToObject( Type::typeid, notification->GetType() );
 			m_byte = notification->GetByte();
 			m_valueId = gcnew ZWValueID( notification->GetValueID() );
+			m_string = gcnew String( notification->GetString().c_str() );
 		}
 
 		Type GetType(){ return m_type; }
@@ -91,10 +94,12 @@ namespace OpenZWaveDotNet
 		uint8 GetGroupIdx(){ assert(Type::Group==m_type); return m_byte; } 
 		uint8 GetEvent(){ assert(Type::NodeEvent==m_type); return m_byte; }
 		uint8 GetByte(){ return m_byte; }
+		String^ GetString(){ return m_string; }
 
 	internal:
 		Type		m_type;
 		ZWValueID^	m_valueId;
 		uint8		m_byte;
+		String^		m_string;
 	};
 }

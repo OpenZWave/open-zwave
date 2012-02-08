@@ -76,19 +76,21 @@ Value::Value
 	string const& _units,
 	bool const _readOnly,
 	bool const _writeOnly,
-	bool const _isSet
+	bool const _isSet,
+	uint8 const _pollIntensity
 ):
 	m_min( 0 ),
 	m_max( 0 ),
 	m_refs( 1 ),
-	m_id( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, _type ),
+	m_id( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, _type, _pollIntensity ),
 	m_label( _label ),
 	m_units( _units ),
 	m_readOnly( _readOnly ),
 	m_writeOnly( _writeOnly ),
 	m_isSet( _isSet ),
 	m_affectsLength( 0 ),
-	m_affectsAll( false )
+	m_affectsAll( false ),
+	m_checkChange( false )
 {
 }
 
@@ -106,7 +108,8 @@ Value::Value
 	m_writeOnly( false ),
 	m_isSet( false ),
 	m_affectsLength( 0 ),
-	m_affectsAll( false )
+	m_affectsAll( false ),
+	m_checkChange( false )
 {
 }
 
@@ -153,7 +156,13 @@ void Value::ReadXML
 		index = (uint8)intVal;
 	}
 
-	m_id = ValueID( _homeId, _nodeId, genre, _commandClassId, instance, index, type );
+	uint8 pollIntensity = 0;
+	if( TIXML_SUCCESS == _valueElement->QueryIntAttribute( "poll_intensity", &intVal ) )
+	{
+		pollIntensity = (uint8)intVal;
+	}
+
+	m_id = ValueID( _homeId, _nodeId, genre, _commandClassId, instance, index, type, pollIntensity );
 
 	char const* label = _valueElement->Attribute( "label" );
 	if( label )
@@ -224,6 +233,12 @@ void Value::ReadXML
 		}
 	}
 
+	char const* checkChange = _valueElement->Attribute( "check_change" );
+	if( checkChange )
+	{
+		m_checkChange = !strcmp( checkChange, "true" );
+	}
+
 	if( TIXML_SUCCESS == _valueElement->QueryIntAttribute( "min", &intVal ) )
 	{
 		m_min = intVal;
@@ -276,6 +291,10 @@ void Value::WriteXML
 	_valueElement->SetAttribute( "units", m_units.c_str() );
 	_valueElement->SetAttribute( "read_only", m_readOnly ? "true" : "false" );
 	_valueElement->SetAttribute( "write_only", m_writeOnly ? "true" : "false" );
+	_valueElement->SetAttribute( "check_change", m_checkChange ? "true" : "false" );
+
+	snprintf( str, sizeof(str), "%d", m_id.GetPollIntensity() );
+	_valueElement->SetAttribute( "poll_intensity", str );
 
 	snprintf( str, sizeof(str), "%d", m_min );
 	_valueElement->SetAttribute( "min", str );
@@ -335,8 +354,12 @@ bool Value::Set
 		{
 			if( CommandClass* cc = node->GetCommandClass( m_id.GetCommandClassId() ) )
 			{
+				// flag value as set and queue a "Set Value" message for transmission to the device
 				m_isSet = true;
 				res = cc->SetValue( *this );
+
+				// queue a "RequestValue" message to update the value
+				bool res2 = cc->RequestValue( 0, m_id.GetIndex(), m_id.GetInstance(), Driver::MsgQueue_Send );
 			}
 		}
 	}

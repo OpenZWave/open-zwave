@@ -210,7 +210,7 @@ void SwitchAll::CreateVars
 			items.push_back( item ); 
 		}
 
-		node->CreateValueList(  ValueID::ValueGenre_System, GetCommandClassId(), _instance, 0, "Switch All", "", false, false, items, 0 );
+		node->CreateValueList(  ValueID::ValueGenre_System, GetCommandClassId(), _instance, 0, "Switch All", "", false, false, items, 0, 0 );
 	}
 }
 

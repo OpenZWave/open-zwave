@@ -164,6 +164,8 @@ Driver::Driver
 	m_controller->SetSignalThreshold( 1 );
 
 	Options::Get()->GetOptionAsBool( "NotifyTransactions", &m_notifytransactions );
+
+//	Log::SetDriver( this );
 }
 
 //-----------------------------------------------------------------------------
@@ -174,6 +176,8 @@ Driver::~Driver
 (
 )
 {
+	Log::Write("~Driver start\n");
+
 	// Save the driver config before deleting anything else
 	WriteConfig();
 
@@ -187,12 +191,14 @@ Driver::~Driver
 
 	m_driverThread->Stop();
 	m_driverThread->Release();
+	Log::Write("1");
 
 	m_sendMutex->Release();
 	m_pollMutex->Release();
 
 	m_controller->Close();
 	m_controller->Release();
+	Log::Write("2");
 
 	// Clear the send Queue
 	for( int32 i=0; i<MsgQueue_Count; ++i )
@@ -209,6 +215,7 @@ Driver::~Driver
 
 		m_queueEvent[i]->Release();
 	}
+	Log::Write("3");
 
 	// Clear the node data
 	LockNodes();
@@ -225,12 +232,15 @@ Driver::~Driver
 		}
 	}
 	ReleaseNodes();
+	Log::Write("4");
 
 	NotifyWatchers();
 	m_nodeMutex->Release();
+	Log::Write("5");
     
     // Unsure at what point this is safe to do?
     delete m_controllerReplication;
+	Log::Write("~Driver end\n");
 }
 
 //-----------------------------------------------------------------------------
@@ -320,6 +330,7 @@ void Driver::DriverThreadProc
 					}
 					case 0:
 					{
+						Log::Write("DriverThread exit\n");
 						// Exit has been signalled
 						return;
 					}
@@ -749,6 +760,21 @@ void Driver::SendMsg
 	m_msgQueue[_queue].push_back( item );
 	m_queueEvent[_queue]->Set();
 	m_sendMutex->Unlock();
+
+	// check to see how many messages are queued to be sent; send notification at 15; soft reset controller at 30
+	switch (m_msgQueue[_queue].size())
+	{
+	case 15:
+		{
+			Log::Write("ERROR: send log has grown to 15 messages");
+		}
+		break;
+	case 30:
+		Log::Write("ERROR: due to large send log, soft-resetting the controller");
+		SoftReset();
+		break;
+	}
+
 }
 
 //-----------------------------------------------------------------------------
@@ -812,7 +838,7 @@ bool Driver::WriteMsg
 {
 	if( !m_currentMsg )
 	{
-		assert(0);
+		Log::Write( "ERROR in WriteMsg: m_currentMsg is null." );
 		return false;
 	}
 
@@ -2175,12 +2201,12 @@ void Driver::HandleSendDataRequest
 		// Callback ID matches our expectation
 		if( _data[3] & TRANSMIT_COMPLETE_NOROUTE )
 		{
-			Log::Write( "Error: %s failed.  No route available.", _replication ? "ZW_REPLICATION_SEND_DATA" : "ZW_SEND_DATA" );
+			Log::Write( "ERROR: %s failed.  No route available.", _replication ? "ZW_REPLICATION_SEND_DATA" : "ZW_SEND_DATA" );
 			RemoveCurrentMsg();
 		}
 		else if( _data[3] & TRANSMIT_COMPLETE_NO_ACK )
 		{
-			Log::Write( "Error: %s failed. No ACK received - device may be asleep.", _replication ? "ZW_REPLICATION_SEND_DATA" : "ZW_SEND_DATA" );
+			Log::Write( "ERROR: %s failed. No ACK received - device may be asleep.", _replication ? "ZW_REPLICATION_SEND_DATA" : "ZW_SEND_DATA" );
 			if( m_currentMsg )
 			{
 				if( !_replication )
@@ -2198,7 +2224,7 @@ void Driver::HandleSendDataRequest
 		}
 		else if( _data[3] & TRANSMIT_COMPLETE_FAIL )
 		{
-			Log::Write( "Error: %s failed. Network is busy.", _replication ? "ZW_REPLICATION_SEND_DATA" : "ZW_SEND_DATA" );
+			Log::Write( "ERROR: %s failed. Network is busy.", _replication ? "ZW_REPLICATION_SEND_DATA" : "ZW_SEND_DATA" );
 		}
 		else
 		{
@@ -2980,14 +3006,14 @@ bool Driver::EnablePoll
 		// confirm that this value is in the node's value store
 		if( Value* value = node->GetValue( _valueId ) )
 		{
-			value = value;
+//			value = value;
 			// Add the valueid to the polling list
 			m_pollMutex->Lock();
 
 			// See if the node is already in the poll list.
-			for( list<ValueID>::iterator it = m_pollList.begin(); it != m_pollList.end(); ++it )
+			for( list<PollEntry>::iterator it = m_pollList.begin(); it != m_pollList.end(); ++it )
 			{
-				if( *it == _valueId )
+				if( (*it).m_id == _valueId )
 				{
 					// It is already in the poll list, so we have nothing to do.
 					m_pollMutex->Unlock();
@@ -2997,7 +3023,10 @@ bool Driver::EnablePoll
 			}
 
 			// Not in the list, so we add it
-			m_pollList.push_back( _valueId );
+			PollEntry pe;
+			pe.m_id = _valueId;
+			pe.m_pollCounter = _valueId.GetPollIntensity();
+			m_pollList.push_back( pe );
 			m_pollMutex->Unlock();
 			ReleaseNodes();
 			return true;
@@ -3027,9 +3056,9 @@ bool Driver::DisablePoll
 		m_pollMutex->Lock();
 
 		// See if the value is already in the poll list.
-		for( list<ValueID>::iterator it = m_pollList.begin(); it != m_pollList.end(); ++it )
+		for( list<PollEntry>::iterator it = m_pollList.begin(); it != m_pollList.end(); ++it )
 		{
-			if( *it == _valueId )
+			if( (*it).m_id == _valueId )
 			{
 				// Found it
 				m_pollList.erase( it );
@@ -3066,9 +3095,9 @@ bool Driver::isPolled
 		m_pollMutex->Lock();
 
 		// See if the value is already in the poll list.
-		for( list<ValueID>::iterator it = m_pollList.begin(); it != m_pollList.end(); ++it )
+		for( list<PollEntry>::iterator it = m_pollList.begin(); it != m_pollList.end(); ++it )
 		{
-			if( *it == _valueId )
+			if( (*it).m_id == _valueId )
 			{
 				// Found it
 				m_pollMutex->Unlock();
@@ -3101,81 +3130,6 @@ void Driver::PollThreadEntryPoint
 	if( driver )
 	{
 		driver->PollThreadProc( _exitEvent );
-	}
-}
-
-//-----------------------------------------------------------------------------
-// <Driver::PollThreadProc>
-// Thread for poll Z-Wave devices
-//-----------------------------------------------------------------------------
-void Driver::PollThreadProc
-(
-	Event* _exitEvent
-)
-{
-	while( 1 )
-	{
-		int32 pollInterval = m_pollInterval * 1000;	// Get the time in milliseconds in which we are to poll all the devices
-
-		if( !m_pollList.empty() && m_awakeNodesQueried)
-		{
-			// We only bother getting the lock if the pollList is not empty
-			m_pollMutex->Lock();
-			
-			if( !m_pollList.empty() )
-			{
-				// Get the next node to be polled
-				ValueID valueId = m_pollList.front();
-			
-				// Move it to the back of the list
-				m_pollList.pop_front();
-				m_pollList.push_back( valueId );
-
-				// Calculate the time before the next poll, so that all polls 
-				// can take place within the user-specified interval.
-				pollInterval /= m_pollList.size();
-
-				// Request the state of the value from the node to which it belongs
-				if( Node* node = GetNode( valueId.GetNodeId() ) )
-				{
-					bool requestState = true;
-					if( !node->IsListeningDevice() )
-					{
-						// The device is not awake all the time.  If it is not awake, we mark it
-						// as requiring a poll.  The poll will be done next time the node wakes up.
-						if( WakeUp* wakeUp = static_cast<WakeUp*>( node->GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
-						{
-							if( !wakeUp->IsAwake() )
-							{
-								wakeUp->SetPollRequired();
-								requestState = false;
-							}
-						}
-					}
-
-					if( requestState )
-					{
-						// Request an update of the value
-						CommandClass* cc = node->GetCommandClass( valueId.GetCommandClassId() );
-						uint8 index = valueId.GetIndex();
-						uint8 instance = valueId.GetInstance();
-						Log::Write( "Polling node %d: %s index = %d instance = %d (poll queue has %d messages)", node->m_nodeId, cc->GetCommandClassName().c_str(), index, instance, m_msgQueue[MsgQueue_Poll].size() );
-						cc->RequestValue( 0, index, instance, MsgQueue_Poll );
-					}
-
-					ReleaseNodes();
-				}
-			}
-
-			m_pollMutex->Unlock();
-		}
-
-		// Wait for the interval to expire, while watching for exit events
-		if( Wait::Single( _exitEvent, pollInterval ) < 0 )
-		{
-			// Exit has been called
-			return;
-		}
 	}
 }
 
@@ -3381,6 +3335,25 @@ uint8 Driver::GetNodeVersion
 	}
 
 	return version;
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::GetNodeSecurity>
+// Get the security byte of a node
+//-----------------------------------------------------------------------------
+uint8 Driver::GetNodeSecurity
+(
+	 uint8 const _nodeId
+)
+{
+	uint8 security = 0;
+	if( Node* node = GetNode( _nodeId ) )
+	{
+		security = node->GetSecurity();
+		ReleaseNodes();
+	}
+
+	return security;
 }
 
 //-----------------------------------------------------------------------------
@@ -3767,7 +3740,7 @@ void Driver::ResetController
 (
 )
 {
-	Log::Write( "Reset controller and erase all node information");
+	Log::Write( "\nReset controller and erase all node information\n");
 	Msg* msg = new Msg( "Reset controller and erase all node information", 0xff, REQUEST, FUNC_ID_ZW_SET_DEFAULT, true );
 	SendMsg( msg, MsgQueue_Command );
 }
@@ -3780,7 +3753,7 @@ void Driver::SoftReset
 (
 )
 {
-	Log::Write( "Soft-resetting the Z-Wave controller chip");
+	Log::Write( "\nSoft-resetting the Z-Wave controller chip\n");
 	Msg* msg = new Msg( "Soft-resetting the Z-Wave controller chip", 0xff, REQUEST, FUNC_ID_SERIAL_API_SOFT_RESET, false, false );
 	SendMsg( msg, MsgQueue_Command );
 }
@@ -5001,3 +4974,192 @@ void Driver::GetDriverStatistics
 	_data->s_controllerReadCnt = m_controllerReadCnt;
 	_data->s_controllerWriteCnt = m_controllerWriteCnt;
 }
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+/// DSM SURPLUS
+//-----------------------------------------------------------------------------
+// <Driver::PollThreadProc>
+// Thread for poll Z-Wave devices
+//-----------------------------------------------------------------------------
+/*void Driver::PollThreadProc
+(
+	Event* _exitEvent
+)
+{
+	while( 1 )
+	{
+		int32 pollInterval;// = m_pollInterval * 1000;	// Get the time in milliseconds in which we are to poll all the devices
+
+		if( !m_pollList.empty() && m_awakeNodesQueried)
+		{
+			// We only bother getting the lock if the pollList is not empty
+			m_pollMutex->Lock();
+			
+			if( !m_pollList.empty() )
+			{
+				// Get the next node to be polled
+				PollEntry pe = m_pollList.front();
+				ValueID valueId = pe.m_id;
+			
+				// Move it to the back of the list
+//				m_pollList.pop_front();
+//				m_pollList.push_back( valueId );
+
+				// test to see whether this value should be polled in this particular run through the list
+				// execute if pe.m_pollCounter equals 1
+//				if( pe.m_pollCounter == 1 )
+				{
+					// Calculate the time before the next poll, so that all polls 
+					// can take place within the user-specified interval.
+					//pollInterval /= m_pollList.size();
+
+					// Request the state of the value from the node to which it belongs
+					if( Node* node = GetNode( valueId.GetNodeId() ) )
+					{
+						bool requestState = true;
+						if( !node->IsListeningDevice() )
+						{
+							// The device is not awake all the time.  If it is not awake, we mark it
+							// as requiring a poll.  The poll will be done next time the node wakes up.
+							if( WakeUp* wakeUp = static_cast<WakeUp*>( node->GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
+							{
+								if( !wakeUp->IsAwake() )
+								{
+									wakeUp->SetPollRequired();
+									requestState = false;
+								}
+							}
+						}
+
+						if( requestState )
+						{
+							// Request an update of the value
+							CommandClass* cc = node->GetCommandClass( valueId.GetCommandClassId() );
+							uint8 index = valueId.GetIndex();
+							uint8 instance = valueId.GetInstance();
+							Log::Write( "Polling node %d: %s index = %d instance = %d (poll queue has %d messages)", node->m_nodeId, cc->GetCommandClassName().c_str(), index, instance, m_msgQueue[MsgQueue_Poll].size() );
+							cc->RequestValue( 0, index, instance, MsgQueue_Poll );
+						}
+
+						ReleaseNodes();
+					}
+				} // if m_pollCounter == 1
+			}
+
+			m_pollMutex->Unlock();
+		}
+
+
+		// don't poll if there are already messages in the send queue
+		while( !m_msgQueue[MsgQueue_Send].empty() )
+		{
+			pollInterval = 10;	// check the queue every 10ms
+			// Wait for the interval to expire, while watching for exit events
+			if( Wait::Single( _exitEvent, pollInterval ) > 0 )
+			{
+				Log::Write("PollThread exit\n");
+				// Exit has been called
+				return;
+			}
+		}
+	}
+}
+*/
+//-----------------------------------------------------------------------------
+// <Driver::PollThreadProc>
+// Thread for poll Z-Wave devices
+//-----------------------------------------------------------------------------
+void Driver::PollThreadProc
+(
+	Event* _exitEvent
+)
+{
+	while( 1 )
+	{
+		int32 pollInterval = 10;// = m_pollInterval * 1000;	// Get the time in milliseconds in which we are to poll all the devices
+
+		if( !m_pollList.empty() && m_awakeNodesQueried)
+		{
+			// We only bother getting the lock if the pollList is not empty
+			m_pollMutex->Lock();
+			
+			if( !m_pollList.empty() )
+			{
+				// Get the next node to be polled
+				PollEntry pe = m_pollList.front();
+				ValueID  valueId = pe.m_id;
+			
+				// Move it to the back of the list
+				m_pollList.pop_front();
+				m_pollList.push_back( pe );
+
+				// Calculate the time before the next poll, so that all polls 
+				// can take place within the user-specified interval.
+				//pollInterval /= m_pollList.size();
+
+				// Request the state of the value from the node to which it belongs
+				if( Node* node = GetNode( valueId.GetNodeId() ) )
+				{
+					bool requestState = true;
+					if( !node->IsListeningDevice() )
+					{
+						// The device is not awake all the time.  If it is not awake, we mark it
+						// as requiring a poll.  The poll will be done next time the node wakes up.
+						if( WakeUp* wakeUp = static_cast<WakeUp*>( node->GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
+						{
+							if( !wakeUp->IsAwake() )
+							{
+								wakeUp->SetPollRequired();
+								requestState = false;
+							}
+						}
+					}
+
+					if( requestState )
+					{
+						// Request an update of the value
+						CommandClass* cc = node->GetCommandClass( valueId.GetCommandClassId() );
+						uint8 index = valueId.GetIndex();
+						uint8 instance = valueId.GetInstance();
+						Log::Write( "Polling node %d: %s index = %d instance = %d (poll queue has %d messages)", node->m_nodeId, cc->GetCommandClassName().c_str(), index, instance, m_msgQueue[MsgQueue_Poll].size() );
+						cc->RequestValue( 0, index, instance, MsgQueue_Poll );
+					}
+
+					ReleaseNodes();
+				}
+			}
+
+			m_pollMutex->Unlock();
+
+			// Wait for the interval to expire, while watching for exit events
+/*			Log::Write("Queue size: Send=%d, Command=%d, WakeUp=%d, Query=%d, Poll=%d",
+				m_msgQueue[MsgQueue_Send].size(), 
+				m_msgQueue[MsgQueue_Command].size(),
+				m_msgQueue[MsgQueue_WakeUp].size(),
+				m_msgQueue[MsgQueue_Query].size(),
+				m_msgQueue[MsgQueue_Poll].size());
+*/
+			while( !m_msgQueue[MsgQueue_Poll].empty()
+				|| !m_msgQueue[MsgQueue_Send].empty()
+				|| !m_msgQueue[MsgQueue_Command].empty()
+				|| !m_msgQueue[MsgQueue_Query].empty() )
+			{
+				if( Wait::Single( _exitEvent, pollInterval ) == 0 )
+				{
+					// Exit has been called
+					return;
+				}
+			}
+		}
+		else
+		{
+			if( Wait::Single( _exitEvent, pollInterval ) == 0 )
+			{
+				// Exit has been called
+				return;
+			}
+		}
+	}
+}
+

@@ -206,7 +206,7 @@ namespace OpenZWaveDotNet
 		 * \param _bLog True to enable logging; false to disable logging.
 		 * \see GetLoggingState
 		 */
-		void SetLoggingState(bool bState){ Log::SetLoggingState(bState); }
+		void SetLoggingState(int bState){ Log::SetLoggingState(true); }
 
 		/**
 		 * \brief Gets the current library logging state.
@@ -497,6 +497,14 @@ namespace OpenZWaveDotNet
 		 */
 		uint8 GetNodeVersion( uint32 const homeId, uint8 const nodeId ){ return Manager::Get()->GetNodeVersion(homeId, nodeId); }
 
+		/**
+		 * \brief Get the security byte for a node.  Bit meanings are still to be determined.
+		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param _nodeId The ID of the node to query.
+		 * \return the node's security byte
+		 */
+		uint8 GetNodeSecurity( uint32 const homeId, uint8 const nodeId ){ return Manager::Get()->GetNodeSecurity(homeId, nodeId); }
+		
 		/**
 		 * \brief Get a node's "basic" type.
 		 * \param homeId The Home ID of the Z-Wave controller that manages the node.
@@ -808,6 +816,15 @@ namespace OpenZWaveDotNet
 		 * \see ValueID
 		 */
 		bool IsValueSet( ZWValueID^ id ){ return Manager::Get()->IsValueSet(id->CreateUnmanagedValueID()); }
+
+		/**
+		 * \brief Test whether the value is currently being polled.
+		 *
+		 * \param _id The unique identifier of the value.
+		 * \return true if the value is being polled, false otherwise.	
+		 * \see ValueID
+		 */
+		bool IsValuePolled( ZWValueID^ id ){ return Manager::Get()->IsValuePolled(id->CreateUnmanagedValueID()); }
 
 		/**
 		 * \brief Gets a value as a bool.

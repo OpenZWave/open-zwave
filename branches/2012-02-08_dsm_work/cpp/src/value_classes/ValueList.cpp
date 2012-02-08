@@ -29,6 +29,9 @@
 #include "ValueList.h"
 #include "Msg.h"
 #include "Log.h"
+// todo check this
+#include "Manager.h"
+#include "time.h"
 
 using namespace OpenZWave;
 
@@ -50,9 +53,10 @@ ValueList::ValueList
 	bool const _readOnly,
 	bool const _writeOnly,
 	vector<Item> const& _items,
-	int32 const _valueIdx
+	int32 const _valueIdx,
+	uint8 const _pollIntensity
 ):
-	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_List, _label, _units, _readOnly, _writeOnly, false ),
+	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_List, _label, _units, _readOnly, _writeOnly, false, _pollIntensity ),
 	m_items( _items ),
 	m_valueIdx( _valueIdx )
 {
@@ -101,7 +105,7 @@ void ValueList::ReadXML
 	if ( TIXML_SUCCESS == _valueElement->QueryIntAttribute( "value", &intVal ) )
 	{
 		m_valueIdx = (int32)intVal;
-		SetIsSet();
+//		SetIsSet();
 	}
 	else
 	{
@@ -157,7 +161,8 @@ bool ValueList::SetByLabel
 	}
 
 	// Set the value in our records.
-	OnValueChanged( m_items[index].m_value );
+//	OnValueChanged( m_items[index].m_value );
+	m_newValueIdx = index;
 
 	// Set the value in the device.
 	return Value::Set();
@@ -173,7 +178,7 @@ bool ValueList::SetByValue
 )
 {
 	// Set the value in our records.
-	OnValueChanged( _value );
+//	OnValueChanged( _value );
 
 	// Set the value in the device.
 	return Value::Set();
@@ -196,8 +201,63 @@ void ValueList::OnValueChanged
 		return;
 	}
 
-	m_valueIdx = index;
-	Value::OnValueChanged();
+	// if this is the first read of a value, assume it is valid (and notify as a change)
+	if (!IsSet())
+	{
+		Log::Write("Initial read of value");			
+		SetIsSet();
+		m_valueIdx = index;
+		Value::OnValueChanged();
+		return;
+	}
+	else
+		Log::Write("Refreshed Value: old value index=%d, new value index=%d",m_valueIdx, index);
+	m_refreshTime = time( NULL );
+
+//	Log::Write("IsCheckingChange() is %s",IsCheckingChange()?"true":"false");
+	if (IsCheckingChange())
+		if (m_valueIdx == index)
+		{
+			Log::Write("ERROR: Spurious value change was noted.");
+			SetCheckingChange(false);
+		}
+
+	// see if the reported value has changed
+	if (m_valueIdx != index)
+	{
+		// if so, and this is the first indication of a change, check it again
+		if (!IsCheckingChange())
+		{
+			// identify this as a second refresh of the value and send the refresh request
+			Log::Write("Changed value (possible)--rechecking");
+			SetCheckingChange( true );
+			m_valueIdxCheck = index;
+			Manager::Get()->RefreshValue( GetID() );
+			return;
+		}
+		else
+		{
+			// this is a "checked" value
+			if (m_valueIdxCheck == index)
+			{
+				// same as the changed value being checked?  if so, confirm the change
+				Log::Write("Changed value--confirmed");
+				SetCheckingChange( false );
+				SetIsSet();
+				m_valueIdx = index;
+				Value::OnValueChanged();
+			}
+			else
+			{
+				// the second read is different than both the original value and the checked value...retry
+				Log::Write("Changed value (changed again)--rechecking");
+				SetCheckingChange( true );
+				m_valueIdxCheck = index;
+				Manager::Get()->RefreshValue( GetID() );
+				return;
+			}
+		}
+	}
 }
 
 //-----------------------------------------------------------------------------

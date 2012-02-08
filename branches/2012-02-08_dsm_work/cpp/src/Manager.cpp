@@ -72,6 +72,7 @@ Manager* Manager::Create
 (
 )
 {
+	_CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 	if( Options::Get() && Options::Get()->AreLocked() )
 	{
 		if( NULL == s_instance )
@@ -138,6 +139,8 @@ Manager::~Manager
 (
 )
 {
+	Log::Write("~Manager start\n");
+
 	// Clear the pending list
 	while( !m_pendingDrivers.empty() )
 	{
@@ -145,6 +148,7 @@ Manager::~Manager
 		delete *it;
 		m_pendingDrivers.erase( it );
 	}
+	Log::Write("M1");
 
 	// Clear the ready map
 	while( !m_readyDrivers.empty() )
@@ -153,6 +157,7 @@ Manager::~Manager
 		delete it->second;
 		m_readyDrivers.erase( it );
 	}
+	Log::Write("M2");
 	
 	m_exitEvent->Release();
 	m_notificationMutex->Release();
@@ -164,6 +169,7 @@ Manager::~Manager
 		delete *it;
 		m_watchers.erase( it );
 	}
+	Log::Write("M3");
 
 	// Clear the generic device class list
 	while( !Node::s_genericDeviceClasses.empty() )
@@ -172,8 +178,11 @@ Manager::~Manager
 		delete git->second;
 		Node::s_genericDeviceClasses.erase( git );
 	}
+	Log::Write("M4");
 
 	Log::Destroy();
+	Log::Write("~Manager end\n");
+
 }
 
 //-----------------------------------------------------------------------------
@@ -523,6 +532,7 @@ bool Manager::EnablePoll
 {
 	if( Driver* driver = GetDriver( _valueId.GetHomeId() ) )
 	{
+		Log::Write( "EnablePoll for Home ID 0x%.8x and Value ID 0x%.8x", _valueId.GetHomeId(), _valueId.GetId() );
 		return( driver->EnablePoll( _valueId ) );
 	}
 
@@ -541,6 +551,7 @@ bool Manager::DisablePoll
 {
 	if( Driver* driver = GetDriver( _valueId.GetHomeId() ) )
 	{
+		Log::Write( "DisablePoll for Home ID 0x%.8x and Value ID 0x%.8x", _valueId.GetHomeId(), _valueId.GetId() );
 		return( driver->DisablePoll( _valueId ) );
 	}
 
@@ -772,6 +783,25 @@ uint8 Manager::GetNodeVersion
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
 		version = driver->GetNodeVersion( _nodeId );
+	}
+
+	return version;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::GetNodeSecurity>
+// Get the security byte of a node
+//-----------------------------------------------------------------------------
+uint8 Manager::GetNodeSecurity
+(
+	uint32 const _homeId,
+	uint8 const _nodeId
+)
+{
+	uint8 version = 0;
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		version = driver->GetNodeSecurity( _nodeId );
 	}
 
 	return version;
@@ -1445,6 +1475,30 @@ bool Manager::IsValueSet
 		if( Value* value = driver->GetValue( _id ) )
 		{
 			res = value->IsSet();
+			value->Release();
+		}
+		driver->ReleaseNodes();
+	}
+
+	return res;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::IsValuePolled>
+// Test whether the value is currently being polled
+//-----------------------------------------------------------------------------
+bool Manager::IsValuePolled
+( 
+	ValueID const& _id
+)
+{
+	bool res = false;
+	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
+	{
+		driver->LockNodes();
+		if( Value* value = driver->GetValue( _id ) )
+		{
+			res = value->IsPolled();
 			value->Release();
 		}
 		driver->ReleaseNodes();
@@ -2190,6 +2244,36 @@ bool Manager::SetValue
 	}
 
 	return res;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::RefreshValue>
+// Instruct the driver to refresh this value by sending a message to the device
+//-----------------------------------------------------------------------------
+bool Manager::RefreshValue
+(
+	ValueID const& _id
+)
+{
+	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
+	{
+	    Node *node;
+
+	    // Need to lock and unlock nodes to check this information
+	    driver->LockNodes();
+
+	    if( (node = driver->GetNodeUnsafe( _id.GetNodeId() ) ) != NULL)
+	    {
+			CommandClass* cc = node->GetCommandClass( _id.GetCommandClassId() );
+			uint8 index = _id.GetIndex();
+			uint8 instance = _id.GetInstance();
+			Log::Write( "Re-polling node %d: %s index = %d instance = %d (to confirm a reported change)", node->m_nodeId, cc->GetCommandClassName().c_str(), index, instance );
+			cc->RequestValue( 0, index, instance, Driver::MsgQueue_Send );
+		}
+		driver->ReleaseNodes();
+		return true;
+	}
+	return false;
 }
 
 //-----------------------------------------------------------------------------

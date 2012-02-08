@@ -153,6 +153,9 @@ namespace OpenZWave
 	     */
 		ValueType GetType()const{ return( (ValueType)( m_id & 0x0000000f ) ); }
 
+		uint8 GetPollIntensity()const{ return( (uint8)( ( (m_id1 & 0x00ff0000) ) >> 16 ) ); }
+		void SetPollIntensity( uint8 _pollIntensity ) { (m_id1 |= (((uint32)_pollIntensity) << 16)); }
+
 		uint64 GetId()const{ return (uint64) ( ( (uint64)m_id1 << 32 ) | m_id );}
 
 		// Comparison Operators
@@ -217,7 +220,8 @@ namespace OpenZWave
 			uint8 const _commandClassId,
 			uint8 const _instance,
 			uint8 const _valueIndex,
-			ValueType const _type
+			ValueType const _type,
+			uint8 const _pollIntensity
 		):
 			m_homeId( _homeId )
 		{
@@ -226,7 +230,8 @@ namespace OpenZWave
 				 | (((uint32)_commandClassId)<<14)
 				 | (((uint32)_valueIndex)<<4)
 				 | ((uint32)_type);
-			m_id1 = (((uint32)_instance)<<24);
+			m_id1 = (((uint32)_instance)<<24)
+				 | (((uint32)_pollIntensity)<<16);
 		}
 
 	private:
@@ -272,6 +277,7 @@ namespace OpenZWave
 		// ID1 Packing:
 		// Bits
 		// 24-31	8 bits. Instance Index of the command class.
+		// 16-23	8 bits. Poll intensity, where 0 is "no poll", 1 is poll every time, 2 is poll every other time, etc.
 		uint32	m_id1;
 
 		// Unique PC interface identifier

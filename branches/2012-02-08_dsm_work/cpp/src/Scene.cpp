@@ -131,6 +131,9 @@ void Scene::WriteXML
 			snprintf( str, sizeof(str), "%d", (*vt)->m_id.GetIndex() );
 			valueElement->SetAttribute( "index", str );
 
+			snprintf( str, sizeof(str), "%d", (*vt)->m_id.GetPollIntensity() );
+			valueElement->SetAttribute( "poll_intensity", str );
+
 			valueElement->SetAttribute( "type", Value::GetTypeNameFromEnum((*vt)->m_id.GetType()) );
 
 			TiXmlText* textElement = new TiXmlText( (*vt)->m_value.c_str() );
@@ -246,10 +249,15 @@ bool Scene::ReadScenes
 				{
 					index = intVal;
 				}
+				uint8 pollIntensity = 0;
+				if( TIXML_SUCCESS == valueElement->QueryIntAttribute( "poll_intensity", &intVal ) )
+				{
+					pollIntensity = intVal;
+				}
 				ValueID::ValueType type = Value::GetTypeEnumFromName( valueElement->Attribute( "type" ) );
 				char const* data = valueElement->GetText();
 
-				scene->m_values.push_back( new SceneStorage( ValueID(homeId, nodeId, genre, commandClassId, instance, index, type), data ) );
+				scene->m_values.push_back( new SceneStorage( ValueID(homeId, nodeId, genre, commandClassId, instance, index, type, pollIntensity), data ) );
 			}
 
 			valueElement = valueElement->NextSiblingElement();

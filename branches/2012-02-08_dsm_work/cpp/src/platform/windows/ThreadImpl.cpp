@@ -47,7 +47,6 @@ ThreadImpl::ThreadImpl
 	m_bIsRunning( false ),
 	m_name( _name )
 {
-
 }
 
 //-----------------------------------------------------------------------------
@@ -79,6 +78,7 @@ bool ThreadImpl::Start
 
 	HANDLE hThread = ::CreateThread( NULL, 0, ThreadImpl::ThreadProc, this, CREATE_SUSPENDED, NULL );
 	m_hThread = hThread;
+	std::printf("Starting thread %s (0x%.4x)", m_name, m_hThread);
 
 	::ResumeThread( hThread );
 	return true;
@@ -110,6 +110,7 @@ bool ThreadImpl::Terminate
 	}
 
 	// This can cause all sorts of trouble if the thread is holding a lock.
+	std::printf("Thread %s (0x.%4x) terminating\n", m_name.c_str(), m_hThread);
 	TerminateThread( m_hThread, 0 );
 	m_hThread = INVALID_HANDLE_VALUE;
 	return true;
