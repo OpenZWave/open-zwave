@@ -37,17 +37,17 @@
 			</Help>
 		</Value>
 		<Value type="list" index="3" genre="config" label="LED ON/OFF" value="255">
-			<help>
+			<Help>
 				LED ON/OFF turns the LED on or off. A slight improvement in
 				battery life is obtained by turning the LED off. Setting LED
 				ON/OFF to zero will turn the LED off and 255 turns it on.
 				Default is On (255).
-			</help>
+			</Help>
 			<Item label="Off" value="0"/>
 			<Item label="On" value="255"/>
 		</Value>
 		<Value type="byte" index="4" genre="config" label="Light Threshold" units="%" min="0" max="100" value="100">
-			<help>
+			<Help>
 				Light Threshold is the percentage of light in the room above
 				which the lights will not be turned on. Light Threshold is often
 				used in room with a lot of natural daylight. Setting Light
@@ -66,7 +66,7 @@
 				from coming on in a reasonably well light room and will turn
 				them on as it is getting dark. Some experimentation is required
 				with each room to determine the proper setting.				
-			</help>
+			</Help>
 		</Value>
 		<Value type="byte" index="5" genre="config" label="Stay Awake" units="" min="0" max="255" value="0">
 			<Help>
