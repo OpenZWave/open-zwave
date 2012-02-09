@@ -359,7 +359,7 @@ void Driver::DriverThreadProc
 		if( attempts < 25 )
 		{
 			// Retry every 5 seconds for the first two minutes
-			if( !Wait::Single( _exitEvent, 5000 ) )
+			if( Wait::Single( _exitEvent, 5000 ) == 0 )
 			{
 				// Exit signalled.
 				return;
@@ -368,7 +368,7 @@ void Driver::DriverThreadProc
 		else
 		{
 			// Retry every 30 seconds after that
-			if( !Wait::Single( _exitEvent, 30000 ) )
+			if( Wait::Single( _exitEvent, 30000 ) == 0 )
 			{
 				// Exit signalled.
 				return;
@@ -3171,7 +3171,7 @@ void Driver::PollThreadProc
 		}
 
 		// Wait for the interval to expire, while watching for exit events
-		if( Wait::Single( _exitEvent, pollInterval ) < 0 )
+		if( Wait::Single( _exitEvent, pollInterval ) == 0 )
 		{
 			// Exit has been called
 			return;
