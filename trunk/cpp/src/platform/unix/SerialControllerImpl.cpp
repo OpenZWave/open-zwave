@@ -314,7 +314,7 @@ void SerialControllerImpl::Read
 
 	while( 1 )
         {
-		uint32 bytesRead;
+		int32 bytesRead;
 		int err;
 
 		do
