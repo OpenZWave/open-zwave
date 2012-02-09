@@ -141,8 +141,8 @@ bool Stream::Put
 		uint32 block1 = m_bufferSize - m_head;
 		uint32 block2 = _size - block1;
 
-		memcpy( &m_buffer[m_head], m_buffer, block1 );
-		memcpy( m_buffer, &m_buffer[block1], block2 );
+		memcpy( &m_buffer[m_head], _buffer, block1 );
+		memcpy( m_buffer, &_buffer[block1], block2 );
 		m_head = block2;
 	}
 	else
