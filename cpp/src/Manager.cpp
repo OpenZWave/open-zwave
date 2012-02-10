@@ -2193,6 +2193,38 @@ bool Manager::SetValue
 }
 
 //-----------------------------------------------------------------------------
+// <Manager::RefreshValue>
+// Instruct the driver to refresh this value by sending a message to the device
+//-----------------------------------------------------------------------------
+bool Manager::RefreshValue
+(
+	ValueID const& _id
+)
+{
+	bool bRet = false;	// return value
+
+	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
+	{
+	    Node *node;
+
+	    // Need to lock and unlock nodes to check this information
+	    driver->LockNodes();
+
+	    if( (node = driver->GetNodeUnsafe( _id.GetNodeId() ) ) != NULL)
+	    {
+			CommandClass* cc = node->GetCommandClass( _id.GetCommandClassId() );
+			uint8 index = _id.GetIndex();
+			uint8 instance = _id.GetInstance();
+			Log::Write( "Refreshing node %d: %s index = %d instance = %d (to confirm a reported change)", node->m_nodeId, cc->GetCommandClassName().c_str(), index, instance );
+			cc->RequestValue( 0, index, instance, Driver::MsgQueue_Send );
+			bRet = true;
+		}
+		driver->ReleaseNodes();
+	}
+	return bRet;
+}
+
+//-----------------------------------------------------------------------------
 // <Manager::PressButton>
 // Starts an activity in a device.
 //-----------------------------------------------------------------------------

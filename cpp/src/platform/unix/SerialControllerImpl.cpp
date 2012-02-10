@@ -187,13 +187,13 @@ bool SerialControllerImpl::Init
 	if( -1 == m_hSerialController )
 	{
 		//Error
-		Log::Write( "Cannot open serial port %s. Error code %d", device.c_str(), errno );
+		Log::Write( "ERROR: Cannot open serial port %s. Error code %d", device.c_str(), errno );
 		goto SerialOpenFailure;
 	}
 
 	if( flock( m_hSerialController, LOCK_EX) == -1 )
 	{
-		Log::Write( "Cannot get exclusive lock for serial port %s. Error code %d", device.c_str(), errno );
+		Log::Write( "ERROR: Cannot get exclusive lock for serial port %s. Error code %d", device.c_str(), errno );
 	}
 
 	int bits;
@@ -216,7 +216,7 @@ bool SerialControllerImpl::Init
 			tios.c_cflag = PARENB | PARODD;
 			break;
 		default:
-			Log::Write( "Parity not supported" );
+			Log::Write( "ERROR: Parity not supported" );
 			goto SerialOpenFailure;
 	}
 	switch( m_owner->m_stopBits )
@@ -227,7 +227,7 @@ bool SerialControllerImpl::Init
 			tios.c_cflag |= CSTOPB;
 			break;
 		default:
-			Log::Write( "Stopbits not supported" );
+			Log::Write( "ERROR: Stopbits not supported" );
 			goto SerialOpenFailure;
 	}
 	tios.c_iflag |= IGNBRK;
@@ -282,7 +282,7 @@ bool SerialControllerImpl::Init
 	if ( tcsetattr( m_hSerialController, TCSANOW, &tios ) == -1 )
 	{
 		// Error.  Clean up and exit
-		Log::Write( "Failed to set serial port parameters" );
+		Log::Write( "ERROR: Failed to set serial port parameters" );
 		goto SerialOpenFailure;
 	}
 
@@ -293,7 +293,7 @@ bool SerialControllerImpl::Init
 	return true;
 
 SerialOpenFailure:
- 	Log::Write( "Failed to open serial port %s", device.c_str() );
+ 	Log::Write( "ERROR: Failed to open serial port %s", device.c_str() );
 	if(m_hSerialController >= 0)
 	{
 		close( m_hSerialController );
@@ -356,7 +356,7 @@ uint32 SerialControllerImpl::Write
 	if( -1 == m_hSerialController )
 	{
 		//Error
-		Log::Write( "Error: Serial port must be opened before writing" );
+		Log::Write( "ERROR: Serial port must be opened before writing" );
 		return 0;
 	}
 
