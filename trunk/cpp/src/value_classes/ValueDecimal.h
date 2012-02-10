@@ -49,8 +49,8 @@ namespace OpenZWave
 		friend class ThermostatSetpoint;
 
 	public:
-	  	ValueDecimal( uint32 const _homeId, uint8 const _nodeId, ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, string const& _label, string const& _units, bool const _readOnly, bool const _writeOnly, string const& _value );
-		ValueDecimal(){}
+		ValueDecimal( uint32 const _homeId, uint8 const _nodeId, ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, string const& _label, string const& _units, bool const _readOnly, bool const _writeOnly, string const& _value );
+		ValueDecimal(): m_precision( 0 ){}
 		virtual ~ValueDecimal(){}
 
 		bool Set( string const& _value );

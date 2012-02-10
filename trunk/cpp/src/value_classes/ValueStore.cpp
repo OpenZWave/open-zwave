@@ -30,7 +30,6 @@
 #include "Manager.h"
 #include "Notification.h"
 
-
 using namespace OpenZWave;
 
 
