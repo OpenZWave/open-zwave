@@ -190,7 +190,7 @@ bool SerialControllerImpl::Init
 	if( INVALID_HANDLE_VALUE == m_hSerialController )
 	{
 		//Error
-		Log::Write( "Cannot open serial port %s. Error code %d\n", m_owner->m_serialControllerName.c_str(), GetLastError() );
+		Log::Write( "ERROR: Cannot open serial port %s. Error code %d\n", m_owner->m_serialControllerName.c_str(), GetLastError() );
 		goto SerialOpenFailure;
 	}
 
@@ -200,7 +200,7 @@ bool SerialControllerImpl::Init
 	if( !GetCommState( m_hSerialController, &dcb ) )
 	{
 		//Error.  Clean up and exit
-		Log::Write( "Failed to read serial port state" );
+		Log::Write( "ERROR: Failed to read serial port state" );
 		goto SerialOpenFailure;
 	}
 
@@ -213,7 +213,7 @@ bool SerialControllerImpl::Init
 	if( !SetCommState( m_hSerialController, &dcb) )
 	{
 		//Error. Clean up and exit
-		Log::Write( "Failed to set serial port state" );
+		Log::Write( "ERROR: Failed to set serial port state" );
 		goto SerialOpenFailure;
 	}
 
@@ -227,7 +227,7 @@ bool SerialControllerImpl::Init
 	if( !SetCommTimeouts( m_hSerialController, &commTimeouts ) )
 	{
 		// Error.  Clean up and exit
-		Log::Write( "Failed to set serial port timeouts" );
+		Log::Write( "ERROR: Failed to set serial port timeouts" );
 		goto SerialOpenFailure;
 	}
 
@@ -235,7 +235,7 @@ bool SerialControllerImpl::Init
 	if( !SetCommMask( m_hSerialController, EV_RXCHAR ) )
 	{
 		//Error.  Clean up and exit
-		Log::Write( "Failed to set serial port mask" );
+		Log::Write( "ERROR: Failed to set serial port mask" );
 		goto SerialOpenFailure;
 	}
 
@@ -247,7 +247,7 @@ bool SerialControllerImpl::Init
 	return true;
 
 SerialOpenFailure:
- 	Log::Write( "Failed to open serial port %s (attempt %d)", m_owner->m_serialControllerName.c_str(), _attempts );
+ 	Log::Write( "ERROR: Failed to open serial port %s (attempt %d)", m_owner->m_serialControllerName.c_str(), _attempts );
 	CloseHandle( m_hSerialController );
 	m_hSerialController = INVALID_HANDLE_VALUE;
 	return false;
@@ -380,7 +380,7 @@ uint32 SerialControllerImpl::Write
 	if( INVALID_HANDLE_VALUE == m_hSerialController )
 	{
 		//Error
-		Log::Write( "Error: Serial port must be opened before writing\n" );
+		Log::Write( "ERROR: Serial port must be opened before writing\n" );
 		return 0;
 	}
 
@@ -399,7 +399,7 @@ uint32 SerialControllerImpl::Write
 		}
 		else
 		{
-			Log::Write( "Error: Serial port write (0x%.8x)", GetLastError() );
+			Log::Write( "ERROR: Serial port write (0x%.8x)", GetLastError() );
 		}
 	}
 
