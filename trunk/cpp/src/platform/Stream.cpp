@@ -27,6 +27,7 @@
 //-----------------------------------------------------------------------------
 #include "Stream.h"
 #include "Mutex.h"
+#include "Log.h"
 
 #include <string.h>
 
@@ -92,6 +93,7 @@ bool Stream::Get
 	if( m_dataSize < _size )
 	{
 		// There is not enough data in the buffer to fulfill the request
+		Log::Write("ERROR: Not enough data in stream buffer");
 		return false;
 	}
 
@@ -131,6 +133,7 @@ bool Stream::Put
 	if( (m_bufferSize-m_dataSize) < _size )
 	{
 		// There is not enough space left in the buffer for the data
+		Log::Write("ERROR: Not enough space in stream buffer");
 		return false;
 	}
 

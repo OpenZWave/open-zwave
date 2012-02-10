@@ -60,6 +60,7 @@ namespace OpenZWaveDotNet
 			ValueAdded						= Notification::Type_ValueAdded,	
 			ValueRemoved					= Notification::Type_ValueRemoved,		
 			ValueChanged					= Notification::Type_ValueChanged,		
+			ValueRefreshed					= Notification::Type_ValueRefreshed,
 			Group							= Notification::Type_Group,				
 			NodeNew							= Notification::Type_NodeNew,
 			NodeAdded						= Notification::Type_NodeAdded,			
@@ -74,7 +75,8 @@ namespace OpenZWaveDotNet
 			EssentialNodeQueriesComplete	= Notification::Type_EssentialNodeQueriesComplete,
 			NodeQueriesComplete				= Notification::Type_NodeQueriesComplete,
 			AwakeNodesQueried				= Notification::Type_AwakeNodesQueried,
-			AllNodesQueried					= Notification::Type_AllNodesQueried
+			AllNodesQueried					= Notification::Type_AllNodesQueried,
+			LogWritten						= Notification::Type_LogWritten
 		};
 
 		ZWNotification( Notification* notification )

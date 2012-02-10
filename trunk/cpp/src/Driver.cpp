@@ -2974,6 +2974,9 @@ bool Driver::EnablePoll
 	ValueID const _valueId
 )
 {
+	// make sure the polling thread doesn't lock the node while we're in this function
+	m_pollMutex->Lock();
+
 	// confirm that this node exists
 	uint8 nodeId = _valueId.GetNodeId();
 	Node* node = GetNode( nodeId );
@@ -2983,10 +2986,8 @@ bool Driver::EnablePoll
 		if( Value* value = node->GetValue( _valueId ) )
 		{
 			value->Release();
-			// Add the valueid to the polling list
-			LockNodes(); // do we need this?
-			m_pollMutex->Lock();
 
+			// Add the valueid to the polling list
 			// See if the node is already in the poll list.
 			for( list<ValueID>::iterator it = m_pollList.begin(); it != m_pollList.end(); ++it )
 			{
@@ -3006,6 +3007,9 @@ bool Driver::EnablePoll
 			return true;
 		}
 
+		// allow the poll thread to continue
+		m_pollMutex->Unlock();
+
 		Log::Write( "EnablePoll failed - value not found for node %d", nodeId );
 		return false;
 	}
@@ -3023,11 +3027,14 @@ bool Driver::DisablePoll
 	ValueID const _valueId
 )
 {
+	// make sure the polling thread doesn't lock the node while we're in this function
+	m_pollMutex->Lock();
+
+	// confirm that this node exists
 	uint8 nodeId = _valueId.GetNodeId();
 	Node* node = GetNode( nodeId );
 	if( node != NULL)
 	{
-		m_pollMutex->Lock();
 
 		// See if the value is already in the poll list.
 		for( list<ValueID>::iterator it = m_pollList.begin(); it != m_pollList.end(); ++it )
@@ -3049,6 +3056,9 @@ bool Driver::DisablePoll
 		return false;
 	}
 
+	// allow the poll thread to continue
+	m_pollMutex->Unlock();
+
 	Log::Write( "DisablePoll failed - node %d not found", nodeId );
 	return false;
 }
@@ -3062,11 +3072,14 @@ bool Driver::isPolled
 	ValueID const _valueId
 )
 {
+	// make sure the polling thread doesn't lock the node while we're in this function
+	m_pollMutex->Lock();
+
+	// confirm that this node exists
 	uint8 nodeId = _valueId.GetNodeId();
 	Node* node = GetNode( nodeId );
 	if( node != NULL)
 	{
-		m_pollMutex->Lock();
 
 		// See if the value is already in the poll list.
 		for( list<ValueID>::iterator it = m_pollList.begin(); it != m_pollList.end(); ++it )
@@ -3085,6 +3098,9 @@ bool Driver::isPolled
 		ReleaseNodes();
 		return false;
 	}
+
+	// allow the poll thread to continue
+	m_pollMutex->Unlock();
 
 	Log::Write( "isPolled failed - node %d not found", nodeId );
 	return false;
