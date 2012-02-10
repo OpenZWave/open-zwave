@@ -46,7 +46,7 @@ namespace OpenZWave
 	{
 	public:
 		ValueButton( uint32 const _homeId, uint8 const _nodeId, ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, string const& _label, uint8 const _pollIntensity );
-		ValueButton(){}
+		ValueButton(): m_pressed( false ){}
 		virtual ~ValueButton(){}
 
 		bool PressButton();

@@ -3,7 +3,7 @@
 //	WaitImpl.cpp
 //
 //	POSIX implementation of an abstract base class for objects we 
-//  want to be able to wait for.
+//	want to be able to wait for.
 //
 //	Copyright (c) 2010 Mal Lansell <mal@lansell.org>
 //	All rights reserved.
@@ -97,6 +97,8 @@ bool WaitImpl::RemoveWatcher
 	void* _context
 )
 {
+	bool res = false;
+
 	pthread_mutex_lock( &m_criticalSection );
 
 	for( list<Watcher>::iterator it=m_watchers.begin(); it!=m_watchers.end(); ++it )
@@ -105,12 +107,13 @@ bool WaitImpl::RemoveWatcher
 		if( ( watcher.m_callback == _callback ) && ( watcher.m_context == _context ) )
 		{
 			m_watchers.erase( it );
+			res = true;
 			break;
 		}
 	}
 
 	pthread_mutex_unlock( &m_criticalSection );
-	return false;
+	return res;
 }
 
 //-----------------------------------------------------------------------------

@@ -47,6 +47,7 @@ ThreadImpl::ThreadImpl
 	m_bIsRunning( false ),
 	m_name( _name )
 {
+
 }
 
 //-----------------------------------------------------------------------------
@@ -78,7 +79,6 @@ bool ThreadImpl::Start
 
 	HANDLE hThread = ::CreateThread( NULL, 0, ThreadImpl::ThreadProc, this, CREATE_SUSPENDED, NULL );
 	m_hThread = hThread;
-	std::printf("Starting thread %s (0x%.4x)", m_name, m_hThread);
 
 	::ResumeThread( hThread );
 	return true;

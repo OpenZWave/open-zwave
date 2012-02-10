@@ -40,16 +40,28 @@ LogImpl::LogImpl
 (
 	string const& _filename
 ):
-	m_filename( _filename )
+	m_filenamebase( _filename )
 {
+	SYSTEMTIME time;
+	::GetLocalTime( &time );
+	m_filename = TimeBasedFileName(m_filenamebase, &time);
 	FILE* pFile;
-	if( !fopen_s( &pFile, m_filename.c_str(), "w" ) )
+	if( !fopen_s( &pFile, m_filename.c_str(), "a" ) )
 	{
-		SYSTEMTIME time;
-		::GetLocalTime( &time );
 		fprintf( pFile, "\nLogging started %04d-%02d-%02d %02d:%02d:%02d\n\n", time.wYear, time.wMonth, time.wDay, time.wHour, time.wMinute, time.wSecond );
 		fclose( pFile );
 	}
+}
+
+string LogImpl::TimeBasedFileName
+(
+	string const& _basename, 
+	SYSTEMTIME* _time
+)
+{
+	char outstring[50];
+	sprintf( outstring, "OZW_LOG_%04d-%02d-%02d_%02d.txt",_time->wYear, _time->wMonth, _time->wDay, _time->wHour);
+	return outstring;
 }
 
 //-----------------------------------------------------------------------------
@@ -75,8 +87,10 @@ void LogImpl::Write
 	// Get a timestamp
 	SYSTEMTIME time;
 	::GetLocalTime( &time );
-	char timeStr[32];
-	sprintf_s( timeStr, sizeof(timeStr), "%04d-%02d-%02d %02d:%02d:%02d:%03d ", time.wYear, time.wMonth, time.wDay, time.wHour, time.wMinute, time.wSecond, time.wMilliseconds );
+	m_filename = TimeBasedFileName(m_filenamebase, &time);
+	char timeStr[50];
+	DWORD dwThread = ::GetCurrentThreadId();
+	sprintf_s( timeStr, sizeof(timeStr), "%04d-%02d-%02d %02d:%02d:%02d:%03d %d ", time.wYear, time.wMonth, time.wDay, time.wHour, time.wMinute, time.wSecond, time.wMilliseconds, dwThread );
 
 	FILE* pFile;
 	if( !fopen_s( &pFile, m_filename.c_str(), "a" ) )

@@ -115,6 +115,9 @@ Node::Node
 	m_routing( false ),
 	m_homeId( _homeId ),
 	m_nodeId( _nodeId ),
+	m_basic( 0 ),
+	m_generic( 0 ),
+	m_specific( 0 ),
 	m_values( new ValueStore() ),
 	m_writeCnt( 0 ),
 	m_readCnt( 0 ),
@@ -1813,6 +1816,7 @@ void Node::ReadValueFromXML
 		if( Value* value = store->GetValue( id.GetValueStoreKey() ) )
 		{
 			value->ReadXML( m_homeId, m_nodeId, _commandClassId, _valueElement );
+			value->Release();
 		}
 		else
 		{
@@ -1830,6 +1834,7 @@ Value* Node::GetValue
 	ValueID const& _id
 )
 {
+	// This increments the value's reference count
 	return GetValueStore()->GetValue( _id.GetValueStoreKey() );
 }
 
@@ -1846,6 +1851,7 @@ Value* Node::GetValue
 {
 	Value* value = NULL;
 	ValueStore* store = GetValueStore();
+	// This increments the value's reference count
 	value = store->GetValue( ValueID::GetValueStoreKey( _commandClassId, _instance, _valueIndex ) );
 	return value;
 }

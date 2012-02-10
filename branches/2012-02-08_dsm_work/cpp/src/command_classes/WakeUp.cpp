@@ -74,6 +74,15 @@ WakeUp::~WakeUp
 )
 {
 	m_mutex->Release();
+	while( !m_pendingQueue.empty() )
+	{
+		Driver::MsgQueueItem const& item = m_pendingQueue.front();
+		if( Driver::MsgQueueCmd_SendMsg == item.m_command )
+		{
+			delete item.m_msg;
+		}
+		m_pendingQueue.pop_front();
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -166,6 +175,7 @@ bool WakeUp::HandleMsg
 			{
 				Log::Write( "" );
 				Log::Write("Unusual response: WakeUpCmd_IntervalReport with len = %d.  Ignored.", _length );
+				value->Release();
 				return false;
 			}
 
@@ -184,6 +194,7 @@ bool WakeUp::HandleMsg
 			{
 				SetValue( *value );	
 			}
+			value->Release();
  		}
 		return true;
 	}

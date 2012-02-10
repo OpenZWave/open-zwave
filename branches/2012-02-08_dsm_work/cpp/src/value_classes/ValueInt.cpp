@@ -170,7 +170,7 @@ void ValueInt::OnValueChanged
 	if (IsCheckingChange())
 		if (m_value == _value)
 		{
-			Log::Write("ERROR: Spurious value change was noted.");
+			Log::Write("WARNING: Spurious value change was noted.");
 			SetCheckingChange(false);
 		}
 

@@ -31,6 +31,7 @@
 #include "Defs.h"
 #include <string>
 #include "Log.h"
+#include <windows.h>
 
 namespace OpenZWave
 {
@@ -45,8 +46,10 @@ namespace OpenZWave
 		~LogImpl();
 
 		void Write( char const* _format, va_list _args );
+		string TimeBasedFileName( string const& _filenamebase, SYSTEMTIME* _time );
 
 		string m_filename;
+		string m_filenamebase;
 	};
 
 } // namespace OpenZWave

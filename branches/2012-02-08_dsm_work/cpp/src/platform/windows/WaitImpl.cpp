@@ -93,6 +93,7 @@ bool WaitImpl::RemoveWatcher
 	void* _context
 )
 {
+	bool res = false;
 	EnterCriticalSection( &m_criticalSection );
 
 	for( list<Watcher>::iterator it=m_watchers.begin(); it!=m_watchers.end(); ++it )
@@ -101,12 +102,13 @@ bool WaitImpl::RemoveWatcher
 		if( ( watcher.m_callback == _callback ) && ( watcher.m_context == _context ) )
 		{
 			m_watchers.erase( it );
+			res = true;
 			break;
 		}
 	}
 
 	LeaveCriticalSection( &m_criticalSection );
-	return false;
+	return res;
 }
 
 //-----------------------------------------------------------------------------

@@ -92,6 +92,7 @@ bool Stream::Get
 	if( m_dataSize < _size )
 	{
 		// There is not enough data in the buffer to fulfill the request
+		Log::Write("ERROR: Not enough data in stream buffer");
 		return false;
 	}
 
@@ -115,6 +116,7 @@ bool Stream::Get
 
 	m_dataSize -= _size;
 	m_mutex->Unlock();
+//	LogData( _buffer, _size, "Get returned");
 	return true;
 }
 
@@ -128,9 +130,12 @@ bool Stream::Put
 	uint32 _size
 )
 {
+//	LogData( _buffer, _size, "Put received");
+
 	if( (m_bufferSize-m_dataSize) < _size )
 	{
 		// There is not enough space left in the buffer for the data
+		Log::Write("ERROR: Not enough space in stream buffer");
 		return false;
 	}
 
@@ -141,8 +146,8 @@ bool Stream::Put
 		uint32 block1 = m_bufferSize - m_head;
 		uint32 block2 = _size - block1;
 
-		memcpy( &m_buffer[m_head], m_buffer, block1 );
-		memcpy( m_buffer, &m_buffer[block1], block2 );
+		memcpy( &m_buffer[m_head], _buffer, block1 );
+		memcpy( m_buffer, &_buffer[block1], block2 );
 		m_head = block2;
 	}
 	else
@@ -172,6 +177,31 @@ bool Stream::IsSignalled
 (
 )
 {
+//	Log::Write("\t\tIsSignalled is %s.  datasize=%d, signalSize=%d",m_dataSize>=m_signalSize?"true":"false",m_dataSize, m_signalSize);
 	return( m_dataSize >= m_signalSize );
+}
+
+void Stream::LogData
+(
+	uint8* _buffer,
+	uint32 _length,
+	string _function
+)
+{
+	if( !_length ) return;
+
+	string str = "";
+	for( uint32 i=0; i<_length; ++i ) 
+	{
+		if( i )
+		{
+			str += ", ";
+		}
+			
+		char byteStr[8];
+		snprintf( byteStr, sizeof(byteStr), "0x%.2x", _buffer[i] );
+		str += byteStr;
+	}
+//	Log::Write( "\t\tStream::%s: %s", _function.c_str(), str.c_str() );
 }
 

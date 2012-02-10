@@ -42,6 +42,18 @@
  #endif
 #endif  // _DEBUG
 
+#ifdef _SHOWTRACE
+ #define TRACE0(formatStr)  Log::Write( formatStr );
+ #define TRACE1(formatStr, v1) Log::Write( formatStr, v1 );
+ #define TRACE2(formatStr,v1, v2) Log::Write( formatStr, v1, v2 );
+ #define TRACE3(formatStr, v1, v2, v3) Log::Write( formatStr, v1, v2, v3 );
+#else
+ #define TRACE0(formatStr)
+ #define TRACE1(formatStr, v1)
+ #define TRACE2(formatStr,v1, v2)
+ #define TRACE3(formatStr, v1, v2, v3)
+#endif // _DEBUG
+
 #ifdef NULL
 #undef NULL
 #endif

@@ -218,7 +218,7 @@ void ValueList::OnValueChanged
 	if (IsCheckingChange())
 		if (m_valueIdx == index)
 		{
-			Log::Write("ERROR: Spurious value change was noted.");
+			Log::Write("WARNING: Spurious value change was noted.");
 			SetCheckingChange(false);
 		}
 

@@ -144,7 +144,7 @@ void ValueString::OnValueChanged
 	if (IsCheckingChange())
 		if (strcmp(m_value.c_str(), _value.c_str())==0)
 		{
-			Log::Write("ERROR: Spurious value change was noted.");
+			Log::Write("WARNING: Spurious value change was noted.");
 			SetCheckingChange(false);
 		}
 

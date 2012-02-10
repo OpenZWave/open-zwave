@@ -87,6 +87,8 @@ namespace OpenZWave
 		 */
 		uint32 GetDataSize()const{ return m_dataSize; }
 
+		void LogData( uint8* _buffer, uint32 _size, string _function );
+
 	protected:
 		/**
 		 * Used by the Wait class to test whether the buffer contains sufficient data.

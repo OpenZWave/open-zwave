@@ -278,6 +278,9 @@ void SerialControllerImpl::Read
 				// Read completed
 				GetOverlappedResult( m_hSerialController, &overlapped, &bytesRead, TRUE );
 
+				// Log the data
+//				LogData( buffer, bytesRead );
+
 				// Copy to the stream buffer
 				m_owner->Put( buffer, bytesRead );
 			}
@@ -307,6 +310,9 @@ void SerialControllerImpl::Read
 
 					// Read completed
 					GetOverlappedResult( m_hSerialController, &overlapped, &bytesRead, TRUE );
+
+					// log the data
+//					LogData( buffer, bytesRead );
 
 					// Copy to the stream buffer
 					m_owner->Put( buffer, bytesRead );
@@ -365,6 +371,29 @@ exitRead:
 	SetCommMask( m_hSerialController, 0 );
 	CancelIo( m_hSerialController );
 	CloseHandle( overlapped.hEvent );
+}
+
+void SerialControllerImpl::LogData
+(
+	uint8* _buffer,
+	uint32 _length
+)
+{
+	if( !_length ) return;
+
+	string str = "";
+	for( uint32 i=0; i<_length; ++i ) 
+	{
+		if( i )
+		{
+			str += ", ";
+		}
+			
+		char byteStr[8];
+		snprintf( byteStr, sizeof(byteStr), "0x%.2x", _buffer[i] );
+		str += byteStr;
+	}
+	Log::Write( "  Serial received: %s", str.c_str() );
 }
 
 //-----------------------------------------------------------------------------
