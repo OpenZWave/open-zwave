@@ -37,7 +37,7 @@ namespace OpenZWave
 {
 	class Driver;
 
-    class Controller: public Stream
+	class Controller: public Stream
 	{
 		// Controller is derived from Stream rather than containing one, so that
 		// we can use its Wait abilities without having to duplicate them here.

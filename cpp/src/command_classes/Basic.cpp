@@ -105,6 +105,7 @@ bool Basic::HandleMsg
 		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, 0 ) ) )
 		{
 			value->OnValueChanged( _data[1] );
+			value->Release();
 		}
 		return true;
 	}
@@ -182,6 +183,7 @@ void Basic::Set
 	if( ValueByte* value = static_cast<ValueByte*>( GetValue( 1, 0 ) ) )
 	{
 		value->Set( _level );
+		value->Release();
 	}
 }
 

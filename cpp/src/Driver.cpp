@@ -138,6 +138,8 @@ Driver::Driver
 	m_NAKCnt( 0 ),
 	m_ACKCnt( 0 ),
 	m_OOFCnt( 0 ),
+	m_dropped( 0 ),
+	m_retries( 0 ),
 	m_controllerReadCnt( 0 ),
 	m_controllerWriteCnt( 0 )
 {
@@ -2974,14 +2976,15 @@ bool Driver::EnablePoll
 {
 	// confirm that this node exists
 	uint8 nodeId = _valueId.GetNodeId();
-    Node* node = GetNode( nodeId );
+	Node* node = GetNode( nodeId );
 	if( node != NULL )
 	{
 		// confirm that this value is in the node's value store
 		if( Value* value = node->GetValue( _valueId ) )
 		{
-			value = value;
+			value->Release();
 			// Add the valueid to the polling list
+			LockNodes(); // do we need this?
 			m_pollMutex->Lock();
 
 			// See if the node is already in the poll list.
