@@ -177,7 +177,14 @@ Driver::~Driver
 )
 {
 	// Save the driver config before deleting anything else
-	WriteConfig();
+	bool save;
+	if( Options::Get()->GetOptionAsBool( "SaveConfiguration", &save) )
+	{
+		if( save )
+		{
+			WriteConfig();
+		}
+	}
 
 	// The order of the statements below has been achieved by mitigating freed memory
 	//references using a memory allocator checker. Do not rearrange unless you are
