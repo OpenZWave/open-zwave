@@ -448,7 +448,8 @@ bool Meter::HandleReport
 					// We need to create a value to hold the previous
 					if( Node* node = GetNodeUnsafe() )
 					{
-						previous = node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, baseIndex+1, "Previous Reading", value->GetUnits().c_str(), true, false, "0.0" );
+						node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, baseIndex+1, "Previous Reading", value->GetUnits().c_str(), true, false, "0.0" );
+						previous = static_cast<ValueDecimal*>( GetValue( _instance, baseIndex+1 ) );
 					}
 				}
 				if( previous )
@@ -470,7 +471,8 @@ bool Meter::HandleReport
 					// We need to create a value to hold the time delta
 					if( Node* node = GetNodeUnsafe() )
 					{
-						interval = node->CreateValueInt( ValueID::ValueGenre_User, GetCommandClassId(), _instance, baseIndex+2, "Interval", "seconds", true, false, 0 );
+						node->CreateValueInt( ValueID::ValueGenre_User, GetCommandClassId(), _instance, baseIndex+2, "Interval", "seconds", true, false, 0 );
+						interval = static_cast<ValueInt*>( GetValue( _instance, baseIndex+2 ) );
 					}
 				}
 				if( interval )
