@@ -57,21 +57,22 @@ Options* Options::Create
 		// Add the default options
 		s_instance->AddOptionString(	"ConfigPath",			_configPath,	false );	// Path to the OpenZWave config folder.
 		s_instance->AddOptionString(	"UserPath",				_userPath,		false );	// Path to the user's data folder.
-		s_instance->AddOptionBool(		"Logging",				true );						// Enable logging of library activity.
-		s_instance->AddOptionBool(		"Associate",			true );						// Enable automatic association of the controller with group one of every device.
+		s_instance->AddOptionBool(	"Logging",				true );					// Enable logging of library activity.
+		s_instance->AddOptionBool(	"Associate",			true );						// Enable automatic association of the controller with group one of every device.
 		s_instance->AddOptionString(	"Exclude",				string(""),		true );		// Remove support for the listed command classes.
 		s_instance->AddOptionString(	"Include",				string(""),		true );		// Only handle the specified command classes.  The Exclude option is ignored if anything is listed here.
-		s_instance->AddOptionBool(		"NotifyTransactions",	false );					// Notifications when transaction complete is reported.
-		s_instance->AddOptionString(	"Interface",			string(""),		true );		// Identify the serial port to be accessed (TODO: change the code so more than one serial port can be specified and HID)
-		s_instance->AddOptionInt(			"DriverMaxAttempts", 0);
+		s_instance->AddOptionBool(	"NotifyTransactions",		false );					// Notifications when transaction complete is reported.
+		s_instance->AddOptionString(	"Interface",			string(""),		true );			// Identify the serial port to be accessed (TODO: change the code so more than one serial port can be specified and HID)
+		s_instance->AddOptionBool(	"SaveConfiguration",		true );						// Save the XML configuration upon driver close.
+		s_instance->AddOptionInt(	"DriverMaxAttempts", 0);
 	}
 
 	return s_instance;
 }
 
 //-----------------------------------------------------------------------------
-// <Options::Create>
-// Static method to create an Options object
+// <Options::Destroy>
+// Static method to destroy an Options object
 //-----------------------------------------------------------------------------
 bool Options::Destroy
 (
@@ -92,7 +93,7 @@ bool Options::Destroy
 
 //-----------------------------------------------------------------------------
 // <Options::Options>
-// Destructor
+// Constructor
 //-----------------------------------------------------------------------------
 Options::Options
 (
@@ -107,7 +108,7 @@ Options::Options
 }
 
 //-----------------------------------------------------------------------------
-// <Options::Options>
+// <Options::~Options>
 // Destructor
 //-----------------------------------------------------------------------------
 Options::~Options
