@@ -80,7 +80,6 @@ Value::Value
 ):
 	m_min( 0 ),
 	m_max( 0 ),
-	m_refs( 1 ),
 	m_id( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, _type ),
 	m_label( _label ),
 	m_units( _units ),
@@ -101,7 +100,6 @@ Value::Value
 ):
 	m_min( 0 ),
 	m_max( 0 ),
-	m_refs( 1 ),
 	m_readOnly( false ),
 	m_writeOnly( false ),
 	m_isSet( false ),

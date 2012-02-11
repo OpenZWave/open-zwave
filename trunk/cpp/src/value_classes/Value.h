@@ -30,6 +30,7 @@
 
 #include <string>
 #include "Defs.h"
+#include "Ref.h"
 #include "ValueID.h"
 
 class TiXmlElement;
@@ -40,7 +41,7 @@ namespace OpenZWave
 
 	/** \brief Base class for values associated with a node.
 	 */
-	class Value
+	class Value: public Ref
 	{
 		friend class Driver;
 		friend class ValueStore;
@@ -72,8 +73,6 @@ namespace OpenZWave
 		virtual string const GetAsString() const { return ""; }
 		virtual bool SetFromString( string const& _value ) { return false; }
 
-		uint32 Release(){ uint32 t; if( !(t = --m_refs) ){ delete this; } return t; }
-
 		// Helpers
 		static ValueID::ValueGenre GetGenreEnumFromName( char const* _name );
 		static char const* GetGenreNameFromEnum( ValueID::ValueGenre _genre );
@@ -91,9 +90,6 @@ namespace OpenZWave
 		int32		m_max;
 
 	private:
-		uint32 AddRef(){ ++m_refs; return m_refs; }
-
-		uint32		m_refs;
 		ValueID		m_id;
 		string		m_label;
 		string		m_units;
