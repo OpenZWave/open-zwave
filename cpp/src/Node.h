@@ -185,7 +185,7 @@ namespace OpenZWave
 		 * \param _stage The desired query stage.
 		 * \see m_queryStage, m_queryPending
 		 */
-		void SetQueryStage( QueryStage const _stage );	 
+		void SetQueryStage( QueryStage const _stage, bool const _advance = true );
 
 		/**
 		 * Returns the current query stage enum.
