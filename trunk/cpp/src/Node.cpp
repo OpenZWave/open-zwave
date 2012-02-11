@@ -531,7 +531,8 @@ void Node::QueryStageRetry
 //-----------------------------------------------------------------------------
 void Node::SetQueryStage
 (
-	QueryStage const _stage
+	QueryStage const _stage,
+	bool const _advance	// = true
 )
 {
 	if( (int)_stage < (int)m_queryStage )
@@ -545,7 +546,10 @@ void Node::SetQueryStage
 		}
 	}
 
-	AdvanceQueries();
+	if( _advance )
+	{
+		AdvanceQueries();
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -633,7 +637,7 @@ void Node::ReadXML
 			}
 		}
 
-		SetQueryStage( queryStage );
+		SetQueryStage( queryStage, false );
 	}
 
 	if( m_queryStage != QueryStage_None )
