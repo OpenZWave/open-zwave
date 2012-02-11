@@ -1499,7 +1499,7 @@ ValueID Node::CreateValueID
 // <Node::CreateValueBool>
 // Helper to create a new bool value and add it to the value store
 //-----------------------------------------------------------------------------
-ValueBool* Node::CreateValueBool
+bool Node::CreateValueBool
 (
 	ValueID::ValueGenre const _genre,
 	uint8 const _commandClassId,
@@ -1514,15 +1514,20 @@ ValueBool* Node::CreateValueBool
 {
   	ValueBool* value = new ValueBool( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default );
 	ValueStore* store = GetValueStore();
-	store->AddValue( value );
-	return value;
+	if( store->AddValue( value ) )
+	{	
+		value->Release();
+		return true;
+	}
+	
+	return false;
 }
 
 //-----------------------------------------------------------------------------
 // <Node::CreateValueButton>
 // Helper to create a new trigger value and add it to the value store
 //-----------------------------------------------------------------------------
-ValueButton* Node::CreateValueButton
+bool Node::CreateValueButton
 (
 	ValueID::ValueGenre const _genre,
 	uint8 const _commandClassId,
@@ -1533,15 +1538,20 @@ ValueButton* Node::CreateValueButton
 {
 	ValueButton* value = new ValueButton( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label );
 	ValueStore* store = GetValueStore();
-	store->AddValue( value );
-	return value;
+	if( store->AddValue( value ) )
+	{	
+		value->Release();
+		return true;
+	}
+	
+	return false;
 }
 
 //-----------------------------------------------------------------------------
 // <Node::CreateValueByte>
 // Helper to create a new byte value and add it to the value store
 //-----------------------------------------------------------------------------
-ValueByte* Node::CreateValueByte
+bool Node::CreateValueByte
 (
 	ValueID::ValueGenre const _genre,
 	uint8 const _commandClassId,
@@ -1556,15 +1566,20 @@ ValueByte* Node::CreateValueByte
 {
   	ValueByte* value = new ValueByte( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default );
 	ValueStore* store = GetValueStore();
-	store->AddValue( value );
-	return value;
+	if( store->AddValue( value ) )
+	{	
+		value->Release();
+		return true;
+	}
+	
+	return false;
 }
 
 //-----------------------------------------------------------------------------
 // <Node::CreateValueDecimal>
 // Helper to create a new decimal value and add it to the value store
 //-----------------------------------------------------------------------------
-ValueDecimal* Node::CreateValueDecimal
+bool Node::CreateValueDecimal
 (
 	ValueID::ValueGenre const _genre,
 	uint8 const _commandClassId,
@@ -1579,15 +1594,20 @@ ValueDecimal* Node::CreateValueDecimal
 {
   	ValueDecimal* value = new ValueDecimal( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default );
 	ValueStore* store = GetValueStore();
-	store->AddValue( value );
-	return value;
+	if( store->AddValue( value ) )
+	{	
+		value->Release();
+		return true;
+	}
+	
+	return false;
 }
 
 //-----------------------------------------------------------------------------
 // <Node::CreateValueInt>
 // Helper to create a new int value and add it to the value store
 //-----------------------------------------------------------------------------
-ValueInt* Node::CreateValueInt
+bool Node::CreateValueInt
 (
 	ValueID::ValueGenre const _genre,
 	uint8 const _commandClassId,
@@ -1602,15 +1622,20 @@ ValueInt* Node::CreateValueInt
 {
   	ValueInt* value = new ValueInt( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default );
 	ValueStore* store = GetValueStore();
-	store->AddValue( value );
-	return value;
+	if( store->AddValue( value ) )
+	{	
+		value->Release();
+		return true;
+	}
+	
+	return false;
 }
 
 //-----------------------------------------------------------------------------
 // <Node::CreateValueList>
 // Helper to create a new list value and add it to the value store
 //-----------------------------------------------------------------------------
-ValueList* Node::CreateValueList
+bool Node::CreateValueList
 (
 	ValueID::ValueGenre const _genre,
 	uint8 const _commandClassId,
@@ -1626,15 +1651,20 @@ ValueList* Node::CreateValueList
 {
   	ValueList* value = new ValueList( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _items, _default );
 	ValueStore* store = GetValueStore();
-	store->AddValue( value );
-	return value;
+	if( store->AddValue( value ) )
+	{	
+		value->Release();
+		return true;
+	}
+	
+	return false;
 }
 
 //-----------------------------------------------------------------------------
 // <Node::CreateValueSchedule>
 // Helper to create a new schedule value and add it to the value store
 //-----------------------------------------------------------------------------
-ValueSchedule* Node::CreateValueSchedule
+bool Node::CreateValueSchedule
 (
 	ValueID::ValueGenre const _genre,
 	uint8 const _commandClassId,
@@ -1648,15 +1678,20 @@ ValueSchedule* Node::CreateValueSchedule
 {
 	ValueSchedule* value = new ValueSchedule( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly );
 	ValueStore* store = GetValueStore();
-	store->AddValue( value );
-	return value;
+	if( store->AddValue( value ) )
+	{	
+		value->Release();
+		return true;
+	}
+	
+	return false;
 }
 
 //-----------------------------------------------------------------------------
 // <Node::CreateValueShort>
 // Helper to create a new short value and add it to the value store
 //-----------------------------------------------------------------------------
-ValueShort* Node::CreateValueShort
+bool Node::CreateValueShort
 (
 	ValueID::ValueGenre const _genre,
 	uint8 const _commandClassId,
@@ -1671,15 +1706,20 @@ ValueShort* Node::CreateValueShort
 {
   	ValueShort* value = new ValueShort( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default );
 	ValueStore* store = GetValueStore();
-	store->AddValue( value );
-	return value;
+	if( store->AddValue( value ) )
+	{	
+		value->Release();
+		return true;
+	}
+	
+	return false;
 }
 
 //-----------------------------------------------------------------------------
 // <Node::CreateValueString>
 // Helper to create a new string value and add it to the value store
 //-----------------------------------------------------------------------------
-ValueString* Node::CreateValueString
+bool Node::CreateValueString
 (
 	ValueID::ValueGenre const _genre,
 	uint8 const _commandClassId,
@@ -1694,8 +1734,13 @@ ValueString* Node::CreateValueString
 {
   	ValueString* value = new ValueString( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default );
 	ValueStore* store = GetValueStore();
-	store->AddValue( value );
-	return value;
+	if( store->AddValue( value ) )
+	{	
+		value->Release();
+		return true;
+	}
+	
+	return false;
 }
 
 //-----------------------------------------------------------------------------
