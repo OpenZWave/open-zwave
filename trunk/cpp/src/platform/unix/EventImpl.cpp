@@ -142,11 +142,11 @@ bool EventImpl::Wait
 	else
 	{
 		++m_waitingThreads;
-        if( _timeout == 0 )
+	        if( _timeout == 0 )
 		{
-            result = m_isSignaled;
-        }
-        else if( _timeout > 0 )
+	            result = m_isSignaled;
+		}
+		else if( _timeout > 0 )
 		{
 			struct timeval now;
 			struct timespec abstime;
