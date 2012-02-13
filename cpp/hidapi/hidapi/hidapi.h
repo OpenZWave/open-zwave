@@ -69,13 +69,44 @@ extern "C" {
 			    (Windows/Mac only).*/
 			unsigned short usage;
 			/** The USB interface which this logical device
-			    represents (Linux/libusb implementation only). */
+			    represents. Valid on both Linux implementations
+			    in all cases, and valid on the Windows implementation
+			    only if the device contains more than one interface. */
 			int interface_number;
 
 			/** Pointer to the next device */
 			struct hid_device_info *next;
 		};
 
+
+		/** @brief Initialize the HIDAPI library.
+
+			This function initializes the HIDAPI library. Calling it is not
+			strictly necessary, as it will be called automatically by
+			hid_enumerate() and any of the hid_open_*() functions if it is
+			needed.  This function should be called at the beginning of
+			execution however, if there is a chance of HIDAPI handles
+			being opened by different threads simultaneously.
+			
+			@ingroup API
+
+			@returns
+				This function returns 0 on success and -1 on error.
+		*/
+		int HID_API_EXPORT HID_API_CALL hid_init(void);
+
+		/** @brief Finalize the HIDAPI library.
+
+			This function frees all of the static data associated with
+			HIDAPI. It should be called at the end of execution to avoid
+			memory leaks.
+
+			@ingroup API
+
+		    @returns
+				This function returns 0 on success and -1 on error.
+		*/
+		int HID_API_EXPORT HID_API_CALL hid_exit(void);
 
 		/** @brief Enumerate the HID Devices.
 
@@ -168,6 +199,26 @@ extern "C" {
 				-1 on error.
 		*/
 		int  HID_API_EXPORT HID_API_CALL hid_write(hid_device *device, const unsigned char *data, size_t length);
+
+		/** @brief Read an Input report from a HID device with timeout.
+
+			Input reports are returned
+			to the host through the INTERRUPT IN endpoint. The first byte will
+			contain the Report number if the device uses numbered reports.
+
+			@ingroup API
+			@param device A device handle returned from hid_open().
+			@param data A buffer to put the read data into.
+			@param length The number of bytes to read. For devices with
+				multiple reports, make sure to read an extra byte for
+				the report number.
+			@param milliseconds timeout in milliseconds or -1 for blocking wait.
+
+			@returns
+				This function returns the actual number of bytes read and
+				-1 on error.
+		*/
+		int HID_API_EXPORT HID_API_CALL hid_read_timeout(hid_device *dev, unsigned char *data, size_t length, int milliseconds);
 
 		/** @brief Read an Input report from a HID device.
 

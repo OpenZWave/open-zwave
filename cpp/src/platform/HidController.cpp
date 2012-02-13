@@ -166,6 +166,7 @@ bool HidController::Close
 	}
 
 	m_bOpen = false;
+	hid_exit();
 	return true;
 }
 
@@ -246,7 +247,7 @@ bool HidController::Init
     int hidApiResult;
     const uint8 dataOutEnableZwave[3] = { 0x02, 0x01, 0x04 };
 
-	Log::Write( "Open HID port %s", m_hidControllerName.c_str() );
+    Log::Write( "Open HID port %s", m_hidControllerName.c_str() );
     m_hHidController = hid_open(m_vendorId, m_productId, NULL);
     if (!m_hHidController)
     {   
@@ -343,17 +344,17 @@ bool HidController::Init
     hidApiResult = hid_set_nonblocking(m_hHidController, 0);
     CHECK_HIDAPI_RESULT(hidApiResult, HidOpenFailure);
 	
-	// Open successful
+    // Open successful
     m_bOpen = true;
-	return true;
+    return true;
 
 HidOpenFailure:
- 	Log::Write( "Failed to open HID port %s", m_hidControllerName.c_str() );
+    Log::Write( "Failed to open HID port %s", m_hidControllerName.c_str() );
     const wchar_t* errString = hid_error(m_hHidController);
     Log::Write("HIDAPI ERROR STRING (if any):\n%ls\n", errString);
     hid_close(m_hHidController);
-	m_hHidController = NULL;
-	return false;
+    m_hHidController = NULL;
+    return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -480,9 +481,9 @@ uint32 HidController::Write
 //-----------------------------------------------------------------------------
 int HidController::GetFeatureReport
 (
-    uint32 _length,
+	uint32 _length,
 	uint8  _reportId,
-    uint8* _buffer
+	uint8* _buffer
 )
 {
     int result;
