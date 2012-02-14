@@ -72,7 +72,10 @@ void WaitImpl::AddWatcher
 	watcher.m_context = _context;
 	
 	EnterCriticalSection( &m_criticalSection );
+
 	m_watchers.push_back( watcher );
+
+	LeaveCriticalSection( &m_criticalSection );
 
 	// If the object is already in a signalled state, notify the watcher immediately
 	if( m_owner->IsSignalled() )
@@ -80,7 +83,6 @@ void WaitImpl::AddWatcher
 		_callback( _context );
 	}
 
-	LeaveCriticalSection( &m_criticalSection );
 }
 
 //-----------------------------------------------------------------------------
@@ -120,12 +122,12 @@ void WaitImpl::Notify
 )
 {
 	EnterCriticalSection( &m_criticalSection );
+
 	for( list<Watcher>::iterator it=m_watchers.begin(); it!=m_watchers.end(); ++it )
 	{
 		Watcher const& watcher = *it;
 		watcher.m_callback( watcher.m_context );
 	}
+
 	LeaveCriticalSection( &m_criticalSection );
 }
-
-

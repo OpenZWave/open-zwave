@@ -523,6 +523,7 @@ bool Manager::EnablePoll
 {
 	if( Driver* driver = GetDriver( _valueId.GetHomeId() ) )
 	{
+		Log::Write( "EnablePoll for Home ID 0x%.8x and Value ID 0x%.8x", _valueId.GetHomeId(), _valueId.GetId() );
 		return( driver->EnablePoll( _valueId ) );
 	}
 
@@ -541,6 +542,7 @@ bool Manager::DisablePoll
 {
 	if( Driver* driver = GetDriver( _valueId.GetHomeId() ) )
 	{
+		Log::Write( "DisablePoll for Home ID 0x%.8x and Value ID 0x%.8x", _valueId.GetHomeId(), _valueId.GetId() );
 		return( driver->DisablePoll( _valueId ) );
 	}
 

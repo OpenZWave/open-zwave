@@ -279,7 +279,8 @@ void SerialControllerImpl::Read
 				GetOverlappedResult( m_hSerialController, &overlapped, &bytesRead, TRUE );
 
 				// Copy to the stream buffer
-				m_owner->Put( buffer, bytesRead );
+				if( bytesRead > 0 )
+					m_owner->Put( buffer, bytesRead );
 			}
 			else
 			{
@@ -309,7 +310,8 @@ void SerialControllerImpl::Read
 					GetOverlappedResult( m_hSerialController, &overlapped, &bytesRead, TRUE );
 
 					// Copy to the stream buffer
-					m_owner->Put( buffer, bytesRead );
+					if( bytesRead > 0 )
+						m_owner->Put( buffer, bytesRead );
 				}
 				else
 				{
