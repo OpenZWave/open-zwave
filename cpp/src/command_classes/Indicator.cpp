@@ -104,6 +104,7 @@ bool Indicator::HandleMsg
 		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, 0 ) ) )
 		{
 			value->OnValueChanged( _data[1] != 0 );
+			value->Release();
 		}
 		return true;
 	}

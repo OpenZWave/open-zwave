@@ -48,9 +48,12 @@ using namespace OpenZWave;
 HidController::HidController
 (
 ):
+	m_hHidController( NULL ),
+	m_thread( NULL ),
 	m_vendorId( 0x1b5f ),	// Wayne Dalton
 	m_productId( 0x01 ),	// ControlThink ThinkStick
 	m_serialNumber( "" ),
+	m_hidControllerName( "" ),
 	m_bOpen( false )
 {
 }
@@ -166,6 +169,8 @@ bool HidController::Close
 	}
 
 	m_bOpen = false;
+	hid_close( m_hHidController );
+	m_hHidController = NULL;
 	hid_exit();
 	return true;
 }
@@ -317,6 +322,7 @@ bool HidController::Init
             snprintf(&serialHex[i], serialLength - i + 1, "%hx", hidInfoString[i] & 0x0f);
         }
         Log::Write( "\tSerial #:     %ls   --> %s", hidInfoString, serialHex );
+	delete [] serialHex;
     }
     Log::Write("\n");
 

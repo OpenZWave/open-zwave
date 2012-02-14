@@ -101,7 +101,7 @@ bool ThreadImpl::Terminate
 (
 )
 {
-	void* data;
+	void* data = NULL;
 
 	//fprintf(stderr, "thread %s stopping %08x running %d\n", m_name.c_str(), m_hThread, m_bIsRunning );
 	//fflush(stderr);
@@ -114,11 +114,11 @@ bool ThreadImpl::Terminate
 	// We need to find another way to interrupt select.
 	// thread_kill( m_hThread, SIGALRM );
 
-	pthread_cancel(m_hThread);
-	pthread_join( m_hThread, &data );
-
 	//m_hThread = NULL;
 	m_bIsRunning = false;
+	pthread_cancel( m_hThread );
+	pthread_join( m_hThread, &data );
+
 	return true;
 }
 
