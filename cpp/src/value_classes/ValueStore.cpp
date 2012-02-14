@@ -29,6 +29,7 @@
 #include "Value.h"
 #include "Manager.h"
 #include "Notification.h"
+#include "Log.h"
 
 using namespace OpenZWave;
 
@@ -44,8 +45,8 @@ ValueStore::~ValueStore
 	map<uint32,Value*>::iterator it = m_values.begin();
 	while( !m_values.empty() )
 	{
-		it->second->Release();
-		m_values.erase( it );
+		ValueID const& valueId = it->second->GetID();
+		RemoveValue( valueId.GetValueStoreKey() );
 		it = m_values.begin();
 	}
 }

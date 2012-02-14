@@ -135,6 +135,9 @@ Node::~Node
 (
 )
 {
+	// Delete the values
+	delete m_values;
+
 	// Delete the command classes
 	while( !m_commandClassMap.empty() )
 	{
@@ -157,9 +160,6 @@ Node::~Node
 		map<uint8,uint8>::iterator it = m_buttonMap.begin();
 		m_buttonMap.erase( it );
 	}
-
-	// Delete the values
-	delete m_values;
 }
 
 //-----------------------------------------------------------------------------
@@ -1523,7 +1523,8 @@ bool Node::CreateValueBool
 		value->Release();
 		return true;
 	}
-	
+
+	value->Release();
 	return false;
 }
 
@@ -1547,7 +1548,8 @@ bool Node::CreateValueButton
 		value->Release();
 		return true;
 	}
-	
+
+	value->Release();
 	return false;
 }
 
@@ -1575,7 +1577,8 @@ bool Node::CreateValueByte
 		value->Release();
 		return true;
 	}
-	
+
+	value->Release();
 	return false;
 }
 
@@ -1603,7 +1606,8 @@ bool Node::CreateValueDecimal
 		value->Release();
 		return true;
 	}
-	
+
+	value->Release();
 	return false;
 }
 
@@ -1631,7 +1635,8 @@ bool Node::CreateValueInt
 		value->Release();
 		return true;
 	}
-	
+
+	value->Release();
 	return false;
 }
 
@@ -1660,7 +1665,8 @@ bool Node::CreateValueList
 		value->Release();
 		return true;
 	}
-	
+
+	value->Release();
 	return false;
 }
 
@@ -1687,7 +1693,8 @@ bool Node::CreateValueSchedule
 		value->Release();
 		return true;
 	}
-	
+
+	value->Release();
 	return false;
 }
 
@@ -1715,7 +1722,8 @@ bool Node::CreateValueShort
 		value->Release();
 		return true;
 	}
-	
+
+	value->Release();
 	return false;
 }
 
@@ -1743,7 +1751,8 @@ bool Node::CreateValueString
 		value->Release();
 		return true;
 	}
-	
+
+	value->Release();
 	return false;
 }
 
@@ -1758,14 +1767,13 @@ void Node::RemoveValueList
 {
 	ValueStore* store = GetValueStore();
 	store->RemoveValue( _value->GetID().GetValueStoreKey() );
-	delete _value;
 }
 
 //-----------------------------------------------------------------------------
 // <Node::CreateValueFromXML>
 // Get the value object with the specified ID
 //-----------------------------------------------------------------------------
-Value* Node::CreateValueFromXML
+bool Node::CreateValueFromXML
 ( 
 	uint8 const _commandClassId,
 	TiXmlElement const* _valueElement
@@ -1787,6 +1795,7 @@ Value* Node::CreateValueFromXML
 		case ValueID::ValueType_Short:		{	value = new ValueShort();		break;	}
 		case ValueID::ValueType_String:		{	value = new ValueString();		break;	}
 		case ValueID::ValueType_Button:		{	value = new ValueButton();		break;	}
+		default:				{	Log::Write( "Unknown ValueType in XML: %s", _valueElement->Attribute( "type" ) ); break; }
 	}
 
 	if( value )
@@ -1794,10 +1803,16 @@ Value* Node::CreateValueFromXML
 		value->ReadXML( m_homeId, m_nodeId, _commandClassId, _valueElement );
 
 		ValueStore* store = GetValueStore();
-		store->AddValue( value );
+		if( store->AddValue( value ) )
+		{
+			value->Release();
+			return true;
+		}
+
+		value->Release();
 	}
 
-	return value;
+	return false;
 }
 
 //-----------------------------------------------------------------------------

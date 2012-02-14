@@ -185,8 +185,10 @@ bool ThermostatSetpoint::RequestValue
 		return true;
 	}
 
-	if( GetValue( 1, _setPointIndex ) )
+	Value* value = GetValue( 1, _setPointIndex );
+	if( value != NULL )
 	{
+		value->Release();
 		// Request the setpoint value
 		Msg* msg = new Msg( "Request Current Thermostat Setpoint", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 		msg->SetInstance( this, _instance );
@@ -228,6 +230,7 @@ bool ThermostatSetpoint::HandleMsg
 			{
 				value->SetPrecision( precision );
 			}
+			value->Release();
 
 			Log::Write( "Received thermostat setpoint report from node %d: Setpoint %s = %s%s", GetNodeId(), value->GetLabel().c_str(), value->GetValue().c_str(), value->GetUnits().c_str() );		
 		}

@@ -401,7 +401,7 @@ namespace OpenZWave
 		void RemoveValueList( ValueList* _value );
 
 		void ReadValueFromXML( uint8 const _commandClassId, TiXmlElement const* _valueElement );
-		Value* CreateValueFromXML( uint8 const _commandClassId, TiXmlElement const* _valueElement );
+		bool CreateValueFromXML( uint8 const _commandClassId, TiXmlElement const* _valueElement );
 
 	private:
 		ValueStore* GetValueStore()const{ return m_values; }

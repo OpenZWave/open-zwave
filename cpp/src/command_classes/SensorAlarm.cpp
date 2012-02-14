@@ -91,8 +91,10 @@ bool SensorAlarm::RequestState
 	{
 		for( uint8 i=0; i<SensorAlarm_Count; ++i )
 		{
-			if( NULL != GetValue( 1, i ) )
+			Value* value = GetValue( 1, i );
+			if( value != NULL )
 			{
+				value->Release();
 				// There is a value for this alarm type, so request it
 				requests |= RequestValue( _requestFlags, i, _instance, _queue );
 			}
@@ -163,6 +165,7 @@ bool SensorAlarm::HandleMsg
 			// uint16 time = (((uint16)_data[4])<<8) | (uint16)_data[5];  Don't know what to do with this yet.
 
 			value->OnValueChanged( state );
+			value->Release();
 			Log::Write( "Received alarm state report from node %d: %s = %d", sourceNodeId, value->GetLabel().c_str(), state );		
 		}
 

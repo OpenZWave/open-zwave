@@ -203,6 +203,11 @@ Driver::~Driver
 	m_controller->Close();
 	m_controller->Release();
 
+	if( m_currentMsg != NULL )
+	{
+		RemoveCurrentMsg();
+	}
+
 	// Clear the send Queue
 	for( int32 i=0; i<MsgQueue_Count; ++i )
 	{
@@ -225,12 +230,11 @@ Driver::~Driver
 	{
 		if( GetNodeUnsafe( i ) )
 		{
+			delete m_nodes[i];
+			m_nodes[i] = NULL;
 			Notification* notification = new Notification( Notification::Type_NodeRemoved );
 			notification->SetHomeAndNodeIds( m_homeId, i );
 			QueueNotification( notification ); 
-
-			delete m_nodes[i];
-			m_nodes[i] = NULL;
 		}
 	}
 	ReleaseNodes();
@@ -238,8 +242,8 @@ Driver::~Driver
 	NotifyWatchers();
 	m_nodeMutex->Release();
     
-    // Unsure at what point this is safe to do?
-    delete m_controllerReplication;
+	// Unsure at what point this is safe to do?
+	delete m_controllerReplication;
 }
 
 //-----------------------------------------------------------------------------
@@ -1913,12 +1917,12 @@ void Driver::HandleSerialAPIGetInitDataResponse
 					{
 						// This node no longer exists in the Z-Wave network
 						Log::Write( "    Node %.3d: Removed", nodeId );
+						delete m_nodes[nodeId];
+						m_nodes[nodeId] = NULL;
 						Notification* notification = new Notification( Notification::Type_NodeRemoved );
 						notification->SetHomeAndNodeIds( m_homeId, nodeId );
 						QueueNotification( notification ); 
 
-						delete m_nodes[nodeId];
-						m_nodes[nodeId] = NULL;
 						ReleaseNodes();
 					}
 				}
@@ -2378,14 +2382,14 @@ void Driver::HandleRemoveNodeFromNetworkRequest
 
 			if ( m_controllerCommandNode != 0 )
 			{
-				Notification* notification = new Notification( Notification::Type_NodeRemoved );
-				notification->SetHomeAndNodeIds( m_homeId, m_controllerCommandNode );
-				QueueNotification( notification ); 
-			
 				LockNodes();
 				delete m_nodes[m_controllerCommandNode];
 				m_nodes[m_controllerCommandNode] = NULL;
 				ReleaseNodes();
+
+				Notification* notification = new Notification( Notification::Type_NodeRemoved );
+				notification->SetHomeAndNodeIds( m_homeId, m_controllerCommandNode );
+				QueueNotification( notification ); 
 			}
 
 			if( m_controllerCallback )
@@ -2786,14 +2790,14 @@ bool Driver::HandleApplicationUpdateRequest
 		{
 			Log::Write( "** Network change **: Z-Wave node %d was removed", nodeId );
 
-			Notification* notification = new Notification( Notification::Type_NodeRemoved );
-			notification->SetHomeAndNodeIds( m_homeId, nodeId );
-			QueueNotification( notification ); 
-
 			LockNodes();
 			delete m_nodes[nodeId];
 			m_nodes[nodeId] = NULL;
 			ReleaseNodes();
+
+			Notification* notification = new Notification( Notification::Type_NodeRemoved );
+			notification->SetHomeAndNodeIds( m_homeId, nodeId );
+			QueueNotification( notification ); 
 			break;
 		}
 		case UPDATE_STATE_NEW_ID_ASSIGNED:
@@ -3253,10 +3257,10 @@ void Driver::InitNode
 	if( m_nodes[_nodeId] )
 	{
 		// Remove the original node
+		delete m_nodes[_nodeId];
 		Notification* notification = new Notification( Notification::Type_NodeRemoved );
 		notification->SetHomeAndNodeIds( m_homeId, _nodeId );
 		QueueNotification( notification ); 
-		delete m_nodes[_nodeId];
 	}
 
 	// Add the new node

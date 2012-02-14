@@ -112,6 +112,7 @@ bool Protection::HandleMsg
 		if( ValueList* value = static_cast<ValueList*>( GetValue( _instance, 0 ) ) )
 		{
 			value->OnValueChanged( (int)_data[1] );
+			value->Release();
 		}
 
 		return true;
