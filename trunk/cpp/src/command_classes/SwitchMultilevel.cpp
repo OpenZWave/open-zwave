@@ -163,6 +163,7 @@ bool SwitchMultilevel::HandleMsg
 		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, SwitchMultilevelIndex_Level ) ) )
 		{
 			value->OnValueChanged( _data[1] );
+			value->Release();
 		}
 		return true;
 	}
@@ -183,10 +184,12 @@ bool SwitchMultilevel::HandleMsg
 			if( NULL != ( button = static_cast<ValueButton*>( GetValue( _instance, SwitchMultilevelIndex_Bright ) ) ) )
 			{
 				button->SetLabel( c_switchLabelsPos[switchType1] );
+				button->Release();
 			}
 			if( NULL != ( button = static_cast<ValueButton*>( GetValue( _instance, SwitchMultilevelIndex_Dim ) ) ) )
 			{
 				button->SetLabel( c_switchLabelsNeg[switchType1] );
+				button->Release();
 			}
 		}
 		
@@ -195,10 +198,12 @@ bool SwitchMultilevel::HandleMsg
 			if( NULL != ( button = static_cast<ValueButton*>( GetValue( _instance, SwitchMultilevelIndex_Inc ) ) ) )
 			{
 				button->SetLabel( c_switchLabelsPos[switchType2] );
+				button->Release();
 			}
 			if( NULL != ( button = static_cast<ValueButton*>( GetValue( _instance, SwitchMultilevelIndex_Dec ) ) ) )
 			{
 				button->SetLabel( c_switchLabelsNeg[switchType2] );
+				button->Release();
 			}
 		}
 		return true;
@@ -255,6 +260,7 @@ bool SwitchMultilevel::SetValue
 			if( ValueByte* value = static_cast<ValueByte*>( GetValue( instance, SwitchMultilevelIndex_Level ) ) )
 			{
 				res = SetLevel( instance, value->GetValue() );
+				value->Release();
 			}
 			break;
 		}
@@ -271,6 +277,7 @@ bool SwitchMultilevel::SetValue
 				{
 					res = StopLevelChange( instance );
 				}
+				button->Release();
 			}
 			break;
 		}
@@ -287,6 +294,7 @@ bool SwitchMultilevel::SetValue
 				{
 					res = StopLevelChange( instance );
 				}
+				button->Release();
 			}
 			break;
 		}
@@ -331,6 +339,7 @@ bool SwitchMultilevel::SetValue
 				{
 					res = StopLevelChange( instance );
 				}
+				button->Release();
 			}
 			break;
 		}
@@ -347,6 +356,7 @@ bool SwitchMultilevel::SetValue
 				{
 					res = StopLevelChange( instance );
 				}
+				button->Release();
 			}
 			break;
 		}
@@ -373,6 +383,7 @@ bool SwitchMultilevel::SetLevel
 	if( ValueByte* durationValue = static_cast<ValueByte*>( GetValue( _instance, SwitchMultilevelIndex_Duration ) ) )
 	{
 		uint8 duration = durationValue->GetValue();
+		durationValue->Release();
 		if( duration == 0xff )
 		{
 			Log::Write( "  Duration: Default" );
@@ -425,6 +436,7 @@ bool SwitchMultilevel::StartLevelChange
 	{
 		if( ignoreStartLevel->GetValue() )
 		{
+			ignoreStartLevel->Release();
 			// Set the ignore start level flag
 			direction |= 0x20;
 		}
@@ -435,6 +447,7 @@ bool SwitchMultilevel::StartLevelChange
 	if( ValueByte* startLevelValue = static_cast<ValueByte*>( GetValue( _instance, SwitchMultilevelIndex_StartLevel ) ) )
 	{
 		startLevel = startLevelValue->GetValue();
+		startLevelValue->Release();
 	}
 	Log::Write( "  Start Level:        %d", startLevel );
 
@@ -443,6 +456,7 @@ bool SwitchMultilevel::StartLevelChange
 	{
 		length = 5;
 		duration = durationValue->GetValue();
+		durationValue->Release();
 		Log::Write( "  Duration:           %d", duration );
 	}
 
@@ -453,6 +467,7 @@ bool SwitchMultilevel::StartLevelChange
 		{
 			length = 6;
 			step = stepValue->GetValue();
+			stepValue->Release();
 			Log::Write( "  Step Size:          %d", step );
 		}
 	}

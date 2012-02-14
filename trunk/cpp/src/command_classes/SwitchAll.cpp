@@ -112,6 +112,7 @@ bool SwitchAll::HandleMsg
 		if( ValueList* value = static_cast<ValueList*>( GetValue( _instance, 0 ) ) )
 		{
 			value->OnValueChanged( (int32)_data[1] );
+			value->Release();
 			Log::Write( "Received SwitchAll report from node %d: %s", GetNodeId(), value->GetItem().m_label.c_str() );
 		}
  		return true;
