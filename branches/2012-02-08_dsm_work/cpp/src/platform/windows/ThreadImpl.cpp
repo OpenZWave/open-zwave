@@ -110,7 +110,6 @@ bool ThreadImpl::Terminate
 	}
 
 	// This can cause all sorts of trouble if the thread is holding a lock.
-	std::printf("Thread %s (0x.%4x) terminating\n", m_name.c_str(), m_hThread);
 	TerminateThread( m_hThread, 0 );
 	m_hThread = INVALID_HANDLE_VALUE;
 	return true;

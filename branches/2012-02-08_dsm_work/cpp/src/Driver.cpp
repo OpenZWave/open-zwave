@@ -166,8 +166,6 @@ Driver::Driver
 	m_controller->SetSignalThreshold( 1 );
 
 	Options::Get()->GetOptionAsBool( "NotifyTransactions", &m_notifytransactions );
-
-//	Log::SetDriver( this );
 }
 
 //-----------------------------------------------------------------------------
@@ -178,10 +176,15 @@ Driver::~Driver
 (
 )
 {
-	Log::Write("~Driver start\n");
-
 	// Save the driver config before deleting anything else
-	WriteConfig();
+	bool save;
+	if( Options::Get()->GetOptionAsBool( "SaveConfiguration", &save) )
+	{
+		if( save )
+		{
+			WriteConfig();
+		}
+	}
 
 	// The order of the statements below has been achieved by mitigating freed memory
 	//references using a memory allocator checker. Do not rearrange unless you are
@@ -193,14 +196,17 @@ Driver::~Driver
 
 	m_driverThread->Stop();
 	m_driverThread->Release();
-	Log::Write("1");
 
 	m_sendMutex->Release();
 	m_pollMutex->Release();
 
 	m_controller->Close();
 	m_controller->Release();
-	Log::Write("2");
+
+	if( m_currentMsg != NULL )
+	{
+		RemoveCurrentMsg();
+	}
 
 	// Clear the send Queue
 	for( int32 i=0; i<MsgQueue_Count; ++i )
@@ -217,7 +223,6 @@ Driver::~Driver
 
 		m_queueEvent[i]->Release();
 	}
-	Log::Write("3");
 
 	// Clear the node data
 	LockNodes();
@@ -225,24 +230,20 @@ Driver::~Driver
 	{
 		if( GetNodeUnsafe( i ) )
 		{
+			delete m_nodes[i];
+			m_nodes[i] = NULL;
 			Notification* notification = new Notification( Notification::Type_NodeRemoved );
 			notification->SetHomeAndNodeIds( m_homeId, i );
 			QueueNotification( notification ); 
-
-			delete m_nodes[i];
-			m_nodes[i] = NULL;
 		}
 	}
 	ReleaseNodes();
-	Log::Write("4");
 
 	NotifyWatchers();
 	m_nodeMutex->Release();
-	Log::Write("5");
     
-    // Unsure at what point this is safe to do?
-    delete m_controllerReplication;
-	Log::Write("~Driver end\n");
+	// Unsure at what point this is safe to do?
+	delete m_controllerReplication;
 }
 
 //-----------------------------------------------------------------------------
@@ -324,7 +325,6 @@ void Driver::DriverThreadProc
 					case -1:	
 					{
 						// Wait has timed out - time to resend
-						Log::Write("DriverThreadProc wait timed out, timeout=%d", timeout);
 						if( WriteMsg() )
 						{
 							retryTimeStamp.SetTime( RETRY_TIMEOUT );
@@ -333,14 +333,12 @@ void Driver::DriverThreadProc
 					}
 					case 0:
 					{
-						Log::Write("DriverThread exit\n");
 						// Exit has been signalled
 						return;
 					}
 					case 1:
 					{
 						// Data has been received
-//						Log::Write("\t\tm_controller event (data received)");
 						ReadMsg();
 						break;
 					}
@@ -736,7 +734,6 @@ void Driver::SendMsg
 
 	MsgQueueItem item;
 	item.m_command = MsgQueueCmd_SendMsg;
-	if( _msg == NULL ) Log::Write( "ERROR: Trying to send a null message." );
 	item.m_msg = _msg;
 
 	// If the message is for a sleeping node, we queue it in the node itself.
@@ -843,7 +840,7 @@ bool Driver::WriteMsg
 {
 	if( !m_currentMsg )
 	{
-		Log::Write( "ERROR in WriteMsg: m_currentMsg is null." );
+		assert(0);
 		return false;
 	}
 
@@ -1139,7 +1136,6 @@ bool Driver::ReadMsg
 	if( !m_controller->Read( buffer, 1 ) )
 	{
 		// Nothing to read
-		Log::Write("\t\tReadMsg nothing to read!");
 		return false;
 	}
 
@@ -1147,7 +1143,6 @@ bool Driver::ReadMsg
 	{
 		case SOF:
 		{
-//			Log::Write("\t\tSOF");
 			m_SOFCnt++;
 			if( m_waitingForAck )
 			{
@@ -1156,16 +1151,13 @@ bool Driver::ReadMsg
 			}
 
 			// Read the length byte.  Keep trying until we get it.
-//			Log::Write("\t\tset1");
 			m_controller->SetSignalThreshold( 1 );
-//			Log::Write("\t\tset2");
 			if( Wait::Single( m_controller, 100 ) < 0 )
 			{
 				Log::Write( "100ms passed without finding the length byte...aborting frame read");
 				m_readAborts++;
 				break;
 			}
-//			Log::Write("\t\tset3");
 
 			m_controller->Read( &buffer[1], 1 );
 			m_controller->SetSignalThreshold( buffer[1] );
@@ -1195,7 +1187,7 @@ bool Driver::ReadMsg
 				snprintf( byteStr, sizeof(byteStr), "0x%.2x", buffer[i] );
 				str += byteStr;
 			}
-			TRACE1( "  Received: %s", str.c_str() )
+			Log::Write( "  Received: %s", str.c_str() );
 
 			// Verify checksum
 			uint8 checksum = 0xff;
@@ -1242,7 +1234,7 @@ bool Driver::ReadMsg
 
 		case ACK:
 		{
-			TRACE2( "  ACK received CallbackId 0x%.2x Reply 0x%.2x", m_expectedCallbackId, m_expectedReply )
+			Log::Write( "  ACK received CallbackId 0x%.2x Reply 0x%.2x", m_expectedCallbackId, m_expectedReply );
 			m_ACKCnt++;
 			
 			m_waitingForAck = false;		
@@ -1648,7 +1640,7 @@ void Driver::ProcessMsg
 					{
 						if( m_expectedCommandClassId == _data[5] && m_expectedNodeId == _data[3] )
 						{
-							TRACE0( "  Expected reply and command class was received" );
+							Log::Write( "  Expected reply and command class was received" );
 							m_expectedReply = 0;
 							m_expectedCommandClassId = 0;
 							m_expectedNodeId = 0;
@@ -1656,7 +1648,7 @@ void Driver::ProcessMsg
 					}
 					else
 					{
-						TRACE0( "  Expected reply was received" );
+						Log::Write( "  Expected reply was received" );
 						m_expectedReply = 0;
 					}
 				}
@@ -1664,8 +1656,8 @@ void Driver::ProcessMsg
 
 			if( !( m_expectedCallbackId || m_expectedReply ) )
 			{
-				TRACE0( "  Message transaction complete" );
-				TRACE0( "" );
+				Log::Write( "  Message transaction complete" );
+				Log::Write( "" );
 				delete m_currentMsg;
 				m_currentMsg = NULL;
 
@@ -1940,12 +1932,12 @@ void Driver::HandleSerialAPIGetInitDataResponse
 					{
 						// This node no longer exists in the Z-Wave network
 						Log::Write( "    Node %.3d: Removed", nodeId );
+						delete m_nodes[nodeId];
+						m_nodes[nodeId] = NULL;
 						Notification* notification = new Notification( Notification::Type_NodeRemoved );
 						notification->SetHomeAndNodeIds( m_homeId, nodeId );
 						QueueNotification( notification ); 
 
-						delete m_nodes[nodeId];
-						m_nodes[nodeId] = NULL;
 						ReleaseNodes();
 					}
 				}
@@ -2137,7 +2129,7 @@ void Driver::HandleSendDataResponse
 {
 	if( _data[2] )
 	{
-		TRACE1( "  %s delivered to Z-Wave stack", _replication ? "ZW_REPLICATION_SEND_DATA" : "ZW_SEND_DATA" )
+		Log::Write( "  %s delivered to Z-Wave stack", _replication ? "ZW_REPLICATION_SEND_DATA" : "ZW_SEND_DATA" );
 	}
 	else
 	{
@@ -2199,7 +2191,7 @@ void Driver::HandleSendDataRequest
 	bool _replication
 )
 {
-	TRACE3( "  %s Request with callback ID 0x%.2x received (expected 0x%.2x)", _replication ? "ZW_REPLICATION_SEND_DATA" : "ZW_SEND_DATA", _data[2], m_expectedCallbackId );
+	Log::Write( "  %s Request with callback ID 0x%.2x received (expected 0x%.2x)", _replication ? "ZW_REPLICATION_SEND_DATA" : "ZW_SEND_DATA", _data[2], m_expectedCallbackId );
 
 	if( _data[2] != m_expectedCallbackId )
 	{
@@ -2405,14 +2397,14 @@ void Driver::HandleRemoveNodeFromNetworkRequest
 
 			if ( m_controllerCommandNode != 0 )
 			{
-				Notification* notification = new Notification( Notification::Type_NodeRemoved );
-				notification->SetHomeAndNodeIds( m_homeId, m_controllerCommandNode );
-				QueueNotification( notification ); 
-			
 				LockNodes();
 				delete m_nodes[m_controllerCommandNode];
 				m_nodes[m_controllerCommandNode] = NULL;
 				ReleaseNodes();
+
+				Notification* notification = new Notification( Notification::Type_NodeRemoved );
+				notification->SetHomeAndNodeIds( m_homeId, m_controllerCommandNode );
+				QueueNotification( notification ); 
 			}
 
 			if( m_controllerCallback )
@@ -2813,14 +2805,14 @@ bool Driver::HandleApplicationUpdateRequest
 		{
 			Log::Write( "** Network change **: Z-Wave node %d was removed", nodeId );
 
-			Notification* notification = new Notification( Notification::Type_NodeRemoved );
-			notification->SetHomeAndNodeIds( m_homeId, nodeId );
-			QueueNotification( notification ); 
-
 			LockNodes();
 			delete m_nodes[nodeId];
 			m_nodes[nodeId] = NULL;
 			ReleaseNodes();
+
+			Notification* notification = new Notification( Notification::Type_NodeRemoved );
+			notification->SetHomeAndNodeIds( m_homeId, nodeId );
+			QueueNotification( notification ); 
 			break;
 		}
 		case UPDATE_STATE_NEW_ID_ASSIGNED:
@@ -3171,7 +3163,7 @@ void Driver::PollThreadProc
 {
 	while( 1 )
 	{
-		int32 pollInterval = 10;// = m_pollInterval * 1000;	// Get the time in milliseconds in which we are to poll all the devices
+		int32 pollInterval = m_pollInterval * 5;	// Get the time in milliseconds in which we are to poll all the devices
 
 		if( !m_pollList.empty() && m_awakeNodesQueried)
 		{
@@ -3227,19 +3219,15 @@ void Driver::PollThreadProc
 			m_pollMutex->Unlock();
 
 			// Wait for the interval to expire, while watching for exit events
-/*			Log::Write("Queue size: Send=%d, Command=%d, WakeUp=%d, Query=%d, Poll=%d",
-				m_msgQueue[MsgQueue_Send].size(), 
-				m_msgQueue[MsgQueue_Command].size(),
-				m_msgQueue[MsgQueue_WakeUp].size(),
-				m_msgQueue[MsgQueue_Query].size(),
-				m_msgQueue[MsgQueue_Poll].size());
-*/
 			while( !m_msgQueue[MsgQueue_Poll].empty()
 				|| !m_msgQueue[MsgQueue_Send].empty()
 				|| !m_msgQueue[MsgQueue_Command].empty()
 				|| !m_msgQueue[MsgQueue_Query].empty() )
 			{
-				if( Wait::Single( _exitEvent, pollInterval ) == 0 )
+				Log::Add("Driver::PollThreadProc--Start Wait::Single (MsgQueues empty)");
+				int32 i32 = Wait::Single( _exitEvent, pollInterval );
+				Log::Add("Driver::PollThreadProc--End Wait::Single (MsgQueues empty), returned %ld",i32);
+				if( i32 == 0 )
 				{
 					// Exit has been called
 					return;
@@ -3248,7 +3236,10 @@ void Driver::PollThreadProc
 		}
 		else
 		{
-			if( Wait::Single( _exitEvent, pollInterval ) == 0 )
+			Log::Add("Driver::PollThreadProce--Start Wait::Single (m_pollList empty)");
+			int32 i32 = Wait::Single( _exitEvent, pollInterval );
+			Log::Add("Driver::PollThreadProc--End Wait::Single (m_pollList empty), returned %ld",i32);
+			if( i32 == 0 )
 			{
 				// Exit has been called
 				return;
@@ -3305,10 +3296,10 @@ void Driver::InitNode
 	if( m_nodes[_nodeId] )
 	{
 		// Remove the original node
+		delete m_nodes[_nodeId];
 		Notification* notification = new Notification( Notification::Type_NodeRemoved );
 		notification->SetHomeAndNodeIds( m_homeId, _nodeId );
 		QueueNotification( notification ); 
-		delete m_nodes[_nodeId];
 	}
 
 	// Add the new node
@@ -3864,7 +3855,7 @@ void Driver::ResetController
 (
 )
 {
-	Log::Write( "\nReset controller and erase all node information\n");
+	Log::Write( "Reset controller and erase all node information");
 	Msg* msg = new Msg( "Reset controller and erase all node information", 0xff, REQUEST, FUNC_ID_ZW_SET_DEFAULT, true );
 	SendMsg( msg, MsgQueue_Command );
 }
@@ -3877,7 +3868,7 @@ void Driver::SoftReset
 (
 )
 {
-	Log::Write( "\nSoft-resetting the Z-Wave controller chip\n");
+	Log::Write( "Soft-resetting the Z-Wave controller chip");
 	Msg* msg = new Msg( "Soft-resetting the Z-Wave controller chip", 0xff, REQUEST, FUNC_ID_SERIAL_API_SOFT_RESET, false, false );
 	SendMsg( msg, MsgQueue_Command );
 }

@@ -129,14 +129,17 @@ bool Clock::HandleMsg
 		if( ValueList* dayValue = static_cast<ValueList*>( GetValue( _instance, ClockIndex_Day ) ) )
 		{
 			dayValue->OnValueChanged( day );
+			dayValue->Release();
 		}
 		if( ValueByte* hourValue = static_cast<ValueByte*>( GetValue( _instance, ClockIndex_Hour ) ) )
 		{
 			hourValue->OnValueChanged( hour );
+			hourValue->Release();
 		}
 		if( ValueByte* minuteValue = static_cast<ValueByte*>( GetValue( _instance, ClockIndex_Minute ) ) )
 		{
 			minuteValue->OnValueChanged( minute );
+			minuteValue->Release();
 		}
 		return true;
 	}
@@ -180,6 +183,18 @@ bool Clock::SetValue
 		ret = true;
 	}
 
+	if( dayValue != NULL )
+	{
+		dayValue->Release();
+	}
+	if( hourValue != NULL )
+	{
+		hourValue->Release();
+	}
+	if( minuteValue != NULL )
+	{
+		minuteValue->Release();
+	}
 	return ret;
 }
 

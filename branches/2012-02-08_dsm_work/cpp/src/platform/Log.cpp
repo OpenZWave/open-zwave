@@ -148,6 +148,59 @@ void Log::Write
 }
 
 //-----------------------------------------------------------------------------
+//	<Log::Write>
+//	Write to the log
+//-----------------------------------------------------------------------------
+void Log::Add
+(
+	char const* _format,
+	...
+)
+{
+	if( s_instance && s_dologging && s_instance->m_pImpl )
+	{
+	  	s_instance->m_logMutex->Lock();
+		va_list args;
+		va_start( args, _format );
+		s_instance->m_pImpl->Add( _format, args );
+		va_end( args );
+		s_instance->m_logMutex->Unlock();
+	}
+}
+
+//-----------------------------------------------------------------------------
+//	<Log::Dump>
+//	
+//-----------------------------------------------------------------------------
+void Log::Dump
+(
+)
+{
+	if( s_instance && s_dologging && s_instance->m_pImpl )
+	{
+	  	s_instance->m_logMutex->Lock();
+		s_instance->m_pImpl->Dump();
+		s_instance->m_logMutex->Unlock();
+	}
+}
+
+//-----------------------------------------------------------------------------
+//	<Log::Clear>
+//	
+//-----------------------------------------------------------------------------
+void Log::Clear
+(
+)
+{
+	if( s_instance && s_dologging && s_instance->m_pImpl )
+	{
+	  	s_instance->m_logMutex->Lock();
+		s_instance->m_pImpl->Clear();
+		s_instance->m_logMutex->Unlock();
+	}
+}
+
+//-----------------------------------------------------------------------------
 //	<Log::Log>
 //	Constructor
 //-----------------------------------------------------------------------------

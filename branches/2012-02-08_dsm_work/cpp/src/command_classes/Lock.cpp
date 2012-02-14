@@ -104,6 +104,7 @@ bool Lock::HandleMsg
 		if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, 0 ) ) )
 		{
 			value->OnValueChanged( _data[1] != 0 );
+			value->Release();
 		}
 		return true;
 	}

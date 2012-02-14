@@ -141,6 +141,10 @@ int32 Wait::Multiple
 				break;
 			}
 		}
+		if( res == -1 )	// wait thought an object was signalled, but now it's not!
+		{
+			assert( 0 );
+		}
 	}
 
 	// Remove the watchers

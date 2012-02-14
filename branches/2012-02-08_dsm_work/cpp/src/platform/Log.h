@@ -41,6 +41,9 @@ namespace OpenZWave
 		i_LogImpl() { } ;
 		virtual ~i_LogImpl() { } ;
 		virtual void Write( char const* _format, va_list _args ) = 0;
+		virtual void Add( char const* _format, va_list _args ) = 0;
+		virtual void Dump() = 0;
+		virtual void Clear() = 0;
 	};
 
 
@@ -104,6 +107,9 @@ namespace OpenZWave
 		 * \see Create, Destroy
 		 */
 		static void Write( char const* _format, ... );
+		static void Add( char const* _format, ... );
+		static void Dump();
+		static void Clear();
 
 	private:
 		Log( string const& _filename );

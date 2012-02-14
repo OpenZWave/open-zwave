@@ -109,6 +109,7 @@ bool Configuration::HandleMsg
 					Log::Write( "Invalid type (%d) for configuration parameter %d", value->GetID().GetType(), parameter );
 				}
 			}
+			value->Release();
 		}
 		else
 		{

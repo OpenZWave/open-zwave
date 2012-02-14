@@ -121,6 +121,7 @@ bool ThermostatOperatingState::HandleMsg
 		if( ValueString* valueString = static_cast<ValueString*>( GetValue( _instance, 0 ) ) )
 		{
 			valueString->OnValueChanged( c_stateName[_data[1]&0x0f] );
+			valueString->Release();
 			Log::Write( "Received thermostat operating state from node %d: %s", GetNodeId(), valueString->GetValue().c_str() );		
 		}
 		return true;

@@ -213,6 +213,7 @@ bool ClimateControlSchedule::HandleMsg
 
 			// Notify the user
 			value->OnValueChanged();
+			value->Release();
 		}
 
 		return true;
@@ -269,6 +270,7 @@ bool ClimateControlSchedule::HandleMsg
 		if( ValueList* valueList = static_cast<ValueList*>( GetValue( _instance, ClimateControlScheduleIndex_OverrideState ) ) )
 		{
 			valueList->OnValueChanged( (int)overrideState );
+			valueList->Release();
 		}
 
 		uint8 setback = _data[2];
@@ -291,6 +293,7 @@ bool ClimateControlSchedule::HandleMsg
 		if( ValueByte* valueByte = static_cast<ValueByte*>( GetValue( _instance, ClimateControlScheduleIndex_OverrideSetback ) ) )
 		{
 			valueByte->OnValueChanged( setback );
+			valueByte->Release();
 		}
 
 		return true;

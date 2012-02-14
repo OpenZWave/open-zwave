@@ -31,6 +31,9 @@
 #include <assert.h>
 #include <list>
 
+#define _SHOWTRACE
+#define _SHOWSTREAM
+
 #ifdef _DEBUG
  #define  _CRTDBG_MAP_ALLOC 1
  #include <stdlib.h>
@@ -52,7 +55,7 @@
  #define TRACE1(formatStr, v1)
  #define TRACE2(formatStr,v1, v2)
  #define TRACE3(formatStr, v1, v2, v3)
-#endif // _DEBUG
+#endif // _SHOWTRACE
 
 #ifdef NULL
 #undef NULL

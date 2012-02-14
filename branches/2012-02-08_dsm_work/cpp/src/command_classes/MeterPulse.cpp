@@ -109,6 +109,7 @@ bool MeterPulse::HandleMsg
 		if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, 0 ) ) )
 		{
 			value->OnValueChanged( count );
+			value->Release();
 		}
 
 		return true;

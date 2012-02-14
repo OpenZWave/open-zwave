@@ -118,6 +118,8 @@
 		<Product type="0006" id="0001" name="ST814 Temperature and Humidity Sensor" config="everspring/st814.xml"/>
 		<Product type="000b" id="0001" name="ST812 Flood Detector"/>
 	</Manufacturer>
+	<Manufacturer id="0113" name="Evolve Guest Controls">
+	</Manufacturer>
 	<Manufacturer id="0036" name="Exceptional Innv">
 	</Manufacturer>
 	<Manufacturer id="0004" name="Exhausto">

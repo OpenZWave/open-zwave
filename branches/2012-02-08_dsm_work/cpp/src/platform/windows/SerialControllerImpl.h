@@ -53,7 +53,6 @@ namespace OpenZWave
 		
 		bool Init( uint32 const _attempts );
 		void Read();
-		void LogData( uint8* _buffer, uint32 _length );
 
 		SerialController*			m_owner;
 		HANDLE						m_hThread;

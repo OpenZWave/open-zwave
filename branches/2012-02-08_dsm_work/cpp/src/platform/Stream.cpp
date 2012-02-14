@@ -27,6 +27,7 @@
 //-----------------------------------------------------------------------------
 #include "Stream.h"
 #include "Mutex.h"
+#include "Log.h"
 
 #include <string.h>
 
@@ -116,7 +117,6 @@ bool Stream::Get
 
 	m_dataSize -= _size;
 	m_mutex->Unlock();
-//	LogData( _buffer, _size, "Get returned");
 	return true;
 }
 
@@ -130,8 +130,6 @@ bool Stream::Put
 	uint32 _size
 )
 {
-//	LogData( _buffer, _size, "Put received");
-
 	if( (m_bufferSize-m_dataSize) < _size )
 	{
 		// There is not enough space left in the buffer for the data
@@ -177,8 +175,19 @@ bool Stream::IsSignalled
 (
 )
 {
-//	Log::Write("\t\tIsSignalled is %s.  datasize=%d, signalSize=%d",m_dataSize>=m_signalSize?"true":"false",m_dataSize, m_signalSize);
 	return( m_dataSize >= m_signalSize );
+}
+
+void Stream::LogData
+(
+)
+{
+#ifdef _SHOWSTREAM
+	if( m_dataSize != 0 )
+		LogData( m_buffer, m_dataSize, "      Stream::LogData--" );
+	else
+		Log::Add( "      Stream::LogData--Buffer is empty" );
+#endif
 }
 
 void Stream::LogData
@@ -202,6 +211,6 @@ void Stream::LogData
 		snprintf( byteStr, sizeof(byteStr), "0x%.2x", _buffer[i] );
 		str += byteStr;
 	}
-//	Log::Write( "\t\tStream::%s: %s", _function.c_str(), str.c_str() );
+	Log::Add( "%s: %s", _function.c_str(), str.c_str() );
 }
 

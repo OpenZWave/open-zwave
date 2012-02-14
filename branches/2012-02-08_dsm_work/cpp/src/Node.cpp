@@ -135,6 +135,9 @@ Node::~Node
 (
 )
 {
+	// Delete the values
+	delete m_values;
+
 	// Delete the command classes
 	while( !m_commandClassMap.empty() )
 	{
@@ -157,9 +160,6 @@ Node::~Node
 		map<uint8,uint8>::iterator it = m_buttonMap.begin();
 		m_buttonMap.erase( it );
 	}
-
-	// Delete the values
-	delete m_values;
 }
 
 //-----------------------------------------------------------------------------
@@ -531,7 +531,8 @@ void Node::QueryStageRetry
 //-----------------------------------------------------------------------------
 void Node::SetQueryStage
 (
-	QueryStage const _stage
+	QueryStage const _stage,
+	bool const _advance	// = true
 )
 {
 	if( (int)_stage < (int)m_queryStage )
@@ -545,7 +546,10 @@ void Node::SetQueryStage
 		}
 	}
 
-	AdvanceQueries();
+	if( _advance )
+	{
+		AdvanceQueries();
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -633,7 +637,7 @@ void Node::ReadXML
 			}
 		}
 
-		SetQueryStage( queryStage );
+		SetQueryStage( queryStage, false );
 	}
 
 	if( m_queryStage != QueryStage_None )
@@ -1512,7 +1516,7 @@ ValueID Node::CreateValueID
 // <Node::CreateValueBool>
 // Helper to create a new bool value and add it to the value store
 //-----------------------------------------------------------------------------
-ValueBool* Node::CreateValueBool
+bool Node::CreateValueBool
 (
 	ValueID::ValueGenre const _genre,
 	uint8 const _commandClassId,
@@ -1528,15 +1532,21 @@ ValueBool* Node::CreateValueBool
 {
   	ValueBool* value = new ValueBool( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default, _pollIntensity );
 	ValueStore* store = GetValueStore();
-	store->AddValue( value );
-	return value;
+	if( store->AddValue( value ) )
+	{	
+		value->Release();
+		return true;
+	}
+
+	value->Release();
+	return false;
 }
 
 //-----------------------------------------------------------------------------
 // <Node::CreateValueButton>
 // Helper to create a new trigger value and add it to the value store
 //-----------------------------------------------------------------------------
-ValueButton* Node::CreateValueButton
+bool Node::CreateValueButton
 (
 	ValueID::ValueGenre const _genre,
 	uint8 const _commandClassId,
@@ -1548,15 +1558,21 @@ ValueButton* Node::CreateValueButton
 {
 	ValueButton* value = new ValueButton( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _pollIntensity );
 	ValueStore* store = GetValueStore();
-	store->AddValue( value );
-	return value;
+	if( store->AddValue( value ) )
+	{	
+		value->Release();
+		return true;
+	}
+
+	value->Release();
+	return false;
 }
 
 //-----------------------------------------------------------------------------
 // <Node::CreateValueByte>
 // Helper to create a new byte value and add it to the value store
 //-----------------------------------------------------------------------------
-ValueByte* Node::CreateValueByte
+bool Node::CreateValueByte
 (
 	ValueID::ValueGenre const _genre,
 	uint8 const _commandClassId,
@@ -1572,15 +1588,21 @@ ValueByte* Node::CreateValueByte
 {
   	ValueByte* value = new ValueByte( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default, _pollIntensity );
 	ValueStore* store = GetValueStore();
-	store->AddValue( value );
-	return value;
+	if( store->AddValue( value ) )
+	{	
+		value->Release();
+		return true;
+	}
+
+	value->Release();
+	return false;
 }
 
 //-----------------------------------------------------------------------------
 // <Node::CreateValueDecimal>
 // Helper to create a new decimal value and add it to the value store
 //-----------------------------------------------------------------------------
-ValueDecimal* Node::CreateValueDecimal
+bool Node::CreateValueDecimal
 (
 	ValueID::ValueGenre const _genre,
 	uint8 const _commandClassId,
@@ -1596,15 +1618,21 @@ ValueDecimal* Node::CreateValueDecimal
 {
   	ValueDecimal* value = new ValueDecimal( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default, _pollIntensity );
 	ValueStore* store = GetValueStore();
-	store->AddValue( value );
-	return value;
+	if( store->AddValue( value ) )
+	{	
+		value->Release();
+		return true;
+	}
+
+	value->Release();
+	return false;
 }
 
 //-----------------------------------------------------------------------------
 // <Node::CreateValueInt>
 // Helper to create a new int value and add it to the value store
 //-----------------------------------------------------------------------------
-ValueInt* Node::CreateValueInt
+bool Node::CreateValueInt
 (
 	ValueID::ValueGenre const _genre,
 	uint8 const _commandClassId,
@@ -1620,15 +1648,21 @@ ValueInt* Node::CreateValueInt
 {
   	ValueInt* value = new ValueInt( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default, _pollIntensity );
 	ValueStore* store = GetValueStore();
-	store->AddValue( value );
-	return value;
+	if( store->AddValue( value ) )
+	{	
+		value->Release();
+		return true;
+	}
+
+	value->Release();
+	return false;
 }
 
 //-----------------------------------------------------------------------------
 // <Node::CreateValueList>
 // Helper to create a new list value and add it to the value store
 //-----------------------------------------------------------------------------
-ValueList* Node::CreateValueList
+bool Node::CreateValueList
 (
 	ValueID::ValueGenre const _genre,
 	uint8 const _commandClassId,
@@ -1645,15 +1679,21 @@ ValueList* Node::CreateValueList
 {
   	ValueList* value = new ValueList( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _items, _default, _pollIntensity );
 	ValueStore* store = GetValueStore();
-	store->AddValue( value );
-	return value;
+	if( store->AddValue( value ) )
+	{	
+		value->Release();
+		return true;
+	}
+
+	value->Release();
+	return false;
 }
 
 //-----------------------------------------------------------------------------
 // <Node::CreateValueSchedule>
 // Helper to create a new schedule value and add it to the value store
 //-----------------------------------------------------------------------------
-ValueSchedule* Node::CreateValueSchedule
+bool Node::CreateValueSchedule
 (
 	ValueID::ValueGenre const _genre,
 	uint8 const _commandClassId,
@@ -1668,15 +1708,21 @@ ValueSchedule* Node::CreateValueSchedule
 {
 	ValueSchedule* value = new ValueSchedule( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _pollIntensity );
 	ValueStore* store = GetValueStore();
-	store->AddValue( value );
-	return value;
+	if( store->AddValue( value ) )
+	{	
+		value->Release();
+		return true;
+	}
+
+	value->Release();
+	return false;
 }
 
 //-----------------------------------------------------------------------------
 // <Node::CreateValueShort>
 // Helper to create a new short value and add it to the value store
 //-----------------------------------------------------------------------------
-ValueShort* Node::CreateValueShort
+bool Node::CreateValueShort
 (
 	ValueID::ValueGenre const _genre,
 	uint8 const _commandClassId,
@@ -1692,15 +1738,21 @@ ValueShort* Node::CreateValueShort
 {
   	ValueShort* value = new ValueShort( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default, _pollIntensity );
 	ValueStore* store = GetValueStore();
-	store->AddValue( value );
-	return value;
+	if( store->AddValue( value ) )
+	{	
+		value->Release();
+		return true;
+	}
+
+	value->Release();
+	return false;
 }
 
 //-----------------------------------------------------------------------------
 // <Node::CreateValueString>
 // Helper to create a new string value and add it to the value store
 //-----------------------------------------------------------------------------
-ValueString* Node::CreateValueString
+bool Node::CreateValueString
 (
 	ValueID::ValueGenre const _genre,
 	uint8 const _commandClassId,
@@ -1716,8 +1768,14 @@ ValueString* Node::CreateValueString
 {
   	ValueString* value = new ValueString( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default, _pollIntensity );
 	ValueStore* store = GetValueStore();
-	store->AddValue( value );
-	return value;
+	if( store->AddValue( value ) )
+	{	
+		value->Release();
+		return true;
+	}
+
+	value->Release();
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -1731,14 +1789,13 @@ void Node::RemoveValueList
 {
 	ValueStore* store = GetValueStore();
 	store->RemoveValue( _value->GetID().GetValueStoreKey() );
-	delete _value;
 }
 
 //-----------------------------------------------------------------------------
 // <Node::CreateValueFromXML>
 // Get the value object with the specified ID
 //-----------------------------------------------------------------------------
-Value* Node::CreateValueFromXML
+bool Node::CreateValueFromXML
 ( 
 	uint8 const _commandClassId,
 	TiXmlElement const* _valueElement
@@ -1760,6 +1817,7 @@ Value* Node::CreateValueFromXML
 		case ValueID::ValueType_Short:		{	value = new ValueShort();		break;	}
 		case ValueID::ValueType_String:		{	value = new ValueString();		break;	}
 		case ValueID::ValueType_Button:		{	value = new ValueButton();		break;	}
+		default:				{	Log::Write( "Unknown ValueType in XML: %s", _valueElement->Attribute( "type" ) ); break; }
 	}
 
 	if( value )
@@ -1767,10 +1825,16 @@ Value* Node::CreateValueFromXML
 		value->ReadXML( m_homeId, m_nodeId, _commandClassId, _valueElement );
 
 		ValueStore* store = GetValueStore();
-		store->AddValue( value );
+		if( store->AddValue( value ) )
+		{
+			value->Release();
+			return true;
+		}
+
+		value->Release();
 	}
 
-	return value;
+	return false;
 }
 
 //-----------------------------------------------------------------------------

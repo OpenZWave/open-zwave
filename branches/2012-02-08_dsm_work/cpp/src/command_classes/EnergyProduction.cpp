@@ -133,6 +133,7 @@ bool EnergyProduction::HandleMsg
 			{
 				decimalValue->SetPrecision( precision );
 			}
+			decimalValue->Release();
 		}
 		return true;
 	}

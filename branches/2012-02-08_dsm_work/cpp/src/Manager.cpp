@@ -139,8 +139,6 @@ Manager::~Manager
 (
 )
 {
-	Log::Write("~Manager start\n");
-
 	// Clear the pending list
 	while( !m_pendingDrivers.empty() )
 	{
@@ -148,7 +146,6 @@ Manager::~Manager
 		delete *it;
 		m_pendingDrivers.erase( it );
 	}
-	Log::Write("M1");
 
 	// Clear the ready map
 	while( !m_readyDrivers.empty() )
@@ -157,7 +154,6 @@ Manager::~Manager
 		delete it->second;
 		m_readyDrivers.erase( it );
 	}
-	Log::Write("M2");
 	
 	m_exitEvent->Release();
 	m_notificationMutex->Release();
@@ -169,7 +165,6 @@ Manager::~Manager
 		delete *it;
 		m_watchers.erase( it );
 	}
-	Log::Write("M3");
 
 	// Clear the generic device class list
 	while( !Node::s_genericDeviceClasses.empty() )
@@ -178,11 +173,8 @@ Manager::~Manager
 		delete git->second;
 		Node::s_genericDeviceClasses.erase( git );
 	}
-	Log::Write("M4");
 
 	Log::Destroy();
-	Log::Write("~Manager end\n");
-
 }
 
 //-----------------------------------------------------------------------------
@@ -2255,6 +2247,8 @@ bool Manager::RefreshValue
 	ValueID const& _id
 )
 {
+	bool bRet = false;	// return value
+
 	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 	{
 	    Node *node;
@@ -2267,13 +2261,13 @@ bool Manager::RefreshValue
 			CommandClass* cc = node->GetCommandClass( _id.GetCommandClassId() );
 			uint8 index = _id.GetIndex();
 			uint8 instance = _id.GetInstance();
-			Log::Write( "Re-polling node %d: %s index = %d instance = %d (to confirm a reported change)", node->m_nodeId, cc->GetCommandClassName().c_str(), index, instance );
+			Log::Write( "Refreshing node %d: %s index = %d instance = %d (to confirm a reported change)", node->m_nodeId, cc->GetCommandClassName().c_str(), index, instance );
 			cc->RequestValue( 0, index, instance, Driver::MsgQueue_Send );
+			bRet = true;
 		}
 		driver->ReleaseNodes();
-		return true;
 	}
-	return false;
+	return bRet;
 }
 
 //-----------------------------------------------------------------------------

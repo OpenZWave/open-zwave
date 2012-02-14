@@ -191,8 +191,10 @@ bool Meter::RequestValue
 	{
 		uint8 baseIndex = i<<2;
 
-		if( GetValue( _instance, baseIndex ) )
+		Value* value = GetValue( _instance, baseIndex );
+		if( value != NULL )
 		{
+			value->Release();
 			Msg* msg = new Msg( "MeterCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 			msg->SetInstance( this, _instance );
 			msg->Append( GetNodeId() );
@@ -275,6 +277,7 @@ bool Meter::HandleSupportedReport
 						{
 							value->SetLabel( c_electricityLabels[i] );
 							value->SetUnits( c_electricityUnits[i] );
+							value->Release();
 						}
 						else
 						{
@@ -291,6 +294,7 @@ bool Meter::HandleSupportedReport
 						{
 							value->SetLabel( "Gas" );
 							value->SetUnits( c_gasUnits[i] );
+							value->Release();
 						}
 						else
 						{
@@ -307,6 +311,7 @@ bool Meter::HandleSupportedReport
 						{
 							value->SetLabel( "Water" );
 							value->SetUnits( c_waterUnits[i] );
+							value->Release();
 						}
 						else
 						{
@@ -360,6 +365,7 @@ bool Meter::HandleReport
 		if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, MeterIndex_Exporting ) ) )
 		{
 			value->OnValueChanged( exporting );
+			value->Release();
 		}
 	}
 
@@ -413,6 +419,7 @@ bool Meter::HandleReport
 			{
 				value->SetPrecision( precision );
 			}
+			value->Release();
 		}
 	}
 	else
@@ -434,6 +441,7 @@ bool Meter::HandleReport
 			{
 				value->SetPrecision( precision );
 			}
+			value->Release();
 
 			// Read any previous value and time delta
 			uint8 size = _data[2] & 0x07;
@@ -448,7 +456,8 @@ bool Meter::HandleReport
 					// We need to create a value to hold the previous
 					if( Node* node = GetNodeUnsafe() )
 					{
-						previous = node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, baseIndex+1, "Previous Reading", value->GetUnits().c_str(), true, false, "0.0", 0 );
+						node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, baseIndex+1, "Previous Reading", value->GetUnits().c_str(), true, false, "0.0", 0 );
+						previous = static_cast<ValueDecimal*>( GetValue( _instance, baseIndex+1 ) );
 					}
 				}
 				if( previous )
@@ -461,6 +470,7 @@ bool Meter::HandleReport
 					{
 						previous->SetPrecision( precision );
 					}
+					previous->Release();
 				}
 
 				// Time delta
@@ -470,12 +480,14 @@ bool Meter::HandleReport
 					// We need to create a value to hold the time delta
 					if( Node* node = GetNodeUnsafe() )
 					{
-						interval = node->CreateValueInt( ValueID::ValueGenre_User, GetCommandClassId(), _instance, baseIndex+2, "Interval", "seconds", true, false, 0, 0 );
+						node->CreateValueInt( ValueID::ValueGenre_User, GetCommandClassId(), _instance, baseIndex+2, "Interval", "seconds", true, false, 0, 0 );
+						interval = static_cast<ValueInt*>( GetValue( _instance, baseIndex+2 ) );
 					}
 				}
 				if( interval )
 				{
 		 			interval->OnValueChanged( (int32)delta );
+					interval->Release();
 				}
 			}
 		}

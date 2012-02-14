@@ -68,6 +68,7 @@ namespace OpenZWave
 
 		/**
 		 * Used by the Wait::Multiple method.
+		 * returns true if the event signalled, false if it timed out
 		 */
 		bool Wait( int32 _timeout );
 

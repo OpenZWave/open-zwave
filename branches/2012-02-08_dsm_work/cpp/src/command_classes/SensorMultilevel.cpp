@@ -199,7 +199,8 @@ bool SensorMultilevel::HandleMsg
 					case SensorType_Distance:				units = c_distanceUnits[scale];			break;
 					default:																		break;
 				}
-				value = node->CreateValueDecimal(  ValueID::ValueGenre_User, GetCommandClassId(), _instance, sensorType, c_sensorTypeNames[sensorType], units, true, false, "0.0", 0  );
+				node->CreateValueDecimal(  ValueID::ValueGenre_User, GetCommandClassId(), _instance, sensorType, c_sensorTypeNames[sensorType], units, true, false, "0.0", 0  );
+				value = static_cast<ValueDecimal*>( GetValue( _instance, sensorType ) );
 			}
 
 			Log::Write( "Received SensorMultiLevel report from node %d, instance %d: value=%s%s", GetNodeId(), _instance, valueStr.c_str(), value->GetUnits().c_str() );
@@ -208,6 +209,7 @@ bool SensorMultilevel::HandleMsg
 				value->SetPrecision( precision );
 			}
 			value->OnValueChanged( valueStr );
+			value->Release();
 			return true;
 		}
 	}

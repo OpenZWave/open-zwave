@@ -65,8 +65,6 @@ namespace OpenZWave
 		friend class ManufacturerSpecific;
 		friend class NodeNaming;
 		friend class WakeUp;
-		//dsm
-		friend class LogImpl;
 
 	//-----------------------------------------------------------------------------
 	//	Controller Interfaces

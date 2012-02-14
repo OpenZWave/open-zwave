@@ -111,3 +111,66 @@ void LogImpl::Write
 		fclose( pFile );
 	}
 }
+
+//-----------------------------------------------------------------------------
+//	<LogImpl::Add>
+//	Write to the LogQueue
+//-----------------------------------------------------------------------------
+void LogImpl::Add
+( 
+	char const* _format, 
+	va_list _args
+)
+{
+	// Get a timestamp
+	SYSTEMTIME time;
+	::GetLocalTime( &time );
+	char timeStr[50];
+	DWORD dwThread = ::GetCurrentThreadId();
+	sprintf_s( timeStr, sizeof(timeStr), "%04d-%02d-%02d %02d:%02d:%02d:%03d %04d ", time.wYear, time.wMonth, time.wDay, time.wHour, time.wMinute, time.wSecond, time.wMilliseconds, dwThread );
+
+	char outString[500];
+	char outString2[500];
+	vsprintf(outString, _format, _args );
+	sprintf(outString2, "%s%s",timeStr, outString);
+
+	string logStr = outString2;
+
+	m_logQueue.push_back(logStr);
+
+	if( m_logQueue.size() > 500 )
+	{
+		m_logQueue.pop_front();
+	}
+}
+
+//-----------------------------------------------------------------------------
+//	<LogImpl::Dump>
+//	Dump the LogQueue to output device
+//-----------------------------------------------------------------------------
+void LogImpl::Dump
+( 
+)
+{
+	Log::Write( "Dumping queued log messages");
+	list<string>::iterator it = m_logQueue.begin();
+	while( it != m_logQueue.end() )
+	{
+		string strTemp = *it;
+		Log::Write( strTemp.c_str() );
+		it++;
+	}
+	m_logQueue.clear();
+	Log::Write( "End of queued log message dump");
+}
+
+//-----------------------------------------------------------------------------
+//	<LogImpl::Clear>
+//	Clear the LogQueue
+//-----------------------------------------------------------------------------
+void LogImpl::Clear
+( 
+)
+{
+	m_logQueue.clear();
+}

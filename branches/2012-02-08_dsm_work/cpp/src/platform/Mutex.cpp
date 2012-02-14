@@ -27,7 +27,6 @@
 //-----------------------------------------------------------------------------
 #include "Defs.h"
 #include "Mutex.h"
-
 #include "MutexImpl.h"	// Platform-specific implementation of a mutex
 
 

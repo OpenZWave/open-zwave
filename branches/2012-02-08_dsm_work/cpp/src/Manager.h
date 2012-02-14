@@ -995,6 +995,13 @@ namespace OpenZWave
 		 */
 		bool SetValueListSelection( ValueID const& _id, string const& _selectedItem );
 
+		/**
+		 * \brief Refreshes the specified value from the Z-Wave network.
+		 * A call to this function causes the library to send a message to the network to retrieve the current value
+		 * of the specified ValueID (just like a poll, except only one-time, not recurring).
+		 * \param _id The unique identifier of the value to be refreshed.
+		 * \return true if the driver and node were found; false otherwise
+		 */
 		bool RefreshValue( ValueID const& _id);
 
 		/**

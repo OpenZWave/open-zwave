@@ -128,10 +128,12 @@ bool Language::HandleMsg
 		if( ValueString* languageValue = static_cast<ValueString*>( GetValue( _instance, LanguageIndex_Language ) ) )
 		{
 			languageValue->OnValueChanged( language );
+			languageValue->Release();
 		}
 		if( ValueString* countryValue = static_cast<ValueString*>( GetValue( _instance, LanguageIndex_Country ) ) )
 		{
 			countryValue->OnValueChanged( country );
+			countryValue->Release();
 		}
 		return true;
 	}

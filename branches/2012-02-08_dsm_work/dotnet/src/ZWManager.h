@@ -206,7 +206,7 @@ namespace OpenZWaveDotNet
 		 * \param _bLog True to enable logging; false to disable logging.
 		 * \see GetLoggingState
 		 */
-		void SetLoggingState(int bState){ Log::SetLoggingState(true); }
+		void SetLoggingState(bool bState){ Log::SetLoggingState(bState); }
 
 		/**
 		 * \brief Gets the current library logging state.
