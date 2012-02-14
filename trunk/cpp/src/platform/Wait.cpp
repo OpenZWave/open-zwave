@@ -29,6 +29,7 @@
 #include "Wait.h"
 #include "WaitImpl.h"	// Platform-specific implementation of a Wait object
 #include "Event.h"
+#include "Log.h"
 
 using namespace OpenZWave;
 
@@ -140,6 +141,11 @@ int32 Wait::Multiple
 				res = (int32)i;
 				break;
 			}
+		}
+		if( res == -1 )	// wait thought an object was signalled, but now it's not!
+		{
+			Log::Write( "ERROR: Wait::Multiple had an object with a transitory signal" );
+			assert( 0 );
 		}
 	}
 

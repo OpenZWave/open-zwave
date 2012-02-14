@@ -77,14 +77,13 @@ void WaitImpl::AddWatcher
 	
   	pthread_mutex_lock( &m_criticalSection );
 	m_watchers.push_back( watcher );
+	pthread_mutex_unlock( &m_criticalSection );
 
 	// If the object is already in a signalled state, notify the watcher immediately
 	if( m_owner->IsSignalled() )
 	{
 		_callback( _context );
 	}
-
-	pthread_mutex_unlock( &m_criticalSection );
 }
 
 //-----------------------------------------------------------------------------
