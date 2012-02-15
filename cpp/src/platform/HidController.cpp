@@ -161,6 +161,9 @@ bool HidController::Close
 (
 )
 {
+	hid_close( m_hHidController );
+	m_hHidController = NULL;
+
 	if( m_thread )
 	{
 		m_thread->Stop();
@@ -169,8 +172,6 @@ bool HidController::Close
 	}
 
 	m_bOpen = false;
-	hid_close( m_hHidController );
-	m_hHidController = NULL;
 	hid_exit();
 	return true;
 }
@@ -252,6 +253,7 @@ bool HidController::Init
     int hidApiResult;
     const uint8 dataOutEnableZwave[3] = { 0x02, 0x01, 0x04 };
 
+    hid_init();
     Log::Write( "Open HID port %s", m_hidControllerName.c_str() );
     m_hHidController = hid_open(m_vendorId, m_productId, NULL);
     if (!m_hHidController)
