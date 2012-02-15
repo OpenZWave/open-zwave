@@ -45,7 +45,7 @@ using namespace OpenZWave;
 static uint32 g_homeId = 0;
 bool g_nodesQueried = false;
 
-typedef struct 
+typedef struct
 {
 	uint32			m_homeId;
 	uint8			m_nodeId;
@@ -182,6 +182,7 @@ void OnNotification
 				if( ( nodeInfo->m_homeId == homeId ) && ( nodeInfo->m_nodeId == nodeId ) )
 				{
 					g_nodes.erase( it );
+					delete nodeInfo;
 					break;
 				}
 			}
@@ -356,6 +357,8 @@ int main( int argc, char* argv[] )
 	}
 
 	// program exit (clean up)
+	Manager::Destroy();
+	Options::Destroy();
 	DeleteCriticalSection( &g_criticalSection );
 	return 0;
 }

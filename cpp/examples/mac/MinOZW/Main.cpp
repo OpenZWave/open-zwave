@@ -62,7 +62,7 @@ static pthread_mutex_t initMutex = PTHREAD_MUTEX_INITIALIZER;
 
 //-----------------------------------------------------------------------------
 // <GetNodeInfo>
-// Callback that is triggered when a value, group or node changes
+// Return the NodeInfo object associated with this notification
 //-----------------------------------------------------------------------------
 NodeInfo* GetNodeInfo
 (
@@ -169,6 +169,7 @@ void OnNotification
 				if( ( nodeInfo->m_homeId == homeId ) && ( nodeInfo->m_nodeId == nodeId ) )
 				{
 					g_nodes.erase( it );
+					delete nodeInfo;
 					break;
 				}
 			}
@@ -305,8 +306,9 @@ int main( int argc, char* argv[] )
 		}
 	}
 
+	// program exit (clean up)
 	Manager::Destroy();
-
+	Options::Destroy();
 	pthread_mutex_destroy( &g_criticalSection );
 	return 0;
 }
