@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Product>
+  <!-- COMMAND_CLASS_WAKE_UP.  This class is in the list reported by the ZTroller, but it does not
+  respond to requests.  It still needs to be supported so that wake up notifications are handled. -->
+  <CommandClass id="132" create_vars="false" />
+</Product>
