@@ -144,8 +144,8 @@ int32 Wait::Multiple
 		}
 		if( res == -1 )	// wait thought an object was signalled, but now it's not!
 		{
-			Log::Write( "ERROR: Wait::Multiple had an object with a transitory signal" );
-			assert( 0 );
+			Log::Write( LogLevel_Warning, "Wait::Multiple for... loop failed" );
+//			assert( 0 );
 		}
 	}
 

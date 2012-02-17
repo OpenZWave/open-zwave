@@ -89,6 +89,14 @@ namespace OpenZWave
 
 	protected:
 		/**
+		 * Formats stream buffer data for output to the log.
+		 * \param _buffer pointer to the stream buffer "head" location
+		 * \param _size number of valid bytes currently in the buffer
+		 * \param _function string containing text to display before the data
+		 */
+		void LogData( uint8* _buffer, uint32 _size, string _function );
+
+		/**
 		 * Used by the Wait class to test whether the buffer contains sufficient data.
 		 */
 		virtual bool IsSignalled();

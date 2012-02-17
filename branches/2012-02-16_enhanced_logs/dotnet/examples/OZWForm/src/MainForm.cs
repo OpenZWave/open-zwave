@@ -329,6 +329,12 @@ namespace OZWForm
                         //}
 						toolStripStatusLabel1.Text = "Initializing...node " + node.ID + " query complete.";
 						break;
+					}
+				case ZWNotification.Type.EssentialNodeQueriesComplete:
+					{
+                        Node node = GetNode(m_notification.GetHomeId(), m_notification.GetNodeId());
+						toolStripStatusLabel1.Text = "Initializing...node " + node.ID + " essential queries complete.";
+						break;
                     }
                 case ZWNotification.Type.AllNodesQueried:
                     {

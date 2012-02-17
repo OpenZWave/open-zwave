@@ -102,7 +102,7 @@ bool SwitchToggleMultilevel::HandleMsg
 {
 	if( SwitchToggleMultilevelCmd_Report == (SwitchToggleMultilevelCmd)_data[0] )
 	{
-		Log::Write( "Received SwitchToggleMultiLevel report from node %d: level=%d", GetNodeId(), _data[1] );
+		Log::Write( LogLevel_Info, "Received SwitchToggleMultiLevel report from node %d: level=%d", GetNodeId(), _data[1] );
 
 		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, 0 ) ) )
 		{
@@ -124,7 +124,7 @@ bool SwitchToggleMultilevel::SetValue
 	Value const& _value
 )
 {
-	Log::Write( "SwitchToggleMultilevel::Set - Toggling the state of node %d", GetNodeId() );
+	Log::Write( LogLevel_Info, "SwitchToggleMultilevel::Set - Toggling the state of node %d", GetNodeId() );
 	Msg* msg = new Msg( "SwitchToggleMultilevel Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
 	msg->SetInstance( this, _value.GetID().GetInstance() );
 	msg->Append( GetNodeId() );
@@ -151,7 +151,7 @@ void SwitchToggleMultilevel::StartLevelChange
 	param |= ( _bIgnoreStartLevel ? 0x20 : 0x00 );
 	param |= ( _bRollover ? 0x80 : 0x00 );
 
-	Log::Write( "SwitchMultilevel::StartLevelChange - Starting a level change on node %d, Direction=%d, IgnoreStartLevel=%s and rollover=%s", GetNodeId(), (_direction==SwitchToggleMultilevelDirection_Up) ? "Up" : "Down", _bIgnoreStartLevel ? "True" : "False", _bRollover ? "True" : "False" );
+	Log::Write( LogLevel_Info, "SwitchMultilevel::StartLevelChange - Starting a level change on node %d, Direction=%d, IgnoreStartLevel=%s and rollover=%s", GetNodeId(), (_direction==SwitchToggleMultilevelDirection_Up) ? "Up" : "Down", _bIgnoreStartLevel ? "True" : "False", _bRollover ? "True" : "False" );
 	Msg* msg = new Msg( "SwitchMultilevel StartLevelChange", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
 	msg->Append( GetNodeId() );
 	msg->Append( 3 );
@@ -169,7 +169,7 @@ void SwitchToggleMultilevel::StopLevelChange
 (
 )
 {
-	Log::Write( "SwitchToggleMultilevel::StopLevelChange - Stopping the level change on node %d", GetNodeId() );
+	Log::Write( LogLevel_Info, "SwitchToggleMultilevel::StopLevelChange - Stopping the level change on node %d", GetNodeId() );
 	Msg* msg = new Msg( "SwitchToggleMultilevel StopLevelChange", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
 	msg->Append( GetNodeId() );
 	msg->Append( 2 );

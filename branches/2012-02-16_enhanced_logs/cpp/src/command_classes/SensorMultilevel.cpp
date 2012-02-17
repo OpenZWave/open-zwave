@@ -203,7 +203,7 @@ bool SensorMultilevel::HandleMsg
 				value = static_cast<ValueDecimal*>( GetValue( _instance, sensorType ) );
 			}
 
-			Log::Write( "Received SensorMultiLevel report from node %d, instance %d: value=%s%s", GetNodeId(), _instance, valueStr.c_str(), value->GetUnits().c_str() );
+			Log::Write( LogLevel_Info, "Received SensorMultiLevel report from node %d, instance %d: value=%s%s", GetNodeId(), _instance, valueStr.c_str(), value->GetUnits().c_str() );
 			if( value->GetPrecision() != precision )
 			{
 				value->SetPrecision( precision );

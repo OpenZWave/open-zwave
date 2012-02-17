@@ -321,7 +321,7 @@ int main( int argc, char* argv[] )
 
 	// Add a Z-Wave Driver
 	// Modify this line to set the correct serial port for your PC interface.
-	Manager::Get()->AddDriver( "\\\\.\\COM3" );
+	Manager::Get()->AddDriver( "\\\\.\\COM6" );
   //Manager::Get()->AddDriver( "HID Controller", Driver::ControllerInterface_Hid );
 
 	// Now we just wait for the driver to become ready.
@@ -348,11 +348,13 @@ int main( int argc, char* argv[] )
 	// threads, and we cannot risk the list being changed while we are using it.  
 	// We must hold the critical section for as short a time as possible, to avoid
 	// stalling the OpenZWave drivers.
-	while( true )
+//	while( true )
 	{
 		EnterCriticalSection( &g_criticalSection );
+
 		// Do stuff
 		Sleep(6000);
+
 		LeaveCriticalSection( &g_criticalSection );
 	}
 

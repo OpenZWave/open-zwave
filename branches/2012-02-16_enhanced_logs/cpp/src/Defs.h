@@ -31,6 +31,27 @@
 #include <assert.h>
 #include <list>
 
+/*-----------------------------------------------------------------------------
+ * Debugging Flags
+ *	_WINDOWS_
+ *		If this is a Windows OS and the library is compiled in debug mode,
+ *		the following block of code will add a memory leakage report at
+ *		the end of program execution.
+ *---------------------------------------------------------------------------*/
+#ifdef _WINDOWS_
+ #ifdef _DEBUG
+  #define  _CRTDBG_MAP_ALLOC 1
+  #include <stdlib.h>
+  #include <crtdbg.h>
+
+  #ifndef DBG_NEW
+   #define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
+   #define new DBG_NEW
+  #endif
+ #endif  // _DEBUG
+#endif // _WINDOWS_
+
+
 #ifdef NULL
 #undef NULL
 #endif

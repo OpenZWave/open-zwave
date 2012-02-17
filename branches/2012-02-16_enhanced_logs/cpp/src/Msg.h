@@ -56,7 +56,8 @@ namespace OpenZWave
 		uint8 GetExpectedCommandClassId()const{ return m_expectedCommandClassId; }
 		uint32 GetLength()const{ return m_length; }
 		uint8* GetBuffer(){ return m_buffer; }
-		string GetAsString();
+		string GetSummaryString();
+		string GetFrameString();
 
 		uint8 GetSendAttempts()const{ return m_sendAttempts; }
 		void SetSendAttempts( uint8 _count ){ m_sendAttempts = _count; }

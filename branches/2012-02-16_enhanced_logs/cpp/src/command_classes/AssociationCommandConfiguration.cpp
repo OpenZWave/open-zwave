@@ -145,11 +145,11 @@ bool AssociationCommandConfiguration::HandleMsg
 		int16 numFreeCommands			= (((int16)_data[2])<<16) | (int16)_data[3];
 		int16 maxCommands				= (((int16)_data[4])<<16) | (int16)_data[5];
 
-		Log::Write( "Received AssociationCommandConfiguration Supported Records Report from node %d:", GetNodeId() );
-		Log::Write( "    Maximum command length = %d bytes", maxCommandLength );
-		Log::Write( "    Maximum number of commands = %d", maxCommands );
-		Log::Write( "    Number of free commands = %d", numFreeCommands );
-		Log::Write( "    Commands are %s and are %s", commandsAreValues ? "values" : "not values", commandsAreConfigurable ? "configurable" : "not configurable" );
+		Log::Write( LogLevel_Info, "Received AssociationCommandConfiguration Supported Records Report from node %d:", GetNodeId() );
+		Log::Write( LogLevel_Info, "    Maximum command length = %d bytes", maxCommandLength );
+		Log::Write( LogLevel_Info, "    Maximum number of commands = %d", maxCommands );
+		Log::Write( LogLevel_Info, "    Number of free commands = %d", numFreeCommands );
+		Log::Write( LogLevel_Info, "    Commands are %s and are %s", commandsAreValues ? "values" : "not values", commandsAreConfigurable ? "configurable" : "not configurable" );
 
 		ValueBool* valueBool;
 		ValueByte* valueByte;
@@ -194,8 +194,8 @@ bool AssociationCommandConfiguration::HandleMsg
 		bool  firstReports	= ( ( _data[3] & 0x80 ) != 0 );		// True if this is the first message containing commands for this group and node.
 		uint8 numReports	= _data[3] & 0x0f;
 
-		Log::Write( "Received AssociationCommandConfiguration Report from node %d:", GetNodeId() );
-		Log::Write( "    Commands for node %d in group %d,", nodeIdx, groupIdx );
+		Log::Write( LogLevel_Info, "Received AssociationCommandConfiguration Report from node %d:", GetNodeId() );
+		Log::Write( LogLevel_Info, "    Commands for node %d in group %d,", nodeIdx, groupIdx );
 
 		if( Node* node = GetNodeUnsafe() )
 		{

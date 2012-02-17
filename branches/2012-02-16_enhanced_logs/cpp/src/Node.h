@@ -266,6 +266,7 @@ namespace OpenZWave
 		bool IsSecurityDevice()const{ return m_security; }
 		uint32 GetMaxBaudRate()const{ return m_maxBaudRate; }
 		uint8 GetVersion()const{ return m_version; }
+		uint8 GetSecurity()const{ return m_security; }
 		
 		uint8 GetNodeId()const{ return m_nodeId; }
 		
