@@ -72,7 +72,6 @@ Manager* Manager::Create
 (
 )
 {
-	_CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 	if( Options::Get() && Options::Get()->AreLocked() )
 	{
 		if( NULL == s_instance )

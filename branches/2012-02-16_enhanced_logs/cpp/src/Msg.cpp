@@ -189,7 +189,7 @@ string Msg::GetSummaryString()
 //-----------------------------------------------------------------------------
 string Msg::GetFrameString()
 {
-	string str = ": ";
+	string str = "";
 
 	char byteStr[16];
 	for( uint32 i=0; i<m_length; ++i ) 
