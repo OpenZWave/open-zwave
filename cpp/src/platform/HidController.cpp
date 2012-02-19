@@ -420,7 +420,7 @@ void HidController::Read
 		if( 0x02 == inputReport[2] )
 		{
 			// rx feature report data is buffering or available on the HID port
-			bzero( buffer, sizeof(buffer) );
+			memset( buffer, '\0', sizeof(buffer) );
 			bytesRead = GetFeatureReport(FEATURE_REPORT_LENGTH, 0x5, buffer);
 			{
 				string tmp = "";
