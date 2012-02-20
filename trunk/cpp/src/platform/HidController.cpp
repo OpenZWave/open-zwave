@@ -400,7 +400,7 @@ void HidController::Read
 				snprintf(bstr, sizeof(bstr), "%02x ", inputReport[i] );
 				tmp += bstr;
 			}
-			Log::Write( "hid read %d %s", hidApiResult, tmp.c_str() );
+			Log::Write( LogLevel_Debug, "hid read %d %s", hidApiResult, tmp.c_str() );
 		}
             
 		if( hidApiResult == -1 )
@@ -432,7 +432,7 @@ void HidController::Read
 					snprintf( bstr, sizeof(bstr), "0x%.2x ", buffer[2+i] );
 					tmp += bstr;
 				}
-				Log::Write( "feature report read=%d ID=%d len=%d %s", bytesRead, buffer[0], buffer[1], tmp.c_str() );
+				Log::Write( LogLevel_Debug, "feature report read=%d ID=%d len=%d %s", bytesRead, buffer[0], buffer[1], tmp.c_str() );
 			}
 			CHECK_HIDAPI_RESULT(bytesRead, HidPortError);
             
