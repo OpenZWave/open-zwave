@@ -56,6 +56,20 @@ namespace OpenZWaveDotNet
 	[UnmanagedFunctionPointer(CallingConvention::Cdecl)]
 	private delegate void OnNotificationFromUnmanagedDelegate(Notification* _notification, void* _context);
 
+	// Logging levels
+	public enum class ZWLogLevel
+	{
+		Always		= LogLevel_Always,
+		None		= LogLevel_None,
+		Fatal		= LogLevel_Fatal,
+		Error		= LogLevel_Error,
+		Warning		= LogLevel_Warning,
+		Alert		= LogLevel_Alert,
+		Info		= LogLevel_Info,
+		Detail		= LogLevel_Detail,
+		Debug		= LogLevel_Debug
+	};
+
 	// Delegate for handling controller command callbacks
 	public enum class ZWControllerState
 	{
@@ -66,6 +80,13 @@ namespace OpenZWaveDotNet
 		Failed		= Driver::ControllerState_Failed,								/**< The command has failed. */
 		NodeOK		= Driver::ControllerState_NodeOK,								/**< Used with the HasNodeFailed, RemoveFailedNode and ReplaceFailedNode commands to indicate that the controller thinks the node is OK. */
 		NodeFailed	= Driver::ControllerState_NodeFailed							/**< Used only with HasNodeFailed to indicate that the controller thinks the node has failed. */
+	};
+
+	// Controller interface types
+	public enum class ZWControllerInterface
+	{
+		Serial		= Driver::ControllerInterface_Serial,
+		Hid			= Driver::ControllerInterface_Hid
 	};
 
 	public enum class ZWControllerCommand
@@ -214,6 +235,16 @@ namespace OpenZWaveDotNet
 		 * \see SetLoggingState
 		 */
 		bool GetLoggingState() { return Log::GetLoggingState(); }
+
+		/**
+		 * \brief Sets the current library log file name to a new name
+		 */
+		void SetLogFileName( String^ _filename ) { Log::SetLogFileName((const char*)(Marshal::StringToHGlobalAnsi(_filename)).ToPointer()); }
+
+		/**
+		 * \brief Sends current driver statistics to the log file
+		 */
+		void LogDriverStatistics(uint32 homeId ) { Manager::Get()->LogDriverStatistics(homeId); }
 	/*@}*/					   
 
 	//-----------------------------------------------------------------------------
@@ -256,10 +287,12 @@ namespace OpenZWaveDotNet
 		 * has been received, a DriverReady notification callback is sent, containing the Home ID of the controller.  This Home ID is
 		 * required by most of the OpenZWave Manager class methods.
 		 * \param _serialPortName The string used to open the serial port, for example "\\.\COM3".
+		 8 \param _interfaceType Specifies whether this is a serial or HID interface (default is serial).
 		 * \return True if a new driver was created, false if a driver for the controller already exists.
 		 * \see Create, Get, RemoveDriver
 		 */
 		bool AddDriver( String^ serialPortName ){ return Manager::Get()->AddDriver((const char*)(Marshal::StringToHGlobalAnsi(serialPortName)).ToPointer()); }
+		bool AddDriver( String^ serialPortName, ZWControllerInterface interfaceType ){ return Manager::Get()->AddDriver((const char*)(Marshal::StringToHGlobalAnsi(serialPortName)).ToPointer(), (Driver::ControllerInterface) interfaceType); }
 
 		/**
 		 * \brief Removes the driver for a Z-Wave controller, and closes the serial port.
@@ -497,6 +530,14 @@ namespace OpenZWaveDotNet
 		 */
 		uint8 GetNodeVersion( uint32 const homeId, uint8 const nodeId ){ return Manager::Get()->GetNodeVersion(homeId, nodeId); }
 
+		/**
+		 * \brief Get the security byte for a node.  Bit meanings are still to be determined.
+		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param _nodeId The ID of the node to query.
+		 * \return the node's security byte
+		 */
+		uint8 GetNodeSecurity( uint32 const homeId, uint8 const nodeId ){ return Manager::Get()->GetNodeSecurity(homeId, nodeId); }
+		
 		/**
 		 * \brief Get a node's "basic" type.
 		 * \param homeId The Home ID of the Z-Wave controller that manages the node.

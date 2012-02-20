@@ -82,7 +82,7 @@ bool Powerlevel::HandleMsg
 		PowerLevelEnum powerLevel = (PowerLevelEnum)_data[1];
 		uint8 timeout = _data[2];
 
-		Log::Write( "Received a PowerLevel report from node %d: PowerLevel=%s, Timeout=%d", GetNodeId(), c_powerLevelNames[powerLevel], timeout );
+		Log::Write( LogLevel_Info, "Received a PowerLevel report from node %d: PowerLevel=%s, Timeout=%d", GetNodeId(), c_powerLevelNames[powerLevel], timeout );
 		return true;
 	}
 
@@ -92,7 +92,7 @@ bool Powerlevel::HandleMsg
 		PowerLevelStatusEnum status = (PowerLevelStatusEnum)_data[2];
 		uint16 ackCount = (((uint16)_data[3])<<8) | (uint16)_data[4];
 
-		Log::Write( "Received a PowerLevel Test Node report on node %d: Test Node=%d, Status=%s, Test Frame ACK Count=%d", GetNodeId(), testNode, c_powerLevelStatusNames[status], ackCount );
+		Log::Write( LogLevel_Info, "Received a PowerLevel Test Node report on node %d: Test Node=%d, Status=%s, Test Frame ACK Count=%d", GetNodeId(), testNode, c_powerLevelStatusNames[status], ackCount );
 		return true;
 	}
 	return false;
@@ -113,7 +113,7 @@ void Powerlevel::Set
 		return;
 	}
 
-	Log::Write( "Setting the power level of node %d to %s for %d seconds", GetNodeId(), c_powerLevelNames[_powerLevel], _timeout );
+	Log::Write( LogLevel_Info, "Setting the power level of node %d to %s for %d seconds", GetNodeId(), c_powerLevelNames[_powerLevel], _timeout );
 	Msg* msg = new Msg( "PowerlevelCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 	msg->Append( GetNodeId() );
 	msg->Append( 4 );
@@ -141,7 +141,7 @@ void Powerlevel::Test
 		return;
 	}
 
-	Log::Write( "Running a Power Level Test from node %d: Target Node = %d, Power Level = %s, Number of Frames = %d", GetNodeId(), _testNodeId, c_powerLevelNames[_powerLevel], _numFrames );
+	Log::Write( LogLevel_Info, "Running a Power Level Test from node %d: Target Node = %d, Power Level = %s, Number of Frames = %d", GetNodeId(), _testNodeId, c_powerLevelNames[_powerLevel], _numFrames );
 	Msg* msg = new Msg( "PowerlevelCmd_TestNodeSet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 	msg->Append( GetNodeId() );
 	msg->Append( 6 );

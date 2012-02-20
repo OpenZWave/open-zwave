@@ -166,10 +166,10 @@ void Msg::Finalize()
 
 
 //-----------------------------------------------------------------------------
-// <Msg::GetAsString>
-// Create a string containing the raw data
+// <Msg::GetSummaryString>
+// Create a string containing a summary of the message
 //-----------------------------------------------------------------------------
-string Msg::GetAsString()
+string Msg::GetSummaryString()
 {
 	string str = m_logText;
 
@@ -180,8 +180,18 @@ string Msg::GetAsString()
 		str += byteStr;
 	}
 
-	str += ": ";
+	return str;
+}
 
+//-----------------------------------------------------------------------------
+// <Msg::GetFrameString>
+// Create a string containing the raw data frame
+//-----------------------------------------------------------------------------
+string Msg::GetFrameString()
+{
+	string str = "";
+
+	char byteStr[16];
 	for( uint32 i=0; i<m_length; ++i ) 
 	{
 		if( i )

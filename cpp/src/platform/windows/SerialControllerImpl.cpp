@@ -177,7 +177,7 @@ bool SerialControllerImpl::Init
 	uint32 const _attempts
 )
 {  
-	Log::Write( "Trying to open serial port %s (Attempt %d)", m_owner->m_serialControllerName.c_str(), _attempts );
+	Log::Write( LogLevel_Info, "Trying to open serial port %s (Attempt %d)", m_owner->m_serialControllerName.c_str(), _attempts );
 
 	m_hSerialController = CreateFile( m_owner->m_serialControllerName.c_str(), 
 							 GENERIC_READ | GENERIC_WRITE, 
@@ -190,7 +190,7 @@ bool SerialControllerImpl::Init
 	if( INVALID_HANDLE_VALUE == m_hSerialController )
 	{
 		//Error
-		Log::Write( "ERROR: Cannot open serial port %s. Error code %d\n", m_owner->m_serialControllerName.c_str(), GetLastError() );
+		Log::Write( LogLevel_Error, "ERROR: Cannot open serial port %s. Error code %d\n", m_owner->m_serialControllerName.c_str(), GetLastError() );
 		goto SerialOpenFailure;
 	}
 
@@ -200,7 +200,7 @@ bool SerialControllerImpl::Init
 	if( !GetCommState( m_hSerialController, &dcb ) )
 	{
 		//Error.  Clean up and exit
-		Log::Write( "ERROR: Failed to read serial port state" );
+		Log::Write( LogLevel_Error, "ERROR: Failed to read serial port state" );
 		goto SerialOpenFailure;
 	}
 
@@ -213,7 +213,7 @@ bool SerialControllerImpl::Init
 	if( !SetCommState( m_hSerialController, &dcb) )
 	{
 		//Error. Clean up and exit
-		Log::Write( "ERROR: Failed to set serial port state" );
+		Log::Write( LogLevel_Error, "ERROR: Failed to set serial port state" );
 		goto SerialOpenFailure;
 	}
 
@@ -227,7 +227,7 @@ bool SerialControllerImpl::Init
 	if( !SetCommTimeouts( m_hSerialController, &commTimeouts ) )
 	{
 		// Error.  Clean up and exit
-		Log::Write( "ERROR: Failed to set serial port timeouts" );
+		Log::Write( LogLevel_Error, "ERROR: Failed to set serial port timeouts" );
 		goto SerialOpenFailure;
 	}
 
@@ -235,7 +235,7 @@ bool SerialControllerImpl::Init
 	if( !SetCommMask( m_hSerialController, EV_RXCHAR ) )
 	{
 		//Error.  Clean up and exit
-		Log::Write( "ERROR: Failed to set serial port mask" );
+		Log::Write( LogLevel_Info, "ERROR: Failed to set serial port mask" );
 		goto SerialOpenFailure;
 	}
 
@@ -243,11 +243,11 @@ bool SerialControllerImpl::Init
 	PurgeComm( m_hSerialController, PURGE_RXABORT|PURGE_RXCLEAR|PURGE_TXABORT|PURGE_TXCLEAR );
 
 	// Open successful
- 	Log::Write( "Serial port %s opened (attempt %d)", m_owner->m_serialControllerName.c_str(), _attempts );
+ 	Log::Write( LogLevel_Info, "Serial port %s opened (attempt %d)", m_owner->m_serialControllerName.c_str(), _attempts );
 	return true;
 
 SerialOpenFailure:
- 	Log::Write( "ERROR: Failed to open serial port %s (attempt %d)", m_owner->m_serialControllerName.c_str(), _attempts );
+ 	Log::Write( LogLevel_Info, "ERROR: Failed to open serial port %s (attempt %d)", m_owner->m_serialControllerName.c_str(), _attempts );
 	CloseHandle( m_hSerialController );
 	m_hSerialController = INVALID_HANDLE_VALUE;
 	return false;
@@ -382,7 +382,7 @@ uint32 SerialControllerImpl::Write
 	if( INVALID_HANDLE_VALUE == m_hSerialController )
 	{
 		//Error
-		Log::Write( "ERROR: Serial port must be opened before writing\n" );
+		Log::Write( LogLevel_Error, "ERROR: Serial port must be opened before writing\n" );
 		return 0;
 	}
 
@@ -401,7 +401,7 @@ uint32 SerialControllerImpl::Write
 		}
 		else
 		{
-			Log::Write( "ERROR: Serial port write (0x%.8x)", GetLastError() );
+			Log::Write( LogLevel_Error, "ERROR: Serial port write (0x%.8x)", GetLastError() );
 		}
 	}
 

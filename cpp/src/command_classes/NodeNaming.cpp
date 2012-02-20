@@ -294,7 +294,7 @@ bool NodeNaming::HandleMsg
 			{
 				// We only overwrite the name if it is empty
 				node->m_nodeName = name;
-				Log::Write( "Received the name of Node %d: %s.", GetNodeId(), name.c_str() );
+				Log::Write( LogLevel_Info, "Received the name of Node %d: %s.", GetNodeId(), name.c_str() );
 				updated = true;
 			}
 		}
@@ -305,7 +305,7 @@ bool NodeNaming::HandleMsg
 			{
 				// We only overwrite the location if it is empty
 				node->m_location = location;
-				Log::Write( "Received the location of Node %d: %s.", GetNodeId(), location.c_str() );
+				Log::Write( LogLevel_Info, "Received the location of Node %d: %s.", GetNodeId(), location.c_str() );
 				updated = true;
 			}
 		}
@@ -336,7 +336,7 @@ void NodeNaming::SetName
 		length = 16;
 	}
 
-	Log::Write( "NodeNaming::Set - Naming node %d as '%s'", GetNodeId(), _name.c_str() );
+	Log::Write( LogLevel_Info, "NodeNaming::Set - Naming node %d as '%s'", GetNodeId(), _name.c_str() );
 	Msg* msg = new Msg( "NodeNaming Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
 	msg->Append( GetNodeId() );
 	msg->Append( (uint8)(length + 3) );
@@ -368,7 +368,7 @@ void NodeNaming::SetLocation
 		length = 16;
 	}
 
-	Log::Write( "NodeNaming::SetLocation - Setting location of node %d as '%s'", GetNodeId(), _location.c_str() );
+	Log::Write( LogLevel_Info, "NodeNaming::SetLocation - Setting location of node %d as '%s'", GetNodeId(), _location.c_str() );
 	Msg* msg = new Msg( "NodeNaming Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
 	msg->Append( GetNodeId() );
 	msg->Append( (uint8)(length + 3) );

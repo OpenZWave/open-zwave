@@ -99,7 +99,7 @@ bool Lock::HandleMsg
 {
 	if( LockCmd_Report == (LockCmd)_data[0] )
 	{
-		Log::Write( "Received Lock report from node %d: Lock is %s", GetNodeId(), _data[1] ? "Locked" : "Unlocked" );
+		Log::Write( LogLevel_Info, "Received Lock report from node %d: Lock is %s", GetNodeId(), _data[1] ? "Locked" : "Unlocked" );
 
 		if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, 0 ) ) )
 		{
@@ -125,7 +125,7 @@ bool Lock::SetValue
 	{
 		ValueBool const* value = static_cast<ValueBool const*>(&_value);
 
-		Log::Write( "Lock::Set - Requesting the node %d lock to be %s", GetNodeId(), value->GetValue() ? "Locked" : "Unlocked" );
+		Log::Write( LogLevel_Info, "Lock::Set - Requesting the node %d lock to be %s", GetNodeId(), value->GetValue() ? "Locked" : "Unlocked" );
 		Msg* msg = new Msg( "LockCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 		msg->SetInstance( this, _value.GetID().GetInstance() );
 		msg->Append( GetNodeId() );

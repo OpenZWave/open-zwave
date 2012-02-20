@@ -30,6 +30,7 @@
 #include "Msg.h"
 #include "SerialController.h"
 #include "SerialControllerImpl.h"	// Platform-specific implementation of a serial port
+#include "Log.h"
 
 using namespace OpenZWave;
 
@@ -168,6 +169,9 @@ uint32 SerialController::Write
 	{
 		return 0;
 	}
+
+	Log::Write( LogLevel_Debug, "      SerialController::Write (sent to controller)" );
+	LogData(_buffer, _length, "      Write: ");
 
 	return( m_pImpl->Write( _buffer, _length ) );
 }

@@ -297,6 +297,12 @@ namespace OpenZWave
 		 * \return a integer message count
 		 */
 		int32 GetSendQueueCount( uint32 const _homeId );
+
+		/**
+		 * \brief Send current driver statistics to the log file
+		 * \param _homeId The Home ID of the Z-Wave controller.
+		 */
+		void LogDriverStatistics( uint32 const _homeId );
 	/*@}*/
 
 	private:
@@ -453,6 +459,14 @@ namespace OpenZWave
 		 * \return the node's version number
 		 */
 		uint8 GetNodeVersion( uint32 const _homeId, uint8 const _nodeId );
+
+		/**
+		 * \brief Get the security byte of a node
+		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param _nodeId The ID of the node to query.
+		 * \return the node's security byte
+		 */
+		uint8 GetNodeSecurity( uint32 const _homeId, uint8 const _nodeId );
 
 		/**
 		 * \brief Get the basic type of a node.

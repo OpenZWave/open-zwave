@@ -38,16 +38,38 @@ using namespace OpenZWave;
 //-----------------------------------------------------------------------------
 LogImpl::LogImpl
 (
-	string const& _filename
+	string const& _filename,
+	bool const _bAppendLog,
+	bool const _bConsoleOutput,
+	LogLevel const _saveLevel,
+	LogLevel const _queueLevel,
+	LogLevel const _dumpTrigger
 ):
-	m_filename( _filename )
+	m_filename( _filename ),					// name of log file
+	m_bAppendLog( _bAppendLog ),				// true to append (and not overwrite) any existing log
+	m_bConsoleOutput( _bConsoleOutput ),		// true to provide a copy of output to console
+	m_saveLevel( _saveLevel ),					// level of messages to log to file
+	m_queueLevel( _queueLevel ),				// level of messages to log to queue
+	m_dumpTrigger( _dumpTrigger )				// dump queued messages when this level is seen
 {
-	FILE* pFile;
-	if( !fopen_s( &pFile, m_filename.c_str(), "w" ) )
+	string accessType;
+
+	// create an adjusted file name and timestamp string
+	string timeStr = GetTimeStampString();
+
+	if ( m_bAppendLog )
 	{
-		SYSTEMTIME time;
-		::GetLocalTime( &time );
-		fprintf( pFile, "\nLogging started %04d-%02d-%02d %02d:%02d:%02d\n\n", time.wYear, time.wMonth, time.wDay, time.wHour, time.wMinute, time.wSecond );
+		accessType = "a";
+	}
+	else
+	{
+		accessType = "w";
+	}
+
+	FILE* pFile;
+	if( !fopen_s( &pFile, _filename.c_str(), accessType.c_str() ) )
+	{
+		fprintf( pFile, "\nLogging started %s\n\n", timeStr.c_str() );
 		fclose( pFile );
 	}
 }
@@ -68,32 +90,179 @@ LogImpl::~LogImpl
 //-----------------------------------------------------------------------------
 void LogImpl::Write
 ( 
+	LogLevel _logLevel,
 	char const* _format, 
 	va_list _args
+)
+{
+	// create a timestamp string
+	string timeStr = GetTimeStampString();
+
+	// handle this message
+	if( (_logLevel <= m_queueLevel) || (_logLevel == LogLevel_Internal) )	// we're going to do something with this message...
+	{
+		char lineBuf[1024];
+		if( !_format || ( _format[0] == 0 ) )
+			strcpy( lineBuf, "" );
+		else
+			vsprintf_s( lineBuf, sizeof(lineBuf), _format, _args );
+
+		// should this message be saved to file (and possibly written to console?)
+		if( (_logLevel <= m_saveLevel) || (_logLevel == LogLevel_Internal) )
+		{
+			// save to file
+			FILE* pFile;
+			if( !fopen_s( &pFile, m_filename.c_str(), "a" ) )
+			{
+				if( _logLevel != LogLevel_Internal )						// don't add a second timestamp to display of queued messages
+				{
+					fprintf( pFile, "%s", timeStr.c_str() );
+					if( m_bConsoleOutput )
+					{
+						printf( "%s", timeStr.c_str() );
+					}
+				}
+
+				// print message to file (and possibly screen)
+				fprintf( pFile, "%s", lineBuf );
+				if( m_bConsoleOutput )
+				{
+					printf( "%s", lineBuf );
+				}
+
+				// add a newline
+				fprintf( pFile, "\n" ); 
+				if( m_bConsoleOutput )
+				{
+					printf( "\n" );
+				}
+
+				fclose( pFile );
+			}
+		}
+
+		if( _logLevel != LogLevel_Internal )
+		{
+			char queueBuf[1024];
+			string threadStr = GetThreadId();
+			sprintf_s( queueBuf, sizeof(queueBuf), "%s%s%s", timeStr.c_str(), threadStr.c_str(), lineBuf );
+			Queue( queueBuf );
+		}
+	}
+
+	// now check to see if the _dumpTrigger has been hit
+	if( (_logLevel <= m_dumpTrigger) && (_logLevel != LogLevel_Internal) && (_logLevel != LogLevel_Always) )
+		QueueDump();
+}
+
+//-----------------------------------------------------------------------------
+//	<LogImpl::Queue>
+//	Write to the log queue
+//-----------------------------------------------------------------------------
+void LogImpl::Queue
+( 
+	char const* _buffer
+)
+{
+	string bufStr = _buffer;
+	m_logQueue.push_back( bufStr );
+
+	// rudimentary queue size management
+	if( m_logQueue.size() > 500 )
+	{
+		m_logQueue.pop_front();
+	}
+}
+
+//-----------------------------------------------------------------------------
+//	<LogImpl::QueueDump>
+//	Dump the LogQueue to output device
+//-----------------------------------------------------------------------------
+void LogImpl::QueueDump
+( 
+)
+{
+	Log::Write( LogLevel_Internal, "\n\nDumping queued log messages\n");
+	list<string>::iterator it = m_logQueue.begin();
+	while( it != m_logQueue.end() )
+	{
+		string strTemp = *it;
+		Log::Write( LogLevel_Internal, strTemp.c_str() );
+		it++;
+	}
+	m_logQueue.clear();
+	Log::Write( LogLevel_Internal, "\nEnd of queued log message dump\n\n");
+}
+
+//-----------------------------------------------------------------------------
+//	<LogImpl::Clear>
+//	Clear the LogQueue
+//-----------------------------------------------------------------------------
+void LogImpl::QueueClear
+( 
+)
+{
+	m_logQueue.clear();
+}
+
+//-----------------------------------------------------------------------------
+//	<LogImpl::SetLoggingState>
+//	Sets the various log state variables
+//-----------------------------------------------------------------------------
+void LogImpl::SetLoggingState
+(
+	LogLevel _saveLevel,
+	LogLevel _queueLevel,
+	LogLevel _dumpTrigger
+)
+{
+	m_saveLevel = _saveLevel;
+	m_queueLevel = _queueLevel;
+	m_dumpTrigger = _dumpTrigger;
+}
+
+//-----------------------------------------------------------------------------
+//	<LogImpl::GetTimeStampAndThreadId>
+//	Generate a string with formatted current time
+//-----------------------------------------------------------------------------
+string LogImpl::GetTimeStampString
+( 
 )
 {
 	// Get a timestamp
 	SYSTEMTIME time;
 	::GetLocalTime( &time );
-	char timeStr[32];
-	sprintf_s( timeStr, sizeof(timeStr), "%04d-%02d-%02d %02d:%02d:%02d:%03d ", time.wYear, time.wMonth, time.wDay, time.wHour, time.wMinute, time.wSecond, time.wMilliseconds );
 
-	FILE* pFile;
-	if( !fopen_s( &pFile, m_filename.c_str(), "a" ) )
-	{
-		// Log to screen and file
-		if( _format && ( _format[0] != 0 ) )
-		{
-			printf( "%s", timeStr );
-			fprintf( pFile, "%s", timeStr );
+	// create a time stamp string for the log message
+	char buf[100];
+	sprintf_s( buf, sizeof(buf), "%04d-%02d-%02d %02d:%02d:%02d:%03d ", time.wYear, time.wMonth, time.wDay, time.wHour, time.wMinute, time.wSecond, time.wMilliseconds );
+	string str = buf;
+	return str;
+}
 
-			vprintf( _format, _args );
-			vfprintf( pFile, _format, _args );
-		}
+//-----------------------------------------------------------------------------
+//	<LogImpl::GetThreadId>
+//	Generate a string with formatted thread id
+//-----------------------------------------------------------------------------
+string LogImpl::GetThreadId
+( 
+)
+{
+	char buf[20];
+	DWORD dwThread = ::GetCurrentThreadId();
+	sprintf_s( buf, sizeof(buf), "%04d ", dwThread );
+	string str = buf;
+	return str;
+}
 
-		printf( "\n" );
-		fprintf( pFile, "\n" ); 
-
-		fclose( pFile );
-	}
+//-----------------------------------------------------------------------------
+//	<LogImpl::SetLogFileName>
+//	Provide a new log file name (applicable to future writes)
+//-----------------------------------------------------------------------------
+void LogImpl::SetLogFileName
+( 
+	string _filename
+)
+{
+	m_filename = _filename;
 }

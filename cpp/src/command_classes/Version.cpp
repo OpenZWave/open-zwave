@@ -171,7 +171,7 @@ bool Version::HandleMsg
 			snprintf( protocol, sizeof(protocol), "%d.%.2d", _data[2], _data[3] );
 			snprintf( application, sizeof(application), "%d.%.2d", _data[4], _data[5] );
 
-			Log::Write( "Received Version report from node %d: Library=%s, Protocol=%s, Application=%s", GetNodeId(), library, protocol, application );
+			Log::Write( LogLevel_Info, "Received Version report from node %d: Library=%s, Protocol=%s, Application=%s", GetNodeId(), library, protocol, application );
 			ClearStaticRequest( StaticRequest_Values );
 
 			if( ValueString* libraryValue = static_cast<ValueString*>( GetValue( _instance, VersionIndex_Library ) ) )
@@ -197,7 +197,7 @@ bool Version::HandleMsg
 		{
 			if( CommandClass* pCommandClass = node->GetCommandClass( _data[1] ) )
 			{
-				Log::Write( "Received Command Class Version report from node %d: CommandClass=%s, Version=%d", GetNodeId(), pCommandClass->GetCommandClassName().c_str(), _data[2] );
+				Log::Write( LogLevel_Info, "Received Command Class Version report from node %d: CommandClass=%s, Version=%d", GetNodeId(), pCommandClass->GetCommandClassName().c_str(), _data[2] );
 				pCommandClass->ClearStaticRequest( StaticRequest_Version );
 				pCommandClass->SetVersion( _data[2] );
 			}
