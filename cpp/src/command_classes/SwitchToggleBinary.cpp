@@ -99,7 +99,7 @@ bool SwitchToggleBinary::HandleMsg
 {
 	if( SwitchToggleBinaryCmd_Report == (SwitchToggleBinaryCmd)_data[0] )
 	{
-		Log::Write( "Received SwitchToggleBinary report from node %d: %s", GetNodeId(), _data[1] ? "On" : "Off" );
+		Log::Write( LogLevel_Info, "Received SwitchToggleBinary report from node %d: %s", GetNodeId(), _data[1] ? "On" : "Off" );
 
 		if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, 0 ) ) )
 		{
@@ -121,7 +121,7 @@ bool SwitchToggleBinary::SetValue
 	Value const& _value
 )
 {
-	Log::Write( "SwitchToggleBinary::Set - Toggling the state of node %d", GetNodeId() );
+	Log::Write( LogLevel_Info, "SwitchToggleBinary::Set - Toggling the state of node %d", GetNodeId() );
 	Msg* msg = new Msg( "SwitchToggleBinary Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
 	msg->SetInstance( this, _value.GetID().GetInstance() );
 	msg->Append( GetNodeId() );

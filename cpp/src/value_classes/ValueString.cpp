@@ -78,7 +78,7 @@ void ValueString::ReadXML
 	}
 	else
 	{
-		Log::Write( "Missing default string value from xml configuration: node %d, class 0x%02x, instance %d, index %d", _nodeId,  _commandClassId, GetID().GetInstance(), GetID().GetIndex() );
+		Log::Write( LogLevel_Alert, "Missing default string value from xml configuration: node %d, class 0x%02x, instance %d, index %d", _nodeId,  _commandClassId, GetID().GetInstance(), GetID().GetIndex() );
 	}
 }
 

@@ -124,7 +124,7 @@ bool ThermostatFanState::HandleMsg
 		{
 			valueString->OnValueChanged( c_stateName[_data[1]&0x0f] );
 			valueString->Release();
-			Log::Write( "Received thermostat fan state from node %d: %s", GetNodeId(), valueString->GetValue().c_str() );		
+			Log::Write( LogLevel_Info, "Received thermostat fan state from node %d: %s", GetNodeId(), valueString->GetValue().c_str() );		
 		}
 		return true;
 	}

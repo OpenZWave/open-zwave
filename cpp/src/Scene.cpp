@@ -180,13 +180,13 @@ bool Scene::ReadScenes
 	{
 		if( (uint32)intVal != c_sceneVersion )
 		{
-			Log::Write( "Driver::ReadScenes - %s is from an older version of OpenZWave and cannot be loaded.", filename.c_str() );
+			Log::Write( LogLevel_Alert, "Driver::ReadScenes - %s is from an older version of OpenZWave and cannot be loaded.", filename.c_str() );
 			return false;
 		}
 	}
 	else
 	{
-		Log::Write( "Driver::ReadScenes - %s is from an older version of OpenZWave and cannot be loaded.", filename.c_str() );
+		Log::Write( LogLevel_Alert, "Driver::ReadScenes - %s is from an older version of OpenZWave and cannot be loaded.", filename.c_str() );
 		return false;
 	}
 

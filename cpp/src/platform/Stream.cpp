@@ -93,7 +93,7 @@ bool Stream::Get
 	if( m_dataSize < _size )
 	{
 		// There is not enough data in the buffer to fulfill the request
-		Log::Write("ERROR: Not enough data in stream buffer");
+		Log::Write( LogLevel_Error, "ERROR: Not enough data in stream buffer");
 		return false;
 	}
 
@@ -115,6 +115,9 @@ bool Stream::Get
 		m_tail += _size;
 	}
 
+	Log::Write( LogLevel_Debug, "      Stream::Get (provided to application)" );
+	LogData( _buffer, _size, "      Get: ");
+
 	m_dataSize -= _size;
 	m_mutex->Unlock();
 	return true;
@@ -133,7 +136,7 @@ bool Stream::Put
 	if( (m_bufferSize-m_dataSize) < _size )
 	{
 		// There is not enough space left in the buffer for the data
-		Log::Write("ERROR: Not enough space in stream buffer");
+		Log::Write( LogLevel_Error, "ERROR: Not enough space in stream buffer");
 		return false;
 	}
 
@@ -158,6 +161,9 @@ bool Stream::Put
 	m_dataSize += _size;
 	m_mutex->Unlock();
 
+	Log::Write( LogLevel_Debug, "      Stream::Put (received from controller)" );
+	LogData(m_buffer+m_head-_size, _size, "      Put: ");
+
 	if( IsSignalled() )
 	{
 		// We now have more data than we are waiting for, so notify the watchers
@@ -178,3 +184,30 @@ bool Stream::IsSignalled
 	return( m_dataSize >= m_signalSize );
 }
 
+//-----------------------------------------------------------------------------
+//	<Stream::LogData>
+//	Format the stream buffer data for log output
+//-----------------------------------------------------------------------------
+void Stream::LogData
+(
+	uint8* _buffer,
+	uint32 _length,
+	string _function
+)
+{
+	if( !_length ) return;
+
+	string str = "";
+	for( uint32 i=0; i<_length; ++i ) 
+	{
+		if( i )
+		{
+			str += ", ";
+		}
+			
+		char byteStr[8];
+		snprintf( byteStr, sizeof(byteStr), "0x%.2x", _buffer[i] );
+		str += byteStr;
+	}
+	Log::Write( LogLevel_Debug, "%s%s", _function.c_str(), str.c_str() );
+}

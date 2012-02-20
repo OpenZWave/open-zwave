@@ -173,8 +173,8 @@ bool WakeUp::HandleMsg
 			// of 3 (0x84 (classid), 0x06 (IntervalReport), 0x00).  Not sure what this means
 			if( _length < 6 )
 			{
-				Log::Write( "" );
-				Log::Write("Unusual response: WakeUpCmd_IntervalReport with len = %d.  Ignored.", _length );
+				Log::Write( LogLevel_Warning, "" );
+				Log::Write( LogLevel_Warning, "Unusual response: WakeUpCmd_IntervalReport with len = %d.  Ignored.", _length );
 				value->Release();
 				return false;
 			}
@@ -185,7 +185,7 @@ bool WakeUp::HandleMsg
 
 			uint8 targetNodeId = _data[4];
 
-			Log::Write( "Received Wakeup Interval report from node %d: Interval=%d, Target Node=%d", GetNodeId(), interval, targetNodeId );
+			Log::Write( LogLevel_Info, "Received Wakeup Interval report from node %d: Interval=%d, Target Node=%d", GetNodeId(), interval, targetNodeId );
 
 			value->OnValueChanged( (int32)interval );
 		
@@ -201,7 +201,7 @@ bool WakeUp::HandleMsg
 	else if( WakeUpCmd_Notification == (WakeUpCmd)_data[0] )
 	{	
 		// The device is awake.
-		Log::Write( "Received Wakeup Notification from node %d", GetNodeId() );
+		Log::Write( LogLevel_Info, "Received Wakeup Notification from node %d", GetNodeId() );
 		m_notification = true;
 		SetAwake( true );				
 		return true;
@@ -263,7 +263,7 @@ void WakeUp::SetAwake
 	if( m_awake != _state )
 	{
 		m_awake = _state;
-		Log::Write( "  Node %d has been marked as %s", GetNodeId(), m_awake ? "awake" : "asleep" );
+		Log::Write( LogLevel_Info, "  Node %d has been marked as %s", GetNodeId(), m_awake ? "awake" : "asleep" );
 	}
 
 	if( m_awake )

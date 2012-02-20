@@ -79,7 +79,7 @@ void ValueDecimal::ReadXML
 	}
 	else
 	{
-		Log::Write( "Missing default decimal value from xml configuration: node %d, class 0x%02x, instance %d, index %d", _nodeId,  _commandClassId, GetID().GetInstance(), GetID().GetIndex() );
+		Log::Write( LogLevel_Info, "Missing default decimal value from xml configuration: node %d, class 0x%02x, instance %d, index %d", _nodeId,  _commandClassId, GetID().GetInstance(), GetID().GetIndex() );
 	}
 }
 

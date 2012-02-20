@@ -99,7 +99,7 @@ bool SwitchBinary::HandleMsg
 {
 	if (SwitchBinaryCmd_Report == (SwitchBinaryCmd)_data[0])
 	{
-		Log::Write( "Received SwitchBinary report from node %d: level=%s", GetNodeId(), _data[1] ? "On" : "Off" );
+		Log::Write( LogLevel_Info, "Received SwitchBinary report from node %d: level=%s", GetNodeId(), _data[1] ? "On" : "Off" );
 
 		if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, 0 ) ) )
 		{
@@ -125,7 +125,7 @@ bool SwitchBinary::SetValue
 	{
 		ValueBool const* value = static_cast<ValueBool const*>(&_value);
 
-		Log::Write( "SwitchBinary::Set - Setting node %d to %s", GetNodeId(), value->GetValue() ? "On" : "Off" );
+		Log::Write( LogLevel_Info, "SwitchBinary::Set - Setting node %d to %s", GetNodeId(), value->GetValue() ? "On" : "Off" );
 		Msg* msg = new Msg( "SwitchBinary Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
 		msg->SetInstance( this, _value.GetID().GetInstance() );
 		msg->Append( GetNodeId() );

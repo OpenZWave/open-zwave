@@ -1,3 +1,4 @@
+//-----------------------------------------------------------------------------
 //
 // SerialControllerImpl.cpp
 //
@@ -180,20 +181,20 @@ bool SerialControllerImpl::Init
 
 	string device = m_owner->m_serialControllerName;
 	
-	Log::Write( "Trying to open serial port %s (attempt %d)", device.c_str(), _attempts );
+	Log::Write( LogLevel_Info, "Trying to open serial port %s (attempt %d)", device.c_str(), _attempts );
 	
 	m_hSerialController = open( device.c_str(), O_RDWR | O_NOCTTY, 0 );
 
 	if( -1 == m_hSerialController )
 	{
 		//Error
-		Log::Write( "ERROR: Cannot open serial port %s. Error code %d", device.c_str(), errno );
+		Log::Write( LogLevel_Error, "ERROR: Cannot open serial port %s. Error code %d", device.c_str(), errno );
 		goto SerialOpenFailure;
 	}
 
 	if( flock( m_hSerialController, LOCK_EX) == -1 )
 	{
-		Log::Write( "ERROR: Cannot get exclusive lock for serial port %s. Error code %d", device.c_str(), errno );
+		Log::Write( LogLevel_Error, "ERROR: Cannot get exclusive lock for serial port %s. Error code %d", device.c_str(), errno );
 	}
 
 	int bits;
@@ -216,7 +217,7 @@ bool SerialControllerImpl::Init
 			tios.c_cflag = PARENB | PARODD;
 			break;
 		default:
-			Log::Write( "ERROR: Parity not supported" );
+			Log::Write( LogLevel_Error, "ERROR: Parity not supported" );
 			goto SerialOpenFailure;
 	}
 	switch( m_owner->m_stopBits )
@@ -227,7 +228,7 @@ bool SerialControllerImpl::Init
 			tios.c_cflag |= CSTOPB;
 			break;
 		default:
-			Log::Write( "ERROR: Stopbits not supported" );
+			Log::Write( LogLevel_Error, "ERROR: Stopbits not supported" );
 			goto SerialOpenFailure;
 	}
 	tios.c_iflag |= IGNBRK;
@@ -276,24 +277,24 @@ bool SerialControllerImpl::Init
 			cfsetspeed( &tios, B230400 );
 			break;
 		default:
-			Log::Write( "Baud rate not supported" );
+			Log::Write( LogLevel_Error, "Baud rate not supported" );
 			goto SerialOpenFailure;
 	}
 	if ( tcsetattr( m_hSerialController, TCSANOW, &tios ) == -1 )
 	{
 		// Error.  Clean up and exit
-		Log::Write( "ERROR: Failed to set serial port parameters" );
+		Log::Write( LogLevel_Error, "ERROR: Failed to set serial port parameters" );
 		goto SerialOpenFailure;
 	}
 
 	tcflush( m_hSerialController, TCIOFLUSH );
 
 	// Open successful
- 	Log::Write( "Serial port %s opened (attempt %d)", device.c_str(), _attempts );
+ 	Log::Write( LogLevel_Info, "Serial port %s opened (attempt %d)", device.c_str(), _attempts );
 	return true;
 
 SerialOpenFailure:
- 	Log::Write( "ERROR: Failed to open serial port %s", device.c_str() );
+ 	Log::Write( LogLevel_Error, "ERROR: Failed to open serial port %s", device.c_str() );
 	if(m_hSerialController >= 0)
 	{
 		close( m_hSerialController );
@@ -356,7 +357,7 @@ uint32 SerialControllerImpl::Write
 	if( -1 == m_hSerialController )
 	{
 		//Error
-		Log::Write( "ERROR: Serial port must be opened before writing" );
+		Log::Write( LogLevel_Error, "ERROR: Serial port must be opened before writing" );
 		return 0;
 	}
 

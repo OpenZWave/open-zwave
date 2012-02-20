@@ -78,13 +78,13 @@ bool ApplicationStatus::HandleMsg
 				snprintf( msg, sizeof(msg), "Unknown status" );
 			}
 		}
-		Log::Write( "Received Application Status Busy from node %d: %s", GetNodeId(), msg );
+		Log::Write( LogLevel_Info, "Received Application Status Busy from node %d: %s", GetNodeId(), msg );
 		return true;
 	}
 
 	if( ApplicationStatusCmd_RejectedRequest == (ApplicationStatusCmd)_data[0] )
 	{
-		Log::Write( "Received Application Rejected Request from node %d: Status=%d", GetNodeId(), _data[1] );
+		Log::Write( LogLevel_Info, "Received Application Rejected Request from node %d: Status=%d", GetNodeId(), _data[1] );
 		return true;
 	}
 

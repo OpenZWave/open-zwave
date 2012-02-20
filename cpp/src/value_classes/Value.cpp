@@ -202,7 +202,7 @@ void Value::ReadXML
 					}
 					else if(affects[i] < '0' || affects[i] > '9')
 					{
-						Log::Write( "Improperly formatted affects data: \"%s\"", affects);
+						Log::Write( LogLevel_Info, "Improperly formatted affects data: \"%s\"", affects);
 						break;
 					}
 				}
