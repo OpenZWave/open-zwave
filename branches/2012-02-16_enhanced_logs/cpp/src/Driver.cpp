@@ -707,7 +707,7 @@ void Driver::SendQueryStageComplete
 				{
 					// If the message is for a sleeping node, we queue it in the node itself.
 					Log::Write( LogLevel_Info, "" );
-					Log::Write( LogLevel_Detail, "Queuing Wake-Up Command: Query Stage Complete (%s)", node->GetQueryStageName( _stage ).c_str() );
+					Log::Write( LogLevel_Detail, "Node%03d, Queuing Wake-Up Command: Query Stage Complete (%s)", node->GetNodeId(), node->GetQueryStageName( _stage ).c_str() );
 					wakeUp->QueueMsg( item );
 					ReleaseNodes();
 					return;
@@ -716,7 +716,7 @@ void Driver::SendQueryStageComplete
 		}
 
 		// Non-sleeping node 
-		Log::Write( LogLevel_Detail, "Queuing Command: Query Stage Complete (%s)", node->GetQueryStageName( _stage ).c_str() );
+		Log::Write( LogLevel_Detail, "Node%03d, Queuing Command: Query Stage Complete (%s)", node->GetNodeId(), node->GetQueryStageName( _stage ).c_str() );
 		m_sendMutex->Lock();
 		m_msgQueue[MsgQueue_Query].push_back( item );
 		m_queueEvent[MsgQueue_Query]->Set();
@@ -752,8 +752,8 @@ void Driver::SendMsg
 				if( !wakeUp->IsAwake() )
 				{
 					Log::Write( LogLevel_Detail, "" );
-					Log::Write( LogLevel_Detail, "Queuing Wake-Up Command: %s", _msg->GetSummaryString().c_str() );
-					Log::Write( LogLevel_Detail, "  Data Frame: %s", _msg->GetFrameString().c_str() );
+					Log::Write( LogLevel_Detail, "Node%03d, Queuing Wake-Up Command: %s", _msg->GetTargetNodeId(), _msg->GetSummaryString().c_str() );
+					Log::Write( LogLevel_Detail, "  Node%03d, Data Frame: %s", _msg->GetTargetNodeId(), _msg->GetFrameString().c_str() );
 					wakeUp->QueueMsg( item );
 					ReleaseNodes();
 					return;
@@ -764,8 +764,8 @@ void Driver::SendMsg
 		ReleaseNodes();
 	}
 
-	Log::Write( LogLevel_Detail, "Queuing command: %s", _msg->GetSummaryString().c_str() );
-	Log::Write( LogLevel_Detail, "  Data Frame: %s", _msg->GetFrameString().c_str() );
+	Log::Write( LogLevel_Detail, "Node%03d, Queuing command: %s", _msg->GetTargetNodeId(), _msg->GetSummaryString().c_str() );
+	Log::Write( LogLevel_Detail, "  Node%03d, Data Frame: %s", _msg->GetTargetNodeId(), _msg->GetFrameString().c_str() );
 	m_sendMutex->Lock();
 	m_msgQueue[_queue].push_back( item );
 	m_queueEvent[_queue]->Set();
@@ -813,7 +813,7 @@ bool Driver::WriteNextMsg
 		Node* node = GetNodeUnsafe( item.m_nodeId );
 		if( node != NULL )
 		{	
-			Log::Write( LogLevel_Detail, "Node %d: Query Stage Complete (%s)", node->GetNodeId(), node->GetQueryStageName( stage ).c_str() );
+			Log::Write( LogLevel_Detail, "Node%03d, Query Stage Complete (%s)", node->GetNodeId(), node->GetQueryStageName( stage ).c_str() );
 			node->QueryStageComplete( stage );
 			node->AdvanceQueries();
 			return true;
@@ -841,7 +841,7 @@ bool Driver::WriteMsg
 	if( attempts >= MAX_TRIES )
 	{
 		// That's it - already tried to send MAX_TRIES times.
-		Log::Write( LogLevel_Error, "ERROR: Dropping command, expected response not received after %d attempt(s)", MAX_TRIES );
+		Log::Write( LogLevel_Error, "Node%03d, ERROR: Dropping command, expected response not received after %d attempt(s)", m_currentMsg->GetTargetNodeId(), MAX_TRIES );
 		delete m_currentMsg;
 		m_currentMsg = NULL;
 
@@ -861,8 +861,8 @@ bool Driver::WriteMsg
 	m_waitingForAck = true;
 
 	Log::Write( LogLevel_Info, "" );
-	Log::Write( LogLevel_Info, "Sending command (Callback ID=0x%.2x, Expected Reply=0x%.2x) - %s", m_currentMsg->GetCallbackId(), m_currentMsg->GetExpectedReply(), m_currentMsg->GetSummaryString().c_str() );
-	Log::Write( LogLevel_Detail, "  Data Frame: %s", m_currentMsg->GetFrameString().c_str() );
+	Log::Write( LogLevel_Info, "Node%03d, Sending command (Callback ID=0x%.2x, Expected Reply=0x%.2x) - %s", m_currentMsg->GetTargetNodeId(), m_currentMsg->GetCallbackId(), m_currentMsg->GetExpectedReply(), m_currentMsg->GetSummaryString().c_str() );
+	Log::Write( LogLevel_Detail, "  Node%03d, Data Frame: %s", m_currentMsg->GetTargetNodeId(), m_currentMsg->GetFrameString().c_str() );
 			
 	m_controller->Write( m_currentMsg->GetBuffer(), m_currentMsg->GetLength() );
 	m_writeCnt++;
@@ -892,7 +892,7 @@ void Driver::RemoveCurrentMsg
 (
 )
 {
-	Log::Write( LogLevel_Debug, "Removing current message" );
+	Log::Write( LogLevel_Debug, "Node%03d, Removing current message", m_currentMsg->GetTargetNodeId() );
 	delete m_currentMsg;
 	m_currentMsg = NULL;
 
@@ -937,8 +937,8 @@ bool Driver::MoveMessagesToWakeUpQueue
 						// commands to the pending queue.
 						if( !m_currentMsg->IsWakeUpNoMoreInformationCommand() )
 						{
-							Log::Write( LogLevel_Info, "Node not responding - moving message to Wake-Up queue: %s", m_currentMsg->GetSummaryString().c_str() );
-							Log::Write( LogLevel_Detail, "  Data Frame: %s", m_currentMsg->GetFrameString().c_str() );
+							Log::Write( LogLevel_Info, "Node%03d, Node not responding - moving message to Wake-Up queue: %s", m_currentMsg->GetTargetNodeId(), m_currentMsg->GetSummaryString().c_str() );
+							Log::Write( LogLevel_Detail, "Node%03d,   Data Frame: %s", m_currentMsg->GetTargetNodeId(), m_currentMsg->GetFrameString().c_str() );
 							MsgQueueItem item;
 							item.m_command = MsgQueueCmd_SendMsg;
 							item.m_msg = m_currentMsg;
@@ -975,8 +975,8 @@ bool Driver::MoveMessagesToWakeUpQueue
 								// commands to the pending queue.
 								if( !item.m_msg->IsWakeUpNoMoreInformationCommand() )
 								{
-									Log::Write( LogLevel_Info, "Node not responding - moving message to Wake-Up queue: %s", item.m_msg->GetSummaryString().c_str() );
-									Log::Write( LogLevel_Detail, "  Data Frame: %s", item.m_msg->GetFrameString().c_str() );
+									Log::Write( LogLevel_Info, "Node%03d, Node not responding - moving message to Wake-Up queue: %s", item.m_msg->GetTargetNodeId(), item.m_msg->GetSummaryString().c_str() );
+									Log::Write( LogLevel_Detail, "Node%03d,   Data Frame: %s", item.m_msg->GetTargetNodeId(), item.m_msg->GetFrameString().c_str() );
 									wakeUp->QueueMsg( item );
 								}
 								else
@@ -990,7 +990,7 @@ bool Driver::MoveMessagesToWakeUpQueue
 						{
 							if( _targetNodeId == item.m_nodeId )
 							{
-								Log::Write( LogLevel_Info, "Node not responding - moving QueryStageComplete command to Wake-Up queue" );
+								Log::Write( LogLevel_Info, "Node%03d, Node not responding - moving QueryStageComplete command to Wake-Up queue", item.m_msg->GetTargetNodeId() );
 								wakeUp->QueueMsg( item );
 								remove = true;
 							}
@@ -1058,7 +1058,7 @@ void Driver::CheckCompletedNodeQueries
 		if( all )
 		{
 			// no sleeping nodes, no more nodes in the queue, so...All done
-			Log::Write( LogLevel_Info, "Node query processing complete." );
+			Log::Write( LogLevel_Info, "         Node query processing complete." );
 			Notification* notification = new Notification( Notification::Type_AllNodesQueried );
 			notification->SetHomeAndNodeIds( m_homeId, 0xff );
 			QueueNotification( notification ); 
@@ -1070,7 +1070,7 @@ void Driver::CheckCompletedNodeQueries
 			if (!m_awakeNodesQueried ) 
 			{
 				// only sleeping nodes remain, so signal awake nodes queried complete
-				Log::Write( LogLevel_Info, "Node query processing complete except for sleeping nodes." );
+				Log::Write( LogLevel_Info, "         Node query processing complete except for sleeping nodes." );
 				Notification* notification = new Notification( Notification::Type_AwakeNodesQueried );
 				notification->SetHomeAndNodeIds( m_homeId, 0xff );
 				QueueNotification( notification ); 
@@ -2126,11 +2126,11 @@ void Driver::HandleSendDataResponse
 {
 	if( _data[2] )
 	{
-		Log::Write( LogLevel_Info, "  %s delivered to Z-Wave stack", _replication ? "ZW_REPLICATION_SEND_DATA" : "ZW_SEND_DATA" );
+		Log::Write( LogLevel_Detail, "  %s delivered to Z-Wave stack", _replication ? "ZW_REPLICATION_SEND_DATA" : "ZW_SEND_DATA" );
 	}
 	else
 	{
-		Log::Write( LogLevel_Info, "ERROR: %s could not be delivered to Z-Wave stack", _replication ? "ZW_REPLICATION_SEND_DATA" : "ZW_SEND_DATA" );
+		Log::Write( LogLevel_Error, "ERROR: %s could not be delivered to Z-Wave stack", _replication ? "ZW_REPLICATION_SEND_DATA" : "ZW_SEND_DATA" );
 	}
 }
 

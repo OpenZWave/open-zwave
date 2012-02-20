@@ -373,7 +373,7 @@ void HidController::Read
 (
 )
 {
-	uint8 buffer[256];
+	uint8 buffer[FEATURE_REPORT_LENGTH];
 	int bytesRead = 0;
 
  	while( true )
@@ -390,8 +390,18 @@ void HidController::Read
         //                 This value will increase with every input report retrieved
         //                 until the rx data is fully buffered in the controller.
 
-        uint8 inputReport[INPUT_REPORT_LENGTH] = { 0 };
-        int hidApiResult = hid_read( m_hHidController, inputReport, INPUT_REPORT_LENGTH );
+		uint8 inputReport[INPUT_REPORT_LENGTH] = { 0 };
+	        int hidApiResult = hid_read( m_hHidController, inputReport, INPUT_REPORT_LENGTH );
+		{
+			string tmp = "";
+			for( int i = 0; i < INPUT_REPORT_LENGTH; i++ )
+			{
+				char bstr[16];
+				snprintf(bstr, sizeof(bstr), "%02x ", inputReport[i] );
+				tmp += bstr;
+			}
+			Log::Write( "hid read %d %s", hidApiResult, tmp.c_str() );
+		}
             
 		if( hidApiResult == -1 )
 		{
@@ -402,27 +412,39 @@ void HidController::Read
 		}
 
 		if( 0x01 == inputReport[2] )
-        {
+		{
 			// no rx feature reports recieved yet
 			continue;
 		}
 
 		if( 0x02 == inputReport[2] )
 		{
-	        // rx feature report data is buffering or available on the HID port
-		    bytesRead = GetFeatureReport(FEATURE_REPORT_LENGTH, 0x5, buffer);
-		    CHECK_HIDAPI_RESULT(bytesRead, HidPortError);
-            
-		    // Rx feature report buffer should contain
-		    // [0]      - 0x05 (rx feature report ID)
-		    // [1]      - length of rx data (or 0x00 and no further bytes if no rx data waiting)
-		    // [2]...   - rx data
-
-			if( bytesRead > 2 )
+			// rx feature report data is buffering or available on the HID port
+			memset( buffer, '\0', sizeof(buffer) );
+			bytesRead = GetFeatureReport(FEATURE_REPORT_LENGTH, 0x5, buffer);
 			{
-				Put( &buffer[2], buffer[1] ); 
+				string tmp = "";
+				for (int i = 0; i < 30; i++)
+				{
+					char bstr[16];
+					if( i == buffer[1] )
+						tmp + "| ";
+					snprintf( bstr, sizeof(bstr), "0x%.2x ", buffer[2+i] );
+					tmp += bstr;
+				}
+				Log::Write( "feature report read=%d ID=%d len=%d %s", bytesRead, buffer[0], buffer[1], tmp.c_str() );
 			}
+			CHECK_HIDAPI_RESULT(bytesRead, HidPortError);
+            
+			// Rx feature report buffer should contain
+			// [0]      - 0x05 (rx feature report ID)
+			// [1]      - length of rx data (or 0x00 and no further bytes if no rx data waiting)
+			// [2]...   - rx data
 
+			if( buffer[1] > 0 )
+			{
+			    	Put( &buffer[2], buffer[1] );
+			}
 			continue;
 		}
 

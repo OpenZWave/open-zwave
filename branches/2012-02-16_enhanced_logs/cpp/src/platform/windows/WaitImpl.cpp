@@ -29,6 +29,7 @@
 #include "Defs.h"
 #include "Wait.h"
 #include "WaitImpl.h"
+#include "Log.h"
 
 using namespace OpenZWave;
 
