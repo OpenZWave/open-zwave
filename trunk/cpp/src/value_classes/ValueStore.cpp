@@ -29,7 +29,6 @@
 #include "Value.h"
 #include "Manager.h"
 #include "Notification.h"
-#include "Log.h"
 
 using namespace OpenZWave;
 

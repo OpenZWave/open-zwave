@@ -348,11 +348,13 @@ int main( int argc, char* argv[] )
 	// threads, and we cannot risk the list being changed while we are using it.  
 	// We must hold the critical section for as short a time as possible, to avoid
 	// stalling the OpenZWave drivers.
-	while( true )
+//	while( true )
 	{
 		EnterCriticalSection( &g_criticalSection );
+
 		// Do stuff
 		Sleep(6000);
+
 		LeaveCriticalSection( &g_criticalSection );
 	}
 

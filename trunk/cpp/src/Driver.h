@@ -138,6 +138,7 @@ namespace OpenZWave
 		bool					m_awakeNodesQueried;	/**< Set to true once the driver has polled all awake nodes */
 		bool					m_allNodesQueried;		/**< Set to true once the driver has polled all nodes */
 		bool					m_notifytransactions; 
+		TimeStamp				m_startTime;			/**< Time this driver started (for log report purposes) */
 
 	//-----------------------------------------------------------------------------
 	//	Configuration
@@ -458,6 +459,7 @@ namespace OpenZWave
 		bool IsNodeSecurityDevice( uint8 const _nodeId );
 		uint32 GetNodeMaxBaudRate( uint8 const _nodeId );
 		uint8 GetNodeVersion( uint8 const _nodeId );
+		uint8 GetNodeSecurity( uint8 const _nodeId );
 		uint8 GetNodeBasic( uint8 const _nodeId );
 		uint8 GetNodeGeneric( uint8 const _nodeId );
 		uint8 GetNodeSpecific( uint8 const _nodeId );
@@ -616,9 +618,9 @@ namespace OpenZWave
 		struct DriverData
 		{
 			uint32 s_SOFCnt;			// Number of SOF bytes received
-			uint32 s_ACKWaiting;			// Number of unsolcited messages while waiting for an ACK
-			uint32 s_readAborts;			// Number of times read were aborted due to timeouts
-			uint32 s_badChecksum;			// Number of bad checksums
+			uint32 s_ACKWaiting;		// Number of unsolicited messages while waiting for an ACK
+			uint32 s_readAborts;		// Number of times read were aborted due to timeouts
+			uint32 s_badChecksum;		// Number of bad checksums
 			uint32 s_readCnt;			// Number of messages successfully read
 			uint32 s_writeCnt;			// Number of messages successfully sent
 			uint32 s_CANCnt;			// Number of CAN bytes received
@@ -627,17 +629,19 @@ namespace OpenZWave
 			uint32 s_OOFCnt;			// Number of bytes out of framing
 			uint32 s_dropped;			// Number of messages dropped & not delivered
 			uint32 s_retries;			// Number of messages retransmitted
-			uint32 s_controllerReadCnt;		// Number of controller messages read
-			uint32 s_controllerWriteCnt;		// Number of controller messages sent
+			uint32 s_controllerReadCnt;	// Number of controller messages read
+			uint32 s_controllerWriteCnt;// Number of controller messages sent
 		};
+
+		void LogDriverStatistics();
 
 	private:
 		void GetDriverStatistics( DriverData* _data );
 
 		uint32 m_SOFCnt;			// Number of SOF bytes received
-		uint32 m_ACKWaiting;			// Number of unsolcited messages while waiting for an ACK
-		uint32 m_readAborts;			// Number of times read were aborted due to timeouts
-		uint32 m_badChecksum;			// Number of bad checksums
+		uint32 m_ACKWaiting;		// Number of unsolcited messages while waiting for an ACK
+		uint32 m_readAborts;		// Number of times read were aborted due to timeouts
+		uint32 m_badChecksum;		// Number of bad checksums
 		uint32 m_readCnt;			// Number of messages successfully read
 		uint32 m_writeCnt;			// Number of messages successfully sent
 		uint32 m_CANCnt;			// Number of CAN bytes received
@@ -646,10 +650,10 @@ namespace OpenZWave
 		uint32 m_OOFCnt;			// Number of bytes out of framing
 		uint32 m_dropped;			// Number of messages dropped & not delivered
 		uint32 m_retries;			// Number of retransmitted messages
-		uint32 m_controllerReadCnt;		// Number of messages read from controller
-		uint32 m_controllerWriteCnt;		// Number of messages written to the controller
-		//time_t m_commandStart;			// Start time of last command
-		//time_t m_timeoutLost;				// Cumulative time lost to timeouts
+		uint32 m_controllerReadCnt;	// Number of messages read from controller
+		uint32 m_controllerWriteCnt;// Number of messages written to the controller
+		//time_t m_commandStart;	// Start time of last command
+		//time_t m_timeoutLost;		// Cumulative time lost to timeouts
 	};
 
 } // namespace OpenZWave

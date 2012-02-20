@@ -31,6 +31,7 @@
 #include "Defs.h"
 #include <string>
 #include "Log.h"
+#include "Windows.h"
 
 namespace OpenZWave
 {
@@ -41,12 +42,26 @@ namespace OpenZWave
 	private:
 		friend class Log;
 
-		LogImpl( string const& _filename );
+		LogImpl( string const& _filename, bool const _bAppendLog, bool const _bConsoleOutput, LogLevel const _saveLevel, LogLevel const _queueLevel, LogLevel const _dumpTrigger );
 		~LogImpl();
 
-		void Write( char const* _format, va_list _args );
+		void Write( LogLevel _level, char const* _format, va_list _args );
+		void Queue( char const* _buffer );
+		void QueueDump();
+		void QueueClear();
+		void SetLoggingState( LogLevel _saveLevel, LogLevel _queueLevel, LogLevel _dumpTrigger );
+		void SetLogFileName( string _filename );
 
-		string m_filename;
+		string GetTimeStampString();
+		string GetThreadId();
+
+		string m_filename;						/**< filename specified by user (default is ozw_log.txt) */
+		bool m_bConsoleOutput;					/**< if true, send log output to console as well as to the file */
+		bool m_bAppendLog;						/**< if true, the log file should be appended to any with the same name */
+		list<string> m_logQueue;				/**< list of queued log messages */
+		LogLevel m_saveLevel;
+		LogLevel m_queueLevel;
+		LogLevel m_dumpTrigger;
 	};
 
 } // namespace OpenZWave

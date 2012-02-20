@@ -193,7 +193,7 @@ bool ManufacturerSpecific::HandleMsg
 				LoadConfigXML( configPath );
 			}
 
-			Log::Write( "Received manufacturer specific report from node %d: Manufacturer=%s, Product=%s", 
+			Log::Write( LogLevel_Info, "Received manufacturer specific report from node %d: Manufacturer=%s, Product=%s", 
 									GetNodeId(), node->GetManufacturerName().c_str(), node->GetProductName().c_str() );
 			ClearStaticRequest( StaticRequest_Values );
 			node->m_manufacturerSpecificClassReceived = true;
@@ -230,7 +230,7 @@ bool ManufacturerSpecific::LoadProductXML
 	if( !pDoc->LoadFile( filename.c_str(), TIXML_ENCODING_UTF8 ) )
 	{
 		delete pDoc;	
-		Log::Write( "Unable to load %s", filename.c_str() );
+		Log::Write( LogLevel_Info, "Unable to load %s", filename.c_str() );
 		return false;
 	}
 
@@ -249,7 +249,7 @@ bool ManufacturerSpecific::LoadProductXML
 			str = manufacturerElement->Attribute( "id" );
 			if( !str )
 			{
-				Log::Write( "Error in manufacturer_specific.xml at line %d - missing manufacturer id attribute", manufacturerElement->Row() );
+				Log::Write( LogLevel_Info, "Error in manufacturer_specific.xml at line %d - missing manufacturer id attribute", manufacturerElement->Row() );
 				delete pDoc;	
 				return false;
 			}
@@ -258,7 +258,7 @@ bool ManufacturerSpecific::LoadProductXML
 			str = manufacturerElement->Attribute( "name" );
 			if( !str )
 			{
-				Log::Write( "Error in manufacturer_specific.xml at line %d - missing manufacturer name attribute", manufacturerElement->Row() );
+				Log::Write( LogLevel_Info, "Error in manufacturer_specific.xml at line %d - missing manufacturer name attribute", manufacturerElement->Row() );
 				delete pDoc;	
 				return false;
 			}
@@ -276,7 +276,7 @@ bool ManufacturerSpecific::LoadProductXML
 					str = productElement->Attribute( "type" );
 					if( !str )
 					{
-						Log::Write( "Error in manufacturer_specific.xml at line %d - missing product type attribute", productElement->Row() );
+						Log::Write( LogLevel_Info, "Error in manufacturer_specific.xml at line %d - missing product type attribute", productElement->Row() );
 						delete pDoc;	
 						return false;
 					}
@@ -285,7 +285,7 @@ bool ManufacturerSpecific::LoadProductXML
 					str = productElement->Attribute( "id" );
 					if( !str )
 					{
-						Log::Write( "Error in manufacturer_specific.xml at line %d - missing product id attribute", productElement->Row() );
+						Log::Write( LogLevel_Info, "Error in manufacturer_specific.xml at line %d - missing product id attribute", productElement->Row() );
 						delete pDoc;	
 						return false;
 					}
@@ -294,7 +294,7 @@ bool ManufacturerSpecific::LoadProductXML
 					str = productElement->Attribute( "name" );
 					if( !str )
 					{
-						Log::Write( "Error in manufacturer_specific.xml at line %d - missing product name attribute", productElement->Row() );
+						Log::Write( LogLevel_Info, "Error in manufacturer_specific.xml at line %d - missing product name attribute", productElement->Row() );
 						delete pDoc;	
 						return false;
 					}
@@ -313,7 +313,7 @@ bool ManufacturerSpecific::LoadProductXML
 					if ( s_productMap[product->GetKey()] != NULL )
 					{
 						Product *c = s_productMap[product->GetKey()];
-						Log::Write("Product name collision: %s, type %x id %x manufacturerid %x, collides with %s, type %x id %x manufacturerid %x", productName.c_str(), productType, productId, manufacturerId, c->GetProductName().c_str(), c->GetProductType(), c->GetProductId(), c->GetManufacturerId());
+						Log::Write( LogLevel_Info, "Product name collision: %s, type %x id %x manufacturerid %x, collides with %s, type %x id %x manufacturerid %x", productName.c_str(), productType, productId, manufacturerId, c->GetProductName().c_str(), c->GetProductType(), c->GetProductId(), c->GetManufacturerId());
 						delete product;
 					}
 					else
@@ -381,11 +381,11 @@ bool ManufacturerSpecific::LoadConfigXML
 		string filename =  configPath + _configXML;
 
 		TiXmlDocument* doc = new TiXmlDocument();
-		Log::Write( "  Opening config param file %s", filename.c_str() );
+		Log::Write( LogLevel_Info, "  Opening config param file %s", filename.c_str() );
 		if( !doc->LoadFile( filename.c_str(), TIXML_ENCODING_UTF8 ) )
 		{
 			delete doc;	
-			Log::Write( "Unable to find or load Config Param file %s", filename.c_str() );
+			Log::Write( LogLevel_Info, "Unable to find or load Config Param file %s", filename.c_str() );
 			return false;
 		}
 
