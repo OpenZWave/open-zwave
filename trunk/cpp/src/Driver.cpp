@@ -752,8 +752,7 @@ void Driver::SendMsg
 				if( !wakeUp->IsAwake() )
 				{
 					Log::Write( LogLevel_Detail, "" );
-					Log::Write( LogLevel_Detail, "Node%03d, Queuing Wake-Up Command: %s", _msg->GetTargetNodeId(), _msg->GetSummaryString().c_str() );
-					Log::Write( LogLevel_Detail, "  Node%03d, Data Frame: %s", _msg->GetTargetNodeId(), _msg->GetFrameString().c_str() );
+					Log::Write( LogLevel_Detail, "Node%03d, Queuing Wake-Up Command: %s, %s", _msg->GetTargetNodeId(), _msg->GetSummaryString().c_str(), _msg->GetFrameString().c_str()  );
 					wakeUp->QueueMsg( item );
 					ReleaseNodes();
 					return;
@@ -764,8 +763,7 @@ void Driver::SendMsg
 		ReleaseNodes();
 	}
 
-	Log::Write( LogLevel_Detail, "Node%03d, Queuing command: %s", _msg->GetTargetNodeId(), _msg->GetSummaryString().c_str() );
-	Log::Write( LogLevel_Detail, "  Node%03d, Data Frame: %s", _msg->GetTargetNodeId(), _msg->GetFrameString().c_str() );
+	Log::Write( LogLevel_Detail, "Node%03d, Queuing command: %s, %s", _msg->GetTargetNodeId(), _msg->GetSummaryString().c_str(),_msg->GetFrameString().c_str() );
 	m_sendMutex->Lock();
 	m_msgQueue[_queue].push_back( item );
 	m_queueEvent[_queue]->Set();
@@ -861,8 +859,7 @@ bool Driver::WriteMsg
 	m_waitingForAck = true;
 
 	Log::Write( LogLevel_Info, "" );
-	Log::Write( LogLevel_Info, "Node%03d, Sending command (Callback ID=0x%.2x, Expected Reply=0x%.2x) - %s", m_currentMsg->GetTargetNodeId(), m_currentMsg->GetCallbackId(), m_currentMsg->GetExpectedReply(), m_currentMsg->GetSummaryString().c_str() );
-	Log::Write( LogLevel_Detail, "  Node%03d, Data Frame: %s", m_currentMsg->GetTargetNodeId(), m_currentMsg->GetFrameString().c_str() );
+	Log::Write( LogLevel_Info, "Node%03d, Sending command (Callback ID=0x%.2x, Expected Reply=0x%.2x) - %s, %s", m_currentMsg->GetTargetNodeId(), m_currentMsg->GetCallbackId(), m_currentMsg->GetExpectedReply(), m_currentMsg->GetSummaryString().c_str(), m_currentMsg->GetFrameString().c_str() );
 			
 	m_controller->Write( m_currentMsg->GetBuffer(), m_currentMsg->GetLength() );
 	m_writeCnt++;
@@ -937,8 +934,7 @@ bool Driver::MoveMessagesToWakeUpQueue
 						// commands to the pending queue.
 						if( !m_currentMsg->IsWakeUpNoMoreInformationCommand() )
 						{
-							Log::Write( LogLevel_Info, "Node%03d, Node not responding - moving message to Wake-Up queue: %s", m_currentMsg->GetTargetNodeId(), m_currentMsg->GetSummaryString().c_str() );
-							Log::Write( LogLevel_Detail, "Node%03d,   Data Frame: %s", m_currentMsg->GetTargetNodeId(), m_currentMsg->GetFrameString().c_str() );
+							Log::Write( LogLevel_Info, "Node%03d, Node not responding - moving message to Wake-Up queue: %s, %s", m_currentMsg->GetTargetNodeId(), m_currentMsg->GetSummaryString().c_str(), m_currentMsg->GetFrameString().c_str() );
 							MsgQueueItem item;
 							item.m_command = MsgQueueCmd_SendMsg;
 							item.m_msg = m_currentMsg;
@@ -975,8 +971,7 @@ bool Driver::MoveMessagesToWakeUpQueue
 								// commands to the pending queue.
 								if( !item.m_msg->IsWakeUpNoMoreInformationCommand() )
 								{
-									Log::Write( LogLevel_Info, "Node%03d, Node not responding - moving message to Wake-Up queue: %s", item.m_msg->GetTargetNodeId(), item.m_msg->GetSummaryString().c_str() );
-									Log::Write( LogLevel_Detail, "Node%03d,   Data Frame: %s", item.m_msg->GetTargetNodeId(), item.m_msg->GetFrameString().c_str() );
+									Log::Write( LogLevel_Info, "Node%03d, Node not responding - moving message to Wake-Up queue: %s, %s", item.m_msg->GetTargetNodeId(), item.m_msg->GetSummaryString().c_str(), item.m_msg->GetFrameString().c_str() );
 									wakeUp->QueueMsg( item );
 								}
 								else
