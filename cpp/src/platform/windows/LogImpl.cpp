@@ -103,9 +103,13 @@ void LogImpl::Write
 	{
 		char lineBuf[1024];
 		if( !_format || ( _format[0] == 0 ) )
-			strcpy( lineBuf, "" );
+		{
+			strcpy_s( lineBuf, 1024, "" );
+		}
 		else
+		{
 			vsprintf_s( lineBuf, sizeof(lineBuf), _format, _args );
+		}
 
 		// should this message be saved to file (and possibly written to console?)
 		if( (_logLevel <= m_saveLevel) || (_logLevel == LogLevel_Internal) )
@@ -152,7 +156,9 @@ void LogImpl::Write
 
 	// now check to see if the _dumpTrigger has been hit
 	if( (_logLevel <= m_dumpTrigger) && (_logLevel != LogLevel_Internal) && (_logLevel != LogLevel_Always) )
+	{
 		QueueDump();
+	}
 }
 
 //-----------------------------------------------------------------------------

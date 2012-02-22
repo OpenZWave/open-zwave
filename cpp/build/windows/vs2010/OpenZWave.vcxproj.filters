@@ -258,7 +258,6 @@
     <ClInclude Include="..\..\..\src\platform\HidController.h">
       <Filter>Platform</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\Scene.h" />
     <ClInclude Include="..\..\..\src\Bitfield.h">
       <Filter>Main</Filter>
     </ClInclude>
@@ -285,6 +284,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\platform\Stream.h">
       <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Scene.h">
+      <Filter>Main</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -519,7 +521,6 @@
     <ClCompile Include="..\..\..\src\platform\HidController.cpp">
       <Filter>Platform</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\Scene.cpp" />
     <ClCompile Include="..\..\..\src\Scene.cpp">
       <Filter>Main</Filter>
     </ClCompile>
@@ -540,6 +541,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\platform\Stream.cpp">
       <Filter>Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Scene.cpp">
+      <Filter>Main</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
