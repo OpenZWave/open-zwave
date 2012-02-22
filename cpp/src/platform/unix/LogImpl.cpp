@@ -26,6 +26,7 @@
 //
 //-----------------------------------------------------------------------------
 #include <string>
+#include <cstring>
 #include "Defs.h"
 #include "LogImpl.h"
 
