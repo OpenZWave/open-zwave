@@ -31,6 +31,8 @@
 
 #include <string.h>
 
+#include <cstdio>
+
 using namespace OpenZWave;
 
 //-----------------------------------------------------------------------------
