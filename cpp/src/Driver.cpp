@@ -831,7 +831,8 @@ bool Driver::WriteMsg
 {
 	if( !m_currentMsg )
 	{
-		assert(0);
+		Log::Write( LogLevel_Error, "m_currentMsg is NULL" );
+//		assert(0);
 		return false;
 	}
 
@@ -858,7 +859,8 @@ bool Driver::WriteMsg
 	m_expectedReply = m_currentMsg->GetExpectedReply();
 	m_waitingForAck = true;
 
-	Log::Write( LogLevel_Info, "" );
+	Log::Write( LogLevel_Detail, "" );
+
 	Log::Write( LogLevel_Info, "Node%03d, Sending command (Callback ID=0x%.2x, Expected Reply=0x%.2x) - %s, %s", m_currentMsg->GetTargetNodeId(), m_currentMsg->GetCallbackId(), m_currentMsg->GetExpectedReply(), m_currentMsg->GetSummaryString().c_str(), m_currentMsg->GetFrameString().c_str() );
 			
 	m_controller->Write( m_currentMsg->GetBuffer(), m_currentMsg->GetLength() );
@@ -889,7 +891,11 @@ void Driver::RemoveCurrentMsg
 (
 )
 {
-	Log::Write( LogLevel_Debug, "Node%03d, Removing current message", m_currentMsg->GetTargetNodeId() );
+	if( m_currentMsg != NULL)
+		Log::Write( LogLevel_Debug, "Node%03d, Removing current message", m_currentMsg->GetTargetNodeId() );
+	else
+		Log::Write( LogLevel_Warning, "         Removing current message (though it was already NULL)" );
+
 	delete m_currentMsg;
 	m_currentMsg = NULL;
 
@@ -934,7 +940,14 @@ bool Driver::MoveMessagesToWakeUpQueue
 						// commands to the pending queue.
 						if( !m_currentMsg->IsWakeUpNoMoreInformationCommand() )
 						{
-							Log::Write( LogLevel_Info, "Node%03d, Node not responding - moving message to Wake-Up queue: %s, %s", m_currentMsg->GetTargetNodeId(), m_currentMsg->GetSummaryString().c_str(), m_currentMsg->GetFrameString().c_str() );
+							if( m_currentMsg != NULL)
+							{
+								Log::Write( LogLevel_Info, "Node%03d, Node not responding - moving message to Wake-Up queue: %s, %s", m_currentMsg->GetTargetNodeId(), m_currentMsg->GetSummaryString().c_str(), m_currentMsg->GetFrameString().c_str() );
+							}
+							else
+							{
+								Log::Write( LogLevel_Warning, "NullMsg, Node not responding - moving message to Wake-Up queue: %s, %s", m_currentMsg->GetSummaryString().c_str(), m_currentMsg->GetFrameString().c_str() );
+							}
 							MsgQueueItem item;
 							item.m_command = MsgQueueCmd_SendMsg;
 							item.m_msg = m_currentMsg;
@@ -1179,7 +1192,15 @@ bool Driver::ReadMsg
 				snprintf( byteStr, sizeof(byteStr), "0x%.2x", buffer[i] );
 				str += byteStr;
 			}
-			Log::Write( LogLevel_Detail, "  Received: %s", str.c_str() );
+			if( m_currentMsg != NULL)
+			{
+				Log::Write( LogLevel_Detail, "Node%03d,  Received: %s", m_currentMsg->GetTargetNodeId(), str.c_str() );
+			}
+			else
+			{
+				Log::Write( LogLevel_Warning, "NullMsg,   Received: %s", str.c_str() );
+			}
+
 
 			// Verify checksum
 			uint8 checksum = 0xff;
@@ -1226,7 +1247,14 @@ bool Driver::ReadMsg
 
 		case ACK:
 		{
-			Log::Write( LogLevel_Detail, "  ACK received CallbackId 0x%.2x Reply 0x%.2x", m_expectedCallbackId, m_expectedReply );
+			if( m_currentMsg != NULL)
+			{
+				Log::Write( LogLevel_Detail, "Node%03d,  ACK received CallbackId 0x%.2x Reply 0x%.2x", m_currentMsg->GetTargetNodeId(), m_expectedCallbackId, m_expectedReply );
+			}
+			else
+			{
+				Log::Write( LogLevel_Warning, "NullMsg,  ACK received CallbackId 0x%.2x Reply 0x%.2x", m_expectedCallbackId, m_expectedReply );
+			}
 			m_ACKCnt++;
 			
 			m_waitingForAck = false;		
@@ -1680,8 +1708,8 @@ void Driver::HandleGetVersionResponse
 	{
 		m_libraryTypeName = c_libraryTypeNames[m_libraryType];
 	}
-	Log::Write( LogLevel_Info, "Received reply to FUNC_ID_ZW_GET_VERSION:" );
-	Log::Write( LogLevel_Info, "    %s library, version %s", m_libraryTypeName.c_str(), m_libraryVersion.c_str() );
+	Log::Write( LogLevel_Info, "Node%03d, Received reply to FUNC_ID_ZW_GET_VERSION:", m_currentMsg->GetTargetNodeId() );
+	Log::Write( LogLevel_Info, "Node%03d,    %s library, version %s", m_currentMsg->GetTargetNodeId(), m_libraryTypeName.c_str(), m_libraryVersion.c_str() );
 }
 
 //-----------------------------------------------------------------------------
@@ -3201,7 +3229,7 @@ void Driver::PollThreadProc
 						CommandClass* cc = node->GetCommandClass( valueId.GetCommandClassId() );
 						uint8 index = valueId.GetIndex();
 						uint8 instance = valueId.GetInstance();
-						Log::Write( LogLevel_Info, "Polling node %d: %s index = %d instance = %d (poll queue has %d messages)", node->m_nodeId, cc->GetCommandClassName().c_str(), index, instance, m_msgQueue[MsgQueue_Poll].size() );
+						Log::Write( LogLevel_Detail, "Node%03d, Polling: %s index = %d instance = %d (poll queue has %d messages)", node->m_nodeId, cc->GetCommandClassName().c_str(), index, instance, m_msgQueue[MsgQueue_Poll].size() );
 						cc->RequestValue( 0, index, instance, MsgQueue_Poll );
 					}
 
