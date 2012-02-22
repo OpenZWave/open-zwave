@@ -610,6 +610,7 @@ namespace OpenZWave
 		void NotifyWatchers();												// Passes the notifications to all the registered watcher callbacks in turn.
 
 		list<Notification*>	m_notifications;
+		Event*				m_notificationsEvent;
 
 	//-----------------------------------------------------------------------------
 	//	Statistics

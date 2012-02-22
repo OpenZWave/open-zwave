@@ -120,6 +120,7 @@ Driver::Driver
 	m_pollThread( new Thread( "poll" ) ),
 	m_pollMutex( new Mutex() ),
 	m_pollInterval( 30 ),                   // By default, every polled device is queried once every 30 seconds
+	m_notificationsEvent( new Event() ),
 	m_controllerState( ControllerState_Normal ),
 	m_controllerCommand( ControllerCommand_None ),
 	m_controllerCallback( NULL ),
@@ -243,6 +244,7 @@ Driver::~Driver
 	ReleaseNodes();
 
 	NotifyWatchers();
+	m_notificationsEvent->Release();
 	m_nodeMutex->Release();
     
 	// Unsure at what point this is safe to do?
@@ -293,14 +295,15 @@ void Driver::DriverThreadProc
 		if( Init( attempts ) )
 		{
 			// Driver has been initialised
-			Wait* waitObjects[7];
+			Wait* waitObjects[8];
 			waitObjects[0] = _exitEvent;						// Thread must exit.
-			waitObjects[1] = m_controller;						// Controller has received data.
-			waitObjects[2] = m_queueEvent[MsgQueue_Command];	// A controller command is in progress.
-			waitObjects[3] = m_queueEvent[MsgQueue_WakeUp];		// A node has woken. Pending messages should be sent.
-			waitObjects[4] = m_queueEvent[MsgQueue_Send];		// Ordinary requests to be sent.
-			waitObjects[5] = m_queueEvent[MsgQueue_Query];		// Node queries are pending.
-			waitObjects[6] = m_queueEvent[MsgQueue_Poll];		// Poll request is waiting.
+			waitObjects[1] = m_notificationsEvent;				// Notifications waiting to be sent.
+			waitObjects[2] = m_controller;						// Controller has received data.
+			waitObjects[3] = m_queueEvent[MsgQueue_Command];	// A controller command is in progress.
+			waitObjects[4] = m_queueEvent[MsgQueue_WakeUp];		// A node has woken. Pending messages should be sent.
+			waitObjects[5] = m_queueEvent[MsgQueue_Send];		// Ordinary requests to be sent.
+			waitObjects[6] = m_queueEvent[MsgQueue_Query];		// Node queries are pending.
+			waitObjects[7] = m_queueEvent[MsgQueue_Poll];		// Poll request is waiting.
 
 			TimeStamp retryTimeStamp;
 
@@ -311,10 +314,10 @@ void Driver::DriverThreadProc
 				int32 timeout = Wait::Timeout_Infinite;
 
 				// If we're waiting for a message to complete, we can only
-				// handle incoming data and exit events.
+				// handle incoming data, notifications and exit events.
 				if( m_waitingForAck || m_expectedCallbackId || m_expectedReply )
 				{
-					count = 2;
+					count = 3;
 					timeout = retryTimeStamp.TimeRemaining();
 					if( timeout < 0 )
 					{
@@ -344,6 +347,12 @@ void Driver::DriverThreadProc
 					}
 					case 1:
 					{
+						// Notifications are waiting to be sent
+						NotifyWatchers();			
+						break;
+					}
+					case 2:
+					{
 						// Data has been received
 						ReadMsg();
 						break;
@@ -351,16 +360,13 @@ void Driver::DriverThreadProc
 					default:
 					{
 						// All the other events are sending message queue items
-						if( WriteNextMsg( (MsgQueue)(res-2) ) )
+						if( WriteNextMsg( (MsgQueue)(res-3) ) )
 						{
 							retryTimeStamp.SetTime( RETRY_TIMEOUT );
 						}
 						break;
 					}
 				}
-
-				// Send any pending notifications
-				NotifyWatchers();
 			}
 		}
 
@@ -998,7 +1004,7 @@ bool Driver::MoveMessagesToWakeUpQueue
 						{
 							if( _targetNodeId == item.m_nodeId )
 							{
-								Log::Write( LogLevel_Info, "Node%03d, Node not responding - moving QueryStageComplete command to Wake-Up queue", item.m_msg->GetTargetNodeId() );
+								Log::Write( LogLevel_Info, "Node%03d, Node not responding - moving QueryStageComplete command to Wake-Up queue", item.m_nodeId );
 								wakeUp->QueueMsg( item );
 								remove = true;
 							}
@@ -2070,15 +2076,39 @@ bool Driver::HandleRemoveFailedNodeResponse
 	ControllerState state = ControllerState_InProgress;
 	if( _data[2] )
 	{
-		// Failed
-		Log::Write( LogLevel_Info, "WARNING: Received reply to FUNC_ID_ZW_REMOVE_FAILED_NODE_ID - command failed" );
+		string reason;
+		switch( _data[2] )
+		{
+			case FAILED_NODE_NOT_FOUND:
+			{
+				reason = "Node not found";
+				break;
+			}
+			case FAILED_NODE_REMOVE_PROCESS_BUSY:
+			{
+				reason = "Remove process busy";
+				break;
+			}
+			case FAILED_NODE_REMOVE_FAIL:
+			{
+				reason = "Remove failed";
+				break;
+			}
+			default:
+			{
+				reason = "Command failed";
+				break;
+			}
+		}
+
+		Log::Write( LogLevel_Info, "WARNING: Received reply to FUNC_ID_ZW_REMOVE_FAILED_NODE_ID - %s", reason.c_str() );
 		state = ControllerState_Failed;
 		m_controllerCommand = ControllerCommand_None;
 		res = false;
 	}
 	else
 	{
-		Log::Write( LogLevel_Info, "Received reply to FUNC_ID_ZW_REMOVE_FAILED_NODE_ID - command in progress" );
+		Log::Write( LogLevel_Info, "Received reply to FUNC_ID_ZW_REMOVE_FAILED_NODE_ID - Command in progress" );
 	}
 
 	if( m_controllerCallback )
@@ -4484,6 +4514,7 @@ void Driver::QueueNotification
 )
 {
 	m_notifications.push_back( _notification );
+	m_notificationsEvent->Set();
 }
 
 //-----------------------------------------------------------------------------
@@ -4505,6 +4536,7 @@ void Driver::NotifyWatchers
 		delete notification;
 		nit = m_notifications.begin();
 	}
+	m_notificationsEvent->Reset();
 }
 
 //-----------------------------------------------------------------------------
