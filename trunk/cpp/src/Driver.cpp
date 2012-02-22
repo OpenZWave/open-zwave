@@ -2541,6 +2541,11 @@ void Driver::HandleRemoveFailedNodeRequest
 			Log::Write( LogLevel_Info, "Received reply to FUNC_ID_ZW_REMOVE_FAILED_NODE_ID - node %d successfully moved to failed nodes list", m_controllerCommandNode );
 			state = ControllerState_Completed;
 			m_controllerCommand = ControllerCommand_None;
+
+			Notification* notification = new Notification( Notification::Type_NodeRemoved );
+			notification->SetHomeAndNodeIds( m_homeId, m_controllerCommandNode );
+			QueueNotification( notification ); 
+ 
 			break;
 		}
 		case FAILED_NODE_NOT_REMOVED:
