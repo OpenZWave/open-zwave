@@ -310,7 +310,7 @@ void Driver::DriverThreadProc
 			while( true )
 			{
 				Log::Write( LogLevel_Debug, "Top of DriverThreadProc loop." );
-				uint32 count = 7;
+				uint32 count = 8;
 				int32 timeout = Wait::Timeout_Infinite;
 
 				// If we're waiting for a message to complete, we can only
