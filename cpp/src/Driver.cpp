@@ -420,7 +420,7 @@ bool Driver::Init
 
 	if( !m_controller->Open( m_controllerPath ) )
 	{
-	 	Log::Write( LogLevel_Info, "WARNING: Failed to init the controller (attempt %d)", _attempts );
+	 	Log::Write( LogLevel_Warning, "WARNING: Failed to init the controller (attempt %d)", _attempts );
 		return false;
 	}
 
@@ -476,7 +476,7 @@ bool Driver::ReadConfig
 	// Version
 	if( TIXML_SUCCESS != driverElement->QueryIntAttribute( "version", &intVal ) || (uint32)intVal != c_configVersion )
 	{
-		Log::Write( LogLevel_Info, "WARNING: Driver::ReadConfig - %s is from an older version of OpenZWave and cannot be loaded.", filename.c_str() );
+		Log::Write( LogLevel_Warning, "WARNING: Driver::ReadConfig - %s is from an older version of OpenZWave and cannot be loaded.", filename.c_str() );
 		return false;
 	}
 	
@@ -489,13 +489,13 @@ bool Driver::ReadConfig
 
 		if( homeId != m_homeId )
 		{
-			Log::Write( LogLevel_Info, "WARNING: Driver::ReadConfig - Home ID in file %s is incorrect", filename.c_str() );
+			Log::Write( LogLevel_Warning, "WARNING: Driver::ReadConfig - Home ID in file %s is incorrect", filename.c_str() );
 			return false;
 		}
 	}
 	else
 	{
-		Log::Write( LogLevel_Info, "WARNING: Driver::ReadConfig - Home ID is missing from file %s", filename.c_str() );
+		Log::Write( LogLevel_Warning, "WARNING: Driver::ReadConfig - Home ID is missing from file %s", filename.c_str() );
 		return false;
 	}
 
@@ -504,13 +504,13 @@ bool Driver::ReadConfig
 	{
 		if( (uint8)intVal != m_nodeId )
 		{
-			Log::Write( LogLevel_Info, "WARNING: Driver::ReadConfig - Controller Node ID in file %s is incorrect", filename.c_str() );
+			Log::Write( LogLevel_Warning, "WARNING: Driver::ReadConfig - Controller Node ID in file %s is incorrect", filename.c_str() );
 			return false;
 		}
 	}
 	else
 	{
-		Log::Write( LogLevel_Info, "WARNING: Driver::ReadConfig - Node ID is missing from file %s", filename.c_str() );
+		Log::Write( LogLevel_Warning, "WARNING: Driver::ReadConfig - Node ID is missing from file %s", filename.c_str() );
 		return false;
 	}
 
@@ -573,7 +573,7 @@ void Driver::WriteConfig
 	char str[32];
 
 	if (!m_homeId) {
-		Log::Write( LogLevel_Info, "WARNING: Tried to write driver config with no home ID set");
+		Log::Write( LogLevel_Warning, "WARNING: Tried to write driver config with no home ID set");
 		return;
 	}
 	
@@ -1157,7 +1157,7 @@ bool Driver::ReadMsg
 			m_SOFCnt++;
 			if( m_waitingForAck )
 			{
-				Log::Write( LogLevel_Info, "WARNING: Unsolicited message received while waiting for ACK." );
+				Log::Write( LogLevel_Warning, "WARNING: Unsolicited message received while waiting for ACK." );
 				m_ACKWaiting++;
 			}
 
@@ -1165,7 +1165,7 @@ bool Driver::ReadMsg
 			m_controller->SetSignalThreshold( 1 );
 			if( Wait::Single( m_controller, 100 ) < 0 )
 			{
-				Log::Write( LogLevel_Info, "WARNING: 100ms passed without finding the length byte...aborting frame read");
+				Log::Write( LogLevel_Warning, "WARNING: 100ms passed without finding the length byte...aborting frame read");
 				m_readAborts++;
 				break;
 			}
@@ -1174,7 +1174,7 @@ bool Driver::ReadMsg
 			m_controller->SetSignalThreshold( buffer[1] );
 			if( Wait::Single( m_controller, 500 ) < 0 )
 			{
-				Log::Write( LogLevel_Info, "WARNING: 500ms passed without reading the rest of the frame...aborting frame read" );
+				Log::Write( LogLevel_Warning, "WARNING: 500ms passed without reading the rest of the frame...aborting frame read" );
 				m_readAborts++;
 				m_controller->SetSignalThreshold( 1 );
 				break;
@@ -1227,17 +1227,18 @@ bool Driver::ReadMsg
 			}
 			else
 			{
-				Log::Write( LogLevel_Info, "WARNING: Checksum incorrect - sending NAK" );
+				Log::Write( LogLevel_Warning, "WARNING: Checksum incorrect - sending NAK" );
 				m_badChecksum++;
 				uint8 nak = NAK;
 				m_controller->Write( &nak, 1 );
+				m_controller->Purge();
 			}
 			break;
 		}
 			
 		case CAN:
 		{
-			Log::Write( LogLevel_Info, "WARNING: CAN received...triggering resend" );
+			Log::Write( LogLevel_Warning, "WARNING: CAN received...triggering resend" );
 			m_CANCnt++;
 			WriteMsg();
 			break;
@@ -1245,7 +1246,7 @@ bool Driver::ReadMsg
 		
 		case NAK:
 		{
-			Log::Write( LogLevel_Info, "WARNING: NAK received...triggering resend" );
+			Log::Write( LogLevel_Warning, "WARNING: NAK received...triggering resend" );
 			m_NAKCnt++;
 			WriteMsg();
 			break;
@@ -1274,10 +1275,11 @@ bool Driver::ReadMsg
 		
 		default:
 		{
-			Log::Write( LogLevel_Info, "WARNING: Out of frame flow! (0x%.2x).  Sending NAK.", buffer[0] );
+			Log::Write( LogLevel_Warning, "WARNING: Out of frame flow! (0x%.2x).  Sending NAK.", buffer[0] );
 			m_OOFCnt++;
 			uint8 nak = NAK;
 			m_controller->Write( &nak, 1 );
+			m_controller->Purge();
 			break;
 		}
 	}
@@ -1814,7 +1816,7 @@ bool Driver::HandleNetworkUpdateResponse
 	else
 	{
 		// Failed
-		Log::Write( LogLevel_Info, "WARNING: Received reply to FUNC_ID_ZW_REQUEST_NETWORK_UPDATE - command failed" );
+		Log::Write( LogLevel_Warning, "WARNING: Received reply to FUNC_ID_ZW_REQUEST_NETWORK_UPDATE - command failed" );
 		state = ControllerState_Failed;
 		m_controllerCommand = ControllerCommand_None;
 		res = false;
@@ -1987,7 +1989,7 @@ void Driver::HandleGetNodeProtocolInfoResponse
 	// We have to assume that the node is the same one as in the most recent request.
 	if( !m_currentMsg )
 	{
-		Log::Write( LogLevel_Info, "WARNING: Received unexpected FUNC_ID_ZW_GET_NODE_PROTOCOL_INFO message - ignoring.");
+		Log::Write( LogLevel_Warning, "WARNING: Received unexpected FUNC_ID_ZW_GET_NODE_PROTOCOL_INFO message - ignoring.");
 		return;
 	}
 
@@ -2019,7 +2021,7 @@ bool Driver::HandleAssignReturnRouteResponse
 	else
 	{
 		// Failed
-		Log::Write( LogLevel_Info, "WARNING: Received reply to FUNC_ID_ZW_ASSIGN_RETURN_ROUTE - command failed" );
+		Log::Write( LogLevel_Warning, "WARNING: Received reply to FUNC_ID_ZW_ASSIGN_RETURN_ROUTE - command failed" );
 		state = ControllerState_Failed;
 		m_controllerCommand = ControllerCommand_None;
 		res = false;
@@ -2050,7 +2052,7 @@ bool Driver::HandleDeleteReturnRouteResponse
 	else
 	{
 		// Failed
-		Log::Write( LogLevel_Info, "WARNING: Received reply to FUNC_ID_ZW_DELETE_RETURN_ROUTE - command failed" );
+		Log::Write( LogLevel_Warning, "WARNING: Received reply to FUNC_ID_ZW_DELETE_RETURN_ROUTE - command failed" );
 		state = ControllerState_Failed;
 		m_controllerCommand = ControllerCommand_None;
 		res = false;
@@ -2101,7 +2103,7 @@ bool Driver::HandleRemoveFailedNodeResponse
 			}
 		}
 
-		Log::Write( LogLevel_Info, "WARNING: Received reply to FUNC_ID_ZW_REMOVE_FAILED_NODE_ID - %s", reason.c_str() );
+		Log::Write( LogLevel_Warning, "WARNING: Received reply to FUNC_ID_ZW_REMOVE_FAILED_NODE_ID - %s", reason.c_str() );
 		state = ControllerState_Failed;
 		m_controllerCommand = ControllerCommand_None;
 		res = false;
@@ -2127,7 +2129,7 @@ void Driver::HandleIsFailedNodeResponse
 	uint8* _data
 )
 {
-	Log::Write( LogLevel_Info, "%s Received reply to FUNC_ID_ZW_IS_FAILED_NODE_ID - node %d has %s", _data[2]?"WARNING:":"", m_controllerCommandNode, _data[2] ? "failed" : "not failed" );
+	Log::Write( _data[2]?LogLevel_Warning:LogLevel_Info, "%s Received reply to FUNC_ID_ZW_IS_FAILED_NODE_ID - node %d has %s", _data[2]?"WARNING:":"", m_controllerCommandNode, _data[2] ? "failed" : "not failed" );
 	if( m_controllerCallback )
 	{
 		m_controllerCallback( _data[2] ? ControllerState_NodeFailed : ControllerState_NodeOK, m_controllerCallbackContext );
@@ -2150,7 +2152,7 @@ bool Driver::HandleReplaceFailedNodeResponse
 	if( _data[2] )
 	{
 		// Command failed
-		Log::Write( LogLevel_Info, "WARNING: Received reply to FUNC_ID_ZW_REPLACE_FAILED_NODE - command failed" );
+		Log::Write( LogLevel_Warning, "WARNING: Received reply to FUNC_ID_ZW_REPLACE_FAILED_NODE - command failed" );
 		state = ControllerState_Failed;
 		m_controllerCommand = ControllerCommand_None;
 		res = false;
@@ -2246,7 +2248,7 @@ void Driver::HandleSendDataRequest
 	if( _data[2] != m_expectedCallbackId )
 	{
 		// Wrong callback ID
-		Log::Write( LogLevel_Info, "WARNING: Callback ID is invalid" );
+		Log::Write( LogLevel_Warning, "WARNING: Callback ID is invalid" );
 	}
 	else 
 	{
@@ -2270,7 +2272,7 @@ void Driver::HandleSendDataRequest
 						return;
 					}
 
-					Log::Write( LogLevel_Info, "WARNING: Device is not a sleeping node - retrying the send." );
+					Log::Write( LogLevel_Warning, "WARNING: Device is not a sleeping node - retrying the send." );
 				}
 			}
 		}
@@ -2306,22 +2308,22 @@ void Driver::HandleNetworkUpdateRequest
 		}
 		case SUC_UPDATE_ABORT:
 		{
-			Log::Write( LogLevel_Info, "WARNING: Received reply to FUNC_ID_ZW_REQUEST_NETWORK_UPDATE: Failed - Error. Process aborted." );
+			Log::Write( LogLevel_Warning, "WARNING: Received reply to FUNC_ID_ZW_REQUEST_NETWORK_UPDATE: Failed - Error. Process aborted." );
 			break;
 		}
 		case SUC_UPDATE_WAIT:
 		{
-			Log::Write( LogLevel_Info, "WARNING: Received reply to FUNC_ID_ZW_REQUEST_NETWORK_UPDATE: Failed - SUC is busy." );
+			Log::Write( LogLevel_Warning, "WARNING: Received reply to FUNC_ID_ZW_REQUEST_NETWORK_UPDATE: Failed - SUC is busy." );
 			break;
 		}
 		case SUC_UPDATE_DISABLED:
 		{
-			Log::Write( LogLevel_Info, "WARNING: Received reply to FUNC_ID_ZW_REQUEST_NETWORK_UPDATE: Failed - SUC is disabled." );
+			Log::Write( LogLevel_Warning, "WARNING: Received reply to FUNC_ID_ZW_REQUEST_NETWORK_UPDATE: Failed - SUC is disabled." );
 			break;
 		}
 		case SUC_UPDATE_OVERFLOW:
 		{
-			Log::Write( LogLevel_Info, "WARNING: Received reply to FUNC_ID_ZW_REQUEST_NETWORK_UPDATE: Failed - Overflow. Full replication required." );
+			Log::Write( LogLevel_Warning, "WARNING: Received reply to FUNC_ID_ZW_REQUEST_NETWORK_UPDATE: Failed - Overflow. Full replication required." );
 			break;
 		}
 		default:
@@ -2425,7 +2427,7 @@ void Driver::HandleRemoveNodeFromNetworkRequest
 				}
 				else
 				{
-					Log::Write( LogLevel_Info, "WARNING: Node is 0 but not enough data to perform alternative match.");
+					Log::Write( LogLevel_Warning, "WARNING: Node is 0 but not enough data to perform alternative match.");
 				}
 			}
 			else
@@ -2466,7 +2468,7 @@ void Driver::HandleRemoveNodeFromNetworkRequest
 		}
 		case REMOVE_NODE_STATUS_FAILED:
 		{
-			Log::Write( LogLevel_Info, "WARNING: REMOVE_NODE_STATUS_FAILED" );
+			Log::Write( LogLevel_Warning, "WARNING: REMOVE_NODE_STATUS_FAILED" );
 			if( m_controllerCallback )
 			{
 				m_controllerCallback( ControllerState_Failed, m_controllerCallbackContext );
@@ -2550,7 +2552,7 @@ void Driver::HandleSetLearnModeRequest
 		}
 		case LEARN_MODE_FAILED:
 		{
-			Log::Write( LogLevel_Info, "WARNING: LEARN_MODE_FAILED" );
+			Log::Write( LogLevel_Warning, "WARNING: LEARN_MODE_FAILED" );
 			if( m_controllerCallback )
 			{
 				m_controllerCallback( ControllerState_Failed, m_controllerCallbackContext );
@@ -2590,7 +2592,7 @@ void Driver::HandleRemoveFailedNodeRequest
 	{
 		case FAILED_NODE_OK:
 		{
-			Log::Write( LogLevel_Info, "WARNING: Received reply to FUNC_ID_ZW_REMOVE_FAILED_NODE_ID - Node %d is OK, so command failed", m_controllerCommandNode );
+			Log::Write( LogLevel_Warning, "WARNING: Received reply to FUNC_ID_ZW_REMOVE_FAILED_NODE_ID - Node %d is OK, so command failed", m_controllerCommandNode );
 			state = ControllerState_NodeOK;
 			break;
 		}
@@ -2608,7 +2610,7 @@ void Driver::HandleRemoveFailedNodeRequest
 		}
 		case FAILED_NODE_NOT_REMOVED:
 		{
-			Log::Write( LogLevel_Info, "WARNING: Received reply to FUNC_ID_ZW_REMOVE_FAILED_NODE_ID - unable to move node %d to failed nodes list", m_controllerCommandNode );
+			Log::Write( LogLevel_Warning, "WARNING: Received reply to FUNC_ID_ZW_REMOVE_FAILED_NODE_ID - unable to move node %d to failed nodes list", m_controllerCommandNode );
 			state = ControllerState_Failed;
 			m_controllerCommand = ControllerCommand_None;
 			break;
@@ -2740,7 +2742,7 @@ void Driver::HandleAssignReturnRouteRequest
 	if( _data[3] )
 	{
 		// Failed
-		Log::Write( LogLevel_Info, "WARNING: Received reply to FUNC_ID_ZW_ASSIGN_RETURN_ROUTE for node %d - FAILED: %s", m_controllerCommandNode, c_transmitStatusNames[_data[3]] );
+		Log::Write( LogLevel_Warning, "WARNING: Received reply to FUNC_ID_ZW_ASSIGN_RETURN_ROUTE for node %d - FAILED: %s", m_controllerCommandNode, c_transmitStatusNames[_data[3]] );
 		if( m_controllerCallback )
 		{
 			m_controllerCallback( ControllerState_Failed, m_controllerCallbackContext );
@@ -2771,7 +2773,7 @@ void Driver::HandleDeleteReturnRouteRequest
 	if( _data[3] )
 	{
 		// Failed
-		Log::Write( LogLevel_Info, "WARNING: Received reply to FUNC_ID_ZW_DELETE_RETURN_ROUTE for node %d - FAILED: %s", m_controllerCommandNode, c_transmitStatusNames[_data[3]] );
+		Log::Write( LogLevel_Warning, "WARNING: Received reply to FUNC_ID_ZW_DELETE_RETURN_ROUTE for node %d - FAILED: %s", m_controllerCommandNode, c_transmitStatusNames[_data[3]] );
 		if( m_controllerCallback )
 		{
 			m_controllerCallback( ControllerState_Failed, m_controllerCallbackContext );
@@ -2821,7 +2823,7 @@ void Driver::HandleNodeNeighborUpdateRequest
 		}
 		case REQUEST_NEIGHBOR_UPDATE_FAILED:
 		{
-			Log::Write( LogLevel_Info, "WARNING: REQUEST_NEIGHBOR_UPDATE_FAILED" );
+			Log::Write( LogLevel_Warning, "WARNING: REQUEST_NEIGHBOR_UPDATE_FAILED" );
 			if( m_controllerCallback )
 			{
 				m_controllerCallback( ControllerState_Failed, m_controllerCallbackContext );
@@ -2885,7 +2887,7 @@ bool Driver::HandleApplicationUpdateRequest
 		}
 		case UPDATE_STATE_NODE_INFO_REQ_FAILED:
 		{
-			Log::Write( LogLevel_Info, "WARNING: FUNC_ID_ZW_APPLICATION_UPDATE: UPDATE_STATE_NODE_INFO_REQ_FAILED received" );
+			Log::Write( LogLevel_Warning, "WARNING: FUNC_ID_ZW_APPLICATION_UPDATE: UPDATE_STATE_NODE_INFO_REQ_FAILED received" );
 	
 			// Note: Unhelpfully, the nodeId is always zero in this message.  We have to 
 			// assume the message came from the last node to which we sent a request.
@@ -4809,7 +4811,7 @@ void Driver::ReadButtons
 	TiXmlDocument doc;
 	if( !doc.LoadFile( filename.c_str(), TIXML_ENCODING_UTF8 ) )
 	{
-		Log::Write( LogLevel_Info, "WARNING:  Driver::ReadButtons - zwbutton.xml file not found.");
+		Log::Write( LogLevel_Warning, "WARNING:  Driver::ReadButtons - zwbutton.xml file not found.");
 		return;
 	}
 
@@ -4817,7 +4819,7 @@ void Driver::ReadButtons
 	str = nodesElement->Value();
 	if( str && strcmp( str, "Nodes" ))
 	{
-		Log::Write( LogLevel_Info, "WARNING: Driver::ReadButtons - zwbutton.xml is malformed");
+		Log::Write( LogLevel_Warning, "WARNING: Driver::ReadButtons - zwbutton.xml is malformed");
 		return;
 	}
 
@@ -4832,7 +4834,7 @@ void Driver::ReadButtons
 	}
 	else
 	{
-		Log::Write( LogLevel_Info, "WARNING: Driver::ReadButtons - zwbutton.xml is from an older version of OpenZWave and cannot be loaded." );
+		Log::Write( LogLevel_Warning, "WARNING: Driver::ReadButtons - zwbutton.xml is from an older version of OpenZWave and cannot be loaded." );
 		return;
 	}
 
@@ -4860,7 +4862,7 @@ void Driver::ReadButtons
 					{
 						if (TIXML_SUCCESS != buttonElement->QueryIntAttribute( "id", &buttonId ) )
 						{
-							Log::Write( LogLevel_Info, "WARNING: Driver::ReadButtons - cannot find Button Id for node %d", _nodeId );
+							Log::Write( LogLevel_Warning, "WARNING: Driver::ReadButtons - cannot find Button Id for node %d", _nodeId );
 							return;
 						}
 						str = buttonElement->GetText();
@@ -4905,7 +4907,7 @@ bool Driver::HandleSetSlaveLearnModeResponse
 	else
 	{
 		// Failed
-		Log::Write( LogLevel_Info, "WARNING: Received reply to FUNC_ID_ZW_SET_SLAVE_LEARN_MODE - command failed" );
+		Log::Write( LogLevel_Warning, "WARNING: Received reply to FUNC_ID_ZW_SET_SLAVE_LEARN_MODE - command failed" );
 		state = ControllerState_Failed;
 		m_controllerCommand = ControllerCommand_None;
 		res = false;

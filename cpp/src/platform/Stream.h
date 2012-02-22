@@ -89,6 +89,13 @@ namespace OpenZWave
 		 */
 		uint32 GetDataSize()const{ return m_dataSize; }
 
+ 		/**
+		 * Empties the stream bytes held in the buffer.  
+		 * This is called when the library gets out of sync with the controller and sends a "NAK" 
+		 * to the controller.
+		 */
+		void Purge();
+
 	protected:
 		/**
 		 * Formats stream buffer data for output to the log.
