@@ -31,6 +31,8 @@
 #include "Defs.h"
 #include "Wait.h"
 
+#include <string>
+
 namespace OpenZWave
 {
 	class Mutex;
