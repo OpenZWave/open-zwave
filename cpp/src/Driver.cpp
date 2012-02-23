@@ -106,12 +106,21 @@ Driver::Driver
 	m_allNodesQueried( false ),
 	m_notifytransactions( false ),
 	m_controllerPath( _controllerPath ),
+	m_controller( NULL ),
 	m_homeId( 0 ),
+	m_libraryVersion( "" ),
+	m_libraryTypeName( "" ),
+	m_libraryType( 0 ),
+	m_manufacturerId( 0 ),
+	m_productType( 0 ),
+	m_productId ( 0 ),
+	m_initVersion( 0 ),
 	m_initCaps( 0 ),
 	m_controllerCaps( 0 ),
 	m_nodeMutex( new Mutex() ),
 	m_controllerReplication( NULL ),
 	m_sendMutex( new Mutex() ),
+	m_currentMsg( NULL ),
 	m_waitingForAck( false ),
 	m_expectedCallbackId( 0 ),
 	m_expectedReply( 0 ),
@@ -120,7 +129,6 @@ Driver::Driver
 	m_pollThread( new Thread( "poll" ) ),
 	m_pollMutex( new Mutex() ),
 	m_pollInterval( 30 ),                   // By default, every polled device is queried once every 30 seconds
-	m_notificationsEvent( new Event() ),
 	m_controllerState( ControllerState_Normal ),
 	m_controllerCommand( ControllerCommand_None ),
 	m_controllerCallback( NULL ),
@@ -129,6 +137,7 @@ Driver::Driver
 	m_controllerCommandNode( 0 ),
 	m_controllerCommandArg( 0 ),
 	m_virtualNeighborsReceived( false ),
+	m_notificationsEvent( new Event() ),
 	m_SOFCnt( 0 ),
 	m_ACKWaiting( 0 ),
 	m_readAborts( 0 ),
@@ -334,7 +343,7 @@ void Driver::DriverThreadProc
 					case -1:	
 					{
 						// Wait has timed out - time to resend
-						if( WriteMsg() )
+						if( WriteMsg( "Wait Timeout" ) )
 						{
 							retryTimeStamp.SetTime( RETRY_TIMEOUT );
 						}
@@ -758,7 +767,7 @@ void Driver::SendMsg
 				if( !wakeUp->IsAwake() )
 				{
 					Log::Write( LogLevel_Detail, "" );
-					Log::Write( LogLevel_Detail, "Node%03d, Queuing Wake-Up Command: %s, %s", _msg->GetTargetNodeId(), _msg->GetSummaryString().c_str(), _msg->GetFrameString().c_str()  );
+					Log::Write( LogLevel_Detail, "Node%03d Queuing Wake-Up Command: %s", _msg->GetTargetNodeId(), _msg->GetAsString().c_str() );
 					wakeUp->QueueMsg( item );
 					ReleaseNodes();
 					return;
@@ -769,7 +778,19 @@ void Driver::SendMsg
 		ReleaseNodes();
 	}
 
-	Log::Write( LogLevel_Detail, "Node%03d, Queuing command: %s, %s", _msg->GetTargetNodeId(), _msg->GetSummaryString().c_str(),_msg->GetFrameString().c_str() );
+	uint8 nodeId = _msg->GetTargetNodeId();
+	char buf[10];
+	string str;
+	if( nodeId == 0xff )
+	{
+		str = "contrlr";
+	}
+	else
+	{
+		snprintf( buf, sizeof(buf), "Node%03d", nodeId );
+		str = buf;
+	}  
+	Log::Write( LogLevel_Detail, "%s Queuing command: %s", str.c_str(), _msg->GetAsString().c_str() );
 	m_sendMutex->Lock();
 	m_msgQueue[_queue].push_back( item );
 	m_queueEvent[_queue]->Set();
@@ -799,7 +820,7 @@ bool Driver::WriteNextMsg
 			m_queueEvent[_queue]->Reset();
 		}
 		m_sendMutex->Unlock();
-		return WriteMsg();
+		return WriteMsg( "WriteNextMsg" );
 	}
 	
 	if( MsgQueueCmd_QueryStageComplete == item.m_command )
@@ -833,20 +854,32 @@ bool Driver::WriteNextMsg
 //-----------------------------------------------------------------------------
 bool Driver::WriteMsg
 (
+	string const msg
 )
 {
+	Log::Write( LogLevel_Detail, "WriteMsg %s m_currentMsg=%08x", msg.c_str(), m_currentMsg );
 	if( !m_currentMsg )
 	{
-		Log::Write( LogLevel_Error, "m_currentMsg is NULL" );
-//		assert(0);
 		return false;
 	}
 
 	uint8 attempts = m_currentMsg->GetSendAttempts();
+	uint8 nodeId = m_currentMsg->GetTargetNodeId();
+	char buf[15];
+	string str;
+	if( nodeId == 0xff )
+	{
+		str = "contrlr";
+	}
+	else
+	{
+		snprintf( buf, sizeof(buf), "node%03d", nodeId );
+		str = buf;
+	}  
 	if( attempts >= MAX_TRIES )
 	{
 		// That's it - already tried to send MAX_TRIES times.
-		Log::Write( LogLevel_Error, "Node%03d, ERROR: Dropping command, expected response not received after %d attempt(s)", m_currentMsg->GetTargetNodeId(), MAX_TRIES );
+		Log::Write( LogLevel_Error, "%s ERROR: Dropping command, expected response not received after %d attempt(s)", str.c_str(), MAX_TRIES );
 		delete m_currentMsg;
 		m_currentMsg = NULL;
 
@@ -858,21 +891,26 @@ bool Driver::WriteMsg
 		return false;
 	}
 
-	m_currentMsg->SetSendAttempts( attempts + 1 );
+	m_currentMsg->SetSendAttempts( ++attempts );
 	m_expectedCallbackId = m_currentMsg->GetCallbackId();
 	m_expectedCommandClassId = m_currentMsg->GetExpectedCommandClassId();
 	m_expectedNodeId = m_currentMsg->GetTargetNodeId();
 	m_expectedReply = m_currentMsg->GetExpectedReply();
 	m_waitingForAck = true;
+	string attemptsstr = "";
+	if( attempts > 1 )
+	{
+		snprintf( buf, sizeof(buf), "Attempt %d, ", attempts );
+		attemptsstr = buf;
+	}
 
 	Log::Write( LogLevel_Detail, "" );
 
-	Log::Write( LogLevel_Info, "Node%03d, Sending command (Callback ID=0x%.2x, Expected Reply=0x%.2x) - %s, %s", m_currentMsg->GetTargetNodeId(), m_currentMsg->GetCallbackId(), m_currentMsg->GetExpectedReply(), m_currentMsg->GetSummaryString().c_str(), m_currentMsg->GetFrameString().c_str() );
-			
+	Log::Write( LogLevel_Info, "%s Sending command (%sCallback ID=0x%.2x, Expected Reply=0x%.2x) - %s", str.c_str(), attemptsstr.c_str(), m_currentMsg->GetCallbackId(), m_currentMsg->GetExpectedReply(), m_currentMsg->GetAsString().c_str() );
+
 	m_controller->Write( m_currentMsg->GetBuffer(), m_currentMsg->GetLength() );
 	m_writeCnt++;
 	
-	uint8 nodeId = m_currentMsg->GetTargetNodeId();
 	if( nodeId == 0xff )
 	{
 		m_controllerWriteCnt++;
@@ -946,14 +984,7 @@ bool Driver::MoveMessagesToWakeUpQueue
 						// commands to the pending queue.
 						if( !m_currentMsg->IsWakeUpNoMoreInformationCommand() )
 						{
-							if( m_currentMsg != NULL)
-							{
-								Log::Write( LogLevel_Info, "Node%03d, Node not responding - moving message to Wake-Up queue: %s, %s", m_currentMsg->GetTargetNodeId(), m_currentMsg->GetSummaryString().c_str(), m_currentMsg->GetFrameString().c_str() );
-							}
-							else
-							{
-								Log::Write( LogLevel_Warning, "NullMsg, Node not responding - moving message to Wake-Up queue: %s, %s", m_currentMsg->GetSummaryString().c_str(), m_currentMsg->GetFrameString().c_str() );
-							}
+							Log::Write( LogLevel_Info, "Node%03d, Node not responding - moving message to Wake-Up queue: %s", m_currentMsg->GetTargetNodeId(), m_currentMsg->GetAsString().c_str() );
 							MsgQueueItem item;
 							item.m_command = MsgQueueCmd_SendMsg;
 							item.m_msg = m_currentMsg;
@@ -963,7 +994,7 @@ bool Driver::MoveMessagesToWakeUpQueue
 						{
 							delete m_currentMsg;
 						}
-					
+
 						m_currentMsg = NULL;
 						m_expectedCallbackId = 0;
 						m_expectedCommandClassId = 0;
@@ -990,7 +1021,7 @@ bool Driver::MoveMessagesToWakeUpQueue
 								// commands to the pending queue.
 								if( !item.m_msg->IsWakeUpNoMoreInformationCommand() )
 								{
-									Log::Write( LogLevel_Info, "Node%03d, Node not responding - moving message to Wake-Up queue: %s, %s", item.m_msg->GetTargetNodeId(), item.m_msg->GetSummaryString().c_str(), item.m_msg->GetFrameString().c_str() );
+								  Log::Write( LogLevel_Info, "Node%03d, Node not responding - moving message to Wake-Up queue: %s", item.m_msg->GetTargetNodeId(), item.m_msg->GetAsString().c_str() );
 									wakeUp->QueueMsg( item );
 								}
 								else
@@ -1163,9 +1194,10 @@ bool Driver::ReadMsg
 
 			// Read the length byte.  Keep trying until we get it.
 			m_controller->SetSignalThreshold( 1 );
-			if( Wait::Single( m_controller, 100 ) < 0 )
+			int32 response = Wait::Single( m_controller, 50 );
+			if( response < 0 )
 			{
-				Log::Write( LogLevel_Warning, "WARNING: 100ms passed without finding the length byte...aborting frame read");
+				Log::Write( LogLevel_Warning, "WARNING: 50ms passed without finding the length byte...aborting frame read");
 				m_readAborts++;
 				break;
 			}
@@ -1240,7 +1272,7 @@ bool Driver::ReadMsg
 		{
 			Log::Write( LogLevel_Warning, "WARNING: CAN received...triggering resend" );
 			m_CANCnt++;
-			WriteMsg();
+			WriteMsg( "CAN" );
 			break;
 		}
 		
@@ -1248,27 +1280,26 @@ bool Driver::ReadMsg
 		{
 			Log::Write( LogLevel_Warning, "WARNING: NAK received...triggering resend" );
 			m_NAKCnt++;
-			WriteMsg();
+			WriteMsg( "NAK" );
 			break;
 		}
 
 		case ACK:
 		{
-			if( m_currentMsg != NULL)
+			m_ACKCnt++;
+			m_waitingForAck = false;		
+			if( m_currentMsg == NULL )
 			{
-				Log::Write( LogLevel_Detail, "Node%03d,  ACK received CallbackId 0x%.2x Reply 0x%.2x", m_currentMsg->GetTargetNodeId(), m_expectedCallbackId, m_expectedReply );
+				Log::Write( LogLevel_Detail, "contrlr  ACK received" );
 			}
 			else
 			{
-				Log::Write( LogLevel_Warning, "NullMsg,  ACK received CallbackId 0x%.2x Reply 0x%.2x", m_expectedCallbackId, m_expectedReply );
-			}
-			m_ACKCnt++;
-			
-			m_waitingForAck = false;		
-			if( ( 0 == m_expectedCallbackId ) && ( 0 == m_expectedReply ) )
-			{
-				// Remove the message from the queue, now that it has been acknowledged.
-				RemoveCurrentMsg();
+				Log::Write( LogLevel_Detail, "Node%03,  ACK received CallbackId 0x%.2x Reply 0x%.2x", m_currentMsg->GetTargetNodeId(), m_expectedCallbackId, m_expectedReply );
+				if( ( 0 == m_expectedCallbackId ) && ( 0 == m_expectedReply ) )
+				{
+					// Remove the message from the queue, now that it has been acknowledged.
+					RemoveCurrentMsg();
+				}
 			}
 			break;
 		}
@@ -1318,6 +1349,12 @@ void Driver::ProcessMsg
 			{
 				Log::Write( LogLevel_Detail, "" );
 				HandleGetSerialAPICapabilitiesResponse( _data );
+				break;
+			}
+			case FUNC_ID_SERIAL_API_SOFT_RESET:
+			{
+				Log::Write( LogLevel_Detail, "" );
+				HandleSerialAPISoftResetResponse( _data );
 				break;
 			}
 			case FUNC_ID_ZW_SEND_DATA:
@@ -1669,6 +1706,7 @@ void Driver::ProcessMsg
 						if( m_expectedCommandClassId == _data[5] && m_expectedNodeId == _data[3] )
 						{
 							Log::Write( LogLevel_Detail, "  Expected reply and command class was received" );
+							m_waitingForAck = false;
 							m_expectedReply = 0;
 							m_expectedCommandClassId = 0;
 							m_expectedNodeId = 0;
@@ -1765,8 +1803,7 @@ void Driver::HandleGetSerialAPICapabilitiesResponse
 )
 {
 	Log::Write( LogLevel_Info, "Received reply to FUNC_ID_SERIAL_API_GET_CAPABILITIES" );
-	Log::Write( LogLevel_Info, "    Application Version:  %d", _data[2] );
-	Log::Write( LogLevel_Info, "    Application Revision: %d", _data[3] );
+	Log::Write( LogLevel_Info, "    Serial API Version:   %d.%d", _data[2], _data[3] );
 	Log::Write( LogLevel_Info, "    Manufacturer ID:      0x%.2x%.2x", _data[4], _data[5] );
 	Log::Write( LogLevel_Info, "    Product Type:         0x%.2x%.2x", _data[6], _data[7] );
 	Log::Write( LogLevel_Info, "    Product ID:           0x%.2x%.2x", _data[8], _data[9] );
@@ -1784,6 +1821,19 @@ void Driver::HandleGetSerialAPICapabilitiesResponse
 		SendMsg( new Msg( "FUNC_ID_ZW_GET_VIRTUAL_NODES", 0xff, REQUEST, FUNC_ID_ZW_GET_VIRTUAL_NODES, false ), Driver::MsgQueue_Command);
 	}
 	SendMsg( new Msg( "FUNC_ID_SERIAL_API_GET_INIT_DATA", 0xff, REQUEST, FUNC_ID_SERIAL_API_GET_INIT_DATA, false ), Driver::MsgQueue_Command);
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::HandleSerialAPISoftResetResponse>
+// Process a response from the Z-Wave PC interface
+//-----------------------------------------------------------------------------
+void Driver::HandleSerialAPISoftResetResponse
+(
+	uint8* _data
+)
+{
+
+	Log::Write( LogLevel_Info, "Received reply to Soft Reset.");
 }
 
 //-----------------------------------------------------------------------------
@@ -2253,12 +2303,12 @@ void Driver::HandleSendDataRequest
 	else 
 	{
 		// Callback ID matches our expectation
-		if( _data[3] & TRANSMIT_COMPLETE_NOROUTE )
+		if( ( _data[3] & TRANSMIT_COMPLETE_NOROUTE ) != 0 )
 		{
 			Log::Write( LogLevel_Info, "ERROR: %s failed.  No route available.", _replication ? "ZW_REPLICATION_SEND_DATA" : "ZW_SEND_DATA" );
 			RemoveCurrentMsg();
 		}
-		else if( _data[3] & TRANSMIT_COMPLETE_NO_ACK )
+		else if( ( _data[3] & TRANSMIT_COMPLETE_NO_ACK ) != 0 )
 		{
 			Log::Write( LogLevel_Info, "ERROR: %s failed. No ACK received - device may be asleep.", _replication ? "ZW_REPLICATION_SEND_DATA" : "ZW_SEND_DATA" );
 			if( m_currentMsg )
@@ -2276,7 +2326,7 @@ void Driver::HandleSendDataRequest
 				}
 			}
 		}
-		else if( _data[3] & TRANSMIT_COMPLETE_FAIL )
+		else if( ( _data[3] & TRANSMIT_COMPLETE_FAIL ) != 0 )
 		{
 			Log::Write( LogLevel_Info, "ERROR: %s failed. Network is busy.", _replication ? "ZW_REPLICATION_SEND_DATA" : "ZW_SEND_DATA" );
 		}
@@ -2928,7 +2978,7 @@ bool Driver::HandleApplicationUpdateRequest
 
 	if( messageRemoved )
 	{
-		m_waitingForAck = 0;	
+		m_waitingForAck = false;
 		m_expectedCallbackId = 0;
 		m_expectedReply = 0;
 		m_expectedCommandClassId = 0;
@@ -3916,6 +3966,8 @@ void Driver::RequestNodeNeighbors
 	uint32 const _requestFlags
 )
 {
+	//Log::Write( LogLevel_Detail, "IsAPICallSupported( FUNC_ID_ZW_GET_ROUTING_INFO ) = %s", IsAPICallSupported( FUNC_ID_ZW_GET_ROUTING_INFO ) ? "true" : "false" );
+	// Handle casse where some controllers actually support but don't claim to. Z-Troller
 	if( IsAPICallSupported( FUNC_ID_ZW_GET_ROUTING_INFO ) )
 	{
 		// Note: This is not the same as RequestNodeNeighbourUpdate.  This method
