@@ -130,6 +130,7 @@ int32 Wait::Multiple
 	}
 
 	int32 res = -1;	// Default to timeout result
+	string str = "";
 	if( waitEvent->Wait( _timeout ) )
 	{
 		// An object was signalled.  Run through the list 
@@ -138,14 +139,14 @@ int32 Wait::Multiple
 		{
 			if( _objects[i]->IsSignalled() )
 			{
-				res = (int32)i;
-				break;
+				if( res == -1 )
+					res = (int32)i;
+				char buf[15];
+				snprintf(buf, sizeof(buf), "%d, ", i);
+				str += buf;
 			}
 		}
-		if( res == -1 )	// wait thought an object was signalled, but now it's not!
-		{
-			Log::Write( LogLevel_Error, "Wait::Multiple for... loop failed" );
-		}
+		Log::Write( LogLevel_Detail, "Wait::Multiple res=%d num=%d >%s", res, _numObjects, str.c_str() );
 	}
 
 	// Remove the watchers
