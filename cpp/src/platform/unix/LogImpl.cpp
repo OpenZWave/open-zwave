@@ -102,46 +102,50 @@ void LogImpl::Write
 	// handle this message
 	if( (_logLevel <= m_queueLevel) || (_logLevel == LogLevel_Internal) )	// we're going to do something with this message...
 	{
-		char lineBuf[1024];
-		if( !_format || ( _format[0] == 0 ) )
-			strcpy( lineBuf, "" );
-		else
+		char lineBuf[1024] = {};
+		int lineLen = 0;
+		if( _format != NULL && _format[0] != '\0' )
 		{
 			va_list saveargs;
 			va_copy( saveargs, _args );
-			vsprintf( lineBuf, _format, _args );			// GREG: do you have vsprintf_s?
+			lineLen = vsnprintf( lineBuf, sizeof(lineBuf), _format, _args );
 			va_end( saveargs );
 		}
 
 		// should this message be saved to file (and possibly written to console?)
 		if( (_logLevel <= m_saveLevel) || (_logLevel == LogLevel_Internal) )
 		{
+			char outBuf[1124];
+			char *outBufPtr = outBuf;
 			// save to file
 			FILE* pFile = fopen( m_filename.c_str(), "a" );
 			if ( pFile != NULL )
 			{
 				if( _logLevel != LogLevel_Internal )						// don't add a second timestamp to display of queued messages
 				{
-					// GREG:  Do you need the c_str()?  
-					fprintf( pFile, "%s", timeStr.c_str() );
-					if( m_bConsoleOutput )
-					{
-						printf( "%s", timeStr.c_str() );
-					}
+					strcpy( outBufPtr, timeStr.c_str() );
+					outBufPtr += timeStr.length();
 				}
+
+				if( lineLen > 0 )
+				{
+					uint32 len = ( outBufPtr - outBuf ) + lineLen;
+					if( len >= sizeof(outBuf) )
+					{
+						lineLen = sizeof(outBuf) - 3;
+					}
+					strncpy( outBufPtr, lineBuf, lineLen );
+					outBufPtr += lineLen;
+				}
+
+				*outBufPtr++ = '\n';
+				*outBufPtr = '\0';
 
 				// print message to file (and possibly screen)
-				fprintf( pFile, "%s", lineBuf );
+				fputs( outBuf, pFile );
 				if( m_bConsoleOutput )
 				{
-					printf( "%s", lineBuf );
-				}
-
-				// add a newline
-				putc( '\n', pFile ); 
-				if( m_bConsoleOutput )
-				{
-					putchar( '\n' );
+					fputs( outBuf, stdout );
 				}
 
 				fclose( pFile );
@@ -189,7 +193,9 @@ void LogImpl::QueueDump
 ( 
 )
 {
-	Log::Write( LogLevel_Internal, "\n\nDumping queued log messages\n");
+	Log::Write( LogLevel_Always, "" );
+	Log::Write( LogLevel_Always, "Dumping queued log messages");
+	Log::Write( LogLevel_Always, "" );
 	list<string>::iterator it = m_logQueue.begin();
 	while( it != m_logQueue.end() )
 	{
@@ -198,7 +204,9 @@ void LogImpl::QueueDump
 		it++;
 	}
 	m_logQueue.clear();
-	Log::Write( LogLevel_Internal, "\nEnd of queued log message dump\n\n");
+	Log::Write( LogLevel_Always, "" );
+	Log::Write( LogLevel_Always, "End of queued log message dump");
+	Log::Write( LogLevel_Always, "" );
 }
 
 //-----------------------------------------------------------------------------
@@ -260,7 +268,6 @@ string LogImpl::GetThreadId
 )
 {
 	char buf[20];
-	// GREG:  Not sure how to get a threadId
 	snprintf( buf, sizeof(buf), "%08x ", pthread_self() );
 	string str = buf;
 	return str;
