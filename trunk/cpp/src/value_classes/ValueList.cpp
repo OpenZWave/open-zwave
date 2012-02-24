@@ -50,11 +50,13 @@ ValueList::ValueList
 	bool const _readOnly,
 	bool const _writeOnly,
 	vector<Item> const& _items,
-	int32 const _valueIdx
+	int32 const _valueIdx,
+	uint8 const _size	// = 4
 ):
 	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_List, _label, _units, _readOnly, _writeOnly, false ),
 	m_items( _items ),
-	m_valueIdx( _valueIdx )
+	m_valueIdx( _valueIdx ),
+	m_size( _size )
 {
 }
 
@@ -72,6 +74,24 @@ void ValueList::ReadXML
 {
 	Value::ReadXML( _homeId, _nodeId, _commandClassId, _valueElement );
 
+	// Get size of values
+	int intSize;
+	if ( TIXML_SUCCESS == _valueElement->QueryIntAttribute( "size", &intSize ) )
+	{
+		if( intSize == 1 || intSize == 2 || intSize == 4 )
+		{
+			m_size = intSize;
+		}
+		else
+		{
+			Log::Write( LogLevel_Info, "Value size is invalid. Only 1, 2 & 4 supported for node %d, class 0x%02x, instance %d, index %d", _nodeId, _commandClassId, GetID().GetInstance(), GetID().GetIndex() );
+		}
+	}
+	else
+	{
+		Log::Write( LogLevel_Info, "Value list size is not set, assuming 4 bytes for node %d, class 0x%02x, instance %d, index %d", _nodeId, _commandClassId, GetID().GetInstance(), GetID().GetIndex() );
+	}
+
 	// Read the items
 	m_items.clear();
 	TiXmlElement const* itemElement = _valueElement->FirstChildElement();
@@ -85,27 +105,61 @@ void ValueList::ReadXML
 			int value = 0;
 			itemElement->QueryIntAttribute( "value", &value );
 
-			Item item;
-			item.m_label = labelStr;
-			item.m_value = value;
+			if(( m_size == 1 && value > 255 ) || ( m_size == 2 && value > 65535) )
+			{
+				Log::Write( LogLevel_Info, "Item value %s is incorrect size in xml configuration for node %d, class 0x%02x, instance %d, index %d", labelStr, _nodeId, _commandClassId, GetID().GetInstance(), GetID().GetIndex() );
+			}
+			else
+			{
+				Item item;
+				item.m_label = labelStr;
+				item.m_value = value;
 
-			m_items.push_back( item );
+				m_items.push_back( item );
+			}
 		}
 
 		itemElement = itemElement->NextSiblingElement();
 	}
 
 	// Set the value
+	bool valSet = false;
 	int intVal;
 	m_valueIdx = 0;
 	if ( TIXML_SUCCESS == _valueElement->QueryIntAttribute( "value", &intVal ) )
 	{
-		m_valueIdx = (int32)intVal;
-		SetIsSet();
+		valSet = true;
+		intVal = GetItemIdxByValue( intVal );
+		if( intVal != -1 )
+		{
+			m_valueIdx = (int32)intVal;
+			SetIsSet();
+		}
+		else
+		{
+			Log::Write( LogLevel_Info, "Value is not found in xml configuration for node %d, class 0x%02x, instance %d, index %d", _nodeId, _commandClassId, GetID().GetInstance(), GetID().GetIndex() );
+		}
 	}
-	else
+
+	// Set the index
+	bool indSet = false;
+	int intInd = 0;
+	if ( TIXML_SUCCESS == _valueElement->QueryIntAttribute( "vindex", &intInd ) )
 	{
-		Log::Write( LogLevel_Info, "Missing default list value from xml configuration: node %d, class 0x%02x, instance %d, index %d", _nodeId,  _commandClassId, GetID().GetInstance(), GetID().GetIndex() );
+		indSet = true;
+		if( intInd >= 0 && intInd < (int32)m_items.size() )
+		{
+			m_valueIdx = (int32)intInd;
+			SetIsSet();
+		}
+		else
+		{
+			Log::Write( LogLevel_Info, "Vindex is out of range for index in xml configuration for node %d, class 0x%02x, instance %d, index %d", _nodeId, _commandClassId, GetID().GetInstance(), GetID().GetIndex() );
+		}
+	}
+	if( !valSet && !indSet )
+	{
+		Log::Write( LogLevel_Info, "Missing default list value or vindex from xml configuration: node %d, class 0x%02x, instance %d, index %d", _nodeId,  _commandClassId, GetID().GetInstance(), GetID().GetIndex() );
 	}
 }
 
@@ -122,10 +176,10 @@ void ValueList::WriteXML
 	
 	char str[16] = "";
 	if ( IsSet() )
-    {
+	{
 		snprintf( str, 16, "%d", m_valueIdx );
-    }
-	_valueElement->SetAttribute( "value", str );
+	}
+	_valueElement->SetAttribute( "vindex", str );
 
 	for( vector<Item>::iterator it = m_items.begin(); it != m_items.end(); ++it )
 	{
