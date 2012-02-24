@@ -113,11 +113,22 @@ Node::Node
 	m_frequentListening( false ),
 	m_beaming( false ),
 	m_routing( false ),
+	m_maxBaudRate( 0 ),
+	m_version( 0 ),
+	m_security( false ),
 	m_homeId( _homeId ),
 	m_nodeId( _nodeId ),
 	m_basic( 0 ),
 	m_generic( 0 ),
 	m_specific( 0 ),
+	m_type( "" ),
+	m_manufacturerName( "" ),
+	m_productName( "" ),
+	m_nodeName( "" ),
+	m_location( "" ),
+	m_manufacturerId( "" ),
+	m_productType( "" ),
+	m_productId( "" ),
 	m_values( new ValueStore() ),
 	m_writeCnt( 0 ),
 	m_readCnt( 0 ),
@@ -799,16 +810,19 @@ void Node::ReadXML
 						m_productName = str;
 					}
 				}
-
-				// Notify the watchers of the name changes
-				Notification* notification = new Notification( Notification::Type_NodeNaming );
-				notification->SetHomeAndNodeIds( m_homeId, m_nodeId );
-				GetDriver()->QueueNotification( notification );
 			}
 		}
 
 		// Move to the next child node
 		child = child->NextSiblingElement();
+	}
+
+	if( m_nodeName.length() > 0 || m_location.length() > 0 || m_manufacturerId.length() > 0 )
+	{
+		// Notify the watchers of the name changes
+		Notification* notification = new Notification( Notification::Type_NodeNaming );
+		notification->SetHomeAndNodeIds( m_homeId, m_nodeId );
+		GetDriver()->QueueNotification( notification );
 	}
 }
 
@@ -1171,6 +1185,10 @@ void Node::SetNodeName
 )
 {
 	m_nodeName = _nodeName;
+	// Notify the watchers of the name changes
+	Notification* notification = new Notification( Notification::Type_NodeNaming );
+	notification->SetHomeAndNodeIds( m_homeId, m_nodeId );
+	GetDriver()->QueueNotification( notification );
 	if( NodeNaming* cc = static_cast<NodeNaming*>( GetCommandClass( NodeNaming::StaticGetCommandClassId() ) ) )
 	{
 		// The node supports naming, so we try to write the name into the device
@@ -1188,6 +1206,10 @@ void Node::SetLocation
 )
 {
 	m_location = _location;
+	// Notify the watchers of the name changes
+	Notification* notification = new Notification( Notification::Type_NodeNaming );
+	notification->SetHomeAndNodeIds( m_homeId, m_nodeId );
+	GetDriver()->QueueNotification( notification );
 	if( NodeNaming* cc = static_cast<NodeNaming*>( GetCommandClass( NodeNaming::StaticGetCommandClassId() ) ) )
 	{
 		// The node supports naming, so we try to write the location into the device
@@ -1400,10 +1422,9 @@ bool Node::RequestAllConfigParams
 		for( ValueStore::Iterator it = m_values->Begin(); it != m_values->End(); ++it )
 		{
 			Value* value = it->second;
-			if( value->GetID().GetCommandClassId() == Configuration::StaticGetCommandClassId() )
+			if( value->GetID().GetCommandClassId() == Configuration::StaticGetCommandClassId() && !value->IsWriteOnly() )
 			{
-				cc->RequestValue( _requestFlags, value->GetID().GetIndex() );
-				res = true;
+				res |= cc->RequestValue( _requestFlags, value->GetID().GetIndex() );
 			}
 		}
 	}
@@ -1654,11 +1675,12 @@ bool Node::CreateValueList
 	string const& _units,
 	bool const _readOnly,
 	bool const _writeOnly,
+	uint8 const _size,
 	vector<ValueList::Item> const& _items,
 	int32 const _default
 )
 {
-  	ValueList* value = new ValueList( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _items, _default );
+	ValueList* value = new ValueList( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _items, _default, _size );
 	ValueStore* store = GetValueStore();
 	if( store->AddValue( value ) )
 	{	
@@ -1791,7 +1813,7 @@ bool Node::CreateValueFromXML
 		case ValueID::ValueType_Decimal:	{	value = new ValueDecimal();		break;	}
 		case ValueID::ValueType_Int:		{	value = new ValueInt();			break;	}
 		case ValueID::ValueType_List:		{	value = new ValueList();		break;	}
-		case ValueID::ValueType_Schedule:	{	value = new ValueSchedule();	break;	}
+		case ValueID::ValueType_Schedule:	{	value = new ValueSchedule();		break;	}
 		case ValueID::ValueType_Short:		{	value = new ValueShort();		break;	}
 		case ValueID::ValueType_String:		{	value = new ValueString();		break;	}
 		case ValueID::ValueType_Button:		{	value = new ValueButton();		break;	}
