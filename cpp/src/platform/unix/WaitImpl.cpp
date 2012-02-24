@@ -30,6 +30,9 @@
 #include "Wait.h"
 #include "WaitImpl.h"
 
+#include <stdio.h>
+#include <errno.h>
+
 using namespace OpenZWave;
 
 //-----------------------------------------------------------------------------
@@ -75,9 +78,17 @@ void WaitImpl::AddWatcher
 	watcher.m_callback = _callback;
 	watcher.m_context = _context;
 	
-  	pthread_mutex_lock( &m_criticalSection );
+	if( pthread_mutex_lock( &m_criticalSection ) != 0 )
+	{
+		fprintf(stderr, "WaitImpl::AddWatcher lock error %d\n", errno );
+		assert( 0 );
+	}
 	m_watchers.push_back( watcher );
-	pthread_mutex_unlock( &m_criticalSection );
+	if( pthread_mutex_unlock( &m_criticalSection ) != 0 )
+	{
+		fprintf(stderr, "WaitImpl::AddWatcher unlock error %d\n", errno );
+		assert( 0 );
+	}
 
 	// If the object is already in a signalled state, notify the watcher immediately
 	if( m_owner->IsSignalled() )
@@ -98,7 +109,11 @@ bool WaitImpl::RemoveWatcher
 {
 	bool res = false;
 
-	pthread_mutex_lock( &m_criticalSection );
+	if( pthread_mutex_lock( &m_criticalSection ) != 0 )
+	{
+		fprintf(stderr, "WaitImpl::RemoveWatcher lock error %d\n", errno );
+		assert( 0 );
+	}
 
 	for( list<Watcher>::iterator it=m_watchers.begin(); it!=m_watchers.end(); ++it )
 	{
@@ -111,7 +126,11 @@ bool WaitImpl::RemoveWatcher
 		}
 	}
 
-	pthread_mutex_unlock( &m_criticalSection );
+	if( pthread_mutex_unlock( &m_criticalSection ) != 0 )
+	{
+		fprintf(stderr, "WaitImpl::RemoveWatcher unlock error %d\n", errno );
+		assert( 0 );
+	}
 	return res;
 }
 
@@ -123,13 +142,19 @@ void WaitImpl::Notify
 (
 )
 {
-	pthread_mutex_lock( &m_criticalSection );
+	if( pthread_mutex_lock( &m_criticalSection ) != 0 )
+	{
+		fprintf(stderr, "WaitImpl::Notify lock error %d\n", errno );
+		assert( 0 );
+	}
 	for( list<Watcher>::iterator it=m_watchers.begin(); it!=m_watchers.end(); ++it )
 	{
 		Watcher const& watcher = *it;
 		watcher.m_callback( watcher.m_context );
 	}
-	pthread_mutex_unlock( &m_criticalSection );
+	if( pthread_mutex_unlock( &m_criticalSection ) != 0 )
+	{
+		fprintf(stderr, "WaitImpl::Notify unlock error %d\n", errno );
+		assert( 0 );
+	}
 }
-
-
