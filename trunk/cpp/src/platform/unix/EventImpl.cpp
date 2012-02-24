@@ -76,11 +76,19 @@ void EventImpl::Set
 (
 )
 {
-	pthread_mutex_lock( &m_lock );
+	if( pthread_mutex_lock( &m_lock ) != 0 )
+	{
+		fprintf(stderr,  "EventImpl::Set lock error %d\n", errno );
+		assert( 0 );
+	}
 	if( m_manualReset )
 	{
 		m_isSignaled = true;
-		pthread_cond_broadcast( &m_condition );
+		if( pthread_cond_broadcast( &m_condition ) != 0 )
+		{
+			fprintf(stderr,  "EventImpl::Set cond broadcast error %d\n", errno );
+			assert( 0 );
+		}
 	}
 	else
 	{
@@ -90,10 +98,18 @@ void EventImpl::Set
 		}
 		else
 		{
-			pthread_cond_signal( &m_condition );
+			if( pthread_cond_signal( &m_condition ) != 0 )
+			{
+			  	fprintf(stderr,  "EventImpl::Set cond signal error %d\n", errno );
+				assert( 0 );
+			}
 		}
 	}
-	pthread_mutex_unlock( &m_lock );
+	if( pthread_mutex_unlock( &m_lock ) != 0 )
+	{
+		fprintf(stderr,  "EventImpl::Set unlock error %d\n", errno );
+		assert( 0 );
+	} 
 }
 
 //-----------------------------------------------------------------------------
@@ -104,9 +120,17 @@ void EventImpl::Reset
 (
 )
 {
-	pthread_mutex_lock ( &m_lock );
+	if( pthread_mutex_lock ( &m_lock ) != 0 )
+	{
+		fprintf(stderr,  "EventImpl::Reset lock error %d\n", errno );
+		assert( 0 );
+	}
 	m_isSignaled = false;
-	pthread_mutex_unlock( &m_lock );
+	if( pthread_mutex_unlock( &m_lock ) != 0 )
+	{
+		fprintf(stderr, "EventImpl::Reset unlock error %d\n", errno );
+		assert( 0 );
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -131,7 +155,11 @@ bool EventImpl::Wait
 {
 	bool result = true;
 
-	pthread_mutex_lock( &m_lock );
+	if( pthread_mutex_lock( &m_lock ) != 0 )
+	{
+		fprintf(stderr,  "EventImpl::Wait lock error %d\n", errno );
+		assert( 0 );
+	}
 	if( m_isSignaled )
 	{
 		if ( !m_manualReset )
@@ -142,11 +170,11 @@ bool EventImpl::Wait
 	else
 	{
 		++m_waitingThreads;
-        if( _timeout == 0 )
-		{
-            result = m_isSignaled;
-        }
-        else if( _timeout > 0 )
+	        if( _timeout == 0 )
+       		{
+			result = m_isSignaled;
+	        }
+	        else if( _timeout > 0 )
 		{
 			struct timeval now;
 			struct timespec abstime;
@@ -183,9 +211,15 @@ bool EventImpl::Wait
 					break;
 				}
 				else
-				{
-					result = true;
-				}
+					if( pr == 0 )
+					{
+						result = true;
+					}
+					else
+					{
+							fprintf(stderr,   "EventImpl::Wait cond timedwait error %d\n", errno );
+							assert( 0 );
+					}
 			}
 		}
 		else
@@ -195,15 +229,25 @@ bool EventImpl::Wait
 				int oldstate;
 				pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, &oldstate);
 
-				pthread_cond_wait( &m_condition, &m_lock );
+				int pr = pthread_cond_wait( &m_condition, &m_lock );
 
 				pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, &oldstate);
+
+				if( pr != 0 )
+				{
+					fprintf(stderr,  "EventImpl::Wait cond wait error %d\n", errno );
+					assert( 0 );
+				}
 			}
 		}
 		--m_waitingThreads;
 	}
 
-	pthread_mutex_unlock( &m_lock );
+	if( pthread_mutex_unlock( &m_lock ) != 0 )
+	{
+		fprintf(stderr, "EventImpl::Wait unlock error %d\n", errno );
+		assert( 0 );
+	}
 	return result;
 }
 
