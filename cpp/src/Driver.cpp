@@ -1294,7 +1294,7 @@ bool Driver::ReadMsg
 			}
 			else
 			{
-				Log::Write( LogLevel_Detail, "Node%03,  ACK received CallbackId 0x%.2x Reply 0x%.2x", m_currentMsg->GetTargetNodeId(), m_expectedCallbackId, m_expectedReply );
+				Log::Write( LogLevel_Detail, "Node%03d,  ACK received CallbackId 0x%.2x Reply 0x%.2x", m_currentMsg->GetTargetNodeId(), m_expectedCallbackId, m_expectedReply );
 				if( ( 0 == m_expectedCallbackId ) && ( 0 == m_expectedReply ) )
 				{
 					// Remove the message from the queue, now that it has been acknowledged.
