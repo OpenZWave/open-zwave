@@ -56,7 +56,7 @@ static char const* c_typeName[] =
 	"schedule",
 	"short",
 	"string",
-	"trigger"
+	"button"
 };
 
 //-----------------------------------------------------------------------------
