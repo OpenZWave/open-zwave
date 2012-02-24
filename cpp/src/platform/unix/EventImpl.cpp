@@ -28,6 +28,7 @@
 #include "Defs.h"
 #include "EventImpl.h"
 
+#include <stdio.h>
 #include <sys/time.h>
 
 using namespace OpenZWave;
