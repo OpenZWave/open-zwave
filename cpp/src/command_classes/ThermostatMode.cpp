@@ -359,6 +359,6 @@ void ThermostatMode::CreateVars
 			}
 		}
 
-		node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Mode", "", false, false, m_supportedModes, defaultValue );
+		node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Mode", "", false, false, 1, m_supportedModes, defaultValue );
 	}
 }

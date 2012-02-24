@@ -2,19 +2,19 @@
 <Product>
   <!-- Configuration Parameters -->
   <CommandClass id="112">
-    <Value type="list" index="1" genre="config" label="Report type" units="" min="0" max="1" value="0">
+    <Value type="list" index="1" genre="config" label="Report type" units="" min="0" max="1" size="1" value="0">
       <Help>
 	Defines the contents of Multilevel Sensor Report after Multilevel Sensor Get received.
       </Help>
       <Item label="Power" value="0" />
       <Item label="Voltage" value="1" />
     </Value>
-    <Value type="short" index="2" genre="config" label="Blinking behavior" units="" min="0" max="65535" value="0">
+    <Value type="short" index="2" genre="config" label="Blinking behavior" units="" min="0" max="65535" write_only="true" value="0">
       <Help>
 	This is actually a double byte value. The LSB defines the total time the device needs to blink in seconds. The MSB defines the on/off interval of the blink in tenths of seconds.
       </Help>
     </Value>
-    <Value type="list" index="80" genre="config" label="Notification status" units="" value="0">
+    <Value type="list" index="80" genre="config" label="Notification status" units="" size="1" value="0">
       <Help>
 	Enables automatic notifications to associated devices whenever there is a state change.
       </Help>

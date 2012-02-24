@@ -53,7 +53,7 @@ namespace OpenZWave
 			int32	m_value;
 		};
 
-		ValueList( uint32 const _homeId, uint8 const _nodeId, ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, string const& _label, string const& _units, bool const _readOnly, bool const _writeOnly, vector<Item> const& _items, int32 const _valueIdx );
+		ValueList( uint32 const _homeId, uint8 const _nodeId, ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, string const& _label, string const& _units, bool const _readOnly, bool const _writeOnly, vector<Item> const& _items, int32 const _valueIdx, uint8 const _size = 4 );
 		ValueList(){}
 		virtual ~ValueList(){}
 
@@ -75,9 +75,12 @@ namespace OpenZWave
 
 		bool GetItemLabels( vector<string>* o_items );
 
+		uint8 const GetSize()const{ return m_size; }
+
 	private:
 		vector<Item>	m_items;
 		int32			m_valueIdx;
+		uint8			m_size;
 	};
 
 } // namespace OpenZWave
