@@ -258,7 +258,7 @@ bool HidController::Init
 	m_hHidController = hid_open(m_vendorId, m_productId, NULL);
 	if (!m_hHidController)
 	{   
-	        Log::Write( LogLevel_Error, "Cannot find specified HID port with VID:%04hx and PID:0x%04hx.\n", m_vendorId, m_productId );
+	        Log::Write( LogLevel_Error, "Cannot find specified HID port with VID:%04hx and PID:0x%04hx.", m_vendorId, m_productId );
 
 		// Enumerate connected HIDs for debugging purposes
 		// Note: most OS intentionally hide keyboard/mouse devices from HID access
@@ -266,10 +266,10 @@ bool HidController::Init
 		devices = hid_enumerate(0x0, 0x0);
 		currentDevice = devices;
 
-		Log::Write( LogLevel_Error, "Enumerating connected HIDs:\n" );
+		Log::Write( LogLevel_Error, "Enumerating connected HIDs:" );
 		while (currentDevice)
 		{
-			Log::Write( LogLevel_Error, "\tVID:%04hx\tPID:0x%04hx\tSN:%ls\tMfg:%ls\tProd:%ls\tPath:%s\n",
+			Log::Write( LogLevel_Error, "\tVID:%04hx\tPID:0x%04hx\tSN:%ls\tMfg:%ls\tProd:%ls\tPath:%s",
 				    currentDevice->vendor_id,
 				    currentDevice->product_id,
 				    currentDevice->serial_number,
@@ -326,7 +326,7 @@ bool HidController::Init
 		Log::Write( LogLevel_Info, "      Serial #:     %ls   --> %s", hidInfoString, serialHex );
 		delete [] serialHex;
 	}
-	Log::Write( LogLevel_Info, "\n" );
+	Log::Write( LogLevel_Info, "" );
 
 	// Turn on ZWave data via a short series of feature reports
 	uint8 dataIn[FEATURE_REPORT_LENGTH];
@@ -346,12 +346,12 @@ bool HidController::Init
 	hidApiResult = GetFeatureReport(FEATURE_REPORT_LENGTH, 0x02, dataIn );
 	CHECK_HIDAPI_RESULT(hidApiResult, HidOpenFailure);
 
-	// Ensure that reads for input reports are blocked until data arrives.
+	// Ensure that reads for input reports are nonblocked.
 	// Input report data is polled in Wait() to check if there are feature
 	// reports waiting to be retrieved that contain ZWave rx packets.
-	hidApiResult = hid_set_nonblocking(m_hHidController, 0);
+	hidApiResult = hid_set_nonblocking(m_hHidController, 1);
 	CHECK_HIDAPI_RESULT(hidApiResult, HidOpenFailure);
-	
+
 	// Open successful
 	m_bOpen = true;
 	return true;
@@ -359,7 +359,7 @@ bool HidController::Init
 HidOpenFailure:
 	Log::Write( LogLevel_Error, "Failed to open HID port %s", m_hidControllerName.c_str() );
 	const wchar_t* errString = hid_error(m_hHidController);
-	Log::Write( LogLevel_Error, "HIDAPI ERROR STRING (if any):\n%ls\n", errString);
+	Log::Write( LogLevel_Error, "HIDAPI ERROR STRING (if any): %ls", errString);
 	hid_close(m_hHidController);
 	m_hHidController = NULL;
 	return false;
@@ -375,52 +375,21 @@ void HidController::Read
 {
 	uint8 buffer[FEATURE_REPORT_LENGTH];
 	int bytesRead = 0;
+	int msgSent = 1;	// nonzero so we do an initial hid_read to prime controller
 
  	while( true )
 	{
-		// We can know if a feature report is waiting to be read, based on the input data 
-		// that is always being sent from the HID port.
-
-		// Wayne-Dalton input report data is structured as follows (best guess):
-	        // [0] 0x03      - input report ID
-	        // [1] 0x01      - ??? never changes
-	        // [2] 0xNN      - if 0x01, no feature reports waiting
-	        //                 if 0x02, feature report ID 0x05 is waiting to be retrieved
-	        // [3,4] 0xNNNN  - Number of ZWave rx bytes waiting to be read.
-	        //                 This value will increase with every input report retrieved
-	        //                 until the rx data is fully buffered in the controller.
-
-		uint8 inputReport[INPUT_REPORT_LENGTH] = { 0 };
-	        int hidApiResult = hid_read( m_hHidController, inputReport, INPUT_REPORT_LENGTH );
+		// Rx feature report buffer should contain
+		// [0]      - 0x05 (rx feature report ID)
+		// [1]      - length of rx data (or 0x00 and no further bytes if no rx data waiting)
+		// [2]...   - rx data
+	  	// We poll this waiting for data.
+		bytesRead = GetFeatureReport(FEATURE_REPORT_LENGTH, 0x5, buffer);
+		CHECK_HIDAPI_RESULT(bytesRead, HidPortError);
+		if( bytesRead >= 2 )
 		{
-			string tmp = "";
-			for( int i = 0; i < INPUT_REPORT_LENGTH; i++ )
-			{
-				char bstr[16];
-				snprintf(bstr, sizeof(bstr), "%02x ", inputReport[i] );
-				tmp += bstr;
-			}
-			Log::Write( LogLevel_Debug, "hid read %d %s", hidApiResult, tmp.c_str() );
-		}
-            
-		if( hidApiResult == -1 )
-		{
-			Log::Write( LogLevel_Warning, "Error: HID port returned error reading input bytes: 0x%08hx, HIDAPI error string:", hidApiResult );
-			const wchar_t* errString = hid_error(m_hHidController);
-			Log::Write( LogLevel_Info, "%ls\n", errString);
-			return;
-		}
 
-		if( 0x01 == inputReport[2] )
-		{
-			// no rx feature reports recieved yet
-			continue;
-		}
-
-		if( 0x02 == inputReport[2] )
-		{
-			// rx feature report data is buffering or available on the HID port
-			bytesRead = GetFeatureReport(FEATURE_REPORT_LENGTH, 0x5, buffer);
+			if( buffer[1] > 0 )
 			{
 				string tmp = "";
 				for (int i = 0; i < buffer[1]; i++)
@@ -430,30 +399,49 @@ void HidController::Read
 					tmp += bstr;
 				}
 				Log::Write( LogLevel_Detail, "feature report read=%d ID=%d len=%d %s", bytesRead, buffer[0], buffer[1], tmp.c_str() );
+				Put( &buffer[2], buffer[1] );
+				msgSent++;
 			}
-			CHECK_HIDAPI_RESULT(bytesRead, HidPortError);
+			else
+				if( msgSent > 0 )
+				{
+					// Hang a hid_read to acknowledge receipt. Seems the response is conveying
+					// transaction status.
+					// Wayne-Dalton input report data is structured as follows (best guess):
+				        // [0] 0x03      - input report ID
+				        // [1] 0x01      - ??? never changes
+				        // [2] 0xNN      - if 0x01, no feature reports waiting
+				        //                 if 0x02, feature report ID 0x05 is waiting to be retrieved
+				        // [3,4] 0xNNNN  - Number of ZWave messages?
+
+					uint8 inputReport[INPUT_REPORT_LENGTH] = { 0 };
+					int hidApiResult = hid_read( m_hHidController, inputReport, INPUT_REPORT_LENGTH );
+					//if( hidApiResult != 0 )
+					{
+						string tmp = "";
+						for( int i = 0; i < INPUT_REPORT_LENGTH; i++ )
+						{
+							char bstr[16];
+							snprintf(bstr, sizeof(bstr), "%02x ", inputReport[i] );
+							tmp += bstr;
+						}
+						Log::Write( LogLevel_Detail, "hid read %d %s", hidApiResult, tmp.c_str() );
+					}
             
-			// Rx feature report buffer should contain
-			// [0]      - 0x05 (rx feature report ID)
-			// [1]      - length of rx data (or 0x00 and no further bytes if no rx data waiting)
-			// [2]...   - rx data
+					if( hidApiResult == -1 )
+					{
+						const wchar_t* errString = hid_error(m_hHidController);
+						Log::Write( LogLevel_Warning, "Error: HID port returned error reading input bytes: 0x%08hx, HIDAPI error string: %ls", hidApiResult, errString );
+					}
 
-			if( buffer[1] > 0 )
-			{
-			    	Put( &buffer[2], buffer[1] );
-			}
-
-			continue;
+					msgSent = 0;
+				}
 		}
-
-		//Error
-		Log::Write( LogLevel_Warning, "Error: HID port returned unexpected input report data in byte 2 during Wait(): 0x%08hx\n", inputReport[2] );
-		return;
 	}
 
 HidPortError:
 	Log::Write( LogLevel_Warning, "Error: HID port returned error reading rest of packet: 0x%08hx, HIDAPI error string:", bytesRead );
-	Log::Write( LogLevel_Warning, "%ls\n", hid_error(m_hHidController));
+	Log::Write( LogLevel_Warning, "%ls", hid_error(m_hHidController));
 }
 
 //-----------------------------------------------------------------------------
@@ -469,14 +457,14 @@ uint32 HidController::Write
 	if( !m_bOpen )
 	{
 		//Error
-		Log::Write( LogLevel_Warning, "Error: HID port must be opened before writing\n" );
+		Log::Write( LogLevel_Warning, "Error: HID port must be opened before writing" );
 		return 0;
 	}
 
 	if ( FEATURE_REPORT_LENGTH - 2 < _length)
 	{
 		//Error
-		Log::Write( LogLevel_Info, "Error: Write buffer length %d exceeded feature report data capacity %d\n", _length, FEATURE_REPORT_LENGTH - 2 );
+		Log::Write( LogLevel_Info, "Error: Write buffer length %d exceeded feature report data capacity %d", _length, FEATURE_REPORT_LENGTH - 2 );
 		return 0;
 	}
 
@@ -497,9 +485,8 @@ uint32 HidController::Write
 	if (bytesSent < 2)
 	{
 		//Error
-		Log::Write( LogLevel_Warning, "Error: HID port returned error sending bytes: 0x%08hx, HIDAPI error string:", bytesSent );
 		const wchar_t* errString = hid_error(m_hHidController);
-		Log::Write( LogLevel_Info, "%ls\n", errString);
+		Log::Write( LogLevel_Warning, "Error: HID port returned error sending bytes: 0x%08hx, HIDAPI error string: %ls", bytesSent, errString );
 		return 0;
 	}
 
@@ -522,7 +509,7 @@ int HidController::GetFeatureReport
 	result = hid_get_feature_report(m_hHidController, _buffer, _length);
 	if (result < 0)
 	{
-	        Log::Write( LogLevel_Info, "Error: HID GetFeatureReport on ID 0x%hx returned (0x%.8x)\n", _reportId, result );
+	        Log::Write( LogLevel_Info, "Error: HID GetFeatureReport on ID 0x%hx returned (0x%.8x)", _reportId, result );
 	}
 	return result;
 }
@@ -542,7 +529,7 @@ int HidController::SendFeatureReport
 	result = hid_send_feature_report(m_hHidController, _data, _length);
 	if (result < 0)
 	{
-		Log::Write( LogLevel_Info, "Error: HID SendFeatureReport on ID 0x%hx returned (0x%.8x)\n", _data[0], result );
+		Log::Write( LogLevel_Info, "Error: HID SendFeatureReport on ID 0x%hx returned (0x%.8x)", _data[0], result );
 	}
 	return result;
 }
