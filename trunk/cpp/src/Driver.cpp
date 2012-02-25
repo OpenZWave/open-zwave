@@ -50,6 +50,7 @@
 
 #include "ValueID.h"
 #include "Value.h"
+#include "ValueStore.h"
 
 #include <algorithm>
 
@@ -128,7 +129,8 @@ Driver::Driver
 	m_expectedNodeId( 0 ),
 	m_pollThread( new Thread( "poll" ) ),
 	m_pollMutex( new Mutex() ),
-	m_pollInterval( 30 ),                   // By default, every polled device is queried once every 30 seconds
+	m_pollInterval( 30000 ),						// By default, every polled device is attempted to be queried once every 30 seconds
+	m_bIntervalBetweenPolls( false ),				// if set to true (via SetPollInterval), the pollInterval will be interspersed between each poll (so a much smaller m_pollInterval like 100, 500, or 1,000 may be appropriate)
 	m_controllerState( ControllerState_Normal ),
 	m_controllerCommand( ControllerCommand_None ),
 	m_controllerCallback( NULL ),
@@ -179,6 +181,8 @@ Driver::Driver
 	m_controller->SetSignalThreshold( 1 );
 
 	Options::Get()->GetOptionAsBool( "NotifyTransactions", &m_notifytransactions );
+	Options::Get()->GetOptionAsInt( "PollInterval", &m_pollInterval );
+	Options::Get()->GetOptionAsBool( "IntervalBetweenPolls", &m_bIntervalBetweenPolls );
 }
 
 //-----------------------------------------------------------------------------
@@ -540,6 +544,12 @@ bool Driver::ReadConfig
 		m_pollInterval = intVal;
 	}
 
+	// Poll Interval--between polls or period for polling the entire pollList?
+	if( TIXML_SUCCESS == driverElement->QueryIntAttribute( "poll_interval_between", &intVal ) )
+	{
+		m_bIntervalBetweenPolls = ( intVal != 0 );
+	}
+
 	// Read the nodes
 	LockNodes();
 	TiXmlElement const* nodeElement = driverElement->FirstChildElement();
@@ -568,6 +578,22 @@ bool Driver::ReadConfig
 	}
 	
 	ReleaseNodes();
+
+	// restore the previous state (for now, polling) for the nodes/values just retrieved
+	for( int i=0; i<256; i++ )
+	{
+		if( m_nodes[i] != NULL )
+		{
+			ValueStore* vs = m_nodes[i]->m_values;
+			for( ValueStore::Iterator it = vs->Begin(); it != vs->End(); ++it )
+			{
+				Value* value = it->second;
+				if( value->m_pollIntensity != 0 )
+					EnablePoll( value->GetID(), value->m_pollIntensity );
+			}
+		}
+	}
+
 	return true;
 }
 
@@ -610,6 +636,9 @@ void Driver::WriteConfig
 
 	snprintf( str, sizeof(str), "%d", m_pollInterval );
 	driverElement->SetAttribute( "poll_interval", str );
+
+	snprintf( str, sizeof(str), "%d", (int) m_bIntervalBetweenPolls );
+	driverElement->SetAttribute( "poll_interval_between", str );
 
 	LockNodes();
 	for( int i=0; i<256; ++i )
@@ -767,7 +796,7 @@ void Driver::SendMsg
 				if( !wakeUp->IsAwake() )
 				{
 					Log::Write( LogLevel_Detail, "" );
-					Log::Write( LogLevel_Detail, "Node%03d Queuing Wake-Up Command: %s", _msg->GetTargetNodeId(), _msg->GetAsString().c_str() );
+					Log::Write( LogLevel_Detail, "Node%03d, Queuing Wake-Up Command: %s", _msg->GetTargetNodeId(), _msg->GetAsString().c_str()  );
 					wakeUp->QueueMsg( item );
 					ReleaseNodes();
 					return;
@@ -787,7 +816,7 @@ void Driver::SendMsg
 	}
 	else
 	{
-		snprintf( buf, sizeof(buf), "Node%03d", nodeId );
+		snprintf( buf, sizeof(buf), "Node%03d,", nodeId );
 		str = buf;
 	}  
 	Log::Write( LogLevel_Detail, "%s Queuing command: %s", str.c_str(), _msg->GetAsString().c_str() );
@@ -873,7 +902,7 @@ bool Driver::WriteMsg
 	}
 	else
 	{
-		snprintf( buf, sizeof(buf), "node%03d", nodeId );
+		snprintf( buf, sizeof(buf), "Node%03d,", nodeId );
 		str = buf;
 	}  
 	if( attempts >= MAX_TRIES )
@@ -3104,7 +3133,8 @@ void Driver::CommonAddNodeStatusRequestHandler
 //-----------------------------------------------------------------------------
 bool Driver::EnablePoll
 ( 
-	ValueID const _valueId
+	ValueID const _valueId,
+	uint8 const _intensity
 )
 {
 	// make sure the polling thread doesn't lock the node while we're in this function
@@ -3118,15 +3148,17 @@ bool Driver::EnablePoll
 		// confirm that this value is in the node's value store
 		if( Value* value = node->GetValue( _valueId ) )
 		{
-			value->Release();
+			// update the value's pollIntensity
+			value->SetPollIntensity( _intensity );
 
 			// Add the valueid to the polling list
 			// See if the node is already in the poll list.
-			for( list<ValueID>::iterator it = m_pollList.begin(); it != m_pollList.end(); ++it )
+			for( list<PollEntry>::iterator it = m_pollList.begin(); it != m_pollList.end(); ++it )
 			{
-				if( *it == _valueId )
+				if( (*it).m_id == _valueId )
 				{
 					// It is already in the poll list, so we have nothing to do.
+					value->Release();
 					m_pollMutex->Unlock();
 					ReleaseNodes();
 					return true;
@@ -3134,9 +3166,20 @@ bool Driver::EnablePoll
 			}
 
 			// Not in the list, so we add it
-			m_pollList.push_back( _valueId );
+			PollEntry pe;
+			pe.m_id = _valueId;
+			pe.m_pollCounter = value->GetPollIntensity();
+			m_pollList.push_back( pe );
+			value->Release();
 			m_pollMutex->Unlock();
 			ReleaseNodes();
+
+			// send notification to indicate polling is enabled
+			Notification* notification = new Notification( Notification::Type_PollingEnabled );
+			notification->SetHomeAndNodeIds( m_homeId, _valueId.GetNodeId() );
+			QueueNotification( notification ); 
+			Log::Write( LogLevel_Info, "Node%03d, EnablePoll for HomeID 0x%.8x, value(cc=0x%02x,in=0x%02x,id=0x%02x)", 
+				_valueId.GetNodeId(),_valueId.GetHomeId(), _valueId.GetCommandClassId(), _valueId.GetIndex(), _valueId.GetInstance() );
 			return true;
 		}
 
@@ -3168,16 +3211,28 @@ bool Driver::DisablePoll
 	Node* node = GetNode( nodeId );
 	if( node != NULL)
 	{
-
 		// See if the value is already in the poll list.
-		for( list<ValueID>::iterator it = m_pollList.begin(); it != m_pollList.end(); ++it )
+		for( list<PollEntry>::iterator it = m_pollList.begin(); it != m_pollList.end(); ++it )
 		{
-			if( *it == _valueId )
+			if( (*it).m_id == _valueId )
 			{
 				// Found it
+				// remove it from the poll list
 				m_pollList.erase( it );
+
+				// get the value object and reset pollIntensity to zero (indicating no polling)
+				Value* value = GetValue( _valueId );
+				value->SetPollIntensity( 0 );
+				value->Release();
 				m_pollMutex->Unlock();
 				ReleaseNodes();
+
+				// send notification to indicate polling is disabled
+				Notification* notification = new Notification( Notification::Type_PollingDisabled );
+				notification->SetHomeAndNodeIds( m_homeId, _valueId.GetNodeId() );
+				QueueNotification( notification ); 
+				Log::Write( LogLevel_Info, "Node%03d, DisablePoll for HomeID 0x%.8x, value(cc=0x%02x,in=0x%02x,id=0x%02x)", 
+					_valueId.GetNodeId(),_valueId.GetHomeId(), _valueId.GetCommandClassId(), _valueId.GetIndex(), _valueId.GetInstance() );
 				return true;
 			}
 		}
@@ -3205,9 +3260,28 @@ bool Driver::isPolled
 	ValueID const _valueId
 )
 {
+	bool bPolled;
+
 	// make sure the polling thread doesn't lock the node while we're in this function
 	m_pollMutex->Lock();
 
+	Value* value = GetValue( _valueId );
+	if( value->GetPollIntensity() != 0 ) 
+	{
+		bPolled = true;
+	}
+	else
+	{
+		bPolled = false;
+	}
+
+	value->Release();
+
+	/*
+	 * This code is retained for the moment as a belt-and-suspenders test to confirm that
+	 * the pollIntensity member of each value and the pollList contents do not get out
+	 * of sync.
+	 */
 	// confirm that this node exists
 	uint8 nodeId = _valueId.GetNodeId();
 	Node* node = GetNode( nodeId );
@@ -3215,31 +3289,65 @@ bool Driver::isPolled
 	{
 
 		// See if the value is already in the poll list.
-		for( list<ValueID>::iterator it = m_pollList.begin(); it != m_pollList.end(); ++it )
+		for( list<PollEntry>::iterator it = m_pollList.begin(); it != m_pollList.end(); ++it )
 		{
-			if( *it == _valueId )
+			if( (*it).m_id == _valueId )
 			{
 				// Found it
 				m_pollMutex->Unlock();
 				ReleaseNodes();
-				return true;
+				if( bPolled )
+				{
+					return true;
+				}
+				else
+				{
+					Log::Write( LogLevel_Error, "IsPolled setting for valueId 0x%016x is not consistent with the poll list", _valueId.GetId() );
+				}
 			}
 		}
 
 		// Not in the list
 		m_pollMutex->Unlock();
 		ReleaseNodes();
-		return false;
+				if( !bPolled )
+				{
+					return false;
+				}
+				else
+				{
+					Log::Write( LogLevel_Error, "IsPolled setting for valueId 0x%016x is not consistent with the poll list", _valueId.GetId() );
+				}
 	}
 
 	// allow the poll thread to continue
 	m_pollMutex->Unlock();
 
-	Log::Write( LogLevel_Info, "isPolled failed - node %d not found", nodeId );
+	Log::Write( LogLevel_Info, "isPolled failed - node %d not found (the value reported that it is%s polled)", nodeId, bPolled?"":" not" );
 	return false;
 }
 
 //-----------------------------------------------------------------------------
+// <Driver::SetPollIntensity>
+// Set the intensity with which this value is polled
+//-----------------------------------------------------------------------------
+void Driver::SetPollIntensity
+( 
+	ValueID const _valueId,
+	uint8 const _intensity
+)
+{
+	// make sure the polling thread doesn't lock the value while we're in this function
+	m_pollMutex->Lock();
+
+	Value* value = GetValue( _valueId );
+	value->SetPollIntensity( _intensity );
+
+	value->Release();
+	m_pollMutex->Unlock();
+}
+
+	//-----------------------------------------------------------------------------
 // <Driver::PollThreadEntryPoint>
 // Entry point of the thread for poll Z-Wave devices
 //-----------------------------------------------------------------------------
@@ -3267,25 +3375,49 @@ void Driver::PollThreadProc
 {
 	while( 1 )
 	{
-		int32 pollInterval = m_pollInterval * 1000;	// Get the time in milliseconds in which we are to poll all the devices
+		int32 pollInterval = m_pollInterval;
 
-		if( !m_pollList.empty() && m_awakeNodesQueried)
+		if( m_awakeNodesQueried )
 		{
-			// We only bother getting the lock if the pollList is not empty
-			m_pollMutex->Lock();
-			
 			if( !m_pollList.empty() )
 			{
-				// Get the next node to be polled
-				ValueID valueId = m_pollList.front();
+				// We only bother getting the lock if the pollList is not empty
+				m_pollMutex->Lock();
 			
-				// Move it to the back of the list
+				// Get the next value to be polled
+				PollEntry pe = m_pollList.front();
 				m_pollList.pop_front();
-				m_pollList.push_back( valueId );
+				ValueID  valueId = pe.m_id;
+			
+				// only execute this poll if pe.m_pollCounter == 1; otherwise decrement the counter and process the next polled value
+				if( pe.m_pollCounter != 1)
+				{
+					pe.m_pollCounter--;
+					m_pollList.push_back( pe );
+					m_pollMutex->Unlock();
+					continue;
+				}
 
-				// Calculate the time before the next poll, so that all polls 
-				// can take place within the user-specified interval.
-				pollInterval /= m_pollList.size();
+				// reset the poll counter to the full pollIntensity value and push it at the end of the list
+				// release the value object referenced; call GetNode to ensure the node objects are locked during this period
+				Node* node = GetNode( valueId.GetNodeId() );
+				Value* value = GetValue( valueId );
+				pe.m_pollCounter = value->GetPollIntensity();
+				m_pollList.push_back( pe );
+				value->Release();
+				ReleaseNodes();
+
+				// If the polling interval is for the whole poll list, calculate the time before the next poll, 
+				// so that all polls can take place within the user-specified interval.
+				if( !m_bIntervalBetweenPolls )
+				{
+					if( pollInterval < 100 )
+					{
+						Log::Write( LogLevel_Info, "The pollInterval setting is only %d, which appears to be a legacy setting.  Multiplying by 1000 to convert to ms.", pollInterval );
+						pollInterval *= 1000;
+					}
+					pollInterval /= m_pollList.size();
+				}
 
 				// Request the state of the value from the node to which it belongs
 				if( Node* node = GetNode( valueId.GetNodeId() ) )
@@ -3317,16 +3449,38 @@ void Driver::PollThreadProc
 
 					ReleaseNodes();
 				}
+
+				m_pollMutex->Unlock();
 			}
 
-			m_pollMutex->Unlock();
-		}
 
-		// Wait for the interval to expire, while watching for exit events
-		if( Wait::Single( _exitEvent, pollInterval ) == 0 )
+			// Polling messages are only sent when there are no other messages waiting to be sent
+			// While this makes the polls much more variable and uncertain if some other activity dominates
+			// a send queue, that may be appropriate
+			// TODO we can have a debate about whether to test all four queues or just the Poll queue
+			while( !m_msgQueue[MsgQueue_Poll].empty()
+				|| !m_msgQueue[MsgQueue_Send].empty()
+				|| !m_msgQueue[MsgQueue_Command].empty()
+				|| !m_msgQueue[MsgQueue_Query].empty() )
+			{
+				// Wait for the interval to expire, while watching for exit events
+				int32 i32 = Wait::Single( _exitEvent, pollInterval );
+				if( i32 == 0 )
+				{
+					// Exit has been called
+					return;
+				}
+			}
+		}
+		else		// poll list is empty or awake nodes haven't been fully queried yet
 		{
-			// Exit has been called
-			return;
+			// don't poll just yet, wait for the pollInterval or exit before re-checking to see if the pollList has elements
+			int32 i32 = Wait::Single( _exitEvent, pollInterval );
+			if( i32 == 0 )
+			{
+				// Exit has been called
+				return;
+			}
 		}
 	}
 }
@@ -3974,7 +4128,7 @@ void Driver::RequestNodeNeighbors
 		// merely requests the controller's current neighbour information and
 		// the reply will be copied into the relevant Node object for later use.
 		m_controllerCommandNode = _nodeId;
-		Log::Write( LogLevel_Detail, "Requesting routing info (neighbor list) for Node %d", _nodeId );
+		Log::Write( LogLevel_Detail, "Node%03d, Requesting routing info (neighbor list)", _nodeId );
 		Msg* msg = new Msg( "Get Routing Info", _nodeId, REQUEST, FUNC_ID_ZW_GET_ROUTING_INFO, false );
 		msg->Append( _nodeId );
 		msg->Append( 1 );		// Exclude bad links
@@ -4863,7 +5017,7 @@ void Driver::ReadButtons
 	TiXmlDocument doc;
 	if( !doc.LoadFile( filename.c_str(), TIXML_ENCODING_UTF8 ) )
 	{
-		Log::Write( LogLevel_Warning, "WARNING:  Driver::ReadButtons - zwbutton.xml file not found.");
+		Log::Write( LogLevel_Info, "Driver::ReadButtons - zwbutton.xml file not found.");
 		return;
 	}
 

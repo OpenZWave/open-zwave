@@ -33,17 +33,20 @@
 #include "Windows.h"
 #include "Options.h"
 #include "Manager.h"
+#include "Driver.h"
 #include "Node.h"
 #include "Group.h"
 #include "Notification.h"
 #include "ValueStore.h"
 #include "Value.h"
 #include "ValueBool.h"
+#include "Log.h"
 
 using namespace OpenZWave;
 
 static uint32 g_homeId = 0;
-bool g_nodesQueried = false;
+static bool   g_initFailed = false;
+static bool   g_nodesQueried = false;
 
 typedef struct
 {
@@ -94,48 +97,55 @@ void OnNotification
 
 	switch( _notification->GetType() )
 	{
-		case Notification::Type_AllNodesQueried:
+		case Notification::Type_ValueAdded:
 		{
-			printf( "Notificaton:  AllNodesQueried\n" );
-			g_nodesQueried = true;
-			break;
-		}
-		case Notification::Type_AwakeNodesQueried:
-		{
-			printf( "Notificaton:  AwakeNodesQueried\n" );
-			g_nodesQueried = true;
-			break;
-		}
-		case Notification::Type_DriverReady:
-		{
-			printf( "Notification:  DriverReady\n" );
-			g_homeId = _notification->GetHomeId();
-			break;
-		}
-		case Notification::Type_DriverReset:
-		{
-			printf( "Notification:  DriverReset\n" );
-			break;
-		}
-		case Notification::Type_Group:
-		{
-			printf( "Notification:  Group\n" );
-
 			if( NodeInfo* nodeInfo = GetNodeInfo( _notification ) )
 			{
-				// One of the node's association groups has changed
-				// TBD...
+				// Add the new value to our list
+				nodeInfo->m_values.push_back( _notification->GetValueID() );
 			}
 			break;
 		}
-		case Notification::Type_MsgComplete:
+
+		case Notification::Type_ValueRemoved:
 		{
-			printf( "Notificaton:  MsgComplete\n" );
+			if( NodeInfo* nodeInfo = GetNodeInfo( _notification ) )
+			{
+				// Remove the value from out list
+				for( list<ValueID>::iterator it = nodeInfo->m_values.begin(); it != nodeInfo->m_values.end(); ++it )
+				{
+					if( (*it) == _notification->GetValueID() )
+					{
+						nodeInfo->m_values.erase( it );
+						break;
+					}
+				}
+			}
 			break;
 		}
+
+		case Notification::Type_ValueChanged:
+		{
+			// One of the node values has changed
+			if( NodeInfo* nodeInfo = GetNodeInfo( _notification ) )
+			{
+				nodeInfo = nodeInfo;		// placeholder for real action
+			}
+			break;
+		}
+
+		case Notification::Type_Group:
+		{
+			// One of the node's association groups has changed
+			if( NodeInfo* nodeInfo = GetNodeInfo( _notification ) )
+			{
+				nodeInfo = nodeInfo;		// placeholder for real action
+			}
+			break;
+		}
+
 		case Notification::Type_NodeAdded:
 		{
-			printf( "Notification:  NodeAdded\n" );
 			// Add the new node to our list
 			NodeInfo* nodeInfo = new NodeInfo();
 			nodeInfo->m_homeId = _notification->GetHomeId();
@@ -144,35 +154,9 @@ void OnNotification
 			g_nodes.push_back( nodeInfo );
 			break;
 		}
-		case Notification::Type_NodeEvent:
-		{
-			printf( "Notification:  Event\n" );
-			if( NodeInfo* nodeInfo = GetNodeInfo( _notification ) )
-			{
-				// We have received an event from the node, caused by a
-				// basic_set or hail message.
-				// TBD...
-			}
-			break;
-		}
-		case Notification::Type_NodeNaming:
-		{
-			printf( "Notification:  NodeNaming\n" );
-			break;
-		}
-		case Notification::Type_NodeProtocolInfo:
-		{
-			printf( "Notification:  NodeProtocolInfo\n" );
-			break;
-		}
-		case Notification::Type_NodeQueriesComplete:
-		{
-			printf( "Notification:  NodeQueriesComplete\n" );
-			break;
-		}
+
 		case Notification::Type_NodeRemoved:
 		{
-			printf( "Notification:  NodeRemoved\n" );
 			// Remove the node from our list
 			uint32 const homeId = _notification->GetHomeId();
 			uint8 const nodeId = _notification->GetNodeId();
@@ -188,108 +172,62 @@ void OnNotification
 			}
 			break;
 		}
+
+		case Notification::Type_NodeEvent:
+		{
+			// We have received an event from the node, caused by a
+			// basic_set or hail message.
+			if( NodeInfo* nodeInfo = GetNodeInfo( _notification ) )
+			{
+				nodeInfo = nodeInfo;		// placeholder for real action
+			}
+			break;
+		}
+
 		case Notification::Type_PollingDisabled:
 		{
-			printf( "Notification:  PollingDisabled\n" );
 			if( NodeInfo* nodeInfo = GetNodeInfo( _notification ) )
 			{
 				nodeInfo->m_polled = false;
 			}
 			break;
 		}
+
 		case Notification::Type_PollingEnabled:
 		{
-			printf( "Notification:  PollingEnabled\n" );
 			if( NodeInfo* nodeInfo = GetNodeInfo( _notification ) )
 			{
 				nodeInfo->m_polled = true;
 			}
 			break;
 		}
-		case Notification::Type_ValueAdded:
+
+		case Notification::Type_DriverReady:
 		{
-			printf( "\nNotification:  ValueAdded" );
-			if( NodeInfo* nodeInfo = GetNodeInfo( _notification ) )
-			{
-				// Add the new value to our list
-				nodeInfo->m_values.push_back( _notification->GetValueID() );
-			}
+			g_homeId = _notification->GetHomeId();
 			break;
 		}
-		case Notification::Type_ValueChanged:
+
+		case Notification::Type_DriverFailed:
 		{
-			if( NodeInfo* nodeInfo = GetNodeInfo( _notification ) )
-			{
-				printf( "\nValue changed." );
-				printf( "\nHome ID: 0x%.8x  Node ID: %d,  Polled: %s", nodeInfo->m_homeId, nodeInfo->m_nodeId, nodeInfo->m_polled?"true":"false" );
-				ValueID valueid = _notification->GetValueID();
-				printf( "\nValue is: \n part of command class: 0x%.2x\n of genre: %d\n with index %d\n and type %d", 
-					valueid.GetCommandClassId(), valueid.GetGenre(), valueid.GetIndex(), valueid.GetInstance(), valueid.GetType() );
-				switch( valueid.GetType() )
-				{
-				case ValueID::ValueType_Bool:
-					bool bTestBool;
-					Manager::Get()->GetValueAsBool( valueid, &bTestBool );
-					printf( "\nValue is: %s", bTestBool?"true":"false" );
-					break;
-/*				case ValueID::ValueType_Button:
-					printf( "\nButton value not implemented" );
-					break;
-*/
-				case ValueID::ValueType_Byte:
-					uint8 bTestByte;
-					Manager::Get()->GetValueAsByte( valueid, &bTestByte );
-					printf( "\nValue is: 0x%.2x", bTestByte );
-					break;
-				case ValueID::ValueType_Decimal:
-					float bTestFloat;
-					Manager::Get()->GetValueAsFloat( valueid, &bTestFloat );
-					printf( "\nValue is: %.2f", bTestFloat );
-					break;
-				case ValueID::ValueType_Int:
-					int32 bTestInt;
-					Manager::Get()->GetValueAsInt( valueid, &bTestInt );
-					printf( "\nValue is: %d", bTestInt );
-					break;
-				case ValueID::ValueType_List:
-				case ValueID::ValueType_Max:
-				case ValueID::ValueType_Schedule:
-				case ValueID::ValueType_Short:
-					int16 bTestShort;
-					Manager::Get()->GetValueAsShort( valueid, &bTestShort );
-					printf( "\nValue is: %d", bTestShort );
-					break;
-				case ValueID::ValueType_String:
-					string bTestString;
-					Manager::Get()->GetValueAsString( valueid, &bTestString );
-					printf( "\nValue is: %s", bTestString.c_str() );
-					break;
-					break;
-				}
-			}
-			else
-			{
-				// ValueChanged notification for a node that doesn't appear to exist in our g_nodes list
-				printf( "\nERROR: Value changed notification for an unidentified node." );
-			}
+			g_initFailed = true;
 			break;
 		}
-		case Notification::Type_ValueRemoved:
+
+		case Notification::Type_AwakeNodesQueried:
+		case Notification::Type_AllNodesQueried:
 		{
-			printf( "\nNotification:  ValueRemoved" );
-			if( NodeInfo* nodeInfo = GetNodeInfo( _notification ) )
-			{
-				// Remove the value from out list
-				for( list<ValueID>::iterator it = nodeInfo->m_values.begin(); it != nodeInfo->m_values.end(); ++it )
-				{
-					if( (*it) == _notification->GetValueID() )
-					{
-						nodeInfo->m_values.erase( it );
-						break;
-					}
-				}
-			}
+			g_nodesQueried = true;
 			break;
+		}
+
+		case Notification::Type_DriverReset:
+		case Notification::Type_MsgComplete:
+		case Notification::Type_NodeNaming:
+		case Notification::Type_NodeProtocolInfo:
+		case Notification::Type_NodeQueriesComplete:
+		default:
+		{
 		}
 	}
 
@@ -309,6 +247,9 @@ int main( int argc, char* argv[] )
 	// The second argument is the path for saved Z-Wave network state and the log file.  If you leave it NULL 
 	// the log file will appear in the program's working directory.
 	Options::Create( "../../../../../config/", "", "" );
+	Options::Get()->AddOptionInt( "SaveLogLevel", LogLevel_Detail );
+	Options::Get()->AddOptionInt( "QueueLogLevel", LogLevel_Debug );
+	Options::Get()->AddOptionInt( "DumpTrigger", LogLevel_Error );
 	Options::Get()->Lock();
 
 	Manager::Create();
@@ -321,15 +262,15 @@ int main( int argc, char* argv[] )
 
 	// Add a Z-Wave Driver
 	// Modify this line to set the correct serial port for your PC interface.
-	Manager::Get()->AddDriver( "\\\\.\\COM3" );
-  //Manager::Get()->AddDriver( "HID Controller", Driver::ControllerInterface_Hid );
 
-	// Now we just wait for the driver to become ready.
+	string port = "\\\\.\\COM6";
+
+	Manager::Get()->AddDriver( ( argc > 1 ) ? argv[1] : port );
+	//Manager::Get()->AddDriver( "HID Controller", Driver::ControllerInterface_Hid );
+
+	// Now we just wait for either the AwakeNodesQueried or AllNodesQueried notification,
+	// then write out the config file.
 	// In a normal app, we would be handling notifications and building a UI for the user.
-	while( !g_homeId )
-	{
-		Sleep( 1000 );
-	}
 
 	// Since the configuration file contains command class information that is only 
 	// known after the nodes on the network are queried, wait until all of the nodes 
@@ -340,22 +281,63 @@ int main( int argc, char* argv[] )
 	{
 		Sleep( 1000 );
 	}
-	Manager::Get()->WriteConfig( g_homeId );
-	
-	// If we want to access our NodeInfo list, that has been built from all the
-	// notification callbacks we received from the library, we have to do so
-	// from inside a Critical Section.  This is because the callbacks occur on other 
-	// threads, and we cannot risk the list being changed while we are using it.  
-	// We must hold the critical section for as short a time as possible, to avoid
-	// stalling the OpenZWave drivers.
-//	while( true )
+
+	if( !g_initFailed )
 	{
+
+		Manager::Get()->WriteConfig( g_homeId );
+
+		// The section below demonstrates setting up polling for a variable.  In this simple
+		// example, it has been hardwired to read COMMAND_CLASS_BASIC on the first node (that 
+		// isn't nodeId 1) that supports this setting.
 		EnterCriticalSection( &g_criticalSection );
+		bool valueFound = false;
+		for( list<NodeInfo*>::iterator it = g_nodes.begin(); it != g_nodes.end(); ++it )
+		{
+			NodeInfo* nodeInfo = *it;
 
-		// Do stuff
-		Sleep(6000);
+			// skip the controller (most likely node 1)
+			if( nodeInfo->m_nodeId == 1) continue;
 
+			for( list<ValueID>::iterator it2 = nodeInfo->m_values.begin(); it2 != nodeInfo->m_values.end(); ++it2 )
+			{
+				ValueID v = *it2;
+				if( v.GetCommandClassId() == 0x20 )
+				{
+					Manager::Get()->EnablePoll( v, 2 );		// enables polling with "intensity" of 2, though this is irrelevant with only one value polled
+					valueFound = true;
+					break;
+				}
+			}
+			if( valueFound )
+			{
+				break;
+			}
+		}
 		LeaveCriticalSection( &g_criticalSection );
+
+		// If we want to access our NodeInfo list, that has been built from all the
+		// notification callbacks we received from the library, we have to do so
+		// from inside a Critical Section.  This is because the callbacks occur on other 
+		// threads, and we cannot risk the list being changed while we are using it.  
+		// We must hold the critical section for as short a time as possible, to avoid
+		// stalling the OpenZWave drivers.
+		// At this point, the program just waits for 3 minutes (to demonstrate polling),
+		// then exits
+		for( int i = 0; i < 60*3*10; i++ )
+		{
+			Sleep(90);				// do most of your work outside critical section
+
+			EnterCriticalSection( &g_criticalSection );
+			Sleep(10);				// but NodeInfo list and similar data should be inside critical section
+			LeaveCriticalSection( &g_criticalSection );
+		}
+
+		Driver::DriverData data;
+		Manager::Get()->GetDriverStatistics( g_homeId, &data );
+		printf("SOF: %d ACK Waiting: %d Read Aborts: %d Bad Checksums: %d\n", data.s_SOFCnt, data.s_ACKWaiting, data.s_readAborts, data.s_badChecksum);
+		printf("Reads: %d Writes: %d CAN: %d NAK: %d ACK: %d Out of Frame: %d\n", data.s_readCnt, data.s_writeCnt, data.s_CANCnt, data.s_NAKCnt, data.s_ACKCnt, data.s_OOFCnt);
+		printf("Dropped: %d Retries: %d\n", data.s_dropped, data.s_retries);
 	}
 
 	// program exit (clean up)

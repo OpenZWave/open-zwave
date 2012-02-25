@@ -41,6 +41,7 @@
 #include "ValueStore.h"
 #include "Value.h"
 #include "ValueBool.h"
+#include "Log.h"
 
 using namespace OpenZWave;
 
@@ -127,22 +128,20 @@ void OnNotification
 
 		case Notification::Type_ValueChanged:
 		{
+			// One of the node values has changed
 			if( NodeInfo* nodeInfo = GetNodeInfo( _notification ) )
 			{
-				// One of the node values has changed
-				// TBD...
-				nodeInfo = nodeInfo;
+				nodeInfo = nodeInfo;		// placeholder for real action
 			}
 			break;
 		}
 
 		case Notification::Type_Group:
 		{
+			// One of the node's association groups has changed
 			if( NodeInfo* nodeInfo = GetNodeInfo( _notification ) )
 			{
-				// One of the node's association groups has changed
-				// TBD...
-				nodeInfo = nodeInfo;
+				nodeInfo = nodeInfo;		// placeholder for real action
 			}
 			break;
 		}
@@ -178,12 +177,11 @@ void OnNotification
 
 		case Notification::Type_NodeEvent:
 		{
+			// We have received an event from the node, caused by a
+			// basic_set or hail message.
 			if( NodeInfo* nodeInfo = GetNodeInfo( _notification ) )
 			{
-				// We have received an event from the node, caused by a
-				// basic_set or hail message.
-				// TBD...
-				nodeInfo = nodeInfo;
+				nodeInfo = nodeInfo;		// placeholder for real action
 			}
 			break;
 		}
@@ -212,7 +210,6 @@ void OnNotification
 			break;
 		}
 
-
 		case Notification::Type_DriverFailed:
 		{
 			g_initFailed = true;
@@ -223,10 +220,15 @@ void OnNotification
 		case Notification::Type_AwakeNodesQueried:
 		case Notification::Type_AllNodesQueried:
 		{
-				pthread_cond_broadcast(&initCond);
-				break;
+			pthread_cond_broadcast(&initCond);
+			break;
 		}
 
+		case Notification::Type_DriverReset:
+		case Notification::Type_MsgComplete:
+		case Notification::Type_NodeNaming:
+		case Notification::Type_NodeProtocolInfo:
+		case Notification::Type_NodeQueriesComplete:
 		default:
 		{
 		}
@@ -234,6 +236,7 @@ void OnNotification
 
 	pthread_mutex_unlock( &g_criticalSection );
 }
+
 //-----------------------------------------------------------------------------
 // <main>
 // Create the driver and then wait
@@ -253,7 +256,10 @@ int main( int argc, char* argv[] )
 	// The first argument is the path to the config files (where the manufacturer_specific.xml file is located
 	// The second argument is the path for saved Z-Wave network state and the log file.  If you leave it NULL 
 	// the log file will appear in the program's working directory.
-	Options::Create( "../../../../config/", "", "" );
+	Options::Create( "../../../../../config/", "", "" );
+	Options::Get()->AddOptionInt( "SaveLogLevel", LogLevel_Detail );
+	Options::Get()->AddOptionInt( "QueueLogLevel", LogLevel_Debug );
+	Options::Get()->AddOptionInt( "DumpTrigger", LogLevel_Error );
 	Options::Get()->Lock();
 
 	Manager::Create();
@@ -272,38 +278,72 @@ int main( int argc, char* argv[] )
 	Manager::Get()->AddDriver( ( argc > 1 ) ? argv[1] : port );
 	//Manager::Get()->AddDriver( "HID Controller", Driver::ControllerInterface_Hid );
 
-	// Now we just wait for the driver to become ready, and then write out the loaded config.
+	// Now we just wait for either the AwakeNodesQueried or AllNodesQueried notification,
+	// then write out the config file.
 	// In a normal app, we would be handling notifications and building a UI for the user.
 	pthread_cond_wait( &initCond, &initMutex );
 
+	// Since the configuration file contains command class information that is only 
+	// known after the nodes on the network are queried, wait until all of the nodes 
+	// on the network have been queried (at least the "listening" ones) before
+	// writing the configuration file.  (Maybe write again after sleeping nodes have
+	// been queried as well.)
 	if( !g_initFailed )
 	{
 
-		//Manager::Get()->BeginAddNode( g_homeId );
-		//sleep(10);
-		//Manager::Get()->EndAddNode( g_homeId );
-		//Manager::Get()->BeginRemoveNode( g_homeId );
-		//sleep(10);
-		//Manager::Get()->EndRemoveNode( g_homeId );
-		//sleep(10);
-
 		Manager::Get()->WriteConfig( g_homeId );
+
+		// The section below demonstrates setting up polling for a variable.  In this simple
+		// example, it has been hardwired to read COMMAND_CLASS_BASIC on the first node (that 
+		// isn't nodeId 1) that supports this setting.
+		pthread_mutex_lock( &g_criticalSection );
+		bool valueFound = false;
+		for( list<NodeInfo*>::iterator it = g_nodes.begin(); it != g_nodes.end(); ++it )
+		{
+			NodeInfo* nodeInfo = *it;
+
+			// skip the controller (most likely node 1)
+			if( nodeInfo->m_nodeId == 1) continue;
+
+			for( list<ValueID>::iterator it2 = nodeInfo->m_values.begin(); it2 != nodeInfo->m_values.end(); ++it2 )
+			{
+				ValueID v = *it2;
+				if( v.GetCommandClassId() == 0x20 )
+				{
+					Manager::Get()->EnablePoll( v, 2 );		// enables polling with "intensity" of 2, though this is irrelevant with only one value polled
+					valueFound = true;
+					break;
+				}
+			}
+			if( valueFound )
+			{
+				break;
+			}
+		}
+		pthread_mutex_unlock( &g_criticalSection );
+
+		// If we want to access our NodeInfo list, that has been built from all the
+		// notification callbacks we received from the library, we have to do so
+		// from inside a Critical Section.  This is because the callbacks occur on other 
+		// threads, and we cannot risk the list being changed while we are using it.  
+		// We must hold the critical section for as short a time as possible, to avoid
+		// stalling the OpenZWave drivers.
+		// At this point, the program just waits for 3 minutes (to demonstrate polling),
+		// then exits
+		for( int i = 0; i < 60*3*10; i++ )
+		{
+			sleep(90);				// do most of your work outside critical section
+
+			pthread_mutex_lock( &g_criticalSection );
+			sleep(10);				// but NodeInfo list and similar data should be inside critical section
+			pthread_mutex_unlock( &g_criticalSection );
+		}
 
 		Driver::DriverData data;
 		Manager::Get()->GetDriverStatistics( g_homeId, &data );
 		printf("SOF: %d ACK Waiting: %d Read Aborts: %d Bad Checksums: %d\n", data.s_SOFCnt, data.s_ACKWaiting, data.s_readAborts, data.s_badChecksum);
 		printf("Reads: %d Writes: %d CAN: %d NAK: %d ACK: %d Out of Frame: %d\n", data.s_readCnt, data.s_writeCnt, data.s_CANCnt, data.s_NAKCnt, data.s_ACKCnt, data.s_OOFCnt);
 		printf("Dropped: %d Retries: %d\n", data.s_dropped, data.s_retries);
-
-//		while( true )
-		{
-			sleep(10);
-
-			pthread_mutex_lock( &g_criticalSection );
-			// Do stuff
-			pthread_mutex_unlock( &g_criticalSection );
-			sleep(5);
-		}
 	}
 
 	// program exit (clean up)

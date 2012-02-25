@@ -423,18 +423,24 @@ namespace OpenZWave
 	//-----------------------------------------------------------------------------
 	private:
 		int32 GetPollInterval(){ return m_pollInterval ; }
-		void SetPollInterval( int32 _seconds ){ m_pollInterval = _seconds; }
-		bool EnablePoll( ValueID _valueId );
+		void SetPollInterval( int32 _milliseconds, bool _bIntervalBetweenPolls ){ m_pollInterval = _milliseconds; m_bIntervalBetweenPolls = _bIntervalBetweenPolls; }
+		bool EnablePoll( ValueID _valueId, uint8 _intensity = 1 );
 		bool DisablePoll( ValueID _valueId );
 		bool isPolled( ValueID _valueId );
-
+		void SetPollIntensity( ValueID _valueId, uint8 _intensity );
 		static void PollThreadEntryPoint( Event* _exitEvent, void* _context );
 		void PollThreadProc( Event* _exitEvent );
 
 		Thread*					m_pollThread;								// Thread for polling devices on the Z-Wave network
-		list<ValueID>			m_pollList;									// List of nodes that need to be polled
+		struct PollEntry
+		{
+			ValueID	m_id;
+			uint8	m_pollCounter;
+		};
+		list<PollEntry>			m_pollList;									// List of nodes that need to be polled
 		Mutex*					m_pollMutex;								// Serialize access to the polling list
 		int32					m_pollInterval;								// Time interval during which all nodes must be polled
+		bool					m_bIntervalBetweenPolls;					// if true, the library intersperses m_pollInterval between polls; if false, the library attempts to complete all polls within m_pollInterval
 
 	//-----------------------------------------------------------------------------
 	//	Retrieving Node information

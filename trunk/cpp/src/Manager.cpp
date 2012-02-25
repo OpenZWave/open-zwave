@@ -537,17 +537,18 @@ int32 Manager::GetPollInterval
 //-----------------------------------------------------------------------------
 void Manager::SetPollInterval
 (
-	int32 _seconds
+	int32 _milliseconds,
+	bool _bIntervalBetweenPolls
 )
 {
 	for( list<Driver*>::iterator pit = m_pendingDrivers.begin(); pit != m_pendingDrivers.end(); ++pit )
 	{
-		(*pit)->SetPollInterval( _seconds );
+		(*pit)->SetPollInterval( _milliseconds, _bIntervalBetweenPolls );
 	}
 
 	for( map<uint32,Driver*>::iterator rit = m_readyDrivers.begin(); rit != m_readyDrivers.end(); ++rit )
 	{
-		rit->second->SetPollInterval( _seconds );
+		rit->second->SetPollInterval( _milliseconds, _bIntervalBetweenPolls );
 	}
 }
 
@@ -557,13 +558,13 @@ void Manager::SetPollInterval
 //-----------------------------------------------------------------------------
 bool Manager::EnablePoll
 ( 
-	ValueID const _valueId
+	ValueID const _valueId,
+	uint8 const _intensity
 )
 {
 	if( Driver* driver = GetDriver( _valueId.GetHomeId() ) )
 	{
-		Log::Write( LogLevel_Info, "EnablePoll for Home ID 0x%.8x and Value ID 0x%.8x", _valueId.GetHomeId(), _valueId.GetId() );
-		return( driver->EnablePoll( _valueId ) );
+		return( driver->EnablePoll( _valueId, _intensity ) );
 	}
 
 	Log::Write( LogLevel_Info, "EnablePoll failed - Driver with Home ID 0x%.8x is not available", _valueId.GetHomeId() );
@@ -581,7 +582,6 @@ bool Manager::DisablePoll
 {
 	if( Driver* driver = GetDriver( _valueId.GetHomeId() ) )
 	{
-		Log::Write( LogLevel_Info, "DisablePoll for Home ID 0x%.8x and Value ID 0x%.8x", _valueId.GetHomeId(), _valueId.GetId() );
 		return( driver->DisablePoll( _valueId ) );
 	}
 
@@ -606,6 +606,25 @@ bool Manager::isPolled
 	Log::Write( LogLevel_Info, "isPolled failed - Driver with Home ID 0x%.8x is not available", _valueId.GetHomeId() );
 	return false;
 }
+
+//-----------------------------------------------------------------------------
+// <Manager::SetPollIntensity>
+// Change the intensity with which this value is polled
+//-----------------------------------------------------------------------------
+void Manager::SetPollIntensity
+( 
+	ValueID const _valueId,
+	uint8 const _intensity
+)
+{
+	if( Driver* driver = GetDriver( _valueId.GetHomeId() ) )
+	{
+		return( driver->SetPollIntensity( _valueId, _intensity ) );
+	}
+
+	Log::Write( LogLevel_Error, "SetPollIntensity failed - Driver with Home ID 0x%.8x is not available", _valueId.GetHomeId() );
+}
+
 
 //-----------------------------------------------------------------------------
 //	Retrieving Node information
@@ -1505,6 +1524,30 @@ bool Manager::IsValueSet
 		if( Value* value = driver->GetValue( _id ) )
 		{
 			res = value->IsSet();
+			value->Release();
+		}
+		driver->ReleaseNodes();
+	}
+
+	return res;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::IsValuePolled>
+// Test whether the value is currently being polled
+//-----------------------------------------------------------------------------
+bool Manager::IsValuePolled
+( 
+	ValueID const& _id
+)
+{
+	bool res = false;
+	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
+	{
+		driver->LockNodes();
+		if( Value* value = driver->GetValue( _id ) )
+		{
+			res = value->IsPolled();
 			value->Release();
 		}
 		driver->ReleaseNodes();

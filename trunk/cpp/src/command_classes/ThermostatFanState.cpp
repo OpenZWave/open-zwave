@@ -143,7 +143,7 @@ void ThermostatFanState::CreateVars
 {
 	if( Node* node = GetNodeUnsafe() )
 	{
-	  	node->CreateValueString( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Fan State", "", true, false, c_stateName[0] );
+	  	node->CreateValueString( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Fan State", "", true, false, c_stateName[0], 0 );
 	}
 }
 

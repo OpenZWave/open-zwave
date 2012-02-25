@@ -76,7 +76,8 @@ Value::Value
 	string const& _units,
 	bool const _readOnly,
 	bool const _writeOnly,
-	bool const _isSet
+	bool const _isSet,
+	uint8 const _pollIntensity
 ):
 	m_min( 0 ),
 	m_max( 0 ),
@@ -86,6 +87,7 @@ Value::Value
 	m_readOnly( _readOnly ),
 	m_writeOnly( _writeOnly ),
 	m_isSet( _isSet ),
+	m_pollIntensity( _pollIntensity ),
 	m_affectsLength( 0 ),
 	m_affectsAll( false )
 {
@@ -175,6 +177,11 @@ void Value::ReadXML
 	if( writeOnly )
 	{
 		m_writeOnly = !strcmp( writeOnly, "true" );
+	}
+
+	if( TIXML_SUCCESS == _valueElement->QueryIntAttribute( "poll_intensity", &intVal ) )
+	{
+		m_pollIntensity = (uint8)intVal;
 	}
 
 	char const* affects = _valueElement->Attribute( "affects" );
@@ -274,6 +281,8 @@ void Value::WriteXML
 	_valueElement->SetAttribute( "units", m_units.c_str() );
 	_valueElement->SetAttribute( "read_only", m_readOnly ? "true" : "false" );
 	_valueElement->SetAttribute( "write_only", m_writeOnly ? "true" : "false" );
+	snprintf( str, sizeof(str), "%d", m_pollIntensity );
+	_valueElement->SetAttribute( "poll_intensity", str );
 
 	snprintf( str, sizeof(str), "%d", m_min );
 	_valueElement->SetAttribute( "min", str );

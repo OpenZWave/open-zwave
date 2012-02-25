@@ -50,9 +50,10 @@ ValueBool::ValueBool
 	string const& _units,
 	bool const _readOnly,
 	bool const _writeOnly,
-	bool const _value
+	bool const _value,
+	uint8 const _pollIntensity
 ):
-  	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Bool, _label, _units, _readOnly, _writeOnly, false ),
+  	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Bool, _label, _units, _readOnly, _writeOnly, false, _pollIntensity ),
 	m_value( _value )
 {
 }

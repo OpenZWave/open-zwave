@@ -51,9 +51,10 @@ ValueList::ValueList
 	bool const _writeOnly,
 	vector<Item> const& _items,
 	int32 const _valueIdx,
+	uint8 const _pollIntensity,
 	uint8 const _size	// = 4
 ):
-	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_List, _label, _units, _readOnly, _writeOnly, false ),
+	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_List, _label, _units, _readOnly, _writeOnly, false, _pollIntensity ),
 	m_items( _items ),
 	m_valueIdx( _valueIdx ),
 	m_size( _size )

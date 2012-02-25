@@ -152,8 +152,8 @@ void Language::CreateVars
 {
 	if( Node* node = GetNodeUnsafe() )
 	{
-	  	node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, (uint8)LanguageIndex_Language, "Language", "", false, false, "" );
-		node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, (uint8)LanguageIndex_Country, "Country", "", false, false, "" );
+	  	node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, (uint8)LanguageIndex_Language, "Language", "", false, false, "", 0 );
+		node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, (uint8)LanguageIndex_Country, "Country", "", false, false, "", 0 );
 	}
 }
 

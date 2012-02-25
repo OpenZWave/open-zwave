@@ -183,7 +183,8 @@ void Stream::Purge
 (
 )
 {
-	m_tail += m_dataSize;
+	m_tail = 0;
+	m_head = 0;
 	m_dataSize = 0;
 }
 

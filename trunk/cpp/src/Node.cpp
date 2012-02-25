@@ -209,7 +209,7 @@ void Node::AdvanceQueries
 				// determines, among other things, whether this node is a listener, its maximum baud rate and its device classes
 				if( !ProtocolInfoReceived() )
 				{
-					Log::Write( LogLevel_Detail, "Node %d: QueryStage_ProtocolInfo", m_nodeId );
+					Log::Write( LogLevel_Detail, "Node%03d, QueryStage_ProtocolInfo", m_nodeId );
 					Msg* msg = new Msg( "Get Node Protocol Info", m_nodeId, REQUEST, FUNC_ID_ZW_GET_NODE_PROTOCOL_INFO, false );
 					msg->Append( m_nodeId );	
 					GetDriver()->SendMsg( msg, Driver::MsgQueue_Query );
@@ -227,7 +227,7 @@ void Node::AdvanceQueries
 			{
 				// For sleeping devices other than controllers, we need to defer the usual requests until
 				// we have told the device to send it's wake-up notifications to the PC controller.
-				Log::Write( LogLevel_Detail, "Node %d: QueryStage_WakeUp", m_nodeId );
+				Log::Write( LogLevel_Detail, "Node%03d, QueryStage_WakeUp", m_nodeId );
 
 				WakeUp* wakeUp = static_cast<WakeUp*>( GetCommandClass( WakeUp::StaticGetCommandClassId() ) );
 
@@ -251,7 +251,7 @@ void Node::AdvanceQueries
 				// Obtain manufacturer, product type and product ID code from the node device
 				// Manufacturer Specific data is requested before the other command class data so 
 				// that we can modify the supported command classes list through the product XML files.
-				Log::Write( LogLevel_Detail, "Node %d: QueryStage_ManufacturerSpecific1", m_nodeId );
+				Log::Write( LogLevel_Detail, "Node%03d, QueryStage_ManufacturerSpecific1", m_nodeId );
 				ManufacturerSpecific* cc = static_cast<ManufacturerSpecific*>( GetCommandClass( ManufacturerSpecific::StaticGetCommandClassId() ) );
 				if( cc  )
 				{
@@ -269,7 +269,7 @@ void Node::AdvanceQueries
 				if( !NodeInfoReceived() && !IsController() && m_nodeInfoSupported )
 				{
 					// obtain from the node a list of command classes that it 1) supports and 2) controls (separated by a mark in the buffer)
-					Log::Write( LogLevel_Detail, "Node %d: QueryStage_NodeInfo", m_nodeId );
+					Log::Write( LogLevel_Detail, "Node%03d, QueryStage_NodeInfo", m_nodeId );
 					Msg* msg = new Msg( "Request Node Info", m_nodeId, REQUEST, FUNC_ID_ZW_REQUEST_NODE_INFO, false, true, FUNC_ID_ZW_APPLICATION_UPDATE );
 					msg->Append( m_nodeId );	
 					GetDriver()->SendMsg( msg, Driver::MsgQueue_Query ); 
@@ -290,7 +290,7 @@ void Node::AdvanceQueries
 					// Obtain manufacturer, product type and product ID code from the node device
 					// Manufacturer Specific data is requested before the other command class data so 
 					// that we can modify the supported command classes list through the product XML files.
-					Log::Write( LogLevel_Detail, "Node %d: QueryStage_ManufacturerSpecific2", m_nodeId );
+					Log::Write( LogLevel_Detail, "Node%03d, QueryStage_ManufacturerSpecific2", m_nodeId );
 					ManufacturerSpecific* cc = static_cast<ManufacturerSpecific*>( GetCommandClass( ManufacturerSpecific::StaticGetCommandClassId() ) );
 					if( cc  )
 					{
@@ -317,7 +317,7 @@ void Node::AdvanceQueries
 			case QueryStage_Versions:
 			{
 				// Get the version information (if the device supports COMMAND_CLASS_VERSION
-				Log::Write( LogLevel_Detail, "Node %d: QueryStage_Versions", m_nodeId );
+				Log::Write( LogLevel_Detail, "Node%03d, QueryStage_Versions", m_nodeId );
 				Version* vcc = static_cast<Version*>( GetCommandClass( Version::StaticGetCommandClassId() ) );
 				if( vcc )
 				{
@@ -343,7 +343,7 @@ void Node::AdvanceQueries
 			case QueryStage_Instances:
 			{																   
 				// if the device at this node supports multiple instances, obtain a list of these instances
-				Log::Write( LogLevel_Detail, "Node %d: QueryStage_Instances", m_nodeId );
+				Log::Write( LogLevel_Detail, "Node%03d, QueryStage_Instances", m_nodeId );
 				MultiInstance* micc = static_cast<MultiInstance*>( GetCommandClass( MultiInstance::StaticGetCommandClassId() ) );
 				if( micc )
 				{
@@ -356,7 +356,7 @@ void Node::AdvanceQueries
 					m_queryStage = QueryStage_Static;
 					m_queryRetries = 0;
 
-					Log::Write( LogLevel_Info, "Node %d: Essential node queries are complete", m_nodeId );
+					Log::Write( LogLevel_Info, "Node%03d, Essential node queries are complete", m_nodeId );
 					Notification* notification = new Notification( Notification::Type_EssentialNodeQueriesComplete );
 					notification->SetHomeAndNodeIds( m_homeId, m_nodeId );
 					GetDriver()->QueueNotification( notification ); 
@@ -367,7 +367,7 @@ void Node::AdvanceQueries
 			{
 				// Request any other static values associated with each command class supported by this node
 				// examples are supported thermostat operating modes, setpoints and fan modes
-				Log::Write( LogLevel_Detail, "Node %d: QueryStage_Static", m_nodeId );
+				Log::Write( LogLevel_Detail, "Node%03d, QueryStage_Static", m_nodeId );
 				for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
 				{
 					if( !it->second->IsAfterMark() )
@@ -387,7 +387,7 @@ void Node::AdvanceQueries
 			case QueryStage_Associations:
 			{
 				// if this device supports COMMAND_CLASS_ASSOCIATION, determine to which groups this node belong
-				Log::Write( LogLevel_Detail, "Node %d: QueryStage_Associations", m_nodeId );
+				Log::Write( LogLevel_Detail, "Node%03d, QueryStage_Associations", m_nodeId );
 				Association* acc = static_cast<Association*>( GetCommandClass( Association::StaticGetCommandClassId() ) );
 				if( acc )
 				{
@@ -405,7 +405,7 @@ void Node::AdvanceQueries
 			case QueryStage_Neighbors:
 			{
 				// retrieves this node's neighbors and stores the neighbor bitmap in the node object
-				Log::Write( LogLevel_Detail, "Node %d: QueryStage_Neighbors", m_nodeId );
+				Log::Write( LogLevel_Detail, "Node%03d, QueryStage_Neighbors", m_nodeId );
 				GetDriver()->RequestNodeNeighbors( m_nodeId, CommandClass::RequestFlag_LowPriority );
 				m_queryPending = true;
 				break;
@@ -414,7 +414,7 @@ void Node::AdvanceQueries
 			{
 				// Request the session values from the command classes in turn
 				// examples of Session information are: current thermostat setpoints, node names and climate control schedules
-				Log::Write( LogLevel_Detail, "Node %d: QueryStage_Session", m_nodeId );
+				Log::Write( LogLevel_Detail, "Node%03d, QueryStage_Session", m_nodeId );
 				for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
 				{
 					if( !it->second->IsAfterMark() )
@@ -433,7 +433,7 @@ void Node::AdvanceQueries
 			{
 				// Request the dynamic values from the node, that can change at any time
 				// Examples include on/off state, heating mode, temperature, etc.
-				Log::Write( LogLevel_Detail, "Node %d: QueryStage_Dynamic", m_nodeId );
+				Log::Write( LogLevel_Detail, "Node%03d, QueryStage_Dynamic", m_nodeId );
 				m_queryPending = RequestDynamicValues();
 
 				if( !m_queryPending )
@@ -446,7 +446,7 @@ void Node::AdvanceQueries
 			case QueryStage_Configuration:
 			{
 				// Request the configurable parameter values from the node.
-				Log::Write( LogLevel_Detail, "Node %d: QueryStage_Configuration", m_nodeId );
+				Log::Write( LogLevel_Detail, "Node%03d, QueryStage_Configuration", m_nodeId );
 				if( m_queryConfiguration )
 				{
 					if( RequestAllConfigParams( CommandClass::RequestFlag_LowPriority) )
@@ -465,7 +465,7 @@ void Node::AdvanceQueries
 			case QueryStage_Complete:
 			{
 				// Notify the watchers that the queries are complete for this node
-				Log::Write( LogLevel_Detail, "Node %d: QueryStage_Complete", m_nodeId );
+				Log::Write( LogLevel_Detail, "Node%03d, QueryStage_Complete", m_nodeId );
 				Notification* notification = new Notification( Notification::Type_NodeQueriesComplete );
 				notification->SetHomeAndNodeIds( m_homeId, m_nodeId );
 				GetDriver()->QueueNotification( notification ); 
@@ -1236,14 +1236,14 @@ void Node::ApplicationCommandHandler
 		{
 			// This is a controller replication message, and we do not support it.
 			// We have to at least acknowledge the message to avoid locking the sending device.
-			Log::Write( LogLevel_Info, "Node(%d)::ApplicationCommandHandler - Default acknowledgement of controller replication data", m_nodeId );
+			Log::Write( LogLevel_Info, "Node%03d, ApplicationCommandHandler - Default acknowledgement of controller replication data", m_nodeId );
 
 			Msg* msg = new Msg( "Replication Command Complete", m_nodeId, REQUEST, FUNC_ID_ZW_REPLICATION_COMMAND_COMPLETE, false );
 			GetDriver()->SendMsg( msg, Driver::MsgQueue_Command );
 		}
 		else
 		{
-			Log::Write( LogLevel_Info, "Node(%d)::ApplicationCommandHandler - Unhandled Command Class 0x%.2x", m_nodeId, _data[5] );
+			Log::Write( LogLevel_Info, "Node%03d, ApplicationCommandHandler - Unhandled Command Class 0x%.2x", m_nodeId, _data[5] );
 		}
 	}
 }
@@ -1290,7 +1290,7 @@ CommandClass* Node::AddCommandClass
 	}
 	else
 	{
-		Log::Write( LogLevel_Info, "Node(%d)::AddCommandClass - Unsupported Command Class 0x%.2x", m_nodeId, _commandClassId );
+		Log::Write( LogLevel_Info, "Node%03d, AddCommandClass - Unsupported Command Class 0x%.2x", m_nodeId, _commandClassId );
 	}
 
 	return NULL;
@@ -1319,7 +1319,7 @@ void Node::RemoveCommandClass
 	}
 
 	// Destroy the command class object and remove it from our map
-	Log::Write( LogLevel_Info, "Node(%d)::RemoveCommandClass - Removed support for %s", m_nodeId, it->second->GetCommandClassName().c_str() );
+	Log::Write( LogLevel_Info, "Node%03d, RemoveCommandClass - Removed support for %s", m_nodeId, it->second->GetCommandClassName().c_str() );
 
 	delete it->second;
 	m_commandClassMap.erase( it );
@@ -1534,10 +1534,11 @@ bool Node::CreateValueBool
 	string const& _units,
 	bool const _readOnly,
 	bool const _writeOnly,
-	bool const _default
+	bool const _default,
+	uint8 const _pollIntensity
 )
 {
-  	ValueBool* value = new ValueBool( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default );
+  	ValueBool* value = new ValueBool( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default, _pollIntensity );
 	ValueStore* store = GetValueStore();
 	if( store->AddValue( value ) )
 	{	
@@ -1559,10 +1560,11 @@ bool Node::CreateValueButton
 	uint8 const _commandClassId,
 	uint8 const _instance,
 	uint8 const _valueIndex,
-	string const& _label
+	string const& _label,
+	uint8 const _pollIntensity
 )
 {
-	ValueButton* value = new ValueButton( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label );
+	ValueButton* value = new ValueButton( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _pollIntensity );
 	ValueStore* store = GetValueStore();
 	if( store->AddValue( value ) )
 	{	
@@ -1588,10 +1590,11 @@ bool Node::CreateValueByte
 	string const& _units,
 	bool const _readOnly,
 	bool const _writeOnly,
-	uint8 const _default
+	uint8 const _default,
+	uint8 const _pollIntensity
 )
 {
-  	ValueByte* value = new ValueByte( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default );
+  	ValueByte* value = new ValueByte( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default, _pollIntensity );
 	ValueStore* store = GetValueStore();
 	if( store->AddValue( value ) )
 	{	
@@ -1617,10 +1620,11 @@ bool Node::CreateValueDecimal
 	string const& _units,
 	bool const _readOnly,
 	bool const _writeOnly,
-	string const& _default
+	string const& _default,
+	uint8 const _pollIntensity
 )
 {
-  	ValueDecimal* value = new ValueDecimal( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default );
+  	ValueDecimal* value = new ValueDecimal( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default, _pollIntensity );
 	ValueStore* store = GetValueStore();
 	if( store->AddValue( value ) )
 	{	
@@ -1646,10 +1650,11 @@ bool Node::CreateValueInt
 	string const& _units,
 	bool const _readOnly,
 	bool const _writeOnly,
-	int32 const _default
+	int32 const _default,
+	uint8 const _pollIntensity
 )
 {
-  	ValueInt* value = new ValueInt( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default );
+  	ValueInt* value = new ValueInt( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default, _pollIntensity );
 	ValueStore* store = GetValueStore();
 	if( store->AddValue( value ) )
 	{	
@@ -1677,10 +1682,11 @@ bool Node::CreateValueList
 	bool const _writeOnly,
 	uint8 const _size,
 	vector<ValueList::Item> const& _items,
-	int32 const _default
+	int32 const _default,
+	uint8 const _pollIntensity
 )
 {
-	ValueList* value = new ValueList( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _items, _default, _size );
+	ValueList* value = new ValueList( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _items, _default, _pollIntensity, _size );
 	ValueStore* store = GetValueStore();
 	if( store->AddValue( value ) )
 	{	
@@ -1705,10 +1711,11 @@ bool Node::CreateValueSchedule
 	string const& _label,
 	string const& _units,
 	bool const _readOnly,
-	bool const _writeOnly
+	bool const _writeOnly,
+	uint8 const _pollIntensity
 )
 {
-	ValueSchedule* value = new ValueSchedule( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly );
+	ValueSchedule* value = new ValueSchedule( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _pollIntensity );
 	ValueStore* store = GetValueStore();
 	if( store->AddValue( value ) )
 	{	
@@ -1734,10 +1741,11 @@ bool Node::CreateValueShort
 	string const& _units,
 	bool const _readOnly,
 	bool const _writeOnly,
-	int16 const _default
+	int16 const _default,
+	uint8 const _pollIntensity
 )
 {
-  	ValueShort* value = new ValueShort( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default );
+  	ValueShort* value = new ValueShort( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default, _pollIntensity );
 	ValueStore* store = GetValueStore();
 	if( store->AddValue( value ) )
 	{	
@@ -1763,10 +1771,11 @@ bool Node::CreateValueString
 	string const& _units,
 	bool const _readOnly,
 	bool const _writeOnly,
-	string const& _default
+	string const& _default,
+	uint8 const _pollIntensity
 )
 {
-  	ValueString* value = new ValueString( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default );
+  	ValueString* value = new ValueString( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default, _pollIntensity );
 	ValueStore* store = GetValueStore();
 	if( store->AddValue( value ) )
 	{	
