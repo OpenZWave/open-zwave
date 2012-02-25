@@ -751,7 +751,7 @@ void Driver::SendQueryStageComplete
 				{
 					// If the message is for a sleeping node, we queue it in the node itself.
 					Log::Write( LogLevel_Info, "" );
-					Log::Write( LogLevel_Detail, "Node%03d, Queuing Wake-Up Command: Query Stage Complete (%s)", node->GetNodeId(), node->GetQueryStageName( _stage ).c_str() );
+					Log::Write( LogLevel_Detail, "%s, Queuing Wake-Up Command: Query Stage Complete (%s)", GetNodeString( node->GetNodeId() ).c_str(), node->GetQueryStageName( _stage ).c_str() );
 					wakeUp->QueueMsg( item );
 					ReleaseNodes();
 					return;
@@ -760,7 +760,7 @@ void Driver::SendQueryStageComplete
 		}
 
 		// Non-sleeping node 
-		Log::Write( LogLevel_Detail, "Node%03d, Queuing Command: Query Stage Complete (%s)", node->GetNodeId(), node->GetQueryStageName( _stage ).c_str() );
+		Log::Write( LogLevel_Detail, "%s, Queuing Command: Query Stage Complete (%s)", GetNodeString( node->GetNodeId() ).c_str(), node->GetQueryStageName( _stage ).c_str() );
 		m_sendMutex->Lock();
 		m_msgQueue[MsgQueue_Query].push_back( item );
 		m_queueEvent[MsgQueue_Query]->Set();
@@ -796,7 +796,7 @@ void Driver::SendMsg
 				if( !wakeUp->IsAwake() )
 				{
 					Log::Write( LogLevel_Detail, "" );
-					Log::Write( LogLevel_Detail, "Node%03d, Queuing Wake-Up Command: %s", _msg->GetTargetNodeId(), _msg->GetAsString().c_str()  );
+					Log::Write( LogLevel_Detail, "%s, Queuing Wake-Up Command: %s", GetNodeString( _msg->GetTargetNodeId() ).c_str(), _msg->GetAsString().c_str() );
 					wakeUp->QueueMsg( item );
 					ReleaseNodes();
 					return;
@@ -807,19 +807,7 @@ void Driver::SendMsg
 		ReleaseNodes();
 	}
 
-	uint8 nodeId = _msg->GetTargetNodeId();
-	char buf[10];
-	string str;
-	if( nodeId == 0xff )
-	{
-		str = "contrlr";
-	}
-	else
-	{
-		snprintf( buf, sizeof(buf), "Node%03d,", nodeId );
-		str = buf;
-	}  
-	Log::Write( LogLevel_Detail, "%s Queuing command: %s", str.c_str(), _msg->GetAsString().c_str() );
+	Log::Write( LogLevel_Detail, "%s, Queuing command: %s", GetNodeString( _msg->GetTargetNodeId() ).c_str(), _msg->GetAsString().c_str() );
 	m_sendMutex->Lock();
 	m_msgQueue[_queue].push_back( item );
 	m_queueEvent[_queue]->Set();
@@ -867,7 +855,7 @@ bool Driver::WriteNextMsg
 		Node* node = GetNodeUnsafe( item.m_nodeId );
 		if( node != NULL )
 		{	
-			Log::Write( LogLevel_Detail, "Node%03d, Query Stage Complete (%s)", node->GetNodeId(), node->GetQueryStageName( stage ).c_str() );
+			Log::Write( LogLevel_Detail, "%s, Query Stage Complete (%s)", GetNodeString( node->GetNodeId() ).c_str(), node->GetQueryStageName( stage ).c_str() );
 			node->QueryStageComplete( stage );
 			node->AdvanceQueries();
 			return true;
@@ -894,21 +882,10 @@ bool Driver::WriteMsg
 
 	uint8 attempts = m_currentMsg->GetSendAttempts();
 	uint8 nodeId = m_currentMsg->GetTargetNodeId();
-	char buf[15];
-	string str;
-	if( nodeId == 0xff )
-	{
-		str = "contrlr";
-	}
-	else
-	{
-		snprintf( buf, sizeof(buf), "Node%03d,", nodeId );
-		str = buf;
-	}  
 	if( attempts >= MAX_TRIES )
 	{
 		// That's it - already tried to send MAX_TRIES times.
-		Log::Write( LogLevel_Error, "%s ERROR: Dropping command, expected response not received after %d attempt(s)", str.c_str(), MAX_TRIES );
+		Log::Write( LogLevel_Error, "%s, ERROR: Dropping command, expected response not received after %d attempt(s)", GetNodeString( nodeId ).c_str(), MAX_TRIES );
 		delete m_currentMsg;
 		m_currentMsg = NULL;
 
@@ -929,13 +906,13 @@ bool Driver::WriteMsg
 	string attemptsstr = "";
 	if( attempts > 1 )
 	{
+		char buf[15];
 		snprintf( buf, sizeof(buf), "Attempt %d, ", attempts );
 		attemptsstr = buf;
 	}
 
 	Log::Write( LogLevel_Detail, "" );
-
-	Log::Write( LogLevel_Info, "%s Sending command (%sCallback ID=0x%.2x, Expected Reply=0x%.2x) - %s", str.c_str(), attemptsstr.c_str(), m_currentMsg->GetCallbackId(), m_currentMsg->GetExpectedReply(), m_currentMsg->GetAsString().c_str() );
+	Log::Write( LogLevel_Info, "%s, Sending command (%sCallback ID=0x%.2x, Expected Reply=0x%.2x) - %s", GetNodeString( nodeId ).c_str(), attemptsstr.c_str(), m_currentMsg->GetCallbackId(), m_currentMsg->GetExpectedReply(), m_currentMsg->GetAsString().c_str() );
 
 	m_controller->Write( m_currentMsg->GetBuffer(), m_currentMsg->GetLength() );
 	m_writeCnt++;
@@ -964,11 +941,7 @@ void Driver::RemoveCurrentMsg
 (
 )
 {
-	if( m_currentMsg != NULL)
-		Log::Write( LogLevel_Debug, "Node%03d, Removing current message", m_currentMsg->GetTargetNodeId() );
-	else
-		Log::Write( LogLevel_Warning, "         Removing current message (though it was already NULL)" );
-
+	assert( m_currentMsg != NULL );
 	delete m_currentMsg;
 	m_currentMsg = NULL;
 
@@ -1013,7 +986,7 @@ bool Driver::MoveMessagesToWakeUpQueue
 						// commands to the pending queue.
 						if( !m_currentMsg->IsWakeUpNoMoreInformationCommand() )
 						{
-							Log::Write( LogLevel_Info, "Node%03d, Node not responding - moving message to Wake-Up queue: %s", m_currentMsg->GetTargetNodeId(), m_currentMsg->GetAsString().c_str() );
+							Log::Write( LogLevel_Info, "%s, Node not responding - moving message to Wake-Up queue: %s", GetNodeString( m_currentMsg->GetTargetNodeId() ).c_str(), m_currentMsg->GetAsString().c_str() );
 							MsgQueueItem item;
 							item.m_command = MsgQueueCmd_SendMsg;
 							item.m_msg = m_currentMsg;
@@ -1050,7 +1023,7 @@ bool Driver::MoveMessagesToWakeUpQueue
 								// commands to the pending queue.
 								if( !item.m_msg->IsWakeUpNoMoreInformationCommand() )
 								{
-								  Log::Write( LogLevel_Info, "Node%03d, Node not responding - moving message to Wake-Up queue: %s", item.m_msg->GetTargetNodeId(), item.m_msg->GetAsString().c_str() );
+									Log::Write( LogLevel_Info, "%s, Node not responding - moving message to Wake-Up queue: %s", GetNodeString( item.m_msg->GetTargetNodeId() ).c_str(), item.m_msg->GetAsString().c_str() );
 									wakeUp->QueueMsg( item );
 								}
 								else
@@ -1064,7 +1037,7 @@ bool Driver::MoveMessagesToWakeUpQueue
 						{
 							if( _targetNodeId == item.m_nodeId )
 							{
-								Log::Write( LogLevel_Info, "Node%03d, Node not responding - moving QueryStageComplete command to Wake-Up queue", item.m_nodeId );
+								Log::Write( LogLevel_Info, "%s, Node not responding - moving QueryStageComplete command to Wake-Up queue", GetNodeString( item.m_nodeId ).c_str() );
 								wakeUp->QueueMsg( item );
 								remove = true;
 							}
@@ -1259,15 +1232,7 @@ bool Driver::ReadMsg
 				snprintf( byteStr, sizeof(byteStr), "0x%.2x", buffer[i] );
 				str += byteStr;
 			}
-			if( m_currentMsg != NULL)
-			{
-				Log::Write( LogLevel_Detail, "Node%03d,  Received: %s", m_currentMsg->GetTargetNodeId(), str.c_str() );
-			}
-			else
-			{
-				Log::Write( LogLevel_Warning, "NullMsg,   Received: %s", str.c_str() );
-			}
-
+			Log::Write( LogLevel_Detail, "%s,  Received: %s", m_currentMsg == NULL ? "Unknown" : GetNodeString( m_currentMsg->GetTargetNodeId() ).c_str(), str.c_str() );
 
 			// Verify checksum
 			uint8 checksum = 0xff;
@@ -1319,11 +1284,11 @@ bool Driver::ReadMsg
 			m_waitingForAck = false;		
 			if( m_currentMsg == NULL )
 			{
-				Log::Write( LogLevel_Detail, "contrlr  ACK received" );
+				Log::Write( LogLevel_Detail, "contrlr,  ACK received" );
 			}
 			else
 			{
-				Log::Write( LogLevel_Detail, "Node%03d,  ACK received CallbackId 0x%.2x Reply 0x%.2x", m_currentMsg->GetTargetNodeId(), m_expectedCallbackId, m_expectedReply );
+				Log::Write( LogLevel_Detail, "%s,  ACK received CallbackId 0x%.2x Reply 0x%.2x", GetNodeString( m_currentMsg->GetTargetNodeId() ).c_str(), m_expectedCallbackId, m_expectedReply );
 				if( ( 0 == m_expectedCallbackId ) && ( 0 == m_expectedReply ) )
 				{
 					// Remove the message from the queue, now that it has been acknowledged.
@@ -1722,7 +1687,7 @@ void Driver::ProcessMsg
 			{
 				if( m_expectedCallbackId == _data[2] )
 				{
-					Log::Write( LogLevel_Detail, "  Expected callbackId was received" );
+					Log::Write( LogLevel_Detail, "%s,  Expected callbackId was received", GetNodeString( m_currentMsg->GetTargetNodeId() ).c_str() );
 					m_expectedCallbackId = 0;
 				}
 			}
@@ -1734,7 +1699,7 @@ void Driver::ProcessMsg
 					{
 						if( m_expectedCommandClassId == _data[5] && m_expectedNodeId == _data[3] )
 						{
-							Log::Write( LogLevel_Detail, "  Expected reply and command class was received" );
+							Log::Write( LogLevel_Detail, "%s,  Expected reply and command class was received", GetNodeString( m_currentMsg->GetTargetNodeId() ).c_str() );
 							m_waitingForAck = false;
 							m_expectedReply = 0;
 							m_expectedCommandClassId = 0;
@@ -1743,7 +1708,7 @@ void Driver::ProcessMsg
 					}
 					else
 					{
-						Log::Write( LogLevel_Detail, "  Expected reply was received" );
+						Log::Write( LogLevel_Detail, "%s,  Expected reply was received", GetNodeString( m_currentMsg->GetTargetNodeId() ).c_str() );
 						m_expectedReply = 0;
 					}
 				}
@@ -1751,7 +1716,7 @@ void Driver::ProcessMsg
 
 			if( !( m_expectedCallbackId || m_expectedReply ) )
 			{
-				Log::Write( LogLevel_Detail, "  Message transaction complete" );
+				Log::Write( LogLevel_Detail, "%s,  Message transaction complete", GetNodeString( m_currentMsg->GetTargetNodeId() ).c_str() );
 				Log::Write( LogLevel_Detail, "" );
 				delete m_currentMsg;
 				m_currentMsg = NULL;
@@ -1783,8 +1748,8 @@ void Driver::HandleGetVersionResponse
 	{
 		m_libraryTypeName = c_libraryTypeNames[m_libraryType];
 	}
-	Log::Write( LogLevel_Info, "Node%03d, Received reply to FUNC_ID_ZW_GET_VERSION:", m_currentMsg->GetTargetNodeId() );
-	Log::Write( LogLevel_Info, "Node%03d,    %s library, version %s", m_currentMsg->GetTargetNodeId(), m_libraryTypeName.c_str(), m_libraryVersion.c_str() );
+	Log::Write( LogLevel_Info, "%s, Received reply to FUNC_ID_ZW_GET_VERSION:", GetNodeString( m_currentMsg->GetTargetNodeId() ).c_str() );
+	Log::Write( LogLevel_Info, "%s,    %s library, version %s", GetNodeString( m_currentMsg->GetTargetNodeId() ).c_str(), m_libraryTypeName.c_str(), m_libraryVersion.c_str() );
 }
 
 //-----------------------------------------------------------------------------
@@ -1798,26 +1763,28 @@ void Driver::HandleGetControllerCapabilitiesResponse
 {
 	m_controllerCaps = _data[2];
 
-	Log::Write( LogLevel_Info, "Received reply to FUNC_ID_ZW_GET_CONTROLLER_CAPABILITIES:" );
+	Log::Write( LogLevel_Info, "%s, Received reply to FUNC_ID_ZW_GET_CONTROLLER_CAPABILITIES:", GetNodeString( m_currentMsg->GetTargetNodeId() ).c_str() );
 
 	char str[256];
 	if( m_controllerCaps & ControllerCaps_SIS )
 	{
-		Log::Write( LogLevel_Info, "    There is a SUC ID Server (SIS) in this network." );
-		snprintf( str, 256, "    The PC controller is an inclusion %s%s%s", 
-			( m_controllerCaps & ControllerCaps_SUC ) ? " static update controller (SUC)" : " controller",
-			( m_controllerCaps & ControllerCaps_OnOtherNetwork ) ? " which is using a Home ID from another network" : "",
-			( m_controllerCaps & ControllerCaps_RealPrimary ) ? " and was the original primary before the SIS was added." : "." );
+		Log::Write( LogLevel_Info, "%s,    There is a SUC ID Server (SIS) in this network.", GetNodeString( m_currentMsg->GetTargetNodeId() ).c_str() );
+		snprintf( str, 256, "%s,    The PC controller is an inclusion %s%s%s",
+			  GetNodeString( m_currentMsg->GetTargetNodeId() ).c_str(),
+			  ( m_controllerCaps & ControllerCaps_SUC ) ? " static update controller (SUC)" : " controller",
+			  ( m_controllerCaps & ControllerCaps_OnOtherNetwork ) ? " which is using a Home ID from another network" : "",
+			  ( m_controllerCaps & ControllerCaps_RealPrimary ) ? " and was the original primary before the SIS was added." : "." );
 		Log::Write( LogLevel_Info, str );
 
 	}
 	else
 	{
-		Log::Write( LogLevel_Info, "    There is no SUC ID Server (SIS) in this network." );
-		snprintf( str, 256, "    The PC controller is a %s%s%s", 
-			( m_controllerCaps & ControllerCaps_Secondary ) ? "secondary" : "primary",
-			( m_controllerCaps & ControllerCaps_SUC ) ? " static update controller (SUC)" : " controller",
-			( m_controllerCaps & ControllerCaps_OnOtherNetwork ) ? " which is using a Home ID from another network." : "." );
+		Log::Write( LogLevel_Info, "%s,    There is no SUC ID Server (SIS) in this network.", GetNodeString( m_currentMsg->GetTargetNodeId() ).c_str() );
+		snprintf( str, 256, "%s,    The PC controller is a %s%s%s", 
+			  GetNodeString( m_currentMsg->GetTargetNodeId() ).c_str(),
+			  ( m_controllerCaps & ControllerCaps_Secondary ) ? "secondary" : "primary",
+			  ( m_controllerCaps & ControllerCaps_SUC ) ? " static update controller (SUC)" : " controller",
+			  ( m_controllerCaps & ControllerCaps_OnOtherNetwork ) ? " which is using a Home ID from another network." : "." );
 		Log::Write( LogLevel_Info, str );
 	}
 }
@@ -1831,11 +1798,11 @@ void Driver::HandleGetSerialAPICapabilitiesResponse
 	uint8* _data
 )
 {
-	Log::Write( LogLevel_Info, "Received reply to FUNC_ID_SERIAL_API_GET_CAPABILITIES" );
-	Log::Write( LogLevel_Info, "    Serial API Version:   %d.%d", _data[2], _data[3] );
-	Log::Write( LogLevel_Info, "    Manufacturer ID:      0x%.2x%.2x", _data[4], _data[5] );
-	Log::Write( LogLevel_Info, "    Product Type:         0x%.2x%.2x", _data[6], _data[7] );
-	Log::Write( LogLevel_Info, "    Product ID:           0x%.2x%.2x", _data[8], _data[9] );
+	Log::Write( LogLevel_Info, "%s, Received reply to FUNC_ID_SERIAL_API_GET_CAPABILITIES", GetNodeString( m_currentMsg->GetTargetNodeId() ).c_str() );
+	Log::Write( LogLevel_Info, "%s,    Serial API Version:   %d.%d", GetNodeString( m_currentMsg->GetTargetNodeId() ).c_str(), _data[2], _data[3] );
+	Log::Write( LogLevel_Info, "%s,    Manufacturer ID:      0x%.2x%.2x", GetNodeString( m_currentMsg->GetTargetNodeId() ).c_str(), _data[4], _data[5] );
+	Log::Write( LogLevel_Info, "%s,    Product Type:         0x%.2x%.2x", GetNodeString( m_currentMsg->GetTargetNodeId() ).c_str(), _data[6], _data[7] );
+	Log::Write( LogLevel_Info, "%s,    Product ID:           0x%.2x%.2x", GetNodeString( m_currentMsg->GetTargetNodeId() ).c_str(), _data[8], _data[9] );
 
 	// _data[10] to _data[41] are a 256-bit bitmask with one bit set for 
 	// each FUNC_ID_ method supported by the controller.
@@ -1961,7 +1928,7 @@ void Driver::HandleMemoryGetIdResponse
 	uint8* _data
 )
 {
-	Log::Write( LogLevel_Info, "Received reply to FUNC_ID_ZW_MEMORY_GET_ID. Home ID = 0x%02x%02x%02x%02x.  Our node ID = %d", _data[2], _data[3], _data[4], _data[5], _data[6] );
+	Log::Write( LogLevel_Info, "%s, Received reply to FUNC_ID_ZW_MEMORY_GET_ID. Home ID = 0x%02x%02x%02x%02x.  Our node ID = %d", GetNodeString( m_currentMsg->GetTargetNodeId() ).c_str(), _data[2], _data[3], _data[4], _data[5], _data[6] );
 	m_homeId = (((uint32)_data[2])<<24) | (((uint32)_data[3])<<16) | (((uint32)_data[4])<<8) | ((uint32)_data[5]);
 	m_nodeId = _data[6];
 	m_controllerReplication = static_cast<ControllerReplication*>(ControllerReplication::Create( m_homeId, m_nodeId ));
@@ -3400,7 +3367,7 @@ void Driver::PollThreadProc
 
 				// reset the poll counter to the full pollIntensity value and push it at the end of the list
 				// release the value object referenced; call GetNode to ensure the node objects are locked during this period
-				Node* node = GetNode( valueId.GetNodeId() );
+				(void)GetNode( valueId.GetNodeId() );
 				Value* value = GetValue( valueId );
 				pe.m_pollCounter = value->GetPollIntensity();
 				m_pollList.push_back( pe );
@@ -3443,7 +3410,7 @@ void Driver::PollThreadProc
 						CommandClass* cc = node->GetCommandClass( valueId.GetCommandClassId() );
 						uint8 index = valueId.GetIndex();
 						uint8 instance = valueId.GetInstance();
-						Log::Write( LogLevel_Detail, "Node%03d, Polling: %s index = %d instance = %d (poll queue has %d messages)", node->m_nodeId, cc->GetCommandClassName().c_str(), index, instance, m_msgQueue[MsgQueue_Poll].size() );
+						Log::Write( LogLevel_Detail, "%s, Polling: %s index = %d instance = %d (poll queue has %d messages)", GetNodeString( node->m_nodeId ).c_str(), cc->GetCommandClassName().c_str(), index, instance, m_msgQueue[MsgQueue_Poll].size() );
 						cc->RequestValue( 0, index, instance, MsgQueue_Poll );
 					}
 

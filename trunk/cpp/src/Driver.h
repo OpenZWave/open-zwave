@@ -480,6 +480,19 @@ namespace OpenZWave
 		string GetNodeManufacturerId( uint8 const _nodeId );
 		string GetNodeProductType( uint8 const _nodeId );
 		string GetNodeProductId( uint8 const _nodeId );
+		string GetNodeString( uint8 const _nodeId )const
+		{
+			if( _nodeId == 0xff )
+			{
+				return "contrlr";
+			}
+			else
+			{
+				char buf[10];
+				snprintf( buf, sizeof(buf), "Node%03d", _nodeId );
+				return buf;
+			}
+		}
 
 		void SetNodeManufacturerName( uint8 const _nodeId, string const& _manufacturerName );
 		void SetNodeProductName( uint8 const _nodeId, string const& _productName );
