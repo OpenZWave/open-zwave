@@ -3418,35 +3418,34 @@ void Driver::PollThreadProc
 				}
 
 				m_pollMutex->Unlock();
+
+				// Polling messages are only sent when there are no other messages waiting to be sent
+				// While this makes the polls much more variable and uncertain if some other activity dominates
+				// a send queue, that may be appropriate
+				// TODO we can have a debate about whether to test all four queues or just the Poll queue
+				while( !m_msgQueue[MsgQueue_Poll].empty()
+					|| !m_msgQueue[MsgQueue_Send].empty()
+					|| !m_msgQueue[MsgQueue_Command].empty()
+					|| !m_msgQueue[MsgQueue_Query].empty() )
+				{
+					// Wait for the interval to expire, while watching for exit events
+					int32 i32 = Wait::Single( _exitEvent, pollInterval );
+					if( i32 == 0 )
+					{
+						// Exit has been called
+						return;
+					}
+				}
 			}
-
-
-			// Polling messages are only sent when there are no other messages waiting to be sent
-			// While this makes the polls much more variable and uncertain if some other activity dominates
-			// a send queue, that may be appropriate
-			// TODO we can have a debate about whether to test all four queues or just the Poll queue
-			while( !m_msgQueue[MsgQueue_Poll].empty()
-				|| !m_msgQueue[MsgQueue_Send].empty()
-				|| !m_msgQueue[MsgQueue_Command].empty()
-				|| !m_msgQueue[MsgQueue_Query].empty() )
+			else		// poll list is empty or awake nodes haven't been fully queried yet
 			{
-				// Wait for the interval to expire, while watching for exit events
+				// don't poll just yet, wait for the pollInterval or exit before re-checking to see if the pollList has elements
 				int32 i32 = Wait::Single( _exitEvent, pollInterval );
 				if( i32 == 0 )
 				{
 					// Exit has been called
 					return;
 				}
-			}
-		}
-		else		// poll list is empty or awake nodes haven't been fully queried yet
-		{
-			// don't poll just yet, wait for the pollInterval or exit before re-checking to see if the pollList has elements
-			int32 i32 = Wait::Single( _exitEvent, pollInterval );
-			if( i32 == 0 )
-			{
-				// Exit has been called
-				return;
 			}
 		}
 	}
