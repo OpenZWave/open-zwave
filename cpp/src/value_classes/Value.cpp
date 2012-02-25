@@ -84,12 +84,13 @@ Value::Value
 	m_id( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, _type ),
 	m_label( _label ),
 	m_units( _units ),
+	m_help( "" ),
 	m_readOnly( _readOnly ),
 	m_writeOnly( _writeOnly ),
 	m_isSet( _isSet ),
-	m_pollIntensity( _pollIntensity ),
 	m_affectsLength( 0 ),
-	m_affectsAll( false )
+	m_affectsAll( false ),
+	m_pollIntensity( _pollIntensity )
 {
 }
 
