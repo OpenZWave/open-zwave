@@ -191,7 +191,7 @@ bool SensorAlarm::HandleMsg
 						int32 index = (int32)(i<<3) + bit;
 						if( index < SensorAlarm_Count )
 						{
-						  	node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, index, c_alarmTypeName[index], "", true, false, 0 );
+						  	node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, index, c_alarmTypeName[index], "", true, false, 0, 0 );
 							Log::Write( LogLevel_Info, "    Added alarm type: %s", c_alarmTypeName[index] );
 						}
 					}

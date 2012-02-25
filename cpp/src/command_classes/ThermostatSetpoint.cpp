@@ -255,7 +255,7 @@ bool ThermostatSetpoint::HandleMsg
 						int32 index = (int32)((i-1)<<3) + bit + m_setPointBase;
 						if( index < ThermostatSetpoint_Count )
 						{
-						  	node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, index, c_setpointName[index], "C", false, false, "0.0" );
+						  	node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, index, c_setpointName[index], "C", false, false, "0.0", 0 );
 							Log::Write( LogLevel_Info, "    Added setpoint: %s", c_setpointName[index] );
 						}
 					}
@@ -312,6 +312,6 @@ void ThermostatSetpoint::CreateVars
 {
 	if( Node* node = GetNodeUnsafe() )
 	{
-	  	node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, _index, "Setpoint", "C", false, false, "0.0"  );
+	  	node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, _index, "Setpoint", "C", false, false, "0.0", 0  );
 	}
 }

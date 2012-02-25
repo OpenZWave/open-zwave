@@ -26,8 +26,7 @@
 //-----------------------------------------------------------------------------
 
 #ifndef _Defs_H
-#define _Defs_H					   
-
+#define _Defs_H
 #include <assert.h>
 #include <list>
 

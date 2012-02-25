@@ -47,7 +47,7 @@ namespace OpenZWave
 		friend class ValueStore;
 
 	public:
-		Value( uint32 const _homeId, uint8 const _nodeId, ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, ValueID::ValueType const _type, string const& _label, string const& _units, bool const _readOnly, bool const _writeOnly, bool const _isset );
+		Value( uint32 const _homeId, uint8 const _nodeId, ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, ValueID::ValueType const _type, string const& _label, string const& _units, bool const _readOnly, bool const _writeOnly, bool const _isset, uint8 const _pollIntensity );
 		Value();
 
 		virtual void ReadXML( uint32 const _homeId, uint8 const _nodeId, uint8 const _commandClassId, TiXmlElement const* _valueElement );
@@ -57,6 +57,7 @@ namespace OpenZWave
 		bool IsReadOnly()const{ return m_readOnly; }
 		bool IsWriteOnly()const{ return m_writeOnly; }
 		bool IsSet()const{ return m_isSet; }
+		bool IsPolled()const{ return m_pollIntensity != 0; }
 
 		string const& GetLabel()const{ return m_label; }
 		void SetLabel( string const& _label ){ m_label = _label; }
@@ -66,6 +67,9 @@ namespace OpenZWave
 
 		string const& GetHelp()const{ return m_help; }
 		void SetHelp( string const& _help ){ m_help = _help; }
+
+		uint8 const& GetPollIntensity()const{ return m_pollIntensity; }
+		void SetPollIntensity( uint8 const& _intensity ){ m_pollIntensity = _intensity; }
 
 		int32 GetMin()const{ return m_min; }
 		int32 GetMax()const{ return m_max; }
@@ -100,6 +104,7 @@ namespace OpenZWave
 		uint8		m_affectsLength;
 		uint8*		m_affects;
 		bool		m_affectsAll;
+		uint8		m_pollIntensity;
 	};
 
 } // namespace OpenZWave

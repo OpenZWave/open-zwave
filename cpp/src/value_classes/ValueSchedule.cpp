@@ -49,9 +49,10 @@ ValueSchedule::ValueSchedule
 	string const& _label,
 	string const& _units,
 	bool const _readOnly,
-	bool const _writeOnly
+	bool const _writeOnly,
+	uint8 const _pollIntensity
 ):
-  	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Byte, _label, _units, _readOnly, _writeOnly, false )
+  	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Byte, _label, _units, _readOnly, _writeOnly, false, _pollIntensity )
 {
 }
 

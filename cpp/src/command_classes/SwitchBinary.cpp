@@ -152,6 +152,6 @@ void SwitchBinary::CreateVars
 {
 	if( Node* node = GetNodeUnsafe() )
 	{
-	  	node->CreateValueBool( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Switch", "", false, false, false );
+	  	node->CreateValueBool( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Switch", "", false, false, false, 0 );
 	}
 }
