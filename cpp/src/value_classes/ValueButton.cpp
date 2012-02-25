@@ -47,9 +47,10 @@ ValueButton::ValueButton
 	uint8 const _commandClassId,
 	uint8 const _instance,
 	uint8 const _index,
-	string const& _label
+	string const& _label,
+	uint8 const _pollIntensity
 ):
-	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Button, _label, "", false, true, true ),
+	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Button, _label, "", false, true, true, _pollIntensity ),
 	m_pressed( false )
 {
 }

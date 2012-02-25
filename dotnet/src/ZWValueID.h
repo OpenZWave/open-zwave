@@ -88,7 +88,8 @@ namespace OpenZWaveDotNet
 			uint8 commandClassId,
 			uint8 instance,
 			uint8 valueIndex,
-			ZWValueID::ValueType type
+			ZWValueID::ValueType type,
+			uint8 pollIntensity
 		)
 		{
 			m_valueId = new ValueID( homeId, nodeId, (ValueID::ValueGenre)genre, commandClassId, instance, valueIndex, (ValueID::ValueType)type );

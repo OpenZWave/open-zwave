@@ -165,6 +165,9 @@ namespace OZWForm
             m_options.Create(@"..\..\..\..\..\..\..\config\", @"", @"");
 
             // Add any app specific options here...
+			m_options.AddOptionInt("SaveLogLevel", (int)ZWLogLevel.Detail);
+			m_options.AddOptionInt("QueueLogLevel", (int)ZWLogLevel.Debug);
+			m_options.AddOptionInt("DumpTriggerLevel", (int)ZWLogLevel.Warning);
 
             // Lock the options
             m_options.Lock();
@@ -175,7 +178,8 @@ namespace OZWForm
             m_manager.OnNotification += new ManagedNotificationsHandler(NotificationHandler);
 
             // Add a driver
-            m_manager.AddDriver(@"\\.\COM3");
+            m_manager.AddDriver(@"\\.\COM6");
+//			m_manager.AddDriver(@"HID Controller", ZWControllerInterface.Hid);
         }
 
         public void NotificationHandler(ZWNotification notification)

@@ -338,14 +338,14 @@ namespace OpenZWave
 		 * poll per second).
 		 * \param _seconds The length of the polling interval in seconds.
 		 */
-		void SetPollInterval( int32 _seconds );
+		void SetPollInterval( int32 _milliseconds, bool _bIntervalBetweenPolls );
 
 		/**
 		 * \brief Enable the polling of a device's state.
 		 * \param _valueId The ID of the value to start polling.
 		 * \return True if polling was enabled.
 		 */
-		bool EnablePoll( ValueID const _valueId );
+		bool EnablePoll( ValueID const _valueId, uint8 const _intensity = 1 );
 
 		/**
 		 * \brief Disable the polling of a device's state.
@@ -360,6 +360,12 @@ namespace OpenZWave
 		 * \return True if polling is active.
 		 */
 		bool isPolled( ValueID const _valueId );
+
+		/**
+		 * \brief Set the frequency of polling (0=none, 1=every time through the list, 2-every other time, etc)
+		 * \param _valueId The ID of the value whose intensity should be set
+		 */
+		void SetPollIntensity( ValueID const _valueId, uint8 const _intensity );
 	/*@}*/
 
 	//-----------------------------------------------------------------------------
@@ -822,6 +828,14 @@ namespace OpenZWave
 		 * \see ValueID
 		 */
 		bool IsValueSet( ValueID const& _id );
+
+		/**
+		 * \brief Test whether the value is currently being polled.
+		 * \param _id The unique identifier of the value.
+		 * \return true if the value is being polled, otherwise false.	
+		 * \see ValueID
+		 */
+		bool IsValuePolled( ValueID const& _id );
 
 		/**
 		 * \brief Gets a value as a bool.

@@ -200,7 +200,7 @@ bool SensorMultilevel::HandleMsg
 			ValueDecimal* value = static_cast<ValueDecimal*>( GetValue( _instance, sensorType ) );
 			if( value == NULL)
 			{
-				node->CreateValueDecimal(  ValueID::ValueGenre_User, GetCommandClassId(), _instance, sensorType, c_sensorTypeNames[sensorType], units, true, false, "0.0"  );
+				node->CreateValueDecimal(  ValueID::ValueGenre_User, GetCommandClassId(), _instance, sensorType, c_sensorTypeNames[sensorType], units, true, false, "0.0", 0  );
 				value = static_cast<ValueDecimal*>( GetValue( _instance, sensorType ) );
 			}
 			else 

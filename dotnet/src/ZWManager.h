@@ -411,7 +411,7 @@ namespace OpenZWaveDotNet
 		 * polled at the specified interval.
 		 * \param _seconds The length of the polling interval in seconds.
 		 */
-		void SetPollInterval( int32 seconds ){ Manager::Get()->SetPollInterval(seconds); }
+		void SetPollInterval( int32 milliseconds, bool bIntervalBetweenPolls ){ Manager::Get()->SetPollInterval(milliseconds, bIntervalBetweenPolls); }
 
 		/**
 		 * \brief Enable the polling of a device's state.
@@ -849,6 +849,15 @@ namespace OpenZWaveDotNet
 		 * \see ValueID
 		 */
 		bool IsValueSet( ZWValueID^ id ){ return Manager::Get()->IsValueSet(id->CreateUnmanagedValueID()); }
+
+		/**
+		 * \brief Test whether the value is currently being polled.
+		 *
+		 * \param _id The unique identifier of the value.
+		 * \return true if the value is being polled, false otherwise.	
+		 * \see ValueID
+		 */
+		bool IsValuePolled( ZWValueID^ id ){ return Manager::Get()->IsValuePolled(id->CreateUnmanagedValueID()); }
 
 		/**
 		 * \brief Gets a value as a bool.
