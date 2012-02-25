@@ -1034,19 +1034,20 @@ void Node::UpdateProtocolInfo
 	// and now just request the optional classes regardless.
 	// bool optional = (( _data[1] & 0x80 ) != 0 );	
 
-	Log::Write( LogLevel_Info, "  Protocol Info for Node %d:", m_nodeId );
+	string nodestr = GetDriver()->GetNodeString( m_nodeId );
+	Log::Write( LogLevel_Info, "%s,  Protocol Info for Node %d:", nodestr.c_str(), m_nodeId );
 	if( m_listening )
-		Log::Write( LogLevel_Info, "    Listening     = true" );
+		Log::Write( LogLevel_Info, "%s,    Listening     = true", nodestr.c_str() );
 	else
 	{
-		Log::Write( LogLevel_Info, "    Listening     = false" );
-		Log::Write( LogLevel_Info, "    Frequent      = %s", m_frequentListening ? "true" : "false" );
+		Log::Write( LogLevel_Info, "%s,    Listening     = false", nodestr.c_str() );
+		Log::Write( LogLevel_Info, "%s,    Frequent      = %s", nodestr.c_str(), m_frequentListening ? "true" : "false" );
 	}
-	Log::Write( LogLevel_Info, "    Beaming       = %s", m_beaming ? "true" : "false" );
-	Log::Write( LogLevel_Info, "    Routing       = %s", m_routing ? "true" : "false" );
-	Log::Write( LogLevel_Info, "    Max Baud Rate = %d", m_maxBaudRate );
-	Log::Write( LogLevel_Info, "    Version       = %d", m_version );
-	Log::Write( LogLevel_Info, "    Security      = %s", m_security ? "true" : "false" );
+	Log::Write( LogLevel_Info, "%s,    Beaming       = %s", nodestr.c_str(), m_beaming ? "true" : "false" );
+	Log::Write( LogLevel_Info, "%s,    Routing       = %s", nodestr.c_str(), m_routing ? "true" : "false" );
+	Log::Write( LogLevel_Info, "%s,    Max Baud Rate = %d", nodestr.c_str(), m_maxBaudRate );
+	Log::Write( LogLevel_Info, "%s,    Version       = %d", nodestr.c_str(), m_version );
+	Log::Write( LogLevel_Info, "%s,    Security      = %s", nodestr.c_str(), m_security ? "true" : "false" );
 
 	// Set up the device class based data for the node, including mandatory command classes
 	SetDeviceClasses( _data[3], _data[4], _data[5] );
@@ -2183,14 +2184,15 @@ bool Node::SetDeviceClasses
 
 	// Get the basic device class label
 	map<uint8,string>::iterator bit = s_basicDeviceClasses.find( _basic );
+	string nodestr = GetDriver()->GetNodeString( m_nodeId );
 	if( bit != s_basicDeviceClasses.end() )
 	{
 		m_type = bit->second;
-		Log::Write( LogLevel_Info, "  Node(%d) Basic device class    (0x%.2x) - %s", m_nodeId, m_basic, m_type.c_str() );
+		Log::Write( LogLevel_Info, "%s,  Basic device class    (0x%.2x) - %s", nodestr.c_str(), m_basic, m_type.c_str() );
 	}
 	else
 	{
-		Log::Write( LogLevel_Info, "  Node(%d) Basic device class unknown", m_nodeId );
+		Log::Write( LogLevel_Info, "%s,  Basic device class unknown", nodestr.c_str() );
 	}
 
 	// Apply any Generic device class data
@@ -2201,7 +2203,7 @@ bool Node::SetDeviceClasses
 		GenericDeviceClass* genericDeviceClass = git->second;
 		m_type = genericDeviceClass->GetLabel();
 
-		Log::Write( LogLevel_Info, "  Node(%d) Generic device Class  (0x%.2x) - %s", m_nodeId, m_generic, m_type.c_str() );
+		Log::Write( LogLevel_Info, "%s,  Generic device Class  (0x%.2x) - %s", nodestr.c_str(), m_generic, m_type.c_str() );
 
 		// Add the mandatory command classes for this generic class type
 		AddMandatoryCommandClasses( genericDeviceClass->GetMandatoryCommandClasses() );
@@ -2214,7 +2216,7 @@ bool Node::SetDeviceClasses
 		{
 			m_type = specificDeviceClass->GetLabel();
 
-			Log::Write( LogLevel_Info, "  Node(%d) Specific device class (0x%.2x) - %s", m_nodeId, m_specific, m_type.c_str() );
+			Log::Write( LogLevel_Info, "%s,  Specific device class (0x%.2x) - %s", nodestr.c_str(), m_specific, m_type.c_str() );
 
 			// Add the mandatory command classes for this specific class type
 			AddMandatoryCommandClasses( specificDeviceClass->GetMandatoryCommandClasses() );
@@ -2227,12 +2229,12 @@ bool Node::SetDeviceClasses
 		}
 		else
 		{
-			Log::Write( LogLevel_Info, "  Node(%d) No specific device class defined", m_nodeId );
+			Log::Write( LogLevel_Info, "%s,  No specific device class defined", nodestr.c_str() );
 		}
 	}
 	else
 	{
-		Log::Write( LogLevel_Info, "  Node(%d) No generic or specific device classes defined", m_nodeId );
+		Log::Write( LogLevel_Info, "%s,  No generic or specific device classes defined", nodestr.c_str() );
 	}
 
 	// Deal with sleeping devices
@@ -2258,34 +2260,34 @@ bool Node::SetDeviceClasses
 	{
 		map<uint8,CommandClass*>::const_iterator cit;
 
-		Log::Write( LogLevel_Info, "  Mandatory Command Classes for Node %d:", m_nodeId );
+		Log::Write( LogLevel_Info, "%s,  Mandatory Command Classes for Node %d:", nodestr.c_str(), m_nodeId );
 		bool reportedClasses = false;
 		for( cit = m_commandClassMap.begin(); cit != m_commandClassMap.end(); ++cit )
 		{
 			if( !cit->second->IsAfterMark() )
 			{
-				Log::Write( LogLevel_Info, "    %s", cit->second->GetCommandClassName().c_str() );
+				Log::Write( LogLevel_Info, "%s,    %s", nodestr.c_str(), cit->second->GetCommandClassName().c_str() );
 				reportedClasses = true;
 			}
 		}
 		if( !reportedClasses )
 		{
-			Log::Write( LogLevel_Info, "    None" );
+			Log::Write( LogLevel_Info, "%s,    None", nodestr.c_str() );
 		}
 
-		Log::Write( LogLevel_Info, "  Mandatory Command Classes controlled by Node %d:", m_nodeId );
+		Log::Write( LogLevel_Info, "%s,  Mandatory Command Classes controlled by Node %d:", nodestr.c_str(), m_nodeId );
 		reportedClasses = false;
 		for( cit = m_commandClassMap.begin(); cit != m_commandClassMap.end(); ++cit )
 		{
 			if( cit->second->IsAfterMark() )
 			{
-				Log::Write( LogLevel_Info, "    %s", cit->second->GetCommandClassName().c_str() );
+				Log::Write( LogLevel_Info, "%s,    %s", nodestr.c_str(), cit->second->GetCommandClassName().c_str() );
 				reportedClasses = true;
 			}
 		}
 		if( !reportedClasses )
 		{
-			Log::Write( LogLevel_Info, "    None" );
+			Log::Write( LogLevel_Info, "%s,    None", nodestr.c_str() );
 		}
 	}
 

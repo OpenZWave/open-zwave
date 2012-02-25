@@ -263,7 +263,7 @@ void WakeUp::SetAwake
 	if( m_awake != _state )
 	{
 		m_awake = _state;
-		Log::Write( LogLevel_Info, "  Node %d has been marked as %s", GetNodeId(), m_awake ? "awake" : "asleep" );
+		Log::Write( LogLevel_Info, "%s,  Node %d has been marked as %s", GetDriver()->GetNodeString( GetNodeId() ).c_str(), GetNodeId(), m_awake ? "awake" : "asleep" );
 	}
 
 	if( m_awake )
