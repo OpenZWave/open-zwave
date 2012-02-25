@@ -941,7 +941,6 @@ void Driver::RemoveCurrentMsg
 (
 )
 {
-	assert( m_currentMsg != NULL );
 	delete m_currentMsg;
 	m_currentMsg = NULL;
 
@@ -1955,7 +1954,8 @@ void Driver::HandleSerialAPIGetInitDataResponse
 		ReadConfig();
 	}
 
-	Log::Write( LogLevel_Info, "Received reply to FUNC_ID_SERIAL_API_GET_INIT_DATA:" );
+	string nodestr = GetNodeString( m_currentMsg->GetTargetNodeId() );
+	Log::Write( LogLevel_Info, "%s, Received reply to FUNC_ID_SERIAL_API_GET_INIT_DATA:", nodestr.c_str() );
 	m_initVersion = _data[2];
 	m_initCaps = _data[3];
 
@@ -1970,14 +1970,14 @@ void Driver::HandleSerialAPIGetInitDataResponse
 				{					
 					if( IsVirtualNode( nodeId ) )
 					{
-						Log::Write( LogLevel_Info, "    Node %.3d - Virtual (ignored)", nodeId );
+						Log::Write( LogLevel_Info, "%s,    Node %.3d - Virtual (ignored)", nodestr.c_str(), nodeId );
 					}
 					else
 					{
 						Node* node = GetNode( nodeId );
 						if( node )
 						{
-							Log::Write( LogLevel_Info, "    Node %.3d - Known", nodeId );
+							Log::Write( LogLevel_Info, "%s,    Node %.3d - Known", nodestr.c_str() );
 							if( !m_init )
 							{
 								// The node was read in from the config, so we 
@@ -1990,7 +1990,7 @@ void Driver::HandleSerialAPIGetInitDataResponse
 						else
 						{
 							// This node is new
-							Log::Write( LogLevel_Info, "    Node %.3d - New", nodeId );
+							Log::Write( LogLevel_Info, "%s,    Node %.3d - New", nodestr.c_str(), nodeId );
 							Notification* notification = new Notification( Notification::Type_NodeNew );
 							notification->SetHomeAndNodeIds( m_homeId, nodeId );
 							QueueNotification( notification ); 
@@ -2005,7 +2005,7 @@ void Driver::HandleSerialAPIGetInitDataResponse
 					if( GetNode(nodeId) )
 					{
 						// This node no longer exists in the Z-Wave network
-						Log::Write( LogLevel_Info, "    Node %.3d: Removed", nodeId );
+						Log::Write( LogLevel_Info, "%s,    Node %.3d: Removed", nodestr.c_str(), nodeId );
 						delete m_nodes[nodeId];
 						m_nodes[nodeId] = NULL;
 						Notification* notification = new Notification( Notification::Type_NodeRemoved );
@@ -2040,7 +2040,7 @@ void Driver::HandleGetNodeProtocolInfoResponse
 	}
 
 	uint8 nodeId = m_currentMsg->GetTargetNodeId();
-	Log::Write( LogLevel_Info, "Received reply to FUNC_ID_ZW_GET_NODE_PROTOCOL_INFO for node %d", nodeId );
+	Log::Write( LogLevel_Info, "%s, Received reply to FUNC_ID_ZW_GET_NODE_PROTOCOL_INFO for node %d", GetNodeString( nodeId ).c_str(), nodeId );
 
 	// Update the node with the protocol info
 	if( Node* node = GetNodeUnsafe( nodeId ) )
@@ -2227,11 +2227,11 @@ void Driver::HandleSendDataResponse
 {
 	if( _data[2] )
 	{
-		Log::Write( LogLevel_Detail, "  %s delivered to Z-Wave stack", _replication ? "ZW_REPLICATION_SEND_DATA" : "ZW_SEND_DATA" );
+		Log::Write( LogLevel_Detail, "%s,  %s delivered to Z-Wave stack", GetNodeString( m_currentMsg->GetTargetNodeId() ).c_str(), _replication ? "ZW_REPLICATION_SEND_DATA" : "ZW_SEND_DATA" );
 	}
 	else
 	{
-		Log::Write( LogLevel_Error, "ERROR: %s could not be delivered to Z-Wave stack", _replication ? "ZW_REPLICATION_SEND_DATA" : "ZW_SEND_DATA" );
+		Log::Write( LogLevel_Error, "%s, ERROR: %s could not be delivered to Z-Wave stack", GetNodeString( m_currentMsg->GetTargetNodeId() ).c_str(), _replication ? "ZW_REPLICATION_SEND_DATA" : "ZW_SEND_DATA" );
 	}
 }
 
@@ -2244,14 +2244,15 @@ void Driver::HandleGetRoutingInfoResponse
 	uint8* _data
 )
 {
-	Log::Write( LogLevel_Info, "Received reply to FUNC_ID_ZW_GET_ROUTING_INFO" );
+	uint8 const nodeId = m_currentMsg->GetTargetNodeId();
+	Log::Write( LogLevel_Info, "%s, Received reply to FUNC_ID_ZW_GET_ROUTING_INFO", GetNodeString( nodeId ).c_str() );
 
 	if( Node* node = GetNode( m_controllerCommandNode ) )
 	{
 		// copy the 29-byte bitmap received (29*8=232 possible nodes) into this node's neighbors member variable
 		memcpy( node->m_neighbors, &_data[2], 29 );
 		ReleaseNodes();
-		Log::Write( LogLevel_Info, "    Neighbors of this node are:" );
+		Log::Write( LogLevel_Info, "%s,    Neighbors of this node are:", GetNodeString( nodeId ).c_str() );
 		bool bNeighbors = false;
 		for( int by=0; by<29; by++ )
 		{
@@ -2259,7 +2260,7 @@ void Driver::HandleGetRoutingInfoResponse
 			{
 				if( (_data[2+by] & (0x01<<bi)) )
 				{
-					Log::Write( LogLevel_Info, "    Node %d", (by<<3)+bi+1 );
+					Log::Write( LogLevel_Info, "%s,    Node %d", GetNodeString( nodeId ).c_str(), (by<<3)+bi+1 );
 					bNeighbors = true;
 				}
 			}
@@ -2267,7 +2268,7 @@ void Driver::HandleGetRoutingInfoResponse
 		
 		if( !bNeighbors )
 		{
-			Log::Write( LogLevel_Info, "    (none reported)" );
+		  Log::Write( LogLevel_Info, "%s,    (none reported)", GetNodeString( nodeId ).c_str() );
 		}
 	}
 
@@ -2289,24 +2290,25 @@ void Driver::HandleSendDataRequest
 	bool _replication
 )
 {
-	Log::Write( LogLevel_Detail, "  %s Request with callback ID 0x%.2x received (expected 0x%.2x)", _replication ? "ZW_REPLICATION_SEND_DATA" : "ZW_SEND_DATA", _data[2], m_expectedCallbackId );
+	string nodestr = GetNodeString( m_currentMsg->GetTargetNodeId() );
+	Log::Write( LogLevel_Detail, "%s,  %s Request with callback ID 0x%.2x received (expected 0x%.2x)", nodestr.c_str(), _replication ? "ZW_REPLICATION_SEND_DATA" : "ZW_SEND_DATA", _data[2], m_expectedCallbackId );
 
 	if( _data[2] != m_expectedCallbackId )
 	{
 		// Wrong callback ID
-		Log::Write( LogLevel_Warning, "WARNING: Callback ID is invalid" );
+		Log::Write( LogLevel_Warning, "%s, WARNING: Callback ID is invalid", nodestr.c_str() );
 	}
 	else 
 	{
 		// Callback ID matches our expectation
 		if( ( _data[3] & TRANSMIT_COMPLETE_NOROUTE ) != 0 )
 		{
-			Log::Write( LogLevel_Info, "ERROR: %s failed.  No route available.", _replication ? "ZW_REPLICATION_SEND_DATA" : "ZW_SEND_DATA" );
+			Log::Write( LogLevel_Info, "%s, ERROR: %s failed.  No route available.", nodestr.c_str(), _replication ? "ZW_REPLICATION_SEND_DATA" : "ZW_SEND_DATA" );
 			RemoveCurrentMsg();
 		}
 		else if( ( _data[3] & TRANSMIT_COMPLETE_NO_ACK ) != 0 )
 		{
-			Log::Write( LogLevel_Info, "ERROR: %s failed. No ACK received - device may be asleep.", _replication ? "ZW_REPLICATION_SEND_DATA" : "ZW_SEND_DATA" );
+			Log::Write( LogLevel_Info, "%s, ERROR: %s failed. No ACK received - device may be asleep.", nodestr.c_str(), _replication ? "ZW_REPLICATION_SEND_DATA" : "ZW_SEND_DATA" );
 			if( m_currentMsg )
 			{
 				if( !_replication )
@@ -2318,13 +2320,13 @@ void Driver::HandleSendDataRequest
 						return;
 					}
 
-					Log::Write( LogLevel_Warning, "WARNING: Device is not a sleeping node - retrying the send." );
+					Log::Write( LogLevel_Warning, "%s, WARNING: Device is not a sleeping node - retrying the send.", nodestr.c_str() );
 				}
 			}
 		}
 		else if( ( _data[3] & TRANSMIT_COMPLETE_FAIL ) != 0 )
 		{
-			Log::Write( LogLevel_Info, "ERROR: %s failed. Network is busy.", _replication ? "ZW_REPLICATION_SEND_DATA" : "ZW_SEND_DATA" );
+			Log::Write( LogLevel_Info, "%s, ERROR: %s failed. Network is busy.", nodestr.c_str(), _replication ? "ZW_REPLICATION_SEND_DATA" : "ZW_SEND_DATA" );
 		}
 		else
 		{

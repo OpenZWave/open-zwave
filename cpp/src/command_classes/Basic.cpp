@@ -202,7 +202,7 @@ bool Basic::SetMapping
 	{
 		if( CommandClass* cc = node->GetCommandClass( _commandClassId ) )
 		{
-			Log::Write( LogLevel_Info, "    COMMAND_CLASS_BASIC will be mapped to %s", cc->GetCommandClassName().c_str() );
+			Log::Write( LogLevel_Info, "%s,    COMMAND_CLASS_BASIC will be mapped to %s", node->GetDriver()->GetNodeString( node->m_nodeId ).c_str(), cc->GetCommandClassName().c_str() );
 			m_mapping = _commandClassId;
 			res = true;
 		}
