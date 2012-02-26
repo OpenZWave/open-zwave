@@ -162,7 +162,7 @@ bool SwitchMultilevel::HandleMsg
 
 		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, SwitchMultilevelIndex_Level ) ) )
 		{
-			value->OnValueChanged( _data[1] );
+			value->OnValueRefreshed( _data[1] );
 			value->Release();
 		}
 		return true;

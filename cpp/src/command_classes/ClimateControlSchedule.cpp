@@ -212,7 +212,7 @@ bool ClimateControlSchedule::HandleMsg
 			}
 
 			// Notify the user
-			value->OnValueChanged();
+			value->OnValueRefreshed();
 			value->Release();
 		}
 
@@ -269,7 +269,7 @@ bool ClimateControlSchedule::HandleMsg
 
 		if( ValueList* valueList = static_cast<ValueList*>( GetValue( _instance, ClimateControlScheduleIndex_OverrideState ) ) )
 		{
-			valueList->OnValueChanged( (int)overrideState );
+			valueList->OnValueRefreshed( (int)overrideState );
 			valueList->Release();
 		}
 
@@ -292,7 +292,7 @@ bool ClimateControlSchedule::HandleMsg
 
 		if( ValueByte* valueByte = static_cast<ValueByte*>( GetValue( _instance, ClimateControlScheduleIndex_OverrideSetback ) ) )
 		{
-			valueByte->OnValueChanged( setback );
+			valueByte->OnValueRefreshed( setback );
 			valueByte->Release();
 		}
 

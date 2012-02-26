@@ -29,6 +29,7 @@
 #include "ValueString.h"
 #include "Msg.h"
 #include "Log.h"
+#include "Manager.h"
 
 using namespace OpenZWave;
 
@@ -75,7 +76,6 @@ void ValueString::ReadXML
 	if( str )
 	{
 		m_value = str;
-		SetIsSet();
 	}
 	else
 	{
@@ -101,30 +101,37 @@ void ValueString::WriteXML
 
 //-----------------------------------------------------------------------------
 // <ValueString::Set>
-// Set a nwe value in the device
+// Set a new value in the device and queue a "RequestValue" to confirm it worked
 //-----------------------------------------------------------------------------
 bool ValueString::Set
 (
 	string const& _value
 )
 {
-	// Set the value in our records.
-	OnValueChanged( _value );
-
 	// Set the value in the device.
 	return Value::Set();
 }
 
 //-----------------------------------------------------------------------------
-// <ValueString::OnValueChanged>
-// A value in a device has changed
+// <ValueString::OnValueRefreshed>
+// A value in a device has been refreshed
 //-----------------------------------------------------------------------------
-void ValueString::OnValueChanged
+void ValueString::OnValueRefreshed
 (
 	string const& _value
 )
 {
-	m_value = _value;
-	Value::OnValueChanged();
+	switch( VerifyRefreshedValue( (void*) &m_value, (void*) &m_valueCheck, (void*) &_value, 1) )
+	{
+	case 0:		// value hasn't changed, nothing to do
+		break;
+	case 1:		// value has changed (not confirmed yet), save _value in m_valueCheck
+		m_valueCheck = _value;
+		break;
+	case 2:		// value has changed (confirmed), save _value in m_value
+		m_value = _value;
+		break;
+	case 3:		// all three values are different, so wait for next refresh to try again
+		break;
+	}
 }
-

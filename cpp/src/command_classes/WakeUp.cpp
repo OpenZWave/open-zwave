@@ -187,7 +187,7 @@ bool WakeUp::HandleMsg
 
 			Log::Write( LogLevel_Info, "%s, Received Wakeup Interval report from node %d: Interval=%d, Target Node=%d", GetDriver()->GetNodeString( GetNodeId() ).c_str(), GetNodeId(), interval, targetNodeId );
 
-			value->OnValueChanged( (int32)interval );
+			value->OnValueRefreshed( (int32)interval );
 		
 			// Ensure that the target node for wake-up notifications is the controller
 			if( GetDriver()->GetNodeId() != targetNodeId )

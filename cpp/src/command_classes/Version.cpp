@@ -176,17 +176,17 @@ bool Version::HandleMsg
 
 			if( ValueString* libraryValue = static_cast<ValueString*>( GetValue( _instance, VersionIndex_Library ) ) )
 			{
-				libraryValue->OnValueChanged( library );
+				libraryValue->OnValueRefreshed( library );
 				libraryValue->Release();
 			}
 			if( ValueString* protocolValue = static_cast<ValueString*>( GetValue( _instance, VersionIndex_Protocol ) ) )
 			{
-				protocolValue->OnValueChanged( protocol );
+				protocolValue->OnValueRefreshed( protocol );
 				protocolValue->Release();
 			}
 			if( ValueString* applicationValue = static_cast<ValueString*>( GetValue( _instance, VersionIndex_Application ) ) )
 			{
-				applicationValue->OnValueChanged( application );
+				applicationValue->OnValueRefreshed( application );
 				applicationValue->Release();
 			}
 

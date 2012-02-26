@@ -105,8 +105,6 @@ void ValueSchedule::ReadXML
 
 		child = child->NextSiblingElement();
 	}
-
-	SetIsSet();
 }
 
 //-----------------------------------------------------------------------------
@@ -157,21 +155,20 @@ bool ValueSchedule::Set
 (
 )
 {
-	// Set the value in our records.
-	OnValueChanged();
-
 	// Set the value in the device.
 	return Value::Set();
 }
 
 //-----------------------------------------------------------------------------
-// <ValueSchedule::OnValueChanged>
-// A value in a device has changed
+// <ValueSchedule::OnValueRefreshed>
+// A value in a device has been refreshed
 //-----------------------------------------------------------------------------
-void ValueSchedule::OnValueChanged
+void ValueSchedule::OnValueRefreshed
 (
 )
 {
+	// TODO:  do schedules ever report spurious values and need rechecking like other value types?
+	// See, for example, ValueShort::OnValueRefreshed
 	Value::OnValueChanged();
 }
 

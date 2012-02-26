@@ -50,7 +50,7 @@ namespace OpenZWave
 		virtual ~ValueBool(){}
 
 		bool Set( bool const _value );
-		void OnValueChanged( bool const _value );
+		void OnValueRefreshed( bool const _value );
 
 		// From Value
 		virtual string const GetAsString() const { return ( GetValue() ? "True" : "False" ); }
@@ -61,7 +61,9 @@ namespace OpenZWave
 		bool GetValue()const{ return m_value; }
 
 	private:
-		bool	m_value;
+		bool	m_value;				// the current index in the m_items vector
+		bool	m_valueCheck;			// the previous value (used for double-checking spurious value reads)
+		bool	m_newValue;				// a new value to be set on the appropriate device
 	};
 
 } // namespace OpenZWave

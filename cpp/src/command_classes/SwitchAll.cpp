@@ -111,7 +111,7 @@ bool SwitchAll::HandleMsg
 	{
 		if( ValueList* value = static_cast<ValueList*>( GetValue( _instance, 0 ) ) )
 		{
-			value->OnValueChanged( (int32)_data[1] );
+			value->OnValueRefreshed( (int32)_data[1] );
 			value->Release();
 			Log::Write( LogLevel_Info, "%s, Received SwitchAll report from node %d: %s", GetDriver()->GetNodeString( GetNodeId() ).c_str(), GetNodeId(), value->GetItem().m_label.c_str() );
 		}

@@ -213,7 +213,7 @@ bool SensorMultilevel::HandleMsg
 			{
 				value->SetPrecision( precision );
 			}
-			value->OnValueChanged( valueStr );
+			value->OnValueRefreshed( valueStr );
 			value->Release();
 			return true;
 		}

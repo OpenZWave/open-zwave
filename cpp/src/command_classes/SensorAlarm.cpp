@@ -164,7 +164,7 @@ bool SensorAlarm::HandleMsg
 			uint8 state = _data[3];
 			// uint16 time = (((uint16)_data[4])<<8) | (uint16)_data[5];  Don't know what to do with this yet.
 
-			value->OnValueChanged( state );
+			value->OnValueRefreshed( state );
 			value->Release();
 			Log::Write( LogLevel_Info, "Received alarm state report from node %d: %s = %d", sourceNodeId, value->GetLabel().c_str(), state );		
 		}

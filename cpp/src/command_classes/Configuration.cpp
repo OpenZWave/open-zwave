@@ -77,31 +77,31 @@ bool Configuration::HandleMsg
 				case ValueID::ValueType_Bool:
 				{
 					ValueBool* valueBool = static_cast<ValueBool*>( value );
-					valueBool->OnValueChanged( paramValue != 0 );
+					valueBool->OnValueRefreshed( paramValue != 0 );
 					break;
 				}
 				case ValueID::ValueType_Byte:
 				{
 					ValueByte* valueByte = static_cast<ValueByte*>( value );
-					valueByte->OnValueChanged( (uint8)paramValue );
+					valueByte->OnValueRefreshed( (uint8)paramValue );
 					break;
 				}
 				case ValueID::ValueType_Short:
 				{
 					ValueShort* valueShort = static_cast<ValueShort*>( value );
-					valueShort->OnValueChanged( (int16)paramValue );
+					valueShort->OnValueRefreshed( (int16)paramValue );
 					break;
 				}
 				case ValueID::ValueType_Int:
 				{
 					ValueInt* valueInt = static_cast<ValueInt*>( value );
-					valueInt->OnValueChanged( paramValue );
+					valueInt->OnValueRefreshed( paramValue );
 					break;
 				}
 				case ValueID::ValueType_List:
 				{
 					ValueList* valueList = static_cast<ValueList*>( value );
-					valueList->OnValueChanged( paramValue );
+					valueList->OnValueRefreshed( paramValue );
 					break;
 				}
 				default:
