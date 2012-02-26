@@ -1071,8 +1071,9 @@ void Node::UpdateNodeInfo
 {
 	if( !NodeInfoReceived() )
 	{
+		string nodestr = GetDriver()->GetNodeString( m_nodeId );
 		// Add the command classes specified by the device
-		Log::Write( LogLevel_Info, "  Optional command classes for node %d:", m_nodeId );
+		Log::Write( LogLevel_Info, "%s,  Optional command classes for node %d:", nodestr.c_str(), m_nodeId );
 		
 		bool newCommandClasses = false;
 		uint32 i;
@@ -1090,9 +1091,9 @@ void Node::UpdateNodeInfo
 
 				if( !newCommandClasses )
 				{
-					Log::Write( LogLevel_Info, "    None" );
+					Log::Write( LogLevel_Info, "%s,    None", nodestr.c_str() );
 				}
-				Log::Write( LogLevel_Info, "  Optional command classes controlled by node %d:", m_nodeId );
+				Log::Write( LogLevel_Info, "%s,  Optional command classes controlled by node %d:", nodestr.c_str(), m_nodeId );
 				newCommandClasses = false;
 				continue;
 			}
@@ -1112,19 +1113,19 @@ void Node::UpdateNodeInfo
 					// call at the end of this method have been processed.
 					pCommandClass->SetInstance( 1 );
 					newCommandClasses = true;
-					Log::Write( LogLevel_Info, "    %s", pCommandClass->GetCommandClassName().c_str() );
+					Log::Write( LogLevel_Info, "%s,    %s", nodestr.c_str(), pCommandClass->GetCommandClassName().c_str() );
 				}
 			}
 			else
 			{
-				Log::Write( LogLevel_Info, "  Node(%d)::CommandClass 0x%.2x - NOT REQUIRED", m_nodeId, _data[i] );
+				Log::Write( LogLevel_Info, "%s,  CommandClass 0x%.2x - NOT REQUIRED", nodestr.c_str(), _data[i] );
 			}
 		}
 
 		if( !newCommandClasses )
 		{
 			// No additional command classes over the mandatory ones.
-			Log::Write( LogLevel_Info, "    None" );
+			Log::Write( LogLevel_Info, "%s,    None", nodestr.c_str() );
 		}
 
 		SetStaticRequests();
@@ -2100,7 +2101,7 @@ void Node::AutoAssociate
 			if( group->IsAuto() && !group->Contains( controllerNodeId ) )
 			{
 				// Associate the controller into the group
-				Log::Write( LogLevel_Info, "Adding the controller to group %d (%s) of node %d", group->GetIdx(), group->GetLabel().c_str(), GetNodeId() );
+				Log::Write( LogLevel_Info, "%s, Adding the controller to group %d (%s) of node %d", GetDriver()->GetNodeString( GetNodeId() ).c_str(), group->GetIdx(), group->GetLabel().c_str(), GetNodeId() );
 				group->AddAssociation( controllerNodeId );
 			}
 		}

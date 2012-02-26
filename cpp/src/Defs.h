@@ -88,6 +88,10 @@ namespace OpenZWave
 
 #endif
 
+#define MAX_TRIES		3	// Retry sends up to 3 times
+#define MAX_MAX_TRIES		7	// Don't exceed this retry limit
+#define RETRY_TIMEOUT	2000		// Retry send after two seconds
+
 #define SOF												0x01
 #define ACK												0x06
 #define NAK												0x15

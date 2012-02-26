@@ -111,7 +111,7 @@ bool Battery::HandleMsg
 			batteryLevel = 0;
 		}
 
-		Log::Write( LogLevel_Info, "Received Battery report from node %d: level=%d", GetNodeId(), batteryLevel );
+		Log::Write( LogLevel_Info, "%s, Received Battery report from node %d: level=%d", GetDriver()->GetNodeString( GetNodeId() ).c_str(), GetNodeId(), batteryLevel );
 
 		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, 0 ) ) )
 		{

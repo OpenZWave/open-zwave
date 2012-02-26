@@ -29,6 +29,7 @@
 #include "Thread.h"
 #include "Event.h"
 #include "Log.h"
+#include "TimeStamp.h"
 #include "HidController.h"
 
 #define CHECK_HIDAPI_RESULT(RESULT, ERRORLABEL) if (RESULT < 0) goto ERRORLABEL
@@ -346,10 +347,10 @@ bool HidController::Init
 	hidApiResult = GetFeatureReport(FEATURE_REPORT_LENGTH, 0x02, dataIn );
 	CHECK_HIDAPI_RESULT(hidApiResult, HidOpenFailure);
 
-	// Ensure that reads for input reports are nonblocked.
+	// Ensure that reads for input reports are blocked.
 	// Input report data is polled in Wait() to check if there are feature
 	// reports waiting to be retrieved that contain ZWave rx packets.
-	hidApiResult = hid_set_nonblocking(m_hHidController, 1);
+	hidApiResult = hid_set_nonblocking(m_hHidController, 0);
 	CHECK_HIDAPI_RESULT(hidApiResult, HidOpenFailure);
 
 	// Open successful
@@ -375,8 +376,11 @@ void HidController::Read
 {
 	uint8 buffer[FEATURE_REPORT_LENGTH];
 	int bytesRead = 0;
-	int msgSent = 1;	// nonzero so we do an initial hid_read to prime controller
+	uint8 inputReport[INPUT_REPORT_LENGTH];
+	bool dataRecvd = false;
+	TimeStamp readTimer;
 
+	bytesRead = hid_read( m_hHidController, inputReport, INPUT_REPORT_LENGTH );
  	while( true )
 	{
 		// Rx feature report buffer should contain
@@ -398,12 +402,18 @@ void HidController::Read
 					snprintf( bstr, sizeof(bstr), "0x%.2x ", buffer[2+i] );
 					tmp += bstr;
 				}
-				Log::Write( LogLevel_Detail, "feature report read=%d ID=%d len=%d %s", bytesRead, buffer[0], buffer[1], tmp.c_str() );
+				Log::Write( LogLevel_Detail, "hid report read=%d ID=%d len=%d %s", bytesRead, buffer[0], buffer[1], tmp.c_str() );
+			}
+
+			if( buffer[1] > 0 )
+			{
 				Put( &buffer[2], buffer[1] );
-				msgSent++;
+				dataRecvd = true;
+				readTimer.SetTime( 80 );
 			}
 			else
-				if( msgSent > 0 )
+			{
+				if( dataRecvd && readTimer.TimeRemaining() <= 0 )
 				{
 					// Hang a hid_read to acknowledge receipt. Seems the response is conveying
 					// transaction status.
@@ -414,7 +424,6 @@ void HidController::Read
 				        //                 if 0x02, feature report ID 0x05 is waiting to be retrieved
 				        // [3,4] 0xNNNN  - Number of ZWave messages?
 
-					uint8 inputReport[INPUT_REPORT_LENGTH] = { 0 };
 					int hidApiResult = hid_read( m_hHidController, inputReport, INPUT_REPORT_LENGTH );
 					//if( hidApiResult != 0 )
 					{
@@ -434,8 +443,9 @@ void HidController::Read
 						Log::Write( LogLevel_Warning, "Error: HID port returned error reading input bytes: 0x%08hx, HIDAPI error string: %ls", hidApiResult, errString );
 					}
 
-					msgSent = 0;
+					dataRecvd = false;
 				}
+			}
 		}
 	}
 
