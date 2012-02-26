@@ -1269,7 +1269,7 @@ bool Driver::ReadMsg
 			// Don't increment the transmission counter as it is possible the message will never get out
 			// on very busy networks with lots of unsolicited messages being received. Increase the amount
 			// of retries but only up to a limit so we don't stay here forever.
-			Log::Write( LogLevel_Detail, "CAN received...triggering resend" );
+			Log::Write( LogLevel_Detail, "%s, CAN received...triggering resend", GetNodeString( m_currentMsg ).c_str() );
 			m_CANCnt++;
 			m_currentMsg->SetMaxSendAttempts( m_currentMsg->GetMaxSendAttempts() + 1 );
 			WriteMsg( "CAN" );
