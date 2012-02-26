@@ -68,10 +68,10 @@ namespace OpenZWave
 	private:
 		void SetPrecision( uint8 _precision ){ m_precision = _precision; }
 
-		uint8	m_precision;
 		string	m_value;				// the current value
 		string	m_valueCheck;			// the previous value (used for double-checking spurious value reads)
 		string	m_newValue;				// a new value to be set on the appropriate device
+        uint8	m_precision;
 	};
 
 } // namespace OpenZWave
