@@ -61,6 +61,9 @@ namespace OpenZWave
 		uint8 GetSendAttempts()const{ return m_sendAttempts; }
 		void SetSendAttempts( uint8 _count ){ m_sendAttempts = _count; }
 
+		uint8 GetMaxSendAttempts()const{ return m_maxSendAttempts; }
+		void SetMaxSendAttempts( uint8 _count ){ if( _count < MAX_MAX_TRIES ) m_maxSendAttempts = _count; }
+
 		bool IsWakeUpNoMoreInformationCommand()
 		{
 			return( m_bFinal && (m_length==11) && (m_buffer[3]==0x13) && (m_buffer[6]==0x84) && (m_buffer[7]==0x08) );
@@ -93,6 +96,7 @@ namespace OpenZWave
 		
 		uint8			m_targetNodeId;
 		uint8			m_sendAttempts;
+		uint8			m_maxSendAttempts;
 
 		uint8			m_instance;			// If this value is not one, the message must be wrapped in a multiInstance or multiChannel command class
 

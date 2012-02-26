@@ -445,6 +445,41 @@ namespace OpenZWave
 	//-----------------------------------------------------------------------------
 	//	Retrieving Node information
 	//-----------------------------------------------------------------------------
+	public:
+		string GetNodeString( uint8 const _nodeId )const
+		{
+			if( _nodeId == 0xff )
+			{
+				return "contrlr";
+			}
+			else
+			{
+				char buf[10];
+				snprintf( buf, sizeof(buf), "Node%03d", _nodeId );
+				return buf;
+			}
+		}
+		string GetNodeString( Msg const* _msg )const
+		{
+			if( _msg == NULL )
+			{
+			  return "unknown";
+			}
+			else
+			{
+				uint8 const nodeId = _msg->GetTargetNodeId();
+				if( nodeId == 0xff )
+				{
+					return "contrlr";
+				}
+				else
+				{
+					char buf[10];
+					snprintf( buf, sizeof(buf), "Node%03d", nodeId );
+					return buf;
+				}
+			}
+		}
 	private:
 		/**
 		 *  Creates a new Node object (deleting any previous Node object with the same nodeId) and
@@ -480,20 +515,6 @@ namespace OpenZWave
 		string GetNodeManufacturerId( uint8 const _nodeId );
 		string GetNodeProductType( uint8 const _nodeId );
 		string GetNodeProductId( uint8 const _nodeId );
-		string GetNodeString( uint8 const _nodeId )const
-		{
-			if( _nodeId == 0xff )
-			{
-				return "contrlr";
-			}
-			else
-			{
-				char buf[10];
-				snprintf( buf, sizeof(buf), "Node%03d", _nodeId );
-				return buf;
-			}
-		}
-
 		void SetNodeManufacturerName( uint8 const _nodeId, string const& _manufacturerName );
 		void SetNodeProductName( uint8 const _nodeId, string const& _productName );
 		void SetNodeName( uint8 const _nodeId, string const& _nodeName );
@@ -505,6 +526,7 @@ namespace OpenZWave
 		Value* GetValue( ValueID const& _id );
 
 		bool IsAPICallSupported( uint8 const _apinum )const{ return (( m_apiMask[( _apinum - 1 ) >> 3] & ( 1 << (( _apinum - 1 ) & 0x07 ))) != 0 ); }
+		uint8 NodeFromMessage( uint8 const* buffer );
 
 	//-----------------------------------------------------------------------------
 	// Controller commands

@@ -57,7 +57,7 @@ namespace OpenZWave
 
 	private:
 		ManufacturerSpecific( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){ SetStaticRequest( StaticRequest_Values ); }
-		static bool LoadProductXML();
+		static bool LoadProductXML( Node* _node );
 		static void UnloadProductXML();
 		bool LoadConfigXML( string const& _configXML );
 

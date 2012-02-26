@@ -59,6 +59,7 @@ Msg::Msg
 	m_length( 4 ),
 	m_targetNodeId( _targetNodeId ),
 	m_sendAttempts( 0 ),
+	m_maxSendAttempts( MAX_TRIES ),
 	m_instance( 1 )
 {
 	if( _bReplyRequired )
