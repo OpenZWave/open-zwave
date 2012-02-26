@@ -446,6 +446,7 @@ void HidController::Read
 				}
 			}
 		}
+		m_thread->Sleep(15);
 	}
 
 HidPortError:

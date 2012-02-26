@@ -31,6 +31,7 @@
 //-----------------------------------------------------------------------------
 
 #include <unistd.h>
+#include <stdlib.h>
 #include <pthread.h>
 #include "Options.h"
 #include "Manager.h"
@@ -276,10 +277,15 @@ int main( int argc, char* argv[] )
 	// Add a Z-Wave Driver
 	// Modify this line to set the correct serial port for your PC interface.
 
-	string port = "/dev/ttyUSB0";
-
-	Manager::Get()->AddDriver( ( argc > 1 ) ? argv[1] : port );
-	//Manager::Get()->AddDriver( "HID Controller", Driver::ControllerInterface_Hid );
+	if ( argc == 1 )
+	{
+		fprintf(stderr, "test: missing port name required.\n" );
+		exit(1);
+	}
+	if( strcasecmp( argv[1], "usb" ) == 0 )
+		Manager::Get()->AddDriver( "HID Controller", Driver::ControllerInterface_Hid );
+	else
+		Manager::Get()->AddDriver( argv[1] );
 
 	// Now we just wait for either the AwakeNodesQueried or AllNodesQueried notification,
 	// then write out the config file.
@@ -350,6 +356,10 @@ int main( int argc, char* argv[] )
 	}
 
 	// program exit (clean up)
+	if( strcasecmp( argv[1], "usb" ) == 0 )
+		Manager::Get()->RemoveDriver( "HID Controller" );
+	else
+		Manager::Get()->RemoveDriver( argv[1] );
 	Manager::Destroy();
 	Options::Destroy();
 	pthread_mutex_destroy( &g_criticalSection );
