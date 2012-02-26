@@ -377,10 +377,9 @@ void HidController::Read
 	uint8 buffer[FEATURE_REPORT_LENGTH];
 	int bytesRead = 0;
 	uint8 inputReport[INPUT_REPORT_LENGTH];
-	bool dataRecvd = false;
+	bool dataRecvd = true;
 	TimeStamp readTimer;
 
-	bytesRead = hid_read( m_hHidController, inputReport, INPUT_REPORT_LENGTH );
  	while( true )
 	{
 		// Rx feature report buffer should contain
