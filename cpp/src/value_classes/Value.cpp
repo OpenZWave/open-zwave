@@ -92,8 +92,8 @@ Value::Value
 	m_isSet( _isSet ),
 	m_affectsLength( 0 ),
 	m_affectsAll( false ),
-	m_pollIntensity( _pollIntensity ),
-	m_checkChange( false )
+    m_checkChange( false ),
+	m_pollIntensity( _pollIntensity )
 {
 }
 
@@ -360,7 +360,7 @@ bool Value::Set
 				res = cc->SetValue( *this );
 
 				// queue a "RequestValue" message to update the value
-				bool res2 = cc->RequestValue( 0, m_id.GetIndex(), m_id.GetInstance(), Driver::MsgQueue_Send );
+                cc->RequestValue( 0, m_id.GetIndex(), m_id.GetInstance(), Driver::MsgQueue_Send );
 			}
 		}
 	}
@@ -539,7 +539,7 @@ int Value::VerifyRefreshedValue
 			Log::Write( LogLevel_Detail, "Refreshed Value: old value=%s, new value=%s, type=%s", ((string*)_originalValue)->c_str(), ((string*)_newValue)->c_str(), "string" );
 			break;
 		case 2:			// short
-			Log::Write( LogLevel_Detail, "Refreshed Value: old value=%d, new value=%d, type=%s", *((short*)_originalValue), *((short*)_newValue, "short") );
+            Log::Write( LogLevel_Detail, "Refreshed Value: old value=%d, new value=%d, type=%s", *((short*)_originalValue), *((short*)_newValue), "short");
 			break;
 		case 3:			// int32
 			Log::Write( LogLevel_Detail, "Refreshed Value: old value=%d, new value=%d, type=%s", *((int32*)_originalValue), *((int32*)_newValue), "int32" );
