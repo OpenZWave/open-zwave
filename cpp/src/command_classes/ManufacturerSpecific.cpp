@@ -110,7 +110,7 @@ string ManufacturerSpecific::SetProductDetails
 {
 	char str[64];
 
-	if (!s_bXmlLoaded) LoadProductXML();
+	if (!s_bXmlLoaded) LoadProductXML( node );
 
 	snprintf( str, sizeof(str), "Unknown: id=%.4x", manufacturerId );
 	string manufacturerName = str;
@@ -193,8 +193,8 @@ bool ManufacturerSpecific::HandleMsg
 				LoadConfigXML( configPath );
 			}
 
-			Log::Write( LogLevel_Info, "Received manufacturer specific report from node %d: Manufacturer=%s, Product=%s", 
-									GetNodeId(), node->GetManufacturerName().c_str(), node->GetProductName().c_str() );
+			Log::Write( LogLevel_Info, "%s, Received manufacturer specific report from node %d: Manufacturer=%s, Product=%s", 
+				    GetDriver()->GetNodeString( GetNodeId() ).c_str(), GetNodeId(), node->GetManufacturerName().c_str(), node->GetProductName().c_str() );
 			ClearStaticRequest( StaticRequest_Values );
 			node->m_manufacturerSpecificClassReceived = true;
 		}
@@ -216,6 +216,7 @@ bool ManufacturerSpecific::HandleMsg
 //-----------------------------------------------------------------------------
 bool ManufacturerSpecific::LoadProductXML
 (
+	Node* _node
 )
 {
 	s_bXmlLoaded = true;
@@ -225,12 +226,13 @@ bool ManufacturerSpecific::LoadProductXML
 	Options::Get()->GetOptionAsString( "ConfigPath", &configPath );
 
 	string filename =  configPath + "manufacturer_specific.xml";
+	string nodestr = _node->GetDriver()->GetNodeString( _node->GetNodeId() );
 
 	TiXmlDocument* pDoc = new TiXmlDocument();
 	if( !pDoc->LoadFile( filename.c_str(), TIXML_ENCODING_UTF8 ) )
 	{
 		delete pDoc;	
-		Log::Write( LogLevel_Info, "Unable to load %s", filename.c_str() );
+		Log::Write( LogLevel_Info, "%s, Unable to load %s", nodestr.c_str(), filename.c_str() );
 		return false;
 	}
 
@@ -249,8 +251,8 @@ bool ManufacturerSpecific::LoadProductXML
 			str = manufacturerElement->Attribute( "id" );
 			if( !str )
 			{
-				Log::Write( LogLevel_Info, "Error in manufacturer_specific.xml at line %d - missing manufacturer id attribute", manufacturerElement->Row() );
-				delete pDoc;	
+				Log::Write( LogLevel_Info, "%s, Error in manufacturer_specific.xml at line %d - missing manufacturer id attribute", nodestr.c_str(), manufacturerElement->Row() );
+				delete pDoc;
 				return false;
 			}
 			uint16 manufacturerId = (uint16)strtol( str, &pStopChar, 16 );
@@ -258,8 +260,8 @@ bool ManufacturerSpecific::LoadProductXML
 			str = manufacturerElement->Attribute( "name" );
 			if( !str )
 			{
-				Log::Write( LogLevel_Info, "Error in manufacturer_specific.xml at line %d - missing manufacturer name attribute", manufacturerElement->Row() );
-				delete pDoc;	
+				Log::Write( LogLevel_Info, "%s, Error in manufacturer_specific.xml at line %d - missing manufacturer name attribute", nodestr.c_str(), manufacturerElement->Row() );
+				delete pDoc;
 				return false;
 			}
 			
@@ -276,7 +278,7 @@ bool ManufacturerSpecific::LoadProductXML
 					str = productElement->Attribute( "type" );
 					if( !str )
 					{
-						Log::Write( LogLevel_Info, "Error in manufacturer_specific.xml at line %d - missing product type attribute", productElement->Row() );
+						Log::Write( LogLevel_Info, "%s, Error in manufacturer_specific.xml at line %d - missing product type attribute", nodestr.c_str(), productElement->Row() );
 						delete pDoc;	
 						return false;
 					}
@@ -285,7 +287,7 @@ bool ManufacturerSpecific::LoadProductXML
 					str = productElement->Attribute( "id" );
 					if( !str )
 					{
-						Log::Write( LogLevel_Info, "Error in manufacturer_specific.xml at line %d - missing product id attribute", productElement->Row() );
+						Log::Write( LogLevel_Info, "%s, Error in manufacturer_specific.xml at line %d - missing product id attribute", nodestr.c_str(), productElement->Row() );
 						delete pDoc;	
 						return false;
 					}
@@ -294,7 +296,7 @@ bool ManufacturerSpecific::LoadProductXML
 					str = productElement->Attribute( "name" );
 					if( !str )
 					{
-						Log::Write( LogLevel_Info, "Error in manufacturer_specific.xml at line %d - missing product name attribute", productElement->Row() );
+						Log::Write( LogLevel_Info, "%s, Error in manufacturer_specific.xml at line %d - missing product name attribute", nodestr.c_str(), productElement->Row() );
 						delete pDoc;	
 						return false;
 					}
@@ -313,7 +315,7 @@ bool ManufacturerSpecific::LoadProductXML
 					if ( s_productMap[product->GetKey()] != NULL )
 					{
 						Product *c = s_productMap[product->GetKey()];
-						Log::Write( LogLevel_Info, "Product name collision: %s, type %x id %x manufacturerid %x, collides with %s, type %x id %x manufacturerid %x", productName.c_str(), productType, productId, manufacturerId, c->GetProductName().c_str(), c->GetProductType(), c->GetProductId(), c->GetManufacturerId());
+						Log::Write( LogLevel_Info, "Product name collision: type %x id %x manufacturerid %x, collides with %s, type %x id %x manufacturerid %x", productName.c_str(), productType, productId, manufacturerId, c->GetProductName().c_str(), c->GetProductType(), c->GetProductId(), c->GetManufacturerId());
 						delete product;
 					}
 					else
@@ -381,11 +383,11 @@ bool ManufacturerSpecific::LoadConfigXML
 		string filename =  configPath + _configXML;
 
 		TiXmlDocument* doc = new TiXmlDocument();
-		Log::Write( LogLevel_Info, "  Opening config param file %s", filename.c_str() );
+		Log::Write( LogLevel_Info, "%s,  Opening config param file %s", GetDriver()->GetNodeString( GetNodeId() ).c_str(), filename.c_str() );
 		if( !doc->LoadFile( filename.c_str(), TIXML_ENCODING_UTF8 ) )
 		{
 			delete doc;	
-			Log::Write( LogLevel_Info, "Unable to find or load Config Param file %s", filename.c_str() );
+			Log::Write( LogLevel_Info, "%s, Unable to find or load Config Param file %s", GetDriver()->GetNodeString( GetNodeId() ).c_str(), filename.c_str() );
 			return false;
 		}
 
@@ -418,10 +420,10 @@ void ManufacturerSpecific::ReLoadConfigXML
 (
 )
 {
-	if (!s_bXmlLoaded) LoadProductXML();
-
 	if( Node* node = GetNodeUnsafe() )
 	{
+		if (!s_bXmlLoaded) LoadProductXML( node );
+
 		uint16 manufacturerId = (uint16)strtol( node->GetManufacturerId().c_str(), NULL, 16 );
 		uint16 productType = (uint16)strtol( node->GetProductType().c_str(), NULL, 16 );
 		uint16 productId = (uint16)strtol( node->GetProductId().c_str(), NULL, 16 );

@@ -101,7 +101,7 @@ bool Basic::HandleMsg
 	if( BasicCmd_Report == (BasicCmd)_data[0] )
 	{
 		// Level
-		Log::Write( LogLevel_Info, "Received Basic report from node %d: level=%d", GetNodeId(), _data[1] );
+		Log::Write( LogLevel_Info, "%s, Received Basic report from node %d: level=%d", GetDriver()->GetNodeString( GetNodeId() ).c_str(), GetNodeId(), _data[1] );
 		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, 0 ) ) )
 		{
 			value->OnValueChanged( _data[1] );
@@ -113,7 +113,7 @@ bool Basic::HandleMsg
 	if( BasicCmd_Set == (BasicCmd)_data[0] )
 	{
 		// Commmand received from the node.  Handle as a notifcation event
-		Log::Write( LogLevel_Info, "Received Basic set from node %d: level=%d.  Sending event notification.", GetNodeId(), _data[1] );
+		Log::Write( LogLevel_Info, "%s, Received Basic set from node %d: level=%d.  Sending event notification.", GetDriver()->GetNodeString( GetNodeId() ).c_str(), GetNodeId(), _data[1] );
 
 		Notification* notification = new Notification( Notification::Type_NodeEvent );
 		notification->SetHomeAndNodeIds( GetHomeId(), GetNodeId() );
@@ -138,7 +138,7 @@ bool Basic::SetValue
 	{
 		ValueByte const* value = static_cast<ValueByte const*>(&_value);
 	
-		Log::Write( LogLevel_Info, "Basic::Set - Setting node %d to level %d", GetNodeId(), value->GetValue() );
+		Log::Write( LogLevel_Info, "%s, Basic::Set - Setting node %d to level %d", GetDriver()->GetNodeString( GetNodeId() ).c_str(), GetNodeId(), value->GetValue() );
 		Msg* msg = new Msg( "Basic Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
 		msg->SetInstance( this, _value.GetID().GetInstance() );
 		msg->Append( GetNodeId() );
@@ -202,7 +202,7 @@ bool Basic::SetMapping
 	{
 		if( CommandClass* cc = node->GetCommandClass( _commandClassId ) )
 		{
-			Log::Write( LogLevel_Info, "%s,    COMMAND_CLASS_BASIC will be mapped to %s", node->GetDriver()->GetNodeString( node->m_nodeId ).c_str(), cc->GetCommandClassName().c_str() );
+		  Log::Write( LogLevel_Info, "%s,    COMMAND_CLASS_BASIC will be mapped to %s", GetDriver()->GetNodeString( GetNodeId() ).c_str(), cc->GetCommandClassName().c_str() );
 			m_mapping = _commandClassId;
 			res = true;
 		}

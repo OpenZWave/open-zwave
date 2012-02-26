@@ -66,9 +66,6 @@ using namespace OpenZWave;
 //
 uint32 const c_configVersion = 3;
 
-#define MAX_TRIES		3		// Retry sends up to 3 times
-#define RETRY_TIMEOUT	2000	// Retry send after two seconds
-
 static char const* c_libraryTypeNames[] = 
 {
 	"Unknown",			// library type 0
@@ -796,7 +793,7 @@ void Driver::SendMsg
 				if( !wakeUp->IsAwake() )
 				{
 					Log::Write( LogLevel_Detail, "" );
-					Log::Write( LogLevel_Detail, "%s, Queuing Wake-Up Command: %s", GetNodeString( _msg->GetTargetNodeId() ).c_str(), _msg->GetAsString().c_str() );
+					Log::Write( LogLevel_Detail, "%s, Queuing Wake-Up Command: %s", GetNodeString( _msg ).c_str(), _msg->GetAsString().c_str() );
 					wakeUp->QueueMsg( item );
 					ReleaseNodes();
 					return;
@@ -807,7 +804,7 @@ void Driver::SendMsg
 		ReleaseNodes();
 	}
 
-	Log::Write( LogLevel_Detail, "%s, Queuing command: %s", GetNodeString( _msg->GetTargetNodeId() ).c_str(), _msg->GetAsString().c_str() );
+	Log::Write( LogLevel_Detail, "%s, Queuing command: %s", GetNodeString( _msg ).c_str(), _msg->GetAsString().c_str() );
 	m_sendMutex->Lock();
 	m_msgQueue[_queue].push_back( item );
 	m_queueEvent[_queue]->Set();
@@ -882,10 +879,10 @@ bool Driver::WriteMsg
 
 	uint8 attempts = m_currentMsg->GetSendAttempts();
 	uint8 nodeId = m_currentMsg->GetTargetNodeId();
-	if( attempts >= MAX_TRIES )
+	if( attempts >= m_currentMsg->GetMaxSendAttempts() )
 	{
-		// That's it - already tried to send MAX_TRIES times.
-		Log::Write( LogLevel_Error, "%s, ERROR: Dropping command, expected response not received after %d attempt(s)", GetNodeString( nodeId ).c_str(), MAX_TRIES );
+		// That's it - already tried to send GetMaxSendAttempt() times.
+		Log::Write( LogLevel_Error, "%s, ERROR: Dropping command, expected response not received after %d attempt(s)", GetNodeString( nodeId ).c_str(), m_currentMsg->GetMaxSendAttempts() );
 		delete m_currentMsg;
 		m_currentMsg = NULL;
 
@@ -985,7 +982,7 @@ bool Driver::MoveMessagesToWakeUpQueue
 						// commands to the pending queue.
 						if( !m_currentMsg->IsWakeUpNoMoreInformationCommand() )
 						{
-							Log::Write( LogLevel_Info, "%s, Node not responding - moving message to Wake-Up queue: %s", GetNodeString( m_currentMsg->GetTargetNodeId() ).c_str(), m_currentMsg->GetAsString().c_str() );
+							Log::Write( LogLevel_Info, "%s, Node not responding - moving message to Wake-Up queue: %s", GetNodeString( m_currentMsg ).c_str(), m_currentMsg->GetAsString().c_str() );
 							MsgQueueItem item;
 							item.m_command = MsgQueueCmd_SendMsg;
 							item.m_msg = m_currentMsg;
@@ -1022,7 +1019,7 @@ bool Driver::MoveMessagesToWakeUpQueue
 								// commands to the pending queue.
 								if( !item.m_msg->IsWakeUpNoMoreInformationCommand() )
 								{
-									Log::Write( LogLevel_Info, "%s, Node not responding - moving message to Wake-Up queue: %s", GetNodeString( item.m_msg->GetTargetNodeId() ).c_str(), item.m_msg->GetAsString().c_str() );
+									Log::Write( LogLevel_Info, "%s, Node not responding - moving message to Wake-Up queue: %s", GetNodeString( item.m_msg ).c_str(), item.m_msg->GetAsString().c_str() );
 									wakeUp->QueueMsg( item );
 								}
 								else
@@ -1189,7 +1186,10 @@ bool Driver::ReadMsg
 			m_SOFCnt++;
 			if( m_waitingForAck )
 			{
-				Log::Write( LogLevel_Warning, "WARNING: Unsolicited message received while waiting for ACK." );
+				// This can happen on any normal network when a transmission overlaps an unexpected
+				// reception and the data in the buffer doesn't contain the ACK. The controller will
+				// notice and send us a CAN to retransmit.
+				Log::Write( LogLevel_Detail, "Unsolicited message received while waiting for ACK." );
 				m_ACKWaiting++;
 			}
 
@@ -1231,7 +1231,8 @@ bool Driver::ReadMsg
 				snprintf( byteStr, sizeof(byteStr), "0x%.2x", buffer[i] );
 				str += byteStr;
 			}
-			Log::Write( LogLevel_Detail, "%s,  Received: %s", m_currentMsg == NULL ? "Unknown" : GetNodeString( m_currentMsg->GetTargetNodeId() ).c_str(), str.c_str() );
+			uint8 nodeId = NodeFromMessage( buffer );
+			Log::Write( LogLevel_Detail, "%s,  Received: %s", nodeId ? GetNodeString( nodeId ).c_str() : GetNodeString( m_currentMsg ).c_str(), str.c_str() );
 
 			// Verify checksum
 			uint8 checksum = 0xff;
@@ -1263,8 +1264,14 @@ bool Driver::ReadMsg
 			
 		case CAN:
 		{
-			Log::Write( LogLevel_Warning, "WARNING: CAN received...triggering resend" );
+			// This is the other side of an unsolicited ACK. As mentioned there if we receive a message
+			// just after we transmitted one, the controller will notice and tell us to retransmit here.
+			// Don't increment the transmission counter as it is possible the message will never get out
+			// on very busy networks with lots of unsolicited messages being received. Increase the amount
+			// of retries but only up to a limit so we don't stay here forever.
+			Log::Write( LogLevel_Detail, "CAN received...triggering resend" );
 			m_CANCnt++;
+			m_currentMsg->SetMaxSendAttempts( m_currentMsg->GetMaxSendAttempts() + 1 );
 			WriteMsg( "CAN" );
 			break;
 		}
@@ -1287,7 +1294,7 @@ bool Driver::ReadMsg
 			}
 			else
 			{
-				Log::Write( LogLevel_Detail, "%s,  ACK received CallbackId 0x%.2x Reply 0x%.2x", GetNodeString( m_currentMsg->GetTargetNodeId() ).c_str(), m_expectedCallbackId, m_expectedReply );
+				Log::Write( LogLevel_Detail, "%s,  ACK received CallbackId 0x%.2x Reply 0x%.2x", GetNodeString( m_currentMsg ).c_str(), m_expectedCallbackId, m_expectedReply );
 				if( ( 0 == m_expectedCallbackId ) && ( 0 == m_expectedReply ) )
 				{
 					// Remove the message from the queue, now that it has been acknowledged.
@@ -1439,11 +1446,11 @@ void Driver::ProcessMsg
 				Log::Write( LogLevel_Detail, "" );
 				if( _data[2] )
 				{
-					Log::Write( LogLevel_Info, "FUNC_ID_ZW_REQUEST_NODE_INFO Request successful." );
+					Log::Write( LogLevel_Info, "%s, FUNC_ID_ZW_REQUEST_NODE_INFO Request successful.", GetNodeString( m_currentMsg ).c_str() );
 				}
 				else
 				{
-					Log::Write( LogLevel_Info, "FUNC_ID_ZW_REQUEST_NODE_INFO Request failed." );
+					Log::Write( LogLevel_Info, "%s, FUNC_ID_ZW_REQUEST_NODE_INFO Request failed.", GetNodeString( m_currentMsg ).c_str() );
 				}
 				break;
 			}
@@ -1686,7 +1693,7 @@ void Driver::ProcessMsg
 			{
 				if( m_expectedCallbackId == _data[2] )
 				{
-					Log::Write( LogLevel_Detail, "%s,  Expected callbackId was received", GetNodeString( m_currentMsg->GetTargetNodeId() ).c_str() );
+					Log::Write( LogLevel_Detail, "%s,  Expected callbackId was received", GetNodeString( m_currentMsg ).c_str() );
 					m_expectedCallbackId = 0;
 				}
 			}
@@ -1698,7 +1705,7 @@ void Driver::ProcessMsg
 					{
 						if( m_expectedCommandClassId == _data[5] && m_expectedNodeId == _data[3] )
 						{
-							Log::Write( LogLevel_Detail, "%s,  Expected reply and command class was received", GetNodeString( m_currentMsg->GetTargetNodeId() ).c_str() );
+							Log::Write( LogLevel_Detail, "%s,  Expected reply and command class was received", GetNodeString( m_currentMsg ).c_str() );
 							m_waitingForAck = false;
 							m_expectedReply = 0;
 							m_expectedCommandClassId = 0;
@@ -1707,7 +1714,7 @@ void Driver::ProcessMsg
 					}
 					else
 					{
-						Log::Write( LogLevel_Detail, "%s,  Expected reply was received", GetNodeString( m_currentMsg->GetTargetNodeId() ).c_str() );
+						Log::Write( LogLevel_Detail, "%s,  Expected reply was received", GetNodeString( m_currentMsg ).c_str() );
 						m_expectedReply = 0;
 					}
 				}
@@ -1715,7 +1722,7 @@ void Driver::ProcessMsg
 
 			if( !( m_expectedCallbackId || m_expectedReply ) )
 			{
-				Log::Write( LogLevel_Detail, "%s,  Message transaction complete", GetNodeString( m_currentMsg->GetTargetNodeId() ).c_str() );
+				Log::Write( LogLevel_Detail, "%s,  Message transaction complete", GetNodeString( m_currentMsg ).c_str() );
 				Log::Write( LogLevel_Detail, "" );
 				delete m_currentMsg;
 				m_currentMsg = NULL;
@@ -1747,8 +1754,8 @@ void Driver::HandleGetVersionResponse
 	{
 		m_libraryTypeName = c_libraryTypeNames[m_libraryType];
 	}
-	Log::Write( LogLevel_Info, "%s, Received reply to FUNC_ID_ZW_GET_VERSION:", GetNodeString( m_currentMsg->GetTargetNodeId() ).c_str() );
-	Log::Write( LogLevel_Info, "%s,    %s library, version %s", GetNodeString( m_currentMsg->GetTargetNodeId() ).c_str(), m_libraryTypeName.c_str(), m_libraryVersion.c_str() );
+	Log::Write( LogLevel_Info, "%s, Received reply to FUNC_ID_ZW_GET_VERSION:", GetNodeString( m_currentMsg ).c_str() );
+	Log::Write( LogLevel_Info, "%s,    %s library, version %s", GetNodeString( m_currentMsg ).c_str(), m_libraryTypeName.c_str(), m_libraryVersion.c_str() );
 }
 
 //-----------------------------------------------------------------------------
@@ -1762,14 +1769,14 @@ void Driver::HandleGetControllerCapabilitiesResponse
 {
 	m_controllerCaps = _data[2];
 
-	Log::Write( LogLevel_Info, "%s, Received reply to FUNC_ID_ZW_GET_CONTROLLER_CAPABILITIES:", GetNodeString( m_currentMsg->GetTargetNodeId() ).c_str() );
+	Log::Write( LogLevel_Info, "%s, Received reply to FUNC_ID_ZW_GET_CONTROLLER_CAPABILITIES:", GetNodeString( m_currentMsg ).c_str() );
 
 	char str[256];
 	if( m_controllerCaps & ControllerCaps_SIS )
 	{
-		Log::Write( LogLevel_Info, "%s,    There is a SUC ID Server (SIS) in this network.", GetNodeString( m_currentMsg->GetTargetNodeId() ).c_str() );
+		Log::Write( LogLevel_Info, "%s,    There is a SUC ID Server (SIS) in this network.", GetNodeString( m_currentMsg ).c_str() );
 		snprintf( str, 256, "%s,    The PC controller is an inclusion %s%s%s",
-			  GetNodeString( m_currentMsg->GetTargetNodeId() ).c_str(),
+			  GetNodeString( m_currentMsg ).c_str(),
 			  ( m_controllerCaps & ControllerCaps_SUC ) ? " static update controller (SUC)" : " controller",
 			  ( m_controllerCaps & ControllerCaps_OnOtherNetwork ) ? " which is using a Home ID from another network" : "",
 			  ( m_controllerCaps & ControllerCaps_RealPrimary ) ? " and was the original primary before the SIS was added." : "." );
@@ -1778,9 +1785,9 @@ void Driver::HandleGetControllerCapabilitiesResponse
 	}
 	else
 	{
-		Log::Write( LogLevel_Info, "%s,    There is no SUC ID Server (SIS) in this network.", GetNodeString( m_currentMsg->GetTargetNodeId() ).c_str() );
+		Log::Write( LogLevel_Info, "%s,    There is no SUC ID Server (SIS) in this network.", GetNodeString( m_currentMsg ).c_str() );
 		snprintf( str, 256, "%s,    The PC controller is a %s%s%s", 
-			  GetNodeString( m_currentMsg->GetTargetNodeId() ).c_str(),
+			  GetNodeString( m_currentMsg ).c_str(),
 			  ( m_controllerCaps & ControllerCaps_Secondary ) ? "secondary" : "primary",
 			  ( m_controllerCaps & ControllerCaps_SUC ) ? " static update controller (SUC)" : " controller",
 			  ( m_controllerCaps & ControllerCaps_OnOtherNetwork ) ? " which is using a Home ID from another network." : "." );
@@ -1797,11 +1804,11 @@ void Driver::HandleGetSerialAPICapabilitiesResponse
 	uint8* _data
 )
 {
-	Log::Write( LogLevel_Info, "%s, Received reply to FUNC_ID_SERIAL_API_GET_CAPABILITIES", GetNodeString( m_currentMsg->GetTargetNodeId() ).c_str() );
-	Log::Write( LogLevel_Info, "%s,    Serial API Version:   %d.%d", GetNodeString( m_currentMsg->GetTargetNodeId() ).c_str(), _data[2], _data[3] );
-	Log::Write( LogLevel_Info, "%s,    Manufacturer ID:      0x%.2x%.2x", GetNodeString( m_currentMsg->GetTargetNodeId() ).c_str(), _data[4], _data[5] );
-	Log::Write( LogLevel_Info, "%s,    Product Type:         0x%.2x%.2x", GetNodeString( m_currentMsg->GetTargetNodeId() ).c_str(), _data[6], _data[7] );
-	Log::Write( LogLevel_Info, "%s,    Product ID:           0x%.2x%.2x", GetNodeString( m_currentMsg->GetTargetNodeId() ).c_str(), _data[8], _data[9] );
+	Log::Write( LogLevel_Info, "%s, Received reply to FUNC_ID_SERIAL_API_GET_CAPABILITIES", GetNodeString( m_currentMsg ).c_str() );
+	Log::Write( LogLevel_Info, "%s,    Serial API Version:   %d.%d", GetNodeString( m_currentMsg ).c_str(), _data[2], _data[3] );
+	Log::Write( LogLevel_Info, "%s,    Manufacturer ID:      0x%.2x%.2x", GetNodeString( m_currentMsg ).c_str(), _data[4], _data[5] );
+	Log::Write( LogLevel_Info, "%s,    Product Type:         0x%.2x%.2x", GetNodeString( m_currentMsg ).c_str(), _data[6], _data[7] );
+	Log::Write( LogLevel_Info, "%s,    Product ID:           0x%.2x%.2x", GetNodeString( m_currentMsg ).c_str(), _data[8], _data[9] );
 
 	// _data[10] to _data[41] are a 256-bit bitmask with one bit set for 
 	// each FUNC_ID_ method supported by the controller.
@@ -1927,7 +1934,7 @@ void Driver::HandleMemoryGetIdResponse
 	uint8* _data
 )
 {
-	Log::Write( LogLevel_Info, "%s, Received reply to FUNC_ID_ZW_MEMORY_GET_ID. Home ID = 0x%02x%02x%02x%02x.  Our node ID = %d", GetNodeString( m_currentMsg->GetTargetNodeId() ).c_str(), _data[2], _data[3], _data[4], _data[5], _data[6] );
+	Log::Write( LogLevel_Info, "%s, Received reply to FUNC_ID_ZW_MEMORY_GET_ID. Home ID = 0x%02x%02x%02x%02x.  Our node ID = %d", GetNodeString( m_currentMsg ).c_str(), _data[2], _data[3], _data[4], _data[5], _data[6] );
 	m_homeId = (((uint32)_data[2])<<24) | (((uint32)_data[3])<<16) | (((uint32)_data[4])<<8) | ((uint32)_data[5]);
 	m_nodeId = _data[6];
 	m_controllerReplication = static_cast<ControllerReplication*>(ControllerReplication::Create( m_homeId, m_nodeId ));
@@ -1954,7 +1961,7 @@ void Driver::HandleSerialAPIGetInitDataResponse
 		ReadConfig();
 	}
 
-	string nodestr = GetNodeString( m_currentMsg->GetTargetNodeId() );
+	string nodestr = GetNodeString( m_currentMsg );
 	Log::Write( LogLevel_Info, "%s, Received reply to FUNC_ID_SERIAL_API_GET_INIT_DATA:", nodestr.c_str() );
 	m_initVersion = _data[2];
 	m_initCaps = _data[3];
@@ -2227,11 +2234,11 @@ void Driver::HandleSendDataResponse
 {
 	if( _data[2] )
 	{
-		Log::Write( LogLevel_Detail, "%s,  %s delivered to Z-Wave stack", GetNodeString( m_currentMsg->GetTargetNodeId() ).c_str(), _replication ? "ZW_REPLICATION_SEND_DATA" : "ZW_SEND_DATA" );
+		Log::Write( LogLevel_Detail, "%s,  %s delivered to Z-Wave stack", GetNodeString( m_currentMsg ).c_str(), _replication ? "ZW_REPLICATION_SEND_DATA" : "ZW_SEND_DATA" );
 	}
 	else
 	{
-		Log::Write( LogLevel_Error, "%s, ERROR: %s could not be delivered to Z-Wave stack", GetNodeString( m_currentMsg->GetTargetNodeId() ).c_str(), _replication ? "ZW_REPLICATION_SEND_DATA" : "ZW_SEND_DATA" );
+		Log::Write( LogLevel_Error, "%s, ERROR: %s could not be delivered to Z-Wave stack", GetNodeString( m_currentMsg ).c_str(), _replication ? "ZW_REPLICATION_SEND_DATA" : "ZW_SEND_DATA" );
 	}
 }
 
@@ -2244,15 +2251,14 @@ void Driver::HandleGetRoutingInfoResponse
 	uint8* _data
 )
 {
-	uint8 const nodeId = m_currentMsg->GetTargetNodeId();
-	Log::Write( LogLevel_Info, "%s, Received reply to FUNC_ID_ZW_GET_ROUTING_INFO", GetNodeString( nodeId ).c_str() );
+	Log::Write( LogLevel_Info, "%s, Received reply to FUNC_ID_ZW_GET_ROUTING_INFO", GetNodeString( m_currentMsg ).c_str() );
 
 	if( Node* node = GetNode( m_controllerCommandNode ) )
 	{
 		// copy the 29-byte bitmap received (29*8=232 possible nodes) into this node's neighbors member variable
 		memcpy( node->m_neighbors, &_data[2], 29 );
 		ReleaseNodes();
-		Log::Write( LogLevel_Info, "%s,    Neighbors of this node are:", GetNodeString( nodeId ).c_str() );
+		Log::Write( LogLevel_Info, "%s,    Neighbors of this node are:", GetNodeString( m_currentMsg ).c_str() );
 		bool bNeighbors = false;
 		for( int by=0; by<29; by++ )
 		{
@@ -2260,7 +2266,7 @@ void Driver::HandleGetRoutingInfoResponse
 			{
 				if( (_data[2+by] & (0x01<<bi)) )
 				{
-					Log::Write( LogLevel_Info, "%s,    Node %d", GetNodeString( nodeId ).c_str(), (by<<3)+bi+1 );
+					Log::Write( LogLevel_Info, "%s,    Node %d", GetNodeString( m_currentMsg ).c_str(), (by<<3)+bi+1 );
 					bNeighbors = true;
 				}
 			}
@@ -2268,7 +2274,7 @@ void Driver::HandleGetRoutingInfoResponse
 		
 		if( !bNeighbors )
 		{
-		  Log::Write( LogLevel_Info, "%s,    (none reported)", GetNodeString( nodeId ).c_str() );
+		  Log::Write( LogLevel_Info, "%s,    (none reported)", GetNodeString( m_currentMsg ).c_str() );
 		}
 	}
 
@@ -2290,7 +2296,7 @@ void Driver::HandleSendDataRequest
 	bool _replication
 )
 {
-	string nodestr = GetNodeString( m_currentMsg->GetTargetNodeId() );
+	string nodestr = GetNodeString( m_currentMsg );
 	Log::Write( LogLevel_Detail, "%s,  %s Request with callback ID 0x%.2x received (expected 0x%.2x)", nodestr.c_str(), _replication ? "ZW_REPLICATION_SEND_DATA" : "ZW_SEND_DATA", _data[2], m_expectedCallbackId );
 
 	if( _data[2] != m_expectedCallbackId )
@@ -2935,7 +2941,7 @@ bool Driver::HandleApplicationUpdateRequest
 		}
 		case UPDATE_STATE_NODE_INFO_REQ_FAILED:
 		{
-			Log::Write( LogLevel_Warning, "WARNING: FUNC_ID_ZW_APPLICATION_UPDATE: UPDATE_STATE_NODE_INFO_REQ_FAILED received" );
+			Log::Write( LogLevel_Warning, "%s, WARNING: FUNC_ID_ZW_APPLICATION_UPDATE: UPDATE_STATE_NODE_INFO_REQ_FAILED received", GetNodeString( m_currentMsg ).c_str() );
 	
 			// Note: Unhelpfully, the nodeId is always zero in this message.  We have to 
 			// assume the message came from the last node to which we sent a request.
@@ -2945,7 +2951,7 @@ bool Driver::HandleApplicationUpdateRequest
 				if( node )
 				{
 					// Retry the query up to three times
-					node->QueryStageRetry( Node::QueryStage_NodeInfo, MAX_TRIES );
+					node->QueryStageRetry( Node::QueryStage_NodeInfo, m_currentMsg->GetMaxSendAttempts() );
 
 					// Just in case the failure was due to the node being asleep, we try
 					// to move its pending messages to its wakeup queue.  If it is not
@@ -2960,12 +2966,12 @@ bool Driver::HandleApplicationUpdateRequest
 		}
 		case UPDATE_STATE_NODE_INFO_REQ_DONE:
 		{
-			Log::Write( LogLevel_Info, "UPDATE_STATE_NODE_INFO_REQ_DONE from node %d", nodeId );
+			Log::Write( LogLevel_Info, "%s, UPDATE_STATE_NODE_INFO_REQ_DONE from node %d", GetNodeString( nodeId ).c_str(), nodeId );
 			break;
 		}
 		case UPDATE_STATE_NODE_INFO_RECEIVED:
 		{
-			Log::Write( LogLevel_Info, "UPDATE_STATE_NODE_INFO_RECEIVED from node %d", nodeId );
+			Log::Write( LogLevel_Info, "%s, UPDATE_STATE_NODE_INFO_RECEIVED from node %d", GetNodeString( nodeId ).c_str(), nodeId );
 			if( Node* node = GetNodeUnsafe( nodeId ) )
 			{
 				node->UpdateNodeInfo( &_data[8], _data[4] - 3 );
@@ -3316,7 +3322,7 @@ void Driver::SetPollIntensity
 	m_pollMutex->Unlock();
 }
 
-	//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // <Driver::PollThreadEntryPoint>
 // Entry point of the thread for poll Z-Wave devices
 //-----------------------------------------------------------------------------
@@ -5274,6 +5280,27 @@ void Driver::HandleApplicationSlaveCommandRequest
 	}
 }
 
+//-----------------------------------------------------------------------------
+// <Driver::NodeFromMessage>
+// See if we can get node from incoming message data
+//-----------------------------------------------------------------------------
+uint8 Driver::NodeFromMessage
+(
+	uint8 const* buffer
+)
+{
+	uint8 nodeId = 0;
+
+	if( buffer[1] >= 5 )
+	{
+		switch( buffer[3] )
+		{
+			case FUNC_ID_APPLICATION_COMMAND_HANDLER:		nodeId = buffer[5];	break;
+			case FUNC_ID_ZW_APPLICATION_UPDATE:			nodeId = buffer[5];	break;
+		}
+	}
+	return nodeId;
+}
 //-----------------------------------------------------------------------------
 // <Driver::GetDriverStatistics>
 // Return driver statistics

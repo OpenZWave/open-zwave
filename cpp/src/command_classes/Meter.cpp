@@ -339,7 +339,7 @@ bool Meter::HandleSupportedReport
 			node->CreateValueButton( ValueID::ValueGenre_System, GetCommandClassId(), _instance, MeterIndex_Reset, "Reset", 0 );
 		}
 
-		Log::Write( LogLevel_Info, "Received Meter supported report from node %d, %s", GetNodeId(), msg.c_str() );
+		Log::Write( LogLevel_Info, "%s, Received Meter supported report from node %d, %s", GetDriver()->GetNodeString( GetNodeId() ).c_str(), GetNodeId(), msg.c_str() );
 		return true;
 	}
 
@@ -411,7 +411,7 @@ bool Meter::HandleReport
 
 		if( ValueDecimal* value = static_cast<ValueDecimal*>( GetValue( _instance, 0 ) ) )
 		{
-			Log::Write( LogLevel_Info, "Received Meter report from node %d: %s=%s%s", GetNodeId(), label.c_str(), valueStr.c_str(), units.c_str() );
+			Log::Write( LogLevel_Info, "%s, Received Meter report from node %d: %s=%s%s", GetDriver()->GetNodeString( GetNodeId() ).c_str(), GetNodeId(), label.c_str(), valueStr.c_str(), units.c_str() );
 			value->SetLabel( label );
 			value->SetUnits( units );
 			value->OnValueChanged( valueStr );
@@ -435,7 +435,7 @@ bool Meter::HandleReport
 
 		if( ValueDecimal* value = static_cast<ValueDecimal*>( GetValue( _instance, baseIndex ) ) )
 		{
-			Log::Write( LogLevel_Info, "Received Meter report from node %d: %s%s=%s%s", GetNodeId(), exporting ? "Exporting ": "", value->GetLabel().c_str(), valueStr.c_str(), value->GetUnits().c_str() );
+			Log::Write( LogLevel_Info, "%s, Received Meter report from node %d: %s%s=%s%s", GetDriver()->GetNodeString( GetNodeId() ).c_str(), GetNodeId(), exporting ? "Exporting ": "", value->GetLabel().c_str(), valueStr.c_str(), value->GetUnits().c_str() );
 			value->OnValueChanged( valueStr );
 			if( value->GetPrecision() != precision )
 			{
@@ -464,7 +464,7 @@ bool Meter::HandleReport
 				{
 					precision = 0;
 					valueStr = ExtractValue( &_data[2], &scale, &precision, 3+size );
-					Log::Write( LogLevel_Info, "    Previous value was %s%s, received %d seconds ago.", valueStr.c_str(), previous->GetUnits().c_str(), delta );
+					Log::Write( LogLevel_Info, "%s,    Previous value was %s%s, received %d seconds ago.", GetDriver()->GetNodeString( GetNodeId() ).c_str(), valueStr.c_str(), previous->GetUnits().c_str(), delta );
 					previous->OnValueChanged( valueStr );
 					if( previous->GetPrecision() != precision )
 					{
