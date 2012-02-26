@@ -49,7 +49,7 @@ namespace OpenZWave
 		virtual ~ValueShort(){}
 
 		bool Set( int16 const _value );
-		void OnValueChanged( int16 const _value );
+		void OnValueRefreshed( int16 const _value );
 
 		// From Value
 		virtual string const GetAsString() const;
@@ -60,7 +60,9 @@ namespace OpenZWave
 		int16 GetValue()const{ return m_value; }
 
 	private:
-		int16	m_value;
+		int16	m_value;				// the current value
+		int16	m_valueCheck;			// the previous value (used for double-checking spurious value reads)
+		int16	m_newValue;				// a new value to be set on the appropriate device
 	};
 
 } // namespace OpenZWave

@@ -128,17 +128,17 @@ bool Clock::HandleMsg
 
 		if( ValueList* dayValue = static_cast<ValueList*>( GetValue( _instance, ClockIndex_Day ) ) )
 		{
-			dayValue->OnValueChanged( day );
+			dayValue->OnValueRefreshed( day );
 			dayValue->Release();
 		}
 		if( ValueByte* hourValue = static_cast<ValueByte*>( GetValue( _instance, ClockIndex_Hour ) ) )
 		{
-			hourValue->OnValueChanged( hour );
+			hourValue->OnValueRefreshed( hour );
 			hourValue->Release();
 		}
 		if( ValueByte* minuteValue = static_cast<ValueByte*>( GetValue( _instance, ClockIndex_Minute ) ) )
 		{
-			minuteValue->OnValueChanged( minute );
+			minuteValue->OnValueRefreshed( minute );
 			minuteValue->Release();
 		}
 		return true;

@@ -128,7 +128,7 @@ bool EnergyProduction::HandleMsg
 		Log::Write( LogLevel_Info, "Received an Energy production report from node %d: %s = %s", GetNodeId(), c_energyParameterNames[_data[1]], value.c_str() );
 		if( ValueDecimal* decimalValue = static_cast<ValueDecimal*>( GetValue( _instance, _data[1] ) ) )
 		{
-			decimalValue->OnValueChanged( value );
+			decimalValue->OnValueRefreshed( value );
 			if( decimalValue->GetPrecision() != precision )
 			{
 				decimalValue->SetPrecision( precision );

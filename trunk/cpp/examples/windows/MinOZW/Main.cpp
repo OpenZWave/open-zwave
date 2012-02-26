@@ -29,7 +29,7 @@
 //	along with OpenZWave.  If not, see <http://www.gnu.org/licenses/>.
 //
 //-----------------------------------------------------------------------------
-
+#include "vld.h"
 #include "Windows.h"
 #include "Options.h"
 #include "Manager.h"
@@ -252,6 +252,7 @@ int main( int argc, char* argv[] )
 	Options::Get()->AddOptionInt( "DumpTrigger", LogLevel_Error );
 	Options::Get()->AddOptionInt( "PollInterval", 500 );
 	Options::Get()->AddOptionBool( "IntervalBetweenPolls", true );
+	Options::Get()->AddOptionBool("ValidateValueChanges", true);
 	Options::Get()->Lock();
 
 	Manager::Create();

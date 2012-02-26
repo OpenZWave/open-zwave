@@ -56,7 +56,7 @@ namespace OpenZWave
 		uint8 GetNumSwitchPoints()const{ return m_numSwitchPoints; }
 
 		bool Set();
-		void OnValueChanged();
+		void OnValueRefreshed();
 
 		// From Value
 		virtual void ReadXML( uint32 const _homeId, uint8 const _nodeId, uint8 const _commandClassId, TiXmlElement const* _valueElement );

@@ -68,7 +68,6 @@ void ValueButton::ReadXML
 )
 {
 	Value::ReadXML( _homeId, _nodeId, _commandClassId, _valueElement );
-	SetIsSet();
 }
 
 //-----------------------------------------------------------------------------

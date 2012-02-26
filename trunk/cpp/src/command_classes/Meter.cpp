@@ -364,7 +364,7 @@ bool Meter::HandleReport
 		exporting = ((_data[1] & 0x60) == 0x40 );
 		if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, MeterIndex_Exporting ) ) )
 		{
-			value->OnValueChanged( exporting );
+			value->OnValueRefreshed( exporting );
 			value->Release();
 		}
 	}
@@ -414,7 +414,7 @@ bool Meter::HandleReport
 			Log::Write( LogLevel_Info, "%s, Received Meter report from node %d: %s=%s%s", GetDriver()->GetNodeString( GetNodeId() ).c_str(), GetNodeId(), label.c_str(), valueStr.c_str(), units.c_str() );
 			value->SetLabel( label );
 			value->SetUnits( units );
-			value->OnValueChanged( valueStr );
+			value->OnValueRefreshed( valueStr );
 			if( value->GetPrecision() != precision )
 			{
 				value->SetPrecision( precision );
@@ -436,7 +436,7 @@ bool Meter::HandleReport
 		if( ValueDecimal* value = static_cast<ValueDecimal*>( GetValue( _instance, baseIndex ) ) )
 		{
 			Log::Write( LogLevel_Info, "%s, Received Meter report from node %d: %s%s=%s%s", GetDriver()->GetNodeString( GetNodeId() ).c_str(), GetNodeId(), exporting ? "Exporting ": "", value->GetLabel().c_str(), valueStr.c_str(), value->GetUnits().c_str() );
-			value->OnValueChanged( valueStr );
+			value->OnValueRefreshed( valueStr );
 			if( value->GetPrecision() != precision )
 			{
 				value->SetPrecision( precision );
@@ -465,7 +465,7 @@ bool Meter::HandleReport
 					precision = 0;
 					valueStr = ExtractValue( &_data[2], &scale, &precision, 3+size );
 					Log::Write( LogLevel_Info, "%s,    Previous value was %s%s, received %d seconds ago.", GetDriver()->GetNodeString( GetNodeId() ).c_str(), valueStr.c_str(), previous->GetUnits().c_str(), delta );
-					previous->OnValueChanged( valueStr );
+					previous->OnValueRefreshed( valueStr );
 					if( previous->GetPrecision() != precision )
 					{
 						previous->SetPrecision( precision );
@@ -486,7 +486,7 @@ bool Meter::HandleReport
 				}
 				if( interval )
 				{
-		 			interval->OnValueChanged( (int32)delta );
+		 			interval->OnValueRefreshed( (int32)delta );
 					interval->Release();
 				}
 			}

@@ -110,12 +110,12 @@ bool Alarm::HandleMsg
 		ValueByte* value;
 		if( (value = static_cast<ValueByte*>( GetValue( _instance, AlarmIndex_Type ) )) )
 		{
-			value->OnValueChanged( _data[1] );
+			value->OnValueRefreshed( _data[1] );
 			value->Release();
 		}
 		if( (value = static_cast<ValueByte*>( GetValue( _instance, AlarmIndex_Level ) )) )
 		{
-			value->OnValueChanged( _data[2] );
+			value->OnValueRefreshed( _data[2] );
 			value->Release();
 		}
 		return true;
