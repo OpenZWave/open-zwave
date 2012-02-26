@@ -29,6 +29,8 @@
 #include "ValueList.h"
 #include "Msg.h"
 #include "Log.h"
+#include "Manager.h"
+#include <ctime>
 
 using namespace OpenZWave;
 
@@ -134,7 +136,6 @@ void ValueList::ReadXML
 		if( intVal != -1 )
 		{
 			m_valueIdx = (int32)intVal;
-			SetIsSet();
 		}
 		else
 		{
@@ -151,7 +152,6 @@ void ValueList::ReadXML
 		if( intInd >= 0 && intInd < (int32)m_items.size() )
 		{
 			m_valueIdx = (int32)intInd;
-			SetIsSet();
 		}
 		else
 		{
@@ -211,8 +211,7 @@ bool ValueList::SetByLabel
 		return false;
 	}
 
-	// Set the value in our records.
-	OnValueChanged( m_items[index].m_value );
+	m_newValueIdx = index;
 
 	// Set the value in the device.
 	return Value::Set();
@@ -227,18 +226,15 @@ bool ValueList::SetByValue
 	int32 const _value
 )
 {
-	// Set the value in our records.
-	OnValueChanged( _value );
-
 	// Set the value in the device.
 	return Value::Set();
 }
 
 //-----------------------------------------------------------------------------
-// <ValueList::OnValueChanged>
-// A value in a device has changed
+// <ValueList::OnValueRefreshed>
+// A value in a device has been refreshed
 //-----------------------------------------------------------------------------
-void ValueList::OnValueChanged
+void ValueList::OnValueRefreshed
 (
 	int32 const _value
 )
@@ -251,8 +247,19 @@ void ValueList::OnValueChanged
 		return;
 	}
 
-	m_valueIdx = index;
-	Value::OnValueChanged();
+	switch( VerifyRefreshedValue( (void*) &m_valueIdx, (void*) &m_valueIdxCheck, (void*) &index, 3) )
+	{
+	case 0:		// value hasn't changed, nothing to do
+		break;
+	case 1:		// value has changed (not confirmed yet), save _value in m_valueCheck
+		m_valueIdxCheck = index;
+		break;
+	case 2:		// value has changed (confirmed), save _value in m_value
+		m_valueIdx = index;
+		break;
+	case 3:		// all three values are different, so wait for next refresh to try again
+		break;
+	}
 }
 
 //-----------------------------------------------------------------------------

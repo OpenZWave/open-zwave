@@ -225,7 +225,7 @@ bool ThermostatSetpoint::HandleMsg
 			string temperature = ExtractValue( &_data[2], &scale, &precision );
 
 			value->SetUnits( scale ? "F" : "C" );
-			value->OnValueChanged( temperature );
+			value->OnValueRefreshed( temperature );
 			if( value->GetPrecision() != precision )
 			{
 				value->SetPrecision( precision );

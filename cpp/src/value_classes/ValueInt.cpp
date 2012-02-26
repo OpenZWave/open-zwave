@@ -31,6 +31,8 @@
 #include "ValueInt.h"
 #include "Msg.h"
 #include "Log.h"
+#include "Manager.h"
+#include <ctime>
 
 using namespace OpenZWave;
 
@@ -97,7 +99,6 @@ void ValueInt::ReadXML
 	if( TIXML_SUCCESS == _valueElement->QueryIntAttribute( "value", &intVal ) )
 	{
 		m_value = (int32)intVal;
-		SetIsSet();
 	}
 	else
 	{
@@ -134,25 +135,30 @@ bool ValueInt::Set
 	int32 const _value
 )
 {
-	// Set the value in our records.
-	OnValueChanged( _value );
-
 	// Set the value in the device.
 	return Value::Set();
 }
 
 //-----------------------------------------------------------------------------
-// <ValueInt::OnValueChanged>
-// A value in a device has changed
+// <ValueInt::OnValueRefreshed>
+// A value in a device has been refreshed
 //-----------------------------------------------------------------------------
-void ValueInt::OnValueChanged
+void ValueInt::OnValueRefreshed
 (
 	int32 const _value
 )
 {
-	m_value = _value;
-	Value::OnValueChanged();
+	switch( VerifyRefreshedValue( (void*) &m_value, (void*) &m_valueCheck, (void*) &_value, 3) )
+	{
+	case 0:		// value hasn't changed, nothing to do
+		break;
+	case 1:		// value has changed (not confirmed yet), save _value in m_valueCheck
+		m_valueCheck = _value;
+		break;
+	case 2:		// value has changed (confirmed), save _value in m_value
+		m_value = _value;
+		break;
+	case 3:		// all three values are different, so wait for next refresh to try again
+		break;
+	}
 }
-
-
-

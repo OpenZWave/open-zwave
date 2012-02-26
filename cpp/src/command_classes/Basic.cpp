@@ -104,7 +104,7 @@ bool Basic::HandleMsg
 		Log::Write( LogLevel_Info, "%s, Received Basic report from node %d: level=%d", GetDriver()->GetNodeString( GetNodeId() ).c_str(), GetNodeId(), _data[1] );
 		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, 0 ) ) )
 		{
-			value->OnValueChanged( _data[1] );
+			value->OnValueRefreshed( _data[1] );
 			value->Release();
 		}
 		return true;

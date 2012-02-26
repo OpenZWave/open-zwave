@@ -157,31 +157,31 @@ bool AssociationCommandConfiguration::HandleMsg
 
 		if( (valueByte = static_cast<ValueByte*>( GetValue( _instance, AssociationCommandConfigurationIndex_MaxCommandLength ) )) )
 		{
-			valueByte->OnValueChanged( maxCommandLength );
+			valueByte->OnValueRefreshed( maxCommandLength );
 			valueByte->Release();
 		}
 
 		if( (valueBool = static_cast<ValueBool*>( GetValue( _instance, AssociationCommandConfigurationIndex_CommandsAreValues ) )) )
 		{
-			valueBool->OnValueChanged( commandsAreValues );
+			valueBool->OnValueRefreshed( commandsAreValues );
 			valueBool->Release();
 		}
 
 		if( (valueBool = static_cast<ValueBool*>( GetValue( _instance, AssociationCommandConfigurationIndex_CommandsAreConfigurable ) )) )
 		{
-			valueBool->OnValueChanged( commandsAreConfigurable );
+			valueBool->OnValueRefreshed( commandsAreConfigurable );
 			valueBool->Release();
 		}
 
 		if( (valueShort = static_cast<ValueShort*>( GetValue( _instance, AssociationCommandConfigurationIndex_NumFreeCommands ) )) )
 		{
-			valueShort->OnValueChanged( numFreeCommands );
+			valueShort->OnValueRefreshed( numFreeCommands );
 			valueShort->Release();
 		}
 
 		if( (valueShort = static_cast<ValueShort*>( GetValue( _instance, AssociationCommandConfigurationIndex_MaxCommands ) )) )
 		{
-			valueShort->OnValueChanged( maxCommands );
+			valueShort->OnValueRefreshed( maxCommands );
 			valueShort->Release();
 		}
 		return true;

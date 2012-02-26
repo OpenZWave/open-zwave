@@ -111,7 +111,7 @@ bool Protection::HandleMsg
 		Log::Write( LogLevel_Info, "Received a Protection report from node %d: %s", GetNodeId(), c_protectionStateNames[_data[1]] );
 		if( ValueList* value = static_cast<ValueList*>( GetValue( _instance, 0 ) ) )
 		{
-			value->OnValueChanged( (int)_data[1] );
+			value->OnValueRefreshed( (int)_data[1] );
 			value->Release();
 		}
 

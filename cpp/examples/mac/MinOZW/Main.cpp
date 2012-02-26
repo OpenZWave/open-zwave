@@ -262,6 +262,7 @@ int main( int argc, char* argv[] )
 	Options::Get()->AddOptionInt( "DumpTrigger", LogLevel_Error );
 	Options::Get()->AddOptionInt( "PollInterval", 500 );
 	Options::Get()->AddOptionBool( "IntervalBetweenPolls", true );
+	Options::Get()->AddOptionBool("ValidateValueChanges", true);
 	Options::Get()->Lock();
 
 	Manager::Create();

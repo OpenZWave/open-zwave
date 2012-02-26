@@ -34,6 +34,8 @@
 #include "Value.h"
 #include "Log.h"
 #include "CommandClass.h"
+#include <ctime>
+#include "Options.h"
 
 using namespace OpenZWave;
 
@@ -90,7 +92,8 @@ Value::Value
 	m_isSet( _isSet ),
 	m_affectsLength( 0 ),
 	m_affectsAll( false ),
-	m_pollIntensity( _pollIntensity )
+	m_pollIntensity( _pollIntensity ),
+	m_checkChange( false )
 {
 }
 
@@ -107,7 +110,8 @@ Value::Value
 	m_writeOnly( false ),
 	m_isSet( false ),
 	m_affectsLength( 0 ),
-	m_affectsAll( false )
+	m_affectsAll( false ),
+	m_checkChange( false )
 {
 }
 
@@ -230,6 +234,12 @@ void Value::ReadXML
 		}
 	}
 
+	char const* checkChange = _valueElement->Attribute( "check_change" );
+	if( checkChange )
+	{
+		m_checkChange = !strcmp( checkChange, "true" );
+	}
+
 	if( TIXML_SUCCESS == _valueElement->QueryIntAttribute( "min", &intVal ) )
 	{
 		m_min = intVal;
@@ -282,6 +292,8 @@ void Value::WriteXML
 	_valueElement->SetAttribute( "units", m_units.c_str() );
 	_valueElement->SetAttribute( "read_only", m_readOnly ? "true" : "false" );
 	_valueElement->SetAttribute( "write_only", m_writeOnly ? "true" : "false" );
+	_valueElement->SetAttribute( "check_change", m_checkChange ? "true" : "false" );
+
 	snprintf( str, sizeof(str), "%d", m_pollIntensity );
 	_valueElement->SetAttribute( "poll_intensity", str );
 
@@ -343,8 +355,12 @@ bool Value::Set
 		{
 			if( CommandClass* cc = node->GetCommandClass( m_id.GetCommandClassId() ) )
 			{
+				// flag value as set and queue a "Set Value" message for transmission to the device
 				m_isSet = true;
 				res = cc->SetValue( *this );
+
+				// queue a "RequestValue" message to update the value
+				bool res2 = cc->RequestValue( 0, m_id.GetIndex(), m_id.GetInstance(), Driver::MsgQueue_Send );
 			}
 		}
 	}
@@ -366,6 +382,31 @@ bool Value::Set
 
 	return res;
 }
+
+//-----------------------------------------------------------------------------
+// <Value::OnValueRefreshed>
+// A value in a device has been refreshed
+//-----------------------------------------------------------------------------
+void Value::OnValueRefreshed
+(
+)
+{
+	if( IsWriteOnly() )
+	{
+		return;
+	}
+
+	if( Driver* driver = Manager::Get()->GetDriver( m_id.GetHomeId() ) )
+	{
+		m_isSet = true;
+	
+		// Notify the watchers
+		Notification* notification = new Notification( Notification::Type_ValueRefreshed );
+		notification->SetValueId( m_id );
+		driver->QueueNotification( notification ); 
+	}
+}
+
 
 //-----------------------------------------------------------------------------
 // <Value::OnValueChanged>
@@ -465,4 +506,156 @@ char const* Value::GetTypeNameFromEnum
 	return c_typeName[_type];
 }
 
+//-----------------------------------------------------------------------------
+// <Value::VerifyRefreshedValue>
+// Check a refreshed value
+//-----------------------------------------------------------------------------
+int Value::VerifyRefreshedValue
+(
+	void* _originalValue,
+	void* _checkValue,
+	void* _newValue,
+	int _type
+)
+{
+	// TODO: this is pretty rough code, but it's reused by each value type.  It would be
+	// better if the actions were taken (m_value = _value, etc.) in this code rather than 
+	// in the calling routine as a result of the return value.  In particular, it's messy
+	// to be setting these values after the refesh or notification is sent.  With some
+	// focus on the actual variable storage, we should be able to accomplish this with
+	// memory functions.  It's really the strings that make things complicated(?).
+	// if this is the first read of a value, assume it is valid (and notify as a change)
+	if( !IsSet() )
+	{
+		Log::Write( LogLevel_Detail, "Initial read of value" );
+		Value::OnValueChanged();
+		return 2;		// confirmed change of value
+	}
+	else
+	{
+		switch( _type )
+		{
+		case 1:			// string
+			Log::Write( LogLevel_Detail, "Refreshed Value: old value=%s, new value=%s, type=%s", ((string*)_originalValue)->c_str(), ((string*)_newValue)->c_str(), "string" );
+			break;
+		case 2:			// short
+			Log::Write( LogLevel_Detail, "Refreshed Value: old value=%d, new value=%d, type=%s", *((short*)_originalValue), *((short*)_newValue, "short") );
+			break;
+		case 3:			// int32
+			Log::Write( LogLevel_Detail, "Refreshed Value: old value=%d, new value=%d, type=%s", *((int32*)_originalValue), *((int32*)_newValue), "int32" );
+			break;
+		case 4:			// uint8
+			Log::Write( LogLevel_Detail, "Refreshed Value: old value=%d, new value=%d, type=%s", *((uint8*)_originalValue), *((uint8*)_newValue), "uint8" );
+			break;
+		case 5:			// bool
+			Log::Write( LogLevel_Detail, "Refreshed Value: old value=%s, new value=%s, type=%s", *((bool*)_originalValue)?"true":"false", *((uint8*)_newValue)?"true":"false", "bool" );
+			break;
+		default:
+			break;
+		}
+	}
+	m_refreshTime = time( NULL );	// update value refresh time
 
+	// check whether changes in this value should be verified (since some devices will report values that always
+	// change, where confirming changes is difficult or impossible)
+	bool bGlobalVerify = false;
+	Options::Get()->GetOptionAsBool( "ValidateValueChanges", &bGlobalVerify );
+
+	Log::Write( LogLevel_Detail, "Changes to this value are %sverified", (m_verifyChanges && bGlobalVerify)?"":"not " );
+
+	if( !m_verifyChanges || !bGlobalVerify )
+	{
+		// since we're not checking changes in this value, notify ValueChanged (to be on the safe side)
+		Value::OnValueChanged();
+		return 2;				// confirmed change of value
+	}
+
+	// see if the value has changed (result is used whether checking change or not)
+	bool bOriginalEqual = false;
+	switch( _type )
+	{
+	case 1:			// string
+		bOriginalEqual = ( strcmp( ((string*)_originalValue)->c_str(), ((string*)_newValue)->c_str() ) == 0 );
+		break;
+	case 2:			// short
+		bOriginalEqual = ( *((short*)_originalValue) == *((short*)_newValue) );
+		break;
+	case 3:			// int32
+		bOriginalEqual = ( *((int32*)_originalValue) == *((int32*)_newValue) );
+		break;
+	case 4:			// uint8
+		bOriginalEqual = ( *((uint8*)_originalValue) == *((uint8*)_newValue) );
+		break;
+	case 5:			// bool
+		bOriginalEqual = ( *((bool*)_originalValue) == *((bool*)_newValue) );
+		break;
+	}
+
+		// if this is the first refresh of the value, test to see if the value has changed
+	if( !IsCheckingChange() )
+	{
+		if( bOriginalEqual )
+		{
+			// values are the same, so signal a refresh and return
+			Value::OnValueRefreshed();
+			return 0;			// value hasn't changed
+		}
+
+		// values are different, so flag this as a verification refresh and queue it
+		Log::Write( LogLevel_Info, "Changed value (possible)--rechecking" );
+		SetCheckingChange( true );
+		Manager::Get()->RefreshValue( GetID() );
+		return 1;				// value has changed (to be confirmed)
+	}
+	else		// IsCheckingChange is true if this is the second read of a potentially changed value
+	{
+		// if the second read is the same as the first read, the value really changed
+		bool bCheckEqual = false;
+		switch( _type )
+		{
+		case 1:			// string
+			bCheckEqual = ( strcmp( ((string*)_checkValue)->c_str(), ((string*)_newValue)->c_str() ) == 0 );
+			break;
+		case 2:			// short
+			bCheckEqual = ( *((short*)_checkValue) == *((short*)_newValue) );
+			break;
+		case 3:			// int32
+			bCheckEqual = ( *((int32*)_checkValue) == *((int32*)_newValue) );
+			break;
+		case 4:			// uint8
+			bCheckEqual = ( *((uint8*)_checkValue) == *((uint8*)_newValue) );
+			break;
+		case 5:			// bool
+			bCheckEqual = ( *((bool*)_checkValue) == *((bool*)_newValue) );
+			break;
+		}
+		if( bCheckEqual )
+		{
+			Log::Write( LogLevel_Info, "Changed value--confirmed" );
+			SetCheckingChange( false );
+
+			// update the saved value and send notification
+			Value::OnValueChanged();
+			return 2;
+		}
+
+		// if the second read is the same as the original value, the first read is assumed to have been in error
+		// log this situation, but don't change the value or send a ValueChanged Notification
+		if( bOriginalEqual )
+		{
+			Log::Write( LogLevel_Info, "Spurious value change was noted." );
+			SetCheckingChange( false );
+			Value::OnValueRefreshed();
+			return 0;
+		}
+
+		// the second read is different than both the original value and the checked value...retry
+		// keep trying until we get the same value twice
+		Log::Write( LogLevel_Info, "Changed value (changed again)--rechecking" );
+		SetCheckingChange( true );
+
+		// save a temporary copy of value and re-read value from device
+		Manager::Get()->RefreshValue( GetID() );
+		return 1;
+	}
+}

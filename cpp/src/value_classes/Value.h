@@ -86,12 +86,20 @@ namespace OpenZWave
 	protected:
 		virtual ~Value();
 
-		bool Set();				// For the user to change a value in a device
-		void SetIsSet() { m_isSet = true; }
-		void OnValueChanged();	// A value in a device has been changed.
+		bool Set();							// For the user to change a value in a device
+//		void SetIsSet() { m_isSet = true; }	// TODO: consider removing this...it's never called since m_isSet is set in ValueChanged and ValueRefreshed
+		void SetChangeVerified( bool _verify ){ m_verifyChanges = _verify; }
+		bool IsCheckingChange()const{ return m_checkChange; }
+		void SetCheckingChange( bool _check ) { m_checkChange = _check; }
+		void OnValueRefreshed();			// A value in a device has been refreshed
+		void OnValueChanged();				// The refreshed value actually changed
+		int VerifyRefreshedValue( void* _originalValue, void* _checkValue, void* _newValue, int _type );
 
 		int32		m_min;
 		int32		m_max;
+
+		time_t		m_refreshTime;			// time_t identifying when this value was last refreshed
+		bool		m_verifyChanges;		// if true, apparent changes are verified; otherwise, they're not
 
 	private:
 		ValueID		m_id;
@@ -104,6 +112,7 @@ namespace OpenZWave
 		uint8		m_affectsLength;
 		uint8*		m_affects;
 		bool		m_affectsAll;
+		bool		m_checkChange;
 		uint8		m_pollIntensity;
 	};
 

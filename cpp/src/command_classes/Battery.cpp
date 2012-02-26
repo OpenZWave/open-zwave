@@ -115,7 +115,7 @@ bool Battery::HandleMsg
 
 		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, 0 ) ) )
 		{
-			value->OnValueChanged( batteryLevel );
+			value->OnValueRefreshed( batteryLevel );
 			value->Release();
 		}
 		return true;

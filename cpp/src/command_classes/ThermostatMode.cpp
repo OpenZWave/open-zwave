@@ -234,7 +234,7 @@ bool ThermostatMode::HandleMsg
 		// We have received the thermostat mode from the Z-Wave device
 		if( ValueList* valueList = static_cast<ValueList*>( GetValue( _instance, 0 ) ) )
 		{
-			valueList->OnValueChanged( _data[1]&0x1f );
+			valueList->OnValueRefreshed( _data[1]&0x1f );
 			valueList->Release();
 			Log::Write( LogLevel_Info, "Received thermostat mode from node %d: %s", GetNodeId(), valueList->GetItem().m_label.c_str() );
 		}
@@ -297,7 +297,7 @@ bool ThermostatMode::SetValue
 	if( ValueID::ValueType_List == _value.GetID().GetType() )
 	{
 		ValueList const* value = static_cast<ValueList const*>(&_value);
-		uint8 state = (uint8)value->GetItem().m_value;
+		uint8 state = (uint8)value->GetNewItem().m_value;
 
 		Msg* msg = new Msg( "Set Thermostat Mode", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 		msg->Append( GetNodeId() );

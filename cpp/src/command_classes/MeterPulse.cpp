@@ -108,7 +108,7 @@ bool MeterPulse::HandleMsg
 		Log::Write( LogLevel_Info, "Received a meter pulse count from node %d: Count=%d", GetNodeId(), count );
 		if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, 0 ) ) )
 		{
-			value->OnValueChanged( count );
+			value->OnValueRefreshed( count );
 			value->Release();
 		}
 
