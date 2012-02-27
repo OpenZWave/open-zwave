@@ -4454,6 +4454,7 @@ bool Driver::CancelControllerCommand
 		case ControllerCommand_RemoveDevice:
 		{
 			Log::Write( LogLevel_Info, "CancelRemoveDevice" );
+			m_controllerCommandNode = 0xff;		// identify the fact that there is no node to remove
 			Msg* msg = new Msg( "CancelRemoveDevice", 0xff, REQUEST, FUNC_ID_ZW_REMOVE_NODE_FROM_NETWORK, true );
 			msg->Append( REMOVE_NODE_STOP );
 			SendMsg( msg, MsgQueue_Command );
