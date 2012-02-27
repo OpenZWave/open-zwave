@@ -247,7 +247,7 @@ bool Options::GetOptionAsBool
 		return true;
 	}
 
-	Log::Write( LogLevel_Warning, "Specified option [%s] was not found.", _name );
+	Log::Write( LogLevel_Warning, "Specified option [%s] was not found.", _name.c_str() );
 	return false;
 }
 
@@ -268,7 +268,7 @@ bool Options::GetOptionAsInt
 		return true;
 	}
 
-	Log::Write( LogLevel_Warning, "Specified option [%s] was not found.", _name );
+	Log::Write( LogLevel_Warning, "Specified option [%s] was not found.", _name.c_str() );
 	return false;
 }
 
@@ -289,7 +289,7 @@ bool Options::GetOptionAsString
 		return true;
 	}
 
-	Log::Write( LogLevel_Warning, "Specified option [%s] was not found.", _name );
+	Log::Write( LogLevel_Warning, "Specified option [%s] was not found.", _name.c_str() );
 	return false;
 }
 
@@ -309,7 +309,7 @@ Options::OptionType Options::GetOptionType
 	}
 
 	// Option not found
-	Log::Write( LogLevel_Warning, "Specified option [%s] was not found.", _name );
+	Log::Write( LogLevel_Warning, "Specified option [%s] was not found.", _name.c_str() );
 	return OptionType_Invalid;
 }
 
