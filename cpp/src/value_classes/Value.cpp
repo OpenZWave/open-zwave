@@ -399,11 +399,16 @@ void Value::OnValueRefreshed
 	if( Driver* driver = Manager::Get()->GetDriver( m_id.GetHomeId() ) )
 	{
 		m_isSet = true;
-	
-		// Notify the watchers
-		Notification* notification = new Notification( Notification::Type_ValueRefreshed );
-		notification->SetValueId( m_id );
-		driver->QueueNotification( notification ); 
+
+		bool bSuppress;
+		Options::Get()->GetOptionAsBool( "SuppressValueRefresh", &bSuppress );
+		if( !bSuppress )
+		{
+			// Notify the watchers
+			Notification* notification = new Notification( Notification::Type_ValueRefreshed );
+			notification->SetValueId( m_id );
+			driver->QueueNotification( notification ); 
+		}
 	}
 }
 
