@@ -55,16 +55,31 @@ Options* Options::Create
 		s_instance = new Options( _configPath, _userPath, _commandLine );
 
 		// Add the default options
-		s_instance->AddOptionString(	"ConfigPath",			_configPath,	false );	// Path to the OpenZWave config folder.
-		s_instance->AddOptionString(	"UserPath",				_userPath,		false );	// Path to the user's data folder.
-		s_instance->AddOptionBool(	"Logging",				true );					// Enable logging of library activity.
-		s_instance->AddOptionBool(	"Associate",			true );						// Enable automatic association of the controller with group one of every device.
-		s_instance->AddOptionString(	"Exclude",				string(""),		true );		// Remove support for the listed command classes.
-		s_instance->AddOptionString(	"Include",				string(""),		true );		// Only handle the specified command classes.  The Exclude option is ignored if anything is listed here.
-		s_instance->AddOptionBool(	"NotifyTransactions",		false );					// Notifications when transaction complete is reported.
-		s_instance->AddOptionString(	"Interface",			string(""),		true );			// Identify the serial port to be accessed (TODO: change the code so more than one serial port can be specified and HID)
-		s_instance->AddOptionBool(	"SaveConfiguration",		true );						// Save the XML configuration upon driver close.
-		s_instance->AddOptionInt(	"DriverMaxAttempts", 0);
+		s_instance->AddOptionString(	"ConfigPath",				_configPath,	false );	// Path to the OpenZWave config folder.
+		s_instance->AddOptionString(	"UserPath",					_userPath,		false );	// Path to the user's data folder.
+
+		s_instance->AddOptionBool(		"Logging",					true );						// Enable logging of library activity.
+		s_instance->AddOptionString(	"LogFileName",				"OZW_Log.txt",	false );	// Name of the log file (can be changed via Log::SetLogFileName)
+		s_instance->AddOptionBool(		"AppendLogFile",			false );					// Append new session logs to existing log file (false = overwrite)
+		s_instance->AddOptionBool(		"ConsoleOutput",			true );						// Display log information on console (as well as save to disk)
+		s_instance->AddOptionInt(		"SaveLogLevel",				LogLevel_Detail );			// Save (to file) log messages equal to or above LogLevel_Detail
+		s_instance->AddOptionInt(		"QueueLogLevel",			LogLevel_Debug );			// Save (in RAM) log messages equal to or above LogLevel_Debug
+		s_instance->AddOptionInt(		"DumpTriggerLevel",			LogLevel_Warning );			// Dump the RAM messages to file when a LogLevel_Warning or above is shown
+
+		s_instance->AddOptionBool(		"Associate",				true );						// Enable automatic association of the controller with group one of every device.
+		s_instance->AddOptionString(	"Exclude",					string(""),		true );		// Remove support for the listed command classes.
+		s_instance->AddOptionString(	"Include",					string(""),		true );		// Only handle the specified command classes.  The Exclude option is ignored if anything is listed here.
+		s_instance->AddOptionBool(		"NotifyTransactions",		false );					// Notifications when transaction complete is reported.
+		s_instance->AddOptionString(	"Interface",				string(""),		true );		// Identify the serial port to be accessed (TODO: change the code so more than one serial port can be specified and HID)
+		s_instance->AddOptionBool(		"SaveConfiguration",		true );						// Save the XML configuration upon driver close.
+		s_instance->AddOptionInt(		"DriverMaxAttempts",		0);
+
+		s_instance->AddOptionInt(		"PollInterval",				30000);						// 30 seconds (can easily poll 30 values in this time; ~120 values is the effective limit for 30 seconds)
+		s_instance->AddOptionBool(		"IntervalBetweenPolls",		false );					// if false, try to execute the entire poll list within the PollInterval time frame
+																								// if true, wait for PollInterval milliseconds between polls
+		s_instance->AddOptionBool(		"ValidateValueChanges",		true );						// if true, confirm any value changes (to eliminate spurious reported changes from device) other than any
+																								// values for which SetChangeVerified( false ) has been called
+		s_instance->AddOptionBool(		"SuppressValueRefresh",		false );					// if true, notifications for refreshed (but unchanged) values will not be sent
 	}
 
 	return s_instance;
@@ -232,6 +247,7 @@ bool Options::GetOptionAsBool
 		return true;
 	}
 
+	Log::Write( LogLevel_Warning, "Specified option [%s] was not found.", _name );
 	return false;
 }
 
@@ -252,6 +268,7 @@ bool Options::GetOptionAsInt
 		return true;
 	}
 
+	Log::Write( LogLevel_Warning, "Specified option [%s] was not found.", _name );
 	return false;
 }
 
@@ -272,6 +289,7 @@ bool Options::GetOptionAsString
 		return true;
 	}
 
+	Log::Write( LogLevel_Warning, "Specified option [%s] was not found.", _name );
 	return false;
 }
 
@@ -291,6 +309,7 @@ Options::OptionType Options::GetOptionType
 	}
 
 	// Option not found
+	Log::Write( LogLevel_Warning, "Specified option [%s] was not found.", _name );
 	return OptionType_Invalid;
 }
 

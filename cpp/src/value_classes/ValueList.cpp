@@ -195,6 +195,21 @@ void ValueList::WriteXML
 }
 
 //-----------------------------------------------------------------------------
+// <ValueList::SetByValue>
+// Set a new value in the device, selected by item index
+//-----------------------------------------------------------------------------
+bool ValueList::SetByValue
+(
+	int32 const _value
+)
+{
+	m_newValueIdx = _value;
+
+	// Set the value in the device.
+	return Value::Set();
+}
+
+//-----------------------------------------------------------------------------
 // <ValueList::SetByLabel>
 // Set a new value in the device, selected by item label
 //-----------------------------------------------------------------------------
@@ -213,19 +228,6 @@ bool ValueList::SetByLabel
 
 	m_newValueIdx = index;
 
-	// Set the value in the device.
-	return Value::Set();
-}
-
-//-----------------------------------------------------------------------------
-// <ValueList::SetByValue>
-// Set a new value in the device, selected by item value
-//-----------------------------------------------------------------------------
-bool ValueList::SetByValue
-(
-	int32 const _value
-)
-{
 	// Set the value in the device.
 	return Value::Set();
 }

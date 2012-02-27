@@ -124,6 +124,8 @@ bool ValueBool::Set
 	bool const _value
 )
 {
+	m_value = _value;
+
 	// Set the value in the device.
 	return Value::Set();
 }

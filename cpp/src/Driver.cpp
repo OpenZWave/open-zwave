@@ -535,7 +535,7 @@ bool Driver::ReadConfig
 		m_controllerCaps = (uint8)intVal;
 	}
 
-	// Poll Interval
+/*	// Poll Interval
 	if( TIXML_SUCCESS == driverElement->QueryIntAttribute( "poll_interval", &intVal ) )
 	{
 		m_pollInterval = intVal;
@@ -546,7 +546,7 @@ bool Driver::ReadConfig
 	{
 		m_bIntervalBetweenPolls = ( intVal != 0 );
 	}
-
+*/
 	// Read the nodes
 	LockNodes();
 	TiXmlElement const* nodeElement = driverElement->FirstChildElement();
@@ -631,12 +631,12 @@ void Driver::WriteConfig
 	snprintf( str, sizeof(str), "%d", m_controllerCaps );
 	driverElement->SetAttribute( "controller_capabilities", str );
 
-	snprintf( str, sizeof(str), "%d", m_pollInterval );
+/*	snprintf( str, sizeof(str), "%d", m_pollInterval );
 	driverElement->SetAttribute( "poll_interval", str );
 
 	snprintf( str, sizeof(str), "%d", (int) m_bIntervalBetweenPolls );
 	driverElement->SetAttribute( "poll_interval_between", str );
-
+*/
 	LockNodes();
 	for( int i=0; i<256; ++i )
 	{
@@ -938,8 +938,16 @@ void Driver::RemoveCurrentMsg
 (
 )
 {
-	delete m_currentMsg;
-	m_currentMsg = NULL;
+	if( m_currentMsg != NULL)
+	{
+		Log::Write( LogLevel_Debug, "Node%03d, Removing current message", m_currentMsg->GetTargetNodeId() );
+		delete m_currentMsg;
+		m_currentMsg = NULL;
+	}
+	else
+	{
+		Log::Write( LogLevel_Warning, "         Removing current message (though it was already NULL)" );
+	}
 
 	m_expectedCallbackId = 0;
 	m_expectedCommandClassId = 0;
@@ -1271,7 +1279,14 @@ bool Driver::ReadMsg
 			// of retries but only up to a limit so we don't stay here forever.
 			Log::Write( LogLevel_Detail, "%s, CAN received...triggering resend", GetNodeString( m_currentMsg ).c_str() );
 			m_CANCnt++;
-			m_currentMsg->SetMaxSendAttempts( m_currentMsg->GetMaxSendAttempts() + 1 );
+			if( m_currentMsg != NULL )
+			{
+				m_currentMsg->SetMaxSendAttempts( m_currentMsg->GetMaxSendAttempts() + 1 );
+			}
+			else
+			{
+				Log::Write( LogLevel_Warning, "m_currentMsg was NULL when trying to set MaxSendAttempts" );
+			}
 			WriteMsg( "CAN" );
 			break;
 		}
@@ -3133,6 +3148,7 @@ bool Driver::EnablePoll
 				if( (*it).m_id == _valueId )
 				{
 					// It is already in the poll list, so we have nothing to do.
+					Log::Write( LogLevel_Detail, "EnablePoll not required to do anything (value is already in the poll list)" );
 					value->Release();
 					m_pollMutex->Unlock();
 					ReleaseNodes();
@@ -3153,8 +3169,9 @@ bool Driver::EnablePoll
 			Notification* notification = new Notification( Notification::Type_PollingEnabled );
 			notification->SetHomeAndNodeIds( m_homeId, _valueId.GetNodeId() );
 			QueueNotification( notification ); 
-			Log::Write( LogLevel_Info, "Node%03d, EnablePoll for HomeID 0x%.8x, value(cc=0x%02x,in=0x%02x,id=0x%02x)", 
-				_valueId.GetNodeId(),_valueId.GetHomeId(), _valueId.GetCommandClassId(), _valueId.GetIndex(), _valueId.GetInstance() );
+			Log::Write( LogLevel_Info, "Node%03d, EnablePoll for HomeID 0x%.8x, value(cc=0x%02x,in=0x%02x,id=0x%02x)--pollList has %d items", 
+				_valueId.GetNodeId(),_valueId.GetHomeId(), _valueId.GetCommandClassId(), _valueId.GetIndex(), _valueId.GetInstance(),
+				m_pollList.size() );
 			return true;
 		}
 
@@ -3206,8 +3223,9 @@ bool Driver::DisablePoll
 				Notification* notification = new Notification( Notification::Type_PollingDisabled );
 				notification->SetHomeAndNodeIds( m_homeId, _valueId.GetNodeId() );
 				QueueNotification( notification ); 
-				Log::Write( LogLevel_Info, "Node%03d, DisablePoll for HomeID 0x%.8x, value(cc=0x%02x,in=0x%02x,id=0x%02x)", 
-					_valueId.GetNodeId(),_valueId.GetHomeId(), _valueId.GetCommandClassId(), _valueId.GetIndex(), _valueId.GetInstance() );
+				Log::Write( LogLevel_Info, "Node%03d, DisablePoll for HomeID 0x%.8x, value(cc=0x%02x,in=0x%02x,id=0x%02x)--poll list has %d items", 
+					_valueId.GetNodeId(),_valueId.GetHomeId(), _valueId.GetCommandClassId(), _valueId.GetIndex(), _valueId.GetInstance(),
+					m_pollList.size() );
 				return true;
 			}
 		}
