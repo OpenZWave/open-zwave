@@ -29,7 +29,6 @@
 //	along with OpenZWave.  If not, see <http://www.gnu.org/licenses/>.
 //
 //-----------------------------------------------------------------------------
-#include "vld.h"
 #include "Windows.h"
 #include "Options.h"
 #include "Manager.h"
