@@ -3464,15 +3464,15 @@ void Driver::PollThreadProc
 					|| !m_msgQueue[MsgQueue_Query].empty()
 					|| m_currentMsg != NULL );
 			}
-			else		// poll list is empty or awake nodes haven't been fully queried yet
+		}
+		else		// poll list is empty or awake nodes haven't been fully queried yet
+		{
+			// don't poll just yet, wait for the pollInterval or exit before re-checking to see if the pollList has elements
+			int32 i32 = Wait::Single( _exitEvent, pollInterval );
+			if( i32 == 0 )
 			{
-				// don't poll just yet, wait for the pollInterval or exit before re-checking to see if the pollList has elements
-				int32 i32 = Wait::Single( _exitEvent, pollInterval );
-				if( i32 == 0 )
-				{
-					// Exit has been called
-					return;
-				}
+				// Exit has been called
+				return;
 			}
 		}
 	}
