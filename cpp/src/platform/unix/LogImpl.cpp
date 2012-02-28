@@ -92,12 +92,14 @@ LogImpl::~LogImpl
 void LogImpl::Write
 ( 
 	LogLevel _logLevel,
+	uint8 const _nodeId,
 	char const* _format, 
 	va_list _args
 )
 {
 	// create a timestamp string
 	string timeStr = GetTimeStampString();
+	string nodeStr = GetNodeString( _nodeId );
 
 	// handle this message
 	if( (_logLevel <= m_queueLevel) || (_logLevel == LogLevel_Internal) )	// we're going to do something with this message...
@@ -125,6 +127,8 @@ void LogImpl::Write
 				{
 					strcpy( outBufPtr, timeStr.c_str() );
 					outBufPtr += timeStr.length();
+					strcpy( outBufPtr, nodeStr.c_str() );
+					outBufPtr += nodeStr.length();
 				}
 
 				if( lineLen > 0 )
@@ -257,6 +261,32 @@ string LogImpl::GetTimeStampString
 		  tm->tm_hour, tm->tm_min, tm->tm_sec, tv.tv_usec / 1000 );
 	string str = buf;
 	return str;
+}
+
+//-----------------------------------------------------------------------------
+//	<LogImpl::GetNodeString>
+//	Generate a string with formatted node id
+//-----------------------------------------------------------------------------
+string LogImpl::GetNodeString
+(
+	uint8 const _nodeId
+)
+{
+	if( _nodeId == 0 )
+	{
+		return "";
+	}
+	else
+		if( _nodeId == 255 ) // should make distinction between broadcast and controller better for SwitchAll broadcast
+		{
+			return "contrlr, ";
+		}
+		else
+		{
+			char buf[20];  
+			snprintf( buf, sizeof(buf), "Node%03d, ", _nodeId );
+			return buf;
+		}
 }
 
 //-----------------------------------------------------------------------------

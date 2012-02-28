@@ -209,7 +209,7 @@ void MultiInstance::HandleMultiInstanceReport
 
 		if( CommandClass* pCommandClass = node->GetCommandClass( commandClassId ) )
 		{
-			Log::Write( LogLevel_Info, "%s, Received MultiInstanceReport from node %d for %s: Number of instances = %d", GetDriver()->GetNodeString( GetNodeId() ).c_str(), GetNodeId(), pCommandClass->GetCommandClassName().c_str(), instances );
+			Log::Write( LogLevel_Info, GetNodeId(), "Received MultiInstanceReport from node %d for %s: Number of instances = %d", GetNodeId(), pCommandClass->GetCommandClassName().c_str(), instances );
 			pCommandClass->SetInstances( instances );
 			pCommandClass->ClearStaticRequest( StaticRequest_Instances );
 		}
@@ -237,7 +237,7 @@ void MultiInstance::HandleMultiInstanceEncap
 
 		if( CommandClass* pCommandClass = node->GetCommandClass( commandClassId ) )
 		{
-			Log::Write( LogLevel_Info, "%s, Received a MultiInstanceEncap from node %d, instance %d, for Command Class %s", GetDriver()->GetNodeString( GetNodeId() ).c_str(), GetNodeId(), instance, pCommandClass->GetCommandClassName().c_str() );
+			Log::Write( LogLevel_Info, GetNodeId(), "Received a MultiInstanceEncap from node %d, instance %d, for Command Class %s", GetNodeId(), instance, pCommandClass->GetCommandClassName().c_str() );
 			pCommandClass->HandleMsg( &_data[3], _length-3, instance );
 		}
 	}
@@ -264,7 +264,7 @@ void MultiInstance::HandleMultiChannelEndPointReport
 
 	if( m_endPointsAreSameClass )
 	{
-		Log::Write( LogLevel_Info, "%s, Received MultiChannelEndPointReport from node %d.  All %d endpoints are the same.", GetDriver()->GetNodeString( GetNodeId() ).c_str(), GetNodeId(), m_numEndpoints );
+		Log::Write( LogLevel_Info, GetNodeId(), "Received MultiChannelEndPointReport from node %d.  All %d endpoints are the same.", GetNodeId(), m_numEndpoints );
 	
 		// Send a single capability request to endpoint 1 (since all classes are the same)
 		char str[128];
@@ -280,8 +280,8 @@ void MultiInstance::HandleMultiChannelEndPointReport
 	}
 	else
 	{
-		Log::Write( LogLevel_Info, "%s, Received MultiChannelEndPointReport from node %d.  Endpoints are not all the same.", GetDriver()->GetNodeString( GetNodeId() ).c_str(), GetNodeId() );
-		Log::Write( LogLevel_Info, "%s,    Starting search for endpoints by generic class...", GetDriver()->GetNodeString( GetNodeId() ).c_str() );
+		Log::Write( LogLevel_Info, GetNodeId(), "Received MultiChannelEndPointReport from node %d.  Endpoints are not all the same.", GetNodeId() );
+		Log::Write( LogLevel_Info, GetNodeId(), "    Starting search for endpoints by generic class..." );
 
 		// This is where things get really ugly.  We need to get the capabilities of each
 		// endpoint, but we only know how many there are, not which indices they
@@ -320,9 +320,9 @@ void MultiInstance::HandleMultiChannelCapabilityReport
 		uint8 endPoint = _data[1] & 0x7f;
 		bool dynamic = ((_data[1] & 0x80)!=0);
 
-		Log::Write( LogLevel_Info, "%s, Received MultiChannelCapabilityReport from node %d for endpoint %d", GetDriver()->GetNodeString( GetNodeId() ).c_str(), GetNodeId(), endPoint );
-		Log::Write( LogLevel_Info, "%s,	 Endpoint is%sdynamic, and is a %s", GetDriver()->GetNodeString( GetNodeId() ).c_str(), dynamic ? " " : " not ", node->GetEndPointDeviceClassLabel( _data[2], _data[3] ).c_str() );
-		Log::Write( LogLevel_Info, "%s,    Command classes supported by the endpoint are:", GetDriver()->GetNodeString( GetNodeId() ).c_str() );
+		Log::Write( LogLevel_Info, GetNodeId(), "Received MultiChannelCapabilityReport from node %d for endpoint %d", GetNodeId(), endPoint );
+		Log::Write( LogLevel_Info, GetNodeId(), "    Endpoint is%sdynamic, and is a %s", dynamic ? " " : " not ", node->GetEndPointDeviceClassLabel( _data[2], _data[3] ).c_str() );
+		Log::Write( LogLevel_Info, GetNodeId(), "    Command classes supported by the endpoint are:" );
 
 		// Store the command classes for later use
 		bool afterMark = false;
@@ -351,13 +351,13 @@ void MultiInstance::HandleMultiChannelCapabilityReport
 			}
 			if( cc )
 			{
-				Log::Write( LogLevel_Info, "%s,        %s", GetDriver()->GetNodeString( GetNodeId() ).c_str(), cc->GetCommandClassName().c_str() );
+				Log::Write( LogLevel_Info, GetNodeId(), "        %s", cc->GetCommandClassName().c_str() );
 			}
  		}
 
 		if( ( endPoint == 1 ) && m_endPointsAreSameClass )
 		{
-			Log::Write( LogLevel_Info, "%s, All endpoints in this device are the same as endpoint 1.  Searching for the other endpoints...", GetDriver()->GetNodeString( GetNodeId() ).c_str() );
+			Log::Write( LogLevel_Info, GetNodeId(), "All endpoints in this device are the same as endpoint 1.  Searching for the other endpoints..." );
 	
 			// All end points have the same command classes.
 			// We just need to find them...
@@ -399,7 +399,7 @@ void MultiInstance::HandleMultiChannelEndPointFindReport
 	uint32 const _length
 )
 {
-	Log::Write( LogLevel_Info, "%s, Received MultiChannelEndPointFindReport from node %d", GetDriver()->GetNodeString( GetNodeId() ).c_str(), GetNodeId() );
+	Log::Write( LogLevel_Info, GetNodeId(), "Received MultiChannelEndPointFindReport from node %d", GetNodeId() );
 	uint8 numEndPoints = _length - 5;
 	for( uint8 i=0; i<numEndPoints; ++i )
 	{
@@ -416,7 +416,7 @@ void MultiInstance::HandleMultiChannelEndPointFindReport
 					CommandClass* cc = node->GetCommandClass( commandClassId );
 					if( cc )
 					{	
-						Log::Write( LogLevel_Info, "%s,    Endpoint %d: Adding %s", GetDriver()->GetNodeString( GetNodeId() ).c_str(), endPoint, cc->GetCommandClassName().c_str() );
+						Log::Write( LogLevel_Info, GetNodeId(), "    Endpoint %d: Adding %s", endPoint, cc->GetCommandClassName().c_str() );
 						cc->SetInstance( endPoint );
 					}
 				}
@@ -483,7 +483,7 @@ void MultiInstance::HandleMultiChannelEncap
 		uint8 commandClassId = _data[3];
 		if( CommandClass* pCommandClass = node->GetCommandClass( commandClassId ) )
 		{
-			Log::Write( LogLevel_Info, "%s, Received a MultiChannelEncap from node %d, endpoint %d for Command Class %s", GetDriver()->GetNodeString( GetNodeId() ).c_str(), GetNodeId(), endPoint, pCommandClass->GetCommandClassName().c_str() );
+			Log::Write( LogLevel_Info, GetNodeId(), "Received a MultiChannelEncap from node %d, endpoint %d for Command Class %s", GetNodeId(), endPoint, pCommandClass->GetCommandClassName().c_str() );
 			pCommandClass->HandleMsg( &_data[4], _length-4, endPoint );
 		}
 	}

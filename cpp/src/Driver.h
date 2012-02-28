@@ -446,38 +446,15 @@ namespace OpenZWave
 	//	Retrieving Node information
 	//-----------------------------------------------------------------------------
 	public:
-		string GetNodeString( uint8 const _nodeId )const
-		{
-			if( _nodeId == 0xff )
-			{
-				return "contrlr";
-			}
-			else
-			{
-				char buf[10];
-				snprintf( buf, sizeof(buf), "Node%03d", _nodeId );
-				return buf;
-			}
-		}
-		string GetNodeString( Msg const* _msg )const
+		uint8 GetNodeNumber( Msg const* _msg )const
 		{
 			if( _msg == NULL )
 			{
-			  return "unknown";
+				return 0;
 			}
 			else
 			{
-				uint8 const nodeId = _msg->GetTargetNodeId();
-				if( nodeId == 0xff )
-				{
-					return "contrlr";
-				}
-				else
-				{
-					char buf[10];
-					snprintf( buf, sizeof(buf), "Node%03d", nodeId );
-					return buf;
-				}
+				return _msg->GetTargetNodeId();
 			}
 		}
 	private:
@@ -593,7 +570,7 @@ namespace OpenZWave
 		uint8					m_controllerCommandNode;
 		uint8					m_controllerCommandArg;
 
-
+		uint8					m_SUCNode;
 
 	//-----------------------------------------------------------------------------
 	// Virtual Node commands

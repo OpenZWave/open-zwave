@@ -30,6 +30,7 @@
 #include "Log.h"
 #include "MutexImpl.h"
 
+#include <stdio.h>
 #include <errno.h>
 
 using namespace OpenZWave;
@@ -47,7 +48,11 @@ MutexImpl::MutexImpl
 
 	pthread_mutexattr_init ( &ma );
 	pthread_mutexattr_settype( &ma, PTHREAD_MUTEX_RECURSIVE );
-	pthread_mutex_init( &m_criticalSection, &ma );
+	int err = pthread_mutex_init( &m_criticalSection, &ma );
+	if( err != 0 )
+	{
+		fprintf(stderr, "MutexImpl::MutexImpl error %d (%d)\n", errno, err );
+	}
 	pthread_mutexattr_destroy( &ma );
 }
 
@@ -74,9 +79,14 @@ bool MutexImpl::Lock
 	if( _bWait )
 	{
 		// We will wait for the lock
-	  	pthread_mutex_lock( &m_criticalSection );
-		++m_lockCount;
-		return true;
+		int err = pthread_mutex_lock( &m_criticalSection );
+		if( err == 0 )
+		{
+			++m_lockCount;
+			return true;
+		}
+		fprintf(stderr, "MutexImpl::Lock error %d (%d)\n", errno, err);
+		return false;
 	}
 
 	// Returns immediately, even if the lock was not available.
@@ -105,7 +115,11 @@ void MutexImpl::Unlock
 	else
 	{
 		--m_lockCount;
-		pthread_mutex_unlock( &m_criticalSection );
+		int err = pthread_mutex_unlock( &m_criticalSection );
+		if( err != 0 )
+		{
+			fprintf(stderr, "MutexImpl::Unlock error %d (%d)\n", errno, err);
+		}
 	}
 }
 

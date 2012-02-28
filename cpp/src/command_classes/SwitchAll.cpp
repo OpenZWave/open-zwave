@@ -113,7 +113,7 @@ bool SwitchAll::HandleMsg
 		{
 			value->OnValueRefreshed( (int32)_data[1] );
 			value->Release();
-			Log::Write( LogLevel_Info, "%s, Received SwitchAll report from node %d: %s", GetDriver()->GetNodeString( GetNodeId() ).c_str(), GetNodeId(), value->GetItem().m_label.c_str() );
+			Log::Write( LogLevel_Info, GetNodeId(), "Received SwitchAll report from node %d: %s", GetNodeId(), value->GetItem().m_label.c_str() );
 		}
  		return true;
 	}
@@ -135,7 +135,7 @@ bool SwitchAll::SetValue
 		ValueList const* value = static_cast<ValueList const*>(&_value);
 		ValueList::Item const& item = value->GetItem();
 
-		Log::Write( LogLevel_Info, "%s, SwitchAll::Set - %s on node %d", GetDriver()->GetNodeString( GetNodeId() ).c_str(), item.m_label.c_str(), GetNodeId() );
+		Log::Write( LogLevel_Info, GetNodeId(), "SwitchAll::Set - %s on node %d", item.m_label.c_str(), GetNodeId() );
 		Msg* msg = new Msg( "SwitchAllCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
 		msg->SetInstance( this, _value.GetID().GetInstance() );
 		msg->Append( GetNodeId() );
@@ -161,7 +161,7 @@ void SwitchAll::Off
 	uint8 const _nodeId 
 )
 {
-	Log::Write( LogLevel_Info, "%s, SwitchAll::Off (Node=%d)", _driver->GetNodeString( _nodeId ).c_str(), _nodeId );
+	Log::Write( LogLevel_Info, _nodeId, "SwitchAll::Off (Node=%d)", _nodeId );
 	Msg* msg = new Msg( "SwitchAllCmd_Off", _nodeId, REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
 	msg->Append( _nodeId );
 	msg->Append( 2 );
@@ -181,7 +181,7 @@ void SwitchAll::On
 	uint8 const _nodeId 
 )
 {
-	Log::Write( LogLevel_Info, "%s, SwitchAll::On (Node=%d)", _driver->GetNodeString( _nodeId ).c_str(), _nodeId );
+	Log::Write( LogLevel_Info, _nodeId, "SwitchAll::On (Node=%d)", _nodeId );
 	Msg* msg = new Msg( "SwitchAllCmd_On", _nodeId, REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
 	msg->Append( _nodeId );
 	msg->Append( 2 );
