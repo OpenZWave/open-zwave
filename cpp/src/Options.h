@@ -55,9 +55,9 @@ namespace OpenZWave
 	 * 1) Create an Options object, providing paths to the OpenZWave config folder,
 	 * the User data folder and any command line string containing program options.
 	 * 2) Call Options::AddOptionBool, Options::AddOptionInt or Options::AddOptionString
-	 * to add any application-specific configurable options
-	 * The OpenZWave options will already have been added during construction of the
-	 * Options object.
+	 * to add any application-specific configurable options.  In this way, the Options
+	 * class can be used for non-OpenZWave options as well.  (OpenZWave options must
+	 * be specified in step #1 above (either via xml file or a command line string).
 	 * 3) Call Options::Lock.  This will cause the option values to be read from
 	 * the options.xml file and the command line string, and will lock the options
 	 * so that no more calls aside from GetOptionAs may be made.
@@ -220,10 +220,7 @@ namespace OpenZWave
 			friend class Options;
 
 		public:
-			Option( string const& _name, bool const _value ):  m_type( Options::OptionType_Bool ), m_name( _name ), m_valueBool( _value ),  m_append( false ){}
-			Option( string const& _name, int32 const _value ): m_type( Options::OptionType_Int ), m_name( _name ), m_valueInt( _value ) , m_append( false ){}
-			Option( string const& _name, string const& _value, bool const _append ): m_type( Options::OptionType_String ), m_name( _name ), m_valueString( _value ), m_append( _append ){}
-			
+			Option( string const& _name ):  m_name( _name ), m_append( false ){}
 			bool SetValueFromString( string const& _value );
 
 			Options::OptionType	m_type;
@@ -239,6 +236,7 @@ namespace OpenZWave
 
 		bool ParseOptionsString( string const& _options );					// Parse a string containing program options, such as a command line.
 		bool ParseOptionsXML( string const& _filename );					// Parse an XML file containing program options.
+		Option* AddOption( string const& _name );							// check lock and create (or open existing) option
 		Option* Find( string const& _name );
 
 		map<string,Option*>	m_options;										// Map of option names to values.
@@ -247,7 +245,6 @@ namespace OpenZWave
 		bool				m_locked;										// If true, the options are final and AddOption can no longer be called.
 		static Options*		s_instance;
 	};
-
 } // namespace OpenZWave
 
 #endif // _Options_H

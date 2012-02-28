@@ -290,10 +290,9 @@ int main( int argc, char* argv[] )
 		Manager::Get()->WriteConfig( g_homeId );
 
 		// The section below demonstrates setting up polling for a variable.  In this simple
-		// example, it has been hardwired to read COMMAND_CLASS_BASIC on the first node (that 
-		// isn't nodeId 1) that supports this setting.
+		// example, it has been hardwired to poll COMMAND_CLASS_BASIC on the each node that 
+		// supports this setting.
 		EnterCriticalSection( &g_criticalSection );
-		bool valueFound = false;
 		for( list<NodeInfo*>::iterator it = g_nodes.begin(); it != g_nodes.end(); ++it )
 		{
 			NodeInfo* nodeInfo = *it;
@@ -307,13 +306,8 @@ int main( int argc, char* argv[] )
 				if( v.GetCommandClassId() == 0x20 )
 				{
 					Manager::Get()->EnablePoll( v, 2 );		// enables polling with "intensity" of 2, though this is irrelevant with only one value polled
-					valueFound = true;
 					break;
 				}
-			}
-			if( valueFound )
-			{
-				break;
 			}
 		}
 		LeaveCriticalSection( &g_criticalSection );
