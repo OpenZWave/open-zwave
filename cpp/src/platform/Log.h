@@ -56,7 +56,7 @@ namespace OpenZWave
 	public:
 		i_LogImpl() { } ;
 		virtual ~i_LogImpl() { } ;
-		virtual void Write( LogLevel _level, char const* _format, va_list _args ) = 0;
+		virtual void Write( LogLevel _level, uint8 const _nodeId, char const* _format, va_list _args ) = 0;
 		virtual void QueueDump() = 0;
 		virtual void QueueClear() = 0;
 		virtual void SetLoggingState( LogLevel _saveLevel, LogLevel _queueLevel, LogLevel _dumpTrigger ) = 0;
@@ -149,6 +149,17 @@ namespace OpenZWave
 		 * \see Create, Destroy
 		 */
 		static void Write( LogLevel _level, char const* _format, ... );
+
+		/**
+		 * Write an entry to the log.
+		 * Writes a formatted string to the log.
+		 * \param _level	Specifies the type of log message (Error, Warning, Debug, etc.)
+		 * \param _nodeId	Node Id this entry is about.
+		 * \param _format.  A string formatted in the same manner as used with printf etc.
+		 * \param ... a variable number of arguments, to be included in the formatted string.
+		 * \see Create, Destroy
+		 */
+		static void Write( LogLevel _level, uint8 const _nodeId, char const* _format, ... );
 
 		/**
 		 * Send the queued log messages to the log output.

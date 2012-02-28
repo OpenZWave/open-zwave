@@ -145,7 +145,7 @@ void Log::SetLoggingState
 	if( _queueLevel <= _saveLevel )
 		Log::Write( LogLevel_Warning, "Only lower priority messages may be queued for error-driven display." );
 	if( _dumpTrigger >= _queueLevel )
-		Log::Write( LogLevel_Warning, "The trigger for dumping queued messages must be a higher-priority message than the level that is queued.." );
+		Log::Write( LogLevel_Warning, "The trigger for dumping queued messages must be a higher-priority message than the level that is queued." );
 
 	// s_dologging is true if any messages are to be saved in file or queue
 	if( (_saveLevel > LogLevel_Always) ||
@@ -190,12 +190,37 @@ void Log::Write
 {
 	if( s_instance && s_dologging && s_instance->m_pImpl )
 	{
-	  	s_instance->m_logMutex->Lock();
+		s_instance->m_logMutex->Lock(); // double locks if recursive
 		va_list args;
 		va_start( args, _format );
-		s_instance->m_pImpl->Write( _level, _format, args );
+		s_instance->m_pImpl->Write( _level, 0, _format, args );
 		va_end( args );
 		s_instance->m_logMutex->Unlock();
+	}
+}
+
+//-----------------------------------------------------------------------------
+//	<Log::Write>
+//	Write to the log
+//-----------------------------------------------------------------------------
+void Log::Write
+(
+	LogLevel _level,
+	uint8 const _nodeId,
+	char const* _format,
+	...
+)
+{
+	if( s_instance && s_dologging && s_instance->m_pImpl )
+	{
+		if( _level != LogLevel_Internal )
+		  	s_instance->m_logMutex->Lock();
+		va_list args;
+		va_start( args, _format );
+		s_instance->m_pImpl->Write( _level, _nodeId, _format, args );
+		va_end( args );
+		if( _level != LogLevel_Internal )
+			s_instance->m_logMutex->Unlock();
 	}
 }
 

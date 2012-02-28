@@ -174,7 +174,7 @@ bool WakeUp::HandleMsg
 			if( _length < 6 )
 			{
 				Log::Write( LogLevel_Warning, "" );
-				Log::Write( LogLevel_Warning, "%s, Unusual response: WakeUpCmd_IntervalReport with len = %d.  Ignored.", GetDriver()->GetNodeString( GetNodeId() ).c_str(), _length );
+				Log::Write( LogLevel_Warning, GetNodeId(), "Unusual response: WakeUpCmd_IntervalReport with len = %d.  Ignored.", _length );
 				value->Release();
 				return false;
 			}
@@ -185,7 +185,7 @@ bool WakeUp::HandleMsg
 
 			uint8 targetNodeId = _data[4];
 
-			Log::Write( LogLevel_Info, "%s, Received Wakeup Interval report from node %d: Interval=%d, Target Node=%d", GetDriver()->GetNodeString( GetNodeId() ).c_str(), GetNodeId(), interval, targetNodeId );
+			Log::Write( LogLevel_Info, GetNodeId(), "Received Wakeup Interval report from node %d: Interval=%d, Target Node=%d", GetNodeId(), interval, targetNodeId );
 
 			value->OnValueRefreshed( (int32)interval );
 		
@@ -201,7 +201,7 @@ bool WakeUp::HandleMsg
 	else if( WakeUpCmd_Notification == (WakeUpCmd)_data[0] )
 	{	
 		// The device is awake.
-		Log::Write( LogLevel_Info, "%s, Received Wakeup Notification from node %d", GetDriver()->GetNodeString( GetNodeId() ).c_str(), GetNodeId() );
+		Log::Write( LogLevel_Info, GetNodeId(), "Received Wakeup Notification from node %d", GetNodeId() );
 		m_notification = true;
 		SetAwake( true );				
 		return true;
@@ -263,7 +263,7 @@ void WakeUp::SetAwake
 	if( m_awake != _state )
 	{
 		m_awake = _state;
-		Log::Write( LogLevel_Info, "%s,  Node %d has been marked as %s", GetDriver()->GetNodeString( GetNodeId() ).c_str(), GetNodeId(), m_awake ? "awake" : "asleep" );
+		Log::Write( LogLevel_Info, GetNodeId(), "  Node %d has been marked as %s", GetNodeId(), m_awake ? "awake" : "asleep" );
 	}
 
 	if( m_awake )
