@@ -146,25 +146,18 @@ Options::~Options
 bool Options::AddOptionBool
 ( 
 	string const& _name,
-	bool const _default
+	bool const _value
 )
 {
-	if( m_locked )
-	{
-		// Options are final, no more may be added
-		assert(0);
-		return false;
-	}
+	// get (or create) option
+	Option* option = AddOption( _name );
 
-	if( Find( _name ) )
-	{
-		// Option already exists
-		return false;
-	}
+	// set unique option members
+	option->m_type = Options::OptionType_Bool;
+	option->m_valueBool = _value;
 
-	Option* option	= new Option( _name, _default );
+	// save in m_options map
 	string lowerName = ToLower( _name );
-
 	m_options[lowerName] = option;
 	return true;
 }
@@ -176,25 +169,18 @@ bool Options::AddOptionBool
 bool Options::AddOptionInt
 (
 	string const& _name,
-	int32 const _default
+	int32 const _value
 )
 {
-	if( m_locked )
-	{
-		// Options are final, no more may be added
-		assert(0);
-		return false;
-	}
+	// get (or create) option
+	Option* option = AddOption( _name );
 
-	if( Find( _name ) )
-	{
-		// Option already exists
-		return false;
-	}
+	// set unique option members
+	option->m_type = Options::OptionType_Int;
+	option->m_valueInt = _value;
 
-	Option* option	= new Option( _name, _default );
+	// save in m_options map
 	string lowerName = ToLower( _name );
-
 	m_options[lowerName] = option;
 	return true;
 }
@@ -206,26 +192,20 @@ bool Options::AddOptionInt
 bool Options::AddOptionString
 ( 
 	string const& _name,
-	string const& _default,
+	string const& _value,
 	bool const _append
 )
 {
-	if( m_locked )
-	{
-		// Options are final, no more may be added
-		assert(0);
-		return false;
-	}
+	// get (or create) option
+	Option* option = AddOption( _name );
 
-	if( Find( _name ) )
-	{
-		// Option already exists
-		return false;
-	}
+	// set unique option members
+	option->m_type = Options::OptionType_String;
+	option->m_valueString = _value;
+	option->m_append = _append;
 
-	Option* option	= new Option( _name, _default, _append );
+	// save in m_options map
 	string lowerName = ToLower( _name );
-
 	m_options[lowerName] = option;
 	return true;
 }
@@ -323,8 +303,7 @@ bool Options::Lock
 {
 	if( m_locked )
 	{
-		// Options are already final
-		assert(0);
+		Log::Write( LogLevel_Error, "Options are already final (locked)." );
 		return false;
 	}
 
@@ -350,6 +329,7 @@ bool Options::ParseOptionsString
 	size_t start = 0;
 	while( 1 )
 	{
+		// find start of first option name
 		pos = _commandLine.find_first_of( "--", start );
 		if( string::npos == pos )
 		{
@@ -381,6 +361,7 @@ bool Options::ParseOptionsString
 			while( parsing )
 			{
 				string value;
+				size_t back = start;
 				pos = _commandLine.find( " ", start );
 				if( string::npos == pos )
 				{
@@ -411,11 +392,14 @@ bool Options::ParseOptionsString
 							res = false;
 						}
 					}
+					start = back;		// back up to the beginning of the next option
+					break;
 				}
 				else if( value.size() > 0 )
 				{
 					// Set the value
 					option->SetValueFromString( value );
+					numValues++;
 				}
 			}
 		}
@@ -468,6 +452,31 @@ bool Options::ParseOptionsXML
 	}
 
 	return true;
+}
+
+//-----------------------------------------------------------------------------
+// <Options::AddOption>
+// General setup for adding a specific option
+//-----------------------------------------------------------------------------
+Options::Option* Options::AddOption
+( 
+	string const& _name
+)
+{
+	if( m_locked )
+	{
+		Log::Write( LogLevel_Error, "Options have been locked.  No more may be added." );
+		return false;
+	}
+
+	// get a pointer to the option (and create a new Option if it doesn't already exist)
+	Option* option = Find( _name );
+	if( option == NULL )
+	{
+		option = new Option( _name );
+	}
+
+	return option;
 }
 
 //-----------------------------------------------------------------------------

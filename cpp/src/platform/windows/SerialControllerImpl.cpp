@@ -177,7 +177,7 @@ bool SerialControllerImpl::Init
 	uint32 const _attempts
 )
 {  
-	Log::Write( LogLevel_Info, "Trying to open serial port %s (Attempt %d)", m_owner->m_serialControllerName.c_str(), _attempts );
+	Log::Write( LogLevel_Info, "    Trying to open serial port %s (Attempt %d)", m_owner->m_serialControllerName.c_str(), _attempts );
 
 	m_hSerialController = CreateFile( m_owner->m_serialControllerName.c_str(), 
 							 GENERIC_READ | GENERIC_WRITE, 
@@ -243,7 +243,7 @@ bool SerialControllerImpl::Init
 	PurgeComm( m_hSerialController, PURGE_RXABORT|PURGE_RXCLEAR|PURGE_TXABORT|PURGE_TXCLEAR );
 
 	// Open successful
- 	Log::Write( LogLevel_Info, "Serial port %s opened (attempt %d)", m_owner->m_serialControllerName.c_str(), _attempts );
+ 	Log::Write( LogLevel_Info, "    Serial port %s opened (attempt %d)", m_owner->m_serialControllerName.c_str(), _attempts );
 	return true;
 
 SerialOpenFailure:

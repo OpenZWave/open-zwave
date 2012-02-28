@@ -126,7 +126,6 @@ Driver::Driver
 	m_expectedNodeId( 0 ),
 	m_pollThread( new Thread( "poll" ) ),
 	m_pollMutex( new Mutex() ),
-	m_pollInterval( 30000 ),						// By default, every polled device is attempted to be queried once every 30 seconds
 	m_bIntervalBetweenPolls( false ),				// if set to true (via SetPollInterval), the pollInterval will be interspersed between each poll (so a much smaller m_pollInterval like 100, 500, or 1,000 may be appropriate)
 	m_controllerState( ControllerState_Normal ),
 	m_controllerCommand( ControllerCommand_None ),
@@ -871,7 +870,7 @@ bool Driver::WriteMsg
 	string const msg
 )
 {
-	Log::Write( LogLevel_Detail, "WriteMsg %s m_currentMsg=%08x", msg.c_str(), m_currentMsg );
+	Log::Write( LogLevel_Debug, "WriteMsg %s m_currentMsg=%08x", msg.c_str(), m_currentMsg );
 	if( !m_currentMsg )
 	{
 		return false;
@@ -3370,105 +3369,111 @@ void Driver::PollThreadProc
 	{
 		int32 pollInterval = m_pollInterval;
 
-		if( m_awakeNodesQueried )
+		if( m_awakeNodesQueried && !m_pollList.empty() )
 		{
-			if( !m_pollList.empty() )
+			// We only bother getting the lock if the pollList is not empty
+			m_pollMutex->Lock();
+			
+			// Get the next value to be polled
+			PollEntry pe = m_pollList.front();
+			m_pollList.pop_front();
+			ValueID  valueId = pe.m_id;
+			
+			// only execute this poll if pe.m_pollCounter == 1; otherwise decrement the counter and process the next polled value
+			if( pe.m_pollCounter != 1)
 			{
-				// We only bother getting the lock if the pollList is not empty
-				m_pollMutex->Lock();
-			
-				// Get the next value to be polled
-				PollEntry pe = m_pollList.front();
-				m_pollList.pop_front();
-				ValueID  valueId = pe.m_id;
-			
-				// only execute this poll if pe.m_pollCounter == 1; otherwise decrement the counter and process the next polled value
-				if( pe.m_pollCounter != 1)
-				{
-					pe.m_pollCounter--;
-					m_pollList.push_back( pe );
-					m_pollMutex->Unlock();
-					continue;
-				}
-
-				// reset the poll counter to the full pollIntensity value and push it at the end of the list
-				// release the value object referenced; call GetNode to ensure the node objects are locked during this period
-				(void)GetNode( valueId.GetNodeId() );
-				Value* value = GetValue( valueId );
-				pe.m_pollCounter = value->GetPollIntensity();
+				pe.m_pollCounter--;
 				m_pollList.push_back( pe );
-				value->Release();
-				ReleaseNodes();
+				m_pollMutex->Unlock();
+				continue;
+			}
 
-				// If the polling interval is for the whole poll list, calculate the time before the next poll, 
-				// so that all polls can take place within the user-specified interval.
-				if( !m_bIntervalBetweenPolls )
+			// reset the poll counter to the full pollIntensity value and push it at the end of the list
+			// release the value object referenced; call GetNode to ensure the node objects are locked during this period
+			(void)GetNode( valueId.GetNodeId() );
+			Value* value = GetValue( valueId );
+			pe.m_pollCounter = value->GetPollIntensity();
+			m_pollList.push_back( pe );
+			value->Release();
+			ReleaseNodes();
+
+			// If the polling interval is for the whole poll list, calculate the time before the next poll, 
+			// so that all polls can take place within the user-specified interval.
+			if( !m_bIntervalBetweenPolls )
+			{
+				if( pollInterval < 100 )
 				{
-					if( pollInterval < 100 )
-					{
-						Log::Write( LogLevel_Info, "The pollInterval setting is only %d, which appears to be a legacy setting.  Multiplying by 1000 to convert to ms.", pollInterval );
-						pollInterval *= 1000;
-					}
-					pollInterval /= m_pollList.size();
+					Log::Write( LogLevel_Info, "The pollInterval setting is only %d, which appears to be a legacy setting.  Multiplying by 1000 to convert to ms.", pollInterval );
+					pollInterval *= 1000;
 				}
+				pollInterval /= m_pollList.size();
+			}
 
-				// Request the state of the value from the node to which it belongs
-				if( Node* node = GetNode( valueId.GetNodeId() ) )
+			// Request the state of the value from the node to which it belongs
+			if( Node* node = GetNode( valueId.GetNodeId() ) )
+			{
+				bool requestState = true;
+				if( !node->IsListeningDevice() )
 				{
-					bool requestState = true;
-					if( !node->IsListeningDevice() )
+					// The device is not awake all the time.  If it is not awake, we mark it
+					// as requiring a poll.  The poll will be done next time the node wakes up.
+					if( WakeUp* wakeUp = static_cast<WakeUp*>( node->GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
 					{
-						// The device is not awake all the time.  If it is not awake, we mark it
-						// as requiring a poll.  The poll will be done next time the node wakes up.
-						if( WakeUp* wakeUp = static_cast<WakeUp*>( node->GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
+						if( !wakeUp->IsAwake() )
 						{
-							if( !wakeUp->IsAwake() )
-							{
-								wakeUp->SetPollRequired();
-								requestState = false;
-							}
+							wakeUp->SetPollRequired();
+							requestState = false;
 						}
 					}
-
-					if( requestState )
-					{
-						// Request an update of the value
-						CommandClass* cc = node->GetCommandClass( valueId.GetCommandClassId() );
-						uint8 index = valueId.GetIndex();
-						uint8 instance = valueId.GetInstance();
-						Log::Write( LogLevel_Detail, "%s, Polling: %s index = %d instance = %d (poll queue has %d messages)", GetNodeString( node->m_nodeId ).c_str(), cc->GetCommandClassName().c_str(), index, instance, m_msgQueue[MsgQueue_Poll].size() );
-						cc->RequestValue( 0, index, instance, MsgQueue_Poll );
-					}
-
-					ReleaseNodes();
 				}
 
-				m_pollMutex->Unlock();
-
-				// Polling messages are only sent when there are no other messages waiting to be sent
-				// While this makes the polls much more variable and uncertain if some other activity dominates
-				// a send queue, that may be appropriate
-				// TODO we can have a debate about whether to test all four queues or just the Poll queue
-				do
+				if( requestState )
 				{
-					// Wait for the interval to expire, while watching for exit events
-					int32 i32 = Wait::Single( _exitEvent, pollInterval );
-					if( i32 == 0 )
-					{
-						// Exit has been called
-						return;
-					}
-				} while( !m_msgQueue[MsgQueue_Poll].empty()
-					|| !m_msgQueue[MsgQueue_Send].empty()
-					|| !m_msgQueue[MsgQueue_Command].empty()
-					|| !m_msgQueue[MsgQueue_Query].empty()
-					|| m_currentMsg != NULL );
+					// Request an update of the value
+					CommandClass* cc = node->GetCommandClass( valueId.GetCommandClassId() );
+					uint8 index = valueId.GetIndex();
+					uint8 instance = valueId.GetInstance();
+					Log::Write( LogLevel_Detail, "%s, Polling: %s index = %d instance = %d (poll queue has %d messages)", GetNodeString( node->m_nodeId ).c_str(), cc->GetCommandClassName().c_str(), index, instance, m_msgQueue[MsgQueue_Poll].size() );
+					cc->RequestValue( 0, index, instance, MsgQueue_Poll );
+				}
+
+				ReleaseNodes();
+			}
+
+			m_pollMutex->Unlock();
+
+			// Polling messages are only sent when there are no other messages waiting to be sent
+			// While this makes the polls much more variable and uncertain if some other activity dominates
+			// a send queue, that may be appropriate
+			// TODO we can have a debate about whether to test all four queues or just the Poll queue
+			// Wait until the library isn't actively sending messages (or in the midst of a transaction)
+			int i32;
+			while( !m_msgQueue[MsgQueue_Poll].empty()
+				|| !m_msgQueue[MsgQueue_Send].empty()
+				|| !m_msgQueue[MsgQueue_Command].empty()
+				|| !m_msgQueue[MsgQueue_Query].empty()
+				|| m_currentMsg != NULL )
+			{
+				i32 = Wait::Single( _exitEvent, 10);		// test conditions every 10ms
+				if( i32 == 0 )
+				{
+					// Exit has been called
+					return;
+				}
+			}
+
+			// ready for next poll...insert the pollInterval delay
+			i32 = Wait::Single( _exitEvent, pollInterval );
+			if( i32 == 0 )
+			{
+				// Exit has been called
+				return;
 			}
 		}
 		else		// poll list is empty or awake nodes haven't been fully queried yet
 		{
 			// don't poll just yet, wait for the pollInterval or exit before re-checking to see if the pollList has elements
-			int32 i32 = Wait::Single( _exitEvent, pollInterval );
+			int32 i32 = Wait::Single( _exitEvent, 500 );
 			if( i32 == 0 )
 			{
 				// Exit has been called
