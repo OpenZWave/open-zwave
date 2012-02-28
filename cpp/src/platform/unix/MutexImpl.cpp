@@ -104,8 +104,8 @@ void MutexImpl::Unlock
 	}
 	else
 	{
-		pthread_mutex_unlock( &m_criticalSection );
 		--m_lockCount;
+		pthread_mutex_unlock( &m_criticalSection );
 	}
 }
 
