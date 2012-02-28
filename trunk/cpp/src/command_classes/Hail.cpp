@@ -56,7 +56,7 @@ bool Hail::HandleMsg
 	{
 		// We have received a hail from the Z-Wave device.
 		// Request an update of the dynamic values.
-		Log::Write( LogLevel_Info, "Received Hail command from node %d", GetNodeId() );
+		Log::Write( LogLevel_Info, GetNodeId(), "Received Hail command from node %d", GetNodeId() );
 		if( Node* node = GetNodeUnsafe() )
 		{
 			node->RequestDynamicValues();

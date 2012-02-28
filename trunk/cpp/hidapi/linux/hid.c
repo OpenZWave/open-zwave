@@ -556,7 +556,6 @@ int HID_API_EXPORT hid_get_feature_report(hid_device *dev, unsigned char *data, 
 	if (res < 0)
 		perror("ioctl (GFEATURE)");
 
-
 	return res;
 }
 

@@ -209,7 +209,7 @@ void Node::AdvanceQueries
 				// determines, among other things, whether this node is a listener, its maximum baud rate and its device classes
 				if( !ProtocolInfoReceived() )
 				{
-					Log::Write( LogLevel_Detail, "Node%03d, QueryStage_ProtocolInfo", m_nodeId );
+					Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_ProtocolInfo" );
 					Msg* msg = new Msg( "Get Node Protocol Info", m_nodeId, REQUEST, FUNC_ID_ZW_GET_NODE_PROTOCOL_INFO, false );
 					msg->Append( m_nodeId );	
 					GetDriver()->SendMsg( msg, Driver::MsgQueue_Query );
@@ -227,12 +227,14 @@ void Node::AdvanceQueries
 			{
 				// For sleeping devices other than controllers, we need to defer the usual requests until
 				// we have told the device to send it's wake-up notifications to the PC controller.
-				Log::Write( LogLevel_Detail, "Node%03d, QueryStage_WakeUp", m_nodeId );
+				Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_WakeUp" );
 
 				WakeUp* wakeUp = static_cast<WakeUp*>( GetCommandClass( WakeUp::StaticGetCommandClassId() ) );
 
-				// if this device is a "sleeping device" and not a controller
-				if( wakeUp && !IsController() )
+				// if this device is a "sleeping device" and not a controller and not a
+				// FLiRS device. FLiRS will wake up when you send them something and they
+				// don't seem to support Wakeup
+				if( wakeUp && !IsController() && !IsFrequentListeningDevice() )
 				{
 					// start the process of requesting node state from this sleeping device
 					wakeUp->Init();
@@ -251,7 +253,7 @@ void Node::AdvanceQueries
 				// Obtain manufacturer, product type and product ID code from the node device
 				// Manufacturer Specific data is requested before the other command class data so 
 				// that we can modify the supported command classes list through the product XML files.
-				Log::Write( LogLevel_Detail, "Node%03d, QueryStage_ManufacturerSpecific1", m_nodeId );
+				Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_ManufacturerSpecific1" );
 				ManufacturerSpecific* cc = static_cast<ManufacturerSpecific*>( GetCommandClass( ManufacturerSpecific::StaticGetCommandClassId() ) );
 				if( cc  )
 				{
@@ -269,7 +271,7 @@ void Node::AdvanceQueries
 				if( !NodeInfoReceived() && !IsController() && m_nodeInfoSupported )
 				{
 					// obtain from the node a list of command classes that it 1) supports and 2) controls (separated by a mark in the buffer)
-					Log::Write( LogLevel_Detail, "Node%03d, QueryStage_NodeInfo", m_nodeId );
+					Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_NodeInfo" );
 					Msg* msg = new Msg( "Request Node Info", m_nodeId, REQUEST, FUNC_ID_ZW_REQUEST_NODE_INFO, false, true, FUNC_ID_ZW_APPLICATION_UPDATE );
 					msg->Append( m_nodeId );	
 					GetDriver()->SendMsg( msg, Driver::MsgQueue_Query ); 
@@ -290,7 +292,7 @@ void Node::AdvanceQueries
 					// Obtain manufacturer, product type and product ID code from the node device
 					// Manufacturer Specific data is requested before the other command class data so 
 					// that we can modify the supported command classes list through the product XML files.
-					Log::Write( LogLevel_Detail, "Node%03d, QueryStage_ManufacturerSpecific2", m_nodeId );
+					Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_ManufacturerSpecific2" );
 					ManufacturerSpecific* cc = static_cast<ManufacturerSpecific*>( GetCommandClass( ManufacturerSpecific::StaticGetCommandClassId() ) );
 					if( cc  )
 					{
@@ -317,7 +319,7 @@ void Node::AdvanceQueries
 			case QueryStage_Versions:
 			{
 				// Get the version information (if the device supports COMMAND_CLASS_VERSION
-				Log::Write( LogLevel_Detail, "Node%03d, QueryStage_Versions", m_nodeId );
+				Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_Versions" );
 				Version* vcc = static_cast<Version*>( GetCommandClass( Version::StaticGetCommandClassId() ) );
 				if( vcc )
 				{
@@ -343,7 +345,7 @@ void Node::AdvanceQueries
 			case QueryStage_Instances:
 			{																   
 				// if the device at this node supports multiple instances, obtain a list of these instances
-				Log::Write( LogLevel_Detail, "Node%03d, QueryStage_Instances", m_nodeId );
+				Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_Instances" );
 				MultiInstance* micc = static_cast<MultiInstance*>( GetCommandClass( MultiInstance::StaticGetCommandClassId() ) );
 				if( micc )
 				{
@@ -356,7 +358,7 @@ void Node::AdvanceQueries
 					m_queryStage = QueryStage_Static;
 					m_queryRetries = 0;
 
-					Log::Write( LogLevel_Info, "Node%03d, Essential node queries are complete", m_nodeId );
+					Log::Write( LogLevel_Info, m_nodeId, "Essential node queries are complete" );
 					Notification* notification = new Notification( Notification::Type_EssentialNodeQueriesComplete );
 					notification->SetHomeAndNodeIds( m_homeId, m_nodeId );
 					GetDriver()->QueueNotification( notification ); 
@@ -367,7 +369,7 @@ void Node::AdvanceQueries
 			{
 				// Request any other static values associated with each command class supported by this node
 				// examples are supported thermostat operating modes, setpoints and fan modes
-				Log::Write( LogLevel_Detail, "Node%03d, QueryStage_Static", m_nodeId );
+				Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_Static" );
 				for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
 				{
 					if( !it->second->IsAfterMark() )
@@ -387,7 +389,7 @@ void Node::AdvanceQueries
 			case QueryStage_Associations:
 			{
 				// if this device supports COMMAND_CLASS_ASSOCIATION, determine to which groups this node belong
-				Log::Write( LogLevel_Detail, "Node%03d, QueryStage_Associations", m_nodeId );
+				Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_Associations" );
 				Association* acc = static_cast<Association*>( GetCommandClass( Association::StaticGetCommandClassId() ) );
 				if( acc )
 				{
@@ -405,7 +407,7 @@ void Node::AdvanceQueries
 			case QueryStage_Neighbors:
 			{
 				// retrieves this node's neighbors and stores the neighbor bitmap in the node object
-				Log::Write( LogLevel_Detail, "Node%03d, QueryStage_Neighbors", m_nodeId );
+				Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_Neighbors" );
 				GetDriver()->RequestNodeNeighbors( m_nodeId, CommandClass::RequestFlag_LowPriority );
 				m_queryPending = true;
 				break;
@@ -414,7 +416,7 @@ void Node::AdvanceQueries
 			{
 				// Request the session values from the command classes in turn
 				// examples of Session information are: current thermostat setpoints, node names and climate control schedules
-				Log::Write( LogLevel_Detail, "Node%03d, QueryStage_Session", m_nodeId );
+				Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_Session" );
 				for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
 				{
 					if( !it->second->IsAfterMark() )
@@ -433,7 +435,7 @@ void Node::AdvanceQueries
 			{
 				// Request the dynamic values from the node, that can change at any time
 				// Examples include on/off state, heating mode, temperature, etc.
-				Log::Write( LogLevel_Detail, "Node%03d, QueryStage_Dynamic", m_nodeId );
+				Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_Dynamic" );
 				m_queryPending = RequestDynamicValues();
 
 				if( !m_queryPending )
@@ -446,7 +448,7 @@ void Node::AdvanceQueries
 			case QueryStage_Configuration:
 			{
 				// Request the configurable parameter values from the node.
-				Log::Write( LogLevel_Detail, "Node%03d, QueryStage_Configuration", m_nodeId );
+				Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_Configuration" );
 				if( m_queryConfiguration )
 				{
 					if( RequestAllConfigParams( CommandClass::RequestFlag_LowPriority) )
@@ -465,7 +467,7 @@ void Node::AdvanceQueries
 			case QueryStage_Complete:
 			{
 				// Notify the watchers that the queries are complete for this node
-				Log::Write( LogLevel_Detail, "Node%03d, QueryStage_Complete", m_nodeId );
+				Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_Complete" );
 				Notification* notification = new Notification( Notification::Type_NodeQueriesComplete );
 				notification->SetHomeAndNodeIds( m_homeId, m_nodeId );
 				GetDriver()->QueueNotification( notification ); 
@@ -520,7 +522,7 @@ void Node::QueryStageRetry
 	uint8 const _maxAttempts // = 0
 )
 {
-	Log::Write( LogLevel_Info, "QueryStageRetry stage %s requested stage %s max %d retries %d pending %d", c_queryStageNames[_stage], c_queryStageNames[m_queryStage], _maxAttempts, m_queryRetries, m_queryPending);
+	Log::Write( LogLevel_Info, m_nodeId, "QueryStageRetry stage %s requested stage %s max %d retries %d pending %d", c_queryStageNames[_stage], c_queryStageNames[m_queryStage], _maxAttempts, m_queryRetries, m_queryPending);
 	
 	// Check that we are actually on the specified stage
 	if( _stage != m_queryStage )
@@ -1000,7 +1002,7 @@ void Node::UpdateProtocolInfo
 	if( _data[4] == 0 )
 	{
 		// Node doesn't exist if Generic class is zero.
-		Log::Write( LogLevel_Info, "  Protocol Info for Node %d reports node nonexistent", m_nodeId );
+		Log::Write( LogLevel_Info, m_nodeId, "  Protocol Info for Node %d reports node nonexistent", m_nodeId );
 		return;
 	}
 
@@ -1034,20 +1036,19 @@ void Node::UpdateProtocolInfo
 	// and now just request the optional classes regardless.
 	// bool optional = (( _data[1] & 0x80 ) != 0 );	
 
-	string nodestr = GetDriver()->GetNodeString( m_nodeId );
-	Log::Write( LogLevel_Info, "%s,  Protocol Info for Node %d:", nodestr.c_str(), m_nodeId );
+	Log::Write( LogLevel_Info, m_nodeId, "  Protocol Info for Node %d:", m_nodeId );
 	if( m_listening )
-		Log::Write( LogLevel_Info, "%s,    Listening     = true", nodestr.c_str() );
+		Log::Write( LogLevel_Info, m_nodeId, "    Listening     = true" );
 	else
 	{
-		Log::Write( LogLevel_Info, "%s,    Listening     = false", nodestr.c_str() );
-		Log::Write( LogLevel_Info, "%s,    Frequent      = %s", nodestr.c_str(), m_frequentListening ? "true" : "false" );
+		Log::Write( LogLevel_Info, m_nodeId, "    Listening     = false" );
+		Log::Write( LogLevel_Info, m_nodeId, "    Frequent      = %s", m_frequentListening ? "true" : "false" );
 	}
-	Log::Write( LogLevel_Info, "%s,    Beaming       = %s", nodestr.c_str(), m_beaming ? "true" : "false" );
-	Log::Write( LogLevel_Info, "%s,    Routing       = %s", nodestr.c_str(), m_routing ? "true" : "false" );
-	Log::Write( LogLevel_Info, "%s,    Max Baud Rate = %d", nodestr.c_str(), m_maxBaudRate );
-	Log::Write( LogLevel_Info, "%s,    Version       = %d", nodestr.c_str(), m_version );
-	Log::Write( LogLevel_Info, "%s,    Security      = %s", nodestr.c_str(), m_security ? "true" : "false" );
+	Log::Write( LogLevel_Info, m_nodeId, "    Beaming       = %s", m_beaming ? "true" : "false" );
+	Log::Write( LogLevel_Info, m_nodeId, "    Routing       = %s", m_routing ? "true" : "false" );
+	Log::Write( LogLevel_Info, m_nodeId, "    Max Baud Rate = %d", m_maxBaudRate );
+	Log::Write( LogLevel_Info, m_nodeId, "    Version       = %d", m_version );
+	Log::Write( LogLevel_Info, m_nodeId, "    Security      = %s", m_security ? "true" : "false" );
 
 	// Set up the device class based data for the node, including mandatory command classes
 	SetDeviceClasses( _data[3], _data[4], _data[5] );
@@ -1071,9 +1072,8 @@ void Node::UpdateNodeInfo
 {
 	if( !NodeInfoReceived() )
 	{
-		string nodestr = GetDriver()->GetNodeString( m_nodeId );
 		// Add the command classes specified by the device
-		Log::Write( LogLevel_Info, "%s,  Optional command classes for node %d:", nodestr.c_str(), m_nodeId );
+		Log::Write( LogLevel_Info, m_nodeId, "  Optional command classes for node %d:", m_nodeId );
 		
 		bool newCommandClasses = false;
 		uint32 i;
@@ -1091,9 +1091,9 @@ void Node::UpdateNodeInfo
 
 				if( !newCommandClasses )
 				{
-					Log::Write( LogLevel_Info, "%s,    None", nodestr.c_str() );
+					Log::Write( LogLevel_Info, m_nodeId, "    None" );
 				}
-				Log::Write( LogLevel_Info, "%s,  Optional command classes controlled by node %d:", nodestr.c_str(), m_nodeId );
+				Log::Write( LogLevel_Info, m_nodeId, "  Optional command classes controlled by node %d:", m_nodeId );
 				newCommandClasses = false;
 				continue;
 			}
@@ -1113,19 +1113,19 @@ void Node::UpdateNodeInfo
 					// call at the end of this method have been processed.
 					pCommandClass->SetInstance( 1 );
 					newCommandClasses = true;
-					Log::Write( LogLevel_Info, "%s,    %s", nodestr.c_str(), pCommandClass->GetCommandClassName().c_str() );
+					Log::Write( LogLevel_Info, m_nodeId, "    %s", pCommandClass->GetCommandClassName().c_str() );
 				}
 			}
 			else
 			{
-				Log::Write( LogLevel_Info, "%s,  CommandClass 0x%.2x - NOT REQUIRED", nodestr.c_str(), _data[i] );
+				Log::Write( LogLevel_Info, m_nodeId, "  CommandClass 0x%.2x - NOT REQUIRED", _data[i] );
 			}
 		}
 
 		if( !newCommandClasses )
 		{
 			// No additional command classes over the mandatory ones.
-			Log::Write( LogLevel_Info, "%s,    None", nodestr.c_str() );
+			Log::Write( LogLevel_Info, m_nodeId, "    None" );
 		}
 
 		SetStaticRequests();
@@ -1238,14 +1238,14 @@ void Node::ApplicationCommandHandler
 		{
 			// This is a controller replication message, and we do not support it.
 			// We have to at least acknowledge the message to avoid locking the sending device.
-			Log::Write( LogLevel_Info, "Node%03d, ApplicationCommandHandler - Default acknowledgement of controller replication data", m_nodeId );
+			Log::Write( LogLevel_Info, m_nodeId, "ApplicationCommandHandler - Default acknowledgement of controller replication data" );
 
 			Msg* msg = new Msg( "Replication Command Complete", m_nodeId, REQUEST, FUNC_ID_ZW_REPLICATION_COMMAND_COMPLETE, false );
 			GetDriver()->SendMsg( msg, Driver::MsgQueue_Command );
 		}
 		else
 		{
-			Log::Write( LogLevel_Info, "Node%03d, ApplicationCommandHandler - Unhandled Command Class 0x%.2x", m_nodeId, _data[5] );
+			Log::Write( LogLevel_Info, m_nodeId, "ApplicationCommandHandler - Unhandled Command Class 0x%.2x", _data[5] );
 		}
 	}
 }
@@ -1292,7 +1292,7 @@ CommandClass* Node::AddCommandClass
 	}
 	else
 	{
-		Log::Write( LogLevel_Info, "Node%03d, AddCommandClass - Unsupported Command Class 0x%.2x", m_nodeId, _commandClassId );
+		Log::Write( LogLevel_Info, m_nodeId, "AddCommandClass - Unsupported Command Class 0x%.2x", _commandClassId );
 	}
 
 	return NULL;
@@ -1321,7 +1321,7 @@ void Node::RemoveCommandClass
 	}
 
 	// Destroy the command class object and remove it from our map
-	Log::Write( LogLevel_Info, "Node%03d, RemoveCommandClass - Removed support for %s", m_nodeId, it->second->GetCommandClassName().c_str() );
+	Log::Write( LogLevel_Info, m_nodeId, "RemoveCommandClass - Removed support for %s", it->second->GetCommandClassName().c_str() );
 
 	delete it->second;
 	m_commandClassMap.erase( it );
@@ -1828,7 +1828,7 @@ bool Node::CreateValueFromXML
 		case ValueID::ValueType_Short:		{	value = new ValueShort();		break;	}
 		case ValueID::ValueType_String:		{	value = new ValueString();		break;	}
 		case ValueID::ValueType_Button:		{	value = new ValueButton();		break;	}
-		default:				{	Log::Write( LogLevel_Info, "Unknown ValueType in XML: %s", _valueElement->Attribute( "type" ) ); break; }
+		default:				{	Log::Write( LogLevel_Info, m_nodeId, "Unknown ValueType in XML: %s", _valueElement->Attribute( "type" ) ); break; }
 	}
 
 	if( value )
@@ -2101,7 +2101,7 @@ void Node::AutoAssociate
 			if( group->IsAuto() && !group->Contains( controllerNodeId ) )
 			{
 				// Associate the controller into the group
-				Log::Write( LogLevel_Info, "%s, Adding the controller to group %d (%s) of node %d", GetDriver()->GetNodeString( GetNodeId() ).c_str(), group->GetIdx(), group->GetLabel().c_str(), GetNodeId() );
+				Log::Write( LogLevel_Info, m_nodeId, "Adding the controller to group %d (%s) of node %d", group->GetIdx(), group->GetLabel().c_str(), GetNodeId() );
 				group->AddAssociation( controllerNodeId );
 			}
 		}
@@ -2185,15 +2185,14 @@ bool Node::SetDeviceClasses
 
 	// Get the basic device class label
 	map<uint8,string>::iterator bit = s_basicDeviceClasses.find( _basic );
-	string nodestr = GetDriver()->GetNodeString( m_nodeId );
 	if( bit != s_basicDeviceClasses.end() )
 	{
 		m_type = bit->second;
-		Log::Write( LogLevel_Info, "%s,  Basic device class    (0x%.2x) - %s", nodestr.c_str(), m_basic, m_type.c_str() );
+		Log::Write( LogLevel_Info, m_nodeId, "  Basic device class    (0x%.2x) - %s", m_basic, m_type.c_str() );
 	}
 	else
 	{
-		Log::Write( LogLevel_Info, "%s,  Basic device class unknown", nodestr.c_str() );
+		Log::Write( LogLevel_Info, m_nodeId, "  Basic device class unknown" );
 	}
 
 	// Apply any Generic device class data
@@ -2204,7 +2203,7 @@ bool Node::SetDeviceClasses
 		GenericDeviceClass* genericDeviceClass = git->second;
 		m_type = genericDeviceClass->GetLabel();
 
-		Log::Write( LogLevel_Info, "%s,  Generic device Class  (0x%.2x) - %s", nodestr.c_str(), m_generic, m_type.c_str() );
+		Log::Write( LogLevel_Info, m_nodeId, "  Generic device Class  (0x%.2x) - %s", m_generic, m_type.c_str() );
 
 		// Add the mandatory command classes for this generic class type
 		AddMandatoryCommandClasses( genericDeviceClass->GetMandatoryCommandClasses() );
@@ -2217,7 +2216,7 @@ bool Node::SetDeviceClasses
 		{
 			m_type = specificDeviceClass->GetLabel();
 
-			Log::Write( LogLevel_Info, "%s,  Specific device class (0x%.2x) - %s", nodestr.c_str(), m_specific, m_type.c_str() );
+			Log::Write( LogLevel_Info, m_nodeId, "  Specific device class (0x%.2x) - %s", m_specific, m_type.c_str() );
 
 			// Add the mandatory command classes for this specific class type
 			AddMandatoryCommandClasses( specificDeviceClass->GetMandatoryCommandClasses() );
@@ -2230,12 +2229,12 @@ bool Node::SetDeviceClasses
 		}
 		else
 		{
-			Log::Write( LogLevel_Info, "%s,  No specific device class defined", nodestr.c_str() );
+			Log::Write( LogLevel_Info, m_nodeId, "  No specific device class defined" );
 		}
 	}
 	else
 	{
-		Log::Write( LogLevel_Info, "%s,  No generic or specific device classes defined", nodestr.c_str() );
+		Log::Write( LogLevel_Info, m_nodeId, "  No generic or specific device classes defined" );
 	}
 
 	// Deal with sleeping devices
@@ -2261,34 +2260,34 @@ bool Node::SetDeviceClasses
 	{
 		map<uint8,CommandClass*>::const_iterator cit;
 
-		Log::Write( LogLevel_Info, "%s,  Mandatory Command Classes for Node %d:", nodestr.c_str(), m_nodeId );
+		Log::Write( LogLevel_Info, m_nodeId, "  Mandatory Command Classes for Node %d:", m_nodeId );
 		bool reportedClasses = false;
 		for( cit = m_commandClassMap.begin(); cit != m_commandClassMap.end(); ++cit )
 		{
 			if( !cit->second->IsAfterMark() )
 			{
-				Log::Write( LogLevel_Info, "%s,    %s", nodestr.c_str(), cit->second->GetCommandClassName().c_str() );
+				Log::Write( LogLevel_Info, m_nodeId, "    %s", cit->second->GetCommandClassName().c_str() );
 				reportedClasses = true;
 			}
 		}
 		if( !reportedClasses )
 		{
-			Log::Write( LogLevel_Info, "%s,    None", nodestr.c_str() );
+			Log::Write( LogLevel_Info, m_nodeId, "    None" );
 		}
 
-		Log::Write( LogLevel_Info, "%s,  Mandatory Command Classes controlled by Node %d:", nodestr.c_str(), m_nodeId );
+		Log::Write( LogLevel_Info, m_nodeId, "  Mandatory Command Classes controlled by Node %d:", m_nodeId );
 		reportedClasses = false;
 		for( cit = m_commandClassMap.begin(); cit != m_commandClassMap.end(); ++cit )
 		{
 			if( cit->second->IsAfterMark() )
 			{
-				Log::Write( LogLevel_Info, "%s,    %s", nodestr.c_str(), cit->second->GetCommandClassName().c_str() );
+				Log::Write( LogLevel_Info, m_nodeId, "    %s", cit->second->GetCommandClassName().c_str() );
 				reportedClasses = true;
 			}
 		}
 		if( !reportedClasses )
 		{
-			Log::Write( LogLevel_Info, "%s,    None", nodestr.c_str() );
+			Log::Write( LogLevel_Info, m_nodeId, "    None" );
 		}
 	}
 

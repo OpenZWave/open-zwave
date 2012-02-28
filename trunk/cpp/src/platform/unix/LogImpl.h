@@ -44,7 +44,7 @@ namespace OpenZWave
 		LogImpl( string const& _filename, bool const _bAppendLog, bool const _bConsoleOutput, LogLevel const _saveLevel, LogLevel const _queueLevel, LogLevel const _dumpTrigger );
 		~LogImpl();
 
-		void Write( LogLevel _level, char const* _format, va_list _args );
+		void Write( LogLevel _level, uint8 const _nodeId, char const* _format, va_list _args );
 		void Queue( char const* _buffer );
 		void QueueDump();
 		void QueueClear();
@@ -52,6 +52,7 @@ namespace OpenZWave
 		void SetLogFileName( string _filename );
 
 		string GetTimeStampString();
+		string GetNodeString( uint8 const _nodeId );
 		string GetThreadId();
 
 		string m_filename;						/**< filename specified by user (default is ozw_log.txt) */
