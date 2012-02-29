@@ -3471,7 +3471,7 @@ void Driver::PollThreadProc
 				|| !m_msgQueue[MsgQueue_Send].empty()
 				|| !m_msgQueue[MsgQueue_Command].empty()
 				|| !m_msgQueue[MsgQueue_Query].empty()
-				|| m_currentMsg != NULL )
+				/*|| m_currentMsg != NULL*/ )
 			{
 				i32 = Wait::Single( _exitEvent, 10);		// test conditions every 10ms
 				if( i32 == 0 )
