@@ -871,7 +871,7 @@ bool Driver::WriteMsg
 	string const msg
 )
 {
-	Log::Write( LogLevel_Debug, "WriteMsg %s m_currentMsg=%08x", msg.c_str(), m_currentMsg );
+	Log::Write( LogLevel_Debug, GetNodeNumber( m_currentMsg ), "WriteMsg %s m_currentMsg=%08x", msg.c_str(), m_currentMsg );
 	if( !m_currentMsg )
 	{
 		return false;
@@ -938,15 +938,11 @@ void Driver::RemoveCurrentMsg
 (
 )
 {
+	Log::Write( LogLevel_Detail, GetNodeNumber( m_currentMsg ), "Removing current message" );
 	if( m_currentMsg != NULL)
 	{
-		Log::Write( LogLevel_Debug, "Node%03d, Removing current message", m_currentMsg->GetTargetNodeId() );
 		delete m_currentMsg;
 		m_currentMsg = NULL;
-	}
-	else
-	{
-		Log::Write( LogLevel_Warning, "         Removing current message (though it was already NULL)" );
 	}
 
 	m_expectedCallbackId = 0;
@@ -1722,7 +1718,7 @@ void Driver::ProcessMsg
 				{
 					if( m_expectedCommandClassId && ( m_expectedReply == FUNC_ID_APPLICATION_COMMAND_HANDLER ) )
 					{
-						if( m_expectedCommandClassId == _data[5] && m_expectedNodeId == _data[3] )
+						if( m_expectedCallbackId == 0 && m_expectedCommandClassId == _data[5] && m_expectedNodeId == _data[3] )
 						{
 							Log::Write( LogLevel_Detail, GetNodeNumber( m_currentMsg ), "  Expected reply and command class was received" );
 							m_waitingForAck = false;
@@ -2528,7 +2524,7 @@ void Driver::HandleRemoveNodeFromNetworkRequest
 					m_controllerCommandNode = _data[4];
 			}
 
-			if ( m_controllerCommandNode != 0 )
+			if ( m_controllerCommandNode != 0 && m_controllerCommandNode != 0xff )
 			{
 				LockNodes();
 				delete m_nodes[m_controllerCommandNode];
@@ -4472,6 +4468,7 @@ bool Driver::CancelControllerCommand
 		case ControllerCommand_RemoveController:
 		{
 			Log::Write( LogLevel_Info, nodeId, "CancelRemoveController" );
+			m_controllerCommandNode = 0xff;		// identify the fact that there is no node to remove
 			Msg* msg = new Msg( "CancelRemoveController", 0xff, REQUEST, FUNC_ID_ZW_REMOVE_NODE_FROM_NETWORK, true );
 			msg->Append( REMOVE_NODE_STOP );
 			SendMsg( msg, MsgQueue_Command );
