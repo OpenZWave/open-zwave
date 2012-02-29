@@ -53,6 +53,7 @@ namespace OpenZWave
 		void SetLogFileName( string _filename );
 
 		string GetTimeStampString();
+		string GetNodeString( uint8 const _nodeId );
 		string GetThreadId();
 
 		string m_filename;						/**< filename specified by user (default is ozw_log.txt) */
