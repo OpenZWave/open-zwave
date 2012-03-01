@@ -190,6 +190,9 @@ Driver::~Driver
 (
 )
 {
+	// append final driver stats output to the log file
+	LogDriverStatistics();
+
 	// Save the driver config before deleting anything else
 	bool save;
 	if( Options::Get()->GetOptionAsBool( "SaveConfiguration", &save) )
@@ -1989,14 +1992,14 @@ void Driver::HandleSerialAPIGetInitDataResponse
 				{					
 					if( IsVirtualNode( nodeId ) )
 					{
-						Log::Write( LogLevel_Info, GetNodeNumber( m_currentMsg ), "    Node %.3d - Virtual (ignored)", nodeId );
+						Log::Write( LogLevel_Info, GetNodeNumber( m_currentMsg ), "    Node - Virtual (ignored)" );
 					}
 					else
 					{
 						Node* node = GetNode( nodeId );
 						if( node )
 						{
-							Log::Write( LogLevel_Info, GetNodeNumber( m_currentMsg ), "    Node %.3d - Known" );
+							Log::Write( LogLevel_Info, GetNodeNumber( m_currentMsg ), "    Node - Known" );
 							if( !m_init )
 							{
 								// The node was read in from the config, so we 
@@ -2009,7 +2012,7 @@ void Driver::HandleSerialAPIGetInitDataResponse
 						else
 						{
 							// This node is new
-							Log::Write( LogLevel_Info, GetNodeNumber( m_currentMsg ), "    Node %.3d - New", nodeId );
+							Log::Write( LogLevel_Info, GetNodeNumber( m_currentMsg ), "    Node - New" );
 							Notification* notification = new Notification( Notification::Type_NodeNew );
 							notification->SetHomeAndNodeIds( m_homeId, nodeId );
 							QueueNotification( notification ); 
@@ -2024,7 +2027,7 @@ void Driver::HandleSerialAPIGetInitDataResponse
 					if( GetNode(nodeId) )
 					{
 						// This node no longer exists in the Z-Wave network
-						Log::Write( LogLevel_Info, GetNodeNumber( m_currentMsg ), "    Node %.3d: Removed", nodeId );
+						Log::Write( LogLevel_Info, GetNodeNumber( m_currentMsg ), "    Node - Removed" );
 						delete m_nodes[nodeId];
 						m_nodes[nodeId] = NULL;
 						Notification* notification = new Notification( Notification::Type_NodeRemoved );
@@ -2059,7 +2062,7 @@ void Driver::HandleGetNodeProtocolInfoResponse
 	}
 
 	uint8 nodeId = m_currentMsg->GetTargetNodeId();
-	Log::Write( LogLevel_Info, nodeId, "Received reply to FUNC_ID_ZW_GET_NODE_PROTOCOL_INFO for node %d", nodeId );
+	Log::Write( LogLevel_Info, nodeId, "Received reply to FUNC_ID_ZW_GET_NODE_PROTOCOL_INFO" );
 
 	// Update the node with the protocol info
 	if( Node* node = GetNodeUnsafe( nodeId ) )
@@ -3186,7 +3189,7 @@ bool Driver::EnablePoll
 			notification->SetHomeAndNodeIds( m_homeId, _valueId.GetNodeId() );
 			QueueNotification( notification ); 
 			Log::Write( LogLevel_Info, nodeId, "EnablePoll for HomeID 0x%.8x, value(cc=0x%02x,in=0x%02x,id=0x%02x)--pollList has %d items", 
-				    _valueId.GetNodeId(),_valueId.GetHomeId(), _valueId.GetCommandClassId(), _valueId.GetIndex(), _valueId.GetInstance(), m_pollList.size() );
+				    _valueId.GetHomeId(), _valueId.GetCommandClassId(), _valueId.GetIndex(), _valueId.GetInstance(), m_pollList.size() );
 			return true;
 		}
 
@@ -3239,7 +3242,7 @@ bool Driver::DisablePoll
 				notification->SetHomeAndNodeIds( m_homeId, _valueId.GetNodeId() );
 				QueueNotification( notification ); 
 				Log::Write( LogLevel_Info, nodeId, "Node%03d, DisablePoll for HomeID 0x%.8x, value(cc=0x%02x,in=0x%02x,id=0x%02x)--poll list has %d items", 
-					    _valueId.GetNodeId(),_valueId.GetHomeId(), _valueId.GetCommandClassId(), _valueId.GetIndex(), _valueId.GetInstance(), m_pollList.size() );
+					    _valueId.GetHomeId(), _valueId.GetCommandClassId(), _valueId.GetIndex(), _valueId.GetInstance(), m_pollList.size() );
 				return true;
 			}
 		}
@@ -3463,17 +3466,24 @@ void Driver::PollThreadProc
 			// TODO we can have a debate about whether to test all four queues or just the Poll queue
 			// Wait until the library isn't actively sending messages (or in the midst of a transaction)
 			int i32;
+			int loopCount = 0;
 			while( !m_msgQueue[MsgQueue_Poll].empty()
 				|| !m_msgQueue[MsgQueue_Send].empty()
 				|| !m_msgQueue[MsgQueue_Command].empty()
 				|| !m_msgQueue[MsgQueue_Query].empty()
-				/*|| m_currentMsg != NULL*/ )
+				|| m_currentMsg != NULL )
 			{
 				i32 = Wait::Single( _exitEvent, 10);		// test conditions every 10ms
 				if( i32 == 0 )
 				{
 					// Exit has been called
 					return;
+				}
+				loopCount++;
+				if( loopCount == 150 )
+				{
+					Log::QueueDump();
+					assert( 0 );
 				}
 			}
 

@@ -214,11 +214,11 @@ void Manager::WriteConfig
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
 		driver->WriteConfig();
-		Log::Write( LogLevel_Info, "Manager::WriteConfig completed for driver with home ID of 0x%.8x", _homeId );
+		Log::Write( LogLevel_Info, "mgr,     Manager::WriteConfig completed for driver with home ID of 0x%.8x", _homeId );
 	}
 	else
 	{
-		Log::Write( LogLevel_Info, "Manager::WriteConfig failed - _homeId %d not found", _homeId );
+		Log::Write( LogLevel_Info, "mgr,     Manager::WriteConfig failed - _homeId %d not found", _homeId );
 	}
 	Scene::WriteXML( "zwscene.xml" );
 }
@@ -244,7 +244,7 @@ bool Manager::AddDriver
 	{
 		if( _controllerPath == (*pit)->GetControllerPath() )
 		{
-			Log::Write( LogLevel_Info, "Cannot add driver for controller %s - driver already exists", _controllerPath.c_str() );
+			Log::Write( LogLevel_Info, "mgr,     Cannot add driver for controller %s - driver already exists", _controllerPath.c_str() );
 			return false;
 		}
 	}
@@ -254,7 +254,7 @@ bool Manager::AddDriver
 	{
 		if( _controllerPath == rit->second->GetControllerPath() )
 		{
-			Log::Write( LogLevel_Info, "Cannot add driver for controller %s - driver already exists", _controllerPath.c_str() );
+			Log::Write( LogLevel_Info, "mgr,     Cannot add driver for controller %s - driver already exists", _controllerPath.c_str() );
 			return false;
 		}
 	}
@@ -263,7 +263,7 @@ bool Manager::AddDriver
 	m_pendingDrivers.push_back( driver );
 	driver->Start();
 
-	Log::Write( LogLevel_Info, "Added driver for controller %s", _controllerPath.c_str() );
+	Log::Write( LogLevel_Info, "mgr,     Added driver for controller %s", _controllerPath.c_str() );
 	return true;
 }
 
@@ -283,7 +283,7 @@ bool Manager::RemoveDriver
 		{
 			delete *pit;
 			m_pendingDrivers.erase( pit );
-			Log::Write( LogLevel_Info, "Driver for controller %s removed", _controllerPath.c_str() );
+			Log::Write( LogLevel_Info, "mgr,     Driver for controller %s removed", _controllerPath.c_str() );
 			return true;
 		}
 	}
@@ -295,12 +295,12 @@ bool Manager::RemoveDriver
 		{
 			delete rit->second;
 			m_readyDrivers.erase( rit );
-			Log::Write( LogLevel_Info, "Driver for controller %s removed", _controllerPath.c_str() );
+			Log::Write( LogLevel_Info, "mgr,     Driver for controller %s removed", _controllerPath.c_str() );
 			return true;
 		}
 	}
 
-	Log::Write( LogLevel_Info, "Failed to remove driver for controller %s", _controllerPath.c_str() );
+	Log::Write( LogLevel_Info, "mgr,     Failed to remove driver for controller %s", _controllerPath.c_str() );
 	return false;
 }
 
@@ -319,7 +319,7 @@ Driver* Manager::GetDriver
 		return it->second;
 	}
 
-	Log::Write( LogLevel_Info, "Manager::GetDriver failed - Home ID 0x%.8x is unknown", _homeId );
+	Log::Write( LogLevel_Info, "mgr,     Manager::GetDriver failed - Home ID 0x%.8x is unknown", _homeId );
 	assert(0);
 	return NULL;
 }
@@ -350,7 +350,7 @@ void Manager::SetDriverReady
 	if( found )
 	{
 		if (success) {
-			Log::Write( LogLevel_Info, "Driver with Home ID of 0x%.8x is now ready.", _driver->GetHomeId() );
+			Log::Write( LogLevel_Info, "mgr,     Driver with Home ID of 0x%.8x is now ready.", _driver->GetHomeId() );
 			Log::Write( LogLevel_Info, "" );
 		}
 
@@ -378,7 +378,7 @@ uint8 Manager::GetControllerNodeId
 		return driver->GetNodeId();
 	}
 
-	Log::Write( LogLevel_Info, "GetControllerNodeId() failed - _homeId %d not found", _homeId );
+	Log::Write( LogLevel_Info, "mgr,     GetControllerNodeId() failed - _homeId %d not found", _homeId );
 	return 0xff;
 }
 
@@ -396,7 +396,7 @@ bool Manager::IsPrimaryController
 		return driver->IsPrimaryController();
 	}
 
-	Log::Write( LogLevel_Info, "IsPrimaryController() failed - _homeId %d not found", _homeId );
+	Log::Write( LogLevel_Info, "mgr,     IsPrimaryController() failed - _homeId %d not found", _homeId );
 	return false;
 }
 
@@ -414,7 +414,7 @@ bool Manager::IsStaticUpdateController
 		return driver->IsStaticUpdateController();
 	}
 
-	Log::Write( LogLevel_Info, "IsStaticUpdateController() failed - _homeId %d not found", _homeId );
+	Log::Write( LogLevel_Info, "mgr,     IsStaticUpdateController() failed - _homeId %d not found", _homeId );
 	return false;
 }
 
@@ -432,7 +432,7 @@ bool Manager::IsBridgeController
 		return driver->IsBridgeController();
 	}
 
-	Log::Write( LogLevel_Info, "IsBridgeController() failed - _homeId %d not found", _homeId );
+	Log::Write( LogLevel_Info, "mgr,     IsBridgeController() failed - _homeId %d not found", _homeId );
 	return false;
 }
 
@@ -450,7 +450,7 @@ string Manager::GetLibraryVersion
 		return driver->GetLibraryVersion();
 	}
 
-	Log::Write( LogLevel_Info, "GetLibraryVersion() failed - _homeId %d not found", _homeId );
+	Log::Write( LogLevel_Info, "mgr,     GetLibraryVersion() failed - _homeId %d not found", _homeId );
 	return "";
 }
 
@@ -468,7 +468,7 @@ string Manager::GetLibraryTypeName
 		return driver->GetLibraryTypeName();
 	}
 
-	Log::Write( LogLevel_Info, "GetLibraryTypeName() failed - _homeId %d not found", _homeId );
+	Log::Write( LogLevel_Info, "mgr,     GetLibraryTypeName() failed - _homeId %d not found", _homeId );
 	return "";
 }
 
@@ -486,7 +486,7 @@ int32 Manager::GetSendQueueCount
 		return driver->GetSendQueueCount();
 	}
 
-	Log::Write( LogLevel_Info, "GetSendQueueCount() failed - _homeId %d not found", _homeId );
+	Log::Write( LogLevel_Info, "mgr,     GetSendQueueCount() failed - _homeId %d not found", _homeId );
 	return -1;
 }
 
@@ -504,7 +504,7 @@ void Manager::LogDriverStatistics
 		return driver->LogDriverStatistics();
 	}
 
-	Log::Write( LogLevel_Warning, "LogDriverStatistics() failed - _homeId %d not found", _homeId );
+	Log::Write( LogLevel_Warning, "mgr,     LogDriverStatistics() failed - _homeId %d not found", _homeId );
 }
 
 //-----------------------------------------------------------------------------
@@ -567,7 +567,7 @@ bool Manager::EnablePoll
 		return( driver->EnablePoll( _valueId, _intensity ) );
 	}
 
-	Log::Write( LogLevel_Info, "EnablePoll failed - Driver with Home ID 0x%.8x is not available", _valueId.GetHomeId() );
+	Log::Write( LogLevel_Info, "mgr,     EnablePoll failed - Driver with Home ID 0x%.8x is not available", _valueId.GetHomeId() );
 	return false;
 }
 
@@ -585,7 +585,7 @@ bool Manager::DisablePoll
 		return( driver->DisablePoll( _valueId ) );
 	}
 
-	Log::Write( LogLevel_Info, "DisablePoll failed - Driver with Home ID 0x%.8x is not available", _valueId.GetHomeId() );
+	Log::Write( LogLevel_Info, "mgr,     DisablePoll failed - Driver with Home ID 0x%.8x is not available", _valueId.GetHomeId() );
 	return false;
 }
 
@@ -603,7 +603,7 @@ bool Manager::isPolled
 		return( driver->isPolled( _valueId ) );
 	}
 
-	Log::Write( LogLevel_Info, "isPolled failed - Driver with Home ID 0x%.8x is not available", _valueId.GetHomeId() );
+	Log::Write( LogLevel_Info, "mgr,     isPolled failed - Driver with Home ID 0x%.8x is not available", _valueId.GetHomeId() );
 	return false;
 }
 
@@ -622,7 +622,7 @@ void Manager::SetPollIntensity
 		return( driver->SetPollIntensity( _valueId, _intensity ) );
 	}
 
-	Log::Write( LogLevel_Error, "SetPollIntensity failed - Driver with Home ID 0x%.8x is not available", _valueId.GetHomeId() );
+	Log::Write( LogLevel_Error, "mgr,     SetPollIntensity failed - Driver with Home ID 0x%.8x is not available", _valueId.GetHomeId() );
 }
 
 
@@ -2318,13 +2318,35 @@ bool Manager::RefreshValue
 			CommandClass* cc = node->GetCommandClass( _id.GetCommandClassId() );
 			uint8 index = _id.GetIndex();
 			uint8 instance = _id.GetInstance();
-			Log::Write( LogLevel_Info, "Refreshing node %d: %s index = %d instance = %d (to confirm a reported change)", node->m_nodeId, cc->GetCommandClassName().c_str(), index, instance );
+			Log::Write( LogLevel_Info, "mgr,     Refreshing node %d: %s index = %d instance = %d (to confirm a reported change)", node->m_nodeId, cc->GetCommandClassName().c_str(), index, instance );
 			cc->RequestValue( 0, index, instance, Driver::MsgQueue_Send );
 			bRet = true;
 		}
 		driver->ReleaseNodes();
 	}
 	return bRet;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::SetChangeVerified>
+// Set the verify changes flag for the specified value
+//-----------------------------------------------------------------------------
+void Manager::SetChangeVerified
+(
+	ValueID const& _id,
+	bool _verify
+)
+{
+	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
+	{
+		driver->LockNodes();
+		if( Value* value = driver->GetValue( _id ) )
+		{
+			value->SetChangeVerified( _verify );
+			value->Release();
+		}
+		driver->ReleaseNodes();
+	}
 }
 
 //-----------------------------------------------------------------------------

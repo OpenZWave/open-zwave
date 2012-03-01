@@ -77,8 +77,6 @@ Options* Options::Create
 		s_instance->AddOptionInt(		"PollInterval",				30000);						// 30 seconds (can easily poll 30 values in this time; ~120 values is the effective limit for 30 seconds)
 		s_instance->AddOptionBool(		"IntervalBetweenPolls",		false );					// if false, try to execute the entire poll list within the PollInterval time frame
 																								// if true, wait for PollInterval milliseconds between polls
-		s_instance->AddOptionBool(		"ValidateValueChanges",		true );						// if true, confirm any value changes (to eliminate spurious reported changes from device) other than any
-																								// values for which SetChangeVerified( false ) has been called
 		s_instance->AddOptionBool(		"SuppressValueRefresh",		false );					// if true, notifications for refreshed (but unchanged) values will not be sent
 	}
 

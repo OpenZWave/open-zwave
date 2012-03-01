@@ -236,11 +236,11 @@ bool ThermostatMode::HandleMsg
 		{
 			valueList->OnValueRefreshed( _data[1]&0x1f );
 			valueList->Release();
-			Log::Write( LogLevel_Info, "Received thermostat mode from node %d: %s", GetNodeId(), valueList->GetItem().m_label.c_str() );
+			Log::Write( LogLevel_Info, GetNodeId(), "Received thermostat mode: %s", valueList->GetItem().m_label.c_str() );
 		}
 		else
 		{
-			Log::Write( LogLevel_Info, "Received thermostat mode from node %d: index %d", GetNodeId(), _data[1]&0x1f );
+			Log::Write( LogLevel_Info, GetNodeId(), "Received thermostat mode: index %d", _data[1]&0x1f );
 		}
 		return true;
 	}
@@ -250,7 +250,7 @@ bool ThermostatMode::HandleMsg
 		// We have received the supported thermostat modes from the Z-Wave device
 		// these values are used to populate m_supportedModes which, in turn, is used to "seed" the values
 		// for each m_modes instance
-		Log::Write( LogLevel_Info, "Received supported thermostat modes from node %d", GetNodeId() );		
+		Log::Write( LogLevel_Info, GetNodeId(), "Received supported thermostat modes" );		
 
 		m_supportedModes.clear();
 		for( uint32 i=1; i<_length-1; ++i )
@@ -264,14 +264,14 @@ bool ThermostatMode::HandleMsg
 					
 					if ((size_t)item.m_value >= sizeof(c_modeName)/sizeof(*c_modeName))
 					{
-						Log::Write( LogLevel_Info, "Received unknown thermostat mode: 0x%x", item.m_value);
+						Log::Write( LogLevel_Info, GetNodeId(), "Received unknown thermostat mode: 0x%x", item.m_value);
 					}
 					else
 					{
 						item.m_label = c_modeName[item.m_value];
 						m_supportedModes.push_back( item );
 
-						Log::Write( LogLevel_Info, "    Added mode: %s", c_modeName[item.m_value] );
+						Log::Write( LogLevel_Info, GetNodeId(), "    Added mode: %s", c_modeName[item.m_value] );
 					}
 				}
 			}
