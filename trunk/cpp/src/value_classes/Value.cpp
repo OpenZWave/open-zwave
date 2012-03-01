@@ -94,6 +94,7 @@ Value::Value
 	m_affectsLength( 0 ),
 	m_affectsAll( false ),
 	m_checkChange( false ),
+	m_verifyChanges( false ),
 	m_pollIntensity( _pollIntensity )
 {
 }
@@ -114,6 +115,7 @@ Value::Value
 	m_affectsLength( 0 ),
 	m_affectsAll( false ),
 	m_checkChange( false ),
+	m_verifyChanges( false ),
 	m_pollIntensity( 0 )
 {
 }
