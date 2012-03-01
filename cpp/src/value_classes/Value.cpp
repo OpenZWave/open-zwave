@@ -93,7 +93,8 @@ Value::Value
 	m_affectsLength( 0 ),
 	m_affectsAll( false ),
     m_checkChange( false ),
-	m_pollIntensity( _pollIntensity )
+	m_pollIntensity( _pollIntensity ),
+	m_verifyChanges( false )
 {
 }
 
@@ -111,7 +112,9 @@ Value::Value
 	m_isSet( false ),
 	m_affectsLength( 0 ),
 	m_affectsAll( false ),
-	m_checkChange( false )
+	m_checkChange( false ),
+	m_pollIntensity( 0 ),
+	m_verifyChanges( false )
 {
 }
 
@@ -234,10 +237,10 @@ void Value::ReadXML
 		}
 	}
 
-	char const* checkChange = _valueElement->Attribute( "check_change" );
-	if( checkChange )
+	char const* verifyChanges = _valueElement->Attribute( "verify_changes" );
+	if( verifyChanges )
 	{
-		m_checkChange = !strcmp( checkChange, "true" );
+		m_verifyChanges = !strcmp( verifyChanges, "true" );
 	}
 
 	if( TIXML_SUCCESS == _valueElement->QueryIntAttribute( "min", &intVal ) )
@@ -292,7 +295,7 @@ void Value::WriteXML
 	_valueElement->SetAttribute( "units", m_units.c_str() );
 	_valueElement->SetAttribute( "read_only", m_readOnly ? "true" : "false" );
 	_valueElement->SetAttribute( "write_only", m_writeOnly ? "true" : "false" );
-	_valueElement->SetAttribute( "check_change", m_checkChange ? "true" : "false" );
+	_valueElement->SetAttribute( "verify_changes", m_verifyChanges ? "true" : "false" );
 
 	snprintf( str, sizeof(str), "%d", m_pollIntensity );
 	_valueElement->SetAttribute( "poll_intensity", str );
@@ -532,7 +535,7 @@ int Value::VerifyRefreshedValue
 	// if this is the first read of a value, assume it is valid (and notify as a change)
 	if( !IsSet() )
 	{
-		Log::Write( LogLevel_Detail, "Initial read of value" );
+		Log::Write( LogLevel_Detail, m_id.GetNodeId(), "Initial read of value" );
 		Value::OnValueChanged();
 		return 2;		// confirmed change of value
 	}
@@ -541,19 +544,19 @@ int Value::VerifyRefreshedValue
 		switch( _type )
 		{
 		case 1:			// string
-			Log::Write( LogLevel_Detail, "Refreshed Value: old value=%s, new value=%s, type=%s", ((string*)_originalValue)->c_str(), ((string*)_newValue)->c_str(), "string" );
+			Log::Write( LogLevel_Detail, m_id.GetNodeId(), "Refreshed Value: old value=%s, new value=%s, type=%s", ((string*)_originalValue)->c_str(), ((string*)_newValue)->c_str(), "string" );
 			break;
 		case 2:			// short
-            Log::Write( LogLevel_Detail, "Refreshed Value: old value=%d, new value=%d, type=%s", *((short*)_originalValue), *((short*)_newValue), "short");
+            Log::Write( LogLevel_Detail, m_id.GetNodeId(), "Refreshed Value: old value=%d, new value=%d, type=%s", *((short*)_originalValue), *((short*)_newValue), "short");
 			break;
 		case 3:			// int32
-			Log::Write( LogLevel_Detail, "Refreshed Value: old value=%d, new value=%d, type=%s", *((int32*)_originalValue), *((int32*)_newValue), "int32" );
+			Log::Write( LogLevel_Detail, m_id.GetNodeId(), "Refreshed Value: old value=%d, new value=%d, type=%s", *((int32*)_originalValue), *((int32*)_newValue), "int32" );
 			break;
 		case 4:			// uint8
-			Log::Write( LogLevel_Detail, "Refreshed Value: old value=%d, new value=%d, type=%s", *((uint8*)_originalValue), *((uint8*)_newValue), "uint8" );
+			Log::Write( LogLevel_Detail, m_id.GetNodeId(), "Refreshed Value: old value=%d, new value=%d, type=%s", *((uint8*)_originalValue), *((uint8*)_newValue), "uint8" );
 			break;
 		case 5:			// bool
-			Log::Write( LogLevel_Detail, "Refreshed Value: old value=%s, new value=%s, type=%s", *((bool*)_originalValue)?"true":"false", *((uint8*)_newValue)?"true":"false", "bool" );
+			Log::Write( LogLevel_Detail, m_id.GetNodeId(), "Refreshed Value: old value=%s, new value=%s, type=%s", *((bool*)_originalValue)?"true":"false", *((uint8*)_newValue)?"true":"false", "bool" );
 			break;
 		default:
 			break;
@@ -563,12 +566,9 @@ int Value::VerifyRefreshedValue
 
 	// check whether changes in this value should be verified (since some devices will report values that always
 	// change, where confirming changes is difficult or impossible)
-	bool bGlobalVerify = false;
-	Options::Get()->GetOptionAsBool( "ValidateValueChanges", &bGlobalVerify );
+	Log::Write( LogLevel_Detail, m_id.GetNodeId(), "Changes to this value are %sverified", m_verifyChanges ? "" : "not " );
 
-	Log::Write( LogLevel_Detail, "Changes to this value are %sverified", (m_verifyChanges && bGlobalVerify)?"":"not " );
-
-	if( !m_verifyChanges || !bGlobalVerify )
+	if( !m_verifyChanges )
 	{
 		// since we're not checking changes in this value, notify ValueChanged (to be on the safe side)
 		Value::OnValueChanged();
@@ -607,7 +607,7 @@ int Value::VerifyRefreshedValue
 		}
 
 		// values are different, so flag this as a verification refresh and queue it
-		Log::Write( LogLevel_Info, "Changed value (possible)--rechecking" );
+		Log::Write( LogLevel_Info, m_id.GetNodeId(), "Changed value (possible)--rechecking" );
 		SetCheckingChange( true );
 		Manager::Get()->RefreshValue( GetID() );
 		return 1;				// value has changed (to be confirmed)
@@ -636,7 +636,7 @@ int Value::VerifyRefreshedValue
 		}
 		if( bCheckEqual )
 		{
-			Log::Write( LogLevel_Info, "Changed value--confirmed" );
+			Log::Write( LogLevel_Info, m_id.GetNodeId(), "Changed value--confirmed" );
 			SetCheckingChange( false );
 
 			// update the saved value and send notification
@@ -648,7 +648,7 @@ int Value::VerifyRefreshedValue
 		// log this situation, but don't change the value or send a ValueChanged Notification
 		if( bOriginalEqual )
 		{
-			Log::Write( LogLevel_Info, "Spurious value change was noted." );
+			Log::Write( LogLevel_Info, m_id.GetNodeId(), "Spurious value change was noted." );
 			SetCheckingChange( false );
 			Value::OnValueRefreshed();
 			return 0;
@@ -656,7 +656,7 @@ int Value::VerifyRefreshedValue
 
 		// the second read is different than both the original value and the checked value...retry
 		// keep trying until we get the same value twice
-		Log::Write( LogLevel_Info, "Changed value (changed again)--rechecking" );
+		Log::Write( LogLevel_Info, m_id.GetNodeId(), "Changed value (changed again)--rechecking" );
 		SetCheckingChange( true );
 
 		// save a temporary copy of value and re-read value from device

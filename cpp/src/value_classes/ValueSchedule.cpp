@@ -156,6 +156,7 @@ bool ValueSchedule::Set
 )
 {
 	// Set the value in the device.
+	// TODO this needs to be checked to make sure it works as intended
 	return Value::Set();
 }
 

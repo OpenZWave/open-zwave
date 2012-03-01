@@ -203,10 +203,16 @@ bool ValueList::SetByValue
 	int32 const _value
 )
 {
-	m_newValueIdx = _value;
+	// save the old value (to be restored after Set() call)
+	int32 oldValueIdx = m_newValueIdx;
 
 	// Set the value in the device.
-	return Value::Set();
+	m_newValueIdx = _value;
+	bool ret = Value::Set();
+
+	// restore the old value so the RefreshValue queued in Set() will identify any change
+	m_newValueIdx = oldValueIdx;
+	return ret;
 }
 
 //-----------------------------------------------------------------------------
@@ -226,10 +232,7 @@ bool ValueList::SetByLabel
 		return false;
 	}
 
-	m_newValueIdx = index;
-
-	// Set the value in the device.
-	return Value::Set();
+	return SetByValue( index );
 }
 
 //-----------------------------------------------------------------------------

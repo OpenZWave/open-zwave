@@ -74,6 +74,8 @@ namespace OpenZWave
 		int32 GetMin()const{ return m_min; }
 		int32 GetMax()const{ return m_max; }
 
+		void SetChangeVerified( bool _verify ){ m_verifyChanges = _verify; }
+
 		virtual string const GetAsString() const { return ""; }
 		virtual bool SetFromString( string const& _value ) { return false; }
 
@@ -88,7 +90,6 @@ namespace OpenZWave
 
 		bool Set();							// For the user to change a value in a device
 //		void SetIsSet() { m_isSet = true; }	// TODO: consider removing this...it's never called since m_isSet is set in ValueChanged and ValueRefreshed
-		void SetChangeVerified( bool _verify ){ m_verifyChanges = _verify; }
 		bool IsCheckingChange()const{ return m_checkChange; }
 		void SetCheckingChange( bool _check ) { m_checkChange = _check; }
 		void OnValueRefreshed();			// A value in a device has been refreshed

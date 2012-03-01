@@ -1017,6 +1017,15 @@ namespace OpenZWave
 		bool RefreshValue( ValueID const& _id);
 
 		/**
+		 * \brief Sets a flag indicating whether value changes noted upon a refresh should be verified.  If so, the
+		 * library will immediately refresh the value a second time whenever a change is observed.  This helps to filter
+		 * out spurious data reported occasionally by some devices.
+		 * \param _id The unique identifier of the value whose changes should or should not be verified.
+		 * \param _verify if true, verify changes; if false, don't verify changes.
+		 */
+		void SetChangeVerified( ValueID const& _id, bool _verify );
+
+		/**
 		 * \brief Starts an activity in a device.
 		 * Since buttons are write-only values that do not report a state, no notification callbacks are sent.
 		 * \param _id The unique identifier of the integer value.
