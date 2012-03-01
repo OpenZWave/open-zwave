@@ -83,6 +83,7 @@ Value::Value
 ):
 	m_min( 0 ),
 	m_max( 0 ),
+	m_verifyChanges( false ),
 	m_id( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, _type ),
 	m_label( _label ),
 	m_units( _units ),
@@ -92,9 +93,8 @@ Value::Value
 	m_isSet( _isSet ),
 	m_affectsLength( 0 ),
 	m_affectsAll( false ),
-    m_checkChange( false ),
-	m_pollIntensity( _pollIntensity ),
-	m_verifyChanges( false )
+	m_checkChange( false ),
+	m_pollIntensity( _pollIntensity )
 {
 }
 
@@ -107,14 +107,14 @@ Value::Value
 ):
 	m_min( 0 ),
 	m_max( 0 ),
+	m_verifyChanges( false ),
 	m_readOnly( false ),
 	m_writeOnly( false ),
 	m_isSet( false ),
 	m_affectsLength( 0 ),
 	m_affectsAll( false ),
 	m_checkChange( false ),
-	m_pollIntensity( 0 ),
-	m_verifyChanges( false )
+	m_pollIntensity( 0 )
 {
 }
 
