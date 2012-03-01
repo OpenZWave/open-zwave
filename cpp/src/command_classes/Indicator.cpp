@@ -99,7 +99,7 @@ bool Indicator::HandleMsg
 {
 	if( IndicatorCmd_Report == (IndicatorCmd)_data[0] )
 	{
-		Log::Write( LogLevel_Info, "Received an Indicator report from node %d: Indicator=%d", GetNodeId(), _data[1] );
+		Log::Write( LogLevel_Info, GetNodeId(), "Received an Indicator report: Indicator=%d", _data[1] );
 
 		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, 0 ) ) )
 		{
@@ -125,7 +125,7 @@ bool Indicator::SetValue
 	{
 		ValueByte const* value = static_cast<ValueByte const*>(&_value);
 
-		Log::Write( LogLevel_Info, "Indicator::SetValue - Setting indicator on node %d to %d", GetNodeId(), value->GetValue());
+		Log::Write( LogLevel_Info, GetNodeId(), "Indicator::SetValue - Setting indicator to %d", value->GetValue());
 		Msg* msg = new Msg( "Basic Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
 		msg->SetInstance( this, _value.GetID().GetInstance() );
 		msg->Append( GetNodeId() );

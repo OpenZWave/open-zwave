@@ -108,10 +108,16 @@ bool ValueString::Set
 	string const& _value
 )
 {
-	m_value = _value;
+	// save the old value (to be restored after Set() call)
+	string oldValue = m_value;
 
 	// Set the value in the device.
-	return Value::Set();
+	m_value = _value;
+	bool ret = Value::Set();
+
+	// restore the old value so the RefreshValue queued in Set() will identify any change
+	m_value = oldValue;
+	return ret;
 }
 
 //-----------------------------------------------------------------------------
