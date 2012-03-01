@@ -3554,11 +3554,6 @@ void Driver::InitNode
 
 	// Add the new node
 	m_nodes[_nodeId] = new Node( m_homeId, _nodeId );
-	// Do controller specific node initializations
-	if( _nodeId == m_nodeId )
-	{
-		ManufacturerSpecific::SetProductDetails(m_nodes[_nodeId], m_manufacturerId, m_productType, m_productId);
-	}
 	ReleaseNodes();
 
 	Notification* notification = new Notification( Notification::Type_NodeAdded );
@@ -4133,8 +4128,6 @@ void Driver::RequestNodeNeighbors
 	uint32 const _requestFlags
 )
 {
-	//Log::Write( LogLevel_Detail, "IsAPICallSupported( FUNC_ID_ZW_GET_ROUTING_INFO ) = %s", IsAPICallSupported( FUNC_ID_ZW_GET_ROUTING_INFO ) ? "true" : "false" );
-	// Handle casse where some controllers actually support but don't claim to. Z-Troller
 	if( IsAPICallSupported( FUNC_ID_ZW_GET_ROUTING_INFO ) )
 	{
 		// Note: This is not the same as RequestNodeNeighbourUpdate.  This method

@@ -254,15 +254,25 @@ void Node::AdvanceQueries
 				// Manufacturer Specific data is requested before the other command class data so 
 				// that we can modify the supported command classes list through the product XML files.
 				Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_ManufacturerSpecific1" );
-				ManufacturerSpecific* cc = static_cast<ManufacturerSpecific*>( GetCommandClass( ManufacturerSpecific::StaticGetCommandClassId() ) );
-				if( cc  )
+				if( GetDriver()->GetNodeId() == m_nodeId )
 				{
-					m_queryPending = cc->RequestState( CommandClass::RequestFlag_Static, 1, Driver::MsgQueue_Query );
-				}
-				if( !m_queryPending )
-				{
+					string configPath = ManufacturerSpecific::SetProductDetails( this, GetDriver()->GetManufacturerId(), GetDriver()->GetProductType(), GetDriver()->GetProductId() );
+					ManufacturerSpecific::LoadConfigXML( this, configPath );
 					m_queryStage = QueryStage_NodeInfo;
 					m_queryRetries = 0;
+				}
+				else
+				{
+					ManufacturerSpecific* cc = static_cast<ManufacturerSpecific*>( GetCommandClass( ManufacturerSpecific::StaticGetCommandClassId() ) );
+					if( cc  )
+					{
+						m_queryPending = cc->RequestState( CommandClass::RequestFlag_Static, 1, Driver::MsgQueue_Query );
+					}
+					if( !m_queryPending )
+					{
+						m_queryStage = QueryStage_NodeInfo;
+						m_queryRetries = 0;
+					}
 				}
 				break;
 			}
@@ -843,6 +853,26 @@ void Node::ReadDeviceProtocolXML
 	{
 		m_nodeInfoSupported = !strcmp( str, "true" );
 	}
+
+	// Some controllers support API calls that aren't advertised in their returned data.
+	// So provide a way to manipulate the returned data to reflect reality.
+	TiXmlElement const* ccElement = _ccsElement->FirstChildElement();
+	while( ccElement )
+	{
+		str = ccElement->Value();
+		if( str && !strcmp( str, "APIcall" ) )
+		{
+			char const* funcStr = ccElement->Attribute( "function" );
+			char *p;
+			uint8 func = (uint8)strtol( funcStr, &p, 16 );
+			if( p != funcStr )
+			{
+				char const* presStr = ccElement->Attribute( "present" );
+				GetDriver()->SetAPICall( func, !strcmp( presStr, "true" ) );
+			}
+		}
+		ccElement = ccElement->NextSiblingElement();
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -861,7 +891,7 @@ void Node::ReadCommandClassesXML
 	while( ccElement )
 	{
 		str = ccElement->Value();
-		if( str && !strcmp( ccElement->Value(), "CommandClass" ) )
+		if( str && !strcmp( str, "CommandClass" ) )
 		{
 			if( TIXML_SUCCESS == ccElement->QueryIntAttribute( "id", &intVal ) )
 			{

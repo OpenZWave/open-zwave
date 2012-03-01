@@ -110,7 +110,7 @@ string ManufacturerSpecific::SetProductDetails
 {
 	char str[64];
 
-	if (!s_bXmlLoaded) LoadProductXML( node );
+	if (!s_bXmlLoaded) LoadProductXML();
 
 	snprintf( str, sizeof(str), "Unknown: id=%.4x", manufacturerId );
 	string manufacturerName = str;
@@ -190,7 +190,7 @@ bool ManufacturerSpecific::HandleMsg
 			string configPath = SetProductDetails( node, manufacturerId, productType, productId);
 			if( configPath.size() > 0 )
 			{
-				LoadConfigXML( configPath );
+				LoadConfigXML( node, configPath );
 			}
 
 			Log::Write( LogLevel_Info, GetNodeId(), "Received manufacturer specific report from node %d: Manufacturer=%s, Product=%s", 
@@ -216,7 +216,6 @@ bool ManufacturerSpecific::HandleMsg
 //-----------------------------------------------------------------------------
 bool ManufacturerSpecific::LoadProductXML
 (
-	Node* _node
 )
 {
 	s_bXmlLoaded = true;
@@ -231,7 +230,7 @@ bool ManufacturerSpecific::LoadProductXML
 	if( !pDoc->LoadFile( filename.c_str(), TIXML_ENCODING_UTF8 ) )
 	{
 		delete pDoc;	
-		Log::Write( LogLevel_Info, _node->m_nodeId, "Unable to load %s", filename.c_str() );
+		Log::Write( LogLevel_Info, "Unable to load %s", filename.c_str() );
 		return false;
 	}
 
@@ -250,7 +249,7 @@ bool ManufacturerSpecific::LoadProductXML
 			str = manufacturerElement->Attribute( "id" );
 			if( !str )
 			{
-				Log::Write( LogLevel_Info, _node->m_nodeId, "Error in manufacturer_specific.xml at line %d - missing manufacturer id attribute", manufacturerElement->Row() );
+				Log::Write( LogLevel_Info, "Error in manufacturer_specific.xml at line %d - missing manufacturer id attribute", manufacturerElement->Row() );
 				delete pDoc;
 				return false;
 			}
@@ -259,7 +258,7 @@ bool ManufacturerSpecific::LoadProductXML
 			str = manufacturerElement->Attribute( "name" );
 			if( !str )
 			{
-				Log::Write( LogLevel_Info, _node->m_nodeId, "Error in manufacturer_specific.xml at line %d - missing manufacturer name attribute", manufacturerElement->Row() );
+				Log::Write( LogLevel_Info, "Error in manufacturer_specific.xml at line %d - missing manufacturer name attribute", manufacturerElement->Row() );
 				delete pDoc;
 				return false;
 			}
@@ -277,7 +276,7 @@ bool ManufacturerSpecific::LoadProductXML
 					str = productElement->Attribute( "type" );
 					if( !str )
 					{
-						Log::Write( LogLevel_Info, _node->m_nodeId, "Error in manufacturer_specific.xml at line %d - missing product type attribute", productElement->Row() );
+						Log::Write( LogLevel_Info, "Error in manufacturer_specific.xml at line %d - missing product type attribute", productElement->Row() );
 						delete pDoc;	
 						return false;
 					}
@@ -286,7 +285,7 @@ bool ManufacturerSpecific::LoadProductXML
 					str = productElement->Attribute( "id" );
 					if( !str )
 					{
-						Log::Write( LogLevel_Info, _node->m_nodeId, "Error in manufacturer_specific.xml at line %d - missing product id attribute", productElement->Row() );
+						Log::Write( LogLevel_Info, "Error in manufacturer_specific.xml at line %d - missing product id attribute", productElement->Row() );
 						delete pDoc;	
 						return false;
 					}
@@ -295,7 +294,7 @@ bool ManufacturerSpecific::LoadProductXML
 					str = productElement->Attribute( "name" );
 					if( !str )
 					{
-						Log::Write( LogLevel_Info, _node->m_nodeId, "Error in manufacturer_specific.xml at line %d - missing product name attribute", productElement->Row() );
+						Log::Write( LogLevel_Info, "Error in manufacturer_specific.xml at line %d - missing product name attribute", productElement->Row() );
 						delete pDoc;	
 						return false;
 					}
@@ -371,44 +370,40 @@ void ManufacturerSpecific::UnloadProductXML
 //-----------------------------------------------------------------------------
 bool ManufacturerSpecific::LoadConfigXML
 (
+	Node* _node,
 	string const& _configXML
 )
 {
-	if( Node* node = GetNodeUnsafe() )
-	{
-		string configPath;
-		Options::Get()->GetOptionAsString( "ConfigPath", &configPath );
+	string configPath;
+	Options::Get()->GetOptionAsString( "ConfigPath", &configPath );
 		
-		string filename =  configPath + _configXML;
+	string filename =  configPath + _configXML;
 
-		TiXmlDocument* doc = new TiXmlDocument();
-		Log::Write( LogLevel_Info, GetNodeId(), "  Opening config param file %s", filename.c_str() );
-		if( !doc->LoadFile( filename.c_str(), TIXML_ENCODING_UTF8 ) )
-		{
-			delete doc;	
-			Log::Write( LogLevel_Info, GetNodeId(), "Unable to find or load Config Param file %s", filename.c_str() );
-			return false;
-		}
-
-		Node::QueryStage qs = node->GetCurrentQueryStage();
-		if( qs == Node::QueryStage_ManufacturerSpecific1 )
-		{
-			node->ReadDeviceProtocolXML( doc->RootElement() );
-		}
-		else
-		{
-			if( !node->m_manufacturerSpecificClassReceived )
-			{
-				node->ReadDeviceProtocolXML( doc->RootElement() );
-			}
-			node->ReadCommandClassesXML( doc->RootElement() );
-		}
-
+	TiXmlDocument* doc = new TiXmlDocument();
+	Log::Write( LogLevel_Info, _node->GetNodeId(), "  Opening config param file %s", filename.c_str() );
+	if( !doc->LoadFile( filename.c_str(), TIXML_ENCODING_UTF8 ) )
+	{
 		delete doc;	
-		return true;
+		Log::Write( LogLevel_Info, _node->GetNodeId(), "Unable to find or load Config Param file %s", filename.c_str() );
+		return false;
 	}
 
-	return false;
+	Node::QueryStage qs = _node->GetCurrentQueryStage();
+	if( qs == Node::QueryStage_ManufacturerSpecific1 )
+	{
+		_node->ReadDeviceProtocolXML( doc->RootElement() );
+	}
+	else
+	{
+		if( !_node->m_manufacturerSpecificClassReceived )
+		{
+			_node->ReadDeviceProtocolXML( doc->RootElement() );
+		}
+		_node->ReadCommandClassesXML( doc->RootElement() );
+	}
+
+	delete doc;	
+	return true;
 }
 
 //-----------------------------------------------------------------------------
@@ -421,7 +416,7 @@ void ManufacturerSpecific::ReLoadConfigXML
 {
 	if( Node* node = GetNodeUnsafe() )
 	{
-		if (!s_bXmlLoaded) LoadProductXML( node );
+		if (!s_bXmlLoaded) LoadProductXML();
 
 		uint16 manufacturerId = (uint16)strtol( node->GetManufacturerId().c_str(), NULL, 16 );
 		uint16 productType = (uint16)strtol( node->GetProductType().c_str(), NULL, 16 );
@@ -436,7 +431,7 @@ void ManufacturerSpecific::ReLoadConfigXML
 				string configPath = pit->second->GetConfigPath();
 				if( configPath.size() > 0 )
 				{
-					LoadConfigXML( configPath );
+					LoadConfigXML( node, configPath );
 				}
 			}
 		}
