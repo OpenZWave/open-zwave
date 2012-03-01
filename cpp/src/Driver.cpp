@@ -3480,10 +3480,10 @@ void Driver::PollThreadProc
 					return;
 				}
 				loopCount++;
-				if( loopCount == 150 )
+				if( loopCount == 100*10 )		// 10 seconds worth of delay?
 				{
 					Log::QueueDump();
-					assert( 0 );
+//					assert( 0 );
 				}
 			}
 
