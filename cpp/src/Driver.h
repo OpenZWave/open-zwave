@@ -179,6 +179,9 @@ namespace OpenZWave
 
 		uint32 GetHomeId()const{ return m_homeId; }
 		uint8 GetNodeId()const{ return m_nodeId; }
+		uint16 GetManufacturerId()const{ return m_manufacturerId; }
+		uint16 GetProductType()const{ return m_productType; }
+		uint16 GetProductId()const{ return m_productId; }
 		string GetControllerPath()const{ return m_controllerPath; }
 		string GetLibraryVersion()const{ return m_libraryVersion; }
 		string GetLibraryTypeName()const{ return m_libraryTypeName; }
@@ -503,6 +506,17 @@ namespace OpenZWave
 		Value* GetValue( ValueID const& _id );
 
 		bool IsAPICallSupported( uint8 const _apinum )const{ return (( m_apiMask[( _apinum - 1 ) >> 3] & ( 1 << (( _apinum - 1 ) & 0x07 ))) != 0 ); }
+		void SetAPICall( uint8 const _apinum, bool _toSet )
+		{
+			if( _toSet )
+			{
+				m_apiMask[( _apinum - 1 ) >> 3] |= ( 1 << (( _apinum - 1 ) & 0x07 ));
+			}
+			else
+			{
+				m_apiMask[( _apinum - 1 ) >> 3] &= ~( 1 << (( _apinum - 1 ) & 0x07 ));
+			}
+		}
 		uint8 NodeFromMessage( uint8 const* buffer );
 
 	//-----------------------------------------------------------------------------
