@@ -106,7 +106,7 @@ bool Configuration::HandleMsg
 				}
 				default:
 				{
-					Log::Write( LogLevel_Info, "Invalid type (%d) for configuration parameter %d", value->GetID().GetType(), parameter );
+					Log::Write( LogLevel_Info, GetNodeId(), "Invalid type (%d) for configuration parameter %d", value->GetID().GetType(), parameter );
 				}
 			}
 			value->Release();
@@ -138,13 +138,13 @@ bool Configuration::HandleMsg
 					}
 					default:
 					{
-						Log::Write( LogLevel_Info, "Invalid size of %d bytes for configuration parameter %d", size, parameter );
+						Log::Write( LogLevel_Info, GetNodeId(), "Invalid size of %d bytes for configuration parameter %d", size, parameter );
 					}
 				}
 			}
 		}
 
-		Log::Write( LogLevel_Info, "Received Configuration report from node %d: Parameter=%d, Value=%d", GetNodeId(), parameter, paramValue );
+		Log::Write( LogLevel_Info, GetNodeId(), "Received Configuration report: Parameter=%d, Value=%d", parameter, paramValue );
 		return true;
 	}
 
@@ -198,7 +198,7 @@ bool Configuration::SetValue
 		}
 	}
 
-	Log::Write( LogLevel_Info, "Configuration::Set failed (bad value or value type) - Node=%d, Parameter=%d", GetNodeId(), param );
+	Log::Write( LogLevel_Info, GetNodeId(), "Configuration::Set failed (bad value or value type) - Parameter=%d", param );
 	return false;
 }
 
@@ -234,7 +234,7 @@ void Configuration::Set
 	uint8 const _size
 )
 {
-	Log::Write( LogLevel_Info, "Configuration::Set - Node=%d, Parameter=%d, Value=%d Size=%d", GetNodeId(), _parameter, _value, _size );
+	Log::Write( LogLevel_Info, GetNodeId(), "Configuration::Set - Parameter=%d, Value=%d Size=%d", _parameter, _value, _size );
 
 	Msg* msg = new Msg( "ConfigurationCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 	msg->Append( GetNodeId() );

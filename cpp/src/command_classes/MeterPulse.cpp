@@ -105,7 +105,7 @@ bool MeterPulse::HandleMsg
 			count |= (uint32)_data[i+1];
 		}
 
-		Log::Write( LogLevel_Info, "Received a meter pulse count from node %d: Count=%d", GetNodeId(), count );
+		Log::Write( LogLevel_Info, GetNodeId(), "Received a meter pulse count: Count=%d", count );
 		if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, 0 ) ) )
 		{
 			value->OnValueRefreshed( count );

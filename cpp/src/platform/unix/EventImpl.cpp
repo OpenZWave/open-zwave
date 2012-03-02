@@ -77,17 +77,19 @@ void EventImpl::Set
 (
 )
 {
-	if( pthread_mutex_lock( &m_lock ) != 0 )
+	int err = pthread_mutex_lock( &m_lock );
+	if( err != 0 )
 	{
-		fprintf(stderr,  "EventImpl::Set lock error %d\n", errno );
+		fprintf(stderr,  "EventImpl::Set lock error %d (%d)\n", errno, err );
 		assert( 0 );
 	}
 	if( m_manualReset )
 	{
 		m_isSignaled = true;
-		if( pthread_cond_broadcast( &m_condition ) != 0 )
+		err = pthread_cond_broadcast( &m_condition );
+		if( err != 0 )
 		{
-			fprintf(stderr,  "EventImpl::Set cond broadcast error %d\n", errno );
+			fprintf(stderr,  "EventImpl::Set cond broadcast error %d (%s)\n", errno, err );
 			assert( 0 );
 		}
 	}
@@ -99,16 +101,18 @@ void EventImpl::Set
 		}
 		else
 		{
-			if( pthread_cond_signal( &m_condition ) != 0 )
+			err = pthread_cond_signal( &m_condition );
+			if( err != 0 )
 			{
-			  	fprintf(stderr,  "EventImpl::Set cond signal error %d\n", errno );
+				fprintf(stderr,  "EventImpl::Set cond signal error %d (%d)\n", errno, err );
 				assert( 0 );
 			}
 		}
 	}
-	if( pthread_mutex_unlock( &m_lock ) != 0 )
+	err = pthread_mutex_unlock( &m_lock );
+	if( err != 0 )
 	{
-		fprintf(stderr,  "EventImpl::Set unlock error %d\n", errno );
+		fprintf(stderr,  "EventImpl::Set unlock error %d (%d)\n", errno, err );
 		assert( 0 );
 	} 
 }
@@ -121,15 +125,17 @@ void EventImpl::Reset
 (
 )
 {
-	if( pthread_mutex_lock ( &m_lock ) != 0 )
+	int err = pthread_mutex_lock ( &m_lock );
+	if( err != 0 )
 	{
-		fprintf(stderr,  "EventImpl::Reset lock error %d\n", errno );
+		fprintf(stderr,  "EventImpl::Reset lock error %d (%d)\n", errno, err );
 		assert( 0 );
 	}
 	m_isSignaled = false;
-	if( pthread_mutex_unlock( &m_lock ) != 0 )
+	err = pthread_mutex_unlock( &m_lock );
+	if( err != 0 )
 	{
-		fprintf(stderr, "EventImpl::Reset unlock error %d\n", errno );
+		fprintf(stderr, "EventImpl::Reset unlock error %d (%d)\n", errno, err );
 		assert( 0 );
 	}
 }
@@ -156,9 +162,10 @@ bool EventImpl::Wait
 {
 	bool result = true;
 
-	if( pthread_mutex_lock( &m_lock ) != 0 )
+	int err = pthread_mutex_lock( &m_lock );
+	if( err != 0 )
 	{
-		fprintf(stderr,  "EventImpl::Wait lock error %d\n", errno );
+		fprintf(stderr,  "EventImpl::Wait lock error %d (%d)\n", errno, err );
 		assert( 0 );
 	}
 	if( m_isSignaled )
@@ -188,10 +195,10 @@ bool EventImpl::Wait
 			now.tv_usec += (_timeout % 1000) * 1000;
 
 			// Careful now! Did it wrap?
-			if(now.tv_usec > (1000 * 1000))
+			while( now.tv_usec >= ( 1000 * 1000 ) )
 			{
-				// Yes it did so bump our seconds and modulo
-				now.tv_usec %= (1000 * 1000);
+				// Yes it did so bump our seconds and subtract
+				now.tv_usec -= (1000 * 1000);
 				abstime.tv_sec++;
 			}
             
@@ -202,24 +209,24 @@ bool EventImpl::Wait
 				int oldstate;
 				pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, &oldstate);
 
-				int pr = pthread_cond_timedwait( &m_condition, &m_lock, &abstime );
+				err = pthread_cond_timedwait( &m_condition, &m_lock, &abstime );
 
 				pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, &oldstate);
 
-				if( pr == ETIMEDOUT )
+				if( err == ETIMEDOUT )
 				{
 					result = false;
 					break;
 				}
 				else
-					if( pr == 0 )
+					if( err == 0 )
 					{
 						result = true;
 					}
 					else
 					{
-							fprintf(stderr,   "EventImpl::Wait cond timedwait error %d\n", errno );
-							assert( 0 );
+						fprintf(stderr,   "EventImpl::Wait cond timedwait error %d (%d)\n", errno, err );
+						assert( 0 );
 					}
 			}
 		}
@@ -230,13 +237,13 @@ bool EventImpl::Wait
 				int oldstate;
 				pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, &oldstate);
 
-				int pr = pthread_cond_wait( &m_condition, &m_lock );
+				err = pthread_cond_wait( &m_condition, &m_lock );
 
 				pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, &oldstate);
 
-				if( pr != 0 )
+				if( err != 0 )
 				{
-					fprintf(stderr,  "EventImpl::Wait cond wait error %d\n", errno );
+					fprintf(stderr,  "EventImpl::Wait cond wait error %d (%d)\n", errno, err );
 					assert( 0 );
 				}
 			}
@@ -244,9 +251,10 @@ bool EventImpl::Wait
 		--m_waitingThreads;
 	}
 
-	if( pthread_mutex_unlock( &m_lock ) != 0 )
+	err = pthread_mutex_unlock( &m_lock );
+	if( err != 0 )
 	{
-		fprintf(stderr, "EventImpl::Wait unlock error %d\n", errno );
+		fprintf(stderr, "EventImpl::Wait unlock error %d (%d)\n", errno, err );
 		assert( 0 );
 	}
 	return result;

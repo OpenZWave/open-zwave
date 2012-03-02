@@ -105,7 +105,7 @@ bool Alarm::HandleMsg
 	if (AlarmCmd_Report == (AlarmCmd)_data[0])
 	{
 		// We have received a report from the Z-Wave device
-		Log::Write( LogLevel_Info, "Received Alarm report from node %d: type=%d, level=%d", GetNodeId(), _data[1], _data[2] );
+		Log::Write( LogLevel_Info, GetNodeId(), "Received Alarm report: type=%d, level=%d", _data[1], _data[2] );
 
 		ValueByte* value;
 		if( (value = static_cast<ValueByte*>( GetValue( _instance, AlarmIndex_Type ) )) )

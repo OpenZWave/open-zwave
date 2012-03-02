@@ -95,7 +95,7 @@ bool EnergyProduction::RequestValue
 	Driver::MsgQueue const _queue
 )
 {
-	Log::Write( LogLevel_Info, "Requesting the %s value from node %d", c_energyParameterNames[_valueEnum], GetNodeId() );
+	Log::Write( LogLevel_Info, GetNodeId(), "Requesting the %s value", c_energyParameterNames[_valueEnum] );
 	Msg* msg = new Msg( "EnergyProductionCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 	msg->SetInstance( this, _instance );
 	msg->Append( GetNodeId() );
@@ -125,7 +125,7 @@ bool EnergyProduction::HandleMsg
 		uint8 precision = 0;
 		string value = ExtractValue( &_data[2], &scale, &precision );
 
-		Log::Write( LogLevel_Info, "Received an Energy production report from node %d: %s = %s", GetNodeId(), c_energyParameterNames[_data[1]], value.c_str() );
+		Log::Write( LogLevel_Info, GetNodeId(), "Received an Energy production report: %s = %s", c_energyParameterNames[_data[1]], value.c_str() );
 		if( ValueDecimal* decimalValue = static_cast<ValueDecimal*>( GetValue( _instance, _data[1] ) ) )
 		{
 			decimalValue->OnValueRefreshed( value );
