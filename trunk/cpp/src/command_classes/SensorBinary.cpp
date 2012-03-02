@@ -98,7 +98,7 @@ bool SensorBinary::HandleMsg
 {
 	if (SensorBinaryCmd_Report == (SensorBinaryCmd)_data[0])
 	{
-		Log::Write( LogLevel_Info, "Received SensorBinary report from node %d: State=%s", GetNodeId(), _data[1] ? "On" : "Off" );
+		Log::Write( LogLevel_Info, GetNodeId(), "Received SensorBinary report: State=%s", _data[1] ? "On" : "Off" );
 
 		if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, 0 ) ) )
 		{

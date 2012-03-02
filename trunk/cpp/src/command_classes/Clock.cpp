@@ -123,7 +123,7 @@ bool Clock::HandleMsg
 		uint8 hour = _data[1] & 0x1f;
 		uint8 minute = _data[2];
 
-		Log::Write( LogLevel_Info, "Received Clock report from node %d: %s %.2d:%.2d", GetNodeId(), c_dayNames[day], hour, minute );
+		Log::Write( LogLevel_Info, GetNodeId(), "Received Clock report: %s %.2d:%.2d", c_dayNames[day], hour, minute );
 
 
 		if( ValueList* dayValue = static_cast<ValueList*>( GetValue( _instance, ClockIndex_Day ) ) )

@@ -122,7 +122,7 @@ bool Language::HandleMsg
 		country[1] = _data[5];
 		country[2] = 0;
 
-		Log::Write( LogLevel_Info, "Received Language report from node %d: Language=%s, Country=%s", GetNodeId(), language, country );
+		Log::Write( LogLevel_Info, GetNodeId(), "Received Language report: Language=%s, Country=%s", language, country );
 		ClearStaticRequest( StaticRequest_Values );
 
 		if( ValueString* languageValue = static_cast<ValueString*>( GetValue( _instance, LanguageIndex_Language ) ) )
