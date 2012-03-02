@@ -166,7 +166,7 @@ bool SensorAlarm::HandleMsg
 
 			value->OnValueRefreshed( state );
 			value->Release();
-			Log::Write( LogLevel_Info, "Received alarm state report from node %d: %s = %d", sourceNodeId, value->GetLabel().c_str(), state );		
+			Log::Write( LogLevel_Info, GetNodeId(), "Received alarm state report from node %d: %s = %d", sourceNodeId, value->GetLabel().c_str(), state );
 		}
 
 		return true;
@@ -177,7 +177,7 @@ bool SensorAlarm::HandleMsg
 		if( Node* node = GetNodeUnsafe() )
 		{
 			// We have received the supported alarm types from the Z-Wave device
-			Log::Write( LogLevel_Info, "Received supported alarm types from node %d", GetNodeId() );		
+			Log::Write( LogLevel_Info, GetNodeId(), "Received supported alarm types" );		
 
 			// Parse the data for the supported alarm types
 			uint8 numBytes = _data[1];
@@ -192,7 +192,7 @@ bool SensorAlarm::HandleMsg
 						if( index < SensorAlarm_Count )
 						{
 						  	node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, index, c_alarmTypeName[index], "", true, false, 0, 0 );
-							Log::Write( LogLevel_Info, "    Added alarm type: %s", c_alarmTypeName[index] );
+							Log::Write( LogLevel_Info, GetNodeId(), "    Added alarm type: %s", c_alarmTypeName[index] );
 						}
 					}
 				}

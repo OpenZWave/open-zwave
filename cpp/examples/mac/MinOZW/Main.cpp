@@ -329,10 +329,8 @@ int main( int argc, char* argv[] )
 		// then exits
 		for( int i = 0; i < 60*3*10; i++ )
 		{
-			sleep(90);				// do most of your work outside critical section
-
 			pthread_mutex_lock( &g_criticalSection );
-			sleep(10);				// but NodeInfo list and similar data should be inside critical section
+			sleep(1);				// but NodeInfo list and similar data should be inside critical section
 			pthread_mutex_unlock( &g_criticalSection );
 		}
 

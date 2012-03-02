@@ -108,7 +108,7 @@ bool Protection::HandleMsg
 {
 	if (ProtectionCmd_Report == (ProtectionCmd)_data[0])
 	{
-		Log::Write( LogLevel_Info, "Received a Protection report from node %d: %s", GetNodeId(), c_protectionStateNames[_data[1]] );
+		Log::Write( LogLevel_Info, GetNodeId(), "Received a Protection report: %s", c_protectionStateNames[_data[1]] );
 		if( ValueList* value = static_cast<ValueList*>( GetValue( _instance, 0 ) ) )
 		{
 			value->OnValueRefreshed( (int)_data[1] );
@@ -135,7 +135,7 @@ bool Protection::SetValue
 		ValueList const* value = static_cast<ValueList const*>(&_value);
 		ValueList::Item const& item = value->GetItem();
 
-		Log::Write( LogLevel_Info, "Protection::Set - Setting protection state on node %d to '%s'", GetNodeId(), item.m_label.c_str() );
+		Log::Write( LogLevel_Info, GetNodeId(), "Protection::Set - Setting protection state to '%s'", item.m_label.c_str() );
 		Msg* msg = new Msg( "Protection Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
 		msg->SetInstance( this, _value.GetID().GetInstance() );
 		msg->Append( GetNodeId() );
