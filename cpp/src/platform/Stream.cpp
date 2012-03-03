@@ -161,7 +161,6 @@ bool Stream::Put
 	}
 
 	m_dataSize += _size;
-	m_mutex->Unlock();
 
 	Log::Write( LogLevel_Debug, "      Stream::Put (received from controller)" );
 	LogData(m_buffer+m_head-_size, _size, "      Put: ");
@@ -172,6 +171,7 @@ bool Stream::Put
 		Notify();
 	}
 
+	m_mutex->Unlock();
 	return true;
 }
 
