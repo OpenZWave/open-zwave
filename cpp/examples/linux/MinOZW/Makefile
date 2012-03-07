@@ -25,14 +25,17 @@ LDFLAGS	:= $(DEBUG_LDFLAGS)
 
 INCLUDES	:= -I ../../../src -I ../../../src/command_classes/ -I ../../../src/value_classes/ \
 	-I ../../../src/platform/ -I ../../../h/platform/unix -I ../../../tinyxml/ -I ../../../hidapi/hidapi/
-LIBS := $(wildcard ../../../lib/linux/*.a)
+LIBS = $(wildcard ../../../lib/linux/*.a)
 
 %.o : %.cpp
 	$(CXX) $(CFLAGS) $(INCLUDES) -o $@ $<
 
 all: test
 
-test:	Main.o $(LIBS)
+lib:
+	$(MAKE) -C ../../../build/linux
+
+test:	Main.o lib
 	$(LD) -o $@ $(LDFLAGS) $< $(LIBS) -pthread -ludev
 
 clean:
