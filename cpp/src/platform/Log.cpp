@@ -125,7 +125,10 @@ void Log::SetLoggingState
 	bool _dologging
 )
 {
+	bool prevLogging = s_dologging;
 	s_dologging = _dologging;
+	
+	if (!prevLogging && s_dologging) Log::Write(LogLevel_Always, "Logging started\n\n");
 }
 
 //-----------------------------------------------------------------------------
@@ -147,6 +150,7 @@ void Log::SetLoggingState
 	if( _dumpTrigger >= _queueLevel )
 		Log::Write( LogLevel_Warning, "The trigger for dumping queued messages must be a higher-priority message than the level that is queued." );
 
+	bool prevLogging = s_dologging;
 	// s_dologging is true if any messages are to be saved in file or queue
 	if( (_saveLevel > LogLevel_Always) ||
 		(_queueLevel > LogLevel_Always) )
@@ -164,6 +168,8 @@ void Log::SetLoggingState
 		s_instance->m_pImpl->SetLoggingState( _saveLevel, _queueLevel, _dumpTrigger );
 		s_instance->m_logMutex->Unlock();
 	}
+	
+	if (!prevLogging && s_dologging) Log::Write(LogLevel_Always, "Logging started\n\n");
 }
 
 //-----------------------------------------------------------------------------
