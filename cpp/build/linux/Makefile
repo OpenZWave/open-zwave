@@ -57,7 +57,7 @@ indep := $(notdir $(wildcard ../../src/*.cpp))
 default:	$(LIBDIR)/openzwave.a
 
 clean:
-	rm -f *.d *.o
+	rm -f *.d *.d.* *.o vers.c
 
 -include $(tinyxml:.cpp=.d)
 -include $(hidapi:.c=.d)
