@@ -52,26 +52,6 @@ LogImpl::LogImpl
 	m_queueLevel( _queueLevel ),				// level of messages to log to queue
 	m_dumpTrigger( _dumpTrigger )				// dump queued messages when this level is seen
 {
-	string accessType;
-
-	// create an adjusted file name and timestamp string
-	string timeStr = GetTimeStampString();
-
-	if ( m_bAppendLog )
-	{
-		accessType = "a";
-	}
-	else
-	{
-		accessType = "w";
-	}
-
-	FILE* pFile = fopen( m_filename.c_str(), accessType.c_str() );
-	if ( pFile != NULL )
-	{
-		fprintf( pFile, "\nLogging started %s\n\n", timeStr.c_str() );
-		fclose( pFile );
-	}
 	setlinebuf(stdout);	// To prevent buffering and lock contention issues
 }
 
