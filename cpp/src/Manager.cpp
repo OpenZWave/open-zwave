@@ -115,38 +115,33 @@ Manager::Manager
 	s_instance = this;
 
 	// Create the log file (if enabled)
-	bool logging;
-	if( Options::Get()->GetOptionAsBool( "Logging", &logging ) )
-	{
-		if( logging )
-		{
-			// set default log configuration parameters and check to see
-			// if they are overridden via Options settings
-			string userPath = "";
-			Options::Get()->GetOptionAsString( "UserPath", &userPath );
+	bool logging = false;
+	Options::Get()->GetOptionAsBool( "Logging", &logging );
 
-			string logFileNameBase = "OZW_Log.txt";
-			Options::Get()->GetOptionAsString( "LogFileName", &logFileNameBase );
+	string userPath = "";
+	Options::Get()->GetOptionAsString( "UserPath", &userPath );
 
-			bool bAppend = false;
-			Options::Get()->GetOptionAsBool( "AppendLogFile", &bAppend );
+	string logFileNameBase = "OZW_Log.txt";
+	Options::Get()->GetOptionAsString( "LogFileName", &logFileNameBase );
 
-			bool bConsoleOutput = true;
-			Options::Get()->GetOptionAsBool( "ConsoleOutput", &bConsoleOutput );
+	bool bAppend = false;
+	Options::Get()->GetOptionAsBool( "AppendLogFile", &bAppend );
 
-			int nSaveLogLevel = (int) LogLevel_Detail;
-			Options::Get()->GetOptionAsInt( "SaveLogLevel", &nSaveLogLevel );
+	bool bConsoleOutput = true;
+	Options::Get()->GetOptionAsBool( "ConsoleOutput", &bConsoleOutput );
 
-			int nQueueLogLevel = (int) LogLevel_Debug;
-			Options::Get()->GetOptionAsInt( "QueueLogLevel", &nQueueLogLevel );
+	int nSaveLogLevel = (int) LogLevel_Detail;
+	Options::Get()->GetOptionAsInt( "SaveLogLevel", &nSaveLogLevel );
 
-			int nDumpTrigger = (int) LogLevel_Warning;
-			Options::Get()->GetOptionAsInt( "DumpTriggerLevel", &nDumpTrigger );
+	int nQueueLogLevel = (int) LogLevel_Debug;
+	Options::Get()->GetOptionAsInt( "QueueLogLevel", &nQueueLogLevel );
 
-			string logFilename = userPath + logFileNameBase;
-			Log::Create( logFilename, bAppend, bConsoleOutput, (LogLevel) nSaveLogLevel, (LogLevel) nQueueLogLevel, (LogLevel) nDumpTrigger );
-		}
-	}
+	int nDumpTrigger = (int) LogLevel_Warning;
+	Options::Get()->GetOptionAsInt( "DumpTriggerLevel", &nDumpTrigger );
+
+	string logFilename = userPath + logFileNameBase;
+	Log::Create( logFilename, bAppend, bConsoleOutput, (LogLevel) nSaveLogLevel, (LogLevel) nQueueLogLevel, (LogLevel) nDumpTrigger );
+	Log::SetLoggingState( logging );
 
 	CommandClasses::RegisterCommandClasses();
 	Scene::ReadScenes();
