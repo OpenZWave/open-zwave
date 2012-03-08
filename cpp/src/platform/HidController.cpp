@@ -421,16 +421,16 @@ void HidController::Read
 
 			int hidApiResult = hid_read( m_hHidController, inputReport, INPUT_REPORT_LENGTH );
 			//if( hidApiResult != 0 )
-			{
-				string tmp = "";
-				for( int i = 0; i < INPUT_REPORT_LENGTH; i++ )
-				{
-					char bstr[16];
-					snprintf(bstr, sizeof(bstr), "%02x ", inputReport[i] );
-					tmp += bstr;
-				}
-				Log::Write( LogLevel_Detail, "hid read %d %s", hidApiResult, tmp.c_str() );
-			}
+			//{
+			//	string tmp = "";
+			//	for( int i = 0; i < INPUT_REPORT_LENGTH; i++ )
+			//	{
+			//		char bstr[16];
+			//		snprintf(bstr, sizeof(bstr), "%02x ", inputReport[i] );
+			//		tmp += bstr;
+			//	}
+			//	Log::Write( LogLevel_Detail, "hid read %d %s", hidApiResult, tmp.c_str() );
+			//}
 
 			if( hidApiResult == -1 )
 			{
