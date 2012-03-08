@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Protocol>
-  <APIcall function="0x80" present="true" />
-</Protocol>
 <Product>
+  <Protocol>
+    <APIcall function="0x80" present="true" />
+  </Protocol>
 </Product>

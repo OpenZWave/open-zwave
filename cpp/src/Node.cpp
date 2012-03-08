@@ -847,29 +847,38 @@ void Node::ReadDeviceProtocolXML
 	TiXmlElement const* _ccsElement
 )
 {
-	char const* str = _ccsElement->Attribute( "nodeinfosupported" );
-
-	if( str )
-	{
-		m_nodeInfoSupported = !strcmp( str, "true" );
-	}
-
-	// Some controllers support API calls that aren't advertised in their returned data.
-	// So provide a way to manipulate the returned data to reflect reality.
 	TiXmlElement const* ccElement = _ccsElement->FirstChildElement();
 	while( ccElement )
 	{
-		str = ccElement->Value();
-		if( str && !strcmp( str, "APIcall" ) )
+		char const* str = ccElement->Value();
+		if( str && !strcmp( str, "Protocol" ) )
 		{
-			char const* funcStr = ccElement->Attribute( "function" );
-			char *p;
-			uint8 func = (uint8)strtol( funcStr, &p, 16 );
-			if( p != funcStr )
+			str = _ccsElement->Attribute( "nodeinfosupported" );
+			if( str )
 			{
-				char const* presStr = ccElement->Attribute( "present" );
-				GetDriver()->SetAPICall( func, !strcmp( presStr, "true" ) );
+				m_nodeInfoSupported = !strcmp( str, "true" );
 			}
+
+			// Some controllers support API calls that aren't advertised in their returned data.
+			// So provide a way to manipulate the returned data to reflect reality.
+			TiXmlElement const* childElement = _ccsElement->FirstChildElement();
+			while( childElement )
+			{
+				str = childElement->Value();
+				if( str && !strcmp( str, "APIcall" ) )
+				{
+					char const* funcStr = childElement->Attribute( "function" );
+					char *p;
+					uint8 func = (uint8)strtol( funcStr, &p, 16 );
+					if( p != funcStr )
+					{
+						char const* presStr = ccElement->Attribute( "present" );
+						GetDriver()->SetAPICall( func, !strcmp( presStr, "true" ) );
+					}
+				}
+				childElement = childElement->NextSiblingElement();
+			}
+			return;
 		}
 		ccElement = ccElement->NextSiblingElement();
 	}
