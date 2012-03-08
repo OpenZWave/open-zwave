@@ -29,7 +29,7 @@ set. Set to 0 will disable the autoreporting function.
   <CommandClass id="133">
     <Associations num_groups="2">
       <Group index="1" max_associations="1" label="Reports" auto="true" />
-      <Group index="2" max_associations="4" label="Basic" auto="true" /
-	     </Associations>
+      <Group index="2" max_associations="4" label="Basic" auto="true" />
+    </Associations>
   </CommandClass>
 </Product>
