@@ -182,6 +182,9 @@ void ValueList::WriteXML
 	}
 	_valueElement->SetAttribute( "vindex", str );
 
+	snprintf( str, 16, "%d", m_size );
+	_valueElement->SetAttribute( "size", str );
+
 	for( vector<Item>::iterator it = m_items.begin(); it != m_items.end(); ++it )
 	{
 		TiXmlElement* pItemElement = new TiXmlElement( "Item" );
