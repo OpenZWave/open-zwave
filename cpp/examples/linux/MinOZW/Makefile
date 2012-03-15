@@ -8,11 +8,11 @@
 
 .SUFFIXES:	.cpp .o .a .s
 
-CC     := gcc
-CXX    := g++
-LD     := g++
-AR     := ar rc
-RANLIB := ranlib
+CC     := $(CROSS_COMPILE)gcc
+CXX    := $(CROSS_COMPILE)g++
+LD     := $(CROSS_COMPILE)g++
+AR     := $(CROSS_COMPILE)ar rc
+RANLIB := $(CROSS_COMPILE)ranlib
 
 DEBUG_CFLAGS    := -Wall -Wno-format -g -DDEBUG
 RELEASE_CFLAGS  := -Wall -Wno-unknown-pragmas -Wno-format -O3

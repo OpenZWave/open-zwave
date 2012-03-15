@@ -23,14 +23,17 @@ LDFLAGS	:= $(DEBUG_LDFLAGS)
 
 INCLUDES	:= -I ../../../src -I ../../../src/command_classes/ -I ../../../src/value_classes/ \
 	-I ../../../src/platform/ -I ../../../h/platform/unix -I ../../../tinyxml/ -I ../../../hidapi/hidapi/
-LIBS := $(wildcard ../../../lib/mac/*.a)
+LIBS = $(wildcard ../../../lib/mac/*.a)
 
 %.o : %.cpp
 	$(CXX) $(CFLAGS) $(INCLUDES) -o $@ $<
 
 all: test
 
-test:	Main.o $(LIBS)
+lib:
+	$(MAKE) -C ../../../build/mac
+
+test:	Main.o lib
 	$(LD) -o $@ $(LDFLAGS) $< $(LIBS) -framework IOKit -framework CoreFoundation
 
 clean:

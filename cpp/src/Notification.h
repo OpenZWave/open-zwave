@@ -85,7 +85,7 @@ namespace OpenZWave
 			Type_NodeQueriesComplete,			/**< All the initialisation queries on a node have been completed. */
 			Type_AwakeNodesQueried,				/**< All awake nodes have been queried, so client application can expected complete data for these nodes. */
 			Type_AllNodesQueried,				/**< All nodes have been queried, so client application can expected complete data. */
-			Type_LogWritten						/**< A line has been written to the OpenZWave log. */
+			Type_Error						/**< An error has occured that we need to report. */
 		};
 
 		/** 
@@ -110,32 +110,38 @@ namespace OpenZWave
 		/** 
 		 * Get the unique ValueID of any value involved in this notification.
 		 * \return the value's ValueID
-	     */
+		 */
 		ValueID const& GetValueID()const{ return m_valueId; }
 		
 		/** 
 		 * Get the index of the association group that has been changed.  Only valid in NotificationType::Type_Group notifications. 
 		 * \return the group index.
-	     */
+		 */
 		uint8 GetGroupIdx()const{ assert(Type_Group==m_type); return m_byte; } 
 
 		/** 
 		 * Get the event value of a notification.  Only valid in NotificationType::Type_NodeEvent notifications. 
 		 * \return the event value.
-	     */
+		 */
 		uint8 GetEvent()const{ assert(Type_NodeEvent==m_type); return m_byte; } 
 
 		/** 
 		 * Get the button id of a notification.  Only valid in NotificationType::Type_CreateButton, DeleteButton,
 		 * ButtonOn and ButtonOff notifications. 
 		 * \return the button id.
-	     */
+		 */
 		uint8 GetButtonId()const{ assert(Type_CreateButton==m_type || Type_DeleteButton==m_type || Type_ButtonOn==m_type || Type_ButtonOff==m_type); return m_byte; } 
+
+		/**
+		 * Get the error code from a notification. Only valid for NotificationType::Type_Error notifications.
+		 * \return the error code.
+		 */
+		uint8 GetErrorCode()const{ assert(Type_Error==m_type); return m_byte; }
 
 		/** 
 		 * Helper function to simplify wrapping the notification class.  Should not normally need to be called.
 		 * \return the internal byte value of the notification.
-	     */
+		 */
 		uint8 GetByte()const{ return m_byte; } 
 
 	private:
