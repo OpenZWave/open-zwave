@@ -1992,14 +1992,14 @@ void Driver::HandleSerialAPIGetInitDataResponse
 				{					
 					if( IsVirtualNode( nodeId ) )
 					{
-						Log::Write( LogLevel_Info, GetNodeNumber( m_currentMsg ), "    Node - Virtual (ignored)" );
+						Log::Write( LogLevel_Info, GetNodeNumber( m_currentMsg ), "    Node %.3d - Virtual (ignored)" );
 					}
 					else
 					{
 						Node* node = GetNode( nodeId );
 						if( node )
 						{
-							Log::Write( LogLevel_Info, GetNodeNumber( m_currentMsg ), "    Node - Known" );
+							Log::Write( LogLevel_Info, GetNodeNumber( m_currentMsg ), "    Node %.3d - Known" );
 							if( !m_init )
 							{
 								// The node was read in from the config, so we 
@@ -2012,7 +2012,7 @@ void Driver::HandleSerialAPIGetInitDataResponse
 						else
 						{
 							// This node is new
-							Log::Write( LogLevel_Info, GetNodeNumber( m_currentMsg ), "    Node - New" );
+							Log::Write( LogLevel_Info, GetNodeNumber( m_currentMsg ), "    Node %.3d - New" );
 							Notification* notification = new Notification( Notification::Type_NodeNew );
 							notification->SetHomeAndNodeIds( m_homeId, nodeId );
 							QueueNotification( notification ); 
@@ -2027,7 +2027,7 @@ void Driver::HandleSerialAPIGetInitDataResponse
 					if( GetNode(nodeId) )
 					{
 						// This node no longer exists in the Z-Wave network
-						Log::Write( LogLevel_Info, GetNodeNumber( m_currentMsg ), "    Node - Removed" );
+						Log::Write( LogLevel_Info, GetNodeNumber( m_currentMsg ), "    Node %.3d - Removed" );
 						delete m_nodes[nodeId];
 						m_nodes[nodeId] = NULL;
 						Notification* notification = new Notification( Notification::Type_NodeRemoved );
