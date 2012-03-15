@@ -13,8 +13,8 @@ LD     := g++
 AR     := ar rc
 RANLIB := ranlib
 
-DEBUG_CFLAGS    := -Wall -Wno-format -g -DDEBUG -DLOG_STDERR
-RELEASE_CFLAGS  := -Wall -Wno-unknown-pragmas -Wno-format -O3 -DNDEBUG
+DEBUG_CFLAGS    := -Wall -Wno-format -g -DDEBUG -DLOG_STDERR -fPIC
+RELEASE_CFLAGS  := -Wall -Wno-unknown-pragmas -Wno-format -O3 -DNDEBUG -fPIC
 
 DEBUG_LDFLAGS	:= -g
 
@@ -52,10 +52,10 @@ indep := $(notdir $(wildcard ../../src/*.cpp))
 %.o : %.c
 	$(CC) $(CFLAGS) $(INCLUDES) -o $@ $<
 
-default:	$(LIBDIR)/openzwave.a
+default:	$(LIBDIR)/libopenzwave.a $(LIBDIR)/libopenzwave.so
 
 clean:
-	rm -f *.d *.o
+	rm -f *.d *.d.* *.o vers.c
 
 -include $(tinyxml:.cpp=.d)
 -include $(hidapi:.c=.d)
@@ -69,10 +69,18 @@ vers.c:	verscheck
 
 vers.o:	vers.c
 
-$(LIBDIR)/openzwave.a:	$(patsubst %.cpp,%.o,$(tinyxml)) \
+$(LIBDIR)/libopenzwave.a:	$(patsubst %.cpp,%.o,$(tinyxml)) \
 			$(patsubst %.c,%.o,$(hidapi)) \
 			$(patsubst %.cpp,%.o,$(cclasses)) \
 			$(patsubst %.cpp,%.o,$(vclasses)) \
 			$(patsubst %.cpp,%.o,$(pform)) \
 			$(patsubst %.cpp,%.o,$(indep)) vers.o
 	$(AR) $@ $?
+
+$(LIBDIR)/libopenzwave.so:	$(patsubst %.cpp,%.o,$(tinyxml)) \
+			$(patsubst %.c,%.o,$(hidapi)) \
+			$(patsubst %.cpp,%.o,$(cclasses)) \
+			$(patsubst %.cpp,%.o,$(vclasses)) \
+			$(patsubst %.cpp,%.o,$(pform)) \
+			$(patsubst %.cpp,%.o,$(indep)) vers.o
+	$(LD) -shared -o $@ $+ -framework IOKit -framework CoreFoundation
