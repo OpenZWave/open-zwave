@@ -2324,7 +2324,7 @@ void Driver::HandleSendDataRequest
 	if( _data[2] != m_expectedCallbackId )
 	{
 		// Wrong callback ID
-		Log::Write( LogLevel_Warning, nodeId, "WARNING: Callback ID is invalid" );
+		Log::Write( LogLevel_Warning, nodeId, "WARNING: Unexpected Callback ID received" );
 	}
 	else 
 	{
@@ -2936,18 +2936,17 @@ bool Driver::HandleApplicationUpdateRequest
 	bool messageRemoved = false;
 
 	uint8 nodeId = _data[3];
-	uint8 cnodeId = GetNodeNumber( m_currentMsg );
 
 	switch( _data[2] )
 	{
 		case UPDATE_STATE_SUC_ID:
 		{
-			Log::Write( LogLevel_Info, cnodeId, "UPDATE_STATE_SUC_ID from node %d", nodeId );
+			Log::Write( LogLevel_Info, nodeId, "UPDATE_STATE_SUC_ID from node %d", nodeId );
 			break;
 		}
 		case UPDATE_STATE_DELETE_DONE:
 		{
-			Log::Write( LogLevel_Info, cnodeId, "** Network change **: Z-Wave node %d was removed", nodeId );
+			Log::Write( LogLevel_Info, nodeId, "** Network change **: Z-Wave node %d was removed", nodeId );
 
 			LockNodes();
 			delete m_nodes[nodeId];
@@ -2961,7 +2960,7 @@ bool Driver::HandleApplicationUpdateRequest
 		}
 		case UPDATE_STATE_NEW_ID_ASSIGNED:
 		{
-			Log::Write( LogLevel_Info, cnodeId, "** Network change **: ID %d was assigned to a new Z-Wave node", nodeId );
+			Log::Write( LogLevel_Info, nodeId, "** Network change **: ID %d was assigned to a new Z-Wave node", nodeId );
 			
 			// Request the node protocol info (also removes any existing node and creates a new one)
 			InitNode( nodeId );		
@@ -2969,12 +2968,12 @@ bool Driver::HandleApplicationUpdateRequest
 		}
 		case UPDATE_STATE_ROUTING_PENDING:
 		{
-			Log::Write( LogLevel_Info, cnodeId, "UPDATE_STATE_ROUTING_PENDING from node %d", nodeId );
+			Log::Write( LogLevel_Info, nodeId, "UPDATE_STATE_ROUTING_PENDING from node %d", nodeId );
 			break;
 		}
 		case UPDATE_STATE_NODE_INFO_REQ_FAILED:
 		{
-			Log::Write( LogLevel_Warning, cnodeId, "WARNING: FUNC_ID_ZW_APPLICATION_UPDATE: UPDATE_STATE_NODE_INFO_REQ_FAILED received" );
+			Log::Write( LogLevel_Warning, nodeId, "WARNING: FUNC_ID_ZW_APPLICATION_UPDATE: UPDATE_STATE_NODE_INFO_REQ_FAILED received" );
 	
 			// Note: Unhelpfully, the nodeId is always zero in this message.  We have to 
 			// assume the message came from the last node to which we sent a request.
@@ -2999,12 +2998,12 @@ bool Driver::HandleApplicationUpdateRequest
 		}
 		case UPDATE_STATE_NODE_INFO_REQ_DONE:
 		{
-			Log::Write( LogLevel_Info, cnodeId, "UPDATE_STATE_NODE_INFO_REQ_DONE from node %d", nodeId );
+			Log::Write( LogLevel_Info, nodeId, "UPDATE_STATE_NODE_INFO_REQ_DONE from node %d", nodeId );
 			break;
 		}
 		case UPDATE_STATE_NODE_INFO_RECEIVED:
 		{
-			Log::Write( LogLevel_Info, cnodeId, "UPDATE_STATE_NODE_INFO_RECEIVED from node %d", nodeId );
+			Log::Write( LogLevel_Info, nodeId, "UPDATE_STATE_NODE_INFO_RECEIVED from node %d", nodeId );
 			if( Node* node = GetNodeUnsafe( nodeId ) )
 			{
 				node->UpdateNodeInfo( &_data[8], _data[4] - 3 );
