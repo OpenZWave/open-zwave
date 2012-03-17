@@ -286,6 +286,7 @@ namespace OpenZWave
 		void RemoveCurrentMsg();											// Deletes the current message and cleans up the callback etc states
 		bool MoveMessagesToWakeUpQueue(	uint8 const _targetNodeId );		// If a node does not respond, and is of a type that can sleep, this method is used to move all its pending messages to another queue ready for when it mext wakes up.
 		bool IsControllerCommand( uint8 const _command );					// identify controller commands
+		bool IsExpectedReply( uint8 const _nodeId );						// Determine if reply message is the one we are expecting
 		void SendQueryStageComplete( uint8 const _nodeId, Node::QueryStage const _stage, MsgQueue const _queue );
 		void CheckCompletedNodeQueries();									// Send notifications if all awake and/or sleeping nodes have completed their queries
 
