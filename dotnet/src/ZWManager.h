@@ -1037,6 +1037,24 @@ namespace OpenZWaveDotNet
 		bool SetValueListSelection( ZWValueID^ id, String^ selectedItem ){ return Manager::Get()->SetValueListSelection(id->CreateUnmanagedValueID(), (const char*)(Marshal::StringToHGlobalAnsi(selectedItem)).ToPointer()); }
 	
 		/**
+		 * \brief Refreshes the specified value from the Z-Wave network.
+		 * A call to this function causes the library to send a message to the network to retrieve the current value
+		 * of the specified ValueID (just like a poll, except only one-time, not recurring).
+		 * \param _id The unique identifier of the value to be refreshed.
+		 * \return true if the driver and node were found; false otherwise
+		 */
+		bool RefreshValue( ZWValueID^ id ){ return Manager::Get()->RefreshValue(id->CreateUnmanagedValueID()); }
+
+		/**
+		 * \brief Sets a flag indicating whether value changes noted upon a refresh should be verified.  If so, the
+		 * library will immediately refresh the value a second time whenever a change is observed.  This helps to filter
+		 * out spurious data reported occasionally by some devices.
+		 * \param _id The unique identifier of the value whose changes should or should not be verified.
+		 * \param _verify if true, verify changes; if false, don't verify changes.
+		 */
+		void SetChangeVerified( ZWValueID^ id, bool verify ){ Manager::Get()->SetChangeVerified(id->CreateUnmanagedValueID(), verify); }
+
+		/**
 		 * \brief Starts an activity in a device.
 		 *
 		 * Since buttons are write-only values that do not report a state, no notification callbacks are sent.

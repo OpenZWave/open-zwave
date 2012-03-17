@@ -344,11 +344,13 @@ bool Value::Set
 (
 )
 {
+	// nothing to do if this is a read-only value (return false to indicate an error)
 	if( IsReadOnly() )
 	{
 		return false;
 	}
 
+	// retrieve the driver, node and commandclass object for this value
 	bool res = false;
 	Node* node = NULL;
 	if( Driver* driver = Manager::Get()->GetDriver( m_id.GetHomeId() ) )
@@ -359,7 +361,6 @@ bool Value::Set
 			if( CommandClass* cc = node->GetCommandClass( m_id.GetCommandClassId() ) )
 			{
 				// flag value as set and queue a "Set Value" message for transmission to the device
-				m_isSet = true;
 				res = cc->SetValue( *this );
 
 				// queue a "RequestValue" message to update the value
