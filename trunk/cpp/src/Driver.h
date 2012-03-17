@@ -282,7 +282,7 @@ namespace OpenZWave
 		 *  RemoveNodeQuery, Node::AllQueriesCompleted
 		 */
 		bool WriteNextMsg( MsgQueue const _queue );							// Extracts the first message from the queue, and makes it the current one.
-		bool WriteMsg( string const str);								// Sends the current message to the Z-Wave network
+		bool WriteMsg( string const str);									// Sends the current message to the Z-Wave network
 		void RemoveCurrentMsg();											// Deletes the current message and cleans up the callback etc states
 		bool MoveMessagesToWakeUpQueue(	uint8 const _targetNodeId );		// If a node does not respond, and is of a type that can sleep, this method is used to move all its pending messages to another queue ready for when it mext wakes up.
 		bool IsControllerCommand( uint8 const _command );					// identify controller commands
@@ -296,7 +296,7 @@ namespace OpenZWave
 		//		priority send queue, because the controller command processes are not
 		//		permitted to be interupted by other requests.
 		//
-		// 2)	The wakup queue.  This holds messages that have been held for a 
+		// 2)	The wakeup queue.  This holds messages that have been held for a 
 		//		sleeping device that has now woken up.  These gwt a high priority
 		//		because such devices do not stay awake for very long.
 		//

@@ -64,7 +64,7 @@ Options* Options::Create
 		s_instance->AddOptionBool(		"ConsoleOutput",			true );						// Display log information on console (as well as save to disk)
 		s_instance->AddOptionInt(		"SaveLogLevel",				LogLevel_Detail );			// Save (to file) log messages equal to or above LogLevel_Detail
 		s_instance->AddOptionInt(		"QueueLogLevel",			LogLevel_Debug );			// Save (in RAM) log messages equal to or above LogLevel_Debug
-		s_instance->AddOptionInt(		"DumpTriggerLevel",			LogLevel_None );			// Dump the RAM messages to file when a LogLevel_Warning or above is shown
+		s_instance->AddOptionInt(		"DumpTriggerLevel",			LogLevel_None );			// Default is to never dump RAM-stored log messages
 
 		s_instance->AddOptionBool(		"Associate",				true );						// Enable automatic association of the controller with group one of every device.
 		s_instance->AddOptionString(	"Exclude",					string(""),		true );		// Remove support for the listed command classes.

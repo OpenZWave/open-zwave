@@ -575,5 +575,10 @@ namespace OZWForm
 					return "";
 			}
 		}
+
+		private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
+		{
+			m_manager.SoftReset(m_homeId);
+		}
     }
 }

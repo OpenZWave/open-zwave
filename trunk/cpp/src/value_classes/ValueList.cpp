@@ -206,15 +206,16 @@ bool ValueList::SetByValue
 	int32 const _value
 )
 {
-	// save the old value (to be restored after Set() call)
-	int32 oldValueIdx = m_newValueIdx;
+	// create a temporary copy of this value to be submitted to the Set() call and set its value to the function param
+  	ValueList* tempValue = new ValueList( *this );
+	tempValue->m_newValueIdx = _value;
 
 	// Set the value in the device.
-	m_newValueIdx = _value;
-	bool ret = Value::Set();
+	bool ret = ((Value*)tempValue)->Set();
 
-	// restore the old value so the RefreshValue queued in Set() will identify any change
-	m_newValueIdx = oldValueIdx;
+	// clean up the temporary value
+	delete tempValue;
+
 	return ret;
 }
 
