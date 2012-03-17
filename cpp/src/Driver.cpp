@@ -874,7 +874,7 @@ bool Driver::WriteMsg
 	string const msg
 )
 {
-	Log::Write( LogLevel_Debug, GetNodeNumber( m_currentMsg ), "WriteMsg %s m_currentMsg=%08x", msg.c_str(), m_currentMsg );
+	Log::Write( LogLevel_Detail, GetNodeNumber( m_currentMsg ), "WriteMsg %s m_currentMsg=%08x", msg.c_str(), m_currentMsg );
 	if( !m_currentMsg )
 	{
 		return false;
