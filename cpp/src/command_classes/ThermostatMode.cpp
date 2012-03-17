@@ -231,26 +231,25 @@ bool ThermostatMode::HandleMsg
 {
 	if( ThermostatModeCmd_Report == (ThermostatModeCmd)_data[0] )
 	{
-		uint8 mode = _data[1]&0x1;
+		uint8 mode = _data[1]&0x1f;
 		
-		if( !m_supportedModes.empty() )
+		if( mode < m_supportedModes.size() )
 		{
 			// We have received the thermostat mode from the Z-Wave device
 			if( ValueList* valueList = static_cast<ValueList*>( GetValue( _instance, 0 ) ) )
 			{
-				if (mode < valueList->GetSize())
-				{
-					valueList->OnValueRefreshed( mode );
-					valueList->Release();
-					Log::Write( LogLevel_Info, GetNodeId(), "Received thermostat mode: %s", valueList->GetItem().m_label.c_str() );
-				} else {
-					Log::Write( LogLevel_Info, GetNodeId(), "Received unknown thermostat mode: index %d", mode );
-				}
+				valueList->OnValueRefreshed( mode );
+				valueList->Release();
+				Log::Write( LogLevel_Info, GetNodeId(), "Received thermostat mode: %s", valueList->GetItem().m_label.c_str() );
 			}
 			else
 			{
 				Log::Write( LogLevel_Info, GetNodeId(), "Received thermostat mode: index %d", mode );
 			}
+		}
+		else
+		{
+			 Log::Write( LogLevel_Info, GetNodeId(), "Received unknown thermostat mode: index %d", mode );
 		}
 		return true;
 	}
