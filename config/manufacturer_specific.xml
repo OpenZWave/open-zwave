@@ -17,7 +17,7 @@
 		<Product type="4450" id="3030" name="ZDP100 Plugin Lamp Module"/>
 		<Product type="4457" id="3033" name="ZDW103 Wall Dimmer Module" config="act/zdw103.xml"/>
 		<Product type="4457" id="3330" name="ZDW230 Wall Dimmer Module"/>
-		<Product type="4457" id="3332" name="ZDW232 Wall Dimmer Module"/>
+		<Product type="4457" id="3332" name="ZDW232 Wall Dimmer Module" config="act/zdw232.xml"/>
 		<Product type="444d" id="3330" name="ZDM230 Wall Dimmer Module" config="act/zdm230.xml"/>
 		<Product type="5250" id="3030" name="ZRP100 Plugin Appliance Module"/>
 		<Product type="5250" id="3130" name="ZRP110 Exterior Appliance Module" config="act/zrp110.xml"/>
