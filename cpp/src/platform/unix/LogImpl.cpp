@@ -52,6 +52,14 @@ LogImpl::LogImpl
 	m_queueLevel( _queueLevel ),				// level of messages to log to queue
 	m_dumpTrigger( _dumpTrigger )				// dump queued messages when this level is seen
 {
+	if ( !m_bAppendLog )
+	{
+		FILE* pFile = fopen( m_filename.c_str(), "w" );
+		if( pFile != NULL )
+		{
+			fclose( pFile );
+		}
+	}
 	setlinebuf(stdout);	// To prevent buffering and lock contention issues
 }
 

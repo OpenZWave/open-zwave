@@ -239,8 +239,8 @@ bool ThermostatMode::HandleMsg
 			if( ValueList* valueList = static_cast<ValueList*>( GetValue( _instance, 0 ) ) )
 			{
 				valueList->OnValueRefreshed( mode );
-				valueList->Release();
 				Log::Write( LogLevel_Info, GetNodeId(), "Received thermostat mode: %s", valueList->GetItem().m_label.c_str() );
+				valueList->Release();
 			}
 			else
 			{
@@ -363,8 +363,8 @@ void ThermostatMode::CreateVars
 			// from zwcfg xml file).  So, if the instance already exists, we delete its value and add a new one below
 			if( ValueList* valueList = static_cast<ValueList*>( GetValue( _instance, 0 ) ) )
 			{
-				valueList->Release();
 				node->RemoveValueList( valueList );
+				valueList->Release();
 			}
 		}
 
