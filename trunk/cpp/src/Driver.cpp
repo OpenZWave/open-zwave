@@ -1167,6 +1167,35 @@ bool Driver::IsControllerCommand
 }
 
 //-----------------------------------------------------------------------------
+// <Driver::IsExpectedReply>
+// Determine if the reply is from the node we are expecting.
+//-----------------------------------------------------------------------------
+bool Driver::IsExpectedReply
+(
+	const uint8 _nodeId
+)
+{
+	// Accept all controller commands.
+	if( m_expectedNodeId == 255 )
+	{
+		return true;
+	}
+	// Accept all messages that do not convey source node identification.
+	if( m_expectedReply == FUNC_ID_ZW_GET_NODE_PROTOCOL_INFO ||
+	    m_expectedReply == FUNC_ID_ZW_REQUEST_NODE_INFO ||
+	    m_expectedReply == FUNC_ID_ZW_GET_ROUTING_INFO )
+	{
+		return true;
+	}
+	// Accept if source message contains node info and it is from the one we are expecting
+	if( m_expectedNodeId == _nodeId )
+	{
+		return true;
+	}
+	Log::Write( LogLevel_Detail, "IsExpectedReply: m_expectedNodeId = %d m_expectedReply = %02x", m_expectedNodeId, m_expectedReply );
+	return false;
+}
+//-----------------------------------------------------------------------------
 //	Receiving Z-Wave messages
 //-----------------------------------------------------------------------------
 
@@ -1732,8 +1761,13 @@ void Driver::ProcessMsg
 					}
 					else
 					{
-						Log::Write( LogLevel_Detail, GetNodeNumber( m_currentMsg ), "  Expected reply was received" );
-						m_expectedReply = 0;
+						if( IsExpectedReply( _data[3] ) )
+					  
+						{
+							Log::Write( LogLevel_Detail, GetNodeNumber( m_currentMsg ), "  Expected reply was received" );
+							m_expectedReply = 0;
+							m_expectedNodeId = 0;
+						}
 					}
 				}
 			}

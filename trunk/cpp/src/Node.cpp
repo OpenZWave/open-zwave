@@ -257,7 +257,10 @@ void Node::AdvanceQueries
 				if( GetDriver()->GetNodeId() == m_nodeId )
 				{
 					string configPath = ManufacturerSpecific::SetProductDetails( this, GetDriver()->GetManufacturerId(), GetDriver()->GetProductType(), GetDriver()->GetProductId() );
-					ManufacturerSpecific::LoadConfigXML( this, configPath );
+					if( configPath.length() > 0 )
+					{
+						ManufacturerSpecific::LoadConfigXML( this, configPath );
+					}
 					m_queryStage = QueryStage_NodeInfo;
 					m_queryRetries = 0;
 				}
