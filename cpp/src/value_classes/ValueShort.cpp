@@ -139,15 +139,16 @@ bool ValueShort::Set
 	int16 const _value
 )
 {
-	// save the old value (to be restored after Set() call)
-	int16 oldValue = m_value;
+	// create a temporary copy of this value to be submitted to the Set() call and set its value to the function param
+  	ValueShort* tempValue = new ValueShort( *this );
+	tempValue->m_value = _value;
 
 	// Set the value in the device.
-	m_value = _value;
-	bool ret = Value::Set();
+	bool ret = ((Value*)tempValue)->Set();
 
-	// restore the old value so the RefreshValue queued in Set() will identify any change
-	m_value = oldValue;
+	// clean up the temporary value
+	delete tempValue;
+
 	return ret;
 }
 

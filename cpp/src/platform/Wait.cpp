@@ -147,7 +147,7 @@ int32 Wait::Multiple
 			}
 		}
 	}
-	Log::Write( LogLevel_Detail, "Wait::Multiple res=%d num=%d >%s", res, _numObjects, str.c_str() );
+	Log::Write( LogLevel_Debug, "Wait::Multiple res=%d num=%d >%s", res, _numObjects, str.c_str() );
 
 	// Remove the watchers
 	for( i=0; i<_numObjects; ++i )

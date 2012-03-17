@@ -79,6 +79,8 @@ namespace OpenZWave
 		virtual string const GetAsString() const { return ""; }
 		virtual bool SetFromString( string const& _value ) { return false; }
 
+		bool Set();							// For the user to change a value in a device
+
 		// Helpers
 		static ValueID::ValueGenre GetGenreEnumFromName( char const* _name );
 		static char const* GetGenreNameFromEnum( ValueID::ValueGenre _genre );
@@ -88,7 +90,6 @@ namespace OpenZWave
 	protected:
 		virtual ~Value();
 
-		bool Set();							// For the user to change a value in a device
 //		void SetIsSet() { m_isSet = true; }	// TODO: consider removing this...it's never called since m_isSet is set in ValueChanged and ValueRefreshed
 		bool IsCheckingChange()const{ return m_checkChange; }
 		void SetCheckingChange( bool _check ) { m_checkChange = _check; }

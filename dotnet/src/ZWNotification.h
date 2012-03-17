@@ -76,7 +76,7 @@ namespace OpenZWaveDotNet
 			NodeQueriesComplete				= Notification::Type_NodeQueriesComplete,
 			AwakeNodesQueried				= Notification::Type_AwakeNodesQueried,
 			AllNodesQueried					= Notification::Type_AllNodesQueried,
-			LogWritten						= Notification::Type_LogWritten
+			ErrorCode						= Notification::Type_Error
 		};
 
 		ZWNotification( Notification* notification )
