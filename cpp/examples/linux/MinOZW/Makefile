@@ -41,7 +41,7 @@ test:	Main.o lib
 clean:
 	rm -f test Main.o
 
-XMLLINT := $(shell whereis xmllint)
+XMLLINT := $(shell whereis xmllint | cut -c10-)
 
 xmltest:	$(XMLLINT)
 	@$(XMLLINT) --noout --schema ../../../../config/zwcfg.xsd zwcfg_*.xml
