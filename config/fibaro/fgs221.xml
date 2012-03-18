@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<Product>
+<Product xmlns='http://code.google.com/p/open-zwave/'>
   <!-- Configuration -->
   <CommandClass id="112">
     <Value type="list" genre="config" instance="1" index="1" label="1. Enable/Disable ALL ON/OFF" value="255">

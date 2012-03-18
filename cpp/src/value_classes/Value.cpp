@@ -326,7 +326,7 @@ void Value::WriteXML
 		_valueElement->SetAttribute( "affects", s.c_str() );
 	}
 
-	if( m_help != "" )
+	if( m_help.length() > 0 )
 	{
 		TiXmlElement* helpElement = new TiXmlElement( "Help" );
 		_valueElement->LinkEndChild( helpElement );

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<Product>
+<Product xmlns='http://code.google.com/p/open-zwave/'>
   <!-- The thermostat does not properly report its operating modes -->
   <CommandClass id="64">
     <SupportedModes>
