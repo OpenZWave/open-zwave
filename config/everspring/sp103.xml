@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- EVERSPRING SP103 MOTION DETECTOR -->
-<Product>
+<Product xmlns='http://code.google.com/p/open-zwave/'>
 	<!-- Configuration Parameters -->
 	<CommandClass id="112">
 		<Value type="byte" index="1" genre="config" label="ON Phase Level" units="" min="0" max="127" value="0">

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ManufacturerSpecificData>
+<ManufacturerSpecificData xmlns='http://code.google.com/p/open-zwave/'>
 	<Manufacturer id="0040" name="2B Electronics">
 	</Manufacturer>
 	<Manufacturer id="0098" name="2GIG Technologies">
@@ -198,12 +198,12 @@
 	<Manufacturer id="0013" name="Internet Dom">
 	</Manufacturer>
 	<Manufacturer id="0063" name="GE">
-		<Product type="4450" id="3030" name="GE 45602 Lamp Dimmer Module" config="ge/dimmer_module.xml"/>
-		<Product type="4457" id="3230" name="GE 45606 2-Way Dimmer Switch" config="ge/dimmer.xml"/>
-		<Product type="5250" id="3030" name="GE 45603 Plugin Appliance Module"/>
-		<Product type="5250" id="3130" name="GE 45604 Outdoor Module"/>
-		<Product type="5257" id="3533" name="GE 45609 On/Off Relay Switch" config="ge/relay.xml"/>
-		<Product type="4457" id="3033" name="GE 45613 3-Way Dimmer Switch" config="ge/dimmer.xml"/>
+		<Product type="4450" id="3030" name="45602 Lamp Dimmer Module" config="ge/dimmer_module.xml"/>
+		<Product type="4457" id="3230" name="45606 2-Way Dimmer Switch" config="ge/dimmer.xml"/>
+		<Product type="5250" id="3030" name="45603 Plugin Appliance Module"/>
+		<Product type="5250" id="3130" name="45604 Outdoor Module"/>
+		<Product type="5257" id="3533" name="45609 On/Off Relay Switch" config="ge/relay.xml"/>
+		<Product type="4457" id="3033" name="45613 3-Way Dimmer Switch" config="ge/dimmer.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0091" name="Kamstrup">
 	</Manufacturer>
@@ -264,7 +264,7 @@
 	</Manufacturer>
 	<Manufacturer id="0041" name="OpenPeak Inc.">
 	</Manufacturer>
-	<Manufacturer id="0064" name="Popp / Düwi">
+	<Manufacturer id="0064" name="Popp / Duwi">
 	  <Product type="3001" id="0000" name="Plugin Switch" />
 	</Manufacturer>
 	<Manufacturer id="0016" name="PowerLynx">

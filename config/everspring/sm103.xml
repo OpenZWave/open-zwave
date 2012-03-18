@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Product>
+<Product xmlns='http://code.google.com/p/open-zwave/'>
 	<!-- Configuration Parameters -->
 	<CommandClass id="112">
 		<Value type="byte" index="1" genre="config" label="On Level" units="" min="0" max="127" value="99">

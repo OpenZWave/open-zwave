@@ -162,15 +162,15 @@ bool HidController::Close
 (
 )
 {
-	hid_close( m_hHidController );
-	m_hHidController = NULL;
-
 	if( m_thread )
 	{
 		m_thread->Stop();
 		m_thread->Release();
 		m_thread = NULL;
 	}
+
+	hid_close( m_hHidController );
+	m_hHidController = NULL;
 
 	m_bOpen = false;
 	hid_exit();
