@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- EVERSPRING AN158 ON/OFF MODULE -->
 <!-- Information from http://www.pepper1.net/zwavedb/device/54 -->
-<Product>
+<Product xmlns='http://code.google.com/p/open-zwave/'>
   <!-- Configuration Parameters -->
   <CommandClass id="112">
     <Value type="short" index="1" genre="config" label="True Period" units="100ms" min="0" max="120" value="10">

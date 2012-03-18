@@ -94,6 +94,8 @@ void Scene::WriteXML
 	doc.LinkEndChild( decl );
 	doc.LinkEndChild( scenesElement );
 
+	scenesElement->SetAttribute( "xmlns", "http://code.google.com/p/open-zwave/" );
+
 	snprintf( str, sizeof(str), "%d", c_sceneVersion );
 	scenesElement->SetAttribute( "version", str);
 

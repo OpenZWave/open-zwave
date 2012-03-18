@@ -277,15 +277,19 @@ int main( int argc, char* argv[] )
 	// Add a Z-Wave Driver
 	// Modify this line to set the correct serial port for your PC interface.
 
-	if ( argc == 1 )
+	string port = "/dev/ttyUSB0";
+	if ( argc > 1 )
 	{
-		fprintf(stderr, "test: missing port name required.\n" );
-		exit(1);
+		port = argv[1];
 	}
-	if( strcasecmp( argv[1], "usb" ) == 0 )
+	if( strcasecmp( port.c_str(), "usb" ) == 0 )
+	{
 		Manager::Get()->AddDriver( "HID Controller", Driver::ControllerInterface_Hid );
+	}
 	else
-		Manager::Get()->AddDriver( argv[1] );
+	{
+		Manager::Get()->AddDriver( port );
+	}
 
 	// Now we just wait for either the AwakeNodesQueried or AllNodesQueried notification,
 	// then write out the config file.
@@ -333,12 +337,10 @@ int main( int argc, char* argv[] )
 		// stalling the OpenZWave drivers.
 		// At this point, the program just waits for 3 minutes (to demonstrate polling),
 		// then exits
-		for( int i = 0; i < 60*3*10; i++ )
+		for( int i = 0; i < 60*3; i++ )
 		{
-			sleep(90);				// do most of your work outside critical section
-
 			pthread_mutex_lock( &g_criticalSection );
-			sleep(10);				// but NodeInfo list and similar data should be inside critical section
+			sleep(1);				// but NodeInfo list and similar data should be inside critical section
 			pthread_mutex_unlock( &g_criticalSection );
 		}
 
@@ -350,10 +352,15 @@ int main( int argc, char* argv[] )
 	}
 
 	// program exit (clean up)
-	if( strcasecmp( argv[1], "usb" ) == 0 )
+	if( strcasecmp( port.c_str(), "usb" ) == 0 )
+	{
 		Manager::Get()->RemoveDriver( "HID Controller" );
+	}
 	else
-		Manager::Get()->RemoveDriver( argv[1] );
+	{
+		Manager::Get()->RemoveDriver( port );
+	}
+	Manager::Get()->RemoveWatcher( OnNotification, NULL );
 	Manager::Destroy();
 	Options::Destroy();
 	pthread_mutex_destroy( &g_criticalSection );

@@ -38,3 +38,9 @@ test:	Main.o lib
 
 clean:
 	rm -f test Main.o
+
+XMLLINT := $(shell whereis xmllint)
+
+xmltest:	$(XMLLINT)
+	@$(XMLLINT) --noout --schema ../../../../config/zwcfg.xsd zwcfg_*.xml
+	@$(XMLLINT) --noout --schema ../../../../config/zwscene.xsd zwscene.xml

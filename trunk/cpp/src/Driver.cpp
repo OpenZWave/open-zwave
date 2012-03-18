@@ -619,6 +619,8 @@ void Driver::WriteConfig
 	doc.LinkEndChild( decl );
 	doc.LinkEndChild( driverElement );  
 
+	driverElement->SetAttribute( "xmlns", "http://code.google.com/p/open-zwave/" );
+
 	snprintf( str, sizeof(str), "%d", c_configVersion );
 	driverElement->SetAttribute( "version", str );
 
@@ -1175,8 +1177,8 @@ bool Driver::IsExpectedReply
 	const uint8 _nodeId
 )
 {
-	// Accept all controller commands.
-	if( m_expectedNodeId == 255 )
+	// Accept all controller commands or where the protocol doesn't identify the actual node
+	if( m_expectedNodeId == 255 || _nodeId == 0 )
 	{
 		return true;
 	}
@@ -5005,6 +5007,8 @@ void Driver::SaveButtons
 	TiXmlElement* nodesElement = new TiXmlElement( "Nodes" );
 	doc.LinkEndChild( decl );
 	doc.LinkEndChild( nodesElement );
+
+	nodesElement->SetAttribute( "xmlns", "http://code.google.com/p/open-zwave/" );
 
 	snprintf( str, sizeof(str), "%d", 1 );
 	nodesElement->SetAttribute( "version", str);

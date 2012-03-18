@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Aeon Labs Door/Window Sensor -->
-<Product>
+<Product xmlns='http://code.google.com/p/open-zwave/'>
 	<!-- Configuration Parameters not supported -->
 	<!-- Association Groups -->
 	<CommandClass id="133">
