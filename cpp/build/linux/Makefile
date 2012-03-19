@@ -59,7 +59,7 @@ default:	$(LIBDIR)/libopenzwave.a $(LIBDIR)/libopenzwave.so
 clean:
 	rm -f *.d *.d.* *.o vers.c
 
-XMLLINT := $(shell whereis xmllint | cut -c10-)
+XMLLINT := $(shell whereis -b xmllint | cut -c10-)
 
 xmltest:	$(XMLLINT)
 	@$(XMLLINT) --noout --schema ../../../config/device_classes.xsd ../../../config/device_classes.xml

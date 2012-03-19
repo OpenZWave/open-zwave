@@ -75,6 +75,20 @@ char const* c_genericClassName[] =
 };
 
 //-----------------------------------------------------------------------------
+// <MultiInstance::MultiInstance>
+// Constructor
+//-----------------------------------------------------------------------------
+MultiInstance::MultiInstance
+(
+	uint32 const _homeId,
+	uint8 const _nodeId
+):
+	CommandClass( _homeId, _nodeId ),
+	m_numEndpoints( 0 )
+{
+}
+
+//-----------------------------------------------------------------------------
 // <MultiInstance::RequestInstances>
 // Request number of instances of the specified command class from the device
 //-----------------------------------------------------------------------------
@@ -534,7 +548,3 @@ void MultiInstance::SendEncap
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 	GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 }
-
-
-
-
