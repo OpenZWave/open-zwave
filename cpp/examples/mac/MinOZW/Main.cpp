@@ -339,8 +339,9 @@ int main( int argc, char* argv[] )
 		for( int i = 0; i < 60*3; i++ )
 		{
 			pthread_mutex_lock( &g_criticalSection );
-			sleep(1);				// but NodeInfo list and similar data should be inside critical section
+			// but NodeInfo list and similar data should be inside critical section
 			pthread_mutex_unlock( &g_criticalSection );
+			sleep(1);
 		}
 
 		Driver::DriverData data;
