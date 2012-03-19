@@ -71,7 +71,7 @@ namespace OpenZWave
 		void SendEncap( uint8 const* _data, uint32 const _length, uint32 const _instance, uint32 const _requestFlags );
 
 	private:
-		MultiInstance( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
+		MultiInstance( uint32 const _homeId, uint8 const _nodeId );
 
 		void HandleMultiInstanceReport( uint8 const* _data, uint32 const _length );
 		void HandleMultiInstanceEncap( uint8 const* _data, uint32 const _length );
