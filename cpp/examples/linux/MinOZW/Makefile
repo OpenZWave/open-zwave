@@ -43,6 +43,11 @@ clean:
 
 XMLLINT := $(shell whereis -b xmllint | cut -c10-)
 
+ifeq ($(XMLLINT),)
+xmltest:	$(XMLLINT)
+	$(error xmllint command not found.)
+else
 xmltest:	$(XMLLINT)
 	@$(XMLLINT) --noout --schema ../../../../config/zwcfg.xsd zwcfg_*.xml
 	@$(XMLLINT) --noout --schema ../../../../config/zwscene.xsd zwscene.xml
+endif
