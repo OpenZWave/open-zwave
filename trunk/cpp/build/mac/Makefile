@@ -59,11 +59,16 @@ clean:
 
 XMLLINT := $(shell whereis xmllint)
 
+ifeq ($(XMLLINT),)
+xmltest:	$(XMLLINT)
+	$(error xmllint command not found.)
+else
 xmltest:	$(XMLLINT)
 	@$(XMLLINT) --noout --schema ../../../config/device_classes.xsd ../../../config/device_classes.xml
 	@$(XMLLINT) --noout --schema ../../../config/options.xsd ../../../config/options.xml
 	@$(XMLLINT) --noout --schema ../../../config/manufacturer_specific.xsd ../../../config/manufacturer_specific.xml
 	@$(XMLLINT) --noout --schema ../../../config/device_configuration.xsd ../../../config/*/*.xml
+endif
 
 -include $(tinyxml:.cpp=.d)
 -include $(hidapi:.c=.d)
