@@ -143,6 +143,7 @@ bool Stream::Put
 	}
 
 	m_mutex->Lock();
+	Log::Write( LogLevel_Debug, "      Stream::Put (received from controller)" );
 	if( (m_head + _size) > m_bufferSize )
 	{
 		// We will have to wrap around
@@ -152,18 +153,18 @@ bool Stream::Put
 		memcpy( &m_buffer[m_head], _buffer, block1 );
 		memcpy( m_buffer, &_buffer[block1], block2 );
 		m_head = block2;
+		LogData( m_buffer + m_head - block1, block1, "      Put: ");
+		LogData( m_buffer, block2, "      Put: ");
 	}
 	else
 	{
 		// There is enough space before we reach the end of the buffer
 		memcpy( &m_buffer[m_head], _buffer, _size );
 		m_head += _size;
+		LogData(m_buffer+m_head-_size, _size, "      Put: ");
 	}
 
 	m_dataSize += _size;
-
-	Log::Write( LogLevel_Debug, "      Stream::Put (received from controller)" );
-	LogData(m_buffer+m_head-_size, _size, "      Put: ");
 
 	if( IsSignalled() )
 	{
