@@ -1216,6 +1216,7 @@ void Node::SetStaticRequests
 		{
 			it->second->SetStaticRequest( request );
 		}
+		SetQueryStage( QueryStage_ManufacturerSpecific2 );
 	}
 }
 
