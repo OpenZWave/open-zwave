@@ -313,7 +313,7 @@ bool ManufacturerSpecific::LoadProductXML
 					if ( s_productMap[product->GetKey()] != NULL )
 					{
 						Product *c = s_productMap[product->GetKey()];
-						Log::Write( LogLevel_Info, "Product name collision: type %x id %x manufacturerid %x, collides with %s, type %x id %x manufacturerid %x", productName.c_str(), productType, productId, manufacturerId, c->GetProductName().c_str(), c->GetProductType(), c->GetProductId(), c->GetManufacturerId());
+						Log::Write( LogLevel_Info, "Product name collision: %s type %x id %x manufacturerid %x, collides with %s, type %x id %x manufacturerid %x", productName.c_str(), productType, productId, manufacturerId, c->GetProductName().c_str(), c->GetProductType(), c->GetProductId(), c->GetManufacturerId());
 						delete product;
 					}
 					else
