@@ -337,6 +337,8 @@
 	<Manufacturer id="0008" name="Wayne Dalton">
 		<Product type="0007" id="0020" name="WDTC-20 Thermostat" config="waynedalton/WDTC-20.xml"/>
 	</Manufacturer>
+	<Manufacturer id="0118" name="Wenzhou TKB Control System">
+	</Manufacturer>
 	<Manufacturer id="004c" name="Woodward Labs">
 	</Manufacturer>
 	<Manufacturer id="0003" name="Wrap">
