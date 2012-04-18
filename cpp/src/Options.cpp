@@ -52,11 +52,24 @@ Options* Options::Create
 {
 	if( s_instance == NULL )
 	{
-		s_instance = new Options( _configPath, _userPath, _commandLine );
+		string configPath = _configPath;
+		string userPath = _userPath;
+
+		// Make sure a trailing path delimiter is present
+		if( configPath.size() > 0 && configPath[configPath.size() - 1] != '/' )
+		{
+			configPath += "/";
+		}
+		if( userPath.size() > 0 && userPath[userPath.size() - 1] != '/' )
+		{
+			userPath += "/";
+		}
+
+		s_instance = new Options( configPath, userPath, _commandLine );
 
 		// Add the default options
-		s_instance->AddOptionString(	"ConfigPath",				_configPath,	false );	// Path to the OpenZWave config folder.
-		s_instance->AddOptionString(	"UserPath",					_userPath,		false );	// Path to the user's data folder.
+		s_instance->AddOptionString(	"ConfigPath",				configPath,	false );	// Path to the OpenZWave config folder.
+		s_instance->AddOptionString(	"UserPath",					userPath,		false );	// Path to the user's data folder.
 
 		s_instance->AddOptionBool(		"Logging",					true );						// Enable logging of library activity.
 		s_instance->AddOptionString(	"LogFileName",				"OZW_Log.txt",	false );	// Name of the log file (can be changed via Log::SetLogFileName)
