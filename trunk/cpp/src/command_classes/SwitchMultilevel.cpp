@@ -259,7 +259,7 @@ bool SwitchMultilevel::SetValue
 			// Level
 			if( ValueByte* value = static_cast<ValueByte*>( GetValue( instance, SwitchMultilevelIndex_Level ) ) )
 			{
-				res = SetLevel( instance, value->GetValue() );
+				res = SetLevel( instance, (static_cast<ValueByte const*>(&_value))->GetValue() );
 				value->Release();
 			}
 			break;
