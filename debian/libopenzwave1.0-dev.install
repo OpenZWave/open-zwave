@@ -1,2 +1,2 @@
-usr/include/openzwave/*.h
+usr/include/openzwave/*
 usr/lib/libopenzwave.a
