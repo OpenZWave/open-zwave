@@ -25,7 +25,7 @@
 //	along with OpenZWave.  If not, see <http://www.gnu.org/licenses/>.
 //
 //-----------------------------------------------------------------------------
-
+#include <unistd.h>
 #include "Defs.h"
 #include "Thread.h"
 #include "Event.h"

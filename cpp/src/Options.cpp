@@ -477,7 +477,7 @@ Options::Option* Options::AddOption
 	if( m_locked )
 	{
 		Log::Write( LogLevel_Error, "Options have been locked.  No more may be added." );
-		return false;
+		return NULL;
 	}
 
 	// get a pointer to the option (and create a new Option if it doesn't already exist)
