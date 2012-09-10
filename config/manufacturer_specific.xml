@@ -146,6 +146,7 @@
 		<Product type="8007" id="1390" name="Wireless Lighting Control"/>
 	</Manufacturer>
 	<Manufacturer id="0099" name="GreenWave">
+		<Product type="0002" id="0002" name="PowerNode 1 port"/>
 		<Product type="0003" id="0004" name="PowerNode 6 port" config="greenwave/powernode6.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0084" name="FortrezZ">
