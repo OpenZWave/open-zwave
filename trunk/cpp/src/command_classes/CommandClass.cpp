@@ -60,6 +60,7 @@ CommandClass::CommandClass
 	m_version( 1 ),
 	m_afterMark( false ),
 	m_createVars( true ),
+	m_overridePrecision( -1 ),
 	m_staticRequests( 0 )
 {
 }
@@ -170,6 +171,11 @@ void CommandClass::ReadXML
 		m_staticRequests = (uint8)intVal;
 	}
 
+	if( TIXML_SUCCESS == _ccElement->QueryIntAttribute( "override_precision", &intVal ) )
+	{
+		m_overridePrecision = (int8)intVal;
+	}
+
 	str = _ccElement->Attribute( "after_mark" );
 	if( str )
 	{
@@ -234,6 +240,12 @@ void CommandClass::WriteXML
 	{
 		snprintf( str, 32, "%d", m_staticRequests );
 		_ccElement->SetAttribute( "request_flags", str );
+	}
+
+	if( m_overridePrecision >= 0 )
+	{
+		snprintf( str, 32, "%d", m_overridePrecision );
+		_ccElement->SetAttribute( "override_precision", str );
 	}
 
 	if( m_afterMark )
@@ -421,16 +433,17 @@ int32 CommandClass::ValueToInteger
 )const
 {
 	int32 val;
+	uint8 precision;
 	
 	// Find the decimal point
 	size_t pos = _value.find_first_of( "." );
 	if( pos == string::npos )
+		pos = _value.find_first_of( "," );
+
+	if( pos == string::npos )
 	{
 		// No decimal point
-		if( o_precision )
-		{
-			*o_precision = 0;
-		}
+		precision = 0;
 
 		// Convert the string to an integer
 		val = atol( _value.c_str() );
@@ -438,14 +451,21 @@ int32 CommandClass::ValueToInteger
 	else
 	{
 		// Remove the decimal point and convert to an integer
-		if( o_precision )
-		{
-			*o_precision = (_value.size()-pos)-1;
-		}
+		precision = (_value.size()-pos)-1;
 
 		string str = _value.substr( 0, pos ) + _value.substr( pos+1 );
 		val = atol( str.c_str() );
 	}
+
+	if ( m_overridePrecision > 0 )
+	{
+		while ( precision < m_overridePrecision ) {
+			precision++;
+			val *= 10;
+		}
+	}
+
+	if ( o_precision ) *o_precision = precision;
 
 	if( o_size )
 	{
