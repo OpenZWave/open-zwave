@@ -116,6 +116,7 @@ namespace OpenZWave
 		Bitfield	m_instances;
 		bool		m_afterMark;		// Set to true if the command class is listed after COMMAND_CLASS_MARK, and should not create any values.
 		bool		m_createVars;		// Do we want to create variables
+		int8		m_overridePrecision;// Override precision when writing values if >=0
 
 	//-----------------------------------------------------------------------------
 	// Record which items of static data have been read from the device
