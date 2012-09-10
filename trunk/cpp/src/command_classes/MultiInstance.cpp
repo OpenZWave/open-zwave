@@ -375,17 +375,35 @@ void MultiInstance::HandleMultiChannelCapabilityReport
 	
 			// All end points have the same command classes.
 			// We just need to find them...
-			char str[128];
-			snprintf( str, sizeof( str ), "MultiChannelCmd_EndPointFind for generic device class 0x%.2x", _data[2] );
-			Msg* msg = new Msg( str, GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-			msg->Append( GetNodeId() );
-			msg->Append( 4 );
-			msg->Append( GetCommandClassId() );
-			msg->Append( MultiChannelCmd_EndPointFind );
-			msg->Append( _data[2] );	// Generic device class
-			msg->Append( 0xff );		// Any specific device class
-			msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-			GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
+			if (node->MultiEndPointFindSupported()) {
+				char str[128];
+				snprintf( str, sizeof( str ), "MultiChannelCmd_EndPointFind for generic device class 0x%.2x", _data[2] );
+				Msg* msg = new Msg( str, GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+				msg->Append( GetNodeId() );
+				msg->Append( 4 );
+				msg->Append( GetCommandClassId() );
+				msg->Append( MultiChannelCmd_EndPointFind );
+				msg->Append( _data[2] );	// Generic device class
+				msg->Append( 0xff );		// Any specific device class
+				msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+				GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
+			} else {
+				// no way to find them, assume they are in ascending order
+				for( uint8 endPoint=1; endPoint<=m_numEndpoints; ++endPoint )
+				{
+					// Use the stored command class list to set up the endpoint.
+					for( set<uint8>::iterator it=m_endPointCommandClasses.begin(); it!=m_endPointCommandClasses.end(); ++it )
+					{
+						uint8 commandClassId = *it;
+						CommandClass* cc = node->GetCommandClass( commandClassId );
+						if( cc )
+						{
+							Log::Write( LogLevel_Info, GetNodeId(), "    Endpoint %d: Adding %s", endPoint, cc->GetCommandClassName().c_str() );
+							cc->SetInstance( endPoint );
+						}
+					}
+				}
+			}
 		}
 		else
 		{

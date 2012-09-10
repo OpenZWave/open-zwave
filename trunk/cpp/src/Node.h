@@ -224,6 +224,8 @@ namespace OpenZWave
 
 		bool AllQueriesCompleted()const{ return( QueryStage_Complete == m_queryStage ); }
 
+		bool MultiEndPointFindSupported()const{ return m_multiEndPointFindSupported; }
+
 	private:
 		void SetStaticRequests();
 
@@ -235,6 +237,7 @@ namespace OpenZWave
 		bool		m_nodeInfoReceived;
 		bool		m_manufacturerSpecificClassReceived;
 		bool		m_nodeInfoSupported;
+		bool		m_multiEndPointFindSupported;
 
 	//-----------------------------------------------------------------------------
 	// Capabilities
