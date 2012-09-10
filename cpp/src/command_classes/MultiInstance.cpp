@@ -278,7 +278,7 @@ void MultiInstance::HandleMultiChannelEndPointReport
 
 	if( m_endPointsAreSameClass )
 	{
-		Log::Write( LogLevel_Info, GetNodeId(), "Received MultiChannelEndPointReport from node %d.  All %d endpoints are the same.", GetNodeId(), m_numEndpoints );
+		Log::Write( LogLevel_Info, GetNodeId(), "Received MultiChannelEndPointReport from node %d. All %d endpoints are the same.", GetNodeId(), m_numEndpoints );
 	
 		// Send a single capability request to endpoint 1 (since all classes are the same)
 		char str[128];
@@ -294,7 +294,7 @@ void MultiInstance::HandleMultiChannelEndPointReport
 	}
 	else
 	{
-		Log::Write( LogLevel_Info, GetNodeId(), "Received MultiChannelEndPointReport from node %d.  Endpoints are not all the same.", GetNodeId() );
+		Log::Write( LogLevel_Info, GetNodeId(), "Received MultiChannelEndPointReport from node %d. Endpoints are not all the same.", GetNodeId() );
 		Log::Write( LogLevel_Info, GetNodeId(), "    Starting search for endpoints by generic class..." );
 
 		// This is where things get really ugly.  We need to get the capabilities of each
