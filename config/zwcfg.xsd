@@ -66,6 +66,30 @@
    <xs:attribute name='max_baud_rate' type='xs:string' use='optional'/>
    <xs:attribute name='version' type='xs:string' use='optional'/>
    <xs:attribute name='query_stage' type='xs:string' use='optional'/>
+   <xs:attribute name='security' use='optional'>
+    <xs:simpleType>
+     <xs:restriction base='xs:string'>
+      <xs:enumeration value='true'/>
+      <xs:enumeration value='false'/>
+     </xs:restriction>
+    </xs:simpleType>
+   </xs:attribute>
+   <xs:attribute name='nodeinfosupported' use='optional'>
+    <xs:simpleType>
+     <xs:restriction base='xs:string'>
+      <xs:enumeration value='true'/>
+      <xs:enumeration value='false'/>
+     </xs:restriction>
+    </xs:simpleType>
+   </xs:attribute>
+   <xs:attribute name='multiendpointfindsupported' use='optional'>
+    <xs:simpleType>
+     <xs:restriction base='xs:string'>
+      <xs:enumeration value='true'/>
+      <xs:enumeration value='false'/>
+     </xs:restriction>
+    </xs:simpleType>
+   </xs:attribute>
   </xs:complexType>
  </xs:element>
 
@@ -122,6 +146,7 @@
     </xs:simpleType>
    </xs:attribute>
    <xs:attribute name='request_flags' type='xs:string' use='optional'/>
+   <xs:attribute name='base' type='xs:string' use='optional'/>
   </xs:complexType>
  </xs:element>
 
