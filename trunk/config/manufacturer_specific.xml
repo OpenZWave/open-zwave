@@ -355,6 +355,9 @@
 	<Manufacturer id="0000" name="Zensys">
 		<Product type="0001" id="0001" name="Controller"/>
 	</Manufacturer>
+    <Manufacturer id="0115" name="Z-Wave.Me">
+      <Product type="1000" id="0002" name="ZME_06433 Wall Flush-Mountable Dimmer" config="zwave.me/ZME_06433.xml"/>
+    </Manufacturer>
 	<Manufacturer id="004f" name="Z-Wave Technologia">
 	</Manufacturer>
 	<Manufacturer id="0021" name="Zykronix">
