@@ -108,6 +108,7 @@
 	<Manufacturer id="0035" name="Embedit A/S">
 	</Manufacturer>
 	<Manufacturer id="0060" name="Everspring">
+		<Product type="0003" id="0001" name="AD142 Plug-in Dimmer Module"/>
 		<Product type="0104" id="0001" name="AN145 Lamp Screw In Module" config="everspring/an145.xml"/>
 		<Product type="0004" id="0002" name="AN158 Plug-in Meter Appliance Module" config="everspring/an158.xml"/>
 		<Product type="0004" id="0001" name="AN157 Plug-in Appliance Module"/>
