@@ -36,7 +36,7 @@
 				This may be inaccurate, but default for Homeseer HSM100 may actually be 3 minutes, instead of 20?				
 			</Help>
 		</Value>
-		<Value type="list" index="3" genre="config" label="LED ON/OFF" units="" min="" max="" value="255">
+		<Value type="list" index="3" genre="config" label="LED ON/OFF" units="" min="" max="" size="1" value="255">
 			<Help>
 				LED ON/OFF turns the LED on or off. A slight improvement in
 				battery life is obtained by turning the LED off. Setting LED
