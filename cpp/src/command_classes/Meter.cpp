@@ -292,13 +292,13 @@ bool Meter::HandleSupportedReport
 					{
 						if( ValueDecimal* value = static_cast<ValueDecimal*>( GetValue( _instance, baseIndex ) ) )
 						{
-							value->SetLabel( "Gas" );
+							value->SetLabel( c_meterTypes[MeterType_Gas] );
 							value->SetUnits( c_gasUnits[i] );
 							value->Release();
 						}
 						else
 						{
-							node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, baseIndex, "Gas", c_gasUnits[i], true, false, "0.0", 0 );
+							node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, baseIndex, c_meterTypes[meterType], c_gasUnits[i], true, false, "0.0", 0 );
 						}
 						if( i != 0 )
 							msg += ", ";
@@ -309,13 +309,13 @@ bool Meter::HandleSupportedReport
 					{
 						if( ValueDecimal* value = static_cast<ValueDecimal*>( GetValue( _instance, baseIndex ) ) )
 						{
-							value->SetLabel( "Water" );
+							value->SetLabel( c_meterTypes[MeterType_Water] );
 							value->SetUnits( c_waterUnits[i] );
 							value->Release();
 						}
 						else
 						{
-							node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, baseIndex, "Water", c_waterUnits[i], true, false, "0.0", 0 );
+							node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, baseIndex, c_meterTypes[meterType], c_waterUnits[i], true, false, "0.0", 0 );
 						}
 						if( i != 0 )
 							msg += ", ";
@@ -392,14 +392,14 @@ bool Meter::HandleReport
 			case MeterType_Gas:
 			{
 				// Gas Meter
-				label = "Gas";
+				label = c_meterTypes[MeterType_Gas];
 				units = c_gasUnits[scale];
 				break;
 			}
 			case MeterType_Water:
 			{
 				// Water Meter
-				label = "Water";
+				label = c_meterTypes[MeterType_Water];
 				units = c_waterUnits[scale];
 				break;
 			}
