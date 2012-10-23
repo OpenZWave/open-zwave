@@ -116,7 +116,7 @@ bool Basic::HandleMsg
 		Log::Write( LogLevel_Info, GetNodeId(), "Received Basic set from node %d: level=%d.  Sending event notification.", GetNodeId(), _data[1] );
 
 		Notification* notification = new Notification( Notification::Type_NodeEvent );
-		notification->SetHomeAndNodeIds( GetHomeId(), GetNodeId() );
+		notification->SetHomeNodeIdAndInstance( GetHomeId(), GetNodeId(), _instance );
 		notification->SetEvent( _data[1] );
 		GetDriver()->QueueNotification( notification );
 		return true;
