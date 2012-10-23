@@ -232,6 +232,12 @@ namespace OpenZWave
 	private:
 		// Construct a value id for use in notifications
 		ValueID( uint32 const _homeId, uint8 const _nodeId ): m_id1( 0 ),m_homeId( _homeId ){ m_id = ((uint32)_nodeId)<<24; }
+		ValueID( uint32 const _homeId, uint8 const _nodeId, uint32 const _instance ): 
+			m_homeId( _homeId )
+			{ 
+				m_id = (((uint32)_nodeId)<<24);
+				m_id1 = (((uint32)_instance)<<24);
+			}
 
 		// Default constructor
 		ValueID():m_id(0),m_id1(0),m_homeId(0){}
