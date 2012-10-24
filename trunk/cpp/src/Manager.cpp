@@ -2863,6 +2863,7 @@ void Manager::ResetController
 	{
 		driver->ResetController();
 	}
+	RemoveAllScenes( _homeId );
 }
 
 //-----------------------------------------------------------------------------
@@ -2942,6 +2943,30 @@ uint8 Manager::GetAllScenes
 {
 	*_sceneIds = NULL;
 	return Scene::GetAllScenes( _sceneIds );
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::RemoveAllScenes>
+// Remove every scene id
+//-----------------------------------------------------------------------------
+void Manager::RemoveAllScenes
+(
+	uint32 const _homeId
+)
+{
+	for( int i = 1; i < 256; i++ )
+	{
+		if( _homeId == 0 )	// remove every device from every scene
+			RemoveScene( i );
+		else
+		{
+			Scene *scene = Scene::Get( i );
+			if( scene != NULL )
+			{
+				scene->RemoveValues( _homeId );
+			}
+		}
+	}
 }
 
 //-----------------------------------------------------------------------------
