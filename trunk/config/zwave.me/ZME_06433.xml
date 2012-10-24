@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--Taken from http://en.z-wave.me/docs/ZME_0643x_UserManual.pdf-->
-<Product>
+<Product xmlns='http://code.google.com/p/open-zwave/'>
 	<!-- Configuration Parameters -->
   <!--IMPORTANT: Controllers may only allow to configure signed values. 
   In order to set values in the range  128?255 for parameters 4,  5 and 6 the
