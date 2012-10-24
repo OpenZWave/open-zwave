@@ -1428,7 +1428,7 @@ namespace OpenZWave
 		/**
 		 * \brief Gets the number of scenes that have been defined.
 		 * \return The number of scenes.
-		 * \see GetAllScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
+		 * \see GetAllScenes, RemoveAllScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
 		 */
 		uint8 GetNumScenes( );
 
@@ -1439,6 +1439,13 @@ namespace OpenZWave
 		 * \see GetNumScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
 		 */
 		uint8 GetAllScenes( uint8** _sceneIds );
+
+		/**
+		 * \brief Remove all the SceneIds.
+		 * \param _homeId The Home ID of the Z-Wave controller. 0 for all devices from all scenes.
+		 * \see GetAllScenes, GetNumScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
+		 */
+		void RemoveAllScenes( uint32 const _homeId );
 
 		/**
 		 * \brief Create a new Scene passing in Scene ID
