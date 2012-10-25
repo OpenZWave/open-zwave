@@ -93,6 +93,9 @@
 	</Manufacturer>
 	<Manufacturer id="0050" name="Digital 5">
 	</Manufacturer>
+	<Manufacturer id="008a" name="Digital Home Systems">
+		<Product type="0003" id="0100" name="DHS-ZW-SNMT-01 Multi Sensor"/>
+	</Manufacturer>
 	<Manufacturer id="0012" name="E Housekeeper">
 		<Product type="0001" id="0001" name="Switchkeeper Plug-in Appliance Module"/>
 	</Manufacturer>
