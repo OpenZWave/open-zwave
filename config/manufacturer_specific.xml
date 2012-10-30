@@ -208,7 +208,9 @@
 		<Product type="0003" id="0003" name="HA-03WD Lamp Module"/>
 		<Product type="0004" id="0003" name="HA-04C Outdoor Module"/>
 		<Product type="0005" id="0003" name="HA-05C Lamp Screw In Module"/>
+		<Product type="0006" id="0003" name="HA-06 In-Wall Switch Dimmer"/>
 		<Product type="4341" id="0600" name="CA600 Wall Dimmer"/>
+		<Product type="4341" id="3000" name="CA3000 Wall Switch"/>
 		<Product type="4341" id="3500" name="CA3560 Split-Duplex Receptacle"/>
 		<Product type="4341" id="8900" name="CA8900 Digital Thermostat" config="intermatic/ca8900.xml"/>
 		<Product type="4341" id="9000" name="CA9000 PIR Occupancy Sensor"/>

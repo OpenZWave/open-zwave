@@ -64,6 +64,7 @@ namespace OpenZWave
 		friend class Basic;
 		friend class ManufacturerSpecific;
 		friend class NodeNaming;
+		friend class SceneActivation;
 		friend class WakeUp;
 
 	//-----------------------------------------------------------------------------
