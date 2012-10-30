@@ -22,7 +22,7 @@
                </Value>
                 <Value type="short" index="3" genre="config" label="On time" units="minutes" min="1" max="15300" value="240">
                         <Help>
-                                How long should the device associated to multi senor keep
+				How long should the device associated to multi sensor keep
 				state On before sending it Off command (if the value is bigger
 				than 255, the value would be rounded to next integer in minutes)
                         </Help>
@@ -36,6 +36,13 @@
  			<Item label="Disabled" value="0" />
 			<Item label="Enabled" value="1" />
                </Value>
+		<Value type="byte" index="5" genre="config" label="Command Options" units="" min="1" max="2" value="1">
+			<Help>
+				Which commands to send when PIR motion sensor triggered
+				1(default)	->	Basic Set
+				2			->	Binary Sensor Report
+			</Help>
+		</Value>
                 <Value type="int" index="101" genre="config" label="Group 1 Reports" units="" value="0">
                         <Help>
                                 Which reports need to send automatically in timing intervals for group 1
