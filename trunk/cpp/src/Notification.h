@@ -50,6 +50,7 @@ namespace OpenZWave
 		friend class Basic;
 		friend class ManufacturerSpecific;
 		friend class NodeNaming;
+		friend class SceneActivation;
 
 	public:
 		/** 
@@ -71,8 +72,9 @@ namespace OpenZWave
 			Type_NodeProtocolInfo,				/**< Basic node information has been receievd, such as whether the node is a listening device, a routing device and its baud rate and basic, generic and specific types. It is after this notification that you can call Manager::GetNodeType to obtain a label containing the device description. */
 			Type_NodeNaming,					/**< One of the node names has changed (name, manufacturer, product). */
 			Type_NodeEvent,						/**< A node has triggered an event.  This is commonly caused when a node sends a Basic_Set command to the controller.  The event value is stored in the notification. */
-			Type_PollingDisabled,				/**< Polling of a node has been successfully turned off by a call to Manager::DisablePoll */
-			Type_PollingEnabled,				/**< Polling of a node has been successfully turned on by a call to Manager::EnablePoll */
+			Type_PollingDisabled,					/**< Polling of a node has been successfully turned off by a call to Manager::DisablePoll */
+			Type_PollingEnabled,					/**< Polling of a node has been successfully turned on by a call to Manager::EnablePoll */
+			Type_SceneEvent,					/**< Scene Activation Set received */
 			Type_CreateButton,					/**< Handheld controller button event created */
 			Type_DeleteButton,					/**< Handheld controller button event deleted */
 			Type_ButtonOn,						/**< Handheld controller button on pressed event */
@@ -153,6 +155,7 @@ namespace OpenZWave
 		void SetValueId( ValueID const& _valueId ){ m_valueId = _valueId; }
 		void SetGroupIdx( uint8 const _groupIdx ){ assert(Type_Group==m_type); m_byte = _groupIdx; }
 		void SetEvent( uint8 const _event ){ assert(Type_NodeEvent==m_type); m_byte = _event; }
+		void SetSceneId( uint8 const _sceneId ){ assert(Type_SceneEvent==m_type); m_byte = _sceneId; }
 		void SetButtonId( uint8 const _buttonId ){ assert(Type_CreateButton==m_type||Type_DeleteButton==m_type||Type_ButtonOn==m_type||Type_ButtonOff==m_type); m_byte = _buttonId; }
 
 		NotificationType	m_type;

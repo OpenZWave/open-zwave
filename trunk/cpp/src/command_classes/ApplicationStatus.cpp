@@ -75,7 +75,7 @@ bool ApplicationStatus::HandleMsg
 			default:
 			{
 				// Invalid status
-				snprintf( msg, sizeof(msg), "Unknown status" );
+				snprintf( msg, sizeof(msg), "Unknown status %d", _data[1] );
 			}
 		}
 		Log::Write( LogLevel_Info, GetNodeId(), "Received Application Status Busy: %s", msg );
