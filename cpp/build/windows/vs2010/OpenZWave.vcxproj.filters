@@ -288,6 +288,9 @@
     <ClInclude Include="..\..\..\src\Scene.h">
       <Filter>Main</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\command_classes\SceneActivation.h">
+      <Filter>Command Classes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\Driver.cpp">
@@ -544,6 +547,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\Scene.cpp">
       <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\command_classes\SceneActivation.cpp">
+      <Filter>Command Classes</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

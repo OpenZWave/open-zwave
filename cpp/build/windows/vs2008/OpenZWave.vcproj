@@ -728,6 +728,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\command_classes\SceneActivation.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\command_classes\SceneActivation.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\command_classes\SensorAlarm.cpp"
 				>
 			</File>
