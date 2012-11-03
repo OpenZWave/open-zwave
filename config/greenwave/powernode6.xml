@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Product xmlns='http://code.google.com/p/open-zwave/'>
   <Protocol multiendpointfindsupported="false" />
+
+  <!-- COMMAND_CLASS_ALARM. This class is in the list reported by the GreenWave PowerNode 6, but it does not respond to requests -->
+  <CommandClass id="113" action="remove" /> 
+
 </Product>
