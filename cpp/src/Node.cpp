@@ -137,6 +137,7 @@ Node::Node
 	m_retries( 0 ),
 	m_averageRTT( 0 )
 {
+	memset( m_neighbors, 0, sizeof(m_neighbors) );
 }
 
 //-----------------------------------------------------------------------------
@@ -611,7 +612,7 @@ uint32 Node::GetNeighbors
 	for( i = 0; i < 29; i++ )
 	{
 		for( unsigned char mask = 0x80; mask != 0; mask >>= 1 )
-			if( m_neighbors[i] & mask )
+		  if( ( m_neighbors[i] & mask ) != 0 )
 				numNeighbors++;
 	}
 

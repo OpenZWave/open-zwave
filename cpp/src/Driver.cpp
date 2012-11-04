@@ -2311,7 +2311,7 @@ void Driver::HandleGetRoutingInfoResponse
 {
 	Log::Write( LogLevel_Info, GetNodeNumber( m_currentMsg ), "Received reply to FUNC_ID_ZW_GET_ROUTING_INFO" );
 
-	if( Node* node = GetNode( m_controllerCommandNode ) )
+	if( Node* node = GetNode( GetNodeNumber( m_currentMsg ) ) )
 	{
 		// copy the 29-byte bitmap received (29*8=232 possible nodes) into this node's neighbors member variable
 		memcpy( node->m_neighbors, &_data[2], 29 );
