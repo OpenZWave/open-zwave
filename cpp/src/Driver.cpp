@@ -4178,7 +4178,6 @@ void Driver::RequestNodeNeighbors
 		// Note: This is not the same as RequestNodeNeighbourUpdate.  This method
 		// merely requests the controller's current neighbour information and
 		// the reply will be copied into the relevant Node object for later use.
-		m_controllerCommandNode = _nodeId;
 		Log::Write( LogLevel_Detail, GetNodeNumber( m_currentMsg ), "Requesting routing info (neighbor list) for Node %d", _nodeId );
 		Msg* msg = new Msg( "Get Routing Info", _nodeId, REQUEST, FUNC_ID_ZW_GET_ROUTING_INFO, false );
 		msg->Append( _nodeId );
