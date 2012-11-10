@@ -127,6 +127,7 @@ namespace OpenZWave
 #define FUNC_ID_ZW_SEND_DATA						0x13
 #define FUNC_ID_ZW_GET_VERSION						0x15
 #define FUNC_ID_ZW_R_F_POWER_LEVEL_SET					0x17
+#define FUNC_ID_ZW_GET_RANDOM						0x1c
 #define FUNC_ID_ZW_MEMORY_GET_ID					0x20
 #define FUNC_ID_MEMORY_GET_BYTE						0x21
 #define FUNC_ID_ZW_READ_MEMORY						0x23
