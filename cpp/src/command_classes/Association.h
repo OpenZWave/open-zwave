@@ -37,6 +37,8 @@ namespace OpenZWave
 	 */
 	class Association: public CommandClass
 	{
+		friend class Group;
+
 	public:
 		static CommandClass* Create( uint32 const _homeId, uint8 const _nodeId ){ return new Association( _homeId, _nodeId ); }
 		virtual ~Association(){}
