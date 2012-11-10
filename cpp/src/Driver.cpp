@@ -882,57 +882,68 @@ bool Driver::WriteMsg
 		return false;
 	}
 
-	uint8 attempts = m_currentMsg->GetSendAttempts();
-	uint8 nodeId = m_currentMsg->GetTargetNodeId();
-	if( attempts >= m_currentMsg->GetMaxSendAttempts() )
+	// only send new messages if 1) there is no controller command executing or 2) there is one
+	// in process, but this is also a controller command
+	uint8* msgcmd = m_currentMsg->GetBuffer();
+	if(( m_controllerCommand == ControllerCommand_None ) || IsControllerCommand( msgcmd[3] ) )
 	{
-		// That's it - already tried to send GetMaxSendAttempt() times.
-		Log::Write( LogLevel_Error, nodeId, "ERROR: Dropping command, expected response not received after %d attempt(s)", m_currentMsg->GetMaxSendAttempts() );
-		delete m_currentMsg;
-		m_currentMsg = NULL;
+		uint8 attempts = m_currentMsg->GetSendAttempts();
+		uint8 nodeId = m_currentMsg->GetTargetNodeId();
+		if( attempts >= m_currentMsg->GetMaxSendAttempts() )
+		{
+			// That's it - already tried to send GetMaxSendAttempt() times.
+			Log::Write( LogLevel_Error, nodeId, "ERROR: Dropping command, expected response not received after %d attempt(s)", m_currentMsg->GetMaxSendAttempts() );
+			delete m_currentMsg;
+			m_currentMsg = NULL;
 
-		m_expectedCallbackId = 0;
-		m_expectedCommandClassId = 0;
-		m_expectedNodeId = 0;
-		m_expectedReply = 0;
-		m_waitingForAck = false;
-		return false;
-	}
+			m_expectedCallbackId = 0;
+			m_expectedCommandClassId = 0;
+			m_expectedNodeId = 0;
+			m_expectedReply = 0;
+			m_waitingForAck = false;
+			return false;
+		}
 
-	m_currentMsg->SetSendAttempts( ++attempts );
-	m_expectedCallbackId = m_currentMsg->GetCallbackId();
-	m_expectedCommandClassId = m_currentMsg->GetExpectedCommandClassId();
-	m_expectedNodeId = m_currentMsg->GetTargetNodeId();
-	m_expectedReply = m_currentMsg->GetExpectedReply();
-	m_waitingForAck = true;
-	string attemptsstr = "";
-	if( attempts > 1 )
-	{
-		char buf[15];
-		snprintf( buf, sizeof(buf), "Attempt %d, ", attempts );
-		attemptsstr = buf;
-	}
+		m_currentMsg->SetSendAttempts( ++attempts );
+		m_expectedCallbackId = m_currentMsg->GetCallbackId();
+		m_expectedCommandClassId = m_currentMsg->GetExpectedCommandClassId();
+		m_expectedNodeId = m_currentMsg->GetTargetNodeId();
+		m_expectedReply = m_currentMsg->GetExpectedReply();
+		m_waitingForAck = true;
+		string attemptsstr = "";
+		if( attempts > 1 )
+		{
+		      char buf[15];
+		      snprintf( buf, sizeof(buf), "Attempt %d, ", attempts );
+		      attemptsstr = buf;
+		}
 
-	Log::Write( LogLevel_Detail, "" );
-	Log::Write( LogLevel_Info, nodeId, "Sending command (%sCallback ID=0x%.2x, Expected Reply=0x%.2x) - %s", attemptsstr.c_str(), m_currentMsg->GetCallbackId(), m_currentMsg->GetExpectedReply(), m_currentMsg->GetAsString().c_str() );
+		Log::Write( LogLevel_Detail, "" );
+		Log::Write( LogLevel_Info, nodeId, "Sending command (%sCallback ID=0x%.2x, Expected Reply=0x%.2x) - %s", attemptsstr.c_str(), m_currentMsg->GetCallbackId(), m_currentMsg->GetExpectedReply(), m_currentMsg->GetAsString().c_str() );
 
-	m_controller->Write( m_currentMsg->GetBuffer(), m_currentMsg->GetLength() );
-	m_writeCnt++;
-	
-	if( nodeId == 0xff )
-	{
-		m_controllerWriteCnt++;
+		m_controller->Write( m_currentMsg->GetBuffer(), m_currentMsg->GetLength() );
+		m_writeCnt++;
+
+		if( nodeId == 0xff )
+		{
+			m_controllerWriteCnt++;
+		}
+		else
+		{
+			Node* node = GetNodeUnsafe( nodeId );
+			if( node != NULL )
+			{
+				node->m_writeCnt++;
+			}
+		}
+
+		return true;
 	}
 	else
 	{
-		Node* node = GetNodeUnsafe( nodeId );
-		if( node != NULL )
-		{
-			node->m_writeCnt++;
-		}
+		Log::Write(LogLevel_Info, GetNodeNumber( m_currentMsg ), "Not sending a queued message 0x%02x because controller is busy.  m_controllerCommand = 0x%02x", msgcmd[3], m_controllerCommand);
+		return false;
 	}
-
-	return true;
 }
 
 //-----------------------------------------------------------------------------
@@ -1418,6 +1429,12 @@ void Driver::ProcessMsg
 				HandleGetVersionResponse( _data );
 				break;
 			}
+			case FUNC_ID_ZW_GET_RANDOM:
+			{
+				Log::Write( LogLevel_Detail, "" );
+				HandleGetRandomResponse( _data );
+				break;
+			}
 			case FUNC_ID_ZW_MEMORY_GET_ID:
 			{
 				Log::Write( LogLevel_Detail, "" );
@@ -1813,6 +1830,18 @@ void Driver::HandleGetVersionResponse
 }
 
 //-----------------------------------------------------------------------------
+// <Driver::HandleGetRandomResponse>
+// Process a response from the Z-Wave PC interface
+//-----------------------------------------------------------------------------
+void Driver::HandleGetRandomResponse
+(
+	uint8* _data
+)
+{
+  Log::Write( LogLevel_Info, GetNodeNumber( m_currentMsg ), "Received reply to FUNC_ID_ZW_GET_RANDOM: %s", _data[2] ? "true" : "false" );
+}
+
+//-----------------------------------------------------------------------------
 // <Driver::HandleGetControllerCapabilitiesResponse>
 // Process a response from the Z-Wave PC interface
 //-----------------------------------------------------------------------------
@@ -1873,6 +1902,12 @@ void Driver::HandleGetSerialAPICapabilitiesResponse
 	if( IsBridgeController() )
 	{
 		SendMsg( new Msg( "FUNC_ID_ZW_GET_VIRTUAL_NODES", 0xff, REQUEST, FUNC_ID_ZW_GET_VIRTUAL_NODES, false ), Driver::MsgQueue_Command);
+	}
+	else
+	{
+		Msg *msg = new Msg( "FUNC_ID_ZW_GET_RANDOM", 0xff, REQUEST, FUNC_ID_ZW_GET_RANDOM, false );
+		msg->Append( 32 ); 	// 32 bytes
+		SendMsg( msg, Driver::MsgQueue_Command );
 	}
 	SendMsg( new Msg( "FUNC_ID_SERIAL_API_GET_INIT_DATA", 0xff, REQUEST, FUNC_ID_SERIAL_API_GET_INIT_DATA, false ), Driver::MsgQueue_Command);
 }

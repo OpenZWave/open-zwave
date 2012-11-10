@@ -203,6 +203,7 @@ void Group::AddAssociation
 			if( Association* cc = static_cast<Association*>( node->GetCommandClass( Association::StaticGetCommandClassId() ) ) )
 			{
 				cc->Set( m_groupIdx, _nodeId );
+				cc->QueryGroup( m_groupIdx, 0 );
 			}
 		}
 	}
@@ -224,6 +225,7 @@ void Group::RemoveAssociation
 			if( Association* cc = static_cast<Association*>( node->GetCommandClass( Association::StaticGetCommandClassId() ) ) )
 			{
 				cc->Remove( m_groupIdx, _nodeId );
+				cc->QueryGroup( m_groupIdx, 0 );
 			}
 		}
 	}
