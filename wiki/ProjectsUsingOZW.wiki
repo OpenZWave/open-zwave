@@ -1,6 +1,6 @@
 #summary Other projects that depend on open-zwave.
 
-  * [https://github.com/ekarak/ansible ansible] (via ThriftOZW) - A home automation scripting framework for ruby
+  * [https://github.com/ekarak/ansible ansible] (via Thrift4OZW) - A home automation scripting framework for ruby
   * [http://code.google.com/p/openzwave-control-panel/ openzwave-control-panel] - Web-based interface for managing and monitoring Z-Wave networks
   * [http://www.opensourceautomation.com Open Source Automation] - Extensible automation platform (Windows only)
   * [http://projects.maartendamen.com/projects/pyopenzwave/ py-openzwave] ([http://github.com/maartendamen/py-openzwave github])
