@@ -112,7 +112,7 @@ bool Basic::HandleMsg
 
 	if( BasicCmd_Set == (BasicCmd)_data[0] )
 	{
-		// Commmand received from the node.  Handle as a notifcation event
+		// Commmand received from the node.  Handle as a notification event
 		Log::Write( LogLevel_Info, GetNodeId(), "Received Basic set from node %d: level=%d.  Sending event notification.", GetNodeId(), _data[1] );
 
 		Notification* notification = new Notification( Notification::Type_NodeEvent );

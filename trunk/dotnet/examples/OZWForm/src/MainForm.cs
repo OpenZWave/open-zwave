@@ -27,6 +27,8 @@ namespace OZWForm
         private ZWNotification m_notification = null;
         private BindingList<Node> m_nodeList = new BindingList<Node>();
         private Byte m_rightClickNode = 0xff;
+		private string m_driverPort = string.Empty;
+
         public MainForm()
         {
             // Initialize the form
@@ -165,9 +167,9 @@ namespace OZWForm
             m_options.Create(@"..\..\..\..\..\..\..\config\", @"", @"");
 
             // Add any app specific options here...
-			m_options.AddOptionInt("SaveLogLevel", (int)ZWLogLevel.Detail);
-			m_options.AddOptionInt("QueueLogLevel", (int)ZWLogLevel.Debug);
-			m_options.AddOptionInt("DumpTriggerLevel", (int)ZWLogLevel.Warning);
+			m_options.AddOptionInt("SaveLogLevel", (int)ZWLogLevel.Detail);			// ordinarily, just write "Detail" level messages to the log
+			m_options.AddOptionInt("QueueLogLevel", (int)ZWLogLevel.Debug);			// save recent messages with "Debug" level messages to be dumped if an error occurs
+			m_options.AddOptionInt("DumpTriggerLevel", (int)ZWLogLevel.Error);		// only "dump" Debug  to the log emessages when an error-level message is logged
 
             // Lock the options
             m_options.Lock();
@@ -178,7 +180,8 @@ namespace OZWForm
             m_manager.OnNotification += new ManagedNotificationsHandler(NotificationHandler);
 
             // Add a driver
-            m_manager.AddDriver(@"\\.\COM6");
+			m_driverPort = @"\\.\COM4";
+            m_manager.AddDriver(m_driverPort);
 //			m_manager.AddDriver(@"HID Controller", ZWControllerInterface.Hid);
         }
 
@@ -343,12 +346,14 @@ namespace OZWForm
                 case ZWNotification.Type.AllNodesQueried:
                     {
 						toolStripStatusLabel1.Text = "Ready:  All nodes queried.";
+						m_manager.WriteConfig(m_notification.GetHomeId());
                         break;
                     }
                 case ZWNotification.Type.AwakeNodesQueried:
                     {
 						toolStripStatusLabel1.Text = "Ready:  Awake nodes queried (but not some sleeping nodes).";
-                        break;
+						m_manager.WriteConfig(m_notification.GetHomeId());
+						break;
                     }
             }
 
@@ -470,7 +475,7 @@ namespace OZWForm
         private void DoCommand(ZWControllerCommand command)
         {
             ControllerCommandDlg dlg = new ControllerCommandDlg(this, m_manager, m_homeId, command, m_rightClickNode);
-            dlg.ShowDialog(this);
+            DialogResult d = dlg.ShowDialog(this);
             dlg.Dispose();
         }
 
@@ -576,9 +581,19 @@ namespace OZWForm
 			}
 		}
 
-		private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
+		private void softToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			m_manager.SoftReset(m_homeId);
+		}
+
+		private void eraseAllToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			if (DialogResult.Yes == MessageBox.Show("Are you sure you want to fully reset the controller?  This will delete all network information and require re-including all nodes.", "Hard Reset", MessageBoxButtons.YesNo))
+			{
+				m_manager.ResetController(m_homeId);
+				m_manager.RemoveDriver(m_driverPort);
+				m_manager.AddDriver(m_driverPort);
+			}
 		}
     }
 }

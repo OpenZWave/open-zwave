@@ -1196,7 +1196,8 @@ bool Driver::IsExpectedReply
 	// Accept all messages that do not convey source node identification.
 	if( m_expectedReply == FUNC_ID_ZW_GET_NODE_PROTOCOL_INFO ||
 	    m_expectedReply == FUNC_ID_ZW_REQUEST_NODE_INFO ||
-	    m_expectedReply == FUNC_ID_ZW_GET_ROUTING_INFO )
+	    m_expectedReply == FUNC_ID_ZW_GET_ROUTING_INFO ||
+		m_expectedReply == FUNC_ID_ZW_REQUEST_NODE_NEIGHBOR_UPDATE )
 	{
 		return true;
 	}
@@ -1769,8 +1770,10 @@ void Driver::ProcessMsg
 				{
 					if( m_expectedCommandClassId && ( m_expectedReply == FUNC_ID_APPLICATION_COMMAND_HANDLER ) )
 					{
-						if( m_expectedCallbackId == 0 && m_expectedCommandClassId == _data[5] && m_expectedNodeId == _data[3] )
+						if( /*test m_expectedCallbackId == 0 &&*/ m_expectedCommandClassId == _data[5] && m_expectedNodeId == _data[3] )
 						{
+							if( m_expectedCallbackId != 0 )
+								Log::Write( LogLevel_Detail, GetNodeNumber( m_currentMsg ), "WARNING: Unusual message sequence.  CallbackId (expected 0x00) was 0x%.2x, while CommandClassId (0x%.2x) and NodeId (0x%.2x) were as expected", m_expectedCallbackId, m_expectedCommandClassId, m_expectedNodeId );
 							Log::Write( LogLevel_Detail, GetNodeNumber( m_currentMsg ), "  Expected reply and command class was received" );
 							m_waitingForAck = false;
 							m_expectedReply = 0;
@@ -2395,7 +2398,10 @@ void Driver::HandleSendDataRequest
 	if( _data[2] != m_expectedCallbackId )
 	{
 		// Wrong callback ID
-		Log::Write( LogLevel_Warning, nodeId, "WARNING: Unexpected Callback ID received" );
+		if (_data[2] == Msg::GetLastCallbackId())
+			Log::Write( LogLevel_Alert, nodeId, "Duplicate response received");
+		else
+			Log::Write( LogLevel_Warning, nodeId, "WARNING: Unexpected Callback ID received (received 0x%.2x, expected 0x%.2x, lastid was 0x%.2x)",_data[2], m_expectedCallbackId, Msg::GetLastCallbackId() );
 	}
 	else 
 	{

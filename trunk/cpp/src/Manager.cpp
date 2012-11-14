@@ -314,7 +314,7 @@ Driver* Manager::GetDriver
 		return it->second;
 	}
 
-	Log::Write( LogLevel_Info, "mgr,     Manager::GetDriver failed - Home ID 0x%.8x is unknown", _homeId );
+	Log::Write( LogLevel_Error, "mgr,     Manager::GetDriver failed - Home ID 0x%.8x is unknown", _homeId );
 	assert(0);
 	return NULL;
 }
