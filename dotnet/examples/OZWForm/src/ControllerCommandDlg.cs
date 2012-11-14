@@ -17,6 +17,7 @@ namespace OZWForm
         static private ManagedControllerStateChangedHandler m_controllerStateChangedHandler = new ManagedControllerStateChangedHandler(ControllerCommandDlg.MyControllerStateChangedHandler);
 		static private ZWControllerCommand m_op;
         static private Byte m_nodeId;
+		static private DialogResult result;
 
 		private MainForm m_mainDlg;
 		public MainForm MainDlg
@@ -37,6 +38,13 @@ namespace OZWForm
 
 			switch (m_op)
 			{
+				case ZWControllerCommand.RequestNodeNeighborUpdate:
+					{
+						this.Text = "Node Neighbor Update";
+						this.label1.Text = "Request that a node update its list of neighbors.";
+						break;
+					}
+
                 case ZWControllerCommand.AddController:
 				{
 					this.Text = "Add Controller";
@@ -140,6 +148,7 @@ namespace OZWForm
 		            // The command is now complete
                     dlgText = "Command Completed OK.";
                     complete = true;
+					result = DialogResult.OK;
 		            break;
 		        }
 		        case ZWControllerState.Failed:
@@ -148,19 +157,22 @@ namespace OZWForm
 		            // The command is now complete
                     dlgText = "Command Failed.";
                     complete = true;
-		            break;
+					result = DialogResult.Abort;
+					break;
 		        }
                 case ZWControllerState.NodeOK:
                 {
                     dlgText = "Node has not failed.";
                     complete = true;
-                    break;
+					result = DialogResult.No;
+					break;
                 }
                 case ZWControllerState.NodeFailed:
                 {
                     dlgText = "Node has failed.";
                     complete = true;
-                    break;
+					result = DialogResult.Yes;
+					break;
                 }
 		    }
 
@@ -229,6 +241,7 @@ namespace OZWForm
 
 			// Close the dialog
 			Close();
+			m_dlg.DialogResult = result;
 		}
  	}
 }

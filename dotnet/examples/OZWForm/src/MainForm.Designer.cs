@@ -58,6 +58,10 @@
 			this.receiveConfigurationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
 			this.requestNetworkUpdateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
+			this.resetControllersoftToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.softToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.eraseAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
 			this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
 			((System.ComponentModel.ISupportInitialize)(this.NodeGridView)).BeginInit();
@@ -70,9 +74,9 @@
 			// 
 			this.NodeGridView.AllowUserToAddRows = false;
 			this.NodeGridView.AllowUserToDeleteRows = false;
-			this.NodeGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
+			this.NodeGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.NodeGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.NodeGridView.ContextMenuStrip = this.NodeContextMenuStrip;
 			this.NodeGridView.Location = new System.Drawing.Point(13, 37);
@@ -196,13 +200,13 @@
 			this.FileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.SaveToolStripMenuItem});
 			this.FileToolStripMenuItem.Name = "FileToolStripMenuItem";
-			this.FileToolStripMenuItem.Size = new System.Drawing.Size(35, 20);
+			this.FileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
 			this.FileToolStripMenuItem.Text = "&File";
 			// 
 			// SaveToolStripMenuItem
 			// 
 			this.SaveToolStripMenuItem.Name = "SaveToolStripMenuItem";
-			this.SaveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.SaveToolStripMenuItem.Size = new System.Drawing.Size(98, 22);
 			this.SaveToolStripMenuItem.Text = "&Save";
 			this.SaveToolStripMenuItem.Click += new System.EventHandler(this.SaveToolStripMenuItem_Click);
 			// 
@@ -219,81 +223,111 @@
             this.toolStripSeparator2,
             this.receiveConfigurationToolStripMenuItem,
             this.toolStripSeparator3,
-            this.requestNetworkUpdateToolStripMenuItem});
+            this.requestNetworkUpdateToolStripMenuItem,
+            this.toolStripSeparator7,
+            this.resetControllersoftToolStripMenuItem});
 			this.controllerToolStripMenuItem.Name = "controllerToolStripMenuItem";
-			this.controllerToolStripMenuItem.Size = new System.Drawing.Size(66, 20);
+			this.controllerToolStripMenuItem.Size = new System.Drawing.Size(72, 20);
 			this.controllerToolStripMenuItem.Text = "Controller";
 			// 
 			// createNewPrmaryControllerToolStripMenuItem
 			// 
 			this.createNewPrmaryControllerToolStripMenuItem.Name = "createNewPrmaryControllerToolStripMenuItem";
-			this.createNewPrmaryControllerToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
+			this.createNewPrmaryControllerToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
 			this.createNewPrmaryControllerToolStripMenuItem.Text = "Create New Prmary Controller";
 			this.createNewPrmaryControllerToolStripMenuItem.Click += new System.EventHandler(this.createNewPrmaryControllerToolStripMenuItem_Click);
 			// 
 			// transferPrimaryRoleToolStripMenuItem
 			// 
 			this.transferPrimaryRoleToolStripMenuItem.Name = "transferPrimaryRoleToolStripMenuItem";
-			this.transferPrimaryRoleToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
+			this.transferPrimaryRoleToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
 			this.transferPrimaryRoleToolStripMenuItem.Text = "Transfer Primary Role";
 			this.transferPrimaryRoleToolStripMenuItem.Click += new System.EventHandler(this.transferPrimaryRoleToolStripMenuItem_Click);
 			// 
 			// addControllerToolStripMenuItem
 			// 
 			this.addControllerToolStripMenuItem.Name = "addControllerToolStripMenuItem";
-			this.addControllerToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
+			this.addControllerToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
 			this.addControllerToolStripMenuItem.Text = "Add Controller";
 			this.addControllerToolStripMenuItem.Click += new System.EventHandler(this.addControllerToolStripMenuItem_Click);
 			// 
 			// addDeviceToolStripMenuItem
 			// 
 			this.addDeviceToolStripMenuItem.Name = "addDeviceToolStripMenuItem";
-			this.addDeviceToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
+			this.addDeviceToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
 			this.addDeviceToolStripMenuItem.Text = "Add Device";
 			this.addDeviceToolStripMenuItem.Click += new System.EventHandler(this.addDeviceToolStripMenuItem_Click);
 			// 
 			// toolStripSeparator1
 			// 
 			this.toolStripSeparator1.Name = "toolStripSeparator1";
-			this.toolStripSeparator1.Size = new System.Drawing.Size(226, 6);
+			this.toolStripSeparator1.Size = new System.Drawing.Size(229, 6);
 			// 
 			// removeControllerToolStripMenuItem
 			// 
 			this.removeControllerToolStripMenuItem.Name = "removeControllerToolStripMenuItem";
-			this.removeControllerToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
+			this.removeControllerToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
 			this.removeControllerToolStripMenuItem.Text = "Remove Controller";
 			this.removeControllerToolStripMenuItem.Click += new System.EventHandler(this.removeControllerToolStripMenuItem_Click);
 			// 
 			// removeDeviceToolStripMenuItem
 			// 
 			this.removeDeviceToolStripMenuItem.Name = "removeDeviceToolStripMenuItem";
-			this.removeDeviceToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
+			this.removeDeviceToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
 			this.removeDeviceToolStripMenuItem.Text = "Remove Device";
 			this.removeDeviceToolStripMenuItem.Click += new System.EventHandler(this.removeDeviceToolStripMenuItem_Click);
 			// 
 			// toolStripSeparator2
 			// 
 			this.toolStripSeparator2.Name = "toolStripSeparator2";
-			this.toolStripSeparator2.Size = new System.Drawing.Size(226, 6);
+			this.toolStripSeparator2.Size = new System.Drawing.Size(229, 6);
 			// 
 			// receiveConfigurationToolStripMenuItem
 			// 
 			this.receiveConfigurationToolStripMenuItem.Name = "receiveConfigurationToolStripMenuItem";
-			this.receiveConfigurationToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
+			this.receiveConfigurationToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
 			this.receiveConfigurationToolStripMenuItem.Text = "Receive Configuration";
 			this.receiveConfigurationToolStripMenuItem.Click += new System.EventHandler(this.receiveConfigurationToolStripMenuItem_Click);
 			// 
 			// toolStripSeparator3
 			// 
 			this.toolStripSeparator3.Name = "toolStripSeparator3";
-			this.toolStripSeparator3.Size = new System.Drawing.Size(226, 6);
+			this.toolStripSeparator3.Size = new System.Drawing.Size(229, 6);
 			// 
 			// requestNetworkUpdateToolStripMenuItem
 			// 
 			this.requestNetworkUpdateToolStripMenuItem.Name = "requestNetworkUpdateToolStripMenuItem";
-			this.requestNetworkUpdateToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
+			this.requestNetworkUpdateToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
 			this.requestNetworkUpdateToolStripMenuItem.Text = "Request Network Update";
 			this.requestNetworkUpdateToolStripMenuItem.Click += new System.EventHandler(this.requestNetworkUpdateToolStripMenuItem_Click);
+			// 
+			// toolStripSeparator7
+			// 
+			this.toolStripSeparator7.Name = "toolStripSeparator7";
+			this.toolStripSeparator7.Size = new System.Drawing.Size(229, 6);
+			// 
+			// resetControllersoftToolStripMenuItem
+			// 
+			this.resetControllersoftToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.softToolStripMenuItem,
+            this.eraseAllToolStripMenuItem});
+			this.resetControllersoftToolStripMenuItem.Name = "resetControllersoftToolStripMenuItem";
+			this.resetControllersoftToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
+			this.resetControllersoftToolStripMenuItem.Text = "Reset Controller";
+			// 
+			// softToolStripMenuItem
+			// 
+			this.softToolStripMenuItem.Name = "softToolStripMenuItem";
+			this.softToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.softToolStripMenuItem.Text = "Soft";
+			this.softToolStripMenuItem.Click += new System.EventHandler(this.softToolStripMenuItem_Click);
+			// 
+			// eraseAllToolStripMenuItem
+			// 
+			this.eraseAllToolStripMenuItem.Name = "eraseAllToolStripMenuItem";
+			this.eraseAllToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.eraseAllToolStripMenuItem.Text = "Erase All";
+			this.eraseAllToolStripMenuItem.Click += new System.EventHandler(this.eraseAllToolStripMenuItem_Click);
 			// 
 			// statusStrip1
 			// 
@@ -308,7 +342,7 @@
 			// toolStripStatusLabel1
 			// 
 			this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-			this.toolStripStatusLabel1.Size = new System.Drawing.Size(66, 17);
+			this.toolStripStatusLabel1.Size = new System.Drawing.Size(70, 17);
 			this.toolStripStatusLabel1.Text = "Initializing...";
 			// 
 			// MainForm
@@ -366,6 +400,10 @@
         private System.Windows.Forms.ToolStripMenuItem deleteReturnRouteToolStripMenuItem;
 		private System.Windows.Forms.StatusStrip statusStrip1;
 		private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
+		private System.Windows.Forms.ToolStripMenuItem resetControllersoftToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem softToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem eraseAllToolStripMenuItem;
     }
 }
 
