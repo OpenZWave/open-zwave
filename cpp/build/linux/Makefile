@@ -59,7 +59,7 @@ default:	$(LIBDIR)/libopenzwave.a $(LIBDIR)/libopenzwave.so
 clean:
 	rm -f *.d *.d.* *.o vers.c
 
-XMLLINT := $(shell whereis -b xmllint | cut -c10-)
+XMLLINT := $(shell which xmllint)
 
 ifeq ($(XMLLINT),)
 xmltest:	$(XMLLINT)
