@@ -127,7 +127,30 @@
     <xs:element ref='Product:Help' minOccurs='0' maxOccurs='1'/>
     <xs:element ref='Product:Item' minOccurs='0' maxOccurs='unbounded'/>
    </xs:sequence>
-   <xs:attribute name='type' type='xs:string' use='required'/>
+   <xs:attribute name='type' use='required'>
+     <xs:simpleType>
+       <xs:restriction base='xs:string'>
+	 <xs:enumeration value='bool'/>
+	 <xs:enumeration value='byte'/>
+	 <xs:enumeration value='decimal'/>
+	 <xs:enumeration value='int'/>
+	 <xs:enumeration value='list'/>
+	 <xs:enumeration value='schedule'/>
+	 <xs:enumeration value='short'/>
+	 <xs:enumeration value='string'/>
+	 <xs:enumeration value='button'/>
+       </xs:restriction>
+     </xs:simpleType>
+   </xs:attribute>
+   <xs:attribute name='size' use='optional'>
+     <xs:simpleType>
+       <xs:restriction base='xs:string'>
+	 <xs:enumeration value='1'/>
+	 <xs:enumeration value='2'/>
+	 <xs:enumeration value='4'/>
+       </xs:restriction>
+     </xs:simpleType>
+   </xs:attribute>
    <xs:attribute name='index' type='xs:string' use='required'/>
    <xs:attribute name='genre' type='xs:string' use='required'/>
    <xs:attribute name='label' type='xs:string' use='required'/>
@@ -153,7 +176,6 @@
    </xs:attribute>
    <xs:attribute name='affects' type='xs:string' use='optional'/>
    <xs:attribute name='instance' type='xs:string' use='optional'/>
-   <xs:attribute name='size' type='xs:string' use='optional'/>
   </xs:complexType>
  </xs:element>
 
