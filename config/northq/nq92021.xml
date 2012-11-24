@@ -13,7 +13,7 @@
 
   <!-- Configuration Parameters -->
   <CommandClass id="112">
-    <Value type="long" index="1" genre="config" label="Pulse factor" units="pulses" min="1" max="655350"  value="10000">
+    <Value type="int" index="1" genre="config" label="Pulse factor" units="pulses" min="1" max="655350"  value="10000">
       <Help>How many pulses*10 per. kWh.</Help>
     </Value>
     
@@ -37,7 +37,7 @@
       <Help>Do not use. Set this value using WAKE_UP_INTERVAL_SET instead.</Help>
     </Value>
 
-    <Value type="long" index="9" genre="config" label="Pulse count" units="pulses/kWh" min="0" max="2147483647" value="0" >
+    <Value type="int" index="9" genre="config" label="Pulse count" units="pulses/kWh" min="0" max="2147483647" value="0" >
       <Help>Current pulse count in device (pulse count / pulse factor = kWh).</Help>
     </Value>
 
