@@ -109,7 +109,6 @@ Node::Node
 	m_nodeInfoReceived( false ),
 	m_manufacturerSpecificClassReceived( false ),
 	m_nodeInfoSupported( true ),
-	m_multiEndPointFindSupported( true ),
 	m_listening( true ),	// assume we start out listening
 	m_frequentListening( false ),
 	m_beaming( false ),
@@ -781,13 +780,6 @@ void Node::ReadXML
 		m_nodeInfoSupported = !strcmp( str, "true" );
 	}
 
-	m_multiEndPointFindSupported = true;
-	str = _node->Attribute( "multiendpointfindsupported" );
-	if( str )
-	{
-		m_multiEndPointFindSupported = !strcmp( str, "true" );
-	}
-
 	// Read the manufacturer info and create the command classes
 	TiXmlElement const* child = _node->FirstChildElement();
 	while( child )
@@ -869,12 +861,6 @@ void Node::ReadDeviceProtocolXML
 			if( str )
 			{
 				m_nodeInfoSupported = !strcmp( str, "true" );
-			}
-
-			str = ccElement->Attribute( "multiendpointfindsupported" );
-			if( str )
-			{
-				m_multiEndPointFindSupported = !strcmp( str, "true" );
 			}
 
 			// Some controllers support API calls that aren't advertised in their returned data.
@@ -1009,11 +995,6 @@ void Node::WriteXML
 	if( !m_nodeInfoSupported )
 	{
 		nodeElement->SetAttribute( "nodeinfosupported", "false" );
-	}
-
-	if( !m_multiEndPointFindSupported )
-	{
-		nodeElement->SetAttribute( "multiendpointfindsupported", "false" );
 	}
 
 	nodeElement->SetAttribute( "query_stage", c_queryStageNames[m_queryStage] );

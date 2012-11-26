@@ -60,7 +60,8 @@ Msg::Msg
 	m_targetNodeId( _targetNodeId ),
 	m_sendAttempts( 0 ),
 	m_maxSendAttempts( MAX_TRIES ),
-	m_instance( 1 )
+	m_instance( 1 ),
+	m_flags( 0 )
 {
 	if( _bReplyRequired )
 	{
@@ -84,21 +85,37 @@ void Msg::SetInstance
 	uint8 const _instance
 )
 {
-	if( _instance > 1 )
+	// Determine whether we should encapsulate the message in MultiInstance or MultiCommand
+	if( Node* node = _cc->GetNodeUnsafe() )
 	{
-		// Determine whether we should encapsulate the message in MultiInstance or MultiCommand
-		if( Node* node = _cc->GetNodeUnsafe() )
+		MultiInstance* micc = static_cast<MultiInstance*>( node->GetCommandClass( MultiInstance::StaticGetCommandClassId() ) );
+		if( micc && micc->GetVersion() > 1 )
 		{
-			MultiInstance* micc = static_cast<MultiInstance*>( node->GetCommandClass( MultiInstance::StaticGetCommandClassId() ) );
-			if( micc )
+			MultiInstance::MultiInstanceMapping map = micc->GetEndPointMap();
+
+			// Set the flag bit to indicate MultiChannel rather than MultiInstance
+			m_flags |= m_MultiChannel;
+			if( map == MultiInstance::MultiInstanceMapAll )
 			{
-				m_expectedCommandClassId = MultiInstance::StaticGetCommandClassId();
-				m_instance = _instance;
-				if( micc->GetVersion() > 1 )
+				if( _instance > 1 )
 				{
-					// Set the top bit to indicate MultiChannel rather than MultiInstance					
-					m_instance |= 0x80;
+					// Allows us to use endpoint 1
+					m_instance = _instance - 1;
+					m_flags |= m_MultiChannelMapAll;
+					m_expectedCommandClassId = MultiInstance::StaticGetCommandClassId();
 				}
+			}
+			else if( map == MultiInstance::MultiInstanceMapEndPoints )
+			{
+				// Only use MultiInstance
+				m_instance = _instance;
+				m_flags |= m_MultiChannelMapEP;
+				m_expectedCommandClassId = MultiInstance::StaticGetCommandClassId();
+			}
+			else
+			{
+				// instance 1 (no instance) is same as endpoint 1. Start with endpoint 2
+				m_instance = _instance;
 			}
 		}	
 	}
@@ -129,7 +146,7 @@ void Msg::Finalize()
 	}
 
 	// Deal with encapsulation
-	if( m_instance != 1 )
+	if( m_instance != 1 || ( m_flags & ( m_MultiChannelMapAll | m_MultiChannelMapEP ) ) != 0 )
 	{
 		Encap();
 	}
@@ -212,7 +229,7 @@ void Msg::Encap
 	}
 
 	// Insert the encap header
-	if( m_instance & 0x80 )
+	if( ( m_flags & m_MultiChannel ) != 0 )
 	{
 		// MultiChannel
 		for( uint32 i=m_length-1; i>=6; --i )
@@ -223,11 +240,16 @@ void Msg::Encap
 		m_buffer[5] += 4;
 		m_buffer[6] = MultiInstance::StaticGetCommandClassId();
 		m_buffer[7] = MultiInstance::MultiChannelCmd_Encap;
-		m_buffer[8] = 0;
-		m_buffer[9] = m_instance & 0x7f;
+		m_buffer[8] = 1;
+		m_buffer[9] = m_instance;
 		m_length += 4;
 
-		snprintf( str, 256, "MultiChannel Encapsulated (instance=%d): %s", m_instance&0x7f, m_logText.c_str() );
+		uint8 instance = m_instance;
+		if( ( m_flags & m_MultiChannelMapAll ) != 0 )
+		{
+			instance++;						// library instance
+		}
+		snprintf( str, sizeof(str), "MultiChannel Encapsulated (instance=%d): %s", instance, m_logText.c_str() );
 		m_logText = str;
 	}
 	else
@@ -244,7 +266,7 @@ void Msg::Encap
 		m_buffer[8] = m_instance;
 		m_length += 3;
 
-		snprintf( str, 256, "MultiInstance Encapsulated (instance=%d): %s", m_instance&0x7f, m_logText.c_str() );
+		snprintf( str, sizeof(str), "MultiInstance Encapsulated (instance=%d): %s", m_instance, m_logText.c_str() );
 		m_logText = str;
 	}
 }

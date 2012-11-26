@@ -41,8 +41,8 @@ enum VersionCmd
 {
 	VersionCmd_Get					= 0x11,
 	VersionCmd_Report				= 0x12,
-	VersionCmd_CommandClassGet		= 0x13,
-	VersionCmd_CommandClassReport	= 0x14
+	VersionCmd_CommandClassGet			= 0x13,
+	VersionCmd_CommandClassReport			= 0x14
 };
 
 enum
@@ -61,7 +61,8 @@ Version::Version
 	uint32 const _homeId,
 	uint8 const _nodeId
 ):
-	CommandClass( _homeId, _nodeId ), m_classGetSupported( true )
+	CommandClass( _homeId, _nodeId ),
+	m_classGetSupported( true )
 {
 	SetStaticRequest( StaticRequest_Values );
 }
