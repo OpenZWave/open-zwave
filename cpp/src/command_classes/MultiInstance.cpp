@@ -25,6 +25,7 @@
 //
 //-----------------------------------------------------------------------------
 
+#include "tinyxml.h"
 #include "CommandClasses.h"
 #include "MultiInstance.h"
 #include "Defs.h"
@@ -84,8 +85,83 @@ MultiInstance::MultiInstance
 	uint8 const _nodeId
 ):
 	CommandClass( _homeId, _nodeId ),
-	m_numEndpoints( 0 )
+	m_numEndPoints( 0 ),
+	m_numEndPointsHint( 0 ),
+	m_endPointMap( MultiInstanceMapAll ),
+	m_endPointFindSupported( false )
 {
+}
+
+//-----------------------------------------------------------------------------
+// <MultiInstance::ReadXML>
+// Class specific configuration
+//-----------------------------------------------------------------------------
+void MultiInstance::ReadXML
+( 
+	TiXmlElement const* _ccElement
+)
+{
+	int32 intVal;
+	char const* str;
+
+	CommandClass::ReadXML( _ccElement );
+
+	if( TIXML_SUCCESS == _ccElement->QueryIntAttribute( "endpoints", &intVal ) )
+	{
+		m_numEndPointsHint = (uint8)intVal;
+	}
+
+	str = _ccElement->Attribute("mapping");
+	if( str )
+	{
+		if( strcmp( str, "all") == 0 )
+		{
+			m_endPointMap = MultiInstanceMapAll;
+		}
+		else if( strcmp( str, "endpoints") == 0 )
+		{
+			m_endPointMap = MultiInstanceMapEndPoints;
+		}
+		else
+		{
+			Log::Write( LogLevel_Info, GetNodeId(), "Bad value for mapping: %s", str);
+		}
+	}
+
+	str = _ccElement->Attribute("findsupport");
+	if( str )
+	{
+		m_endPointFindSupported = !strcmp( str, "true");
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <MultiInstance::WriteXML>
+// Class specific configuration
+//-----------------------------------------------------------------------------
+void MultiInstance::WriteXML
+( 
+	TiXmlElement* _ccElement
+)
+{
+	char str[32];
+
+	CommandClass::WriteXML( _ccElement );
+	if( m_numEndPointsHint != 0 )
+	{
+		snprintf( str, sizeof(str), "%d", m_numEndPointsHint );
+		_ccElement->SetAttribute( "endpoints", str);
+	}
+
+	if( m_endPointMap == MultiInstanceMapEndPoints )
+	{
+		_ccElement->SetAttribute( "mapping", "endpoints" );
+	}
+
+	if( m_endPointFindSupported )
+	{
+		_ccElement->SetAttribute( "findsupport", "true" );
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -267,53 +343,46 @@ void MultiInstance::HandleMultiChannelEndPointReport
 	uint32 const _length
 )
 {
-	if( m_numEndpoints != 0 )
+	int len;
+
+	if( m_numEndPoints != 0 )
 	{
 		return;
 	}
 
 	m_numEndPointsCanChange = (( _data[1] & 0x80 ) != 0 );	// Number of endpoints can change.
 	m_endPointsAreSameClass = (( _data[1] & 0x40 ) != 0 );	// All endpoints are the same command class.
-	m_numEndpoints = _data[2] & 0x7f;
-
-	if( m_endPointsAreSameClass )
+	m_numEndPoints = _data[2] & 0x7f;
+	if( m_numEndPointsHint != 0 )
 	{
-		Log::Write( LogLevel_Info, GetNodeId(), "Received MultiChannelEndPointReport from node %d. All %d endpoints are the same.", GetNodeId(), m_numEndpoints );
+		m_numEndPoints = m_numEndPointsHint;		// don't use device's number
+	}
+
+	len = m_numEndPoints;
+	if( m_endPointsAreSameClass ) // only need to check single end point
+	{
+		len = 1;
+		Log::Write( LogLevel_Info, GetNodeId(), "Received MultiChannelEndPointReport from node %d. All %d endpoints are the same.", GetNodeId(), m_numEndPoints );
+	}
+	else
+	{
+		Log::Write( LogLevel_Info, GetNodeId(), "Received MultiChannelEndPointReport from node %d. %d endpoints are not all the same.", GetNodeId(), m_numEndPoints );
+	}
+
+	// This code assumes the endpoints are all in numeric sequential order.
+	// Since the end point finds do not appear to work this is the best estimate.
+	for( uint8 i = 1; i <= len; i++ )
+	{
 	
-		// Send a single capability request to endpoint 1 (since all classes are the same)
+		// Send a single capability request to each endpoint
 		char str[128];
-		snprintf( str, sizeof( str ), "MultiChannelCmd_CapabilityGet for endpoint 1" );
+		snprintf( str, sizeof( str ), "MultiChannelCmd_CapabilityGet for endpoint %d", i );
 		Msg* msg = new Msg( str, GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 		msg->Append( GetNodeId() );
 		msg->Append( 3 );
 		msg->Append( GetCommandClassId() );
 		msg->Append( MultiChannelCmd_CapabilityGet );
-		msg->Append( 1 );
-		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-		GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
-	}
-	else
-	{
-		Log::Write( LogLevel_Info, GetNodeId(), "Received MultiChannelEndPointReport from node %d. Endpoints are not all the same.", GetNodeId() );
-		Log::Write( LogLevel_Info, GetNodeId(), "    Starting search for endpoints by generic class..." );
-
-		// This is where things get really ugly.  We need to get the capabilities of each
-		// endpoint, but we only know how many there are, not which indices they
-		// are at.  We will first try to use MultiChannelCmd_EndPointFind to get
-		// lists of indices.  We have to specify a generic device class in the find,
-		// so we try generic classes in an order likely to find the endpoints the quickest.
-		m_endPointFindIndex = 0;
-		m_numEndPointsFound = 0;
-
-		char str[128];
-		snprintf( str, 128, "MultiChannelCmd_EndPointFind for generic device class 0x%.2x (%s)", c_genericClass[m_endPointFindIndex], c_genericClassName[m_endPointFindIndex] );
-		Msg* msg = new Msg( str, GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-		msg->Append( GetNodeId() );
-		msg->Append( 4 );
-		msg->Append( GetCommandClassId() );
-		msg->Append( MultiChannelCmd_EndPointFind );
-		msg->Append( c_genericClass[m_endPointFindIndex] );		// Generic device class
-		msg->Append( 0xff );									// Any specific device class
+		msg->Append( i );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 		GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 	}
@@ -369,52 +438,40 @@ void MultiInstance::HandleMultiChannelCapabilityReport
 			}
  		}
 
-		if( ( endPoint == 1 ) && m_endPointsAreSameClass )
+		// Create instances (endpoints) for each command class in the list
+		uint8 i;
+		int len;
+		if( m_endPointsAreSameClass )
 		{
-			Log::Write( LogLevel_Info, GetNodeId(), "All endpoints in this device are the same as endpoint 1.  Searching for the other endpoints..." );
-	
-			// All end points have the same command classes.
-			// We just need to find them...
-			if (node->MultiEndPointFindSupported()) {
-				char str[128];
-				snprintf( str, sizeof( str ), "MultiChannelCmd_EndPointFind for generic device class 0x%.2x", _data[2] );
-				Msg* msg = new Msg( str, GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-				msg->Append( GetNodeId() );
-				msg->Append( 4 );
-				msg->Append( GetCommandClassId() );
-				msg->Append( MultiChannelCmd_EndPointFind );
-				msg->Append( _data[2] );	// Generic device class
-				msg->Append( 0xff );		// Any specific device class
-				msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-				GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
-			} else {
-				// no way to find them, assume they are in ascending order
-				for( uint8 endPoint=1; endPoint<=m_numEndpoints; ++endPoint )
-				{
-					// Use the stored command class list to set up the endpoint.
-					for( set<uint8>::iterator it=m_endPointCommandClasses.begin(); it!=m_endPointCommandClasses.end(); ++it )
-					{
-						uint8 commandClassId = *it;
-						CommandClass* cc = node->GetCommandClass( commandClassId );
-						if( cc )
-						{
-							Log::Write( LogLevel_Info, GetNodeId(), "    Endpoint %d: Adding %s", endPoint, cc->GetCommandClassName().c_str() );
-							cc->SetInstance( endPoint );
-						}
-					}
-				}
+			i = 1;
+			if( m_endPointMap == MultiInstanceMapAll )
+			{
+				len = m_numEndPoints + 1;
 			}
+			else
+			{
+				len = m_numEndPoints;
+			}
+		}
+		else if( m_endPointMap == MultiInstanceMapAll )
+		{
+			i = endPoint + 1;
+			len = endPoint + 1;
 		}
 		else
 		{
-			// Create instances (endpoints) for each command class in the list
+			i = endPoint;
+			len = endPoint;
+		}
+		for( ; i <= len; i++ )
+		{
 			for( set<uint8>::iterator it=m_endPointCommandClasses.begin(); it!=m_endPointCommandClasses.end(); ++it )
 			{
 				uint8 commandClassId = *it;
 				CommandClass* cc = node->GetCommandClass( commandClassId );
 				if( cc )
 				{	
-					cc->SetInstance( endPoint );
+					cc->SetInstance( i );
 				}
 			}
 		}
@@ -513,56 +570,15 @@ void MultiInstance::HandleMultiChannelEncap
 	{
 		uint8 endPoint = _data[1] & 0x7f;
 		uint8 commandClassId = _data[3];
+		uint8 instance = endPoint;
+		if( m_endPointMap == MultiInstanceMapAll )
+		{
+			instance++;
+		}
 		if( CommandClass* pCommandClass = node->GetCommandClass( commandClassId ) )
 		{
 			Log::Write( LogLevel_Info, GetNodeId(), "Received a MultiChannelEncap from node %d, endpoint %d for Command Class %s", GetNodeId(), endPoint, pCommandClass->GetCommandClassName().c_str() );
-			pCommandClass->HandleMsg( &_data[4], _length-4, endPoint );
+			pCommandClass->HandleMsg( &_data[4], _length-4, instance );
 		}
 	}
-}
-
-//-----------------------------------------------------------------------------
-// <MultiInstance::SendEncap>
-// Send a message encasulated in a MultiInstance/MultiChannel command
-//-----------------------------------------------------------------------------
-void MultiInstance::SendEncap
-(
-	uint8 const* _data,
-	uint32 const _length,
-	uint32 const _instance,
-	uint32 const _requestFlags
-)
-{
-	char str[128];
-	Msg* msg;
-	if( GetVersion() == 1 )
-	{
-		// MultiInstance
-		snprintf( str, sizeof( str ), "MultiInstanceCmd_Encap (Instance=%d)", _instance );
-		msg = new Msg( str, GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-		msg->Append( GetNodeId() );
-		msg->Append( 3+_length );
-		msg->Append( GetCommandClassId() );
-		msg->Append( MultiInstanceCmd_Encap );
-	}
-	else
-	{
-		// MultiChannel
-		snprintf( str, sizeof( str ), "MultiChannelCmd_Encap (Instance=%d)", _instance );
-		msg = new Msg( str, GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-		msg->Append( GetNodeId() );
-		msg->Append( 4+_length );
-		msg->Append( GetCommandClassId() );
-		msg->Append( MultiChannelCmd_Encap );
-		msg->Append( 0 );
-	}
-
-	msg->Append( _instance );
-	for( uint8 i=0; i<_length; ++i )
-	{
-		msg->Append( _data[i] );
-	}
-
-	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 }

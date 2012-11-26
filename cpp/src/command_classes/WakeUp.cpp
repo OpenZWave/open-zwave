@@ -44,7 +44,9 @@ enum WakeUpCmd
 	WakeUpCmd_IntervalGet		= 0x05,
 	WakeUpCmd_IntervalReport	= 0x06,
 	WakeUpCmd_Notification		= 0x07,
-	WakeUpCmd_NoMoreInformation	= 0x08
+	WakeUpCmd_NoMoreInformation	= 0x08,
+	WakeUpCmd_IntervalCapabilitiesGet = 0x09,
+	WakeUpCmd_IntervalCapabilitiesReport = 0x0A
 };
 
 
@@ -151,6 +153,18 @@ bool WakeUp::RequestValue
 	msg->Append( WakeUpCmd_IntervalGet );
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 	GetDriver()->SendMsg( msg, _queue );
+
+	if( GetVersion() > 1 )
+	{
+		Msg* msg = new Msg( "WakeUpCmd_IntervalCapabilityGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		msg->Append( GetNodeId() );
+		msg->Append( 2 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( WakeUpCmd_IntervalCapabilitiesGet );
+		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		GetDriver()->SendMsg( msg, _queue );
+	}
+
 	return true;
 }
 
@@ -205,6 +219,34 @@ bool WakeUp::HandleMsg
 		m_notification = true;
 		SetAwake( true );				
 		return true;
+	}
+	else if( WakeUpCmd_IntervalCapabilitiesReport == (WakeUpCmd)_data[0] )
+	{	
+		uint32 mininterval = (((uint32)_data[1]) << 16) | (((uint32)_data[2]) << 8) | ((uint32)_data[3]);
+		uint32 maxinterval = (((uint32)_data[4]) << 16) | (((uint32)_data[5]) << 8) | ((uint32)_data[6]);
+		uint32 definterval = (((uint32)_data[7]) << 16) | (((uint32)_data[8]) << 8) | ((uint32)_data[9]);
+		uint32 stepinterval = (((uint32)_data[10]) << 16) | (((uint32)_data[11]) << 8) | ((uint32)_data[12]);
+		Log::Write( LogLevel_Info, GetNodeId(), "Received Wakeup Interval Capability report from node %d: Min Interval=%d, Max Interval=%d, Default Interval=%d, Interval Step=%d", GetNodeId(), mininterval, maxinterval, definterval, stepinterval );
+		if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, 1 ) ) )
+		{
+			value->Release();
+			value->OnValueRefreshed( (int32)mininterval );
+		}
+		if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, 2 ) ) )
+		{
+			value->Release();
+			value->OnValueRefreshed( (int32)maxinterval );
+		}
+		if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, 3 ) ) )
+		{
+			value->Release();
+			value->OnValueRefreshed( (int32)definterval );
+		}
+		if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, 4 ) ) )
+		{
+			value->Release();
+			value->OnValueRefreshed( (int32)stepinterval );
+		}
 	}
 
 	return false;
@@ -385,6 +427,13 @@ void WakeUp::CreateVars
 		if( !node->IsController() )	// We don't add the interval value for controllers, because they don't appear to ever wake up on their own.
 		{
 		  	node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 0, "Wake-up Interval", "Seconds", false, false, 3600, 0 );
+			if( GetVersion() > 1 )
+			{
+			  	node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 1, "Minimum Wake-up Interval", "Seconds", true, false, 0, 0 );
+				node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 2, "Maximum Wake-up Interval", "Seconds", true, false, 0, 0 );
+				node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 3, "Default Wake-up Interval", "Seconds", true, false, 0, 0 );
+				node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 4, "Wake-up Interval Step", "Seconds", true, false, 0, 0 );
+			}
 		}
 	}
 }
