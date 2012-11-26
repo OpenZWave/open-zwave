@@ -51,5 +51,6 @@
       <Group index="2" max_associations="3" label="Basic" auto="true" />
     </Associations>
   </CommandClass>
+  <CommandClass id="96" mapping="endpoints" />
 </Product>
 

@@ -46,12 +46,19 @@ namespace OpenZWave
 
 			// Version 2
 			MultiChannelCmd_EndPointGet			= 0x07,
-			MultiChannelCmd_EndPointReport		= 0x08,
-			MultiChannelCmd_CapabilityGet		= 0x09,
-			MultiChannelCmd_CapabilityReport	= 0x0a,
-			MultiChannelCmd_EndPointFind		= 0x0b,
-			MultiChannelCmd_EndPointFindReport	= 0x0c,
+			MultiChannelCmd_EndPointReport			= 0x08,
+			MultiChannelCmd_CapabilityGet			= 0x09,
+			MultiChannelCmd_CapabilityReport		= 0x0a,
+			MultiChannelCmd_EndPointFind			= 0x0b,
+			MultiChannelCmd_EndPointFindReport		= 0x0c,
 			MultiChannelCmd_Encap				= 0x0d
+		};
+
+		enum MultiInstanceMapping
+		{
+			MultiInstanceMapAll,
+			MultiInstanceMapEndPoints,
+			MultiInstanceMapOther
 		};
 
 		static CommandClass* Create( uint32 const _homeId, uint8 const _nodeId ){ return new MultiInstance( _homeId, _nodeId ); }
@@ -63,12 +70,14 @@ namespace OpenZWave
 		bool RequestInstances();
 
 		// From CommandClass
+		virtual void ReadXML( TiXmlElement const* _ccElement );
+		virtual void WriteXML( TiXmlElement* _ccElement );
 		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }
 		virtual string const GetCommandClassName()const{ return StaticGetCommandClassName(); }
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );
 		virtual uint8 GetMaxVersion(){ return 2; }
 
-		void SendEncap( uint8 const* _data, uint32 const _length, uint32 const _instance, uint32 const _requestFlags );
+		MultiInstanceMapping GetEndPointMap(){ return m_endPointMap; }
 
 	private:
 		MultiInstance( uint32 const _homeId, uint8 const _nodeId );
@@ -82,12 +91,17 @@ namespace OpenZWave
 
 		bool		m_numEndPointsCanChange;
 		bool		m_endPointsAreSameClass;
-		uint8		m_numEndpoints;
+		uint8		m_numEndPoints;
 		
 		// Finding endpoints
 		uint8		m_endPointFindIndex;
 		uint8		m_numEndPointsFound;
 		set<uint8>	m_endPointCommandClasses;
+
+		// configuration
+		uint8		m_numEndPointsHint;		// for nodes that do not report correct number of end points
+		MultiInstanceMapping m_endPointMap;		// Determine how to map end points to value id instances
+		bool		m_endPointFindSupported;	// for nodes that (someday may) support endpointfind
 	};
 
 } // namespace OpenZWave
