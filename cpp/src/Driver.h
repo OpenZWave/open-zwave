@@ -589,6 +589,33 @@ namespace OpenZWave
 
 		uint8					m_SUCNode;
 
+		// Perform node routing updates when associations change
+		enum UpdateNodeRoutesState
+		{
+			UpdateNodeRoutesBegin,
+			UpdateNodeRoutesDeleted,
+			UpdateNodeRoutesAssigning,
+			UpdateNodeRoutesAssigning1,
+			UpdateNodeRoutesAssigning2,
+			UpdateNodeRoutesAssigning3,
+			UpdateNodeRoutesAssigning4,
+			UpdateNodeRoutesEnd
+		};
+
+		struct UpdateNodeRoutesData
+		{
+			uint8 m_nodeId;
+			UpdateNodeRoutesState m_state;
+			uint8 m_numNodes;
+			uint8 m_nodes[5];
+			uint8 m_nodeIndex;
+			Driver *m_driver;
+		};
+
+		static void UpdateNodeRoutesCallback( ControllerState _state, void* _context );
+		void UpdateNodeRoutes( uint8 const_nodeId );
+		void UpdateNodeRoutes( UpdateNodeRoutesData* _data );
+
 	//-----------------------------------------------------------------------------
 	// Virtual Node commands
 	//-----------------------------------------------------------------------------
