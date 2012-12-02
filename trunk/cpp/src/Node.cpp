@@ -122,6 +122,7 @@ Node::Node
 	m_generic( 0 ),
 	m_specific( 0 ),
 	m_type( "" ),
+	m_numRouteNodes( 0 ),
 	m_manufacturerName( "" ),
 	m_productName( "" ),
 	m_nodeName( "" ),
@@ -137,6 +138,7 @@ Node::Node
 	m_averageRTT( 0 )
 {
 	memset( m_neighbors, 0, sizeof(m_neighbors) );
+	memset( m_routeNodes, 0, sizeof(m_routeNodes) );
 }
 
 //-----------------------------------------------------------------------------

@@ -1193,7 +1193,7 @@ bool Manager::IsNodeInfoReceived
 
 		if( (node = driver->GetNodeUnsafe( _nodeId ) ) != NULL)
 		{
-			result = (node->NodeInfoReceived());
+			result = node->NodeInfoReceived();
 		}
 
 		driver->ReleaseNodes();            
