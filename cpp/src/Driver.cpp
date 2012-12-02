@@ -2279,12 +2279,11 @@ void Driver::HandleIsFailedNodeResponse
 	{
 		Log::Write( LogLevel_Warning, GetNodeNumber( m_currentMsg ), "Received reply to FUNC_ID_ZW_IS_FAILED_NODE_ID - node %d has not failed", m_controllerCommandNode );
 	}
+	m_controllerCommand = ControllerCommand_None;
 	if( m_controllerCallback )
 	{
 		m_controllerCallback( _data[2] ? ControllerState_NodeFailed : ControllerState_NodeOK, m_controllerCallbackContext );
 	}
-
-	m_controllerCommand = ControllerCommand_None;
 }
 
 //-----------------------------------------------------------------------------
@@ -2373,13 +2372,6 @@ void Driver::HandleGetRoutingInfoResponse
 			Log::Write( LogLevel_Info, GetNodeNumber( m_currentMsg ), " (none reported)" );
 		}
 	}
-
-
-	if( m_controllerCallback )
-	{
-		m_controllerCallback( ControllerState_Completed, m_controllerCallbackContext );
-	}
-	m_controllerCommand = ControllerCommand_None;
 }
 
 //-----------------------------------------------------------------------------
@@ -2485,11 +2477,11 @@ void Driver::HandleNetworkUpdateRequest
 		}
 	}
 
+	m_controllerCommand = ControllerCommand_None;
 	if( m_controllerCallback )
 	{
 		m_controllerCallback( state, m_controllerCallbackContext );
 	}
-	m_controllerCommand = ControllerCommand_None;
 }
 
 //-----------------------------------------------------------------------------
@@ -2616,21 +2608,21 @@ void Driver::HandleRemoveNodeFromNetworkRequest
 				QueueNotification( notification ); 
 			}
 
+			m_controllerCommand = ControllerCommand_None;
 			if( m_controllerCallback )
 			{
 				m_controllerCallback( ControllerState_Completed, m_controllerCallbackContext );
 			}
-			m_controllerCommand = ControllerCommand_None;
 			break;
 		}
 		case REMOVE_NODE_STATUS_FAILED:
 		{
 			Log::Write( LogLevel_Warning, nodeId, "WARNING: REMOVE_NODE_STATUS_FAILED" );
+			m_controllerCommand = ControllerCommand_None;
 			if( m_controllerCallback )
 			{
 				m_controllerCallback( ControllerState_Failed, m_controllerCallbackContext );
 			}
-			m_controllerCommand = ControllerCommand_None;
 			break;
 		}
 		default:
@@ -2692,11 +2684,11 @@ void Driver::HandleSetLearnModeRequest
 		case LEARN_MODE_DONE:
 		{
 			Log::Write( LogLevel_Info, nodeId, "LEARN_MODE_DONE" );
+			m_controllerCommand = ControllerCommand_None;
 			if( m_controllerCallback )
 			{
 				m_controllerCallback( ControllerState_Completed, m_controllerCallbackContext );
 			}
-			m_controllerCommand = ControllerCommand_None;
 
 			// Stop learn mode
 			Msg* msg = new Msg( "End Learn Mode", 0xff, REQUEST, FUNC_ID_ZW_SET_LEARN_MODE, false, false );
@@ -2711,11 +2703,11 @@ void Driver::HandleSetLearnModeRequest
 		case LEARN_MODE_FAILED:
 		{
 			Log::Write( LogLevel_Warning, nodeId, "WARNING: LEARN_MODE_FAILED" );
+			m_controllerCommand = ControllerCommand_None;
 			if( m_controllerCallback )
 			{
 				m_controllerCallback( ControllerState_Failed, m_controllerCallbackContext );
 			}
-			m_controllerCommand = ControllerCommand_None;
 
 			// Controller change failed
 			Msg* msg = new Msg(  "Controller change failed", 0xff, REQUEST, FUNC_ID_ZW_CONTROLLER_CHANGE, true, false );
@@ -2759,7 +2751,6 @@ void Driver::HandleRemoveFailedNodeRequest
 		{
 			Log::Write( LogLevel_Info, nodeId, "Received reply to FUNC_ID_ZW_REMOVE_FAILED_NODE_ID - node %d successfully moved to failed nodes list", m_controllerCommandNode );
 			state = ControllerState_Completed;
-			m_controllerCommand = ControllerCommand_None;
 
 			Notification* notification = new Notification( Notification::Type_NodeRemoved );
 			notification->SetHomeAndNodeIds( m_homeId, m_controllerCommandNode );
@@ -2771,16 +2762,15 @@ void Driver::HandleRemoveFailedNodeRequest
 		{
 			Log::Write( LogLevel_Warning, nodeId, "WARNING: Received reply to FUNC_ID_ZW_REMOVE_FAILED_NODE_ID - unable to move node %d to failed nodes list", m_controllerCommandNode );
 			state = ControllerState_Failed;
-			m_controllerCommand = ControllerCommand_None;
 			break;
 		}
 	}
 
+	m_controllerCommand = ControllerCommand_None;
 	if( m_controllerCallback )
 	{
 		m_controllerCallback( state, m_controllerCallbackContext );
 	}
-	m_controllerCommand = ControllerCommand_None;
 }
 
 //-----------------------------------------------------------------------------
@@ -2899,27 +2889,26 @@ void Driver::HandleAssignReturnRouteRequest
 	uint8* _data
 )
 {
+	ControllerState cs;
 	uint8 nodeId = GetNodeNumber( m_currentMsg );
 	if( _data[3] )
 	{
 		// Failed
 		Log::Write( LogLevel_Warning, nodeId, "WARNING: Received reply to FUNC_ID_ZW_ASSIGN_RETURN_ROUTE for node %d - FAILED: %s", m_controllerCommandNode, c_transmitStatusNames[_data[3]] );
-		if( m_controllerCallback )
-		{
-			m_controllerCallback( ControllerState_Failed, m_controllerCallbackContext );
-		}
+		cs = ControllerState_Failed;
 	}
 	else
 	{
 		// Success
 		Log::Write( LogLevel_Info, nodeId, "Received reply to FUNC_ID_ZW_ASSIGN_RETURN_ROUTE for node %d - SUCCESS", m_controllerCommandNode );
-		if( m_controllerCallback )
-		{
-			m_controllerCallback( ControllerState_Completed, m_controllerCallbackContext );
-		}
+		cs = ControllerState_Completed;
 	}
 
 	m_controllerCommand = ControllerCommand_None;
+	if( m_controllerCallback )
+	{
+		m_controllerCallback( cs, m_controllerCallbackContext );
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -2931,27 +2920,26 @@ void Driver::HandleDeleteReturnRouteRequest
 	uint8* _data
 )
 {
+	ControllerState cs;
 	uint8 nodeId = GetNodeNumber( m_currentMsg );
 	if( _data[3] )
 	{
 		// Failed
 		Log::Write( LogLevel_Warning, nodeId, "WARNING: Received reply to FUNC_ID_ZW_DELETE_RETURN_ROUTE for node %d - FAILED: %s", m_controllerCommandNode, c_transmitStatusNames[_data[3]] );
-		if( m_controllerCallback )
-		{
-			m_controllerCallback( ControllerState_Failed, m_controllerCallbackContext );
-		}
+		cs = ControllerState_Failed;
 	}
 	else
 	{
 		// Success
 		Log::Write( LogLevel_Info, nodeId, "Received reply to FUNC_ID_ZW_DELETE_RETURN_ROUTE for node %d - SUCCESS", m_controllerCommandNode );
-		if( m_controllerCallback )
-		{
-			m_controllerCallback( ControllerState_Completed, m_controllerCallbackContext );
-		}
+		cs = ControllerState_Completed;
 	}
 
 	m_controllerCommand = ControllerCommand_None;
+	if( m_controllerCallback )
+	{
+		m_controllerCallback( cs, m_controllerCallbackContext );
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -3173,11 +3161,11 @@ void Driver::CommonAddNodeStatusRequestHandler
 
 			if( m_controllerCommandNode != 0xff )
 				InitNode( m_controllerCommandNode );
+			m_controllerCommand = ControllerCommand_None;
 			if( m_controllerCallback )
 			{
 				m_controllerCallback( ControllerState_Completed, m_controllerCallbackContext );
 			}
-			m_controllerCommand = ControllerCommand_None;
 
 			// If the added device was a controller, we should check whether to make it a SUC or SIS
 			// TBD...
@@ -3186,11 +3174,11 @@ void Driver::CommonAddNodeStatusRequestHandler
 		case ADD_NODE_STATUS_FAILED:
 		{
 			Log::Write( LogLevel_Info, nodeId, "ADD_NODE_STATUS_FAILED" );
+			m_controllerCommand = ControllerCommand_None;
 			if( m_controllerCallback )
 			{
 				m_controllerCallback( ControllerState_Failed, m_controllerCallbackContext );
 			}
-			m_controllerCommand = ControllerCommand_None;
 
 			// Remove the AddNode command from the queue
 			RemoveCurrentMsg();
@@ -3892,7 +3880,7 @@ uint32 Driver::GetNodeNeighbors
 	uint32 numNeighbors = 0;
 	if( Node* node = GetNode( _nodeId ) )
 	{
-		numNeighbors = node->GetNeighbors(o_neighbors );
+		numNeighbors = node->GetNeighbors( o_neighbors );
 		ReleaseNodes();
 	}
 
@@ -4359,10 +4347,10 @@ bool Driver::BeginControllerCommand
 		case ControllerCommand_AssignReturnRoute:
 		{
 			m_controllerCommandNode = _nodeId;
-			Log::Write( LogLevel_Info, nodeId, "Assigning return route from node %d", _nodeId );
+			Log::Write( LogLevel_Info, nodeId, "Assigning return route from node %d to node %d", _nodeId, _arg );
 			Msg* msg = new Msg( "Assigning return route", _nodeId, REQUEST, FUNC_ID_ZW_ASSIGN_RETURN_ROUTE, true );
 			msg->Append( _nodeId );		// from the node
-			msg->Append( m_nodeId );	// to the controller
+			msg->Append( _arg );		// to the specific destination
 			SendMsg( msg, MsgQueue_Command );
 			break;
 		}
@@ -5352,11 +5340,11 @@ void Driver::HandleSendSlaveNodeInfoRequest
 		notification->SetButtonId( m_controllerCommandArg );
 		QueueNotification( notification );
 
+		m_controllerCommand = ControllerCommand_None;
 		if( m_controllerCallback )
 		{
 			m_controllerCallback( state, m_controllerCallbackContext );
 		}
-		m_controllerCommand = ControllerCommand_None;
 		RequestVirtualNeighbors( MsgQueue_Send );
 	}
 	else			// error. try again
@@ -5426,6 +5414,121 @@ uint8 Driver::NodeFromMessage
 		}
 	}
 	return nodeId;
+}
+//-----------------------------------------------------------------------------
+// <Driver::UpdateNodeRoutesCallback>
+// Handle node routing update controller response
+//-----------------------------------------------------------------------------
+void Driver::UpdateNodeRoutesCallback
+(
+	ControllerState _state,
+	void* _context
+)
+{
+	UpdateNodeRoutesData *data = (UpdateNodeRoutesData *)_context;
+
+	if( _state == ControllerState_Completed )
+	{
+		data->m_state = (UpdateNodeRoutesState)((uint8)data->m_state + 1);
+		data->m_driver->UpdateNodeRoutes( data );
+	}
+	else if( _state == ControllerState_Failed )
+	{
+		Log::Write( LogLevel_Error, data->m_nodeId, "Node routing update failed" );
+		data->m_state = UpdateNodeRoutesEnd;
+		data->m_driver->UpdateNodeRoutes( data );
+	}
+}
+//-----------------------------------------------------------------------------
+// <Driver::UpdateNodeRoutes>
+// Update a node's routing information
+//-----------------------------------------------------------------------------
+void Driver::UpdateNodeRoutes
+(
+	uint8 const _nodeId
+)
+{
+	// Only for routing slaves
+	Node* node = GetNodeUnsafe( _nodeId );
+	if( node != NULL && node->GetBasic() == 0x04 )
+	{
+		uint8 numGroups = GetNumGroups( _nodeId );
+		uint8* associations;
+		uint8 i;
+		UpdateNodeRoutesData *data = new UpdateNodeRoutesData();
+
+		// Determine up to 5 destinations
+		data->m_numNodes = 0;
+		memset( data->m_nodes, 0, sizeof(data->m_nodes) );
+		for( i = 1; i <= numGroups && data->m_numNodes < sizeof(data->m_nodes) ; i++ )
+		{
+			uint32 len = GetAssociations( _nodeId, i, &associations );
+			for( uint8 j = 0; j < len; j++ )
+			{
+				uint8 k;
+				for( k = 0; k < data->m_numNodes; k++ )
+				{
+					if( data->m_nodes[k] == associations[j] )
+					{
+						break;
+					}
+				}
+				if( k >= data->m_numNodes && data->m_numNodes < sizeof(data->m_nodes) )	// not in list so add it
+				{
+					data->m_nodes[data->m_numNodes++] = associations[j];
+				}
+			}
+			delete [] associations;
+		}
+		if( data->m_numNodes != node->m_numRouteNodes && memcmp( data->m_nodes, node->m_routeNodes, sizeof(node->m_routeNodes) ) != 0 )
+		{
+			data->m_nodeId = _nodeId;
+			data->m_state = UpdateNodeRoutesBegin;
+			data->m_driver = this;
+			BeginControllerCommand( ControllerCommand_DeleteAllReturnRoutes, UpdateNodeRoutesCallback, (void *)data, true, _nodeId, 0 );
+		}
+		else
+		{
+			delete data;
+		}
+	}
+}
+//-----------------------------------------------------------------------------
+// <Driver::UpdateNodeRoutes>
+// Update a node's routing information
+//-----------------------------------------------------------------------------
+void Driver::UpdateNodeRoutes
+(
+	UpdateNodeRoutesData* _data
+)
+{
+	if( _data->m_state == UpdateNodeRoutesDeleted )
+	{
+		_data->m_nodeIndex = 0;
+		_data->m_state = UpdateNodeRoutesAssigning;
+		BeginControllerCommand( ControllerCommand_AssignReturnRoute, UpdateNodeRoutesCallback, (void *)_data, true, _data->m_nodeId, _data->m_nodes[_data->m_nodeIndex] );
+	} else if (_data->m_state < UpdateNodeRoutesEnd )
+	{
+		_data->m_nodeIndex++;
+		if( _data->m_nodeIndex < _data->m_numNodes )
+		{
+			BeginControllerCommand( ControllerCommand_AssignReturnRoute, UpdateNodeRoutesCallback, (void *)_data, true, _data->m_nodeId, _data->m_nodes[_data->m_nodeIndex] );
+		}
+		else
+		{
+			// Save away info for later
+			Node* node = GetNodeUnsafe( _data->m_nodeId );
+			if( node != NULL )
+			{
+				node->m_numRouteNodes = _data->m_numNodes;
+				memcpy( node->m_routeNodes, _data->m_nodes, sizeof(_data->m_nodes) );
+			}
+			delete _data;
+		}
+	} else if (_data->m_state == UpdateNodeRoutesEnd )
+	{
+		delete _data;
+	}
 }
 //-----------------------------------------------------------------------------
 // <Driver::GetDriverStatistics>

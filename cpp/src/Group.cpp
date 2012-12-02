@@ -303,6 +303,8 @@ void Group::OnGroupChanged
 		notification->SetHomeAndNodeIds( m_homeId, m_nodeId );
 		notification->SetGroupIdx( m_groupIdx );
 		Manager::Get()->GetDriver( m_homeId )->QueueNotification( notification ); 
+		// Update routes on remote node if necessary
+		Manager::Get()->GetDriver( m_homeId )->UpdateNodeRoutes( m_nodeId );
 	}
 }
 
