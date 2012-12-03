@@ -108,6 +108,7 @@ namespace OpenZWave
 #define TRANSMIT_OPTION_LOW_POWER		   				0x02
 #define TRANSMIT_OPTION_AUTO_ROUTE  					0x04
 #define TRANSMIT_OPTION_NO_ROUTE 						0x10
+#define TRANSMIT_OPTION_EXPLORE							0x20
 
 #define TRANSMIT_COMPLETE_OK	  						0x00
 #define TRANSMIT_COMPLETE_NO_ACK	  					0x01
