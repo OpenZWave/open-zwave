@@ -58,6 +58,10 @@
 	</Manufacturer>
 	<Manufacturer id="0018" name="Balboa Inst.">
 	</Manufacturer>
+	<Manufacturer id="008a" name="BeNext">
+		<Product type="0004" id="0100" name="Door Sensor" config="BeNext/DoorSensor.xml"/>
+		<Product type="0007" id="0101" name="Tag Reader" config="BeNext/TagReader.xml"/>
+	</Manufacturer>
 	<Manufacturer id="002c" name="BeSafer">
 	</Manufacturer>
 	<Manufacturer id="0023" name="Boca Devices">
