@@ -45,7 +45,6 @@ static uint8 const	c_scaleShift		= 0x03;
 static uint8 const	c_precisionMask		= 0xe0;
 static uint8 const	c_precisionShift	= 0x05;
 
-
 //-----------------------------------------------------------------------------
 // <CommandClass::CommandClass>
 // Constructor
@@ -63,6 +62,21 @@ CommandClass::CommandClass
 	m_overridePrecision( -1 ),
 	m_staticRequests( 0 )
 {
+}
+
+//-----------------------------------------------------------------------------
+// <CommandClass::~CommandClass>
+// Destructor
+//-----------------------------------------------------------------------------
+CommandClass::~CommandClass
+(
+)
+{
+	while( !m_endPointMap.empty() )
+	{
+		map<uint8,uint8>::iterator it = m_endPointMap.begin();
+		m_endPointMap.erase( it );
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -200,11 +214,18 @@ void CommandClass::ReadXML
 		{
 			if( !strcmp( str, "Instance" ) )
 			{
+				uint8 instance;
 				// Add an instance to the command class
 				if( TIXML_SUCCESS == child->QueryIntAttribute( "index", &intVal ) )
 				{
-					uint8 instance = (uint8)intVal;
+					instance = (uint8)intVal;
 					SetInstance( instance );
+				}
+				// See if its associated endpoint is present
+				if( TIXML_SUCCESS == child->QueryIntAttribute( "endpoint", &intVal ) )
+				{
+					uint8 endpoint = (uint8)intVal;
+					SetEndPoint( instance, endpoint );
 				}
 			}
 			else if( !strcmp( str, "Value" ) )
@@ -229,22 +250,22 @@ void CommandClass::WriteXML
 {
 	char str[32];
 
-	snprintf( str, 32, "%d", GetCommandClassId() );
+	snprintf( str, sizeof(str), "%d", GetCommandClassId() );
 	_ccElement->SetAttribute( "id", str );
 	_ccElement->SetAttribute( "name", GetCommandClassName().c_str() );
 
-	snprintf( str, 32, "%d", GetVersion() );
+	snprintf( str, sizeof(str), "%d", GetVersion() );
 	_ccElement->SetAttribute( "version", str );
 
 	if( m_staticRequests )
 	{
-		snprintf( str, 32, "%d", m_staticRequests );
+		snprintf( str, sizeof(str), "%d", m_staticRequests );
 		_ccElement->SetAttribute( "request_flags", str );
 	}
 
 	if( m_overridePrecision >= 0 )
 	{
-		snprintf( str, 32, "%d", m_overridePrecision );
+		snprintf( str, sizeof(str), "%d", m_overridePrecision );
 		_ccElement->SetAttribute( "override_precision", str );
 	}
 
@@ -264,8 +285,15 @@ void CommandClass::WriteXML
 		TiXmlElement* instanceElement = new TiXmlElement( "Instance" );
 		_ccElement->LinkEndChild( instanceElement );
 
-		snprintf( str, 32, "%d", *it );
+		snprintf( str, sizeof(str), "%d", *it );
 		instanceElement->SetAttribute( "index", str );
+
+		map<uint8,uint8>::iterator eit = m_endPointMap.find( *it );
+		if( eit != m_endPointMap.end() )
+		{
+			snprintf( str, sizeof(str), "%d", eit->second );
+			instanceElement->SetAttribute( "endpoint", str );
+		}
 	}
 
 	// Write out the values for this command class
