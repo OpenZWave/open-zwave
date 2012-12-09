@@ -44,9 +44,8 @@ namespace OpenZWave
 	public:
 		enum MessageFlags
 		{
-			m_MultiChannel			= 0x01,		// Indicate MultiChannel instead of MultiInstance
-			m_MultiChannelMapAll		= 0x02,		// Map library instances into endpoints for non-overlap
-			m_MultiChannelMapEP		= 0x04		// Map for end points only
+			m_MultiChannel			= 0x01,		// Indicate MultiChannel encapsulation
+			m_MultiInstance			= 0x02		// Indicate MultiInstance encapsulation
 		};
 
 		Msg( string const& _logtext, uint8 _targetNodeId, uint8 const _msgType, uint8 const _function, bool const _bCallbackRequired, bool const _bReplyRequired = true, uint8 const _expectedReply = 0, uint8 const _expectedCommandClassId = 0 );
@@ -90,7 +89,7 @@ namespace OpenZWave
 		static uint8 GetLastCallbackId(){ return (s_nextCallbackId > 1? s_nextCallbackId -1 : 255);}
 
 	private:
-		void Encap();						// Encapsulate the data inside a MultiInstance/Multicommand message
+		void MultiEncap();					// Encapsulate the data inside a MultiInstance/Multicommand message
 
 		string			m_logText;
 		bool			m_bFinal;
@@ -106,10 +105,11 @@ namespace OpenZWave
 		uint8			m_sendAttempts;
 		uint8			m_maxSendAttempts;
 
-		uint8			m_instance;			// Instance to use if the message must be wrapped in a multiInstance or multiChannel command class
+		uint8			m_instance;
+		uint8			m_endPoint;			// Endpoint to use if the message must be wrapped in a multiInstance or multiChannel command class
 		uint8			m_flags;
 
-		static uint8	s_nextCallbackId;	// counter to get a unique callback id
+		static uint8		s_nextCallbackId;		// counter to get a unique callback id
 	};
 
 } // namespace OpenZWave
