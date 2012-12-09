@@ -411,7 +411,7 @@ void MultiInstance::HandleMultiChannelCapabilityReport
 		bool afterMark = false;
 		m_endPointCommandClasses.clear();
 		uint8 numCommandClasses = _length - 5;
-		for( uint8 i=0; i<numCommandClasses; ++i )
+		for( uint8 i = 0; i < numCommandClasses; ++i )
 		{
 			uint8 commandClassId = _data[i+4];
 			if( commandClassId == 0xef )
@@ -438,40 +438,74 @@ void MultiInstance::HandleMultiChannelCapabilityReport
 			}
  		}
 
-		// Create instances (endpoints) for each command class in the list
-		uint8 i;
-		int len;
-		if( m_endPointsAreSameClass )
+		// Create internal library instances for each command class in the list
+		// Also set up mapping from intances to endpoints for encapsulation
+		if( m_endPointsAreSameClass )				// Create all the same instances here
 		{
-			i = 1;
-			if( m_endPointMap == MultiInstanceMapAll )
+			int len;
+
+			if( m_endPointMap == MultiInstanceMapAll )	// Include the non-endpoint instance
 			{
+				endPoint = 0;
 				len = m_numEndPoints + 1;
 			}
 			else
 			{
+				endPoint = 1;
 				len = m_numEndPoints;
 			}
+
+			// Create all the command classes for all the endpoints
+			for( uint8 i = 1; i <= len; i++ )
+			{
+				for( set<uint8>::iterator it = m_endPointCommandClasses.begin(); it != m_endPointCommandClasses.end(); ++it )
+				{
+					uint8 commandClassId = *it;
+					CommandClass* cc = node->GetCommandClass( commandClassId );
+					if( cc )
+					{	
+						cc->SetInstance( i );
+						if( m_endPointMap != MultiInstanceMapAll || i != 1 )
+						{
+							cc->SetEndPoint( i, endPoint );
+						}
+					}
+				}
+				endPoint++;
+			}
 		}
-		else if( m_endPointMap == MultiInstanceMapAll )
+		else							// Endpoints are different
 		{
-			i = endPoint + 1;
-			len = endPoint + 1;
-		}
-		else
-		{
-			i = endPoint;
-			len = endPoint;
-		}
-		for( ; i <= len; i++ )
-		{
-			for( set<uint8>::iterator it=m_endPointCommandClasses.begin(); it!=m_endPointCommandClasses.end(); ++it )
+			for( set<uint8>::iterator it = m_endPointCommandClasses.begin(); it != m_endPointCommandClasses.end(); ++it )
 			{
 				uint8 commandClassId = *it;
 				CommandClass* cc = node->GetCommandClass( commandClassId );
 				if( cc )
-				{	
+				{
+					uint8 i;
+					// Find the next free instance of this class
+					for( i = 1; i <= 127; i++ )
+					{
+						if( m_endPointMap == MultiInstanceMapAll ) // Include the non-endpoint instance
+						{
+							if( !cc->GetInstances()->IsSet( i ) )
+							{
+								break;
+							}
+						}
+						// Reuse non-endpoint instances first time we see it
+						else if( i == 1 && cc->GetInstances()->IsSet( i ) && cc->GetEndPoint( i ) == 0 )
+						{
+							break;
+						}
+						// Find the next free instance
+						else if( !cc->GetInstances()->IsSet( i ) )
+						{
+							break;
+						}
+					}
 					cc->SetInstance( i );
+					cc->SetEndPoint( i, endPoint );
 				}
 			}
 		}

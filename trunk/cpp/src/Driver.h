@@ -342,12 +342,12 @@ namespace OpenZWave
 			MsgQueueCmd			m_command;
 			Msg*				m_msg;
 			uint8				m_nodeId;
-			Node::QueryStage	m_queryStage;
+			Node::QueryStage		m_queryStage;
 		};
 
-		list<MsgQueueItem>		m_msgQueue[MsgQueue_Count];
+		list<MsgQueueItem>			m_msgQueue[MsgQueue_Count];
 		Event*					m_queueEvent[MsgQueue_Count];				// Events for each queue, which are signalled when the queue is not empty
-		Mutex*					m_sendMutex;								// Serialize access to the queues
+		Mutex*					m_sendMutex;						// Serialize access to the queues
 		Msg*					m_currentMsg;
 		TimeStamp				m_resendTimeStamp;
 
@@ -671,7 +671,7 @@ namespace OpenZWave
 		void QueueNotification( Notification* _notification );				// Adds a notification to the list.  Notifications are queued until a point in the thread where we know we do not have any nodes locked.
 		void NotifyWatchers();												// Passes the notifications to all the registered watcher callbacks in turn.
 
-		list<Notification*>	m_notifications;
+		list<Notification*>		m_notifications;
 		Event*				m_notificationsEvent;
 
 	//-----------------------------------------------------------------------------

@@ -309,9 +309,9 @@ void Driver::DriverThreadProc
 		{
 			// Driver has been initialised
 			Wait* waitObjects[8];
-			waitObjects[0] = _exitEvent;						// Thread must exit.
-			waitObjects[1] = m_notificationsEvent;				// Notifications waiting to be sent.
-			waitObjects[2] = m_controller;						// Controller has received data.
+			waitObjects[0] = _exitEvent;				// Thread must exit.
+			waitObjects[1] = m_notificationsEvent;			// Notifications waiting to be sent.
+			waitObjects[2] = m_controller;				// Controller has received data.
 			waitObjects[3] = m_queueEvent[MsgQueue_Command];	// A controller command is in progress.
 			waitObjects[4] = m_queueEvent[MsgQueue_WakeUp];		// A node has woken. Pending messages should be sent.
 			waitObjects[5] = m_queueEvent[MsgQueue_Send];		// Ordinary requests to be sent.
@@ -2371,6 +2371,12 @@ void Driver::HandleGetRoutingInfoResponse
 		{
 			Log::Write( LogLevel_Info, GetNodeNumber( m_currentMsg ), " (none reported)" );
 		}
+
+		m_controllerCommand = ControllerCommand_None;
+		if( m_controllerCallback )
+		{
+			m_controllerCallback( ControllerState_Completed, m_controllerCallbackContext );
+		}
 	}
 }
 
@@ -2975,11 +2981,11 @@ void Driver::HandleNodeNeighborUpdateRequest
 		case REQUEST_NEIGHBOR_UPDATE_FAILED:
 		{
 			Log::Write( LogLevel_Warning, nodeId, "WARNING: REQUEST_NEIGHBOR_UPDATE_FAILED" );
+			m_controllerCommand = ControllerCommand_None;
 			if( m_controllerCallback )
 			{
 				m_controllerCallback( ControllerState_Failed, m_controllerCallbackContext );
 			}
-			m_controllerCommand = ControllerCommand_None;
 			break;
 		}
 		default:

@@ -71,6 +71,7 @@ using namespace OpenZWave;
 #include "ThermostatMode.h"
 #include "ThermostatOperatingState.h"
 #include "ThermostatSetpoint.h"
+#include "UserCode.h"
 #include "Version.h"
 #include "WakeUp.h"
 
@@ -203,6 +204,7 @@ void CommandClasses::RegisterCommandClasses
 	cc.Register( ThermostatMode::StaticGetCommandClassId(), ThermostatMode::StaticGetCommandClassName(), ThermostatMode::Create );
 	cc.Register( ThermostatOperatingState::StaticGetCommandClassId(), ThermostatOperatingState::StaticGetCommandClassName(), ThermostatOperatingState::Create );
 	cc.Register( ThermostatSetpoint::StaticGetCommandClassId(), ThermostatSetpoint::StaticGetCommandClassName(), ThermostatSetpoint::Create );
+	cc.Register( UserCode::StaticGetCommandClassId(), UserCode::StaticGetCommandClassName(), UserCode::Create );
 	cc.Register( Version::StaticGetCommandClassId(), Version::StaticGetCommandClassName(), Version::Create );
 	cc.Register( WakeUp::StaticGetCommandClassId(), WakeUp::StaticGetCommandClassName(), WakeUp::Create );
 

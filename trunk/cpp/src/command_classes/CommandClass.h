@@ -30,6 +30,7 @@
 
 #include <string>
 #include <vector>
+#include <map>
 #include "tinyxml.h"
 #include "Defs.h"
 #include "Bitfield.h"
@@ -55,7 +56,7 @@ namespace OpenZWave
 		};
 
 		CommandClass( uint32 const _homeId, uint8 const _nodeId );
-		virtual ~CommandClass(){}
+		virtual ~CommandClass();
 
 		virtual void ReadXML( TiXmlElement const* _ccElement );
 		virtual void WriteXML( TiXmlElement* _ccElement );
@@ -81,10 +82,15 @@ namespace OpenZWave
 		Driver* GetDriver()const;
 		Node* GetNodeUnsafe()const;
 		Value* GetValue( uint8 const _instance, uint8 const _index );
+		uint8 GetEndPoint( uint8 const _instance ){
+			map<uint8,uint8>::iterator it = m_endPointMap.find( _instance );
+			return( it == m_endPointMap.end() ? 0 : it->second );
+		}
 
 		void SetInstances( uint8 const _instances );
 		void SetInstance( uint8 const _endPoint );
 		void SetAfterMark(){ m_afterMark = true; }
+		void SetEndPoint( uint8 const _instance, uint8 const _endpoint){ m_endPointMap[_instance] = _endpoint; }
 		bool IsAfterMark()const{ return m_afterMark; }
 		bool IsCreateVars()const{ return m_createVars; }
 
@@ -114,6 +120,7 @@ namespace OpenZWave
 		uint8		m_nodeId;
 		uint8		m_version;
 		Bitfield	m_instances;
+		map<uint8,uint8> m_endPointMap;
 		bool		m_afterMark;		// Set to true if the command class is listed after COMMAND_CLASS_MARK, and should not create any values.
 		bool		m_createVars;		// Do we want to create variables
 		int8		m_overridePrecision;// Override precision when writing values if >=0
