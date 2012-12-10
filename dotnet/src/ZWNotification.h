@@ -70,13 +70,19 @@ namespace OpenZWaveDotNet
 			NodeEvent						= Notification::Type_NodeEvent,
 			PollingDisabled					= Notification::Type_PollingDisabled,	
 			PollingEnabled					= Notification::Type_PollingEnabled,	
+			SceneEvent						= Notification::Type_SceneEvent,
+			CreateButton					= Notification::Type_CreateButton,
+			DeleteButton					= Notification::Type_DeleteButton,
+			ButtonOn						= Notification::Type_ButtonOn,
+			ButtonOff						= Notification::Type_ButtonOff,
 			DriverReady						= Notification::Type_DriverReady,		
+			DriverFailed					= Notification::Type_DriverFailed,
 			DriverReset						= Notification::Type_DriverReset,
 			EssentialNodeQueriesComplete	= Notification::Type_EssentialNodeQueriesComplete,
 			NodeQueriesComplete				= Notification::Type_NodeQueriesComplete,
 			AwakeNodesQueried				= Notification::Type_AwakeNodesQueried,
 			AllNodesQueried					= Notification::Type_AllNodesQueried,
-			ErrorCode						= Notification::Type_Error
+			Notification					= Notification::Type_Notification
 		};
 
 		ZWNotification( Notification* notification )
