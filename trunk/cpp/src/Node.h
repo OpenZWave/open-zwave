@@ -30,11 +30,13 @@
 
 #include <string>
 #include <vector>
+#include <list>
 #include <map>
 #include "Defs.h"
 #include "ValueID.h"
 #include "ValueList.h"
 #include "Msg.h"
+#include "TimeStamp.h"
 
 class TiXmlElement;
 
@@ -491,12 +493,45 @@ namespace OpenZWave
 	//-----------------------------------------------------------------------------
 	//	Statistics
 	//-----------------------------------------------------------------------------
+	public:
+		struct CommandClassData
+		{
+			uint8 m_commandClassId;
+			uint32 m_sentCnt;
+			uint32 m_receivedCnt;
+		};
+
+		struct NodeData
+		{
+			uint32 m_sentCnt;
+			uint32 m_sentFailed;
+			uint32 m_retries;
+			uint32 m_receivedCnt;
+			uint32 m_receivedDups;
+			uint32 m_rtt;					// last round trip if successful in ms
+			string m_sentTS;
+			string m_receivedTS;
+			uint32 m_lastRTT;
+			uint32 m_averageRTT;				// ms
+			uint8 m_quality;				// Node quality measure
+			uint8 m_lastReceivedMessage[254];
+			list<CommandClassData> m_ccData;
+		};
+
 	private:
-		uint32 m_writeCnt;				// Number of messages sent to this node.
-		uint32 m_readCnt;				// Number of messages received from this node.
-		uint32 m_dropped;				// Number of messages dropped and not delivered.
-		uint32 m_retries;				// Number of retransmitted messages;
+		void GetNodeStatistics( NodeData* _data );
+
+		uint32 m_sentCnt;				// Number of messages sent from this node.
+		uint32 m_sentFailed;				// Number of sent messages failed
+		uint32 m_retries;				// Number of message retries
+		uint32 m_receivedCnt;				// Number of messages received from this node.
+		uint32 m_receivedDups;				// Number of duplicated messages received;
+		uint32 m_lastRTT;					// Last message rtt
+		TimeStamp m_sentTS;				// Last message sent time
+		TimeStamp m_receivedTS;				// Last message received time
 		uint32 m_averageRTT;				// Average round trip time.
+		uint8 m_quality;				// Node quality measure
+		uint8 m_lastReceivedMessage[254];		// Place to hold last received message
 	};
 
 } //namespace OpenZWave

@@ -1,10 +1,10 @@
 //-----------------------------------------------------------------------------
 //
-//	TimeStamp.h
+//	FileOps.cpp
 //
-//	Cross-platform TimeStamp
+//	Cross-platform File Operations
 //
-//	Copyright (c) 2010 Mal Lansell <mal@lansell.org>
+//	Copyright (c) 2012 Greg Satz <satz@iranger.com>
 //	All rights reserved.
 //
 //	SOFTWARE NOTICE AND LICENSE
@@ -26,78 +26,75 @@
 //
 //-----------------------------------------------------------------------------
 #include <string>
-#include "Defs.h"
-#include "TimeStamp.h"
-
-#include "TimeStampImpl.h"	// Platform-specific implementation of a TimeStamp
-
+#include "FileOps.h"
+#include "FileOpsImpl.h"	// Platform-specific implementation of a File Operations
 
 using namespace OpenZWave;
 
+FileOps* FileOps::s_instance = NULL;
+FileOpsImpl* FileOps::m_pImpl = NULL;
+
 //-----------------------------------------------------------------------------
-//	<TimeStamp::TimeStamp>
-//	Constructor
+//	<FileOps::Create>
+//	Static creation of the singleton
 //-----------------------------------------------------------------------------
-TimeStamp::TimeStamp
+FileOps* FileOps::Create
 (
-):
-	m_pImpl( new TimeStampImpl() )
+)
 {
+	if( s_instance == NULL )
+	{
+		s_instance = new FileOps();
+	}
+	return s_instance;
 }
 
 //-----------------------------------------------------------------------------
-//	<TimeStamp::~TimeStamp>
+//	<FileOps::Destroy>
+//	Static method to destroy the fileops singleton.
+//-----------------------------------------------------------------------------
+void FileOps::Destroy
+(
+)
+{
+	delete s_instance;
+	s_instance = NULL;
+}
+
+//-----------------------------------------------------------------------------
+//	<FileOps::FolderExists>
+//	Static method to check for existance of a folder
+//-----------------------------------------------------------------------------
+bool FileOps::FolderExists
+(
+	string _folderName
+)
+{
+	if( s_instance != NULL )
+	{
+		return s_instance->m_pImpl->FolderExists( _folderName );
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+//	<FileOps::FileOps>
+//	Constructor
+//-----------------------------------------------------------------------------
+FileOps::FileOps
+(
+)
+{
+	m_pImpl = new FileOpsImpl();
+}
+
+//-----------------------------------------------------------------------------
+//	<FileOps::~FileOps>
 //	Destructor
 //-----------------------------------------------------------------------------
-TimeStamp::~TimeStamp
+FileOps::~FileOps
 (
 )
 {
 	delete m_pImpl;
-}
-
-//-----------------------------------------------------------------------------
-//	<TimeStamp::SetTime>
-//	Sets the timestamp to now, plus an offset in milliseconds
-//-----------------------------------------------------------------------------
-void TimeStamp::SetTime
-(
-	int32 _milliseconds	// = 0
-)
-{
-	m_pImpl->SetTime( _milliseconds );
-}
-
-//-----------------------------------------------------------------------------
-//	<TimeStamp::TimeRemaining>
-//	Gets the difference between now and the timestamp time in milliseconds
-//-----------------------------------------------------------------------------
-int32 TimeStamp::TimeRemaining
-(
-)
-{
-	return m_pImpl->TimeRemaining();
-}
-
-//-----------------------------------------------------------------------------
-//	<TimeStamp::GetAsString>
-//	Return object as a string
-//-----------------------------------------------------------------------------
-string TimeStamp::GetAsString
-(
-)
-{
-	return m_pImpl->GetAsString();
-}
-//-----------------------------------------------------------------------------
-//	<TimeStamp::operator->
-//	Overload the subtract operator to get the difference between two 
-//	timestamps in milliseconds
-//-----------------------------------------------------------------------------
-int32 TimeStamp::operator- 
-(
-	TimeStamp const& _other
-)
-{
-	return (int32)(m_pImpl - _other.m_pImpl);
 }

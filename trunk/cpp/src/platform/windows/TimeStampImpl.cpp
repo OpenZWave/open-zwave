@@ -82,6 +82,24 @@ int32 TimeStampImpl::TimeRemaining
 }
 
 //-----------------------------------------------------------------------------
+//	<TimeStampImpl::GetAsString>
+//	Return a string representation
+//-----------------------------------------------------------------------------
+string TimeStampImpl::GetAsString
+(
+)
+{
+	// Convert m_stamp (FILETIME) to SYSTEMTIME for ease of use
+	SYSTEMTIME time;
+	::FileTimeToSystemTime( (FILETIME*)m_stamp, &time );
+
+	char buf[100];
+	sprintf_s( buf, sizeof(buf), "%04d-%02d-%02d %02d:%02d:%02d:%03d ", time.wYear, time.wMonth, time.wDay, time.wHour, time.wMinute, time.wSecond, time.wMilliseconds );
+	string str = buf;
+	return str;
+}
+
+//-----------------------------------------------------------------------------
 //	<TimeStampImpl::operator->
 //	Overload the subtract operator to get the difference between two 
 //	timestamps in milliseconds

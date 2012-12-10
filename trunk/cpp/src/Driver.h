@@ -64,6 +64,7 @@ namespace OpenZWave
 		friend class Basic;
 		friend class ManufacturerSpecific;
 		friend class NodeNaming;
+		friend class NoOperation;
 		friend class SceneActivation;
 		friend class WakeUp;
 
@@ -184,6 +185,7 @@ namespace OpenZWave
 		uint16 GetProductType()const{ return m_productType; }
 		uint16 GetProductId()const{ return m_productId; }
 		string GetControllerPath()const{ return m_controllerPath; }
+		ControllerInterface GetControllerInterfaceType()const{ return m_controllerInterfaceType; }
 		string GetLibraryVersion()const{ return m_libraryVersion; }
 		string GetLibraryTypeName()const{ return m_libraryTypeName; }
 		int32 GetSendQueueCount()const
@@ -225,7 +227,7 @@ namespace OpenZWave
 		 */
 		void ReleaseNodes();
 
-		ControllerInterface     m_controllerInterfaceType;                  // Specifies the controller's hardware interface
+		ControllerInterface			m_controllerInterfaceType;						// Specifies the controller's hardware interface
 		string					m_controllerPath;							// name or path used to open the controller hardware.
 		Controller*				m_controller;								// Handles communications with the controller hardware.
 		uint32					m_homeId;									// Home ID of the Z-Wave controller.  Not valid until the DriverReady notification has been received.
@@ -299,7 +301,7 @@ namespace OpenZWave
 		//		permitted to be interupted by other requests.
 		//
 		// 2)	The wakeup queue.  This holds messages that have been held for a 
-		//		sleeping device that has now woken up.  These gwt a high priority
+		//		sleeping device that has now woken up.  These get a high priority
 		//		because such devices do not stay awake for very long.
 		//
 		// 3)	The send queue.  This is for normal messages, usually triggered by
@@ -415,6 +417,7 @@ namespace OpenZWave
 		bool HandleSendSlaveNodeInfoResponse( uint8* _data );
 		void HandleSendSlaveNodeInfoRequest( uint8* _data );
 		void HandleApplicationSlaveCommandRequest( uint8* _data );
+		void HandleSerialAPIResetRequest( uint8* _data );
 
 		void CommonAddNodeStatusRequestHandler( uint8 _funcId, uint8* _data );
 
@@ -572,7 +575,7 @@ namespace OpenZWave
 
 	private:
 		// The public interface is provided via the wrappers in the Manager class
-		void ResetController();
+		void ResetController( Event* _evt );
 		void SoftReset();
 		void RequestNodeNeighbors( uint8 const _nodeId, uint32 const _requestFlags );
 
@@ -588,6 +591,8 @@ namespace OpenZWave
 		uint8					m_controllerCommandArg;
 
 		uint8					m_SUCNode;
+
+		Event*					m_controllerResetEvent;
 
 		// Perform node routing updates when associations change
 		enum UpdateNodeRoutesState
@@ -615,6 +620,12 @@ namespace OpenZWave
 		static void UpdateNodeRoutesCallback( ControllerState _state, void* _context );
 		void UpdateNodeRoutes( uint8 const_nodeId );
 		void UpdateNodeRoutes( UpdateNodeRoutesData* _data );
+
+	//-----------------------------------------------------------------------------
+	// Network functions
+	//-----------------------------------------------------------------------------
+	private:
+		void TestNetwork( uint8 const _nodeId, uint32 const _count );
 
 	//-----------------------------------------------------------------------------
 	// Virtual Node commands
@@ -680,31 +691,38 @@ namespace OpenZWave
 	public:
 		struct DriverData
 		{
-			uint32 s_SOFCnt;			// Number of SOF bytes received
-			uint32 s_ACKWaiting;		// Number of unsolicited messages while waiting for an ACK
-			uint32 s_readAborts;		// Number of times read were aborted due to timeouts
-			uint32 s_badChecksum;		// Number of bad checksums
-			uint32 s_readCnt;			// Number of messages successfully read
-			uint32 s_writeCnt;			// Number of messages successfully sent
-			uint32 s_CANCnt;			// Number of CAN bytes received
-			uint32 s_NAKCnt;			// Number of NAK bytes received
-			uint32 s_ACKCnt;			// Number of ACK bytes received
-			uint32 s_OOFCnt;			// Number of bytes out of framing
-			uint32 s_dropped;			// Number of messages dropped & not delivered
-			uint32 s_retries;			// Number of messages retransmitted
-			uint32 s_controllerReadCnt;	// Number of controller messages read
-			uint32 s_controllerWriteCnt;// Number of controller messages sent
+			uint32 m_SOFCnt;			// Number of SOF bytes received
+			uint32 m_ACKWaiting;			// Number of unsolicited messages while waiting for an ACK
+			uint32 m_readAborts;			// Number of times read were aborted due to timeouts
+			uint32 m_badChecksum;			// Number of bad checksums
+			uint32 m_readCnt;			// Number of messages successfully read
+			uint32 m_writeCnt;			// Number of messages successfully sent
+			uint32 m_CANCnt;			// Number of CAN bytes received
+			uint32 m_NAKCnt;			// Number of NAK bytes received
+			uint32 m_ACKCnt;			// Number of ACK bytes received
+			uint32 m_OOFCnt;			// Number of bytes out of framing
+			uint32 m_dropped;			// Number of messages dropped & not delivered
+			uint32 m_retries;			// Number of messages retransmitted
+			uint32 m_callbacks;			// Number of unexpected callbacks
+			uint32 m_badroutes;			// Number of failed messages due to bad route response
+			uint32 m_noack;				// Number of no ACK returned errors
+			uint32 m_netbusy;			// Number of network busy/failure messages
+			uint32 m_nondelivery;			// Number of messages not delivered to network
+			uint32 m_routedbusy;			// Number of messages received with routed busy status
+			uint32 m_broadcastReadCnt;		// Number of broadcasts read
+			uint32 m_broadcastWriteCnt;		// Number of broadcasts sent
 		};
 
 		void LogDriverStatistics();
 
 	private:
 		void GetDriverStatistics( DriverData* _data );
+		void GetNodeStatistics( uint8 const _nodeId, Node::NodeData* _data );
 
 		uint32 m_SOFCnt;			// Number of SOF bytes received
-		uint32 m_ACKWaiting;		// Number of unsolcited messages while waiting for an ACK
-		uint32 m_readAborts;		// Number of times read were aborted due to timeouts
-		uint32 m_badChecksum;		// Number of bad checksums
+		uint32 m_ACKWaiting;			// Number of unsolcited messages while waiting for an ACK
+		uint32 m_readAborts;			// Number of times read were aborted due to timeouts
+		uint32 m_badChecksum;			// Number of bad checksums
 		uint32 m_readCnt;			// Number of messages successfully read
 		uint32 m_writeCnt;			// Number of messages successfully sent
 		uint32 m_CANCnt;			// Number of CAN bytes received
@@ -713,8 +731,14 @@ namespace OpenZWave
 		uint32 m_OOFCnt;			// Number of bytes out of framing
 		uint32 m_dropped;			// Number of messages dropped & not delivered
 		uint32 m_retries;			// Number of retransmitted messages
-		uint32 m_controllerReadCnt;	// Number of messages read from controller
-		uint32 m_controllerWriteCnt;// Number of messages written to the controller
+		uint32 m_callbacks;			// Number of unexpected callbacks
+		uint32 m_badroutes;			// Number of failed messages due to bad route response
+		uint32 m_noack;				// Number of no ACK returned errors
+		uint32 m_netbusy;			// Number of network busy/failure messages
+		uint32 m_nondelivery;			// Number of messages not delivered to network
+		uint32 m_routedbusy;			// Number of messages received with routed busy status
+		uint32 m_broadcastReadCnt;		// Number of broadcasts read
+		uint32 m_broadcastWriteCnt;		// Number of broadcasts sent
 		//time_t m_commandStart;	// Start time of last command
 		//time_t m_timeoutLost;		// Cumulative time lost to timeouts
 	};

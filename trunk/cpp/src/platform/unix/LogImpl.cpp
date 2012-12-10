@@ -109,7 +109,7 @@ void LogImpl::Write
 			char *outBufPtr = outBuf;
 			// save to file
 			FILE* pFile = fopen( m_filename.c_str(), "a" );
-			if ( pFile != NULL )
+			if ( pFile != NULL || m_bConsoleOutput )
 			{
 				if( _logLevel != LogLevel_Internal )						// don't add a second timestamp to display of queued messages
 				{
@@ -134,13 +134,15 @@ void LogImpl::Write
 				*outBufPtr = '\0';
 
 				// print message to file (and possibly screen)
-				fputs( outBuf, pFile );
+				if( pFile != NULL )
+				{
+					fputs( outBuf, pFile );
+					fclose( pFile );
+				}
 				if( m_bConsoleOutput )
 				{
 					fputs( outBuf, stdout );
 				}
-
-				fclose( pFile );
 			}
 		}
 
@@ -229,7 +231,7 @@ void LogImpl::SetLoggingState
 }
 
 //-----------------------------------------------------------------------------
-//	<LogImpl::GetTimeStampAndThreadId>
+//	<LogImpl::GetTimeStampString>
 //	Generate a string with formatted current time
 //-----------------------------------------------------------------------------
 string LogImpl::GetTimeStampString

@@ -97,8 +97,8 @@ void Log::Destroy
 }
 
 //-----------------------------------------------------------------------------
-//	<Log::Create>
-//	Static creation of the singleton
+//	<Log::SetLoggingClass>
+//	Set log class
 //-----------------------------------------------------------------------------
 bool Log::SetLoggingClass
 (

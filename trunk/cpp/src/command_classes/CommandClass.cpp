@@ -60,7 +60,10 @@ CommandClass::CommandClass
 	m_afterMark( false ),
 	m_createVars( true ),
 	m_overridePrecision( -1 ),
-	m_staticRequests( 0 )
+	m_getSupported( true ),
+	m_staticRequests( 0 ),
+	m_sentCnt( 0 ),
+	m_receivedCnt( 0 )
 {
 }
 
@@ -202,6 +205,12 @@ void CommandClass::ReadXML
 		m_createVars = !strcmp( str, "true" );
 	}
 
+	str = _ccElement->Attribute( "getsupported" );
+	if( str )
+	{
+		m_getSupported = !strcmp( str, "true" );
+	}
+
 	// Setting the instance count will create all the values.
 	SetInstances( instances );
 
@@ -277,6 +286,11 @@ void CommandClass::WriteXML
 	if( m_createVars )
 	{
 		_ccElement->SetAttribute( "create_vars", "true" );
+	}
+
+	if( !m_getSupported )
+	{
+		_ccElement->SetAttribute( "getsupported", "false" );
 	}
 
 	// Write out the instances

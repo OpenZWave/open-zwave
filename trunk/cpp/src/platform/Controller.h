@@ -31,6 +31,7 @@
 #include <string>
 #include <list>
 #include "Defs.h"
+#include "Driver.h"
 #include "Stream.h"
 
 namespace OpenZWave

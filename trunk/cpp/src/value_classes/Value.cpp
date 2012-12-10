@@ -373,7 +373,7 @@ bool Value::Set
 	{
 		if( m_affectsAll )
 		{
-			node->RequestAllConfigParams( CommandClass::RequestFlag_LowPriority );
+			node->RequestAllConfigParams( 0 );
 		}
 		else if( m_affectsLength > 0 )
 		{

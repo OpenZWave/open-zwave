@@ -54,6 +54,7 @@ using namespace OpenZWave;
 #include "MultiInstance.h"
 #include "MultiInstanceAssociation.h"
 #include "NodeNaming.h"
+#include "NoOperation.h"
 #include "Powerlevel.h"
 #include "Proprietary.h"
 #include "Protection.h"
@@ -187,6 +188,7 @@ void CommandClasses::RegisterCommandClasses
 	cc.Register( MultiInstance::StaticGetCommandClassId(), MultiInstance::StaticGetCommandClassName(), MultiInstance::Create );
 	cc.Register( MultiInstanceAssociation::StaticGetCommandClassId(), MultiInstanceAssociation::StaticGetCommandClassName(), MultiInstanceAssociation::Create );
 	cc.Register( NodeNaming::StaticGetCommandClassId(), NodeNaming::StaticGetCommandClassName(), NodeNaming::Create );
+	cc.Register( NoOperation::StaticGetCommandClassId(), NoOperation::StaticGetCommandClassName(), NoOperation::Create );
 	cc.Register( Powerlevel::StaticGetCommandClassId(), Powerlevel::StaticGetCommandClassName(), Powerlevel::Create );
 	cc.Register( Proprietary::StaticGetCommandClassId(), Proprietary::StaticGetCommandClassName(), Proprietary::Create );
 	cc.Register( Protection::StaticGetCommandClassId(), Protection::StaticGetCommandClassName(), Protection::Create );
