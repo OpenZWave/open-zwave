@@ -35,10 +35,10 @@
 namespace OpenZWave
 {
 	class Driver;
-    class Msg;
+	class Msg;
 	class SerialControllerImpl;
 
-    class SerialController: public Controller
+	class SerialController: public Controller
 	{
 		friend class SerialControllerImpl;
 

@@ -1,10 +1,10 @@
 //-----------------------------------------------------------------------------
 //
-//	Version.h
+//	NoOperation.h
 //
-//	Implementation of the Z-Wave COMMAND_CLASS_VERSION
+//	Implementation of the Z-Wave COMMAND_CLASS_NO_OPERATION
 //
-//	Copyright (c) 2010 Mal Lansell <openzwave@lansell.org>
+//	Copyright (c) 2012 Greg Satz <satz@iranger.com>
 //
 //	SOFTWARE NOTICE AND LICENSE
 //
@@ -25,41 +25,33 @@
 //
 //-----------------------------------------------------------------------------
 
-#ifndef _Version_H
-#define _Version_H
+#ifndef _NoOperation_H
+#define _NoOperation_H
 
 #include "CommandClass.h"
 
 namespace OpenZWave
 {
-	class ValueString;
-
-	/** \brief Implements COMMAND_CLASS_VERSION (0x86), a Z-Wave device command class.
+	/** \brief Implements COMMAND_CLASS_NO_OPERATION (0x00), a Z-Wave device command class.
 	 */
-	class Version: public CommandClass
+	class NoOperation: public CommandClass
 	{
 	public:
-		static CommandClass* Create( uint32 const _homeId, uint8 const _nodeId ){ return new Version( _homeId, _nodeId ); }
-		virtual ~Version(){}
+		static CommandClass* Create( uint32 const _homeId, uint8 const _nodeId ){ return new NoOperation( _homeId, _nodeId ); }
+		virtual ~NoOperation(){}
 
-		static uint8 const StaticGetCommandClassId(){ return 0x86; }
-		static string const StaticGetCommandClassName(){ return "COMMAND_CLASS_VERSION"; }
+		static uint8 const StaticGetCommandClassId(){ return 0x00; }
+		static string const StaticGetCommandClassName(){ return "COMMAND_CLASS_NO_OPERATION"; }
 
-		bool RequestCommandClassVersion( CommandClass const* _commandClass );
+		void Set( bool const _route );
 
 		// From CommandClass
-		virtual bool RequestState( uint32 const _requestFlags, uint8 const _instance, Driver::MsgQueue const _queue );
-		virtual bool RequestValue( uint32 const _requestFlags, uint8 const _index, uint8 const _instance, Driver::MsgQueue const _queue );
 		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }
 		virtual string const GetCommandClassName()const{ return StaticGetCommandClassName(); }
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );
 
-	protected:
-		virtual void CreateVars( uint8 const _instance );
-
 	private:
-		Version( uint32 const _homeId, uint8 const _nodeId );
-
+		NoOperation( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
 	};
 
 } // namespace OpenZWave

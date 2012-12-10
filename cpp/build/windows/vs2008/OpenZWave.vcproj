@@ -327,6 +327,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\src\platform\windows\FileOpsImpl.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\platform\windows\FileOpsImpl.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\src\platform\windows\LogImpl.cpp"
 					>
 				</File>

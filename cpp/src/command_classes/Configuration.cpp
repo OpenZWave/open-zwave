@@ -203,8 +203,8 @@ bool Configuration::SetValue
 }
 
 //-----------------------------------------------------------------------------
-// <Configuration::RequestValue>												   
-// Request current parameter value from the device									   
+// <Configuration::RequestValue>
+// Request current parameter value from the device
 //-----------------------------------------------------------------------------
 bool Configuration::RequestValue
 (

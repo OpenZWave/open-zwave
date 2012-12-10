@@ -1418,6 +1418,35 @@ namespace OpenZWave
 	/*@}*/
 
 	//-----------------------------------------------------------------------------
+	// Network commands
+	//-----------------------------------------------------------------------------
+	/** \name Network Commands
+	 *  Commands for Z-Wave network for testing, routing and other internal
+	 *  operations.
+	 */
+	/*@{*/
+	public:	
+		/**
+		 * \brief Test network node.
+		 * Sends a series of messages to a network node for testing network reliability.
+		 * \param _homeId The Home ID of the Z-Wave controller to be reset.
+		 * \param _count This is the number of test messages to send.
+		 * \see TestNetwork
+		 */
+		void TestNetworkNode( uint32 const _homeId, uint8 const _nodeId, uint32 const _count );
+
+		/**
+		 * \brief Test network.
+		 * Sends a series of messages to every node on the network for testing network reliability.
+		 * \param _homeId The Home ID of the Z-Wave controller to be reset.
+		 * \param _count This is the number of test messages to send.
+		 * \see TestNetwork
+		 */
+		void TestNetwork( uint32 const _homeId, uint32 const _count );
+
+	/*@}*/
+
+	//-----------------------------------------------------------------------------
 	// Scene commands
 	//-----------------------------------------------------------------------------
 	/** \name Scene Commands
@@ -1769,6 +1798,14 @@ namespace OpenZWave
 		 * \param _data Pointer to structure DriverData to return values
 		 */
 		void GetDriverStatistics( uint32 const _homeId, Driver::DriverData* _data );
+
+		/**
+		 * \brief Retrieve statistics per node
+		 * \param _homeId The Home ID of the driver for the node
+		 * \param _nodeId The node number
+		 * \param _data Pointer to structure NodeData to return values
+		 */
+		void GetNodeStatistics( uint32 const _homeId, uint8 const _nodeId, Node::NodeData* _data );
 
 	};
 	/*@}*/

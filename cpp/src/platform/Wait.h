@@ -3,7 +3,7 @@
 //	Wait.h
 //
 //	Cross-platform abstract base class for objects we 
-//  want to be able to wait for.
+//	want to be able to wait for.
 //
 //	Copyright (c) 2010 Mal Lansell <mal@lansell.org>
 //	All rights reserved.
