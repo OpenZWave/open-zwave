@@ -117,12 +117,15 @@ void LogImpl::Write
 		if( (_logLevel <= m_saveLevel) || (_logLevel == LogLevel_Internal) )
 		{
 			// save to file
-			FILE* pFile;
-			if( !fopen_s( &pFile, m_filename.c_str(), "a" ) )
+			FILE* pFile = NULL;
+			if( !fopen_s( &pFile, m_filename.c_str(), "a" ) || m_bConsoleOutput )
 			{
 				if( _logLevel != LogLevel_Internal )						// don't add a second timestamp to display of queued messages
 				{
-					fprintf( pFile, "%s%s", timeStr.c_str(), nodeStr.c_str() );
+					if( pFile != NULL )
+					{
+						fprintf( pFile, "%s%s", timeStr.c_str(), nodeStr.c_str() );
+					}
 					if( m_bConsoleOutput )
 					{
 						printf( "%s%s", timeStr.c_str(), nodeStr.c_str() );
@@ -130,20 +133,18 @@ void LogImpl::Write
 				}
 
 				// print message to file (and possibly screen)
-				fprintf( pFile, "%s", lineBuf );
+				if( pFile != NULL )
+				{
+					fprintf( pFile, "%s", lineBuf );
+					fprintf( pFile, "\n" ); 
+					fclose( pFile );
+				}
 				if( m_bConsoleOutput )
 				{
 					printf( "%s", lineBuf );
-				}
-
-				// add a newline
-				fprintf( pFile, "\n" ); 
-				if( m_bConsoleOutput )
-				{
 					printf( "\n" );
 				}
 
-				fclose( pFile );
 			}
 		}
 

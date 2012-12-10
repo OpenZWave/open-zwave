@@ -298,7 +298,7 @@ bool Association::HandleMsg
 				if( nextGroup <= m_numGroups )
 				{
 					// Query the next group
-					QueryGroup( nextGroup, RequestFlag_LowPriority );
+					QueryGroup( nextGroup, 0 );
 				}
 				else
 				{

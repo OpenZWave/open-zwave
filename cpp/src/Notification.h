@@ -50,6 +50,7 @@ namespace OpenZWave
 		friend class Basic;
 		friend class ManufacturerSpecific;
 		friend class NodeNaming;
+		friend class NoOperation;
 		friend class SceneActivation;
 
 	public:
@@ -61,15 +62,15 @@ namespace OpenZWave
 	     */
 		enum NotificationType 
 		{
-			Type_ValueAdded = 0,				/**< A new node value has been added to OpenZWave's list. These notifications occur after a node has been discovered, and details of its command classes have been received.  Each command class may generate one or more values depending on the complexity of the item being represented.  */
+			Type_ValueAdded = 0,					/**< A new node value has been added to OpenZWave's list. These notifications occur after a node has been discovered, and details of its command classes have been received.  Each command class may generate one or more values depending on the complexity of the item being represented.  */
 			Type_ValueRemoved,					/**< A node value has been removed from OpenZWave's list.  This only occurs when a node is removed. */
 			Type_ValueChanged,					/**< A node value has been updated from the Z-Wave network and it is different from the previous value. */
-			Type_ValueRefreshed,				/**< A node value has been updated from the Z-Wave network. */
-			Type_Group,							/**< The associations for the node have changed. The application should rebuild any group information it holds about the node. */
+			Type_ValueRefreshed,					/**< A node value has been updated from the Z-Wave network. */
+			Type_Group,						/**< The associations for the node have changed. The application should rebuild any group information it holds about the node. */
 			Type_NodeNew,						/**< A new node has been found (not already stored in zwcfg*.xml file) */
 			Type_NodeAdded,						/**< A new node has been added to OpenZWave's list.  This may be due to a device being added to the Z-Wave network, or because the application is initializing itself. */
 			Type_NodeRemoved,					/**< A node has been removed from OpenZWave's list.  This may be due to a device being removed from the Z-Wave network, or because the application is closing. */
-			Type_NodeProtocolInfo,				/**< Basic node information has been receievd, such as whether the node is a listening device, a routing device and its baud rate and basic, generic and specific types. It is after this notification that you can call Manager::GetNodeType to obtain a label containing the device description. */
+			Type_NodeProtocolInfo,					/**< Basic node information has been receievd, such as whether the node is a listening device, a routing device and its baud rate and basic, generic and specific types. It is after this notification that you can call Manager::GetNodeType to obtain a label containing the device description. */
 			Type_NodeNaming,					/**< One of the node names has changed (name, manufacturer, product). */
 			Type_NodeEvent,						/**< A node has triggered an event.  This is commonly caused when a node sends a Basic_Set command to the controller.  The event value is stored in the notification. */
 			Type_PollingDisabled,					/**< Polling of a node has been successfully turned off by a call to Manager::DisablePoll */
@@ -82,12 +83,23 @@ namespace OpenZWave
 			Type_DriverReady,					/**< A driver for a PC Z-Wave controller has been added and is ready to use.  The notification will contain the controller's Home ID, which is needed to call most of the Manager methods. */
 			Type_DriverFailed,					/**< Driver failed to load */
 			Type_DriverReset,					/**< All nodes and values for this driver have been removed.  This is sent instead of potentially hundreds of individual node and value notifications. */
-			Type_MsgComplete,					/**< The last message that was sent is now complete. */
-			Type_EssentialNodeQueriesComplete,	/**< The queries on a node that are essential to its operation have been completed. The node can now handle incoming messages. */
-			Type_NodeQueriesComplete,			/**< All the initialisation queries on a node have been completed. */
-			Type_AwakeNodesQueried,				/**< All awake nodes have been queried, so client application can expected complete data for these nodes. */
-			Type_AllNodesQueried,				/**< All nodes have been queried, so client application can expected complete data. */
-			Type_Error						/**< An error has occured that we need to report. */
+			Type_EssentialNodeQueriesComplete,			/**< The queries on a node that are essential to its operation have been completed. The node can now handle incoming messages. */
+			Type_NodeQueriesComplete,				/**< All the initialisation queries on a node have been completed. */
+			Type_AwakeNodesQueried,					/**< All awake nodes have been queried, so client application can expected complete data for these nodes. */
+			Type_AllNodesQueried,					/**< All nodes have been queried, so client application can expected complete data. */
+			Type_Notification					/**< An error has occured that we need to report. */
+		};
+
+		/** 
+		 * Notification codes.
+		 * Notifications of the type Type_Notification convey some
+		 * extra information defined here.
+		 */
+		enum NotificationCode
+		{
+			Code_MsgComplete = 0,					/**< Completed messages */
+			Code_Timeout,						/**< Messages that timeout will send a Notification with this code. */
+			Code_NoOperation					/**< Report on NoOperation message sent completion  */
 		};
 
 		/** 
@@ -134,11 +146,17 @@ namespace OpenZWave
 		 */
 		uint8 GetButtonId()const{ assert(Type_CreateButton==m_type || Type_DeleteButton==m_type || Type_ButtonOn==m_type || Type_ButtonOff==m_type); return m_byte; } 
 
-		/**
-		 * Get the error code from a notification. Only valid for NotificationType::Type_Error notifications.
-		 * \return the error code.
+		/** 
+		 * Get the scene Id of a notification.  Only valid in NotificationType::Type_SceneEvent notifications. 
+		 * \return the event value.
 		 */
-		uint8 GetErrorCode()const{ assert(Type_Error==m_type); return m_byte; }
+		uint8 GetSceneId()const{ assert(Type_SceneEvent==m_type); return m_byte; } 
+
+		/**
+		 * Get the notification code from a notification. Only valid for NotificationType::Type_Notification notifications.
+		 * \return the notification code.
+		 */
+		uint8 GetNotification()const{ assert(Type_Notification==m_type); return m_byte; }
 
 		/** 
 		 * Helper function to simplify wrapping the notification class.  Should not normally need to be called.
@@ -157,8 +175,9 @@ namespace OpenZWave
 		void SetEvent( uint8 const _event ){ assert(Type_NodeEvent==m_type); m_byte = _event; }
 		void SetSceneId( uint8 const _sceneId ){ assert(Type_SceneEvent==m_type); m_byte = _sceneId; }
 		void SetButtonId( uint8 const _buttonId ){ assert(Type_CreateButton==m_type||Type_DeleteButton==m_type||Type_ButtonOn==m_type||Type_ButtonOff==m_type); m_byte = _buttonId; }
+		void SetNotification( uint8 const _noteId ){ assert(Type_Notification==m_type); m_byte = _noteId; }
 
-		NotificationType	m_type;
+		NotificationType		m_type;
 		ValueID				m_valueId;
 		uint8				m_byte;
 	};

@@ -86,7 +86,6 @@ namespace OpenZWave
 
 			return false;
 		}
-		static uint8 GetLastCallbackId(){ return (s_nextCallbackId > 1? s_nextCallbackId -1 : 255);}
 
 	private:
 		void MultiEncap();					// Encapsulate the data inside a MultiInstance/Multicommand message

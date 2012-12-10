@@ -40,7 +40,7 @@ namespace OpenZWave
 	class Thread;
 	class Event;
 
-    class HidController: public Controller
+	class HidController: public Controller
 	{
 	public:
 		/**

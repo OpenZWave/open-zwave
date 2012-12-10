@@ -28,6 +28,8 @@
 #ifndef _TimeStampImpl_H
 #define _TimeStampImpl_H
 
+#include <stdio.h>
+#include <time.h>
 #include <sys/time.h>
 #include "Defs.h"
 
@@ -66,16 +68,21 @@ namespace OpenZWave
 		int32 TimeRemaining();
 
 		/**
+		 * Return as as string
+		 */
+		string GetAsString();
+
+		/**
 		 * Overload the subtract operator to get the difference between
 		 * two timestamps in milliseconds.
 		 */
 		int32 operator- ( TimeStampImpl const& _other );
 
 	private:
-		TimeStampImpl( TimeStampImpl const&	);				// prevent copy
-		TimeStampImpl& operator = ( TimeStampImpl const& );	// prevent assignment
+		TimeStampImpl( TimeStampImpl const& );					// prevent copy
+		TimeStampImpl& operator = ( TimeStampImpl const& );			// prevent assignment
 
-        struct timespec m_stamp;
+		struct timespec m_stamp;
 	};
 
 } // namespace OpenZWave

@@ -65,13 +65,18 @@ namespace OpenZWave
 		int32 TimeRemaining();
 
 		/**
+		 * Return as as string
+		 */
+		string GetAsString();
+
+		/**
 		 * Overload the subtract operator to get the difference between
 		 * two timestamps in milliseconds.
 		 */
 		int32 operator- ( TimeStampImpl const& _other );
 
 	private:
-		TimeStampImpl( TimeStampImpl const&	);				// prevent copy
+		TimeStampImpl( TimeStampImpl const& );			// prevent copy
 		TimeStampImpl& operator = ( TimeStampImpl const& );	// prevent assignment
 
 		int64	m_stamp;

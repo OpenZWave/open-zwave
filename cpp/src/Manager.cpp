@@ -82,7 +82,9 @@ Manager* Manager::Create
 	}
 
 	// Options have not been created and locked.
-	assert(0);
+	Log::Create( "", false, true, LogLevel_Debug, LogLevel_Debug, LogLevel_Debug );
+	Log::Write( LogLevel_Error, "Options have not been created and locked. Exiting..." );
+	exit(1);
 	return NULL;
 }
 
@@ -2861,7 +2863,13 @@ void Manager::ResetController
 {
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
-		driver->ResetController();
+		driver->ResetController( m_exitEvent );
+		Wait::Single( m_exitEvent );
+		m_exitEvent->Reset();
+		string path = driver->GetControllerPath();
+		Driver::ControllerInterface intf = driver->GetControllerInterfaceType();
+		RemoveDriver( path );
+		AddDriver( path, intf );
 	}
 	RemoveAllScenes( _homeId );
 }
@@ -2919,6 +2927,39 @@ bool Manager::CancelControllerCommand
 	}
 
 	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::TestNetworkNode>
+// Send a number of test messages to a node and record results.
+//-----------------------------------------------------------------------------
+void Manager::TestNetworkNode
+(
+	uint32 const _homeId,
+	uint8 const _nodeId,
+	uint32 const _count
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		driver->TestNetwork( _nodeId, _count );
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::TestNetwork>
+// Send a number of test messages to every node and record results.
+//-----------------------------------------------------------------------------
+void Manager::TestNetwork
+(
+	uint32 const _homeId,
+	uint32 const _count
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		driver->TestNetwork( 0, _count );
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -3621,7 +3662,7 @@ bool Manager::ActivateScene
 }
 
 //-----------------------------------------------------------------------------
-// <Manager::DriverStatistics>
+// <Manager::GetDriverStatistics>
 // Retrieve driver based counters.
 //-----------------------------------------------------------------------------
 void Manager::GetDriverStatistics
@@ -3633,6 +3674,24 @@ void Manager::GetDriverStatistics
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
 		driver->GetDriverStatistics( _data );
+	}
+
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::GetNodeStatistics>
+// Retrieve driver based counters.
+//-----------------------------------------------------------------------------
+void Manager::GetNodeStatistics
+(
+	uint32 const _homeId,
+	uint8 const _nodeId,
+	Node::NodeData* _data
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		driver->GetNodeStatistics( _nodeId, _data );
 	}
 
 }

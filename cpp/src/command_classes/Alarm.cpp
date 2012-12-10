@@ -69,8 +69,8 @@ bool Alarm::RequestState
 }
 
 //-----------------------------------------------------------------------------
-// <Alarm::RequestValue>												   
-// Request current value from the device									   
+// <Alarm::RequestValue>
+// Request current value from the device
 //-----------------------------------------------------------------------------
 bool Alarm::RequestValue
 (
@@ -80,15 +80,19 @@ bool Alarm::RequestValue
 	Driver::MsgQueue const _queue
 )
 {
-	Msg* msg = new Msg( "AlarmCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-	msg->SetInstance( this, _instance );
-	msg->Append( GetNodeId() );
-	msg->Append( 2 );
-	msg->Append( GetCommandClassId() );
-	msg->Append( AlarmCmd_Get );
-	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	GetDriver()->SendMsg( msg, _queue );
-	return true;
+	if( IsGetSupported() )
+	{
+		Msg* msg = new Msg( "AlarmCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		msg->SetInstance( this, _instance );
+		msg->Append( GetNodeId() );
+		msg->Append( 2 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( AlarmCmd_Get );
+		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		GetDriver()->SendMsg( msg, _queue );
+		return true;
+	}
+	return false;
 }
 
 //-----------------------------------------------------------------------------

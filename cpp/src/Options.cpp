@@ -33,6 +33,7 @@
 #include "Utils.h"
 #include "Manager.h"
 #include "Log.h"
+#include "FileOps.h"
 #include "tinyxml.h"
 
 using namespace OpenZWave;
@@ -65,6 +66,13 @@ Options* Options::Create
 			userPath += "/";
 		}
 
+		FileOps::Create();
+		if( !FileOps::FolderExists( configPath ) )
+		{
+			Log::Create( "", false, true, LogLevel_Debug, LogLevel_Debug, LogLevel_Debug );
+			Log::Write( LogLevel_Error, "Cannot find a path to the configuration files at %s. Exiting...", configPath.c_str() );
+			exit( 1 );
+		}
 		s_instance = new Options( configPath, userPath, _commandLine );
 
 		// Add the default options

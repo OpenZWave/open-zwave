@@ -1,6 +1,6 @@
 //-----------------------------------------------------------------------------
 //
-//	TimeStampImpl.h
+//	TimeStampImpl.cpp
 //
 //	OSX implementation of a TimeStamp
 //
@@ -25,6 +25,8 @@
 //	along with OpenZWave.  If not, see <http://www.gnu.org/licenses/>.
 //
 //-----------------------------------------------------------------------------
+#include <string>
+#include <cstring>
 #include "Defs.h"
 #include "TimeStampImpl.h"
 
@@ -60,7 +62,7 @@ void TimeStampImpl::SetTime
 	int32 _milliseconds	// = 0
 )
 {
-    struct timeval now;   
+    struct timeval now;
     gettimeofday(&now, NULL);
     
     m_stamp.tv_sec = now.tv_sec + (_milliseconds / 1000);
@@ -69,7 +71,7 @@ void TimeStampImpl::SetTime
     now.tv_usec += ((_milliseconds % 1000) * 1000);
     
     // Careful now! Did it wrap?
-    if(now.tv_usec > 1000000)
+    if(now.tv_usec >= 1000000)
     {
         // Yes it did so bump our seconds and modulo
         now.tv_usec %= 1000000;
@@ -99,6 +101,24 @@ int32 TimeStampImpl::TimeRemaining
     diff += (((m_stamp.tv_nsec/1000)-now.tv_usec)/1000);
     
     return diff;
+}
+
+//-----------------------------------------------------------------------------
+//	<TimeStampImpl::GetAsString>
+//	Return a string representation
+//-----------------------------------------------------------------------------
+string TimeStampImpl::GetAsString
+(
+)
+{
+	char str[100];
+	struct tm *tm;
+	tm = localtime( &m_stamp.tv_sec );
+
+	snprintf( str, sizeof(str), "%04d-%02d-%02d %02d:%02d:%02d:%03d ", 
+		  tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday,
+		  tm->tm_hour, tm->tm_min, tm->tm_sec, (int)(m_stamp.tv_nsec / (1000*1000)) );
+	return str;
 }
 
 //-----------------------------------------------------------------------------

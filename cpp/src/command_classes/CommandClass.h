@@ -46,13 +46,13 @@ namespace OpenZWave
 	 */
 	class CommandClass
 	{
+
 	public:
 		enum
 		{
 			RequestFlag_Static		= 0x00000001,	/**< Values that never change. */
 			RequestFlag_Session		= 0x00000002,	/**< Values that change infrequently, and so only need to be requested at start up, or via a manual refresh. */
 			RequestFlag_Dynamic		= 0x00000004,	/**< Values that change and will be requested if polling is enabled on the node. */
-			RequestFlag_LowPriority	= 0x00000008	/**< Indictates that the request should be made with low priority messages */
 		};
 
 		CommandClass( uint32 const _homeId, uint8 const _nodeId );
@@ -93,6 +93,7 @@ namespace OpenZWave
 		void SetEndPoint( uint8 const _instance, uint8 const _endpoint){ m_endPointMap[_instance] = _endpoint; }
 		bool IsAfterMark()const{ return m_afterMark; }
 		bool IsCreateVars()const{ return m_createVars; }
+		bool IsGetSupported()const{ return m_getSupported; }
 
 		// Helper methods
 		string ExtractValue( uint8 const* _data, uint8* _scale, uint8* _precision, uint8 _valueOffset = 1 )const;
@@ -123,7 +124,8 @@ namespace OpenZWave
 		map<uint8,uint8> m_endPointMap;
 		bool		m_afterMark;		// Set to true if the command class is listed after COMMAND_CLASS_MARK, and should not create any values.
 		bool		m_createVars;		// Do we want to create variables
-		int8		m_overridePrecision;// Override precision when writing values if >=0
+		int8		m_overridePrecision;	// Override precision when writing values if >=0
+		bool		m_getSupported;	    	// Get operation supported
 
 	//-----------------------------------------------------------------------------
 	// Record which items of static data have been read from the device
@@ -142,11 +144,21 @@ namespace OpenZWave
 
 	private:
 		uint8   m_staticRequests;
+
+	//-----------------------------------------------------------------------------
+	//	Statistics
+	//-----------------------------------------------------------------------------
+	public:
+		uint32 GetSentCnt()const{ return m_sentCnt; }
+		uint32 GetReceivedCnt()const{ return m_receivedCnt; }
+		void SentCntIncr(){ m_sentCnt++; }
+		void ReceivedCntIncr(){ m_receivedCnt++; }
+
+	private:
+		uint32 m_sentCnt;				// Number of messages sent from this command class.
+		uint32 m_receivedCnt;				// Number of messages received from this commandclass.
 	};
 
 } // namespace OpenZWave
 
 #endif
-
-
-
