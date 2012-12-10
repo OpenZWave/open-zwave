@@ -112,6 +112,8 @@ extern "C" {
 
 			This function returns a linked list of all the HID devices
 			attached to the system which match vendor_id and product_id.
+			If @p vendor_id is set to 0 then any vendor matches.
+			If @p product_id is set to 0 then any product matches.
 			If @p vendor_id and @p product_id are both set to 0, then
 			all HID devices will be returned.
 
@@ -155,7 +157,7 @@ extern "C" {
 				This function returns a pointer to a #hid_device object on
 				success or NULL on failure.
 		*/
-		HID_API_EXPORT hid_device * HID_API_CALL hid_open(unsigned short vendor_id, unsigned short product_id, wchar_t *serial_number);
+		HID_API_EXPORT hid_device * HID_API_CALL hid_open(unsigned short vendor_id, unsigned short product_id, const wchar_t *serial_number);
 
 		/** @brief Open a HID device by its path name.
 
