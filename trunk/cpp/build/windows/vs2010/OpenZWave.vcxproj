@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -87,8 +87,10 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\hidapi\hidapi\hidapi.h" />
     <ClInclude Include="..\..\..\src\Bitfield.h" />
+    <ClInclude Include="..\..\..\src\command_classes\NoOperation.h" />
     <ClInclude Include="..\..\..\src\command_classes\SceneActivation.h" />
     <ClInclude Include="..\..\..\src\command_classes\SensorAlarm.h" />
+    <ClInclude Include="..\..\..\src\command_classes\UserCode.h" />
     <ClInclude Include="..\..\..\src\Defs.h" />
     <ClInclude Include="..\..\..\src\Driver.h" />
     <ClInclude Include="..\..\..\src\Group.h" />
@@ -176,8 +178,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\hidapi\windows\hid.cpp" />
+    <ClCompile Include="..\..\..\src\command_classes\NoOperation.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\SceneActivation.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\SensorAlarm.cpp" />
+    <ClCompile Include="..\..\..\src\command_classes\UserCode.cpp" />
     <ClCompile Include="..\..\..\src\Driver.cpp" />
     <ClCompile Include="..\..\..\src\Group.cpp" />
     <ClCompile Include="..\..\..\src\Manager.cpp" />
