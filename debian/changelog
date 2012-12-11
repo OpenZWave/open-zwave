@@ -1,4 +1,4 @@
-openzwave (1.0-2) UNRELEASED; urgency=low
+openzwave (1.0-3) UNRELEASED; urgency=low
 
   [ hari ]
   * Initial release.
@@ -6,5 +6,6 @@ openzwave (1.0-2) UNRELEASED; urgency=low
   [ root ]
   * include config files in debian package, put headers in to proper
     paths
+  * increasing release version after greg's large update
 
- -- root <root@pluto.vt100.at>  Wed, 18 Jul 2012 21:26:57 +0200
+ -- root <root@pluto.vt100.at>  Tue, 11 Dec 2012 10:29:26 +0100
