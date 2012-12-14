@@ -36,6 +36,7 @@
 #include "Log.h"
 
 #include "ValueByte.h"
+#include "NoOperation.h"
 
 using namespace OpenZWave;
 
@@ -198,13 +199,16 @@ bool Basic::SetMapping
 {
 	bool res = false;
 
-	if( Node const* node = GetNodeUnsafe() )
+	if( _commandClassId != NoOperation::StaticGetCommandClassId() )
 	{
-		if( CommandClass* cc = node->GetCommandClass( _commandClassId ) )
+		if( Node const* node = GetNodeUnsafe() )
 		{
-			Log::Write( LogLevel_Info, GetNodeId(), "    COMMAND_CLASS_BASIC will be mapped to %s", cc->GetCommandClassName().c_str() );
-			m_mapping = _commandClassId;
-			res = true;
+			if( CommandClass* cc = node->GetCommandClass( _commandClassId ) )
+			{
+				Log::Write( LogLevel_Info, GetNodeId(), "    COMMAND_CLASS_BASIC will be mapped to %s", cc->GetCommandClassName().c_str() );
+				m_mapping = _commandClassId;
+				res = true;
+			}
 		}
 	}
 
