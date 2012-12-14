@@ -105,10 +105,11 @@ void Msg::SetInstance
 					m_expectedCommandClassId = MultiInstance::StaticGetCommandClassId();
 				}
 			}
-			else
+			else if( m_instance > 1 )
 			{
 				// Set the flag bit to indicate MultiInstance rather than MultiChannel
 				m_flags |= m_MultiInstance;
+				m_expectedCommandClassId = MultiInstance::StaticGetCommandClassId();
 			}
 		}
 	}
@@ -251,7 +252,7 @@ void Msg::MultiEncap
 		m_buffer[5] += 3;
 		m_buffer[6] = MultiInstance::StaticGetCommandClassId();
 		m_buffer[7] = MultiInstance::MultiInstanceCmd_Encap;
-		m_buffer[8] = m_endPoint;
+		m_buffer[8] = m_instance;
 		m_length += 3;
 
 		snprintf( str, sizeof(str), "MultiInstance Encapsulated (instance=%d): %s", m_instance, m_logText.c_str() );
