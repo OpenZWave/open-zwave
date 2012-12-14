@@ -33,6 +33,7 @@
 #include "Driver.h"
 #include "Node.h"
 #include "Log.h"
+#include "NoOperation.h"
 
 using namespace OpenZWave;
 
@@ -183,6 +184,10 @@ bool MultiInstance::RequestInstances
 			for( map<uint8,CommandClass*>::const_iterator it = node->m_commandClassMap.begin(); it != node->m_commandClassMap.end(); ++it )
 			{
 				CommandClass* cc = it->second;
+				if( cc->GetCommandClassId() == NoOperation::StaticGetCommandClassId() )
+				{
+					continue;
+				}
  				if( cc->HasStaticRequest( StaticRequest_Instances ) )
 				{
 					snprintf( str, sizeof( str ), "MultiInstanceCmd_Get for %s", cc->GetCommandClassName().c_str() );
@@ -292,10 +297,6 @@ void MultiInstance::HandleMultiInstanceReport
 	{
 		uint8 commandClassId = _data[1];
 		uint8 instances = _data[2];
-		if( GetVersion() > 1 )
-		{
-			instances &= 0x7f;
-		}
 
 		if( CommandClass* pCommandClass = node->GetCommandClass( commandClassId ) )
 		{

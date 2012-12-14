@@ -74,8 +74,8 @@ bool SwitchAll::RequestState
 }
 
 //-----------------------------------------------------------------------------
-// <SwitchAll::RequestValue>												   
-// Request current value from the device									   
+// <SwitchAll::RequestValue>
+// Request current value from the device
 //-----------------------------------------------------------------------------
 bool SwitchAll::RequestValue
 (

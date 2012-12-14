@@ -168,15 +168,19 @@ bool UserCode::HandleMsg
 	if( UserNumberCmd_Report == (UserCodeCmd)_data[0] )
 	{	
 		m_userCodeCount = _data[1];
+		if( m_userCodeCount > 10 )
+		{
+			m_userCodeCount = 10;						// arbitrary for now
+		}
 		m_userCodesStatus = new uint8[m_userCodeCount];
 		ClearStaticRequest( StaticRequest_Values );
 		if( m_userCodeCount == 0 )
 		{
-			Log::Write( LogLevel_Info, GetNodeId(), "Received User Number report from node %d: Not supported, ", GetNodeId() );
+			Log::Write( LogLevel_Info, GetNodeId(), "Received User Number report from node %d: Not supported", GetNodeId() );
 		}
 		else
 		{
-			Log::Write( LogLevel_Info, GetNodeId(), "Received User Number report from node %d: Supported Codes %d, ", GetNodeId(), m_userCodeCount );
+			Log::Write( LogLevel_Info, GetNodeId(), "Received User Number report from node %d: Supported Codes %d (%d)", GetNodeId(), m_userCodeCount, _data[1] );
 		}
 
 		// Hopefully the user code number doesn't change or this code will need to

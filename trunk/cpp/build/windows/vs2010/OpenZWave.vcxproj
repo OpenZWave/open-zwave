@@ -146,6 +146,7 @@
     <ClInclude Include="..\..\..\src\command_classes\CommandClasses.h" />
     <ClInclude Include="..\..\..\src\command_classes\Configuration.h" />
     <ClInclude Include="..\..\..\src\command_classes\ControllerReplication.h" />
+    <ClInclude Include="..\..\..\src\command_classes\CRC16Encap.h" />
     <ClInclude Include="..\..\..\src\command_classes\EnergyProduction.h" />
     <ClInclude Include="..\..\..\src\command_classes\Hail.h" />
     <ClInclude Include="..\..\..\src\command_classes\Indicator.h" />
@@ -173,6 +174,7 @@
     <ClInclude Include="..\..\..\src\command_classes\ThermostatMode.h" />
     <ClInclude Include="..\..\..\src\command_classes\ThermostatOperatingState.h" />
     <ClInclude Include="..\..\..\src\command_classes\ThermostatSetpoint.h" />
+    <ClInclude Include="..\..\..\src\command_classes\UserCode.h" />
     <ClInclude Include="..\..\..\src\command_classes\Version.h" />
     <ClInclude Include="..\..\..\src\command_classes\WakeUp.h" />
   </ItemGroup>
@@ -237,6 +239,7 @@
     <ClCompile Include="..\..\..\src\command_classes\CommandClasses.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\Configuration.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\ControllerReplication.cpp" />
+    <ClCompile Include="..\..\..\src\command_classes\CRC16Encap.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\EnergyProduction.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\Hail.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\Indicator.cpp" />
@@ -264,6 +267,7 @@
     <ClCompile Include="..\..\..\src\command_classes\ThermostatMode.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\ThermostatOperatingState.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\ThermostatSetpoint.cpp" />
+    <ClCompile Include="..\..\..\src\command_classes\UserCode.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\Version.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\WakeUp.cpp" />
   </ItemGroup>

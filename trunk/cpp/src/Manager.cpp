@@ -43,6 +43,7 @@
 
 #include "CommandClasses.h"
 #include "CommandClass.h"
+#include "WakeUp.h"
 
 #include "ValueID.h"
 #include "ValueBool.h"
@@ -1205,7 +1206,7 @@ bool Manager::IsNodeInfoReceived
 }
 
 //-----------------------------------------------------------------------------
-// <Manager::IsNodeClassAvailable>
+// <Manager::GetNodeClassAvailable>
 // Helper method to return whether a particular class is available in a node
 //-----------------------------------------------------------------------------
 bool Manager::GetNodeClassInformation
@@ -1226,10 +1227,10 @@ bool Manager::GetNodeClassInformation
 	        // Need to lock and unlock nodes to check this information
 	        driver->LockNodes();
 
-	        if( (node = driver->GetNodeUnsafe( _nodeId ) ) != NULL)
+	        if( ( node = driver->GetNodeUnsafe( _nodeId ) ) != NULL )
 	        {
 			CommandClass *cc;
-			if( ( node->NodeInfoReceived() ) && ( ( cc = node->GetCommandClass(_commandClassId)) != NULL ) )
+			if( node->NodeInfoReceived() && ( ( cc = node->GetCommandClass( _commandClassId ) ) != NULL ) )
 			{
 				if( _className )
 				{
@@ -1248,6 +1249,52 @@ bool Manager::GetNodeClassInformation
 	}
     
 	return result;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::IsNodeAwake>
+// Helper method to return whether a node is awake or sleeping
+//-----------------------------------------------------------------------------
+bool Manager::IsNodeAwake
+(
+	uint32 const _homeId,
+	uint8 const _nodeId
+)
+{
+	if( IsNodeListeningDevice( _homeId, _nodeId ) )
+	{
+		return true;				// if listening then always awake
+	}
+	bool result = true;
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+	        // Need to lock and unlock nodes to check this information
+	        driver->LockNodes();
+
+	        if( Node* node = driver->GetNodeUnsafe( _nodeId ) )
+	        {
+			WakeUp *wcc;
+			if( node->NodeInfoReceived() && ( ( wcc = static_cast<WakeUp*>( node->GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) ) != NULL ) )
+			{
+				result = wcc->IsAwake();
+			}
+		}
+		driver->ReleaseNodes();
+	}
+	return result;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::IsNodeFailed>
+// Helper method to return whether a node is on the network or not
+//-----------------------------------------------------------------------------
+bool Manager::IsNodeFailed
+(
+	uint32 const _homeId,
+	uint8 const _nodeId
+)
+{
+	return false;
 }
 
 //-----------------------------------------------------------------------------

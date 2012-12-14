@@ -104,8 +104,8 @@ static char const* c_switchLabelsNeg[] =
 };
 
 //-----------------------------------------------------------------------------
-// <SwitchMultilevel::RequestState>												   
-// Request current state from the device									   
+// <SwitchMultilevel::RequestState>
+// Request current state from the device
 //-----------------------------------------------------------------------------
 bool SwitchMultilevel::RequestState
 (
@@ -123,8 +123,8 @@ bool SwitchMultilevel::RequestState
 }
 
 //-----------------------------------------------------------------------------
-// <SwitchMultilevel::RequestValue>												   
-// Request current value from the device									   
+// <SwitchMultilevel::RequestValue>
+// Request current value from the device
 //-----------------------------------------------------------------------------
 bool SwitchMultilevel::RequestValue
 (

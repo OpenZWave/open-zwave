@@ -69,6 +69,9 @@
     <ClInclude Include="..\..\..\src\command_classes\ControllerReplication.h">
       <Filter>Command Classes</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\command_classes\CRC16Encap.h">
+      <Filter>Command Classes</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\command_classes\EnergyProduction.h">
       <Filter>Command Classes</Filter>
     </ClInclude>
@@ -148,6 +151,9 @@
       <Filter>Command Classes</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\command_classes\ThermostatSetpoint.h">
+      <Filter>Command Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\command_classes\UserCode.h">
       <Filter>Command Classes</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\command_classes\Version.h">
@@ -422,6 +428,9 @@
     <ClCompile Include="..\..\..\src\command_classes\ControllerReplication.cpp">
       <Filter>Command Classes</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\command_classes\CRC16Encap.cpp">
+      <Filter>Command Classes</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\command_classes\EnergyProduction.cpp">
       <Filter>Command Classes</Filter>
     </ClCompile>
@@ -501,6 +510,9 @@
       <Filter>Command Classes</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\command_classes\ThermostatSetpoint.cpp">
+      <Filter>Command Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\command_classes\UserCode.cpp">
       <Filter>Command Classes</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\command_classes\Version.cpp">
