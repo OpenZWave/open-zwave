@@ -430,7 +430,7 @@ namespace OpenZWave
 		 * \brief Get whether the node is a beam capable device.
 		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
 		 * \param _nodeId The ID of the node to query.
-		 * \return True if it is a frequent listening node.
+		 * \return True if it is a beam capable node.
 		 */
 		bool IsNodeBeamingDevice( uint32 const _homeId, uint8 const _nodeId );
 
@@ -730,6 +730,22 @@ namespace OpenZWave
 		 */
 		bool GetNodeClassInformation( uint32 const _homeId, uint8 const _nodeId, uint8 const _commandClassId,
 					      string *_className = NULL, uint8 *_classVersion = NULL);
+		/**
+		 * \brief Get whether the node is awake or asleep
+		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param _nodeId The ID of the node to query.
+		 * \return True if the node is awake
+		 */
+		bool IsNodeAwake( uint32 const _homeId, uint8 const _nodeId );
+
+		/**
+		 * \brief Get whether the node is working or has failed
+		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param _nodeId The ID of the node to query.
+		 * \return True if the node has failed and is no longer part of the network
+		 */
+		bool IsNodeFailed( uint32 const _homeId, uint8 const _nodeId );
+
 	/*@}*/
 
 	//-----------------------------------------------------------------------------
@@ -1377,17 +1393,16 @@ namespace OpenZWave
 		 * <p> Commands
 		 * - Driver::ControllerCommand_AddController - Add a new secondary controller to the Z-Wave network.
 		 * - Driver::ControllerCommand_AddDevice - Add a new device (but not a controller) to the Z-Wave network.
-		 * - Driver::ControllerCommand_CreateNewPrimary (Not yet implemented)
-		 * - Driver::ControllerCommand_ReceiveConfiguration -   
+		 * - Driver::ControllerCommand_CreateNewPrimary - Create a new primary controller (dangerous).
+		 * - Driver::ControllerCommand_ReceiveConfiguration - Used by controller to be added as secondary.
 		 * - Driver::ControllerCommand_RemoveController - remove a controller from the Z-Wave network.
 		 * - Driver::ControllerCommand_RemoveDevice - remove a device (but not a controller) from the Z-Wave network.
- 		 * - Driver::ControllerCommand_RemoveFailedNode - move a node to the controller's list of failed nodes.  The node must actually
-		 * have failed or have been disabled since the command will fail if it responds.  A node must be in the controller's failed nodes list
-		 * for ControllerCommand_ReplaceFailedNode to work.
+ 		 * - Driver::ControllerCommand_RemoveFailedNode - Remove a node from the network. The node must not be responding
+		 * and be on the controller's failed node list.
 		 * - Driver::ControllerCommand_HasNodeFailed - Check whether a node is in the controller's failed nodes list.
-		 * - Driver::ControllerCommand_ReplaceFailedNode - replace a failed device with another. If the node is not in 
+		 * - Driver::ControllerCommand_ReplaceFailedNode - Replace a failed device with another. If the node is not in 
 		 * the controller's failed nodes list, or the node responds, this command will fail.
-		 * - Driver:: ControllerCommand_TransferPrimaryRole	(Not yet implemented) - Add a new controller to the network and
+		 * - Driver:: ControllerCommand_TransferPrimaryRole - Add a new controller to the network and
 		 * make it the primary.  The existing primary will become a secondary controller.  
 		 * - Driver::ControllerCommand_RequestNetworkUpdate - Update the controller with network information from the SUC/SIS.
 		 * - Driver::ControllerCommand_RequestNodeNeighborUpdate - Get a node to rebuild its neighbour list.  This method also does ControllerCommand_RequestNodeNeighbors afterwards.
@@ -1396,6 +1411,7 @@ namespace OpenZWave
 		 * - Driver::ControllerCommand_CreateButton - Create a handheld button id.
 		 * - Driver::ControllerCommand_DeleteButton - Delete a handheld button id.
 		 * <p> Callbacks
+		 * - Driver::ControllerState_Starting, the controller command has begun
 		 * - Driver::ControllerState_Waiting, the controller is waiting for a user action.  A notice should be displayed 
 		 * to the user at this point, telling them what to do next.
 		 * For the add, remove, replace and transfer primary role commands, the user needs to be told to press the 
