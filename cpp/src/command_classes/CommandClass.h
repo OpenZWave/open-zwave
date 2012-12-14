@@ -86,6 +86,16 @@ namespace OpenZWave
 			map<uint8,uint8>::iterator it = m_endPointMap.find( _instance );
 			return( it == m_endPointMap.end() ? 0 : it->second );
 		}
+		uint8 GetInstance( uint8 const _endPoint ){
+			for( map<uint8,uint8>::iterator it = m_endPointMap.begin(); it != m_endPointMap.end(); it++ )
+			{
+				if( _endPoint == it->second )
+				{
+					return it->first;
+				}
+			}
+			return 0;
+		}
 
 		void SetInstances( uint8 const _instances );
 		void SetInstance( uint8 const _endPoint );

@@ -26,6 +26,7 @@
 //-----------------------------------------------------------------------------
 
 #include "Defs.h"
+#include "Log.h"
 #include "Msg.h"
 #include "Node.h"
 #include "MultiInstance.h"
@@ -96,6 +97,7 @@ void Msg::SetInstance
 			if( micc->GetVersion() > 1 )
 			{
 				m_endPoint = _cc->GetEndPoint( _instance );
+				Log::Write( LogLevel_Info, "Msg::SetInstance _instance=%d m_endPoint=%d class=%s", _instance, m_endPoint, _cc->GetCommandClassName().c_str() );
 				if( m_endPoint != 0 )
 				{
 					// Set the flag bit to indicate MultiChannel rather than MultiInstance
@@ -105,7 +107,7 @@ void Msg::SetInstance
 			}
 			else
 			{
-				// Set the flag bit to indicate MultiChannel rather than MultiInstance
+				// Set the flag bit to indicate MultiInstance rather than MultiChannel
 				m_flags |= m_MultiInstance;
 			}
 		}
@@ -256,4 +258,3 @@ void Msg::MultiEncap
 		m_logText = str;
 	}
 }
-
