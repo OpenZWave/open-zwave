@@ -1961,7 +1961,8 @@ void Driver::HandleGetSerialAPICapabilitiesResponse
 	{
 		SendMsg( new Msg( "FUNC_ID_ZW_GET_VIRTUAL_NODES", 0xff, REQUEST, FUNC_ID_ZW_GET_VIRTUAL_NODES, false ), Driver::MsgQueue_Command);
 	}
-	else
+	else if( IsAPICallSupported( FUNC_ID_ZW_GET_RANDOM ) )
+
 	{
 		Msg *msg = new Msg( "FUNC_ID_ZW_GET_RANDOM", 0xff, REQUEST, FUNC_ID_ZW_GET_RANDOM, false );
 		msg->Append( 32 );      // 32 bytes
