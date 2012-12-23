@@ -129,20 +129,24 @@ bool SwitchMultilevel::RequestState
 bool SwitchMultilevel::RequestValue
 (
 	uint32 const _requestFlags,
-	uint8 const _dummy1,	// = 0 (not used)
+	uint8 const _index,
 	uint8 const _instance,
 	Driver::MsgQueue const _queue
 )
 {
-	Msg* msg = new Msg( "SwitchMultilevelCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-	msg->SetInstance( this, _instance );
-	msg->Append( GetNodeId() );
-	msg->Append( 2 );
-	msg->Append( GetCommandClassId() );
-	msg->Append( SwitchMultilevelCmd_Get );
-	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	GetDriver()->SendMsg( msg, _queue );
-	return true;
+	if( _index == 0 )
+	{
+		Msg* msg = new Msg( "SwitchMultilevelCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		msg->SetInstance( this, _instance );
+		msg->Append( GetNodeId() );
+		msg->Append( 2 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( SwitchMultilevelCmd_Get );
+		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		GetDriver()->SendMsg( msg, _queue );
+		return true;
+	}
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -254,7 +258,7 @@ bool SwitchMultilevel::SetValue
 
 	switch( _value.GetID().GetIndex() )
 	{
-		case 0:
+		case SwitchMultilevelIndex_Level:
 		{
 			// Level
 			if( ValueByte* value = static_cast<ValueByte*>( GetValue( instance, SwitchMultilevelIndex_Level ) ) )
@@ -264,7 +268,7 @@ bool SwitchMultilevel::SetValue
 			}
 			break;
 		}
-		case 1:
+		case SwitchMultilevelIndex_Bright:
 		{
 			// Bright
 			if( ValueButton* button = static_cast<ValueButton*>( GetValue( instance, SwitchMultilevelIndex_Bright ) ) )
@@ -281,7 +285,7 @@ bool SwitchMultilevel::SetValue
 			}
 			break;
 		}
-		case 2:
+		case SwitchMultilevelIndex_Dim:
 		{
 			// Dim
 			if( ValueButton* button = static_cast<ValueButton*>( GetValue( instance, SwitchMultilevelIndex_Dim ) ) )
@@ -298,35 +302,47 @@ bool SwitchMultilevel::SetValue
 			}
 			break;
 		}
-		case 3:
+		case SwitchMultilevelIndex_IgnoreStartLevel:
 		{
-			// Ignore Start Level
-			// Nothing to do.  State is set within the value, and
-			// is not separately transmitted to the device.
+			if( ValueBool* value = static_cast<ValueBool*>( GetValue( instance, SwitchMultilevelIndex_IgnoreStartLevel ) ) )
+			{
+				value->OnValueRefreshed( (static_cast<ValueBool const*>( &_value))->GetValue() );
+				value->Release();
+			}
+			res = true;
 			break;
 		}
-		case 4:
+		case SwitchMultilevelIndex_StartLevel:
 		{
-			// Start level
-			// Nothing to do.  State is set within the value, and
-			// is not separately transmitted to the device.
+			if( ValueByte* value = static_cast<ValueByte*>( GetValue( instance, SwitchMultilevelIndex_StartLevel ) ) )
+			{
+				value->OnValueRefreshed( (static_cast<ValueByte const*>( &_value))->GetValue() );
+				value->Release();
+			}
+			res = true;
 			break;
 		}
-		case 5:
+		case SwitchMultilevelIndex_Duration:
 		{
-			// Dimming Duration
-			// Nothing to do.  State is set within the value, and
-			// is not separately transmitted to the device.
+			if( ValueByte* value = static_cast<ValueByte*>( GetValue( instance, SwitchMultilevelIndex_Duration ) ) )
+			{
+				value->OnValueRefreshed( (static_cast<ValueByte const*>( &_value))->GetValue() );
+				value->Release();
+			}
+			res = true;
 			break;
 		}
-		case 6:
+		case SwitchMultilevelIndex_Step:
 		{
-			// Step Size
-			// Nothing to do.  State is set within the value, and
-			// is not separately transmitted to the device.
+			if( ValueByte* value = static_cast<ValueByte*>( GetValue( instance, SwitchMultilevelIndex_Step ) ) )
+			{
+				value->OnValueRefreshed( (static_cast<ValueByte const*>( &_value))->GetValue() );
+				value->Release();
+			}
+			res = true;
 			break;
 		}
-		case 7:
+		case SwitchMultilevelIndex_Inc:
 		{
 			// Inc
 			if( ValueButton* button = static_cast<ValueButton*>( GetValue( instance, SwitchMultilevelIndex_Inc ) ) )
@@ -343,7 +359,7 @@ bool SwitchMultilevel::SetValue
 			}
 			break;
 		}
-		case 8:
+		case SwitchMultilevelIndex_Dec:
 		{
 			// Dec
 			if( ValueButton* button = static_cast<ValueButton*>( GetValue( instance, SwitchMultilevelIndex_Dec ) ) )

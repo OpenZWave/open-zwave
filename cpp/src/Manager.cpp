@@ -108,7 +108,6 @@ void Manager::Destroy
 Manager::Manager
 (
 ):
-	m_exitEvent( new Event() ),
 	m_notificationMutex( new Mutex() )
 {
 	// Set the locale
@@ -174,7 +173,6 @@ Manager::~Manager
 		m_readyDrivers.erase( it );
 	}
 	
-	m_exitEvent->Release();
 	m_notificationMutex->Release();
 
 	// Clear the watchers list
@@ -377,6 +375,24 @@ uint8 Manager::GetControllerNodeId
 	}
 
 	Log::Write( LogLevel_Info, "mgr,     GetControllerNodeId() failed - _homeId %d not found", _homeId );
+	return 0xff;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::GetSUCNodeId>
+// 
+//-----------------------------------------------------------------------------
+uint8 Manager::GetSUCNodeId
+(
+	uint32 const _homeId
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		return driver->GetSUCNodeId();
+	}
+
+	Log::Write( LogLevel_Info, "mgr,     GetSUCNodeId() failed - _homeId %d not found", _homeId );
 	return 0xff;
 }
 
@@ -2910,9 +2926,10 @@ void Manager::ResetController
 {
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
-		driver->ResetController( m_exitEvent );
-		Wait::Single( m_exitEvent );
-		m_exitEvent->Reset();
+		Event *event = new Event();
+		driver->ResetController( event );
+		Wait::Single( event );
+		event->Release();
 		string path = driver->GetControllerPath();
 		Driver::ControllerInterface intf = driver->GetControllerInterfaceType();
 		RemoveDriver( path );
@@ -2944,7 +2961,7 @@ bool Manager::BeginControllerCommand
 (
 	uint32 const _homeId, 
 	Driver::ControllerCommand _command,
-	Driver::pfnControllerCallback_t _callback,	// = NULL
+	Driver::pfnControllerCallback_t _callback,				// = NULL
 	void* _context,								// = NULL
 	bool _highPower,							// = false
 	uint8 _nodeId,								// = 0xff
@@ -3006,6 +3023,60 @@ void Manager::TestNetwork
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
 		driver->TestNetwork( 0, _count );
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::HealNetworkNode>
+// Heal a single node in the network
+//-----------------------------------------------------------------------------
+void Manager::HealNetworkNode
+(
+	uint32 const _homeId,
+	uint8 const _nodeId,
+	bool _doRR
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		Node* node = driver->GetNode( _nodeId );
+		if( node )
+		{
+			BeginControllerCommand( _homeId, Driver::ControllerCommand_RequestNodeNeighborUpdate, NULL, NULL, true, _nodeId );
+			if( _doRR )
+			{
+				driver->UpdateNodeRoutes( _nodeId, true );
+			}
+			driver->ReleaseNodes();
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::HealNetwork>
+// Heal the Z-Wave network one node at a time.
+//-----------------------------------------------------------------------------
+void Manager::HealNetwork
+(
+	uint32 const _homeId,
+	bool _doRR
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		driver->LockNodes();
+		for( uint8 i=0; i<255; i++ )
+		{
+			if( driver->m_nodes[i] != NULL )
+			{
+				BeginControllerCommand( _homeId, Driver::ControllerCommand_RequestNodeNeighborUpdate, NULL, NULL, true, i );
+				if( _doRR )
+				{
+					driver->UpdateNodeRoutes( i, true );
+				}
+			}
+		}
+		driver->ReleaseNodes();
 	}
 }
 

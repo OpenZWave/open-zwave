@@ -156,7 +156,6 @@ namespace OpenZWave
 		Manager();															// Constructor, to be called only via the static Create method.
 		virtual ~Manager();													// Destructor, to be called only via the static Destroy method.
 
-		Event*					m_exitEvent;								// Event that will be signalled when the threads should exit
 		bool					m_exit;										// Flag indicating that program exit is in progress.
 		static Manager*			s_instance;									// Pointer to the instance of the Manager singleton.
 
@@ -229,6 +228,13 @@ namespace OpenZWave
 		 * \return the node ID of the Z-Wave controller.
 		 */
 		uint8 GetControllerNodeId( uint32 const _homeId );
+
+		/**
+		 * \brief Get the node ID of the Static Update Controller.
+		 * \param _homeId The Home ID of the Z-Wave controller.
+		 * \return the node ID of the Z-Wave controller.
+		 */
+		uint8 GetSUCNodeId( uint32 const _homeId );
 
 		/**
 		 * \brief Query if the controller is a primary controller.
@@ -946,7 +952,7 @@ namespace OpenZWave
 
 		/**
 		 * \brief Sets the state of a bool.
-		 * Due to the possibility of a device being asleep, the command is assumed to suceeed, and the value
+		 * Due to the possibility of a device being asleep, the command is assumed to suceed, and the value
 		 * held by the node is updated directly.  This will be reverted by a future status message from the device
 		 * if the Z-Wave message actually failed to get through.  Notification callbacks will be sent in both cases.
 		 * \param _id The unique identifier of the bool value.
@@ -957,7 +963,7 @@ namespace OpenZWave
 
 		/**
 		 * \brief Sets the value of a byte.
-		 * Due to the possibility of a device being asleep, the command is assumed to suceeed, and the value
+		 * Due to the possibility of a device being asleep, the command is assumed to suceed, and the value
 		 * held by the node is updated directly.  This will be reverted by a future status message from the device
 		 * if the Z-Wave message actually failed to get through.  Notification callbacks will be sent in both cases.
 		 * \param _id The unique identifier of the byte value.
@@ -980,7 +986,7 @@ namespace OpenZWave
 		
 		/**
 		 * \brief Sets the value of a 32-bit signed integer.
-		 * Due to the possibility of a device being asleep, the command is assumed to suceeed, and the value
+		 * Due to the possibility of a device being asleep, the command is assumed to suceed, and the value
 		 * held by the node is updated directly.  This will be reverted by a future status message from the device
 		 * if the Z-Wave message actually failed to get through.  Notification callbacks will be sent in both cases.
 		 * \param _id The unique identifier of the integer value.
@@ -991,7 +997,7 @@ namespace OpenZWave
 
 		/**
 		 * \brief Sets the value of a 16-bit signed integer.
-		 * Due to the possibility of a device being asleep, the command is assumed to suceeed, and the value
+		 * Due to the possibility of a device being asleep, the command is assumed to suceed, and the value
 		 * held by the node is updated directly.  This will be reverted by a future status message from the device
 		 * if the Z-Wave message actually failed to get through.  Notification callbacks will be sent in both cases.
 		 * \param _id The unique identifier of the integer value.
@@ -1002,7 +1008,7 @@ namespace OpenZWave
 
 		/**
 		 * \brief Sets the value from a string, regardless of type.
-		 * Due to the possibility of a device being asleep, the command is assumed to suceeed, and the value
+		 * Due to the possibility of a device being asleep, the command is assumed to suceed, and the value
 		 * held by the node is updated directly.  This will be reverted by a future status message from the device
 		 * if the Z-Wave message actually failed to get through.  Notification callbacks will be sent in both cases.
 		 * \param _id The unique identifier of the integer value.
@@ -1013,7 +1019,7 @@ namespace OpenZWave
 
 		/**
 		 * \brief Sets the selected item in a list.
-		 * Due to the possibility of a device being asleep, the command is assumed to suceeed, and the value
+		 * Due to the possibility of a device being asleep, the command is assumed to suceed, and the value
 		 * held by the node is updated directly.  This will be reverted by a future status message from the device
 		 * if the Z-Wave message actually failed to get through.  Notification callbacks will be sent in both cases.
 		 * \param _id The unique identifier of the list value.
@@ -1274,7 +1280,7 @@ namespace OpenZWave
 
 		/**
 		 * \brief Adds a node to an association group.
-		 * Due to the possibility of a device being asleep, the command is assumed to suceeed, and the association data
+		 * Due to the possibility of a device being asleep, the command is assumed to suceed, and the association data
 		 * held in this class is updated directly.  This will be reverted by a future Association message from the device
 		 * if the Z-Wave message actually failed to get through.  Notification callbacks will be sent in both cases.
 		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
@@ -1287,7 +1293,7 @@ namespace OpenZWave
 
 		/**
 		 * \brief Removes a node from an association group.
-		 * Due to the possibility of a device being asleep, the command is assumed to suceeed, and the association data
+		 * Due to the possibility of a device being asleep, the command is assumed to suceed, and the association data
 		 * held in this class is updated directly.  This will be reverted by a future Association message from the device
 		 * if the Z-Wave message actually failed to get through.   Notification callbacks will be sent in both cases.
 		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
@@ -1381,22 +1387,21 @@ namespace OpenZWave
 		 * \param _homeId The Home ID of the Z-Wave controller.
 		 * \param _command The command to be sent to the controller.
 		 * \param _callback pointer to a function that will be called at various stages during the command process
+		 * to notify the user of progress or to request actions on the user's part.  Defaults to NULL.
 		 * \param _context pointer to user defined data that will be passed into to the callback function.  Defaults to NULL.
 		 * \param _highPower used only with the AddDevice, AddController, RemoveDevice and RemoveController commands. 
 		 * Usually when adding or removing devices, the controller operates at low power so that the controller must
 		 * be physically close to the device for security reasons.  If _highPower is true, the controller will 
 		 * operate at normal power levels instead.  Defaults to false.
-		 * \param _nodeId used only with the ReplaceFailedNode command, to specify the node that is going to be replaced.
-		 * \return true if the command was accepted and has started.
+		 * \param _nodeId is the node ID used by the command if necessary.
+		 * \param _arg is an optional argument, usually another node ID, that is used by the command.
+		 * \return true if the command was accepted and has queued to be executed.
 		 * \see CancelControllerCommand, HasNodeFailed, RemoveFailedNode, Driver::ControllerCommand, Driver::pfnControllerCallback_t, 
-		 * to notify the user of progress or to request actions on the user's part.  Defaults to NULL.
 		 * <p> Commands
-		 * - Driver::ControllerCommand_AddController - Add a new secondary controller to the Z-Wave network.
-		 * - Driver::ControllerCommand_AddDevice - Add a new device (but not a controller) to the Z-Wave network.
-		 * - Driver::ControllerCommand_CreateNewPrimary - Create a new primary controller (dangerous).
-		 * - Driver::ControllerCommand_ReceiveConfiguration - Used by controller to be added as secondary.
-		 * - Driver::ControllerCommand_RemoveController - remove a controller from the Z-Wave network.
-		 * - Driver::ControllerCommand_RemoveDevice - remove a device (but not a controller) from the Z-Wave network.
+		 * - Driver::ControllerCommand_AddDevice - Add a new device or controller to the Z-Wave network.
+		 * - Driver::ControllerCommand_CreateNewPrimary - Create a new primary controller when old primary fails. Requires SUC.
+		 * - Driver::ControllerCommand_ReceiveConfiguration - Receive network configuration information from primary controller. Requires secondary.
+		 * - Driver::ControllerCommand_RemoveDevice - Remove a device or controller from the Z-Wave network.
  		 * - Driver::ControllerCommand_RemoveFailedNode - Remove a node from the network. The node must not be responding
 		 * and be on the controller's failed node list.
 		 * - Driver::ControllerCommand_HasNodeFailed - Check whether a node is in the controller's failed nodes list.
@@ -1405,9 +1410,11 @@ namespace OpenZWave
 		 * - Driver:: ControllerCommand_TransferPrimaryRole - Add a new controller to the network and
 		 * make it the primary.  The existing primary will become a secondary controller.  
 		 * - Driver::ControllerCommand_RequestNetworkUpdate - Update the controller with network information from the SUC/SIS.
-		 * - Driver::ControllerCommand_RequestNodeNeighborUpdate - Get a node to rebuild its neighbour list.  This method also does ControllerCommand_RequestNodeNeighbors afterwards.
+		 * - Driver::ControllerCommand_RequestNodeNeighborUpdate - Get a node to rebuild its neighbour list.  This method also does RequestNodeNeighbors afterwards.
 		 * - Driver::ControllerCommand_AssignReturnRoute - Assign a network return route to a device.
 		 * - Driver::ControllerCommand_DeleteAllReturnRoutes - Delete all network return routes from a device.
+		 * - Driver::ControllerCommand_SendNodeInformation - Send a node information frame.
+		 * - Driver::ControllerCommand_ReplicationSend - Send information from primary to secondary
 		 * - Driver::ControllerCommand_CreateButton - Create a handheld button id.
 		 * - Driver::ControllerCommand_DeleteButton - Delete a handheld button id.
 		 * <p> Callbacks
@@ -1459,6 +1466,24 @@ namespace OpenZWave
 		 * \see TestNetwork
 		 */
 		void TestNetwork( uint32 const _homeId, uint32 const _count );
+
+ 		/**
+		 * \brief Heal network node by requesting the node rediscover their neighbors.
+		 * Sends a ControllerCommand_RequestNodeNeighborUpdate to the node.
+		 * \param _homeId The Home ID of the Z-Wave network to be healed.
+		 * \param _nodeId The node to heal.
+		 * \param _doRR Whether to perform return routes initialization.
+		 */
+		void HealNetworkNode( uint32 const _homeId, uint8 const _nodeId, bool _doRR );
+
+ 		/**
+		 * \brief Heal network by requesting node's rediscover their neighbors.
+		 * Sends a ControllerCommand_RequestNodeNeighborUpdate to every node.
+		 * Can take a while on larger networks.
+		 * \param _homeId The Home ID of the Z-Wave network to be healed.
+		 * \param _doRR Whether to perform return routes initialization.
+		 */
+		void HealNetwork( uint32 const _homeId, bool _doRR );
 
 	/*@}*/
 

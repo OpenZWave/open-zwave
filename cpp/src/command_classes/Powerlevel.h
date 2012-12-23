@@ -32,6 +32,8 @@
 
 namespace OpenZWave
 {
+	class ValueList;
+
 	/** \brief Implements COMMAND_CLASS_POWERLEVEL (0x73), a Z-Wave device command class.
 	 */
 	class Powerlevel: public CommandClass
@@ -64,16 +66,23 @@ namespace OpenZWave
 		static uint8 const StaticGetCommandClassId(){ return 0x73; }
 		static string const StaticGetCommandClassName(){ return "COMMAND_CLASS_POWERLEVEL"; }
 
-		void Set( PowerLevelEnum _powerLevel, uint8 _timeout );
-		void Test( uint8 _testNodeId, PowerLevelEnum _powerLevel, uint16 _numFrames );
-
 		// From CommandClass
+		virtual bool RequestState( uint32 const _requestFlags, uint8 const _instance, Driver::MsgQueue const _queue );
+		virtual bool RequestValue( uint32 const _requestFlags, uint8 const _index, uint8 const _instance, Driver::MsgQueue const _queue );
 		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }
 		virtual string const GetCommandClassName()const{ return StaticGetCommandClassName(); }
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );
+		virtual bool SetValue( Value const& _value );
+
+	protected:
+		virtual void CreateVars( uint8 const _instance );
 
 	private:	
 		Powerlevel( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
+
+		bool Set( uint8 const _instance );
+		bool Test( uint8 const _instance );
+		bool Report( uint8 const _instance );
 	};
 
 } // namespace OpenZWave
