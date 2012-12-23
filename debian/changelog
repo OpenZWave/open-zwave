@@ -1,4 +1,4 @@
-openzwave (1.0-5) UNRELEASED; urgency=low
+openzwave (1.0-6) UNRELEASED; urgency=low
 
   [ hari ]
   * Initial release.
@@ -9,5 +9,6 @@ openzwave (1.0-5) UNRELEASED; urgency=low
   * increasing release version after greg's large update
   * new package including patches for retry timer and explore routing
   * don't assume devices are awake in debian package
+  * increase deb package version
 
- -- root <root@pluto.vt100.at>  Wed, 19 Dec 2012 18:36:26 +0100
+ -- root <root@pluto.vt100.at>  Sun, 23 Dec 2012 10:08:29 +0100
