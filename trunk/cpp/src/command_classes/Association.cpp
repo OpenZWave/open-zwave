@@ -226,7 +226,7 @@ bool Association::HandleMsg
 			// Retrieve the number of groups this device supports.
 			// The groups will be queried with the session data.
 			m_numGroups = _data[1];
-			Log::Write( LogLevel_Info, GetNodeId(), "Received Association Groupings report from node %d.  Number of groups is %d", GetNodeId(), m_numGroups );
+			Log::Write( LogLevel_Info, GetNodeId(), "Received Association Groupings report from node %d. Number of groups is %d", GetNodeId(), m_numGroups );
 			ClearStaticRequest( StaticRequest_Values );
 			handled = true;
 		}

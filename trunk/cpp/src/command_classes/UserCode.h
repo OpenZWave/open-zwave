@@ -51,6 +51,9 @@ namespace OpenZWave
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );
 		virtual bool SetValue( Value const& _value );
 
+	protected:
+		virtual void CreateVars( uint8 const _instance );
+
 	private:
 		UserCode( uint32 const _homeId, uint8 const _nodeId );
 

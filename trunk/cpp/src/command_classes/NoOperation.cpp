@@ -71,5 +71,5 @@ void NoOperation::Set
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 	else
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_NO_ROUTE );
-	GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
+	GetDriver()->SendMsg( msg, Driver::MsgQueue_NoOp );
 }

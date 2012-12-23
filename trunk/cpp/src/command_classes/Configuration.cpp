@@ -33,6 +33,7 @@
 #include "Node.h"
 #include "Log.h"
 #include "ValueBool.h"
+#include "ValueButton.h"
 #include "ValueByte.h"
 #include "ValueInt.h"
 #include "ValueList.h"
@@ -191,6 +192,12 @@ bool Configuration::SetValue
 		{
 			ValueList const& valueList = static_cast<ValueList const&>( _value );
 			Set( param, valueList.GetNewItem().m_value, valueList.GetSize() );
+			return true;
+		}
+		case ValueID::ValueType_Button:
+		{
+			ValueButton const& valueButton = static_cast<ValueButton const&>( _value );
+			Set( param, valueButton.IsPressed(), 1 );
 			return true;
 		}
 		default:

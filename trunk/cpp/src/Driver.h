@@ -57,6 +57,7 @@ namespace OpenZWave
 		friend class Node;
 		friend class Group;
 		friend class CommandClass;
+		friend class ControllerReplication;
 		friend class Value;
 		friend class ValueStore;
 		friend class ValueButton;
@@ -181,6 +182,7 @@ namespace OpenZWave
 
 		uint32 GetHomeId()const{ return m_homeId; }
 		uint8 GetNodeId()const{ return m_nodeId; }
+		uint8 GetSUCNodeId()const{ return m_SUCNodeId; }
 		uint16 GetManufacturerId()const{ return m_manufacturerId; }
 		uint16 GetProductType()const{ return m_productType; }
 		uint16 GetProductId()const{ return m_productId; }
@@ -236,6 +238,7 @@ namespace OpenZWave
 		string					m_libraryTypeName;							// Name describing the library type.
 		uint8					m_libraryType;								// Type of library used by the controller.
 
+		uint8					m_serialAPIVersion[2];
 		uint16					m_manufacturerId;
 		uint16					m_productType;
 		uint16					m_productId;
@@ -249,109 +252,6 @@ namespace OpenZWave
 		Mutex*					m_nodeMutex;								// Serializes access to node data
 
 		ControllerReplication*	m_controllerReplication;					// Controller replication is handled separately from the other command classes, due to older hand-held controllers using invalid node IDs.
-
-	//-----------------------------------------------------------------------------
-	//	Sending Z-Wave messages
-	//-----------------------------------------------------------------------------
-	public:
-		enum MsgQueue
-		{
-			MsgQueue_Command = 0,
-			MsgQueue_WakeUp,
-			MsgQueue_Send,
-			MsgQueue_Query,
-			MsgQueue_Poll,
-			MsgQueue_Count		// Number of message queues
-		};
-
-		void SendMsg( Msg* _msg, MsgQueue const _queue );
-
-	private:
-		/**
-		 *  If there are messages in the send queue (m_sendQueue), gets the next message in the
-		 *  queue and writes it to the serial port.  In sending the message, SendMsg also initializes
-		 *  variables tracking the message's callback ID (m_expectedCallbackId), expected reply
-		 *  (m_expectedReply) and expected command class ID (m_expectedCommandClassId).  It also
-		 *  sets m_waitingForAck to true and increments the message's send attempts counter.
-		 *  <p>
-		 *  If there are no messages in the send queue, then SendMsg checks the query queue to
-		 *  see if there are any outstanding queries that can be processed (target node not asleep).
-		 *  If so, it retrieves the Node object that needs to be queried and calls that node's
-		 *  AdvanceQueries member function.  If this call results in all of the node's queries to be
-		 *  completed, SendMsg will remove the node query item from the query queue.
-		 *  \return TRUE if data was written, FALSE if not
-		 *  \see Msg, m_sendQueue, m_expectedCallbackId, m_expectedReply, m_expectedCommandClassId,
-		 *  m_waitingForAck, Msg::GetSendAttempts, Node::AdvanceQueries, GetCurrentNodeQuery,
-		 *  RemoveNodeQuery, Node::AllQueriesCompleted
-		 */
-		bool WriteNextMsg( MsgQueue const _queue );							// Extracts the first message from the queue, and makes it the current one.
-		bool WriteMsg( string const str);									// Sends the current message to the Z-Wave network
-		void RemoveCurrentMsg();											// Deletes the current message and cleans up the callback etc states
-		bool MoveMessagesToWakeUpQueue(	uint8 const _targetNodeId );		// If a node does not respond, and is of a type that can sleep, this method is used to move all its pending messages to another queue ready for when it mext wakes up.
-		bool IsControllerCommand( uint8 const _command );					// identify controller commands
-		bool IsExpectedReply( uint8 const _nodeId );						// Determine if reply message is the one we are expecting
-		void SendQueryStageComplete( uint8 const _nodeId, Node::QueryStage const _stage, MsgQueue const _queue );
-		void CheckCompletedNodeQueries();									// Send notifications if all awake and/or sleeping nodes have completed their queries
-
-		// Requests to be sent to nodes are assigned to one of five queues.
-		// From highest to lowest priority, these are
-		//
-		// 1)	The command queue, for controller commands.  This is the highest
-		//		priority send queue, because the controller command processes are not
-		//		permitted to be interupted by other requests.
-		//
-		// 2)	The wakeup queue.  This holds messages that have been held for a 
-		//		sleeping device that has now woken up.  These get a high priority
-		//		because such devices do not stay awake for very long.
-		//
-		// 3)	The send queue.  This is for normal messages, usually triggered by
-		//		a user interaction with the application.
-		//
-		// 4)	The query queue.  For node query messages sent when a new node is
-		//		discovered.  The query process generates a large number of requests,
-		//		so the query queue has a low priority to avoid making the system
-		//		unresponsive.
-		//
-		// 5)   The poll queue.  Requests to devices that need their state polling
-		//		at regular intervals.  These are of the lowest priority, and are only
-		//		sent when nothing else is going on
-		enum MsgQueueCmd
-		{
-			MsgQueueCmd_SendMsg = 0,
-			MsgQueueCmd_QueryStageComplete
-		};
-		
-		class MsgQueueItem
-		{
-		public:
-			bool operator == ( MsgQueueItem const& _other )const
-			{
-				if( _other.m_command == m_command )
-				{
-					if( m_command == MsgQueueCmd_SendMsg )
-					{
-						return( (*_other.m_msg) == (*m_msg) );
-					}
-					else
-					{
-						return( (_other.m_nodeId == m_nodeId) && (_other.m_queryStage == m_queryStage) );
-					}
-				}
-
-				return false;
-			}
-
-			MsgQueueCmd			m_command;
-			Msg*				m_msg;
-			uint8				m_nodeId;
-			Node::QueryStage		m_queryStage;
-		};
-
-		list<MsgQueueItem>			m_msgQueue[MsgQueue_Count];
-		Event*					m_queueEvent[MsgQueue_Count];				// Events for each queue, which are signalled when the queue is not empty
-		Mutex*					m_sendMutex;						// Serialize access to the queues
-		Msg*					m_currentMsg;
-		TimeStamp				m_resendTimeStamp;
 
 	//-----------------------------------------------------------------------------
 	//	Receiving Z-Wave messages
@@ -388,6 +288,7 @@ namespace OpenZWave
 		bool HandleReplaceFailedNodeResponse( uint8* _data );
 		bool HandleAssignReturnRouteResponse( uint8* _data );
 		bool HandleDeleteReturnRouteResponse( uint8* _data );
+		void HandleSendNodeInformationRequest( uint8* _data );
 		void HandleSendDataResponse( uint8* _data, bool _replication );
 		bool HandleNetworkUpdateResponse( uint8* _data );
 		void HandleGetRoutingInfoResponse( uint8* _data );
@@ -455,17 +356,8 @@ namespace OpenZWave
 	//	Retrieving Node information
 	//-----------------------------------------------------------------------------
 	public:
-		uint8 GetNodeNumber( Msg const* _msg )const
-		{
-			if( _msg == NULL )
-			{
-				return 0;
-			}
-			else
-			{
-				return _msg->GetTargetNodeId();
-			}
-		}
+		uint8 GetNodeNumber( Msg const* _msg )const{ return  ( _msg == NULL ? 0 : _msg->GetTargetNodeId() ); }
+
 	private:
 		/**
 		 *  Creates a new Node object (deleting any previous Node object with the same nodeId) and
@@ -537,20 +429,20 @@ namespace OpenZWave
 		enum ControllerCommand
 		{
 			ControllerCommand_None = 0,					/**< No command. */
-			ControllerCommand_AddController,				/**< Add a new controller to the Z-Wave network.  The new controller will be a secondary. */
-			ControllerCommand_AddDevice,					/**< Add a new device (but not a controller) to the Z-Wave network. */
-			ControllerCommand_CreateNewPrimary,				/**< Add a new controller to the Z-Wave network.  The new controller will be the primary, and the current primary will become a secondary controller. */
+			ControllerCommand_AddDevice,					/**< Add a new device or controller to the Z-Wave network. */
+			ControllerCommand_CreateNewPrimary,				/**< Add a new controller to the Z-Wave network. Used when old primary fails. Requires SUC. */
 			ControllerCommand_ReceiveConfiguration,				/**< Receive Z-Wave network configuration information from another controller. */
-			ControllerCommand_RemoveController,				/**< Remove a controller from the Z-Wave network. */
-			ControllerCommand_RemoveDevice,					/**< Remove a new device (but not a controller) from the Z-Wave network. */
+			ControllerCommand_RemoveDevice,					/**< Remove a device or controller from the Z-Wave network. */
 			ControllerCommand_RemoveFailedNode,				/**< Move a node to the controller's failed nodes list. This command will only work if the node cannot respond. */
 			ControllerCommand_HasNodeFailed,				/**< Check whether a node is in the controller's failed nodes list. */
 			ControllerCommand_ReplaceFailedNode,				/**< Replace a non-responding node with another. The node must be in the controller's list of failed nodes for this command to succeed. */
 			ControllerCommand_TransferPrimaryRole,				/**< Make a different controller the primary. */
 			ControllerCommand_RequestNetworkUpdate,				/**< Request network information from the SUC/SIS. */
-			ControllerCommand_RequestNodeNeighborUpdate,			/**< Get a node to rebuild its neighbour list.  This method also does ControllerCommand_RequestNodeNeighbors */
+			ControllerCommand_RequestNodeNeighborUpdate,			/**< Get a node to rebuild its neighbour list.  This method also does RequestNodeNeighbors */
 			ControllerCommand_AssignReturnRoute,				/**< Assign a network return routes to a device. */
 			ControllerCommand_DeleteAllReturnRoutes,			/**< Delete all return routes from a device. */
+			ControllerCommand_SendNodeInformation,				/**< Send a node information frame */
+			ControllerCommand_ReplicationSend,				/**< Send information from primary to secondary */
 			ControllerCommand_CreateButton,					/**< Create an id that tracks handheld button presses */
 			ControllerCommand_DeleteButton					/**< Delete id that tracks handheld button presses */
 		};
@@ -563,7 +455,11 @@ namespace OpenZWave
 		enum ControllerState
 		{
 			ControllerState_Normal = 0,				/**< No command in progress. */
+			ControllerState_Starting,				/**< The command is starting. */
+			ControllerState_Cancel,					/**< The command was cancelled. */
+			ControllerState_Error,					/**< Command invocation had error(s) and was aborted */
 			ControllerState_Waiting,				/**< Controller is waiting for a user action. */
+			ControllerState_Sleeping,				/**< Controller command is on a sleep queue wait for device. */
 			ControllerState_InProgress,				/**< The controller is communicating with the other device to carry out the command. */
 			ControllerState_Completed,			    	/**< The command has completed successfully. */
 			ControllerState_Failed,					/**< The command has failed. */
@@ -571,7 +467,28 @@ namespace OpenZWave
 			ControllerState_NodeFailed				/**< Used only with ControllerCommand_HasNodeFailed to indicate that the controller thinks the node has failed. */
 		};
 
-		typedef void (*pfnControllerCallback_t)( ControllerState _state, void* _context );
+		/**
+		 * Controller Errors
+		 * Provide some more information about controller failures.
+		 */
+		enum ControllerError
+		{
+		  ControllerError_None = 0,
+		  ControllerError_ButtonNotFound,				/**< Button */
+		  ControllerError_NodeNotFound,					/**< Button */
+		  ControllerError_NotBridge,					/**< Button */
+		  ControllerError_NotSUC,					/**< CreateNewPrimary */
+		  ControllerError_NotSecondary,					/**< CreateNewPrimary */
+		  ControllerError_NotPrimary,					/**< RemoveFailedNode, AddNodeToNetwork */
+		  ControllerError_IsPrimary,					/**< ReceiveConfiguration */
+		  ControllerError_NotFound,					/**< RemoveFailedNode */
+		  ControllerError_Busy,						/**< RemoveFailedNode, RequestNetworkUpdate */
+		  ControllerError_Failed,					/**< RemoveFailedNode, RequestNetworkUpdate */
+		  ControllerError_Disabled,					/**< RequestNetworkUpdate error */
+		  ControllerError_Overflow,					/**< RequestNetworkUpdate error */
+		};
+
+		typedef void (*pfnControllerCallback_t)( ControllerState _state, ControllerError _err, void* _context );
 
 	private:
 		// The public interface is provided via the wrappers in the Manager class
@@ -581,45 +498,182 @@ namespace OpenZWave
 
 		bool BeginControllerCommand( ControllerCommand _command, pfnControllerCallback_t _callback, void* _context, bool _highPower, uint8 _nodeId, uint8 _arg );
 		bool CancelControllerCommand();
+		void AddNodeStop( uint8 const _funcId );					// Handle different controller behaviors
 
-		ControllerState				m_controllerState;
-		ControllerCommand			m_controllerCommand;
-		pfnControllerCallback_t			m_controllerCallback;
-		void*					m_controllerCallbackContext;
-		bool					m_controllerAdded;
-		uint8					m_controllerCommandNode;
-		uint8					m_controllerCommandArg;
+		struct ControllerCommandItem
+		{
+			ControllerState				m_controllerState;
+			bool					m_controllerStateChanged;
+			bool					m_controllerCommandDone;
+			ControllerCommand			m_controllerCommand;
+			pfnControllerCallback_t			m_controllerCallback;
+			ControllerError				m_controllerReturnError;
+			void*					m_controllerCallbackContext;
+			bool					m_highPower;
+			bool					m_controllerAdded;
+			uint8					m_controllerCommandNode;
+			uint8					m_controllerCommandArg;
+		};
 
-		uint8					m_SUCNode;
+		ControllerCommandItem*			m_currentControllerCommand;
+
+		void DoControllerCommand();
+		void UpdateControllerState( ControllerState const _state, ControllerError const _error = ControllerError_None )
+		{
+			if( m_currentControllerCommand != NULL )
+			{
+				if( _state != m_currentControllerCommand->m_controllerState )
+				{
+					m_currentControllerCommand->m_controllerStateChanged = true;
+					m_currentControllerCommand->m_controllerState = _state;
+					switch( _state )
+					{
+						case ControllerState_Error:
+						case ControllerState_Cancel:
+						case ControllerState_Failed:
+						case ControllerState_Sleeping:
+						case ControllerState_NodeFailed:
+						case ControllerState_NodeOK:
+						case ControllerState_Completed:
+						{
+							m_currentControllerCommand->m_controllerCommandDone = true;
+							break;
+						}
+						default:
+						{
+							break;
+						}
+					}
+
+				}
+				if( _error != ControllerError_None )
+				{
+					m_currentControllerCommand->m_controllerReturnError = _error;
+				}
+			}
+		}
+
+		uint8					m_SUCNodeId;
+
+		void UpdateNodeRoutes( uint8 const_nodeId, bool _doUpdate = false );
 
 		Event*					m_controllerResetEvent;
 
-		// Perform node routing updates when associations change
-		enum UpdateNodeRoutesState
+	//-----------------------------------------------------------------------------
+	//	Sending Z-Wave messages
+	//-----------------------------------------------------------------------------
+	public:
+		enum MsgQueue
 		{
-			UpdateNodeRoutesBegin,
-			UpdateNodeRoutesDeleted,
-			UpdateNodeRoutesAssigning,
-			UpdateNodeRoutesAssigning1,
-			UpdateNodeRoutesAssigning2,
-			UpdateNodeRoutesAssigning3,
-			UpdateNodeRoutesAssigning4,
-			UpdateNodeRoutesEnd
+			MsgQueue_Command = 0,
+			MsgQueue_Controller,
+			MsgQueue_NoOp,
+			MsgQueue_WakeUp,
+			MsgQueue_Send,
+			MsgQueue_Query,
+			MsgQueue_Poll,
+			MsgQueue_Count		// Number of message queues
 		};
 
-		struct UpdateNodeRoutesData
+		void SendMsg( Msg* _msg, MsgQueue const _queue );
+
+	private:
+		/**
+		 *  If there are messages in the send queue (m_sendQueue), gets the next message in the
+		 *  queue and writes it to the serial port.  In sending the message, SendMsg also initializes
+		 *  variables tracking the message's callback ID (m_expectedCallbackId), expected reply
+		 *  (m_expectedReply) and expected command class ID (m_expectedCommandClassId).  It also
+		 *  sets m_waitingForAck to true and increments the message's send attempts counter.
+		 *  <p>
+		 *  If there are no messages in the send queue, then SendMsg checks the query queue to
+		 *  see if there are any outstanding queries that can be processed (target node not asleep).
+		 *  If so, it retrieves the Node object that needs to be queried and calls that node's
+		 *  AdvanceQueries member function.  If this call results in all of the node's queries to be
+		 *  completed, SendMsg will remove the node query item from the query queue.
+		 *  \return TRUE if data was written, FALSE if not
+		 *  \see Msg, m_sendQueue, m_expectedCallbackId, m_expectedReply, m_expectedCommandClassId,
+		 *  m_waitingForAck, Msg::GetSendAttempts, Node::AdvanceQueries, GetCurrentNodeQuery,
+		 *  RemoveNodeQuery, Node::AllQueriesCompleted
+		 */
+		bool WriteNextMsg( MsgQueue const _queue );							// Extracts the first message from the queue, and makes it the current one.
+		bool WriteMsg( string const str);									// Sends the current message to the Z-Wave network
+		void RemoveCurrentMsg();											// Deletes the current message and cleans up the callback etc states
+		bool MoveMessagesToWakeUpQueue(	uint8 const _targetNodeId, bool const _move );		// If a node does not respond, and is of a type that can sleep, this method is used to move all its pending messages to another queue ready for when it mext wakes up.
+		void HandleErrorResponse( uint8 const _error, uint8 const _nodeId, char const* _funcStr, bool _sleepCheck = false );
+		bool IsExpectedReply( uint8 const _nodeId );						// Determine if reply message is the one we are expecting
+		void SendQueryStageComplete( uint8 const _nodeId, Node::QueryStage const _stage, MsgQueue const _queue );
+		void CheckCompletedNodeQueries();									// Send notifications if all awake and/or sleeping nodes have completed their queries
+
+		// Requests to be sent to nodes are assigned to one of five queues.
+		// From highest to lowest priority, these are
+		//
+		// 1)	The command queue, for controller commands.  This is the highest
+		//		priority send queue, because the controller command processes are not
+		//		permitted to be interupted by other requests.
+		//
+		// 2)	The controller queue exists to handle multi-step controller commands. These
+		//		typically require user interaction or affect the network in some way.
+		//
+		// 3)	The No Operation command class queue. This is used for device probing
+		//		at startup as well as network diagostics.
+		//
+		// 4)	The wakeup queue.  This holds messages that have been held for a 
+		//		sleeping device that has now woken up.  These get a high priority
+		//		because such devices do not stay awake for very long.
+		//
+		// 5)	The send queue.  This is for normal messages, usually triggered by
+		//		a user interaction with the application.
+		//
+		// 6)	The query queue.  For node query messages sent when a new node is
+		//		discovered.  The query process generates a large number of requests,
+		//		so the query queue has a low priority to avoid making the system
+		//		unresponsive.
+		//
+		// 7)   The poll queue.  Requests to devices that need their state polling
+		//		at regular intervals.  These are of the lowest priority, and are only
+		//		sent when nothing else is going on
+		//
+		enum MsgQueueCmd
 		{
-			uint8 m_nodeId;
-			UpdateNodeRoutesState m_state;
-			uint8 m_numNodes;
-			uint8 m_nodes[5];
-			uint8 m_nodeIndex;
-			Driver *m_driver;
+			MsgQueueCmd_SendMsg = 0,
+			MsgQueueCmd_QueryStageComplete,
+			MsgQueueCmd_Controller
+		};
+		
+		class MsgQueueItem
+		{
+		public:
+			bool operator == ( MsgQueueItem const& _other )const
+			{
+				if( _other.m_command == m_command )
+				{
+					if( m_command == MsgQueueCmd_SendMsg )
+					{
+						return( (*_other.m_msg) == (*m_msg) );
+					}
+					else if( m_command == MsgQueueCmd_QueryStageComplete )
+					{
+						return( (_other.m_nodeId == m_nodeId) && (_other.m_queryStage == m_queryStage) );
+					} else {
+					  return( (_other.m_cci->m_controllerCommand == m_cci->m_controllerCommand) && (_other.m_cci->m_controllerCallback == m_cci->m_controllerCallback) );
+					}
+				}
+
+				return false;
+			}
+
+			MsgQueueCmd			m_command;
+			Msg*				m_msg;
+			uint8				m_nodeId;
+			Node::QueryStage		m_queryStage;
+			ControllerCommandItem*		m_cci;
 		};
 
-		static void UpdateNodeRoutesCallback( ControllerState _state, void* _context );
-		void UpdateNodeRoutes( uint8 const_nodeId );
-		void UpdateNodeRoutes( UpdateNodeRoutesData* _data );
+		list<MsgQueueItem>			m_msgQueue[MsgQueue_Count];
+		Event*					m_queueEvent[MsgQueue_Count];				// Events for each queue, which are signalled when the queue is not empty
+		Mutex*					m_sendMutex;						// Serialize access to the queues
+		Msg*					m_currentMsg;
+		TimeStamp				m_resendTimeStamp;
 
 	//-----------------------------------------------------------------------------
 	// Network functions
@@ -707,6 +761,7 @@ namespace OpenZWave
 			uint32 m_badroutes;			// Number of failed messages due to bad route response
 			uint32 m_noack;				// Number of no ACK returned errors
 			uint32 m_netbusy;			// Number of network busy/failure messages
+			uint32 m_notidle;
 			uint32 m_nondelivery;			// Number of messages not delivered to network
 			uint32 m_routedbusy;			// Number of messages received with routed busy status
 			uint32 m_broadcastReadCnt;		// Number of broadcasts read
@@ -735,6 +790,7 @@ namespace OpenZWave
 		uint32 m_badroutes;			// Number of failed messages due to bad route response
 		uint32 m_noack;				// Number of no ACK returned errors
 		uint32 m_netbusy;			// Number of network busy/failure messages
+		uint32 m_notidle;			// Number of not idle messages
 		uint32 m_nondelivery;			// Number of messages not delivered to network
 		uint32 m_routedbusy;			// Number of messages received with routed busy status
 		uint32 m_broadcastReadCnt;		// Number of broadcasts read

@@ -52,6 +52,12 @@ enum
 	UserCode_NotAvailable		= 0xff
 };
 
+enum
+{
+	UserCodeIndex_Unknown		= 253,
+	UserCodeIndex_Count		= 254
+};
+
 //-----------------------------------------------------------------------------
 // <UserCode::UserCode>
 // Constructor
@@ -78,7 +84,7 @@ UserCode::~UserCode
 {
 	if( m_userCodesStatus != NULL )
 	{
-		delete m_userCodesStatus;
+		delete [] m_userCodesStatus;
 	}
 }
 
@@ -101,7 +107,7 @@ bool UserCode::RequestState
 
 	if( _requestFlags & RequestFlag_Session )
 	{
-		for( uint8 i = 0; i < m_userCodeCount; i++ )
+		for( uint8 i = 0; i < /* m_userCodeCount */ 10; i++ )		// need a better way
 		{
 			requests |= RequestValue( _requestFlags, i, _instance, _queue );
 		}
@@ -168,11 +174,12 @@ bool UserCode::HandleMsg
 	if( UserNumberCmd_Report == (UserCodeCmd)_data[0] )
 	{	
 		m_userCodeCount = _data[1];
-		if( m_userCodeCount > 10 )
+		if( m_userCodeCount > 253 )
 		{
-			m_userCodeCount = 10;						// arbitrary for now
+			// Make space for code count and unknown values
+			m_userCodeCount = 253;
 		}
-		m_userCodesStatus = new uint8[m_userCodeCount];
+		m_userCodesStatus = new uint8[m_userCodeCount + 2];
 		ClearStaticRequest( StaticRequest_Values );
 		if( m_userCodeCount == 0 )
 		{
@@ -183,9 +190,7 @@ bool UserCode::HandleMsg
 			Log::Write( LogLevel_Info, GetNodeId(), "Received User Number report from node %d: Supported Codes %d (%d)", GetNodeId(), m_userCodeCount, _data[1] );
 		}
 
-		// Hopefully the user code number doesn't change or this code will need to
-		ValueByte *value;
-		if( ( value = static_cast<ValueByte*>( GetValue( _instance, m_userCodeCount ) ) ) != NULL )
+		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, UserCodeIndex_Count ) ) )
 		{
 			value->OnValueRefreshed( m_userCodeCount );
 			value->Release();
@@ -193,31 +198,24 @@ bool UserCode::HandleMsg
 
 		if( Node* node = GetNodeUnsafe() )
 		{
-			if( value == NULL )
+			for( uint8 i = 0; i < m_userCodeCount; i++ )
 			{
-				node->CreateValueByte( ValueID::ValueGenre_System, GetCommandClassId(), _instance, m_userCodeCount, "Code Count", "", true, false, m_userCodeCount, 0 );
-			}
-			for( uint8 i = 0; i <= m_userCodeCount; i++ )
-			{
-				if( i > 0 )
-				{
-					snprintf( str, sizeof(str), "Code %d", i );
-				}
-				else
-				{
-					snprintf( str, sizeof(str), "Unknown Code" );
-				}
-				node->CreateValueString( ValueID::ValueGenre_User, GetCommandClassId(), _instance, i, str, "", i == 0 ? true : false, false, "", 0 );
+				snprintf( str, sizeof(str), "Code %d", i );
+				node->CreateValueString( ValueID::ValueGenre_User, GetCommandClassId(), _instance, i, str, "", false, false, "", 0 );
 			}
 		}
 		return true;
 	}
 	else if( UserCodeCmd_Report == (UserCodeCmd)_data[0] )
 	{	
-		uint8 i = _data[1];
+		int i = _data[1];
 		if( i == 0 )							// Unknown code
 		{
-			i = m_userCodeCount + 1;
+			i = UserCodeIndex_Unknown;
+		}
+		else
+		{
+			i--;
 		}
 		if( ValueString* value = static_cast<ValueString*>( GetValue( _instance, i ) ) )
 		{
@@ -276,4 +274,20 @@ bool UserCode::SetValue
 	}
 
 	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <UserCode::CreateVars>
+// Create the values managed by this command class
+//-----------------------------------------------------------------------------
+void UserCode::CreateVars
+(
+	uint8 const _instance
+)
+{
+	if( Node* node = GetNodeUnsafe() )
+	{
+		node->CreateValueString( ValueID::ValueGenre_User, GetCommandClassId(), _instance, UserCodeIndex_Unknown, "Unknown Code", "", true, false, "", 0 );
+		node->CreateValueByte( ValueID::ValueGenre_System, GetCommandClassId(), _instance, UserCodeIndex_Count, "Code Count", "", true, false, 0, 0 );
+	}
 }

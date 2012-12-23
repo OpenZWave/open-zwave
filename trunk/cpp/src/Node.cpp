@@ -137,8 +137,8 @@ Node::Node
 	m_retries( 0 ),
 	m_receivedCnt( 0 ),
 	m_receivedDups( 0 ),
-	m_lastRTT( 0 ),
-	m_averageRTT( 0 ),
+	m_lastRequestRTT( 0 ),
+	m_averageRequestRTT( 0 ),
 	m_quality( 0 )
 {
 	memset( m_neighbors, 0, sizeof(m_neighbors) );
@@ -289,7 +289,7 @@ void Node::AdvanceQueries
 			}
 			case QueryStage_NodeInfo:
 			{
-				if( !NodeInfoReceived() && !IsController() && m_nodeInfoSupported )
+				if( !NodeInfoReceived() && m_nodeInfoSupported )
 				{
 					// obtain from the node a list of command classes that it 1) supports and 2) controls (separated by a mark in the buffer)
 					Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_NodeInfo" );
@@ -2470,10 +2470,10 @@ void Node::GetNodeStatistics
 	_data->m_retries = m_retries;
 	_data->m_receivedCnt = m_receivedCnt;
 	_data->m_receivedDups = m_receivedDups;
-	_data->m_lastRTT = m_lastRTT;
+	_data->m_lastRequestRTT = m_lastRequestRTT;
 	_data->m_sentTS = m_sentTS.GetAsString();
 	_data->m_receivedTS = m_receivedTS.GetAsString();
-	_data->m_averageRTT = m_averageRTT;
+	_data->m_averageRequestRTT = m_averageRequestRTT;
 	_data->m_quality = m_quality;
 	memcpy( _data->m_lastReceivedMessage, m_lastReceivedMessage, sizeof(m_lastReceivedMessage) );
 	for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )

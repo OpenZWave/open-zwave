@@ -134,8 +134,7 @@
 	Device tag.
       </Help>
     </Value>
-    <Value type="button" index="255" genre="config" label="Reset device"
-	   units="" write_only="true" value="0">
+    <Value type="button" index="255" genre="config" label="Reset device" units="" write_only="true" value="0">
       <Help>
 	Reset to the default configuration.
       </Help>

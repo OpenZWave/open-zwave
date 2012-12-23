@@ -52,6 +52,7 @@ namespace OpenZWave
 		friend class NodeNaming;
 		friend class NoOperation;
 		friend class SceneActivation;
+		friend class WakeUp;
 
 	public:
 		/** 
@@ -99,7 +100,8 @@ namespace OpenZWave
 		{
 			Code_MsgComplete = 0,					/**< Completed messages */
 			Code_Timeout,						/**< Messages that timeout will send a Notification with this code. */
-			Code_NoOperation					/**< Report on NoOperation message sent completion  */
+			Code_NoOperation,					/**< Report on NoOperation message sent completion  */
+			Code_Awake						/**< Report when a sleeping node wakes up */
 		};
 
 		/** 

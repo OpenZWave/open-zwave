@@ -61,9 +61,45 @@ Version::Version
 	uint32 const _homeId,
 	uint8 const _nodeId
 ):
-	CommandClass( _homeId, _nodeId )
+	CommandClass( _homeId, _nodeId ),
+	m_classGetSupported( true )
 {
 	SetStaticRequest( StaticRequest_Values );
+}
+
+//-----------------------------------------------------------------------------
+// <Version::ReadXML>
+// Read configuration.
+//-----------------------------------------------------------------------------
+void Version::ReadXML
+( 
+	TiXmlElement const* _ccElement
+)
+{
+	CommandClass::ReadXML( _ccElement );
+
+	char const* str = _ccElement->Attribute("classgetsupported");
+	if( str )
+	{
+		m_classGetSupported = !strcmp( str, "true");
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <Version::WriteXML>
+// Save changed configuration
+//-----------------------------------------------------------------------------
+void Version::WriteXML
+( 
+	TiXmlElement* _ccElement
+)
+{
+	CommandClass::WriteXML( _ccElement );
+
+	if( !m_classGetSupported )
+	{
+		_ccElement->SetAttribute( "classgetsupported", "false" );
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -183,7 +219,7 @@ bool Version::RequestCommandClassVersion
 	CommandClass const* _commandClass
 )
 {
-	if( IsGetSupported() )
+	if( m_classGetSupported )
 	{
 		if( _commandClass->HasStaticRequest( StaticRequest_Version ) )
 		{
