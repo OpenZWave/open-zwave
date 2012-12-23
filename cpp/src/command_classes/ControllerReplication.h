@@ -43,18 +43,29 @@ namespace OpenZWave
 		static uint8 const StaticGetCommandClassId(){ return 0x21; }
 		static string const StaticGetCommandClassName(){ return "COMMAND_CLASS_CONTROLLER_REPLICATION"; }
 
-		void StartReplication( uint8 const _targetNodeId, uint8 const _funcId );
-		void SendNextData( uint8 const _targetNodeId );
-
 		// From CommandClass
 		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }
 		virtual string const GetCommandClassName()const{ return StaticGetCommandClassName(); }
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );
+		virtual bool SetValue( Value const& _value );
+
+		void SendNextData();
+
+	protected:
+		virtual void CreateVars( uint8 const _instance );
 
 	private:
-		ControllerReplication( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
+		ControllerReplication( uint32 const _homeId, uint8 const _nodeId );
+		bool StartReplication( uint8 const _instance );
 
+
+		bool	m_busy;
+		uint8	m_targetNodeId;
 		uint8	m_funcId;
+		int	m_nodeId;
+		int	m_groupCount;
+		int	m_groupIdx;
+		string	m_groupName;
 	};
 
 } // namespace OpenZWave

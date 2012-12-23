@@ -33,6 +33,7 @@
 #include "Driver.h"
 #include "Node.h"
 #include "Log.h"
+#include "Notification.h"
 #include "Mutex.h"
 #include "ValueInt.h"
 
@@ -101,7 +102,7 @@ void WakeUp::Init
 	// that the controller will receive the wake-up notifications from
 	// the device.  Once this is done, we can request the rest of the node
 	// state.
-	RequestState( CommandClass::RequestFlag_Session, 1, Driver::MsgQueue_Send );
+	RequestState( CommandClass::RequestFlag_Session, 1, Driver::MsgQueue_WakeUp );
 }
 
 //-----------------------------------------------------------------------------
@@ -286,7 +287,7 @@ bool WakeUp::SetValue
 		msg->Append( (uint8)( interval & 0xff ) );		
 		msg->Append( GetDriver()->GetNodeId() );
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-		GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
+		GetDriver()->SendMsg( msg, Driver::MsgQueue_WakeUp );
 		return true;
 	}
 
@@ -310,10 +311,16 @@ void WakeUp::SetAwake
 
 	if( m_awake )
 	{
+		Notification* notification = new Notification( Notification::Type_Notification );
+		notification->SetHomeAndNodeIds( GetHomeId(), GetNodeId() );
+		notification->SetNotification( Notification::Code_Awake );
+		GetDriver()->QueueNotification( notification );
+
 		// If the device is marked for polling, request the current state
+		Node* node = GetNodeUnsafe();
 		if( m_pollRequired )
 		{
-			if( Node* node = GetNodeUnsafe() )
+			if( node != NULL )
 			{
 				node->SetQueryStage( Node::QueryStage_Dynamic );
 			}
@@ -352,6 +359,10 @@ void WakeUp::QueueMsg
 			{
 				delete item.m_msg;
 			}
+			else if( Driver::MsgQueueCmd_Controller == item.m_command )
+			{
+				delete item.m_cci;
+			}
 			m_pendingQueue.erase( it++ );
 		}
 		else
@@ -385,6 +396,10 @@ void WakeUp::SendPending
 		else if( Driver::MsgQueueCmd_QueryStageComplete == item.m_command )
 		{
 			GetDriver()->SendQueryStageComplete( item.m_nodeId, item.m_queryStage, Driver::MsgQueue_WakeUp );
+		} else if( Driver::MsgQueueCmd_Controller == item.m_command )
+		{
+			GetDriver()->BeginControllerCommand( item.m_cci->m_controllerCommand, item.m_cci->m_controllerCallback, item.m_cci->m_controllerCallbackContext, item.m_cci->m_highPower, item.m_cci->m_controllerCommandNode, item.m_cci->m_controllerCommandArg );
+			delete item.m_cci;
 		}
 		it = m_pendingQueue.erase( it );
 	}
@@ -403,7 +418,7 @@ void WakeUp::SendPending
 	if( sendToSleep )
 	{
 		m_notification = false;
-		Msg* msg = new Msg( "Wakeup - No More Information  (send to sleep)", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+		Msg* msg = new Msg( "Wakeup - No More Information (send to sleep)", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 		msg->Append( GetNodeId() );
 		msg->Append( 2 );
 		msg->Append( GetCommandClassId() );

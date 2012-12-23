@@ -205,6 +205,15 @@ void CommandClass::ReadXML
 		m_createVars = !strcmp( str, "true" );
 	}
 
+	// Make sure previously created values are removed if create_vars=false
+	if( !m_createVars )
+	{
+		if( Node* node = GetNodeUnsafe() )
+		{
+			node->GetValueStore()->RemoveCommandClassValues( GetCommandClassId() );
+		}
+	}
+
 	str = _ccElement->Attribute( "getsupported" );
 	if( str )
 	{
@@ -283,9 +292,9 @@ void CommandClass::WriteXML
 		_ccElement->SetAttribute( "after_mark", "true" );
 	}
 
-	if( m_createVars )
+	if( !m_createVars )
 	{
-		_ccElement->SetAttribute( "create_vars", "true" );
+		_ccElement->SetAttribute( "create_vars", "false" );
 	}
 
 	if( !m_getSupported )

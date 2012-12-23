@@ -26,7 +26,6 @@
 //-----------------------------------------------------------------------------
 
 #include "Defs.h"
-#include "Log.h"
 #include "Msg.h"
 #include "Node.h"
 #include "MultiInstance.h"

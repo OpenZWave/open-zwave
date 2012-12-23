@@ -43,7 +43,7 @@ enum ProtectionCmd
 {
 	ProtectionCmd_Set		= 0x01,
 	ProtectionCmd_Get		= 0x02,
-	ProtectionCmd_Report	= 0x03
+	ProtectionCmd_Report		= 0x03
 };
 
 static char const* c_protectionStateNames[] = 
@@ -54,8 +54,8 @@ static char const* c_protectionStateNames[] =
 };
 
 //-----------------------------------------------------------------------------
-// <Protection::RequestState>												   
-// Request current state from the device									   
+// <Protection::RequestState>
+// Request current state from the device
 //-----------------------------------------------------------------------------
 bool Protection::RequestState
 (
@@ -73,8 +73,8 @@ bool Protection::RequestState
 }
 
 //-----------------------------------------------------------------------------
-// <Protection::RequestValue>												   
-// Request current value from the device									   
+// <Protection::RequestValue>
+// Request current value from the device
 //-----------------------------------------------------------------------------
 bool Protection::RequestValue
 (
@@ -172,6 +172,6 @@ void Protection::CreateVars
 			items.push_back( item ); 
 		}
 
-		node->CreateValueList(  ValueID::ValueGenre_System, GetCommandClassId(), _instance, 0, "Protection", "", false, false, 1, items, 0, 0 );
+		node->CreateValueList( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 0, "Protection", "", false, false, 1, items, 0, 0 );
 	}
 }

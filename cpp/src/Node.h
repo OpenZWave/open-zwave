@@ -75,6 +75,7 @@ namespace OpenZWave
 		friend class ClimateControlSchedule;
 		friend class Clock;
 		friend class CommandClass;
+		friend class ControllerReplication;
 		friend class EnergyProduction;
 		friend class Hail;
 		friend class Indicator;
@@ -128,20 +129,20 @@ namespace OpenZWave
 	public:
 		enum QueryStage														
 		{
-			QueryStage_ProtocolInfo,			/**< Retrieve protocol information */
+			QueryStage_ProtocolInfo,				/**< Retrieve protocol information */
 			QueryStage_WakeUp,					/**< Start wake up process if a sleeping node*/
-			QueryStage_ManufacturerSpecific1,	/**< Retrieve manufacturer name and product ids if ProtocolInfo lets us */
-			QueryStage_NodeInfo,				/**< Retrieve info about supported, controlled command classes */
-			QueryStage_ManufacturerSpecific2,	/**< Retrieve manufacturer name and product ids */
-			QueryStage_Versions,				/**< Retrieve version information */
-			QueryStage_Instances,				/**< Retrieve information about multiple command class instances */
+			QueryStage_ManufacturerSpecific1,			/**< Retrieve manufacturer name and product ids if ProtocolInfo lets us */
+			QueryStage_NodeInfo,					/**< Retrieve info about supported, controlled command classes */
+			QueryStage_ManufacturerSpecific2,			/**< Retrieve manufacturer name and product ids */
+			QueryStage_Versions,					/**< Retrieve version information */
+			QueryStage_Instances,					/**< Retrieve information about multiple command class instances */
 			QueryStage_Static,					/**< Retrieve static information (doesn't change) */
-			QueryStage_Associations,			/**< Retrieve information about associations */
-			QueryStage_Neighbors,				/**< Retrieve node neighbor list */
+			QueryStage_Associations,				/**< Retrieve information about associations */
+			QueryStage_Neighbors,					/**< Retrieve node neighbor list */
 			QueryStage_Session,					/**< Retrieve session information (changes infrequently) */
 			QueryStage_Dynamic,					/**< Retrieve dynamic information (changes frequently) */
-			QueryStage_Configuration,			/**< Retrieve configurable parameter information (only done on request) */
-			QueryStage_Complete,				/**< Query process is completed for this node */
+			QueryStage_Configuration,				/**< Retrieve configurable parameter information (only done on request) */
+			QueryStage_Complete,					/**< Query process is completed for this node */
 			QueryStage_None						/**< Query process hasn't started for this node */
 		};
 
@@ -209,7 +210,6 @@ namespace OpenZWave
 		 *  command for this node.  If protocol information has already been retrieved
 		 *  for the node, the function simply returns.  Otherwise, it populates several
 		 *  member variables about the device at this node:
-		 *  - m_listening (whether it is always listening or whether it "sleeps"
 		 *  - m_routing (whether it is a routing node (capable of passing commands along to other nodes in the network) or not
 		 *  - m_maxBaudRate (the maximum baud rate at which this device can communicate)
 		 *  - m_version (TODO)
@@ -508,11 +508,10 @@ namespace OpenZWave
 			uint32 m_retries;
 			uint32 m_receivedCnt;
 			uint32 m_receivedDups;
-			uint32 m_rtt;					// last round trip if successful in ms
 			string m_sentTS;
 			string m_receivedTS;
-			uint32 m_lastRTT;
-			uint32 m_averageRTT;				// ms
+			uint32 m_lastRequestRTT;
+			uint32 m_averageRequestRTT;				// ms
 			uint8 m_quality;				// Node quality measure
 			uint8 m_lastReceivedMessage[254];
 			list<CommandClassData> m_ccData;
@@ -526,10 +525,10 @@ namespace OpenZWave
 		uint32 m_retries;				// Number of message retries
 		uint32 m_receivedCnt;				// Number of messages received from this node.
 		uint32 m_receivedDups;				// Number of duplicated messages received;
-		uint32 m_lastRTT;					// Last message rtt
+		uint32 m_lastRequestRTT;			// Last message rtt
 		TimeStamp m_sentTS;				// Last message sent time
 		TimeStamp m_receivedTS;				// Last message received time
-		uint32 m_averageRTT;				// Average round trip time.
+		uint32 m_averageRequestRTT;			// Average round trip time.
 		uint8 m_quality;				// Node quality measure
 		uint8 m_lastReceivedMessage[254];		// Place to hold last received message
 	};

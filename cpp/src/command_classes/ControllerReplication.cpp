@@ -33,28 +33,11 @@
 #include "Node.h"
 #include "Log.h"
 
-using namespace OpenZWave;
+#include "ValueByte.h"
+#include "ValueList.h"
+#include "ValueButton.h"
 
-//static enum ControllerReplicationCmd
-//{
-//	CtrlReplicationTransferGroup = 0x31
-//		Sequence number: type=BYTE
-//		Group id: type=BYTE
-//		Node id: type=BYTE
-//	CtrlReplicationTransferGroupName = 0x32
-//		Sequence number: type=BYTE
-//		Group id: type=BYTE
-//		Group name: type=ARRAY
-//	CtrlReplicationTransferScene = 0x33
-//		Sequence number: type=BYTE
-//		Scene id: type=BYTE
-//		Node id: type=BYTE
-//		Level: type=BYTE
-//	CtrlReplicationTransferSceneName = 0x34
-//		Sequence number: type=BYTE
-//		Scene id: type=BYTE
-//		Scene name: type=ARRAY
-//};
+using namespace OpenZWave;
 
 enum ControllerReplicationCmd
 {
@@ -64,6 +47,39 @@ enum ControllerReplicationCmd
 	ControllerReplicationCmd_TransferSceneName	= 0x34
 };
 
+enum
+{
+	ControllerReplicationIndex_NodeId = 0,
+	ControllerReplicationIndex_Function,
+	ControllerReplicationIndex_Replicate
+};
+
+static char const* c_controllerReplicationFunctionNames[] = 
+{
+	"Groups",
+	"Group Names",
+	"Scenes",
+	"Scene Names",
+};
+
+//-----------------------------------------------------------------------------
+// <ControllerReplication::HandleMsg>
+// Handle a message from the Z-Wave network
+//-----------------------------------------------------------------------------
+ControllerReplication::ControllerReplication
+(
+	uint32 const _homeId,
+	uint8 const _nodeId
+):
+	CommandClass( _homeId, _nodeId ),
+	m_busy( false ),
+	m_targetNodeId( 0 ),
+	m_funcId( 0 ),
+	m_nodeId( -1 ),
+	m_groupCount( -1 ),
+	m_groupIdx( -1 )
+{
+}
 
 //-----------------------------------------------------------------------------
 // <ControllerReplication::HandleMsg>
@@ -99,26 +115,106 @@ bool ControllerReplication::HandleMsg
 		}
 	}
 
-	Msg* msg = new Msg( "ControllerReplication - Command Complete", GetNodeId(), REQUEST, FUNC_ID_ZW_REPLICATION_COMMAND_COMPLETE, false, false );
-	GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
+	Msg* msg = new Msg( "ControllerReplication Command Complete", GetNodeId(), REQUEST, FUNC_ID_ZW_REPLICATION_COMMAND_COMPLETE, false, false );
+	GetDriver()->SendMsg( msg, Driver::MsgQueue_Command );
 	return true;
+}
+
+//-----------------------------------------------------------------------------
+// <ControllerReplication::SetValue>
+// Set a value on the Z-Wave device
+//-----------------------------------------------------------------------------
+bool ControllerReplication::SetValue
+(
+	Value const& _value
+)
+{
+	bool res = false;
+	uint8 instance = _value.GetID().GetInstance();
+
+	switch( _value.GetID().GetIndex() )
+	{
+		case ControllerReplicationIndex_NodeId:
+		{
+			if( ValueByte* value = static_cast<ValueByte*>( GetValue( instance, ControllerReplicationIndex_NodeId ) ) )
+			{
+				value->OnValueRefreshed( (static_cast<ValueByte const*>( &_value))->GetValue() );
+				value->Release();
+				res = true;
+			}
+			break;
+		}
+		case ControllerReplicationIndex_Function:
+		{
+			if( ValueList* value = static_cast<ValueList*>( GetValue( instance, ControllerReplicationIndex_Function ) ) )
+			{
+				ValueList::Item const& item = (static_cast<ValueList const*>( &_value))->GetNewItem();
+				value->OnValueRefreshed( item.m_value );
+				value->Release();
+				res = true;
+			}
+			break;
+		}
+		case ControllerReplicationIndex_Replicate:
+		{
+			if( ValueButton* button = static_cast<ValueButton*>( GetValue( instance, ControllerReplicationIndex_Replicate ) ) )
+			{
+				if( button->IsPressed() )
+				{
+					res = StartReplication( instance );
+				}
+				button->Release();
+			}
+			break;
+		}
+	}
+	return res;
 }
 
 //-----------------------------------------------------------------------------
 // <ControllerReplication::StartReplication>
 // Set up the group and scene data to be sent to the other controller
 //-----------------------------------------------------------------------------
-void ControllerReplication::StartReplication
+bool ControllerReplication::StartReplication
 (
-	uint8 const _targetNodeId,
-	uint8 const _funcId
+	uint8 const _instance
 )
 {
+	if( m_busy )
+	{
+		return false;
+	}
+
+	if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, ControllerReplicationIndex_NodeId ) ) )
+	{
+		m_targetNodeId = value->GetValue();
+		value->Release();
+	}
+	else
+	{
+		return false;
+	}
+
+	if( ValueList* value = static_cast<ValueList*>( GetValue( _instance, ControllerReplicationIndex_Function ) ) )
+	{
+		ValueList::Item const& item = value->GetItem();
+		m_funcId = item.m_value;
+		value->Release();
+	}
+	else
+	{
+		return false;
+	}
+
 	// Store the Z-Wave command we should use when replication has completed.
-	m_funcId = _funcId;	
+	m_nodeId = -1;
+	m_groupCount = -1;
+	m_groupIdx = -1;
+	m_busy = true;
 
 	// Set up the groups and scenes to be sent
-	SendNextData( _targetNodeId );
+	SendNextData();
+	return true;
 }
 
 //-----------------------------------------------------------------------------
@@ -127,16 +223,104 @@ void ControllerReplication::StartReplication
 //-----------------------------------------------------------------------------
 void ControllerReplication::SendNextData
 (
-	uint8 const _targetNodeId
 )
 {
-	// To do: Send scene and group data from the controller.
-	// It may well be that we never need to implement this - scenes will be handled 
-	// by OpenZWave, not the Z-Wave scene classes, and PC controllers don't seem
-	// to hold any associations.
+	uint16 i = 255;
 
-	// For now, we stop the replication process.
-	Msg* msg = new Msg( "Replication Stop", 0xff, REQUEST, m_funcId, true );
-	msg->Append( ADD_NODE_STOP );
-	GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
+	if( !m_busy )
+	{
+		return;
+	}
+
+	while( 1 )
+	{
+		if( m_groupIdx != -1 )
+		{
+			m_groupIdx++;
+			if( m_groupIdx <= m_groupCount )
+			{
+				break;
+			}
+		}
+		i = m_nodeId == -1 ? 0 : m_nodeId+1;
+		GetDriver()->LockNodes();
+		while( i < 256 )
+		{
+			if( GetDriver()->m_nodes[i] )
+			{
+				m_groupCount = GetDriver()->m_nodes[i]->GetNumGroups();
+				if( m_groupCount != 0 )
+				{
+					m_groupName = GetDriver()->m_nodes[i]->GetGroupLabel( m_groupIdx );
+					m_groupIdx = m_groupName.length() > 0 ? 0 : 1;
+					break;
+				}
+			}
+			i++;
+		}
+		GetDriver()->ReleaseNodes();
+		m_nodeId = i;
+		break;
+	}
+	if( i < 255 )
+	{
+		Msg* msg = new Msg( "Replication Send", m_targetNodeId, REQUEST, FUNC_ID_ZW_REPLICATION_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		msg->Append( m_targetNodeId );
+		if( m_groupName.length() > 0 )
+		{		
+			msg->Append( m_groupName.length() + 4 );
+			msg->Append( GetCommandClassId() );
+			msg->Append( ControllerReplicationCmd_TransferGroupName );
+			msg->Append( 0 );
+			msg->Append( m_groupIdx );
+			for( uint8 j = 0; j < m_groupName.length(); j++ )
+			{
+				msg->Append( m_groupName[j] );
+			}
+			m_groupName = "";
+		}
+		else
+		{
+			msg->Append( 5 );
+			msg->Append( GetCommandClassId() );
+			msg->Append( ControllerReplicationCmd_TransferGroup );
+			msg->Append( 0 );
+			msg->Append( m_groupIdx );
+			msg->Append( m_nodeId );
+		}
+		msg->Append( TRANSMIT_OPTION_ACK );
+		GetDriver()->SendMsg( msg, Driver::MsgQueue_Command );
+	}
+	else
+	{
+		GetDriver()->AddNodeStop( m_funcId );
+		m_busy = false;
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <ControllerReplication::CreateVars>
+// Create the values managed by this command class
+//-----------------------------------------------------------------------------
+void ControllerReplication::CreateVars
+(
+	uint8 const _instance
+)
+{
+	if( Node* node = GetNodeUnsafe() )
+	{
+		node->CreateValueByte( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ControllerReplicationIndex_NodeId, "Node", "", false, false, 0, 0 );
+		vector<ValueList::Item> items;
+
+		ValueList::Item item;
+		for( uint8 i=0; i<4; ++i )
+		{
+			item.m_label = c_controllerReplicationFunctionNames[i];
+			item.m_value = ControllerReplicationCmd_TransferGroup + i;
+			items.push_back( item ); 
+		}
+
+		node->CreateValueList( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ControllerReplicationIndex_Function, "Functions", "", false, false, 1, items, 0, 0 );
+		node->CreateValueButton( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ControllerReplicationIndex_Replicate, "Replicate", 0 );
+	}
 }
