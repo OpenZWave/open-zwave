@@ -293,7 +293,7 @@ namespace OpenZWave
 		bool HandleNetworkUpdateResponse( uint8* _data );
 		void HandleGetRoutingInfoResponse( uint8* _data );
 
-		void HandleSendDataRequest( uint8* _data, bool _replication );
+		bool HandleSendDataRequest( uint8* _data, bool _replication );
 		void HandleAddNodeToNetworkRequest( uint8* _data );
 		void HandleCreateNewPrimaryRequest( uint8* _data );
 		void HandleControllerChangeRequest( uint8* _data );
@@ -303,8 +303,8 @@ namespace OpenZWave
 		void HandleRemoveNodeFromNetworkRequest( uint8* _data );
 		void HandleApplicationCommandHandlerRequest( uint8* _data );
 		void HandlePromiscuousApplicationCommandHandlerRequest( uint8* _data );
-		void HandleAssignReturnRouteRequest( uint8* _data );
-		void HandleDeleteReturnRouteRequest( uint8* _data );
+		bool HandleAssignReturnRouteRequest( uint8* _data );
+		bool HandleDeleteReturnRouteRequest( uint8* _data );
 		void HandleNodeNeighborUpdateRequest( uint8* _data );
 		void HandleNetworkUpdateRequest( uint8* _data );
 		bool HandleApplicationUpdateRequest( uint8* _data );

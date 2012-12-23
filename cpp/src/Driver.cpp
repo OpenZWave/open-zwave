@@ -1094,7 +1094,15 @@ bool Driver::MoveMessagesToWakeUpQueue
 					// Move all messages for this node to the wake-up queue
 					m_sendMutex->Lock();
 
-					// Try the current message first
+					// See if we are working on a controller command
+					if( m_currentControllerCommand )
+					{
+						// Don't save controller message as it will be recreated
+						delete m_currentMsg;
+						m_currentMsg = NULL;
+					}
+
+					// Then try the current message first
 					if( m_currentMsg )
 					{
 						if( _targetNodeId == m_currentMsg->GetTargetNodeId() )
@@ -1160,6 +1168,15 @@ bool Driver::MoveMessagesToWakeUpQueue
 									remove = true;
 								}
 							}
+							if( MsgQueueCmd_Controller == item.m_command )
+							{
+								if( _targetNodeId == item.m_cci->m_controllerCommandNode )
+								{
+									Log::Write( LogLevel_Info, _targetNodeId, "Node not responding - moving controller command to Wake-Up queue: %s", c_controllerCommandNames[item.m_cci->m_controllerCommand] );
+									wakeUp->QueueMsg( item );
+									remove = true;
+								}
+							}
 
 							if( remove )
 							{
@@ -1176,6 +1193,18 @@ bool Driver::MoveMessagesToWakeUpQueue
 						{
 							m_queueEvent[i]->Reset();
 						}
+					}
+
+					if( m_currentControllerCommand )
+					{
+						// Put command back on queue so it will be cleaned up
+						UpdateControllerState( ControllerState_Sleeping );
+						MsgQueueItem item;
+						item.m_command = MsgQueueCmd_Controller;
+						item.m_cci = new ControllerCommandItem( *m_currentControllerCommand );
+						m_currentControllerCommand = item.m_cci;
+						m_msgQueue[MsgQueue_Controller].push_back( item );
+						m_queueEvent[MsgQueue_Controller]->Set();
 					}
 
 					m_sendMutex->Unlock();
@@ -1751,7 +1780,14 @@ void Driver::ProcessMsg
 			}
 			case FUNC_ID_ZW_SEND_DATA:
 			{
-				HandleSendDataRequest( _data, false );
+				if( !HandleSendDataRequest( _data, false ) )
+				{
+					handleCallback = false;
+					m_expectedCallbackId = 0;
+					m_expectedReply = 0;
+					m_expectedCommandClassId = 0;
+					m_expectedNodeId = 0;
+				}
 				break;
 			}
 			case FUNC_ID_ZW_REPLICATION_COMMAND_COMPLETE:
@@ -1771,13 +1807,27 @@ void Driver::ProcessMsg
 			case FUNC_ID_ZW_ASSIGN_RETURN_ROUTE:
 			{
 				Log::Write( LogLevel_Detail, "" );
-				HandleAssignReturnRouteRequest( _data );
+				if( !HandleAssignReturnRouteRequest( _data ) )
+				{
+					handleCallback = false;
+					m_expectedCallbackId = 0;
+					m_expectedReply = 0;
+					m_expectedCommandClassId = 0;
+					m_expectedNodeId = 0;
+				}
 				break;
 			}
 			case FUNC_ID_ZW_DELETE_RETURN_ROUTE:
 			{
 				Log::Write( LogLevel_Detail, "" );
-				HandleDeleteReturnRouteRequest( _data );
+				if( !HandleDeleteReturnRouteRequest( _data ) )
+				{
+					handleCallback = false;
+					m_expectedCallbackId = 0;
+					m_expectedReply = 0;
+					m_expectedCommandClassId = 0;
+					m_expectedNodeId = 0;
+				}
 				break;
 			}
 			case FUNC_ID_ZW_SEND_NODE_INFORMATION:
@@ -2549,13 +2599,14 @@ void Driver::HandleGetRoutingInfoResponse
 // <Driver::HandleSendDataRequest>
 // Process a request from the Z-Wave PC interface
 //-----------------------------------------------------------------------------
-void Driver::HandleSendDataRequest
+bool Driver::HandleSendDataRequest
 (
 	uint8* _data,
 	bool _replication
 )
 {
 	uint8 nodeId = GetNodeNumber( m_currentMsg );
+	bool res = false;
 	Log::Write( LogLevel_Detail, nodeId, "  %s Request with callback ID 0x%.2x received (expected 0x%.2x)",  _replication ? "ZW_REPLICATION_SEND_DATA" : "ZW_SEND_DATA", _data[2], m_expectedCallbackId );
 
 	if( _data[2] != m_expectedCallbackId )
@@ -2588,8 +2639,10 @@ void Driver::HandleSendDataRequest
 		{
 			// Command reception acknowledged by node
 			m_expectedCallbackId = 0;
+			res = true;
 		}
 	}
+	return res;
 }
 
 //-----------------------------------------------------------------------------
@@ -3053,21 +3106,22 @@ void Driver::HandlePromiscuousApplicationCommandHandlerRequest
 // <Driver::HandleAssignReturnRouteRequest>
 // Process a request from the Z-Wave PC interface
 //-----------------------------------------------------------------------------
-void Driver::HandleAssignReturnRouteRequest
+bool Driver::HandleAssignReturnRouteRequest
 (
 	uint8* _data
 )
 {
 	ControllerState state;
 	uint8 nodeId = GetNodeNumber( m_currentMsg );
+	bool res = false;
 	if( m_currentControllerCommand == NULL )
 	{
-		return;
+		return res;
 	}
 	if( _data[3] )
 	{
 		// Failed
-		HandleErrorResponse( _data[3], m_currentControllerCommand->m_controllerCommandNode, "ZW_ASSIGN_RETURN_ROUTE" );
+		HandleErrorResponse( _data[3], m_currentControllerCommand->m_controllerCommandNode, "ZW_ASSIGN_RETURN_ROUTE", true );
 		state = ControllerState_Failed;
 	}
 	else
@@ -3075,30 +3129,33 @@ void Driver::HandleAssignReturnRouteRequest
 		// Success
 		Log::Write( LogLevel_Info, nodeId, "Received reply to FUNC_ID_ZW_ASSIGN_RETURN_ROUTE for node %d - SUCCESS", m_currentControllerCommand->m_controllerCommandNode );
 		state = ControllerState_Completed;
+		res = true;
 	}
 
 	UpdateControllerState( state );
+	return res;
 }
 
 //-----------------------------------------------------------------------------
 // <Driver::HandleDeleteReturnRouteRequest>
 // Process a request from the Z-Wave PC interface
 //-----------------------------------------------------------------------------
-void Driver::HandleDeleteReturnRouteRequest
+bool Driver::HandleDeleteReturnRouteRequest
 (
 	uint8* _data
 )
 {
 	ControllerState state;
 	uint8 nodeId = GetNodeNumber( m_currentMsg );
+	bool res = false;
 	if( m_currentControllerCommand == NULL )
 	{
-		return;
+		return res;
 	}
 	if( _data[3] )
 	{
 		// Failed
-		HandleErrorResponse( _data[3], m_currentControllerCommand->m_controllerCommandNode, "ZW_DELETE_RETURN_ROUTE" );
+		HandleErrorResponse( _data[3], m_currentControllerCommand->m_controllerCommandNode, "ZW_DELETE_RETURN_ROUTE", true );
 		state = ControllerState_Failed;
 	}
 	else
@@ -3106,9 +3163,11 @@ void Driver::HandleDeleteReturnRouteRequest
 		// Success
 		Log::Write( LogLevel_Info, nodeId, "Received reply to FUNC_ID_ZW_DELETE_RETURN_ROUTE for node %d - SUCCESS", m_currentControllerCommand->m_controllerCommandNode );
 		state = ControllerState_Completed;
+		res = true;
 	}
 
 	UpdateControllerState( state );
+	return res;
 }
 
 //-----------------------------------------------------------------------------
@@ -3344,7 +3403,6 @@ void Driver::CommonAddNodeStatusRequestHandler
 			// Get the controller out of add mode to avoid accidentally adding other devices.
 			// We used to call replication here.
 			AddNodeStop( _funcId );
-			}
 			break;
 		}
 		case ADD_NODE_STATUS_DONE:
@@ -4426,7 +4484,7 @@ bool Driver::BeginControllerCommand
 		return false;
 	}
 
-	Log::Write( LogLevel_Detail, 0, "Queuing Controller Command: %s", c_controllerCommandNames[_command] );
+	Log::Write( LogLevel_Detail, _nodeId, "Queuing Controller Command: %s", c_controllerCommandNames[_command] );
 	cci = new ControllerCommandItem();
 	cci->m_controllerCommand = _command;
 	cci->m_controllerCallback = _callback;

@@ -2,7 +2,7 @@
 <Product xmlns='http://code.google.com/p/open-zwave/'>
 	<!-- Configuration Parameters -->
 	<CommandClass id="112">
-		<Value type="list" index="17" genre="config" label="Mode" value="0" >
+		<Value type="list" index="17" genre="config" label="Mode" value="0" size="1">
 			<Help>
 				The ZIR010 can be configured to operate in 1 of 3 modes.
 				Those modes are:
@@ -28,7 +28,7 @@
 				Information reproduced from: http://www.pepper1.net/zwavedb/uploads/resources/bdf086a9388325a2fb8b8aa298e24e512faec65d.pdf
 			</Help>
 		</Value>
-		<Value type="list" index="19" genre="config" label="Unsolicited Commands" value="1" >
+		<Value type="list" index="19" genre="config" label="Unsolicited Commands" value="1" size="1">
 			<Help>
 				The ZIR010 can be disabled from sending commands unsolicited without removing associated devices by
 				setting Configuration Parameter # 19 to 0 (when asked for number of bytes, select 1).
