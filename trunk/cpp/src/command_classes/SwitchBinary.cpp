@@ -81,7 +81,7 @@ bool SwitchBinary::RequestValue
 	msg->Append( 2 );
 	msg->Append( GetCommandClassId() );
 	msg->Append( SwitchBinaryCmd_Get );
-	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	msg->Append( GetDriver()->GetTransmitOptions() );
 	GetDriver()->SendMsg( msg, _queue );
 	return true;
 }
@@ -133,7 +133,7 @@ bool SwitchBinary::SetValue
 		msg->Append( GetCommandClassId() );
 		msg->Append( SwitchBinaryCmd_Set );
 		msg->Append( value->GetValue() ? 0xff : 0x00 );
-		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		msg->Append( GetDriver()->GetTransmitOptions() );
 		GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 		return true;
 	}

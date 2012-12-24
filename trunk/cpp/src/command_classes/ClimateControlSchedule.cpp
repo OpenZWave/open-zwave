@@ -150,7 +150,7 @@ bool ClimateControlSchedule::RequestValue
 	msg->Append( 2 );
 	msg->Append( GetCommandClassId() );
 	msg->Append( ClimateControlScheduleCmd_ChangedGet );
-	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	msg->Append( GetDriver()->GetTransmitOptions() );
 	GetDriver()->SendMsg( msg, _queue );
 	return true;
 }
@@ -241,7 +241,7 @@ bool ClimateControlSchedule::HandleMsg
 					msg->Append( GetCommandClassId() );
 					msg->Append( ClimateControlScheduleCmd_Get );
 					msg->Append( i );
-					msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+					msg->Append( GetDriver()->GetTransmitOptions() );
 					GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 				}
 			}
@@ -254,7 +254,7 @@ bool ClimateControlSchedule::HandleMsg
 			msg->Append( 2 );
 			msg->Append( GetCommandClassId() );
 			msg->Append( ClimateControlScheduleCmd_OverrideGet );
-			msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+			msg->Append( GetDriver()->GetTransmitOptions() );
 			GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 		}
 		return true;
@@ -351,7 +351,7 @@ bool ClimateControlSchedule::SetValue
 			}
 		}
 
-		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		msg->Append( GetDriver()->GetTransmitOptions() );
 		GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 	}
 	else
@@ -372,7 +372,7 @@ bool ClimateControlSchedule::SetValue
 			msg->Append( ClimateControlScheduleCmd_OverrideSet );
 			msg->Append( (uint8)item.m_value );
 			msg->Append( setback->GetValue() );
-			msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+			msg->Append( GetDriver()->GetTransmitOptions() );
 			GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 		}
 	}

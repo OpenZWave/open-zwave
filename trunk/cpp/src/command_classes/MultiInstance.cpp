@@ -198,7 +198,7 @@ bool MultiInstance::RequestInstances
 					msg->Append( GetCommandClassId() );
 					msg->Append( MultiInstanceCmd_Get );
 					msg->Append( cc->GetCommandClassId() );
-					msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+					msg->Append( GetDriver()->GetTransmitOptions() );
 					GetDriver()->SendMsg( msg, Driver::MsgQueue_Query );
 					res = true;
 				}
@@ -216,7 +216,7 @@ bool MultiInstance::RequestInstances
 		msg->Append( 2 );
 		msg->Append( GetCommandClassId() );
 		msg->Append( MultiChannelCmd_EndPointGet );
-		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		msg->Append( GetDriver()->GetTransmitOptions() );
 		GetDriver()->SendMsg( msg, Driver::MsgQueue_Query );
 		res = true;
 	}
@@ -384,7 +384,7 @@ void MultiInstance::HandleMultiChannelEndPointReport
 		msg->Append( GetCommandClassId() );
 		msg->Append( MultiChannelCmd_CapabilityGet );
 		msg->Append( i );
-		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		msg->Append( GetDriver()->GetTransmitOptions() );
 		GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 	}
 }
@@ -557,7 +557,7 @@ void MultiInstance::HandleMultiChannelEndPointFindReport
 			msg->Append( GetCommandClassId() );
 			msg->Append( MultiChannelCmd_CapabilityGet );
 			msg->Append( endPoint );
-			msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+			msg->Append( GetDriver()->GetTransmitOptions() );
 			GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 		}
 	}
@@ -583,7 +583,7 @@ void MultiInstance::HandleMultiChannelEndPointFindReport
 					msg->Append( MultiChannelCmd_EndPointFind );
 					msg->Append( c_genericClass[m_endPointFindIndex] );		// Generic device class
 					msg->Append( 0xff );									// Any specific device class
-					msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+					msg->Append( GetDriver()->GetTransmitOptions() );
 					GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 				}
 			}

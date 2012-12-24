@@ -225,7 +225,7 @@ bool Configuration::RequestValue
 	msg->Append( GetCommandClassId() );
 	msg->Append( ConfigurationCmd_Get );
 	msg->Append( _parameter );
-	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	msg->Append( GetDriver()->GetTransmitOptions() );
 	GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 	return true;
 }
@@ -260,6 +260,6 @@ void Configuration::Set
 		msg->Append( (uint8)(_value>>8) );
 	}
 	msg->Append( (uint8)_value );
-	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	msg->Append( GetDriver()->GetTransmitOptions() );
 	GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 }
