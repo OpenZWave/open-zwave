@@ -91,7 +91,7 @@ bool SwitchAll::RequestValue
 	msg->Append( 2 );
 	msg->Append( GetCommandClassId() );
 	msg->Append( SwitchAllCmd_Get );
-	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	msg->Append( GetDriver()->GetTransmitOptions() );
 	GetDriver()->SendMsg( msg, _queue );
 	return true;
 }
@@ -143,7 +143,7 @@ bool SwitchAll::SetValue
 		msg->Append( GetCommandClassId() );
 		msg->Append( SwitchAllCmd_Set );
 		msg->Append( (uint8)item.m_value );
-		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		msg->Append( GetDriver()->GetTransmitOptions() );
 		GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 		return true;
 	}
@@ -167,7 +167,7 @@ void SwitchAll::Off
 	msg->Append( 2 );
 	msg->Append( StaticGetCommandClassId() );
 	msg->Append( SwitchAllCmd_Off );
-	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	msg->Append( _driver->GetTransmitOptions() );
 	_driver->SendMsg( msg, Driver::MsgQueue_Send );
 }
 
@@ -187,7 +187,7 @@ void SwitchAll::On
 	msg->Append( 2 );
 	msg->Append( StaticGetCommandClassId() );
 	msg->Append( SwitchAllCmd_On );
-	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	msg->Append( _driver->GetTransmitOptions() );
 	_driver->SendMsg( msg, Driver::MsgQueue_Send );
 }
 

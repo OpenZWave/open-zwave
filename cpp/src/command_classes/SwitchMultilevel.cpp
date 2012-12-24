@@ -142,7 +142,7 @@ bool SwitchMultilevel::RequestValue
 		msg->Append( 2 );
 		msg->Append( GetCommandClassId() );
 		msg->Append( SwitchMultilevelCmd_Get );
-		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		msg->Append( GetDriver()->GetTransmitOptions() );
 		GetDriver()->SendMsg( msg, _queue );
 		return true;
 	}
@@ -235,7 +235,7 @@ void SwitchMultilevel::SetVersion
 		msg->Append( 2 );
 		msg->Append( GetCommandClassId() );
 		msg->Append( SwitchMultilevelCmd_SupportedGet );
-		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		msg->Append( GetDriver()->GetTransmitOptions() );
 		GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 
 		// Set the request flag again - it will be cleared when we get a
@@ -427,7 +427,7 @@ bool SwitchMultilevel::SetLevel
 		msg->Append( _level );
 	}
 
-	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	msg->Append( GetDriver()->GetTransmitOptions() );
 	GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 	return true;
 }
@@ -507,7 +507,7 @@ bool SwitchMultilevel::StartLevelChange
 		msg->Append( step );
 	}
 
-	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	msg->Append( GetDriver()->GetTransmitOptions() );
 	GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 	return true;
 }
@@ -528,7 +528,7 @@ bool SwitchMultilevel::StopLevelChange
 	msg->Append( 2 );
 	msg->Append( GetCommandClassId() );
 	msg->Append( SwitchMultilevelCmd_StopLevelChange );
-	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	msg->Append( GetDriver()->GetTransmitOptions() );
 	GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 	return true;
 }

@@ -142,7 +142,7 @@ bool UserCode::RequestValue
 		msg->Append( 2 );
 		msg->Append( GetCommandClassId() );
 		msg->Append( UserNumberCmd_Get );
-		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		msg->Append( GetDriver()->GetTransmitOptions() );
 		GetDriver()->SendMsg( msg, _queue );
 		return true;
 	}
@@ -153,7 +153,7 @@ bool UserCode::RequestValue
 	msg->Append( GetCommandClassId() );
 	msg->Append( UserCodeCmd_Get );
 	msg->Append( _userCodeIdx );
-	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	msg->Append( GetDriver()->GetTransmitOptions() );
 	GetDriver()->SendMsg( msg, _queue );
 	return true;
 }
@@ -268,7 +268,7 @@ bool UserCode::SetValue
 		{
 			msg->Append( s[i] );
 		}
-		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		msg->Append( GetDriver()->GetTransmitOptions() );
 		GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 		return true;
 	}

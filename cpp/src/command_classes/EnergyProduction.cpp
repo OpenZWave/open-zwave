@@ -103,7 +103,7 @@ bool EnergyProduction::RequestValue
 	msg->Append( GetCommandClassId() );
 	msg->Append( EnergyProductionCmd_Get );
 	msg->Append( _valueEnum );
-	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	msg->Append( GetDriver()->GetTransmitOptions() );
 	GetDriver()->SendMsg( msg, _queue );
 	return true;
 }

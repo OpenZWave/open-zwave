@@ -152,7 +152,7 @@ bool WakeUp::RequestValue
 	msg->Append( 2 );
 	msg->Append( GetCommandClassId() );
 	msg->Append( WakeUpCmd_IntervalGet );
-	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	msg->Append( GetDriver()->GetTransmitOptions() );
 	GetDriver()->SendMsg( msg, _queue );
 
 	if( GetVersion() > 1 )
@@ -162,7 +162,7 @@ bool WakeUp::RequestValue
 		msg->Append( 2 );
 		msg->Append( GetCommandClassId() );
 		msg->Append( WakeUpCmd_IntervalCapabilitiesGet );
-		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		msg->Append( GetDriver()->GetTransmitOptions() );
 		GetDriver()->SendMsg( msg, _queue );
 	}
 
@@ -286,7 +286,7 @@ bool WakeUp::SetValue
 		msg->Append( (uint8)(( interval >> 8 ) & 0xff) );	 
 		msg->Append( (uint8)( interval & 0xff ) );		
 		msg->Append( GetDriver()->GetNodeId() );
-		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		msg->Append( GetDriver()->GetTransmitOptions() );
 		GetDriver()->SendMsg( msg, Driver::MsgQueue_WakeUp );
 		return true;
 	}
@@ -423,7 +423,7 @@ void WakeUp::SendPending
 		msg->Append( 2 );
 		msg->Append( GetCommandClassId() );
 		msg->Append( WakeUpCmd_NoMoreInformation );
-		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		msg->Append( GetDriver()->GetTransmitOptions() );
 		GetDriver()->SendMsg( msg, Driver::MsgQueue_WakeUp );
 	}
 }

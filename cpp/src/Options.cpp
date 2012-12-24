@@ -69,7 +69,7 @@ Options* Options::Create
 		FileOps::Create();
 		if( !FileOps::FolderExists( configPath ) )
 		{
-			Log::Create( "", false, true, LogLevel_Debug, LogLevel_Debug, LogLevel_Debug );
+			Log::Create( "", false, true, LogLevel_Debug, LogLevel_Debug, LogLevel_None );
 			Log::Write( LogLevel_Error, "Cannot find a path to the configuration files at %s. Exiting...", configPath.c_str() );
 			exit( 1 );
 		}

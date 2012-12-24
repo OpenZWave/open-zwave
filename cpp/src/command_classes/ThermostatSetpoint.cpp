@@ -180,7 +180,7 @@ bool ThermostatSetpoint::RequestValue
 		msg->Append( 2 );
 		msg->Append( GetCommandClassId() );
 		msg->Append( ThermostatSetpointCmd_SupportedGet );
-		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		msg->Append( GetDriver()->GetTransmitOptions() );
 		GetDriver()->SendMsg( msg, _queue );
 		return true;
 	}
@@ -197,7 +197,7 @@ bool ThermostatSetpoint::RequestValue
 		msg->Append( GetCommandClassId() );
 		msg->Append( ThermostatSetpointCmd_Get );
 		msg->Append( _setPointIndex );
-		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		msg->Append( GetDriver()->GetTransmitOptions() );
 		GetDriver()->SendMsg( msg, _queue );
 		return true;
 	}
@@ -292,7 +292,7 @@ bool ThermostatSetpoint::SetValue
 		msg->Append( ThermostatSetpointCmd_Set );
 		msg->Append( value->GetID().GetIndex() );
 		AppendValue( msg, value->GetValue(), scale );
-		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		msg->Append( GetDriver()->GetTransmitOptions() );
 		GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 		return true;
 	}

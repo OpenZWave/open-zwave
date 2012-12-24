@@ -75,34 +75,30 @@ void Association::ReadXML
 {
 	CommandClass::ReadXML( _ccElement );
 
-	if( Node* node = GetNodeUnsafe() )
+	TiXmlElement const* associationsElement = _ccElement->FirstChildElement();
+	while( associationsElement )
 	{
-		TiXmlElement const* associationsElement = _ccElement->FirstChildElement();
-		while( associationsElement )
+		char const* str = associationsElement->Value();
+		if( str && !strcmp( str, "Associations" ) )
 		{
-			char const* str = associationsElement->Value();
-			if( str && !strcmp( str, "Associations" ) )
+			int intVal;
+			if( TIXML_SUCCESS == associationsElement->QueryIntAttribute( "num_groups", &intVal ) )
 			{
-				int intVal;
-				if( TIXML_SUCCESS == associationsElement->QueryIntAttribute( "num_groups", &intVal ) )
-				{
-					m_numGroups = (uint8)intVal;
-				}
-
-				TiXmlElement const* groupElement = associationsElement->FirstChildElement();
-				while( groupElement )
-				{
-					Group* group = new Group( GetHomeId(), GetNodeId(), groupElement );
-					node->AddGroup( group );
-
-					groupElement = groupElement->NextSiblingElement();
-				}
-
-				break;
+				m_numGroups = (uint8)intVal;
 			}
 
-			associationsElement = associationsElement->NextSiblingElement();
+			TiXmlElement const* groupElement = associationsElement->FirstChildElement();
+			while( groupElement )
+			{
+				new Group( GetHomeId(), GetNodeId(), groupElement );
+
+				groupElement = groupElement->NextSiblingElement();
+			}
+
+			break;
 		}
+
+		associationsElement = associationsElement->NextSiblingElement();
 	}
 }
 
@@ -174,7 +170,7 @@ bool Association::RequestValue
 	msg->Append( 2 );
 	msg->Append( GetCommandClassId() );
 	msg->Append( AssociationCmd_GroupingsGet );
-	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	msg->Append( GetDriver()->GetTransmitOptions() );
 	GetDriver()->SendMsg( msg, _queue );
 	return true;
 }
@@ -333,7 +329,7 @@ void Association::QueryGroup
 	msg->Append( GetCommandClassId() );
 	msg->Append( AssociationCmd_Get );
 	msg->Append( _groupIdx );
-	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	msg->Append( GetDriver()->GetTransmitOptions() );
 	GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 }
 
@@ -356,7 +352,7 @@ void Association::Set
 	msg->Append( AssociationCmd_Set );
 	msg->Append( _groupIdx );
 	msg->Append( _targetNodeId );
-	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	msg->Append( GetDriver()->GetTransmitOptions() );
 	GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 }
 
@@ -379,7 +375,7 @@ void Association::Remove
 	msg->Append( AssociationCmd_Remove );
 	msg->Append( _groupIdx );
 	msg->Append( _targetNodeId );
-	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	msg->Append( GetDriver()->GetTransmitOptions() );
 	GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 }
 

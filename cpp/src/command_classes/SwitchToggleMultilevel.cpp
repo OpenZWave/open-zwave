@@ -84,7 +84,7 @@ bool SwitchToggleMultilevel::RequestValue
 	msg->Append( 2 );
 	msg->Append( GetCommandClassId() );
 	msg->Append( SwitchToggleMultilevelCmd_Get );
-	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	msg->Append( GetDriver()->GetTransmitOptions() );
 	GetDriver()->SendMsg( msg, _queue );
 	return true;
 }
@@ -131,7 +131,7 @@ bool SwitchToggleMultilevel::SetValue
 	msg->Append( 2 );
 	msg->Append( GetCommandClassId() );
 	msg->Append( SwitchToggleMultilevelCmd_Set );
-	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	msg->Append( GetDriver()->GetTransmitOptions() );
 	GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 	return true;
 }
@@ -158,7 +158,7 @@ void SwitchToggleMultilevel::StartLevelChange
 	msg->Append( GetCommandClassId() );
 	msg->Append( SwitchToggleMultilevelCmd_StartLevelChange );
 	msg->Append( param );
-	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	msg->Append( GetDriver()->GetTransmitOptions() );
 }
 
 //-----------------------------------------------------------------------------
@@ -175,7 +175,7 @@ void SwitchToggleMultilevel::StopLevelChange
 	msg->Append( 2 );
 	msg->Append( GetCommandClassId() );
 	msg->Append( SwitchToggleMultilevelCmd_StopLevelChange );
-	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	msg->Append( GetDriver()->GetTransmitOptions() );
 }
 
 //-----------------------------------------------------------------------------
