@@ -175,14 +175,11 @@ void ValueList::WriteXML
 {
 	Value::WriteXML( _valueElement );
 	
-	char str[16] = "";
-	if ( IsSet() )
-	{
-		snprintf( str, 16, "%d", m_valueIdx );
-	}
+	char str[16];
+	snprintf( str, sizeof(str), "%d", m_valueIdx );
 	_valueElement->SetAttribute( "vindex", str );
 
-	snprintf( str, 16, "%d", m_size );
+	snprintf( str, sizeof(str), "%d", m_size );
 	_valueElement->SetAttribute( "size", str );
 
 	for( vector<Item>::iterator it = m_items.begin(); it != m_items.end(); ++it )
@@ -190,7 +187,7 @@ void ValueList::WriteXML
 		TiXmlElement* pItemElement = new TiXmlElement( "Item" );
 		pItemElement->SetAttribute( "label", (*it).m_label.c_str() );
 		
-		snprintf( str, 16, "%d", (*it).m_value );
+		snprintf( str, sizeof(str), "%d", (*it).m_value );
 		pItemElement->SetAttribute( "value", str );
 
 		_valueElement->LinkEndChild( pItemElement );

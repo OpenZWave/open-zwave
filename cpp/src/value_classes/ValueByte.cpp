@@ -120,13 +120,9 @@ void ValueByte::WriteXML
 {
 	Value::WriteXML( _valueElement );
 
-	if ( !IsSet() )
-		_valueElement->SetAttribute( "value", "" );
-	else {
-		char str[8];
-		snprintf( str, sizeof(str), "%d", m_value );
-		_valueElement->SetAttribute( "value", str );
-	}
+	char str[8];
+	snprintf( str, sizeof(str), "%d", m_value );
+	_valueElement->SetAttribute( "value", str );
 }
 
 //-----------------------------------------------------------------------------
