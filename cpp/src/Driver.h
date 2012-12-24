@@ -253,6 +253,8 @@ namespace OpenZWave
 
 		ControllerReplication*	m_controllerReplication;					// Controller replication is handled separately from the other command classes, due to older hand-held controllers using invalid node IDs.
 
+		uint8					m_transmitOptions;
+
 	//-----------------------------------------------------------------------------
 	//	Receiving Z-Wave messages
 	//-----------------------------------------------------------------------------
@@ -576,6 +578,11 @@ namespace OpenZWave
 		};
 
 		void SendMsg( Msg* _msg, MsgQueue const _queue );
+
+		/**
+		 * Fetch the transmit options
+		 */
+		uint8 GetTransmitOptions()const{ return m_transmitOptions; }
 
 	private:
 		/**

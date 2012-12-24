@@ -85,7 +85,7 @@ bool Battery::RequestValue
 	msg->Append( 2 );
 	msg->Append( GetCommandClassId() );
 	msg->Append( BatteryCmd_Get );
-	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	msg->Append( GetDriver()->GetTransmitOptions() );
 	GetDriver()->SendMsg( msg, _queue );
 	return true;
 }

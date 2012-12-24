@@ -160,7 +160,7 @@ bool Meter::RequestState
 			msg->Append( 2 );
 			msg->Append( GetCommandClassId() );
 			msg->Append( MeterCmd_SupportedGet );
-			msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+			msg->Append( GetDriver()->GetTransmitOptions() );
 			GetDriver()->SendMsg( msg, _queue );
 			res = true;
 		}
@@ -202,7 +202,7 @@ bool Meter::RequestValue
 			msg->Append( GetCommandClassId() );
 			msg->Append( MeterCmd_Get );
 			msg->Append( (uint8)( i << 3 ) );
-			msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+			msg->Append( GetDriver()->GetTransmitOptions() );
 			GetDriver()->SendMsg( msg, _queue );
 			res |= true;
 		}
@@ -516,7 +516,7 @@ bool Meter::SetValue
 			msg->Append( 2 );
 			msg->Append( GetCommandClassId() );
 			msg->Append( MeterCmd_Reset );
-			msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+			msg->Append( GetDriver()->GetTransmitOptions() );
 			GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 			return true;
 		}

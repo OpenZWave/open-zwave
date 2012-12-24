@@ -100,7 +100,7 @@ bool AssociationCommandConfiguration::RequestValue
 	msg->Append( 2 );
 	msg->Append( GetCommandClassId() );
 	msg->Append( AssociationCommandConfigurationCmd_SupportedRecordsGet );
-	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	msg->Append( GetDriver()->GetTransmitOptions() );
 	GetDriver()->SendMsg( msg, _queue );
 	return true;
 }
@@ -122,7 +122,7 @@ void AssociationCommandConfiguration::RequestCommands
 	msg->Append( AssociationCommandConfigurationCmd_Get );
 	msg->Append( _groupIdx );
 	msg->Append( _nodeId );
-	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	msg->Append( GetDriver()->GetTransmitOptions() );
 	GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 }
 
@@ -269,7 +269,7 @@ void AssociationCommandConfiguration::SetCommand
 		msg->Append( _data[i] );
 	}
 
-	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	msg->Append( GetDriver()->GetTransmitOptions() );
 	GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 }
 

@@ -253,7 +253,7 @@ bool NodeNaming::RequestValue
 		msg->Append( 2 );
 		msg->Append( GetCommandClassId() );
 		msg->Append( NodeNamingCmd_Get );
-		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		msg->Append( GetDriver()->GetTransmitOptions() );
 		GetDriver()->SendMsg( msg, _queue );
 		return true;
 	}
@@ -266,7 +266,7 @@ bool NodeNaming::RequestValue
 		msg->Append( 2 );
 		msg->Append( GetCommandClassId() );
 		msg->Append( NodeNamingCmd_LocationGet );
-		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		msg->Append( GetDriver()->GetTransmitOptions() );
 		GetDriver()->SendMsg( msg, _queue );
 		return true;
 	}
@@ -349,7 +349,7 @@ void NodeNaming::SetName
 		msg->Append( _name[i] );
 	}
 
-	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	msg->Append( GetDriver()->GetTransmitOptions() );
 	GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 }
 
@@ -381,7 +381,7 @@ void NodeNaming::SetLocation
 		msg->Append( _location[i] );
 	}
 
-	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	msg->Append( GetDriver()->GetTransmitOptions() );
 	GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 }
 

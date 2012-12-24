@@ -125,7 +125,7 @@ bool SensorAlarm::RequestValue
 		msg->Append( 2 );
 		msg->Append( GetCommandClassId() );
 		msg->Append( SensorAlarmCmd_SupportedGet );
-		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		msg->Append( GetDriver()->GetTransmitOptions() );
 		GetDriver()->SendMsg( msg, _queue );
 	}
 	else
@@ -138,7 +138,7 @@ bool SensorAlarm::RequestValue
 		msg->Append( GetCommandClassId() );
 		msg->Append( SensorAlarmCmd_Get );
 		msg->Append( _alarmType );
-		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		msg->Append( GetDriver()->GetTransmitOptions() );
 		GetDriver()->SendMsg( msg, _queue );
 	}
 	return true;

@@ -131,6 +131,7 @@ Driver::Driver
 	m_controllerCaps( 0 ),
 	m_nodeMutex( new Mutex() ),
 	m_controllerReplication( NULL ),
+	m_transmitOptions( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE | TRANSMIT_OPTION_EXPLORE ),
 	m_waitingForAck( false ),
 	m_expectedCallbackId( 0 ),
 	m_expectedReply( 0 ),
@@ -4657,7 +4658,7 @@ void Driver::DoControllerCommand
 				msg->Append( m_currentControllerCommand->m_controllerCommandNode );
 				if( opts )
 				{
-					msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+					msg->Append( GetTransmitOptions() );
 				}
 				SendMsg( msg, MsgQueue_Command );
 			}
@@ -4685,7 +4686,7 @@ void Driver::DoControllerCommand
 			Log::Write( LogLevel_Info, 0, "Sending a node information frame" );
 			Msg* msg = new Msg( "Send Node Information", m_currentControllerCommand->m_controllerCommandNode, REQUEST, FUNC_ID_ZW_SEND_NODE_INFORMATION, true );
 			msg->Append( m_currentControllerCommand->m_controllerCommandNode );		// to the node
-			msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+			msg->Append( GetTransmitOptions() );
 			SendMsg( msg, MsgQueue_Command );
 			break;
 		}

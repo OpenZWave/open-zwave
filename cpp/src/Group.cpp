@@ -140,6 +140,11 @@ Group::Group
 		associationElement = associationElement->NextSiblingElement();
 	}
 
+	// Group must be added before OnGroupChanged is called so UpdateNodeRoutes can find it
+	if( Node* node = Manager::Get()->GetDriver( m_homeId )->GetNodeUnsafe( _nodeId ) )
+	{
+		node->AddGroup( this );
+	}
 	OnGroupChanged( pending );
 }
 

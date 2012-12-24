@@ -126,7 +126,7 @@ bool Powerlevel::RequestValue
 		msg->Append( 2 );
 		msg->Append( GetCommandClassId() );
 		msg->Append( PowerlevelCmd_Get );
-		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		msg->Append( GetDriver()->GetTransmitOptions() );
 		GetDriver()->SendMsg( msg, _queue );
 		return true;
 	}
@@ -341,7 +341,7 @@ bool Powerlevel::Set
 	msg->Append( PowerlevelCmd_Set );
 	msg->Append( (uint8)powerLevel );
 	msg->Append( timeout );
-	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	msg->Append( GetDriver()->GetTransmitOptions() );
 	GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 	return true;
 }
@@ -401,7 +401,7 @@ bool Powerlevel::Test
 	msg->Append( (uint8)powerLevel );
 	msg->Append( (uint8)(numFrames >> 8) );
 	msg->Append( (uint8)(numFrames & 0x00ff) );
-	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	msg->Append( GetDriver()->GetTransmitOptions() );
 	GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 	return true;
 }
@@ -422,7 +422,7 @@ bool Powerlevel::Report
 	msg->Append( 6 );
 	msg->Append( GetCommandClassId() );
 	msg->Append( PowerlevelCmd_TestNodeGet );
-	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	msg->Append( GetDriver()->GetTransmitOptions() );
 	GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 	return true;
 }

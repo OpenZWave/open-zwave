@@ -83,7 +83,7 @@ Manager* Manager::Create
 	}
 
 	// Options have not been created and locked.
-	Log::Create( "", false, true, LogLevel_Debug, LogLevel_Debug, LogLevel_Debug );
+	Log::Create( "", false, true, LogLevel_Debug, LogLevel_Debug, LogLevel_None );
 	Log::Write( LogLevel_Error, "Options have not been created and locked. Exiting..." );
 	exit(1);
 	return NULL;

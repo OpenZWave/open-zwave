@@ -101,7 +101,7 @@ bool Clock::RequestValue
 	msg->Append( 2 );
 	msg->Append( GetCommandClassId() );
 	msg->Append( ClockCmd_Get );
-	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	msg->Append( GetDriver()->GetTransmitOptions() );
 	GetDriver()->SendMsg( msg, _queue );
 	return true;
 }
@@ -178,7 +178,7 @@ bool Clock::SetValue
 		msg->Append( ClockCmd_Set );
 		msg->Append( ( day << 5 ) | hour );
 		msg->Append( minute );
-		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		msg->Append( GetDriver()->GetTransmitOptions() );
 		GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 		ret = true;
 	}
