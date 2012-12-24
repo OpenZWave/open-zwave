@@ -109,10 +109,7 @@ void ValueBool::WriteXML
 )
 {
 	Value::WriteXML( _valueElement );
-	if ( !IsSet() )
-		_valueElement->SetAttribute( "value", "" );
-	else
-		_valueElement->SetAttribute( "value", m_value ? "True" : "False" );
+	_valueElement->SetAttribute( "value", m_value ? "True" : "False" );
 }
 
 //-----------------------------------------------------------------------------

@@ -95,10 +95,7 @@ void ValueDecimal::WriteXML
 )
 {
 	Value::WriteXML( _valueElement );
-	if ( !IsSet() )
-		_valueElement->SetAttribute( "value", "" );
-	else
-		_valueElement->SetAttribute( "value", m_value.c_str() );
+	_valueElement->SetAttribute( "value", m_value.c_str() );
 }
 
 //-----------------------------------------------------------------------------

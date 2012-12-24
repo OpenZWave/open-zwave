@@ -118,11 +118,6 @@ void ValueSchedule::WriteXML
 {
 	Value::WriteXML( _valueElement );
 
-	if( !IsSet() )
-	{
-		return;
-	}
-
 	for( uint8 i=0; i<GetNumSwitchPoints(); ++i )
 	{
 		uint8 hours;
@@ -135,13 +130,13 @@ void ValueSchedule::WriteXML
 			TiXmlElement* switchPointElement = new TiXmlElement( "SwitchPoint" );
 			_valueElement->LinkEndChild( switchPointElement );
 
-			snprintf( str, 8, "%d", hours );
+			snprintf( str, sizeof(str), "%d", hours );
 			switchPointElement->SetAttribute( "hours", str );
 
-			snprintf( str, 8, "%d", minutes );
+			snprintf( str, sizeof(str), "%d", minutes );
 			switchPointElement->SetAttribute( "minutes", str );
 
-			snprintf( str, 8, "%d", setback );
+			snprintf( str, sizeof(str), "%d", setback );
 			switchPointElement->SetAttribute( "setback", str );
 		}
 	}
