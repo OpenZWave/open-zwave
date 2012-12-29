@@ -963,9 +963,15 @@ bool Driver::WriteMsg
 	string const msg
 )
 {
-	//Log::Write( LogLevel_Detail, GetNodeNumber( m_currentMsg ), "WriteMsg %s m_currentMsg=%08x", msg.c_str(), m_currentMsg );
 	if( !m_currentMsg )
 	{
+		Log::Write( LogLevel_Detail, GetNodeNumber( m_currentMsg ), "WriteMsg %s m_currentMsg=%08x", msg.c_str(), m_currentMsg );
+		// We try not to hang when this happenes
+		m_expectedCallbackId = 0;
+		m_expectedCommandClassId = 0;
+		m_expectedNodeId = 0;
+		m_expectedReply = 0;
+		m_waitingForAck = false;
 		return false;
 	}
 
@@ -1482,6 +1488,7 @@ bool Driver::ReadMsg
 			else
 			{
 				Log::Write( LogLevel_Warning, "m_currentMsg was NULL when trying to set MaxSendAttempts" );
+				Log::QueueDump();
 			}
 			WriteMsg( "CAN" );
 			break;
