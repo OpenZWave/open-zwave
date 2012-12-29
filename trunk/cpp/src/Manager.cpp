@@ -2934,6 +2934,7 @@ void Manager::ResetController
 		Driver::ControllerInterface intf = driver->GetControllerInterfaceType();
 		RemoveDriver( path );
 		AddDriver( path, intf );
+		Wait::Multiple( NULL, 0, 500 );
 	}
 	RemoveAllScenes( _homeId );
 }
