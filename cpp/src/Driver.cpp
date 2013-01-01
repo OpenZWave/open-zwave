@@ -256,7 +256,8 @@ Driver::~Driver
 			if( MsgQueueCmd_SendMsg == item.m_command )
 			{
 				delete item.m_msg;
-			} else if( MsgQueueCmd_Controller == item.m_command )
+			}
+			else if( MsgQueueCmd_Controller == item.m_command )
 			{
 				delete item.m_cci;
 			}
@@ -3368,10 +3369,10 @@ void Driver::CommonAddNodeStatusRequestHandler
 )
 {
 	uint8 nodeId = GetNodeNumber( m_currentMsg );
-	ControllerState state = m_currentControllerCommand->m_controllerState;
-	if( m_currentControllerCommand == NULL )
+	ControllerState state;
+	if( m_currentControllerCommand != NULL )
 	{
-		return;
+		state = m_currentControllerCommand->m_controllerState;
 	}
 	switch( _data[3] )
 	{
@@ -3392,16 +3393,22 @@ void Driver::CommonAddNodeStatusRequestHandler
 		{
 			Log::Write( LogLevel_Info, nodeId, "ADD_NODE_STATUS_ADDING_SLAVE" );
 			Log::Write( LogLevel_Info, nodeId, "Adding node ID %d", _data[4] );
-			m_currentControllerCommand->m_controllerAdded = false;
-			m_currentControllerCommand->m_controllerCommandNode = _data[4];
+			if( m_currentControllerCommand != NULL )
+			{
+				m_currentControllerCommand->m_controllerAdded = false;
+				m_currentControllerCommand->m_controllerCommandNode = _data[4];
+			}
 			break;
 		}
 		case ADD_NODE_STATUS_ADDING_CONTROLLER:
 		{
 			Log::Write( LogLevel_Info, nodeId, "ADD_NODE_STATUS_ADDING_CONTROLLER");
 			Log::Write( LogLevel_Info, nodeId, "Adding controller ID %d", _data[4] );
-			m_currentControllerCommand->m_controllerAdded = true;
-			m_currentControllerCommand->m_controllerCommandNode = _data[4];
+			if( m_currentControllerCommand != NULL )
+			{
+				m_currentControllerCommand->m_controllerAdded = true;
+				m_currentControllerCommand->m_controllerCommandNode = _data[4];
+			}
 			break;
 		}
 		case ADD_NODE_STATUS_PROTOCOL_DONE:
@@ -3417,13 +3424,13 @@ void Driver::CommonAddNodeStatusRequestHandler
 		{
 			Log::Write( LogLevel_Info, nodeId, "ADD_NODE_STATUS_DONE" );
 			state = ControllerState_Completed;
-			if( m_currentControllerCommand->m_controllerCommandNode != 0xff )
+			if( m_currentControllerCommand != NULL && m_currentControllerCommand->m_controllerCommandNode != 0xff )
 			{
 				InitNode( m_currentControllerCommand->m_controllerCommandNode );
 			}
 
 			// Not sure about the new controller function here.
-			if( _funcId != FUNC_ID_ZW_ADD_NODE_TO_NETWORK && m_currentControllerCommand->m_controllerAdded )
+			if( _funcId != FUNC_ID_ZW_ADD_NODE_TO_NETWORK && m_currentControllerCommand != NULL && m_currentControllerCommand->m_controllerAdded )
 			{
 				// Rebuild all the node info.  Group and scene data that we stored
 				// during replication will be applied as we discover each node.

@@ -84,6 +84,10 @@ WakeUp::~WakeUp
 		{
 			delete item.m_msg;
 		}
+		else if( MsgQueueCmd_Controller == item.m_command )
+		{
+			delete item.m_cci;
+		}
 		m_pendingQueue.pop_front();
 	}
 }
