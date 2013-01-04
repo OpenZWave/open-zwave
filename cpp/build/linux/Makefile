@@ -15,7 +15,7 @@ LD     := $(CROSS_COMPILE)g++
 AR     := $(CROSS_COMPILE)ar rc
 RANLIB := $(CROSS_COMPILE)ranlib
 
-DEBUG_CFLAGS    := -Wall -Wno-inline -Wno-format -Werror -g -DDEBUG -DLOG_STDERR -fPIC
+DEBUG_CFLAGS    := -Wall -Wno-unknown-pragmas -Wno-inline -Wno-format -Werror -g -DDEBUG -DLOG_STDERR -fPIC
 RELEASE_CFLAGS  := -Wall -Wno-unknown-pragmas -Werror -Wno-format -O3 -DNDEBUG -fPIC
 
 DEBUG_LDFLAGS	:= -g
