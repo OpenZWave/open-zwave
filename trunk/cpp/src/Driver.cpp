@@ -3220,7 +3220,7 @@ void Driver::HandleNodeNeighborUpdateRequest
 )
 {
 	uint8 nodeId = GetNodeNumber( m_currentMsg );
-	ControllerState state;
+	ControllerState state = ControllerState_Normal;
 	switch( _data[3] )
 	{
 		case REQUEST_NEIGHBOR_UPDATE_STARTED:
@@ -3369,7 +3369,7 @@ void Driver::CommonAddNodeStatusRequestHandler
 )
 {
 	uint8 nodeId = GetNodeNumber( m_currentMsg );
-	ControllerState state;
+	ControllerState state = ControllerState_Normal;
 	if( m_currentControllerCommand != NULL )
 	{
 		state = m_currentControllerCommand->m_controllerState;
