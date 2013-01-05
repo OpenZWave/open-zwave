@@ -202,9 +202,9 @@ bool Version::HandleMsg
 				pCommandClass->ClearStaticRequest( StaticRequest_Version );
 				pCommandClass->SetVersion( _data[2] );
 			}
-		}
 
-		return true;
+			return true;
+		}
 	}
 
 	return false;

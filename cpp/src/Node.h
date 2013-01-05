@@ -130,7 +130,8 @@ namespace OpenZWave
 		enum QueryStage														
 		{
 			QueryStage_ProtocolInfo,				/**< Retrieve protocol information */
-			QueryStage_WakeUp,					/**< Start wake up process if a sleeping node*/
+			QueryStage_Probe,					/**< Ping device to see if alive */
+			QueryStage_WakeUp,					/**< Start wake up process if a sleeping node */
 			QueryStage_ManufacturerSpecific1,			/**< Retrieve manufacturer name and product ids if ProtocolInfo lets us */
 			QueryStage_NodeInfo,					/**< Retrieve info about supported, controlled command classes */
 			QueryStage_ManufacturerSpecific2,			/**< Retrieve manufacturer name and product ids */
@@ -206,6 +207,12 @@ namespace OpenZWave
 		string GetQueryStageName( QueryStage const _stage );
 
 		/**
+		 * Returns whether the library thinks a node is functioning properly
+		 * \return boolean status of node.
+		 */
+		bool IsNodeAlive()const{ return m_nodeAlive; }
+
+		/**
 		 *  This function handles a response to the FUNC_ID_ZW_GET_NODE_PROTOCOL_INFO
 		 *  command for this node.  If protocol information has already been retrieved
 		 *  for the node, the function simply returns.  Otherwise, it populates several
@@ -237,6 +244,7 @@ namespace OpenZWave
 		bool		m_nodeInfoReceived;
 		bool		m_manufacturerSpecificClassReceived;
 		bool		m_nodeInfoSupported;
+		bool		m_nodeAlive;
 
 	//-----------------------------------------------------------------------------
 	// Capabilities
@@ -508,11 +516,14 @@ namespace OpenZWave
 			uint32 m_retries;
 			uint32 m_receivedCnt;
 			uint32 m_receivedDups;
+			uint32 m_receivedUnsolicited;
 			string m_sentTS;
 			string m_receivedTS;
 			uint32 m_lastRequestRTT;
 			uint32 m_averageRequestRTT;				// ms
-			uint8 m_quality;				// Node quality measure
+			uint32 m_lastResponseRTT;
+			uint32 m_averageResponseRTT;
+			uint8 m_quality;					// Node quality measure
 			uint8 m_lastReceivedMessage[254];
 			list<CommandClassData> m_ccData;
 		};
@@ -525,10 +536,13 @@ namespace OpenZWave
 		uint32 m_retries;				// Number of message retries
 		uint32 m_receivedCnt;				// Number of messages received from this node.
 		uint32 m_receivedDups;				// Number of duplicated messages received;
-		uint32 m_lastRequestRTT;			// Last message rtt
+		uint32 m_receivedUnsolicited;			// Number of messages received unsolicited
+		uint32 m_lastRequestRTT;			// Last message request RTT
+		uint32 m_lastResponseRTT;			// Last message response RTT
 		TimeStamp m_sentTS;				// Last message sent time
 		TimeStamp m_receivedTS;				// Last message received time
-		uint32 m_averageRequestRTT;			// Average round trip time.
+		uint32 m_averageRequestRTT;			// Average Request round trip time.
+		uint32 m_averageResponseRTT;			// Average Reponse round trip time.
 		uint8 m_quality;				// Node quality measure
 		uint8 m_lastReceivedMessage[254];		// Place to hold last received message
 	};

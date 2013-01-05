@@ -63,6 +63,18 @@ ValueInt::ValueInt
 	m_max = INT_MAX;
 }
 
+//-----------------------------------------------------------------------------
+// <ValueInt::ValueInt>
+// Constructor (from XML)
+//-----------------------------------------------------------------------------
+ValueInt::ValueInt
+(
+)
+{
+	m_min = INT_MIN;
+	m_max = INT_MAX;
+}
+
 string const ValueInt::GetAsString
 (
 ) const

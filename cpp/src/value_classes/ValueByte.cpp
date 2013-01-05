@@ -62,6 +62,18 @@ ValueByte::ValueByte
 	m_max = 255;
 }
 
+//-----------------------------------------------------------------------------
+// <ValueByte::ValueByte>
+// Constructor (from XML)
+//-----------------------------------------------------------------------------
+ValueByte::ValueByte
+(
+)
+{
+	m_min = 0;
+	m_max = 255;
+}
+
 string const ValueByte::GetAsString
 (
 ) const

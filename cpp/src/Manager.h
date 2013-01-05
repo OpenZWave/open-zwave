@@ -752,6 +752,14 @@ namespace OpenZWave
 		 */
 		bool IsNodeFailed( uint32 const _homeId, uint8 const _nodeId );
 
+		/**
+		 * \brief Get whether the node's query stage as a string
+		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param _nodeId The ID of the node to query.
+		 * \return name of current query stage as a string.
+		 */
+		string GetNodeQueryStage( uint32 const _homeId, uint8 const _nodeId );
+
 	/*@}*/
 
 	//-----------------------------------------------------------------------------

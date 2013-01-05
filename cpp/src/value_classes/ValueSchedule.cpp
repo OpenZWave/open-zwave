@@ -52,7 +52,8 @@ ValueSchedule::ValueSchedule
 	bool const _writeOnly,
 	uint8 const _pollIntensity
 ):
-  	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Byte, _label, _units, _readOnly, _writeOnly, false, _pollIntensity )
+	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Byte, _label, _units, _readOnly, _writeOnly, false, _pollIntensity ),
+	m_numSwitchPoints( 0 )
 {
 }
 

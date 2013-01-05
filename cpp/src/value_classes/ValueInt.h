@@ -45,7 +45,7 @@ namespace OpenZWave
 	{
 	public:
 	  	ValueInt( uint32 const _homeId, uint8 const _nodeId, ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, string const& _label, string const& _units, bool const _readOnly, bool const _writeOnly, int32 const _value, uint8 const _pollIntensity );
-		ValueInt(){}
+		ValueInt();
 		virtual ~ValueInt(){}
 
 		bool Set( int32 const _value );

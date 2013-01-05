@@ -216,9 +216,17 @@ bool Configuration::SetValue
 bool Configuration::RequestValue
 (
 	uint32 const _requestFlags,
-	uint8 const _parameter			// parameter number is encoded as the Index portion of ValueID
+	uint8 const _parameter,			// parameter number is encoded as the Index portion of ValueID
+	uint8 const _instance,
+	Driver::MsgQueue const _queue
 )
 {
+	if( _instance != 1 )
+	{
+		// This command class doesn't work with multiple instances
+		return false;
+	}
+
 	Msg* msg = new Msg( "ConfigurationCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 	msg->Append( GetNodeId() );
 	msg->Append( 3 );
@@ -226,7 +234,7 @@ bool Configuration::RequestValue
 	msg->Append( ConfigurationCmd_Get );
 	msg->Append( _parameter );
 	msg->Append( GetDriver()->GetTransmitOptions() );
-	GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
+	GetDriver()->SendMsg( msg, _queue );
 	return true;
 }
 

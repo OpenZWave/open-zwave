@@ -77,6 +77,7 @@ map<uint8,Node::GenericDeviceClass*> Node::s_genericDeviceClasses;
 static char const* c_queryStageNames[] =
 {
 	"ProtocolInfo",
+	"Probe",
 	"WakeUp",
 	"ManufacturerSpecific1",
 	"NodeInfo",
@@ -110,6 +111,7 @@ Node::Node
 	m_nodeInfoReceived( false ),
 	m_manufacturerSpecificClassReceived( false ),
 	m_nodeInfoSupported( true ),
+	m_nodeAlive( true ),	// assome live node
 	m_listening( true ),	// assume we start out listening
 	m_frequentListening( false ),
 	m_beaming( false ),
@@ -137,8 +139,11 @@ Node::Node
 	m_retries( 0 ),
 	m_receivedCnt( 0 ),
 	m_receivedDups( 0 ),
+	m_receivedUnsolicited( 0 ),
 	m_lastRequestRTT( 0 ),
+	m_lastResponseRTT( 0 ),
 	m_averageRequestRTT( 0 ),
+	m_averageResponseRTT( 0 ),
 	m_quality( 0 )
 {
 	memset( m_neighbors, 0, sizeof(m_neighbors) );
@@ -154,6 +159,9 @@ Node::~Node
 (
 )
 {
+	// Remove any messages from queues
+	GetDriver()->RemoveQueues( m_nodeId );
+
 	// Delete the values
 	delete m_values;
 
@@ -201,7 +209,8 @@ void Node::AdvanceQueries
 	// Each stage must generate all the messages for its particular	stage as
 	// assumptions are made in later code (RemoveMsg) that this is the case. This means
 	// each stage is only visited once.
-	while( !m_queryPending )
+	Log::Write( LogLevel_Detail, m_nodeId, "AdvanceQueries queryPending=%d queryRetries=%d queryStage=%s live=%d", m_queryPending, m_queryRetries, c_queryStageNames[m_queryStage], m_nodeAlive );
+	while( !m_queryPending && m_nodeAlive )
 	{
 		switch( m_queryStage )
 		{
@@ -226,6 +235,27 @@ void Node::AdvanceQueries
 				else
 				{
 					// This stage has been done already, so move to the Neighbours stage
+					m_queryStage = QueryStage_Probe;
+					m_queryRetries = 0;
+				}
+				break;
+			}
+			case QueryStage_Probe:
+			{
+				Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_Probe" );
+				//
+				// Send a NoOperation message to see if the node is awake
+				// and alive. Based on the response or lack of response
+				// will determine next step.
+				//
+				NoOperation* noop = static_cast<NoOperation*>( GetCommandClass( NoOperation::StaticGetCommandClassId() ) );
+				if( GetDriver()->GetNodeId() != m_nodeId )
+				{
+					noop->Set( true );
+				      	m_queryPending = true;
+				}
+				else
+				{
 					m_queryStage = QueryStage_WakeUp;
 					m_queryRetries = 0;
 				}
@@ -504,9 +534,12 @@ void Node::AdvanceQueries
 		}
 	}
 
-	// Add a marker to the query queue so this advance method
-	// gets called again once this stage has completed.
-	GetDriver()->SendQueryStageComplete( m_nodeId, m_queryStage, Driver::MsgQueue_Query );
+	if( m_nodeAlive )
+	{
+		// Add a marker to the query queue so this advance method
+		// gets called again once this stage has completed.
+		GetDriver()->SendQueryStageComplete( m_nodeId, m_queryStage );
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -553,10 +586,23 @@ void Node::QueryStageRetry
 
 	if( _maxAttempts && ( ++m_queryRetries >= _maxAttempts ) )
 	{
+		// If we are probing and no response, assume dead node. Sleeping nodes won't go through here/
+		if( m_queryStage == QueryStage_Probe )
+		{
+			Log::Write( LogLevel_Error, m_nodeId, "ERROR: node presumed dead" );
+			m_nodeAlive = false;
+			Notification* notification = new Notification( Notification::Type_Notification );
+			notification->SetHomeAndNodeIds( m_homeId, m_nodeId );
+			notification->SetNotification( Notification::Code_Dead );
+			GetDriver()->QueueNotification( notification );
+			return;
+		}
 		// We've retried too many times.  Move to the next stage.
 		m_queryStage = (Node::QueryStage)( (uint32)(m_queryStage + 1) );
 	}
 	m_queryPending = false;
+	// Repeat the current query stage
+	GetDriver()->RetryQueryStageComplete( m_nodeId, m_queryStage );
 }
 
 //-----------------------------------------------------------------------------
@@ -1057,6 +1103,11 @@ void Node::UpdateProtocolInfo
 	{
 		// Node doesn't exist if Generic class is zero.
 		Log::Write( LogLevel_Info, m_nodeId, "  Protocol Info for Node %d reports node nonexistent", m_nodeId );
+		m_nodeAlive = false;
+		Notification* notification = new Notification( Notification::Type_Notification );
+		notification->SetHomeAndNodeIds( m_homeId, m_nodeId );
+		notification->SetNotification( Notification::Code_Dead );
+		GetDriver()->QueueNotification( notification );
 		return;
 	}
 
@@ -1460,7 +1511,7 @@ void Node::RequestConfigParam
 {
 	if( Configuration* cc = static_cast<Configuration*>( GetCommandClass( Configuration::StaticGetCommandClassId() ) ) )
 	{
-		cc->RequestValue( 0, _param );
+		cc->RequestValue( 0, _param, 1, Driver::MsgQueue_Send );
 	}
 }
 
@@ -1482,7 +1533,7 @@ bool Node::RequestAllConfigParams
 			Value* value = it->second;
 			if( value->GetID().GetCommandClassId() == Configuration::StaticGetCommandClassId() && !value->IsWriteOnly() )
 			{
-				res |= cc->RequestValue( _requestFlags, value->GetID().GetIndex() );
+				res |= cc->RequestValue( _requestFlags, value->GetID().GetIndex(), 1, Driver::MsgQueue_Send );
 			}
 		}
 	}
@@ -2470,10 +2521,13 @@ void Node::GetNodeStatistics
 	_data->m_retries = m_retries;
 	_data->m_receivedCnt = m_receivedCnt;
 	_data->m_receivedDups = m_receivedDups;
+	_data->m_receivedUnsolicited = m_receivedUnsolicited;
 	_data->m_lastRequestRTT = m_lastRequestRTT;
+	_data->m_lastResponseRTT = m_lastResponseRTT;
 	_data->m_sentTS = m_sentTS.GetAsString();
 	_data->m_receivedTS = m_receivedTS.GetAsString();
 	_data->m_averageRequestRTT = m_averageRequestRTT;
+	_data->m_averageResponseRTT = m_averageResponseRTT;
 	_data->m_quality = m_quality;
 	memcpy( _data->m_lastReceivedMessage, m_lastReceivedMessage, sizeof(m_lastReceivedMessage) );
 	for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )

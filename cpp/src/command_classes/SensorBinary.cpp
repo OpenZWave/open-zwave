@@ -27,6 +27,7 @@
 
 #include "CommandClasses.h"
 #include "SensorBinary.h"
+#include "WakeUp.h"
 #include "Defs.h"
 #include "Msg.h"
 #include "Node.h"
@@ -40,12 +41,12 @@ using namespace OpenZWave;
 enum SensorBinaryCmd
 {
 	SensorBinaryCmd_Get		= 0x02,
-	SensorBinaryCmd_Report	= 0x03
+	SensorBinaryCmd_Report		= 0x03
 };
 
 //-----------------------------------------------------------------------------
-// <SensorBinary::RequestState>												   
-// Request current state from the device									   
+// <SensorBinary::RequestState>
+// Request current state from the device
 //-----------------------------------------------------------------------------
 bool SensorBinary::RequestState
 (
@@ -63,8 +64,8 @@ bool SensorBinary::RequestState
 }
 
 //-----------------------------------------------------------------------------
-// <SensorBinary::RequestValue>												   
-// Request current value from the device									   
+// <SensorBinary::RequestValue>
+// Request current value from the device
 //-----------------------------------------------------------------------------
 bool SensorBinary::RequestValue
 (
@@ -105,10 +106,42 @@ bool SensorBinary::HandleMsg
 			value->OnValueRefreshed( _data[1] != 0 );
 			value->Release();
 		}
+		UpdateBasic( _instance, _data[1] != 0 ? 255 : 0 );
 		return true;
 	}
 
 	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <SensorBinary::SetValueBasic>
+// Update class values based in BASIC mapping
+//-----------------------------------------------------------------------------
+void SensorBinary::SetValueBasic
+(
+	uint8 const _instance,
+	uint8 const _value
+)
+{
+	// Send a request for new value to synchronize it with the BASIC set/report.
+	// In case the device is sleeping, we set the value anyway so the BASIC set/report
+	// stays in sync with it. When the device wakes up, the real requested value
+	// will be retrieved.
+	RequestValue( 0, 0, _instance, Driver::MsgQueue_Send );
+	if( Node* node = GetNodeUnsafe() )
+	{
+		if( WakeUp* wakeUp = static_cast<WakeUp*>( node->GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
+		{
+			if( !wakeUp->IsAwake() )
+			{
+				if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, 0 ) ) )
+				{
+					value->OnValueRefreshed( _value != 0 );
+					value->Release();
+				}
+			}
+		}
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -125,10 +158,3 @@ void SensorBinary::CreateVars
 	  	node->CreateValueBool(  ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Sensor", "", true, false, false, 0 );
 	}
 }
-
-
-
-
-
-
-
