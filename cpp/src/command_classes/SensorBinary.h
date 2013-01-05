@@ -51,6 +51,7 @@ namespace OpenZWave
 		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }
 		virtual string const GetCommandClassName()const{ return StaticGetCommandClassName(); }
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );
+		virtual void SetValueBasic( uint8 const _instance, uint8 const _value );
 
 	protected:
 		virtual void CreateVars( uint8 const _instance );

@@ -67,6 +67,7 @@ namespace OpenZWave
 		virtual string const GetCommandClassName()const = 0;
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 ) = 0;
 		virtual bool SetValue( Value const& _value ){ return false; }
+		virtual void SetValueBasic( uint8 const _instance, uint8 const _level ){}		// Class specific handling of BASIC value mapping
 		virtual void SetVersion( uint8 const _version ){ m_version = _version; }
 
 		bool RequestStateForAllInstances( uint32 const _requestFlags, Driver::MsgQueue const _queue );
@@ -82,11 +83,13 @@ namespace OpenZWave
 		Driver* GetDriver()const;
 		Node* GetNodeUnsafe()const;
 		Value* GetValue( uint8 const _instance, uint8 const _index );
-		uint8 GetEndPoint( uint8 const _instance ){
+		uint8 GetEndPoint( uint8 const _instance )
+		{
 			map<uint8,uint8>::iterator it = m_endPointMap.find( _instance );
 			return( it == m_endPointMap.end() ? 0 : it->second );
 		}
-		uint8 GetInstance( uint8 const _endPoint ){
+		uint8 GetInstance( uint8 const _endPoint )
+		{
 			for( map<uint8,uint8>::iterator it = m_endPointMap.begin(); it != m_endPointMap.end(); it++ )
 			{
 				if( _endPoint == it->second )
@@ -101,6 +104,7 @@ namespace OpenZWave
 		void SetInstance( uint8 const _endPoint );
 		void SetAfterMark(){ m_afterMark = true; }
 		void SetEndPoint( uint8 const _instance, uint8 const _endpoint){ m_endPointMap[_instance] = _endpoint; }
+		void SetBasicMapped( bool const _map ){ m_basicMapped = _map; }
 		bool IsAfterMark()const{ return m_afterMark; }
 		bool IsCreateVars()const{ return m_createVars; }
 		bool IsGetSupported()const{ return m_getSupported; }
@@ -119,12 +123,14 @@ namespace OpenZWave
 		uint8 const GetAppendValueSize( string const& _value )const;
 		int32 ValueToInteger( string const& _value, uint8* o_precision, uint8* o_size )const;
 
+		void UpdateMappedClass( uint8 const _instance, uint8 const _classId, uint8 const _value );		// Update mapped class's value from BASIC class
+		void UpdateBasic( uint8 const _instance, uint8 const _value );						// Update BASIC class's value from mapped class
+
 	protected:
 		virtual void CreateVars( uint8 const _instance ){}
 
 	public:
 		virtual void CreateVars( uint8 const _instance, uint8 const _index ){}
-
 
 	private:
 		uint32		m_homeId;
@@ -136,6 +142,7 @@ namespace OpenZWave
 		bool		m_createVars;		// Do we want to create variables
 		int8		m_overridePrecision;	// Override precision when writing values if >=0
 		bool		m_getSupported;	    	// Get operation supported
+		bool		m_basicMapped;		// whether this class is mapped to Basic
 
 	//-----------------------------------------------------------------------------
 	// Record which items of static data have been read from the device

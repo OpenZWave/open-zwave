@@ -299,6 +299,19 @@ bool WakeUp::SetValue
 }
 
 //-----------------------------------------------------------------------------
+// <WakeUp::SetVersion>
+// Set the command class version
+//-----------------------------------------------------------------------------
+void WakeUp::SetVersion
+(
+	uint8 const _version
+)
+{
+	CommandClass::SetVersion( _version );
+	CreateVars( 1 );
+}
+
+//-----------------------------------------------------------------------------
 // <WakeUp::SetAwake>
 // Set whether the device is likely to be awake
 //-----------------------------------------------------------------------------
@@ -311,15 +324,15 @@ void WakeUp::SetAwake
 	{
 		m_awake = _state;
 		Log::Write( LogLevel_Info, GetNodeId(), "  Node %d has been marked as %s", GetNodeId(), m_awake ? "awake" : "asleep" );
+		Notification* notification = new Notification( Notification::Type_Notification );
+		notification->SetHomeAndNodeIds( GetHomeId(), GetNodeId() );
+		notification->SetNotification( m_awake ? Notification::Code_Awake : Notification::Code_Sleep );
+		GetDriver()->QueueNotification( notification );
+
 	}
 
 	if( m_awake )
 	{
-		Notification* notification = new Notification( Notification::Type_Notification );
-		notification->SetHomeAndNodeIds( GetHomeId(), GetNodeId() );
-		notification->SetNotification( Notification::Code_Awake );
-		GetDriver()->QueueNotification( notification );
-
 		// If the device is marked for polling, request the current state
 		Node* node = GetNodeUnsafe();
 		if( m_pollRequired )
@@ -399,7 +412,7 @@ void WakeUp::SendPending
 		}
 		else if( Driver::MsgQueueCmd_QueryStageComplete == item.m_command )
 		{
-			GetDriver()->SendQueryStageComplete( item.m_nodeId, item.m_queryStage, Driver::MsgQueue_WakeUp );
+			GetDriver()->SendQueryStageComplete( item.m_nodeId, item.m_queryStage );
 		} else if( Driver::MsgQueueCmd_Controller == item.m_command )
 		{
 			GetDriver()->BeginControllerCommand( item.m_cci->m_controllerCommand, item.m_cci->m_controllerCallback, item.m_cci->m_controllerCallbackContext, item.m_cci->m_highPower, item.m_cci->m_controllerCommandNode, item.m_cci->m_controllerCommandArg );
@@ -411,7 +424,8 @@ void WakeUp::SendPending
 
 	// Send the device back to sleep, unless we have outstanding queries.
 	bool sendToSleep = m_notification;
-	if( Node* node = GetNodeUnsafe() )
+	Node* node = GetNodeUnsafe();
+	if( node != NULL )
 	{
 		if( !node->AllQueriesCompleted() )
 		{
@@ -445,15 +459,22 @@ void WakeUp::CreateVars
 	{
 		if( !node->IsController() )	// We don't add the interval value for controllers, because they don't appear to ever wake up on their own.
 		{
-		  	node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 0, "Wake-up Interval", "Seconds", false, false, 3600, 0 );
-			if( GetVersion() > 1 )
+			switch( GetVersion() )
 			{
-			  	node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 1, "Minimum Wake-up Interval", "Seconds", true, false, 0, 0 );
-				node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 2, "Maximum Wake-up Interval", "Seconds", true, false, 0, 0 );
-				node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 3, "Default Wake-up Interval", "Seconds", true, false, 0, 0 );
-				node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 4, "Wake-up Interval Step", "Seconds", true, false, 0, 0 );
+				case 1:
+				{
+				  	node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 0, "Wake-up Interval", "Seconds", false, false, 3600, 0 );
+					break;
+				}
+				case 2:
+				{
+				  	node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 1, "Minimum Wake-up Interval", "Seconds", true, false, 0, 0 );
+					node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 2, "Maximum Wake-up Interval", "Seconds", true, false, 0, 0 );
+					node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 3, "Default Wake-up Interval", "Seconds", true, false, 0, 0 );
+					node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 4, "Wake-up Interval Step", "Seconds", true, false, 0, 0 );
+					break;
+				}
 			}
 		}
 	}
 }
-

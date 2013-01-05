@@ -77,6 +77,3 @@ namespace OpenZWave
 } // namespace OpenZWave
 
 #endif
-
-
-

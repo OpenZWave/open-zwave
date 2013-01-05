@@ -493,6 +493,63 @@ bool Driver::Init
 }
 
 //-----------------------------------------------------------------------------
+// <Driver::RemoveQueues>
+// Clean up any messages to a node
+//-----------------------------------------------------------------------------
+void Driver::RemoveQueues
+(
+	uint8 const _nodeId
+)
+{
+	if( m_currentMsg != NULL && m_currentMsg->GetTargetNodeId() == _nodeId )
+	{
+		RemoveCurrentMsg();
+	}
+
+	if( m_currentControllerCommand != NULL && m_currentControllerCommand->m_controllerCommandNode == _nodeId )
+	{
+		UpdateControllerState( ControllerState_Cancel );
+	}
+
+	// Clear the send Queue
+	for( int32 i=0; i<MsgQueue_Count; ++i )
+	{
+		list<MsgQueueItem>::iterator it = m_msgQueue[i].begin();
+		while( it != m_msgQueue[i].end() )
+		{
+			bool remove = false;
+			MsgQueueItem const& item = *it;
+			if( MsgQueueCmd_SendMsg == item.m_command && _nodeId == item.m_msg->GetTargetNodeId() )
+			{
+				delete item.m_msg;
+				remove = true;
+			}
+			else if( MsgQueueCmd_QueryStageComplete == item.m_command && _nodeId == item.m_nodeId )
+			{
+				remove = true;
+			}
+			else if( MsgQueueCmd_Controller == item.m_command && _nodeId == item.m_cci->m_controllerCommandNode )
+			{
+				delete item.m_cci;
+				remove = true;
+			}
+			if( remove )
+			{
+				it = m_msgQueue[i].erase( it );
+			}
+			else
+			{
+				++it;
+			}
+		}
+		if( m_msgQueue[i].empty() )
+		{
+			m_queueEvent[i]->Reset();
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
 //	Configuration
 //-----------------------------------------------------------------------------
 
@@ -770,14 +827,14 @@ void Driver::ReleaseNodes
 void Driver::SendQueryStageComplete
 (
 	uint8 const _nodeId,
-	Node::QueryStage const _stage,
-	MsgQueue const _queue
+	Node::QueryStage const _stage
 )
 {
 	MsgQueueItem item;
 	item.m_command = MsgQueueCmd_QueryStageComplete;
 	item.m_nodeId = _nodeId;
 	item.m_queryStage = _stage;
+	item.m_retry = false;
 
 	if( Node* node = GetNode( _nodeId ) )
 	{
@@ -806,6 +863,34 @@ void Driver::SendQueryStageComplete
 
 		ReleaseNodes();
 	}
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::RemoveQueryStageComplete>
+// Remove an item from the query queue so current stage will be repeated
+//-----------------------------------------------------------------------------
+void Driver::RetryQueryStageComplete
+(
+	uint8 const _nodeId,
+	Node::QueryStage const _stage
+)
+{
+	MsgQueueItem item;
+	item.m_command = MsgQueueCmd_QueryStageComplete;
+	item.m_nodeId = _nodeId;
+	item.m_queryStage = _stage;
+
+	m_sendMutex->Lock();
+
+	for( list<MsgQueueItem>::iterator it = m_msgQueue[MsgQueue_Query].begin(); it != m_msgQueue[MsgQueue_Query].end(); it++ )
+	{
+		if( *it == item )
+		{
+			(*it).m_retry = true;
+			break;
+		}
+	}
+	m_sendMutex->Unlock();
 }
 
 //-----------------------------------------------------------------------------
@@ -907,7 +992,10 @@ bool Driver::WriteNextMsg
 		if( node != NULL )
 		{
 			Log::Write( LogLevel_Detail, node->GetNodeId(), "Query Stage Complete (%s)", node->GetQueryStageName( stage ).c_str() );
-			node->QueryStageComplete( stage );
+			if( !item.m_retry )
+			{
+				node->QueryStageComplete( stage );
+			}
 			node->AdvanceQueries();
 			return true;
 		}
@@ -979,10 +1067,17 @@ bool Driver::WriteMsg
 	uint8 attempts = m_currentMsg->GetSendAttempts();
 	uint8 nodeId = m_currentMsg->GetTargetNodeId();
 	Node* node = GetNode( nodeId );
-	if( attempts >= m_currentMsg->GetMaxSendAttempts() )
+	if( attempts >= m_currentMsg->GetMaxSendAttempts() || (node != NULL && !node->IsNodeAlive() ) )
 	{
 		// That's it - already tried to send GetMaxSendAttempt() times.
-		Log::Write( LogLevel_Error, nodeId, "ERROR: Dropping command, expected response not received after %d attempt(s)", m_currentMsg->GetMaxSendAttempts() );
+		if( node != NULL && !node->IsNodeAlive() )
+		{
+			Log::Write( LogLevel_Error, nodeId, "ERROR: Dropping command because node is presumed dead" );
+		}
+		else
+		{
+			Log::Write( LogLevel_Error, nodeId, "ERROR: Dropping command, expected response not received after %d attempt(s)", m_currentMsg->GetMaxSendAttempts() );
+		}
 		delete m_currentMsg;
 		m_currentMsg = NULL;
 
@@ -1089,7 +1184,6 @@ bool Driver::MoveMessagesToWakeUpQueue
 	// all messages for it to its Wake-Up queue.
 	if( Node* node = GetNodeUnsafe(_targetNodeId) )
 	{
-		// Exclude controllers from battery check
 		if( !node->IsListeningDevice() && !node->IsFrequentListeningDevice() && _targetNodeId != m_nodeId )
 		{
 			if( WakeUp* wakeUp = static_cast<WakeUp*>( node->GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
@@ -1097,6 +1191,7 @@ bool Driver::MoveMessagesToWakeUpQueue
 				// Mark the node as asleep
 				wakeUp->SetAwake( false );
 
+				// If we need to save the messages
 				if( _move )
 				{
 					// Move all messages for this node to the wake-up queue
@@ -1106,8 +1201,7 @@ bool Driver::MoveMessagesToWakeUpQueue
 					if( m_currentControllerCommand )
 					{
 						// Don't save controller message as it will be recreated
-						delete m_currentMsg;
-						m_currentMsg = NULL;
+						RemoveCurrentMsg();
 					}
 
 					// Then try the current message first
@@ -1117,8 +1211,8 @@ bool Driver::MoveMessagesToWakeUpQueue
 						{
 							// This message is for the unresponsive node
 							// We do not move any "Wake Up No More Information"
-							// commands to the pending queue.
-							if( !m_currentMsg->IsWakeUpNoMoreInformationCommand() )
+							// commands or NoOperations to the pending queue.
+							if( !m_currentMsg->IsWakeUpNoMoreInformationCommand() && !m_currentMsg->IsNoOperation() )
 							{
 								Log::Write( LogLevel_Info, _targetNodeId, "Node not responding - moving message to Wake-Up queue: %s", m_currentMsg->GetAsString().c_str() );
 								MsgQueueItem item;
@@ -1154,8 +1248,8 @@ bool Driver::MoveMessagesToWakeUpQueue
 								{
 									// This message is for the unresponsive node
 									// We do not move any "Wake Up No More Information"
-									// commands to the pending queue.
-									if( !item.m_msg->IsWakeUpNoMoreInformationCommand() )
+									// commands or NoOperations to the pending queue.
+									if( !item.m_msg->IsWakeUpNoMoreInformationCommand() && !item.m_msg->IsNoOperation() )
 									{
 										Log::Write( LogLevel_Info, item.m_msg->GetTargetNodeId(), "Node not responding - moving message to Wake-Up queue: %s", item.m_msg->GetAsString().c_str() );
 										wakeUp->QueueMsg( item );
@@ -1232,7 +1326,7 @@ bool Driver::MoveMessagesToWakeUpQueue
 // <Driver::HandleErrorResponse>
 // For messages that return a ZW_SEND_DATA response, process the results here
 //-----------------------------------------------------------------------------
-void Driver::HandleErrorResponse
+bool Driver::HandleErrorResponse
 (
 	uint8 const _error,
 	uint8 const _nodeId,
@@ -1249,19 +1343,16 @@ void Driver::HandleErrorResponse
 	else if( _error == TRANSMIT_COMPLETE_NO_ACK )
 	{
 		m_noack++;
-		Log::Write( LogLevel_Info, _nodeId, "ERROR: %s failed. No ACK received - device may be asleep.",  _funcStr );
+		Log::Write( LogLevel_Info, _nodeId, "WARNING: %s failed. No ACK received - device may be asleep.",  _funcStr );
 		if( m_currentMsg )
 		{
 			// In case the failure is due to the target being a sleeping node, we
 			// first try to move its pending messages to its wake-up queue.
 			if( MoveMessagesToWakeUpQueue( m_currentMsg->GetTargetNodeId(), _sleepCheck ) )
 			{
-				return;
+				return true;
 			}
-			if( IsNodeListeningDevice( m_currentMsg->GetTargetNodeId() ) )
-			{
-				Log::Write( LogLevel_Warning, _nodeId, "  WARNING: Device is not a sleeping node." );
-			}
+			Log::Write( LogLevel_Warning, _nodeId, "WARNING: Device is not a sleeping node." );
 		}
 	}
 	else if( _error == TRANSMIT_COMPLETE_FAIL )
@@ -1274,6 +1365,7 @@ void Driver::HandleErrorResponse
 		m_notidle++;
 		Log::Write( LogLevel_Info, _nodeId, "ERROR: %s failed. Network is busy.", _funcStr );
 	}
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -1547,6 +1639,7 @@ void Driver::ProcessMsg
 )
 {
 	bool handleCallback = true;
+	uint8 nodeId = GetNodeNumber( m_currentMsg );
 
 	if( RESPONSE == _data[0] )
 	{
@@ -1617,7 +1710,7 @@ void Driver::ProcessMsg
 				Log::Write( LogLevel_Detail, "" );
 				if( !HandleAssignReturnRouteResponse( _data ) )
 				{
-					m_expectedCallbackId = _data[2];	// The callback message won't be coming, so we force the transaction to complete
+					m_expectedCallbackId = _data[2];		// The callback message won't be coming, so we force the transaction to complete
 					m_expectedReply = 0;
 					m_expectedCommandClassId = 0;
 					m_expectedNodeId = 0;
@@ -1629,7 +1722,7 @@ void Driver::ProcessMsg
 				Log::Write( LogLevel_Detail, "" );
 				if( !HandleDeleteReturnRouteResponse( _data ) )
 				{
-					m_expectedCallbackId = _data[2];	// The callback message won't be coming, so we force the transaction to complete
+					m_expectedCallbackId = _data[2];		// The callback message won't be coming, so we force the transaction to complete
 					m_expectedReply = 0;
 					m_expectedCommandClassId = 0;
 					m_expectedNodeId = 0;
@@ -1671,11 +1764,11 @@ void Driver::ProcessMsg
 				Log::Write( LogLevel_Detail, "" );
 				if( _data[2] )
 				{
-					Log::Write( LogLevel_Info, GetNodeNumber( m_currentMsg ), "FUNC_ID_ZW_REQUEST_NODE_INFO Request successful." );
+					Log::Write( LogLevel_Info, nodeId, "FUNC_ID_ZW_REQUEST_NODE_INFO Request successful." );
 				}
 				else
 				{
-					Log::Write( LogLevel_Info, GetNodeNumber( m_currentMsg ), "FUNC_ID_ZW_REQUEST_NODE_INFO Request failed." );
+					Log::Write( LogLevel_Info, nodeId, "FUNC_ID_ZW_REQUEST_NODE_INFO Request failed." );
 				}
 				break;
 			}
@@ -1789,14 +1882,7 @@ void Driver::ProcessMsg
 			}
 			case FUNC_ID_ZW_SEND_DATA:
 			{
-				if( !HandleSendDataRequest( _data, false ) )
-				{
-					handleCallback = false;
-					m_expectedCallbackId = 0;
-					m_expectedReply = 0;
-					m_expectedCommandClassId = 0;
-					m_expectedNodeId = 0;
-				}
+				HandleSendDataRequest( _data, false );
 				break;
 			}
 			case FUNC_ID_ZW_REPLICATION_COMMAND_COMPLETE:
@@ -1816,27 +1902,13 @@ void Driver::ProcessMsg
 			case FUNC_ID_ZW_ASSIGN_RETURN_ROUTE:
 			{
 				Log::Write( LogLevel_Detail, "" );
-				if( !HandleAssignReturnRouteRequest( _data ) )
-				{
-					handleCallback = false;
-					m_expectedCallbackId = 0;
-					m_expectedReply = 0;
-					m_expectedCommandClassId = 0;
-					m_expectedNodeId = 0;
-				}
+				HandleAssignReturnRouteRequest( _data );
 				break;
 			}
 			case FUNC_ID_ZW_DELETE_RETURN_ROUTE:
 			{
 				Log::Write( LogLevel_Detail, "" );
-				if( !HandleDeleteReturnRouteRequest( _data ) )
-				{
-					handleCallback = false;
-					m_expectedCallbackId = 0;
-					m_expectedReply = 0;
-					m_expectedCommandClassId = 0;
-					m_expectedNodeId = 0;
-				}
+				HandleDeleteReturnRouteRequest( _data );
 				break;
 			}
 			case FUNC_ID_ZW_SEND_NODE_INFORMATION:
@@ -1954,7 +2026,7 @@ void Driver::ProcessMsg
 			{
 				if( m_expectedCallbackId == _data[2] )
 				{
-					Log::Write( LogLevel_Detail, GetNodeNumber( m_currentMsg ), "  Expected callbackId was received" );
+					Log::Write( LogLevel_Detail, nodeId, "  Expected callbackId was received" );
 					m_expectedCallbackId = 0;
 				}
 			}
@@ -1966,7 +2038,7 @@ void Driver::ProcessMsg
 					{
 						if( m_expectedCallbackId == 0 && m_expectedCommandClassId == _data[5] && m_expectedNodeId == _data[3] )
 						{
-							Log::Write( LogLevel_Detail, GetNodeNumber( m_currentMsg ), "  Expected reply and command class was received" );
+							Log::Write( LogLevel_Detail, nodeId, "  Expected reply and command class was received" );
 							m_waitingForAck = false;
 							m_expectedReply = 0;
 							m_expectedCommandClassId = 0;
@@ -1978,7 +2050,7 @@ void Driver::ProcessMsg
 						if( IsExpectedReply( _data[3] ) )
 
 						{
-							Log::Write( LogLevel_Detail, GetNodeNumber( m_currentMsg ), "  Expected reply was received" );
+							Log::Write( LogLevel_Detail, nodeId, "  Expected reply was received" );
 							m_expectedReply = 0;
 							m_expectedNodeId = 0;
 						}
@@ -1988,21 +2060,13 @@ void Driver::ProcessMsg
 
 			if( !( m_expectedCallbackId || m_expectedReply ) )
 			{
-				Log::Write( LogLevel_Detail, GetNodeNumber( m_currentMsg ), "  Message transaction complete" );
+				Log::Write( LogLevel_Detail, nodeId, "  Message transaction complete" );
 				Log::Write( LogLevel_Detail, "" );
 
-				uint8* msgdata = m_currentMsg->GetBuffer();
-				if( msgdata[3] == FUNC_ID_ZW_SEND_DATA && msgdata[6] == NoOperation::StaticGetCommandClassId() )
-				{
-					Notification* notification = new Notification( Notification::Type_Notification );
-					notification->SetHomeAndNodeIds( m_homeId, GetNodeNumber( m_currentMsg) );
-					notification->SetNotification( Notification::Code_NoOperation );
-					QueueNotification( notification );
-				}
 				if( m_notifytransactions )
 				{
 					Notification* notification = new Notification( Notification::Type_Notification );
-					notification->SetHomeAndNodeIds( m_homeId, GetNodeNumber( m_currentMsg) );
+					notification->SetHomeAndNodeIds( m_homeId, nodeId );
 					notification->SetNotification( Notification::Code_MsgComplete );
 					QueueNotification( notification );
 				}
@@ -2559,10 +2623,9 @@ void Driver::HandleSendDataResponse
 	{
 		Log::Write( LogLevel_Error, GetNodeNumber( m_currentMsg ), "ERROR: %s could not be delivered to Z-Wave stack", _replication ? "ZW_REPLICATION_SEND_DATA" : "ZW_SEND_DATA" );
 		m_nondelivery++;
-		if( Node* node = GetNode( GetNodeNumber( m_currentMsg ) ) )
+		if( Node* node = GetNodeUnsafe( GetNodeNumber( m_currentMsg ) ) )
 		{
 			node->m_sentFailed++;
-			ReleaseNodes();
 		}
 	}
 }
@@ -2608,14 +2671,13 @@ void Driver::HandleGetRoutingInfoResponse
 // <Driver::HandleSendDataRequest>
 // Process a request from the Z-Wave PC interface
 //-----------------------------------------------------------------------------
-bool Driver::HandleSendDataRequest
+void Driver::HandleSendDataRequest
 (
 	uint8* _data,
 	bool _replication
 )
 {
 	uint8 nodeId = GetNodeNumber( m_currentMsg );
-	bool res = false;
 	Log::Write( LogLevel_Detail, nodeId, "  %s Request with callback ID 0x%.2x received (expected 0x%.2x)",  _replication ? "ZW_REPLICATION_SEND_DATA" : "ZW_SEND_DATA", _data[2], m_expectedCallbackId );
 
 	if( _data[2] != m_expectedCallbackId )
@@ -2626,7 +2688,8 @@ bool Driver::HandleSendDataRequest
 	}
 	else
 	{
-		if( Node* node = GetNodeUnsafe( nodeId ) )
+		Node* node = GetNodeUnsafe( nodeId );
+		if( node != NULL )
 		{
 			if( _data[3] != 0 )
 			{
@@ -2635,23 +2698,46 @@ bool Driver::HandleSendDataRequest
 			else
 			{
 				node->m_lastRequestRTT = -node->m_sentTS.TimeRemaining();
+				Log::Write(LogLevel_Info, nodeId, "Request RTT %d Average Request RTT %d", node->m_lastRequestRTT, node->m_averageRequestRTT );
 				node->m_averageRequestRTT = ( node->m_averageRequestRTT + node->m_lastRequestRTT ) >> 1;
 			}
+		}
+
+		// We do this here since HandleErrorResponse/MoveMessagesToWakeUpQueue can delete m_currentMsg
+		if( m_currentMsg->IsNoOperation() )
+		{
+			Notification* notification = new Notification( Notification::Type_Notification );
+			notification->SetHomeAndNodeIds( m_homeId, GetNodeNumber( m_currentMsg) );
+			notification->SetNotification( Notification::Code_NoOperation );
+			QueueNotification( notification );
 		}
 
 		// Callback ID matches our expectation
 		if( _data[3] != 0 )
 		{
-			HandleErrorResponse( _data[3], nodeId, _replication ? "ZW_REPLICATION_SEND_DATA" : "ZW_SEND_DATA", !_replication );
+			if( !HandleErrorResponse( _data[3], nodeId, _replication ? "ZW_REPLICATION_END_DATA" : "ZW_SEND_DATA", !_replication ) )
+			{
+				if( node != NULL && node->GetCurrentQueryStage() == Node::QueryStage_Probe && m_currentMsg->IsNoOperation() )
+				{
+					node->QueryStageRetry( Node::QueryStage_Probe, 3 );
+				}
+			}
 		}
 		else
 		{
-			// Command reception acknowledged by node
-			m_expectedCallbackId = 0;
-			res = true;
+		  	// If WakeUpNoMoreInformation request succeeds, update our status
+		  	if( m_currentMsg->IsWakeUpNoMoreInformationCommand() )
+			{
+				if( WakeUp* wakeUp = static_cast<WakeUp*>( node->GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
+				{
+					// Mark the node as asleep
+					wakeUp->SetAwake( false );
+				}
+			}
 		}
+		// Command reception acknowledged by node, error or not
+		m_expectedCallbackId = 0;
 	}
-	return res;
 }
 
 //-----------------------------------------------------------------------------
@@ -3055,9 +3141,13 @@ void Driver::HandleApplicationCommandHandlerRequest
 	Node* node = GetNodeUnsafe( nodeId );
 
 	if( ( status & RECEIVE_STATUS_ROUTED_BUSY ) != 0 )
+	{
 		m_routedbusy++;
+	}
 	if( ( status & RECEIVE_STATUS_TYPE_BROAD ) != 0 )
+	{
 		m_broadcastReadCnt++;
+	}
 	if( node != NULL )
 	{
 		node->m_receivedCnt++;
@@ -3072,6 +3162,17 @@ void Driver::HandleApplicationCommandHandlerRequest
 			memcpy( node->m_lastReceivedMessage, _data, sizeof(node->m_lastReceivedMessage) );
 		}
 		node->m_receivedTS.SetTime();
+		if( m_expectedReply == FUNC_ID_APPLICATION_COMMAND_HANDLER )
+		{
+			// Need to confirm this is the correct response to the last sent request.
+			node->m_lastResponseRTT = -node->m_sentTS.TimeRemaining();
+			Log::Write(LogLevel_Info, nodeId, "Response RTT %d Average Response RTT %d", node->m_lastResponseRTT, node->m_averageResponseRTT );
+			node->m_averageResponseRTT = ( node->m_averageResponseRTT + node->m_lastResponseRTT ) >> 1;
+		}
+		else
+		{
+			node->m_receivedUnsolicited++;
+		}
 	}
 	if( ApplicationStatus::StaticGetCommandClassId() == classId )
 	{
@@ -3115,17 +3216,16 @@ void Driver::HandlePromiscuousApplicationCommandHandlerRequest
 // <Driver::HandleAssignReturnRouteRequest>
 // Process a request from the Z-Wave PC interface
 //-----------------------------------------------------------------------------
-bool Driver::HandleAssignReturnRouteRequest
+void Driver::HandleAssignReturnRouteRequest
 (
 	uint8* _data
 )
 {
 	ControllerState state;
 	uint8 nodeId = GetNodeNumber( m_currentMsg );
-	bool res = false;
 	if( m_currentControllerCommand == NULL )
 	{
-		return res;
+		return;
 	}
 	if( _data[3] )
 	{
@@ -3138,28 +3238,25 @@ bool Driver::HandleAssignReturnRouteRequest
 		// Success
 		Log::Write( LogLevel_Info, nodeId, "Received reply to FUNC_ID_ZW_ASSIGN_RETURN_ROUTE for node %d - SUCCESS", m_currentControllerCommand->m_controllerCommandNode );
 		state = ControllerState_Completed;
-		res = true;
 	}
 
 	UpdateControllerState( state );
-	return res;
 }
 
 //-----------------------------------------------------------------------------
 // <Driver::HandleDeleteReturnRouteRequest>
 // Process a request from the Z-Wave PC interface
 //-----------------------------------------------------------------------------
-bool Driver::HandleDeleteReturnRouteRequest
+void Driver::HandleDeleteReturnRouteRequest
 (
 	uint8* _data
 )
 {
 	ControllerState state;
 	uint8 nodeId = GetNodeNumber( m_currentMsg );
-	bool res = false;
 	if( m_currentControllerCommand == NULL )
 	{
-		return res;
+		return;
 	}
 	if( _data[3] )
 	{
@@ -3172,11 +3269,9 @@ bool Driver::HandleDeleteReturnRouteRequest
 		// Success
 		Log::Write( LogLevel_Info, nodeId, "Received reply to FUNC_ID_ZW_DELETE_RETURN_ROUTE for node %d - SUCCESS", m_currentControllerCommand->m_controllerCommandNode );
 		state = ControllerState_Completed;
-		res = true;
 	}
 
 	UpdateControllerState( state );
-	return res;
 }
 
 //-----------------------------------------------------------------------------
@@ -3316,8 +3411,8 @@ bool Driver::HandleApplicationUpdateRequest
 				Node* node = GetNodeUnsafe( m_currentMsg->GetTargetNodeId() );
 				if( node )
 				{
-					// Retry the query up to three times
-					node->QueryStageRetry( Node::QueryStage_NodeInfo, m_currentMsg->GetMaxSendAttempts() );
+					// Retry the query twice
+					node->QueryStageRetry( Node::QueryStage_NodeInfo, 2 );
 
 					// Just in case the failure was due to the node being asleep, we try
 					// to move its pending messages to its wakeup queue.  If it is not
@@ -4839,7 +4934,6 @@ void Driver::DoControllerCommand
 			break;
 		}
 	}
-
 }
 
 //-----------------------------------------------------------------------------
@@ -4981,10 +5075,6 @@ void Driver::TestNetwork
 			}
 			if( m_nodes[i] != NULL )
 			{
-				if( !m_nodes[i]->IsListeningDevice() )
-				{
-					continue;
-				}
 				NoOperation *noop = static_cast<NoOperation*>( m_nodes[i]->GetCommandClass( NoOperation::StaticGetCommandClassId() ) );
 				for( int j=0; j < (int)_count; j++ )
 				{
@@ -4993,7 +5083,7 @@ void Driver::TestNetwork
 			}
 		}
 	}
-	else if( _nodeId != m_nodeId && m_nodes[_nodeId] != NULL && !m_nodes[_nodeId]->IsListeningDevice() )
+	else if( _nodeId != m_nodeId && m_nodes[_nodeId] != NULL )
 	{
 		NoOperation *noop = static_cast<NoOperation*>( m_nodes[_nodeId]->GetCommandClass( NoOperation::StaticGetCommandClassId() ) );
 		for( int i=0; i < (int)_count; i++ )
@@ -5853,6 +5943,7 @@ void Driver::UpdateNodeRoutes
 		memset( nodes, 0, sizeof(nodes) );
 		for( i = 1; i <= numGroups && numNodes < sizeof(nodes) ; i++ )
 		{
+			associations = NULL;
 			uint32 len = GetAssociations( _nodeId, i, &associations );
 			for( uint8 j = 0; j < len; j++ )
 			{
@@ -5869,7 +5960,10 @@ void Driver::UpdateNodeRoutes
 					nodes[numNodes++] = associations[j];
 				}
 			}
-			delete [] associations;
+			if( associations != NULL )
+			{
+				delete [] associations;
+			}
 		}
 		if( _doUpdate || numNodes != node->m_numRouteNodes || memcmp( nodes, node->m_routeNodes, sizeof(node->m_routeNodes) ) != 0 )
 		{
@@ -5884,6 +5978,7 @@ void Driver::UpdateNodeRoutes
 		}
 	}
 }
+
 //-----------------------------------------------------------------------------
 // <Driver::GetDriverStatistics>
 // Return driver statistics

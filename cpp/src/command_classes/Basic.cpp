@@ -48,8 +48,58 @@ enum BasicCmd
 };
 
 //-----------------------------------------------------------------------------
-// <Basic::RequestState>												   
-// Request current state from the device									   
+// <Basic::Basic>
+// Constructor
+//-----------------------------------------------------------------------------
+Basic::Basic
+(
+	uint32 const _homeId,
+	uint8 const _nodeId
+):
+	CommandClass( _homeId, _nodeId ),
+	m_mapping( 0 ),
+	m_setAsReport( false )
+{
+}
+
+//-----------------------------------------------------------------------------
+// <Basic::ReadXML>
+// Read configuration.
+//-----------------------------------------------------------------------------
+void Basic::ReadXML
+( 
+	TiXmlElement const* _ccElement
+)
+{
+	CommandClass::ReadXML( _ccElement );
+
+	char const* str = _ccElement->Attribute("setasreport");
+	if( str )
+	{
+		m_setAsReport = !strcmp( str, "true");
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <Basic::WriteXML>
+// Save changed configuration
+//-----------------------------------------------------------------------------
+void Basic::WriteXML
+( 
+	TiXmlElement* _ccElement
+)
+{
+	CommandClass::WriteXML( _ccElement );
+
+	if( m_setAsReport )
+	{
+		_ccElement->SetAttribute( "setasreport", "true" );
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <Basic::RequestState>
+// Request current state from the device
 //-----------------------------------------------------------------------------
 bool Basic::RequestState
 (
@@ -66,8 +116,8 @@ bool Basic::RequestState
 }
 
 //-----------------------------------------------------------------------------
-// <Basic::RequestValue>												   
-// Request current state from the device									   
+// <Basic::RequestValue>
+// Request current state from the device
 //-----------------------------------------------------------------------------
 bool Basic::RequestValue
 (
@@ -108,18 +158,32 @@ bool Basic::HandleMsg
 			value->OnValueRefreshed( _data[1] );
 			value->Release();
 		}
+		UpdateMappedClass( _instance, m_mapping, _data[1] );
 		return true;
 	}
 
 	if( BasicCmd_Set == (BasicCmd)_data[0] )
 	{
-		// Commmand received from the node.  Handle as a notification event
-		Log::Write( LogLevel_Info, GetNodeId(), "Received Basic set from node %d: level=%d.  Sending event notification.", GetNodeId(), _data[1] );
+		if( m_setAsReport )
+		{
+			Log::Write( LogLevel_Info, GetNodeId(), "Received Basic set from node %d: level=%d. Treating it as a Basic report.", GetNodeId(), _data[1] );
+			if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, 0 ) ) )
+			{
+				value->OnValueRefreshed( _data[1] );
+				value->Release();
+			}
+		}
+		else
+		{
+			// Commmand received from the node.  Handle as a notification event
+			Log::Write( LogLevel_Info, GetNodeId(), "Received Basic set from node %d: level=%d.  Sending event notification.", GetNodeId(), _data[1] );
 
-		Notification* notification = new Notification( Notification::Type_NodeEvent );
-		notification->SetHomeNodeIdAndInstance( GetHomeId(), GetNodeId(), _instance );
-		notification->SetEvent( _data[1] );
-		GetDriver()->QueueNotification( notification );
+			Notification* notification = new Notification( Notification::Type_NodeEvent );
+			notification->SetHomeNodeIdAndInstance( GetHomeId(), GetNodeId(), _instance );
+			notification->SetEvent( _data[1] );
+			GetDriver()->QueueNotification( notification );
+		}
+		UpdateMappedClass( _instance, m_mapping, _data[1] );
 		return true;
 	}
 
@@ -153,6 +217,24 @@ bool Basic::SetValue
 	}
 
 	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Basic::SetValueBasic>
+// Set a value from another class (mapping)
+//-----------------------------------------------------------------------------
+void Basic::SetValueBasic
+(
+	uint8 const _instance,
+	uint8 const _value
+)
+{
+	// Just update local value. Device should reflect this value.
+	if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, 0 ) ) )
+	{
+		value->OnValueRefreshed( _value );
+		value->Release();
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -206,6 +288,7 @@ bool Basic::SetMapping
 			if( CommandClass* cc = node->GetCommandClass( _commandClassId ) )
 			{
 				Log::Write( LogLevel_Info, GetNodeId(), "    COMMAND_CLASS_BASIC will be mapped to %s", cc->GetCommandClassName().c_str() );
+				cc->SetBasicMapped( true );
 				m_mapping = _commandClassId;
 				res = true;
 			}

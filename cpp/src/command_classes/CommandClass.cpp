@@ -29,6 +29,7 @@
 #include <locale.h>
 #include "tinyxml.h"
 #include "CommandClass.h"
+#include "Basic.h"
 #include "MultiInstance.h"
 #include "Msg.h"
 #include "Node.h"
@@ -61,6 +62,7 @@ CommandClass::CommandClass
 	m_createVars( true ),
 	m_overridePrecision( -1 ),
 	m_getSupported( true ),
+	m_basicMapped( false ),
 	m_staticRequests( 0 ),
 	m_sentCnt( 0 ),
 	m_receivedCnt( 0 )
@@ -547,6 +549,51 @@ int32 CommandClass::ValueToInteger
 	}
 
 	return val;
+}
+
+//-----------------------------------------------------------------------------
+// <CommandClass::UpdateMappedClass>
+// Update the mapped class if there is one with BASIC level
+//-----------------------------------------------------------------------------
+void CommandClass::UpdateMappedClass
+(
+	uint8 const _instance,
+	uint8 const _classId,
+	uint8 const _level
+)
+{
+	if( _classId )
+	{
+		if( Node const* node = GetNodeUnsafe() )
+		{
+			if( CommandClass* cc = node->GetCommandClass( _classId ) )
+			{
+				cc->SetValueBasic( _instance, _level );
+			}
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <CommandClass::UpdateBasic>
+// If this class is mapped to BASIC, update the BASIC class value
+//-----------------------------------------------------------------------------
+void CommandClass::UpdateBasic
+(
+	uint8 const _instance,
+	uint8 const _value
+)
+{
+	if( m_basicMapped )
+	{
+		if( Node* node = GetNodeUnsafe() )
+		{
+			if( Basic* cc = static_cast<Basic*>( node->GetCommandClass( Basic::StaticGetCommandClassId() ) ) )
+			{
+				cc->SetValueBasic( _instance, _value ? 255 : 0 );
+			}
+		}
+	}
 }
 
 //-----------------------------------------------------------------------------
