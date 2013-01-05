@@ -74,6 +74,10 @@ namespace OpenZWave
 		{
 			return( m_bFinal && (m_length==11) && (m_buffer[3]==0x13) && (m_buffer[6]==0x84) && (m_buffer[7]==0x08) );
 		}
+		bool IsNoOperation()
+		{
+			return( m_bFinal && (m_length==11) && (m_buffer[3]==0x13) && (m_buffer[6]==0x00) && (m_buffer[7]==0x00) );
+		}
 
 		bool operator == ( Msg const& _other )const
 		{ 

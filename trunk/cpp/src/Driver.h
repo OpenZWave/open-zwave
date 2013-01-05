@@ -135,6 +135,12 @@ namespace OpenZWave
 		 */
 		bool Init( uint32 _attempts );
 
+		/**
+		 * Remove any messages to a node on the queues
+		 * Used when deleting a node.
+		 */
+		void RemoveQueues( uint8 const _nodeId );
+
 		Thread*					m_driverThread;			/**< Thread for reading from the Z-Wave controller, and for creating and managing the other threads for sending, polling etc. */
 		bool					m_exit;					/**< Flag that is set when the application is exiting. */
 		bool					m_init;					/**< Set to true once the driver has been initialised */
@@ -295,7 +301,7 @@ namespace OpenZWave
 		bool HandleNetworkUpdateResponse( uint8* _data );
 		void HandleGetRoutingInfoResponse( uint8* _data );
 
-		bool HandleSendDataRequest( uint8* _data, bool _replication );
+		void HandleSendDataRequest( uint8* _data, bool _replication );
 		void HandleAddNodeToNetworkRequest( uint8* _data );
 		void HandleCreateNewPrimaryRequest( uint8* _data );
 		void HandleControllerChangeRequest( uint8* _data );
@@ -305,8 +311,8 @@ namespace OpenZWave
 		void HandleRemoveNodeFromNetworkRequest( uint8* _data );
 		void HandleApplicationCommandHandlerRequest( uint8* _data );
 		void HandlePromiscuousApplicationCommandHandlerRequest( uint8* _data );
-		bool HandleAssignReturnRouteRequest( uint8* _data );
-		bool HandleDeleteReturnRouteRequest( uint8* _data );
+		void HandleAssignReturnRouteRequest( uint8* _data );
+		void HandleDeleteReturnRouteRequest( uint8* _data );
 		void HandleNodeNeighborUpdateRequest( uint8* _data );
 		void HandleNetworkUpdateRequest( uint8* _data );
 		bool HandleApplicationUpdateRequest( uint8* _data );
@@ -606,9 +612,10 @@ namespace OpenZWave
 		bool WriteMsg( string const str);									// Sends the current message to the Z-Wave network
 		void RemoveCurrentMsg();											// Deletes the current message and cleans up the callback etc states
 		bool MoveMessagesToWakeUpQueue(	uint8 const _targetNodeId, bool const _move );		// If a node does not respond, and is of a type that can sleep, this method is used to move all its pending messages to another queue ready for when it mext wakes up.
-		void HandleErrorResponse( uint8 const _error, uint8 const _nodeId, char const* _funcStr, bool _sleepCheck = false );
+		bool HandleErrorResponse( uint8 const _error, uint8 const _nodeId, char const* _funcStr, bool _sleepCheck = false );									    // Handle data errors and process consistently. If message is moved to wake-up queue, return true.
 		bool IsExpectedReply( uint8 const _nodeId );						// Determine if reply message is the one we are expecting
-		void SendQueryStageComplete( uint8 const _nodeId, Node::QueryStage const _stage, MsgQueue const _queue );
+		void SendQueryStageComplete( uint8 const _nodeId, Node::QueryStage const _stage );
+		void RetryQueryStageComplete( uint8 const _nodeId, Node::QueryStage const _stage );
 		void CheckCompletedNodeQueries();									// Send notifications if all awake and/or sleeping nodes have completed their queries
 
 		// Requests to be sent to nodes are assigned to one of five queues.
@@ -661,8 +668,10 @@ namespace OpenZWave
 					else if( m_command == MsgQueueCmd_QueryStageComplete )
 					{
 						return( (_other.m_nodeId == m_nodeId) && (_other.m_queryStage == m_queryStage) );
-					} else {
-					  return( (_other.m_cci->m_controllerCommand == m_cci->m_controllerCommand) && (_other.m_cci->m_controllerCallback == m_cci->m_controllerCallback) );
+					}
+					else if( m_command == MsgQueueCmd_Controller )
+					{
+						return( (_other.m_cci->m_controllerCommand == m_cci->m_controllerCommand) && (_other.m_cci->m_controllerCallback == m_cci->m_controllerCallback) );
 					}
 				}
 
@@ -673,6 +682,7 @@ namespace OpenZWave
 			Msg*				m_msg;
 			uint8				m_nodeId;
 			Node::QueryStage		m_queryStage;
+			bool				m_retry;
 			ControllerCommandItem*		m_cci;
 		};
 

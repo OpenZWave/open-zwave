@@ -63,6 +63,18 @@ ValueShort::ValueShort
 	m_max = SHRT_MAX;
 }
 
+//-----------------------------------------------------------------------------
+// <ValueShort::ValueShort>
+// Constructor
+//-----------------------------------------------------------------------------
+ValueShort::ValueShort
+(
+)
+{
+	m_min = SHRT_MIN;
+	m_max = SHRT_MAX;
+}
+
 string const ValueShort::GetAsString
 (
 ) const

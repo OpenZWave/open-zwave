@@ -45,7 +45,7 @@ namespace OpenZWave
 	{
 	public:
 	  	ValueShort( uint32 const _homeId, uint8 const _nodeId, ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, string const& _label, string const& _units, bool const _readOnly, bool const _writeOnly, int16 const _value, uint8 const _pollIntensity );
-		ValueShort(){}
+		ValueShort();
 		virtual ~ValueShort(){}
 
 		bool Set( int16 const _value );

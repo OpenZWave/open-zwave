@@ -48,6 +48,8 @@ namespace OpenZWave
 		bool SetMapping( uint8 const _commandClassId );	// Map COMMAND_CLASS_BASIC messages to another command class
 
 		// From CommandClass
+		virtual void ReadXML( TiXmlElement const* _ccElement );
+		virtual void WriteXML( TiXmlElement* _ccElement );
 		virtual bool RequestState( uint32 const _requestFlags, uint8 const _instance, Driver::MsgQueue const _queue );
 		virtual bool RequestValue( uint32 const _requestFlags, uint8 const _index, uint8 const _instance, Driver::MsgQueue const _queue );
 		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }		
@@ -55,15 +57,18 @@ namespace OpenZWave
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );
 		virtual bool SetValue( Value const& _value );
 
+		virtual void SetValueBasic( uint8 const _instance, uint8 const _level );
+
 		void Set( uint8 const _level );
 
 	protected:
 		virtual void CreateVars( uint8 const _instance );
 
 	private:
-		Basic( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
+		Basic( uint32 const _homeId, uint8 const _nodeId );
 
 		uint8						m_mapping;
+		bool						m_setAsReport;
 	};
 
 } // namespace OpenZWave

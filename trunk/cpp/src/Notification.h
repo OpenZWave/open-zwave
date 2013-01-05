@@ -101,7 +101,9 @@ namespace OpenZWave
 			Code_MsgComplete = 0,					/**< Completed messages */
 			Code_Timeout,						/**< Messages that timeout will send a Notification with this code. */
 			Code_NoOperation,					/**< Report on NoOperation message sent completion  */
-			Code_Awake						/**< Report when a sleeping node wakes up */
+			Code_Awake,						/**< Report when a sleeping node wakes up */
+			Code_Sleep,						/**< Report when a node goes to sleep */
+			Code_Dead						/**< Report when a node is presumed dead */
 		};
 
 		/** 

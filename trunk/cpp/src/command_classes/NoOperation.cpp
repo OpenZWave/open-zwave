@@ -57,7 +57,8 @@ bool NoOperation::HandleMsg
 //-----------------------------------------------------------------------------
 void NoOperation::Set
 (
-	bool const _route
+	bool const _route,
+	Driver::MsgQueue _queue		// = Driver::MsgQueue_NoOp
 )
 {
 	Log::Write( LogLevel_Info, GetNodeId(), "NoOperation::Set - Routing=%s", _route ? "true" : "false" );
@@ -71,5 +72,5 @@ void NoOperation::Set
 		msg->Append( GetDriver()->GetTransmitOptions() );
 	else
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_NO_ROUTE );
-	GetDriver()->SendMsg( msg, Driver::MsgQueue_NoOp );
+	GetDriver()->SendMsg( msg, _queue );
 }

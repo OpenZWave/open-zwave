@@ -1289,8 +1289,7 @@ bool Manager::IsNodeAwake
 
 	        if( Node* node = driver->GetNodeUnsafe( _nodeId ) )
 	        {
-			WakeUp *wcc;
-			if( node->NodeInfoReceived() && ( ( wcc = static_cast<WakeUp*>( node->GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) ) != NULL ) )
+			if( WakeUp* wcc = static_cast<WakeUp*>( node->GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
 			{
 				result = wcc->IsAwake();
 			}
@@ -1310,7 +1309,38 @@ bool Manager::IsNodeFailed
 	uint8 const _nodeId
 )
 {
-	return false;
+	bool result = false;
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+	        if( Node* node = driver->GetNode( _nodeId ) )
+	        {
+			result = !node->IsNodeAlive();
+		}
+		driver->ReleaseNodes();
+	}
+	return result;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::GetNodeQueryStage>
+// Helper method to return whether a node's query stage
+//-----------------------------------------------------------------------------
+string Manager::GetNodeQueryStage
+(
+	uint32 const _homeId,
+	uint8 const _nodeId
+)
+{
+	string result = "Unknown";
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+	        if( Node* node = driver->GetNode( _nodeId ) )
+	        {
+			result = node->GetQueryStageName( node->GetCurrentQueryStage() );
+		}
+		driver->ReleaseNodes();
+	}
+	return result;
 }
 
 //-----------------------------------------------------------------------------
@@ -2067,13 +2097,16 @@ bool Manager::SetValue
 	{
 		if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 		{
-			driver->LockNodes();
-			if( ValueBool* value = static_cast<ValueBool*>( driver->GetValue( _id ) ) )
+			if( _id.GetNodeId() != driver->GetNodeId() )
 			{
-				res = value->Set( _value );
-				value->Release();
+				driver->LockNodes();
+				if( ValueBool* value = static_cast<ValueBool*>( driver->GetValue( _id ) ) )
+				{
+					res = value->Set( _value );
+					value->Release();
+				}
+				driver->ReleaseNodes();
 			}
-			driver->ReleaseNodes();
 		}
 	}
 
@@ -2096,13 +2129,16 @@ bool Manager::SetValue
 	{
 		if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 		{
-			driver->LockNodes();
-			if( ValueByte* value = static_cast<ValueByte*>( driver->GetValue( _id ) ) )
+			if( _id.GetNodeId() != driver->GetNodeId() )
 			{
-				res = value->Set( _value );
-				value->Release();
+				driver->LockNodes();
+				if( ValueByte* value = static_cast<ValueByte*>( driver->GetValue( _id ) ) )
+				{
+					res = value->Set( _value );
+					value->Release();
+				}
+				driver->ReleaseNodes();
 			}
-			driver->ReleaseNodes();
 		}
 	}
 
@@ -2125,33 +2161,36 @@ bool Manager::SetValue
 	{
 		if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 		{
-			driver->LockNodes();
-			if( ValueDecimal* value = static_cast<ValueDecimal*>( driver->GetValue( _id ) ) )
+			if( _id.GetNodeId() != driver->GetNodeId() )
 			{
-				char str[256];
-				snprintf( str, sizeof(str), "%f", _value );
-
-				// remove trailing zeros (and the decimal point, if present)
-				// TODO: better way of figuring out which locale is being used ('.' or ',' to separate decimals)
-				int nLen;
-				if( ( strchr( str, '.' ) != NULL) || (strchr( str, ',' ) != NULL ) )
+				driver->LockNodes();
+				if( ValueDecimal* value = static_cast<ValueDecimal*>( driver->GetValue( _id ) ) )
 				{
-					for( nLen = strlen( str ) - 1; nLen > 0; nLen-- )
-					{
-						if( str[nLen] == '0' ) 
-							str[nLen] = 0;
-						else
-							break;
-					}
-					if( (str[nLen] == '.') || (str[nLen] == ',') )
-						str[nLen] = 0;
-				}
+					char str[256];
+					snprintf( str, sizeof(str), "%f", _value );
 
-				// now set the value
-				res = value->Set( str );
-				value->Release();
+					// remove trailing zeros (and the decimal point, if present)
+					// TODO: better way of figuring out which locale is being used ('.' or ',' to separate decimals)
+					int nLen;
+					if( ( strchr( str, '.' ) != NULL) || (strchr( str, ',' ) != NULL ) )
+					{
+						for( nLen = strlen( str ) - 1; nLen > 0; nLen-- )
+						{
+							if( str[nLen] == '0' ) 
+								str[nLen] = 0;
+							else
+								break;
+						}
+						if( (str[nLen] == '.') || (str[nLen] == ',') )
+							str[nLen] = 0;
+					}
+
+					// now set the value
+					res = value->Set( str );
+					value->Release();
+				}
+				driver->ReleaseNodes();
 			}
-			driver->ReleaseNodes();
 		}
 	}
 
@@ -2174,13 +2213,16 @@ bool Manager::SetValue
 	{
 		if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 		{
-			driver->LockNodes();
-			if( ValueInt* value = static_cast<ValueInt*>( driver->GetValue( _id ) ) )
+			if( _id.GetNodeId() != driver->GetNodeId() )
 			{
-				res = value->Set( _value );
-				value->Release();
+				driver->LockNodes();
+				if( ValueInt* value = static_cast<ValueInt*>( driver->GetValue( _id ) ) )
+				{
+					res = value->Set( _value );
+					value->Release();
+				}
+				driver->ReleaseNodes();
 			}
-			driver->ReleaseNodes();
 		}
 	}
 
@@ -2203,13 +2245,16 @@ bool Manager::SetValue
 	{
 		if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 		{
-			driver->LockNodes();
-			if( ValueShort* value = static_cast<ValueShort*>( driver->GetValue( _id ) ) )
+			if( _id.GetNodeId() != driver->GetNodeId() )
 			{
-				res = value->Set( _value );
-				value->Release();
+				driver->LockNodes();
+				if( ValueShort* value = static_cast<ValueShort*>( driver->GetValue( _id ) ) )
+				{
+					res = value->Set( _value );
+					value->Release();
+				}
+				driver->ReleaseNodes();
 			}
-			driver->ReleaseNodes();
 		}
 	}
 
@@ -2232,13 +2277,17 @@ bool Manager::SetValueListSelection
 	{
 		if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 		{
-			driver->LockNodes();
-			if( ValueList* value = static_cast<ValueList*>( driver->GetValue( _id ) ) )
+			if( _id.GetNodeId() != driver->GetNodeId() )
 			{
-				res = value->SetByLabel( _selectedItem );
-				value->Release();
+				driver->LockNodes();
+				if( ValueList* value = static_cast<ValueList*>( driver->GetValue( _id ) ) )
+				{
+					res = value->SetByLabel( _selectedItem );
+					value->Release();
+				}
+				driver->ReleaseNodes();
 			}
-			driver->ReleaseNodes();
+			  
 		}
 	}
 
@@ -2259,99 +2308,100 @@ bool Manager::SetValue
 
 	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 	{
-		driver->LockNodes();
-		
-		switch( _id.GetType() )
+		if( _id.GetNodeId() != driver->GetNodeId() )
 		{
-			case ValueID::ValueType_Bool:
+			driver->LockNodes();
+		
+			switch( _id.GetType() )
 			{
-				if( ValueBool* value = static_cast<ValueBool*>( driver->GetValue( _id ) ) )
+				case ValueID::ValueType_Bool:
 				{
-					if( !strcasecmp( "true", _value.c_str() ) )
+					if( ValueBool* value = static_cast<ValueBool*>( driver->GetValue( _id ) ) )
 					{
-						res = value->Set( true );
+						if( !strcasecmp( "true", _value.c_str() ) )
+						{
+							res = value->Set( true );
+						}
+						else if( !strcasecmp( "false", _value.c_str() ) )
+						{
+							res = value->Set( false );
+						}
+						value->Release();
 					}
-					else if( !strcasecmp( "false", _value.c_str() ) )
+					break;
+				}
+				case ValueID::ValueType_Byte:
+				{
+					if( ValueByte* value = static_cast<ValueByte*>( driver->GetValue( _id ) ) )
 					{
-						res = value->Set( false );
+						uint32 val = (uint32)atoi( _value.c_str() );
+						if( val < 256 )
+						{
+							res = value->Set( (uint8)val );
+						}
+						value->Release();
 					}
-					value->Release();
+					break;
 				}
-				break;
-			}
-			case ValueID::ValueType_Byte:
-			{
-				if( ValueByte* value = static_cast<ValueByte*>( driver->GetValue( _id ) ) )
+				case ValueID::ValueType_Decimal:
 				{
-					uint32 val = (uint32)atoi( _value.c_str() );
-					if( val < 256 )
+					if( ValueDecimal* value = static_cast<ValueDecimal*>( driver->GetValue( _id ) ) )
 					{
-						res = value->Set( (uint8)val );
+						res = value->Set( _value );
+						value->Release();
 					}
-					value->Release();
+					break;
 				}
-				break;
-			}
-			case ValueID::ValueType_Decimal:
-			{
-				if( ValueDecimal* value = static_cast<ValueDecimal*>( driver->GetValue( _id ) ) )
+				case ValueID::ValueType_Int:
 				{
-					res = value->Set( _value );
-					value->Release();
-				}
-				break;
-			}
-			case ValueID::ValueType_Int:
-			{
-				if( ValueInt* value = static_cast<ValueInt*>( driver->GetValue( _id ) ) )
-				{
-					int32 val = atoi( _value.c_str() );
-					res = value->Set( val );
-					value->Release();
-				}
-				break;
-			}
-			case ValueID::ValueType_List:
-			{
-				if( ValueList* value = static_cast<ValueList*>( driver->GetValue( _id ) ) )
-				{
-					res = value->SetByLabel( _value );
-					value->Release();
-				}
-				break;
-			}
-			case ValueID::ValueType_Short:
-			{
-				if( ValueShort* value = static_cast<ValueShort*>( driver->GetValue( _id ) ) )
-				{
-					int32 val = (uint32)atoi( _value.c_str() );
-					if( ( val < 32768 ) && ( val >= -32768 ) )
+					if( ValueInt* value = static_cast<ValueInt*>( driver->GetValue( _id ) ) )
 					{
-						res = value->Set( (int16)val );
+						int32 val = atoi( _value.c_str() );
+						res = value->Set( val );
+						value->Release();
 					}
-					value->Release();
-				}
 				break;
-			}
-			case ValueID::ValueType_String:
-			{
-				if( ValueString* value = static_cast<ValueString*>( driver->GetValue( _id ) ) )
+				}
+				case ValueID::ValueType_List:
 				{
-					res = value->Set( _value );
-					value->Release();
+					if( ValueList* value = static_cast<ValueList*>( driver->GetValue( _id ) ) )
+					{
+						res = value->SetByLabel( _value );
+						value->Release();
+					}
+					break;
 				}
-				break;
+				case ValueID::ValueType_Short:
+				{
+					if( ValueShort* value = static_cast<ValueShort*>( driver->GetValue( _id ) ) )
+					{
+						int32 val = (uint32)atoi( _value.c_str() );
+						if( ( val < 32768 ) && ( val >= -32768 ) )
+						{
+							res = value->Set( (int16)val );
+						}
+						value->Release();
+					}
+					break;
+				}
+				case ValueID::ValueType_String:
+				{
+					if( ValueString* value = static_cast<ValueString*>( driver->GetValue( _id ) ) )
+					{
+						res = value->Set( _value );
+						value->Release();
+					}
+					break;
+				}
+				default:
+				{
+					// To keep GCC happy
+					break;
+				}
 			}
-			default:
-			{
-				// To keep GCC happy
-				break;
-			}
+			driver->ReleaseNodes();
 		}
-
-		driver->ReleaseNodes();
 	}
-
 	return res;
 }
 
@@ -2971,7 +3021,7 @@ bool Manager::BeginControllerCommand
 {
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
-		return( driver->BeginControllerCommand( _command, _callback, _context, _highPower, _nodeId, _arg ) );
+		return driver->BeginControllerCommand( _command, _callback, _context, _highPower, _nodeId, _arg );
 	}
 
 	return false;
@@ -3043,7 +3093,7 @@ void Manager::HealNetworkNode
 		Node* node = driver->GetNode( _nodeId );
 		if( node )
 		{
-			BeginControllerCommand( _homeId, Driver::ControllerCommand_RequestNodeNeighborUpdate, NULL, NULL, true, _nodeId );
+			driver->BeginControllerCommand( Driver::ControllerCommand_RequestNodeNeighborUpdate, NULL, NULL, true, _nodeId, 0 );
 			if( _doRR )
 			{
 				driver->UpdateNodeRoutes( _nodeId, true );
@@ -3070,7 +3120,7 @@ void Manager::HealNetwork
 		{
 			if( driver->m_nodes[i] != NULL )
 			{
-				BeginControllerCommand( _homeId, Driver::ControllerCommand_RequestNodeNeighborUpdate, NULL, NULL, true, i );
+			  driver->BeginControllerCommand( Driver::ControllerCommand_RequestNodeNeighborUpdate, NULL, NULL, true, i, 0 );
 				if( _doRR )
 				{
 					driver->UpdateNodeRoutes( i, true );
