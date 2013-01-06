@@ -244,13 +244,6 @@
 			this.transferPrimaryRoleToolStripMenuItem.Text = "Transfer Primary Role";
 			this.transferPrimaryRoleToolStripMenuItem.Click += new System.EventHandler(this.transferPrimaryRoleToolStripMenuItem_Click);
 			// 
-			// addControllerToolStripMenuItem
-			// 
-			this.addControllerToolStripMenuItem.Name = "addControllerToolStripMenuItem";
-			this.addControllerToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
-			this.addControllerToolStripMenuItem.Text = "Add Controller";
-			this.addControllerToolStripMenuItem.Click += new System.EventHandler(this.addControllerToolStripMenuItem_Click);
-			// 
 			// addDeviceToolStripMenuItem
 			// 
 			this.addDeviceToolStripMenuItem.Name = "addDeviceToolStripMenuItem";
@@ -262,13 +255,6 @@
 			// 
 			this.toolStripSeparator1.Name = "toolStripSeparator1";
 			this.toolStripSeparator1.Size = new System.Drawing.Size(229, 6);
-			// 
-			// removeControllerToolStripMenuItem
-			// 
-			this.removeControllerToolStripMenuItem.Name = "removeControllerToolStripMenuItem";
-			this.removeControllerToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
-			this.removeControllerToolStripMenuItem.Text = "Remove Controller";
-			this.removeControllerToolStripMenuItem.Click += new System.EventHandler(this.removeControllerToolStripMenuItem_Click);
 			// 
 			// removeDeviceToolStripMenuItem
 			// 
