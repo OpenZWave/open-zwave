@@ -37,13 +37,24 @@ namespace OpenZWave
 	class UserCode: public CommandClass
 	{
 	public:
+		enum UserCodeStatus
+		{
+			UserCode_Available		= 0x00,
+			UserCode_Occupied		= 0x01,
+			UserCode_Reserved		= 0x02,
+			UserCode_NotAvailable		= 0xfe,
+			UserCode_Unset			= 0xff
+		};
+
 		static CommandClass* Create( uint32 const _homeId, uint8 const _nodeId ){ return new UserCode( _homeId, _nodeId ); }
-		virtual ~UserCode();
+		virtual ~UserCode(){}
 
 		static uint8 const StaticGetCommandClassId(){ return 0x63; }
 		static string const StaticGetCommandClassName(){ return "COMMAND_CLASS_USER_CODE"; }
 
 		// From CommandClass
+		virtual void ReadXML( TiXmlElement const* _ccElement );
+		virtual void WriteXML( TiXmlElement* _ccElement );
 		virtual bool RequestState( uint32 const _requestFlags, uint8 const _instance, Driver::MsgQueue const _queue );
 		virtual bool RequestValue( uint32 const _requestFlags, uint8 const _index, uint8 const _instance, Driver::MsgQueue const _queue );
 		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }
@@ -57,8 +68,40 @@ namespace OpenZWave
 	private:
 		UserCode( uint32 const _homeId, uint8 const _nodeId );
 
+		string CodeStatus( uint8 const _byte )
+		{
+			switch( _byte )
+			{
+				case UserCode_Available:
+				{
+					return "Available";
+				}
+				case UserCode_Occupied:
+				{
+					return "Occupied";
+				}
+				case UserCode_Reserved:
+				{
+					return "Reserved";
+				}
+				case UserCode_NotAvailable:
+				{
+					return "Not Available";
+				}
+				case UserCode_Unset:
+				{
+					return "Unset";
+				}
+				default:
+				{
+					return "Unknown";
+				}				
+			}
+		}
+
+		bool		m_queryAll;				// True while we are requesting all the user codes.
 		uint8		m_userCodeCount;
-		uint8*		m_userCodesStatus;
+		uint8		m_userCodesStatus[255];
 	};
 
 } // namespace OpenZWave

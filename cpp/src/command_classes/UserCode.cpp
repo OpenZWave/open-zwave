@@ -25,6 +25,7 @@
 //
 //-----------------------------------------------------------------------------
 
+#include "tinyxml.h"
 #include "CommandClasses.h"
 #include "UserCode.h"
 #include "Node.h"
@@ -46,16 +47,8 @@ enum UserCodeCmd
 
 enum
 {
-	UserCode_Available		= 0x00,
-	UserCode_Occupied		= 0x01,
-	UserCode_Reserved		= 0x02,
-	UserCode_NotAvailable		= 0xff
-};
-
-enum
-{
-	UserCodeIndex_Unknown		= 253,
-	UserCodeIndex_Count		= 254
+	UserCodeIndex_Unknown		= 0,
+	UserCodeIndex_Count		= 255
 };
 
 //-----------------------------------------------------------------------------
@@ -68,24 +61,45 @@ UserCode::UserCode
 	uint8 const _nodeId 
 ):
 	CommandClass( _homeId, _nodeId ),
-	m_userCodeCount( 0 ),
-	m_userCodesStatus( NULL )
+	m_queryAll( false ),
+	m_userCodeCount( 0 )
 {
 	SetStaticRequest( StaticRequest_Values );
+	memset( m_userCodesStatus, 0xff, sizeof(m_userCodesStatus) );
 }
 
 //-----------------------------------------------------------------------------
-// <UserCode::~UserCode>
-// Destructor
+// <UserCode::ReadXML>
+// Class specific configuration
 //-----------------------------------------------------------------------------
-UserCode::~UserCode
+void UserCode::ReadXML
 ( 
+	TiXmlElement const* _ccElement
 )
 {
-	if( m_userCodesStatus != NULL )
+	int32 intVal;
+
+	CommandClass::ReadXML( _ccElement );
+	if( TIXML_SUCCESS == _ccElement->QueryIntAttribute( "codes", &intVal ) )
 	{
-		delete [] m_userCodesStatus;
+		m_userCodeCount = intVal;
 	}
+}
+
+//-----------------------------------------------------------------------------
+// <UserCode::WriteXML>
+// Class specific configuration
+//-----------------------------------------------------------------------------
+void UserCode::WriteXML
+( 
+	TiXmlElement* _ccElement
+)
+{
+	char str[32];
+
+	CommandClass::WriteXML( _ccElement );
+	snprintf( str, sizeof(str), "%d", m_userCodeCount );
+	_ccElement->SetAttribute( "codes", str);
 }
 
 //-----------------------------------------------------------------------------
@@ -107,9 +121,10 @@ bool UserCode::RequestState
 
 	if( _requestFlags & RequestFlag_Session )
 	{
-		for( uint8 i = 0; i < /* m_userCodeCount */ 10; i++ )		// need a better way
+		if( m_userCodeCount > 0 )
 		{
-			requests |= RequestValue( _requestFlags, i, _instance, _queue );
+			m_queryAll = true;
+			requests |= RequestValue( _requestFlags, 1, _instance, _queue );
 		}
 	}
 
@@ -149,7 +164,7 @@ bool UserCode::RequestValue
 
 	Msg* msg = new Msg( "UserCodeCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 	msg->Append( GetNodeId() );
-	msg->Append( 2 );
+	msg->Append( 3 );
 	msg->Append( GetCommandClassId() );
 	msg->Append( UserCodeCmd_Get );
 	msg->Append( _userCodeIdx );
@@ -174,12 +189,11 @@ bool UserCode::HandleMsg
 	if( UserNumberCmd_Report == (UserCodeCmd)_data[0] )
 	{	
 		m_userCodeCount = _data[1];
-		if( m_userCodeCount > 253 )
+		if( m_userCodeCount > 254 )
 		{
-			// Make space for code count and unknown values
-			m_userCodeCount = 253;
+			// Make space for code count.
+			m_userCodeCount = 254;
 		}
-		m_userCodesStatus = new uint8[m_userCodeCount + 2];
 		ClearStaticRequest( StaticRequest_Values );
 		if( m_userCodeCount == 0 )
 		{
@@ -198,9 +212,16 @@ bool UserCode::HandleMsg
 
 		if( Node* node = GetNodeUnsafe() )
 		{
-			for( uint8 i = 0; i < m_userCodeCount; i++ )
+			for( uint8 i = 0; i <= m_userCodeCount; i++ )
 			{
-				snprintf( str, sizeof(str), "Code %d", i );
+				if( i == 0 )
+				{
+					snprintf( str, sizeof(str), "Unknown Code" );
+				}
+				else
+				{
+					snprintf( str, sizeof(str), "Code %d", i );
+				}
 				node->CreateValueString( ValueID::ValueGenre_User, GetCommandClassId(), _instance, i, str, "", false, false, "", 0 );
 			}
 		}
@@ -209,23 +230,26 @@ bool UserCode::HandleMsg
 	else if( UserCodeCmd_Report == (UserCodeCmd)_data[0] )
 	{	
 		int i = _data[1];
-		if( i == 0 )							// Unknown code
-		{
-			i = UserCodeIndex_Unknown;
-		}
-		else
-		{
-			i--;
-		}
 		if( ValueString* value = static_cast<ValueString*>( GetValue( _instance, i ) ) )
 		{
 			uint8 size = _length - 3;
-			m_userCodesStatus[i-1] = _data[2];
+			m_userCodesStatus[i] = _data[2];
 			memcpy( str, &_data[3], size );
 			value->OnValueRefreshed( str );
 			value->Release();
 		}
-		Log::Write( LogLevel_Info, GetNodeId(), "Received User Code Report from node %d for User Code %d", GetNodeId(), i);
+		Log::Write( LogLevel_Info, GetNodeId(), "Received User Code Report from node %d for User Code %d (%s)", GetNodeId(), i, CodeStatus( _data[2] ).c_str() );
+		if( m_queryAll )
+		{
+			if( ++i <= m_userCodeCount )
+			{
+				RequestValue( 0, i, _instance, Driver::MsgQueue_Query );
+			}
+			else
+			{
+				m_queryAll = false;
+			}
+		}
 		return true;
 	}
 
@@ -283,11 +307,11 @@ bool UserCode::SetValue
 void UserCode::CreateVars
 (
 	uint8 const _instance
+
 )
 {
 	if( Node* node = GetNodeUnsafe() )
 	{
-		node->CreateValueString( ValueID::ValueGenre_User, GetCommandClassId(), _instance, UserCodeIndex_Unknown, "Unknown Code", "", true, false, "", 0 );
 		node->CreateValueByte( ValueID::ValueGenre_System, GetCommandClassId(), _instance, UserCodeIndex_Count, "Code Count", "", true, false, 0, 0 );
 	}
 }
