@@ -45,12 +45,6 @@ namespace OZWForm
 						break;
 					}
 
-                case ZWControllerCommand.AddController:
-				{
-					this.Text = "Add Controller";
-					this.label1.Text = "Put the target controller into receive configuration mode.\nThe PC Z-Wave Controller must be within 2m of the controller being added.";
-					break;
-				}
                 case ZWControllerCommand.AddDevice:
 				{
 					this.Text = "Add Device";
@@ -67,12 +61,6 @@ namespace OZWForm
 				{
 					this.Text = "Receive Configuration";
 					this.label1.Text = "Transfering the network configuration\nfrom another controller.\n\nPlease bring the other controller within 2m of the PC controller and set it to send its network configuration.";
-					break;
-				}
-                case ZWControllerCommand.RemoveController:
-				{
-					this.Text = "RemoveController";
-					this.label1.Text = "Put the target controller into receive configuration mode.\nThe PC Z-Wave Controller must be within 2m of the controller being added.";
 					break;
 				}
                 case ZWControllerCommand.RemoveDevice:

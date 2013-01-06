@@ -92,11 +92,9 @@ namespace OpenZWaveDotNet
 	public enum class ZWControllerCommand
 	{
 		None						= Driver::ControllerCommand_None,						/**< No command. */
-		AddController				= Driver::ControllerCommand_AddController,				/**< Add a new controller to the Z-Wave network.  The new controller will be a secondary. */
 		AddDevice					= Driver::ControllerCommand_AddDevice,					/**< Add a new device (but not a controller) to the Z-Wave network. */
 		CreateNewPrimary			= Driver::ControllerCommand_CreateNewPrimary,			/**< Add a new controller to the Z-Wave network.  The new controller will be the primary, and the current primary will become a secondary controller. */
 		ReceiveConfiguration		= Driver::ControllerCommand_ReceiveConfiguration,		/**< Receive Z-Wave network configuration information from another controller. */
-		RemoveController			= Driver::ControllerCommand_RemoveController,			/**< Remove a controller from the Z-Wave network. */
 		RemoveDevice				= Driver::ControllerCommand_RemoveDevice,				/**< Remove a new device (but not a controller) from the Z-Wave network. */
 		RemoveFailedNode			= Driver::ControllerCommand_RemoveFailedNode,			/**< Move a node to the controller's failed nodes list. This command will only work if the node cannot respond. */
 		HasNodeFailed				= Driver::ControllerCommand_HasNodeFailed,				/**< Check whether a node is in the controller's failed nodes list. */
