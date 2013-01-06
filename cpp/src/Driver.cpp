@@ -247,6 +247,21 @@ Driver::~Driver
 		delete m_currentControllerCommand;
 	}
 
+	// Clear the node data
+	LockNodes();
+	for( int i=0; i<256; ++i )
+	{
+		if( GetNodeUnsafe( i ) )
+		{
+			delete m_nodes[i];
+			m_nodes[i] = NULL;
+			Notification* notification = new Notification( Notification::Type_NodeRemoved );
+			notification->SetHomeAndNodeIds( m_homeId, i );
+			QueueNotification( notification );
+		}
+	}
+	ReleaseNodes();
+
 	// Clear the send Queue
 	for( int32 i=0; i<MsgQueue_Count; ++i )
 	{
@@ -266,21 +281,6 @@ Driver::~Driver
 
 		m_queueEvent[i]->Release();
 	}
-
-	// Clear the node data
-	LockNodes();
-	for( int i=0; i<256; ++i )
-	{
-		if( GetNodeUnsafe( i ) )
-		{
-			delete m_nodes[i];
-			m_nodes[i] = NULL;
-			Notification* notification = new Notification( Notification::Type_NodeRemoved );
-			notification->SetHomeAndNodeIds( m_homeId, i );
-			QueueNotification( notification );
-		}
-	}
-	ReleaseNodes();
 
 	NotifyWatchers();
 	m_notificationsEvent->Release();
