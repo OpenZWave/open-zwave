@@ -422,19 +422,9 @@ namespace OZWForm
             DoCommand( ZWControllerCommand.CreateNewPrimary);
         }
 
-        private void addControllerToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            DoCommand(ZWControllerCommand.AddController);
-        }
-
         private void addDeviceToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DoCommand(ZWControllerCommand.AddDevice);
-        }
-
-        private void removeControllerToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            DoCommand(ZWControllerCommand.RemoveController);
         }
 
         private void removeDeviceToolStripMenuItem_Click(object sender, EventArgs e)
