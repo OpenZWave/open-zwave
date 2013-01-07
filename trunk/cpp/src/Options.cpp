@@ -73,6 +73,7 @@ Options* Options::Create
 			Log::Write( LogLevel_Error, "Cannot find a path to the configuration files at %s. Exiting...", configPath.c_str() );
 			exit( 1 );
 		}
+		FileOps::Destroy();
 		s_instance = new Options( configPath, userPath, _commandLine );
 
 		// Add the default options

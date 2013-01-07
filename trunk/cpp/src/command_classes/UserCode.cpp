@@ -62,6 +62,7 @@ UserCode::UserCode
 ):
 	CommandClass( _homeId, _nodeId ),
 	m_queryAll( false ),
+	m_currentCode( 0 ),
 	m_userCodeCount( 0 )
 {
 	SetStaticRequest( StaticRequest_Values );
@@ -124,7 +125,8 @@ bool UserCode::RequestState
 		if( m_userCodeCount > 0 )
 		{
 			m_queryAll = true;
-			requests |= RequestValue( _requestFlags, 1, _instance, _queue );
+			m_currentCode = 1;
+			requests |= RequestValue( _requestFlags, m_currentCode, _instance, _queue );
 		}
 	}
 
@@ -239,11 +241,12 @@ bool UserCode::HandleMsg
 			value->Release();
 		}
 		Log::Write( LogLevel_Info, GetNodeId(), "Received User Code Report from node %d for User Code %d (%s)", GetNodeId(), i, CodeStatus( _data[2] ).c_str() );
-		if( m_queryAll )
+		if( m_queryAll && i == m_currentCode )
 		{
 			if( ++i <= m_userCodeCount )
 			{
-				RequestValue( 0, i, _instance, Driver::MsgQueue_Query );
+				m_currentCode = i;
+				RequestValue( 0, m_currentCode, _instance, Driver::MsgQueue_Query );
 			}
 			else
 			{
