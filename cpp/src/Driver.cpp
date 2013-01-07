@@ -2128,7 +2128,7 @@ void Driver::HandleGetControllerCapabilitiesResponse
 	{
 		Log::Write( LogLevel_Info, GetNodeNumber( m_currentMsg ), "    There is a SUC ID Server (SIS) in this network." );
 		snprintf( str, sizeof(str), "    The PC controller is an inclusion %s%s%s",
-			  ( m_controllerCaps & ControllerCaps_SUC ) ? " static update controller (SUC)" : " controller",
+			  ( m_controllerCaps & ControllerCaps_SUC ) ? "static update controller (SUC)" : "controller",
 			  ( m_controllerCaps & ControllerCaps_OnOtherNetwork ) ? " which is using a Home ID from another network" : "",
 			  ( m_controllerCaps & ControllerCaps_RealPrimary ) ? " and was the original primary before the SIS was added." : "." );
 		Log::Write( LogLevel_Info, GetNodeNumber( m_currentMsg ), str );
