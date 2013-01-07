@@ -10,7 +10,7 @@
 CC     := gcc
 CXX    := g++
 LD     := g++
-AR     := ar rc
+AR     := ar crc
 RANLIB := ranlib
 
 DEBUG_CFLAGS    := -Wall -Wno-unknown-pragmas -Wno-inline -Werror -Wno-format -g -DDEBUG -DLOG_STDERR -fPIC
@@ -19,8 +19,9 @@ RELEASE_CFLAGS  := -Wall -Wno-unknown-pragmas -Werror -Wno-format -O3 -DNDEBUG -
 DEBUG_LDFLAGS	:= -g
 
 # Change for DEBUG or RELEASE
-CFLAGS	:= -c -DDARWIN $(DEBUG_CFLAGS)
-LDFLAGS	:= $(DEBUG_LDFLAGS)
+ARCH	:= -arch i386 -arch x86_64
+CFLAGS	:= -c -DDARWIN $(ARCH) $(DEBUG_CFLAGS)
+LDFLAGS	:= $(DEBUG_LDFLAGS) $(ARCH)
 
 LIBDIR	:= ../../lib/mac
 
@@ -89,6 +90,7 @@ $(LIBDIR)/libopenzwave.a:	$(patsubst %.cpp,%.o,$(tinyxml)) \
 			$(patsubst %.cpp,%.o,$(pform)) \
 			$(patsubst %.cpp,%.o,$(indep)) vers.o
 	$(AR) $@ $?
+	$(RANLIB) $@
 
 $(LIBDIR)/libopenzwave.so:	$(patsubst %.cpp,%.o,$(tinyxml)) \
 			$(patsubst %.c,%.o,$(hidapi)) \
@@ -96,4 +98,4 @@ $(LIBDIR)/libopenzwave.so:	$(patsubst %.cpp,%.o,$(tinyxml)) \
 			$(patsubst %.cpp,%.o,$(vclasses)) \
 			$(patsubst %.cpp,%.o,$(pform)) \
 			$(patsubst %.cpp,%.o,$(indep)) vers.o
-	$(LD) -shared -o $@ $+ -framework IOKit -framework CoreFoundation
+	$(LD) -shared $(ARCH) -o $@ $+ -framework IOKit -framework CoreFoundation
