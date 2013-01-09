@@ -3162,9 +3162,10 @@ void Driver::HandleApplicationCommandHandlerRequest
 			memcpy( node->m_lastReceivedMessage, _data, sizeof(node->m_lastReceivedMessage) );
 		}
 		node->m_receivedTS.SetTime();
-		if( m_expectedReply == FUNC_ID_APPLICATION_COMMAND_HANDLER )
+		if( m_expectedReply == FUNC_ID_APPLICATION_COMMAND_HANDLER && m_expectedNodeId == nodeId )
 		{
 			// Need to confirm this is the correct response to the last sent request.
+			// At least ignore any received messages prior to the send data request.
 			node->m_lastResponseRTT = -node->m_sentTS.TimeRemaining();
 			Log::Write(LogLevel_Info, nodeId, "Response RTT %d Average Response RTT %d", node->m_lastResponseRTT, node->m_averageResponseRTT );
 			node->m_averageResponseRTT = ( node->m_averageResponseRTT + node->m_lastResponseRTT ) >> 1;

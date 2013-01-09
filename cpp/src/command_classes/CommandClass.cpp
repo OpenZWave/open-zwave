@@ -564,9 +564,10 @@ void CommandClass::UpdateMappedClass
 {
 	if( _classId )
 	{
-		if( Node const* node = GetNodeUnsafe() )
+		if( Node* node = GetNodeUnsafe() )
 		{
-			if( CommandClass* cc = node->GetCommandClass( _classId ) )
+			CommandClass* cc = node->GetCommandClass( _classId );
+			if( node->GetCurrentQueryStage() == Node::QueryStage_Complete && cc != NULL )
 			{
 				cc->SetValueBasic( _instance, _level );
 			}
