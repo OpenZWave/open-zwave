@@ -32,7 +32,7 @@
 #include "Log.h"
 
 #include "ValueByte.h"
-#include "ValueString.h"
+#include "ValueRaw.h"
 
 using namespace OpenZWave;
 
@@ -50,6 +50,8 @@ enum
 	UserCodeIndex_Unknown		= 0,
 	UserCodeIndex_Count		= 255
 };
+
+const uint8 UserCodeLength = 10;
 
 //-----------------------------------------------------------------------------
 // <UserCode::UserCode>
@@ -186,8 +188,6 @@ bool UserCode::HandleMsg
 	uint32 const _instance	// = 1
 )
 {
-	char str[16];
-
 	if( UserNumberCmd_Report == (UserCodeCmd)_data[0] )
 	{	
 		m_userCodeCount = _data[1];
@@ -216,6 +216,8 @@ bool UserCode::HandleMsg
 		{
 			for( uint8 i = 0; i <= m_userCodeCount; i++ )
 			{
+				char str[16];
+
 				if( i == 0 )
 				{
 					snprintf( str, sizeof(str), "Unknown Code" );
@@ -224,7 +226,7 @@ bool UserCode::HandleMsg
 				{
 					snprintf( str, sizeof(str), "Code %d", i );
 				}
-				node->CreateValueString( ValueID::ValueGenre_User, GetCommandClassId(), _instance, i, str, "", false, false, "", 0 );
+				node->CreateValueRaw( ValueID::ValueGenre_User, GetCommandClassId(), _instance, i, str, "", false, false, NULL, UserCodeLength, 0 );
 			}
 		}
 		return true;
@@ -232,12 +234,18 @@ bool UserCode::HandleMsg
 	else if( UserCodeCmd_Report == (UserCodeCmd)_data[0] )
 	{	
 		int i = _data[1];
-		if( ValueString* value = static_cast<ValueString*>( GetValue( _instance, i ) ) )
+		if( ValueRaw* value = static_cast<ValueRaw*>( GetValue( _instance, i ) ) )
 		{
-			uint8 size = _length - 3;
+			uint8 data[UserCodeLength];
+			uint8 size = _length - 4;
+			if( size > UserCodeLength )
+			{
+				Log::Write( LogLevel_Warning, GetNodeId(), "User Code length %d is larger then maximum %d", size, UserCodeLength );
+				size = UserCodeLength;
+			}
 			m_userCodesStatus[i] = _data[2];
-			memcpy( str, &_data[3], size );
-			value->OnValueRefreshed( str );
+			memcpy( data, &_data[3], size );
+			value->OnValueRefreshed( data, size );
 			value->Release();
 		}
 		Log::Write( LogLevel_Info, GetNodeId(), "Received User Code Report from node %d for User Code %d (%s)", GetNodeId(), i, CodeStatus( _data[2] ).c_str() );
@@ -268,17 +276,13 @@ bool UserCode::SetValue
 	Value const& _value
 )
 {
-	if( ValueID::ValueType_String == _value.GetID().GetType() )
+	if( ValueID::ValueType_Raw == _value.GetID().GetType() )
 	{
-		ValueString const* value = static_cast<ValueString const*>(&_value);
-		string s = value->GetValue();
-		uint8 len = s.length();
+		ValueRaw const* value = static_cast<ValueRaw const*>(&_value);
+		uint8* s = value->GetValue();
+		uint8 len = value->GetLength();
 
-		if( len > 10 )
-		{
-			len = 10;
-		}
-		else if (len < 4)
+		if( len > UserCodeLength )
 		{
 			return false;
 		}

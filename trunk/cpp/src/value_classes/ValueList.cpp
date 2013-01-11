@@ -59,6 +59,8 @@ ValueList::ValueList
 	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_List, _label, _units, _readOnly, _writeOnly, false, _pollIntensity ),
 	m_items( _items ),
 	m_valueIdx( _valueIdx ),
+	m_valueIdxCheck( 0 ),
+	m_newValueIdx( 0 ),
 	m_size( _size )
 {
 }
