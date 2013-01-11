@@ -58,7 +58,8 @@ static char const* c_typeName[] =
 	"schedule",
 	"short",
 	"string",
-	"button"
+	"button",
+	"raw"
 };
 
 //-----------------------------------------------------------------------------
@@ -544,23 +545,35 @@ int Value::VerifyRefreshedValue
 	{
 		switch( _type )
 		{
-		case 1:			// string
-			Log::Write( LogLevel_Detail, m_id.GetNodeId(), "Refreshed Value: old value=%s, new value=%s, type=%s", ((string*)_originalValue)->c_str(), ((string*)_newValue)->c_str(), "string" );
-			break;
-		case 2:			// short
-            Log::Write( LogLevel_Detail, m_id.GetNodeId(), "Refreshed Value: old value=%d, new value=%d, type=%s", *((short*)_originalValue), *((short*)_newValue), "short");
-			break;
-		case 3:			// int32
-			Log::Write( LogLevel_Detail, m_id.GetNodeId(), "Refreshed Value: old value=%d, new value=%d, type=%s", *((int32*)_originalValue), *((int32*)_newValue), "int32" );
-			break;
-		case 4:			// uint8
-			Log::Write( LogLevel_Detail, m_id.GetNodeId(), "Refreshed Value: old value=%d, new value=%d, type=%s", *((uint8*)_originalValue), *((uint8*)_newValue), "uint8" );
-			break;
-		case 5:			// bool
-			Log::Write( LogLevel_Detail, m_id.GetNodeId(), "Refreshed Value: old value=%s, new value=%s, type=%s", *((bool*)_originalValue)?"true":"false", *((uint8*)_newValue)?"true":"false", "bool" );
-			break;
-		default:
-			break;
+			case 1:			// string
+			{
+				Log::Write( LogLevel_Detail, m_id.GetNodeId(), "Refreshed Value: old value=%s, new value=%s, type=%s", ((string*)_originalValue)->c_str(), ((string*)_newValue)->c_str(), "string" );
+				break;
+			}
+			case 2:			// short
+			{
+				Log::Write( LogLevel_Detail, m_id.GetNodeId(), "Refreshed Value: old value=%d, new value=%d, type=%s", *((short*)_originalValue), *((short*)_newValue), "short");
+				break;
+			}
+			case 3:			// int32
+			{
+				Log::Write( LogLevel_Detail, m_id.GetNodeId(), "Refreshed Value: old value=%d, new value=%d, type=%s", *((int32*)_originalValue), *((int32*)_newValue), "int32" );
+				break;
+			}
+			case 4:			// uint8
+			{
+				Log::Write( LogLevel_Detail, m_id.GetNodeId(), "Refreshed Value: old value=%d, new value=%d, type=%s", *((uint8*)_originalValue), *((uint8*)_newValue), "uint8" );
+				break;
+			}
+			case 5:			// bool
+			{
+				Log::Write( LogLevel_Detail, m_id.GetNodeId(), "Refreshed Value: old value=%s, new value=%s, type=%s", *((bool*)_originalValue)?"true":"false", *((uint8*)_newValue)?"true":"false", "bool" );
+				break;
+			}
+			default:
+			{
+				break;
+			}
 		}
 	}
 	m_refreshTime = time( NULL );	// update value refresh time

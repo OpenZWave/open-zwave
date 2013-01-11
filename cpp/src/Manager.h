@@ -57,6 +57,7 @@ namespace OpenZWave
 	class ValueList;
 	class ValueShort;
 	class ValueString;
+	class ValueRaw;
 
 	/** \brief
 	 *   The main public interface to OpenZWave.
@@ -872,7 +873,7 @@ namespace OpenZWave
 		 * \param _id The unique identifier of the value.
 		 * \param o_value Pointer to a bool that will be filled with the value.
 		 * \return true if the value was obtained.  Returns false if the value is not a ValueID::ValueType_Bool. The type can be tested with a call to ValueID::GetType.
-		 * \see ValueID::GetType, GetValueAsByte, GetValueAsFloat, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListSelection, GetValueListItems 
+		 * \see ValueID::GetType, GetValueAsByte, GetValueAsFloat, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListSelection, GetValueListItems, GetValueAsRaw
 		 */
 		bool GetValueAsBool( ValueID const& _id, bool* o_value );
 
@@ -881,7 +882,7 @@ namespace OpenZWave
 		 * \param _id The unique identifier of the value.
 		 * \param o_value Pointer to a uint8 that will be filled with the value.
 		 * \return true if the value was obtained.  Returns false if the value is not a ValueID::ValueType_Byte. The type can be tested with a call to ValueID::GetType
-		 * \see ValueID::GetType, GetValueAsBool, GetValueAsFloat, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListSelection, GetValueListItems 
+		 * \see ValueID::GetType, GetValueAsBool, GetValueAsFloat, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListSelection, GetValueListItems, GetValueAsRaw
 		 */
 		bool GetValueAsByte( ValueID const& _id, uint8* o_value );
 
@@ -890,7 +891,7 @@ namespace OpenZWave
 		 * \param _id The unique identifier of the value.
 		 * \param o_value Pointer to a float that will be filled with the value.
 		 * \return true if the value was obtained.  Returns false if the value is not a ValueID::ValueType_Decimal. The type can be tested with a call to ValueID::GetType
-		 * \see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListSelection, GetValueListItems 
+		 * \see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListSelection, GetValueListItems, GetValueAsRaw
 		 */
 		bool GetValueAsFloat( ValueID const& _id, float* o_value );
 
@@ -899,7 +900,7 @@ namespace OpenZWave
 		 * \param _id The unique identifier of the value.
 		 * \param o_value Pointer to an int32 that will be filled with the value.
 		 * \return true if the value was obtained.  Returns false if the value is not a ValueID::ValueType_Int. The type can be tested with a call to ValueID::GetType
-		 * \see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsFloat, GetValueAsShort, GetValueAsString, GetValueListSelection, GetValueListItems 
+		 * \see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsFloat, GetValueAsShort, GetValueAsString, GetValueListSelection, GetValueListItems, GetValueAsRaw
 		 */
 		bool GetValueAsInt( ValueID const& _id, int32* o_value );
 
@@ -908,7 +909,7 @@ namespace OpenZWave
 		 * \param _id The unique identifier of the value.
 		 * \param o_value Pointer to an int16 that will be filled with the value.
 		 * \return true if the value was obtained.  Returns false if the value is not a ValueID::ValueType_Short. The type can be tested with a call to ValueID::GetType.
-		 * \see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsFloat, GetValueAsInt, GetValueAsString, GetValueListSelection, GetValueListItems. 
+		 * \see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsFloat, GetValueAsInt, GetValueAsString, GetValueListSelection, GetValueListItems, GetValueAsRaw
 		 */
 		bool GetValueAsShort( ValueID const& _id, int16* o_value );
 		
@@ -918,16 +919,26 @@ namespace OpenZWave
 		 * \param _id The unique identifier of the value.
 		 * \param o_value Pointer to a string that will be filled with the value.
 		 * \return true if the value was obtained.</returns>
-		 * \see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsFloat, GetValueAsInt, GetValueAsShort, GetValueListSelection, GetValueListItems. 
+		 * \see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsFloat, GetValueAsInt, GetValueAsShort, GetValueListSelection, GetValueListItems, GetValueAsRaw
 		 */
 		bool GetValueAsString( ValueID const& _id, string* o_value );
+		
+		/**
+		 * \brief Gets a value as a collection of bytes.
+		 * \param _id The unique identifier of the value.
+		 * \param o_value Pointer to a uint8* that will be filled with the value. This return value will need to be freed as it was dynamically allocated.
+		 * \param o_length Pointer to a uint8 that will be fill with the data length.
+		 * \return true if the value was obtained. Returns false if the value is not a ValueID::ValueType_Raw. The type can be tested with a call to ValueID::GetType.
+		 * \see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsFloat, GetValueAsInt, GetValueAsShort, GetValueListSelection, GetValueListItems, GetValueAsRaw
+		 */
+		bool GetValueAsRaw( ValueID const& _id, uint8** o_value, uint8* o_length );
 		
 		/**
 		 * \brief Gets the selected item from a list (as a string).
 		 * \param _id The unique identifier of the value.
 		 * \param o_value Pointer to a string that will be filled with the selected item.
 		 * \return True if the value was obtained.  Returns false if the value is not a ValueID::ValueType_List. The type can be tested with a call to ValueID::GetType.
-		 * \see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsFloat, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListItems. 
+		 * \see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsFloat, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListItems, GetValueAsRaw
 		 */
 		bool GetValueListSelection( ValueID const& _id, string* o_value );
 
@@ -936,7 +947,7 @@ namespace OpenZWave
 		 * \param _id The unique identifier of the value.
 		 * \param o_value Pointer to an integer that will be filled with the selected item.
 		 * \return True if the value was obtained.  Returns false if the value is not a ValueID::ValueType_List. The type can be tested with a call to ValueID::GetType.
-		 * \see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsFloat, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListItems. 
+		 * \see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsFloat, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListItems, GetValueAsRaw
 		 */
 		bool GetValueListSelection( ValueID const& _id, int32* o_value );
 
@@ -945,7 +956,7 @@ namespace OpenZWave
 		 * \param _id The unique identifier of the value.
 		 * \param o_value Pointer to a vector of strings that will be filled with list items. The vector will be cleared before the items are added.
 		 * \return true if the list items were obtained.  Returns false if the value is not a ValueID::ValueType_List. The type can be tested with a call to ValueID::GetType.
-		 * \see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsFloat, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListSelection. 
+		 * \see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsFloat, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListSelection, GetValueAsRaw
 		 */
 		bool GetValueListItems( ValueID const& _id, vector<string>* o_value );
 
@@ -1013,6 +1024,17 @@ namespace OpenZWave
 		 * \return true if the value was set.  Returns false if the value is not a ValueID::ValueType_Short. The type can be tested with a call to ValueID::GetType.
 		 */
 		bool SetValue( ValueID const& _id, int16 const _value );
+
+		/**
+		 * \brief Sets the value of a collection of bytes.
+		 * Due to the possibility of a device being asleep, the command is assumed to suceed, and the value
+		 * held by the node is updated directly.  This will be reverted by a future status message from the device
+		 * if the Z-Wave message actually failed to get through.  Notification callbacks will be sent in both cases.
+		 * \param _id The unique identifier of the raw value.
+		 * \param _value The new collection of bytes.
+		 * \return true if the value was set.  Returns false if the value is not a ValueID::ValueType_Raw. The type can be tested with a call to ValueID::GetType.
+		 */
+		bool SetValue( ValueID const& _id, uint8 const* _value, uint8 const _length );
 
 		/**
 		 * \brief Sets the value from a string, regardless of type.

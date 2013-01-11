@@ -1,10 +1,10 @@
 //-----------------------------------------------------------------------------
 //
-//	ValueString.h
+//	ValueRaw.h
 //
-//	Represents a string value
+//	Represents a collection of 8-bit values
 //
-//	Copyright (c) 2010 Mal Lansell <openzwave@lansell.org>
+//	Copyright (c) 2013 Greg Satz <satz@iranger.com>
 //
 //	SOFTWARE NOTICE AND LICENSE
 //
@@ -25,8 +25,8 @@
 //
 //-----------------------------------------------------------------------------
 
-#ifndef _ValueString_H
-#define _ValueString_H
+#ifndef _ValueRaw_H
+#define _ValueRaw_H
 
 #include <string>
 #include "Defs.h"
@@ -39,32 +39,37 @@ namespace OpenZWave
 	class Msg;
 	class Node;
 
-	/** \brief String value sent to/received from a node.
+	/** \brief A collection of bytes sent to/received from a node.
 	 */
-	class ValueString: public Value
+	class ValueRaw: public Value
 	{
 	public:
-		ValueString( uint32 const _homeId, uint8 const _nodeId, ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, string const& _label, string const& _units, bool const _readOnly, bool const _writeOnly, string const& _value, uint8 const _pollIntensity );
-		ValueString(){}
-		virtual ~ValueString(){}
+		ValueRaw( uint32 const _homeId, uint8 const _nodeId, ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint8 const _index, string const& _label, string const& _units, bool const _readOnly, bool const _writeOnly, uint8 const* _value, uint8 const _length, uint8 const _pollIntensity );
+		ValueRaw();
+		virtual ~ValueRaw();
 
-		bool Set( string const& _value );
-		void OnValueRefreshed( string const& _value );
+		bool Set( uint8 const* _value, uint8 const _length );
+		void OnValueRefreshed( uint8 const* _value, uint8 const _length );
 
 		// From Value
-		virtual string const GetAsString() const { return GetValue(); }
-		virtual bool SetFromString( string const& _value ) { return Set( _value ); }
+		virtual string const GetAsString() const;
+		virtual bool SetFromString( string const& _value );
 		virtual void ReadXML( uint32 const _homeId, uint8 const _nodeId, uint8 const _commandClassId, TiXmlElement const* _valueElement );
 		virtual void WriteXML( TiXmlElement* _valueElement );
 
-		string GetValue()const{ return m_value; }
+		uint8* GetValue()const{ return m_value; }
+		uint8 GetLength()const{ return m_valueLength; }
 
 	private:
-		string	m_value;				// the current value
-		string	m_valueCheck;			// the previous value (used for double-checking spurious value reads)
-		string	m_newValue;				// a new value to be set on the appropriate device
+		uint8*	m_value;				// the current value
+		uint8	m_valueLength;				// fixed length for this instance
+		uint8*	m_valueCheck;				// the previous value (used for double-checking spurious value reads)
+		uint8*	m_newValue;				// a new value to be set on the appropriate device
 	};
 
 } // namespace OpenZWave
 
 #endif
+
+
+

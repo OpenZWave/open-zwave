@@ -52,6 +52,7 @@
 #include "ValueDecimal.h"
 #include "ValueInt.h"
 #include "ValueList.h"
+#include "ValueRaw.h"
 #include "ValueSchedule.h"
 #include "ValueShort.h"
 #include "ValueString.h"
@@ -1794,6 +1795,42 @@ bool Manager::GetValueAsInt
 }
 
 //-----------------------------------------------------------------------------
+// <Manager::GetValueAsRaw>
+// Gets a value as a collection of bytes
+//-----------------------------------------------------------------------------
+bool Manager::GetValueAsRaw
+(
+	ValueID const& _id,
+	uint8** o_value,
+	uint8* o_length
+)
+{
+	bool res = false;
+
+	if( o_value && o_length )
+	{
+		if( ValueID::ValueType_Raw == _id.GetType() )
+		{
+			if( Driver* driver = GetDriver( _id.GetHomeId() ) )
+			{
+				driver->LockNodes();
+				if( ValueRaw* value = static_cast<ValueRaw*>( driver->GetValue( _id ) ) )
+				{
+					*o_length = value->GetLength();
+					*o_value = new uint8[*o_length];
+					memcpy( *o_value, value->GetValue(), *o_length );
+					value->Release();
+					res = true;
+				}
+				driver->ReleaseNodes();
+			}
+		}
+	}
+
+	return res;
+}
+
+//-----------------------------------------------------------------------------
 // <Manager::GetValueAsShort>
 // Gets a value as a 16-bit signed integer
 //-----------------------------------------------------------------------------
@@ -1895,6 +1932,16 @@ bool Manager::GetValueAsString
 					{
 						ValueList::Item const& item = value->GetItem();
 						*o_value = item.m_label;
+						value->Release();
+						res = true;
+					}
+					break;
+				}
+				case ValueID::ValueType_Raw:
+				{
+					if( ValueRaw* value = static_cast<ValueRaw*>( driver->GetValue( _id ) ) )
+					{
+						*o_value = value->GetAsString().c_str();
 						value->Release();
 						res = true;
 					}
@@ -2219,6 +2266,39 @@ bool Manager::SetValue
 				if( ValueInt* value = static_cast<ValueInt*>( driver->GetValue( _id ) ) )
 				{
 					res = value->Set( _value );
+					value->Release();
+				}
+				driver->ReleaseNodes();
+			}
+		}
+	}
+
+	return res;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::SetValue>
+// Sets the value from a collection of bytes
+//-----------------------------------------------------------------------------
+bool Manager::SetValue
+( 
+	ValueID const& _id, 
+	uint8 const* _value,
+	uint8 const _length
+)
+{
+	bool res = false;
+
+	if( ValueID::ValueType_Raw == _id.GetType() )
+	{
+		if( Driver* driver = GetDriver( _id.GetHomeId() ) )
+		{
+			if( _id.GetNodeId() != driver->GetNodeId() )
+			{
+				driver->LockNodes();
+				if( ValueRaw* value = static_cast<ValueRaw*>( driver->GetValue( _id ) ) )
+				{
+					res = value->Set( _value, _length );
 					value->Release();
 				}
 				driver->ReleaseNodes();
