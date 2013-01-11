@@ -93,7 +93,8 @@ namespace OpenZWave
 			ValueType_Short,			/**< 16-bit signed value */
 			ValueType_String,			/**< Text string */
 			ValueType_Button,			/**< A write-only value that is the equivalent of pressing a button to send a command to a device */
-			ValueType_Max = ValueType_Button	/**< The highest-number type defined.  Not to be used as a type itself. */
+			ValueType_Raw,				/**< A collection of bytes */
+			ValueType_Max = ValueType_Raw		/**< The highest-number type defined.  Not to be used as a type itself. */
 		};
 
 		/** 

@@ -56,7 +56,9 @@ ValueByte::ValueByte
 	uint8 const _pollIntensity
 ):
 	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Byte, _label, _units, _readOnly, _writeOnly, false, _pollIntensity ),
-	m_value( _value )
+	m_value( _value ),
+	m_valueCheck( false ),
+	m_newValue( false )
 {
 	m_min = 0;
 	m_max = 255;
@@ -147,7 +149,7 @@ bool ValueByte::Set
 )
 {
 	// create a temporary copy of this value to be submitted to the Set() call and set its value to the function param
-  	ValueByte* tempValue = new ValueByte( *this);
+  	ValueByte* tempValue = new ValueByte( *this );
 	tempValue->m_value = _value;
 
 	// Set the value in the device.

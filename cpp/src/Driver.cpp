@@ -5609,7 +5609,7 @@ void Driver::ReadButtons
 	TiXmlDocument doc;
 	if( !doc.LoadFile( filename.c_str(), TIXML_ENCODING_UTF8 ) )
 	{
-		Log::Write( LogLevel_Info, "Driver::ReadButtons - zwbutton.xml file not found.");
+		Log::Write( LogLevel_Debug, "Driver::ReadButtons - zwbutton.xml file not found.");
 		return;
 	}
 
