@@ -93,6 +93,7 @@
    <xs:attribute name='request_flags' type='xs:string' use='optional'/>
    <xs:attribute name='endpoints' type='xs:string' use='optional'/>
    <xs:attribute name='mapping' type='xs:string' use='optional'/>
+   <xs:attribute name='codes' type='xs:string' use='optional'/>
   </xs:complexType>
  </xs:element>
 
@@ -156,6 +157,7 @@
 	 <xs:enumeration value='short'/>
 	 <xs:enumeration value='string'/>
 	 <xs:enumeration value='button'/>
+	 <xs:enumeration value='raw'/>
        </xs:restriction>
      </xs:simpleType>
    </xs:attribute>
@@ -175,6 +177,7 @@
    <xs:attribute name='min' type='xs:string' use='optional'/>
    <xs:attribute name='max' type='xs:string' use='optional'/>
    <xs:attribute name='value' type='xs:string' use='optional'/>
+   <xs:attribute name='length' type='xs:string' use='optional'/>
    <xs:attribute name='read_only' use='optional'>
     <xs:simpleType>
      <xs:restriction base='xs:string'>

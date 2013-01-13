@@ -214,6 +214,9 @@ bool UserCode::HandleMsg
 
 		if( Node* node = GetNodeUnsafe() )
 		{
+			uint8 data[UserCodeLength];
+
+			memset( data, 0, UserCodeLength );
 			for( uint8 i = 0; i <= m_userCodeCount; i++ )
 			{
 				char str[16];
@@ -226,7 +229,7 @@ bool UserCode::HandleMsg
 				{
 					snprintf( str, sizeof(str), "Code %d", i );
 				}
-				node->CreateValueRaw( ValueID::ValueGenre_User, GetCommandClassId(), _instance, i, str, "", false, false, NULL, UserCodeLength, 0 );
+				node->CreateValueRaw( ValueID::ValueGenre_User, GetCommandClassId(), _instance, i, str, "", false, false, data, UserCodeLength, 0 );
 			}
 		}
 		return true;

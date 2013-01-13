@@ -177,7 +177,7 @@ namespace OpenZWave
 			InitCaps_Slave					= 0x01,		/**<  */
 			InitCaps_TimerSupport				= 0x02,		/**< Controller supports timers. */
 			InitCaps_Secondary				= 0x04,		/**< Controller is a secondary. */
-			InitCaps_SUC					= 0x08,		/**< Controller is a static update controller. */
+			InitCaps_SUC					= 0x08		/**< Controller is a static update controller. */
 		};
 
 		bool IsPrimaryController()const{ return ((m_initCaps & InitCaps_Secondary) == 0); }
@@ -493,7 +493,7 @@ namespace OpenZWave
 		  ControllerError_Busy,						/**< RemoveFailedNode, RequestNetworkUpdate */
 		  ControllerError_Failed,					/**< RemoveFailedNode, RequestNetworkUpdate */
 		  ControllerError_Disabled,					/**< RequestNetworkUpdate error */
-		  ControllerError_Overflow,					/**< RequestNetworkUpdate error */
+		  ControllerError_Overflow					/**< RequestNetworkUpdate error */
 		};
 
 		typedef void (*pfnControllerCallback_t)( ControllerState _state, ControllerError _err, void* _context );
