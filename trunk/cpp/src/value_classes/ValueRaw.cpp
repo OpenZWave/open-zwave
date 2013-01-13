@@ -61,11 +61,8 @@ ValueRaw::ValueRaw
 	m_valueCheck ( NULL ),
 	m_newValue ( NULL )
 {
-	if( _value != NULL )
-	{
-		m_value = new uint8[_length];
-		memcpy( m_value, _value, _length );
-	}
+	m_value = new uint8[_length];
+	memcpy( m_value, _value, _length );
 	m_min = 0;
 	m_max = 0;
 }
@@ -245,11 +242,15 @@ void ValueRaw::OnValueRefreshed
 	uint8 const _length
 )
 {
-	switch( VerifyRefreshedValue( (void*) &m_value, (void*) &m_valueCheck, (void*) &_value, 0) )
+	switch( VerifyRefreshedValue( (void*)m_value, (void*)m_valueCheck, (void*)_value, 6, _length ) )
 	{
 	case 0:		// value hasn't changed, nothing to do
 		break;
 	case 1:		// value has changed (not confirmed yet), save _value in m_valueCheck
+		if( m_valueCheck != NULL )
+		{
+			delete [] m_valueCheck;
+		}
 		m_valueCheck = new uint8[_length];
 		memcpy( m_valueCheck, _value, _length );
 		break;
