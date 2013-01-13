@@ -525,7 +525,8 @@ int Value::VerifyRefreshedValue
 	void* _originalValue,
 	void* _checkValue,
 	void* _newValue,
-	int _type
+	int _type,
+	int _length	// = 0
 )
 {
 	// TODO: this is pretty rough code, but it's reused by each value type.  It would be
@@ -570,6 +571,11 @@ int Value::VerifyRefreshedValue
 				Log::Write( LogLevel_Detail, m_id.GetNodeId(), "Refreshed Value: old value=%s, new value=%s, type=%s", *((bool*)_originalValue)?"true":"false", *((uint8*)_newValue)?"true":"false", "bool" );
 				break;
 			}
+			case 6:			// raw
+			{
+				Log::Write( LogLevel_Detail, m_id.GetNodeId(), "Refreshed Value: old value=%x, new value=%x, type=raw", _originalValue, _newValue );
+				break;
+			}
 			default:
 			{
 				break;
@@ -607,6 +613,9 @@ int Value::VerifyRefreshedValue
 		break;
 	case 5:			// bool
 		bOriginalEqual = ( *((bool*)_originalValue) == *((bool*)_newValue) );
+		break;
+	case 6:			// raw
+		bOriginalEqual = ( memcmp( _originalValue, _newValue, _length ) == 0 );
 		break;
 	}
 
@@ -646,6 +655,9 @@ int Value::VerifyRefreshedValue
 			break;
 		case 5:			// bool
 			bCheckEqual = ( *((bool*)_checkValue) == *((bool*)_newValue) );
+			break;
+		case 6:
+			bCheckEqual = ( memcmp( _checkValue, _newValue, _length ) == 0 );
 			break;
 		}
 		if( bCheckEqual )
