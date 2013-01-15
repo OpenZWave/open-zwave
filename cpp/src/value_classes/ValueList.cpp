@@ -207,7 +207,7 @@ bool ValueList::SetByValue
 {
 	// create a temporary copy of this value to be submitted to the Set() call and set its value to the function param
   	ValueList* tempValue = new ValueList( *this );
-	tempValue->m_newValueIdx = _value;
+	tempValue->m_valueIdx = _value;
 
 	// Set the value in the device.
 	bool ret = ((Value*)tempValue)->Set();
@@ -228,7 +228,7 @@ bool ValueList::SetByLabel
 )
 {
 	// Ensure the value is one of the options
-	int32 index = GetItemIdxByLabel( _label );
+	int index = GetItemIdxByLabel( _label );
 	if( index < 0 )
 	{
 		// Item not found

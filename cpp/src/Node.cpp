@@ -1967,6 +1967,7 @@ bool Node::CreateValueFromXML
 		case ValueID::ValueType_Short:		{	value = new ValueShort();		break;	}
 		case ValueID::ValueType_String:		{	value = new ValueString();		break;	}
 		case ValueID::ValueType_Button:		{	value = new ValueButton();		break;	}
+		case ValueID::ValueType_Raw:		{	value = new ValueRaw();			break;  }
 		default:				{	Log::Write( LogLevel_Info, m_nodeId, "Unknown ValueType in XML: %s", _valueElement->Attribute( "type" ) ); break; }
 	}
 
