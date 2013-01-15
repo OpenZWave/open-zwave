@@ -221,7 +221,6 @@ void OnNotification
 		}
 
 		case Notification::Type_DriverReset:
-		case Notification::Type_MsgComplete:
 		case Notification::Type_NodeNaming:
 		case Notification::Type_NodeProtocolInfo:
 		case Notification::Type_NodeQueriesComplete:

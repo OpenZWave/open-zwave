@@ -118,7 +118,7 @@ bool ValueRaw::SetFromString
 {
 	char const* p = _value.c_str();
 	uint8 index = 0;
-	uint8 value[m_valueLength];
+	uint8* value = new uint8[m_valueLength];
 	while( 1 )
 	{
 		char *ep = NULL;
@@ -134,11 +134,16 @@ bool ValueRaw::SetFromString
 		index++;
 		p = ep + 1;
 	}
+
+	bool bRet = false;
+
 	if ( index <= m_valueLength )
 	{
-		return Set( value, index );
+		bRet = Set( value, index );
 	}
-	return false;
+
+	delete [] value;
+	return bRet;
 }
 
 //-----------------------------------------------------------------------------

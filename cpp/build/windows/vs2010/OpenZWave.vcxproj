@@ -120,6 +120,7 @@
     <ClInclude Include="..\..\..\src\Scene.h" />
     <ClInclude Include="..\..\..\src\Utils.h" />
     <ClInclude Include="..\..\..\src\value_classes\ValueButton.h" />
+    <ClInclude Include="..\..\..\src\value_classes\ValueRaw.h" />
     <ClInclude Include="..\..\..\src\value_classes\ValueSchedule.h" />
     <ClInclude Include="..\..\..\tinyxml\tinystr.h" />
     <ClInclude Include="..\..\..\tinyxml\tinyxml.h" />
@@ -174,7 +175,6 @@
     <ClInclude Include="..\..\..\src\command_classes\ThermostatMode.h" />
     <ClInclude Include="..\..\..\src\command_classes\ThermostatOperatingState.h" />
     <ClInclude Include="..\..\..\src\command_classes\ThermostatSetpoint.h" />
-    <ClInclude Include="..\..\..\src\command_classes\UserCode.h" />
     <ClInclude Include="..\..\..\src\command_classes\Version.h" />
     <ClInclude Include="..\..\..\src\command_classes\WakeUp.h" />
   </ItemGroup>
@@ -212,6 +212,7 @@
     <ClCompile Include="..\..\..\src\Scene.cpp" />
     <ClCompile Include="..\..\..\src\Utils.cpp" />
     <ClCompile Include="..\..\..\src\value_classes\ValueButton.cpp" />
+    <ClCompile Include="..\..\..\src\value_classes\ValueRaw.cpp" />
     <ClCompile Include="..\..\..\src\value_classes\ValueSchedule.cpp" />
     <ClCompile Include="..\..\..\tinyxml\tinystr.cpp" />
     <ClCompile Include="..\..\..\tinyxml\tinyxml.cpp" />
@@ -267,7 +268,6 @@
     <ClCompile Include="..\..\..\src\command_classes\ThermostatMode.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\ThermostatOperatingState.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\ThermostatSetpoint.cpp" />
-    <ClCompile Include="..\..\..\src\command_classes\UserCode.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\Version.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\WakeUp.cpp" />
   </ItemGroup>
