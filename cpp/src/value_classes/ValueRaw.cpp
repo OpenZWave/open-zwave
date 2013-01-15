@@ -160,6 +160,7 @@ void ValueRaw::ReadXML
 	{
 		m_valueLength = (uint8)intVal;
 	}
+	m_value = new uint8[m_valueLength];
 	char const* str = _valueElement->Attribute( "value" );
 	if( str )
 	{
