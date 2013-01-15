@@ -476,6 +476,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\value_classes\ValueRaw.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\value_classes\ValueRaw.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\value_classes\ValueSchedule.cpp"
 				>
 			</File>

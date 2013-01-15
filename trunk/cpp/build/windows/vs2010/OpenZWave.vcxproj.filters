@@ -153,9 +153,6 @@
     <ClInclude Include="..\..\..\src\command_classes\ThermostatSetpoint.h">
       <Filter>Command Classes</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\command_classes\UserCode.h">
-      <Filter>Command Classes</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\command_classes\Version.h">
       <Filter>Command Classes</Filter>
     </ClInclude>
@@ -299,6 +296,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\command_classes\NoOperation.h">
       <Filter>Command Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\command_classes\UserCode.h">
+      <Filter>Command Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\value_classes\ValueRaw.h">
+      <Filter>Value Classes</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\command_classes\UserCode.h">
       <Filter>Command Classes</Filter>
@@ -512,9 +515,6 @@
     <ClCompile Include="..\..\..\src\command_classes\ThermostatSetpoint.cpp">
       <Filter>Command Classes</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\command_classes\UserCode.cpp">
-      <Filter>Command Classes</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\command_classes\Version.cpp">
       <Filter>Command Classes</Filter>
     </ClCompile>
@@ -577,6 +577,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\command_classes\NoOperation.cpp">
       <Filter>Command Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\value_classes\ValueRaw.cpp">
+      <Filter>Value Classes</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\command_classes\UserCode.cpp">
       <Filter>Command Classes</Filter>
