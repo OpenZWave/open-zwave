@@ -2473,6 +2473,15 @@ bool Manager::SetValue
 					}
 					break;
 				}
+				case ValueID::ValueType_Raw:
+				{
+					if( ValueRaw* value = static_cast<ValueRaw*>( driver->GetValue( _id ) ) )
+					{
+						res = value->SetFromString( _value );
+						value->Release();
+					}
+					break;
+				}
 				default:
 				{
 					// To keep GCC happy

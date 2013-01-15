@@ -55,8 +55,8 @@ static char const* c_switchAllStateName[] =
 };
 
 //-----------------------------------------------------------------------------
-// <SwitchAll::RequestState>												   
-// Request current state from the device									   
+// <SwitchAll::RequestState>
+// Request current state from the device
 //-----------------------------------------------------------------------------
 bool SwitchAll::RequestState
 (

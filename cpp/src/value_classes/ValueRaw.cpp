@@ -134,7 +134,7 @@ bool ValueRaw::SetFromString
 		index++;
 		p = ep + 1;
 	}
-	if ( index < m_valueLength )
+	if ( index <= m_valueLength )
 	{
 		return Set( value, index );
 	}
@@ -179,7 +179,7 @@ void ValueRaw::ReadXML
 			index++;
 			str = ep + 1;
 		}
-		if( index >= m_valueLength )
+		if( index > m_valueLength )
 		{
 			Log::Write( LogLevel_Info, "Data length mismatch for raw data. Got %d bu expected %d.", index, m_valueLength );
 		}
