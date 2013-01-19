@@ -298,9 +298,12 @@
 	<Manufacturer id="0041" name="OpenPeak Inc.">
 	</Manufacturer>
 	<Manufacturer id="0064" name="Popp / Duwi">
+		<Product type="0001" id="0000" name="ZW EDAN 300 Flush Mounted Dimmer" />
 		<Product type="1001" id="0000" name="Plugin Dimmer" />
+		<Product type="2001" id="0000" name="ZW ES 1000 Flush Mounted Switch" config="duwi/ZWES1000.xml" />
 		<Product type="3001" id="0000" name="ZW ZS 3500 Plugin Switch" />
 		<Product type="3002" id="0000" name="ZW ZSA 3500 Plugin Switch" />
+		<Product type="4001" id="0000" name="ZW ESJ Blind Control" />
 	</Manufacturer>
 	<Manufacturer id="0016" name="PowerLynx">
 	</Manufacturer>
@@ -355,6 +358,7 @@
 	<Manufacturer id="008b" name="Trane">
 		<Product type="5452" id="5431" name="Model TZEMT400AB32MAA" config="trane/TZEMT400AB32MAA.xml"/>
 		<Product type="5452" id="5433" name="Model TZEMT400BB32MAA" config="trane/TZEMT400BB32MAA.xml"/>
+		<Product type="5452" id="5436" name="Model TZEMT400BB32MAA" config="trane/TZEMT400BB32MAA.xml"/>
 	</Manufacturer>
 	<Manufacturer id="006b" name="Tricklestar">
 	</Manufacturer>
