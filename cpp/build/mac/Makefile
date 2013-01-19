@@ -89,6 +89,7 @@ $(LIBDIR)/libopenzwave.a:	$(patsubst %.cpp,%.o,$(tinyxml)) \
 			$(patsubst %.cpp,%.o,$(vclasses)) \
 			$(patsubst %.cpp,%.o,$(pform)) \
 			$(patsubst %.cpp,%.o,$(indep)) vers.o
+	rm $@
 	$(AR) $@ $?
 	$(RANLIB) $@
 
