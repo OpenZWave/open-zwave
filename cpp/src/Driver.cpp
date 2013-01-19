@@ -2897,6 +2897,7 @@ void Driver::HandleRemoveNodeFromNetworkRequest
 		{
 			Log::Write( LogLevel_Info, nodeId, "REMOVE_NODE_STATUS_DONE" );
 
+			AddNodeStop( FUNC_ID_ZW_REMOVE_NODE_FROM_NETWORK );
 			if ( m_currentControllerCommand->m_controllerCommandNode == 0 ) // never received "removing" update
 			{
 				if ( _data[4] != 0 ) // but message has the clue
@@ -2922,6 +2923,7 @@ void Driver::HandleRemoveNodeFromNetworkRequest
 		}
 		case REMOVE_NODE_STATUS_FAILED:
 		{
+			AddNodeStop( FUNC_ID_ZW_REMOVE_NODE_FROM_NETWORK );
 			Log::Write( LogLevel_Warning, nodeId, "WARNING: REMOVE_NODE_STATUS_FAILED" );
 			state = ControllerState_Failed;
 			break;

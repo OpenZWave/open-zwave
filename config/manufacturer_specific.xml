@@ -153,7 +153,8 @@
 	  <Product type="0700" id="1000" name="FGK101 Door Opening Sensor" config="fibaro/fgk001.xml" />
 	  <Product type="0300" id="0106" name="FGR221 Roller Shutter Controller" />
 	  <Product type="0300" id="0107" name="FGR221 Roller Shutter Controller" />
-	  <Product type="0400" id="0104" name="FGS211 Switch 3KW" config="fibaro/fgs211.xml" />
+	  <Product type="0400" id="0104" name="FGS211 Switch 3kW" config="fibaro/fgs211.xml" />
+	  <Product type="0400" id="0109" name="FGS221 Switch 3kW" config="fibaro/fgs221.xml" />
 	  <Product type="0200" id="0104" name="FGS221 Double Relay Switch 2x1,5kW" config="fibaro/fgs221.xml" />
 	  <Product type="0200" id="0105" name="FGS221 Double Relay Switch 2x1,5kW" config="fibaro/fgs221.xml" />
 	  <Product type="0200" id="0106" name="FGS221 Double Relay Switch 2x1,5kW" config="fibaro/fgs221.xml" />
