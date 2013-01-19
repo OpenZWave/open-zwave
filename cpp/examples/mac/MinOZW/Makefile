@@ -12,13 +12,14 @@ LD     := g++
 AR     := ar rc
 RANLIB := ranlib
 
-DEBUG_CFLAGS    := -Wall -Wno-format -g -DDEBUG
-RELEASE_CFLAGS  := -Wall -Wno-unknown-pragmas -Wno-format -O3
+DEBUG_CFLAGS    := -Wall -Wno-unknown-pragmas -Wno-inline -Werror -Wno-format -g -DDEBUG
+RELEASE_CFLAGS  := -Wall -Wno-unknown-pragmas -Werror -Wno-format -O3 -DNDEBUG
 
 DEBUG_LDFLAGS	:= -g
 
 # Change for DEBUG or RELEASE
-CFLAGS	:= -c -DDARWIN $(DEBUG_CFLAGS)
+ARCH :=  -arch i386 -arch x86_64
+CFLAGS	:= -c -DDARWIN $(DEBUG_CFLAGS) $(ARCH)
 LDFLAGS	:= $(DEBUG_LDFLAGS)
 
 INCLUDES	:= -I ../../../src -I ../../../src/command_classes/ -I ../../../src/value_classes/ \
@@ -33,8 +34,8 @@ all: test
 lib:
 	$(MAKE) -C ../../../build/mac
 
-test:	Main.o lib
-	$(LD) -o $@ $(LDFLAGS) $< $(LIBS) -framework IOKit -framework CoreFoundation
+test:	Main.o #lib
+	$(LD) -o $@ $(LDFLAGS) $< $(LIBS) -pthread -framework IOKit -framework CoreFoundation $(ARCH)
 
 clean:
 	rm -f test Main.o
