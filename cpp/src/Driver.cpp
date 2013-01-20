@@ -524,7 +524,7 @@ void Driver::RemoveQueues
 			{
 				remove = true;
 			}
-			else if( MsgQueueCmd_Controller == item.m_command && _nodeId == item.m_cci->m_controllerCommandNode )
+			else if( MsgQueueCmd_Controller == item.m_command && _nodeId == item.m_cci->m_controllerCommandNode && m_currentControllerCommand != item.m_cci )
 			{
 				delete item.m_cci;
 				remove = true;
