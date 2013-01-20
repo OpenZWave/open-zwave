@@ -310,6 +310,18 @@ namespace OpenZWave
 		 * \param _homeId The Home ID of the Z-Wave controller.
 		 */
 		void LogDriverStatistics( uint32 const _homeId );
+
+		/**
+		 * \brief Obtain controller interface type
+		 * \param _homeId The Home ID of the Z-Wave controller.
+		 */
+		Driver::ControllerInterface GetControllerInterfaceType( uint32 const _homeId );
+
+		/**
+		 * \brief Obtain controller interface name
+		 * \param _homeId The Home ID of the Z-Wave controller.
+		 */
+		string GetControllerPath( uint32 const _homeId );
 	/*@}*/
 
 	private:
