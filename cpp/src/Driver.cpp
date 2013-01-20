@@ -245,6 +245,7 @@ Driver::~Driver
 	if( m_currentControllerCommand != NULL )
 	{
 		delete m_currentControllerCommand;
+		m_currentControllerCommand = NULL;
 	}
 
 	// Clear the node data
@@ -504,11 +505,6 @@ void Driver::RemoveQueues
 	if( m_currentMsg != NULL && m_currentMsg->GetTargetNodeId() == _nodeId )
 	{
 		RemoveCurrentMsg();
-	}
-
-	if( m_currentControllerCommand != NULL && m_currentControllerCommand->m_controllerCommandNode == _nodeId )
-	{
-		UpdateControllerState( ControllerState_Cancel );
 	}
 
 	// Clear the send Queue
@@ -4667,17 +4663,10 @@ void Driver::DoControllerCommand
 		}
 		case ControllerCommand_ReceiveConfiguration:
 		{
-			if( IsPrimaryController() )
-			{
-				UpdateControllerState( ControllerState_Error, ControllerError_NotPrimary );
-			}
-			else
-			{
-				Log::Write( LogLevel_Info, 0, "Receive Configuration" );
-				Msg* msg = new Msg( "ReceiveConfiguration", 0xff, REQUEST, FUNC_ID_ZW_SET_LEARN_MODE, true );
-				msg->Append( 0xff );
-				SendMsg( msg, MsgQueue_Command );
-			}
+			Log::Write( LogLevel_Info, 0, "Receive Configuration" );
+			Msg* msg = new Msg( "ReceiveConfiguration", 0xff, REQUEST, FUNC_ID_ZW_SET_LEARN_MODE, true );
+			msg->Append( 0xff );
+			SendMsg( msg, MsgQueue_Command );
 			break;
 		}
 		case ControllerCommand_RemoveDevice:
