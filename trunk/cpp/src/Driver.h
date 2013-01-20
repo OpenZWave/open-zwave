@@ -75,7 +75,8 @@ namespace OpenZWave
 	public:
 		enum ControllerInterface
 		{
-			ControllerInterface_Serial = 0,
+			ControllerInterface_Unknown = 0,
+			ControllerInterface_Serial,
 			ControllerInterface_Hid
 		};
 

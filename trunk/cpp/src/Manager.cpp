@@ -523,6 +523,39 @@ void Manager::LogDriverStatistics
 }
 
 //-----------------------------------------------------------------------------
+// <Manager::GetControllerInterfaceType>
+// Retrieve controller interface type
+//-----------------------------------------------------------------------------
+Driver::ControllerInterface Manager::GetControllerInterfaceType
+(
+	uint32 const _homeId
+)
+{
+	Driver::ControllerInterface ifType = Driver::ControllerInterface_Unknown;
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		ifType = driver->GetControllerInterfaceType();
+	}
+	return ifType;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::GetControllerPath>
+// Retrieve controller interface path
+//-----------------------------------------------------------------------------
+string Manager::GetControllerPath
+(
+	uint32 const _homeId
+)
+{
+	string path = "";
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		path = driver->GetControllerPath();
+	}
+	return path;
+}
+//-----------------------------------------------------------------------------
 //	Polling Z-Wave values
 //-----------------------------------------------------------------------------
 				  		
