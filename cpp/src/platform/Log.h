@@ -48,6 +48,7 @@ namespace OpenZWave
 		LogLevel_Detail,	/**< Detailed information on the progress of each message */
 		LogLevel_Debug,		/**< Very detailed information on progress that will create a huge log file quickly
 									But this level (as others) can be queued and sent to the log only on an error or warning */
+		LogLevel_StreamDetail, /**< Will include low-level byte transfers from controller to buffer to application and back */
 		LogLevel_Internal	/**< Used only within the log class (uses existing timestamp, etc.) */
 	};
 

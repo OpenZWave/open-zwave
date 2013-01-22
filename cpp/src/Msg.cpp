@@ -176,6 +176,30 @@ void Msg::Finalize()
 
 
 //-----------------------------------------------------------------------------
+// <Msg::UpdateCallbackId>
+// If this message has a callback ID, increment it and recalculate the checksum
+//-----------------------------------------------------------------------------
+void Msg::UpdateCallbackId()
+{
+	if( m_bCallbackRequired )
+	{
+		Log::Write( LogLevel_Debug, "Updating Callback ID to %.2X", s_nextCallbackId );
+		// update the callback ID
+		m_buffer[m_length-2] = s_nextCallbackId;
+		m_callbackId = s_nextCallbackId++;
+
+		// Recalculate the checksum
+		uint8 checksum = 0xff;
+		for( int32 i=1; i<m_length-1; ++i ) 
+		{
+			checksum ^= m_buffer[i];
+		}
+		m_buffer[m_length-1] = checksum;
+	}
+}
+
+
+//-----------------------------------------------------------------------------
 // <Msg::GetAsString>
 // Create a string containing the raw data
 //-----------------------------------------------------------------------------
