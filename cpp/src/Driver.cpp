@@ -101,6 +101,18 @@ static char const* c_controllerCommandNames[] =
 	"Delete Button"
 };
 
+static char const* c_sendQueueNames[] =
+{
+	"Command",
+	"Controller",
+	"NoOp",
+	"WakeUp",
+	"Send",
+	"Query",
+	"Poll"
+};
+
+
 //-----------------------------------------------------------------------------
 // <Driver::Driver>
 // Constructor
@@ -350,7 +362,7 @@ void Driver::DriverThreadProc
 
 			while( true )
 			{
-				Log::Write( LogLevel_Debug, "Top of DriverThreadProc loop." );
+				Log::Write( LogLevel_StreamDetail, "      Top of DriverThreadProc loop." );
 				uint32 count = 10;
 				int32 timeout = Wait::Timeout_Infinite;
 
@@ -842,7 +854,7 @@ void Driver::SendQueryStageComplete
 				{
 					// If the message is for a sleeping node, we queue it in the node itself.
 					Log::Write( LogLevel_Info, "" );
-					Log::Write( LogLevel_Detail, node->GetNodeId(), "Queuing Wake-Up Command: Query Stage Complete (%s)", node->GetQueryStageName( _stage ).c_str() );
+					Log::Write( LogLevel_Detail, node->GetNodeId(), "Queuing (%s) Query Stage Complete (%s)", c_sendQueueNames[MsgQueue_WakeUp], node->GetQueryStageName( _stage ).c_str() );
 					wakeUp->QueueMsg( item );
 					ReleaseNodes();
 					return;
@@ -851,7 +863,7 @@ void Driver::SendQueryStageComplete
 		}
 
 		// Non-sleeping node
-		Log::Write( LogLevel_Detail, node->GetNodeId(), "Queuing Command: Query Stage Complete (%s)", node->GetQueryStageName( _stage ).c_str() );
+		Log::Write( LogLevel_Detail, node->GetNodeId(), "Queuing (%s) Query Stage Complete (%s)", c_sendQueueNames[MsgQueue_Query], node->GetQueryStageName( _stage ).c_str() );
 		m_sendMutex->Lock();
 		m_msgQueue[MsgQueue_Query].push_back( item );
 		m_queueEvent[MsgQueue_Query]->Set();
@@ -918,7 +930,7 @@ void Driver::SendMsg
 					// Handle saving multi-step controller commands
 					if( m_currentControllerCommand != NULL )
 					{
-						Log::Write( LogLevel_Detail, GetNodeNumber( _msg ), "Queuing Wake-Up Controller Command: %s", c_controllerCommandNames[m_currentControllerCommand->m_controllerCommand] );
+						Log::Write( LogLevel_Detail, GetNodeNumber( _msg ), "Queuing (%s) %s", c_sendQueueNames[MsgQueue_Controller], c_controllerCommandNames[m_currentControllerCommand->m_controllerCommand] );
 						delete _msg;
 						item.m_command = MsgQueueCmd_Controller;
 						item.m_cci = new ControllerCommandItem( *m_currentControllerCommand );
@@ -927,7 +939,7 @@ void Driver::SendMsg
 					}
 					else
 					{
-						Log::Write( LogLevel_Detail, GetNodeNumber( _msg ), "Queuing Wake-Up Command: %s", _msg->GetAsString().c_str() );
+						Log::Write( LogLevel_Detail, GetNodeNumber( _msg ), "Queuing (%s) %s", c_sendQueueNames[MsgQueue_WakeUp], _msg->GetAsString().c_str() );
 					}
 					wakeUp->QueueMsg( item );
 					ReleaseNodes();
@@ -939,7 +951,7 @@ void Driver::SendMsg
 		ReleaseNodes();
 	}
 
-	Log::Write( LogLevel_Detail, GetNodeNumber( _msg ), "Queuing command: %s", _msg->GetAsString().c_str() );
+	Log::Write( LogLevel_Detail, GetNodeNumber( _msg ), "Queuing (%s) %s", c_sendQueueNames[_queue], _msg->GetAsString().c_str() );
 	m_sendMutex->Lock();
 	m_msgQueue[_queue].push_back( item );
 	m_queueEvent[_queue]->Set();
@@ -963,6 +975,7 @@ bool Driver::WriteNextMsg
 	{
 		// Send a message
 		m_currentMsg = item.m_msg;
+		m_currentMsgQueueSource = _queue;
 		m_msgQueue[_queue].pop_front();
 		if( m_msgQueue[_queue].empty() )
 		{
@@ -1091,6 +1104,12 @@ bool Driver::WriteMsg
 		return false;
 	}
 
+	if( attempts != 0)
+	{
+		// this is not the first attempt, so increment the callback id before sending
+		m_currentMsg->UpdateCallbackId();
+	}
+
 	m_currentMsg->SetSendAttempts( ++attempts );
 	m_expectedCallbackId = m_currentMsg->GetCallbackId();
 	m_expectedCommandClassId = m_currentMsg->GetExpectedCommandClassId();
@@ -1111,7 +1130,7 @@ bool Driver::WriteMsg
 	}
 
 	Log::Write( LogLevel_Detail, "" );
-	Log::Write( LogLevel_Info, nodeId, "Sending command (%sCallback ID=0x%.2x, Expected Reply=0x%.2x) - %s", attemptsstr.c_str(), m_expectedCallbackId, m_expectedReply, m_currentMsg->GetAsString().c_str() );
+	Log::Write( LogLevel_Info, nodeId, "Sending (%s) message (%sCallback ID=0x%.2x, Expected Reply=0x%.2x) - %s", c_sendQueueNames[m_currentMsgQueueSource], attemptsstr.c_str(), m_expectedCallbackId, m_expectedReply, m_currentMsg->GetAsString().c_str() );
 
 	m_controller->Write( m_currentMsg->GetBuffer(), m_currentMsg->GetLength() );
 	m_writeCnt++;
@@ -1597,11 +1616,11 @@ bool Driver::ReadMsg
 			m_waitingForAck = false;
 			if( m_currentMsg == NULL )
 			{
-				Log::Write( LogLevel_Detail, 255, "  ACK received" );
+				Log::Write( LogLevel_StreamDetail, 255, "  ACK received" );
 			}
 			else
 			{
-				Log::Write( LogLevel_Detail, GetNodeNumber( m_currentMsg ), "  ACK received CallbackId 0x%.2x Reply 0x%.2x", m_expectedCallbackId, m_expectedReply );
+				Log::Write( LogLevel_StreamDetail, GetNodeNumber( m_currentMsg ), "  ACK received CallbackId 0x%.2x Reply 0x%.2x", m_expectedCallbackId, m_expectedReply );
 				if( ( 0 == m_expectedCallbackId ) && ( 0 == m_expectedReply ) )
 				{
 					// Remove the message from the queue, now that it has been acknowledged.
@@ -2694,8 +2713,18 @@ void Driver::HandleSendDataRequest
 			else
 			{
 				node->m_lastRequestRTT = -node->m_sentTS.TimeRemaining();
+
+				if( node->m_averageRequestRTT )
+				{
+					// if the average has been established, update by averaging the average and the last RTT
+					node->m_averageRequestRTT = ( node->m_averageRequestRTT + node->m_lastRequestRTT ) >> 1;
+				}
+				else
+				{
+					// if this is the first observed RTT, set the average to this value
+					node->m_averageRequestRTT = node->m_lastRequestRTT;
+				}
 				Log::Write(LogLevel_Info, nodeId, "Request RTT %d Average Request RTT %d", node->m_lastRequestRTT, node->m_averageRequestRTT );
-				node->m_averageRequestRTT = ( node->m_averageRequestRTT + node->m_lastRequestRTT ) >> 1;
 			}
 		}
 
@@ -3165,8 +3194,18 @@ void Driver::HandleApplicationCommandHandlerRequest
 			// Need to confirm this is the correct response to the last sent request.
 			// At least ignore any received messages prior to the send data request.
 			node->m_lastResponseRTT = -node->m_sentTS.TimeRemaining();
+
+			if( node->m_averageResponseRTT )
+			{
+				// if the average has been established, update by averaging the average and the last RTT
+				node->m_averageResponseRTT = ( node->m_averageResponseRTT + node->m_lastResponseRTT ) >> 1;
+			}
+			else
+			{
+				// if this is the first observed RTT, set the average to this value
+				node->m_averageResponseRTT = node->m_lastResponseRTT;
+			}
 			Log::Write(LogLevel_Info, nodeId, "Response RTT %d Average Response RTT %d", node->m_lastResponseRTT, node->m_averageResponseRTT );
-			node->m_averageResponseRTT = ( node->m_averageResponseRTT + node->m_lastResponseRTT ) >> 1;
 		}
 		else
 		{
@@ -3901,8 +3940,9 @@ void Driver::PollThreadProc
 					return;
 				}
 				loopCount++;
-				if( loopCount == 100*10 )		// 10 seconds worth of delay?
+				if( loopCount == 3000*10 )		// 300 seconds worth of delay?  Something unusual is going on
 				{
+					Log::Write( LogLevel_Warning, "Poll queue hasn't been able to execute for 300 secs or more" );
 					Log::QueueDump();
 //					assert( 0 );
 				}
@@ -4593,7 +4633,7 @@ bool Driver::BeginControllerCommand
 		return false;
 	}
 
-	Log::Write( LogLevel_Detail, _nodeId, "Queuing Controller Command: %s", c_controllerCommandNames[_command] );
+	Log::Write( LogLevel_Detail, _nodeId, "Queuing (%s) %s", c_sendQueueNames[MsgQueue_Controller], c_controllerCommandNames[_command] );
 	cci = new ControllerCommandItem();
 	cci->m_controllerCommand = _command;
 	cci->m_controllerCallback = _callback;

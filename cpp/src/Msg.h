@@ -55,11 +55,52 @@ namespace OpenZWave
 
 		void Append( uint8 const _data );
 		void Finalize();
-
+		void UpdateCallbackId();
+	
+		/**
+		 * \brief Identifies the Node ID of the "target" node (if any) for this function.
+		 * \return Node ID of the target.
+		 */
 		uint8 GetTargetNodeId()const{ return m_targetNodeId; }
+
+		/**
+		 * \brief Identifies the Callback ID (if any) for this message.  Callback ID is a value (OpenZWave uses sequential IDs) that
+		 * helps the application associate message responses with the original message request.
+		 * \return Callback ID for this message.
+		 */
 		uint8 GetCallbackId()const{ return m_callbackId; }
+
+		/**
+		 * \brief Identifies the expected reply type (if any) for this message. The expected reply is a function code...one
+		 * of the FUNC_ID... values defined in Defs.h.  Many Z-Wave functions generate responses with the same function code
+		 * (for example, a FUNC_ID_ZW_GET_VERSION message generates a FUNC_ID_ZW_GET_VERSION response.  But other functions
+		 * generate a different response. FUNC_ID_ZW_SEND_DATA triggers several responses, but ultimately, a "Get" sent with
+		 * this function should result in a FUNC_ID_APPLICATION_COMMAND_HANDLER response.
+		 * \return Expected reply (function code) for this message.
+		 */
 		uint8 GetExpectedReply()const{ return m_expectedReply; }
+
+		/**
+		 * \brief Identifies the expected Command Class ID (if any) for this message. 
+		 * \return Expected command class ID for this message.
+		 */
 		uint8 GetExpectedCommandClassId()const{ return m_expectedCommandClassId; }
+
+		/**
+		 * \brief For messages that request a Report for a specified command class, identifies the expected Instance
+		 * for the variable being obtained in the report. 
+		 * \return Expected Instance value for this message.
+		 */
+		uint8 GetExpectedInstance()const{ return m_instance; }
+
+		/**
+		 * \brief For messages that request a Report for a specified command class, identifies the expected Index
+		 * for the variable being obtained in the report. 
+		 * \return Expected Index value for this message.
+		 */
+//		uint8 GetExpectedIndex()const{ return m_expectedIndex; }
+
+
 		uint32 GetLength()const{ return m_length; }
 		uint8* GetBuffer(){ return m_buffer; }
 		string GetAsString();

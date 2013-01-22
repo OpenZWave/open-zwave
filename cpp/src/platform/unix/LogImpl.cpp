@@ -246,7 +246,7 @@ string LogImpl::GetTimeStampString
 
 	// create a time stamp string for the log message
 	char buf[100];
-	snprintf( buf, sizeof(buf), "%04d-%02d-%02d %02d:%02d:%02d:%03d ", 
+	snprintf( buf, sizeof(buf), "%04d-%02d-%02d %02d:%02d:%02d.%03d ", 
 		tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday,
 		  tm->tm_hour, tm->tm_min, tm->tm_sec, tv.tv_usec / 1000 );
 	string str = buf;
