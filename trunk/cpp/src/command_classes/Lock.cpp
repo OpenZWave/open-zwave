@@ -132,7 +132,7 @@ bool Lock::SetValue
 		msg->Append( 3 );
 		msg->Append( GetCommandClassId() );
 		msg->Append( LockCmd_Set );
-		msg->Append( value->GetValue() ? 0xff:0x00 );
+		msg->Append( value->GetValue() ? 0x01:0x00 );
 		msg->Append( GetDriver()->GetTransmitOptions() );
 		GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 		return true;

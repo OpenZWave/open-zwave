@@ -170,7 +170,7 @@ uint32 SerialController::Write
 		return 0;
 	}
 
-	Log::Write( LogLevel_Debug, "      SerialController::Write (sent to controller)" );
+	Log::Write( LogLevel_StreamDetail, "      SerialController::Write (sent to controller)" );
 	LogData(_buffer, _length, "      Write: ");
 
 	return( m_pImpl->Write( _buffer, _length ) );

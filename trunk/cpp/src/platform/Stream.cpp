@@ -117,8 +117,7 @@ bool Stream::Get
 		m_tail += _size;
 	}
 
-	Log::Write( LogLevel_Debug, "      Stream::Get (provided to application)" );
-	LogData( _buffer, _size, "      Get: ");
+	LogData( _buffer, _size, "      Read (buffer->application): ");
 
 	m_dataSize -= _size;
 	m_mutex->Unlock();
@@ -143,7 +142,6 @@ bool Stream::Put
 	}
 
 	m_mutex->Lock();
-	Log::Write( LogLevel_Debug, "      Stream::Put (received from controller)" );
 	if( (m_head + _size) > m_bufferSize )
 	{
 		// We will have to wrap around
@@ -153,15 +151,15 @@ bool Stream::Put
 		memcpy( &m_buffer[m_head], _buffer, block1 );
 		memcpy( m_buffer, &_buffer[block1], block2 );
 		m_head = block2;
-		LogData( m_buffer + m_head - block1, block1, "      Put: ");
-		LogData( m_buffer, block2, "      Put: ");
+		LogData( m_buffer + m_head - block1, block1, "      Read (controller->buffer):  ");
+		LogData( m_buffer, block2, "      Read (controller->buffer):  ");
 	}
 	else
 	{
 		// There is enough space before we reach the end of the buffer
 		memcpy( &m_buffer[m_head], _buffer, _size );
 		m_head += _size;
-		LogData(m_buffer+m_head-_size, _size, "      Put: ");
+		LogData(m_buffer+m_head-_size, _size, "      Read (controller->buffer):  ");
 	}
 
 	m_dataSize += _size;
@@ -225,5 +223,5 @@ void Stream::LogData
 		snprintf( byteStr, sizeof(byteStr), "0x%.2x", _buffer[i] );
 		str += byteStr;
 	}
-	Log::Write( LogLevel_Debug, "%s%s", _function.c_str(), str.c_str() );
+	Log::Write( LogLevel_StreamDetail, "%s%s", _function.c_str(), str.c_str() );
 }

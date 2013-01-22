@@ -691,6 +691,7 @@ namespace OpenZWave
 		Event*					m_queueEvent[MsgQueue_Count];				// Events for each queue, which are signalled when the queue is not empty
 		Mutex*					m_sendMutex;						// Serialize access to the queues
 		Msg*					m_currentMsg;
+		MsgQueue				m_currentMsgQueueSource;			// identifies which queue held m_currentMsg
 		TimeStamp				m_resendTimeStamp;
 
 	//-----------------------------------------------------------------------------
