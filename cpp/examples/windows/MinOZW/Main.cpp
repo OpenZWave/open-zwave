@@ -215,6 +215,7 @@ void OnNotification
 
 		case Notification::Type_AwakeNodesQueried:
 		case Notification::Type_AllNodesQueried:
+		case Notification::Type_AllNodesQueriedSomeDead:
 		{
 			g_nodesQueried = true;
 			break;
