@@ -219,6 +219,7 @@ void OnNotification
 
 		case Notification::Type_AwakeNodesQueried:
 		case Notification::Type_AllNodesQueried:
+		case Notification::Type_AllNodesQueriedSomeDead:
 		{
 			pthread_cond_broadcast(&initCond);
 			break;
