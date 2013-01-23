@@ -306,7 +306,7 @@ bool ThermostatMode::SetValue
 	if( ValueID::ValueType_List == _value.GetID().GetType() )
 	{
 		ValueList const* value = static_cast<ValueList const*>(&_value);
-		uint8 state = (uint8)value->GetNewItem().m_value;
+		uint8 state = (uint8)value->GetItem().m_value;
 
 		Msg* msg = new Msg( "Set Thermostat Mode", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 		msg->Append( GetNodeId() );
