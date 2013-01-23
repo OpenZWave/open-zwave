@@ -482,19 +482,19 @@ namespace OpenZWave
 		 */
 		enum ControllerError
 		{
-		  ControllerError_None = 0,
-		  ControllerError_ButtonNotFound,				/**< Button */
-		  ControllerError_NodeNotFound,					/**< Button */
-		  ControllerError_NotBridge,					/**< Button */
-		  ControllerError_NotSUC,					/**< CreateNewPrimary */
-		  ControllerError_NotSecondary,					/**< CreateNewPrimary */
-		  ControllerError_NotPrimary,					/**< RemoveFailedNode, AddNodeToNetwork */
-		  ControllerError_IsPrimary,					/**< ReceiveConfiguration */
-		  ControllerError_NotFound,					/**< RemoveFailedNode */
-		  ControllerError_Busy,						/**< RemoveFailedNode, RequestNetworkUpdate */
-		  ControllerError_Failed,					/**< RemoveFailedNode, RequestNetworkUpdate */
-		  ControllerError_Disabled,					/**< RequestNetworkUpdate error */
-		  ControllerError_Overflow					/**< RequestNetworkUpdate error */
+			ControllerError_None = 0,
+			ControllerError_ButtonNotFound,					/**< Button */
+			ControllerError_NodeNotFound,					/**< Button */
+			ControllerError_NotBridge,					/**< Button */
+			ControllerError_NotSUC,						/**< CreateNewPrimary */
+			ControllerError_NotSecondary,					/**< CreateNewPrimary */
+			ControllerError_NotPrimary,					/**< RemoveFailedNode, AddNodeToNetwork */
+			ControllerError_IsPrimary,					/**< ReceiveConfiguration */
+			ControllerError_NotFound,					/**< RemoveFailedNode */
+			ControllerError_Busy,						/**< RemoveFailedNode, RequestNetworkUpdate */
+			ControllerError_Failed,						/**< RemoveFailedNode, RequestNetworkUpdate */
+			ControllerError_Disabled,					/**< RequestNetworkUpdate error */
+			ControllerError_Overflow					/**< RequestNetworkUpdate error */
 		};
 
 		typedef void (*pfnControllerCallback_t)( ControllerState _state, ControllerError _err, void* _context );

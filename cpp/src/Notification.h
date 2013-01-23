@@ -87,6 +87,7 @@ namespace OpenZWave
 			Type_EssentialNodeQueriesComplete,			/**< The queries on a node that are essential to its operation have been completed. The node can now handle incoming messages. */
 			Type_NodeQueriesComplete,				/**< All the initialisation queries on a node have been completed. */
 			Type_AwakeNodesQueried,					/**< All awake nodes have been queried, so client application can expected complete data for these nodes. */
+			Type_AllNodesQueriedSomeDead,				/**< All nodes have been queried but some dead nodes found. */
 			Type_AllNodesQueried,					/**< All nodes have been queried, so client application can expected complete data. */
 			Type_Notification					/**< An error has occured that we need to report. */
 		};
