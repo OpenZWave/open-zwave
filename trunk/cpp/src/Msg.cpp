@@ -184,7 +184,6 @@ void Msg::UpdateCallbackId()
 {
 	if( m_bCallbackRequired )
 	{
-		Log::Write( LogLevel_Debug, "Updating Callback ID to %.2X", s_nextCallbackId );
 		// update the callback ID
 		m_buffer[m_length-2] = s_nextCallbackId;
 		m_callbackId = s_nextCallbackId++;
