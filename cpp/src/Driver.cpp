@@ -2933,9 +2933,9 @@ void Driver::HandleRemoveNodeFromNetworkRequest
 		}
 		case REMOVE_NODE_STATUS_DONE:
 		{
+			Log::Write( LogLevel_Info, nodeId, "REMOVE_NODE_STATUS_DONE" );
 			if( !m_currentControllerCommand->m_controllerCommandDone )
 			{
-				Log::Write( LogLevel_Info, nodeId, "REMOVE_NODE_STATUS_DONE" );
 
 				// Remove Node Stop calls back through here so make sure
 				// we do't do it again.
@@ -2961,7 +2961,6 @@ void Driver::HandleRemoveNodeFromNetworkRequest
 					QueueNotification( notification );
 				}
 			}
-
 			return;
 		}
 		case REMOVE_NODE_STATUS_FAILED:
