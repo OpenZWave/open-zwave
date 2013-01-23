@@ -151,6 +151,7 @@ Driver::Driver
 	m_expectedNodeId( 0 ),
 	m_pollThread( new Thread( "poll" ) ),
 	m_pollMutex( new Mutex() ),
+	m_pollInterval( 0 ),
 	m_bIntervalBetweenPolls( false ),				// if set to true (via SetPollInterval), the pollInterval will be interspersed between each poll (so a much smaller m_pollInterval like 100, 500, or 1,000 may be appropriate)
 	m_currentControllerCommand( NULL ),
 	m_SUCNodeId( 0 ),
@@ -252,12 +253,6 @@ Driver::~Driver
 	if( m_currentMsg != NULL )
 	{
 		RemoveCurrentMsg();
-	}
-
-	if( m_currentControllerCommand != NULL )
-	{
-		delete m_currentControllerCommand;
-		m_currentControllerCommand = NULL;
 	}
 
 	// Clear the node data
@@ -1395,6 +1390,7 @@ void Driver::CheckCompletedNodeQueries
 	{
 		bool all = true;
 		bool sleepingOnly = true;
+		bool deadFound = false;
 
 		LockNodes();
 		for( int i=0; i<256; ++i )
@@ -1403,6 +1399,11 @@ void Driver::CheckCompletedNodeQueries
 			{
 				if( m_nodes[i]->GetCurrentQueryStage() != Node::QueryStage_Complete )
 				{
+					if ( !m_nodes[i]->IsNodeAlive() )
+					{
+						deadFound = true;
+						continue;
+					}
 					all = false;
 					if( m_nodes[i]->IsListeningDevice() )
 					{
@@ -1415,11 +1416,22 @@ void Driver::CheckCompletedNodeQueries
 
 		if( all )
 		{
-			// no sleeping nodes, no more nodes in the queue, so...All done
-			Log::Write( LogLevel_Info, "         Node query processing complete." );
-			Notification* notification = new Notification( Notification::Type_AllNodesQueried );
-			notification->SetHomeAndNodeIds( m_homeId, 0xff );
-			QueueNotification( notification );
+			if( deadFound )
+			{
+				// only dead nodes left to query
+				Log::Write( LogLevel_Info, "         Node query processing complete except for dead nodes." );
+				Notification* notification = new Notification( Notification::Type_AllNodesQueriedSomeDead );
+				notification->SetHomeAndNodeIds( m_homeId, 0xff );
+				QueueNotification( notification );
+			}
+			else
+			{
+				// no sleeping nodes, no dead nodes and no more nodes in the queue, so...All done
+				Log::Write( LogLevel_Info, "         Node query processing complete." );
+				Notification* notification = new Notification( Notification::Type_AllNodesQueried );
+				notification->SetHomeAndNodeIds( m_homeId, 0xff );
+				QueueNotification( notification );
+			}
 			m_awakeNodesQueried = true;
 			m_allNodesQueried = true;
 		}
@@ -2200,8 +2212,9 @@ void Driver::HandleGetSerialAPICapabilitiesResponse
 	Msg* msg = new Msg( "FUNC_ID_SERIAL_API_APPL_NODE_INFORMATION", 0xff, REQUEST, FUNC_ID_SERIAL_API_APPL_NODE_INFORMATION, false, false );
 	msg->Append( APPLICATION_NODEINFO_LISTENING );
 	msg->Append( 0x02 );			// Generic Static Controller
-	msg->Append( 0x00 );
-	msg->Append( 0x00 );
+	msg->Append( 0x01 );			// Specific Static PC Controller
+	msg->Append( 0x01 );
+	msg->Append( 0x2b );			// Scene Activation
 	SendMsg( msg, MsgQueue_Command );
 }
 
@@ -2920,31 +2933,36 @@ void Driver::HandleRemoveNodeFromNetworkRequest
 		}
 		case REMOVE_NODE_STATUS_DONE:
 		{
-			Log::Write( LogLevel_Info, nodeId, "REMOVE_NODE_STATUS_DONE" );
-
-			AddNodeStop( FUNC_ID_ZW_REMOVE_NODE_FROM_NETWORK );
-			if ( m_currentControllerCommand->m_controllerCommandNode == 0 ) // never received "removing" update
+			if( !m_currentControllerCommand->m_controllerCommandDone )
 			{
-				if ( _data[4] != 0 ) // but message has the clue
+				Log::Write( LogLevel_Info, nodeId, "REMOVE_NODE_STATUS_DONE" );
+
+				// Remove Node Stop calls back through here so make sure
+				// we do't do it again.
+				UpdateControllerState( ControllerState_Completed );
+				AddNodeStop( FUNC_ID_ZW_REMOVE_NODE_FROM_NETWORK );
+				if ( m_currentControllerCommand->m_controllerCommandNode == 0 ) // never received "removing" update
 				{
-					m_currentControllerCommand->m_controllerCommandNode = _data[4];
+					if ( _data[4] != 0 ) // but message has the clue
+					{
+						m_currentControllerCommand->m_controllerCommandNode = _data[4];
+					}
+				}
+
+				if ( m_currentControllerCommand->m_controllerCommandNode != 0 && m_currentControllerCommand->m_controllerCommandNode != 0xff )
+				{
+					LockNodes();
+					delete m_nodes[m_currentControllerCommand->m_controllerCommandNode];
+					m_nodes[m_currentControllerCommand->m_controllerCommandNode] = NULL;
+					ReleaseNodes();
+
+					Notification* notification = new Notification( Notification::Type_NodeRemoved );
+					notification->SetHomeAndNodeIds( m_homeId, m_currentControllerCommand->m_controllerCommandNode );
+					QueueNotification( notification );
 				}
 			}
 
-			if ( m_currentControllerCommand->m_controllerCommandNode != 0 && m_currentControllerCommand->m_controllerCommandNode != 0xff )
-			{
-				LockNodes();
-				delete m_nodes[m_currentControllerCommand->m_controllerCommandNode];
-				m_nodes[m_currentControllerCommand->m_controllerCommandNode] = NULL;
-				ReleaseNodes();
-
-				Notification* notification = new Notification( Notification::Type_NodeRemoved );
-				notification->SetHomeAndNodeIds( m_homeId, m_currentControllerCommand->m_controllerCommandNode );
-				QueueNotification( notification );
-			}
-
-			state = ControllerState_Completed;
-			break;
+			return;
 		}
 		case REMOVE_NODE_STATUS_FAILED:
 		{

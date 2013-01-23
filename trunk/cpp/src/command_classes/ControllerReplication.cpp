@@ -148,7 +148,7 @@ bool ControllerReplication::SetValue
 		{
 			if( ValueList* value = static_cast<ValueList*>( GetValue( instance, ControllerReplicationIndex_Function ) ) )
 			{
-				ValueList::Item const& item = (static_cast<ValueList const*>( &_value))->GetNewItem();
+				ValueList::Item const& item = (static_cast<ValueList const*>( &_value))->GetItem();
 				value->OnValueRefreshed( item.m_value );
 				value->Release();
 				res = true;

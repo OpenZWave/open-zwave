@@ -210,6 +210,8 @@ void Node::AdvanceQueries
 	// Each stage must generate all the messages for its particular	stage as
 	// assumptions are made in later code (RemoveMsg) that this is the case. This means
 	// each stage is only visited once.
+
+	bool addQSC = false;			// We only want to add a query stage complete if we did some work.
 	Log::Write( LogLevel_Detail, m_nodeId, "AdvanceQueries queryPending=%d queryRetries=%d queryStage=%s live=%d", m_queryPending, m_queryRetries, c_queryStageNames[m_queryStage], m_nodeAlive );
 	while( !m_queryPending && m_nodeAlive )
 	{
@@ -232,6 +234,7 @@ void Node::AdvanceQueries
 					msg->Append( m_nodeId );
 					GetDriver()->SendMsg( msg, Driver::MsgQueue_Query );
 					m_queryPending = true;
+					addQSC = true;
 				}
 				else
 				{
@@ -254,6 +257,7 @@ void Node::AdvanceQueries
 				{
 					noop->Set( true );
 				      	m_queryPending = true;
+					addQSC = true;
 				}
 				else
 				{
@@ -278,6 +282,7 @@ void Node::AdvanceQueries
 					// start the process of requesting node state from this sleeping device
 					wakeUp->Init();
 					m_queryPending = true;
+					addQSC = true;
 				}
 				else
 				{
@@ -309,6 +314,7 @@ void Node::AdvanceQueries
 					if( cc  )
 					{
 						m_queryPending = cc->RequestState( CommandClass::RequestFlag_Static, 1, Driver::MsgQueue_Query );
+						addQSC = m_queryPending;
 					}
 					if( !m_queryPending )
 					{
@@ -328,6 +334,7 @@ void Node::AdvanceQueries
 					msg->Append( m_nodeId );
 					GetDriver()->SendMsg( msg, Driver::MsgQueue_Query );
 					m_queryPending = true;
+					addQSC = true;
 				}
 				else
 				{
@@ -349,6 +356,7 @@ void Node::AdvanceQueries
 					if( cc  )
 					{
 						m_queryPending = cc->RequestState( CommandClass::RequestFlag_Static, 1, Driver::MsgQueue_Query );
+						addQSC = m_queryPending;
 					}
 					if( !m_queryPending )
 					{
@@ -385,6 +393,7 @@ void Node::AdvanceQueries
 							m_queryPending |= vcc->RequestCommandClassVersion( it->second );
 						}
 					}
+					addQSC = m_queryPending;
 				}
 				// advance to Instances stage when finished
 				if( !m_queryPending )
@@ -402,6 +411,7 @@ void Node::AdvanceQueries
 				if( micc )
 				{
 					m_queryPending = micc->RequestInstances();
+					addQSC = m_queryPending;
 				}
 
 				// when done, advance to the Static stage
@@ -429,6 +439,7 @@ void Node::AdvanceQueries
 						m_queryPending |= it->second->RequestStateForAllInstances( CommandClass::RequestFlag_Static, Driver::MsgQueue_Query );
 					}
 				}
+				addQSC = m_queryPending;
 
 				if( !m_queryPending )
 				{
@@ -447,6 +458,7 @@ void Node::AdvanceQueries
 				{
 					acc->RequestAllGroups( 0 );
 					m_queryPending = true;
+					addQSC = true;
 				}
 				else
 				{
@@ -462,6 +474,7 @@ void Node::AdvanceQueries
 				Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_Neighbors" );
 				GetDriver()->RequestNodeNeighbors( m_nodeId, 0 );
 				m_queryPending = true;
+				addQSC = true;
 				break;
 			}
 			case QueryStage_Session:
@@ -476,6 +489,7 @@ void Node::AdvanceQueries
 						m_queryPending |= it->second->RequestStateForAllInstances( CommandClass::RequestFlag_Session, Driver::MsgQueue_Query );
 					}
 				}
+				addQSC = m_queryPending;
 				if( !m_queryPending )
 				{
 					m_queryStage = QueryStage_Dynamic;
@@ -489,6 +503,7 @@ void Node::AdvanceQueries
 				// Examples include on/off state, heating mode, temperature, etc.
 				Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_Dynamic" );
 				m_queryPending = RequestDynamicValues();
+				addQSC = m_queryPending;
 
 				if( !m_queryPending )
 				{
@@ -506,6 +521,7 @@ void Node::AdvanceQueries
 					if( RequestAllConfigParams( 0 ) )
 					{
 						m_queryPending = true;
+						addQSC = true;
 					}
 					m_queryConfiguration = false;
 				}
@@ -535,7 +551,7 @@ void Node::AdvanceQueries
 		}
 	}
 
-	if( m_nodeAlive )
+	if( addQSC && m_nodeAlive )
 	{
 		// Add a marker to the query queue so this advance method
 		// gets called again once this stage has completed.
@@ -587,6 +603,7 @@ void Node::QueryStageRetry
 
 	if( _maxAttempts && ( ++m_queryRetries >= _maxAttempts ) )
 	{
+		m_queryRetries = 0;
 		// If we are probing and no response, assume dead node. Sleeping nodes won't go through here/
 		if( m_queryStage == QueryStage_Probe )
 		{
