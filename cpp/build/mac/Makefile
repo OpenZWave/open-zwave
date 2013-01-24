@@ -90,7 +90,7 @@ $(LIBDIR)/libopenzwave.a:	$(patsubst %.cpp,%.o,$(tinyxml)) \
 			$(patsubst %.cpp,%.o,$(pform)) \
 			$(patsubst %.cpp,%.o,$(indep)) vers.o
 	rm -f $@
-	$(AR) $@ $?
+	$(AR) $@ *.o
 	$(RANLIB) $@
 
 $(LIBDIR)/libopenzwave.so:	$(patsubst %.cpp,%.o,$(tinyxml)) \

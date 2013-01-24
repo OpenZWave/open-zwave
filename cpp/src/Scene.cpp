@@ -53,7 +53,8 @@ Scene::Scene
 ( 
 	uint8 const _sceneId
 ):
-	m_sceneId( _sceneId )
+	m_sceneId( _sceneId ),
+	m_label( "" )
 {
 	s_scenes[_sceneId] = this;
 	s_sceneCnt++;
@@ -69,7 +70,9 @@ Scene::~Scene
 {
 	while( !m_values.empty() )
 	{
-		delete *m_values.begin();
+		SceneStorage* ss = m_values.back();
+		m_values.pop_back();
+		delete ss;
 	}
 
 	s_sceneCnt--;

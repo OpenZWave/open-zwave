@@ -66,6 +66,7 @@ WakeUp::WakeUp
 	m_pollRequired( false ),
 	m_notification( false )
 {
+	SetStaticRequest( StaticRequest_Values );
 }
 
 //-----------------------------------------------------------------------------
@@ -120,16 +121,24 @@ bool WakeUp::RequestState
 	Driver::MsgQueue const _queue
 )
 {
+	bool requests = false;
+	if( ( _requestFlags & RequestFlag_Static ) && HasStaticRequest( StaticRequest_Values ) )
+	{
+		if( GetVersion() > 1 )
+		{
+			requests |= RequestValue( _requestFlags, WakeUpCmd_IntervalCapabilitiesGet, _instance, _queue );
+		}
+	}
 	if( _requestFlags & RequestFlag_Session )
 	{
 		Node* node = GetNodeUnsafe();
 		if( node != NULL && !node->IsController() )
 		{
-			return RequestValue( _requestFlags, 0, _instance, _queue );
+			requests |= RequestValue( _requestFlags, 0, _instance, _queue );
 		}
 	}
 
-	return false;
+	return requests;
 }
 
 //-----------------------------------------------------------------------------
@@ -139,7 +148,7 @@ bool WakeUp::RequestState
 bool WakeUp::RequestValue
 (
 	uint32 const _requestFlags,
-	uint8 const _dummy1,	// = 0
+	uint8 const _getTypeEnum,
 	uint8 const _instance,
 	Driver::MsgQueue const _queue
 )
@@ -150,16 +159,7 @@ bool WakeUp::RequestValue
 		return false;
 	}
 
-	// We won't get a response until the device next wakes up
-	Msg* msg = new Msg( "WakeUpCmd_IntervalGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-	msg->Append( GetNodeId() );
-	msg->Append( 2 );
-	msg->Append( GetCommandClassId() );
-	msg->Append( WakeUpCmd_IntervalGet );
-	msg->Append( GetDriver()->GetTransmitOptions() );
-	GetDriver()->SendMsg( msg, _queue );
-
-	if( GetVersion() > 1 )
+	if( _getTypeEnum == WakeUpCmd_IntervalCapabilitiesGet )
 	{
 		Msg* msg = new Msg( "WakeUpCmd_IntervalCapabilityGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 		msg->Append( GetNodeId() );
@@ -170,7 +170,21 @@ bool WakeUp::RequestValue
 		GetDriver()->SendMsg( msg, _queue );
 	}
 
-	return true;
+
+	if( _getTypeEnum == 0 )
+	{
+		// We won't get a response until the device next wakes up
+		Msg* msg = new Msg( "WakeUpCmd_IntervalGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		msg->Append( GetNodeId() );
+		msg->Append( 2 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( WakeUpCmd_IntervalGet );
+		msg->Append( GetDriver()->GetTransmitOptions() );
+		GetDriver()->SendMsg( msg, _queue );
+		return true;
+	}
+
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -234,24 +248,26 @@ bool WakeUp::HandleMsg
 		Log::Write( LogLevel_Info, GetNodeId(), "Received Wakeup Interval Capability report from node %d: Min Interval=%d, Max Interval=%d, Default Interval=%d, Interval Step=%d", GetNodeId(), mininterval, maxinterval, definterval, stepinterval );
 		if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, 1 ) ) )
 		{
-			value->Release();
 			value->OnValueRefreshed( (int32)mininterval );
+			value->Release();
 		}
 		if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, 2 ) ) )
 		{
-			value->Release();
 			value->OnValueRefreshed( (int32)maxinterval );
+			value->Release();
 		}
 		if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, 3 ) ) )
 		{
-			value->Release();
 			value->OnValueRefreshed( (int32)definterval );
+			value->Release();
 		}
 		if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, 4 ) ) )
 		{
-			value->Release();
 			value->OnValueRefreshed( (int32)stepinterval );
+			value->Release();
 		}
+		ClearStaticRequest( StaticRequest_Values );
+		return true;
 	}
 
 	return false;

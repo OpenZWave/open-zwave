@@ -212,7 +212,6 @@ void Node::AdvanceQueries
 	// each stage is only visited once.
 
 	bool addQSC = false;			// We only want to add a query stage complete if we did some work.
-	Log::Write( LogLevel_Detail, m_nodeId, "AdvanceQueries queryPending=%d queryRetries=%d queryStage=%s live=%d", m_queryPending, m_queryRetries, c_queryStageNames[m_queryStage], m_nodeAlive );
 	while( !m_queryPending && m_nodeAlive )
 	{
 		switch( m_queryStage )
