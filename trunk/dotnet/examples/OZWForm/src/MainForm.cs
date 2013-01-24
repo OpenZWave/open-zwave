@@ -349,6 +349,12 @@ namespace OZWForm
 						m_manager.WriteConfig(m_notification.GetHomeId());
                         break;
                     }
+                case ZWNotification.Type.AllNodesQueriedSomeDead:
+                    {
+						toolStripStatusLabel1.Text = "Ready:  All nodes queried but some are dead.";
+						m_manager.WriteConfig(m_notification.GetHomeId());
+                        break;
+                    }
                 case ZWNotification.Type.AwakeNodesQueried:
                     {
 						toolStripStatusLabel1.Text = "Ready:  Awake nodes queried (but not some sleeping nodes).";
