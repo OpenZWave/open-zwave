@@ -27,6 +27,7 @@
 
 #include "tinyxml.h"
 #include "CommandClasses.h"
+#include "Basic.h"
 #include "MultiInstance.h"
 #include "Defs.h"
 #include "Msg.h"
@@ -441,6 +442,7 @@ void MultiInstance::HandleMultiChannelCapabilityReport
 
 		// Create internal library instances for each command class in the list
 		// Also set up mapping from intances to endpoints for encapsulation
+		Basic* basic = static_cast<Basic*>( node->GetCommandClass( Basic::StaticGetCommandClassId() ) );
 		if( m_endPointsAreSameClass )				// Create all the same instances here
 		{
 			int len;
@@ -469,6 +471,17 @@ void MultiInstance::HandleMultiChannelCapabilityReport
 						if( m_endPointMap != MultiInstanceMapAll || i != 1 )
 						{
 							cc->SetEndPoint( i, endPoint );
+						}
+						// If we support the BASIC command class and it is mapped to a command class
+						// assigned to this end point, make sure the BASIC command class is also associated
+						// with this end point.
+						if( basic != NULL && basic->GetMapping() == commandClassId )
+						{
+							basic->SetInstance( i );
+							if( m_endPointMap != MultiInstanceMapAll || i != 1 )
+							{
+								basic->SetEndPoint( i, endPoint );
+							}
 						}
 					}
 				}
@@ -507,6 +520,14 @@ void MultiInstance::HandleMultiChannelCapabilityReport
 					}
 					cc->SetInstance( i );
 					cc->SetEndPoint( i, endPoint );
+					// If we support the BASIC command class and it is mapped to a command class
+					// assigned to this end point, make sure the BASIC command class is also associated
+					// with this end point.
+					if( basic != NULL && basic->GetMapping() == commandClassId )
+					{
+						basic->SetInstance( i );
+						basic->SetEndPoint( i, endPoint );
+					}
 				}
 			}
 		}

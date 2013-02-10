@@ -360,7 +360,43 @@ void Scene::RemoveValues
 	}
 	// If the scene is now empty, delete it.
 	if( m_values.empty() )
+	{
 		delete this;
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <Scene::RemoveValues>
+// Remove all ValueIDs from given Home ID and node ID
+//-----------------------------------------------------------------------------
+void Scene::RemoveValues
+(
+	uint32 const _homeId,
+	uint8 const _nodeId
+)
+{
+	for( int i = 1; i < 256; i++ )
+	{
+		Scene *scene = Scene::Get( i );
+		if( scene != NULL )
+		{
+		again:
+			for( vector<SceneStorage*>::iterator it = scene->m_values.begin(); it != scene->m_values.end(); ++it )
+			{
+				if( (*it)->m_id.GetHomeId() == _homeId && (*it)->m_id.GetNodeId() == _nodeId )
+				{
+					delete *it;
+					scene->m_values.erase( it );
+					goto again;
+				}
+			}
+			// If the scene is now empty, delete it.
+			if( scene->m_values.empty() )
+			{
+				delete scene;
+			}
+		}
+	}
 }
 
 //-----------------------------------------------------------------------------

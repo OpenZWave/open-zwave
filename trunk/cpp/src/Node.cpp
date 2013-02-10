@@ -52,6 +52,8 @@
 #include "Version.h"
 #include "SwitchAll.h"
 
+#include "Scene.h"
+
 #include "ValueID.h"
 #include "Value.h"
 #include "ValueBool.h"
@@ -86,6 +88,7 @@ static char const* c_queryStageNames[] =
 	"Versions",
 	"Instances",
 	"Static",
+	"Probe1",
 	"Associations",
 	"Neighbors",
 	"Session",
@@ -145,7 +148,8 @@ Node::Node
 	m_lastResponseRTT( 0 ),
 	m_averageRequestRTT( 0 ),
 	m_averageResponseRTT( 0 ),
-	m_quality( 0 )
+	m_quality( 0 ),
+	m_errors( 0 )
 {
 	memset( m_neighbors, 0, sizeof(m_neighbors) );
 	memset( m_routeNodes, 0, sizeof(m_routeNodes) );
@@ -162,6 +166,18 @@ Node::~Node
 {
 	// Remove any messages from queues
 	GetDriver()->RemoveQueues( m_nodeId );
+
+	// Remove the values from the poll list
+	for( ValueStore::Iterator it = m_values->Begin(); it != m_values->End(); ++it )
+	{
+		ValueID const& valueId = it->second->GetID();
+		if( GetDriver()->isPolled( valueId ) )
+		{
+			GetDriver()->DisablePoll( valueId );
+		}
+	}
+
+	Scene::RemoveValues( m_homeId, m_nodeId );
 
 	// Delete the values
 	delete m_values;
@@ -448,6 +464,28 @@ void Node::AdvanceQueries
 				}
 				break;
 			}
+			case QueryStage_Probe1:
+			{
+				Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_Probe1" );
+				//
+				// Send a NoOperation message to see if the node is awake
+				// and alive. Based on the response or lack of response
+				// will determine next step. Called here when configuration exists.
+				//
+				NoOperation* noop = static_cast<NoOperation*>( GetCommandClass( NoOperation::StaticGetCommandClassId() ) );
+				if( GetDriver()->GetNodeId() != m_nodeId )
+				{
+					noop->Set( true );
+				      	m_queryPending = true;
+					addQSC = true;
+				}
+				else
+				{
+					m_queryStage = QueryStage_Associations;
+					m_queryRetries = 0;
+				}
+				break;
+			}
 			case QueryStage_Associations:
 			{
 				// if this device supports COMMAND_CLASS_ASSOCIATION, determine to which groups this node belong
@@ -578,6 +616,10 @@ void Node::QueryStageComplete
 		// Move to the next stage
 		m_queryPending = false;
 		m_queryStage = (QueryStage)( (uint32)m_queryStage + 1 );
+		if( m_queryStage == QueryStage_Probe1 )
+		{
+			m_queryStage = (QueryStage)( (uint32)m_queryStage + 1 );
+		}
 		m_queryRetries = 0;
 	}
 }
@@ -603,17 +645,14 @@ void Node::QueryStageRetry
 	if( _maxAttempts && ( ++m_queryRetries >= _maxAttempts ) )
 	{
 		m_queryRetries = 0;
+#ifdef notdef
 		// If we are probing and no response, assume dead node. Sleeping nodes won't go through here/
 		if( m_queryStage == QueryStage_Probe )
 		{
-			Log::Write( LogLevel_Error, m_nodeId, "ERROR: node presumed dead" );
-			m_nodeAlive = false;
-			Notification* notification = new Notification( Notification::Type_Notification );
-			notification->SetHomeAndNodeIds( m_homeId, m_nodeId );
-			notification->SetNotification( Notification::Code_Dead );
-			GetDriver()->QueueNotification( notification );
+			SetNodeAlive( false );
 			return;
 		}
+#endif
 		// We've retried too many times.  Move to the next stage.
 		m_queryStage = (Node::QueryStage)( (uint32)(m_queryStage + 1) );
 	}
@@ -1120,11 +1159,7 @@ void Node::UpdateProtocolInfo
 	{
 		// Node doesn't exist if Generic class is zero.
 		Log::Write( LogLevel_Info, m_nodeId, "  Protocol Info for Node %d reports node nonexistent", m_nodeId );
-		m_nodeAlive = false;
-		Notification* notification = new Notification( Notification::Type_Notification );
-		notification->SetHomeAndNodeIds( m_homeId, m_nodeId );
-		notification->SetNotification( Notification::Code_Dead );
-		GetDriver()->QueueNotification( notification );
+		SetNodeAlive( false );
 		return;
 	}
 
@@ -1264,6 +1299,40 @@ void Node::UpdateNodeInfo
 	{
 		wakeUp->SetAwake( true );
 	}
+}
+
+//-----------------------------------------------------------------------------
+// <Node::SetNodeAlive>
+// Track alive state of a node for dead node detection.
+//-----------------------------------------------------------------------------
+void Node::SetNodeAlive
+(
+	bool const _isAlive
+)
+{
+	Notification* notification;
+	if( _isAlive )
+	{
+		Log::Write( LogLevel_Error, m_nodeId, "ERROR: node revived" );
+		m_nodeAlive = true;
+		m_errors = 0;
+		if( m_queryStage != Node::QueryStage_Complete )
+		{
+			m_queryRetries = 0; // restart at last stage
+		}
+		notification = new Notification( Notification::Type_Notification );
+		notification->SetHomeAndNodeIds( m_homeId, m_nodeId );
+		notification->SetNotification( Notification::Code_Alive );
+	}
+	else
+	{
+		Log::Write( LogLevel_Error, m_nodeId, "ERROR: node presumed dead" );
+		m_nodeAlive = false;
+		notification = new Notification( Notification::Type_Notification );
+		notification->SetHomeAndNodeIds( m_homeId, m_nodeId );
+		notification->SetNotification( Notification::Code_Dead );
+	}
+	GetDriver()->QueueNotification( notification );
 }
 
 //-----------------------------------------------------------------------------

@@ -248,6 +248,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\platform\FileOps.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\platform\FileOps.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\platform\HidController.cpp"
 				>
 			</File>
@@ -576,22 +584,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\command_classes\NoOperation.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\command_classes\NoOperation.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\command_classes\UserCode.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\command_classes\UserCode.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\src\command_classes\ClimateControlSchedule.cpp"
 				>
 			</File>
@@ -637,6 +629,14 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\command_classes\ControllerReplication.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\command_classes\CRC16Encap.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\command_classes\CRC16Encap.h"
 				>
 			</File>
 			<File
@@ -736,6 +736,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\command_classes\NoOperation.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\command_classes\NoOperation.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\command_classes\Powerlevel.cpp"
 				>
 			</File>
@@ -760,11 +768,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\command_classes\SceneActivation.h"
+				RelativePath="..\..\..\src\command_classes\SceneActivation.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\command_classes\SceneActivation.cpp"
+				RelativePath="..\..\..\src\command_classes\SceneActivation.h"
 				>
 			</File>
 			<File
@@ -869,6 +877,14 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\command_classes\ThermostatSetpoint.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\command_classes\UserCode.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\command_classes\UserCode.h"
 				>
 			</File>
 			<File
