@@ -3289,7 +3289,9 @@ void Manager::RemoveAllScenes
 	for( int i = 1; i < 256; i++ )
 	{
 		if( _homeId == 0 )	// remove every device from every scene
+		{
 			RemoveScene( i );
+		}
 		else
 		{
 			Scene *scene = Scene::Get( i );

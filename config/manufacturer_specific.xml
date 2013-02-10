@@ -250,6 +250,7 @@
 	<Manufacturer id="001d" name="Leviton">
 		<Product type="0101" id="0206" name="RZP15-1LW Binary Scene Switch"/>
 		<Product type="0201" id="0206" name="RZP03-1LW Binary Scene Switch"/>
+		<Product type="0202" id="030b" name="VRP03-1LW Lamp Module"/>
 		<Product type="0301" id="0206" name="RZS15-1LX Binary Scene Switch"/>
 		<Product type="0301" id="0209" name="VRS15-1LZ Binary Scene Switch"/>
 		<Product type="0401" id="0206" name="RZI10-1LX Multilevel Scene Switch" config="leviton/rzi10.xml"/>
@@ -315,6 +316,7 @@
 	<Manufacturer id="0042" name="Pragmatic Cons">
 	</Manufacturer>
 	<Manufacturer id="0095" name="Qees">
+		<Product type="3101" id="0001" name="RETO Dimmer Plus 2013"/>
 	</Manufacturer>
 	<Manufacturer id="0100" name="Reitz-Group.de">
 	</Manufacturer>

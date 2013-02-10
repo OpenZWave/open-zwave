@@ -575,8 +575,8 @@ namespace OpenZWave
 		enum MsgQueue
 		{
 			MsgQueue_Command = 0,
-			MsgQueue_Controller,
 			MsgQueue_NoOp,
+			MsgQueue_Controller,
 			MsgQueue_WakeUp,
 			MsgQueue_Send,
 			MsgQueue_Query,

@@ -104,7 +104,8 @@ namespace OpenZWave
 			Code_NoOperation,					/**< Report on NoOperation message sent completion  */
 			Code_Awake,						/**< Report when a sleeping node wakes up */
 			Code_Sleep,						/**< Report when a node goes to sleep */
-			Code_Dead						/**< Report when a node is presumed dead */
+			Code_Dead,						/**< Report when a node is presumed dead */
+			Code_Alive						/**< Report when a node is revived */
 		};
 
 		/** 
