@@ -247,7 +247,6 @@ Driver::~Driver
 	m_driverThread->Release();
 
 	m_sendMutex->Release();
-	m_pollMutex->Release();
 
 	m_controller->Close();
 	m_controller->Release();
@@ -271,6 +270,9 @@ Driver::~Driver
 		}
 	}
 	ReleaseNodes();
+
+	// Don't release until all nodes have removed their poll values
+	m_pollMutex->Release();
 
 	// Clear the send Queue
 	for( int32 i=0; i<MsgQueue_Count; ++i )
@@ -872,8 +874,8 @@ void Driver::SendQueryStageComplete
 }
 
 //-----------------------------------------------------------------------------
-// <Driver::RemoveQueryStageComplete>
-// Remove an item from the query queue so current stage will be repeated
+// <Driver::RetryQueryStageComplete>
+// Request the current stage will be repeated
 //-----------------------------------------------------------------------------
 void Driver::RetryQueryStageComplete
 (

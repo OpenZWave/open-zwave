@@ -227,6 +227,7 @@ void Node::AdvanceQueries
 	// assumptions are made in later code (RemoveMsg) that this is the case. This means
 	// each stage is only visited once.
 
+	Log::Write( LogLevel_Detail, m_nodeId, "AdvanceQueries queryPending=%d queryRetries=%d queryStage=%s live=%d", m_queryPending, m_queryRetries, c_queryStageNames[m_queryStage], m_nodeAlive );
 	bool addQSC = false;			// We only want to add a query stage complete if we did some work.
 	while( !m_queryPending && m_nodeAlive )
 	{
@@ -642,21 +643,14 @@ void Node::QueryStageRetry
 		return;
 	}
 
+	m_queryPending = false;
 	if( _maxAttempts && ( ++m_queryRetries >= _maxAttempts ) )
 	{
 		m_queryRetries = 0;
-#ifdef notdef
-		// If we are probing and no response, assume dead node. Sleeping nodes won't go through here/
-		if( m_queryStage == QueryStage_Probe )
-		{
-			SetNodeAlive( false );
-			return;
-		}
-#endif
 		// We've retried too many times.  Move to the next stage.
 		m_queryStage = (Node::QueryStage)( (uint32)(m_queryStage + 1) );
+		return;
 	}
-	m_queryPending = false;
 	// Repeat the current query stage
 	GetDriver()->RetryQueryStageComplete( m_nodeId, m_queryStage );
 }
@@ -769,6 +763,11 @@ void Node::ReadXML
 			if( !strcmp( str, c_queryStageNames[i] ) )
 			{
 				queryStage = (QueryStage)i;
+				if( queryStage == QueryStage_WakeUp )
+				{
+					// Restart probe
+					queryStage = QueryStage_Probe;
+				}
 				break;
 			}
 		}
@@ -1311,6 +1310,7 @@ void Node::SetNodeAlive
 )
 {
 	Notification* notification;
+
 	if( _isAlive )
 	{
 		Log::Write( LogLevel_Error, m_nodeId, "ERROR: node revived" );
@@ -1319,6 +1319,7 @@ void Node::SetNodeAlive
 		if( m_queryStage != Node::QueryStage_Complete )
 		{
 			m_queryRetries = 0; // restart at last stage
+			AdvanceQueries();
 		}
 		notification = new Notification( Notification::Type_Notification );
 		notification->SetHomeAndNodeIds( m_homeId, m_nodeId );
@@ -1328,6 +1329,11 @@ void Node::SetNodeAlive
 	{
 		Log::Write( LogLevel_Error, m_nodeId, "ERROR: node presumed dead" );
 		m_nodeAlive = false;
+		if( m_queryStage != Node::QueryStage_Complete )
+		{
+			// Check whether all nodes are now complete
+			GetDriver()->CheckCompletedNodeQueries();
+		}
 		notification = new Notification( Notification::Type_Notification );
 		notification->SetHomeAndNodeIds( m_homeId, m_nodeId );
 		notification->SetNotification( Notification::Code_Dead );
