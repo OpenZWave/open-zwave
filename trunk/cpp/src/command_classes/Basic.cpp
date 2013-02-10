@@ -315,7 +315,7 @@ bool Basic::SetMapping
 		}
 	}
 
-	if( _doLog )
+	if( m_mapping == 0 && _doLog )
 	{
 		Log::Write( LogLevel_Info, GetNodeId(), "    COMMAND_CLASS_BASIC is not mapped" );
 	}
