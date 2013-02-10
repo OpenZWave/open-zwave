@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\..\src;..\..\..\..\src\value_classes"
+				AdditionalIncludeDirectories="..\..\..\..\src;..\..\..\..\src\value_classes;..\..\..\..\src\platform"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"

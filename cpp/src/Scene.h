@@ -44,6 +44,8 @@ namespace OpenZWave
 	class Scene
 	{
 		friend class Manager;
+		friend class Driver;
+		friend class Node;
 
 	//-----------------------------------------------------------------------------
 	// Construction
@@ -68,6 +70,7 @@ namespace OpenZWave
 		bool AddValue( ValueID const& _valueId, string const& _value );
 		bool RemoveValue( ValueID const& _valueId );
 		void RemoveValues( uint32 const _homeId );
+		static void RemoveValues( uint32 const _homeId, uint8 const _nodeId );
 		int GetValues( vector<ValueID>* o_value );
 		bool GetValue( ValueID const& _valueId, string* o_value );
 		bool SetValue( ValueID const& _valueId, string const& _value );

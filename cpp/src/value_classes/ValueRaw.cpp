@@ -132,6 +132,10 @@ bool ValueRaw::SetFromString
 			value[index] = (uint8)val;
 		}
 		index++;
+		if( ep != NULL && *ep == '\0' )
+		{
+			break;
+		}
 		p = ep + 1;
 	}
 
@@ -183,11 +187,15 @@ void ValueRaw::ReadXML
 				m_value[index] = (uint8)val;
 			}
 			index++;
+			if( ep != NULL && *ep == '\0' )
+			{
+				break;
+			}
 			str = ep + 1;
 		}
 		if( index > m_valueLength )
 		{
-			Log::Write( LogLevel_Info, "Data length mismatch for raw data. Got %d bu expected %d.", index, m_valueLength );
+			Log::Write( LogLevel_Info, "Data length mismatch for raw data. Got %d but expected %d.", index, m_valueLength );
 		}
 	}
 	else

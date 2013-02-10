@@ -73,6 +73,15 @@ void Basic::ReadXML
 {
 	CommandClass::ReadXML( _ccElement );
 
+	int32 intVal;
+	if( TIXML_SUCCESS == _ccElement->QueryIntAttribute( "mapping", &intVal ) )
+	{
+		if( intVal < 256 && intVal != 0 )
+		{
+			SetMapping( (uint8)intVal, false );
+		}
+	}
+
 	char const* str = _ccElement->Attribute("setasreport");
 	if( str )
 	{
@@ -90,6 +99,13 @@ void Basic::WriteXML
 )
 {
 	CommandClass::WriteXML( _ccElement );
+
+	char str[32];
+	if( m_mapping != 0 )
+	{
+		snprintf( str, sizeof(str), "%d", m_mapping );
+		_ccElement->SetAttribute( "mapping", str );
+	}
 
 	if( m_setAsReport )
 	{
@@ -276,7 +292,8 @@ void Basic::Set
 //-----------------------------------------------------------------------------
 bool Basic::SetMapping
 (
-	uint8 const _commandClassId
+	uint8 const _commandClassId,
+	bool const _doLog
 )
 {
 	bool res = false;
@@ -287,7 +304,10 @@ bool Basic::SetMapping
 		{
 			if( CommandClass* cc = node->GetCommandClass( _commandClassId ) )
 			{
-				Log::Write( LogLevel_Info, GetNodeId(), "    COMMAND_CLASS_BASIC will be mapped to %s", cc->GetCommandClassName().c_str() );
+				if( _doLog )
+				{
+					Log::Write( LogLevel_Info, GetNodeId(), "    COMMAND_CLASS_BASIC will be mapped to %s", cc->GetCommandClassName().c_str() );
+				}
 				cc->SetBasicMapped( true );
 				m_mapping = _commandClassId;
 				res = true;
@@ -295,5 +315,9 @@ bool Basic::SetMapping
 		}
 	}
 
+	if( _doLog )
+	{
+		Log::Write( LogLevel_Info, GetNodeId(), "    COMMAND_CLASS_BASIC is not mapped" );
+	}
 	return res;
 }

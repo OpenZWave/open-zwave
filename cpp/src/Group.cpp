@@ -140,11 +140,10 @@ Group::Group
 		associationElement = associationElement->NextSiblingElement();
 	}
 
-	// Group must be added before OnGroupChanged is called so UpdateNodeRoutes can find it
-	if( Node* node = Manager::Get()->GetDriver( m_homeId )->GetNodeUnsafe( _nodeId ) )
-	{
-		node->AddGroup( this );
-	}
+	// Group must be added before OnGroupChanged is called so UpdateNodeRoutes can find it.
+	// Since we do not want to update return routes UpdateNodeRoutes won't find the group
+	// so nothing will go out from here. The not sending of return routes information
+	// only works by a side effect of not finding the group.
 	OnGroupChanged( pending );
 }
 

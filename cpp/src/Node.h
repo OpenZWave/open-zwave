@@ -138,6 +138,7 @@ namespace OpenZWave
 			QueryStage_Versions,					/**< Retrieve version information */
 			QueryStage_Instances,					/**< Retrieve information about multiple command class instances */
 			QueryStage_Static,					/**< Retrieve static information (doesn't change) */
+			QueryStage_Probe1,					/**< Ping a device upon starting with configuration */
 			QueryStage_Associations,				/**< Retrieve information about associations */
 			QueryStage_Neighbors,					/**< Retrieve node neighbor list */
 			QueryStage_Session,					/**< Retrieve session information (changes infrequently) */
@@ -232,6 +233,13 @@ namespace OpenZWave
 		bool NodeInfoReceived()const{ return m_nodeInfoReceived; }
 
 		bool AllQueriesCompleted()const{ return( QueryStage_Complete == m_queryStage ); }
+
+		/**
+		 * Handle dead node detection tracking.
+		 * Use this routine to set state of nodes.
+		 * Tracks state as well as send notifications.
+		 */
+		void SetNodeAlive( bool const _isAlive );
 
 	private:
 		void SetStaticRequests();
@@ -546,6 +554,7 @@ namespace OpenZWave
 		uint32 m_averageResponseRTT;			// Average Reponse round trip time.
 		uint8 m_quality;				// Node quality measure
 		uint8 m_lastReceivedMessage[254];		// Place to hold last received message
+		uint8 m_errors;					// Count errors for dead node detection
 	};
 
 } //namespace OpenZWave

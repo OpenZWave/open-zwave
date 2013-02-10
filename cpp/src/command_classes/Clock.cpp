@@ -65,8 +65,8 @@ static char const* c_dayNames[] =
 };
 
 //-----------------------------------------------------------------------------
-// <Clock::RequestState>												   
-// Request current state from the device									   
+// <Clock::RequestState>
+// Request current state from the device
 //-----------------------------------------------------------------------------
 bool Clock::RequestState
 (
@@ -84,8 +84,8 @@ bool Clock::RequestState
 }
 
 //-----------------------------------------------------------------------------
-// <Clock::RequestValue>												   
-// Request current value from the device									   
+// <Clock::RequestValue>
+// Request current value from the device
 //-----------------------------------------------------------------------------
 bool Clock::RequestValue
 (
@@ -223,5 +223,3 @@ void Clock::CreateVars
 		node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ClockIndex_Minute, "Minute", "", false, false, 0, 0 );
 	}
 }
-
-
