@@ -31,6 +31,7 @@
 #include "Driver.h"
 #include "Node.h"
 #include "Notification.h"
+#include "Options.h"
 #include "Association.h"
 #include "AssociationCommandConfiguration.h"
 
@@ -308,7 +309,12 @@ void Group::OnGroupChanged
 		notification->SetGroupIdx( m_groupIdx );
 		Manager::Get()->GetDriver( m_homeId )->QueueNotification( notification ); 
 		// Update routes on remote node if necessary
-		Manager::Get()->GetDriver( m_homeId )->UpdateNodeRoutes( m_nodeId );
+		bool update = false;
+		Options::Get()->GetOptionAsBool( "PerformReturnRoutes", &update );
+		if( update )
+		{
+			Manager::Get()->GetDriver( m_homeId )->UpdateNodeRoutes( m_nodeId );
+		}
 	}
 }
 

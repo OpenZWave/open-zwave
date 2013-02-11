@@ -647,9 +647,12 @@ void Node::QueryStageRetry
 	if( _maxAttempts && ( ++m_queryRetries >= _maxAttempts ) )
 	{
 		m_queryRetries = 0;
-		// We've retried too many times.  Move to the next stage.
-		m_queryStage = (Node::QueryStage)( (uint32)(m_queryStage + 1) );
-		return;
+		// We've retried too many times. Move to the next stage but only if
+		// we aren't in any of the probe stages.
+		if( m_queryStage != QueryStage_Probe && m_queryStage != QueryStage_Probe1 )
+		{
+			m_queryStage = (Node::QueryStage)( (uint32)(m_queryStage + 1) );
+		}
 	}
 	// Repeat the current query stage
 	GetDriver()->RetryQueryStageComplete( m_nodeId, m_queryStage );
@@ -763,11 +766,6 @@ void Node::ReadXML
 			if( !strcmp( str, c_queryStageNames[i] ) )
 			{
 				queryStage = (QueryStage)i;
-				if( queryStage == QueryStage_WakeUp )
-				{
-					// Restart probe
-					queryStage = QueryStage_Probe;
-				}
 				break;
 			}
 		}

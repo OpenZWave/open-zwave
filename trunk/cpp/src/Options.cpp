@@ -100,6 +100,7 @@ Options* Options::Create
 		s_instance->AddOptionBool(		"IntervalBetweenPolls",		false );					// if false, try to execute the entire poll list within the PollInterval time frame
 																								// if true, wait for PollInterval milliseconds between polls
 		s_instance->AddOptionBool(		"SuppressValueRefresh",		false );					// if true, notifications for refreshed (but unchanged) values will not be sent
+		s_instance->AddOptionBool(		"PerformReturnRoutes",		true );					// if true, return routes will be updated
 	}
 
 	return s_instance;
