@@ -106,7 +106,6 @@ bool SensorBinary::HandleMsg
 			value->OnValueRefreshed( _data[1] != 0 );
 			value->Release();
 		}
-		UpdateBasic( _instance, _data[1] != 0 ? 255 : 0 );
 		return true;
 	}
 
@@ -125,8 +124,9 @@ void SensorBinary::SetValueBasic
 {
 	// Send a request for new value to synchronize it with the BASIC set/report.
 	// In case the device is sleeping, we set the value anyway so the BASIC set/report
-	// stays in sync with it. When the device wakes up, the real requested value
-	// will be retrieved.
+	// stays in sync with it. We must be careful mapping the uint8 BASIC value
+	// into a class specific value.
+	// When the device wakes up, the real requested value will be retrieved.
 	RequestValue( 0, 0, _instance, Driver::MsgQueue_Send );
 	if( Node* node = GetNodeUnsafe() )
 	{

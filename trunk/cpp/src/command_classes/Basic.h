@@ -58,8 +58,6 @@ namespace OpenZWave
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );
 		virtual bool SetValue( Value const& _value );
 
-		virtual void SetValueBasic( uint8 const _instance, uint8 const _level );
-
 		void Set( uint8 const _level );
 
 	protected:
@@ -69,6 +67,7 @@ namespace OpenZWave
 		Basic( uint32 const _homeId, uint8 const _nodeId );
 
 		uint8						m_mapping;
+		bool						m_ignoreMapping;
 		bool						m_setAsReport;
 	};
 

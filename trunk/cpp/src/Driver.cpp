@@ -1087,20 +1087,12 @@ bool Driver::WriteMsg
 			// That's it - already tried to send GetMaxSendAttempt() times.
 			Log::Write( LogLevel_Error, nodeId, "ERROR: Dropping command, expected response not received after %d attempt(s)", m_currentMsg->GetMaxSendAttempts() );
 		}
-		delete m_currentMsg;
-		m_currentMsg = NULL;
-
+		RemoveCurrentMsg();
 		m_dropped++;
 		if( node != NULL )
 		{
 		    	ReleaseNodes();
 		}
-
-		m_expectedCallbackId = 0;
-		m_expectedCommandClassId = 0;
-		m_expectedNodeId = 0;
-		m_expectedReply = 0;
-		m_waitingForAck = false;
 		return false;
 	}
 
@@ -2110,8 +2102,7 @@ void Driver::ProcessMsg
 					notification->SetNotification( Notification::Code_MsgComplete );
 					QueueNotification( notification );
 				}
-				delete m_currentMsg;
-				m_currentMsg = NULL;
+				RemoveCurrentMsg();
 			}
 		}
 	}
@@ -2222,11 +2213,14 @@ void Driver::HandleGetSerialAPICapabilitiesResponse
 		SendMsg( msg, MsgQueue_Command );
 	}
 	SendMsg( new Msg( "FUNC_ID_SERIAL_API_GET_INIT_DATA", 0xff, REQUEST, FUNC_ID_SERIAL_API_GET_INIT_DATA, false ), MsgQueue_Command);
-	Msg* msg = new Msg( "FUNC_ID_SERIAL_API_SET_TIMEOUTS", 0xff, REQUEST, FUNC_ID_SERIAL_API_SET_TIMEOUTS, false );
-	msg->Append( ACK_TIMEOUT / 10 );
-	msg->Append( BYTE_TIMEOUT / 10 );
-	SendMsg( msg, MsgQueue_Command );
-	msg = new Msg( "FUNC_ID_SERIAL_API_APPL_NODE_INFORMATION", 0xff, REQUEST, FUNC_ID_SERIAL_API_APPL_NODE_INFORMATION, false, false );
+	if( !IsBridgeController() )
+	{
+		Msg* msg = new Msg( "FUNC_ID_SERIAL_API_SET_TIMEOUTS", 0xff, REQUEST, FUNC_ID_SERIAL_API_SET_TIMEOUTS, false );
+		msg->Append( ACK_TIMEOUT / 10 );
+		msg->Append( BYTE_TIMEOUT / 10 );
+		SendMsg( msg, MsgQueue_Command );
+	}
+	Msg* msg = new Msg( "FUNC_ID_SERIAL_API_APPL_NODE_INFORMATION", 0xff, REQUEST, FUNC_ID_SERIAL_API_APPL_NODE_INFORMATION, false, false );
 	msg->Append( APPLICATION_NODEINFO_LISTENING );
 	msg->Append( 0x02 );			// Generic Static Controller
 	msg->Append( 0x01 );			// Specific Static PC Controller

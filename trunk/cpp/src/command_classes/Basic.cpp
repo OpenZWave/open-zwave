@@ -58,6 +58,7 @@ Basic::Basic
 ):
 	CommandClass( _homeId, _nodeId ),
 	m_mapping( 0 ),
+	m_ignoreMapping( false ),
 	m_setAsReport( false )
 {
 }
@@ -73,6 +74,12 @@ void Basic::ReadXML
 {
 	CommandClass::ReadXML( _ccElement );
 
+	char const* str = _ccElement->Attribute("ignoremapping");
+	if( str )
+	{
+		m_ignoreMapping = !strcmp( str, "true");
+	}
+
 	int32 intVal;
 	if( TIXML_SUCCESS == _ccElement->QueryIntAttribute( "mapping", &intVal ) )
 	{
@@ -82,7 +89,7 @@ void Basic::ReadXML
 		}
 	}
 
-	char const* str = _ccElement->Attribute("setasreport");
+	str = _ccElement->Attribute("setasreport");
 	if( str )
 	{
 		m_setAsReport = !strcmp( str, "true");
@@ -99,6 +106,11 @@ void Basic::WriteXML
 )
 {
 	CommandClass::WriteXML( _ccElement );
+
+	if( m_ignoreMapping )
+	{
+		_ccElement->SetAttribute( "ignoremapping", "true" );
+	}
 
 	char str[32];
 	if( m_mapping != 0 )
@@ -169,12 +181,15 @@ bool Basic::HandleMsg
 	{
 		// Level
 		Log::Write( LogLevel_Info, GetNodeId(), "Received Basic report from node %d: level=%d", GetNodeId(), _data[1] );
-		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, 0 ) ) )
+		if( !m_ignoreMapping && m_mapping != 0 )
+		{
+			UpdateMappedClass( _instance, m_mapping, _data[1] );
+		}
+		else if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, 0 ) ) )
 		{
 			value->OnValueRefreshed( _data[1] );
 			value->Release();
 		}
-		UpdateMappedClass( _instance, m_mapping, _data[1] );
 		return true;
 	}
 
@@ -199,7 +214,10 @@ bool Basic::HandleMsg
 			notification->SetEvent( _data[1] );
 			GetDriver()->QueueNotification( notification );
 		}
-		UpdateMappedClass( _instance, m_mapping, _data[1] );
+		if( !m_ignoreMapping && m_mapping != 0 )
+		{
+			UpdateMappedClass( _instance, m_mapping, _data[1] );
+		}
 		return true;
 	}
 
@@ -236,24 +254,6 @@ bool Basic::SetValue
 }
 
 //-----------------------------------------------------------------------------
-// <Basic::SetValueBasic>
-// Set a value from another class (mapping)
-//-----------------------------------------------------------------------------
-void Basic::SetValueBasic
-(
-	uint8 const _instance,
-	uint8 const _value
-)
-{
-	// Just update local value. Device should reflect this value.
-	if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, 0 ) ) )
-	{
-		value->OnValueRefreshed( _value );
-		value->Release();
-	}
-}
-
-//-----------------------------------------------------------------------------
 // <Basic::CreateVars>
 // Create the values managed by this command class
 //-----------------------------------------------------------------------------
@@ -262,9 +262,12 @@ void Basic::CreateVars
 	uint8 const _instance
 )
 {
-	if( Node* node = GetNodeUnsafe() )
+	if( m_mapping == 0 )
 	{
-	  	node->CreateValueByte( ValueID::ValueGenre_Basic, GetCommandClassId(), _instance, 0, "Basic", "", false, false, 0, 0 );
+		if( Node* node = GetNodeUnsafe() )
+		{
+		  	node->CreateValueByte( ValueID::ValueGenre_Basic, GetCommandClassId(), _instance, 0, "Basic", "", false, false, 0, 0 );
+		}
 	}
 }
 
@@ -300,19 +303,30 @@ bool Basic::SetMapping
 
 	if( _commandClassId != NoOperation::StaticGetCommandClassId() )
 	{
-		if( Node const* node = GetNodeUnsafe() )
+		if( _doLog )
 		{
-			if( CommandClass* cc = node->GetCommandClass( _commandClassId ) )
+			char str[16];
+			snprintf( str, sizeof(str), "0x%02x", _commandClassId );
+			string ccstr = str;
+			if( Node const* node = GetNodeUnsafe() )
 			{
-				if( _doLog )
+				if( CommandClass* cc = node->GetCommandClass( _commandClassId ) )
 				{
-					Log::Write( LogLevel_Info, GetNodeId(), "    COMMAND_CLASS_BASIC will be mapped to %s", cc->GetCommandClassName().c_str() );
+					ccstr = cc->GetCommandClassName();
 				}
-				cc->SetBasicMapped( true );
-				m_mapping = _commandClassId;
-				res = true;
+			}
+			if( m_ignoreMapping )
+			{
+				Log::Write( LogLevel_Info, GetNodeId(), "    COMMAND_CLASS_BASIC will not be mapped to %s (ignored)", ccstr.c_str() );
+			}
+			else
+			{
+				Log::Write( LogLevel_Info, GetNodeId(), "    COMMAND_CLASS_BASIC will be mapped to %s", ccstr.c_str() );
 			}
 		}
+		m_mapping = _commandClassId;
+		RemoveValue( 1, 0 );
+		res = true;
 	}
 
 	if( m_mapping == 0 && _doLog )

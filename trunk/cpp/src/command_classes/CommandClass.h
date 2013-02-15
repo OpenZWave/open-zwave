@@ -83,6 +83,7 @@ namespace OpenZWave
 		Driver* GetDriver()const;
 		Node* GetNodeUnsafe()const;
 		Value* GetValue( uint8 const _instance, uint8 const _index );
+		bool RemoveValue( uint8 const _instance, uint8 const _index );
 		uint8 GetEndPoint( uint8 const _instance )
 		{
 			map<uint8,uint8>::iterator it = m_endPointMap.find( _instance );
@@ -104,7 +105,6 @@ namespace OpenZWave
 		void SetInstance( uint8 const _endPoint );
 		void SetAfterMark(){ m_afterMark = true; }
 		void SetEndPoint( uint8 const _instance, uint8 const _endpoint){ m_endPointMap[_instance] = _endpoint; }
-		void SetBasicMapped( bool const _map ){ m_basicMapped = _map; }
 		bool IsAfterMark()const{ return m_afterMark; }
 		bool IsCreateVars()const{ return m_createVars; }
 		bool IsGetSupported()const{ return m_getSupported; }
@@ -124,7 +124,6 @@ namespace OpenZWave
 		int32 ValueToInteger( string const& _value, uint8* o_precision, uint8* o_size )const;
 
 		void UpdateMappedClass( uint8 const _instance, uint8 const _classId, uint8 const _value );		// Update mapped class's value from BASIC class
-		void UpdateBasic( uint8 const _instance, uint8 const _value );						// Update BASIC class's value from mapped class
 
 	protected:
 		virtual void CreateVars( uint8 const _instance ){}
@@ -142,7 +141,6 @@ namespace OpenZWave
 		bool		m_createVars;		// Do we want to create variables
 		int8		m_overridePrecision;	// Override precision when writing values if >=0
 		bool		m_getSupported;	    	// Get operation supported
-		bool		m_basicMapped;		// whether this class is mapped to Basic
 
 	//-----------------------------------------------------------------------------
 	// Record which items of static data have been read from the device
