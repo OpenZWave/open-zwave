@@ -27,6 +27,7 @@
 
 #include "CommandClasses.h"
 #include "SwitchMultilevel.h"
+#include "WakeUp.h"
 #include "Defs.h"
 #include "Msg.h"
 #include "Driver.h"
@@ -134,7 +135,7 @@ bool SwitchMultilevel::RequestValue
 	Driver::MsgQueue const _queue
 )
 {
-	if( _index == 0 )
+	if( _index == SwitchMultilevelIndex_Level )
 	{
 		Msg* msg = new Msg( "SwitchMultilevelCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 		msg->SetInstance( this, _instance );
@@ -379,6 +380,38 @@ bool SwitchMultilevel::SetValue
 	}
 
 	return res;
+}
+
+//-----------------------------------------------------------------------------
+// <SwitchMultilevel::SetValueBasic>
+// Update class values based in BASIC mapping
+//-----------------------------------------------------------------------------
+void SwitchMultilevel::SetValueBasic
+(
+	uint8 const _instance,
+	uint8 const _value
+)
+{
+	// Send a request for new value to synchronize it with the BASIC set/report.
+	// In case the device is sleeping, we set the value anyway so the BASIC set/report
+	// stays in sync with it. We must be careful mapping the uint8 BASIC value
+	// into a class specific value.
+	// When the device wakes up, the real requested value will be retrieved.
+	RequestValue( 0, 0, _instance, Driver::MsgQueue_Send );
+	if( Node* node = GetNodeUnsafe() )
+	{
+		if( WakeUp* wakeUp = static_cast<WakeUp*>( node->GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
+		{
+			if( !wakeUp->IsAwake() )
+			{
+				if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, SwitchMultilevelIndex_Level ) ) )
+				{
+					value->OnValueRefreshed( _value != 0 );
+					value->Release();
+				}
+			}
+		}
+	}
 }
 
 //-----------------------------------------------------------------------------

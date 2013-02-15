@@ -1462,6 +1462,51 @@ namespace OpenZWaveDotNet
 	/*@}*/
 
 	//-----------------------------------------------------------------------------
+	// Network commands
+	//-----------------------------------------------------------------------------
+	/** \name Network Commands
+	 *  Commands for Z-Wave network for testing, routing and other internal
+	 *  operations.
+	 */
+	/*@{*/
+	public:	
+		/**
+		 * \brief Test network node.
+		 * Sends a series of messages to a network node for testing network reliability.
+		 * \param homeId The Home ID of the Z-Wave controller to be reset.
+		 * \param count This is the number of test messages to send.
+		 * \see TestNetwork
+		 */
+		void TestNetworkNode( uint32 const homeId, uint8 const nodeId, uint32 const count ){ Manager::Get()->TestNetworkNode(homeId, nodeId, count);}
+
+		/**
+		 * \brief Test network.
+		 * Sends a series of messages to every node on the network for testing network reliability.
+		 * \param homeId The Home ID of the Z-Wave controller to be reset.
+		 * \param count This is the number of test messages to send.
+		 * \see TestNetwork
+		 */
+		void TestNetwork( uint32 const homeId, uint32 const count ){ Manager::Get()->TestNetwork(homeId, count);}
+
+ 		/**
+		 * \brief Heal network node by requesting the node rediscover their neighbors.
+		 * Sends a ControllerCommand_RequestNodeNeighborUpdate to the node.
+		 * \param homeId The Home ID of the Z-Wave network to be healed.
+		 * \param nodeId The node to heal.
+		 * \param doRR Whether to perform return routes initialization.
+		 */
+		void HealNetworkNode( uint32 const homeId, uint8 const nodeId, bool doRR ){ Manager::Get()->HealNetworkNode(homeId, nodeId, doRR);}
+
+ 		/**
+		 * \brief Heal network by requesting node's rediscover their neighbors.
+		 * Sends a ControllerCommand_RequestNodeNeighborUpdate to every node.
+		 * Can take a while on larger networks.
+		 * \param homeId The Home ID of the Z-Wave network to be healed.
+		 * \param doRR Whether to perform return routes initialization.
+		 */
+		void HealNetwork( uint32 const homeId, bool doRR ){ Manager::Get()->HealNetwork(homeId, doRR);}
+
+	//-----------------------------------------------------------------------------
 	// Scene commands
 	//-----------------------------------------------------------------------------
 	/** \name Scene Commands

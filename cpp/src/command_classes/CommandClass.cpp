@@ -62,7 +62,6 @@ CommandClass::CommandClass
 	m_createVars( true ),
 	m_overridePrecision( -1 ),
 	m_getSupported( true ),
-	m_basicMapped( false ),
 	m_staticRequests( 0 ),
 	m_sentCnt( 0 ),
 	m_receivedCnt( 0 )
@@ -122,6 +121,23 @@ Value* CommandClass::GetValue
 		value = node->GetValue( GetCommandClassId(), _instance, _index );
 	}
 	return value;
+}
+
+//-----------------------------------------------------------------------------
+// <CommandClass::RemoveValue>
+// Remove a value by its instance and index
+//-----------------------------------------------------------------------------
+bool CommandClass::RemoveValue
+(
+	uint8 const _instance,
+	uint8 const _index
+)
+{
+	if( Node* node = GetNodeUnsafe() )
+	{
+		return node->RemoveValue( GetCommandClassId(), _instance, _index );
+	}
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -570,28 +586,6 @@ void CommandClass::UpdateMappedClass
 			if( node->GetCurrentQueryStage() == Node::QueryStage_Complete && cc != NULL )
 			{
 				cc->SetValueBasic( _instance, _level );
-			}
-		}
-	}
-}
-
-//-----------------------------------------------------------------------------
-// <CommandClass::UpdateBasic>
-// If this class is mapped to BASIC, update the BASIC class value
-//-----------------------------------------------------------------------------
-void CommandClass::UpdateBasic
-(
-	uint8 const _instance,
-	uint8 const _value
-)
-{
-	if( m_basicMapped )
-	{
-		if( Node* node = GetNodeUnsafe() )
-		{
-			if( Basic* cc = static_cast<Basic*>( node->GetCommandClass( Basic::StaticGetCommandClassId() ) ) )
-			{
-				cc->SetValueBasic( _instance, _value ? 255 : 0 );
 			}
 		}
 	}

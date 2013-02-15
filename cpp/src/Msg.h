@@ -45,7 +45,7 @@ namespace OpenZWave
 		enum MessageFlags
 		{
 			m_MultiChannel			= 0x01,		// Indicate MultiChannel encapsulation
-			m_MultiInstance			= 0x02		// Indicate MultiInstance encapsulation
+			m_MultiInstance			= 0x02,		// Indicate MultiInstance encapsulation
 		};
 
 		Msg( string const& _logtext, uint8 _targetNodeId, uint8 const _msgType, uint8 const _function, bool const _bCallbackRequired, bool const _bReplyRequired = true, uint8 const _expectedReply = 0, uint8 const _expectedCommandClassId = 0 );
