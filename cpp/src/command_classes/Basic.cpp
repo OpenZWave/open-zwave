@@ -198,7 +198,11 @@ bool Basic::HandleMsg
 		if( m_setAsReport )
 		{
 			Log::Write( LogLevel_Info, GetNodeId(), "Received Basic set from node %d: level=%d. Treating it as a Basic report.", GetNodeId(), _data[1] );
-			if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, 0 ) ) )
+			if( !m_ignoreMapping && m_mapping != 0 )
+			{
+				UpdateMappedClass( _instance, m_mapping, _data[1] );
+			}
+			else if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, 0 ) ) )
 			{
 				value->OnValueRefreshed( _data[1] );
 				value->Release();
@@ -213,10 +217,6 @@ bool Basic::HandleMsg
 			notification->SetHomeNodeIdAndInstance( GetHomeId(), GetNodeId(), _instance );
 			notification->SetEvent( _data[1] );
 			GetDriver()->QueueNotification( notification );
-		}
-		if( !m_ignoreMapping && m_mapping != 0 )
-		{
-			UpdateMappedClass( _instance, m_mapping, _data[1] );
 		}
 		return true;
 	}
