@@ -73,6 +73,14 @@
      </xs:restriction>
     </xs:simpleType>
    </xs:attribute>
+   <xs:attribute name='ignoremapping' use='optional'>
+    <xs:simpleType>
+     <xs:restriction base='xs:string'>
+      <xs:enumeration value='true'/>
+      <xs:enumeration value='false'/>
+     </xs:restriction>
+    </xs:simpleType>
+   </xs:attribute>
    <xs:attribute name='getsupported' use='optional'>
     <xs:simpleType>
      <xs:restriction base='xs:string'>
