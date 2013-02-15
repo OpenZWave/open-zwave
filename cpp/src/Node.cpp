@@ -1125,28 +1125,15 @@ void Node::WriteXML
 	TiXmlElement* ccsElement = new TiXmlElement( "CommandClasses" );
 	nodeElement->LinkEndChild( ccsElement );
 
-	CommandClass *basic = NULL;
 	for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
 	{
 		if( it->second->GetCommandClassId() == NoOperation::StaticGetCommandClassId() ) // don't output NoOperation
 		{
 			continue;
 		}
-		if( it->second->GetCommandClassId() == NoOperation::StaticGetCommandClassId() ) // save Basic
-		{
-			basic = it->second;
-			continue;
-		}
 		TiXmlElement* ccElement = new TiXmlElement( "CommandClass" );
 		ccsElement->LinkEndChild( ccElement );
 		it->second->WriteXML( ccElement );
-	}
-	// Add it to the end so it can find its mapping class if it exists
-	if( basic != NULL )
-	{
-		TiXmlElement* ccElement = new TiXmlElement( "CommandClass" );
-		ccsElement->LinkEndChild( ccElement );
-		basic->WriteXML( ccElement );
 	}
 }
 
