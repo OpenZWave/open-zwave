@@ -45,7 +45,7 @@
 		<Product type="0003" id="000c" name="Micro Smart Energy Switch"/>
 		<Product type="0003" id="000d" name="Micro Smart Energy Illuminator"/>
 		<Product type="0003" id="000e" name="Micro Motor Controller"/>
-		<Product type="0001" id="0016" name="Key Fob"/>
+		<Product type="0001" id="0016" name="Key Fob" config="aeon_labs/keyfob.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0094" name="Alarm.com">
 	</Manufacturer>
@@ -317,6 +317,7 @@
 	</Manufacturer>
 	<Manufacturer id="0095" name="Qees">
 		<Product type="3101" id="0001" name="RETO Dimmer Plus 2013"/>
+		<Product type="3103" id="0001" name="RETO Plug-in Switch Plus"/>
 	</Manufacturer>
 	<Manufacturer id="0100" name="Reitz-Group.de">
 	</Manufacturer>
@@ -377,6 +378,17 @@
 	<Manufacturer id="005e" name="ViewSonic">
 	</Manufacturer>
 	<Manufacturer id="0007" name="Vimar CRS">
+	</Manufacturer>
+	<Manufacturer id="010a" name="Vitrum">
+		<Product type="1100" id="4900" name="Vitrum I EU Wireless Dimmer"/> 
+		<Product type="1100" id="4a00" name="Vitrum II EU Wireless Dimmer"/> 
+		<Product type="1200" id="5100" name="Vitrum I EU Wireless On-off"/> 
+		<Product type="1200" id="5200" name="Vitrum II EU Wireless On-off"/> 
+		<Product type="1300" id="5A00" name="Vitrum II EU Roller Blind Control"/> 
+		<Product type="2100" id="8a00" name="Vitrum II BS Wireless Dimmer"/>
+		<Product type="2200" id="9100" name="Vitrum I BS Wireless On-off"/>
+		<Product type="2200" id="9200" name="Vitrum II BS Wireless On-off"/>
+		<Product type="2200" id="9400" name="Vitrum IV BS Wireless On-off"/>
 	</Manufacturer>
 	<Manufacturer id="004a" name="Visualize">
 	</Manufacturer>

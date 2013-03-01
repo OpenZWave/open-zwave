@@ -2225,7 +2225,6 @@ void Driver::HandleGetSerialAPICapabilitiesResponse
 	msg->Append( 0x02 );			// Generic Static Controller
 	msg->Append( 0x01 );			// Specific Static PC Controller
 	msg->Append( 0x01 );
-	msg->Append( 0x2b );			// Scene Activation
 	SendMsg( msg, MsgQueue_Command );
 }
 

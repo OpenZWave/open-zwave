@@ -260,14 +260,14 @@ void Configuration::Set
 	msg->Append( _size );
 	if( _size > 2 )
 	{
-		msg->Append( (uint8)(_value>>24) );
-		msg->Append( (uint8)(_value>>16) );
+		msg->Append( (uint8)( ( _value>>24 ) & 0xff ) );
+		msg->Append( (uint8)( ( _value>>16 ) & 0xff ) );
 	}
 	if( _size > 1 ) 
 	{
-		msg->Append( (uint8)(_value>>8) );
+		msg->Append( (uint8)( ( _value>>8 ) & 0xff ) );
 	}
-	msg->Append( (uint8)_value );
+	msg->Append( (uint8)( _value & 0xff ) );
 	msg->Append( GetDriver()->GetTransmitOptions() );
 	GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 }
