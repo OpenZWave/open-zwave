@@ -90,7 +90,11 @@ void Association::ReadXML
 			TiXmlElement const* groupElement = associationsElement->FirstChildElement();
 			while( groupElement )
 			{
-				new Group( GetHomeId(), GetNodeId(), groupElement );
+				if( Node* node = GetNodeUnsafe() )
+				{
+					Group* group = new Group( GetHomeId(), GetNodeId(), groupElement );
+					node->AddGroup( group );
+				}
 
 				groupElement = groupElement->NextSiblingElement();
 			}
