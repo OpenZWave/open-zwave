@@ -364,23 +364,33 @@ bool Value::Set
 				// flag value as set and queue a "Set Value" message for transmission to the device
 				res = cc->SetValue( *this );
 
-				// queue a "RequestValue" message to update the value
-		                cc->RequestValue( 0, m_id.GetIndex(), m_id.GetInstance(), Driver::MsgQueue_Send );
-			}
-		}
-	}
-
-	if( IsWriteOnly() && node != NULL )
-	{
-		if( m_affectsAll )
-		{
-			node->RequestAllConfigParams( 0 );
-		}
-		else if( m_affectsLength > 0 )
-		{
-			for( int i = 0; i < m_affectsLength; i++ )
-			{
-				node->RequestConfigParam( m_affects[i] );
+				if( res )
+				{
+					if( !IsWriteOnly() )
+					{
+						// queue a "RequestValue" message to update the value
+						cc->RequestValue( 0, m_id.GetIndex(), m_id.GetInstance(), Driver::MsgQueue_Send );
+					}
+					else
+					{
+						// There is a "bug" here in that write only values
+						// never send a notification about the value changing.
+						// For sleeping devices it may not change until the
+						// device wakes up at some point in the future.
+						// So when is the right time to change it?
+						if( m_affectsAll )
+						{
+							node->RequestAllConfigParams( 0 );
+						}
+						else if( m_affectsLength > 0 )
+						{
+							for( int i = 0; i < m_affectsLength; i++ )
+							{
+								node->RequestConfigParam( m_affects[i] );
+							}
+						}
+					}
+				}
 			}
 		}
 	}
