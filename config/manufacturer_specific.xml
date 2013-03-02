@@ -93,6 +93,7 @@
 	<Manufacturer id="0030" name="Cytech Tech">
 	</Manufacturer>
 	<Manufacturer id="0002" name="Danfoss">
+	  	<Product type="0005" id="0003" name="Z Thermostat"/>
 		<Product type="0064" id="0001" name="RA Plus-W Radiator Thermostat"/>
 		<Product type="8005" id="0001" name="Living Connect Radiator Thermostat" config="danfoss/living.xml"/>
 	</Manufacturer>
@@ -413,6 +414,7 @@
 	<Manufacturer id="0115" name="Z-Wave.Me">
 		<Product type="1000" id="0002" name="ZME_06433 Wall Flush-Mountable Dimmer" config="zwave.me/ZME_06433.xml"/>
 		<Product type="1000" id="0003" name="ZME_06435 Motor Control"/>
+		<Product type="1000" id="0004" name="ZME_064435 Wall Controller"/>
 	</Manufacturer>
 	<Manufacturer id="004f" name="Z-Wave Technologia">
 	</Manufacturer>
