@@ -152,6 +152,7 @@
 		<Product type="0100" id="0104" name="FGD211 Universal Dimmer 500W" />
 		<Product type="0100" id="0107" name="FGD211 Universal Dimmer 500W" config="fibaro/fgd211.xml" />
 		<Product type="0700" id="1000" name="FGK101 Door Opening Sensor" config="fibaro/fgk001.xml" />
+		<Product type="0300" id="100a" name="FGR221 Roller Shutter Controller" config="fibaro/fgs221.xml"/>
 		<Product type="0300" id="0106" name="FGR221 Roller Shutter Controller" />
 		<Product type="0300" id="0107" name="FGR221 Roller Shutter Controller" />
 		<Product type="0400" id="0104" name="FGS211 Switch 3kW" config="fibaro/fgs211.xml" />
@@ -164,6 +165,7 @@
 		<Product type="0200" id="0105" name="FGS221 Double Relay Switch 2x1,5kW" config="fibaro/fgs221.xml" />
 		<Product type="0200" id="0106" name="FGS221 Double Relay Switch 2x1,5kW" config="fibaro/fgs221.xml" />
 		<Product type="0200" id="0107" name="FGS221 Double Relay Switch 2x1,5kW" config="fibaro/fgs221.xml" />
+		<Product type="0200" id="0109" name="FGS221 Double Relay Switch 2x1,5kW" config="fibaro/fgs221.xml" />
 	</Manufacturer>
 	<Manufacturer id="0037" name="Foard Sys">
 	</Manufacturer>
@@ -415,6 +417,7 @@
 		<Product type="1000" id="0002" name="ZME_06433 Wall Flush-Mountable Dimmer" config="zwave.me/ZME_06433.xml"/>
 		<Product type="1000" id="0003" name="ZME_06435 Motor Control"/>
 		<Product type="1000" id="0004" name="ZME_064435 Wall Controller"/>
+		<Product type="0100" id="0001" name="ZME_KFOB 4 Button Key Fob" config="zwave.me/kfob.xml"/>
 	</Manufacturer>
 	<Manufacturer id="004f" name="Z-Wave Technologia">
 	</Manufacturer>
