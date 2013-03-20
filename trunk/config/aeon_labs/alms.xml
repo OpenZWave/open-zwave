@@ -91,6 +91,11 @@
 				1 seconds - 2678400 seconds
 			</Help>
 		</Value>
+		<Value type="button" index="255" genre="config" label="Reset to default" write_only="true" value="0" >
+			<Help>
+				Reset to factory defaults.
+			</Help>
+		</Value>
         </CommandClass>
         <!-- Association Groups -->
         <CommandClass id="133">
