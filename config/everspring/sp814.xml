@@ -34,6 +34,8 @@
     </Value>
   </CommandClass>
 
+  <!-- Basic set as report -->
+  <CommandClass id="32" setasreport="true"/>
 
   <!-- COMMAND_CLASS_ASSOCIATION. Groups -->
   <CommandClass id="133">
