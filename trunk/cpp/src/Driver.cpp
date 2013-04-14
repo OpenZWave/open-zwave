@@ -1391,6 +1391,7 @@ void Driver::CheckCompletedNodeQueries
 (
 )
 {
+	Log::Write( LogLevel_Warning, "CheckCompletedNodeQueries m_allNodesQueried=%d m_awakeNodesQueried=%d", m_allNodesQueried, m_awakeNodesQueried );
 	if( !m_allNodesQueried )
 	{
 		bool all = true;
@@ -1419,6 +1420,7 @@ void Driver::CheckCompletedNodeQueries
 		}
 		ReleaseNodes();
 
+		Log::Write( LogLevel_Warning, "CheckCompletedNodeQueries all=%d, deadFound=%d sleepingOnly=%d", all, deadFound, sleepingOnly );
 		if( all )
 		{
 			if( deadFound )
@@ -2778,7 +2780,7 @@ void Driver::HandleSendDataRequest
 				}
 			}
 		}
-		else
+		else if( node != NULL )
 		{
 		  	// If WakeUpNoMoreInformation request succeeds, update our status
 		  	if( m_currentMsg->IsWakeUpNoMoreInformationCommand() )
