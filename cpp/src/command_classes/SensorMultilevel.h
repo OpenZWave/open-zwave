@@ -52,10 +52,7 @@ namespace OpenZWave
 		virtual string const GetCommandClassName()const{ return StaticGetCommandClassName(); }
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );
 		
-		// We return 1 instead of 3 because the latter versions only introduce new
-		// sensor types, with no new message format changes.  Setting this to 1 prevents
-		// OpenZWave from making an unecessary version requests. 
-		virtual uint8 GetMaxVersion(){ return 1; }
+		virtual uint8 GetMaxVersion(){ return 5; }
 
 	protected:
 		virtual void CreateVars( uint8 const _instance );

@@ -2226,7 +2226,7 @@ void Driver::HandleGetSerialAPICapabilitiesResponse
 	msg->Append( APPLICATION_NODEINFO_LISTENING );
 	msg->Append( 0x02 );			// Generic Static Controller
 	msg->Append( 0x01 );			// Specific Static PC Controller
-	msg->Append( 0x01 );
+	msg->Append( 0x00 );			// Length
 	SendMsg( msg, MsgQueue_Command );
 }
 

@@ -48,8 +48,8 @@ enum MeterCmd
 	MeterCmd_Get				= 0x01,
 	MeterCmd_Report				= 0x02,
 	// Version 2
-	MeterCmd_SupportedGet		= 0x03,
-	MeterCmd_SupportedReport	= 0x04,
+	MeterCmd_SupportedGet			= 0x03,
+	MeterCmd_SupportedReport		= 0x04,
 	MeterCmd_Reset				= 0x05
 };
 
