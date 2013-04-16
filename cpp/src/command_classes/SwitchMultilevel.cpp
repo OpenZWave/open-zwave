@@ -45,10 +45,10 @@ enum SwitchMultilevelCmd
 	SwitchMultilevelCmd_Set						= 0x01,
 	SwitchMultilevelCmd_Get						= 0x02,
 	SwitchMultilevelCmd_Report					= 0x03,
-	SwitchMultilevelCmd_StartLevelChange		= 0x04,
-	SwitchMultilevelCmd_StopLevelChange			= 0x05,
-	SwitchMultilevelCmd_SupportedGet			= 0x06,
-	SwitchMultilevelCmd_SupportedReport			= 0x07
+	SwitchMultilevelCmd_StartLevelChange				= 0x04,
+	SwitchMultilevelCmd_StopLevelChange				= 0x05,
+	SwitchMultilevelCmd_SupportedGet				= 0x06,
+	SwitchMultilevelCmd_SupportedReport				= 0x07
 };
 
 enum
