@@ -41,8 +41,10 @@ using namespace OpenZWave;
 
 enum SensorMultilevelCmd
 {
-	SensorMultilevelCmd_Get		= 0x04,
-	SensorMultilevelCmd_Report	= 0x05
+	SensorMultilevelCmd_SupportedGet	= 0x01,
+	SensorMultilevelCmd_SupportedReport	= 0x02,
+	SensorMultilevelCmd_Get			= 0x04,
+	SensorMultilevelCmd_Report		= 0x05
 };
 
 enum SensorType
@@ -66,7 +68,19 @@ enum SensorType
 	SensorType_CO2,
 	SensorType_AirFlow,
 	SensorType_TankCapacity,
-	SensorType_Distance
+	SensorType_Distance,
+	SensorType_AnglePosition,
+	SensorType_Rotation,
+	SensorType_WaterTemperature,
+	SensorType_SoilTemperature,
+	SensorType_SeismicIntensity,
+	SensorType_SeismicMagnitude,
+	SensorType_Ultraviolet,
+	SensorType_ElectricalResistivity,
+	SensorType_ElectricalConductivity,
+	SensorType_Loudness,
+	SensorType_Moisture,
+	SensorType_MaxType
 };
 
 static char const* c_sensorTypeNames[] = 
@@ -91,7 +105,18 @@ static char const* c_sensorTypeNames[] =
 	"CO2 Level",
 	"Air Flow",
 	"Tank Capacity",
-	"Distance"
+	"Distance",
+	"Angle Position",
+	"Rotation",
+	"Water Temperature",
+	"Soil Temperature",
+	"Seismic Intensity",
+	"Seismic Magnitude",
+	"Utraviolet",
+	"Electrical Resistivity",
+	"Electrical Conductivity",
+	"Loudness",
+	"Moisture"
 };
 
 static char const* c_tankCapcityUnits[] = 
@@ -108,9 +133,40 @@ static char const* c_distanceUnits[] =
 	"ft"
 };
 
+static char const* c_anglePositionUnits[] =
+{
+	"%",
+	"deg N",
+	"deg S"
+};
+
+static char const* c_seismicIntensityUnits[] =
+{
+	"mercalli",
+	"EU macroseismic",
+	"liedu",
+	"shindo"
+};
+
+static char const* c_seismicMagnitudeUnits[] =
+{
+	"local",
+	"moment",
+	"surface wave",
+	"body wave"
+};
+
+static char const* c_moistureUnits[] =
+{
+	"%",
+	"content",
+	"k ohms",
+	"water activity"
+};
+
 //-----------------------------------------------------------------------------
-// <SensorMultilevel::RequestState>												   
-// Request current state from the device									   
+// <SensorMultilevel::RequestState>
+// Request current state from the device
 //-----------------------------------------------------------------------------
 bool SensorMultilevel::RequestState
 (
@@ -119,12 +175,29 @@ bool SensorMultilevel::RequestState
 	Driver::MsgQueue const _queue
 )
 {
-	if( _requestFlags & RequestFlag_Dynamic )
+	bool res = false;
+	if( GetVersion() > 4 )
 	{
-		return RequestValue( _requestFlags, 0, _instance, _queue );
+		if( _requestFlags & RequestFlag_Static )
+		{
+ 			Msg* msg = new Msg( "SensorMultilevelCmd_SupportedGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+			msg->SetInstance( this, _instance );
+			msg->Append( GetNodeId() );
+			msg->Append( 2 );
+			msg->Append( GetCommandClassId() );
+			msg->Append( SensorMultilevelCmd_SupportedGet );
+			msg->Append( GetDriver()->GetTransmitOptions() );
+			GetDriver()->SendMsg( msg, _queue );
+			res = true;
+		}
 	}
 
-	return false;
+	if( _requestFlags & RequestFlag_Dynamic )
+	{
+		res |= RequestValue( _requestFlags, 0, _instance, _queue );
+	}
+
+	return res;
 }
 
 //-----------------------------------------------------------------------------
@@ -139,15 +212,41 @@ bool SensorMultilevel::RequestValue
 	Driver::MsgQueue const _queue
 )
 {
-	Msg* msg = new Msg( "SensorMultilevelCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-	msg->SetInstance( this, _instance );
-	msg->Append( GetNodeId() );
-	msg->Append( 2 );
-	msg->Append( GetCommandClassId() );
-	msg->Append( SensorMultilevelCmd_Get );
-	msg->Append( GetDriver()->GetTransmitOptions() );
-	GetDriver()->SendMsg( msg, _queue );
-	return true;
+	bool res = false;
+	if( GetVersion() < 5 )
+	{
+		Msg* msg = new Msg( "SensorMultilevelCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		msg->SetInstance( this, _instance );
+		msg->Append( GetNodeId() );
+		msg->Append( 2 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( SensorMultilevelCmd_Get );
+		msg->Append( GetDriver()->GetTransmitOptions() );
+		GetDriver()->SendMsg( msg, _queue );
+		res = true;
+	}
+	else
+	{
+		for( uint8 i = 1; i < SensorType_MaxType; i++ )
+		{
+			Value* value = GetValue( _instance, i );
+			if( value != NULL )
+			{
+				value->Release();
+				Msg* msg = new Msg( "SensorMultilevelCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+				msg->SetInstance( this, _instance );
+				msg->Append( GetNodeId() );
+				msg->Append( 3 );
+				msg->Append( GetCommandClassId() );
+				msg->Append( SensorMultilevelCmd_Get );
+				msg->Append( i );
+				msg->Append( GetDriver()->GetTransmitOptions() );
+				GetDriver()->SendMsg( msg, _queue );
+				res = true;
+			}
+		}
+	}
+	return res;
 }
 
 //-----------------------------------------------------------------------------
@@ -161,7 +260,34 @@ bool SensorMultilevel::HandleMsg
 	uint32 const _instance	// = 1
 )
 {
-	if (SensorMultilevelCmd_Report == (SensorMultilevelCmd)_data[0])
+	if (SensorMultilevelCmd_SupportedReport == (SensorMultilevelCmd)_data[0])
+	{
+		string msg = "";
+
+		if( Node* node = GetNodeUnsafe() )
+		{
+			for( uint8 i = 1; i <= ( _length - 2 ); i++ )
+			{
+				for( uint8 j = 0; j < 8; j++ )
+				{
+					if( _data[i] & ( 1 << j ) )
+					{
+						if( msg != "" )
+						  	msg += ", ";
+						uint8 index = ( ( i - 1 ) * 8 ) + j + 1;
+						msg += c_sensorTypeNames[index];
+						ValueDecimal* value = static_cast<ValueDecimal*>( GetValue( _instance, index ) );
+						if( value == NULL)
+						{
+							node->CreateValueDecimal(  ValueID::ValueGenre_User, GetCommandClassId(), _instance, index, c_sensorTypeNames[index], "", true, false, "0.0", 0  );
+						}
+					}
+				}
+			}
+		}
+		Log::Write( LogLevel_Info, GetNodeId(), "Received SensorMultiLevel supported report from node %d: %s", GetNodeId(), msg.c_str() );
+	}
+	else if (SensorMultilevelCmd_Report == (SensorMultilevelCmd)_data[0])
 	{
 		uint8 scale;
 		uint8 precision = 0;
@@ -174,27 +300,38 @@ bool SensorMultilevel::HandleMsg
 			char const* units = "";
 			switch( sensorType )
 			{
-				case SensorType_Temperature:			units = scale ? "F" : "C";				break;
-				case SensorType_General:				units = scale ? "" : "%";				break;
+				case SensorType_Temperature:				units = scale ? "F" : "C";			break;
+				case SensorType_General:				units = scale ? "" : "%";			break;
 				case SensorType_Luminance:				units = scale ? "lux" : "%";			break;
 				case SensorType_Power:					units = scale ? "BTU/h" : "W";			break;
-				case SensorType_RelativeHumidity:		units = "%";							break;
+				case SensorType_RelativeHumidity:			units = scale ? "" : "%";			break;
 				case SensorType_Velocity:				units = scale ? "mph" : "m/s";			break;
-				case SensorType_Direction:				units = "";								break;
-				case SensorType_AtmosphericPressure:	units = scale ? "inHg" : "kPa";			break;
-				case SensorType_BarometricPressure:		units = scale ? "inHg" : "kPa";			break;
-				case SensorType_SolarRadiation:			units = "W/m2";							break;
+				case SensorType_Direction:				units = "";					break;
+				case SensorType_AtmosphericPressure:			units = scale ? "inHg" : "kPa";			break;
+				case SensorType_BarometricPressure:			units = scale ? "inHg" : "kPa";			break;
+				case SensorType_SolarRadiation:				units = "W/m2";					break;
 				case SensorType_DewPoint:				units = scale ? "in/h" : "mm/h";		break;
-				case SensorType_RainRate:				units = scale ? "F" : "C";				break;
-				case SensorType_TideLevel:				units = scale ? "ft" : "m";				break;
+				case SensorType_RainRate:				units = scale ? "F" : "C";			break;
+				case SensorType_TideLevel:				units = scale ? "ft" : "m";			break;
 				case SensorType_Weight:					units = scale ? "lb" : "kg";			break;
-				case SensorType_Voltage:				units = scale ? "mV" : "V";				break;
-				case SensorType_Current:				units = scale ? "mA" : "A";				break;
-				case SensorType_CO2:					units = "ppm";							break;
+				case SensorType_Voltage:				units = scale ? "mV" : "V";			break;
+				case SensorType_Current:				units = scale ? "mA" : "A";			break;
+				case SensorType_CO2:					units = "ppm";					break;
 				case SensorType_AirFlow:				units = scale ? "cfm" : "m3/h";			break;
-				case SensorType_TankCapacity:			units = c_tankCapcityUnits[scale];		break;
+				case SensorType_TankCapacity:				units = c_tankCapcityUnits[scale];		break;
 				case SensorType_Distance:				units = c_distanceUnits[scale];			break;
-				default:																		break;
+				case SensorType_AnglePosition:				units = c_anglePositionUnits[scale];		break;
+				case SensorType_Rotation:				units = scale ? "hz" : "rpm";			break;
+				case SensorType_WaterTemperature:			units = scale ? "F" : "C";			break;
+				case SensorType_SoilTemperature:			units = scale ? "F" : "C";			break;
+				case SensorType_SeismicIntensity:			units = c_seismicIntensityUnits[scale];		break;
+				case SensorType_SeismicMagnitude:			units = c_seismicMagnitudeUnits[scale];		break;
+				case SensorType_Ultraviolet:				units = "";					break;
+				case SensorType_ElectricalResistivity:			units = "ohm";					break;
+				case SensorType_ElectricalConductivity:			units = "siemens/m";				break;
+				case SensorType_Loudness:				units = scale ? "dBA" : "db";			break;
+				case SensorType_Moisture:				units = c_moistureUnits[scale];			break;
+				default:												break;
 			}
 
 			ValueDecimal* value = static_cast<ValueDecimal*>( GetValue( _instance, sensorType ) );
