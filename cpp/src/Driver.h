@@ -35,6 +35,8 @@
 #include "Defs.h"
 #include "ValueID.h"
 #include "Node.h"
+#include "Event.h"
+#include "Mutex.h"
 #include "TimeStamp.h"
 
 namespace OpenZWave
@@ -546,6 +548,9 @@ namespace OpenZWave
 						case ControllerState_Completed:
 						{
 							m_currentControllerCommand->m_controllerCommandDone = true;
+							m_sendMutex->Lock();
+							m_queueEvent[MsgQueue_Controller]->Set();
+							m_sendMutex->Unlock();
 							break;
 						}
 						default:
