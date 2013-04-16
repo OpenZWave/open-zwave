@@ -2,14 +2,6 @@
 <Product xmlns='http://code.google.com/p/open-zwave/'>
         <!-- Configuration Parameters -->
         <CommandClass id="112">
-                <Value type="byte" index="1" genre="config" label="Sensor report type on Get without instances" units="" min="1" max="3" value="1">
-                        <Help>
-                                Which type of multi sensor report should be sent on multi sensor Get command without instances
-                                1 (default)	  ->   	Temperature
-                                2 		  ->   	Luminance
-                                3 		  ->   	Humidity
-                        </Help>
-                </Value>
                 <Value type="byte" index="2" genre="config" label="Wake up 10 minutes when batteries are inserted" units="minutes" min="0" max="1" value="0">
                         <Help>
                                 Stay awake for 10 minutes after batteries are inserted
