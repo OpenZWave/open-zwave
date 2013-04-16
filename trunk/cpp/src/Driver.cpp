@@ -376,6 +376,10 @@ void Driver::DriverThreadProc
 						timeout = 0;
 					}
 				}
+				else if( m_currentControllerCommand != NULL )
+				{
+					count = 6;
+				}
 				else
 				{
 					Log::QueueClear();							// clear the log queue when starting a new message
@@ -1045,6 +1049,13 @@ bool Driver::WriteNextMsg
 				m_currentControllerCommand->m_controllerCallback( m_currentControllerCommand->m_controllerState, m_currentControllerCommand->m_controllerReturnError, m_currentControllerCommand->m_controllerCallbackContext );
 				m_currentControllerCommand->m_controllerStateChanged = false;
 			}
+		}
+		else
+		{
+			Log::Write( LogLevel_Info, "WriteNextMsg Controller nothing to do" );
+			m_sendMutex->Lock();
+			m_queueEvent[_queue]->Reset();
+			m_sendMutex->Unlock();
 		}
 		return true;
 	}
@@ -3442,8 +3453,14 @@ bool Driver::HandleApplicationUpdateRequest
 )
 {
 	bool messageRemoved = false;
-
 	uint8 nodeId = _data[3];
+	Node* node = GetNodeUnsafe( nodeId );
+
+	// If node is not alive, mark it alive now
+	if( node != NULL && !node->IsNodeAlive() )
+	{
+		node->SetNodeAlive( true );
+	}
 
 	switch( _data[2] )
 	{
@@ -3488,16 +3505,16 @@ bool Driver::HandleApplicationUpdateRequest
 			// assume the message came from the last node to which we sent a request.
 			if( m_currentMsg )
 			{
-				Node* node = GetNodeUnsafe( m_currentMsg->GetTargetNodeId() );
-				if( node )
+				Node* tnode = GetNodeUnsafe( m_currentMsg->GetTargetNodeId() );
+				if( tnode )
 				{
 					// Retry the query twice
-					node->QueryStageRetry( Node::QueryStage_NodeInfo, 2 );
+					tnode->QueryStageRetry( Node::QueryStage_NodeInfo, 2 );
 
 					// Just in case the failure was due to the node being asleep, we try
 					// to move its pending messages to its wakeup queue.  If it is not
 					// a sleeping device, this will have no effect.
-					if( MoveMessagesToWakeUpQueue( node->GetNodeId(), true ) )
+					if( MoveMessagesToWakeUpQueue( tnode->GetNodeId(), true ) )
 					{
 						messageRemoved = true;
 					}
@@ -3513,7 +3530,7 @@ bool Driver::HandleApplicationUpdateRequest
 		case UPDATE_STATE_NODE_INFO_RECEIVED:
 		{
 			Log::Write( LogLevel_Info, nodeId, "UPDATE_STATE_NODE_INFO_RECEIVED from node %d", nodeId );
-			if( Node* node = GetNodeUnsafe( nodeId ) )
+			if( node )
 			{
 				node->UpdateNodeInfo( &_data[8], _data[4] - 3 );
 			}
