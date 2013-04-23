@@ -93,7 +93,7 @@
 	<Manufacturer id="0030" name="Cytech Tech">
 	</Manufacturer>
 	<Manufacturer id="0002" name="Danfoss">
-	  	<Product type="0005" id="0003" name="Z Thermostat"/>
+		<Product type="0005" id="0003" name="Z Thermostat" config="danfoss/z.xml"/>
 		<Product type="0064" id="0001" name="RA Plus-W Radiator Thermostat"/>
 		<Product type="8005" id="0001" name="Living Connect Radiator Thermostat" config="danfoss/living.xml"/>
 	</Manufacturer>
