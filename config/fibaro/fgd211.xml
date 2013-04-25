@@ -30,6 +30,8 @@
     <Value type="byte" genre="config" instance="1" index="9" label="9. Time of MANUALLY moving between the extreme dimming values" units="ms" min="1" max="255" value="5">
       <Help>Options for changing parameter 1-255 (10ms - 2,5s)</Help>
     </Value>
+    <!-- Version 1.9 has a bug that requires this value be set to 0 or the
+	 dimmer gets stuck and won't respond to switch presses -->
     <Value type="byte" genre="config" instance="1" index="10" label="10. Time of AUTOMATIC moving between the extreme dimming values" min="0" max="255" units="ms" value="1">
       <Help>Options for changing parameter 1-255 (10ms - 2,5s) - 0: this value disables the smooth change in light intensity. NOTE: value 0 is required for inductive and capacitive devices unsuitable for dimming (e.g. fluorescent lamps, motors, etc...)</Help>
     </Value>
