@@ -86,6 +86,18 @@ namespace OpenZWaveDotNet
 			Notification					= Notification::Type_Notification
 		};
 
+	public:
+		enum class Code
+		{
+			MsgComplete = Notification::Code_MsgComplete,
+			Timeout = Notification::Code_Timeout,
+			NoOperation = Notification::Code_NoOperation,
+			Awake = Notification::Code_Awake,
+			Sleep = Notification::Code_Sleep,
+			Dead = Notification::Code_Dead,
+			Alive = Notification::Code_Alive
+		};
+
 		ZWNotification( Notification* notification )
 		{
 			m_type = (Type)Enum::ToObject( Type::typeid, notification->GetType() );
