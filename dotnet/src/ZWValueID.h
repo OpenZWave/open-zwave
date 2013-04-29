@@ -63,7 +63,8 @@ namespace OpenZWaveDotNet
 			Schedule	= ValueID::ValueType_Schedule,
 			Short		= ValueID::ValueType_Short,
 			String		= ValueID::ValueType_String,
-			Button		= ValueID::ValueType_Button
+			Button		= ValueID::ValueType_Button,
+			Raw		= ValueID::ValueType_Raw
 		};
 
 		/**
