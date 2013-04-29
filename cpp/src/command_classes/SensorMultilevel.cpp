@@ -345,7 +345,7 @@ bool SensorMultilevel::HandleMsg
 				value->SetUnits(units);
 			}
 
-			Log::Write( LogLevel_Info, GetNodeId(), "Received SensorMultiLevel report from node %d, instance %d: value=%s%s", GetNodeId(), _instance, valueStr.c_str(), value->GetUnits().c_str() );
+			Log::Write( LogLevel_Info, GetNodeId(), "Received SensorMultiLevel report from node %d, instance %d, %s: value=%s%s", GetNodeId(), _instance, c_sensorTypeNames[sensorType], valueStr.c_str(), value->GetUnits().c_str() );
 			if( value->GetPrecision() != precision )
 			{
 				value->SetPrecision( precision );
