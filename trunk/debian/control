@@ -9,10 +9,10 @@ Package: libopenzwave1.0
 Section: libs
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, libudev0 
-Description: This provides an API to access and control a Z-Wave controller
+Description: API to use a Z-Wave controller
 
 Package: libopenzwave1.0-dev
 Section: libdevel
 Depends: ${misc:Depends}, libopenzwave1.0
 Architecture: any
-Description: Development header files for the openzwave library
+Description: header files for the openzwave library
