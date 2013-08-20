@@ -163,14 +163,15 @@
 		<Product type="0400" id="0108" name="FGS211 Switch 3kW" config="fibaro/fgs211.xml" />
 		<Product type="0400" id="0109" name="FGS221 Switch 3kW" config="fibaro/fgs221.xml" />
 		<Product type="0400" id="100a" name="FGS211 Switch 3kW" config="fibaro/fgs211.xml" />
-		<Product type="0200" id="0104" name="FGS221 Double Relay Switch 2x1,5kW" config="fibaro/fgs221.xml" />
-		<Product type="0200" id="0105" name="FGS221 Double Relay Switch 2x1,5kW" config="fibaro/fgs221.xml" />
-		<Product type="0200" id="0106" name="FGS221 Double Relay Switch 2x1,5kW" config="fibaro/fgs221.xml" />
-		<Product type="0200" id="0107" name="FGS221 Double Relay Switch 2x1,5kW" config="fibaro/fgs221.xml" />
-		<Product type="0200" id="0109" name="FGS221 Double Relay Switch 2x1,5kW" config="fibaro/fgs221.xml" />
-		<Product type="0200" id="100a" name="FGS221 Double Relay Switch 2x1,5kW" config="fibaro/fgs221.xml" />
+		<Product type="0200" id="0104" name="FGS221 Double Relay Switch 2x1.5kW" config="fibaro/fgs221.xml" />
+		<Product type="0200" id="0105" name="FGS221 Double Relay Switch 2x1.5kW" config="fibaro/fgs221.xml" />
+		<Product type="0200" id="0106" name="FGS221 Double Relay Switch 2x1.5kW" config="fibaro/fgs221.xml" />
+		<Product type="0200" id="0107" name="FGS221 Double Relay Switch 2x1.5kW" config="fibaro/fgs221.xml" />
+		<Product type="0200" id="0109" name="FGS221 Double Relay Switch 2x1.5kW" config="fibaro/fgs221.xml" />
+		<Product type="0200" id="100a" name="FGS221 Double Relay Switch 2x1.5kW" config="fibaro/fgs221.xml" />
 		<Product type="0600" id="1000" name="FGWPE Wall Plug" config="fibaro/fgwpe.xml" />
-	</Manufacturer>
+    <Product type="0900" id="1000" name="FGRGBWM441 RGBW Controller" config="fibaro/fgrgbwm441.xml" />
+  </Manufacturer>
 	<Manufacturer id="0037" name="Foard Sys">
 	</Manufacturer>
 	<Manufacturer id="0110" name="Frostdale">
