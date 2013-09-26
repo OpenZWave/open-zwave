@@ -8,3 +8,4 @@
   * [https://github.com/ekarak/Thrift4OZW Thrift4OZW] - An external interface to OpenZWave using Thrift & STOMP
   * [http://code.google.com/p/zvirtualscenes/ zVirtualScenes] - A software scene controller for ZWave devices
   * [http://www.agocontrol.com ago control] - An AMQP messaging based home automation suite. Also supports other protocols besides Z-Wave. Lightweight design to run on embedded systems like the Raspberry Pi. 
+  * [http://www.domotiga.nl Domotiga] - An Open Source Home Automation software that supports Zwave among other protocols. 
