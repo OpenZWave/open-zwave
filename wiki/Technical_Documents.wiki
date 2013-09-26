@@ -29,3 +29,7 @@ The following sites also contain various technical details about zwave devices t
 =Contributing=
 
 If you have any technical documents for a Zwave device not listed above, please contact justin at dynam dot ac
+
+Thanks to the Following for Contributing the above documents:
+
+* Fred
