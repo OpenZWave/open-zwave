@@ -26,3 +26,5 @@ Generally, users, and application developers should never modify this file, but 
 This is a directory of various xml files, that contain descriptions of various ZWave devices and allows the library to deal with bugs or peculiarities of particular devices. 
 
 In most Cases, this just maps devices ID's to the Manufacturer and Product Name. In other cases, it sets up OpenZWave to alter the way it communicates with the device. 
+
+More Details are at Device_Database
