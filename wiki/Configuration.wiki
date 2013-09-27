@@ -7,9 +7,10 @@ Open-ZWave uses various configuration files in its operation. This page aims to 
 == Details ==
 
 There are 3 main configuration sets within Open-ZWave. They are:
-* options.xml - Controls various aspects of how the library works
-* zwcfg_**.xml - Is a Cache of the current network configuration
-* Device Database - This is a database of zwave devices
+
+ * options.xml - Controls various aspects of how the library works
+ * zwcfg files - Is a Cache of the current network configuration
+ * Device Database - This is a database of zwave devices
 
 
 === options.xml ===
@@ -17,8 +18,8 @@ This file is the main file users/application developers can modify to alter the 
 
 More Details are at Config_Options
 
-=== zwcfg_**.xml ===
-This file is basically a database of the current network configuration. It is created the first time Open-ZWave discovers your network and is subsequently used on future restarts to speed up the discovery of the network. 
+=== zwcfg files ===
+This file is basically a cache of the current network configuration. It is created the first time Open-ZWave discovers your network and is subsequently used on future restarts to speed up the discovery of the network. 
 
 Generally, users, and application developers should never modify this file, but sometimes it might be required to delete the file, so the library can refresh the network devices and configurations. 
 
