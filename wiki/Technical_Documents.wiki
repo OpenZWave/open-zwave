@@ -20,6 +20,11 @@ If you are looking for device manuals, please contact the manufacturer directly.
 ||[http://ozw.my-ho.st/Aeon/Engineering%20Spec%20-%20Aeon%20Labs%20Smart%20Energy%20Illuminator.pdf Aeon Labs Smart Energy Illuminator]||
 ||[http://ozw.my-ho.st/Aeon/Engineering%20Spec%20-%20Aeon%20Labs%20Smart%20Energy%20Switch.pdf Aeon Labs Smart Energy Switch]||
 ||[http://ozw.my-ho.st/Aeon/Engineering%20Spec%20-%20Aeon%20Labs%20Z-Stick%20S2.pdf Aeon Labs Z-Stick S2]||
+||[http://ozw.my-ho.st/Aeon/Engineering%20Spec%20-%20Aeon%20Labs%20MultiSensor.pdf Aeon Labs MultiSensor]||
+
+== Eurotronic ==
+||[http://ozw.my-ho.st/Eurotronic/Eurotronic_Stella_Z.pdf Stellaz - Wall Radiator Thermostat Valve Control]||
+
 
 =Other Sites=
 The following sites also contain various technical details about zwave devices that you might find usefull.
@@ -33,3 +38,5 @@ If you have any technical documents for a Zwave device not listed above, please 
 Thanks to the Following for Contributing the above documents:
 
 * Fred
+
+* Jorge Lopez
