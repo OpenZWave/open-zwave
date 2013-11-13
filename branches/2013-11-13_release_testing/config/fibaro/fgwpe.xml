@@ -215,7 +215,7 @@
 			<Item label="illumination turned off completely" value="9" />
    </Value>
    
-       <Value type="byte" genre="config" instance="1" index="70" label="70. Oveload safety switch" value="65535"  size="2">
+       <Value type="short" genre="config" instance="1" index="70" label="70. Oveload safety switch" value="65535"  size="2">
       <Help>This function allows for turning off the controlled device in case of exceeding the defined power. Controlled device will be turned off even if "always on" function is active (parameter 1).
 									Controlled device can be turned back on via B-button or sending a 
 									control frame. By default this function is inactive.
