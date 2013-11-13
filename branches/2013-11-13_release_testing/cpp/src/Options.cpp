@@ -173,6 +173,8 @@ bool Options::AddOptionBool
 	// get (or create) option
 	Option* option = AddOption( _name );
 
+	if (option == NULL) return false;
+	
 	// set unique option members
 	option->m_type = Options::OptionType_Bool;
 	option->m_valueBool = _value;
@@ -195,6 +197,8 @@ bool Options::AddOptionInt
 {
 	// get (or create) option
 	Option* option = AddOption( _name );
+
+	if (option == NULL) return false;
 
 	// set unique option members
 	option->m_type = Options::OptionType_Int;
@@ -220,6 +224,8 @@ bool Options::AddOptionString
 	// get (or create) option
 	Option* option = AddOption( _name );
 
+	if (option == NULL) return false;
+	
 	// set unique option members
 	option->m_type = Options::OptionType_String;
 	option->m_valueString = _value;
