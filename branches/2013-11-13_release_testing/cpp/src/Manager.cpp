@@ -673,6 +673,29 @@ void Manager::SetPollIntensity
 	Log::Write( LogLevel_Error, "mgr,     SetPollIntensity failed - Driver with Home ID 0x%.8x is not available", _valueId.GetHomeId() );
 }
 
+//-----------------------------------------------------------------------------
+// <Manager::GetPollIntensity>
+// Change the intensity with which this value is polled
+//-----------------------------------------------------------------------------
+uint8 Manager::GetPollIntensity
+( 
+	ValueID const _valueId
+)
+{
+	uint8 intensity;
+	if( Driver* driver = GetDriver( _valueId.GetHomeId() ) )
+	{
+		driver->LockNodes();
+		if( Value* value = driver->GetValue( _valueId ) )
+		{
+			intensity = value->GetPollIntensity();
+			value->Release();
+		}
+		driver->ReleaseNodes();
+	}
+ 
+ 	return intensity;
+}
 
 //-----------------------------------------------------------------------------
 //	Retrieving Node information
