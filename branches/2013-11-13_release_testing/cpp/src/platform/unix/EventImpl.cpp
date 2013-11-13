@@ -89,7 +89,7 @@ void EventImpl::Set
 		err = pthread_cond_broadcast( &m_condition );
 		if( err != 0 )
 		{
-			fprintf(stderr,  "EventImpl::Set cond broadcast error %d (%s)\n", errno, err );
+			fprintf(stderr,  "EventImpl::Set cond broadcast error %d (%d)\n", errno, err );
 			assert( 0 );
 		}
 	}

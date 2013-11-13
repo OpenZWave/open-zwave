@@ -248,7 +248,7 @@ string LogImpl::GetTimeStampString
 	char buf[100];
 	snprintf( buf, sizeof(buf), "%04d-%02d-%02d %02d:%02d:%02d.%03d ", 
 		tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday,
-		  tm->tm_hour, tm->tm_min, tm->tm_sec, tv.tv_usec / 1000 );
+		  tm->tm_hour, tm->tm_min, tm->tm_sec, (int)tv.tv_usec / 1000 );
 	string str = buf;
 	return str;
 }
@@ -288,7 +288,7 @@ string LogImpl::GetThreadId
 )
 {
 	char buf[20];
-	snprintf( buf, sizeof(buf), "%08x ", pthread_self() );
+	snprintf( buf, sizeof(buf), "%08x ", (long unsigned int)pthread_self() );
 	string str = buf;
 	return str;
 }
