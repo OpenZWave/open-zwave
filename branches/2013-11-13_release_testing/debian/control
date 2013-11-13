@@ -1,0 +1,18 @@
+Source: openzwave
+Maintainer: Harald Klein <hari@vt100.at>
+Section: devel
+Priority: optional
+Build-Depends: debhelper (>= 8), g++ (>= 4.4), quilt, libudev-dev
+Standards-Version: 3.9.3
+
+Package: libopenzwave1.0
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libudev0 
+Description: API to use a Z-Wave controller
+
+Package: libopenzwave1.0-dev
+Section: libdevel
+Depends: ${misc:Depends}, libopenzwave1.0
+Architecture: any
+Description: header files for the openzwave library

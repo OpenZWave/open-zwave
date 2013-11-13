@@ -1,0 +1,15 @@
+openzwave (1.0-635) UNRELEASED; urgency=low
+
+  [ hari ]
+  * Initial release.
+
+  [ root ]
+  * include config files in debian package, put headers in to proper
+    paths
+  * increasing release version after greg's large update
+  * new package including patches for retry timer and explore routing
+  * don't assume devices are awake in debian package
+  * increase deb package version
+  * new package
+
+ -- root <root@pluto.vt100.at>  Mon, 28 Jan 2013 13:48:57 +0100
