@@ -3264,6 +3264,10 @@ void Driver::HandleApplicationCommandHandlerRequest
 		{
 			node->m_receivedUnsolicited++;
 		}
+		if ( !node->IsNodeAlive() ) 
+		{
+		    node->SetNodeAlive( true );
+                }
 	}
 	if( ApplicationStatus::StaticGetCommandClassId() == classId )
 	{
