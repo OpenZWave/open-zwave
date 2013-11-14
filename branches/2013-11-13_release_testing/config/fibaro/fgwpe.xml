@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <Product xmlns='http://code.google.com/p/open-zwave/'>
+
+  <!-- COMMAND_CLASS_ALARM AlarmCmd_Get not supported -->
+  <CommandClass id="113" getsupported="false" />
+
+  <!-- COMMAND_CLASS_SWITCH_ALL SwitchAllCmd_Get not supported -->
+  <CommandClass id="39" getsupported="false" />
   <!-- Configuration -->
   <CommandClass id="112">
     

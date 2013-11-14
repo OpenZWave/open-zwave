@@ -43,7 +43,7 @@ enum EnergyProductionCmd
 	EnergyProductionCmd_Report	= 0x03
 };
 
-enum 
+enum
 {
 	EnergyProductionIndex_Instant = 0,
 	EnergyProductionIndex_Total,
@@ -51,7 +51,7 @@ enum
 	EnergyProductionIndex_Time
 };
 
-static char const* c_energyParameterNames[] = 
+static char const* c_energyParameterNames[] =
 {
 	"Instant energy production",
 	"Total energy production",
@@ -60,8 +60,8 @@ static char const* c_energyParameterNames[] =
 };
 
 //-----------------------------------------------------------------------------
-// <EnergyProduction::RequestState>												   
-// Request current state from the device									   
+// <EnergyProduction::RequestState>
+// Request current state from the device
 //-----------------------------------------------------------------------------
 bool EnergyProduction::RequestState
 (
@@ -84,8 +84,8 @@ bool EnergyProduction::RequestState
 }
 
 //-----------------------------------------------------------------------------
-// <EnergyProduction::RequestValue>												   
-// Request current production from the device									   
+// <EnergyProduction::RequestValue>
+// Request current production from the device
 //-----------------------------------------------------------------------------
 bool EnergyProduction::RequestValue
 (
@@ -95,19 +95,24 @@ bool EnergyProduction::RequestValue
 	Driver::MsgQueue const _queue
 )
 {
-	Log::Write( LogLevel_Info, GetNodeId(), "Requesting the %s value", c_energyParameterNames[_valueEnum] );
-	Msg* msg = new Msg( "EnergyProductionCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-	msg->SetInstance( this, _instance );
-	msg->Append( GetNodeId() );
-	msg->Append( 3 );
-	msg->Append( GetCommandClassId() );
-	msg->Append( EnergyProductionCmd_Get );
-	msg->Append( _valueEnum );
-	msg->Append( GetDriver()->GetTransmitOptions() );
-	GetDriver()->SendMsg( msg, _queue );
-	return true;
+	if ( IsGetSupported() )
+	{
+		Log::Write( LogLevel_Info, GetNodeId(), "Requesting the %s value", c_energyParameterNames[_valueEnum] );
+		Msg* msg = new Msg( "EnergyProductionCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		msg->SetInstance( this, _instance );
+		msg->Append( GetNodeId() );
+		msg->Append( 3 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( EnergyProductionCmd_Get );
+		msg->Append( _valueEnum );
+		msg->Append( GetDriver()->GetTransmitOptions() );
+		GetDriver()->SendMsg( msg, _queue );
+		return true;
+	} else {
+		Log::Write(  LogLevel_Info, GetNodeId(), "EnergyProductionCmd_Get Not Supported on this node");
+	}
+	return false;
 }
-
 //-----------------------------------------------------------------------------
 // <EnergyProduction::HandleMsg>
 // Handle a message from the Z-Wave network

@@ -55,10 +55,10 @@ enum StringEncoding
 };
 
 // Mapping of characters 0x80 and above to Unicode.
-uint16 const c_extendedAsciiToUnicode[] = 
+uint16 const c_extendedAsciiToUnicode[] =
 {
 	0x20ac,	    // 0x80 - Euro Sign
-	0x0081,		// 0x81 - 
+	0x0081,		// 0x81 -
 	0x201a,	    // 0x82 - Single Low-9 Quotation Mark
 	0x0192,	    // 0x83 - Latin Small Letter F With Hook
 	0x201e,	    // 0x84 - Double Low-9 Quotation Mark
@@ -70,11 +70,11 @@ uint16 const c_extendedAsciiToUnicode[] =
 	0x0160,	    // 0x8a - Latin Capital Letter S With Caron
 	0x2039,	    // 0x8b - Single Left-Pointing Angle Quotation Mark
 	0x0152,	    // 0x8c - Latin Capital Ligature Oe
-	0x008d,		// 0x8d - 
+	0x008d,		// 0x8d -
 	0x017d,	    // 0x8e - Latin Capital Letter Z With Caron
-	0x008f,		// 0x8f - 
+	0x008f,		// 0x8f -
 
-	0x0090,		// 0x90 - 
+	0x0090,		// 0x90 -
 	0x2018,	    // 0x91 - Left Single Quotation Mark
 	0x2019,	    // 0x92 - Right Single Quotation Mark
 	0x201c,	    // 0x93 - Left Double Quotation Mark
@@ -87,7 +87,7 @@ uint16 const c_extendedAsciiToUnicode[] =
 	0x0161,	    // 0x9a - Latin Small Letter S With Caron
 	0x203a,	    // 0x9b - Single Right-Pointing Angle Quotation Mark
 	0x0153,	    // 0x9c - Latin Small Ligature Oe
-	0x009d,		// 0x9d - 
+	0x009d,		// 0x9d -
 	0x017e,	    // 0x9e - Latin Small Letter Z With Caron
 	0x0178,	    // 0x9f - Latin Capital Letter Y With Diaeresis
 
@@ -195,8 +195,8 @@ uint16 const c_extendedAsciiToUnicode[] =
 };
 
 //-----------------------------------------------------------------------------
-// <NodeNaming::RequestState>												   
-// Request current state from the device									   
+// <NodeNaming::RequestState>
+// Request current state from the device
 //-----------------------------------------------------------------------------
 bool NodeNaming::RequestState
 (
@@ -228,8 +228,8 @@ bool NodeNaming::RequestState
 }
 
 //-----------------------------------------------------------------------------
-// <NodeNaming::RequestValue>												   
-// Request current value from the device									   
+// <NodeNaming::RequestValue>
+// Request current value from the device
 //-----------------------------------------------------------------------------
 bool NodeNaming::RequestValue
 (
@@ -248,14 +248,20 @@ bool NodeNaming::RequestValue
 	Msg* msg;
 	if( _getTypeEnum == NodeNamingCmd_Get )
 	{
-		msg = new Msg( "NodeNamingCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-		msg->Append( GetNodeId() );
-		msg->Append( 2 );
-		msg->Append( GetCommandClassId() );
-		msg->Append( NodeNamingCmd_Get );
-		msg->Append( GetDriver()->GetTransmitOptions() );
-		GetDriver()->SendMsg( msg, _queue );
-		return true;
+		if ( IsGetSupported() )
+		{
+			msg = new Msg( "NodeNamingCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+			msg->Append( GetNodeId() );
+			msg->Append( 2 );
+			msg->Append( GetCommandClassId() );
+			msg->Append( NodeNamingCmd_Get );
+			msg->Append( GetDriver()->GetTransmitOptions() );
+			GetDriver()->SendMsg( msg, _queue );
+			return true;
+		} else {
+			Log::Write(  LogLevel_Info, GetNodeId(), "NodeNamingCmd_Get Not Supported on this node");
+		}
+		return false;
 	}
 
 	if( _getTypeEnum == NodeNamingCmd_LocationGet )
@@ -337,13 +343,13 @@ void NodeNaming::SetName
 	}
 
 	Log::Write( LogLevel_Info, GetNodeId(), "NodeNaming::Set - Naming to '%s'", _name.c_str() );
-	Msg* msg = new Msg( "NodeNaming Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
+	Msg* msg = new Msg( "NodeNaming Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 	msg->Append( GetNodeId() );
 	msg->Append( (uint8)(length + 3) );
 	msg->Append( GetCommandClassId() );
 	msg->Append( NodeNamingCmd_Set );
 	msg->Append( (uint8)StringEncoding_ASCII );
-	
+
 	for( uint32 i=0; i<length; ++i )
 	{
 		msg->Append( _name[i] );
@@ -369,13 +375,13 @@ void NodeNaming::SetLocation
 	}
 
 	Log::Write( LogLevel_Info, GetNodeId(), "NodeNaming::SetLocation - Setting location to '%s'", _location.c_str() );
-	Msg* msg = new Msg( "NodeNaming Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
+	Msg* msg = new Msg( "NodeNaming Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 	msg->Append( GetNodeId() );
 	msg->Append( (uint8)(length + 3) );
 	msg->Append( GetCommandClassId() );
 	msg->Append( NodeNamingCmd_LocationSet );
 	msg->Append( (uint8)StringEncoding_ASCII );
-	
+
 	for( uint32 i=0; i<length; ++i )
 	{
 		msg->Append( _location[i] );
@@ -400,7 +406,7 @@ string NodeNaming::ExtractString
 	uint32 pos = 0;
 
 	str[0] = 0;
-	StringEncoding encoding = (StringEncoding)( _data[1] & 0x07 );	
+	StringEncoding encoding = (StringEncoding)( _data[1] & 0x07 );
 
 	if( _length >= 3 )
 	{
@@ -410,7 +416,7 @@ string NodeNaming::ExtractString
 		{
 			numBytes = 16;
 		}
-		
+
 		switch( encoding )
 		{
 			case StringEncoding_ASCII:

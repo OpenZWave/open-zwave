@@ -71,9 +71,9 @@ bool Configuration::HandleMsg
 			paramValue |= (int32)_data[i+3];
 		}
 
-		if ( Value* value = GetValue( 1, parameter ) ) 
+		if ( Value* value = GetValue( 1, parameter ) )
 		{
-			switch ( value->GetID().GetType() ) 
+			switch ( value->GetID().GetType() )
 			{
 				case ValueID::ValueType_Bool:
 				{
@@ -226,21 +226,25 @@ bool Configuration::RequestValue
 		// This command class doesn't work with multiple instances
 		return false;
 	}
-
-	Msg* msg = new Msg( "ConfigurationCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-	msg->Append( GetNodeId() );
-	msg->Append( 3 );
-	msg->Append( GetCommandClassId() );
-	msg->Append( ConfigurationCmd_Get );
-	msg->Append( _parameter );
-	msg->Append( GetDriver()->GetTransmitOptions() );
-	GetDriver()->SendMsg( msg, _queue );
-	return true;
+	if ( IsGetSupported() )
+	{
+		Msg* msg = new Msg( "ConfigurationCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		msg->Append( GetNodeId() );
+		msg->Append( 3 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( ConfigurationCmd_Get );
+		msg->Append( _parameter );
+		msg->Append( GetDriver()->GetTransmitOptions() );
+		GetDriver()->SendMsg( msg, _queue );
+		return true;
+	} else {
+		Log::Write(  LogLevel_Info, GetNodeId(), "ConfigurationCmd_Get Not Supported on this node");
+	}
+	return false;
 }
-
 //-----------------------------------------------------------------------------
 // <Configuration::Set>
-// Set the device's 
+// Set the device's
 //-----------------------------------------------------------------------------
 void Configuration::Set
 (
@@ -263,7 +267,7 @@ void Configuration::Set
 		msg->Append( (uint8)( ( _value>>24 ) & 0xff ) );
 		msg->Append( (uint8)( ( _value>>16 ) & 0xff ) );
 	}
-	if( _size > 1 ) 
+	if( _size > 1 )
 	{
 		msg->Append( (uint8)( ( _value>>8 ) & 0xff ) );
 	}

@@ -43,7 +43,7 @@ enum ThermostatFanStateCmd
 	ThermostatFanStateCmd_Report			= 0x03
 };
 
-static char const* c_stateName[] = 
+static char const* c_stateName[] =
 {
 	"Idle",
 	"Running",
@@ -94,16 +94,22 @@ bool ThermostatFanState::RequestValue
 	Driver::MsgQueue const _queue
 )
 {
-	// Request the current state
-	Msg* msg = new Msg( "Request Current Thermostat Fan State", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-	msg->SetInstance( this, _instance );
-	msg->Append( GetNodeId() );
-	msg->Append( 2 );
-	msg->Append( GetCommandClassId() );
-	msg->Append( ThermostatFanStateCmd_Get );
-	msg->Append( GetDriver()->GetTransmitOptions() );
-	GetDriver()->SendMsg( msg, _queue );
-	return true;
+	if ( IsGetSupported() )
+	{
+		// Request the current state
+		Msg* msg = new Msg( "ThermostatFanStateCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		msg->SetInstance( this, _instance );
+		msg->Append( GetNodeId() );
+		msg->Append( 2 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( ThermostatFanStateCmd_Get );
+		msg->Append( GetDriver()->GetTransmitOptions() );
+		GetDriver()->SendMsg( msg, _queue );
+		return true;
+	} else {
+		Log::Write(  LogLevel_Info, GetNodeId(), "ThermostatFanStateCmd_Get Not Supported on this node");
+	}
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -124,11 +130,11 @@ bool ThermostatFanState::HandleMsg
 		{
 			valueString->OnValueRefreshed( c_stateName[_data[1]&0x0f] );
 			valueString->Release();
-			Log::Write( LogLevel_Info, GetNodeId(), "Received thermostat fan state: %s", valueString->GetValue().c_str() );		
+			Log::Write( LogLevel_Info, GetNodeId(), "Received thermostat fan state: %s", valueString->GetValue().c_str() );
 		}
 		return true;
 	}
-		
+
 	return false;
 }
 

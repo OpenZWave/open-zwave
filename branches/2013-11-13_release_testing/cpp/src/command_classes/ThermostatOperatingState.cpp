@@ -43,7 +43,7 @@ enum ThermostatOperatingStateCmd
 	ThermostatOperatingStateCmd_Report			= 0x03
 };
 
-static char const* c_stateName[] = 
+static char const* c_stateName[] =
 {
 	"Idle",
 	"Heating",
@@ -53,13 +53,13 @@ static char const* c_stateName[] =
 	"Pending Cool",
 	"Vent / Economizer",
 	"State 07",				// Undefined states.  May be used in the future.
-	"State 08", 
-	"State 09", 
-	"State 10", 
-	"State 11", 
-	"State 12", 
-	"State 13", 
-	"State 14", 
+	"State 08",
+	"State 09",
+	"State 10",
+	"State 11",
+	"State 12",
+	"State 13",
+	"State 14",
 	"State 15"
 };
 
@@ -93,15 +93,21 @@ bool ThermostatOperatingState::RequestValue
 	Driver::MsgQueue const _queue
 )
 {
-	Msg* msg = new Msg( "Request Current Thermostat Operating State", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-	msg->SetInstance( this, _instance );
-	msg->Append( GetNodeId() );
-	msg->Append( 2 );
-	msg->Append( GetCommandClassId() );
-	msg->Append( ThermostatOperatingStateCmd_Get );
-	msg->Append( GetDriver()->GetTransmitOptions() );
-	GetDriver()->SendMsg( msg, _queue );
-	return true;
+	if ( IsGetSupported() )
+	{
+		Msg* msg = new Msg( "ThermostatOperatingStateCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		msg->SetInstance( this, _instance );
+		msg->Append( GetNodeId() );
+		msg->Append( 2 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( ThermostatOperatingStateCmd_Get );
+		msg->Append( GetDriver()->GetTransmitOptions() );
+		GetDriver()->SendMsg( msg, _queue );
+		return true;
+	} else {
+		Log::Write(  LogLevel_Info, GetNodeId(), "ThermostatOperatingStateCmd_Get Not Supported on this node");
+	}
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -122,7 +128,7 @@ bool ThermostatOperatingState::HandleMsg
 		{
 			valueString->OnValueRefreshed( c_stateName[_data[1]&0x0f] );
 			valueString->Release();
-			Log::Write( LogLevel_Info, GetNodeId(), "Received thermostat operating state: %s", valueString->GetValue().c_str() );		
+			Log::Write( LogLevel_Info, GetNodeId(), "Received thermostat operating state: %s", valueString->GetValue().c_str() );
 		}
 		return true;
 	}

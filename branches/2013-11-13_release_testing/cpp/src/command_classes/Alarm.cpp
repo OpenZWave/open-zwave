@@ -91,6 +91,8 @@ bool Alarm::RequestValue
 		msg->Append( GetDriver()->GetTransmitOptions() );
 		GetDriver()->SendMsg( msg, _queue );
 		return true;
+	} else {
+		Log::Write(  LogLevel_Info, GetNodeId(), "AlarmCmd_Get Not Supported on this node");
 	}
 	return false;
 }

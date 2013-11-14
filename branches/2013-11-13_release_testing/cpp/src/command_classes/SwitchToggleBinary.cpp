@@ -45,8 +45,8 @@ enum SwitchToggleBinaryCmd
 };
 
 //-----------------------------------------------------------------------------
-// <SwitchToggleBinary::RequestState>												   
-// Request current state from the device									   
+// <SwitchToggleBinary::RequestState>
+// Request current state from the device
 //-----------------------------------------------------------------------------
 bool SwitchToggleBinary::RequestState
 (
@@ -64,8 +64,8 @@ bool SwitchToggleBinary::RequestState
 }
 
 //-----------------------------------------------------------------------------
-// <SwitchToggleBinary::RequestValue>												   
-// Request current value from the device									   
+// <SwitchToggleBinary::RequestValue>
+// Request current value from the device
 //-----------------------------------------------------------------------------
 bool SwitchToggleBinary::RequestValue
 (
@@ -75,15 +75,21 @@ bool SwitchToggleBinary::RequestValue
 	Driver::MsgQueue const _queue
 )
 {
-	Msg* msg = new Msg( "SwitchToggleBinaryCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-	msg->SetInstance( this, _instance );
-	msg->Append( GetNodeId() );
-	msg->Append( 2 );
-	msg->Append( GetCommandClassId() );
-	msg->Append( SwitchToggleBinaryCmd_Get );
-	msg->Append( GetDriver()->GetTransmitOptions() );
-	GetDriver()->SendMsg( msg, _queue );
-	return true;
+	if ( IsGetSupported() )
+	{
+		Msg* msg = new Msg( "SwitchToggleBinaryCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		msg->SetInstance( this, _instance );
+		msg->Append( GetNodeId() );
+		msg->Append( 2 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( SwitchToggleBinaryCmd_Get );
+		msg->Append( GetDriver()->GetTransmitOptions() );
+		GetDriver()->SendMsg( msg, _queue );
+		return true;
+	} else {
+		Log::Write(  LogLevel_Info, GetNodeId(), "SwitchToggleBinaryCmd_Get Not Supported on this node");
+	}
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -122,7 +128,7 @@ bool SwitchToggleBinary::SetValue
 )
 {
 	Log::Write( LogLevel_Info, GetNodeId(), "SwitchToggleBinary::Set - Toggling the state" );
-	Msg* msg = new Msg( "SwitchToggleBinary Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
+	Msg* msg = new Msg( "SwitchToggleBinary Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 	msg->SetInstance( this, _value.GetID().GetInstance() );
 	msg->Append( GetNodeId() );
 	msg->Append( 2 );

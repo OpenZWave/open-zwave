@@ -48,8 +48,8 @@ enum SwitchToggleMultilevelCmd
 
 
 //-----------------------------------------------------------------------------
-// <SwitchToggleMultilevel::RequestState>												   
-// Request current state from the device									   
+// <SwitchToggleMultilevel::RequestState>
+// Request current state from the device
 //-----------------------------------------------------------------------------
 bool SwitchToggleMultilevel::RequestState
 (
@@ -78,15 +78,21 @@ bool SwitchToggleMultilevel::RequestValue
 	Driver::MsgQueue const _queue
 )
 {
-	Msg* msg = new Msg( "SwitchToggleMultilevelCmd_StartLevelChange", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-	msg->SetInstance( this, _instance );
-	msg->Append( GetNodeId() );
-	msg->Append( 2 );
-	msg->Append( GetCommandClassId() );
-	msg->Append( SwitchToggleMultilevelCmd_Get );
-	msg->Append( GetDriver()->GetTransmitOptions() );
-	GetDriver()->SendMsg( msg, _queue );
-	return true;
+	if ( IsGetSupported() )
+	{
+		Msg* msg = new Msg( "SwitchToggleMultilevelCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		msg->SetInstance( this, _instance );
+		msg->Append( GetNodeId() );
+		msg->Append( 2 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( SwitchToggleMultilevelCmd_Get );
+		msg->Append( GetDriver()->GetTransmitOptions() );
+		GetDriver()->SendMsg( msg, _queue );
+		return true;
+	} else {
+		Log::Write(  LogLevel_Info, GetNodeId(), "SwitchToggleMultilevelCmd_Get Not Supported on this node");
+	}
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -125,7 +131,7 @@ bool SwitchToggleMultilevel::SetValue
 )
 {
 	Log::Write( LogLevel_Info, GetNodeId(), "SwitchToggleMultilevel::Set - Toggling the state" );
-	Msg* msg = new Msg( "SwitchToggleMultilevel Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
+	Msg* msg = new Msg( "SwitchToggleMultilevel Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 	msg->SetInstance( this, _value.GetID().GetInstance() );
 	msg->Append( GetNodeId() );
 	msg->Append( 2 );
@@ -152,7 +158,7 @@ void SwitchToggleMultilevel::StartLevelChange
 	param |= ( _bRollover ? 0x80 : 0x00 );
 
 	Log::Write( LogLevel_Info, GetNodeId(), "SwitchMultilevel::StartLevelChange - Starting a level change, Direction=%d, IgnoreStartLevel=%s and rollover=%s", (_direction==SwitchToggleMultilevelDirection_Up) ? "Up" : "Down", _bIgnoreStartLevel ? "True" : "False", _bRollover ? "True" : "False" );
-	Msg* msg = new Msg( "SwitchMultilevel StartLevelChange", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
+	Msg* msg = new Msg( "SwitchMultilevel StartLevelChange", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 	msg->Append( GetNodeId() );
 	msg->Append( 3 );
 	msg->Append( GetCommandClassId() );
@@ -170,7 +176,7 @@ void SwitchToggleMultilevel::StopLevelChange
 )
 {
 	Log::Write( LogLevel_Info, GetNodeId(), "SwitchToggleMultilevel::StopLevelChange - Stopping the level change" );
-	Msg* msg = new Msg( "SwitchToggleMultilevel StopLevelChange", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
+	Msg* msg = new Msg( "SwitchToggleMultilevel StopLevelChange", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 	msg->Append( GetNodeId() );
 	msg->Append( 2 );
 	msg->Append( GetCommandClassId() );

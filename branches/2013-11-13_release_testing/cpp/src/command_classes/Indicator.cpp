@@ -45,8 +45,8 @@ enum IndicatorCmd
 };
 
 //-----------------------------------------------------------------------------
-// <Indicator::RequestState>												   
-// Request current state from the device									   
+// <Indicator::RequestState>
+// Request current state from the device
 //-----------------------------------------------------------------------------
 bool Indicator::RequestState
 (
@@ -64,8 +64,8 @@ bool Indicator::RequestState
 }
 
 //-----------------------------------------------------------------------------
-// <Indicator::RequestValue>												   
-// Request current value from the device									   
+// <Indicator::RequestValue>
+// Request current value from the device
 //-----------------------------------------------------------------------------
 bool Indicator::RequestValue
 (
@@ -75,16 +75,23 @@ bool Indicator::RequestValue
 	Driver::MsgQueue const _queue
 )
 {
-	Msg* msg = new Msg( "IndicatorCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-	msg->SetInstance( this, _instance );
-	msg->Append( GetNodeId() );
-	msg->Append( 2 );
-	msg->Append( GetCommandClassId() );
-	msg->Append( IndicatorCmd_Get );
-	msg->Append( GetDriver()->GetTransmitOptions() );
-	GetDriver()->SendMsg( msg, _queue );
-	return true;
+	if ( IsGetSupported() )
+	{
+		Msg* msg = new Msg( "IndicatorCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		msg->SetInstance( this, _instance );
+		msg->Append( GetNodeId() );
+		msg->Append( 2 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( IndicatorCmd_Get );
+		msg->Append( GetDriver()->GetTransmitOptions() );
+		GetDriver()->SendMsg( msg, _queue );
+		return true;
+	} else {
+		Log::Write(  LogLevel_Info, GetNodeId(), "IndicatorCmd_Get Not Supported on this node");
+	}
+	return false;
 }
+
 
 //-----------------------------------------------------------------------------
 // <Indicator::HandleMsg>
@@ -114,7 +121,7 @@ bool Indicator::HandleMsg
 
 //-----------------------------------------------------------------------------
 // <Indicator::SetValue>
-// Set the device's indicator value 
+// Set the device's indicator value
 //-----------------------------------------------------------------------------
 bool Indicator::SetValue
 (
@@ -126,7 +133,7 @@ bool Indicator::SetValue
 		ValueByte const* value = static_cast<ValueByte const*>(&_value);
 
 		Log::Write( LogLevel_Info, GetNodeId(), "Indicator::SetValue - Setting indicator to %d", value->GetValue());
-		Msg* msg = new Msg( "Basic Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
+		Msg* msg = new Msg( "Basic Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 		msg->SetInstance( this, _value.GetID().GetInstance() );
 		msg->Append( GetNodeId() );
 		msg->Append( 3 );
