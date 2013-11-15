@@ -321,6 +321,7 @@
 		<Product type="3001" id="0000" name="ZW ZS 3500 Plugin Switch" />
 		<Product type="3002" id="0000" name="ZW ZSA 3500 Plugin Switch" />
 		<Product type="4001" id="0000" name="ZW ESJ Blind Control" />
+		<Product type="5002" id="0000" name="Wireless Flush Mounted Switch" />
 	</Manufacturer>
 	<Manufacturer id="0016" name="PowerLynx">
 	</Manufacturer>
