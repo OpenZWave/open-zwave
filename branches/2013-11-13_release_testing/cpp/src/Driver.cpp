@@ -3718,6 +3718,7 @@ bool Driver::EnablePoll
 
 		// allow the poll thread to continue
 		m_pollMutex->Unlock();
+		ReleaseNodes();
 
 		Log::Write( LogLevel_Info, nodeId, "EnablePoll failed - value not found for node %d", nodeId );
 		return false;
