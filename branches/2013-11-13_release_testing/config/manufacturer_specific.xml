@@ -156,6 +156,7 @@
 		<Product type="0100" id="0104" name="FGD211 Universal Dimmer 500W" />
 		<Product type="0100" id="0107" name="FGD211 Universal Dimmer 500W" config="fibaro/fgd211.xml" />
 		<Product type="0100" id="0109" name="FGD211 Universal Dimmer 500W" config="fibaro/fgd211.xml" />
+		<Product type="0100" id="100a" name="FGD211 Universal Dimmer 500W" config="fibaro/fgd211.xml" />
 		<Product type="0700" id="1000" name="FGK101 Door Opening Sensor" config="fibaro/fgk001.xml" />
 		<Product type="0300" id="100a" name="FGR221 Roller Shutter Controller" config="fibaro/fgr221.xml"/>
 		<Product type="0300" id="0106" name="FGR221 Roller Shutter Controller" config="fibaro/fgr221.xml"/>
@@ -210,6 +211,7 @@
 	<Manufacturer id="001e" name="Homeseer">
 		<Product type="0001" id="0002" name="ZTroller" config="homeseer/ztroller.xml"/>
 		<Product type="0002" id="0001" name="HSM100 Wireless Multi-Sensor" config="homeseer/hsm100.xml"/>
+		<Product type="0002" id="0002" name="EZMotion+ 3-in-1 Sensor" config="homeseer/hsm100.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0039" name="Honeywell">
 		<Product type="0011" id="0001" name="TH8320ZW1000 Touchscreen Thermostat" config="honeywell/th8320zw1000.xml"/>
@@ -414,6 +416,7 @@
 		<Product type="0007" id="0020" name="WDTC-20 Thermostat" config="waynedalton/WDTC-20.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0118" name="Wenzhou TKB Control System">
+		<Product type="0001" id="0001" name="TZ88 Smart Energy Plug-in Switch" config="wenzhou/tz88.xml"/>
 	</Manufacturer>
 	<Manufacturer id="004c" name="Woodward Labs">
 	</Manufacturer>
