@@ -119,6 +119,9 @@
 	</Manufacturer>
 	<Manufacturer id="0035" name="Embedit A/S">
 	</Manufacturer>
+	<Manufacturer id="0148" name="EUROtronic">
+		<Product type="0001" id="0001" name="EUR_STELLAZ Wall Radiator Thermostat Valve Control" config="eurotronic/eur_stellaz.xml"/>
+	</Manufacturer>
 	<Manufacturer id="0060" name="Everspring">
 		<Product type="0003" id="0001" name="AD142 Plug-in Dimmer Module"/>
 		<Product type="0104" id="0001" name="AN145 Lamp Screw In Module" config="everspring/an145.xml"/>

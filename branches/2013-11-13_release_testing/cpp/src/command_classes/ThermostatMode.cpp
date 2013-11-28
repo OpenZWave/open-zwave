@@ -238,8 +238,18 @@ bool ThermostatMode::HandleMsg
 	if( ThermostatModeCmd_Report == (ThermostatModeCmd)_data[0] )
 	{
 		uint8 mode = _data[1]&0x1f;
+		bool validMode = false;
+		for (vector<ValueList::Item>::iterator it = m_supportedModes.begin(); it != m_supportedModes.end(); ++it )
+		{
+                	ValueList::Item const& item = *it;
 
-		if( mode < m_supportedModes.size() )
+                	if (item.m_value == mode) {
+				validMode = true;
+				break;
+			}
+		}
+
+		if( validMode )
 		{
 			// We have received the thermostat mode from the Z-Wave device
 			if( ValueList* valueList = static_cast<ValueList*>( GetValue( _instance, 0 ) ) )
