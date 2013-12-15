@@ -289,7 +289,7 @@ string LogImpl::GetThreadId
 )
 {
 	char buf[20];
-	snprintf( buf, sizeof(buf), "%08x ", (long unsigned int)pthread_self() );
+	snprintf( buf, sizeof(buf), "%08lx ", (long unsigned int)pthread_self() );
 	string str = buf;
 	return str;
 }

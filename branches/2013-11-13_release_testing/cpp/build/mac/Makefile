@@ -13,8 +13,8 @@ LD     := g++
 AR     := ar crc
 RANLIB := ranlib
 
-DEBUG_CFLAGS    := -Wall -Wno-unknown-pragmas -Wno-inline -Werror -Wno-format -g -DDEBUG -DLOG_STDERR -fPIC
-RELEASE_CFLAGS  := -Wall -Wno-unknown-pragmas -Werror -Wno-format -O3 -DNDEBUG -fPIC
+DEBUG_CFLAGS    := -Wall -Wno-unknown-pragmas -Wno-inline -Werror -g -DDEBUG -DLOG_STDERR -fPIC
+RELEASE_CFLAGS  := -Wall -Wno-unknown-pragmas -Werror -O3 -DNDEBUG -fPIC
 
 DEBUG_LDFLAGS	:= -g
 
