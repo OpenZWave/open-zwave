@@ -27,6 +27,7 @@
 //-----------------------------------------------------------------------------
 #include <string>
 #include <cstring>
+#include <pthread.h>
 #include "Defs.h"
 #include "LogImpl.h"
 

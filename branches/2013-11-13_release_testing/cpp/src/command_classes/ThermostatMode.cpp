@@ -75,9 +75,8 @@ void ThermostatMode::ReadXML
 {
 	CommandClass::ReadXML( _ccElement );
 
-	if( Node* node = GetNodeUnsafe() )
+	if( GetNodeUnsafe() )
 	{
-		node = node;
 		vector<ValueList::Item>	supportedModes;
 
 		TiXmlElement const* supportedModesElement = _ccElement->FirstChildElement( "SupportedModes" );
@@ -128,9 +127,8 @@ void ThermostatMode::WriteXML
 
 	CommandClass::WriteXML( _ccElement );
 
-	if( Node* node = GetNodeUnsafe() )
+	if( GetNodeUnsafe() )
 	{
-		node = node;
 		TiXmlElement* supportedModesElement = new TiXmlElement( "SupportedModes" );
 		_ccElement->LinkEndChild( supportedModesElement );
 

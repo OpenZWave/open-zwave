@@ -132,8 +132,7 @@ Meter::Meter
 	uint32 const _homeId,
 	uint8 const _nodeId
 ):
-	CommandClass( _homeId, _nodeId ),
-	m_scale( 0 )
+	CommandClass( _homeId, _nodeId )
 {
 	SetStaticRequest( StaticRequest_Values );
 }

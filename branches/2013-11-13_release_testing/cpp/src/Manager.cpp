@@ -682,7 +682,7 @@ uint8 Manager::GetPollIntensity
 	ValueID const _valueId
 )
 {
-	uint8 intensity;
+	uint8 intensity = 0;
 	if( Driver* driver = GetDriver( _valueId.GetHomeId() ) )
 	{
 		driver->LockNodes();
