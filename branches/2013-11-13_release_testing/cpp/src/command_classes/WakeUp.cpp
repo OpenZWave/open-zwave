@@ -36,6 +36,7 @@
 #include "Notification.h"
 #include "Mutex.h"
 #include "ValueInt.h"
+#include "Options.h"
 
 using namespace OpenZWave;
 
@@ -62,10 +63,12 @@ WakeUp::WakeUp
 ):
 	CommandClass( _homeId, _nodeId ), 
 	m_mutex( new Mutex() ),
-	m_awake( true ),
 	m_pollRequired( false ),
 	m_notification( false )
 {
+        m_awake = true;
+        Options::Get()->GetOptionAsBool("AssumeAwake", &m_awake);
+
 	SetStaticRequest( StaticRequest_Values );
 }
 
