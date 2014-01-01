@@ -25,9 +25,10 @@
 //
 //-----------------------------------------------------------------------------
 
-#include <algorithm> 
-#include <string>  
-#include <locale.h>  
+#include <algorithm>
+#include <string>
+#include <sstream>
+#include <locale.h>
 
 #include "Defs.h"
 #include "Manager.h"
@@ -60,7 +61,9 @@
 using namespace OpenZWave;
 
 Manager* Manager::s_instance = NULL;
-
+extern uint16_t ozw_vers_major;
+extern uint16_t ozw_vers_minor;
+extern uint16_t ozw_vers_revision;
 
 //-----------------------------------------------------------------------------
 //	Construction
@@ -100,6 +103,23 @@ void Manager::Destroy
 {
 	delete s_instance;
 	s_instance = NULL;
+}
+
+//-----------------------------------------------------------------------------
+//	<Manager::getVersion>
+//	Static method to get the Version of OZW as a string.
+//-----------------------------------------------------------------------------
+std::string Manager::getVersionAsString() {
+	std::ostringstream versionstream;
+	versionstream << ozw_vers_major << "." << ozw_vers_minor << "." << ozw_vers_revision;
+	return versionstream.str();
+}
+//-----------------------------------------------------------------------------
+//	<Manager::getVersion>
+//	Static method to get the Version of OZW.
+//-----------------------------------------------------------------------------
+ozwversion Manager::getVersion() {
+	return version(ozw_vers_major, ozw_vers_minor);
 }
 
 //-----------------------------------------------------------------------------
@@ -173,7 +193,7 @@ Manager::~Manager
 		delete it->second;
 		m_readyDrivers.erase( it );
 	}
-	
+
 	m_notificationMutex->Release();
 
 	// Clear the watchers list
@@ -235,7 +255,7 @@ bool Manager::AddDriver
 )
 {
 	// Make sure we don't already have a driver for this controller
-	
+
 	// Search the pending list
 	for( list<Driver*>::iterator pit = m_pendingDrivers.begin(); pit != m_pendingDrivers.end(); ++pit )
 	{
@@ -357,13 +377,13 @@ void Manager::SetDriverReady
 		// Notify the watchers
 		Notification* notification = new Notification(success ? Notification::Type_DriverReady : Notification::Type_DriverFailed );
 		notification->SetHomeAndNodeIds( _driver->GetHomeId(), _driver->GetNodeId() );
-		_driver->QueueNotification( notification ); 
+		_driver->QueueNotification( notification );
 	}
 }
 
 //-----------------------------------------------------------------------------
 // <Manager::GetControllerNodeId>
-// 
+//
 //-----------------------------------------------------------------------------
 uint8 Manager::GetControllerNodeId
 (
@@ -381,7 +401,7 @@ uint8 Manager::GetControllerNodeId
 
 //-----------------------------------------------------------------------------
 // <Manager::GetSUCNodeId>
-// 
+//
 //-----------------------------------------------------------------------------
 uint8 Manager::GetSUCNodeId
 (
@@ -399,7 +419,7 @@ uint8 Manager::GetSUCNodeId
 
 //-----------------------------------------------------------------------------
 // <Manager::IsPrimaryController>
-// 
+//
 //-----------------------------------------------------------------------------
 bool Manager::IsPrimaryController
 (
@@ -417,7 +437,7 @@ bool Manager::IsPrimaryController
 
 //-----------------------------------------------------------------------------
 // <Manager::IsStaticUpdateController>
-// 
+//
 //-----------------------------------------------------------------------------
 bool Manager::IsStaticUpdateController
 (
@@ -435,7 +455,7 @@ bool Manager::IsStaticUpdateController
 
 //-----------------------------------------------------------------------------
 // <Manager::IsBridgeController>
-// 
+//
 //-----------------------------------------------------------------------------
 bool Manager::IsBridgeController
 (
@@ -453,7 +473,7 @@ bool Manager::IsBridgeController
 
 //-----------------------------------------------------------------------------
 // <Manager::GetLibraryVersion>
-// 
+//
 //-----------------------------------------------------------------------------
 string Manager::GetLibraryVersion
 (
@@ -471,7 +491,7 @@ string Manager::GetLibraryVersion
 
 //-----------------------------------------------------------------------------
 // <Manager::GetLibraryTypeName>
-// 
+//
 //-----------------------------------------------------------------------------
 string Manager::GetLibraryTypeName
 (
@@ -489,7 +509,7 @@ string Manager::GetLibraryTypeName
 
 //-----------------------------------------------------------------------------
 // <Manager::GetSendQueueCount>
-// 
+//
 //-----------------------------------------------------------------------------
 int32 Manager::GetSendQueueCount
 (
@@ -558,7 +578,7 @@ string Manager::GetControllerPath
 //-----------------------------------------------------------------------------
 //	Polling Z-Wave values
 //-----------------------------------------------------------------------------
-				  		
+
 //-----------------------------------------------------------------------------
 // <Manager::GetPollInterval>
 // Return the polling interval
@@ -605,7 +625,7 @@ void Manager::SetPollInterval
 // Enable polling of a value
 //-----------------------------------------------------------------------------
 bool Manager::EnablePoll
-( 
+(
 	ValueID const _valueId,
 	uint8 const _intensity
 )
@@ -624,7 +644,7 @@ bool Manager::EnablePoll
 // Disable polling of a value
 //-----------------------------------------------------------------------------
 bool Manager::DisablePoll
-( 
+(
 	ValueID const _valueId
 )
 {
@@ -642,7 +662,7 @@ bool Manager::DisablePoll
 // Check polling status of a value
 //-----------------------------------------------------------------------------
 bool Manager::isPolled
-( 
+(
 	ValueID const _valueId
 )
 {
@@ -660,7 +680,7 @@ bool Manager::isPolled
 // Change the intensity with which this value is polled
 //-----------------------------------------------------------------------------
 void Manager::SetPollIntensity
-( 
+(
 	ValueID const _valueId,
 	uint8 const _intensity
 )
@@ -678,7 +698,7 @@ void Manager::SetPollIntensity
 // Change the intensity with which this value is polled
 //-----------------------------------------------------------------------------
 uint8 Manager::GetPollIntensity
-( 
+(
 	ValueID const _valueId
 )
 {
@@ -693,7 +713,7 @@ uint8 Manager::GetPollIntensity
 		}
 		driver->ReleaseNodes();
 	}
- 
+
  	return intensity;
 }
 
@@ -1272,9 +1292,9 @@ bool Manager::IsNodeInfoReceived
 			result = node->NodeInfoReceived();
 		}
 
-		driver->ReleaseNodes();            
+		driver->ReleaseNodes();
 	}
-    
+
 	return result;
 }
 
@@ -1292,7 +1312,7 @@ bool Manager::GetNodeClassInformation
 )
 {
 	bool result = false;
-    
+
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
 	        Node *node;
@@ -1320,7 +1340,7 @@ bool Manager::GetNodeClassInformation
 
 		driver->ReleaseNodes();
 	}
-    
+
 	return result;
 }
 
@@ -1426,7 +1446,7 @@ void Manager::SetNodeLevel
 // Gets the user-friendly label for the value
 //-----------------------------------------------------------------------------
 string Manager::GetValueLabel
-( 
+(
 	ValueID const& _id
 )
 {
@@ -1450,7 +1470,7 @@ string Manager::GetValueLabel
 // Sets the user-friendly label for the value
 //-----------------------------------------------------------------------------
 void Manager::SetValueLabel
-( 
+(
 	ValueID const& _id,
 	string const& _value
 )
@@ -1472,7 +1492,7 @@ void Manager::SetValueLabel
 // Gets the units that the value is measured in
 //-----------------------------------------------------------------------------
 string Manager::GetValueUnits
-( 
+(
 	ValueID const& _id
 )
 {
@@ -1496,7 +1516,7 @@ string Manager::GetValueUnits
 // Sets the units that the value is measured in
 //-----------------------------------------------------------------------------
 void Manager::SetValueUnits
-( 
+(
  	ValueID const& _id,
 	string const& _value
 )
@@ -1518,7 +1538,7 @@ void Manager::SetValueUnits
 // Gets a help string describing the value's purpose and usage
 //-----------------------------------------------------------------------------
 string Manager::GetValueHelp
-( 
+(
 	ValueID const& _id
 )
 {
@@ -1542,7 +1562,7 @@ string Manager::GetValueHelp
 // Sets a help string describing the value's purpose and usage
 //-----------------------------------------------------------------------------
 void Manager::SetValueHelp
-( 
+(
 	ValueID const& _id,
 	string const& _value
 )
@@ -1564,7 +1584,7 @@ void Manager::SetValueHelp
 // Gets the minimum for a value
 //-----------------------------------------------------------------------------
 int32 Manager::GetValueMin
-( 
+(
 	ValueID const& _id
 )
 {
@@ -1588,7 +1608,7 @@ int32 Manager::GetValueMin
 // Gets the maximum for a value
 //-----------------------------------------------------------------------------
 int32 Manager::GetValueMax
-( 
+(
 	ValueID const& _id
 )
 {
@@ -1612,7 +1632,7 @@ int32 Manager::GetValueMax
 // Test whether the value is read-only
 //-----------------------------------------------------------------------------
 bool Manager::IsValueReadOnly
-( 
+(
 	ValueID const& _id
 )
 {
@@ -1636,7 +1656,7 @@ bool Manager::IsValueReadOnly
 // Test whether the value is write-only
 //-----------------------------------------------------------------------------
 bool Manager::IsValueWriteOnly
-( 
+(
 	ValueID const& _id
 )
 {
@@ -1660,7 +1680,7 @@ bool Manager::IsValueWriteOnly
 // Test whether the value has been set by a status message from the device
 //-----------------------------------------------------------------------------
 bool Manager::IsValueSet
-( 
+(
 	ValueID const& _id
 )
 {
@@ -1684,7 +1704,7 @@ bool Manager::IsValueSet
 // Test whether the value is currently being polled
 //-----------------------------------------------------------------------------
 bool Manager::IsValuePolled
-( 
+(
 	ValueID const& _id
 )
 {
@@ -1937,7 +1957,7 @@ bool Manager::GetValueAsString
 		if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 		{
 			driver->LockNodes();
-		
+
 			switch( _id.GetType() )
 			{
 				case ValueID::ValueType_Bool:
@@ -2189,8 +2209,8 @@ bool Manager::GetValueFloatPrecision
 // Sets the value from a bool
 //-----------------------------------------------------------------------------
 bool Manager::SetValue
-( 
-	ValueID const& _id, 
+(
+	ValueID const& _id,
 	bool const _value
 )
 {
@@ -2221,8 +2241,8 @@ bool Manager::SetValue
 // Sets the value from a byte
 //-----------------------------------------------------------------------------
 bool Manager::SetValue
-( 
-	ValueID const& _id, 
+(
+	ValueID const& _id,
 	uint8 const _value
 )
 {
@@ -2253,8 +2273,8 @@ bool Manager::SetValue
 // Sets the value from a floating point number
 //-----------------------------------------------------------------------------
 bool Manager::SetValue
-( 
-	ValueID const& _id, 
+(
+	ValueID const& _id,
 	float const _value
 )
 {
@@ -2279,7 +2299,7 @@ bool Manager::SetValue
 					{
 						for( nLen = strlen( str ) - 1; nLen > 0; nLen-- )
 						{
-							if( str[nLen] == '0' ) 
+							if( str[nLen] == '0' )
 								str[nLen] = 0;
 							else
 								break;
@@ -2305,8 +2325,8 @@ bool Manager::SetValue
 // Sets the value from a 32-bit signed integer
 //-----------------------------------------------------------------------------
 bool Manager::SetValue
-( 
-	ValueID const& _id, 
+(
+	ValueID const& _id,
 	int32 const _value
 )
 {
@@ -2337,8 +2357,8 @@ bool Manager::SetValue
 // Sets the value from a collection of bytes
 //-----------------------------------------------------------------------------
 bool Manager::SetValue
-( 
-	ValueID const& _id, 
+(
+	ValueID const& _id,
 	uint8 const* _value,
 	uint8 const _length
 )
@@ -2370,8 +2390,8 @@ bool Manager::SetValue
 // Sets the value from a 16-bit signed integer
 //-----------------------------------------------------------------------------
 bool Manager::SetValue
-( 
-	ValueID const& _id, 
+(
+	ValueID const& _id,
 	int16 const _value
 )
 {
@@ -2423,7 +2443,7 @@ bool Manager::SetValueListSelection
 				}
 				driver->ReleaseNodes();
 			}
-			  
+
 		}
 	}
 
@@ -2435,8 +2455,8 @@ bool Manager::SetValueListSelection
 // Sets the value from a string
 //-----------------------------------------------------------------------------
 bool Manager::SetValue
-( 
-	ValueID const& _id, 
+(
+	ValueID const& _id,
 	string const& _value
 )
 {
@@ -2447,7 +2467,7 @@ bool Manager::SetValue
 		if( _id.GetNodeId() != driver->GetNodeId() )
 		{
 			driver->LockNodes();
-		
+
 			switch( _id.GetType() )
 			{
 				case ValueID::ValueType_Bool:
@@ -2609,7 +2629,7 @@ void Manager::SetChangeVerified
 // Starts an activity in a device.
 //-----------------------------------------------------------------------------
 bool Manager::PressButton
-( 
+(
 	ValueID const& _id
 )
 {
@@ -2637,7 +2657,7 @@ bool Manager::PressButton
 // Stops an activity in a device.
 //-----------------------------------------------------------------------------
 bool Manager::ReleaseButton
-( 
+(
 	ValueID const& _id
 )
 {
@@ -2783,13 +2803,13 @@ void Manager::ClearSwitchPoints
 		}
 	}
 }
-		
+
 //-----------------------------------------------------------------------------
 // <Manager::GetSwitchPoint>
 // Gets switch point data from the schedule
 //-----------------------------------------------------------------------------
 bool Manager::GetSwitchPoint
-( 
+(
 	ValueID const& _id,
 	uint8 const _idx,
 	uint8* o_hours,
@@ -2860,7 +2880,7 @@ void Manager::SwitchAllOff
 //-----------------------------------------------------------------------------
 bool Manager::SetConfigParam
 (
-	uint32 const _homeId, 
+	uint32 const _homeId,
 	uint8 const _nodeId,
 	uint8 const _param,
 	int32 _value,
@@ -2881,7 +2901,7 @@ bool Manager::SetConfigParam
 //-----------------------------------------------------------------------------
 void Manager::RequestConfigParam
 (
-	uint32 const _homeId, 
+	uint32 const _homeId,
 	uint8 const _nodeId,
 	uint8 const _param
 )
@@ -2898,7 +2918,7 @@ void Manager::RequestConfigParam
 //-----------------------------------------------------------------------------
 void Manager::RequestAllConfigParams
 (
-	uint32 const _homeId, 
+	uint32 const _homeId,
 	uint8 const _nodeId
 )
 {
@@ -2923,7 +2943,7 @@ void Manager::RequestAllConfigParams
 //-----------------------------------------------------------------------------
 uint8 Manager::GetNumGroups
 (
-	uint32 const _homeId, 
+	uint32 const _homeId,
 	uint8 const _nodeId
 )
 {
@@ -2940,7 +2960,7 @@ uint8 Manager::GetNumGroups
 // Gets the associations for a group
 //-----------------------------------------------------------------------------
 uint32 Manager::GetAssociations
-( 
+(
 	uint32 const _homeId,
 	uint8 const _nodeId,
 	uint8 const _groupIdx,
@@ -2960,7 +2980,7 @@ uint32 Manager::GetAssociations
 // Gets the maximum number of associations for a group
 //-----------------------------------------------------------------------------
 uint8 Manager::GetMaxAssociations
-( 
+(
 	uint32 const _homeId,
 	uint8 const _nodeId,
 	uint8 const _groupIdx
@@ -2979,7 +2999,7 @@ uint8 Manager::GetMaxAssociations
 // Gets the label for a particular group
 //-----------------------------------------------------------------------------
 string Manager::GetGroupLabel
-( 
+(
 	uint32 const _homeId,
 	uint8 const _nodeId,
 	uint8 const _groupIdx
@@ -3156,7 +3176,7 @@ void Manager::SoftReset
 //-----------------------------------------------------------------------------
 bool Manager::BeginControllerCommand
 (
-	uint32 const _homeId, 
+	uint32 const _homeId,
 	Driver::ControllerCommand _command,
 	Driver::pfnControllerCallback_t _callback,				// = NULL
 	void* _context,								// = NULL
@@ -3548,7 +3568,7 @@ bool Manager::RemoveSceneValue
 
 //-----------------------------------------------------------------------------
 // <Manager::SceneGetValues>
-// Return a scene's Value ID 
+// Return a scene's Value ID
 //-----------------------------------------------------------------------------
 int Manager::SceneGetValues
 (

@@ -254,6 +254,9 @@ int main( int argc, char* argv[] )
 
 	pthread_mutex_lock( &initMutex );
 
+
+	printf("Starting MinOZW with OpenZWave Version %s\n", Manager::getVersionAsString().c_str());
+
 	// Create the OpenZWave Manager.
 	// The first argument is the path to the config files (where the manufacturer_specific.xml file is located
 	// The second argument is the path for saved Z-Wave network state and the log file.  If you leave it NULL 
