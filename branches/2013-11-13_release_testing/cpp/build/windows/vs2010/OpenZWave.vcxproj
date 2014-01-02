@@ -99,6 +99,13 @@
       <AdditionalDependencies>setupapi.lib</AdditionalDependencies>
       <TargetMachine>MachineX86</TargetMachine>
     </Lib>
+    <PreBuildEvent>
+      <Command>"$(ProgramFiles)\TortoiseSVN\bin\subwcrev.exe" . ..\winversion.ini ..\winversion.cpp
+exit 0</Command>
+    </PreBuildEvent>
+    <PreBuildEvent>
+      <Message>Export SVN Revision</Message>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">
     <ClCompile>
@@ -124,6 +131,13 @@
       <AdditionalDependencies>Setupapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PreBuildEvent>
+      <Command>"$(ProgramFiles)\TortoiseSVN\bin\subwcrev.exe" . ..\winversion.ini ..\winversion.cpp
+exit 0</Command>
+    </PreBuildEvent>
+    <PreBuildEvent>
+      <Message>Export SVN Revision</Message>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">
     <ClCompile>
@@ -147,6 +161,12 @@
     <Link>
       <AdditionalDependencies>Setupapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PreBuildEvent />
+    <PreBuildEvent>
+      <Message>Export SVN Revision</Message>
+      <Command>"$(ProgramFiles)\TortoiseSVN\bin\subwcrev.exe" . ..\winversion.ini ..\winversion.cpp
+exit 0</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -165,6 +185,13 @@
       <OutputFile>$(OutDir)\$(ProjectName).lib</OutputFile>
       <AdditionalDependencies>setupapi.lib</AdditionalDependencies>
     </Lib>
+    <PreBuildEvent>
+      <Command>"$(ProgramFiles)\TortoiseSVN\bin\subwcrev.exe" . ..\winversion.ini ..\winversion.cpp
+exit 0</Command>
+    </PreBuildEvent>
+    <PreBuildEvent>
+      <Message>Export SVN Revision</Message>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\hidapi\hidapi\hidapi.h" />
@@ -352,6 +379,7 @@
     <ClCompile Include="..\..\..\src\command_classes\ThermostatSetpoint.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\Version.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\WakeUp.cpp" />
+    <ClCompile Include="..\winversion.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -110,7 +110,8 @@ static inline uint16_t version_minor(const struct ozwversion v) {
  */
 static inline struct ozwversion version(uint16_t major, uint16_t minor)
 {
-	struct ozwversion v = { ._v = (uint32_t)(major << 16) | (uint32_t)minor };
+	struct ozwversion v;
+	v._v = (uint32_t)(major << 16) | (uint32_t)minor;
 	return v;
 }
 
