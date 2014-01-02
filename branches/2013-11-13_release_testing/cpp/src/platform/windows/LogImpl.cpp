@@ -31,6 +31,34 @@
 #include "Defs.h"
 #include "LogImpl.h"
 
+#ifdef MINGW
+
+#define vsprintf_s vsnprintf
+
+#define strcpy_s(DEST, NUM, SOURCE) strncpy(DEST, SOURCE, NUM)
+
+errno_t fopen_s(FILE** pFile, const char *filename, const char *mode)
+{
+    if (!pFile)
+    {
+        _set_errno(EINVAL);
+        return EINVAL;
+    }
+
+    *pFile = fopen(filename, mode);
+
+    if (!*pFile)
+    {
+        return errno;
+    }
+
+    return 0;
+}
+
+#endif
+
+
+
 using namespace OpenZWave;
 
 //-----------------------------------------------------------------------------
@@ -90,10 +118,10 @@ LogImpl::~LogImpl
 //	Write to the log
 //-----------------------------------------------------------------------------
 void LogImpl::Write
-( 
+(
 	LogLevel _logLevel,
 	uint8 const _nodeId,
-	char const* _format, 
+	char const* _format,
 	va_list _args
 )
 {
@@ -137,7 +165,7 @@ void LogImpl::Write
 				if( pFile != NULL )
 				{
 					fprintf( pFile, "%s", lineBuf );
-					fprintf( pFile, "\n" ); 
+					fprintf( pFile, "\n" );
 					fclose( pFile );
 				}
 				if( m_bConsoleOutput )
@@ -170,7 +198,7 @@ void LogImpl::Write
 //	Write to the log queue
 //-----------------------------------------------------------------------------
 void LogImpl::Queue
-( 
+(
 	char const* _buffer
 )
 {
@@ -189,7 +217,7 @@ void LogImpl::Queue
 //	Dump the LogQueue to output device
 //-----------------------------------------------------------------------------
 void LogImpl::QueueDump
-( 
+(
 )
 {
 	Log::Write( LogLevel_Internal, "\n\nDumping queued log messages\n");
@@ -209,7 +237,7 @@ void LogImpl::QueueDump
 //	Clear the LogQueue
 //-----------------------------------------------------------------------------
 void LogImpl::QueueClear
-( 
+(
 )
 {
 	m_logQueue.clear();
@@ -236,7 +264,7 @@ void LogImpl::SetLoggingState
 //	Generate a string with formatted current time
 //-----------------------------------------------------------------------------
 string LogImpl::GetTimeStampString
-( 
+(
 )
 {
 	// Get a timestamp
@@ -270,7 +298,7 @@ string LogImpl::GetNodeString
 		}
 		else
 		{
-			char buf[20];  
+			char buf[20];
 			snprintf( buf, sizeof(buf), "Node%03d, ", _nodeId );
 			return buf;
 		}
@@ -281,7 +309,7 @@ string LogImpl::GetNodeString
 //	Generate a string with formatted thread id
 //-----------------------------------------------------------------------------
 string LogImpl::GetThreadId
-( 
+(
 )
 {
 	char buf[20];
@@ -296,7 +324,7 @@ string LogImpl::GetThreadId
 //	Provide a new log file name (applicable to future writes)
 //-----------------------------------------------------------------------------
 void LogImpl::SetLogFileName
-( 
+(
 	string _filename
 )
 {
