@@ -39,6 +39,9 @@ VERSION_REV := 0
 else
 VERSION_REV := $(shell $(SVNVERSION) ../..|awk -F'[^0-9]*' '$$0=$$1')
 endif
+ifeq ($(VERSION_REV),)
+VERSION_REV := 0
+endif
 # version number to use on the shared library
 VERSION := $(VERSION_MAJ).$(VERSION_MIN)
 
@@ -66,14 +69,16 @@ LDFLAGS	:= $(DEBUG_LDFLAGS)
 endif
 
 #if we are on a Mac, add these flags and libs to the compile and link phases 
-ifeq ($(UNAME), Darwin)
+ifeq ($(UNAME),Darwin)
 CFLAGS	+= -c -DDARWIN -arch i386 -arch x86_64
 LDFLAGS += -arch i386 -arch x86_64
 LIBS	+= -framework IOKit -framework CoreFoundation -arch i386 -arch x86_64
+else
+LDFLAGS += -Wl,-soname,libopenzwave.so.$(VERSION)
 endif
 
 #where to put the temporary library
-LIBDIR	:= ../../lib/linux
+LIBDIR	:= ../../lib/
 #if /lib64 exists, then setup x86_64 library path to lib64 (good indication if a linux has /lib and lib64). 
 #Else, if it doesnt, then set as /lib. This is used in the make install target 
 ifeq ($(wildcard /lib64),)
@@ -92,12 +97,18 @@ instlibdir = $(PREFIX)$(instlibdir.$(MACHINE))
 
 INCLUDES	:= -I ../../src -I ../../src/command_classes/ -I ../../src/value_classes/ \
 	-I ../../src/platform/ -I ../../src/platform/unix -I ../../tinyxml/ -I ../../hidapi/hidapi/
+
+ifeq ($(UNAME),Darwin)
+SOURCES		:= ../../src ../../src/command_classes ../../tinyxml ../../hidapi/mac \
+	../../src/value_classes ../../src/platform ../../src/platform/unix
+VPATH = ../../src:../../src/command_classes:../../tinyxml:../../hidapi/mac:\
+	../../src/value_classes:../../src/platform:../../src/platform/unix
+else
 SOURCES		:= ../../src ../../src/command_classes ../../tinyxml ../../hidapi/linux \
 	../../src/value_classes ../../src/platform ../../src/platform/unix
-
 VPATH = ../../src:../../src/command_classes:../../tinyxml:../../hidapi/linux:\
 	../../src/value_classes:../../src/platform:../../src/platform/unix
-
+endif
 %.d : %.cpp
 	@set -e; rm -f $@; \
 	$(CXX) -MM $(INCLUDES) $< > $@.$$$$; \
@@ -106,7 +117,7 @@ VPATH = ../../src:../../src/command_classes:../../tinyxml:../../hidapi/linux:\
 
 
 tinyxml := $(notdir $(wildcard ../../tinyxml/*.cpp))
-ifeq ($(UNAME), Darwin)
+ifeq ($(UNAME),Darwin)
 hidapi := $(notdir $(wildcard ../../hidapi/mac/*.c))
 else
 hidapi := $(notdir $(wildcard ../../hidapi/linux/hid.c)) # we do not want the libusb version
@@ -167,6 +178,7 @@ $(LIBDIR)/libopenzwave.a:	$(patsubst %.cpp,%.o,$(tinyxml)) \
 			$(patsubst %.cpp,%.o,$(indep)) vers.o
 	@echo "Linking Static Library"
 	@$(AR) $@ $?
+	@$(RANLIB) $@
 
 $(LIBDIR)/libopenzwave.so.$(VERSION):	$(patsubst %.cpp,%.o,$(tinyxml)) \
 			$(patsubst %.c,%.o,$(hidapi)) \
@@ -175,7 +187,7 @@ $(LIBDIR)/libopenzwave.so.$(VERSION):	$(patsubst %.cpp,%.o,$(tinyxml)) \
 			$(patsubst %.cpp,%.o,$(pform)) \
 			$(patsubst %.cpp,%.o,$(indep)) vers.o
 	@echo "Linking Shared Library"
-	@$(LD) $(LDFLAGS) $(LIBS) -shared -Wl,-soname,libopenzwave.so.$(VERSION) -o $@ $+
+	@$(LD) $(LDFLAGS) $(LIBS) -shared  -o $@ $+
 	@ln -sf libopenzwave.so.$(VERSION) $(LIBDIR)/libopenzwave.so
 
 
