@@ -4,7 +4,8 @@
 
 # GNU make only
 
-# Requires libudev-dev
+# Linux requires libudev-dev
+# FreeBSD requires port misc/e2fsprogs-libuuid
 
 .SUFFIXES:	.d .cpp .o .a
 .PHONY:	default clean verscheck
@@ -73,6 +74,8 @@ ifeq ($(UNAME),Darwin)
 CFLAGS	+= -c -DDARWIN -arch i386 -arch x86_64
 LDFLAGS += -arch i386 -arch x86_64
 LIBS	+= -framework IOKit -framework CoreFoundation -arch i386 -arch x86_64
+else ifeq ($(UNAME),FreeBSD)
+CFLAGS += -I/usr/local/include
 else
 LDFLAGS += -Wl,-soname,libopenzwave.so.$(VERSION)
 endif
@@ -86,42 +89,47 @@ instlibdir.x86_64 = /lib
 else
 instlibdir.x86_64 = /lib64
 endif
-instlibdir.i686   = /lib
-instlibdir.i586   = /lib
-instlibdir.i386   = /lib
-instlibdir.i486   = /lib
+instlibdir.default   = /lib
 
 #our actual install location for the library
+ifneq ($(instlibdir.$(MACHINE)),)
 instlibdir = $(PREFIX)$(instlibdir.$(MACHINE))
-
+else
+instlibdir = $(PREFIX)$(instlibdir.default)
+endif
 
 INCLUDES	:= -I ../../src -I ../../src/command_classes/ -I ../../src/value_classes/ \
 	-I ../../src/platform/ -I ../../src/platform/unix -I ../../tinyxml/ -I ../../hidapi/hidapi/
 
 ifeq ($(UNAME),Darwin)
-SOURCES		:= ../../src ../../src/command_classes ../../tinyxml ../../hidapi/mac \
-	../../src/value_classes ../../src/platform ../../src/platform/unix
-VPATH = ../../src:../../src/command_classes:../../tinyxml:../../hidapi/mac:\
-	../../src/value_classes:../../src/platform:../../src/platform/unix
+SOURCES_HIDAPI =../../hidapi/mac
+else ifeq ($(UNAME),FreeBSD)
+SOURCES_HIDAPI =../../hidapi/libusb
 else
-SOURCES		:= ../../src ../../src/command_classes ../../tinyxml ../../hidapi/linux \
-	../../src/value_classes ../../src/platform ../../src/platform/unix
-VPATH = ../../src:../../src/command_classes:../../tinyxml:../../hidapi/linux:\
-	../../src/value_classes:../../src/platform:../../src/platform/unix
+SOURCES_HIDAPI =../../hidapi/linux
 endif
+
+SOURCES		:= ../../src ../../src/command_classes ../../tinyxml \
+	../../src/value_classes ../../src/platform ../../src/platform/unix $(SOURCES_HIDAPI)
+VPATH = ../../src:../../src/command_classes:../../tinyxml:\
+	../../src/value_classes:../../src/platform:../../src/platform/unix:$(SOURCES_HIDAPI)
+	
 %.d : %.cpp
 	@set -e; rm -f $@; \
 	$(CXX) -MM $(INCLUDES) $< > $@.$$$$; \
 	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
 	rm -f $@.$$$$
 
-
 tinyxml := $(notdir $(wildcard ../../tinyxml/*.cpp))
+
 ifeq ($(UNAME),Darwin)
 hidapi := $(notdir $(wildcard ../../hidapi/mac/*.c))
+else ifeq ($(UNAME),FreeBSD)
+hidapi := $(notdir $(wildcard ../../hidapi/libusb/*.c))
 else
-hidapi := $(notdir $(wildcard ../../hidapi/linux/hid.c)) # we do not want the libusb version
+hidapi := $(notdir $(wildcard ../../hidapi/linux/*.c)) # we do not want the libusb version
 endif
+
 cclasses := $(notdir $(wildcard ../../src/command_classes/*.cpp))
 vclasses := $(notdir $(wildcard ../../src/value_classes/*.cpp))
 pform := $(notdir $(wildcard ../../src/platform/*.cpp)) \
@@ -229,4 +237,3 @@ dist: vers.cpp doc
 	rm -rf $(TMP)/openzwave-$(VERSION).$(VERSION_REV)/
 	@cp $(TMP)/openzwave-$(VERSION).$(VERSION_REV).tar.gz .
 	@echo "openzwave-$(VERSION).$(VERSION_REV).tar.gz is ready"
-	
