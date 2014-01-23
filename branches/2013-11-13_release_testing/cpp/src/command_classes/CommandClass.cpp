@@ -250,7 +250,7 @@ void CommandClass::ReadXML
 		{
 			if( !strcmp( str, "Instance" ) )
 			{
-				uint8 instance;
+				uint8 instance = 0;
 				// Add an instance to the command class
 				if( TIXML_SUCCESS == child->QueryIntAttribute( "index", &intVal ) )
 				{
