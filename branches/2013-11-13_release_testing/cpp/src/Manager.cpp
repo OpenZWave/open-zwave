@@ -28,7 +28,6 @@
 #include <algorithm>
 #include <string>
 #include <sstream>
-#include <locale.h>
 
 #include "Defs.h"
 #include "Manager.h"
@@ -131,9 +130,6 @@ Manager::Manager
 ):
 	m_notificationMutex( new Mutex() )
 {
-	// Set the locale
-	::setlocale( LC_ALL, "" );
-
 	// Ensure the singleton instance is set
 	s_instance = this;
 

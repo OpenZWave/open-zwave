@@ -25,7 +25,7 @@ LDFLAGS	:= $(DEBUG_LDFLAGS)
 
 INCLUDES	:= -I ../../../src -I ../../../src/command_classes/ -I ../../../src/value_classes/ \
 	-I ../../../src/platform/ -I ../../../h/platform/unix -I ../../../tinyxml/ -I ../../../hidapi/hidapi/
-LIBS = $(wildcard ../../../lib/linux/*.a)
+LIBS = $(wildcard ../../../lib/*.a)
 
 %.o : %.cpp
 	$(CXX) $(CFLAGS) $(INCLUDES) -o $@ $<
