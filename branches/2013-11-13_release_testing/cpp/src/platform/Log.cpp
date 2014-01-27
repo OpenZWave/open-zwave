@@ -294,7 +294,8 @@ Log::Log
 ):
 	m_logMutex( new Mutex() )
 {
-	m_pImpl = new LogImpl( _filename, _bAppend, _bConsoleOutput, _saveLevel, _queueLevel, _dumpTrigger );
+        if (NULL == m_pImpl) 
+        	m_pImpl = new LogImpl( _filename, _bAppend, _bConsoleOutput, _saveLevel, _queueLevel, _dumpTrigger );
 }
 
 //-----------------------------------------------------------------------------
