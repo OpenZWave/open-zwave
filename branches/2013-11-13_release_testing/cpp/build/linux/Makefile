@@ -185,6 +185,7 @@ $(LIBDIR)/libopenzwave.a:	$(patsubst %.cpp,%.o,$(tinyxml)) \
 			$(patsubst %.cpp,%.o,$(pform)) \
 			$(patsubst %.cpp,%.o,$(indep)) vers.o
 	@echo "Linking Static Library"
+	@rm -rf $@
 	@$(AR) $@ $?
 	@$(RANLIB) $@
 
