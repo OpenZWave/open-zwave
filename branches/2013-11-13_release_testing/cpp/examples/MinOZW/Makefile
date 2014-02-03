@@ -1,0 +1,64 @@
+#
+# Makefile for OpenzWave Mac OS X applications
+# Greg Satz
+
+# GNU make only
+
+# requires libudev-dev
+
+.SUFFIXES:	.d .cpp .o .a
+.PHONY:	default clean
+
+
+DEBUG_CFLAGS    := -Wall -Wno-format -g -DDEBUG
+RELEASE_CFLAGS  := -Wall -Wno-unknown-pragmas -Wno-format -O3
+
+DEBUG_LDFLAGS	:= -g
+
+top_srcdir := $(abspath $(dir $(lastword $(MAKEFILE_LIST)))../../../)
+
+
+INCLUDES	:= -I $(top_srcdir)/cpp/src -I $(top_srcdir)/cpp/src/command_classes/ -I $(top_srcdir)/cpp/src/value_classes/ \
+	-I $(top_srcdir)/cpp/src/platform/ -I $(top_srcdir)/cpp/src/platform/unix -I $(top_srcdir)/cpp/tinyxml/ -I $(top_srcdir)/cpp/hidapi/hidapi/
+LIBS =  $(wildcard $(LIBDIR)/*.so $(top_builddir)/*.so $(top_builddir)/cpp/build/*.so )
+LIBSDIR = $(abspath $(dir $(firstword $(LIBS))))
+minozwsrc := $(notdir $(wildcard $(top_srcdir)/cpp/examples/MinOZW/*.cpp))
+VPATH := $(top_srcdir)/cpp/examples/MinOZW
+
+top_builddir ?= $(CURDIR)
+
+default: $(top_builddir)/MinOZW
+	
+include $(top_srcdir)/cpp/build/support.mk
+
+-include $(patsubst %.cpp,$(DEPDIR)/%.d,$(minozwsrc))
+
+
+$(OBJDIR)/MinOZW:	$(patsubst %.cpp,$(OBJDIR)/%.o,$(minozwsrc))
+	@echo "Linking $(OBJDIR)/MinOZW"
+	@$(LD) -o $@ $(LDFLAGS) $< $(LIBS) -pthread -ludev
+
+$(top_builddir)/MinOZW: $(top_srcdir)/cpp/examples/MinOZW/MinOZW.in $(OBJDIR)/MinOZW
+	@echo "Creating Temporary Shell Launch Script"
+	@$(SED) \
+		-e 's|[@]LDPATH@|$(LIBSDIR)|g' \
+		< "$<" > "$@"
+	@chmod +x $(top_builddir)/MinOZW
+
+clean:
+	@rm -rf $(DEPDIR) $(OBJDIR) $(top_builddir)/MinOZW
+
+XMLLINT := $(shell whereis -b xmllint | cut -c10-)
+
+ifeq ($(XMLLINT),)
+xmltest:	$(XMLLINT)
+	$(error xmllint command not found.)
+else
+xmltest:	$(XMLLINT)
+	@$(XMLLINT) --noout --schema ../../../config/zwcfg.xsd zwcfg_*.xml
+	@$(XMLLINT) --noout --schema ../../../config/zwscene.xsd zwscene.xml
+endif
+
+install: $(OBJDIR)/MinOZW
+	@echo "Installing into Prefix: $(PREFIX)"
+	@install -D $(OBJDIR)/MinOZW $(PREFIX)/bin/MinOZW

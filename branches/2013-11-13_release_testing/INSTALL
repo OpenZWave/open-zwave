@@ -2,10 +2,11 @@ Minimal Install Guide for OpenZWave!
 
 For Unix's (including Mac, bsd's etc)
 =================
-cd cpp/build/
+execute Make in the Top Level Directory
 make
 
-Libraries to link to (Static and Dynamic) will be in cpp/lib/
+Libraries to link to (Static and Dynamic) will be in top level directory as
+well (but you can change that as detailed below with LIBDIR)
 
 To Install:
 make install
@@ -16,6 +17,9 @@ Some Options you can set:
 
 "PREFIX=(path)" - Prefix to install the shared library into - Defaults to
 /usr/local
+
+"LIBDIR=/tmp" - Path to place the libraries into after complication. A poor
+mans "make install" for simple Applications.
 
 To use the options, specify them on the commandline when executing make eg:
 "BUILD=debug PREFIX=/opt/local make"
