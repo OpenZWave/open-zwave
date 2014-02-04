@@ -142,7 +142,6 @@ $(top_builddir)/libopenzwave.pc: $(top_srcdir)/cpp/build/libopenzwave.pc.in $(PK
 		-e 's|[@]includedir@|$(PREFIX)/include/openzwave/|g' \
 		-e 's|[@]VERSION@|$(VERSION)|g' \
 		< "$<" > "$@"
-	@install -D $(top_builddir)/libopenzwave.pc $(instlibdir)/pkgconfig/libopenzwave.pc
 endif
 
 $(top_builddir)/Doxyfile: $(top_srcdir)/docs/Doxyfile.in
@@ -164,24 +163,25 @@ doc: $(top_builddir)/Doxyfile
 endif
 
 install: $(LIBDIR)/libopenzwave.so.$(VERSION) doc $(top_builddir)/libopenzwave.pc 
-	@install -D $(LIBDIR)/libopenzwave.so.$(VERSION) $(instlibdir)/libopenzwave.so.$(VERSION)
-	@ln -sf libopenzwave.so.$(VERSION) $(instlibdir)/libopenzwave.so
-	@install -d $(includedir)/
-	@install $(top_srcdir)/cpp/src/*.h $(includedir)/
-	@install -d $(includedir)PREFIX)/command_classes/
-	@install $(top_srcdir)/cpp/src/command_classes/*.h $(includedir)/command_classes/
-	@install -d $(includedir)/value_classes/
-	@install $(top_srcdir)/cpp/src/value_classes/*.h $(includedir)/value_classes/
-	@install -d $(includedir)/platform/
-	@install $(top_srcdir)/cpp/src/platform/*.h $(includedir)/platform/	
-	@install -d $(includedir)/platform/unix/
-	@install $(top_srcdir)/cpp/src/platform/unix/*.h $(includedir)/platform/unix/
-	@install -d $(sysconfdir)/
-	@cp -r $(top_srcdir)/config/* $(sysconfdir)
-	@install -d $(docdir)/
-	@cp -r $(top_srcdir)/docs/* $(docdir)
-	@cp -r $(top_builddir)/docs/api/* $(docdir)
-	@if [ -a "$(PKGCONFIG)" ]; then cp $(top_builddir)/libopenzwave.pc `pkg-config --variable pc_path pkg-config`; fi
+	@install -D $(LIBDIR)/libopenzwave.so.$(VERSION) $(DESTDIR)/$(instlibdir)/libopenzwave.so.$(VERSION)
+	@ln -sf libopenzwave.so.$(VERSION) $(DESTDIR)/$(instlibdir)/libopenzwave.so
+	@install -d $(DESTDIR)/$(includedir)/openzwave/
+	@install -m 0644 $(top_srcdir)/cpp/src/*.h $(DESTDIR)/$(includedir)/openzwave/
+	@install -d $(DESTDIR)/$(includedir)/openzwave/command_classes/
+	@install -m 0644 $(top_srcdir)/cpp/src/command_classes/*.h $(DESTDIR)/$(includedir)/openzwave/command_classes/
+	@install -d $(DESTDIR)/$(includedir)/openzwave/value_classes/
+	@install -m 0644 $(top_srcdir)/cpp/src/value_classes/*.h $(DESTDIR)/$(includedir)/openzwave/value_classes/
+	@install -d $(DESTDIR)/$(includedir)/openzwave/platform/
+	@install -m 0644 $(top_srcdir)/cpp/src/platform/*.h $(DESTDIR)/$(includedir)/openzwave/platform/	
+	@install -d $(DESTDIR)/$(includedir)/openzwave/platform/unix/
+	@install -m 0644 $(top_srcdir)/cpp/src/platform/unix/*.h $(DESTDIR)/$(includedir)/openzwave/platform/unix/
+	@install -d $(DESTDIR)/$(sysconfdir)/
+	@cp -r $(top_srcdir)/config/* $(DESTDIR)/$(sysconfdir)
+	@install -d $(DESTDIR)/$(docdir)/
+	@cp -r $(top_srcdir)/docs/* $(DESTDIR)/$(docdir)
+	@if [ -d "$(top_builddir)/docs/html/" ]; then cp -r $(top_builddir)/docs/html/* $(DESTDIR)/$(docdir); fi
+	install -d $(DESTDIR)/$(instlibdir)/pkgconfig/
+	@if [ -a "$(PKGCONFIG)" ]; then install -d $(DESTDIR)/$(instlibdir)/pkgconfig/; cp $(top_builddir)/libopenzwave.pc $(DESTDIR)/$(instlibdir)/pkgconfig/; fi
 
 	
 
