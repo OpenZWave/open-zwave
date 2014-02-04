@@ -1132,7 +1132,8 @@ void TiXmlDocument::CopyTo( TiXmlDocument* target ) const
 	TiXmlNode* node = 0;
 	for ( node = firstChild; node; node = node->NextSibling() )
 	{
-		target->LinkEndChild( node->Clone() );
+		TiXmlNode* clonedNode=node->Clone();
+		if (clonedNode!=NULL) target->LinkEndChild( clonedNode );
 	}	
 }
 

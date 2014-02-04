@@ -268,7 +268,7 @@ void Log::QueueClear
 //-----------------------------------------------------------------------------
 void Log::SetLogFileName
 (
-	string _filename
+	const string &_filename
 )
 {
 	if( s_instance && s_dologging && s_instance->m_pImpl )

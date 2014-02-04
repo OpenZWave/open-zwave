@@ -300,7 +300,7 @@ string LogImpl::GetThreadId
 //-----------------------------------------------------------------------------
 void LogImpl::SetLogFileName
 ( 
-	string _filename
+	const string &_filename
 )
 {
 	m_filename = _filename;

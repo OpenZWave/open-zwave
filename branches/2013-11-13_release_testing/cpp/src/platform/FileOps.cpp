@@ -67,7 +67,7 @@ void FileOps::Destroy
 //-----------------------------------------------------------------------------
 bool FileOps::FolderExists
 (
-	string _folderName
+	const string &_folderName
 )
 {
 	if( s_instance != NULL )

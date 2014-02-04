@@ -14,6 +14,7 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     cpp/hidapi/configure.ac \
     config/act/lfm20.xml \
     cpp/src/command_classes/CommandClasses.cpp \
+    config/zwave.me/ZME_06436.xml \
     config/remotec/zxt-120.xml \
     config/zwcfg.xsd \
     cpp/src/value_classes/ValueString.cpp \

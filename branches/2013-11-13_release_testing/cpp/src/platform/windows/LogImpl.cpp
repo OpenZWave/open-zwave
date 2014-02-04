@@ -226,7 +226,7 @@ void LogImpl::QueueDump
 	{
 		string strTemp = *it;
 		Log::Write( LogLevel_Internal, strTemp.c_str() );
-		it++;
+		++it;
 	}
 	m_logQueue.clear();
 	Log::Write( LogLevel_Internal, "\nEnd of queued log message dump\n\n");
@@ -325,7 +325,7 @@ string LogImpl::GetThreadId
 //-----------------------------------------------------------------------------
 void LogImpl::SetLogFileName
 (
-	string _filename
+	const string &_filename
 )
 {
 	m_filename = _filename;

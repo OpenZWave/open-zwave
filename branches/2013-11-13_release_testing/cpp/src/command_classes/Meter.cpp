@@ -256,8 +256,6 @@ bool Meter::HandleSupportedReport
 	if( Node* node = GetNodeUnsafe() )
 	{
 		string msg;
-		string valueLabel;
-
 		msg = c_meterTypes[meterType];
 		msg += ": ";
 		// Create the list of supported scales

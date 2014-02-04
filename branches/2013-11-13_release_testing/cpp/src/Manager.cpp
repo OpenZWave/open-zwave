@@ -622,7 +622,7 @@ void Manager::SetPollInterval
 //-----------------------------------------------------------------------------
 bool Manager::EnablePoll
 (
-	ValueID const _valueId,
+	ValueID const &_valueId,
 	uint8 const _intensity
 )
 {
@@ -641,7 +641,7 @@ bool Manager::EnablePoll
 //-----------------------------------------------------------------------------
 bool Manager::DisablePoll
 (
-	ValueID const _valueId
+	ValueID const &_valueId
 )
 {
 	if( Driver* driver = GetDriver( _valueId.GetHomeId() ) )
@@ -659,7 +659,7 @@ bool Manager::DisablePoll
 //-----------------------------------------------------------------------------
 bool Manager::isPolled
 (
-	ValueID const _valueId
+	ValueID const &_valueId
 )
 {
 	if( Driver* driver = GetDriver( _valueId.GetHomeId() ) )
@@ -677,7 +677,7 @@ bool Manager::isPolled
 //-----------------------------------------------------------------------------
 void Manager::SetPollIntensity
 (
-	ValueID const _valueId,
+	ValueID const &_valueId,
 	uint8 const _intensity
 )
 {
@@ -695,7 +695,7 @@ void Manager::SetPollIntensity
 //-----------------------------------------------------------------------------
 uint8 Manager::GetPollIntensity
 (
-	ValueID const _valueId
+	ValueID const &_valueId
 )
 {
 	uint8 intensity = 0;
@@ -2013,7 +2013,7 @@ bool Manager::GetValueAsString
 				{
 					if( ValueRaw* value = static_cast<ValueRaw*>( driver->GetValue( _id ) ) )
 					{
-						*o_value = value->GetAsString().c_str();
+						*o_value = value->GetAsString();
 						value->Release();
 						res = true;
 					}
@@ -3098,7 +3098,7 @@ bool Manager::RemoveWatcher
 			m_notificationMutex->Unlock();
 			return true;
 		}
-		it++;
+		++it;
 	}
 
 	m_notificationMutex->Unlock();
