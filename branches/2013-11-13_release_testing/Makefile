@@ -7,7 +7,7 @@
 # requires libudev-dev
 
 .SUFFIXES:	.d .cpp .o .a
-.PHONY:	default clean
+.PHONY:	default clean install
 
 
 top_srcdir := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))

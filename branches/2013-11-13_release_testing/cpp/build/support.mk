@@ -1,7 +1,7 @@
 #The Major Version Number
-VERSION_MAJ	:= 1
+VERSION_MAJ	?= 1
 #The Minor Version Number
-VERSION_MIN := 0
+VERSION_MIN ?= 0
 
 #the build type we are making (release or debug)
 BUILD	?= release
@@ -27,12 +27,12 @@ PKGCONFIG := $(shell which pkg-config)
 SVN		:= $(shell which svn)
 # if svnversion is not installed, then set the revision to 0
 ifeq ($(SVNVERSION),)
-VERSION_REV := 0
+VERSION_REV ?= 0
 else
-VERSION_REV := $(shell $(SVNVERSION) $(top_srcdir)|awk -F'[^0-9]*' '$$0=$$1')
+VERSION_REV ?= $(shell $(SVNVERSION) $(top_srcdir)|awk -F'[^0-9]*' '$$0=$$1')
 endif
 ifeq ($(VERSION_REV),)
-VERSION_REV := 0
+VERSION_REV ?= 0
 endif
 # version number to use on the shared library
 VERSION := $(VERSION_MAJ).$(VERSION_MIN)
@@ -71,10 +71,14 @@ instlibdir.default   = /lib/
 
 #our actual install location for the library
 ifneq ($(instlibdir.$(MACHINE)),)
-instlibdir = $(PREFIX)$(instlibdir.$(MACHINE))
+instlibdir ?= $(PREFIX)$(instlibdir.$(MACHINE))
 else
-instlibdir = $(PREFIX)$(instlibdir.default)
+instlibdir ?= $(PREFIX)$(instlibdir.default)
 endif
+
+sysconfdir ?= $(PREFIX)/etc/
+includedir ?= $(PREFIX)/include/openzwave/
+docdir ?= $(PREFIX)/share/doc/openzwave-$(VERSION).$(VERSION_REV)
 
 top_builddir ?= $(CURDIR)
 export top_builddir

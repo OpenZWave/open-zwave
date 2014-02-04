@@ -23,8 +23,6 @@ top_srcdir := $(abspath $(dir $(lastword $(MAKEFILE_LIST)))../../)
 
 include $(top_srcdir)/cpp/build/support.mk
 
-.SUFFIXES:	.d .cpp .o .a
-.PHONY:	default clean install doc
 
 #if we are on a Mac, add these flags and libs to the compile and link phases 
 ifeq ($(UNAME),Darwin)
@@ -168,22 +166,24 @@ endif
 install: $(LIBDIR)/libopenzwave.so.$(VERSION) doc $(top_builddir)/libopenzwave.pc 
 	@install -D $(LIBDIR)/libopenzwave.so.$(VERSION) $(instlibdir)/libopenzwave.so.$(VERSION)
 	@ln -sf libopenzwave.so.$(VERSION) $(instlibdir)/libopenzwave.so
-	@install -d $(PREFIX)/include/openzwave/
-	@install $(top_srcdir)/cpp/src/*.h $(PREFIX)/include/openzwave/
-	@install -d $(PREFIX)/include/openzwave/command_classes/
-	@install $(top_srcdir)/cpp/src/command_classes/*.h $(PREFIX)/include/openzwave/command_classes/
-	@install -d $(PREFIX)/include/openzwave/value_classes/
-	@install $(top_srcdir)/cpp/src/value_classes/*.h $(PREFIX)/include/openzwave/value_classes/
-	@install -d $(PREFIX)/include/openzwave/platform/
-	@install $(top_srcdir)/cpp/src/platform/*.h $(PREFIX)/include/openzwave/platform/	
-	@install -d $(PREFIX)/include/openzwave/platform/unix/
-	@install $(top_srcdir)/cpp/src/platform/unix/*.h $(PREFIX)/include/openzwave/platform/unix/
-	@install -d $(PREFIX)/etc/openzwave/
-	@cp -r $(top_srcdir)/config/* $(PREFIX)/etc/openzwave/
-	@install -d $(PREFIX)/share/doc/openzwave-$(VERSION).$(VERSION_REV)
-	@cp -r $(top_srcdir)/docs/* $(PREFIX)/share/doc/openzwave-$(VERSION).$(VERSION_REV)
-	@cp -r $(top_builddir)/docs/api/* $(PREFIX)/share/doc/openzwave-$(VERSION).$(VERSION_REV)
-	@if [ -a "$(PKGCONFIG)" ]; then install -D $(top_builddir)/libopenzwave.pc $(instlibdir)/pkgconfig/libopenzwave.pc; fi
+	@install -d $(includedir)/
+	@install $(top_srcdir)/cpp/src/*.h $(includedir)/
+	@install -d $(includedir)PREFIX)/command_classes/
+	@install $(top_srcdir)/cpp/src/command_classes/*.h $(includedir)/command_classes/
+	@install -d $(includedir)/value_classes/
+	@install $(top_srcdir)/cpp/src/value_classes/*.h $(includedir)/value_classes/
+	@install -d $(includedir)/platform/
+	@install $(top_srcdir)/cpp/src/platform/*.h $(includedir)/platform/	
+	@install -d $(includedir)/platform/unix/
+	@install $(top_srcdir)/cpp/src/platform/unix/*.h $(includedir)/platform/unix/
+	@install -d $(sysconfdir)/
+	@cp -r $(top_srcdir)/config/* $(sysconfdir)
+	@install -d $(docdir)/
+	@cp -r $(top_srcdir)/docs/* $(docdir)
+	@cp -r $(top_builddir)/docs/api/* $(docdir)
+	@if [ -a "$(PKGCONFIG)" ]; then cp $(top_builddir)/libopenzwave.pc `pkg-config --variable pc_path pkg-config`; fi
 
 	
 
+.SUFFIXES:	.d .cpp .o .a
+.PHONY:	default clean install doc
