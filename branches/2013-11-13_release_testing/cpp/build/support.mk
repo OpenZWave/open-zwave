@@ -41,9 +41,15 @@ VERSION := $(VERSION_MAJ).$(VERSION_MIN)
 CC     := $(CROSS_COMPILE)gcc
 CXX    := $(CROSS_COMPILE)g++
 LD     := $(CROSS_COMPILE)g++
+ifeq ($(UNAME),Darwin)
+AR     := libtool -static -o 
+RANLIB := ranlib
+else
 AR     := $(CROSS_COMPILE)ar rc
 RANLIB := $(CROSS_COMPILE)ranlib
+endif
 SED    := sed
+
 
 #determine if we are release or debug Build and set appropriate flags
 ifeq ($(BUILD), release)
