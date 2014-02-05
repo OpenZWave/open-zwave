@@ -76,7 +76,7 @@ else
 instlibdir ?= $(PREFIX)$(instlibdir.default)
 endif
 
-sysconfdir ?= $(PREFIX)/etc/
+sysconfdir ?= $(PREFIX)/etc/openzwave/
 includedir ?= $(PREFIX)/include/openzwave/
 docdir ?= $(PREFIX)/share/doc/openzwave-$(VERSION).$(VERSION_REV)
 
