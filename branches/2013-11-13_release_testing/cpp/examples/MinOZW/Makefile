@@ -37,7 +37,9 @@ include $(top_srcdir)/cpp/build/support.mk
 ifneq ($(UNAME),Darwin)
 LIBS    += -ludev
 endif
-
+ifeq ($(UNAME),Darwin)
+CFLAGS += -DDARWIN
+endif
 
 $(OBJDIR)/MinOZW:	$(patsubst %.cpp,$(OBJDIR)/%.o,$(minozwsrc))
 	@echo "Linking $(OBJDIR)/MinOZW"
@@ -64,4 +66,5 @@ endif
 
 install: $(OBJDIR)/MinOZW
 	@echo "Installing into Prefix: $(PREFIX)"
-	@install -D $(OBJDIR)/MinOZW $(DESTDIR)/$(PREFIX)/bin/MinOZW
+	@cp $(OBJDIR)/MinOZW $(DESTDIR)/$(PREFIX)/bin/MinOZW
+	@chmod 755 $(DESTDIR)/$(PREFIX)/bin/MinOZW

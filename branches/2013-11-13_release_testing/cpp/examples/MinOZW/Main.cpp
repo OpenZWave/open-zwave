@@ -283,7 +283,7 @@ int main( int argc, char* argv[] )
 
 #ifdef DARWIN
 	string port = "/dev/cu.usbserial";
-#elseif WIN32
+#elif WIN32
         string port = "\\\\.\\COM6";
 #else
 	string port = "/dev/ttyUSB0";

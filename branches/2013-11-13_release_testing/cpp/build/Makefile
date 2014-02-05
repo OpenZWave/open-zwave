@@ -163,18 +163,18 @@ doc: $(top_builddir)/Doxyfile
 endif
 
 install: $(LIBDIR)/libopenzwave.so.$(VERSION) doc $(top_builddir)/libopenzwave.pc 
-	@install -D $(LIBDIR)/libopenzwave.so.$(VERSION) $(DESTDIR)/$(instlibdir)/libopenzwave.so.$(VERSION)
+	@cp  $(LIBDIR)/libopenzwave.so.$(VERSION) $(DESTDIR)/$(instlibdir)/libopenzwave.so.$(VERSION)
 	@ln -sf libopenzwave.so.$(VERSION) $(DESTDIR)/$(instlibdir)/libopenzwave.so
-	@install -d $(DESTDIR)/$(includedir)/openzwave/
-	@install -m 0644 $(top_srcdir)/cpp/src/*.h $(DESTDIR)/$(includedir)/openzwave/
-	@install -d $(DESTDIR)/$(includedir)/openzwave/command_classes/
-	@install -m 0644 $(top_srcdir)/cpp/src/command_classes/*.h $(DESTDIR)/$(includedir)/openzwave/command_classes/
-	@install -d $(DESTDIR)/$(includedir)/openzwave/value_classes/
-	@install -m 0644 $(top_srcdir)/cpp/src/value_classes/*.h $(DESTDIR)/$(includedir)/openzwave/value_classes/
-	@install -d $(DESTDIR)/$(includedir)/openzwave/platform/
-	@install -m 0644 $(top_srcdir)/cpp/src/platform/*.h $(DESTDIR)/$(includedir)/openzwave/platform/	
-	@install -d $(DESTDIR)/$(includedir)/openzwave/platform/unix/
-	@install -m 0644 $(top_srcdir)/cpp/src/platform/unix/*.h $(DESTDIR)/$(includedir)/openzwave/platform/unix/
+	@install -d $(DESTDIR)/$(includedir)
+	@install -m 0644 $(top_srcdir)/cpp/src/*.h $(DESTDIR)/$(includedir)
+	@install -d $(DESTDIR)/$(includedir)/command_classes/
+	@install -m 0644 $(top_srcdir)/cpp/src/command_classes/*.h $(DESTDIR)/$(includedir)/command_classes/
+	@install -d $(DESTDIR)/$(includedir)/value_classes/
+	@install -m 0644 $(top_srcdir)/cpp/src/value_classes/*.h $(DESTDIR)/$(includedir)/value_classes/
+	@install -d $(DESTDIR)/$(includedir)/platform/
+	@install -m 0644 $(top_srcdir)/cpp/src/platform/*.h $(DESTDIR)/$(includedir)/platform/	
+	@install -d $(DESTDIR)/$(includedir)/platform/unix/
+	@install -m 0644 $(top_srcdir)/cpp/src/platform/unix/*.h $(DESTDIR)/$(includedir)/platform/unix/
 	@install -d $(DESTDIR)/$(sysconfdir)/
 	@cp -r $(top_srcdir)/config/* $(DESTDIR)/$(sysconfdir)
 	@install -d $(DESTDIR)/$(docdir)/
