@@ -15,12 +15,12 @@ Version: 1.0.730
 Release: 1
 BuildRequires: gcc-c++ make libudev-devel doxygen graphviz
 %if 0%{?fedora} >= 18
-BuildRequires: systemd-devel
+BuildRequires: systemd-devel pkgconfig
 %else
 %if 0%{?suse_version} >= 1220
-BuildRequires: systemd-devel
+BuildRequires: systemd-devel pkg-config
 %else
-BuildRequires: libudev-devel
+BuildRequires: libudev-devel pkgconfig
 %endif
 %endif
 Source0: libopenzwave-%{version}.tar.gz
@@ -84,7 +84,7 @@ Sample Executables for OpenZWave
 
 %prep
 
-%setup -q -n openzwave-%{version}
+%setup -q 
 
 
 %build
@@ -98,7 +98,12 @@ rm -rf %{buildroot}/*
 major_ver=$(echo %{version} | awk -F \. {'print $1'})
 minor_ver=$(echo %{version} | awk -F \. {'print $2'})
 revision=$(echo %{version} | awk -F \. {'print $3'})
-DESTDIR=%{buildroot} VERSION_MAJ=$major_ver VERSION_MIN=$minor_ver VERSION_REV=$revision PREFIX=/usr sysconfdir=%{_sysconfdir}/openzwave/ includedir=%{_includedir} docdir=%{_defaultdocdir}/openzwave-%{version} instlibdir=%{_libdir} make install
+mkdir -p %{buildroot}/%{_bindir}
+mkdir -p %{buildroot}/%{_libdir}
+mkdir -p %{buildroot}/%{_defaultdocdir}/openzwave-%{version}/
+mkdir -p %{buildroot}/%{_sysconfdir}/
+mkdir -p %{buildroot}/%{_includedir}/openzwave/
+DESTDIR=%{buildroot} VERSION_MAJ=$major_ver VERSION_MIN=$minor_ver VERSION_REV=$revision PREFIX=/usr sysconfdir=%{_sysconfdir}/openzwave/ includedir=%{_includedir}/openzwave/ docdir=%{_defaultdocdir}/openzwave-%{version} instlibdir=%{_libdir} make install
 cp -p INSTALL %{buildroot}/%{_defaultdocdir}/openzwave-%{version}/
 cp -pr license %{buildroot}/%{_defaultdocdir}/openzwave-%{version}/
 rm %{buildroot}%{_defaultdocdir}/openzwave-%{version}/Doxyfile.in
