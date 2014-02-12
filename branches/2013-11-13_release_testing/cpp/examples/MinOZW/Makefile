@@ -66,5 +66,6 @@ endif
 
 install: $(OBJDIR)/MinOZW
 	@echo "Installing into Prefix: $(PREFIX)"
+	@install -d $(DESTDIR)/$(PREFIX)/bin/
 	@cp $(OBJDIR)/MinOZW $(DESTDIR)/$(PREFIX)/bin/MinOZW
 	@chmod 755 $(DESTDIR)/$(PREFIX)/bin/MinOZW

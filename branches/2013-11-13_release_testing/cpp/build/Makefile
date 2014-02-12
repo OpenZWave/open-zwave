@@ -163,6 +163,7 @@ doc: $(top_builddir)/Doxyfile
 endif
 
 install: $(LIBDIR)/libopenzwave.so.$(VERSION) doc $(top_builddir)/libopenzwave.pc 
+	install -d $(DESTDIR)/$(instlibdir)/
 	cp  $(LIBDIR)/libopenzwave.so.$(VERSION) $(DESTDIR)/$(instlibdir)/libopenzwave.so.$(VERSION)
 	ln -sf libopenzwave.so.$(VERSION) $(DESTDIR)/$(instlibdir)/libopenzwave.so
 	install -d $(DESTDIR)/$(includedir)
@@ -181,7 +182,7 @@ install: $(LIBDIR)/libopenzwave.so.$(VERSION) doc $(top_builddir)/libopenzwave.p
 	cp -r $(top_srcdir)/docs/* $(DESTDIR)/$(docdir)
 	if [ -d "$(top_builddir)/docs/html/" ]; then cp -r $(top_builddir)/docs/html/* $(DESTDIR)/$(docdir); fi
 	install -d $(DESTDIR)/$(instlibdir)/pkgconfig/
-	if [ -z "$(PKGCONFIG)" ]; then install -d $(DESTDIR)/$(instlibdir)/pkgconfig/; cp $(top_builddir)/libopenzwave.pc $(DESTDIR)/$(instlibdir)/pkgconfig/; fi
+	if [ -f "$(PKGCONFIG)" ]; then install -d $(DESTDIR)/$(instlibdir)/pkgconfig/; cp $(top_builddir)/libopenzwave.pc $(DESTDIR)/$(instlibdir)/pkgconfig/; fi
 
 	
 
