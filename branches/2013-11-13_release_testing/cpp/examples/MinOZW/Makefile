@@ -43,7 +43,7 @@ endif
 
 $(OBJDIR)/MinOZW:	$(patsubst %.cpp,$(OBJDIR)/%.o,$(minozwsrc))
 	@echo "Linking $(OBJDIR)/MinOZW"
-	@$(LD) -o $@ $(LDFLAGS) $< $(LIBS) -pthread
+	$(LD) -o $@ $(LDFLAGS) $< $(LIBS) -pthread
 
 $(top_builddir)/MinOZW: $(top_srcdir)/cpp/examples/MinOZW/MinOZW.in $(OBJDIR)/MinOZW
 	@echo "Creating Temporary Shell Launch Script"
