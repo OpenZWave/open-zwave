@@ -67,7 +67,7 @@ enum
 };
 
 
-static char const* c_meterTypes[] = 
+static char const* c_meterTypes[] =
 {
 	"Unknown",
 	"Electric",
@@ -75,7 +75,7 @@ static char const* c_meterTypes[] =
 	"Water"
 };
 
-static char const* c_electricityUnits[] = 
+static char const* c_electricityUnits[] =
 {
 	"kWh",
 	"kVAh",
@@ -87,7 +87,7 @@ static char const* c_electricityUnits[] =
 	""
 };
 
-static char const* c_gasUnits[] = 
+static char const* c_gasUnits[] =
 {
 	"cubic meters",
 	"cubic feet",
@@ -99,7 +99,7 @@ static char const* c_gasUnits[] =
 	""
 };
 
-static char const* c_waterUnits[] = 
+static char const* c_waterUnits[] =
 {
 	"cubic meters",
 	"cubic feet",
@@ -111,7 +111,7 @@ static char const* c_waterUnits[] =
 	""
 };
 
-static char const* c_electricityLabels[] = 
+static char const* c_electricityLabels[] =
 {
 	"Energy",
 	"Energy",
@@ -124,7 +124,7 @@ static char const* c_electricityLabels[] =
 };
 
 //-----------------------------------------------------------------------------
-// <Meter::Meter>												   
+// <Meter::Meter>
 // Constructor
 //-----------------------------------------------------------------------------
 Meter::Meter
@@ -132,15 +132,14 @@ Meter::Meter
 	uint32 const _homeId,
 	uint8 const _nodeId
 ):
-	CommandClass( _homeId, _nodeId ),
-	m_scale( 0 )
+	CommandClass( _homeId, _nodeId )
 {
 	SetStaticRequest( StaticRequest_Values );
 }
 
 //-----------------------------------------------------------------------------
-// <Meter::RequestState>												   
-// Request current state from the device									   
+// <Meter::RequestState>
+// Request current state from the device
 //-----------------------------------------------------------------------------
 bool Meter::RequestState
 (
@@ -175,8 +174,8 @@ bool Meter::RequestState
 }
 
 //-----------------------------------------------------------------------------
-// <Meter::RequestValue>												   
-// Request current value from the device									   
+// <Meter::RequestValue>
+// Request current value from the device
 //-----------------------------------------------------------------------------
 bool Meter::RequestValue
 (
@@ -187,6 +186,11 @@ bool Meter::RequestValue
 )
 {
 	bool res = false;
+	if ( !IsGetSupported())
+	{
+		Log::Write(  LogLevel_Info, GetNodeId(), "MeterCmd_Get Not Supported on this node");
+		return false;
+	}
 	for( uint8 i=0; i<8; ++i )
 	{
 		uint8 baseIndex = i<<2;
@@ -252,8 +256,6 @@ bool Meter::HandleSupportedReport
 	if( Node* node = GetNodeUnsafe() )
 	{
 		string msg;
-		string valueLabel;
-
 		msg = c_meterTypes[meterType];
 		msg += ": ";
 		// Create the list of supported scales
@@ -381,7 +383,7 @@ bool Meter::HandleReport
 		string units;
 
 		switch( (MeterType)(_data[1] & 0x1f) )
-		{ 
+		{
 			case MeterType_Electric:
 			{
 				// Electricity Meter
@@ -492,7 +494,7 @@ bool Meter::HandleReport
 			}
 		}
 	}
- 
+
 	return true;
 }
 
@@ -511,7 +513,7 @@ bool Meter::SetValue
 		if( button->IsPressed() )
 		{
 			Msg* msg = new Msg( "MeterCmd_Reset", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-			msg->SetInstance( this, _value.GetID().GetInstance() ); 
+			msg->SetInstance( this, _value.GetID().GetInstance() );
 			msg->Append( GetNodeId() );
 			msg->Append( 2 );
 			msg->Append( GetCommandClassId() );

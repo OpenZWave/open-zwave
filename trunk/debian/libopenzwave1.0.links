@@ -1,2 +1,1 @@
-/usr/lib/libopenzwave.so.1.0 /usr/lib/libopenzwave.so.1
-/usr/share/openzwave/config /etc/openzwave/config
+/usr/lib64/libopenzwave.so.1.0 /usr/lib64/libopenzwave.so.1

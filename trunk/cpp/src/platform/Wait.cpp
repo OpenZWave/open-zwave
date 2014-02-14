@@ -25,6 +25,7 @@
 //	along with OpenZWave.  If not, see <http://www.gnu.org/licenses/>.
 //
 //-----------------------------------------------------------------------------
+#include <stdio.h>
 #include "Defs.h"
 #include "Wait.h"
 #include "WaitImpl.h"	// Platform-specific implementation of a Wait object

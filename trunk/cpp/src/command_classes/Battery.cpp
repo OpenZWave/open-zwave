@@ -44,8 +44,8 @@ enum BatteryCmd
 };
 
 //-----------------------------------------------------------------------------
-// <Battery::RequestState>												   
-// Request current state from the device									   
+// <Battery::RequestState>
+// Request current state from the device
 //-----------------------------------------------------------------------------
 bool Battery::RequestState
 (
@@ -63,8 +63,8 @@ bool Battery::RequestState
 }
 
 //-----------------------------------------------------------------------------
-// <Battery::RequestValue>												   
-// Request current value from the device									   
+// <Battery::RequestValue>
+// Request current value from the device
 //-----------------------------------------------------------------------------
 bool Battery::RequestValue
 (
@@ -79,15 +79,20 @@ bool Battery::RequestValue
 		// This command class doesn't work with multiple instances
 		return false;
 	}
-
-	Msg* msg = new Msg( "BatteryCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-	msg->Append( GetNodeId() );
-	msg->Append( 2 );
-	msg->Append( GetCommandClassId() );
-	msg->Append( BatteryCmd_Get );
-	msg->Append( GetDriver()->GetTransmitOptions() );
-	GetDriver()->SendMsg( msg, _queue );
-	return true;
+	if ( IsGetSupported() )
+	{
+		Msg* msg = new Msg( "BatteryCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		msg->Append( GetNodeId() );
+		msg->Append( 2 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( BatteryCmd_Get );
+		msg->Append( GetDriver()->GetTransmitOptions() );
+		GetDriver()->SendMsg( msg, _queue );
+		return true;
+	} else {
+		Log::Write(  LogLevel_Info, GetNodeId(), "BatteryCmd_Get Not Supported on this node");
+	}
+	return false;
 }
 
 //-----------------------------------------------------------------------------

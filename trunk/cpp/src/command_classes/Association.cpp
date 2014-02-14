@@ -53,10 +53,10 @@ enum AssociationCmd
 // Constructor
 //-----------------------------------------------------------------------------
 Association::Association
-( 
+(
 	uint32 const _homeId,
 	uint8 const _nodeId
-): 
+):
 	CommandClass( _homeId, _nodeId ),
 	m_queryAll(false),
 	m_numGroups(0)
@@ -69,7 +69,7 @@ Association::Association
 // Read the saved association data
 //-----------------------------------------------------------------------------
 void Association::ReadXML
-( 
+(
 	TiXmlElement const* _ccElement
 )
 {
@@ -111,7 +111,7 @@ void Association::ReadXML
 // Save the association data
 //-----------------------------------------------------------------------------
 void Association::WriteXML
-( 
+(
 	TiXmlElement* _ccElement
 )
 {
@@ -126,7 +126,7 @@ void Association::WriteXML
 		associationsElement->SetAttribute( "num_groups", str );
 
 		_ccElement->LinkEndChild( associationsElement );
-		node->WriteGroups( associationsElement ); 
+		node->WriteGroups( associationsElement );
 	}
 }
 
@@ -167,7 +167,6 @@ bool Association::RequestValue
 		// This command class doesn't work with multiple instances
 		return false;
 	}
-
 	// Request the supported group info
 	Msg* msg = new Msg( "Get Association Groupings", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 	msg->Append( GetNodeId() );
@@ -195,7 +194,7 @@ void Association::RequestAllGroups
 	{
 		// We start with group 255, and will then move to group 1, 2 etc and stop when we find a group with a maxAssociations of zero.
 		Log::Write( LogLevel_Info, GetNodeId(), "Number of association groups reported for node %d is 255, which requires special case handling.", GetNodeId() );
-		QueryGroup( 0xff, _requestFlags );	
+		QueryGroup( 0xff, _requestFlags );
 	}
 	else
 	{
@@ -222,7 +221,7 @@ bool Association::HandleMsg
 	if( Node* node = GetNodeUnsafe() )
 	{
 		if( AssociationCmd_GroupingsReport == (AssociationCmd)_data[0] )
-		{	
+		{
 			// Retrieve the number of groups this device supports.
 			// The groups will be queried with the session data.
 			m_numGroups = _data[1];
@@ -326,17 +325,23 @@ void Association::QueryGroup
 	uint32 const _requestFlags
 )
 {
-	Log::Write( LogLevel_Info, GetNodeId(), "Get Associations for group %d of node %d", _groupIdx, GetNodeId() );
-	Msg* msg = new Msg( "Get Associations", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-	msg->Append( GetNodeId() );
-	msg->Append( 3 );
-	msg->Append( GetCommandClassId() );
-	msg->Append( AssociationCmd_Get );
-	msg->Append( _groupIdx );
-	msg->Append( GetDriver()->GetTransmitOptions() );
-	GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
+	if ( IsGetSupported() )
+	{
+		Log::Write( LogLevel_Info, GetNodeId(), "Get Associations for group %d of node %d", _groupIdx, GetNodeId() );
+		Msg* msg = new Msg( "Get Associations", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		msg->Append( GetNodeId() );
+		msg->Append( 3 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( AssociationCmd_Get );
+		msg->Append( _groupIdx );
+		msg->Append( GetDriver()->GetTransmitOptions() );
+		GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
+		return;
+	} else {
+		Log::Write(  LogLevel_Info, GetNodeId(), "AssociationCmd_Get Not Supported on this node");
+	}
+	return;
 }
-
 //-----------------------------------------------------------------------------
 // <Association::Set>
 // Add an association between devices
@@ -349,7 +354,7 @@ void Association::Set
 {
 	Log::Write( LogLevel_Info, GetNodeId(), "Association::Set - Adding node %d to group %d of node %d", _targetNodeId, _groupIdx, GetNodeId() );
 
-	Msg* msg = new Msg( "Association Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
+	Msg* msg = new Msg( "Association Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 	msg->Append( GetNodeId() );
 	msg->Append( 4 );
 	msg->Append( GetCommandClassId() );
@@ -372,7 +377,7 @@ void Association::Remove
 {
 	Log::Write( LogLevel_Info, GetNodeId(), "Association::Remove - Removing node %d from group %d of node %d", _targetNodeId, _groupIdx, GetNodeId() );
 
-	Msg* msg = new Msg( "Association Remove", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
+	Msg* msg = new Msg( "Association Remove", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 	msg->Append( GetNodeId() );
 	msg->Append( 4 );
 	msg->Append( GetCommandClassId() );

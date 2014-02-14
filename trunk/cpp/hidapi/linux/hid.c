@@ -338,12 +338,15 @@ end:
 
 int HID_API_EXPORT hid_init(void)
 {
-	const char *locale;
+/* Refer to http://code.google.com/p/open-zwave/issues/detail?id=254 
+ * We should not be setting the Locale and let the application set it
+ */
+//	const char *locale;
 
 	/* Set the locale if it's not set. */
-	locale = setlocale(LC_CTYPE, NULL);
-	if (!locale)
-		setlocale(LC_CTYPE, "");
+//	locale = setlocale(LC_CTYPE, NULL);
+//	if (!locale)
+//		setlocale(LC_CTYPE, "");
 
 	return 0;
 }

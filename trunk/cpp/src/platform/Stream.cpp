@@ -206,7 +206,7 @@ void Stream::LogData
 (
 	uint8* _buffer,
 	uint32 _length,
-	string _function
+	const string &_function
 )
 {
 	if( !_length ) return;

@@ -45,8 +45,8 @@ enum LockCmd
 };
 
 //-----------------------------------------------------------------------------
-// <Lock::RequestState>												   
-// Request current state from the device									   
+// <Lock::RequestState>
+// Request current state from the device
 //-----------------------------------------------------------------------------
 bool Lock::RequestState
 (
@@ -64,8 +64,8 @@ bool Lock::RequestState
 }
 
 //-----------------------------------------------------------------------------
-// <Lock::RequestValue>												   
-// Request current value from the device									   
+// <Lock::RequestValue>
+// Request current value from the device
 //-----------------------------------------------------------------------------
 bool Lock::RequestValue
 (
@@ -75,16 +75,23 @@ bool Lock::RequestValue
 	Driver::MsgQueue const _queue
 )
 {
-	Msg* msg = new Msg( "LockCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-	msg->SetInstance( this, _instance );
-	msg->Append( GetNodeId() );
-	msg->Append( 2 );
-	msg->Append( GetCommandClassId() );
-	msg->Append( LockCmd_Get );
-	msg->Append( GetDriver()->GetTransmitOptions() );
-	GetDriver()->SendMsg( msg, _queue );
-	return true;
+	if ( IsGetSupported() )
+	{
+		Msg* msg = new Msg( "LockCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		msg->SetInstance( this, _instance );
+		msg->Append( GetNodeId() );
+		msg->Append( 2 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( LockCmd_Get );
+		msg->Append( GetDriver()->GetTransmitOptions() );
+		GetDriver()->SendMsg( msg, _queue );
+		return true;
+	} else {
+		Log::Write(  LogLevel_Info, GetNodeId(), "LockCmd_Get Not Supported on this node");
+	}
+	return false;
 }
+
 
 //-----------------------------------------------------------------------------
 // <Lock::HandleMsg>

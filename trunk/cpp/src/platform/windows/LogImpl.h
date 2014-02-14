@@ -50,7 +50,7 @@ namespace OpenZWave
 		void QueueDump();
 		void QueueClear();
 		void SetLoggingState( LogLevel _saveLevel, LogLevel _queueLevel, LogLevel _dumpTrigger );
-		void SetLogFileName( string _filename );
+		void SetLogFileName( const string &_filename );
 
 		string GetTimeStampString();
 		string GetNodeString( uint8 const _nodeId );

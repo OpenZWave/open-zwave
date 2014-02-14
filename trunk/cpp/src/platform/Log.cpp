@@ -268,7 +268,7 @@ void Log::QueueClear
 //-----------------------------------------------------------------------------
 void Log::SetLogFileName
 (
-	string _filename
+	const string &_filename
 )
 {
 	if( s_instance && s_dologging && s_instance->m_pImpl )
@@ -294,7 +294,8 @@ Log::Log
 ):
 	m_logMutex( new Mutex() )
 {
-	m_pImpl = new LogImpl( _filename, _bAppend, _bConsoleOutput, _saveLevel, _queueLevel, _dumpTrigger );
+        if (NULL == m_pImpl) 
+        	m_pImpl = new LogImpl( _filename, _bAppend, _bConsoleOutput, _saveLevel, _queueLevel, _dumpTrigger );
 }
 
 //-----------------------------------------------------------------------------

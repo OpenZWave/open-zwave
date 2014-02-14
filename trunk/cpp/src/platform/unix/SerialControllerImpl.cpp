@@ -26,6 +26,7 @@
 //
 //-----------------------------------------------------------------------------
 #include <unistd.h>
+#include <pthread.h>
 #include "Defs.h"
 #include "Thread.h"
 #include "Event.h"

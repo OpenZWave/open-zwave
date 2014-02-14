@@ -83,7 +83,7 @@ enum SensorType
 	SensorType_MaxType
 };
 
-static char const* c_sensorTypeNames[] = 
+static char const* c_sensorTypeNames[] =
 {
 	"Undefined",
 	"Temperature",
@@ -119,14 +119,14 @@ static char const* c_sensorTypeNames[] =
 	"Moisture"
 };
 
-static char const* c_tankCapcityUnits[] = 
+static char const* c_tankCapcityUnits[] =
 {
 	"l",
 	"cbm",
 	"gal"
 };
 
-static char const* c_distanceUnits[] = 
+static char const* c_distanceUnits[] =
 {
 	"m",
 	"cm",
@@ -201,8 +201,8 @@ bool SensorMultilevel::RequestState
 }
 
 //-----------------------------------------------------------------------------
-// <SensorMultilevel::RequestValue>												   
-// Request current value from the device									   
+// <SensorMultilevel::RequestValue>
+// Request current value from the device
 //-----------------------------------------------------------------------------
 bool SensorMultilevel::RequestValue
 (
@@ -213,6 +213,10 @@ bool SensorMultilevel::RequestValue
 )
 {
 	bool res = false;
+	if ( !IsGetSupported() ) {
+		Log::Write(  LogLevel_Info, GetNodeId(), "SensorMultilevelCmd_Get Not Supported on this node");
+		return false;
+	}
 	if( GetVersion() < 5 )
 	{
 		Msg* msg = new Msg( "SensorMultilevelCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
@@ -340,7 +344,7 @@ bool SensorMultilevel::HandleMsg
 				node->CreateValueDecimal(  ValueID::ValueGenre_User, GetCommandClassId(), _instance, sensorType, c_sensorTypeNames[sensorType], units, true, false, "0.0", 0  );
 				value = static_cast<ValueDecimal*>( GetValue( _instance, sensorType ) );
 			}
-			else 
+			else
 			{
 				value->SetUnits(units);
 			}

@@ -53,7 +53,7 @@ namespace OpenZWave
 	/** \brief The Driver class handles communication between OpenZWave 
 	 *  and a device attached via a serial port (typically a controller).
 	 */
-	class Driver
+	class OPENZWAVE_EXPORT Driver
 	{
 		friend class Manager;
 		friend class Node;
@@ -345,10 +345,10 @@ namespace OpenZWave
 	private:
 		int32 GetPollInterval(){ return m_pollInterval ; }
 		void SetPollInterval( int32 _milliseconds, bool _bIntervalBetweenPolls ){ m_pollInterval = _milliseconds; m_bIntervalBetweenPolls = _bIntervalBetweenPolls; }
-		bool EnablePoll( ValueID _valueId, uint8 _intensity = 1 );
-		bool DisablePoll( ValueID _valueId );
-		bool isPolled( ValueID _valueId );
-		void SetPollIntensity( ValueID _valueId, uint8 _intensity );
+		bool EnablePoll( const ValueID &_valueId, uint8 _intensity = 1 );
+		bool DisablePoll( const ValueID &_valueId );
+		bool isPolled( const ValueID &_valueId );
+		void SetPollIntensity( const ValueID &_valueId, uint8 _intensity );
 		static void PollThreadEntryPoint( Event* _exitEvent, void* _context );
 		void PollThreadProc( Event* _exitEvent );
 
@@ -358,7 +358,9 @@ namespace OpenZWave
 			ValueID	m_id;
 			uint8	m_pollCounter;
 		};
+OPENZWAVE_EXPORT_WARNINGS_OFF
 		list<PollEntry>			m_pollList;									// List of nodes that need to be polled
+OPENZWAVE_EXPORT_WARNINGS_ON
 		Mutex*					m_pollMutex;								// Serialize access to the polling list
 		int32					m_pollInterval;								// Time interval during which all nodes must be polled
 		bool					m_bIntervalBetweenPolls;					// if true, the library intersperses m_pollInterval between polls; if false, the library attempts to complete all polls within m_pollInterval
@@ -615,7 +617,7 @@ namespace OpenZWave
 		 *  RemoveNodeQuery, Node::AllQueriesCompleted
 		 */
 		bool WriteNextMsg( MsgQueue const _queue );							// Extracts the first message from the queue, and makes it the current one.
-		bool WriteMsg( string const str);									// Sends the current message to the Z-Wave network
+		bool WriteMsg( string const &str);									// Sends the current message to the Z-Wave network
 		void RemoveCurrentMsg();											// Deletes the current message and cleans up the callback etc states
 		bool MoveMessagesToWakeUpQueue(	uint8 const _targetNodeId, bool const _move );		// If a node does not respond, and is of a type that can sleep, this method is used to move all its pending messages to another queue ready for when it mext wakes up.
 		bool HandleErrorResponse( uint8 const _error, uint8 const _nodeId, char const* _funcStr, bool _sleepCheck = false );									    // Handle data errors and process consistently. If message is moved to wake-up queue, return true.
@@ -700,7 +702,9 @@ namespace OpenZWave
 			ControllerCommandItem*		m_cci;
 		};
 
+OPENZWAVE_EXPORT_WARNINGS_OFF
 		list<MsgQueueItem>			m_msgQueue[MsgQueue_Count];
+OPENZWAVE_EXPORT_WARNINGS_ON
 		Event*					m_queueEvent[MsgQueue_Count];				// Events for each queue, which are signalled when the queue is not empty
 		Mutex*					m_sendMutex;						// Serialize access to the queues
 		Msg*					m_currentMsg;
@@ -768,7 +772,9 @@ namespace OpenZWave
 		void QueueNotification( Notification* _notification );				// Adds a notification to the list.  Notifications are queued until a point in the thread where we know we do not have any nodes locked.
 		void NotifyWatchers();												// Passes the notifications to all the registered watcher callbacks in turn.
 
+OPENZWAVE_EXPORT_WARNINGS_OFF
 		list<Notification*>		m_notifications;
+OPENZWAVE_EXPORT_WARNINGS_ON
 		Event*				m_notificationsEvent;
 
 	//-----------------------------------------------------------------------------

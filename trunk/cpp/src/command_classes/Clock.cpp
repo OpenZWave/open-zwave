@@ -52,7 +52,7 @@ enum
 	ClockIndex_Minute
 };
 
-static char const* c_dayNames[] = 
+static char const* c_dayNames[] =
 {
 	"Invalid",
 	"Monday",
@@ -95,15 +95,21 @@ bool Clock::RequestValue
 	Driver::MsgQueue const _queue
 )
 {
-	Msg* msg = new Msg( "ClockCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-	msg->SetInstance( this, _instance );
-	msg->Append( GetNodeId() );
-	msg->Append( 2 );
-	msg->Append( GetCommandClassId() );
-	msg->Append( ClockCmd_Get );
-	msg->Append( GetDriver()->GetTransmitOptions() );
-	GetDriver()->SendMsg( msg, _queue );
-	return true;
+	if ( IsGetSupported() )
+	{
+		Msg* msg = new Msg( "ClockCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		msg->SetInstance( this, _instance );
+		msg->Append( GetNodeId() );
+		msg->Append( 2 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( ClockCmd_Get );
+		msg->Append( GetDriver()->GetTransmitOptions() );
+		GetDriver()->SendMsg( msg, _queue );
+		return true;
+	} else {
+		Log::Write(  LogLevel_Info, GetNodeId(), "ClockCmd_Get Not Supported on this node");
+	}
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -114,7 +120,7 @@ bool Clock::HandleMsg
 (
 	uint8 const* _data,
 	uint32 const _length,
-	uint32 const _instance	// = 1   
+	uint32 const _instance	// = 1
 )
 {
 	if (ClockCmd_Report == (ClockCmd)_data[0])
@@ -143,7 +149,7 @@ bool Clock::HandleMsg
 		}
 		return true;
 	}
-	
+
 	return false;
 }
 
@@ -211,11 +217,11 @@ void Clock::CreateVars
 	{
 		vector<ValueList::Item> items;
 		for( int i=1; i<=7; ++i )
-		{	
+		{
 			ValueList::Item item;
 			item.m_label = c_dayNames[i];
 			item.m_value = i;
-			items.push_back( item ); 
+			items.push_back( item );
 		}
 
 		node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ClockIndex_Day, "Day", "", false, false, 1, items, 0, 0 );

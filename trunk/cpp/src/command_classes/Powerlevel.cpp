@@ -65,7 +65,7 @@ enum
 	PowerlevelIndex_TestAckFrames
 };
 
-static char const* c_powerLevelNames[] = 
+static char const* c_powerLevelNames[] =
 {
 	"Normal",
 	"-1dB",
@@ -79,7 +79,7 @@ static char const* c_powerLevelNames[] =
 	"-9dB"
 };
 
-static char const* c_powerLevelStatusNames[] = 
+static char const* c_powerLevelStatusNames[] =
 {
 	"Failed",
 	"Success",
@@ -120,15 +120,20 @@ bool Powerlevel::RequestValue
 {
 	if( _index == 0 )
 	{
-		Msg* msg = new Msg( "Powerlevel_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-		msg->SetInstance( this, _instance );
-		msg->Append( GetNodeId() );
-		msg->Append( 2 );
-		msg->Append( GetCommandClassId() );
-		msg->Append( PowerlevelCmd_Get );
-		msg->Append( GetDriver()->GetTransmitOptions() );
-		GetDriver()->SendMsg( msg, _queue );
-		return true;
+		if ( IsGetSupported() )
+		{
+			Msg* msg = new Msg( "Powerlevel_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+			msg->SetInstance( this, _instance );
+			msg->Append( GetNodeId() );
+			msg->Append( 2 );
+			msg->Append( GetCommandClassId() );
+			msg->Append( PowerlevelCmd_Get );
+			msg->Append( GetDriver()->GetTransmitOptions() );
+			GetDriver()->SendMsg( msg, _queue );
+			return true;
+		} else {
+			Log::Write(  LogLevel_Info, GetNodeId(), "Powerlevel_Get Not Supported on this node");
+		}
 	}
 	return false;
 }
@@ -237,7 +242,7 @@ bool Powerlevel::SetValue
 				button->Release();
 			}
 			break;
-		}		  
+		}
 		case PowerlevelIndex_TestNode:
 		{
 			if( ValueByte* value = static_cast<ValueByte*>( GetValue( instance, PowerlevelIndex_TestNode ) ) )
@@ -445,7 +450,7 @@ void Powerlevel::CreateVars
 		{
 			item.m_label = c_powerLevelNames[i];
 			item.m_value = i;
-			items.push_back( item ); 
+			items.push_back( item );
 		}
 
 		node->CreateValueList( ValueID::ValueGenre_System, GetCommandClassId(), _instance, PowerlevelIndex_Powerlevel, "Powerlevel", "dB", false, false, 1, items, 0, 0 );
@@ -462,7 +467,7 @@ void Powerlevel::CreateVars
 		{
 			item.m_label = c_powerLevelStatusNames[i];
 			item.m_value = i;
-			items.push_back( item ); 
+			items.push_back( item );
 		}
 		node->CreateValueList( ValueID::ValueGenre_System, GetCommandClassId(), _instance, PowerlevelIndex_TestStatus, "Test Status", "", true, false, 1, items, 0, 0 );
 		node->CreateValueShort( ValueID::ValueGenre_System, GetCommandClassId(), _instance, PowerlevelIndex_TestAckFrames, "Acked Frames", "", true, false, 0, 0 );
