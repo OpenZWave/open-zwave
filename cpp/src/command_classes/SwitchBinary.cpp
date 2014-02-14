@@ -46,8 +46,8 @@ enum SwitchBinaryCmd
 };
 
 //-----------------------------------------------------------------------------
-// <SwitchBinary::RequestState>												   
-// Request current state from the device									   
+// <SwitchBinary::RequestState>
+// Request current state from the device
 //-----------------------------------------------------------------------------
 bool SwitchBinary::RequestState
 (
@@ -65,8 +65,8 @@ bool SwitchBinary::RequestState
 }
 
 //-----------------------------------------------------------------------------
-// <SwitchBinary::RequestValue>												   
-// Request current value from the device									   
+// <SwitchBinary::RequestValue>
+// Request current value from the device
 //-----------------------------------------------------------------------------
 bool SwitchBinary::RequestValue
 (
@@ -76,15 +76,21 @@ bool SwitchBinary::RequestValue
 	Driver::MsgQueue const _queue
 )
 {
-	Msg* msg = new Msg( "SwitchBinaryCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-	msg->SetInstance( this, _instance );
-	msg->Append( GetNodeId() );
-	msg->Append( 2 );
-	msg->Append( GetCommandClassId() );
-	msg->Append( SwitchBinaryCmd_Get );
-	msg->Append( GetDriver()->GetTransmitOptions() );
-	GetDriver()->SendMsg( msg, _queue );
-	return true;
+	if ( IsGetSupported() )
+	{
+		Msg* msg = new Msg( "SwitchBinaryCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		msg->SetInstance( this, _instance );
+		msg->Append( GetNodeId() );
+		msg->Append( 2 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( SwitchBinaryCmd_Get );
+		msg->Append( GetDriver()->GetTransmitOptions() );
+		GetDriver()->SendMsg( msg, _queue );
+		return true;
+	} else {
+		Log::Write(  LogLevel_Info, GetNodeId(), "SwitchBinaryCmd_Get Not Supported on this node");
+	}
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -127,7 +133,7 @@ bool SwitchBinary::SetValue
 		ValueBool const* value = static_cast<ValueBool const*>(&_value);
 
 		Log::Write( LogLevel_Info, GetNodeId(), "SwitchBinary::Set - Setting node %d to %s", GetNodeId(), value->GetValue() ? "On" : "Off" );
-		Msg* msg = new Msg( "SwitchBinary Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
+		Msg* msg = new Msg( "SwitchBinary Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 		msg->SetInstance( this, _value.GetID().GetInstance() );
 		msg->Append( GetNodeId() );
 		msg->Append( 3 );

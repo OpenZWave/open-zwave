@@ -51,8 +51,8 @@ enum
 };
 
 //-----------------------------------------------------------------------------
-// <Language::RequestState>												   
-// Request current state from the device									   
+// <Language::RequestState>
+// Request current state from the device
 //-----------------------------------------------------------------------------
 bool Language::RequestState
 (
@@ -70,8 +70,8 @@ bool Language::RequestState
 }
 
 //-----------------------------------------------------------------------------
-// <Language::RequestValue>												   
-// Request current value from the device									   
+// <Language::RequestValue>
+// Request current value from the device
 //-----------------------------------------------------------------------------
 bool Language::RequestValue
 (
@@ -86,15 +86,20 @@ bool Language::RequestValue
 		// This command class doesn't work with multiple instances
 		return false;
 	}
-
-	Msg* msg = new Msg( "LanguageCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-	msg->Append( GetNodeId() );
-	msg->Append( 2 );
-	msg->Append( GetCommandClassId() );
-	msg->Append( LanguageCmd_Get );
-	msg->Append( GetDriver()->GetTransmitOptions() );
-	GetDriver()->SendMsg( msg, _queue );
-	return true;
+	if ( IsGetSupported() )
+	{
+		Msg* msg = new Msg( "LanguageCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		msg->Append( GetNodeId() );
+		msg->Append( 2 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( LanguageCmd_Get );
+		msg->Append( GetDriver()->GetTransmitOptions() );
+		GetDriver()->SendMsg( msg, _queue );
+		return true;
+	} else {
+		Log::Write(  LogLevel_Info, GetNodeId(), "LanguageCmd_Get Not Supported on this node");
+	}
+	return false;
 }
 
 //-----------------------------------------------------------------------------

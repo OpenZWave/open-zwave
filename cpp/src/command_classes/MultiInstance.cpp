@@ -99,7 +99,7 @@ MultiInstance::MultiInstance
 // Class specific configuration
 //-----------------------------------------------------------------------------
 void MultiInstance::ReadXML
-( 
+(
 	TiXmlElement const* _ccElement
 )
 {
@@ -142,7 +142,7 @@ void MultiInstance::ReadXML
 // Class specific configuration
 //-----------------------------------------------------------------------------
 void MultiInstance::WriteXML
-( 
+(
 	TiXmlElement* _ccElement
 )
 {
@@ -289,7 +289,7 @@ bool MultiInstance::HandleMsg
 // Handle a message from the Z-Wave network
 //-----------------------------------------------------------------------------
 void MultiInstance::HandleMultiInstanceReport
-(	
+(
 	uint8 const* _data,
 	uint32 const _length
 )
@@ -313,7 +313,7 @@ void MultiInstance::HandleMultiInstanceReport
 // Handle a message from the Z-Wave network
 //-----------------------------------------------------------------------------
 void MultiInstance::HandleMultiInstanceEncap
-(	
+(
 	uint8 const* _data,
 	uint32 const _length
 )
@@ -340,7 +340,7 @@ void MultiInstance::HandleMultiInstanceEncap
 // Handle a message from the Z-Wave network
 //-----------------------------------------------------------------------------
 void MultiInstance::HandleMultiChannelEndPointReport
-(	
+(
 	uint8 const* _data,
 	uint32 const _length
 )
@@ -375,7 +375,7 @@ void MultiInstance::HandleMultiChannelEndPointReport
 	// Since the end point finds do not appear to work this is the best estimate.
 	for( uint8 i = 1; i <= len; i++ )
 	{
-	
+
 		// Send a single capability request to each endpoint
 		char str[128];
 		snprintf( str, sizeof( str ), "MultiChannelCmd_CapabilityGet for endpoint %d", i );
@@ -395,15 +395,24 @@ void MultiInstance::HandleMultiChannelEndPointReport
 // Handle a message from the Z-Wave network
 //-----------------------------------------------------------------------------
 void MultiInstance::HandleMultiChannelCapabilityReport
-(	
+(
 	uint8 const* _data,
 	uint32 const _length
 )
 {
+
+	bool dynamic = ((_data[1] & 0x80)!=0);
+	/* if you having problems with Dynamic Devices not correctly
+	 * updating the commandclasses, see this email thread:
+	 * https://groups.google.com/d/topic/openzwave/IwepxScRAVo/discussion
+	 */
+    if (!dynamic && m_endPointCommandClasses.size() > 0)
+    	return;
+
+
 	if( Node* node = GetNodeUnsafe() )
 	{
 		uint8 endPoint = _data[1] & 0x7f;
-		bool dynamic = ((_data[1] & 0x80)!=0);
 
 		Log::Write( LogLevel_Info, GetNodeId(), "Received MultiChannelCapabilityReport from node %d for endpoint %d", GetNodeId(), endPoint );
 		Log::Write( LogLevel_Info, GetNodeId(), "    Endpoint is%sdynamic, and is a %s", dynamic ? " " : " not ", node->GetEndPointDeviceClassLabel( _data[2], _data[3] ).c_str() );
@@ -466,7 +475,7 @@ void MultiInstance::HandleMultiChannelCapabilityReport
 					uint8 commandClassId = *it;
 					CommandClass* cc = node->GetCommandClass( commandClassId );
 					if( cc )
-					{	
+					{
 						cc->SetInstance( i );
 						if( m_endPointMap != MultiInstanceMapAll || i != 1 )
 						{
@@ -539,7 +548,7 @@ void MultiInstance::HandleMultiChannelCapabilityReport
 // Handle a message from the Z-Wave network
 //-----------------------------------------------------------------------------
 void MultiInstance::HandleMultiChannelEndPointFindReport
-(	
+(
 	uint8 const* _data,
 	uint32 const _length
 )
@@ -560,7 +569,7 @@ void MultiInstance::HandleMultiChannelEndPointFindReport
 					uint8 commandClassId = *it;
 					CommandClass* cc = node->GetCommandClass( commandClassId );
 					if( cc )
-					{	
+					{
 						Log::Write( LogLevel_Info, GetNodeId(), "    Endpoint %d: Adding %s", endPoint, cc->GetCommandClassName().c_str() );
 						cc->SetInstance( endPoint );
 					}
@@ -617,7 +626,7 @@ void MultiInstance::HandleMultiChannelEndPointFindReport
 // Handle a message from the Z-Wave network
 //-----------------------------------------------------------------------------
 void MultiInstance::HandleMultiChannelEncap
-(	
+(
 	uint8 const* _data,
 	uint32 const _length
 )

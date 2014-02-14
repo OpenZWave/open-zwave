@@ -43,7 +43,7 @@ namespace OpenZWave
 		FileOpsImpl();
 		~FileOpsImpl();
 
-		bool FolderExists( string _filename );
+		bool FolderExists( const string &_filename );
 	};
 
 } // namespace OpenZWave

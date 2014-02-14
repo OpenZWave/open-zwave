@@ -47,7 +47,7 @@ enum ThermostatFanModeCmd
 	ThermostatFanModeCmd_SupportedReport			= 0x05
 };
 
-static string const c_modeName[] = 
+static string const c_modeName[] =
 {
 	"Auto Low",
 	"On Low",
@@ -63,15 +63,14 @@ static string const c_modeName[] =
 // Read the supported modes
 //-----------------------------------------------------------------------------
 void ThermostatFanMode::ReadXML
-( 
+(
 	TiXmlElement const* _ccElement
 )
 {
 	CommandClass::ReadXML( _ccElement );
 
-	if( Node* node = GetNodeUnsafe() )
+	if( GetNodeUnsafe() )
 	{
-		node = node;
 		vector<ValueList::Item>	supportedModes;
 
 		TiXmlElement const* supportedModesElement = _ccElement->FirstChildElement( "SupportedModes" );
@@ -89,7 +88,7 @@ void ThermostatFanMode::ReadXML
 						ValueList::Item item;
 						item.m_value = index;
 						item.m_label = c_modeName[index];
-						supportedModes.push_back( item );					
+						supportedModes.push_back( item );
 					}
 				}
 
@@ -101,7 +100,7 @@ void ThermostatFanMode::ReadXML
 		{
 			m_supportedModes = supportedModes;
 			ClearStaticRequest( StaticRequest_Values );
-			CreateVars( 1 ); 
+			CreateVars( 1 );
 		}
 	}
 }
@@ -111,15 +110,14 @@ void ThermostatFanMode::ReadXML
 // Save the supported modes
 //-----------------------------------------------------------------------------
 void ThermostatFanMode::WriteXML
-( 
+(
 	TiXmlElement* _ccElement
 )
 {
 	CommandClass::WriteXML( _ccElement );
 
-	if( Node* node = GetNodeUnsafe() )
+	if( GetNodeUnsafe() )
 	{
-		node = node;
 		TiXmlElement* supportedModesElement = new TiXmlElement( "SupportedModes" );
 		_ccElement->LinkEndChild( supportedModesElement );
 
@@ -180,7 +178,7 @@ bool ThermostatFanMode::RequestValue
 	if( _getTypeEnum == ThermostatFanModeCmd_SupportedGet )
 	{
 		// Request the supported modes
-		Msg* msg = new Msg( "Request Supported Thermostat Fan Modes", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		Msg* msg = new Msg( "ThermostatFanModeCmd_SupportedGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 		msg->SetInstance( this, _instance );
 		msg->Append( GetNodeId() );
 		msg->Append( 2 );
@@ -193,16 +191,21 @@ bool ThermostatFanMode::RequestValue
 
 	if( _getTypeEnum == ThermostatFanModeCmd_Get || _getTypeEnum == 0 )
 	{
-		// Request the current fan mode
-		Msg* msg = new Msg( "Request Current Thermostat Fan Mode", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-		msg->SetInstance( this, _instance );
-		msg->Append( GetNodeId() );
-		msg->Append( 2 );
-		msg->Append( GetCommandClassId() );
-		msg->Append( ThermostatFanModeCmd_Get );
-		msg->Append( GetDriver()->GetTransmitOptions() );
-		GetDriver()->SendMsg( msg, _queue );
-		return true;
+		if ( IsGetSupported() )
+		{
+			// Request the current fan mode
+			Msg* msg = new Msg( "ThermostatFanModeCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+			msg->SetInstance( this, _instance );
+			msg->Append( GetNodeId() );
+			msg->Append( 2 );
+			msg->Append( GetCommandClassId() );
+			msg->Append( ThermostatFanModeCmd_Get );
+			msg->Append( GetDriver()->GetTransmitOptions() );
+			GetDriver()->SendMsg( msg, _queue );
+			return true;
+		} else {
+			Log::Write(  LogLevel_Info, GetNodeId(), "ThermostatFanModeCmd_Get Not Supported on this node");
+		}
 	}
 	return false;
 }
@@ -221,14 +224,14 @@ bool ThermostatFanMode::HandleMsg
 	if( ThermostatFanModeCmd_Report == (ThermostatFanModeCmd)_data[0] )
 	{
 		uint8 mode = (int32)_data[1];
-		
+
 		if( mode < m_supportedModes.size() )
 		{
 			// We have received the thermostat mode from the Z-Wave device
 			if( ValueList* valueList = static_cast<ValueList*>( GetValue( _instance, 0 ) ) )
 			{
 				valueList->OnValueRefreshed( (int32)_data[1] );
-				Log::Write( LogLevel_Info, GetNodeId(), "Received thermostat fan mode: %s", valueList->GetItem().m_label.c_str() );		
+				Log::Write( LogLevel_Info, GetNodeId(), "Received thermostat fan mode: %s", valueList->GetItem().m_label.c_str() );
 				valueList->Release();
 			}
 			else
@@ -238,15 +241,15 @@ bool ThermostatFanMode::HandleMsg
 		}
 		else
 		{
-			Log::Write( LogLevel_Info, GetNodeId(), "Received unknown thermostat fan mode: %d", mode );		
+			Log::Write( LogLevel_Info, GetNodeId(), "Received unknown thermostat fan mode: %d", mode );
 		}
 		return true;
 	}
-	
+
 	if( ThermostatFanModeCmd_SupportedReport == (ThermostatFanModeCmd)_data[0] )
 	{
 		// We have received the supported thermostat fan modes from the Z-Wave device
-		Log::Write( LogLevel_Info, GetNodeId(), "Received supported thermostat fan modes" );		
+		Log::Write( LogLevel_Info, GetNodeId(), "Received supported thermostat fan modes" );
 
 		m_supportedModes.clear();
 		for( uint32 i=1; i<_length-1; ++i )
@@ -257,7 +260,7 @@ bool ThermostatFanMode::HandleMsg
 				{
 					ValueList::Item item;
 					item.m_value = (int32)((i-1)<<3) + bit;
-					
+
 					if ((size_t)item.m_value >= sizeof(c_modeName)/sizeof(*c_modeName))
 					{
 						Log::Write( LogLevel_Info, GetNodeId(), "Received unknown fan mode: 0x%x", item.m_value);
@@ -295,7 +298,7 @@ bool ThermostatFanMode::SetValue
 		ValueList const* value = static_cast<ValueList const*>(&_value);
 		uint8 state = (uint8)value->GetItem().m_value;
 
-		Msg* msg = new Msg( "Set Thermostat Fan Mode", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+		Msg* msg = new Msg( "ThermostatFanModeCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 		msg->SetInstance( this, _value.GetID().GetInstance() );
 		msg->Append( GetNodeId() );
 		msg->Append( 3 );

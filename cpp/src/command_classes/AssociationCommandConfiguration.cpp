@@ -59,8 +59,8 @@ enum
 
 
 //-----------------------------------------------------------------------------
-// <AssociationCommandConfiguration::RequestState>												   
-// Request current state from the device									   
+// <AssociationCommandConfiguration::RequestState>
+// Request current state from the device
 //-----------------------------------------------------------------------------
 bool AssociationCommandConfiguration::RequestState
 (
@@ -78,8 +78,8 @@ bool AssociationCommandConfiguration::RequestState
 }
 
 //-----------------------------------------------------------------------------
-// <AssociationCommandConfiguration::RequestValue>												   
-// Request current value from the device									   
+// <AssociationCommandConfiguration::RequestValue>
+// Request current value from the device
 //-----------------------------------------------------------------------------
 bool AssociationCommandConfiguration::RequestValue
 (
@@ -106,8 +106,8 @@ bool AssociationCommandConfiguration::RequestValue
 }
 
 //-----------------------------------------------------------------------------
-// <AssociationCommandConfiguration::RequestCommands>												   
-// Request the command data									   
+// <AssociationCommandConfiguration::RequestCommands>
+// Request the command data
 //-----------------------------------------------------------------------------
 void AssociationCommandConfiguration::RequestCommands
 (
@@ -115,17 +115,21 @@ void AssociationCommandConfiguration::RequestCommands
 	uint8 const _nodeId
 )
 {
-	Msg* msg = new Msg( "AssociationCommandConfigurationCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-	msg->Append( GetNodeId() );
-	msg->Append( 4 );
-	msg->Append( GetCommandClassId() );
-	msg->Append( AssociationCommandConfigurationCmd_Get );
-	msg->Append( _groupIdx );
-	msg->Append( _nodeId );
-	msg->Append( GetDriver()->GetTransmitOptions() );
-	GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
+	if ( IsGetSupported() )
+	{
+		Msg* msg = new Msg( "AssociationCommandConfigurationCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		msg->Append( GetNodeId() );
+		msg->Append( 4 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( AssociationCommandConfigurationCmd_Get );
+		msg->Append( _groupIdx );
+		msg->Append( _nodeId );
+		msg->Append( GetDriver()->GetTransmitOptions() );
+		GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
+	} else {
+		Log::Write(  LogLevel_Info, GetNodeId(), "AssociationCommandConfigurationCmd_Get Not Supported on this node");
+	}
 }
-
 //-----------------------------------------------------------------------------
 // <AssociationCommandConfiguration::HandleMsg>
 // Handle a message from the Z-Wave network
@@ -186,7 +190,7 @@ bool AssociationCommandConfiguration::HandleMsg
 		}
 		return true;
 	}
-	
+
 	if (AssociationCommandConfigurationCmd_Report == (AssociationCommandConfigurationCmd)_data[0])
 	{
 		uint8 groupIdx		= _data[1];
@@ -245,7 +249,7 @@ void AssociationCommandConfiguration::CreateVars
 
 //-----------------------------------------------------------------------------
 // <AssociationCommandConfiguration::SetCommand>
-// Set a command for the association									   
+// Set a command for the association
 //-----------------------------------------------------------------------------
 void AssociationCommandConfiguration::SetCommand
 (

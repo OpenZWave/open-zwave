@@ -58,9 +58,9 @@ const uint8 UserCodeLength = 10;
 // Constructor
 //-----------------------------------------------------------------------------
 UserCode::UserCode
-( 
+(
 	uint32 const _homeId,
-	uint8 const _nodeId 
+	uint8 const _nodeId
 ):
 	CommandClass( _homeId, _nodeId ),
 	m_queryAll( false ),
@@ -76,7 +76,7 @@ UserCode::UserCode
 // Class specific configuration
 //-----------------------------------------------------------------------------
 void UserCode::ReadXML
-( 
+(
 	TiXmlElement const* _ccElement
 )
 {
@@ -94,7 +94,7 @@ void UserCode::ReadXML
 // Class specific configuration
 //-----------------------------------------------------------------------------
 void UserCode::WriteXML
-( 
+(
 	TiXmlElement* _ccElement
 )
 {
@@ -152,7 +152,11 @@ bool UserCode::RequestValue
 		// This command class doesn't work with multiple instances
 		return false;
 	}
-
+	if ( !IsGetSupported() )
+	{
+		Log::Write(  LogLevel_Info, GetNodeId(), "UserNumberCmd_Get Not Supported on this node");
+		return false;
+	}
 	if( _userCodeIdx == 0xff )
 	{
 		// Get number of supported user codes.
@@ -189,7 +193,7 @@ bool UserCode::HandleMsg
 )
 {
 	if( UserNumberCmd_Report == (UserCodeCmd)_data[0] )
-	{	
+	{
 		m_userCodeCount = _data[1];
 		if( m_userCodeCount > 254 )
 		{
@@ -235,7 +239,7 @@ bool UserCode::HandleMsg
 		return true;
 	}
 	else if( UserCodeCmd_Report == (UserCodeCmd)_data[0] )
-	{	
+	{
 		int i = _data[1];
 		if( ValueRaw* value = static_cast<ValueRaw*>( GetValue( _instance, i ) ) )
 		{

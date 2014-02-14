@@ -55,9 +55,8 @@ FileOpsImpl::~FileOpsImpl
 //	<FileOpsImpl::FolderExists>
 //	Determine if a folder exists
 //-----------------------------------------------------------------------------
-bool FileOpsImpl::FolderExists
-( 
-	string _folderName
+bool FileOpsImpl::FolderExists( 
+	const string &_folderName
 )
 {
 	int32 ftype = GetFileAttributes( _folderName.c_str() );

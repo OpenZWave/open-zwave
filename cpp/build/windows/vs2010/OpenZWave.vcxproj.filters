@@ -584,5 +584,8 @@
     <ClCompile Include="..\..\..\src\command_classes\UserCode.cpp">
       <Filter>Command Classes</Filter>
     </ClCompile>
+    <ClCompile Include="..\winversion.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

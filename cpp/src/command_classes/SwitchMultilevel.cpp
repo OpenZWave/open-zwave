@@ -64,23 +64,23 @@ enum
 	SwitchMultilevelIndex_Dec
 };
 
-static uint8 c_directionParams[] = 
-{ 
-	0x18, 
-	0x58, 
-	0xc0, 
-	0xc8 
+static uint8 c_directionParams[] =
+{
+	0x18,
+	0x58,
+	0xc0,
+	0xc8
 };
 
-static char const* c_directionDebugLabels[] = 
-{ 
-	"Up", 
-	"Down", 
-	"Inc", 
-	"Dec" 
+static char const* c_directionDebugLabels[] =
+{
+	"Up",
+	"Down",
+	"Inc",
+	"Dec"
 };
 
-static char const* c_switchLabelsPos[] = 
+static char const* c_switchLabelsPos[] =
 {
 	"Undefined",
 	"On",
@@ -92,7 +92,7 @@ static char const* c_switchLabelsPos[] =
 	"Push"
 };
 
-static char const* c_switchLabelsNeg[] = 
+static char const* c_switchLabelsNeg[] =
 {
 	"Undefined",
 	"Off",
@@ -137,15 +137,20 @@ bool SwitchMultilevel::RequestValue
 {
 	if( _index == SwitchMultilevelIndex_Level )
 	{
-		Msg* msg = new Msg( "SwitchMultilevelCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-		msg->SetInstance( this, _instance );
-		msg->Append( GetNodeId() );
-		msg->Append( 2 );
-		msg->Append( GetCommandClassId() );
-		msg->Append( SwitchMultilevelCmd_Get );
-		msg->Append( GetDriver()->GetTransmitOptions() );
-		GetDriver()->SendMsg( msg, _queue );
-		return true;
+		if ( IsGetSupported() )
+		{
+			Msg* msg = new Msg( "SwitchMultilevelCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+			msg->SetInstance( this, _instance );
+			msg->Append( GetNodeId() );
+			msg->Append( 2 );
+			msg->Append( GetCommandClassId() );
+			msg->Append( SwitchMultilevelCmd_Get );
+			msg->Append( GetDriver()->GetTransmitOptions() );
+			GetDriver()->SendMsg( msg, _queue );
+			return true;
+		} else {
+			Log::Write(  LogLevel_Info, GetNodeId(), "SwitchMultilevelCmd_Get Not Supported on this node");
+		}
 	}
 	return false;
 }
@@ -177,7 +182,7 @@ bool SwitchMultilevel::HandleMsg
 	{
 		uint8 switchType1 = _data[1] & 0x1f;
 		uint8 switchType2 = _data[2] & 0x1f;
-		
+
 		Log::Write( LogLevel_Info, GetNodeId(), "Received SwitchMultiLevel supported report: Switch1=%s/%s, Switch2=%s/%s", c_switchLabelsPos[switchType1], c_switchLabelsNeg[switchType1], c_switchLabelsPos[switchType2], c_switchLabelsNeg[switchType2] );
 		ClearStaticRequest( StaticRequest_Version );
 
@@ -197,7 +202,7 @@ bool SwitchMultilevel::HandleMsg
 				button->Release();
 			}
 		}
-		
+
 		if( switchType2 )
 		{
 			if( NULL != ( button = static_cast<ValueButton*>( GetValue( _instance, SwitchMultilevelIndex_Inc ) ) ) )
@@ -425,10 +430,10 @@ bool SwitchMultilevel::SetLevel
 )
 {
 	Log::Write( LogLevel_Info, GetNodeId(), "SwitchMultilevel::Set - Setting to level %d", _level );
-	Msg* msg = new Msg( "SwitchMultiLevel Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
+	Msg* msg = new Msg( "SwitchMultiLevel Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 	msg->SetInstance( this, _instance );
 	msg->Append( GetNodeId() );
-	
+
 	if( ValueByte* durationValue = static_cast<ValueByte*>( GetValue( _instance, SwitchMultilevelIndex_Duration ) ) )
 	{
 		uint8 duration = durationValue->GetValue();
@@ -520,8 +525,8 @@ bool SwitchMultilevel::StartLevelChange
 			Log::Write( LogLevel_Info, GetNodeId(), "  Step Size:          %d", step );
 		}
 	}
-	
-	Msg* msg = new Msg( "SwitchMultilevel StartLevelChange", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
+
+	Msg* msg = new Msg( "SwitchMultilevel StartLevelChange", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 	msg->SetInstance( this, _instance );
 	msg->Append( GetNodeId() );
 	msg->Append( length );
@@ -555,7 +560,7 @@ bool SwitchMultilevel::StopLevelChange
 )
 {
 	Log::Write( LogLevel_Info, GetNodeId(), "SwitchMultilevel::StopLevelChange - Stopping the level change" );
-	Msg* msg = new Msg( "SwitchMultilevel StopLevelChange", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );		
+	Msg* msg = new Msg( "SwitchMultilevel StopLevelChange", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 	msg->SetInstance( this, _instance );
 	msg->Append( GetNodeId() );
 	msg->Append( 2 );

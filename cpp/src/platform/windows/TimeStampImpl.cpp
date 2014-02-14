@@ -25,6 +25,7 @@
 //	along with OpenZWave.  If not, see <http://www.gnu.org/licenses/>.
 //
 //-----------------------------------------------------------------------------
+#include <string>
 #include <Windows.h>
 #include "Defs.h"
 #include "TimeStampImpl.h"
@@ -61,8 +62,8 @@ void TimeStampImpl::SetTime
 	int32 _milliseconds	// = 0
 )
 {
-	int64 offset = ((int64)_milliseconds) * 10000i64;	// Timestamp is stored in 100ns steps.
-	
+	int64 offset = ((int64)_milliseconds) * 10000LL;	// Timestamp is stored in 100ns steps.
+
 	GetSystemTimeAsFileTime( (FILETIME*)&m_stamp );
 	m_stamp += offset;
 }
@@ -78,7 +79,7 @@ int32 TimeStampImpl::TimeRemaining
 	int64 now;
 	GetSystemTimeAsFileTime( (FILETIME*)&now );
 
-	return (int32)( ( m_stamp - now ) / 10000i64 );
+	return (int32)( ( m_stamp - now ) / 10000LL );
 }
 
 //-----------------------------------------------------------------------------
@@ -101,13 +102,13 @@ string TimeStampImpl::GetAsString
 
 //-----------------------------------------------------------------------------
 //	<TimeStampImpl::operator->
-//	Overload the subtract operator to get the difference between two 
+//	Overload the subtract operator to get the difference between two
 //	timestamps in milliseconds
 //-----------------------------------------------------------------------------
-int32 TimeStampImpl::operator- 
+int32 TimeStampImpl::operator-
 (
 	TimeStampImpl const& _other
 )
 {
-	return (int32)( ( m_stamp - _other.m_stamp ) / 10000i64 );
+	return (int32)( ( m_stamp - _other.m_stamp ) / 10000LL );
 }

@@ -31,6 +31,7 @@
 //-----------------------------------------------------------------------------
 
 #include <unistd.h>
+#include <stdlib.h>
 #include <pthread.h>
 #include "Options.h"
 #include "Manager.h"
@@ -253,11 +254,14 @@ int main( int argc, char* argv[] )
 
 	pthread_mutex_lock( &initMutex );
 
+
+	printf("Starting MinOZW with OpenZWave Version %s\n", Manager::getVersionAsString().c_str());
+
 	// Create the OpenZWave Manager.
 	// The first argument is the path to the config files (where the manufacturer_specific.xml file is located
 	// The second argument is the path for saved Z-Wave network state and the log file.  If you leave it NULL 
 	// the log file will appear in the program's working directory.
-	Options::Create( "../../../../config/", "", "" );
+	Options::Create( "../../../config/", "", "" );
 	Options::Get()->AddOptionInt( "SaveLogLevel", LogLevel_Detail );
 	Options::Get()->AddOptionInt( "QueueLogLevel", LogLevel_Debug );
 	Options::Get()->AddOptionInt( "DumpTrigger", LogLevel_Error );
@@ -277,12 +281,18 @@ int main( int argc, char* argv[] )
 	// Add a Z-Wave Driver
 	// Modify this line to set the correct serial port for your PC interface.
 
+#ifdef DARWIN
 	string port = "/dev/cu.usbserial";
-	if( argc > 1 )
+#elif WIN32
+        string port = "\\\\.\\COM6";
+#else
+	string port = "/dev/ttyUSB0";
+#endif
+	if ( argc > 1 )
 	{
 		port = argv[1];
 	}
-	if( strcasecmp( port.c_str(), "usb") == 0 )
+	if( strcasecmp( port.c_str(), "usb" ) == 0 )
 	{
 		Manager::Get()->AddDriver( "HID Controller", Driver::ControllerInterface_Hid );
 	}
@@ -353,7 +363,7 @@ int main( int argc, char* argv[] )
 	}
 
 	// program exit (clean up)
-	if( strcasecmp( port.c_str(), "usb") == 0 )
+	if( strcasecmp( port.c_str(), "usb" ) == 0 )
 	{
 		Manager::Get()->RemoveDriver( "HID Controller" );
 	}
@@ -361,7 +371,6 @@ int main( int argc, char* argv[] )
 	{
 		Manager::Get()->RemoveDriver( port );
 	}
-
 	Manager::Get()->RemoveWatcher( OnNotification, NULL );
 	Manager::Destroy();
 	Options::Destroy();
