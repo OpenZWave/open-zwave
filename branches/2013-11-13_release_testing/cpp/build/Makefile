@@ -127,7 +127,7 @@ $(LIBDIR)/libopenzwave.so.$(VERSION):	$(patsubst %.cpp,$(OBJDIR)/%.o,$(tinyxml))
 			$(patsubst %.cpp,$(OBJDIR)/%.o,$(indep)) \
 			$(OBJDIR)/vers.o
 	@echo "Linking Shared Library"
-	@$(LD) $(LDFLAGS) $(LIBS) -shared  -o $@ $+
+	@$(LD) $(LDFLAGS) -shared  -o $@ $+ $(LIBS)
 	@ln -sf libopenzwave.so.$(VERSION) $(LIBDIR)/libopenzwave.so
 
 ifeq ($(PKGCONFIG),)
