@@ -34,16 +34,13 @@ include $(top_srcdir)/cpp/build/support.mk
 -include $(patsubst %.cpp,$(DEPDIR)/%.d,$(minozwsrc))
 
 #if we are on a Mac, add these flags and libs to the compile and link phases 
-ifneq ($(UNAME),Darwin)
-LIBS    += -ludev
-endif
 ifeq ($(UNAME),Darwin)
 CFLAGS += -DDARWIN
 endif
 
 $(OBJDIR)/MinOZW:	$(patsubst %.cpp,$(OBJDIR)/%.o,$(minozwsrc))
 	@echo "Linking $(OBJDIR)/MinOZW"
-	$(LD) -o $@ $(LDFLAGS) $< $(LIBS) -pthread
+	$(LD) $(LDFLAGS) -o $@ $< $(LIBS) -pthread
 
 $(top_builddir)/MinOZW: $(top_srcdir)/cpp/examples/MinOZW/MinOZW.in $(OBJDIR)/MinOZW
 	@echo "Creating Temporary Shell Launch Script"

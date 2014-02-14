@@ -33,6 +33,7 @@ else ifeq ($(UNAME),FreeBSD)
 CFLAGS += -I/usr/local/include
 else
 LDFLAGS += -Wl,-soname,libopenzwave.so.$(VERSION)
+LIBS 	+= -ludev
 endif
 
 #where to put the temporary library
