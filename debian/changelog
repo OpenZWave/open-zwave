@@ -1,4 +1,4 @@
-openzwave (1.0.736-1) UNRELEASED; urgency=low
+openzwave (1.0.742-1) UNRELEASED; urgency=low
 
   [ hari ]
   * Initial release.
@@ -12,4 +12,7 @@ openzwave (1.0.736-1) UNRELEASED; urgency=low
   * increase deb package version
   * new package
 
- -- root <root@pluto.vt100.at>  Mon, 28 Jan 2013 13:48:57 +0100
+  [ fish ]
+  * fix i386 builds on debian
+
+ -- fish <fish@ubuntu>  Sat, 15 Feb 2014 00:40:22 +0800
