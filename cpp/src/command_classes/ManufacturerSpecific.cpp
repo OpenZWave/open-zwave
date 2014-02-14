@@ -54,8 +54,8 @@ map<int64,ManufacturerSpecific::Product*> ManufacturerSpecific::s_productMap;
 bool ManufacturerSpecific::s_bXmlLoaded = false;
 
 //-----------------------------------------------------------------------------
-// <ManufacturerSpecific::RequestState>												   
-// Request current state from the device									   
+// <ManufacturerSpecific::RequestState>
+// Request current state from the device
 //-----------------------------------------------------------------------------
 bool ManufacturerSpecific::RequestState
 (
@@ -73,8 +73,8 @@ bool ManufacturerSpecific::RequestState
 }
 
 //-----------------------------------------------------------------------------
-// <ManufacturerSpecific::RequestValue>												   
-// Request current value from the device									   
+// <ManufacturerSpecific::RequestValue>
+// Request current value from the device
 //-----------------------------------------------------------------------------
 bool ManufacturerSpecific::RequestValue
 (
@@ -89,15 +89,20 @@ bool ManufacturerSpecific::RequestValue
 		// This command class doesn't work with multiple instances
 		return false;
 	}
-
-	Msg* msg = new Msg( "ManufacturerSpecificCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-	msg->Append( GetNodeId() );
-	msg->Append( 2 );
-	msg->Append( GetCommandClassId() );
-	msg->Append( ManufacturerSpecificCmd_Get );
-	msg->Append( GetDriver()->GetTransmitOptions() );
-	GetDriver()->SendMsg( msg, _queue );
-	return true;
+	if ( IsGetSupported() )
+	{
+		Msg* msg = new Msg( "ManufacturerSpecificCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		msg->Append( GetNodeId() );
+		msg->Append( 2 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( ManufacturerSpecificCmd_Get );
+		msg->Append( GetDriver()->GetTransmitOptions() );
+		GetDriver()->SendMsg( msg, _queue );
+		return true;
+	} else {
+		Log::Write(  LogLevel_Info, GetNodeId(), "ManufacturerSpecificCmd_Get Not Supported on this node");
+	}
+	return false;
 }
 
 string ManufacturerSpecific::SetProductDetails
@@ -114,12 +119,12 @@ string ManufacturerSpecific::SetProductDetails
 
 	snprintf( str, sizeof(str), "Unknown: id=%.4x", manufacturerId );
 	string manufacturerName = str;
-	
+
 	snprintf( str, sizeof(str), "Unknown: type=%.4x, id=%.4x", productType, productId );
-	string productName = str;	
-	
+	string productName = str;
+
 	string configPath = "";
-	
+
 	// Try to get the real manufacturer and product names
 	map<uint16,string>::iterator mit = s_manufacturerMap.find( manufacturerId );
 	if( mit != s_manufacturerMap.end() )
@@ -158,7 +163,7 @@ string ManufacturerSpecific::SetProductDetails
 
 	snprintf( str, sizeof(str), "%.4x", productId );
 	node->SetProductId( str );
-	
+
 	return configPath;
 }
 
@@ -193,12 +198,12 @@ bool ManufacturerSpecific::HandleMsg
 				LoadConfigXML( node, configPath );
 			}
 
-			Log::Write( LogLevel_Info, GetNodeId(), "Received manufacturer specific report from node %d: Manufacturer=%s, Product=%s", 
+			Log::Write( LogLevel_Info, GetNodeId(), "Received manufacturer specific report from node %d: Manufacturer=%s, Product=%s",
 				    GetNodeId(), node->GetManufacturerName().c_str(), node->GetProductName().c_str() );
 			ClearStaticRequest( StaticRequest_Values );
 			node->m_manufacturerSpecificClassReceived = true;
 		}
-		
+
 		// Notify the watchers of the name changes
 		Notification* notification = new Notification( Notification::Type_NodeNaming );
 		notification->SetHomeAndNodeIds( GetHomeId(), GetNodeId() );
@@ -206,7 +211,7 @@ bool ManufacturerSpecific::HandleMsg
 
 		return true;
 	}
-	
+
 	return false;
 }
 
@@ -229,7 +234,7 @@ bool ManufacturerSpecific::LoadProductXML
 	TiXmlDocument* pDoc = new TiXmlDocument();
 	if( !pDoc->LoadFile( filename.c_str(), TIXML_ENCODING_UTF8 ) )
 	{
-		delete pDoc;	
+		delete pDoc;
 		Log::Write( LogLevel_Info, "Unable to load %s", filename.c_str() );
 		return false;
 	}
@@ -238,7 +243,7 @@ bool ManufacturerSpecific::LoadProductXML
 
 	char const* str;
 	char* pStopChar;
-	
+
 	TiXmlElement const* manufacturerElement = root->FirstChildElement();
 	while( manufacturerElement )
 	{
@@ -262,7 +267,7 @@ bool ManufacturerSpecific::LoadProductXML
 				delete pDoc;
 				return false;
 			}
-			
+
 			// Add this manufacturer to the map
 			s_manufacturerMap[manufacturerId] = str;
 
@@ -277,16 +282,16 @@ bool ManufacturerSpecific::LoadProductXML
 					if( !str )
 					{
 						Log::Write( LogLevel_Info, "Error in manufacturer_specific.xml at line %d - missing product type attribute", productElement->Row() );
-						delete pDoc;	
+						delete pDoc;
 						return false;
 					}
 					uint16 productType = (uint16)strtol( str, &pStopChar, 16 );
-					
+
 					str = productElement->Attribute( "id" );
 					if( !str )
 					{
 						Log::Write( LogLevel_Info, "Error in manufacturer_specific.xml at line %d - missing product id attribute", productElement->Row() );
-						delete pDoc;	
+						delete pDoc;
 						return false;
 					}
 					uint16 productId = (uint16)strtol( str, &pStopChar, 16 );
@@ -295,7 +300,7 @@ bool ManufacturerSpecific::LoadProductXML
 					if( !str )
 					{
 						Log::Write( LogLevel_Info, "Error in manufacturer_specific.xml at line %d - missing product name attribute", productElement->Row() );
-						delete pDoc;	
+						delete pDoc;
 						return false;
 					}
 					string productName = str;
@@ -331,7 +336,7 @@ bool ManufacturerSpecific::LoadProductXML
 		manufacturerElement = manufacturerElement->NextSiblingElement();
 	}
 
-	delete pDoc;	
+	delete pDoc;
 	return true;
 }
 
@@ -376,14 +381,14 @@ bool ManufacturerSpecific::LoadConfigXML
 {
 	string configPath;
 	Options::Get()->GetOptionAsString( "ConfigPath", &configPath );
-		
+
 	string filename =  configPath + _configXML;
 
 	TiXmlDocument* doc = new TiXmlDocument();
 	Log::Write( LogLevel_Info, _node->GetNodeId(), "  Opening config param file %s", filename.c_str() );
 	if( !doc->LoadFile( filename.c_str(), TIXML_ENCODING_UTF8 ) )
 	{
-		delete doc;	
+		delete doc;
 		Log::Write( LogLevel_Info, _node->GetNodeId(), "Unable to find or load Config Param file %s", filename.c_str() );
 		return false;
 	}
@@ -402,7 +407,7 @@ bool ManufacturerSpecific::LoadConfigXML
 		_node->ReadCommandClassesXML( doc->RootElement() );
 	}
 
-	delete doc;	
+	delete doc;
 	return true;
 }
 

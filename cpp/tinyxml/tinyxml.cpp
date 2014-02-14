@@ -29,6 +29,8 @@ distribution.
 #include <iostream>
 #endif
 
+#include <new>
+
 #include "tinyxml.h"
 
 
@@ -731,7 +733,7 @@ void TiXmlElement::SetAttribute( const char * cname, const char * cvalue )
 		return;
 	}
 
-	TiXmlAttribute* attrib = new TiXmlAttribute( cname, cvalue );
+	TiXmlAttribute* attrib = new (std::nothrow) TiXmlAttribute( cname, cvalue );
 	if ( attrib )
 	{
 		attributeSet.Add( attrib );
@@ -754,7 +756,7 @@ void TiXmlElement::SetAttribute( const std::string& name, const std::string& _va
 		return;
 	}
 
-	TiXmlAttribute* attrib = new TiXmlAttribute( name, _value );
+	TiXmlAttribute* attrib = new (std::nothrow) TiXmlAttribute( name, _value );
 	if ( attrib )
 	{
 		attributeSet.Add( attrib );
@@ -859,7 +861,7 @@ bool TiXmlElement::Accept( TiXmlVisitor* visitor ) const
 
 TiXmlNode* TiXmlElement::Clone() const
 {
-	TiXmlElement* clone = new TiXmlElement( Value() );
+	TiXmlElement* clone = new (std::nothrow) TiXmlElement( Value() );
 	if ( !clone )
 		return 0;
 
@@ -1130,14 +1132,15 @@ void TiXmlDocument::CopyTo( TiXmlDocument* target ) const
 	TiXmlNode* node = 0;
 	for ( node = firstChild; node; node = node->NextSibling() )
 	{
-		target->LinkEndChild( node->Clone() );
+		TiXmlNode* clonedNode=node->Clone();
+		if (clonedNode!=NULL) target->LinkEndChild( clonedNode );
 	}	
 }
 
 
 TiXmlNode* TiXmlDocument::Clone() const
 {
-	TiXmlDocument* clone = new TiXmlDocument();
+	TiXmlDocument* clone = new (std::nothrow) TiXmlDocument();
 	if ( !clone )
 		return 0;
 
@@ -1322,7 +1325,7 @@ bool TiXmlComment::Accept( TiXmlVisitor* visitor ) const
 
 TiXmlNode* TiXmlComment::Clone() const
 {
-	TiXmlComment* clone = new TiXmlComment();
+	TiXmlComment* clone = new (std::nothrow) TiXmlComment();
 
 	if ( !clone )
 		return 0;
@@ -1369,7 +1372,7 @@ bool TiXmlText::Accept( TiXmlVisitor* visitor ) const
 TiXmlNode* TiXmlText::Clone() const
 {	
 	TiXmlText* clone = 0;
-	clone = new TiXmlText( "" );
+	clone = new (std::nothrow) TiXmlText( "" );
 
 	if ( !clone )
 		return 0;
@@ -1457,7 +1460,7 @@ bool TiXmlDeclaration::Accept( TiXmlVisitor* visitor ) const
 
 TiXmlNode* TiXmlDeclaration::Clone() const
 {	
-	TiXmlDeclaration* clone = new TiXmlDeclaration();
+	TiXmlDeclaration* clone = new (std::nothrow) TiXmlDeclaration();
 
 	if ( !clone )
 		return 0;
@@ -1489,7 +1492,7 @@ bool TiXmlUnknown::Accept( TiXmlVisitor* visitor ) const
 
 TiXmlNode* TiXmlUnknown::Clone() const
 {
-	TiXmlUnknown* clone = new TiXmlUnknown();
+	TiXmlUnknown* clone = new (std::nothrow) TiXmlUnknown();
 
 	if ( !clone )
 		return 0;

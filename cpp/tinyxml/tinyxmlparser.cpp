@@ -24,6 +24,7 @@ distribution.
 
 #include <ctype.h>
 #include <stddef.h>
+#include <new>
 
 #include "tinyxml.h"
 
@@ -850,21 +851,21 @@ TiXmlNode* TiXmlNode::Identify( const char* p, TiXmlEncoding encoding )
 		#ifdef DEBUG_PARSER
 			TIXML_LOG( "XML parsing Declaration\n" );
 		#endif
-		returnNode = new TiXmlDeclaration();
+		returnNode = new (std::nothrow) TiXmlDeclaration();
 	}
 	else if ( StringEqual( p, commentHeader, false, encoding ) )
 	{
 		#ifdef DEBUG_PARSER
 			TIXML_LOG( "XML parsing Comment\n" );
 		#endif
-		returnNode = new TiXmlComment();
+		returnNode = new (std::nothrow) TiXmlComment();
 	}
 	else if ( StringEqual( p, cdataHeader, false, encoding ) )
 	{
 		#ifdef DEBUG_PARSER
 			TIXML_LOG( "XML parsing CDATA\n" );
 		#endif
-		TiXmlText* text = new TiXmlText( "" );
+		TiXmlText* text = new (std::nothrow) TiXmlText( "" );
 		text->SetCDATA( true );
 		returnNode = text;
 	}
@@ -873,7 +874,7 @@ TiXmlNode* TiXmlNode::Identify( const char* p, TiXmlEncoding encoding )
 		#ifdef DEBUG_PARSER
 			TIXML_LOG( "XML parsing Unknown(1)\n" );
 		#endif
-		returnNode = new TiXmlUnknown();
+		returnNode = new (std::nothrow) TiXmlUnknown();
 	}
 	else if (	IsAlpha( *(p+1), encoding )
 			  || *(p+1) == '_' )
@@ -881,14 +882,14 @@ TiXmlNode* TiXmlNode::Identify( const char* p, TiXmlEncoding encoding )
 		#ifdef DEBUG_PARSER
 			TIXML_LOG( "XML parsing Element\n" );
 		#endif
-		returnNode = new TiXmlElement( "" );
+		returnNode = new (std::nothrow) TiXmlElement( "" );
 	}
 	else
 	{
 		#ifdef DEBUG_PARSER
 			TIXML_LOG( "XML parsing Unknown(2)\n" );
 		#endif
-		returnNode = new TiXmlUnknown();
+		returnNode = new (std::nothrow) TiXmlUnknown();
 	}
 
 	if ( returnNode )
@@ -1136,7 +1137,7 @@ const char* TiXmlElement::Parse( const char* p, TiXmlParsingData* data, TiXmlEnc
 		else
 		{
 			// Try to read an attribute:
-			TiXmlAttribute* attrib = new TiXmlAttribute();
+			TiXmlAttribute* attrib = new (std::nothrow) TiXmlAttribute();
 			if ( !attrib )
 			{
 				if ( document ) document->SetError( TIXML_ERROR_OUT_OF_MEMORY, pErr, data, encoding );
@@ -1187,7 +1188,7 @@ const char* TiXmlElement::ReadValue( const char* p, TiXmlParsingData* data, TiXm
 		if ( *p != '<' )
 		{
 			// Take what we have, make a text element.
-			TiXmlText* textNode = new TiXmlText( "" );
+			TiXmlText* textNode = new (std::nothrow) TiXmlText( "" );
 
 			if ( !textNode )
 			{

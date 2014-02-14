@@ -44,8 +44,8 @@ enum MeterPulseCmd
 };
 
 //-----------------------------------------------------------------------------
-// <MeterPulse::RequestState>												   
-// Request current state from the device									   
+// <MeterPulse::RequestState>
+// Request current state from the device
 //-----------------------------------------------------------------------------
 bool MeterPulse::RequestState
 (
@@ -63,8 +63,8 @@ bool MeterPulse::RequestState
 }
 
 //-----------------------------------------------------------------------------
-// <MeterPulse::RequestValue>												   
-// Request current value from the device									   
+// <MeterPulse::RequestValue>
+// Request current value from the device
 //-----------------------------------------------------------------------------
 bool MeterPulse::RequestValue
 (
@@ -74,15 +74,21 @@ bool MeterPulse::RequestValue
 	Driver::MsgQueue const _queue
 )
 {
-	Msg* msg = new Msg( "MeterPulseCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-	msg->SetInstance( this, _instance );
-	msg->Append( GetNodeId() );
-	msg->Append( 2 );
-	msg->Append( GetCommandClassId() );
-	msg->Append( MeterPulseCmd_Get );
-	msg->Append( GetDriver()->GetTransmitOptions() );
-	GetDriver()->SendMsg( msg, _queue );
-	return true;
+	if ( IsGetSupported() )
+	{
+		Msg* msg = new Msg( "MeterPulseCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		msg->SetInstance( this, _instance );
+		msg->Append( GetNodeId() );
+		msg->Append( 2 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( MeterPulseCmd_Get );
+		msg->Append( GetDriver()->GetTransmitOptions() );
+		GetDriver()->SendMsg( msg, _queue );
+		return true;
+	} else {
+		Log::Write(  LogLevel_Info, GetNodeId(), "MeterPulseCmd_Get Not Supported on this node");
+	}
+	return false;
 }
 
 //-----------------------------------------------------------------------------

@@ -72,7 +72,7 @@ Version::Version
 // Read configuration.
 //-----------------------------------------------------------------------------
 void Version::ReadXML
-( 
+(
 	TiXmlElement const* _ccElement
 )
 {
@@ -90,7 +90,7 @@ void Version::ReadXML
 // Save changed configuration
 //-----------------------------------------------------------------------------
 void Version::WriteXML
-( 
+(
 	TiXmlElement* _ccElement
 )
 {
@@ -138,15 +138,20 @@ bool Version::RequestValue
 		// This command class doesn't work with multiple instances
 		return false;
 	}
-
-	Msg* msg = new Msg( "VersionCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-	msg->Append( GetNodeId() );
-	msg->Append( 2 );
-	msg->Append( GetCommandClassId() );
-	msg->Append( VersionCmd_Get );
-	msg->Append( GetDriver()->GetTransmitOptions() );
-	GetDriver()->SendMsg( msg, _queue );
-	return true;
+	if ( IsGetSupported() )
+	{
+		Msg* msg = new Msg( "VersionCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		msg->Append( GetNodeId() );
+		msg->Append( 2 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( VersionCmd_Get );
+		msg->Append( GetDriver()->GetTransmitOptions() );
+		GetDriver()->SendMsg( msg, _queue );
+		return true;
+	} else {
+		Log::Write(  LogLevel_Info, GetNodeId(), "VersionCmd_Get Not Supported on this node");
+	}
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -193,7 +198,7 @@ bool Version::HandleMsg
 
 			return true;
 		}
-	
+
 		if (VersionCmd_CommandClassReport == (VersionCmd)_data[0])
 		{
 			if( CommandClass* pCommandClass = node->GetCommandClass( _data[1] ) )
@@ -212,7 +217,7 @@ bool Version::HandleMsg
 
 //-----------------------------------------------------------------------------
 // <Version::RequestCommandClassVersion>
-// Request the version of a command class used by the device 
+// Request the version of a command class used by the device
 //-----------------------------------------------------------------------------
 bool Version::RequestCommandClassVersion
 (

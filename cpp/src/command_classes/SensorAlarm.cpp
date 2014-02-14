@@ -45,7 +45,7 @@ enum SensorAlarmCmd
 	SensorAlarmCmd_SupportedReport	= 0x04
 };
 
-static char const* c_alarmTypeName[] = 
+static char const* c_alarmTypeName[] =
 {
 	"General",
 	"Smoke",
@@ -67,7 +67,7 @@ SensorAlarm::SensorAlarm
 ):
 	CommandClass( _homeId, _nodeId )
 {
-	SetStaticRequest( StaticRequest_Values ); 
+	SetStaticRequest( StaticRequest_Values );
 }
 
 //-----------------------------------------------------------------------------
@@ -119,7 +119,7 @@ bool SensorAlarm::RequestValue
 	if( _alarmType == 0xff )
 	{
 		// Request the supported alarm types
-		Msg* msg = new Msg( "Request Supported Alarm Types", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		Msg* msg = new Msg( "SensorAlarmCmd_SupportedGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 		msg->SetInstance( this, _instance );
 		msg->Append( GetNodeId() );
 		msg->Append( 2 );
@@ -127,21 +127,28 @@ bool SensorAlarm::RequestValue
 		msg->Append( SensorAlarmCmd_SupportedGet );
 		msg->Append( GetDriver()->GetTransmitOptions() );
 		GetDriver()->SendMsg( msg, _queue );
+		return true;
 	}
 	else
 	{
 		// Request the alarm state
-		Msg* msg = new Msg( "Request alarm state", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-		msg->SetInstance( this, _instance );
-		msg->Append( GetNodeId() );
-		msg->Append( 3 );
-		msg->Append( GetCommandClassId() );
-		msg->Append( SensorAlarmCmd_Get );
-		msg->Append( _alarmType );
-		msg->Append( GetDriver()->GetTransmitOptions() );
-		GetDriver()->SendMsg( msg, _queue );
+		if ( IsGetSupported() )
+		{
+			Msg* msg = new Msg( "SensorAlarmCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+			msg->SetInstance( this, _instance );
+			msg->Append( GetNodeId() );
+			msg->Append( 3 );
+			msg->Append( GetCommandClassId() );
+			msg->Append( SensorAlarmCmd_Get );
+			msg->Append( _alarmType );
+			msg->Append( GetDriver()->GetTransmitOptions() );
+			GetDriver()->SendMsg( msg, _queue );
+			return true;
+		} else {
+			Log::Write(  LogLevel_Info, GetNodeId(), "SensorAlarmCmd_Get Not Supported on this node");
+		}
 	}
-	return true;
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -171,13 +178,13 @@ bool SensorAlarm::HandleMsg
 
 		return true;
 	}
-			
+
 	if( SensorAlarmCmd_SupportedReport == (SensorAlarmCmd)_data[0] )
 	{
 		if( Node* node = GetNodeUnsafe() )
 		{
 			// We have received the supported alarm types from the Z-Wave device
-			Log::Write( LogLevel_Info, GetNodeId(), "Received supported alarm types" );		
+			Log::Write( LogLevel_Info, GetNodeId(), "Received supported alarm types" );
 
 			// Parse the data for the supported alarm types
 			uint8 numBytes = _data[1];
