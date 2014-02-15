@@ -1,2 +1,2 @@
-usr/lib64/libopenzwave.so.*
+usr/lib/*/libopenzwave.so.*
 etc/openzwave/*

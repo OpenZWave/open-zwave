@@ -53,11 +53,11 @@ SED    := sed
 
 #determine if we are release or debug Build and set appropriate flags
 ifeq ($(BUILD), release)
-CFLAGS	:= -c $(RELEASE_CFLAGS)
-LDFLAGS	:= $(RELEASE_LDFLAGS)
+CFLAGS	+= -c $(RELEASE_CFLAGS)
+LDFLAGS	+= $(RELEASE_LDFLAGS)
 else
-CFLAGS	:= -c $(DEBUG_CFLAGS)
-LDFLAGS	:= $(DEBUG_LDFLAGS)
+CFLAGS	+= -c $(DEBUG_CFLAGS)
+LDFLAGS	+= $(DEBUG_LDFLAGS)
 endif
 
 #if /lib64 exists, then setup x86_64 library path to lib64 (good indication if a linux has /lib and lib64). 
