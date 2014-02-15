@@ -2,20 +2,20 @@ Format: 3.0 (quilt)
 Source: openzwave
 Binary: libopenzwave1.0, libopenzwave1.0-dev, openzwave
 Architecture: any
-Version: 1.0.736-1
+Version: 1.0.742-1
 Maintainer: Harald Klein <hari@vt100.at>
 Standards-Version: 3.9.3
-Build-Depends: debhelper (>= 8), g++ (>= 4.4), quilt, libudev-dev
+Build-Depends: debhelper (>= 9), dh-exec (>= 0.3), g++ (>= 4.4), quilt, libudev-dev
 Package-List: 
  libopenzwave1.0 deb libs optional
  libopenzwave1.0-dev deb libdevel optional
  openzwave deb misc optional
 Checksums-Sha1: 
- d6185246b2617803dfc1a31542b2e26788a6f668 587032 openzwave_1.0.736.orig.tar.bz2
- 26aa5b7a110fc08d7e0506f3522691bfd3ca30ec 3160 openzwave_1.0.736-1.debian.tar.gz
+ 1fed10d9550220a6943a0376fd28febc9b670072 755515 openzwave_1.0.742.orig.tar.gz
+ 6e1a47811cbb39121f865c199f8f38bf0c4101ca 3252 openzwave_1.0.742-1.debian.tar.gz
 Checksums-Sha256: 
- 8da43ad1cfc5deff73f84a3d3b0e43906cab3144f9cf9464e82bd4b5b1eb67e2 587032 openzwave_1.0.736.orig.tar.bz2
- ada4d9bda0b766fce06951a29479c15f2ff537c4426c281472fe83857326992d 3160 openzwave_1.0.736-1.debian.tar.gz
+ 623da0f0ba0af3e7898f7ded381e3a748b05e2c6618bf0997c1a894358c513b6 755515 openzwave_1.0.742.orig.tar.gz
+ 70ec260b3edf1e417f887001fce35b44a33b6f2d626f47a1c6717ba067951c0a 3252 openzwave_1.0.742-1.debian.tar.gz
 Files: 
- 400f2a7f8aa80e8c82711c1b2fdf4301 587032 openzwave_1.0.736.orig.tar.bz2
- 1bc2ad0afb77166e6a2ddbbc1bdf9cdd 3160 openzwave_1.0.736-1.debian.tar.gz
+ 07294fb33951ee0e9adee232ed7ed72c 755515 openzwave_1.0.742.orig.tar.gz
+ 0775eadbf1a4feaa6af914eb0df3f74d 3252 openzwave_1.0.742-1.debian.tar.gz
