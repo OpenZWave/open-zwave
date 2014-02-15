@@ -20,7 +20,7 @@ Description: API to use a Z-Wave controller
 
 Package: libopenzwave1.0-dev
 Section: libdevel
-Depends: ${misc:Depends}, libopenzwave1.0 (= ${binary:Version}), ${shlibs:Depends}
+Depends: ${misc:Depends}, libopenzwave1.0 (= ${binary:Version})
 Architecture: any
 Description: header files for the openzwave library
  OpenZWave is an open-source, cross-platform library designed to enable 
