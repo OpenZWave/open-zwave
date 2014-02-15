@@ -28,6 +28,7 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     config/zwave.me/ZME_06433.xml \
     config/fibaro/fgs221.xml \
     cpp/src/command_classes/CommandClass.h \
+    openzwave.dsc \
     cpp/src/Manager.h \
     cpp/hidapi/windows/.gitignore \
     cpp/tinyxml/tinyxmlparser.cpp \
@@ -196,7 +197,6 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     dotnet/build/vs2010/OpenZWaveDotNet.sln \
     cpp/src/value_classes/ValueList.h \
     config/everspring/se812.xml \
-    debian/libopenzwave1.0-dev.links \
     cpp/src/value_classes/ValueList.cpp \
     cpp/src/command_classes/ManufacturerSpecific.cpp \
     cpp/hidapi/windows/ddk_build/.gitignore \
@@ -374,6 +374,7 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     dotnet/src/app.rc \
     cpp/src/command_classes/Association.cpp \
     dotnet/build/vs2008/OpenZWaveDotNet.sln \
+    debian/libopenzwave1.0.lintian-overrides \
     config/rcs/therm0007.xml \
     cpp/hidapi/pc/hidapi-libusb.pc.in \
     cpp/src/command_classes/Indicator.h \
@@ -383,6 +384,7 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     cpp/examples/windows/MinOZW/vs2010/MinOZW.vcxproj \
     dotnet/src/ZWOptions.cpp \
     cpp/src/command_classes/CRC16Encap.h \
+    debian/openzwave.install \
     config/eurotronic/eur_stellaz.xml \
     dotnet/examples/OZWForm/src/ConfigurationWakeUpDlg.cs \
     cpp/hidapi/linux/Makefile.am \
