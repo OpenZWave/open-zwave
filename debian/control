@@ -2,12 +2,13 @@ Source: openzwave
 Maintainer: Harald Klein <hari@vt100.at>
 Section: devel
 Priority: optional
-Build-Depends: debhelper (>= 8), g++ (>= 4.4), quilt, libudev-dev
+Build-Depends: debhelper (>=9), dh-exec (>=0.3), g++ (>= 4.4), quilt, libudev-dev
 Standards-Version: 3.9.3
 
 Package: libopenzwave1.0
 Section: libs
 Architecture: any
+Pre-Depends: ${misc:Pre-Depends}
 Depends: ${shlibs:Depends}, ${misc:Depends}, libudev0, ${shlibs:Depends}
 Description: API to use a Z-Wave controller
  OpenZWave is an open-source, cross-platform library designed to enable 
