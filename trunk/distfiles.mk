@@ -105,7 +105,6 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     config/everspring/sp814.xml \
     cpp/src/command_classes/SwitchBinary.cpp \
     cpp/hidapi/libusb/Makefile.am \
-    debian/patches/SIS.diff \
     cpp/src/command_classes/WakeUp.h \
     cpp/src/platform/Stream.h \
     dotnet/src/AssemblyInfo.cpp \
@@ -212,7 +211,6 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     cpp/src/command_classes/SwitchToggleBinary.h \
     config/device_classes.xsd \
     cpp/src/command_classes/Lock.h \
-    debian/patches/soname.patch \
     cpp/src/command_classes/Hail.h \
     cpp/examples/MinOZW/Makefile \
     dotnet/examples/OZWForm/src/ValuePanelList.cs \
@@ -345,7 +343,6 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     config/aeon_labs/doorwindow.xml \
     config/honeywell/th8320zw1000.xml \
     cpp/src/value_classes/ValueByte.h \
-    debian/patches/awake.patch \
     cpp/src/command_classes/SwitchBinary.h \
     cpp/tinyxml/tinyxml.cpp \
     cpp/examples/windows/MinOZW/vs2010/MinOZW.sln \
