@@ -167,6 +167,7 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     config/options.xsd \
     cpp/src/DoxygenMain.h \
     config/ge/relay.xml \
+    config/vitrum/vitrumBS.xml \
     dotnet/examples/OZWForm/src/Node.cs \
     cpp/hidapi/windows/Makefile-manual \
     cpp/src/platform/FileOps.h \
