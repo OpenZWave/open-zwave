@@ -403,15 +403,15 @@
 	<Manufacturer id="0007" name="Vimar CRS">
 	</Manufacturer>
 	<Manufacturer id="010a" name="Vitrum">
-		<Product type="1100" id="4900" name="Vitrum I EU Wireless Dimmer"/> 
-		<Product type="1100" id="4a00" name="Vitrum II EU Wireless Dimmer"/> 
-		<Product type="1200" id="5100" name="Vitrum I EU Wireless On-off"/> 
-		<Product type="1200" id="5200" name="Vitrum II EU Wireless On-off"/> 
-		<Product type="1300" id="5A00" name="Vitrum II EU Roller Blind Control"/> 
-		<Product type="2100" id="8a00" name="Vitrum II BS Wireless Dimmer"/>
-		<Product type="2200" id="9100" name="Vitrum I BS Wireless On-off"/>
-		<Product type="2200" id="9200" name="Vitrum II BS Wireless On-off"/>
-		<Product type="2200" id="9400" name="Vitrum IV BS Wireless On-off"/>
+		<Product type="1100" id="4900" name="Vitrum I EU Wireless Dimmer" config="vitrum/vitrumBS.xml"/> 
+		<Product type="1100" id="4a00" name="Vitrum II EU Wireless Dimmer" config="vitrum/vitrumBS.xml"/> 
+		<Product type="1200" id="5100" name="Vitrum I EU Wireless On-off" config="vitrum/vitrumBS.xml"/> 
+		<Product type="1200" id="5200" name="Vitrum II EU Wireless On-off" config="vitrum/vitrumBS.xml"/> 
+		<Product type="1300" id="5A00" name="Vitrum II EU Roller Blind Control" config="vitrum/vitrumBS.xml"/> 
+		<Product type="2100" id="8a00" name="Vitrum II BS Wireless Dimmer" config="vitrum/vitrumBS.xml"/>
+		<Product type="2200" id="9100" name="Vitrum I BS Wireless On-off" config="vitrum/vitrumBS.xml"/>
+		<Product type="2200" id="9200" name="Vitrum II BS Wireless On-off" config="vitrum/vitrumBS.xml"/>
+		<Product type="2200" id="9400" name="Vitrum IV BS Wireless On-off" config="vitrum/vitrumBS.xml"/>
 	</Manufacturer>
 	<Manufacturer id="004a" name="Visualize">
 	</Manufacturer>
