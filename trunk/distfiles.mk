@@ -11,6 +11,7 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     cpp/build/windows/vs2008/OpenZWave.sln \
     cpp/src/Node.cpp \
     config/BeNext/EnergySwitch.xml \
+    config/BeNext/PluginDimmer.xml \
     cpp/hidapi/configure.ac \
     config/act/lfm20.xml \
     cpp/src/command_classes/CommandClasses.cpp \
@@ -229,8 +230,8 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     cpp/build/libopenzwave.pc.in \
     cpp/src/platform/unix/LogImpl.cpp \
     cpp/src/platform/TimeStamp.cpp \
-    docs/general/Notifications.html \
     dotnet/examples/OZWForm/src/ValuePanelButton.resx \
+    docs/general/Notifications.html \
     cpp/src/Scene.h \
     config/zwave.me/kfob.xml \
     cpp/src/command_classes/SwitchMultilevel.h \
@@ -320,6 +321,7 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     debian/patches/series \
     cpp/src/platform/windows/WaitImpl.h \
     config/zwscene.xsd \
+    config/BeNext/2poleswitch.xml \
     docs/images+css/OpenZWave.css \
     cpp/src/command_classes/ThermostatFanState.cpp \
     config/rcs/pm12-zw.xml \
@@ -350,6 +352,7 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     dotnet/examples/OZWForm/src/ValuePanelDecimal.resx \
     cpp/src/platform/unix/LogImpl.h \
     cpp/src/command_classes/ThermostatFanState.h \
+    config/BeNext/BuiltinDimmer.xml \
     cpp/src/command_classes/ThermostatOperatingState.cpp \
     cpp/src/platform/windows/SerialControllerImpl.h \
     config/danfoss/z.xml \
@@ -376,8 +379,8 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     config/rcs/therm0007.xml \
     cpp/hidapi/pc/hidapi-libusb.pc.in \
     cpp/src/command_classes/Indicator.h \
-    cpp/src/command_classes/MeterPulse.cpp \
     dotnet/examples/OZWForm/src/ValuePanelButton.cs \
+    cpp/src/command_classes/MeterPulse.cpp \
     config/rcs/therm0005.xml \
     cpp/examples/windows/MinOZW/vs2010/MinOZW.vcxproj \
     dotnet/src/ZWOptions.cpp \
@@ -393,6 +396,7 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     dotnet/examples/OZWForm/build/vs2010/OZWForm.csproj \
     cpp/src/Options.cpp \
     cpp/src/platform/unix/EventImpl.cpp \
+    config/BeNext/1poleswitch.xml \
     config/BeNext/Molite.xml \
     cpp/src/command_classes/Language.h \
     cpp/src/command_classes/SensorBinary.cpp \
@@ -442,8 +446,8 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     config/manufacturer_specific.xml \
     cpp/src/platform/unix/TimeStampImpl.h \
     cpp/src/command_classes/Clock.h \
-    config/act/zir010.xml \
     cpp/build/Makefile \
+    config/act/zir010.xml \
     cpp/src/command_classes/ThermostatFanMode.h \
     config/homeseer/hsm100.xml \
     cpp/src/value_classes/ValueRaw.cpp \
