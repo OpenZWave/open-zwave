@@ -69,6 +69,7 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     dotnet/examples/OZWForm/src/ValuePanelInt.cs \
     config/waynedalton/WDTC-20.xml \
     cpp/src/platform/Controller.cpp \
+    config/wenzhou/tz66d.xml \
     config/BeNext/AlarmSound.xml \
     cpp/src/command_classes/Association.h \
     cpp/src/platform/windows/FileOpsImpl.h \
