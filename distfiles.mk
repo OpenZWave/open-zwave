@@ -229,8 +229,8 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     cpp/build/libopenzwave.pc.in \
     cpp/src/platform/unix/LogImpl.cpp \
     cpp/src/platform/TimeStamp.cpp \
-    dotnet/examples/OZWForm/src/ValuePanelButton.resx \
     docs/general/Notifications.html \
+    dotnet/examples/OZWForm/src/ValuePanelButton.resx \
     cpp/src/Scene.h \
     config/zwave.me/kfob.xml \
     cpp/src/command_classes/SwitchMultilevel.h \
@@ -376,8 +376,8 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     config/rcs/therm0007.xml \
     cpp/hidapi/pc/hidapi-libusb.pc.in \
     cpp/src/command_classes/Indicator.h \
-    dotnet/examples/OZWForm/src/ValuePanelButton.cs \
     cpp/src/command_classes/MeterPulse.cpp \
+    dotnet/examples/OZWForm/src/ValuePanelButton.cs \
     config/rcs/therm0005.xml \
     cpp/examples/windows/MinOZW/vs2010/MinOZW.vcxproj \
     dotnet/src/ZWOptions.cpp \
@@ -393,6 +393,7 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     dotnet/examples/OZWForm/build/vs2010/OZWForm.csproj \
     cpp/src/Options.cpp \
     cpp/src/platform/unix/EventImpl.cpp \
+    config/BeNext/Molite.xml \
     cpp/src/command_classes/Language.h \
     cpp/src/command_classes/SensorBinary.cpp \
     cpp/src/command_classes/MultiInstance.cpp \
