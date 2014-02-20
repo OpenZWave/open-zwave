@@ -59,6 +59,8 @@
 	<Manufacturer id="0018" name="Balboa Inst.">
 	</Manufacturer>
 	<Manufacturer id="008a" name="BeNext">
+		<Product type="0003" id="0100" name="DHS-ZW-SNMT-01 Multi Sensor" config="BeNext/Molite.xml"/>
+		<Product type="0003" id="0101" name="DHS-ZW-SNMT-01 Multi Sensor" config="BeNext/Molite.xml"/>
 		<Product type="0004" id="0100" name="Door Sensor" config="BeNext/DoorSensor.xml"/>
 		<Product type="0005" id="0101" name="Alarm Sound" config="BeNext/AlarmSound.xml"/>
 		<Product type="0006" id="0101" name="Energy Switch" config="BeNext/EnergySwitch.xml"/>
