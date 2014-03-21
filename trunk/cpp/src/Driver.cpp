@@ -358,6 +358,8 @@ void Driver::DriverThreadProc
 			waitObjects[9] = m_queueEvent[MsgQueue_Poll];		// Poll request is waiting.
 
 			TimeStamp retryTimeStamp;
+			int retryTimeout = RETRY_TIMEOUT;
+			Options::Get()->GetOptionAsInt( "RetryTimeout", &retryTimeout );
 
 			while( true )
 			{
@@ -401,7 +403,7 @@ void Driver::DriverThreadProc
 						}
 						if( WriteMsg( "Wait Timeout" ) )
 						{
-							retryTimeStamp.SetTime( RETRY_TIMEOUT );
+							retryTimeStamp.SetTime( retryTimeout );
 						}
 						break;
 					}
@@ -427,7 +429,7 @@ void Driver::DriverThreadProc
 						// All the other events are sending message queue items
 						if( WriteNextMsg( (MsgQueue)(res-3) ) )
 						{
-							retryTimeStamp.SetTime( RETRY_TIMEOUT );
+							retryTimeStamp.SetTime( retryTimeout );
 						}
 						break;
 					}
