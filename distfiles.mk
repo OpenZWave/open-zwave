@@ -433,6 +433,7 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     cpp/src/value_classes/ValueSchedule.h \
     cpp/build/windows/vs2010/OpenZWave.vcxproj \
     dotnet/src/ZWNotification.h \
+    config/zwave.me/ZME_WCD2.xml \
     cpp/hidapi/m4/pkg.m4 \
     dotnet/build/vs2010/OpenZWaveDotNet.vcxproj.filters \
     cpp/src/Defs.h \
