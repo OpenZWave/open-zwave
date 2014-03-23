@@ -50,6 +50,9 @@
 		<Product type="0003" id="0011" name="Micro Double Switch" />
 		<Product type="0002" id="0036" name="Recessed Door Sensor" config="aeon_labs/recessed_doorsensor.xml"/>
 	</Manufacturer>
+        <Manufacturer id="0111" name="Airline Mechanical">
+                <Product type="8200" id="0200" name="ZDS-100"/>
+        </Manufacturer>
 	<Manufacturer id="0094" name="Alarm.com">
 	</Manufacturer>
 	<Manufacturer id="0029" name="Asia Heading">
@@ -150,6 +153,8 @@
 		<Product type="0002" id="0001" name="HSM02 Mini Door/Window Detector" config="everspringct/hsm02.xml" />
 	</Manufacturer>
 	<Manufacturer id="0113" name="Evolve Guest Controls">
+                <Product type="5257" id="3533" name="LSM-15"/>
+                <Product type="5246" id="3133" name="LFM-20"/>
 	</Manufacturer>
 	<Manufacturer id="0036" name="Exceptional Innv">
 	</Manufacturer>
@@ -204,6 +209,7 @@
 	</Manufacturer>
 	<Manufacturer id="0084" name="FortrezZ">
 		<Product type="0311" id="010b" name="SSA1 / SSA2 - Siren/Strobe Light Alarm"/>
+		<Product type="0313" id="010b" name="SSA2USR - Siren/Strobe Light Alarm"/>
 	</Manufacturer>
 	<Manufacturer id="0017" name="HiTech Automation">
 	</Manufacturer>
@@ -292,6 +298,9 @@
 		<Product type="1001" id="0209" name="VRF01-1LZ Multilevel Scene Switch - 1.5A Fan" config="leviton/vrf01.xml"/>
 		<Product type="1102" id="0243" name="VRCS2-MRZ 2-Button Scene Controller with Switches"/>
 	</Manufacturer>
+	<Manufacturer id="014F" name="Linear">
+                <Product type="5257" id="3533" name="WS15Z-1"/>
+        </Manufacturer>
 	<Manufacturer id="007f" name="Logitech">
 	</Manufacturer>
 	<Manufacturer id="0025" name="Loudwater Tech">
