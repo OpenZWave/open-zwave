@@ -102,6 +102,7 @@
    <xs:attribute name='request_flags' type='xs:string' use='optional'/>
    <xs:attribute name='endpoints' type='xs:string' use='optional'/>
    <xs:attribute name='mapping' type='xs:string' use='optional'/>
+   <xs:attribute name='ignoreUnsolicitedMultiChnCapReport' type='xs:string' use='optional'/>
    <xs:attribute name='codes' type='xs:string' use='optional'/>
   </xs:complexType>
  </xs:element>
