@@ -407,16 +407,20 @@ void MultiInstance::HandleMultiChannelCapabilityReport
 {
 
 	bool dynamic = ((_data[1] & 0x80)!=0);
-	/* if you having problems with Dynamic Devices not correctly
-	 * updating the commandclasses, see this email thread:
-	 * https://groups.google.com/d/topic/openzwave/IwepxScRAVo/discussion
-	 */
-    if ((m_ignoreUnsolicitedMultiChannelCapabilityReport) && !dynamic && m_endPointCommandClasses.size() > 0)
-    	return;
 
 
 	if( Node* node = GetNodeUnsafe() )
 	{
+		/* if you having problems with Dynamic Devices not correctly
+		 * updating the commandclasses, see this email thread:
+		 * https://groups.google.com/d/topic/openzwave/IwepxScRAVo/discussion
+		 */
+	    if ((m_ignoreUnsolicitedMultiChannelCapabilityReport && (node->GetCurrentQueryStage() != Node::QueryStage_Instances))
+	    		&& !dynamic && m_endPointCommandClasses.size() > 0) {
+			Log::Write(LogLevel_Error, GetNodeId(), "Recieved a Unsolicited MultiChannelEncap when we are not in QueryState_Instances");
+	    	return;
+	    }
+
 		uint8 endPoint = _data[1] & 0x7f;
 
 		Log::Write( LogLevel_Info, GetNodeId(), "Received MultiChannelCapabilityReport from node %d for endpoint %d", GetNodeId(), endPoint );
