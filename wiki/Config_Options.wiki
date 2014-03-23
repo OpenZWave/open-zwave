@@ -40,6 +40,7 @@ The Various Options you can specify are:
 ||Include||String||Specify Which Command Classes the Library will support||
 ||Exclude||String||Specifically Exclude Command Classes from the Library||
 ||SuppressValueRefresh||Bool||After a Value is Refreshed, should we send a notification to the application||
+||RetryTimeout||Integer||Timeout before retrying to send a message. Defaults to 40 Seconds||
 
 
 ==Log Levels==
