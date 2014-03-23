@@ -1493,6 +1493,8 @@ bool Driver::IsExpectedReply
 	    m_expectedReply == FUNC_ID_ZW_SEND_DATA ||
 	    m_expectedReply == FUNC_ID_ZW_SEND_NODE_INFORMATION ||
 	    m_expectedReply == FUNC_ID_ZW_REQUEST_NODE_NEIGHBOR_UPDATE ||
+	    m_expectedReply == FUNC_ID_ZW_ENABLE_SUC ||
+	    m_expectedReply == FUNC_ID_ZW_SET_SUC_NODE_ID ||
 	    m_expectedReply == FUNC_ID_ZW_REQUEST_NODE_NEIGHBOR_UPDATE_OPTIONS )
 	{
 		return true;
