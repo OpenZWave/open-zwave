@@ -416,6 +416,7 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     dotnet/examples/OZWForm/src/MainForm.Designer.cs \
     cpp/src/platform/unix/ThreadImpl.h \
     dotnet/src/ZWValueID.h \
+    config/aeon_labs/recessed_doorsensor.xml \
     debian/changelog \
     cpp/src/Node.h \
     dotnet/build/vs2010/OpenZWaveDotNet.vcxproj \
