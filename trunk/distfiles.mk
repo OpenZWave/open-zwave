@@ -142,8 +142,8 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     cpp/src/platform/windows/MutexImpl.h \
     cpp/hidapi/m4/ax_pthread.m4 \
     dotnet/examples/OZWForm/src/ConfigurationWakeUpDlg.Designer.cs \
-    cpp/hidapi/doxygen/Doxyfile \
     cpp/src/command_classes/Alarm.h \
+    cpp/hidapi/doxygen/Doxyfile \
     dotnet/examples/OZWForm/src/ValuePanel.Designer.cs \
     cpp/src/Utils.cpp \
     cpp/src/command_classes/SensorMultilevel.h \
