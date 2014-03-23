@@ -227,6 +227,7 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     docs/images+css/Doxywizard2.JPG \
     dotnet/examples/OZWForm/src/ControllerCommandDlg.cs \
     cpp/src/command_classes/UserCode.h \
+    config/philio/psm02.xml \
     cpp/src/command_classes/Indicator.cpp \
     cpp/build/libopenzwave.pc.in \
     cpp/src/platform/unix/LogImpl.cpp \
