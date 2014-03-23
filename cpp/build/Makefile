@@ -13,7 +13,7 @@
 
 
 # what flags we will use for compiling in debug mode
-DEBUG_CFLAGS    := -Wall -Wno-unknown-pragmas -Wno-inline -Wno-format -Werror -g -DDEBUG -fPIC  -DSYSCONFDIR="\"$(PREFIX)/etc/openzwave/\""
+DEBUG_CFLAGS    := -Wall -Wno-unknown-pragmas -Wno-inline -Wno-format -Werror -ggdb -DDEBUG -fPIC  -DSYSCONFDIR="\"$(PREFIX)/etc/openzwave/\""
 # what flags we will use for compiling in release mode
 RELEASE_CFLAGS  := -Wall -Wno-unknown-pragmas -Werror -Wno-format -O3 -DNDEBUG -fPIC  -DSYSCONFDIR="\"$(PREFIX)/etc/openzwave/\""
 #what flags we will use for linking in debug mode

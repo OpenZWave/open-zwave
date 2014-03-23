@@ -308,4 +308,5 @@ Log::~Log
 {
 	m_logMutex->Release();
 	delete m_pImpl;
+	m_pImpl = NULL;
 }
