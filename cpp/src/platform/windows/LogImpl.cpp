@@ -68,8 +68,8 @@ using namespace OpenZWave;
 LogImpl::LogImpl
 (
 	string const& _filename,
-	bool const _bConsoleOutput,
 	bool const _bAppendLog,
+	bool const _bConsoleOutput,
 	LogLevel const _saveLevel,
 	LogLevel const _queueLevel,
 	LogLevel const _dumpTrigger

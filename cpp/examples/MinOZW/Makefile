@@ -10,7 +10,7 @@
 .PHONY:	default clean
 
 
-DEBUG_CFLAGS    := -Wall -Wno-format -g -DDEBUG
+DEBUG_CFLAGS    := -Wall -Wno-format -ggdb -DDEBUG
 RELEASE_CFLAGS  := -Wall -Wno-unknown-pragmas -Wno-format -O3
 
 DEBUG_LDFLAGS	:= -g
