@@ -135,6 +135,11 @@ void MultiInstance::ReadXML
 	{
 		m_endPointFindSupported = !strcmp( str, "true");
 	}
+	str = _ccElement->Attribute("ignoreUnsolicitedMultiChnCapReport");
+	if( str )
+	{
+		m_ignoreUnsolicitedMultiChannelCapabilityReport = !strcmp( str, "true");
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -406,7 +411,7 @@ void MultiInstance::HandleMultiChannelCapabilityReport
 	 * updating the commandclasses, see this email thread:
 	 * https://groups.google.com/d/topic/openzwave/IwepxScRAVo/discussion
 	 */
-    if (!dynamic && m_endPointCommandClasses.size() > 0)
+    if ((m_ignoreUnsolicitedMultiChannelCapabilityReport) && !dynamic && m_endPointCommandClasses.size() > 0)
     	return;
 
 
@@ -633,20 +638,22 @@ void MultiInstance::HandleMultiChannelEncap
 {
 	if( Node* node = GetNodeUnsafe() )
 	{
-		uint8 endPoint = _data[1] & 0x7f;
-		uint8 commandClassId = _data[3];
-		if( CommandClass* pCommandClass = node->GetCommandClass( commandClassId ) )
-		{
-			uint8 instance = pCommandClass->GetInstance( endPoint );
-			if( instance == 0 )
+			uint8 endPoint = _data[1] & 0x7f;
+			uint8 commandClassId = _data[3];
+			if( CommandClass* pCommandClass = node->GetCommandClass( commandClassId ) )
 			{
-				Log::Write( LogLevel_Error, GetNodeId(), "Cannot find endpoint map to instance for Command Class %s endpoint %d", pCommandClass->GetCommandClassName().c_str(), endPoint );
+				uint8 instance = pCommandClass->GetInstance( endPoint );
+				if( instance == 0 )
+				{
+					Log::Write( LogLevel_Error, GetNodeId(), "Cannot find endpoint map to instance for Command Class %s endpoint %d", pCommandClass->GetCommandClassName().c_str(), endPoint );
+				}
+				else
+				{
+					Log::Write( LogLevel_Info, GetNodeId(), "Received a MultiChannelEncap from node %d, endpoint %d for Command Class %s", GetNodeId(), endPoint, pCommandClass->GetCommandClassName().c_str() );
+					pCommandClass->HandleMsg( &_data[4], _length-4, instance );
+				}
+			} else {
+				Log::Write(LogLevel_Error, GetNodeId(), "Recieved a MultiChannelEncap for endpoint %d for Command Class %d, which we can't find", endPoint, commandClassId);
 			}
-			else
-			{
-				Log::Write( LogLevel_Info, GetNodeId(), "Received a MultiChannelEncap from node %d, endpoint %d for Command Class %s", GetNodeId(), endPoint, pCommandClass->GetCommandClassName().c_str() );
-				pCommandClass->HandleMsg( &_data[4], _length-4, instance );
-			}
-		}
 	}
 }
