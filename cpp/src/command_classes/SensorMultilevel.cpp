@@ -314,8 +314,8 @@ bool SensorMultilevel::HandleMsg
 				case SensorType_AtmosphericPressure:			units = scale ? "inHg" : "kPa";			break;
 				case SensorType_BarometricPressure:			units = scale ? "inHg" : "kPa";			break;
 				case SensorType_SolarRadiation:				units = "W/m2";					break;
-				case SensorType_DewPoint:				units = scale ? "in/h" : "mm/h";		break;
-				case SensorType_RainRate:				units = scale ? "F" : "C";			break;
+				case SensorType_DewPoint:				units = scale ? "F" : "C";			break;
+				case SensorType_RainRate:				units = scale ? "in/h" : "mm/h";		break;
 				case SensorType_TideLevel:				units = scale ? "ft" : "m";			break;
 				case SensorType_Weight:					units = scale ? "lb" : "kg";			break;
 				case SensorType_Voltage:				units = scale ? "mV" : "V";			break;
