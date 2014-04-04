@@ -11,7 +11,7 @@ If you are looking for device manuals, please contact the manufacturer directly.
 ||[http://ozw.my-ho.st/Aeon/Engineering%20Spec%20-%20Aeon%20Labs%20Door%20Window%20Sensor.pdf Aeon Labs Door Window Sensor]||
 ||[http://ozw.my-ho.st/Aeon/Engineering%20Spec%20-%20Aeon%20Labs%20Home%20Energy%20Meter.pdf Aeon Labs Home Energy Meter]||
 ||[http://ozw.my-ho.st/Aeon/Engineering%20Spec%20-%20Aeon%20Labs%20Home%20Energy%20Meter%282nd%20Edition%29.pdf Aeon Labs Home Energy Meter (2nd Edition)]||
-||[http://ozw.my-ho.st/Aeon/Engineering%20Spec%20-%20Aeon%20Labs%20Home%20Energy%20Meter%282nd%20Edition%29.pdf Aeon Labs Home Energy Meter (2nd Edition - 3 Clamp Edition)]||
+||[http://ozw.my-ho.st/Aeon/Engineering%20Spec%20-%20Aeon%20Labs%20Home%20Energy%20Meter%282nd%20Edition%29%20%203p4%20-V1.05.pdf Aeon Labs Home Energy Meter (2nd Edition - 3 Clamp Edition)]||
 ||[http://ozw.my-ho.st/Aeon/Engineering%20Spec%20-%20Aeon%20Labs%20Key%20Fob%20%281%20Button%29%20SW-V1.01.pdf Aeon Labs Key Fob (1 Button)]||
 ||[http://ozw.my-ho.st/Aeon/Engineering%20Spec%20-%20Aeon%20Labs%20Key%20Fob%20%284%20Button%29_20130427%20.pdf Aeon Labs Key Fob (4 Button)]||
 ||[http://ozw.my-ho.st/Aeon/Engineering%20Spec%20-%20Aeon%20Labs%20Micro%20Motor%20Controller%20V1.23.pdf Aeon Labs Micro Motor Controller]||
