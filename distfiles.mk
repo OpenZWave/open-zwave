@@ -87,6 +87,7 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     dotnet/examples/OZWForm/src/NodeForm.Designer.cs \
     dotnet/examples/OZWForm/src/ValuePanelString.resx \
     dotnet/src/resource.h \
+    config/aeon_labs/hemg2.xml \
     cpp/src/command_classes/ControllerReplication.cpp \
     config/schlagelink/itemp.xml \
     cpp/src/command_classes/Meter.h \
@@ -158,6 +159,7 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     cpp/src/platform/unix/SerialControllerImpl.cpp \
     config/fibaro/fgbs001.xml \
     cpp/src/command_classes/CommandClasses.h \
+    config/fibaro/fgms.xml \
     cpp/tinyxml/tinyxmlerror.cpp \
     cpp/src/command_classes/SwitchAll.cpp \
     dotnet/examples/OZWForm/src/ValuePanelBool.resx \
