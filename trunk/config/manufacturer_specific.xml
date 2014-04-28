@@ -46,6 +46,7 @@
 		<Product type="0003" id="000c" name="Micro Smart Energy Switch"/>
 		<Product type="0003" id="000d" name="Micro Smart Energy Illuminator"/>
 		<Product type="0003" id="000e" name="Micro Motor Controller"/>
+		<Product type="0003" id="001a" name="Micro Switch (2nd Edition)"/>
 		<Product type="0003" id="0012" name="Micro Smart Energy Switch G2" config="aeon_labs/ses.xml" />
 		<Product type="0001" id="0016" name="Key Fob" config="aeon_labs/keyfob.xml"/>
 		<Product type="0003" id="0011" name="Micro Double Switch" />
