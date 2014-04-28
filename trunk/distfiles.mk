@@ -251,6 +251,7 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     cpp/src/command_classes/MultiCmd.h \
     debian/copyright \
     config/aeon_labs/hem.xml \
+    config/vision/zs5101eu.xml \
     dotnet/examples/OZWForm/src/ValuePanel.resx \
     cpp/src/command_classes/Proprietary.cpp \
     dotnet/examples/OZWForm/src/ValuePanelShort.cs \
