@@ -211,6 +211,7 @@
 		<Product type="0003" id="0004" name="PowerNode 6 port" config="greenwave/powernode6.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0084" name="FortrezZ">
+		<Product type="0311" id="0109" name="SSA1 / SSA2 - Siren/Strobe Light Alarm"/>
 		<Product type="0311" id="010b" name="SSA1 / SSA2 - Siren/Strobe Light Alarm"/>
 		<Product type="0313" id="010b" name="SSA2USR - Siren/Strobe Light Alarm"/>
 	</Manufacturer>
