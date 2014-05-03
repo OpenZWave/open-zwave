@@ -45,6 +45,7 @@
 #include "CommandClasses.h"
 #include "ApplicationStatus.h"
 #include "ControllerReplication.h"
+#include "Security.h"
 #include "WakeUp.h"
 #include "SwitchAll.h"
 #include "ManufacturerSpecific.h"
@@ -924,9 +925,10 @@ void Driver::SendMsg
 	item.m_msg = _msg;
 	_msg->Finalize();
 
-	// If the message is for a sleeping node, we queue it in the node itself.
+
 	if( Node* node = GetNode(_msg->GetTargetNodeId()) )
 	{
+		// If the message is for a sleeping node, we queue it in the node itself.
 		if( !node->IsListeningDevice() )
 		{
 			if( WakeUp* wakeUp = static_cast<WakeUp*>( node->GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
@@ -955,6 +957,18 @@ void Driver::SendMsg
 			}
 		}
 
+		/* if the node Supports the Security Class - check if this message is meant to be encapsulated */
+		if ( Security* security = static_cast<Security *>( node->GetCommandClass(Security::StaticGetCommandClassId() ) ) )
+		{
+			CommandClass *cc = node->GetCommandClass(_msg->GetExpectedCommandClassId());
+			if ( cc->IsSecured() )
+			{
+				Log::Write( LogLevel_Detail, GetNodeNumber( _msg ), "Encapsulating Message For Command Class %s", cc->GetCommandClassName().c_str());
+				security->SendMsg(_msg);
+				ReleaseNodes();
+				return;
+			}
+		}
 		ReleaseNodes();
 	}
 
@@ -3275,7 +3289,7 @@ void Driver::HandleApplicationCommandHandlerRequest
 		{
 			node->m_receivedUnsolicited++;
 		}
-		if ( !node->IsNodeAlive() ) 
+		if ( !node->IsNodeAlive() )
 		{
 		    node->SetNodeAlive( true );
                 }
@@ -3289,7 +3303,7 @@ void Driver::HandleApplicationCommandHandlerRequest
 		if( m_controllerReplication && m_currentControllerCommand && ( ControllerCommand_ReceiveConfiguration == m_currentControllerCommand->m_controllerCommand ) )
 		{
 			m_controllerReplication->HandleMsg( &_data[6], _data[4] );
-			
+
 			UpdateControllerState( ControllerState_InProgress );
 		}
 	}
@@ -6183,4 +6197,18 @@ void Driver::LogDriverStatistics
 	Log::Write( LogLevel_Always, "Messages retransmitted: . . . . . . . . . . . . . . . . . %ld", data.m_retries );
 	Log::Write( LogLevel_Always, "Messages dropped and not delivered: . . . . . . . . . . . %ld", data.m_dropped );
 	Log::Write( LogLevel_Always, "***************************************************************************" );
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::GetNetworkKey>
+// Get the Network Key we will use for Security Command Class
+//-----------------------------------------------------------------------------
+uint8 const *Driver::GetNetworkKey() {
+	std::string networkKey;
+	Options::Get()->GetOptionAsString("networkKey", &networkKey );
+	if (networkKey.length() != 16) {
+		Log::Write( LogLevel_Warning, "Network Key is not 128 bits long - Aborting");
+		assert(networkKey.length != 16);
+	}
+	return reinterpret_cast<const uint8_t*>(networkKey.c_str());
 }

@@ -99,7 +99,7 @@ using namespace OpenZWave;
 CommandClasses::CommandClasses
 (
 )
-{ 
+{
 	memset( m_commandClassCreators, 0, sizeof(pfnCreateCommandClass_t)*256 );
 	memset( m_supportedCommandClasses, 0, sizeof(uint32)*8 );
 }
@@ -109,7 +109,7 @@ CommandClasses::CommandClasses
 //	Static method to determine whether a command class is supported
 //-----------------------------------------------------------------------------
 bool CommandClasses::IsSupported
-( 
+(
 	uint8 const _commandClassId
 )
 {
@@ -122,14 +122,14 @@ bool CommandClasses::IsSupported
 //	Static method to register a command class creator method
 //-----------------------------------------------------------------------------
 void CommandClasses::Register
-( 
-	uint8 const _commandClassId, 
+(
+	uint8 const _commandClassId,
 	string const& _commandClassName,
 	pfnCreateCommandClass_t _creator
 )
 {
 	m_commandClassCreators[_commandClassId] = _creator;
-	
+
 	// Set the bit representing the command class
 	Get().m_supportedCommandClasses[_commandClassId>>5] |= (1u<<(_commandClassId&0x1f));
 
@@ -143,7 +143,7 @@ void CommandClasses::Register
 CommandClass* CommandClasses::CreateCommandClass
 (
 	uint8 const _commandClassId,
-	uint32 const _homeId, 
+	uint32 const _homeId,
 	uint8 const _nodeId
 )
 {
@@ -196,6 +196,7 @@ void CommandClasses::RegisterCommandClasses
 	cc.Register( Proprietary::StaticGetCommandClassId(), Proprietary::StaticGetCommandClassName(), Proprietary::Create );
 	cc.Register( Protection::StaticGetCommandClassId(), Protection::StaticGetCommandClassName(), Protection::Create );
 	cc.Register( SceneActivation::StaticGetCommandClassId(), SceneActivation::StaticGetCommandClassName(), SceneActivation::Create );
+	cc.Register( Security::StaticGetCommandClassId(), Security::StaticGetCommandClassName(), Security::Create);
 	cc.Register( SensorAlarm::StaticGetCommandClassId(), SensorAlarm::StaticGetCommandClassName(), SensorAlarm::Create );
 	cc.Register( SensorBinary::StaticGetCommandClassId(), SensorBinary::StaticGetCommandClassName(), SensorBinary::Create );
 	cc.Register( SensorMultilevel::StaticGetCommandClassId(), SensorMultilevel::StaticGetCommandClassName(), SensorMultilevel::Create );
@@ -223,14 +224,14 @@ void CommandClasses::RegisterCommandClasses
 		// complete list of what should be supported.
 		// Any existing support is cleared first.
 		memset( cc.m_supportedCommandClasses, 0, sizeof(uint32)*8 );
-		cc.ParseCommandClassOption( str, true );		
+		cc.ParseCommandClassOption( str, true );
 	}
 
 	// Apply the excluded command class option
 	Options::Get()->GetOptionAsString( "Exclude", &str );
 	if( str != "" )
 	{
-		cc.ParseCommandClassOption( str, false );		
+		cc.ParseCommandClassOption( str, false );
 	}
 }
 
@@ -283,7 +284,7 @@ void CommandClasses::ParseCommandClassOption
 //	Convert a command class name (e.g COMMAND_CLASS_BASIC) into its 8-bit ID
 //-----------------------------------------------------------------------------
 uint8 CommandClasses::GetCommandClassId
-( 
+(
 	string const& _name
 )
 {

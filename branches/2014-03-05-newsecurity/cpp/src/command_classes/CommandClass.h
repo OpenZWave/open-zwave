@@ -108,6 +108,8 @@ namespace OpenZWave
 		bool IsAfterMark()const{ return m_afterMark; }
 		bool IsCreateVars()const{ return m_createVars; }
 		bool IsGetSupported()const{ return m_getSupported; }
+		bool IsSecured()const{ return m_isSecured; }
+		void SetSecured(){ m_isSecured = true; }
 
 		// Helper methods
 		string ExtractValue( uint8 const* _data, uint8* _scale, uint8* _precision, uint8 _valueOffset = 1 )const;
@@ -143,6 +145,7 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		bool		m_createVars;		// Do we want to create variables
 		int8		m_overridePrecision;	// Override precision when writing values if >=0
 		bool		m_getSupported;	    	// Get operation supported
+		bool		m_isSecured;		// is this command class secured with the Security Command Class
 
 	//-----------------------------------------------------------------------------
 	// Record which items of static data have been read from the device

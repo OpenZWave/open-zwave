@@ -62,6 +62,7 @@ CommandClass::CommandClass
 	m_createVars( true ),
 	m_overridePrecision( -1 ),
 	m_getSupported( true ),
+	m_isSecured( false ),
 	m_staticRequests( 0 ),
 	m_sentCnt( 0 ),
 	m_receivedCnt( 0 )
@@ -145,13 +146,13 @@ bool CommandClass::RemoveValue
 // Instances as set by the MultiInstance V1 command class
 //-----------------------------------------------------------------------------
 void CommandClass::SetInstances
-( 
+(
 	uint8 const _instances
 )
 {
 	// Ensure we have a set of reported variables for each new instance
 	if( !m_afterMark )
-	{	
+	{
 		for( uint8 i=0; i<_instances; ++i )
 		{
 			SetInstance( i+1 );
@@ -164,7 +165,7 @@ void CommandClass::SetInstances
 // Instances as set by the MultiChannel (i.e. MultiInstance V2) command class
 //-----------------------------------------------------------------------------
 void CommandClass::SetInstance
-( 
+(
 	uint8 const _endPoint
 )
 {
@@ -183,7 +184,7 @@ void CommandClass::SetInstance
 // Read the saved command class data
 //-----------------------------------------------------------------------------
 void CommandClass::ReadXML
-( 
+(
 	TiXmlElement const* _ccElement
 )
 {
@@ -280,7 +281,7 @@ void CommandClass::ReadXML
 // Save the static node configuration data
 //-----------------------------------------------------------------------------
 void CommandClass::WriteXML
-( 
+(
 	TiXmlElement* _ccElement
 )
 {
@@ -423,8 +424,8 @@ string CommandClass::ExtractValue
 
 		// Shift the characters to make space for the decimal point.
 		// We don't worry about overwriting any minus sign since that is
-		// already written into the res string. While we're shifting, we 
-		// also look for the real starting position of the number so we 
+		// already written into the res string. While we're shifting, we
+		// also look for the real starting position of the number so we
 		// can copy it into the res string later.
 		int32 start = -1;
 		for( int32 i=0; i<decimal; ++i )
@@ -503,7 +504,7 @@ int32 CommandClass::ValueToInteger
 {
 	int32 val;
 	uint8 precision;
-	
+
 	// Find the decimal point
 	size_t pos = _value.find_first_of( "." );
 	if( pos == string::npos )
@@ -596,10 +597,10 @@ void CommandClass::UpdateMappedClass
 // The static data for this command class has been read from the device
 //-----------------------------------------------------------------------------
 void CommandClass::ClearStaticRequest
-( 
+(
 	uint8 _request
 )
-{ 
+{
 	m_staticRequests &= ~_request;
 }
 

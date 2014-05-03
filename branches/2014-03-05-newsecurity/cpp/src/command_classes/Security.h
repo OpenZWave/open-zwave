@@ -28,22 +28,24 @@
 #ifndef _Security_H
 #define _Security_H
 
+
 #include "CommandClass.h"
+
 
 namespace OpenZWave
 {
 	/** \brief Implements COMMAND_CLASS_SECURITY (0x98), a Z-Wave device command class.
 	 */
-	
+
 	typedef struct SecurityPayload {
 		uint8 m_length;
 		uint8 m_part;
 		uint8 m_data[28];
 	} SecurityPayload;
-	
+
 	/* This should probably go into its own file, but its so simple... and only the Security Command Class uses it currently
 	 */
-	
+
 	class Timer {
 	public:
 		Timer() {
@@ -59,7 +61,7 @@ namespace OpenZWave
 	private:
 		clock_t start;
 	};
-	
+
 	class Security: public CommandClass
 	{
 	public:
@@ -75,7 +77,7 @@ namespace OpenZWave
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );
 		void SendMsg( Msg* _msg );
 	private:
-		Security( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
+		Security( uint32 const _homeId, uint8 const _nodeId );
 		bool RequestState( uint32 const _requestFlags, uint8 const _instance, Driver::MsgQueue const _queue);
 		bool RequestValue( uint32 const _requestFlags, uint8 const _index, uint8 const _instance, Driver::MsgQueue const _queue);
 		void SendNonceReport();
@@ -84,15 +86,17 @@ namespace OpenZWave
 		bool DecryptMessage( uint8 const* _data, uint32 const _length );
 		bool EncryptMessage( uint8 const* _nonce );
 		void QueuePayload( SecurityPayload const& _payload );
-		
+
 		Mutex *m_queueMutex;
 		list<SecurityPayload>      m_queue;         // Messages waiting to be sent when the device wakes up
 		bool m_waitingForNonce;
-		uint8 *m_initializationVector; // This might not be correct type
+		uint8 m_initializationVector[16]; // First 8 Bytes are Random, Second 8 Bytes are the NONCE
 		uint8 m_sequenceCounter;
 		Timer m_nonceTimer;
-		
-		
+
+
+
+
 	};
 
 } // namespace OpenZWave
