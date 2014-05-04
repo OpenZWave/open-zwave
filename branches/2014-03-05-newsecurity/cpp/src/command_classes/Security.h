@@ -30,6 +30,7 @@
 
 
 #include "CommandClass.h"
+#include "aescpp.h"
 
 
 namespace OpenZWave
@@ -66,7 +67,7 @@ namespace OpenZWave
 	{
 	public:
 		static CommandClass* Create( uint32 const _homeId, uint8 const _nodeId ){ return new Security( _homeId, _nodeId ); }
-		virtual ~Security(){}
+		virtual ~Security();
 
 		static uint8 const StaticGetCommandClassId(){ return 0x98; }
 		static string const StaticGetCommandClassName(){ return "COMMAND_CLASS_SECURITY"; }
@@ -75,7 +76,10 @@ namespace OpenZWave
 		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }
 		virtual string const GetCommandClassName()const{ return StaticGetCommandClassName(); }
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );
+		void ReadXML(TiXmlElement const* _ccElement);
+		void WriteXML(TiXmlElement* _ccElement);
 		void SendMsg( Msg* _msg );
+
 	private:
 		Security( uint32 const _homeId, uint8 const _nodeId );
 		bool RequestState( uint32 const _requestFlags, uint8 const _instance, Driver::MsgQueue const _queue);
@@ -86,13 +90,24 @@ namespace OpenZWave
 		bool DecryptMessage( uint8 const* _data, uint32 const _length );
 		bool EncryptMessage( uint8 const* _nonce );
 		void QueuePayload( SecurityPayload const& _payload );
+		bool createIVFromPacket(uint8 const* _data, uint8 *iv);
+		void SendNetworkKey();
+		void SetupNetworkKey();
 
 		Mutex *m_queueMutex;
 		list<SecurityPayload>      m_queue;         // Messages waiting to be sent when the device wakes up
 		bool m_waitingForNonce;
-		uint8 m_initializationVector[16]; // First 8 Bytes are Random, Second 8 Bytes are the NONCE
+		//uint8 m_initializationVector[16]; // First 8 Bytes are Random, Second 8 Bytes are the NONCE
 		uint8 m_sequenceCounter;
 		Timer m_nonceTimer;
+		uint8 currentNonce[8];
+		bool m_networkkeyset;
+
+		AESencrypt encrypt;
+		AESdecrypt decrypt;
+		const uint8 *nk;
+		uint8 *authkey;
+		uint8 *encryptkey;
 
 
 

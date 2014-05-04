@@ -56,6 +56,7 @@
 #include "ValueStore.h"
 
 #include <algorithm>
+#include <iostream>
 
 using namespace OpenZWave;
 
@@ -105,6 +106,7 @@ static char const* c_controllerCommandNames[] =
 
 static char const* c_sendQueueNames[] =
 {
+	"Security",
 	"Command",
 	"NoOp",
 	"Controller",
@@ -350,8 +352,8 @@ void Driver::DriverThreadProc
 			waitObjects[0] = _exitEvent;				// Thread must exit.
 			waitObjects[1] = m_notificationsEvent;			// Notifications waiting to be sent.
 			waitObjects[2] = m_controller;				// Controller has received data.
-			waitObjects[3] = m_queueEvent[MsgQueue_Security];	// Security Related Commands (As they have a timeout)
-			waitObjects[4] = m_queueEvent[MsgQueue_Command];	// A controller command is in progress.
+			waitObjects[3] = m_queueEvent[MsgQueue_Command];	// A controller command is in progress.
+			waitObjects[4] = m_queueEvent[MsgQueue_Security];	// Security Related Commands (As they have a timeout)
 			waitObjects[5] = m_queueEvent[MsgQueue_NoOp];		// Send device probes and diagnostics messages
 			waitObjects[6] = m_queueEvent[MsgQueue_Controller];	// A multi-part controller command is in progress
 			waitObjects[7] = m_queueEvent[MsgQueue_WakeUp];		// A node has woken. Pending messages should be sent.
@@ -366,7 +368,7 @@ void Driver::DriverThreadProc
 			while( true )
 			{
 				Log::Write( LogLevel_StreamDetail, "      Top of DriverThreadProc loop." );
-				uint32 count = 10;
+				uint32 count = 11;
 				int32 timeout = Wait::Timeout_Infinite;
 
 				// If we're waiting for a message to complete, we can only
@@ -382,7 +384,7 @@ void Driver::DriverThreadProc
 				}
 				else if( m_currentControllerCommand != NULL )
 				{
-					count = 6;
+					count = 7;
 				}
 				else
 				{
@@ -391,6 +393,7 @@ void Driver::DriverThreadProc
 
 				// Wait for something to do
 				int32 res = Wait::Multiple( waitObjects, count, timeout );
+
 				switch( res )
 				{
 					case -1:
@@ -988,6 +991,7 @@ bool Driver::WriteNextMsg
 	MsgQueue const _queue
 )
 {
+
 	// There are messages to send, so get the one at the front of the queue
 	m_sendMutex->Lock();
 	MsgQueueItem item = m_msgQueue[_queue].front();
@@ -6208,7 +6212,7 @@ uint8 const *Driver::GetNetworkKey() {
 	Options::Get()->GetOptionAsString("networkKey", &networkKey );
 	if (networkKey.length() != 16) {
 		Log::Write( LogLevel_Warning, "Network Key is not 128 bits long - Aborting");
-		assert(networkKey.length != 16);
+		assert(networkKey.length() != 16);
 	}
 	return reinterpret_cast<const uint8_t*>(networkKey.c_str());
 }

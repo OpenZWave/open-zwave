@@ -13,9 +13,9 @@
 
 
 # what flags we will use for compiling in debug mode
-DEBUG_CFLAGS    := -Wall -Wno-unknown-pragmas -Wno-inline -Wno-format -Werror -ggdb -DDEBUG -fPIC  -DSYSCONFDIR="\"$(PREFIX)/etc/openzwave/\""
+DEBUG_CFLAGS    := -Wall -Wno-unknown-pragmas -Wno-inline -Wno-format -Werror -Wno-error=sequence-point -Wno-sequence-point -ggdb -DDEBUG -fPIC  -DSYSCONFDIR="\"$(PREFIX)/etc/openzwave/\""
 # what flags we will use for compiling in release mode
-RELEASE_CFLAGS  := -Wall -Wno-unknown-pragmas -Werror -Wno-format -O3 -DNDEBUG -fPIC  -DSYSCONFDIR="\"$(PREFIX)/etc/openzwave/\""
+RELEASE_CFLAGS  := -Wall -Wno-unknown-pragmas -Werror -Wno-format -Wno-error=sequence-point -Wno-sequence-point -O3 -DNDEBUG -fPIC  -DSYSCONFDIR="\"$(PREFIX)/etc/openzwave/\""
 #what flags we will use for linking in debug mode
 DEBUG_LDFLAGS	:= -g
 
@@ -40,7 +40,7 @@ endif
 LIBDIR	?= $(top_builddir)
 
 INCLUDES	:= -I $(top_srcdir)/cpp/src -I $(top_srcdir)/cpp/src/command_classes/ -I $(top_srcdir)/cpp/src/value_classes/ \
-	-I $(top_srcdir)/cpp/src/platform/ -I $(top_srcdir)/cpp/src/platform/unix -I $(top_srcdir)/cpp/tinyxml/ -I $(top_srcdir)/cpp/hidapi/hidapi/
+	-I $(top_srcdir)/cpp/src/platform/ -I $(top_srcdir)/cpp/src/platform/unix -I $(top_srcdir)/cpp/tinyxml/ -I $(top_srcdir)/cpp/hidapi/hidapi/ -I$(top_srcdir)/cpp/src/aes/
 
 ifeq ($(UNAME),Darwin)
 SOURCES_HIDAPI =$(top_srcdir)/cpp/hidapi/mac
@@ -52,9 +52,9 @@ endif
 
 
 SOURCES		:= $(top_srcdir)/cpp/src $(top_srcdir)/cpp/src/command_classes $(top_srcdir)/cpp/tinyxml \
-	$(top_srcdir)/cpp/src/value_classes $(top_srcdir)/cpp/src/platform $(top_srcdir)/cpp/src/platform/unix $(SOURCES_HIDAPI)
+	$(top_srcdir)/cpp/src/value_classes $(top_srcdir)/cpp/src/platform $(top_srcdir)/cpp/src/platform/unix $(SOURCES_HIDAPI) $(top_srcdir)/cpp/src/aes/
 VPATH = $(top_srcdir)/cpp/src:$(top_srcdir)/cpp/src/command_classes:$(top_srcdir)/cpp/tinyxml:\
-	$(top_srcdir)/cpp/src/value_classes:$(top_srcdir)/cpp/src/platform:$(top_srcdir)/cpp/src/platform/unix:$(SOURCES_HIDAPI)
+	$(top_srcdir)/cpp/src/value_classes:$(top_srcdir)/cpp/src/platform:$(top_srcdir)/cpp/src/platform/unix:$(SOURCES_HIDAPI):$(top_srcdir)/cpp/src/aes/
 	
 
 tinyxml := $(notdir $(wildcard $(top_srcdir)/cpp/tinyxml/*.cpp))
@@ -72,6 +72,8 @@ vclasses := $(notdir $(wildcard $(top_srcdir)/cpp/src/value_classes/*.cpp))
 pform := $(notdir $(wildcard $(top_srcdir)/cpp/src/platform/*.cpp)) \
 	$(notdir $(wildcard $(top_srcdir)/cpp/src/platform/unix/*.cpp))
 indep := $(notdir $(filter-out $(top_srcdir)/cpp/src/vers.cpp, $(wildcard $(top_srcdir)/cpp/src/*.cpp)))
+aes := $(notdir $(wildcard $(top_srcdir)/cpp/src/aes/*.c))
+
 
 default: $(LIBDIR)/libopenzwave.a $(LIBDIR)/libopenzwave.so.$(VERSION)
 
@@ -97,6 +99,7 @@ endif
 -include $(patsubst %.cpp,$(DEPDIR)/%.d,$(vclasses))
 -include $(patsubst %.cpp,$(DEPDIR)/%.d,$(pform))
 -include $(patsubst %.cpp,$(DEPDIR)/%.d,$(indep))
+-include $(patsubst %.c,$(DEPDIR)/%d,$(aes))
 
 #create a vers.cpp file that contains our version and subversion revisions
 $(top_srcdir)/cpp/src/vers.cpp:
@@ -110,6 +113,7 @@ $(top_srcdir)/cpp/src/vers.cpp:
 
 $(LIBDIR)/libopenzwave.a:	$(patsubst %.cpp,$(OBJDIR)/%.o,$(tinyxml)) \
 			$(patsubst %.c,$(OBJDIR)/%.o,$(hidapi)) \
+			$(patsubst %.c,$(OBJDIR)/%.o,$(aes)) \
 			$(patsubst %.cpp,$(OBJDIR)/%.o,$(cclasses)) \
 			$(patsubst %.cpp,$(OBJDIR)/%.o,$(vclasses)) \
 			$(patsubst %.cpp,$(OBJDIR)/%.o,$(pform)) \
@@ -121,6 +125,7 @@ $(LIBDIR)/libopenzwave.a:	$(patsubst %.cpp,$(OBJDIR)/%.o,$(tinyxml)) \
 
 $(LIBDIR)/libopenzwave.so.$(VERSION):	$(patsubst %.cpp,$(OBJDIR)/%.o,$(tinyxml)) \
 			$(patsubst %.c,$(OBJDIR)/%.o,$(hidapi)) \
+			$(patsubst %.c,$(OBJDIR)/%.o,$(aes)) \
 			$(patsubst %.cpp,$(OBJDIR)/%.o,$(cclasses)) \
 			$(patsubst %.cpp,$(OBJDIR)/%.o,$(vclasses)) \
 			$(patsubst %.cpp,$(OBJDIR)/%.o,$(pform)) \

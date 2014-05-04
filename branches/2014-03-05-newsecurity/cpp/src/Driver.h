@@ -70,6 +70,7 @@ namespace OpenZWave
 		friend class NoOperation;
 		friend class SceneActivation;
 		friend class WakeUp;
+		friend class Security;
 
 	//-----------------------------------------------------------------------------
 	//	Controller Interfaces
@@ -581,8 +582,8 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 	public:
 		enum MsgQueue
 		{
-			MsgQueue_Security = 0,
-			MsgQueue_Command,
+			MsgQueue_Command = 0,
+			MsgQueue_Security,
 			MsgQueue_NoOp,
 			MsgQueue_Controller,
 			MsgQueue_WakeUp,

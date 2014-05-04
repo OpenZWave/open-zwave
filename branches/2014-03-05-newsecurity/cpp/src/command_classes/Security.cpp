@@ -31,7 +31,6 @@
 #include "Security.h"
 #include "Association.h"
 #include "Defs.h"
-#include "AES.h"
 #include "Msg.h"
 #include "Node.h"
 #include "Driver.h"
@@ -91,7 +90,8 @@ enum SecurityCmd
 
 enum
 {
-	SecurityScheme_Zero					= 0x01,
+	SecurityScheme_Zero					= 0x00,
+//	SecurityScheme_Zero					= 0x01,	/* at least Vision Door Locks Report 0 instead of 0x01 */
 	SecurityScheme_Reserved1			= 0x02,
 	SecurityScheme_Reserved2			= 0x04,
 	SecurityScheme_Reserved3			= 0x08,
@@ -118,7 +118,8 @@ Security::Security
 ):
 	CommandClass( _homeId, _nodeId ),
 	m_waitingForNonce(false),
-	m_sequenceCounter(0)
+	m_sequenceCounter(0),
+	m_networkkeyset(false)
 
 {
 	/* seed our Random Number Generator for NONCE Generation
@@ -126,9 +127,78 @@ Security::Security
 	 * supports this class, it just adds more "randomness" to the NONCE
 	 * although I'm sure its no way cryptographically secure :) */
 	srand((unsigned)time(0));
-
-
+	SetupNetworkKey();
 }
+
+Security::~Security
+(
+)
+{
+	delete this->encryptkey;
+	delete this->authkey;
+}
+
+//-----------------------------------------------------------------------------
+// <Version::ReadXML>
+// Read configuration.
+//-----------------------------------------------------------------------------
+void Security::ReadXML
+(
+	TiXmlElement const* _ccElement
+)
+{
+	CommandClass::ReadXML( _ccElement );
+
+	char const* str = _ccElement->Attribute("NetworkKeySet");
+	if( str )
+	{
+		m_networkkeyset = !strcmp( str, "true");
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <Version::WriteXML>
+// Save changed configuration
+//-----------------------------------------------------------------------------
+void Security::WriteXML
+(
+	TiXmlElement* _ccElement
+)
+{
+	CommandClass::WriteXML( _ccElement );
+
+	if( m_networkkeyset )
+	{
+		_ccElement->SetAttribute( "NetworkKeySet", "true" );
+	}
+}
+
+
+
+
+void Security::SetupNetworkKey
+(
+)
+{
+	/* setup a Frame Encryption Key and Authentication Key */
+
+	/* if the NetworkKey has been set on this node previously */
+	if (m_networkkeyset)
+		this->nk = GetDriver()->GetNetworkKey();
+	else
+		this->nk = SecuritySchemes[0];
+	this->encrypt.key128(nk);
+	this->decrypt.key128(nk);
+	this->encryptkey = (uint8*)malloc(16);
+	if (EXIT_FAILURE == this->encrypt.ecb_encrypt(EncryptPassword, this->encryptkey, 16)) {
+		Log::Write(LogLevel_Warning, "Failed to Encrypt EncryptPassword");
+	}
+	this->authkey = (uint8*)malloc(16);
+	if (EXIT_FAILURE == this->encrypt.ecb_encrypt(AuthPassword, this->authkey, 16)) {
+		Log::Write(LogLevel_Warning, "Failed to Encrypt AuthPassword");
+	}
+}
+
 //-----------------------------------------------------------------------------
 // <Security::RequestState>
 // Request current state from the device
@@ -148,8 +218,9 @@ bool Security::RequestState
 		msg->Append( GetCommandClassId() );
 		msg->Append( SecurityCmd_SchemeGet );
 		msg->Append( (uint8)SecurityScheme_Zero );
-		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+		msg->Append( GetDriver()->GetTransmitOptions() );
 		GetDriver()->SendMsg( msg, Driver::MsgQueue_Security);
+		//this->RequestNonce();
 		return true;
 	}
 	return false;
@@ -200,7 +271,7 @@ bool Security::HandleMsg
 		}
 		case SecurityCmd_SchemeReport:
 		{
-			Log::Write(LogLevel_Info, "Received SecurityCmd_SchemeReport from node %d", GetNodeId() );
+			Log::Write(LogLevel_Info, "Received SecurityCmd_SchemeReport from node %d: %d", GetNodeId(), _data[1]);
 			uint8 schemes = _data[1];
 			if( schemes & SecurityScheme_Zero )
 			{
@@ -209,7 +280,7 @@ bool Security::HandleMsg
 				 * XXX TODO: a flag to track if its already had the NetworkKey set and saved to our XML
 				 * file
 				 */
-				Log::Write(LogLevel_Info, "    Security scheme agreed.  Key expected from device." );
+				Log::Write(LogLevel_Info, "    Security scheme agreed." );
 			}
 			else
 			{
@@ -234,6 +305,8 @@ bool Security::HandleMsg
 			 * and thus should set the Flag referenced in SecurityCmd_SchemeReport
 			 */
 			Log::Write(LogLevel_Info,  "Received SecurityCmd_NetworkKeyVerify from node %d", GetNodeId() );
+			this->m_networkkeyset = true;
+			SetupNetworkKey();
 			break;
 		}
 		case SecurityCmd_SchemeInherit:
@@ -405,15 +478,27 @@ bool Security::EncryptMessage
 	msg->Append( GetCommandClassId() );
 	msg->Append( (queueSize>1) ? SecurityCmd_MessageEncapNonceGet : SecurityCmd_MessageEncap );
 
+	/* create the iv
+	 *
+	 */
+	uint8 initializationVector[16];
+	/* the first 8 bytes of a outgoing IV are random */
+	for (int i = 0; i < 8; i++) {
+		initializationVector[i] = (rand()%0xFF)+1;
+	}
+	/* the remaining 8 bytes are the NONCE we got from the device */
+	for (int i = 0; i < 8; i++) {
+		initializationVector[8+i] = _nonce[i];
+	}
+
 	/* Append the first 8 bytes of the initialization vector
 	 * to the message. The remaining 8 bytes are the NONCE we recieved from
 	 * the node, and is ommitted from sending back to the Node. But we use the full 16 bytes to
 	 * as the IV to encrypt out message.
 	 */
-	uint32 i;
-	for( i=0; i<8; ++i )
+	for(int i=0; i<8; ++i )
 	{
-		msg->Append( m_initializationVector[i] );
+		msg->Append( initializationVector[i] );
 	}
 
 	// Append the sequence data
@@ -438,20 +523,28 @@ bool Security::EncryptMessage
 	/* Append the message payload after encrypting it with AES-OFB (key is EncryptPassword,
 	 * full IV (16 bytes - 8 Random and 8 NONCE) and payload.m_data
 	 */
+	uint8 encryptedpayload[payload.m_length];
+	if (aes_ofb_encrypt(payload.m_data, encryptedpayload, payload.m_length, initializationVector, this->encrypt.cx) == EXIT_FAILURE) {
+		Log::Write(LogLevel_Warning, "Failed to Encrypt Packet");
+		return false;
+	}
 
-	for( i=0; i<payload.m_length; ++i )
+
+	for(int i=0; i<payload.m_length; ++i )
 	{
-		msg->Append( payload.m_data[i] );
+		msg->Append( encryptedpayload[i] );
 	}
 
 	// Append the nonce identifier - Not sure what this one is yet. For now, try 0 :)
-	msg->Append(0);
+	msg->Append(_nonce[0]);
 
 	/* Append space for the authentication data Set with AES-CBCMAC (key is AuthPassword,
 	 * Full IV (16 bytes - 8 random and 8 NONCE) and sequence|SrcNode|DstNode|payload.m_length|payload.m_data
 	 *
 	 */
-	for( i=0; i<8; ++i )
+	//uint8 authmac;
+
+	for(int i=0; i<8; ++i )
 	{
 		msg->Append( 0 );
 	}
@@ -464,6 +557,16 @@ bool Security::EncryptMessage
 
 	// Encrypt the encapsulated message fragment
 
+	return true;
+}
+
+bool Security::createIVFromPacket(uint8 const* _data, uint8 *iv) {
+	for (int i = 0; i < 8; i++) {
+		iv[i] = _data[1+i];
+	}
+	for (int i = 0; i < 8; i++) {
+		iv[8+i] = this->currentNonce[i];
+	}
 	return true;
 }
 
@@ -487,14 +590,37 @@ bool Security::DecryptMessage
 		return false;
 	}
 
-	uint8 const* pPrivateNonce = &_data[1];				// 8 bytes in length
+	uint8 iv[16];
+	createIVFromPacket(_data, iv); /* first 8 bytes of Packet are the Random Value generated by the Device
+									* 2nd 8 bytes of the IV are our nonce we sent previously
+									*/
 	bool secondFrame = ((_data[9] & 0x20) != 0);
 	bool sequenced = ((_data[9] & 0x10) != 0);
 	uint8 sequenceCount = _data[9] & 0x0f;
 	uint8 nonceId = _data[_length-10];
 	uint8 const* pAuthentication = &_data[_length-9];		// 8 bytes in length
 
-	UNUSED(pPrivateNonce);
+	uint8 decryptpacket[_length-11];
+	if (aes_ofb_decrypt(&_data[10], decryptpacket, _length-11, iv, this->encrypt.cx) == EXIT_FAILURE) {
+		Log::Write(LogLevel_Warning, "Failed to Decrypt Packet");
+		return false;
+	}
+#ifdef NDEBUG
+	char byteStr[16];
+	std::string str;
+	for( uint32 i=0; i<_length-11; ++i )
+	{
+		if( i )
+		{
+			str += ", ";
+		}
+
+		snprintf( byteStr, sizeof(byteStr), "0x%.2x", decryptpacket[i] );
+		str += byteStr;
+	}
+	Log::Write(LogLevel_Info, "Decrypted Packet: %s", str.c_str());
+#endif
+
 	UNUSED(secondFrame);
 	UNUSED(sequenced);
 	UNUSED(sequenceCount);
@@ -541,8 +667,8 @@ void Security::GenerateAuthentication
 	uint32 numBlocks = i/16;
 
 	// Create the initial authentication value from the initialization vector
-	AES aes;
-	aes.EncryptBlock( (const char*)m_initializationVector, (char *)_authentication );
+	//AES aes;
+	//aes.EncryptBlock( (const char*)m_initializationVector, (char *)_authentication );
 
 	// Combine with the header and message data
 	for( i=0; i<numBlocks; ++i )
@@ -555,7 +681,7 @@ void Security::GenerateAuthentication
 		}
 
 		// Encrypt the result
-		aes.EncryptBlock( (const char *)_authentication, (char *)_authentication );
+		//aes.EncryptBlock( (const char *)_authentication, (char *)_authentication );
 	}
 }
 
@@ -590,11 +716,11 @@ void Security::SendNonceReport
 (
 )
 {
-	uint8 publicNonce[8];
+	//uint8 publicNonce[8];
 
 	/* this should be pretty random */
 	for (int i = 0; i < 8; i++) {
-		publicNonce[i] = (rand()%0xFF)+1;
+		this->currentNonce[i] = (rand()%0xFF)+1;
 	}
 
 
@@ -605,7 +731,7 @@ void Security::SendNonceReport
 	msg->Append( SecurityCmd_NonceReport );
 	for( int i=0; i<8; ++i )
 	{
-		msg->Append( publicNonce[i] );
+		msg->Append( this->currentNonce[i] );
 	}
 	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
 	GetDriver()->SendMsg( msg, Driver::MsgQueue_Security);
@@ -613,4 +739,21 @@ void Security::SendNonceReport
 	// Reset the nonce timer.  The encapsulated message
 	// must be received within 10 seconds.
 	m_nonceTimer.Reset();
+}
+void Security::SendNetworkKey
+(
+)
+{
+	Msg *msg = new Msg( "SecurityCmd_NetworkKeySet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+	msg->Append( GetNodeId() );
+	msg->Append( 10 );
+	msg->Append( GetCommandClassId() );
+	msg->Append( SecurityCmd_NetworkKeySet );
+	const uint8 *tnk = GetDriver()->GetNetworkKey();
+	for( int i=0; i<16; ++i )
+	{
+		msg->Append( tnk[i] );
+	}
+	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	this->SendMsg(msg);
 }

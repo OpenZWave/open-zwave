@@ -46,6 +46,9 @@
 
 using namespace OpenZWave;
 
+        bool temp = false;
+
+
 static uint32 g_homeId = 0;
 static bool   g_initFailed = false;
 
@@ -96,6 +99,9 @@ void OnNotification
 )
 {
 	// Must do this inside a critical section to avoid conflicts with the main thread
+	Manager::Get()->ResetController( _notification->GetHomeId());
+	sleep(10);
+	return;
 	pthread_mutex_lock( &g_criticalSection );
 
 	switch( _notification->GetType() )
@@ -155,6 +161,9 @@ void OnNotification
 			nodeInfo->m_nodeId = _notification->GetNodeId();
 			nodeInfo->m_polled = false;		
 			g_nodes.push_back( nodeInfo );
+		        if (temp == true) {
+			    Manager::Get()->CancelControllerCommand( _notification->GetHomeId() );
+                        }
 			break;
 		}
 
@@ -315,6 +324,9 @@ int main( int argc, char* argv[] )
 	{
 
 		Manager::Get()->WriteConfig( g_homeId );
+		        Manager::Get()->BeginControllerCommand( g_homeId, Driver::ControllerCommand_AddDevice, NULL, NULL, true, 0xff );
+      		        temp = true;
+
 
 		// The section below demonstrates setting up polling for a variable.  In this simple
 		// example, it has been hardwired to poll COMMAND_CLASS_BASIC on the each node that 
@@ -332,7 +344,7 @@ int main( int argc, char* argv[] )
 				ValueID v = *it2;
 				if( v.GetCommandClassId() == 0x20 )
 				{
-					Manager::Get()->EnablePoll( v, 2 );		// enables polling with "intensity" of 2, though this is irrelevant with only one value polled
+//					Manager::Get()->EnablePoll( v, 2 );		// enables polling with "intensity" of 2, though this is irrelevant with only one value polled
 					break;
 				}
 			}
