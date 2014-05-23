@@ -27,6 +27,7 @@
 
 #include <ctime>
 
+
 #include "CommandClasses.h"
 #include "Security.h"
 #include "Association.h"
@@ -38,6 +39,12 @@
 #include "Log.h"
 
 #include "ValueByte.h"
+
+
+#include <openssl/conf.h>
+#include <openssl/evp.h>
+#include <openssl/err.h>
+
 
 using namespace OpenZWave;
 
@@ -88,28 +95,34 @@ enum SecurityCmd
 	SecurityCmd_MessageEncapNonceGet	= 0xc1
 };
 
-enum
+enum SecurityScheme
 {
 	SecurityScheme_Zero					= 0x00,
-//	SecurityScheme_Zero					= 0x01,	/* at least Vision Door Locks Report 0 instead of 0x01 */
-	SecurityScheme_Reserved1			= 0x02,
-	SecurityScheme_Reserved2			= 0x04,
-	SecurityScheme_Reserved3			= 0x08,
-	SecurityScheme_Reserved4			= 0x10,
-	SecurityScheme_Reserved5			= 0x20,
-	SecurityScheme_Reserved6			= 0x40,
-	SecurityScheme_Reserved7			= 0x80
 };
 
 
-uint8 SecuritySchemes[1][16] = {
+uint8_t SecuritySchemes[1][16] = {
 		{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
 };
 
-uint8 EncryptPassword[16] = {0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA};
-uint8 AuthPassword[16] = {0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55};
+uint8_t EncryptPassword[16] = {0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA};
+uint8_t AuthPassword[16] = {0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55};
 
+void PrintHex(std::string prefix, uint8_t const *data, uint32 const length) {
+	char byteStr[16];
+	std::string str;
+	for( uint32 i=0; i<length; ++i )
+	{
+		if( i )
+		{
+			str += ", ";
+		}
 
+		snprintf( byteStr, sizeof(byteStr), "0x%.2x", data[i] );
+		str += byteStr;
+	}
+	Log::Write(LogLevel_Info, "%s Packet: %s", prefix.c_str(), str.c_str());
+}
 
 Security::Security
 (
@@ -134,8 +147,8 @@ Security::~Security
 (
 )
 {
-	delete this->encryptkey;
-	delete this->authkey;
+	//delete this->encryptkey;
+	//delete this->authkey;
 }
 
 //-----------------------------------------------------------------------------
@@ -175,28 +188,88 @@ void Security::WriteXML
 
 
 
-
 void Security::SetupNetworkKey
 (
 )
 {
-	/* setup a Frame Encryption Key and Authentication Key */
+//#define TESTENC 1
 
-	/* if the NetworkKey has been set on this node previously */
-	if (m_networkkeyset)
-		this->nk = GetDriver()->GetNetworkKey();
-	else
-		this->nk = SecuritySchemes[0];
-	this->encrypt.key128(nk);
-	this->decrypt.key128(nk);
-	this->encryptkey = (uint8*)malloc(16);
-	if (EXIT_FAILURE == this->encrypt.ecb_encrypt(EncryptPassword, this->encryptkey, 16)) {
-		Log::Write(LogLevel_Warning, "Failed to Encrypt EncryptPassword");
+#if TESTENC
+//	uint8_t iv[16] = {  0x81, 0x42, 0xd1, 0x51, 0xf1, 0x59, 0x3d, 0x70, 0xd5, 0xe3, 0x6c, 0xcb, 0x02, 0xd0, 0x3f, 0x5c,  /* */  };
+	uint8_t iv[16] = {  0xee, 0x2c, 0x1c, 0x0e, 0xe1, 0x54, 0xe7, 0xfa, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa  /* */  };
+//	uint8_t pck[] = {  0x25, 0x68, 0x06, 0xc5, 0xb3, 0xee, 0x2c, 0x17, 0x26, 0x7e, 0xf0, 0x84, 0xd4, 0xc3, 0xba, 0xed, 0xe5, 0xb9, 0x55};
+	uint8_t pck[] = {  0x65, 0xce, 0x5e, 0x75, 0xec, 0xe6, 0x09, 0x9b};
+	/* 				    1     2     3     4     5     6     7     8     9     10    11    12    13    14    15    16    17    18    19 */
+	uint8_t out[50];
+	memset(&out[0], 0, 50);
+	this->nk = SecuritySchemes[0];
+
+#endif
+#if 0
+
+	this->nk = GetDriver->GetNetworkKey();
+#endif
+	uint8 tmpNK[] = {0x5b, 0x99, 0xfd, 0xf1, 0x66, 0x56, 0xc3, 0xef, 0xcc, 0xf6, 0xf1, 0x6c, 0xc9, 0x26, 0x84, 0xf4};
+	this->nk = tmpNK;
+
+	this->AuthKey = new aes_encrypt_ctx;
+	this->EncryptKey = new aes_encrypt_ctx;
+
+	if (aes_init() == EXIT_FAILURE) {
+		Log::Write(LogLevel_Warning, "Failed to Init AES Engine");
+		return;
 	}
-	this->authkey = (uint8*)malloc(16);
-	if (EXIT_FAILURE == this->encrypt.ecb_encrypt(AuthPassword, this->authkey, 16)) {
-		Log::Write(LogLevel_Warning, "Failed to Encrypt AuthPassword");
+
+	if (aes_encrypt_key128(this->nk, this->EncryptKey) == EXIT_FAILURE) {
+		Log::Write(LogLevel_Warning, "Failed to Set Initial Network Key for Encryption");
+		return;
 	}
+
+	if (aes_encrypt_key128(this->nk, this->AuthKey) == EXIT_FAILURE) {
+		Log::Write(LogLevel_Warning, "Failed to Set Initial Network Key for Authentication");
+		return;
+	}
+
+	uint8 tmpEncKey[32];
+	uint8 tmpAuthKey[32];
+	aes_mode_reset(this->EncryptKey);
+	aes_mode_reset(this->AuthKey);
+
+	if (aes_ecb_encrypt(EncryptPassword, tmpEncKey, 16, this->EncryptKey) == EXIT_FAILURE) {
+		Log::Write(LogLevel_Warning, "Failed to Generate Encrypted Network Key for Encryption");
+		return;
+	}
+	if (aes_ecb_encrypt(AuthPassword, tmpAuthKey, 16, this->AuthKey) == EXIT_FAILURE) {
+		Log::Write(LogLevel_Warning, "Failed to Generate Encrypted Network Key for Authentication");
+		return;
+	}
+
+
+	aes_mode_reset(this->EncryptKey);
+	aes_mode_reset(this->AuthKey);
+	if (aes_encrypt_key128(tmpEncKey, this->EncryptKey) == EXIT_FAILURE) {
+		Log::Write(LogLevel_Warning, "Failed to set Encrypted Network Key for Encryption");
+		return;
+	}
+	if (aes_encrypt_key128(tmpAuthKey, this->AuthKey) == EXIT_FAILURE) {
+		Log::Write(LogLevel_Warning, "Failed to set Encrypted Network Key for Authentication");
+		return;
+	}
+	aes_mode_reset(this->EncryptKey);
+	aes_mode_reset(this->AuthKey);
+#if TESTENC
+	PrintHex("Key", this->nk, 16);
+	PrintHex("Packet Encryption Key", tmpEncKey, 16);
+	PrintHex("IV", iv, 16);
+	PrintHex("input", pck, 19);
+	if (aes_ofb_decrypt(pck, out, 19, iv, this->EncryptKey) == EXIT_FAILURE) {
+		Log::Write(LogLevel_Warning, "Failed to Decrypt Packet");
+		return;
+	}
+	PrintHex("Pck", out, 19);
+	//exit(-1);
+
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -210,6 +283,7 @@ bool Security::RequestState
 	Driver::MsgQueue const _queue
 )
 {
+#if 0
 	if( _requestFlags & RequestFlag_Static )
 	{
 		Msg* msg = new Msg( "SecurityCmd_SchemeGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
@@ -224,6 +298,8 @@ bool Security::RequestState
 		return true;
 	}
 	return false;
+#endif
+	return true;
 }
 
 //-----------------------------------------------------------------------------
@@ -273,7 +349,7 @@ bool Security::HandleMsg
 		{
 			Log::Write(LogLevel_Info, "Received SecurityCmd_SchemeReport from node %d: %d", GetNodeId(), _data[1]);
 			uint8 schemes = _data[1];
-			if( schemes & SecurityScheme_Zero )
+			if( schemes == SecurityScheme_Zero )
 			{
 				/* We're good to go.  We now should send our NetworkKey to the device if this is the first
 				 * time we have seen it
@@ -281,6 +357,7 @@ bool Security::HandleMsg
 				 * file
 				 */
 				Log::Write(LogLevel_Info, "    Security scheme agreed." );
+				this->RequestNonce();
 			}
 			else
 			{
@@ -524,7 +601,7 @@ bool Security::EncryptMessage
 	 * full IV (16 bytes - 8 Random and 8 NONCE) and payload.m_data
 	 */
 	uint8 encryptedpayload[payload.m_length];
-	if (aes_ofb_encrypt(payload.m_data, encryptedpayload, payload.m_length, initializationVector, this->encrypt.cx) == EXIT_FAILURE) {
+	if (aes_ofb_encrypt(payload.m_data, encryptedpayload, payload.m_length, initializationVector, this->EncryptKey) == EXIT_FAILURE) {
 		Log::Write(LogLevel_Warning, "Failed to Encrypt Packet");
 		return false;
 	}
@@ -535,32 +612,28 @@ bool Security::EncryptMessage
 		msg->Append( encryptedpayload[i] );
 	}
 
-	// Append the nonce identifier - Not sure what this one is yet. For now, try 0 :)
+	// Append the nonce identifier :)
 	msg->Append(_nonce[0]);
 
 	/* Append space for the authentication data Set with AES-CBCMAC (key is AuthPassword,
 	 * Full IV (16 bytes - 8 random and 8 NONCE) and sequence|SrcNode|DstNode|payload.m_length|payload.m_data
 	 *
 	 */
-	//uint8 authmac;
-
+	uint8 mac[8];
+	this->GenerateAuthentication(msg->GetBuffer(), msg->GetLength(), GetDriver()->GetNodeId(), GetNodeId(), initializationVector, mac);
 	for(int i=0; i<8; ++i )
 	{
-		msg->Append( 0 );
+		msg->Append( mac[i] );
 	}
 
-
-
-
-
-
-
-	// Encrypt the encapsulated message fragment
+	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
+	this->SendMsg(msg);
 
 	return true;
 }
 
-bool Security::createIVFromPacket(uint8 const* _data, uint8 *iv) {
+bool Security::createIVFromPacket_inbound(uint8 const* _data, uint8 *iv) {
+
 	for (int i = 0; i < 8; i++) {
 		iv[i] = _data[1+i];
 	}
@@ -569,6 +642,19 @@ bool Security::createIVFromPacket(uint8 const* _data, uint8 *iv) {
 	}
 	return true;
 }
+bool Security::createIVFromPacket_outbound(uint8 const* _data, uint8 *iv) {
+
+
+	for (int i = 0; i < 8; i++) {
+		iv[i] = this->currentNonce[i];
+	}
+	for (int i = 0; i < 8; i++) {
+		iv[8+i] = _data[1+i];
+	}
+	return true;
+}
+
+
 
 //-----------------------------------------------------------------------------
 // <Security::DecryptMessage>
@@ -590,99 +676,170 @@ bool Security::DecryptMessage
 		return false;
 	}
 
-	uint8 iv[16];
-	createIVFromPacket(_data, iv); /* first 8 bytes of Packet are the Random Value generated by the Device
+#if 1
+	uint8 iv[17];
+	createIVFromPacket_inbound(_data, iv); /* first 8 bytes of Packet are the Random Value generated by the Device
 									* 2nd 8 bytes of the IV are our nonce we sent previously
 									*/
-	bool secondFrame = ((_data[9] & 0x20) != 0);
-	bool sequenced = ((_data[9] & 0x10) != 0);
-	uint8 sequenceCount = _data[9] & 0x0f;
-	uint8 nonceId = _data[_length-10];
-	uint8 const* pAuthentication = &_data[_length-9];		// 8 bytes in length
+#endif
+	uint8 decryptpacket[32];
+	memset(&decryptpacket[0], 0, 32);
+	uint32 encryptedpacketsize = _length-11-8;
+	uint8 encyptedpacket[32];
 
-	uint8 decryptpacket[_length-11];
-	if (aes_ofb_decrypt(&_data[10], decryptpacket, _length-11, iv, this->encrypt.cx) == EXIT_FAILURE) {
+	for (uint32 i = 0; i < 32; i++) {
+		if (i >= encryptedpacketsize) {
+			/* pad the remaining fields */
+			encyptedpacket[i] = 0;
+		} else {
+			encyptedpacket[i] = _data[9+i];
+		}
+	}
+	Log::Write(LogLevel_Debug, "Encrypted Packet Sizes: %d (Total) %d (Payload)", _length, encryptedpacketsize);
+	PrintHex("IV", iv, 16);
+	PrintHex("Encrypted", encyptedpacket, 16);
+	/* 8 - IV - 2 - Command Header */
+	PrintHex("Auth", &_data[8+encryptedpacketsize+2], 8);
+	aes_mode_reset(this->EncryptKey);
+#if 0
+	uint8_t iv[16] = {  0x81, 0x42, 0xd1, 0x51, 0xf1, 0x59, 0x3d, 0x70, 0xd5, 0xe3, 0x6c, 0xcb, 0x02, 0xd0, 0x3f, 0x5c,  /* */  };
+   	uint8_t pck[] = {  0x25, 0x68, 0x06, 0xc5, 0xb3, 0xee, 0x2c, 0x17, 0x26, 0x7e, 0xf0, 0x84, 0xd4, 0xc3, 0xba, 0xed, 0xe5, 0xb9, 0x55};
+	if (aes_ofb_decrypt(pck, decryptpacket, 19, iv, this->EncryptKey) == EXIT_FAILURE) {
 		Log::Write(LogLevel_Warning, "Failed to Decrypt Packet");
 		return false;
 	}
-#ifdef NDEBUG
-	char byteStr[16];
-	std::string str;
-	for( uint32 i=0; i<_length-11; ++i )
-	{
-		if( i )
-		{
-			str += ", ";
-		}
-
-		snprintf( byteStr, sizeof(byteStr), "0x%.2x", decryptpacket[i] );
-		str += byteStr;
+	PrintHex("Pck", decryptpacket, 19);
+#else
+	if (aes_ofb_decrypt(encyptedpacket, decryptpacket, encryptedpacketsize, iv, this->EncryptKey) == EXIT_FAILURE) {
+		Log::Write(LogLevel_Warning, "Failed to Decrypt Packet");
+		return false;
 	}
-	Log::Write(LogLevel_Info, "Decrypted Packet: %s", str.c_str());
+	PrintHex("Pck", decryptpacket, encryptedpacketsize);
 #endif
+	uint8 mac[32];
+	/* we have to regenerate the IV as the ofb decryption routine will alter it. */
+	createIVFromPacket_inbound(_data, iv);
 
-	UNUSED(secondFrame);
-	UNUSED(sequenced);
-	UNUSED(sequenceCount);
-	UNUSED(nonceId);
-	UNUSED(pAuthentication);
+	this->GenerateAuthentication(_data, _length, GetNodeId(), GetDriver()->GetNodeId(), iv, mac);
+	if (memcmp(&_data[8+encryptedpacketsize+2], mac, 8) != 0) {
+		Log::Write(LogLevel_Warning, "MAC Authentication of Packet Failed. Dropping");
+		return false;
+	}
+	/* XXX TODO: Check the Sequence Header Frame to see if this is the first part of a
+	 * message, or 2nd part, or a entire message.
+	 *
+	 * I havn't actually seen a Z-Wave Message thats too big to fit in a encrypted message
+	 * yet, so we will look at this if such a message actually exists!
+	 */
 
 
+	/* if the command class is us, send it back to our HandleMessage */
+	if (decryptpacket[1] == this->StaticGetCommandClassId()) {
+		this->HandleMsg(decryptpacket, encryptedpacketsize);
+	} else {
+		/* send to the Command Class for processing.... */
+		if( Node* node = GetNodeUnsafe() )
+		{
+			uint8 commandClassId = decryptpacket[1];
+
+			if( CommandClass* pCommandClass = node->GetCommandClass( commandClassId ) )
+			{
+				Log::Write( LogLevel_Info, GetNodeId(), "Received a SecurityCmd_MessageEncap from node %d for Command Class %s", GetNodeId(), pCommandClass->GetCommandClassName().c_str() );
+				pCommandClass->ReceivedCntIncr();
+				pCommandClass->HandleMsg( &_data[2], _length-2);
+			} else {
+				Log::Write( LogLevel_Info, GetNodeId(), "ApplicationCommandHandler - Unhandled Command Class 0x%.2x", decryptpacket[1] );
+			}
+		}
+	}
 	return true;
+
 }
 
 //-----------------------------------------------------------------------------
 // <Security::GenerateAuthentication>
 // Generate authentication data from a security-encrypted message
 //-----------------------------------------------------------------------------
-void Security::GenerateAuthentication
+bool Security::GenerateAuthentication
 (
 	uint8 const* _data,				// Starting from the command class command
 	uint32 const _length,
 	uint8 const _sendingNode,
 	uint8 const _receivingNode,
+	uint8 *iv,
 	uint8* _authentication			// 8-byte buffer that will be filled with the authentication data
 )
 {
 	// Build a buffer containing a 4-byte header and the encrypted
 	// message data, padded with zeros to a 16-byte boundary.
-	char buffer[256];
+	uint8 buffer[256];
+	uint8 tmpauth[16];
+	memset(buffer, 0, 256);
+	memset(tmpauth, 0, 16);
 
 	buffer[0] = _data[0];							// Security command class command
 	buffer[1] = _sendingNode;
 	buffer[2] = _receivingNode;
-	buffer[3] = _length - 18;						// Subtract 18 to account for the 9 security command class bytes that come before and after the encrypted data
-	memcpy( &buffer[4], &_data[9], _length-18 );	// Encrypted message
+	buffer[3] = _length - 19; // Subtract 19 to account for the 9 security command class bytes that come before and after the encrypted data
+	memcpy( &buffer[4], &_data[9], _length-19 );	// Encrypted message
 
-	// End of data = (_length-18) + 4.
-	uint32 i = _length-14;
+	uint8 bufsize = _length - 19 + 4; /* the size of buffer */
 
-	// Pad data with zeros to the next 16-byte boundary
-	while( i & 0x0f )
-	{
-		buffer[i] = 0;
-		i++;
+	PrintHex("Raw Auth (minus IV)", buffer, bufsize);
+	Log::Write(LogLevel_Debug, "Raw Auth (Minus IV) Size: %d (%d)", bufsize, bufsize+16);
+
+	aes_mode_reset(this->AuthKey);
+	/* encrypt the IV with ecb */
+	if (aes_ecb_encrypt(iv, tmpauth, 16, this->AuthKey) == EXIT_FAILURE) {
+		Log::Write(LogLevel_Warning, "Failed Initial ECB Encrypt of Auth Packet");
+		return false;
 	}
 
-	uint32 numBlocks = i/16;
+	/* our temporary holding var */
+	uint8 encpck[16];
 
-	// Create the initial authentication value from the initialization vector
-	//AES aes;
-	//aes.EncryptBlock( (const char*)m_initializationVector, (char *)_authentication );
-
-	// Combine with the header and message data
-	for( i=0; i<numBlocks; ++i )
-	{
-		// Xor the authentication with the block data
-		uint32 start = i<<4;
-		for( uint32 j=0; j<16; ++j )
-		{
-			_authentication[j] ^= buffer[start+j];
+	int block = 0;
+	/* reset our encpck temp var */
+	memset(encpck, 0, 16);
+	/* now xor the buffer with our encrypted IV */
+	for (int i = 0; i < bufsize; i++) {
+		encpck[block] = buffer[i];
+		block++;
+		/* if we hit a blocksize, then encrypt */
+		if (block == 16) {
+			for (int j = 0; j < 16; j++) {
+				/* here we do our xor */
+				tmpauth[j] = encpck[j] ^ tmpauth[j];
+				/* and reset encpck for good measure */
+				encpck[j] = 0;
+			}
+			/* reset our block counter back to 0 */
+			block = 0;
+			aes_mode_reset(this->AuthKey);
+			if (aes_ecb_encrypt(tmpauth, tmpauth, 16, this->AuthKey) == EXIT_FAILURE) {
+				Log::Write(LogLevel_Warning, "Failed Subsequent (%d) ECB Encrypt of Auth Packet", i);
+				return false;
+			}
 		}
-
-		// Encrypt the result
-		//aes.EncryptBlock( (const char *)_authentication, (char *)_authentication );
 	}
+	/* any left over data that isn't a full block size*/
+	if (block > 0) {
+		for (int i= 0; i < 16; i++) {
+			/* encpck from block to 16 is already gauranteed to be 0
+			 * so its safe to xor it with out tmpmac */
+			tmpauth[i] = encpck[i] ^ tmpauth[i];
+		}
+		aes_mode_reset(this->AuthKey);
+		if (aes_ecb_encrypt(tmpauth, tmpauth, 16, this->AuthKey) == EXIT_FAILURE) {
+			Log::Write(LogLevel_Warning, "Failed Final ECB Encrypt of Auth Packet");
+			return false;
+		}
+	}
+	/* we only care about the first 8 bytes of tmpauth as the mac */
+	PrintHex("Computed Auth", tmpauth, 8);
+	/* so only copy 8 bytes to the _authentication var */
+	memcpy(_authentication, tmpauth, 8);
+	return true;
 }
 
 //-----------------------------------------------------------------------------
@@ -720,7 +877,8 @@ void Security::SendNonceReport
 
 	/* this should be pretty random */
 	for (int i = 0; i < 8; i++) {
-		this->currentNonce[i] = (rand()%0xFF)+1;
+		//this->currentNonce[i] = (rand()%0xFF)+1;
+		this->currentNonce[i] = 0xAA;
 	}
 
 

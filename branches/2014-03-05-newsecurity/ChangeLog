@@ -1,0 +1,3 @@
+Version 1.1
+ - Fixed Command Class Recieved Message Counter when we are handling a
+   MultiInstanceMessageEncap Message (Justin)

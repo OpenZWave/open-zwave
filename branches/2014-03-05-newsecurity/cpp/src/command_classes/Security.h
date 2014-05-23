@@ -86,11 +86,13 @@ namespace OpenZWave
 		bool RequestValue( uint32 const _requestFlags, uint8 const _index, uint8 const _instance, Driver::MsgQueue const _queue);
 		void SendNonceReport();
 		void RequestNonce();
-		void GenerateAuthentication( uint8 const* _data, uint32 const _length, uint8 const _sendingNode, uint8 const _receivingNode, uint8* _authentication);
+		bool GenerateAuthentication( uint8 const* _data, uint32 const _length, uint8 const _sendingNode, uint8 const _receivingNode, uint8 *iv, uint8* _authentication);
 		bool DecryptMessage( uint8 const* _data, uint32 const _length );
 		bool EncryptMessage( uint8 const* _nonce );
 		void QueuePayload( SecurityPayload const& _payload );
-		bool createIVFromPacket(uint8 const* _data, uint8 *iv);
+		bool createIVFromPacket_inbound(uint8 const* _data, uint8 *iv);
+		bool createIVFromPacket_outbound(uint8 const* _data, uint8 *iv);
+
 		void SendNetworkKey();
 		void SetupNetworkKey();
 
@@ -103,9 +105,9 @@ namespace OpenZWave
 		uint8 currentNonce[8];
 		bool m_networkkeyset;
 
-		AESencrypt encrypt;
-		AESdecrypt decrypt;
-		const uint8 *nk;
+		aes_encrypt_ctx *AuthKey;
+		aes_encrypt_ctx *EncryptKey;
+		uint8 *nk;
 		uint8 *authkey;
 		uint8 *encryptkey;
 
