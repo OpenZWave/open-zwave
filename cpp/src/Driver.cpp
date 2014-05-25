@@ -2342,13 +2342,12 @@ void Driver::HandleGetSUCNodeIdResponse
 		bool enableSIS = true;
 		Options::Get()->GetOptionAsBool("EnableSIS", &enableSIS);
 		if (enableSIS) {
-			Log::Write( LogLevel_Info, "  No SUC, so we become SUC" );
+			Log::Write( LogLevel_Info, "  No SUC, so we become SIS" );
 
 			Msg* msg;
 			msg = new Msg( "Enable SUC", m_nodeId, REQUEST, FUNC_ID_ZW_ENABLE_SUC, false );
 			msg->Append( 1 );
-			msg->Append( SUC_FUNC_BASIC_SUC );			// SUC
-			msg->Append( SUC_FUNC_NODEID_SERVER );		// SIS
+			msg->Append( SUC_FUNC_NODEID_SERVER );		// SIS; SUC would be ZW_SUC_FUNC_BASIC_SUC
 			SendMsg( msg, MsgQueue_Send );
 
 			msg = new Msg( "Set SUC node ID", m_nodeId, REQUEST, FUNC_ID_ZW_SET_SUC_NODE_ID, false );
