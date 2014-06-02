@@ -46,6 +46,7 @@
 #include "ControllerReplication.h"
 #include "ManufacturerSpecific.h"
 #include "MultiInstance.h"
+#include "Security.h"
 #include "WakeUp.h"
 #include "NodeNaming.h"
 #include "NoOperation.h"
@@ -84,6 +85,7 @@ static char const* c_queryStageNames[] =
 	"WakeUp",
 	"ManufacturerSpecific1",
 	"NodeInfo",
+	"SecurityReport",
 	"ManufacturerSpecific2",
 	"Versions",
 	"Instances",
@@ -355,9 +357,37 @@ void Node::AdvanceQueries
 				else
 				{
 					// This stage has been done already, so move to the Manufacturer Specific stage
+					m_queryStage = QueryStage_SecurityReport;
+					m_queryRetries = 0;
+				}
+				break;
+			}
+			case QueryStage_SecurityReport:
+			{
+				/* For Devices that Support the Security Class, we have to request a list of
+				 * Command Classes that Require Security.
+				 */
+				Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_SecurityReport" );
+
+				Security* seccc = static_cast<Security*>( GetCommandClass( Security::StaticGetCommandClassId() ) );
+
+				if( seccc )
+				{
+					// start the process of requesting node state from this sleeping device
+					m_queryPending = seccc->Init();
+					/* Dont add a Notification Callback here, as this is a multipacket exchange.
+					 * the Security Command Class will automatically advance the Query Stage
+					 * when we recieve a SecurityCmd_SupportedReport
+					 */
+					addQSC = false;
+				}
+				else
+				{
+					// this is not a Security Device, so move onto the next querystage
 					m_queryStage = QueryStage_ManufacturerSpecific2;
 					m_queryRetries = 0;
 				}
+
 				break;
 			}
 			case QueryStage_ManufacturerSpecific2:
@@ -606,6 +636,7 @@ void Node::QueryStageComplete
 	QueryStage const _stage
 )
 {
+	printf("Stage: %x %x\n", _stage, m_queryStage);
 	// Check that we are actually on the specified stage
 	if( _stage != m_queryStage )
 	{
@@ -1214,6 +1245,66 @@ void Node::UpdateProtocolInfo
 	m_protocolInfoReceived = true;
 }
 
+void Node::SetSecuredClasses
+(
+		uint8 const* _data,
+		uint8 const _length
+)
+{
+	uint32 i;
+	Log::Write( LogLevel_Info, m_nodeId, "  Secured command classes for node %d:", m_nodeId );
+
+	bool afterMark = false;
+	for( i=0; i<_length; ++i )
+	{
+		if( _data[i] == 0xef )
+		{
+			// COMMAND_CLASS_MARK.
+			// Marks the end of the list of supported command classes.  The remaining classes
+			// are those that can be controlled by the device.  These classes are created
+			// without values.  Messages received cause notification events instead.
+			afterMark = true;
+			continue;
+		}
+		/* Check if this is a CC that is already registered with the node */
+		if (CommandClass *pCommandClass = GetCommandClass(_data[i]))
+		{
+			pCommandClass->SetSecured();
+			Log::Write( LogLevel_Info, m_nodeId, "    %s (Secured)", pCommandClass->GetCommandClassName().c_str() );
+		}
+		/* it might be a new CC we havn't seen as part of the NIF */
+		else if( CommandClasses::IsSupported( _data[i] ) )
+		{
+			if( CommandClass* pCommandClass = AddCommandClass( _data[i] ) )
+			{
+				// If this class came after the COMMAND_CLASS_MARK, then we do not create values.
+				if( afterMark )
+				{
+					pCommandClass->SetAfterMark();
+				}
+				pCommandClass->SetSecured();
+				// Start with an instance count of one.  If the device supports COMMMAND_CLASS_MULTI_INSTANCE
+				// then some command class instance counts will increase once the responses to the RequestState
+				// call at the end of this method have been processed.
+				pCommandClass->SetInstance( 1 );
+				Log::Write( LogLevel_Info, m_nodeId, "    %s (Secured)", pCommandClass->GetCommandClassName().c_str() );
+
+			}
+		}
+		else
+		{
+			Log::Write( LogLevel_Info, m_nodeId, "    Secure CommandClass 0x%.2x - NOT SUPPORTED", _data[i] );
+		}
+	}
+	Log::Write( LogLevel_Info, m_nodeId, "  UnSecured command classes for node %d:", m_nodeId );
+	for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
+	{
+		if (!it->second->IsSecured())
+			Log::Write( LogLevel_Info, m_nodeId, "    %s (Unsecured)", it->second->GetCommandClassName().c_str() );
+	}
+
+
+}
 //-----------------------------------------------------------------------------
 // <Node::UpdateNodeInfo>
 // Set up the command classes from the node info frame
@@ -2482,7 +2573,7 @@ bool Node::SetDeviceClasses
 	}
 
 	// Deal with sleeping devices
-	if( !m_listening )
+	if( !m_listening && !IsFrequentListeningDevice())
 	{
 		// Device does not always listen, so we need the WakeUp handler.  We can't
 		// wait for the command class list because the request for the command

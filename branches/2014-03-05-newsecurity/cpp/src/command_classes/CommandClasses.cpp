@@ -116,7 +116,16 @@ bool CommandClasses::IsSupported
 	// Test the bit representing the command class
 	return( (Get().m_supportedCommandClasses[_commandClassId>>5] & (1u<<(_commandClassId&0x1f))) != 0 );
 }
-
+string CommandClasses::GetName(
+	uint8 const _commandClassId
+)
+{
+	for (std::map<string,uint8>::iterator it = Get().m_namesToIDs.begin(); it != Get().m_namesToIDs.end(); it++) {
+		if (it->second == _commandClassId)
+			return it->first;
+	}
+	return string("Unknown");
+}
 //-----------------------------------------------------------------------------
 //	<CommandClasses::Register>
 //	Static method to register a command class creator method

@@ -106,8 +106,8 @@ static char const* c_controllerCommandNames[] =
 
 static char const* c_sendQueueNames[] =
 {
-	"Security",
 	"Command",
+	"Security",
 	"NoOp",
 	"Controller",
 	"WakeUp",
@@ -966,7 +966,7 @@ void Driver::SendMsg
 			CommandClass *cc = node->GetCommandClass(_msg->GetExpectedCommandClassId());
 			if ( cc->IsSecured() )
 			{
-				Log::Write( LogLevel_Detail, GetNodeNumber( _msg ), "Encapsulating Message For Command Class %s", cc->GetCommandClassName().c_str());
+				Log::Write( LogLevel_Detail, GetNodeNumber( _msg ), "Encrypting Message For Command Class %s", cc->GetCommandClassName().c_str());
 				security->SendMsg(_msg);
 				ReleaseNodes();
 				return;

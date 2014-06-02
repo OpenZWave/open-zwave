@@ -41,11 +41,6 @@
 #include "ValueByte.h"
 
 
-#include <openssl/conf.h>
-#include <openssl/evp.h>
-#include <openssl/err.h>
-
-
 using namespace OpenZWave;
 
 
@@ -130,6 +125,8 @@ Security::Security
 	uint8 const _nodeId
 ):
 	CommandClass( _homeId, _nodeId ),
+
+	m_queueMutex( new Mutex() ),
 	m_waitingForNonce(false),
 	m_sequenceCounter(0),
 	m_networkkeyset(false)
@@ -270,8 +267,27 @@ void Security::SetupNetworkKey
 	//exit(-1);
 
 #endif
-}
+	//uint8 tmpiv[8] = {  0x16, 0xc2, 0x96, 0x60, 0x46, 0x33, 0x69, 0x04 };
+	/* expected output = 0x06, 0xcc, 0xab, 0x1a, 0x86, 0x91, 0x39, 0xfd
+	 * expected Auth = 0x64, 0x42, 0x26, 0x59, 0xf3, 0x04, 0x72, 0x16
+	 * plaintext packet = 0x62, 0x03, 0x00, 0x10, 0x02, 0xfe, 0xfe
+	 */
+	//this->EncryptMessage(tmpiv);
 
+}
+bool Security::Init
+(
+)
+{
+	Msg* msg = new Msg( "SecurityCmd_SupportedGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+	msg->Append( GetNodeId() );
+	msg->Append( 2 );
+	msg->Append( GetCommandClassId() );
+	msg->Append( SecurityCmd_SupportedGet );
+	msg->Append( GetDriver()->GetTransmitOptions() );
+	this->SendMsg( msg);
+	return true;
+}
 //-----------------------------------------------------------------------------
 // <Security::RequestState>
 // Request current state from the device
@@ -286,16 +302,7 @@ bool Security::RequestState
 #if 0
 	if( _requestFlags & RequestFlag_Static )
 	{
-		Msg* msg = new Msg( "SecurityCmd_SchemeGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-		msg->Append( GetNodeId() );
-		msg->Append( 3 );
-		msg->Append( GetCommandClassId() );
-		msg->Append( SecurityCmd_SchemeGet );
-		msg->Append( (uint8)SecurityScheme_Zero );
-		msg->Append( GetDriver()->GetTransmitOptions() );
-		GetDriver()->SendMsg( msg, Driver::MsgQueue_Security);
-		//this->RequestNonce();
-		return true;
+
 	}
 	return false;
 #endif
@@ -315,6 +322,22 @@ bool Security::RequestValue
 )
 {
 	Log::Write(LogLevel_Info, "Got a RequestValue Call");
+	return true;
+}
+
+
+bool Security::HandleSupportedReport
+(
+	uint8 const* _data,
+	uint32 const _length
+)
+{
+
+	PrintHex("Security Classes", _data, _length);
+	GetNodeUnsafe()->SetSecuredClasses(_data, _length);
+	/* advance the Query Stage */
+	GetNodeUnsafe()->QueryStageComplete(Node::QueryStage_SecurityReport);
+	GetNodeUnsafe()->AdvanceQueries();
 	return true;
 }
 
@@ -343,6 +366,7 @@ bool Security::HandleMsg
 			 * Command Classes created after the Discovery Phase is completed!
 			 */
 			Log::Write(LogLevel_Info, "Received SecurityCmd_SupportedReport from node %d", GetNodeId() );
+			HandleSupportedReport(&_data[2], _length-2);
 			break;
 		}
 		case SecurityCmd_SchemeReport:
@@ -410,6 +434,7 @@ bool Security::HandleMsg
 			 */
 			Log::Write(LogLevel_Info,  "Received SecurityCmd_NonceReport from node %d", GetNodeId() );
 			EncryptMessage( &_data[1] );
+			m_waitingForNonce = false;
 			break;
 		}
 		case SecurityCmd_MessageEncap:
@@ -471,25 +496,25 @@ void Security::SendMsg
 	if( length > 28 )
 	{
 		// Message must be split into two parts
-		struct SecurityPayload payload1;
-		payload1.m_length = 28;
-		payload1.m_part = 1;
-		memcpy( payload1.m_data, &buffer[6], payload1.m_length );
+		struct SecurityPayload *payload1 = new SecurityPayload;
+		payload1->m_length = 28;
+		payload1->m_part = 1;
+		memcpy( payload1->m_data, &buffer[6], payload1->m_length );
 		QueuePayload( payload1 );
 
-		struct SecurityPayload payload2;
-		payload2.m_length = length-28;
-		payload2.m_part = 2;
-		memcpy( payload2.m_data, &buffer[34], payload2.m_length );
+		struct SecurityPayload *payload2 = new SecurityPayload;
+		payload2->m_length = length-28;
+		payload2->m_part = 2;
+		memcpy( payload2->m_data, &buffer[34], payload2->m_length );
 		QueuePayload( payload2 );
 	}
 	else
 	{
 		// The entire message can be encapsulated as one
-		struct SecurityPayload payload;
-		payload.m_length = length;
-		payload.m_part = 0;				// Zero means not split into separate messages
-		memcpy( payload.m_data, &buffer[6], payload.m_length );
+		struct SecurityPayload *payload = new SecurityPayload;
+		payload->m_length = length;
+		payload->m_part = 0;				// Zero means not split into separate messages
+		memcpy( payload->m_data, &buffer[6], payload->m_length );
 		QueuePayload( payload );
 	}
 }
@@ -501,7 +526,7 @@ void Security::SendMsg
 //-----------------------------------------------------------------------------
 void Security::QueuePayload
 (
-	SecurityPayload const& _payload
+	SecurityPayload *_payload
 )
 {
 	m_queueMutex->Lock();
@@ -514,7 +539,7 @@ void Security::QueuePayload
 		RequestNonce();
 	}
 
-	m_queueMutex->Release();
+	m_queueMutex->Unlock();
 }
 
 
@@ -527,6 +552,7 @@ bool Security::EncryptMessage
 	uint8 const* _nonce
 )
 {
+#if 1
 	if( m_nonceTimer.GetMilliseconds() > 10000 )
 	{
 		// The nonce was  not received within 10 seconds
@@ -544,24 +570,35 @@ bool Security::EncryptMessage
 		return false;
 	}
 
-	struct SecurityPayload const& payload = m_queue.front();
+	struct SecurityPayload * payload = m_queue.front();
 	uint32 queueSize = m_queue.size();
-	m_queueMutex->Release();
-
+	m_queueMutex->Unlock();
+#else
+	uint32 queueSize = m_queue.size();
+	struct SecurityPayload payload;
+	payload.m_length = 7;
+	payload.m_part = 0;
+	uint8 tmpdata[7] = {0x62, 0x03, 0x00, 0x10, 0x02, 0xfe, 0xfe};
+	for (int i = 0; i < payload.m_length; i++)
+		payload.m_data[i] = tmpdata[i];
+	printf("\n\n");
+#endif
 	// Encapsulate the message fragment
 	Msg* msg = new Msg( (queueSize>1) ? "SecurityCmd_MessageEncapNonceGet" : "SecurityCmd_MessageEncap", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 	msg->Append( GetNodeId() );
-	msg->Append( payload.m_length + 20 );
+	msg->Append( payload->m_length + 20 );
 	msg->Append( GetCommandClassId() );
 	msg->Append( (queueSize>1) ? SecurityCmd_MessageEncapNonceGet : SecurityCmd_MessageEncap );
-
+	/* if its a MessageEncapNonceGet then NONCE is automatically sent after the device recieves this message */
+	if (queueSize>1) m_waitingForNonce = true;
 	/* create the iv
 	 *
 	 */
 	uint8 initializationVector[16];
 	/* the first 8 bytes of a outgoing IV are random */
 	for (int i = 0; i < 8; i++) {
-		initializationVector[i] = (rand()%0xFF)+1;
+		//initializationVector[i] = (rand()%0xFF)+1;
+		initializationVector[i] = 0xAA;
 	}
 	/* the remaining 8 bytes are the NONCE we got from the device */
 	for (int i = 0; i < 8; i++) {
@@ -580,34 +617,56 @@ bool Security::EncryptMessage
 
 	// Append the sequence data
 	uint8 sequence = 0;
-	if( payload.m_part == 0 )
+	if( payload->m_part == 0 )
 	{
 		sequence = 0;
 	}
-	else if( payload.m_part == 1 )
+	else if( payload->m_part == 1 )
 	{
 		sequence = (++m_sequenceCounter) & 0x0f;
 		sequence |= 0x10;		// Sequenced, first frame
 	}
-	if( payload.m_part == 2 )
+	if( payload->m_part == 2 )
 	{
 		sequence = m_sequenceCounter & 0x0f;
 		sequence |= 0x30;		// Sequenced, second frame
 	}
-
-	msg->Append( sequence );
+	uint8 plaintextmsg[payload->m_length+1];
+	plaintextmsg[0] = sequence;
+	for (int i = 0; i < payload->m_length; i++)
+		plaintextmsg[i+1] = payload->m_data[i];
 
 	/* Append the message payload after encrypting it with AES-OFB (key is EncryptPassword,
 	 * full IV (16 bytes - 8 Random and 8 NONCE) and payload.m_data
 	 */
-	uint8 encryptedpayload[payload.m_length];
-	if (aes_ofb_encrypt(payload.m_data, encryptedpayload, payload.m_length, initializationVector, this->EncryptKey) == EXIT_FAILURE) {
+	PrintHex("Input Packet:", plaintextmsg, payload->m_length+1);
+	PrintHex("IV:", initializationVector, 16);
+	uint8 encryptedpayload[payload->m_length+1];
+	aes_mode_reset(this->EncryptKey);
+	if (aes_ofb_encrypt(plaintextmsg, encryptedpayload, payload->m_length+1, initializationVector, this->EncryptKey) == EXIT_FAILURE) {
 		Log::Write(LogLevel_Warning, "Failed to Encrypt Packet");
 		return false;
 	}
-
-
-	for(int i=0; i<payload.m_length; ++i )
+	PrintHex("Encrypted Output", encryptedpayload, payload->m_length+1);
+#if 1
+	/* the first 8 bytes of a outgoing IV are random */
+	for (int i = 0; i < 8; i++) {
+		//initializationVector[i] = (rand()%0xFF)+1;
+		initializationVector[i] = 0xAA;
+	}
+	/* the remaining 8 bytes are the NONCE we got from the device */
+	for (int i = 0; i < 8; i++) {
+		initializationVector[8+i] = _nonce[i];
+	}
+	aes_mode_reset(this->EncryptKey);
+	uint8 tmpoutput[16];
+	if (aes_ofb_encrypt(encryptedpayload, tmpoutput, payload->m_length+1, initializationVector, this->EncryptKey) == EXIT_FAILURE) {
+		Log::Write(LogLevel_Warning, "Failed to Encrypt Packet");
+		return false;
+	}
+	PrintHex("tmp output", tmpoutput, payload->m_length+1);
+#endif
+	for(int i=0; i<payload->m_length+1; ++i )
 	{
 		msg->Append( encryptedpayload[i] );
 	}
@@ -619,16 +678,28 @@ bool Security::EncryptMessage
 	 * Full IV (16 bytes - 8 random and 8 NONCE) and sequence|SrcNode|DstNode|payload.m_length|payload.m_data
 	 *
 	 */
+	/* Regenerate IV */
+	/* the first 8 bytes of a outgoing IV are random */
+	for (int i = 0; i < 8; i++) {
+		//initializationVector[i] = (rand()%0xFF)+1;
+		initializationVector[i] = 0xAA;
+	}
+	/* the remaining 8 bytes are the NONCE we got from the device */
+	for (int i = 0; i < 8; i++) {
+		initializationVector[8+i] = _nonce[i];
+	}
 	uint8 mac[8];
-	this->GenerateAuthentication(msg->GetBuffer(), msg->GetLength(), GetDriver()->GetNodeId(), GetNodeId(), initializationVector, mac);
+	this->GenerateAuthentication(&msg->GetBuffer()[7], msg->GetLength()+2, GetDriver()->GetNodeId(), GetNodeId(), initializationVector, mac);
 	for(int i=0; i<8; ++i )
 	{
 		msg->Append( mac[i] );
 	}
-
-	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	this->SendMsg(msg);
-
+	PrintHex("Auth", mac, 8);
+	msg->Append( GetDriver()->GetTransmitOptions() );
+	PrintHex("Outgoing", msg->GetBuffer(), msg->GetLength());
+	//exit(-1);
+	GetDriver()->SendMsg(msg, Driver::MsgQueue_Security);
+	delete payload;
 	return true;
 }
 
@@ -714,7 +785,7 @@ bool Security::DecryptMessage
 		Log::Write(LogLevel_Warning, "Failed to Decrypt Packet");
 		return false;
 	}
-	PrintHex("Pck", decryptpacket, encryptedpacketsize);
+	PrintHex("Decrypted", decryptpacket, encryptedpacketsize);
 #endif
 	uint8 mac[32];
 	/* we have to regenerate the IV as the ofb decryption routine will alter it. */
@@ -732,10 +803,11 @@ bool Security::DecryptMessage
 	 * yet, so we will look at this if such a message actually exists!
 	 */
 
-
+printf("%x %x\n", decryptpacket[1], this->StaticGetCommandClassId());
 	/* if the command class is us, send it back to our HandleMessage */
 	if (decryptpacket[1] == this->StaticGetCommandClassId()) {
-		this->HandleMsg(decryptpacket, encryptedpacketsize);
+		/* drop the sequence header, and the command class when we pass through to our handler */
+		this->HandleMsg(&decryptpacket[2], encryptedpacketsize-2);
 	} else {
 		/* send to the Command Class for processing.... */
 		if( Node* node = GetNodeUnsafe() )
@@ -776,7 +848,6 @@ bool Security::GenerateAuthentication
 	uint8 tmpauth[16];
 	memset(buffer, 0, 256);
 	memset(tmpauth, 0, 16);
-
 	buffer[0] = _data[0];							// Security command class command
 	buffer[1] = _sendingNode;
 	buffer[2] = _receivingNode;
