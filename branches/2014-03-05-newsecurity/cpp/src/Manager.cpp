@@ -1388,8 +1388,8 @@ bool Manager::IsNodeFailed
 	        if( Node* node = driver->GetNode( _nodeId ) )
 	        {
 			result = !node->IsNodeAlive();
+        		driver->ReleaseNodes();
 		}
-		driver->ReleaseNodes();
 	}
 	return result;
 }
@@ -1410,8 +1410,8 @@ string Manager::GetNodeQueryStage
 	        if( Node* node = driver->GetNode( _nodeId ) )
 	        {
 			result = node->GetQueryStageName( node->GetCurrentQueryStage() );
+        		driver->ReleaseNodes();
 		}
-		driver->ReleaseNodes();
 	}
 	return result;
 }

@@ -1,3 +1,10 @@
 Version 1.1
  - Fixed Command Class Recieved Message Counter when we are handling a
    MultiInstanceMessageEncap Message (Justin)
+ - Fixed Issue 310 - Unbalanced Lock/Release in Manager::IsNodeFailed and
+   Manager::GetNodeQueryStage (Justin)
+ - For Sleeping Devices - Do Not automatically add WakeUp Class to these
+   devices if they advertise themselves as FrequentListening. This matches
+   the Logic in the QueryStage functions where we skip querying the Device
+   for Wakeup Configuration if its set as FLiRS. Needs some testing (Justin)
+ 
