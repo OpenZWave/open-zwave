@@ -636,7 +636,6 @@ void Node::QueryStageComplete
 	QueryStage const _stage
 )
 {
-	printf("Stage: %x %x\n", _stage, m_queryStage);
 	// Check that we are actually on the specified stage
 	if( _stage != m_queryStage )
 	{

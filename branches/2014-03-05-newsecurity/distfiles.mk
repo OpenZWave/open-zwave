@@ -129,12 +129,14 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     cpp/hidapi/Makefile.am \
     cpp/src/command_classes/SceneActivation.h \
     config/trane/TZEMT400BB32MAA.xml \
+    cpp/src/aes/aes_modes.c \
     cpp/build/support.mk \
     cpp/hidapi/linux/.gitignore \
     cpp/src/command_classes/Battery.h \
     dotnet/examples/OZWForm/src/Properties/Resources.resx \
     config/aeon_labs/ses.xml \
     config/horstmann/hrt4zw.xml \
+    cpp/src/aes/brg_types.h \
     cpp/src/platform/Thread.h \
     dotnet/examples/OZWForm/src/ControllerCommandDlg.Designer.cs \
     config/homeseer/ztroller.xml \
@@ -148,6 +150,7 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     dotnet/examples/OZWForm/src/ValuePanel.Designer.cs \
     cpp/src/Utils.cpp \
     cpp/src/command_classes/SensorMultilevel.h \
+    cpp/src/command_classes/DoorLock.cpp \
     dotnet/examples/OZWForm/src/ValuePanel.cs \
     cpp/src/platform/windows/ThreadImpl.cpp \
     cpp/src/command_classes/SwitchToggleBinary.cpp \
@@ -163,10 +166,12 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     cpp/tinyxml/tinyxmlerror.cpp \
     cpp/src/command_classes/SwitchAll.cpp \
     dotnet/examples/OZWForm/src/ValuePanelBool.resx \
+    cpp/src/aes/aestab.h \
     cpp/src/value_classes/ValueDecimal.h \
     config/duwi/ZWES1000.xml \
     cpp/hidapi/AUTHORS.txt \
     cpp/src/platform/windows/LogImpl.cpp \
+    cpp/src/command_classes/Security.h \
     cpp/src/value_classes/ValueByte.cpp \
     config/options.xsd \
     cpp/src/DoxygenMain.h \
@@ -175,6 +180,7 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     dotnet/examples/OZWForm/src/Node.cs \
     cpp/hidapi/windows/Makefile-manual \
     cpp/src/platform/FileOps.h \
+    cpp/src/command_classes/DoorLock.h \
     cpp/src/platform/unix/MutexImpl.h \
     dotnet/examples/OZWForm/src/ValuePanelByte.cs \
     cpp/hidapi/pc/hidapi.pc.in \
@@ -183,6 +189,7 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     cpp/src/Scene.cpp \
     cpp/src/command_classes/Lock.cpp \
     cpp/tinyxml/tinystr.h \
+    cpp/src/aes/aescrypt.c \
     cpp/src/value_classes/ValueString.h \
     dist.mk \
     cpp/hidapi/LICENSE.txt \
@@ -244,6 +251,7 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     cpp/src/command_classes/SwitchAll.h \
     cpp/src/platform/Event.cpp \
     cpp/hidapi/libusb/hid.c \
+    cpp/src/aes/aescpp.h \
     docs/general/DoxygenStepByStep.html \
     cpp/src/platform/windows/LogImpl.h \
     cpp/src/value_classes/ValueButton.h \
@@ -271,13 +279,16 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     dotnet/src/ZWManager.cpp \
     config/manufacturer_specific.xsd \
     cpp/src/command_classes/Alarm.cpp \
+    cpp/src/aes/aeskey.c \
     cpp/hidapi/pc/hidapi-hidraw.pc.in \
     cpp/hidapi/windows/hid.cpp \
     config/greenwave/powernode1.xml \
     config/leviton/vrcpg.xml \
     cpp/build/windows/installer/buildall.bat \
+    ChangeLog \
     cpp/examples/windows/MinOZW/vs2010/MinOZW.vcxproj.filters \
     cpp/hidapi/udev/99-hid.rules \
+    cpp/src/aes/aes.h \
     cpp/hidapi/hidapi/hidapi.h \
     cpp/src/command_classes/MultiInstance.h \
     config/frostdale/fdn2nxx.xml \
@@ -306,6 +317,7 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     config/leviton/rzi10.xml \
     docs/general/MakingDocumentation.html \
     config/ge/dimmer_module.xml \
+    cpp/src/aes/aes.txt \
     cpp/src/command_classes/Clock.cpp \
     config/everspring/st814.xml \
     cpp/build/windows/vs2008/OpenZWave.vcproj \
@@ -343,8 +355,8 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     cpp/hidapi/windows/Makefile.am \
     dotnet/examples/OZWForm/src/NodeForm.cs \
     cpp/src/platform/TimeStamp.h \
-    cpp/src/command_classes/SensorBinary.h \
     dotnet/examples/OZWForm/build/vs2008/OZWForm.csproj \
+    cpp/src/command_classes/SensorBinary.h \
     debian/shlibs.libopenzwave1.0 \
     cpp/build/windows/vs2010/OpenZWave.sln \
     debian/libopenzwave1.0.links \
@@ -382,6 +394,7 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     dotnet/build/vs2008/OpenZWaveDotNet.sln \
     debian/libopenzwave1.0.lintian-overrides \
     config/rcs/therm0007.xml \
+    cpp/src/aes/brg_endian.h \
     cpp/hidapi/pc/hidapi-libusb.pc.in \
     cpp/src/command_classes/Indicator.h \
     dotnet/examples/OZWForm/src/ValuePanelButton.cs \
@@ -391,7 +404,6 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     dotnet/src/ZWOptions.cpp \
     cpp/src/command_classes/CRC16Encap.h \
     debian/openzwave.install \
-    config/eurotronic/eur_stellaz.xml \
     dotnet/examples/OZWForm/src/ConfigurationWakeUpDlg.cs \
     cpp/hidapi/linux/Makefile.am \
     config/wenzhou/tz88.xml \
@@ -417,13 +429,16 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     dotnet/examples/OZWForm/src/ValuePanelDecimal.cs \
     cpp/src/command_classes/NodeNaming.cpp \
     dotnet/examples/OZWForm/src/MainForm.Designer.cs \
+    cpp/src/aes/aestab.c \
     cpp/src/platform/unix/ThreadImpl.h \
     dotnet/src/ZWValueID.h \
     config/aeon_labs/recessed_doorsensor.xml \
     debian/changelog \
     cpp/src/Node.h \
+    cpp/src/command_classes/Security.cpp \
     dotnet/build/vs2010/OpenZWaveDotNet.vcxproj \
     cpp/src/platform/Stream.cpp \
+    cpp/src/aes/aesopt.h \
     cpp/hidapi/windows/ddk_build/sources \
     config/fibaro/fgss101.xml \
     cpp/examples/windows/MinOZW/Main.cpp \

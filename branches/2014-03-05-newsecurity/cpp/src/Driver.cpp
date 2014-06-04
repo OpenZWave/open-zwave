@@ -963,7 +963,7 @@ void Driver::SendMsg
 		/* if the node Supports the Security Class - check if this message is meant to be encapsulated */
 		if ( Security* security = static_cast<Security *>( node->GetCommandClass(Security::StaticGetCommandClassId() ) ) )
 		{
-			CommandClass *cc = node->GetCommandClass(_msg->GetExpectedCommandClassId());
+			CommandClass *cc = node->GetCommandClass(_msg->GetSendingCommandClass());
 			if ( cc->IsSecured() )
 			{
 				Log::Write( LogLevel_Detail, GetNodeNumber( _msg ), "Encrypting Message For Command Class %s", cc->GetCommandClassName().c_str());

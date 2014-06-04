@@ -99,9 +99,6 @@ void OnNotification
 )
 {
 	// Must do this inside a critical section to avoid conflicts with the main thread
-	Manager::Get()->ResetController( _notification->GetHomeId());
-	sleep(10);
-	return;
 	pthread_mutex_lock( &g_criticalSection );
 
 	switch( _notification->GetType() )
@@ -324,8 +321,6 @@ int main( int argc, char* argv[] )
 	{
 
 		Manager::Get()->WriteConfig( g_homeId );
-		        Manager::Get()->BeginControllerCommand( g_homeId, Driver::ControllerCommand_AddDevice, NULL, NULL, true, 0xff );
-      		        temp = true;
 
 
 		// The section below demonstrates setting up polling for a variable.  In this simple

@@ -496,13 +496,13 @@ void Security::SendMsg
 	if( length > 28 )
 	{
 		// Message must be split into two parts
-		struct SecurityPayload *payload1 = new SecurityPayload;
+		SecurityPayload *payload1 = new SecurityPayload();
 		payload1->m_length = 28;
 		payload1->m_part = 1;
 		memcpy( payload1->m_data, &buffer[6], payload1->m_length );
 		QueuePayload( payload1 );
 
-		struct SecurityPayload *payload2 = new SecurityPayload;
+		SecurityPayload *payload2 = new SecurityPayload();
 		payload2->m_length = length-28;
 		payload2->m_part = 2;
 		memcpy( payload2->m_data, &buffer[34], payload2->m_length );
@@ -511,7 +511,7 @@ void Security::SendMsg
 	else
 	{
 		// The entire message can be encapsulated as one
-		struct SecurityPayload *payload = new SecurityPayload;
+		SecurityPayload *payload = new SecurityPayload();
 		payload->m_length = length;
 		payload->m_part = 0;				// Zero means not split into separate messages
 		memcpy( payload->m_data, &buffer[6], payload->m_length );
@@ -570,8 +570,9 @@ bool Security::EncryptMessage
 		return false;
 	}
 
-	struct SecurityPayload * payload = m_queue.front();
-	uint32 queueSize = m_queue.size();
+	SecurityPayload * payload = m_queue.front();
+	m_queue.pop_front();
+	//uint32 queueSize = m_queue.size();
 	m_queueMutex->Unlock();
 #else
 	uint32 queueSize = m_queue.size();
@@ -581,16 +582,16 @@ bool Security::EncryptMessage
 	uint8 tmpdata[7] = {0x62, 0x03, 0x00, 0x10, 0x02, 0xfe, 0xfe};
 	for (int i = 0; i < payload.m_length; i++)
 		payload.m_data[i] = tmpdata[i];
-	printf("\n\n");
 #endif
 	// Encapsulate the message fragment
-	Msg* msg = new Msg( (queueSize>1) ? "SecurityCmd_MessageEncapNonceGet" : "SecurityCmd_MessageEncap", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+	/* MessageEncapNonceGet doesn't seem to work */
+	//Msg* msg = new Msg( (queueSize>1) ? "SecurityCmd_MessageEncapNonceGet" : "SecurityCmd_MessageEncap", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+	Msg* msg = new Msg( "SecurityCmd_MessageEncap", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 	msg->Append( GetNodeId() );
 	msg->Append( payload->m_length + 20 );
 	msg->Append( GetCommandClassId() );
-	msg->Append( (queueSize>1) ? SecurityCmd_MessageEncapNonceGet : SecurityCmd_MessageEncap );
-	/* if its a MessageEncapNonceGet then NONCE is automatically sent after the device recieves this message */
-	if (queueSize>1) m_waitingForNonce = true;
+	//msg->Append( (queueSize>1) ? SecurityCmd_MessageEncapNonceGet : SecurityCmd_MessageEncap );
+	msg->Append( SecurityCmd_MessageEncap );
 	/* create the iv
 	 *
 	 */
@@ -699,6 +700,11 @@ bool Security::EncryptMessage
 	PrintHex("Outgoing", msg->GetBuffer(), msg->GetLength());
 	//exit(-1);
 	GetDriver()->SendMsg(msg, Driver::MsgQueue_Security);
+	/* if its a MessageEncapNonceGet then NONCE is automatically sent after the device recieves this message */
+//	if (queueSize>1) {
+//		RequestNonce();
+//	}
+
 	delete payload;
 	return true;
 }
@@ -783,6 +789,8 @@ bool Security::DecryptMessage
 #else
 	if (aes_ofb_decrypt(encyptedpacket, decryptpacket, encryptedpacketsize, iv, this->EncryptKey) == EXIT_FAILURE) {
 		Log::Write(LogLevel_Warning, "Failed to Decrypt Packet");
+		if (m_queue.size() > 1)
+			RequestNonce();
 		return false;
 	}
 	PrintHex("Decrypted", decryptpacket, encryptedpacketsize);
@@ -794,6 +802,8 @@ bool Security::DecryptMessage
 	this->GenerateAuthentication(_data, _length, GetNodeId(), GetDriver()->GetNodeId(), iv, mac);
 	if (memcmp(&_data[8+encryptedpacketsize+2], mac, 8) != 0) {
 		Log::Write(LogLevel_Warning, "MAC Authentication of Packet Failed. Dropping");
+		if (m_queue.size() > 1)
+			RequestNonce();
 		return false;
 	}
 	/* XXX TODO: Check the Sequence Header Frame to see if this is the first part of a
@@ -803,7 +813,6 @@ bool Security::DecryptMessage
 	 * yet, so we will look at this if such a message actually exists!
 	 */
 
-printf("%x %x\n", decryptpacket[1], this->StaticGetCommandClassId());
 	/* if the command class is us, send it back to our HandleMessage */
 	if (decryptpacket[1] == this->StaticGetCommandClassId()) {
 		/* drop the sequence header, and the command class when we pass through to our handler */
@@ -818,12 +827,15 @@ printf("%x %x\n", decryptpacket[1], this->StaticGetCommandClassId());
 			{
 				Log::Write( LogLevel_Info, GetNodeId(), "Received a SecurityCmd_MessageEncap from node %d for Command Class %s", GetNodeId(), pCommandClass->GetCommandClassName().c_str() );
 				pCommandClass->ReceivedCntIncr();
-				pCommandClass->HandleMsg( &_data[2], _length-2);
+				pCommandClass->HandleMsg( &decryptpacket[2], encryptedpacketsize-2);
 			} else {
 				Log::Write( LogLevel_Info, GetNodeId(), "ApplicationCommandHandler - Unhandled Command Class 0x%.2x", decryptpacket[1] );
 			}
 		}
 	}
+	if (m_queue.size() > 0)
+		RequestNonce();
+
 	return true;
 
 }
@@ -921,6 +933,8 @@ void Security::RequestNonce
 (
 )
 {
+	if (m_waitingForNonce == true)
+		return;
 	m_waitingForNonce = true;
 
 	Msg* msg = new Msg( "SecurityCmd_NonceGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
