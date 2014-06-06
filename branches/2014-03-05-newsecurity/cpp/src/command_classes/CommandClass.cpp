@@ -239,6 +239,11 @@ void CommandClass::ReadXML
 		m_getSupported = !strcmp( str, "true" );
 	}
 
+	str = _ccElement->Attribute( "issecured" );
+	if( str )
+	{
+		m_isSecured = !strcmp( str, "true" );
+	}
 	// Setting the instance count will create all the values.
 	SetInstances( instances );
 
@@ -320,6 +325,11 @@ void CommandClass::WriteXML
 	{
 		_ccElement->SetAttribute( "getsupported", "false" );
 	}
+	if ( m_isSecured )
+        {
+                _ccElement->SetAttribute( "issecured", "true" );
+        }
+
 
 	// Write out the instances
 	for( Bitfield::Iterator it = m_instances.Begin(); it != m_instances.End(); ++ it )
