@@ -102,6 +102,7 @@ uint8_t SecuritySchemes[1][16] = {
 
 uint8_t EncryptPassword[16] = {0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA};
 uint8_t AuthPassword[16] = {0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55};
+uint8 tmpNK[] = {0x5b, 0x99, 0xfd, 0xf1, 0x66, 0x56, 0xc3, 0xef, 0xcc, 0xf6, 0xf1, 0x6c, 0xc9, 0x26, 0x84, 0xf4};
 
 void PrintHex(std::string prefix, uint8_t const *data, uint32 const length) {
 	char byteStr[16];
@@ -158,12 +159,6 @@ void Security::ReadXML
 )
 {
 	CommandClass::ReadXML( _ccElement );
-
-	char const* str = _ccElement->Attribute("NetworkKeySet");
-	if( str )
-	{
-		m_networkkeyset = !strcmp( str, "true");
-	}
 }
 
 //-----------------------------------------------------------------------------
@@ -176,11 +171,6 @@ void Security::WriteXML
 )
 {
 	CommandClass::WriteXML( _ccElement );
-
-	if( m_networkkeyset )
-	{
-		_ccElement->SetAttribute( "NetworkKeySet", "true" );
-	}
 }
 
 
@@ -206,9 +196,16 @@ void Security::SetupNetworkKey
 
 	this->nk = GetDriver->GetNetworkKey();
 #endif
-	uint8 tmpNK[] = {0x5b, 0x99, 0xfd, 0xf1, 0x66, 0x56, 0xc3, 0xef, 0xcc, 0xf6, 0xf1, 0x6c, 0xc9, 0x26, 0x84, 0xf4};
-	this->nk = tmpNK;
-
+	if (GetNodeUnsafe()->IsAddingNode() && m_networkkeyset == false)
+		this->nk = SecuritySchemes[0];
+	else {
+#if 1
+		this->nk = tmpNK;
+#else
+		this->nk = GetDriver->GetNetworkKey();
+#endif
+	}
+	PrintHex("Network Key", this->nk, 16);
 	this->AuthKey = new aes_encrypt_ctx;
 	this->EncryptKey = new aes_encrypt_ctx;
 
@@ -279,13 +276,29 @@ bool Security::Init
 (
 )
 {
-	Msg* msg = new Msg( "SecurityCmd_SupportedGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-	msg->Append( GetNodeId() );
-	msg->Append( 2 );
-	msg->Append( GetCommandClassId() );
-	msg->Append( SecurityCmd_SupportedGet );
-	msg->Append( GetDriver()->GetTransmitOptions() );
-	this->SendMsg( msg);
+	/* if we are adding this node, then instead to a SchemeGet Command instead - This
+	 * will start the Network Key Exchange
+	 */
+	if (GetNodeUnsafe()->IsAddingNode()) {
+		Msg * msg = new Msg ("SecurityCmd_SchemeGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		msg->Append( GetNodeId() );
+		msg->Append( 3 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( SecurityCmd_SchemeGet );
+		msg->Append( 0 );
+		msg->Append( GetDriver()->GetTransmitOptions() );
+		/* SchemeGet is unencrypted */
+		GetDriver()->SendMsg(msg, Driver::MsgQueue_Security);
+	} else {
+		Msg* msg = new Msg( "SecurityCmd_SupportedGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		msg->Append( GetNodeId() );
+		msg->Append( 2 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( SecurityCmd_SupportedGet );
+		msg->Append( GetDriver()->GetTransmitOptions() );
+		this->SendMsg( msg);
+	}
+
 	return true;
 }
 //-----------------------------------------------------------------------------
@@ -377,11 +390,23 @@ bool Security::HandleMsg
 			{
 				/* We're good to go.  We now should send our NetworkKey to the device if this is the first
 				 * time we have seen it
-				 * XXX TODO: a flag to track if its already had the NetworkKey set and saved to our XML
-				 * file
 				 */
 				Log::Write(LogLevel_Info, "    Security scheme agreed." );
-				this->RequestNonce();
+				/* create the NetworkKey Packet. EncryptMessage will encrypt it for us (And request the NONCE) */
+				Msg * msg = new Msg ("SecurityCmd_NetworkKeySet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+				msg->Append( GetNodeId() );
+				msg->Append( 18 );
+				msg->Append( GetCommandClassId() );
+				msg->Append( SecurityCmd_NetworkKeySet );
+				for (int i = 0; i < 16; i++)
+#if 1
+					msg->Append(tmpNK[i]);
+#else
+					msg->append(GetDriver()->GetNetworkKey[i])
+#endif
+				msg->Append( GetDriver()->GetTransmitOptions() );
+				this->SendMsg( msg);
+
 			}
 			else
 			{
@@ -406,8 +431,15 @@ bool Security::HandleMsg
 			 * and thus should set the Flag referenced in SecurityCmd_SchemeReport
 			 */
 			Log::Write(LogLevel_Info,  "Received SecurityCmd_NetworkKeyVerify from node %d", GetNodeId() );
-			this->m_networkkeyset = true;
-			SetupNetworkKey();
+			/* now as for our SupportedGet */
+			Msg* msg = new Msg( "SecurityCmd_SupportedGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+			msg->Append( GetNodeId() );
+			msg->Append( 2 );
+			msg->Append( GetCommandClassId() );
+			msg->Append( SecurityCmd_SupportedGet );
+			msg->Append( GetDriver()->GetTransmitOptions() );
+			this->SendMsg( msg);
+
 			break;
 		}
 		case SecurityCmd_SchemeInherit:
@@ -704,6 +736,15 @@ bool Security::EncryptMessage
 //	if (queueSize>1) {
 //		RequestNonce();
 //	}
+
+	/* finally, if the message we just sent is a NetworkKeySet, then we need to reset our Network Key here
+	 * as the reply we will get back will be encrypted with the new Network key
+	 */
+	if ((this->m_networkkeyset == false) && (payload->m_data[0] == 0x98) && (payload->m_data[1] == 0x06)) {
+		Log::Write(LogLevel_Info, "Reseting Network Key after Inclusion");
+		this->m_networkkeyset = true;
+		SetupNetworkKey();
+	}
 
 	delete payload;
 	return true;

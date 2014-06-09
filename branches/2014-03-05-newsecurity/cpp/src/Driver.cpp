@@ -3651,7 +3651,7 @@ void Driver::CommonAddNodeStatusRequestHandler
 			state = ControllerState_Completed;
 			if( m_currentControllerCommand != NULL && m_currentControllerCommand->m_controllerCommandNode != 0xff )
 			{
-				InitNode( m_currentControllerCommand->m_controllerCommandNode );
+				InitNode( m_currentControllerCommand->m_controllerCommandNode, true );
 			}
 
 			// Not sure about the new controller function here.
@@ -4099,7 +4099,8 @@ void Driver::InitAllNodes
 //-----------------------------------------------------------------------------
 void Driver::InitNode
 (
-	uint8 const _nodeId
+	uint8 const _nodeId,
+	bool newNode
 )
 {
 	// Delete any existing node and replace it with a new one
@@ -4115,6 +4116,7 @@ void Driver::InitNode
 
 	// Add the new node
 	m_nodes[_nodeId] = new Node( m_homeId, _nodeId );
+	if (newNode == true) static_cast<Node *>(m_nodes[_nodeId])->SetAddingNode();
 	ReleaseNodes();
 
 	Notification* notification = new Notification( Notification::Type_NodeAdded );

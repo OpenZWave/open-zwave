@@ -381,7 +381,7 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 *  \param _nodeId The node ID of the node to create and query.
 		 *  \see Notification::Type_NodeAdded, Notification::Type_NodeRemoved, Node::QueryStage_None,
 		 */
-		void InitNode( uint8 const _nodeId );
+		void InitNode( uint8 const _nodeId, bool newNode = false );
 
 		void InitAllNodes();												// Delete all nodes and fetch the data from the Z-Wave network again.
 

@@ -296,6 +296,9 @@ namespace OpenZWave
 		string const& GetType()const{ return m_type; }
 		uint32 GetNeighbors( uint8** o_associations );
 		bool IsController()const{ return ( m_basic == 0x01 || m_basic == 0x02 ) && ( m_generic == 0x01 || m_generic == 0x02 ); }
+		bool IsAddingNode() const { return m_addingNode; }	/* These three *AddingNode functions are used to tell if we this node is just being discovered. Currently used by the Security CC to initiate the Network Key Exchange */
+		void SetAddingNode() { m_addingNode = true; }
+		void ClearAddingNode() { m_addingNode = false; }
 
 	private:
 		bool		m_listening;
@@ -315,6 +318,7 @@ namespace OpenZWave
 		uint8		m_numRouteNodes;	// number of node routes
 		uint8		m_routeNodes[5];	// nodes to route to
 		map<uint8,uint8>	m_buttonMap;	// Map button IDs into virtual node numbers
+		bool		m_addingNode;
 
 	//-----------------------------------------------------------------------------
 	// Device Naming

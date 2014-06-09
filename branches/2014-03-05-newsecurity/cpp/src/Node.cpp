@@ -132,6 +132,7 @@ Node::Node
 	m_specific( 0 ),
 	m_type( "" ),
 	m_numRouteNodes( 0 ),
+	m_addingNode( false ),
 	m_manufacturerName( "" ),
 	m_productName( "" ),
 	m_nodeName( "" ),
@@ -602,6 +603,7 @@ void Node::AdvanceQueries
 			}
 			case QueryStage_Complete:
 			{
+				ClearAddingNode();
 				// Notify the watchers that the queries are complete for this node
 				Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_Complete" );
 				Notification* notification = new Notification( Notification::Type_NodeQueriesComplete );
