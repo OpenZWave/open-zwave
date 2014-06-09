@@ -134,10 +134,10 @@ Your Device is now Securely Included in your network. There should be no need to
 As mentioned above, as long as your Application has implemented support to add a device, then potentially the only thing you need to worry about is implementing the new Command Classes that we will introduce now (Such as Door Lock etc). These new "Secured" Command Classes operate no differently from our standard command classes, so there is nothing special that needs to be done. (but some of the new Command Classes might implement different types of Values - Something to watch out for)
 
 If your application does not support adding new devices to a network, then you should implement this by calling:
-{{
+{{{
 Manager::Get()->BeginControllerCommand(homeId, Driver::ControllerCommand_AddDevice,
 callbackfn, context, true));
-}}
+}}}
 Make sure you enable "high power" mode (the last true arguement above) and implement whatever callbacks you need to tell your users success/failure. this method is documented at the [http://openzwave.com/dev/classOpenZWave_1_1Manager.html#aa11faf40f19f0cda202d2353a60dbf7b OZW API] page. 
 An example can be found in the OZW Control Panel code, in webserver.cpp, around line 1169
 
