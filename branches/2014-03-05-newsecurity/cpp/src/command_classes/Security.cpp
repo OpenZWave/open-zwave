@@ -102,7 +102,6 @@ uint8_t SecuritySchemes[1][16] = {
 
 uint8_t EncryptPassword[16] = {0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA};
 uint8_t AuthPassword[16] = {0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55};
-uint8 tmpNK[] = {0x5b, 0x99, 0xfd, 0xf1, 0x66, 0x56, 0xc3, 0xef, 0xcc, 0xf6, 0xf1, 0x6c, 0xc9, 0x26, 0x84, 0xf4};
 
 void PrintHex(std::string prefix, uint8_t const *data, uint32 const length) {
 	char byteStr[16];
@@ -145,8 +144,7 @@ Security::~Security
 (
 )
 {
-	//delete this->encryptkey;
-	//delete this->authkey;
+
 }
 
 //-----------------------------------------------------------------------------
@@ -199,13 +197,9 @@ void Security::SetupNetworkKey
 	if (GetNodeUnsafe()->IsAddingNode() && m_networkkeyset == false)
 		this->nk = SecuritySchemes[0];
 	else {
-#if 1
-		this->nk = tmpNK;
-#else
-		this->nk = GetDriver->GetNetworkKey();
-#endif
+		this->nk = GetDriver()->GetNetworkKey();
 	}
-	PrintHex("Network Key", this->nk, 16);
+
 	this->AuthKey = new aes_encrypt_ctx;
 	this->EncryptKey = new aes_encrypt_ctx;
 
@@ -399,11 +393,7 @@ bool Security::HandleMsg
 				msg->Append( GetCommandClassId() );
 				msg->Append( SecurityCmd_NetworkKeySet );
 				for (int i = 0; i < 16; i++)
-#if 1
-					msg->Append(tmpNK[i]);
-#else
-					msg->append(GetDriver()->GetNetworkKey[i])
-#endif
+					msg->Append(GetDriver()->GetNetworkKey()[i]);
 				msg->Append( GetDriver()->GetTransmitOptions() );
 				this->SendMsg( msg);
 
@@ -1024,20 +1014,4 @@ void Security::SendNonceReport
 	// must be received within 10 seconds.
 	m_nonceTimer.Reset();
 }
-void Security::SendNetworkKey
-(
-)
-{
-	Msg *msg = new Msg( "SecurityCmd_NetworkKeySet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-	msg->Append( GetNodeId() );
-	msg->Append( 10 );
-	msg->Append( GetCommandClassId() );
-	msg->Append( SecurityCmd_NetworkKeySet );
-	const uint8 *tnk = GetDriver()->GetNetworkKey();
-	for( int i=0; i<16; ++i )
-	{
-		msg->Append( tnk[i] );
-	}
-	msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE );
-	this->SendMsg(msg);
-}
+

@@ -94,13 +94,11 @@ namespace OpenZWave
 		bool createIVFromPacket_inbound(uint8 const* _data, uint8 *iv);
 		bool createIVFromPacket_outbound(uint8 const* _data, uint8 *iv);
 
-		void SendNetworkKey();
 		void SetupNetworkKey();
 
 		Mutex *m_queueMutex;
 		list<SecurityPayload *>      m_queue;         // Messages waiting to be sent when the device wakes up
 		bool m_waitingForNonce;
-		//uint8 m_initializationVector[16]; // First 8 Bytes are Random, Second 8 Bytes are the NONCE
 		uint8 m_sequenceCounter;
 		Timer m_nonceTimer;
 		uint8 currentNonce[8];
@@ -109,8 +107,7 @@ namespace OpenZWave
 		aes_encrypt_ctx *AuthKey;
 		aes_encrypt_ctx *EncryptKey;
 		uint8 *nk;
-		uint8 *authkey;
-		uint8 *encryptkey;
+
 
 
 

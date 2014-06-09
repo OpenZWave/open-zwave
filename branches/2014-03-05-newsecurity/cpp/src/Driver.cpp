@@ -55,6 +55,8 @@
 #include "Value.h"
 #include "ValueStore.h"
 
+#include "Utils.h"
+
 #include <algorithm>
 #include <iostream>
 
@@ -6209,12 +6211,27 @@ void Driver::LogDriverStatistics
 // <Driver::GetNetworkKey>
 // Get the Network Key we will use for Security Command Class
 //-----------------------------------------------------------------------------
-uint8 const *Driver::GetNetworkKey() {
+uint8 *Driver::GetNetworkKey() {
 	std::string networkKey;
-	Options::Get()->GetOptionAsString("networkKey", &networkKey );
-	if (networkKey.length() != 16) {
-		Log::Write( LogLevel_Warning, "Network Key is not 128 bits long - Aborting");
-		assert(networkKey.length() != 16);
+	std::vector<std::string> elems;
+	static uint8 keybytes[16];
+	static bool keySet = false;
+	if (keySet == false) {
+		Options::Get()->GetOptionAsString("NetworkKey", &networkKey );
+		OpenZWave::split(elems, networkKey, ",", true);
+		if (elems.size() != 16) {
+			Log::Write(LogLevel_Warning, "Invalid Network Key. Does not contain 16 Bytes");
+			assert(0);
+		}
+		int i = 0;
+		for (std::vector<std::string>::iterator it = elems.begin(); it != elems.end(); it++) {
+			if (0 == sscanf(OpenZWave::trim(*it).c_str(), "%x", &keybytes[i])) {
+				Log::Write(LogLevel_Warning, "Cannot Convert Network Key Byte %s to Key", (*it).c_str());
+				assert(0);
+			}
+			i++;
+		}
+		keySet = true;
 	}
-	return reinterpret_cast<const uint8_t*>(networkKey.c_str());
+	return keybytes;
 }

@@ -848,7 +848,7 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 	//	Security Command Class Related (Version 1.1)
 	//-----------------------------------------------------------------------------
 	private:
-		uint8 const *GetNetworkKey();
+		uint8 *GetNetworkKey();
 	};
 
 } // namespace OpenZWave

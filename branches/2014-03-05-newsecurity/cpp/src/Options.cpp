@@ -118,6 +118,7 @@ Options* Options::Create
 																								// if true, wait for PollInterval milliseconds between polls
 		s_instance->AddOptionBool(		"SuppressValueRefresh",		false );					// if true, notifications for refreshed (but unchanged) values will not be sent
 		s_instance->AddOptionBool(		"PerformReturnRoutes",		true );					// if true, return routes will be updated
+		s_instance->AddOptionString(	"NetworkKey", 				string(""), 			false);
 	}
 
 	return s_instance;
@@ -154,8 +155,10 @@ Options::Options
 	string const& _userPath,
 	string const& _commandLine
 ):
-	m_xml( _userPath + "options.xml" ),
+	m_xml ("options.xml"),
 	m_commandLine( _commandLine ),
+	m_SystemPath (_configPath),
+	m_LocalPath (_userPath),
 	m_locked( false )
 {
 }
@@ -351,7 +354,8 @@ bool Options::Lock
 		return false;
 	}
 
-	ParseOptionsXML( m_xml );
+	ParseOptionsXML( m_SystemPath + m_xml );
+	ParseOptionsXML( m_LocalPath + m_xml);
 	ParseOptionsString( m_commandLine );
 	m_locked = true;
 
@@ -466,6 +470,7 @@ bool Options::ParseOptionsXML
 	{
 		return false;
 	}
+	Log::Write(LogLevel_Info, "Reading %s for Options", _filename.c_str());
 
 	TiXmlElement const* optionsElement = doc.RootElement();
 

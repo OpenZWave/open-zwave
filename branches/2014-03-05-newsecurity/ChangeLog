@@ -7,4 +7,6 @@ Version 1.1
    devices if they advertise themselves as FrequentListening. This matches
    the Logic in the QueryStage functions where we skip querying the Device
    for Wakeup Configuration if its set as FLiRS. Needs some testing (Justin)
- 
+ - Options.xml file can now live in both the System Config Path
+   (/etc/openzwave for example) or the Local Application Path. Local
+   Options.xml will override any System Options.xml
