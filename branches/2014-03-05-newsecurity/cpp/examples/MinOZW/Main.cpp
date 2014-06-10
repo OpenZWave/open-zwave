@@ -39,10 +39,10 @@
 #include "Node.h"
 #include "Group.h"
 #include "Notification.h"
-#include "ValueStore.h"
-#include "Value.h"
-#include "ValueBool.h"
-#include "Log.h"
+#include "value_classes/ValueStore.h"
+#include "value_classes/Value.h"
+#include "value_classes/ValueBool.h"
+#include "platform/Log.h"
 
 using namespace OpenZWave;
 
@@ -319,9 +319,6 @@ int main( int argc, char* argv[] )
 	// been queried as well.)
 	if( !g_initFailed )
 	{
-
-		Manager::Get()->WriteConfig( g_homeId );
-
 
 		// The section below demonstrates setting up polling for a variable.  In this simple
 		// example, it has been hardwired to poll COMMAND_CLASS_BASIC on the each node that 

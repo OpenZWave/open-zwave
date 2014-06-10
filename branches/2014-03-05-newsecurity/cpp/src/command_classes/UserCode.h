@@ -28,7 +28,7 @@
 #ifndef _UserCode_H
 #define _UserCode_H
 
-#include "CommandClass.h"
+#include "command_classes/CommandClass.h"
 
 namespace OpenZWave
 {

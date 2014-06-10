@@ -25,16 +25,16 @@
 //
 //-----------------------------------------------------------------------------
 
-#include "CommandClasses.h"
-#include "ClimateControlSchedule.h"
+#include "command_classes/CommandClasses.h"
+#include "command_classes/ClimateControlSchedule.h"
 #include "Defs.h"
 #include "Msg.h"
 #include "Driver.h"
 #include "Node.h"
-#include "Log.h"
-#include "ValueByte.h"
-#include "ValueList.h"
-#include "ValueSchedule.h"
+#include "platform/Log.h"
+#include "value_classes/ValueByte.h"
+#include "value_classes/ValueList.h"
+#include "value_classes/ValueSchedule.h"
 
 using namespace OpenZWave;
 

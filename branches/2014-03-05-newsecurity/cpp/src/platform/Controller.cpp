@@ -26,7 +26,7 @@
 //-----------------------------------------------------------------------------
 #include "Defs.h"
 #include "Driver.h"
-#include "Controller.h"
+#include "platform/Controller.h"
 
 using namespace OpenZWave;
 

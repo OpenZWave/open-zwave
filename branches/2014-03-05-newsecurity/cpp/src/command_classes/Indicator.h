@@ -28,7 +28,7 @@
 #ifndef _Indicator_H
 #define _Indicator_H
 
-#include "CommandClass.h"
+#include "command_classes/CommandClass.h"
 
 namespace OpenZWave
 {

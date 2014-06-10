@@ -25,8 +25,8 @@
 //
 //-----------------------------------------------------------------------------
 
-#include "CommandClasses.h"
-#include "ManufacturerSpecific.h"
+#include "command_classes/CommandClasses.h"
+#include "command_classes/ManufacturerSpecific.h"
 #include "tinyxml.h"
 
 #include "Defs.h"
@@ -36,10 +36,10 @@
 #include "Manager.h"
 #include "Driver.h"
 #include "Notification.h"
-#include "Log.h"
+#include "platform/Log.h"
 
-#include "ValueStore.h"
-#include "ValueString.h"
+#include "value_classes/ValueStore.h"
+#include "value_classes/ValueString.h"
 
 using namespace OpenZWave;
 

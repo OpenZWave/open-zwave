@@ -28,15 +28,15 @@
 #include <math.h>
 #include <locale.h>
 #include "tinyxml.h"
-#include "CommandClass.h"
-#include "Basic.h"
-#include "MultiInstance.h"
+#include "command_classes/CommandClass.h"
+#include "command_classes/Basic.h"
+#include "command_classes/MultiInstance.h"
 #include "Msg.h"
 #include "Node.h"
 #include "Driver.h"
 #include "Manager.h"
-#include "Log.h"
-#include "ValueStore.h"
+#include "platform/Log.h"
+#include "value_classes/ValueStore.h"
 
 using namespace OpenZWave;
 
@@ -531,7 +531,7 @@ int32 CommandClass::ValueToInteger
 	else
 	{
 		// Remove the decimal point and convert to an integer
-		precision = (_value.size()-pos)-1;
+		precision = (uint8) ((_value.size()-pos)-1);
 
 		string str = _value.substr( 0, pos ) + _value.substr( pos+1 );
 		val = atol( str.c_str() );

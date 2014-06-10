@@ -26,9 +26,14 @@
 //
 //-----------------------------------------------------------------------------
 #include "Defs.h"
-#include "Event.h"
-#include "Thread.h"
-#include "ThreadImpl.h"	// Platform-specific implementation of a thread
+#include "platform/Event.h"
+#include "platform/Thread.h"
+
+#ifdef WIN32
+#include "platform/windows/ThreadImpl.h"	// Platform-specific implementation of a thread
+#else
+#include "platform/unix/ThreadImpl.h"	// Platform-specific implementation of a thread
+#endif
 
 using namespace OpenZWave;
 

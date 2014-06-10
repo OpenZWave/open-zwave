@@ -33,41 +33,41 @@
 #include "Driver.h"
 #include "Notification.h"
 #include "Msg.h"
-#include "Log.h"
-#include "Mutex.h"
+#include "platform/Log.h"
+#include "platform/Mutex.h"
 
 #include "tinyxml.h"
 
-#include "CommandClasses.h"
-#include "CommandClass.h"
-#include "Association.h"
-#include "Basic.h"
-#include "Configuration.h"
-#include "ControllerReplication.h"
-#include "ManufacturerSpecific.h"
-#include "MultiInstance.h"
-#include "Security.h"
-#include "WakeUp.h"
-#include "NodeNaming.h"
-#include "NoOperation.h"
-#include "Version.h"
-#include "SwitchAll.h"
+#include "command_classes/CommandClasses.h"
+#include "command_classes/CommandClass.h"
+#include "command_classes/Association.h"
+#include "command_classes/Basic.h"
+#include "command_classes/Configuration.h"
+#include "command_classes/ControllerReplication.h"
+#include "command_classes/ManufacturerSpecific.h"
+#include "command_classes/MultiInstance.h"
+#include "command_classes/Security.h"
+#include "command_classes/WakeUp.h"
+#include "command_classes/NodeNaming.h"
+#include "command_classes/NoOperation.h"
+#include "command_classes/Version.h"
+#include "command_classes/SwitchAll.h"
 
 #include "Scene.h"
 
-#include "ValueID.h"
-#include "Value.h"
-#include "ValueBool.h"
-#include "ValueButton.h"
-#include "ValueByte.h"
-#include "ValueDecimal.h"
-#include "ValueInt.h"
-#include "ValueRaw.h"
-#include "ValueList.h"
-#include "ValueSchedule.h"
-#include "ValueShort.h"
-#include "ValueString.h"
-#include "ValueStore.h"
+#include "value_classes/ValueID.h"
+#include "value_classes/Value.h"
+#include "value_classes/ValueBool.h"
+#include "value_classes/ValueButton.h"
+#include "value_classes/ValueByte.h"
+#include "value_classes/ValueDecimal.h"
+#include "value_classes/ValueInt.h"
+#include "value_classes/ValueRaw.h"
+#include "value_classes/ValueList.h"
+#include "value_classes/ValueSchedule.h"
+#include "value_classes/ValueShort.h"
+#include "value_classes/ValueString.h"
+#include "value_classes/ValueStore.h"
 
 using namespace OpenZWave;
 
@@ -2326,7 +2326,7 @@ uint8 Node::GetNumGroups
 (
 )
 {
-	return m_groups.size();
+	return (uint8) m_groups.size();
 }
 
 //-----------------------------------------------------------------------------
@@ -2803,7 +2803,7 @@ Node::DeviceClass::DeviceClass
 		}
 
 		// Copy the vector contents into an array.
-		uint32 numCCs = ccs.size();
+		size_t numCCs = ccs.size();
 		m_mandatoryCommandClasses = new uint8[numCCs+1];
 		m_mandatoryCommandClasses[numCCs] = 0;	// Zero terminator
 

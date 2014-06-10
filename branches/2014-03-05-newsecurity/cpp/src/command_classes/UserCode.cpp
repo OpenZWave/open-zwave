@@ -26,13 +26,13 @@
 //-----------------------------------------------------------------------------
 
 #include "tinyxml.h"
-#include "CommandClasses.h"
-#include "UserCode.h"
+#include "command_classes/CommandClasses.h"
+#include "command_classes/UserCode.h"
 #include "Node.h"
-#include "Log.h"
+#include "platform/Log.h"
 
-#include "ValueByte.h"
-#include "ValueRaw.h"
+#include "value_classes/ValueByte.h"
+#include "value_classes/ValueRaw.h"
 
 using namespace OpenZWave;
 

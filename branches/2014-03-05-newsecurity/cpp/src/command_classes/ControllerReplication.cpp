@@ -25,17 +25,17 @@
 //
 //-----------------------------------------------------------------------------
 
-#include "CommandClasses.h"
-#include "ControllerReplication.h"
+#include "command_classes/CommandClasses.h"
+#include "command_classes/ControllerReplication.h"
 #include "Defs.h"
 #include "Msg.h"
 #include "Driver.h"
 #include "Node.h"
-#include "Log.h"
+#include "platform/Log.h"
 
-#include "ValueByte.h"
-#include "ValueList.h"
-#include "ValueButton.h"
+#include "value_classes/ValueByte.h"
+#include "value_classes/ValueList.h"
+#include "value_classes/ValueButton.h"
 
 using namespace OpenZWave;
 
@@ -268,7 +268,7 @@ void ControllerReplication::SendNextData
 		msg->Append( m_targetNodeId );
 		if( m_groupName.length() > 0 )
 		{		
-			msg->Append( m_groupName.length() + 4 );
+			msg->Append((uint8) (m_groupName.length() + 4 ));
 			msg->Append( GetCommandClassId() );
 			msg->Append( ControllerReplicationCmd_TransferGroupName );
 			msg->Append( 0 );

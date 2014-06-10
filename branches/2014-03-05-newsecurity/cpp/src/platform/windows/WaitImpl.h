@@ -32,8 +32,8 @@
 #include <windows.h>
 #include <list>
 #include "Defs.h"
-#include "Ref.h"
-#include "Wait.h"
+#include "platform/Ref.h"
+#include "platform/Wait.h"
 
 namespace OpenZWave
 {

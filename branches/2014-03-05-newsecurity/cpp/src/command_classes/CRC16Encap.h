@@ -28,7 +28,7 @@
 #ifndef _CRC16_ENCAP_H
 #define _CRC16_ENCAP_H
 
-#include "CommandClass.h"
+#include "command_classes/CommandClass.h"
 
 namespace OpenZWave
 {

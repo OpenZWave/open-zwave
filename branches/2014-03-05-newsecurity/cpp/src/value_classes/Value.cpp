@@ -31,9 +31,9 @@
 #include "Node.h"
 #include "Notification.h"
 #include "Msg.h"
-#include "Value.h"
-#include "Log.h"
-#include "CommandClass.h"
+#include "value_classes/Value.h"
+#include "platform/Log.h"
+#include "command_classes/CommandClass.h"
 #include <ctime>
 #include "Options.h"
 
@@ -207,10 +207,10 @@ void Value::ReadXML
 		}
 		else
 		{
-			int len = strlen( affects );
+			size_t len = strlen( affects );
 			if( len > 0 )
 			{
-				for( int i = 0; i < len; i++ )
+				for( size_t i = 0; i < len; i++ )
 				{
 					if( affects[i] == ',' )
 					{
@@ -224,7 +224,7 @@ void Value::ReadXML
 				}
 				m_affectsLength++;
 				m_affects = new uint8[m_affectsLength];
-				int j = 0;
+				unsigned int j = 0;
 				for( int i = 0; i < m_affectsLength; i++ )
 				{
 					m_affects[i] = atoi( &affects[j] );

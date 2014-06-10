@@ -30,7 +30,7 @@
 
 #include <string>
 #include "Defs.h"
-#include "Wait.h"
+#include "platform/Wait.h"
 
 namespace OpenZWave
 {

@@ -28,9 +28,9 @@
 #include <sstream>
 #include <limits.h>
 #include "tinyxml.h"
-#include "ValueSchedule.h"
+#include "value_classes/ValueSchedule.h"
 #include "Msg.h"
-#include "Log.h"
+#include "platform/Log.h"
 
 using namespace OpenZWave;
 

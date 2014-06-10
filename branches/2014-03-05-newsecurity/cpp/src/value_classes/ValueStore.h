@@ -30,7 +30,7 @@
 
 #include <map>
 #include "Defs.h"
-#include "ValueID.h"
+#include "value_classes/ValueID.h"
 
 class TiXmlElement;
 

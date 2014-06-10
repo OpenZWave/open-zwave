@@ -28,10 +28,9 @@
 #ifndef _Security_H
 #define _Security_H
 
-
-#include "CommandClass.h"
-#include "aescpp.h"
-
+#include <ctime>
+#include "aes/aescpp.h"
+#include "command_classes/CommandClass.h"
 
 namespace OpenZWave
 {
@@ -56,8 +55,8 @@ namespace OpenZWave
 		void Reset() {
 			start = clock();
 		}
-		uint64 GetMilliseconds() {
-			return (( clock() - start ) / (double) CLOCKS_PER_SEC)/1000;
+		inline uint64 GetMilliseconds() {
+            return (uint64 )(((clock() - start) / (double)CLOCKS_PER_SEC) / 1000);
 		}
 	private:
 		clock_t start;

@@ -28,7 +28,7 @@
 #ifndef _Event_H
 #define _Event_H
 
-#include "Wait.h"
+#include "platform/Wait.h"
 
 namespace OpenZWave
 {

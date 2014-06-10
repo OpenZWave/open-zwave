@@ -32,8 +32,8 @@
 #include "Options.h"
 #include "Utils.h"
 #include "Manager.h"
-#include "Log.h"
-#include "FileOps.h"
+#include "platform/Log.h"
+#include "platform/FileOps.h"
 #include "tinyxml.h"
 
 using namespace OpenZWave;

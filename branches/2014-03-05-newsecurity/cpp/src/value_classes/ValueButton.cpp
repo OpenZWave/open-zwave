@@ -26,11 +26,11 @@
 //-----------------------------------------------------------------------------
 
 #include "tinyxml.h"
-#include "ValueButton.h"
+#include "value_classes/ValueButton.h"
 #include "Manager.h"
 #include "Driver.h"
 #include "Node.h"
-#include "Log.h"
+#include "platform/Log.h"
 
 using namespace OpenZWave;
 

@@ -33,10 +33,10 @@
 #include <list>
 #include <map>
 #include "Defs.h"
-#include "ValueID.h"
-#include "ValueList.h"
+#include "value_classes/ValueID.h"
+#include "value_classes/ValueList.h"
 #include "Msg.h"
-#include "TimeStamp.h"
+#include "platform/TimeStamp.h"
 
 class TiXmlElement;
 

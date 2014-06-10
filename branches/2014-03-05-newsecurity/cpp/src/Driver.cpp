@@ -24,7 +24,6 @@
 //	along with OpenZWave.  If not, see <http://www.gnu.org/licenses/>.
 //
 //-----------------------------------------------------------------------------
-
 #include "Defs.h"
 #include "Driver.h"
 #include "Options.h"
@@ -34,26 +33,26 @@
 #include "Notification.h"
 #include "Scene.h"
 
-#include "Event.h"
-#include "Mutex.h"
-#include "SerialController.h"
-#include "HidController.h"
-#include "Thread.h"
-#include "Log.h"
-#include "TimeStamp.h"
+#include "platform/Event.h"
+#include "platform/Mutex.h"
+#include "platform/SerialController.h"
+#include "platform/HidController.h"
+#include "platform/Thread.h"
+#include "platform/Log.h"
+#include "platform/TimeStamp.h"
 
-#include "CommandClasses.h"
-#include "ApplicationStatus.h"
-#include "ControllerReplication.h"
-#include "Security.h"
-#include "WakeUp.h"
-#include "SwitchAll.h"
-#include "ManufacturerSpecific.h"
-#include "NoOperation.h"
+#include "command_classes/CommandClasses.h"
+#include "command_classes/ApplicationStatus.h"
+#include "command_classes/ControllerReplication.h"
+#include "command_classes/Security.h"
+#include "command_classes/WakeUp.h"
+#include "command_classes/SwitchAll.h"
+#include "command_classes/ManufacturerSpecific.h"
+#include "command_classes/NoOperation.h"
 
-#include "ValueID.h"
-#include "Value.h"
-#include "ValueStore.h"
+#include "value_classes/ValueID.h"
+#include "value_classes/Value.h"
+#include "value_classes/ValueStore.h"
 
 #include "Utils.h"
 
@@ -3982,7 +3981,7 @@ void Driver::PollThreadProc
 					Log::Write( LogLevel_Info, "The pollInterval setting is only %d, which appears to be a legacy setting.  Multiplying by 1000 to convert to ms.", pollInterval );
 					pollInterval *= 1000;
 				}
-				pollInterval /= m_pollList.size();
+				pollInterval /= (int32) m_pollList.size();
 			}
 
 			// Request the state of the value from the node to which it belongs

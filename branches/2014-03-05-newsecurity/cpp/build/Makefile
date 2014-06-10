@@ -39,8 +39,7 @@ endif
 #where to put the temporary library
 LIBDIR	?= $(top_builddir)
 
-INCLUDES	:= -I $(top_srcdir)/cpp/src -I $(top_srcdir)/cpp/src/command_classes/ -I $(top_srcdir)/cpp/src/value_classes/ \
-	-I $(top_srcdir)/cpp/src/platform/ -I $(top_srcdir)/cpp/src/platform/unix -I $(top_srcdir)/cpp/tinyxml/ -I $(top_srcdir)/cpp/hidapi/hidapi/ -I$(top_srcdir)/cpp/src/aes/
+INCLUDES	:= -I $(top_srcdir)/cpp/src -I $(top_srcdir)/cpp/tinyxml/ -I $(top_srcdir)/cpp/hidapi/hidapi/
 
 ifeq ($(UNAME),Darwin)
 SOURCES_HIDAPI =$(top_srcdir)/cpp/hidapi/mac

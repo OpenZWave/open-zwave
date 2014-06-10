@@ -28,7 +28,7 @@
 #ifndef _SwitchMultilevel_H
 #define _SwitchMultilevel_H
 
-#include "CommandClass.h"
+#include "command_classes/CommandClass.h"
 
 namespace OpenZWave
 {

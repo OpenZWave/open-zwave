@@ -33,11 +33,11 @@
 #include <list>
 
 #include "Defs.h"
-#include "ValueID.h"
+#include "value_classes/ValueID.h"
 #include "Node.h"
-#include "Event.h"
-#include "Mutex.h"
-#include "TimeStamp.h"
+#include "platform/Event.h"
+#include "platform/Mutex.h"
+#include "platform/TimeStamp.h"
 
 namespace OpenZWave
 {
@@ -205,7 +205,7 @@ namespace OpenZWave
 			int32 count = 0;
 			for( int32 i=0; i<MsgQueue_Count; ++i )
 			{
-				count += m_msgQueue[i].size();
+				count += (int32) (m_msgQueue[i].size());
 			}
 			return count;
 		}
