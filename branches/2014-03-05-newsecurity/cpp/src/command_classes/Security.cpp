@@ -192,9 +192,11 @@ void Security::SetupNetworkKey
 
 	this->nk = GetDriver->GetNetworkKey();
 #endif
-	if (GetNodeUnsafe()->IsAddingNode() && m_networkkeyset == false)
+	if ((GetNodeUnsafe()->IsAddingNode() == true) && (m_networkkeyset == false)) {
+		Log::Write(LogLevel_Info, "  Using Scheme0 Network Key for Key Exchange (AddingNode: %s KeySet: %s)", GetNodeUnsafe()->IsAddingNode() ? "true" : "false", m_networkkeyset ? "true" : "false" );
 		this->nk = SecuritySchemes[0];
-	else {
+	} else {
+		Log::Write(LogLevel_Info, "  Using Configured Network Key (AddingNode: %s KeySet: %s)", GetNodeUnsafe()->IsAddingNode() ? "true" : "false", m_networkkeyset ? "true" : "false" );
 		this->nk = GetDriver()->GetNetworkKey();
 	}
 

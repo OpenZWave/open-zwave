@@ -3220,7 +3220,7 @@ void Driver::HandleReplaceFailedNodeRequest
 			// Request new node info for this device
 			if( m_currentControllerCommand != NULL )
 			{
-				InitNode( m_currentControllerCommand->m_controllerCommandNode );
+				InitNode( m_currentControllerCommand->m_controllerCommandNode, true );
 			}
 			break;
 		}
@@ -4126,6 +4126,7 @@ void Driver::InitNode
 
 	// Request the node info
 	m_nodes[_nodeId]->SetQueryStage( Node::QueryStage_ProtocolInfo );
+	Log::Write(LogLevel_Info, "Initilizing Node. New Node: %s (%s)", static_cast<Node *>(m_nodes[_nodeId])->IsAddingNode() ? "true" : "false", newNode ? "true" : "false");
 }
 
 //-----------------------------------------------------------------------------
