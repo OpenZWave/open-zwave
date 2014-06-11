@@ -79,6 +79,9 @@ namespace OpenZWave
 		void WriteXML(TiXmlElement* _ccElement);
 		void SendMsg( Msg* _msg );
 
+	protected:
+		void CreateVars( uint8 const _instance );
+
 	private:
 		Security( uint32 const _homeId, uint8 const _nodeId );
 		bool RequestState( uint32 const _requestFlags, uint8 const _instance, Driver::MsgQueue const _queue);
@@ -92,7 +95,6 @@ namespace OpenZWave
 		void QueuePayload( SecurityPayload * _payload );
 		bool createIVFromPacket_inbound(uint8 const* _data, uint8 *iv);
 		bool createIVFromPacket_outbound(uint8 const* _data, uint8 *iv);
-
 		void SetupNetworkKey();
 
 		Mutex *m_queueMutex;
@@ -107,6 +109,7 @@ namespace OpenZWave
 		aes_encrypt_ctx *EncryptKey;
 		uint8 *nk;
 		bool m_schemeagreed;
+		bool m_secured;
 
 
 

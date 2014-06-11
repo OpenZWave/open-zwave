@@ -36,7 +36,7 @@
 #include "Driver.h"
 #include "platform/Log.h"
 
-#include "value_classes/ValueByte.h"
+#include "value_classes/ValueBool.h"
 
 
 using namespace OpenZWave;
@@ -128,7 +128,8 @@ Security::Security
 	m_waitingForNonce(false),
 	m_sequenceCounter(0),
 	m_networkkeyset(false),
-	m_schemeagreed(false)
+	m_schemeagreed(false),
+	m_secured(false)
 
 {
 	/* seed our Random Number Generator for NONCE Generation
@@ -872,7 +873,14 @@ bool Security::DecryptMessage
 	}
 	if (m_queue.size() > 0)
 		RequestNonce();
-
+	if (m_secured == false) {
+		if( ValueBool* value = static_cast<ValueBool*>( GetValue( 1, 0 ) ) )
+		{
+			value->OnValueRefreshed( true );
+			value->Release();
+		}
+		m_secured = true;
+	}
 	return true;
 
 }
@@ -1021,3 +1029,17 @@ void Security::SendNonceReport
 	m_nonceTimer.Reset();
 }
 
+//-----------------------------------------------------------------------------
+// <Battery::CreateVars>
+// Create the values managed by this command class
+//-----------------------------------------------------------------------------
+void Security::CreateVars
+(
+	uint8 const _instance
+)
+{
+	if( Node* node = GetNodeUnsafe() )
+	{
+	  	node->CreateValueBool( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 0, "Secured", "", true, false, false, 0 );
+	}
+}

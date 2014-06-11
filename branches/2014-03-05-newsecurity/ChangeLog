@@ -16,4 +16,6 @@ Version 1.1
  - A few fixes for Windows Calls and various casts required to eliminate
    warnings (Svente Karisson)
  - Add a Error String if we fail to parse our Options.xml files (Justin)
+ - Added a Complete Door Lock Command Class (Justin)
+
 
