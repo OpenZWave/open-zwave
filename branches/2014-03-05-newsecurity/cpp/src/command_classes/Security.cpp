@@ -660,7 +660,7 @@ bool Security::EncryptMessage
 		sequence |= 0x30;		// Sequenced, second frame
 	}
 	/* at most, the payload will be 28 bytes + 1 byte for the Sequence. */
-	uint8 plaintextmsg[29];
+	uint8 plaintextmsg[30];
 	plaintextmsg[0] = sequence;
 	for (int i = 0; i < payload->m_length; i++)
 		plaintextmsg[i+1] = payload->m_data[i];
@@ -670,7 +670,7 @@ bool Security::EncryptMessage
 	 */
 	PrintHex("Input Packet:", plaintextmsg, payload->m_length+1);
 	PrintHex("IV:", initializationVector, 16);
-	uint8 encryptedpayload[29];
+	uint8 encryptedpayload[30];
 	aes_mode_reset(this->EncryptKey);
 	if (aes_ofb_encrypt(plaintextmsg, encryptedpayload, payload->m_length+1, initializationVector, this->EncryptKey) == EXIT_FAILURE) {
 		Log::Write(LogLevel_Warning, "Failed to Encrypt Packet");

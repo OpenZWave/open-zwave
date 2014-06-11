@@ -22,7 +22,7 @@ Issue Date: 20/12/2007
 #include "aestab.h"
 
 #if defined( USE_INTEL_AES_IF_PRESENT )
-#include <aes/aesaes_ni.h"
+#include <aes/aesaes_ni.h>
 #else
 /* map names here to provide the external API ('name' -> 'aes_name') */
 #  define aes_xi(x) aes_ ## x
