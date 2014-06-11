@@ -106,6 +106,7 @@ namespace OpenZWave
 		aes_encrypt_ctx *AuthKey;
 		aes_encrypt_ctx *EncryptKey;
 		uint8 *nk;
+		bool m_schemeagreed;
 
 
 

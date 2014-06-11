@@ -127,7 +127,8 @@ Security::Security
 	m_queueMutex( new Mutex() ),
 	m_waitingForNonce(false),
 	m_sequenceCounter(0),
-	m_networkkeyset(false)
+	m_networkkeyset(false),
+	m_schemeagreed(false)
 
 {
 	/* seed our Random Number Generator for NONCE Generation
@@ -380,6 +381,10 @@ bool Security::HandleMsg
 		{
 			Log::Write(LogLevel_Info, "Received SecurityCmd_SchemeReport from node %d: %d", GetNodeId(), _data[1]);
 			uint8 schemes = _data[1];
+			if (m_schemeagreed == true) {
+				Log::Write(LogLevel_Warning, "   Already Received a SecurityCmd_SchemeReport from the node. Ignoring");
+				break;
+			}
 			if( schemes == SecurityScheme_Zero )
 			{
 				/* We're good to go.  We now should send our NetworkKey to the device if this is the first
@@ -396,7 +401,7 @@ bool Security::HandleMsg
 					msg->Append(GetDriver()->GetNetworkKey()[i]);
 				msg->Append( GetDriver()->GetTransmitOptions() );
 				this->SendMsg( msg);
-
+				m_schemeagreed = true;
 			}
 			else
 			{

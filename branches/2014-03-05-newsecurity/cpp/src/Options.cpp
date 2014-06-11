@@ -468,6 +468,7 @@ bool Options::ParseOptionsXML
 	TiXmlDocument doc;
 	if( !doc.LoadFile( _filename.c_str(), TIXML_ENCODING_UTF8 ) )
 	{
+		Log::Write(LogLevel_Warning, "Failed to Parse %s: %s", _filename.c_str(), doc.ErrorDesc());
 		return false;
 	}
 	Log::Write(LogLevel_Info, "Reading %s for Options", _filename.c_str());

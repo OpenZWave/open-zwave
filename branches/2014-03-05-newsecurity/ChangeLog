@@ -15,3 +15,5 @@ Version 1.1
    Based on work started by Svente Karisson (Justin)
  - A few fixes for Windows Calls and various casts required to eliminate
    warnings (Svente Karisson)
+ - Add a Error String if we fail to parse our Options.xml files (Justin)
+
