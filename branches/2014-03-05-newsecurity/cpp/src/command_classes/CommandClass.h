@@ -110,6 +110,9 @@ namespace OpenZWave
 		bool IsGetSupported()const{ return m_getSupported; }
 		bool IsSecured()const{ return m_isSecured; }
 		void SetSecured(){ m_isSecured = true; }
+		bool IsSecureSupported()const { return m_SecureSupport; }
+		void ClearSecureSupport() { m_SecureSupport = false; }
+		void SetSecureSupport() { m_SecureSupport = true; }
 
 		// Helper methods
 		string ExtractValue( uint8 const* _data, uint8* _scale, uint8* _precision, uint8 _valueOffset = 1 )const;
@@ -146,6 +149,7 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		int8		m_overridePrecision;	// Override precision when writing values if >=0
 		bool		m_getSupported;	    	// Get operation supported
 		bool		m_isSecured;		// is this command class secured with the Security Command Class
+		bool		m_SecureSupport; 	// Does this commandclass support secure encryption (eg, the Security CC doesn't encrypt itself, so it doesn't support encryption)
 
 	//-----------------------------------------------------------------------------
 	// Record which items of static data have been read from the device

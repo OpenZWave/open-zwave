@@ -132,6 +132,13 @@ Security::Security
 	m_secured(false)
 
 {
+	/* We don't want the Driver to route "Security" messages back to us for Encryption,
+	 * so disable SecureSupport for the Security Command Class
+	 * (This stops this Command Class getting Marked as as IsSecured() if its listed
+	 * in the SecurityCmd_SupportedReport from the device - Which some devices do)
+	 */
+	ClearSecureSupport();
+
 	/* seed our Random Number Generator for NONCE Generation
 	 * It doesn't matter we might seed it multiple times with each device that
 	 * supports this class, it just adds more "randomness" to the NONCE

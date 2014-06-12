@@ -63,6 +63,7 @@ CommandClass::CommandClass
 	m_overridePrecision( -1 ),
 	m_getSupported( true ),
 	m_isSecured( false ),
+	m_SecureSupport( true ),
 	m_staticRequests( 0 ),
 	m_sentCnt( 0 ),
 	m_receivedCnt( 0 )

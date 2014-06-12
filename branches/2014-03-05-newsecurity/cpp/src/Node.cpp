@@ -1270,8 +1270,12 @@ void Node::SetSecuredClasses
 		/* Check if this is a CC that is already registered with the node */
 		if (CommandClass *pCommandClass = GetCommandClass(_data[i]))
 		{
-			pCommandClass->SetSecured();
-			Log::Write( LogLevel_Info, m_nodeId, "    %s (Secured)", pCommandClass->GetCommandClassName().c_str() );
+			if (pCommandClass->IsSecureSupported()) {
+				pCommandClass->SetSecured();
+				Log::Write( LogLevel_Info, m_nodeId, "    %s (Secured)", pCommandClass->GetCommandClassName().c_str() );
+			} else {
+				Log::Write( LogLevel_Info, m_nodeId, "    %s (Downgraded)", pCommandClass->GetCommandClassName().c_str() );
+			}
 		}
 		/* it might be a new CC we havn't seen as part of the NIF */
 		else if( CommandClasses::IsSupported( _data[i] ) )
@@ -1283,12 +1287,16 @@ void Node::SetSecuredClasses
 				{
 					pCommandClass->SetAfterMark();
 				}
-				pCommandClass->SetSecured();
+				if (pCommandClass->IsSecureSupported()) {
+					pCommandClass->SetSecured();
+					Log::Write( LogLevel_Info, m_nodeId, "    %s (Secured)", pCommandClass->GetCommandClassName().c_str() );
+				} else {
+					Log::Write( LogLevel_Info, m_nodeId, "    %s (Downgraded)", pCommandClass->GetCommandClassName().c_str() );
+				}
 				// Start with an instance count of one.  If the device supports COMMMAND_CLASS_MULTI_INSTANCE
 				// then some command class instance counts will increase once the responses to the RequestState
 				// call at the end of this method have been processed.
 				pCommandClass->SetInstance( 1 );
-				Log::Write( LogLevel_Info, m_nodeId, "    %s (Secured)", pCommandClass->GetCommandClassName().c_str() );
 
 			}
 		}
