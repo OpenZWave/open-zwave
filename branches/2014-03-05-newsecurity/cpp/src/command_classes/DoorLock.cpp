@@ -27,6 +27,7 @@
 
 #include "command_classes/CommandClasses.h"
 #include "command_classes/DoorLock.h"
+#include "command_classes/WakeUp.h"
 #include "Defs.h"
 #include "Msg.h"
 #include "Node.h"
@@ -438,7 +439,7 @@ bool DoorLock::SetValue
 				ok = false;
 				Log::Write(LogLevel_Warning, GetNodeId(), "Failed To Retrieve Value_System_Config_Mode For SetValue");
 			}
-			uint8 control;
+			uint8 control = 0;
 			if( ValueByte* value = static_cast<ValueByte*>( GetValue( instance, Value_System_Config_OutsideHandles ) ) )
 			{
 				control = (value->GetValue() << 4);
