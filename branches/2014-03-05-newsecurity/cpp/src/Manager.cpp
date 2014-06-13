@@ -164,6 +164,7 @@ Manager::Manager
 
 	CommandClasses::RegisterCommandClasses();
 	Scene::ReadScenes();
+	Log::Write(LogLevel_Always, "OpenZwave Version %s Starting Up", getVersionAsString().c_str());
 }
 
 //-----------------------------------------------------------------------------

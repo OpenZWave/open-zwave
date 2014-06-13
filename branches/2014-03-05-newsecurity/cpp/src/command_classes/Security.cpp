@@ -55,22 +55,8 @@ using namespace OpenZWave;
  * and not at any random time. This means that when including Secure Devices, we must use the OZW AddNode
  * Controller Commands, and then once the Inclusion is complete, initiate a NetworkKeySet. Including a
  * Secure Device by say using the button on a Z-Stick is technically not possible, as OZW needs to send
- * the Network Key right away after negoiating the SecurityScheme (before the timeout).
+ * the Network Key right away after negotiating the SecurityScheme (before the timeout).
  *
- * The Good News
- *
- * The Blackhat Paper this class is based on found a vulnerbility where the Secure Device didn't maintain
- * a state if it had already Recieved a NetworkKeySet command, so we should be able to exploit this
- * to set our Network Key - The only downside is that Sigma might have patched subsequent firmware versions to
- * close this hole. (it is a big hole as well - Anybody can reset the NetworkKey and do bad things with
- * your locks etc!) and thus we will have to implement some advanced state tracking and code to do
- * NetworkKeySet in the AddNode path.
- *
- * So....
- *
- * If some devices don't work with the expliot, its possible that Sigma patched later versions of the firmware
- * and then this code is going to get even more complicated and
- * its tenticals are going to reach deep into the Node and Driver Classes. *sigh*
  */
 
 enum SecurityCmd
@@ -202,10 +188,10 @@ void Security::SetupNetworkKey
 	this->nk = GetDriver->GetNetworkKey();
 #endif
 	if ((GetNodeUnsafe()->IsAddingNode() == true) && (m_networkkeyset == false)) {
-		Log::Write(LogLevel_Info, "  Using Scheme0 Network Key for Key Exchange (AddingNode: %s KeySet: %s)", GetNodeUnsafe()->IsAddingNode() ? "true" : "false", m_networkkeyset ? "true" : "false" );
+		Log::Write(LogLevel_Info, GetNodeId(), "  Using Scheme0 Network Key for Key Exchange (AddingNode: %s KeySet: %s)", GetNodeUnsafe()->IsAddingNode() ? "true" : "false", m_networkkeyset ? "true" : "false" );
 		this->nk = SecuritySchemes[0];
 	} else {
-		Log::Write(LogLevel_Info, "  Using Configured Network Key (AddingNode: %s KeySet: %s)", GetNodeUnsafe()->IsAddingNode() ? "true" : "false", m_networkkeyset ? "true" : "false" );
+		Log::Write(LogLevel_Info, GetNodeId(), "  Using Configured Network Key (AddingNode: %s KeySet: %s)", GetNodeUnsafe()->IsAddingNode() ? "true" : "false", m_networkkeyset ? "true" : "false" );
 		this->nk = GetDriver()->GetNetworkKey();
 	}
 
@@ -213,17 +199,17 @@ void Security::SetupNetworkKey
 	this->EncryptKey = new aes_encrypt_ctx;
 
 	if (aes_init() == EXIT_FAILURE) {
-		Log::Write(LogLevel_Warning, "Failed to Init AES Engine");
+		Log::Write(LogLevel_Warning, GetNodeId(), "Failed to Init AES Engine");
 		return;
 	}
 
 	if (aes_encrypt_key128(this->nk, this->EncryptKey) == EXIT_FAILURE) {
-		Log::Write(LogLevel_Warning, "Failed to Set Initial Network Key for Encryption");
+		Log::Write(LogLevel_Warning, GetNodeId(), "Failed to Set Initial Network Key for Encryption");
 		return;
 	}
 
 	if (aes_encrypt_key128(this->nk, this->AuthKey) == EXIT_FAILURE) {
-		Log::Write(LogLevel_Warning, "Failed to Set Initial Network Key for Authentication");
+		Log::Write(LogLevel_Warning, GetNodeId(), "Failed to Set Initial Network Key for Authentication");
 		return;
 	}
 
@@ -233,11 +219,11 @@ void Security::SetupNetworkKey
 	aes_mode_reset(this->AuthKey);
 
 	if (aes_ecb_encrypt(EncryptPassword, tmpEncKey, 16, this->EncryptKey) == EXIT_FAILURE) {
-		Log::Write(LogLevel_Warning, "Failed to Generate Encrypted Network Key for Encryption");
+		Log::Write(LogLevel_Warning, GetNodeId(), "Failed to Generate Encrypted Network Key for Encryption");
 		return;
 	}
 	if (aes_ecb_encrypt(AuthPassword, tmpAuthKey, 16, this->AuthKey) == EXIT_FAILURE) {
-		Log::Write(LogLevel_Warning, "Failed to Generate Encrypted Network Key for Authentication");
+		Log::Write(LogLevel_Warning, GetNodeId(), "Failed to Generate Encrypted Network Key for Authentication");
 		return;
 	}
 
@@ -245,11 +231,11 @@ void Security::SetupNetworkKey
 	aes_mode_reset(this->EncryptKey);
 	aes_mode_reset(this->AuthKey);
 	if (aes_encrypt_key128(tmpEncKey, this->EncryptKey) == EXIT_FAILURE) {
-		Log::Write(LogLevel_Warning, "Failed to set Encrypted Network Key for Encryption");
+		Log::Write(LogLevel_Warning, GetNodeId(), "Failed to set Encrypted Network Key for Encryption");
 		return;
 	}
 	if (aes_encrypt_key128(tmpAuthKey, this->AuthKey) == EXIT_FAILURE) {
-		Log::Write(LogLevel_Warning, "Failed to set Encrypted Network Key for Authentication");
+		Log::Write(LogLevel_Warning, GetNodeId(), "Failed to set Encrypted Network Key for Authentication");
 		return;
 	}
 	aes_mode_reset(this->EncryptKey);
@@ -260,7 +246,7 @@ void Security::SetupNetworkKey
 	PrintHex("IV", iv, 16);
 	PrintHex("input", pck, 19);
 	if (aes_ofb_decrypt(pck, out, 19, iv, this->EncryptKey) == EXIT_FAILURE) {
-		Log::Write(LogLevel_Warning, "Failed to Decrypt Packet");
+		Log::Write(LogLevel_Warning, GetNodeId(), "Failed to Decrypt Packet");
 		return;
 	}
 	PrintHex("Pck", out, 19);
@@ -337,7 +323,7 @@ bool Security::RequestValue
 	Driver::MsgQueue const _queue
 )
 {
-	Log::Write(LogLevel_Info, "Got a RequestValue Call");
+	Log::Write(LogLevel_Info, GetNodeId(), "Got a RequestValue Call");
 	return true;
 }
 
@@ -381,16 +367,16 @@ bool Security::HandleMsg
 			 * This means we must do a SecurityCmd_SupportedGet request ASAP so we dont have
 			 * Command Classes created after the Discovery Phase is completed!
 			 */
-			Log::Write(LogLevel_Info, "Received SecurityCmd_SupportedReport from node %d", GetNodeId() );
+			Log::Write(LogLevel_Info, GetNodeId(), "Received SecurityCmd_SupportedReport from node %d", GetNodeId() );
 			HandleSupportedReport(&_data[2], _length-2);
 			break;
 		}
 		case SecurityCmd_SchemeReport:
 		{
-			Log::Write(LogLevel_Info, "Received SecurityCmd_SchemeReport from node %d: %d", GetNodeId(), _data[1]);
+			Log::Write(LogLevel_Info, GetNodeId(), "Received SecurityCmd_SchemeReport from node %d: %d", GetNodeId(), _data[1]);
 			uint8 schemes = _data[1];
 			if (m_schemeagreed == true) {
-				Log::Write(LogLevel_Warning, "   Already Received a SecurityCmd_SchemeReport from the node. Ignoring");
+				Log::Write(LogLevel_Warning, GetNodeId(), "   Already Received a SecurityCmd_SchemeReport from the node. Ignoring");
 				break;
 			}
 			if( schemes == SecurityScheme_Zero )
@@ -398,7 +384,7 @@ bool Security::HandleMsg
 				/* We're good to go.  We now should send our NetworkKey to the device if this is the first
 				 * time we have seen it
 				 */
-				Log::Write(LogLevel_Info, "    Security scheme agreed." );
+				Log::Write(LogLevel_Info, GetNodeId(), "    Security scheme agreed." );
 				/* create the NetworkKey Packet. EncryptMessage will encrypt it for us (And request the NONCE) */
 				Msg * msg = new Msg ("SecurityCmd_NetworkKeySet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 				msg->Append( GetNodeId() );
@@ -416,7 +402,7 @@ bool Security::HandleMsg
 				/* No common security scheme.  The device should continue as an unsecured node.
 				 * but Some Command Classes might not be present...
 				 */
-				Log::Write(LogLevel_Warning,  "    No common security scheme.  The device will continue as an unsecured node." );
+				Log::Write(LogLevel_Warning,  GetNodeId(), "    No common security scheme.  The device will continue as an unsecured node." );
 			}
 			break;
 		}
@@ -425,7 +411,7 @@ bool Security::HandleMsg
 			/* we shouldn't get a NetworkKeySet from a node if we are the controller
 			 * as we send it out to the Devices
 			 */
-			Log::Write(LogLevel_Info,  "Received SecurityCmd_NetworkKeySet from node %d", GetNodeId() );
+			Log::Write(LogLevel_Info,  GetNodeId(), "Received SecurityCmd_NetworkKeySet from node %d", GetNodeId() );
 			break;
 		}
 		case SecurityCmd_NetworkKeyVerify:
@@ -433,7 +419,7 @@ bool Security::HandleMsg
 			/* if we can decrypt this packet, then we are assured that our NetworkKeySet is successfull
 			 * and thus should set the Flag referenced in SecurityCmd_SchemeReport
 			 */
-			Log::Write(LogLevel_Info,  "Received SecurityCmd_NetworkKeyVerify from node %d", GetNodeId() );
+			Log::Write(LogLevel_Info,  GetNodeId(), "Received SecurityCmd_NetworkKeyVerify from node %d", GetNodeId() );
 			/* now as for our SupportedGet */
 			Msg* msg = new Msg( "SecurityCmd_SupportedGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 			msg->Append( GetNodeId() );
@@ -450,7 +436,7 @@ bool Security::HandleMsg
 			/* only used in a Controller Replication Type enviroment.
 			 *
 			 */
-			Log::Write(LogLevel_Info,  "Received SecurityCmd_SchemeInherit from node %d", GetNodeId() );
+			Log::Write(LogLevel_Info,  GetNodeId(), "Received SecurityCmd_SchemeInherit from node %d", GetNodeId() );
 			break;
 		}
 		case SecurityCmd_NonceGet:
@@ -458,7 +444,7 @@ bool Security::HandleMsg
 			/* the Device wants to send us a Encrypted Packet, and thus requesting for our latest NONCE
 			 *
 			 */
-			Log::Write(LogLevel_Info,  "Received SecurityCmd_NonceGet from node %d", GetNodeId() );
+			Log::Write(LogLevel_Info,  GetNodeId(), "Received SecurityCmd_NonceGet from node %d", GetNodeId() );
 			SendNonceReport();
 			break;
 		}
@@ -467,7 +453,7 @@ bool Security::HandleMsg
 			/* we recieved a NONCE from a device, so assume that there is something in a queue to send
 			 * out
 			 */
-			Log::Write(LogLevel_Info,  "Received SecurityCmd_NonceReport from node %d", GetNodeId() );
+			Log::Write(LogLevel_Info,  GetNodeId(), "Received SecurityCmd_NonceReport from node %d", GetNodeId() );
 			EncryptMessage( &_data[1] );
 			m_waitingForNonce = false;
 			break;
@@ -477,7 +463,7 @@ bool Security::HandleMsg
 			/* We recieved a Encrypted single packet from the Device. Decrypt it.
 			 *
 			 */
-			Log::Write(LogLevel_Info,  "Received SecurityCmd_MessageEncap from node %d", GetNodeId() );
+			Log::Write(LogLevel_Info,  GetNodeId(), "Received SecurityCmd_MessageEncap from node %d", GetNodeId() );
 			DecryptMessage( _data, _length );
 			break;
 		}
@@ -486,7 +472,7 @@ bool Security::HandleMsg
 			/* we recieved a encrypted packet from the device, and the device is also asking us to send a
 			 * new NONCE to it, hence there must be multiple packets.
 			 */
-			Log::Write(LogLevel_Info,  "Received SecurityCmd_MessageEncapNonceGet from node %d", GetNodeId() );
+			Log::Write(LogLevel_Info,  GetNodeId(), "Received SecurityCmd_MessageEncapNonceGet from node %d", GetNodeId() );
 			DecryptMessage( _data, _length );
 			/* Regardless of the success/failure of Decrypting, send a new NONCE */
 			SendNonceReport();
@@ -681,7 +667,7 @@ bool Security::EncryptMessage
 	uint8 encryptedpayload[30];
 	aes_mode_reset(this->EncryptKey);
 	if (aes_ofb_encrypt(plaintextmsg, encryptedpayload, payload->m_length+1, initializationVector, this->EncryptKey) == EXIT_FAILURE) {
-		Log::Write(LogLevel_Warning, "Failed to Encrypt Packet");
+		Log::Write(LogLevel_Warning, GetNodeId(), "Failed to Encrypt Packet");
 		return false;
 	}
 	PrintHex("Encrypted Output", encryptedpayload, payload->m_length+1);
@@ -698,7 +684,7 @@ bool Security::EncryptMessage
 	aes_mode_reset(this->EncryptKey);
 	uint8 tmpoutput[16];
 	if (aes_ofb_encrypt(encryptedpayload, tmpoutput, payload->m_length+1, initializationVector, this->EncryptKey) == EXIT_FAILURE) {
-		Log::Write(LogLevel_Warning, "Failed to Encrypt Packet");
+		Log::Write(LogLevel_Warning, GetNodeId(), "Failed to Encrypt Packet");
 		return false;
 	}
 	PrintHex("tmp output", tmpoutput, payload->m_length+1);
@@ -745,7 +731,7 @@ bool Security::EncryptMessage
 	 * as the reply we will get back will be encrypted with the new Network key
 	 */
 	if ((this->m_networkkeyset == false) && (payload->m_data[0] == 0x98) && (payload->m_data[1] == 0x06)) {
-		Log::Write(LogLevel_Info, "Reseting Network Key after Inclusion");
+		Log::Write(LogLevel_Info, GetNodeId(), "Reseting Network Key after Inclusion");
 		this->m_networkkeyset = true;
 		SetupNetworkKey();
 	}
@@ -817,7 +803,7 @@ bool Security::DecryptMessage
 			encyptedpacket[i] = _data[9+i];
 		}
 	}
-	Log::Write(LogLevel_Debug, "Encrypted Packet Sizes: %d (Total) %d (Payload)", _length, encryptedpacketsize);
+	Log::Write(LogLevel_Debug, GetNodeId(), "Encrypted Packet Sizes: %d (Total) %d (Payload)", _length, encryptedpacketsize);
 	PrintHex("IV", iv, 16);
 	PrintHex("Encrypted", encyptedpacket, 16);
 	/* 8 - IV - 2 - Command Header */
@@ -827,13 +813,13 @@ bool Security::DecryptMessage
 	uint8_t iv[16] = {  0x81, 0x42, 0xd1, 0x51, 0xf1, 0x59, 0x3d, 0x70, 0xd5, 0xe3, 0x6c, 0xcb, 0x02, 0xd0, 0x3f, 0x5c,  /* */  };
    	uint8_t pck[] = {  0x25, 0x68, 0x06, 0xc5, 0xb3, 0xee, 0x2c, 0x17, 0x26, 0x7e, 0xf0, 0x84, 0xd4, 0xc3, 0xba, 0xed, 0xe5, 0xb9, 0x55};
 	if (aes_ofb_decrypt(pck, decryptpacket, 19, iv, this->EncryptKey) == EXIT_FAILURE) {
-		Log::Write(LogLevel_Warning, "Failed to Decrypt Packet");
+		Log::Write(LogLevel_Warning, GetNodeId(), "Failed to Decrypt Packet");
 		return false;
 	}
 	PrintHex("Pck", decryptpacket, 19);
 #else
 	if (aes_ofb_decrypt(encyptedpacket, decryptpacket, encryptedpacketsize, iv, this->EncryptKey) == EXIT_FAILURE) {
-		Log::Write(LogLevel_Warning, "Failed to Decrypt Packet");
+		Log::Write(LogLevel_Warning, GetNodeId(), "Failed to Decrypt Packet");
 		if (m_queue.size() > 1)
 			RequestNonce();
 		return false;
@@ -846,7 +832,7 @@ bool Security::DecryptMessage
 
 	this->GenerateAuthentication(_data, _length, GetNodeId(), GetDriver()->GetNodeId(), iv, mac);
 	if (memcmp(&_data[8+encryptedpacketsize+2], mac, 8) != 0) {
-		Log::Write(LogLevel_Warning, "MAC Authentication of Packet Failed. Dropping");
+		Log::Write(LogLevel_Warning, GetNodeId(), "MAC Authentication of Packet Failed. Dropping");
 		if (m_queue.size() > 1)
 			RequestNonce();
 		return false;
@@ -921,12 +907,12 @@ bool Security::GenerateAuthentication
 	uint8 bufsize = _length - 19 + 4; /* the size of buffer */
 
 	PrintHex("Raw Auth (minus IV)", buffer, bufsize);
-	Log::Write(LogLevel_Debug, "Raw Auth (Minus IV) Size: %d (%d)", bufsize, bufsize+16);
+	Log::Write(LogLevel_Debug, GetNodeId(), "Raw Auth (Minus IV) Size: %d (%d)", bufsize, bufsize+16);
 
 	aes_mode_reset(this->AuthKey);
 	/* encrypt the IV with ecb */
 	if (aes_ecb_encrypt(iv, tmpauth, 16, this->AuthKey) == EXIT_FAILURE) {
-		Log::Write(LogLevel_Warning, "Failed Initial ECB Encrypt of Auth Packet");
+		Log::Write(LogLevel_Warning, GetNodeId(), "Failed Initial ECB Encrypt of Auth Packet");
 		return false;
 	}
 
@@ -952,7 +938,7 @@ bool Security::GenerateAuthentication
 			block = 0;
 			aes_mode_reset(this->AuthKey);
 			if (aes_ecb_encrypt(tmpauth, tmpauth, 16, this->AuthKey) == EXIT_FAILURE) {
-				Log::Write(LogLevel_Warning, "Failed Subsequent (%d) ECB Encrypt of Auth Packet", i);
+				Log::Write(LogLevel_Warning, GetNodeId(), "Failed Subsequent (%d) ECB Encrypt of Auth Packet", i);
 				return false;
 			}
 		}
@@ -966,7 +952,7 @@ bool Security::GenerateAuthentication
 		}
 		aes_mode_reset(this->AuthKey);
 		if (aes_ecb_encrypt(tmpauth, tmpauth, 16, this->AuthKey) == EXIT_FAILURE) {
-			Log::Write(LogLevel_Warning, "Failed Final ECB Encrypt of Auth Packet");
+			Log::Write(LogLevel_Warning, GetNodeId(), "Failed Final ECB Encrypt of Auth Packet");
 			return false;
 		}
 	}
