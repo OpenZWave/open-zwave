@@ -203,12 +203,12 @@ bool DoorLock::RequestState
 	bool requests = false;
 	if( ( _requestFlags & RequestFlag_Static ) && HasStaticRequest( StaticRequest_Values ) )
 	{
-		requests = RequestValue( _requestFlags, DoorLockCmd_Configuration_Get, _instance, _queue );
+		requests = RequestValue( _requestFlags, Value_System_Config_Mode, _instance, _queue );
 	}
 
 	if( _requestFlags & RequestFlag_Dynamic )
 	{
-		requests |= RequestValue( _requestFlags, DoorLockCmd_Get, _instance, _queue );
+		requests |= RequestValue( _requestFlags, Value_Lock, _instance, _queue );
 	}
 
 	return requests;
@@ -229,7 +229,7 @@ bool DoorLock::RequestValue
 	Driver::MsgQueue const _queue
 )
 {
-	if ( _what == DoorLockCmd_Configuration_Get) {
+	if ( _what >= Value_System_Config_Mode) {
 		Msg* msg = new Msg( "DoorLockCmd_Configuration_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 		msg->SetInstance( this, _instance );
 		msg->Append( GetNodeId() );
@@ -240,7 +240,7 @@ bool DoorLock::RequestValue
 		GetDriver()->SendMsg( msg, _queue );
 		return true;
 
-	} else if ( _what == DoorLockCmd_Get) {
+	} else if ((_what == Value_Lock) || (_what == Value_Lock_Mode)) {
 
 		if ( IsGetSupported() )
 		{
