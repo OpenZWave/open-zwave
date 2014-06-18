@@ -26,6 +26,8 @@ If you are looking for device manuals, please contact the manufacturer directly.
 == Eurotronic ==
 ||[http://ozw.my-ho.st/Eurotronic/Eurotronic_Stella_Z.pdf Stellaz - Wall Radiator Thermostat Valve Control]||
 
+== Yale ( Assa Abloy) == 
+||[http://ozw.my-ho.st/Yale/Yale%20ZWave%20Developer%20Guide.pdf Yale ZWave Developer Guide]||
 
 =Other Sites=
 The following sites also contain various technical details about zwave devices that you might find usefull.
