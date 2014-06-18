@@ -119,6 +119,7 @@ Options* Options::Create
 		s_instance->AddOptionBool(		"SuppressValueRefresh",		false );					// if true, notifications for refreshed (but unchanged) values will not be sent
 		s_instance->AddOptionBool(		"PerformReturnRoutes",		true );					// if true, return routes will be updated
 		s_instance->AddOptionString(	"NetworkKey", 				string(""), 			false);
+		s_instance->AddOptionBool(		"RefreshAllUserCodes",		false ); 					// if true, during startup, we refresh all the UserCodes the device reports it supports. If False, we stop after we get the first "Available" slot (Some devices have 250+ usercode slots! - That makes our Session Stage Very Long )
 	}
 
 	return s_instance;

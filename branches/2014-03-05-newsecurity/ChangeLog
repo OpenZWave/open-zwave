@@ -17,5 +17,7 @@ Version 1.1
    warnings (Svente Karisson)
  - Add a Error String if we fail to parse our Options.xml files (Justin)
  - Added a Complete Door Lock Command Class (Justin)
-
+ - Change the Logic in the UserCode Command Class to only retrive UserCodes
+   upto the first available slot (Justin)
+ - Add a ValueButton to the UserCode class to refresh all UserCodes (Justin)
 
