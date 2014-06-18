@@ -41,6 +41,12 @@ The Various Options you can specify are:
 ||Exclude||String||Specifically Exclude Command Classes from the Library||
 ||SuppressValueRefresh||Bool||After a Value is Refreshed, should we send a notification to the application||
 ||RetryTimeout||Integer||Timeout before retrying to send a message. Defaults to 40 Seconds||
+||NetworkKey||16 Byte Key||Network Key to use for Encrypting Secure Messages over the Network||
+||EnableSIS||Bool||Automatically become a SUC if there is No SUC on the network||
+||AssumeAwake||Bool||Assume Devices that support the Wakeup Class are awake when starting up OZW||
+||RefreshAllUserCodes||Bool||Should we refresh all UserCodes in the UserCode CC when we start up ||
+
+
 
 
 ==Log Levels==
