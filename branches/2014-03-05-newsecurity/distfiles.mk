@@ -204,6 +204,7 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     config/fibaro/fgwpe.xml \
     cpp/src/Bitfield.h \
     config/fibaro/fgr221.xml \
+    config/vision/zm1601eu.xml \
     config/trane/TZEMT400AB32MAA.xml \
     cpp/src/platform/HidController.h \
     dotnet/build/vs2010/OpenZWaveDotNet.sln \
