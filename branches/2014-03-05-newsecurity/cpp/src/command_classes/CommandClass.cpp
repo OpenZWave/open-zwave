@@ -83,6 +83,21 @@ CommandClass::~CommandClass
 		map<uint8,uint8>::iterator it = m_endPointMap.begin();
 		m_endPointMap.erase( it );
 	}
+	while ( !m_RefreshClassValues.empty() )
+	{
+		for (unsigned int i = 0; i < m_RefreshClassValues.size(); i++)
+		{
+			RefreshValue *rcc = m_RefreshClassValues.at(i);
+			for (unsigned int j = 0; j < rcc->RefreshClasses.size(); i++)
+			{
+				delete rcc->RefreshClasses[j];
+			}
+			rcc->RefreshClasses.clear();
+			delete rcc;
+		}
+		m_RefreshClassValues.clear();
+	}
+
 }
 
 //-----------------------------------------------------------------------------
@@ -276,10 +291,110 @@ void CommandClass::ReadXML
 				// Apply any differences from the saved XML to the value
 				GetNodeUnsafe()->ReadValueFromXML( GetCommandClassId(), child );
 			}
+			else if (!strcmp( str, "TriggerRefreshValue" ) )
+			{
+				ReadValueRefreshXML(child);
+			}
 		}
 
 		child = child->NextSiblingElement();
 	}
+}
+
+//-----------------------------------------------------------------------------
+// <CommandClass::ReadValueRefreshXML>
+// Read the config that contains a list of Values that should be refreshed when
+// we recieve u updated Value from a device. (This helps Yale Door Locks, which send a
+// Alarm Report instead of DoorLock Report when the status of the Door Lock is changed
+//-----------------------------------------------------------------------------
+void CommandClass::ReadValueRefreshXML
+(
+	TiXmlElement const* _ccElement
+)
+{
+
+	char const* str;
+	bool ok = false;
+	const char *genre;
+	RefreshValue *rcc = new RefreshValue();
+	rcc->cc = GetCommandClassId();
+	genre = _ccElement->Attribute( "Genre" );
+	rcc->genre = Value::GetGenreEnumFromName(genre);
+	_ccElement->QueryIntAttribute( "Instance", (int*)&rcc->instance);
+	_ccElement->QueryIntAttribute( "Index", (int*)&rcc->index);
+	Log::Write(LogLevel_Info, GetNodeId(), "Value Refresh triggered by Genre: %d, Instance: %d, Index: %d for:", rcc->genre, rcc->instance, rcc->index);
+	TiXmlElement const* child = _ccElement->FirstChildElement();
+	while( child )
+	{
+		str = child->Value();
+		if( str )
+		{
+			if ( !strcmp(str, "RefreshClassValue"))
+			{
+				RefreshValue *arcc = new RefreshValue();
+				child->QueryIntAttribute( "CommandClass", (int*)&arcc->cc);
+				child->QueryIntAttribute( "RequestFlags", (int*)&arcc->genre);
+				child->QueryIntAttribute( "Instance", (int*)&arcc->instance);
+				child->QueryIntAttribute( "Index", (int*)&arcc->index);
+				Log::Write(LogLevel_Info, GetNodeId(), "    CommandClass: %d, RequestFlags: %d, Instance: %d, Index: %d", arcc->cc, arcc->genre, arcc->instance, arcc->index);
+				rcc->RefreshClasses.push_back(arcc);
+				ok = true;
+			}
+			else
+			{
+				Log::Write(LogLevel_Warning, GetNodeId(), "Got Unhandled Child Entry in TriggerRefreshValue XML Config: %s", str);
+			}
+		}
+	}
+	if (ok = true) {
+		m_RefreshClassValues.push_back( rcc );
+	} else {
+		Log::Write(LogLevel_Warning, GetNodeId(), "Failed to add a RefreshClassValue from XML");
+
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <CommandClass::CheckForRefreshValues>
+// Scan our m_RefreshClassValues vector to see if we should call any other
+// Command Classes to refresh their value
+//-----------------------------------------------------------------------------
+
+bool CommandClass::CheckForRefreshValues (
+		Value const* _value
+)
+{
+	if (m_RefreshClassValues.empty())
+		return false;
+
+	Node* node = GetNodeUnsafe();
+	if( node != NULL )
+	{
+		for (uint32 i = 0; i < m_RefreshClassValues.size(); i++)
+		{
+			RefreshValue *rcc = m_RefreshClassValues.at(i);
+			Log::Write(LogLevel_Debug, GetNodeId(), "Checking Value Against RefreshClassList: Genre %d = %d, Instance %d = %d, Index %d = %d", rcc->genre,
+					_value->GetID().GetGenre(), rcc->instance, _value->GetID().GetInstance(), rcc->index, _value->GetID().GetIndex());
+			if ((rcc->genre == _value->GetID().GetGenre()) && (rcc->instance == _value->GetID().GetInstance()) && (rcc->index == _value->GetID().GetIndex()) )
+			{
+				/* we got a match..... */
+				for (uint32 j = 0; j < rcc->RefreshClasses.size(); i++)
+				{
+					RefreshValue *arcc = rcc->RefreshClasses.at(j);
+					Log::Write(LogLevel_Debug, GetNodeId(), "Requesting Refresh of Value: CommandClass: %d Genre %d, Instance %d, Index %d", arcc->cc, arcc->genre, arcc->instance, arcc->index);
+					if( CommandClass* cc = node->GetCommandClass( arcc->cc ) )
+					{
+						cc->RequestValue(arcc->genre, arcc->index, arcc->instance, Driver::MsgQueue_Send);
+					}
+				}
+			}
+		}
+	}
+	else /* Driver */
+	{
+		Log::Write(LogLevel_Warning, GetNodeId(), "Can't get Node");
+	}
+	return true;
 }
 
 //-----------------------------------------------------------------------------

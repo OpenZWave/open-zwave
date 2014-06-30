@@ -450,6 +450,23 @@ void Value::OnValueChanged
 		notification->SetValueId( m_id );
 		driver->QueueNotification( notification ); 
 	}
+	/* Call Back to the Command Class that this Value has changed, so we can search the
+	 * TriggerRefreshValue vector to see if we should request any other values to be
+	 * refreshed.
+	 */
+	Node* node = NULL;
+	if( Driver* driver = Manager::Get()->GetDriver( m_id.GetHomeId() ) )
+	{
+		node = driver->GetNodeUnsafe( m_id.GetNodeId() );
+		if( node != NULL )
+		{
+			if( CommandClass* cc = node->GetCommandClass( m_id.GetCommandClassId() ) )
+			{
+				cc->CheckForRefreshValues(this);
+			}
+		}
+	}
+
 }
 
 //-----------------------------------------------------------------------------

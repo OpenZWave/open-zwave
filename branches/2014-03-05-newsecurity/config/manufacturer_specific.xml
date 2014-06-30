@@ -59,6 +59,9 @@
 	</Manufacturer>
 	<Manufacturer id="0029" name="Asia Heading">
 	</Manufacturer>
+	<Manufacturer id="0129" name="Assa Abloy">
+		<Product type="0002" id="0000" name="Yale Real Living Cap-Touch Deadbolt" config="assa_abloy/RealLivingCapTouch.xml" />
+	</Manufacturer>
 	<Manufacturer id="005d" name="Aspalis">
 		<Product type="0202" id="0511" name="Plugin Lamp Module"/>
 	</Manufacturer>

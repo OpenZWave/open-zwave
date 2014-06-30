@@ -71,6 +71,7 @@ namespace OpenZWave
 		virtual void SetVersion( uint8 const _version ){ m_version = _version; }
 
 		bool RequestStateForAllInstances( uint32 const _requestFlags, Driver::MsgQueue const _queue );
+		bool CheckForRefreshValues(Value const* _value );
 
 		// The highest version number of the command class implemented by OpenZWave.  We only need
 		// to do version gets on command classes that override this with a number greater than one.
@@ -130,8 +131,17 @@ namespace OpenZWave
 
 		void UpdateMappedClass( uint8 const _instance, uint8 const _classId, uint8 const _value );		// Update mapped class's value from BASIC class
 
+		typedef struct RefreshValue {
+			uint8 cc;
+			uint8 genre;
+			uint8 instance;
+			uint8 index;
+			std::vector<RefreshValue *> RefreshClasses;
+		} RefreshValue;
+
 	protected:
 		virtual void CreateVars( uint8 const _instance ){}
+		void ReadValueRefreshXML ( TiXmlElement const* _ccElement );
 
 	public:
 		virtual void CreateVars( uint8 const _instance, uint8 const _index ){}
@@ -150,6 +160,7 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		bool		m_getSupported;	    	// Get operation supported
 		bool		m_isSecured;		// is this command class secured with the Security Command Class
 		bool		m_SecureSupport; 	// Does this commandclass support secure encryption (eg, the Security CC doesn't encrypt itself, so it doesn't support encryption)
+		std::vector<RefreshValue *> m_RefreshClassValues; // what Command Class Values should we refresh ?
 
 	//-----------------------------------------------------------------------------
 	// Record which items of static data have been read from the device
