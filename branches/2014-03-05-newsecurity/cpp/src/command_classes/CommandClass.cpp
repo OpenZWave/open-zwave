@@ -479,6 +479,26 @@ void CommandClass::WriteXML
 			value->WriteXML( valueElement );
 		}
 	}
+	// Write out the TriggerRefreshValue if it exists
+	for (uint32 i = 0; i < m_RefreshClassValues.size(); i++)
+	{
+		RefreshValue *rcc = m_RefreshClassValues.at(i);
+		TiXmlElement* RefreshElement = new TiXmlElement("TriggerRefreshValue");
+		_ccElement->LinkEndChild( RefreshElement );
+		RefreshElement->SetAttribute("Genre", Value::GetGenreNameFromEnum((ValueID::ValueGenre)rcc->genre));
+		RefreshElement->SetAttribute("Instance", rcc->instance);
+		RefreshElement->SetAttribute("Index", rcc->index);
+		for (uint32 j = 0; j < rcc->RefreshClasses.size(); j++)
+		{
+			RefreshValue *arcc = rcc->RefreshClasses.at(j);
+			TiXmlElement *ClassElement = new TiXmlElement("RefreshClassValue");
+			RefreshElement->LinkEndChild(ClassElement);
+			ClassElement->SetAttribute("CommandClass", arcc->cc);
+			ClassElement->SetAttribute("RequestFlags", arcc->genre);
+			ClassElement->SetAttribute("Instance", arcc->instance);
+			ClassElement->SetAttribute("Index", arcc->index);
+		}
+	}
 }
 
 //-----------------------------------------------------------------------------
