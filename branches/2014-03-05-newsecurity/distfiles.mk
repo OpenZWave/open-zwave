@@ -185,8 +185,8 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     dotnet/examples/OZWForm/src/ValuePanelByte.cs \
     cpp/hidapi/pc/hidapi.pc.in \
     cpp/src/command_classes/SwitchToggleMultilevel.h \
-    cpp/hidapi/windows/hidapi.vcproj \
     cpp/src/Scene.cpp \
+    cpp/hidapi/windows/hidapi.vcproj \
     cpp/src/command_classes/Lock.cpp \
     cpp/tinyxml/tinystr.h \
     cpp/src/aes/aescrypt.c \
@@ -379,6 +379,7 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     cpp/src/platform/windows/ThreadImpl.h \
     cpp/src/Driver.cpp \
     cpp/src/command_classes/WakeUp.cpp \
+    config/assa_abloy/RealLivingCapTouch.xml \
     cpp/hidapi/mac/Makefile-manual \
     cpp/hidapi/windows/ddk_build/makefile \
     cpp/src/command_classes/ClimateControlSchedule.cpp \
@@ -452,8 +453,8 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     cpp/build/windows/vs2010/OpenZWave.vcxproj \
     dotnet/src/ZWNotification.h \
     config/zwave.me/ZME_WCD2.xml \
-    cpp/hidapi/m4/pkg.m4 \
     dotnet/build/vs2010/OpenZWaveDotNet.vcxproj.filters \
+    cpp/hidapi/m4/pkg.m4 \
     cpp/src/Defs.h \
     config/intermatic/ca8900.xml \
     cpp/src/command_classes/Powerlevel.h \
