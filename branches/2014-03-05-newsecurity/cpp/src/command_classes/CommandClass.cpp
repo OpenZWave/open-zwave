@@ -31,6 +31,7 @@
 #include "command_classes/CommandClass.h"
 #include "command_classes/Basic.h"
 #include "command_classes/MultiInstance.h"
+#include "command_classes/CommandClasses.h"
 #include "Msg.h"
 #include "Node.h"
 #include "Driver.h"
@@ -322,7 +323,7 @@ void CommandClass::ReadValueRefreshXML
 	rcc->genre = Value::GetGenreEnumFromName(genre);
 	_ccElement->QueryIntAttribute( "Instance", (int*)&rcc->instance);
 	_ccElement->QueryIntAttribute( "Index", (int*)&rcc->index);
-	Log::Write(LogLevel_Info, GetNodeId(), "Value Refresh triggered by Genre: %d, Instance: %d, Index: %d for:", rcc->genre, rcc->instance, rcc->index);
+	Log::Write(LogLevel_Info, GetNodeId(), "Value Refresh triggered by CommandClass: %s, Genre: %d, Instance: %d, Index: %d for:", GetCommandClassName().c_str(), rcc->genre, rcc->instance, rcc->index);
 	TiXmlElement const* child = _ccElement->FirstChildElement();
 	while( child )
 	{
@@ -336,7 +337,7 @@ void CommandClass::ReadValueRefreshXML
 				child->QueryIntAttribute( "RequestFlags", (int*)&arcc->genre);
 				child->QueryIntAttribute( "Instance", (int*)&arcc->instance);
 				child->QueryIntAttribute( "Index", (int*)&arcc->index);
-				Log::Write(LogLevel_Info, GetNodeId(), "    CommandClass: %d, RequestFlags: %d, Instance: %d, Index: %d", arcc->cc, arcc->genre, arcc->instance, arcc->index);
+				Log::Write(LogLevel_Info, GetNodeId(), "    CommandClass: %s, RequestFlags: %d, Instance: %d, Index: %d", CommandClasses::GetName(arcc->cc).c_str(), arcc->genre, arcc->instance, arcc->index);
 				rcc->RefreshClasses.push_back(arcc);
 				ok = true;
 			}
@@ -345,8 +346,9 @@ void CommandClass::ReadValueRefreshXML
 				Log::Write(LogLevel_Warning, GetNodeId(), "Got Unhandled Child Entry in TriggerRefreshValue XML Config: %s", str);
 			}
 		}
+		child = child->NextSiblingElement();
 	}
-	if (ok = true) {
+	if (ok == true) {
 		m_RefreshClassValues.push_back( rcc );
 	} else {
 		Log::Write(LogLevel_Warning, GetNodeId(), "Failed to add a RefreshClassValue from XML");
@@ -365,23 +367,24 @@ bool CommandClass::CheckForRefreshValues (
 )
 {
 	if (m_RefreshClassValues.empty())
+	{
+		//Log::Write(LogLevel_Debug, GetNodeId(), "Bailing out of CheckForRefreshValues");
 		return false;
-
+	}
 	Node* node = GetNodeUnsafe();
 	if( node != NULL )
 	{
 		for (uint32 i = 0; i < m_RefreshClassValues.size(); i++)
 		{
 			RefreshValue *rcc = m_RefreshClassValues.at(i);
-			Log::Write(LogLevel_Debug, GetNodeId(), "Checking Value Against RefreshClassList: Genre %d = %d, Instance %d = %d, Index %d = %d", rcc->genre,
-					_value->GetID().GetGenre(), rcc->instance, _value->GetID().GetInstance(), rcc->index, _value->GetID().GetIndex());
+			//Log::Write(LogLevel_Debug, GetNodeId(), "Checking Value Against RefreshClassList: CommandClass %s = %s, Genre %d = %d, Instance %d = %d, Index %d = %d", CommandClasses::GetName(rcc->cc).c_str(), CommandClasses::GetName(_value->GetID().GetCommandClassId()).c_str(), rcc->genre, _value->GetID().GetGenre(), rcc->instance, _value->GetID().GetInstance(), rcc->index, _value->GetID().GetIndex());
 			if ((rcc->genre == _value->GetID().GetGenre()) && (rcc->instance == _value->GetID().GetInstance()) && (rcc->index == _value->GetID().GetIndex()) )
 			{
 				/* we got a match..... */
-				for (uint32 j = 0; j < rcc->RefreshClasses.size(); i++)
+				for (uint32 j = 0; j < rcc->RefreshClasses.size(); j++)
 				{
 					RefreshValue *arcc = rcc->RefreshClasses.at(j);
-					Log::Write(LogLevel_Debug, GetNodeId(), "Requesting Refresh of Value: CommandClass: %d Genre %d, Instance %d, Index %d", arcc->cc, arcc->genre, arcc->instance, arcc->index);
+					Log::Write(LogLevel_Debug, GetNodeId(), "Requesting Refresh of Value: CommandClass: %s Genre %d, Instance %d, Index %d", CommandClasses::GetName(arcc->cc).c_str(), arcc->genre, arcc->instance, arcc->index);
 					if( CommandClass* cc = node->GetCommandClass( arcc->cc ) )
 					{
 						cc->RequestValue(arcc->genre, arcc->index, arcc->instance, Driver::MsgQueue_Send);
