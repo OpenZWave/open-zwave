@@ -20,4 +20,17 @@ Version 1.1
  - Change the Logic in the UserCode Command Class to only retrive UserCodes
    upto the first available slot (Justin)
  - Add a ValueButton to the UserCode class to refresh all UserCodes (Justin)
-
+ - Fixed Issue 301 - Updated Aeon Recessed Door Sensor (Justin)
+ - Fixed Issue 302 - New ID for Aeon Labs Door/Window Sensor (Justin)
+ - Fixed Issue 306 & 304 - Updated Fibaro FGMS Config File (Justin)
+ - Fixed Issue 308 - Add Zenzhou TZ65D Dual Wall Dimmer (Justin)
+ - Fixed Issue 309 - Add Config File for ZWave.Me Flush Mountable Switch (Justin)
+ - Fixed Issue 311 - Add Vision Siren (Justin)
+ - Fixed Issue 314 - Updated Fibaro RGBW Config File (Justin)
+ - Fixed Issue 318 - Updated Fibaro Wall Plug Config File (Justin)
+ - Fixed Issue 321 - Updated Fibaro FGRM222 Config File (Justin)
+ - Fixed Issue 324 - New Config file for Aeon Labs MiniMote (Justin)
+ - Added ZWave.Me iTemp Config file thanks to Willem Burgers (Justin)
+ - Added new id for Aeon Labs Micro Smart Engergy Illuminator G2 thanks to
+   jmeyer (Justin)
+ 

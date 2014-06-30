@@ -46,6 +46,7 @@
 		<Product type="0003" id="000b" name="Smart Energy Strip"/>
 		<Product type="0003" id="000c" name="Micro Smart Energy Switch"/>
 		<Product type="0003" id="000d" name="Micro Smart Energy Illuminator"/>
+		<Product type="0003" id="001b" name="Micro Smart Energy Illuminator G2"/>
 		<Product type="0003" id="000e" name="Micro Motor Controller"/>
 		<Product type="0003" id="001a" name="Micro Switch (2nd Edition)"/>
 		<Product type="0003" id="0012" name="Micro Smart Energy Switch G2" config="aeon_labs/ses.xml" />
