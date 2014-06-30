@@ -435,9 +435,9 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     dotnet/src/ZWValueID.h \
     config/aeon_labs/recessed_doorsensor.xml \
     debian/changelog \
+    dotnet/build/vs2010/OpenZWaveDotNet.vcxproj \
     cpp/src/Node.h \
     cpp/src/command_classes/Security.cpp \
-    dotnet/build/vs2010/OpenZWaveDotNet.vcxproj \
     cpp/src/platform/Stream.cpp \
     cpp/src/aes/aesopt.h \
     cpp/hidapi/windows/ddk_build/sources \
@@ -452,6 +452,7 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     cpp/src/value_classes/ValueSchedule.h \
     cpp/build/windows/vs2010/OpenZWave.vcxproj \
     dotnet/src/ZWNotification.h \
+    config/wenzhou/tz65d.xml \
     config/zwave.me/ZME_WCD2.xml \
     dotnet/build/vs2010/OpenZWaveDotNet.vcxproj.filters \
     cpp/hidapi/m4/pkg.m4 \
