@@ -2917,39 +2917,47 @@ void Driver::HandleRemoveNodeFromNetworkRequest
 	uint8* _data
 )
 {
-	uint8 nodeId = GetNodeNumber( m_currentMsg );
+	//uint8 nodeId = GetNodeNumber( m_currentMsg );
 	if( m_currentControllerCommand == NULL )
 	{
 		return;
 	}
 	ControllerState state = m_currentControllerCommand->m_controllerState;
-	Log::Write( LogLevel_Info, nodeId, "FUNC_ID_ZW_REMOVE_NODE_FROM_NETWORK:" );
+	Log::Write( LogLevel_Info, "FUNC_ID_ZW_REMOVE_NODE_FROM_NETWORK:" );
 
 	switch( _data[3] )
 	{
 		case REMOVE_NODE_STATUS_LEARN_READY:
 		{
-			Log::Write( LogLevel_Info, nodeId, "REMOVE_NODE_STATUS_LEARN_READY" );
+			Log::Write( LogLevel_Info, "REMOVE_NODE_STATUS_LEARN_READY" );
 			state = ControllerState_Waiting;
 			m_currentControllerCommand->m_controllerCommandNode = 0;
 			break;
 		}
 		case REMOVE_NODE_STATUS_NODE_FOUND:
 		{
-			Log::Write( LogLevel_Info, nodeId, "REMOVE_NODE_STATUS_NODE_FOUND" );
+			Log::Write( LogLevel_Info, "REMOVE_NODE_STATUS_NODE_FOUND" );
 			state = ControllerState_InProgress;
 			break;
 		}
 		case REMOVE_NODE_STATUS_REMOVING_SLAVE:
 		{
-			Log::Write( LogLevel_Info, nodeId, "REMOVE_NODE_STATUS_REMOVING_SLAVE" );
-			Log::Write( LogLevel_Info, nodeId, "Removing node ID %d", _data[4] );
-			m_currentControllerCommand->m_controllerCommandNode = _data[4];
+			Log::Write( LogLevel_Info, "REMOVE_NODE_STATUS_REMOVING_SLAVE" );
+			if (_data[4] != 0)
+			{
+				Log::Write( LogLevel_Info, "Removing node ID %d", _data[4] );
+				m_currentControllerCommand->m_controllerCommandNode = _data[4];
+			}
+			else
+			{
+				Log::Write( LogLevel_Warning, "Remove Node Failed - NodeID 0 Returned");
+				state = ControllerState_Failed;
+			}
 			break;
 		}
 		case REMOVE_NODE_STATUS_REMOVING_CONTROLLER:
 		{
-			Log::Write( LogLevel_Info, nodeId, "REMOVE_NODE_STATUS_REMOVING_CONTROLLER" );
+			Log::Write( LogLevel_Info, "REMOVE_NODE_STATUS_REMOVING_CONTROLLER" );
 			m_currentControllerCommand->m_controllerCommandNode = _data[4];
 			if( m_currentControllerCommand->m_controllerCommandNode == 0 ) // Some controllers don't return node number
 			{
@@ -2974,7 +2982,7 @@ void Driver::HandleRemoveNodeFromNetworkRequest
 						{
 							if( m_currentControllerCommand->m_controllerCommandNode != 0 )
 							{
-								Log::Write( LogLevel_Info, nodeId, "Alternative controller lookup found more then one match. Using the first one found." );
+								Log::Write( LogLevel_Info, "Alternative controller lookup found more then one match. Using the first one found." );
 							}
 							else
 							{
@@ -2986,19 +2994,19 @@ void Driver::HandleRemoveNodeFromNetworkRequest
 				}
 				else
 				{
-					Log::Write( LogLevel_Warning, nodeId, "WARNING: Node is 0 but not enough data to perform alternative match." );
+					Log::Write( LogLevel_Warning, "WARNING: Node is 0 but not enough data to perform alternative match." );
 				}
 			}
 			else
 			{
 				m_currentControllerCommand->m_controllerCommandNode = _data[4];
 			}
-			Log::Write( LogLevel_Info, nodeId, "Removing controller ID %d", m_currentControllerCommand->m_controllerCommandNode );
+			Log::Write( LogLevel_Info, "Removing controller ID %d", m_currentControllerCommand->m_controllerCommandNode );
 			break;
 		}
 		case REMOVE_NODE_STATUS_DONE:
 		{
-			Log::Write( LogLevel_Info, nodeId, "REMOVE_NODE_STATUS_DONE" );
+			Log::Write( LogLevel_Info, "REMOVE_NODE_STATUS_DONE" );
 			if( !m_currentControllerCommand->m_controllerCommandDone )
 			{
 
@@ -3031,7 +3039,7 @@ void Driver::HandleRemoveNodeFromNetworkRequest
 		case REMOVE_NODE_STATUS_FAILED:
 		{
 			AddNodeStop( FUNC_ID_ZW_REMOVE_NODE_FROM_NETWORK );
-			Log::Write( LogLevel_Warning, nodeId, "WARNING: REMOVE_NODE_STATUS_FAILED" );
+			Log::Write( LogLevel_Warning,  "WARNING: REMOVE_NODE_STATUS_FAILED" );
 			state = ControllerState_Failed;
 			break;
 		}
