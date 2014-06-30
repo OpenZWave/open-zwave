@@ -155,6 +155,7 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     cpp/src/platform/windows/ThreadImpl.cpp \
     cpp/src/command_classes/SwitchToggleBinary.cpp \
     cpp/src/platform/SerialController.h \
+    config/zwave.me/iTemp.xml \
     cpp/src/command_classes/AssociationCommandConfiguration.h \
     cpp/hidapi/mac/hid.c \
     cpp/examples/windows/MinOZW/vs2008/MinOZW.sln \
