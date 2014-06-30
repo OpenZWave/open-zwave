@@ -6214,6 +6214,7 @@ void Driver::LogDriverStatistics
 uint8 *Driver::GetNetworkKey() {
 	std::string networkKey;
 	std::vector<std::string> elems;
+	unsigned int tempkey[16];
 	static uint8 keybytes[16];
 	static bool keySet = false;
 	if (keySet == false) {
@@ -6225,9 +6226,11 @@ uint8 *Driver::GetNetworkKey() {
 		}
 		int i = 0;
 		for (std::vector<std::string>::iterator it = elems.begin(); it != elems.end(); it++) {
-			if (0 == sscanf(OpenZWave::trim(*it).c_str(), "%x", &keybytes[i])) {
+			if (0 == sscanf(OpenZWave::trim(*it).c_str(), "%x", &tempkey[i])) {
 				Log::Write(LogLevel_Warning, "Cannot Convert Network Key Byte %s to Key", (*it).c_str());
 				assert(0);
+			} else {
+				keybytes[i] = (tempkey[i] & 0xFF);
 			}
 			i++;
 		}
