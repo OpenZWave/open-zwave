@@ -472,6 +472,7 @@
 	</Manufacturer>
 	<Manufacturer id="0109" name="Vision">
 		<Product type="1001" id="0101" name="Z-Wave USB Stick"/>
+		<Product type="2005" id="0503" name="Battery Operated Siren (ZME1601EU)" config="vision/zm160eu.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0115" name="Z-Wave.Me">
 		<Product type="1000" id="0002" name="ZME_06433 Wall Flush-Mountable Dimmer" config="zwave.me/ZME_06433.xml"/>
