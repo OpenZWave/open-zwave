@@ -195,6 +195,7 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     cpp/hidapi/LICENSE.txt \
     docs/images+css/Doxywizard5.JPG \
     dotnet/examples/OZWForm/src/MainForm.cs \
+    config/zwave.me/ZME_05431.xml \
     config/everspring/an158.xml \
     cpp/build/windows/installer/openzwave.nsi \
     cpp/src/platform/windows/TimeStampImpl.h \
