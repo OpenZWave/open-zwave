@@ -28,7 +28,7 @@
 #ifndef _Basic_H
 #define _Basic_H
 
-#include "CommandClass.h"
+#include "command_classes/CommandClass.h"
 
 namespace OpenZWave
 {

@@ -30,7 +30,7 @@
 
 #include <string>
 #include "Defs.h"
-#include "Controller.h"
+#include "platform/Controller.h"
 #include "hidapi.h"
 
 namespace OpenZWave

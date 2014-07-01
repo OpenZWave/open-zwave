@@ -27,9 +27,9 @@
 
 #include <cstring>
 #include "Manager.h"
-#include "Log.h"
-#include "Value.h"
-#include "ValueID.h"
+#include "platform/Log.h"
+#include "value_classes/Value.h"
+#include "value_classes/ValueID.h"
 #include "Scene.h"
 #include "Options.h"
 
@@ -408,7 +408,7 @@ int Scene::GetValues
 	vector<ValueID>* o_value
 )
 {
-	int size = m_values.size();
+	int size = (int) m_values.size();
 	if( size > 0 )
 	{
 		for( vector<SceneStorage*>::iterator it = m_values.begin(); it != m_values.end(); ++it )

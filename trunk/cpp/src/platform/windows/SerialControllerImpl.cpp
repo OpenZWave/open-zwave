@@ -28,7 +28,7 @@
 #include "Defs.h"
 #include "SerialControllerImpl.h"
 
-#include "Log.h"
+#include "platform/Log.h"
 
 using namespace OpenZWave;
 
@@ -179,7 +179,7 @@ bool SerialControllerImpl::Init
 {  
 	Log::Write( LogLevel_Info, "    Trying to open serial port %s (Attempt %d)", m_owner->m_serialControllerName.c_str(), _attempts );
 
-	m_hSerialController = CreateFile( m_owner->m_serialControllerName.c_str(), 
+	m_hSerialController = CreateFileA( m_owner->m_serialControllerName.c_str(), 
 							 GENERIC_READ | GENERIC_WRITE, 
 							 0, 
 							 NULL,

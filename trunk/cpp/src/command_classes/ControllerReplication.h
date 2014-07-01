@@ -28,7 +28,7 @@
 #ifndef _ControllerReplication_H
 #define _ControllerReplication_H
 
-#include "CommandClass.h"
+#include "command_classes/CommandClass.h"
 
 namespace OpenZWave
 {

@@ -36,10 +36,10 @@
 #include "Node.h"
 #include "Group.h"
 #include "Notification.h"
-#include "ValueStore.h"
-#include "Value.h"
-#include "ValueBool.h"
-#include "Log.h"
+#include "value_classes/ValueStore.h"
+#include "value_classes/Value.h"
+#include "value_classes/ValueBool.h"
+#include "platform/Log.h"
 
 using namespace OpenZWave;
 

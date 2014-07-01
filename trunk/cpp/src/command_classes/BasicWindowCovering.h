@@ -28,7 +28,7 @@
 #ifndef _BasicWindowCovering_H
 #define _BasicWindowCovering_H
 
-#include "CommandClass.h"
+#include "command_classes/CommandClass.h"
 
 namespace OpenZWave
 {

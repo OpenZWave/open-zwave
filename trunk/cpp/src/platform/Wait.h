@@ -30,7 +30,7 @@
 #define _Wait_H
 
 #include <list>
-#include "Ref.h"
+#include "platform/Ref.h"
 
 namespace OpenZWave
 {

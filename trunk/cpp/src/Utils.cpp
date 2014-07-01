@@ -25,6 +25,7 @@
 //
 //-----------------------------------------------------------------------------
 
+
 #include "Defs.h"
 #include "Utils.h"
 
@@ -35,12 +36,12 @@ using namespace OpenZWave;
 // Convert a string to all upper-case.
 //-----------------------------------------------------------------------------
 string OpenZWave::ToUpper
-( 
+(
 	string const& _str
-) 
+)
 {
 	string upper = _str;
-	transform( upper.begin(), upper.end(), upper.begin(), ::toupper ); 
+	transform( upper.begin(), upper.end(), upper.begin(), ::toupper );
 	return upper;
 }
 
@@ -49,11 +50,67 @@ string OpenZWave::ToUpper
 // Convert a string to all lower-case.
 //-----------------------------------------------------------------------------
 string OpenZWave::ToLower
-( 
+(
 	string const& _str
-) 
+)
 {
 	string lower = _str;
-	transform( lower.begin(), lower.end(), lower.begin(), ::tolower ); 
+	transform( lower.begin(), lower.end(), lower.begin(), ::tolower );
 	return lower;
+}
+
+//-----------------------------------------------------------------------------
+// <OpenZWave::trim>
+// Remove WhiteSpaces from the begining and end of a string
+//-----------------------------------------------------------------------------
+
+std::string &OpenZWave::trim
+(
+		std::string &s
+)
+{
+    if(s.size() == 0)
+    {
+        return s;
+    }
+
+    int val = 0;
+    for (size_t cur = 0; cur < s.size(); cur++)
+    {
+        if(s[cur] != ' ' && isalnum(s[cur]))
+        {
+            s[val] = s[cur];
+            val++;
+        }
+    }
+    s.resize(val);
+    return s;
+}
+
+//-----------------------------------------------------------------------------
+// <OpenZWave::split>
+// Split a String into a vector, seperated by anything specified in seperators.
+//-----------------------------------------------------------------------------
+void OpenZWave::split
+(
+		std::vector<std::string>& lst,
+		const std::string& input,
+		const std::string& separators,
+		bool remove_empty
+)
+{
+    std::ostringstream word;
+    for (size_t n = 0; n < input.size(); ++n)
+    {
+        if (std::string::npos == separators.find(input[n]))
+            word << input[n];
+        else
+        {
+            if (!word.str().empty() || !remove_empty)
+                lst.push_back(word.str());
+            word.str("");
+        }
+    }
+    if (!word.str().empty() || !remove_empty)
+        lst.push_back(word.str());
 }

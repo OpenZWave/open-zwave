@@ -26,9 +26,9 @@
 //-----------------------------------------------------------------------------
 
 #include "tinyxml.h"
-#include "ValueRaw.h"
+#include "value_classes/ValueRaw.h"
 #include "Msg.h"
-#include "Log.h"
+#include "platform/Log.h"
 #include "Manager.h"
 #include <ctime>
 

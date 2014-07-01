@@ -28,7 +28,7 @@
 #ifndef _SensorMultilevel_H
 #define _SensorMultilevel_H
 
-#include "CommandClass.h"
+#include "command_classes/CommandClass.h"
 
 namespace OpenZWave
 {

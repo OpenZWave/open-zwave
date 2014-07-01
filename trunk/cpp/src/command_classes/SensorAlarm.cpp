@@ -25,15 +25,15 @@
 //
 //-----------------------------------------------------------------------------
 
-#include "CommandClasses.h"
-#include "SensorAlarm.h"
+#include "command_classes/CommandClasses.h"
+#include "command_classes/SensorAlarm.h"
 #include "Defs.h"
 #include "Msg.h"
 #include "Node.h"
 #include "Driver.h"
-#include "Log.h"
+#include "platform/Log.h"
 
-#include "ValueByte.h"
+#include "value_classes/ValueByte.h"
 
 using namespace OpenZWave;
 

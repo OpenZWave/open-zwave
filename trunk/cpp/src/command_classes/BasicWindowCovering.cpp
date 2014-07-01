@@ -25,14 +25,14 @@
 //
 //-----------------------------------------------------------------------------
 
-#include "CommandClasses.h"
-#include "BasicWindowCovering.h"
+#include "command_classes/CommandClasses.h"
+#include "command_classes/BasicWindowCovering.h"
 #include "Defs.h"
 #include "Msg.h"
 #include "Driver.h"
 #include "Node.h"
-#include "Log.h"
-#include "ValueButton.h"
+#include "platform/Log.h"
+#include "value_classes/ValueButton.h"
 
 using namespace OpenZWave;
 

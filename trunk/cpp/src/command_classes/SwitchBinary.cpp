@@ -25,16 +25,16 @@
 //
 //-----------------------------------------------------------------------------
 
-#include "CommandClasses.h"
-#include "SwitchBinary.h"
-#include "WakeUp.h"
+#include "command_classes/CommandClasses.h"
+#include "command_classes/SwitchBinary.h"
+#include "command_classes/WakeUp.h"
 #include "Defs.h"
 #include "Msg.h"
 #include "Driver.h"
 #include "Node.h"
-#include "Log.h"
+#include "platform/Log.h"
 
-#include "ValueBool.h"
+#include "value_classes/ValueBool.h"
 
 using namespace OpenZWave;
 

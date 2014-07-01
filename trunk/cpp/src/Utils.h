@@ -28,9 +28,11 @@
 #ifndef _Utils_H
 #define _Utils_H
 
-#include <string> 
-#include <locale> 
-#include <algorithm> 
+#include <string>
+#include <locale>
+#include <algorithm>
+#include <sstream>
+#include <vector>
 
 namespace OpenZWave
 {
@@ -49,6 +51,22 @@ namespace OpenZWave
 	 * \see ToUpper, Trim
 	 */
 	string ToLower( string const& _str );
+
+	/**
+	 * Split a String into a Vector, seperated by seperators
+	 * \param lst the vector to store the results in
+	 * \param input the input string to split
+	 * \param seperators a string containing a list of valid seperators
+	 * \param remove_empty if after spliting a string, the any of the results are a empty string, should we preseve them or not
+	 */
+	void split (std::vector<std::string>& lst, const std::string& input, const std::string& separators, bool remove_empty = true);
+
+	/**
+	 * Trim Whitespace from the start and end of a string.
+	 * \param s the string to trim
+	 * \return the trimmed string
+	 */
+	std::string &trim ( std::string &s );
 
 } // namespace OpenZWave
 

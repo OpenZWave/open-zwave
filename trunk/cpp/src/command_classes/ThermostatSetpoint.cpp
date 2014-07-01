@@ -25,15 +25,15 @@
 //
 //-----------------------------------------------------------------------------
 
-#include "CommandClasses.h"
-#include "ThermostatSetpoint.h"
+#include "command_classes/CommandClasses.h"
+#include "command_classes/ThermostatSetpoint.h"
 #include "Defs.h"
 #include "Msg.h"
 #include "Node.h"
 #include "Driver.h"
-#include "Log.h"
+#include "platform/Log.h"
 
-#include "ValueDecimal.h"
+#include "value_classes/ValueDecimal.h"
 
 using namespace OpenZWave;
 

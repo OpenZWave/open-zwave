@@ -28,7 +28,7 @@
 #ifndef _NodeNaming_H
 #define _NodeNaming_H
 
-#include "CommandClass.h"
+#include "command_classes/CommandClass.h"
 
 namespace OpenZWave
 {

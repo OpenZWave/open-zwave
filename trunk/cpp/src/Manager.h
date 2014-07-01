@@ -37,7 +37,7 @@
 
 #include "Defs.h"
 #include "Driver.h"
-#include "ValueID.h"
+#include "value_classes/ValueID.h"
 
 namespace OpenZWave
 {

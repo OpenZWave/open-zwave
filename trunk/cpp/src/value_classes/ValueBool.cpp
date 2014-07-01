@@ -26,10 +26,10 @@
 //-----------------------------------------------------------------------------
 
 #include "tinyxml.h"
-#include "ValueBool.h"
+#include "value_classes/ValueBool.h"
 #include "Driver.h"
 #include "Node.h"
-#include "Log.h"
+#include "platform/Log.h"
 #include "Manager.h"
 #include <ctime>
 

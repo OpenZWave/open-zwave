@@ -28,7 +28,7 @@
 #ifndef _Clock_H
 #define _Clock_H
 
-#include "CommandClass.h"
+#include "command_classes/CommandClass.h"
 
 namespace OpenZWave
 {

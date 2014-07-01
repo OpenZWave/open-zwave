@@ -31,7 +31,7 @@
 #include <stdarg.h>
 #include <string>
 #include "Defs.h"
-#include "FileOps.h"
+#include "platform/FileOps.h"
 
 namespace OpenZWave
 {

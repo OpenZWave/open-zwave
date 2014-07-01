@@ -8,4 +8,4 @@ Description: A Open Source implementation of the ZWave Serial API
 URL: http://www.openzwave.org/
 Version: @VERSION@
 Libs: -L${libdir} -lopenzwave
-Cflags: -I${includedir} -I${includedir}/command_classes/ -I${includedir}/value_classes/ -I${includedir}/platform/
+Cflags: -I${includedir} 

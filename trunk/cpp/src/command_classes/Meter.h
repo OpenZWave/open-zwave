@@ -28,7 +28,7 @@
 #ifndef _Meter_H
 #define _Meter_H
 
-#include "CommandClass.h"
+#include "command_classes/CommandClass.h"
 
 namespace OpenZWave
 {

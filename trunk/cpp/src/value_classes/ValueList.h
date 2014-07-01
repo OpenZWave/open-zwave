@@ -31,7 +31,7 @@
 #include <string>
 #include <vector>
 #include "Defs.h"
-#include "Value.h"
+#include "value_classes/Value.h"
 
 class TiXmlElement;
 

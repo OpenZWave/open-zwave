@@ -25,16 +25,16 @@
 //
 //-----------------------------------------------------------------------------
 
-#include "CommandClasses.h"
-#include "Clock.h"
+#include "command_classes/CommandClasses.h"
+#include "command_classes/Clock.h"
 #include "Defs.h"
 #include "Msg.h"
 #include "Node.h"
 #include "Driver.h"
-#include "Log.h"
+#include "platform/Log.h"
 
-#include "ValueByte.h"
-#include "ValueList.h"
+#include "value_classes/ValueByte.h"
+#include "value_classes/ValueList.h"
 
 using namespace OpenZWave;
 

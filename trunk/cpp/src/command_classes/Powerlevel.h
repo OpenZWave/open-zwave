@@ -28,7 +28,7 @@
 #ifndef _Powerlevel_H
 #define _Powerlevel_H
 
-#include "CommandClass.h"
+#include "command_classes/CommandClass.h"
 
 namespace OpenZWave
 {

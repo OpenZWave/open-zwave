@@ -26,9 +26,9 @@
 //-----------------------------------------------------------------------------
 
 #include "tinyxml.h"
-#include "ValueString.h"
+#include "value_classes/ValueString.h"
 #include "Msg.h"
-#include "Log.h"
+#include "platform/Log.h"
 #include "Manager.h"
 
 using namespace OpenZWave;

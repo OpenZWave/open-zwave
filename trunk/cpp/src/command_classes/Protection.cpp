@@ -27,15 +27,15 @@
 
 #include <vector>
 
-#include "CommandClasses.h"
-#include "Protection.h"
+#include "command_classes/CommandClasses.h"
+#include "command_classes/Protection.h"
 #include "Defs.h"
 #include "Msg.h"
 #include "Node.h"
 #include "Driver.h"
-#include "Log.h"
+#include "platform/Log.h"
 
-#include "ValueList.h"
+#include "value_classes/ValueList.h"
 
 using namespace OpenZWave;
 

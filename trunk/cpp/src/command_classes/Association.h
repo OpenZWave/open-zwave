@@ -29,7 +29,7 @@
 #define _Association_H
 
 #include <vector>
-#include "CommandClass.h"
+#include "command_classes/CommandClass.h"
 
 namespace OpenZWave
 {

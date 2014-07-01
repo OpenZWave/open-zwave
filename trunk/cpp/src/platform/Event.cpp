@@ -26,8 +26,13 @@
 //
 //-----------------------------------------------------------------------------
 #include "Defs.h"
-#include "Event.h"
-#include "EventImpl.h"	// Platform-specific implementation of an event
+#include "platform/Event.h"
+
+#ifdef WIN32
+#include "platform/windows/EventImpl.h"	// Platform-specific implementation of an event
+#else
+#include "platform/unix/EventImpl.h"	// Platform-specific implementation of an event
+#endif
 
 using namespace OpenZWave;
 
