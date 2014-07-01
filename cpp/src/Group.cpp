@@ -32,8 +32,8 @@
 #include "Node.h"
 #include "Notification.h"
 #include "Options.h"
-#include "Association.h"
-#include "AssociationCommandConfiguration.h"
+#include "command_classes/Association.h"
+#include "command_classes/AssociationCommandConfiguration.h"
 
 using namespace OpenZWave;
 
@@ -327,7 +327,7 @@ uint32 Group::GetAssociations
 	uint8** o_associations 
 )
 {
-	uint32 numNodes = m_associations.size();
+	size_t numNodes = m_associations.size();
 	if( !numNodes )
 	{
 		*o_associations = NULL;
@@ -342,7 +342,7 @@ uint32 Group::GetAssociations
 	}
 
 	*o_associations = associations;
-	return numNodes;
+	return (uint32) numNodes;
 }
 
 //-----------------------------------------------------------------------------

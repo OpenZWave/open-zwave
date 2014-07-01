@@ -28,8 +28,8 @@
 #include "Defs.h"
 #include "Msg.h"
 #include "Node.h"
-#include "Log.h"
-#include "MultiInstance.h"
+#include "platform/Log.h"
+#include "command_classes/MultiInstance.h"
 
 using namespace OpenZWave;
 

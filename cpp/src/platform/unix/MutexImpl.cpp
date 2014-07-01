@@ -27,7 +27,7 @@
 //-----------------------------------------------------------------------------
 
 #include "Defs.h"
-#include "Log.h"
+#include "platform/Log.h"
 #include "MutexImpl.h"
 
 #include <stdio.h>

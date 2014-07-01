@@ -26,8 +26,13 @@
 //
 //-----------------------------------------------------------------------------
 #include "Defs.h"
-#include "Mutex.h"
-#include "MutexImpl.h"	// Platform-specific implementation of a mutex
+#include "platform/Mutex.h"
+
+#ifdef WIN32
+#include "platform/windows/MutexImpl.h"	// Platform-specific implementation of a mutex
+#else
+#include "platform/unix/MutexImpl.h"	// Platform-specific implementation of a mutex
+#endif
 
 
 using namespace OpenZWave;

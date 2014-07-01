@@ -28,7 +28,7 @@
 #ifndef _EnergyProduction_H
 #define _EnergyProduction_H
 
-#include "CommandClass.h"
+#include "command_classes/CommandClass.h"
 
 namespace OpenZWave
 {

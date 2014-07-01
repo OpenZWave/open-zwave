@@ -28,7 +28,7 @@
 #ifndef _Language_H
 #define _Language_H
 
-#include "CommandClass.h"
+#include "command_classes/CommandClass.h"
 
 namespace OpenZWave
 {

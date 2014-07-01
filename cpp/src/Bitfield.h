@@ -146,7 +146,7 @@ namespace OpenZWave
 		};
 
 		Iterator Begin()const{ return Iterator( this, 0 ); }
-		Iterator End()const{ return Iterator( this, m_bits.size()<<5 ); }
+		Iterator End()const{ return Iterator( this, (uint32) m_bits.size()<<5 ); }
 
 	private:
 OPENZWAVE_EXPORT_WARNINGS_OFF

@@ -28,7 +28,7 @@
 #ifndef _Alarm_H
 #define _Alarm_H
 
-#include "CommandClass.h"
+#include "command_classes/CommandClass.h"
 
 namespace OpenZWave
 {

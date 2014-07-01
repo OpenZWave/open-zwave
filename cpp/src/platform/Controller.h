@@ -32,7 +32,7 @@
 #include <list>
 #include "Defs.h"
 #include "Driver.h"
-#include "Stream.h"
+#include "platform/Stream.h"
 
 namespace OpenZWave
 {

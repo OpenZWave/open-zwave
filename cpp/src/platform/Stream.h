@@ -29,7 +29,7 @@
 #define _Stream_H
 
 #include "Defs.h"
-#include "Wait.h"
+#include "platform/Wait.h"
 
 #include <string>
 

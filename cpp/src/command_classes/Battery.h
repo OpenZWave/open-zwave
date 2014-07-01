@@ -28,7 +28,7 @@
 #ifndef _Battery_H
 #define _Battery_H
 
-#include "CommandClass.h"
+#include "command_classes/CommandClass.h"
 
 namespace OpenZWave
 {

@@ -24,7 +24,6 @@
 //	along with OpenZWave.  If not, see <http://www.gnu.org/licenses/>.
 //
 //-----------------------------------------------------------------------------
-
 #include "Defs.h"
 #include "Driver.h"
 #include "Options.h"
@@ -34,27 +33,31 @@
 #include "Notification.h"
 #include "Scene.h"
 
-#include "Event.h"
-#include "Mutex.h"
-#include "SerialController.h"
-#include "HidController.h"
-#include "Thread.h"
-#include "Log.h"
-#include "TimeStamp.h"
+#include "platform/Event.h"
+#include "platform/Mutex.h"
+#include "platform/SerialController.h"
+#include "platform/HidController.h"
+#include "platform/Thread.h"
+#include "platform/Log.h"
+#include "platform/TimeStamp.h"
 
-#include "CommandClasses.h"
-#include "ApplicationStatus.h"
-#include "ControllerReplication.h"
-#include "WakeUp.h"
-#include "SwitchAll.h"
-#include "ManufacturerSpecific.h"
-#include "NoOperation.h"
+#include "command_classes/CommandClasses.h"
+#include "command_classes/ApplicationStatus.h"
+#include "command_classes/ControllerReplication.h"
+#include "command_classes/Security.h"
+#include "command_classes/WakeUp.h"
+#include "command_classes/SwitchAll.h"
+#include "command_classes/ManufacturerSpecific.h"
+#include "command_classes/NoOperation.h"
 
-#include "ValueID.h"
-#include "Value.h"
-#include "ValueStore.h"
+#include "value_classes/ValueID.h"
+#include "value_classes/Value.h"
+#include "value_classes/ValueStore.h"
+
+#include "Utils.h"
 
 #include <algorithm>
+#include <iostream>
 
 using namespace OpenZWave;
 
@@ -105,6 +108,7 @@ static char const* c_controllerCommandNames[] =
 static char const* c_sendQueueNames[] =
 {
 	"Command",
+	"Security",
 	"NoOp",
 	"Controller",
 	"WakeUp",
@@ -345,17 +349,18 @@ void Driver::DriverThreadProc
 		if( Init( attempts ) )
 		{
 			// Driver has been initialised
-			Wait* waitObjects[10];
+			Wait* waitObjects[11];
 			waitObjects[0] = _exitEvent;				// Thread must exit.
 			waitObjects[1] = m_notificationsEvent;			// Notifications waiting to be sent.
 			waitObjects[2] = m_controller;				// Controller has received data.
 			waitObjects[3] = m_queueEvent[MsgQueue_Command];	// A controller command is in progress.
-			waitObjects[4] = m_queueEvent[MsgQueue_NoOp];		// Send device probes and diagnostics messages
-			waitObjects[5] = m_queueEvent[MsgQueue_Controller];	// A multi-part controller command is in progress
-			waitObjects[6] = m_queueEvent[MsgQueue_WakeUp];		// A node has woken. Pending messages should be sent.
-			waitObjects[7] = m_queueEvent[MsgQueue_Send];		// Ordinary requests to be sent.
-			waitObjects[8] = m_queueEvent[MsgQueue_Query];		// Node queries are pending.
-			waitObjects[9] = m_queueEvent[MsgQueue_Poll];		// Poll request is waiting.
+			waitObjects[4] = m_queueEvent[MsgQueue_Security];	// Security Related Commands (As they have a timeout)
+			waitObjects[5] = m_queueEvent[MsgQueue_NoOp];		// Send device probes and diagnostics messages
+			waitObjects[6] = m_queueEvent[MsgQueue_Controller];	// A multi-part controller command is in progress
+			waitObjects[7] = m_queueEvent[MsgQueue_WakeUp];		// A node has woken. Pending messages should be sent.
+			waitObjects[8] = m_queueEvent[MsgQueue_Send];		// Ordinary requests to be sent.
+			waitObjects[9] = m_queueEvent[MsgQueue_Query];		// Node queries are pending.
+			waitObjects[10] = m_queueEvent[MsgQueue_Poll];		// Poll request is waiting.
 
 			TimeStamp retryTimeStamp;
 			int retryTimeout = RETRY_TIMEOUT;
@@ -364,7 +369,7 @@ void Driver::DriverThreadProc
 			while( true )
 			{
 				Log::Write( LogLevel_StreamDetail, "      Top of DriverThreadProc loop." );
-				uint32 count = 10;
+				uint32 count = 11;
 				int32 timeout = Wait::Timeout_Infinite;
 
 				// If we're waiting for a message to complete, we can only
@@ -380,7 +385,7 @@ void Driver::DriverThreadProc
 				}
 				else if( m_currentControllerCommand != NULL )
 				{
-					count = 6;
+					count = 7;
 				}
 				else
 				{
@@ -389,6 +394,7 @@ void Driver::DriverThreadProc
 
 				// Wait for something to do
 				int32 res = Wait::Multiple( waitObjects, count, timeout );
+
 				switch( res )
 				{
 					case -1:
@@ -923,9 +929,10 @@ void Driver::SendMsg
 	item.m_msg = _msg;
 	_msg->Finalize();
 
-	// If the message is for a sleeping node, we queue it in the node itself.
+
 	if( Node* node = GetNode(_msg->GetTargetNodeId()) )
 	{
+		// If the message is for a sleeping node, we queue it in the node itself.
 		if( !node->IsListeningDevice() )
 		{
 			if( WakeUp* wakeUp = static_cast<WakeUp*>( node->GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
@@ -954,6 +961,18 @@ void Driver::SendMsg
 			}
 		}
 
+		/* if the node Supports the Security Class - check if this message is meant to be encapsulated */
+		if ( Security* security = static_cast<Security *>( node->GetCommandClass(Security::StaticGetCommandClassId() ) ) )
+		{
+			CommandClass *cc = node->GetCommandClass(_msg->GetSendingCommandClass());
+			if ( cc->IsSecured() )
+			{
+				Log::Write( LogLevel_Detail, GetNodeNumber( _msg ), "Encrypting Message For Command Class %s", cc->GetCommandClassName().c_str());
+				security->SendMsg(_msg);
+				ReleaseNodes();
+				return;
+			}
+		}
 		ReleaseNodes();
 	}
 
@@ -973,6 +992,7 @@ bool Driver::WriteNextMsg
 	MsgQueue const _queue
 )
 {
+
 	// There are messages to send, so get the one at the front of the queue
 	m_sendMutex->Lock();
 	MsgQueueItem item = m_msgQueue[_queue].front();
@@ -2896,39 +2916,47 @@ void Driver::HandleRemoveNodeFromNetworkRequest
 	uint8* _data
 )
 {
-	uint8 nodeId = GetNodeNumber( m_currentMsg );
+	//uint8 nodeId = GetNodeNumber( m_currentMsg );
 	if( m_currentControllerCommand == NULL )
 	{
 		return;
 	}
 	ControllerState state = m_currentControllerCommand->m_controllerState;
-	Log::Write( LogLevel_Info, nodeId, "FUNC_ID_ZW_REMOVE_NODE_FROM_NETWORK:" );
+	Log::Write( LogLevel_Info, "FUNC_ID_ZW_REMOVE_NODE_FROM_NETWORK:" );
 
 	switch( _data[3] )
 	{
 		case REMOVE_NODE_STATUS_LEARN_READY:
 		{
-			Log::Write( LogLevel_Info, nodeId, "REMOVE_NODE_STATUS_LEARN_READY" );
+			Log::Write( LogLevel_Info, "REMOVE_NODE_STATUS_LEARN_READY" );
 			state = ControllerState_Waiting;
 			m_currentControllerCommand->m_controllerCommandNode = 0;
 			break;
 		}
 		case REMOVE_NODE_STATUS_NODE_FOUND:
 		{
-			Log::Write( LogLevel_Info, nodeId, "REMOVE_NODE_STATUS_NODE_FOUND" );
+			Log::Write( LogLevel_Info, "REMOVE_NODE_STATUS_NODE_FOUND" );
 			state = ControllerState_InProgress;
 			break;
 		}
 		case REMOVE_NODE_STATUS_REMOVING_SLAVE:
 		{
-			Log::Write( LogLevel_Info, nodeId, "REMOVE_NODE_STATUS_REMOVING_SLAVE" );
-			Log::Write( LogLevel_Info, nodeId, "Removing node ID %d", _data[4] );
-			m_currentControllerCommand->m_controllerCommandNode = _data[4];
+			Log::Write( LogLevel_Info, "REMOVE_NODE_STATUS_REMOVING_SLAVE" );
+			if (_data[4] != 0)
+			{
+				Log::Write( LogLevel_Info, "Removing node ID %d", _data[4] );
+				m_currentControllerCommand->m_controllerCommandNode = _data[4];
+			}
+			else
+			{
+				Log::Write( LogLevel_Warning, "Remove Node Failed - NodeID 0 Returned");
+				state = ControllerState_Failed;
+			}
 			break;
 		}
 		case REMOVE_NODE_STATUS_REMOVING_CONTROLLER:
 		{
-			Log::Write( LogLevel_Info, nodeId, "REMOVE_NODE_STATUS_REMOVING_CONTROLLER" );
+			Log::Write( LogLevel_Info, "REMOVE_NODE_STATUS_REMOVING_CONTROLLER" );
 			m_currentControllerCommand->m_controllerCommandNode = _data[4];
 			if( m_currentControllerCommand->m_controllerCommandNode == 0 ) // Some controllers don't return node number
 			{
@@ -2953,7 +2981,7 @@ void Driver::HandleRemoveNodeFromNetworkRequest
 						{
 							if( m_currentControllerCommand->m_controllerCommandNode != 0 )
 							{
-								Log::Write( LogLevel_Info, nodeId, "Alternative controller lookup found more then one match. Using the first one found." );
+								Log::Write( LogLevel_Info, "Alternative controller lookup found more then one match. Using the first one found." );
 							}
 							else
 							{
@@ -2965,19 +2993,19 @@ void Driver::HandleRemoveNodeFromNetworkRequest
 				}
 				else
 				{
-					Log::Write( LogLevel_Warning, nodeId, "WARNING: Node is 0 but not enough data to perform alternative match." );
+					Log::Write( LogLevel_Warning, "WARNING: Node is 0 but not enough data to perform alternative match." );
 				}
 			}
 			else
 			{
 				m_currentControllerCommand->m_controllerCommandNode = _data[4];
 			}
-			Log::Write( LogLevel_Info, nodeId, "Removing controller ID %d", m_currentControllerCommand->m_controllerCommandNode );
+			Log::Write( LogLevel_Info, "Removing controller ID %d", m_currentControllerCommand->m_controllerCommandNode );
 			break;
 		}
 		case REMOVE_NODE_STATUS_DONE:
 		{
-			Log::Write( LogLevel_Info, nodeId, "REMOVE_NODE_STATUS_DONE" );
+			Log::Write( LogLevel_Info, "REMOVE_NODE_STATUS_DONE" );
 			if( !m_currentControllerCommand->m_controllerCommandDone )
 			{
 
@@ -3010,7 +3038,7 @@ void Driver::HandleRemoveNodeFromNetworkRequest
 		case REMOVE_NODE_STATUS_FAILED:
 		{
 			AddNodeStop( FUNC_ID_ZW_REMOVE_NODE_FROM_NETWORK );
-			Log::Write( LogLevel_Warning, nodeId, "WARNING: REMOVE_NODE_STATUS_FAILED" );
+			Log::Write( LogLevel_Warning,  "WARNING: REMOVE_NODE_STATUS_FAILED" );
 			state = ControllerState_Failed;
 			break;
 		}
@@ -3199,7 +3227,7 @@ void Driver::HandleReplaceFailedNodeRequest
 			// Request new node info for this device
 			if( m_currentControllerCommand != NULL )
 			{
-				InitNode( m_currentControllerCommand->m_controllerCommandNode );
+				InitNode( m_currentControllerCommand->m_controllerCommandNode, true );
 			}
 			break;
 		}
@@ -3273,7 +3301,7 @@ void Driver::HandleApplicationCommandHandlerRequest
 		{
 			node->m_receivedUnsolicited++;
 		}
-		if ( !node->IsNodeAlive() ) 
+		if ( !node->IsNodeAlive() )
 		{
 		    node->SetNodeAlive( true );
                 }
@@ -3287,7 +3315,7 @@ void Driver::HandleApplicationCommandHandlerRequest
 		if( m_controllerReplication && m_currentControllerCommand && ( ControllerCommand_ReceiveConfiguration == m_currentControllerCommand->m_controllerCommand ) )
 		{
 			m_controllerReplication->HandleMsg( &_data[6], _data[4] );
-			
+
 			UpdateControllerState( ControllerState_InProgress );
 		}
 	}
@@ -3631,7 +3659,7 @@ void Driver::CommonAddNodeStatusRequestHandler
 			state = ControllerState_Completed;
 			if( m_currentControllerCommand != NULL && m_currentControllerCommand->m_controllerCommandNode != 0xff )
 			{
-				InitNode( m_currentControllerCommand->m_controllerCommandNode );
+				InitNode( m_currentControllerCommand->m_controllerCommandNode, true );
 			}
 
 			// Not sure about the new controller function here.
@@ -3960,7 +3988,7 @@ void Driver::PollThreadProc
 					Log::Write( LogLevel_Info, "The pollInterval setting is only %d, which appears to be a legacy setting.  Multiplying by 1000 to convert to ms.", pollInterval );
 					pollInterval *= 1000;
 				}
-				pollInterval /= m_pollList.size();
+				pollInterval /= (int32) m_pollList.size();
 			}
 
 			// Request the state of the value from the node to which it belongs
@@ -4079,7 +4107,8 @@ void Driver::InitAllNodes
 //-----------------------------------------------------------------------------
 void Driver::InitNode
 (
-	uint8 const _nodeId
+	uint8 const _nodeId,
+	bool newNode
 )
 {
 	// Delete any existing node and replace it with a new one
@@ -4095,6 +4124,7 @@ void Driver::InitNode
 
 	// Add the new node
 	m_nodes[_nodeId] = new Node( m_homeId, _nodeId );
+	if (newNode == true) static_cast<Node *>(m_nodes[_nodeId])->SetAddingNode();
 	ReleaseNodes();
 
 	Notification* notification = new Notification( Notification::Type_NodeAdded );
@@ -4103,6 +4133,7 @@ void Driver::InitNode
 
 	// Request the node info
 	m_nodes[_nodeId]->SetQueryStage( Node::QueryStage_ProtocolInfo );
+	Log::Write(LogLevel_Info, "Initilizing Node. New Node: %s (%s)", static_cast<Node *>(m_nodes[_nodeId])->IsAddingNode() ? "true" : "false", newNode ? "true" : "false");
 }
 
 //-----------------------------------------------------------------------------
@@ -6181,4 +6212,36 @@ void Driver::LogDriverStatistics
 	Log::Write( LogLevel_Always, "Messages retransmitted: . . . . . . . . . . . . . . . . . %ld", data.m_retries );
 	Log::Write( LogLevel_Always, "Messages dropped and not delivered: . . . . . . . . . . . %ld", data.m_dropped );
 	Log::Write( LogLevel_Always, "***************************************************************************" );
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::GetNetworkKey>
+// Get the Network Key we will use for Security Command Class
+//-----------------------------------------------------------------------------
+uint8 *Driver::GetNetworkKey() {
+	std::string networkKey;
+	std::vector<std::string> elems;
+	unsigned int tempkey[16];
+	static uint8 keybytes[16];
+	static bool keySet = false;
+	if (keySet == false) {
+		Options::Get()->GetOptionAsString("NetworkKey", &networkKey );
+		OpenZWave::split(elems, networkKey, ",", true);
+		if (elems.size() != 16) {
+			Log::Write(LogLevel_Warning, "Invalid Network Key. Does not contain 16 Bytes");
+			assert(0);
+		}
+		int i = 0;
+		for (std::vector<std::string>::iterator it = elems.begin(); it != elems.end(); it++) {
+			if (0 == sscanf(OpenZWave::trim(*it).c_str(), "%x", &tempkey[i])) {
+				Log::Write(LogLevel_Warning, "Cannot Convert Network Key Byte %s to Key", (*it).c_str());
+				assert(0);
+			} else {
+				keybytes[i] = (tempkey[i] & 0xFF);
+			}
+			i++;
+		}
+		keySet = true;
+	}
+	return keybytes;
 }

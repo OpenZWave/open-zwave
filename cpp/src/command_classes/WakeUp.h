@@ -29,7 +29,7 @@
 #define _WakeUp_H
 
 #include <list>
-#include "CommandClass.h"
+#include "command_classes/CommandClass.h"
 #include "Driver.h"
 
 namespace OpenZWave

@@ -25,15 +25,15 @@
 //
 //-----------------------------------------------------------------------------
 
-#include "CommandClasses.h"
-#include "SwitchToggleMultilevel.h"
+#include "command_classes/CommandClasses.h"
+#include "command_classes/SwitchToggleMultilevel.h"
 #include "Defs.h"
 #include "Msg.h"
 #include "Driver.h"
 #include "Node.h"
-#include "Log.h"
+#include "platform/Log.h"
 
-#include "ValueByte.h"
+#include "value_classes/ValueByte.h"
 
 using namespace OpenZWave;
 

@@ -25,13 +25,13 @@
 //
 //-----------------------------------------------------------------------------
 
-#include "CommandClasses.h"
-#include "NoOperation.h"
+#include "command_classes/CommandClasses.h"
+#include "command_classes/NoOperation.h"
 #include "Defs.h"
 #include "Msg.h"
 #include "Node.h"
 #include "Driver.h"
-#include "Log.h"
+#include "platform/Log.h"
 
 using namespace OpenZWave;
 

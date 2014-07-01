@@ -29,7 +29,7 @@
 #define _Configuration_H
 
 #include <list>
-#include "CommandClass.h"
+#include "command_classes/CommandClass.h"
 
 namespace OpenZWave
 {

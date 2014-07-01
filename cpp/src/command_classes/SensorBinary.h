@@ -28,7 +28,7 @@
 #ifndef _SensorBinary_H
 #define _SensorBinary_H
 
-#include "CommandClass.h"
+#include "command_classes/CommandClass.h"
 
 namespace OpenZWave
 {

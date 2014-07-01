@@ -39,12 +39,15 @@
 #include "Node.h"
 #include "Group.h"
 #include "Notification.h"
-#include "ValueStore.h"
-#include "Value.h"
-#include "ValueBool.h"
-#include "Log.h"
+#include "value_classes/ValueStore.h"
+#include "value_classes/Value.h"
+#include "value_classes/ValueBool.h"
+#include "platform/Log.h"
 
 using namespace OpenZWave;
+
+        bool temp = false;
+
 
 static uint32 g_homeId = 0;
 static bool   g_initFailed = false;
@@ -155,6 +158,9 @@ void OnNotification
 			nodeInfo->m_nodeId = _notification->GetNodeId();
 			nodeInfo->m_polled = false;		
 			g_nodes.push_back( nodeInfo );
+		        if (temp == true) {
+			    Manager::Get()->CancelControllerCommand( _notification->GetHomeId() );
+                        }
 			break;
 		}
 
@@ -314,8 +320,6 @@ int main( int argc, char* argv[] )
 	if( !g_initFailed )
 	{
 
-		Manager::Get()->WriteConfig( g_homeId );
-
 		// The section below demonstrates setting up polling for a variable.  In this simple
 		// example, it has been hardwired to poll COMMAND_CLASS_BASIC on the each node that 
 		// supports this setting.
@@ -332,7 +336,7 @@ int main( int argc, char* argv[] )
 				ValueID v = *it2;
 				if( v.GetCommandClassId() == 0x20 )
 				{
-					Manager::Get()->EnablePoll( v, 2 );		// enables polling with "intensity" of 2, though this is irrelevant with only one value polled
+//					Manager::Get()->EnablePoll( v, 2 );		// enables polling with "intensity" of 2, though this is irrelevant with only one value polled
 					break;
 				}
 			}

@@ -28,10 +28,10 @@
 #include <unistd.h>
 #include <pthread.h>
 #include "Defs.h"
-#include "Thread.h"
-#include "Event.h"
+#include "platform/Thread.h"
+#include "platform/Event.h"
 #include "SerialControllerImpl.h"
-#include "Log.h"
+#include "platform/Log.h"
 
 #ifdef __linux__
 #include <libudev.h>

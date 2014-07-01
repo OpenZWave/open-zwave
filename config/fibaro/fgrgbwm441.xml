@@ -99,5 +99,5 @@
       <Group index="5" max_associations="1" label="Controller Updates" auto="true"/>
     </Associations>
   </CommandClass>
-
+  <CommandClass id="32" action="remove" />
 </Product>

@@ -18,8 +18,7 @@ DEBUG_LDFLAGS	:= -g
 top_srcdir := $(abspath $(dir $(lastword $(MAKEFILE_LIST)))../../../)
 
 
-INCLUDES	:= -I $(top_srcdir)/cpp/src -I $(top_srcdir)/cpp/src/command_classes/ -I $(top_srcdir)/cpp/src/value_classes/ \
-	-I $(top_srcdir)/cpp/src/platform/ -I $(top_srcdir)/cpp/src/platform/unix -I $(top_srcdir)/cpp/tinyxml/ -I $(top_srcdir)/cpp/hidapi/hidapi/
+INCLUDES	:= -I $(top_srcdir)/cpp/src -I $(top_srcdir)/cpp/tinyxml/ -I $(top_srcdir)/cpp/hidapi/hidapi/
 LIBS =  $(wildcard $(LIBDIR)/*.so $(top_builddir)/*.so $(top_builddir)/cpp/build/*.so )
 LIBSDIR = $(abspath $(dir $(firstword $(LIBS))))
 minozwsrc := $(notdir $(wildcard $(top_srcdir)/cpp/examples/MinOZW/*.cpp))

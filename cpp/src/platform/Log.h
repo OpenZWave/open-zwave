@@ -32,10 +32,12 @@
 #include <string>
 #include "Defs.h"
 
+
+
 namespace OpenZWave
 {
 	class Mutex;
-
+	extern char const *LogLevelString[];
 	enum LogLevel
 	{
 		LogLevel_None,		/**< Disable all logging */

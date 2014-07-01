@@ -28,7 +28,7 @@
 #ifndef _SceneActivation_H
 #define _SceneActivation_H
 
-#include "CommandClass.h"
+#include "command_classes/CommandClass.h"
 
 namespace OpenZWave
 {

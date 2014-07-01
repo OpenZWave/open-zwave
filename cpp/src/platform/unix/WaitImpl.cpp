@@ -27,7 +27,7 @@
 //
 //-----------------------------------------------------------------------------
 #include "Defs.h"
-#include "Wait.h"
+#include "platform/Wait.h"
 #include "WaitImpl.h"
 
 #include <stdio.h>

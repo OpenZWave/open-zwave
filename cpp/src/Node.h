@@ -33,10 +33,10 @@
 #include <list>
 #include <map>
 #include "Defs.h"
-#include "ValueID.h"
-#include "ValueList.h"
+#include "value_classes/ValueID.h"
+#include "value_classes/ValueList.h"
 #include "Msg.h"
-#include "TimeStamp.h"
+#include "platform/TimeStamp.h"
 
 class TiXmlElement;
 
@@ -57,7 +57,7 @@ namespace OpenZWave
 	class ValueString;
 	class Mutex;
 
-	/** \brief The Node class describes a Z-Wave node object...typically a device on the 
+	/** \brief The Node class describes a Z-Wave node object...typically a device on the
 	 *  Z-Wave network.
 	 */
 	class Node
@@ -87,6 +87,7 @@ namespace OpenZWave
 		friend class MultiInstance;
 		friend class NodeNaming;
 		friend class Protection;
+		friend class Security;
 		friend class SensorAlarm;
 		friend class SensorBinary;
 		friend class SensorMultilevel;
@@ -113,12 +114,12 @@ namespace OpenZWave
 		 *  \param _nodeId The nodeId of this node.
 		 */
 		Node( uint32 const _homeId, uint8 const _nodeId );
-		/** Destructor cleans up memory allocated to node and its child objects. 
+		/** Destructor cleans up memory allocated to node and its child objects.
 		*/
 		virtual ~Node();
 
 	private:
-		/** Returns a pointer to the driver (interface with a Z-Wave controller) 
+		/** Returns a pointer to the driver (interface with a Z-Wave controller)
 		 *  associated with this node.
 		*/
 		Driver* GetDriver()const;
@@ -127,13 +128,14 @@ namespace OpenZWave
 	// Initialization
 	//-----------------------------------------------------------------------------
 	public:
-		enum QueryStage														
+		enum QueryStage
 		{
 			QueryStage_ProtocolInfo,				/**< Retrieve protocol information */
 			QueryStage_Probe,					/**< Ping device to see if alive */
 			QueryStage_WakeUp,					/**< Start wake up process if a sleeping node */
 			QueryStage_ManufacturerSpecific1,			/**< Retrieve manufacturer name and product ids if ProtocolInfo lets us */
 			QueryStage_NodeInfo,					/**< Retrieve info about supported, controlled command classes */
+			QueryStage_SecurityReport,				/**< Retrive a list of Command Classes that require Security */
 			QueryStage_ManufacturerSpecific2,			/**< Retrieve manufacturer name and product ids */
 			QueryStage_Versions,					/**< Retrieve version information */
 			QueryStage_Instances,					/**< Retrieve information about multiple command class instances */
@@ -150,37 +152,37 @@ namespace OpenZWave
 
 
 		/**
-		 * This function advances the query process (see Remarks below for more detail on the 
+		 * This function advances the query process (see Remarks below for more detail on the
 		 * process).  It iterates through the various query stages enumerated in Node::QueryStage.
-		 * 
+		 *
 		 * \remark
 		 * For OpenZWave to discover everything about a node, we have to follow a certain
 		 * order of queries, because the results of one stage may affect what is requested
 		 * in the next stage.  The stage is saved with the node data, so that any incomplete
 		 * queries can be restarted the next time the application runs.
 		 * <p>
-		 * The individual command classes also store some state information as to whether 
-		 * they have had a response to certain queries.  This state information is 
+		 * The individual command classes also store some state information as to whether
+		 * they have had a response to certain queries.  This state information is
 		 * initilized by the SetStaticRequests call in QueryStage_None.  It is also saved,
 		 * so we do not need to request state  from every command class if some have previously
-		 * responded. 
+		 * responded.
 		 */
 		void AdvanceQueries();
 
-		/** 
+		/**
 		 *  Signal that a specific query stage has been completed for this node.  This will
-		 *  only work if the query process for this node is indeed at the specified stage.  
+		 *  only work if the query process for this node is indeed at the specified stage.
 		 *  Otherwise, the function returns with no action.
 		 *  \param _stage The current stage of the query process.
 		 */
 		void QueryStageComplete( QueryStage const _stage );
 
-		/** 
+		/**
 		 *  Retry the specified query stage (up to _maxAttempts retries).  This will
-		 *  only work if the query process for this node is indeed at the specified stage.  
+		 *  only work if the query process for this node is indeed at the specified stage.
 		 *  Otherwise, the function returns with no action.
 		 *  \param _stage The query stage to retry.
-		 *  \param _maxAttempts 
+		 *  \param _maxAttempts
 		 */
 		void QueryStageRetry( QueryStage const _stage, uint8 const _maxAttempts = 0 );	    // maxAttempts of zero means no limit
 
@@ -285,15 +287,18 @@ namespace OpenZWave
 		uint32 GetMaxBaudRate()const{ return m_maxBaudRate; }
 		uint8 GetVersion()const{ return m_version; }
 		uint8 GetSecurity()const{ return m_security; }
-		
+
 		uint8 GetNodeId()const{ return m_nodeId; }
-		
+
 		uint8 GetBasic()const{ return m_basic; }
 		uint8 GetGeneric()const{ return m_generic; }
 		uint8 GetSpecific()const{ return m_specific; }
-		string const& GetType()const{ return m_type; }	
+		string const& GetType()const{ return m_type; }
 		uint32 GetNeighbors( uint8** o_associations );
 		bool IsController()const{ return ( m_basic == 0x01 || m_basic == 0x02 ) && ( m_generic == 0x01 || m_generic == 0x02 ); }
+		bool IsAddingNode() const { return m_addingNode; }	/* These three *AddingNode functions are used to tell if we this node is just being discovered. Currently used by the Security CC to initiate the Network Key Exchange */
+		void SetAddingNode() { m_addingNode = true; }
+		void ClearAddingNode() { m_addingNode = false; }
 
 	private:
 		bool		m_listening;
@@ -313,6 +318,7 @@ namespace OpenZWave
 		uint8		m_numRouteNodes;	// number of node routes
 		uint8		m_routeNodes[5];	// nodes to route to
 		map<uint8,uint8>	m_buttonMap;	// Map button IDs into virtual node numbers
+		bool		m_addingNode;
 
 	//-----------------------------------------------------------------------------
 	// Device Naming
@@ -321,13 +327,13 @@ namespace OpenZWave
 		// Manufacturer, Product and Name are stored here so they can be set by the
 		// user even if the device does not support the relevant command classes.
 		string GetManufacturerName()const{ return m_manufacturerName; }
-		string GetProductName()const{ return m_productName; }	
-		string GetNodeName()const{ return m_nodeName; }	
-		string GetLocation()const{ return m_location; }	
+		string GetProductName()const{ return m_productName; }
+		string GetNodeName()const{ return m_nodeName; }
+		string GetLocation()const{ return m_location; }
 
 		string GetManufacturerId()const{ return m_manufacturerId; }
-		string GetProductType()const{ return m_productType; }	
-		string GetProductId()const{ return m_productId; }	
+		string GetProductType()const{ return m_productType; }
+		string GetProductId()const{ return m_productId; }
 
 		void SetManufacturerName( string const& _manufacturerName ){ m_manufacturerName = _manufacturerName; }
 		void SetProductName( string const& _productName ){ m_productName = _productName; }
@@ -337,7 +343,7 @@ namespace OpenZWave
 		void SetManufacturerId( string const& _manufacturerId ){ m_manufacturerId = _manufacturerId; }
 		void SetProductType( string const& _productType ){ m_productType = _productType; }
 		void SetProductId( string const& _productId ){ m_productId = _productId; }
-		
+
 		string		m_manufacturerName;
 		string		m_productName;
 		string		m_nodeName;
@@ -360,19 +366,27 @@ namespace OpenZWave
 		CommandClass* GetCommandClass( uint8 const _commandClassId )const;
 		void ApplicationCommandHandler( uint8 const* _data );
 
+		/**
+		 * This function sets up Secured Command Classes. It iterates over the existing command classes marking them
+		 * as Secured if they exist, and if they don't, it creates new Command Classes and sets them up as Secured
+		 * @param _data a list of Command Classes that are Secured by the Device
+		 * @param _length the length of the _data string
+		 */
+		void SetSecuredClasses( uint8 const* _data, uint8 const _length );
+
 	private:
 		/**
-		 * Creates the specified command class object and adds it to the node (via the 
+		 * Creates the specified command class object and adds it to the node (via the
 		 * m_commandClassMap) if it doesn't exist.
 		 * No new object is created if it already exists for this node.
 		 * \param _commandClassId Class ID (a single byte value) identifying the command class requested.
-		 * \return Pointer to the CommandClass object just added to the map (NULL if the object 
+		 * \return Pointer to the CommandClass object just added to the map (NULL if the object
 		 * was already there or if the CommandClass object creation failed).
 		 * \see CommandClass, CommandClasses::CreateCommandClass, m_commandClassMap
 		 */
 		CommandClass* AddCommandClass( uint8 const _commandClassId );
 		/**
-		 * Removes a command class object from the node (via the m_commandClassMap).  Before removing the 
+		 * Removes a command class object from the node (via the m_commandClassMap).  Before removing the
 		 * object, this function also removes any values stored in the object's ValueStore.
 		 * \param _commandClassId Class ID (a single byte value) identifying the command class to be removed.
 		 * \see m_commandClassMap, ValueStore, GetValueStore, ValueStore::RemoveCommandClassValues
@@ -447,7 +461,7 @@ namespace OpenZWave
 	//-----------------------------------------------------------------------------
 	// Groups
 	//-----------------------------------------------------------------------------
-	private:		
+	private:
 		// The public interface is provided via the wrappers in the Manager class
 		uint8 GetNumGroups();
 		uint32 GetAssociations( uint8 const _groupIdx, uint8** o_associations );
