@@ -28,7 +28,7 @@
 #ifndef _MultiCmd_H
 #define _MultiCmd_H
 
-#include "CommandClass.h"
+#include "command_classes/CommandClass.h"
 
 namespace OpenZWave
 {

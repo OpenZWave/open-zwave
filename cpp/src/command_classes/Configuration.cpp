@@ -25,19 +25,19 @@
 //
 //-----------------------------------------------------------------------------
 
-#include "CommandClasses.h"
-#include "Configuration.h"
+#include "command_classes/CommandClasses.h"
+#include "command_classes/Configuration.h"
 #include "Defs.h"
 #include "Msg.h"
 #include "Driver.h"
 #include "Node.h"
-#include "Log.h"
-#include "ValueBool.h"
-#include "ValueButton.h"
-#include "ValueByte.h"
-#include "ValueInt.h"
-#include "ValueList.h"
-#include "ValueShort.h"
+#include "platform/Log.h"
+#include "value_classes/ValueBool.h"
+#include "value_classes/ValueButton.h"
+#include "value_classes/ValueByte.h"
+#include "value_classes/ValueInt.h"
+#include "value_classes/ValueList.h"
+#include "value_classes/ValueShort.h"
 
 using namespace OpenZWave;
 

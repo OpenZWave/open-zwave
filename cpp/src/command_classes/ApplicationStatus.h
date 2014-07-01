@@ -28,7 +28,7 @@
 #ifndef _ApplicationStatus_H
 #define _ApplicationStatus_H
 
-#include "CommandClass.h"
+#include "command_classes/CommandClass.h"
 
 namespace OpenZWave
 {

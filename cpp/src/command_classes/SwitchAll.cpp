@@ -25,15 +25,15 @@
 //
 //-----------------------------------------------------------------------------
 
-#include "CommandClasses.h"
-#include "SwitchAll.h"
+#include "command_classes/CommandClasses.h"
+#include "command_classes/SwitchAll.h"
 #include "Defs.h"
 #include "Msg.h"
 #include "Node.h"
 #include "Driver.h"
-#include "Log.h"
+#include "platform/Log.h"
 
-#include "ValueList.h"
+#include "value_classes/ValueList.h"
 
 using namespace OpenZWave;
 

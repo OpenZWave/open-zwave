@@ -33,40 +33,41 @@
 #include "Driver.h"
 #include "Notification.h"
 #include "Msg.h"
-#include "Log.h"
-#include "Mutex.h"
+#include "platform/Log.h"
+#include "platform/Mutex.h"
 
 #include "tinyxml.h"
 
-#include "CommandClasses.h"
-#include "CommandClass.h"
-#include "Association.h"
-#include "Basic.h"
-#include "Configuration.h"
-#include "ControllerReplication.h"
-#include "ManufacturerSpecific.h"
-#include "MultiInstance.h"
-#include "WakeUp.h"
-#include "NodeNaming.h"
-#include "NoOperation.h"
-#include "Version.h"
-#include "SwitchAll.h"
+#include "command_classes/CommandClasses.h"
+#include "command_classes/CommandClass.h"
+#include "command_classes/Association.h"
+#include "command_classes/Basic.h"
+#include "command_classes/Configuration.h"
+#include "command_classes/ControllerReplication.h"
+#include "command_classes/ManufacturerSpecific.h"
+#include "command_classes/MultiInstance.h"
+#include "command_classes/Security.h"
+#include "command_classes/WakeUp.h"
+#include "command_classes/NodeNaming.h"
+#include "command_classes/NoOperation.h"
+#include "command_classes/Version.h"
+#include "command_classes/SwitchAll.h"
 
 #include "Scene.h"
 
-#include "ValueID.h"
-#include "Value.h"
-#include "ValueBool.h"
-#include "ValueButton.h"
-#include "ValueByte.h"
-#include "ValueDecimal.h"
-#include "ValueInt.h"
-#include "ValueRaw.h"
-#include "ValueList.h"
-#include "ValueSchedule.h"
-#include "ValueShort.h"
-#include "ValueString.h"
-#include "ValueStore.h"
+#include "value_classes/ValueID.h"
+#include "value_classes/Value.h"
+#include "value_classes/ValueBool.h"
+#include "value_classes/ValueButton.h"
+#include "value_classes/ValueByte.h"
+#include "value_classes/ValueDecimal.h"
+#include "value_classes/ValueInt.h"
+#include "value_classes/ValueRaw.h"
+#include "value_classes/ValueList.h"
+#include "value_classes/ValueSchedule.h"
+#include "value_classes/ValueShort.h"
+#include "value_classes/ValueString.h"
+#include "value_classes/ValueStore.h"
 
 using namespace OpenZWave;
 
@@ -84,6 +85,7 @@ static char const* c_queryStageNames[] =
 	"WakeUp",
 	"ManufacturerSpecific1",
 	"NodeInfo",
+	"SecurityReport",
 	"ManufacturerSpecific2",
 	"Versions",
 	"Instances",
@@ -130,6 +132,7 @@ Node::Node
 	m_specific( 0 ),
 	m_type( "" ),
 	m_numRouteNodes( 0 ),
+	m_addingNode( false ),
 	m_manufacturerName( "" ),
 	m_productName( "" ),
 	m_nodeName( "" ),
@@ -355,9 +358,37 @@ void Node::AdvanceQueries
 				else
 				{
 					// This stage has been done already, so move to the Manufacturer Specific stage
+					m_queryStage = QueryStage_SecurityReport;
+					m_queryRetries = 0;
+				}
+				break;
+			}
+			case QueryStage_SecurityReport:
+			{
+				/* For Devices that Support the Security Class, we have to request a list of
+				 * Command Classes that Require Security.
+				 */
+				Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_SecurityReport" );
+
+				Security* seccc = static_cast<Security*>( GetCommandClass( Security::StaticGetCommandClassId() ) );
+
+				if( seccc )
+				{
+					// start the process of requesting node state from this sleeping device
+					m_queryPending = seccc->Init();
+					/* Dont add a Notification Callback here, as this is a multipacket exchange.
+					 * the Security Command Class will automatically advance the Query Stage
+					 * when we recieve a SecurityCmd_SupportedReport
+					 */
+					addQSC = false;
+				}
+				else
+				{
+					// this is not a Security Device, so move onto the next querystage
 					m_queryStage = QueryStage_ManufacturerSpecific2;
 					m_queryRetries = 0;
 				}
+
 				break;
 			}
 			case QueryStage_ManufacturerSpecific2:
@@ -572,6 +603,7 @@ void Node::AdvanceQueries
 			}
 			case QueryStage_Complete:
 			{
+				ClearAddingNode();
 				// Notify the watchers that the queries are complete for this node
 				Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_Complete" );
 				Notification* notification = new Notification( Notification::Type_NodeQueriesComplete );
@@ -1214,6 +1246,74 @@ void Node::UpdateProtocolInfo
 	m_protocolInfoReceived = true;
 }
 
+void Node::SetSecuredClasses
+(
+		uint8 const* _data,
+		uint8 const _length
+)
+{
+	uint32 i;
+	Log::Write( LogLevel_Info, m_nodeId, "  Secured command classes for node %d:", m_nodeId );
+
+	bool afterMark = false;
+	for( i=0; i<_length; ++i )
+	{
+		if( _data[i] == 0xef )
+		{
+			// COMMAND_CLASS_MARK.
+			// Marks the end of the list of supported command classes.  The remaining classes
+			// are those that can be controlled by the device.  These classes are created
+			// without values.  Messages received cause notification events instead.
+			afterMark = true;
+			continue;
+		}
+		/* Check if this is a CC that is already registered with the node */
+		if (CommandClass *pCommandClass = GetCommandClass(_data[i]))
+		{
+			if (pCommandClass->IsSecureSupported()) {
+				pCommandClass->SetSecured();
+				Log::Write( LogLevel_Info, m_nodeId, "    %s (Secured)", pCommandClass->GetCommandClassName().c_str() );
+			} else {
+				Log::Write( LogLevel_Info, m_nodeId, "    %s (Downgraded)", pCommandClass->GetCommandClassName().c_str() );
+			}
+		}
+		/* it might be a new CC we havn't seen as part of the NIF */
+		else if( CommandClasses::IsSupported( _data[i] ) )
+		{
+			if( CommandClass* pCommandClass = AddCommandClass( _data[i] ) )
+			{
+				// If this class came after the COMMAND_CLASS_MARK, then we do not create values.
+				if( afterMark )
+				{
+					pCommandClass->SetAfterMark();
+				}
+				if (pCommandClass->IsSecureSupported()) {
+					pCommandClass->SetSecured();
+					Log::Write( LogLevel_Info, m_nodeId, "    %s (Secured)", pCommandClass->GetCommandClassName().c_str() );
+				} else {
+					Log::Write( LogLevel_Info, m_nodeId, "    %s (Downgraded)", pCommandClass->GetCommandClassName().c_str() );
+				}
+				// Start with an instance count of one.  If the device supports COMMMAND_CLASS_MULTI_INSTANCE
+				// then some command class instance counts will increase once the responses to the RequestState
+				// call at the end of this method have been processed.
+				pCommandClass->SetInstance( 1 );
+
+			}
+		}
+		else
+		{
+			Log::Write( LogLevel_Info, m_nodeId, "    Secure CommandClass 0x%.2x - NOT SUPPORTED", _data[i] );
+		}
+	}
+	Log::Write( LogLevel_Info, m_nodeId, "  UnSecured command classes for node %d:", m_nodeId );
+	for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
+	{
+		if (!it->second->IsSecured())
+			Log::Write( LogLevel_Info, m_nodeId, "    %s (Unsecured)", it->second->GetCommandClassName().c_str() );
+	}
+
+
+}
 //-----------------------------------------------------------------------------
 // <Node::UpdateNodeInfo>
 // Set up the command classes from the node info frame
@@ -2234,7 +2334,7 @@ uint8 Node::GetNumGroups
 (
 )
 {
-	return m_groups.size();
+	return (uint8) m_groups.size();
 }
 
 //-----------------------------------------------------------------------------
@@ -2482,7 +2582,7 @@ bool Node::SetDeviceClasses
 	}
 
 	// Deal with sleeping devices
-	if( !m_listening )
+	if( !m_listening && !IsFrequentListeningDevice())
 	{
 		// Device does not always listen, so we need the WakeUp handler.  We can't
 		// wait for the command class list because the request for the command
@@ -2711,7 +2811,7 @@ Node::DeviceClass::DeviceClass
 		}
 
 		// Copy the vector contents into an array.
-		uint32 numCCs = ccs.size();
+		size_t numCCs = ccs.size();
 		m_mandatoryCommandClasses = new uint8[numCCs+1];
 		m_mandatoryCommandClasses[numCCs] = 0;	// Zero terminator
 

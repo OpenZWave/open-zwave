@@ -25,17 +25,17 @@
 //
 //-----------------------------------------------------------------------------
 
-#include "CommandClasses.h"
-#include "AssociationCommandConfiguration.h"
+#include "command_classes/CommandClasses.h"
+#include "command_classes/AssociationCommandConfiguration.h"
 #include "Defs.h"
 #include "Msg.h"
 #include "Node.h"
 #include "Group.h"
 #include "Driver.h"
-#include "Log.h"
-#include "ValueBool.h"
-#include "ValueByte.h"
-#include "ValueShort.h"
+#include "platform/Log.h"
+#include "value_classes/ValueBool.h"
+#include "value_classes/ValueByte.h"
+#include "value_classes/ValueShort.h"
 
 using namespace OpenZWave;
 

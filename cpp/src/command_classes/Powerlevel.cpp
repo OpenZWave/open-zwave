@@ -27,17 +27,17 @@
 
 #include <vector>
 
-#include "CommandClasses.h"
-#include "Powerlevel.h"
+#include "command_classes/CommandClasses.h"
+#include "command_classes/Powerlevel.h"
 #include "Defs.h"
 #include "Msg.h"
 #include "Driver.h"
-#include "Log.h"
+#include "platform/Log.h"
 
-#include "ValueByte.h"
-#include "ValueShort.h"
-#include "ValueList.h"
-#include "ValueButton.h"
+#include "value_classes/ValueByte.h"
+#include "value_classes/ValueShort.h"
+#include "value_classes/ValueList.h"
+#include "value_classes/ValueButton.h"
 
 using namespace OpenZWave;
 

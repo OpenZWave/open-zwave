@@ -37,25 +37,25 @@
 #include "Options.h"
 #include "Scene.h"
 
-#include "Mutex.h"
-#include "Event.h"
-#include "Log.h"
+#include "platform/Mutex.h"
+#include "platform/Event.h"
+#include "platform/Log.h"
 
-#include "CommandClasses.h"
-#include "CommandClass.h"
-#include "WakeUp.h"
+#include "command_classes/CommandClasses.h"
+#include "command_classes/CommandClass.h"
+#include "command_classes/WakeUp.h"
 
-#include "ValueID.h"
-#include "ValueBool.h"
-#include "ValueButton.h"
-#include "ValueByte.h"
-#include "ValueDecimal.h"
-#include "ValueInt.h"
-#include "ValueList.h"
-#include "ValueRaw.h"
-#include "ValueSchedule.h"
-#include "ValueShort.h"
-#include "ValueString.h"
+#include "value_classes/ValueID.h"
+#include "value_classes/ValueBool.h"
+#include "value_classes/ValueButton.h"
+#include "value_classes/ValueByte.h"
+#include "value_classes/ValueDecimal.h"
+#include "value_classes/ValueInt.h"
+#include "value_classes/ValueList.h"
+#include "value_classes/ValueRaw.h"
+#include "value_classes/ValueSchedule.h"
+#include "value_classes/ValueShort.h"
+#include "value_classes/ValueString.h"
 
 using namespace OpenZWave;
 
@@ -164,6 +164,7 @@ Manager::Manager
 
 	CommandClasses::RegisterCommandClasses();
 	Scene::ReadScenes();
+	Log::Write(LogLevel_Always, "OpenZwave Version %s Starting Up", getVersionAsString().c_str());
 }
 
 //-----------------------------------------------------------------------------
@@ -1388,8 +1389,8 @@ bool Manager::IsNodeFailed
 	        if( Node* node = driver->GetNode( _nodeId ) )
 	        {
 			result = !node->IsNodeAlive();
+        		driver->ReleaseNodes();
 		}
-		driver->ReleaseNodes();
 	}
 	return result;
 }
@@ -1410,8 +1411,8 @@ string Manager::GetNodeQueryStage
 	        if( Node* node = driver->GetNode( _nodeId ) )
 	        {
 			result = node->GetQueryStageName( node->GetCurrentQueryStage() );
+        		driver->ReleaseNodes();
 		}
-		driver->ReleaseNodes();
 	}
 	return result;
 }
@@ -2290,7 +2291,7 @@ bool Manager::SetValue
 
 					// remove trailing zeros (and the decimal point, if present)
 					// TODO: better way of figuring out which locale is being used ('.' or ',' to separate decimals)
-					int nLen;
+					size_t nLen;
 					if( ( strchr( str, '.' ) != NULL) || (strchr( str, ',' ) != NULL ) )
 					{
 						for( nLen = strlen( str ) - 1; nLen > 0; nLen-- )

@@ -25,12 +25,17 @@
 //
 //-----------------------------------------------------------------------------
 
-#include "Event.h"
-#include "Thread.h" 
 #include "Msg.h"
-#include "SerialController.h"
-#include "SerialControllerImpl.h"	// Platform-specific implementation of a serial port
-#include "Log.h"
+#include "platform/Event.h"
+#include "platform/Thread.h" 
+#include "platform/SerialController.h"
+#include "platform/Log.h"
+
+#ifdef WIN32
+#include "platform/windows/SerialControllerImpl.h"	// Platform-specific implementation of a serial port
+#else
+#include "platform/unix/SerialControllerImpl.h"	// Platform-specific implementation of a serial port
+#endif
 
 using namespace OpenZWave;
 

@@ -26,11 +26,11 @@
 //-----------------------------------------------------------------------------
 
 #include "Msg.h"
-#include "Thread.h"
-#include "Event.h"
-#include "Log.h"
-#include "TimeStamp.h"
-#include "HidController.h"
+#include "platform/Thread.h"
+#include "platform/Event.h"
+#include "platform/Log.h"
+#include "platform/TimeStamp.h"
+#include "platform/HidController.h"
 
 #define CHECK_HIDAPI_RESULT(RESULT, ERRORLABEL) if (RESULT < 0) goto ERRORLABEL
 #define PACKET_BUFFER_LENGTH 256

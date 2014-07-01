@@ -38,7 +38,7 @@
 #include <arpa/inet.h>
 
 #include "Defs.h"
-#include "SerialController.h"
+#include "platform/SerialController.h"
 
 namespace OpenZWave
 {

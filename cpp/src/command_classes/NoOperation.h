@@ -28,7 +28,7 @@
 #ifndef _NoOperation_H
 #define _NoOperation_H
 
-#include "CommandClass.h"
+#include "command_classes/CommandClass.h"
 
 namespace OpenZWave
 {

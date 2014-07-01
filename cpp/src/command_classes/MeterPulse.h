@@ -28,7 +28,7 @@
 #ifndef _MeterPulse_H
 #define _MeterPulse_H
 
-#include "CommandClass.h"
+#include "command_classes/CommandClass.h"
 
 namespace OpenZWave
 {

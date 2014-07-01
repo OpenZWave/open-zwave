@@ -28,7 +28,7 @@
 #ifndef _Proprietary_H
 #define _Proprietary_H
 
-#include "CommandClass.h"
+#include "command_classes/CommandClass.h"
 
 namespace OpenZWave
 {

@@ -28,7 +28,7 @@
 #ifndef _UserCode_H
 #define _UserCode_H
 
-#include "CommandClass.h"
+#include "command_classes/CommandClass.h"
 
 namespace OpenZWave
 {
@@ -95,7 +95,7 @@ namespace OpenZWave
 				default:
 				{
 					return "Unknown";
-				}				
+				}
 			}
 		}
 
@@ -103,6 +103,7 @@ namespace OpenZWave
 		uint8		m_currentCode;
 		uint8		m_userCodeCount;
 		uint8		m_userCodesStatus[255];
+		bool		m_refreshUserCodes;
 	};
 
 } // namespace OpenZWave

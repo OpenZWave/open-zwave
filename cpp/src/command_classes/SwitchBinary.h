@@ -28,7 +28,7 @@
 #ifndef _SwitchBinary_H
 #define _SwitchBinary_H
 
-#include "CommandClass.h"
+#include "command_classes/CommandClass.h"
 
 namespace OpenZWave
 {

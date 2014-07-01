@@ -154,6 +154,7 @@ namespace OpenZWave
 // Rename safe versions of sprintf etc
 #define snprintf sprintf_s
 #define strcasecmp _stricmp
+#define sscanf sscanf_s
 
 #endif
 
@@ -163,7 +164,7 @@ namespace OpenZWave
 // Replace "safe" versions of sprintf
 #define sprintf_s snprintf
 
-// seems some MINGW versions don't have a errno_t 
+// seems some MINGW versions don't have a errno_t
 #ifndef errno_t
 #define errno_t int
 #endif

@@ -59,7 +59,7 @@ bool FileOpsImpl::FolderExists(
 	const string &_folderName
 )
 {
-	int32 ftype = GetFileAttributes( _folderName.c_str() );
+    int32 ftype = GetFileAttributesA(_folderName.c_str());
 	if( ftype == INVALID_FILE_ATTRIBUTES )
 		return false;			// something is wrong with _foldername path
 	if( ftype & FILE_ATTRIBUTE_DIRECTORY )

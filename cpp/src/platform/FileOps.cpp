@@ -26,8 +26,13 @@
 //
 //-----------------------------------------------------------------------------
 #include <string>
-#include "FileOps.h"
-#include "FileOpsImpl.h"	// Platform-specific implementation of a File Operations
+#include "platform/FileOps.h"
+
+#ifdef WIN32
+#include "platform/windows/FileOpsImpl.h"	// Platform-specific implementation of a File Operations
+#else
+#include "platform/unix/FileOpsImpl.h"	// Platform-specific implementation of a File Operations
+#endif
 
 using namespace OpenZWave;
 

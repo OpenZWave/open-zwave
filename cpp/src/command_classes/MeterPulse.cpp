@@ -25,15 +25,15 @@
 //
 //-----------------------------------------------------------------------------
 
-#include "CommandClasses.h"
-#include "MeterPulse.h"
+#include "command_classes/CommandClasses.h"
+#include "command_classes/MeterPulse.h"
 #include "Defs.h"
 #include "Msg.h"
 #include "Node.h"
 #include "Driver.h"
-#include "Log.h"
+#include "platform/Log.h"
 
-#include "ValueInt.h"
+#include "value_classes/ValueInt.h"
 
 using namespace OpenZWave;
 

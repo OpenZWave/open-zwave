@@ -28,7 +28,7 @@
 #ifndef _Mutex_H
 #define _Mutex_H
 
-#include "Wait.h"
+#include "platform/Wait.h"
 
 namespace OpenZWave
 {

@@ -29,7 +29,7 @@
 #define _MultiInstanceAssociation_H
 
 #include <vector>
-#include "CommandClass.h"
+#include "command_classes/CommandClass.h"
 
 namespace OpenZWave
 {

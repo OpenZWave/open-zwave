@@ -30,7 +30,7 @@
 
 #include <string>
 #include <windows.h>
-#include "Thread.h"
+#include "platform/Thread.h"
 
 namespace OpenZWave
 {

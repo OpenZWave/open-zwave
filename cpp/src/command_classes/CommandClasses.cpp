@@ -27,65 +27,67 @@
 
 #include <string.h>
 
-#include "CommandClasses.h"
+#include "command_classes/CommandClasses.h"
 
 using namespace OpenZWave;
 
-#include "Alarm.h"
-#include "ApplicationStatus.h"
-#include "Association.h"
-#include "AssociationCommandConfiguration.h"
-#include "Basic.h"
-#include "BasicWindowCovering.h"
-#include "Battery.h"
-#include "ClimateControlSchedule.h"
-#include "Clock.h"
-#include "Configuration.h"
-#include "ControllerReplication.h"
-#include "CRC16Encap.h"
-#include "EnergyProduction.h"
-#include "Hail.h"
-#include "Indicator.h"
-#include "Language.h"
-#include "Lock.h"
-#include "ManufacturerSpecific.h"
-#include "Meter.h"
-#include "MeterPulse.h"
-#include "MultiCmd.h"
-#include "MultiInstance.h"
-#include "MultiInstanceAssociation.h"
-#include "NodeNaming.h"
-#include "NoOperation.h"
-#include "Powerlevel.h"
-#include "Proprietary.h"
-#include "Protection.h"
-#include "SceneActivation.h"
-#include "SensorAlarm.h"
-#include "SensorBinary.h"
-#include "SensorMultilevel.h"
-#include "SwitchAll.h"
-#include "SwitchBinary.h"
-#include "SwitchMultilevel.h"
-#include "SwitchToggleBinary.h"
-#include "SwitchToggleMultilevel.h"
-#include "ThermostatFanMode.h"
-#include "ThermostatFanState.h"
-#include "ThermostatMode.h"
-#include "ThermostatOperatingState.h"
-#include "ThermostatSetpoint.h"
-#include "UserCode.h"
-#include "Version.h"
-#include "WakeUp.h"
+#include "command_classes/Alarm.h"
+#include "command_classes/ApplicationStatus.h"
+#include "command_classes/Association.h"
+#include "command_classes/AssociationCommandConfiguration.h"
+#include "command_classes/Basic.h"
+#include "command_classes/BasicWindowCovering.h"
+#include "command_classes/Battery.h"
+#include "command_classes/ClimateControlSchedule.h"
+#include "command_classes/Clock.h"
+#include "command_classes/Configuration.h"
+#include "command_classes/ControllerReplication.h"
+#include "command_classes/CRC16Encap.h"
+#include "command_classes/DoorLock.h"
+#include "command_classes/EnergyProduction.h"
+#include "command_classes/Hail.h"
+#include "command_classes/Indicator.h"
+#include "command_classes/Language.h"
+#include "command_classes/Lock.h"
+#include "command_classes/ManufacturerSpecific.h"
+#include "command_classes/Meter.h"
+#include "command_classes/MeterPulse.h"
+#include "command_classes/MultiCmd.h"
+#include "command_classes/MultiInstance.h"
+#include "command_classes/MultiInstanceAssociation.h"
+#include "command_classes/NodeNaming.h"
+#include "command_classes/NoOperation.h"
+#include "command_classes/Powerlevel.h"
+#include "command_classes/Proprietary.h"
+#include "command_classes/Protection.h"
+#include "command_classes/SceneActivation.h"
+#include "command_classes/Security.h"
+#include "command_classes/SensorAlarm.h"
+#include "command_classes/SensorBinary.h"
+#include "command_classes/SensorMultilevel.h"
+#include "command_classes/SwitchAll.h"
+#include "command_classes/SwitchBinary.h"
+#include "command_classes/SwitchMultilevel.h"
+#include "command_classes/SwitchToggleBinary.h"
+#include "command_classes/SwitchToggleMultilevel.h"
+#include "command_classes/ThermostatFanMode.h"
+#include "command_classes/ThermostatFanState.h"
+#include "command_classes/ThermostatMode.h"
+#include "command_classes/ThermostatOperatingState.h"
+#include "command_classes/ThermostatSetpoint.h"
+#include "command_classes/UserCode.h"
+#include "command_classes/Version.h"
+#include "command_classes/WakeUp.h"
 
-#include "ValueBool.h"
-#include "ValueButton.h"
-#include "ValueByte.h"
-#include "ValueDecimal.h"
-#include "ValueInt.h"
-#include "ValueList.h"
-#include "ValueSchedule.h"
-#include "ValueShort.h"
-#include "ValueString.h"
+#include "value_classes/ValueBool.h"
+#include "value_classes/ValueButton.h"
+#include "value_classes/ValueByte.h"
+#include "value_classes/ValueDecimal.h"
+#include "value_classes/ValueInt.h"
+#include "value_classes/ValueList.h"
+#include "value_classes/ValueSchedule.h"
+#include "value_classes/ValueShort.h"
+#include "value_classes/ValueString.h"
 
 #include "Manager.h"
 #include "Options.h"
@@ -98,7 +100,7 @@ using namespace OpenZWave;
 CommandClasses::CommandClasses
 (
 )
-{ 
+{
 	memset( m_commandClassCreators, 0, sizeof(pfnCreateCommandClass_t)*256 );
 	memset( m_supportedCommandClasses, 0, sizeof(uint32)*8 );
 }
@@ -108,27 +110,36 @@ CommandClasses::CommandClasses
 //	Static method to determine whether a command class is supported
 //-----------------------------------------------------------------------------
 bool CommandClasses::IsSupported
-( 
+(
 	uint8 const _commandClassId
 )
 {
 	// Test the bit representing the command class
 	return( (Get().m_supportedCommandClasses[_commandClassId>>5] & (1u<<(_commandClassId&0x1f))) != 0 );
 }
-
+string CommandClasses::GetName(
+	uint8 const _commandClassId
+)
+{
+	for (std::map<string,uint8>::iterator it = Get().m_namesToIDs.begin(); it != Get().m_namesToIDs.end(); it++) {
+		if (it->second == _commandClassId)
+			return it->first;
+	}
+	return string("Unknown");
+}
 //-----------------------------------------------------------------------------
 //	<CommandClasses::Register>
 //	Static method to register a command class creator method
 //-----------------------------------------------------------------------------
 void CommandClasses::Register
-( 
-	uint8 const _commandClassId, 
+(
+	uint8 const _commandClassId,
 	string const& _commandClassName,
 	pfnCreateCommandClass_t _creator
 )
 {
 	m_commandClassCreators[_commandClassId] = _creator;
-	
+
 	// Set the bit representing the command class
 	Get().m_supportedCommandClasses[_commandClassId>>5] |= (1u<<(_commandClassId&0x1f));
 
@@ -142,7 +153,7 @@ void CommandClasses::Register
 CommandClass* CommandClasses::CreateCommandClass
 (
 	uint8 const _commandClassId,
-	uint32 const _homeId, 
+	uint32 const _homeId,
 	uint8 const _nodeId
 )
 {
@@ -178,6 +189,7 @@ void CommandClasses::RegisterCommandClasses
 	cc.Register( Configuration::StaticGetCommandClassId(), Configuration::StaticGetCommandClassName(), Configuration::Create );
 	cc.Register( ControllerReplication::StaticGetCommandClassId(), ControllerReplication::StaticGetCommandClassName(), ControllerReplication::Create );
 	cc.Register( CRC16Encap::StaticGetCommandClassId(), CRC16Encap::StaticGetCommandClassName(), CRC16Encap::Create );
+	cc.Register( DoorLock::StaticGetCommandClassId(), DoorLock::StaticGetCommandClassName(), DoorLock::Create );
 	cc.Register( EnergyProduction::StaticGetCommandClassId(), EnergyProduction::StaticGetCommandClassName(), EnergyProduction::Create );
 	cc.Register( Hail::StaticGetCommandClassId(), Hail::StaticGetCommandClassName(), Hail::Create );
 	cc.Register( Indicator::StaticGetCommandClassId(), Indicator::StaticGetCommandClassName(), Indicator::Create );
@@ -195,6 +207,7 @@ void CommandClasses::RegisterCommandClasses
 	cc.Register( Proprietary::StaticGetCommandClassId(), Proprietary::StaticGetCommandClassName(), Proprietary::Create );
 	cc.Register( Protection::StaticGetCommandClassId(), Protection::StaticGetCommandClassName(), Protection::Create );
 	cc.Register( SceneActivation::StaticGetCommandClassId(), SceneActivation::StaticGetCommandClassName(), SceneActivation::Create );
+	cc.Register( Security::StaticGetCommandClassId(), Security::StaticGetCommandClassName(), Security::Create);
 	cc.Register( SensorAlarm::StaticGetCommandClassId(), SensorAlarm::StaticGetCommandClassName(), SensorAlarm::Create );
 	cc.Register( SensorBinary::StaticGetCommandClassId(), SensorBinary::StaticGetCommandClassName(), SensorBinary::Create );
 	cc.Register( SensorMultilevel::StaticGetCommandClassId(), SensorMultilevel::StaticGetCommandClassName(), SensorMultilevel::Create );
@@ -222,14 +235,14 @@ void CommandClasses::RegisterCommandClasses
 		// complete list of what should be supported.
 		// Any existing support is cleared first.
 		memset( cc.m_supportedCommandClasses, 0, sizeof(uint32)*8 );
-		cc.ParseCommandClassOption( str, true );		
+		cc.ParseCommandClassOption( str, true );
 	}
 
 	// Apply the excluded command class option
 	Options::Get()->GetOptionAsString( "Exclude", &str );
 	if( str != "" )
 	{
-		cc.ParseCommandClassOption( str, false );		
+		cc.ParseCommandClassOption( str, false );
 	}
 }
 
@@ -244,7 +257,7 @@ void CommandClasses::ParseCommandClassOption
 )
 {
 	size_t pos = 0;
-	uint8 start = 0;
+    size_t start = 0;
 	bool parsing = true;
 	while( parsing )
 	{
@@ -282,7 +295,7 @@ void CommandClasses::ParseCommandClassOption
 //	Convert a command class name (e.g COMMAND_CLASS_BASIC) into its 8-bit ID
 //-----------------------------------------------------------------------------
 uint8 CommandClasses::GetCommandClassId
-( 
+(
 	string const& _name
 )
 {

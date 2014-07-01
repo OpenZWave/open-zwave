@@ -30,8 +30,8 @@
 
 #include <string>
 #include "Defs.h"
-#include "Ref.h"
-#include "ValueID.h"
+#include "platform/Ref.h"
+#include "value_classes/ValueID.h"
 
 class TiXmlElement;
 

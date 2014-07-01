@@ -25,9 +25,9 @@
 //	along with OpenZWave.  If not, see <http://www.gnu.org/licenses/>.
 //
 //-----------------------------------------------------------------------------
-#include "Stream.h"
-#include "Mutex.h"
-#include "Log.h"
+#include "platform/Stream.h"
+#include "platform/Mutex.h"
+#include "platform/Log.h"
 
 #include <string.h>
 

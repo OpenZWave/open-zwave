@@ -128,6 +128,7 @@ void LogImpl::Write
 	// create a timestamp string
 	string timeStr = GetTimeStampString();
 	string nodeStr = GetNodeString( _nodeId );
+	string logLevelStr = GetLogLevelString(_logLevel);
 
 	// handle this message
 	if( (_logLevel <= m_queueLevel) || (_logLevel == LogLevel_Internal) )	// we're going to do something with this message...
@@ -153,11 +154,11 @@ void LogImpl::Write
 				{
 					if( pFile != NULL )
 					{
-						fprintf( pFile, "%s%s", timeStr.c_str(), nodeStr.c_str() );
+						fprintf( pFile, "%s%s%s", timeStr.c_str(), logLevelStr.c_str(), nodeStr.c_str() );
 					}
 					if( m_bConsoleOutput )
 					{
-						printf( "%s%s", timeStr.c_str(), nodeStr.c_str() );
+						printf( "%s%s%s", timeStr.c_str(), logLevelStr.c_str(), nodeStr.c_str() );
 					}
 				}
 
@@ -329,4 +330,21 @@ void LogImpl::SetLogFileName
 )
 {
 	m_filename = _filename;
+}
+//-----------------------------------------------------------------------------
+//	<LogImpl::GetLogLevelString>
+//	Provide a new log file name (applicable to future writes)
+//-----------------------------------------------------------------------------
+string LogImpl::GetLogLevelString
+(
+		LogLevel _level
+)
+{
+	if ((_level >= LogLevel_None) && (_level <= LogLevel_Internal)) {
+		char buf[20];
+		snprintf( buf, sizeof(buf), "%s, ", LogLevelString[_level] );
+		return buf;
+	}
+	else
+		return "Unknown, ";
 }
