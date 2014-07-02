@@ -249,6 +249,7 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     cpp/src/Scene.h \
     config/zwave.me/kfob.xml \
     cpp/src/command_classes/SwitchMultilevel.h \
+    cpp/src/command_classes/DoorLockLogging.h \
     cpp/src/command_classes/SceneActivation.cpp \
     cpp/src/command_classes/Protection.h \
     cpp/src/command_classes/SwitchAll.h \
@@ -369,6 +370,7 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     cpp/src/command_classes/SwitchBinary.h \
     cpp/tinyxml/tinyxml.cpp \
     cpp/examples/windows/MinOZW/vs2010/MinOZW.sln \
+    cpp/src/command_classes/DoorLockLogging.cpp \
     dotnet/examples/OZWForm/src/ValuePanelDecimal.resx \
     cpp/src/platform/unix/LogImpl.h \
     cpp/src/command_classes/ThermostatFanState.h \
@@ -409,6 +411,7 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     cpp/src/command_classes/CRC16Encap.h \
     debian/openzwave.install \
     dotnet/examples/OZWForm/src/ConfigurationWakeUpDlg.cs \
+    config/eurotronic/eur_stellaz.xml \
     cpp/hidapi/linux/Makefile.am \
     config/wenzhou/tz88.xml \
     cpp/src/command_classes/Hail.cpp \
