@@ -44,6 +44,7 @@ using namespace OpenZWave;
 #include "command_classes/ControllerReplication.h"
 #include "command_classes/CRC16Encap.h"
 #include "command_classes/DoorLock.h"
+#include "command_classes/DoorLockLogging.h"
 #include "command_classes/EnergyProduction.h"
 #include "command_classes/Hail.h"
 #include "command_classes/Indicator.h"
@@ -190,6 +191,7 @@ void CommandClasses::RegisterCommandClasses
 	cc.Register( ControllerReplication::StaticGetCommandClassId(), ControllerReplication::StaticGetCommandClassName(), ControllerReplication::Create );
 	cc.Register( CRC16Encap::StaticGetCommandClassId(), CRC16Encap::StaticGetCommandClassName(), CRC16Encap::Create );
 	cc.Register( DoorLock::StaticGetCommandClassId(), DoorLock::StaticGetCommandClassName(), DoorLock::Create );
+	cc.Register( DoorLockLogging::StaticGetCommandClassId(), DoorLockLogging::StaticGetCommandClassName(), DoorLockLogging::Create);
 	cc.Register( EnergyProduction::StaticGetCommandClassId(), EnergyProduction::StaticGetCommandClassName(), EnergyProduction::Create );
 	cc.Register( Hail::StaticGetCommandClassId(), Hail::StaticGetCommandClassName(), Hail::Create );
 	cc.Register( Indicator::StaticGetCommandClassId(), Indicator::StaticGetCommandClassName(), Indicator::Create );
