@@ -218,6 +218,7 @@ exit 0</Command>
     <ClInclude Include="..\..\..\src\aes\brg_types.h" />
     <ClInclude Include="..\..\..\src\Bitfield.h" />
     <ClInclude Include="..\..\..\src\command_classes\DoorLock.h" />
+    <ClInclude Include="..\..\..\src\command_classes\DoorLockLogging.h" />
     <ClInclude Include="..\..\..\src\command_classes\NoOperation.h" />
     <ClInclude Include="..\..\..\src\command_classes\SceneActivation.h" />
     <ClInclude Include="..\..\..\src\command_classes\Security.h" />
@@ -317,6 +318,7 @@ exit 0</Command>
     <ClCompile Include="..\..\..\src\aes\aestab.c" />
     <ClCompile Include="..\..\..\src\aes\aes_modes.c" />
     <ClCompile Include="..\..\..\src\command_classes\DoorLock.cpp" />
+    <ClCompile Include="..\..\..\src\command_classes\DoorLockLogging.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\NoOperation.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\SceneActivation.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\Security.cpp" />
