@@ -157,7 +157,8 @@
 		<Product type="000b" id="0001" name="ST812 Flood Detector"/>
 		<Product type="0009" id="0001" name="TSE03 Door Bell" config="everspring/tse03.xml"/>
 	</Manufacturer>
-	<Manufacturer id="0116" name="Everspring CT">
+	<Manufacturer id="0116" name="Chromagic Technologies Corporation">
+		<Product type="0001" id="0001" name="HSCP02 Motion Detector"/>
 		<Product type="0002" id="0001" name="HSM02 Mini Door/Window Detector" config="everspringct/hsm02.xml" />
 	</Manufacturer>
 	<Manufacturer id="0113" name="Evolve Guest Controls">
