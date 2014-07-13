@@ -37,3 +37,4 @@ Version 1.1
  - Fixed Issue 330 - Update Fibaro FGS211 Config File (Alex)
  - Fixed Issue 331 - Update Fibaro RGBWM441 Config File (Alex)
  - Add new id for GE Duplex Receptacle (Alex) 
+ - Add 18 new ids for Vision devices (Alex)

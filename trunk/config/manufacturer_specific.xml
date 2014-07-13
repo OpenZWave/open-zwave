@@ -474,8 +474,26 @@
 		<Product type="0001" id="0001" name="Controller"/>
 	</Manufacturer>
 	<Manufacturer id="0109" name="Vision">
-		<Product type="1001" id="0101" name="Z-Wave USB Stick"/>
-		<Product type="2005" id="0503" name="Battery Operated Siren (ZME1601EU)" config="vision/zm160eu.xml"/>
+		<Product type="1001" id="0101" name="ZU1401 Z-Wave USB Stick"/>
+		<Product type="2001" id="0101" name="ZD2102 Door/Window Sensor"/>
+		<Product type="2001" id="0102" name="ZD2102 Door/Window Sensor"/>
+		<Product type="2001" id="0104" name="ZD2102 Door/Window Sensor"/>
+		<Product type="2002" id="0201" name="ZP3102 PIR Motion Sensor"/>
+		<Product type="2002" id="0202" name="ZP3102 PIR Motion Sensor"/>
+		<Product type="2002" id="0204" name="ZP3102 PIR Motion Sensor"/>
+		<Product type="2003" id="0302" name="ZS5101 Shock and Vibration Sensor"/>
+		<Product type="2004" id="0403" name="ZS6101 Smoke Detector"/>
+		<Product type="2005" id="0503" name="ZM1601 Battery Operated Siren" config="vision/zm160eu.xml"/>
+		<Product type="2005" id="0505" name="ZM1601 Battery Operated Siren"/>
+		<Product type="2006" id="0610" name="ZM1701 Electronic Deadbolt Door Lock without Handle"/>
+		<Product type="2006" id="0620" name="ZM1702 Electronic Deadbolt Door Lock with Handle"/>
+		<Product type="2008" id="0803" name="ZL7101 Plug-in Dimmer Module"/>
+		<Product type="200a" id="0a02" name="ZG8101 Garage Door Detector"/>
+		<Product type="200f" id="0f02" name="ZG6301 CO Detector"/>
+		<Product type="2012" id="1203" name="ZR1202 Repeater"/>
+		<Product type="2014" id="1401" name="ZL7101 Plug-in Dimmer Module"/>
+		<Product type="2017" id="1717" name="ZL7432 In-Wall Switch, Dual Relay"/>
+		<Product type="3001" id="0104" name="ZM1602 Main Operated Siren"/>
 	</Manufacturer>
 	<Manufacturer id="0115" name="Z-Wave.Me">
 		<Product type="1000" id="0002" name="ZME_06433 Wall Flush-Mountable Dimmer" config="zwave.me/ZME_06433.xml"/>
