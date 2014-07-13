@@ -31,9 +31,21 @@ clean:
 cpp/src/vers.cpp:
 	$(MAKE) -C $(top_srcdir)/cpp/build/ -$(MAKEFLAGS) cpp/src/vers.cpp
 
-check:
+check: xmltest
 
 include $(top_srcdir)/cpp/build/support.mk
+
+ifeq ($(XMLLINT),)
+xmltest:	$(XMLLINT)
+	$(error xmllint command not found.)
+else
+xmltest:	$(XMLLINT)
+	@$(XMLLINT) --noout --schema $(top_srcdir)/config/device_classes.xsd $(top_srcdir)/config/device_classes.xml
+	@$(XMLLINT) --noout --schema $(top_srcdir)/config/options.xsd $(top_srcdir)/config/options.xml
+	@$(XMLLINT) --noout --schema $(top_srcdir)/config/manufacturer_specific.xsd $(top_srcdir)/config/manufacturer_specific.xml
+	@$(XMLLINT) --noout --schema $(top_srcdir)/config/device_configuration.xsd $(top_srcdir)/config/*/*.xml
+endif
+
 
 dist-update:
 	@echo "Updating List of Distribition Files"

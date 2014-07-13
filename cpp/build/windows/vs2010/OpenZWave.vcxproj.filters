@@ -330,6 +330,9 @@
     <ClInclude Include="..\..\..\src\command_classes\DoorLock.h">
       <Filter>Command Classes</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\command_classes\DoorLockLogging.h">
+      <Filter>Command Classes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\Driver.cpp">
@@ -624,6 +627,9 @@
       <Filter>AES</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\command_classes\DoorLock.cpp">
+      <Filter>Command Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\command_classes\DoorLockLogging.cpp">
       <Filter>Command Classes</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\command_classes\Security.cpp">
