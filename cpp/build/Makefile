@@ -80,18 +80,6 @@ clean:
 	@rm -rf $(DEPDIR) $(OBJDIR) $(LIBDIR)/libopenzwave.so* $(LIBDIR)/libopenzwave.a $(top_builddir)/libopenzwave.pc $(top_builddir)/docs/api $(top_builddir)/Doxyfile
 
 
-ifeq ($(XMLLINT),)
-xmltest:	$(XMLLINT)
-	$(error xmllint command not found.)
-else
-xmltest:	$(XMLLINT)
-	@$(XMLLINT) --noout --schema ../../config/device_classes.xsd ../../config/device_classes.xml
-	@$(XMLLINT) --noout --schema ../../config/options.xsd ../../config/options.xml
-	@$(XMLLINT) --noout --schema ../../config/manufacturer_specific.xsd ../../config/manufacturer_specific.xml
-	@$(XMLLINT) --noout --schema ../../config/device_configuration.xsd ../../config/*/*.xml
-endif
-
-
 -include $(patsubst %.cpp,$(DEPDIR)/%.d,$(tinyxml))
 -include $(patsubst %.c,$(DEPDIR)/%.d,$(hidapi))
 -include $(patsubst %.cpp,$(DEPDIR)/%.d,$(cclasses))

@@ -2,7 +2,7 @@
 //
 //	DoorLockLogging.cpp
 //
-//	Implementation of the Z-Wave COMMAND_CLASS_DOOR_LOCK
+//	Implementation of the Z-Wave COMMAND_CLASS_DOOR_LOCK_LOGGING
 //
 //	Copyright (c) 2014 Justin Hammond <justin@dynam.ac>
 //
