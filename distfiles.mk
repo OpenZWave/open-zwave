@@ -492,4 +492,5 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     cpp/src/command_classes/Battery.cpp \
     config/everspring/sp103.xml \
     dotnet/src/ZWOptions.h \
+    config/qees/reto-plugin-switch.xml \
     cpp/src/vers.cpp
