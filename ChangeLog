@@ -33,4 +33,5 @@ Version 1.1
  - Added ZWave.Me iTemp Config file thanks to Willem Burgers (Justin)
  - Added new id for Aeon Labs Micro Smart Engergy Illuminator G2 thanks to
    jmeyer (Justin)
+ - Fixed Issue 329 - Update Fibaro FGD211 Config File (Alex)
  
