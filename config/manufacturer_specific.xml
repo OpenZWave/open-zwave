@@ -375,7 +375,7 @@
 	</Manufacturer>
 	<Manufacturer id="0095" name="Qees">
 		<Product type="3101" id="0001" name="RETO Dimmer Plus 2013"/>
-		<Product type="3103" id="0001" name="RETO Plug-in Switch Plus"/>
+		<Product type="3103" id="0001" name="RETO Plug-in Switch Plus" config="qees/reto-plugin-switch.xml" />
 	</Manufacturer>
 	<Manufacturer id="0100" name="Reitz-Group.de">
 	</Manufacturer>
