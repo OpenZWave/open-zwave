@@ -48,7 +48,7 @@ enum UserCodeCmd
 
 enum
 {
-	UserCodeIndex_Refresh	= 0,
+	UserCodeIndex_Refresh	= 254,
 	UserCodeIndex_Count		= 255
 };
 
@@ -67,7 +67,8 @@ UserCode::UserCode
 	m_queryAll( false ),
 	m_currentCode( 0 ),
 	m_userCodeCount( 0 ),
-	m_refreshUserCodes(false)
+	m_refreshUserCodes(false),
+	m_indexStartsAtZero( false )
 {
 	SetStaticRequest( StaticRequest_Values );
 	memset( m_userCodesStatus, 0xff, sizeof(m_userCodesStatus) );
@@ -91,6 +92,11 @@ void UserCode::ReadXML
 	{
 		m_userCodeCount = intVal;
 	}
+	char const* str = _ccElement->Attribute("indexStartsAtZero");
+	if( str )
+	{
+		m_indexStartsAtZero = !strcmp( str, "true");
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -107,6 +113,10 @@ void UserCode::WriteXML
 	CommandClass::WriteXML( _ccElement );
 	snprintf( str, sizeof(str), "%d", m_userCodeCount );
 	_ccElement->SetAttribute( "codes", str);
+	if( m_indexStartsAtZero )
+	{
+		_ccElement->SetAttribute( "indexStartsAtZero", "true" );
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -131,7 +141,10 @@ bool UserCode::RequestState
 		if( m_userCodeCount > 0 )
 		{
 			m_queryAll = true;
-			m_currentCode = 1;
+			if (m_indexStartsAtZero)
+				m_currentCode = 0;
+			else
+				m_currentCode = 1;
 			requests |= RequestValue( _requestFlags, m_currentCode, _instance, _queue );
 		}
 	}
@@ -225,10 +238,9 @@ bool UserCode::HandleMsg
 			uint8 data[UserCodeLength];
 
 			memset( data, 0, UserCodeLength );
-			for( uint8 i = 1; i <= m_userCodeCount; i++ )
+			for( uint8 i = (m_indexStartsAtZero ? 0 : 1); i <= m_userCodeCount; i++ )
 			{
 				char str[16];
-				/* User Code 0 is invalid - Its used to "set all user codes" so lets just ignore it for now */
 				snprintf( str, sizeof(str), "Code %d", i );
 				node->CreateValueRaw( ValueID::ValueGenre_User, GetCommandClassId(), _instance, i, str, "", false, false, data, UserCodeLength, 0 );
 			}
@@ -318,7 +330,7 @@ bool UserCode::SetValue
 	if ( (ValueID::ValueType_Button == _value.GetID().GetType()) && (_value.GetID().GetIndex() == UserCodeIndex_Refresh) )
 	{
 		m_refreshUserCodes = true;
-		m_currentCode = 1;
+		m_currentCode = (m_indexStartsAtZero ? 0 : 1);
 		m_queryAll = true;
 		RequestValue( 0, m_currentCode, _value.GetID().GetInstance(), Driver::MsgQueue_Query );
 		return true;
