@@ -44,3 +44,5 @@ Version 1.1
  - Add a additional ID for Vision ZM1701 Deadbolt without Handle (Justin)
  - Add a ID and Config file for Assa Abloy Real Living Cap-Touch Deadbolt
    (Justin)
+ - Implement the TimeParameters Command Class (Justin)
+ - Fix up AssumeAwake Option for the Wakeup Class (Justin)

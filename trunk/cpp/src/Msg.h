@@ -99,7 +99,11 @@ namespace OpenZWave
 		 * \return Expected Index value for this message.
 		 */
 //		uint8 GetExpectedIndex()const{ return m_expectedIndex; }
-
+		/**
+		 * \brief get the LogText Associated with this message
+		 * \return the LogText used during the constructor
+		 */
+		string GetLogText()const{ return m_logText; }
 
 		uint32 GetLength()const{ return m_length; }
 		uint8* GetBuffer(){ return m_buffer; }

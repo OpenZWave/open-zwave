@@ -28,6 +28,7 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     cpp/src/command_classes/ThermostatSetpoint.h \
     config/zwave.me/ZME_06433.xml \
     config/fibaro/fgs221.xml \
+    cpp/src/command_classes/TimeParameters.cpp \
     cpp/src/command_classes/CommandClass.h \
     openzwave.dsc \
     cpp/src/Manager.h \
@@ -302,8 +303,8 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     config/everspringct/hsm02.xml \
     cpp/src/platform/SerialController.cpp \
     debian/Makefile \
-    cpp/src/value_classes/ValueSchedule.cpp \
     docs/images+css/image003.gif \
+    cpp/src/value_classes/ValueSchedule.cpp \
     cpp/examples/MinOZW/Main.cpp \
     cpp/src/platform/windows/TimeStampImpl.cpp \
     cpp/src/Utils.h \
@@ -377,6 +378,7 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     config/BeNext/BuiltinDimmer.xml \
     cpp/src/command_classes/ThermostatOperatingState.cpp \
     cpp/src/platform/windows/SerialControllerImpl.h \
+    config/qees/reto-plugin-switch.xml \
     config/danfoss/z.xml \
     debian/rules \
     cpp/src/Driver.h \
@@ -434,6 +436,7 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     cpp/src/value_classes/ValueInt.h \
     cpp/src/value_classes/ValueButton.cpp \
     dotnet/examples/OZWForm/src/ValuePanelDecimal.cs \
+    cpp/src/command_classes/TimeParameters.h \
     cpp/src/command_classes/NodeNaming.cpp \
     dotnet/examples/OZWForm/src/MainForm.Designer.cs \
     cpp/src/aes/aestab.c \
@@ -492,5 +495,4 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     cpp/src/command_classes/Battery.cpp \
     config/everspring/sp103.xml \
     dotnet/src/ZWOptions.h \
-    config/qees/reto-plugin-switch.xml \
     cpp/src/vers.cpp
