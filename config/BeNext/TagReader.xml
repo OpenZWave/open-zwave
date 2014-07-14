@@ -2,6 +2,7 @@
 <!--http://www.pepper1.net/zwavedb/device/302-->
 <Product xmlns='http://code.google.com/p/open-zwave/'>
   <!-- Configuration -->
+  <CommandClass id="99" indexStartsAtZero="true" />
   <CommandClass id="112">
 
     <Value type="byte" genre="config" instance="1" index="1" label="Set to Default" value="-1">
