@@ -39,3 +39,8 @@ Version 1.1
  - Add new id for GE Duplex Receptacle (Alex) 
  - Add 18 new ids for Vision devices (Alex)
  - Add Device Qees RETO Plug-in Switch Plus Config File (Alex)
+ - Implement DoorLockLogging Command Class (Justin)
+ - Implement Security Command Class (Justin)
+ - Add a additional ID for Vision ZM1701 Deadbolt without Handle (Justin)
+ - Add a ID and Config file for Assa Abloy Real Living Cap-Touch Deadbolt
+   (Justin)

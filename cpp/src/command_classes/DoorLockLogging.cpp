@@ -36,6 +36,7 @@
 #include "value_classes/ValueBool.h"
 #include "value_classes/ValueByte.h"
 #include "value_classes/ValueInt.h"
+#include "value_classes/ValueString.h"
 
 using namespace OpenZWave;
 
@@ -122,8 +123,9 @@ static char const* c_DoorLockEventType[] =
 
 enum ValueIDSystemIndexes
 {
-	Value_System_Config_MaxRecords		= 0x00,		/* Simple On/Off Mode for Lock */
-	Value_GetRecordNo					= 0x01
+	Value_System_Config_MaxRecords		= 0x00,		/* Max Number of Records the Device can Hold */
+	Value_GetRecordNo					= 0x01,		/* Current Record Number after refresh */
+	Value_LogRecord						= 0x02		/* Simple String Representation of the Log Record - Tab Delimited Fields */
 };
 
 
@@ -283,8 +285,34 @@ bool DoorLockLogging::HandleMsg
 			value->OnValueRefreshed( _data[1]);
 			value->Release();
 		}
+		if( ValueString* value = static_cast<ValueString*>( GetValue( _instance, Value_LogRecord ) ) )
+		{
+			char msg[512];
+			uint16 year = (_data[2] << 8) + (_data[3] & 0xFF);
+			uint8 month = (_data[4] & 0x0F);
+			uint8 day = (_data[5] & 0x1F);
+			uint8 hour = (_data[6] & 0x1F);
+			uint8 minute = (_data[7] & 0x3F);
+			uint8 second = (_data[8] & 0x3F);
+			bool valid = (_data[6] & 0xE0) >> 5;
+			uint8 userid = (_data[10]);
+			uint8 usercodelength = (_data[11]);
+			char usercode[254];
+			snprintf(usercode, sizeof(usercode), "UserCode:");
+			if (usercodelength > 0)
+				for (int i = 0; i < usercodelength; i++ )
+				{
+					snprintf(usercode, sizeof(usercode), "%s %d", usercode, (int)_data[12+i]);
+				}
 
-
+			if (valid) {
+				snprintf(msg, sizeof(msg), "%02d/%02d/%02d %02d:%02d:%02d \tMessage: %s \tUserID: %d \t%s", (int)day, (int)month, (int)year, (int)hour, (int)minute, (int)second, c_DoorLockEventType[EventType], (int)userid, usercode);
+			} else
+				snprintf(msg, sizeof(msg), "Invalid Record");
+			value->OnValueRefreshed(msg);
+			value->Release();
+		}
+		return true;
 
 	}
 	return false;
@@ -334,7 +362,7 @@ void DoorLockLogging::CreateVars
 	{
   		node->CreateValueByte( ValueID::ValueGenre_System, GetCommandClassId(), _instance, Value_System_Config_MaxRecords, "Max Number of Records", "", true, false, 0x0, 0 );
   		node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, Value_GetRecordNo, "Current Record Number", "", false, false, 0x0, 0 );
-
+  		node->CreateValueString( ValueID::ValueGenre_User, GetCommandClassId(), _instance, Value_LogRecord, "Log Record", "", true, false, "", 0 );
 	}
 }
 
