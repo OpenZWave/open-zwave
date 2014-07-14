@@ -222,6 +222,7 @@ exit 0</Command>
     <ClInclude Include="..\..\..\src\command_classes\NoOperation.h" />
     <ClInclude Include="..\..\..\src\command_classes\SceneActivation.h" />
     <ClInclude Include="..\..\..\src\command_classes\Security.h" />
+    <ClInclude Include="..\..\..\src\command_classes\TimeParameters.h" />
     <ClInclude Include="..\..\..\src\command_classes\SensorAlarm.h" />
     <ClInclude Include="..\..\..\src\command_classes\UserCode.h" />
     <ClInclude Include="..\..\..\src\Defs.h" />
@@ -322,6 +323,7 @@ exit 0</Command>
     <ClCompile Include="..\..\..\src\command_classes\NoOperation.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\SceneActivation.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\Security.cpp" />
+    <ClCompile Include="..\..\..\src\command_classes\TimeParameters.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\SensorAlarm.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\UserCode.cpp" />
     <ClCompile Include="..\..\..\src\Driver.cpp" />
