@@ -46,3 +46,4 @@ Version 1.1
    (Justin)
  - Implement the TimeParameters Command Class (Justin)
  - Fix up AssumeAwake Option for the Wakeup Class (Justin)
+ - Update BeNext Tag Reader Config File (Alex)
