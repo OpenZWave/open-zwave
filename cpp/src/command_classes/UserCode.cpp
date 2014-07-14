@@ -256,7 +256,7 @@ bool UserCode::HandleMsg
 		if( m_queryAll && i == m_currentCode )
 		{
 
-			if (m_refreshUserCodes && (_data[2] == UserCode_Available)) {
+			if (m_refreshUserCodes && (_data[2] != UserCode_Available)) {
 				if( ++i <= m_userCodeCount )
 				{
 					m_currentCode = i;
