@@ -102,8 +102,9 @@ namespace OpenZWave
 		bool		m_queryAll;				// True while we are requesting all the user codes.
 		uint8		m_currentCode;
 		uint8		m_userCodeCount;
-		uint8		m_userCodesStatus[255];
+		uint8		m_userCodesStatus[256];
 		bool		m_refreshUserCodes;
+		bool 		m_indexStartsAtZero;
 	};
 
 } // namespace OpenZWave
