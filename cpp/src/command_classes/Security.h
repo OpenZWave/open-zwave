@@ -40,7 +40,8 @@ namespace OpenZWave
 	typedef struct SecurityPayload {
 		uint8 m_length;
 		uint8 m_part;
-		uint8 m_data[28];
+		uint8 m_data[32];
+		string logmsg;
 	} SecurityPayload;
 
 	/* This should probably go into its own file, but its so simple... and only the Security Command Class uses it currently

@@ -71,6 +71,7 @@ using namespace OpenZWave;
 #include "command_classes/SwitchMultilevel.h"
 #include "command_classes/SwitchToggleBinary.h"
 #include "command_classes/SwitchToggleMultilevel.h"
+#include "command_classes/TimeParameters.h"
 #include "command_classes/ThermostatFanMode.h"
 #include "command_classes/ThermostatFanState.h"
 #include "command_classes/ThermostatMode.h"
@@ -218,6 +219,7 @@ void CommandClasses::RegisterCommandClasses
 	cc.Register( SwitchMultilevel::StaticGetCommandClassId(), SwitchMultilevel::StaticGetCommandClassName(), SwitchMultilevel::Create );
 	cc.Register( SwitchToggleBinary::StaticGetCommandClassId(), SwitchToggleBinary::StaticGetCommandClassName(), SwitchToggleBinary::Create );
 	cc.Register( SwitchToggleMultilevel::StaticGetCommandClassId(), SwitchToggleMultilevel::StaticGetCommandClassName(), SwitchToggleMultilevel::Create );
+	cc.Register( TimeParameters::StaticGetCommandClassId(), TimeParameters::StaticGetCommandClassName(), TimeParameters::Create);
 	cc.Register( ThermostatFanMode::StaticGetCommandClassId(), ThermostatFanMode::StaticGetCommandClassName(), ThermostatFanMode::Create );
 	cc.Register( ThermostatFanState::StaticGetCommandClassId(), ThermostatFanState::StaticGetCommandClassName(), ThermostatFanState::Create );
 	cc.Register( ThermostatMode::StaticGetCommandClassId(), ThermostatMode::StaticGetCommandClassName(), ThermostatMode::Create );
