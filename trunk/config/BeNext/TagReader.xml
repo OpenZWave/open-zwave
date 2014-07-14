@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--http://www.pepper1.net/zwavedb/device/302-->
 <Product xmlns='http://code.google.com/p/open-zwave/'>
-  <!-- Configuration -->
+
   <CommandClass id="99" indexStartsAtZero="true" />
+
+  <!-- Configuration -->
   <CommandClass id="112">
 
     <Value type="byte" genre="config" instance="1" index="1" label="Set to Default" value="-1">
@@ -31,6 +33,9 @@
     </Value>
   </CommandClass>
   
+  <!-- COMMAND_CLASS_ALARM AlarmCmd_Get not supported -->
+  <CommandClass id="113" getsupported="false" />
+
   <!-- Association Groups -->
   <CommandClass id="133">
     <Associations num_groups="1">
