@@ -2,8 +2,6 @@
 <!--http://www.pepper1.net/zwavedb/device/302-->
 <Product xmlns='http://code.google.com/p/open-zwave/'>
 
-  <CommandClass id="99" indexStartsAtZero="true" />
-
   <!-- Configuration -->
   <CommandClass id="112">
 
