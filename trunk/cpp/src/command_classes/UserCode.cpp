@@ -67,8 +67,7 @@ UserCode::UserCode
 	m_queryAll( false ),
 	m_currentCode( 0 ),
 	m_userCodeCount( 0 ),
-	m_refreshUserCodes(false),
-	m_indexStartsAtZero( false )
+	m_refreshUserCodes(false)
 {
 	SetStaticRequest( StaticRequest_Values );
 	memset( m_userCodesStatus, 0xff, sizeof(m_userCodesStatus) );
@@ -92,11 +91,6 @@ void UserCode::ReadXML
 	{
 		m_userCodeCount = intVal;
 	}
-	char const* str = _ccElement->Attribute("indexStartsAtZero");
-	if( str )
-	{
-		m_indexStartsAtZero = !strcmp( str, "true");
-	}
 }
 
 //-----------------------------------------------------------------------------
@@ -113,10 +107,6 @@ void UserCode::WriteXML
 	CommandClass::WriteXML( _ccElement );
 	snprintf( str, sizeof(str), "%d", m_userCodeCount );
 	_ccElement->SetAttribute( "codes", str);
-	if( m_indexStartsAtZero )
-	{
-		_ccElement->SetAttribute( "indexStartsAtZero", "true" );
-	}
 }
 
 //-----------------------------------------------------------------------------
@@ -141,10 +131,7 @@ bool UserCode::RequestState
 		if( m_userCodeCount > 0 )
 		{
 			m_queryAll = true;
-			if (m_indexStartsAtZero)
-				m_currentCode = 0;
-			else
-				m_currentCode = 1;
+			m_currentCode = 1;
 			requests |= RequestValue( _requestFlags, m_currentCode, _instance, _queue );
 		}
 	}
@@ -186,7 +173,11 @@ bool UserCode::RequestValue
 		GetDriver()->SendMsg( msg, _queue );
 		return true;
 	}
-
+	if (_userCodeIdx == 0)
+	{
+		Log::Write( LogLevel_Warning, GetNodeId(), "UserCodeCmd_Get with Index 0 not Supported");
+		return false;
+	}
 	Msg* msg = new Msg( "UserCodeCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 	msg->Append( GetNodeId() );
 	msg->Append( 3 );
@@ -238,11 +229,19 @@ bool UserCode::HandleMsg
 			uint8 data[UserCodeLength];
 
 			memset( data, 0, UserCodeLength );
-			for( uint8 i = (m_indexStartsAtZero ? 0 : 1); i <= m_userCodeCount; i++ )
+			for( uint8 i = 0; i <= m_userCodeCount; i++ )
 			{
 				char str[16];
-				snprintf( str, sizeof(str), "Code %d", i );
-				node->CreateValueRaw( ValueID::ValueGenre_User, GetCommandClassId(), _instance, i, str, "", false, false, data, UserCodeLength, 0 );
+				if (i == 0)
+				{
+					snprintf( str, sizeof(str), "Enrollment Code");
+					node->CreateValueRaw( ValueID::ValueGenre_User, GetCommandClassId(), _instance, i, str, "", true, false, data, UserCodeLength, 0 );
+				}
+				else
+				{
+					snprintf( str, sizeof(str), "Code %d:", i);
+					node->CreateValueRaw( ValueID::ValueGenre_User, GetCommandClassId(), _instance, i, str, "", false, false, data, UserCodeLength, 0 );
+				}
 			}
 		}
 		return true;
@@ -300,7 +299,7 @@ bool UserCode::SetValue
 	Value const& _value
 )
 {
-	if( (ValueID::ValueType_Raw == _value.GetID().GetType()) && (_value.GetID().GetIndex() > UserCodeIndex_Refresh) )
+	if( (ValueID::ValueType_Raw == _value.GetID().GetType()) && (_value.GetID().GetIndex() < UserCodeIndex_Refresh) )
 	{
 		ValueRaw const* value = static_cast<ValueRaw const*>(&_value);
 		uint8* s = value->GetValue();
@@ -311,7 +310,7 @@ bool UserCode::SetValue
 			return false;
 		}
 		m_userCodesStatus[value->GetID().GetIndex()] = UserCode_Occupied;
-		Msg* msg = new Msg( "Set UserCode", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+		Msg* msg = new Msg( "UserCodeCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 		msg->SetInstance( this, _value.GetID().GetInstance() );
 		msg->Append( GetNodeId() );
 		msg->Append( 4 + len );
@@ -330,7 +329,7 @@ bool UserCode::SetValue
 	if ( (ValueID::ValueType_Button == _value.GetID().GetType()) && (_value.GetID().GetIndex() == UserCodeIndex_Refresh) )
 	{
 		m_refreshUserCodes = true;
-		m_currentCode = (m_indexStartsAtZero ? 0 : 1);
+		m_currentCode = 1;
 		m_queryAll = true;
 		RequestValue( 0, m_currentCode, _value.GetID().GetInstance(), Driver::MsgQueue_Query );
 		return true;
