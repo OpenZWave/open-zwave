@@ -294,7 +294,11 @@ bool DoorLockLogging::HandleMsg
 			uint8 hour = (_data[6] & 0x1F);
 			uint8 minute = (_data[7] & 0x3F);
 			uint8 second = (_data[8] & 0x3F);
-			bool valid = (_data[6] & 0xE0) >> 5;
+			bool valid = false;
+			if (((_data[6] & 0xE0) >> 5) > 0)
+			{
+				valid = true;
+			}
 			uint8 userid = (_data[10]);
 			uint8 usercodelength = (_data[11]);
 			char usercode[254];
