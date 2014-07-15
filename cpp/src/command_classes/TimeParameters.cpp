@@ -25,6 +25,7 @@
 //
 //-----------------------------------------------------------------------------
 
+#include <time.h>
 #include "command_classes/CommandClasses.h"
 #include "command_classes/TimeParameters.h"
 #include "Defs.h"
