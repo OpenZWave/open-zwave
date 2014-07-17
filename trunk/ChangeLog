@@ -47,3 +47,4 @@ Version 1.1
  - Implement the TimeParameters Command Class (Justin)
  - Fix up AssumeAwake Option for the Wakeup Class (Justin)
  - Update BeNext Tag Reader Config File (Alex)
+ - Fixed Issue 335 - Update zwave.me KeyFob Config File (Alex)
