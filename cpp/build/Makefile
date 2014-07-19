@@ -169,6 +169,8 @@ install: $(LIBDIR)/libopenzwave.so.$(VERSION) doc $(top_builddir)/libopenzwave.p
 	install -m 0644 $(top_srcdir)/cpp/src/platform/*.h $(DESTDIR)/$(includedir)/platform/	
 	install -d $(DESTDIR)/$(includedir)/platform/unix/
 	install -m 0644 $(top_srcdir)/cpp/src/platform/unix/*.h $(DESTDIR)/$(includedir)/platform/unix/
+	install -d $(DESTDIR)/$(includedir)/aes/
+	install -m 0644 $(top_srcdir)/cpp/src/aes/*.h $(DESTDIR)/$(includedir)/aes/
 	install -d $(DESTDIR)/$(sysconfdir)/
 	cp -r $(top_srcdir)/config/* $(DESTDIR)/$(sysconfdir)
 	install -d $(DESTDIR)/$(docdir)/
