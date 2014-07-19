@@ -17,7 +17,7 @@
 			<Item label="Disabled" value="0" />
 			<Item label="Enabled" value="1" /> 			
 		</Value>
-		<Value type="byte" index="5" genre="config" label="Command Options" min="1" max="2" value="1" size="1">
+		<Value type="list" index="5" genre="config" label="Command Options" min="1" max="2" value="1" size="1">
 			<Help>Which commands to send when PIR motion sensor triggered</Help>
 			<Item label="Basic Set (default) " value="1" />
 			<Item label="Binary Sensor Report" value="2" />  
