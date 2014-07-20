@@ -358,6 +358,7 @@
 	</Manufacturer>
 	<Manufacturer id="013c" name="Philio Technology Corporation">
 		<Product type="0001" id="0004" name="In Wall Dual Relay (1 Way) Switch Module (PAN06-1)" />
+		<Product type="0001" id="0003" name="PAN04-1 Double Relay Switch 2x1.5kW with Power Measurement" config="philio/pan04.xml" />
 		<Product type="0002" id="0002" name="Slim Multi-Sensor PSM02" config="philio/psm02.xml" />
 	</Manufacturer>
 	<Manufacturer id="0064" name="Popp / Duwi">
