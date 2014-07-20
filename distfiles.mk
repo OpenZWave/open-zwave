@@ -495,4 +495,5 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     cpp/src/command_classes/Battery.cpp \
     config/everspring/sp103.xml \
     dotnet/src/ZWOptions.h \
+    config/philio/pan04.xml \
     cpp/src/vers.cpp
