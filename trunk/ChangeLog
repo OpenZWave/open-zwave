@@ -55,3 +55,4 @@ Version 1.1
  - Fixed Issue 340 - Add Remotec ZRC-100 Remote Control (Alex)
  - Fixed Issue 301 - Add Philio PAN04-1 Relay Insert (Alex)
  - Fixed Issue 341 - Corrected directory/filename errors in manufacturer xml (Alex)
+ - Fixed Issue 342 - Added 4 Qubino devices thanks to jeanfrancois (Alex) 
