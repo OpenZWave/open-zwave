@@ -496,4 +496,8 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     config/everspring/sp103.xml \
     dotnet/src/ZWOptions.h \
     config/philio/pan04.xml \
+    config/qubino/ZMNHAA2.xml \
+    config/qubino/ZMNHBA2.xml \
+    config/qubino/ZMNHCA2.xml \
+    config/qubino/ZMNHDA2.xml \
     cpp/src/vers.cpp
