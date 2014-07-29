@@ -37,11 +37,11 @@ You must choose a 16 byte value as your network key. This will be the master key
  # Location your options.xml file. On `*`nix platforms, this can reside in either /etc/openzwave, /usr/local/etc/openzwave or your application folder. (if options.xml exists in both the system directories and the local application folder, then best to set it on the system directory version)
  # Open it up and towards the end of the file (assuming a recent copy of OZW is present) you should see the following commented out block:
 {{{
-  <!-- <Options name="NetworkKey" value="0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F 0x10" /> -->
+  <!-- <Option name="NetworkKey" value="0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F 0x10" /> -->
 }}}
  Uncomment it looks like this:
 {{{
-   <Options name="NetworkKey" value="0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10" />
+   <Option name="NetworkKey" value="0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10" />
 }}}
  And now replace the values 0x01 to 0x10 with your own Network Key. Each Individual value can be anywhere from 0x00 to 0xFF. You *MUST* ensure that there are exactly 16 entries, separated by comma's otherwise OZW will not start-up correctly
  
