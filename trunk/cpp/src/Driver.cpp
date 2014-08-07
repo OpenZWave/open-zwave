@@ -6228,14 +6228,21 @@ uint8 *Driver::GetNetworkKey() {
 		Options::Get()->GetOptionAsString("NetworkKey", &networkKey );
 		OpenZWave::split(elems, networkKey, ",", true);
 		if (elems.size() != 16) {
-			Log::Write(LogLevel_Warning, "Invalid Network Key. Does not contain 16 Bytes");
+			Log::Write(LogLevel_Warning, "Invalid Network Key. Does not contain 16 Bytes - Contains %d", elems.size());
+			Log::Write(LogLevel_Warning, "Raw Key: %s", networkKey.c_str());
+			Log::Write(LogLevel_Warning, "Parsed Key:");
+			int i = 0;
+                        for (std::vector<std::string>::iterator it = elems.begin(); it != elems.end(); it++) 
+    			    Log::Write(LogLevel_Warning, "%d) - %s", ++i, (*it).c_str());
 			assert(0);
+			exit(-1);
 		}
 		int i = 0;
 		for (std::vector<std::string>::iterator it = elems.begin(); it != elems.end(); it++) {
 			if (0 == sscanf(OpenZWave::trim(*it).c_str(), "%x", &tempkey[i])) {
 				Log::Write(LogLevel_Warning, "Cannot Convert Network Key Byte %s to Key", (*it).c_str());
 				assert(0);
+				exit(-1);
 			} else {
 				keybytes[i] = (tempkey[i] & 0xFF);
 			}
