@@ -137,7 +137,9 @@ Security::~Security
 (
 )
 {
-
+	m_queueMutex->Release();
+	delete this->AuthKey;
+	delete this->EncryptKey;
 }
 
 //-----------------------------------------------------------------------------
@@ -543,6 +545,7 @@ void Security::SendMsg
 		payload->logmsg = _msg->GetLogText();
 		QueuePayload( payload );
 	}
+	delete _msg;
 }
 
 //-----------------------------------------------------------------------------
