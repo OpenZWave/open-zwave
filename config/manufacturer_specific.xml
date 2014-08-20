@@ -500,7 +500,8 @@
 		<Product type="2006" id="0621" name="ZM1701 Electronic Deadbolt Door Lock without Handle"/>
 		<Product type="2008" id="0803" name="ZL7101 Plug-in Dimmer Module"/>
 		<Product type="200a" id="0a02" name="ZG8101 Garage Door Detector"/>
-		<Product type="200f" id="0f02" name="ZG6301 CO Detector"/>
+		<Product type="200f" id="0f02" name="ZS6301 CO Detector"/>
+		<Product type="200f" id="0f03" name="ZS6301 CO Detector"/>
 		<Product type="2012" id="1203" name="ZR1202 Repeater"/>
 		<Product type="2014" id="1401" name="ZL7101 Plug-in Dimmer Module"/>
 		<Product type="2017" id="1717" name="ZL7432 In-Wall Switch, Dual Relay"/>
