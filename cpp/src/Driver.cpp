@@ -56,6 +56,7 @@
 
 #include "Utils.h"
 
+#include <unistd.h>
 #include <algorithm>
 #include <iostream>
 
@@ -3626,22 +3627,47 @@ void Driver::CommonAddNodeStatusRequestHandler
 		{
 			Log::Write( LogLevel_Info, nodeId, "ADD_NODE_STATUS_ADDING_SLAVE" );
 			Log::Write( LogLevel_Info, nodeId, "Adding node ID %d", _data[4] );
+			/* Discovered all the CC's are sent in this packet as well:
+			 * position description
+			 * 4 - Node ID
+			 * 5 - Length
+			 * 6 - Basic Device Class
+			 * 7 - Generic Device Class
+			 * 8 - Specific Device Class
+			 * 9 to Length - Command Classes
+			 * Last pck - CRC
+			 */
 			if( m_currentControllerCommand != NULL )
 			{
 				m_currentControllerCommand->m_controllerAdded = false;
 				m_currentControllerCommand->m_controllerCommandNode = _data[4];
 			}
+			AddNodeStop( _funcId );
+			sleep(1);
 			break;
 		}
 		case ADD_NODE_STATUS_ADDING_CONTROLLER:
 		{
 			Log::Write( LogLevel_Info, nodeId, "ADD_NODE_STATUS_ADDING_CONTROLLER");
 			Log::Write( LogLevel_Info, nodeId, "Adding controller ID %d", _data[4] );
+			/* Discovered all the CC's are sent in this packet as well:
+			 * position description
+			 * 4 - Node ID
+			 * 5 - Length
+			 * 6 - Basic Device Class
+			 * 7 - Generic Device Class
+			 * 8 - Specific Device Class
+			 * 9 to Length - Command Classes
+			 * Last pck - CRC
+			 */
+
+
 			if( m_currentControllerCommand != NULL )
 			{
 				m_currentControllerCommand->m_controllerAdded = true;
 				m_currentControllerCommand->m_controllerCommandNode = _data[4];
 			}
+			AddNodeStop( _funcId );
 			break;
 		}
 		case ADD_NODE_STATUS_PROTOCOL_DONE:
@@ -6232,7 +6258,7 @@ uint8 *Driver::GetNetworkKey() {
 			Log::Write(LogLevel_Warning, "Raw Key: %s", networkKey.c_str());
 			Log::Write(LogLevel_Warning, "Parsed Key:");
 			int i = 0;
-                        for (std::vector<std::string>::iterator it = elems.begin(); it != elems.end(); it++) 
+                        for (std::vector<std::string>::iterator it = elems.begin(); it != elems.end(); it++)
     			    Log::Write(LogLevel_Warning, "%d) - %s", ++i, (*it).c_str());
 			assert(0);
 			exit(-1);
