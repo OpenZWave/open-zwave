@@ -196,7 +196,9 @@ void Security::SetupNetworkKey
 		Log::Write(LogLevel_Info, GetNodeId(), "  Using Configured Network Key (AddingNode: %s KeySet: %s)", GetNodeUnsafe()->IsAddingNode() ? "true" : "false", m_networkkeyset ? "true" : "false" );
 		this->nk = GetDriver()->GetNetworkKey();
 	}
-
+#ifdef DEBUG
+	PrintHex("Network Key", this->nk, 16);
+#endif
 	this->AuthKey = new aes_encrypt_ctx;
 	this->EncryptKey = new aes_encrypt_ctx;
 
@@ -685,7 +687,9 @@ bool Security::EncryptMessage
 	}
 #ifdef DEBUG
 	PrintHex("Encrypted Output", encryptedpayload, payload->m_length+1);
-#endif
+
+	/* The Following Code attempts to Decrypt the Packet and Verify */
+
 	/* the first 8 bytes of a outgoing IV are random */
 	for (int i = 0; i < 8; i++) {
 		//initializationVector[i] = (rand()%0xFF)+1;
@@ -701,8 +705,8 @@ bool Security::EncryptMessage
 		Log::Write(LogLevel_Warning, GetNodeId(), "Failed to Encrypt Packet");
 		return false;
 	}
-#ifdef DEBUG
-	PrintHex("tmp output", tmpoutput, payload->m_length+1);
+
+	PrintHex("Decrypted output", tmpoutput, payload->m_length+1);
 #endif
 	for(int i=0; i<payload->m_length+1; ++i )
 	{
@@ -1017,8 +1021,8 @@ void Security::SendNonceReport
 
 	/* this should be pretty random */
 	for (int i = 0; i < 8; i++) {
-		this->currentNonce[i] = (rand()%0xFF)+1;
-		//this->currentNonce[i] = 0xAA;
+		//this->currentNonce[i] = (rand()%0xFF)+1;
+		this->currentNonce[i] = 0xAA;
 	}
 
 
