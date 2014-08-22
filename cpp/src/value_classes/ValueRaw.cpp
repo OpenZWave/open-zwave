@@ -73,7 +73,10 @@ ValueRaw::ValueRaw
 //-----------------------------------------------------------------------------
 ValueRaw::ValueRaw
 (
-)
+): 
+        m_value( NULL ),
+        m_valueCheck ( NULL ),
+        m_newValue ( NULL )
 {
 	m_valueLength = 0;
 	m_min = 0;

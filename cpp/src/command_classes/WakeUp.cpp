@@ -228,7 +228,8 @@ bool WakeUp::HandleMsg
 			// Ensure that the target node for wake-up notifications is the controller
 			// but only if node is not a listening device. Hybrid devices that can be
 			// powered by other then batteries shouldn't do this.
-			if( GetDriver()->GetNodeId() != targetNodeId && !GetNodeUnsafe()->IsListeningDevice() )
+			Node *node = GetNodeUnsafe();
+			if( GetDriver()->GetNodeId() != targetNodeId && ((node) && (!node->IsListeningDevice())) )
 			{
 				SetValue( *value );	
 			}

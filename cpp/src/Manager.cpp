@@ -2588,11 +2588,15 @@ bool Manager::RefreshValue
 	    if( (node = driver->GetNodeUnsafe( _id.GetNodeId() ) ) != NULL)
 	    {
 			CommandClass* cc = node->GetCommandClass( _id.GetCommandClassId() );
-			uint8 index = _id.GetIndex();
-			uint8 instance = _id.GetInstance();
-			Log::Write( LogLevel_Info, "mgr,     Refreshing node %d: %s index = %d instance = %d (to confirm a reported change)", node->m_nodeId, cc->GetCommandClassName().c_str(), index, instance );
-			cc->RequestValue( 0, index, instance, Driver::MsgQueue_Send );
-			bRet = true;
+			if (cc) {
+        			uint8 index = _id.GetIndex();
+	        		uint8 instance = _id.GetInstance();
+		        	Log::Write( LogLevel_Info, "mgr,     Refreshing node %d: %s index = %d instance = %d (to confirm a reported change)", node->m_nodeId, cc->GetCommandClassName().c_str(), index, instance );
+		        	cc->RequestValue( 0, index, instance, Driver::MsgQueue_Send );
+        			bRet = true;
+                        } else {
+                                bRet = false;
+                        }
 		}
 		driver->ReleaseNodes();
 	}

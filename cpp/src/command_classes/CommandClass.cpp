@@ -333,10 +333,22 @@ void CommandClass::ReadValueRefreshXML
 			if ( !strcmp(str, "RefreshClassValue"))
 			{
 				RefreshValue *arcc = new RefreshValue();
-				child->QueryIntAttribute( "CommandClass", (int*)&arcc->cc);
-				child->QueryIntAttribute( "RequestFlags", (int*)&arcc->genre);
-				child->QueryIntAttribute( "Instance", (int*)&arcc->instance);
-				child->QueryIntAttribute( "Index", (int*)&arcc->index);
+				if (child->QueryIntAttribute( "CommandClass", (int*)&arcc->cc) != TIXML_SUCCESS) {
+					Log::Write(LogLevel_Warning, GetNodeId(), "    Invalid XML - CommandClass Attribute is wrong type or missing");
+					continue;
+				}
+				if (child->QueryIntAttribute( "RequestFlags", (int*)&arcc->genre) != TIXML_SUCCESS) {
+					Log::Write(LogLevel_Warning, GetNodeId(), "    Invalid XML - RequestFlags Attribute is wrong type or missing");
+					continue;
+				}
+				if (child->QueryIntAttribute( "Instance", (int*)&arcc->instance) != TIXML_SUCCESS) {
+					Log::Write(LogLevel_Warning, GetNodeId(), "    Invalid XML - Instance Attribute is wrong type or missing");
+					continue;
+				}
+				if (child->QueryIntAttribute( "Index", (int*)&arcc->index) != TIXML_SUCCESS) {
+					Log::Write(LogLevel_Warning, GetNodeId(), "    Invalid XML - Index Attribute is wrong type or missing");
+					continue;
+				}
 				Log::Write(LogLevel_Info, GetNodeId(), "    CommandClass: %s, RequestFlags: %d, Instance: %d, Index: %d", CommandClasses::GetName(arcc->cc).c_str(), arcc->genre, arcc->instance, arcc->index);
 				rcc->RefreshClasses.push_back(arcc);
 				ok = true;
@@ -352,7 +364,7 @@ void CommandClass::ReadValueRefreshXML
 		m_RefreshClassValues.push_back( rcc );
 	} else {
 		Log::Write(LogLevel_Warning, GetNodeId(), "Failed to add a RefreshClassValue from XML");
-
+		delete rcc;
 	}
 }
 
