@@ -92,7 +92,7 @@ static char const* c_gasUnits[] =
 	"cubic meters",
 	"cubic feet",
 	"",
-	"pulses"
+	"pulses",
 	"",
 	"",
 	"",
@@ -104,7 +104,7 @@ static char const* c_waterUnits[] =
 	"cubic meters",
 	"cubic feet",
 	"US gallons",
-	"pulses"
+	"pulses",
 	"",
 	"",
 	"",

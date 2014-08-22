@@ -55,7 +55,7 @@
 #include "value_classes/ValueStore.h"
 
 #include "Utils.h"
-#ifdef __unix__
+#if defined(__unix__) || (defined(__APPLE__) && defined(__MACH__))
 # include <unistd.h>
 #elif defined _WIN32
 # include <windows.h>
@@ -970,7 +970,7 @@ void Driver::SendMsg
 		if ( Security* security = static_cast<Security *>( node->GetCommandClass(Security::StaticGetCommandClassId() ) ) )
 		{
 			CommandClass *cc = node->GetCommandClass(_msg->GetSendingCommandClass());
-			if ( cc->IsSecured() )
+			if ( (cc) && (cc->IsSecured()) )
 			{
 				Log::Write( LogLevel_Detail, GetNodeNumber( _msg ), "Encrypting Message For Command Class %s", cc->GetCommandClassName().c_str());
 				security->SendMsg(_msg);
@@ -3826,6 +3826,8 @@ bool Driver::DisablePoll
 
 				// get the value object and reset pollIntensity to zero (indicating no polling)
 				Value* value = GetValue( _valueId );
+                                if (!value) 
+                                        continue;
 				value->SetPollIntensity( 0 );
 				value->Release();
 				m_pollMutex->Unlock();
@@ -3945,6 +3947,8 @@ void Driver::SetPollIntensity
 	m_pollMutex->Lock();
 
 	Value* value = GetValue( _valueId );
+	if (!value)
+	        return;
 	value->SetPollIntensity( _intensity );
 
 	value->Release();
@@ -4004,6 +4008,8 @@ void Driver::PollThreadProc
 			// release the value object referenced; call GetNode to ensure the node objects are locked during this period
 			(void)GetNode( valueId.GetNodeId() );
 			Value* value = GetValue( valueId );
+			if (!value)
+			        continue;
 			pe.m_pollCounter = value->GetPollIntensity();
 			m_pollList.push_back( pe );
 			value->Release();
@@ -4043,10 +4049,12 @@ void Driver::PollThreadProc
 				{
 					// Request an update of the value
 					CommandClass* cc = node->GetCommandClass( valueId.GetCommandClassId() );
-					uint8 index = valueId.GetIndex();
-					uint8 instance = valueId.GetInstance();
-					Log::Write( LogLevel_Detail, node->m_nodeId, "Polling: %s index = %d instance = %d (poll queue has %d messages)", cc->GetCommandClassName().c_str(), index, instance, m_msgQueue[MsgQueue_Poll].size() );
-					cc->RequestValue( 0, index, instance, MsgQueue_Poll );
+					if (cc) {
+        					uint8 index = valueId.GetIndex();
+	        				uint8 instance = valueId.GetInstance();
+		        			Log::Write( LogLevel_Detail, node->m_nodeId, "Polling: %s index = %d instance = %d (poll queue has %d messages)", cc->GetCommandClassName().c_str(), index, instance, m_msgQueue[MsgQueue_Poll].size() );
+			        		cc->RequestValue( 0, index, instance, MsgQueue_Poll );
+                                        }
 				}
 
 				ReleaseNodes();

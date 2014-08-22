@@ -116,7 +116,7 @@ static char const* c_DoorLockEventType[] =
 	"Lock Reset",
 	"Configuration Changed",
 	"Low Battery",
-	"New Battery Installed"
+	"New Battery Installed",
 	"Unknown"
 };
 
@@ -222,7 +222,7 @@ bool DoorLockLogging::RequestValue
 	Driver::MsgQueue const _queue
 )
 {
-	if ( _what >= DoorLockLoggingCmd_RecordSupported_Get) {
+	if ( _what == DoorLockLoggingCmd_RecordSupported_Get) {
 		Msg* msg = new Msg( "DoorLockLoggingCmd_RecordSupported_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 		msg->SetInstance( this, _instance );
 		msg->Append( GetNodeId() );
@@ -278,7 +278,7 @@ bool DoorLockLogging::HandleMsg
 		if (EventType >= DoorLockEventType_Max)
 			EventType = DoorLockEventType_Max;
 
-		Log::Write (LogLevel_Info, GetNodeId(), "Recieved a DoorLockLogging Record %d which is \"%s\"", _data[1], c_DoorLockEventType[EventType]);
+		Log::Write (LogLevel_Info, GetNodeId(), "Recieved a DoorLockLogging Record %d which is \"%s\"", _data[1], c_DoorLockEventType[EventType-1]);
 
 		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, Value_GetRecordNo ) ) )
 		{

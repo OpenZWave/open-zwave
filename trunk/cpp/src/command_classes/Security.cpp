@@ -683,6 +683,7 @@ bool Security::EncryptMessage
 	aes_mode_reset(this->EncryptKey);
 	if (aes_ofb_encrypt(plaintextmsg, encryptedpayload, payload->m_length+1, initializationVector, this->EncryptKey) == EXIT_FAILURE) {
 		Log::Write(LogLevel_Warning, GetNodeId(), "Failed to Encrypt Packet");
+		delete msg;
 		return false;
 	}
 #ifdef DEBUG
@@ -703,6 +704,7 @@ bool Security::EncryptMessage
 	uint8 tmpoutput[16];
 	if (aes_ofb_encrypt(encryptedpayload, tmpoutput, payload->m_length+1, initializationVector, this->EncryptKey) == EXIT_FAILURE) {
 		Log::Write(LogLevel_Warning, GetNodeId(), "Failed to Encrypt Packet");
+		delete msg;
 		return false;
 	}
 

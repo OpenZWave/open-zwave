@@ -54,6 +54,20 @@ ValueSchedule::ValueSchedule
 ):
 	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Byte, _label, _units, _readOnly, _writeOnly, false, _pollIntensity ),
 	m_numSwitchPoints( 0 )
+	
+{
+}
+
+//-----------------------------------------------------------------------------
+// <ValueSchedule::ValueSchedule>
+// Constructor
+//-----------------------------------------------------------------------------
+ValueSchedule::ValueSchedule
+(
+):
+	Value(),
+	m_numSwitchPoints( 0 )
+	
 {
 }
 

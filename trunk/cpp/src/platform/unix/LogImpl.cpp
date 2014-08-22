@@ -115,11 +115,11 @@ void LogImpl::Write
 			{
 				if( _logLevel != LogLevel_Internal )						// don't add a second timestamp to display of queued messages
 				{
-					strcpy( outBufPtr, timeStr.c_str() );
+					strncpy( outBufPtr, timeStr.c_str(), 1124 );
 					outBufPtr += timeStr.length();
-					strcpy( outBufPtr, loglevelStr.c_str() );
+					strncpy( outBufPtr, loglevelStr.c_str(), 1124 );
 					outBufPtr += loglevelStr.length();
-					strcpy( outBufPtr, nodeStr.c_str() );
+					strncpy( outBufPtr, nodeStr.c_str(), 1124 );
 					outBufPtr += nodeStr.length();
 				}
 
