@@ -84,6 +84,7 @@ Value::Value
 ):
 	m_min( 0 ),
 	m_max( 0 ),
+	m_refreshTime(0),
 	m_verifyChanges( false ),
 	m_id( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, _type ),
 	m_label( _label ),
@@ -93,6 +94,7 @@ Value::Value
 	m_writeOnly( _writeOnly ),
 	m_isSet( _isSet ),
 	m_affectsLength( 0 ),
+	m_affects(),
 	m_affectsAll( false ),
 	m_checkChange( false ),
 	m_pollIntensity( _pollIntensity )

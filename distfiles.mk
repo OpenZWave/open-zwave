@@ -100,6 +100,7 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     cpp/src/value_classes/ValueStore.h \
     distfiles.mk \
     config/device_configuration.xsd \
+    config/qubino/ZMNHCA2.xml \
     config/fibaro/fgk001.xml \
     cpp/hidapi/mac/.gitignore \
     config/act/zdw232.xml \
@@ -141,8 +142,8 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     cpp/src/platform/Thread.h \
     dotnet/examples/OZWForm/src/ControllerCommandDlg.Designer.cs \
     config/homeseer/ztroller.xml \
-    config/rcs/therm0009.xml \
     cpp/src/Group.cpp \
+    config/rcs/therm0009.xml \
     cpp/src/platform/windows/MutexImpl.h \
     cpp/hidapi/m4/ax_pthread.m4 \
     dotnet/examples/OZWForm/src/ConfigurationWakeUpDlg.Designer.cs \
@@ -161,6 +162,7 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     cpp/hidapi/mac/hid.c \
     cpp/examples/windows/MinOZW/vs2008/MinOZW.sln \
     cpp/src/value_classes/ValueShort.h \
+    config/qubino/ZMNHDA2.xml \
     cpp/src/platform/unix/SerialControllerImpl.cpp \
     config/fibaro/fgbs001.xml \
     cpp/src/command_classes/CommandClasses.h \
@@ -181,6 +183,7 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     config/vitrum/vitrumBS.xml \
     dotnet/examples/OZWForm/src/Node.cs \
     cpp/hidapi/windows/Makefile-manual \
+    config/philio/pan04.xml \
     cpp/src/platform/FileOps.h \
     cpp/src/command_classes/DoorLock.h \
     cpp/src/platform/unix/MutexImpl.h \
@@ -255,6 +258,7 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     cpp/src/command_classes/Protection.h \
     cpp/src/command_classes/SwitchAll.h \
     cpp/src/platform/Event.cpp \
+    config/qubino/ZMNHBA2.xml \
     cpp/hidapi/libusb/hid.c \
     cpp/src/aes/aescpp.h \
     docs/general/DoxygenStepByStep.html \
@@ -268,6 +272,7 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     dotnet/examples/OZWForm/src/ValuePanel.resx \
     cpp/src/command_classes/Proprietary.cpp \
     dotnet/examples/OZWForm/src/ValuePanelShort.cs \
+    cpp/build/sh2ju.sh \
     dotnet/examples/OZWForm/src/ValuePanelInt.resx \
     config/fibaro/fgfs101.xml \
     config/2gig/ct100.xml \
@@ -341,6 +346,7 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     config/everspring/sm103.xml \
     config/everspring/st815.xml \
     debian/patches/series \
+    config/qubino/ZMNHAA2.xml \
     cpp/src/platform/windows/WaitImpl.h \
     config/zwscene.xsd \
     config/BeNext/2poleswitch.xml \
@@ -360,6 +366,7 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     cpp/hidapi/windows/Makefile.am \
     dotnet/examples/OZWForm/src/NodeForm.cs \
     cpp/src/platform/TimeStamp.h \
+    cpp/build/OZW_RunTests.sh \
     dotnet/examples/OZWForm/build/vs2008/OZWForm.csproj \
     cpp/src/command_classes/SensorBinary.h \
     debian/shlibs.libopenzwave1.0 \
@@ -456,8 +463,8 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     dotnet/examples/OZWForm/src/ValuePanelShort.resx \
     dotnet/examples/OZWForm/src/Properties/Settings.settings \
     cpp/hidapi/linux/Makefile-manual \
-    cpp/src/command_classes/UserCode.cpp \
     docs/images+css/Doxywizard3.JPG \
+    cpp/src/command_classes/UserCode.cpp \
     cpp/src/value_classes/ValueSchedule.h \
     cpp/build/windows/vs2010/OpenZWave.vcxproj \
     dotnet/src/ZWNotification.h \
@@ -495,9 +502,4 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     cpp/src/command_classes/Battery.cpp \
     config/everspring/sp103.xml \
     dotnet/src/ZWOptions.h \
-    config/philio/pan04.xml \
-    config/qubino/ZMNHAA2.xml \
-    config/qubino/ZMNHBA2.xml \
-    config/qubino/ZMNHCA2.xml \
-    config/qubino/ZMNHDA2.xml \
     cpp/src/vers.cpp

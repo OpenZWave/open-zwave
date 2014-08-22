@@ -71,7 +71,12 @@ ValueInt::ValueInt
 //-----------------------------------------------------------------------------
 ValueInt::ValueInt
 (
-)
+):
+  	Value(),
+	m_value( 0 ),
+	m_valueCheck( 0 ),
+	m_newValue( 0 )
+
 {
 	m_min = INT_MIN;
 	m_max = INT_MAX;
