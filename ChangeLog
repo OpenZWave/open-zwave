@@ -61,3 +61,4 @@ Version 1.1
  - Fixed Issue 348 - Typo in Config Index Number for zwave.me ZME_06436 (Justin)
  - Fix Several Warnings/Initilizers etc (Justin)
  - Fixed Issue 357 - Fixed Qubino manufacturer id from 345 (dec) to 159 (hex) (Alex)
+ - Fixed Issue 356 - New ID for Fibaro FGMS001 (Alex) 
