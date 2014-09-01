@@ -60,3 +60,4 @@ Version 1.1
  - Fixed Issue 351 - Added new ids for Vision VS6301 and updated Product Name (Justin)
  - Fixed Issue 348 - Typo in Config Index Number for zwave.me ZME_06436 (Justin)
  - Fix Several Warnings/Initilizers etc (Justin)
+ - Fixed Issue 357 - Fixed Qubino manufacturer id from 345 (dec) to 159 (hex) (Alex)
