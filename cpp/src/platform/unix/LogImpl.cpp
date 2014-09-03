@@ -104,7 +104,7 @@ void LogImpl::Write
 		{
 			va_list saveargs;
 			va_copy( saveargs, _args );
-//			lineLen = vsnprintf( lineBuf, sizeof(lineBuf), _format, _args );
+
 			vsnprintf( lineBuf, sizeof(lineBuf), _format, _args );
 			va_end( saveargs );
 		}
@@ -113,10 +113,7 @@ void LogImpl::Write
 		if( (_logLevel <= m_saveLevel) || (_logLevel == LogLevel_Internal) )
 		{
 			std::string outBuf;
-//			char outBuf[1124];
-//			char *outBufPtr = outBuf;
-			// save to file
-//			FILE* pFile = fopen( m_filename.c_str(), "a" );
+
 			if ( this->pFile != NULL || m_bConsoleOutput )
 			{
 				if( _logLevel != LogLevel_Internal )						// don't add a second timestamp to display of queued messages
@@ -126,30 +123,9 @@ void LogImpl::Write
 					outBuf.append(nodeStr);
 					outBuf.append(lineBuf);
 					outBuf.append("\n");
-#if 0
-					strncat( outBuf, timeStr.c_str(), sizeof(outBuf) - timeStr.length() -1 );
-					//outBufPtr += timeStr.length();
-					strncat( outBuf, loglevelStr.c_str(), sizeof(outBuf) - logLevelStr.);
-					//outBufPtr += loglevelStr.length();
-					strncat( outBuf, nodeStr.c_str(), 1124 );
-					//outBufPtr += nodeStr.length();
-#endif
-				}
-#if 0
-				if( lineLen > 0 )
-				{
-					uint32 len = ( outBufPtr - outBuf ) + lineLen;
-					if( len >= sizeof(outBuf) )
-					{
-						lineLen = sizeof(outBuf) - 3;
-					}
-					strncpy( outBufPtr, lineBuf, lineLen );
-					outBufPtr += lineLen;
+
 				}
 
-				*outBufPtr++ = '\n';
-				*outBufPtr = '\0';
-#endif
 				// print message to file (and possibly screen)
 				if( this->pFile != NULL )
 				{
