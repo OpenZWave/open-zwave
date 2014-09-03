@@ -89,10 +89,14 @@ CommandClass::~CommandClass
 		for (unsigned int i = 0; i < m_RefreshClassValues.size(); i++)
 		{
 			RefreshValue *rcc = m_RefreshClassValues.at(i);
-			for (unsigned int j = 0; j < rcc->RefreshClasses.size(); i++)
-			{
-				delete rcc->RefreshClasses[j];
+			while(!rcc->RefreshClasses.empty()) {
+				delete rcc->RefreshClasses.back();
+				rcc->RefreshClasses.pop_back();
 			}
+//			for (unsigned int j = 0; j < rcc->RefreshClasses.size(); i++)
+//			{
+//				delete rcc->RefreshClasses[j];
+//			}
 			rcc->RefreshClasses.clear();
 			delete rcc;
 		}
@@ -565,7 +569,7 @@ string CommandClass::ExtractValue
 
 	// Convert the integer to a decimal string.  We avoid
 	// using floats to prevent accuracy issues.
-	char numBuf[12];
+	char numBuf[12] = {0};
 
 	if( precision == 0 )
 	{

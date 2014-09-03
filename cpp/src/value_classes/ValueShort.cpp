@@ -71,7 +71,11 @@ ValueShort::ValueShort
 //-----------------------------------------------------------------------------
 ValueShort::ValueShort
 (
-)
+):
+	Value(),
+	m_value( 0 ),
+	m_valueCheck( 0 ),
+	m_newValue( 0 )
 {
 	m_min = SHRT_MIN;
 	m_max = SHRT_MAX;

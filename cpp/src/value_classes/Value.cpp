@@ -39,7 +39,7 @@
 
 using namespace OpenZWave;
 
-static char const* c_genreName[] = 
+static char const* c_genreName[] =
 {
 	"all",
 	"user",
@@ -48,7 +48,7 @@ static char const* c_genreName[] =
 	"basic"
 };
 
-static char const* c_typeName[] = 
+static char const* c_typeName[] =
 {
 	"bool",
 	"byte",
@@ -110,11 +110,13 @@ Value::Value
 ):
 	m_min( 0 ),
 	m_max( 0 ),
+	m_refreshTime(0),
 	m_verifyChanges( false ),
 	m_readOnly( false ),
 	m_writeOnly( false ),
 	m_isSet( false ),
 	m_affectsLength( 0 ),
+	m_affects(),
 	m_affectsAll( false ),
 	m_checkChange( false ),
 	m_pollIntensity( 0 )
@@ -324,7 +326,7 @@ void Value::WriteXML
 			{
 				s = s + ",";
 			}
-			
+
 		}
 		_valueElement->SetAttribute( "affects", s.c_str() );
 	}
@@ -424,7 +426,7 @@ void Value::OnValueRefreshed
 			// Notify the watchers
 			Notification* notification = new Notification( Notification::Type_ValueRefreshed );
 			notification->SetValueId( m_id );
-			driver->QueueNotification( notification ); 
+			driver->QueueNotification( notification );
 		}
 	}
 }
@@ -446,11 +448,11 @@ void Value::OnValueChanged
 	if( Driver* driver = Manager::Get()->GetDriver( m_id.GetHomeId() ) )
 	{
 		m_isSet = true;
-	
+
 		// Notify the watchers
 		Notification* notification = new Notification( Notification::Type_ValueChanged );
 		notification->SetValueId( m_id );
-		driver->QueueNotification( notification ); 
+		driver->QueueNotification( notification );
 	}
 	/* Call Back to the Command Class that this Value has changed, so we can search the
 	 * TriggerRefreshValue vector to see if we should request any other values to be
@@ -477,7 +479,7 @@ void Value::OnValueChanged
 //-----------------------------------------------------------------------------
 ValueID::ValueGenre Value::GetGenreEnumFromName
 (
-	char const* _name	
+	char const* _name
 )
 {
 	ValueID::ValueGenre genre = ValueID::ValueGenre_System;
@@ -514,7 +516,7 @@ char const* Value::GetGenreNameFromEnum
 //-----------------------------------------------------------------------------
 ValueID::ValueType Value::GetTypeEnumFromName
 (
-	char const* _name	
+	char const* _name
 )
 {
 	ValueID::ValueType type = ValueID::ValueType_Bool;
@@ -559,7 +561,7 @@ int Value::VerifyRefreshedValue
 )
 {
 	// TODO: this is pretty rough code, but it's reused by each value type.  It would be
-	// better if the actions were taken (m_value = _value, etc.) in this code rather than 
+	// better if the actions were taken (m_value = _value, etc.) in this code rather than
 	// in the calling routine as a result of the return value.  In particular, it's messy
 	// to be setting these values after the refesh or notification is sent.  With some
 	// focus on the actual variable storage, we should be able to accomplish this with

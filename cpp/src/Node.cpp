@@ -152,6 +152,7 @@ Node::Node
 	m_averageRequestRTT( 0 ),
 	m_averageResponseRTT( 0 ),
 	m_quality( 0 ),
+	m_lastReceivedMessage(),
 	m_errors( 0 )
 {
 	memset( m_neighbors, 0, sizeof(m_neighbors) );

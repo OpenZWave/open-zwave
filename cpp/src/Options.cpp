@@ -123,7 +123,7 @@ Options* Options::Create
 		s_instance->AddOptionInt( 		"RetryTimeout", 			RETRY_TIMEOUT);				// How long do we wait to timeout messages sent
 		s_instance->AddOptionBool( 		"EnableSIS", 				true);						// Automatically become a SUC if there is no SUC on the network.
 		s_instance->AddOptionBool( 		"AssumeAwake", 				true);						// Assume Devices that Support the Wakeup CC are awake when we first query them....
-
+		s_instance->AddOptionBool(		"NotifyOnDriverUnload",		false);						// Should we send the Node/Value Notifications on Driver Unloading - Read comments in Driver::~Driver() method about possible race conditions
 	}
 
 	return s_instance;
