@@ -230,6 +230,13 @@ Driver::~Driver
 (
 )
 {
+	/* Signal that we are going away... so at least Apps know... */
+	Notification* notification = new Notification( Notification::Type_DriverRemoved );
+	notification->SetHomeAndNodeIds( m_homeId, 0 );
+	QueueNotification( notification );
+	NotifyWatchers();
+
+
 	// append final driver stats output to the log file
 	LogDriverStatistics();
 
@@ -302,8 +309,22 @@ Driver::~Driver
 
 		m_queueEvent[i]->Release();
 	}
-
-	NotifyWatchers();
+	/* Doing our Notification Call back here in the destructor is just asking for trouble
+	 * as there is a good chance that the application will do some sort of GetDriver() supported
+	 * method on the Manager Class, which by this time, most of the OZW Classes associated with the
+	 * Driver class is 99% destructed. (mainly nodes, which cascade to CC, which cascade to ValueID
+	 * classes etc). We might need a flag around the Manager::GetDriver() class that stops applications
+	 * from getting a half destructed Driver Reference, but still retain a Internal GetDriver() method
+	 * that can return half destructed Driver references for internal classes (as per Greg's note above)
+	 */
+	bool notify;
+	if( Options::Get()->GetOptionAsBool( "NotifyOnDriverUnload", &notify) )
+	{
+		if( notify )
+		{
+			NotifyWatchers();
+		}
+	}
 	m_notificationsEvent->Release();
 	m_nodeMutex->Release();
 
@@ -1544,7 +1565,7 @@ bool Driver::ReadMsg
 (
 )
 {
-	uint8 buffer[1024];
+	uint8 buffer[1024] = {0};
 
 	if( !m_controller->Read( buffer, 1 ) )
 	{
@@ -3826,7 +3847,7 @@ bool Driver::DisablePoll
 
 				// get the value object and reset pollIntensity to zero (indicating no polling)
 				Value* value = GetValue( _valueId );
-                                if (!value) 
+                                if (!value)
                                         continue;
 				value->SetPollIntensity( 0 );
 				value->Release();
@@ -3872,7 +3893,7 @@ bool Driver::isPolled
 	m_pollMutex->Lock();
 
 	Value* value = GetValue( _valueId );
-	if( value->GetPollIntensity() != 0 )
+	if( value && value->GetPollIntensity() != 0 )
 	{
 		bPolled = true;
 	}
@@ -3881,7 +3902,7 @@ bool Driver::isPolled
 		bPolled = false;
 	}
 
-	value->Release();
+	if (value) value->Release();
 
 	/*
 	 * This code is retained for the moment as a belt-and-suspenders test to confirm that

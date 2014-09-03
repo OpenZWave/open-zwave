@@ -307,6 +307,20 @@ bool Manager::RemoveDriver
 	{
 		if( _controllerPath == rit->second->GetControllerPath() )
 		{
+			/* data race right here:
+			 * Before, we were deleting the Driver Class direct from the Map... this was causing a datarace:
+			 * 1) Driver::~Driver destructor starts deleting everything....
+			 * 2) This Triggers Notifications such as ValueDeleted etc
+			 * 3) Notifications are delivered to applications, and applications start calling
+			 *    Manager Functions which require the Driver (such as IsPolled(valueid))
+			 * 4) Manager looks up the Driver in the m_readyDriver and returns a pointer to the Driver Class
+			 *    which is currently being destructed.
+			 * 5) All Hell Breaks loose and we crash and burn.
+			 *
+			 * But we can't change this, as the Driver Destructor triggers internal GetDriver calls... which
+			 * will crash and burn if they can't get a valid Driver back...
+			 */
+			Log::Write( LogLevel_Info, "mgr,     Driver for controller %s pending removal", _controllerPath.c_str() );
 			delete rit->second;
 			m_readyDrivers.erase( rit );
 			Log::Write( LogLevel_Info, "mgr,     Driver for controller %s removed", _controllerPath.c_str() );
@@ -334,7 +348,7 @@ Driver* Manager::GetDriver
 	}
 
 	Log::Write( LogLevel_Error, "mgr,     Manager::GetDriver failed - Home ID 0x%.8x is unknown", _homeId );
-	assert(0);
+	//assert(0); << Don't assert as this might be a valid condition when we call RemoveDriver. See comments above.
 	return NULL;
 }
 
@@ -1947,7 +1961,7 @@ bool Manager::GetValueAsString
 )
 {
 	bool res = false;
-	char str[256];
+	char str[256] = {0};
 
 	if( o_value )
 	{

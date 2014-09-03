@@ -62,3 +62,11 @@ Version 1.1
  - Fix Several Warnings/Initilizers etc (Justin)
  - Fixed Issue 357 - Fixed Qubino manufacturer id from 345 (dec) to 159 (hex) (Alex)
  - Fixed Issue 356 - New ID for Fibaro FGMS001 (Alex) 
+ - Do Not Open and Close the Log file on each message. Close it during the
+   Destructor (Justin)
+ - Race Condition in the RemoveDriver call and Notifications. Add a new
+   Notification about the Driver being removed, and by default turn off
+   NodeRemoved/ValueRemoved Notifications from being sent if the Driver is
+   being unloaded. WARNING: If you call any manager functions that require
+   the Driver after recieving this message, there is a high probability your
+   application will crash with a SegV (Justin)
