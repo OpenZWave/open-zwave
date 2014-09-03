@@ -28,6 +28,7 @@
 #include <string>
 #include <cstring>
 #include <pthread.h>
+#include <iostream>
 #include "Defs.h"
 #include "LogImpl.h"
 
@@ -55,11 +56,13 @@ LogImpl::LogImpl
 {
 	if ( !m_bAppendLog )
 	{
-		FILE* pFile = fopen( m_filename.c_str(), "w" );
-		if( pFile != NULL )
-		{
-			fclose( pFile );
-		}
+		this->pFile = fopen( m_filename.c_str(), "w" );
+	} else {
+		this->pFile = fopen( m_filename.c_str(), "a" );
+	}
+	if( this->pFile == NULL )
+	{
+		std::cerr << "Could Not Open OZW Log File." << std::endl;
 	}
 	setlinebuf(stdout);	// To prevent buffering and lock contention issues
 }
@@ -72,6 +75,7 @@ LogImpl::~LogImpl
 (
 )
 {
+	fclose( this->pFile );
 }
 
 //-----------------------------------------------------------------------------
@@ -79,10 +83,10 @@ LogImpl::~LogImpl
 //	Write to the log
 //-----------------------------------------------------------------------------
 void LogImpl::Write
-( 
+(
 	LogLevel _logLevel,
 	uint8 const _nodeId,
-	char const* _format, 
+	char const* _format,
 	va_list _args
 )
 {
@@ -94,35 +98,44 @@ void LogImpl::Write
 	// handle this message
 	if( (_logLevel <= m_queueLevel) || (_logLevel == LogLevel_Internal) )	// we're going to do something with this message...
 	{
-		char lineBuf[1024] = {};
-		int lineLen = 0;
+		char lineBuf[1024] = {0};
+		//int lineLen = 0;
 		if( _format != NULL && _format[0] != '\0' )
 		{
 			va_list saveargs;
 			va_copy( saveargs, _args );
-			lineLen = vsnprintf( lineBuf, sizeof(lineBuf), _format, _args );
+//			lineLen = vsnprintf( lineBuf, sizeof(lineBuf), _format, _args );
+			vsnprintf( lineBuf, sizeof(lineBuf), _format, _args );
 			va_end( saveargs );
 		}
 
 		// should this message be saved to file (and possibly written to console?)
 		if( (_logLevel <= m_saveLevel) || (_logLevel == LogLevel_Internal) )
 		{
-			char outBuf[1124];
-			char *outBufPtr = outBuf;
+			std::string outBuf;
+//			char outBuf[1124];
+//			char *outBufPtr = outBuf;
 			// save to file
-			FILE* pFile = fopen( m_filename.c_str(), "a" );
-			if ( pFile != NULL || m_bConsoleOutput )
+//			FILE* pFile = fopen( m_filename.c_str(), "a" );
+			if ( this->pFile != NULL || m_bConsoleOutput )
 			{
 				if( _logLevel != LogLevel_Internal )						// don't add a second timestamp to display of queued messages
 				{
-					strncpy( outBufPtr, timeStr.c_str(), 1124 );
-					outBufPtr += timeStr.length();
-					strncpy( outBufPtr, loglevelStr.c_str(), 1124 );
-					outBufPtr += loglevelStr.length();
-					strncpy( outBufPtr, nodeStr.c_str(), 1124 );
-					outBufPtr += nodeStr.length();
+					outBuf.append(timeStr);
+					outBuf.append(loglevelStr);
+					outBuf.append(nodeStr);
+					outBuf.append(lineBuf);
+					outBuf.append("\n");
+#if 0
+					strncat( outBuf, timeStr.c_str(), sizeof(outBuf) - timeStr.length() -1 );
+					//outBufPtr += timeStr.length();
+					strncat( outBuf, loglevelStr.c_str(), sizeof(outBuf) - logLevelStr.);
+					//outBufPtr += loglevelStr.length();
+					strncat( outBuf, nodeStr.c_str(), 1124 );
+					//outBufPtr += nodeStr.length();
+#endif
 				}
-
+#if 0
 				if( lineLen > 0 )
 				{
 					uint32 len = ( outBufPtr - outBuf ) + lineLen;
@@ -136,16 +149,15 @@ void LogImpl::Write
 
 				*outBufPtr++ = '\n';
 				*outBufPtr = '\0';
-
+#endif
 				// print message to file (and possibly screen)
-				if( pFile != NULL )
+				if( this->pFile != NULL )
 				{
-					fputs( outBuf, pFile );
-					fclose( pFile );
+					fputs( outBuf.c_str(), pFile );
 				}
 				if( m_bConsoleOutput )
 				{
-					fputs( outBuf, stdout );
+					fputs( outBuf.c_str(), stdout );
 				}
 			}
 		}
@@ -169,7 +181,7 @@ void LogImpl::Write
 //	Write to the log queue
 //-----------------------------------------------------------------------------
 void LogImpl::Queue
-( 
+(
 	char const* _buffer
 )
 {
@@ -188,7 +200,7 @@ void LogImpl::Queue
 //	Dump the LogQueue to output device
 //-----------------------------------------------------------------------------
 void LogImpl::QueueDump
-( 
+(
 )
 {
 	Log::Write( LogLevel_Always, "" );
@@ -212,7 +224,7 @@ void LogImpl::QueueDump
 //	Clear the LogQueue
 //-----------------------------------------------------------------------------
 void LogImpl::QueueClear
-( 
+(
 )
 {
 	m_logQueue.clear();
@@ -239,7 +251,7 @@ void LogImpl::SetLoggingState
 //	Generate a string with formatted current time
 //-----------------------------------------------------------------------------
 string LogImpl::GetTimeStampString
-( 
+(
 )
 {
 	// Get a timestamp
@@ -250,7 +262,7 @@ string LogImpl::GetTimeStampString
 
 	// create a time stamp string for the log message
 	char buf[100];
-	snprintf( buf, sizeof(buf), "%04d-%02d-%02d %02d:%02d:%02d.%03d ", 
+	snprintf( buf, sizeof(buf), "%04d-%02d-%02d %02d:%02d:%02d.%03d ",
 		tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday,
 		  tm->tm_hour, tm->tm_min, tm->tm_sec, (int)tv.tv_usec / 1000 );
 	string str = buf;
@@ -277,7 +289,7 @@ string LogImpl::GetNodeString
 		}
 		else
 		{
-			char buf[20];  
+			char buf[20];
 			snprintf( buf, sizeof(buf), "Node%03d, ", _nodeId );
 			return buf;
 		}
@@ -288,7 +300,7 @@ string LogImpl::GetNodeString
 //	Generate a string with formatted thread id
 //-----------------------------------------------------------------------------
 string LogImpl::GetThreadId
-( 
+(
 )
 {
 	char buf[20];
@@ -302,7 +314,7 @@ string LogImpl::GetThreadId
 //	Provide a new log file name (applicable to future writes)
 //-----------------------------------------------------------------------------
 void LogImpl::SetLogFileName
-( 
+(
 	const string &_filename
 )
 {
