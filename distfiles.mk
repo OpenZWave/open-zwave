@@ -263,6 +263,7 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     cpp/hidapi/libusb/hid.c \
     cpp/src/aes/aescpp.h \
     docs/general/DoxygenStepByStep.html \
+    config/zipato/MiniKeypad.xml \
     cpp/src/platform/windows/LogImpl.h \
     cpp/src/value_classes/ValueButton.h \
     config/everspring/sf812.xml \
