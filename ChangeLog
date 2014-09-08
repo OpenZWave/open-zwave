@@ -70,3 +70,4 @@ Version 1.1
    being unloaded. WARNING: If you call any manager functions that require
    the Driver after recieving this message, there is a high probability your
    application will crash with a SegV (Justin)
+ - Fixed Issue 361 - Update Qubino ZMNHDA2 Config File, proper endpoint mapping (Alex)
