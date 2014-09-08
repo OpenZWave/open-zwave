@@ -71,3 +71,4 @@ Version 1.1
    the Driver after recieving this message, there is a high probability your
    application will crash with a SegV (Justin)
  - Fixed Issue 361 - Update Qubino ZMNHDA2 Config File, proper endpoint mapping (Alex)
+ - Fixed Issue 359 - Update Qubino ZMNHBA2 Config File, fixed invalid group 4 (Alex)
