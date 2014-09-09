@@ -177,6 +177,7 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     cpp/src/platform/windows/LogImpl.cpp \
     cpp/src/command_classes/Security.h \
     cpp/src/value_classes/ValueByte.cpp \
+    config/popp/123658.xml \
     config/options.xsd \
     cpp/src/DoxygenMain.h \
     config/ge/relay.xml \
@@ -207,8 +208,8 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     cpp/src/platform/windows/TimeStampImpl.h \
     cpp/src/platform/unix/ThreadImpl.cpp \
     config/device_classes.xml \
-    config/fibaro/fgwpe.xml \
     cpp/src/Bitfield.h \
+    config/fibaro/fgwpe.xml \
     config/fibaro/fgr221.xml \
     config/vision/zm1601eu.xml \
     config/trane/TZEMT400AB32MAA.xml \
