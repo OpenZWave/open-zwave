@@ -75,3 +75,4 @@ Version 1.1
  - Fixed Issue 360 - Add Config File for Popp 123658 (Alex)
  - Fixed Issue 364 - Update Schlagelink iTemp Config File, removed invalid char (Alex)
  - Fixed Issue 365 - Add Config File for Popp 123601 Plug-in Switch thanks to tony.b.hansson (Alex)
+ - Fixed Issue 366 - Add Config File for Popp 123580 Plug-in Dimmer thanks to tony.b.hansson (Alex)
