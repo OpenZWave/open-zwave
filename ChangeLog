@@ -73,3 +73,4 @@ Version 1.1
  - Fixed Issue 361 - Update Qubino ZMNHDA2 Config File, proper endpoint mapping (Alex)
  - Fixed Issue 359 - Update Qubino ZMNHBA2 Config File, fixed invalid group 4 (Alex)
  - Fixed Issue 360 - Add Config File for Popp 123658 (Alex)
+ - Fixed Issue 364 - Update Schlagelink iTemp Config File, removed invalid char (Alex)
