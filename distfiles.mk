@@ -178,6 +178,7 @@ DISTFILES =     cpp/src/command_classes/CommandClass.cpp \
     cpp/src/command_classes/Security.h \
     cpp/src/value_classes/ValueByte.cpp \
     config/popp/123658.xml \
+    config/popp/123601.xml \
     config/options.xsd \
     cpp/src/DoxygenMain.h \
     config/ge/relay.xml \
