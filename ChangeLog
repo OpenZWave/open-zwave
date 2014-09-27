@@ -77,3 +77,4 @@ Version 1.1
  - Fixed Issue 365 - Add Config File for Popp 123601 Plug-in Switch thanks to tony.b.hansson (Alex)
  - Fixed Issue 366 - Add Config File for Popp 123580 Plug-in Dimmer thanks to tony.b.hansson (Alex)
  - Fixed Issue 363 - Added new id for Schlagelink iTemp thanks to steph10200 (Alex)
+ - Fixed Issue 370 - Fixed Config File for zwave.me 06433 thanks to geilername (Alex)
