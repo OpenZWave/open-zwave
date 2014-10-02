@@ -3921,10 +3921,10 @@ bool Driver::isPolled
 			if( (*it).m_id == _valueId )
 			{
 				// Found it
-				m_pollMutex->Unlock();
-				ReleaseNodes();
 				if( bPolled )
 				{
+					m_pollMutex->Unlock();
+					ReleaseNodes();
 					return true;
 				}
 				else
@@ -3935,10 +3935,11 @@ bool Driver::isPolled
 		}
 
 		// Not in the list
-		m_pollMutex->Unlock();
-		ReleaseNodes();
+
 		if( !bPolled )
 		{
+			m_pollMutex->Unlock();
+			ReleaseNodes();
 			return false;
 		}
 		else

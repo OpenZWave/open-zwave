@@ -83,3 +83,4 @@ Version 1.1
    might require you to delete your zwcfg_*.xml file if you encounter
    problems (Justin)
  - Fixed Issue 371 - Double ReleaseNodes on Invalid Node in GetNodeStatistics (Justin)
+ - Fixed Issue 372 - Mutex Unlocking in the Driver::isPolled method (Justin)
