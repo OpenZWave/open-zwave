@@ -79,3 +79,6 @@ Version 1.1
  - Fixed Issue 363 - Added new id for Schlagelink iTemp thanks to steph10200 (Alex)
  - Fixed Issue 370 - Fixed Config File for zwave.me 06433 thanks to geilername (Alex)
  - Fixed Issue 368 - Bounds Checking on our String Arrays (Justin)
+ - Fixed Issue 362 - Fix Mapping between ValueGenre Names and Enum's. This
+   might require you to delete your zwcfg_*.xml file if you encounter
+   problems (Justin)
