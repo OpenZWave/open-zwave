@@ -129,6 +129,12 @@ bool Clock::HandleMsg
 		uint8 hour = _data[1] & 0x1f;
 		uint8 minute = _data[2];
 
+		if (day > 7) /* size of c_dayNames */
+		{
+			Log::Write (LogLevel_Warning, GetNodeId(), "Day Value was greater than range. Setting to Invalid");
+			day = 0;
+		}
+
 		Log::Write( LogLevel_Info, GetNodeId(), "Received Clock report: %s %.2d:%.2d", c_dayNames[day], hour, minute );
 
 

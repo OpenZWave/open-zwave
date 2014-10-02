@@ -126,6 +126,7 @@ bool ThermostatOperatingState::HandleMsg
 		// We have received the thermostat operating state from the Z-Wave device
 		if( ValueString* valueString = static_cast<ValueString*>( GetValue( _instance, 0 ) ) )
 		{
+			/* no need bounds checking on c_stateName here, as it can only be 1 Byte anyway */
 			valueString->OnValueRefreshed( c_stateName[_data[1]&0x0f] );
 			valueString->Release();
 			Log::Write( LogLevel_Info, GetNodeId(), "Received thermostat operating state: %s", valueString->GetValue().c_str() );

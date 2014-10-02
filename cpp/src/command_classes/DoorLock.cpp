@@ -101,7 +101,8 @@ static char const* c_LockStateNames[] =
 		"Inside Handle Unsecured with Timeout",
 		"Outside Handle Unsecured",
 		"Outside Handle Unsecured with Timeout",
-		"Secured"
+		"Secured",
+		"Invalid"
 };
 
 
@@ -275,16 +276,23 @@ bool DoorLock::HandleMsg
 
 	if( DoorLockCmd_Report == (DoorLockCmd)_data[0] )
 	{
-		Log::Write( LogLevel_Info, GetNodeId(), "Received DoorLock report: DoorLock is %s", c_LockStateNames[(_data[1] == 0xFF) ? 6 : _data[1] ] );
+		uint8 lockState = (_data[1] == 0xFF) ? 6 : _data[1];
+		if (lockState > 6) /* size of c_LockStateNames minus Invalid Entry */
+		{
+			Log::Write (LogLevel_Warning, GetNodeId(), "LockState Value was greater than range. Setting to Invalid");
+			lockState = 7;
+		}
+
+		Log::Write( LogLevel_Info, GetNodeId(), "Received DoorLock report: DoorLock is %s", c_LockStateNames[lockState] );
 
 		if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, Value_Lock ) ) )
 		{
-			value->OnValueRefreshed( _data[1] == 0xFF );
+			value->OnValueRefreshed( lockState == 0xFF );
 			value->Release();
 		}
 		if( ValueList* value = static_cast<ValueList*>( GetValue( _instance, Value_Lock_Mode ) ) )
 		{
-			value->OnValueRefreshed( _data[1]);
+			value->OnValueRefreshed( lockState);
 			value->Release();
 		}
 		return true;
@@ -544,7 +552,7 @@ void DoorLock::CreateVars
 	  	{
 	  		vector<ValueList::Item> items;
 	  		ValueList::Item item;
-	  		for( uint8 i=0; i<7; ++i )
+	  		for( uint8 i=0; i<8; ++i )
 	  		{
 	  			item.m_label = c_LockStateNames[i];
 	  			item.m_value = (i < 6) ? i : 0xFF;

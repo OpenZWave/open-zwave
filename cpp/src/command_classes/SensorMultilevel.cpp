@@ -85,83 +85,89 @@ enum SensorType
 
 static char const* c_sensorTypeNames[] =
 {
-	"Undefined",
-	"Temperature",
-	"General",
-	"Luminance",
-	"Power",
-	"Relative Humidity",
-	"Velocity",
-	"Direction",
-	"Atmospheric Pressure",
-	"Barometric Pressure",
-	"Solar Radiation",
-	"Dew Point",
-	"Rain Rate",
-	"Tide Level",
-	"Weight",
-	"Voltage",
-	"Current",
-	"CO2 Level",
-	"Air Flow",
-	"Tank Capacity",
-	"Distance",
-	"Angle Position",
-	"Rotation",
-	"Water Temperature",
-	"Soil Temperature",
-	"Seismic Intensity",
-	"Seismic Magnitude",
-	"Utraviolet",
-	"Electrical Resistivity",
-	"Electrical Conductivity",
-	"Loudness",
-	"Moisture"
+		"Undefined",
+		"Temperature",
+		"General",
+		"Luminance",
+		"Power",
+		"Relative Humidity",
+		"Velocity",
+		"Direction",
+		"Atmospheric Pressure",
+		"Barometric Pressure",
+		"Solar Radiation",
+		"Dew Point",
+		"Rain Rate",
+		"Tide Level",
+		"Weight",
+		"Voltage",
+		"Current",
+		"CO2 Level",
+		"Air Flow",
+		"Tank Capacity",
+		"Distance",
+		"Angle Position",
+		"Rotation",
+		"Water Temperature",
+		"Soil Temperature",
+		"Seismic Intensity",
+		"Seismic Magnitude",
+		"Utraviolet",
+		"Electrical Resistivity",
+		"Electrical Conductivity",
+		"Loudness",
+		"Moisture"
 };
 
 static char const* c_tankCapcityUnits[] =
 {
-	"l",
-	"cbm",
-	"gal"
+		"l",
+		"cbm",
+		"gal",
+		""
 };
 
 static char const* c_distanceUnits[] =
 {
-	"m",
-	"cm",
-	"ft"
+		"m",
+		"cm",
+		"ft",
+		""
 };
 
 static char const* c_anglePositionUnits[] =
 {
-	"%",
-	"deg N",
-	"deg S"
+		"%",
+		"deg N",
+		"deg S",
+		""
 };
 
 static char const* c_seismicIntensityUnits[] =
 {
-	"mercalli",
-	"EU macroseismic",
-	"liedu",
-	"shindo"
+		"mercalli",
+		"EU macroseismic",
+		"liedu",
+		"shindo",
+		""
 };
 
 static char const* c_seismicMagnitudeUnits[] =
 {
-	"local",
-	"moment",
-	"surface wave",
-	"body wave"
+		"local",
+		"moment",
+		"surface wave",
+		"body wave",
+		""
 };
 
 static char const* c_moistureUnits[] =
 {
-	"%",
-	"content",
-	"k ohms",
-	"water activity"
+		"%",
+		"content",
+		"k ohms",
+		"water activity",
+		""
 };
 
 //-----------------------------------------------------------------------------
@@ -170,9 +176,9 @@ static char const* c_moistureUnits[] =
 //-----------------------------------------------------------------------------
 bool SensorMultilevel::RequestState
 (
-	uint32 const _requestFlags,
-	uint8 const _instance,
-	Driver::MsgQueue const _queue
+		uint32 const _requestFlags,
+		uint8 const _instance,
+		Driver::MsgQueue const _queue
 )
 {
 	bool res = false;
@@ -180,7 +186,7 @@ bool SensorMultilevel::RequestState
 	{
 		if( _requestFlags & RequestFlag_Static )
 		{
- 			Msg* msg = new Msg( "SensorMultilevelCmd_SupportedGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+			Msg* msg = new Msg( "SensorMultilevelCmd_SupportedGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 			msg->SetInstance( this, _instance );
 			msg->Append( GetNodeId() );
 			msg->Append( 2 );
@@ -206,10 +212,10 @@ bool SensorMultilevel::RequestState
 //-----------------------------------------------------------------------------
 bool SensorMultilevel::RequestValue
 (
-	uint32 const _requestFlags,
-	uint8 const _dummy,		// = 0 (not used)
-	uint8 const _instance,
-	Driver::MsgQueue const _queue
+		uint32 const _requestFlags,
+		uint8 const _dummy,		// = 0 (not used)
+		uint8 const _instance,
+		Driver::MsgQueue const _queue
 )
 {
 	bool res = false;
@@ -259,9 +265,9 @@ bool SensorMultilevel::RequestValue
 //-----------------------------------------------------------------------------
 bool SensorMultilevel::HandleMsg
 (
-	uint8 const* _data,
-	uint32 const _length,
-	uint32 const _instance	// = 1
+		uint8 const* _data,
+		uint32 const _length,
+		uint32 const _instance	// = 1
 )
 {
 	if (SensorMultilevelCmd_SupportedReport == (SensorMultilevelCmd)_data[0])
@@ -277,8 +283,13 @@ bool SensorMultilevel::HandleMsg
 					if( _data[i] & ( 1 << j ) )
 					{
 						if( msg != "" )
-						  	msg += ", ";
+							msg += ", ";
 						uint8 index = ( ( i - 1 ) * 8 ) + j + 1;
+						if (index >= SensorType_MaxType) /* max size for c_sensorTypeNames */
+						{
+							Log::Write (LogLevel_Warning, GetNodeId(), "SensorType Value was greater than range. Dropping");
+							continue;
+						}
 						msg += c_sensorTypeNames[index];
 						ValueDecimal* value = static_cast<ValueDecimal*>( GetValue( _instance, index ) );
 						if( value == NULL)
@@ -322,20 +333,91 @@ bool SensorMultilevel::HandleMsg
 				case SensorType_Current:				units = scale ? "mA" : "A";			break;
 				case SensorType_CO2:					units = "ppm";					break;
 				case SensorType_AirFlow:				units = scale ? "cfm" : "m3/h";			break;
-				case SensorType_TankCapacity:				units = c_tankCapcityUnits[scale];		break;
-				case SensorType_Distance:				units = c_distanceUnits[scale];			break;
-				case SensorType_AnglePosition:				units = c_anglePositionUnits[scale];		break;
+				case SensorType_TankCapacity: {
+					if (scale > 2) /* size of c_tankCapcityUnits minus invalid */
+					{
+						Log::Write (LogLevel_Warning, GetNodeId(), "Scale Value for c_tankCapcityUnits was greater than range. Setting to empty");
+						units = c_tankCapcityUnits[3]; /* empty entry */
+					}
+					else
+					{
+						units = c_tankCapcityUnits[scale];
+					}
+				}
+				break;
+				case SensorType_Distance: {
+					if (scale > 2) /* size of c_distanceUnits minus invalid */
+					{
+						Log::Write (LogLevel_Warning, GetNodeId(), "Scale Value for c_distanceUnits was greater than range. Setting to empty");
+						units = c_distanceUnits[3]; /* empty entry */
+					}
+					else
+					{
+						units = c_distanceUnits[scale];
+					}
+				}
+				break;
+				case SensorType_AnglePosition: {
+					if (scale > 2) /* size of c_anglePositionUnits minus invalid */
+					{
+						Log::Write (LogLevel_Warning, GetNodeId(), "Scale Value for c_anglePositionUnits was greater than range. Setting to empty");
+						units = c_anglePositionUnits[3]; /* empty entry */
+					}
+					else
+					{
+						units = c_anglePositionUnits[scale];
+					}
+				}
+				break;
 				case SensorType_Rotation:				units = scale ? "hz" : "rpm";			break;
 				case SensorType_WaterTemperature:			units = scale ? "F" : "C";			break;
 				case SensorType_SoilTemperature:			units = scale ? "F" : "C";			break;
-				case SensorType_SeismicIntensity:			units = c_seismicIntensityUnits[scale];		break;
-				case SensorType_SeismicMagnitude:			units = c_seismicMagnitudeUnits[scale];		break;
+				case SensorType_SeismicIntensity: {
+					if (scale > 3) /* size of c_seismicIntensityUnits minus invalid */
+					{
+						Log::Write (LogLevel_Warning, GetNodeId(), "Scale Value for c_seismicIntensityUnits was greater than range. Setting to empty");
+						units = c_seismicIntensityUnits[4]; /* empty entry */
+					}
+					else
+					{
+						units = c_seismicIntensityUnits[scale];
+					}
+				}
+				break;
+				case SensorType_SeismicMagnitude: {
+					if (scale > 3) /* size of c_seismicMagnitudeUnits minus invalid */
+					{
+						Log::Write (LogLevel_Warning, GetNodeId(), "Scale Value for c_seismicMagnitudeUnits was greater than range. Setting to empty");
+						units = c_seismicMagnitudeUnits[4]; /* empty entry */
+					}
+					else
+					{
+						units = c_seismicMagnitudeUnits[scale];
+					}
+				}
+				break;
 				case SensorType_Ultraviolet:				units = "";					break;
 				case SensorType_ElectricalResistivity:			units = "ohm";					break;
 				case SensorType_ElectricalConductivity:			units = "siemens/m";				break;
 				case SensorType_Loudness:				units = scale ? "dBA" : "db";			break;
-				case SensorType_Moisture:				units = c_moistureUnits[scale];			break;
-				default:												break;
+				case SensorType_Moisture: {
+					if (scale > 3) /* size of c_moistureUnits minus invalid */
+					{
+						Log::Write (LogLevel_Warning, GetNodeId(), "Scale Value for c_moistureUnits was greater than range. Setting to empty");
+						units = c_moistureUnits[4]; /* empty entry */
+					}
+					else
+					{
+						units = c_moistureUnits[scale];
+					}
+				}
+				break;
+				default: {
+					Log::Write (LogLevel_Warning, GetNodeId(), "sensorType Value was greater than range. Dropping");
+					return false;
+				}
+				break;
+
 			}
 
 			ValueDecimal* value = static_cast<ValueDecimal*>( GetValue( _instance, sensorType ) );
@@ -368,7 +450,7 @@ bool SensorMultilevel::HandleMsg
 //-----------------------------------------------------------------------------
 void SensorMultilevel::CreateVars
 (
-	uint8 const _instance
+		uint8 const _instance
 )
 {
 	// Don't create anything here. We do it in the report.
