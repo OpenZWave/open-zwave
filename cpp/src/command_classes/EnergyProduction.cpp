@@ -95,6 +95,12 @@ bool EnergyProduction::RequestValue
 	Driver::MsgQueue const _queue
 )
 {
+	if (_valueEnum > EnergyProductionIndex_Time)
+	{
+		Log::Write (LogLevel_Warning, GetNodeId(), "RequestValue _valueEnum was greater than range. Dropping");
+		return false;
+	}
+
 	if ( IsGetSupported() )
 	{
 		Log::Write( LogLevel_Info, GetNodeId(), "Requesting the %s value", c_energyParameterNames[_valueEnum] );
@@ -129,6 +135,12 @@ bool EnergyProduction::HandleMsg
 		uint8 scale;
 		uint8 precision = 0;
 		string value = ExtractValue( &_data[2], &scale, &precision );
+		uint8 paramType = _data[1];
+		if (paramType > 4) /* size of  c_energyParameterNames minus Invalid Entry*/
+		{
+			Log::Write (LogLevel_Warning, GetNodeId(), "paramType Value was greater than range. Dropping Message");
+			return false;
+		}
 
 		Log::Write( LogLevel_Info, GetNodeId(), "Received an Energy production report: %s = %s", c_energyParameterNames[_data[1]], value.c_str() );
 		if( ValueDecimal* decimalValue = static_cast<ValueDecimal*>( GetValue( _instance, _data[1] ) ) )

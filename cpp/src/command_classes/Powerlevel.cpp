@@ -76,14 +76,16 @@ static char const* c_powerLevelNames[] =
 	"-6dB",
 	"-7dB",
 	"-8dB",
-	"-9dB"
+	"-9dB",
+	"Unknown"
 };
 
 static char const* c_powerLevelStatusNames[] =
 {
 	"Failed",
 	"Success",
-	"In Progress"
+	"In Progress",
+	"Unknown"
 };
 
 
@@ -152,6 +154,11 @@ bool Powerlevel::HandleMsg
 	if( PowerlevelCmd_Report == (PowerlevelCmd)_data[0] )
 	{
 		PowerLevelEnum powerLevel = (PowerLevelEnum)_data[1];
+		if (powerLevel > 9) /* size of c_powerLevelNames minus Unknown*/
+		{
+			Log::Write (LogLevel_Warning, GetNodeId(), "powerLevel Value was greater than range. Setting to Invalid");
+			powerLevel = (PowerLevelEnum)10;
+		}
 		uint8 timeout = _data[2];
 
 		Log::Write( LogLevel_Info, GetNodeId(), "Received a PowerLevel report: PowerLevel=%s, Timeout=%d", c_powerLevelNames[powerLevel], timeout );
@@ -173,6 +180,12 @@ bool Powerlevel::HandleMsg
 		uint8 testNode = _data[1];
 		PowerLevelStatusEnum status = (PowerLevelStatusEnum)_data[2];
 		uint16 ackCount = (((uint16)_data[3])<<8) | (uint16)_data[4];
+
+		if (status > 2) /* size of c_powerLevelStatusNames minus Unknown */
+		{
+			Log::Write (LogLevel_Warning, GetNodeId(), "status Value was greater than range. Setting to Unknown");
+			status = (PowerLevelStatusEnum)3;
+		}
 
 		Log::Write( LogLevel_Info, GetNodeId(), "Received a PowerLevel Test Node report: Test Node=%d, Status=%s, Test Frame ACK Count=%d", testNode, c_powerLevelStatusNames[status], ackCount );
 		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, PowerlevelIndex_TestNode ) ) )
@@ -336,6 +349,13 @@ bool Powerlevel::Set
 	{
 		return false;
 	}
+	if (powerLevel > 9) /* size of c_powerLevelNames minus Unknown */
+	{
+		Log::Write (LogLevel_Warning, GetNodeId(), "powerLevel Value was greater than range. Dropping");
+		/* Drop it */
+		return false;
+	}
+
 
 	Log::Write( LogLevel_Info, GetNodeId(), "Setting the power level to %s for %d seconds", c_powerLevelNames[powerLevel], timeout );
 	Msg* msg = new Msg( "PowerlevelCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
@@ -394,6 +414,12 @@ bool Powerlevel::Test
 	{
 		return false;
 	}
+	if (powerLevel > 9) /* size of c_powerLevelNames minus Unknown */
+	{
+		Log::Write (LogLevel_Warning, GetNodeId(), "powerLevel Value was greater than range. Dropping");
+		return false;
+	}
+
 
 	Log::Write( LogLevel_Info, GetNodeId(), "Running a Power Level Test: Target Node = %d, Power Level = %s, Number of Frames = %d", testNodeId, c_powerLevelNames[powerLevel], numFrames );
 	Msg* msg = new Msg( "PowerlevelCmd_TestNodeSet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );

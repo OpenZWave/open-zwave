@@ -251,6 +251,12 @@ bool Meter::HandleSupportedReport
 {
 	bool canReset = ((_data[1] & 0x80) != 0);
 	MeterType meterType = (MeterType)(_data[1] & 0x1f);
+	if (meterType > 4) /* size of c_meterTypes */
+	{
+		Log::Write (LogLevel_Warning, GetNodeId(), "meterType Value was greater than range. Dropping Message");
+		return false;
+	}
+
 
 	ClearStaticRequest( StaticRequest_Version );
 	if( Node* node = GetNodeUnsafe() )
@@ -376,11 +382,24 @@ bool Meter::HandleReport
 	uint8 precision = 0;
 	string valueStr = ExtractValue( &_data[2], &scale, &precision );
 
+	if (scale > 7) /* size of c_electricityLabels, c_electricityUnits, c_gasUnits, c_waterUnits */
+	{
+		Log::Write (LogLevel_Warning, GetNodeId(), "Scale was greater than range. Setting to Invalid");
+		scale = 7;
+	}
+
+
 	if( GetVersion() == 1 )
 	{
 		// In version 1, we don't know the scale until we get the first value report
 		string label;
 		string units;
+		MeterType meterType = (MeterType)(_data[1] & 0x1f);
+		if (meterType > 4) /* size of c_meterTypes */
+		{
+			Log::Write (LogLevel_Warning, GetNodeId(), "meterType Value was greater than range. Dropping Message");
+			return false;
+		}
 
 		switch( (MeterType)(_data[1] & 0x1f) )
 		{

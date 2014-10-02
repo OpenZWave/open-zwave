@@ -60,7 +60,7 @@ static char const* c_stateName[] =
 	"State 12",
 	"State 13",
 	"State 14",
-	"State 15"
+	"State 15",
 };
 
 //-----------------------------------------------------------------------------
@@ -128,7 +128,10 @@ bool ThermostatFanState::HandleMsg
 		// We have received the thermostat fan state from the Z-Wave device
 		if( ValueString* valueString = static_cast<ValueString*>( GetValue( _instance, 0 ) ) )
 		{
-			valueString->OnValueRefreshed( c_stateName[_data[1]&0x0f] );
+			/* No need bounds checking as the state can only be a single byte - No larger than our Char array anyway */
+			uint8 state = (_data[1]&0x0f);
+
+			valueString->OnValueRefreshed( c_stateName[state] );
 			valueString->Release();
 			Log::Write( LogLevel_Info, GetNodeId(), "Received thermostat fan state: %s", valueString->GetValue().c_str() );
 		}

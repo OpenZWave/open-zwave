@@ -119,7 +119,7 @@ static char const* c_DoorLockEventType[] =
 	"New Battery Installed",
 	"Unknown"
 };
-
+/* size = 31 entries */
 
 enum ValueIDSystemIndexes
 {

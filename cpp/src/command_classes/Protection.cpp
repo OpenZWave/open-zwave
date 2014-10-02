@@ -50,7 +50,8 @@ static char const* c_protectionStateNames[] =
 {
 	"Unprotected",
 	"Protection by Sequence",
-	"No Operation Possible"
+	"No Operation Possible",
+	"Unknown"
 };
 
 //-----------------------------------------------------------------------------
@@ -114,6 +115,12 @@ bool Protection::HandleMsg
 {
 	if (ProtectionCmd_Report == (ProtectionCmd)_data[0])
 	{
+		int8 stateValue = _data[1];
+		if (stateValue > 2) /* size of c_protectionStateNames minus Invalid */
+		{
+			Log::Write (LogLevel_Warning, GetNodeId(), "State Value was greater than range. Setting to Invalid");
+			stateValue = 3;
+		}
 		Log::Write( LogLevel_Info, GetNodeId(), "Received a Protection report: %s", c_protectionStateNames[_data[1]] );
 		if( ValueList* value = static_cast<ValueList*>( GetValue( _instance, 0 ) ) )
 		{
