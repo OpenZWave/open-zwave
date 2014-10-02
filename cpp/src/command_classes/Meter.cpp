@@ -250,7 +250,7 @@ bool Meter::HandleSupportedReport
 )
 {
 	bool canReset = ((_data[1] & 0x80) != 0);
-	MeterType meterType = (MeterType)(_data[1] & 0x1f);
+	int8 meterType = (MeterType)(_data[1] & 0x1f);
 	if (meterType > 4) /* size of c_meterTypes */
 	{
 		Log::Write (LogLevel_Warning, GetNodeId(), "meterType Value was greater than range. Dropping Message");
@@ -394,7 +394,7 @@ bool Meter::HandleReport
 		// In version 1, we don't know the scale until we get the first value report
 		string label;
 		string units;
-		MeterType meterType = (MeterType)(_data[1] & 0x1f);
+		int8 meterType = (MeterType)(_data[1] & 0x1f);
 		if (meterType > 4) /* size of c_meterTypes */
 		{
 			Log::Write (LogLevel_Warning, GetNodeId(), "meterType Value was greater than range. Dropping Message");
