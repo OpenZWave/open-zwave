@@ -41,11 +41,11 @@ using namespace OpenZWave;
 
 static char const* c_genreName[] =
 {
-	"all",
+	"basic",
 	"user",
 	"config",
 	"system",
-	"basic"
+	"invalid"
 };
 
 static char const* c_typeName[] =
