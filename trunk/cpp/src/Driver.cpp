@@ -6223,8 +6223,8 @@ void Driver::GetNodeStatistics
 	if( node != NULL )
 	{
 		node->GetNodeStatistics( _data );
+		ReleaseNodes();
 	}
-	ReleaseNodes();
 }
 
 //-----------------------------------------------------------------------------

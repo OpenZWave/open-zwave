@@ -82,3 +82,4 @@ Version 1.1
  - Fixed Issue 362 - Fix Mapping between ValueGenre Names and Enum's. This
    might require you to delete your zwcfg_*.xml file if you encounter
    problems (Justin)
+ - Fixed Issue 371 - Double ReleaseNodes on Invalid Node in GetNodeStatistics (Justin)
