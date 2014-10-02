@@ -1,11 +1,15 @@
 #summary Other projects that depend on open-zwave.
-
+= Applications = 
   * [https://github.com/ekarak/ansible ansible] (via Thrift4OZW) - A home automation scripting framework for ruby
   * [http://code.google.com/p/openzwave-control-panel/ openzwave-control-panel] - Web-based interface for managing and monitoring Z-Wave networks
   * [http://www.opensourceautomation.com Open Source Automation] - Extensible automation platform (Windows only)
-  * [http://projects.maartendamen.com/projects/pyopenzwave/ py-openzwave] ([http://github.com/maartendamen/py-openzwave github])
-  * [http://code.google.com/p/py-openzwave-extension/ py-openzwave-extension]
-  * [https://github.com/ekarak/Thrift4OZW Thrift4OZW] - An external interface to OpenZWave using Thrift & STOMP
   * [http://code.google.com/p/zvirtualscenes/ zVirtualScenes] - A software scene controller for ZWave devices
   * [http://www.agocontrol.com ago control] - An AMQP messaging based home automation suite. Also supports other protocols besides Z-Wave. Lightweight design to run on embedded systems like the Raspberry Pi. 
   * [http://www.domotiga.nl Domotiga] - An Open Source Home Automation software that supports Zwave among other protocols. 
+
+= Language Wrappers =
+The following is a list of Language Wrappers for OZW:
+  * [http://projects.maartendamen.com/projects/pyopenzwave/ py-openzwave] ([http://github.com/maartendamen/py-openzwave github])
+  * [http://code.google.com/p/py-openzwave-extension/ py-openzwave-extension]
+  * [https://github.com/ekarak/Thrift4OZW Thrift4OZW] - An external interface to OpenZWave using Thrift & STOMP
+ * [https://www.npmjs.org/package/openzwave] - NodeJS Wrapper
