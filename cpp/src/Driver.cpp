@@ -54,6 +54,9 @@
 #include "value_classes/Value.h"
 #include "value_classes/ValueStore.h"
 
+#include "tinyxml.h"
+
+
 #include "Utils.h"
 #if defined(__unix__) || (defined(__APPLE__) && defined(__MACH__))
 # include <unistd.h>

@@ -35,6 +35,8 @@
 
 #include "value_classes/ValueString.h"
 
+#include "tinyxml.h"
+
 using namespace OpenZWave;
 
 enum VersionCmd

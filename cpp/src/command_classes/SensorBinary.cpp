@@ -33,8 +33,8 @@
 #include "Node.h"
 #include "Driver.h"
 #include "platform/Log.h"
-
 #include "value_classes/ValueBool.h"
+#include "tinyxml.h"
 
 using namespace OpenZWave;
 
