@@ -35,6 +35,8 @@
 
 #include "value_classes/ValueDecimal.h"
 
+#include "tinyxml.h"
+
 using namespace OpenZWave;
 
 enum ThermostatSetpointCmd

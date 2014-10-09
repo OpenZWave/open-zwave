@@ -35,6 +35,8 @@
 
 #include "value_classes/ValueList.h"
 
+#include "tinyxml.h"
+
 using namespace OpenZWave;
 
 enum ThermostatModeCmd

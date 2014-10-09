@@ -38,6 +38,8 @@
 #include "value_classes/ValueByte.h"
 #include "command_classes/NoOperation.h"
 
+#include "tinyxml.h"
+
 using namespace OpenZWave;
 
 enum BasicCmd

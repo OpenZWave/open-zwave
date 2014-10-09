@@ -38,6 +38,8 @@
 #include "value_classes/ValueByte.h"
 #include "value_classes/ValueInt.h"
 
+#include "tinyxml.h"
+
 using namespace OpenZWave;
 
 enum DoorLockCmd

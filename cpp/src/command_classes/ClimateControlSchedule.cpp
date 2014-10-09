@@ -36,6 +36,8 @@
 #include "value_classes/ValueList.h"
 #include "value_classes/ValueSchedule.h"
 
+#include "tinyxml.h"
+
 using namespace OpenZWave;
 
 enum ClimateControlScheduleCmd
