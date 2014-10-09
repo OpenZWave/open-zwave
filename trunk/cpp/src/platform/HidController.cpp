@@ -31,6 +31,8 @@
 #include "platform/Log.h"
 #include "platform/TimeStamp.h"
 #include "platform/HidController.h"
+#include "hidapi.h"
+
 
 #define CHECK_HIDAPI_RESULT(RESULT, ERRORLABEL) if (RESULT < 0) goto ERRORLABEL
 #define PACKET_BUFFER_LENGTH 256

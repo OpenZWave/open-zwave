@@ -84,3 +84,7 @@ Version 1.1
    problems (Justin)
  - Fixed Issue 371 - Double ReleaseNodes on Invalid Node in GetNodeStatistics (Justin)
  - Fixed Issue 372 - Mutex Unlocking in the Driver::isPolled method (Justin)
+ - Remove tinyxml.h include from our headers so we don't have to distribute
+   the TinyXML header files (Justin)
+ - Remove the hidapi.h include from our headers so we don't have to
+   distribute the hidapi header files (Justin)

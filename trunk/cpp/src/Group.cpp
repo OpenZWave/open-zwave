@@ -35,6 +35,8 @@
 #include "command_classes/Association.h"
 #include "command_classes/AssociationCommandConfiguration.h"
 
+#include "tinyxml.h"
+
 using namespace OpenZWave;
 
 
