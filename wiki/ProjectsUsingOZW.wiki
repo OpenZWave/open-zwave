@@ -13,3 +13,4 @@ The following is a list of Language Wrappers for OZW:
   * [http://code.google.com/p/py-openzwave-extension/ py-openzwave-extension]
   * [https://github.com/ekarak/Thrift4OZW Thrift4OZW] - An external interface to OpenZWave using Thrift & STOMP
  * [https://www.npmjs.org/package/openzwave] - NodeJS Wrapper
+ * [https://code.google.com/p/python-openzwave/] - Python-OpenZwave
