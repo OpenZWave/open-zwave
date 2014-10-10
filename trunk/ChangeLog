@@ -88,3 +88,4 @@ Version 1.1
    the TinyXML header files (Justin)
  - Remove the hidapi.h include from our headers so we don't have to
    distribute the hidapi header files (Justin)
+ - Fixed Issue 375 - Add Ecolink Garage Door Sensor - (Justin)
