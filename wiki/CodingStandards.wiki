@@ -32,6 +32,7 @@ Also, the Doxygen documentation on http://www.openzwave.com/dev/ is also automat
 
 Full Releases are still somewhat manual as far as the source and distribution packages are concerned. 
   # you should update version numbers in cpp/build/support.mk file, (VERSION_MAJ and VERSION_MIN - Revision is automatically pulled from the svn repository). 
+  # Update the cpp/build/windows/winversion.ini and winversion.tmpl (ini file is used when we can find TortiseSVN in the system - tmpl is used when its not present). 
   # Update the version number in openzwave.spec file (Look for Version: 1.1.730 and replace with 1.2.0 - the last revision number will automaticlally be pulled from the svn repository when the packages are built)
   # update the openzwave.dsc and debian/ files for your new version.
   # commit your changes then tag the release:
