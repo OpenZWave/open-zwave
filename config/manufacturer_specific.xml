@@ -126,7 +126,7 @@
 	<Manufacturer id="0012" name="E Housekeeper">
 		<Product type="0001" id="0001" name="Switchkeeper Plug-in Appliance Module"/>
 	</Manufacturer>
-        <Manufacturer id="011f" name="Ecolink">
+        <Manufacturer id="014a" name="Ecolink">
                 <Product type="0001" id="0003" name="Garage Door Sensor"/>
         </Manufacturer>
 	<Manufacturer id="0087" name="Eka Systems">
@@ -301,6 +301,7 @@
 	<Manufacturer id="0091" name="Kamstrup">
 	</Manufacturer>
 	<Manufacturer id="0090" name="Kwikset">
+		<Product type="0001" id="0001" name="Touchpad Electronic Deadbolt"/>
 	</Manufacturer>
 	<Manufacturer id="0051" name="Lagotek Corp">
 	</Manufacturer>
