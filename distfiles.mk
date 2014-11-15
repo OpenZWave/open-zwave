@@ -28,6 +28,7 @@ DISTFILES =     config/honeywell/th8320zw1000.xml \
     cpp/build/windows/winversion.ini \
     cpp/hidapi/libusb/hid.c \
     config/qubino/ZMNHBA2.xml \
+    config/qubino/ZMNHJA2.xml \
     cpp/src/aes/aeskey.c \
     cpp/hidapi/windows/ddk_build/.gitignore \
     dotnet/src/app.ico \

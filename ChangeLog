@@ -90,3 +90,4 @@ Version 1.1
    distribute the hidapi header files (Justin)
  - Fixed Issue 375 - Add Ecolink Garage Door Sensor - (Justin)
  - Fixed Issue 383 - Update Remotec ZXT-120 Config file thanks to yy.bendavid & gizmocuz (Alex)
+ - Fixed Issue 392 - Add Qubino ZMNHJA2 Config file thanks to nicoserveur (Alex)
