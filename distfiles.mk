@@ -243,6 +243,7 @@ DISTFILES =     config/honeywell/th8320zw1000.xml \
     cpp/src/command_classes/NodeNaming.h \
     cpp/src/platform/unix/SerialControllerImpl.cpp \
     config/schlagelink/itemp.xml \
+    config/schlagelink/minikeypad.xml \
     config/qees/reto-plugin-switch.xml \
     cpp/src/command_classes/Proprietary.cpp \
     dotnet/examples/OZWForm/src/ValuePanelBool.cs \
