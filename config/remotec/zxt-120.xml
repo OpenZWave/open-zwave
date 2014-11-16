@@ -1,7 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Product xmlns='http://code.google.com/p/open-zwave/'>
-  <!-- This thermostat's setpoint descriptions are 0 based, not 1 -->
-  <CommandClass id="67" base="0" />
+
+	<!-- This thermostat's setpoint descriptions are 0 based, not 1 -->
+	<!-- COMMAND_CLASS_THERMOSTAT_SETPOINT get is not supported -->
+	<CommandClass id="67" base="0" getsupported="false"/>
+
+	<!-- The thermostat does not properly report its operating modes -->
+	<CommandClass id="64" name="COMMAND_CLASS_THERMOSTAT_MODE" version="1" request_flags="4" create_vars="true">
+		<Value type="list" genre="user" instance="1" index="0" label="Mode" units="" read_only="false" write_only="false" min="0" max="0" value="0">
+			<Item label="Off" value="0" />
+			<Item label="Heat" value="1" />
+			<Item label="Cool" value="2" />
+			<Item label="Resume" value="5" />
+			<Item label="Fan Only" value="6" />
+			<Item label="Dry Air" value="8" />
+			<Item label="Auto Changeover" value="10" />
+		</Value>
+		<SupportedModes>
+			<Mode index="0" label="Off" />
+			<Mode index="1" label="Heat" />
+			<Mode index="2" label="Cool" />
+			<Mode index="5" label="Resume" />
+			<Mode index="6" label="Fan Only" />
+			<Mode index="8" label="Dry Air" />
+			<Mode index="10" label="Auto Changeover" />
+		</SupportedModes>
+	</CommandClass>
   
 	<CommandClass id="112">
 		<Value type="int" index="25" genre="config" label="Indicate a location for IR code  learning and start learning" min="0" max="22" value="0">
