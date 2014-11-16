@@ -532,6 +532,9 @@
 		<Product type="0201" id="0001" name="iTemp" config="zwave.me/iTemp.xml" />
 		<Product type="0200" id="0001" name="iTemp" config="zwave.me/iTemp.xml" />
 	</Manufacturer>
+	<Manufacturer id="0147" name="Z-Wave.Me">
+		<Product type="0002" id="0003" name="RaZberry Controller"/>
+	</Manufacturer>
 	<Manufacturer id="004f" name="Z-Wave Technologia">
 	</Manufacturer>
 	<Manufacturer id="0131" name="Zipato">
