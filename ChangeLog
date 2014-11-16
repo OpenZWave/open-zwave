@@ -94,3 +94,4 @@ Version 1.1
  - Fixed Issue 394 - Add 2GIG CT100 USA version device thanks to mldkfa (Alex)
  - Fixed Issue 387 - Add Zipato RFID Config file thanks to jeanfrancois.auger (Alex)
  - Fixed Issue 391 - Update zwave.key keyfob config thanks to gizmocuz (Alex)
+ - Fixed Issue 397 - Update remotec ZXT-120 config thanks to gizmocuz (Alex)
