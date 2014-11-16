@@ -1,7 +1,7 @@
 #The Major Version Number
 VERSION_MAJ	?= 1
 #The Minor Version Number
-VERSION_MIN ?= 2
+VERSION_MIN ?= 3
 
 #the build type we are making (release or debug)
 BUILD	?= release
