@@ -5,6 +5,7 @@ Version 1.3
  - Fixed Issue 387 - Add Zipato RFID Config file thanks to jeanfrancois.auger (Alex)
  - Fixed Issue 391 - Update zwave.key keyfob config thanks to gizmocuz (Alex)
  - Fixed Issue 397 - Update remotec ZXT-120 config thanks to gizmocuz (Alex)
+ - Fixed Issue 396 - Add Z-Wave.me RaZberry thanks to steph10200 (Alex)
 
 Version 1.2 
  - Released on 15/10/14
