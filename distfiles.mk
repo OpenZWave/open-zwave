@@ -511,4 +511,6 @@ DISTFILES =     config/honeywell/th8320zw1000.xml \
     cpp/src/command_classes/Configuration.cpp \
     config/evolve/lrm-as.xml \
     config/evolve/lsm-15.xml \
+    config/duwi/ZWESJ300.xml \
+    config/zwave.me/ZME_064435.xml \
     cpp/src/vers.cpp
