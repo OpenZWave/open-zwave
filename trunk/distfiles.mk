@@ -509,4 +509,6 @@ DISTFILES =     config/honeywell/th8320zw1000.xml \
     cpp/build/OZW_RunTests.sh \
     config/fibaro/fgrm222.xml \
     cpp/src/command_classes/Configuration.cpp \
+    config/evolve/lrm-as.xml \
+    config/evolve/lsm-15.xml \
     cpp/src/vers.cpp
