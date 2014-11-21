@@ -1,0 +1,699 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<messages xmlns:if="Wt.WTemplate.conditions">
+	<message id="Wt.Auth.field">
+		<![CDATA[
+			${<if:{1}>}
+				<div class="control-group">
+					<label for="${id:{1}}" class="control-label">
+						${tr:{1}}
+					</label>
+					<div class="controls">
+						${{1}} <span class="help-inline">${{1}-info}</span>
+					</div>
+				</div>
+			${</if:{1}>}
+		]]>
+	</message>
+
+	<message id="Wt.Auth.field2">
+		<![CDATA[
+			${<if:{1}>}
+				<div class="control-group">
+					<label for="${id:{1}}" class="control-label">
+						${tr:{2}}
+					</label>
+					<div class="controls">
+						${{1}} <span class="help-inline">
+							${{1}-info}
+						</span>
+					</div>
+				</div>
+			${</if:{1}>}
+		]]>
+	</message>
+	<message id="Wt.Auth.field3">
+		<![CDATA[
+			${<if:{1}>}
+				<div class="control-group">
+					<label for="${id:{1}}" class="control-label">
+						${tr:{2}}
+					</label>
+					<div class="controls">
+						${{1}} <span class="help-inline">
+							${{1}-info} ${{3} class="btn-link"}
+						</span>
+					</div>
+				</div>
+			${</if:{1}>}
+		]]>
+	</message>
+
+	<message id="template.registration">
+		<div class="Wt-auth-registration">
+			<p class="lead">
+				${tr:registration-description}
+			</p>
+			<div class="form-horizontal">
+				${block:Wt.Auth.field3 user-name user-name-label
+				user-name-confirm-is-you}
+				${block:Wt.Auth.field3 email email-label
+				email-confirm-is-you}
+				${block:Wt.Auth.field firstname}
+				${block:Wt.Auth.field lastname}
+				${block:Wt.Auth.field password}
+				${block:Wt.Auth.field
+				repeat-password}
+
+				<div class="modal-footer"> <!-- assuming here we're in a dialog -->
+					${ok-button class="btn-primary"} ${cancel-button}
+				</div>
+			</div>
+		</div>
+	</message>
+	<message id="registration-description">New User Registration</message>
+	<message id="user-name-label">Username</message>
+	<message id="email-label">Email</message>
+	<message id="firstname">Firstname</message>
+	<message id="lastname">Lastname</message>
+
+
+	<message id="hometemplate">
+		<div id="top_wrapper">
+			<!-- <div id="top_content"> ${languages} <div id="top_wt"> <a href="http://www.emweb.be/"> 
+				<img src="/css/wt/emweb_powered.jpg" alt="Emweb" height="22" /> </a> </div> 
+				</div> -->
+		</div>
+
+		<div id="banner_wrapper">
+			<div id="banner_content">
+				<div id="banner_end">
+					<div id="banner">
+						<!-- <a href="#">Wt</a> -->
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="main_wrapper" class="home">
+			<div id="main_content">
+				<div id="main_menu">
+					${menu}
+					${sidebar}
+				</div>
+				${contents}
+				<div class="clearall"></div>
+			</div>
+		</div>
+	</message>
+
+	<message id="news.rssfeed">
+		<div class="footer">
+			<div class="well text-center"> <small>
+				Website Designed by
+				<a href="http://www.dynam.ac/">Dynamx (Singapore) Pte Ltd</a> &copy;
+				2014</small>
+				<script type="text/javascript"
+					src="http://jira.my-ho.st/jira/s/d41d8cd98f00b204e9800998ecf8427e/en_US-v4aony-1988229788/6252/18/1.4.7/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?collectorId=2c0508f9"></script>
+			</div>
+		</div>
+	</message>
+	<message id="Wt.Auth.confirmmail.subject">OpenZWave User account activation Link</message>
+	<message id="Wt.Auth.confirmmail.body">
+		Hello {1},
+
+		Thank you for joining!
+
+		To complete your
+		registration, please finally confirm your account by
+		clicking on the
+		following link or copying the URL into your browser.
+
+		Please click here
+		to confirm your registration or copy and paste the
+		following URL into
+		your browser: (Note: be sure to copy the entire
+		URL, including any
+		part
+		of it which goes onto a second line.)
+
+		{3}
+
+		Good luck!
+		The OpenZWave
+		team.
+	</message>
+	<message id="Wt.Auth.confirmmail.htmlbody">
+		<h3>Hello {1},</h3>
+		<p>Thank you for joining!</p>
+		<p>To complete your registration, please finally confirm your account
+			by clicking on the following link or copying the URL into your
+			browser.</p>
+		<p>
+			Please
+			<a href="{3}">click here to confirm</a>
+			your registration or copy and paste the following URL into your
+			browser:
+			<i>(Note: be sure to copy the entire URL, including any part of it
+				which goes onto a second line.)</i>
+		</p>
+		<b>{3}</b>
+		<p>Good luck!</p>
+		<p>The OpenZWave team.</p>
+	</message>
+	<message id="Wt.Auth.lostpasswordmail.subject">OpenZWave Lost password instructions</message>
+	<message id="Wt.Auth.lostpasswordmail.body">
+		Hello {1},
+		This mail has been sent to you, because
+		someone (presumably you?)
+		indicated that he wishes to choose a new
+		password, because the current
+		password escapes his mind.
+
+		If you
+		requested this, then choose a new password by clicking on the
+		following link or copying the URL into your browser. If you didn't
+		request this, you can safely ignore and discard this email.
+
+		Please
+		copy
+		and paste the following URL into your browser: (Note: be sure to
+		copy
+		the entire URL, including any part of it which goes onto a second
+		line.)
+
+		{3}
+
+		Good luck!,
+		The OpenZWave team.
+	</message>
+	<message id="Wt.Auth.lostpasswordmail.htmlbody">
+		<h3>Hello {1},</h3>
+		<p>This mail has been sent to you, because someone (presumably you?)
+			indicated that he wishes to choose a new password, because the
+			current password escapes his mind.</p>
+		<p>If you requested this, then choose a new password by clicking on
+			the following link or copying the URL into your browser. If you
+			didn't request this, you can safely ignore and discard this email.</p>
+		<p>
+			Please
+			<a href="{3}">click here to choose a new password</a>
+			or copy and paste the following URL into your browser:
+			<i>(Note: be sure to copy the entire URL, including any part of it
+				which goes onto a second line.)</i>
+		</p>
+		<b>{3}</b>
+		<p>Good luck!</p>
+		<p>The OpenZWave team.</p>
+	</message>
+	<message id="template.login">
+		<div class="Wt-form Wt-auth-login">
+			<h2>${login-form-title}</h2>
+			<p>${login-form-info}</p>
+			<div class="Wt-fields">
+				<label>${tr:user-name-label}</label>
+				${user-name}
+				<label>${tr:password-label}</label>
+				${password}
+				${remember-me}
+				<label>${tr:remember-me-label}</label>
+
+			</div>
+			<div class="Wt-buttons">
+				${login} ${cancel}
+			</div>
+			<div class="Wt-buttons">
+				${lost-password} ${sep} ${register}
+			</div>
+		</div>
+	</message>
+	<message id="user-name-label">UserName</message>
+	<message id="password-label">Password</message>
+	<message id="remember-me-label">Remember Me</message>
+	<message id="template.logged-in">
+		<div class="Wt-auth-logged-in">
+			<b>${user-name}</b>
+			${logout}
+		</div>
+	</message>
+	<message id="template.lost-password">
+		<div class="Wt-form Wt-auth-lost-password">
+			<h2>${lost-password-form-title}</h2>
+			<p>${lost-password-form-info}</p>
+			<div class="Wt-fields">
+				<label>${tr:email-address}</label>
+				${email}
+			</div>
+			<div class="Wt-buttons">
+				${send-button} ${cancel-button}
+			</div>
+		</div>
+	</message>
+	<message id="email-address">Email Address</message>
+	<message id="template.update-password">
+		<div class="Wt-form Wt-auth-update-password">
+			<h2>${update-password-form-title}</h2>
+			<p>${update-password-form-info}</p>
+			<div class="Wt-fields">
+				<div>
+					<label>${tr:password}</label>
+					${password1}
+					<span class="help-inline">${password1-form-info}</span>
+				</div>
+				<div>
+					<label>${tr:repeat-password}</label>
+					${password2}
+					<span class="help-inline">${password2-form-info}</span>
+				</div>
+			</div>
+			<div class="Wt-buttons">
+				${ok-button} ${cancel-button}
+			</div>
+		</div>
+	</message>
+	<message id="password">New Password</message>
+	<message id="repeat-password">Repeat Password</message>
+	<message id="lostmail-sent">An email has been sent. Follow the instructions to
+		set a new password.</message>
+	<message id="newusermail-sent">An email has been sent. Follow the instructions to
+		complete the registration</message>
+	<message id="registration-complete">Registration is Complete. You may now Login</message>
+	<message id="Wt.Auth.passwdqc.reason-error">
+		Check failed
+	</message>
+	<message id="Wt.Auth.passwdqc.reason-same">
+		The same as the old one
+	</message>
+	<message id="Wt.Auth.passwdqc.reason-similar">
+		Based on the old one
+	</message>
+	<message id="Wt.Auth.passwdqc.reason-short">
+		Too short
+	</message>
+	<message id="Wt.Auth.passwdqc.reason-long">
+		Too long
+	</message>
+	<message id="Wt.Auth.passwdqc.reason-simpleshort">
+		Not enough different characters or classes for
+		this
+		length
+	</message>
+	<message id="Wt.Auth.passwdqc.reason-simple">
+		Not enough different characters or classes
+	</message>
+	<message id="Wt.Auth.passwdqc.reason-personal">
+		Based on personal information
+	</message>
+	<message id="Wt.Auth.passwdqc.reason-word">
+		Based on a dictionary word and not a passphrase
+	</message>
+	<message id="Wt.Auth.passwdqc.reason-seq">
+		Based on a common sequence of characters
+	</message>
+	<message id="Wt.Auth.passwdqc.reason-ok">
+		Valid
+	</message>
+
+
+	<message id="introduction-home">
+		<h2>Introduction</h2>
+		<p>
+			Our goal is to create free software library that interfaces with
+			selected Z-Wave PC controllers, allowing anyone to create
+			applications that manipulate and respond to devices on a Z-Wave
+			network, without requiring in-depth knowledge of the Z-Wave
+			protocol.
+		</p>
+		<p>
+			This software is currently aimed at Application Developers who
+			wish
+			to
+			incorporate Z-Wave functionality into their applications.
+		</p>
+		<p>
+			If you are a looking for applications to control your Z-Wave
+			devices,
+			please consult this
+			<a href="http://code.google.com/p/open-zwave/wiki/ProjectsUsingOZW">
+				page
+			</a>
+			which lists applications that utilize OpenZWave.
+		</p>
+		<h2>Features</h2>
+		<ul>
+			<li>Developed in C++</li>
+			<li>Dotnet wrapper for Windows</li>
+			<li>Portable to most Linux, Mac OSX and Windows Platforms</li>
+			<li>
+				Works with the multiple
+				<a
+					href="http://code.google.com/p/open-zwave/wiki/Controller_Compatibility_List">ZWave Controllers</a>
+			</li>
+			<li>ZWave Protocol is abstracted away hiding a lot of the complexity</li>
+			<li>
+				Works with most switches, dimmers, termostates, energy monitors,
+				motion sensors, applicance modules,key fobs, door/window sensors
+				etc
+				(see
+				<a
+					href="http://code.google.com/p/open-zwave/source/browse/trunk/config/manufacturer_specific.xml">here</a>
+				for a complete list)
+			</li>
+			<li>Security related devices such as Locks are Supported</li>
+			<li>Reverse Engineered the ZWave Protocol</li>
+			<li>Easy to add support for new devices</li>
+			<li>Fully Documented Code Base</li>
+			<li>Includes simple examples to demostrate how to interface to the
+				code</li>
+		</ul>
+		<h2>Code Details</h2>
+		<script type="text/javascript"
+			src="http://www.openhub.net/p/383580/widgets/project_factoids_stats.js"></script>
+	</message>
+	<message id="introduction-intro">
+		<img src="http://www.openzwave.com/logo.png" width="150" height="75"></img>
+	</message>
+	<message id="introduction-contact">
+		<h2>Contact</h2>
+		<ul>
+			<li>
+				Google Groups Discussion List -
+				<a href="https://groups.google.com/forum/#!forum/openzwave">https://groups.google.com/forum/#!forum/openzwave</a>
+			</li>
+		</ul>
+	</message>
+
+
+	<message id="blog-login-status">
+		<nav>
+			<ul class="pager">
+				<li>${archive-link}</li>
+				<li>${author-panel-link}</li>
+			</ul>
+		</nav>
+	</message>
+
+	<message id="blog-invaliduser">
+		<div class="profile-panel">
+			<h4>This user id is invalid</h4>
+		</div>
+	</message>
+
+	<message id="blog-mustlogin">
+		<div class="profile-panel">
+			<h4>You need to log in to access this function</h4>
+		</div>
+	</message>
+
+	<message id="blog-mustbeadministrator">
+		<div class="profile-panel">
+			<h4>You need to be administrator to access this function</h4>
+		</div>
+	</message>
+
+	<message id="blog-author-panel">
+		<div class="author-panel">
+			<h4>
+				Author panel for
+				<span class="poster">${user}</span>
+			</h4>
+			Statistics:
+			<ul>
+				<li>${unpublished-count} unpublished post(s)</li>
+				<li>${published-count} published post(s)</li>
+			</ul>
+			${new-post}
+			${unpublished-posts}
+		</div>
+	</message>
+
+	<message id="blog-post">
+		<div class="blog-post">
+			<h2 class="blog-post-title">${title}</h2>
+			<div class="blog-post-meta">by ${author} on ${date}</div>
+			<div>
+				${brief+body}
+			</div>
+			<div style="margin-top: 10px; blog-post-meta">${comment-count}</div>
+			<div>
+				${publish} ${edit} ${delete}
+			</div>
+			<div>
+				${comments}
+			</div>
+		</div>
+	</message>
+
+	<message id="blog-post-brief">
+		<div class="blog-post">
+			<h2 class="blog-post-title">${title}</h2>
+			<div class="blog-post-meta">by ${author} on ${date}</div>
+			<div class="asciidoc">
+				${brief}
+			</div>
+			<div class="margin-top: 10px; blog-post-meta">${comment-count}</div>
+			<nav>
+				<ul class="pager">
+					<li>${read-more}</li>
+				</ul>
+			</nav>
+			<div style="margin-top: 10px">
+				${publish} ${edit} ${delete}
+			</div>
+
+		</div>
+	</message>
+
+	<message id="blog-post-edit">
+		<h4></h4>
+		<div class="blogpost-edit">
+			<div>Title: ${title-edit}</div>
+			<div>${brief-edit}</div>
+			<div>${body-edit}</div>
+			<div>
+				${save} ${cancel}
+			</div>
+		</div>
+	</message>
+
+	<message id="blog-comment">
+		<div class="comment-icon" />
+		<div class="comment-body">
+			<div class="comment-info">
+				<span class="poster">${author}</span>
+				${date} ${collapse-expand}
+			</div>
+			${contents}
+			<div class="comment-links">
+				${reply} ${edit} ${delete}
+			</div>
+			${children}
+		</div>
+	</message>
+
+	<message id="blog-root-comment">
+		<div class="comment-links">
+			${reply}
+		</div>
+		${children}
+	</message>
+
+	<message id="blog-edit-comment">
+		<div class="comment-edit-icon" />
+		<div class="comment-body comment-edit">
+			<div>${area}</div>
+			<div style="float: right">
+				<i>plain text</i>
+				or (&lt;code&gt;...&lt;/code&gt;)
+			</div>
+			${save}
+			${cancel}
+		</div>
+	</message>
+
+	<message id="blog-no-post">
+		<h4>No posts found</h4>
+		Sorry, no blog posts found that match your selection.
+	</message>
+
+	<message id="blog-no-author">
+		<h4>No author</h4>
+		Sorry, {1} is not a registered blog author.
+	</message>
+
+	<message id="archive-title">
+		<h4>Archive</h4>
+	</message>
+
+	<message id="archive">News Archive</message>
+	<message id="author-post">Authoring panel</message>
+	<message id="comment-add">Add comment</message>
+	<message id="comment-reply">Reply</message>
+	<message id="comment-edit">Edit</message>
+	<message id="comment-delete">Delete</message>
+	<message id="comment-deleted">
+		<i>[[Comment deleted]]</i>
+	</message>
+	<message id="blog-read-more">Read More</message>
+	<message id="new-post">New post</message>
+	<message id="publish">Publish</message>
+	<message id="retract">Retract</message>
+	<message id="delete">Delete</message>
+	<message id="edit">Edit</message>
+	<message id="save">Save</message>
+	<message id="cancel">Cancel</message>
+	<message id="go-limit">Search</message>
+	<message id="no-users-found">No users found</message>
+
+	<message id="loganalyzerrun-intro">
+		Scan your OpenZWave Log file and check for common
+		issues, errors and
+		recomended fixes
+	</message>
+	<message id="scan-instructions">
+		<div>
+			<h2>Scanning Your OZW Log File</h2>
+		</div>
+		<div>This Application will scan your OpenZWave Log file and report
+			common issues, errors and provide some recomendations for fixes. In
+			order to scan the log file, please follow the instructions below:</div>
+		<div>
+			<h3>Preparation</h3>
+		</div>
+		<div>
+			<ul>
+				<li>Please ensure you have logged in with a Valid Account on this
+					website.</li>
+				<li>Before Uploading your Log file, please remove the zwcfg_*.xml
+					file from the application working directory</li>
+				<li>Click on the "New Scan" link to the left and use the browse
+					button to select your log file</li>
+				<li>After selecting your log file, the upload should start already.
+					Depending upon the size, this may take some time</li>
+				<li>Once the upload is complete, the scan will commence. A
+					progressbar will list the progress of the scan</li>
+				<li>Finally, once the Scan is complete, you will be redirected to
+					the results page</li>
+			</ul>
+		</div>
+		<div>
+			<h3>Results Page</h3>
+		</div>
+		<div>
+			<ul>
+				<li>The Results Page will list your previous scans by date. Select
+					the Scan date you are interested in</li>
+				<li>The "Make Public" option allows you to share the link of the
+					scan
+					results with others.</li>
+				<li>When the "Make Public" Option is enabled, a text link "Public
+					URL
+					for Sharing" appears. Right click and select "Copy Link
+					Location" to
+					save the public link</li>
+				<li>If Filing a but report, ensure you Enable the Make Public
+					Option
+					and copy the URL to the Bug Report</li>
+			</ul>
+		</div>
+		<div>
+			<h3>The Different Tabs</h3>
+		</div>
+		<div>
+			<h4>Results Tab</h4>
+			<ul>
+				<li>
+					<h4>Network Information</h4>
+				</li>
+				<li>The Results tab presents some basic information about the scan
+					results as well as information on your network</li>
+				<li>The Network Information Panel presents your HomeID and USB Port
+					that was used (Among other details)</li>
+				<li>A Network Diagram is also shown here. Click on the image to
+					enlarge it</li>
+				<li>
+					<h4>Node Panels</h4>
+				</li>
+				<li>The Node Panels present details about the different nodes in
+					your network</li>
+				<li>In the Node Panel shows "Unknown Manufacturer" and/or "Unknown
+					Product" it means the node was probably sleeping and did not wake
+					up during the period the Log file covers</li>
+				<li>The Final part of the Panel Title - either Complete or
+					Incomplete indicates if all the information was captured from the
+					Node during the period the Logging took place</li>
+				<li>The Details of the Node Panels will list various information,
+					including things like the Flags, Basic, Generic, and Specific
+					Device Classes of the Node, and the Neighbors</li>
+				<li>The Command Classes Table will list Command Classes that this
+					node responds to</li>
+				<li>Asterix next to the CommandClass name indicate its mandatory.
+					No
+					Asterix indicate optional</li>
+				<li>If OZW does not Implement the Command Class, it will be shown
+					as
+					"0xXX Not Supported"</li>
+			</ul>
+			<h4>Info, Warning and Error Tabs</h4>
+			<div>The remaining tabs show the categorization of the results. Info
+				messages are usually harmless and no real action should be
+				required. Warning messages usually indicate a more serious problem
+				and should be looked into, and errors are generally considered very
+				bad and must be fixed if you want optimal operation of your Z-Wave
+				Network with OZW</div>
+			<ul>
+				<li>
+					<h4>The Panels</h4>
+				</li>
+				<li>Each Panel (Network or Node) contains a number of columns:</li>
+				<li>MessageID - A Reference ID. This is used by the Developers to
+					reference the issue</li>
+				<li>Message - A short description of the problem</li>
+				<li>More Info - A link to the Knowledge Base that contains generic
+					information about the type of error encountered. It may also
+					contain specific information and recomendations to fix the issue</li>
+				<li>Line Number - What line the Issue was detected at in the Log
+					File. May be blank in some cases if the error is related to the
+					state of the network</li>
+				<li>
+					<h4>Network Messages</h4>
+				</li>
+				<li>Network Messages are issues that are not specific to a node or
+					Controller</li>
+				<li>
+					<h4>Node Messages</h4>
+				</li>
+				<li>Node Messages are are issues that are specific to a node, or
+					issue that occured when communicating with a node</li>
+			</ul>
+		</div>
+	</message>
+	<message id="kb-introduction">
+		<div>These pages contain additional information about issues that
+			might be encountered when using OZW with your application
+			or issues with your network.</div>
+		<div>The pages are referenced from the LogScanner, but are presented
+			here so you can review aswell. They are generally broken down into
+			broad categories and some times contain recomendations for fixes for
+			specific issues.</div>
+	</message>
+	<message id="downloads-intro">
+	Download Stable Releases or Current Code Snapshots of OZW
+	</message>
+	<message id="downloads-home">
+	<h2>Downloads</h2>
+	<div>We distribute both Stable Releases of OpenZWave as well as Current Code snapshots of our Development</div>
+	<div>Its recomended you use the Stable Releases, as the snapshots may not be stable or be work in progress</div>
+	<div>Both Stable Releases as well as Snapshots are distributed in source and binary form.</div>
+	<div>The Binary packages are created for different distributions. You can either download the individual packages, or add the repository URL to your package manager</div>
+	</message>
+	<message id="developers-intro">
+	This section contains information relevent for Developers that wish to work with OZW
+	</message>
+	<message id="developers-home">
+	<h2>Developer Related Information</h2>
+	<h3>Code and BugTracker</h3>
+	<div>This link will take you to our Google Code homepage where you can checkout the latest source, or file bug reports. It also contains a wiki with some additional information</div>
+	<h3>API Documentation</h3>
+	<div>This link will take you to our most recent API documentation pages</div>
+	</message>
+</messages>

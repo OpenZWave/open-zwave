@@ -1,0 +1,1 @@
+## Internal OpenZWave Errors

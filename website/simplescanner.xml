@@ -1,0 +1,483 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simplescanner>
+	<scan id="1">
+		<regex>.*CAN received...triggering resend</regex>
+		<type>Info</type>
+		<message>This indicates that a Message Collision happened on the Z-Wave network and the message will be reattempted. If you get lots of these messages it indicates a RF Interferance Issues</message>
+		<moreinfo>RFIssues</moreinfo>
+	</scan>
+	<scan id="2">
+		<regex>.*ERROR: Dropping command because node is presumed dead</regex>
+		<type>Error</type>
+		<message>A Message sent to ${node} was dropped as the Controller has assumed the node is Dead</message>
+		<moreinfo>DeadNode</moreinfo>
+	</scan>
+	<scan id="3">
+		<regex>.*ERROR: Dropping command, expected response not received after (\d*) attempt(s)</regex>
+		<type>Error</type>
+		<message>A Message sent to ${node} was dropped as we retried to send the message ${1} time(s) but it did not respond</message>
+		<moreinfo>MsgDropped</moreinfo>
+	</scan>
+	<scan id="4">
+		<regex>.*ERROR: .* could not be delivered to Z-Wave stack</regex>
+		<type>Error</type>
+		<message>A Message sent to ${node} was dropped as the Controller rejected it. Please report to Developers</message>
+		<moreinfo>SendError</moreinfo>
+	</scan>
+	<scan id="5">
+		<regex>.*IsPolled setting for valueId (.*) is not consistent with the poll list</regex>
+		<type>Error</type>
+		<message>There is a Internal Corruption on the Polling Structures. Please report to Developers</message>
+		<moreinfo>InternalError</moreinfo>
+	</scan>
+	<scan id="6">
+		<regex>.*Options have not been created and locked. Exiting...</regex>
+		<type>Error</type>
+		<message>The Options have not been setup before starting the Driver. This is a Application Implementation Error. Please report to the Application Developers</message>
+		<moreinfo>AppError</moreinfo>
+	</scan>
+	<scan id="7">
+		<regex>.*mgr,     Manager::GetDriver failed - Home ID (.*) is unknown</regex>
+		<type>Error</type>
+		<message>The Application has requested a homeid of ${1} which is not valid. This is a Application Implementation Error. Please report to the Application Developers</message>
+		<moreinfo>AppError</moreinfo>
+	</scan>
+	<scan id="8">
+		<regex>.*mgr,     SetPollIntensity failed - Driver with Home ID (.*) is not available</regex>
+		<type>Error</type>
+		<message>The Application has requested a homeid of ${1} which is not valid. This is a Application Implementation Error. Please report to the Application Developers</message>
+		<moreinfo>AppError</moreinfo>
+	</scan>
+	<scan id="9">
+		<regex>.*WARNING: node revived</regex>
+		<type>Warning</type>
+		<message>The Node ${node} has returned after the Controller assumed it was Dead. </message>
+		<moreinfo>DeadNode</moreinfo>
+	</scan>
+	<scan id="10">
+		<regex>.*ERROR: node presumed dead</regex>
+		<type>Error</type>
+		<message>A Message sent to ${node} was dropped as the Controller has assumed the node is Dead</message>
+		<moreinfo>DeadNode</moreinfo>
+	</scan>
+	<scan id="11">
+		<regex>.*Cannot find a path to the configuration files at (.*), Using (.*) instead...</regex>
+		<type>Warning</type>
+		<message>A attempt to Open the Config files at ${1} failed. Not a critical error as the Library will try different paths before Erroring Out (Next Path : ${2})</message>
+		<moreinfo>ConfigError</moreinfo>
+	</scan>
+	<scan id="12">
+		<regex>.*Cannot find a path to the configuration files at .*\. Exiting...</regex>
+		<type>Error</type>
+		<message>The Library could not open any Config files and tried different locations. Please check the location of your config files.</message>
+		<moreinfo>ConfigError</moreinfo>
+	</scan>
+	<scan id="13">
+		<regex>.*Options are already final (locked)\.</regex>
+		<type>Error</type>
+		<message>The Application has attempted to Modify the Options after starting the Driver. This is a Application Implementation Error. Please report to the Application Developers</message>
+		<moreinfo>AppError</moreinfo>
+	</scan>
+	<scan id="14">
+		<regex>.*Options have been locked.  No more may be added\.</regex>
+		<type>Error</type>
+		<message>The Application has attempted to Modify the Options after starting the Driver. This is a Application Implementation Error. Please report to the Application Developers</message>
+		<moreinfo>AppError</moreinfo>
+	</scan>
+	<scan id="15">
+		<regex>.*Recieved a Unsolicited MultiChannelEncap when we are not in QueryState_Instances</regex>
+		<type>Warning</type>
+		<message>The Node {node} has Sent a Unsolicited Message. Please report to the Developers</message>
+		<moreinfo>DeviceConfigError</moreinfo>
+	</scan>
+	<scan id="16">
+		<regex>.*ERROR: Cannot open serial port (.*)\. Error code (.*)</regex>
+		<type>Error</type>
+		<message>The Library was unable to open the Serial Port ${1}. The Error Was ${2}. Please check you have specified the correct serial port</message>
+		<moreinfo>AppError</moreinfo>
+	</scan>
+	<scan id="17">
+		<regex>.*Cannot find endpoint map to instance for Command Class .* endpoint .*</regex>
+		<type>Error</type>
+		<message>A Internal Error in the Library occured. Please report to the Developers</message>
+		<moreinfo>DeviceConfigError</moreinfo>
+	</scan>
+	<scan id="18">
+		<regex>.*Recieved a MultiChannelEncap for endpoint .* for Command Class .*, which we can't find</regex>
+		<type>Error</type>
+		<message>A Internal Error in the Library occured. Please report to the Developers</message>
+		<moreinfo>DeviceConfigError</moreinfo>
+	</scan>
+	<scan id="19">
+		<regex>.*ERROR: Cannot get exclusive lock for serial port (.*)\. Error code (.*)</regex>
+		<type>Error</type>
+		<message>The Serial Port ${1} is possibly being used by another Application. The Error Was ${2}. Please check you have specified the correct serial port and no other applications are running</message>
+		<moreinfo>AppError</moreinfo>
+	</scan>
+	<scan id="20">
+		<regex>.*ERROR: Parity not supported</regex>
+		<type>Error</type>
+		<message>The Serial Port does not support Parity. Please report to the developers</message>
+		<moreinfo>OSError</moreinfo>
+	</scan>
+	<scan id="21">
+		<regex>.*ERROR: Stopbits not supported</regex>
+		<type>Error</type>
+		<message>The Serial Port does not support Parity. Please report to the developers</message>
+		<moreinfo>OSError</moreinfo>
+	</scan>
+	<scan id="22">
+		<regex>.*Baud rate not supported</regex>
+		<type>Error</type>
+		<message>The Serial Port does not the requested speed. Please report to the developers</message>
+		<moreinfo>OSError</moreinfo>
+	</scan>
+	<scan id="23">
+		<regex>.*ERROR: Failed to set serial port parameters</regex>
+		<type>Error</type>
+		<message>The Serial Port does not the requested speed. Please report to the developers</message>
+		<moreinfo>OSError</moreinfo>
+	</scan>
+	<scan id="24">
+		<regex>.*ERROR: Failed to open serial port (.*)</regex>
+		<type>Error</type>
+		<message>The Library was unable to open the Serial Port ${1}. Please check you have specified the correct serial port</message>
+		<moreinfo>AppError</moreinfo>
+	</scan>
+	<scan id="25">
+		<regex>.*ERROR: Serial port must be opened before writing</regex>
+		<type>Error</type>
+		<message>A Internal Error Occured. Please report to the Developers</message>
+		<moreinfo>InternalError</moreinfo>
+	</scan>
+	<scan id="26">
+		<regex>.*Cannot find specified HID port with VID:(.*) and PID:(.*)\.</regex>
+		<type>Error</type>
+		<message>The Library was unable to find the USB Device with VID = ${1} and PID = ${2}. Please check you have specified the correct USB Device ID's</message>
+		<moreinfo>AppError</moreinfo>
+	</scan>
+	<scan id="27">
+		<regex>.*Failed to open HID port (.*)</regex>
+		<type>Error</type>
+		<message>The Library was unable to open the USB Device ${1}. Please check you have specified the correct USB Device ID's</message>
+		<moreinfo>AppError</moreinfo>
+	</scan>
+	<scan id="28">
+		<regex>.*HIDAPI ERROR STRING (if any): (.*)</regex>
+		<type>Error</type>
+		<message>The USB Device reported a Error: ${1} Please report to the Developers</message>
+		<moreinfo>InternalError</moreinfo>
+	</scan>				
+	<scan id="29">
+		<regex>.*ERROR: Not enough data in stream buffer</regex>
+		<type>Error</type>
+		<message>An Internal Error Occured. Please report to the Developers</message>
+		<moreinfo>InternalError</moreinfo>
+	</scan>				
+	<scan id="30">
+		<regex>.*ERROR: Not enough space in stream buffer</regex>
+		<type>Error</type>
+		<message>An Internal Error Occured. Please report to the Developers</message>
+		<moreinfo>InternalError</moreinfo>
+	</scan>
+	<scan id="31">
+		<regex>.*ERROR: Failed to read serial port state</regex>
+		<type>Error</type>
+		<message>An Internal Error Occured. Please report to the Developers</message>
+		<moreinfo>InternalError</moreinfo>
+	</scan>
+	<scan id="32">
+		<regex>.*ERROR: Failed to set serial port state</regex>
+		<type>Error</type>
+		<message>An Internal Error Occured. Please report to the Developers</message>
+		<moreinfo>InternalError</moreinfo>
+	</scan>
+	<scan id="33">
+		<regex>.*ERROR: Failed to set serial port timeouts</regex>
+		<type>Error</type>
+		<message>An Internal Error Occured. Please report to the Developers</message>
+		<moreinfo>InternalError</moreinfo>
+	</scan>
+	<scan id="34">
+		<regex>.*ERROR: Serial port write \((.*)\)</regex>
+		<type>Error</type>
+		<message>An Internal Error Occured ${1}. Please report to the Developers</message>
+		<moreinfo>InternalError</moreinfo>
+	</scan>
+	<scan id="35">
+		<regex>.*WARNING: Failed to init the controller \(attempt (.*)\)</regex>
+		<type>Error</type>
+		<message>An error occured while trying to Open the Controller. Please report to the Developers</message>
+		<moreinfo>InternalError</moreinfo>
+	</scan>
+	<scan id="36">
+		<regex>.*WARNING: Driver::ReadConfig - (.*) is from an older version of OpenZWave and cannot be loaded.</regex>
+		<type>Error</type>
+		<message>The file ${1} is from a older version of OpenZWave. Please delete these file and restart OZW if this message persists</message>
+		<moreinfo>ConfigError</moreinfo>
+	</scan>
+	<scan id="37">
+		<regex>.*WARNING: Driver::ReadConfig - Home ID in file (.*) is incorrect</regex>
+		<type>Warning</type>
+		<message>The File ${1} contains a incorrect HomeID. Please remove this file and restart your application if this message persists</message>
+		<moreinfo>ConfigError</moreinfo>
+	</scan>
+	<scan id="38">
+		<regex>.*WARNING: Driver::ReadConfig - Home ID is missing from file (.*)</regex>
+		<type>Warning</type>
+		<message>The File ${1} does not contain a HomeID. Please remove this file and restart your application if this message persists</message>
+		<moreinfo>ConfigError</moreinfo>
+	</scan>
+	<scan id="39">
+		<regex>.*WARNING: Driver::ReadConfig - Controller Node ID in file (.*) is incorrect</regex>
+		<type>Warning</type>
+		<message>The File ${1} contains incorrect Controller Node ID. Please remove this file and restart your application if this message persists</message>
+		<moreinfo>ConfigError</moreinfo>
+	</scan>
+	<scan id="40">
+		<regex>.*WARNING: Driver::ReadConfig - Node ID is missing from file (.*)</regex>
+		<type>Warning</type>
+		<message>The File ${1} does not contain a Node ID. Please remove this file and restart your application if this message persists</message>
+		<moreinfo>ConfigError</moreinfo>
+	</scan>
+	<scan id="41">
+		<regex>.*WARNING: Tried to write driver config with no home ID set</regex>
+		<type>Warning</type>
+		<message>The Application triggered a WriteConfig but the library does not have a valid HomeID. This is a Application Implementation Error. Please report to the Application Developers</message>
+		<moreinfo>AppError</moreinfo>
+	</scan>
+	<scan id="42">
+		<regex>.*WARNING: Device is not a sleeping node.</regex>
+		<type>Warning</type>
+		<message>A Message sent to ${node} was not acknowledged, and does not support the WakeUP CC. This device may be disabled or offline</message>
+		<moreinfo>NodeErrors</moreinfo>
+	</scan>
+	<scan id="43">
+		<regex>.*WARNING: 50ms passed without finding the length byte...aborting frame read</regex>
+		<type>Warning</type>
+		<message>A error was encounted communicating with the Controller. If this message repeats it may indicate a problem and you should report it to the Developers</message>
+		<moreinfo>ControllerErrors</moreinfo>
+	</scan>
+	<scan id="44">
+		<regex>.*WARNING: 500ms passed without reading the rest of the frame...aborting frame read</regex>
+		<type>Warning</type>
+		<message>A error was encounted communicating with the Controller. If this message repeats it may indicate a problem and you should report it to the Developers</message>
+		<moreinfo>ControllerErrors</moreinfo>
+	</scan>
+	<scan id="45">
+		<regex>.*WARNING: Checksum incorrect - sending NAK</regex>
+		<type>Warning</type>
+		<message>A message recieved from the Controller was corrupted. If this message repeats it may indicate a problem with the Controller and you should report it to the Developers</message>
+		<moreinfo>ControllerErrors</moreinfo>
+	</scan>
+	<scan id="46">
+		<regex>.*m_currentMsg was NULL when trying to set MaxSendAttempts</regex>
+		<type>Error</type>
+		<message>An Internal Error Occured. Please report to the Developers</message>
+		<moreinfo>InternalError</moreinfo>
+	</scan>
+	<scan id="47">
+		<regex>.*WARNING: NAK received...triggering resend</regex>
+		<type>Warning</type>
+		<message>A message sent to the Controller was corrupted. If this message repeats it may indicate a problem with the Controller and you should report it to the Developers</message>
+		<moreinfo>InternalError</moreinfo>
+	</scan>
+	<scan id="48">
+		<regex>.*WARNING: Out of frame flow! .*\.  Sending NAK.</regex>
+		<type>Error</type>
+		<message>This message could indicate you have selected the wrong Serial Port. Please check your serial port and if the message persists, please report it to the Developers</message>
+		<moreinfo>AppError</moreinfo>
+	</scan>
+	<scan id="49">
+		<regex>.*WARNING: Received reply to FUNC_ID_ZW_REQUEST_NETWORK_UPDATE - command failed</regex>
+		<type>Warning</type>
+		<message>A Request to update the Network Topology failed. If you continue to receive this message, please report it to the Developers</message>
+		<moreinfo>NetworkError</moreinfo>
+	</scan>
+	<scan id="50">
+		<regex>.*WARNING: Received reply to FUNC_ID_ZW_ASSIGN_RETURN_ROUTE - command failed</regex>
+		<type>Warning</type>
+		<message>A request for a Node to update its Routing Table failed. if you continue to recieve this message, please report it to the Developers</message>
+		<moreinfo>NetworkError</moreinfo>
+	</scan>
+	<scan id="51">
+		<regex>.*WARNING: Received reply to FUNC_ID_ZW_DELETE_RETURN_ROUTE - command failed</regex>
+		<type>Warning</type>
+		<message>A request for a Node to update its Routing Table failed. if you continue to recieve this message, please report it to the Developerss</message>
+		<moreinfo>NetworkError</moreinfo>
+	</scan>	
+	<scan id="52">
+		<regex>.*WARNING: Received reply to FUNC_ID_ZW_DELETE_RETURN_ROUTE - command failed</regex>
+		<type>Warning</type>
+		<message>A request for a Node to update its Routing Table failed. if you continue to recieve this message, please report it to the Developerss</message>
+		<moreinfo>NetworkError</moreinfo>
+	</scan>
+	<scan id="53">
+		<regex>.*WARNING: Received reply to FUNC_ID_ZW_REMOVE_FAILED_NODE_ID - (.*)</regex>
+		<type>Warning</type>
+		<message>A request to remove a Failed Node Failed: ${1}. If the node has not failed, you should just unpair it instead</message>
+		<moreinfo>AddRemoveNode</moreinfo>
+	</scan>
+	<scan id="54">
+		<regex>.*WARNING: Received reply to FUNC_ID_ZW_IS_FAILED_NODE_ID - node (.*) failed</regex>
+		<type>Error</type>
+		<message>The Controller Believes that the ${node} has failed. You should check it is operating correctly</message>
+		<moreinfo>NetworkError</moreinfo>
+	</scan>
+	<scan id="55">
+		<regex>.*Received reply to FUNC_ID_ZW_IS_FAILED_NODE_ID - node (.*) has not failed</regex>
+		<type>Info</type>
+		<message>The Controller has confirmed that ${node} has not failed. This is a informational message only</message>
+		<moreinfo>NetworkError</moreinfo>
+	</scan>
+	<scan id="56">
+		<regex>.*WARNING: Received reply to FUNC_ID_ZW_REPLACE_FAILED_NODE - command failed</regex>
+		<type>Warning</type>
+		<message>A request to remove a Failed Node Failed: ${1}. If the node has not failed, you should just unpair it instead.</message>
+		<moreinfo>AddRemoveNode</moreinfo>
+	</scan>
+	<scan id="57">
+		<regex>.*WARNING: Received reply to FUNC_ID_ZW_DELETE_RETURN_ROUTE - command failed</regex>
+		<type>Warning</type>
+		<message>A request for a Node to update its Routing Table failed. if you continue to recieve this message, please report it to the Developerss</message>
+		<moreinfo>NetworkError</moreinfo>
+	</scan>
+	<scan id="58">
+		<regex>.*WARNING: Unexpected Callback ID received</regex>
+		<type>Warning</type>
+		<message>This is a Internal Error. Please report it to the Developers</message>
+		<moreinfo>InternalError</moreinfo>
+	</scan>
+	<scan id="59">
+		<regex>.*WARNING: Received reply to FUNC_ID_ZW_REQUEST_NETWORK_UPDATE: Failed - Error. Process aborted.</regex>
+		<type>Warning</type>
+		<message>A Request to update the Network was aborted. Please retry this and if this message persists, please report it to the Developers</message>
+		<moreinfo>NetworkError</moreinfo>
+	</scan>
+	<scan id="60">
+		<regex>.*WARNING: Received reply to FUNC_ID_ZW_REQUEST_NETWORK_UPDATE: Failed - SUC is busy.</regex>
+		<type>Warning</type>
+		<message>A Request to update the Network failed as the SUC Node was Busy. Please retry this and if this message persists, please report it to the Developers</message>
+		<moreinfo>NetworkError</moreinfo>
+	</scan>
+	<scan id="61">
+		<regex>.*WARNING: Received reply to FUNC_ID_ZW_REQUEST_NETWORK_UPDATE: Failed - SUC is disabled.</regex>
+		<type>Warning</type>
+		<message>A Request to update the Network has failed as the SUC node is disabled. Please check your SUC node and retry. if this message persists, please report it to the Developers</message>
+		<moreinfo>NetworkError</moreinfo>
+	</scan>
+	<scan id="62">
+		<regex>.*WARNING: Received reply to FUNC_ID_ZW_REQUEST_NETWORK_UPDATE: Failed - Overflow. Full replication required.</regex>
+		<type>Warning</type>
+		<message>A Request to update the Network has failed. Please retry this and if this message persists, please report it to the Developers</message>
+		<moreinfo>NetworkError</moreinfo>
+	</scan>
+	<scan id="63">
+		<regex>.*Remove Node Failed - NodeID 0 Returned</regex>
+		<type>Warning</type>
+		<message>A Request remove a Node Failed. Please retry this and if this message persists, please report it to the Developers</message>
+		<moreinfo>AddRemoveNode</moreinfo>
+	</scan>
+	<scan id="64">
+		<regex>.*WARNING: Node is 0 but not enough data to perform alternative match.</regex>
+		<type>Warning</type>
+		<message>This is a Internal Error. Please report it to the Developers</message>
+		<moreinfo>InternalError</moreinfo>
+	</scan>
+	<scan id="65">
+		<regex>.*WARNING: REMOVE_NODE_STATUS_FAILED</regex>
+		<type>Warning</type>
+		<message>This is a Internal Error. Please report it to the Developers</message>
+		<moreinfo>InternalError</moreinfo>
+	</scan>
+	<scan id="66">
+		<regex>.*WARNING: LEARN_MODE_FAILED</regex>
+		<type>Warning</type>
+		<message>This is a Internal Error. Please report it to the Developers</message>
+		<moreinfo>InternalError</moreinfo>
+	</scan>
+	<scan id="67">
+		<regex>.*WARNING: Received reply to FUNC_ID_ZW_REMOVE_FAILED_NODE_ID - Node (.*) is OK, so command failed</regex>
+		<type>Warning</type>
+		<message>A Attempt to remove failed node for node ${1} failed as the Controller believes this node is ok. Maybe you should just unpair the node instead.</message>
+		<moreinfo>AddRemoveNode</moreinfo>
+	</scan>
+	<scan id="68">
+		<regex>.*WARNING: Received reply to FUNC_ID_ZW_REMOVE_FAILED_NODE_ID - unable to move node (.*) to failed nodes list</regex>
+		<type>Warning</type>
+		<message>A Attempt to remove failed node for node ${1} failed as the Controller believes this node is ok. Maybe you should just unpair the node instead.</message>
+		<moreinfo>AddRemoveNode</moreinfo>
+	</scan>
+	<scan id="69">
+		<regex>.*WARNING: REQUEST_NEIGHBOR_UPDATE_FAILED</regex>
+		<type>Warning</type>
+		<message>A Request for ${node} to update its Neighbor Table failed. If you recieve this message often, please report it to the Developers.</message>
+		<moreinfo>NetworkError</moreinfo>
+	</scan>
+	<scan id="70">
+		<regex>.*WARNING: FUNC_ID_ZW_APPLICATION_UPDATE: UPDATE_STATE_NODE_INFO_REQ_FAILED received</regex>
+		<type>Warning</type>
+		<message>This is a Internal Error. Please report it to the Developers</message>
+		<moreinfo>InternalError</moreinfo>
+	</scan>
+	<scan id="71">
+		<regex>.*Poll queue hasn't been able to execute for 300 secs or more</regex>
+		<type>Warning</type>
+		<message>The Poll Thread has not been able to run for more than 5 minutes. This might indicate a overloaded machine or network</message>
+		<moreinfo>OSError</moreinfo>
+	</scan>
+	<scan id="72">
+		<regex>.*WARNING: Driver::ReadButtons - zwbutton.xml is malformed</regex>
+		<type>Warning</type>
+		<message>This is a Internal Error. Please report it to the Developers</message>
+		<moreinfo>InternalError</moreinfo>
+	</scan>
+	<scan id="73">
+		<regex>.*WARNING: Driver::ReadButtons - zwbutton.xml is from an older version of OpenZWave and cannot be loaded.</regex>
+		<type>Warning</type>
+		<message>The zwbutton.xml file is from a old version of OpenZWave. Please delete this file and restart your application</message>
+		<moreinfo>ConfigError</moreinfo>
+	</scan>
+	<scan id="74">
+		<regex>.*WARNING: Driver::ReadButtons - cannot find Button Id for node %d</regex>
+		<type>Warning</type>
+		<message>This is a Internal Error. Please report it to the Developers</message>
+		<moreinfo>InternalError</moreinfo>
+	</scan>
+	<scan id="75">
+		<regex>.*WARNING: Received reply to FUNC_ID_ZW_SET_SLAVE_LEARN_MODE - command failed</regex>
+		<type>Warning</type>
+		<message>This is a Internal Error. Please report it to the Developers</message>
+		<moreinfo>InternalError</moreinfo>
+	</scan>
+	<scan id="76">
+		<regex>.*Invalid Network Key. Does not contain 16 Bytes - Contains (.*)</regex>
+		<type>Error</type>
+		<message>The Network Key must contain 16 Bytes (Characters). It only contains ${1}. Please update it.</message>
+		<moreinfo>ConfigError</moreinfo>
+	</scan>
+	<scan id="77">
+		<regex>.*Cannot Convert Network Key Byte (.*) to Key</regex>
+		<type>Warning</type>
+		<message>The Byte ${1} in the Network Key is invalid. Please update it</message>
+		<moreinfo>ConfigError</moreinfo>
+	</scan>
+	<scan id="78">
+		<regex>.*mgr,     LogDriverStatistics() failed - _homeId (.*) not found</regex>
+		<type>Warning</type>
+		<message>A call to LogDriverStatistics contained a invalid HomeID ${1} - Please report this to the Application Developers</message>
+		<moreinfo>AppError</moreinfo>
+	</scan>
+	<scan id="79">
+		<regex>.*Specified option [(.*)] was not found.</regex>
+		<type>Warning</type>
+		<message>A Request for a Option Key ${1} was not found. Please report this to the Application Developers</message>
+		<moreinfo>AppError</moreinfo>
+	</scan>
+	<scan id="80">
+		<regex>.*Failed to Parse (.*): (.*)</regex>
+		<type>Warning</type>
+		<message>The File ${1} is malformed. The Error is ${2}. You should either correct the file, or remove it.</message>
+		<moreinfo>ConfigError</moreinfo>
+	</scan>
+</simplescanner>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<messages>
+  <message id="firstname-info">Your First Name</message>
+  <message id="lastname-info">Your Last Name</message>
+  <message id="Wt.Auth.firstname">FirstName</message>
+  <message id="Wt.Auth.lastname">Last Name</message>
+  <message id="KB-intro">This Section is a Knowledge Base of common issues
+  users and developers run into when using OpenZWave.</message>
+</messages>
