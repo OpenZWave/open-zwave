@@ -1,4 +1,6 @@
 # Release Notes
+## Version 1.2
+ * Enable StateScanner and start adding modules
 
 ## Version 1.1
  * Detect if zwcfg*.xml was present when the Log was created and issue a warning.

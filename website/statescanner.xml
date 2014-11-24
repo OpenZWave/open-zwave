@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<statescanner>
+	<scan id="20000">
+		<type>Warning</type>
+		<message>The Device did not acknowledge the message of type "${topic}". You should investigate if this device really supports the associated CommandClass</message>
+		<moreinfo>ControllerErrors</moreinfo>
+		<module>DroppedMsg</module>
+	</scan>
+	<scan id="20001">
+		<regex>Enable SUC</regex>
+		<type>Error</type>
+		<message>Your Controller does not support SUC mode. You should set EnableSIS to false in Options.xml</message>
+		<moreinfo>ControllerErrors</moreinfo>
+		<module>DroppedMsg</module>
+	</scan>
+	<scan id="20002">
+		<regex>SecurityCmd_SchemeGet</regex>
+		<type>Error</type>
+		<message>Your Secure Device did not respond during Inclusion to the Security Setup Messages. You should check how long it took between including the device and receiving this message (There maybe additional Warnings/Errors related to this message)</message>
+		<moreinfo>SecurityInclusion</moreinfo>
+		<module>DroppedMsg</module>
+	</scan>
+	<scan id="20003">
+		<type>Warning</type>
+		<message>The Time it took the Controller to discover the Node and Start the Secure inclusion was ${time} seconds. Secure Inclusion Might fail for anything over 15 seconds based on experience. You may need to retry a few times to see if the process will complete quicker</message>
+		<moreinfo>SecurityInclusion</moreinfo>
+		<module>Security</module>
+	</scan>
+		<scan id="20004">
+		<regex>SecurityCmd_SchemeGet</regex>
+		<type>Error</type>
+		<message>The Time it took the Controller to discover the Node and Start the Secure inclusion was ${time} seconds. Secure Inclusion has probably failed (anything over 15 seconds will most likely fail). You may need to retry a few times to see if the process will complete quicker</message>
+		<moreinfo>SecurityInclusion</moreinfo>
+		<module>Security</module>
+	</scan>
+</statescanner>

@@ -108,14 +108,27 @@
 
 	<message id="news.rssfeed">
 		<div class="footer">
-			<div class="well text-center"> <small>
-				Website Designed by
-				<a href="http://www.dynam.ac/">Dynamx (Singapore) Pte Ltd</a> &copy;
-				2014</small>
+			<div class="well text-center">
+				<small>
+					Website Designed by
+					<a href="http://www.dynam.ac/">Dynamx (Singapore) Pte Ltd</a> &copy;
+					2014
+				</small>
 				<script type="text/javascript"
 					src="http://jira.my-ho.st/jira/s/d41d8cd98f00b204e9800998ecf8427e/en_US-v4aony-1988229788/6252/18/1.4.7/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?collectorId=2c0508f9"></script>
 			</div>
 		</div>
+		<script>/*<![CDATA[ */
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-55872429-1', 'auto');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+	/* ]]> */
+		</script>
 	</message>
 	<message id="Wt.Auth.confirmmail.subject">OpenZWave User account activation Link</message>
 	<message id="Wt.Auth.confirmmail.body">
@@ -636,10 +649,14 @@
 			<h4>Info, Warning and Error Tabs</h4>
 			<div>The remaining tabs show the categorization of the results. Info
 				messages are usually harmless and no real action should be
-				required. Warning messages usually indicate a more serious problem
-				and should be looked into, and errors are generally considered very
-				bad and must be fixed if you want optimal operation of your Z-Wave
-				Network with OZW</div>
+				required.
+				Warning messages usually indicate a more serious problem
+				and should
+				be looked into, and errors are generally considered very
+				bad and must
+				be fixed if you want optimal operation of your Z-Wave
+				Network with
+				OZW</div>
 			<ul>
 				<li>
 					<h4>The Panels</h4>
@@ -670,30 +687,40 @@
 	<message id="kb-introduction">
 		<div>These pages contain additional information about issues that
 			might be encountered when using OZW with your application
-			or issues with your network.</div>
+			or issues
+			with your network.</div>
 		<div>The pages are referenced from the LogScanner, but are presented
 			here so you can review aswell. They are generally broken down into
 			broad categories and some times contain recomendations for fixes for
 			specific issues.</div>
 	</message>
 	<message id="downloads-intro">
-	Download Stable Releases or Current Code Snapshots of OZW
+		Download Stable Releases or Current Code Snapshots of OZW
 	</message>
 	<message id="downloads-home">
-	<h2>Downloads</h2>
-	<div>We distribute both Stable Releases of OpenZWave as well as Current Code snapshots of our Development</div>
-	<div>Its recomended you use the Stable Releases, as the snapshots may not be stable or be work in progress</div>
-	<div>Both Stable Releases as well as Snapshots are distributed in source and binary form.</div>
-	<div>The Binary packages are created for different distributions. You can either download the individual packages, or add the repository URL to your package manager</div>
+		<h2>Downloads</h2>
+		<div>We distribute both Stable Releases of OpenZWave as well as
+			Current Code snapshots of our Development</div>
+		<div>Its recomended you use the Stable Releases, as the snapshots may
+			not be stable or be work in progress</div>
+		<div>Both Stable Releases as well as Snapshots are distributed in
+			source and binary form.</div>
+		<div>The Binary packages are created for different distributions. You
+			can either download the individual packages, or add the repository
+			URL to your package manager</div>
 	</message>
 	<message id="developers-intro">
-	This section contains information relevent for Developers that wish to work with OZW
+		This section contains information relevent for Developers that wish to
+		work with OZW
 	</message>
 	<message id="developers-home">
-	<h2>Developer Related Information</h2>
-	<h3>Code and BugTracker</h3>
-	<div>This link will take you to our Google Code homepage where you can checkout the latest source, or file bug reports. It also contains a wiki with some additional information</div>
-	<h3>API Documentation</h3>
-	<div>This link will take you to our most recent API documentation pages</div>
+		<h2>Developer Related Information</h2>
+		<h3>Code and BugTracker</h3>
+		<div>This link will take you to our Google Code homepage where you can
+			checkout the latest source, or file bug reports. It also contains a
+			wiki with some additional information</div>
+		<h3>API Documentation</h3>
+		<div>This link will take you to our most recent API documentation
+			pages</div>
 	</message>
 </messages>
