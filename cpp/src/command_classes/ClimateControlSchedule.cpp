@@ -240,10 +240,9 @@ bool ClimateControlSchedule::HandleMsg
 				// The schedule has changed and is not in override mode, so request reports for each day
 				for( int i=1; i<=7; ++i )
 				{
-					char str[64];
-					snprintf( str, 64, "Get climate control schedule for %s", c_dayNames[i] );
+					Log::Write(LogLevel_Info, GetNodeId(), "Get climate control schedule for %s", c_dayNames[i] );
 
-					Msg* msg = new Msg( str, GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+					Msg* msg = new Msg( "ClimateControlScheduleCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 					msg->Append( GetNodeId() );
 					msg->Append( 3 );
 					msg->Append( GetCommandClassId() );
@@ -257,7 +256,7 @@ bool ClimateControlSchedule::HandleMsg
 		else
 		{
 			// Device is in override mode, so we request details of that instead
-			Msg* msg = new Msg( "Get climate control schedule override state", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+			Msg* msg = new Msg( "ClimateControlScheduleCmd_OverrideGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 			msg->Append( GetNodeId() );
 			msg->Append( 2 );
 			msg->Append( GetCommandClassId() );
@@ -333,10 +332,9 @@ bool ClimateControlSchedule::SetValue
 		// Set a schedule
 		ValueSchedule const* value = static_cast<ValueSchedule const*>(&_value);
 
-		char str[64];
-		snprintf( str, 64, "Set the climate control schedule for %s on node %d", c_dayNames[idx], GetNodeId() );
+		Log::Write( LogLevel_Info, GetNodeId(), "Set the climate control schedule for %s", c_dayNames[idx]);
 
-		Msg* msg = new Msg( str, GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		Msg* msg = new Msg( "ClimateControlScheduleCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 		msg->SetInstance( this, instance );
 		msg->Append( GetNodeId() );
 		msg->Append( 30 );
@@ -377,7 +375,7 @@ bool ClimateControlSchedule::SetValue
 		{
 			ValueList::Item const& item = state->GetItem();
 
-			Msg* msg = new Msg( "Set climate control schedule override state", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+			Msg* msg = new Msg( "ClimateControlScheduleCmd_OverrideSet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 			msg->SetInstance( this, instance );
 			msg->Append( GetNodeId() );
 			msg->Append( 4 );
