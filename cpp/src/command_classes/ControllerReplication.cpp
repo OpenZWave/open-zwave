@@ -54,7 +54,7 @@ enum
 	ControllerReplicationIndex_Replicate
 };
 
-static char const* c_controllerReplicationFunctionNames[] = 
+static char const* c_controllerReplicationFunctionNames[] =
 {
 	"Groups",
 	"Group Names",
@@ -115,7 +115,7 @@ bool ControllerReplication::HandleMsg
 		}
 	}
 
-	Msg* msg = new Msg( "ControllerReplication Command Complete", GetNodeId(), REQUEST, FUNC_ID_ZW_REPLICATION_COMMAND_COMPLETE, false, false );
+	Msg* msg = new Msg( "ControllerReplicationCmd_Complete", GetNodeId(), REQUEST, FUNC_ID_ZW_REPLICATION_COMMAND_COMPLETE, false, false );
 	GetDriver()->SendMsg( msg, Driver::MsgQueue_Command );
 	return true;
 }
@@ -264,10 +264,10 @@ void ControllerReplication::SendNextData
 	}
 	if( i < 255 )
 	{
-		Msg* msg = new Msg( "Replication Send", m_targetNodeId, REQUEST, FUNC_ID_ZW_REPLICATION_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		Msg* msg = new Msg( (m_groupName.length() > 0 ? "ControllerReplicationCmd_TransferGroupName" : "ControllerReplicationCmd_TransferGroup"), m_targetNodeId, REQUEST, FUNC_ID_ZW_REPLICATION_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 		msg->Append( m_targetNodeId );
 		if( m_groupName.length() > 0 )
-		{		
+		{
 			msg->Append((uint8) (m_groupName.length() + 4 ));
 			msg->Append( GetCommandClassId() );
 			msg->Append( ControllerReplicationCmd_TransferGroupName );
@@ -317,7 +317,7 @@ void ControllerReplication::CreateVars
 		{
 			item.m_label = c_controllerReplicationFunctionNames[i];
 			item.m_value = ControllerReplicationCmd_TransferGroup + i;
-			items.push_back( item ); 
+			items.push_back( item );
 		}
 
 		node->CreateValueList( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ControllerReplicationIndex_Function, "Functions", "", false, false, 1, items, 0, 0 );

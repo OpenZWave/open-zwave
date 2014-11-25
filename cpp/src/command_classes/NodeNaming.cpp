@@ -343,7 +343,7 @@ void NodeNaming::SetName
 	}
 
 	Log::Write( LogLevel_Info, GetNodeId(), "NodeNaming::Set - Naming to '%s'", _name.c_str() );
-	Msg* msg = new Msg( "NodeNaming Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+	Msg* msg = new Msg( "NodeNamingCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 	msg->Append( GetNodeId() );
 	msg->Append( (uint8)(length + 3) );
 	msg->Append( GetCommandClassId() );
@@ -375,7 +375,7 @@ void NodeNaming::SetLocation
 	}
 
 	Log::Write( LogLevel_Info, GetNodeId(), "NodeNaming::SetLocation - Setting location to '%s'", _location.c_str() );
-	Msg* msg = new Msg( "NodeNaming Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+	Msg* msg = new Msg( "NodeNamingCmd_LocationSet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 	msg->Append( GetNodeId() );
 	msg->Append( (uint8)(length + 3) );
 	msg->Append( GetCommandClassId() );

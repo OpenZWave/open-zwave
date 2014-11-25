@@ -187,7 +187,6 @@ bool MultiInstance::RequestInstances
 		if( Node* node = GetNodeUnsafe() )
 		{
 			// MULTI_INSTANCE
-			char str[128];
 			for( map<uint8,CommandClass*>::const_iterator it = node->m_commandClassMap.begin(); it != node->m_commandClassMap.end(); ++it )
 			{
 				CommandClass* cc = it->second;
@@ -197,9 +196,9 @@ bool MultiInstance::RequestInstances
 				}
 				if( cc->HasStaticRequest( StaticRequest_Instances ) )
 				{
-					snprintf( str, sizeof( str ), "MultiInstanceCmd_Get for %s", cc->GetCommandClassName().c_str() );
+					Log::Write( LogLevel_Info, GetNodeId(), "MultiInstanceCmd_Get for %s", cc->GetCommandClassName().c_str() );
 
-					Msg* msg = new Msg( str, GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+					Msg* msg = new Msg( "MultiInstanceCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 					msg->Append( GetNodeId() );
 					msg->Append( 3 );
 					msg->Append( GetCommandClassId() );
@@ -215,10 +214,10 @@ bool MultiInstance::RequestInstances
 	else
 	{
 		// MULTI_CHANNEL
-		char str[128];
-		snprintf( str, sizeof( str ), "MultiChannelCmd_EndPointGet for node %d", GetNodeId() );
 
-		Msg* msg = new Msg( str, GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		Log::Write( LogLevel_Info, GetNodeId(), "MultiChannelCmd_EndPointGet for node %d", GetNodeId() );
+
+		Msg* msg = new Msg( "MultiChannelCmd_EndPointGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 		msg->Append( GetNodeId() );
 		msg->Append( 2 );
 		msg->Append( GetCommandClassId() );
@@ -384,9 +383,8 @@ void MultiInstance::HandleMultiChannelEndPointReport
 	{
 
 		// Send a single capability request to each endpoint
-		char str[128];
-		snprintf( str, sizeof( str ), "MultiChannelCmd_CapabilityGet for endpoint %d", i );
-		Msg* msg = new Msg( str, GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		Log::Write( LogLevel_Info, GetNodeId(), "MultiChannelCmd_CapabilityGet for endpoint %d", i );
+		Msg* msg = new Msg( "MultiChannelCmd_CapabilityGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 		msg->Append( GetNodeId() );
 		msg->Append( 3 );
 		msg->Append( GetCommandClassId() );
@@ -590,9 +588,8 @@ void MultiInstance::HandleMultiChannelEndPointFindReport
 		else
 		{
 			// Endpoints are different, so request the capabilities
-			char str[128];
-			snprintf( str, 128, "MultiChannelCmd_CapabilityGet for node %d, endpoint %d", GetNodeId(), endPoint );
-			Msg* msg = new Msg( str, GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+			Log::Write(LogLevel_Info, GetNodeId(), "MultiChannelCmd_CapabilityGet for node %d, endpoint %d", GetNodeId(), endPoint );
+			Msg* msg = new Msg( "MultiChannelCmd_CapabilityGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 			msg->Append( GetNodeId() );
 			msg->Append( 3 );
 			msg->Append( GetCommandClassId() );
@@ -623,9 +620,8 @@ void MultiInstance::HandleMultiChannelEndPointFindReport
 							m_endPointFindIndex = 14;
 						}
 
-						char str[128];
-						snprintf( str, 128, "MultiChannelCmd_EndPointFind for generic device class 0x%.2x (%s)", c_genericClass[m_endPointFindIndex], c_genericClassName[m_endPointFindIndex] );
-						Msg* msg = new Msg( str, GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+						Log::Write(LogLevel_Info, GetNodeId(), "MultiChannelCmd_EndPointFind for generic device class 0x%.2x (%s)", c_genericClass[m_endPointFindIndex], c_genericClassName[m_endPointFindIndex] );
+						Msg* msg = new Msg( "MultiChannelCmd_EndPointFind", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 						msg->Append( GetNodeId() );
 						msg->Append( 4 );
 						msg->Append( GetCommandClassId() );

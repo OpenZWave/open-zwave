@@ -124,7 +124,7 @@ bool Powerlevel::RequestValue
 	{
 		if ( IsGetSupported() )
 		{
-			Msg* msg = new Msg( "Powerlevel_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+			Msg* msg = new Msg( "PowerlevelCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 			msg->SetInstance( this, _instance );
 			msg->Append( GetNodeId() );
 			msg->Append( 2 );

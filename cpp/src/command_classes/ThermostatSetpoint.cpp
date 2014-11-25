@@ -290,7 +290,7 @@ bool ThermostatSetpoint::SetValue
 		ValueDecimal const* value = static_cast<ValueDecimal const*>(&_value);
 		uint8 scale = strcmp( "C", value->GetUnits().c_str() ) ? 1 : 0;
 
-		Msg* msg = new Msg( "Set Thermostat Setpoint", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+		Msg* msg = new Msg( "ThermostatSetpointCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 		msg->SetInstance( this, _value.GetID().GetInstance() );
 		msg->Append( GetNodeId() );
 		msg->Append( 4 + GetAppendValueSize( value->GetValue() ) );

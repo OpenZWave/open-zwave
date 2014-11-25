@@ -168,7 +168,7 @@ bool Association::RequestValue
 		return false;
 	}
 	// Request the supported group info
-	Msg* msg = new Msg( "Get Association Groupings", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+	Msg* msg = new Msg( "AssociationCmd_GroupingsGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 	msg->Append( GetNodeId() );
 	msg->Append( 2 );
 	msg->Append( GetCommandClassId() );
@@ -328,7 +328,7 @@ void Association::QueryGroup
 	if ( IsGetSupported() )
 	{
 		Log::Write( LogLevel_Info, GetNodeId(), "Get Associations for group %d of node %d", _groupIdx, GetNodeId() );
-		Msg* msg = new Msg( "Get Associations", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		Msg* msg = new Msg( "AssociationCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 		msg->Append( GetNodeId() );
 		msg->Append( 3 );
 		msg->Append( GetCommandClassId() );
@@ -354,7 +354,7 @@ void Association::Set
 {
 	Log::Write( LogLevel_Info, GetNodeId(), "Association::Set - Adding node %d to group %d of node %d", _targetNodeId, _groupIdx, GetNodeId() );
 
-	Msg* msg = new Msg( "Association Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+	Msg* msg = new Msg( "AssociationCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 	msg->Append( GetNodeId() );
 	msg->Append( 4 );
 	msg->Append( GetCommandClassId() );
@@ -377,7 +377,7 @@ void Association::Remove
 {
 	Log::Write( LogLevel_Info, GetNodeId(), "Association::Remove - Removing node %d from group %d of node %d", _targetNodeId, _groupIdx, GetNodeId() );
 
-	Msg* msg = new Msg( "Association Remove", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+	Msg* msg = new Msg( "AssociationCmd_Remove", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 	msg->Append( GetNodeId() );
 	msg->Append( 4 );
 	msg->Append( GetCommandClassId() );

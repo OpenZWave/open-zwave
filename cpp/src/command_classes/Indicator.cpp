@@ -133,7 +133,7 @@ bool Indicator::SetValue
 		ValueByte const* value = static_cast<ValueByte const*>(&_value);
 
 		Log::Write( LogLevel_Info, GetNodeId(), "Indicator::SetValue - Setting indicator to %d", value->GetValue());
-		Msg* msg = new Msg( "Basic Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+		Msg* msg = new Msg( "IndicatorCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 		msg->SetInstance( this, _value.GetID().GetInstance() );
 		msg->Append( GetNodeId() );
 		msg->Append( 3 );
