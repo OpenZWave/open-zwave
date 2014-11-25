@@ -2,35 +2,208 @@
 <statescanner>
 	<scan id="20000">
 		<type>Warning</type>
-		<message>The Device did not acknowledge the message of type "${topic}". You should investigate if this device really supports the associated CommandClass</message>
+		<message>The Device did not acknowledge the message of type
+			"${topic}". You should investigate if this device really supports the
+			associated CommandClass
+		</message>
 		<moreinfo>ControllerErrors</moreinfo>
 		<module>DroppedMsg</module>
 	</scan>
 	<scan id="20001">
 		<regex>Enable SUC</regex>
 		<type>Error</type>
-		<message>Your Controller does not support SUC mode. You should set EnableSIS to false in Options.xml</message>
+		<message>Your Controller does not support SUC mode. You should set
+			EnableSIS to false in Options.xml
+		</message>
 		<moreinfo>ControllerErrors</moreinfo>
 		<module>DroppedMsg</module>
 	</scan>
 	<scan id="20002">
 		<regex>SecurityCmd_SchemeGet</regex>
 		<type>Error</type>
-		<message>Your Secure Device did not respond during Inclusion to the Security Setup Messages. You should check how long it took between including the device and receiving this message (There maybe additional Warnings/Errors related to this message)</message>
+		<message>Your Secure Device did not respond during Inclusion to the
+			Security Setup Messages. You should check how long it took between
+			including the device and receiving this message (There maybe
+			additional Warnings/Errors related to this message)
+		</message>
 		<moreinfo>SecurityInclusion</moreinfo>
 		<module>DroppedMsg</module>
 	</scan>
 	<scan id="20003">
 		<type>Warning</type>
-		<message>The Time it took the Controller to discover the Node and Start the Secure inclusion was ${time} seconds. Secure Inclusion Might fail for anything over 15 seconds based on experience. You may need to retry a few times to see if the process will complete quicker</message>
+		<message>The Time it took the Controller to discover the Node and
+			Start the Secure inclusion was ${time} seconds. Secure Inclusion
+			Might fail for anything over 15 seconds based on experience. You may
+			need to retry a few times to see if the process will complete quicker
+		</message>
 		<moreinfo>SecurityInclusion</moreinfo>
 		<module>Security</module>
 	</scan>
-		<scan id="20004">
+	<scan id="20004">
 		<regex>SecurityCmd_SchemeGet</regex>
 		<type>Error</type>
-		<message>The Time it took the Controller to discover the Node and Start the Secure inclusion was ${time} seconds. Secure Inclusion has probably failed (anything over 15 seconds will most likely fail). You may need to retry a few times to see if the process will complete quicker</message>
+		<message>The Time it took the Controller to discover the Node and
+			Start the Secure inclusion was ${time} seconds. Secure Inclusion has
+			probably failed (anything over 15 seconds will most likely fail). You
+			may need to retry a few times to see if the process will complete
+			quicker
+		</message>
 		<moreinfo>SecurityInclusion</moreinfo>
 		<module>Security</module>
 	</scan>
+	<scan id="20005">
+		<regex>.*Basic::Set - Setting node /d* to level .*</regex>
+		<type>Info</type>
+		<message>Your Application set a value when OpenZWave was still
+			starting up. There might be a delay between setting the value and the
+			device actually recieving the command. Please read the MoreInfo Link
+			for further details
+		</message>
+		<moreinfo>SlowResponseDuringStartup</moreinfo>
+		<module>StartupTracking</module>
+	</scan>
+	<scan id="20006">
+		<regex>.*Configuration::Set - Parameter=/d*, Value=/d* Size=/d*
+		</regex>
+		<type>Info</type>
+		<message>Your Application set a value when OpenZWave was still
+			starting up. There might be a delay between setting the value and the
+			device actually recieving the command. Please read the MoreInfo Link
+			for further details
+		</message>
+		<moreinfo>SlowResponseDuringStartup</moreinfo>
+		<module>StartupTracking</module>
+	</scan>
+	<scan id="20007">
+		<regex>.*Value_Lock::Set - Requesting lock to be .*</regex>
+		<type>Info</type>
+		<message>Your Application set a value when OpenZWave was still
+			starting up. There might be a delay between setting the value and the
+			device actually recieving the command. Please read the MoreInfo Link
+			for further details
+		</message>
+		<moreinfo>SlowResponseDuringStartup</moreinfo>
+		<module>StartupTracking</module>
+	</scan>
+	<scan id="20008">
+		<regex>.*Value_Lock_Mode::Set - Requesting lock to be .*</regex>
+		<type>Info</type>
+		<message>Your Application set a value when OpenZWave was still
+			starting up. There might be a delay between setting the value and the
+			device actually recieving the command. Please read the MoreInfo Link
+			for further details
+		</message>
+		<moreinfo>SlowResponseDuringStartup</moreinfo>
+		<module>StartupTracking</module>
+	</scan>
+	<scan id="20009">
+		<regex>.*Indicator::SetValue - Setting indicator to /d*</regex>
+		<type>Info</type>
+		<message>Your Application set a value when OpenZWave was still
+			starting up. There might be a delay between setting the value and the
+			device actually recieving the command. Please read the MoreInfo Link
+			for further details
+		</message>
+		<moreinfo>SlowResponseDuringStartup</moreinfo>
+		<module>StartupTracking</module>
+	</scan>
+	<!-- This one is fairly common 
+	<scan id="20010"> <regex>.*NoOperation::Set 
+		- Routing=.*</regex> <type>Info</type> <message>Your Application set a value 
+		when OpenZWave was still starting up. There might be a delay between setting 
+		the value and the device actually recieving the command. Please read the 
+		MoreInfo Link for further details </message> <moreinfo>SlowResponseDuringStartup</moreinfo> 
+		<module>StartupTracking</module> </scan> 
+		-->
+	<scan id="20011">
+		<regex>.*NodeNaming::Set - Naming to '.*'</regex>
+		<type>Info</type>
+		<message>Your Application set a value when OpenZWave was still
+			starting up. There might be a delay between setting the value and the
+			device actually recieving the command. Please read the MoreInfo Link
+			for further details
+		</message>
+		<moreinfo>SlowResponseDuringStartup</moreinfo>
+		<module>StartupTracking</module>
+	</scan>
+	<scan id="20012">
+		<regex>.*NodeNaming::SetLocation - Setting location to '.*'</regex>
+		<type>Info</type>
+		<message>Your Application set a value when OpenZWave was still
+			starting up. There might be a delay between setting the value and the
+			device actually recieving the command. Please read the MoreInfo Link
+			for further details
+		</message>
+		<moreinfo>SlowResponseDuringStartup</moreinfo>
+		<module>StartupTracking</module>
+	</scan>
+	<scan id="20013">
+		<regex>.*Protection::Set - Setting protection state to '.*'</regex>
+		<type>Info</type>
+		<message>Your Application set a value when OpenZWave was still
+			starting up. There might be a delay between setting the value and the
+			device actually recieving the command. Please read the MoreInfo Link
+			for further details
+		</message>
+		<moreinfo>SlowResponseDuringStartup</moreinfo>
+		<module>StartupTracking</module>
+	</scan>
+	<scan id="20014">
+		<regex>.*SwitchAll::Set - .* on node /d*</regex>
+		<type>Info</type>
+		<message>Your Application set a value when OpenZWave was still
+			starting up. There might be a delay between setting the value and the
+			device actually recieving the command. Please read the MoreInfo Link
+			for further details
+		</message>
+		<moreinfo>SlowResponseDuringStartup</moreinfo>
+		<module>StartupTracking</module>
+	</scan>
+	<scan id="20015">
+		<regex>.*SwitchMultilevel::Set - Setting to level /d*</regex>
+		<type>Info</type>
+		<message>Your Application set a value when OpenZWave was still
+			starting up. There might be a delay between setting the value and the
+			device actually recieving the command. Please read the MoreInfo Link
+			for further details
+		</message>
+		<moreinfo>SlowResponseDuringStartup</moreinfo>
+		<module>StartupTracking</module>
+	</scan>
+	<scan id="20016">
+		<regex>.*SwitchBinary::Set - Setting node /d* to .*</regex>
+		<type>Info</type>
+		<message>Your Application set a value when OpenZWave was still
+			starting up. There might be a delay between setting the value and the
+			device actually recieving the command. Please read the MoreInfo Link
+			for further details
+		</message>
+		<moreinfo>SlowResponseDuringStartup</moreinfo>
+		<module>StartupTracking</module>
+	</scan>
+	<scan id="20017">
+		<regex>.*SwitchToggleBinary::Set - Toggling the state</regex>
+		<type>Info</type>
+		<message>Your Application set a value when OpenZWave was still
+			starting up. There might be a delay between setting the value and the
+			device actually recieving the command. Please read the MoreInfo Link
+			for further details
+		</message>
+		<moreinfo>SlowResponseDuringStartup</moreinfo>
+		<module>StartupTracking</module>
+	</scan>
+	<scan id="20018">
+		<regex>.*SwitchToggleMultilevel::Set - Toggling the state</regex>
+		<type>Info</type>
+		<message>Your Application set a value when OpenZWave was still
+			starting up. There might be a delay between setting the value and the
+			device actually recieving the command. Please read the MoreInfo Link
+			for further details
+		</message>
+		<moreinfo>SlowResponseDuringStartup</moreinfo>
+		<module>StartupTracking</module>
+	</scan>
+
+
+
 </statescanner>

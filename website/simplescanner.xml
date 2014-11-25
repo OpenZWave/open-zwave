@@ -62,7 +62,7 @@
 	</scan>
 	<scan id="11">
 		<regex>.*Cannot find a path to the configuration files at (.*), Using (.*) instead...</regex>
-		<type>Warning</type>
+		<type>Info</type>
 		<message>A attempt to Open the Config files at ${1} failed. Not a critical error as the Library will try different paths before Erroring Out (Next Path : ${2})</message>
 		<moreinfo>ConfigError</moreinfo>
 	</scan>
