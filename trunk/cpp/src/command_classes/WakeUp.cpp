@@ -57,11 +57,11 @@ enum WakeUpCmd
 // Constructor
 //-----------------------------------------------------------------------------
 WakeUp::WakeUp
-( 
+(
 	uint32 const _homeId,
-	uint8 const _nodeId 
+	uint8 const _nodeId
 ):
-	CommandClass( _homeId, _nodeId ), 
+	CommandClass( _homeId, _nodeId ),
 	m_mutex( new Mutex() ),
 	m_pollRequired( false ),
 	m_notification( false )
@@ -77,7 +77,7 @@ WakeUp::WakeUp
 // Destructor
 //-----------------------------------------------------------------------------
 WakeUp::~WakeUp
-( 
+(
 )
 {
 	m_mutex->Release();
@@ -101,7 +101,7 @@ WakeUp::~WakeUp
 // Starts the process of requesting node state from a sleeping device
 //-----------------------------------------------------------------------------
 void WakeUp::Init
-( 
+(
 )
 {
 	// Request the wake up interval.  When we receive the response, we
@@ -202,7 +202,7 @@ bool WakeUp::HandleMsg
 )
 {
 	if( WakeUpCmd_IntervalReport == (WakeUpCmd)_data[0] )
-	{	
+	{
 		if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, 0 ) ) )
 		{
 			// some interval reports received are validly formatted (proper checksum, etc.) but only have length
@@ -224,29 +224,29 @@ bool WakeUp::HandleMsg
 			Log::Write( LogLevel_Info, GetNodeId(), "Received Wakeup Interval report from node %d: Interval=%d, Target Node=%d", GetNodeId(), interval, targetNodeId );
 
 			value->OnValueRefreshed( (int32)interval );
-		
+
 			// Ensure that the target node for wake-up notifications is the controller
 			// but only if node is not a listening device. Hybrid devices that can be
 			// powered by other then batteries shouldn't do this.
 			Node *node = GetNodeUnsafe();
 			if( GetDriver()->GetNodeId() != targetNodeId && ((node) && (!node->IsListeningDevice())) )
 			{
-				SetValue( *value );	
+				SetValue( *value );
 			}
 			value->Release();
  		}
 		return true;
 	}
 	else if( WakeUpCmd_Notification == (WakeUpCmd)_data[0] )
-	{	
+	{
 		// The device is awake.
 		Log::Write( LogLevel_Info, GetNodeId(), "Received Wakeup Notification from node %d", GetNodeId() );
 		m_notification = true;
-		SetAwake( true );				
+		SetAwake( true );
 		return true;
 	}
 	else if( WakeUpCmd_IntervalCapabilitiesReport == (WakeUpCmd)_data[0] )
-	{	
+	{
 		uint32 mininterval = (((uint32)_data[1]) << 16) | (((uint32)_data[2]) << 8) | ((uint32)_data[3]);
 		uint32 maxinterval = (((uint32)_data[4]) << 16) | (((uint32)_data[5]) << 8) | ((uint32)_data[6]);
 		uint32 definterval = (((uint32)_data[7]) << 16) | (((uint32)_data[8]) << 8) | ((uint32)_data[9]);
@@ -291,10 +291,10 @@ bool WakeUp::SetValue
 	if( ValueID::ValueType_Int == _value.GetID().GetType() )
 	{
 		ValueInt const* value = static_cast<ValueInt const*>(&_value);
-	
-		Msg* msg = new Msg( "Wakeup Interval Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+
+		Msg* msg = new Msg( "WakeUpCmd_IntervalSet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 		msg->Append( GetNodeId() );
-		
+
 		if( GetNodeUnsafe()->GetCommandClass( MultiCmd::StaticGetCommandClassId() ) )
 		{
 			msg->Append( 10 );
@@ -308,9 +308,9 @@ bool WakeUp::SetValue
 		msg->Append( 6 );	// length of command bytes following
 		msg->Append( GetCommandClassId() );
 		msg->Append( WakeUpCmd_IntervalSet );
-		msg->Append( (uint8)(( interval >> 16 ) & 0xff) ); 
-		msg->Append( (uint8)(( interval >> 8 ) & 0xff) );	 
-		msg->Append( (uint8)( interval & 0xff ) );		
+		msg->Append( (uint8)(( interval >> 16 ) & 0xff) );
+		msg->Append( (uint8)(( interval >> 8 ) & 0xff) );
+		msg->Append( (uint8)( interval & 0xff ) );
 		msg->Append( GetDriver()->GetNodeId() );
 		msg->Append( GetDriver()->GetTransmitOptions() );
 		GetDriver()->SendMsg( msg, Driver::MsgQueue_WakeUp );
@@ -365,7 +365,7 @@ void WakeUp::SetAwake
 			}
 			m_pollRequired = false;
 		}
-			
+
 		// Send all pending messages
 		SendPending();
 	}
@@ -382,8 +382,8 @@ void WakeUp::QueueMsg
 {
 	m_mutex->Lock();
 
-	// See if there is already a copy of this message in the queue.  If so, 
-	// we delete it.  This is to prevent duplicates building up if the 
+	// See if there is already a copy of this message in the queue.  If so,
+	// we delete it.  This is to prevent duplicates building up if the
 	// device does not wake up very often.  Deleting the original and
 	// adding the copy to the end avoids problems with the order of
 	// commands such as on and off.
@@ -426,7 +426,7 @@ void WakeUp::SendPending
 	m_mutex->Lock();
 	list<Driver::MsgQueueItem>::iterator it = m_pendingQueue.begin();
 	while( it != m_pendingQueue.end() )
-	{	
+	{
 		Driver::MsgQueueItem const& item = *it;
 		if( Driver::MsgQueueCmd_SendMsg == item.m_command )
 		{
@@ -458,7 +458,7 @@ void WakeUp::SendPending
 	if( sendToSleep )
 	{
 		m_notification = false;
-		Msg* msg = new Msg( "Wakeup - No More Information (send to sleep)", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+		Msg* msg = new Msg( "WakeUpCmd_NoMoreInformation", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 		msg->Append( GetNodeId() );
 		msg->Append( 2 );
 		msg->Append( GetCommandClassId() );

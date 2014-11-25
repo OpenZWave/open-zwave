@@ -54,7 +54,7 @@ ValueSchedule::ValueSchedule
 ):
 	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Byte, _label, _units, _readOnly, _writeOnly, false, _pollIntensity ),
 	m_numSwitchPoints( 0 )
-	
+
 {
 }
 
@@ -67,7 +67,7 @@ ValueSchedule::ValueSchedule
 ):
 	Value(),
 	m_numSwitchPoints( 0 )
-	
+
 {
 }
 
@@ -95,7 +95,7 @@ void ValueSchedule::ReadXML
 			if( !strcmp( str, "SwitchPoint" ) )
 			{
 				int intVal;
-				
+
 				uint8 hours = 0;
 				if( TIXML_SUCCESS == child->QueryIntAttribute( "hours", &intVal ) )
 				{
@@ -195,7 +195,7 @@ bool ValueSchedule::SetSwitchPoint
 	// Find where to insert this switch point.  They must be sorted by ascending time value.
 	uint8 i;
 	uint8 insertAt = 0;
-	
+
 	for( i=0; i<m_numSwitchPoints; ++i )
 	{
 		if( m_switchPoints[i].m_hours == _hours )
@@ -276,7 +276,7 @@ bool ValueSchedule::RemoveSwitchPoint
 // Get the values of a switch point
 //-----------------------------------------------------------------------------
 bool ValueSchedule::GetSwitchPoint
-( 
+(
 	uint8 const _idx,
 	uint8* o_hours,
 	uint8* o_minutes,
@@ -349,3 +349,7 @@ bool ValueSchedule::FindSwitchPoint
 	return false;
 }
 
+string const ValueSchedule::GetAsString() const {
+	/* we should actuall find a way to return the arrays of switchpoints nicely */
+	return "SwitchPoint";
+}

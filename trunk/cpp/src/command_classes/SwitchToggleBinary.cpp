@@ -128,7 +128,7 @@ bool SwitchToggleBinary::SetValue
 )
 {
 	Log::Write( LogLevel_Info, GetNodeId(), "SwitchToggleBinary::Set - Toggling the state" );
-	Msg* msg = new Msg( "SwitchToggleBinary Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+	Msg* msg = new Msg( "SwitchToggleBinaryCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 	msg->SetInstance( this, _value.GetID().GetInstance() );
 	msg->Append( GetNodeId() );
 	msg->Append( 2 );
