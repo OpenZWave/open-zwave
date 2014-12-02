@@ -38,18 +38,31 @@ This message indicates that OpenZWave could not find a USB device with the speci
 
 #### MessageID 41
 
-This message usually indicates that the Application requested a WriteConfig, but OpenZWave either was not fully initilized, or had failed to start correctly. Please only issue the WriteConfig once OpenZWave indicates it is operational via the Notification Callbacks. 
+This message usually indicates that the Application requested a WriteConfig, but OpenZWave either was not fully initialized, or had failed to start correctly. Please only issue the WriteConfig once OpenZWave indicates it is operational via the Notification Callbacks. 
 
-Best Practices is to call WriteConfig after recieving a "AllNodesQueried" or a "AllNodesQueriedSomeDead" notification and again and application shutdown time.
+Best Practices is to call WriteConfig after receiving a "AllNodesQueried" or a "AllNodesQueriedSomeDead" notification and again and application shutdown time.
 
 #### MessageID 48
 
 This message usually indicates that a incorrect serial port was specified when OpenZWave was started and we are instead talking to another device, and not a ZWave Controller. Please confirm the serial port is correct.
 
-If you occasionally recieve this message but OpenZWave is functioning correctly, it could indicate other problems and you should seek help on the [Google Groups list][1]
+If you occasionally receive this message but OpenZWave is functioning correctly, it could indicate other problems and you should seek help on the [Google Groups list][1]
 
 #### MessageID 79
 
-A Option was set by the application that OpenZWave does not support. You should confirm the options passed during the initilzation phase of OpenZWave (Refer to MessageID 6 above)
+A Option was set by the application that OpenZWave does not support. You should confirm the options passed during the initialization phase of OpenZWave (Refer to MessageID 6 above)
+
+#### MessageID 89, 90
+
+The application sent a invalid System_Config Variable to the DoorLock CC. You should contact the developers of your application to investigate this issue. 
+
+#### MessageID 91
+
+The application sent a invalid request to the EnergyProduction CC. You should contact the developers of your application to investigate this issue.
+
+#### MessageID 112
+
+The Application requested UserCode at position 0, which is invalid. Please report this issue to the developers of your application. 
+
 
 [1]: https://groups.google.com/forum/#!forum/openzwave "OpenZWave Google Groups"

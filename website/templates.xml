@@ -317,7 +317,7 @@
 		Based on personal information
 	</message>
 	<message id="Wt.Auth.passwdqc.reason-word">
-		Based on a dictionary word and not a passphrase
+		Based on a dictionary word and not a pass phrase
 	</message>
 	<message id="Wt.Auth.passwdqc.reason-seq">
 		Based on a common sequence of characters
@@ -363,8 +363,8 @@
 			</li>
 			<li>ZWave Protocol is abstracted away hiding a lot of the complexity</li>
 			<li>
-				Works with most switches, dimmers, termostates, energy monitors,
-				motion sensors, applicance modules,key fobs, door/window sensors
+				Works with most switches, dimmers, thermostats, energy monitors,
+				motion sensors, appliance modules,key fobs, door/window sensors
 				etc
 				(see
 				<a
@@ -375,7 +375,7 @@
 			<li>Reverse Engineered the ZWave Protocol</li>
 			<li>Easy to add support for new devices</li>
 			<li>Fully Documented Code Base</li>
-			<li>Includes simple examples to demostrate how to interface to the
+			<li>Includes simple examples to demonstrate how to interface to the
 				code</li>
 		</ul>
 		<h2>Code Details</h2>
@@ -560,14 +560,14 @@
 	<message id="loganalyzerrun-intro">
 		Scan your OpenZWave Log file and check for common
 		issues, errors and
-		recomended fixes
+		recommended fixes
 	</message>
 	<message id="scan-instructions">
 		<div>
 			<h2>Scanning Your OZW Log File</h2>
 		</div>
 		<div>This Application will scan your OpenZWave Log file and report
-			common issues, errors and provide some recomendations for fixes. In
+			common issues, errors and provide some recommendations for fixes. In
 			order to scan the log file, please follow the instructions below:</div>
 		<div>
 			<h3>Preparation</h3>
@@ -583,7 +583,7 @@
 				<li>After selecting your log file, the upload should start already.
 					Depending upon the size, this may take some time</li>
 				<li>Once the upload is complete, the scan will commence. A
-					progressbar will list the progress of the scan</li>
+					progress bar will list the progress of the scan</li>
 				<li>Finally, once the Scan is complete, you will be redirected to
 					the results page</li>
 			</ul>
@@ -639,9 +639,9 @@
 					Device Classes of the Node, and the Neighbors</li>
 				<li>The Command Classes Table will list Command Classes that this
 					node responds to</li>
-				<li>Asterix next to the CommandClass name indicate its mandatory.
+				<li>Asterisks next to the CommandClass name indicate its mandatory.
 					No
-					Asterix indicate optional</li>
+					Asterisks indicate optional</li>
 				<li>If OZW does not Implement the Command Class, it will be shown
 					as
 					"0xXX Not Supported"</li>
@@ -667,7 +667,7 @@
 				<li>Message - A short description of the problem</li>
 				<li>More Info - A link to the Knowledge Base that contains generic
 					information about the type of error encountered. It may also
-					contain specific information and recomendations to fix the issue</li>
+					contain specific information and recommendations to fix the issue</li>
 				<li>Line Number - What line the Issue was detected at in the Log
 					File. May be blank in some cases if the error is related to the
 					state of the network</li>
@@ -680,7 +680,7 @@
 					<h4>Node Messages</h4>
 				</li>
 				<li>Node Messages are are issues that are specific to a node, or
-					issue that occured when communicating with a node</li>
+					issue that occurred when communicating with a node</li>
 			</ul>
 		</div>
 	</message>
@@ -690,8 +690,8 @@
 			or issues
 			with your network.</div>
 		<div>The pages are referenced from the LogScanner, but are presented
-			here so you can review aswell. They are generally broken down into
-			broad categories and some times contain recomendations for fixes for
+			here so you can review as well. They are generally broken down into
+			broad categories and some times contain recommendations for fixes for
 			specific issues.</div>
 	</message>
 	<message id="downloads-intro">
@@ -701,7 +701,7 @@
 		<h2>Downloads</h2>
 		<div>We distribute both Stable Releases of OpenZWave as well as
 			Current Code snapshots of our Development</div>
-		<div>Its recomended you use the Stable Releases, as the snapshots may
+		<div>Its recommended you use the Stable Releases, as the snapshots may
 			not be stable or be work in progress</div>
 		<div>Both Stable Releases as well as Snapshots are distributed in
 			source and binary form.</div>
@@ -710,7 +710,7 @@
 			URL to your package manager</div>
 	</message>
 	<message id="developers-intro">
-		This section contains information relevent for Developers that wish to
+		This section contains information relevant for Developers that wish to
 		work with OZW
 	</message>
 	<message id="developers-home">

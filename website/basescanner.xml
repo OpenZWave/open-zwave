@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<basescanner>
+	<scanner id="1">
+		<name>SimpleScanner</name>
+		<enabled>true</enabled>
+		<rangestart>1</rangestart>
+		<rangeend>9999</rangeend>
+		<filename>simplescanner.xml</filename>
+	</scanner>
+	<scanner id="2">
+		<name>BaseScanner</name>
+		<enabled>true</enabled>
+		<rangestart>10000</rangestart>
+		<rangeend>19999</rangeend>
+		<filename></filename>
+	</scanner>
+	<scanner id="3">
+		<name>StateScanner</name>
+		<enabled>true</enabled>
+		<rangestart>20000</rangestart>
+		<rangeend>29999</rangeend>
+		<filename>statescanner.xml</filename>
+	</scanner>
+</basescanner>
+	

@@ -6,7 +6,7 @@
 			"${topic}". You should investigate if this device really supports the
 			associated CommandClass
 		</message>
-		<moreinfo>ControllerErrors</moreinfo>
+		<moreinfo>DeviceConfigError</moreinfo>
 		<module>DroppedMsg</module>
 	</scan>
 	<scan id="20001">
@@ -56,7 +56,7 @@
 		<type>Info</type>
 		<message>Your Application set a value when OpenZWave was still
 			starting up. There might be a delay between setting the value and the
-			device actually recieving the command. Please read the MoreInfo Link
+			device actually receiving the command. Please read the MoreInfo Link
 			for further details
 		</message>
 		<moreinfo>SlowResponseDuringStartup</moreinfo>
@@ -68,7 +68,7 @@
 		<type>Info</type>
 		<message>Your Application set a value when OpenZWave was still
 			starting up. There might be a delay between setting the value and the
-			device actually recieving the command. Please read the MoreInfo Link
+			device actually receiving the command. Please read the MoreInfo Link
 			for further details
 		</message>
 		<moreinfo>SlowResponseDuringStartup</moreinfo>
@@ -79,7 +79,7 @@
 		<type>Info</type>
 		<message>Your Application set a value when OpenZWave was still
 			starting up. There might be a delay between setting the value and the
-			device actually recieving the command. Please read the MoreInfo Link
+			device actually receiving the command. Please read the MoreInfo Link
 			for further details
 		</message>
 		<moreinfo>SlowResponseDuringStartup</moreinfo>
@@ -90,7 +90,7 @@
 		<type>Info</type>
 		<message>Your Application set a value when OpenZWave was still
 			starting up. There might be a delay between setting the value and the
-			device actually recieving the command. Please read the MoreInfo Link
+			device actually receiving the command. Please read the MoreInfo Link
 			for further details
 		</message>
 		<moreinfo>SlowResponseDuringStartup</moreinfo>
@@ -101,7 +101,7 @@
 		<type>Info</type>
 		<message>Your Application set a value when OpenZWave was still
 			starting up. There might be a delay between setting the value and the
-			device actually recieving the command. Please read the MoreInfo Link
+			device actually receiving the command. Please read the MoreInfo Link
 			for further details
 		</message>
 		<moreinfo>SlowResponseDuringStartup</moreinfo>
@@ -111,7 +111,7 @@
 	<scan id="20010"> <regex>.*NoOperation::Set 
 		- Routing=.*</regex> <type>Info</type> <message>Your Application set a value 
 		when OpenZWave was still starting up. There might be a delay between setting 
-		the value and the device actually recieving the command. Please read the 
+		the value and the device actually receiving the command. Please read the 
 		MoreInfo Link for further details </message> <moreinfo>SlowResponseDuringStartup</moreinfo> 
 		<module>StartupTracking</module> </scan> 
 		-->
@@ -120,7 +120,7 @@
 		<type>Info</type>
 		<message>Your Application set a value when OpenZWave was still
 			starting up. There might be a delay between setting the value and the
-			device actually recieving the command. Please read the MoreInfo Link
+			device actually receiving the command. Please read the MoreInfo Link
 			for further details
 		</message>
 		<moreinfo>SlowResponseDuringStartup</moreinfo>
@@ -131,7 +131,7 @@
 		<type>Info</type>
 		<message>Your Application set a value when OpenZWave was still
 			starting up. There might be a delay between setting the value and the
-			device actually recieving the command. Please read the MoreInfo Link
+			device actually receiving the command. Please read the MoreInfo Link
 			for further details
 		</message>
 		<moreinfo>SlowResponseDuringStartup</moreinfo>
@@ -142,7 +142,7 @@
 		<type>Info</type>
 		<message>Your Application set a value when OpenZWave was still
 			starting up. There might be a delay between setting the value and the
-			device actually recieving the command. Please read the MoreInfo Link
+			device actually receiving the command. Please read the MoreInfo Link
 			for further details
 		</message>
 		<moreinfo>SlowResponseDuringStartup</moreinfo>
@@ -153,7 +153,7 @@
 		<type>Info</type>
 		<message>Your Application set a value when OpenZWave was still
 			starting up. There might be a delay between setting the value and the
-			device actually recieving the command. Please read the MoreInfo Link
+			device actually receiving the command. Please read the MoreInfo Link
 			for further details
 		</message>
 		<moreinfo>SlowResponseDuringStartup</moreinfo>
@@ -164,7 +164,7 @@
 		<type>Info</type>
 		<message>Your Application set a value when OpenZWave was still
 			starting up. There might be a delay between setting the value and the
-			device actually recieving the command. Please read the MoreInfo Link
+			device actually receiving the command. Please read the MoreInfo Link
 			for further details
 		</message>
 		<moreinfo>SlowResponseDuringStartup</moreinfo>
@@ -175,7 +175,7 @@
 		<type>Info</type>
 		<message>Your Application set a value when OpenZWave was still
 			starting up. There might be a delay between setting the value and the
-			device actually recieving the command. Please read the MoreInfo Link
+			device actually receiving the command. Please read the MoreInfo Link
 			for further details
 		</message>
 		<moreinfo>SlowResponseDuringStartup</moreinfo>
@@ -186,7 +186,7 @@
 		<type>Info</type>
 		<message>Your Application set a value when OpenZWave was still
 			starting up. There might be a delay between setting the value and the
-			device actually recieving the command. Please read the MoreInfo Link
+			device actually receiving the command. Please read the MoreInfo Link
 			for further details
 		</message>
 		<moreinfo>SlowResponseDuringStartup</moreinfo>
@@ -197,13 +197,23 @@
 		<type>Info</type>
 		<message>Your Application set a value when OpenZWave was still
 			starting up. There might be a delay between setting the value and the
-			device actually recieving the command. Please read the MoreInfo Link
+			device actually receiving the command. Please read the MoreInfo Link
 			for further details
 		</message>
 		<moreinfo>SlowResponseDuringStartup</moreinfo>
 		<module>StartupTracking</module>
 	</scan>
-
+	<scan id="20019">
+		<regex>.*Value::Set - (.*) - (.*) - .* - .* - .*</regex>
+		<type>Info</type>
+		<message>Your Application set a value on ${1} (${2}) when OpenZWave was still
+			starting up. There might be a delay between setting the value and the
+			device actually receiving the command. Please read the MoreInfo Link
+			for further details
+		</message>
+		<moreinfo>SlowResponseDuringStartup</moreinfo>
+		<module>StartupTracking</module>
+	</scan>
 
 
 </statescanner>

@@ -6,7 +6,7 @@ Configuration Errors usually relate to corrupt or missing files that are needed 
 
 #### MessageID 11, 12
 
-This message indicates that a attempt to open a Configuration or State File failed at the specified location. OpenZWave will typically retry a few different paths (System Path, Local Path and application defined paths) before giving up. If you recieve MessageID 12, it indicates that OpenZWave could not find the file, and has given up, and thus you should ensure that the files specified in the message are located in one of the paths attempted.
+This message indicates that a attempt to open a Configuration or State File failed at the specified location. OpenZWave will typically retry a few different paths (System Path, Local Path and application defined paths) before giving up. If you receive MessageID 12, it indicates that OpenZWave could not find the file, and has given up, and thus you should ensure that the files specified in the message are located in one of the paths attempted.
 
 #### MessageID 36, 38, 39, 40, 73
 
@@ -20,7 +20,7 @@ This error indicates that the file is for a different Z-Wave Network (each netwo
 
 This error indicates that the Network Key specified in the Options.xml file does not contain exactly 16 Bytes, or was malformed. The Network Key is used for encryption and should be specified by the user before adding any devices to your network that support the Security CommandClass. You should refer to [Adding Security Devices to OZW](http://code.google.com/p/open-zwave/wiki/Adding_Security_Devices_to_OZW) for more information about correctly setting up and including Security Enabled Devices. 
 
-#### MessageID 80
+#### MessageID 80, 83
 
 This indicates that one of the Configuration Files or State Files was corrupted and could not be parsed. You remove the file, and in the case of Configuration files, replace it with a known good copy of the file (eg, from our [Source Repository](http://code.google.com/p/open-zwave/source/browse/#svn%2Ftrunk%2Fconfig))
 
