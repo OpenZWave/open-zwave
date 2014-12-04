@@ -1,4 +1,10 @@
 # Release Notes
+## Version 1.4
+ * Fix SQL Reconnection issues
+
+## Version 1.3
+ * Finalize KB documentation and tidy ups
+
 ## Version 1.2
  * Enable StateScanner and start adding modules
 

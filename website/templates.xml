@@ -124,7 +124,7 @@
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
   })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-  ga('create', 'UA-55872429-1', 'auto');
+  ga('create', 'UA-55872429-2', 'auto');
   ga('require', 'displayfeatures');
   ga('send', 'pageview');
 	/* ]]> */
@@ -383,7 +383,7 @@
 			src="http://www.openhub.net/p/383580/widgets/project_factoids_stats.js"></script>
 	</message>
 	<message id="introduction-intro">
-		<img src="http://www.openzwave.com/logo.png" width="150" height="75"></img>
+		<img src="http://www.openzwave.com/css/ozwlogo.png" width="150" height="75"></img>
 	</message>
 	<message id="introduction-contact">
 		<h2>Contact</h2>
