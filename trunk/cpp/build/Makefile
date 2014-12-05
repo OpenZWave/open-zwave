@@ -30,7 +30,13 @@ CFLAGS	+= -c -DDARWIN -arch i386 -arch x86_64
 LDFLAGS += -arch i386 -arch x86_64
 LIBS	+= -framework IOKit -framework CoreFoundation -arch i386 -arch x86_64
 else ifeq ($(UNAME),FreeBSD)
+
+# FreeBSD 10 has native iconv.h; for older, we look in /usr/local, and libiconv must be installed from ports.
+ifeq (,$(wildcard /usr/include/iconv.h))
 CFLAGS += -I/usr/local/include
+endif
+LDFLAGS+= -lusb
+
 else
 LDFLAGS += -Wl,-soname,libopenzwave.so.$(VERSION)
 LIBS 	+= -ludev
@@ -144,6 +150,10 @@ $(top_builddir)/Doxyfile: $(top_srcdir)/docs/Doxyfile.in
 		-e 's|[@]TOPSRC_DIR@|$(top_srcdir)|g' \
 		< "$<" > "$@"
 
+# If we dont have DOT, we will fail building doxygen
+ifeq ($(DOT),)
+undefine DOXYGEN
+endif
 
 ifeq ($(DOXYGEN),)
 doc:
