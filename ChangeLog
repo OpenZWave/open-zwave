@@ -13,6 +13,8 @@ Version 1.3
  - Added new manufacturers and new devices (Alex)
  - Add Wenzhou TSP01 Config file thanks to Jan (Alex)
  - Standardize some of the Logging Messages so its easier to parse (Justin)
+ - Implemented Issue 325 - Add a GetChangeVerfied method to the Manager and Value classes to
+   determine if a Value is checked upon refresh from a device (Justin)
 
 Version 1.2 
  - Released on 15/10/14
