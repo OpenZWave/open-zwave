@@ -487,6 +487,7 @@
 		<Product type="0101" id="8371" name="ZXT-310EU"/>
 		<Product type="0101" id="8377" name="ZXT-120" config="remotec/zxt-120.xml"/>
 		<Product type="8201" id="8120" name="ZFM-X10EU Dual Mode Insert Module "/>
+		<Product type="8000" id="0002" name="ZFM-80" config="remotec/zfm-80.xml" />
 	</Manufacturer>
 	<Manufacturer id="0010" name="RCS">
 	  <Product type="0001" id="0002" name="TZ43 Thermostat" />
