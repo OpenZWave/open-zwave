@@ -2171,6 +2171,7 @@ bool Manager::GetValueListItems
 				driver->LockNodes();
 				if( ValueList* value = static_cast<ValueList*>( driver->GetValue( _id ) ) )
 				{
+					o_value->clear();
 					res = value->GetItemLabels( o_value );
 					value->Release();
 				}
