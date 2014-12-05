@@ -51,6 +51,7 @@ Options* Options::Create
 	string const& _commandLine
 )
 {
+
 	if( s_instance == NULL )
 	{
 		string configPath = _configPath;
@@ -87,7 +88,8 @@ Options* Options::Create
 #endif
 			} else {
 				Log::Write( LogLevel_Error, "Cannot find a path to the configuration files at %s. Exiting...", configPath.c_str() );
-				exit( 1 );
+				OZW_FATAL_ERROR(OZWException::OZWEXCEPTION_CONFIG, "Cannot Find Configuration Files");
+				return NULL;
 			}
 		}
 		FileOps::Destroy();
