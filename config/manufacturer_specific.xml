@@ -197,7 +197,7 @@
 		<Product type="4457" id="3034" name="LRM-AS Wall Dimmer 500W" config="evolve/lrm-as.xml"/>
                 <Product type="5246" id="3133" name="LFM-20 Fixture Module"/>
                 <Product type="5257" id="3533" name="LSM-15 Wall Switch" config="evolve/lsm-15.xml"/>
-		<Product type="5457" id="3033" name="LTM-5 Wall Switch Transmitter"/>
+		<Product type="5457" id="3033" name="LTM-5 Wall Switch Transmitter" config="evolve/ltm-5.xml" />
 	</Manufacturer>
 	<Manufacturer id="0036" name="Exceptional Innv">
 	</Manufacturer>
