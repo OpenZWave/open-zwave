@@ -37,6 +37,15 @@ ifeq ($(UNAME),Darwin)
 CFLAGS += -DDARWIN
 endif
 
+# Dup from main makefile, but that is not included when building here..
+ifeq ($(UNAME),FreeBSD)
+ifeq (,$(wildcard /usr/include/iconv.h))
+CFLAGS += -I/usr/local/include
+LDFLAGS+= -L/usr/local/lib -liconv
+endif
+LDFLAGS+= -lusb
+endif
+
 $(OBJDIR)/MinOZW:	$(patsubst %.cpp,$(OBJDIR)/%.o,$(minozwsrc))
 	@echo "Linking $(OBJDIR)/MinOZW"
 	$(LD) $(LDFLAGS) -o $@ $< $(LIBS) -pthread
