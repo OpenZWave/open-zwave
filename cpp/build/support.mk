@@ -15,6 +15,8 @@ SVNVERSION := $(shell which svnversion)
 UNAME  := $(shell uname -s)
 #the location of Doxygen to generate our api documentation
 DOXYGEN := $(shell which doxygen)
+#dot is required for doxygen (part of Graphviz)
+DOT := $(shell which dot)
 #the machine type we are building on (i686 or x86_64)
 MACHINE := $(shell uname -m)
 #the location of xmllink for checking our config files
@@ -38,9 +40,16 @@ endif
 VERSION := $(VERSION_MAJ).$(VERSION_MIN)
 
 # support Cross Compiling options
+ifeq ($(UNAME),FreeBSD)
+# Actually hide behind c++ which works for both clang based 10.0 and earlier(?)
+CC     := $(CROSS_COMPILE)cc
+CXX    := $(CROSS_COMPILE)c++
+LD     := $(CROSS_COMPILE)c++
+else
 CC     := $(CROSS_COMPILE)gcc
 CXX    := $(CROSS_COMPILE)g++
 LD     := $(CROSS_COMPILE)g++
+endif
 ifeq ($(UNAME),Darwin)
 AR     := libtool -static -o 
 RANLIB := ranlib
