@@ -18,6 +18,7 @@ Version 1.3
  - Fixed issue 350 - FreeBSD Makefile updates and a few patches (Justin)
  - Fixed issue 395 - Clear the ListItems Vector before populating with new
    values (Justin)
+ - Fixed issue 402 - Clean vers.cpp when we issue a make clean (Justin)
 
 Version 1.2 
  - Released on 15/10/14
