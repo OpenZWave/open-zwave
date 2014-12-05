@@ -83,7 +83,7 @@ aes := $(notdir $(wildcard $(top_srcdir)/cpp/src/aes/*.c))
 default: $(LIBDIR)/libopenzwave.a $(LIBDIR)/libopenzwave.so.$(VERSION)
 
 clean:
-	@rm -rf $(DEPDIR) $(OBJDIR) $(LIBDIR)/libopenzwave.so* $(LIBDIR)/libopenzwave.a $(top_builddir)/libopenzwave.pc $(top_builddir)/docs/api $(top_builddir)/Doxyfile
+	@rm -rf $(DEPDIR) $(OBJDIR) $(LIBDIR)/libopenzwave.so* $(LIBDIR)/libopenzwave.a $(top_builddir)/libopenzwave.pc $(top_builddir)/docs/api $(top_builddir)/Doxyfile $(top_srcdir)/cpp/src/vers.cpp
 
 
 -include $(patsubst %.cpp,$(DEPDIR)/%.d,$(tinyxml))
