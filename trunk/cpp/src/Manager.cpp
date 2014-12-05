@@ -2640,6 +2640,30 @@ void Manager::SetChangeVerified
 }
 
 //-----------------------------------------------------------------------------
+// <Manager::GetChangeVerified>
+// Get the verify changes flag for the specified value
+//-----------------------------------------------------------------------------
+bool Manager::GetChangeVerified
+(
+	ValueID const& _id
+)
+{
+	bool res = false;
+	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
+	{
+		driver->LockNodes();
+		if( Value* value = driver->GetValue( _id ) )
+		{
+			res = value->GetChangeVerified();
+			value->Release();
+		}
+		driver->ReleaseNodes();
+	}
+	return res;
+}
+
+
+//-----------------------------------------------------------------------------
 // <Manager::PressButton>
 // Starts an activity in a device.
 //-----------------------------------------------------------------------------
