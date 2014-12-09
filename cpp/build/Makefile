@@ -142,18 +142,20 @@ $(top_builddir)/libopenzwave.pc: $(top_srcdir)/cpp/build/libopenzwave.pc.in $(PK
 		-e 's|[@]VERSION@|$(VERSION)|g' \
 		< "$<" > "$@"
 endif
+ifeq ($(DOT),)
+HAVE_DOT = -e 's|[@]HAVE_DOT@|NO|g' 
+else
+HAVE_DOT = -e 's|[@]HAVE_DOT@|YES|g' 
+endif
 
-$(top_builddir)/Doxyfile: $(top_srcdir)/docs/Doxyfile.in
+$(top_builddir)/Doxyfile: $(top_srcdir)/docs/Doxyfile.in $(top_srcdir)/cpp/src/vers.cpp
 	@mkdir -p $(top_builddir)/docs/api/
 	@$(SED) \
 		-e 's|[@]OUTPUT_DIR@|$(top_builddir)/docs/api/|g' \
 		-e 's|[@]TOPSRC_DIR@|$(top_srcdir)|g' \
+		$(HAVE_DOT) \
+		-e 's|[@]VERSION@|$(VERSION).$(VERSION_REV)|g' \
 		< "$<" > "$@"
-
-# If we dont have DOT, we will fail building doxygen
-ifeq ($(DOT),)
-undefine DOXYGEN
-endif
 
 ifeq ($(DOXYGEN),)
 doc:
