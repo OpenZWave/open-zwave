@@ -508,14 +508,14 @@ void Security::SendMsg
 	if( _msg->GetLength() < 7 )
 	{
 		// Message too short
-		assert(0);
+		Log::Write(LogLevel_Error, GetNodeId(), "Message to to Short for Encryption");
 		return;
 	}
 
 	if( buffer[3] != FUNC_ID_ZW_SEND_DATA )
 	{
 		// Invalid message type
-		assert(0);
+		Log::Write(LogLevel_Error, GetNodeId(), "Message is not a ZW_SEND_DATA Message");
 		return;
 	}
 
