@@ -52,7 +52,8 @@ namespace OpenZWave
 				OZWEXCEPTION_CONFIG,
 				OZWEXCEPTION_INVALID_HOMEID = 100,
 				OZWEXCEPTION_INVALID_VALUEID,
-				OZWEXCEPTION_CANNOT_CONVERT_VALUEID
+				OZWEXCEPTION_CANNOT_CONVERT_VALUEID,
+				OZWEXCEPTION_SECURITY_FAILED
 			};
 
 			//-----------------------------------------------------------------------------
@@ -100,6 +101,9 @@ namespace OpenZWave
 						break;
 					case OZWEXCEPTION_CANNOT_CONVERT_VALUEID:
 						ss << " - CannotConvertValueIDError (" << exitCode << ") Msg: " << msg;
+						break;
+					case OZWEXCEPTION_SECURITY_FAILED:
+						ss << " - Security Initilization Failed (" << exitCode << ") Msg: " << msg;
 						break;
 				}
 				return ss.str();
