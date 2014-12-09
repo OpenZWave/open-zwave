@@ -80,6 +80,7 @@ map<uint8,Node::GenericDeviceClass*> Node::s_genericDeviceClasses;
 
 static char const* c_queryStageNames[] =
 {
+	"None",
 	"ProtocolInfo",
 	"Probe",
 	"WakeUp",
@@ -96,8 +97,7 @@ static char const* c_queryStageNames[] =
 	"Session",
 	"Dynamic",
 	"Configuration",
-	"Complete",
-	"None"
+	"Complete"
 };
 
 //-----------------------------------------------------------------------------
