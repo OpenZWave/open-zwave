@@ -142,7 +142,7 @@ bool Options::Destroy
 	if( Manager::Get() )
 	{
 		// Cannot delete Options because Manager object still exists
-		assert(0);
+		OZW_ERROR(OZWException::OZWEXCEPTION_OPTIONS, "Cannot Delete Options Class as Manager Class is still around");
 		return false;
 	}
 
