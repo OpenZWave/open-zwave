@@ -604,6 +604,10 @@
 		<Product type="2002" id="0201" name="ZP3102 PIR Motion Sensor"/>
 		<Product type="2002" id="0202" name="ZP3102 PIR Motion Sensor"/>
 		<Product type="2002" id="0204" name="ZP3102 PIR Motion Sensor"/>
+		<Product type="2002" id="0201" name="ZP3102 US PIR Motion Sensor" config="vision/zp3102.xml"/>
+		<Product type="2002" id="0202" name="ZP3102 AU PIR Motion Sensor" config="vision/zp3102.xml"/>
+		<Product type="2002" id="0204" name="ZP3102 JP PIR Motion Sensor" config="vision/zp3102.xml"/>
+		<Product type="2002" id="0205" name="ZP3102 EU PIR Motion Sensor" config="vision/zp3102.xml"/>		
 		<Product type="2003" id="0302" name="ZS5101 Shock and Vibration Sensor"/>
 		<Product type="2004" id="0403" name="ZS6101 Smoke Detector"/>
 		<Product type="2005" id="0503" name="ZM1601 Battery Operated Siren" config="vision/zm1601eu.xml"/>
