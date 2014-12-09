@@ -154,7 +154,8 @@
 			endpoint .*
 		</regex>
 		<type>Error</type>
-		<message>A Internal Error in the Library occurred. Please report to the
+		<message>A Internal Error in the Library occurred. Please report to
+			the
 			Developers
 		</message>
 		<moreinfo>DeviceConfigError</moreinfo>
@@ -164,7 +165,8 @@
 			Class .*, which we can't find
 		</regex>
 		<type>Error</type>
-		<message>A Internal Error in the Library occurred. Please report to the
+		<message>A Internal Error in the Library occurred. Please report to
+			the
 			Developers
 		</message>
 		<moreinfo>DeviceConfigError</moreinfo>
@@ -817,7 +819,8 @@
 		<regex>.*RequestValue _valueEnum was greater than range. Dropping
 		</regex>
 		<type>Warning</type>
-		<message>A attempt to retrieve a value from the EnergyProduction CC was
+		<message>A attempt to retrieve a value from the EnergyProduction CC
+			was
 			out of range. This is usually a Application related error
 		</message>
 		<moreinfo>AppError</moreinfo>
@@ -907,12 +910,14 @@
 		<regex>.*Failed to Decrypt Packet</regex>
 		<type>Error</type>
 		<message>A attempt to decrypt a encrypted packet from a device failed.
-			Please ensure your Network Key is valid.</message>
+			Please ensure your Network Key is valid.
+		</message>
 		<moreinfo>SecurityRelated</moreinfo>
 	</scan>
 	<scan id="103">
 		<regex>.*Already Received a SecurityCmd_SchemeReport from the node.
-			Ignoring</regex>
+			Ignoring
+		</regex>
 		<type>Info</type>
 		<message>The Device resent a SchemeReport message to us. If you
 			receive lots of these messages, please report it to a developer
@@ -921,18 +926,21 @@
 	</scan>
 	<scan id="104">
 		<regex>.*No common security scheme. The device will continue as an
-			unsecured node.</regex>
+			unsecured node.
+		</regex>
 		<type>Error</type>
 		<message>OpenZWave and the Device could not find a Common Security
 			Scheme to use for encryption. This could indicate a new protocol
-			change. Please report it to a Developer</message>
+			change. Please report it to a Developer
+		</message>
 		<moreinfo>SecurityRelated</moreinfo>
 	</scan>
 	<scan id="105">
 		<regex>.*Failed to Encrypt Packet</regex>
 		<type>Error</type>
 		<message>A attempt to decrypt a encrypted packet from a device failed.
-			Please ensure your Network Key is valid.</message>
+			Please ensure your Network Key is valid.
+		</message>
 		<moreinfo>SecurityRelated</moreinfo>
 	</scan>
 	<scan id="106">
@@ -973,7 +981,8 @@
 		<moreinfo>DeviceBugs</moreinfo>
 	</scan>
 	<scan id="111">
-		<regex>.*Scale Value for .* was greater than range. Setting to empty</regex>
+		<regex>.*Scale Value for .* was greater than range. Setting to empty
+		</regex>
 		<type>Warning</type>
 		<message>A value returned from the one of the CommandClasses was out
 			of range (${1}). Please report this to a developer
@@ -983,7 +992,9 @@
 	<scan id="112">
 		<regex>.*UserCodeCmd_Get with Index 0 not Supported</regex>
 		<type>Warning</type>
-		<message>An attempt to retrieve the UserCode at Index 0 was requested, which is a invalid location. This is usually a Application error. Please report to your application developers
+		<message>An attempt to retrieve the UserCode at Index 0 was requested,
+			which is a invalid location. This is usually a Application error.
+			Please report to your application developers
 		</message>
 		<moreinfo>AppError</moreinfo>
 	</scan>
@@ -995,10 +1006,54 @@
 		<moreinfo>InternalError</moreinfo>
 	</scan>
 	<scan id="114">
-		<regex>.*Unusual response: WakeUpCmd_IntervalReport with len = .*.  Ignored.</regex>
+		<regex>.*Unusual response: WakeUpCmd_IntervalReport with len = .*.
+			Ignored.</regex>
 		<type>Warning</type>
-		<message>The Device sent a unusual wakeup IntervalReport message. Please report this to the developers
+		<message>The Device sent a unusual wakeup IntervalReport message.
+			Please report this to the developers
 		</message>
 		<moreinfo>DeviceBugs</moreinfo>
+	</scan>
+	<scan id="115">
+		<regex>.*Message to to Short for Encryption</regex>
+		<type>Error</type>
+		<message>A Internal Error Occured when trying to encrypt a message.
+			Please report this to the developers</message>
+		<moreinfo>InternalError</moreinfo>
+	</scan>
+	<scan id="116">
+		<regex>.*Message is not a ZW_SEND_DATA Message</regex>
+		<type>Error</type>
+		<message>A Internal Error Occured when trying to encrypt a message.
+			Please report this to the developers</message>
+		<moreinfo>InternalError</moreinfo>
+	</scan>
+	<scan id="117">
+		<regex>.*Invalid ValueID passed to (.*)</regex>
+		<message>A ValueID passed to the Manager Method ${1} was not valid.
+			Please report this to the Application Developers</message>
+		<moreinfo>AppError</moreinfo>
+	</scan>
+	<scan id="118">
+		<regex>.*ValueID passed to GetValueAsBool is not a Bool or Button
+			Value</regex>
+		<message>a ValueID passed to the Manager Method GetValueAsBool is not
+			a Bool or Button Value. Please report this to the Application
+			Developers</message>
+		<moreinfo>AppError</moreinfo>
+	</scan>
+	<scan id="119">
+		<regex>.*ValueID passed to (.*) is not a .* Value</regex>
+		<message>a ValueID passed tot he Manager Method ${1} was not valid.
+			Please report this to the Application Developers</message>
+		<moreinfo>AppError</moreinfo>
+	</scan>
+	<scan id="120">
+		<regex>.*Cannot Delete Options Class as Manager Class is still around
+		</regex>
+		<message>The Application attempted to delete the Options class with
+			the Manager Class still around. Please report this to the application
+			developers</message>
+		<moreinfo>AppError</moreinfo>
 	</scan>
 </simplescanner>
