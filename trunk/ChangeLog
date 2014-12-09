@@ -21,6 +21,7 @@ Version 1.3
  - Fixed issue 402 - Clean vers.cpp when we issue a make clean (Justin)
  - Fixed issue 405 - Add new ID's for Fibaro FGD211 and FGS221 (Justin)
  - Fixed issue 406 - Add Remotec ZFM-80 (Justin)
+ - Fixed issue 410 - Add Vision ZP3102 (Justin)
 
 Version 1.2 
  - Released on 15/10/14
