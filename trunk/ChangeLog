@@ -26,6 +26,7 @@ Version 1.3
  - Fixed Issue 343 - Add Exceptions instead of Exit for some fatal errors 
    Also, add Exceptions if any of the GetValue or SetValue calls in the
    Manager class are passed invalid ValueID's (Justin)
+ - Fixed duplicate Vision devices and added a missing id for ZP3102 (Alex)
 
 Version 1.2 
  - Released on 15/10/14
