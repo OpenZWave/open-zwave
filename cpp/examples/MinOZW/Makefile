@@ -27,14 +27,15 @@ VPATH := $(top_srcdir)/cpp/examples/MinOZW
 top_builddir ?= $(CURDIR)
 
 default: $(top_builddir)/MinOZW
-	
+
 include $(top_srcdir)/cpp/build/support.mk
 
 -include $(patsubst %.cpp,$(DEPDIR)/%.d,$(minozwsrc))
 
 #if we are on a Mac, add these flags and libs to the compile and link phases 
 ifeq ($(UNAME),Darwin)
-CFLAGS += -DDARWIN
+CFLAGS += -DDARWIN -arch i386 -arch x86_64
+LDFLAGS += -arch i386 -arch x86_64
 endif
 
 # Dup from main makefile, but that is not included when building here..
