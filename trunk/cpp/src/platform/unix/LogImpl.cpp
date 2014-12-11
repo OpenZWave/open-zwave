@@ -65,6 +65,7 @@ LogImpl::LogImpl
 		std::cerr << "Could Not Open OZW Log File." << std::endl;
 	}
 	setlinebuf(stdout);	// To prevent buffering and lock contention issues
+	setlinebuf(this->pFile);
 }
 
 //-----------------------------------------------------------------------------
