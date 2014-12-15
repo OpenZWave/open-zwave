@@ -630,6 +630,7 @@
 		<Product type="0001" id="0001" name="Smoke Detector"/>
 		<Product type="0001" id="0069" name="Key Fob"/>
 		<Product type="0002" id="0003" name="Z-Wave USB Stick"/>
+		<Product type="0400" id="0001" name="ZME_UZB1 USB Stick"/>
 		<Product type="0024" id="0001" name="Floor Thermostat"/>
 		<Product type="0100" id="0001" name="ZME_KFOB 4 Button Key Fob" config="zwave.me/kfob.xml"/>
 		<Product type="0100" id="0004" name="ZME_WCD2 Double Paddle Wall Controller" config="zwave.me/ZME_WCD2.xml"/>
