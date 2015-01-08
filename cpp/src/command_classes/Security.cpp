@@ -878,7 +878,7 @@ bool Security::DecryptMessage
 			{
 				Log::Write( LogLevel_Info, GetNodeId(), "Received a SecurityCmd_MessageEncap from node %d for Command Class %s", GetNodeId(), pCommandClass->GetCommandClassName().c_str() );
 				pCommandClass->ReceivedCntIncr();
-				pCommandClass->HandleMsg( &decryptpacket[2], encryptedpacketsize-2);
+				pCommandClass->HandleMsg( &decryptpacket[2], encryptedpacketsize-1);
 			} else {
 				Log::Write( LogLevel_Info, GetNodeId(), "ApplicationCommandHandler - Unhandled Command Class 0x%.2x", decryptpacket[1] );
 			}
