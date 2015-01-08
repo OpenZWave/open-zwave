@@ -38,6 +38,7 @@ Version 1.3
  - Added Aeon Labs Smart Energy Switch V2 that supports the Security CC but
    doesn't support the Basic CC - Related to issue 427 (Justin)
  - Fixed issue 420 - Dotnet Patch from scopollif. (Justin)
+ - Fixed issue 415 - add 2Gig CT101 Thermostat (Justin)
 
 
 Version 1.2 
