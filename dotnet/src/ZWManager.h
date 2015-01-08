@@ -59,22 +59,28 @@ namespace OpenZWaveDotNet
 	// Logging levels
 	public enum class ZWLogLevel
 	{
-		Always		= LogLevel_Always,
 		None		= LogLevel_None,
+		Always		= LogLevel_Always,
 		Fatal		= LogLevel_Fatal,
 		Error		= LogLevel_Error,
 		Warning		= LogLevel_Warning,
 		Alert		= LogLevel_Alert,
 		Info		= LogLevel_Info,
 		Detail		= LogLevel_Detail,
-		Debug		= LogLevel_Debug
+		Debug		= LogLevel_Debug,
+		StreamDetail= LogLevel_StreamDetail,
+		Internal	= LogLevel_Internal
 	};
 
 	// Delegate for handling controller command callbacks
 	public enum class ZWControllerState
 	{
 		Normal		= Driver::ControllerState_Normal,								/**< No command in progress. */
+		Starting	= Driver::ControllerState_Starting,								/**< The command is starting. */
+		Cancel		= Driver::ControllerState_Cancel,								/**< The command was cancelled. */
+		Error		= Driver::ControllerState_Error,								/**< Command invocation had error(s) and was aborted */
 		Waiting		= Driver::ControllerState_Waiting,								/**< Controller is waiting for a user action. */
+		Sleeping	= Driver::ControllerState_Sleeping,								/**< Controller command is on a sleep queue wait for device. */
 		InProgress	= Driver::ControllerState_InProgress,							/**< The controller is communicating with the other device to carry out the command. */
 		Completed	= Driver::ControllerState_Completed,							/**< The command has completed successfully. */
 		Failed		= Driver::ControllerState_Failed,								/**< The command has failed. */
@@ -85,6 +91,7 @@ namespace OpenZWaveDotNet
 	// Controller interface types
 	public enum class ZWControllerInterface
 	{
+		Unknown		= Driver::ControllerInterface_Unknown,
 		Serial		= Driver::ControllerInterface_Serial,
 		Hid			= Driver::ControllerInterface_Hid
 	};
@@ -103,7 +110,11 @@ namespace OpenZWaveDotNet
 		RequestNetworkUpdate		= Driver::ControllerCommand_RequestNetworkUpdate,		/**< Request network information from the SUC/SIS. */
 		RequestNodeNeighborUpdate	= Driver::ControllerCommand_RequestNodeNeighborUpdate,	/**< Get a node to rebuild its neighbour list.  This method also does ControllerCommand_RequestNodeNeighbors */
 		AssignReturnRoute			= Driver::ControllerCommand_AssignReturnRoute,			/**< Assign a network return route to a device. */
-		DeleteAllReturnRoutes		= Driver::ControllerCommand_DeleteAllReturnRoutes		/**< Delete all network return routes from a device. */
+		DeleteAllReturnRoutes		= Driver::ControllerCommand_DeleteAllReturnRoutes,		/**< Delete all network return routes from a device. */
+		SendNodeInformation			= Driver::ControllerCommand_SendNodeInformation,		/**< Send a node information frame */
+		ReplicationSend				= Driver::ControllerCommand_ReplicationSend,			/**< Send information from primary to secondary */
+		CreateButton				= Driver::ControllerCommand_CreateButton,				/**< Create an id that tracks handheld button presses */
+		DeleteButton				= Driver::ControllerCommand_DeleteButton				/**< Delete id that tracks handheld button presses */
 	};
 
 	public delegate void ManagedControllerStateChangedHandler( ZWControllerState _state);
