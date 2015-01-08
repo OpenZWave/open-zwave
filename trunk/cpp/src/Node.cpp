@@ -492,6 +492,8 @@ void Node::AdvanceQueries
 				if( !m_queryPending )
 				{
 					// when all (if any) static information has been retrieved, advance to the Associations stage
+					// Probe1 stage is for Nodes that are read in via the zw state file, as is skipped as we would
+					// have already queried it at the discovery phase in Probe.
 					m_queryStage = QueryStage_Associations;
 					m_queryRetries = 0;
 				}
@@ -711,7 +713,6 @@ void Node::SetQueryStage
 			m_queryConfiguration = true;
 		}
 	}
-
 	if( _advance )
 	{
 		AdvanceQueries();
@@ -803,7 +804,19 @@ void Node::ReadXML
 			}
 		}
 
-		SetQueryStage( queryStage, false );
+		/* we cant use the SetQueryStage method here, as it only allows us to
+		 * go to a lower QueryStage, and not a higher QueryStage. As QueryStage_Complete is higher than
+		 * QueryStage_None (the default) we manually set it here. Note - in Driver::HandleSerialAPIGetInitDataResponse the
+		 * QueryStage is set to Probe1 (which is less than QueryStage_Associations) if this is a existing node read in via the zw state file.
+		 *
+		 */
+		m_queryStage = queryStage;
+		m_queryPending = false;
+
+		if( QueryStage_Configuration == queryStage )
+		{
+			m_queryConfiguration = true;
+		}
 	}
 
 	if( m_queryStage != QueryStage_None )
