@@ -77,7 +77,8 @@ LogImpl::~LogImpl
 (
 )
 {
-	fclose( this->pFile );
+	if (this->pFile)
+		fclose( this->pFile );
 }
 
 //-----------------------------------------------------------------------------
