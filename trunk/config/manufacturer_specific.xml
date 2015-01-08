@@ -41,6 +41,7 @@
 		<Product type="0002" id="001d" name="Door/Window Sensor" config="aeon_labs/doorwindow.xml"/>
 		<Product type="0002" id="0005" name="Multi Sensor" config="aeon_labs/alms.xml"/>
 		<Product type="0003" id="0006" name="Smart Energy Switch" config="aeon_labs/ses.xml"/>
+		<Product type="0003" id="004b" name="Smart Energy Switch v2" config="aeon_labs/ses2.xml"/>
 		<Product type="0001" id="0007" name="Z-Stick S2 Lite"/>
 		<Product type="0003" id="0008" name="Smart Energy Illuminator"/>
 		<Product type="0002" id="0009" name="Home Energy Meter" config="aeon_labs/hem.xml"/>
