@@ -29,6 +29,16 @@ Version 1.3
  - Fixed duplicate Vision devices and added a missing id for ZP3102 (Alex)
  - Fixed Issue 417 - Add Z-Wave.Me ZME_UZB1 USB Stick thanks to Ugo (Alex)
  - Add new Aeon Repeater device (Alex)
+ - Fixed a crash in the LogFile Class when the destructor was called
+   (Justin)
+ - Fix Issue 426 - Upon restarts of OZW, we restarted the entire discovery
+   process again (Justin)
+ - Fix a off by 1 issue with the Security CC that was causing the
+   Assoication Set Failures on Secured Devices. (Justin)
+ - Added Aeon Labs Smart Energy Switch V2 that supports the Security CC but
+   doesn't support the Basic CC - Related to issue 427 (Justin)
+ - Fixed issue 420 - Dotnet Patch from scopollif. (Justin)
+
 
 Version 1.2 
  - Released on 15/10/14
