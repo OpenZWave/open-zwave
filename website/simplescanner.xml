@@ -1056,4 +1056,11 @@
 			developers</message>
 		<moreinfo>AppError</moreinfo>
 	</scan>
+	<scan id="121">
+		<regex>.*Recieved a Encrypted Message that is too Short.
+		Dropping it</regex>
+		<message>The Security CC recieved a message from a Device
+		that was too short. The message has been dropped.</message>
+		<moreinfo>SecurityRelated</moreinfo>
+	</scan>
 </simplescanner>
