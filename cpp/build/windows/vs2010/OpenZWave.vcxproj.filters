@@ -327,6 +327,9 @@
     <ClInclude Include="..\..\..\src\command_classes\Security.h">
       <Filter>Command Classes</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\command_classes\CentralScene.h">
+      <Filter>Command Classes</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\command_classes\TimeParameters.h">
       <Filter>Command Classes</Filter>
     </ClInclude>
@@ -636,6 +639,9 @@
       <Filter>Command Classes</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\command_classes\Security.cpp">
+      <Filter>Command Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\command_classes\CentralScene.cpp">
       <Filter>Command Classes</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\command_classes\TimeParameters.cpp">

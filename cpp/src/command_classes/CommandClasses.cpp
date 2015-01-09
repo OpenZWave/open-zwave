@@ -38,6 +38,7 @@ using namespace OpenZWave;
 #include "command_classes/Basic.h"
 #include "command_classes/BasicWindowCovering.h"
 #include "command_classes/Battery.h"
+#include "command_classes/CentralScene.h"
 #include "command_classes/ClimateControlSchedule.h"
 #include "command_classes/Clock.h"
 #include "command_classes/Configuration.h"
@@ -186,6 +187,7 @@ void CommandClasses::RegisterCommandClasses
 	cc.Register( Basic::StaticGetCommandClassId(), Basic::StaticGetCommandClassName(), Basic::Create );
 	cc.Register( BasicWindowCovering::StaticGetCommandClassId(), BasicWindowCovering::StaticGetCommandClassName(), BasicWindowCovering::Create );
 	cc.Register( Battery::StaticGetCommandClassId(), Battery::StaticGetCommandClassName(), Battery::Create );
+	cc.Register( CentralScene::StaticGetCommandClassId(), CentralScene::StaticGetCommandClassName(), CentralScene::Create );
 	cc.Register( ClimateControlSchedule::StaticGetCommandClassId(), ClimateControlSchedule::StaticGetCommandClassName(), ClimateControlSchedule::Create );
 	cc.Register( Clock::StaticGetCommandClassId(), Clock::StaticGetCommandClassName(), Clock::Create );
 	cc.Register( Configuration::StaticGetCommandClassId(), Configuration::StaticGetCommandClassName(), Configuration::Create );
