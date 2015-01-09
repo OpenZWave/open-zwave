@@ -44,6 +44,7 @@ Version 1.3
    Issue 367 (Justin)
  - Fixed issue 425 - Bail out of Decrypting Packets if they are too short
    (Justin)
+ - Fixed Fibaro FGD211 device config, removed automatic association for group 1&2 (Alex) 
 
 Version 1.2 
  - Released on 15/10/14
