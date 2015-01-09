@@ -631,21 +631,23 @@
 		<Product type="3001" id="0104" name="ZM1602 Main Operated Siren"/>
 	</Manufacturer>
 	<Manufacturer id="0115" name="Z-Wave.Me">
-		<Product type="0001" id="0001" name="Smoke Detector"/>
+		<Product type="0001" id="0001" name="Z-Wave USB Stick"/>
 		<Product type="0001" id="0069" name="Key Fob"/>
 		<Product type="0002" id="0003" name="Z-Wave USB Stick"/>
-		<Product type="0400" id="0001" name="ZME_UZB1 USB Stick"/>
 		<Product type="0024" id="0001" name="Floor Thermostat"/>
 		<Product type="0100" id="0001" name="ZME_KFOB 4 Button Key Fob" config="zwave.me/kfob.xml"/>
 		<Product type="0100" id="0004" name="ZME_WCD2 Double Paddle Wall Controller" config="zwave.me/ZME_WCD2.xml"/>
-		<Product type="1000" id="0001" name="ZME_054313Z Flush-Mountable Switch" config="zwave.me/ZME_05431.xml"/>
-		<Product type="1000" id="0002" name="ZME_06433 Wall Flush-Mountable Dimmer" config="zwave.me/ZME_06433.xml"/>
-		<Product type="1000" id="0003" name="ZME_06436 Motor Control" config="zwave.me/ZME_06436.xml" />
-		<Product type="1000" id="0004" name="ZME_064435 Wall Controller" config="zwave.me/ZME_064435.xml"/>
+		<Product type="0100" id="0200" name="Smoke Detector"/>
+		<Product type="0100" id="0201" name="Smoke Detector"/>
 		<Product type="0200" id="0001" name="iTemp Temperature Sensor" config="zwave.me/iTemp.xml"/>
 		<Product type="0201" id="0001" name="iTemp Temperature Sensor" config="zwave.me/iTemp.xml"/>
 		<Product type="0201" id="0002" name="Thermostat"/>
 		<Product type="0201" id="0003" name="Binary Sensor"/>
+		<Product type="0400" id="0001" name="ZME_UZB1 USB Stick"/>
+		<Product type="1000" id="0001" name="ZME_054313Z Flush-Mountable Switch" config="zwave.me/ZME_05431.xml"/>
+		<Product type="1000" id="0002" name="ZME_06433 Wall Flush-Mountable Dimmer" config="zwave.me/ZME_06433.xml"/>
+		<Product type="1000" id="0003" name="ZME_06436 Motor Control" config="zwave.me/ZME_06436.xml" />
+		<Product type="1000" id="0004" name="ZME_064435 Wall Controller" config="zwave.me/ZME_064435.xml"/>
 		<Product type="1100" id="0002" name="PLDE Plug-in Dimmer"/>
 	</Manufacturer>
 	<Manufacturer id="0147" name="Z-Wave.Me">
