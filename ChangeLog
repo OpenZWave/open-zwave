@@ -46,6 +46,7 @@ Version 1.3
    (Justin)
  - Fixed Fibaro FGD211 device config, removed automatic association for group 1&2 (Alex) 
  - Updated Z-Wave.Me device list thanks to Willem (Alex)
+ - Fixed Issue 431 - Update Fibaro fgrgbwm441 config thanks to Piotr (Alex)
 
 Version 1.2 
  - Released on 15/10/14
