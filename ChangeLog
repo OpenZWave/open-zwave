@@ -51,6 +51,7 @@ Version 1.3
  - Fixed Issue 439 - Update Fibaro FGMS001 config thanks to Jug (Alex)
  - Fixed Issue 434 - Update Fibaro fgbs001 config thanks to Piotr (Alex)
  - Fixed Issue 436 - Update Fibaro fgd211 config thanks to Piotr (Alex)
+ - Fixed Issue 437 - Update Qubino ZMNHDA2 config thanks to Piotr (Alex)
 
 Version 1.2 
  - Released on 15/10/14
