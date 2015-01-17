@@ -7,7 +7,8 @@ A list of working controllers used with OpenZwave:
 || Aeon ZStick || USB || 40000 ||
 || Seluxit !ViaSens 100 || USB || ? ||
 || Z-Wave.Me Z-Stick || USB || ? ||
-
+|| Z-Wave.Me RaZberry || USB || ? ||
+|| Vision USB Stick || USB || ? ||
 
 A list of *non-working* controllers tried with OpenZwave:
 || *Manufacture* || *Connection Type* || *Speed reported* || *Comment* || 
