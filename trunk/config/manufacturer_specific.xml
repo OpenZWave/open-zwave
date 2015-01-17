@@ -119,6 +119,9 @@
 	</Manufacturer>
 	<Manufacturer id="002f" name="Color Kinetics">
 	</Manufacturer>
+	<Manufacturer id="0179" name="ConnectHome">
+		<Product type="0001" id="0001" name="CH-201 Thermostat"/>
+	</Manufacturer>
 	<Manufacturer id="0019" name="ControlThink">
 	</Manufacturer>
 	<Manufacturer id="0015" name="ConvergeX">
