@@ -63,7 +63,6 @@ m_dumpTrigger( _dumpTrigger )				// dump queued messages when this level is seen
 		}
 		if( this->pFile == NULL )
 		{
-			std::cout << m_filename << std::endl;
 			std::cerr << "Could Not Open OZW Log File." << std::endl;
 		} else {
 			setlinebuf(this->pFile);
