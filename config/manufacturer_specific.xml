@@ -535,6 +535,9 @@
 	<Manufacturer id="0151" name="Sercomm">
 		<Product type="0002" id="0001" name="SW-CLP01-EU Clamp Power Meter"/>
 	</Manufacturer>
+	<Manufacturer id="0000" name="Sigma Designs">
+		<Product type="0001" id="0001" name="UZB Z-Wave USB Adapter"/>
+	</Manufacturer>
 	<Manufacturer id="0045" name="Sine Wireless">
 	</Manufacturer>
 	<Manufacturer id="0070" name="Smart Products">
