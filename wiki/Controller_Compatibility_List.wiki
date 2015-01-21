@@ -9,6 +9,7 @@ A list of working controllers used with OpenZwave:
 || Z-Wave.Me Z-Stick || USB || ? ||
 || Z-Wave.Me RaZberry || USB || ? ||
 || Vision USB Stick || USB || ? ||
+|| Sigma Designs UZB Stick || USB || 100000 ||
 
 A list of *non-working* controllers tried with OpenZwave:
 || *Manufacture* || *Connection Type* || *Speed reported* || *Comment* || 
