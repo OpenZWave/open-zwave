@@ -2385,26 +2385,29 @@ void Driver::HandleGetSUCNodeIdResponse
 {
 	Log::Write( LogLevel_Info, GetNodeNumber( m_currentMsg ), "Received reply to GET_SUC_NODE_ID.  Node ID = %d", _data[2] );
 	m_SUCNodeId = _data[2];
-
 	if( _data[2] == 0)
 	{
 		bool enableSIS = true;
 		Options::Get()->GetOptionAsBool("EnableSIS", &enableSIS);
 		if (enableSIS) {
-			Log::Write( LogLevel_Info, "  No SUC, so we become SIS" );
+			if (IsAPICallSupported(FUNC_ID_ZW_ENABLE_SUC) && IsAPICallSupported(FUNC_ID_ZW_SET_SUC_NODE_ID)) {
+				Log::Write( LogLevel_Info, "  No SUC, so we become SIS" );
 
-			Msg* msg;
-			msg = new Msg( "Enable SUC", m_nodeId, REQUEST, FUNC_ID_ZW_ENABLE_SUC, false );
-			msg->Append( 1 );
-			msg->Append( SUC_FUNC_NODEID_SERVER );		// SIS; SUC would be ZW_SUC_FUNC_BASIC_SUC
-			SendMsg( msg, MsgQueue_Send );
+				Msg* msg;
+				msg = new Msg( "Enable SUC", m_nodeId, REQUEST, FUNC_ID_ZW_ENABLE_SUC, false );
+				msg->Append( 1 );
+				msg->Append( SUC_FUNC_NODEID_SERVER );		// SIS; SUC would be ZW_SUC_FUNC_BASIC_SUC
+				SendMsg( msg, MsgQueue_Send );
 
-			msg = new Msg( "Set SUC node ID", m_nodeId, REQUEST, FUNC_ID_ZW_SET_SUC_NODE_ID, false );
-			msg->Append( m_nodeId );
-			msg->Append( 1 );								// TRUE, we want to be SUC/SIS
-			msg->Append( 0 );								// no low power
-			msg->Append( SUC_FUNC_NODEID_SERVER );
-			SendMsg( msg, MsgQueue_Send );
+				msg = new Msg( "Set SUC node ID", m_nodeId, REQUEST, FUNC_ID_ZW_SET_SUC_NODE_ID, false );
+				msg->Append( m_nodeId );
+				msg->Append( 1 );								// TRUE, we want to be SUC/SIS
+				msg->Append( 0 );								// no low power
+				msg->Append( SUC_FUNC_NODEID_SERVER );
+				SendMsg( msg, MsgQueue_Send );
+			} else {
+				Log::Write (LogLevel_Info, "Controller Does not Support SUC - Cannot Setup Controller as SUC Node");
+			}
 		} else {
 			Log::Write( LogLevel_Info, "  No SUC, not becoming SUC as option is disabled" );
 		}
