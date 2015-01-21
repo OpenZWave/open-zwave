@@ -42,6 +42,7 @@ using namespace OpenZWave;
 
 char const *OpenZWave::LogLevelString[] =
 {
+		"Invalid",	/**< Invalid Log Level Status - Used to Indicate error from Importing bad Options.xml */
 		"None", 	/**< LogLevel_None Disable all logging */
 		"Always",   /**< LogLevel_Always These messages should always be shown */
 		"Fatal",	/**< LogLevel_Fatal A likely fatal issue in the library */
@@ -78,6 +79,10 @@ Log* Log::Create
 {
 	if( NULL == s_instance )
 	{
+		s_instance = new Log( _filename, _bAppend, _bConsoleOutput, _saveLevel, _queueLevel, _dumpTrigger );
+		s_dologging = true; // default logging to true so no change to what people experience now
+	} else {
+		Log::Destroy();
 		s_instance = new Log( _filename, _bAppend, _bConsoleOutput, _saveLevel, _queueLevel, _dumpTrigger );
 		s_dologging = true; // default logging to true so no change to what people experience now
 	}
@@ -149,7 +154,7 @@ void Log::SetLoggingState
 {
 	bool prevLogging = s_dologging;
 	s_dologging = _dologging;
-	
+
 	if (!prevLogging && s_dologging) Log::Write(LogLevel_Always, "Logging started\n\n");
 }
 
@@ -158,10 +163,10 @@ void Log::SetLoggingState
 //	Set flag to actually write to log or skip it
 //-----------------------------------------------------------------------------
 void Log::SetLoggingState
-( 
-	LogLevel _saveLevel, 
-	LogLevel _queueLevel, 
-	LogLevel _dumpTrigger 
+(
+	LogLevel _saveLevel,
+	LogLevel _queueLevel,
+	LogLevel _dumpTrigger
 )
 {
 	// parameter checking:
@@ -190,7 +195,7 @@ void Log::SetLoggingState
 		s_instance->m_pImpl->SetLoggingState( _saveLevel, _queueLevel, _dumpTrigger );
 		s_instance->m_logMutex->Unlock();
 	}
-	
+
 	if (!prevLogging && s_dologging) Log::Write(LogLevel_Always, "Logging started\n\n");
 }
 
@@ -316,7 +321,7 @@ Log::Log
 ):
 	m_logMutex( new Mutex() )
 {
-        if (NULL == m_pImpl) 
+        if (NULL == m_pImpl)
         	m_pImpl = new LogImpl( _filename, _bAppend, _bConsoleOutput, _saveLevel, _queueLevel, _dumpTrigger );
 }
 
