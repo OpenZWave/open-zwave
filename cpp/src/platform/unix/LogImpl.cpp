@@ -40,31 +40,34 @@ using namespace OpenZWave;
 //-----------------------------------------------------------------------------
 LogImpl::LogImpl
 (
-	string const& _filename,
-	bool const _bAppendLog,
-	bool const _bConsoleOutput,
-	LogLevel const _saveLevel,
-	LogLevel const _queueLevel,
-	LogLevel const _dumpTrigger
+		string const& _filename,
+		bool const _bAppendLog,
+		bool const _bConsoleOutput,
+		LogLevel const _saveLevel,
+		LogLevel const _queueLevel,
+		LogLevel const _dumpTrigger
 ):
-	m_filename( _filename ),					// name of log file
-	m_bConsoleOutput( _bConsoleOutput ),		// true to provide a copy of output to console
-	m_bAppendLog( _bAppendLog ),				// true to append (and not overwrite) any existing log
-	m_saveLevel( _saveLevel ),					// level of messages to log to file
-	m_queueLevel( _queueLevel ),				// level of messages to log to queue
-	m_dumpTrigger( _dumpTrigger )				// dump queued messages when this level is seen
+m_filename( _filename ),					// name of log file
+m_bConsoleOutput( _bConsoleOutput ),		// true to provide a copy of output to console
+m_bAppendLog( _bAppendLog ),				// true to append (and not overwrite) any existing log
+m_saveLevel( _saveLevel ),					// level of messages to log to file
+m_queueLevel( _queueLevel ),				// level of messages to log to queue
+m_dumpTrigger( _dumpTrigger )				// dump queued messages when this level is seen
 {
-	if ( !m_bAppendLog )
-	{
-		this->pFile = fopen( m_filename.c_str(), "w" );
-	} else {
-		this->pFile = fopen( m_filename.c_str(), "a" );
-	}
-	if( this->pFile == NULL )
-	{
-		std::cerr << "Could Not Open OZW Log File." << std::endl;
-	} else {
-		setlinebuf(this->pFile);
+	if (!m_filename.empty()) {
+		if ( !m_bAppendLog )
+		{
+			this->pFile = fopen( m_filename.c_str(), "w" );
+		} else {
+			this->pFile = fopen( m_filename.c_str(), "a" );
+		}
+		if( this->pFile == NULL )
+		{
+			std::cout << m_filename << std::endl;
+			std::cerr << "Could Not Open OZW Log File." << std::endl;
+		} else {
+			setlinebuf(this->pFile);
+		}
 	}
 	setlinebuf(stdout);	// To prevent buffering and lock contention issues
 }
@@ -87,10 +90,10 @@ LogImpl::~LogImpl
 //-----------------------------------------------------------------------------
 void LogImpl::Write
 (
-	LogLevel _logLevel,
-	uint8 const _nodeId,
-	char const* _format,
-	va_list _args
+		LogLevel _logLevel,
+		uint8 const _nodeId,
+		char const* _format,
+		va_list _args
 )
 {
 	// create a timestamp string
@@ -161,7 +164,7 @@ void LogImpl::Write
 //-----------------------------------------------------------------------------
 void LogImpl::Queue
 (
-	char const* _buffer
+		char const* _buffer
 )
 {
 	string bufStr = _buffer;
@@ -215,9 +218,9 @@ void LogImpl::QueueClear
 //-----------------------------------------------------------------------------
 void LogImpl::SetLoggingState
 (
-	LogLevel _saveLevel,
-	LogLevel _queueLevel,
-	LogLevel _dumpTrigger
+		LogLevel _saveLevel,
+		LogLevel _queueLevel,
+		LogLevel _dumpTrigger
 )
 {
 	m_saveLevel = _saveLevel;
@@ -242,8 +245,8 @@ string LogImpl::GetTimeStampString
 	// create a time stamp string for the log message
 	char buf[100];
 	snprintf( buf, sizeof(buf), "%04d-%02d-%02d %02d:%02d:%02d.%03d ",
-		tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday,
-		  tm->tm_hour, tm->tm_min, tm->tm_sec, (int)tv.tv_usec / 1000 );
+			tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday,
+			tm->tm_hour, tm->tm_min, tm->tm_sec, (int)tv.tv_usec / 1000 );
 	string str = buf;
 	return str;
 }
@@ -254,7 +257,7 @@ string LogImpl::GetTimeStampString
 //-----------------------------------------------------------------------------
 string LogImpl::GetNodeString
 (
-	uint8 const _nodeId
+		uint8 const _nodeId
 )
 {
 	if( _nodeId == 0 )
@@ -294,7 +297,7 @@ string LogImpl::GetThreadId
 //-----------------------------------------------------------------------------
 void LogImpl::SetLogFileName
 (
-	const string &_filename
+		const string &_filename
 )
 {
 	m_filename = _filename;
