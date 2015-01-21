@@ -56,6 +56,8 @@ Version 1.3
  - Added GE 12724 3-Way Dimmer Switch device thanks to Dax (Alex)
  - Added additional Fibaro FGBS001 device id thanks to Stef (Alex)
  - Added ConnectHome CH-201 device thanks to Tehnoinstyle (Alex)
+ - Detect if the Controller Supports SUC - If not, Dont try to become a SUC
+   when starting up (Justin)
 
 Version 1.2 
  - Released on 15/10/14
