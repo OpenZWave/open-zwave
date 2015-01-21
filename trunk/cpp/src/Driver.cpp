@@ -781,7 +781,7 @@ void Driver::WriteConfig
 	snprintf( str, sizeof(str), "%d", m_pollInterval );
 	driverElement->SetAttribute( "poll_interval", str );
 
-	snprintf( str, sizeof(str), "%d", (int) m_bIntervalBetweenPolls );
+	snprintf( str, sizeof(str), "%s", m_bIntervalBetweenPolls ? "true" : "false" );
 	driverElement->SetAttribute( "poll_interval_between", str );
 
 	LockNodes();
