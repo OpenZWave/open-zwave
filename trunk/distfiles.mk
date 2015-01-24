@@ -524,4 +524,5 @@ DISTFILES =     cpp/hidapi/pc/hidapi-libusb.pc.in \
     cpp/src/platform/windows/MutexImpl.h \
     cpp/src/command_classes/Protection.h \
     cpp/build/support.mk \
+    config/qubino/ZMNHIA2.xml \
     cpp/src/vers.cpp
