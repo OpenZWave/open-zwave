@@ -81,9 +81,10 @@ namespace OpenZWaveDotNet
 			EssentialNodeQueriesComplete	= Notification::Type_EssentialNodeQueriesComplete,
 			NodeQueriesComplete				= Notification::Type_NodeQueriesComplete,
 			AwakeNodesQueried				= Notification::Type_AwakeNodesQueried,
+			AllNodesQueriedSomeDead			= Notification::Type_AllNodesQueriedSomeDead,
 			AllNodesQueried					= Notification::Type_AllNodesQueried,
-			AllNodesQueriedSomeDead				= Notification::Type_AllNodesQueriedSomeDead,
-			Notification					= Notification::Type_Notification
+			Notification					= Notification::Type_Notification,
+			DriverRemoved					= Notification::Type_DriverRemoved
 		};
 
 	public:
