@@ -157,7 +157,7 @@ bool Basic::RequestValue
 	Driver::MsgQueue const _queue
 )
 {
-	if ( IsGetSupported() )
+	if ( IsGetSupported() && !m_ignoreMapping && m_mapping != 0)
 	{
 		Msg* msg = new Msg( "BasicCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 		msg->SetInstance( this, _instance );
@@ -197,6 +197,8 @@ bool Basic::HandleMsg
 		{
 			value->OnValueRefreshed( _data[1] );
 			value->Release();
+		} else {
+			Log::Write(LogLevel_Warning, GetNodeId(), "No Valid Mapping for Basic Command Class and No ValueID Exported. Error?");
 		}
 		return true;
 	}
@@ -270,13 +272,7 @@ void Basic::CreateVars
 	uint8 const _instance
 )
 {
-	if( m_mapping == 0 )
-	{
-		if( Node* node = GetNodeUnsafe() )
-		{
-		  	node->CreateValueByte( ValueID::ValueGenre_Basic, GetCommandClassId(), _instance, 0, "Basic", "", false, false, 0, 0 );
-		}
-	}
+	m_instances.push_back(_instance);
 }
 
 //-----------------------------------------------------------------------------
@@ -337,9 +333,19 @@ bool Basic::SetMapping
 		res = true;
 	}
 
-	if( m_mapping == 0 && _doLog )
+	if( m_mapping == 0 )
 	{
-		Log::Write( LogLevel_Info, GetNodeId(), "    COMMAND_CLASS_BASIC is not mapped" );
+		if (_doLog )
+			Log::Write( LogLevel_Info, GetNodeId(), "    COMMAND_CLASS_BASIC is not mapped" );
+		if( Node* node = GetNodeUnsafe() )
+		{
+			if (m_instances.size() > 0) {
+				for (unsigned int i = 0; i < m_instances.size(); i++)
+					node->CreateValueByte( ValueID::ValueGenre_Basic, GetCommandClassId(), m_instances[i], 0, "Basic", "", false, false, 0, 0 );
+			} else {
+				node->CreateValueByte( ValueID::ValueGenre_Basic, GetCommandClassId(), 0, 0, "Basic", "", false, false, 0, 0 );
+			}
+		}
 	}
 	return res;
 }
