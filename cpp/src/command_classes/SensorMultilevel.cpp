@@ -112,7 +112,7 @@ static char const* c_sensorTypeNames[] =
 		"Soil Temperature",
 		"Seismic Intensity",
 		"Seismic Magnitude",
-		"Utraviolet",
+		"Ultraviolet",
 		"Electrical Resistivity",
 		"Electrical Conductivity",
 		"Loudness",
