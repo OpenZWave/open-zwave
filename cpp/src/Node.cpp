@@ -485,6 +485,9 @@ void Node::AdvanceQueries
 					if( !it->second->IsAfterMark() )
 					{
 						m_queryPending |= it->second->RequestStateForAllInstances( CommandClass::RequestFlag_Static, Driver::MsgQueue_Query );
+					} else {
+						/* Controlling CC's might still need to retrieve some info */
+						m_queryPending |= it->second->RequestStateForAllInstances( CommandClass::RequestFlag_AfterMark, Driver::MsgQueue_Query );
 					}
 				}
 				addQSC = m_queryPending;
@@ -1737,7 +1740,11 @@ bool Node::RequestAllConfigParams
 			Value* value = it->second;
 			if( value->GetID().GetCommandClassId() == Configuration::StaticGetCommandClassId() && !value->IsWriteOnly() )
 			{
-				res |= cc->RequestValue( _requestFlags, value->GetID().GetIndex(), 1, Driver::MsgQueue_Send );
+				/* put the ConfigParams Request into the MsgQueue_Query queue. This is so MsgQueue_Send doesn't get backlogged with a
+				 * lot of ConfigParams requests, and should help speed up any user generated messages being sent out (as the MsgQueue_Send has a higher
+				 * priority than MsgQueue_Query
+				 */
+				res |= cc->RequestValue( _requestFlags, value->GetID().GetIndex(), 1, Driver::MsgQueue_Query );
 			}
 		}
 	}
