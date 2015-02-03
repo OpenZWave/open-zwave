@@ -40,7 +40,9 @@ using namespace OpenZWave;
 
 enum CentralSceneCmd
 {
-	CentralSceneCmd_Set				= 0x03
+	CentralSceneCmd_Capability_Get    = 0x01,
+	CentralSceneCmd_Capability_Report = 0x02,
+	CentralSceneCmd_Set				  = 0x03
 };
 
 
@@ -61,7 +63,7 @@ CentralScene::CentralScene
 CommandClass( _homeId, _nodeId ),
 m_scenecount(0)
 {
-	SetStaticRequest( StaticRequest_Values );
+	Log::Write(LogLevel_Info, GetNodeId(), "CentralScene - Created %d", HasStaticRequest( StaticRequest_Values ));
 }
 
 
@@ -76,26 +78,13 @@ bool CentralScene::RequestState
 		Driver::MsgQueue const _queue
 )
 {
+	Log::Write(LogLevel_Info, GetNodeId(), "CentralScene RequestState: %d", _requestFlags);
 	bool requests = false;
-	if( ( _requestFlags & RequestFlag_Static ) && HasStaticRequest( StaticRequest_Values ) )
+	if( ( _requestFlags & RequestFlag_AfterMark ))
 	{
-		/* XXX - DEBUG - This is to discover the Capabilities Message of a Device. Its for testing only. */
-		for (int i = 1; i < 6; i++)
-			requests = RequestValue( _requestFlags, i, _instance, _queue );
-	}
-	/* Create a Number of ValueID's based on the m_scenecount variable - Again, till we discover the Capabilities decode,
-	 * this has to specified in the config file.
-	 */
-	if( Node* node = GetNodeUnsafe() )
-	{
-		if ( ( _requestFlags & RequestFlag_Session)) {
-			char lbl[64];
-			for (int i = 1; i <= m_scenecount; i++) {
-				snprintf(lbl, 64, "Scene %d", i);
-				node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), _instance, i, lbl, "", true, false, 0, 0 );
-			}
-
-		}
+			requests = RequestValue( _requestFlags, CentralSceneCmd_Capability_Get, _instance, _queue );
+	} else {
+		Log::Write(LogLevel_Info, GetNodeId(), "CentralScene: Not a StaticRequest");
 	}
 	return requests;
 }
@@ -112,14 +101,16 @@ bool CentralScene::RequestValue
 		Driver::MsgQueue const _queue
 )
 {
-	Msg* msg = new Msg( "CentralScene_Capabilities_Test", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-	msg->SetInstance( this, _instance );
-	msg->Append( GetNodeId() );
-	msg->Append( 2 );
-	msg->Append( GetCommandClassId() );
-	msg->Append( _what );
-	msg->Append( GetDriver()->GetTransmitOptions() );
-	GetDriver()->SendMsg( msg, _queue );
+	if (_what == CentralSceneCmd_Capability_Get) {
+		Msg* msg = new Msg( "CentralSceneCmd_Capability_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		msg->SetInstance( this, _instance );
+		msg->Append( GetNodeId() );
+		msg->Append( 2 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( _what );
+		msg->Append( GetDriver()->GetTransmitOptions() );
+		GetDriver()->SendMsg( msg, _queue );
+	}
 	return true;
 }
 //-----------------------------------------------------------------------------
@@ -191,6 +182,33 @@ bool CentralScene::HandleMsg
 			return false;
 		}
 		return true;
+	} else if (CentralSceneCmd_Capability_Report == (CentralSceneCmd)_data[0]) {
+		/* Create a Number of ValueID's based on the m_scenecount variable
+		 * We prefer
+		 */
+		int scenecount = _data[1];
+		if (m_scenecount != 0)
+			m_scenecount = scenecount;
+
+		if ( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, CentralScene_Count)))
+		{
+			value->OnValueRefreshed(m_scenecount);
+			value->Release();
+		} else {
+			Log::Write( LogLevel_Warning, GetNodeId(), "Can't find ValueID for SceneCount");
+		}
+
+		if( Node* node = GetNodeUnsafe() )
+		{
+				char lbl[64];
+				for (int i = 1; i <= m_scenecount; i++) {
+					snprintf(lbl, 64, "Scene %d", i);
+					node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), _instance, i, lbl, "", true, false, 0, 0 );
+				}
+
+		} else {
+			Log::Write(LogLevel_Info, GetNodeId(), "CentralScene: Can't find Node!");
+		}
 	}
 
 	return false;
