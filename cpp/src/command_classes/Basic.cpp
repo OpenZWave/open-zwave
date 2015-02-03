@@ -140,7 +140,8 @@ bool Basic::RequestState
 {
 	if( _requestFlags & RequestFlag_Dynamic )
 	{
-		return RequestValue( _requestFlags, 0, _instance, _queue );
+		if ( (m_ignoreMapping || (!m_ignoreMapping && m_mapping == 0)))
+			return RequestValue( _requestFlags, 0, _instance, _queue );
 	}
 	return false;
 }
@@ -157,7 +158,7 @@ bool Basic::RequestValue
 	Driver::MsgQueue const _queue
 )
 {
-	if ( IsGetSupported() && !m_ignoreMapping && m_mapping != 0)
+	if ( IsGetSupported() )
 	{
 		Msg* msg = new Msg( "BasicCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 		msg->SetInstance( this, _instance );
