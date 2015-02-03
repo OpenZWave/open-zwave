@@ -184,7 +184,8 @@ bool CentralScene::HandleMsg
 		return true;
 	} else if (CentralSceneCmd_Capability_Report == (CentralSceneCmd)_data[0]) {
 		/* Create a Number of ValueID's based on the m_scenecount variable
-		 * We prefer
+		 * We prefer what the Config File specifies rather than what is returned by
+		 * the Device...
 		 */
 		int scenecount = _data[1];
 		if (m_scenecount != 0)

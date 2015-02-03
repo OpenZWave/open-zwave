@@ -289,7 +289,7 @@ bool DoorLock::HandleMsg
 
 		if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, Value_Lock ) ) )
 		{
-			value->OnValueRefreshed( lockState == 0xFF );
+			value->OnValueRefreshed( lockState == 0x06 );
 			value->Release();
 		}
 		if( ValueList* value = static_cast<ValueList*>( GetValue( _instance, Value_Lock_Mode ) ) )
