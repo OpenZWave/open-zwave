@@ -68,7 +68,17 @@ Version 1.3
  - Fixed Issue 444 - Added Aeon Aeon Labs Micro Smart Energy Dimmer thanks
    to yy (Alex)
  - Fixed Issue 430 - Spelling Mistake (Justin)
-
+ - Add Support for CommandClasses that are marked as Controlling (versus
+   Controlled) to be able to still query the Device for Data. This is needed
+   for the CentralScene CC which is implemented as Controlling on most
+   devices (Justin)
+ - CentralScene CC should be able to query for number of Scene's supported.
+   Needs further testing with other devices (only BeNext at the moment is
+   tested) (Justin)
+ - When refreshing the ConfigParams on a device, place the messages in the
+   MsgQueue_Query queue rather tha the MsgQueue_Send queue. This should help
+   the "responsiveness" of OZW during startup if a user sends a message and
+   there is a big backlog in the Send Queue (Justin)
 
 Version 1.2 
  - Released on 15/10/14
