@@ -79,6 +79,8 @@ Version 1.3
    MsgQueue_Query queue rather tha the MsgQueue_Send queue. This should help
    the "responsiveness" of OZW during startup if a user sends a message and
    there is a big backlog in the Send Queue (Justin)
+ - Fixed issue 452 - Fix the ValueID for Door_Lock index to report correct
+   status. (Justin)
 
 Version 1.2 
  - Released on 15/10/14
