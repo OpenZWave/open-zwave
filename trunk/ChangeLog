@@ -83,6 +83,7 @@ Version 1.3
    status. (Justin)
  - Fixed issue 448 - Dont request Basic Get if we have a mapped Class during
    startup (Justin)
+ - Added Everspring HAN02 device thanks to lookwhatthecat (Alex)
 
 Version 1.2 
  - Released on 15/10/14
