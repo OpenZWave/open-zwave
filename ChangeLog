@@ -84,6 +84,8 @@ Version 1.3
  - Fixed issue 448 - Dont request Basic Get if we have a mapped Class during
    startup (Justin)
  - Added Everspring HAN02 device thanks to lookwhatthecat (Alex)
+ - Fixed issue 453 - Don't crash if we skip notifications due to invalid
+   ValueID's (Justin)
 
 Version 1.2 
  - Released on 15/10/14
