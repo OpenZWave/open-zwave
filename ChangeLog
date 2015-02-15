@@ -91,6 +91,7 @@ Version 1.3
  - Fixed Popp 123580 Plug-in Dimmer device config thanks to Tom (Alex)
  - Fixed issue 457 - Added zwave.me KFOB-S device thanks to Tony (Alex)
  - Updated BeNext TagReader device config thanks to Rob (Alex)
+ - Added Philio PST02-1B device thanks to Thaui (Alex)
 
 Version 1.2 
  - Released on 15/10/14
