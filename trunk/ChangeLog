@@ -93,6 +93,7 @@ Version 1.3
  - Updated BeNext TagReader device config thanks to Rob (Alex)
  - Added Philio PST02-1B device thanks to Thaui (Alex)
  - Updated BeNext TagReader device config (Alex)
+ - Fixed issue 449 - Update Wenzhou TZ67 device config thanks to bas (Alex)
 
 Version 1.2 
  - Released on 15/10/14
