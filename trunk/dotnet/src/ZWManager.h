@@ -232,8 +232,21 @@ namespace OpenZWaveDotNet
 		void Destroy(){ Manager::Get()->Destroy(); }
 
 		/**
+		 * \brief Get the Version Number of OZW as a string
+		 * \return a String representing the version number as MAJOR.MINOR.REVISION
+		 */
+		String^ GetVersionAsString() { return gcnew String(Manager::Get()->getVersionAsString().c_str()); }
+
+		/**
+		 * \brief Get the Version Number as the Version Struct (Only Major/Minor returned)
+		 * \return the version struct representing the version
+		 */
+		//ozwversion GetVersion();
+
+
+		/**
 		 * \brief Sets the library logging state.
-		 * \param _bLog True to enable logging; false to disable logging.
+		 * \param bState True to enable logging; false to disable logging.
 		 * \see GetLoggingState
 		 */
 		void SetLoggingState(bool bState){ Log::SetLoggingState(bState); }
@@ -295,8 +308,8 @@ namespace OpenZWaveDotNet
 		 * missing information, and a refresh of the list of nodes that it controls.  Once this information
 		 * has been received, a DriverReady notification callback is sent, containing the Home ID of the controller.  This Home ID is
 		 * required by most of the OpenZWave Manager class methods.
-		 * \param _serialPortName The string used to open the serial port, for example "\\.\COM3".
-		 8 \param _interfaceType Specifies whether this is a serial or HID interface (default is serial).
+		 * \param serialPortName The string used to open the serial port, for example "\\.\COM3".
+		 8 \param interfaceType Specifies whether this is a serial or HID interface (default is serial).
 		 * \return True if a new driver was created, false if a driver for the controller already exists.
 		 * \see Create, Get, RemoveDriver
 		 */
@@ -307,7 +320,7 @@ namespace OpenZWaveDotNet
 		 * \brief Removes the driver for a Z-Wave controller, and closes the serial port.
 		 *
 		 * Drivers do not need to be explicitly removed before calling Destroy - this is handled automatically.
-		 * @paaram _serialPortName The same string as was passed in the original call to AddDriver.
+		 * @paaram serialPortName The same string as was passed in the original call to AddDriver.
 		 * \returns True if the driver was removed, false if it could not be found.
 		 * \see Destroy, AddDriver
 		 */
@@ -319,6 +332,14 @@ namespace OpenZWaveDotNet
 		 * \return the node ID of the Z-Wave controller.
 		 */
 		uint8 GetControllerNodeId( uint32 homeId ){ return Manager::Get()->GetControllerNodeId(homeId); }
+
+		/**
+		 * \brief Get the node ID of the Static Update Controller.
+		 * \param homeId The Home ID of the Z-Wave controller.
+		 * \return the node ID of the Z-Wave controller.
+		 */
+		uint8 GetSUCNodeId( uint32 homeId ) { return Manager::Get()->GetSUCNodeId(homeId); }
+
 
 		/**
 		 * \brief Query if the controller is a primary controller.
@@ -393,6 +414,18 @@ namespace OpenZWaveDotNet
 		 */
 		int32 GetSendQueueCount( uint32 const homeId ){ return Manager::Get()->GetSendQueueCount( homeId ); }
 
+		/**
+		 * \brief Obtain controller interface type
+		 * \param homeId The Home ID of the Z-Wave controller.
+		 */
+		ZWControllerInterface GetControllerInterfaceType( uint32 homeId ) { return (ZWControllerInterface)Manager::Get()->GetControllerInterfaceType(homeId); }
+
+		/**
+		 * \brief Obtain controller interface path
+		 * \param homeId The Home ID of the Z-Wave controller.
+		 */
+		String^ GetControllerPath( uint32 homeId ) { return gcnew String(Manager::Get()->GetControllerPath(homeId).c_str()); }
+
 	/*@}*/					   
 
 	//-----------------------------------------------------------------------------
@@ -406,6 +439,11 @@ namespace OpenZWaveDotNet
 	/*@{*/
 	public:
 		/**
+		 * \brief Get the time period between polls of a node's state.
+		 */
+		int32 GetPollInterval() { return Manager::Get()->GetPollInterval(); }
+
+		/**
 		 * \brief Set the time period between polls of a node's state.
 		 *
 		 * Due to patent concerns, some devices do not report state changes automatically to the controller.
@@ -418,7 +456,7 @@ namespace OpenZWaveDotNet
 		 *
 		 * Note that the polling interval cannot be set on a per-node basis.  Every node that is polled is
 		 * polled at the specified interval.
-		 * \param _seconds The length of the polling interval in seconds.
+		 * \param milliseconds The length of the polling interval in milliseconds.
 		 */
 		void SetPollInterval( int32 milliseconds, bool bIntervalBetweenPolls ){ Manager::Get()->SetPollInterval(milliseconds, bIntervalBetweenPolls); }
 
@@ -431,12 +469,45 @@ namespace OpenZWaveDotNet
 		bool EnablePoll( ZWValueID^ valueId ){ return Manager::Get()->EnablePoll(valueId->CreateUnmanagedValueID()); }
 
 		/**
+		 * \brief Enable the polling of a device's state.
+		 *
+		 * \param valueId The ID of the value to start polling.
+		 * \param intensity, number of polling for one polling interval.
+		 * \return True if polling was enabled.
+		 */
+		bool EnablePoll( ZWValueID^ valueId, uint8 intensity ){ return Manager::Get()->EnablePoll(valueId->CreateUnmanagedValueID(), intensity); }
+
+		/**
 		 * \brief Disable the polling of a device's state.
 		 *
 		 * \param valueId The ID of the value to stop polling.
 		 * \return True if polling was disabled.
 		 */
 		bool DisablePoll( ZWValueID^ valueId ){ return Manager::Get()->DisablePoll(valueId->CreateUnmanagedValueID()); }
+
+		/**
+		 * \brief Determine the polling of a device's state.
+		 * \param valueId The ID of the value to check polling.
+		 * \return True if polling is active.
+		 */
+		bool IsPolled( ZWValueID^ valueId ) { return Manager::Get()->isPolled(valueId->CreateUnmanagedValueID()); }
+
+		/**
+		 * \brief Set the frequency of polling (0=none, 1=every time through the list, 2-every other time, etc)
+		 * \param valueId The ID of the value whose intensity should be set
+		 * \param intensity The intensity to set
+		 */
+		void SetPollIntensity( ZWValueID^ valueId, uint8 intensity ) { Manager::Get()->SetPollIntensity(valueId->CreateUnmanagedValueID(), intensity); }
+
+		/**
+		 * \brief Get the polling intensity of a device's state.
+		 * \param valueId The ID of the value to check polling.
+		 * \return Intensity, number of polling for one polling interval.
+		 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_VALUEID if the ValueID is invalid
+		 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_HOMEID if the Driver cannot be found
+		 */
+		uint8 GetPollIntensity( ZWValueID^ valueId ) { return Manager::Get()->GetPollIntensity( valueId->CreateUnmanagedValueID()); }
+
 	/*@}*/
 
 	//-----------------------------------------------------------------------------
@@ -541,8 +612,8 @@ namespace OpenZWaveDotNet
 
 		/**
 		 * \brief Get the security byte for a node.  Bit meanings are still to be determined.
-		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
-		 * \param _nodeId The ID of the node to query.
+		 * \param homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param nodeId The ID of the node to query.
 		 * \return the node's security byte
 		 */
 		uint8 GetNodeSecurity( uint32 const homeId, uint8 const nodeId ){ return Manager::Get()->GetNodeSecurity(homeId, nodeId); }
@@ -584,9 +655,9 @@ namespace OpenZWaveDotNet
 		/**
 		 * \brief Get the bitmap of this node's neighbors
 		 *
-		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
-		 * \param _nodeId The ID of the node to query.
-		 * \param _nodeNeighbors An array of 29 uint8s to hold the neighbor bitmap
+		 * \param homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param nodeId The ID of the node to query.
+		 * \param o_associations An array of 29 uint8s to hold the neighbor bitmap
 		 */
 		uint32 GetNodeNeighbors( uint32 const homeId, uint8 const nodeId, [Out] array<Byte>^ %o_associations );
 
@@ -697,7 +768,7 @@ namespace OpenZWaveDotNet
 		 * specific command class is not supported by the device.
 		 * \see GetNodeManufacturerId, GetNodeProductType, GetNodeManufacturerName, GetNodeProductName
 		 */
-		String^ GetNodeProductId( uint32 homeId, uint8 nodeId ){ return gcnew String(Manager::Get()->GetNodeProductId(homeId,nodeId).c_str()); }
+		String^ GetNodeProductId( uint32 homeId, uint8 nodeId ){ return gcnew String(Manager::Get()->GetNodeProductId( homeId, nodeId ).c_str()); }
 
 		/**
 		 * \brief Set the manufacturer name of a device.
@@ -710,10 +781,10 @@ namespace OpenZWaveDotNet
 		 * than being reported via a command class Value object.
 		 * \param homeId The Home ID of the Z-Wave controller that manages the node.
 		 * \param nodeId The ID of the node to query.
-		 * \param _manufacturerName	A string containing the node's manufacturer name.
+		 * \param manufacturerName	A string containing the node's manufacturer name.
 		 * \see GetNodeManufacturerName, GetNodeProductName, SetNodeProductName
 		 */
-		void SetNodeManufacturerName( uint32 homeId, uint8 nodeId, String^ _manufacturerName ){ Manager::Get()->SetNodeManufacturerName( homeId, nodeId, (const char*)(Marshal::StringToHGlobalAnsi(_manufacturerName)).ToPointer()); }
+		void SetNodeManufacturerName( uint32 homeId, uint8 nodeId, String^ manufacturerName ){ Manager::Get()->SetNodeManufacturerName( homeId, nodeId, (const char*)(Marshal::StringToHGlobalAnsi(manufacturerName)).ToPointer()); }
 		
 		/**
 		 * \brief Set the product name of a device.
@@ -726,10 +797,10 @@ namespace OpenZWaveDotNet
 		 * than being reported via a command class Value object.
 		 * \param homeId The Home ID of the Z-Wave controller that manages the node.
 		 * \param nodeId The ID of the node to query.
-		 * \param _productName A string containing the node's product name.
+		 * \param productName A string containing the node's product name.
 		 * \see GetNodeProductName, GetNodeManufacturerName, SetNodeManufacturerName
 		 */
-		void SetNodeProductName( uint32 homeId, uint8 nodeId, String^ _productName ){ Manager::Get()->SetNodeProductName( homeId, nodeId, (const char*)(Marshal::StringToHGlobalAnsi(_productName)).ToPointer()); }
+		void SetNodeProductName( uint32 homeId, uint8 nodeId, String^ productName ){ Manager::Get()->SetNodeProductName( homeId, nodeId, (const char*)(Marshal::StringToHGlobalAnsi(productName)).ToPointer()); }
 
 		/**
 		 * \brief Set the name of a node.
@@ -742,10 +813,10 @@ namespace OpenZWaveDotNet
 		 * The maximum length of a node name is 16 characters.
 		 * \param homeId The Home ID of the Z-Wave controller that manages the node.
 		 * \param nodeId The ID of the node to query.
-		 * \param _nodeName A string containing the node's name.
+		 * \param nodeName A string containing the node's name.
 		 * \see GetNodeName, GetNodeLocation, SetNodeLocation
 		 */
-		void SetNodeName( uint32 homeId, uint8 nodeId, String^ _nodeName ){ Manager::Get()->SetNodeName( homeId, nodeId, (const char*)(Marshal::StringToHGlobalAnsi(_nodeName)).ToPointer()); }
+		void SetNodeName( uint32 homeId, uint8 nodeId, String^ nodeName ){ Manager::Get()->SetNodeName( homeId, nodeId, (const char*)(Marshal::StringToHGlobalAnsi(nodeName)).ToPointer()); }
 
 		/**
 		 * \brief Set the location of a node.
@@ -757,10 +828,10 @@ namespace OpenZWaveDotNet
 		 * If the device does support the Node Naming command class, the new location will be sent to the node.
 		 * \param homeId The Home ID of the Z-Wave controller that manages the node.
 		 * \param nodeId The ID of the node to query.
-		 * \param _location A string containing the node's location.
+		 * \param location A string containing the node's location.
 		 * \see GetNodeLocation, GetNodeName, SetNodeName
 		 */
-		void SetNodeLocation( uint32 homeId, uint8 nodeId, String^ _location ){ Manager::Get()->SetNodeLocation( homeId, nodeId, (const char*)(Marshal::StringToHGlobalAnsi(_location)).ToPointer()); }
+		void SetNodeLocation( uint32 homeId, uint8 nodeId, String^ location ){ Manager::Get()->SetNodeLocation( homeId, nodeId, (const char*)(Marshal::StringToHGlobalAnsi(location)).ToPointer()); }
 	
 		/**
 		 * \brief Turns a node on.
@@ -769,7 +840,7 @@ namespace OpenZWaveDotNet
 		 * changing the level reported by the node's Basic command class to 255, and will generate a 
 		 * ValueChanged notification from that class.  This command will turn on the device at its
 		 * last known level, if supported by the device, otherwise it will turn	it on at 100%.
-		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param homeId The Home ID of the Z-Wave controller that manages the node.
 		 * \param nodeId The ID of the node to be changed.
 		 * \see SetNodeOff, SetNodeLevel
 		 */
@@ -781,7 +852,7 @@ namespace OpenZWaveDotNet
 		 * This is a helper method to simplify basic control of a node.  It is the equivalent of
 		 * changing the level reported by the node's Basic command class to zero, and will generate
 		 * a ValueChanged notification from that class.
-		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param homeId The Home ID of the Z-Wave controller that manages the node.
 		 * \param nodeId The ID of the node to be changed.
 		 * \see SetNodeOn, SetNodeLevel
 		 */
@@ -793,15 +864,55 @@ namespace OpenZWaveDotNet
 		 * This is a helper method to simplify basic control of a node.  It is the equivalent of
 		 * changing the value reported by the node's Basic command class and will generate a 
 		 * ValueChanged notification from that class.
-		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param homeId The Home ID of the Z-Wave controller that manages the node.
 		 * \param nodeId The ID of the node to be changed.
-		 * \param _level The level to set the node.  Valid values are 0-99 and 255.  Zero is off and
+		 * \param level The level to set the node.  Valid values are 0-99 and 255.  Zero is off and
 		 * 99 is fully on.  255 will turn on the device at its last known level (if supported).
 		 * \see SetNodeOn, SetNodeOff
 		 */
 		void SetNodeLevel( uint32 homeId, uint8 nodeId, uint8 level ){ Manager::Get()->SetNodeLevel( homeId, nodeId, level ); }
 		
+		/**
+		 * \brief Get whether the node information has been received
+		 * \param homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param nodeId The ID of the node to query.
+		 * \return True if the node information has been received yet
+		 */
+		bool IsNodeInfoReceived( uint32 homeId, uint8 nodeId ) { return Manager::Get()->IsNodeInfoReceived( homeId, nodeId ); }
+
+		/**
+		 * \brief Get whether the node has the defined class available or not
+		 * \param homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param nodeId The ID of the node to query.
+		 * \param commandClassId Id of the class to test for
+		 * \return True if the node does have the class instantiated, will return name & version
+		 */
 		bool GetNodeClassInformation(uint32 homeId, uint8 nodeId, uint8 commandClassId, [Out] String^ %className, [Out] System::Byte %classVersion);
+
+		/**
+		 * \brief Get whether the node is awake or asleep
+		 * \param homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param nodeId The ID of the node to query.
+		 * \return True if the node is awake
+		 */
+		bool IsNodeAwake( uint32 homeId, uint8 nodeId ) { return Manager::Get()->IsNodeAwake( homeId, nodeId); }
+
+		/**
+		 * \brief Get whether the node is working or has failed
+		 * \param homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param nodeId The ID of the node to query.
+		 * \return True if the node has failed and is no longer part of the network
+		 */
+		bool IsNodeFailed( uint32 homeId, uint8 nodeId ) { return Manager::Get()->IsNodeFailed( homeId, nodeId); }
+
+		/**
+		 * \brief Get whether the node's query stage as a string
+		 * \param homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param nodeId The ID of the node to query.
+		 * \return name of current query stage as a string.
+		 */
+		String^ GetNodeQueryStage( uint32 homeId, uint8 nodeId ) { return gcnew String(Manager::Get()->GetNodeQueryStage( homeId, nodeId).c_str()); }
+
 	/*@}*/
 
 	//-----------------------------------------------------------------------------
@@ -817,16 +928,26 @@ namespace OpenZWaveDotNet
 		/**
 		 * \brief Gets the user-friendly label for the value.
 		 *
-		 * \param _id The unique identifier of the value.
+		 * \param id The unique identifier of the value.
 		 * \return The value label.
 		 * \see ValueID
 		 */
 		String^ GetValueLabel( ZWValueID^ id ){ return gcnew String(Manager::Get()->GetValueLabel(id->CreateUnmanagedValueID()).c_str()); }
 
 		/**
+		 * \brief Sets the user-friendly label for the value.
+		 * \param id The unique identifier of the value.
+		 * \param value The new value of the label.
+		 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_VALUEID if the ValueID is invalid
+		 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_HOMEID if the Driver cannot be found
+		 * \see ValueID
+		 */
+		void SetValueLabel( ZWValueID^ id, String^ value ) { Manager::Get()->SetValueLabel( id->CreateUnmanagedValueID(), (const char*)(Marshal::StringToHGlobalAnsi(value)).ToPointer()); }
+
+		/**
 		 * \brief Gets the units that the value is measured in.
 		 *
-		 * \param _id The unique identifier of the value.
+		 * \param id The unique identifier of the value.
 		 * \return The value units.
 		 * \see ValueID
 		 */
@@ -835,7 +956,7 @@ namespace OpenZWaveDotNet
 		/**
 		 * \brief Gets a help string describing the value's purpose and usage.
 		 *
-		 * \param _id The unique identifier of the value.
+		 * \param id The unique identifier of the value.
 		 * \return The value help text.
 		 * \see ValueID
 		 */
@@ -844,7 +965,7 @@ namespace OpenZWaveDotNet
 		/**
 		 * \brief Test whether the value is read-only.
 		 *
-		 * \param _id The unique identifier of the value.
+		 * \param id The unique identifier of the value.
 		 * \return true if the value cannot be changed by the user.	
 		 * \see ValueID
 		 */
@@ -853,7 +974,7 @@ namespace OpenZWaveDotNet
 		/**
 		 * \brief Test whether the value has been set.
 		 *
-		 * \param _id The unique identifier of the value.
+		 * \param id The unique identifier of the value.
 		 * \return true if the value has actually been set by a status message from the device, rather than simply being the default.	
 		 * \see ValueID
 		 */
@@ -862,7 +983,7 @@ namespace OpenZWaveDotNet
 		/**
 		 * \brief Test whether the value is currently being polled.
 		 *
-		 * \param _id The unique identifier of the value.
+		 * \param id The unique identifier of the value.
 		 * \return true if the value is being polled, false otherwise.	
 		 * \see ValueID
 		 */
