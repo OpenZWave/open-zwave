@@ -94,6 +94,15 @@ Version 1.3
  - Added Philio PST02-1B device thanks to Thaui (Alex)
  - Updated BeNext TagReader device config (Alex)
  - Fixed issue 449 - Update Wenzhou TZ67 device config thanks to bas (Alex)
+ - Fixed issue 367 - Implement CentralScene with lots of testing by
+   TMartinez (Justin)
+ - Update our Mutex's to use Scoped Locks instead. This saves us from having
+   to track Lock/Unlocks. Implemented for the m_nodeMutex in the
+   DriverClass. We should also port the Polling and Send Mutex's as well.
+   This fixes issue 451 (Justin)
+ - Fixed issue 459 - Alarm Class Version 2 (Justin)
+ - Fix DoorLockLogging Class not saving the Max Number of records (Justin)
+
 
 Version 1.2 
  - Released on 15/10/14
