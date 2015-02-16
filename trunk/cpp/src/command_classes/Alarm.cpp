@@ -39,15 +39,65 @@ using namespace OpenZWave;
 
 enum AlarmCmd
 {
-	AlarmCmd_Get	= 0x04,
-	AlarmCmd_Report = 0x05
+	AlarmCmd_Get			= 0x04,
+	AlarmCmd_Report			= 0x05,
+	// Version 2
+	AlarmCmd_SupportedGet		= 0x07,
+	AlarmCmd_SupportedReport	= 0x08
 };
 
 enum
 {
 	AlarmIndex_Type = 0,
-	AlarmIndex_Level
+	AlarmIndex_Level,
+	AlarmIndex_SourceNodeId
 };
+
+enum
+{
+	Alarm_General = 0,
+	Alarm_Smoke,
+	Alarm_CarbonMonoxide,
+	Alarm_CarbonDioxide,
+	Alarm_Heat,
+	Alarm_Flood,
+	Alarm_Access_Control,
+	Alarm_Burglar,
+	Alarm_Power_Management,
+	Alarm_System,
+	Alarm_Emergency,
+	Alarm_Count
+};
+
+static char const* c_alarmTypeName[] =
+{
+		"General",
+		"Smoke",
+		"Carbon Monoxide",
+		"Carbon Dioxide",
+		"Heat",
+		"Flood",
+		"Access Control",
+		"Burglar",
+		"Power Management",
+		"System",
+		"Emergency"
+};
+
+//-----------------------------------------------------------------------------
+// <WakeUp::WakeUp>
+// Constructor
+//-----------------------------------------------------------------------------
+Alarm::Alarm
+(
+		uint32 const _homeId,
+		uint8 const _nodeId
+):
+CommandClass( _homeId, _nodeId )
+{
+	SetStaticRequest( StaticRequest_Values );
+}
+
 
 //-----------------------------------------------------------------------------
 // <Alarm::RequestState>
@@ -55,11 +105,28 @@ enum
 //-----------------------------------------------------------------------------
 bool Alarm::RequestState
 (
-	uint32 const _requestFlags,
-	uint8 const _instance,
-	Driver::MsgQueue const _queue
+		uint32 const _requestFlags,
+		uint8 const _instance,
+		Driver::MsgQueue const _queue
 )
 {
+	if( ( _requestFlags & RequestFlag_Static ) && HasStaticRequest( StaticRequest_Values ) )
+	{
+		if( GetVersion() > 1 )
+		{
+			// Request the supported alarm types
+			Msg* msg = new Msg( "AlarmCmd_SupportedGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+			msg->SetInstance( this, _instance );
+			msg->Append( GetNodeId() );
+			msg->Append( 2 );
+			msg->Append( GetCommandClassId() );
+			msg->Append( AlarmCmd_SupportedGet );
+			msg->Append( GetDriver()->GetTransmitOptions() );
+			GetDriver()->SendMsg( msg, _queue );
+			return true;
+		}
+	}
+
 	if( _requestFlags & RequestFlag_Dynamic )
 	{
 		return RequestValue( _requestFlags, 0, _instance, _queue );
@@ -74,10 +141,10 @@ bool Alarm::RequestState
 //-----------------------------------------------------------------------------
 bool Alarm::RequestValue
 (
-	uint32 const _requestFlags,
-	uint8 const _dummy1,	// = 0 (not used)
-	uint8 const _instance,
-	Driver::MsgQueue const _queue
+		uint32 const _requestFlags,
+		uint8 const _dummy1,	// = 0 (not used)
+		uint8 const _instance,
+		Driver::MsgQueue const _queue
 )
 {
 	if( IsGetSupported() )
@@ -103,9 +170,9 @@ bool Alarm::RequestValue
 //-----------------------------------------------------------------------------
 bool Alarm::HandleMsg
 (
-	uint8 const* _data,
-	uint32 const _length,
-	uint32 const _instance	// = 1
+		uint8 const* _data,
+		uint32 const _length,
+		uint32 const _instance	// = 1
 )
 {
 	if (AlarmCmd_Report == (AlarmCmd)_data[0])
@@ -124,6 +191,58 @@ bool Alarm::HandleMsg
 			value->OnValueRefreshed( _data[2] );
 			value->Release();
 		}
+
+		// With Version=2, the data has more detailed information about the alarm
+		if(( GetVersion() > 1 ) && ( _length >= 7  ))
+		{
+			if( (value = static_cast<ValueByte*>( GetValue( _instance, AlarmIndex_SourceNodeId ) )) )
+			{
+				value->OnValueRefreshed( _data[4] );
+				value->Release();
+			}
+
+			if( (value = static_cast<ValueByte*>( GetValue( _instance, _data[5]+3 ) )) )
+			{
+				value->OnValueRefreshed( _data[6] );
+				value->Release();
+			}
+		}
+
+		return true;
+	}
+
+	if( AlarmCmd_SupportedReport == (AlarmCmd)_data[0] )
+	{
+		if( Node* node = GetNodeUnsafe() )
+		{
+			// We have received the supported alarm types from the Z-Wave device
+			Log::Write( LogLevel_Info, GetNodeId(), "Received supported alarm types" );
+
+			node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, AlarmIndex_SourceNodeId, "SourceNodeId", "", true, false, 0, 0 );
+			Log::Write( LogLevel_Info, GetNodeId(), "    Added alarm SourceNodeId" );
+
+			// Parse the data for the supported alarm types
+			uint8 numBytes = _data[1];
+			for( uint32 i=0; i<numBytes; ++i )
+			{
+				for( int32 bit=0; bit<8; ++bit )
+				{
+					if( ( _data[i+2] & (1<<bit) ) != 0 )
+					{
+						int32 index = (int32)(i<<3) + bit;
+						if( index < Alarm_Count )
+						{
+							node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, index+3, c_alarmTypeName[index], "", true, false, 0, 0 );
+							Log::Write( LogLevel_Info, GetNodeId(), "    Added alarm type: %s", c_alarmTypeName[index] );
+						} else {
+							Log::Write( LogLevel_Info, GetNodeId(), "    Unknown alarm type: %d", index );
+						}
+					}
+				}
+			}
+		}
+
+		ClearStaticRequest( StaticRequest_Values );
 		return true;
 	}
 
@@ -136,12 +255,12 @@ bool Alarm::HandleMsg
 //-----------------------------------------------------------------------------
 void Alarm::CreateVars
 (
-	uint8 const _instance
+		uint8 const _instance
 )
 {
 	if( Node* node = GetNodeUnsafe() )
 	{
-	  	node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, AlarmIndex_Type, "Alarm Type", "", true, false, 0, 0 );
+		node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, AlarmIndex_Type, "Alarm Type", "", true, false, 0, 0 );
 		node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, AlarmIndex_Level, "Alarm Level", "", true, false, 0, 0 );
 	}
 }

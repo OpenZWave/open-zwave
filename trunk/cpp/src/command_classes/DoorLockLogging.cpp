@@ -266,10 +266,11 @@ bool DoorLockLogging::HandleMsg
 	if( DoorLockLoggingCmd_RecordSupported_Report == (DoorLockLoggingCmd)_data[0] )
 	{
 		Log::Write( LogLevel_Info, GetNodeId(), "Received DoorLockLoggingCmd_RecordSupported_Report: Max Records is %d ", _data[1]);
-
+		m_MaxRecords = _data[1];
 		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, Value_System_Config_MaxRecords ) ) )
 		{
-			value->OnValueRefreshed( _data[1]);
+
+			value->OnValueRefreshed( m_MaxRecords);
 			value->Release();
 		}
 		ClearStaticRequest( StaticRequest_Values );
