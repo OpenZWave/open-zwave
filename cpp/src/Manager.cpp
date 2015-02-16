@@ -36,6 +36,7 @@
 #include "Notification.h"
 #include "Options.h"
 #include "Scene.h"
+#include "Utils.h"
 
 #include "platform/Mutex.h"
 #include "platform/Event.h"
@@ -129,7 +130,7 @@ ozwversion Manager::getVersion() {
 Manager::Manager
 (
 ):
-	m_notificationMutex( new Mutex() )
+m_notificationMutex( new Mutex() )
 {
 	// Ensure the singleton instance is set
 	s_instance = this;
@@ -232,7 +233,7 @@ Manager::~Manager
 //-----------------------------------------------------------------------------
 void Manager::WriteConfig
 (
-	uint32 const _homeId
+		uint32 const _homeId
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
@@ -257,8 +258,8 @@ void Manager::WriteConfig
 //-----------------------------------------------------------------------------
 bool Manager::AddDriver
 (
-	string const& _controllerPath,
-	Driver::ControllerInterface const& _interface
+		string const& _controllerPath,
+		Driver::ControllerInterface const& _interface
 )
 {
 	// Make sure we don't already have a driver for this controller
@@ -297,7 +298,7 @@ bool Manager::AddDriver
 //-----------------------------------------------------------------------------
 bool Manager::RemoveDriver
 (
-	string const& _controllerPath
+		string const& _controllerPath
 )
 {
 	// Search the pending list
@@ -348,7 +349,7 @@ bool Manager::RemoveDriver
 //-----------------------------------------------------------------------------
 Driver* Manager::GetDriver
 (
-	uint32 const _homeId
+		uint32 const _homeId
 )
 {
 	map<uint32,Driver*>::iterator it = m_readyDrivers.find( _homeId );
@@ -369,8 +370,8 @@ Driver* Manager::GetDriver
 //-----------------------------------------------------------------------------
 void Manager::SetDriverReady
 (
-	Driver* _driver,
-	bool success
+		Driver* _driver,
+		bool success
 )
 {
 	// Search the pending list
@@ -409,7 +410,7 @@ void Manager::SetDriverReady
 //-----------------------------------------------------------------------------
 uint8 Manager::GetControllerNodeId
 (
-	uint32 const _homeId
+		uint32 const _homeId
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
@@ -427,7 +428,7 @@ uint8 Manager::GetControllerNodeId
 //-----------------------------------------------------------------------------
 uint8 Manager::GetSUCNodeId
 (
-	uint32 const _homeId
+		uint32 const _homeId
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
@@ -445,7 +446,7 @@ uint8 Manager::GetSUCNodeId
 //-----------------------------------------------------------------------------
 bool Manager::IsPrimaryController
 (
-	uint32 const _homeId
+		uint32 const _homeId
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
@@ -463,7 +464,7 @@ bool Manager::IsPrimaryController
 //-----------------------------------------------------------------------------
 bool Manager::IsStaticUpdateController
 (
-	uint32 const _homeId
+		uint32 const _homeId
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
@@ -481,7 +482,7 @@ bool Manager::IsStaticUpdateController
 //-----------------------------------------------------------------------------
 bool Manager::IsBridgeController
 (
-	uint32 const _homeId
+		uint32 const _homeId
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
@@ -499,7 +500,7 @@ bool Manager::IsBridgeController
 //-----------------------------------------------------------------------------
 string Manager::GetLibraryVersion
 (
-	uint32 const _homeId
+		uint32 const _homeId
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
@@ -517,7 +518,7 @@ string Manager::GetLibraryVersion
 //-----------------------------------------------------------------------------
 string Manager::GetLibraryTypeName
 (
-	uint32 const _homeId
+		uint32 const _homeId
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
@@ -535,7 +536,7 @@ string Manager::GetLibraryTypeName
 //-----------------------------------------------------------------------------
 int32 Manager::GetSendQueueCount
 (
-	uint32 const _homeId
+		uint32 const _homeId
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
@@ -553,7 +554,7 @@ int32 Manager::GetSendQueueCount
 //-----------------------------------------------------------------------------
 void Manager::LogDriverStatistics
 (
-	uint32 const _homeId
+		uint32 const _homeId
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
@@ -570,7 +571,7 @@ void Manager::LogDriverStatistics
 //-----------------------------------------------------------------------------
 Driver::ControllerInterface Manager::GetControllerInterfaceType
 (
-	uint32 const _homeId
+		uint32 const _homeId
 )
 {
 	Driver::ControllerInterface ifType = Driver::ControllerInterface_Unknown;
@@ -587,7 +588,7 @@ Driver::ControllerInterface Manager::GetControllerInterfaceType
 //-----------------------------------------------------------------------------
 string Manager::GetControllerPath
 (
-	uint32 const _homeId
+		uint32 const _homeId
 )
 {
 	string path = "";
@@ -627,8 +628,8 @@ int32 Manager::GetPollInterval
 //-----------------------------------------------------------------------------
 void Manager::SetPollInterval
 (
-	int32 _milliseconds,
-	bool _bIntervalBetweenPolls
+		int32 _milliseconds,
+		bool _bIntervalBetweenPolls
 )
 {
 	for( list<Driver*>::iterator pit = m_pendingDrivers.begin(); pit != m_pendingDrivers.end(); ++pit )
@@ -648,8 +649,8 @@ void Manager::SetPollInterval
 //-----------------------------------------------------------------------------
 bool Manager::EnablePoll
 (
-	ValueID const &_valueId,
-	uint8 const _intensity
+		ValueID const &_valueId,
+		uint8 const _intensity
 )
 {
 	if( Driver* driver = GetDriver( _valueId.GetHomeId() ) )
@@ -667,7 +668,7 @@ bool Manager::EnablePoll
 //-----------------------------------------------------------------------------
 bool Manager::DisablePoll
 (
-	ValueID const &_valueId
+		ValueID const &_valueId
 )
 {
 	if( Driver* driver = GetDriver( _valueId.GetHomeId() ) )
@@ -685,7 +686,7 @@ bool Manager::DisablePoll
 //-----------------------------------------------------------------------------
 bool Manager::isPolled
 (
-	ValueID const &_valueId
+		ValueID const &_valueId
 )
 {
 	if( Driver* driver = GetDriver( _valueId.GetHomeId() ) )
@@ -703,8 +704,8 @@ bool Manager::isPolled
 //-----------------------------------------------------------------------------
 void Manager::SetPollIntensity
 (
-	ValueID const &_valueId,
-	uint8 const _intensity
+		ValueID const &_valueId,
+		uint8 const _intensity
 )
 {
 	if( Driver* driver = GetDriver( _valueId.GetHomeId() ) )
@@ -721,13 +722,13 @@ void Manager::SetPollIntensity
 //-----------------------------------------------------------------------------
 uint8 Manager::GetPollIntensity
 (
-	ValueID const &_valueId
+		ValueID const &_valueId
 )
 {
 	uint8 intensity = 0;
 	if( Driver* driver = GetDriver( _valueId.GetHomeId() ) )
 	{
-		driver->LockNodes();
+		LockGuard LG(driver->m_nodeMutex);
 		if( Value* value = driver->GetValue( _valueId ) )
 		{
 			intensity = value->GetPollIntensity();
@@ -735,10 +736,9 @@ uint8 Manager::GetPollIntensity
 		} else {
 			OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to GetPollIntensity");
 		}
-		driver->ReleaseNodes();
 	}
 
- 	return intensity;
+	return intensity;
 }
 
 //-----------------------------------------------------------------------------
@@ -751,19 +751,19 @@ uint8 Manager::GetPollIntensity
 //-----------------------------------------------------------------------------
 bool Manager::RefreshNodeInfo
 (
-	uint32 const _homeId,
-	uint8 const _nodeId
+		uint32 const _homeId,
+		uint8 const _nodeId
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
 		// Cause the node's data to be obtained from the Z-Wave network
 		// in the same way as if it had just been added.
+		LockGuard LG(driver->m_nodeMutex);
 		Node* node = driver->GetNode( _nodeId );
 		if( node )
 		{
 			node->SetQueryStage( Node::QueryStage_ProtocolInfo );
-			driver->ReleaseNodes();
 			return true;
 		}
 	}
@@ -777,18 +777,18 @@ bool Manager::RefreshNodeInfo
 //-----------------------------------------------------------------------------
 bool Manager::RequestNodeState
 (
-	uint32 const _homeId,
-	uint8 const _nodeId
+		uint32 const _homeId,
+		uint8 const _nodeId
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
+		LockGuard LG(driver->m_nodeMutex);
 		// Retreive the Node's session and dynamic data
 		Node* node = driver->GetNode( _nodeId );
 		if( node )
 		{
 			node->SetQueryStage( Node::QueryStage_Associations );
-			driver->ReleaseNodes();
 			return true;
 		}
 	}
@@ -801,18 +801,18 @@ bool Manager::RequestNodeState
 //-----------------------------------------------------------------------------
 bool Manager::RequestNodeDynamic
 (
-	uint32 const _homeId,
-	uint8 const _nodeId
+		uint32 const _homeId,
+		uint8 const _nodeId
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
+		LockGuard LG(driver->m_nodeMutex);
 		// Retreive the Node's dynamic data
 		Node* node = driver->GetNode( _nodeId );
 		if( node )
 		{
 			node->SetQueryStage( Node::QueryStage_Dynamic );
-			driver->ReleaseNodes();
 			return true;
 		}
 	}
@@ -825,8 +825,8 @@ bool Manager::RequestNodeDynamic
 //-----------------------------------------------------------------------------
 bool Manager::IsNodeListeningDevice
 (
-	uint32 const _homeId,
-	uint8 const _nodeId
+		uint32 const _homeId,
+		uint8 const _nodeId
 )
 {
 	bool res = false;
@@ -844,8 +844,8 @@ bool Manager::IsNodeListeningDevice
 //-----------------------------------------------------------------------------
 bool Manager::IsNodeFrequentListeningDevice
 (
-	uint32 const _homeId,
-	uint8 const _nodeId
+		uint32 const _homeId,
+		uint8 const _nodeId
 )
 {
 	bool res = false;
@@ -863,8 +863,8 @@ bool Manager::IsNodeFrequentListeningDevice
 //-----------------------------------------------------------------------------
 bool Manager::IsNodeBeamingDevice
 (
-	uint32 const _homeId,
-	uint8 const _nodeId
+		uint32 const _homeId,
+		uint8 const _nodeId
 )
 {
 	bool res = false;
@@ -882,8 +882,8 @@ bool Manager::IsNodeBeamingDevice
 //-----------------------------------------------------------------------------
 bool Manager::IsNodeRoutingDevice
 (
-	uint32 const _homeId,
-	uint8 const _nodeId
+		uint32 const _homeId,
+		uint8 const _nodeId
 )
 {
 	bool res = false;
@@ -901,8 +901,8 @@ bool Manager::IsNodeRoutingDevice
 //-----------------------------------------------------------------------------
 bool Manager::IsNodeSecurityDevice
 (
-	uint32 const _homeId,
-	uint8 const _nodeId
+		uint32 const _homeId,
+		uint8 const _nodeId
 )
 {
 	bool security = 0;
@@ -920,8 +920,8 @@ bool Manager::IsNodeSecurityDevice
 //-----------------------------------------------------------------------------
 uint32 Manager::GetNodeMaxBaudRate
 (
-	uint32 const _homeId,
-	uint8 const _nodeId
+		uint32 const _homeId,
+		uint8 const _nodeId
 )
 {
 	uint32 baud = 0;
@@ -939,8 +939,8 @@ uint32 Manager::GetNodeMaxBaudRate
 //-----------------------------------------------------------------------------
 uint8 Manager::GetNodeVersion
 (
-	uint32 const _homeId,
-	uint8 const _nodeId
+		uint32 const _homeId,
+		uint8 const _nodeId
 )
 {
 	uint8 version = 0;
@@ -958,8 +958,8 @@ uint8 Manager::GetNodeVersion
 //-----------------------------------------------------------------------------
 uint8 Manager::GetNodeSecurity
 (
-	uint32 const _homeId,
-	uint8 const _nodeId
+		uint32 const _homeId,
+		uint8 const _nodeId
 )
 {
 	uint8 version = 0;
@@ -977,8 +977,8 @@ uint8 Manager::GetNodeSecurity
 //-----------------------------------------------------------------------------
 uint8 Manager::GetNodeBasic
 (
-	uint32 const _homeId,
-	uint8 const _nodeId
+		uint32 const _homeId,
+		uint8 const _nodeId
 )
 {
 	uint8 basic = 0;
@@ -996,8 +996,8 @@ uint8 Manager::GetNodeBasic
 //-----------------------------------------------------------------------------
 uint8 Manager::GetNodeGeneric
 (
-	uint32 const _homeId,
-	uint8 const _nodeId
+		uint32 const _homeId,
+		uint8 const _nodeId
 )
 {
 	uint8 genericType = 0;
@@ -1015,8 +1015,8 @@ uint8 Manager::GetNodeGeneric
 //-----------------------------------------------------------------------------
 uint8 Manager::GetNodeSpecific
 (
-	uint32 const _homeId,
-	uint8 const _nodeId
+		uint32 const _homeId,
+		uint8 const _nodeId
 )
 {
 	uint8 specific = 0;
@@ -1034,8 +1034,8 @@ uint8 Manager::GetNodeSpecific
 //-----------------------------------------------------------------------------
 string Manager::GetNodeType
 (
-	uint32 const _homeId,
-	uint8 const _nodeId
+		uint32 const _homeId,
+		uint8 const _nodeId
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
@@ -1052,9 +1052,9 @@ string Manager::GetNodeType
 //-----------------------------------------------------------------------------
 uint32 Manager::GetNodeNeighbors
 (
-	uint32 const _homeId,
-	uint8 const _nodeId,
-	uint8** o_neighbors
+		uint32 const _homeId,
+		uint8 const _nodeId,
+		uint8** o_neighbors
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
@@ -1071,8 +1071,8 @@ uint32 Manager::GetNodeNeighbors
 //-----------------------------------------------------------------------------
 string Manager::GetNodeManufacturerName
 (
-	uint32 const _homeId,
-	uint8 const _nodeId
+		uint32 const _homeId,
+		uint8 const _nodeId
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
@@ -1089,8 +1089,8 @@ string Manager::GetNodeManufacturerName
 //-----------------------------------------------------------------------------
 string Manager::GetNodeProductName
 (
-	uint32 const _homeId,
-	uint8 const _nodeId
+		uint32 const _homeId,
+		uint8 const _nodeId
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
@@ -1107,8 +1107,8 @@ string Manager::GetNodeProductName
 //-----------------------------------------------------------------------------
 string Manager::GetNodeName
 (
-	uint32 const _homeId,
-	uint8 const _nodeId
+		uint32 const _homeId,
+		uint8 const _nodeId
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
@@ -1125,8 +1125,8 @@ string Manager::GetNodeName
 //-----------------------------------------------------------------------------
 string Manager::GetNodeLocation
 (
-	uint32 const _homeId,
-	uint8 const _nodeId
+		uint32 const _homeId,
+		uint8 const _nodeId
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
@@ -1143,9 +1143,9 @@ string Manager::GetNodeLocation
 //-----------------------------------------------------------------------------
 void Manager::SetNodeManufacturerName
 (
-	uint32 const _homeId,
-	uint8 const _nodeId,
-	string const& _manufacturerName
+		uint32 const _homeId,
+		uint8 const _nodeId,
+		string const& _manufacturerName
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
@@ -1160,9 +1160,9 @@ void Manager::SetNodeManufacturerName
 //-----------------------------------------------------------------------------
 void Manager::SetNodeProductName
 (
-	uint32 const _homeId,
-	uint8 const _nodeId,
-	string const& _productName
+		uint32 const _homeId,
+		uint8 const _nodeId,
+		string const& _productName
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
@@ -1177,9 +1177,9 @@ void Manager::SetNodeProductName
 //-----------------------------------------------------------------------------
 void Manager::SetNodeName
 (
-	uint32 const _homeId,
-	uint8 const _nodeId,
-	string const& _nodeName
+		uint32 const _homeId,
+		uint8 const _nodeId,
+		string const& _nodeName
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
@@ -1194,9 +1194,9 @@ void Manager::SetNodeName
 //-----------------------------------------------------------------------------
 void Manager::SetNodeLocation
 (
-	uint32 const _homeId,
-	uint8 const _nodeId,
-	string const& _location
+		uint32 const _homeId,
+		uint8 const _nodeId,
+		string const& _location
 
 )
 {
@@ -1212,8 +1212,8 @@ void Manager::SetNodeLocation
 //-----------------------------------------------------------------------------
 string Manager::GetNodeManufacturerId
 (
-	uint32 const _homeId,
-	uint8 const _nodeId
+		uint32 const _homeId,
+		uint8 const _nodeId
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
@@ -1230,8 +1230,8 @@ string Manager::GetNodeManufacturerId
 //-----------------------------------------------------------------------------
 string Manager::GetNodeProductType
 (
-	uint32 const _homeId,
-	uint8 const _nodeId
+		uint32 const _homeId,
+		uint8 const _nodeId
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
@@ -1248,8 +1248,8 @@ string Manager::GetNodeProductType
 //-----------------------------------------------------------------------------
 string Manager::GetNodeProductId
 (
-	uint32 const _homeId,
-	uint8 const _nodeId
+		uint32 const _homeId,
+		uint8 const _nodeId
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
@@ -1266,8 +1266,8 @@ string Manager::GetNodeProductId
 //-----------------------------------------------------------------------------
 void Manager::SetNodeOn
 (
-	uint32 const _homeId,
-	uint8 const _nodeId
+		uint32 const _homeId,
+		uint8 const _nodeId
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
@@ -1282,8 +1282,8 @@ void Manager::SetNodeOn
 //-----------------------------------------------------------------------------
 void Manager::SetNodeOff
 (
-	uint32 const _homeId,
-	uint8 const _nodeId
+		uint32 const _homeId,
+		uint8 const _nodeId
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
@@ -1298,8 +1298,8 @@ void Manager::SetNodeOff
 //-----------------------------------------------------------------------------
 bool Manager::IsNodeInfoReceived
 (
-	uint32 const _homeId,
-	uint8 const _nodeId
+		uint32 const _homeId,
+		uint8 const _nodeId
 )
 {
 	bool result = false;
@@ -1309,14 +1309,12 @@ bool Manager::IsNodeInfoReceived
 		Node *node;
 
 		// Need to lock and unlock nodes to check this information
-		driver->LockNodes();
+		LockGuard LG(driver->m_nodeMutex);
 
-		if( (node = driver->GetNodeUnsafe( _nodeId ) ) != NULL)
+		if( (node = driver->GetNode( _nodeId ) ) != NULL)
 		{
 			result = node->NodeInfoReceived();
 		}
-
-		driver->ReleaseNodes();
 	}
 
 	return result;
@@ -1328,24 +1326,24 @@ bool Manager::IsNodeInfoReceived
 //-----------------------------------------------------------------------------
 bool Manager::GetNodeClassInformation
 (
-	uint32 const _homeId,
-	uint8 const _nodeId,
-	uint8 const _commandClassId,
-	string *_className,
-	uint8 *_classVersion
+		uint32 const _homeId,
+		uint8 const _nodeId,
+		uint8 const _commandClassId,
+		string *_className,
+		uint8 *_classVersion
 )
 {
 	bool result = false;
 
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
-	        Node *node;
+		Node *node;
 
-	        // Need to lock and unlock nodes to check this information
-	        driver->LockNodes();
+		// Need to lock and unlock nodes to check this information
+		LockGuard LG(driver->m_nodeMutex);
 
-	        if( ( node = driver->GetNodeUnsafe( _nodeId ) ) != NULL )
-	        {
+		if( ( node = driver->GetNode( _nodeId ) ) != NULL )
+		{
 			CommandClass *cc;
 			if( node->NodeInfoReceived() && ( ( cc = node->GetCommandClass( _commandClassId ) ) != NULL ) )
 			{
@@ -1362,7 +1360,6 @@ bool Manager::GetNodeClassInformation
 			}
 		}
 
-		driver->ReleaseNodes();
 	}
 
 	return result;
@@ -1374,8 +1371,8 @@ bool Manager::GetNodeClassInformation
 //-----------------------------------------------------------------------------
 bool Manager::IsNodeAwake
 (
-	uint32 const _homeId,
-	uint8 const _nodeId
+		uint32 const _homeId,
+		uint8 const _nodeId
 )
 {
 	if( IsNodeListeningDevice( _homeId, _nodeId ) )
@@ -1385,17 +1382,16 @@ bool Manager::IsNodeAwake
 	bool result = true;
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
-	        // Need to lock and unlock nodes to check this information
-	        driver->LockNodes();
+		// Need to lock and unlock nodes to check this information
+		LockGuard LG(driver->m_nodeMutex);
 
-	        if( Node* node = driver->GetNodeUnsafe( _nodeId ) )
-	        {
+		if( Node* node = driver->GetNode( _nodeId ) )
+		{
 			if( WakeUp* wcc = static_cast<WakeUp*>( node->GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
 			{
 				result = wcc->IsAwake();
 			}
 		}
-		driver->ReleaseNodes();
 	}
 	return result;
 }
@@ -1406,17 +1402,17 @@ bool Manager::IsNodeAwake
 //-----------------------------------------------------------------------------
 bool Manager::IsNodeFailed
 (
-	uint32 const _homeId,
-	uint8 const _nodeId
+		uint32 const _homeId,
+		uint8 const _nodeId
 )
 {
 	bool result = false;
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
-	        if( Node* node = driver->GetNode( _nodeId ) )
-	        {
+		LockGuard LG(driver->m_nodeMutex);
+		if( Node* node = driver->GetNode( _nodeId ) )
+		{
 			result = !node->IsNodeAlive();
-        		driver->ReleaseNodes();
 		}
 	}
 	return result;
@@ -1428,17 +1424,17 @@ bool Manager::IsNodeFailed
 //-----------------------------------------------------------------------------
 string Manager::GetNodeQueryStage
 (
-	uint32 const _homeId,
-	uint8 const _nodeId
+		uint32 const _homeId,
+		uint8 const _nodeId
 )
 {
 	string result = "Unknown";
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
-	        if( Node* node = driver->GetNode( _nodeId ) )
-	        {
+		LockGuard LG(driver->m_nodeMutex);
+		if( Node* node = driver->GetNode( _nodeId ) )
+		{
 			result = node->GetQueryStageName( node->GetCurrentQueryStage() );
-        		driver->ReleaseNodes();
 		}
 	}
 	return result;
@@ -1450,9 +1446,9 @@ string Manager::GetNodeQueryStage
 //-----------------------------------------------------------------------------
 void Manager::SetNodeLevel
 (
-	uint32 const _homeId,
-	uint8 const _nodeId,
-	uint8 const _level
+		uint32 const _homeId,
+		uint8 const _nodeId,
+		uint8 const _level
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
@@ -1471,13 +1467,13 @@ void Manager::SetNodeLevel
 //-----------------------------------------------------------------------------
 string Manager::GetValueLabel
 (
-	ValueID const& _id
+		ValueID const& _id
 )
 {
 	string label;
 	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 	{
-		driver->LockNodes();
+		LockGuard LG(driver->m_nodeMutex);
 		if( Value* value = driver->GetValue( _id ) )
 		{
 			label = value->GetLabel();
@@ -1485,7 +1481,6 @@ string Manager::GetValueLabel
 		} else {
 			OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to GetValueLabel");
 		}
-		driver->ReleaseNodes();
 	}
 
 	return label;
@@ -1497,13 +1492,13 @@ string Manager::GetValueLabel
 //-----------------------------------------------------------------------------
 void Manager::SetValueLabel
 (
-	ValueID const& _id,
-	string const& _value
+		ValueID const& _id,
+		string const& _value
 )
 {
 	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 	{
-		driver->LockNodes();
+		LockGuard LG(driver->m_nodeMutex);
 		if( Value* value = driver->GetValue( _id ) )
 		{
 			value->SetLabel( _value );
@@ -1511,7 +1506,6 @@ void Manager::SetValueLabel
 		} else {
 			OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to SetValueLabel");
 		}
-		driver->ReleaseNodes();
 	}
 }
 
@@ -1521,13 +1515,13 @@ void Manager::SetValueLabel
 //-----------------------------------------------------------------------------
 string Manager::GetValueUnits
 (
-	ValueID const& _id
+		ValueID const& _id
 )
 {
 	string units;
 	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 	{
-		driver->LockNodes();
+		LockGuard LG(driver->m_nodeMutex);
 		if( Value* value = driver->GetValue( _id ) )
 		{
 			units = value->GetUnits();
@@ -1535,7 +1529,6 @@ string Manager::GetValueUnits
 		} else {
 			OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to GetValueUnits");
 		}
-		driver->ReleaseNodes();
 	}
 
 	return units;
@@ -1547,13 +1540,13 @@ string Manager::GetValueUnits
 //-----------------------------------------------------------------------------
 void Manager::SetValueUnits
 (
- 	ValueID const& _id,
-	string const& _value
+		ValueID const& _id,
+		string const& _value
 )
 {
 	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 	{
-		driver->LockNodes();
+		LockGuard LG(driver->m_nodeMutex);
 		if( Value* value = driver->GetValue( _id ) )
 		{
 			value->SetUnits( _value );
@@ -1561,7 +1554,6 @@ void Manager::SetValueUnits
 		} else {
 			OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to SetValueUnits");
 		}
-		driver->ReleaseNodes();
 	}
 }
 
@@ -1571,13 +1563,13 @@ void Manager::SetValueUnits
 //-----------------------------------------------------------------------------
 string Manager::GetValueHelp
 (
-	ValueID const& _id
+		ValueID const& _id
 )
 {
 	string help;
 	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 	{
-		driver->LockNodes();
+		LockGuard LG(driver->m_nodeMutex);
 		if( Value* value = driver->GetValue( _id ) )
 		{
 			help = value->GetHelp();
@@ -1585,7 +1577,6 @@ string Manager::GetValueHelp
 		} else {
 			OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to GetValueHelp");
 		}
-		driver->ReleaseNodes();
 	}
 
 	return help;
@@ -1597,13 +1588,13 @@ string Manager::GetValueHelp
 //-----------------------------------------------------------------------------
 void Manager::SetValueHelp
 (
-	ValueID const& _id,
-	string const& _value
+		ValueID const& _id,
+		string const& _value
 )
 {
 	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 	{
-		driver->LockNodes();
+		LockGuard LG(driver->m_nodeMutex);
 		if( Value* value = driver->GetValue( _id ) )
 		{
 			value->SetHelp( _value );
@@ -1611,7 +1602,6 @@ void Manager::SetValueHelp
 		} else {
 			OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to SetValueHelp");
 		}
-		driver->ReleaseNodes();
 	}
 }
 
@@ -1621,13 +1611,13 @@ void Manager::SetValueHelp
 //-----------------------------------------------------------------------------
 int32 Manager::GetValueMin
 (
-	ValueID const& _id
+		ValueID const& _id
 )
 {
 	int32 limit = 0;
 	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 	{
-		driver->LockNodes();
+		LockGuard LG(driver->m_nodeMutex);
 		if( Value* value = driver->GetValue( _id ) )
 		{
 			limit = value->GetMin();
@@ -1635,7 +1625,6 @@ int32 Manager::GetValueMin
 		} else {
 			OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to GetValueMin");
 		}
-		driver->ReleaseNodes();
 	}
 
 	return limit;
@@ -1647,13 +1636,13 @@ int32 Manager::GetValueMin
 //-----------------------------------------------------------------------------
 int32 Manager::GetValueMax
 (
-	ValueID const& _id
+		ValueID const& _id
 )
 {
 	int32 limit = 0;
 	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 	{
-		driver->LockNodes();
+		LockGuard LG(driver->m_nodeMutex);
 		if( Value* value = driver->GetValue( _id ) )
 		{
 			limit = value->GetMax();
@@ -1661,7 +1650,6 @@ int32 Manager::GetValueMax
 		} else {
 			OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to GetValueMax");
 		}
-		driver->ReleaseNodes();
 	}
 
 	return limit;
@@ -1673,13 +1661,13 @@ int32 Manager::GetValueMax
 //-----------------------------------------------------------------------------
 bool Manager::IsValueReadOnly
 (
-	ValueID const& _id
+		ValueID const& _id
 )
 {
 	bool res = false;
 	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 	{
-		driver->LockNodes();
+		LockGuard LG(driver->m_nodeMutex);
 		if( Value* value = driver->GetValue( _id ) )
 		{
 			res = value->IsReadOnly();
@@ -1687,7 +1675,6 @@ bool Manager::IsValueReadOnly
 		} else {
 			OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to IsValueReadOnly");
 		}
-		driver->ReleaseNodes();
 	}
 
 	return res;
@@ -1699,13 +1686,13 @@ bool Manager::IsValueReadOnly
 //-----------------------------------------------------------------------------
 bool Manager::IsValueWriteOnly
 (
-	ValueID const& _id
+		ValueID const& _id
 )
 {
 	bool res = false;
 	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 	{
-		driver->LockNodes();
+		LockGuard LG(driver->m_nodeMutex);
 		if( Value* value = driver->GetValue( _id ) )
 		{
 			res = value->IsWriteOnly();
@@ -1713,7 +1700,6 @@ bool Manager::IsValueWriteOnly
 		} else {
 			OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to IsValueWriteOnly");
 		}
-		driver->ReleaseNodes();
 	}
 
 	return res;
@@ -1725,13 +1711,13 @@ bool Manager::IsValueWriteOnly
 //-----------------------------------------------------------------------------
 bool Manager::IsValueSet
 (
-	ValueID const& _id
+		ValueID const& _id
 )
 {
 	bool res = false;
 	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 	{
-		driver->LockNodes();
+		LockGuard LG(driver->m_nodeMutex);
 		if( Value* value = driver->GetValue( _id ) )
 		{
 			res = value->IsSet();
@@ -1739,7 +1725,6 @@ bool Manager::IsValueSet
 		} else {
 			OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to IsValueSet");
 		}
-		driver->ReleaseNodes();
 	}
 
 	return res;
@@ -1751,13 +1736,13 @@ bool Manager::IsValueSet
 //-----------------------------------------------------------------------------
 bool Manager::IsValuePolled
 (
-	ValueID const& _id
+		ValueID const& _id
 )
 {
 	bool res = false;
 	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 	{
-		driver->LockNodes();
+		LockGuard LG(driver->m_nodeMutex);
 		if( Value* value = driver->GetValue( _id ) )
 		{
 			res = value->IsPolled();
@@ -1765,7 +1750,6 @@ bool Manager::IsValuePolled
 		} else {
 			OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to IsValuePolled");
 		}
-		driver->ReleaseNodes();
 	}
 
 	return res;
@@ -1777,8 +1761,8 @@ bool Manager::IsValuePolled
 //-----------------------------------------------------------------------------
 bool Manager::GetValueAsBool
 (
-	ValueID const& _id,
-	bool* o_value
+		ValueID const& _id,
+		bool* o_value
 )
 {
 	bool res = false;
@@ -1789,7 +1773,7 @@ bool Manager::GetValueAsBool
 		{
 			if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 			{
-				driver->LockNodes();
+				LockGuard LG(driver->m_nodeMutex);
 				if( ValueBool* value = static_cast<ValueBool*>( driver->GetValue( _id ) ) )
 				{
 					*o_value = value->GetValue();
@@ -1798,14 +1782,13 @@ bool Manager::GetValueAsBool
 				} else {
 					OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to GetValueAsBool");
 				}
-				driver->ReleaseNodes();
 			}
 		}
 		else if( ValueID::ValueType_Button == _id.GetType() )
 		{
 			if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 			{
-			    driver->LockNodes();
+				LockGuard LG(driver->m_nodeMutex);
 				if( ValueButton* value = static_cast<ValueButton*>( driver->GetValue( _id ) ) )
 				{
 					*o_value = value->IsPressed();
@@ -1814,7 +1797,6 @@ bool Manager::GetValueAsBool
 				} else {
 					OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to GetValueAsBool");
 				}
-				driver->ReleaseNodes();
 			}
 		} else {
 			OZW_ERROR(OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID, "ValueID passed to GetValueAsBool is not a Bool or Button Value");
@@ -1830,8 +1812,8 @@ bool Manager::GetValueAsBool
 //-----------------------------------------------------------------------------
 bool Manager::GetValueAsByte
 (
-	ValueID const& _id,
-	uint8* o_value
+		ValueID const& _id,
+		uint8* o_value
 )
 {
 	bool res = false;
@@ -1842,7 +1824,7 @@ bool Manager::GetValueAsByte
 		{
 			if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 			{
-				driver->LockNodes();
+				LockGuard LG(driver->m_nodeMutex);
 				if( ValueByte* value = static_cast<ValueByte*>( driver->GetValue( _id ) ) )
 				{
 					*o_value = value->GetValue();
@@ -1851,7 +1833,6 @@ bool Manager::GetValueAsByte
 				} else {
 					OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to GetValueAsByte");
 				}
-				driver->ReleaseNodes();
 			}
 		} else {
 			OZW_ERROR(OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID, "ValueID passed to GetValueAsByte is not a Byte Value");
@@ -1867,8 +1848,8 @@ bool Manager::GetValueAsByte
 //-----------------------------------------------------------------------------
 bool Manager::GetValueAsFloat
 (
-	ValueID const& _id,
-	float* o_value
+		ValueID const& _id,
+		float* o_value
 )
 {
 	bool res = false;
@@ -1879,7 +1860,7 @@ bool Manager::GetValueAsFloat
 		{
 			if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 			{
-				driver->LockNodes();
+				LockGuard LG(driver->m_nodeMutex);
 				if( ValueDecimal* value = static_cast<ValueDecimal*>( driver->GetValue( _id ) ) )
 				{
 					string str = value->GetValue();
@@ -1889,7 +1870,6 @@ bool Manager::GetValueAsFloat
 				} else {
 					OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to GetValueAsFloat");
 				}
-				driver->ReleaseNodes();
 			}
 		} else {
 			OZW_ERROR(OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID, "ValueID passed to GetValueAsFloat is not a Float Value");
@@ -1905,8 +1885,8 @@ bool Manager::GetValueAsFloat
 //-----------------------------------------------------------------------------
 bool Manager::GetValueAsInt
 (
-	ValueID const& _id,
-	int32* o_value
+		ValueID const& _id,
+		int32* o_value
 )
 {
 	bool res = false;
@@ -1917,7 +1897,7 @@ bool Manager::GetValueAsInt
 		{
 			if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 			{
-				driver->LockNodes();
+				LockGuard LG(driver->m_nodeMutex);
 				if( ValueInt* value = static_cast<ValueInt*>( driver->GetValue( _id ) ) )
 				{
 					*o_value = value->GetValue();
@@ -1926,7 +1906,6 @@ bool Manager::GetValueAsInt
 				} else {
 					OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to GetValueAsInt");
 				}
-				driver->ReleaseNodes();
 			}
 		} else {
 			OZW_ERROR(OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID, "ValueID passed to GetValueAsInt is not a Int Value");
@@ -1942,9 +1921,9 @@ bool Manager::GetValueAsInt
 //-----------------------------------------------------------------------------
 bool Manager::GetValueAsRaw
 (
-	ValueID const& _id,
-	uint8** o_value,
-	uint8* o_length
+		ValueID const& _id,
+		uint8** o_value,
+		uint8* o_length
 )
 {
 	bool res = false;
@@ -1955,7 +1934,7 @@ bool Manager::GetValueAsRaw
 		{
 			if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 			{
-				driver->LockNodes();
+				LockGuard LG(driver->m_nodeMutex);
 				if( ValueRaw* value = static_cast<ValueRaw*>( driver->GetValue( _id ) ) )
 				{
 					*o_length = value->GetLength();
@@ -1966,7 +1945,6 @@ bool Manager::GetValueAsRaw
 				} else {
 					OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to GetValueAsRaw");
 				}
-				driver->ReleaseNodes();
 			}
 		} else {
 			OZW_ERROR(OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID, "ValueID passed to GetValueAsRaw is not a Raw Value");
@@ -1982,8 +1960,8 @@ bool Manager::GetValueAsRaw
 //-----------------------------------------------------------------------------
 bool Manager::GetValueAsShort
 (
-	ValueID const& _id,
-	int16* o_value
+		ValueID const& _id,
+		int16* o_value
 )
 {
 	bool res = false;
@@ -1994,7 +1972,7 @@ bool Manager::GetValueAsShort
 		{
 			if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 			{
-				driver->LockNodes();
+				LockGuard LG(driver->m_nodeMutex);
 				if( ValueShort* value = static_cast<ValueShort*>( driver->GetValue( _id ) ) )
 				{
 					*o_value = value->GetValue();
@@ -2003,7 +1981,6 @@ bool Manager::GetValueAsShort
 				} else {
 					OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to GetValueAsShort");
 				}
-				driver->ReleaseNodes();
 			}
 		} else {
 			OZW_ERROR(OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID, "ValueID passed to GetValueAsShort is not a Short Value");
@@ -2019,8 +1996,8 @@ bool Manager::GetValueAsShort
 //-----------------------------------------------------------------------------
 bool Manager::GetValueAsString
 (
-	ValueID const& _id,
-	string* o_value
+		ValueID const& _id,
+		string* o_value
 )
 {
 	bool res = false;
@@ -2030,7 +2007,7 @@ bool Manager::GetValueAsString
 	{
 		if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 		{
-			driver->LockNodes();
+			LockGuard LG(driver->m_nodeMutex);
 
 			switch( _id.GetType() )
 			{
@@ -2169,7 +2146,6 @@ bool Manager::GetValueAsString
 #endif
 			}
 
-			driver->ReleaseNodes();
 		}
 	}
 
@@ -2182,8 +2158,8 @@ bool Manager::GetValueAsString
 //-----------------------------------------------------------------------------
 bool Manager::GetValueListSelection
 (
-	ValueID const& _id,
-	string* o_value
+		ValueID const& _id,
+		string* o_value
 )
 {
 	bool res = false;
@@ -2194,7 +2170,7 @@ bool Manager::GetValueListSelection
 		{
 			if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 			{
-				driver->LockNodes();
+				LockGuard LG(driver->m_nodeMutex);
 				if( ValueList* value = static_cast<ValueList*>( driver->GetValue( _id ) ) )
 				{
 					ValueList::Item const& item = value->GetItem();
@@ -2207,7 +2183,6 @@ bool Manager::GetValueListSelection
 				} else {
 					OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to GetValueListSelection");
 				}
-				driver->ReleaseNodes();
 			}
 		} else {
 			OZW_ERROR(OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID, "ValueID passed to GetValueListSelection is not a List Value");
@@ -2223,8 +2198,8 @@ bool Manager::GetValueListSelection
 //-----------------------------------------------------------------------------
 bool Manager::GetValueListSelection
 (
-	ValueID const& _id,
-	int32* o_value
+		ValueID const& _id,
+		int32* o_value
 )
 {
 	bool res = false;
@@ -2235,7 +2210,7 @@ bool Manager::GetValueListSelection
 		{
 			if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 			{
-				driver->LockNodes();
+				LockGuard LG(driver->m_nodeMutex);
 				if( ValueList* value = static_cast<ValueList*>( driver->GetValue( _id ) ) )
 				{
 					ValueList::Item const& item = value->GetItem();
@@ -2245,7 +2220,6 @@ bool Manager::GetValueListSelection
 				} else {
 					OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to GetValueListSelection");
 				}
-				driver->ReleaseNodes();
 			}
 		} else {
 			OZW_ERROR(OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID, "ValueID passed to GetValueListSelection is not a List Value");
@@ -2261,8 +2235,8 @@ bool Manager::GetValueListSelection
 //-----------------------------------------------------------------------------
 bool Manager::GetValueListItems
 (
-	ValueID const& _id,
-	vector<string>* o_value
+		ValueID const& _id,
+		vector<string>* o_value
 )
 {
 	bool res = false;
@@ -2273,7 +2247,7 @@ bool Manager::GetValueListItems
 		{
 			if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 			{
-				driver->LockNodes();
+				LockGuard LG(driver->m_nodeMutex);
 				if( ValueList* value = static_cast<ValueList*>( driver->GetValue( _id ) ) )
 				{
 					o_value->clear();
@@ -2282,7 +2256,6 @@ bool Manager::GetValueListItems
 				} else {
 					OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to GetValueListItems");
 				}
-				driver->ReleaseNodes();
 			}
 		} else {
 			OZW_ERROR(OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID, "ValueID passed to GetValueListItems is not a List Value");
@@ -2298,8 +2271,8 @@ bool Manager::GetValueListItems
 //-----------------------------------------------------------------------------
 bool Manager::GetValueFloatPrecision
 (
-	ValueID const& _id,
-	uint8* o_value
+		ValueID const& _id,
+		uint8* o_value
 )
 {
 	bool res = false;
@@ -2310,7 +2283,7 @@ bool Manager::GetValueFloatPrecision
 		{
 			if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 			{
-				driver->LockNodes();
+				LockGuard LG(driver->m_nodeMutex);
 				if( ValueDecimal* value = static_cast<ValueDecimal*>( driver->GetValue( _id ) ) )
 				{
 					*o_value = value->GetPrecision();
@@ -2319,7 +2292,6 @@ bool Manager::GetValueFloatPrecision
 				} else {
 					OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to GetValueFloatPrecision");
 				}
-				driver->ReleaseNodes();
 			}
 		} else {
 			OZW_ERROR(OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID, "ValueID passed to GetValueFloatPrecision is not a Decimal Value");
@@ -2335,8 +2307,8 @@ bool Manager::GetValueFloatPrecision
 //-----------------------------------------------------------------------------
 bool Manager::SetValue
 (
-	ValueID const& _id,
-	bool const _value
+		ValueID const& _id,
+		bool const _value
 )
 {
 	bool res = false;
@@ -2347,7 +2319,7 @@ bool Manager::SetValue
 		{
 			if( _id.GetNodeId() != driver->GetNodeId() )
 			{
-				driver->LockNodes();
+				LockGuard LG(driver->m_nodeMutex);
 				if( ValueBool* value = static_cast<ValueBool*>( driver->GetValue( _id ) ) )
 				{
 					res = value->Set( _value );
@@ -2355,7 +2327,6 @@ bool Manager::SetValue
 				} else {
 					OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to SetValue");
 				}
-				driver->ReleaseNodes();
 			}
 		}
 	} else {
@@ -2371,8 +2342,8 @@ bool Manager::SetValue
 //-----------------------------------------------------------------------------
 bool Manager::SetValue
 (
-	ValueID const& _id,
-	uint8 const _value
+		ValueID const& _id,
+		uint8 const _value
 )
 {
 	bool res = false;
@@ -2383,7 +2354,7 @@ bool Manager::SetValue
 		{
 			if( _id.GetNodeId() != driver->GetNodeId() )
 			{
-				driver->LockNodes();
+				LockGuard LG(driver->m_nodeMutex);
 				if( ValueByte* value = static_cast<ValueByte*>( driver->GetValue( _id ) ) )
 				{
 					res = value->Set( _value );
@@ -2391,7 +2362,6 @@ bool Manager::SetValue
 				} else {
 					OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to SetValue");
 				}
-				driver->ReleaseNodes();
 			}
 		}
 	} else {
@@ -2407,8 +2377,8 @@ bool Manager::SetValue
 //-----------------------------------------------------------------------------
 bool Manager::SetValue
 (
-	ValueID const& _id,
-	float const _value
+		ValueID const& _id,
+		float const _value
 )
 {
 	bool res = false;
@@ -2419,7 +2389,7 @@ bool Manager::SetValue
 		{
 			if( _id.GetNodeId() != driver->GetNodeId() )
 			{
-				driver->LockNodes();
+				LockGuard LG(driver->m_nodeMutex);
 				if( ValueDecimal* value = static_cast<ValueDecimal*>( driver->GetValue( _id ) ) )
 				{
 					char str[256];
@@ -2447,7 +2417,6 @@ bool Manager::SetValue
 				} else {
 					OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to SetValue");
 				}
-				driver->ReleaseNodes();
 			}
 		}
 	} else {
@@ -2463,8 +2432,8 @@ bool Manager::SetValue
 //-----------------------------------------------------------------------------
 bool Manager::SetValue
 (
-	ValueID const& _id,
-	int32 const _value
+		ValueID const& _id,
+		int32 const _value
 )
 {
 	bool res = false;
@@ -2475,7 +2444,7 @@ bool Manager::SetValue
 		{
 			if( _id.GetNodeId() != driver->GetNodeId() )
 			{
-				driver->LockNodes();
+				LockGuard LG(driver->m_nodeMutex);
 				if( ValueInt* value = static_cast<ValueInt*>( driver->GetValue( _id ) ) )
 				{
 					res = value->Set( _value );
@@ -2483,7 +2452,6 @@ bool Manager::SetValue
 				} else {
 					OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to SetValue");
 				}
-				driver->ReleaseNodes();
 			}
 		}
 	} else {
@@ -2499,9 +2467,9 @@ bool Manager::SetValue
 //-----------------------------------------------------------------------------
 bool Manager::SetValue
 (
-	ValueID const& _id,
-	uint8 const* _value,
-	uint8 const _length
+		ValueID const& _id,
+		uint8 const* _value,
+		uint8 const _length
 )
 {
 	bool res = false;
@@ -2512,7 +2480,7 @@ bool Manager::SetValue
 		{
 			if( _id.GetNodeId() != driver->GetNodeId() )
 			{
-				driver->LockNodes();
+				LockGuard LG(driver->m_nodeMutex);
 				if( ValueRaw* value = static_cast<ValueRaw*>( driver->GetValue( _id ) ) )
 				{
 					res = value->Set( _value, _length );
@@ -2520,7 +2488,6 @@ bool Manager::SetValue
 				} else {
 					OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to SetValue");
 				}
-				driver->ReleaseNodes();
 			}
 		}
 	} else {
@@ -2536,8 +2503,8 @@ bool Manager::SetValue
 //-----------------------------------------------------------------------------
 bool Manager::SetValue
 (
-	ValueID const& _id,
-	int16 const _value
+		ValueID const& _id,
+		int16 const _value
 )
 {
 	bool res = false;
@@ -2548,7 +2515,7 @@ bool Manager::SetValue
 		{
 			if( _id.GetNodeId() != driver->GetNodeId() )
 			{
-				driver->LockNodes();
+				LockGuard LG(driver->m_nodeMutex);
 				if( ValueShort* value = static_cast<ValueShort*>( driver->GetValue( _id ) ) )
 				{
 					res = value->Set( _value );
@@ -2556,7 +2523,6 @@ bool Manager::SetValue
 				} else {
 					OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to SetValue");
 				}
-				driver->ReleaseNodes();
 			}
 		}
 	} else {
@@ -2572,8 +2538,8 @@ bool Manager::SetValue
 //-----------------------------------------------------------------------------
 bool Manager::SetValueListSelection
 (
-	ValueID const& _id,
-	string const& _selectedItem
+		ValueID const& _id,
+		string const& _selectedItem
 )
 {
 	bool res = false;
@@ -2584,7 +2550,7 @@ bool Manager::SetValueListSelection
 		{
 			if( _id.GetNodeId() != driver->GetNodeId() )
 			{
-				driver->LockNodes();
+				LockGuard LG(driver->m_nodeMutex);
 				if( ValueList* value = static_cast<ValueList*>( driver->GetValue( _id ) ) )
 				{
 					res = value->SetByLabel( _selectedItem );
@@ -2592,7 +2558,6 @@ bool Manager::SetValueListSelection
 				} else {
 					OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to SetValueListSelection");
 				}
-				driver->ReleaseNodes();
 			}
 
 		}
@@ -2609,8 +2574,8 @@ bool Manager::SetValueListSelection
 //-----------------------------------------------------------------------------
 bool Manager::SetValue
 (
-	ValueID const& _id,
-	string const& _value
+		ValueID const& _id,
+		string const& _value
 )
 {
 	bool res = false;
@@ -2619,7 +2584,7 @@ bool Manager::SetValue
 	{
 		if( _id.GetNodeId() != driver->GetNodeId() )
 		{
-			driver->LockNodes();
+			LockGuard LG(driver->m_nodeMutex);
 
 			switch( _id.GetType() )
 			{
@@ -2734,7 +2699,6 @@ bool Manager::SetValue
 					break;
 				}
 			}
-			driver->ReleaseNodes();
 		}
 	}
 	return res;
@@ -2746,33 +2710,32 @@ bool Manager::SetValue
 //-----------------------------------------------------------------------------
 bool Manager::RefreshValue
 (
-	ValueID const& _id
+		ValueID const& _id
 )
 {
 	bool bRet = false;	// return value
 
 	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 	{
-	    Node *node;
+		Node *node;
 
-	    // Need to lock and unlock nodes to check this information
-	    driver->LockNodes();
+		// Need to lock and unlock nodes to check this information
+		LockGuard LG(driver->m_nodeMutex);
 
-	    if( (node = driver->GetNodeUnsafe( _id.GetNodeId() ) ) != NULL)
-	    {
+		if( (node = driver->GetNode( _id.GetNodeId() ) ) != NULL)
+		{
 			CommandClass* cc = node->GetCommandClass( _id.GetCommandClassId() );
 			if (cc) {
-        			uint8 index = _id.GetIndex();
-	        		uint8 instance = _id.GetInstance();
-		        	Log::Write( LogLevel_Info, "mgr,     Refreshing node %d: %s index = %d instance = %d (to confirm a reported change)", node->m_nodeId, cc->GetCommandClassName().c_str(), index, instance );
-		        	cc->RequestValue( 0, index, instance, Driver::MsgQueue_Send );
-        			bRet = true;
-            } else {
-       				OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to RefreshValue");
-       				bRet = false;
-            }
+				uint8 index = _id.GetIndex();
+				uint8 instance = _id.GetInstance();
+				Log::Write( LogLevel_Info, "mgr,     Refreshing node %d: %s index = %d instance = %d (to confirm a reported change)", node->m_nodeId, cc->GetCommandClassName().c_str(), index, instance );
+				cc->RequestValue( 0, index, instance, Driver::MsgQueue_Send );
+				bRet = true;
+			} else {
+				OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to RefreshValue");
+				bRet = false;
+			}
 		}
-		driver->ReleaseNodes();
 	}
 	return bRet;
 }
@@ -2783,13 +2746,13 @@ bool Manager::RefreshValue
 //-----------------------------------------------------------------------------
 void Manager::SetChangeVerified
 (
-	ValueID const& _id,
-	bool _verify
+		ValueID const& _id,
+		bool _verify
 )
 {
 	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 	{
-		driver->LockNodes();
+		LockGuard LG(driver->m_nodeMutex);
 		if( Value* value = driver->GetValue( _id ) )
 		{
 			value->SetChangeVerified( _verify );
@@ -2797,7 +2760,6 @@ void Manager::SetChangeVerified
 		} else {
 			OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to SetChangeVerified");
 		}
-		driver->ReleaseNodes();
 	}
 }
 
@@ -2807,13 +2769,13 @@ void Manager::SetChangeVerified
 //-----------------------------------------------------------------------------
 bool Manager::GetChangeVerified
 (
-	ValueID const& _id
+		ValueID const& _id
 )
 {
 	bool res = false;
 	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 	{
-		driver->LockNodes();
+		LockGuard LG(driver->m_nodeMutex);
 		if( Value* value = driver->GetValue( _id ) )
 		{
 			res = value->GetChangeVerified();
@@ -2821,7 +2783,6 @@ bool Manager::GetChangeVerified
 		} else {
 			OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to GetChangeVerified");
 		}
-		driver->ReleaseNodes();
 	}
 	return res;
 }
@@ -2833,7 +2794,7 @@ bool Manager::GetChangeVerified
 //-----------------------------------------------------------------------------
 bool Manager::PressButton
 (
-	ValueID const& _id
+		ValueID const& _id
 )
 {
 	bool res = false;
@@ -2842,7 +2803,7 @@ bool Manager::PressButton
 	{
 		if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 		{
-			driver->LockNodes();
+			LockGuard LG(driver->m_nodeMutex);
 			if( ValueButton* value = static_cast<ValueButton*>( driver->GetValue( _id ) ) )
 			{
 				res = value->PressButton();
@@ -2850,7 +2811,6 @@ bool Manager::PressButton
 			} else {
 				OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to PressButton");
 			}
-			driver->ReleaseNodes();
 		}
 	} else {
 		OZW_ERROR(OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID, "ValueID passed to PressButton is not a Button Value");
@@ -2865,7 +2825,7 @@ bool Manager::PressButton
 //-----------------------------------------------------------------------------
 bool Manager::ReleaseButton
 (
-	ValueID const& _id
+		ValueID const& _id
 )
 {
 	bool res = false;
@@ -2874,7 +2834,7 @@ bool Manager::ReleaseButton
 	{
 		if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 		{
-			driver->LockNodes();
+			LockGuard LG(driver->m_nodeMutex);
 			if( ValueButton* value = static_cast<ValueButton*>( driver->GetValue( _id ) ) )
 			{
 				res = value->ReleaseButton();
@@ -2882,7 +2842,6 @@ bool Manager::ReleaseButton
 			} else {
 				OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to ReleaseButton");
 			}
-			driver->ReleaseNodes();
 		}
 	} else {
 		OZW_ERROR(OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID, "ValueID passed to ReleaseButton is not a Button Value");
@@ -2901,17 +2860,17 @@ bool Manager::ReleaseButton
 //-----------------------------------------------------------------------------
 uint8 Manager::GetNumSwitchPoints
 (
-	ValueID const& _id
+		ValueID const& _id
 )
 {
-//	bool res = false;
+	//	bool res = false;
 
 	uint8 numSwitchPoints = 0;
 	if( ValueID::ValueType_Schedule == _id.GetType() )
 	{
 		if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 		{
-			driver->LockNodes();
+			LockGuard LG(driver->m_nodeMutex);
 			if( ValueSchedule* value = static_cast<ValueSchedule*>( driver->GetValue( _id ) ) )
 			{
 				numSwitchPoints = value->GetNumSwitchPoints();
@@ -2919,7 +2878,6 @@ uint8 Manager::GetNumSwitchPoints
 			} else {
 				OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to GetNumSwitchPoints");
 			}
-			driver->ReleaseNodes();
 		}
 	} else {
 		OZW_ERROR(OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID, "ValueID passed to GetNumSwitchPoints is not a Schedule Value");
@@ -2934,10 +2892,10 @@ uint8 Manager::GetNumSwitchPoints
 //-----------------------------------------------------------------------------
 bool Manager::SetSwitchPoint
 (
-	ValueID const& _id,
-	uint8 const _hours,
-	uint8 const _minutes,
-	int8 const _setback
+		ValueID const& _id,
+		uint8 const _hours,
+		uint8 const _minutes,
+		int8 const _setback
 )
 {
 	bool res = false;
@@ -2946,7 +2904,7 @@ bool Manager::SetSwitchPoint
 	{
 		if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 		{
-			driver->LockNodes();
+			LockGuard LG(driver->m_nodeMutex);
 			if( ValueSchedule* value = static_cast<ValueSchedule*>( driver->GetValue( _id ) ) )
 			{
 				res = value->SetSwitchPoint( _hours, _minutes, _setback );
@@ -2954,7 +2912,6 @@ bool Manager::SetSwitchPoint
 			} else {
 				OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to SetSwitchPoint");
 			}
-			driver->ReleaseNodes();
 		}
 	} else {
 		OZW_ERROR(OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID, "ValueID passed to SetSwitchPoint is not a Schedule Value");
@@ -2969,9 +2926,9 @@ bool Manager::SetSwitchPoint
 //-----------------------------------------------------------------------------
 bool Manager::RemoveSwitchPoint
 (
-	ValueID const& _id,
-	uint8 const _hours,
-	uint8 const _minutes
+		ValueID const& _id,
+		uint8 const _hours,
+		uint8 const _minutes
 )
 {
 	bool res = false;
@@ -2980,7 +2937,7 @@ bool Manager::RemoveSwitchPoint
 	{
 		if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 		{
-			driver->LockNodes();
+			LockGuard LG(driver->m_nodeMutex);
 			if( ValueSchedule* value = static_cast<ValueSchedule*>( driver->GetValue( _id ) ) )
 			{
 				uint8 idx;
@@ -2994,7 +2951,6 @@ bool Manager::RemoveSwitchPoint
 			} else {
 				OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to RemoveSwitchPoint");
 			}
-			driver->ReleaseNodes();
 		}
 	} else {
 		OZW_ERROR(OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID, "ValueID passed to RemoveSwitchPoint is not a Schedule Value");
@@ -3009,14 +2965,14 @@ bool Manager::RemoveSwitchPoint
 //-----------------------------------------------------------------------------
 void Manager::ClearSwitchPoints
 (
-	ValueID const& _id
+		ValueID const& _id
 )
 {
 	if( ValueID::ValueType_Schedule == _id.GetType() )
 	{
 		if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 		{
-			driver->LockNodes();
+			LockGuard LG(driver->m_nodeMutex);
 			if( ValueSchedule* value = static_cast<ValueSchedule*>( driver->GetValue( _id ) ) )
 			{
 				value->ClearSwitchPoints();
@@ -3024,7 +2980,6 @@ void Manager::ClearSwitchPoints
 			} else {
 				OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to ClearSwitchPoints");
 			}
-			driver->ReleaseNodes();
 		}
 	} else {
 		OZW_ERROR(OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID, "ValueID passed to ClearSwitchPoints is not a Schedule Value");
@@ -3037,11 +2992,11 @@ void Manager::ClearSwitchPoints
 //-----------------------------------------------------------------------------
 bool Manager::GetSwitchPoint
 (
-	ValueID const& _id,
-	uint8 const _idx,
-	uint8* o_hours,
-	uint8* o_minutes,
-	int8* o_setback
+		ValueID const& _id,
+		uint8 const _idx,
+		uint8* o_hours,
+		uint8* o_minutes,
+		int8* o_setback
 )
 {
 	bool res = false;
@@ -3050,7 +3005,7 @@ bool Manager::GetSwitchPoint
 	{
 		if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 		{
-			driver->LockNodes();
+			LockGuard LG(driver->m_nodeMutex);
 			if( ValueSchedule* value = static_cast<ValueSchedule*>( driver->GetValue( _id ) ) )
 			{
 				res = value->GetSwitchPoint( _idx, o_hours, o_minutes, o_setback );
@@ -3058,7 +3013,6 @@ bool Manager::GetSwitchPoint
 			} else {
 				OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to GetSwitchPoint");
 			}
-			driver->ReleaseNodes();
 		}
 	} else {
 		OZW_ERROR(OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID, "ValueID passed to GetSwitchPoint is not a Schedule Value");
@@ -3077,7 +3031,7 @@ bool Manager::GetSwitchPoint
 //-----------------------------------------------------------------------------
 void Manager::SwitchAllOn
 (
-	uint32 const _homeId
+		uint32 const _homeId
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
@@ -3092,7 +3046,7 @@ void Manager::SwitchAllOn
 //-----------------------------------------------------------------------------
 void Manager::SwitchAllOff
 (
-	uint32 const _homeId
+		uint32 const _homeId
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
@@ -3111,11 +3065,11 @@ void Manager::SwitchAllOff
 //-----------------------------------------------------------------------------
 bool Manager::SetConfigParam
 (
-	uint32 const _homeId,
-	uint8 const _nodeId,
-	uint8 const _param,
-	int32 _value,
-	uint8 const _size
+		uint32 const _homeId,
+		uint8 const _nodeId,
+		uint8 const _param,
+		int32 _value,
+		uint8 const _size
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
@@ -3132,9 +3086,9 @@ bool Manager::SetConfigParam
 //-----------------------------------------------------------------------------
 void Manager::RequestConfigParam
 (
-	uint32 const _homeId,
-	uint8 const _nodeId,
-	uint8 const _param
+		uint32 const _homeId,
+		uint8 const _nodeId,
+		uint8 const _param
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
@@ -3149,17 +3103,17 @@ void Manager::RequestConfigParam
 //-----------------------------------------------------------------------------
 void Manager::RequestAllConfigParams
 (
-	uint32 const _homeId,
-	uint8 const _nodeId
+		uint32 const _homeId,
+		uint8 const _nodeId
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
+		LockGuard LG(driver->m_nodeMutex);
 		Node* node = driver->GetNode( _nodeId );
 		if( node )
 		{
 			node->SetQueryStage( Node::QueryStage_Configuration );
-			driver->ReleaseNodes();
 		}
 	}
 }
@@ -3174,8 +3128,8 @@ void Manager::RequestAllConfigParams
 //-----------------------------------------------------------------------------
 uint8 Manager::GetNumGroups
 (
-	uint32 const _homeId,
-	uint8 const _nodeId
+		uint32 const _homeId,
+		uint8 const _nodeId
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
@@ -3192,10 +3146,10 @@ uint8 Manager::GetNumGroups
 //-----------------------------------------------------------------------------
 uint32 Manager::GetAssociations
 (
-	uint32 const _homeId,
-	uint8 const _nodeId,
-	uint8 const _groupIdx,
-	uint8** o_associations
+		uint32 const _homeId,
+		uint8 const _nodeId,
+		uint8 const _groupIdx,
+		uint8** o_associations
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
@@ -3212,9 +3166,9 @@ uint32 Manager::GetAssociations
 //-----------------------------------------------------------------------------
 uint8 Manager::GetMaxAssociations
 (
-	uint32 const _homeId,
-	uint8 const _nodeId,
-	uint8 const _groupIdx
+		uint32 const _homeId,
+		uint8 const _nodeId,
+		uint8 const _groupIdx
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
@@ -3231,9 +3185,9 @@ uint8 Manager::GetMaxAssociations
 //-----------------------------------------------------------------------------
 string Manager::GetGroupLabel
 (
-	uint32 const _homeId,
-	uint8 const _nodeId,
-	uint8 const _groupIdx
+		uint32 const _homeId,
+		uint8 const _nodeId,
+		uint8 const _groupIdx
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
@@ -3250,10 +3204,10 @@ string Manager::GetGroupLabel
 //-----------------------------------------------------------------------------
 void Manager::AddAssociation
 (
-	uint32 const _homeId,
-	uint8 const _nodeId,
-	uint8 const _groupIdx,
-	uint8 const _targetNodeId
+		uint32 const _homeId,
+		uint8 const _nodeId,
+		uint8 const _groupIdx,
+		uint8 const _targetNodeId
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
@@ -3268,10 +3222,10 @@ void Manager::AddAssociation
 //-----------------------------------------------------------------------------
 void Manager::RemoveAssociation
 (
-	uint32 const _homeId,
-	uint8 const _nodeId,
-	uint8 const _groupIdx,
-	uint8 const _targetNodeId
+		uint32 const _homeId,
+		uint8 const _nodeId,
+		uint8 const _groupIdx,
+		uint8 const _targetNodeId
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
@@ -3291,8 +3245,8 @@ void Manager::RemoveAssociation
 //-----------------------------------------------------------------------------
 bool Manager::AddWatcher
 (
-	pfnOnNotification_t _watcher,
-	void* _context
+		pfnOnNotification_t _watcher,
+		void* _context
 )
 {
 	// Ensure this watcher is not already on the list
@@ -3318,8 +3272,8 @@ bool Manager::AddWatcher
 //-----------------------------------------------------------------------------
 bool Manager::RemoveWatcher
 (
-	pfnOnNotification_t _watcher,
-	void* _context
+		pfnOnNotification_t _watcher,
+		void* _context
 )
 {
 	m_notificationMutex->Lock();
@@ -3346,7 +3300,7 @@ bool Manager::RemoveWatcher
 //-----------------------------------------------------------------------------
 void Manager::NotifyWatchers
 (
-	Notification* _notification
+		Notification* _notification
 )
 {
 	m_notificationMutex->Lock();
@@ -3368,7 +3322,7 @@ void Manager::NotifyWatchers
 //-----------------------------------------------------------------------------
 void Manager::ResetController
 (
-	uint32 const _homeId
+		uint32 const _homeId
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
@@ -3392,7 +3346,7 @@ void Manager::ResetController
 //-----------------------------------------------------------------------------
 void Manager::SoftReset
 (
-	uint32 const _homeId
+		uint32 const _homeId
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
@@ -3407,13 +3361,13 @@ void Manager::SoftReset
 //-----------------------------------------------------------------------------
 bool Manager::BeginControllerCommand
 (
-	uint32 const _homeId,
-	Driver::ControllerCommand _command,
-	Driver::pfnControllerCallback_t _callback,				// = NULL
-	void* _context,								// = NULL
-	bool _highPower,							// = false
-	uint8 _nodeId,								// = 0xff
-	uint8 _arg								// = 0
+		uint32 const _homeId,
+		Driver::ControllerCommand _command,
+		Driver::pfnControllerCallback_t _callback,				// = NULL
+		void* _context,								// = NULL
+		bool _highPower,							// = false
+		uint8 _nodeId,								// = 0xff
+		uint8 _arg								// = 0
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
@@ -3430,7 +3384,7 @@ bool Manager::BeginControllerCommand
 //-----------------------------------------------------------------------------
 bool Manager::CancelControllerCommand
 (
-	uint32 const _homeId
+		uint32 const _homeId
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
@@ -3447,9 +3401,9 @@ bool Manager::CancelControllerCommand
 //-----------------------------------------------------------------------------
 void Manager::TestNetworkNode
 (
-	uint32 const _homeId,
-	uint8 const _nodeId,
-	uint32 const _count
+		uint32 const _homeId,
+		uint8 const _nodeId,
+		uint32 const _count
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
@@ -3464,8 +3418,8 @@ void Manager::TestNetworkNode
 //-----------------------------------------------------------------------------
 void Manager::TestNetwork
 (
-	uint32 const _homeId,
-	uint32 const _count
+		uint32 const _homeId,
+		uint32 const _count
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
@@ -3480,13 +3434,14 @@ void Manager::TestNetwork
 //-----------------------------------------------------------------------------
 void Manager::HealNetworkNode
 (
-	uint32 const _homeId,
-	uint8 const _nodeId,
-	bool _doRR
+		uint32 const _homeId,
+		uint8 const _nodeId,
+		bool _doRR
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
+		LockGuard LG(driver->m_nodeMutex);
 		Node* node = driver->GetNode( _nodeId );
 		if( node )
 		{
@@ -3495,7 +3450,6 @@ void Manager::HealNetworkNode
 			{
 				driver->UpdateNodeRoutes( _nodeId, true );
 			}
-			driver->ReleaseNodes();
 		}
 	}
 }
@@ -3506,25 +3460,24 @@ void Manager::HealNetworkNode
 //-----------------------------------------------------------------------------
 void Manager::HealNetwork
 (
-	uint32 const _homeId,
-	bool _doRR
+		uint32 const _homeId,
+		bool _doRR
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
-		driver->LockNodes();
+		LockGuard LG(driver->m_nodeMutex);
 		for( uint8 i=0; i<255; i++ )
 		{
 			if( driver->m_nodes[i] != NULL )
 			{
-			  driver->BeginControllerCommand( Driver::ControllerCommand_RequestNodeNeighborUpdate, NULL, NULL, true, i, 0 );
+				driver->BeginControllerCommand( Driver::ControllerCommand_RequestNodeNeighborUpdate, NULL, NULL, true, i, 0 );
 				if( _doRR )
 				{
 					driver->UpdateNodeRoutes( i, true );
 				}
 			}
 		}
-		driver->ReleaseNodes();
 	}
 }
 
@@ -3545,7 +3498,7 @@ uint8 Manager::GetNumScenes
 //-----------------------------------------------------------------------------
 uint8 Manager::GetAllScenes
 (
-	uint8** _sceneIds
+		uint8** _sceneIds
 )
 {
 	*_sceneIds = NULL;
@@ -3558,7 +3511,7 @@ uint8 Manager::GetAllScenes
 //-----------------------------------------------------------------------------
 void Manager::RemoveAllScenes
 (
-	uint32 const _homeId
+		uint32 const _homeId
 )
 {
 	for( int i = 1; i < 256; i++ )
@@ -3605,7 +3558,7 @@ uint8 Manager::CreateScene
 //-----------------------------------------------------------------------------
 bool Manager::RemoveScene
 (
-	uint8 const _sceneId
+		uint8 const _sceneId
 )
 {
 	Scene *scene = Scene::Get( _sceneId );
@@ -3623,9 +3576,9 @@ bool Manager::RemoveScene
 //-----------------------------------------------------------------------------
 bool Manager::AddSceneValue
 (
-	uint8 const _sceneId,
-	ValueID const& _valueId,
-	bool const _value
+		uint8 const _sceneId,
+		ValueID const& _valueId,
+		bool const _value
 )
 {
 	Scene *scene = Scene::Get( _sceneId );
@@ -3642,9 +3595,9 @@ bool Manager::AddSceneValue
 //-----------------------------------------------------------------------------
 bool Manager::AddSceneValue
 (
-	uint8 const _sceneId,
-	ValueID const& _valueId,
-	uint8 const _value
+		uint8 const _sceneId,
+		ValueID const& _valueId,
+		uint8 const _value
 )
 {
 	Scene *scene = Scene::Get( _sceneId );
@@ -3663,9 +3616,9 @@ bool Manager::AddSceneValue
 //-----------------------------------------------------------------------------
 bool Manager::AddSceneValue
 (
-	uint8 const _sceneId,
-	ValueID const& _valueId,
-	float const _value
+		uint8 const _sceneId,
+		ValueID const& _valueId,
+		float const _value
 )
 {
 	Scene *scene = Scene::Get( _sceneId );
@@ -3684,9 +3637,9 @@ bool Manager::AddSceneValue
 //-----------------------------------------------------------------------------
 bool Manager::AddSceneValue
 (
-	uint8 const _sceneId,
-	ValueID const& _valueId,
-	int32 const _value
+		uint8 const _sceneId,
+		ValueID const& _valueId,
+		int32 const _value
 )
 {
 	Scene *scene = Scene::Get( _sceneId );
@@ -3705,9 +3658,9 @@ bool Manager::AddSceneValue
 //-----------------------------------------------------------------------------
 bool Manager::AddSceneValue
 (
-	uint8 const _sceneId,
-	ValueID const& _valueId,
-	int16 const _value
+		uint8 const _sceneId,
+		ValueID const& _valueId,
+		int16 const _value
 )
 {
 	Scene *scene = Scene::Get( _sceneId );
@@ -3726,9 +3679,9 @@ bool Manager::AddSceneValue
 //-----------------------------------------------------------------------------
 bool Manager::AddSceneValue
 (
-	uint8 const _sceneId,
-	ValueID const& _valueId,
-	string const& _value
+		uint8 const _sceneId,
+		ValueID const& _valueId,
+		string const& _value
 )
 {
 	Scene *scene = Scene::Get( _sceneId );
@@ -3745,9 +3698,9 @@ bool Manager::AddSceneValue
 //-----------------------------------------------------------------------------
 bool Manager::AddSceneValueListSelection
 (
-	uint8 const _sceneId,
-	ValueID const& _valueId,
-	string const& _value
+		uint8 const _sceneId,
+		ValueID const& _valueId,
+		string const& _value
 )
 {
 	Scene *scene = Scene::Get( _sceneId );
@@ -3764,9 +3717,9 @@ bool Manager::AddSceneValueListSelection
 //-----------------------------------------------------------------------------
 bool Manager::AddSceneValueListSelection
 (
-	uint8 const _sceneId,
-	ValueID const& _valueId,
-	int32 const _value
+		uint8 const _sceneId,
+		ValueID const& _valueId,
+		int32 const _value
 )
 {
 	Scene *scene = Scene::Get( _sceneId );
@@ -3785,8 +3738,8 @@ bool Manager::AddSceneValueListSelection
 //-----------------------------------------------------------------------------
 bool Manager::RemoveSceneValue
 (
-	uint8 const _sceneId,
-	ValueID const& _valueId
+		uint8 const _sceneId,
+		ValueID const& _valueId
 )
 {
 	Scene *scene = Scene::Get( _sceneId );
@@ -3803,8 +3756,8 @@ bool Manager::RemoveSceneValue
 //-----------------------------------------------------------------------------
 int Manager::SceneGetValues
 (
-	uint8 const _sceneId,
-	vector<ValueID>* o_value
+		uint8 const _sceneId,
+		vector<ValueID>* o_value
 )
 {
 	o_value->clear();
@@ -3822,9 +3775,9 @@ int Manager::SceneGetValues
 //-----------------------------------------------------------------------------
 bool Manager::SceneGetValueAsBool
 (
-	uint8 const _sceneId,
-	ValueID const& _valueId,
-	bool* o_value
+		uint8 const _sceneId,
+		ValueID const& _valueId,
+		bool* o_value
 )
 {
 	Scene *scene = Scene::Get( _sceneId );
@@ -3846,9 +3799,9 @@ bool Manager::SceneGetValueAsBool
 //-----------------------------------------------------------------------------
 bool Manager::SceneGetValueAsByte
 (
-	uint8 const _sceneId,
-	ValueID const& _valueId,
-	uint8* o_value
+		uint8 const _sceneId,
+		ValueID const& _valueId,
+		uint8* o_value
 )
 {
 	Scene *scene = Scene::Get( _sceneId );
@@ -3870,9 +3823,9 @@ bool Manager::SceneGetValueAsByte
 //-----------------------------------------------------------------------------
 bool Manager::SceneGetValueAsFloat
 (
-	uint8 const _sceneId,
-	ValueID const& _valueId,
-	float* o_value
+		uint8 const _sceneId,
+		ValueID const& _valueId,
+		float* o_value
 )
 {
 	Scene *scene = Scene::Get( _sceneId );
@@ -3894,9 +3847,9 @@ bool Manager::SceneGetValueAsFloat
 //-----------------------------------------------------------------------------
 bool Manager::SceneGetValueAsInt
 (
-	uint8 const _sceneId,
-	ValueID const& _valueId,
-	int32* o_value
+		uint8 const _sceneId,
+		ValueID const& _valueId,
+		int32* o_value
 )
 {
 	Scene *scene = Scene::Get( _sceneId );
@@ -3918,9 +3871,9 @@ bool Manager::SceneGetValueAsInt
 //-----------------------------------------------------------------------------
 bool Manager::SceneGetValueAsShort
 (
-	uint8 const _sceneId,
-	ValueID const& _valueId,
-	int16* o_value
+		uint8 const _sceneId,
+		ValueID const& _valueId,
+		int16* o_value
 )
 {
 	Scene *scene = Scene::Get( _sceneId );
@@ -3942,9 +3895,9 @@ bool Manager::SceneGetValueAsShort
 //-----------------------------------------------------------------------------
 bool Manager::SceneGetValueAsString
 (
-	uint8 const _sceneId,
-	ValueID const& _valueId,
-	string* o_value
+		uint8 const _sceneId,
+		ValueID const& _valueId,
+		string* o_value
 )
 {
 	Scene *scene = Scene::Get( _sceneId );
@@ -3964,9 +3917,9 @@ bool Manager::SceneGetValueAsString
 //-----------------------------------------------------------------------------
 bool Manager::SceneGetValueListSelection
 (
-	uint8 const _sceneId,
-	ValueID const& _valueId,
-	string* o_value
+		uint8 const _sceneId,
+		ValueID const& _valueId,
+		string* o_value
 )
 {
 	Scene *scene = Scene::Get( _sceneId );
@@ -3986,9 +3939,9 @@ bool Manager::SceneGetValueListSelection
 //-----------------------------------------------------------------------------
 bool Manager::SceneGetValueListSelection
 (
-	uint8 const _sceneId,
-	ValueID const& _valueId,
-	int32* o_value
+		uint8 const _sceneId,
+		ValueID const& _valueId,
+		int32* o_value
 )
 {
 	Scene *scene = Scene::Get( _sceneId );
@@ -4010,15 +3963,15 @@ bool Manager::SceneGetValueListSelection
 //-----------------------------------------------------------------------------
 bool Manager::SetSceneValue
 (
-	uint8 const _sceneId,
-	ValueID const& _valueId,
-	bool const _value
+		uint8 const _sceneId,
+		ValueID const& _valueId,
+		bool const _value
 )
 {
 	Scene *scene = Scene::Get( _sceneId );
 	if( scene != NULL )
 	{
-	  return scene->SetValue( _valueId, _value ? "True" : "False" );
+		return scene->SetValue( _valueId, _value ? "True" : "False" );
 	}
 	return false;
 }
@@ -4029,9 +3982,9 @@ bool Manager::SetSceneValue
 //-----------------------------------------------------------------------------
 bool Manager::SetSceneValue
 (
-	uint8 const _sceneId,
-	ValueID const& _valueId,
-	uint8 const _value
+		uint8 const _sceneId,
+		ValueID const& _valueId,
+		uint8 const _value
 )
 {
 	Scene *scene = Scene::Get( _sceneId );
@@ -4050,9 +4003,9 @@ bool Manager::SetSceneValue
 //-----------------------------------------------------------------------------
 bool Manager::SetSceneValue
 (
-	uint8 const _sceneId,
-	ValueID const& _valueId,
-	float const _value
+		uint8 const _sceneId,
+		ValueID const& _valueId,
+		float const _value
 )
 {
 	Scene *scene = Scene::Get( _sceneId );
@@ -4071,9 +4024,9 @@ bool Manager::SetSceneValue
 //-----------------------------------------------------------------------------
 bool Manager::SetSceneValue
 (
-	uint8 const _sceneId,
-	ValueID const& _valueId,
-	int32 const _value
+		uint8 const _sceneId,
+		ValueID const& _valueId,
+		int32 const _value
 )
 {
 	Scene *scene = Scene::Get( _sceneId );
@@ -4092,9 +4045,9 @@ bool Manager::SetSceneValue
 //-----------------------------------------------------------------------------
 bool Manager::SetSceneValue
 (
-	uint8 const _sceneId,
-	ValueID const& _valueId,
-	int16 const _value
+		uint8 const _sceneId,
+		ValueID const& _valueId,
+		int16 const _value
 )
 {
 	Scene *scene = Scene::Get( _sceneId );
@@ -4113,9 +4066,9 @@ bool Manager::SetSceneValue
 //-----------------------------------------------------------------------------
 bool Manager::SetSceneValue
 (
-	uint8 const _sceneId,
-	ValueID const& _valueId,
-	string const& _value
+		uint8 const _sceneId,
+		ValueID const& _valueId,
+		string const& _value
 )
 {
 	Scene *scene = Scene::Get( _sceneId );
@@ -4132,9 +4085,9 @@ bool Manager::SetSceneValue
 //-----------------------------------------------------------------------------
 bool Manager::SetSceneValueListSelection
 (
-	uint8 const _sceneId,
-	ValueID const& _valueId,
-	string const& _value
+		uint8 const _sceneId,
+		ValueID const& _valueId,
+		string const& _value
 )
 {
 	Scene *scene = Scene::Get( _sceneId );
@@ -4151,9 +4104,9 @@ bool Manager::SetSceneValueListSelection
 //-----------------------------------------------------------------------------
 bool Manager::SetSceneValueListSelection
 (
-	uint8 const _sceneId,
-	ValueID const& _valueId,
-	int32 const _value
+		uint8 const _sceneId,
+		ValueID const& _valueId,
+		int32 const _value
 )
 {
 	Scene *scene = Scene::Get( _sceneId );
@@ -4172,7 +4125,7 @@ bool Manager::SetSceneValueListSelection
 //-----------------------------------------------------------------------------
 string Manager::GetSceneLabel
 (
-	uint8 const _sceneId
+		uint8 const _sceneId
 )
 {
 	Scene *scene = Scene::Get( _sceneId );
@@ -4189,8 +4142,8 @@ string Manager::GetSceneLabel
 //-----------------------------------------------------------------------------
 void Manager::SetSceneLabel
 (
-	uint8 const _sceneId,
-	string const& _value
+		uint8 const _sceneId,
+		string const& _value
 )
 {
 	Scene *scene = Scene::Get( _sceneId );
@@ -4206,7 +4159,7 @@ void Manager::SetSceneLabel
 //-----------------------------------------------------------------------------
 bool Manager::SceneExists
 (
-	uint8 const _sceneId
+		uint8 const _sceneId
 )
 {
 	return Scene::Get( _sceneId ) != NULL;
@@ -4218,10 +4171,10 @@ bool Manager::SceneExists
 //-----------------------------------------------------------------------------
 bool Manager::ActivateScene
 (
-	uint8 const _sceneId
+		uint8 const _sceneId
 )
 {
-  	Scene *scene = Scene::Get( _sceneId );
+	Scene *scene = Scene::Get( _sceneId );
 	if( scene != NULL )
 	{
 		return scene->Activate();
@@ -4235,8 +4188,8 @@ bool Manager::ActivateScene
 //-----------------------------------------------------------------------------
 void Manager::GetDriverStatistics
 (
-	uint32 const _homeId,
-	Driver::DriverData* _data
+		uint32 const _homeId,
+		Driver::DriverData* _data
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
@@ -4252,9 +4205,9 @@ void Manager::GetDriverStatistics
 //-----------------------------------------------------------------------------
 void Manager::GetNodeStatistics
 (
-	uint32 const _homeId,
-	uint8 const _nodeId,
-	Node::NodeData* _data
+		uint32 const _homeId,
+		uint8 const _nodeId,
+		Node::NodeData* _data
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
