@@ -31,7 +31,8 @@
 #include "Msg.h"
 #include "Driver.h"
 #include "Node.h"
-#include "platform/Log.h"
+#include "Utils.h"
+
 
 #include "value_classes/ValueByte.h"
 #include "value_classes/ValueList.h"
@@ -243,7 +244,7 @@ void ControllerReplication::SendNextData
 			}
 		}
 		i = m_nodeId == -1 ? 0 : m_nodeId+1;
-		GetDriver()->LockNodes();
+		LockGuard LG(GetDriver()->m_nodeMutex);
 		while( i < 256 )
 		{
 			if( GetDriver()->m_nodes[i] )
@@ -258,7 +259,6 @@ void ControllerReplication::SendNextData
 			}
 			i++;
 		}
-		GetDriver()->ReleaseNodes();
 		m_nodeId = i;
 		break;
 	}
