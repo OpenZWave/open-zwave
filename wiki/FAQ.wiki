@@ -11,9 +11,7 @@ We will try to answer common questions and issues here in this FAQ.
 
 In OZW we maintain a [Device_Database] of all Devices that have been tested and work with OZW. Its possible your device is a new device we have not come across yet. Depending upon how conform-ant the device is to the Z-Wave Spec and how configurable it is, Adding the device to our database can be a simple one line change, to adding a complex xml file describing the devices configuration and quirks. 
 
-For starters, you can try to follow the instructions posted on the domotiga Wiki at [http://www.domotiga.nl/projects/domotiga/wiki/Z-Wave_OpenZWave#Questions-and-answers]. 
-
-We will soon add detailed instructions on how to create complex configuration files for new devices, but in the mean time, that would be a good place to start. 
+For instructions on adding devices, please consult this [Adding_Devices page]
 
 == I remove my ZWave USB Dongle and my PC starts using 100% CPU ==
 
@@ -39,4 +37,3 @@ Polling Security enabled Devices (such as door locks etc) is going to be even wo
 4) The device you are attempting to talk to is Battery Powered and supports the Wakeup Class. These devices are not always listening to the network, so if you send them a command (or request a updated value), OZW can't actually transmit it till the device "wakes up". Wakeup times are generally configurable, but again at the expense of battery life. Most of these devices will wake up and send update messages when a certain action occurs (such as detecting motion) but will not accept new commands till their wakeup time expires. 
 
 Sometimes you can manually wakeup the device by hitting a button etc on the device. This might only be useful during start-up phase if you quickly want the device to wake up and appear in your application. 
-
