@@ -1,27 +1,5 @@
-openzwave (800) testing; urgency=low
+openzwave (0.9) testing; urgency=low
 
   * build package for testing
 
  -- root <root@pluto.vt100.intra>  Thu, 26 Feb 2015 18:27:30 +0100
-
-openzwave (799) unstable; urgency=low
-
-  [ hari ]
-  * Initial release.
-
-  [ root ]
-  * include config files in debian package, put headers in to proper
-    paths
-  * increasing release version after greg's large update
-  * new package including patches for retry timer and explore routing
-  * don't assume devices are awake in debian package
-  * increase deb package version
-  * new package
-
-  [ fish ]
-  * fix i386 builds on debian
-
-  [ root ]
-  * new package
-
- -- root <root@pluto.vt100.intra>  Wed, 07 May 2014 13:05:24 +0200
