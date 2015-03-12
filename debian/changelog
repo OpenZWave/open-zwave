@@ -1,4 +1,4 @@
-openzwave (0.9) testing; urgency=low
+openzwave (0.9) unstable; urgency=low
 
   * build package for testing
 
