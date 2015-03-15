@@ -69,6 +69,7 @@ DISTFILES =	ChangeLog \
 	config/fibaro/fgs221.xml \
 	config/fibaro/fgss101.xml \
 	config/fibaro/fgwpe.xml \
+	config/fibaro/fgsd002.xml \
 	config/frostdale/fdn2nxx.xml \
 	config/ge/dimmer.xml \
 	config/ge/dimmer_module.xml \
