@@ -258,6 +258,7 @@
     		<Product type="0900" id="1000" name="FGRGBWM441 RGBW Controller" config="fibaro/fgrgbwm441.xml" />
     		<Product type="0900" id="4000" name="FGRGBWM441 RGBW Controller" config="fibaro/fgrgbwm441.xml" />
     		<Product type="0c00" id="1000" name="FGSS101 Smoke Sensor" config="fibaro/fgss101.xml" />
+		<Product type="0c02" id="1002" name="FGSD002 Smoke Sensor" config="fibaro/fgsd002.xml" />
   	</Manufacturer>
 	<Manufacturer id="0138" name="First Alert">
     		<Product type="0001" id="0002" name="ZCombo Smoke and Carbon Monoxide Detector" />
