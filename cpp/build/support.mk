@@ -26,12 +26,13 @@ TMP     := /tmp
 #pkg-config binary for package config files
 PKGCONFIG := $(shell which pkg-config)
 #svn binary for doing a make dist export
-SVN		:= $(shell which svn)
+GIT		:= $(shell which git)
 # if svnversion is not installed, then set the revision to 0
-ifeq ($(SVNVERSION),)
+ifeq ($(GIT),)
 VERSION_REV ?= 0
 else
-VERSION_REV ?= $(shell $(SVNVERSION) $(top_srcdir)|awk -F'[^0-9]*' '$$0=$$1')
+GITVERSION	:= $(shell $(GIT) describe --long --tags --dirty | sed s/^v//)
+VERSION_REV 	?= $(shell echo $(GITVERSION) | awk '{split($$0,a,"-"); print a[2]}')
 endif
 ifeq ($(VERSION_REV),)
 VERSION_REV ?= 0
