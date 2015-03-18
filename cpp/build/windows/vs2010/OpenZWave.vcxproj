@@ -100,15 +100,11 @@
       <TargetMachine>MachineX86</TargetMachine>
     </Lib>
     <PreBuildEvent>
-      <Command>"$(ProgramFiles)\TortoiseSVN\bin\subwcrev.exe" . ..\winversion.ini ..\winversion.cpp
-if %ERRORLEVEL% GTR 0 (
-echo Using Default WinVersion.cpp Version as we could not find a copy of TortoiseSVN in your Program Files 
-copy ..\winversion.tmpl ..\winversion.cpp
-)
+      <Command>CALL $(SolutionDir)\..\GIT-VS-VERSION-GEN.bat "$(ProjectDir)\" "..\winversion.cpp" 
 exit 0</Command>
     </PreBuildEvent>
     <PreBuildEvent>
-      <Message>Export SVN Revision</Message>
+      <Message>Export GIT Revision</Message>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">
@@ -136,15 +132,11 @@ exit 0</Command>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PreBuildEvent>
-      <Command>"$(ProgramFiles)\TortoiseSVN\bin\subwcrev.exe" . ..\winversion.ini ..\winversion.cpp
-if %ERRORLEVEL% GTR 0 (
-echo Using Default WinVersion.cpp Version as we could not find a copy of TortoiseSVN in your Program Files 
-copy ..\winversion.tmpl ..\winversion.cpp
-)
+      <Command>CALL $(SolutionDir)\..\GIT-VS-VERSION-GEN.bat "$(ProjectDir)\" "..\winversion.cpp" 
 exit 0</Command>
     </PreBuildEvent>
     <PreBuildEvent>
-      <Message>Export SVN Revision</Message>
+      <Message>Export GIT Revision</Message>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">
@@ -171,12 +163,8 @@ exit 0</Command>
     </Link>
     <PreBuildEvent />
     <PreBuildEvent>
-      <Message>Export SVN Revision</Message>
-      <Command>"$(ProgramFiles)\TortoiseSVN\bin\subwcrev.exe" . ..\winversion.ini ..\winversion.cpp
-if %ERRORLEVEL% GTR 0 (
-echo Using Default WinVersion.cpp Version as we could not find a copy of TortoiseSVN in your Program Files 
-copy ..\winversion.tmpl ..\winversion.cpp
-)
+      <Message>Export GIT Revision</Message>
+      <Command>CALL $(SolutionDir)\..\GIT-VS-VERSION-GEN.bat "$(ProjectDir)\" "..\winversion.cpp" 
 exit 0</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
@@ -198,15 +186,11 @@ exit 0</Command>
       <AdditionalDependencies>setupapi.lib</AdditionalDependencies>
     </Lib>
     <PreBuildEvent>
-      <Command>"$(ProgramFiles)\TortoiseSVN\bin\subwcrev.exe" . ..\winversion.ini ..\winversion.cpp
-if %ERRORLEVEL% GTR 0 (
-echo Using Default WinVersion.cpp Version as we could not find a copy of TortoiseSVN in your Program Files 
-copy ..\winversion.tmpl ..\winversion.cpp
-)
+      <Command>CALL $(SolutionDir)\..\GIT-VS-VERSION-GEN.bat "$(ProjectDir)\" "..\winversion.cpp" 
 exit 0</Command>
     </PreBuildEvent>
     <PreBuildEvent>
-      <Message>Export SVN Revision</Message>
+      <Message>Export GIT Revision</Message>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
