@@ -141,6 +141,7 @@ DISTFILES =	ChangeLog \
 	cpp/build/libopenzwave.pc.in \
 	cpp/build/sh2ju.sh \
 	cpp/build/support.mk \
+	cpp/build/windows/GIT-VS-VERSION-GEN.bat \
 	cpp/build/windows/installer/buildall.bat \
 	cpp/build/windows/installer/openzwave.nsi \
 	cpp/build/windows/mingw32/Makefile \
@@ -149,7 +150,6 @@ DISTFILES =	ChangeLog \
 	cpp/build/windows/vs2010/OpenZWave.sln \
 	cpp/build/windows/vs2010/OpenZWave.vcxproj \
 	cpp/build/windows/vs2010/OpenZWave.vcxproj.filters \
-	cpp/build/windows/winversion.ini \
 	cpp/build/windows/winversion.tmpl \
 	cpp/examples/MinOZW/Main.cpp \
 	cpp/examples/MinOZW/Makefile \
