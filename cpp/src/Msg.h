@@ -160,7 +160,7 @@ namespace OpenZWave
 			UpdateCallbackId();
 		}
 		void clearNonce() {
-			bzero(m_nonce, 8);
+			memset((m_nonce), '\0', 8);
 			m_noncerecvd = false;
 		}
 		void SetHomeId(uint32 homeId) { m_homeId = homeId; };
