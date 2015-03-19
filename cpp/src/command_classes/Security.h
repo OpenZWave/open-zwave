@@ -44,6 +44,27 @@ namespace OpenZWave
 		string logmsg;
 	} SecurityPayload;
 
+	enum SecurityCmd
+	{
+		SecurityCmd_SupportedGet			= 0x02,
+		SecurityCmd_SupportedReport			= 0x03,
+		SecurityCmd_SchemeGet				= 0x04,
+		SecurityCmd_SchemeReport			= 0x05,
+		SecurityCmd_NetworkKeySet			= 0x06,
+		SecurityCmd_NetworkKeyVerify		= 0x07,
+		SecurityCmd_SchemeInherit			= 0x08,
+		SecurityCmd_NonceGet				= 0x40,
+		SecurityCmd_NonceReport				= 0x80,
+		SecurityCmd_MessageEncap			= 0x81,
+		SecurityCmd_MessageEncapNonceGet	= 0xc1
+	};
+
+	enum SecurityScheme
+	{
+		SecurityScheme_Zero					= 0x00,
+	};
+
+
 	/* This should probably go into its own file, but its so simple... and only the Security Command Class uses it currently
 	 */
 

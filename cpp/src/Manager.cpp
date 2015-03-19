@@ -399,7 +399,7 @@ void Manager::SetDriverReady
 
 		// Notify the watchers
 		Notification* notification = new Notification(success ? Notification::Type_DriverReady : Notification::Type_DriverFailed );
-		notification->SetHomeAndNodeIds( _driver->GetHomeId(), _driver->GetNodeId() );
+		notification->SetHomeAndNodeIds( _driver->GetHomeId(), _driver->GetControllerNodeId() );
 		_driver->QueueNotification( notification );
 	}
 }
@@ -415,7 +415,7 @@ uint8 Manager::GetControllerNodeId
 {
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
-		return driver->GetNodeId();
+		return driver->GetControllerNodeId();
 	}
 
 	Log::Write( LogLevel_Info, "mgr,     GetControllerNodeId() failed - _homeId %d not found", _homeId );
@@ -2317,7 +2317,7 @@ bool Manager::SetValue
 	{
 		if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 		{
-			if( _id.GetNodeId() != driver->GetNodeId() )
+			if( _id.GetNodeId() != driver->GetControllerNodeId() )
 			{
 				LockGuard LG(driver->m_nodeMutex);
 				if( ValueBool* value = static_cast<ValueBool*>( driver->GetValue( _id ) ) )
@@ -2352,7 +2352,7 @@ bool Manager::SetValue
 	{
 		if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 		{
-			if( _id.GetNodeId() != driver->GetNodeId() )
+			if( _id.GetNodeId() != driver->GetControllerNodeId() )
 			{
 				LockGuard LG(driver->m_nodeMutex);
 				if( ValueByte* value = static_cast<ValueByte*>( driver->GetValue( _id ) ) )
@@ -2387,7 +2387,7 @@ bool Manager::SetValue
 	{
 		if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 		{
-			if( _id.GetNodeId() != driver->GetNodeId() )
+			if( _id.GetNodeId() != driver->GetControllerNodeId() )
 			{
 				LockGuard LG(driver->m_nodeMutex);
 				if( ValueDecimal* value = static_cast<ValueDecimal*>( driver->GetValue( _id ) ) )
@@ -2442,7 +2442,7 @@ bool Manager::SetValue
 	{
 		if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 		{
-			if( _id.GetNodeId() != driver->GetNodeId() )
+			if( _id.GetNodeId() != driver->GetControllerNodeId() )
 			{
 				LockGuard LG(driver->m_nodeMutex);
 				if( ValueInt* value = static_cast<ValueInt*>( driver->GetValue( _id ) ) )
@@ -2478,7 +2478,7 @@ bool Manager::SetValue
 	{
 		if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 		{
-			if( _id.GetNodeId() != driver->GetNodeId() )
+			if( _id.GetNodeId() != driver->GetControllerNodeId() )
 			{
 				LockGuard LG(driver->m_nodeMutex);
 				if( ValueRaw* value = static_cast<ValueRaw*>( driver->GetValue( _id ) ) )
@@ -2513,7 +2513,7 @@ bool Manager::SetValue
 	{
 		if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 		{
-			if( _id.GetNodeId() != driver->GetNodeId() )
+			if( _id.GetNodeId() != driver->GetControllerNodeId() )
 			{
 				LockGuard LG(driver->m_nodeMutex);
 				if( ValueShort* value = static_cast<ValueShort*>( driver->GetValue( _id ) ) )
@@ -2548,7 +2548,7 @@ bool Manager::SetValueListSelection
 	{
 		if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 		{
-			if( _id.GetNodeId() != driver->GetNodeId() )
+			if( _id.GetNodeId() != driver->GetControllerNodeId() )
 			{
 				LockGuard LG(driver->m_nodeMutex);
 				if( ValueList* value = static_cast<ValueList*>( driver->GetValue( _id ) ) )
@@ -2582,7 +2582,7 @@ bool Manager::SetValue
 
 	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 	{
-		if( _id.GetNodeId() != driver->GetNodeId() )
+		if( _id.GetNodeId() != driver->GetControllerNodeId() )
 		{
 			LockGuard LG(driver->m_nodeMutex);
 

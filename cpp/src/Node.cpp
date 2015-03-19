@@ -273,10 +273,11 @@ void Node::AdvanceQueries
 				// will determine next step.
 				//
 				NoOperation* noop = static_cast<NoOperation*>( GetCommandClass( NoOperation::StaticGetCommandClassId() ) );
-				if( GetDriver()->GetNodeId() != m_nodeId )
+				/* don't Probe the Controller */
+				if( GetDriver()->GetControllerNodeId() != m_nodeId )
 				{
 					noop->Set( true );
-				      	m_queryPending = true;
+			      	m_queryPending = true;
 					addQSC = true;
 				}
 				else
@@ -318,8 +319,11 @@ void Node::AdvanceQueries
 				// Manufacturer Specific data is requested before the other command class data so
 				// that we can modify the supported command classes list through the product XML files.
 				Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_ManufacturerSpecific1" );
-				if( GetDriver()->GetNodeId() == m_nodeId )
+
+				/* if its the Controller, then we can just load up the XML straight away */
+				if( GetDriver()->GetControllerNodeId() == m_nodeId )
 				{
+					Log::Write( LogLevel_Detail, m_nodeId, "Load Controller Manufacturer Specific Config");
 					string configPath = ManufacturerSpecific::SetProductDetails( this, GetDriver()->GetManufacturerId(), GetDriver()->GetProductType(), GetDriver()->GetProductId() );
 					if( configPath.length() > 0 )
 					{
@@ -330,6 +334,13 @@ void Node::AdvanceQueries
 				}
 				else
 				{
+					Log::Write( LogLevel_Detail, m_nodeId, "Checking for ManufacturerSpecific CC and Requesting values if present on this node");
+					/* if the ManufacturerSpecific CC was not specified in the ProtocolInfo packet for the Generic/Specific Device type (as part a Mandatory Command Class)
+					 * then this will fail, but we will retry in ManufacturerSpecific2
+					 *
+					 * XXX TODO: This could probably be reworked a bit to make this a Mandatory CC for all devices regardless
+					 * of Generic/Specific Type. Then we can drop the Second ManufacturerSpecific QueryStage later.
+					 */
 					ManufacturerSpecific* cc = static_cast<ManufacturerSpecific*>( GetCommandClass( ManufacturerSpecific::StaticGetCommandClassId() ) );
 					if( cc  )
 					{
@@ -377,11 +388,11 @@ void Node::AdvanceQueries
 				{
 					// start the process of requesting node state from this sleeping device
 					m_queryPending = seccc->Init();
-					/* Dont add a Notification Callback here, as this is a multipacket exchange.
+					/* Dont add a QueryStageComplete flag here, as this is a multipacket exchange.
 					 * the Security Command Class will automatically advance the Query Stage
 					 * when we recieve a SecurityCmd_SupportedReport
 					 */
-					addQSC = false;
+					addQSC = true;
 				}
 				else
 				{
@@ -511,7 +522,8 @@ void Node::AdvanceQueries
 				// will determine next step. Called here when configuration exists.
 				//
 				NoOperation* noop = static_cast<NoOperation*>( GetCommandClass( NoOperation::StaticGetCommandClassId() ) );
-				if( GetDriver()->GetNodeId() != m_nodeId )
+				/* Don't do this if its to the Controller */
+				if( GetDriver()->GetControllerNodeId() != m_nodeId )
 				{
 					noop->Set( true );
 				      	m_queryPending = true;
@@ -2458,7 +2470,7 @@ void Node::AutoAssociate
 	if( autoAssociate )
 	{
 		// Try to automatically associate with any groups that have been flagged.
-		uint8 controllerNodeId = GetDriver()->GetNodeId();
+		uint8 controllerNodeId = GetDriver()->GetControllerNodeId();
 
 		for( map<uint8,Group*>::iterator it = m_groups.begin(); it != m_groups.end(); ++it )
 		{

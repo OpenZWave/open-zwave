@@ -38,6 +38,7 @@
 #include "platform/Event.h"
 #include "platform/Mutex.h"
 #include "platform/TimeStamp.h"
+#include "aes/aescpp.h"
 
 namespace OpenZWave
 {
@@ -71,6 +72,7 @@ namespace OpenZWave
 		friend class SceneActivation;
 		friend class WakeUp;
 		friend class Security;
+		friend class Msg;
 
 	//-----------------------------------------------------------------------------
 	//	Controller Interfaces
@@ -191,7 +193,7 @@ namespace OpenZWave
 
 
 		uint32 GetHomeId()const{ return m_homeId; }
-		uint8 GetNodeId()const{ return m_nodeId; }
+		uint8 GetControllerNodeId()const{ return m_Controller_nodeId; }
 		uint8 GetSUCNodeId()const{ return m_SUCNodeId; }
 		uint16 GetManufacturerId()const{ return m_manufacturerId; }
 		uint16 GetProductType()const{ return m_productType; }
@@ -257,7 +259,7 @@ namespace OpenZWave
 		uint8					m_initVersion;								// Version of the Serial API used by the controller.
 		uint8					m_initCaps;									// Set of flags indicating the serial API capabilities (See IsSlave, HasTimerSupport, IsPrimaryController and IsStaticUpdateController above).
 		uint8					m_controllerCaps;							// Set of flags indicating the controller's capabilities (See IsInclusionController above).
-		uint8					m_nodeId;									// Z-Wave Controller's own node ID.
+		uint8					m_Controller_nodeId;									// Z-Wave Controller's own node ID.
 		Node*					m_nodes[256];								// Array containing all the node objects.
 		Mutex*					m_nodeMutex;								// Serializes access to node data
 
@@ -847,8 +849,18 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 	//-----------------------------------------------------------------------------
 	//	Security Command Class Related (Version 1.1)
 	//-----------------------------------------------------------------------------
+	public:
+		aes_encrypt_ctx *GetAuthKey() { return this->AuthKey; };
+		aes_encrypt_ctx *GetEncKey() { return this->EncryptKey; };
+
 	private:
+		bool initNetworkKeys(bool newnode);
 		uint8 *GetNetworkKey();
+		bool SendEncryptedMessage();
+		bool SendNonceRequest();
+		aes_encrypt_ctx *AuthKey;
+		aes_encrypt_ctx *EncryptKey;
+
 	};
 
 } // namespace OpenZWave
