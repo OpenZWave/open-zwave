@@ -35,6 +35,7 @@
 #include "Node.h"
 #include "Driver.h"
 #include "platform/Log.h"
+#include "Utils.h"
 
 #include "value_classes/ValueBool.h"
 
@@ -59,25 +60,7 @@ using namespace OpenZWave;
  *
  */
 
-enum SecurityCmd
-{
-	SecurityCmd_SupportedGet			= 0x02,
-	SecurityCmd_SupportedReport			= 0x03,
-	SecurityCmd_SchemeGet				= 0x04,
-	SecurityCmd_SchemeReport			= 0x05,
-	SecurityCmd_NetworkKeySet			= 0x06,
-	SecurityCmd_NetworkKeyVerify		= 0x07,
-	SecurityCmd_SchemeInherit			= 0x08,
-	SecurityCmd_NonceGet				= 0x40,
-	SecurityCmd_NonceReport				= 0x80,
-	SecurityCmd_MessageEncap			= 0x81,
-	SecurityCmd_MessageEncapNonceGet	= 0xc1
-};
 
-enum SecurityScheme
-{
-	SecurityScheme_Zero					= 0x00,
-};
 
 
 uint8_t SecuritySchemes[1][16] = {
@@ -87,21 +70,7 @@ uint8_t SecuritySchemes[1][16] = {
 uint8_t EncryptPassword[16] = {0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA};
 uint8_t AuthPassword[16] = {0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55};
 
-void PrintHex(std::string prefix, uint8_t const *data, uint32 const length) {
-	char byteStr[16];
-	std::string str;
-	for( uint32 i=0; i<length; ++i )
-	{
-		if( i )
-		{
-			str += ", ";
-		}
 
-		snprintf( byteStr, sizeof(byteStr), "0x%.2x", data[i] );
-		str += byteStr;
-	}
-	Log::Write(LogLevel_Info, "%s Packet: %s", prefix.c_str(), str.c_str());
-}
 
 Security::Security
 (
@@ -289,7 +258,8 @@ bool Security::Init
 		msg->Append( GetCommandClassId() );
 		msg->Append( SecurityCmd_SupportedGet );
 		msg->Append( GetDriver()->GetTransmitOptions() );
-		this->SendMsg( msg);
+		msg->setEncrypted();
+		GetDriver()->SendMsg( msg, Driver::MsgQueue_Security);
 	}
 
 	return true;
@@ -400,7 +370,8 @@ bool Security::HandleMsg
 				for (int i = 0; i < 16; i++)
 					msg->Append(GetDriver()->GetNetworkKey()[i]);
 				msg->Append( GetDriver()->GetTransmitOptions() );
-				this->SendMsg( msg);
+				msg->setEncrypted();
+				GetDriver()->SendMsg( msg, Driver::MsgQueue_Security);
 				m_schemeagreed = true;
 			}
 			else
@@ -433,7 +404,8 @@ bool Security::HandleMsg
 			msg->Append( GetCommandClassId() );
 			msg->Append( SecurityCmd_SupportedGet );
 			msg->Append( GetDriver()->GetTransmitOptions() );
-			this->SendMsg( msg);
+			msg->setEncrypted();
+			GetDriver()->SendMsg( msg, Driver::MsgQueue_Security);
 
 			break;
 		}
@@ -502,6 +474,10 @@ void Security::SendMsg
 	Msg* _msg
 )
 {
+	std::cout << "Security Class for SendMsg?" << std::endl;
+	GetDriver()->SendMsg( _msg, Driver::MsgQueue_Security);
+	return;
+
 	_msg->Finalize();
 
 	uint8* buffer = _msg->GetBuffer();
@@ -733,7 +709,7 @@ bool Security::EncryptMessage
 		initializationVector[8+i] = _nonce[i];
 	}
 	uint8 mac[8];
-	this->GenerateAuthentication(&msg->GetBuffer()[7], msg->GetLength()+2, GetDriver()->GetNodeId(), GetNodeId(), initializationVector, mac);
+	this->GenerateAuthentication(&msg->GetBuffer()[7], msg->GetLength()+2, GetDriver()->GetControllerNodeId(), GetNodeId(), initializationVector, mac);
 	for(int i=0; i<8; ++i )
 	{
 		msg->Append( mac[i] );
@@ -855,7 +831,7 @@ bool Security::DecryptMessage
 	/* we have to regenerate the IV as the ofb decryption routine will alter it. */
 	createIVFromPacket_inbound(_data, iv);
 
-	this->GenerateAuthentication(_data, _length, GetNodeId(), GetDriver()->GetNodeId(), iv, mac);
+	this->GenerateAuthentication(_data, _length, GetNodeId(), GetDriver()->GetControllerNodeId(), iv, mac);
 	if (memcmp(&_data[8+encryptedpacketsize+2], mac, 8) != 0) {
 		Log::Write(LogLevel_Warning, GetNodeId(), "MAC Authentication of Packet Failed. Dropping");
 		if (m_queue.size() > 1)
@@ -999,6 +975,7 @@ void Security::RequestNonce
 (
 )
 {
+	return;
 	if (m_waitingForNonce == true)
 		return;
 	m_waitingForNonce = true;

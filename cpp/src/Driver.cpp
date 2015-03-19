@@ -210,6 +210,10 @@ m_broadcastWriteCnt( 0 )
 	// Clear the virtual neighbors array
 	memset( m_virtualNeighbors, 0, NUM_NODE_BITFIELD_BYTES );
 
+	// Initilize the Network Keys
+
+	initNetworkKeys(false);
+
 	if( ControllerInterface_Hid == _interface )
 	{
 		m_controller = new HidController();
@@ -398,7 +402,7 @@ void Driver::DriverThreadProc
 			TimeStamp retryTimeStamp;
 			int retryTimeout = RETRY_TIMEOUT;
 			Options::Get()->GetOptionAsInt( "RetryTimeout", &retryTimeout );
-
+			//retryTimeout = RETRY_TIMEOUT * 10;
 			while( true )
 			{
 				Log::Write( LogLevel_StreamDetail, "      Top of DriverThreadProc loop." );
@@ -426,6 +430,7 @@ void Driver::DriverThreadProc
 				}
 
 				// Wait for something to do
+				std::cout << "Polling For Something timeout: " << retryTimeout << " Count: " << count << std::endl;
 				int32 res = Wait::Multiple( waitObjects, count, timeout );
 
 				switch( res )
@@ -518,7 +523,7 @@ bool Driver::Init
 		uint32 _attempts
 )
 {
-	m_nodeId = -1;
+	m_Controller_nodeId = -1;
 	m_waitingForAck = false;
 
 	// Open the controller
@@ -660,7 +665,7 @@ bool Driver::ReadConfig
 	// Node ID
 	if( TIXML_SUCCESS == driverElement->QueryIntAttribute( "node_id", &intVal ) )
 	{
-		if( (uint8)intVal != m_nodeId )
+		if( (uint8)intVal != m_Controller_nodeId )
 		{
 			Log::Write( LogLevel_Warning, "WARNING: Driver::ReadConfig - Controller Node ID in file %s is incorrect", filename.c_str() );
 			return false;
@@ -773,7 +778,7 @@ void Driver::WriteConfig
 	snprintf( str, sizeof(str), "0x%.8x", m_homeId );
 	driverElement->SetAttribute( "home_id", str );
 
-	snprintf( str, sizeof(str), "%d", m_nodeId );
+	snprintf( str, sizeof(str), "%d", m_Controller_nodeId );
 	driverElement->SetAttribute( "node_id", str );
 
 	snprintf( str, sizeof(str), "%d", m_initCaps );
@@ -963,11 +968,24 @@ void Driver::SendMsg
 
 	item.m_command = MsgQueueCmd_SendMsg;
 	item.m_msg = _msg;
+	/* make sure the HomeId is Set on this message */
+	_msg->SetHomeId(m_homeId);
 	_msg->Finalize();
 	{
 		LockGuard LG(m_nodeMutex);
 		if( Node* node = GetNode(_msg->GetTargetNodeId()) )
 		{
+			/* if the node Supports the Security Class - check if this message is meant to be encapsulated */
+			if ( node->GetCommandClass(Security::StaticGetCommandClassId() ) )
+			{
+				CommandClass *cc = node->GetCommandClass(_msg->GetSendingCommandClass());
+				if ( (cc) && (cc->IsSecured()) )
+				{
+					Log::Write( LogLevel_Detail, GetNodeNumber( _msg ), "Setting Encryption Flag on Message For Command Class %s", cc->GetCommandClassName().c_str());
+					item.m_msg->setEncrypted();
+				}
+			}
+
 			// If the message is for a sleeping node, we queue it in the node itself.
 			if( !node->IsListeningDevice() )
 			{
@@ -993,18 +1011,6 @@ void Driver::SendMsg
 						wakeUp->QueueMsg( item );
 						return;
 					}
-				}
-			}
-
-			/* if the node Supports the Security Class - check if this message is meant to be encapsulated */
-			if ( Security* security = static_cast<Security *>( node->GetCommandClass(Security::StaticGetCommandClassId() ) ) )
-			{
-				CommandClass *cc = node->GetCommandClass(_msg->GetSendingCommandClass());
-				if ( (cc) && (cc->IsSecured()) )
-				{
-					Log::Write( LogLevel_Detail, GetNodeNumber( _msg ), "Encrypting Message For Command Class %s", cc->GetCommandClassName().c_str());
-					security->SendMsg(_msg);
-					return;
 				}
 			}
 		}
@@ -1127,6 +1133,7 @@ bool Driver::WriteMsg
 		string const &msg
 )
 {
+	std::cout << msg << std::endl;
 	if( !m_currentMsg )
 	{
 		Log::Write( LogLevel_Detail, GetNodeNumber( m_currentMsg ), "WriteMsg %s m_currentMsg=%08x", msg.c_str(), m_currentMsg );
@@ -1143,7 +1150,8 @@ bool Driver::WriteMsg
 	uint8 nodeId = m_currentMsg->GetTargetNodeId();
 	LockGuard LG(m_nodeMutex);
 	Node* node = GetNode( nodeId );
-	if( attempts >= m_currentMsg->GetMaxSendAttempts() || (node != NULL && !node->IsNodeAlive() && !m_currentMsg->IsNoOperation() ) )
+	if( attempts >= m_currentMsg->GetMaxSendAttempts() ||
+			(node != NULL && !node->IsNodeAlive() && !m_currentMsg->IsNoOperation() ) )
 	{
 		if( node != NULL && !node->IsNodeAlive() )
 		{
@@ -1165,7 +1173,16 @@ bool Driver::WriteMsg
 		m_currentMsg->UpdateCallbackId();
 	}
 
-	m_currentMsg->SetSendAttempts( ++attempts );
+	/* XXX TODO: Minor Bug - Due to the post increament of the SendAttempts, it means our final NONCE_GET will go though
+	 * but the subsequent MSG send will fail (as the counter is incremented only upon a successful NONCE_GET, and Not a Send
+	 *
+	 */
+
+	if (m_currentMsg->isEncrypted() && !m_currentMsg->isNonceRecieved()) {
+		m_currentMsg->SetSendAttempts( ++attempts );
+	} else if (!m_currentMsg->isEncrypted() ) {
+		m_currentMsg->SetSendAttempts( ++attempts );
+	}
 	m_expectedCallbackId = m_currentMsg->GetCallbackId();
 	m_expectedCommandClassId = m_currentMsg->GetExpectedCommandClassId();
 	m_expectedNodeId = m_currentMsg->GetTargetNodeId();
@@ -1185,9 +1202,19 @@ bool Driver::WriteMsg
 	}
 
 	Log::Write( LogLevel_Detail, "" );
-	Log::Write( LogLevel_Info, nodeId, "Sending (%s) message (%sCallback ID=0x%.2x, Expected Reply=0x%.2x) - %s", c_sendQueueNames[m_currentMsgQueueSource], attemptsstr.c_str(), m_expectedCallbackId, m_expectedReply, m_currentMsg->GetAsString().c_str() );
 
-	m_controller->Write( m_currentMsg->GetBuffer(), m_currentMsg->GetLength() );
+	if (m_currentMsg->isEncrypted()) {
+		if (m_currentMsg->isNonceRecieved()) {
+			Log::Write( LogLevel_Info, nodeId, "Processing (%s) Encrypted message (%sCallback ID=0x%.2x, Expected Reply=0x%.2x) - %s", c_sendQueueNames[m_currentMsgQueueSource], attemptsstr.c_str(), m_expectedCallbackId, m_expectedReply, m_currentMsg->GetAsString().c_str() );
+			SendEncryptedMessage();
+		} else {
+			Log::Write( LogLevel_Info, nodeId, "Processing (%s) Nonce Request message (%sCallback ID=0x%.2x, Expected Reply=0x%.2x)", c_sendQueueNames[m_currentMsgQueueSource], attemptsstr.c_str(), m_expectedCallbackId, m_expectedReply);
+			SendNonceRequest();
+		}
+	} else {
+		Log::Write( LogLevel_Info, nodeId, "Sending (%s) message (%sCallback ID=0x%.2x, Expected Reply=0x%.2x) - %s", c_sendQueueNames[m_currentMsgQueueSource], attemptsstr.c_str(), m_expectedCallbackId, m_expectedReply, m_currentMsg->GetAsString().c_str() );
+		m_controller->Write( m_currentMsg->GetBuffer(), m_currentMsg->GetLength() );
+	}
 	m_writeCnt++;
 
 	if( nodeId == 0xff )
@@ -1202,7 +1229,7 @@ bool Driver::WriteMsg
 			node->m_sentTS.SetTime();
 			if( m_expectedReply == FUNC_ID_APPLICATION_COMMAND_HANDLER )
 			{
-				CommandClass* cc = node->GetCommandClass( m_expectedCommandClassId );
+				CommandClass *cc = node->GetCommandClass(m_expectedCommandClassId);
 				if( cc != NULL )
 				{
 					cc->SentCntIncr();
@@ -1250,7 +1277,7 @@ bool Driver::MoveMessagesToWakeUpQueue
 	// all messages for it to its Wake-Up queue.
 	if( Node* node = GetNodeUnsafe(_targetNodeId) )
 	{
-		if( !node->IsListeningDevice() && !node->IsFrequentListeningDevice() && _targetNodeId != m_nodeId )
+		if( !node->IsListeningDevice() && !node->IsFrequentListeningDevice() && _targetNodeId != m_Controller_nodeId )
 		{
 			if( WakeUp* wakeUp = static_cast<WakeUp*>( node->GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
 			{
@@ -1736,6 +1763,15 @@ void Driver::ProcessMsg
 	bool handleCallback = true;
 	uint8 nodeId = GetNodeNumber( m_currentMsg );
 
+	std::cout << "ProcessMsg (start)" << std::endl;
+	std::cout << "m_expectedCallbackId: " << std::hex << (int)m_expectedCallbackId << " " << (int)_data[2] << std::endl;
+	std::cout << "m_expectedCommandClassId: " << (int)m_expectedCommandClassId << " " << (int)_data[5] << std::endl;
+	std::cout << "m_expectedNodeId: " << (int)m_expectedNodeId << " " << (int) _data[3] << std::endl;
+	std::cout << "m_expectedReply: " << (int)m_expectedReply << " " << (int)_data[1] << std::endl;
+	std::cout << "m_waitingForAck: " << (bool)m_waitingForAck << std::endl;
+	std::cout << std::dec << std::endl;
+
+
 	if( RESPONSE == _data[0] )
 	{
 		switch( _data[1] )
@@ -2115,6 +2151,14 @@ void Driver::ProcessMsg
 	// Generic callback handling
 	if( handleCallback )
 	{
+		std::cout << "ProcessMsg (handleCallback)" << std::endl;
+		std::cout << "m_expectedCallbackId: " << std::hex << (int)m_expectedCallbackId << " " << (int)_data[2] << std::endl;
+		std::cout << "m_expectedCommandClassId: " << (int)m_expectedCommandClassId << " " << (int)_data[5] << std::endl;
+		std::cout << "m_expectedNodeId: " << (int)m_expectedNodeId << " " << (int) _data[3] << std::endl;
+		std::cout << "m_expectedReply: " << (int)m_expectedReply << " " << (int)_data[1] << std::endl;
+		std::cout << "m_waitingForAck: " << (bool)m_waitingForAck << std::endl;
+		std::cout << std::dec << std::endl;
+
 		if( ( m_expectedCallbackId || m_expectedReply ) )
 		{
 			if( m_expectedCallbackId )
@@ -2152,6 +2196,13 @@ void Driver::ProcessMsg
 					}
 				}
 			}
+			std::cout << "ProcessMsg (Final test)" << std::endl;
+			std::cout << "m_expectedCallbackId: " << std::hex << (int)m_expectedCallbackId << " " << (int)_data[2] << std::endl;
+			std::cout << "m_expectedCommandClassId: " << (int)m_expectedCommandClassId << " " << (int)_data[5] << std::endl;
+			std::cout << "m_expectedNodeId: " << (int)m_expectedNodeId << " " << (int) _data[3] << std::endl;
+			std::cout << "m_expectedReply: " << (int)m_expectedReply << " " << (int)_data[1] << std::endl;
+			std::cout << "m_waitingForAck: " << (bool)m_waitingForAck << std::endl;
+			std::cout << std::dec << std::endl;
 
 			if( !( m_expectedCallbackId || m_expectedReply ) )
 			{
@@ -2391,13 +2442,13 @@ void Driver::HandleGetSUCNodeIdResponse
 				Log::Write( LogLevel_Info, "  No SUC, so we become SIS" );
 
 				Msg* msg;
-				msg = new Msg( "Enable SUC", m_nodeId, REQUEST, FUNC_ID_ZW_ENABLE_SUC, false );
+				msg = new Msg( "Enable SUC", m_Controller_nodeId, REQUEST, FUNC_ID_ZW_ENABLE_SUC, false );
 				msg->Append( 1 );
 				msg->Append( SUC_FUNC_NODEID_SERVER );		// SIS; SUC would be ZW_SUC_FUNC_BASIC_SUC
 				SendMsg( msg, MsgQueue_Send );
 
-				msg = new Msg( "Set SUC node ID", m_nodeId, REQUEST, FUNC_ID_ZW_SET_SUC_NODE_ID, false );
-				msg->Append( m_nodeId );
+				msg = new Msg( "Set SUC node ID", m_Controller_nodeId, REQUEST, FUNC_ID_ZW_SET_SUC_NODE_ID, false );
+				msg->Append( m_Controller_nodeId );
 				msg->Append( 1 );								// TRUE, we want to be SUC/SIS
 				msg->Append( 0 );								// no low power
 				msg->Append( SUC_FUNC_NODEID_SERVER );
@@ -2422,8 +2473,8 @@ void Driver::HandleMemoryGetIdResponse
 {
 	Log::Write( LogLevel_Info, GetNodeNumber( m_currentMsg ), "Received reply to FUNC_ID_ZW_MEMORY_GET_ID. Home ID = 0x%02x%02x%02x%02x.  Our node ID = %d", _data[2], _data[3], _data[4], _data[5], _data[6] );
 	m_homeId = ( ( (uint32)_data[2] )<<24 ) | ( ( (uint32)_data[3] )<<16 ) | ( ( (uint32)_data[4] )<<8 ) | ( (uint32)_data[5] );
-	m_nodeId = _data[6];
-	m_controllerReplication = static_cast<ControllerReplication*>(ControllerReplication::Create( m_homeId, m_nodeId ));
+	m_Controller_nodeId = _data[6];
+	m_controllerReplication = static_cast<ControllerReplication*>(ControllerReplication::Create( m_homeId, m_Controller_nodeId ));
 }
 
 //-----------------------------------------------------------------------------
@@ -2999,7 +3050,7 @@ void Driver::HandleRemoveNodeFromNetworkRequest
 							continue;
 						}
 						// Ignore primary controller
-						if( m_nodes[i]->m_nodeId == m_nodeId )
+						if( m_nodes[i]->m_nodeId == m_Controller_nodeId )
 						{
 							continue;
 						}
@@ -3280,6 +3331,8 @@ void Driver::HandleApplicationCommandHandlerRequest
 		uint8* _data
 )
 {
+	std::cout << "HandleApplicationCommandHandlerRequest" << std::endl;
+
 	uint8 status = _data[2];
 	uint8 nodeId = _data[3];
 	uint8 classId = _data[5];
@@ -3346,6 +3399,14 @@ void Driver::HandleApplicationCommandHandlerRequest
 			m_controllerReplication->HandleMsg( &_data[6], _data[4] );
 
 			UpdateControllerState( ControllerState_InProgress );
+		}
+	}
+	/* Check if this is a NONCE Report from the device */
+	else if ( ( Security::StaticGetCommandClassId() == classId ) && ( _data[6] == 0x80 ))
+	{
+		if (m_currentMsg && m_currentMsg->isEncrypted()) {
+			m_currentMsg->setNonce(&_data[7]);
+			WriteMsg( "SendEncrypted" );
 		}
 	}
 	else
@@ -5264,7 +5325,7 @@ void Driver::TestNetwork
 	{
 		for( int i=0; i<256; ++i )
 		{
-			if( i == m_nodeId ) // ignore sending to ourself
+			if( i == m_Controller_nodeId ) // ignore sending to ourself
 			{
 				continue;
 			}
@@ -5278,7 +5339,7 @@ void Driver::TestNetwork
 			}
 		}
 	}
-	else if( _nodeId != m_nodeId && m_nodes[_nodeId] != NULL )
+	else if( _nodeId != m_Controller_nodeId && m_nodes[_nodeId] != NULL )
 	{
 		NoOperation *noop = static_cast<NoOperation*>( m_nodes[_nodeId]->GetCommandClass( NoOperation::StaticGetCommandClassId() ) );
 		for( int i=0; i < (int)_count; i++ )
@@ -6316,4 +6377,118 @@ uint8 *Driver::GetNetworkKey() {
 		keySet = true;
 	}
 	return keybytes;
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::SendEncryptedMessage>
+// Send either a NONCE request, or the actual encrypted message, depending what state the Message Currently is in.
+//-----------------------------------------------------------------------------
+bool Driver::SendEncryptedMessage() {
+
+
+	uint8 *buffer = m_currentMsg->GetBuffer();
+	uint8 length = m_currentMsg->GetLength();
+	PrintHex("Sending", buffer, length);
+	//m_expectedReply = FUNC_ID_ZW_SEND_DATA;
+	//m_expectedCommandClassId = Security::StaticGetCommandClassId();
+
+	m_controller->Write( buffer, length );
+	m_currentMsg->clearNonce();
+
+
+	std::cout << "m_expectedCallbackId: " << std::hex << (int)m_expectedCallbackId << std::endl;
+	std::cout << "m_expectedCommandClassId: " << (int)m_expectedCommandClassId << std::endl;
+	std::cout << "m_expectedNodeId: " << (int)m_expectedNodeId << std::endl;
+	std::cout << "m_expectedReply: " << (int)m_expectedReply << std::endl;
+	std::cout << "m_waitingForAck: " << (bool)m_waitingForAck << std::endl;
+	std::cout << std::dec << std::endl;
+
+
+
+	return true;
+}
+
+
+bool Driver::SendNonceRequest() {
+
+	uint8 m_buffer[11];
+std::cout << "NonceGet" << std::endl;
+	/* construct a standard NONCE_GET message */
+	m_buffer[0] = SOF;
+	m_buffer[1] = 9;					// Length of the entire message
+	m_buffer[2] = REQUEST;
+	m_buffer[3] = FUNC_ID_ZW_SEND_DATA;
+	m_buffer[4] = m_currentMsg->GetTargetNodeId();
+	m_buffer[5] = 2; 					// Length of the payload
+	m_buffer[6] = Security::StaticGetCommandClassId();
+	m_buffer[7] = SecurityCmd_NonceGet;
+	m_buffer[8] = TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE;
+	/* this is the same as the Actual Message */
+	m_buffer[9] = m_expectedCallbackId;
+	// Calculate the checksum
+	m_buffer[10] = 0xff;
+	for( uint32 i=1; i<10; ++i )
+	{
+		m_buffer[10] ^= m_buffer[i];
+	}
+	m_controller->Write(m_buffer, 11);
+
+	m_expectedReply = FUNC_ID_APPLICATION_COMMAND_HANDLER;
+	m_expectedCommandClassId = Security::StaticGetCommandClassId();
+
+	return true;
+}
+
+bool Driver::initNetworkKeys(bool newnode) {
+
+	uint8_t EncryptPassword[16] = {0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA};
+	uint8_t AuthPassword[16] = {0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55};
+
+
+	this->AuthKey = new aes_encrypt_ctx;
+	this->EncryptKey = new aes_encrypt_ctx;
+
+	if (aes_init() == EXIT_FAILURE) {
+		Log::Write(LogLevel_Warning, GetControllerNodeId(), "Failed to Init AES Engine");
+		return false;
+	}
+
+	if (aes_encrypt_key128(this->GetNetworkKey(), this->EncryptKey) == EXIT_FAILURE) {
+		Log::Write(LogLevel_Warning, GetControllerNodeId(), "Failed to Set Initial Network Key for Encryption");
+		return false;
+	}
+
+	if (aes_encrypt_key128(this->GetNetworkKey(), this->AuthKey) == EXIT_FAILURE) {
+		Log::Write(LogLevel_Warning, GetControllerNodeId(), "Failed to Set Initial Network Key for Authentication");
+		return false;
+	}
+
+	uint8 tmpEncKey[32];
+	uint8 tmpAuthKey[32];
+	aes_mode_reset(this->EncryptKey);
+	aes_mode_reset(this->AuthKey);
+
+	if (aes_ecb_encrypt(EncryptPassword, tmpEncKey, 16, this->EncryptKey) == EXIT_FAILURE) {
+		Log::Write(LogLevel_Warning, GetControllerNodeId(), "Failed to Generate Encrypted Network Key for Encryption");
+		return false;
+	}
+	if (aes_ecb_encrypt(AuthPassword, tmpAuthKey, 16, this->AuthKey) == EXIT_FAILURE) {
+		Log::Write(LogLevel_Warning, GetControllerNodeId(), "Failed to Generate Encrypted Network Key for Authentication");
+		return false;
+	}
+
+
+	aes_mode_reset(this->EncryptKey);
+	aes_mode_reset(this->AuthKey);
+	if (aes_encrypt_key128(tmpEncKey, this->EncryptKey) == EXIT_FAILURE) {
+		Log::Write(LogLevel_Warning, GetControllerNodeId(), "Failed to set Encrypted Network Key for Encryption");
+		return false;
+	}
+	if (aes_encrypt_key128(tmpAuthKey, this->AuthKey) == EXIT_FAILURE) {
+		Log::Write(LogLevel_Warning, GetControllerNodeId(), "Failed to set Encrypted Network Key for Authentication");
+		return false;
+	}
+	aes_mode_reset(this->EncryptKey);
+	aes_mode_reset(this->AuthKey);
+	return true;
 }
