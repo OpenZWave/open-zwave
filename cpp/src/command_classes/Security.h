@@ -100,6 +100,7 @@ namespace OpenZWave
 		void ReadXML(TiXmlElement const* _ccElement);
 		void WriteXML(TiXmlElement* _ccElement);
 		void SendMsg( Msg* _msg );
+		uint8 *getNonce();
 
 	protected:
 		void CreateVars( uint8 const _instance );
