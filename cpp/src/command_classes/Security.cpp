@@ -1006,7 +1006,7 @@ void Security::SendNonceReport
 	/* this should be pretty random */
 	for (int i = 0; i < 8; i++) {
 		//this->currentNonce[i] = (rand()%0xFF)+1;
-		this->currentNonce[i] = 0xAA;
+		this->currentNonce[i] = 0x5A;
 	}
 
 
@@ -1040,4 +1040,8 @@ void Security::CreateVars
 	{
 	  	node->CreateValueBool( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 0, "Secured", "", true, false, false, 0 );
 	}
+}
+
+uint8 *Security::getNonce() {
+	return this->currentNonce;
 }
