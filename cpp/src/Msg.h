@@ -165,13 +165,12 @@ namespace OpenZWave
 		}
 		void SetHomeId(uint32 homeId) { m_homeId = homeId; };
 
-	private:
 		/** Returns a pointer to the driver (interface with a Z-Wave controller)
 		 *  associated with this node.
 		*/
 		Driver* GetDriver()const;
+	private:
 
-		bool GenerateAuthentication( uint8 const* _data, uint32 const _length, uint8 const _sendingNode, uint8 const _receivingNode, uint8 *iv, uint8* _authentication);
 
 		void MultiEncap();					// Encapsulate the data inside a MultiInstance/Multicommand message
 
@@ -184,11 +183,10 @@ namespace OpenZWave
 		uint8			m_expectedCommandClassId;
 		uint8			m_length;
 		uint8			m_buffer[256];
-		uint8 			e_buffer[256];
+		uint8			e_buffer[256];
 
 		uint8			m_targetNodeId;
 		uint8			m_sendAttempts;
-		uint8			m_sendNonceAttempts;
 		uint8			m_maxSendAttempts;
 
 		uint8			m_instance;
