@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Aeon Labs Smart Switch Gen5 -->
+<Product xmlns='http://code.google.com/p/open-zwave/'>
+  <!-- This device doesn't respond to Basic Messages (that are secured) -->
+  <CommandClass id="32" action="remove" />
+  <!-- Configuration Parameters -->
+  <CommandClass id="112">    
+    <Value type="short" index="2" genre="config" label="Make Smart Switch blink"  min="0" max="65535" value="3850" size="2">
+      <Help>
+	  Configuration Value 1: 1‐255
+	  Configuration Value 1 is to Specify the time that Smart Switch need blink, The unit is Second;
+	
+	  Configuration Value 2: 1‐255
+	  Configuration Value 2 is to Specify the Cycle of on/off, the unit of it is 0.1 second. For example: if we set Configuration Value 1 to '15',Configuration Value 2 to '10',then Smart Switch will open 0.5 second, close 0.5 second, and repeat for 14 times.
+	  
+	  Default value 0x0f0a
+      </Help>
+    </Value>
+    
+    <Value type="list" index="3" genre="config" label="Current Overload Protection" size="1" value="0">
+      <Help>
+      Load will be closed when the Current overrun (US: 15.5A, other country: 16.2A) and the time more than 2 minutes
+      </Help>
+      <Item label="Disabled" value="0" />
+      <Item label="Enabled" value="1" />
+    </Value>
+    
+    <Value type="list" index="20" genre="config" label="Output load after re‐power" units="" size="1" value="0">
+      <Help>Configure the output load status after re‐power on.</Help>
+      <Item label="Last Status" value="0" />
+      <Item label="Always On" value="1" />
+      <Item label="Always Off" value="2" />
+    </Value>
+    
+    <Value type="list" index="80" genre="config" label="Enable to send notifications" size="1" value="0">
+      <Help>
+      Enable to send notifications to associated devices (Group 1) when the state of Micro Switch’s load changed
+      </Help>
+      <Item label="Nothing" value="0" />
+      <Item label="Hail CC" value="1" />
+      <Item label="Basic CC report" value="2" />
+    </Value>
+    
+    <Value type="list" index="81" genre="config" label="Configure the state of red LED" size="1" value="0">
+      <Help>
+      Configure the state of red LED
+      </Help>
+      <Item label="Follow the status of load" value="0" />
+      <Item label="Follow with auto off" value="1" />
+    </Value>
+    
+    <Value type="list" index="90" genre="config" label="Enables/disables parameter 91 and 92" units="" value="1">
+      <Help></Help>
+      <Item label="Disabled" value="0" />
+      <Item label="Enabled" value="1" />
+    </Value>
+    
+    <Value type="short" index="91" genre="config" label="Wattage threshold" units="watts" min="0" max="60000" value="25">
+      <Help>
+	The value here represents minimum change in wattage (in terms of wattage) for a REPORT to be sent (Valid values 0‐60000).
+      </Help>
+    </Value>
+    
+    <Value type="byte" index="92" genre="config" label="Wattage threshold percent" units="%" min="0" max="100" value="5">
+      <Help>
+	The value here represents minimum change in wattage percent (in terms of percentage) for a REPORT to be sent (Valid values 0‐100).
+      </Help>
+    </Value>
+    
+    <Value type="button" index="100" genre="config" label="Reset Default Group Reports" units="" write_only="true" value="0" affects="101,102,103">
+      <Help>
+      Set report types for groups 1, 2 and 3 to default. Reverts to 0	after set.
+      </Help>
+    </Value>
+    
+    <Value type="int" index="101" genre="config" label="Report type Group 1" units="" value="4">
+      <Help>
+      Defines the type of report sent for reporting group 1. 
+	 	Value 1 (msb) Reserved
+	 	Value 2 Reserved
+	 	Value 3 Reserved
+	 	Value 4 (lsb) bits 7-4 reserved
+                      bit 3 Auto send Meter REPORT (kWh)
+		              bit 2 Auto send Meter REPORT (watt)
+		              bit 1 Auto send Meter REPORT (current)
+		              bit 1 Auto send Meter REPORT (voltage)
+      </Help>
+    </Value>
+    
+    <Value type="int" index="102" genre="config" label="Report type Group 2" units="" value="8">
+      <Help>
+      Defines the type of report sent for reporting group 2. 
+	    Value 1 (msb) Reserved
+	 	Value 2 Reserved
+	 	Value 3 Reserved
+	 	Value 4 (lsb) bits 7-4 reserved
+                      bit 3 Auto send Meter REPORT (kWh)
+		              bit 2 Auto send Meter REPORT (watt)
+		              bit 1 Auto send Meter REPORT (current)
+		              bit 1 Auto send Meter REPORT (voltage)
+      </Help>
+    </Value>
+    <Value type="int" index="103" genre="config" label="Report type Group 3" units="" value="0">
+      <Help>
+      Defines the type of report sent for reporting group 3. 
+	    Value 1 (msb) Reserved
+	 	Value 2 Reserved
+	 	Value 3 Reserved
+	 	Value 4 (lsb) bits 7-4 reserved
+                      bit 3 Auto send Meter REPORT (kWh)
+		              bit 2 Auto send Meter REPORT (watt)
+		              bit 1 Auto send Meter REPORT (current)
+		              bit 1 Auto send Meter REPORT (voltage)
+      </Help>
+    </Value>
+    
+    <Value type="button" index="110" genre="config" label="Reset Default Group Time" units="" write_only="true" value="0" affects="111,112,113">
+      <Help>
+      Set time interval for sending reports for groups 1, 2 and 3 to default.
+      </Help>
+    </Value>
+    
+    <Value type="int" index="111" genre="config" label="Send interval G1" units="seconds" min="0" max="4294967295" value="3" size="4">
+      <Help>
+      The time interval of sending Report group 1 (Valid values 0x01‐0xFFFFFFFF).
+      </Help>
+    </Value>
+    
+    <Value type="int" index="112" genre="config" label="Send interval G2" units="seconds" min="0" max="4294967295" value="8280" size="4">
+      <Help>
+      The time interval of sending Report group 2 (Valid values 0x01‐0xFFFFFFFF).
+      </Help>
+    </Value>
+    
+    <Value type="int" index="113" genre="config" label="Send interval G3" units="seconds" min="0" max="4294967295" value="8280" size="4">
+      <Help>
+      The time interval of sending Report group 3 (Valid values 0x01‐0xFFFFFFFF).
+      </Help>
+    </Value>
+    
+    <Value type="list" index="200" genre="config" label="Partner ID" units="" value="0">
+      <Help></Help>
+      <Item label="Aeon Labs Standard Product" value="0" />
+      <Item label="AT&T" value="1" />
+    </Value>
+    
+     <Value type="list" index="252" genre="config" label="Configuration Locked" size="1" value="0">
+      <Help>
+      Enable/disable Configuration Locked
+      </Help>
+      <Item label="Disabled" value="0" />
+      <Item label="Enabled" value="1" />
+    </Value>
+    
+    <Value type="short" index="254" genre="config" label="Device tag" units="" min="0" max="65535" value="0" size="2">
+      <Help>
+      Device tag.
+      </Help>
+    </Value>
+    <Value type="button" index="255" genre="config" label="Reset device" units="" write_only="true" value="0">
+      <Help>
+      Reset to the default configuration.
+      </Help>
+    </Value>
+  </CommandClass>
+
+  <!-- Association Groups -->
+  <CommandClass id="133">
+    <Associations num_groups="3">
+      <Group index="1" max_associations="5" label="Group 1" auto="true" />
+      <Group index="2" max_associations="5" label="Group 2" auto="true" />
+      <Group index="2" max_associations="5" label="Group 3" auto="true" />
+    </Associations>
+  </CommandClass>
+</Product>
+
