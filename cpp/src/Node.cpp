@@ -2926,3 +2926,25 @@ Node::DeviceClass* Node::GenericDeviceClass::GetSpecificDeviceClass
 
 	return NULL;
 }
+
+//-----------------------------------------------------------------------------
+// <Node::GenericDeviceClass::GetSpecificDeviceClass>
+// Get a specific device class object
+//-----------------------------------------------------------------------------
+uint8 *Node::GenerateNonceKey() {
+	for (int i = 0; i < 8; i++) {
+		//this->currentNonce[i] = (rand()%0xFF)+1;
+		this->m_nonces[i] = 0x50 + m_nodeId;
+	}
+	return &this->m_nonces[0];
+}
+uint8 *Node::GetNonceKey(uint32 nonceid) {
+
+	/* make sure the nonceid matches the first byte of our stored Nonce */
+	if (nonceid == this->m_nonces[0])
+		return &this->m_nonces[0];
+	Log::Write(LogLevel_Warning, m_nodeId, "A Nonce with id %x does not exist", nonceid);
+	return NULL;
+}
+
+

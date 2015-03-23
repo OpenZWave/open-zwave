@@ -116,7 +116,11 @@ void OpenZWave::split
 }
 
 void OpenZWave::PrintHex(std::string prefix, uint8_t const *data, uint32 const length) {
-	char byteStr[16];
+	Log::Write(LogLevel_Info, "%s: %s", prefix.c_str(), PktToString(data, length).c_str());
+}
+
+string OpenZWave::PktToString(uint8 const *data, uint32 const length) {
+	char byteStr[length];
 	std::string str;
 	for( uint32 i=0; i<length; ++i )
 	{
@@ -128,5 +132,6 @@ void OpenZWave::PrintHex(std::string prefix, uint8_t const *data, uint32 const l
 		snprintf( byteStr, sizeof(byteStr), "0x%.2x", data[i] );
 		str += byteStr;
 	}
-	Log::Write(LogLevel_Info, "%s: %s", prefix.c_str(), str.c_str());
+	return str;
+
 }
