@@ -73,6 +73,7 @@ namespace OpenZWave
 
 
 	void PrintHex(std::string prefix, uint8_t const *data, uint32 const length);
+	string PktToString(uint8 const *data, uint32 const length);
 
 	struct LockGuard
 	{

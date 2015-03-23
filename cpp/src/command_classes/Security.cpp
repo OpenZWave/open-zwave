@@ -422,8 +422,7 @@ bool Security::HandleMsg
 			/* the Device wants to send us a Encrypted Packet, and thus requesting for our latest NONCE
 			 *
 			 */
-			Log::Write(LogLevel_Info,  GetNodeId(), "Received SecurityCmd_NonceGet from node %d", GetNodeId() );
-			SendNonceReport();
+//			SendNonceReport();
 			break;
 		}
 		case SecurityCmd_NonceReport:
@@ -431,9 +430,8 @@ bool Security::HandleMsg
 			/* we recieved a NONCE from a device, so assume that there is something in a queue to send
 			 * out
 			 */
-			Log::Write(LogLevel_Info,  GetNodeId(), "Received SecurityCmd_NonceReport from node %d", GetNodeId() );
-			EncryptMessage( &_data[1] );
-			m_waitingForNonce = false;
+//			EncryptMessage( &_data[1] );
+//			m_waitingForNonce = false;
 			break;
 		}
 		case SecurityCmd_MessageEncap:

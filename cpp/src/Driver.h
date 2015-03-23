@@ -857,7 +857,8 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		bool initNetworkKeys(bool newnode);
 		uint8 *GetNetworkKey();
 		bool SendEncryptedMessage();
-		bool SendNonceRequest();
+		bool SendNonceRequest(string logmsg);
+		void SendNonceKey(uint8 nodeId, uint8 *nonce);
 		aes_encrypt_ctx *AuthKey;
 		aes_encrypt_ctx *EncryptKey;
 

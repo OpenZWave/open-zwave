@@ -307,7 +307,10 @@ uint8* Msg::GetBuffer() {
 	if (m_encrypted == false)
 		return m_buffer;
 	else
+		std::cout << "Nonce: " << PktToString(m_nonce, 8).c_str() << std::endl;
+		std::cout << "Buffer: " << PktToString(m_buffer, m_length) << std::endl;
 		if (EncyrptBuffer(m_buffer, m_length, GetDriver(), GetDriver()->GetControllerNodeId(), m_targetNodeId, m_nonce, e_buffer)) {
+			std::cout << "EncBuffer: " << PktToString(e_buffer, m_length) << std::endl;
 			return e_buffer;
 		} else {
 			Log::Write(LogLevel_Warning, m_targetNodeId, "Failed to Encyrpt Packet");
