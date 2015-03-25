@@ -3,7 +3,8 @@ Open-ZWave Library
 
 Our goal is to create free software library that interfaces with selected Z-Wave PC controllers, allowing anyone to create applications that manipulate and respond to devices on a Z-Wave network, without requiring in-depth knowledge of the Z-Wave protocol.
 
-This software is currently aimed at Application Developers who wish to incorporate Z-Wave functionality into their applications. 
+This software is currently aimed at Application Developers who wish to incorporate Z-Wave functionality into their applications.
+
 Our Homepage is at http://www.openzwave.net/ and our Github Page is located at https://github.com/OpenZWave/. If you wish to participate on our Mailing List, please visit https://groups.google.com/forum/#!forum/openzwave
 
 ## Getting Started
