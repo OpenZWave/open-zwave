@@ -94,6 +94,8 @@ DISTFILES =	ChangeLog \
 	config/options.xsd \
 	config/philio/pan04.xml \
 	config/philio/psm02.xml \
+	config/polycontrol/doorlock.xml \
+	config/polycontrol/keypad.xml \
 	config/popp/123580.xml \
 	config/popp/123601.xml \
 	config/popp/123658.xml \
