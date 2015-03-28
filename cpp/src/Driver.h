@@ -861,6 +861,8 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		void SendNonceKey(uint8 nodeId, uint8 *nonce);
 		aes_encrypt_ctx *AuthKey;
 		aes_encrypt_ctx *EncryptKey;
+		uint8 m_nonceReportSent;
+		uint8 m_nonceReportSentAttempt;
 
 	};
 

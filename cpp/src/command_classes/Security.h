@@ -37,12 +37,6 @@ namespace OpenZWave
 	/** \brief Implements COMMAND_CLASS_SECURITY (0x98), a Z-Wave device command class.
 	 */
 
-	typedef struct SecurityPayload {
-		uint8 m_length;
-		uint8 m_part;
-		uint8 m_data[32];
-		string logmsg;
-	} SecurityPayload;
 
 	enum SecurityCmd
 	{
@@ -65,24 +59,6 @@ namespace OpenZWave
 	};
 
 
-	/* This should probably go into its own file, but its so simple... and only the Security Command Class uses it currently
-	 */
-
-	class Timer {
-	public:
-		Timer() {
-			this->Reset();
-		};
-		virtual ~Timer() {};
-		void Reset() {
-			start = clock();
-		}
-		inline uint64 GetMilliseconds() {
-            return (uint64 )(((clock() - start) / (double)CLOCKS_PER_SEC) / 1000);
-		}
-	private:
-		clock_t start;
-	};
 
 	class Security: public CommandClass
 	{
@@ -100,7 +76,6 @@ namespace OpenZWave
 		void ReadXML(TiXmlElement const* _ccElement);
 		void WriteXML(TiXmlElement* _ccElement);
 		void SendMsg( Msg* _msg );
-		uint8 *getNonce();
 
 	protected:
 		void CreateVars( uint8 const _instance );
@@ -110,27 +85,7 @@ namespace OpenZWave
 		bool RequestState( uint32 const _requestFlags, uint8 const _instance, Driver::MsgQueue const _queue);
 		bool RequestValue( uint32 const _requestFlags, uint8 const _index, uint8 const _instance, Driver::MsgQueue const _queue);
 		bool HandleSupportedReport(uint8 const* _data, uint32 const _length);
-		void SendNonceReport();
-		void RequestNonce();
-		bool GenerateAuthentication( uint8 const* _data, uint32 const _length, uint8 const _sendingNode, uint8 const _receivingNode, uint8 *iv, uint8* _authentication);
-		bool DecryptMessage( uint8 const* _data, uint32 const _length );
-		bool EncryptMessage( uint8 const* _nonce );
-		void QueuePayload( SecurityPayload * _payload );
-		bool createIVFromPacket_inbound(uint8 const* _data, uint8 *iv);
-		bool createIVFromPacket_outbound(uint8 const* _data, uint8 *iv);
-		void SetupNetworkKey();
 
-		Mutex *m_queueMutex;
-		list<SecurityPayload *>      m_queue;         // Messages waiting to be sent when the device wakes up
-		bool m_waitingForNonce;
-		uint8 m_sequenceCounter;
-		Timer m_nonceTimer;
-		uint8 currentNonce[8];
-		bool m_networkkeyset;
-
-		aes_encrypt_ctx *AuthKey;
-		aes_encrypt_ctx *EncryptKey;
-		uint8 *nk;
 		bool m_schemeagreed;
 		bool m_secured;
 

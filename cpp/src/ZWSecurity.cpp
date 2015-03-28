@@ -30,6 +30,7 @@
 #include "Node.h"
 #include "Driver.h"
 #include "Manager.h"
+#include "Options.h"
 #include "Utils.h"
 #include "platform/Log.h"
 #include "command_classes/MultiInstance.h"
@@ -356,6 +357,30 @@ namespace OpenZWave {
 		return true;
 	}
 
+	SecurityStrategy ShouldSecureCommandClass(uint8 CommandClass) {
+		string securestrategy;
+		Options::Get()->GetOptionAsString( "SecurityStrategy", &securestrategy );
+		if (ToUpper(securestrategy) == "ESSENTIAL") {
+			return SecurityStrategy_Essential;
+		} else if (ToUpper(securestrategy) == "SUPPORTED") {
+			return SecurityStrategy_Supported;
+		} else if (ToUpper(securestrategy) == "CUSTOM") {
+			string customsecurecc;
+			Options::Get()->GetOptionAsString( "CustomSecuredCC", &customsecurecc);
 
+			char* pos = const_cast<char*>(customsecurecc.c_str());
+			while( *pos )
+			{
+				if (CommandClass == (uint8)strtol( pos, &pos, 16 )) {
+					return SecurityStrategy_Supported;
+				}
+				if( (*pos) == ',' )
+				{
+					++pos;
+				}
+			}
+		}
+		return SecurityStrategy_Essential;
+	}
 
 }
