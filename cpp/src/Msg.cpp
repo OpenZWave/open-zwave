@@ -38,7 +38,8 @@
 
 using namespace OpenZWave;
 
-uint8 Msg::s_nextCallbackId = 1;
+/* Callback for normal messages start at 10. Special Messages using a Callback prior to 10 */
+uint8 Msg::s_nextCallbackId = 10;
 
 #define DEBUG 1
 
@@ -161,7 +162,7 @@ void Msg::Finalize()
 
 		if( 0 == s_nextCallbackId )
 		{
-			s_nextCallbackId = 1;
+			s_nextCallbackId = 10;
 		}
 
 		m_buffer[m_length++] = s_nextCallbackId;
@@ -193,6 +194,11 @@ void Msg::UpdateCallbackId()
 {
 	if( m_bCallbackRequired )
 	{
+		if( 0 == s_nextCallbackId )
+		{
+			s_nextCallbackId = 10;
+		}
+
 		// update the callback ID
 		m_buffer[m_length-2] = s_nextCallbackId;
 		m_callbackId = s_nextCallbackId++;

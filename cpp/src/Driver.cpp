@@ -194,7 +194,9 @@ m_notidle( 0 ),
 m_nondelivery( 0 ),
 m_routedbusy( 0 ),
 m_broadcastReadCnt( 0 ),
-m_broadcastWriteCnt( 0 )
+m_broadcastWriteCnt( 0 ),
+m_nonceReportSent( 0 ),
+m_nonceReportSentAttempt( 0 )
 {
 	// set a timestamp to indicate when this driver started
 	TimeStamp m_startTime;
@@ -1146,9 +1148,19 @@ bool Driver::WriteMsg
 		m_waitingForAck = false;
 		return false;
 	}
-
-	uint8 attempts = m_currentMsg->GetSendAttempts();
-	uint8 nodeId = m_currentMsg->GetTargetNodeId();
+	/* if this is called with m_nonceReportSent > 0 it means that we have
+	 * tried to send a NONCE report and it timed out or was NAK'd
+	 *
+	 */
+	uint8 attempts;
+	uint8 nodeId;
+	if (m_nonceReportSent > 0) {
+		attempts = m_nonceReportSentAttempt++;
+		nodeId = m_nonceReportSent;
+	} else {
+		attempts = m_currentMsg->GetSendAttempts();
+		nodeId = m_currentMsg->GetTargetNodeId();
+	}
 	LockGuard LG(m_nodeMutex);
 	Node* node = GetNode( nodeId );
 	if( attempts >= m_currentMsg->GetMaxSendAttempts() ||
@@ -1168,7 +1180,7 @@ bool Driver::WriteMsg
 		return false;
 	}
 
-	if( attempts != 0)
+	if (( attempts != 0) && (m_nonceReportSent == 0))
 	{
 		// this is not the first attempt, so increment the callback id before sending
 		m_currentMsg->UpdateCallbackId();
@@ -1179,16 +1191,18 @@ bool Driver::WriteMsg
 	 *
 	 */
 
-	if (m_currentMsg->isEncrypted() && !m_currentMsg->isNonceRecieved()) {
-		m_currentMsg->SetSendAttempts( ++attempts );
-	} else if (!m_currentMsg->isEncrypted() ) {
-		m_currentMsg->SetSendAttempts( ++attempts );
+	if (m_nonceReportSent == 0) {
+		if (m_currentMsg->isEncrypted() && !m_currentMsg->isNonceRecieved()) {
+			m_currentMsg->SetSendAttempts( ++attempts );
+		} else if (!m_currentMsg->isEncrypted() ) {
+			m_currentMsg->SetSendAttempts( ++attempts );
+		}
+		m_expectedCallbackId = m_currentMsg->GetCallbackId();
+		m_expectedCommandClassId = m_currentMsg->GetExpectedCommandClassId();
+		m_expectedNodeId = m_currentMsg->GetTargetNodeId();
+		m_expectedReply = m_currentMsg->GetExpectedReply();
+		m_waitingForAck = true;
 	}
-	m_expectedCallbackId = m_currentMsg->GetCallbackId();
-	m_expectedCommandClassId = m_currentMsg->GetExpectedCommandClassId();
-	m_expectedNodeId = m_currentMsg->GetTargetNodeId();
-	m_expectedReply = m_currentMsg->GetExpectedReply();
-	m_waitingForAck = true;
 	string attemptsstr = "";
 	if( attempts > 1 )
 	{
@@ -1204,7 +1218,10 @@ bool Driver::WriteMsg
 
 	Log::Write( LogLevel_Detail, "" );
 
-	if (m_currentMsg->isEncrypted()) {
+	if (m_nonceReportSent > 0) {
+		/* send a new NONCE report */
+		SendNonceKey(m_nonceReportSent, node->GenerateNonceKey());
+	} else if (m_currentMsg->isEncrypted()) {
 		if (m_currentMsg->isNonceRecieved()) {
 			Log::Write( LogLevel_Info, nodeId, "Processing (%s) Encrypted message (%sCallback ID=0x%.2x, Expected Reply=0x%.2x) - %s", c_sendQueueNames[m_currentMsgQueueSource], attemptsstr.c_str(), m_expectedCallbackId, m_expectedReply, m_currentMsg->GetAsString().c_str() );
 			SendEncryptedMessage();
@@ -1239,6 +1256,15 @@ bool Driver::WriteMsg
 		}
 	}
 
+	std::cout << "WriteMsg ()" << std::endl;
+	std::cout << "m_expectedCallbackId: " << std::hex << (int)m_expectedCallbackId << std::endl;
+	std::cout << "m_expectedCommandClassId: " << (int)m_expectedCommandClassId << std::endl;
+	std::cout << "m_expectedNodeId: " << (int)m_expectedNodeId << std::endl;
+	std::cout << "m_expectedReply: " << (int)m_expectedReply << std::endl;
+	std::cout << "m_waitingForAck: " << (bool)m_waitingForAck << std::endl;
+	std::cout << std::dec << std::endl;
+
+
 	return true;
 }
 
@@ -1262,6 +1288,8 @@ void Driver::RemoveCurrentMsg
 	m_expectedNodeId = 0;
 	m_expectedReply = 0;
 	m_waitingForAck = false;
+	m_nonceReportSent = 0;
+	m_nonceReportSentAttempt = 0;
 }
 
 //-----------------------------------------------------------------------------
@@ -1775,7 +1803,7 @@ void Driver::ProcessMsg
 			this->SendEncryptedMessage();
 			return;
 
-		/* if this is a NONCE Get - Then call to the CC directly, process it, and then bail out. */
+			/* if this is a NONCE Get - Then call to the CC directly, process it, and then bail out. */
 		} else if (SecurityCmd_NonceGet == _data[6]) {
 			Log::Write(LogLevel_Info,  _data[3], "Received SecurityCmd_NonceGet from node %d", _data[3] );
 			{
@@ -1795,10 +1823,15 @@ void Driver::ProcessMsg
 			/* don't continue processing */
 			return;
 
-		/* if this message is encrypted, decrypt it first */
-		} else if (SecurityCmd_MessageEncap == _data[6]) {
+			/* if this message is encrypted, decrypt it first */
+		} else if ((SecurityCmd_MessageEncap == _data[6]) || (SecurityCmd_MessageEncapNonceGet == _data[6])) {
 			uint8 _newdata[256];
 			uint8 *_nonce;
+
+			/* clear out NONCE Report tracking */
+			m_nonceReportSent = 0;
+			m_nonceReportSentAttempt = 0;
+
 
 			/* make sure the Node Exists, and it has the Security CC */
 			{
@@ -1825,8 +1858,22 @@ void Driver::ProcessMsg
 				/* now copy the decrypted packet */
 				/* XXX this is Broken right now */
 				memcpy(&_data[5], &_newdata[1], _data[4]);
-
 				PrintHex("Decrypted Packet", _data, _data[4]+5);
+				/* if the Node has something else to send, it will encrypt a message and send it as a MessageEncapNonceGet */
+				if (SecurityCmd_MessageEncapNonceGet == _data[6])
+				{
+					Log::Write(LogLevel_Info,  _data[3], "Received SecurityCmd_MessageEncapNonceGet from node %d - Sending New Nonce", _data[3] );
+					LockGuard LG(m_nodeMutex);
+					Node* node = GetNode( _data[3] );
+					if( node ) {
+						_nonce = node->GenerateNonceKey();
+					} else {
+						Log::Write(LogLevel_Warning, _data[3], "Couldn't Generate Nonce Key for Node %d", _data[3]);
+						return;
+					}
+					SendNonceKey(_data[3], _nonce);
+				}
+
 			} else {
 				/* it failed for some reason, lets just move on */
 				m_expectedReply = 0;
@@ -2921,15 +2968,12 @@ void Driver::HandleSendDataRequest
 {
 	uint8 nodeId = GetNodeNumber( m_currentMsg );
 	Log::Write( LogLevel_Detail, nodeId, "  %s Request with callback ID 0x%.2x received (expected 0x%.2x)",  _replication ? "ZW_REPLICATION_SEND_DATA" : "ZW_SEND_DATA", _data[2], m_expectedCallbackId );
-
-	if( _data[2] != m_expectedCallbackId )
-	{
+	/* Callback ID's below 10 are reserved for NONCE messages */
+	if ((_data[2] > 10 ) && ( _data[2] != m_expectedCallbackId )) {
 		// Wrong callback ID
 		m_callbacks++;
 		Log::Write( LogLevel_Warning, nodeId, "WARNING: Unexpected Callback ID received" );
-	}
-	else
-	{
+	} else {
 		Node* node = GetNodeUnsafe( nodeId );
 		if( node != NULL )
 		{
@@ -2994,8 +3038,9 @@ void Driver::HandleSendDataRequest
 				node->SetNodeAlive( true );
 			}
 		}
-		// Command reception acknowledged by node, error or not
-		m_expectedCallbackId = 0;
+		// Command reception acknowledged by node, error or not, but ignore any NONCE messages
+		if (_data[2] > 0 && _data[2] < 10)
+			m_expectedCallbackId = 0;
 	}
 }
 
@@ -6569,21 +6614,31 @@ void Driver::SendNonceKey(uint8 nodeId, uint8 *nonce) {
 
 	std::cout << "NonceReport" << std::endl;
 
-	Msg* msg = new Msg( "SecurityCmd_NonceReport", nodeId, REQUEST, FUNC_ID_ZW_SEND_DATA, false);
-	msg->Append( nodeId );
-	msg->Append( 10 );
-	msg->Append( Security::StaticGetCommandClassId() );
-	msg->Append( SecurityCmd_NonceReport );
-	for( int i=0; i<8; ++i )
-	{
-		msg->Append( nonce[i] );
+	uint8 m_buffer[19];
+	/* construct a standard NONCE_GET message */
+	m_buffer[0] = SOF;
+	m_buffer[1] = 17;					// Length of the entire message
+	m_buffer[2] = REQUEST;
+	m_buffer[3] = FUNC_ID_ZW_SEND_DATA;
+	m_buffer[4] = m_currentMsg->GetTargetNodeId();
+	m_buffer[5] = 10; 					// Length of the payload
+	m_buffer[6] = Security::StaticGetCommandClassId();
+	m_buffer[7] = SecurityCmd_NonceReport;
+	for (int i = 0; i < 8; ++i) {
+		m_buffer[8+i] = nonce[i];
 	}
-	msg->Append( TRANSMIT_OPTION_AUTO_ROUTE );
+	m_buffer[16] = TRANSMIT_OPTION_AUTO_ROUTE;
+	/* this is the same as the Actual Message */
+	m_buffer[17] = 1;
+	// Calculate the checksum
+	m_buffer[18] = 0xff;
+	for( uint32 i=1; i<18; ++i )
+	{
+		m_buffer[18] ^= m_buffer[i];
+	}
+	Log::Write(LogLevel_Info, m_currentMsg->GetTargetNodeId(), "Sending (%s) message (Callback ID=0x%.2x, Expected Reply=0x%.2x) - Nonce_Report - %s:", c_sendQueueNames[m_currentMsgQueueSource], m_buffer[17], m_expectedReply, PktToString(m_buffer, 19).c_str());
 
-	msg->SetHomeId(m_homeId);
-	msg->Finalize();
+	m_controller->Write(m_buffer, 19);
 
-	Log::Write( LogLevel_Info, nodeId, "Sending (UnQueued) message (Callback ID=0x%.2x, Expected Reply=0x%.2x) - %s", 0, FUNC_ID_ZW_SEND_DATA, msg->GetAsString().c_str() );
-	m_controller->Write( msg->GetBuffer(), msg->GetLength() );
-
+	m_nonceReportSent = nodeId;
 }

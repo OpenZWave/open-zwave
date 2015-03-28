@@ -126,6 +126,8 @@ Options* Options::Create
 		s_instance->AddOptionBool( 		"EnableSIS", 				true);						// Automatically become a SUC if there is no SUC on the network.
 		s_instance->AddOptionBool( 		"AssumeAwake", 				true);						// Assume Devices that Support the Wakeup CC are awake when we first query them....
 		s_instance->AddOptionBool(		"NotifyOnDriverUnload",		false);						// Should we send the Node/Value Notifications on Driver Unloading - Read comments in Driver::~Driver() method about possible race conditions
+		s_instance->AddOptionString(	"SecurityStrategy", 		"ESSENTIAL", 	false);		// Should we encrypt CC's that are available via both clear text and Security CC?
+		s_instance->AddOptionString(	"CustomSecuredCC", 			"0x62,0x4c,0x63", 	false);	// What List of Custom CC should we always encrypt if SecurityStrategy is CUSTOM
 	}
 
 	return s_instance;

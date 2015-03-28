@@ -33,6 +33,7 @@
 #include "Driver.h"
 #include "Notification.h"
 #include "Msg.h"
+#include "ZWSecurity.h"
 #include "platform/Log.h"
 #include "platform/Mutex.h"
 
@@ -1284,6 +1285,7 @@ void Node::SetSecuredClasses
 	uint32 i;
 	Log::Write( LogLevel_Info, m_nodeId, "  Secured command classes for node %d:", m_nodeId );
 
+
 	bool afterMark = false;
 	for( i=0; i<_length; ++i )
 	{
@@ -1299,14 +1301,26 @@ void Node::SetSecuredClasses
 		/* Check if this is a CC that is already registered with the node */
 		if (CommandClass *pCommandClass = GetCommandClass(_data[i]))
 		{
-			if (pCommandClass->IsSecureSupported()) {
-				pCommandClass->SetSecured();
-				Log::Write( LogLevel_Info, m_nodeId, "    %s (Secured)", pCommandClass->GetCommandClassName().c_str() );
+			/* if it was specified int he NIF frame, and came in as part of the Security SupportedReport message
+			 * then it can support both Clear Text and Secured Comms. So do a check first
+			 */
+			if (pCommandClass->IsInNIF()) {
+				/* if the CC Supports Security and our SecurityStrategy says we should encrypt it, then mark it as encrypted */
+				if (pCommandClass->IsSecureSupported() && (ShouldSecureCommandClass(_data[i]) == SecurityStrategy_Supported )) {
+					pCommandClass->SetSecured();
+					Log::Write( LogLevel_Info, m_nodeId, "    %s (Secured) - %s", pCommandClass->GetCommandClassName().c_str(), pCommandClass->IsInNIF() ? "InNIF": "NotInNIF");
+				}
+				/* if it wasn't in the NIF frame, then it will only support Secured Comms. */
 			} else {
-				Log::Write( LogLevel_Info, m_nodeId, "    %s (Downgraded)", pCommandClass->GetCommandClassName().c_str() );
+				if (pCommandClass->IsSecureSupported()) {
+					pCommandClass->SetSecured();
+					Log::Write( LogLevel_Info, m_nodeId, "    %s (Secured) - %s", pCommandClass->GetCommandClassName().c_str(), pCommandClass->IsInNIF() ? "InNIF": "NotInNIF");
+				}
 			}
 		}
-		/* it might be a new CC we havn't seen as part of the NIF */
+		/* it might be a new CC we havn't seen as part of the NIF. In that case
+		 * its only supported via the Security CC, so no need to check our SecurityStrategy, just
+		 * encrypt it regardless */
 		else if( CommandClasses::IsSupported( _data[i] ) )
 		{
 			if( CommandClass* pCommandClass = AddCommandClass( _data[i] ) )
@@ -1318,9 +1332,7 @@ void Node::SetSecuredClasses
 				}
 				if (pCommandClass->IsSecureSupported()) {
 					pCommandClass->SetSecured();
-					Log::Write( LogLevel_Info, m_nodeId, "    %s (Secured)", pCommandClass->GetCommandClassName().c_str() );
-				} else {
-					Log::Write( LogLevel_Info, m_nodeId, "    %s (Downgraded)", pCommandClass->GetCommandClassName().c_str() );
+					Log::Write( LogLevel_Info, m_nodeId, "    %s (Secured) - %s", pCommandClass->GetCommandClassName().c_str(), pCommandClass->IsInNIF() ? "InNIF" : "NotInNIF" );
 				}
 				// Start with an instance count of one.  If the device supports COMMMAND_CLASS_MULTI_INSTANCE
 				// then some command class instance counts will increase once the responses to the RequestState
@@ -1338,7 +1350,7 @@ void Node::SetSecuredClasses
 	for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
 	{
 		if (!it->second->IsSecured())
-			Log::Write( LogLevel_Info, m_nodeId, "    %s (Unsecured)", it->second->GetCommandClassName().c_str() );
+			Log::Write( LogLevel_Info, m_nodeId, "    %s (Unsecured) - %s", it->second->GetCommandClassName().c_str(), it->second->IsInNIF() ? "InNIF" : "NotInNIF" );
 	}
 
 
@@ -1385,6 +1397,8 @@ void Node::UpdateNodeInfo
 			{
 				if( CommandClass* pCommandClass = AddCommandClass( _data[i] ) )
 				{
+					/* this CC was in the NIF frame */
+					pCommandClass->SetInNIF();
 					// If this class came after the COMMAND_CLASS_MARK, then we do not create values.
 					if( afterMark )
 					{
@@ -1397,6 +1411,10 @@ void Node::UpdateNodeInfo
 					pCommandClass->SetInstance( 1 );
 					newCommandClasses = true;
 					Log::Write( LogLevel_Info, m_nodeId, "    %s", pCommandClass->GetCommandClassName().c_str() );
+				} else if (CommandClass *pCommandClass = GetCommandClass( _data[i] ) ) {
+					/* this CC was in the NIF frame */
+					pCommandClass->SetInNIF();
+					Log::Write( LogLevel_Info, m_nodeId, "    %s (Existing)", pCommandClass->GetCommandClassName().c_str() );
 				}
 			}
 			else
@@ -2928,8 +2946,8 @@ Node::DeviceClass* Node::GenericDeviceClass::GetSpecificDeviceClass
 }
 
 //-----------------------------------------------------------------------------
-// <Node::GenericDeviceClass::GetSpecificDeviceClass>
-// Get a specific device class object
+// <Node::GenerateNonceKey>
+// Generate a NONCE key for this node
 //-----------------------------------------------------------------------------
 uint8 *Node::GenerateNonceKey() {
 	for (int i = 0; i < 8; i++) {
@@ -2938,6 +2956,11 @@ uint8 *Node::GenerateNonceKey() {
 	}
 	return &this->m_nonces[0];
 }
+//-----------------------------------------------------------------------------
+// <Node::GetNonceKey>
+// Get a NONCE key for this node that matches the nonceid.
+//-----------------------------------------------------------------------------
+
 uint8 *Node::GetNonceKey(uint32 nonceid) {
 
 	/* make sure the nonceid matches the first byte of our stored Nonce */
