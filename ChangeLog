@@ -107,6 +107,7 @@ Version 1.3
  - Added Vision Z-Wave USB Stick device thanks to GizMoCuz (Alex)
  - Fixed issue 469 - Added Fibaro Smoke Detector FGSD-002 thanks to tmartine (Alex)
  - Fix LogImpl crash if no filename was configured (pull req 488) (Stromnet)
+ - Update Fibaro Smoke Sensor device, interview process wouldn't complete (Alex)
 
 Version 1.2 
  - Released on 15/10/14
