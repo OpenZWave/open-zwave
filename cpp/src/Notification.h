@@ -90,7 +90,7 @@ namespace OpenZWave
 			Type_AllNodesQueriedSomeDead,				/**< All nodes have been queried but some dead nodes found. */
 			Type_AllNodesQueried,					/**< All nodes have been queried, so client application can expected complete data. */
 			Type_Notification,					/**< An error has occured that we need to report. */
-			Type_DriverRemoved					/**< The Driver is being removed. (either due to Error or by request) Do Not Call Any Driver Related Methods after recieving this call */
+			Type_DriverRemoved					/**< The Driver is being removed. (either due to Error or by request) Do Not Call Any Driver Related Methods after receiving this call */
 		};
 
 		/**

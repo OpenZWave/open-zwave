@@ -456,7 +456,7 @@ bool Security::HandleMsg
 		}
 		case SecurityCmd_NonceReport:
 		{
-			/* we recieved a NONCE from a device, so assume that there is something in a queue to send
+			/* we received a NONCE from a device, so assume that there is something in a queue to send
 			 * out
 			 */
 			Log::Write(LogLevel_Info,  GetNodeId(), "Received SecurityCmd_NonceReport from node %d", GetNodeId() );
@@ -466,7 +466,7 @@ bool Security::HandleMsg
 		}
 		case SecurityCmd_MessageEncap:
 		{
-			/* We recieved a Encrypted single packet from the Device. Decrypt it.
+			/* We received a Encrypted single packet from the Device. Decrypt it.
 			 *
 			 */
 			Log::Write(LogLevel_Info,  GetNodeId(), "Received SecurityCmd_MessageEncap from node %d", GetNodeId() );
@@ -475,7 +475,7 @@ bool Security::HandleMsg
 		}
 		case SecurityCmd_MessageEncapNonceGet:
 		{
-			/* we recieved a encrypted packet from the device, and the device is also asking us to send a
+			/* we received a encrypted packet from the device, and the device is also asking us to send a
 			 * new NONCE to it, hence there must be multiple packets.
 			 */
 			Log::Write(LogLevel_Info,  GetNodeId(), "Received SecurityCmd_MessageEncapNonceGet from node %d", GetNodeId() );
@@ -641,7 +641,7 @@ bool Security::EncryptMessage
 	}
 
 	/* Append the first 8 bytes of the initialization vector
-	 * to the message. The remaining 8 bytes are the NONCE we recieved from
+	 * to the message. The remaining 8 bytes are the NONCE we received from
 	 * the node, and is ommitted from sending back to the Node. But we use the full 16 bytes to
 	 * as the IV to encrypt out message.
 	 */
@@ -804,7 +804,7 @@ bool Security::DecryptMessage
 		return false;
 	}
 	if (_length < 19) {
-		Log::Write(LogLevel_Warning, GetNodeId(), "Recieved a Encrypted Message that is too Short. Dropping it");
+		Log::Write(LogLevel_Warning, GetNodeId(), "Received a Encrypted Message that is too Short. Dropping it");
 		return false;
 	}
 
