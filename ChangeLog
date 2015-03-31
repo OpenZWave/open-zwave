@@ -110,6 +110,7 @@ Version 1.3
  - Update Fibaro Smoke Sensor device, interview process wouldn't complete (Alex)
  - Fixed issue 464 - Added/Updated Polycontrol keypad/doorlock devices thanks to santal (Alex)
  - Fixed issue 495 - Added Fibaro FGD211 device thanks to nechry (Alex)
+ - Fixed issue 496 - Added Aeon-Labs Z-Stick Gen5 thanks to nechry (Alex)
 
 Version 1.2 
  - Released on 15/10/14
