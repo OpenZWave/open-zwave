@@ -45,14 +45,12 @@
 			<Item label="Group 1 not sent, Group 2 sent." value="2" />
 		</Value>
 
-		<Value type="byte" genre="config" instance="1" index="10" label="Interval between successive readings of temperature sensors" min="1" max="255" value="20">
-			<Help>Interval between successive readings of temperature from all sensors connected to the device in seconds. Note: taking temperature readings from the sensor does not result in sending a temperature condition report to the central hub.</Help>
+		<Value type="list" genre="config" instance="1" index="10" label="Tamper alarm" min="0" max="1" value="1" size="1">
+			<Help>Tamper alarm cancellation</Help>
+			<Item label="Inactive" value="0" />
+			<Item label="Active" value="1" />
 		</Value>
-
-		<Value type="byte" genre="config" instance="1" index="11" label="Interval between forcing to send report concerning the temperature conditions" min="0" max="255" value="200">
-			<Help>Interval between forcing to send report concerning the temperature conditions. The forced report is sent immediately after the next reading of temperature from the sensor, irrespective of the settings of parameter no. 12. Value 0 = Deactivates the function. Note: Frequent sending of temperature condition reports is reasonable when the sensor is located somewhere where can occure rapid changes of ambient temperature. In other cases it is recommended to leave the parameter set to the default value.</Help>
-		</Value>
-
+		
 		<Value type="byte" genre="config" instance="1" index="12" label="Insensitiveness to temperature changes" min="0" max="255" value="8">
 			<Help>Insensitiveness to temperature changes. This is the maximum acceptable difference between the last reported temperature and the current temperature taken from the sensor. If the temperatures differ by the set value or more, then a report with the current temperature value is sent to the device assigned to association group no. 3. Intervals between taking readings from sensors are specified by parameter no. 10.
 			  Possible parameter settings:0 - 255 [0oC to 16oC] [0 oF - 28.8oF]
@@ -76,6 +74,16 @@
 			<Help>Enable/Disable scene functionality. The device offers the possibility of sending commands compatible with Command class scene activation. Information is sent to devices assigned to association group no. 3.</Help>
 			<Item label="Scenes disabled" value="0" />
 			<Item label="Scenes enabled" value="1" />
+		</Value>
+		
+		<Value type="list" genre="config" instance="1" index="15" label="DS18B20 state" read_only="true" size="1">
+			<Help>
+			The parameter value is automatically sent to the association group III if the connected sensor DS18B20 four times mistakenly read the temperature.
+			In case of Wake Up Interval set for 4000 seconds temperature sensor will be checked every 5 minutes.
+			</Help>
+			<Item label="DS18B20 is working properly" value="0" />
+			<Item label="DS18B20 is not working properly" value="1" />
+			<Item label="No DS18B20 temperature sensor" value="255" />
 		</Value>
 	</CommandClass>
 
