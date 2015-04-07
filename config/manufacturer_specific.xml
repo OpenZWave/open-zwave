@@ -679,4 +679,7 @@
 	</Manufacturer>
 	<Manufacturer id="0021" name="Zykronix">
 	</Manufacturer>
+	<Manufacturer id="0184" name="Dragon Tech">
+		<Product type="4447" id="3034" name="In Wall Dimmer" config="dragontech/wd-100.xml" />
+	</Manufacturer>
 </ManufacturerSpecificData>
