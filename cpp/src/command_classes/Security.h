@@ -69,6 +69,7 @@ namespace OpenZWave
 		static uint8 const StaticGetCommandClassId(){ return 0x98; }
 		static string const StaticGetCommandClassName(){ return "COMMAND_CLASS_SECURITY"; }
 		bool Init();
+		bool ExchangeNetworkKeys();
 		// From CommandClass
 		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }
 		virtual string const GetCommandClassName()const{ return StaticGetCommandClassName(); }

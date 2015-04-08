@@ -82,24 +82,24 @@ map<uint8,Node::GenericDeviceClass*> Node::s_genericDeviceClasses;
 
 static char const* c_queryStageNames[] =
 {
-	"None",
-	"ProtocolInfo",
-	"Probe",
-	"WakeUp",
-	"ManufacturerSpecific1",
-	"NodeInfo",
-	"SecurityReport",
-	"ManufacturerSpecific2",
-	"Versions",
-	"Instances",
-	"Static",
-	"Probe1",
-	"Associations",
-	"Neighbors",
-	"Session",
-	"Dynamic",
-	"Configuration",
-	"Complete"
+		"None",
+		"ProtocolInfo",
+		"Probe",
+		"WakeUp",
+		"ManufacturerSpecific1",
+		"NodeInfo",
+		"SecurityReport",
+		"ManufacturerSpecific2",
+		"Versions",
+		"Instances",
+		"Static",
+		"Probe1",
+		"Associations",
+		"Neighbors",
+		"Session",
+		"Dynamic",
+		"Configuration",
+		"Complete"
 };
 
 //-----------------------------------------------------------------------------
@@ -108,56 +108,56 @@ static char const* c_queryStageNames[] =
 //-----------------------------------------------------------------------------
 Node::Node
 (
-	uint32 const _homeId,
-	uint8 const _nodeId
+		uint32 const _homeId,
+		uint8 const _nodeId
 ):
-	m_queryStage( QueryStage_None ),
-	m_queryPending( false ),
-	m_queryConfiguration( false ),
-	m_queryRetries( 0 ),
-	m_protocolInfoReceived( false ),
-	m_basicprotocolInfoReceived( false ),
-	m_nodeInfoReceived( false ),
-	m_manufacturerSpecificClassReceived( false ),
-	m_nodeInfoSupported( true ),
-	m_nodeAlive( true ),	// assome live node
-	m_listening( true ),	// assume we start out listening
-	m_frequentListening( false ),
-	m_beaming( false ),
-	m_routing( false ),
-	m_maxBaudRate( 0 ),
-	m_version( 0 ),
-	m_security( false ),
-	m_homeId( _homeId ),
-	m_nodeId( _nodeId ),
-	m_basic( 0 ),
-	m_generic( 0 ),
-	m_specific( 0 ),
-	m_type( "" ),
-	m_numRouteNodes( 0 ),
-	m_addingNode( false ),
-	m_manufacturerName( "" ),
-	m_productName( "" ),
-	m_nodeName( "" ),
-	m_location( "" ),
-	m_manufacturerId( "" ),
-	m_productType( "" ),
-	m_productId( "" ),
-	m_secured ( false ),
-	m_values( new ValueStore() ),
-	m_sentCnt( 0 ),
-	m_sentFailed( 0 ),
-	m_retries( 0 ),
-	m_receivedCnt( 0 ),
-	m_receivedDups( 0 ),
-	m_receivedUnsolicited( 0 ),
-	m_lastRequestRTT( 0 ),
-	m_lastResponseRTT( 0 ),
-	m_averageRequestRTT( 0 ),
-	m_averageResponseRTT( 0 ),
-	m_quality( 0 ),
-	m_lastReceivedMessage(),
-	m_errors( 0 )
+m_queryStage( QueryStage_None ),
+m_queryPending( false ),
+m_queryConfiguration( false ),
+m_queryRetries( 0 ),
+m_protocolInfoReceived( false ),
+m_basicprotocolInfoReceived( false ),
+m_nodeInfoReceived( false ),
+m_manufacturerSpecificClassReceived( false ),
+m_nodeInfoSupported( true ),
+m_nodeAlive( true ),	// assome live node
+m_listening( true ),	// assume we start out listening
+m_frequentListening( false ),
+m_beaming( false ),
+m_routing( false ),
+m_maxBaudRate( 0 ),
+m_version( 0 ),
+m_security( false ),
+m_homeId( _homeId ),
+m_nodeId( _nodeId ),
+m_basic( 0 ),
+m_generic( 0 ),
+m_specific( 0 ),
+m_type( "" ),
+m_numRouteNodes( 0 ),
+m_addingNode( false ),
+m_manufacturerName( "" ),
+m_productName( "" ),
+m_nodeName( "" ),
+m_location( "" ),
+m_manufacturerId( "" ),
+m_productType( "" ),
+m_productId( "" ),
+m_secured ( false ),
+m_values( new ValueStore() ),
+m_sentCnt( 0 ),
+m_sentFailed( 0 ),
+m_retries( 0 ),
+m_receivedCnt( 0 ),
+m_receivedDups( 0 ),
+m_receivedUnsolicited( 0 ),
+m_lastRequestRTT( 0 ),
+m_lastResponseRTT( 0 ),
+m_averageRequestRTT( 0 ),
+m_averageResponseRTT( 0 ),
+m_quality( 0 ),
+m_lastReceivedMessage(),
+m_errors( 0 )
 {
 	memset( m_neighbors, 0, sizeof(m_neighbors) );
 	memset( m_routeNodes, 0, sizeof(m_routeNodes) );
@@ -281,7 +281,7 @@ void Node::AdvanceQueries
 				if( GetDriver()->GetControllerNodeId() != m_nodeId )
 				{
 					noop->Set( true );
-			      	m_queryPending = true;
+					m_queryPending = true;
 					addQSC = true;
 				}
 				else
@@ -446,11 +446,15 @@ void Node::AdvanceQueries
 				Version* vcc = static_cast<Version*>( GetCommandClass( Version::StaticGetCommandClassId() ) );
 				if( vcc )
 				{
+					Log::Write(LogLevel_Info, m_nodeId, "Requesting Versions");
 					for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
 					{
 						CommandClass* cc = it->second;
+						Log::Write(LogLevel_Info, m_nodeId, "Requesting Versions for %s", cc->GetCommandClassName().c_str());
+
 						if( cc->GetMaxVersion() > 1 )
 						{
+							Log::Write(LogLevel_Info, m_nodeId, "	ok");
 							// Get the version for each supported command class that
 							// we have implemented at greater than version one.
 							m_queryPending |= vcc->RequestCommandClassVersion( it->second );
@@ -530,7 +534,7 @@ void Node::AdvanceQueries
 				if( GetDriver()->GetControllerNodeId() != m_nodeId )
 				{
 					noop->Set( true );
-				      	m_queryPending = true;
+					m_queryPending = true;
 					addQSC = true;
 				}
 				else
@@ -657,7 +661,7 @@ void Node::AdvanceQueries
 //-----------------------------------------------------------------------------
 void Node::QueryStageComplete
 (
-	QueryStage const _stage
+		QueryStage const _stage
 )
 {
 	// Check that we are actually on the specified stage
@@ -685,8 +689,8 @@ void Node::QueryStageComplete
 //-----------------------------------------------------------------------------
 void Node::QueryStageRetry
 (
-	QueryStage const _stage,
-	uint8 const _maxAttempts // = 0
+		QueryStage const _stage,
+		uint8 const _maxAttempts // = 0
 )
 {
 	Log::Write( LogLevel_Info, m_nodeId, "QueryStageRetry stage %s requested stage %s max %d retries %d pending %d", c_queryStageNames[_stage], c_queryStageNames[m_queryStage], _maxAttempts, m_queryRetries, m_queryPending);
@@ -718,8 +722,8 @@ void Node::QueryStageRetry
 //-----------------------------------------------------------------------------
 void Node::SetQueryStage
 (
-	QueryStage const _stage,
-	bool const _advance	// = true
+		QueryStage const _stage,
+		bool const _advance	// = true
 )
 {
 	if( (int)_stage < (int)m_queryStage )
@@ -744,7 +748,7 @@ void Node::SetQueryStage
 //-----------------------------------------------------------------------------
 string Node::GetQueryStageName
 (
-	QueryStage const _stage
+		QueryStage const _stage
 )
 {
 	return c_queryStageNames[_stage];
@@ -756,7 +760,7 @@ string Node::GetQueryStageName
 //-----------------------------------------------------------------------------
 uint32 Node::GetNeighbors
 (
-	uint8** o_neighbors
+		uint8** o_neighbors
 )
 {
 	// determine how many neighbors there are
@@ -770,7 +774,7 @@ uint32 Node::GetNeighbors
 	for( i = 0; i < 29; i++ )
 	{
 		for( unsigned char mask = 0x80; mask != 0; mask >>= 1 )
-		  if( ( m_neighbors[i] & mask ) != 0 )
+			if( ( m_neighbors[i] & mask ) != 0 )
 				numNeighbors++;
 	}
 
@@ -803,7 +807,7 @@ uint32 Node::GetNeighbors
 //-----------------------------------------------------------------------------
 void Node::ReadXML
 (
-	TiXmlElement const* _node
+		TiXmlElement const* _node
 )
 {
 	char const* str;
@@ -1026,7 +1030,7 @@ void Node::ReadXML
 //-----------------------------------------------------------------------------
 void Node::ReadDeviceProtocolXML
 (
-	TiXmlElement const* _ccsElement
+		TiXmlElement const* _ccsElement
 )
 {
 	TiXmlElement const* ccElement = _ccsElement->FirstChildElement();
@@ -1072,7 +1076,7 @@ void Node::ReadDeviceProtocolXML
 //-----------------------------------------------------------------------------
 void Node::ReadCommandClassesXML
 (
-	TiXmlElement const* _ccsElement
+		TiXmlElement const* _ccsElement
 )
 {
 	char const* str;
@@ -1129,7 +1133,7 @@ void Node::ReadCommandClassesXML
 //-----------------------------------------------------------------------------
 void Node::WriteXML
 (
-	TiXmlElement* _driverElement
+		TiXmlElement* _driverElement
 )
 {
 	char str[32];
@@ -1166,12 +1170,12 @@ void Node::WriteXML
 	nodeElement->SetAttribute( "version", str );
 
 	if( m_security )
-        {
+	{
 		nodeElement->SetAttribute( "security", "true" );
 	}
 
 	if( m_secured )
-        {
+	{
 		nodeElement->SetAttribute( "secured", "true" );
 	}
 
@@ -1221,7 +1225,7 @@ void Node::WriteXML
 //-----------------------------------------------------------------------------
 void Node::UpdateProtocolInfo
 (
-	uint8 const* _data
+		uint8 const* _data
 )
 {
 	if( _data[4] == 0 )
@@ -1348,11 +1352,13 @@ void Node::SetProtocolInfo
 	/* first iterate over them and check for the Security CC, as we want to quickly start exchanging the Network Keys
 	 * first (before other CC's start sending stuff and slowing down our exchange
 	 */
-	for (int i = 3; i < _length; i++) {
-		if (m_secured && (_protocolInfo[i] == Security::StaticGetCommandClassId())) {
-			/* Wheee... Security CC is supported... */
-			if (Security *pCommandClass = static_cast<Security *>(AddCommandClass(_protocolInfo[i]))) {
-				pCommandClass->Init();
+	if (m_secured) {
+		for (int i = 3; i < _length; i++) {
+			if (_protocolInfo[i] == Security::StaticGetCommandClassId()) {
+				/* Wheee... Security CC is supported... */
+				if (Security *pCommandClass = static_cast<Security *>(AddCommandClass(_protocolInfo[i]))) {
+					pCommandClass->ExchangeNetworkKeys();
+				}
 			}
 		}
 	}
@@ -1432,6 +1438,25 @@ void Node::SetSecuredClasses
 				// call at the end of this method have been processed.
 				pCommandClass->SetInstance( 1 );
 
+				/* set our Static Request Flags */
+				uint8 request = 0;
+
+				if( GetCommandClass( MultiInstance::StaticGetCommandClassId() ) )
+				{
+					// Request instances
+					request |= (uint8)CommandClass::StaticRequest_Instances;
+				}
+
+				if( GetCommandClass( Version::StaticGetCommandClassId() ) )
+				{
+					// Request versions
+					request |= (uint8)CommandClass::StaticRequest_Version;
+				}
+
+				if( request )
+				{
+					pCommandClass->SetStaticRequest( request );
+				}
 			}
 		}
 		else
@@ -1454,8 +1479,8 @@ void Node::SetSecuredClasses
 //-----------------------------------------------------------------------------
 void Node::UpdateNodeInfo
 (
-	uint8 const* _data,
-	uint8 const _length
+		uint8 const* _data,
+		uint8 const _length
 )
 {
 	if( !NodeInfoReceived() )
@@ -1544,7 +1569,7 @@ void Node::UpdateNodeInfo
 //-----------------------------------------------------------------------------
 void Node::SetNodeAlive
 (
-	bool const _isAlive
+		bool const _isAlive
 )
 {
 	Notification* notification;
@@ -1619,7 +1644,7 @@ void Node::SetStaticRequests
 //-----------------------------------------------------------------------------
 void Node::SetNodeName
 (
-	string const& _nodeName
+		string const& _nodeName
 )
 {
 	m_nodeName = _nodeName;
@@ -1640,7 +1665,7 @@ void Node::SetNodeName
 //-----------------------------------------------------------------------------
 void Node::SetLocation
 (
-	string const& _location
+		string const& _location
 )
 {
 	m_location = _location;
@@ -1661,7 +1686,7 @@ void Node::SetLocation
 //-----------------------------------------------------------------------------
 void Node::ApplicationCommandHandler
 (
-	uint8 const* _data
+		uint8 const* _data
 )
 {
 	if( CommandClass* pCommandClass = GetCommandClass( _data[5] ) )
@@ -1693,7 +1718,7 @@ void Node::ApplicationCommandHandler
 //-----------------------------------------------------------------------------
 CommandClass* Node::GetCommandClass
 (
-	uint8 const _commandClassId
+		uint8 const _commandClassId
 )const
 {
 	map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.find( _commandClassId );
@@ -1712,7 +1737,7 @@ CommandClass* Node::GetCommandClass
 //-----------------------------------------------------------------------------
 CommandClass* Node::AddCommandClass
 (
-	uint8 const _commandClassId
+		uint8 const _commandClassId
 )
 {
 	if( GetCommandClass( _commandClassId ) )
@@ -1741,7 +1766,7 @@ CommandClass* Node::AddCommandClass
 //-----------------------------------------------------------------------------
 void Node::RemoveCommandClass
 (
-	uint8 const _commandClassId
+		uint8 const _commandClassId
 )
 {
 	map<uint8,CommandClass*>::iterator it = m_commandClassMap.find( _commandClassId );
@@ -1770,9 +1795,9 @@ void Node::RemoveCommandClass
 //-----------------------------------------------------------------------------
 bool Node::SetConfigParam
 (
-	uint8 const _param,
-	int32 _value,
-	uint8 const _size
+		uint8 const _param,
+		int32 _value,
+		uint8 const _size
 )
 {
 	if( Configuration* cc = static_cast<Configuration*>( GetCommandClass( Configuration::StaticGetCommandClassId() ) ) )
@@ -1836,7 +1861,7 @@ bool Node::SetConfigParam
 //-----------------------------------------------------------------------------
 void Node::RequestConfigParam
 (
-	uint8 const _param
+		uint8 const _param
 )
 {
 	if( Configuration* cc = static_cast<Configuration*>( GetCommandClass( Configuration::StaticGetCommandClassId() ) ) )
@@ -1851,7 +1876,7 @@ void Node::RequestConfigParam
 //-----------------------------------------------------------------------------
 bool Node::RequestAllConfigParams
 (
-	uint32 const _requestFlags
+		uint32 const _requestFlags
 )
 {
 	bool res = false;
@@ -1901,7 +1926,7 @@ bool Node::RequestDynamicValues
 //-----------------------------------------------------------------------------
 void Node::SetLevel
 (
-	uint8 const _level
+		uint8 const _level
 )
 {
 	// Level is 0-99, with 0 = off and 99 = fully on. 255 = turn on at last level.
@@ -1925,11 +1950,11 @@ void Node::SetNodeOn
 (
 )
 {
-    // Level is 0-99, with 0 = off and 99 = fully on. 255 = turn on at last level.
-    if( Basic* cc = static_cast<Basic*>( GetCommandClass( Basic::StaticGetCommandClassId() ) ) )
-    {
-        cc->Set( 255 );
-    }
+	// Level is 0-99, with 0 = off and 99 = fully on. 255 = turn on at last level.
+	if( Basic* cc = static_cast<Basic*>( GetCommandClass( Basic::StaticGetCommandClassId() ) ) )
+	{
+		cc->Set( 255 );
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -1940,11 +1965,11 @@ void Node::SetNodeOff
 (
 )
 {
-    // Level is 0-99, with 0 = off and 99 = fully on. 255 = turn on at last level.
-    if( Basic* cc = static_cast<Basic*>( GetCommandClass( Basic::StaticGetCommandClassId() ) ) )
-    {
-        cc->Set( 0 );
-    }
+	// Level is 0-99, with 0 = off and 99 = fully on. 255 = turn on at last level.
+	if( Basic* cc = static_cast<Basic*>( GetCommandClass( Basic::StaticGetCommandClassId() ) ) )
+	{
+		cc->Set( 0 );
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -1953,11 +1978,11 @@ void Node::SetNodeOff
 //-----------------------------------------------------------------------------
 ValueID Node::CreateValueID
 (
-	ValueID::ValueGenre const _genre,
-	uint8 const _commandClassId,
-	uint8 const _instance,
-	uint8 const _valueIndex,
-	ValueID::ValueType const _type
+		ValueID::ValueGenre const _genre,
+		uint8 const _commandClassId,
+		uint8 const _instance,
+		uint8 const _valueIndex,
+		ValueID::ValueType const _type
 )
 {
 	return ValueID( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _type );
@@ -1969,19 +1994,19 @@ ValueID Node::CreateValueID
 //-----------------------------------------------------------------------------
 bool Node::CreateValueBool
 (
-	ValueID::ValueGenre const _genre,
-	uint8 const _commandClassId,
-	uint8 const _instance,
-	uint8 const _valueIndex,
-	string const& _label,
-	string const& _units,
-	bool const _readOnly,
-	bool const _writeOnly,
-	bool const _default,
-	uint8 const _pollIntensity
+		ValueID::ValueGenre const _genre,
+		uint8 const _commandClassId,
+		uint8 const _instance,
+		uint8 const _valueIndex,
+		string const& _label,
+		string const& _units,
+		bool const _readOnly,
+		bool const _writeOnly,
+		bool const _default,
+		uint8 const _pollIntensity
 )
 {
-  	ValueBool* value = new ValueBool( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default, _pollIntensity );
+	ValueBool* value = new ValueBool( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default, _pollIntensity );
 	ValueStore* store = GetValueStore();
 	if( store->AddValue( value ) )
 	{
@@ -1999,12 +2024,12 @@ bool Node::CreateValueBool
 //-----------------------------------------------------------------------------
 bool Node::CreateValueButton
 (
-	ValueID::ValueGenre const _genre,
-	uint8 const _commandClassId,
-	uint8 const _instance,
-	uint8 const _valueIndex,
-	string const& _label,
-	uint8 const _pollIntensity
+		ValueID::ValueGenre const _genre,
+		uint8 const _commandClassId,
+		uint8 const _instance,
+		uint8 const _valueIndex,
+		string const& _label,
+		uint8 const _pollIntensity
 )
 {
 	ValueButton* value = new ValueButton( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _pollIntensity );
@@ -2025,19 +2050,19 @@ bool Node::CreateValueButton
 //-----------------------------------------------------------------------------
 bool Node::CreateValueByte
 (
-	ValueID::ValueGenre const _genre,
-	uint8 const _commandClassId,
-	uint8 const _instance,
-	uint8 const _valueIndex,
-	string const& _label,
-	string const& _units,
-	bool const _readOnly,
-	bool const _writeOnly,
-	uint8 const _default,
-	uint8 const _pollIntensity
+		ValueID::ValueGenre const _genre,
+		uint8 const _commandClassId,
+		uint8 const _instance,
+		uint8 const _valueIndex,
+		string const& _label,
+		string const& _units,
+		bool const _readOnly,
+		bool const _writeOnly,
+		uint8 const _default,
+		uint8 const _pollIntensity
 )
 {
-  	ValueByte* value = new ValueByte( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default, _pollIntensity );
+	ValueByte* value = new ValueByte( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default, _pollIntensity );
 	ValueStore* store = GetValueStore();
 	if( store->AddValue( value ) )
 	{
@@ -2055,19 +2080,19 @@ bool Node::CreateValueByte
 //-----------------------------------------------------------------------------
 bool Node::CreateValueDecimal
 (
-	ValueID::ValueGenre const _genre,
-	uint8 const _commandClassId,
-	uint8 const _instance,
-	uint8 const _valueIndex,
-	string const& _label,
-	string const& _units,
-	bool const _readOnly,
-	bool const _writeOnly,
-	string const& _default,
-	uint8 const _pollIntensity
+		ValueID::ValueGenre const _genre,
+		uint8 const _commandClassId,
+		uint8 const _instance,
+		uint8 const _valueIndex,
+		string const& _label,
+		string const& _units,
+		bool const _readOnly,
+		bool const _writeOnly,
+		string const& _default,
+		uint8 const _pollIntensity
 )
 {
-  	ValueDecimal* value = new ValueDecimal( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default, _pollIntensity );
+	ValueDecimal* value = new ValueDecimal( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default, _pollIntensity );
 	ValueStore* store = GetValueStore();
 	if( store->AddValue( value ) )
 	{
@@ -2085,19 +2110,19 @@ bool Node::CreateValueDecimal
 //-----------------------------------------------------------------------------
 bool Node::CreateValueInt
 (
-	ValueID::ValueGenre const _genre,
-	uint8 const _commandClassId,
-	uint8 const _instance,
-	uint8 const _valueIndex,
-	string const& _label,
-	string const& _units,
-	bool const _readOnly,
-	bool const _writeOnly,
-	int32 const _default,
-	uint8 const _pollIntensity
+		ValueID::ValueGenre const _genre,
+		uint8 const _commandClassId,
+		uint8 const _instance,
+		uint8 const _valueIndex,
+		string const& _label,
+		string const& _units,
+		bool const _readOnly,
+		bool const _writeOnly,
+		int32 const _default,
+		uint8 const _pollIntensity
 )
 {
-  	ValueInt* value = new ValueInt( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default, _pollIntensity );
+	ValueInt* value = new ValueInt( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default, _pollIntensity );
 	ValueStore* store = GetValueStore();
 	if( store->AddValue( value ) )
 	{
@@ -2115,18 +2140,18 @@ bool Node::CreateValueInt
 //-----------------------------------------------------------------------------
 bool Node::CreateValueList
 (
-	ValueID::ValueGenre const _genre,
-	uint8 const _commandClassId,
-	uint8 const _instance,
-	uint8 const _valueIndex,
-	string const& _label,
-	string const& _units,
-	bool const _readOnly,
-	bool const _writeOnly,
-	uint8 const _size,
-	vector<ValueList::Item> const& _items,
-	int32 const _default,
-	uint8 const _pollIntensity
+		ValueID::ValueGenre const _genre,
+		uint8 const _commandClassId,
+		uint8 const _instance,
+		uint8 const _valueIndex,
+		string const& _label,
+		string const& _units,
+		bool const _readOnly,
+		bool const _writeOnly,
+		uint8 const _size,
+		vector<ValueList::Item> const& _items,
+		int32 const _default,
+		uint8 const _pollIntensity
 )
 {
 	ValueList* value = new ValueList( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _items, _default, _pollIntensity, _size );
@@ -2147,17 +2172,17 @@ bool Node::CreateValueList
 //-----------------------------------------------------------------------------
 bool Node::CreateValueRaw
 (
-	ValueID::ValueGenre const _genre,
-	uint8 const _commandClassId,
-	uint8 const _instance,
-	uint8 const _valueIndex,
-	string const& _label,
-	string const& _units,
-	bool const _readOnly,
-	bool const _writeOnly,
-	uint8 const* _default,
-	uint8 const _length,
-	uint8 const _pollIntensity
+		ValueID::ValueGenre const _genre,
+		uint8 const _commandClassId,
+		uint8 const _instance,
+		uint8 const _valueIndex,
+		string const& _label,
+		string const& _units,
+		bool const _readOnly,
+		bool const _writeOnly,
+		uint8 const* _default,
+		uint8 const _length,
+		uint8 const _pollIntensity
 )
 {
 	ValueRaw* value = new ValueRaw( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default, _length, _pollIntensity );
@@ -2178,15 +2203,15 @@ bool Node::CreateValueRaw
 //-----------------------------------------------------------------------------
 bool Node::CreateValueSchedule
 (
-	ValueID::ValueGenre const _genre,
-	uint8 const _commandClassId,
-	uint8 const _instance,
-	uint8 const _valueIndex,
-	string const& _label,
-	string const& _units,
-	bool const _readOnly,
-	bool const _writeOnly,
-	uint8 const _pollIntensity
+		ValueID::ValueGenre const _genre,
+		uint8 const _commandClassId,
+		uint8 const _instance,
+		uint8 const _valueIndex,
+		string const& _label,
+		string const& _units,
+		bool const _readOnly,
+		bool const _writeOnly,
+		uint8 const _pollIntensity
 )
 {
 	ValueSchedule* value = new ValueSchedule( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _pollIntensity );
@@ -2207,19 +2232,19 @@ bool Node::CreateValueSchedule
 //-----------------------------------------------------------------------------
 bool Node::CreateValueShort
 (
-	ValueID::ValueGenre const _genre,
-	uint8 const _commandClassId,
-	uint8 const _instance,
-	uint8 const _valueIndex,
-	string const& _label,
-	string const& _units,
-	bool const _readOnly,
-	bool const _writeOnly,
-	int16 const _default,
-	uint8 const _pollIntensity
+		ValueID::ValueGenre const _genre,
+		uint8 const _commandClassId,
+		uint8 const _instance,
+		uint8 const _valueIndex,
+		string const& _label,
+		string const& _units,
+		bool const _readOnly,
+		bool const _writeOnly,
+		int16 const _default,
+		uint8 const _pollIntensity
 )
 {
-  	ValueShort* value = new ValueShort( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default, _pollIntensity );
+	ValueShort* value = new ValueShort( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default, _pollIntensity );
 	ValueStore* store = GetValueStore();
 	if( store->AddValue( value ) )
 	{
@@ -2237,19 +2262,19 @@ bool Node::CreateValueShort
 //-----------------------------------------------------------------------------
 bool Node::CreateValueString
 (
-	ValueID::ValueGenre const _genre,
-	uint8 const _commandClassId,
-	uint8 const _instance,
-	uint8 const _valueIndex,
-	string const& _label,
-	string const& _units,
-	bool const _readOnly,
-	bool const _writeOnly,
-	string const& _default,
-	uint8 const _pollIntensity
+		ValueID::ValueGenre const _genre,
+		uint8 const _commandClassId,
+		uint8 const _instance,
+		uint8 const _valueIndex,
+		string const& _label,
+		string const& _units,
+		bool const _readOnly,
+		bool const _writeOnly,
+		string const& _default,
+		uint8 const _pollIntensity
 )
 {
-  	ValueString* value = new ValueString( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default, _pollIntensity );
+	ValueString* value = new ValueString( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default, _pollIntensity );
 	ValueStore* store = GetValueStore();
 	if( store->AddValue( value ) )
 	{
@@ -2267,7 +2292,7 @@ bool Node::CreateValueString
 //-----------------------------------------------------------------------------
 void Node::RemoveValueList
 (
-	ValueList* _value
+		ValueList* _value
 )
 {
 	ValueStore* store = GetValueStore();
@@ -2280,8 +2305,8 @@ void Node::RemoveValueList
 //-----------------------------------------------------------------------------
 bool Node::CreateValueFromXML
 (
-	uint8 const _commandClassId,
-	TiXmlElement const* _valueElement
+		uint8 const _commandClassId,
+		TiXmlElement const* _valueElement
 )
 {
 	Value* value = NULL;
@@ -2327,8 +2352,8 @@ bool Node::CreateValueFromXML
 //-----------------------------------------------------------------------------
 void Node::ReadValueFromXML
 (
-	uint8 const _commandClassId,
-	TiXmlElement const* _valueElement
+		uint8 const _commandClassId,
+		TiXmlElement const* _valueElement
 )
 {
 	int32 intVal;
@@ -2373,7 +2398,7 @@ void Node::ReadValueFromXML
 //-----------------------------------------------------------------------------
 Value* Node::GetValue
 (
-	ValueID const& _id
+		ValueID const& _id
 )
 {
 	// This increments the value's reference count
@@ -2386,9 +2411,9 @@ Value* Node::GetValue
 //-----------------------------------------------------------------------------
 Value* Node::GetValue
 (
-	uint8 const _commandClassId,
-	uint8 const _instance,
-	uint8 const _valueIndex
+		uint8 const _commandClassId,
+		uint8 const _instance,
+		uint8 const _valueIndex
 )
 {
 	Value* value = NULL;
@@ -2404,9 +2429,9 @@ Value* Node::GetValue
 //-----------------------------------------------------------------------------
 bool Node::RemoveValue
 (
-	uint8 const _commandClassId,
-	uint8 const _instance,
-	uint8 const _valueIndex
+		uint8 const _commandClassId,
+		uint8 const _instance,
+		uint8 const _valueIndex
 )
 {
 	ValueStore* store = GetValueStore();
@@ -2419,7 +2444,7 @@ bool Node::RemoveValue
 //-----------------------------------------------------------------------------
 Group* Node::GetGroup
 (
-	uint8 const _groupIdx
+		uint8 const _groupIdx
 )
 {
 	map<uint8,Group*>::iterator it = m_groups.find( _groupIdx );
@@ -2437,7 +2462,7 @@ Group* Node::GetGroup
 //-----------------------------------------------------------------------------
 void Node::AddGroup
 (
-	Group* _group
+		Group* _group
 )
 {
 	map<uint8,Group*>::iterator it = m_groups.find( _group->GetIdx() );
@@ -2457,7 +2482,7 @@ void Node::AddGroup
 //-----------------------------------------------------------------------------
 void Node::WriteGroups
 (
-	TiXmlElement* _associationsElement
+		TiXmlElement* _associationsElement
 )
 {
 	for( map<uint8,Group*>::iterator it = m_groups.begin(); it != m_groups.end(); ++it )
@@ -2487,8 +2512,8 @@ uint8 Node::GetNumGroups
 //-----------------------------------------------------------------------------
 uint32 Node::GetAssociations
 (
-	uint8 const _groupIdx,
-	uint8** o_associations
+		uint8 const _groupIdx,
+		uint8** o_associations
 )
 {
 	uint32 numAssociations = 0;
@@ -2506,7 +2531,7 @@ uint32 Node::GetAssociations
 //-----------------------------------------------------------------------------
 uint8 Node::GetMaxAssociations
 (
-	uint8 const _groupIdx
+		uint8 const _groupIdx
 )
 {
 	uint8 maxAssociations = 0;
@@ -2524,7 +2549,7 @@ uint8 Node::GetMaxAssociations
 //-----------------------------------------------------------------------------
 string Node::GetGroupLabel
 (
-	uint8 const _groupIdx
+		uint8 const _groupIdx
 )
 {
 	string label = "";
@@ -2542,8 +2567,8 @@ string Node::GetGroupLabel
 //-----------------------------------------------------------------------------
 void Node::AddAssociation
 (
-	uint8 const _groupIdx,
-	uint8 const _targetNodeId
+		uint8 const _groupIdx,
+		uint8 const _targetNodeId
 )
 {
 	if( Group* group = GetGroup( _groupIdx ) )
@@ -2558,8 +2583,8 @@ void Node::AddAssociation
 //-----------------------------------------------------------------------------
 void Node::RemoveAssociation
 (
-	uint8 const _groupIdx,
-	uint8 const _targetNodeId
+		uint8 const _groupIdx,
+		uint8 const _targetNodeId
 )
 {
 	if( Group* group = GetGroup( _groupIdx ) )
@@ -2617,8 +2642,8 @@ Driver* Node::GetDriver
 //-----------------------------------------------------------------------------
 string Node::GetEndPointDeviceClassLabel
 (
-	uint8 const _generic,
-	uint8 const _specific
+		uint8 const _generic,
+		uint8 const _specific
 )
 {
 	char str[32];
@@ -2656,9 +2681,9 @@ string Node::GetEndPointDeviceClassLabel
 //-----------------------------------------------------------------------------
 bool Node::SetDeviceClasses
 (
-	uint8 const _basic,
-	uint8 const _generic,
-	uint8 const _specific
+		uint8 const _basic,
+		uint8 const _generic,
+		uint8 const _specific
 )
 {
 	m_basic = _basic;
@@ -2788,7 +2813,7 @@ bool Node::SetDeviceClasses
 //-----------------------------------------------------------------------------
 bool Node::AddMandatoryCommandClasses
 (
-	uint8 const* _commandClasses
+		uint8 const* _commandClasses
 )
 {
 	if( NULL == _commandClasses )
@@ -2811,7 +2836,7 @@ bool Node::AddMandatoryCommandClasses
 		}
 
 		if( CommandClasses::IsSupported( cc ) )
-        {
+		{
 			if( CommandClass* commandClass = AddCommandClass( cc ) )
 			{
 				// If this class came after the COMMAND_CLASS_MARK, then we do not create values.
@@ -2894,7 +2919,7 @@ void Node::ReadDeviceClasses
 //-----------------------------------------------------------------------------
 void Node::GetNodeStatistics
 (
-	NodeData* _data
+		NodeData* _data
 )
 {
 	_data->m_sentCnt = m_sentCnt;
@@ -2927,10 +2952,10 @@ void Node::GetNodeStatistics
 //-----------------------------------------------------------------------------
 Node::DeviceClass::DeviceClass
 (
-	TiXmlElement const* _el
+		TiXmlElement const* _el
 ):
-	m_mandatoryCommandClasses(NULL),
-	m_basicMapping(0)
+m_mandatoryCommandClasses(NULL),
+m_basicMapping(0)
 {
 	char const* str = _el->Attribute( "label" );
 	if( str )
@@ -2979,9 +3004,9 @@ Node::DeviceClass::DeviceClass
 //-----------------------------------------------------------------------------
 Node::GenericDeviceClass::GenericDeviceClass
 (
-	TiXmlElement const* _el
+		TiXmlElement const* _el
 ):
-	DeviceClass( _el )
+DeviceClass( _el )
 {
 	// Add any specific device classes
 	TiXmlElement const* child = _el->FirstChildElement();
@@ -3026,7 +3051,7 @@ Node::GenericDeviceClass::~GenericDeviceClass
 //-----------------------------------------------------------------------------
 Node::DeviceClass* Node::GenericDeviceClass::GetSpecificDeviceClass
 (
-	uint8 const& _specific
+		uint8 const& _specific
 )
 {
 	map<uint8,DeviceClass*>::iterator it = m_specificDeviceClasses.find( _specific );
