@@ -381,9 +381,12 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 *  stages--Node::QueryStage_None).  This function will send Notification::Type_NodeAdded
 		 *  and Notification::Type_NodeRemoved messages to identify these modifications.
 		 *  \param _nodeId The node ID of the node to create and query.
+		 *  \param newNode If this is a new Node added to the network, or we are just creating when we reload.
+		 *  \param _protocolInfo if this is called via a AddNode command, then this would be the Device Classes, and CommandClass list
+		 *  \param _length The length of the _protocolInfo field
 		 *  \see Notification::Type_NodeAdded, Notification::Type_NodeRemoved, Node::QueryStage_None,
 		 */
-		void InitNode( uint8 const _nodeId, bool newNode = false );
+		void InitNode( uint8 const _nodeId, bool newNode = false, bool secure = false, uint8 const *_protocolInfo = NULL, uint8 const _length = 0);
 
 		void InitAllNodes();												// Delete all nodes and fetch the data from the Z-Wave network again.
 
@@ -529,6 +532,8 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 			bool					m_controllerAdded;
 			uint8					m_controllerCommandNode;
 			uint8					m_controllerCommandArg;
+			uint8					m_controllerDeviceProtocolInfo[254];
+			uint8 					m_controllerDeviceProtocolInfoLength;
 		};
 
 		ControllerCommandItem*			m_currentControllerCommand;

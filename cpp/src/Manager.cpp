@@ -3480,6 +3480,23 @@ void Manager::HealNetwork
 		}
 	}
 }
+//-----------------------------------------------------------------------------
+// <Manager::AddDevice>
+// Add a Device to the Network.
+//-----------------------------------------------------------------------------
+bool Manager::AddDevice( uint32 const _homeId, bool _doSecurity ) {
+	if (Driver *driver = GetDriver( _homeId ) ) {
+		LockGuard LG(driver->m_nodeMutex);
+		/* we use the Args option to communicate if Security CC should be initialized */
+		return driver->BeginControllerCommand(
+				Driver::ControllerCommand_AddDevice,
+				NULL, NULL, true, 0, (_doSecurity  == true ? 1 : 0));
+	}
+	return false;
+}
+
+
+
 
 //-----------------------------------------------------------------------------
 // <Manager::GetNumScenes>
