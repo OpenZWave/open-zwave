@@ -1678,6 +1678,16 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 */
 		void HealNetwork( uint32 const _homeId, bool _doRR );
 
+		/**
+		 * \brief Start the Inclusion Process to add a Node to the Network.
+		 * \param _homeId The Home ID of the Z-Wave network where the device should be added.
+		 * \param _doSecurity Whether to initialize the Network Key on the device if it supports the Security CC
+		 * \return if the AddDevice Command was sent succcesfully to the Controller
+		 */
+		bool AddDevice( uint32 const _homeId, bool _doSecurity = true );
+
+
+
 	/*@}*/
 
 	//-----------------------------------------------------------------------------

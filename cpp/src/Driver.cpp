@@ -433,7 +433,6 @@ void Driver::DriverThreadProc
 				}
 
 				// Wait for something to do
-				std::cout << "Polling For Something timeout: " << retryTimeout << " Count: " << count << std::endl;
 				int32 res = Wait::Multiple( waitObjects, count, timeout );
 
 				switch( res )
@@ -1136,7 +1135,6 @@ bool Driver::WriteMsg
 		string const &msg
 )
 {
-	std::cout << msg << std::endl;
 	if( !m_currentMsg )
 	{
 		Log::Write( LogLevel_Detail, GetNodeNumber( m_currentMsg ), "WriteMsg %s m_currentMsg=%08x", msg.c_str(), m_currentMsg );
@@ -1255,7 +1253,7 @@ bool Driver::WriteMsg
 			}
 		}
 	}
-
+#if 0
 	std::cout << "WriteMsg ()" << std::endl;
 	std::cout << "m_expectedCallbackId: " << std::hex << (int)m_expectedCallbackId << std::endl;
 	std::cout << "m_expectedCommandClassId: " << (int)m_expectedCommandClassId << std::endl;
@@ -1263,7 +1261,7 @@ bool Driver::WriteMsg
 	std::cout << "m_expectedReply: " << (int)m_expectedReply << std::endl;
 	std::cout << "m_waitingForAck: " << (bool)m_waitingForAck << std::endl;
 	std::cout << std::dec << std::endl;
-
+#endif
 
 	return true;
 }
@@ -1852,13 +1850,12 @@ void Driver::ProcessMsg
 				/* Ok - _newdata now contains the decrypted packet */
 				/* copy it back to the _data packet for processing */
 				/* New Length - See Decrypt Packet for why these numbers*/
-				PrintHex("Before Packet", _data, _data[4]+6);
 				_data[4] = _data[4] - 8 - 8 - 2 - 2;
-				Log::Write(LogLevel_Warning, 0, "Length: %d", _data[4]);
+
 				/* now copy the decrypted packet */
-				/* XXX this is Broken right now */
 				memcpy(&_data[5], &_newdata[1], _data[4]);
-				PrintHex("Decrypted Packet", _data, _data[4]+5);
+				//PrintHex("Decrypted Packet", _data, _data[4]+5);
+
 				/* if the Node has something else to send, it will encrypt a message and send it as a MessageEncapNonceGet */
 				if (SecurityCmd_MessageEncapNonceGet == _data[6])
 				{
@@ -1883,10 +1880,9 @@ void Driver::ProcessMsg
 			}
 		}
 	}
-	PrintHex("Raw", _data, 10);
 
 
-
+#if 0
 	std::cout << "ProcessMsg (start)" << std::endl;
 	std::cout << "m_expectedCallbackId: " << std::hex << (int)m_expectedCallbackId << " " << (int)_data[2] << std::endl;
 	std::cout << "m_expectedCommandClassId: " << (int)m_expectedCommandClassId << " " << (int)_data[5] << std::endl;
@@ -1894,7 +1890,7 @@ void Driver::ProcessMsg
 	std::cout << "m_expectedReply: " << (int)m_expectedReply << " " << (int)_data[1] << std::endl;
 	std::cout << "m_waitingForAck: " << (bool)m_waitingForAck << std::endl;
 	std::cout << std::dec << std::endl;
-
+#endif
 
 	if( RESPONSE == _data[0] )
 	{
@@ -2275,6 +2271,7 @@ void Driver::ProcessMsg
 	// Generic callback handling
 	if( handleCallback )
 	{
+#if 0
 		std::cout << "ProcessMsg (handleCallback)" << std::endl;
 		std::cout << "m_expectedCallbackId: " << std::hex << (int)m_expectedCallbackId << " " << (int)_data[2] << std::endl;
 		std::cout << "m_expectedCommandClassId: " << (int)m_expectedCommandClassId << " " << (int)_data[5] << std::endl;
@@ -2282,7 +2279,7 @@ void Driver::ProcessMsg
 		std::cout << "m_expectedReply: " << (int)m_expectedReply << " " << (int)_data[1] << std::endl;
 		std::cout << "m_waitingForAck: " << (bool)m_waitingForAck << std::endl;
 		std::cout << std::dec << std::endl;
-
+#endif
 		if( ( m_expectedCallbackId || m_expectedReply ) )
 		{
 			if( m_expectedCallbackId )
@@ -2320,6 +2317,7 @@ void Driver::ProcessMsg
 					}
 				}
 			}
+#if 0
 			std::cout << "ProcessMsg (Final test)" << std::endl;
 			std::cout << "m_expectedCallbackId: " << std::hex << (int)m_expectedCallbackId << " " << (int)_data[2] << std::endl;
 			std::cout << "m_expectedCommandClassId: " << (int)m_expectedCommandClassId << " " << (int)_data[5] << std::endl;
@@ -2327,7 +2325,7 @@ void Driver::ProcessMsg
 			std::cout << "m_expectedReply: " << (int)m_expectedReply << " " << (int)_data[1] << std::endl;
 			std::cout << "m_waitingForAck: " << (bool)m_waitingForAck << std::endl;
 			std::cout << std::dec << std::endl;
-
+#endif
 			if( !( m_expectedCallbackId || m_expectedReply ) )
 			{
 				Log::Write( LogLevel_Detail, _data[3], "  Message transaction complete" );
@@ -3453,7 +3451,6 @@ void Driver::HandleApplicationCommandHandlerRequest
 		uint8* _data
 )
 {
-	std::cout << "HandleApplicationCommandHandlerRequest" << std::endl;
 
 	uint8 status = _data[2];
 	uint8 nodeId = _data[3];
@@ -3844,9 +3841,14 @@ void Driver::CommonAddNodeStatusRequestHandler
 			{
 				m_currentControllerCommand->m_controllerAdded = false;
 				m_currentControllerCommand->m_controllerCommandNode = _data[4];
+				/* make sure we dont overrun our buffer. Its ok to truncate */
+				uint8 length = _data[5];
+				if (length > 254) length = 254;
+				memcpy(&m_currentControllerCommand->m_controllerDeviceProtocolInfo, &_data[6], length);
+				m_currentControllerCommand->m_controllerDeviceProtocolInfoLength = length;
 			}
-			AddNodeStop( _funcId );
-			sleep(1);
+//			AddNodeStop( _funcId );
+//			sleep(1);
 			break;
 		}
 		case ADD_NODE_STATUS_ADDING_CONTROLLER:
@@ -3870,7 +3872,7 @@ void Driver::CommonAddNodeStatusRequestHandler
 				m_currentControllerCommand->m_controllerAdded = true;
 				m_currentControllerCommand->m_controllerCommandNode = _data[4];
 			}
-			AddNodeStop( _funcId );
+//			AddNodeStop( _funcId );
 			break;
 		}
 		case ADD_NODE_STATUS_PROTOCOL_DONE:
@@ -3888,7 +3890,7 @@ void Driver::CommonAddNodeStatusRequestHandler
 			state = ControllerState_Completed;
 			if( m_currentControllerCommand != NULL && m_currentControllerCommand->m_controllerCommandNode != 0xff )
 			{
-				InitNode( m_currentControllerCommand->m_controllerCommandNode, true );
+				InitNode( m_currentControllerCommand->m_controllerCommandNode, true, m_currentControllerCommand->m_controllerCommandArg, m_currentControllerCommand->m_controllerDeviceProtocolInfo, m_currentControllerCommand->m_controllerDeviceProtocolInfoLength );
 			}
 
 			// Not sure about the new controller function here.
@@ -4345,7 +4347,10 @@ void Driver::InitAllNodes
 void Driver::InitNode
 (
 		uint8 const _nodeId,
-		bool newNode
+		bool newNode,
+		bool secure,
+		uint8 const *_protocolInfo,
+		uint8 const _length
 )
 {
 	// Delete any existing node and replace it with a new one
@@ -4369,8 +4374,13 @@ void Driver::InitNode
 	notification->SetHomeAndNodeIds( m_homeId, _nodeId );
 	QueueNotification( notification );
 
-	// Request the node info
-	m_nodes[_nodeId]->SetQueryStage( Node::QueryStage_ProtocolInfo );
+	if (_length == 0) {
+		// Request the node info
+		m_nodes[_nodeId]->SetQueryStage( Node::QueryStage_ProtocolInfo );
+	} else {
+		m_nodes[_nodeId]->SetSecured(secure);
+		m_nodes[_nodeId]->SetProtocolInfo(_protocolInfo, _length);
+	}
 	Log::Write(LogLevel_Info, "Initilizing Node. New Node: %s (%s)", static_cast<Node *>(m_nodes[_nodeId])->IsAddingNode() ? "true" : "false", newNode ? "true" : "false");
 }
 
@@ -6498,7 +6508,7 @@ uint8 *Driver::GetNetworkKey() {
 // Send either a NONCE request, or the actual encrypted message, depending what state the Message Currently is in.
 //-----------------------------------------------------------------------------
 bool Driver::SendEncryptedMessage() {
-	std::cout << "Send Encrypted" << std::endl;
+
 	uint8 *buffer = m_currentMsg->GetBuffer();
 	uint8 length = m_currentMsg->GetLength();
 	m_expectedCallbackId = m_currentMsg->GetCallbackId();
@@ -6509,14 +6519,14 @@ bool Driver::SendEncryptedMessage() {
 	m_controller->Write( buffer, length );
 	m_currentMsg->clearNonce();
 
-
+#if 0
 	std::cout << "m_expectedCallbackId: " << std::hex << (int)m_expectedCallbackId << std::endl;
 	std::cout << "m_expectedCommandClassId: " << (int)m_expectedCommandClassId << std::endl;
 	std::cout << "m_expectedNodeId: " << (int)m_expectedNodeId << std::endl;
 	std::cout << "m_expectedReply: " << (int)m_expectedReply << std::endl;
 	std::cout << "m_waitingForAck: " << (bool)m_waitingForAck << std::endl;
 	std::cout << std::dec << std::endl;
-
+#endif
 
 
 	return true;
@@ -6526,7 +6536,7 @@ bool Driver::SendEncryptedMessage() {
 bool Driver::SendNonceRequest(string logmsg) {
 
 	uint8 m_buffer[11];
-	std::cout << "NonceGet" << std::endl;
+
 	/* construct a standard NONCE_GET message */
 	m_buffer[0] = SOF;
 	m_buffer[1] = 9;					// Length of the entire message
@@ -6612,7 +6622,6 @@ bool Driver::initNetworkKeys(bool newnode) {
 
 void Driver::SendNonceKey(uint8 nodeId, uint8 *nonce) {
 
-	std::cout << "NonceReport" << std::endl;
 
 	uint8 m_buffer[19];
 	/* construct a standard NONCE_GET message */

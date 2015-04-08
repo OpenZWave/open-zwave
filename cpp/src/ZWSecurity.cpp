@@ -36,9 +36,9 @@
 #include "command_classes/MultiInstance.h"
 #include "command_classes/Security.h"
 #include "aes/aescpp.h"
-
+#ifndef DEBUG
 #define DEBUG
-
+#endif
 namespace OpenZWave {
 	//using namespace OpenZWave;
 

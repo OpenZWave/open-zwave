@@ -229,6 +229,14 @@ namespace OpenZWave
 			 *  - m_beaming (device is beam capable)
 			 */
 			void UpdateProtocolInfo( uint8 const* _data );
+			/**
+			 * this function is called when the Node is added via a AddNode request. the ProtocolInfo field contains the
+			 * devices classes and the CommandClasses that the node supports, so we can build a pretty good Node out of that
+			 * info.
+			 * @param _protocolInfo Byte 0 - Basic Device Class Byte 1 - Generic Device Class, Byte 2 - Specific Device Classes Remaining Bytes - Supported Command Classes
+			 * @param _length lenght of the _protocolInfo field.
+			 */
+			void SetProtocolInfo(uint8 const* _protocolInfo, uint8 const _length);
 			void UpdateNodeInfo( uint8 const* _data, uint8 const _length );
 
 			bool ProtocolInfoReceived()const{ return m_protocolInfoReceived; }
@@ -251,6 +259,7 @@ namespace OpenZWave
 			bool		m_queryConfiguration;
 			uint8		m_queryRetries;
 			bool		m_protocolInfoReceived;
+			bool		m_basicprotocolInfoReceived;
 			bool		m_nodeInfoReceived;
 			bool		m_manufacturerSpecificClassReceived;
 			bool		m_nodeInfoSupported;
@@ -373,7 +382,7 @@ namespace OpenZWave
 			 * @param _length the length of the _data string
 			 */
 			void SetSecuredClasses( uint8 const* _data, uint8 const _length );
-
+			void SetSecured(bool secure);
 		private:
 			/**
 			 * Creates the specified command class object and adds it to the node (via the
@@ -398,7 +407,7 @@ namespace OpenZWave
 			void WriteXML( TiXmlElement* _nodeElement );
 
 			map<uint8,CommandClass*>		m_commandClassMap;	/**< Map of command class ids and pointers to associated command class objects */
-
+			bool							m_secured; /**< Is this Node added Securely */
 			//-----------------------------------------------------------------------------
 			// Basic commands (helpers that go through the basic command class)
 			//-----------------------------------------------------------------------------
