@@ -74,12 +74,12 @@ uint8_t AuthPassword[16] = {0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55
 
 Security::Security
 (
-	uint32 const _homeId,
-	uint8 const _nodeId
+		uint32 const _homeId,
+		uint8 const _nodeId
 ):
-	CommandClass( _homeId, _nodeId ),
-	m_schemeagreed(false),
-	m_secured(false)
+CommandClass( _homeId, _nodeId ),
+m_schemeagreed(false),
+m_secured(false)
 
 {
 	/* We don't want the Driver to route "Security" messages back to us for Encryption,
@@ -103,7 +103,7 @@ Security::~Security
 //-----------------------------------------------------------------------------
 void Security::ReadXML
 (
-	TiXmlElement const* _ccElement
+		TiXmlElement const* _ccElement
 )
 {
 	CommandClass::ReadXML( _ccElement );
@@ -115,7 +115,7 @@ void Security::ReadXML
 //-----------------------------------------------------------------------------
 void Security::WriteXML
 (
-	TiXmlElement* _ccElement
+		TiXmlElement* _ccElement
 )
 {
 	CommandClass::WriteXML( _ccElement );
@@ -127,9 +127,24 @@ bool Security::Init
 (
 )
 {
-	/* if we are adding this node, then instead to a SchemeGet Command instead - This
-	 * will start the Network Key Exchange
-	 */
+	Msg* msg = new Msg( "SecurityCmd_SupportedGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+	msg->Append( GetNodeId() );
+	msg->Append( 2 );
+	msg->Append( GetCommandClassId() );
+	msg->Append( SecurityCmd_SupportedGet );
+	msg->Append( GetDriver()->GetTransmitOptions() );
+	msg->setEncrypted();
+	GetDriver()->SendMsg( msg, Driver::MsgQueue_Security);
+	return true;
+}
+//-----------------------------------------------------------------------------
+// <Security::RequestState>
+// Request current state from the device
+//-----------------------------------------------------------------------------
+bool Security::ExchangeNetworkKeys
+(
+)
+{
 	if (GetNodeUnsafe()->IsAddingNode()) {
 		Msg * msg = new Msg ("SecurityCmd_SchemeGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 		msg->Append( GetNodeId() );
@@ -140,28 +155,21 @@ bool Security::Init
 		msg->Append( GetDriver()->GetTransmitOptions() );
 		/* SchemeGet is unencrypted */
 		GetDriver()->SendMsg(msg, Driver::MsgQueue_Security);
-	} else {
-		Msg* msg = new Msg( "SecurityCmd_SupportedGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-		msg->Append( GetNodeId() );
-		msg->Append( 2 );
-		msg->Append( GetCommandClassId() );
-		msg->Append( SecurityCmd_SupportedGet );
-		msg->Append( GetDriver()->GetTransmitOptions() );
-		msg->setEncrypted();
-		GetDriver()->SendMsg( msg, Driver::MsgQueue_Security);
+		return true;
 	}
-
-	return true;
+	return false;
 }
+
+
 //-----------------------------------------------------------------------------
 // <Security::RequestState>
 // Request current state from the device
 //-----------------------------------------------------------------------------
 bool Security::RequestState
 (
-	uint32 const _requestFlags,
-	uint8 const _instance,
-	Driver::MsgQueue const _queue
+		uint32 const _requestFlags,
+		uint8 const _instance,
+		Driver::MsgQueue const _queue
 )
 {
 #if 0
@@ -180,10 +188,10 @@ bool Security::RequestState
 //-----------------------------------------------------------------------------
 bool Security::RequestValue
 (
-	uint32 const _requestFlags,
-	uint8 const _index,
-	uint8 const _instance,
-	Driver::MsgQueue const _queue
+		uint32 const _requestFlags,
+		uint8 const _index,
+		uint8 const _instance,
+		Driver::MsgQueue const _queue
 )
 {
 	Log::Write(LogLevel_Info, GetNodeId(), "Got a RequestValue Call");
@@ -193,8 +201,8 @@ bool Security::RequestValue
 
 bool Security::HandleSupportedReport
 (
-	uint8 const* _data,
-	uint32 const _length
+		uint8 const* _data,
+		uint32 const _length
 )
 {
 
@@ -214,9 +222,9 @@ bool Security::HandleSupportedReport
 //-----------------------------------------------------------------------------
 bool Security::HandleMsg
 (
-	uint8 const* _data,
-	uint32 const _length,
-	uint32 const _instance	// = 1
+		uint8 const* _data,
+		uint32 const _length,
+		uint32 const _instance	// = 1
 )
 {
 	switch( (SecurityCmd)_data[0] )
@@ -336,12 +344,12 @@ bool Security::HandleMsg
 //-----------------------------------------------------------------------------
 void Security::CreateVars
 (
-	uint8 const _instance
+		uint8 const _instance
 )
 {
 	if( Node* node = GetNodeUnsafe() )
 	{
-	  	node->CreateValueBool( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 0, "Secured", "", true, false, false, 0 );
+		node->CreateValueBool( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 0, "Secured", "", true, false, false, 0 );
 	}
 }
 

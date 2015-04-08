@@ -2288,6 +2288,9 @@ void Driver::ProcessMsg
 				{
 					Log::Write( LogLevel_Detail, _data[3], "  Expected callbackId was received" );
 					m_expectedCallbackId = 0;
+				} else if (_data[2] == 0x02 || _data[2] == 0x01) {
+					/* it was a NONCE request/reply. Drop it */
+					return;
 				}
 			}
 			if( m_expectedReply )
@@ -2971,6 +2974,8 @@ void Driver::HandleSendDataRequest
 		// Wrong callback ID
 		m_callbacks++;
 		Log::Write( LogLevel_Warning, nodeId, "WARNING: Unexpected Callback ID received" );
+	} else if (_data[2] > 0 && _data[2] < 10) {
+		return;
 	} else {
 		Node* node = GetNodeUnsafe( nodeId );
 		if( node != NULL )
@@ -3037,8 +3042,8 @@ void Driver::HandleSendDataRequest
 			}
 		}
 		// Command reception acknowledged by node, error or not, but ignore any NONCE messages
-		if (_data[2] > 0 && _data[2] < 10)
-			m_expectedCallbackId = 0;
+		//
+		//	m_expectedCallbackId = 0;
 	}
 }
 
@@ -6549,7 +6554,8 @@ bool Driver::SendNonceRequest(string logmsg) {
 	//m_buffer[8] = TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE;
 	m_buffer[8] = TRANSMIT_OPTION_AUTO_ROUTE;
 	/* this is the same as the Actual Message */
-	m_buffer[9] = m_expectedCallbackId;
+	//m_buffer[9] = m_expectedCallbackId;
+	m_buffer[9] = 2;
 	// Calculate the checksum
 	m_buffer[10] = 0xff;
 	for( uint32 i=1; i<10; ++i )
@@ -6571,21 +6577,26 @@ bool Driver::initNetworkKeys(bool newnode) {
 	uint8_t EncryptPassword[16] = {0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA};
 	uint8_t AuthPassword[16] = {0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55};
 
-
+	uint8_t SecuritySchemes[1][16] = {
+			{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
+	};
+	this->m_inclusionkeySet = newnode;
 	this->AuthKey = new aes_encrypt_ctx;
 	this->EncryptKey = new aes_encrypt_ctx;
+
+	Log::Write(LogLevel_Info, GetControllerNodeId(), "Setting Up %s Network Key for Secure Communications", newnode == true ? "Inclusion" : "Provided");
 
 	if (aes_init() == EXIT_FAILURE) {
 		Log::Write(LogLevel_Warning, GetControllerNodeId(), "Failed to Init AES Engine");
 		return false;
 	}
 
-	if (aes_encrypt_key128(this->GetNetworkKey(), this->EncryptKey) == EXIT_FAILURE) {
+	if (aes_encrypt_key128(newnode == false ? this->GetNetworkKey() : SecuritySchemes[0], this->EncryptKey) == EXIT_FAILURE) {
 		Log::Write(LogLevel_Warning, GetControllerNodeId(), "Failed to Set Initial Network Key for Encryption");
 		return false;
 	}
 
-	if (aes_encrypt_key128(this->GetNetworkKey(), this->AuthKey) == EXIT_FAILURE) {
+	if (aes_encrypt_key128(newnode == false ? this->GetNetworkKey() : SecuritySchemes[0], this->AuthKey) == EXIT_FAILURE) {
 		Log::Write(LogLevel_Warning, GetControllerNodeId(), "Failed to Set Initial Network Key for Authentication");
 		return false;
 	}
@@ -6629,7 +6640,7 @@ void Driver::SendNonceKey(uint8 nodeId, uint8 *nonce) {
 	m_buffer[1] = 17;					// Length of the entire message
 	m_buffer[2] = REQUEST;
 	m_buffer[3] = FUNC_ID_ZW_SEND_DATA;
-	m_buffer[4] = m_currentMsg->GetTargetNodeId();
+	m_buffer[4] = nodeId;
 	m_buffer[5] = 10; 					// Length of the payload
 	m_buffer[6] = Security::StaticGetCommandClassId();
 	m_buffer[7] = SecurityCmd_NonceReport;
@@ -6645,9 +6656,39 @@ void Driver::SendNonceKey(uint8 nodeId, uint8 *nonce) {
 	{
 		m_buffer[18] ^= m_buffer[i];
 	}
-	Log::Write(LogLevel_Info, m_currentMsg->GetTargetNodeId(), "Sending (%s) message (Callback ID=0x%.2x, Expected Reply=0x%.2x) - Nonce_Report - %s:", c_sendQueueNames[m_currentMsgQueueSource], m_buffer[17], m_expectedReply, PktToString(m_buffer, 19).c_str());
+	Log::Write(LogLevel_Info, nodeId, "Sending (%s) message (Callback ID=0x%.2x, Expected Reply=0x%.2x) - Nonce_Report - %s:", c_sendQueueNames[m_currentMsgQueueSource], m_buffer[17], m_expectedReply, PktToString(m_buffer, 19).c_str());
 
 	m_controller->Write(m_buffer, 19);
 
 	m_nonceReportSent = nodeId;
 }
+
+aes_encrypt_ctx *Driver::GetAuthKey
+(
+)
+{
+	if( m_currentControllerCommand != NULL &&
+			m_currentControllerCommand->m_controllerCommand == ControllerCommand_AddDevice &&
+			m_currentControllerCommand->m_controllerState == ControllerState_Completed ) {
+		/* we are adding a Node, so our AuthKey is different from normal comms */
+		initNetworkKeys(true);
+	} else if (m_inclusionkeySet) {
+		initNetworkKeys(false);
+	}
+	return this->AuthKey;
+};
+aes_encrypt_ctx *Driver::GetEncKey
+(
+)
+{
+	if( m_currentControllerCommand != NULL &&
+			m_currentControllerCommand->m_controllerCommand == ControllerCommand_AddDevice &&
+			m_currentControllerCommand->m_controllerState == ControllerState_Completed ) {
+		/* we are adding a Node, so our EncryptKey is different from normal comms */
+		initNetworkKeys(true);
+	} else if (m_inclusionkeySet) {
+		initNetworkKeys(false);
+	}
+
+	return this->EncryptKey;
+};

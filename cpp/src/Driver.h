@@ -855,8 +855,8 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 	//	Security Command Class Related (Version 1.1)
 	//-----------------------------------------------------------------------------
 	public:
-		aes_encrypt_ctx *GetAuthKey() { return this->AuthKey; };
-		aes_encrypt_ctx *GetEncKey() { return this->EncryptKey; };
+		aes_encrypt_ctx *GetAuthKey();
+		aes_encrypt_ctx *GetEncKey();
 
 	private:
 		bool initNetworkKeys(bool newnode);
@@ -868,6 +868,7 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		aes_encrypt_ctx *EncryptKey;
 		uint8 m_nonceReportSent;
 		uint8 m_nonceReportSentAttempt;
+		bool m_inclusionkeySet;
 
 	};
 
