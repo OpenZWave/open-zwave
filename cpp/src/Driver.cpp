@@ -3710,18 +3710,21 @@ void Driver::CommonAddNodeStatusRequestHandler
 		case ADD_NODE_STATUS_DONE:
 		{
 			Log::Write( LogLevel_Info, nodeId, "ADD_NODE_STATUS_DONE" );
-			state = ControllerState_Completed;
-			if( m_currentControllerCommand != NULL && m_currentControllerCommand->m_controllerCommandNode != 0xff )
+			if (!m_currentControllerCommand->m_controllerCommandDone)
 			{
-				InitNode( m_currentControllerCommand->m_controllerCommandNode, true );
-			}
+				state = ControllerState_Completed;
+				if( m_currentControllerCommand != NULL && m_currentControllerCommand->m_controllerCommandNode != 0xff )
+				{
+					InitNode( m_currentControllerCommand->m_controllerCommandNode, true );
+				}
 
-			// Not sure about the new controller function here.
-			if( _funcId != FUNC_ID_ZW_ADD_NODE_TO_NETWORK && m_currentControllerCommand != NULL && m_currentControllerCommand->m_controllerAdded )
-			{
-				// Rebuild all the node info.  Group and scene data that we stored
-				// during replication will be applied as we discover each node.
-				InitAllNodes();
+				// Not sure about the new controller function here.
+				if( _funcId != FUNC_ID_ZW_ADD_NODE_TO_NETWORK && m_currentControllerCommand != NULL && m_currentControllerCommand->m_controllerAdded )
+				{
+					// Rebuild all the node info.  Group and scene data that we stored
+					// during replication will be applied as we discover each node.
+					InitAllNodes();
+				}
 			}
 			break;
 		}
