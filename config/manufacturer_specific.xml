@@ -459,6 +459,7 @@
 		<Product type="0001" id="0004" name="PAN06-1 In Wall Dual Relay (1 Way) Switch Module"/>
 		<Product type="0001" id="0006" name="PAN08-1 In Wall Roller Shutter Controller"/>
 		<Product type="0002" id="0002" name="PSM02-1 Slim Multi-Sensor" config="philio/psm02.xml"/>
+		<Product type="0002" id="000e" name="PST02-1C Slim Multi Sensor" config="philio/pst02-1c.xml"/>
 		<Product type="0002" id="000d" name="PST02-1B Multi Sensor"/>
 	</Manufacturer>
 	<Manufacturer id="010e" name="Polycontrol">
