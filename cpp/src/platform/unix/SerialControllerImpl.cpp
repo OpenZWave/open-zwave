@@ -313,6 +313,7 @@ void SerialControllerImpl::Read
 )
 {
 	uint8 buffer[256];
+	bool dataIsExpected = false;
 
 	while( 1 )
         {
@@ -322,8 +323,18 @@ void SerialControllerImpl::Read
 		do
 		{
 			bytesRead = read( m_hSerialController, buffer, sizeof(buffer) );
+
 			if( bytesRead > 0 )
+			{
 				m_owner->Put( buffer, bytesRead );
+				dataIsExpected = false;
+			}
+			else if (bytesRead == EBADF || (dataIsExpected && bytesRead == 0))
+			{
+				Log::Write( LogLevel_Error, "ERROR: Serial port %s disconnected?", m_owner->m_serialControllerName.c_str() );
+
+				return;
+			}
 		} while( bytesRead > 0 );
 
 		do
@@ -341,7 +352,17 @@ void SerialControllerImpl::Read
 			pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, &oldstate);
 			err = select( m_hSerialController + 1, &rds, NULL, &eds, whenp );
 			pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, &oldstate);
+
+			if( err == EBADF )
+			{
+				Log::Write( LogLevel_Error, "ERROR: Serial port %s disconnected", m_owner->m_serialControllerName.c_str() );
+				return;
+			}
 		} while( err <= 0 );
+
+		// If select said we have data, expect data on read. If read gives 0 bytes even if
+		// select said there would be data, suspect a failure and reopen the device.
+		dataIsExpected = true;
 	}
 }
 
