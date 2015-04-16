@@ -37,11 +37,6 @@ namespace OpenZWave
 	class CRC16Encap: public CommandClass
 	{
 	public:
-		enum CRC16EncapCmd
-		{
-			CRC16EncapCmd_Encap = 0x01
-		};
-
 		static CommandClass* Create( uint32 const _homeId, uint8 const _nodeId ){ return new CRC16Encap( _homeId, _nodeId ); }
 		virtual ~CRC16Encap(){}
 
