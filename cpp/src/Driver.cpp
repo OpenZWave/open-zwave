@@ -5711,8 +5711,6 @@ void Driver::NotifyWatchers
 
 		/* check the any ValueID's sent as part of the Notification are still valid */
 		switch (notification->GetType()) {
-			case Notification::Type_ValueAdded:
-			case Notification::Type_ValueRemoved:
 			case Notification::Type_ValueChanged:
 			case Notification::Type_ValueRefreshed:
 				if (!GetValue(notification->GetValueID())) {
