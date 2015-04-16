@@ -26,27 +26,27 @@
 		</Value>
 
 		<Value type="list" index="80" genre="config" label="Send Notifications" units="" min="0" max="1" value="0" size="1">
-			<Item label="Nothing" value="0" />
-			<Item label="Hail" value="1" />
-			<Item label="Basic" value="2" />
 			<Help>
 				Enable to send notifications to associated devices (Group 1) when the state of Siren changed 
 			</Help>
+			<Item label="Nothing" value="0" />
+			<Item label="Hail" value="1" />
+			<Item label="Basic" value="2" />
 		</Value>
 
 		<Value type="list" index="200" genre="config" label="Partner ID" units="" min="0" max="1" value="0" size="1">
-			<Item label="Aeon Labs Standard Product" value="0"/>
 			<Help>
 				Partner ID 
 			</Help>
+			<Item label="Aeon Labs Standard Product" value="0"/>
 		</Value>
 
 		<Value type="list" index="252" genre="config" label="Enable/disable Lock Configuration" units="" min="0" max="1" value="0" size="1">
-			<Item label="Disable" value="0" />
-			<Item label="Enable" value="1" />
 			<Help>
 				Enable/disable Lock Configuration
 			</Help>
+			<Item label="Disable" value="0" />
+			<Item label="Enable" value="1" />
 		</Value>
 
 		<Value type="int" index="255" genre="config" label="Reset default configuration" units="" value="" write_only="true" affects="all">
