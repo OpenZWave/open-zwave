@@ -25,22 +25,27 @@
 			</Help>
 		</Value>
 
-		<Value type="int" index="80" genre="config" label="Send Notifications" units="" min="0" max="1" value="0" size="1">
+		<Value type="list" index="80" genre="config" label="Send Notifications" units="" min="0" max="1" value="0" size="1">
+			<Item label="Nothing" value="0" />
+			<Item label="Hail" value="1" />
+			<Item label="Basic" value="2" />
 			<Help>
 				Enable to send notifications to associated devices (Group 1) when the state of Siren changed 
-				(0=nothing, 1=hail CC report, 2=basic CC report).
 			</Help>
 		</Value>
 
-		<Value type="int" index="200" genre="config" label="Partner ID" units="" min="0" max="1" value="0" size="1">
+		<Value type="list" index="200" genre="config" label="Partner ID" units="" min="0" max="1" value="0" size="1">
+			<Item label="Aeon Labs Standard Product" value="0"/>
 			<Help>
-				(0=Aeon Labs Standard Product)
+				Partner ID 
 			</Help>
 		</Value>
 
-		<Value type="int" index="252" genre="config" label="Enable/disable Lock Configuration" units="" min="0" max="1" value="0" size="1">
+		<Value type="list" index="252" genre="config" label="Enable/disable Lock Configuration" units="" min="0" max="1" value="0" size="1">
+			<Item label="Disable" value="0" />
+			<Item label="Enable" value="1" />
 			<Help>
-				(0=disable, 1=enable)
+				Enable/disable Lock Configuration
 			</Help>
 		</Value>
 
@@ -57,7 +62,7 @@
 	<!-- Association Groups -->
 	<CommandClass id="133">
 		<Associations num_groups="1">
-			<Group index="1" max_associations="5" label="Reports" auto="true"/>
+			<Group index="1" max_associations="5" label="LifeLine" auto="true"/>
 		</Associations>
 	</CommandClass>
 </Product>
