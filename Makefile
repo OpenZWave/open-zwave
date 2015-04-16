@@ -49,7 +49,7 @@ endif
 
 dist-update:
 	@echo "Updating List of Distribition Files"
-	@$(SVN) --xml -v st > .distfiles
+	@$(GIT) ls-files > .distfiles
 	@$(top_srcdir)/makedist
 
 DIST_FORMATS ?= gzip
