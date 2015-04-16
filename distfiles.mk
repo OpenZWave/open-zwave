@@ -27,6 +27,7 @@ DISTFILES =	ChangeLog \
 	config/act/zrw103.xml \
 	config/aeon_labs/alms.xml \
 	config/aeon_labs/doorwindow.xml \
+	config/aeon_labs/dsd31.xml \
 	config/aeon_labs/hem.xml \
 	config/aeon_labs/hemg2.xml \
 	config/aeon_labs/keyfob.xml \
@@ -94,6 +95,7 @@ DISTFILES =	ChangeLog \
 	config/options.xsd \
 	config/philio/pan04.xml \
 	config/philio/psm02.xml \
+	config/philio/pst02-1c.xml \
 	config/polycontrol/doorlock.xml \
 	config/polycontrol/keypad.xml \
 	config/popp/123580.xml \
@@ -128,6 +130,7 @@ DISTFILES =	ChangeLog \
 	config/wenzhou/tz66d.xml \
 	config/wenzhou/tz67.xml \
 	config/wenzhou/tz88.xml \
+	config/widom/UBS104.xml \
 	config/zipato/MiniKeypad.xml \
 	config/zipato/RGBBulb.xml \
 	config/zwave.me/ZME_05431.xml \
