@@ -608,8 +608,8 @@
 		<Product type="0102" id="1020" name="TZ66D Dual Wall Switch" config="wenzhou/tz66d.xml"/>
 		<Product type="0202" id="0611" name="TZ67 Wall Plug Dimmer" config="wenzhou/tz67.xml"/>
 	</Manufacturer>
-	<Manufacturer id="0149" name="Widom">
-		<Product type="0012" id="0104" name="Universal Relay Switch"/>
+	<Manufacturer id="0149" name="wiDom">
+		<Product type="0012" id="0104" name="UBS104 Universal Relay Switch" config="widom/UBS104.xml"/>
 	</Manufacturer>
 	<Manufacturer id="004c" name="Woodward Labs">
 	</Manufacturer>

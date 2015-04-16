@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Product xmlns='http://code.google.com/p/open-zwave/'>
+
+<!-- wiDom: UBS104 Universal Relay Switch -->
+
+	<!-- Configuration  -->
+	<CommandClass id="112">
+		<Value type="list" genre="config" instance="1" index="1" label="Device status when the external switch receives 1 click" size="1" min="1" max="4" value="1">
+			<Help/>
+			<Item label="Toggle" value="1" />
+			<Item label="On" value="2" />
+			<Item label="Off" value="3" />
+			<Item label="Ignore" value="4" />
+		</Value>
+	
+		<Value type="list" genre="config" instance="1" index="2" label="Device status when the external switch receives 2 clicks" size="1" min="1" max="4" value="1">
+			<Help/>
+			<Item label="Toggle" value="1" />
+			<Item label="On" value="2" />
+			<Item label="Off" value="3" />
+			<Item label="Ignore" value="4" />
+		</Value>
+	
+		<Value type="list" genre="config" instance="1" index="3" label="Device status when the external switch receives 3 clicks" size="1" min="1" max="4" value="1">
+			<Help/>
+			<Item label="Toggle" value="1" />
+			<Item label="On" value="2" />
+			<Item label="Off" value="3" />
+			<Item label="Ignore" value="4" />
+		</Value>
+
+		<Value type="list" genre="config" instance="1" index="4" label="Device status when the external switch is held down" size="1" min="1" max="4" value="1">
+			<Help/>
+			<Item label="Toggle" value="1" />
+			<Item label="On" value="2" />
+			<Item label="Off" value="3" />
+			<Item label="Ignore" value="4" />
+		</Value>
+
+		<Value type="list" genre="config" instance="1" index="5" label="Action on the associated devices when the external switch receives 1 click" size="1" min="1" max="6" value="1">
+			<Help/>
+			<Item label="Toggle" value="1" />
+			<Item label="Ignore if On" value="2" />
+			<Item label="Ignore if Off" value="3" />
+			<Item label="Toggle associated" value="4" />
+			<Item label="Set as initial status value" value="5" />
+			<Item label="Ignore" value="6" />
+		</Value>
+
+		<Value type="list" genre="config" instance="1" index="6" label="Action on the associated devices when the external switch receives 2 clicks" size="1" min="1" max="6" value="1">
+			<Help/>
+			<Item label="Toggle" value="1" />
+			<Item label="Ignore if On" value="2" />
+			<Item label="Ignore if Off" value="3" />
+			<Item label="Toggle associated" value="4" />
+			<Item label="Set as initial status value" value="5" />
+			<Item label="Ignore" value="6" />
+		</Value>
+
+		<Value type="list" genre="config" instance="1" index="7" label="Action on the associated devices when the external switch receives 3 clicks" size="1" min="1" max="6" value="6">
+			<Help/>
+			<Item label="Toggle" value="1" />
+			<Item label="Ignore if On" value="2" />
+			<Item label="Ignore if Off" value="3" />
+			<Item label="Toggle associated" value="4" />
+			<Item label="Set as initial status value" value="5" />
+			<Item label="Ignore" value="6" />
+		</Value>
+
+		<Value type="list" genre="config" instance="1" index="8" label="Action on the associated devices when the external switch is held down" size="1" min="1" max="6" value="1">
+			<Help/>
+			<Item label="Toggle" value="1" />
+			<Item label="Ignore if On" value="2" />
+			<Item label="Ignore if Off" value="3" />
+			<Item label="Toggle associated" value="4" />
+			<Item label="Set as initial status value" value="5" />
+			<Item label="Ignore" value="6" />
+		</Value>
+
+		<Value type="list" genre="config" instance="1" index="9" label="Action performed on all network devices when the external switch receives 1 click" size="1" min="1" max="5" value="5">
+			<Help/>
+			<Item label="Toggle" value="1" />
+			<Item label="Ignore if On" value="2" />
+			<Item label="Ignore if Off" value="3" />
+			<Item label="Set as initial status value" value="4" />
+			<Item label="Ignore" value="5" />
+		</Value>
+
+		<Value type="list" genre="config" instance="1" index="10" label="Action performed on all network devices when the external switch receives 2 clicks" size="1" min="1" max="5" value="5">
+			<Help/>
+			<Item label="Toggle" value="1" />
+			<Item label="Ignore if On" value="2" />
+			<Item label="Ignore if Off" value="3" />
+			<Item label="Set as initial status value" value="4" />
+			<Item label="Ignore" value="5" />
+		</Value>
+
+		<Value type="list" genre="config" instance="1" index="11" label="Action performed on all network devices when the external switch receives 3 clicks" size="1" min="1" max="5" value="5">
+			<Help/>
+			<Item label="Toggle" value="1" />
+			<Item label="Ignore if On" value="2" />
+			<Item label="Ignore if Off" value="3" />
+			<Item label="Set as initial status value" value="4" />
+			<Item label="Ignore" value="5" />
+		</Value>
+
+		<Value type="list" genre="config" instance="1" index="12" label="Action performed on all network devices when the external switch is held down" size="1" min="1" max="5" value="5">
+			<Help/>
+			<Item label="Toggle" value="1" />
+			<Item label="Ignore if On" value="2" />
+			<Item label="Ignore if Off" value="3" />
+			<Item label="Set as initial status value" value="4" />
+			<Item label="Ignore" value="5" />
+		</Value>
+
+		<Value type="list" genre="config" instance="1" index="20" label="Device status upon receipt of a Basic Set" size="1" min="1" max="4" value="1">
+			<Help/>
+			<Item label="How received" value="1" />
+			<Item label="Ignore if On" value="2" />
+			<Item label="Ignore if Off" value="3" />
+			<Item label="Ignore" value="4" />
+		</Value>
+
+		<Value type="byte" genre="config" instance="1" index="30" label="ON_LEVEL value used for devices belonging to Group 2 (1 Click association group)" size="1" min="0" max="255" value="255">
+			<Help>Set value from 0 to 255 (Default: 255)</Help>
+		</Value>
+
+		<Value type="byte" genre="config" instance="1" index="31" label="OFF_LEVEL value used for devices belonging to Group 2 (1 Click association group)" size="1" min="0" max="255" value="0">
+			<Help>Set value from 0 to 255 (Default: 0)</Help>
+		</Value>
+
+		<Value type="byte" genre="config" instance="1" index="32" label="ON_LEVEL value used for devices belonging to Group 3 (2 Click association group)" size="1" min="0" max="255" value="255">
+			<Help>Set value from 0 to 255 (Default: 255)</Help>
+		</Value>
+
+		<Value type="byte" genre="config" instance="1" index="33" label="OFF_LEVEL value used for devices belonging to Group 3 (2 Click association group)" size="1" min="0" max="255" value="0">
+			<Help>Set value from 0 to 255 (Default: 0)</Help>
+		</Value>
+
+		<Value type="byte" genre="config" instance="1" index="34" label="ON_LEVEL value used for devices belonging to Group 4 (3 Click association group)" size="1" min="0" max="255" value="255">
+			<Help>Set value from 0 to 255 (Default: 255)</Help>
+		</Value>
+
+		<Value type="byte" genre="config" instance="1" index="35" label="OFF_LEVEL value used for devices belonging to Group 4 (3 Click association group)" size="1" min="0" max="255" value="0">
+			<Help>Set value from 0 to 255 (Default: 0)</Help>
+		</Value>
+
+		<Value type="byte" genre="config" instance="1" index="36" label="ON_LEVEL value used for devices belonging to Group 5 (Hold association group)" size="1" min="0" max="255" value="255">
+			<Help>Set value from 0 to 255 (Default: 255)</Help>
+		</Value>
+
+		<Value type="byte" genre="config" instance="1" index="37" label="OFF_LEVEL value used for devices belonging to Group 5 (Hold association group)" size="1" min="0" max="255" value="0">
+			<Help>Set value from 0 to 255 (Default: 0)</Help>
+		</Value>
+
+		<Value type="list" genre="config" instance="1" index="40" label="Timer associated with the 1 click event on the external switch" size="1" min="0" max="1" value="0">
+			<Help/>
+			<Item label="Timer disabled" value="0" />
+			<Item label="Timer enabled" value="1" />
+		</Value>
+
+		<Value type="list" genre="config" instance="1" index="41" label="Timer associated with the 2 click event on the external switch" size="1" min="0" max="1" value="0">
+			<Help/>
+			<Item label="Timer disabled" value="0" />
+			<Item label="Timer enabled" value="1" />
+		</Value>
+
+		<Value type="list" genre="config" instance="1" index="42" label="Timer associated with the 3 click event on the external switch" size="1" min="0" max="1" value="0">
+			<Help/>
+			<Item label="Timer disabled" value="0" />
+			<Item label="Timer enabled" value="1" />
+		</Value>
+
+		<Value type="list" genre="config" instance="1" index="43" label="Timer associated with the hold event on the external switch" size="1" min="0" max="1" value="0">
+			<Help/>
+			<Item label="Timer disabled" value="0" />
+			<Item label="Timer enabled" value="1" />
+		</Value>
+
+		<Value type="list" genre="config" instance="1" index="44" label="Timer associated with the reception of a Basic Set command" size="1" min="0" max="1" value="0">
+			<Help/>
+			<Item label="Timer disabled" value="0" />
+			<Item label="Timer enabled" value="1" />
+		</Value>
+
+		<Value type="short" genre="config" instance="1" index="45" label="Switch-off timer" size="2" min="0" max="3600" value="600">
+			<Help>Time in seconds (1 – 3600). Default: 600 (10 minutes)</Help>
+		</Value>
+
+		<Value type="list" genre="config" instance="1" index="46" label="Switch-off timer validity" size="1" min="0" max="1" value="1">
+			<Help/>
+			<Item label="Cancel" value="0" />
+			<Item label="Mantain" value="1" />
+		</Value>
+
+		<Value type="list" genre="config" instance="1" index="50" label="Smoke Alarm, CO, CO2 Action" size="1" min="1" max="4" value="1">
+			<Help/>
+			<Item label="On" value="1" />
+			<Item label="Off" value="2" />
+			<Item label="Flash" value="3" />
+			<Item label="Ignore" value="4" />
+		</Value>
+
+		<Value type="list" genre="config" instance="1" index="51" label="Heat Allarm" size="1" min="1" max="4" value="1">
+			<Help/>
+			<Item label="On" value="1" />
+			<Item label="Off" value="2" />
+			<Item label="Flash" value="3" />
+			<Item label="Ignore" value="4" />
+		</Value>
+
+		<Value type="list" genre="config" instance="1" index="52" label="Water Allarm" size="1" min="1" max="4" value="2">
+			<Help/>
+			<Item label="On" value="1" />
+			<Item label="Off" value="2" />
+			<Item label="Flash" value="3" />
+			<Item label="Ignore" value="4" />
+		</Value>
+
+		<Value type="list" genre="config" instance="1" index="53" label="Home Security" size="1" min="1" max="4" value="3">
+			<Help/>
+			<Item label="On" value="1" />
+			<Item label="Off" value="2" />
+			<Item label="Flash" value="3" />
+			<Item label="Ignore" value="4" />
+		</Value>
+
+		<Value type="byte" genre="config" instance="1" index="54" label="ON time during flashing" size="1" min="0" max="255" value="5">
+			<Help>Set value from 0 to 255 (Default: 5)</Help>
+		</Value>
+
+		<Value type="byte" genre="config" instance="1" index="55" label="OFF time during flashing" size="1" min="0" max="255" value="5">
+			<Help>Set value from 0 to 255 (Default: 5)</Help>
+		</Value>
+
+		<Value type="byte" genre="config" instance="1" index="56" label="Duration of flashing phase" size="1" min="0" max="255" value="10">
+			<Help>Set value from 0 to 255 (Default: 10)</Help>
+		</Value>
+
+		<Value type="list" genre="config" instance="1" index="60" label="Startup Status" size="1" min="1" max="3" value="3">
+			<Help/>
+			<Item label="On" value="1" />
+			<Item label="Off" value="2" />
+			<Item label="Previous status" value="3" />
+		</Value>
+
+		<Value type="list" genre="config" instance="1" index="61" label="Configuration Reset" size="1" min="0" max="4" value="4">
+			<Help/>
+			<Item label="Factory reset" value="0" />
+			<Item label="Reset associations" value="1" />
+			<Item label="Reset configurations" value="2" />
+			<Item label="Ignore" value="4" />
+		</Value>
+
+		<Value type="list" genre="config" instance="1" index="62" label="Type of external switch" size="1" min="0" max="4" value="4">
+			<Help/>
+			<Item label="Ignore" value="0" />
+			<Item label="Button" value="1" />
+			<Item label="Bistable switch" value="2" />
+			<Item label="AC sensing" value="3" />
+			<Item label="Automatic recognition" value="4" />
+		</Value>
+
+		<Value type="byte" genre="config" instance="1" index="63" label="Sensitivity" size="1" min="0" max="255" value="9">
+			<Help>Set value from 0 to 255 (Default: 9)</Help>
+		</Value>
+
+		<Value type="short" genre="config" instance="1" index="64" label="Load protection" size="2" min="0" max="3600" value="0">
+			<Help>Time in seconds (1–3600). Default: 0</Help>
+		</Value>
+
+		<Value type="list" genre="config" instance="1" index="65" label="Learn Mode" size="1" min="0" max="3" value="0">
+			<Help/>
+			<Item label="Ignore" value="0" />
+			<Item label="1 Click" value="1" />
+			<Item label="2 Clicks" value="2" />
+			<Item label="3 Clicks" value="3" />
+		</Value>
+	</CommandClass>
+
+	<!-- Association Groups -->
+	<CommandClass id="133">
+		<Associations num_groups="3">
+			<Group index="1" max_associations="16" label="devices that will be notified of changes in its status" auto="true"/>
+			<Group index="2" max_associations="16" label="devices that will be controlled by a single click on the external switch" auto="true" />
+			<Group index="3" max_associations="16" label="devices that will be controlled by a double click on the external switch" auto="true"/>
+			<Group index="4" max_associations="16" label="devices that will be controlled by a triple click on the external switch" auto="true"/>
+			<Group index="5" max_associations="16" label="devices that will be controlled by hold on the external switch" auto="true"/>
+		</Associations>
+	</CommandClass>
+
+</Product>
