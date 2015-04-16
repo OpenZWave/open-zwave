@@ -113,6 +113,9 @@ Version 1.3
  - Fixed issue 496 - Added Aeon-Labs Z-Stick Gen5 thanks to nechry (Alex)
  - Don't kill Notifications for ValueAdded and ValueRemoved as they might
    not exist right then (Justin)
+ - Pull Request #516 - Add Philio PST02-1C thanks to Ugoviti (Justin)
+ - Pull Request #517 - Add Aeon Labs Gen5 thanks to Ugoviti (Justin)
+ - Pull Request #515 - Add Widom USB104 Universal Relay Switch thanks to Ugoviti (Justin)
 
 Version 1.2 
  - Released on 15/10/14
