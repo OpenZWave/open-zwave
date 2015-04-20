@@ -184,7 +184,7 @@ bool SerialControllerImpl::Init
 	
 	Log::Write( LogLevel_Info, "Trying to open serial port %s (attempt %d)", device.c_str(), _attempts );
 	
-	m_hSerialController = open( device.c_str(), O_RDWR | O_NOCTTY, 0 );
+	m_hSerialController = open( device.c_str(), O_RDWR | O_NOCTTY | O_NONBLOCK, 0 );
 
 	if( -1 == m_hSerialController )
 	{
