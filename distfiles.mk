@@ -41,6 +41,7 @@ DISTFILES =	ChangeLog \
 	config/device_classes.xml \
 	config/device_classes.xsd \
 	config/device_configuration.xsd \
+	config/dragontech/wd-100.xml \
 	config/duwi/ZWES1000.xml \
 	config/duwi/ZWESJ300.xml \
 	config/eurotronic/eur_stellaz.xml \
@@ -125,6 +126,7 @@ DISTFILES =	ChangeLog \
 	config/vision/zs5101eu.xml \
 	config/vitrum/vitrumBS.xml \
 	config/waynedalton/WDTC-20.xml \
+	config/wenzhou/sm103.xml \
 	config/wenzhou/tsp01.xml \
 	config/wenzhou/tz65d.xml \
 	config/wenzhou/tz66d.xml \
