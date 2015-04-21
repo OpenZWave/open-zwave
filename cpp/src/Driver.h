@@ -539,43 +539,7 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		ControllerCommandItem*			m_currentControllerCommand;
 
 		void DoControllerCommand();
-		void UpdateControllerState( ControllerState const _state, ControllerError const _error = ControllerError_None )
-		{
-			if( m_currentControllerCommand != NULL )
-			{
-				if( _state != m_currentControllerCommand->m_controllerState )
-				{
-					m_currentControllerCommand->m_controllerStateChanged = true;
-					m_currentControllerCommand->m_controllerState = _state;
-					switch( _state )
-					{
-						case ControllerState_Error:
-						case ControllerState_Cancel:
-						case ControllerState_Failed:
-						case ControllerState_Sleeping:
-						case ControllerState_NodeFailed:
-						case ControllerState_NodeOK:
-						case ControllerState_Completed:
-						{
-							m_currentControllerCommand->m_controllerCommandDone = true;
-							m_sendMutex->Lock();
-							m_queueEvent[MsgQueue_Controller]->Set();
-							m_sendMutex->Unlock();
-							break;
-						}
-						default:
-						{
-							break;
-						}
-					}
-
-				}
-				if( _error != ControllerError_None )
-				{
-					m_currentControllerCommand->m_controllerReturnError = _error;
-				}
-			}
-		}
+		void UpdateControllerState( ControllerState const _state, ControllerError const _error = ControllerError_None );
 
 		uint8					m_SUCNodeId;
 

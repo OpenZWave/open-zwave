@@ -3481,10 +3481,14 @@ void Manager::HealNetwork
 	}
 }
 //-----------------------------------------------------------------------------
-// <Manager::AddDevice>
+// <Manager::AddNode>
 // Add a Device to the Network.
 //-----------------------------------------------------------------------------
-bool Manager::AddDevice( uint32 const _homeId, bool _doSecurity ) {
+bool Manager::AddNode
+(
+		uint32 const _homeId, bool _doSecurity
+)
+{
 	if (Driver *driver = GetDriver( _homeId ) ) {
 		LockGuard LG(driver->m_nodeMutex);
 		/* we use the Args option to communicate if Security CC should be initialized */
@@ -3495,7 +3499,61 @@ bool Manager::AddDevice( uint32 const _homeId, bool _doSecurity ) {
 	return false;
 }
 
+//-----------------------------------------------------------------------------
+// <Manager::RemoveNode>
+// Remove a Device from the Network.
+//-----------------------------------------------------------------------------
+bool Manager::RemoveNode
+(
+		uint32 const _homeId
+)
+{
+	if (Driver *driver = GetDriver( _homeId ) ) {
+		LockGuard LG(driver->m_nodeMutex);
+		return driver->BeginControllerCommand(
+				Driver::ControllerCommand_RemoveDevice,
+				NULL, NULL, true, 0, 0);
+	}
+	return false;
+}
 
+//-----------------------------------------------------------------------------
+// <Manager::RemoveFailedNode>
+// Remove a Specific Device from the network if its non-responsive.
+//-----------------------------------------------------------------------------
+bool Manager::RemoveFailedNode
+(
+		uint32 const _homeId,
+		uint8 const _nodeId
+)
+{
+	if (Driver *driver = GetDriver( _homeId ) ) {
+		LockGuard LG(driver->m_nodeMutex);
+		return driver->BeginControllerCommand(
+				Driver::ControllerCommand_RemoveFailedNode,
+				NULL, NULL, true, _nodeId, 0);
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::HasNodeFailed>
+// Test if the Controller Believes the Node has Failed.
+//-----------------------------------------------------------------------------
+bool Manager::HasNodeFailed
+(
+		uint32 const _homeId,
+		uint8 const _nodeId
+)
+{
+	if (Driver *driver = GetDriver( _homeId ) ) {
+		LockGuard LG(driver->m_nodeMutex);
+		return driver->BeginControllerCommand(
+				Driver::ControllerCommand_HasNodeFailed,
+				NULL, NULL, true, _nodeId, 0);
+	}
+	return false;
+}
 
 
 //-----------------------------------------------------------------------------

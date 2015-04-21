@@ -1680,11 +1680,49 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 
 		/**
 		 * \brief Start the Inclusion Process to add a Node to the Network.
+		 * The Status of the Node Inclusion is communicated via Notifications. Specifically, you should
+		 * monitor ControllerCommand Notifications.
+		 *
 		 * \param _homeId The Home ID of the Z-Wave network where the device should be added.
 		 * \param _doSecurity Whether to initialize the Network Key on the device if it supports the Security CC
 		 * \return if the AddDevice Command was sent succcesfully to the Controller
 		 */
-		bool AddDevice( uint32 const _homeId, bool _doSecurity = true );
+		bool AddNode( uint32 const _homeId, bool _doSecurity = true );
+
+		/**
+		 * \brief Remove a Device from the Z-Wave Network
+		 * The Status of the Node Removal is communicated via Notifications. Specifically, you should
+		 * monitor ControllerCommand Notifications.
+		 *
+		 * \param _homeId The HomeID of the Z-Wave network where you want to remove the device
+		 * \return if the RemoveDevice Command was send succesfully to the Controller
+		 */
+		bool RemoveNode(uint32 const _homeId);
+
+		/**
+		 * \brief Remove a Failed Device from the Z-Wave Network
+		 * This Command will remove a failed node from the network. The Node should be on the Controllers Failed
+		 * Node List, otherwise this command will fail. You can use the HasNodeFailed function below to test if the Controller
+		 * believes the Node has Failed.
+		 * The Status of the Node Removal is communicated via Notifications. Specifically, you should
+		 * monitor ControllerCommand Notifications.
+		 *
+		 * \param _homeId The HomeID of the Z-Wave network where you want to remove the device
+		 * \param _nodeId The NodeID of the Failed Node.
+		 * \return if the RemoveDevice Command was send succesfully to the Controller
+		 */
+		bool RemoveFailedNode(uint32 const _homeId, uint8 const _nodeId);
+
+		/**
+		 * \brief Check if the Controller Believes a Node has Failed.
+		 * This is different from the IsNodeFailed call in that we test the Controllers Failed Node List, whereas the IsNodeFailed is testing
+		 * our list of Failed Nodes, which might be different.
+		 * The Results will be communicated via Notifications. Specifically, you should monitor the ControllerCommand notifications
+		 *
+		 * \param _homeId The HomeID of the Z-Wave network where you want to remove the device
+		 * \return if the RemoveDevice Command was send succesfully to the Controller
+		 */
+		bool HasNodeFailed(uint32 const _homeId, uint8 const _nodeId);
 
 
 

@@ -90,7 +90,8 @@ namespace OpenZWave
 			Type_AllNodesQueriedSomeDead,				/**< All nodes have been queried but some dead nodes found. */
 			Type_AllNodesQueried,					/**< All nodes have been queried, so client application can expected complete data. */
 			Type_Notification,					/**< An error has occured that we need to report. */
-			Type_DriverRemoved					/**< The Driver is being removed. (either due to Error or by request) Do Not Call Any Driver Related Methods after recieving this call */
+			Type_DriverRemoved,					/**< The Driver is being removed. (either due to Error or by request) Do Not Call Any Driver Related Methods after recieving this call */
+			Type_ControllerCommand				/**< When Controller Commands are executed, Notifications of Success/Failure etc are communicated via this Notification */
 		};
 
 		/**
@@ -141,10 +142,10 @@ namespace OpenZWave
 		uint8 GetGroupIdx()const{ assert(Type_Group==m_type); return m_byte; }
 
 		/**
-		 * Get the event value of a notification.  Only valid in NotificationType::Type_NodeEvent notifications.
+		 * Get the event value of a notification.  Only valid in NotificationType::Type_NodeEvent and NotificationType::Type_ControllerCommand notifications.
 		 * \return the event value.
 		 */
-		uint8 GetEvent()const{ assert(Type_NodeEvent==m_type); return m_byte; }
+		uint8 GetEvent()const{ assert((Type_NodeEvent==m_type) || (Type_ControllerCommand == m_type)); return m_event; }
 
 		/**
 		 * Get the button id of a notification.  Only valid in NotificationType::Type_CreateButton, DeleteButton,
@@ -163,7 +164,7 @@ namespace OpenZWave
 		 * Get the notification code from a notification. Only valid for NotificationType::Type_Notification notifications.
 		 * \return the notification code.
 		 */
-		uint8 GetNotification()const{ assert(Type_Notification==m_type); return m_byte; }
+		uint8 GetNotification()const{ assert((Type_Notification==m_type) || (Type_ControllerCommand == m_type)); return m_byte; }
 
 		/**
 		 * Helper function to simplify wrapping the notification class.  Should not normally need to be called.
@@ -171,22 +172,30 @@ namespace OpenZWave
 		 */
 		uint8 GetByte()const{ return m_byte; }
 
+		/**
+		 * Helper Function to return the Notification as a String
+		 * \return A string representation of this Notification
+		 */
+		string GetAsString();
+
+
 	private:
-		Notification( NotificationType _type ): m_type( _type ), m_byte(0){}
+		Notification( NotificationType _type ): m_type( _type ), m_byte(0), m_event(0) {}
 		~Notification(){}
 
 		void SetHomeAndNodeIds( uint32 const _homeId, uint8 const _nodeId ){ m_valueId = ValueID( _homeId, _nodeId ); }
 		void SetHomeNodeIdAndInstance ( uint32 const _homeId, uint8 const _nodeId, uint32 const _instance ){ m_valueId = ValueID( _homeId, _nodeId, _instance ); }
 		void SetValueId( ValueID const& _valueId ){ m_valueId = _valueId; }
 		void SetGroupIdx( uint8 const _groupIdx ){ assert(Type_Group==m_type); m_byte = _groupIdx; }
-		void SetEvent( uint8 const _event ){ assert(Type_NodeEvent==m_type); m_byte = _event; }
+		void SetEvent( uint8 const _event ){ assert(Type_NodeEvent==m_type || Type_ControllerCommand == m_type); m_event = _event; }
 		void SetSceneId( uint8 const _sceneId ){ assert(Type_SceneEvent==m_type); m_byte = _sceneId; }
 		void SetButtonId( uint8 const _buttonId ){ assert(Type_CreateButton==m_type||Type_DeleteButton==m_type||Type_ButtonOn==m_type||Type_ButtonOff==m_type); m_byte = _buttonId; }
-		void SetNotification( uint8 const _noteId ){ assert(Type_Notification==m_type); m_byte = _noteId; }
+		void SetNotification( uint8 const _noteId ){ assert((Type_Notification==m_type) || (Type_ControllerCommand == m_type)); m_byte = _noteId; }
 
 		NotificationType		m_type;
 		ValueID				m_valueId;
 		uint8				m_byte;
+		uint8				m_event;
 	};
 
 } //namespace OpenZWave
