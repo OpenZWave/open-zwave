@@ -118,6 +118,7 @@ Version 1.3
  - Pull Request #515 - Add Widom USB104 Universal Relay Switch thanks to Ugoviti (Justin)
  - Pull Request #508 - Update Fibaro FGFS101 Association Groups thanks to Nechry (Justin)
  - Pull Request #504 - CRC16Encap CC Support from xs4 (Justin)
+ - Pull Request #522 - Dragon Tech In wall dimmer from Stevejbauer (Justin)
 
 Version 1.2 
  - Released on 15/10/14
