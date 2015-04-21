@@ -298,10 +298,11 @@ namespace OpenZWave {
 		uint32 encryptedpacketsize = e_length - 8 - 8 - 2 - 2;
 
 		/* if the Encrypted Packet Size is less than 3, there is probably a issue, drop it. */
-		if (encryptedpacketsize <= 3) {
+		if (encryptedpacketsize < 3) {
 			Log::Write(LogLevel_Warning, _sendingNode, "Encrypted Packet Size is Less than 3 Bytes. Dropping");
 			return false;
 		}
+
 
 		uint8 encyptedpacket[32];
 
