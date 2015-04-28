@@ -1422,8 +1422,10 @@ void Node::SetSecuredClasses
 		 * encrypt it regardless */
 		else if( CommandClasses::IsSupported( _data[i] ) )
 		{
+
 			if( CommandClass* pCommandClass = AddCommandClass( _data[i] ) )
 			{
+
 				// If this class came after the COMMAND_CLASS_MARK, then we do not create values.
 				if( afterMark )
 				{
