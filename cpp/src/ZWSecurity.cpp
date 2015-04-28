@@ -361,6 +361,7 @@ namespace OpenZWave {
 	SecurityStrategy ShouldSecureCommandClass(uint8 CommandClass) {
 		string securestrategy;
 		Options::Get()->GetOptionAsString( "SecurityStrategy", &securestrategy );
+
 		if (ToUpper(securestrategy) == "ESSENTIAL") {
 			return SecurityStrategy_Essential;
 		} else if (ToUpper(securestrategy) == "SUPPORTED") {
