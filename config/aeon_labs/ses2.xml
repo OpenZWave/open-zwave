@@ -145,8 +145,9 @@
 
   <!-- Association Groups -->
   <CommandClass id="133">
-    <Associations num_groups="1">
+    <Associations num_groups="2">
       <Group index="1" max_associations="5" label="Reports" auto="true" />
+      <Group index="1" max_associations="5" label="RetransmitSwitchCC" auto="true" />
     </Associations>
   </CommandClass>
 </Product>
