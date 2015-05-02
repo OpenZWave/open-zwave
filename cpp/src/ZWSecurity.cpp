@@ -36,9 +36,8 @@
 #include "command_classes/MultiInstance.h"
 #include "command_classes/Security.h"
 #include "aes/aescpp.h"
-#ifndef DEBUG
-#define DEBUG
-#endif
+
+
 namespace OpenZWave {
 	//using namespace OpenZWave;
 
@@ -337,7 +336,7 @@ namespace OpenZWave {
 			Log::Write(LogLevel_Warning, _sendingNode, "Failed to Decrypt Packet");
 			return false;
 		}
-		PrintHex("Decrypted", m_buffer, encryptedpacketsize);
+		Log::Write(LogLevel_Detail, _sendingNode, "Decrypted Packet: %s", PktToString(m_buffer, encryptedpacketsize).c_str());
 #endif
 		uint8 mac[32];
 		/* we have to regenerate the IV as the ofb decryption routine will alter it. */
