@@ -121,6 +121,9 @@ Version 1.3
  - Pull Request #522 - Dragon Tech In wall dimmer from Stevejbauer (Justin)
  - Fix Issue #523 - Add Wenzhou Door/Window Sensor from whiteduck22 (Justin)
  - Pull Request #534 - Add Aeon Labs Recessed Door Sensor Gen5 from xxv (Justin)
+ - Pull Request #532 - Fix Aeon Labs DoorWindow Sensor Config from Nechry (Justin)
+ - Pull Request #529 - Updated Config for the Zipato MiniKeyPad from Nechry (Justin)
+ - Pull Request #528 and #527 - Add Aeon Labs Key Fob Gen5 Config from Nechry (Justin)
 
 Version 1.2 
  - Released on 15/10/14
