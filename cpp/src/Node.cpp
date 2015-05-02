@@ -120,6 +120,7 @@ m_basicprotocolInfoReceived( false ),
 m_nodeInfoReceived( false ),
 m_manufacturerSpecificClassReceived( false ),
 m_nodeInfoSupported( true ),
+m_refreshonNodeInfoFrame ( true ),
 m_nodeAlive( true ),	// assome live node
 m_listening( true ),	// assume we start out listening
 m_frequentListening( false ),
@@ -962,6 +963,15 @@ void Node::ReadXML
 		m_nodeInfoSupported = !strcmp( str, "true" );
 	}
 
+	m_refreshonNodeInfoFrame = true;
+	str = _node->Attribute( "refreshonnodeinfoframe" );
+	if ( str )
+		m_refreshonNodeInfoFrame = !strcmp (str, "true" );
+
+	std::cout << str << std::endl;
+	exit(-1);
+
+
 	// Read the manufacturer info and create the command classes
 	TiXmlElement const* child = _node->FirstChildElement();
 	while( child )
@@ -1033,9 +1043,11 @@ void Node::ReadDeviceProtocolXML
 		TiXmlElement const* _ccsElement
 )
 {
+
 	TiXmlElement const* ccElement = _ccsElement->FirstChildElement();
 	while( ccElement )
 	{
+
 		char const* str = ccElement->Value();
 		if( str && !strcmp( str, "Protocol" ) )
 		{
@@ -1043,6 +1055,12 @@ void Node::ReadDeviceProtocolXML
 			if( str )
 			{
 				m_nodeInfoSupported = !strcmp( str, "true" );
+			}
+
+			str = ccElement->Attribute( "refreshonnodeinfoframe" );
+			if ( str )
+			{
+				m_refreshonNodeInfoFrame = !strcmp( str, "true" );
 			}
 
 			// Some controllers support API calls that aren't advertised in their returned data.
@@ -1183,6 +1201,11 @@ void Node::WriteXML
 	if( !m_nodeInfoSupported )
 	{
 		nodeElement->SetAttribute( "nodeinfosupported", "false" );
+	}
+
+	if (!m_refreshonNodeInfoFrame)
+	{
+		nodeElement->SetAttribute( "refreshonnodeinfoframe", "false" );
 	}
 
 	nodeElement->SetAttribute( "query_stage", c_queryStageNames[m_queryStage] );
@@ -1554,8 +1577,9 @@ void Node::UpdateNodeInfo
 	}
 	else
 	{
-		// We probably only need to do the dynamic stuff
-		SetQueryStage( QueryStage_Dynamic );
+		/* Only Refresh if the Device Config Specifies it  - Only the dynamic stuff */
+		if (m_refreshonNodeInfoFrame)
+			SetQueryStage( QueryStage_Dynamic );
 	}
 
 	// Treat the node info frame as a sign that the node is awake
