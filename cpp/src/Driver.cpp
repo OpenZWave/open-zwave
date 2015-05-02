@@ -4322,7 +4322,7 @@ void Driver::InitNode
 		// Request the node info
 		m_nodes[_nodeId]->SetQueryStage( Node::QueryStage_ProtocolInfo );
 	} else {
-		m_nodes[_nodeId]->SetSecured(secure);
+		if (isNetworkKeySet()) m_nodes[_nodeId]->SetSecured(secure);
 		m_nodes[_nodeId]->SetProtocolInfo(_protocolInfo, _length);
 	}
 	Log::Write(LogLevel_Info, "Initilizing Node. New Node: %s (%s)", static_cast<Node *>(m_nodes[_nodeId])->IsAddingNode() ? "true" : "false", newNode ? "true" : "false");
@@ -6472,7 +6472,7 @@ uint8 *Driver::GetNetworkKey() {
 	std::string networkKey;
 	std::vector<std::string> elems;
 	unsigned int tempkey[16];
-	static uint8 keybytes[16];
+	static uint8 keybytes[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 	static bool keySet = false;
 	if (keySet == false) {
 		Options::Get()->GetOptionAsString("NetworkKey", &networkKey );
@@ -6511,8 +6511,6 @@ bool Driver::SendEncryptedMessage() {
 	uint8 length = m_currentMsg->GetLength();
 	m_expectedCallbackId = m_currentMsg->GetCallbackId();
 	Log::Write(LogLevel_Info, m_currentMsg->GetTargetNodeId(), "Sending (%s) message (Callback ID=0x%.2x, Expected Reply=0x%.2x) - %s", c_sendQueueNames[m_currentMsgQueueSource], m_expectedCallbackId, m_expectedReply, m_currentMsg->GetAsString().c_str());
-	//m_expectedReply = FUNC_ID_ZW_SEND_DATA;
-	//m_expectedCommandClassId = Security::StaticGetCommandClassId();
 
 	m_controller->Write( buffer, length );
 	m_currentMsg->clearNonce();
@@ -6549,9 +6547,6 @@ bool Driver::SendNonceRequest(string logmsg) {
 
 	m_controller->Write(m_buffer, 11);
 
-	//m_expectedReply = FUNC_ID_APPLICATION_COMMAND_HANDLER;
-	//m_expectedCommandClassId = Security::StaticGetCommandClassId();
-
 	return true;
 }
 
@@ -6568,6 +6563,11 @@ bool Driver::initNetworkKeys(bool newnode) {
 	this->EncryptKey = new aes_encrypt_ctx;
 
 	Log::Write(LogLevel_Info, GetControllerNodeId(), "Setting Up %s Network Key for Secure Communications", newnode == true ? "Inclusion" : "Provided");
+
+	if (!isNetworkKeySet()) {
+		Log::Write(LogLevel_Warning, GetControllerNodeId(), "Failed - Network Key Not Set");
+		return false;
+	}
 
 	if (aes_init() == EXIT_FAILURE) {
 		Log::Write(LogLevel_Warning, GetControllerNodeId(), "Failed to Init AES Engine");
@@ -6675,3 +6675,12 @@ aes_encrypt_ctx *Driver::GetEncKey
 
 	return this->EncryptKey;
 };
+
+bool Driver::isNetworkKeySet() {
+	std::string networkKey;
+	if (!Options::Get()->GetOptionAsString("NetworkKey", &networkKey )) {
+		return false;
+	} else {
+		return networkKey.length() <= 0 ? false : true;
+	}
+}

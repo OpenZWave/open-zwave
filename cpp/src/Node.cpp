@@ -1127,8 +1127,14 @@ void Node::ReadCommandClassesXML
 				}
 				else
 				{
+
 					if( NULL == cc )
 					{
+						if (Security::StaticGetCommandClassId() == id && GetDriver()->isNetworkKeySet()) {
+							Log::Write(LogLevel_Warning, "Security Command Class cannot be Loaded. NetworkKey is not set");
+							continue;
+						}
+
 						// Command class support does not exist yet, so we create it
 						cc = AddCommandClass( id );
 					}
@@ -1378,9 +1384,13 @@ void Node::SetProtocolInfo
 	if (m_secured) {
 		for (int i = 3; i < _length; i++) {
 			if (_protocolInfo[i] == Security::StaticGetCommandClassId()) {
-				/* Wheee... Security CC is supported... */
-				if (Security *pCommandClass = static_cast<Security *>(AddCommandClass(_protocolInfo[i]))) {
-					pCommandClass->ExchangeNetworkKeys();
+				if (!GetDriver()->isNetworkKeySet()) {
+					Log::Write(LogLevel_Warning, m_nodeId, "Security Command Class cannot be loaded. NetworkKey is not Set");
+				} else {
+					/* Wheee... Security CC is supported... */
+					if (Security *pCommandClass = static_cast<Security *>(AddCommandClass(_protocolInfo[i]))) {
+						pCommandClass->ExchangeNetworkKeys();
+					}
 				}
 			}
 		}
@@ -1406,6 +1416,11 @@ void Node::SetSecuredClasses
 	uint32 i;
 	m_secured = true;
 	Log::Write( LogLevel_Info, m_nodeId, "  Secured command classes for node %d:", m_nodeId );
+
+	if (!GetDriver()->isNetworkKeySet()) {
+		Log::Write (LogLevel_Warning, m_nodeId, "  Secured Command Classes cannot be enabled as Network Key is not set");
+		return;
+	}
 
 
 	bool afterMark = false;
@@ -1445,7 +1460,6 @@ void Node::SetSecuredClasses
 		 * encrypt it regardless */
 		else if( CommandClasses::IsSupported( _data[i] ) )
 		{
-
 			if( CommandClass* pCommandClass = AddCommandClass( _data[i] ) )
 			{
 
@@ -1538,6 +1552,10 @@ void Node::UpdateNodeInfo
 
 			if( CommandClasses::IsSupported( _data[i] ) )
 			{
+				if (Security::StaticGetCommandClassId() == _data[i] && !GetDriver()->isNetworkKeySet()) {
+					Log::Write (LogLevel_Info, m_nodeId, "    %s (Disabled - Network Key Not Set)", Security::StaticGetCommandClassName().c_str());
+					continue;
+				}
 				if( CommandClass* pCommandClass = AddCommandClass( _data[i] ) )
 				{
 					/* this CC was in the NIF frame */
@@ -2863,6 +2881,11 @@ bool Node::AddMandatoryCommandClasses
 
 		if( CommandClasses::IsSupported( cc ) )
 		{
+			if (Security::StaticGetCommandClassId() == cc && !GetDriver()->isNetworkKeySet()) {
+				Log::Write(LogLevel_Warning, m_nodeId, "Security Command Class Cannot be Enabled - NetworkKey is not set");
+				continue;
+			}
+
 			if( CommandClass* commandClass = AddCommandClass( cc ) )
 			{
 				// If this class came after the COMMAND_CLASS_MARK, then we do not create values.

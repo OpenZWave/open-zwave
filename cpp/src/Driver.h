@@ -821,6 +821,7 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 	public:
 		aes_encrypt_ctx *GetAuthKey();
 		aes_encrypt_ctx *GetEncKey();
+		bool isNetworkKeySet();
 
 	private:
 		bool initNetworkKeys(bool newnode);
