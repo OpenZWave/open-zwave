@@ -1,0 +1,8 @@
+.dep/
+.lib/
+MinOZW
+cpp/src/vers.cpp
+libopenzwave.a
+libopenzwave.pc
+libopenzwave.so*
+libopenzwave.so
