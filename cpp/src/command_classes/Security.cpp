@@ -43,34 +43,6 @@
 using namespace OpenZWave;
 
 
-#define UNUSED(x) (void)(x)
-
-
-/* in order to communicate with a Secure Device, we need to send the Network Key to the
- * Device with a SecurityCmd_NetworkKeySet packet containing our Network Key.
- * Fairly simple right?
- *
- * BUT
- *
- * The NetworkKeySet should be done during a inclusion of the device (there is technically a timeout)
- * and not at any random time. This means that when including Secure Devices, we must use the OZW AddNode
- * Controller Commands, and then once the Inclusion is complete, initiate a NetworkKeySet. Including a
- * Secure Device by say using the button on a Z-Stick is technically not possible, as OZW needs to send
- * the Network Key right away after negotiating the SecurityScheme (before the timeout).
- *
- */
-
-
-
-
-uint8_t SecuritySchemes[1][16] = {
-		{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
-};
-
-uint8_t EncryptPassword[16] = {0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA};
-uint8_t AuthPassword[16] = {0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55};
-
-
 
 Security::Security
 (
@@ -210,9 +182,6 @@ bool Security::HandleSupportedReport
 	PrintHex("Security Classes", _data, _length);
 #endif
 	GetNodeUnsafe()->SetSecuredClasses(_data, _length);
-	/* advance the Query Stage */
-	//GetNodeUnsafe()->QueryStageComplete(Node::QueryStage_SecurityReport);
-	//GetNodeUnsafe()->AdvanceQueries();
 	return true;
 }
 

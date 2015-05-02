@@ -3555,6 +3555,83 @@ bool Manager::HasNodeFailed
 	return false;
 }
 
+//-----------------------------------------------------------------------------
+// <Manager::AssignReturnRoute>
+// Ask a Node to update its Return Route to the Controller
+//-----------------------------------------------------------------------------
+bool Manager::AssignReturnRoute
+(
+		uint32 const _homeId,
+		uint8 const _nodeId
+)
+{
+	if (Driver *driver = GetDriver( _homeId ) ) {
+		LockGuard LG(driver->m_nodeMutex);
+		return driver->BeginControllerCommand(
+				Driver::ControllerCommand_AssignReturnRoute,
+				NULL, NULL, true, _nodeId, 0);
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::RequestNodeNeighborUpdate>
+// Ask a Node to update its Neighbor Table.
+//-----------------------------------------------------------------------------
+bool Manager::RequestNodeNeighborUpdate
+(
+		uint32 const _homeId,
+		uint8 const _nodeId
+)
+{
+	if (Driver *driver = GetDriver( _homeId ) ) {
+		LockGuard LG(driver->m_nodeMutex);
+		return driver->BeginControllerCommand(
+				Driver::ControllerCommand_RequestNodeNeighborUpdate,
+				NULL, NULL, true, _nodeId, 0);
+	}
+	return false;
+}
+
+
+//-----------------------------------------------------------------------------
+// <Manager::DeleteAllReturnRoutes>
+// Ask a Node to delete all its Return Routes
+//-----------------------------------------------------------------------------
+bool Manager::DeleteAllReturnRoutes
+(
+		uint32 const _homeId,
+		uint8 const _nodeId
+)
+{
+	if (Driver *driver = GetDriver( _homeId ) ) {
+		LockGuard LG(driver->m_nodeMutex);
+		return driver->BeginControllerCommand(
+				Driver::ControllerCommand_DeleteAllReturnRoutes,
+				NULL, NULL, true, _nodeId, 0);
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::SendNodeInformation>
+// Send a NIF frame from the Controller to the Node
+//-----------------------------------------------------------------------------
+bool Manager::SendNodeInformation
+(
+		uint32 const _homeId,
+		uint8 const _nodeId
+)
+{
+	if (Driver *driver = GetDriver( _homeId ) ) {
+		LockGuard LG(driver->m_nodeMutex);
+		return driver->BeginControllerCommand(
+				Driver::ControllerCommand_SendNodeInformation,
+				NULL, NULL, true, _nodeId, 0);
+	}
+	return false;
+}
+
 
 //-----------------------------------------------------------------------------
 // <Manager::GetNumScenes>

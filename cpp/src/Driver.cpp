@@ -857,29 +857,6 @@ Node* Driver::GetNode
 	return NULL;
 }
 
-#if 0
-//-----------------------------------------------------------------------------
-// <Driver::LockNodes>
-// Lock the nodes so that no other thread can modify them
-//-----------------------------------------------------------------------------
-void Driver::LockNodes
-(
-)
-{
-	m_nodeMutex->Lock();
-}
-
-//-----------------------------------------------------------------------------
-// <Driver::ReleaseNodes>
-// Unlock the nodes so that other threads can modify them
-//-----------------------------------------------------------------------------
-void Driver::ReleaseNodes
-(
-)
-{
-	m_nodeMutex->Unlock();
-}
-#endif
 //-----------------------------------------------------------------------------
 //	Sending Z-Wave messages
 //-----------------------------------------------------------------------------
@@ -1253,16 +1230,6 @@ bool Driver::WriteMsg
 			}
 		}
 	}
-#if 0
-	std::cout << "WriteMsg ()" << std::endl;
-	std::cout << "m_expectedCallbackId: " << std::hex << (int)m_expectedCallbackId << std::endl;
-	std::cout << "m_expectedCommandClassId: " << (int)m_expectedCommandClassId << std::endl;
-	std::cout << "m_expectedNodeId: " << (int)m_expectedNodeId << std::endl;
-	std::cout << "m_expectedReply: " << (int)m_expectedReply << std::endl;
-	std::cout << "m_waitingForAck: " << (bool)m_waitingForAck << std::endl;
-	std::cout << std::dec << std::endl;
-#endif
-
 	return true;
 }
 
@@ -1882,16 +1849,6 @@ void Driver::ProcessMsg
 	}
 
 
-#if 0
-	std::cout << "ProcessMsg (start)" << std::endl;
-	std::cout << "m_expectedCallbackId: " << std::hex << (int)m_expectedCallbackId << " " << (int)_data[2] << std::endl;
-	std::cout << "m_expectedCommandClassId: " << (int)m_expectedCommandClassId << " " << (int)_data[5] << std::endl;
-	std::cout << "m_expectedNodeId: " << (int)m_expectedNodeId << " " << (int) _data[3] << std::endl;
-	std::cout << "m_expectedReply: " << (int)m_expectedReply << " " << (int)_data[1] << std::endl;
-	std::cout << "m_waitingForAck: " << (bool)m_waitingForAck << std::endl;
-	std::cout << std::dec << std::endl;
-#endif
-
 	if( RESPONSE == _data[0] )
 	{
 		switch( _data[1] )
@@ -2271,15 +2228,6 @@ void Driver::ProcessMsg
 	// Generic callback handling
 	if( handleCallback )
 	{
-#if 0
-		std::cout << "ProcessMsg (handleCallback)" << std::endl;
-		std::cout << "m_expectedCallbackId: " << std::hex << (int)m_expectedCallbackId << " " << (int)_data[2] << std::endl;
-		std::cout << "m_expectedCommandClassId: " << (int)m_expectedCommandClassId << " " << (int)_data[5] << std::endl;
-		std::cout << "m_expectedNodeId: " << (int)m_expectedNodeId << " " << (int) _data[3] << std::endl;
-		std::cout << "m_expectedReply: " << (int)m_expectedReply << " " << (int)_data[1] << std::endl;
-		std::cout << "m_waitingForAck: " << (bool)m_waitingForAck << std::endl;
-		std::cout << std::dec << std::endl;
-#endif
 		if( ( m_expectedCallbackId || m_expectedReply ) )
 		{
 			if( m_expectedCallbackId )
@@ -2320,15 +2268,6 @@ void Driver::ProcessMsg
 					}
 				}
 			}
-#if 0
-			std::cout << "ProcessMsg (Final test)" << std::endl;
-			std::cout << "m_expectedCallbackId: " << std::hex << (int)m_expectedCallbackId << " " << (int)_data[2] << std::endl;
-			std::cout << "m_expectedCommandClassId: " << (int)m_expectedCommandClassId << " " << (int)_data[5] << std::endl;
-			std::cout << "m_expectedNodeId: " << (int)m_expectedNodeId << " " << (int) _data[3] << std::endl;
-			std::cout << "m_expectedReply: " << (int)m_expectedReply << " " << (int)_data[1] << std::endl;
-			std::cout << "m_waitingForAck: " << (bool)m_waitingForAck << std::endl;
-			std::cout << std::dec << std::endl;
-#endif
 			if( !( m_expectedCallbackId || m_expectedReply ) )
 			{
 				Log::Write( LogLevel_Detail, _data[3], "  Message transaction complete" );
@@ -6577,16 +6516,6 @@ bool Driver::SendEncryptedMessage() {
 
 	m_controller->Write( buffer, length );
 	m_currentMsg->clearNonce();
-
-#if 0
-	std::cout << "m_expectedCallbackId: " << std::hex << (int)m_expectedCallbackId << std::endl;
-	std::cout << "m_expectedCommandClassId: " << (int)m_expectedCommandClassId << std::endl;
-	std::cout << "m_expectedNodeId: " << (int)m_expectedNodeId << std::endl;
-	std::cout << "m_expectedReply: " << (int)m_expectedReply << std::endl;
-	std::cout << "m_waitingForAck: " << (bool)m_waitingForAck << std::endl;
-	std::cout << std::dec << std::endl;
-#endif
-
 
 	return true;
 }

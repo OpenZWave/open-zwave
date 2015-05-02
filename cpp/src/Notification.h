@@ -60,6 +60,7 @@ namespace OpenZWave
 		 * Notifications of various Z-Wave events sent to the watchers
 		 * registered with the Manager::AddWatcher method.
 		 * \see Manager::AddWatcher
+		 * \see Manager::BeginControllerCommand
 	     */
 		enum NotificationType
 		{
@@ -91,7 +92,8 @@ namespace OpenZWave
 			Type_AllNodesQueried,					/**< All nodes have been queried, so client application can expected complete data. */
 			Type_Notification,					/**< An error has occured that we need to report. */
 			Type_DriverRemoved,					/**< The Driver is being removed. (either due to Error or by request) Do Not Call Any Driver Related Methods after recieving this call */
-			Type_ControllerCommand				/**< When Controller Commands are executed, Notifications of Success/Failure etc are communicated via this Notification */
+			Type_ControllerCommand				/**< When Controller Commands are executed, Notifications of Success/Failure etc are communicated via this Notification
+												  * Notification::GetEvent returns Driver::ControllerCommand and Notification::GetNotification returns Driver::ControllerState */
 		};
 
 		/**
@@ -136,32 +138,32 @@ namespace OpenZWave
 		ValueID const& GetValueID()const{ return m_valueId; }
 
 		/**
-		 * Get the index of the association group that has been changed.  Only valid in NotificationType::Type_Group notifications.
+		 * Get the index of the association group that has been changed.  Only valid in Notification::Type_Group notifications.
 		 * \return the group index.
 		 */
 		uint8 GetGroupIdx()const{ assert(Type_Group==m_type); return m_byte; }
 
 		/**
-		 * Get the event value of a notification.  Only valid in NotificationType::Type_NodeEvent and NotificationType::Type_ControllerCommand notifications.
+		 * Get the event value of a notification.  Only valid in Notification::Type_NodeEvent and Notification::Type_ControllerCommand notifications.
 		 * \return the event value.
 		 */
 		uint8 GetEvent()const{ assert((Type_NodeEvent==m_type) || (Type_ControllerCommand == m_type)); return m_event; }
 
 		/**
-		 * Get the button id of a notification.  Only valid in NotificationType::Type_CreateButton, DeleteButton,
-		 * ButtonOn and ButtonOff notifications.
+		 * Get the button id of a notification.  Only valid in Notification::Type_CreateButton, Notification::Type_DeleteButton,
+		 * Notification::Type_ButtonOn and Notification::Type_ButtonOff notifications.
 		 * \return the button id.
 		 */
 		uint8 GetButtonId()const{ assert(Type_CreateButton==m_type || Type_DeleteButton==m_type || Type_ButtonOn==m_type || Type_ButtonOff==m_type); return m_byte; }
 
 		/**
-		 * Get the scene Id of a notification.  Only valid in NotificationType::Type_SceneEvent notifications.
+		 * Get the scene Id of a notification.  Only valid in Notification::Type_SceneEvent notifications.
 		 * \return the event value.
 		 */
 		uint8 GetSceneId()const{ assert(Type_SceneEvent==m_type); return m_byte; }
 
 		/**
-		 * Get the notification code from a notification. Only valid for NotificationType::Type_Notification notifications.
+		 * Get the notification code from a notification. Only valid for Notification::Type_Notification or Notification::Type_ControllerCommand notifications.
 		 * \return the notification code.
 		 */
 		uint8 GetNotification()const{ assert((Type_Notification==m_type) || (Type_ControllerCommand == m_type)); return m_byte; }
