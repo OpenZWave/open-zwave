@@ -27,6 +27,7 @@ DISTFILES =	ChangeLog \
 	config/act/zrw103.xml \
 	config/aeon_labs/alms.xml \
 	config/aeon_labs/doorwindow.xml \
+	config/aeon_labs/dsd31.xml \
 	config/aeon_labs/hem.xml \
 	config/aeon_labs/hemg2.xml \
 	config/aeon_labs/keyfob.xml \
@@ -40,6 +41,7 @@ DISTFILES =	ChangeLog \
 	config/device_classes.xml \
 	config/device_classes.xsd \
 	config/device_configuration.xsd \
+	config/dragontech/wd-100.xml \
 	config/duwi/ZWES1000.xml \
 	config/duwi/ZWESJ300.xml \
 	config/eurotronic/eur_stellaz.xml \
@@ -94,6 +96,7 @@ DISTFILES =	ChangeLog \
 	config/options.xsd \
 	config/philio/pan04.xml \
 	config/philio/psm02.xml \
+	config/philio/pst02-1c.xml \
 	config/polycontrol/doorlock.xml \
 	config/polycontrol/keypad.xml \
 	config/popp/123580.xml \
@@ -123,11 +126,13 @@ DISTFILES =	ChangeLog \
 	config/vision/zs5101eu.xml \
 	config/vitrum/vitrumBS.xml \
 	config/waynedalton/WDTC-20.xml \
+	config/wenzhou/sm103.xml \
 	config/wenzhou/tsp01.xml \
 	config/wenzhou/tz65d.xml \
 	config/wenzhou/tz66d.xml \
 	config/wenzhou/tz67.xml \
 	config/wenzhou/tz88.xml \
+	config/widom/UBS104.xml \
 	config/zipato/MiniKeypad.xml \
 	config/zipato/RGBBulb.xml \
 	config/zwave.me/ZME_05431.xml \
@@ -220,6 +225,7 @@ DISTFILES =	ChangeLog \
 	cpp/src/Msg.h \
 	cpp/src/Node.cpp \
 	cpp/src/Node.h \
+	cpp/src/Notification.cpp \
 	cpp/src/Notification.h \
 	cpp/src/OZWException.h \
 	cpp/src/Options.cpp \
@@ -228,6 +234,8 @@ DISTFILES =	ChangeLog \
 	cpp/src/Scene.h \
 	cpp/src/Utils.cpp \
 	cpp/src/Utils.h \
+	cpp/src/ZWSecurity.cpp \
+	cpp/src/ZWSecurity.h \
 	cpp/src/aes/aes.h \
 	cpp/src/aes/aes.txt \
 	cpp/src/aes/aes_modes.c \
