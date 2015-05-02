@@ -263,6 +263,7 @@ namespace OpenZWave
 			bool		m_nodeInfoReceived;
 			bool		m_manufacturerSpecificClassReceived;
 			bool		m_nodeInfoSupported;
+			bool		m_refreshonNodeInfoFrame;
 			bool		m_nodeAlive;
 
 			//-----------------------------------------------------------------------------
