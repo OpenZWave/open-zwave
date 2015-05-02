@@ -88,10 +88,13 @@ indep := $(notdir $(filter-out $(top_srcdir)/cpp/src/vers.cpp, $(wildcard $(top_
 aes := $(notdir $(wildcard $(top_srcdir)/cpp/src/aes/*.c))
 
 
-default: $(LIBDIR)/libopenzwave.a $(LIBDIR)/$(SHARED_LIB_NAME)
+default: printversion $(LIBDIR)/libopenzwave.a $(LIBDIR)/$(SHARED_LIB_NAME)
 
 clean:
 	@rm -rf $(DEPDIR) $(OBJDIR) $(LIBDIR)/libopenzwave.so* $(LIBDIR)/libopenzwave*.dylib $(LIBDIR)/libopenzwave.a $(top_builddir)/libopenzwave.pc $(top_builddir)/docs/api $(top_builddir)/Doxyfile $(top_srcdir)/cpp/src/vers.cpp
+
+printversion:
+	@echo "Building OpenZWave Version $(GITVERSION)"	
 
 
 -include $(patsubst %.cpp,$(DEPDIR)/%.d,$(tinyxml))
@@ -104,7 +107,7 @@ clean:
 
 #create a vers.cpp file that contains our version and subversion revisions
 $(top_srcdir)/cpp/src/vers.cpp:
-	@echo "Creating $(top_srcdir)/cpp/src/vers.cpp file"
+	@echo "Creating vers.cpp"
 	@echo '#include "Defs.h"' > $(top_srcdir)/cpp/src/vers.cpp
 	@echo 'uint16_t ozw_vers_major = $(VERSION_MAJ);' >> $(top_srcdir)/cpp/src/vers.cpp
 	@echo 'uint16_t ozw_vers_minor = $(VERSION_MIN);' >> $(top_srcdir)/cpp/src/vers.cpp
