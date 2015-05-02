@@ -318,6 +318,7 @@ exit 0</Command>
     <ClCompile Include="..\..\..\src\Manager.cpp" />
     <ClCompile Include="..\..\..\src\Msg.cpp" />
     <ClCompile Include="..\..\..\src\Node.cpp" />
+    <ClCompile Include="..\..\..\src\Notification.cpp" />
     <ClCompile Include="..\..\..\src\Options.cpp" />
     <ClCompile Include="..\..\..\src\ZWSecurity.cpp" />
     <ClCompile Include="..\..\..\src\platform\Controller.cpp" />

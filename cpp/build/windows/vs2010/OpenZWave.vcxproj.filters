@@ -359,6 +359,9 @@
     <ClCompile Include="..\..\..\src\Node.cpp">
       <Filter>Main</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\Notification.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\platform\Event.cpp">
       <Filter>Platform</Filter>
     </ClCompile>
