@@ -124,6 +124,7 @@ Version 1.3
  - Pull Request #532 - Fix Aeon Labs DoorWindow Sensor Config from Nechry (Justin)
  - Pull Request #529 - Updated Config for the Zipato MiniKeyPad from Nechry (Justin)
  - Pull Request #528 and #527 - Add Aeon Labs Key Fob Gen5 Config from Nechry (Justin)
+ - Add new ID's for BeNext Energy Switch from Rob (Justin)
 
 Version 1.2 
  - Released on 15/10/14
