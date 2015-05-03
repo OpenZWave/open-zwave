@@ -3156,7 +3156,7 @@ void Driver::HandleRemoveNodeFromNetworkRequest
 				// Remove Node Stop calls back through here so make sure
 				// we do't do it again.
 				UpdateControllerState( ControllerState_Completed );
-				AddNodeStop( FUNC_ID_ZW_REMOVE_NODE_FROM_NETWORK );
+				//AddNodeStop( FUNC_ID_ZW_REMOVE_NODE_FROM_NETWORK );
 				if ( m_currentControllerCommand->m_controllerCommandNode == 0 ) // never received "removing" update
 				{
 					if ( _data[4] != 0 ) // but message has the clue
