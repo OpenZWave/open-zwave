@@ -49,6 +49,7 @@
 		<Product type="0002" id="0009" name="Home Energy Meter" config="aeon_labs/hem.xml"/>
 		<Product type="0002" id="001c" name="Home Energy Meter G2" config="aeon_labs/hemg2.xml"/>
 		<Product type="0002" id="001d" name="Door/Window Sensor" config="aeon_labs/doorwindow.xml"/>
+		<Product type="0002" id="002d" name="Water Sensor" config="aeon_labs/watersensor.xml" />
 		<Product type="0002" id="0036" name="Recessed Door Sensor" config="aeon_labs/recessed_doorsensor.xml"/>
 		<Product type="0002" id="0059" name="Recessed Door Sensor" config="aeon_labs/recessed_doorsensor_gen5.xml"/>
 		<Product type="0003" id="0006" name="Smart Energy Switch" config="aeon_labs/ses.xml"/>
