@@ -558,6 +558,9 @@
 	</Manufacturer>
 	<Manufacturer id="0047" name="Somfy">
 	</Manufacturer>
+	<Manufacturer id="166" name="Swiid">
+		<Product type="100" id="100" name="SwiidInter" config="swiid/swiidinter.xml"/>
+	</Manufacturer>
 	<Manufacturer id="0009" name="Sylvania">
 	</Manufacturer>
 	<Manufacturer id="0012" name="Tell It Online">
