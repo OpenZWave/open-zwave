@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Product xmlns='http://code.google.com/p/open-zwave/'>
   <!-- Aeon Labs Heavy Duty Smart Switch -->
+  <Protocol refreshonnodeinfoframe="false"/>
+
+
   <!-- Configuration Parameters -->
   <CommandClass id="112">
     <Value type="list" index="3" genre="config" label="Current Overload Protection" size="1" value="0">
