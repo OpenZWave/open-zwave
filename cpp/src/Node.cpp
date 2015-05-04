@@ -158,10 +158,12 @@ m_averageRequestRTT( 0 ),
 m_averageResponseRTT( 0 ),
 m_quality( 0 ),
 m_lastReceivedMessage(),
-m_errors( 0 )
+m_errors( 0 ),
+m_lastnonce ( 0 )
 {
 	memset( m_neighbors, 0, sizeof(m_neighbors) );
 	memset( m_routeNodes, 0, sizeof(m_routeNodes) );
+	memset( m_nonces, 0, sizeof(m_nonces) );
 	AddCommandClass( 0 );
 }
 
@@ -362,7 +364,7 @@ void Node::AdvanceQueries
 			}
 			case QueryStage_NodeInfo:
 			{
-				if( !NodeInfoReceived() && m_nodeInfoSupported )
+				if( !NodeInfoReceived() && m_nodeInfoSupported && (GetDriver()->GetControllerNodeId() != m_nodeId))
 				{
 					// obtain from the node a list of command classes that it 1) supports and 2) controls (separated by a mark in the buffer)
 					Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_NodeInfo" );
@@ -968,10 +970,6 @@ void Node::ReadXML
 	if ( str )
 		m_refreshonNodeInfoFrame = !strcmp (str, "true" );
 
-	std::cout << str << std::endl;
-	exit(-1);
-
-
 	// Read the manufacturer info and create the command classes
 	TiXmlElement const* child = _node->FirstChildElement();
 	while( child )
@@ -1130,8 +1128,9 @@ void Node::ReadCommandClassesXML
 
 					if( NULL == cc )
 					{
-						if (Security::StaticGetCommandClassId() == id && GetDriver()->isNetworkKeySet()) {
+						if (Security::StaticGetCommandClassId() == id && !GetDriver()->isNetworkKeySet()) {
 							Log::Write(LogLevel_Warning, "Security Command Class cannot be Loaded. NetworkKey is not set");
+							ccElement = ccElement->NextSiblingElement();
 							continue;
 						}
 
