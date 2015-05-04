@@ -64,8 +64,9 @@
 		<Product type="0003" id="001a" name="Micro Switch (2nd Edition)"/>
 		<Product type="0003" id="001b" name="Micro Smart Energy Illuminator G2"/>
 		<Product type="0003" id="0012" name="Micro Smart Energy Switch G2" config="aeon_labs/ses.xml" />
-		<Product type="0003" id="0013" name="Micro Smart Energy Dimmer"/>
+		<Product type="0003" id="0013" name="Micro Smart Energy Dimmer v2" config="aeon_labs/msesv2.xml" />
 		<Product type="0003" id="004b" name="Smart Energy Switch v2" config="aeon_labs/ses2.xml"/>
+		<Product type="0003" id="004e" name="Heavy Duty Smart Switch Gen5" config="aeon_labs/hdss_gen5.xml" />
 		<Product type="0004" id="0025" name="Z-Wave Repeater"/>
 		<Product type="0004" id="0050" name="DSD31 Siren Gen5" config="aeon_labs/dsd31.xml"/>
         <!-- US-market products start with type prefix "01" -->

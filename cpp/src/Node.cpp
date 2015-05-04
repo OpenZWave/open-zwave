@@ -3117,11 +3117,17 @@ Node::DeviceClass* Node::GenericDeviceClass::GetSpecificDeviceClass
 // Generate a NONCE key for this node
 //-----------------------------------------------------------------------------
 uint8 *Node::GenerateNonceKey() {
+	uint8 idx = this->m_lastnonce;
 	for (int i = 0; i < 8; i++) {
-		//this->currentNonce[i] = (rand()%0xFF)+1;
-		this->m_nonces[i] = 0x50 + m_nodeId;
+		this->m_nonces[idx][i] = (rand()%0xFF)+1;
 	}
-	return &this->m_nonces[0];
+	this->m_lastnonce++;
+	if (this->m_lastnonce >= 8)
+		this->m_lastnonce = 0;
+	for (uint8 i = 0; i < 8; i++) {
+		PrintHex("NONCES", (const uint8_t*)this->m_nonces[i], 8);
+	}
+	return &this->m_nonces[idx][0];
 }
 //-----------------------------------------------------------------------------
 // <Node::GetNonceKey>
@@ -3129,11 +3135,16 @@ uint8 *Node::GenerateNonceKey() {
 //-----------------------------------------------------------------------------
 
 uint8 *Node::GetNonceKey(uint32 nonceid) {
-
-	/* make sure the nonceid matches the first byte of our stored Nonce */
-	if (nonceid == this->m_nonces[0])
-		return &this->m_nonces[0];
+	for (uint8 i = 0; i < 8; i++) {
+		/* make sure the nonceid matches the first byte of our stored Nonce */
+		if (nonceid == this->m_nonces[i][0]) {
+			return &this->m_nonces[i][0];
+		}
+	}
 	Log::Write(LogLevel_Warning, m_nodeId, "A Nonce with id %x does not exist", nonceid);
+	for (uint8 i = 0; i < 8; i++) {
+		PrintHex("NONCES", (const uint8_t*)this->m_nonces[i], 8);
+	}
 	return NULL;
 }
 

@@ -590,11 +590,8 @@ namespace OpenZWave
 			uint8 *GetNonceKey(uint32 nonceid);
 
 			private:
-			/* if we ever support parallel transactions, this will be a array of all outstanding
-			 * NONCE Requests a Device has made to us, otherwise for now, we are just using store the most
-			 * recent NONCE sent to a device, and the first byte is used as the nonceid in the GetNonceKey function
-			 */
-			uint8 m_nonces[8];
+			uint8 m_lastnonce;
+			uint8 m_nonces[8][8];
 	};
 
 
