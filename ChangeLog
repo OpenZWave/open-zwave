@@ -120,6 +120,7 @@ Version 1.3
  - Pull Request #504 - CRC16Encap CC Support from xs4 (Justin)
  - Pull Request #522 - Dragon Tech In wall dimmer from Stevejbauer (Justin)
  - Fix Issue #523 - Add Wenzhou Door/Window Sensor from whiteduck22 (Justin)
+ - Pull Request #538 and #541 - Add SwiidInter to manufacturer_specific from Nechry (Justin)
 
 Version 1.2 
  - Released on 15/10/14
