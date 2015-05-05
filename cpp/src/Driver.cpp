@@ -2908,7 +2908,7 @@ void Driver::HandleSendDataRequest
 )
 {
 	uint8 nodeId = GetNodeNumber( m_currentMsg );
-	Log::Write( LogLevel_Detail, nodeId, "  %s Request with callback ID 0x%.2x received (expected 0x%.2x)",  _replication ? "ZW_REPLICATION_SEND_DATA" : "ZW_SEND_DATA", _data[2], m_expectedCallbackId );
+	Log::Write( LogLevel_Detail, nodeId, "  %s Request with callback ID 0x%.2x received (expected 0x%.2x)",  _replication ? "ZW_REPLICATION_SEND_DATA" : "ZW_SEND_DATA", _data[2], _data[2] < 10 ? _data[2] : m_expectedCallbackId );
 	/* Callback ID's below 10 are reserved for NONCE messages */
 	if ((_data[2] > 10 ) && ( _data[2] != m_expectedCallbackId )) {
 		// Wrong callback ID
@@ -3182,7 +3182,7 @@ void Driver::HandleRemoveNodeFromNetworkRequest
 		}
 		case REMOVE_NODE_STATUS_FAILED:
 		{
-			AddNodeStop( FUNC_ID_ZW_REMOVE_NODE_FROM_NETWORK );
+			//AddNodeStop( FUNC_ID_ZW_REMOVE_NODE_FROM_NETWORK );
 			Log::Write( LogLevel_Warning,  "WARNING: REMOVE_NODE_STATUS_FAILED" );
 			state = ControllerState_Failed;
 			break;
@@ -3771,7 +3771,7 @@ void Driver::CommonAddNodeStatusRequestHandler
 		case ADD_NODE_STATUS_ADDING_SLAVE:
 		{
 			Log::Write( LogLevel_Info, nodeId, "ADD_NODE_STATUS_ADDING_SLAVE" );
-			Log::Write( LogLevel_Info, nodeId, "Adding node ID %d", _data[4] );
+			Log::Write( LogLevel_Info, nodeId, "Adding node ID %d - %s", _data[4], m_currentControllerCommand->m_controllerCommandArg ? "Secure" : "Non-Secure");
 			/* Discovered all the CC's are sent in this packet as well:
 			 * position description
 			 * 4 - Node ID
@@ -4323,10 +4323,13 @@ void Driver::InitNode
 		// Request the node info
 		m_nodes[_nodeId]->SetQueryStage( Node::QueryStage_ProtocolInfo );
 	} else {
-		if (isNetworkKeySet()) m_nodes[_nodeId]->SetSecured(secure);
+		if (isNetworkKeySet())
+			m_nodes[_nodeId]->SetSecured(secure);
+		else
+			Log::Write(LogLevel_Info, _nodeId, "Network Key Not Set - Secure Option is %s", secure ? "required" : "not required");
 		m_nodes[_nodeId]->SetProtocolInfo(_protocolInfo, _length);
 	}
-	Log::Write(LogLevel_Info, "Initilizing Node. New Node: %s (%s)", static_cast<Node *>(m_nodes[_nodeId])->IsAddingNode() ? "true" : "false", newNode ? "true" : "false");
+	Log::Write(LogLevel_Info, _nodeId, "Initilizing Node. New Node: %s (%s)", static_cast<Node *>(m_nodes[_nodeId])->IsAddingNode() ? "true" : "false", newNode ? "true" : "false");
 }
 
 //-----------------------------------------------------------------------------
@@ -6532,7 +6535,7 @@ bool Driver::SendNonceRequest(string logmsg) {
 	m_buffer[6] = Security::StaticGetCommandClassId();
 	m_buffer[7] = SecurityCmd_NonceGet;
 	//m_buffer[8] = TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE;
-	m_buffer[8] = TRANSMIT_OPTION_AUTO_ROUTE;
+	m_buffer[8] = TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE;
 	/* this is the same as the Actual Message */
 	//m_buffer[9] = m_expectedCallbackId;
 	m_buffer[9] = 2;
@@ -6629,7 +6632,7 @@ void Driver::SendNonceKey(uint8 nodeId, uint8 *nonce) {
 	for (int i = 0; i < 8; ++i) {
 		m_buffer[8+i] = nonce[i];
 	}
-	m_buffer[16] = TRANSMIT_OPTION_AUTO_ROUTE;
+	m_buffer[16] = TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE;
 	/* this is the same as the Actual Message */
 	m_buffer[17] = 1;
 	// Calculate the checksum
