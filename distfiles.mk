@@ -98,6 +98,7 @@ DISTFILES =	.gitignore \
 	config/philio/pan04.xml \
 	config/philio/psm02.xml \
 	config/philio/pst02-1c.xml \
+	config/philio/pst02.xml \
 	config/polycontrol/doorlock.xml \
 	config/polycontrol/keypad.xml \
 	config/popp/123580.xml \
