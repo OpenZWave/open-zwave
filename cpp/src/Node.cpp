@@ -1353,6 +1353,7 @@ void Node::SetProtocolInfo
 
 	if( ProtocolInfoReceived() || m_basicprotocolInfoReceived == true )
 	{
+		std::cout << "proto already recieved" << std::endl;
 		// We already have this info
 		return;
 	}
@@ -1381,13 +1382,21 @@ void Node::SetProtocolInfo
 	 * first (before other CC's start sending stuff and slowing down our exchange
 	 */
 	if (m_secured) {
-		for (int i = 3; i < _length; i++) {
-			if (_protocolInfo[i] == Security::StaticGetCommandClassId()) {
-				if (!GetDriver()->isNetworkKeySet()) {
-					Log::Write(LogLevel_Warning, m_nodeId, "Security Command Class cannot be loaded. NetworkKey is not Set");
-				} else {
-					/* Wheee... Security CC is supported... */
-					if (Security *pCommandClass = static_cast<Security *>(AddCommandClass(_protocolInfo[i]))) {
+		if (Security *pCommandClass = static_cast<Security *>(GetCommandClass(Security::StaticGetCommandClassId()))) {
+			/* Security CC has already been loaded, most likely via the SetDeviceClasses Function above */
+			if (!GetDriver()->isNetworkKeySet()) {
+				Log::Write(LogLevel_Warning, m_nodeId, "Security Command Class Disabled. NetworkKey is not Set");
+			} else {
+				pCommandClass->ExchangeNetworkKeys();
+			}
+		} else {
+			/* Security CC is not loaded, see if its in our NIF frame and load if necessary */
+			for (int i = 3; i < _length; i++) {
+				if (_protocolInfo[i] == Security::StaticGetCommandClassId()) {
+					pCommandClass = static_cast<Security *>(AddCommandClass(_protocolInfo[i]));
+					if (!GetDriver()->isNetworkKeySet()) {
+						Log::Write(LogLevel_Warning, m_nodeId, "Security Command Class Disabled. NetworkKey is not Set");
+					} else {
 						pCommandClass->ExchangeNetworkKeys();
 					}
 				}

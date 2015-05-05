@@ -202,7 +202,7 @@ namespace OpenZWave
 #define ACK_TIMEOUT	1000		// How long to wait for an ACK
 #define BYTE_TIMEOUT	150
 //#define RETRY_TIMEOUT	40000		// Retry send after 40 seconds
-#define RETRY_TIMEOUT	5000		// Retry send after 5 seconds (we might need to keep this below 10 for Security CC to function correctly)
+#define RETRY_TIMEOUT	10000		// Retry send after 10 seconds (we might need to keep this below 10 for Security CC to function correctly)
 
 #define SOF												0x01
 #define ACK												0x06
