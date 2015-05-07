@@ -351,6 +351,135 @@ bool ZWManager::BeginControllerCommand
 	return( Manager::Get()->BeginControllerCommand( homeId, (Driver::ControllerCommand)command, (Driver::pfnControllerCallback_t)ip.ToPointer(), NULL, highPower, nodeId ) );
 }
 
+//-----------------------------------------------------------------------------
+// <ZWManager::HealNetworkNode>
+// Heal a single node in the network
+//-----------------------------------------------------------------------------
+void ZWManager::HealNetworkNode
+(
+uint32 const homeId,
+uint8 const nodeId,
+bool doRR
+)
+{
+	Manager::Get()->HealNetworkNode(homeId, nodeId, doRR);
+}
+
+//-----------------------------------------------------------------------------
+// <ZWManager::HealNetwork>
+// Heal the Z-Wave network one node at a time.
+//-----------------------------------------------------------------------------
+void ZWManager::HealNetwork
+(
+uint32 const homeId,
+bool doRR
+)
+{
+	Manager::Get()->HealNetwork(homeId, doRR);
+}
+
+//-----------------------------------------------------------------------------
+// <ZWManager::AddNode>
+// Add a Device to the Network.
+//-----------------------------------------------------------------------------
+bool ZWManager::AddNode
+(
+uint32 const homeId, bool doSecurity
+)
+{
+	return Manager::Get()->AddNode(homeId, doSecurity);
+}
+
+//-----------------------------------------------------------------------------
+// <ZWManager::RemoveNode>
+// Remove a Device from the Network.
+//-----------------------------------------------------------------------------
+bool ZWManager::RemoveNode
+(
+uint32 const homeId
+)
+{
+	return Manager::Get()->RemoveNode(homeId);
+}
+
+//-----------------------------------------------------------------------------
+// <ZWManager::RemoveFailedNode>
+// Remove a Specific Device from the network if its non-responsive.
+//-----------------------------------------------------------------------------
+bool ZWManager::RemoveFailedNode
+(
+uint32 const homeId,
+uint8 const nodeId
+)
+{
+	return Manager::Get()->RemoveFailedNode(homeId, nodeId);
+}
+
+//-----------------------------------------------------------------------------
+// <ZWManager::HasNodeFailed>
+// Test if the Controller Believes the Node has Failed.
+//-----------------------------------------------------------------------------
+bool ZWManager::HasNodeFailed
+(
+uint32 const homeId,
+uint8 const nodeId
+)
+{
+	return Manager::Get()->HasNodeFailed(homeId, nodeId);
+}
+
+//-----------------------------------------------------------------------------
+// <ZWManager::AssignReturnRoute>
+// Ask a Node to update its Return Route to the Controller
+//-----------------------------------------------------------------------------
+bool ZWManager::AssignReturnRoute
+(
+uint32 const homeId,
+uint8 const nodeId
+)
+{
+	return Manager::Get()->AssignReturnRoute(homeId, nodeId);
+}
+
+//-----------------------------------------------------------------------------
+// <ZWManager::RequestNodeNeighborUpdate>
+// Ask a Node to update its Neighbor Table.
+//-----------------------------------------------------------------------------
+bool ZWManager::RequestNodeNeighborUpdate
+(
+uint32 const homeId,
+uint8 const nodeId
+)
+{
+	return Manager::Get()->RequestNodeNeighborUpdate(homeId, nodeId);
+}
+
+//-----------------------------------------------------------------------------
+// <ZWManager::DeleteAllReturnRoutes>
+// Ask a Node to delete all its Return Routes
+//-----------------------------------------------------------------------------
+bool ZWManager::DeleteAllReturnRoutes
+(
+uint32 const homeId,
+uint8 const nodeId
+)
+{
+	return Manager::Get()->DeleteAllReturnRoutes(homeId, nodeId);
+}
+
+//-----------------------------------------------------------------------------
+// <ZWManager::SendNodeInformation>
+// Send a NIF frame from the Controller to the Node
+//-----------------------------------------------------------------------------
+bool ZWManager::SendNodeInformation
+(
+uint32 const homeId,
+uint8 const nodeId
+)
+{
+	return Manager::Get()->SendNodeInformation(homeId, nodeId);
+}
+
 bool ZWManager::GetNodeClassInformation
 (
 	uint32 homeId, 

@@ -1590,7 +1590,137 @@ namespace OpenZWaveDotNet
 		 * \return true if a command was running and was cancelled.
 		 * \see BeginControllerCommand 
 		 */
-		bool CancelControllerCommand( uint32 homeId ){ return Manager::Get()->CancelControllerCommand( homeId ); }
+		bool CancelControllerCommand(uint32 homeId){ return Manager::Get()->CancelControllerCommand(homeId); }
+
+		/**
+		* \brief Heal network node by requesting the node rediscover their neighbors.
+		* Sends a ControllerCommand_RequestNodeNeighborUpdate to the node.
+		* \param homeId The Home ID of the Z-Wave network to be healed.
+		* \param nodeId The node to heal.
+		* \param doRR Whether to perform return routes initialization.
+		*/
+		void HealNetworkNode(uint32 const homeId,uint8 const nodeId,bool doRR);
+
+		/**
+		* \brief Heal network by requesting node's rediscover their neighbors.
+		* Sends a ControllerCommand_RequestNodeNeighborUpdate to every node.
+		* Can take a while on larger networks.
+		* \param homeId The Home ID of the Z-Wave network to be healed.
+		* \param doRR Whether to perform return routes initialization.
+		*/
+		void HealNetwork(uint32 const homeId, bool doRR);
+		
+		/**
+		* \brief Start the Inclusion Process to add a Node to the Network.
+		* The Status of the Node Inclusion is communicated via Notifications. Specifically, you should
+		* monitor ControllerCommand Notifications.
+		*
+		* Results of the AddNode Command will be send as a Notification with the Notification type as
+		* Notification::Type_ControllerCommand
+		*
+		* \param homeId The Home ID of the Z-Wave network where the device should be added.
+		* \param doSecurity Whether to initialize the Network Key on the device if it supports the Security CC
+		* \return if the Command was sent succcesfully to the Controller
+		*/
+		bool AddNode(uint32 const homeId, bool doSecurity);
+
+		/**
+		* \brief Remove a Device from the Z-Wave Network
+		* The Status of the Node Removal is communicated via Notifications. Specifically, you should
+		* monitor ControllerCommand Notifications.
+		*
+		* Results of the AddNode Command will be send as a Notification with the Notification type as
+		* Notification::Type_ControllerCommand
+		*
+		* \param homeId The HomeID of the Z-Wave network where you want to remove the device
+		* \return if the Command was send succesfully to the Controller
+		*/
+		bool RemoveNode(uint32 const homeId);
+
+		/**
+		* \brief Remove a Failed Device from the Z-Wave Network
+		* This Command will remove a failed node from the network. The Node should be on the Controllers Failed
+		* Node List, otherwise this command will fail. You can use the HasNodeFailed function below to test if the Controller
+		* believes the Node has Failed.
+		* The Status of the Node Removal is communicated via Notifications. Specifically, you should
+		* monitor ControllerCommand Notifications.
+		*
+		* Results of the AddNode Command will be send as a Notification with the Notification type as
+		* Notification::Type_ControllerCommand
+		*
+		* \param homeId The HomeID of the Z-Wave network where you want to remove the device
+		* \param nodeId The NodeID of the Failed Node.
+		* \return if the Command was send succesfully to the Controller
+		*/
+		bool RemoveFailedNode(uint32 const homeId, uint8 const nodeId);
+
+		/**
+		* \brief Check if the Controller Believes a Node has Failed.
+		* This is different from the IsNodeFailed call in that we test the Controllers Failed Node List, whereas the IsNodeFailed is testing
+		* our list of Failed Nodes, which might be different.
+		* The Results will be communicated via Notifications. Specifically, you should monitor the ControllerCommand notifications
+		*
+		* Results of the AddNode Command will be send as a Notification with the Notification type as
+		* Notification::Type_ControllerCommand
+		*
+		* \param homeId The HomeID of the Z-Wave network where you want to test the device
+		* \param nodeId The NodeID of the Failed Node.
+		* \return if the RemoveDevice Command was send succesfully to the Controller
+		*/
+		bool HasNodeFailed(uint32 const homeId, uint8 const nodeId);
+
+		/**
+		* \brief Ask a Node to update its update its Return Route to the Controller
+		* This command will ask a Node to update its Return Route to the Controller
+		*
+		* Results of the AddNode Command will be send as a Notification with the Notification type as
+		* Notification::Type_ControllerCommand
+		*
+		* \param homeId The HomeID of the Z-Wave network where you want to update the device
+		* \param nodeId The NodeID of the Node.
+		* \return if the Command was send succesfully to the Controller
+		*/
+		bool AssignReturnRoute(uint32 const homeId, uint8 const nodeId);
+
+		/**
+		* \brief Ask a Node to update its Neighbor Tables
+		* This command will ask a Node to update its Neighbor Tables.
+		*
+		* Results of the AddNode Command will be send as a Notification with the Notification type as
+		* Notification::Type_ControllerCommand
+		*
+		* \param homeId The HomeID of the Z-Wave network where you want to update the device
+		* \param nodeId The NodeID of the Node.
+		* \return if the Command was send succesfully to the Controller
+		*/
+		bool RequestNodeNeighborUpdate(uint32 const homeId, uint8 const nodeId);
+
+		/**
+		* \brief Ask a Node to delete all Return Route.
+		* This command will ask a Node to delete all its return routes, and will rediscover when needed.
+		*
+		* Results of the AddNode Command will be send as a Notification with the Notification type as
+		* Notification::Type_ControllerCommand
+		*
+		* \param homeId The HomeID of the Z-Wave network where you want to update the device
+		* \param nodeId The NodeID of the Node.
+		* \return if the Command was send succesfully to the Controller
+		*/
+		bool DeleteAllReturnRoutes(uint32 const homeId, uint8 const nodeId);
+
+		/**
+		* \brief Send a NIF frame from the Controller to a Node.
+		* This command send a NIF frame from the Controller to a Node
+		*
+		* Results of the AddNode Command will be send as a Notification with the Notification type as
+		* Notification::Type_ControllerCommand
+		*
+		* \param homeId The HomeID of the Z-Wave network
+		* \param nodeId The NodeID of the Node to recieve the NIF
+		* \return if the sendNIF Command was send succesfully to the Controller
+		*/
+		bool SendNodeInformation(uint32 const homeId, uint8 const nodeId);
+		
 	/*@}*/
 
 	//-----------------------------------------------------------------------------
