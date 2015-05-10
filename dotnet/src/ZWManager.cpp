@@ -474,7 +474,8 @@ bool ZWManager::SceneGetValueAsDecimal
 	if( Manager::Get()->SceneGetValueAsString( sceneId, valueId->CreateUnmanagedValueID(), &value ) )
 	{
 		String^ decimal = gcnew String(value.c_str());
-		o_value = Decimal::Parse( decimal );
+		CultureInfo^ culture = gcnew CultureInfo("en-GB");
+		o_value = Decimal::Parse( decimal, NumberStyles::Float | NumberStyles::AllowThousands, culture); 
 		return true;
 	}
 	return false;
