@@ -352,39 +352,12 @@ bool ZWManager::BeginControllerCommand
 }
 
 //-----------------------------------------------------------------------------
-// <ZWManager::HealNetworkNode>
-// Heal a single node in the network
-//-----------------------------------------------------------------------------
-void ZWManager::HealNetworkNode
-(
-uint32 const homeId,
-uint8 const nodeId,
-bool doRR
-)
-{
-	Manager::Get()->HealNetworkNode(homeId, nodeId, doRR);
-}
-
-//-----------------------------------------------------------------------------
-// <ZWManager::HealNetwork>
-// Heal the Z-Wave network one node at a time.
-//-----------------------------------------------------------------------------
-void ZWManager::HealNetwork
-(
-uint32 const homeId,
-bool doRR
-)
-{
-	Manager::Get()->HealNetwork(homeId, doRR);
-}
-
-//-----------------------------------------------------------------------------
 // <ZWManager::AddNode>
 // Add a Device to the Network.
 //-----------------------------------------------------------------------------
 bool ZWManager::AddNode
 (
-uint32 const homeId, bool doSecurity
+	uint32 const homeId, bool doSecurity
 )
 {
 	return Manager::Get()->AddNode(homeId, doSecurity);
@@ -396,7 +369,7 @@ uint32 const homeId, bool doSecurity
 //-----------------------------------------------------------------------------
 bool ZWManager::RemoveNode
 (
-uint32 const homeId
+	uint32 const homeId
 )
 {
 	return Manager::Get()->RemoveNode(homeId);
@@ -408,8 +381,8 @@ uint32 const homeId
 //-----------------------------------------------------------------------------
 bool ZWManager::RemoveFailedNode
 (
-uint32 const homeId,
-uint8 const nodeId
+	uint32 const homeId,
+	uint8 const nodeId
 )
 {
 	return Manager::Get()->RemoveFailedNode(homeId, nodeId);
@@ -421,8 +394,8 @@ uint8 const nodeId
 //-----------------------------------------------------------------------------
 bool ZWManager::HasNodeFailed
 (
-uint32 const homeId,
-uint8 const nodeId
+	uint32 const homeId,
+	uint8 const nodeId
 )
 {
 	return Manager::Get()->HasNodeFailed(homeId, nodeId);
@@ -434,8 +407,8 @@ uint8 const nodeId
 //-----------------------------------------------------------------------------
 bool ZWManager::AssignReturnRoute
 (
-uint32 const homeId,
-uint8 const nodeId
+	uint32 const homeId,
+	uint8 const nodeId
 )
 {
 	return Manager::Get()->AssignReturnRoute(homeId, nodeId);
@@ -447,8 +420,8 @@ uint8 const nodeId
 //-----------------------------------------------------------------------------
 bool ZWManager::RequestNodeNeighborUpdate
 (
-uint32 const homeId,
-uint8 const nodeId
+	uint32 const homeId,
+	uint8 const nodeId
 )
 {
 	return Manager::Get()->RequestNodeNeighborUpdate(homeId, nodeId);
@@ -460,8 +433,8 @@ uint8 const nodeId
 //-----------------------------------------------------------------------------
 bool ZWManager::DeleteAllReturnRoutes
 (
-uint32 const homeId,
-uint8 const nodeId
+	uint32 const homeId,
+	uint8 const nodeId
 )
 {
 	return Manager::Get()->DeleteAllReturnRoutes(homeId, nodeId);
@@ -473,8 +446,8 @@ uint8 const nodeId
 //-----------------------------------------------------------------------------
 bool ZWManager::SendNodeInformation
 (
-uint32 const homeId,
-uint8 const nodeId
+	uint32 const homeId,
+	uint8 const nodeId
 )
 {
 	return Manager::Get()->SendNodeInformation(homeId, nodeId);

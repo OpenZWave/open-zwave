@@ -1591,25 +1591,7 @@ namespace OpenZWaveDotNet
 		 * \see BeginControllerCommand 
 		 */
 		bool CancelControllerCommand(uint32 homeId){ return Manager::Get()->CancelControllerCommand(homeId); }
-
-		/**
-		* \brief Heal network node by requesting the node rediscover their neighbors.
-		* Sends a ControllerCommand_RequestNodeNeighborUpdate to the node.
-		* \param homeId The Home ID of the Z-Wave network to be healed.
-		* \param nodeId The node to heal.
-		* \param doRR Whether to perform return routes initialization.
-		*/
-		void HealNetworkNode(uint32 const homeId,uint8 const nodeId,bool doRR);
-
-		/**
-		* \brief Heal network by requesting node's rediscover their neighbors.
-		* Sends a ControllerCommand_RequestNodeNeighborUpdate to every node.
-		* Can take a while on larger networks.
-		* \param homeId The Home ID of the Z-Wave network to be healed.
-		* \param doRR Whether to perform return routes initialization.
-		*/
-		void HealNetwork(uint32 const homeId, bool doRR);
-		
+				
 		/**
 		* \brief Start the Inclusion Process to add a Node to the Network.
 		* The Status of the Node Inclusion is communicated via Notifications. Specifically, you should
