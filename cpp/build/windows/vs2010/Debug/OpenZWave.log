@@ -1,10 +1,10 @@
-﻿Build started 11-5-2015 1:30:43.
-     1>Project "I:\Work\GitHub\open-zwave\cpp\build\windows\vs2010\OpenZWave.vcxproj" on node 2 (Rebuild target(s)).
+﻿Build started 11-5-2015 11:23:14.
+     1>Project "D:\Users\J.Klessens\Documents\Lyvins\Git\open-zwave\cpp\build\windows\vs2010\OpenZWave.vcxproj" on node 2 (Rebuild target(s)).
      1>PreBuildEvent:
-         CALL I:\Work\GitHub\open-zwave\dotnet\examples\OZWForm\src\\..\GIT-VS-VERSION-GEN.bat "I:\Work\GitHub\open-zwave\cpp\build\windows\vs2010\\" "..\winversion.cpp" 
+         CALL D:\Users\J.Klessens\Documents\Lyvins\Git\open-zwave\dotnet\examples\OZWForm\src\\..\GIT-VS-VERSION-GEN.bat "D:\Users\J.Klessens\Documents\Lyvins\Git\open-zwave\cpp\build\windows\vs2010\\" "..\winversion.cpp" 
          exit 0
          :VCEnd
-         'I:\Work\GitHub\open-zwave\dotnet\examples\OZWForm\src\\..\GIT-VS-VERSION-GEN.bat' is not recognized as an internal or external command,
+         'D:\Users\J.Klessens\Documents\Lyvins\Git\open-zwave\dotnet\examples\OZWForm\src\\..\GIT-VS-VERSION-GEN.bat' is not recognized as an internal or external command,
          operable program or batch file.
        ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I..\..\..\src /I..\..\..\tinyxml /I..\..\..\hidapi\hidapi /Zi /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _LIB /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt ..\..\..\hidapi\windows\hid.cpp ..\..\..\src\command_classes\DoorLock.cpp ..\..\..\src\command_classes\DoorLockLogging.cpp ..\..\..\src\command_classes\NoOperation.cpp ..\..\..\src\command_classes\SceneActivation.cpp ..\..\..\src\command_classes\Security.cpp ..\..\..\src\command_classes\CentralScene.cpp ..\..\..\src\command_classes\TimeParameters.cpp ..\..\..\src\command_classes\SensorAlarm.cpp ..\..\..\src\command_classes\UserCode.cpp ..\..\..\src\Driver.cpp ..\..\..\src\Group.cpp ..\..\..\src\Manager.cpp ..\..\..\src\Msg.cpp ..\..\..\src\Node.cpp ..\..\..\src\Notification.cpp ..\..\..\src\Options.cpp ..\..\..\src\ZWSecurity.cpp ..\..\..\src\platform\Controller.cpp ..\..\..\src\platform\Event.cpp ..\..\..\src\platform\FileOps.cpp ..\..\..\src\platform\HidController.cpp ..\..\..\src\platform\Log.cpp ..\..\..\src\platform\Mutex.cpp ..\..\..\src\platform\Stream.cpp ..\..\..\src\platform\SerialController.cpp ..\..\..\src\platform\Thread.cpp ..\..\..\src\platform\TimeStamp.cpp ..\..\..\src\platform\Wait.cpp ..\..\..\src\platform\windows\EventImpl.cpp ..\..\..\src\platform\windows\FileOpsImpl.cpp ..\..\..\src\platform\windows\LogImpl.cpp ..\..\..\src\platform\windows\MutexImpl.cpp ..\..\..\src\platform\windows\SerialControllerImpl.cpp ..\..\..\src\platform\windows\ThreadImpl.cpp ..\..\..\src\platform\windows\TimeStampImpl.cpp ..\..\..\src\platform\windows\WaitImpl.cpp ..\..\..\src\Scene.cpp ..\..\..\src\Utils.cpp ..\..\..\src\value_classes\ValueButton.cpp ..\..\..\src\value_classes\ValueRaw.cpp ..\..\..\src\value_classes\ValueSchedule.cpp ..\..\..\tinyxml\tinystr.cpp ..\..\..\tinyxml\tinyxml.cpp ..\..\..\tinyxml\tinyxmlerror.cpp ..\..\..\tinyxml\tinyxmlparser.cpp ..\..\..\src\value_classes\Value.cpp ..\..\..\src\value_classes\ValueBool.cpp ..\..\..\src\value_classes\ValueByte.cpp ..\..\..\src\value_classes\ValueDecimal.cpp ..\..\..\src\value_classes\ValueInt.cpp ..\..\..\src\value_classes\ValueList.cpp ..\..\..\src\value_classes\ValueShort.cpp ..\..\..\src\value_classes\ValueStore.cpp ..\..\..\src\value_classes\ValueString.cpp ..\..\..\src\command_classes\Alarm.cpp ..\..\..\src\command_classes\ApplicationStatus.cpp ..\..\..\src\command_classes\Association.cpp ..\..\..\src\command_classes\AssociationCommandConfiguration.cpp ..\..\..\src\command_classes\Basic.cpp ..\..\..\src\command_classes\BasicWindowCovering.cpp ..\..\..\src\command_classes\Battery.cpp ..\..\..\src\command_classes\ClimateControlSchedule.cpp ..\..\..\src\command_classes\Clock.cpp ..\..\..\src\command_classes\CommandClass.cpp ..\..\..\src\command_classes\CommandClasses.cpp ..\..\..\src\command_classes\Configuration.cpp ..\..\..\src\command_classes\ControllerReplication.cpp ..\..\..\src\command_classes\CRC16Encap.cpp ..\..\..\src\command_classes\EnergyProduction.cpp ..\..\..\src\command_classes\Hail.cpp ..\..\..\src\command_classes\Indicator.cpp ..\..\..\src\command_classes\Language.cpp ..\..\..\src\command_classes\Lock.cpp ..\..\..\src\command_classes\ManufacturerSpecific.cpp ..\..\..\src\command_classes\Meter.cpp ..\..\..\src\command_classes\MeterPulse.cpp ..\..\..\src\command_classes\MultiCmd.cpp ..\..\..\src\command_classes\MultiInstance.cpp ..\..\..\src\command_classes\MultiInstanceAssociation.cpp ..\..\..\src\command_classes\NodeNaming.cpp ..\..\..\src\command_classes\Powerlevel.cpp ..\..\..\src\command_classes\Proprietary.cpp ..\..\..\src\command_classes\Protection.cpp ..\..\..\src\command_classes\SensorBinary.cpp ..\..\..\src\command_classes\SensorMultilevel.cpp ..\..\..\src\command_classes\SwitchAll.cpp ..\..\..\src\command_classes\SwitchBinary.cpp ..\..\..\src\command_classes\SwitchMultilevel.cpp ..\..\..\src\command_classes\SwitchToggleBinary.cpp ..\..\..\src\command_classes\SwitchToggleMultilevel.cpp ..\..\..\src\command_classes\ThermostatFanMode.cpp ..\..\..\src\command_classes\ThermostatFanState.cpp ..\..\..\src\command_classes\ThermostatMode.cpp ..\..\..\src\command_classes\ThermostatOperatingState.cpp ..\..\..\src\command_classes\ThermostatSetpoint.cpp ..\..\..\src\command_classes\Version.cpp ..\..\..\src\command_classes\WakeUp.cpp ..\winversion.cpp
@@ -127,7 +127,7 @@
          aescrypt.c
          Generating Code...
        Lib:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\Lib.exe /OUT:"I:\Work\GitHub\open-zwave\dotnet\examples\OZWForm\src\Debug\\OpenZWave.lib" setupapi.lib /NOLOGO /MACHINE:X86 Debug\hid.obj
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\Lib.exe /OUT:"D:\Users\J.Klessens\Documents\Lyvins\Git\open-zwave\dotnet\examples\OZWForm\src\Debug\\OpenZWave.lib" setupapi.lib /NOLOGO /MACHINE:X86 Debug\hid.obj
          Debug\aescrypt.obj
          Debug\aeskey.obj
          Debug\aestab.obj
@@ -230,9 +230,9 @@
          Debug\Version.obj
          Debug\WakeUp.obj
          Debug\winversion.obj
-         OpenZWave.vcxproj -> I:\Work\GitHub\open-zwave\dotnet\examples\OZWForm\src\Debug\OpenZWave.lib
-     1>Done Building Project "I:\Work\GitHub\open-zwave\cpp\build\windows\vs2010\OpenZWave.vcxproj" (Rebuild target(s)).
+         OpenZWave.vcxproj -> D:\Users\J.Klessens\Documents\Lyvins\Git\open-zwave\dotnet\examples\OZWForm\src\Debug\OpenZWave.lib
+     1>Done Building Project "D:\Users\J.Klessens\Documents\Lyvins\Git\open-zwave\cpp\build\windows\vs2010\OpenZWave.vcxproj" (Rebuild target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:01:39.38
+Time Elapsed 00:00:54.75
