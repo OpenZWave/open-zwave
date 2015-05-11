@@ -29,13 +29,20 @@ DISTFILES =	.gitignore \
 	config/aeon_labs/alms.xml \
 	config/aeon_labs/doorwindow.xml \
 	config/aeon_labs/dsd31.xml \
+	config/aeon_labs/hdss_gen5.xml \
 	config/aeon_labs/hem.xml \
 	config/aeon_labs/hemg2.xml \
 	config/aeon_labs/keyfob.xml \
+	config/aeon_labs/keyfob2.xml \
 	config/aeon_labs/minimote.xml \
+	config/aeon_labs/msesv2.xml \
+	config/aeon_labs/multisensor_gen5.xml \
+	config/aeon_labs/panicbtn.xml \
 	config/aeon_labs/recessed_doorsensor.xml \
+	config/aeon_labs/recessed_doorsensor_gen5.xml \
 	config/aeon_labs/ses.xml \
 	config/aeon_labs/ses2.xml \
+	config/aeon_labs/watersensor.xml \
 	config/assa_abloy/RealLivingCapTouch.xml \
 	config/danfoss/living.xml \
 	config/danfoss/z.xml \
@@ -98,6 +105,7 @@ DISTFILES =	.gitignore \
 	config/philio/pan04.xml \
 	config/philio/psm02.xml \
 	config/philio/pst02-1c.xml \
+	config/philio/pst02-b.xml \
 	config/philio/pst02.xml \
 	config/polycontrol/doorlock.xml \
 	config/polycontrol/keypad.xml \
@@ -124,6 +132,7 @@ DISTFILES =	.gitignore \
 	config/swiid/swiidinter.xml \
 	config/trane/TZEMT400AB32MAA.xml \
 	config/trane/TZEMT400BB32MAA.xml \
+	config/vision/zd2102.xml \
 	config/vision/zm1601eu.xml \
 	config/vision/zp3102.xml \
 	config/vision/zs5101eu.xml \
