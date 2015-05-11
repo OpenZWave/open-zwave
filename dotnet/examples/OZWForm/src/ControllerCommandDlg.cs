@@ -62,7 +62,7 @@ namespace OZWForm
                         "Press the program button on the Z-Wave device to add it to the network.\nFor security reasons, the PC Z-Wave Controller must be close to the device being added.";
 
                     m_manager.OnNotification += new ManagedNotificationsHandler(NotificationHandler);
-                    if (!m_manager.AddNode(m_homeId, true))
+                    if (!m_manager.AddNode(m_homeId, m_mainDlg.SecurityEnabled))
                     {
                         m_manager.OnNotification -= NotificationHandler;
                     }

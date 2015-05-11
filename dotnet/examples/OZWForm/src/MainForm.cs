@@ -26,11 +26,19 @@ namespace OZWForm
             get { return m_manager; }
         }
 
+        private bool m_securityEnabled = false;
+
+        public bool SecurityEnabled
+        {
+            get { return m_securityEnabled; }
+        }
+
         private UInt32 m_homeId = 0;
         private ZWNotification m_notification = null;
         private BindingList<Node> m_nodeList = new BindingList<Node>();
         private Byte m_rightClickNode = 0xff;
         private string m_driverPort = string.Empty;
+        
 
         public MainForm()
         {
@@ -186,7 +194,7 @@ namespace OZWForm
             m_manager.OnNotification += new ManagedNotificationsHandler(NotificationHandler);
 
             // Add a driver
-            m_driverPort = @"\\.\COM8";
+            m_driverPort = @"\\.\COM5";
             m_manager.AddDriver(m_driverPort);
 //			m_manager.AddDriver(@"HID Controller", ZWControllerInterface.Hid);
         }
@@ -601,6 +609,13 @@ namespace OZWForm
                 m_manager.RemoveDriver(m_driverPort);
                 m_manager.AddDriver(m_driverPort);
             }
+        }
+
+        private void addSecureDeviceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            m_securityEnabled = true;
+            DoCommand(ZWControllerCommand.AddDevice);
+            m_securityEnabled = false;
         }
     }
 }
