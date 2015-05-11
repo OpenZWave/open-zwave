@@ -127,6 +127,8 @@ Version 1.3
  - Add new ID's for BeNext Energy Switch from Rob (Justin)
  - Depreciate the ControllerCommand method in the Manager class and replace with direct 
    function calls (Justin)
+ - Pull Request #538 and #541 - Add SwiidInter to manufacturer_specific from Nechry (Justin)
+ - Pull Request #545 - Add Philio PST02-A 4 in 1 MultiSensor from Nechry (Justin)
 
 Version 1.2 
  - Released on 15/10/14
