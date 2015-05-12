@@ -41,7 +41,6 @@ namespace OZWForm
             // modify the form controls without throwing an exception.
             m_notification = notification;
             Invoke(new MethodInvoker(NotificationHandler));
-            //NotificationHandler();
             m_notification = null;
         }
 

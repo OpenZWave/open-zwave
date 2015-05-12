@@ -125,6 +125,14 @@ Version 1.3
  - Pull Request #529 - Updated Config for the Zipato MiniKeyPad from Nechry (Justin)
  - Pull Request #528 and #527 - Add Aeon Labs Key Fob Gen5 Config from Nechry (Justin)
  - Add new ID's for BeNext Energy Switch from Rob (Justin)
+ - Depreciate the ControllerCommand method in the Manager class and replace with direct 
+   function calls (Justin)
+ - Pull Request #538 and #541 - Add SwiidInter to manufacturer_specific from Nechry (Justin)
+ - Pull Request #545 - Add Philio PST02-A 4 in 1 MultiSensor from Nechry (Justin)
+ - Pull Request #546 - Update Philio PST02-A Config from Nechry (Justin)
+ - Pull Request #547 & #549 - New Config File for Philio PST02-B from Nechry (Justin)
+ - Pull Request #548 - Update Config file for Philio PST02-C from Nechry (Justin)
+ - Pull Request #550 - Config File for Vision zd2102 from Ugoviti (Justin)
 
 Version 1.2 
  - Released on 15/10/14
