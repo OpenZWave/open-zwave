@@ -5,6 +5,13 @@
   <!-- Basic Messages should map to the ColorControl Command Class I hope -->
   <CommandClass id="32" setasreport="true"/>
 
+  <!-- COMMAND_CLASS_POWERLEVEL does not respond to requests -->
+  <CommandClass id="115" action="remove"/>
+
+  <!-- Fibaro Devices with firmware prior to 25.25 have a bug in the Report
+  message -->
+  <CommandClass id="51" coloridxbug="true"/>                
+
   <!-- Configuration -->
   <CommandClass id="112">
     <Value type="list" genre="config" instance="1" index="1" label="Enable/Disable ALL ON/OFF" size="1" value="255">

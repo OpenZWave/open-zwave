@@ -63,6 +63,9 @@ namespace OpenZWave
 	private:
 		Color( uint32 const _homeId, uint8 const _nodeId );
 		uint16 m_capabilities;
+		bool m_coloridxbug; // Fibaro RGBW before version 25.25 always reported the coloridx as 3 in the Report Message. Work around it
+		uint8 m_coloridxcount;
+		uint8 m_colorvalues[9];
 	};
 
 } // namespace OpenZWave
