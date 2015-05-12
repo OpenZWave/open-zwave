@@ -3632,6 +3632,159 @@ bool Manager::SendNodeInformation
 	return false;
 }
 
+//-----------------------------------------------------------------------------
+// <Manager::CreateNewPrimary>
+// Send a NIF frame from the Controller to the Node
+//-----------------------------------------------------------------------------
+bool Manager::CreateNewPrimary
+(
+		uint32 const _homeId
+)
+{
+	if (Driver *driver = GetDriver( _homeId ) ) {
+		LockGuard LG(driver->m_nodeMutex);
+		return driver->BeginControllerCommand(
+				Driver::ControllerCommand_CreateNewPrimary,
+				NULL, NULL, true, 0, 0);
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::ReceiveConfiguration>
+// Send a NIF frame from the Controller to the Node
+//-----------------------------------------------------------------------------
+bool Manager::ReceiveConfiguration
+(
+		uint32 const _homeId
+)
+{
+	if (Driver *driver = GetDriver( _homeId ) ) {
+		LockGuard LG(driver->m_nodeMutex);
+		return driver->BeginControllerCommand(
+				Driver::ControllerCommand_ReceiveConfiguration,
+				NULL, NULL, true, 0, 0);
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::ReplaceFailedNode>
+// Send a NIF frame from the Controller to the Node
+//-----------------------------------------------------------------------------
+bool Manager::ReplaceFailedNode
+(
+		uint32 const _homeId,
+		uint8 const _nodeId
+)
+{
+	if (Driver *driver = GetDriver( _homeId ) ) {
+		LockGuard LG(driver->m_nodeMutex);
+		return driver->BeginControllerCommand(
+				Driver::ControllerCommand_ReplaceFailedNode,
+				NULL, NULL, true, _nodeId, 0);
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::TransferPrimaryRole>
+// Send a NIF frame from the Controller to the Node
+//-----------------------------------------------------------------------------
+bool Manager::TransferPrimaryRole
+(
+		uint32 const _homeId
+)
+{
+	if (Driver *driver = GetDriver( _homeId ) ) {
+		LockGuard LG(driver->m_nodeMutex);
+		return driver->BeginControllerCommand(
+				Driver::ControllerCommand_TransferPrimaryRole,
+				NULL, NULL, true, 0, 0);
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::RequestNetworkUpdate>
+// Send a NIF frame from the Controller to the Node
+//-----------------------------------------------------------------------------
+bool Manager::RequestNetworkUpdate
+(
+		uint32 const _homeId,
+		uint8 const _nodeId
+)
+{
+	if (Driver *driver = GetDriver( _homeId ) ) {
+		LockGuard LG(driver->m_nodeMutex);
+		return driver->BeginControllerCommand(
+				Driver::ControllerCommand_RequestNetworkUpdate,
+				NULL, NULL, true, _nodeId, 0);
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::ReplicationSend>
+// Send a NIF frame from the Controller to the Node
+//-----------------------------------------------------------------------------
+bool Manager::ReplicationSend
+(
+		uint32 const _homeId,
+		uint8 const _nodeId
+)
+{
+	if (Driver *driver = GetDriver( _homeId ) ) {
+		LockGuard LG(driver->m_nodeMutex);
+		return driver->BeginControllerCommand(
+				Driver::ControllerCommand_ReplicationSend,
+				NULL, NULL, true, _nodeId, 0);
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::CreateButton>
+// Send a NIF frame from the Controller to the Node
+//-----------------------------------------------------------------------------
+bool Manager::CreateButton
+(
+		uint32 const _homeId,
+		uint8 const _nodeId,
+		uint8 const _buttonid
+)
+{
+	if (Driver *driver = GetDriver( _homeId ) ) {
+		LockGuard LG(driver->m_nodeMutex);
+		return driver->BeginControllerCommand(
+				Driver::ControllerCommand_CreateButton,
+				NULL, NULL, true, _nodeId, _buttonid);
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::DeleteButton>
+// Send a NIF frame from the Controller to the Node
+//-----------------------------------------------------------------------------
+bool Manager::DeleteButton
+(
+		uint32 const _homeId,
+		uint8 const _nodeId,
+		uint8 const _buttonid
+)
+{
+	if (Driver *driver = GetDriver( _homeId ) ) {
+		LockGuard LG(driver->m_nodeMutex);
+		return driver->BeginControllerCommand(
+				Driver::ControllerCommand_DeleteButton,
+				NULL, NULL, true, _nodeId, _buttonid);
+	}
+	return false;
+}
+
+
+
 
 //-----------------------------------------------------------------------------
 // <Manager::GetNumScenes>
