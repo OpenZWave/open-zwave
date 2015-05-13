@@ -84,7 +84,8 @@ namespace OpenZWaveDotNet
 			AllNodesQueriedSomeDead			= Notification::Type_AllNodesQueriedSomeDead,
 			AllNodesQueried					= Notification::Type_AllNodesQueried,
 			Notification					= Notification::Type_Notification,
-			DriverRemoved					= Notification::Type_DriverRemoved
+			DriverRemoved					= Notification::Type_DriverRemoved,
+			ControllerCommand				= Notification::Type_ControllerCommand
 		};
 
 	public:
@@ -103,6 +104,13 @@ namespace OpenZWaveDotNet
 		{
 			m_type = (Type)Enum::ToObject( Type::typeid, notification->GetType() );
 			m_byte = notification->GetByte();
+
+			//Check if notification is either NodeEvent or ControllerCommand, otherwise GetEvent() will fail
+			if ((m_type == Type::NodeEvent) || (m_type == Type::ControllerCommand))
+			{
+				m_event = notification->GetEvent();
+			}			
+
 			m_valueId = gcnew ZWValueID( notification->GetValueID() );
 		}
 
@@ -111,12 +119,13 @@ namespace OpenZWaveDotNet
 		uint8 GetNodeId(){ return m_valueId->GetNodeId(); }
 		ZWValueID^ GetValueID(){ return m_valueId; }
 		uint8 GetGroupIdx(){ assert(Type::Group==m_type); return m_byte; } 
-		uint8 GetEvent(){ assert(Type::NodeEvent==m_type); return m_byte; }
+		uint8 GetEvent(){ return m_event; }
 		uint8 GetByte(){ return m_byte; }
 
 	internal:
 		Type		m_type;
 		ZWValueID^	m_valueId;
 		uint8		m_byte;
+		uint8		m_event;
 	};
 }
