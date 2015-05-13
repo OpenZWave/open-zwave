@@ -1,22 +1,45 @@
+//-----------------------------------------------------------------------------
+//
+//      ControllerCommandDlg.cs
+//
+//      Executes a controller command and show a dialog window while the 
+//      controller command is running.
+//
+//      Copyright (c) 2010 Amer Harb <harb_amer@hotmail.com>
+//
+//      SOFTWARE NOTICE AND LICENSE
+//
+//      This file is part of OpenZWave.
+//
+//      OpenZWave is free software: you can redistribute it and/or modify
+//      it under the terms of the GNU Lesser General Public License as published
+//      by the Free Software Foundation, either version 3 of the License,
+//      or (at your option) any later version.
+//
+//      OpenZWave is distributed in the hope that it will be useful,
+//      but WITHOUT ANY WARRANTY; without even the implied warranty of
+//      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//      GNU Lesser General Public License for more details.
+//
+//      You should have received a copy of the GNU Lesser General Public License
+//      along with OpenZWave.  If not, see <http://www.gnu.org/licenses/>.
+//
+//-----------------------------------------------------------------------------
+
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using OpenZWaveDotNet;
 
 namespace OZWForm
 {
+    /// <summary>
+    /// Executes a controller command and show a dialog window while the controller command is running
+    /// </summary>
     public partial class ControllerCommandDlg : Form
     {
         private static ZWManager m_manager;
         private static ControllerCommandDlg m_dlg;
         private static UInt32 m_homeId;
-
-        private static ManagedControllerStateChangedHandler m_controllerStateChangedHandler =
-            new ManagedControllerStateChangedHandler(ControllerCommandDlg.MyControllerStateChangedHandler);
 
         private static ZWControllerCommand m_op;
         private static Byte m_nodeId;
@@ -29,6 +52,14 @@ namespace OZWForm
             get { return m_mainDlg; }
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ControllerCommandDlg"/> class.
+        /// </summary>
+        /// <param name="_mainDlg">The main form.</param>
+        /// <param name="_manager">The manager.</param>
+        /// <param name="homeId">The home identifier.</param>
+        /// <param name="_op">The Controller Command.</param>
+        /// <param name="nodeId">The node identifier.</param>
         public ControllerCommandDlg(MainForm _mainDlg, ZWManager _manager, UInt32 homeId, ZWControllerCommand _op,
             Byte nodeId)
         {
@@ -41,6 +72,7 @@ namespace OZWForm
 
             InitializeComponent();
 
+            m_manager.OnNotification += new ManagedNotificationsHandler(NotificationHandler);
             switch (m_op)
             {
                 case ZWControllerCommand.RequestNodeNeighborUpdate:
@@ -48,10 +80,9 @@ namespace OZWForm
                     this.Text = "Node Neighbor Update";
                     this.label1.Text = "Request that a node update its list of neighbors.";
 
-                    m_manager.OnNotification += new ManagedNotificationsHandler(NotificationHandler);
                     if (!m_manager.RequestNodeNeighborUpdate(m_homeId, m_nodeId))
                     {
-                        m_manager.OnNotification -= NotificationHandler;
+                        MyControllerStateChangedHandler(ZWControllerState.Failed);
                     }
                     break;
                 }
@@ -61,10 +92,9 @@ namespace OZWForm
                     this.label1.Text =
                         "Press the program button on the Z-Wave device to add it to the network.\nFor security reasons, the PC Z-Wave Controller must be close to the device being added.";
 
-                    m_manager.OnNotification += new ManagedNotificationsHandler(NotificationHandler);
                     if (!m_manager.AddNode(m_homeId, m_mainDlg.SecurityEnabled))
                     {
-                        m_manager.OnNotification -= NotificationHandler;
+                        MyControllerStateChangedHandler(ZWControllerState.Failed);
                     }
                     break;
                 }
@@ -74,10 +104,9 @@ namespace OZWForm
                     this.label1.Text =
                         "Put the target controller into receive configuration mode.\nThe PC Z-Wave Controller must be within 2m of the controller that is being made the primary.";
 
-                    m_manager.OnControllerStateChanged += m_controllerStateChangedHandler;
-                    if (!m_manager.BeginControllerCommand(m_homeId, m_op, false, m_nodeId))
+                    if (!m_manager.CreateNewPrimary(m_homeId))
                     {
-                        m_manager.OnControllerStateChanged -= m_controllerStateChangedHandler;
+                        MyControllerStateChangedHandler(ZWControllerState.Failed);
                     }
                     break;
                 }
@@ -87,10 +116,9 @@ namespace OZWForm
                     this.label1.Text =
                         "Transfering the network configuration\nfrom another controller.\n\nPlease bring the other controller within 2m of the PC controller and set it to send its network configuration.";
 
-                    m_manager.OnControllerStateChanged += m_controllerStateChangedHandler;
-                    if (!m_manager.BeginControllerCommand(m_homeId, m_op, false, m_nodeId))
+                    if (!m_manager.ReceiveConfiguration(m_homeId))
                     {
-                        m_manager.OnControllerStateChanged -= m_controllerStateChangedHandler;
+                        MyControllerStateChangedHandler(ZWControllerState.Failed);
                     }
                     break;
                 }
@@ -100,10 +128,9 @@ namespace OZWForm
                     this.label1.Text =
                         "Press the program button on the Z-Wave device to remove it from the network.\nFor security reasons, the PC Z-Wave Controller must be close to the device being removed.";
 
-                    m_manager.OnNotification += new ManagedNotificationsHandler(NotificationHandler);
                     if (!m_manager.RemoveNode(m_homeId))
                     {
-                        m_manager.OnNotification -= NotificationHandler;
+                        MyControllerStateChangedHandler(ZWControllerState.Failed);
                     }
                     break;
                 }
@@ -113,10 +140,9 @@ namespace OZWForm
                     this.label1.Text =
                         "Transfering the primary role\nto another controller.\n\nPlease bring the new controller within 2m of the PC controller and set it to receive the network configuration.";
 
-                    m_manager.OnControllerStateChanged += m_controllerStateChangedHandler;
-                    if (!m_manager.BeginControllerCommand(m_homeId, m_op, false, m_nodeId))
+                    if (!m_manager.TransferPrimaryRole(m_homeId))
                     {
-                        m_manager.OnControllerStateChanged -= m_controllerStateChangedHandler;
+                        MyControllerStateChangedHandler(ZWControllerState.Failed);
                     }
                     break;
                 }
@@ -126,10 +152,9 @@ namespace OZWForm
                     this.Text = "Has Node Failed";
                     this.label1.Text = "Testing whether the node has failed.\nThis command cannot be cancelled.";
 
-                    m_manager.OnNotification += new ManagedNotificationsHandler(NotificationHandler);
                     if (!m_manager.HasNodeFailed(m_homeId, m_nodeId))
                     {
-                        m_manager.OnNotification -= NotificationHandler;
+                        MyControllerStateChangedHandler(ZWControllerState.Failed);
                     }
                     break;
                 }
@@ -140,10 +165,9 @@ namespace OZWForm
                     this.label1.Text =
                         "Removing the failed node from the controller's list.\nThis command cannot be cancelled.";
 
-                    m_manager.OnNotification += new ManagedNotificationsHandler(NotificationHandler);
                     if (!m_manager.RemoveFailedNode(m_homeId, m_nodeId))
                     {
-                        m_manager.OnNotification -= NotificationHandler;
+                        MyControllerStateChangedHandler(ZWControllerState.Failed);
                     }
                     break;
                 }
@@ -153,11 +177,27 @@ namespace OZWForm
                     this.Text = "Replacing Failed Node";
                     this.label1.Text = "Testing the failed node.\nThis command cannot be cancelled.";
 
-                    m_manager.OnControllerStateChanged += m_controllerStateChangedHandler;
-                    if (!m_manager.BeginControllerCommand(m_homeId, m_op, false, m_nodeId))
+                    if (!m_manager.ReplaceFailedNode(m_homeId, m_nodeId))
                     {
-                        m_manager.OnControllerStateChanged -= m_controllerStateChangedHandler;
+                        MyControllerStateChangedHandler(ZWControllerState.Failed);
                     }
+                    break;
+                }
+                case ZWControllerCommand.RequestNetworkUpdate:
+                {
+                    this.ButtonCancel.Enabled = false;
+                    this.Text = "Requesting Network Update";
+                    this.label1.Text = "Requesting the Network Update.";
+
+                    if (!m_manager.RequestNetworkUpdate(m_homeId, m_nodeId))
+                    {
+                        MyControllerStateChangedHandler(ZWControllerState.Failed);
+                    }
+                    break;
+                }
+                default:
+                {
+                    m_manager.OnNotification -= NotificationHandler;
                     break;
                 }
             }
@@ -241,6 +281,20 @@ namespace OZWForm
                     result = DialogResult.Yes;
                     break;
                 }
+                case ZWControllerState.Cancel:
+                {
+                    dlgText = "Command was cancelled.";
+                    complete = true;
+                    result = DialogResult.Cancel;
+                    break;
+                }
+                case ZWControllerState.Error:
+                {
+                    dlgText = "An error occurred while processing the controller command.";
+                    complete = true;
+                    result = DialogResult.Cancel;
+                    break;
+                }
             }
 
             if (dlgText != "")
@@ -255,11 +309,14 @@ namespace OZWForm
                 m_dlg.SetButtonText("OK");
 
                 // Remove the event handler
-                m_manager.OnControllerStateChanged -= m_controllerStateChangedHandler;
                 m_manager.OnNotification -= NotificationHandler;
             }
         }
 
+        /// <summary>
+        /// Sets the dialog text.
+        /// </summary>
+        /// <param name="text">The text.</param>
         private void SetDialogText(String text)
         {
             if (m_dlg.InvokeRequired)
@@ -272,6 +329,10 @@ namespace OZWForm
             }
         }
 
+        /// <summary>
+        /// Sets the button text.
+        /// </summary>
+        /// <param name="text">The text.</param>
         private void SetButtonText(String text)
         {
             if (m_dlg.InvokeRequired)
@@ -284,6 +345,10 @@ namespace OZWForm
             }
         }
 
+        /// <summary>
+        /// Sets the button enabled.
+        /// </summary>
+        /// <param name="enabled">if set to <c>true</c> [enabled].</param>
         private void SetButtonEnabled(bool enabled)
         {
             if (m_dlg.InvokeRequired)
@@ -296,12 +361,16 @@ namespace OZWForm
             }
         }
 
+        /// <summary>
+        /// Handles the Click event of the ButtonCancel control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void ButtonCancel_Click(object sender, EventArgs e)
         {
             if (ButtonCancel.Text != "OK")
             {
                 // Remove the event handler
-                m_manager.OnControllerStateChanged -= m_controllerStateChangedHandler;
                 m_manager.OnNotification -= NotificationHandler;
 
                 // Cancel the operation

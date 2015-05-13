@@ -24,6 +24,7 @@
 //      along with OpenZWave.  If not, see <http://www.gnu.org/licenses/>.
 //
 //-----------------------------------------------------------------------------
+
 #include "ZWManager.h"
 
 using namespace OpenZWaveDotNet;
@@ -339,6 +340,7 @@ uint32 ZWManager::GetAssociations
 // <ZWManager::BeginControllerCommand>
 // Start a controller command process
 //-----------------------------------------------------------------------------
+[Obsolete("BeginControllerCommand is deprecated, please use the specialized methods instead.", true)]
 bool ZWManager::BeginControllerCommand
 (
 	uint32 homeId,
@@ -349,108 +351,6 @@ bool ZWManager::BeginControllerCommand
 {
 	IntPtr ip = Marshal::GetFunctionPointerForDelegate( m_onStateChanged );
 	return( Manager::Get()->BeginControllerCommand( homeId, (Driver::ControllerCommand)command, (Driver::pfnControllerCallback_t)ip.ToPointer(), NULL, highPower, nodeId ) );
-}
-
-//-----------------------------------------------------------------------------
-// <ZWManager::AddNode>
-// Add a Device to the Network.
-//-----------------------------------------------------------------------------
-bool ZWManager::AddNode
-(
-	uint32 const homeId, bool doSecurity
-)
-{
-	return Manager::Get()->AddNode(homeId, doSecurity);
-}
-
-//-----------------------------------------------------------------------------
-// <ZWManager::RemoveNode>
-// Remove a Device from the Network.
-//-----------------------------------------------------------------------------
-bool ZWManager::RemoveNode
-(
-	uint32 const homeId
-)
-{
-	return Manager::Get()->RemoveNode(homeId);
-}
-
-//-----------------------------------------------------------------------------
-// <ZWManager::RemoveFailedNode>
-// Remove a Specific Device from the network if its non-responsive.
-//-----------------------------------------------------------------------------
-bool ZWManager::RemoveFailedNode
-(
-	uint32 const homeId,
-	uint8 const nodeId
-)
-{
-	return Manager::Get()->RemoveFailedNode(homeId, nodeId);
-}
-
-//-----------------------------------------------------------------------------
-// <ZWManager::HasNodeFailed>
-// Test if the Controller Believes the Node has Failed.
-//-----------------------------------------------------------------------------
-bool ZWManager::HasNodeFailed
-(
-	uint32 const homeId,
-	uint8 const nodeId
-)
-{
-	return Manager::Get()->HasNodeFailed(homeId, nodeId);
-}
-
-//-----------------------------------------------------------------------------
-// <ZWManager::AssignReturnRoute>
-// Ask a Node to update its Return Route to the Controller
-//-----------------------------------------------------------------------------
-bool ZWManager::AssignReturnRoute
-(
-	uint32 const homeId,
-	uint8 const nodeId
-)
-{
-	return Manager::Get()->AssignReturnRoute(homeId, nodeId);
-}
-
-//-----------------------------------------------------------------------------
-// <ZWManager::RequestNodeNeighborUpdate>
-// Ask a Node to update its Neighbor Table.
-//-----------------------------------------------------------------------------
-bool ZWManager::RequestNodeNeighborUpdate
-(
-	uint32 const homeId,
-	uint8 const nodeId
-)
-{
-	return Manager::Get()->RequestNodeNeighborUpdate(homeId, nodeId);
-}
-
-//-----------------------------------------------------------------------------
-// <ZWManager::DeleteAllReturnRoutes>
-// Ask a Node to delete all its Return Routes
-//-----------------------------------------------------------------------------
-bool ZWManager::DeleteAllReturnRoutes
-(
-	uint32 const homeId,
-	uint8 const nodeId
-)
-{
-	return Manager::Get()->DeleteAllReturnRoutes(homeId, nodeId);
-}
-
-//-----------------------------------------------------------------------------
-// <ZWManager::SendNodeInformation>
-// Send a NIF frame from the Controller to the Node
-//-----------------------------------------------------------------------------
-bool ZWManager::SendNodeInformation
-(
-	uint32 const homeId,
-	uint8 const nodeId
-)
-{
-	return Manager::Get()->SendNodeInformation(homeId, nodeId);
 }
 
 bool ZWManager::GetNodeClassInformation

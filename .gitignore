@@ -20,3 +20,17 @@ Debug
 /dotnet/examples/OZWForm/src/OZWForm.sdf
 /dotnet/examples/OZWForm/src/OZWForm.sln
 /dotnet/examples/OZWForm/src/OZWForm.v12.suo
+*.cache
+*.res
+*.lib
+*.dll
+*.metagen
+*.exp
+*.exe
+OZWForm.exe.config
+OZWForm.vshost.exe.config
+OZWForm.vshost.exe.manifest
+*.resources
+/dotnet/examples/OZWForm/src/bin/x86/Release/OZW_Log.txt
+/dotnet/examples/OZWForm/src/bin/x86/Release
+/dotnet/examples/OZWForm/src/obj/x86/Release

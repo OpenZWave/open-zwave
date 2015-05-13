@@ -1,15 +1,42 @@
-﻿using System;
-using System.Collections.Generic;
+﻿//-----------------------------------------------------------------------------
+//
+//      MainForm.cs
+//
+//      The Main Form of the OZWForm application.
+//      Handles most of the Open Zwave notifications and commands.
+//
+//      Copyright (c) 2010 Amer Harb <harb_amer@hotmail.com>
+//
+//      SOFTWARE NOTICE AND LICENSE
+//
+//      This file is part of OpenZWave.
+//
+//      OpenZWave is free software: you can redistribute it and/or modify
+//      it under the terms of the GNU Lesser General Public License as published
+//      by the Free Software Foundation, either version 3 of the License,
+//      or (at your option) any later version.
+//
+//      OpenZWave is distributed in the hope that it will be useful,
+//      but WITHOUT ANY WARRANTY; without even the implied warranty of
+//      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//      GNU Lesser General Public License for more details.
+//
+//      You should have received a copy of the GNU Lesser General Public License
+//      along with OpenZWave.  If not, see <http://www.gnu.org/licenses/>.
+//
+//-----------------------------------------------------------------------------
+
+using System;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using OpenZWaveDotNet;
 
 namespace OZWForm
 {
-    //temp
+    /// <summary>
+    /// The Main Form of the OZWForm application.
+    /// Handles most of the Open Zwave notifications and commands.
+    /// </summary>
     public partial class MainForm : Form
     {
         private static ZWOptions m_options = null;
@@ -38,8 +65,11 @@ namespace OZWForm
         private BindingList<Node> m_nodeList = new BindingList<Node>();
         private Byte m_rightClickNode = 0xff;
         private string m_driverPort = string.Empty;
-        
 
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MainForm"/> class.
+        /// </summary>
         public MainForm()
         {
             // Initialize the form
@@ -199,6 +229,10 @@ namespace OZWForm
 //			m_manager.AddDriver(@"HID Controller", ZWControllerInterface.Hid);
         }
 
+        /// <summary>
+        /// The notifications handler.
+        /// </summary>
+        /// <param name="notification">The notification.</param>
         public void NotificationHandler(ZWNotification notification)
         {
             // Handle the notification on a thread that can safely
@@ -208,6 +242,9 @@ namespace OZWForm
             m_notification = null;
         }
 
+        /// <summary>
+        /// The notification handler.
+        /// </summary>
         private void NotificationHandler()
         {
             switch (m_notification.GetType())
@@ -384,6 +421,12 @@ namespace OZWForm
             NodeGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
         }
 
+        /// <summary>
+        /// Gets the node.
+        /// </summary>
+        /// <param name="homeId">The home identifier.</param>
+        /// <param name="nodeId">The node identifier.</param>
+        /// <returns></returns>
         private Node GetNode(UInt32 homeId, Byte nodeId)
         {
             foreach (Node node in m_nodeList)
@@ -397,11 +440,21 @@ namespace OZWForm
             return null;
         }
 
+        /// <summary>
+        /// Handles the Click event of the SaveToolStripMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void SaveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             m_manager.WriteConfig(m_homeId);
         }
 
+        /// <summary>
+        /// Handles the CellMouseDown event of the NodeGridView control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="DataGridViewCellMouseEventArgs"/> instance containing the event data.</param>
         private void NodeGridView_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
         {
             if ((e.RowIndex >= 0) && (e.Button == System.Windows.Forms.MouseButtons.Right))
@@ -414,76 +467,150 @@ namespace OZWForm
             }
         }
 
+        /// <summary>
+        /// Handles the Click event of the PowerOnToolStripMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void PowerOnToolStripMenuItem_Click(object sender, EventArgs e)
         {
             m_manager.SetNodeOn(m_homeId, m_rightClickNode);
         }
 
+        /// <summary>
+        /// Handles the Click event of the PowerOffToolStripMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void PowerOffToolStripMenuItem_Click(object sender, EventArgs e)
         {
             m_manager.SetNodeOff(m_homeId, m_rightClickNode);
         }
 
+        /// <summary>
+        /// Handles the Click event of the hasNodeFailedToolStripMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void hasNodeFailedToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DoCommand(ZWControllerCommand.HasNodeFailed);
         }
 
+        /// <summary>
+        /// Handles the Click event of the markNodeAsFailedToolStripMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void markNodeAsFailedToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DoCommand(ZWControllerCommand.RemoveFailedNode);
         }
 
+        /// <summary>
+        /// Handles the Click event of the replaceFailedNodeToolStripMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void replaceFailedNodeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DoCommand(ZWControllerCommand.ReplaceFailedNode);
         }
 
+        /// <summary>
+        /// Handles the Click event of the createNewPrmaryControllerToolStripMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void createNewPrmaryControllerToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DoCommand(ZWControllerCommand.CreateNewPrimary);
         }
 
+        /// <summary>
+        /// Handles the Click event of the addDeviceToolStripMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void addDeviceToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DoCommand(ZWControllerCommand.AddDevice);
         }
 
+        /// <summary>
+        /// Handles the Click event of the removeDeviceToolStripMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void removeDeviceToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DoCommand(ZWControllerCommand.RemoveDevice);
         }
 
+        /// <summary>
+        /// Handles the Click event of the transferPrimaryRoleToolStripMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void transferPrimaryRoleToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DoCommand(ZWControllerCommand.TransferPrimaryRole);
         }
 
+        /// <summary>
+        /// Handles the Click event of the receiveConfigurationToolStripMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void receiveConfigurationToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DoCommand(ZWControllerCommand.ReceiveConfiguration);
         }
 
+        /// <summary>
+        /// Handles the Click event of the requestNetworkUpdateToolStripMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void requestNetworkUpdateToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DoCommand(ZWControllerCommand.RequestNetworkUpdate);
         }
 
+        /// <summary>
+        /// Handles the Click event of the requestNodeNeighborUpdateToolStripMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void requestNodeNeighborUpdateToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DoCommand(ZWControllerCommand.RequestNodeNeighborUpdate);
         }
 
+        /// <summary>
+        /// Handles the Click event of the assignReturnRouteToolStripMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void assignReturnRouteToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DoCommand(ZWControllerCommand.AssignReturnRoute);
         }
 
+        /// <summary>
+        /// Handles the Click event of the deleteReturnRouteToolStripMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void deleteReturnRouteToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DoCommand(ZWControllerCommand.DeleteAllReturnRoutes);
         }
 
+        /// <summary>
+        /// Does the command.
+        /// </summary>
+        /// <param name="command">The command.</param>
         private void DoCommand(ZWControllerCommand command)
         {
             ControllerCommandDlg dlg = new ControllerCommandDlg(this, m_manager, m_homeId, command, m_rightClickNode);
@@ -491,6 +618,11 @@ namespace OZWForm
             dlg.Dispose();
         }
 
+        /// <summary>
+        /// Handles the Click event of the propertiesToolStripMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void propertiesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Node node = GetNode(m_homeId, m_rightClickNode);
@@ -509,6 +641,11 @@ namespace OZWForm
             }
         }
 
+        /// <summary>
+        /// Handles the CellParsing event of the NodeGridView control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="DataGridViewCellParsingEventArgs"/> instance containing the event data.</param>
         private void NodeGridView_CellParsing(object sender, DataGridViewCellParsingEventArgs e)
         {
             if ((e.RowIndex < 0) || (e.ColumnIndex < 0))
@@ -548,6 +685,11 @@ namespace OZWForm
             }
         }
 
+        /// <summary>
+        /// Gets the value.
+        /// </summary>
+        /// <param name="v">The v.</param>
+        /// <returns></returns>
         private string GetValue(ZWValueID v)
         {
             switch (v.GetType())
@@ -593,11 +735,21 @@ namespace OZWForm
             }
         }
 
+        /// <summary>
+        /// Handles the Click event of the softToolStripMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void softToolStripMenuItem_Click(object sender, EventArgs e)
         {
             m_manager.SoftReset(m_homeId);
         }
 
+        /// <summary>
+        /// Handles the Click event of the eraseAllToolStripMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void eraseAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (DialogResult.Yes ==
@@ -611,6 +763,11 @@ namespace OZWForm
             }
         }
 
+        /// <summary>
+        /// Handles the Click event of the addSecureDeviceToolStripMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void addSecureDeviceToolStripMenuItem_Click(object sender, EventArgs e)
         {
             m_securityEnabled = true;
