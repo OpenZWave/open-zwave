@@ -262,6 +262,7 @@ exit 0</Command>
     <ClInclude Include="..\..\..\src\command_classes\Battery.h" />
     <ClInclude Include="..\..\..\src\command_classes\ClimateControlSchedule.h" />
     <ClInclude Include="..\..\..\src\command_classes\Clock.h" />
+    <ClInclude Include="..\..\..\src\command_classes\Color.h" />
     <ClInclude Include="..\..\..\src\command_classes\CommandClass.h" />
     <ClInclude Include="..\..\..\src\command_classes\CommandClasses.h" />
     <ClInclude Include="..\..\..\src\command_classes\Configuration.h" />
@@ -364,6 +365,7 @@ exit 0</Command>
     <ClCompile Include="..\..\..\src\command_classes\Battery.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\ClimateControlSchedule.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\Clock.cpp" />
+    <ClCompile Include="..\..\..\src\command_classes\Color.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\CommandClass.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\CommandClasses.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\Configuration.cpp" />
