@@ -34,3 +34,4 @@ OZWForm.vshost.exe.manifest
 /dotnet/examples/OZWForm/src/bin/x86/Release/OZW_Log.txt
 /dotnet/examples/OZWForm/src/bin/x86/Release
 /dotnet/examples/OZWForm/src/obj/x86/Release
+.gitignore
