@@ -54,6 +54,16 @@
 #	define OPENZWAVE_EXPORT_WARNINGS_ON
 #endif
 
+#ifdef __GNUC__
+#define DEPRECATED __attribute__((deprecated))
+#elif defined(_MSC_VER)
+#define DEPRECATED __declspec(deprecated)
+#else
+#pragma message("WARNING: You need to implement DEPRECATED for this compiler")
+#define DEPRECATED
+#endif
+
+
 #ifdef NULL
 #undef NULL
 #endif
@@ -201,7 +211,8 @@ namespace OpenZWave
 #define MAX_MAX_TRIES		7	// Don't exceed this retry limit
 #define ACK_TIMEOUT	1000		// How long to wait for an ACK
 #define BYTE_TIMEOUT	150
-#define RETRY_TIMEOUT	40000		// Retry send after 40 seconds
+//#define RETRY_TIMEOUT	40000		// Retry send after 40 seconds
+#define RETRY_TIMEOUT	10000		// Retry send after 10 seconds (we might need to keep this below 10 for Security CC to function correctly)
 
 #define SOF												0x01
 #define ACK												0x06
