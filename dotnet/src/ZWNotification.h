@@ -1,6 +1,6 @@
 //-----------------------------------------------------------------------------
 //
-//      zwave.h
+//      ZWNotification.h
 //
 //      Cli/C++ wrapper for the C++ OpenZWave Manager class
 //
