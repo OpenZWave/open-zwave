@@ -6,3 +6,17 @@ libopenzwave.a
 libopenzwave.pc
 libopenzwave.so*
 libopenzwave.so
+*.obj
+/cpp/build/windows/vs2010/Debug/*.log
+/cpp/build/windows/vs2010/Debug/OpenZWave.tlog/*.tlog
+/cpp/build/windows/vs2010/Debug/OpenZWave.tlog/*.lastbuildstate
+*.idb
+*.pdb
+*.log
+*.tlog
+/dotnet/build/vs2010/Debug/app.res
+Debug
+/dotnet/examples/OZWForm/src/OZWForm.csproj
+/dotnet/examples/OZWForm/src/OZWForm.sdf
+/dotnet/examples/OZWForm/src/OZWForm.sln
+/dotnet/examples/OZWForm/src/OZWForm.v12.suo
