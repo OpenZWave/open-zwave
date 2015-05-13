@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="DebugDLL|Win32">
       <Configuration>DebugDLL</Configuration>
@@ -28,22 +28,18 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -88,6 +84,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\..\src;..\..\..\src\command_classes;..\..\..\src\value_classes;..\..\..\src\platform;..\..\..\src\platform\windows;..\..\..\tinyxml;..\..\..\hidapi\hidapi;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -96,7 +93,6 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <AdditionalIncludeDirectories>..\..\..\src;..\..\..\tinyxml;..\..\..\hidapi\hidapi;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Lib>
       <OutputFile>$(OutDir)\$(ProjectName).lib</OutputFile>
@@ -104,16 +100,21 @@
       <TargetMachine>MachineX86</TargetMachine>
     </Lib>
     <PreBuildEvent>
-      <Command>CALL $(SolutionDir)\..\GIT-VS-VERSION-GEN.bat "$(ProjectDir)\" "..\winversion.cpp" 
+      <Command>"$(ProgramFiles)\TortoiseSVN\bin\subwcrev.exe" . ..\winversion.ini ..\winversion.cpp
+if %ERRORLEVEL% GTR 0 (
+echo Using Default WinVersion.cpp Version as we could not find a copy of TortoiseSVN in your Program Files 
+copy ..\winversion.tmpl ..\winversion.cpp
+)
 exit 0</Command>
     </PreBuildEvent>
     <PreBuildEvent>
-      <Message>Export GIT Revision</Message>
+      <Message>Export SVN Revision</Message>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\..\src;..\..\..\src\command_classes;..\..\..\src\value_classes;..\..\..\src\platform;..\..\..\src\platform\windows;..\..\..\tinyxml;..\..\..\hidapi\hidapi;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;OPENZWAVE_MAKEDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -123,7 +124,6 @@ exit 0</Command>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <DisableSpecificWarnings>4251</DisableSpecificWarnings>
-      <AdditionalIncludeDirectories>..\..\..\src;..\..\..\tinyxml;..\..\..\hidapi\hidapi;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Lib>
       <OutputFile>$(OutDir)\$(ProjectName).dll</OutputFile>
@@ -136,16 +136,21 @@ exit 0</Command>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PreBuildEvent>
-      <Command>CALL $(SolutionDir)\..\GIT-VS-VERSION-GEN.bat "$(ProjectDir)\" "..\winversion.cpp" 
+      <Command>"$(ProgramFiles)\TortoiseSVN\bin\subwcrev.exe" . ..\winversion.ini ..\winversion.cpp
+if %ERRORLEVEL% GTR 0 (
+echo Using Default WinVersion.cpp Version as we could not find a copy of TortoiseSVN in your Program Files 
+copy ..\winversion.tmpl ..\winversion.cpp
+)
 exit 0</Command>
     </PreBuildEvent>
     <PreBuildEvent>
-      <Message>Export GIT Revision</Message>
+      <Message>Export SVN Revision</Message>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
+      <AdditionalIncludeDirectories>..\..\..\src;..\..\..\src\command_classes;..\..\..\src\value_classes;..\..\..\src\platform;..\..\..\src\platform\windows;..\..\..\tinyxml;..\..\..\hidapi\hidapi;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_LIB;OPENZWAVE_MAKEDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -155,7 +160,6 @@ exit 0</Command>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <DisableSpecificWarnings>4251</DisableSpecificWarnings>
-      <AdditionalIncludeDirectories>..\..\..\src;..\..\..\tinyxml;..\..\..\hidapi\hidapi;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Lib>
       <OutputFile>$(OutDir)\$(ProjectName).lib</OutputFile>
@@ -167,8 +171,12 @@ exit 0</Command>
     </Link>
     <PreBuildEvent />
     <PreBuildEvent>
-      <Message>Export GIT Revision</Message>
-      <Command>CALL $(SolutionDir)\..\GIT-VS-VERSION-GEN.bat "$(ProjectDir)\" "..\winversion.cpp" 
+      <Message>Export SVN Revision</Message>
+      <Command>"$(ProgramFiles)\TortoiseSVN\bin\subwcrev.exe" . ..\winversion.ini ..\winversion.cpp
+if %ERRORLEVEL% GTR 0 (
+echo Using Default WinVersion.cpp Version as we could not find a copy of TortoiseSVN in your Program Files 
+copy ..\winversion.tmpl ..\winversion.cpp
+)
 exit 0</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
@@ -176,6 +184,7 @@ exit 0</Command>
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>..\..\..\src;..\..\..\src\command_classes;..\..\..\src\value_classes;..\..\..\src\platform;..\..\..\src\platform\windows;..\..\..\tinyxml;..\..\..\hidapi\hidapi;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -183,35 +192,28 @@ exit 0</Command>
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <AdditionalIncludeDirectories>..\..\..\src;..\..\..\tinyxml;..\..\..\hidapi\hidapi;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Lib>
       <OutputFile>$(OutDir)\$(ProjectName).lib</OutputFile>
       <AdditionalDependencies>setupapi.lib</AdditionalDependencies>
     </Lib>
     <PreBuildEvent>
-      <Command>CALL $(SolutionDir)\..\GIT-VS-VERSION-GEN.bat "$(ProjectDir)\" "..\winversion.cpp" 
+      <Command>"$(ProgramFiles)\TortoiseSVN\bin\subwcrev.exe" . ..\winversion.ini ..\winversion.cpp
+if %ERRORLEVEL% GTR 0 (
+echo Using Default WinVersion.cpp Version as we could not find a copy of TortoiseSVN in your Program Files 
+copy ..\winversion.tmpl ..\winversion.cpp
+)
 exit 0</Command>
     </PreBuildEvent>
     <PreBuildEvent>
-      <Message>Export GIT Revision</Message>
+      <Message>Export SVN Revision</Message>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\hidapi\hidapi\hidapi.h" />
-    <ClInclude Include="..\..\..\src\aes\aes.h" />
-    <ClInclude Include="..\..\..\src\aes\aesopt.h" />
-    <ClInclude Include="..\..\..\src\aes\aestab.h" />
-    <ClInclude Include="..\..\..\src\aes\brg_endian.h" />
-    <ClInclude Include="..\..\..\src\aes\brg_types.h" />
     <ClInclude Include="..\..\..\src\Bitfield.h" />
-    <ClInclude Include="..\..\..\src\command_classes\DoorLock.h" />
-    <ClInclude Include="..\..\..\src\command_classes\DoorLockLogging.h" />
     <ClInclude Include="..\..\..\src\command_classes\NoOperation.h" />
     <ClInclude Include="..\..\..\src\command_classes\SceneActivation.h" />
-    <ClInclude Include="..\..\..\src\command_classes\Security.h" />
-    <ClInclude Include="..\..\..\src\command_classes\CentralScene.h" />
-    <ClInclude Include="..\..\..\src\command_classes\TimeParameters.h" />
     <ClInclude Include="..\..\..\src\command_classes\SensorAlarm.h" />
     <ClInclude Include="..\..\..\src\command_classes\UserCode.h" />
     <ClInclude Include="..\..\..\src\Defs.h" />
@@ -222,7 +224,6 @@ exit 0</Command>
     <ClInclude Include="..\..\..\src\Node.h" />
     <ClInclude Include="..\..\..\src\Notification.h" />
     <ClInclude Include="..\..\..\src\Options.h" />
-    <ClInclude Include="..\..\..\src\ZWSecurity.h" />
     <ClInclude Include="..\..\..\src\platform\Controller.h" />
     <ClInclude Include="..\..\..\src\platform\Event.h" />
     <ClInclude Include="..\..\..\src\platform\HidController.h" />
@@ -304,17 +305,8 @@ exit 0</Command>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\hidapi\windows\hid.cpp" />
-    <ClCompile Include="..\..\..\src\aes\aescrypt.c" />
-    <ClCompile Include="..\..\..\src\aes\aeskey.c" />
-    <ClCompile Include="..\..\..\src\aes\aestab.c" />
-    <ClCompile Include="..\..\..\src\aes\aes_modes.c" />
-    <ClCompile Include="..\..\..\src\command_classes\DoorLock.cpp" />
-    <ClCompile Include="..\..\..\src\command_classes\DoorLockLogging.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\NoOperation.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\SceneActivation.cpp" />
-    <ClCompile Include="..\..\..\src\command_classes\Security.cpp" />
-    <ClCompile Include="..\..\..\src\command_classes\CentralScene.cpp" />
-    <ClCompile Include="..\..\..\src\command_classes\TimeParameters.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\SensorAlarm.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\UserCode.cpp" />
     <ClCompile Include="..\..\..\src\Driver.cpp" />
@@ -322,9 +314,7 @@ exit 0</Command>
     <ClCompile Include="..\..\..\src\Manager.cpp" />
     <ClCompile Include="..\..\..\src\Msg.cpp" />
     <ClCompile Include="..\..\..\src\Node.cpp" />
-    <ClCompile Include="..\..\..\src\Notification.cpp" />
     <ClCompile Include="..\..\..\src\Options.cpp" />
-    <ClCompile Include="..\..\..\src\ZWSecurity.cpp" />
     <ClCompile Include="..\..\..\src\platform\Controller.cpp" />
     <ClCompile Include="..\..\..\src\platform\Event.cpp" />
     <ClCompile Include="..\..\..\src\platform\FileOps.cpp" />
