@@ -226,7 +226,7 @@ void LogImpl::QueueDump
 	while( it != m_logQueue.end() )
 	{
 		string strTemp = *it;
-		Log::Write( LogLevel_Internal, strTemp.c_str() );
+		Log::Write( LogLevel_Internal, "%s", strTemp.c_str() );
 		++it;
 	}
 	m_logQueue.clear();
