@@ -193,14 +193,13 @@ void Group::WriteXML
 //-----------------------------------------------------------------------------
 bool Group::Contains
 (
-	uint8 const _nodeId
+	uint8 const _nodeId,
+	uint8 const _instance
 )
 {
-//	map<uint8,AssociationCommandVec>::iterator it = m_associations.find( _nodeId );
-//	return( it != m_associations.end() );
 	for( map<InstanceAssociation,AssociationCommandVec>::iterator it = m_associations.begin(); it != m_associations.end(); ++it )
 	{
-		if (it->first.m_nodeId == _nodeId)
+		if ((it->first.m_nodeId == _nodeId) and (it->first.m_instance == _instance))
 		{
 			return true;
 		}
@@ -214,28 +213,6 @@ bool Group::Contains
 //-----------------------------------------------------------------------------
 void Group::AddAssociation
 (
-	uint8 const _nodeId
-)
-{
-	if( Driver* driver = Manager::Get()->GetDriver( m_homeId ) )
-	{
-		if( Node* node = driver->GetNodeUnsafe( m_nodeId ) )
-		{
-			if( Association* cc = static_cast<Association*>( node->GetCommandClass( Association::StaticGetCommandClassId() ) ) )
-			{
-				cc->Set( m_groupIdx, _nodeId );
-				cc->QueryGroup( m_groupIdx, 0 );
-			}
-		}
-	}
-}
-
-//-----------------------------------------------------------------------------
-// <Group::AddAssociation>
-// Associate a node with this group
-//-----------------------------------------------------------------------------
-void Group::AddAssociation
-(
 	uint8 const _nodeId,
 	uint8 const _instance
 )
@@ -244,38 +221,20 @@ void Group::AddAssociation
 	{
 		if( Node* node = driver->GetNodeUnsafe( m_nodeId ) )
 		{
-			if( MultiInstanceAssociation* cc = static_cast<MultiInstanceAssociation*>( node->GetCommandClass( MultiInstanceAssociation::StaticGetCommandClassId() ) ) )
+			// TODO add options to use Association when _instance == 0
+			if( MultiInstanceAssociation* cc = static_cast<MultiInstanceAssociation*>( node->GetCommandClass( MultiInstanceAssociation::StaticGetCommandClassId() )))
 			{
 				cc->Set( m_groupIdx, _nodeId, _instance );
 				cc->QueryGroup( m_groupIdx, 0 );
 			}
-//			if( Association* cc = static_cast<Association*>( node->GetCommandClass( Association::StaticGetCommandClassId() ) ) )
-//			{
-//				cc->Set( m_groupIdx, _nodeId );
-//				cc->QueryGroup( m_groupIdx, 0 );
-//			}
-		}
-	}
-}
-
-//-----------------------------------------------------------------------------
-// <Group:RemoveAssociation>
-// Remove a node from this group
-//-----------------------------------------------------------------------------
-void Group::RemoveAssociation
-(
-	uint8 const _nodeId
-)
-{
-	if( Driver* driver = Manager::Get()->GetDriver( m_homeId ) )
-	{
-		if( Node* node = driver->GetNodeUnsafe( m_nodeId ) )
-		{
-			if( Association* cc = static_cast<Association*>( node->GetCommandClass( Association::StaticGetCommandClassId() ) ) )
+			else
 			{
-				cc->Remove( m_groupIdx, _nodeId );
-				cc->QueryGroup( m_groupIdx, 0 );
-			}
+				if( Association* cc = static_cast<Association*>( node->GetCommandClass( Association::StaticGetCommandClassId() ) ) )
+				{
+					cc->Set( m_groupIdx, _nodeId );
+					cc->QueryGroup( m_groupIdx, 0 );
+				}
+			} 
 		}
 	}
 }
@@ -294,10 +253,19 @@ void Group::RemoveAssociation
 	{
 		if( Node* node = driver->GetNodeUnsafe( m_nodeId ) )
 		{
+			// TODO add options to use Association when _instance == 0
 			if( MultiInstanceAssociation* cc = static_cast<MultiInstanceAssociation*>( node->GetCommandClass( MultiInstanceAssociation::StaticGetCommandClassId() ) ) )
 			{
 				cc->Remove( m_groupIdx, _nodeId, _instance );
 				cc->QueryGroup( m_groupIdx, 0 );
+			} 
+			else
+			{
+				if( Association* cc = static_cast<Association*>( node->GetCommandClass( Association::StaticGetCommandClassId() ) ) )
+				{
+					cc->Remove( m_groupIdx, _nodeId );
+					cc->QueryGroup( m_groupIdx, 0 );
+				}
 			}
 		}
 	}

@@ -1478,36 +1478,10 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 * \param _nodeId The ID of the node whose associations are to be changed.
 		 * \param _groupIdx One-based index of the group (because Z-Wave product manuals use one-based group numbering).
 		 * \param _targetNodeId Identifier for the node that will be added to the association group.
-		 * \see GetNumGroups, GetAssociations, GetMaxAssociations, RemoveAssociation
-		 */
-		void AddAssociation( uint32 const _homeId, uint8 const _nodeId, uint8 const _groupIdx, uint8 const _targetNodeId );
-
-		/**
-		 * \brief Adds a node to an association group.
-		 * Due to the possibility of a device being asleep, the command is assumed to suceed, and the association data
-		 * held in this class is updated directly.  This will be reverted by a future Association message from the device
-		 * if the Z-Wave message actually failed to get through.  Notification callbacks will be sent in both cases.
-		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
-		 * \param _nodeId The ID of the node whose associations are to be changed.
-		 * \param _groupIdx One-based index of the group (because Z-Wave product manuals use one-based group numbering).
-		 * \param _targetNodeId Identifier for the node that will be added to the association group.
 		 * \param _instance Identifier for the instance that will be added to the association group.
 		 * \see GetNumGroups, GetAssociations, GetMaxAssociations, RemoveAssociation
 		 */
-		void AddAssociation( uint32 const _homeId, uint8 const _nodeId, uint8 const _groupIdx, uint8 const _targetNodeId, uint8 const _instance );
-
-		/**
-		 * \brief Removes a node from an association group.
-		 * Due to the possibility of a device being asleep, the command is assumed to suceed, and the association data
-		 * held in this class is updated directly.  This will be reverted by a future Association message from the device
-		 * if the Z-Wave message actually failed to get through.   Notification callbacks will be sent in both cases.
-		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
-		 * \param _nodeId The ID of the node whose associations are to be changed.
-		 * \param _groupIdx One-based index of the group (because Z-Wave product manuals use one-based group numbering).
-		 * \param _targetNodeId Identifier for the node that will be removed from the association group.
-		 * \see GetNumGroups, GetAssociations, GetMaxAssociations, AddAssociation
-		 */
-		void RemoveAssociation( uint32 const _homeId, uint8 const _nodeId, uint8 const _groupIdx, uint8 const _targetNodeId );
+		void AddAssociation( uint32 const _homeId, uint8 const _nodeId, uint8 const _groupIdx, uint8 const _targetNodeId, uint8 const _instance = 0x00 );
 
 		/**
 		 * \brief Removes a node from an association group.
@@ -1521,7 +1495,7 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 * \param _instance Identifier for the instance that will be removed to the association group.
 		 * \see GetNumGroups, GetAssociations, GetMaxAssociations, AddAssociation
 		 */
-		void RemoveAssociation( uint32 const _homeId, uint8 const _nodeId, uint8 const _groupIdx, uint8 const _targetNodeId, uint8 const _instance );
+		void RemoveAssociation( uint32 const _homeId, uint8 const _nodeId, uint8 const _groupIdx, uint8 const _targetNodeId, uint8 const _instance = 0x00 );
 
 	/*@}*/
 

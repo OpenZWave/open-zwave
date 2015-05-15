@@ -5649,24 +5649,6 @@ void Driver::AddAssociation
 (
 		uint8 const _nodeId,
 		uint8 const _groupIdx,
-		uint8 const _targetNodeId
-)
-{
-	LockGuard LG(m_nodeMutex);
-	if( Node* node = GetNode( _nodeId ) )
-	{
-		node->AddAssociation( _groupIdx, _targetNodeId );
-	}
-}
-
-//-----------------------------------------------------------------------------
-// <Driver::AddAssociation>
-// Adds a node to an association group
-//-----------------------------------------------------------------------------
-void Driver::AddAssociation
-(
-		uint8 const _nodeId,
-		uint8 const _groupIdx,
 		uint8 const _targetNodeId,
 		uint8 const _instance
 )
@@ -5675,24 +5657,6 @@ void Driver::AddAssociation
 	if( Node* node = GetNode( _nodeId ) )
 	{
 		node->AddAssociation( _groupIdx, _targetNodeId, _instance );
-	}
-}
-
-//-----------------------------------------------------------------------------
-// <Driver::RemoveAssociation>
-// Removes a node from an association group
-//-----------------------------------------------------------------------------
-void Driver::RemoveAssociation
-(
-		uint8 const _nodeId,
-		uint8 const _groupIdx,
-		uint8 const _targetNodeId
-)
-{
-	LockGuard LG(m_nodeMutex);
-	if( Node* node = GetNode( _nodeId ) )
-	{
-		node->RemoveAssociation( _groupIdx, _targetNodeId );
 	}
 }
 
