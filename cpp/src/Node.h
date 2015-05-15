@@ -85,6 +85,7 @@ namespace OpenZWave
 		friend class Meter;
 		friend class MeterPulse;
 		friend class MultiInstance;
+			friend class MultiInstanceAssociation;
 		friend class NodeNaming;
 		friend class Protection;
 		friend class Security;
@@ -468,7 +469,9 @@ namespace OpenZWave
 		uint8 GetMaxAssociations( uint8 const _groupIdx );
 		string GetGroupLabel( uint8 const _groupIdx );
 		void AddAssociation( uint8 const _groupIdx, uint8 const _targetNodeId );
+			void AddAssociation( uint8 const _groupIdx, uint8 const _targetNodeId, uint8 const _instance );
 		void RemoveAssociation( uint8 const _groupIdx, uint8 const _targetNodeId );
+			void RemoveAssociation( uint8 const _groupIdx, uint8 const _targetNodeId, uint8 const _instance );
 		void AutoAssociate();
 
 		// The following methods are not exposed

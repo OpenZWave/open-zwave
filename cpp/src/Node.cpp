@@ -46,6 +46,7 @@
 #include "command_classes/ControllerReplication.h"
 #include "command_classes/ManufacturerSpecific.h"
 #include "command_classes/MultiInstance.h"
+#include "command_classes/MultiInstanceAssociation.h"
 #include "command_classes/Security.h"
 #include "command_classes/WakeUp.h"
 #include "command_classes/NodeNaming.h"
@@ -528,18 +529,28 @@ void Node::AdvanceQueries
 			{
 				// if this device supports COMMAND_CLASS_ASSOCIATION, determine to which groups this node belong
 				Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_Associations" );
-				Association* acc = static_cast<Association*>( GetCommandClass( Association::StaticGetCommandClassId() ) );
-				if( acc )
+				MultiInstanceAssociation* macc = static_cast<MultiInstanceAssociation*>( GetCommandClass( MultiInstanceAssociation::StaticGetCommandClassId() ) );
+				if( macc )
 				{
-					acc->RequestAllGroups( 0 );
+					macc->RequestAllGroups( 0 );
 					m_queryPending = true;
 					addQSC = true;
 				}
 				else
 				{
-					// if this device doesn't support Associations, move to retrieve Session information
-					m_queryStage = QueryStage_Neighbors;
-					m_queryRetries = 0;
+					Association* acc = static_cast<Association*>( GetCommandClass( Association::StaticGetCommandClassId() ) );
+					if( acc )
+					{
+						acc->RequestAllGroups( 0 );
+						m_queryPending = true;
+						addQSC = true;
+					}
+					else
+					{
+						// if this device doesn't support Associations, move to retrieve Session information
+						m_queryStage = QueryStage_Neighbors;
+						m_queryRetries = 0;
+					}
 				}
 				break;
 			}
@@ -2430,6 +2441,23 @@ void Node::AddAssociation
 }
 
 //-----------------------------------------------------------------------------
+// <Node::AddAssociation>
+// Adds a node to an association group
+//-----------------------------------------------------------------------------
+void Node::AddAssociation
+(
+		uint8 const _groupIdx,
+		uint8 const _targetNodeId,
+		uint8 const _instance
+)
+{
+	if( Group* group = GetGroup( _groupIdx ) )
+	{
+		group->AddAssociation( _targetNodeId, _instance  );
+	}
+}
+
+//-----------------------------------------------------------------------------
 // <Node::RemoveAssociation>
 // Removes a node from an association group
 //-----------------------------------------------------------------------------
@@ -2442,6 +2470,23 @@ void Node::RemoveAssociation
 	if( Group* group = GetGroup( _groupIdx ) )
 	{
 		group->RemoveAssociation( _targetNodeId );
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <Node::RemoveAssociation>
+// Removes a node from an association group
+//-----------------------------------------------------------------------------
+void Node::RemoveAssociation
+(
+		uint8 const _groupIdx,
+		uint8 const _targetNodeId,
+		uint8 const _instance
+)
+{
+	if( Group* group = GetGroup( _groupIdx ) )
+	{
+		group->RemoveAssociation( _targetNodeId, _instance );
 	}
 }
 

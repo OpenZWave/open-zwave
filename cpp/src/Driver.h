@@ -770,7 +770,9 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		uint8 GetMaxAssociations( uint8 const _nodeId, uint8 const _groupIdx );
 		string GetGroupLabel( uint8 const _nodeId, uint8 const _groupIdx );
 		void AddAssociation( uint8 const _nodeId, uint8 const _groupIdx, uint8 const _targetNodeId );
+		void AddAssociation( uint8 const _nodeId, uint8 const _groupIdx, uint8 const _targetNodeId, uint8 const _instance );
 		void RemoveAssociation( uint8 const _nodeId, uint8 const _groupIdx, uint8 const _targetNodeId );
+		void RemoveAssociation( uint8 const _nodeId, uint8 const _groupIdx, uint8 const _targetNodeId, uint8 const _instance  );
 
 	//-----------------------------------------------------------------------------
 	//	Notifications
