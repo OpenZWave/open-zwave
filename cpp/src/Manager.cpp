@@ -64,6 +64,7 @@ Manager* Manager::s_instance = NULL;
 extern uint16_t ozw_vers_major;
 extern uint16_t ozw_vers_minor;
 extern uint16_t ozw_vers_revision;
+extern char ozw_version_string[];
 
 //-----------------------------------------------------------------------------
 //	Construction
@@ -114,6 +115,15 @@ std::string Manager::getVersionAsString() {
 	std::ostringstream versionstream;
 	versionstream << ozw_vers_major << "." << ozw_vers_minor << "." << ozw_vers_revision;
 	return versionstream.str();
+}
+//-----------------------------------------------------------------------------
+//      <Manager::getVersionLong>
+//      Static method to get the long Version of OZW as a string.
+//-----------------------------------------------------------------------------
+std::string Manager::getVersionLongAsString() {
+        std::ostringstream versionstream;
+        versionstream << ozw_version_string;
+        return versionstream.str();
 }
 //-----------------------------------------------------------------------------
 //	<Manager::getVersion>
