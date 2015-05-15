@@ -39,12 +39,18 @@ namespace OpenZWave
 {
 	class Node;
 
+	typedef struct InstanceAssociation {
+		uint8 m_nodeId;
+		uint8 m_instance;
+	} InstanceAssociation;
+	
 	/** \brief Manages a group of devices (various nodes associated with each other).
 	 */
 	class Group
 	{
 		friend class Node;
 		friend class Association;
+		friend class MultiInstanceAssociation;
 
 	//-----------------------------------------------------------------------------
 	// Construction
@@ -62,6 +68,7 @@ namespace OpenZWave
 	public:
 		string const& GetLabel()const{ return m_label; }
 		uint32 GetAssociations( uint8** o_associations );
+		uint32 GetAssociations( InstanceAssociation** o_associations );
 		uint8 GetMaxAssociations()const{ return m_maxAssociations; }
 		uint8 GetIdx()const{ return m_groupIdx; }
 		bool Contains( uint8 const _nodeId );
@@ -71,8 +78,11 @@ namespace OpenZWave
 		void SetAuto( bool const _state ){ m_auto = _state; }
 
 		void AddAssociation( uint8 const _nodeId );
+		void AddAssociation( uint8 const _nodeId, uint8 const _instance );
 		void RemoveAssociation( uint8 const _nodeId );
+		void RemoveAssociation( uint8 const _nodeId, uint8 const _instance );
 		void OnGroupChanged( vector<uint8> const& _associations );
+		void OnGroupChanged( vector<InstanceAssociation> const& _associations );
 
 	//-----------------------------------------------------------------------------
 	// Command methods (COMMAND_CLASS_ASSOCIATION_COMMAND_CONFIGURATION)
@@ -94,6 +104,10 @@ namespace OpenZWave
 		};
 
 		typedef vector<AssociationCommand>	AssociationCommandVec;
+		struct classcomp {
+			bool operator() (const InstanceAssociation& lhs, const InstanceAssociation& rhs) const
+			{return (lhs.m_nodeId < rhs.m_nodeId) and (lhs.m_instance < rhs.m_instance );}
+		};
 
 	//-----------------------------------------------------------------------------
 	// Member variables
@@ -105,7 +119,7 @@ namespace OpenZWave
 		uint8								m_groupIdx;
 		uint8								m_maxAssociations;
 		bool								m_auto;				// If true, the controller will automatically be associated with the group
-		map<uint8,AssociationCommandVec>	m_associations;
+		map<InstanceAssociation,AssociationCommandVec,classcomp>	m_associations;
 	};
 
 } //namespace OpenZWave
