@@ -416,16 +416,40 @@ bool Color::SetValue
 		Value const& _value
 )
 {
-#if 0
-	if (ValueID::ValueType_Raw == _value.GetID().GetType())
+	std::cout << "processing" << std::endl;
+	if (ValueID::ValueType_String == _value.GetID().GetType())
 	{
-		ValueRaw const* value = static_cast<ValueRaw const*>(&_value);
-		uint8* s = value->GetValue();
-		uint8 len = value->GetLength();
-		if (len > 10) //sanity check
+		ValueString const* value = static_cast<ValueString const*>(&_value);
+		string s = value->GetValue();
+		uint64_t rawresult;
+std::cout << s.length() << std::endl;
+		//sanity check
+		if (s.length() < 7)
+			return false;
+std::cout << "ok" << std::endl;
+		if (s.at(0) != '#')
 			return false;
 
 		Log::Write( LogLevel_Info, GetNodeId(), "Color::SetValue - Setting Color value");
+
+		s.erase(0, 1);
+		std::cout << s << std::endl;
+		std::stringstream ss(s);
+		ss >> std::hex >> rawresult;
+		std::cout << hex << rawresult << std::endl;
+
+		int r = (rawresult / 0x1000000) %0x100;
+		int g = (rawresult / 0x10000) % 0x100;
+		int b = (rawresult / 0x100) % 0x100;
+		int w = rawresult % 0x100;
+
+		std::cout << "r: " << r << " g: " << g << " b: " << b << " w :" << w << std::endl;
+
+
+	}
+
+
+#if 0
 		Msg* msg = new Msg( "Color Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 		msg->SetInstance( this, _value.GetID().GetInstance() );
 		msg->Append( GetNodeId() );
