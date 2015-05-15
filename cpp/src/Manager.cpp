@@ -3217,6 +3217,26 @@ void Manager::AddAssociation
 }
 
 //-----------------------------------------------------------------------------
+// <Manager::AddAssociation>
+// Adds a node to an association group
+//-----------------------------------------------------------------------------
+void Manager::AddAssociation
+(
+		uint32 const _homeId,
+		uint8 const _nodeId,
+		uint8 const _groupIdx,
+		uint8 const _targetNodeId,
+		uint8 const _instance
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		driver->AddAssociation( _nodeId, _groupIdx, _targetNodeId, _instance );
+	}
+}
+
+
+//-----------------------------------------------------------------------------
 // <Manager::RemoveAssociation>
 // Removes a node from an association group
 //-----------------------------------------------------------------------------
@@ -3231,6 +3251,25 @@ void Manager::RemoveAssociation
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
 		driver->RemoveAssociation( _nodeId, _groupIdx, _targetNodeId );
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::RemoveAssociation>
+// Removes a node from an association group
+//-----------------------------------------------------------------------------
+void Manager::RemoveAssociation
+(
+		uint32 const _homeId,
+		uint8 const _nodeId,
+		uint8 const _groupIdx,
+		uint8 const _targetNodeId,
+		uint8 const _instance
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		driver->RemoveAssociation( _nodeId, _groupIdx, _targetNodeId, _instance );
 	}
 }
 
