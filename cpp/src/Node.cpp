@@ -2431,22 +2431,6 @@ string Node::GetGroupLabel
 void Node::AddAssociation
 (
 	uint8 const _groupIdx,
-	uint8 const _targetNodeId
-)
-{
-	if( Group* group = GetGroup( _groupIdx ) )
-	{
-		group->AddAssociation( _targetNodeId );
-	}
-}
-
-//-----------------------------------------------------------------------------
-// <Node::AddAssociation>
-// Adds a node to an association group
-//-----------------------------------------------------------------------------
-void Node::AddAssociation
-(
-		uint8 const _groupIdx,
 		uint8 const _targetNodeId,
 		uint8 const _instance
 )
@@ -2464,22 +2448,6 @@ void Node::AddAssociation
 void Node::RemoveAssociation
 (
 	uint8 const _groupIdx,
-	uint8 const _targetNodeId
-)
-{
-	if( Group* group = GetGroup( _groupIdx ) )
-	{
-		group->RemoveAssociation( _targetNodeId );
-	}
-}
-
-//-----------------------------------------------------------------------------
-// <Node::RemoveAssociation>
-// Removes a node from an association group
-//-----------------------------------------------------------------------------
-void Node::RemoveAssociation
-(
-		uint8 const _groupIdx,
 		uint8 const _targetNodeId,
 		uint8 const _instance
 )
