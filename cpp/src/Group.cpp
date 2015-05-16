@@ -404,7 +404,7 @@ uint32 Group::GetAssociations
 	}
 
 	*o_associations = associations;
-	return (uint32) numNodes;
+	return (uint32) i;
 }
 
 //-----------------------------------------------------------------------------
@@ -444,15 +444,18 @@ uint32 Group::GetAssociations
 //-----------------------------------------------------------------------------
 bool Group::ClearCommands
 ( 
-	uint8 const _nodeId
+	uint8 const _nodeId,
+	uint8 const _instance
 )
-{
-//	map<uint8,AssociationCommandVec>::iterator it = m_associations.find( _nodeId );
-//	if( it != m_associations.end() )
-//	{
-//		it->second.clear();
-//		return true;
-//	}
+{	
+	for( map<InstanceAssociation,AssociationCommandVec>::iterator it = m_associations.begin(); it != m_associations.end(); ++it )
+	{
+		if( (it->first.m_nodeId == _nodeId) and (it->first.m_instance == _instance) )
+		{
+			it->second.clear();
+			return true;
+		}
+    }
 
 	return false;
 }
@@ -465,16 +468,19 @@ bool Group::AddCommand
 (
 	uint8 const _nodeId,
 	uint8 const _length,
-	uint8 const* _data
+	uint8 const* _data,
+	uint8 const _instance
 )
 {
-//	map<uint8,AssociationCommandVec>::iterator it = m_associations.find( _nodeId );
-//	if( it != m_associations.end() )
-//	{
-//		it->second.push_back( AssociationCommand( _length, _data ) );
-//		return true;
-//	}
-
+	for( map<InstanceAssociation,AssociationCommandVec>::iterator it = m_associations.begin(); it != m_associations.end(); ++it )
+	{
+		if( (it->first.m_nodeId == _nodeId) and (it->first.m_instance == _instance) )
+		{
+			it->second.push_back( AssociationCommand( _length, _data ) );
+			return true;
+		}
+	}
+	
 	return false;
 }
 
