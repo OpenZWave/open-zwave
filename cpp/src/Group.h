@@ -86,8 +86,8 @@ namespace OpenZWave
 	// Command methods (COMMAND_CLASS_ASSOCIATION_COMMAND_CONFIGURATION)
 	//-----------------------------------------------------------------------------
 	public:
-		bool ClearCommands( uint8 const _nodeId );
-		bool AddCommand( uint8 const _nodeId, uint8 const _length, uint8 const* _data );
+		bool ClearCommands( uint8 const _nodeId, uint8 const _instance = 0x00 );
+		bool AddCommand( uint8 const _nodeId, uint8 const _length, uint8 const* _data, uint8 const _instance = 0x00 );
 
 	private:
 		class AssociationCommand
