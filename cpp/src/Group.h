@@ -104,7 +104,7 @@ namespace OpenZWave
 		typedef vector<AssociationCommand>	AssociationCommandVec;
 		struct classcomp {
 			bool operator() (const InstanceAssociation& lhs, const InstanceAssociation& rhs) const
-			{return (lhs.m_nodeId < rhs.m_nodeId) and (lhs.m_instance < rhs.m_instance );}
+			{return lhs.m_nodeId == rhs.m_nodeId ? lhs.m_instance < rhs.m_instance : lhs.m_nodeId < rhs.m_nodeId;}
 		};
 
 	//-----------------------------------------------------------------------------
