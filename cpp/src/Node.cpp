@@ -2389,6 +2389,25 @@ uint32 Node::GetAssociations
 }
 
 //-----------------------------------------------------------------------------
+// <Node::GetAssociations>
+// Gets the associations for a group
+//-----------------------------------------------------------------------------
+uint32 Node::GetAssociations
+(
+		uint8 const _groupIdx,
+		InstanceAssociation** o_associations
+)
+{
+	uint32 numAssociations = 0;
+	if( Group* group = GetGroup( _groupIdx ) )
+	{
+		numAssociations = group->GetAssociations( o_associations );
+	}
+
+	return numAssociations;
+}
+
+//-----------------------------------------------------------------------------
 // <Node::GetMaxAssociations>
 // Gets the maximum number of associations for a group
 //-----------------------------------------------------------------------------

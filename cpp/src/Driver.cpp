@@ -5417,6 +5417,27 @@ uint32 Driver::GetAssociations
 }
 
 //-----------------------------------------------------------------------------
+// <Driver::GetAssociations>
+// Gets the associations for a group
+//-----------------------------------------------------------------------------
+uint32 Driver::GetAssociations
+(
+		uint8 const _nodeId,
+		uint8 const _groupIdx,
+		InstanceAssociation** o_associations
+)
+{
+	uint32 numAssociations = 0;
+	LockGuard LG(m_nodeMutex);
+	if( Node* node = GetNode( _nodeId ) )
+	{
+		numAssociations = node->GetAssociations( _groupIdx, o_associations );
+	}
+
+	return numAssociations;
+}
+
+//-----------------------------------------------------------------------------
 // <Driver::GetMaxAssociations>
 // Gets the maximum number of associations for a group
 //-----------------------------------------------------------------------------
