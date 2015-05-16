@@ -106,7 +106,7 @@ Group::Group
 {
 	int intVal;
 	char const* str;
-	vector<uint8> pending;
+	vector<InstanceAssociation> pending;
 
 	if( TIXML_SUCCESS == _groupElement->QueryIntAttribute( "index", &intVal ) )
 	{
@@ -137,8 +137,18 @@ Group::Group
 		char const* elementName = associationElement->Value();
 		if( elementName && !strcmp( elementName, "Node" ) )
 		{
-			if (associationElement->QueryIntAttribute( "id", &intVal ) == TIXML_SUCCESS) 
-				pending.push_back( (uint8)intVal );
+			
+			if( associationElement->QueryIntAttribute( "id", &intVal ) == TIXML_SUCCESS )
+			{
+				InstanceAssociation association;
+				association.m_nodeId = (uint8)intVal;
+				if( associationElement->QueryIntAttribute( "instance", &intVal ) == TIXML_SUCCESS )
+					association.m_instance = (uint8)intVal;
+				else
+					association.m_instance = 0x00;
+
+				pending.push_back( association );
+			}
 		}
 
 		associationElement = associationElement->NextSiblingElement();
@@ -177,7 +187,7 @@ void Group::WriteXML
 		
 		snprintf( str, 16, "%d", it->first.m_nodeId );
 		associationElement->SetAttribute( "id", str );
-//		if (it->first.m_instance != 0)
+		if (it->first.m_instance != 0)
 		{
 			snprintf( str, 16, "%d", it->first.m_instance );
 			associationElement->SetAttribute( "instance", str );
