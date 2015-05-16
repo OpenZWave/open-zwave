@@ -6349,7 +6349,7 @@ void Driver::UpdateNodeRoutes
 		uint8 numGroups = GetNumGroups( _nodeId );
 		uint8 numNodes = 0;
 		uint8 nodes[5];
-		uint8* associations;
+		InstanceAssociation* associations;
 		uint8 i;
 
 		// Determine up to 5 destinations
@@ -6364,14 +6364,14 @@ void Driver::UpdateNodeRoutes
 				uint8 k;
 				for( k = 0; k < numNodes; k++ )
 				{
-					if( nodes[k] == associations[j] )
+					if( nodes[k] == associations[j].m_nodeId )
 					{
 						break;
 					}
 				}
 				if( k >= numNodes && numNodes < sizeof(nodes) )	// not in list so add it
 				{
-					nodes[numNodes++] = associations[j];
+					nodes[numNodes++] = associations[j].m_nodeId;
 				}
 			}
 			if( associations != NULL )
