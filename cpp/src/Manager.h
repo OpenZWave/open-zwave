@@ -37,6 +37,7 @@
 
 #include "Defs.h"
 #include "Driver.h"
+#include "Group.h"
 #include "value_classes/ValueID.h"
 
 namespace OpenZWave
@@ -1449,6 +1450,19 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 */
 		uint32 GetAssociations( uint32 const _homeId, uint8 const _nodeId, uint8 const _groupIdx, uint8** o_associations );
 
+		/**
+		 * \brief Gets the associations for a group.
+		 * Makes a copy of the list of associated nodes in the group, and returns it in an array of InstanceAssociation's.
+		 * The caller is responsible for freeing the array memory with a call to delete [].
+		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param _nodeId The ID of the node whose associations we are interested in.
+		 * \param _groupIdx One-based index of the group (because Z-Wave product manuals use one-based group numbering).
+		 * \param o_associations If the number of associations returned is greater than zero, o_associations will be set to point to an array containing the IDs and instances of the associated nodes.
+		 * \return The number of items in the associations array.  If zero, the array will point to NULL, and does not need to be deleted.
+		 * \see GetNumGroups, AddAssociation, RemoveAssociation, GetMaxAssociations
+		 */
+		uint32 GetAssociations( uint32 const _homeId, uint8 const _nodeId, uint8 const _groupIdx, InstanceAssociation** o_associations );
+			 
 		/**
 		 * \brief Gets the maximum number of associations for a group.
 		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
