@@ -231,7 +231,6 @@ void Group::AddAssociation
 	{
 		if( Node* node = driver->GetNodeUnsafe( m_nodeId ) )
 		{
-			// TODO add options to use Association when _instance == 0
 			if( MultiInstanceAssociation* cc = static_cast<MultiInstanceAssociation*>( node->GetCommandClass( MultiInstanceAssociation::StaticGetCommandClassId() )))
 			{
 				cc->Set( m_groupIdx, _nodeId, _instance );
@@ -263,7 +262,6 @@ void Group::RemoveAssociation
 	{
 		if( Node* node = driver->GetNodeUnsafe( m_nodeId ) )
 		{
-			// TODO add options to use Association when _instance == 0
 			if( MultiInstanceAssociation* cc = static_cast<MultiInstanceAssociation*>( node->GetCommandClass( MultiInstanceAssociation::StaticGetCommandClassId() ) ) )
 			{
 				cc->Remove( m_groupIdx, _nodeId, _instance );
@@ -403,7 +401,7 @@ uint32 Group::GetAssociations
 		return 0;
 	}
 
-	uint8* associations = new uint8[numNodes]; // TODO
+	uint8* associations = new uint8[numNodes]; // room for all associations, we only need room for the associations without instance
 	uint32 i = 0;
 	for( map<InstanceAssociation,AssociationCommandVec>::iterator it = m_associations.begin(); it != m_associations.end(); ++it )
 	{
