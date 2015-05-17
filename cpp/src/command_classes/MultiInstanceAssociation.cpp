@@ -223,18 +223,6 @@ bool MultiInstanceAssociation::HandleMsg
 			{
 				if( _length >= 5 )
 				{
-//					uint8 numAssociations = _length - 5;
-
-//					Log::Write( LogLevel_Info, GetNodeId(), "Received Multi Instance Association report from node %d, group %d, containing %d associations", GetNodeId(), groupIdx, numAssociations );
-//					if( numAssociations )
-//					{
-//						Log::Write( LogLevel_Info, GetNodeId(), "  The group contains:" );
-//						for( i=0; i<numAssociations; ++i )
-//						{
-//							Log::Write( LogLevel_Info, GetNodeId(), "    Node %d",  _data[i+4] );
-//							m_pendingMembers.push_back( _data[i+4] );
-//						}
-//					}
 					// format:
 					//   node A
 					//   node B
