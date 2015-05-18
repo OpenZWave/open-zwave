@@ -35,6 +35,7 @@
 #include "command_classes/Association.h"
 #include "command_classes/AssociationCommandConfiguration.h"
 #include "command_classes/MultiInstanceAssociation.h"
+#include "platform/Log.h"
 
 #include "tinyxml.h"
 
@@ -236,13 +237,14 @@ void Group::AddAssociation
 				cc->Set( m_groupIdx, _nodeId, _instance );
 				cc->QueryGroup( m_groupIdx, 0 );
 			}
+			else if( Association* cc = static_cast<Association*>( node->GetCommandClass( Association::StaticGetCommandClassId() ) ) )
+			{
+				cc->Set( m_groupIdx, _nodeId );
+				cc->QueryGroup( m_groupIdx, 0 );
+			}
 			else
 			{
-				if( Association* cc = static_cast<Association*>( node->GetCommandClass( Association::StaticGetCommandClassId() ) ) )
-				{
-					cc->Set( m_groupIdx, _nodeId );
-					cc->QueryGroup( m_groupIdx, 0 );
-				}
+				Log::Write( LogLevel_Info, m_nodeId, "No supported Association CC found" );
 			} 
 		}
 	}
@@ -267,14 +269,15 @@ void Group::RemoveAssociation
 				cc->Remove( m_groupIdx, _nodeId, _instance );
 				cc->QueryGroup( m_groupIdx, 0 );
 			} 
-			else
+			else if( Association* cc = static_cast<Association*>( node->GetCommandClass( Association::StaticGetCommandClassId() ) ) )
 			{
-				if( Association* cc = static_cast<Association*>( node->GetCommandClass( Association::StaticGetCommandClassId() ) ) )
-				{
 					cc->Remove( m_groupIdx, _nodeId );
 					cc->QueryGroup( m_groupIdx, 0 );
-				}
 			}
+			else
+			{
+				Log::Write( LogLevel_Info, m_nodeId, "No supported Association CC found" );
+			}	
 		}
 	}
 }
