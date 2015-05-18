@@ -5,7 +5,7 @@
 //      Executes a controller command and show a dialog window while the 
 //      controller command is running.
 //
-//      Copyright (c) 2010 Amer Harb <harb_amer@hotmail.com>
+//      Copyright (c) 2010 Mal Lansell <openzwave@lansell.org>
 //
 //      SOFTWARE NOTICE AND LICENSE
 //

@@ -134,6 +134,9 @@ Version 1.3
  - Pull Request #548 - Update Config file for Philio PST02-C from Nechry (Justin)
  - Pull Request #550 - Config File for Vision zd2102 from Ugoviti (Justin)
  - Fix a crash when dumping the Queue to the Log, reported by Gizmocuz (Justin)
+ - Pull Request #555 - Update the dotNet wrapper and OZWForm to use the new
+   Manager Methods that replace the BeginControllerCommand Method. From
+   JKlessens (Justin) 
 
 Version 1.2 
  - Released on 15/10/14
