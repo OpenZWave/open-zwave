@@ -5,7 +5,7 @@
 //      The Main Form of the OZWForm application.
 //      Handles most of the Open Zwave notifications and commands.
 //
-//      Copyright (c) 2010 Amer Harb <harb_amer@hotmail.com>
+//      Copyright (c) 2010 Mal Lansell <openzwave@lansell.org>
 //
 //      SOFTWARE NOTICE AND LICENSE
 //

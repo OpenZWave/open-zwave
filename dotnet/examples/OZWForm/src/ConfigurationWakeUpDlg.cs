@@ -4,7 +4,7 @@
 //
 //      <Enter class description>
 //
-//      Copyright (c) 2010 Amer Harb <harb_amer@hotmail.com>
+//      Copyright (c) 2010 Mal Lansell <openzwave@lansell.org>
 //
 //      SOFTWARE NOTICE AND LICENSE
 //
