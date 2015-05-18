@@ -1,16 +1,48 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿//-----------------------------------------------------------------------------
+//
+//      ValuePanelDecimal.cs
+//
+//      <Enter class description>
+//
+//      Copyright (c) 2010 Amer Harb <harb_amer@hotmail.com>
+//
+//      SOFTWARE NOTICE AND LICENSE
+//
+//      This file is part of OZWForm.
+//
+//      OZWForm is free software: you can redistribute it and/or modify
+//      it under the terms of the GNU General Public License as published by
+//      the Free Software Foundation, either version 3 of the License, or
+//      (at your option) any later version.
+//
+//      OZWForm is distributed in the hope that it will be useful,
+//      but WITHOUT ANY WARRANTY; without even the implied warranty of
+//      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//      GNU General Public License for more details.
+//
+//      You should have received a copy of the GNU General Public License
+//      along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//
+//-----------------------------------------------------------------------------
+
+using System;
 using OpenZWaveDotNet;
 
 namespace OZWForm
 {
+    /// <summary>
+    /// Value panel for containing decimal values
+    /// </summary>
     public class ValuePanelDecimal: ValuePanel
     {
         private System.Windows.Forms.TextBox ValueDecimalTextBox;
         private System.Windows.Forms.Button ValueDecimalButtonSet;
         private System.Windows.Forms.Label ValueDecimalLabel;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ValuePanelDecimal"/> class.
+        /// </summary>
+        /// <param name="valueID">The value identifier.</param>
         public ValuePanelDecimal( ZWValueID valueID ): base( valueID )
         {
             InitializeComponent();
@@ -32,6 +64,9 @@ namespace OZWForm
             SendChanges = true;
         }
 
+        /// <summary>
+        /// Initializes the component.
+        /// </summary>
         private void InitializeComponent()
         {
             this.ValueDecimalLabel = new System.Windows.Forms.Label();
@@ -80,6 +115,11 @@ namespace OZWForm
 
         }
 
+        /// <summary>
+        /// Handles the Click event of the ValueDecimalButtonSet control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void ValueDecimalButtonSet_Click(object sender, EventArgs e)
         {
             if (SendChanges)
