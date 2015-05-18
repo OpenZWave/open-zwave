@@ -161,6 +161,12 @@ namespace OpenZWave
 		static std::string getVersionAsString();
 
 		/**
+                 * \brief Get the Version Number including Git commit of OZW as a string
+                 * \return a String representing the version number as MAJOR.MINOR.REVISION-gCOMMIT
+                 */
+                static std::string getVersionLongAsString();
+
+                /**
 		 * \brief Get the Version Number as the Version Struct (Only Major/Minor returned)
 		 * \return the version struct representing the version
 		 */
