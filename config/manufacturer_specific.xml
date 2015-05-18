@@ -131,7 +131,8 @@
 	</Manufacturer>
 	<Manufacturer id="001a" name="Cooper">
 		<Product type="4449" id="0002" name="RF9534DS Wall Dimmer Module"/>
-		<Product type="5244" id="0000" name="RF9505-TWS Split Control Duplex Receptacle"/>
+		<Product type="4449" id="0101" name="RF9540-N All Load Dimmer Light Switch" config="cooper/RF9540-N.xml"/>
+		<Product type="5244" id="0000" name="RF9505-T Split Control Duplex Receptacle" config="cooper/RF9505-T.xml"/>
 	</Manufacturer>
 	<Manufacturer id="009d" name="Coventive">
 	</Manufacturer>
