@@ -197,6 +197,11 @@ bool Color::RequestValue
 		Driver::MsgQueue const _queue
 )
 {
+	/* rework this so we split out the coloridx from value index. This will then enable us to either start a
+	 * refresh for valueID's based on index, or a call from other methods to get a particular color.
+	 */
+
+
 	if( IsGetSupported() )
 	{
 		/* make sure our coloridx is valid */
@@ -408,6 +413,28 @@ bool Color::HandleMsg
 }
 
 //-----------------------------------------------------------------------------
+// <GetColor>
+// Get a Specific Color Value from a position in a RGB String
+// its assumed the string is formated such as #RRGGBB[WWCWAMCYPR]
+// where the color values in [] are optional.
+// throws a exception when position is out of bounds
+//-----------------------------------------------------------------------------
+uint16 GetColor(string rgbstring, uint8 const position) {
+
+	/* check the length of the string based on position value we passed in including the #*/
+	if (rgbstring.length() < (size_t)(position *2)+1) {
+		Log::Write( LogLevel_Warning, "Request for Color Position %d exceeds String Length: %s", position, rgbstring.c_str());
+		throw;
+	}
+	string result = rgbstring.substr(((position - 1) * 2) +1, 2);
+	std::stringstream ss(result);
+	uint16 rawresult;
+	ss >> std::hex >> rawresult;
+	return rawresult;
+}
+
+
+//-----------------------------------------------------------------------------
 // <Color::SetValue>
 // Set the device's Color value
 //-----------------------------------------------------------------------------
@@ -421,31 +448,118 @@ bool Color::SetValue
 	{
 		ValueString const* value = static_cast<ValueString const*>(&_value);
 		string s = value->GetValue();
-		uint64_t rawresult;
-std::cout << s.length() << std::endl;
-		//sanity check
-		if (s.length() < 7)
+		/* make sure the first char is # */
+		if (s.at(0) != '#') {
+			Log::Write( LogLevel_Warning, GetNodeId(), "Color::SetValue - String is Malformed. Missing #: %s", s.c_str());
 			return false;
-std::cout << "ok" << std::endl;
-		if (s.at(0) != '#')
+		}
+		/* length minus the # has to be multiple of 2's */
+		if ((s.length()-1) % 2 != 0 ) {
+			Log::Write( LogLevel_Warning, GetNodeId(), "Color::SetValue - Uneven Length string. Each Color should be 2 chars: %s", s.c_str());
 			return false;
+		}
 
+		/* the size of the string tells us how many colors are set */
+		uint8 nocols = (s.length() -1) / 2;
+		uint16 colvals[8] = { 0, 0, 0, 0, 0, 0, 0, 0};
+		bool colvalset[8] = { false, false, false, false, false, false, false, false };
+
+
+		try {
+			/* we always will have at least RGB */
+			colvals[COLORIDX_RED] = GetColor(s, 1);
+			colvals[COLORIDX_GREEN] = GetColor(s, 2);
+			colvals[COLORIDX_BLUE] = GetColor(s, 3);
+
+			/* if nocols = 4 then allwhite is set */
+			if (nocols == 4) {
+				/* use ww as the var for all white */
+				colvals[COLORIDX_WARMWHITE] = GetColor(s, 4);
+				colvalset[COLORIDX_WARMWHITE] = true;
+			}
+			if (nocols >= 5) {
+				/* warm white and cold white are set */
+				colvals[COLORIDX_WARMWHITE] = GetColor(s, 4);
+				colvals[COLORIDX_COLDWHITE] = GetColor(s, 5);
+				colvalset[COLORIDX_WARMWHITE] = true;
+				colvalset[COLORIDX_COLDWHITE] = true;
+			}
+			if (nocols >= 6) {
+				/* amber is also set */
+				colvals[COLORIDX_AMBER] = GetColor(s, 6);
+				colvalset[COLORIDX_AMBER] = true;
+			}
+			if (nocols >= 7) {
+				/* cyan is also set */
+				colvals[COLORIDX_CYAN] = GetColor(s, 7);
+				colvalset[COLORIDX_CYAN] = true;
+			}
+			if (nocols == 8) {
+				/* purple is also set */
+				colvals[COLORIDX_PURPLE] = GetColor(s, 8);
+				colvalset[COLORIDX_PURPLE] = true;
+			}
+		} catch(...) {
+			Log::Write(LogLevel_Warning, GetNodeId(), "Color::SetValue - Color String Decoding Failed: %s", s.c_str());
+			return false;
+		}
 		Log::Write( LogLevel_Info, GetNodeId(), "Color::SetValue - Setting Color value");
 
-		s.erase(0, 1);
-		std::cout << s << std::endl;
-		std::stringstream ss(s);
-		ss >> std::hex >> rawresult;
-		std::cout << hex << rawresult << std::endl;
 
-		int r = (rawresult / 0x1000000) %0x100;
-		int g = (rawresult / 0x10000) % 0x100;
-		int b = (rawresult / 0x100) % 0x100;
-		int w = rawresult % 0x100;
+		std::cout << std::hex << "r: " << colvals[COLORIDX_RED] << " g: " << colvals[COLORIDX_BLUE] << " b: " << colvals[COLORIDX_GREEN];
+		if (colvalset[COLORIDX_WARMWHITE] && !colvalset[COLORIDX_COLDWHITE])
+			std::cout << " aw: " << colvals[COLORIDX_WARMWHITE];
+		if (colvalset[COLORIDX_WARMWHITE] && colvalset[COLORIDX_COLDWHITE]) {
+			std::cout << " ww: " << colvals[COLORIDX_WARMWHITE];
+			std::cout << " cw: " << colvals[COLORIDX_COLDWHITE];
+		}
+		if (colvalset[COLORIDX_AMBER])
+			std::cout << " amber: " << colvals[COLORIDX_AMBER];
+		if (colvalset[COLORIDX_CYAN])
+			std::cout << " cyan: " << colvals[COLORIDX_CYAN];
+		if (colvalset[COLORIDX_PURPLE])
+			std::cout << " Purple: " << colvals[COLORIDX_PURPLE];
+		std::cout << std::endl;
 
-		std::cout << "r: " << r << " g: " << g << " b: " << b << " w :" << w << std::endl;
 
-
+		Msg* msg = new Msg( "Color Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+		msg->SetInstance( this, _value.GetID().GetInstance() );
+		msg->Append( GetNodeId() );
+		msg->Append(3 + (nocols*2)); //length
+		msg->Append( GetCommandClassId() );
+		msg->Append(ColorCmd_Set); //cmd
+		msg->Append(nocols*2);
+		msg->Append(COLORIDX_RED);
+		msg->Append(colvals[COLORIDX_RED]);
+		msg->Append(COLORIDX_GREEN);
+		msg->Append(colvals[COLORIDX_GREEN]);
+		msg->Append(COLORIDX_BLUE);
+		msg->Append(colvals[COLORIDX_BLUE]);
+		if (colvalset[COLORIDX_WARMWHITE] & !colvalset[COLORIDX_COLDWHITE]) {
+			msg->Append(COLORIDX_WARMWHITE);
+			msg->Append(colvals[COLORIDX_WARMWHITE]);
+		}
+		if (colvalset[COLORIDX_WARMWHITE] && colvalset[COLORIDX_COLDWHITE]) {
+			msg->Append(COLORIDX_WARMWHITE);
+			msg->Append(colvals[COLORIDX_WARMWHITE]);
+			msg->Append(COLORIDX_COLDWHITE);
+			msg->Append(colvals[COLORIDX_COLDWHITE]);
+		}
+		if (colvalset[COLORIDX_AMBER]) {
+			msg->Append(COLORIDX_AMBER);
+			msg->Append(colvals[COLORIDX_AMBER]);
+		}
+		if (colvalset[COLORIDX_CYAN]) {
+			msg->Append(COLORIDX_CYAN);
+			msg->Append(colvals[COLORIDX_CYAN]);
+		}
+		if (colvalset[COLORIDX_PURPLE]) {
+			msg->Append(COLORIDX_PURPLE);
+			msg->Append(colvals[COLORIDX_PURPLE]);
+		}
+		msg->Append(GetDriver()->GetTransmitOptions());
+		GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
+		return true;
 	}
 
 
