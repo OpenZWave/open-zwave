@@ -98,6 +98,7 @@ DISTFILES =	.gitignore \
 	config/philio/pan04.xml \
 	config/philio/psm02.xml \
 	config/philio/pst02-1c.xml \
+	config/philio/pst02-b.xml \
 	config/philio/pst02.xml \
 	config/polycontrol/doorlock.xml \
 	config/polycontrol/keypad.xml \
@@ -124,6 +125,7 @@ DISTFILES =	.gitignore \
 	config/swiid/swiidinter.xml \
 	config/trane/TZEMT400AB32MAA.xml \
 	config/trane/TZEMT400BB32MAA.xml \
+	config/vision/zd2102.xml \
 	config/vision/zm1601eu.xml \
 	config/vision/zp3102.xml \
 	config/vision/zs5101eu.xml \
@@ -269,6 +271,8 @@ DISTFILES =	.gitignore \
 	cpp/src/command_classes/ClimateControlSchedule.h \
 	cpp/src/command_classes/Clock.cpp \
 	cpp/src/command_classes/Clock.h \
+	cpp/src/command_classes/Color.cpp \
+	cpp/src/command_classes/Color.h \
 	cpp/src/command_classes/CommandClass.cpp \
 	cpp/src/command_classes/CommandClass.h \
 	cpp/src/command_classes/CommandClasses.cpp \
