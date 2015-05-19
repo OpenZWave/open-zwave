@@ -12,6 +12,28 @@
   message -->
   <CommandClass id="51" coloridxbug="true"/>                
 
+  <!-- Fibaro devices refuse to send a Report message when color changes are done.. so manually trigger a refresh -->
+  <CommandClass id="38">
+	<TriggerRefreshValue Genre="user" Index="0" Instance="1">
+    	<RefreshClassValue CommandClass="51" RequestFlags="0" Index="255" Instance="1" />
+    </TriggerRefreshValue>
+  	<TriggerRefreshValue Genre="user" Index="0" Instance="2">
+    	<RefreshClassValue CommandClass="51" RequestFlags="0" Index="255" Instance="1" />
+    </TriggerRefreshValue>
+    <TriggerRefreshValue Genre="user" Index="0" Instance="3">
+    	<RefreshClassValue CommandClass="51" RequestFlags="0" Index="255" Instance="1" />
+    </TriggerRefreshValue>
+    <TriggerRefreshValue Genre="user" Index="0" Instance="4">
+    	<RefreshClassValue CommandClass="51" RequestFlags="0" Index="255" Instance="1" />
+    </TriggerRefreshValue>
+    <TriggerRefreshValue Genre="user" Index="0" Instance="5">
+    	<RefreshClassValue CommandClass="51" RequestFlags="0" Index="255" Instance="1" />
+    </TriggerRefreshValue>
+    <TriggerRefreshValue Genre="user" Index="0" Instance="6">
+    	<RefreshClassValue CommandClass="51" RequestFlags="0" Index="255" Instance="1" />
+    </TriggerRefreshValue>
+  </CommandClass>
+
   <!-- Configuration -->
   <CommandClass id="112">
     <Value type="list" genre="config" instance="1" index="1" label="Enable/Disable ALL ON/OFF" size="1" value="255">
