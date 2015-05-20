@@ -47,6 +47,21 @@ enum MultiInstanceAssociationCmd
 	MultiInstanceAssociationCmd_GroupingsReport	= 0x06
 };
 
+// <MultiInstanceAssociation::MultiInstanceAssociation>
+// Constructor
+//-----------------------------------------------------------------------------
+MultiInstanceAssociation::MultiInstanceAssociation
+(
+	uint32 const _homeId,
+	uint8 const _nodeId
+):
+	CommandClass( _homeId, _nodeId ),
+	m_queryAll(false),
+	m_numGroups(0)
+{
+	SetStaticRequest( StaticRequest_Values );
+}
+
 //-----------------------------------------------------------------------------
 // <MultiInstanceAssociation::ReadXML>
 // Read the saved association data
@@ -279,6 +294,7 @@ bool MultiInstanceAssociation::HandleMsg
 						group = new Group( GetHomeId(), GetNodeId(), groupIdx, maxAssociations );
 						node->AddGroup( group );
 					}
+					group->SetMultiInstance( true );
 
 					// Update the group with its new contents
 					group->OnGroupChanged( m_pendingMembers );

@@ -77,6 +77,9 @@ namespace OpenZWave
 		bool IsAuto()const{ return m_auto; }
 		void SetAuto( bool const _state ){ m_auto = _state; }
 
+		bool IsMultiInstance()const{ return m_multiInstance; }
+		void SetMultiInstance( bool const _state ){ m_multiInstance = _state; }
+
 		void AddAssociation( uint8 const _nodeId, uint8 const _instance = 0x00 );
 		void RemoveAssociation( uint8 const _nodeId, uint8 const _instance = 0x00 );
 		void OnGroupChanged( vector<uint8> const& _associations );
@@ -117,6 +120,7 @@ namespace OpenZWave
 		uint8								m_groupIdx;
 		uint8								m_maxAssociations;
 		bool								m_auto;				// If true, the controller will automatically be associated with the group
+		bool								m_multiInstance;    // If true, the group is MultiInstance capable
 		map<InstanceAssociation,AssociationCommandVec,classcomp>	m_associations;
 	};
 
