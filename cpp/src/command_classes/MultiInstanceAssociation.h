@@ -59,9 +59,9 @@ namespace OpenZWave
 		void RequestAllGroups( uint32 const _requestFlags );
 		void Set( uint8 const _group, uint8 const _nodeId, uint8 const _instance );
 		void Remove( uint8 const _group, uint8 const _nodeId, uint8 const _instance );
-			
+
 	private:
-		MultiInstanceAssociation( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
+		MultiInstanceAssociation( uint32 const _homeId, uint8 const _nodeId );
 		void QueryGroup( uint8 _groupIdx, uint32 const _requestFlags );
 		void AutoAssociate();
 
