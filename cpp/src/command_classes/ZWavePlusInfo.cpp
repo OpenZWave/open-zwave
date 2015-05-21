@@ -51,7 +51,9 @@ enum
 	ZWavePlusInfoIndex_Role,
 	ZWavePlusInfoIndex_Node,
 	ZWavePlusInfoIndex_InstallerIcon,
-	ZWavePlusInfoIndex_UserIcon
+	ZWavePlusInfoIndex_InstallerIconSpecific,
+	ZWavePlusInfoIndex_UserIcon,
+	ZWavePlusInfoIndex_UserIconSpecific
 };
 
 enum
@@ -95,6 +97,37 @@ static char const* c_nodeTypeName[] =
 	"Z-Wave+ IP client and IP node",
 	"Z-Wave+ IP client and Zwave node"	
 };
+
+static char const* c_iconTypeName[] =
+{
+	"Unknown Type",
+	"Central Controller",
+	"Display Simple",
+	"Door Lock Keypad",
+	"Fan Switch",
+	"Gateway",
+	"Light Dimmer Switch",
+	"On/Off Power Switch",
+	"Power Strip",
+	"Remote Control AV",
+	"Remote Control Multi Purpose",
+	"Sensor Notification",
+	"Sensor Multilevel",
+	"Set Top Box",
+	"Siren",
+	"Sub Energy Meter",
+	"Sub System Controller",
+	"Thermostat HVAC",
+	"Thermostat Setback",
+	"TV",
+	"Valve Open/Close",
+	"Wall Controller",
+	"Whole Home Meter Simple",
+	"Window Covering No Position/Endpoint",
+	"Window Covering Endpoint Aware",
+	"Window Covering Position/Endpoint Aware"
+};
+
 
 
 //-----------------------------------------------------------------------------
@@ -182,16 +215,26 @@ bool ZWavePlusInfo::HandleMsg
 			value->OnValueRefreshed(  _data[3] );
 			value->Release();
 		}
-		if( ValueShort* value = static_cast<ValueShort*>( GetValue( _instance, ZWavePlusInfoIndex_InstallerIcon ) ) )
+		if( ValueList* value = static_cast<ValueList*>( GetValue( _instance, ZWavePlusInfoIndex_InstallerIcon ) ) )
 		{
-			value->OnValueRefreshed(  (_data[4] << 8)  + _data[5]);
+			value->OnValueRefreshed(  _data[4] );
 			value->Release();
 		}
-		if( ValueShort* value = static_cast<ValueShort*>( GetValue( _instance, ZWavePlusInfoIndex_UserIcon ) ) )
+		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, ZWavePlusInfoIndex_InstallerIconSpecific ) ) )
 		{
-			value->OnValueRefreshed(  (_data[6] << 8) + _data[7] );
+			value->OnValueRefreshed(  _data[5] );
 			value->Release();
 		}
+		if( ValueList* value = static_cast<ValueList*>( GetValue( _instance, ZWavePlusInfoIndex_UserIcon ) ) )
+		{
+			value->OnValueRefreshed(  _data[6] );
+			value->Release();
+		}
+		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, ZWavePlusInfoIndex_UserIconSpecific ) ) )
+		{
+			value->OnValueRefreshed(  _data[7] );
+			value->Release();
+		}		
 		return true;
 	}
 	return false;
@@ -234,7 +277,19 @@ void ZWavePlusInfo::CreateVars
 		}
 		
 		node->CreateValueList( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ZWavePlusInfoIndex_Node, "Node Type", "", true, false, 0, nodeItems, 0, 0 );
-		node->CreateValueShort( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ZWavePlusInfoIndex_InstallerIcon, "Installer Icon", "", true, false, 0, 0 );
-		node->CreateValueShort( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ZWavePlusInfoIndex_UserIcon, "User Icon", "", true, false, 0, 0 );
+
+		vector<ValueList::Item> iconItems;
+		for( int i=0; i<36; ++i )
+		{
+			ValueList::Item item;
+			item.m_label = c_iconTypeName[i];
+			item.m_value = i;
+			iconItems.push_back( item );
+		}
+		
+		node->CreateValueList( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ZWavePlusInfoIndex_InstallerIcon, "Installer Icon", "", true, false, 0, iconItems, 0, 0 );
+		node->CreateValueByte( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ZWavePlusInfoIndex_InstallerIconSpecific, "Installer Icon Specific Type", "", true, false, 0, 0 );
+		node->CreateValueList( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ZWavePlusInfoIndex_UserIcon, "User Icon", "", true, false, 0, iconItems, 0, 0 );
+		node->CreateValueByte( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ZWavePlusInfoIndex_InstallerIconSpecific, "User Icon Specific Type", "", true, false, 0, 0 );
 	}
 }
