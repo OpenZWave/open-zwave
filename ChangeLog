@@ -124,7 +124,6 @@ Version 1.3
  - Pull Request #545 - Add Philio PST02-A 4 in 1 MultiSensor from Nechry (Justin)
  - Fix a crash when dumping the Queue to the Log, reported by Gizmocuz (Justin)
  - Pull Request #564 - Add Cooper Configs from Stevejbauer (Justin)
- - Pull Request #561 - Add Version String Method from Ikkemaniac (Justin)
  - Pull Request #562 - Fix Windows Build Event with wrong directory from douglasbeck (Justin)
  - Pull Request #567 and Issue 566 - Add Fibaro FGS221 from Nechry and
    DanielLast (Justin)
