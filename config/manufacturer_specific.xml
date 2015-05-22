@@ -449,6 +449,9 @@
 	</Manufacturer>
 	<Manufacturer id="0083" name="MTC Maintronic">
 	</Manufacturer>
+	<Manufacturer id="0165" name="NodOn">
+    		<Product type="0001" id="0001" name="ASP-3-1-00 Smart Plug" config="nodon/asp3100SmartPlug.xml"/>
+	</Manufacturer>
 	<Manufacturer id="0096" name="NorthQ">
 		<Product type="0001" id="0001" name="NQ-92021 Power Reader" config="northq/nq92021.xml"/>
 		<Product type="0001" id="0002" name="NQ-9021 Power Reader"/>
