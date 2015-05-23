@@ -68,6 +68,7 @@ enum
 	RoleType_Listening_Sleeping_Slave,
 };
 
+#if 0
 static char const* c_roleTypeName[] =
 {
 	"Central Controller",
@@ -97,6 +98,8 @@ static char const* c_nodeTypeName[] =
 	"Z-Wave+ IP client and IP node",
 	"Z-Wave+ IP client and Zwave node"	
 };
+
+#endif
 
 static char const* c_iconTypeName[] =
 {
@@ -200,6 +203,20 @@ bool ZWavePlusInfo::HandleMsg
 		// We have received a report from the Z-Wave device
 		Log::Write( LogLevel_Info, GetNodeId(), "Received ZWavePlusInfo command from node %d", GetNodeId() );
 
+		if( Node* node = GetNodeUnsafe() )
+		{
+			node->SetNodePlusInfoReceived( true );
+			node->SetIcon( _data[6] );
+			if( _data[6] < 36 )
+			{
+				node->SetIconName( c_iconTypeName[_data[6]] );
+			} 
+			else
+			{
+				node->SetIconName( c_iconTypeName[0] );
+			}
+		}
+#if 0
 		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, ZWavePlusInfoIndex_Version ) ) )
 		{
 			value->OnValueRefreshed( _data[1] );
@@ -234,7 +251,8 @@ bool ZWavePlusInfo::HandleMsg
 		{
 			value->OnValueRefreshed(  _data[7] );
 			value->Release();
-		}		
+		}
+#endif		
 		return true;
 	}
 	return false;
@@ -252,6 +270,7 @@ void ZWavePlusInfo::CreateVars
 {
 	// version:01 role:AlwaysOnSlave node:Z-Wave+Node installerIcon:0600 userIcon:0600 
 
+#if 0
 	if( Node* node = GetNodeUnsafe() )
 	{
 		node->CreateValueByte( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ZWavePlusInfoIndex_Version, "Z‐Wave Plus Version", "", true, false, 0, 0 );
@@ -292,4 +311,5 @@ void ZWavePlusInfo::CreateVars
 		node->CreateValueList( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ZWavePlusInfoIndex_UserIcon, "User Icon", "", true, false, 0, iconItems, 0, 0 );
 		node->CreateValueByte( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ZWavePlusInfoIndex_InstallerIconSpecific, "User Icon Specific Type", "", true, false, 0, 0 );
 	}
+#endif
 }
