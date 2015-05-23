@@ -205,7 +205,8 @@ bool ZWavePlusInfo::HandleMsg
 
 		if( Node* node = GetNodeUnsafe() )
 		{
-			node->SetNodePlusInfoReceived( true );
+			node->SetDeviceClasses(	_data[2], _data[3] );
+			
 			node->SetIcon( _data[6] );
 			if( _data[6] < 36 )
 			{

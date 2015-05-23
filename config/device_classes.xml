@@ -100,4 +100,8 @@
     <Specific key="0x0a" label="Advanced Zensor Smoke Sensor" command_classes="0x71,0x72,0x80,0x85,0x86,0xef,0x71" />
   </Generic>
   <Generic key="0xff" label="Non Interoperable" />
+
+  <Role key="0x05" label="Always On Slave" command_class="0x5E,0x98"/>
+  <Role key="0x06" label="Reporting Sleeping Slave" command_class="0x5E,0x98"/>
+  
 </DeviceClasses>

@@ -78,6 +78,7 @@ using namespace OpenZWave;
 bool Node::s_deviceClassesLoaded = false;
 map<uint8,string> Node::s_basicDeviceClasses;
 map<uint8,Node::GenericDeviceClass*> Node::s_genericDeviceClasses;
+map<uint8,Node::DeviceClass*> Node::s_roleDeviceClasses;
 
 static char const* c_queryStageNames[] =
 {
@@ -2695,6 +2696,37 @@ bool Node::SetDeviceClasses
 }
 
 //-----------------------------------------------------------------------------
+// <Node::SetDeviceClasses>
+// Set the device class data for the node based on the Zwave+ info report
+//-----------------------------------------------------------------------------
+bool Node::SetDeviceClasses
+(
+	uint8 const _role,
+	uint8 const _nodeType
+)
+{   
+	if ( m_nodePlusInfoReceived )
+	{
+		return false; // todo meaning?
+	}
+	m_nodePlusInfoReceived = true;
+
+	// Apply any Role device class data
+	map<uint8,DeviceClass*>::iterator rit = s_roleDeviceClasses.find( _role );
+	if( rit != s_roleDeviceClasses.end() )
+	{
+		DeviceClass* roleDeviceClass = rit->second;
+		m_type = roleDeviceClass->GetLabel();
+
+		Log::Write( LogLevel_Info, m_nodeId, "  Role device Class  (0x%.2x) - %s", m_generic, m_type.c_str() );
+
+		// Add the mandatory command classes for this role class type
+		AddMandatoryCommandClasses( roleDeviceClass->GetMandatoryCommandClasses() );
+	}
+	return true;
+}
+
+//-----------------------------------------------------------------------------
 // <Node::AddMandatoryCommandClasses>
 // Add mandatory command classes to the node
 //-----------------------------------------------------------------------------
@@ -2790,6 +2822,10 @@ void Node::ReadDeviceClasses
 					{
 						s_basicDeviceClasses[key] = label;
 					}
+				}
+				else if( !strcmp( str, "Role" ) )
+				{
+					s_roleDeviceClasses[key] = new DeviceClass( child );
 				}
 			}
 		}
