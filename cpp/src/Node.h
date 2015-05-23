@@ -105,6 +105,7 @@ namespace OpenZWave
 		friend class ThermostatSetpoint;
 		friend class Version;
 		friend class WakeUp;
+		friend class ZWavePlusInfo;
 
 	//-----------------------------------------------------------------------------
 	// Construction
@@ -235,9 +236,11 @@ namespace OpenZWave
 
 		bool ProtocolInfoReceived()const{ return m_protocolInfoReceived; }
 		bool NodeInfoReceived()const{ return m_nodeInfoReceived; }
+		bool NodePlusInfoReceived()const{ return m_nodePlusInfoReceived; }
 
 		bool AllQueriesCompleted()const{ return( QueryStage_Complete == m_queryStage ); }
 
+		void SetNodePlusInfoReceived(const bool _received){ m_nodePlusInfoReceived = _received; }
 		/**
 		 * Handle dead node detection tracking.
 		 * Use this routine to set state of nodes.
@@ -254,6 +257,7 @@ namespace OpenZWave
 		uint8		m_queryRetries;
 		bool		m_protocolInfoReceived;
 		bool		m_nodeInfoReceived;
+		bool		m_nodePlusInfoReceived;
 		bool		m_manufacturerSpecificClassReceived;
 		bool		m_nodeInfoSupported;
 		bool		m_nodeAlive;
@@ -354,6 +358,16 @@ namespace OpenZWave
 		string		m_manufacturerId;
 		string		m_productType;
 		string		m_productId;
+
+		// zwave+ info
+		uint8 GetIcon()const{return m_userIcon; }
+		string GetIconName()const{ return m_userIconName; }
+		
+		void SetIcon(const uint8 _icon){ m_userIcon = _icon; };
+		void SetIconName( string const& _iconName ){ m_userIconName = _iconName; }
+		
+		uint8		m_userIcon;
+		string		m_userIconName;
 
 	//-----------------------------------------------------------------------------
 	// Command Classes

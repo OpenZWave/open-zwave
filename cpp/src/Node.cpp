@@ -116,6 +116,7 @@ Node::Node
 	m_queryRetries( 0 ),
 	m_protocolInfoReceived( false ),
 	m_nodeInfoReceived( false ),
+	m_nodePlusInfoReceived( false ),
 	m_manufacturerSpecificClassReceived( false ),
 	m_nodeInfoSupported( true ),
 	m_nodeAlive( true ),	// assome live node
@@ -141,6 +142,8 @@ Node::Node
 	m_manufacturerId( "" ),
 	m_productType( "" ),
 	m_productId( "" ),
+	m_userIcon( 0 ),
+	m_userIconName( "" ),
 	m_values( new ValueStore() ),
 	m_sentCnt( 0 ),
 	m_sentFailed( 0 ),
