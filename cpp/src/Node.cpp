@@ -53,6 +53,7 @@
 #include "command_classes/NoOperation.h"
 #include "command_classes/Version.h"
 #include "command_classes/SwitchAll.h"
+#include "command_classes/ZWavePlusInfo.h"
 
 #include "Scene.h"
 
@@ -88,6 +89,7 @@ static char const* c_queryStageNames[] =
 	"WakeUp",
 	"ManufacturerSpecific1",
 	"NodeInfo",
+	"NodePlusInfo",
 	"SecurityReport",
 	"ManufacturerSpecific2",
 	"Versions",
@@ -364,10 +366,29 @@ void Node::AdvanceQueries
 				else
 				{
 					// This stage has been done already, so move to the Manufacturer Specific stage
-					m_queryStage = QueryStage_SecurityReport;
+					m_queryStage = QueryStage_NodePlusInfo;
 					m_queryRetries = 0;
 				}
 				break;
+			}
+			case QueryStage_NodePlusInfo:
+			{
+				Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_NodePlusInfo" );
+				ZWavePlusInfo* pluscc = static_cast<ZWavePlusInfo*>( GetCommandClass( ZWavePlusInfo::StaticGetCommandClassId() ) );
+
+				if ( pluscc )
+				{
+					m_queryPending = pluscc->RequestState( CommandClass::RequestFlag_Static, 1, Driver::MsgQueue_Query );
+					addQSC = m_queryPending;					
+				}
+				else
+				{
+					// this is not a Zwave+ node, so move onto the next querystage
+					m_queryStage = QueryStage_SecurityReport;
+					m_queryRetries = 0;
+				}
+
+				break;				
 			}
 			case QueryStage_SecurityReport:
 			{
