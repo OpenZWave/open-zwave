@@ -139,6 +139,7 @@ namespace OpenZWave
 			QueryStage_WakeUp,					/**< Start wake up process if a sleeping node */
 			QueryStage_ManufacturerSpecific1,			/**< Retrieve manufacturer name and product ids if ProtocolInfo lets us */
 			QueryStage_NodeInfo,					/**< Retrieve info about supported, controlled command classes */
+			QueryStage_NodePlusInfo,				/**< Retrieve ZWave+ info and update device classes */
 			QueryStage_SecurityReport,				/**< Retrive a list of Command Classes that require Security */
 			QueryStage_ManufacturerSpecific2,			/**< Retrieve manufacturer name and product ids */
 			QueryStage_Versions,					/**< Retrieve version information */
