@@ -47,7 +47,7 @@ enum ZWavePlusInfoCmdEnum
 
 enum
 {
-	ZWavePlusInfoIndex_Version = 0,
+	ZWavePlusInfoIndex_Version = 0x00,
 	ZWavePlusInfoIndex_Role,
 	ZWavePlusInfoIndex_Node,
 	ZWavePlusInfoIndex_InstallerIcon,
@@ -56,19 +56,18 @@ enum
 	ZWavePlusInfoIndex_UserIconSpecific
 };
 
-enum
+enum RoleTypeEnum
 {
-	RoleType_Central_Controller = 1,
+	RoleType_Central_Controller = 0x00,
 	RoleType_Sub_Controller,
 	RoleType_Portable_Controller,
 	RoleType_Portable_Reporting_Controller,
 	RoleType_Portable_Slave,
 	RoleType_Always_On_Slave,
 	RoleType_Reporting_Sleeping_Slave,
-	RoleType_Listening_Sleeping_Slave,
+	RoleType_Listening_Sleeping_Slave
 };
 
-#if 0
 static char const* c_roleTypeName[] =
 {
 	"Central Controller",
@@ -81,9 +80,9 @@ static char const* c_roleTypeName[] =
 	"Listening Sleeping Slave"
 };
 
-enum
+enum NodeTypeEnum
 {
-	NodeType_Node = 1,
+	NodeType_Node = 0x00,
 	NodeType_IP_router,
 	NodeType_IP_gateway,
 	NodeType_IP_client_and_IP_node,
@@ -98,8 +97,6 @@ static char const* c_nodeTypeName[] =
 	"Z-Wave+ IP client and IP node",
 	"Z-Wave+ IP client and Zwave node"	
 };
-
-#endif
 
 static char const* c_iconTypeName[] =
 {
@@ -200,13 +197,28 @@ bool ZWavePlusInfo::HandleMsg
 {
 	if( ZWavePlusInfoCmd_Report == _data[0] )
 	{
+		uint8 version = _data[1];
+		RoleTypeEnum role    = (RoleTypeEnum)_data[2];
+		NodeTypeEnum nodeType    = (NodeTypeEnum)_data[3];
+		uint16 installerIcon = (_data[4]<< 8) | _data[5];
+		uint16 userIcon		 = (_data[6]<< 8) | _data[7];
+
 		// We have received a report from the Z-Wave device
-		Log::Write( LogLevel_Info, GetNodeId(), "Received ZWavePlusInfo command from node %d", GetNodeId() );
+		// make sure we have the strings for the values recieved.
+		if( role <= RoleType_Listening_Sleeping_Slave && nodeType <= NodeType_IP_client_and_zwave_node )
+		{
+			Log::Write( LogLevel_Info, GetNodeId(), "Received ZWavePlusInfo report: version:0x%.2x role:%s node:%s installerIcon:0x%.4x userIcon:0x%.4x", 
+				       version, c_roleTypeName[role], c_nodeTypeName[nodeType], installerIcon ,userIcon );
+		}
+		else
+		{
+			Log::Write( LogLevel_Info, GetNodeId(), "Received ZWavePlusInfo report: version:0x%.2x role:0x%.2x node:0x%.2x installerIcon:0x%.4x userIcon:0x%.4x", 
+				       version, role, nodeType, installerIcon ,userIcon );
+		}
 
 		if( Node* node = GetNodeUnsafe() )
 		{
-			node->SetDeviceClasses(	_data[2], _data[3] );
-			
+			node->SetDeviceClasses(	role, nodeType );
 			node->SetIcon( _data[6] );
 			if( _data[6] < 36 )
 			{
