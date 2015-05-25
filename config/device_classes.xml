@@ -101,7 +101,14 @@
   </Generic>
   <Generic key="0xff" label="Non Interoperable" />
 
-  <Role key="0x05" label="Always On Slave" command_class="0x5E,0x98"/>
-  <Role key="0x06" label="Reporting Sleeping Slave" command_class="0x5E,0x98"/>
-  
+  <!-- Z-Wave+ role -->
+  <Role key="0x00" label="Central Controller" />
+  <Role key="0x01" label="Sub Controller" />
+  <Role key="0x02" label="Portable Controller" />
+  <Role key="0x03" label="Portable Reporting Controller" />
+  <Role key="0x04" label="Portable Slave" />
+  <Role key="0x05" label="Always On Slave" />
+  <Role key="0x06" label="Reporting Sleeping Slave" />
+  <Role key="0x07" label="Listening Sleeping Slave" />
+
 </DeviceClasses>
