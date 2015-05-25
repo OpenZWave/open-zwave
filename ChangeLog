@@ -128,6 +128,9 @@ Version 1.3
  - Pull Request #562 - Fix Windows Build Event with wrong directory from douglasbeck (Justin)
  - Pull Request #567 and Issue 566 - Add Fibaro FGS221 from Nechry and
    DanielLast (Justin)
+ - Pull Request #574 - Add Fibaro FGS212 Config from Nechry (Justin)
+ - Pull Request #576 - Fix up Qubino ZMNHBA2 Help from DavZero (Justin)
+
 
 Version 1.2 
  - Released on 15/10/14
