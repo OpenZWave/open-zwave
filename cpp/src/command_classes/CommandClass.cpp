@@ -309,7 +309,7 @@ void CommandClass::ReadXML
 //-----------------------------------------------------------------------------
 // <CommandClass::ReadValueRefreshXML>
 // Read the config that contains a list of Values that should be refreshed when
-// we recieve u updated Value from a device. (This helps Yale Door Locks, which send a
+// we receive u updated Value from a device. (This helps Yale Door Locks, which send a
 // Alarm Report instead of DoorLock Report when the status of the Door Lock is changed
 //-----------------------------------------------------------------------------
 void CommandClass::ReadValueRefreshXML

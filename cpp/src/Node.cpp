@@ -379,7 +379,7 @@ void Node::AdvanceQueries
 					m_queryPending = seccc->Init();
 					/* Dont add a Notification Callback here, as this is a multipacket exchange.
 					 * the Security Command Class will automatically advance the Query Stage
-					 * when we recieve a SecurityCmd_SupportedReport
+					 * when we receive a SecurityCmd_SupportedReport
 					 */
 					addQSC = false;
 				}
