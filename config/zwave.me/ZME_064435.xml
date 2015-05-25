@@ -39,7 +39,7 @@
 			<Item label="Broadcast" value="2" />
 		</Value>
 	</CommandClass>
-	
+
 	<!-- Basic set as report -->
 	<CommandClass id="32" setasreport="true"/>
 
