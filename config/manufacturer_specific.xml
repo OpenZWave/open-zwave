@@ -567,6 +567,7 @@
 	</Manufacturer>
 	<Manufacturer id="166" name="Swiid">
 		<Product type="100" id="100" name="SwiidInter" config="swiid/swiidinter.xml"/>
+                <Product type="2007" id="0706" name="SwiidPlug" config="swiid/swiidplug.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0009" name="Sylvania">
 	</Manufacturer>
