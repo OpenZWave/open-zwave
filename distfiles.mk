@@ -44,6 +44,8 @@ DISTFILES =	.gitignore \
 	config/aeon_labs/ses2.xml \
 	config/aeon_labs/watersensor.xml \
 	config/assa_abloy/RealLivingCapTouch.xml \
+	config/cooper/RF9505-T.xml \
+	config/cooper/RF9540-N.xml \
 	config/danfoss/living.xml \
 	config/danfoss/z.xml \
 	config/device_classes.xml \
@@ -99,6 +101,7 @@ DISTFILES =	.gitignore \
 	config/leviton/vri10.xml \
 	config/manufacturer_specific.xml \
 	config/manufacturer_specific.xsd \
+	config/nodon/asp3100SmartPlug.xml \
 	config/northq/nq92021.xml \
 	config/options.xml \
 	config/options.xsd \
@@ -130,6 +133,7 @@ DISTFILES =	.gitignore \
 	config/schlagelink/itemp.xml \
 	config/schlagelink/minikeypad.xml \
 	config/swiid/swiidinter.xml \
+	config/swiid/swiidplug.xml \
 	config/trane/TZEMT400AB32MAA.xml \
 	config/trane/TZEMT400BB32MAA.xml \
 	config/vision/zd2102.xml \
