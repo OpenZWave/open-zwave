@@ -149,6 +149,14 @@ Version 1.3
  - Pull Request #580 - Add zwave.me Razberry ZWave+ adapter from Nechry
    (Justin)
  - Pull Request #581 - Update Zipato Minikeypad from Nechry (Justin)
+ - Fixed issue #352 - Security Rewrite (Justin)
+ - Fixed issue #467 - Fixed Aeon Labs Multisensor Gen5 (Justin)
+ - Fixed issue #471 - Fixed Vision ZD2102 (Justin)
+ - Fixed issue #472 - Fixed Aeon Labs Siren Gen5 (Justin)
+ - Fixed issue #473 - Fixed Philio PST02-1C Slim Multisensor (Justin)
+ - Fixed issue #540 - Depreciate the BeginControllerCommand Method for
+   dedicated methods in the Manager Class - Applications should update their
+   code to use the new API instead. (Justin)
 
 
 Version 1.2 
