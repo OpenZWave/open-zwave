@@ -270,7 +270,7 @@ bool DoorLockLogging::HandleMsg
 		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, Value_System_Config_MaxRecords ) ) )
 		{
 
-			value->OnValueRefreshed( m_MaxRecords);
+			value->OnValueRefreshed( m_MaxRecords );
 			value->Release();
 		}
 		ClearStaticRequest( StaticRequest_Values );
