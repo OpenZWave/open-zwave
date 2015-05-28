@@ -144,7 +144,8 @@
 	</Manufacturer>
 	<Manufacturer id="001a" name="Cooper">
 		<Product type="4449" id="0002" name="RF9534DS Wall Dimmer Module"/>
-		<Product type="5244" id="0000" name="RF9505-TWS Split Control Duplex Receptacle"/>
+		<Product type="4449" id="0101" name="RF9540-N All Load Dimmer Light Switch" config="cooper/RF9540-N.xml"/>
+		<Product type="5244" id="0000" name="RF9505-T Split Control Duplex Receptacle" config="cooper/RF9505-T.xml"/>
 	</Manufacturer>
 	<Manufacturer id="009d" name="Coventive">
 	</Manufacturer>
@@ -261,6 +262,7 @@
 		<Product type="0400" id="0108" name="FGS211 Switch 3kW" config="fibaro/fgs211.xml" />
 		<Product type="0400" id="0109" name="FGS221 Switch 3kW" config="fibaro/fgs221.xml" />
 		<Product type="0400" id="100a" name="FGS211 Switch 3kW" config="fibaro/fgs211.xml" />
+		<Product type="0402" id="1002" name="FGS212 Switch 3kW" config="fibaro/fgs211.xml" />
 		<Product type="0200" id="0104" name="FGS221 Double Relay Switch 2x1.5kW" config="fibaro/fgs221.xml" />
 		<Product type="0200" id="0105" name="FGS221 Double Relay Switch 2x1.5kW" config="fibaro/fgs221.xml" />
 		<Product type="0200" id="0106" name="FGS221 Double Relay Switch 2x1.5kW" config="fibaro/fgs221.xml" />
@@ -268,6 +270,7 @@
 		<Product type="0200" id="0109" name="FGS221 Double Relay Switch 2x1.5kW" config="fibaro/fgs221.xml" />
 		<Product type="0200" id="100a" name="FGS221 Double Relay Switch 2x1.5kW" config="fibaro/fgs221.xml" />
 		<Product type="0200" id="300a" name="FGS221 Double Relay Switch 2x1.5kW" config="fibaro/fgs221.xml" />
+		<Product type="0202" id="1002" name="FGS222 Double Relay Switch 2x1.5kW" config="fibaro/fgs221.xml" />
 		<Product type="0600" id="1000" name="FGWPE Wall Plug" config="fibaro/fgwpe.xml" />
 		<Product type="0800" id="1001" name="FGMS001 Motion Sensor" config="fibaro/fgms.xml" />
 		<Product type="0800" id="4001" name="FGMS001 Motion Sensor" config="fibaro/fgms.xml" />
@@ -460,6 +463,9 @@
 	</Manufacturer>
 	<Manufacturer id="0083" name="MTC Maintronic">
 	</Manufacturer>
+	<Manufacturer id="0165" name="NodOn">
+    		<Product type="0001" id="0001" name="ASP-3-1-00 Smart Plug" config="nodon/asp3100SmartPlug.xml"/>
+	</Manufacturer>
 	<Manufacturer id="0096" name="NorthQ">
 		<Product type="0001" id="0001" name="NQ-92021 Power Reader" config="northq/nq92021.xml"/>
 		<Product type="0001" id="0002" name="NQ-9021 Power Reader"/>
@@ -574,6 +580,7 @@
 	</Manufacturer>
 	<Manufacturer id="166" name="Swiid">
 		<Product type="100" id="100" name="SwiidInter" config="swiid/swiidinter.xml"/>
+                <Product type="2007" id="0706" name="SwiidPlug" config="swiid/swiidplug.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0009" name="Sylvania">
 	</Manufacturer>
@@ -696,6 +703,7 @@
 	</Manufacturer>
 	<Manufacturer id="0147" name="Z-Wave.Me">
 		<Product type="0002" id="0003" name="RaZberry Controller"/>
+		<Product type="0400" id="0001" name="RaZberry Controller ZWave+"/>
 	</Manufacturer>
 	<Manufacturer id="004f" name="Z-Wave Technologia">
 	</Manufacturer>
