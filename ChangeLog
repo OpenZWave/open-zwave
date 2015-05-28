@@ -132,7 +132,8 @@ Version 1.3
  - Pull Request #576 - Fix up Qubino ZMNHBA2 Help from DavZero (Justin)
  - Pull Request #578 - Add NodOn SmartPlug, Swiid SwiidPlug and update
    ZME_064435 Config fron Nechry (Justin)
-
+ - Pull Request #580 - Add zwave.me Razberry ZWave+ adapter from Nechry
+   (Justin)
 
 
 Version 1.2 
