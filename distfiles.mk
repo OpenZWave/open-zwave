@@ -29,13 +29,20 @@ DISTFILES =	.gitignore \
 	config/aeon_labs/alms.xml \
 	config/aeon_labs/doorwindow.xml \
 	config/aeon_labs/dsd31.xml \
+	config/aeon_labs/hdss_gen5.xml \
 	config/aeon_labs/hem.xml \
 	config/aeon_labs/hemg2.xml \
 	config/aeon_labs/keyfob.xml \
+	config/aeon_labs/keyfob2.xml \
 	config/aeon_labs/minimote.xml \
+	config/aeon_labs/msesv2.xml \
+	config/aeon_labs/multisensor_gen5.xml \
+	config/aeon_labs/panicbtn.xml \
 	config/aeon_labs/recessed_doorsensor.xml \
+	config/aeon_labs/recessed_doorsensor_gen5.xml \
 	config/aeon_labs/ses.xml \
 	config/aeon_labs/ses2.xml \
+	config/aeon_labs/watersensor.xml \
 	config/assa_abloy/RealLivingCapTouch.xml \
 	config/cooper/RF9505-T.xml \
 	config/cooper/RF9540-N.xml \
@@ -234,6 +241,7 @@ DISTFILES =	.gitignore \
 	cpp/src/Msg.h \
 	cpp/src/Node.cpp \
 	cpp/src/Node.h \
+	cpp/src/Notification.cpp \
 	cpp/src/Notification.h \
 	cpp/src/OZWException.h \
 	cpp/src/Options.cpp \
@@ -242,6 +250,8 @@ DISTFILES =	.gitignore \
 	cpp/src/Scene.h \
 	cpp/src/Utils.cpp \
 	cpp/src/Utils.h \
+	cpp/src/ZWSecurity.cpp \
+	cpp/src/ZWSecurity.h \
 	cpp/src/aes/aes.h \
 	cpp/src/aes/aes.txt \
 	cpp/src/aes/aes_modes.c \
