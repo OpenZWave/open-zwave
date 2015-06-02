@@ -128,7 +128,19 @@ static char const* c_iconTypeName[] =
 	"Window Covering Position/Endpoint Aware"
 };
 
-
+//-----------------------------------------------------------------------------
+// <ZWavePlusInfo::ZWavePlusInfo>
+// Constructor
+//-----------------------------------------------------------------------------
+ZWavePlusInfo::ZWavePlusInfo
+(
+    uint32 const _homeId,
+    uint8 const _nodeId
+):
+    CommandClass( _homeId, _nodeId )
+{
+    SetStaticRequest( StaticRequest_Values );
+}
 
 //-----------------------------------------------------------------------------
 // <ZWavePlusInfo::RequestState>
@@ -141,7 +153,7 @@ bool ZWavePlusInfo::RequestState
 	Driver::MsgQueue const _queue
 )
 {
-	if( _requestFlags & RequestFlag_Static )
+	if( _requestFlags & RequestFlag_Static && HasStaticRequest( StaticRequest_Values ) )
 	{
 		return RequestValue( _requestFlags, 0, _instance, _queue );
 	}
@@ -229,6 +241,7 @@ bool ZWavePlusInfo::HandleMsg
 				node->SetIconName( c_iconTypeName[0] );
 			}
 		}
+		ClearStaticRequest( StaticRequest_Values );
 		return true;
 	}
 	return false;
