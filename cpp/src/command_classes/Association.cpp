@@ -270,7 +270,12 @@ bool Association::HandleMsg
 						group = new Group( GetHomeId(), GetNodeId(), groupIdx, maxAssociations );
 						node->AddGroup( group );
 					}
-
+					
+					// in case the group was created by AssociationGroupInfo, the maxAssociations should be added 
+					if( group->m_maxAssociations == 0 )
+					{
+						group->m_maxAssociations = maxAssociations;
+					}
 					// Update the group with its new contents
 					group->OnGroupChanged( m_pendingMembers );
 					m_pendingMembers.clear();

@@ -34,6 +34,7 @@
 #include "Options.h"
 #include "command_classes/Association.h"
 #include "command_classes/AssociationCommandConfiguration.h"
+#include "command_classes/AssociationGroupInfo.h"
 #include "command_classes/MultiInstanceAssociation.h"
 #include "platform/Log.h"
 
@@ -51,7 +52,8 @@ Group::Group
 	uint32 const _homeId,
 	uint8 const _nodeId,
 	uint8 const _groupIdx,
-	uint8 const _maxAssociations
+	uint8 const _maxAssociations,
+	string const* _label
 ):
 	m_homeId( _homeId ),
 	m_nodeId( _nodeId ),
@@ -60,9 +62,16 @@ Group::Group
 	m_auto( false ),
         m_multiInstance( false )
 {
-	char str[16];
-	snprintf( str, sizeof(str), "Group %d", m_groupIdx );
-	m_label = str;
+	if( _label == NULL )
+	{
+		char str[16];
+		snprintf( str, sizeof(str), "Group %d", m_groupIdx );
+		m_label = str;
+	}
+	else
+	{
+		m_label = _label->c_str();
+	}
 
 	// Auto-association by default is with group 1 or 255, with group 1 taking precedence.
 	// Group 255 is always created first, so if this is group 1, we need to turn off the
