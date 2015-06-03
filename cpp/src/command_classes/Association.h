@@ -38,6 +38,7 @@ namespace OpenZWave
 	class Association: public CommandClass
 	{
 		friend class Group;
+		friend class AssociationGroupInfo;
 
 	public:
 		static CommandClass* Create( uint32 const _homeId, uint8 const _nodeId ){ return new Association( _homeId, _nodeId ); }
@@ -63,6 +64,7 @@ namespace OpenZWave
 		Association( uint32 const _homeId, uint8 const _nodeId );
 		void QueryGroup( uint8 _groupIdx, uint32 const _requestFlags );
 		void AutoAssociate();
+		uint8 const GetNumGroups()const{ return m_numGroups; }
 
 		bool			m_queryAll;			// When true, once a group has been queried, we request the next one.
 		uint8			m_numGroups;		// Number of groups supported by the device.  255 is reported by certain manufacturers and requires special handling.
