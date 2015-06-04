@@ -57,6 +57,7 @@ namespace OpenZWave
 
 	private:
 		SceneActivation( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
+		static void Activate( uint32 const _homeId, uint8 const _scene, uint8 const _duration);
 	};
 
 } // namespace OpenZWave
