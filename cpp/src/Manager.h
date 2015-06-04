@@ -116,6 +116,7 @@ namespace OpenZWave
 		friend class ValueStore;
 		friend class ValueButton;
 		friend class Msg;
+		friend class SceneActivation;
 
 	public:
 		typedef void (*pfnOnNotification_t)( Notification const* _pNotification, void* _context );
@@ -2278,6 +2279,9 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists
 		 */
 		bool ActivateScene( uint8 const _sceneId );
+
+		// register scene at actuator
+		bool SetActuatorScene( uint8 const _sceneId, ValueID const& _valueId, uint8 const _value, uint8 const _duration );
 
 	/*@}*/
 

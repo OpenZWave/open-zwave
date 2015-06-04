@@ -55,6 +55,7 @@
 #include "command_classes/NoOperation.h"
 #include "command_classes/Version.h"
 #include "command_classes/SwitchAll.h"
+#include "command_classes/SceneActuatorConf.h"
 
 #include "Scene.h"
 
@@ -3003,6 +3004,26 @@ void Node::ReadDeviceClasses
 
 	s_deviceClassesLoaded = true;
 }
+
+//-----------------------------------------------------------------------------
+// <Node::SetActuatorScene>
+// Return true if node supports SceneActuatorConf CommandClass
+//-----------------------------------------------------------------------------
+bool Node::SetActuatorScene
+(
+		uint8 const _sceneId,
+		uint8 const _value,
+		uint8 const _duration
+)
+{
+	if( SceneActuatorConf* cc = static_cast<SceneActuatorConf*>( GetCommandClass( SceneActuatorConf::StaticGetCommandClassId() ) ) )
+	{
+		cc->SetScene( _sceneId, _value, _duration );
+		return true;
+	}
+	return false;
+}
+
 
 //-----------------------------------------------------------------------------
 // <Node::GetNoderStatistics>

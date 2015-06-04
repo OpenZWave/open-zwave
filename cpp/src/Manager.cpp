@@ -4520,6 +4520,25 @@ bool Manager::ActivateScene
 }
 
 //-----------------------------------------------------------------------------
+// <Manager::SetActuatorScene>
+// Return true if node supports SceneActuatorConf CommandClass
+//-----------------------------------------------------------------------------
+bool Manager::SetActuatorScene
+(
+		uint8 const _sceneId,
+		ValueID const& _valueId,
+		uint8 const _value,
+		uint8 const _duration
+)
+{
+	if( Driver* driver = GetDriver( _valueId.GetHomeId() ) )
+	{
+		return driver->SetActuatorScene( _sceneId, _valueId, _value, _duration );
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
 // <Manager::GetDriverStatistics>
 // Retrieve driver based counters.
 //-----------------------------------------------------------------------------

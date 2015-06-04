@@ -50,10 +50,11 @@ namespace OpenZWave
 		virtual string const GetCommandClassName()const{ return StaticGetCommandClassName(); }
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );
 
+		void SetScene( uint8 const _sceneId, uint8 const _level, uint8 const _duration );
+
 	private:
 		SceneActuatorConf( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
 
-		void SetScene(uint8 const _sceneId, uint8 const _duration, uint8 const _level );
 
 	};
 

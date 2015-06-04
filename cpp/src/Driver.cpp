@@ -6397,6 +6397,27 @@ void Driver::UpdateNodeRoutes
 }
 
 //-----------------------------------------------------------------------------
+// <Driver::SetActuatorScene>
+// Return true if node supports SceneActuatorConf CommandClass
+//-----------------------------------------------------------------------------
+bool Driver::SetActuatorScene
+(
+		uint8 const _sceneId,
+		ValueID const& _valueId,
+		uint8 const _value,
+		uint8 const _duration
+)
+{
+	LockGuard LG(m_nodeMutex);
+	if( Node* node = GetNode( _valueId.GetNodeId() ) )
+	{
+		return node->SetActuatorScene( _sceneId, _value, _duration );
+	}
+	return false;
+}
+
+
+//-----------------------------------------------------------------------------
 // <Driver::GetDriverStatistics>
 // Return driver statistics
 //-----------------------------------------------------------------------------

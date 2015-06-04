@@ -535,6 +535,14 @@ namespace OpenZWave
 			static map<uint8,string>				s_basicDeviceClasses;		// Map of basic device classes.
 			static map<uint8,GenericDeviceClass*>	s_genericDeviceClasses;		// Map of generic device classes.
 
+
+			//-----------------------------------------------------------------------------
+			//	Scenes
+			//-----------------------------------------------------------------------------
+			public:
+				bool SetActuatorScene( uint8 const _sceneId, uint8 const _value, uint8 const _duration );
+
+
 			//-----------------------------------------------------------------------------
 			//	Statistics
 			//-----------------------------------------------------------------------------

@@ -56,16 +56,12 @@ bool SceneActuatorConf::RequestState
 {
 	if( ( _requestFlags & RequestFlag_Dynamic ) )
 	{
-#if 0
-//		RequestValue( _requestFlags, 1, _instance, _queue );
-//		RequestValue( _requestFlags, 2, _instance, _queue );
-
-		RequestValue( _requestFlags, 0x03, _instance, _queue );
-		SetScene(0x03, 0x00, 0xFF); // scene 16 on now
-		RequestValue( _requestFlags, 0x03, _instance, _queue );
-		SetScene(0x03, 0x00, 0x63); // scene 16 on now
-		RequestValue( _requestFlags, 0x03, _instance, _queue );
-#endif
+//		RequestValue( _requestFlags, 0x01, _instance, _queue );
+//		SetScene( 0x00, 0xff, 0xff );
+//		RequestValue( _requestFlags, 0x01, _instance, _queue );
+//		RequestValue( _requestFlags, 0x02, _instance, _queue );
+//		RequestValue( _requestFlags, 0x03, _instance, _queue );
+//		RequestValue( _requestFlags, 0x04, _instance, _queue );
 		return RequestValue( _requestFlags, 0, _instance, _queue ); // request active scene
 	}
 
@@ -104,11 +100,12 @@ bool SceneActuatorConf::RequestValue
 
 void SceneActuatorConf::SetScene
 (
-		uint8 const _sceneId,
-		uint8 const _duration,
-		uint8 const _level
+	uint8 const _sceneId,
+	uint8 const _level,
+	uint8 const _duration
 )
 {
+	// once a actuator has activated the scene it can only be undone by a reset
 	// TODO _bReplyRequired is false else we get a timeout. Why is this needed?
 	Msg* msg = new Msg( "SceneActuatorConfCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, false, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 	msg->Append( GetNodeId() );
