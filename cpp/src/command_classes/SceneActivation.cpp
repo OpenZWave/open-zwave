@@ -83,14 +83,14 @@ bool SceneActivation::HandleMsg
 //-----------------------------------------------------------------------------
 void SceneActivation::Activate
 (
-	uint32 const _homeId,
+	Driver * driver,
 	uint8 const _scene,
 	uint8 const _duration
 )
 {
 	Log::Write( LogLevel_Info, "Activating scene %d, duration %d", _scene, _duration );
 
-	if (Driver* driver = Manager::Get()->GetDriver( _homeId ) )
+	if ( driver != NULL )
 	{
 		Msg* msg = new Msg( "SceneActivationCmd_Set", 0xFF, REQUEST, FUNC_ID_ZW_SEND_DATA, true , true);
 		msg->Append( 0xFF );

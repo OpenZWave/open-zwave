@@ -2282,6 +2282,7 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 
 		// register scene at actuator
 		bool SetActuatorScene( uint8 const _sceneId, ValueID const& _valueId, uint8 const _value, uint8 const _duration );
+		bool ActivateScene( uint32 const _homeId, uint8 const _sceneId, uint8 const _duration );
 
 	/*@}*/
 

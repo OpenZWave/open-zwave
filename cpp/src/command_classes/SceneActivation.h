@@ -55,9 +55,9 @@ namespace OpenZWave
 		/** \brief Handle a response to a message associated with this command class. (Inherited from CommandClass) */
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );
 
+		static void Activate( Driver * driver, uint8 const _scene, uint8 const _duration);
 	private:
 		SceneActivation( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
-		static void Activate( uint32 const _homeId, uint8 const _scene, uint8 const _duration);
 	};
 
 } // namespace OpenZWave

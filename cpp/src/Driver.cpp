@@ -50,6 +50,7 @@
 #include "command_classes/SwitchAll.h"
 #include "command_classes/ManufacturerSpecific.h"
 #include "command_classes/NoOperation.h"
+#include "command_classes/SceneActivation.h"
 
 #include "value_classes/ValueID.h"
 #include "value_classes/Value.h"
@@ -6416,6 +6417,18 @@ bool Driver::SetActuatorScene
 	return false;
 }
 
+//-----------------------------------------------------------------------------
+// <Driver::ActivateScene>
+// broadcast the scene activation
+//-----------------------------------------------------------------------------
+void Driver::ActivateScene
+(
+		uint8 const _sceneId,
+		uint8 const _duration
+)
+{
+	SceneActivation::Activate( this , _sceneId, _duration );
+}
 
 //-----------------------------------------------------------------------------
 // <Driver::GetDriverStatistics>

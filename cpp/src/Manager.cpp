@@ -4538,6 +4538,21 @@ bool Manager::SetActuatorScene
 	return false;
 }
 
+bool Manager::ActivateScene
+(
+		uint32 const _homeId,
+		uint8 const _sceneId,
+		uint8 const _duration
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		driver->ActivateScene( _sceneId,  _duration );
+		return true;
+	}
+	return false;
+}
+
 //-----------------------------------------------------------------------------
 // <Manager::GetDriverStatistics>
 // Retrieve driver based counters.
