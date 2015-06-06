@@ -116,7 +116,6 @@ namespace OpenZWave
 		friend class ValueStore;
 		friend class ValueButton;
 		friend class Msg;
-		friend class SceneActivation;
 
 	public:
 		typedef void (*pfnOnNotification_t)( Notification const* _pNotification, void* _context );

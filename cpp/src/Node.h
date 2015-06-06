@@ -89,6 +89,7 @@ namespace OpenZWave
 			friend class MultiInstanceAssociation;
 			friend class NodeNaming;
 			friend class Protection;
+			friend class SceneControllerConf;
 			friend class Security;
 			friend class SensorAlarm;
 			friend class SensorBinary;

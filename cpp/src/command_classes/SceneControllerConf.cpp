@@ -32,6 +32,7 @@
 #include "Node.h"
 #include "Driver.h"
 #include "platform/Log.h"
+#include "value_classes/ValueByte.h"
 
 using namespace OpenZWave;
 
@@ -45,7 +46,7 @@ enum SceneControllerConfCmd
 
 //-----------------------------------------------------------------------------
 // <SceneControllerConf::RequestState>
-// Nothing to do for SceneActuatorConf
+// Request button bindings from the device
 //-----------------------------------------------------------------------------
 bool SceneControllerConf::RequestState
 (
@@ -54,22 +55,24 @@ bool SceneControllerConf::RequestState
 	Driver::MsgQueue const _queue
 )
 {
-	if( ( _requestFlags & RequestFlag_Dynamic ) )
-	{
-#if 0
-		RequestValue( _requestFlags, 0x01, _instance, _queue );
-		Set( 0x01, 0x02, 0x00 );
-		RequestValue( _requestFlags, 0x01, _instance, _queue );
-#endif
-		return RequestValue( _requestFlags, 0, _instance, _queue ); // request active scene
-	}
+	bool res = false;
 
-	return false;
+	if( ( _requestFlags & RequestFlag_Session ) )
+	{
+		if( Node* node = GetNodeUnsafe() )
+		{
+			for( int i = 1; i <= node->GetNumGroups() ; i++ )
+			{
+				res |= RequestValue( _requestFlags, i, _instance, _queue );
+			}
+		}
+	}
+	return res;
 }
 
 //-----------------------------------------------------------------------------
 // <SceneControllerConf::RequestValue>
-// todo
+// request the state from the device
 //-----------------------------------------------------------------------------
 bool SceneControllerConf::RequestValue
 (
@@ -98,7 +101,7 @@ bool SceneControllerConf::RequestValue
 
 //-----------------------------------------------------------------------------
 // <SceneControllerConf::Set>
-// todo
+// Bind the scene to a button
 //-----------------------------------------------------------------------------
 void SceneControllerConf::Set
 (
@@ -107,7 +110,8 @@ void SceneControllerConf::Set
 	uint8 const _duration
 )
 {
-	Msg* msg = new Msg( "SceneControllerConfCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+	// TODO _bReplyRequired is false else we get a timeout. Why is this needed?
+	Msg* msg = new Msg( "SceneControllerConfCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, false, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 	msg->Append( GetNodeId() );
 	msg->Append( 5 );
 	msg->Append( GetCommandClassId() );
@@ -117,6 +121,24 @@ void SceneControllerConf::Set
 	msg->Append( _duration );
 	msg->Append( GetDriver()->GetTransmitOptions() );
 	GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
+}
+
+//-----------------------------------------------------------------------------
+// <SceneControllerConf::SetValue>
+// Bind the scene to a button
+//-----------------------------------------------------------------------------
+bool SceneControllerConf::SetValue
+(
+	Value const& _value
+)
+{
+	if( ValueID::ValueType_Byte == _value.GetID().GetType() )
+	{
+		ValueByte const* value = static_cast<ValueByte const*>(&_value);
+		Set( _value.GetID().GetIndex(),  value->GetValue(), 0x00 );
+		return true;
+	}
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -148,16 +170,29 @@ bool SceneControllerConf::HandleMsg
 		else
 			snprintf( msg, sizeof(msg), "via configuration" );
 
-		if( sceneId == 0 )
+		if( Node* node = GetNodeUnsafe() )
 		{
-			Log::Write( LogLevel_Info, GetNodeId(), "Received Scene Controller Configuration Report, group %d on node %d has no active scene.", group,  GetNodeId() );
-		}
-		else
-		{
-			Log::Write( LogLevel_Info, GetNodeId(), "Received Scene Controller Configuration Report, group=%d on node %d triggers scene id=%d with duration  %s.", group, GetNodeId(), sceneId, msg );
+			if( sceneId == 0 )
+			{
+				Log::Write( LogLevel_Info, GetNodeId(), "Received Scene Controller Configuration Report, group/button %d on node %d has no active scene.", group,  GetNodeId() );
+			}
+			else
+			{
+				Log::Write( LogLevel_Info, GetNodeId(), "Received Scene Controller Configuration Report, group/button %d on node %d triggers scene id=%d with duration %s.", group, GetNodeId(), sceneId, msg );
+			}
+			ValueByte* value = static_cast<ValueByte*>( GetValue ( _instance, group ) );
+			if( value == NULL )
+			{
+				char lbl[64];
+				snprintf(lbl, 64, "Button %d", group);
+				node->CreateValueByte(ValueID::ValueGenre_User, GetCommandClassId(), _instance, group, lbl, "", false, false, 0, 0 );
+				value = static_cast<ValueByte*>( GetValue ( _instance, group ) );
+			}
+			value->OnValueRefreshed( sceneId );
+			value->Release();
+			// what about duration?
 		}
 		return true;
 	}
 	return false;
 }
-
