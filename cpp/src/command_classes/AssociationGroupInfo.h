@@ -59,7 +59,6 @@ namespace OpenZWave
 		void GetGroupName( uint8 const _groupIdx );
 		void GetGroupInfo( uint8 const _groupIdx );
 		void GetGroupCmdInfo( uint8 const _groupIdx );
-		bool m_requestAllNames;
 	};
 
 } // namespace OpenZWave

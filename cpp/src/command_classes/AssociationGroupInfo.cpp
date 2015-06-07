@@ -62,8 +62,7 @@ AssociationGroupInfo::AssociationGroupInfo
 	uint32 const _homeId,
 	uint8 const _nodeId
 ):
-	CommandClass( _homeId, _nodeId ),
-	m_requestAllNames(false)
+	CommandClass( _homeId, _nodeId )
 {
 }
 
@@ -128,6 +127,10 @@ bool AssociationGroupInfo::RequestValue
 	return false;
 }
 
+//-----------------------------------------------------------------------------
+// <AssociationGroupInfo::GetGroupNames>
+// Request all group names
+//-----------------------------------------------------------------------------
 void AssociationGroupInfo::GetGroupNames
 (
 )
@@ -139,10 +142,9 @@ void AssociationGroupInfo::GetGroupNames
 			// we can not use group count from node. 
 			if( Association* cc = static_cast<Association*>( node->GetCommandClass( Association::StaticGetCommandClassId() ) ) )
 			{
-				if( cc->GetNumGroups() > 0 )
+				for(int i=1 ; i<=cc->GetNumGroups() ; i++ )
 				{
-					m_requestAllNames = true;
-					GetGroupName( cc->GetNumGroups() );
+					GetGroupName( i );
 				}
 			}
 		}
@@ -264,16 +266,6 @@ bool AssociationGroupInfo::HandleMsg
 			{
 				// update the name of the group
 				group->SetLabel( name );
-			}
-
-			if( m_requestAllNames && groupIdx > 1 )
-			{
-				// request next group
-				GetGroupName( groupIdx-1 );
-			}
-			else
-			{
-				m_requestAllNames = false;
 			}
 		}
 		return true;
