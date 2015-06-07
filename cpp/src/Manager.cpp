@@ -2184,7 +2184,7 @@ bool Manager::GetValueListSelection
 				if( ValueList* value = static_cast<ValueList*>( driver->GetValue( _id ) ) )
 				{
 					ValueList::Item const& item = value->GetItem();
-					if( &item != NULL )
+					if( item.m_label.length() > 0 )
 					{
 						*o_value = item.m_label;
 						res = true;
