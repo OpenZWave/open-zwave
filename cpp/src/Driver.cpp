@@ -6339,7 +6339,10 @@ void Driver::UpdateNodeRoutes
 			for( uint8 j = 0; j < len; j++ )
 			{
 				uint8 k;
-				for( k = 0; k < numNodes; k++ )
+				/* there is a gcc bug that triggers here: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=59124
+				 * see also https://github.com/OpenZWave/open-zwave/issues/586
+				 */
+				for( k = 0; k < numNodes && k < sizeof(nodes); k++ )
 				{
 					if( nodes[k] == associations[j] )
 					{

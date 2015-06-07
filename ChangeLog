@@ -159,7 +159,7 @@ Version 1.3
    code to use the new API instead. (Justin)
  - Pull Request #587 - Add Zwave.me ZME_WALLC-S Secure Wall Controller from
    xs4 (Justin)
-
+ - Fixed issue #586 - Compile Error on newer GCC's (Justin)
 
 Version 1.2 
  - Released on 15/10/14
