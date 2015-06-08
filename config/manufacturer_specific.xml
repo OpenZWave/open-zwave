@@ -383,7 +383,7 @@
 		<Product type="5252" id="3530" name="45605 Duplex Receptacle"/>
 		<Product type="5257" id="3533" name="45609 On/Off Relay Switch" config="ge/relay.xml"/>
 		<Product type="4457" id="3033" name="45613 3-Way Dimmer Switch" config="ge/dimmer.xml"/>
-		<Product type="4952" id="3032" name="45609 On/Off Relay Switch" config="ge/relay.xml"/>
+		<Product type="4952" id="3032" name="12722 On/Off Relay Switch" config="ge/relay.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0091" name="Kamstrup">
 	</Manufacturer>
