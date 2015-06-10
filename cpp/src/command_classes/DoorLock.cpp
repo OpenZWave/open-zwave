@@ -358,7 +358,7 @@ bool DoorLock::SetValue
 		ValueBool const* value = static_cast<ValueBool const*>(&_value);
 
 		Log::Write( LogLevel_Info, GetNodeId(), "Value_Lock::Set - Requesting lock to be %s", value->GetValue() ? "Locked" : "Unlocked" );
-		Msg* msg = new Msg( "DoorLockCmd_Get",  GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		Msg* msg = new Msg( "DoorLockCmd_Set",  GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 		msg->SetInstance( this, _value.GetID().GetInstance() );
 		msg->Append( GetNodeId() );
 		msg->Append( 3 );
@@ -376,7 +376,7 @@ bool DoorLock::SetValue
 
 
 		Log::Write( LogLevel_Info, GetNodeId(), "Value_Lock_Mode::Set - Requesting lock to be %s", item.m_label.c_str() );
-		Msg* msg = new Msg( "DoorLockCmd_Get",  GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		Msg* msg = new Msg( "DoorLockCmd_Set",  GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 		msg->SetInstance( this, _value.GetID().GetInstance() );
 		msg->Append( GetNodeId() );
 		msg->Append( 3 );
