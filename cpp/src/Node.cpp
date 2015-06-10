@@ -1353,7 +1353,6 @@ void Node::SetProtocolInfo
 
 	if( ProtocolInfoReceived() || m_basicprotocolInfoReceived == true )
 	{
-		std::cout << "proto already recieved" << std::endl;
 		// We already have this info
 		return;
 	}
