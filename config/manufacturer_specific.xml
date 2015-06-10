@@ -70,6 +70,7 @@
 		<Product type="0004" id="0025" name="Z-Wave Repeater"/>
 		<Product type="0004" id="0050" name="DSD31 Siren Gen5" config="aeon_labs/dsd31.xml"/>
         <!-- US-market products start with type prefix "01" -->
+		<Product type="0101" id="005a" name="Z-Stick Gen5"/>
 		<Product type="0102" id="0059" name="Recessed Door Sensor Gen5" config="aeon_labs/recessed_doorsensor_gen5.xml"/>
         <!-- AU-market products start with type prefix "02" -->
 		<Product type="0202" id="0059" name="Recessed Door Sensor Gen5" config="aeon_labs/recessed_doorsensor_gen5.xml"/>
@@ -382,6 +383,7 @@
 		<Product type="5252" id="3530" name="45605 Duplex Receptacle"/>
 		<Product type="5257" id="3533" name="45609 On/Off Relay Switch" config="ge/relay.xml"/>
 		<Product type="4457" id="3033" name="45613 3-Way Dimmer Switch" config="ge/dimmer.xml"/>
+		<Product type="4952" id="3032" name="12722 On/Off Relay Switch" config="ge/relay.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0091" name="Kamstrup">
 	</Manufacturer>
