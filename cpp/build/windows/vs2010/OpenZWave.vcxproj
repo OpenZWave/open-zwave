@@ -100,7 +100,8 @@
       <TargetMachine>MachineX86</TargetMachine>
     </Lib>
     <PreBuildEvent>
-      <Command>CALL $(SolutionDir)\..\GIT-VS-VERSION-GEN.bat "$(ProjectDir)\" "..\winversion.cpp" 
+      <Command>del ..\winversion.cpp
+CALL $(ProjectDir)\..\GIT-VS-VERSION-GEN.bat "$(ProjectDir)\" "..\winversion.cpp"
 exit 0</Command>
     </PreBuildEvent>
     <PreBuildEvent>
@@ -132,7 +133,8 @@ exit 0</Command>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PreBuildEvent>
-      <Command>CALL $(SolutionDir)\..\GIT-VS-VERSION-GEN.bat "$(ProjectDir)\" "..\winversion.cpp" 
+      <Command>del ..\winversion.cpp
+CALL $(ProjectDir)\..\GIT-VS-VERSION-GEN.bat "$(ProjectDir)\" "..\winversion.cpp"
 exit 0</Command>
     </PreBuildEvent>
     <PreBuildEvent>
@@ -164,7 +166,8 @@ exit 0</Command>
     <PreBuildEvent />
     <PreBuildEvent>
       <Message>Export GIT Revision</Message>
-      <Command>CALL $(SolutionDir)\..\GIT-VS-VERSION-GEN.bat "$(ProjectDir)\" "..\winversion.cpp" 
+      <Command>del ..\winversion.cpp
+CALL $(ProjectDir)\..\GIT-VS-VERSION-GEN.bat "$(ProjectDir)\" "..\winversion.cpp"
 exit 0</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
@@ -186,7 +189,8 @@ exit 0</Command>
       <AdditionalDependencies>setupapi.lib</AdditionalDependencies>
     </Lib>
     <PreBuildEvent>
-      <Command>CALL $(SolutionDir)\..\GIT-VS-VERSION-GEN.bat "$(ProjectDir)\" "..\winversion.cpp" 
+      <Command>del ..\winversion.cpp
+CALL $(ProjectDir)\..\GIT-VS-VERSION-GEN.bat "$(ProjectDir)\" "..\winversion.cpp"
 exit 0</Command>
     </PreBuildEvent>
     <PreBuildEvent>
@@ -218,6 +222,7 @@ exit 0</Command>
     <ClInclude Include="..\..\..\src\Node.h" />
     <ClInclude Include="..\..\..\src\Notification.h" />
     <ClInclude Include="..\..\..\src\Options.h" />
+    <ClInclude Include="..\..\..\src\ZWSecurity.h" />
     <ClInclude Include="..\..\..\src\platform\Controller.h" />
     <ClInclude Include="..\..\..\src\platform\Event.h" />
     <ClInclude Include="..\..\..\src\platform\HidController.h" />
@@ -318,7 +323,9 @@ exit 0</Command>
     <ClCompile Include="..\..\..\src\Manager.cpp" />
     <ClCompile Include="..\..\..\src\Msg.cpp" />
     <ClCompile Include="..\..\..\src\Node.cpp" />
+    <ClCompile Include="..\..\..\src\Notification.cpp" />
     <ClCompile Include="..\..\..\src\Options.cpp" />
+    <ClCompile Include="..\..\..\src\ZWSecurity.cpp" />
     <ClCompile Include="..\..\..\src\platform\Controller.cpp" />
     <ClCompile Include="..\..\..\src\platform\Event.cpp" />
     <ClCompile Include="..\..\..\src\platform\FileOps.cpp" />

@@ -29,14 +29,23 @@ DISTFILES =	.gitignore \
 	config/aeon_labs/alms.xml \
 	config/aeon_labs/doorwindow.xml \
 	config/aeon_labs/dsd31.xml \
+	config/aeon_labs/hdss_gen5.xml \
 	config/aeon_labs/hem.xml \
 	config/aeon_labs/hemg2.xml \
 	config/aeon_labs/keyfob.xml \
+	config/aeon_labs/keyfob2.xml \
 	config/aeon_labs/minimote.xml \
+	config/aeon_labs/msesv2.xml \
+	config/aeon_labs/multisensor_gen5.xml \
+	config/aeon_labs/panicbtn.xml \
 	config/aeon_labs/recessed_doorsensor.xml \
+	config/aeon_labs/recessed_doorsensor_gen5.xml \
 	config/aeon_labs/ses.xml \
 	config/aeon_labs/ses2.xml \
+	config/aeon_labs/watersensor.xml \
 	config/assa_abloy/RealLivingCapTouch.xml \
+	config/cooper/RF9505-T.xml \
+	config/cooper/RF9540-N.xml \
 	config/danfoss/living.xml \
 	config/danfoss/z.xml \
 	config/device_classes.xml \
@@ -92,6 +101,7 @@ DISTFILES =	.gitignore \
 	config/leviton/vri10.xml \
 	config/manufacturer_specific.xml \
 	config/manufacturer_specific.xsd \
+	config/nodon/asp3100SmartPlug.xml \
 	config/northq/nq92021.xml \
 	config/options.xml \
 	config/options.xsd \
@@ -123,6 +133,7 @@ DISTFILES =	.gitignore \
 	config/schlagelink/itemp.xml \
 	config/schlagelink/minikeypad.xml \
 	config/swiid/swiidinter.xml \
+	config/swiid/swiidplug.xml \
 	config/trane/TZEMT400AB32MAA.xml \
 	config/trane/TZEMT400BB32MAA.xml \
 	config/vision/zd2102.xml \
@@ -144,6 +155,7 @@ DISTFILES =	.gitignore \
 	config/zwave.me/ZME_06433.xml \
 	config/zwave.me/ZME_06436.xml \
 	config/zwave.me/ZME_064435.xml \
+	config/zwave.me/ZME_WALLC-S.xml \
 	config/zwave.me/ZME_WCD2.xml \
 	config/zwave.me/iTemp.xml \
 	config/zwave.me/kfob.xml \
@@ -230,6 +242,7 @@ DISTFILES =	.gitignore \
 	cpp/src/Msg.h \
 	cpp/src/Node.cpp \
 	cpp/src/Node.h \
+	cpp/src/Notification.cpp \
 	cpp/src/Notification.h \
 	cpp/src/OZWException.h \
 	cpp/src/Options.cpp \
@@ -238,6 +251,8 @@ DISTFILES =	.gitignore \
 	cpp/src/Scene.h \
 	cpp/src/Utils.cpp \
 	cpp/src/Utils.h \
+	cpp/src/ZWSecurity.cpp \
+	cpp/src/ZWSecurity.h \
 	cpp/src/aes/aes.h \
 	cpp/src/aes/aes.txt \
 	cpp/src/aes/aes_modes.c \
