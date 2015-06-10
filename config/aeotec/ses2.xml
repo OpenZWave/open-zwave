@@ -30,6 +30,10 @@
       <Item label="Hail" value="1" />
       <Item label="Basic" value="2" />
     </Value>
+    <Value type="list" index="81" genre="config" label="Configure the state of the LED" units="" min="0" max="1" size="1" value="0">
+    	<Item label="The LED will follow the status (on/off) of its load. (Default)" value="0"/>
+    	<Item label="When the state of the Switch changes, the LED will follow the status (on/off) of its load, but the LED will turn off after 5 seconds." value="1"/> 
+    </Value>
     <Value type="bool" index="90" genre="config" label="Enables/disables parameter 91/92" units="" value="0">
       <Help>
 	Enable/disable Wattage threshold and percent.
