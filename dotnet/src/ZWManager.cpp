@@ -24,6 +24,7 @@
 //      along with OpenZWave.  If not, see <http://www.gnu.org/licenses/>.
 //
 //-----------------------------------------------------------------------------
+
 #include "ZWManager.h"
 
 using namespace OpenZWaveDotNet;
@@ -339,6 +340,7 @@ uint32 ZWManager::GetAssociations
 // <ZWManager::BeginControllerCommand>
 // Start a controller command process
 //-----------------------------------------------------------------------------
+[Obsolete("BeginControllerCommand is deprecated, please use the specialized methods instead.", true)]
 bool ZWManager::BeginControllerCommand
 (
 	uint32 homeId,

@@ -249,6 +249,9 @@
     <ClInclude Include="..\..\..\src\Options.h">
       <Filter>Main</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\ZWSecurity.h">
+      <Filter>Main</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\Utils.h">
       <Filter>Main</Filter>
     </ClInclude>
@@ -357,6 +360,9 @@
       <Filter>Main</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\Node.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Notification.cpp">
       <Filter>Main</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\platform\Event.cpp">
@@ -567,6 +573,9 @@
       <Filter>Value Classes</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\Options.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\ZWSecurity.cpp">
       <Filter>Main</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\Utils.cpp">

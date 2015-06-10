@@ -54,6 +54,16 @@
 #	define OPENZWAVE_EXPORT_WARNINGS_ON
 #endif
 
+#ifdef __GNUC__
+#define DEPRECATED __attribute__((deprecated))
+#elif defined(_MSC_VER)
+#define DEPRECATED __declspec(deprecated)
+#else
+#pragma message("WARNING: You need to implement DEPRECATED for this compiler")
+#define DEPRECATED
+#endif
+
+
 #ifdef NULL
 #undef NULL
 #endif
@@ -197,11 +207,13 @@ namespace OpenZWave
 
 #endif
 
-#define MAX_TRIES		3	// Retry sends up to 3 times
+//#define MAX_TRIES		3	// Retry sends up to 3 times
+#define MAX_TRIES		1	// set this to one, as I believe now that a ACK failure is indication that the device is offline, hence additional attempts will not work.
 #define MAX_MAX_TRIES		7	// Don't exceed this retry limit
 #define ACK_TIMEOUT	1000		// How long to wait for an ACK
 #define BYTE_TIMEOUT	150
-#define RETRY_TIMEOUT	40000		// Retry send after 40 seconds
+//#define RETRY_TIMEOUT	40000		// Retry send after 40 seconds
+#define RETRY_TIMEOUT	10000		// Retry send after 10 seconds (we might need to keep this below 10 for Security CC to function correctly)
 
 #define SOF												0x01
 #define ACK												0x06
@@ -373,7 +385,7 @@ namespace OpenZWave
 #define SLAVE_LEARN_MODE_REMOVE							0x03	// remove node directly but only if primary/inclusion controller
 
 #define OPTION_HIGH_POWER								0x80
-
+#define OPTION_NWI										0x40	// NWI Inclusion
 //Device request related
 #define BASIC_SET										0x01
 #define BASIC_REPORT									0x03

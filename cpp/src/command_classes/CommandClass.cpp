@@ -53,21 +53,22 @@ static uint8 const	c_precisionShift	= 0x05;
 //-----------------------------------------------------------------------------
 CommandClass::CommandClass
 (
-	uint32 const _homeId,
-	uint8 const _nodeId
+		uint32 const _homeId,
+		uint8 const _nodeId
 ):
-	m_homeId( _homeId ),
-	m_nodeId( _nodeId ),
-	m_version( 1 ),
-	m_afterMark( false ),
-	m_createVars( true ),
-	m_overridePrecision( -1 ),
-	m_getSupported( true ),
-	m_isSecured( false ),
-	m_SecureSupport( true ),
-	m_staticRequests( 0 ),
-	m_sentCnt( 0 ),
-	m_receivedCnt( 0 )
+m_homeId( _homeId ),
+m_nodeId( _nodeId ),
+m_version( 1 ),
+m_afterMark( false ),
+m_createVars( true ),
+m_overridePrecision( -1 ),
+m_getSupported( true ),
+m_isSecured( false ),
+m_SecureSupport( true ),
+m_inNIF(false),
+m_staticRequests( 0 ),
+m_sentCnt( 0 ),
+m_receivedCnt( 0 )
 {
 }
 
@@ -93,10 +94,10 @@ CommandClass::~CommandClass
 				delete rcc->RefreshClasses.back();
 				rcc->RefreshClasses.pop_back();
 			}
-//			for (unsigned int j = 0; j < rcc->RefreshClasses.size(); i++)
-//			{
-//				delete rcc->RefreshClasses[j];
-//			}
+			//			for (unsigned int j = 0; j < rcc->RefreshClasses.size(); i++)
+			//			{
+			//				delete rcc->RefreshClasses[j];
+			//			}
 			rcc->RefreshClasses.clear();
 			delete rcc;
 		}
@@ -133,8 +134,8 @@ Node* CommandClass::GetNodeUnsafe
 //-----------------------------------------------------------------------------
 Value* CommandClass::GetValue
 (
-	uint8 const _instance,
-	uint8 const _index
+		uint8 const _instance,
+		uint8 const _index
 )
 {
 	Value* value = NULL;
@@ -151,8 +152,8 @@ Value* CommandClass::GetValue
 //-----------------------------------------------------------------------------
 bool CommandClass::RemoveValue
 (
-	uint8 const _instance,
-	uint8 const _index
+		uint8 const _instance,
+		uint8 const _index
 )
 {
 	if( Node* node = GetNodeUnsafe() )
@@ -168,7 +169,7 @@ bool CommandClass::RemoveValue
 //-----------------------------------------------------------------------------
 void CommandClass::SetInstances
 (
-	uint8 const _instances
+		uint8 const _instances
 )
 {
 	// Ensure we have a set of reported variables for each new instance
@@ -187,7 +188,7 @@ void CommandClass::SetInstances
 //-----------------------------------------------------------------------------
 void CommandClass::SetInstance
 (
-	uint8 const _endPoint
+		uint8 const _endPoint
 )
 {
 	if( !m_instances.IsSet( _endPoint ) )
@@ -206,7 +207,7 @@ void CommandClass::SetInstance
 //-----------------------------------------------------------------------------
 void CommandClass::ReadXML
 (
-	TiXmlElement const* _ccElement
+		TiXmlElement const* _ccElement
 )
 {
 	int32 intVal;
@@ -265,6 +266,13 @@ void CommandClass::ReadXML
 	{
 		m_isSecured = !strcmp( str, "true" );
 	}
+	str = _ccElement->Attribute( "innif" );
+	if( str )
+	{
+		m_inNIF = !strcmp( str, "true" );
+	}
+
+
 	// Setting the instance count will create all the values.
 	SetInstances( instances );
 
@@ -314,7 +322,7 @@ void CommandClass::ReadXML
 //-----------------------------------------------------------------------------
 void CommandClass::ReadValueRefreshXML
 (
-	TiXmlElement const* _ccElement
+		TiXmlElement const* _ccElement
 )
 {
 
@@ -422,7 +430,7 @@ bool CommandClass::CheckForRefreshValues (
 //-----------------------------------------------------------------------------
 void CommandClass::WriteXML
 (
-	TiXmlElement* _ccElement
+		TiXmlElement* _ccElement
 )
 {
 	char str[32];
@@ -461,9 +469,13 @@ void CommandClass::WriteXML
 		_ccElement->SetAttribute( "getsupported", "false" );
 	}
 	if ( m_isSecured )
-        {
-                _ccElement->SetAttribute( "issecured", "true" );
-        }
+	{
+		_ccElement->SetAttribute( "issecured", "true" );
+	}
+	if ( m_inNIF )
+	{
+		_ccElement->SetAttribute( "innif", "true" );
+	}
 
 
 	// Write out the instances
@@ -523,10 +535,10 @@ void CommandClass::WriteXML
 //-----------------------------------------------------------------------------
 string CommandClass::ExtractValue
 (
-	uint8 const* _data,
-	uint8* _scale,
-	uint8* _precision,
-	uint8 _valueOffset // = 1
+		uint8 const* _data,
+		uint8* _scale,
+		uint8* _precision,
+		uint8 _valueOffset // = 1
 )const
 {
 	uint8 const size = _data[0] & c_sizeMask;
@@ -623,9 +635,9 @@ string CommandClass::ExtractValue
 //-----------------------------------------------------------------------------
 void CommandClass::AppendValue
 (
-	Msg* _msg,
-	string const& _value,
-	uint8 const _scale
+		Msg* _msg,
+		string const& _value,
+		uint8 const _scale
 )const
 {
 	uint8 precision;
@@ -647,7 +659,7 @@ void CommandClass::AppendValue
 //-----------------------------------------------------------------------------
 uint8 const CommandClass::GetAppendValueSize
 (
-	string const& _value
+		string const& _value
 )const
 {
 	uint8 size;
@@ -662,9 +674,9 @@ uint8 const CommandClass::GetAppendValueSize
 //-----------------------------------------------------------------------------
 int32 CommandClass::ValueToInteger
 (
-	string const& _value,
-	uint8* o_precision,
-	uint8* o_size
+		string const& _value,
+		uint8* o_precision,
+		uint8* o_size
 )const
 {
 	int32 val;
@@ -739,9 +751,9 @@ int32 CommandClass::ValueToInteger
 //-----------------------------------------------------------------------------
 void CommandClass::UpdateMappedClass
 (
-	uint8 const _instance,
-	uint8 const _classId,
-	uint8 const _level
+		uint8 const _instance,
+		uint8 const _classId,
+		uint8 const _level
 )
 {
 	if( _classId )
@@ -763,7 +775,7 @@ void CommandClass::UpdateMappedClass
 //-----------------------------------------------------------------------------
 void CommandClass::ClearStaticRequest
 (
-	uint8 _request
+		uint8 _request
 )
 {
 	m_staticRequests &= ~_request;
@@ -775,8 +787,8 @@ void CommandClass::ClearStaticRequest
 //-----------------------------------------------------------------------------
 bool CommandClass::RequestStateForAllInstances
 (
-	uint32 const _requestFlags,
-	Driver::MsgQueue const _queue
+		uint32 const _requestFlags,
+		Driver::MsgQueue const _queue
 )
 {
 	bool res = false;
