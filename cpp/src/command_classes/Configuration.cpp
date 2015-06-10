@@ -255,7 +255,7 @@ void Configuration::Set
 {
 	Log::Write( LogLevel_Info, GetNodeId(), "Configuration::Set - Parameter=%d, Value=%d Size=%d", _parameter, _value, _size );
 
-	Msg* msg = new Msg( "ConfigurationCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+	Msg* msg = new Msg( "ConfigurationCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true);
 	msg->Append( GetNodeId() );
 	msg->Append( 4 + _size );
 	msg->Append( GetCommandClassId() );

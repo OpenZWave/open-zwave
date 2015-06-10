@@ -28,20 +28,27 @@
 #include "Defs.h"
 #include "Msg.h"
 #include "Node.h"
+#include "Manager.h"
+#include "Utils.h"
+#include "ZWSecurity.h"
 #include "platform/Log.h"
 #include "command_classes/MultiInstance.h"
+#include "command_classes/Security.h"
+#include "aes/aescpp.h"
 
 using namespace OpenZWave;
 
-uint8 Msg::s_nextCallbackId = 1;
+/* Callback for normal messages start at 10. Special Messages using a Callback prior to 10 */
+uint8 Msg::s_nextCallbackId = 10;
 
+#define DEBUG 1
 
 //-----------------------------------------------------------------------------
 // <Msg::Msg>
 // Constructor
 //-----------------------------------------------------------------------------
 Msg::Msg
-( 
+(
 	string const& _logText,
 	uint8 _targetNodeId,
 	uint8 const _msgType,
@@ -63,11 +70,14 @@ Msg::Msg
 	m_maxSendAttempts( MAX_TRIES ),
 	m_instance( 1 ),
 	m_endPoint( 0 ),
-	m_flags( 0 )
+	m_flags( 0 ),
+	m_encrypted ( false ),
+	m_noncerecvd ( false ),
+	m_homeId ( 0 )
 {
 	if( _bReplyRequired )
 	{
-		// Wait for this message before considering the transaction complete 
+		// Wait for this message before considering the transaction complete
 		m_expectedReply = _expectedReply ? _expectedReply : _function;
 	}
 
@@ -152,10 +162,10 @@ void Msg::Finalize()
 
 		if( 0 == s_nextCallbackId )
 		{
-			s_nextCallbackId = 1;
+			s_nextCallbackId = 10;
 		}
 
-		m_buffer[m_length++] = s_nextCallbackId;	
+		m_buffer[m_length++] = s_nextCallbackId;
 		m_callbackId = s_nextCallbackId++;
 	}
 	else
@@ -166,7 +176,7 @@ void Msg::Finalize()
 
 	// Calculate the checksum
 	uint8 checksum = 0xff;
-	for( uint32 i=1; i<m_length; ++i ) 
+	for( uint32 i=1; i<m_length; ++i )
 	{
 		checksum ^= m_buffer[i];
 	}
@@ -184,13 +194,18 @@ void Msg::UpdateCallbackId()
 {
 	if( m_bCallbackRequired )
 	{
+		if( 0 == s_nextCallbackId )
+		{
+			s_nextCallbackId = 10;
+		}
+
 		// update the callback ID
 		m_buffer[m_length-2] = s_nextCallbackId;
 		m_callbackId = s_nextCallbackId++;
 
 		// Recalculate the checksum
 		uint8 checksum = 0xff;
-		for( int32 i=1; i<m_length-1; ++i ) 
+		for( int32 i=1; i<m_length-1; ++i )
 		{
 			checksum ^= m_buffer[i];
 		}
@@ -216,7 +231,7 @@ string Msg::GetAsString()
 
 	str += ": ";
 
-	for( uint32 i=0; i<m_length; ++i ) 
+	for( uint32 i=0; i<m_length; ++i )
 	{
 		if( i )
 		{
@@ -281,3 +296,29 @@ void Msg::MultiEncap
 		m_logText = str;
 	}
 }
+
+//-----------------------------------------------------------------------------
+// <Node::GetDriver>
+// Get a pointer to our driver
+//-----------------------------------------------------------------------------
+Driver* Msg::GetDriver
+(
+)const
+{
+	return( Manager::Get()->GetDriver( m_homeId ) );
+}
+
+
+uint8* Msg::GetBuffer() {
+	if (m_encrypted == false)
+		return m_buffer;
+	else
+		if (EncyrptBuffer(m_buffer, m_length, GetDriver(), GetDriver()->GetControllerNodeId(), m_targetNodeId, m_nonce, e_buffer)) {
+			return e_buffer;
+		} else {
+			Log::Write(LogLevel_Warning, m_targetNodeId, "Failed to Encyrpt Packet");
+			return NULL;
+		}
+}
+
+

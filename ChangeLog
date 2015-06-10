@@ -120,9 +120,50 @@ Version 1.3
  - Pull Request #504 - CRC16Encap CC Support from xs4 (Justin)
  - Pull Request #522 - Dragon Tech In wall dimmer from Stevejbauer (Justin)
  - Fix Issue #523 - Add Wenzhou Door/Window Sensor from whiteduck22 (Justin)
+ - Pull Request #534 - Add Aeon Labs Recessed Door Sensor Gen5 from xxv (Justin)
+ - Pull Request #532 - Fix Aeon Labs DoorWindow Sensor Config from Nechry (Justin)
+ - Pull Request #529 - Updated Config for the Zipato MiniKeyPad from Nechry (Justin)
+ - Pull Request #528 and #527 - Add Aeon Labs Key Fob Gen5 Config from Nechry (Justin)
+ - Add new ID's for BeNext Energy Switch from Rob (Justin)
+ - Depreciate the ControllerCommand method in the Manager class and replace with direct 
+   function calls (Justin)
  - Pull Request #538 and #541 - Add SwiidInter to manufacturer_specific from Nechry (Justin)
  - Pull Request #545 - Add Philio PST02-A 4 in 1 MultiSensor from Nechry (Justin)
  - Pull Request #565 - Add MultiInstanceAssociation CommandClass from xs4 (Justin)
+ - Pull Request #546 - Update Philio PST02-A Config from Nechry (Justin)
+ - Pull Request #547 & #549 - New Config File for Philio PST02-B from Nechry (Justin)
+ - Pull Request #548 - Update Config file for Philio PST02-C from Nechry (Justin)
+ - Pull Request #550 - Config File for Vision zd2102 from Ugoviti (Justin)
+ - Fix a crash when dumping the Queue to the Log, reported by Gizmocuz (Justin)
+ - Pull Request #555 - Update the dotNet wrapper and OZWForm to use the new
+   Manager Methods that replace the BeginControllerCommand Method. From
+   JKlessens (Justin) 
+ - Pull Request #564 - Add Cooper Configs from Stevejbauer (Justin)
+ - Pull Request #561 - Add Version String Method from Ikkemaniac (Justin)
+ - Pull Request #562 - Fix Windows Build Event with wrong directory from douglasbeck (Justin)
+ - Pull Request #567 and Issue 566 - Add Fibaro FGS221 from Nechry and
+   DanielLast (Justin)
+ - Pull Request #574 - Add Fibaro FGS212 Config from Nechry (Justin)
+ - Pull Request #576 - Fix up Qubino ZMNHBA2 Help from DavZero (Justin)
+ - Pull Request #578 - Add NodOn SmartPlug, Swiid SwiidPlug and update
+   ZME_064435 Config fron Nechry (Justin)
+ - Pull Request #580 - Add zwave.me Razberry ZWave+ adapter from Nechry
+   (Justin)
+ - Pull Request #581 - Update Zipato Minikeypad from Nechry (Justin)
+ - Fixed issue #352 - Security Rewrite (Justin)
+ - Fixed issue #467 - Fixed Aeon Labs Multisensor Gen5 (Justin)
+ - Fixed issue #471 - Fixed Vision ZD2102 (Justin)
+ - Fixed issue #472 - Fixed Aeon Labs Siren Gen5 (Justin)
+ - Fixed issue #473 - Fixed Philio PST02-1C Slim Multisensor (Justin)
+ - Fixed issue #540 - Depreciate the BeginControllerCommand Method for
+   dedicated methods in the Manager Class - Applications should update their
+   code to use the new API instead. (Justin)
+ - Pull Request #587 - Add Zwave.me ZME_WALLC-S Secure Wall Controller from
+   xs4 (Justin)
+ - Fixed issue #586 - Compile Error on newer GCC's (Justin)
+ - Fixed issue #568 - Compile Error on new OSX (Justin)
+ - Update the device_classes.xml with the latest known mappings (Justin)
+ - Enable NWI when adding nodes if HighPower is also enabled (Justin)
 
 Version 1.2 
  - Released on 15/10/14
