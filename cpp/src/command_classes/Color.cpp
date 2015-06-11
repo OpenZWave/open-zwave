@@ -79,6 +79,14 @@ enum ColorIDX {
 };
 
 
+enum ValueIDSystemIndexes
+{
+	Value_Color							= 0x00,		/* RGB Color */
+	Value_Color_Index					= 0x01,		/* Color Index if Set */
+	Value_Color_Channels_Capabilities	= 0x02		/* Color Channels Capabilities */
+};
+
+
 Color::Color
 (
 		uint32 const _homeId,
@@ -87,6 +95,7 @@ Color::Color
 CommandClass( _homeId, _nodeId ),
 m_capabilities ( 0 ),
 m_coloridxbug ( false ),
+m_refreshinprogress ( false ),
 m_coloridxcount ( 0 )
 {
 	for (uint8 i = 0; i < 9; i++)
@@ -173,9 +182,17 @@ bool Color::RequestState
 		/* do a request for each channel. the RequestValue will filter out channels that are not supported
 		 * by the device
 		 */
+		if (m_refreshinprogress == true) {
+			Log::Write(LogLevel_Info, GetNodeId(), "Color Refresh in progress");
+			return false;
+		}
+
+		m_refreshinprogress = true;
 		/* if the device has the ColorIDX bug, then only request the first channel. We will get the rest later */
 		for (int i = 0; i <= 9; i++) {
-			bool tmprequests = RequestValue( _requestFlags, i, _instance, _queue );
+			bool tmprequests = RequestColorChannelReport(i, _instance, _queue );
+			if (tmprequests)
+				m_coloridxcount = i;
 			requests |= tmprequests;
 			if (m_coloridxbug && tmprequests)
 				break;
@@ -192,37 +209,52 @@ bool Color::RequestState
 bool Color::RequestValue
 (
 		uint32 const _requestFlags,
-		uint8 const coloridx,
+		uint8 const _what,
 		uint8 const _instance,
 		Driver::MsgQueue const _queue
 )
 {
-	/* rework this so we split out the coloridx from value index. This will then enable us to either start a
-	 * refresh for valueID's based on index, or a call from other methods to get a particular color.
-	 */
-
-
-	if( IsGetSupported() )
+	if( IsGetSupported() && (_what == Value_Color || _what == Value_Color_Index))
 	{
-		/* make sure our coloridx is valid */
-		if ((m_capabilities) & (1<<(coloridx))) {
-			Msg* msg = new Msg("ColorCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
-			msg->SetInstance( this, _instance );
-			msg->Append( GetNodeId() );
-			msg->Append( 3 );
-			msg->Append( GetCommandClassId() );
-			msg->Append( ColorCmd_Get );
-			msg->Append( coloridx );
-			msg->Append( GetDriver()->GetTransmitOptions() );
-			GetDriver()->SendMsg( msg, _queue );
-			m_coloridxcount = coloridx;
+		if (m_refreshinprogress == true)
+		{
+			Log::Write(LogLevel_Warning, GetNodeId(), "ColorRefresh is already in progress. Ignoring Get Request");
+			return false;
+		}
+		std::cout << "Requesting Color Refresh for index 0" << std::endl;
+		if (RequestColorChannelReport(0, _instance, _queue))
+		{
+			m_refreshinprogress = true;
+			m_coloridxcount = 0;
 			return true;
 		}
 	}
 	return false;
 }
 
+bool Color::RequestColorChannelReport
+(
+		uint8 const coloridx,
+		uint8 const _instance,
+		Driver::MsgQueue const _queue
+)
+{
+	/* make sure our coloridx is valid */
+	if ((m_capabilities) & (1<<(coloridx))) {
+		Msg* msg = new Msg("ColorCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
+		msg->SetInstance( this, _instance );
+		msg->Append( GetNodeId() );
+		msg->Append( 3 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( ColorCmd_Get );
+		msg->Append( coloridx );
+		msg->Append( GetDriver()->GetTransmitOptions() );
+		GetDriver()->SendMsg( msg, _queue );
+		return true;
+	}
+	return false;
 
+}
 //-----------------------------------------------------------------------------
 // <Color::HandleMsg>
 // Handle a message from the Z-Wave network
@@ -292,12 +324,13 @@ bool Color::HandleMsg
 		if (m_coloridxbug) {
 			coloridx = m_coloridxcount;
 			for (uint8 idx = m_coloridxcount + 1; idx < 9; idx++ ) {
-				if (RequestValue(0, idx, _instance, Driver::MsgQueue_Send)) {
+				if (RequestColorChannelReport(idx, _instance, Driver::MsgQueue_Send)) {
 					m_coloridxcount = idx;
 					break;
 				}
 			}
 		}
+		std::cout << "got coloridx " << (int)coloridx << std::endl;
 		m_colorvalues[coloridx] = _data[2];
 
 		/* test if there are any more valid coloridx */
@@ -307,8 +340,10 @@ bool Color::HandleMsg
 			}
 		}
 
+		m_refreshinprogress = false;
+
 		/* if we get here, then we can update our ValueID */
-		if( ValueString* color = static_cast<ValueString*>( GetValue( _instance, 1 ) ) )
+		if( ValueString* color = static_cast<ValueString*>( GetValue( _instance, Value_Color ) ) )
 		{
 			/* create a RGB[W] String */
 			std::stringstream ss;
@@ -388,20 +423,19 @@ bool Color::HandleMsg
 				}
 				/* and then our Color */
 				ss << std::setw(2) << std::uppercase << std::hex << std::setfill('0') << (int)m_colorvalues[COLORIDX_PURPLE];
-			} else {
-				/* put 00 into our buffer */
-				ssbuf << "00";
-				usingbuf = true;
 			}
+			/* No need for a else case here as COLORIDX_PURPLE is the last color. If its not supported, we
+			 * don't put anything in our Color String
+			 */
 
 			Log::Write(LogLevel_Info, GetNodeId(), "Received a updated Color from Device: %s", ss.str().c_str() );
-			color->OnValueRefreshed( ss.str() );
+			color->OnValueRefreshed( string(ss.str()) );
 			color->Release();
 
 		}
 		/* if we got a updated Color Index Value - Update our ValueID */
 		if ((m_capabilities) & (1<<(COLORIDX_INDEXCOLOR))) {
-			if( ValueInt* coloridx = static_cast<ValueInt*>( GetValue( _instance, 2 ) ) )
+			if( ValueInt* coloridx = static_cast<ValueInt*>( GetValue( _instance, Value_Color_Index ) ) )
 			{
 				coloridx->OnValueRefreshed( m_colorvalues[COLORIDX_INDEXCOLOR] );
 				coloridx->Release();
@@ -595,9 +629,9 @@ void Color::CreateVars
 	if( Node* node = GetNodeUnsafe() )
 	{
 		/* XXX TODO convert this to a bitset when we implement */
-		node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 254, "Color Channels", "", true, false, 0, 0 );
-		node->CreateValueString( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 1, "Color", "#RRGGBB[WWCWAMCYPR]", false, false, "#000000", 0 );
-		node->CreateValueInt( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 2, "Color Index", "", false, false, 0, 0 );
+		node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, Value_Color_Channels_Capabilities, "Color Channels", "", true, false, 0, 0 );
+		node->CreateValueString( ValueID::ValueGenre_User, GetCommandClassId(), _instance, Value_Color, "Color", "#RRGGBB[WWCWAMCYPR]", false, false, "#000000", 0 );
+		node->CreateValueInt( ValueID::ValueGenre_User, GetCommandClassId(), _instance, Value_Color_Index, "Color Index", "", false, false, 0, 0 );
 
 	}
 
@@ -614,8 +648,5 @@ void Color::SetValueBasic
 		uint8 const _value
 )
 {
-	// Send a request for new value to synchronize it with the BASIC set/report.
-	for (int i = 0; i <= 8; i++) {
-		RequestValue( 0, i, _instance, Driver::MsgQueue_Send );
-	}
+	RequestValue( 0, Value_Color, _instance, Driver::MsgQueue_Send );
 }
