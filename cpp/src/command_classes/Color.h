@@ -50,6 +50,7 @@ namespace OpenZWave
 		virtual void WriteXML( TiXmlElement* _ccElement );
 		virtual bool RequestState( uint32 const _requestFlags, uint8 const _instance, Driver::MsgQueue const _queue );
 		virtual bool RequestValue( uint32 const _requestFlags, uint8 const _index, uint8 const _instance, Driver::MsgQueue const _queue );
+		bool RequestColorChannelReport(	uint8 const coloridx, uint8 const _instance, Driver::MsgQueue const _queue );
 		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }
 		virtual string const GetCommandClassName()const{ return StaticGetCommandClassName(); }
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );
@@ -64,6 +65,7 @@ namespace OpenZWave
 		Color( uint32 const _homeId, uint8 const _nodeId );
 		uint16 m_capabilities;
 		bool m_coloridxbug; // Fibaro RGBW before version 25.25 always reported the coloridx as 3 in the Report Message. Work around it
+		bool m_refreshinprogress;
 		uint8 m_coloridxcount;
 		uint8 m_colorvalues[9];
 	};
