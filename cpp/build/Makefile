@@ -47,20 +47,30 @@ LDFLAGS+= -shared -lusb
 
 else
 LDFLAGS += -shared -Wl,-soname,libopenzwave.so.$(VERSION)
+ifndef NOLIBUDEV
 LIBS 	+= -ludev
+else
+CFLAGS += -DNOLIBUDEV
+endif
 endif
 
 #where to put the temporary library
 LIBDIR	?= $(top_builddir)
 
+ifndef NOLIBUDEV
 INCLUDES	:= -I $(top_srcdir)/cpp/src -I $(top_srcdir)/cpp/tinyxml/ -I $(top_srcdir)/cpp/hidapi/hidapi/
+else
+INCLUDES        := -I $(top_srcdir)/cpp/src -I $(top_srcdir)/cpp/tinyxml/
+endif
 
 ifeq ($(UNAME),Darwin)
 SOURCES_HIDAPI =$(top_srcdir)/cpp/hidapi/mac
 else ifeq ($(UNAME),FreeBSD)
 SOURCES_HIDAPI =$(top_srcdir)/cpp/hidapi/libusb
-else
+else ifndef NOLIBUDEV
 SOURCES_HIDAPI =$(top_srcdir)/cpp/hidapi/linux
+else
+SOURCES_HIDAPI:=
 endif
 
 
@@ -82,8 +92,14 @@ endif
 
 cclasses := $(notdir $(wildcard $(top_srcdir)/cpp/src/command_classes/*.cpp))
 vclasses := $(notdir $(wildcard $(top_srcdir)/cpp/src/value_classes/*.cpp))
+ifndef NOLIBUDEV
 pform := $(notdir $(wildcard $(top_srcdir)/cpp/src/platform/*.cpp)) \
 	$(notdir $(wildcard $(top_srcdir)/cpp/src/platform/unix/*.cpp))
+else
+pform := $(filter-out HidController.cpp, $(notdir $(wildcard $(top_srcdir)/cpp/src/platform/*.cpp))) \
+	$(notdir $(wildcard $(top_srcdir)/cpp/src/platform/unix/*.cpp))
+endif
+
 indep := $(notdir $(filter-out $(top_srcdir)/cpp/src/vers.cpp, $(wildcard $(top_srcdir)/cpp/src/*.cpp)))
 aes := $(notdir $(wildcard $(top_srcdir)/cpp/src/aes/*.c))
 
@@ -98,7 +114,9 @@ printversion:
 
 
 -include $(patsubst %.cpp,$(DEPDIR)/%.d,$(tinyxml))
+ifndef NOLIBUDEV
 -include $(patsubst %.c,$(DEPDIR)/%.d,$(hidapi))
+endif
 -include $(patsubst %.cpp,$(DEPDIR)/%.d,$(cclasses))
 -include $(patsubst %.cpp,$(DEPDIR)/%.d,$(vclasses))
 -include $(patsubst %.cpp,$(DEPDIR)/%.d,$(pform))
@@ -117,6 +135,7 @@ $(top_srcdir)/cpp/src/vers.cpp:
 
 #$(OBJDIR)/vers.o:	$(top_builddir)/vers.cpp
 
+ifndef NOLIBUDEV
 $(LIBDIR)/libopenzwave.a:	$(patsubst %.cpp,$(OBJDIR)/%.o,$(tinyxml)) \
 			$(patsubst %.c,$(OBJDIR)/%.o,$(hidapi)) \
 			$(patsubst %.c,$(OBJDIR)/%.o,$(aes)) \
@@ -125,10 +144,19 @@ $(LIBDIR)/libopenzwave.a:	$(patsubst %.cpp,$(OBJDIR)/%.o,$(tinyxml)) \
 			$(patsubst %.cpp,$(OBJDIR)/%.o,$(pform)) \
 			$(patsubst %.cpp,$(OBJDIR)/%.o,$(indep)) \
 			$(OBJDIR)/vers.o
+else
+$(LIBDIR)/libopenzwave.a:	$(patsubst %.cpp,$(OBJDIR)/%.o,$(tinyxml)) \
+			$(patsubst %.c,$(OBJDIR)/%.o,$(aes)) \
+			$(patsubst %.cpp,$(OBJDIR)/%.o,$(cclasses)) \
+			$(patsubst %.cpp,$(OBJDIR)/%.o,$(vclasses)) \
+			$(patsubst %.cpp,$(OBJDIR)/%.o,$(pform)) \
+			$(patsubst %.cpp,$(OBJDIR)/%.o,$(indep)) \
+			$(OBJDIR)/vers.o
+endif
 	@echo "Linking Static Library"
 	@$(AR) $@ $+
 	@$(RANLIB) $@
-
+ifndef NOLIBUDEV
 $(LIBDIR)/$(SHARED_LIB_NAME):	$(patsubst %.cpp,$(OBJDIR)/%.o,$(tinyxml)) \
 			$(patsubst %.c,$(OBJDIR)/%.o,$(hidapi)) \
 			$(patsubst %.c,$(OBJDIR)/%.o,$(aes)) \
@@ -137,6 +165,15 @@ $(LIBDIR)/$(SHARED_LIB_NAME):	$(patsubst %.cpp,$(OBJDIR)/%.o,$(tinyxml)) \
 			$(patsubst %.cpp,$(OBJDIR)/%.o,$(pform)) \
 			$(patsubst %.cpp,$(OBJDIR)/%.o,$(indep)) \
 			$(OBJDIR)/vers.o
+else
+$(LIBDIR)/$(SHARED_LIB_NAME):	$(patsubst %.cpp,$(OBJDIR)/%.o,$(tinyxml)) \
+			$(patsubst %.c,$(OBJDIR)/%.o,$(aes)) \
+			$(patsubst %.cpp,$(OBJDIR)/%.o,$(cclasses)) \
+			$(patsubst %.cpp,$(OBJDIR)/%.o,$(vclasses)) \
+			$(patsubst %.cpp,$(OBJDIR)/%.o,$(pform)) \
+			$(patsubst %.cpp,$(OBJDIR)/%.o,$(indep)) \
+			$(OBJDIR)/vers.o
+endif
 	@echo "Linking Shared Library"
 	@$(LD) $(LDFLAGS) -o $@ $+ $(LIBS)
 	@ln -sf $(SHARED_LIB_NAME) $(LIBDIR)/$(SHARED_LIB_UNVERSIONED)
