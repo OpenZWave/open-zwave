@@ -4978,7 +4978,7 @@ void Driver::DoControllerCommand
 			{
 				Log::Write( LogLevel_Info, 0, "Add Device" );
 				Msg* msg = new Msg( "AddDevice", 0xff, REQUEST, FUNC_ID_ZW_ADD_NODE_TO_NETWORK, true );
-				msg->Append( m_currentControllerCommand->m_highPower ? ADD_NODE_ANY | OPTION_HIGH_POWER : ADD_NODE_ANY );
+				msg->Append( m_currentControllerCommand->m_highPower ? ADD_NODE_ANY | OPTION_HIGH_POWER | OPTION_NWI : ADD_NODE_ANY );
 				SendMsg( msg, MsgQueue_Command );
 			}
 			break;
@@ -6344,7 +6344,10 @@ void Driver::UpdateNodeRoutes
 			for( uint8 j = 0; j < len; j++ )
 			{
 				uint8 k;
-				for( k = 0; k < numNodes; k++ )
+				/* there is a gcc bug that triggers here: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=59124
+				 * see also https://github.com/OpenZWave/open-zwave/issues/586
+				 */
+				for( k = 0; k < numNodes && k < sizeof(nodes); k++ )
 				{
 					if( nodes[k] == associations[j] )
 					{
