@@ -103,7 +103,7 @@ printversion:
 -include $(patsubst %.cpp,$(DEPDIR)/%.d,$(vclasses))
 -include $(patsubst %.cpp,$(DEPDIR)/%.d,$(pform))
 -include $(patsubst %.cpp,$(DEPDIR)/%.d,$(indep))
--include $(patsubst %.c,$(DEPDIR)/%d,$(aes))
+-include $(patsubst %.c,$(DEPDIR)/%.d,$(aes))
 
 #create a vers.cpp file that contains our version and subversion revisions
 $(top_srcdir)/cpp/src/vers.cpp:
