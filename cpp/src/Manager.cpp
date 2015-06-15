@@ -1297,24 +1297,6 @@ uint8 Manager::GetNodeIcon
 }
 
 //-----------------------------------------------------------------------------
-// <Manager::GetNodeIconName>
-// Get the node icon name as reported in the Z-Wave+ Info report.
-//-----------------------------------------------------------------------------
-string Manager::GetNodeIconName
-(
-		uint32 const _homeId, 
-		uint8 const _nodeId 
-)
-{
-	if( Driver* driver = GetDriver( _homeId ) )
-	{
-		return driver->GetNodeIconName( _nodeId );
-	}
-
-	return "Unknown";	
-}
-
-//-----------------------------------------------------------------------------
 // <Manager::GetNodeProductId>
 // Get the product Id value with the specified ID
 //-----------------------------------------------------------------------------

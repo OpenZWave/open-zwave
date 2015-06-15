@@ -4714,25 +4714,6 @@ string Driver::GetNodeProductId
 }
 
 //-----------------------------------------------------------------------------
-// <Driver::GetNodeIconName>
-// Get the node icon name as reported in the Z-Wave+ Info report.
-// Returns a copy of the string rather than a const ref for thread safety
-//-----------------------------------------------------------------------------
-string Driver::GetNodeIconName
-(
-		uint8 const _nodeId
-)
-{
-	LockGuard LG(m_nodeMutex);
-	if( Node* node = GetNode( _nodeId ) )
-	{
-		return node->GetIconName();
-	}
-
-	return "";
-}
-
-//-----------------------------------------------------------------------------
 // <Driver::GetNodeIcon>
 // Get the node icon as reported in the Z-Wave+ Info report.
 //-----------------------------------------------------------------------------

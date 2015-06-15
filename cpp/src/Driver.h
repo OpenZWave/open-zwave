@@ -409,7 +409,6 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		string GetNodeProductName( uint8 const _nodeId );
 		string GetNodeName( uint8 const _nodeId );
 		string GetNodeLocation( uint8 const _nodeId );
-		string GetNodeIconName( uint8 const _nodeId );
 		uint8 GetNodeIcon( uint8 const _nodeId );
 
 		string GetNodeManufacturerId( uint8 const _nodeId );
