@@ -4714,10 +4714,10 @@ string Driver::GetNodeProductId
 }
 
 //-----------------------------------------------------------------------------
-// <Driver::GetNodeIcon>
-// Get the node icon as reported in the Z-Wave+ Info report.
+// <Driver::GetNodeDeviceType>
+// Get the node device type as reported in the Z-Wave+ Info report.
 //-----------------------------------------------------------------------------
-uint8 Driver::GetNodeIcon
+uint8 Driver::GetNodeDeviceType
 (
 		uint8 const _nodeId
 )
@@ -4725,7 +4725,25 @@ uint8 Driver::GetNodeIcon
 	LockGuard LG(m_nodeMutex);
 	if( Node* node = GetNode( _nodeId ) )
 	{
-		return node->GetIcon();
+		return node->GetDeviceType();
+	}
+
+	return 0x00; // unknown
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::GetNodeRole>
+// Get the node role as reported in the Z-Wave+ Info report.
+//-----------------------------------------------------------------------------
+uint8 Driver::GetNodeRole
+(
+		uint8 const _nodeId
+)
+{
+	LockGuard LG(m_nodeMutex);
+	if( Node* node = GetNode( _nodeId ) )
+	{
+		return node->GetRole();
 	}
 
 	return 0x00; // unknown

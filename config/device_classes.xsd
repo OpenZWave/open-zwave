@@ -52,4 +52,13 @@
   </xs:complexType>
  </xs:element>
 
+ <xs:element name='DeviceType'>
+  <xs:complexType>
+   <xs:attribute name='key' type='xs:string' use='required'/>
+   <xs:attribute name='label' type='xs:string' use='required'/>
+   <xs:attribute name='command_classes' type='xs:string' use='optional'/>
+  </xs:complexType>
+ </xs:element>
+
+
 </xs:schema>

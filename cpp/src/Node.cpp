@@ -82,6 +82,7 @@ bool Node::s_deviceClassesLoaded = false;
 map<uint8,string> Node::s_basicDeviceClasses;
 map<uint8,Node::GenericDeviceClass*> Node::s_genericDeviceClasses;
 map<uint8,Node::DeviceClass*> Node::s_roleDeviceClasses;
+map<uint8,Node::DeviceClass*> Node::s_deviceClasses;
 
 static char const* c_queryStageNames[] =
 {
@@ -149,7 +150,8 @@ m_location( "" ),
 m_manufacturerId( "" ),
 m_productType( "" ),
 m_productId( "" ),
-m_userIcon( 0 ),
+m_deviceType( 0 ),
+m_role( 0 ),
 m_secured ( false ),
 m_values( new ValueStore() ),
 m_sentCnt( 0 ),
@@ -933,6 +935,18 @@ void Node::ReadXML
 		m_specific = (uint8)intVal;
 	}
 
+	if( TIXML_SUCCESS == _node->QueryIntAttribute( "role", &intVal ) )
+	{
+		m_role = (uint8)intVal;
+		m_nodePlusInfoReceived = true;
+	}
+
+	if( TIXML_SUCCESS == _node->QueryIntAttribute( "deviceType", &intVal ) )
+	{
+		m_deviceType = (uint8)intVal;
+		m_nodePlusInfoReceived = true;
+	}
+
 	str = _node->Attribute( "type" );
 	if( str )
 	{
@@ -1210,6 +1224,15 @@ void Node::WriteXML
 
 	snprintf( str, 32, "%d", m_specific );
 	nodeElement->SetAttribute( "specific", str );
+
+	if( m_nodePlusInfoReceived )
+	{
+		snprintf( str, 32, "%d", m_role );
+		nodeElement->SetAttribute( "role", str );
+
+		snprintf( str, 32, "%d", m_deviceType );
+		nodeElement->SetAttribute( "deviceType", str );
+	}
 
 	nodeElement->SetAttribute( "type", m_type.c_str() );
 
@@ -2918,33 +2941,49 @@ bool Node::SetDeviceClasses
 }
 
 //-----------------------------------------------------------------------------
-// <Node::SetDeviceClasses>
+// <Node::SetPlusDeviceClasses>
 // Set the device class data for the node based on the Zwave+ info report
 //-----------------------------------------------------------------------------
-bool Node::SetDeviceClasses
+bool Node::SetPlusDeviceClasses
 (
 	uint8 const _role,
-	uint8 const _nodeType
+	uint8 const _nodeType,
+	uint8 const _deviceType
 )
 {   
 	if ( m_nodePlusInfoReceived )
 	{
-		return false; // todo meaning?
+		return false; // already set
 	}
 	m_nodePlusInfoReceived = true;
+	m_role = _role;
+	m_deviceType = _deviceType;
+
+	// Apply any Zwave+ device class data
+	map<uint8,DeviceClass*>::iterator dit = s_deviceClasses.find( _deviceType );
+	if( dit != s_deviceClasses.end() )
+	{
+		DeviceClass* deviceClass = dit->second;
+		// m_type = deviceClass->GetLabel(); // do we what to update the type with the zwave+ info??
+
+		Log::Write( LogLevel_Info, m_nodeId, "  Zwave+ device Class  (0x%.2x) - %s", _deviceType, deviceClass->GetLabel().c_str() );
+
+		// Add the mandatory command classes for this device class type
+		AddMandatoryCommandClasses( deviceClass->GetMandatoryCommandClasses() );
+	}
 
 	// Apply any Role device class data
 	map<uint8,DeviceClass*>::iterator rit = s_roleDeviceClasses.find( _role );
 	if( rit != s_roleDeviceClasses.end() )
 	{
 		DeviceClass* roleDeviceClass = rit->second;
-		m_type = roleDeviceClass->GetLabel();
 
-		Log::Write( LogLevel_Info, m_nodeId, "  Role device Class  (0x%.2x) - %s", m_generic, m_type.c_str() );
+		Log::Write( LogLevel_Info, m_nodeId, "  Role device Class  (0x%.2x) - %s", m_generic, roleDeviceClass->GetLabel().c_str() );
 
 		// Add the mandatory command classes for this role class type
 		AddMandatoryCommandClasses( roleDeviceClass->GetMandatoryCommandClasses() );
 	}
+
 	return true;
 }
 
@@ -3053,6 +3092,10 @@ void Node::ReadDeviceClasses
 				else if( !strcmp( str, "Role" ) )
 				{
 					s_roleDeviceClasses[key] = new DeviceClass( child );
+				}
+				else if( !strcmp( str, "DeviceType" ) )
+				{
+					s_deviceClasses[key] = new DeviceClass( child );
 				}
 			}
 		}

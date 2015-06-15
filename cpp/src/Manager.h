@@ -819,12 +819,20 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		bool IsNodePlusInfoReceived( uint32 const _homeId, uint8 const _nodeId );
 
 		/**
-		 * \brief Get the node icon as reported in the Z-Wave+ Info report.
+		 * \brief Get the node device type as reported in the Z-Wave+ Info report.
 		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
 		 * \param _nodeId The ID of the node to query.
 		 * \return the node's user icon.
 		 */
-		uint8 GetNodeIcon( uint32 const _homeId, uint8 const _nodeId );
+		uint8 GetNodeDeviceType( uint32 const _homeId, uint8 const _nodeId );
+
+		/**
+		 * \brief Get the node role as reported in the Z-Wave+ Info report.
+		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param _nodeId The ID of the node to query.
+		 * \return the node's user icon.
+		 */
+		uint8 GetNodeRole( uint32 const _homeId, uint8 const _nodeId );
 
 	/*@}*/
 

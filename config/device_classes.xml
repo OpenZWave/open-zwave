@@ -148,4 +148,33 @@
   <Role key="0x06" label="Reporting Sleeping Slave" />
   <Role key="0x07" label="Listening Sleeping Slave" />
 
+  <!-- Z-Wave+ DeviceType  -->
+  <DeviceType key="0x01" label="Central Controller"/>
+  <DeviceType key="0x02" label="Display Simple"/>
+  <DeviceType key="0x03" label="Door Lock Keypad"/>
+  <DeviceType key="0x04" label="Fan Switch"/>
+  <DeviceType key="0x05" label="Gateway"/>
+  <DeviceType key="0x06" label="Light Dimmer Switch"/>
+  <DeviceType key="0x07" label="On/Off Power Switch"/>
+  <DeviceType key="0x08" label="Power Strip"/>
+  <DeviceType key="0x09" label="Remote Control AV"/>
+  <DeviceType key="0x0a" label="Remote Control Multi Purpose"/>
+  <DeviceType key="0x0b" label="Remote Control Simple"/>
+  <DeviceType key="0x0c" label="Sensor Notification"/>
+  <DeviceType key="0x0d" label="Sensor Multilevel"/>
+  <DeviceType key="0x0e" label="Set Top Box"/>
+  <DeviceType key="0x0f" label="Siren"/>
+  <DeviceType key="0x10" label="Sub Energy Meter"/>
+  <DeviceType key="0x11" label="Sub System Controller"/>
+  <DeviceType key="0x12" label="Thermostat HVAC"/>
+  <DeviceType key="0x13" label="Thermostat Setback"/>
+  <DeviceType key="0x14" label="TV"/>
+  <DeviceType key="0x15" label="Valve open/close"/>
+  <DeviceType key="0x16" label="Wall Controller"/>
+  <DeviceType key="0x17" label="Whole Home Meter Simple"/>
+  <DeviceType key="0x18" label="Window Covering No Position/Endpoint"/>
+  <DeviceType key="0x19" label="Window Covering Endpoint Aware"/>
+  <DeviceType key="0x1a" label="Window Covering Position/Endpoint Aware"/>
+
+
 </DeviceClasses>
