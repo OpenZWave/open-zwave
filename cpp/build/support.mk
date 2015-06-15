@@ -9,8 +9,6 @@ BUILD	?= release
 PREFIX	?= /usr/local
 
 
-#The Location of the svnversion command for determining the repository version
-SVNVERSION := $(shell which svnversion)
 #the System we are building on
 UNAME  := $(shell uname -s)
 #the location of Doxygen to generate our api documentation
