@@ -104,23 +104,25 @@ DEPDIR = $(top_builddir)/.dep
 
 $(OBJDIR)/%.o : %.cpp
 	@echo "Building $(notdir $@)"
+	@$(CXX) -MM $(CFLAGS) $(INCLUDES) $< > $(DEPDIR)/$*.d
+	@mv -f $(DEPDIR)/$*.d $(DEPDIR)/$*.d.tmp
+	@$(SED) -e 's|.*:|$(OBJDIR)/$*.o: $(DEPDIR)/$*.d|' < $(DEPDIR)/$*.d.tmp > $(DEPDIR)/$*.d;
+	@$(SED) -e 's/.*://' -e 's/\\$$//' < $(DEPDIR)/$*.d.tmp | fmt -1 | \
+	  $(SED) -e 's/^ *//' -e 's/$$/:/' >> $(DEPDIR)/.$*.d;
+	@rm -f $(DEPDIR)/$*.d.tmp
 	@$(CXX) $(CFLAGS) $(INCLUDES) -o $@ $<
+
 
 $(OBJDIR)/%.o : %.c
 	@echo "Building $(notdir $@)"	
+	@$(CC) -MM $(CFLAGS) $(INCLUDES) $< > $(DEPDIR)/$*.d
+	@mv -f $(DEPDIR)/$*.d $(DEPDIR)/$*.d.tmp
+	@$(SED) -e 's|.*:|$(OBJDIR)/$*.o: $(DEPDIR)/$*.d|' < $(DEPDIR)/$*.d.tmp > $(DEPDIR)/$*.d;
+	@$(SED) -e 's/.*://' -e 's/\\$$//' < $(DEPDIR)/$*.d.tmp | fmt -1 | \
+	  $(SED) -e 's/^ *//' -e 's/$$/:/' >> $(DEPDIR)/.$*.d;
+	@rm -f $(DEPDIR)/$*.d.tmp
 	@$(CC) $(CFLAGS) $(INCLUDES) -o $@ $<
 
-$(DEPDIR)/%.d : %.cpp
-	@set -e; rm -f $@; \
-	$(CXX) -MM $(INCLUDES) $< > $@.$$$$; \
-	$(SED) 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
-	rm -f $@.$$$$
-
-$(DEPDIR)/%.d : %.c
-	@set -e; rm -f $@; \
-	$(CXX) -MM $(INCLUDES) $< > $@.$$$$; \
-	$(SED) 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
-	rm -f $@.$$$$
 
 dummy := $(shell test -d $(OBJDIR) || mkdir -p $(OBJDIR))
 dummy := $(shell test -d $(DEPDIR) || mkdir -p $(DEPDIR))
