@@ -78,7 +78,9 @@ DISTFILES =	.gitignore \
 	config/fibaro/fgrgbwm441.xml \
 	config/fibaro/fgrm222.xml \
 	config/fibaro/fgs211.xml \
+	config/fibaro/fgs212.xml \
 	config/fibaro/fgs221.xml \
+	config/fibaro/fgs222.xml \
 	config/fibaro/fgsd002.xml \
 	config/fibaro/fgss101.xml \
 	config/fibaro/fgwpe.xml \
