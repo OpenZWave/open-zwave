@@ -98,6 +98,7 @@ static char const* c_nodeTypeName[] =
 	"Z-Wave+ IP client and Zwave node"	
 };
 
+#if 0
 static char const* c_iconTypeName[] =
 {
 	"Unknown Type",
@@ -127,6 +128,7 @@ static char const* c_iconTypeName[] =
 	"Window Covering Endpoint Aware",
 	"Window Covering Position/Endpoint Aware"
 };
+#endif
 
 //-----------------------------------------------------------------------------
 // <ZWavePlusInfo::ZWavePlusInfo>
@@ -220,26 +222,18 @@ bool ZWavePlusInfo::HandleMsg
 		if( role <= RoleType_Listening_Sleeping_Slave && nodeType <= NodeType_IP_client_and_zwave_node )
 		{
 			Log::Write( LogLevel_Info, GetNodeId(), "Received ZWavePlusInfo report: version:0x%.2x role:%s node:%s installerIcon:0x%.4x userIcon:0x%.4x", 
-				       version, c_roleTypeName[role], c_nodeTypeName[nodeType], installerIcon ,userIcon );
+				       version, c_roleTypeName[role], c_nodeTypeName[nodeType], installerIcon, userIcon );
 		}
 		else
 		{
 			Log::Write( LogLevel_Info, GetNodeId(), "Received ZWavePlusInfo report: version:0x%.2x role:0x%.2x node:0x%.2x installerIcon:0x%.4x userIcon:0x%.4x", 
-				       version, role, nodeType, installerIcon ,userIcon );
+				       version, role, nodeType, installerIcon, userIcon );
 		}
 
 		if( Node* node = GetNodeUnsafe() )
 		{
 			node->SetDeviceClasses(	role, nodeType );
 			node->SetIcon( _data[6] );
-			if( _data[6] < 36 )
-			{
-				node->SetIconName( c_iconTypeName[_data[6]] );
-			} 
-			else
-			{
-				node->SetIconName( c_iconTypeName[0] );
-			}
 		}
 		ClearStaticRequest( StaticRequest_Values );
 		return true;

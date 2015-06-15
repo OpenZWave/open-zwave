@@ -373,13 +373,10 @@ namespace OpenZWave
 
 			// zwave+ info
 			uint8 GetIcon()const{return m_userIcon; }
-			string GetIconName()const{ return m_userIconName; }
 
 			void SetIcon(const uint8 _icon){ m_userIcon = _icon; };
-			void SetIconName( string const& _iconName ){ m_userIconName = _iconName; }
 
 			uint8 m_userIcon;
-			string m_userIconName;
 
 			//-----------------------------------------------------------------------------
 			// Command Classes

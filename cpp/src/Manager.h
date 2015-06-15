@@ -826,15 +826,6 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 */
 		uint8 GetNodeIcon( uint32 const _homeId, uint8 const _nodeId );
 
-		/**
-		 * \brief Get the node icon name as reported in the Z-Wave+ Info report. 
-		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
-		 * \param _nodeId The ID of the node to query.
-		 * \return the node's user icon name, or an empty string if the Z-Wave+ Info 
-		 * specific command class is not supported by the device.
-		 */
-		string GetNodeIconName( uint32 const _homeId, uint8 const _nodeId );
-
 	/*@}*/
 
 	//-----------------------------------------------------------------------------
