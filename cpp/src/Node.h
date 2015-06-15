@@ -372,11 +372,11 @@ namespace OpenZWave
 			string		m_productId;
 
 			// zwave+ info
-			uint8 GetIcon()const{return m_userIcon; }
+			uint8 GetDeviceType()const{return m_deviceType; }
+			uint8 GetRole()const{return m_role; }
 
-			void SetIcon(const uint8 _icon){ m_userIcon = _icon; };
-
-			uint8 m_userIcon;
+			uint8 m_deviceType;
+			uint8 m_role;
 
 			//-----------------------------------------------------------------------------
 			// Command Classes
@@ -540,7 +540,7 @@ namespace OpenZWave
 
 
 			bool SetDeviceClasses( uint8 const _basic, uint8 const _generic, uint8 const _specific );	// Set the device class data for the node
-			bool SetDeviceClasses( uint8 const _role, uint8 const _nodeType );							// Set the device class data for the node based on the Zwave+ info report
+			bool SetPlusDeviceClasses( uint8 const _role, uint8 const _nodeType, uint8 const _deviceType );	// Set the device class data for the node based on the Zwave+ info report
 			bool AddMandatoryCommandClasses( uint8 const* _commandClasses );							// Add mandatory command classes as specified in the device_classes.xml to the node.
 			void ReadDeviceClasses();																	// Read the static device class data from the device_classes.xml file
 			string GetEndPointDeviceClassLabel( uint8 const _generic, uint8 const _specific );
@@ -549,6 +549,9 @@ namespace OpenZWave
 			static map<uint8,string>				s_basicDeviceClasses;		// Map of basic device classes.
 			static map<uint8,GenericDeviceClass*>	s_genericDeviceClasses;		// Map of generic device classes.
 			static map<uint8,DeviceClass*> 			s_roleDeviceClasses;		// Map of Zwave+ role device classes.
+			static map<uint8,DeviceClass*> 			s_deviceClasses;			// Map of Zwave+ device type device classes.
+
+
 
 			//-----------------------------------------------------------------------------
 			//	Statistics

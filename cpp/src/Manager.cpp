@@ -1279,10 +1279,10 @@ bool Manager::IsNodePlusInfoReceived
 }
 
 //-----------------------------------------------------------------------------
-// <Manager::GetNodeIcon>
-// Get the node icon as reported in the Z-Wave+ Info report.
+// <Manager::GetNodeDeviceType>
+// Get the node device type as reported in the Z-Wave+ Info report.
 //-----------------------------------------------------------------------------
-uint8 Manager::GetNodeIcon
+uint8 Manager::GetNodeDeviceType
 ( 
 		uint32 const _homeId, 
 		uint8 const _nodeId 
@@ -1290,7 +1290,25 @@ uint8 Manager::GetNodeIcon
 {
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
-		return driver->GetNodeIcon( _nodeId );
+		return driver->GetNodeDeviceType( _nodeId );
+	}
+
+	return 0x00; // unknown
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::GetNodeRole>
+// Get the node role as reported in the Z-Wave+ Info report.
+//-----------------------------------------------------------------------------
+uint8 Manager::GetNodeRole
+(
+		uint32 const _homeId,
+		uint8 const _nodeId
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		return driver->GetNodeRole( _nodeId );
 	}
 
 	return 0x00; // unknown

@@ -216,6 +216,7 @@ bool ZWavePlusInfo::HandleMsg
 		NodeTypeEnum nodeType    = (NodeTypeEnum)_data[3];
 		uint16 installerIcon = (_data[4]<< 8) | _data[5];
 		uint16 userIcon		 = (_data[6]<< 8) | _data[7];
+		uint8 deviceType     = _data[6];
 
 		// We have received a report from the Z-Wave device
 		// make sure we have the strings for the values recieved.
@@ -232,8 +233,7 @@ bool ZWavePlusInfo::HandleMsg
 
 		if( Node* node = GetNodeUnsafe() )
 		{
-			node->SetDeviceClasses(	role, nodeType );
-			node->SetIcon( _data[6] );
+			node->SetPlusDeviceClasses(	role, nodeType, deviceType );
 		}
 		ClearStaticRequest( StaticRequest_Values );
 		return true;
