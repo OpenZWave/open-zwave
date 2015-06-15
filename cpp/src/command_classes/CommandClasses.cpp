@@ -42,6 +42,7 @@ using namespace OpenZWave;
 #include "command_classes/CentralScene.h"
 #include "command_classes/ClimateControlSchedule.h"
 #include "command_classes/Clock.h"
+#include "command_classes/Color.h"
 #include "command_classes/Configuration.h"
 #include "command_classes/ControllerReplication.h"
 #include "command_classes/CRC16Encap.h"
@@ -192,6 +193,7 @@ void CommandClasses::RegisterCommandClasses
 	cc.Register( CentralScene::StaticGetCommandClassId(), CentralScene::StaticGetCommandClassName(), CentralScene::Create );
 	cc.Register( ClimateControlSchedule::StaticGetCommandClassId(), ClimateControlSchedule::StaticGetCommandClassName(), ClimateControlSchedule::Create );
 	cc.Register( Clock::StaticGetCommandClassId(), Clock::StaticGetCommandClassName(), Clock::Create );
+	cc.Register( Color::StaticGetCommandClassId(), Color::StaticGetCommandClassName(), Color::Create );
 	cc.Register( Configuration::StaticGetCommandClassId(), Configuration::StaticGetCommandClassName(), Configuration::Create );
 	cc.Register( ControllerReplication::StaticGetCommandClassId(), ControllerReplication::StaticGetCommandClassName(), ControllerReplication::Create );
 	cc.Register( CRC16Encap::StaticGetCommandClassId(), CRC16Encap::StaticGetCommandClassName(), CRC16Encap::Create );

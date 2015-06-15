@@ -35,6 +35,8 @@
 #include "command_classes/Association.h"
 #include "command_classes/AssociationCommandConfiguration.h"
 #include "command_classes/AssociationGroupInfo.h"
+#include "command_classes/MultiInstanceAssociation.h"
+#include "platform/Log.h"
 
 #include "tinyxml.h"
 
@@ -57,7 +59,8 @@ Group::Group
 	m_nodeId( _nodeId ),
 	m_groupIdx( _groupIdx ),
 	m_maxAssociations( _maxAssociations ),
-	m_auto( false )
+	m_auto( false ),
+        m_multiInstance( false )
 {
 	if( _label == NULL )
 	{
@@ -110,11 +113,12 @@ Group::Group
 	m_nodeId( _nodeId ),
 	m_groupIdx( 0 ),
 	m_maxAssociations( 0 ),
-	m_auto( false )
+	m_auto( false ),
+	m_multiInstance( false )
 {
 	int intVal;
 	char const* str;
-	vector<uint8> pending;
+	vector<InstanceAssociation> pending;
 
 	if( TIXML_SUCCESS == _groupElement->QueryIntAttribute( "index", &intVal ) )
 	{
@@ -138,6 +142,12 @@ Group::Group
 		m_label = str;
 	}
 
+	str = _groupElement->Attribute( "multiInstance" );
+	if( str )
+	{
+		m_multiInstance = !strcmp( str, "true" );
+	}
+		
 	// Read the associations for this group
 	TiXmlElement const* associationElement = _groupElement->FirstChildElement();
 	while( associationElement )
@@ -145,8 +155,18 @@ Group::Group
 		char const* elementName = associationElement->Value();
 		if( elementName && !strcmp( elementName, "Node" ) )
 		{
-			if (associationElement->QueryIntAttribute( "id", &intVal ) == TIXML_SUCCESS) 
-				pending.push_back( (uint8)intVal );
+			
+			if( associationElement->QueryIntAttribute( "id", &intVal ) == TIXML_SUCCESS )
+			{
+				InstanceAssociation association;
+				association.m_nodeId = (uint8)intVal;
+				if( associationElement->QueryIntAttribute( "instance", &intVal ) == TIXML_SUCCESS )
+					association.m_instance = (uint8)intVal;
+				else
+					association.m_instance = 0x00;
+
+				pending.push_back( association );
+			}
 		}
 
 		associationElement = associationElement->NextSiblingElement();
@@ -178,13 +198,22 @@ void Group::WriteXML
 
 	_groupElement->SetAttribute( "label", m_label.c_str() );
 	_groupElement->SetAttribute( "auto", m_auto ? "true" : "false" );
-
-	for( map<uint8,AssociationCommandVec>::iterator it = m_associations.begin(); it != m_associations.end(); ++it )
+	if( m_multiInstance )
+	{
+		_groupElement->SetAttribute( "multiInstance", m_multiInstance ? "true" : "false" );
+	}
+	
+	for( map<InstanceAssociation,AssociationCommandVec,classcomp>::iterator it = m_associations.begin(); it != m_associations.end(); ++it )
 	{
 		TiXmlElement* associationElement = new TiXmlElement( "Node" );
 		
-		snprintf( str, 16, "%d", it->first );
+		snprintf( str, 16, "%d", it->first.m_nodeId );
 		associationElement->SetAttribute( "id", str );
+		if (it->first.m_instance != 0)
+		{
+			snprintf( str, 16, "%d", it->first.m_instance );
+			associationElement->SetAttribute( "instance", str );
+		}
 
 		_groupElement->LinkEndChild( associationElement );
 	}
@@ -196,11 +225,18 @@ void Group::WriteXML
 //-----------------------------------------------------------------------------
 bool Group::Contains
 (
-	uint8 const _nodeId
+	uint8 const _nodeId,
+	uint8 const _instance
 )
 {
-	map<uint8,AssociationCommandVec>::iterator it = m_associations.find( _nodeId );
-	return( it != m_associations.end() );
+	for( map<InstanceAssociation,AssociationCommandVec,classcomp>::iterator it = m_associations.begin(); it != m_associations.end(); ++it )
+	{
+		if ((it->first.m_nodeId == _nodeId) && (it->first.m_instance == _instance))
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -209,18 +245,29 @@ bool Group::Contains
 //-----------------------------------------------------------------------------
 void Group::AddAssociation
 (
-	uint8 const _nodeId
+	uint8 const _nodeId,
+	uint8 const _instance
 )
 {
 	if( Driver* driver = Manager::Get()->GetDriver( m_homeId ) )
 	{
 		if( Node* node = driver->GetNodeUnsafe( m_nodeId ) )
 		{
-			if( Association* cc = static_cast<Association*>( node->GetCommandClass( Association::StaticGetCommandClassId() ) ) )
+			MultiInstanceAssociation* cc = static_cast<MultiInstanceAssociation*>( node->GetCommandClass( MultiInstanceAssociation::StaticGetCommandClassId() ));
+			if( cc && IsMultiInstance() )
+			{
+				cc->Set( m_groupIdx, _nodeId, _instance );
+				cc->QueryGroup( m_groupIdx, 0 );
+			}
+			else if( Association* cc = static_cast<Association*>( node->GetCommandClass( Association::StaticGetCommandClassId() ) ) )
 			{
 				cc->Set( m_groupIdx, _nodeId );
 				cc->QueryGroup( m_groupIdx, 0 );
 			}
+			else
+			{
+				Log::Write( LogLevel_Info, m_nodeId, "No supported Association CC found" );
+			} 
 		}
 	}
 }
@@ -231,18 +278,29 @@ void Group::AddAssociation
 //-----------------------------------------------------------------------------
 void Group::RemoveAssociation
 (
-	uint8 const _nodeId
+	uint8 const _nodeId,
+	uint8 const _instance
 )
 {
 	if( Driver* driver = Manager::Get()->GetDriver( m_homeId ) )
 	{
 		if( Node* node = driver->GetNodeUnsafe( m_nodeId ) )
 		{
-			if( Association* cc = static_cast<Association*>( node->GetCommandClass( Association::StaticGetCommandClassId() ) ) )
+			MultiInstanceAssociation* cc = static_cast<MultiInstanceAssociation*>( node->GetCommandClass( MultiInstanceAssociation::StaticGetCommandClassId() ));
+			if( cc && IsMultiInstance() )
 			{
-				cc->Remove( m_groupIdx, _nodeId );
+				cc->Remove( m_groupIdx, _nodeId, _instance );
 				cc->QueryGroup( m_groupIdx, 0 );
+			} 
+			else if( Association* cc = static_cast<Association*>( node->GetCommandClass( Association::StaticGetCommandClassId() ) ) )
+			{
+					cc->Remove( m_groupIdx, _nodeId );
+					cc->QueryGroup( m_groupIdx, 0 );
 			}
+			else
+			{
+				Log::Write( LogLevel_Info, m_nodeId, "No supported Association CC found" );
+			}	
 		}
 	}
 }
@@ -254,6 +312,28 @@ void Group::RemoveAssociation
 void Group::OnGroupChanged
 (
 	vector<uint8> const& _associations
+)
+{
+	vector<InstanceAssociation> instanceAssociations;
+	uint8 i;
+	for( i=0; i<_associations.size(); ++i )
+	{
+		InstanceAssociation association;
+		association.m_nodeId	= _associations[i];
+		association.m_instance  = 0x00;								
+		instanceAssociations.push_back( association );
+	}
+	OnGroupChanged(instanceAssociations);
+	instanceAssociations.clear();
+}
+
+//-----------------------------------------------------------------------------
+// <Group::OnGroupChanged>
+// Change the group contents and notify the watchers
+//-----------------------------------------------------------------------------
+void Group::OnGroupChanged
+(
+	vector<InstanceAssociation> const& _associations
 )
 {
 	bool notify = false;
@@ -306,9 +386,9 @@ void Group::OnGroupChanged
 			{
 				if( AssociationCommandConfiguration* cc = static_cast<AssociationCommandConfiguration*>( node->GetCommandClass( AssociationCommandConfiguration::StaticGetCommandClassId() ) ) )
 				{
-					for( map<uint8,AssociationCommandVec>::iterator it = m_associations.begin(); it != m_associations.end(); ++it )
+					for( map<InstanceAssociation,AssociationCommandVec,classcomp>::iterator it = m_associations.begin(); it != m_associations.end(); ++it )
 					{
-						cc->RequestCommands( m_groupIdx, it->first );
+						cc->RequestCommands( m_groupIdx, it->first.m_nodeId );
 					}
 				}
 			}
@@ -347,9 +427,39 @@ uint32 Group::GetAssociations
 		return 0;
 	}
 
-	uint8* associations = new uint8[numNodes];
+	uint8* associations = new uint8[numNodes]; // room for all associations, we only need room for the associations without instance
 	uint32 i = 0;
-	for( map<uint8,AssociationCommandVec>::iterator it = m_associations.begin(); it != m_associations.end(); ++it )
+	for( map<InstanceAssociation,AssociationCommandVec,classcomp>::iterator it = m_associations.begin(); it != m_associations.end(); ++it )
+	{
+		if ( it->first.m_instance == 0x00) 
+		{
+			associations[i++] = it->first.m_nodeId;
+		}
+	}
+
+	*o_associations = associations;
+	return (uint32) i;
+}
+
+//-----------------------------------------------------------------------------
+// <Group::GetAssociations>
+// Get a list of associations for this group
+//-----------------------------------------------------------------------------
+uint32 Group::GetAssociations
+( 
+	InstanceAssociation** o_associations 
+)
+{
+	size_t numNodes = m_associations.size();
+	if( !numNodes )
+	{
+		*o_associations = NULL;
+		return 0;
+	}
+
+	InstanceAssociation* associations = new InstanceAssociation[numNodes];
+	uint32 i = 0;
+	for( map<InstanceAssociation,AssociationCommandVec,classcomp>::iterator it = m_associations.begin(); it != m_associations.end(); ++it )
 	{
 		associations[i++] = it->first;
 	}
@@ -368,15 +478,18 @@ uint32 Group::GetAssociations
 //-----------------------------------------------------------------------------
 bool Group::ClearCommands
 ( 
-	uint8 const _nodeId
+	uint8 const _nodeId,
+	uint8 const _instance
 )
-{
-	map<uint8,AssociationCommandVec>::iterator it = m_associations.find( _nodeId );
-	if( it != m_associations.end() )
+{	
+	for( map<InstanceAssociation,AssociationCommandVec,classcomp>::iterator it = m_associations.begin(); it != m_associations.end(); ++it )
 	{
-		it->second.clear();
-		return true;
-	}
+		if( (it->first.m_nodeId == _nodeId) && (it->first.m_instance == _instance) )
+		{
+			it->second.clear();
+			return true;
+		}
+    }
 
 	return false;
 }
@@ -389,16 +502,19 @@ bool Group::AddCommand
 (
 	uint8 const _nodeId,
 	uint8 const _length,
-	uint8 const* _data
+	uint8 const* _data,
+	uint8 const _instance
 )
 {
-	map<uint8,AssociationCommandVec>::iterator it = m_associations.find( _nodeId );
-	if( it != m_associations.end() )
+	for( map<InstanceAssociation,AssociationCommandVec,classcomp>::iterator it = m_associations.begin(); it != m_associations.end(); ++it )
 	{
-		it->second.push_back( AssociationCommand( _length, _data ) );
-		return true;
+		if( (it->first.m_nodeId == _nodeId) && (it->first.m_instance == _instance) )
+		{
+			it->second.push_back( AssociationCommand( _length, _data ) );
+			return true;
+		}
 	}
-
+	
 	return false;
 }
 

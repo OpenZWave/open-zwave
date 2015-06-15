@@ -3171,6 +3171,26 @@ uint32 Manager::GetAssociations
 }
 
 //-----------------------------------------------------------------------------
+// <Manager::GetAssociations>
+// Gets the associations for a group
+//-----------------------------------------------------------------------------
+uint32 Manager::GetAssociations
+(
+		uint32 const _homeId,
+		uint8 const _nodeId,
+		uint8 const _groupIdx,
+		InstanceAssociation** o_associations
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		return driver->GetAssociations( _nodeId, _groupIdx, o_associations );
+	}
+
+	return 0;
+}
+
+//-----------------------------------------------------------------------------
 // <Manager::GetMaxAssociations>
 // Gets the maximum number of associations for a group
 //-----------------------------------------------------------------------------
@@ -3217,12 +3237,13 @@ void Manager::AddAssociation
 		uint32 const _homeId,
 		uint8 const _nodeId,
 		uint8 const _groupIdx,
-		uint8 const _targetNodeId
+		uint8 const _targetNodeId,
+		uint8 const _instance
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
-		driver->AddAssociation( _nodeId, _groupIdx, _targetNodeId );
+		driver->AddAssociation( _nodeId, _groupIdx, _targetNodeId, _instance );
 	}
 }
 
@@ -3235,12 +3256,13 @@ void Manager::RemoveAssociation
 		uint32 const _homeId,
 		uint8 const _nodeId,
 		uint8 const _groupIdx,
-		uint8 const _targetNodeId
+		uint8 const _targetNodeId,
+		uint8 const _instance
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
-		driver->RemoveAssociation( _nodeId, _groupIdx, _targetNodeId );
+		driver->RemoveAssociation( _nodeId, _groupIdx, _targetNodeId, _instance );
 	}
 }
 

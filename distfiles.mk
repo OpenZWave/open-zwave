@@ -286,6 +286,8 @@ DISTFILES =	.gitignore \
 	cpp/src/command_classes/ClimateControlSchedule.h \
 	cpp/src/command_classes/Clock.cpp \
 	cpp/src/command_classes/Clock.h \
+	cpp/src/command_classes/Color.cpp \
+	cpp/src/command_classes/Color.h \
 	cpp/src/command_classes/CommandClass.cpp \
 	cpp/src/command_classes/CommandClass.h \
 	cpp/src/command_classes/CommandClasses.cpp \
