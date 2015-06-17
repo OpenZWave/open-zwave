@@ -171,6 +171,9 @@ Version 1.3
  - Update Aeon Labs to Aeotec as thats their Retail name (Justin)
  - Pull Request #598 - Update Config Files for Fibaro FGS212 and FGS222 from
    Nechry (Justin)
+ - If we recieve a cleartext message for a Secured CommandClass, drop the
+   message (Configurable - Set EnforceSecureReception to false in
+   options.xml) (Justin)
 
 Version 1.2 
  - Released on 15/10/14

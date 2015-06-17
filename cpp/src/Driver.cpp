@@ -1756,6 +1756,7 @@ void Driver::ProcessMsg
 )
 {
 	bool handleCallback = true;
+	bool wasencrypted = false;
 	//uint8 nodeId = GetNodeNumber( m_currentMsg );
 
 	if ((REQUEST == _data[0]) &&
@@ -1838,6 +1839,7 @@ void Driver::ProcessMsg
 					}
 					SendNonceKey(_data[3], _nonce);
 				}
+				wasencrypted = true;
 
 			} else {
 				/* it failed for some reason, lets just move on */
@@ -2086,7 +2088,7 @@ void Driver::ProcessMsg
 			case FUNC_ID_APPLICATION_COMMAND_HANDLER:
 			{
 				Log::Write( LogLevel_Detail, "" );
-				HandleApplicationCommandHandlerRequest( _data );
+				HandleApplicationCommandHandlerRequest( _data, wasencrypted );
 				break;
 			}
 			case FUNC_ID_ZW_SEND_DATA:
@@ -3393,7 +3395,8 @@ void Driver::HandleReplaceFailedNodeRequest
 //-----------------------------------------------------------------------------
 void Driver::HandleApplicationCommandHandlerRequest
 (
-		uint8* _data
+		uint8* _data,
+		bool encrypted
 )
 {
 
@@ -3470,7 +3473,7 @@ void Driver::HandleApplicationCommandHandlerRequest
 		// Allow the node to handle the message itself
 		if( node != NULL )
 		{
-			node->ApplicationCommandHandler( _data );
+			node->ApplicationCommandHandler( _data, encrypted );
 		}
 	}
 }
