@@ -48,87 +48,11 @@ enum ZWavePlusInfoCmdEnum
 enum
 {
 	ZWavePlusInfoIndex_Version = 0x00,
-	ZWavePlusInfoIndex_Role,
-	ZWavePlusInfoIndex_Node,
 	ZWavePlusInfoIndex_InstallerIcon,
-	ZWavePlusInfoIndex_InstallerIconSpecific,
 	ZWavePlusInfoIndex_UserIcon,
-	ZWavePlusInfoIndex_UserIconSpecific
 };
 
-enum RoleTypeEnum
-{
-	RoleType_Central_Controller = 0x00,
-	RoleType_Sub_Controller,
-	RoleType_Portable_Controller,
-	RoleType_Portable_Reporting_Controller,
-	RoleType_Portable_Slave,
-	RoleType_Always_On_Slave,
-	RoleType_Reporting_Sleeping_Slave,
-	RoleType_Listening_Sleeping_Slave
-};
 
-static char const* c_roleTypeName[] =
-{
-	"Central Controller",
-	"Sub Controller",
-	"Portable Controller",
-	"Portable Reporting Controller",
-	"Portable Slave",
-	"Always On Slave",
-	"Reporting Sleeping Slave",
-	"Listening Sleeping Slave"
-};
-
-enum NodeTypeEnum
-{
-	NodeType_Node = 0x00,
-	NodeType_IP_router,
-	NodeType_IP_gateway,
-	NodeType_IP_client_and_IP_node,
-	NodeType_IP_client_and_zwave_node
-};
-
-static char const* c_nodeTypeName[] =
-{
-	"Z-Wave+ node",
-	"Z-Wave+ IP router",
-	"Z-Wave+ IP gateway",
-	"Z-Wave+ IP client and IP node",
-	"Z-Wave+ IP client and Zwave node"	
-};
-
-#if 0
-static char const* c_iconTypeName[] =
-{
-	"Unknown Type",
-	"Central Controller",
-	"Display Simple",
-	"Door Lock Keypad",
-	"Fan Switch",
-	"Gateway",
-	"Light Dimmer Switch",
-	"On/Off Power Switch",
-	"Power Strip",
-	"Remote Control AV",
-	"Remote Control Multi Purpose",
-	"Sensor Notification",
-	"Sensor Multilevel",
-	"Set Top Box",
-	"Siren",
-	"Sub Energy Meter",
-	"Sub System Controller",
-	"Thermostat HVAC",
-	"Thermostat Setback",
-	"TV",
-	"Valve Open/Close",
-	"Wall Controller",
-	"Whole Home Meter Simple",
-	"Window Covering No Position/Endpoint",
-	"Window Covering Endpoint Aware",
-	"Window Covering Position/Endpoint Aware"
-};
-#endif
 
 //-----------------------------------------------------------------------------
 // <ZWavePlusInfo::ZWavePlusInfo>
@@ -155,7 +79,7 @@ bool ZWavePlusInfo::RequestState
 	Driver::MsgQueue const _queue
 )
 {
-	if( _requestFlags & RequestFlag_Static && HasStaticRequest( StaticRequest_Values ) )
+	if( (_requestFlags & RequestFlag_Static) && HasStaticRequest( StaticRequest_Values ) )
 	{
 		return RequestValue( _requestFlags, 0, _instance, _queue );
 	}
@@ -179,7 +103,7 @@ bool ZWavePlusInfo::RequestValue
 	{
 		// This command class doesn't work with multiple instances
 		return false;
-	}	
+	}
 	if ( IsGetSupported() )
 	{
 		Msg* msg = new Msg( "ZWavePlusInfoCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
@@ -212,31 +136,61 @@ bool ZWavePlusInfo::HandleMsg
 	if( ZWavePlusInfoCmd_Report == _data[0] )
 	{
 		uint8 version = _data[1];
-		RoleTypeEnum role    = (RoleTypeEnum)_data[2];
-		NodeTypeEnum nodeType    = (NodeTypeEnum)_data[3];
+		uint8 role    = _data[2];
+		uint8 nodeType    = _data[3];
 		uint16 installerIcon = (_data[4]<< 8) | _data[5];
-		uint16 userIcon		 = (_data[6]<< 8) | _data[7];
-		uint8 deviceType     = _data[6];
-
-		// We have received a report from the Z-Wave device
-		// make sure we have the strings for the values recieved.
-		if( role <= RoleType_Listening_Sleeping_Slave && nodeType <= NodeType_IP_client_and_zwave_node )
-		{
-			Log::Write( LogLevel_Info, GetNodeId(), "Received ZWavePlusInfo report: version:0x%.2x role:%s node:%s installerIcon:0x%.4x userIcon:0x%.4x", 
-				       version, c_roleTypeName[role], c_nodeTypeName[nodeType], installerIcon, userIcon );
-		}
-		else
-		{
-			Log::Write( LogLevel_Info, GetNodeId(), "Received ZWavePlusInfo report: version:0x%.2x role:0x%.2x node:0x%.2x installerIcon:0x%.4x userIcon:0x%.4x", 
-				       version, role, nodeType, installerIcon, userIcon );
-		}
+		uint16 deviceType		 = (_data[6]<< 8) | _data[7];
 
 		if( Node* node = GetNodeUnsafe() )
 		{
 			node->SetPlusDeviceClasses(	role, nodeType, deviceType );
 		}
 		ClearStaticRequest( StaticRequest_Values );
+
+		ValueByte* value;
+		if( (value = static_cast<ValueByte*>( GetValue( _instance, ZWavePlusInfoIndex_Version ) )) )
+		{
+			value->OnValueRefreshed( version );
+			value->Release();
+		}
+
+		ValueShort* svalue;
+		if( (svalue = static_cast<ValueShort*>( GetValue( _instance, ZWavePlusInfoIndex_InstallerIcon ) )) )
+		{
+			svalue->OnValueRefreshed( installerIcon );
+			svalue->Release();
+		}
+
+		if( (svalue = static_cast<ValueShort*>( GetValue( _instance, ZWavePlusInfoIndex_UserIcon ) )) )
+		{
+			svalue->OnValueRefreshed( deviceType );
+			svalue->Release();
+		}
+
+
+
+
 		return true;
 	}
 	return false;
 }
+
+//-----------------------------------------------------------------------------
+// <ZWavePlusInfo::CreateVars>
+// Create the values managed by this command class
+//-----------------------------------------------------------------------------
+void ZWavePlusInfo::CreateVars
+(
+		uint8 const _instance
+)
+{
+	if( Node* node = GetNodeUnsafe() )
+	{
+		node->CreateValueByte( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ZWavePlusInfoIndex_Version, "ZWave+ Version", "", true, false, 0, 0 );
+		node->CreateValueShort( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ZWavePlusInfoIndex_InstallerIcon, "InstallerIcon", "", true, false, 0, 0 );
+		node->CreateValueShort( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ZWavePlusInfoIndex_UserIcon, "UserIcon", "", true, false, 0, 0 );
+
+	}
+}
+
+
