@@ -55,6 +55,7 @@
 #include "command_classes/NoOperation.h"
 #include "command_classes/Version.h"
 #include "command_classes/SwitchAll.h"
+#include "command_classes/ZWavePlusInfo.h"
 
 #include "Scene.h"
 
@@ -80,6 +81,8 @@ using namespace OpenZWave;
 bool Node::s_deviceClassesLoaded = false;
 map<uint8,string> Node::s_basicDeviceClasses;
 map<uint8,Node::GenericDeviceClass*> Node::s_genericDeviceClasses;
+map<uint8,Node::DeviceClass*> Node::s_roleDeviceClasses;
+map<uint8,Node::DeviceClass*> Node::s_deviceClasses;
 
 static char const* c_queryStageNames[] =
 {
@@ -89,6 +92,7 @@ static char const* c_queryStageNames[] =
 	"WakeUp",
 	"ManufacturerSpecific1",
 	"NodeInfo",
+	"NodePlusInfo",
 	"SecurityReport",
 	"ManufacturerSpecific2",
 	"Versions",
@@ -119,6 +123,7 @@ m_queryRetries( 0 ),
 m_protocolInfoReceived( false ),
 m_basicprotocolInfoReceived( false ),
 m_nodeInfoReceived( false ),
+m_nodePlusInfoReceived( false ),
 m_manufacturerSpecificClassReceived( false ),
 m_nodeInfoSupported( true ),
 m_refreshonNodeInfoFrame ( true ),
@@ -145,6 +150,8 @@ m_location( "" ),
 m_manufacturerId( "" ),
 m_productType( "" ),
 m_productId( "" ),
+m_deviceType( 0 ),
+m_role( 0 ),
 m_secured ( false ),
 m_values( new ValueStore() ),
 m_sentCnt( 0 ),
@@ -378,10 +385,29 @@ void Node::AdvanceQueries
 				else
 				{
 					// This stage has been done already, so move to the Manufacturer Specific stage
-					m_queryStage = QueryStage_SecurityReport;
+					m_queryStage = QueryStage_NodePlusInfo;
 					m_queryRetries = 0;
 				}
 				break;
+			}
+			case QueryStage_NodePlusInfo:
+			{
+				Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_NodePlusInfo" );
+				ZWavePlusInfo* pluscc = static_cast<ZWavePlusInfo*>( GetCommandClass( ZWavePlusInfo::StaticGetCommandClassId() ) );
+
+				if ( pluscc )
+				{
+					m_queryPending = pluscc->RequestState( CommandClass::RequestFlag_Static, 1, Driver::MsgQueue_Query );
+					addQSC = m_queryPending;					
+				}
+				else
+				{
+					// this is not a Zwave+ node, so move onto the next querystage
+					m_queryStage = QueryStage_SecurityReport;
+					m_queryRetries = 0;
+				}
+
+				break;				
 			}
 			case QueryStage_SecurityReport:
 			{
@@ -909,6 +935,18 @@ void Node::ReadXML
 		m_specific = (uint8)intVal;
 	}
 
+	if( TIXML_SUCCESS == _node->QueryIntAttribute( "role", &intVal ) )
+	{
+		m_role = (uint8)intVal;
+		m_nodePlusInfoReceived = true;
+	}
+
+	if( TIXML_SUCCESS == _node->QueryIntAttribute( "deviceType", &intVal ) )
+	{
+		m_deviceType = (uint8)intVal;
+		m_nodePlusInfoReceived = true;
+	}
+
 	str = _node->Attribute( "type" );
 	if( str )
 	{
@@ -1186,6 +1224,15 @@ void Node::WriteXML
 
 	snprintf( str, 32, "%d", m_specific );
 	nodeElement->SetAttribute( "specific", str );
+
+	if( m_nodePlusInfoReceived )
+	{
+		snprintf( str, 32, "%d", m_role );
+		nodeElement->SetAttribute( "role", str );
+
+		snprintf( str, 32, "%d", m_deviceType );
+		nodeElement->SetAttribute( "deviceType", str );
+	}
 
 	nodeElement->SetAttribute( "type", m_type.c_str() );
 
@@ -2894,6 +2941,53 @@ bool Node::SetDeviceClasses
 }
 
 //-----------------------------------------------------------------------------
+// <Node::SetPlusDeviceClasses>
+// Set the device class data for the node based on the Zwave+ info report
+//-----------------------------------------------------------------------------
+bool Node::SetPlusDeviceClasses
+(
+	uint8 const _role,
+	uint8 const _nodeType,
+	uint8 const _deviceType
+)
+{   
+	if ( m_nodePlusInfoReceived )
+	{
+		return false; // already set
+	}
+	m_nodePlusInfoReceived = true;
+	m_role = _role;
+	m_deviceType = _deviceType;
+
+	// Apply any Zwave+ device class data
+	map<uint8,DeviceClass*>::iterator dit = s_deviceClasses.find( _deviceType );
+	if( dit != s_deviceClasses.end() )
+	{
+		DeviceClass* deviceClass = dit->second;
+		// m_type = deviceClass->GetLabel(); // do we what to update the type with the zwave+ info??
+
+		Log::Write( LogLevel_Info, m_nodeId, "  Zwave+ device Class  (0x%.2x) - %s", _deviceType, deviceClass->GetLabel().c_str() );
+
+		// Add the mandatory command classes for this device class type
+		AddMandatoryCommandClasses( deviceClass->GetMandatoryCommandClasses() );
+	}
+
+	// Apply any Role device class data
+	map<uint8,DeviceClass*>::iterator rit = s_roleDeviceClasses.find( _role );
+	if( rit != s_roleDeviceClasses.end() )
+	{
+		DeviceClass* roleDeviceClass = rit->second;
+
+		Log::Write( LogLevel_Info, m_nodeId, "  Role device Class  (0x%.2x) - %s", m_generic, roleDeviceClass->GetLabel().c_str() );
+
+		// Add the mandatory command classes for this role class type
+		AddMandatoryCommandClasses( roleDeviceClass->GetMandatoryCommandClasses() );
+	}
+
+	return true;
+}
+
+//-----------------------------------------------------------------------------
 // <Node::AddMandatoryCommandClasses>
 // Add mandatory command classes to the node
 //-----------------------------------------------------------------------------
@@ -2994,6 +3088,14 @@ void Node::ReadDeviceClasses
 					{
 						s_basicDeviceClasses[key] = label;
 					}
+				}
+				else if( !strcmp( str, "Role" ) )
+				{
+					s_roleDeviceClasses[key] = new DeviceClass( child );
+				}
+				else if( !strcmp( str, "DeviceType" ) )
+				{
+					s_deviceClasses[key] = new DeviceClass( child );
 				}
 			}
 		}

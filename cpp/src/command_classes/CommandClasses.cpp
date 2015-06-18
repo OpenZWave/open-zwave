@@ -82,6 +82,7 @@ using namespace OpenZWave;
 #include "command_classes/UserCode.h"
 #include "command_classes/Version.h"
 #include "command_classes/WakeUp.h"
+#include "command_classes/ZWavePlusInfo.h"
 
 #include "value_classes/ValueBool.h"
 #include "value_classes/ValueButton.h"
@@ -232,6 +233,7 @@ void CommandClasses::RegisterCommandClasses
 	cc.Register( UserCode::StaticGetCommandClassId(), UserCode::StaticGetCommandClassName(), UserCode::Create );
 	cc.Register( Version::StaticGetCommandClassId(), Version::StaticGetCommandClassName(), Version::Create );
 	cc.Register( WakeUp::StaticGetCommandClassId(), WakeUp::StaticGetCommandClassName(), WakeUp::Create );
+	cc.Register( ZWavePlusInfo::StaticGetCommandClassId(), ZWavePlusInfo::StaticGetCommandClassName(), ZWavePlusInfo::Create );
 
 	// Now all the command classes have been registered, we can modify the
 	// supported command classes array according to the program options.
