@@ -4715,6 +4715,120 @@ string Driver::GetNodeProductId
 }
 
 //-----------------------------------------------------------------------------
+// <Driver::GetNodeDeviceType>
+// Get the node device type as reported in the Z-Wave+ Info report.
+//-----------------------------------------------------------------------------
+uint16 Driver::GetNodeDeviceType
+(
+		uint8 const _nodeId
+)
+{
+	LockGuard LG(m_nodeMutex);
+	if( Node* node = GetNode( _nodeId ) )
+	{
+		return node->GetDeviceType();
+	}
+
+	return 0x00; // unknown
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::GetNodeDeviceTypeString>
+// Get the node DeviceType as a string as reported in the Z-Wave+ Info report.
+//-----------------------------------------------------------------------------
+
+string Driver::GetNodeDeviceTypeString
+(
+		uint8 const _nodeId
+)
+{
+
+	LockGuard LG(m_nodeMutex);
+	if( Node* node = GetNode( _nodeId ) )
+	{
+		return node->GetDeviceTypeString();
+	}
+
+	return ""; // unknown
+}
+
+
+
+//-----------------------------------------------------------------------------
+// <Driver::GetNodeRole>
+// Get the node role as reported in the Z-Wave+ Info report.
+//-----------------------------------------------------------------------------
+uint8 Driver::GetNodeRole
+(
+		uint8 const _nodeId
+)
+{
+	LockGuard LG(m_nodeMutex);
+	if( Node* node = GetNode( _nodeId ) )
+	{
+		return node->GetRoleType();
+	}
+
+	return 0x00; // unknown
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::GetNodeRoleString>
+// Get the node role as a string as reported in the Z-Wave+ Info report.
+//-----------------------------------------------------------------------------
+string Driver::GetNodeRoleString
+(
+		uint8 const _nodeId
+)
+{
+	LockGuard LG(m_nodeMutex);
+	if( Node* node = GetNode( _nodeId ) )
+	{
+		return node->GetRoleTypeString();
+	}
+
+	return ""; // unknown
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::GetNodePlusType>
+// Get the node role as a string as reported in the Z-Wave+ Info report.
+//-----------------------------------------------------------------------------
+uint8 Driver::GetNodePlusType
+(
+		uint8 const _nodeId
+)
+{
+	LockGuard LG(m_nodeMutex);
+	if( Node* node = GetNode( _nodeId ) )
+	{
+		return node->GetNodeType();
+	}
+	return 0x00; // unknown
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::GetNodePlusTypeString>
+// Get the node role as a string as reported in the Z-Wave+ Info report.
+//-----------------------------------------------------------------------------
+string Driver::GetNodePlusTypeString
+(
+		uint8 const _nodeId
+)
+{
+	LockGuard LG(m_nodeMutex);
+	if( Node* node = GetNode( _nodeId ) )
+	{
+		return node->GetNodeTypeString();
+	}
+	return ""; // unknown
+}
+
+
+
+
+
+//-----------------------------------------------------------------------------
 // <Driver::SetNodeManufacturerName>
 // Set the manufacturer name for the node with the specified ID
 //-----------------------------------------------------------------------------
