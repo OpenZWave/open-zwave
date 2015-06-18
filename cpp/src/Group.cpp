@@ -60,7 +60,8 @@ Group::Group
 	m_groupIdx( _groupIdx ),
 	m_maxAssociations( _maxAssociations ),
 	m_auto( false ),
-        m_multiInstance( false )
+	m_multiInstance( false ),
+	m_profile( 0 )
 {
 	if( _label == NULL )
 	{
@@ -114,7 +115,8 @@ Group::Group
 	m_groupIdx( 0 ),
 	m_maxAssociations( 0 ),
 	m_auto( false ),
-	m_multiInstance( false )
+	m_multiInstance( false ),
+	m_profile( 0 )
 {
 	int intVal;
 	char const* str;
@@ -146,6 +148,11 @@ Group::Group
 	if( str )
 	{
 		m_multiInstance = !strcmp( str, "true" );
+	}
+
+	if( TIXML_SUCCESS == _groupElement->QueryIntAttribute( "profile", &intVal ) )
+	{
+		m_profile = (uint16)intVal;
 	}
 		
 	// Read the associations for this group
@@ -203,6 +210,12 @@ void Group::WriteXML
 		_groupElement->SetAttribute( "multiInstance", m_multiInstance ? "true" : "false" );
 	}
 	
+	if( m_profile != 0 )
+	{
+		snprintf( str, 16, "%d", m_profile );
+		_groupElement->SetAttribute( "profile", str );
+	}
+
 	for( map<InstanceAssociation,AssociationCommandVec,classcomp>::iterator it = m_associations.begin(); it != m_associations.end(); ++it )
 	{
 		TiXmlElement* associationElement = new TiXmlElement( "Node" );
