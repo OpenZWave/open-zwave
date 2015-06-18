@@ -2303,8 +2303,24 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 */
 		bool ActivateScene( uint8 const _sceneId );
 
-		// register scene at actuator
-		bool SetActuatorScene( uint8 const _sceneId, ValueID const& _valueId, uint8 const _value, uint8 const _duration );
+		/**
+		 * \brief Register the scene at the actuator.
+		 * \param _homeId The HomeID of the Z-Wave network
+		 * \param _nodeId the ID of the Node
+		 * \param _sceneId The Scene ID.
+		 * \param _value The level a Basic Set can handle.
+		 * \param _duration The default duration, how long should it take to reach the configured level.
+		 * \return true if it is successful.
+		 */
+		bool SetActuatorScene( uint32 const _homeId,  uint8 const _nodeId, uint8 const _sceneId, uint8 const _value, uint8 const _duration );
+
+		/**
+		 * \brief Activate a scene by sending a broadcast message to all nodes.
+		 * \param _homeId The HomeID of the Z-Wave network.
+		 * \param _sceneId The Scene ID.
+		 * \param _duration how long should it take to reach the configured scene level.
+		 * \return true if it is successful.
+		 */
 		bool ActivateScene( uint32 const _homeId, uint8 const _sceneId, uint8 const _duration );
 
 	/*@}*/

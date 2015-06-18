@@ -768,7 +768,7 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 	//	Scenes
 	//-----------------------------------------------------------------------------
 	public:
-		bool SetActuatorScene( uint8 const _sceneId, ValueID const& _valueId, uint8 const _value, uint8 const _duration );
+		bool SetActuatorScene( uint8 const _nodeId, uint8 const _sceneId, uint8 const _value, uint8 const _duration );
 		void ActivateScene( uint8 const _sceneId, uint8 const _duration );
 
 	//-----------------------------------------------------------------------------

@@ -4587,15 +4587,16 @@ bool Manager::ActivateScene
 //-----------------------------------------------------------------------------
 bool Manager::SetActuatorScene
 (
+		uint32 const _homeId,
+		uint8 const _nodeId,
 		uint8 const _sceneId,
-		ValueID const& _valueId,
 		uint8 const _value,
 		uint8 const _duration
 )
 {
-	if( Driver* driver = GetDriver( _valueId.GetHomeId() ) )
+	if( Driver* driver = GetDriver( _homeId ) )
 	{
-		return driver->SetActuatorScene( _sceneId, _valueId, _value, _duration );
+		return driver->SetActuatorScene( _nodeId, _sceneId, _value, _duration );
 	}
 	return false;
 }

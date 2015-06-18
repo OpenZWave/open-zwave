@@ -6517,14 +6517,14 @@ void Driver::UpdateNodeRoutes
 //-----------------------------------------------------------------------------
 bool Driver::SetActuatorScene
 (
+		uint8 const _nodeId,
 		uint8 const _sceneId,
-		ValueID const& _valueId,
 		uint8 const _value,
 		uint8 const _duration
 )
 {
 	LockGuard LG(m_nodeMutex);
-	if( Node* node = GetNode( _valueId.GetNodeId() ) )
+	if( Node* node = GetNode( _nodeId ) )
 	{
 		return node->SetActuatorScene( _sceneId, _value, _duration );
 	}
