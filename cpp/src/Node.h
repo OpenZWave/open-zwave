@@ -372,11 +372,16 @@ namespace OpenZWave
 			string		m_productId;
 
 			// zwave+ info
-			uint8 GetDeviceType()const{return m_deviceType; }
-			uint8 GetRole()const{return m_role; }
+			uint16 GetDeviceType() const { return m_deviceType; }
+			string GetDeviceTypeString();
+			uint8 GetRoleType() const { return m_role; }
+			string GetRoleTypeString();
+			uint8 GetNodeType() const { return m_nodeType; }
+			string GetNodeTypeString();
 
-			uint8 m_deviceType;
+			uint16 m_deviceType;
 			uint8 m_role;
+			uint8 m_nodeType;
 
 			//-----------------------------------------------------------------------------
 			// Command Classes
@@ -540,7 +545,7 @@ namespace OpenZWave
 
 
 			bool SetDeviceClasses( uint8 const _basic, uint8 const _generic, uint8 const _specific );	// Set the device class data for the node
-			bool SetPlusDeviceClasses( uint8 const _role, uint8 const _nodeType, uint8 const _deviceType );	// Set the device class data for the node based on the Zwave+ info report
+			bool SetPlusDeviceClasses( uint8 const _role, uint8 const _nodeType, uint16 const _deviceType );	// Set the device class data for the node based on the Zwave+ info report
 			bool AddMandatoryCommandClasses( uint8 const* _commandClasses );							// Add mandatory command classes as specified in the device_classes.xml to the node.
 			void ReadDeviceClasses();																	// Read the static device class data from the device_classes.xml file
 			string GetEndPointDeviceClassLabel( uint8 const _generic, uint8 const _specific );
@@ -549,8 +554,8 @@ namespace OpenZWave
 			static map<uint8,string>				s_basicDeviceClasses;		// Map of basic device classes.
 			static map<uint8,GenericDeviceClass*>	s_genericDeviceClasses;		// Map of generic device classes.
 			static map<uint8,DeviceClass*> 			s_roleDeviceClasses;		// Map of Zwave+ role device classes.
-			static map<uint8,DeviceClass*> 			s_deviceClasses;			// Map of Zwave+ device type device classes.
-
+			static map<uint16,DeviceClass*> 		s_deviceTypeClasses;		// Map of Zwave+ device type device classes.
+			static map<uint8, DeviceClass*>			s_nodeTypes;				// Map of ZWave+ Node Types
 
 
 			//-----------------------------------------------------------------------------
