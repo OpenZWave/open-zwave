@@ -116,6 +116,15 @@ namespace OpenZWave
 		};
 
 	//-----------------------------------------------------------------------------
+	// Command methods (COMMAND_CLASS_ASSOCIATION_GROUP_INFO)
+	//-----------------------------------------------------------------------------
+	public:
+		uint16 GetProfile()const{ return m_profile; }
+
+	private:
+		void SetProfile(uint16 const _profile ){ m_profile = _profile; }
+
+	//-----------------------------------------------------------------------------
 	// Member variables
 	//-----------------------------------------------------------------------------
 	private:
@@ -127,6 +136,9 @@ namespace OpenZWave
 		bool								m_auto;				// If true, the controller will automatically be associated with the group
 		bool								m_multiInstance;    // If true, the group is MultiInstance capable
 		map<InstanceAssociation,AssociationCommandVec,classcomp>	m_associations;
+
+		// ZWave+ info
+		uint16								m_profile;
 	};
 
 } //namespace OpenZWave

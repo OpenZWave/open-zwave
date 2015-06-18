@@ -53,6 +53,17 @@ enum
 	AssociationGroupInfoReportProfile_General = 0x00,
 };
 
+enum
+{
+	AssociationGroupInfo_Get_ListModeMask			= 0x40,
+	AssociationGroupInfo_Get_RefreshCacheMask		= 0x80,
+
+	AssociationGroupInfo_Report_GroupCountMask		= 0x3f,
+	AssociationGroupInfo_Report_DynamicInfoMask		= 0x40,
+	AssociationGroupInfo_Report_ListModeMask		= 0x80,
+
+};
+
 //-----------------------------------------------------------------------------
 // <AssociationGroupInfo::AssociationGroupInfo>
 // Constructor
@@ -195,7 +206,14 @@ void AssociationGroupInfo::GetGroupInfo
 		msg->Append( 4 );
 		msg->Append( GetCommandClassId() );
 		msg->Append( AssociationGroupInfoCmd_Info_Get );
-		msg->Append( 0x00 ); // bool list mode && bool refresh cache ??
+		if( _groupIdx == 0x00 )
+		{	// request all groups
+			msg->Append( AssociationGroupInfo_Get_ListModeMask );
+		}
+		else
+		{
+			msg->Append( 0x00 );
+		}
 		msg->Append( _groupIdx );
 		msg->Append( GetDriver()->GetTransmitOptions() );
 		GetDriver()->SendMsg( msg, Driver::MsgQueue_Query);
@@ -272,33 +290,29 @@ bool AssociationGroupInfo::HandleMsg
 	} 
 	else if( AssociationGroupInfoCmd_Info_Report == _data[0] )
 	{
-		Log::Write( LogLevel_Info, GetNodeId(), "Received AssociationGroupInfoCmd_Info_Report command report from node %d", GetNodeId() );
-		// format:
-		// ??  bools list mode & dynamic cache ??
-		// groupId ??
-		// 0x00   6 times ???
-		/* 
-		    we should be able to derive info like this:
-				Profile MSB -
-				ASSOCIATION_GROUP_INFO_REPORT_PROFILE_GENERAL
-				Profile LSB -
-				ASSOCIATION_GROUP_INFO_REPORT_PROFILE_GENERAL_NA
+		bool listMode = ((_data[1] & AssociationGroupInfo_Report_ListModeMask) != 0);
+		bool dynamicInfo = ((_data[1] & AssociationGroupInfo_Report_DynamicInfoMask) != 0);
 
-			or this:
-				Profile MSB:
-				ASSOCIATION_GROUP_INFO_REPORT_PROFILE_GENERAL
-				Profile LSB:
-				Group1: 0x01
-				Group2: 0x02
-				Group3: 0x03
-				Group4: 0x04
-				Group5: 0x05
-		*/
-		if ( _data[1] != 0x01 ||  _data[3] != 0x00 || _data[4] != 0x00 || _data[4] != 0x00 || _data[5] != 0x00 || _data[6] != 0x00 || _data[7] != 0x00 || _data[7] != 0x00 )
+		// number of group info elements in this message. Not the total number of groups on the device.
+		// The device can send multiple reports in list mode
+		uint8 groupCount = _data[1] & AssociationGroupInfo_Report_GroupCountMask;
+		Log::Write( LogLevel_Info, GetNodeId(), "AssociationGroupInfoCmd_Info_Report: count:%d listMode:%s dynamicInfo:%s", groupCount, listMode ? "true": "false", dynamicInfo ? "true": "false");
+		for( int i=0; i<groupCount; i++)
 		{
-			// _date[1] always 0x01
-			// _data[2] = seems groupId
-			Log::Write( LogLevel_Info, GetNodeId(), "**TODO: handle AssociationGroupInfoCmd_Info_Report** Please report this message.");
+			uint8 groupIdx = _data[2+i*7];
+			uint8 mode = _data[3+i*7];
+			uint8 profile_msb = _data[4+i*7];
+			uint8 profile_lsb = _data[5+i*7];
+			uint16 profile = (profile_msb << 8 | profile_lsb);
+			Log::Write( LogLevel_Info, GetNodeId(), "   Group=%d, Profile=%.4x, mode:%.2x", groupIdx, profile, mode);
+
+			if( Node* node = GetNodeUnsafe() )
+			{
+				if( Group* group = node->GetGroup( groupIdx ) )
+				{
+					group->SetProfile( profile );
+				}
+			}
 		}
 		return true;
 	}
