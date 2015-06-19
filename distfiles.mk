@@ -34,14 +34,17 @@ DISTFILES =	.gitignore \
 	config/aeotec/hemg2.xml \
 	config/aeotec/keyfob.xml \
 	config/aeotec/keyfob2.xml \
+	config/aeotec/ledbulb.xml \
 	config/aeotec/minimote.xml \
 	config/aeotec/msesv2.xml \
+	config/aeotec/multisensor6.xml \
 	config/aeotec/multisensor_gen5.xml \
 	config/aeotec/panicbtn.xml \
 	config/aeotec/recessed_doorsensor.xml \
 	config/aeotec/recessed_doorsensor_gen5.xml \
 	config/aeotec/ses.xml \
 	config/aeotec/ses2.xml \
+	config/aeotec/ss6.xml \
 	config/aeotec/watersensor.xml \
 	config/assa_abloy/RealLivingCapTouch.xml \
 	config/cooper/RF9505-T.xml \
