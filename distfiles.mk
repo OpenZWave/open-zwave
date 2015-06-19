@@ -58,6 +58,7 @@ DISTFILES =	.gitignore \
 	config/duwi/ZWES1000.xml \
 	config/duwi/ZWESJ300.xml \
 	config/eurotronic/eur_stellaz.xml \
+	config/everspring/ad147.xml \
 	config/everspring/an145.xml \
 	config/everspring/an158.xml \
 	config/everspring/se812.xml \
