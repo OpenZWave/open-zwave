@@ -1253,6 +1253,68 @@ string Manager::GetNodeProductType
 }
 
 //-----------------------------------------------------------------------------
+// <Manager::IsNodePlusInfoReceived>
+// Get whether the Z-Wave+ Info has been received.
+//-----------------------------------------------------------------------------
+bool Manager::IsNodePlusInfoReceived
+(
+		uint32 const _homeId,
+		uint8 const _nodeId
+)
+{
+	bool result = false;
+
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		// Need to lock and unlock nodes to check this information
+		LockGuard LG(driver->m_nodeMutex);
+
+		if( Node *node = driver->GetNode( _nodeId ) )
+		{
+			result = node->NodePlusInfoReceived();
+		}
+	}
+
+	return result;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::GetNodeDeviceType>
+// Get the node device type as reported in the Z-Wave+ Info report.
+//-----------------------------------------------------------------------------
+uint8 Manager::GetNodeDeviceType
+( 
+		uint32 const _homeId, 
+		uint8 const _nodeId 
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		return driver->GetNodeDeviceType( _nodeId );
+	}
+
+	return 0x00; // unknown
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::GetNodeRole>
+// Get the node role as reported in the Z-Wave+ Info report.
+//-----------------------------------------------------------------------------
+uint8 Manager::GetNodeRole
+(
+		uint32 const _homeId,
+		uint8 const _nodeId
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		return driver->GetNodeRole( _nodeId );
+	}
+
+	return 0x00; // unknown
+}
+
+//-----------------------------------------------------------------------------
 // <Manager::GetNodeProductId>
 // Get the product Id value with the specified ID
 //-----------------------------------------------------------------------------

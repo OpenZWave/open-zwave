@@ -39,6 +39,7 @@
 
 #include "value_classes/ValueInt.h"
 #include "value_classes/ValueString.h"
+#include "value_classes/ValueByte.h"
 
 #include "tinyxml.h"
 
@@ -52,6 +53,9 @@ enum ColorCmd
 	ColorCmd_Get = 0x03,
 	ColorCmd_Report = 0x04,
 	ColorCmd_Set = 0x05,
+	/* Version 2 */
+	ColorCmd_StartCapabilityLevelChange = 0x06,
+	ColorCmd_StopStateChange = 0x07
 };
 
 //Capabilities
@@ -83,7 +87,8 @@ enum ValueIDSystemIndexes
 {
 	Value_Color							= 0x00,		/* RGB Color */
 	Value_Color_Index					= 0x01,		/* Color Index if Set */
-	Value_Color_Channels_Capabilities	= 0x02		/* Color Channels Capabilities */
+	Value_Color_Channels_Capabilities	= 0x02,		/* Color Channels Capabilities */
+	Value_Color_Duration				= 0x03
 };
 
 
@@ -221,7 +226,6 @@ bool Color::RequestValue
 			Log::Write(LogLevel_Warning, GetNodeId(), "ColorRefresh is already in progress. Ignoring Get Request");
 			return false;
 		}
-		std::cout << "Requesting Color Refresh for index 0" << std::endl;
 		if (RequestColorChannelReport(0, _instance, _queue))
 		{
 			m_refreshinprogress = true;
@@ -288,18 +292,19 @@ bool Color::HandleMsg
 			Log::Write(LogLevel_Info, GetNodeId(), "Purple (0x07)");
 		if (m_capabilities & 0x100)
 			Log::Write(LogLevel_Info, GetNodeId(), "Indexed Color (0x08)");
-		if( ValueInt* colorchannels = static_cast<ValueInt*>( GetValue( _instance, 254 ) ) )
+		if( ValueInt* colorchannels = static_cast<ValueInt*>( GetValue( _instance, Value_Color_Channels_Capabilities ) ) )
 		{
 			colorchannels->OnValueRefreshed( m_capabilities );
 			colorchannels->Release();
 		}
-		if (m_capabilities & 0x100) {
-			if( Node* node = GetNodeUnsafe() )
-			{
-				node->CreateValueInt( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 2, "Color Index", "", false, false, 0, 0 );
+		if( Node* node = GetNodeUnsafe() )
+		{
+			if (m_capabilities & 0x100) {
+				node->CreateValueInt( ValueID::ValueGenre_User, GetCommandClassId(), _instance, Value_Color_Index, "Color Index", "", false, false, 0, 0 );
 			}
+			if (GetVersion() > 1)
+				node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, Value_Color_Duration, "Duration", "Sec", false, false, 255, 0 );
 		}
-
 
 
 
@@ -330,7 +335,6 @@ bool Color::HandleMsg
 				}
 			}
 		}
-		std::cout << "got coloridx " << (int)coloridx << std::endl;
 		m_colorvalues[coloridx] = _data[2];
 
 		/* test if there are any more valid coloridx */
@@ -477,8 +481,7 @@ bool Color::SetValue
 		Value const& _value
 )
 {
-	std::cout << "processing" << std::endl;
-	if (ValueID::ValueType_String == _value.GetID().GetType())
+	if (Value_Color == _value.GetID().GetIndex())
 	{
 		ValueString const* value = static_cast<ValueString const*>(&_value);
 		string s = value->GetValue();
@@ -540,6 +543,7 @@ bool Color::SetValue
 		Log::Write( LogLevel_Info, GetNodeId(), "Color::SetValue - Setting Color value");
 
 
+#if 0
 		std::cout << std::hex << "r: " << colvals[COLORIDX_RED] << " g: " << colvals[COLORIDX_BLUE] << " b: " << colvals[COLORIDX_GREEN];
 		if (colvalset[COLORIDX_WARMWHITE] && !colvalset[COLORIDX_COLDWHITE])
 			std::cout << " aw: " << colvals[COLORIDX_WARMWHITE];
@@ -554,15 +558,18 @@ bool Color::SetValue
 		if (colvalset[COLORIDX_PURPLE])
 			std::cout << " Purple: " << colvals[COLORIDX_PURPLE];
 		std::cout << std::endl;
+#endif
 
-
-		Msg* msg = new Msg( "Color Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+		Msg* msg = new Msg( "ColorCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 		msg->SetInstance( this, _value.GetID().GetInstance() );
 		msg->Append( GetNodeId() );
-		msg->Append(3 + (nocols*2)); //length
+		if( GetVersion() > 1)
+			msg->Append(3 + (nocols*2)+1); // each color 2 bytes - and 1 byte for duration
+		else
+			msg->Append(3 + (nocols*2)); // each color 2 bytes
 		msg->Append( GetCommandClassId() );
 		msg->Append(ColorCmd_Set); //cmd
-		msg->Append(nocols*2);
+		msg->Append(nocols);
 		msg->Append(COLORIDX_RED);
 		msg->Append(colvals[COLORIDX_RED]);
 		msg->Append(COLORIDX_GREEN);
@@ -591,29 +598,49 @@ bool Color::SetValue
 			msg->Append(COLORIDX_PURPLE);
 			msg->Append(colvals[COLORIDX_PURPLE]);
 		}
-		msg->Append(GetDriver()->GetTransmitOptions());
-		GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
-		return true;
-	}
-
-
-#if 0
-		Msg* msg = new Msg( "Color Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-		msg->SetInstance( this, _value.GetID().GetInstance() );
-		msg->Append( GetNodeId() );
-		msg->Append(3 + len); //length
-		msg->Append( GetCommandClassId() );
-		msg->Append(ColorCmd_Set); //cmd
-		msg->Append(len); //LEN OF DATA
-		for (int ii = 0; ii < len; ii++)
-		{
-			msg->Append(s[ii]);
+		if (GetVersion() > 1) {
+			uint8 duration = 0;
+			if (ValueByte *valduration = static_cast<ValueByte *>(GetValue(_value.GetID().GetInstance(), Value_Color_Duration))) {
+				duration = valduration->GetValue();
+			}
+			msg->Append(duration);
 		}
 		msg->Append(GetDriver()->GetTransmitOptions());
 		GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 		return true;
+	} else if (Value_Color_Index == _value.GetID().GetIndex()) {
+		ValueInt const* value = static_cast<ValueInt const*>(&_value);
+		uint8 index = value->GetValue();
+		Msg* msg = new Msg( "Value_Color_Index", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		msg->SetInstance( this, _value.GetID().GetInstance() );
+		msg->Append( GetNodeId() );
+		if( GetVersion() > 1)
+			msg->Append(3 + 2 + 1); // each color 2 bytes - and 1 byte for duration
+		else
+			msg->Append(3 + 2); // each color 2 bytes
+		msg->Append( GetCommandClassId() );
+		msg->Append(ColorCmd_Set); //cmd
+		msg->Append(1);
+		msg->Append(COLORIDX_INDEXCOLOR);
+		msg->Append(index);
+		if (GetVersion() > 1) {
+			uint8 duration = 0;
+			if (ValueByte *valduration = static_cast<ValueByte *>(GetValue(_value.GetID().GetInstance(), Value_Color_Duration))) {
+				duration = valduration->GetValue();
+			}
+			msg->Append(duration);
+		}
+		msg->Append(GetDriver()->GetTransmitOptions());
+		GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
+	} else if (Value_Color_Duration == _value.GetID().GetIndex()) {
+		if (ValueByte const* m_value = static_cast<ValueByte const*>(GetValue(_value.GetID().GetInstance(), Value_Color_Duration))) {
+			uint8 _duration = m_value->GetValue();
+			if (ValueByte* m_duration = static_cast<ValueByte*>( GetValue(_value.GetID().GetInstance(), Value_Color_Duration))) {
+				m_duration->OnValueRefreshed(_duration);
+				m_duration->Release();
+			}
+		}
 	}
-#endif
 	return false;
 }
 
@@ -629,10 +656,8 @@ void Color::CreateVars
 	if( Node* node = GetNodeUnsafe() )
 	{
 		/* XXX TODO convert this to a bitset when we implement */
-		node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, Value_Color_Channels_Capabilities, "Color Channels", "", true, false, 0, 0 );
+		node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, Value_Color_Channels_Capabilities, "Color Channels", "", true, false, m_capabilities, 0 );
 		node->CreateValueString( ValueID::ValueGenre_User, GetCommandClassId(), _instance, Value_Color, "Color", "#RRGGBB[WWCWAMCYPR]", false, false, "#000000", 0 );
-		node->CreateValueInt( ValueID::ValueGenre_User, GetCommandClassId(), _instance, Value_Color_Index, "Color Index", "", false, false, 0, 0 );
-
 	}
 
 
