@@ -55,7 +55,6 @@ namespace OpenZWave
 
 	private:
 		AssociationGroupInfo( uint32 const _homeId, uint8 const _nodeId );
-		void GetGroupNames();	
 		void GetGroupName( uint8 const _groupIdx );
 		void GetGroupInfo( uint8 const _groupIdx );
 		void GetGroupCmdInfo( uint8 const _groupIdx );
