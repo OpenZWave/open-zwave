@@ -90,8 +90,6 @@ AssociationGroupInfo::AssociationGroupInfo
 			m_autoAssociateCCs[(cc & 0xFF)] = (cc & 0xFF);
 		}
 	}
-	Log::Write(  LogLevel_Info, GetNodeId(), "AssociationGroupInfo bla %d", m_autoAssociateCCs.size() );
-
 }
 
 //-----------------------------------------------------------------------------
