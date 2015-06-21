@@ -88,7 +88,7 @@ bool AssociationGroupInfo::RequestState
 	Driver::MsgQueue const _queue
 )
 {
-	if( /*_requestFlags & RequestFlag_Static ||*/ _requestFlags & RequestFlag_Dynamic )
+	if( _requestFlags & RequestFlag_Static )
 	{
 		return RequestValue( _requestFlags, 0, _instance, _queue );
 	}
@@ -118,15 +118,18 @@ bool AssociationGroupInfo::RequestValue
 	{
 		if( Node* node = GetNodeUnsafe() )
 		{
-			Log::Write(  LogLevel_Info, GetNodeId(), "AssociationGroupInfo RequestValue for %d groups", node->GetNumGroups() );
-
 			// lets request all information for all groups we know
-			// The group names are requested upon group discovery 
-			for( uint8 groupIdx = 1; groupIdx <= node->GetNumGroups( ); groupIdx++ )
+			// we need the number of groups to retrieve, while associations have not been retrieved yet
+			// we can not use group count from node.
+			if( Association* cc = static_cast<Association*>( node->GetCommandClass( Association::StaticGetCommandClassId() ) ) )
 			{
-				// GetGroupName( groupIdx );
-				GetGroupInfo( groupIdx );
-				GetGroupCmdInfo( groupIdx );
+				Log::Write(  LogLevel_Info, GetNodeId(), "AssociationGroupInfo RequestValue for %d groups", cc->GetNumGroups() );
+				for(int groupIdx=1 ; groupIdx<=cc->GetNumGroups() ; groupIdx++ )
+				{
+					GetGroupName( groupIdx );
+					GetGroupInfo( groupIdx );
+					GetGroupCmdInfo( groupIdx );
+				}
 			}
 		}
 		return true;
@@ -136,30 +139,6 @@ bool AssociationGroupInfo::RequestValue
 		Log::Write(  LogLevel_Info, GetNodeId(), "AssociationGroupInfoCmd_Name_Report Not Supported on this node");
 	}
 	return false;
-}
-
-//-----------------------------------------------------------------------------
-// <AssociationGroupInfo::GetGroupNames>
-// Request all group names
-//-----------------------------------------------------------------------------
-void AssociationGroupInfo::GetGroupNames
-(
-)
-{
-	if( IsGetSupported() )
-	{
-		if( Node* node = GetNodeUnsafe() )
-		{   // we need the number of groups to retrieve, while associations have not been retrieved yet 
-			// we can not use group count from node. 
-			if( Association* cc = static_cast<Association*>( node->GetCommandClass( Association::StaticGetCommandClassId() ) ) )
-			{
-				for(int i=1 ; i<=cc->GetNumGroups() ; i++ )
-				{
-					GetGroupName( i );
-				}
-			}
-		}
-	}	
 }
 
 //-----------------------------------------------------------------------------
@@ -267,7 +246,7 @@ bool AssociationGroupInfo::HandleMsg
 	// We have received a message from the Z-Wave device.
 	if( AssociationGroupInfoCmd_Name_Report == _data[0] )
 	{
-		Log::Write( LogLevel_Info, GetNodeId(), "Received AssociationGroupInfoCmd_Name_Report command report from node %d", GetNodeId() );
+		Log::Write( LogLevel_Info, GetNodeId(), "Received AssociationGroupInfoCmd_Name_Report from node %d", GetNodeId() );
 		uint8 groupIdx = _data[1];
 		string name = string( (char *)&_data[3], _data[2] );
 		Log::Write( LogLevel_Info, GetNodeId(), "  Name for group %d: %s", groupIdx, name.c_str() );
@@ -312,13 +291,17 @@ bool AssociationGroupInfo::HandleMsg
 				{
 					group->SetProfile( profile );
 				}
+				else
+				{
+					Log::Write( LogLevel_Warning, GetNodeId(), "   Group:%d does not exist (yet).", groupIdx );
+				}
 			}
 		}
 		return true;
 	}
 	else if( AssociationGroupInfoCmd_Command_List_Report == _data[0] )
 	{
-		Log::Write( LogLevel_Info, GetNodeId(), "Received AssociationGroupInfoCmd_Command_List_Report command report from node %d", GetNodeId() );
+		Log::Write( LogLevel_Info, GetNodeId(), "Received AssociationGroupInfoCmd_Command_List_Report from node %d", GetNodeId() );
 		// format: 
 		//	  groupId
 		//	  size
