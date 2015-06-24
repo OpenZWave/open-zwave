@@ -192,15 +192,16 @@ bool Color::RequestState
 			return false;
 		}
 
-		m_refreshinprogress = true;
 		/* if the device has the ColorIDX bug, then only request the first channel. We will get the rest later */
 		for (int i = 0; i <= 9; i++) {
 			bool tmprequests = RequestColorChannelReport(i, _instance, _queue );
 			if (tmprequests)
 				m_coloridxcount = i;
 			requests |= tmprequests;
-			if (m_coloridxbug && tmprequests)
+			if (m_coloridxbug && tmprequests) {
+				m_refreshinprogress = true;
 				break;
+			}
 		}
 	}
 
@@ -221,16 +222,20 @@ bool Color::RequestValue
 {
 	if( IsGetSupported() && (_what == Value_Color || _what == Value_Color_Index))
 	{
-		if (m_refreshinprogress == true)
+		if (m_coloridxbug && m_refreshinprogress == true)
 		{
 			Log::Write(LogLevel_Warning, GetNodeId(), "ColorRefresh is already in progress. Ignoring Get Request");
 			return false;
 		}
-		if (RequestColorChannelReport(0, _instance, _queue))
-		{
-			m_refreshinprogress = true;
-			m_coloridxcount = 0;
-			return true;
+		for (int i = 0; i <= 9; i++) {
+			if (RequestColorChannelReport(i, _instance, _queue))
+			{
+				if (m_coloridxbug) {
+					m_refreshinprogress = true;
+					m_coloridxcount = 0;
+					return true;
+				}
+			}
 		}
 	}
 	return false;
@@ -273,23 +278,34 @@ bool Color::HandleMsg
 	if (ColorCmd_Capability_Report == (ColorCmd)_data[0])
 	{
 		m_capabilities = (_data[1] + (_data[2] << 8));
+		string helpstr = "#RRGGBB";
 		Log::Write(LogLevel_Info, GetNodeId(), "Received an Color Capability Report: Capability=%xd", m_capabilities);
-		if (m_capabilities & 0x01)
-			Log::Write(LogLevel_Info, GetNodeId(), "Warm White (0x00)");
-		if (m_capabilities & 0x02)
-			Log::Write(LogLevel_Info, GetNodeId(), "Cold White (0x01)");
 		if (m_capabilities & 0x04)
 			Log::Write(LogLevel_Info, GetNodeId(), "Red (0x02)");
 		if (m_capabilities & 0x08)
 			Log::Write(LogLevel_Info, GetNodeId(), "Green (0x03)");
 		if (m_capabilities & 0x10)
 			Log::Write(LogLevel_Info, GetNodeId(), "Blue (0x04)");
-		if (m_capabilities & 0x20)
+		if (m_capabilities & 0x01) {
+			Log::Write(LogLevel_Info, GetNodeId(), "Warm White (0x00)");
+			helpstr += "WW";
+		}
+		if (m_capabilities & 0x02) {
+			Log::Write(LogLevel_Info, GetNodeId(), "Cold White (0x01)");
+			helpstr += "CW";
+		}
+		if (m_capabilities & 0x20) {
 			Log::Write(LogLevel_Info, GetNodeId(), "Amber (0x05)");
-		if (m_capabilities & 0x40)
+			helpstr += "AM";
+		}
+		if (m_capabilities & 0x40) {
 			Log::Write(LogLevel_Info, GetNodeId(), "Cyan (0x06)");
-		if (m_capabilities & 0x80)
+			helpstr += "CY";
+		}
+		if (m_capabilities & 0x80) {
 			Log::Write(LogLevel_Info, GetNodeId(), "Purple (0x07)");
+			helpstr += "PR";
+		}
 		if (m_capabilities & 0x100)
 			Log::Write(LogLevel_Info, GetNodeId(), "Indexed Color (0x08)");
 		if( ValueInt* colorchannels = static_cast<ValueInt*>( GetValue( _instance, Value_Color_Channels_Capabilities ) ) )
@@ -299,6 +315,15 @@ bool Color::HandleMsg
 		}
 		if( Node* node = GetNodeUnsafe() )
 		{
+			if ( ValueString *color = static_cast<ValueString *>( GetValue( _instance, Value_Color ) ) )
+			{
+				color->SetUnits(helpstr);
+			}
+			else
+			{
+				node->CreateValueString( ValueID::ValueGenre_User, GetCommandClassId(), _instance, Value_Color, "Color", helpstr, false, false, "#000000", 0 );
+			}
+
 			if (m_capabilities & 0x100) {
 				node->CreateValueInt( ValueID::ValueGenre_User, GetCommandClassId(), _instance, Value_Color_Index, "Color Index", "", false, false, 0, 0 );
 			}
@@ -343,8 +368,8 @@ bool Color::HandleMsg
 				return true;
 			}
 		}
-
-		m_refreshinprogress = false;
+		if (m_coloridxbug)
+			m_refreshinprogress = false;
 
 		/* if we get here, then we can update our ValueID */
 		if( ValueString* color = static_cast<ValueString*>( GetValue( _instance, Value_Color ) ) )
@@ -372,7 +397,7 @@ bool Color::HandleMsg
 
 			/* if both whites are present.... */
 			if (((m_capabilities) & (1<<(COLORIDX_WARMWHITE)))
-					& ((m_capabilities) & (1<<(COLORIDX_COLDWHITE)))) {
+					&& ((m_capabilities) & (1<<(COLORIDX_COLDWHITE)))) {
 				/* append them both */
 				ss << std::setw(2) << std::uppercase << std::hex << std::setfill('0') << (int)m_colorvalues[COLORIDX_WARMWHITE];
 				ss << std::setw(2) << std::uppercase << std::hex << std::setfill('0') << (int)m_colorvalues[COLORIDX_COLDWHITE];
@@ -560,7 +585,8 @@ bool Color::SetValue
 		std::cout << std::endl;
 #endif
 
-		Msg* msg = new Msg( "ColorCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+//		Msg* msg = new Msg( "ColorCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, false, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		Msg* msg = new Msg( "ColorCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, false);
 		msg->SetInstance( this, _value.GetID().GetInstance() );
 		msg->Append( GetNodeId() );
 		if( GetVersion() > 1)
@@ -657,7 +683,6 @@ void Color::CreateVars
 	{
 		/* XXX TODO convert this to a bitset when we implement */
 		node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, Value_Color_Channels_Capabilities, "Color Channels", "", true, false, m_capabilities, 0 );
-		node->CreateValueString( ValueID::ValueGenre_User, GetCommandClassId(), _instance, Value_Color, "Color", "#RRGGBB[WWCWAMCYPR]", false, false, "#000000", 0 );
 	}
 
 

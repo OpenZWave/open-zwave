@@ -4560,6 +4560,21 @@ string Driver::GetNodeType
 	return "Unknown";
 }
 
+
+bool Driver::IsNodeZWavePlus
+(
+		uint8 const _nodeId
+)
+{
+	LockGuard LG(m_nodeMutex);
+	if( Node* node = GetNode( _nodeId ) )
+	{
+		return node->IsNodeZWavePlus();
+	}
+	return false;
+}
+
+
 //-----------------------------------------------------------------------------
 // <Driver::GetNodeNeighbors>
 // Gets the neighbors for a node

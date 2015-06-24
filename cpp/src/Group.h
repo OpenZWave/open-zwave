@@ -84,12 +84,9 @@ namespace OpenZWave
 		void AddAssociation( uint8 const _nodeId, uint8 const _instance = 0x00 );
 		void RemoveAssociation( uint8 const _nodeId, uint8 const _instance = 0x00 );
 		void OnGroupChanged( vector<uint8> const& _associations );
-<<<<<<< HEAD
 		void OnGroupChanged( vector<InstanceAssociation> const& _associations );
 
-=======
 		void SetLabel(string const& _label){ m_label = _label; }
->>>>>>> initial version of command class AssociationGroupInfo
 	//-----------------------------------------------------------------------------
 	// Command methods (COMMAND_CLASS_ASSOCIATION_COMMAND_CONFIGURATION)
 	//-----------------------------------------------------------------------------

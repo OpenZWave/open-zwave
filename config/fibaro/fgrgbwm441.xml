@@ -10,8 +10,10 @@
 
   <!-- Fibaro Devices with firmware prior to 25.25 have a bug in the Report
   message -->
-  <CommandClass id="51" coloridxbug="true"/>                
-
+  <CommandClass id="51" coloridxbug="true" >
+	 <!--  The Fibaro doesn't report imediate color values, so we need to verify the value -->
+  	<Value type="string" genre="user" instance="1" index="0" label="Color" units="#RRGGBBWW" verify_changes="true" value="#00000000" />
+  </CommandClass>
   <!-- Fibaro devices refuse to send a Report message when color changes are done.. so manually trigger a refresh -->
   <CommandClass id="38">
 	<TriggerRefreshValue Genre="user" Index="0" Instance="1">
