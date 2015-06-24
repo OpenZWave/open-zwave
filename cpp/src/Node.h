@@ -245,7 +245,7 @@ namespace OpenZWave
 
 			bool ProtocolInfoReceived()const{ return m_protocolInfoReceived; }
 			bool NodeInfoReceived()const{ return m_nodeInfoReceived; }
-			bool NodePlusInfoReceived()const{ return m_nodePlusInfoReceived; }
+			bool IsNodeZWavePlus()const{ return m_nodePlusInfoReceived; }
 
 			bool AllQueriesCompleted()const{ return( QueryStage_Complete == m_queryStage ); }
 
