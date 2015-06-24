@@ -270,6 +270,14 @@
      </xs:restriction>
     </xs:simpleType>
    </xs:attribute>
+   <xs:attribute name='verify_changes' use='optional'>
+    <xs:simpleType>
+     <xs:restriction base='xs:string'>
+      <xs:enumeration value='true'/>
+      <xs:enumeration value='false'/>
+     </xs:restriction>
+    </xs:simpleType>
+   </xs:attribute>
    <xs:attribute name='affects' type='xs:string' use='optional'/>
    <xs:attribute name='instance' type='xs:string' use='optional'/>
   </xs:complexType>
