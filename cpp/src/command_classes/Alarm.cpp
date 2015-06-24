@@ -175,6 +175,7 @@ bool Alarm::RequestValue
 				if( Value* value = GetValue( _instance, i + 3 ) ) {
 					value->Release();
 					Msg* msg = new Msg( "AlarmCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+					msg->SetInstance( this, _instance );
 					msg->Append( GetNodeId() );
 					msg->Append( GetVersion() == 2 ? 4 : 5);
 					msg->Append( GetCommandClassId() );
