@@ -110,7 +110,7 @@ $(OBJDIR)/%.o : %.cpp
 	@$(SED) -e 's/.*://' -e 's/\\$$//' < $(DEPDIR)/$*.d.tmp | fmt -1 | \
 	  $(SED) -e 's/^ *//' -e 's/$$/:/' >> $(DEPDIR)/.$*.d;
 	@rm -f $(DEPDIR)/$*.d.tmp
-	@$(CXX) $(CFLAGS) $(INCLUDES) -o $@ $<
+	@$(CXX) $(CFLAGS) $(ARCH) $(INCLUDES) -o $@ $<
 
 
 $(OBJDIR)/%.o : %.c
@@ -121,7 +121,7 @@ $(OBJDIR)/%.o : %.c
 	@$(SED) -e 's/.*://' -e 's/\\$$//' < $(DEPDIR)/$*.d.tmp | fmt -1 | \
 	  $(SED) -e 's/^ *//' -e 's/$$/:/' >> $(DEPDIR)/.$*.d;
 	@rm -f $(DEPDIR)/$*.d.tmp
-	@$(CC) $(CFLAGS) $(INCLUDES) -o $@ $<
+	@$(CC) $(CFLAGS) $(ARCH) $(INCLUDES) -o $@ $<
 
 
 dummy := $(shell test -d $(OBJDIR) || mkdir -p $(OBJDIR))
