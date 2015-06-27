@@ -41,8 +41,48 @@ using namespace OpenZWave;
 enum SensorBinaryCmd
 {
 	SensorBinaryCmd_Get		= 0x02,
-	SensorBinaryCmd_Report		= 0x03
+	SensorBinaryCmd_Report		= 0x03,
+
+	// Version 2
+	SensorBinaryCmd_SupportedSensorGet = 0x01,
+	SensorBinaryCmd_SupportedSensorReport = 0x04
 };
+
+enum SensorBinaryType {
+	SensorBinaryType_Reserved = 0,
+	SensorBinaryType_GeneralPurpose,
+	SensorBinaryType_Smoke,
+	SensorBinaryType_CO,
+	SensorBinaryType_CO2,
+	SensorBinaryType_Heat,
+	SensorBinaryType_Water,
+	SensorBinaryType_Freeze,
+	SensorBinaryType_Tamper,
+	SensorBinaryType_Aux,
+	SensorBinaryType_DoorWindow,
+	SensorBinaryType_Tilt,
+	SensorBinaryType_Motion,
+	SensorBinaryType_GlassBreak,
+	SensorBinaryType_Count
+};
+
+static char const* c_sensorBinaryTypeNames[] = {
+	"Reserved",
+	"General purpose",
+	"Smoke",
+	"CO",
+	"CO2",
+	"Heat",
+	"Water",
+	"Freeze",
+	"Tamper",
+	"Aux",
+	"Door/Window",
+	"Tilt",
+	"Motion",
+	"Glass Break"
+};
+
 
 //-----------------------------------------------------------------------------
 // <SensorBinary::ReadXML>
@@ -114,12 +154,29 @@ bool SensorBinary::RequestState
 	Driver::MsgQueue const _queue
 )
 {
-	if( _requestFlags & RequestFlag_Dynamic )
+	bool res = false;
+	if (_requestFlags & RequestFlag_Static)
 	{
-		return RequestValue( _requestFlags, 0, _instance, _queue );
+		if( GetVersion() > 1 )
+		{
+			Msg* msg = new Msg( "SensorBinaryCmd_SupportedSensorGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+			msg->SetInstance( this, _instance );
+			msg->Append( GetNodeId() );
+			msg->Append( 2 );
+			msg->Append( GetCommandClassId() );
+			msg->Append( SensorBinaryCmd_SupportedSensorGet );
+			msg->Append( GetDriver()->GetTransmitOptions() );
+			GetDriver()->SendMsg( msg, _queue );
+			res = true;
+		}
 	}
 
-	return false;
+	if( _requestFlags & RequestFlag_Dynamic )
+	{
+		res |= RequestValue( _requestFlags, 0, _instance, _queue );
+	}
+
+	return res;
 }
 
 //-----------------------------------------------------------------------------
@@ -134,21 +191,50 @@ bool SensorBinary::RequestValue
 	Driver::MsgQueue const _queue
 )
 {
+	bool res = false;
 	if ( IsGetSupported() )
 	{
-		Msg* msg = new Msg( "SensorBinaryCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-		msg->SetInstance( this, _instance );
-		msg->Append( GetNodeId() );
-		msg->Append( 2 );
-		msg->Append( GetCommandClassId() );
-		msg->Append( SensorBinaryCmd_Get );
-		msg->Append( GetDriver()->GetTransmitOptions() );
-		GetDriver()->SendMsg( msg, _queue );
-		return true;
+		if( GetVersion() > 1 ) {
+			for( uint8 i = 0; i < SensorBinaryType_Count; i++ )
+			{
+		    	uint8 index = i;
+				if( !m_sensorsMap.empty() )
+				{	// use the (legacy) sensor map
+			    	index = m_sensorsMap[i];
+				}
+
+				if( Value* value = GetValue( _instance, index ) )
+				{
+					value->Release();
+					Msg* msg = new Msg( "SensorBinaryCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+					msg->SetInstance( this, _instance );
+					msg->Append( GetNodeId() );
+					msg->Append( 3 );
+					msg->Append( GetCommandClassId() );
+					msg->Append( SensorBinaryCmd_Get );
+					msg->Append( i );
+					msg->Append( GetDriver()->GetTransmitOptions() );
+					GetDriver()->SendMsg( msg, _queue );
+					res = true;
+				}
+			}
+		}
+		else
+		{
+			Msg* msg = new Msg( "SensorBinaryCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+			msg->SetInstance( this, _instance );
+			msg->Append( GetNodeId() );
+			msg->Append( 2 );
+			msg->Append( GetCommandClassId() );
+			msg->Append( SensorBinaryCmd_Get );
+			msg->Append( GetDriver()->GetTransmitOptions() );
+			GetDriver()->SendMsg( msg, _queue );
+			res = true;
+		}
 	} else {
 		Log::Write(  LogLevel_Info, GetNodeId(), "SensorBinaryCmd_Get Not Supported on this node");
 	}
-	return false;
+	return res;
 }
 
 //-----------------------------------------------------------------------------
@@ -164,11 +250,16 @@ bool SensorBinary::HandleMsg
 {
 	if (SensorBinaryCmd_Report == (SensorBinaryCmd)_data[0])
 	{
-	    if( _length > 2 )
+	    if( GetVersion() > 1 )
 	    {
-	        uint8 index = m_sensorsMap[_data[2]];
+	    	uint8 index = _data[2];
+			if( !m_sensorsMap.empty() )
+			{	// use the (legacy) sensor map
+		    	index = m_sensorsMap[_data[2]];
+			}
+	    	string sensor_type =  ( _data[2] < SensorBinaryType_Count ) ? c_sensorBinaryTypeNames[_data[2]] : "Unknown type";
 
-            Log::Write( LogLevel_Info, GetNodeId(), "Received SensorBinary report: Sensor:%d State=%s", _data[2], _data[1] ? "On" : "Off" );
+            Log::Write( LogLevel_Info, GetNodeId(), "Received SensorBinary report: Sensor:%s(%d) State=%s", sensor_type.c_str(), _data[2], _data[1] ? "On" : "Off" );
 
             if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, index ) ) )
             {
@@ -190,6 +281,40 @@ bool SensorBinary::HandleMsg
 
             return true;
 	    }
+	}
+	else if( SensorBinaryCmd_SupportedSensorReport == (SensorBinaryCmd)_data[0] ) {
+		Log::Write( LogLevel_Info, GetNodeId(), "Received SensorBinaryCmd_SupportedSensorReport from node %d", GetNodeId() );
+
+		// the configuration contains a (legacy)sensor map. Do not use the sensor auto discovery.
+		if( !m_sensorsMap.empty() )
+		{
+			return true;
+		}
+
+		if( Node* node = GetNodeUnsafe() )
+		{
+			// Parse the data for the supported sensor types
+			for( uint8 i = 1; i <= ( _length - 2 ); i++ )
+			{
+				for( uint8 j = 0; j < 8; j++ )
+				{
+					if( _data[i] & ( 1 << j ) )
+					{
+						uint8 index = ( ( i - 1 ) * 8 ) + j;
+						if( index < SensorBinaryType_Count )
+						{
+							node->CreateValueBool(  ValueID::ValueGenre_User, GetCommandClassId(), _instance, index, c_sensorBinaryTypeNames[index], "", true, false, false, 0  );
+							Log::Write( LogLevel_Info, GetNodeId(), "    Added sensor type: %s", c_sensorBinaryTypeNames[index] );
+						}
+						else
+						{
+							Log::Write( LogLevel_Info, GetNodeId(), "    Unknown sensor type: %d", index );
+						}
+					}
+				}
+			}
+		}
+		return true;
 	}
 
 	return false;
