@@ -71,6 +71,7 @@ namespace OpenZWave
 			friend class Alarm;
 			friend class Association;
 			friend class AssociationCommandConfiguration;
+			friend class AssociationGroupInfo;
 			friend class Basic;
 			friend class Battery;
 			friend class ClimateControlSchedule;
@@ -144,6 +145,7 @@ namespace OpenZWave
 				QueryStage_ManufacturerSpecific2,			/**< Retrieve manufacturer name and product ids */
 				QueryStage_Versions,					/**< Retrieve version information */
 				QueryStage_Instances,					/**< Retrieve information about multiple command class instances */
+				QueryStage_Groups,					/**< Retrieve information about number of groups */
 				QueryStage_Static,					/**< Retrieve static information (doesn't change) */
 				QueryStage_Probe1,					/**< Ping a device upon starting with configuration */
 				QueryStage_Associations,				/**< Retrieve information about associations */

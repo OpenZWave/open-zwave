@@ -43,6 +43,7 @@
 #include "command_classes/CommandClasses.h"
 #include "command_classes/CommandClass.h"
 #include "command_classes/Association.h"
+#include "command_classes/AssociationGroupInfo.h"
 #include "command_classes/Basic.h"
 #include "command_classes/Configuration.h"
 #include "command_classes/ControllerReplication.h"
@@ -98,6 +99,7 @@ static char const* c_queryStageNames[] =
 		"ManufacturerSpecific2",
 		"Versions",
 		"Instances",
+		"Groups",
 		"Static",
 		"Probe1",
 		"Associations",
@@ -516,13 +518,31 @@ void Node::AdvanceQueries
 				// when done, advance to the Static stage
 				if( !m_queryPending )
 				{
-					m_queryStage = QueryStage_Static;
+					m_queryStage = QueryStage_Groups;
 					m_queryRetries = 0;
 
 					Log::Write( LogLevel_Info, m_nodeId, "Essential node queries are complete" );
 					Notification* notification = new Notification( Notification::Type_EssentialNodeQueriesComplete );
 					notification->SetHomeAndNodeIds( m_homeId, m_nodeId );
 					GetDriver()->QueueNotification( notification );
+				}
+				break;
+			}
+			case QueryStage_Groups:
+			{
+				// if the device at this node supports associatons obtain the number of groups
+				Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_Groups" );
+				if( Association* cc = static_cast<Association*>( GetCommandClass( Association::StaticGetCommandClassId() ) ) )
+				{
+					cc->RequestState( CommandClass::RequestFlag_Static, 1, Driver::MsgQueue_Query );
+					m_queryPending = true;
+					addQSC = true;
+				}
+				else
+				{
+					// if this device doesn't support Associations, move to retrieve Session information
+					m_queryStage = QueryStage_Static;
+					m_queryRetries = 0;
 				}
 				break;
 			}
@@ -1425,7 +1445,6 @@ void Node::SetProtocolInfo
 
 	if( ProtocolInfoReceived() || m_basicprotocolInfoReceived == true )
 	{
-		std::cout << "proto already recieved" << std::endl;
 		// We already have this info
 		return;
 	}

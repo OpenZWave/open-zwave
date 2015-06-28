@@ -3,6 +3,7 @@
 <Options xmlns='http://code.google.com/p/open-zwave/'>
   <Option name="logging" value="true" />
   <Option name="Associate" value="true" />
+  <Option name="AssociateCC" value="0x5A,0x80" />
   <Option name="NotifyTransactions" value="false" />
   <Option name="DriverMaxAttempts" value="5" />
   <Option name="SaveConfiguration" value="true" />

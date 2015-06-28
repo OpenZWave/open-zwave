@@ -50,13 +50,14 @@ namespace OpenZWave
 	{
 		friend class Node;
 		friend class Association;
+		friend class AssociationGroupInfo;
 		friend class MultiInstanceAssociation;
 
 	//-----------------------------------------------------------------------------
 	// Construction
 	//-----------------------------------------------------------------------------
 	public:
-		Group( uint32 const _homeId, uint8 const _nodeId, uint8 const _groupIdx, uint8 const _maxAssociations );
+		Group( uint32 const _homeId, uint8 const _nodeId, uint8 const _groupIdx, uint8 const _maxAssociations, string const* _label=NULL );
 		Group( uint32 const _homeId, uint8 const _nodeId, TiXmlElement const* _valueElement );
 		~Group(){}
 
@@ -83,6 +84,7 @@ namespace OpenZWave
 		void AddAssociation( uint8 const _nodeId, uint8 const _instance = 0x00 );
 		void RemoveAssociation( uint8 const _nodeId, uint8 const _instance = 0x00 );
 		void OnGroupChanged( vector<uint8> const& _associations );
+		void SetLabel(string const& _label){ m_label = _label; }
 		void OnGroupChanged( vector<InstanceAssociation> const& _associations );
 
 	//-----------------------------------------------------------------------------
@@ -111,6 +113,15 @@ namespace OpenZWave
 		};
 
 	//-----------------------------------------------------------------------------
+	// Command methods (COMMAND_CLASS_ASSOCIATION_GROUP_INFO)
+	//-----------------------------------------------------------------------------
+	public:
+		uint16 GetProfile()const{ return m_profile; }
+
+	private:
+		void SetProfile(uint16 const _profile ){ m_profile = _profile; }
+
+	//-----------------------------------------------------------------------------
 	// Member variables
 	//-----------------------------------------------------------------------------
 	private:
@@ -122,6 +133,9 @@ namespace OpenZWave
 		bool								m_auto;				// If true, the controller will automatically be associated with the group
 		bool								m_multiInstance;    // If true, the group is MultiInstance capable
 		map<InstanceAssociation,AssociationCommandVec,classcomp>	m_associations;
+
+		// ZWave+ info
+		uint16								m_profile;
 	};
 
 } //namespace OpenZWave

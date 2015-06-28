@@ -34,6 +34,7 @@
 #include "Options.h"
 #include "command_classes/Association.h"
 #include "command_classes/AssociationCommandConfiguration.h"
+#include "command_classes/AssociationGroupInfo.h"
 #include "command_classes/MultiInstanceAssociation.h"
 #include "platform/Log.h"
 
@@ -51,18 +52,27 @@ Group::Group
 	uint32 const _homeId,
 	uint8 const _nodeId,
 	uint8 const _groupIdx,
-	uint8 const _maxAssociations
+	uint8 const _maxAssociations,
+	string const* _label
 ):
 	m_homeId( _homeId ),
 	m_nodeId( _nodeId ),
 	m_groupIdx( _groupIdx ),
 	m_maxAssociations( _maxAssociations ),
 	m_auto( false ),
-        m_multiInstance( false )
+	m_multiInstance( false ),
+	m_profile( 0 )
 {
-	char str[16];
-	snprintf( str, sizeof(str), "Group %d", m_groupIdx );
-	m_label = str;
+	if( _label == NULL )
+	{
+		char str[16];
+		snprintf( str, sizeof(str), "Group %d", m_groupIdx );
+		m_label = str;
+	}
+	else
+	{
+		m_label = _label->c_str();
+	}
 
 	// Auto-association by default is with group 1 or 255, with group 1 taking precedence.
 	// Group 255 is always created first, so if this is group 1, we need to turn off the
@@ -105,7 +115,8 @@ Group::Group
 	m_groupIdx( 0 ),
 	m_maxAssociations( 0 ),
 	m_auto( false ),
-	m_multiInstance( false )
+	m_multiInstance( false ),
+	m_profile( 0 )
 {
 	int intVal;
 	char const* str;
@@ -137,6 +148,11 @@ Group::Group
 	if( str )
 	{
 		m_multiInstance = !strcmp( str, "true" );
+	}
+
+	if( TIXML_SUCCESS == _groupElement->QueryIntAttribute( "profile", &intVal ) )
+	{
+		m_profile = (uint16)intVal;
 	}
 		
 	// Read the associations for this group
@@ -194,6 +210,12 @@ void Group::WriteXML
 		_groupElement->SetAttribute( "multiInstance", m_multiInstance ? "true" : "false" );
 	}
 	
+	if( m_profile != 0 )
+	{
+		snprintf( str, 16, "%d", m_profile );
+		_groupElement->SetAttribute( "profile", str );
+	}
+
 	for( map<InstanceAssociation,AssociationCommandVec,classcomp>::iterator it = m_associations.begin(); it != m_associations.end(); ++it )
 	{
 		TiXmlElement* associationElement = new TiXmlElement( "Node" );
