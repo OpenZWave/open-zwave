@@ -34,6 +34,9 @@
 #include "Group.h"
 #include "Driver.h"
 #include "platform/Log.h"
+#include "Options.h"
+#include "Utils.h"
+#include <map>
 
 using namespace OpenZWave;
 
@@ -75,7 +78,38 @@ AssociationGroupInfo::AssociationGroupInfo
 ):
 	CommandClass( _homeId, _nodeId )
 {
+	string associateCC;
+	Options::Get()->GetOptionAsString("AssociateCC", &associateCC );
+	vector<string> elems;
+	OpenZWave::split(elems, associateCC, ",", true);
+	unsigned int cc;
+	for (std::vector<std::string>::iterator it = elems.begin(); it != elems.end(); it++)
+	{
+		if (sscanf(OpenZWave::trim(*it).c_str(), "%x", &cc))
+		{
+			m_autoAssociateCCs[(cc & 0xFF)] = (cc & 0xFF);
+		}
+	}
 }
+
+//-----------------------------------------------------------------------------
+// <AssociationGroupInfo::IsAutoAssociateCC>
+// Does the CommandClass require auto association
+//-----------------------------------------------------------------------------
+bool const AssociationGroupInfo::IsAutoAssociateCC
+(
+	uint8 const _cc
+)
+{
+	map<uint8,uint8>::const_iterator it = m_autoAssociateCCs.find( _cc );
+	if( it != m_autoAssociateCCs.end() )
+	{
+		return true;
+	}
+
+	return false;
+}
+
 
 //-----------------------------------------------------------------------------
 // <AssociationGroupInfo::RequestState>
@@ -312,7 +346,8 @@ bool AssociationGroupInfo::HandleMsg
 			// list the CommandClasses and commands that will be send to the associated nodes in this group.
 			// for now just log it, later this could be used auto associate to the group
 			// ie always associate when we find a battery command class
-			Log::Write( LogLevel_Info, GetNodeId()," Supported Command classes and commands for group:%d  :", _data[1]);  
+			Log::Write( LogLevel_Info, GetNodeId()," Supported Command classes and commands for group:%d  :", _data[1]);
+			bool autoAssociate = false;
 			for( uint8 i=0; i<_data[2]; i+=2)
 			{
 				// check if this node actually supports this Command Class
@@ -324,9 +359,17 @@ bool AssociationGroupInfo::HandleMsg
 				{
 					Log::Write( LogLevel_Info, GetNodeId(), "    unsupported 0x%.2x 0x%.2x", _data[i+3], _data[i+4] );
 				}
+				autoAssociate |= IsAutoAssociateCC( _data[i+3] );
+			}
+			if( Group* group = node->GetGroup(  _data[1] ) )
+			{
+				if ( autoAssociate )
+				{
+					group->SetAuto( true );
+					Log::Write( LogLevel_Info, GetNodeId(), " Marking group for auto subscription");
+				}
 			}
 		}
-
 		return true;
 	}
 	return false;

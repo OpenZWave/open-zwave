@@ -29,6 +29,7 @@
 #define _AssociationGroupInfo_H
 
 #include "command_classes/CommandClass.h"
+#include <map>
 
 namespace OpenZWave
 {
@@ -58,6 +59,11 @@ namespace OpenZWave
 		void GetGroupName( uint8 const _groupIdx );
 		void GetGroupInfo( uint8 const _groupIdx );
 		void GetGroupCmdInfo( uint8 const _groupIdx );
+
+		bool const IsAutoAssociateCC( uint8 const _cc );
+
+		map<uint8,uint8> m_autoAssociateCCs;
+
 	};
 
 } // namespace OpenZWave
