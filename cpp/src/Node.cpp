@@ -1425,7 +1425,6 @@ void Node::SetProtocolInfo
 
 	if( ProtocolInfoReceived() || m_basicprotocolInfoReceived == true )
 	{
-		std::cout << "proto already recieved" << std::endl;
 		// We already have this info
 		return;
 	}
@@ -1809,11 +1808,25 @@ void Node::SetLocation
 //-----------------------------------------------------------------------------
 void Node::ApplicationCommandHandler
 (
-		uint8 const* _data
+		uint8 const* _data,
+		bool encrypted
+
 )
 {
 	if( CommandClass* pCommandClass = GetCommandClass( _data[5] ) )
 	{
+		if (pCommandClass->IsSecured() && !encrypted) {
+			Log::Write( LogLevel_Warning, m_nodeId, "Recieved a Clear Text Message for the CommandClass %s which is Secured", pCommandClass->GetCommandClassName().c_str());
+			bool drop = true;
+			Options::Get()->GetOptionAsBool("EnforceSecureReception", &drop);
+			if (drop) {
+				Log::Write( LogLevel_Warning, m_nodeId, "   Dropping Message");
+				return;
+			} else {
+				Log::Write( LogLevel_Warning, m_nodeId, "   Allowing Message (EnforceSecureReception is not set)");
+			}
+		}
+
 		pCommandClass->ReceivedCntIncr();
 		pCommandClass->HandleMsg( &_data[6], _data[4] );
 	}

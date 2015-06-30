@@ -26,23 +26,26 @@ DISTFILES =	.gitignore \
 	config/act/zir010.xml \
 	config/act/zrp110.xml \
 	config/act/zrw103.xml \
-	config/aeon_labs/alms.xml \
-	config/aeon_labs/doorwindow.xml \
-	config/aeon_labs/dsd31.xml \
-	config/aeon_labs/hdss_gen5.xml \
-	config/aeon_labs/hem.xml \
-	config/aeon_labs/hemg2.xml \
-	config/aeon_labs/keyfob.xml \
-	config/aeon_labs/keyfob2.xml \
-	config/aeon_labs/minimote.xml \
-	config/aeon_labs/msesv2.xml \
-	config/aeon_labs/multisensor_gen5.xml \
-	config/aeon_labs/panicbtn.xml \
-	config/aeon_labs/recessed_doorsensor.xml \
-	config/aeon_labs/recessed_doorsensor_gen5.xml \
-	config/aeon_labs/ses.xml \
-	config/aeon_labs/ses2.xml \
-	config/aeon_labs/watersensor.xml \
+	config/aeotec/alms.xml \
+	config/aeotec/doorwindow.xml \
+	config/aeotec/dsd31.xml \
+	config/aeotec/hdss_gen5.xml \
+	config/aeotec/hem.xml \
+	config/aeotec/hemg2.xml \
+	config/aeotec/keyfob.xml \
+	config/aeotec/keyfob2.xml \
+	config/aeotec/ledbulb.xml \
+	config/aeotec/minimote.xml \
+	config/aeotec/msesv2.xml \
+	config/aeotec/multisensor6.xml \
+	config/aeotec/multisensor_gen5.xml \
+	config/aeotec/panicbtn.xml \
+	config/aeotec/recessed_doorsensor.xml \
+	config/aeotec/recessed_doorsensor_gen5.xml \
+	config/aeotec/ses.xml \
+	config/aeotec/ses2.xml \
+	config/aeotec/ss6.xml \
+	config/aeotec/watersensor.xml \
 	config/assa_abloy/RealLivingCapTouch.xml \
 	config/cooper/RF9505-T.xml \
 	config/cooper/RF9540-N.xml \
@@ -55,6 +58,7 @@ DISTFILES =	.gitignore \
 	config/duwi/ZWES1000.xml \
 	config/duwi/ZWESJ300.xml \
 	config/eurotronic/eur_stellaz.xml \
+	config/everspring/ad147.xml \
 	config/everspring/an145.xml \
 	config/everspring/an158.xml \
 	config/everspring/se812.xml \
@@ -78,7 +82,9 @@ DISTFILES =	.gitignore \
 	config/fibaro/fgrgbwm441.xml \
 	config/fibaro/fgrm222.xml \
 	config/fibaro/fgs211.xml \
+	config/fibaro/fgs212.xml \
 	config/fibaro/fgs221.xml \
+	config/fibaro/fgs222.xml \
 	config/fibaro/fgsd002.xml \
 	config/fibaro/fgss101.xml \
 	config/fibaro/fgwpe.xml \
