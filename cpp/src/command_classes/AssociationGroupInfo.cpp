@@ -365,8 +365,13 @@ bool AssociationGroupInfo::HandleMsg
 			{
 				if ( autoAssociate )
 				{
-					group->SetAuto( true );
-					Log::Write( LogLevel_Info, GetNodeId(), " Marking group for auto subscription");
+					if( !group->IsAuto() )
+					{
+						Log::Write( LogLevel_Info, GetNodeId(), "  Group is candidate for (auto) subscription");
+						// hold of on marking the group for auto subscription until we know if we need to rework
+						// the auto subscription based on group 1.
+						// group->SetAuto( true );
+					}
 				}
 			}
 		}
