@@ -396,7 +396,7 @@ namespace OpenZWave
 			 * \see CommandClass, m_commandClassMap
 			 */
 			CommandClass* GetCommandClass( uint8 const _commandClassId )const;
-			void ApplicationCommandHandler( uint8 const* _data );
+			void ApplicationCommandHandler( uint8 const* _data, bool encrypted );
 
 			/**
 			 * This function sets up Secured Command Classes. It iterates over the existing command classes marking them
