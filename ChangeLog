@@ -164,6 +164,19 @@ Version 1.3
  - Fixed issue #568 - Compile Error on new OSX (Justin)
  - Update the device_classes.xml with the latest known mappings (Justin)
  - Enable NWI when adding nodes if HighPower is also enabled (Justin)
+ - Pull Request #596 - Aeotec Z-Stick Gen5 and GE 12722 on/Off Relay from
+   SpudGunMan (Justin)
+ - Pull Request #595 - Aeotec Smart Switch Gen5 Config Updates from Gert
+   Boer and Nechry (Justin)
+ - Pull Request #594 - Aeotec Minimote Config Updates from Nechry (Justin)
+ - Update Aeon Labs to Aeotec as thats their Retail name (Justin)
+ - Pull Request #598 - Update Config Files for Fibaro FGS212 and FGS222 from
+   Nechry (Justin)
+ - If we recieve a cleartext message for a Secured CommandClass, drop the
+   message (Configurable - Set EnforceSecureReception to false in
+   options.xml) (Justin)
+ - Add Aeotec LED Bulb, MultiSensor 6 and SmartSwitch 6 Configs (Justin)
+ - Add Aeotec DSC24 identification and Everspring AD147 identification + config
 
 Version 1.2 
  - Released on 15/10/14

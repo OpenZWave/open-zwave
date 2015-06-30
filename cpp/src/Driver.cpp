@@ -1756,6 +1756,7 @@ void Driver::ProcessMsg
 )
 {
 	bool handleCallback = true;
+	bool wasencrypted = false;
 	//uint8 nodeId = GetNodeNumber( m_currentMsg );
 
 	if ((REQUEST == _data[0]) &&
@@ -1838,6 +1839,7 @@ void Driver::ProcessMsg
 					}
 					SendNonceKey(_data[3], _nonce);
 				}
+				wasencrypted = true;
 
 			} else {
 				/* it failed for some reason, lets just move on */
@@ -2086,7 +2088,7 @@ void Driver::ProcessMsg
 			case FUNC_ID_APPLICATION_COMMAND_HANDLER:
 			{
 				Log::Write( LogLevel_Detail, "" );
-				HandleApplicationCommandHandlerRequest( _data );
+				HandleApplicationCommandHandlerRequest( _data, wasencrypted );
 				break;
 			}
 			case FUNC_ID_ZW_SEND_DATA:
@@ -3393,7 +3395,8 @@ void Driver::HandleReplaceFailedNodeRequest
 //-----------------------------------------------------------------------------
 void Driver::HandleApplicationCommandHandlerRequest
 (
-		uint8* _data
+		uint8* _data,
+		bool encrypted
 )
 {
 
@@ -3470,7 +3473,7 @@ void Driver::HandleApplicationCommandHandlerRequest
 		// Allow the node to handle the message itself
 		if( node != NULL )
 		{
-			node->ApplicationCommandHandler( _data );
+			node->ApplicationCommandHandler( _data, encrypted );
 		}
 	}
 }
@@ -5102,7 +5105,10 @@ void Driver::DoControllerCommand
 			{
 				Log::Write( LogLevel_Info, 0, "Add Device" );
 				Msg* msg = new Msg( "AddDevice", 0xff, REQUEST, FUNC_ID_ZW_ADD_NODE_TO_NETWORK, true );
-				msg->Append( m_currentControllerCommand->m_highPower ? ADD_NODE_ANY | OPTION_HIGH_POWER | OPTION_NWI : ADD_NODE_ANY );
+				uint8 options = ADD_NODE_ANY;
+				if (m_currentControllerCommand->m_highPower) options |= OPTION_HIGH_POWER;
+				if (IsAPICallSupported(FUNC_ID_ZW_EXPLORE_REQUEST_INCLUSION)) options |= OPTION_NWI;
+				msg->Append( options);
 				SendMsg( msg, MsgQueue_Command );
 			}
 			break;
