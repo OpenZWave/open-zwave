@@ -1744,7 +1744,7 @@ void Node::ApplicationCommandHandler
 {
 	if( CommandClass* pCommandClass = GetCommandClass( _data[5] ) )
 	{
-		if (pCommandClass->IsSecured() && encrypted) {
+		if (pCommandClass->IsSecured() && !encrypted) {
 			Log::Write( LogLevel_Warning, m_nodeId, "Recieved a Clear Text Message for the CommandClass %s which is Secured", pCommandClass->GetCommandClassName().c_str());
 			bool drop = true;
 			Options::Get()->GetOptionAsBool("EnforceSecureReception", &drop);
