@@ -34,8 +34,8 @@ include $(top_srcdir)/cpp/build/support.mk
 
 #if we are on a Mac, add these flags and libs to the compile and link phases 
 ifeq ($(UNAME),Darwin)
-CFLAGS += -DDARWIN -arch i386 -arch x86_64
-LDFLAGS += -arch i386 -arch x86_64
+CFLAGS += -DDARWIN
+ARCH += -arch i386 -arch x86_64
 endif
 
 # Dup from main makefile, but that is not included when building here..
@@ -49,7 +49,7 @@ endif
 
 $(OBJDIR)/MinOZW:	$(patsubst %.cpp,$(OBJDIR)/%.o,$(minozwsrc))
 	@echo "Linking $(OBJDIR)/MinOZW"
-	$(LD) $(LDFLAGS) -o $@ $< $(LIBS) -pthread
+	$(LD) $(LDFLAGS) $(ARCH) -o $@ $< $(LIBS) -pthread
 
 $(top_builddir)/MinOZW: $(top_srcdir)/cpp/examples/MinOZW/MinOZW.in $(OBJDIR)/MinOZW
 	@echo "Creating Temporary Shell Launch Script"

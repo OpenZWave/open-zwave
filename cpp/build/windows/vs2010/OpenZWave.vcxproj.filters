@@ -309,6 +309,9 @@
     <ClInclude Include="..\..\..\src\command_classes\UserCode.h">
       <Filter>Command Classes</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\command_classes\ZWavePlusInfo.h">
+      <Filter>Command Classes</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\value_classes\ValueRaw.h">
       <Filter>Value Classes</Filter>
     </ClInclude>
@@ -630,6 +633,9 @@
       <Filter>Value Classes</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\command_classes\UserCode.cpp">
+      <Filter>Command Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\command_classes\ZWavePlusInfo.cpp">
       <Filter>Command Classes</Filter>
     </ClCompile>
     <ClCompile Include="..\winversion.cpp">
