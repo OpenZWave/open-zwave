@@ -1151,6 +1151,13 @@ bool Driver::WriteMsg
 			// That's it - already tried to send GetMaxSendAttempt() times.
 			Log::Write( LogLevel_Error, nodeId, "ERROR: Dropping command, expected response not received after %d attempt(s)", m_currentMsg->GetMaxSendAttempts() );
 		}
+		if( m_currentControllerCommand != NULL )
+		{
+			/* its a ControllerCommand that is failed */
+			UpdateControllerState( ControllerState_Error, ControllerError_Failed);
+
+		}
+
 		RemoveCurrentMsg();
 		m_dropped++;
 		return false;
