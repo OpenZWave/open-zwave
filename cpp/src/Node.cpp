@@ -56,6 +56,7 @@
 #include "command_classes/Version.h"
 #include "command_classes/SwitchAll.h"
 #include "command_classes/ZWavePlusInfo.h"
+#include "command_classes/DeviceResetLocally.h"
 
 #include "Scene.h"
 
@@ -3477,3 +3478,16 @@ string Node::GetNodeTypeString() {
 	return "";
 }
 
+//-----------------------------------------------------------------------------
+// <Node::GetRoleTypeString>
+// Get the ZWave+ NodeType as a String
+//-----------------------------------------------------------------------------
+bool Node::IsNodeReset()
+{
+	DeviceResetLocally *drl = static_cast<DeviceResetLocally *>(GetCommandClass(DeviceResetLocally::StaticGetCommandClassId()));
+	if (drl)
+		return drl->IsDeviceReset();
+	else return false;
+
+
+}
