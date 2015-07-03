@@ -2804,6 +2804,10 @@ void Driver::HandleIsFailedNodeResponse
 	{
 		Log::Write( LogLevel_Warning, nodeId, "WARNING: Received reply to FUNC_ID_ZW_IS_FAILED_NODE_ID - node %d failed", nodeId );
 		state = ControllerState_NodeFailed;
+		if( Node* node = GetNodeUnsafe( nodeId ) )
+		{
+			node->SetNodeAlive( false );
+		}
 	}
 	else
 	{
@@ -2923,8 +2927,6 @@ void Driver::HandleSendDataRequest
 		// Wrong callback ID
 		m_callbacks++;
 		Log::Write( LogLevel_Warning, nodeId, "WARNING: Unexpected Callback ID received" );
-	} else if (_data[2] > 0 && _data[2] < 10) {
-		return;
 	} else {
 		Node* node = GetNodeUnsafe( nodeId );
 		if( node != NULL )
