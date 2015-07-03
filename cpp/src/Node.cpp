@@ -945,7 +945,7 @@ void Node::ReadXML
 
 	if( TIXML_SUCCESS == _node->QueryIntAttribute( "devicetype", &intVal ) )
 	{
-		m_deviceType = (uint8)intVal;
+		m_deviceType = (uint16)intVal;
 		m_nodePlusInfoReceived = true;
 	}
 
@@ -2979,6 +2979,12 @@ bool Node::SetPlusDeviceClasses
 	{
 		return false; // already set
 	}
+
+	if( !s_deviceClassesLoaded )
+	{
+		ReadDeviceClasses();
+	}
+
 	m_nodePlusInfoReceived = true;
 	m_role = _role;
 	m_deviceType = _deviceType;
@@ -3423,6 +3429,11 @@ uint8 *Node::GetNonceKey(uint32 nonceid) {
 // Get the ZWave+ DeviceType as a String
 //-----------------------------------------------------------------------------
 string Node::GetDeviceTypeString() {
+
+	if( !s_deviceClassesLoaded )
+	{
+		ReadDeviceClasses();
+	}
 	map<uint16,DeviceClass*>::iterator nit = s_deviceTypeClasses.find( m_deviceType );
 	if (nit != s_deviceTypeClasses.end())
 	{
@@ -3436,6 +3447,10 @@ string Node::GetDeviceTypeString() {
 // Get the ZWave+ RoleType as a String
 //-----------------------------------------------------------------------------
 string Node::GetRoleTypeString() {
+	if( !s_deviceClassesLoaded )
+	{
+		ReadDeviceClasses();
+	}
 	map<uint8,DeviceClass*>::iterator nit = s_roleDeviceClasses.find( m_role );
 	if (nit != s_roleDeviceClasses.end())
 	{
@@ -3449,6 +3464,10 @@ string Node::GetRoleTypeString() {
 // Get the ZWave+ NodeType as a String
 //-----------------------------------------------------------------------------
 string Node::GetNodeTypeString() {
+	if( !s_deviceClassesLoaded )
+	{
+		ReadDeviceClasses();
+	}
 	map<uint8,DeviceClass*>::iterator nit = s_nodeTypes.find( m_nodeType );
 	if (nit != s_nodeTypes.end())
 	{
