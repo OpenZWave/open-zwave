@@ -223,6 +223,9 @@ string Notification::GetAsString() {
 					break;
 			}
 			break;
+			case Type_NodeReset:
+				str = "Node Reset";
+				break;
 	}
 	return str;
 

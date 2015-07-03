@@ -67,8 +67,8 @@ bool DeviceResetLocally::HandleMsg
 		}
 		// the Controller now knows the node has failed
 		Manager::Get()->HasNodeFailed( GetHomeId(), GetNodeId() );
-		// we are ready to remove the node
-		Manager::Get()->RemoveFailedNode( GetHomeId(), GetNodeId() );
+		m_deviceReset = true;
+
 		return true;
 	}
 	return false;
