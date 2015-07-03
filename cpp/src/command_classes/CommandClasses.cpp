@@ -41,9 +41,11 @@ using namespace OpenZWave;
 #include "command_classes/CentralScene.h"
 #include "command_classes/ClimateControlSchedule.h"
 #include "command_classes/Clock.h"
+#include "command_classes/Color.h"
 #include "command_classes/Configuration.h"
 #include "command_classes/ControllerReplication.h"
 #include "command_classes/CRC16Encap.h"
+#include "command_classes/DeviceResetLocally.h"
 #include "command_classes/DoorLock.h"
 #include "command_classes/DoorLockLogging.h"
 #include "command_classes/EnergyProduction.h"
@@ -81,6 +83,7 @@ using namespace OpenZWave;
 #include "command_classes/UserCode.h"
 #include "command_classes/Version.h"
 #include "command_classes/WakeUp.h"
+#include "command_classes/ZWavePlusInfo.h"
 
 #include "value_classes/ValueBool.h"
 #include "value_classes/ValueButton.h"
@@ -190,9 +193,11 @@ void CommandClasses::RegisterCommandClasses
 	cc.Register( CentralScene::StaticGetCommandClassId(), CentralScene::StaticGetCommandClassName(), CentralScene::Create );
 	cc.Register( ClimateControlSchedule::StaticGetCommandClassId(), ClimateControlSchedule::StaticGetCommandClassName(), ClimateControlSchedule::Create );
 	cc.Register( Clock::StaticGetCommandClassId(), Clock::StaticGetCommandClassName(), Clock::Create );
+	cc.Register( Color::StaticGetCommandClassId(), Color::StaticGetCommandClassName(), Color::Create );
 	cc.Register( Configuration::StaticGetCommandClassId(), Configuration::StaticGetCommandClassName(), Configuration::Create );
 	cc.Register( ControllerReplication::StaticGetCommandClassId(), ControllerReplication::StaticGetCommandClassName(), ControllerReplication::Create );
 	cc.Register( CRC16Encap::StaticGetCommandClassId(), CRC16Encap::StaticGetCommandClassName(), CRC16Encap::Create );
+	cc.Register( DeviceResetLocally::StaticGetCommandClassId(), DeviceResetLocally::StaticGetCommandClassName(), DeviceResetLocally::Create );
 	cc.Register( DoorLock::StaticGetCommandClassId(), DoorLock::StaticGetCommandClassName(), DoorLock::Create );
 	cc.Register( DoorLockLogging::StaticGetCommandClassId(), DoorLockLogging::StaticGetCommandClassName(), DoorLockLogging::Create);
 	cc.Register( EnergyProduction::StaticGetCommandClassId(), EnergyProduction::StaticGetCommandClassName(), EnergyProduction::Create );
@@ -230,6 +235,7 @@ void CommandClasses::RegisterCommandClasses
 	cc.Register( UserCode::StaticGetCommandClassId(), UserCode::StaticGetCommandClassName(), UserCode::Create );
 	cc.Register( Version::StaticGetCommandClassId(), Version::StaticGetCommandClassName(), Version::Create );
 	cc.Register( WakeUp::StaticGetCommandClassId(), WakeUp::StaticGetCommandClassName(), WakeUp::Create );
+	cc.Register( ZWavePlusInfo::StaticGetCommandClassId(), ZWavePlusInfo::StaticGetCommandClassName(), ZWavePlusInfo::Create );
 
 	// Now all the command classes have been registered, we can modify the
 	// supported command classes array according to the program options.

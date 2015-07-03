@@ -2806,7 +2806,18 @@ void Driver::HandleIsFailedNodeResponse
 		state = ControllerState_NodeFailed;
 		if( Node* node = GetNodeUnsafe( nodeId ) )
 		{
-			node->SetNodeAlive( false );
+			if (node->IsNodeReset()) {
+				/* a DeviceReset has Occured. Remove the Node */
+				if (!BeginControllerCommand(Driver::ControllerCommand_RemoveFailedNode, NULL, NULL, true, nodeId, 0))
+					Log::Write(LogLevel_Warning, nodeId, "RemoveFailedNode for DeviceResetLocally Command Failed");
+
+				Notification* notification = new Notification( Notification::Type_NodeReset );
+				notification->SetHomeAndNodeIds( m_homeId, nodeId );
+				QueueNotification( notification );
+				state = ControllerState_Completed;
+			} else {
+				node->SetNodeAlive( false );
+			}
 		}
 	}
 	else
@@ -4572,6 +4583,21 @@ string Driver::GetNodeType
 	return "Unknown";
 }
 
+
+bool Driver::IsNodeZWavePlus
+(
+		uint8 const _nodeId
+)
+{
+	LockGuard LG(m_nodeMutex);
+	if( Node* node = GetNode( _nodeId ) )
+	{
+		return node->IsNodeZWavePlus();
+	}
+	return false;
+}
+
+
 //-----------------------------------------------------------------------------
 // <Driver::GetNodeNeighbors>
 // Gets the neighbors for a node
@@ -4724,6 +4750,120 @@ string Driver::GetNodeProductId
 
 	return "";
 }
+
+//-----------------------------------------------------------------------------
+// <Driver::GetNodeDeviceType>
+// Get the node device type as reported in the Z-Wave+ Info report.
+//-----------------------------------------------------------------------------
+uint16 Driver::GetNodeDeviceType
+(
+		uint8 const _nodeId
+)
+{
+	LockGuard LG(m_nodeMutex);
+	if( Node* node = GetNode( _nodeId ) )
+	{
+		return node->GetDeviceType();
+	}
+
+	return 0x00; // unknown
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::GetNodeDeviceTypeString>
+// Get the node DeviceType as a string as reported in the Z-Wave+ Info report.
+//-----------------------------------------------------------------------------
+
+string Driver::GetNodeDeviceTypeString
+(
+		uint8 const _nodeId
+)
+{
+
+	LockGuard LG(m_nodeMutex);
+	if( Node* node = GetNode( _nodeId ) )
+	{
+		return node->GetDeviceTypeString();
+	}
+
+	return ""; // unknown
+}
+
+
+
+//-----------------------------------------------------------------------------
+// <Driver::GetNodeRole>
+// Get the node role as reported in the Z-Wave+ Info report.
+//-----------------------------------------------------------------------------
+uint8 Driver::GetNodeRole
+(
+		uint8 const _nodeId
+)
+{
+	LockGuard LG(m_nodeMutex);
+	if( Node* node = GetNode( _nodeId ) )
+	{
+		return node->GetRoleType();
+	}
+
+	return 0x00; // unknown
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::GetNodeRoleString>
+// Get the node role as a string as reported in the Z-Wave+ Info report.
+//-----------------------------------------------------------------------------
+string Driver::GetNodeRoleString
+(
+		uint8 const _nodeId
+)
+{
+	LockGuard LG(m_nodeMutex);
+	if( Node* node = GetNode( _nodeId ) )
+	{
+		return node->GetRoleTypeString();
+	}
+
+	return ""; // unknown
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::GetNodePlusType>
+// Get the node role as a string as reported in the Z-Wave+ Info report.
+//-----------------------------------------------------------------------------
+uint8 Driver::GetNodePlusType
+(
+		uint8 const _nodeId
+)
+{
+	LockGuard LG(m_nodeMutex);
+	if( Node* node = GetNode( _nodeId ) )
+	{
+		return node->GetNodeType();
+	}
+	return 0x00; // unknown
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::GetNodePlusTypeString>
+// Get the node role as a string as reported in the Z-Wave+ Info report.
+//-----------------------------------------------------------------------------
+string Driver::GetNodePlusTypeString
+(
+		uint8 const _nodeId
+)
+{
+	LockGuard LG(m_nodeMutex);
+	if( Node* node = GetNode( _nodeId ) )
+	{
+		return node->GetNodeTypeString();
+	}
+	return ""; // unknown
+}
+
+
+
+
 
 //-----------------------------------------------------------------------------
 // <Driver::SetNodeManufacturerName>
@@ -4984,7 +5124,7 @@ void Driver::DoControllerCommand
 			else
 			{
 				Log::Write( LogLevel_Info, 0, "Add Device" );
-				Msg* msg = new Msg( "AddDevice", 0xff, REQUEST, FUNC_ID_ZW_ADD_NODE_TO_NETWORK, true );
+				Msg* msg = new Msg( "ControllerCommand_AddDevice", 0xff, REQUEST, FUNC_ID_ZW_ADD_NODE_TO_NETWORK, true );
 				uint8 options = ADD_NODE_ANY;
 				if (m_currentControllerCommand->m_highPower) options |= OPTION_HIGH_POWER;
 				if (IsAPICallSupported(FUNC_ID_ZW_EXPLORE_REQUEST_INCLUSION)) options |= OPTION_NWI;
@@ -5006,7 +5146,7 @@ void Driver::DoControllerCommand
 			else
 			{
 				Log::Write( LogLevel_Info, 0, "Create New Primary" );
-				Msg* msg = new Msg( "CreateNewPrimary", 0xff, REQUEST, FUNC_ID_ZW_CREATE_NEW_PRIMARY, true );
+				Msg* msg = new Msg( "ControllerCommand_CreateNewPrimary", 0xff, REQUEST, FUNC_ID_ZW_CREATE_NEW_PRIMARY, true );
 				msg->Append( CREATE_PRIMARY_START );
 				SendMsg( msg, MsgQueue_Command );
 			}
@@ -5015,7 +5155,7 @@ void Driver::DoControllerCommand
 		case ControllerCommand_ReceiveConfiguration:
 		{
 			Log::Write( LogLevel_Info, 0, "Receive Configuration" );
-			Msg* msg = new Msg( "ReceiveConfiguration", 0xff, REQUEST, FUNC_ID_ZW_SET_LEARN_MODE, true );
+			Msg* msg = new Msg( "ControllerCommand_ReceiveConfiguration", 0xff, REQUEST, FUNC_ID_ZW_SET_LEARN_MODE, true );
 			msg->Append( 0xff );
 			SendMsg( msg, MsgQueue_Command );
 			break;
@@ -5029,7 +5169,7 @@ void Driver::DoControllerCommand
 			else
 			{
 				Log::Write( LogLevel_Info, 0, "Remove Device" );
-				Msg* msg = new Msg( "RemoveDevice", 0xff, REQUEST, FUNC_ID_ZW_REMOVE_NODE_FROM_NETWORK, true );
+				Msg* msg = new Msg( "ControllerCommand_RemoveDevice", 0xff, REQUEST, FUNC_ID_ZW_REMOVE_NODE_FROM_NETWORK, true );
 				msg->Append( m_currentControllerCommand->m_highPower ? REMOVE_NODE_ANY | OPTION_HIGH_POWER : REMOVE_NODE_ANY );
 				SendMsg( msg, MsgQueue_Command );
 			}
@@ -5038,15 +5178,15 @@ void Driver::DoControllerCommand
 		case ControllerCommand_HasNodeFailed:
 		{
 			Log::Write( LogLevel_Info, 0, "Requesting whether node %d has failed", m_currentControllerCommand->m_controllerCommandNode );
-			Msg* msg = new Msg( "Has Node Failed?", 0xff, REQUEST, FUNC_ID_ZW_IS_FAILED_NODE_ID, false );
+			Msg* msg = new Msg( "ControllerCommand_HasNodeFailed", 0xff, REQUEST, FUNC_ID_ZW_IS_FAILED_NODE_ID, false );
 			msg->Append( m_currentControllerCommand->m_controllerCommandNode );
 			SendMsg( msg, MsgQueue_Command );
 			break;
 		}
 		case ControllerCommand_RemoveFailedNode:
 		{
-			Log::Write( LogLevel_Info, 0, "Marking node %d as having failed", m_currentControllerCommand->m_controllerCommandNode );
-			Msg* msg = new Msg( "Mark Node As Failed", 0xff, REQUEST, FUNC_ID_ZW_REMOVE_FAILED_NODE_ID, true );
+			Log::Write( LogLevel_Info, 0, "ControllerCommand_RemoveFailedNode", m_currentControllerCommand->m_controllerCommandNode );
+			Msg* msg = new Msg( "ControllerCommand_RemoveFailedNode", 0xff, REQUEST, FUNC_ID_ZW_REMOVE_FAILED_NODE_ID, true );
 			msg->Append( m_currentControllerCommand->m_controllerCommandNode );
 			SendMsg( msg, MsgQueue_Command );
 			break;
@@ -5054,7 +5194,7 @@ void Driver::DoControllerCommand
 		case ControllerCommand_ReplaceFailedNode:
 		{
 			Log::Write( LogLevel_Info, 0, "Replace Failed Node %d", m_currentControllerCommand->m_controllerCommandNode );
-			Msg* msg = new Msg( "ReplaceFailedNode", 0xff, REQUEST, FUNC_ID_ZW_REPLACE_FAILED_NODE, true );
+			Msg* msg = new Msg( "ControllerCommand_ReplaceFailedNode", 0xff, REQUEST, FUNC_ID_ZW_REPLACE_FAILED_NODE, true );
 			msg->Append( m_currentControllerCommand->m_controllerCommandNode );
 			SendMsg( msg, MsgQueue_Command );
 			break;
@@ -5068,7 +5208,7 @@ void Driver::DoControllerCommand
 			else
 			{
 				Log::Write( LogLevel_Info, 0, "Transfer Primary Role" );
-				Msg* msg = new Msg( "TransferPrimaryRole", 0xff, REQUEST, FUNC_ID_ZW_CONTROLLER_CHANGE, true );
+				Msg* msg = new Msg( "ControllerCommand_TransferPrimaryRole", 0xff, REQUEST, FUNC_ID_ZW_CONTROLLER_CHANGE, true );
 				msg->Append( m_currentControllerCommand->m_highPower ? CONTROLLER_CHANGE_START | OPTION_HIGH_POWER : CONTROLLER_CHANGE_START );
 				SendMsg( msg, MsgQueue_Command );
 			}
@@ -5083,7 +5223,7 @@ void Driver::DoControllerCommand
 			else
 			{
 				Log::Write( LogLevel_Info, 0, "Request Network Update" );
-				Msg* msg = new Msg( "RequestNetworkUpdate", 0xff, REQUEST, FUNC_ID_ZW_REQUEST_NETWORK_UPDATE, true );
+				Msg* msg = new Msg( "ControllerCommand_RequestNetworkUpdate", 0xff, REQUEST, FUNC_ID_ZW_REQUEST_NETWORK_UPDATE, true );
 				SendMsg( msg, MsgQueue_Command );
 			}
 			break;
@@ -5101,11 +5241,11 @@ void Driver::DoControllerCommand
 				Msg* msg;
 				if( opts )
 				{
-					msg = new Msg( "Requesting Neighbor Update", m_currentControllerCommand->m_controllerCommandNode, REQUEST, FUNC_ID_ZW_REQUEST_NODE_NEIGHBOR_UPDATE_OPTIONS, true );
+					msg = new Msg( "ControllerCommand_RequestNodeNeighborUpdate", m_currentControllerCommand->m_controllerCommandNode, REQUEST, FUNC_ID_ZW_REQUEST_NODE_NEIGHBOR_UPDATE_OPTIONS, true );
 				}
 				else
 				{
-					msg = new Msg( "Requesting Neighbor Update", m_currentControllerCommand->m_controllerCommandNode, REQUEST, FUNC_ID_ZW_REQUEST_NODE_NEIGHBOR_UPDATE, true );
+					msg = new Msg( "ControllerCommand_RequestNodeNeighborUpdate", m_currentControllerCommand->m_controllerCommandNode, REQUEST, FUNC_ID_ZW_REQUEST_NODE_NEIGHBOR_UPDATE, true );
 				}
 				msg->Append( m_currentControllerCommand->m_controllerCommandNode );
 				if( opts )
@@ -5119,7 +5259,7 @@ void Driver::DoControllerCommand
 		case ControllerCommand_AssignReturnRoute:
 		{
 			Log::Write( LogLevel_Info, 0, "Assigning return route from node %d to node %d", m_currentControllerCommand->m_controllerCommandNode, m_currentControllerCommand->m_controllerCommandArg );
-			Msg* msg = new Msg( "Assigning return route", m_currentControllerCommand->m_controllerCommandNode, REQUEST, FUNC_ID_ZW_ASSIGN_RETURN_ROUTE, true );
+			Msg* msg = new Msg( "ControllerCommand_AssignReturnRoute", m_currentControllerCommand->m_controllerCommandNode, REQUEST, FUNC_ID_ZW_ASSIGN_RETURN_ROUTE, true );
 			msg->Append( m_currentControllerCommand->m_controllerCommandNode );		// from the node
 			msg->Append( m_currentControllerCommand->m_controllerCommandArg );		// to the specific destination
 			SendMsg( msg, MsgQueue_Command );
@@ -5128,7 +5268,7 @@ void Driver::DoControllerCommand
 		case ControllerCommand_DeleteAllReturnRoutes:
 		{
 			Log::Write( LogLevel_Info, 0, "Deleting all return routes from node %d", m_currentControllerCommand->m_controllerCommandNode );
-			Msg* msg = new Msg( "Deleting return routes", m_currentControllerCommand->m_controllerCommandNode, REQUEST, FUNC_ID_ZW_DELETE_RETURN_ROUTE, true );
+			Msg* msg = new Msg( "ControllerCommand_DeleteAllReturnRoutess", m_currentControllerCommand->m_controllerCommandNode, REQUEST, FUNC_ID_ZW_DELETE_RETURN_ROUTE, true );
 			msg->Append( m_currentControllerCommand->m_controllerCommandNode );		// from the node
 			SendMsg( msg, MsgQueue_Command );
 			break;
@@ -5136,7 +5276,7 @@ void Driver::DoControllerCommand
 		case ControllerCommand_SendNodeInformation:
 		{
 			Log::Write( LogLevel_Info, 0, "Sending a node information frame" );
-			Msg* msg = new Msg( "Send Node Information", m_currentControllerCommand->m_controllerCommandNode, REQUEST, FUNC_ID_ZW_SEND_NODE_INFORMATION, true );
+			Msg* msg = new Msg( "ControllerCommand_SendNodeInformation", m_currentControllerCommand->m_controllerCommandNode, REQUEST, FUNC_ID_ZW_SEND_NODE_INFORMATION, true );
 			msg->Append( m_currentControllerCommand->m_controllerCommandNode );		// to the node
 			msg->Append( GetTransmitOptions() );
 			SendMsg( msg, MsgQueue_Command );
@@ -5151,7 +5291,7 @@ void Driver::DoControllerCommand
 			else
 			{
 				Log::Write( LogLevel_Info, 0, "Replication Send" );
-				Msg* msg = new Msg( "ReplicationSend", 0xff, REQUEST, FUNC_ID_ZW_ADD_NODE_TO_NETWORK, true );
+				Msg* msg = new Msg( "ControllerCommand_ReplicationSend", 0xff, REQUEST, FUNC_ID_ZW_ADD_NODE_TO_NETWORK, true );
 				msg->Append( m_currentControllerCommand->m_highPower ? ADD_NODE_CONTROLLER | OPTION_HIGH_POWER : ADD_NODE_CONTROLLER );
 				SendMsg( msg, MsgQueue_Command );
 			}
@@ -5189,7 +5329,7 @@ void Driver::DoControllerCommand
 						if( !found ) // create a new virtual node
 						{
 							Log::Write( LogLevel_Info, 0, "AddVirtualNode" );
-							Msg* msg = new Msg( "Slave Node Information", 0xff, REQUEST, FUNC_ID_SERIAL_API_SLAVE_NODE_INFO, false, false );
+							Msg* msg = new Msg( "FUNC_ID_SERIAL_API_SLAVE_NODE_INFO", 0xff, REQUEST, FUNC_ID_SERIAL_API_SLAVE_NODE_INFO, false, false );
 							msg->Append( 0 );		// node 0
 							msg->Append( 1 );		// listening
 							msg->Append( 0x09 );		// genericType window covering
@@ -5197,7 +5337,7 @@ void Driver::DoControllerCommand
 							msg->Append( 0 );		// length
 							SendMsg( msg, MsgQueue_Command );
 
-							msg = new Msg( "Add Virtual Node", 0xff, REQUEST, FUNC_ID_ZW_SET_SLAVE_LEARN_MODE, true );
+							msg = new Msg( "FUNC_ID_ZW_SET_SLAVE_LEARN_MODE", 0xff, REQUEST, FUNC_ID_ZW_SET_SLAVE_LEARN_MODE, true );
 							msg->Append( 0 );		// node 0 to add
 							if( IsPrimaryController() || IsInclusionController() )
 							{
@@ -5617,6 +5757,27 @@ uint32 Driver::GetAssociations
 }
 
 //-----------------------------------------------------------------------------
+// <Driver::GetAssociations>
+// Gets the associations for a group
+//-----------------------------------------------------------------------------
+uint32 Driver::GetAssociations
+(
+		uint8 const _nodeId,
+		uint8 const _groupIdx,
+		InstanceAssociation** o_associations
+)
+{
+	uint32 numAssociations = 0;
+	LockGuard LG(m_nodeMutex);
+	if( Node* node = GetNode( _nodeId ) )
+	{
+		numAssociations = node->GetAssociations( _groupIdx, o_associations );
+	}
+
+	return numAssociations;
+}
+
+//-----------------------------------------------------------------------------
 // <Driver::GetMaxAssociations>
 // Gets the maximum number of associations for a group
 //-----------------------------------------------------------------------------
@@ -5664,13 +5825,14 @@ void Driver::AddAssociation
 (
 		uint8 const _nodeId,
 		uint8 const _groupIdx,
-		uint8 const _targetNodeId
+		uint8 const _targetNodeId,
+		uint8 const _instance
 )
 {
 	LockGuard LG(m_nodeMutex);
 	if( Node* node = GetNode( _nodeId ) )
 	{
-		node->AddAssociation( _groupIdx, _targetNodeId );
+		node->AddAssociation( _groupIdx, _targetNodeId, _instance );
 	}
 }
 
@@ -5682,13 +5844,14 @@ void Driver::RemoveAssociation
 (
 		uint8 const _nodeId,
 		uint8 const _groupIdx,
-		uint8 const _targetNodeId
+		uint8 const _targetNodeId,
+		uint8 const _instance
 )
 {
 	LockGuard LG(m_nodeMutex);
 	if( Node* node = GetNode( _nodeId ) )
 	{
-		node->RemoveAssociation( _groupIdx, _targetNodeId );
+		node->RemoveAssociation( _groupIdx, _targetNodeId, _instance );
 	}
 }
 
@@ -6341,7 +6504,7 @@ void Driver::UpdateNodeRoutes
 		uint8 numGroups = GetNumGroups( _nodeId );
 		uint8 numNodes = 0;
 		uint8 nodes[5];
-		uint8* associations;
+		InstanceAssociation* associations;
 		uint8 i;
 
 		// Determine up to 5 destinations
@@ -6359,14 +6522,14 @@ void Driver::UpdateNodeRoutes
 				 */
 				for( k = 0; k < numNodes && k < sizeof(nodes); k++ )
 				{
-					if( nodes[k] == associations[j] )
+					if( nodes[k] == associations[j].m_nodeId )
 					{
 						break;
 					}
 				}
 				if( k >= numNodes && numNodes < sizeof(nodes) )	// not in list so add it
 				{
-					nodes[numNodes++] = associations[j];
+					nodes[numNodes++] = associations[j].m_nodeId;
 				}
 			}
 			if( associations != NULL )

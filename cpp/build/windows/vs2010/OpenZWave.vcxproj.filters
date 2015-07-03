@@ -60,6 +60,9 @@
     <ClInclude Include="..\..\..\src\command_classes\Clock.h">
       <Filter>Command Classes</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\command_classes\Color.h">
+      <Filter>Command Classes</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\command_classes\CommandClass.h">
       <Filter>Command Classes</Filter>
     </ClInclude>
@@ -306,6 +309,9 @@
     <ClInclude Include="..\..\..\src\command_classes\UserCode.h">
       <Filter>Command Classes</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\command_classes\ZWavePlusInfo.h">
+      <Filter>Command Classes</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\value_classes\ValueRaw.h">
       <Filter>Value Classes</Filter>
     </ClInclude>
@@ -334,6 +340,9 @@
       <Filter>Command Classes</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\command_classes\TimeParameters.h">
+      <Filter>Command Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\command_classes\DeviceResetLocally.h">
       <Filter>Command Classes</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\command_classes\DoorLock.h">
@@ -456,6 +465,9 @@
       <Filter>Command Classes</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\command_classes\Clock.cpp">
+      <Filter>Command Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\command_classes\Color.cpp">
       <Filter>Command Classes</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\command_classes\CommandClass.cpp">
@@ -626,6 +638,9 @@
     <ClCompile Include="..\..\..\src\command_classes\UserCode.cpp">
       <Filter>Command Classes</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\command_classes\ZWavePlusInfo.cpp">
+      <Filter>Command Classes</Filter>
+    </ClCompile>
     <ClCompile Include="..\winversion.cpp">
       <Filter>Main</Filter>
     </ClCompile>
@@ -640,6 +655,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\aes\aestab.c">
       <Filter>AES</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\command_classes\DeviceResetLocally.cpp">
+      <Filter>Command Classes</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\command_classes\DoorLock.cpp">
       <Filter>Command Classes</Filter>

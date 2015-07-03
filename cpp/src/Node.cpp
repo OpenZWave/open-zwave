@@ -48,12 +48,15 @@
 #include "command_classes/ControllerReplication.h"
 #include "command_classes/ManufacturerSpecific.h"
 #include "command_classes/MultiInstance.h"
+#include "command_classes/MultiInstanceAssociation.h"
 #include "command_classes/Security.h"
 #include "command_classes/WakeUp.h"
 #include "command_classes/NodeNaming.h"
 #include "command_classes/NoOperation.h"
 #include "command_classes/Version.h"
 #include "command_classes/SwitchAll.h"
+#include "command_classes/ZWavePlusInfo.h"
+#include "command_classes/DeviceResetLocally.h"
 
 #include "Scene.h"
 
@@ -79,6 +82,9 @@ using namespace OpenZWave;
 bool Node::s_deviceClassesLoaded = false;
 map<uint8,string> Node::s_basicDeviceClasses;
 map<uint8,Node::GenericDeviceClass*> Node::s_genericDeviceClasses;
+map<uint8,Node::DeviceClass*> Node::s_roleDeviceClasses;
+map<uint16,Node::DeviceClass*> Node::s_deviceTypeClasses;
+map<uint8,Node::DeviceClass*> Node::s_nodeTypes;
 
 static char const* c_queryStageNames[] =
 {
@@ -88,6 +94,7 @@ static char const* c_queryStageNames[] =
 		"WakeUp",
 		"ManufacturerSpecific1",
 		"NodeInfo",
+		"NodePlusInfo",
 		"SecurityReport",
 		"ManufacturerSpecific2",
 		"Versions",
@@ -118,6 +125,7 @@ m_queryRetries( 0 ),
 m_protocolInfoReceived( false ),
 m_basicprotocolInfoReceived( false ),
 m_nodeInfoReceived( false ),
+m_nodePlusInfoReceived( false ),
 m_manufacturerSpecificClassReceived( false ),
 m_nodeInfoSupported( true ),
 m_refreshonNodeInfoFrame ( true ),
@@ -144,6 +152,9 @@ m_location( "" ),
 m_manufacturerId( "" ),
 m_productType( "" ),
 m_productId( "" ),
+m_deviceType( 0 ),
+m_role( 0 ),
+m_nodeType ( 0 ),
 m_secured ( false ),
 m_values( new ValueStore() ),
 m_sentCnt( 0 ),
@@ -377,9 +388,28 @@ void Node::AdvanceQueries
 				else
 				{
 					// This stage has been done already, so move to the Manufacturer Specific stage
+					m_queryStage = QueryStage_NodePlusInfo;
+					m_queryRetries = 0;
+				}
+				break;
+			}
+			case QueryStage_NodePlusInfo:
+			{
+				Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_NodePlusInfo" );
+				ZWavePlusInfo* pluscc = static_cast<ZWavePlusInfo*>( GetCommandClass( ZWavePlusInfo::StaticGetCommandClassId() ) );
+
+				if ( pluscc )
+				{
+					m_queryPending = pluscc->RequestState( CommandClass::RequestFlag_Static, 1, Driver::MsgQueue_Query );
+					addQSC = m_queryPending;
+				}
+				else
+				{
+					// this is not a Zwave+ node, so move onto the next querystage
 					m_queryStage = QueryStage_SecurityReport;
 					m_queryRetries = 0;
 				}
+
 				break;
 			}
 			case QueryStage_SecurityReport:
@@ -551,18 +581,28 @@ void Node::AdvanceQueries
 			{
 				// if this device supports COMMAND_CLASS_ASSOCIATION, determine to which groups this node belong
 				Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_Associations" );
-				Association* acc = static_cast<Association*>( GetCommandClass( Association::StaticGetCommandClassId() ) );
-				if( acc )
+				MultiInstanceAssociation* macc = static_cast<MultiInstanceAssociation*>( GetCommandClass( MultiInstanceAssociation::StaticGetCommandClassId() ) );
+				if( macc )
 				{
-					acc->RequestAllGroups( 0 );
+					macc->RequestAllGroups( 0 );
 					m_queryPending = true;
 					addQSC = true;
 				}
 				else
 				{
-					// if this device doesn't support Associations, move to retrieve Session information
-					m_queryStage = QueryStage_Neighbors;
-					m_queryRetries = 0;
+					Association* acc = static_cast<Association*>( GetCommandClass( Association::StaticGetCommandClassId() ) );
+					if( acc )
+					{
+						acc->RequestAllGroups( 0 );
+						m_queryPending = true;
+						addQSC = true;
+					}
+					else
+					{
+						// if this device doesn't support Associations, move to retrieve Session information
+						m_queryStage = QueryStage_Neighbors;
+						m_queryRetries = 0;
+					}
 				}
 				break;
 			}
@@ -898,6 +938,24 @@ void Node::ReadXML
 		m_specific = (uint8)intVal;
 	}
 
+	if( TIXML_SUCCESS == _node->QueryIntAttribute( "roletype", &intVal ) )
+	{
+		m_role = (uint8)intVal;
+		m_nodePlusInfoReceived = true;
+	}
+
+	if( TIXML_SUCCESS == _node->QueryIntAttribute( "devicetype", &intVal ) )
+	{
+		m_deviceType = (uint16)intVal;
+		m_nodePlusInfoReceived = true;
+	}
+
+	if (TIXML_SUCCESS == _node->QueryIntAttribute ( "nodetype", &intVal ) )
+	{
+		m_nodeType = (uint8)intVal;
+		m_nodePlusInfoReceived = true;
+	}
+
 	str = _node->Attribute( "type" );
 	if( str )
 	{
@@ -1041,11 +1099,9 @@ void Node::ReadDeviceProtocolXML
 		TiXmlElement const* _ccsElement
 )
 {
-
 	TiXmlElement const* ccElement = _ccsElement->FirstChildElement();
 	while( ccElement )
 	{
-
 		char const* str = ccElement->Value();
 		if( str && !strcmp( str, "Protocol" ) )
 		{
@@ -1125,7 +1181,6 @@ void Node::ReadCommandClassesXML
 				}
 				else
 				{
-
 					if( NULL == cc )
 					{
 						if (Security::StaticGetCommandClassId() == id && !GetDriver()->isNetworkKeySet()) {
@@ -1178,6 +1233,18 @@ void Node::WriteXML
 
 	snprintf( str, 32, "%d", m_specific );
 	nodeElement->SetAttribute( "specific", str );
+
+	if( m_nodePlusInfoReceived )
+	{
+		snprintf( str, 32, "%d", m_role );
+		nodeElement->SetAttribute( "roletype", str );
+
+		snprintf( str, 32, "%d", m_deviceType );
+		nodeElement->SetAttribute( "devicetype", str );
+
+		snprintf( str, 32, "%d", m_nodeType );
+		nodeElement->SetAttribute ( "nodetype", str );
+	}
 
 	nodeElement->SetAttribute( "type", m_type.c_str() );
 
@@ -1256,6 +1323,12 @@ void Node::UpdateProtocolInfo
 		uint8 const* _data
 )
 {
+	if( ProtocolInfoReceived() )
+	{
+		// We already have this info
+		return;
+	}
+
 	if( _data[4] == 0 )
 	{
 		// Node doesn't exist if Generic class is zero.
@@ -1469,7 +1542,6 @@ void Node::SetSecuredClasses
 		{
 			if( CommandClass* pCommandClass = AddCommandClass( _data[i] ) )
 			{
-
 				// If this class came after the COMMAND_CLASS_MARK, then we do not create values.
 				if( afterMark )
 				{
@@ -2591,6 +2663,25 @@ uint32 Node::GetAssociations
 }
 
 //-----------------------------------------------------------------------------
+// <Node::GetAssociations>
+// Gets the associations for a group
+//-----------------------------------------------------------------------------
+uint32 Node::GetAssociations
+(
+		uint8 const _groupIdx,
+		InstanceAssociation** o_associations
+)
+{
+	uint32 numAssociations = 0;
+	if( Group* group = GetGroup( _groupIdx ) )
+	{
+		numAssociations = group->GetAssociations( o_associations );
+	}
+
+	return numAssociations;
+}
+
+//-----------------------------------------------------------------------------
 // <Node::GetMaxAssociations>
 // Gets the maximum number of associations for a group
 //-----------------------------------------------------------------------------
@@ -2633,12 +2724,13 @@ string Node::GetGroupLabel
 void Node::AddAssociation
 (
 		uint8 const _groupIdx,
-		uint8 const _targetNodeId
+		uint8 const _targetNodeId,
+		uint8 const _instance
 )
 {
 	if( Group* group = GetGroup( _groupIdx ) )
 	{
-		group->AddAssociation( _targetNodeId );
+		group->AddAssociation( _targetNodeId, _instance  );
 	}
 }
 
@@ -2649,12 +2741,13 @@ void Node::AddAssociation
 void Node::RemoveAssociation
 (
 		uint8 const _groupIdx,
-		uint8 const _targetNodeId
+		uint8 const _targetNodeId,
+		uint8 const _instance
 )
 {
 	if( Group* group = GetGroup( _groupIdx ) )
 	{
-		group->RemoveAssociation( _targetNodeId );
+		group->RemoveAssociation( _targetNodeId, _instance );
 	}
 }
 
@@ -2873,6 +2966,157 @@ bool Node::SetDeviceClasses
 }
 
 //-----------------------------------------------------------------------------
+// <Node::SetPlusDeviceClasses>
+// Set the device class data for the node based on the Zwave+ info report
+//-----------------------------------------------------------------------------
+bool Node::SetPlusDeviceClasses
+(
+		uint8 const _role,
+		uint8 const _nodeType,
+		uint16 const _deviceType
+)
+{
+	if ( m_nodePlusInfoReceived )
+	{
+		return false; // already set
+	}
+
+	if( !s_deviceClassesLoaded )
+	{
+		ReadDeviceClasses();
+	}
+
+	m_nodePlusInfoReceived = true;
+	m_role = _role;
+	m_deviceType = _deviceType;
+	m_nodeType = _nodeType;
+
+	Log::Write (LogLevel_Info, m_nodeId, "ZWave+ Info Received from Node %d", m_nodeId);
+	map<uint8,DeviceClass*>::iterator nit = s_nodeTypes.find( m_nodeType );
+	if (nit != s_nodeTypes.end())
+	{
+		DeviceClass* deviceClass = nit->second;
+
+		Log::Write( LogLevel_Info, m_nodeId, "  Zwave+ Node Type  (0x%.2x) - %s. Mandatory Command Classes:", m_nodeType, deviceClass->GetLabel().c_str() );
+		uint8 const *_commandClasses = deviceClass->GetMandatoryCommandClasses();
+
+		/* no CommandClasses to add */
+		if (_commandClasses != NULL)
+		{
+			int i = 0;
+			while (uint8 ccid = _commandClasses[i++])
+			{
+				if( CommandClasses::IsSupported( ccid ) )
+				{
+					Log::Write( LogLevel_Info, m_nodeId, "    %s", CommandClasses::GetName(ccid).c_str());
+				}
+				else
+				{
+					Log::Write( LogLevel_Info, m_nodeId, "    0x%.2x (Not Supported)", ccid);
+				}
+			}
+
+
+			// Add the mandatory command classes for this Roletype
+			AddMandatoryCommandClasses( deviceClass->GetMandatoryCommandClasses() );
+		}
+		else
+		{
+			Log::Write( LogLevel_Info, m_nodeId, "    NONE");
+		}
+	}
+	else
+	{
+		Log::Write (LogLevel_Warning, m_nodeId, "  Zwave+ Node Type  (0x%.2x) - NOT FOUND. No Mandatory Command Classes Loaded:", m_nodeType);
+	}
+
+
+	// Apply any Zwave+ device class data
+	map<uint16,DeviceClass*>::iterator dit = s_deviceTypeClasses.find( _deviceType );
+	if( dit != s_deviceTypeClasses.end() )
+	{
+		DeviceClass* deviceClass = dit->second;
+		// m_type = deviceClass->GetLabel(); // do we what to update the type with the zwave+ info??
+
+		Log::Write( LogLevel_Info, m_nodeId, "  Zwave+ Device Type  (0x%.2x) - %s. Mandatory Command Classes:", _deviceType, deviceClass->GetLabel().c_str() );
+		uint8 const *_commandClasses = deviceClass->GetMandatoryCommandClasses();
+
+		/* no CommandClasses to add */
+		if (_commandClasses != NULL)
+		{
+			int i = 0;
+			while (uint8 ccid = _commandClasses[i++])
+			{
+				if( CommandClasses::IsSupported( ccid ) )
+				{
+					Log::Write( LogLevel_Info, m_nodeId, "    %s", CommandClasses::GetName(ccid).c_str());
+				}
+				else
+				{
+					Log::Write( LogLevel_Info, m_nodeId, "    0x%.2x (Not Supported)", ccid);
+				}
+			}
+
+
+			// Add the mandatory command classes for this device class type
+			AddMandatoryCommandClasses( deviceClass->GetMandatoryCommandClasses() );
+		}
+		else
+		{
+			Log::Write( LogLevel_Info, m_nodeId, "    NONE");
+		}
+	}
+	else
+	{
+		Log::Write (LogLevel_Warning, m_nodeId, "  Zwave+ Device Type  (0x%.2x) - NOT FOUND. No Mandatory Command Classes Loaded:", m_nodeType);
+	}
+
+	// Apply any Role device class data
+	map<uint8,DeviceClass*>::iterator rit = s_roleDeviceClasses.find( _role );
+	if( rit != s_roleDeviceClasses.end() )
+	{
+		DeviceClass* roleDeviceClass = rit->second;
+
+		Log::Write( LogLevel_Info, m_nodeId, "  ZWave+ Role Type  (0x%.2x) - %s", m_generic, roleDeviceClass->GetLabel().c_str() );
+
+		uint8 const *_commandClasses = roleDeviceClass->GetMandatoryCommandClasses();
+
+		/* no CommandClasses to add */
+		if (_commandClasses != NULL)
+		{
+			int i = 0;
+			while (uint8 ccid = _commandClasses[i++])
+			{
+				if( CommandClasses::IsSupported( ccid ) )
+				{
+					Log::Write( LogLevel_Info, m_nodeId, "    %s", CommandClasses::GetName(ccid).c_str());
+				}
+				else
+				{
+					Log::Write( LogLevel_Info, m_nodeId, "    0x%.2x (Not Supported)", ccid);
+				}
+			}
+
+
+			// Add the mandatory command classes for this role class type
+			AddMandatoryCommandClasses( roleDeviceClass->GetMandatoryCommandClasses() );
+		}
+		else
+		{
+			Log::Write( LogLevel_Info, m_nodeId, "    NONE");
+		}
+
+	}
+	else
+	{
+		Log::Write (LogLevel_Warning, m_nodeId, "  ZWave+ Role Type  (0x%.2x) - NOT FOUND. No Mandatory Command Classes Loaded:", m_nodeType);
+	}
+
+
+	return true;
+}
+
+//-----------------------------------------------------------------------------
 // <Node::AddMandatoryCommandClasses>
 // Add mandatory command classes to the node
 //-----------------------------------------------------------------------------
@@ -2960,7 +3204,7 @@ void Node::ReadDeviceClasses
 			if( keyStr )
 			{
 				char* pStop;
-				uint8 key = (uint8)strtol( keyStr, &pStop, 16 );
+				uint16 key = (uint16)strtol( keyStr, &pStop, 16 );
 
 				if( !strcmp( str, "Generic" ) )
 				{
@@ -2973,6 +3217,18 @@ void Node::ReadDeviceClasses
 					{
 						s_basicDeviceClasses[key] = label;
 					}
+				}
+				else if( !strcmp( str, "Role" ) )
+				{
+					s_roleDeviceClasses[key] = new DeviceClass( child );
+				}
+				else if( !strcmp( str, "DeviceType" ) )
+				{
+					s_deviceTypeClasses[key] = new DeviceClass( child );
+				}
+				else if (!strcmp( str, "NodeType" ) )
+				{
+					s_nodeTypes[key] = new DeviceClass( child );
 				}
 			}
 		}
@@ -3169,4 +3425,69 @@ uint8 *Node::GetNonceKey(uint32 nonceid) {
 	return NULL;
 }
 
+//-----------------------------------------------------------------------------
+// <Node::GetDeviceTypeString>
+// Get the ZWave+ DeviceType as a String
+//-----------------------------------------------------------------------------
+string Node::GetDeviceTypeString() {
 
+	if( !s_deviceClassesLoaded )
+	{
+		ReadDeviceClasses();
+	}
+	map<uint16,DeviceClass*>::iterator nit = s_deviceTypeClasses.find( m_deviceType );
+	if (nit != s_deviceTypeClasses.end())
+	{
+		DeviceClass* deviceClass = nit->second;
+		return deviceClass->GetLabel();
+	}
+	return "";
+}
+//-----------------------------------------------------------------------------
+// <Node::GetRoleTypeString>
+// Get the ZWave+ RoleType as a String
+//-----------------------------------------------------------------------------
+string Node::GetRoleTypeString() {
+	if( !s_deviceClassesLoaded )
+	{
+		ReadDeviceClasses();
+	}
+	map<uint8,DeviceClass*>::iterator nit = s_roleDeviceClasses.find( m_role );
+	if (nit != s_roleDeviceClasses.end())
+	{
+		DeviceClass* deviceClass = nit->second;
+		return deviceClass->GetLabel();
+	}
+	return "";
+}
+//-----------------------------------------------------------------------------
+// <Node::GetRoleTypeString>
+// Get the ZWave+ NodeType as a String
+//-----------------------------------------------------------------------------
+string Node::GetNodeTypeString() {
+	if( !s_deviceClassesLoaded )
+	{
+		ReadDeviceClasses();
+	}
+	map<uint8,DeviceClass*>::iterator nit = s_nodeTypes.find( m_nodeType );
+	if (nit != s_nodeTypes.end())
+	{
+		DeviceClass* deviceClass = nit->second;
+		return deviceClass->GetLabel();
+	}
+	return "";
+}
+
+//-----------------------------------------------------------------------------
+// <Node::GetRoleTypeString>
+// Get the ZWave+ NodeType as a String
+//-----------------------------------------------------------------------------
+bool Node::IsNodeReset()
+{
+	DeviceResetLocally *drl = static_cast<DeviceResetLocally *>(GetCommandClass(DeviceResetLocally::StaticGetCommandClassId()));
+	if (drl)
+		return drl->IsDeviceReset();
+	else return false;
+
+
+}

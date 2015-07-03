@@ -1,8 +1,8 @@
 //-----------------------------------------------------------------------------
 //
-//	Alarm.h
+//	Color.h
 //
-//	Implementation of the Z-Wave COMMAND_CLASS_ALARM
+//	Implementation of the Z-Wave COMMAND_CLASS_COLOR
 //
 //	Copyright (c) 2010 Mal Lansell <openzwave@lansell.org>
 //
@@ -25,8 +25,8 @@
 //
 //-----------------------------------------------------------------------------
 
-#ifndef _Alarm_H
-#define _Alarm_H
+#ifndef _Color_H
+#define _Color_H
 
 #include "command_classes/CommandClass.h"
 
@@ -34,38 +34,43 @@ namespace OpenZWave
 {
 	class ValueByte;
 
-	/** \brief Implements COMMAND_CLASS_ALARM (0x71), a Z-Wave device command class.
+	/** \brief Implements COMMAND_CLASS_COLOR (0x33), a Z-Wave device command class.
 	 */
-	class Alarm: public CommandClass
+	class Color: public CommandClass
 	{
 	public:
-		static CommandClass* Create( uint32 const _homeId, uint8 const _nodeId ){ return new Alarm( _homeId, _nodeId ); }
-		virtual ~Alarm(){}
+		static CommandClass* Create( uint32 const _homeId, uint8 const _nodeId ){ return new Color( _homeId, _nodeId ); }
+		virtual ~Color(){}
 
-		/** \brief Get command class ID (1 byte) identifying this command class. */
-		static uint8 const StaticGetCommandClassId(){ return 0x71; }
-		/** \brief Get a string containing the name of this command class. */
-		static string const StaticGetCommandClassName(){ return "COMMAND_CLASS_ALARM"; }
+		static uint8 const StaticGetCommandClassId(){ return 0x33; }
+		static string const StaticGetCommandClassName(){ return "COMMAND_CLASS_COLOR"; }
 
 		// From CommandClass
+		virtual void ReadXML( TiXmlElement const* _ccElement );
+		virtual void WriteXML( TiXmlElement* _ccElement );
 		virtual bool RequestState( uint32 const _requestFlags, uint8 const _instance, Driver::MsgQueue const _queue );
 		virtual bool RequestValue( uint32 const _requestFlags, uint8 const _index, uint8 const _instance, Driver::MsgQueue const _queue );
-		/** \brief Get command class ID (1 byte) identifying this command class. (Inherited from CommandClass) */
+		bool RequestColorChannelReport(	uint8 const coloridx, uint8 const _instance, Driver::MsgQueue const _queue );
 		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }
-		/** \brief Get a string containing the name of this command class. (Inherited from CommandClass) */
 		virtual string const GetCommandClassName()const{ return StaticGetCommandClassName(); }
-		/** \brief Handle a response to a message associated with this command class. (Inherited from CommandClass) */
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );
-
-		virtual uint8 GetMaxVersion(){ return 3; }
+		virtual bool SetValue( Value const& _value );
+		virtual uint8 GetMaxVersion(){ return 2; }
+		virtual void SetValueBasic( uint8 const _instance, uint8 const _value );
 
 	protected:
 		virtual void CreateVars( uint8 const _instance );
 
 	private:
-		Alarm( uint32 const _homeId, uint8 const _nodeId );
+		Color( uint32 const _homeId, uint8 const _nodeId );
+		uint16 m_capabilities;
+		bool m_coloridxbug; // Fibaro RGBW before version 25.25 always reported the coloridx as 3 in the Report Message. Work around it
+		bool m_refreshinprogress;
+		uint8 m_coloridxcount;
+		uint8 m_colorvalues[9];
 	};
 
 } // namespace OpenZWave
 
 #endif
+
