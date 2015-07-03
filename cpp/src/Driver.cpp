@@ -1151,6 +1151,13 @@ bool Driver::WriteMsg
 			// That's it - already tried to send GetMaxSendAttempt() times.
 			Log::Write( LogLevel_Error, nodeId, "ERROR: Dropping command, expected response not received after %d attempt(s)", m_currentMsg->GetMaxSendAttempts() );
 		}
+		if( m_currentControllerCommand != NULL )
+		{
+			/* its a ControllerCommand that is failed */
+			UpdateControllerState( ControllerState_Error, ControllerError_Failed);
+
+		}
+
 		RemoveCurrentMsg();
 		m_dropped++;
 		return false;
@@ -2797,6 +2804,10 @@ void Driver::HandleIsFailedNodeResponse
 	{
 		Log::Write( LogLevel_Warning, nodeId, "WARNING: Received reply to FUNC_ID_ZW_IS_FAILED_NODE_ID - node %d failed", nodeId );
 		state = ControllerState_NodeFailed;
+		if( Node* node = GetNodeUnsafe( nodeId ) )
+		{
+			node->SetNodeAlive( false );
+		}
 	}
 	else
 	{
@@ -2916,8 +2927,6 @@ void Driver::HandleSendDataRequest
 		// Wrong callback ID
 		m_callbacks++;
 		Log::Write( LogLevel_Warning, nodeId, "WARNING: Unexpected Callback ID received" );
-	} else if (_data[2] > 0 && _data[2] < 10) {
-		return;
 	} else {
 		Node* node = GetNodeUnsafe( nodeId );
 		if( node != NULL )
@@ -2945,7 +2954,7 @@ void Driver::HandleSendDataRequest
 		}
 
 		// We do this here since HandleErrorResponse/MoveMessagesToWakeUpQueue can delete m_currentMsg
-		if( m_currentMsg->IsNoOperation() )
+		if( m_currentMsg && m_currentMsg->IsNoOperation() )
 		{
 			Notification* notification = new Notification( Notification::Type_Notification );
 			notification->SetHomeAndNodeIds( m_homeId, GetNodeNumber( m_currentMsg) );
@@ -2958,7 +2967,7 @@ void Driver::HandleSendDataRequest
 		{
 			if( !HandleErrorResponse( _data[3], nodeId, _replication ? "ZW_REPLICATION_END_DATA" : "ZW_SEND_DATA", !_replication ) )
 			{
-				if( m_currentMsg->IsNoOperation() && node != NULL &&
+				if( m_currentMsg &&  m_currentMsg->IsNoOperation() && node != NULL &&
 						( node->GetCurrentQueryStage() == Node::QueryStage_Probe  ||
 								node->GetCurrentQueryStage() == Node::QueryStage_Probe1 ) )
 				{
@@ -2969,7 +2978,7 @@ void Driver::HandleSendDataRequest
 		else if( node != NULL )
 		{
 			// If WakeUpNoMoreInformation request succeeds, update our status
-			if( m_currentMsg->IsWakeUpNoMoreInformationCommand() )
+			if( m_currentMsg && m_currentMsg->IsWakeUpNoMoreInformationCommand() )
 			{
 				if( WakeUp* wakeUp = static_cast<WakeUp*>( node->GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
 				{
