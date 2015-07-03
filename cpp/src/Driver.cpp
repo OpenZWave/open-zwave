@@ -2954,7 +2954,7 @@ void Driver::HandleSendDataRequest
 		}
 
 		// We do this here since HandleErrorResponse/MoveMessagesToWakeUpQueue can delete m_currentMsg
-		if( m_currentMsg->IsNoOperation() )
+		if( m_currentMsg && m_currentMsg->IsNoOperation() )
 		{
 			Notification* notification = new Notification( Notification::Type_Notification );
 			notification->SetHomeAndNodeIds( m_homeId, GetNodeNumber( m_currentMsg) );
@@ -2967,7 +2967,7 @@ void Driver::HandleSendDataRequest
 		{
 			if( !HandleErrorResponse( _data[3], nodeId, _replication ? "ZW_REPLICATION_END_DATA" : "ZW_SEND_DATA", !_replication ) )
 			{
-				if( m_currentMsg->IsNoOperation() && node != NULL &&
+				if( m_currentMsg &&  m_currentMsg->IsNoOperation() && node != NULL &&
 						( node->GetCurrentQueryStage() == Node::QueryStage_Probe  ||
 								node->GetCurrentQueryStage() == Node::QueryStage_Probe1 ) )
 				{
@@ -2978,7 +2978,7 @@ void Driver::HandleSendDataRequest
 		else if( node != NULL )
 		{
 			// If WakeUpNoMoreInformation request succeeds, update our status
-			if( m_currentMsg->IsWakeUpNoMoreInformationCommand() )
+			if( m_currentMsg && m_currentMsg->IsWakeUpNoMoreInformationCommand() )
 			{
 				if( WakeUp* wakeUp = static_cast<WakeUp*>( node->GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
 				{
