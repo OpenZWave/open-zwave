@@ -1,10 +1,10 @@
 //-----------------------------------------------------------------------------
 //
-//	Alarm.h
+//	ZWavePlusInfo.h
 //
-//	Implementation of the Z-Wave COMMAND_CLASS_ALARM
+//	Implementation of the Z-Wave COMMAND_CLASS_ZWAVE_PLUS_INFO
 //
-//	Copyright (c) 2010 Mal Lansell <openzwave@lansell.org>
+//	Copyright (c) 2015
 //
 //	SOFTWARE NOTICE AND LICENSE
 //
@@ -25,47 +25,37 @@
 //
 //-----------------------------------------------------------------------------
 
-#ifndef _Alarm_H
-#define _Alarm_H
+#ifndef _ZWavePlusInfo_H
+#define _ZWavePlusInfo_H
 
 #include "command_classes/CommandClass.h"
 
 namespace OpenZWave
 {
-	class ValueByte;
-
-	/** \brief Implements COMMAND_CLASS_ALARM (0x71), a Z-Wave device command class.
+	/** \brief Implements COMMAND_CLASS_ZWAVE_PLUS_INFO (0x5E), a Z-Wave device command class.
 	 */
-	class Alarm: public CommandClass
+	class ZWavePlusInfo: public CommandClass
 	{
 	public:
-		static CommandClass* Create( uint32 const _homeId, uint8 const _nodeId ){ return new Alarm( _homeId, _nodeId ); }
-		virtual ~Alarm(){}
+		static CommandClass* Create( uint32 const _homeId, uint8 const _nodeId ){ return new ZWavePlusInfo( _homeId, _nodeId ); }
+		virtual ~ZWavePlusInfo(){}
 
-		/** \brief Get command class ID (1 byte) identifying this command class. */
-		static uint8 const StaticGetCommandClassId(){ return 0x71; }
-		/** \brief Get a string containing the name of this command class. */
-		static string const StaticGetCommandClassName(){ return "COMMAND_CLASS_ALARM"; }
+		static uint8 const StaticGetCommandClassId(){ return 0x5E; }
+		static string const StaticGetCommandClassName(){ return "COMMAND_CLASS_ZWAVE_PLUS_INFO"; }
 
 		// From CommandClass
 		virtual bool RequestState( uint32 const _requestFlags, uint8 const _instance, Driver::MsgQueue const _queue );
 		virtual bool RequestValue( uint32 const _requestFlags, uint8 const _index, uint8 const _instance, Driver::MsgQueue const _queue );
-		/** \brief Get command class ID (1 byte) identifying this command class. (Inherited from CommandClass) */
 		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }
-		/** \brief Get a string containing the name of this command class. (Inherited from CommandClass) */
 		virtual string const GetCommandClassName()const{ return StaticGetCommandClassName(); }
-		/** \brief Handle a response to a message associated with this command class. (Inherited from CommandClass) */
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );
-
-		virtual uint8 GetMaxVersion(){ return 3; }
-
-	protected:
 		virtual void CreateVars( uint8 const _instance );
 
 	private:
-		Alarm( uint32 const _homeId, uint8 const _nodeId );
+		ZWavePlusInfo( uint32 const _homeId, uint8 const _nodeId );
 	};
 
 } // namespace OpenZWave
 
 #endif
+
