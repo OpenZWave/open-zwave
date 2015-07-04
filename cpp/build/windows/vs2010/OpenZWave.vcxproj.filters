@@ -342,6 +342,9 @@
     <ClInclude Include="..\..\..\src\command_classes\TimeParameters.h">
       <Filter>Command Classes</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\command_classes\DeviceResetLocally.h">
+      <Filter>Command Classes</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\command_classes\DoorLock.h">
       <Filter>Command Classes</Filter>
     </ClInclude>
@@ -652,6 +655,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\aes\aestab.c">
       <Filter>AES</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\command_classes\DeviceResetLocally.cpp">
+      <Filter>Command Classes</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\command_classes\DoorLock.cpp">
       <Filter>Command Classes</Filter>

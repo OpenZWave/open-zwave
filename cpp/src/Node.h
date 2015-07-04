@@ -319,7 +319,7 @@ namespace OpenZWave
 			bool IsAddingNode() const { return m_addingNode; }	/* These three *AddingNode functions are used to tell if we this node is just being discovered. Currently used by the Security CC to initiate the Network Key Exchange */
 			void SetAddingNode() { m_addingNode = true; }
 			void ClearAddingNode() { m_addingNode = false; }
-
+			bool IsNodeReset();
 		private:
 			bool		m_listening;
 			bool		m_frequentListening;

@@ -302,6 +302,8 @@ DISTFILES =	.gitignore \
 	cpp/src/command_classes/Configuration.h \
 	cpp/src/command_classes/ControllerReplication.cpp \
 	cpp/src/command_classes/ControllerReplication.h \
+	cpp/src/command_classes/DeviceResetLocally.cpp \
+	cpp/src/command_classes/DeviceResetLocally.h \
 	cpp/src/command_classes/DoorLock.cpp \
 	cpp/src/command_classes/DoorLock.h \
 	cpp/src/command_classes/DoorLockLogging.cpp \
@@ -376,6 +378,8 @@ DISTFILES =	.gitignore \
 	cpp/src/command_classes/Version.h \
 	cpp/src/command_classes/WakeUp.cpp \
 	cpp/src/command_classes/WakeUp.h \
+	cpp/src/command_classes/ZWavePlusInfo.cpp \
+	cpp/src/command_classes/ZWavePlusInfo.h \
 	cpp/src/platform/Controller.cpp \
 	cpp/src/platform/Controller.h \
 	cpp/src/platform/Event.cpp \
