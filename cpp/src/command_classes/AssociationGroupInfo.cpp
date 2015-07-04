@@ -53,7 +53,10 @@ enum AssociationGroupInfoCmd
 // other values to be discoverd
 enum
 {
-	AssociationGroupInfoReportProfile_General = 0x00,
+	AssociationGroupInfoReportProfile_General 	= 0x00,
+	// general sub profile
+	AssociationGroupInfoReportProfile_Lifeline 	= 0x01,
+
 };
 
 enum
@@ -317,13 +320,29 @@ bool AssociationGroupInfo::HandleMsg
 			uint8 profile_msb = _data[4+i*7];
 			uint8 profile_lsb = _data[5+i*7];
 			uint16 profile = (profile_msb << 8 | profile_lsb);
+			bool autoAssociate = false;
 			Log::Write( LogLevel_Info, GetNodeId(), "   Group=%d, Profile=%.4x, mode:%.2x", groupIdx, profile, mode);
 
+			if( ( profile_msb == AssociationGroupInfoReportProfile_General ) && ( profile_lsb == AssociationGroupInfoReportProfile_Lifeline ) )
+			{
+				autoAssociate = true;
+			}
 			if( Node* node = GetNodeUnsafe() )
 			{
 				if( Group* group = node->GetGroup( groupIdx ) )
 				{
 					group->SetProfile( profile );
+
+					if ( autoAssociate )
+					{
+						if( !group->IsAuto() )
+						{
+							Log::Write( LogLevel_Info, GetNodeId(), "    Group is candidate for (auto) subscription");
+							// hold of on marking the group for auto subscription until we know if we need to rework
+							// the auto subscription based on group 1.
+							// group->SetAuto( true );
+						}
+					}
 				}
 				else
 				{
