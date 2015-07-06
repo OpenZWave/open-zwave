@@ -112,6 +112,7 @@
 		<Product type="0004" id="0101" name="Door Sensor" config="BeNext/DoorSensor.xml"/>
 		<Product type="0005" id="0101" name="Alarm Sound" config="BeNext/AlarmSound.xml"/>
 		<Product type="0006" id="0101" name="Energy Switch" config="BeNext/EnergySwitch.xml"/>
+		<Product type="0006" id="0200" name="Energy Switch" config="BeNext/EnergySwitch.xml"/>
 		<Product type="0007" id="0100" name="Tag Reader" config="BeNext/TagReader.xml"/>
 		<Product type="0007" id="0101" name="Tag Reader" config="BeNext/TagReader.xml"/>
 		<Product type="0008" id="0101" name="Power Switch"/>
