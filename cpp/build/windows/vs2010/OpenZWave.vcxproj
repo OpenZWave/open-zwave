@@ -263,6 +263,7 @@ exit 0</Command>
     <ClInclude Include="..\..\..\src\command_classes\Alarm.h" />
     <ClInclude Include="..\..\..\src\command_classes\ApplicationStatus.h" />
     <ClInclude Include="..\..\..\src\command_classes\Association.h" />
+    <ClInclude Include="..\..\..\src\command_classes\AssociationGroupInfo.h" />
     <ClInclude Include="..\..\..\src\command_classes\AssociationCommandConfiguration.h" />
     <ClInclude Include="..\..\..\src\command_classes\Basic.h" />
     <ClInclude Include="..\..\..\src\command_classes\BasicWindowCovering.h" />
@@ -370,6 +371,7 @@ exit 0</Command>
     <ClCompile Include="..\..\..\src\command_classes\Alarm.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\ApplicationStatus.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\Association.cpp" />
+    <ClCompile Include="..\..\..\src\command_classes\AssociationGroupInfo.h" />
     <ClCompile Include="..\..\..\src\command_classes\AssociationCommandConfiguration.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\Basic.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\BasicWindowCovering.cpp" />
