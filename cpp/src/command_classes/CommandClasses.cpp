@@ -35,6 +35,7 @@ using namespace OpenZWave;
 #include "command_classes/ApplicationStatus.h"
 #include "command_classes/Association.h"
 #include "command_classes/AssociationCommandConfiguration.h"
+#include "command_classes/AssociationGroupInfo.h"
 #include "command_classes/Basic.h"
 #include "command_classes/BasicWindowCovering.h"
 #include "command_classes/Battery.h"
@@ -45,6 +46,7 @@ using namespace OpenZWave;
 #include "command_classes/Configuration.h"
 #include "command_classes/ControllerReplication.h"
 #include "command_classes/CRC16Encap.h"
+#include "command_classes/DeviceResetLocally.h"
 #include "command_classes/DoorLock.h"
 #include "command_classes/DoorLockLogging.h"
 #include "command_classes/EnergyProduction.h"
@@ -186,6 +188,7 @@ void CommandClasses::RegisterCommandClasses
 	cc.Register( ApplicationStatus::StaticGetCommandClassId(), ApplicationStatus::StaticGetCommandClassName(), ApplicationStatus::Create );
 	cc.Register( Association::StaticGetCommandClassId(), Association::StaticGetCommandClassName(), Association::Create );
 	cc.Register( AssociationCommandConfiguration::StaticGetCommandClassId(), AssociationCommandConfiguration::StaticGetCommandClassName(), AssociationCommandConfiguration::Create );
+	cc.Register( AssociationGroupInfo::StaticGetCommandClassId(), AssociationGroupInfo::StaticGetCommandClassName(), AssociationGroupInfo::Create );
 	cc.Register( Basic::StaticGetCommandClassId(), Basic::StaticGetCommandClassName(), Basic::Create );
 	cc.Register( BasicWindowCovering::StaticGetCommandClassId(), BasicWindowCovering::StaticGetCommandClassName(), BasicWindowCovering::Create );
 	cc.Register( Battery::StaticGetCommandClassId(), Battery::StaticGetCommandClassName(), Battery::Create );
@@ -196,6 +199,7 @@ void CommandClasses::RegisterCommandClasses
 	cc.Register( Configuration::StaticGetCommandClassId(), Configuration::StaticGetCommandClassName(), Configuration::Create );
 	cc.Register( ControllerReplication::StaticGetCommandClassId(), ControllerReplication::StaticGetCommandClassName(), ControllerReplication::Create );
 	cc.Register( CRC16Encap::StaticGetCommandClassId(), CRC16Encap::StaticGetCommandClassName(), CRC16Encap::Create );
+	cc.Register( DeviceResetLocally::StaticGetCommandClassId(), DeviceResetLocally::StaticGetCommandClassName(), DeviceResetLocally::Create );
 	cc.Register( DoorLock::StaticGetCommandClassId(), DoorLock::StaticGetCommandClassName(), DoorLock::Create );
 	cc.Register( DoorLockLogging::StaticGetCommandClassId(), DoorLockLogging::StaticGetCommandClassName(), DoorLockLogging::Create);
 	cc.Register( EnergyProduction::StaticGetCommandClassId(), EnergyProduction::StaticGetCommandClassName(), EnergyProduction::Create );

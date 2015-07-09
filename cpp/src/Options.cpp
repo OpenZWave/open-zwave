@@ -128,6 +128,8 @@ Options* Options::Create
 		s_instance->AddOptionBool(		"NotifyOnDriverUnload",		false);						// Should we send the Node/Value Notifications on Driver Unloading - Read comments in Driver::~Driver() method about possible race conditions
 		s_instance->AddOptionString(	"SecurityStrategy", 		"SUPPORTED", 	false);		// Should we encrypt CC's that are available via both clear text and Security CC?
 		s_instance->AddOptionString(	"CustomSecuredCC", 			"0x62,0x4c,0x63", 	false);	// What List of Custom CC should we always encrypt if SecurityStrategy is CUSTOM
+		s_instance->AddOptionBool(		"EnforceSecureReception",	true);						// if we recieve a clear text message for a CC that is Secured, should we drop the message
+		s_instance->AddOptionString(	"AssociateCC", 				"0x5A,0x80", 	false);		// What CC in the AGI Command list should enable association of the controller to the group
 	}
 
 	return s_instance;
