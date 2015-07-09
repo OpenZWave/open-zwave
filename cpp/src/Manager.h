@@ -531,6 +531,15 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		uint8 GetNodeSecurity( uint32 const _homeId, uint8 const _nodeId );
 
 		/**
+		 * \brief Is this a ZWave+ Supported Node?
+		 * \param _homeId the HomeID of the Z-Wave controller that managed the node.
+		 * \param _nodeId the ID of the node to query.
+		 * \return If this node is a Z-Wave Plus Node
+		 */
+
+		bool IsNodeZWavePlus( uint32 const _homeId, uint8 const _nodeId );
+
+		/**
 		 * \brief Get the basic type of a node.
 		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
 		 * \param _nodeId The ID of the node to query.
@@ -810,21 +819,22 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 */
 		string GetNodeQueryStage( uint32 const _homeId, uint8 const _nodeId );
 
-		/**
-		 * \brief Get whether the Z-Wave+ Info has been received.
-		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
-		 * \param _nodeId The ID of the node to query.
-		 * \return True if the Z-Wave+ Info has been received.
-		 */
-		bool IsNodePlusInfoReceived( uint32 const _homeId, uint8 const _nodeId );
 
 		/**
 		 * \brief Get the node device type as reported in the Z-Wave+ Info report.
 		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
 		 * \param _nodeId The ID of the node to query.
-		 * \return the node's user icon.
+		 * \return the node's DeviceType
 		 */
 		uint8 GetNodeDeviceType( uint32 const _homeId, uint8 const _nodeId );
+
+		/**
+		 * \brief Get the node device type as reported in the Z-Wave+ Info report.
+		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param _nodeId The ID of the node to query.
+		 * \return the node's Device Type as a string.
+		 */
+		string GetNodeDeviceTypeString( uint32 const _homeId, uint8 const _nodeId );
 
 		/**
 		 * \brief Get the node role as reported in the Z-Wave+ Info report.
@@ -833,6 +843,31 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 * \return the node's user icon.
 		 */
 		uint8 GetNodeRole( uint32 const _homeId, uint8 const _nodeId );
+
+		/**
+		 * \brief Get the node role as reported in the Z-Wave+ Info report.
+		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param _nodeId The ID of the node to query.
+		 * \return the node's role type as a string
+		 */
+		string GetNodeRoleString( uint32 const _homeId, uint8 const _nodeId );
+
+		/**
+		 * \brief Get the node PlusType as reported in the Z-Wave+ Info report.
+		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param _nodeId The ID of the node to query.
+		 * \return the node's PlusType
+		 */
+		uint8 GetNodePlusType( uint32 const _homeId, uint8 const _nodeId );
+		/**
+		 * \brief Get the node PlusType as reported in the Z-Wave+ Info report.
+		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param _nodeId The ID of the node to query.
+		 * \return the node's PlusType as a string
+		 */
+		string GetNodePlusTypeString ( uint32 const _homeId, uint8 const _nodeId );
+
+
 
 	/*@}*/
 
@@ -1492,7 +1527,7 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 * \see GetNumGroups, AddAssociation, RemoveAssociation, GetMaxAssociations
 		 */
 		uint32 GetAssociations( uint32 const _homeId, uint8 const _nodeId, uint8 const _groupIdx, InstanceAssociation** o_associations );
-			 
+
 		/**
 		 * \brief Gets the maximum number of associations for a group.
 		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.

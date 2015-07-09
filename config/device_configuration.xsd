@@ -242,6 +242,7 @@
        <xs:restriction base='xs:string'>
 	 <xs:enumeration value='1'/>
 	 <xs:enumeration value='2'/>
+	 <xs:enumeration value='3'/>
 	 <xs:enumeration value='4'/>
        </xs:restriction>
      </xs:simpleType>
@@ -263,6 +264,14 @@
     </xs:simpleType>
    </xs:attribute>
    <xs:attribute name='write_only' use='optional'>
+    <xs:simpleType>
+     <xs:restriction base='xs:string'>
+      <xs:enumeration value='true'/>
+      <xs:enumeration value='false'/>
+     </xs:restriction>
+    </xs:simpleType>
+   </xs:attribute>
+   <xs:attribute name='verify_changes' use='optional'>
     <xs:simpleType>
      <xs:restriction base='xs:string'>
       <xs:enumeration value='true'/>

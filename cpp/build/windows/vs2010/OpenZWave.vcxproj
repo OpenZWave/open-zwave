@@ -205,6 +205,7 @@ exit 0</Command>
     <ClInclude Include="..\..\..\src\aes\brg_endian.h" />
     <ClInclude Include="..\..\..\src\aes\brg_types.h" />
     <ClInclude Include="..\..\..\src\Bitfield.h" />
+    <ClInclude Include="..\..\..\src\command_classes\DeviceResetLocally.h" />
     <ClInclude Include="..\..\..\src\command_classes\DoorLock.h" />
     <ClInclude Include="..\..\..\src\command_classes\DoorLockLogging.h" />
     <ClInclude Include="..\..\..\src\command_classes\NoOperation.h" />
@@ -214,6 +215,7 @@ exit 0</Command>
     <ClInclude Include="..\..\..\src\command_classes\TimeParameters.h" />
     <ClInclude Include="..\..\..\src\command_classes\SensorAlarm.h" />
     <ClInclude Include="..\..\..\src\command_classes\UserCode.h" />
+    <ClInclude Include="..\..\..\src\command_classes\ZWavePlusInfo.h" />
     <ClInclude Include="..\..\..\src\Defs.h" />
     <ClInclude Include="..\..\..\src\Driver.h" />
     <ClInclude Include="..\..\..\src\Group.h" />
@@ -309,6 +311,7 @@ exit 0</Command>
     <ClCompile Include="..\..\..\src\aes\aeskey.c" />
     <ClCompile Include="..\..\..\src\aes\aestab.c" />
     <ClCompile Include="..\..\..\src\aes\aes_modes.c" />
+    <ClCompile Include="..\..\..\src\command_classes\DeviceResetLocally.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\DoorLock.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\DoorLockLogging.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\NoOperation.cpp" />
@@ -318,6 +321,7 @@ exit 0</Command>
     <ClCompile Include="..\..\..\src\command_classes\TimeParameters.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\SensorAlarm.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\UserCode.cpp" />
+    <ClCompile Include="..\..\..\src\command_classes\ZWavePlusInfo.cpp" />
     <ClCompile Include="..\..\..\src\Driver.cpp" />
     <ClCompile Include="..\..\..\src\Group.cpp" />
     <ClCompile Include="..\..\..\src\Manager.cpp" />

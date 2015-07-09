@@ -981,6 +981,28 @@ uint8 Manager::GetNodeSecurity
 	return version;
 }
 
+
+//-----------------------------------------------------------------------------
+// <Manager::IsNodeZWavePlus>
+// Get if the Node is a ZWave Plus Supported Node
+//-----------------------------------------------------------------------------
+bool Manager::IsNodeZWavePlus
+(
+		uint32 const _homeId,
+		uint8 const _nodeId
+)
+{
+	uint8 version = 0;
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		version = driver->IsNodeZWavePlus( _nodeId );
+	}
+
+	return version;
+}
+
+
+
 //-----------------------------------------------------------------------------
 // <Manager::GetNodeBasic>
 // Get the basic type of a node
@@ -1050,7 +1072,10 @@ string Manager::GetNodeType
 {
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
-		return driver->GetNodeType( _nodeId );
+		if (driver->IsNodeZWavePlus(_nodeId))
+			return driver->GetNodeDeviceTypeString(_nodeId);
+		else
+			return driver->GetNodeType( _nodeId );
 	}
 
 	return "Unknown";
@@ -1252,40 +1277,15 @@ string Manager::GetNodeProductType
 	return "Unknown";
 }
 
-//-----------------------------------------------------------------------------
-// <Manager::IsNodePlusInfoReceived>
-// Get whether the Z-Wave+ Info has been received.
-//-----------------------------------------------------------------------------
-bool Manager::IsNodePlusInfoReceived
-(
-		uint32 const _homeId,
-		uint8 const _nodeId
-)
-{
-	bool result = false;
-
-	if( Driver* driver = GetDriver( _homeId ) )
-	{
-		// Need to lock and unlock nodes to check this information
-		LockGuard LG(driver->m_nodeMutex);
-
-		if( Node *node = driver->GetNode( _nodeId ) )
-		{
-			result = node->NodePlusInfoReceived();
-		}
-	}
-
-	return result;
-}
 
 //-----------------------------------------------------------------------------
 // <Manager::GetNodeDeviceType>
 // Get the node device type as reported in the Z-Wave+ Info report.
 //-----------------------------------------------------------------------------
 uint8 Manager::GetNodeDeviceType
-( 
-		uint32 const _homeId, 
-		uint8 const _nodeId 
+(
+		uint32 const _homeId,
+		uint8 const _nodeId
 )
 {
 	if( Driver* driver = GetDriver( _homeId ) )
@@ -1295,6 +1295,26 @@ uint8 Manager::GetNodeDeviceType
 
 	return 0x00; // unknown
 }
+
+//-----------------------------------------------------------------------------
+// <Manager::GetNodeDeviceType>
+// Get the node device type as reported in the Z-Wave+ Info report.
+//-----------------------------------------------------------------------------
+string Manager::GetNodeDeviceTypeString
+(
+		uint32 const _homeId,
+		uint8 const _nodeId
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		return driver->GetNodeDeviceTypeString( _nodeId );
+	}
+
+	return ""; // unknown
+}
+
+
 
 //-----------------------------------------------------------------------------
 // <Manager::GetNodeRole>
@@ -1312,6 +1332,55 @@ uint8 Manager::GetNodeRole
 	}
 
 	return 0x00; // unknown
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::GetNodeRole>
+// Get the node role as reported in the Z-Wave+ Info report.
+//-----------------------------------------------------------------------------
+string Manager::GetNodeRoleString
+(
+		uint32 const _homeId,
+		uint8 const _nodeId
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		return driver->GetNodeRoleString( _nodeId );
+	}
+
+	return ""; // unknown
+}
+
+
+uint8 Manager::GetNodePlusType
+(
+		uint32 const _homeId,
+		uint8 const _nodeId
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		return driver->GetNodePlusType( _nodeId );
+	}
+
+	return 0x00; // unknown
+
+}
+
+string Manager::GetNodePlusTypeString
+(
+		uint32 const _homeId,
+		uint8 const _nodeId
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		return driver->GetNodePlusTypeString( _nodeId );
+	}
+
+	return ""; // unknown
+
 }
 
 //-----------------------------------------------------------------------------

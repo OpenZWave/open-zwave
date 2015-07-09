@@ -66,6 +66,9 @@ enum
 	Alarm_Power_Management,
 	Alarm_System,
 	Alarm_Emergency,
+	Alarm_Clock,
+	Alarm_Appliance,
+	Alarm_HomeHealth,
 	Alarm_Count
 };
 
@@ -81,7 +84,10 @@ static char const* c_alarmTypeName[] =
 		"Burglar",
 		"Power Management",
 		"System",
-		"Emergency"
+		"Emergency",
+		"Clock",
+		"Appliance",
+		"HomeHealth"
 };
 
 //-----------------------------------------------------------------------------
@@ -149,15 +155,42 @@ bool Alarm::RequestValue
 {
 	if( IsGetSupported() )
 	{
-		Msg* msg = new Msg( "AlarmCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-		msg->SetInstance( this, _instance );
-		msg->Append( GetNodeId() );
-		msg->Append( 2 );
-		msg->Append( GetCommandClassId() );
-		msg->Append( AlarmCmd_Get );
-		msg->Append( GetDriver()->GetTransmitOptions() );
-		GetDriver()->SendMsg( msg, _queue );
-		return true;
+		if( GetVersion() == 1 )
+		{
+			Msg* msg = new Msg( "AlarmCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+			msg->SetInstance( this, _instance );
+			msg->Append( GetNodeId() );
+			msg->Append( 2 );
+			msg->Append( GetCommandClassId() );
+			msg->Append( AlarmCmd_Get );
+			msg->Append( GetDriver()->GetTransmitOptions() );
+			GetDriver()->SendMsg( msg, _queue );
+			return true;
+		}
+		else
+		{
+			bool res = false;
+			for( uint8 i = 0; i < Alarm_Count; i++ )
+			{
+				if( Value* value = GetValue( _instance, i + 3 ) ) {
+					value->Release();
+					Msg* msg = new Msg( "AlarmCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+					msg->SetInstance( this, _instance );
+					msg->Append( GetNodeId() );
+					msg->Append( GetVersion() == 2 ? 4 : 5);
+					msg->Append( GetCommandClassId() );
+					msg->Append( AlarmCmd_Get );
+					msg->Append( 0x00); // ? proprietary alarm ?
+					msg->Append( i );
+					if( GetVersion() > 2 )
+						msg->Append(0x01); //get first event of type.
+					msg->Append( GetDriver()->GetTransmitOptions() );
+					GetDriver()->SendMsg( msg, _queue );
+					res = true;
+				}
+			}
+			return res;
+		}
 	} else {
 		Log::Write(  LogLevel_Info, GetNodeId(), "AlarmCmd_Get Not Supported on this node");
 	}
@@ -178,7 +211,17 @@ bool Alarm::HandleMsg
 	if (AlarmCmd_Report == (AlarmCmd)_data[0])
 	{
 		// We have received a report from the Z-Wave device
-		Log::Write( LogLevel_Info, GetNodeId(), "Received Alarm report: type=%d, level=%d", _data[1], _data[2] );
+		if( GetVersion() == 1 )
+		{
+			Log::Write( LogLevel_Info, GetNodeId(), "Received Alarm report: type=%d, level=%d", _data[1], _data[2] );
+		}
+		else
+		{
+			string alarm_type =  ( _data[5] < Alarm_Count ) ? c_alarmTypeName[_data[5]] : "Unknown type";
+
+			Log::Write( LogLevel_Info, GetNodeId(), "Received Alarm report: type=%d, level=%d, sensorSrcID=%d, type:%s event:%d, status=%d",
+							_data[1], _data[2], _data[3], alarm_type.c_str(), _data[6], _data[4] );
+		}
 
 		ValueByte* value;
 		if( (value = static_cast<ValueByte*>( GetValue( _instance, AlarmIndex_Type ) )) )
@@ -197,7 +240,7 @@ bool Alarm::HandleMsg
 		{
 			if( (value = static_cast<ValueByte*>( GetValue( _instance, AlarmIndex_SourceNodeId ) )) )
 			{
-				value->OnValueRefreshed( _data[4] );
+				value->OnValueRefreshed( _data[3] );
 				value->Release();
 			}
 

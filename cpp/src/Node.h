@@ -246,7 +246,7 @@ namespace OpenZWave
 
 			bool ProtocolInfoReceived()const{ return m_protocolInfoReceived; }
 			bool NodeInfoReceived()const{ return m_nodeInfoReceived; }
-			bool NodePlusInfoReceived()const{ return m_nodePlusInfoReceived; }
+			bool IsNodeZWavePlus()const{ return m_nodePlusInfoReceived; }
 
 			bool AllQueriesCompleted()const{ return( QueryStage_Complete == m_queryStage ); }
 
@@ -318,7 +318,7 @@ namespace OpenZWave
 			bool IsAddingNode() const { return m_addingNode; }	/* These three *AddingNode functions are used to tell if we this node is just being discovered. Currently used by the Security CC to initiate the Network Key Exchange */
 			void SetAddingNode() { m_addingNode = true; }
 			void ClearAddingNode() { m_addingNode = false; }
-
+			bool IsNodeReset();
 		private:
 			bool		m_listening;
 			bool		m_frequentListening;
@@ -395,7 +395,7 @@ namespace OpenZWave
 			 * \see CommandClass, m_commandClassMap
 			 */
 			CommandClass* GetCommandClass( uint8 const _commandClassId )const;
-			void ApplicationCommandHandler( uint8 const* _data );
+			void ApplicationCommandHandler( uint8 const* _data, bool encrypted );
 
 			/**
 			 * This function sets up Secured Command Classes. It iterates over the existing command classes marking them
