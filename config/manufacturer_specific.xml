@@ -57,7 +57,7 @@
 		<Product type="0003" id="0008" name="Smart Energy Illuminator"/>
 		<Product type="0003" id="000a" name="Smart Energy 220V Utility Switch"/>
 		<Product type="0003" id="000b" name="Smart Energy Strip"/>
-		<Product type="0003" id="000c" name="Micro Smart Energy Switch"/>
+		<Product type="0003" id="000c" name="Micro Smart Energy Switch" config="aeotec/ses.xml"/>
 		<Product type="0003" id="000d" name="Micro Smart Energy Illuminator"/>
 		<Product type="0003" id="000e" name="Micro Motor Controller"/>
 		<Product type="0003" id="0011" name="Micro Double Switch" />
