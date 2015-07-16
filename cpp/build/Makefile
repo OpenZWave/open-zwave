@@ -181,9 +181,10 @@ doc: $(top_builddir)/Doxyfile
 	@cd $(top_builddir); $(DOXYGEN)
 endif
 
-install: $(LIBDIR)/$(SHARED_LIB_NAME) doc $(top_builddir)/libopenzwave.pc 
+install: $(LIBDIR)/$(SHARED_LIB_NAME) doc $(top_builddir)/libopenzwave.pc $(LIBDIR)/libopenzwave.a
 	install -d $(DESTDIR)/$(instlibdir)/
-	cp  $(LIBDIR)/$(SHARED_LIB_NAME) $(DESTDIR)/$(instlibdir)/$(SHARED_LIB_NAME)
+	cp $(LIBDIR)/libopenzwave.a $(DESTDIR)/$(instlibdir)/libopenzwave.a
+	cp $(LIBDIR)/$(SHARED_LIB_NAME) $(DESTDIR)/$(instlibdir)/$(SHARED_LIB_NAME)
 	ln -sf $(SHARED_LIB_NAME) $(DESTDIR)/$(instlibdir)/$(SHARED_LIB_UNVERSIONED)
 	install -d $(DESTDIR)/$(includedir)
 	install -m 0644 $(top_srcdir)/cpp/src/*.h $(DESTDIR)/$(includedir)
