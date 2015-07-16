@@ -563,6 +563,7 @@
 	</Manufacturer>
 	<Manufacturer id="003b" name="Schlage">
 		<Product type="634b" id="504c" name="FE599GR Wireless Door Lock"/>
+		<Product type="6341" id="5044" name="BE469NXCEN Touchscreen Deadbolt" config="schlage/BE469NXCEN.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0097" name="Schlage Link">
 		<Product type="1182" id="4501" name="iTemp Dual Sensor" config="schlagelink/itemp.xml" />
