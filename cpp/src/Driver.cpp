@@ -3854,6 +3854,12 @@ void Driver::CommonAddNodeStatusRequestHandler
 		}
 		case ADD_NODE_STATUS_DONE:
 		{
+			if (state == ControllerState_Failed) {
+				/* if it was a failed add, we just move on */
+				state = ControllerState_Completed;
+				break;
+			}
+
 			Log::Write( LogLevel_Info, nodeId, "ADD_NODE_STATUS_DONE" );
 			state = ControllerState_Completed;
 			if( m_currentControllerCommand != NULL && m_currentControllerCommand->m_controllerCommandNode != 0xff )

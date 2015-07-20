@@ -181,6 +181,7 @@ Version 1.3
  - Pull Request #622 - Aeotec Micro Smart Energy Switch from Ugoviti (Justin)
  - Issue #628 - Update Everspring SP814 Config file from iarmstrong (Justin)
  - Issue #621 - Add Apache License for the cpp/build/sh2ju.sh script from Alteholz (Justin)
+ - Issue #585 - Possible fix for Node 0/255 when adding new nodes. (Justin)
 
 Version 1.2 
  - Released on 15/10/14
