@@ -136,6 +136,7 @@ DISTFILES =	.gitignore \
 	config/remotec/zfm-80.xml \
 	config/remotec/zurc.xml \
 	config/remotec/zxt-120.xml \
+	config/schlage/BE469NXCEN.xml \
 	config/schlagelink/itemp.xml \
 	config/schlagelink/minikeypad.xml \
 	config/swiid/swiidinter.xml \
