@@ -1,3 +1,9 @@
+The OpenZWave Library is distributed under the LGPL Version 3 license as per
+below. The Example Programs and some support files are distributed under
+different licenses, you should consult the other license files in this
+directory to identify those other files
+
+
 		   GNU LESSER GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
 

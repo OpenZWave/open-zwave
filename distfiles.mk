@@ -562,6 +562,7 @@ DISTFILES =	.gitignore \
 	dotnet/src/app.ico \
 	dotnet/src/app.rc \
 	dotnet/src/resource.h \
+	license/Apache-License-2.0.txt \
 	license/gpl.txt \
 	license/lgpl.txt \
 	license/license.txt \

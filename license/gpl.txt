@@ -1,3 +1,7 @@
+The source files in the cpp/examples are distributed under the GPL V3
+License. The rest of the OpenZWave Library is under the LGPL V3 license
+
+
                     GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
 
