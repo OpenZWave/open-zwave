@@ -31,6 +31,8 @@
 
 #ifdef WIN32
 #include "platform/windows/TimeStampImpl.h"	// Platform-specific implementation of a TimeStamp
+#elif defined _WINRT_DLL
+#include "platform/winRT/TimeStampImpl.h"	// Platform-specific implementation of a TimeStamp
 #else
 #include "platform/unix/TimeStampImpl.h"	// Platform-specific implementation of a TimeStamp
 #endif
@@ -94,10 +96,10 @@ string TimeStamp::GetAsString
 }
 //-----------------------------------------------------------------------------
 //	<TimeStamp::operator->
-//	Overload the subtract operator to get the difference between two 
+//	Overload the subtract operator to get the difference between two
 //	timestamps in milliseconds
 //-----------------------------------------------------------------------------
-int32 TimeStamp::operator- 
+int32 TimeStamp::operator-
 (
 	TimeStamp const& _other
 )

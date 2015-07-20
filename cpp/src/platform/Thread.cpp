@@ -31,6 +31,8 @@
 
 #ifdef WIN32
 #include "platform/windows/ThreadImpl.h"	// Platform-specific implementation of a thread
+#elif defined _WINRT_DLL
+#include "platform/winRT/ThreadImpl.h"	// Platform-specific implementation of a thread
 #else
 #include "platform/unix/ThreadImpl.h"	// Platform-specific implementation of a thread
 #endif
@@ -69,8 +71,8 @@ Thread::~Thread
 //-----------------------------------------------------------------------------
 bool Thread::Start
 (
-	pfnThreadProc_t _pfnThreadProc, 
-	void* _context 
+	pfnThreadProc_t _pfnThreadProc,
+	void* _context
 )
 {
 	return( m_pImpl->Start( _pfnThreadProc, m_exitEvent, _context ) );
@@ -86,11 +88,11 @@ bool Thread::Stop
 {
 	int32 timeout = 2000;	// Give the thread 2 seconds to exit
 	m_exitEvent->Set();
-	
+
 	if( Wait::Single( this, timeout ) < 0 )
 	{
 		// Timed out
-	        m_pImpl->Terminate();
+			m_pImpl->Terminate();
 		return false;
 	}
 
@@ -104,7 +106,7 @@ bool Thread::Stop
 void Thread::Sleep
 (
 	uint32 _milliseconds
-) 
+)
 {
 	return( m_pImpl->Sleep( _milliseconds ) );
 }
