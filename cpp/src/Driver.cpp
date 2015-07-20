@@ -37,7 +37,11 @@
 #include "platform/Event.h"
 #include "platform/Mutex.h"
 #include "platform/SerialController.h"
+#ifdef _WINRT_DLL
+#include "platform/winRT/HidControllerWinRT.h"
+#else
 #include "platform/HidController.h"
+#endif
 #include "platform/Thread.h"
 #include "platform/Log.h"
 #include "platform/TimeStamp.h"
@@ -137,6 +141,7 @@ Driver::Driver
 		ControllerInterface const& _interface
 ):
 m_driverThread( new Thread( "driver" ) ),
+m_initMutex(new Mutex()),
 m_exit( false ),
 m_init( false ),
 m_awakeNodesQueried( false ),
@@ -266,7 +271,9 @@ Driver::~Driver
 	// The order of the statements below has been achieved by mitigating freed memory
 	//references using a memory allocator checker. Do not rearrange unless you are
 	//certain memory won't be referenced out of order. --Greg Satz, April 2010
+	m_initMutex->Lock();
 	m_exit = true;
+	m_initMutex->Unlock();
 
 	m_pollThread->Stop();
 	m_pollThread->Release();
@@ -278,6 +285,8 @@ Driver::~Driver
 
 	m_controller->Close();
 	m_controller->Release();
+
+	m_initMutex->Release();
 
 	if( m_currentMsg != NULL )
 	{
@@ -526,6 +535,14 @@ bool Driver::Init
 		uint32 _attempts
 )
 {
+	m_initMutex->Lock();
+
+	if (m_exit)
+	{
+		m_initMutex->Unlock();
+		return false;
+	}
+
 	m_Controller_nodeId = -1;
 	m_waitingForAck = false;
 
@@ -535,6 +552,7 @@ bool Driver::Init
 	if( !m_controller->Open( m_controllerPath ) )
 	{
 		Log::Write( LogLevel_Warning, "WARNING: Failed to init the controller (attempt %d)", _attempts );
+		m_initMutex->Unlock();
 		return false;
 	}
 
@@ -552,6 +570,8 @@ bool Driver::Init
 	//Msg* msg = new Msg( "FUNC_ID_ZW_SET_PROMISCUOUS_MODE", 0xff, REQUEST, FUNC_ID_ZW_SET_PROMISCUOUS_MODE, false, false );
 	//msg->Append( 0xff );
 	//SendMsg( msg );
+
+	m_initMutex->Unlock();
 
 	// Init successful
 	return true;
@@ -1214,7 +1234,20 @@ bool Driver::WriteMsg
 		}
 	} else {
 		Log::Write( LogLevel_Info, nodeId, "Sending (%s) message (%sCallback ID=0x%.2x, Expected Reply=0x%.2x) - %s", c_sendQueueNames[m_currentMsgQueueSource], attemptsstr.c_str(), m_expectedCallbackId, m_expectedReply, m_currentMsg->GetAsString().c_str() );
-		m_controller->Write( m_currentMsg->GetBuffer(), m_currentMsg->GetLength() );
+		uint32 bytesWritten = m_controller->Write(m_currentMsg->GetBuffer(), m_currentMsg->GetLength());
+
+		if (bytesWritten == 0)
+		{
+			//0 will be returned when the port is closed or something bad happened
+			//so send notification
+			Notification* notification = new Notification(Notification::Type_DriverFailed);
+			notification->SetHomeAndNodeIds(m_homeId, m_currentMsg->GetTargetNodeId());
+			QueueNotification(notification);
+			NotifyWatchers();
+
+			m_driverThread->Stop();
+			return false;
+		}
 	}
 	m_writeCnt++;
 
