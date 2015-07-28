@@ -353,7 +353,7 @@ void ThermostatMode::CreateVars
 	uint8 const _instance
 )
 {
-	// There are three ways to get here...each needs to be handled differently:
+	// There are number of ways to get here...each needs to be handled differently:
 	//	QueryStage_ProtocolInfo:
 	//		Don't know what's supported yet, so do nothing
 	//	QueryStage_NodeInfo:
@@ -361,11 +361,13 @@ void ThermostatMode::CreateVars
 	//	QueryStage_Static:
 	//		Need to create the instance (processing SupportedReport) if it doesn't exist
 	//		If it does, populate with the appropriate values
+	//  other
+	//		Only create the instance if there are supportedModes
 
 	if( Node* node = GetNodeUnsafe() )
 	{
 		Node::QueryStage qs = node->GetCurrentQueryStage();
-		if( qs == Node::QueryStage_ProtocolInfo )
+		if( qs == Node::QueryStage_ProtocolInfo || m_supportedModes.empty() )
 		{
 			// this call is from QueryStage_ProtocolInfo,
 			// so just return (don't know which modes are supported yet)
