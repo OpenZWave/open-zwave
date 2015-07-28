@@ -194,7 +194,7 @@ void ValueList::WriteXML
 )
 {
 	Value::WriteXML( _valueElement );
-	
+
 	char str[16];
 	snprintf( str, sizeof(str), "%d", m_valueIdx );
 	_valueElement->SetAttribute( "vindex", str );
@@ -206,7 +206,7 @@ void ValueList::WriteXML
 	{
 		TiXmlElement* pItemElement = new TiXmlElement( "Item" );
 		pItemElement->SetAttribute( "label", (*it).m_label.c_str() );
-		
+
 		snprintf( str, sizeof(str), "%d", (*it).m_value );
 		pItemElement->SetAttribute( "value", str );
 
@@ -350,6 +350,17 @@ bool ValueList::GetItemLabels
 	return false;
 }
 
+//-----------------------------------------------------------------------------
+// <ValueList::GetItem>
+// Get the Item at the Currently selected Index
+//-----------------------------------------------------------------------------
+ValueList::Item const& ValueList::GetItem() const {
+	try {
+		return m_items.at(m_valueIdx);
+	} catch (const std::out_of_range& oor) {
+		return *(ValueList::Item*)0;
+	}
+}
 
 
 
