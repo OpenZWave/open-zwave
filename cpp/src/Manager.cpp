@@ -2315,10 +2315,12 @@ bool Manager::GetValueListSelection
 				if( ValueList* value = static_cast<ValueList*>( driver->GetValue( _id ) ) )
 				{
 					ValueList::Item const& item = value->GetItem();
-					if( item.m_label.length() > 0 )
+					if( &item != NULL && item.m_label.length() > 0)
 					{
 						*o_value = item.m_label;
 						res = true;
+					} else {
+						Log::Write(LogLevel_Warning, "ValueList returned a NULL value for GetValueListSelection: %s", value->GetLabel().c_str());
 					}
 					value->Release();
 				} else {
