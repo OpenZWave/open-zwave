@@ -34,6 +34,7 @@
 #include "Driver.h"
 #include "platform/Log.h"
 #include "value_classes/ValueBool.h"
+#include "value_classes/ValueStore.h"
 #include "tinyxml.h"
 
 using namespace OpenZWave;
@@ -143,6 +144,38 @@ void SensorBinary::WriteXML
 		sensorMapElement->SetAttribute( "type", str );
 	}
 }
+
+//-----------------------------------------------------------------------------
+// <SensorBinary::SetVersion>
+// Set the command class version
+//-----------------------------------------------------------------------------
+void SensorBinary::SetVersion
+(
+	uint8 const _version
+)
+{
+	CommandClass::SetVersion( _version );
+	if( _version > 1 )
+	{
+		// the configuration contains a (legacy)sensor map, V2 uses auto discovery, purge it
+		if( !m_sensorsMap.empty() )
+		{
+			Log::Write( LogLevel_Error, GetNodeId(), "Found a SensorMap for a SensorBinary V2 device, using the values reported by the device.");
+			m_sensorsMap.clear();
+
+			// the V1 configuration also created values that we do not use, so remove them
+			if( Node* node = GetNodeUnsafe() )
+			{
+				node->GetValueStore()->RemoveCommandClassValues( GetCommandClassId() );
+
+				// make sure RequestState( Static ) is called
+				SetCreateVars( true );
+			}
+		}
+	}
+}
+
+
 //-----------------------------------------------------------------------------
 // <SensorBinary::RequestState>
 // Request current state from the device
@@ -250,13 +283,15 @@ bool SensorBinary::HandleMsg
 {
 	if (SensorBinaryCmd_Report == (SensorBinaryCmd)_data[0])
 	{
-	    if( GetVersion() > 1 )
+	    if( _length > 3 )
 	    {
 	    	uint8 index = _data[2];
-			if( !m_sensorsMap.empty() )
-			{	// use the (legacy) sensor map
-		    	index = m_sensorsMap[_data[2]];
-			}
+    		// version 1 uses the sensorMap
+	    	if( GetVersion() == 1 && !m_sensorsMap.empty() )
+	    	{
+				// use the (legacy) sensor map
+				index = m_sensorsMap[_data[2]];
+	    	}
 	    	string sensor_type =  ( _data[2] < SensorBinaryType_Count ) ? c_sensorBinaryTypeNames[_data[2]] : "Unknown type";
 
             Log::Write( LogLevel_Info, GetNodeId(), "Received SensorBinary report: Sensor:%s(%d) State=%s", sensor_type.c_str(), _data[2], _data[1] ? "On" : "Off" );
@@ -284,12 +319,6 @@ bool SensorBinary::HandleMsg
 	}
 	else if( SensorBinaryCmd_SupportedSensorReport == (SensorBinaryCmd)_data[0] ) {
 		Log::Write( LogLevel_Info, GetNodeId(), "Received SensorBinaryCmd_SupportedSensorReport from node %d", GetNodeId() );
-
-		// the configuration contains a (legacy)sensor map. Do not use the sensor auto discovery.
-		if( !m_sensorsMap.empty() )
-		{
-			return true;
-		}
 
 		if( Node* node = GetNodeUnsafe() )
 		{
