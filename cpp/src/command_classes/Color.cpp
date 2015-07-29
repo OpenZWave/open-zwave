@@ -1096,7 +1096,7 @@ void Color::CreateVars
 	if( Node* node = GetNodeUnsafe() )
 	{
 		/* XXX TODO convert this to a bitset when we implement */
-		node->CreateValueInt( ValueID::ValueGenre_Config, GetCommandClassId(), _instance, Value_Color_Channels_Capabilities, "Color Channels", "", false, false, m_capabilities, 0 );
+		node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, Value_Color_Channels_Capabilities, "Color Channels", "", false, false, m_capabilities, 0 );
 	}
 
 
