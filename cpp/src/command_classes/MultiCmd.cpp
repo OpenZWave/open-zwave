@@ -62,7 +62,7 @@ bool MultiCmd::HandleMsg
 
 				if( CommandClass* pCommandClass = node->GetCommandClass( commandClassId ) )
 				{
-					pCommandClass->HandleMsg( &_data[base+2], length-1 );
+					pCommandClass->HandleMsg( &_data[base+2], length );
 				}
 
 				base += (length + 1);
