@@ -37,7 +37,7 @@
 #include "platform/Event.h"
 #include "platform/Mutex.h"
 #include "platform/SerialController.h"
-#ifdef _WINRT_DLL
+#ifdef WINRT
 #include "platform/winRT/HidControllerWinRT.h"
 #else
 #include "platform/HidController.h"

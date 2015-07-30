@@ -33,7 +33,7 @@
 
 #ifdef WIN32
 #include "platform/windows/WaitImpl.h"	// Platform-specific implementation of a Wait object
-#elif defined _WINRT_DLL
+#elif defined WINRT
 #include "platform/winRT/WaitImpl.h"	// Platform-specific implementation of a Wait object
 #else
 #include "platform/unix/WaitImpl.h"	// Platform-specific implementation of a Wait object

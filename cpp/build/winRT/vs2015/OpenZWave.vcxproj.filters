@@ -1,30 +1,33 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Resources">
-      <UniqueIdentifier>e956b6cc-8fce-4fea-9862-30a92e4c457f</UniqueIdentifier>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tga;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
     <Filter Include="AES">
-      <UniqueIdentifier>{145f7034-a6f4-4a79-a798-ec5e16cd924a}</UniqueIdentifier>
+      <UniqueIdentifier>{ad9f0909-64c6-4295-90a6-3a8fd944f6fa}</UniqueIdentifier>
     </Filter>
     <Filter Include="Command Classes">
-      <UniqueIdentifier>{e4999648-71a8-4ac9-97eb-1a198cfc37b1}</UniqueIdentifier>
+      <UniqueIdentifier>{320ad2da-52a3-4cda-a17e-1e32b837539e}</UniqueIdentifier>
     </Filter>
     <Filter Include="Main">
-      <UniqueIdentifier>{04041ba9-0609-4b13-88e8-16fef5a26dc2}</UniqueIdentifier>
+      <UniqueIdentifier>{7949eeba-8cef-4504-887d-a08c9ea0ad3d}</UniqueIdentifier>
     </Filter>
     <Filter Include="Platform">
-      <UniqueIdentifier>{f6b7ce9f-9ded-49ba-a823-3f655b53b2a9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="TinyXML">
-      <UniqueIdentifier>{8548f516-7114-410f-991d-5e2ca865b687}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Value Classes">
-      <UniqueIdentifier>{6fe8adf3-4f69-45b0-964d-731edd44b3b4}</UniqueIdentifier>
+      <UniqueIdentifier>{02437854-1343-4032-906a-be36f5d1a90f}</UniqueIdentifier>
     </Filter>
     <Filter Include="Platform\WinRT">
-      <UniqueIdentifier>{5c9fb2dd-7c7f-4a12-9760-bca3a3d36675}</UniqueIdentifier>
+      <UniqueIdentifier>{0a3fdc63-a605-4f13-8674-bf166df28af5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TinyXML">
+      <UniqueIdentifier>{a24496cb-7034-4cad-af79-15d2983c84dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Value Classes">
+      <UniqueIdentifier>{1f415adf-d268-4000-a737-1409f46c6534}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="config">
+      <UniqueIdentifier>{d141dfa6-424a-465c-b339-38ca596a6c12}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -244,6 +247,72 @@
     <ClInclude Include="..\..\..\src\ZWSecurity.h">
       <Filter>Main</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\platform\winRT\EventImpl.h">
+      <Filter>Platform\WinRT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\platform\winRT\FileOpsImpl.h">
+      <Filter>Platform\WinRT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\platform\winRT\HidControllerWinRT.h">
+      <Filter>Platform\WinRT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\platform\winRT\LogImpl.h">
+      <Filter>Platform\WinRT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\platform\winRT\MutexImpl.h">
+      <Filter>Platform\WinRT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\platform\winRT\SerialControllerImpl.h">
+      <Filter>Platform\WinRT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\platform\winRT\ThreadImpl.h">
+      <Filter>Platform\WinRT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\platform\winRT\TimeStampImpl.h">
+      <Filter>Platform\WinRT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\platform\winRT\WaitImpl.h">
+      <Filter>Platform\WinRT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\platform\Controller.h">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\platform\Event.h">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\platform\FileOps.h">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\platform\Log.h">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\platform\Mutex.h">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\platform\Ref.h">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\platform\SerialController.h">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\platform\Stream.h">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\platform\Thread.h">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\platform\TimeStamp.h">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\platform\Wait.h">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\tinyxml\tinystr.h">
+      <Filter>TinyXML</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\tinyxml\tinyxml.h">
+      <Filter>TinyXML</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\value_classes\Value.h">
       <Filter>Value Classes</Filter>
     </ClInclude>
@@ -282,72 +351,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\value_classes\ValueString.h">
       <Filter>Value Classes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\tinyxml\tinystr.h">
-      <Filter>TinyXML</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\tinyxml\tinyxml.h">
-      <Filter>TinyXML</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\platform\Controller.h">
-      <Filter>Platform</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\platform\Event.h">
-      <Filter>Platform</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\platform\FileOps.h">
-      <Filter>Platform</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\platform\Log.h">
-      <Filter>Platform</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\platform\Mutex.h">
-      <Filter>Platform</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\platform\Ref.h">
-      <Filter>Platform</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\platform\SerialController.h">
-      <Filter>Platform</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\platform\Stream.h">
-      <Filter>Platform</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\platform\Thread.h">
-      <Filter>Platform</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\platform\TimeStamp.h">
-      <Filter>Platform</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\platform\Wait.h">
-      <Filter>Platform</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\platform\winRT\EventImpl.h">
-      <Filter>Platform\WinRT</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\platform\winRT\FileOpsImpl.h">
-      <Filter>Platform\WinRT</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\platform\winRT\HidControllerWinRT.h">
-      <Filter>Platform\WinRT</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\platform\winRT\LogImpl.h">
-      <Filter>Platform\WinRT</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\platform\winRT\MutexImpl.h">
-      <Filter>Platform\WinRT</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\platform\winRT\SerialControllerImpl.h">
-      <Filter>Platform\WinRT</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\platform\winRT\ThreadImpl.h">
-      <Filter>Platform\WinRT</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\platform\winRT\TimeStampImpl.h">
-      <Filter>Platform\WinRT</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\platform\winRT\WaitImpl.h">
-      <Filter>Platform\WinRT</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -549,6 +552,78 @@
     <ClCompile Include="..\..\..\src\ZWSecurity.cpp">
       <Filter>Main</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\windows\winversion.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\platform\winRT\EventImpl.cpp">
+      <Filter>Platform\WinRT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\platform\winRT\FileOpsImpl.cpp">
+      <Filter>Platform\WinRT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\platform\winRT\HidControllerWinRT.cpp">
+      <Filter>Platform\WinRT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\platform\winRT\LogImpl.cpp">
+      <Filter>Platform\WinRT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\platform\winRT\MutexImpl.cpp">
+      <Filter>Platform\WinRT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\platform\winRT\SerialControllerImpl.cpp">
+      <Filter>Platform\WinRT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\platform\winRT\ThreadImpl.cpp">
+      <Filter>Platform\WinRT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\platform\winRT\TimeStampImpl.cpp">
+      <Filter>Platform\WinRT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\platform\winRT\WaitImpl.cpp">
+      <Filter>Platform\WinRT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\platform\Controller.cpp">
+      <Filter>Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\platform\Event.cpp">
+      <Filter>Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\platform\FileOps.cpp">
+      <Filter>Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\platform\Log.cpp">
+      <Filter>Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\platform\Mutex.cpp">
+      <Filter>Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\platform\SerialController.cpp">
+      <Filter>Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\platform\Stream.cpp">
+      <Filter>Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\platform\Thread.cpp">
+      <Filter>Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\platform\TimeStamp.cpp">
+      <Filter>Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\platform\Wait.cpp">
+      <Filter>Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\tinyxml\tinystr.cpp">
+      <Filter>TinyXML</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\tinyxml\tinyxml.cpp">
+      <Filter>TinyXML</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\tinyxml\tinyxmlerror.cpp">
+      <Filter>TinyXML</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\tinyxml\tinyxmlparser.cpp">
+      <Filter>TinyXML</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\value_classes\Value.cpp">
       <Filter>Value Classes</Filter>
     </ClCompile>
@@ -585,77 +660,473 @@
     <ClCompile Include="..\..\..\src\value_classes\ValueString.cpp">
       <Filter>Value Classes</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\tinyxml\tinystr.cpp">
-      <Filter>TinyXML</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\tinyxml\tinyxml.cpp">
-      <Filter>TinyXML</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\tinyxml\tinyxmlerror.cpp">
-      <Filter>TinyXML</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\tinyxml\tinyxmlparser.cpp">
-      <Filter>TinyXML</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\platform\Controller.cpp">
-      <Filter>Platform</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\platform\Event.cpp">
-      <Filter>Platform</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\platform\FileOps.cpp">
-      <Filter>Platform</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\platform\Log.cpp">
-      <Filter>Platform</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\platform\Mutex.cpp">
-      <Filter>Platform</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\platform\SerialController.cpp">
-      <Filter>Platform</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\platform\Stream.cpp">
-      <Filter>Platform</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\platform\Thread.cpp">
-      <Filter>Platform</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\platform\TimeStamp.cpp">
-      <Filter>Platform</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\platform\Wait.cpp">
-      <Filter>Platform</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\platform\winRT\EventImpl.cpp">
-      <Filter>Platform\WinRT</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\platform\winRT\FileOpsImpl.cpp">
-      <Filter>Platform\WinRT</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\platform\winRT\HidControllerWinRT.cpp">
-      <Filter>Platform\WinRT</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\platform\winRT\LogImpl.cpp">
-      <Filter>Platform\WinRT</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\platform\winRT\MutexImpl.cpp">
-      <Filter>Platform\WinRT</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\platform\winRT\SerialControllerImpl.cpp">
-      <Filter>Platform\WinRT</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\platform\winRT\ThreadImpl.cpp">
-      <Filter>Platform\WinRT</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\platform\winRT\TimeStampImpl.cpp">
-      <Filter>Platform\WinRT</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\platform\winRT\WaitImpl.cpp">
-      <Filter>Platform\WinRT</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\windows\winversion.cpp">
-      <Filter>Main</Filter>
-    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\..\src\aes\aes.txt">
+      <Filter>AES</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <Xsd Include="config\zwscene.xsd" />
+    <Xsd Include="config\device_classes.xsd" />
+    <Xsd Include="config\device_configuration.xsd" />
+    <Xsd Include="config\manufacturer_specific.xsd" />
+    <Xsd Include="config\options.xsd" />
+    <Xsd Include="config\zwcfg.xsd" />
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="config\BeNext\1poleswitch.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\BeNext\2poleswitch.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\popp\123580.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\popp\123601.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\popp\123658.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\BeNext\AlarmSound.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\aeotec\alms.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\everspring\an145.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\everspring\an158.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\nodon\asp3100SmartPlug.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\BeNext\BuiltinDimmer.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\intermatic\ca8900.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\2gig\ct30.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\2gig\ct100.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\2gig\ct101.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\device_classes.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\ge\dimmer.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\ge\dimmer_module.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\polycontrol\doorlock.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\BeNext\DoorSensor.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\aeotec\doorwindow.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\aeotec\dsd31.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\rcs\em52-zw.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\BeNext\EnergySwitch.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\eurotronic\eur_stellaz.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\frostdale\fdn2nxx.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\fibaro\fgbs001.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\fibaro\fgd211.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\fibaro\fgfs101.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\fibaro\fgk001.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\fibaro\fgms.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\fibaro\fgr221.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\fibaro\fgrgbwm441.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\fibaro\fgrm222.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\fibaro\fgs211.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\fibaro\fgs212.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\fibaro\fgs221.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\fibaro\fgs222.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\fibaro\fgsd002.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\fibaro\fgss101.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\fibaro\fgwpe.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\aeotec\hdss_gen5.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\aeotec\hem.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\aeotec\hemg2.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\horstmann\hrt4zw.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\everspringct\hsm02.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\homeseer\hsm100.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\schlagelink\itemp.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\zwave.me\iTemp.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\aeotec\keyfob.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\aeotec\keyfob2.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\polycontrol\keypad.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\zwave.me\kfob.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\act\lfm20.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\danfoss\living.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\evolve\lrm-as.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\evolve\lsm-15.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\evolve\ltm-5.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\manufacturer_specific.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\schlagelink\minikeypad.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\zipato\MiniKeypad.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\aeotec\minimote.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\BeNext\Molite.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\aeotec\msesv2.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\aeotec\multisensor_gen5.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\northq\nq92021.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\options.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\philio\pan04.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\aeotec\panicbtn.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\BeNext\PluginDimmer.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\rcs\pm12-zw.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\greenwave\powernode1.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\greenwave\powernode6.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\philio\psm02.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\philio\pst02.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\philio\pst02-1c.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\philio\pst02-b.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\iris\rangeextender.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\assa_abloy\RealLivingCapTouch.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\aeotec\recessed_doorsensor.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\aeotec\recessed_doorsensor_gen5.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\ge\relay.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\qees\reto-plugin-switch.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\cooper\RF9505-T.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\cooper\RF9540-N.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\zipato\RGBBulb.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\leviton\rzi10.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\BeNext\SceneController.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\everspring\se812.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\aeotec\ses.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\aeotec\ses2.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\everspring\sf812.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\everspring\sm103.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\wenzhou\sm103.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\everspring\sp103.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\everspring\sp814.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\everspring\st814.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\everspring\st815.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\swiid\swiidinter.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\swiid\swiidplug.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\BeNext\TagReader.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\honeywell\th8320zw1000.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\rcs\therm0005.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\rcs\therm0007.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\rcs\therm0009.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\everspring\tse03.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\wenzhou\tsp01.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\wenzhou\tz65d.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\wenzhou\tz66d.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\wenzhou\tz67.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\wenzhou\tz88.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\trane\TZEMT400AB32MAA.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\trane\TZEMT400BB32MAA.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\widom\UBS104.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\vitrum\vitrumBS.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\leviton\vrcpg.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\leviton\vrf01.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\leviton\vri06.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\leviton\vri10.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\aeotec\watersensor.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\dragontech\wd-100.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\waynedalton\WDTC-20.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\danfoss\z.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\vision\zd2102.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\act\zdm230.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\act\zdw103.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\act\zdw232.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\remotec\zfm-80.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\act\zir010.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\vision\zm1601eu.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\zwave.me\ZME_05431.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\zwave.me\ZME_06433.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\zwave.me\ZME_06436.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\zwave.me\ZME_064435.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\zwave.me\ZME_WALLC-S.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\zwave.me\ZME_WCD2.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\qubino\ZMNHAA2.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\qubino\ZMNHBA2.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\qubino\ZMNHCA2.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\qubino\ZMNHDA2.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\qubino\ZMNHIA2.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\qubino\ZMNHJA2.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\vision\zp3102.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\act\zrp110.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\act\zrw103.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\vision\zs5101eu.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\homeseer\ztroller.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\remotec\zurc.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\duwi\ZWES1000.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\duwi\ZWESJ300.xml">
+      <Filter>config</Filter>
+    </Xml>
+    <Xml Include="config\remotec\zxt-120.xml">
+      <Filter>config</Filter>
+    </Xml>
   </ItemGroup>
 </Project>
