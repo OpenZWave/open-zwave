@@ -31,7 +31,7 @@
 
 #ifdef WIN32
 #include "platform/windows/TimeStampImpl.h"	// Platform-specific implementation of a TimeStamp
-#elif defined _WINRT_DLL
+#elif defined WINRT
 #include "platform/winRT/TimeStampImpl.h"	// Platform-specific implementation of a TimeStamp
 #else
 #include "platform/unix/TimeStampImpl.h"	// Platform-specific implementation of a TimeStamp

@@ -33,7 +33,7 @@
 
 #ifdef WIN32
 #include "platform/windows/SerialControllerImpl.h"	// Platform-specific implementation of a serial port
-#elif defined _WINRT_DLL
+#elif defined WINRT
 #include "platform/winRT/SerialControllerImpl.h"	// Platform-specific implementation of a serial port
 #else
 #include "platform/unix/SerialControllerImpl.h"	// Platform-specific implementation of a serial port

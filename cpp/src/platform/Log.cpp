@@ -33,7 +33,7 @@
 
 #ifdef WIN32
 #include "platform/windows/LogImpl.h"	// Platform-specific implementation of a log
-#elif defined _WINRT_DLL
+#elif defined WINRT
 #include "platform/winRT/LogImpl.h"	// Platform-specific implementation of a log
 #else
 #include "platform/unix/LogImpl.h"	// Platform-specific implementation of a log
