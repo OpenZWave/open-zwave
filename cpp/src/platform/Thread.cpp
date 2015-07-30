@@ -31,7 +31,7 @@
 
 #ifdef WIN32
 #include "platform/windows/ThreadImpl.h"	// Platform-specific implementation of a thread
-#elif defined _WINRT_DLL
+#elif defined WINRT
 #include "platform/winRT/ThreadImpl.h"	// Platform-specific implementation of a thread
 #else
 #include "platform/unix/ThreadImpl.h"	// Platform-specific implementation of a thread
