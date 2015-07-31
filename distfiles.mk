@@ -156,6 +156,7 @@ DISTFILES =	.gitignore \
 	config/wenzhou/tz67.xml \
 	config/wenzhou/tz88.xml \
 	config/widom/UBS104.xml \
+	config/widom/UME304C_S.xml \
 	config/zipato/MiniKeypad.xml \
 	config/zipato/RGBBulb.xml \
 	config/zwave.me/ZME_05431.xml \
