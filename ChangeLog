@@ -186,6 +186,7 @@ Version 1.3
    ValueList (when we get a ValueAdded Notificiation)
  - Issue #637 - Change Color Channels ValueID from Config to System Genre (Justin)
  - Issue #635 and #636 - Add widom energy driven switch from RobyBob64 (Justin)
+ - Issue #632 - Add Horstmann SES 301 Temp Sensor from ado464 (Justin)
 
 Version 1.2 
  - Released on 15/10/14
