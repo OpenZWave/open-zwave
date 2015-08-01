@@ -272,6 +272,9 @@ Default setting: 10 (0,1 kWh)</Help>
     </Value>
   </CommandClass>
     
+    <!-- Map endpoints to instances -->
+    <CommandClass id="96" mapping="endpoints" />
+    
 
   <!-- Association Groups -->  
   <CommandClass id="133">
