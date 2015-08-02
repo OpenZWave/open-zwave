@@ -75,6 +75,7 @@ DISTFILES =	.gitignore \
 	config/evolve/ltm-5.xml \
 	config/fibaro/fgbs001.xml \
 	config/fibaro/fgd211.xml \
+	config/fibaro/fgd212.xml \
 	config/fibaro/fgfs101.xml \
 	config/fibaro/fgk001.xml \
 	config/fibaro/fgms.xml \
