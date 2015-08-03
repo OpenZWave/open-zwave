@@ -782,7 +782,7 @@ bool Color::SetValue
 	} else if (Value_Color_Index == _value.GetID().GetIndex()) {
 
 		ValueList const* value = static_cast<ValueList const*>(&_value);
-		uint8 index = value->GetItem().m_value;
+		uint8 index = value->GetItem()->m_value;
 		if ((m_capabilities) & (1<<(COLORIDX_INDEXCOLOR))) {
 			Log::Write( LogLevel_Info, GetNodeId(), "Color::SetValue - Setting Color Index Value (Real)");
 

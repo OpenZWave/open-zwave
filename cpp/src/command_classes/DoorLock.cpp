@@ -372,17 +372,17 @@ bool DoorLock::SetValue
 	if ( (Value_Lock_Mode == _value.GetID().GetIndex()) && (ValueID::ValueType_List == _value.GetID().GetType()) )
 	{
 		ValueList const* value = static_cast<ValueList const*>(&_value);
-		ValueList::Item const& item = value->GetItem();
+		ValueList::Item const *item = value->GetItem();
 
 
-		Log::Write( LogLevel_Info, GetNodeId(), "Value_Lock_Mode::Set - Requesting lock to be %s", item.m_label.c_str() );
+		Log::Write( LogLevel_Info, GetNodeId(), "Value_Lock_Mode::Set - Requesting lock to be %s", item->m_label.c_str() );
 		Msg* msg = new Msg( "DoorLockCmd_Set",  GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 		msg->SetInstance( this, _value.GetID().GetInstance() );
 		msg->Append( GetNodeId() );
 		msg->Append( 3 );
 		msg->Append( GetCommandClassId() );
 		msg->Append( DoorLockCmd_Set );
-		msg->Append( item.m_value );
+		msg->Append( item->m_value );
 		msg->Append( GetDriver()->GetTransmitOptions() );
 		GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 		return true;
@@ -400,8 +400,8 @@ bool DoorLock::SetValue
 				}
 				if( ValueList* value = static_cast<ValueList*>( GetValue( instance, _value.GetID().GetIndex() ) ) )
 				{
-					ValueList::Item const& item = (static_cast<ValueList const*>( &_value))->GetItem();
-					value->OnValueRefreshed( item.m_value );
+					ValueList::Item const *item = (static_cast<ValueList const*>( &_value))->GetItem();
+					value->OnValueRefreshed( item->m_value );
 					value->Release();
 				}
 
@@ -443,8 +443,8 @@ bool DoorLock::SetValue
 		{
 			bool ok = true;
 			if( ValueList* value = static_cast<ValueList*>( GetValue( instance, Value_System_Config_Mode ) ) ) {
-				ValueList::Item const& item = value->GetItem();
-				m_timeoutsupported = item.m_value;
+				ValueList::Item const *item = value->GetItem();
+				m_timeoutsupported = item->m_value;
 			} else {
 				ok = false;
 				Log::Write(LogLevel_Warning, GetNodeId(), "Failed To Retrieve Value_System_Config_Mode For SetValue");

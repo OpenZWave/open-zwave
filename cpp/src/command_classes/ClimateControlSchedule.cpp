@@ -373,7 +373,11 @@ bool ClimateControlSchedule::SetValue
 
 		if( state && setback )
 		{
-			ValueList::Item const& item = state->GetItem();
+			ValueList::Item const *item = state->GetItem();
+			if (item == NULL) {
+			        Log::Write(LogLevel_Warning, GetNodeId(), "Couldn't get Item from ValueList");
+			        return false;
+                        }
 
 			Msg* msg = new Msg( "ClimateControlScheduleCmd_OverrideSet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 			msg->SetInstance( this, instance );
@@ -381,7 +385,7 @@ bool ClimateControlSchedule::SetValue
 			msg->Append( 4 );
 			msg->Append( GetCommandClassId() );
 			msg->Append( ClimateControlScheduleCmd_OverrideSet );
-			msg->Append( (uint8)item.m_value );
+			msg->Append( (uint8)item->m_value );
 			msg->Append( setback->GetValue() );
 			msg->Append( GetDriver()->GetTransmitOptions() );
 			GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );

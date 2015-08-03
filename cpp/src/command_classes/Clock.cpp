@@ -178,7 +178,7 @@ bool Clock::SetValue
 
 	if( dayValue && hourValue && minuteValue )
 	{
-		uint8 day = dayValue->GetItem().m_value;
+		uint8 day = dayValue->GetItem()->m_value;
 		uint8 hour = hourValue->GetValue();
 		uint8 minute = minuteValue->GetValue();
 

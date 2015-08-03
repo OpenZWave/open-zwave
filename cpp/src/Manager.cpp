@@ -2206,8 +2206,8 @@ bool Manager::GetValueAsString
 				{
 					if( ValueList* value = static_cast<ValueList*>( driver->GetValue( _id ) ) )
 					{
-						ValueList::Item const& item = value->GetItem();
-						*o_value = item.m_label;
+						ValueList::Item const *item = value->GetItem();
+						*o_value = item->m_label;
 						value->Release();
 						res = true;
 					} else {
@@ -2314,10 +2314,10 @@ bool Manager::GetValueListSelection
 				LockGuard LG(driver->m_nodeMutex);
 				if( ValueList* value = static_cast<ValueList*>( driver->GetValue( _id ) ) )
 				{
-					ValueList::Item const& item = value->GetItem();
-					if( &item != NULL && item.m_label.length() > 0)
+					ValueList::Item const *item = value->GetItem();
+					if( &item != NULL && item->m_label.length() > 0)
 					{
-						*o_value = item.m_label;
+						*o_value = item->m_label;
 						res = true;
 					} else {
 						Log::Write(LogLevel_Warning, "ValueList returned a NULL value for GetValueListSelection: %s", value->GetLabel().c_str());
@@ -2356,8 +2356,8 @@ bool Manager::GetValueListSelection
 				LockGuard LG(driver->m_nodeMutex);
 				if( ValueList* value = static_cast<ValueList*>( driver->GetValue( _id ) ) )
 				{
-					ValueList::Item const& item = value->GetItem();
-					*o_value = item.m_value;
+					ValueList::Item const *item = value->GetItem();
+					*o_value = item->m_value;
 					value->Release();
 					res = true;
 				} else {

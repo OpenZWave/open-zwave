@@ -146,16 +146,16 @@ bool Protection::SetValue
 	if( ValueID::ValueType_List == _value.GetID().GetType() )
 	{
 		ValueList const* value = static_cast<ValueList const*>(&_value);
-		ValueList::Item const& item = value->GetItem();
+		ValueList::Item const *item = value->GetItem();
 
-		Log::Write( LogLevel_Info, GetNodeId(), "Protection::Set - Setting protection state to '%s'", item.m_label.c_str() );
+		Log::Write( LogLevel_Info, GetNodeId(), "Protection::Set - Setting protection state to '%s'", item->m_label.c_str() );
 		Msg* msg = new Msg( "ProtectionCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 		msg->SetInstance( this, _value.GetID().GetInstance() );
 		msg->Append( GetNodeId() );
 		msg->Append( 3 );
 		msg->Append( GetCommandClassId() );
 		msg->Append( ProtectionCmd_Set );
-		msg->Append( (uint8)item.m_value );
+		msg->Append( (uint8)item->m_value );
 		msg->Append( GetDriver()->GetTransmitOptions() );
 		GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 		return true;

@@ -354,11 +354,11 @@ bool ValueList::GetItemLabels
 // <ValueList::GetItem>
 // Get the Item at the Currently selected Index
 //-----------------------------------------------------------------------------
-ValueList::Item const& ValueList::GetItem() const {
+ValueList::Item const *ValueList::GetItem() const {
 	try {
-		return m_items.at(m_valueIdx);
+		return &m_items.at(m_valueIdx);
 	} catch (const std::out_of_range& oor) {
-		return *(ValueList::Item*)0;
+		return NULL;
 	}
 }
 
