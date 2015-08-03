@@ -199,7 +199,8 @@ bool ControllerReplication::StartReplication
 	if( ValueList* value = static_cast<ValueList*>( GetValue( _instance, ControllerReplicationIndex_Function ) ) )
 	{
 		ValueList::Item const *item = value->GetItem();
-		m_funcId = item->m_value;
+		if (item)
+			m_funcId = item->m_value;
 		value->Release();
 	}
 	else

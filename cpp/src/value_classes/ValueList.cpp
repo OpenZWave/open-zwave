@@ -358,6 +358,7 @@ ValueList::Item const *ValueList::GetItem() const {
 	try {
 		return &m_items.at(m_valueIdx);
 	} catch (const std::out_of_range& oor) {
+		Log::Write(LogLevel_Warning, "Invalid Index Set on ValueList");
 		return NULL;
 	}
 }

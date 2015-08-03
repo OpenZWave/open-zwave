@@ -227,7 +227,8 @@ bool Powerlevel::SetValue
 			if( ValueList* value = static_cast<ValueList*>( GetValue( instance, PowerlevelIndex_Powerlevel ) ) )
 			{
 				ValueList::Item const *item = (static_cast<ValueList const*>( &_value))->GetItem();
-				value->OnValueRefreshed( item->m_value );
+				if (item != NULL)
+					value->OnValueRefreshed( item->m_value );
 				value->Release();
 			}
 			res = true;
@@ -271,7 +272,8 @@ bool Powerlevel::SetValue
 			if( ValueList* value = static_cast<ValueList*>( GetValue( instance, PowerlevelIndex_TestPowerlevel ) ) )
 			{
 				ValueList::Item const *item = (static_cast<ValueList const*>( &_value))->GetItem();
-				value->OnValueRefreshed( item->m_value );
+				if (item != NULL)
+					value->OnValueRefreshed( item->m_value );
 				value->Release();
 			}
 			res = true;
@@ -332,7 +334,8 @@ bool Powerlevel::Set
 	if( ValueList* value = static_cast<ValueList*>( GetValue( _instance, PowerlevelIndex_Powerlevel ) ) )
 	{
 		ValueList::Item const *item = value->GetItem();
-		powerLevel = (PowerLevelEnum)item->m_value;
+		if (item != NULL)
+			powerLevel = (PowerLevelEnum)item->m_value;
 		value->Release();
 	}
 	else
@@ -397,7 +400,8 @@ bool Powerlevel::Test
 	if( ValueList* value = static_cast<ValueList*>( GetValue( _instance, PowerlevelIndex_TestPowerlevel ) ) )
 	{
 		ValueList::Item const *item = value->GetItem();
-		powerLevel = (PowerLevelEnum)item->m_value;
+		if (item != NULL)
+			powerLevel = (PowerLevelEnum)item->m_value;
 		value->Release();
 	}
 	else
