@@ -261,7 +261,7 @@ bool ThermostatMode::HandleMsg
 			if( ValueList* valueList = static_cast<ValueList*>( GetValue( _instance, 0 ) ) )
 			{
 				valueList->OnValueRefreshed( mode );
-				Log::Write( LogLevel_Info, GetNodeId(), "Received thermostat mode: %s", valueList->GetItem().m_label.c_str() );
+				Log::Write( LogLevel_Info, GetNodeId(), "Received thermostat mode: %s", valueList->GetItem()->m_label.c_str() );
 				valueList->Release();
 			}
 			else
@@ -328,7 +328,7 @@ bool ThermostatMode::SetValue
 	if( ValueID::ValueType_List == _value.GetID().GetType() )
 	{
 		ValueList const* value = static_cast<ValueList const*>(&_value);
-		uint8 state = (uint8)value->GetItem().m_value;
+		uint8 state = (uint8)value->GetItem()->m_value;
 
 		Msg* msg = new Msg( "ThermostatModeCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 		msg->Append( GetNodeId() );
