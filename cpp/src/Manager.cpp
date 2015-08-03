@@ -2207,9 +2207,15 @@ bool Manager::GetValueAsString
 					if( ValueList* value = static_cast<ValueList*>( driver->GetValue( _id ) ) )
 					{
 						ValueList::Item const *item = value->GetItem();
-						*o_value = item->m_label;
+						if (item == NULL) {
+							o_value = NULL;
+							res = false;
+						} else {
+							*o_value = item->m_label;
+							res = true;
+						}
 						value->Release();
-						res = true;
+
 					} else {
 						OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to GetValueAsString");
 					}
@@ -2315,11 +2321,12 @@ bool Manager::GetValueListSelection
 				if( ValueList* value = static_cast<ValueList*>( driver->GetValue( _id ) ) )
 				{
 					ValueList::Item const *item = value->GetItem();
-					if( &item != NULL && item->m_label.length() > 0)
+					if( item != NULL && item->m_label.length() > 0)
 					{
 						*o_value = item->m_label;
 						res = true;
 					} else {
+						o_value = NULL;
 						Log::Write(LogLevel_Warning, "ValueList returned a NULL value for GetValueListSelection: %s", value->GetLabel().c_str());
 					}
 					value->Release();
@@ -2357,9 +2364,15 @@ bool Manager::GetValueListSelection
 				if( ValueList* value = static_cast<ValueList*>( driver->GetValue( _id ) ) )
 				{
 					ValueList::Item const *item = value->GetItem();
-					*o_value = item->m_value;
+					if (item == NULL) {
+						*o_value = NULL;
+						res = false;
+					} else {
+						*o_value = item->m_value;
+						res = true;
+					}
 					value->Release();
-					res = true;
+
 				} else {
 					OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to GetValueListSelection");
 				}

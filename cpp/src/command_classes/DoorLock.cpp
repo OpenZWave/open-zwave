@@ -373,6 +373,8 @@ bool DoorLock::SetValue
 	{
 		ValueList const* value = static_cast<ValueList const*>(&_value);
 		ValueList::Item const *item = value->GetItem();
+		if (item == NULL)
+			return false;
 
 
 		Log::Write( LogLevel_Info, GetNodeId(), "Value_Lock_Mode::Set - Requesting lock to be %s", item->m_label.c_str() );
@@ -401,7 +403,8 @@ bool DoorLock::SetValue
 				if( ValueList* value = static_cast<ValueList*>( GetValue( instance, _value.GetID().GetIndex() ) ) )
 				{
 					ValueList::Item const *item = (static_cast<ValueList const*>( &_value))->GetItem();
-					value->OnValueRefreshed( item->m_value );
+					if (item != NULL)
+						value->OnValueRefreshed( item->m_value );
 					value->Release();
 				}
 
@@ -444,7 +447,8 @@ bool DoorLock::SetValue
 			bool ok = true;
 			if( ValueList* value = static_cast<ValueList*>( GetValue( instance, Value_System_Config_Mode ) ) ) {
 				ValueList::Item const *item = value->GetItem();
-				m_timeoutsupported = item->m_value;
+				if (item != NULL)
+					m_timeoutsupported = item->m_value;
 			} else {
 				ok = false;
 				Log::Write(LogLevel_Warning, GetNodeId(), "Failed To Retrieve Value_System_Config_Mode For SetValue");

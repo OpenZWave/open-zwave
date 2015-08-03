@@ -119,7 +119,10 @@ bool SwitchAll::HandleMsg
 		{
 			value->OnValueRefreshed( (int32)_data[1] );
 			value->Release();
-			Log::Write( LogLevel_Info, GetNodeId(), "Received SwitchAll report from node %d: %s", GetNodeId(), value->GetItem()->m_label.c_str() );
+			if (value->GetItem())
+				Log::Write( LogLevel_Info, GetNodeId(), "Received SwitchAll report from node %d: %s", GetNodeId(), value->GetItem()->m_label.c_str() );
+			else
+				Log::Write( LogLevel_Info, GetNodeId(), "Received SwitchAll report from node %d: %d", GetNodeId(), _data[1]);
 		}
  		return true;
 	}
@@ -140,6 +143,8 @@ bool SwitchAll::SetValue
 	{
 		ValueList const* value = static_cast<ValueList const*>(&_value);
 		ValueList::Item const *item = value->GetItem();
+		if (item == NULL)
+			return false;
 
 		Log::Write( LogLevel_Info, GetNodeId(), "SwitchAll::Set - %s on node %d", item->m_label.c_str(), GetNodeId() );
 		Msg* msg = new Msg( "SwitchAllCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
