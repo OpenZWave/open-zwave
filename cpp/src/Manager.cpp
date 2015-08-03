@@ -2365,7 +2365,6 @@ bool Manager::GetValueListSelection
 				{
 					ValueList::Item const *item = value->GetItem();
 					if (item == NULL) {
-						*o_value = NULL;
 						res = false;
 					} else {
 						*o_value = item->m_value;

@@ -328,7 +328,7 @@ bool Powerlevel::Set
 	uint8 const _instance
 )
 {
-	PowerLevelEnum powerLevel;
+	PowerLevelEnum powerLevel = PowerLevel_Normal;
 	uint8 timeout;
 
 	if( ValueList* value = static_cast<ValueList*>( GetValue( _instance, PowerlevelIndex_Powerlevel ) ) )
@@ -384,7 +384,7 @@ bool Powerlevel::Test
 )
 {
 	uint8 testNodeId;
-	PowerLevelEnum powerLevel;
+	PowerLevelEnum powerLevel = PowerLevel_Normal;
 	uint16 numFrames;
 
 	if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, PowerlevelIndex_TestNode ) ) )
