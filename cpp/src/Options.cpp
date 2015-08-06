@@ -88,8 +88,13 @@ Options* Options::Create
 #endif
 			} else {
 				Log::Write( LogLevel_Error, "Cannot find a path to the configuration files at %s. Exiting...", configPath.c_str() );
+<<<<<<< HEAD
 				OZW_FATAL_ERROR(OZWException::OZWEXCEPTION_CONFIG, "Cannot Find Configuration Files");
 				return NULL;
+=======
+                OZW_FATAL_ERROR(OZWException::OZWEXCEPTION_CONFIG, "Cannot Find Configuration Files");
+                return NULL;
+>>>>>>> change line endings to LF instead of CRLF, remove last Microsoft Copyright from header
 			}
 		}
 		FileOps::Destroy();
@@ -126,6 +131,7 @@ Options* Options::Create
 		s_instance->AddOptionBool( 		"EnableSIS", 				true);						// Automatically become a SUC if there is no SUC on the network.
 		s_instance->AddOptionBool( 		"AssumeAwake", 				true);						// Assume Devices that Support the Wakeup CC are awake when we first query them....
 		s_instance->AddOptionBool(		"NotifyOnDriverUnload",		false);						// Should we send the Node/Value Notifications on Driver Unloading - Read comments in Driver::~Driver() method about possible race conditions
+<<<<<<< HEAD
 		s_instance->AddOptionString(	"SecurityStrategy", 		"SUPPORTED", 	false);		// Should we encrypt CC's that are available via both clear text and Security CC?
 		s_instance->AddOptionString(	"CustomSecuredCC", 			"0x62,0x4c,0x63", 	false);	// What List of Custom CC should we always encrypt if SecurityStrategy is CUSTOM
 		s_instance->AddOptionBool(		"EnforceSecureReception",	true);						// if we recieve a clear text message for a CC that is Secured, should we drop the message
@@ -133,6 +139,14 @@ Options* Options::Create
 #if defined WINRT
 		s_instance->AddOptionInt(       "ThreadTerminateTimeout",   -1);						// Since threads cannot be terminated in WinRT, Thread::Terminate will simply wait for them to exit on there own
 #endif
+=======
+        s_instance->AddOptionString(	"SecurityStrategy", 		"SUPPORTED", 	false);		// Should we encrypt CC's that are available via both clear text and Security CC?
+		s_instance->AddOptionString(	"CustomSecuredCC", 			"0x62,0x4c,0x63", 	false);	// What List of Custom CC should we always encrypt if SecurityStrategy is CUSTOM
+
+#if defined WINRT
+		s_instance->AddOptionInt(       "ThreadTerminateTimeout",   -1);						// Since threads cannot be terminated in WinRT, Thread::Terminate will simply wait for them to exit on there own
+#endif
+>>>>>>> change line endings to LF instead of CRLF, remove last Microsoft Copyright from header
 	}
 
 	return s_instance;
@@ -149,7 +163,11 @@ bool Options::Destroy
 	if( Manager::Get() )
 	{
 		// Cannot delete Options because Manager object still exists
+<<<<<<< HEAD
 		OZW_ERROR(OZWException::OZWEXCEPTION_OPTIONS, "Cannot Delete Options Class as Manager Class is still around");
+=======
+        OZW_ERROR(OZWException::OZWEXCEPTION_OPTIONS, "Cannot Delete Options Class as Manager Class is still around");
+>>>>>>> change line endings to LF instead of CRLF, remove last Microsoft Copyright from header
 		return false;
 	}
 
