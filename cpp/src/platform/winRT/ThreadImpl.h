@@ -4,9 +4,6 @@
 //
 //	WinRT implementation of a cross-platform thread
 //
-//	Copyright (c) 2015 Microsoft Corporation
-//	All rights reserved.
-//
 //	SOFTWARE NOTICE AND LICENSE
 //
 //	This file is part of OpenZWave.
