@@ -4,9 +4,6 @@
 //
 //	WinRT implementation of message and error logging
 //
-//	Copyright (c) 2015 Microsoft Corporation
-//	All rights reserved.
-//
 //	SOFTWARE NOTICE AND LICENSE
 //
 //	This file is part of OpenZWave.
