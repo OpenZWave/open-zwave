@@ -90,6 +90,7 @@ namespace OpenZWave
 			friend class MultiInstanceAssociation;
 			friend class NodeNaming;
 			friend class Protection;
+			friend class SceneControllerConf;
 			friend class Security;
 			friend class SensorAlarm;
 			friend class SensorBinary;
@@ -558,6 +559,14 @@ namespace OpenZWave
 			static map<uint8,DeviceClass*> 			s_roleDeviceClasses;		// Map of Zwave+ role device classes.
 			static map<uint16,DeviceClass*> 		s_deviceTypeClasses;		// Map of Zwave+ device type device classes.
 			static map<uint8, DeviceClass*>			s_nodeTypes;				// Map of ZWave+ Node Types
+
+
+
+			//-----------------------------------------------------------------------------
+			//	Scenes
+			//-----------------------------------------------------------------------------
+			public:
+				bool SetActuatorScene( uint8 const _sceneId, uint8 const _value, uint8 const _duration );
 
 
 			//-----------------------------------------------------------------------------

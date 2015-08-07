@@ -66,6 +66,8 @@ using namespace OpenZWave;
 #include "command_classes/Proprietary.h"
 #include "command_classes/Protection.h"
 #include "command_classes/SceneActivation.h"
+#include "command_classes/SceneActuatorConf.h"
+#include "command_classes/SceneControllerConf.h"
 #include "command_classes/Security.h"
 #include "command_classes/SensorAlarm.h"
 #include "command_classes/SensorBinary.h"
@@ -219,6 +221,8 @@ void CommandClasses::RegisterCommandClasses
 	cc.Register( Proprietary::StaticGetCommandClassId(), Proprietary::StaticGetCommandClassName(), Proprietary::Create );
 	cc.Register( Protection::StaticGetCommandClassId(), Protection::StaticGetCommandClassName(), Protection::Create );
 	cc.Register( SceneActivation::StaticGetCommandClassId(), SceneActivation::StaticGetCommandClassName(), SceneActivation::Create );
+	cc.Register( SceneActuatorConf::StaticGetCommandClassId(), SceneActuatorConf::StaticGetCommandClassName(), SceneActuatorConf::Create );
+	cc.Register( SceneControllerConf::StaticGetCommandClassId(), SceneControllerConf::StaticGetCommandClassName(), SceneControllerConf::Create );
 	cc.Register( Security::StaticGetCommandClassId(), Security::StaticGetCommandClassName(), Security::Create);
 	cc.Register( SensorAlarm::StaticGetCommandClassId(), SensorAlarm::StaticGetCommandClassName(), SensorAlarm::Create );
 	cc.Register( SensorBinary::StaticGetCommandClassId(), SensorBinary::StaticGetCommandClassName(), SensorBinary::Create );

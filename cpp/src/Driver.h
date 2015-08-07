@@ -766,6 +766,13 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		Event*				m_notificationsEvent;
 
 	//-----------------------------------------------------------------------------
+	//	Scenes
+	//-----------------------------------------------------------------------------
+	public:
+		bool SetActuatorScene( uint8 const _nodeId, uint8 const _sceneId, uint8 const _value, uint8 const _duration );
+		void ActivateScene( uint8 const _sceneId, uint8 const _duration );
+
+	//-----------------------------------------------------------------------------
 	//	Statistics
 	//-----------------------------------------------------------------------------
 	public:

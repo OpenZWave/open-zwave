@@ -1,10 +1,10 @@
 //-----------------------------------------------------------------------------
 //
-//	SceneActivation.h
+//	SceneActuatorConf.h
 //
-//	Implementation of the Z-Wave COMMAND_CLASS_SCENE_ACTIVATION
+//	Implementation of the Z-Wave  COMMAND_CLASS_SCENE_ACTUATOR_CONF
 //
-//	Copyright (c) 2012 Greg Satz <satz@iranger.com>
+//	Copyright (c) 2015
 //
 //	SOFTWARE NOTICE AND LICENSE
 //
@@ -25,41 +25,40 @@
 //
 //-----------------------------------------------------------------------------
 
-#ifndef _SceneActivation_H
-#define _SceneActivation_H
+#ifndef _SceneActuatorConf_H
+#define _SceneActuatorConf_H
 
 #include "command_classes/CommandClass.h"
 
 namespace OpenZWave
 {
-	class ValueByte;
-
-	/** \brief Implements COMMAND_CLASS_SCENEACTIVATION (0x2B), a Z-Wave device command class.
+	/** \brief Implements  COMMAND_CLASS_SCENE_ACTUATOR_CONF  (0x2C), a Z-Wave device command class.
 	 */
-	class SceneActivation: public CommandClass
+	class SceneActuatorConf: public CommandClass
 	{
 	public:
-		static CommandClass* Create( uint32 const _homeId, uint8 const _nodeId ){ return new SceneActivation( _homeId, _nodeId ); }
-		virtual ~SceneActivation(){}
+		static CommandClass* Create( uint32 const _homeId, uint8 const _nodeId ){ return new SceneActuatorConf( _homeId, _nodeId ); }
+		virtual ~SceneActuatorConf(){}
 
-		/** \brief Get command class ID (1 byte) identifying this command class. */
-		static uint8 const StaticGetCommandClassId(){ return 0x2B; }		
-		/** \brief Get a string containing the name of this command class. */
-		static string const StaticGetCommandClassName(){ return "COMMAND_CLASS_SCENE_ACTIVATION"; }
+		static uint8 const StaticGetCommandClassId(){ return 0x2c; }
+		static string const StaticGetCommandClassName(){ return "COMMAND_CLASS_SCENE_ACTUATOR_CONF"; }
 
 		// From CommandClass
-		/** \brief Get command class ID (1 byte) identifying this command class. (Inherited from CommandClass) */
+		virtual bool RequestState( uint32 const _requestFlags, uint8 const _instance, Driver::MsgQueue const _queue );
+		virtual bool RequestValue( uint32 const _requestFlags, uint8 const _index, uint8 const _instance, Driver::MsgQueue const _queue );
 		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }
-		/** \brief Get a string containing the name of this command class. (Inherited from CommandClass) */
 		virtual string const GetCommandClassName()const{ return StaticGetCommandClassName(); }
-		/** \brief Handle a response to a message associated with this command class. (Inherited from CommandClass) */
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );
 
-		static void Activate( Driver * driver, uint8 const _scene, uint8 const _duration);
+		void SetScene( uint8 const _sceneId, uint8 const _level, uint8 const _duration );
+
 	private:
-		SceneActivation( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
+		SceneActuatorConf( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
+
+
 	};
 
 } // namespace OpenZWave
 
 #endif
+

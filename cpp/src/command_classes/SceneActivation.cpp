@@ -31,6 +31,7 @@
 #include "Msg.h"
 #include "Node.h"
 #include "Driver.h"
+#include "Manager.h"
 #include "Notification.h"
 #include "platform/Log.h"
 
@@ -76,3 +77,30 @@ bool SceneActivation::HandleMsg
 	return false;
 }
 
+//-----------------------------------------------------------------------------
+// <SceneActivation::Activate>
+// Send a broadcast message to activate the scene.
+//-----------------------------------------------------------------------------
+void SceneActivation::Activate
+(
+	Driver * driver,
+	uint8 const _scene,
+	uint8 const _duration
+)
+{
+	Log::Write( LogLevel_Info, "Activating scene %d, duration %d", _scene, _duration );
+
+	if ( driver != NULL )
+	{
+		Msg* msg = new Msg( "SceneActivationCmd_Set", 0xFF, REQUEST, FUNC_ID_ZW_SEND_DATA, true , true);
+		msg->Append( 0xFF );
+		msg->Append( 4 );
+		msg->Append( SceneActivation::StaticGetCommandClassId() );
+		msg->Append( SceneActivationCmd_Set );
+		msg->Append( _scene );
+		msg->Append( _duration );
+		msg->Append( driver->GetTransmitOptions() );
+		driver->SendMsg( msg, Driver::MsgQueue_Send );
+	}
+
+}
