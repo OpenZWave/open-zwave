@@ -226,8 +226,9 @@ bool Powerlevel::SetValue
 		{
 			if( ValueList* value = static_cast<ValueList*>( GetValue( instance, PowerlevelIndex_Powerlevel ) ) )
 			{
-				ValueList::Item const& item = (static_cast<ValueList const*>( &_value))->GetItem();
-				value->OnValueRefreshed( item.m_value );
+				ValueList::Item const *item = (static_cast<ValueList const*>( &_value))->GetItem();
+				if (item != NULL)
+					value->OnValueRefreshed( item->m_value );
 				value->Release();
 			}
 			res = true;
@@ -270,8 +271,9 @@ bool Powerlevel::SetValue
 		{
 			if( ValueList* value = static_cast<ValueList*>( GetValue( instance, PowerlevelIndex_TestPowerlevel ) ) )
 			{
-				ValueList::Item const& item = (static_cast<ValueList const*>( &_value))->GetItem();
-				value->OnValueRefreshed( item.m_value );
+				ValueList::Item const *item = (static_cast<ValueList const*>( &_value))->GetItem();
+				if (item != NULL)
+					value->OnValueRefreshed( item->m_value );
 				value->Release();
 			}
 			res = true;
@@ -326,13 +328,14 @@ bool Powerlevel::Set
 	uint8 const _instance
 )
 {
-	PowerLevelEnum powerLevel;
+	PowerLevelEnum powerLevel = PowerLevel_Normal;
 	uint8 timeout;
 
 	if( ValueList* value = static_cast<ValueList*>( GetValue( _instance, PowerlevelIndex_Powerlevel ) ) )
 	{
-		ValueList::Item const& item = value->GetItem();
-		powerLevel = (PowerLevelEnum)item.m_value;
+		ValueList::Item const *item = value->GetItem();
+		if (item != NULL)
+			powerLevel = (PowerLevelEnum)item->m_value;
 		value->Release();
 	}
 	else
@@ -381,7 +384,7 @@ bool Powerlevel::Test
 )
 {
 	uint8 testNodeId;
-	PowerLevelEnum powerLevel;
+	PowerLevelEnum powerLevel = PowerLevel_Normal;
 	uint16 numFrames;
 
 	if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, PowerlevelIndex_TestNode ) ) )
@@ -396,8 +399,9 @@ bool Powerlevel::Test
 
 	if( ValueList* value = static_cast<ValueList*>( GetValue( _instance, PowerlevelIndex_TestPowerlevel ) ) )
 	{
-		ValueList::Item const& item = value->GetItem();
-		powerLevel = (PowerLevelEnum)item.m_value;
+		ValueList::Item const *item = value->GetItem();
+		if (item != NULL)
+			powerLevel = (PowerLevelEnum)item->m_value;
 		value->Release();
 	}
 	else

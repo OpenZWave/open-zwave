@@ -178,21 +178,25 @@ bool Clock::SetValue
 
 	if( dayValue && hourValue && minuteValue )
 	{
-		uint8 day = dayValue->GetItem().m_value;
-		uint8 hour = hourValue->GetValue();
-		uint8 minute = minuteValue->GetValue();
+		if (dayValue->GetItem() == NULL) {
+			ret = false;
+		} else {
+			uint8 day = dayValue->GetItem()->m_value;
+			uint8 hour = hourValue->GetValue();
+			uint8 minute = minuteValue->GetValue();
 
-		Msg* msg = new Msg( "ClockCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-		msg->SetInstance( this, instance );
-		msg->Append( GetNodeId() );
-		msg->Append( 4 );
-		msg->Append( GetCommandClassId() );
-		msg->Append( ClockCmd_Set );
-		msg->Append( ( day << 5 ) | hour );
-		msg->Append( minute );
-		msg->Append( GetDriver()->GetTransmitOptions() );
-		GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
-		ret = true;
+			Msg* msg = new Msg( "ClockCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+			msg->SetInstance( this, instance );
+			msg->Append( GetNodeId() );
+			msg->Append( 4 );
+			msg->Append( GetCommandClassId() );
+			msg->Append( ClockCmd_Set );
+			msg->Append( ( day << 5 ) | hour );
+			msg->Append( minute );
+			msg->Append( GetDriver()->GetTransmitOptions() );
+			GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
+			ret = true;
+		}
 	}
 
 	if( dayValue != NULL )

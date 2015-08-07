@@ -782,7 +782,10 @@ bool Color::SetValue
 	} else if (Value_Color_Index == _value.GetID().GetIndex()) {
 
 		ValueList const* value = static_cast<ValueList const*>(&_value);
-		uint8 index = value->GetItem().m_value;
+		if (value->GetItem() == NULL) {
+			return false;
+		}
+		uint8 index = value->GetItem()->m_value;
 		if ((m_capabilities) & (1<<(COLORIDX_INDEXCOLOR))) {
 			Log::Write( LogLevel_Info, GetNodeId(), "Color::SetValue - Setting Color Index Value (Real)");
 
@@ -1096,7 +1099,7 @@ void Color::CreateVars
 	if( Node* node = GetNodeUnsafe() )
 	{
 		/* XXX TODO convert this to a bitset when we implement */
-		node->CreateValueInt( ValueID::ValueGenre_Config, GetCommandClassId(), _instance, Value_Color_Channels_Capabilities, "Color Channels", "", false, false, m_capabilities, 0 );
+		node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, Value_Color_Channels_Capabilities, "Color Channels", "", false, false, m_capabilities, 0 );
 	}
 
 

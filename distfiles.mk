@@ -75,6 +75,7 @@ DISTFILES =	.gitignore \
 	config/evolve/ltm-5.xml \
 	config/fibaro/fgbs001.xml \
 	config/fibaro/fgd211.xml \
+	config/fibaro/fgd212.xml \
 	config/fibaro/fgfs101.xml \
 	config/fibaro/fgk001.xml \
 	config/fibaro/fgms.xml \
@@ -136,6 +137,7 @@ DISTFILES =	.gitignore \
 	config/remotec/zfm-80.xml \
 	config/remotec/zurc.xml \
 	config/remotec/zxt-120.xml \
+	config/schlage/BE469NXCEN.xml \
 	config/schlagelink/itemp.xml \
 	config/schlagelink/minikeypad.xml \
 	config/swiid/swiidinter.xml \
@@ -155,6 +157,7 @@ DISTFILES =	.gitignore \
 	config/wenzhou/tz67.xml \
 	config/wenzhou/tz88.xml \
 	config/widom/UBS104.xml \
+	config/widom/UME304C_S.xml \
 	config/zipato/MiniKeypad.xml \
 	config/zipato/RGBBulb.xml \
 	config/zwave.me/ZME_05431.xml \
@@ -561,6 +564,7 @@ DISTFILES =	.gitignore \
 	dotnet/src/app.ico \
 	dotnet/src/app.rc \
 	dotnet/src/resource.h \
+	license/Apache-License-2.0.txt \
 	license/gpl.txt \
 	license/lgpl.txt \
 	license/license.txt \

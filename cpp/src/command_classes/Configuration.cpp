@@ -191,7 +191,8 @@ bool Configuration::SetValue
 		case ValueID::ValueType_List:
 		{
 			ValueList const& valueList = static_cast<ValueList const&>( _value );
-			Set( param, valueList.GetItem().m_value, valueList.GetSize() );
+			if (valueList.GetItem() != NULL)
+				Set( param, valueList.GetItem()->m_value, valueList.GetSize() );
 			return true;
 		}
 		case ValueID::ValueType_Button:

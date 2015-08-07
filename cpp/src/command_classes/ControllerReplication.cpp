@@ -149,8 +149,8 @@ bool ControllerReplication::SetValue
 		{
 			if( ValueList* value = static_cast<ValueList*>( GetValue( instance, ControllerReplicationIndex_Function ) ) )
 			{
-				ValueList::Item const& item = (static_cast<ValueList const*>( &_value))->GetItem();
-				value->OnValueRefreshed( item.m_value );
+				ValueList::Item const *item = (static_cast<ValueList const*>( &_value))->GetItem();
+				value->OnValueRefreshed( item->m_value );
 				value->Release();
 				res = true;
 			}
@@ -198,8 +198,9 @@ bool ControllerReplication::StartReplication
 
 	if( ValueList* value = static_cast<ValueList*>( GetValue( _instance, ControllerReplicationIndex_Function ) ) )
 	{
-		ValueList::Item const& item = value->GetItem();
-		m_funcId = item.m_value;
+		ValueList::Item const *item = value->GetItem();
+		if (item)
+			m_funcId = item->m_value;
 		value->Release();
 	}
 	else
