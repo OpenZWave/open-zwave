@@ -42,6 +42,7 @@ DISTFILES =	.gitignore \
 	config/aeotec/panicbtn.xml \
 	config/aeotec/recessed_doorsensor.xml \
 	config/aeotec/recessed_doorsensor_gen5.xml \
+	config/aeotec/sd6.xml \
 	config/aeotec/ses.xml \
 	config/aeotec/ses2.xml \
 	config/aeotec/ss6.xml \
