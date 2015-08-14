@@ -5,6 +5,9 @@
 //	WinRT implementation of a base class for objects we
 //  want to be able to wait for.
 //
+//	Copyright (c) 2015 Microsoft Corporation
+//	All rights reserved.
+//
 //	SOFTWARE NOTICE AND LICENSE
 //
 //	This file is part of OpenZWave.
