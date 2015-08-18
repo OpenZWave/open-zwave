@@ -108,6 +108,7 @@ namespace OpenZWave
 		void SetEndPoint( uint8 const _instance, uint8 const _endpoint){ m_endPointMap[_instance] = _endpoint; }
 		bool IsAfterMark()const{ return m_afterMark; }
 		bool IsCreateVars()const{ return m_createVars; }
+		void SetCreateVars( bool const _value ){ m_createVars = _value; }
 		bool IsGetSupported()const{ return m_getSupported; }
 		bool IsSecured()const{ return m_isSecured; }
 		void SetSecured(){ m_isSecured = true; }
