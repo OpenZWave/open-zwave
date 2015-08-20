@@ -456,6 +456,14 @@
 	<Manufacturer id="015f" name="Mcohome">
 		<Product type="0001" id="0001" name="Mini Energy Dimmer"/>
 		<Product type="0002" id="0001" name="Mini Energy Switch"/>
+		<!--EU-->
+		<Product type="3102" id="0201" name="MH-S311 One-load" config="mcohome/mhs311.xml"/>
+		<Product type="3102" id="0202" name="MH-S312 Two-load" config="mcohome/mhs312.xml"/>
+		<Product type="3102" id="0204" name="MH-S314 Four-load" config="mcohome/mhs314.xml"/>		
+		<Product type="4102" id="0201" name="MH-S411 One-load" config="mcohome/mhs411.xml"/>
+		<Product type="4102" id="0202" name="MH-S412 Two-load" config="mcohome/mhs412.xml"/>		
+		<!--US-->
+		<Product type="5102" id="0103" name="Touch Panel Switch MH-S513" config="mcohome\mhs513.xml"/>
 	</Manufacturer>
 	<Manufacturer id="007a" name="Merten">
 		<Product type="8001" id="0001" name="Plug-in Appliance Module"/>
