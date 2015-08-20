@@ -40,7 +40,7 @@
 		<Product type="0001" id="0007" name="Z-Stick S2 Lite"/>
 		<Product type="0001" id="0016" name="Key Fob" config="aeotec/keyfob.xml"/>
 		<Product type="0001" id="0058" name="ZW088 Key Fob Gen5" config="aeotec/keyfob2.xml"/>
-		<Product type="0001" id="005a" name="Z-Stick Gen5"/>
+		<Product type="0001" id="005a" name="Z-Stick Gen5" config="aeotec/zstickgen5.xml"/>
 		<Product type="0001" id="005c" name="Z-Stick Lite Gen5"/>
 		<Product type="0001" id="0026" name="Panic Button" config="aeotec/panicbtn.xml"/>
 		<Product type="0002" id="0001" name="Z-Stick S2"/>
