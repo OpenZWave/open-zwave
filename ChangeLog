@@ -192,8 +192,11 @@ Version 1.3
  - Pull Request #640 - Add FGD212 Dimmer 2 Config from xs4 (Justin)
  - Pull Request #641 - Update ZMNHBA2 Config from xs4 (Justin)
  - Add Aeotec Smart Dimmer 6 Config (Justin)
+ - Pull request #649 - Add Everspring st812-Flood Detector (Warp95)
+ - Add Mcohome MH-S411-EU & MH-S412-EU (Warp95)
 
-Version 1.2 
+
+Version 1.2
  - Released on 15/10/14
 
 Version 1.1

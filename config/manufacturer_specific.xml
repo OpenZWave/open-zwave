@@ -456,6 +456,8 @@
 	<Manufacturer id="015f" name="Mcohome">
 		<Product type="0001" id="0001" name="Mini Energy Dimmer"/>
 		<Product type="0002" id="0001" name="Mini Energy Switch"/>
+                <Product type="4102" id="0201" name="MH-S411 Single Touch Panel" config="mcohome/mhs411.xml"/>
+                <Product type="4102" id="0202" name="MH-S412 Double Touch Panel" config="mcohome/mhs412.xml"/>
 	</Manufacturer>
 	<Manufacturer id="007a" name="Merten">
 		<Product type="8001" id="0001" name="Plug-in Appliance Module"/>
