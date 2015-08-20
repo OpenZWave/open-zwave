@@ -110,6 +110,7 @@ DISTFILES =	.gitignore \
 	config/leviton/vri10.xml \
 	config/manufacturer_specific.xml \
 	config/manufacturer_specific.xsd \
+	config/merten/50x5xx.xml \
 	config/nodon/asp3100SmartPlug.xml \
 	config/northq/nq92021.xml \
 	config/options.xml \

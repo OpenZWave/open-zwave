@@ -1,26 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--http://www.pepper1.net/zwavedb/device/85-->
 <Product xmlns='http://code.google.com/p/open-zwave/'>
-
-
-    <commandClasses>
-        <commandClass id="0020" inNIF="false"/>
-        <commandClass id="0060" version="2"/>
-        <commandClass id="0085"/>
-        <commandClass id="0086"/>
-        <commandClass id="0070" version="2"/>
-        <commandClass id="008e"/>
-        <commandClass id="0050" version="2"/>
-        <commandClass id="0031" version="0"/>
-        <commandClass id="0072"/>
-        <commandClass id="0075" version="2"/>
-        <commandClass id="0026"/>
-        <commandClass id="009e" version="0"/>
-      </commandClasses>
-
-
-
-
   <!-- Configuration -->
   <CommandClass id="112">
 
