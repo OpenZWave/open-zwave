@@ -109,7 +109,7 @@
 	<Manufacturer id="008a" name="BeNext">
 		<Product type="0001" id="0100" name="myGate"/>
 		<Product type="0002" id="0100" name="myDisplay"/>
-		<Product type="0003" id="0100" name="DHS-ZW-SNMT-01 Multi Sensor" config="BeNext/Molite.xml"/>
+		<Product type="0003" id="0100" name="MoLiTe Sensor" config="BeNext/Molite.xml"/>
 		<Product type="0003" id="0101" name="DHS-ZW-SNMT-01 Multi Sensor" config="BeNext/Molite.xml"/>
 		<Product type="0004" id="0100" name="Door Sensor" config="BeNext/DoorSensor.xml"/>
 		<Product type="0004" id="0101" name="Door Sensor" config="BeNext/DoorSensor.xml"/>
@@ -120,12 +120,15 @@
 		<Product type="0007" id="0101" name="Tag Reader" config="BeNext/TagReader.xml"/>
 		<Product type="0008" id="0101" name="Power Switch"/>
 		<Product type="000d" id="0100" name="Built-in Dimmer" config="BeNext/BuiltinDimmer.xml"/>
+		<Product type="0014" id="0100" name="Panic Button"/>
 		<Product type="0014" id="0101" name="Panic Button"/>
+		<Product type="0015" id="0100" name="Panic Watch"/>
 		<Product type="0017" id="0100" name="Scene Controller" config="BeNext/SceneController.xml"/>
 		<Product type="0018" id="0100" name="Plug-in Dimmer" config="BeNext/PluginDimmer.xml"/>
 		<Product type="001e" id="0001" name="1Pole Switch" config="BeNext/1poleswitch.xml"/>
 		<Product type="001f" id="0001" name="2Pole Switch" config="BeNext/2poleswitch.xml"/>
-		<Product type="0020" id="0001" name="Energy Switch" config="BeNext/EnergySwitch.xml"/>
+		<Product type="0020" id="0001" name="Energy Switch plus" config="BeNext/EnergySwitch.xml"/>
+		<Product type="0021" id="0001" name="Heating Control" config="BeNext/HeatingControl.xml"/>
 	</Manufacturer>
 	<Manufacturer id="002c" name="BeSafer">
 	</Manufacturer>
