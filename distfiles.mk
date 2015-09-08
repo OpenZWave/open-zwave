@@ -496,15 +496,16 @@ DISTFILES =	.gitignore \
 	debian/control \
 	debian/copyright \
 	debian/format \
-	debian/libopenzwave1.0-dev.install \
-	debian/libopenzwave1.0.install \
-	debian/libopenzwave1.0.links \
-	debian/libopenzwave1.0.lintian-overrides \
+	debian/libopenzwave1.3-dev.install \
+	debian/libopenzwave1.3.install \
+	debian/libopenzwave1.3.links \
+	debian/libopenzwave1.3.lintian-overrides \
 	debian/openzwave.install \
 	debian/patches/series \
 	debian/postinst \
+	debian/postrm \
 	debian/rules \
-	debian/shlibs.libopenzwave1.0 \
+	debian/shlibs.libopenzwave1.3 \
 	debian/source/format \
 	debian/version-increment.sh \
 	dist.mk \
