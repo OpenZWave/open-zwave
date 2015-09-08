@@ -47,6 +47,7 @@ DISTFILES =	.gitignore \
 	config/aeotec/ses2.xml \
 	config/aeotec/ss6.xml \
 	config/aeotec/watersensor.xml \
+	config/aeotec/zstickgen5.xml \
 	config/assa_abloy/RealLivingCapTouch.xml \
 	config/cooper/RF9505-T.xml \
 	config/cooper/RF9540-N.xml \
@@ -59,9 +60,13 @@ DISTFILES =	.gitignore \
 	config/duwi/ZWES1000.xml \
 	config/duwi/ZWESJ300.xml \
 	config/eurotronic/eur_stellaz.xml \
+	config/everspring/ad146.xml \
 	config/everspring/ad147.xml \
 	config/everspring/an145.xml \
 	config/everspring/an158.xml \
+	config/everspring/an179.xml \
+	config/everspring/an180.xml \
+	config/everspring/hsp02.xml \
 	config/everspring/se812.xml \
 	config/everspring/sf812.xml \
 	config/everspring/sm103.xml \
@@ -97,6 +102,7 @@ DISTFILES =	.gitignore \
 	config/ge/relay.xml \
 	config/greenwave/powernode1.xml \
 	config/greenwave/powernode6.xml \
+	config/homeseer/ezmotionplus.xml \
 	config/homeseer/hsm100.xml \
 	config/homeseer/ztroller.xml \
 	config/honeywell/th8320zw1000.xml \
@@ -110,8 +116,16 @@ DISTFILES =	.gitignore \
 	config/leviton/vri10.xml \
 	config/manufacturer_specific.xml \
 	config/manufacturer_specific.xsd \
+	config/mcohome/mhs311.xml \
+	config/mcohome/mhs312.xml \
+	config/mcohome/mhs314.xml \
+	config/mcohome/mhs411.xml \
+	config/mcohome/mhs412.xml \
+	config/mcohome/mhs513.xml \
 	config/merten/50x5xx.xml \
 	config/nodon/asp3100SmartPlug.xml \
+	config/nodon/crc3100OctanRemote.xml \
+	config/nodon/cws3101wallswitch.xml \
 	config/northq/nq92021.xml \
 	config/options.xml \
 	config/options.xsd \
@@ -122,6 +136,7 @@ DISTFILES =	.gitignore \
 	config/philio/pst02.xml \
 	config/polycontrol/doorlock.xml \
 	config/polycontrol/keypad.xml \
+	config/polycontrol/polylock.xml \
 	config/popp/123580.xml \
 	config/popp/123601.xml \
 	config/popp/123658.xml \
@@ -149,6 +164,7 @@ DISTFILES =	.gitignore \
 	config/trane/TZEMT400BB32MAA.xml \
 	config/vision/zd2102.xml \
 	config/vision/zm1601eu.xml \
+	config/vision/zm1602eu.xml \
 	config/vision/zp3102.xml \
 	config/vision/zs5101eu.xml \
 	config/vitrum/vitrumBS.xml \
