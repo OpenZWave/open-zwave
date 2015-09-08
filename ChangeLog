@@ -198,6 +198,7 @@ Version 1.3
  - Pull Request #641 - A Large set of Config File updates from the Jeedom team (Justin)
  - Issue #656 - Update ZME064435 and ZME05470 with Scene Activation Command
    Class from CompaTech (Justin)
+ - Pull Request #655 - Update BeNext Devices from ewgast (Justin)
 
 
 Version 1.2 
