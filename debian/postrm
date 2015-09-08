@@ -1,0 +1,17 @@
+#!/bin/sh -e
+
+case "$1" in
+  purge)
+      set +e
+      rm -Rf /etc/openzwave 2>/dev/null
+      set -e
+  ;;
+  *)
+    echo "postrm called with unknown argument '$1'" 1>&2
+    exit 1
+  ;;
+esac
+
+#DEBHELPER#
+
+exit 0
