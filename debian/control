@@ -5,11 +5,11 @@ Priority: optional
 Build-Depends: debhelper (>=9), dh-exec (>=0.2), g++ (>= 4.4), quilt, libudev-dev, libxml2-utils
 Standards-Version: 3.9.3
 
-Package: libopenzwave1.0
+Package: libopenzwave1.3
 Section: libs
 Architecture: any
 Pre-Depends: ${misc:Pre-Depends}
-Depends: ${shlibs:Depends}, ${misc:Depends}, ${dist:Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${dist:Depends}, libudev0 | libudev1
 Description: API to use a Z-Wave controller
  OpenZWave is an open-source, cross-platform library designed to enable 
  anyone to add support for Z-Wave home-automation devices to their 
@@ -18,9 +18,9 @@ Description: API to use a Z-Wave controller
 
 
 
-Package: libopenzwave1.0-dev
+Package: libopenzwave1.3-dev
 Section: libdevel
-Depends: ${misc:Depends}, libopenzwave1.0 (= ${binary:Version})
+Depends: ${misc:Depends}, libopenzwave1.3 (= ${binary:Version})
 Architecture: any
 Description: header files for the openzwave library
  OpenZWave is an open-source, cross-platform library designed to enable 
@@ -32,7 +32,7 @@ Description: header files for the openzwave library
 Package: openzwave
 Section: misc
 Architecture: any
-Depends: libopenzwave1.0 (>= ${binary:Version}), ${misc:Depends}, ${shlibs:Depends} 
+Depends: libopenzwave1.3 (>= ${binary:Version}), ${misc:Depends}, ${shlibs:Depends} 
 Description: Sample Program for libopenzwave 
  OpenZWave is an open-source, cross-platform library designed to enable 
  anyone to add support for Z-Wave home-automation devices to their 

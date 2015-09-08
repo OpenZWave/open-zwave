@@ -17,7 +17,7 @@ install:
 	install -d $(DESTDIR)/usr/share/openzwave
 	install -d $(DESTDIR)/usr/lib
 	cp -r config $(DESTDIR)/usr/share/openzwave
-	install cpp/lib/linux/libopenzwave.so.1.0 $(DESTDIR)/usr/lib
+	install cpp/lib/linux/libopenzwave.so.1.3 $(DESTDIR)/usr/lib
 	install cpp/lib/linux/libopenzwave.a $(DESTDIR)/usr/lib
 	cp -r cpp/src/*.h $(DESTDIR)/usr/include/openzwave
 	cp -r cpp/src/value_classes/*.h $(DESTDIR)/usr/include/openzwave/value_classes
