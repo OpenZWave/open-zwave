@@ -24,7 +24,7 @@
             <Item label="(Step motor) Wave drive mode.(Less torque, min. power usage, full rotation speed.)" value="0" />
             <Item label="(Step motor) Full drive mode.  (Medium torque, max. power usage, full rotation speed.)" value="1" />
             <Item label="(Step motor) HalfFstep drive mode. (Max. torque, max. power usage, half rotation speed.)" value="2" />
-            <Item label="(Relay) Puts DC on connector pin 1 & 2 for the duration of parameter #2 or #3. The polarity of pin 1 & 2 are reversed with respect to  open / close command. A close command would set p1+ and p2F, open is p1F and   p2+" value="3" />
+            <Item label="(Relay) Puts DC on connector pin 1 &amp; 2 for the duration of parameter #2 or #3. The polarity of pin 1 &amp; 2 are reversed with respect to  open / close command. A close command would set p1+ and p2F, open is p1F and   p2+" value="3" />
             <Item label="(Relay) Lock open sets p1+, p2F, p3z, p4z for parameter #3 seconds. Lock close sets p1z, p2z, p3+, p4F." value="4" />
 		</Value>
 	</CommandClass>
