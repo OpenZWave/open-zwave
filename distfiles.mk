@@ -15,6 +15,7 @@ DISTFILES =	.gitignore \
 	config/BeNext/BuiltinDimmer.xml \
 	config/BeNext/DoorSensor.xml \
 	config/BeNext/EnergySwitch.xml \
+	config/BeNext/HeatingControl.xml \
 	config/BeNext/Molite.xml \
 	config/BeNext/PluginDimmer.xml \
 	config/BeNext/SceneController.xml \
