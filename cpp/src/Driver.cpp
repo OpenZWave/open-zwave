@@ -1366,8 +1366,6 @@ bool Driver::MoveMessagesToWakeUpQueue
 								if( _targetNodeId == item.m_nodeId )
 								{
 									Log::Write( LogLevel_Info, _targetNodeId, "Node not responding - moving QueryStageComplete command to Wake-Up queue" );
-									/* reset any SendAttempts */
-									item.m_msg->SetSendAttempts(0);
 
 									wakeUp->QueueMsg( item );
 									remove = true;
@@ -1378,8 +1376,6 @@ bool Driver::MoveMessagesToWakeUpQueue
 								if( _targetNodeId == item.m_cci->m_controllerCommandNode )
 								{
 									Log::Write( LogLevel_Info, _targetNodeId, "Node not responding - moving controller command to Wake-Up queue: %s", c_controllerCommandNames[item.m_cci->m_controllerCommand] );
-									/* reset any SendAttempts */
-									item.m_msg->SetSendAttempts(0);
 
 									wakeUp->QueueMsg( item );
 									remove = true;
