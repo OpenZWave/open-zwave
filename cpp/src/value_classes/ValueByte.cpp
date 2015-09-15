@@ -170,7 +170,7 @@ void ValueByte::OnValueRefreshed
 	uint8 const _value
 )
 {
-	switch( VerifyRefreshedValue( (void*) &m_value, (void*) &m_valueCheck, (void*) &_value, 4) )
+	switch( VerifyRefreshedValue( (void*) &m_value, (void*) &m_valueCheck, (void*) &_value, ValueID::ValueType_Byte) )
 	{
 	case 0:		// value hasn't changed, nothing to do
 		break;

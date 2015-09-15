@@ -172,7 +172,7 @@ void ValueInt::OnValueRefreshed
 	int32 const _value
 )
 {
-	switch( VerifyRefreshedValue( (void*) &m_value, (void*) &m_valueCheck, (void*) &_value, 3) )
+	switch( VerifyRefreshedValue( (void*) &m_value, (void*) &m_valueCheck, (void*) &_value, ValueID::ValueType_Int) )
 	{
 	case 0:		// value hasn't changed, nothing to do
 		break;

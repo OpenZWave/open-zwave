@@ -259,7 +259,7 @@ void ValueRaw::OnValueRefreshed
 	uint8 const _length
 )
 {
-	switch( VerifyRefreshedValue( (void*)m_value, (void*)m_valueCheck, (void*)_value, 6, _length ) )
+	switch( VerifyRefreshedValue( (void*)m_value, (void*)m_valueCheck, (void*)_value, ValueID::ValueType_Raw, _length ) )
 	{
 	case 0:		// value hasn't changed, nothing to do
 		break;

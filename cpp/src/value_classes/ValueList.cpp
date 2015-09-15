@@ -273,7 +273,7 @@ void ValueList::OnValueRefreshed
 		return;
 	}
 
-	switch( VerifyRefreshedValue( (void*) &m_valueIdx, (void*) &m_valueIdxCheck, (void*) &index, 3) )
+	switch( VerifyRefreshedValue( (void*) &m_valueIdx, (void*) &m_valueIdxCheck, (void*) &index, ValueID::ValueType_List) )
 	{
 	case 0:		// value hasn't changed, nothing to do
 		break;

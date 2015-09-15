@@ -202,7 +202,9 @@ Version 1.3
  - Issue #658 - Reset a Message SendAttempts value when moving to the
    Wakeup Queue, otherwise it gets dropped when we attempt to send it when
    the device wakes up as it exceeds the retry count. (Justin)
-
+ - Issue #416 and Pull Request #506 - ValueShort and ValueSchedule were
+   using wrong Value Storage enums. Enhance Value::VerifyRefreshedValue to
+   handle almsot all types (Except Schedule) (Justin)
 
 Version 1.2 
  - Released on 15/10/14
