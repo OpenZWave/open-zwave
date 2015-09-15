@@ -145,7 +145,7 @@ void ValueBool::OnValueRefreshed
 	bool const _value
 )
 {
-	switch( VerifyRefreshedValue( (void*) &m_value, (void*) &m_valueCheck, (void*) &_value, 5) )
+	switch( VerifyRefreshedValue( (void*) &m_value, (void*) &m_valueCheck, (void*) &_value, ValueID::ValueType_Bool) )
 	{
 	case 0:		// value hasn't changed, nothing to do
 		break;

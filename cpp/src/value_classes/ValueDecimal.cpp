@@ -131,7 +131,7 @@ void ValueDecimal::OnValueRefreshed
 	string const& _value
 )
 {
-	switch( VerifyRefreshedValue( (void*) &m_value, (void*) &m_valueCheck, (void*) &_value, 1) )
+	switch( VerifyRefreshedValue( (void*) &m_value, (void*) &m_valueCheck, (void*) &_value, ValueID::ValueType_Decimal) )
 	{
 	case 0:		// value hasn't changed, nothing to do
 		break;

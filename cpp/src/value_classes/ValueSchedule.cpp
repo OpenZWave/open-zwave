@@ -52,7 +52,7 @@ ValueSchedule::ValueSchedule
 	bool const _writeOnly,
 	uint8 const _pollIntensity
 ):
-	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Byte, _label, _units, _readOnly, _writeOnly, false, _pollIntensity ),
+	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Schedule, _label, _units, _readOnly, _writeOnly, false, _pollIntensity ),
 	m_numSwitchPoints( 0 )
 
 {
@@ -178,9 +178,19 @@ void ValueSchedule::OnValueRefreshed
 (
 )
 {
-	// TODO:  do schedules ever report spurious values and need rechecking like other value types?
-	// See, for example, ValueShort::OnValueRefreshed
-	Value::OnValueChanged();
+	/* Value::VerifyRefreshedValue doesn't handle Schedule Properly yet, but still do this so we can do it eventually */
+
+	switch( VerifyRefreshedValue( (void*) "Schedule", (void*) "Schedule", (void*) "Schedule", ValueID::ValueType_Schedule) )
+	{
+	case 0:		// value hasn't changed, nothing to do
+		break;
+	case 1:		// value has changed (not confirmed yet), save _value in m_valueCheck
+		break;
+	case 2:		// value has changed (confirmed), save _value in m_value
+		break;
+	case 3:		// all three values are different, so wait for next refresh to try again
+		break;
+	}
 }
 
 //-----------------------------------------------------------------------------
