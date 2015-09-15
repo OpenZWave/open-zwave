@@ -231,9 +231,18 @@ bool ThermostatFanMode::HandleMsg
 {
 	if( ThermostatFanModeCmd_Report == (ThermostatFanModeCmd)_data[0] )
 	{
+		bool validMode = false;
 		uint8 mode = (int32)_data[1];
 
-		if( mode < m_supportedModes.size() )
+		for (vector<ValueList::Item>::iterator it = m_supportedModes.begin(); it != m_supportedModes.end(); ++it )
+		{
+			ValueList::Item const& item = *it;
+			if (item.m_value == mode) {
+				validMode = true;
+				break;
+			}
+		}
+		if( validMode )
 		{
 			// We have received the thermostat mode from the Z-Wave device
 			if( ValueList* valueList = static_cast<ValueList*>( GetValue( _instance, 0 ) ) )
@@ -242,13 +251,13 @@ bool ThermostatFanMode::HandleMsg
 				if (valueList->GetItem())
 					Log::Write( LogLevel_Info, GetNodeId(), "Received thermostat fan mode: %s", valueList->GetItem()->m_label.c_str() );
 				else
-					Log::Write( LogLevel_Info, GetNodeId(), "Recieved thermostat fan mode: %d", _data[1]);
+					Log::Write( LogLevel_Info, GetNodeId(), "Received thermostat fan mode: %d", _data[1]);
 				valueList->Release();
 			}
 			else
 			{
 				Log::Write( LogLevel_Info, GetNodeId(), "Received thermostat fan mode: index %d", mode );
-		  }
+			}
 		}
 		else
 		{

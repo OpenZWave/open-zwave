@@ -247,9 +247,8 @@ bool ThermostatMode::HandleMsg
 		bool validMode = false;
 		for (vector<ValueList::Item>::iterator it = m_supportedModes.begin(); it != m_supportedModes.end(); ++it )
 		{
-                	ValueList::Item const& item = *it;
-
-                	if (item.m_value == mode) {
+			ValueList::Item const& item = *it;
+			if (item.m_value == mode) {
 				validMode = true;
 				break;
 			}
