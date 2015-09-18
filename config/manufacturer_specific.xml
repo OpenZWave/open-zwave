@@ -171,6 +171,9 @@
 	<Manufacturer id="0030" name="Cytech Tech">
 		<Product type="0001" id="0001" name="Comfort 9000 with UCM/Zwave"/>
 	</Manufacturer>
+	<Manufacturer id="0108" name="D-Link Corporation">
+		<Product type="0002" id="000e" name="DCH-Z110 Door/Window 3 in 1 sensor" config="dlink/dch-z110.xml"/>
+	</Manufacturer>
 	<Manufacturer id="0002" name="Danfoss">
 		<Product type="0005" id="0003" name="Z Thermostat" config="danfoss/z.xml"/>
 		<Product type="0005" id="0004" name="Z Thermostat 014G0013" config="danfoss/z.xml"/>
