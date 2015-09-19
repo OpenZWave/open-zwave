@@ -57,6 +57,7 @@ DISTFILES =	.gitignore \
 	config/device_classes.xml \
 	config/device_classes.xsd \
 	config/device_configuration.xsd \
+	config/dlink/dch-z110.xml \
 	config/dragontech/wd-100.xml \
 	config/duwi/ZWES1000.xml \
 	config/duwi/ZWESJ300.xml \
