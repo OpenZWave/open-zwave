@@ -1,10 +1,10 @@
 //-----------------------------------------------------------------------------
 //
-//	Thread.cpp
+//	TimeStampImpl.cpp
 //
-//	Cross-platform threads
+//	WinRT implementation of a TimeStamp
 //
-//	Copyright (c) 2010 Mal Lansell <mal@lansell.org>
+//	Copyright (c) 2015 Microsoft Corporation
 //	All rights reserved.
 //
 //	SOFTWARE NOTICE AND LICENSE
@@ -25,101 +25,90 @@
 //	along with OpenZWave.  If not, see <http://www.gnu.org/licenses/>.
 //
 //-----------------------------------------------------------------------------
+#include <string>
+#include <Windows.h>
 #include "Defs.h"
-#include "platform/Event.h"
-#include "platform/Thread.h"
-
-#ifdef WIN32
-#include "platform/windows/ThreadImpl.h"	// Platform-specific implementation of a thread
-#elif defined WINRT
-#include "platform/winRT/ThreadImpl.h"	// Platform-specific implementation of a thread
-#else
-#include "platform/unix/ThreadImpl.h"	// Platform-specific implementation of a thread
-#endif
+#include "TimeStampImpl.h"
 
 using namespace OpenZWave;
 
-
 //-----------------------------------------------------------------------------
-//	<Thread::Thread>
+//	<TimeStampImpl::TimeStampImpl>
 //	Constructor
 //-----------------------------------------------------------------------------
-Thread::Thread
+TimeStampImpl::TimeStampImpl
 (
-	string const& _name
 )
 {
-	m_exitEvent = new Event();
-	m_pImpl = new ThreadImpl( this, _name );
+	SetTime(0);
 }
 
 //-----------------------------------------------------------------------------
-//	<Thread::~Thread>
+//	<TimeStampImpl::~TimeStampImpl>
 //	Destructor
 //-----------------------------------------------------------------------------
-Thread::~Thread
+TimeStampImpl::~TimeStampImpl
 (
 )
 {
-	delete m_pImpl;
-	m_exitEvent->Release();
 }
 
 //-----------------------------------------------------------------------------
-//	<Thread::Start>
-//	Start a function running on this thread
+//	<TimeStampImpl::SetTime>
+//	Sets the timestamp to now, plus an offset in milliseconds
 //-----------------------------------------------------------------------------
-bool Thread::Start
+void TimeStampImpl::SetTime
 (
-	pfnThreadProc_t _pfnThreadProc,
-	void* _context
+	int32 _milliseconds	// = 0
 )
 {
-	return( m_pImpl->Start( _pfnThreadProc, m_exitEvent, _context ) );
+	int64 offset = ((int64)_milliseconds) * 10000LL;	// Timestamp is stored in 100ns steps.
+
+	GetSystemTimeAsFileTime( (FILETIME*)&m_stamp );
+	m_stamp += offset;
 }
 
 //-----------------------------------------------------------------------------
-//	<Thread::Stop>
-//	Stop a function running on this thread
+//	<TimeStampImpl::TimeRemaining>
+//	Gets the difference between now and the timestamp time in milliseconds
 //-----------------------------------------------------------------------------
-bool Thread::Stop
-(
-)
-{
-	int32 timeout = 2000;	// Give the thread 2 seconds to exit
-	m_exitEvent->Set();
-
-	if( Wait::Single( this, timeout ) < 0 )
-	{
-		// Timed out
-			m_pImpl->Terminate();
-		return false;
-	}
-
-	return true;
-}
-
-//-----------------------------------------------------------------------------
-//	<Thread::Sleep>
-//	Causes the thread to sleep for the specified number of milliseconds.
-//-----------------------------------------------------------------------------
-void Thread::Sleep
-(
-	uint32 _milliseconds
-)
-{
-	return( m_pImpl->Sleep( _milliseconds ) );
-}
-
-//-----------------------------------------------------------------------------
-//	<Thread::IsSignalled>
-//	Test whether the event is set
-//-----------------------------------------------------------------------------
-bool Thread::IsSignalled
+int32 TimeStampImpl::TimeRemaining
 (
 )
 {
-	return m_pImpl->IsSignalled();
+	int64 now;
+	GetSystemTimeAsFileTime( (FILETIME*)&now );
+
+	return (int32)( ( m_stamp - now ) / 10000LL );
 }
 
+//-----------------------------------------------------------------------------
+//	<TimeStampImpl::GetAsString>
+//	Return a string representation
+//-----------------------------------------------------------------------------
+string TimeStampImpl::GetAsString
+(
+)
+{
+	// Convert m_stamp (FILETIME) to SYSTEMTIME for ease of use
+	SYSTEMTIME time;
+	::FileTimeToSystemTime( (FILETIME*)&m_stamp, &time );
 
+	char buf[100];
+	sprintf_s( buf, sizeof(buf), "%04d-%02d-%02d %02d:%02d:%02d:%03d ", time.wYear, time.wMonth, time.wDay, time.wHour, time.wMinute, time.wSecond, time.wMilliseconds );
+	string str = buf;
+	return str;
+}
+
+//-----------------------------------------------------------------------------
+//	<TimeStampImpl::operator->
+//	Overload the subtract operator to get the difference between two
+//	timestamps in milliseconds
+//-----------------------------------------------------------------------------
+int32 TimeStampImpl::operator-
+(
+	TimeStampImpl const& _other
+)
+{
+	return (int32)( ( m_stamp - _other.m_stamp ) / 10000LL );
+}

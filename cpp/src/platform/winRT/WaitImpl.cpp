@@ -1,10 +1,11 @@
 //-----------------------------------------------------------------------------
 //
-//	Thread.cpp
+//	WaitImpl.cpp
 //
-//	Cross-platform threads
+//	WinRT implementation of a base class for objects we
+//  want to be able to wait for.
 //
-//	Copyright (c) 2010 Mal Lansell <mal@lansell.org>
+//	Copyright (c) 2015 Microsoft Corporation
 //	All rights reserved.
 //
 //	SOFTWARE NOTICE AND LICENSE
@@ -26,100 +27,108 @@
 //
 //-----------------------------------------------------------------------------
 #include "Defs.h"
-#include "platform/Event.h"
-#include "platform/Thread.h"
-
-#ifdef WIN32
-#include "platform/windows/ThreadImpl.h"	// Platform-specific implementation of a thread
-#elif defined WINRT
-#include "platform/winRT/ThreadImpl.h"	// Platform-specific implementation of a thread
-#else
-#include "platform/unix/ThreadImpl.h"	// Platform-specific implementation of a thread
-#endif
+#include "platform/Wait.h"
+#include "WaitImpl.h"
+#include "platform/Log.h"
 
 using namespace OpenZWave;
 
-
 //-----------------------------------------------------------------------------
-//	<Thread::Thread>
+//	<WaitImpl::WaitImpl>
 //	Constructor
 //-----------------------------------------------------------------------------
-Thread::Thread
+WaitImpl::WaitImpl
 (
-	string const& _name
-)
+	Wait* _owner
+):
+	m_owner( _owner )
 {
-	m_exitEvent = new Event();
-	m_pImpl = new ThreadImpl( this, _name );
+	InitializeCriticalSectionEx( &m_criticalSection, 0, 0 );
 }
 
 //-----------------------------------------------------------------------------
-//	<Thread::~Thread>
+//	<WaitImpl::~WaitImpl>
 //	Destructor
 //-----------------------------------------------------------------------------
-Thread::~Thread
+WaitImpl::~WaitImpl
 (
 )
 {
-	delete m_pImpl;
-	m_exitEvent->Release();
+	DeleteCriticalSection( &m_criticalSection );
 }
 
 //-----------------------------------------------------------------------------
-//	<Thread::Start>
-//	Start a function running on this thread
+//	<WaitImpl::AddWatcher>
+//	Add a watcher to our object.
 //-----------------------------------------------------------------------------
-bool Thread::Start
+void WaitImpl::AddWatcher
 (
-	pfnThreadProc_t _pfnThreadProc,
+	Wait::pfnWaitNotification_t _callback,
 	void* _context
 )
 {
-	return( m_pImpl->Start( _pfnThreadProc, m_exitEvent, _context ) );
-}
+	// Add the watcher to our list
+	Watcher watcher;
+	watcher.m_callback = _callback;
+	watcher.m_context = _context;
 
-//-----------------------------------------------------------------------------
-//	<Thread::Stop>
-//	Stop a function running on this thread
-//-----------------------------------------------------------------------------
-bool Thread::Stop
-(
-)
-{
-	int32 timeout = 2000;	// Give the thread 2 seconds to exit
-	m_exitEvent->Set();
+	EnterCriticalSection( &m_criticalSection );
 
-	if( Wait::Single( this, timeout ) < 0 )
+	m_watchers.push_back( watcher );
+
+	LeaveCriticalSection( &m_criticalSection );
+
+	// If the object is already in a signalled state, notify the watcher immediately
+	if( m_owner->IsSignalled() )
 	{
-		// Timed out
-			m_pImpl->Terminate();
-		return false;
+		_callback( _context );
 	}
 
-	return true;
 }
 
 //-----------------------------------------------------------------------------
-//	<Thread::Sleep>
-//	Causes the thread to sleep for the specified number of milliseconds.
+//	<WaitImpl::RemoveWatcher>
+//	Remove a watcher from our object.
 //-----------------------------------------------------------------------------
-void Thread::Sleep
+bool WaitImpl::RemoveWatcher
 (
-	uint32 _milliseconds
+	Wait::pfnWaitNotification_t _callback,
+	void* _context
 )
 {
-	return( m_pImpl->Sleep( _milliseconds ) );
+	bool res = false;
+	EnterCriticalSection( &m_criticalSection );
+
+	for( list<Watcher>::iterator it=m_watchers.begin(); it!=m_watchers.end(); ++it )
+	{
+		Watcher const& watcher = *it;
+		if( ( watcher.m_callback == _callback ) && ( watcher.m_context == _context ) )
+		{
+			m_watchers.erase( it );
+			res = true;
+			break;
+		}
+	}
+
+	LeaveCriticalSection( &m_criticalSection );
+	return res;
 }
 
 //-----------------------------------------------------------------------------
-//	<Thread::IsSignalled>
-//	Test whether the event is set
+//	<WaitImpl::Notify>
+//	Notify all the watchers that the object has become signalled
 //-----------------------------------------------------------------------------
-bool Thread::IsSignalled
+void WaitImpl::Notify
 (
 )
 {
-	return m_pImpl->IsSignalled();
+	EnterCriticalSection( &m_criticalSection );
+
+	for( list<Watcher>::iterator it=m_watchers.begin(); it!=m_watchers.end(); ++it )
+	{
+		Watcher const& watcher = *it;
+		watcher.m_callback( watcher.m_context );
+	}
+
+	LeaveCriticalSection( &m_criticalSection );
 }
-
-

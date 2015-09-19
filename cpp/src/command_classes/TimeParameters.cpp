@@ -178,7 +178,14 @@ bool TimeParameters::SetValue
 		time_t rawtime;
 		struct tm *timeinfo;
 		time(&rawtime);
+#ifdef WINAPI_FAMILY_APP
+#pragma warning(push)
+#pragma warning(disable:4996)
+#endif
 		timeinfo = localtime(&rawtime);
+#ifdef WINAPI_FAMILY_APP
+#pragma warning(pop)
+#endif
 		Msg* msg = new Msg( "TimeParametersCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 		msg->SetInstance( this, instance );
 		msg->Append( GetNodeId() );

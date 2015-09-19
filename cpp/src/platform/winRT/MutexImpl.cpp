@@ -1,10 +1,10 @@
 //-----------------------------------------------------------------------------
 //
-//	Thread.cpp
+//	MutexImpl.cpp
 //
-//	Cross-platform threads
+//	WinRT implementation of the cross-platform mutex
 //
-//	Copyright (c) 2010 Mal Lansell <mal@lansell.org>
+//	Copyright (c) 2015 Microsoft Corporation
 //	All rights reserved.
 //
 //	SOFTWARE NOTICE AND LICENSE
@@ -26,100 +26,89 @@
 //
 //-----------------------------------------------------------------------------
 #include "Defs.h"
-#include "platform/Event.h"
-#include "platform/Thread.h"
+#include "MutexImpl.h"
 
-#ifdef WIN32
-#include "platform/windows/ThreadImpl.h"	// Platform-specific implementation of a thread
-#elif defined WINRT
-#include "platform/winRT/ThreadImpl.h"	// Platform-specific implementation of a thread
-#else
-#include "platform/unix/ThreadImpl.h"	// Platform-specific implementation of a thread
-#endif
 
 using namespace OpenZWave;
 
-
 //-----------------------------------------------------------------------------
-//	<Thread::Thread>
+//	<MutexImpl::MutexImpl>
 //	Constructor
 //-----------------------------------------------------------------------------
-Thread::Thread
+MutexImpl::MutexImpl
 (
-	string const& _name
-)
+):
+	m_lockCount( 0 )
 {
-	m_exitEvent = new Event();
-	m_pImpl = new ThreadImpl( this, _name );
+	InitializeCriticalSectionEx( &m_criticalSection, 0, 0 );
 }
 
 //-----------------------------------------------------------------------------
-//	<Thread::~Thread>
+//	<MutexImpl::~MutexImpl>
 //	Destructor
 //-----------------------------------------------------------------------------
-Thread::~Thread
+MutexImpl::~MutexImpl
 (
 )
 {
-	delete m_pImpl;
-	m_exitEvent->Release();
+	DeleteCriticalSection( &m_criticalSection );
 }
 
 //-----------------------------------------------------------------------------
-//	<Thread::Start>
-//	Start a function running on this thread
+//	<MutexImpl::Lock>
+//	Lock the mutex
 //-----------------------------------------------------------------------------
-bool Thread::Start
+bool MutexImpl::Lock
 (
-	pfnThreadProc_t _pfnThreadProc,
-	void* _context
+	bool const _bWait // = true;
 )
 {
-	return( m_pImpl->Start( _pfnThreadProc, m_exitEvent, _context ) );
-}
-
-//-----------------------------------------------------------------------------
-//	<Thread::Stop>
-//	Stop a function running on this thread
-//-----------------------------------------------------------------------------
-bool Thread::Stop
-(
-)
-{
-	int32 timeout = 2000;	// Give the thread 2 seconds to exit
-	m_exitEvent->Set();
-
-	if( Wait::Single( this, timeout ) < 0 )
+	if( _bWait )
 	{
-		// Timed out
-			m_pImpl->Terminate();
-		return false;
+		// We will wait for the lock
+		EnterCriticalSection( &m_criticalSection );
+		++m_lockCount;
+		return true;
 	}
 
-	return true;
+	// Returns immediately, even if the lock was not available.
+	if( TryEnterCriticalSection( &m_criticalSection ) )
+	{
+		++m_lockCount;
+		return true;
+	}
+
+	return false;
 }
 
 //-----------------------------------------------------------------------------
-//	<Thread::Sleep>
-//	Causes the thread to sleep for the specified number of milliseconds.
+//	<MutexImpl::Unlock>
+//	Release our lock on the mutex
 //-----------------------------------------------------------------------------
-void Thread::Sleep
-(
-	uint32 _milliseconds
-)
-{
-	return( m_pImpl->Sleep( _milliseconds ) );
-}
-
-//-----------------------------------------------------------------------------
-//	<Thread::IsSignalled>
-//	Test whether the event is set
-//-----------------------------------------------------------------------------
-bool Thread::IsSignalled
+void MutexImpl::Unlock
 (
 )
 {
-	return m_pImpl->IsSignalled();
+	if( !m_lockCount )
+	{
+		// No locks - we have a mismatched lock/release pair
+		assert(0);
+	}
+	else
+	{
+		--m_lockCount;
+		LeaveCriticalSection( &m_criticalSection );
+	}
 }
 
+//-----------------------------------------------------------------------------
+//	<MutexImpl::IsSignalled>
+//	Test whether the mutex is free
+//-----------------------------------------------------------------------------
+bool MutexImpl::IsSignalled
+(
+)
+{
+	return( 0 == m_lockCount );
+}
 
