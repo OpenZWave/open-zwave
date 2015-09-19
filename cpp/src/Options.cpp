@@ -129,6 +129,10 @@ Options* Options::Create
 		s_instance->AddOptionString(	"SecurityStrategy", 		"SUPPORTED", 	false);		// Should we encrypt CC's that are available via both clear text and Security CC?
 		s_instance->AddOptionString(	"CustomSecuredCC", 			"0x62,0x4c,0x63", 	false);	// What List of Custom CC should we always encrypt if SecurityStrategy is CUSTOM
 		s_instance->AddOptionBool(		"EnforceSecureReception",	true);						// if we recieve a clear text message for a CC that is Secured, should we drop the message
+
+#if defined WINRT
+		s_instance->AddOptionInt(       "ThreadTerminateTimeout",   -1);						// Since threads cannot be terminated in WinRT, Thread::Terminate will simply wait for them to exit on there own
+#endif
 	}
 
 	return s_instance;

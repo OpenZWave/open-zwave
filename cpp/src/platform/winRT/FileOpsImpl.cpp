@@ -1,10 +1,10 @@
 //-----------------------------------------------------------------------------
 //
-//	Mutex.cpp
+//	FileOpsImpl.cpp
 //
-//	Cross-platform mutex
+//	WinRT implementation of file operations
 //
-//	Copyright (c) 2010 Mal Lansell <mal@lansell.org>
+//	Copyright (c) 2015 Microsoft Corporation
 //	All rights reserved.
 //
 //	SOFTWARE NOTICE AND LICENSE
@@ -25,79 +25,45 @@
 //	along with OpenZWave.  If not, see <http://www.gnu.org/licenses/>.
 //
 //-----------------------------------------------------------------------------
-#include "Defs.h"
-#include "platform/Mutex.h"
 
-#ifdef WIN32
-#include "platform/windows/MutexImpl.h"	// Platform-specific implementation of a mutex
-#elif defined WINRT
-#include "platform/winRT/MutexImpl.h"	// Platform-specific implementation of a mutex
-#else
-#include "platform/unix/MutexImpl.h"	// Platform-specific implementation of a mutex
-#endif
-
+#include <windows.h>
+#include "FileOpsImpl.h"
 
 using namespace OpenZWave;
 
 //-----------------------------------------------------------------------------
-//	<Mutex::Mutex>
+//	<FileOpsImpl::FileOpsImpl>
 //	Constructor
 //-----------------------------------------------------------------------------
-Mutex::Mutex
+FileOpsImpl::FileOpsImpl
 (
-):
-	m_pImpl( new MutexImpl() )
+)
 {
 }
 
 //-----------------------------------------------------------------------------
-//	<Mutex::~Mutex>
+//	<FileOpsImpl::~FileOpsImpl>
 //	Destructor
 //-----------------------------------------------------------------------------
-Mutex::~Mutex
+FileOpsImpl::~FileOpsImpl
 (
 )
 {
-	delete m_pImpl;
 }
 
 //-----------------------------------------------------------------------------
-//	<Mutex::Lock>
-//	Lock the mutex
+//	<FileOpsImpl::FolderExists>
+//	Determine if a folder exists and is accessible by the calling App
 //-----------------------------------------------------------------------------
-bool Mutex::Lock
-(
-	bool const _bWait // = true;
+bool FileOpsImpl::FolderExists(
+	const string &_folderName
 )
 {
-	return m_pImpl->Lock( _bWait );
+	WIN32_FILE_ATTRIBUTE_DATA fad = { 0 };
+	wstring wFolderName(_folderName.begin(), _folderName.end());
+
+	if (0 == GetFileAttributesEx(wFolderName.c_str(), GetFileExInfoStandard, &fad))
+		return false;
+
+	return (fad.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)? true: false;
 }
-
-//-----------------------------------------------------------------------------
-//	<Mutex::Unlock>
-//	Release our lock on the mutex
-//-----------------------------------------------------------------------------
-void Mutex::Unlock
-(
-)
-{
-	m_pImpl->Unlock();
-
-	if( IsSignalled() )
-	{
-		// The mutex has no owners, so notify the watchers
-		Notify();
-	}
-}
-
-//-----------------------------------------------------------------------------
-//	<Mutex::IsSignalled>
-//	Test whether the event is set
-//-----------------------------------------------------------------------------
-bool Mutex::IsSignalled
-(
-)
-{
-	return m_pImpl->IsSignalled();
-}
-

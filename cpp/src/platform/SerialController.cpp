@@ -27,12 +27,14 @@
 
 #include "Msg.h"
 #include "platform/Event.h"
-#include "platform/Thread.h" 
+#include "platform/Thread.h"
 #include "platform/SerialController.h"
 #include "platform/Log.h"
 
 #ifdef WIN32
 #include "platform/windows/SerialControllerImpl.h"	// Platform-specific implementation of a serial port
+#elif defined WINRT
+#include "platform/winRT/SerialControllerImpl.h"	// Platform-specific implementation of a serial port
 #else
 #include "platform/unix/SerialControllerImpl.h"	// Platform-specific implementation of a serial port
 #endif
@@ -68,12 +70,12 @@ SerialController::~SerialController
 
 //-----------------------------------------------------------------------------
 //  <SerialController::SetBaud>
-//  Set the serial port baud rate.  
+//  Set the serial port baud rate.
 //  The serial port must be closed for the setting to be accepted.
 //-----------------------------------------------------------------------------
 bool SerialController::SetBaud
 (
-    uint32 const _baud
+	uint32 const _baud
 )
 {
 	if( m_bOpen )
@@ -81,8 +83,8 @@ bool SerialController::SetBaud
 		return false;
 	}
 
-    m_baud = _baud;
-    return true;
+	m_baud = _baud;
+	return true;
 }
 
 //-----------------------------------------------------------------------------
@@ -92,7 +94,7 @@ bool SerialController::SetBaud
 //-----------------------------------------------------------------------------
 bool SerialController::SetParity
 (
-    Parity const _parity
+	Parity const _parity
 )
 {
 	if( m_bOpen )
@@ -100,8 +102,8 @@ bool SerialController::SetParity
 		return false;
 	}
 
-    m_parity = _parity;
-    return true;
+	m_parity = _parity;
+	return true;
 }
 
 //-----------------------------------------------------------------------------
@@ -111,7 +113,7 @@ bool SerialController::SetParity
 //-----------------------------------------------------------------------------
 bool SerialController::SetStopBits
 (
-    StopBits const _stopBits
+	StopBits const _stopBits
 )
 {
 	if( m_bOpen )
@@ -119,8 +121,8 @@ bool SerialController::SetStopBits
 		return false;
 	}
 
-    m_stopBits = _stopBits;
-    return true;
+	m_stopBits = _stopBits;
+	return true;
 }
 
 //-----------------------------------------------------------------------------
@@ -137,7 +139,7 @@ bool SerialController::Open
 		return false;
 	}
 
-	m_serialControllerName = _serialControllerName; 
+	m_serialControllerName = _serialControllerName;
 	m_bOpen = m_pImpl->Open();
 	return m_bOpen;
 }
