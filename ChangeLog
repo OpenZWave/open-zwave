@@ -1,5 +1,3 @@
- - Added configuration file for D-Link Corp and DCH-Z110 Door/Window 3in1 sensor
- -  Added configuration file for Merten 50x5xx Roller Shutter Module (Sascha)
 Version 1.3
  - Fixed Issue 383 - Update Remotec ZXT-120 Config file thanks to yy.bendavid & gizmocuz (Alex)
  - Fixed Issue 392 - Add Qubino ZMNHJA2 Config file thanks to nicoserveur (Alex)
@@ -207,6 +205,8 @@ Version 1.3
    using wrong Value Storage enums. Enhance Value::VerifyRefreshedValue to
    handle almsot all types (Except Schedule) (Justin)
  - Issue #501 - Fix ThermostatFanMode when checking for Valid Modes (Justin)
+ - Pull Request #659 - Added configuration file for D-Link Corp and DCH-Z110 Door/Window 3in1 sensor
+   from psixilambda (Justin)
 
 Version 1.2 
  - Released on 15/10/14
