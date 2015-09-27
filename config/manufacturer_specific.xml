@@ -64,7 +64,7 @@
         <Product type="0003" id="0018" name="Smart Switch (2nd Edition)"/>
 		<Product type="0003" id="001a" name="Micro Switch (2nd Edition)"/>
 		<Product type="0003" id="001b" name="Micro Smart Energy Illuminator G2"/>
-		<Product type="0003" id="0012" name="Micro Smart Energy Switch G2" config="aeotec/ses.xml" />
+		<Product type="0003" id="0012" name="Micro Smart Energy Switch G2" config="aeotec/msesv2.xml" />
 		<Product type="0003" id="0013" name="Micro Smart Energy Dimmer v2" config="aeotec/msesv2.xml" />
 		<Product type="0003" id="004b" name="Smart Energy Switch Gen5" config="aeotec/ses2.xml"/>
 		<Product type="0003" id="004e" name="Heavy Duty Smart Switch Gen5" config="aeotec/hdss_gen5.xml" />
