@@ -240,13 +240,13 @@ bool ZWManager::GetValueListSelection
 bool ZWManager::GetValueListItems
 ( 
 	ZWValueID^ id, 
-	[Out] array<String^>^ %o_value
+	[Out] cli::array<String^>^ %o_value
 )
 {
 	vector<string> items;
 	if( Manager::Get()->GetValueListItems(id->CreateUnmanagedValueID(), &items ) )
 	{
-		o_value = gcnew array<String^>(items.size());
+		o_value = gcnew cli::array<String^>(items.size());
 		for( uint32 i=0; i<items.size(); ++i )
 		{
 			o_value[i] = gcnew String( items[i].c_str() );		
@@ -264,14 +264,14 @@ uint32 ZWManager::GetNodeNeighbors
 ( 
 	uint32 homeId,
 	uint8 nodeId,
-	[Out] array<Byte>^ %o_neighbors
+	[Out] cli::array<Byte>^ %o_neighbors
 )
 {
 	uint8* neighbors;
 	uint32 numNeighbors = Manager::Get()->GetNodeNeighbors( homeId, nodeId, &neighbors );
 	if( numNeighbors )
 	{
-		o_neighbors = gcnew array<Byte>(numNeighbors);
+		o_neighbors = gcnew cli::array<Byte>(numNeighbors);
 		for( uint32 i=0; i<numNeighbors; ++i )
 		{
 			o_neighbors[i] = neighbors[i];		
@@ -318,14 +318,14 @@ uint32 ZWManager::GetAssociations
 	uint32 homeId,
 	uint8 nodeId,
 	uint8 groupIdx,
-	[Out] array<Byte>^ %o_associations
+	[Out] cli::array<Byte>^ %o_associations
 )
 {
 	uint8* associations;
 	uint32 numAssociations = Manager::Get()->GetAssociations( homeId, nodeId, groupIdx, &associations );
 	if( numAssociations )
 	{
-		o_associations = gcnew array<Byte>(numAssociations);
+		o_associations = gcnew cli::array<Byte>(numAssociations);
 		for( uint32 i=0; i<numAssociations; ++i )
 		{
 			o_associations[i] = associations[i];		
@@ -379,14 +379,14 @@ bool ZWManager::GetNodeClassInformation
 //-----------------------------------------------------------------------------
 uint8 ZWManager::GetAllScenes
 (
-	[Out] array<Byte>^ o_sceneIds
+	[Out] cli::array<Byte>^ o_sceneIds
 )
 {
 	uint8* sceneIds;
 	uint32 numScenes = Manager::Get()->GetAllScenes( &sceneIds );
 	if( numScenes )
 	{
-		o_sceneIds = gcnew array<Byte>(numScenes);
+		o_sceneIds = gcnew cli::array<Byte>(numScenes);
 		for( uint32 i=0; i<numScenes; ++i )
 		{
 			o_sceneIds[i] = sceneIds[i];		
@@ -404,14 +404,14 @@ uint8 ZWManager::GetAllScenes
 int ZWManager::SceneGetValues
 (
 	uint8 sceneId,
-	[Out] array<ZWValueID ^>^ %o_values
+	[Out] cli::array<ZWValueID ^>^ %o_values
 )
 {
 	vector<ValueID> values;
 	uint32 numValues = Manager::Get()->SceneGetValues( sceneId, &values );
 	if( numValues )
 	{
-		o_values = gcnew array<ZWValueID ^>(numValues);
+		o_values = gcnew cli::array<ZWValueID ^>(numValues);
 		for( uint32 i=0; i<numValues; ++i )
 		{
 			o_values[i] = gcnew ZWValueID(values[i]);		

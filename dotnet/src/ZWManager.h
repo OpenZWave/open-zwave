@@ -659,7 +659,7 @@ namespace OpenZWaveDotNet
 		 * \param nodeId The ID of the node to query.
 		 * \param o_associations An array of 29 uint8s to hold the neighbor bitmap
 		 */
-		uint32 GetNodeNeighbors( uint32 const homeId, uint8 const nodeId, [Out] array<Byte>^ %o_associations );
+		uint32 GetNodeNeighbors( uint32 const homeId, uint8 const nodeId, [Out] cli::array<Byte>^ %o_associations );
 
 		/**
 		 * \brief Get the manufacturer name of a device.
@@ -1078,7 +1078,7 @@ namespace OpenZWaveDotNet
 		 * \return true if the list items were obtained.  Returns false if the value is not a ZWValueID::ValueType_List. The type can be tested with a call to ZWValueID::GetType
 		 * \see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsDecimal, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListSelection 
 		 */
-		bool GetValueListItems( ZWValueID^ id, [Out] array<String^>^ %o_value );
+		bool GetValueListItems( ZWValueID^ id, [Out] cli::array<String^>^ %o_value );
 
 		/**
 		 * \brief Sets the state of a bool.
@@ -1400,7 +1400,7 @@ namespace OpenZWaveDotNet
 		 * \return The number of nodes in the associations array.  If zero, the array will point to NULL, and does not need to be deleted.
 		 * \see GetNumGroups, AddAssociation, RemoveAssociation
 		 */
-		uint32 GetAssociations( uint32 const homeId, uint8 const nodeId, uint8 const groupIdx, [Out] array<Byte>^ %o_associations );
+		uint32 GetAssociations( uint32 const homeId, uint8 const nodeId, uint8 const groupIdx, [Out] cli::array<Byte>^ %o_associations );
 
 		/**
 		 * \brief Gets the maximum number of associations for a group.
@@ -1885,7 +1885,7 @@ namespace OpenZWaveDotNet
 		 * \return The number of scenes.
 		 * \see GetNumScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
 		 */
-		uint8 GetAllScenes( [Out] array<Byte>^ sceneIds );
+		uint8 GetAllScenes( [Out] cli::array<Byte>^ sceneIds );
 
 		/**
 		 * \brief Create a new Scene passing in Scene ID
@@ -1999,7 +1999,7 @@ namespace OpenZWaveDotNet
 		 * \return The number of nodes in the o_value array. If zero, the array will point to NULL and does not need to be deleted.
 		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
 		 */
-		int SceneGetValues( uint8 sceneId, [Out] array<ZWValueID ^>^ %o_values );
+		int SceneGetValues( uint8 sceneId, [Out] cli::array<ZWValueID ^>^ %o_values );
 
 		/**
 		 * \brief Retrieves a scene's value as a bool.
