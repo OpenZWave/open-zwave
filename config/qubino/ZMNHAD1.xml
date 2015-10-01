@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Product xmlns='http://code.google.com/p/open-zwave/'>
 
-<!-- Qubino: ZMNHAD2 Flush 1 Relay -->
+<!-- Qubino: ZMNHAD1 Flush 1 Relay -->
 
 	<!-- Configuration  -->
 	<CommandClass id="112">
