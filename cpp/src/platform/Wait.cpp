@@ -33,6 +33,8 @@
 
 #ifdef WIN32
 #include "platform/windows/WaitImpl.h"	// Platform-specific implementation of a Wait object
+#elif defined WINRT
+#include "platform/winRT/WaitImpl.h"	// Platform-specific implementation of a Wait object
 #else
 #include "platform/unix/WaitImpl.h"	// Platform-specific implementation of a Wait object
 #endif
@@ -68,8 +70,8 @@ Wait::~Wait
 //	Add a watcher to our object.
 //-----------------------------------------------------------------------------
 void Wait::AddWatcher
-( 
-	pfnWaitNotification_t _callback, 
+(
+	pfnWaitNotification_t _callback,
 	void* _context
 )
 {
@@ -91,8 +93,8 @@ void Wait::AddWatcher
 //	Remove a watcher from our object.
 //-----------------------------------------------------------------------------
 void Wait::RemoveWatcher
-( 
-	pfnWaitNotification_t _callback, 
+(
+	pfnWaitNotification_t _callback,
 	void* _context
 )
 {
@@ -128,18 +130,18 @@ int32 Wait::Multiple
 
 	// Create an event that will be set when any of the objects in the list becomes signalled.
 	Event* waitEvent = new Event();
- 
+
 	// Add a watcher to each object in the list, passing in the event as the context.
 	for( i=0; i<_numObjects; ++i )
 	{
-		_objects[i]->AddWatcher( WaitMultipleCallback, waitEvent ); 
+		_objects[i]->AddWatcher( WaitMultipleCallback, waitEvent );
 	}
 
 	int32 res = -1;	// Default to timeout result
 	string str = "";
 	if( waitEvent->Wait( _timeout ) )
 	{
-		// An object was signalled.  Run through the list 
+		// An object was signalled.  Run through the list
 		// and see which one it was.
 		for( i=0; i<_numObjects; ++i )
 		{
@@ -158,7 +160,7 @@ int32 Wait::Multiple
 	// Remove the watchers
 	for( i=0; i<_numObjects; ++i )
 	{
-		_objects[i]->RemoveWatcher( WaitMultipleCallback, waitEvent ); 
+		_objects[i]->RemoveWatcher( WaitMultipleCallback, waitEvent );
 	}
 
 	// We're done with the event now
