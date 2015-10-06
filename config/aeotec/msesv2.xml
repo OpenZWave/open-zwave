@@ -9,9 +9,7 @@
     </Value>
     <Value type="list" index="3" genre="config" label="Current Overload Protection" size="1" value="0">
       <Help>
-      Current Overload Protection. Load will be closed when 3
-      the Current more than 2.7A and the time more than 2
-      minutes
+      Current overload protection. Load will be closed when 3 the current more than 15.5A and the time more than 2 minutes
       </Help>
       <Item label="Disable" value="0" />
       <Item label="Enable" value="1" />
@@ -35,86 +33,64 @@
 	Enable/disable Wattage threshold and percent.
       </Help>
     </Value>
-    <Value type="short" index="91" genre="config" label="Wattage threshold" units="watts" min="0" max="32000" value="50">
+    <Value type="short" index="91" genre="config" label="Wattage threshold" units="watts" min="0" max="32000" value="25">
       <Help>
 	The minimum change in wattage for a report to be sent.
       </Help>
     </Value>
-    <Value type="byte" index="92" genre="config" label="Wattage threshold percent" units="%" min="0" max="99" value="10">
+    <Value type="byte" index="92" genre="config" label="Wattage threshold percent" units="%" min="0" max="99" value="5">
       <Help>
 	Minimum change in percent of wattage to send a report.
       </Help>
     </Value>
     <Value type="button" index="100" genre="config" label="Default Group Reports" units="" write_only="true" value="0" affects="101,102,103">
       <Help>
-	Set report types for groups 1, 2 and 3 to default. Reverts to 0
-	after set.
+	Set report types for groups 1, 2 and 3 to default. Reverts to 0	after set.
       </Help>
     </Value>
-    <Value type="int" index="101" genre="config" label="Report type G1" units="" value="8">
+    <Value type="int" index="101" genre="config" label="Report type G1" units="" value="4">
       <Help>
-	Defines the type of report sent for reporting group 1. 2 is multisensor report. 4 is meter report for watts. 8 is meter report for kilowatts.
-	 Value 1 (msb) Reserved
+	Defines the type of report sent for reporting group 1. 1 for the V. 2 for the A. 4 for the W. 8 for the kWh.
+	 Value 1 (MSB) Reserved
 	 Value 2 Reserved
 	 Value 3 Reserved
-	 Value 4 (lsb) bits 7-4 reserved
-                     bit 3 MRC (KWH)
-		     bit 2 MRC (watt)
-		     bit 1 MSRC (Current)
+	 Value 4 (LSB) bits 7-4 reserved
+             bit 3 MRC (kWh)
+		     bit 2 MRC (Watt)
+		     bit 1 MRC (Current amperage)
 		     bit 0 MRC (Voltage)
 
-	The MRC(KWH) flag signals that Report Group 1 send(1) or don't send(0)
-	Meter Report Command(KWh) automatically.
-
-	The MRC(Watt) flag signals that Report Group 1 send(1) or don't send(0)
-	Meter Report Command(wattage) automatically.
-
-	The MSRC flag signals that Report Group 1 send(1) or don't send(0)
-	Multilevel Sensor Report Command(wattage) automatically.
+     Set each bit to the report you want to receive. You can add them to custom your report.
       </Help>
     </Value>
-    <Value type="int" index="102" genre="config" label="Report type G2" units="" value="0">
+    <Value type="int" index="102" genre="config" label="Report type G2" units="" value="8">
       <Help>
-	Defines the type of report sent for reporting group 2. 2 is multisensor report. 4 is meter report for watts. 8 is meter report for kilowatts.
-	 Value 1 (msb) Reserved
+	Defines the type of report sent for reporting group 1. 1 for the V. 2 for the A. 4 for the W. 8 for the kWh.
+	 Value 1 (MSB) Reserved
 	 Value 2 Reserved
 	 Value 3 Reserved
-	 Value 4 (lsb) bits 7-4 reserved
-                     bit 3 MRC (KWH)
-		     bit 2 MRC (watt)
-		     bit 1 MSRC (Current)
+	 Value 4 (LSB) bits 7-4 reserved
+             bit 3 MRC (kWh)
+		     bit 2 MRC (Watt)
+		     bit 1 MRC (Current amperage)
 		     bit 0 MRC (Voltage)
 
-	The MRC(KWH) flag signals that Report Group 1 send(1) or don't send(0)
-	Meter Report Command(KWh) automatically.
-
-	The MRC(Watt) flag signals that Report Group 1 send(1) or don't send(0)
-	Meter Report Command(wattage) automatically.
-
-	The MSRC flag signals that Report Group 1 send(1) or don't send(0)
-	Multilevel Sensor Report Command(wattage) automatically.
+     Set each bit to the report you want to receive. You can add them to custom your report.
       </Help>
     </Value>
     <Value type="int" index="103" genre="config" label="Report type G3" units="" value="0">
       <Help>
-	Defines the type of report sent for reporting group 3. 2 is multisensor report. 4 is meter report for watts. 8 is meter report for kilowatts.
-	 Value 1 (msb) Reserved
+	Defines the type of report sent for reporting group 1. 1 for the V. 2 for the A. 4 for the W. 8 for the kWh.
+	 Value 1 (MSB) Reserved
 	 Value 2 Reserved
 	 Value 3 Reserved
-	 Value 4 (lsb) bits 7-4 reserved
-                     bit 3 MRC (KWH)
-		     bit 2 MRC (watt)
-		     bit 1 MSRC (Current)
+	 Value 4 (LSB) bits 7-4 reserved
+             bit 3 MRC (kWh)
+		     bit 2 MRC (Watt)
+		     bit 1 MRC (Current amperage)
 		     bit 0 MRC (Voltage)
 
-	The MRC(KWH) flag signals that Report Group 1 send(1) or don't send(0)
-	Meter Report Command(KWh) automatically.
-
-	The MRC(Watt) flag signals that Report Group 1 send(1) or don't send(0)
-	Meter Report Command(wattage) automatically.
-
-	The MSRC flag signals that Report Group 1 send(1) or don't send(0)
-	Multilevel Sensor Report Command(wattage) automatically.
+     Set each bit to the report you want to receive. You can add them to custom your report.
       </Help>
     </Value>
     <Value type="button" index="110" genre="config" label="Default Group Time" units="" write_only="true" value="0" affects="111,112,113">
@@ -137,20 +113,23 @@
 	Defines the time interval when the defined report for group 3 is sent.
       </Help>
     </Value>
-    <Value type="list" index="120" genre="config" label="External Button Mode" size="1" value="255">
+    <Value type="list" index="120" genre="config" label="External Button Mode" size="1" value="1">
       <Help>Turn external button mode</Help>
       <Item label="Momentary Button" value="0" />
       <Item label="2 State Switch" value="1" />
       <Item label="3 way Switch" value="2" />
       <Item label="Unidentified Mode" value="255" />
     </Value>
-    <!-- This is only present in Firmware 1.20
+	<Value type="list" index="200" genre="config" label="Partner ID" min="0" max="1" value="0">
+      <Help>Define product ID</Help>
+      <Item label="Aeon Labs standard product" value="0" />
+      <Item label="ATT" value="1" />
+    </Value>
     <Value type="list" genre="config" index="252" label="Lock/Unlock Configuration" min="0" max="1" value="0">
-      <Help>Lock/ unlock all configuration parameters</Help>
+      <Help>Lock/unlock all configuration parameters</Help>
       <Item label="Unlock" value="0"/>
       <Item label="Lock" value="1"/>
     </Value>
-    -->
     <Value type="short" index="254" genre="config" label="Device tag" units="" min="0" max="65535" value="0">
       <Help>
 	Device tag.
@@ -171,4 +150,3 @@
     </Associations>
   </CommandClass>
 </Product>
-
