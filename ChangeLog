@@ -208,6 +208,7 @@ Version 1.3
  - Pull Request #659 - Added configuration file for D-Link Corp and DCH-Z110 Door/Window 3in1 sensor
    from psixilambda (Justin)
  - Issue #446 - Fix Visual Studio 2015 breakage. (Justin)
+ - Pull Request #664 - Add ZMHAD1 Qubino support from Wackoracoon (Justin)
 
 Version 1.2 
  - Released on 15/10/14
