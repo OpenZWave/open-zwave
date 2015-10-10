@@ -154,7 +154,7 @@ $(top_builddir)/libopenzwave.pc: $(top_srcdir)/cpp/build/libopenzwave.pc.in $(PK
 		-e 's|[@]libdir@|$(instlibdir)|g' \
 		-e 's|[@]includedir@|$(PREFIX)/include/openzwave/|g' \
                 -e 's|[@]sysconfdir@|$(PREFIX)/etc/openzwave/|g' \
-		-e 's|[@]gitversion@|$(GITVERSION)|g' \
+                -e 's|[@]gitversion@|$(GITVERSION)|g' \
                 -e 's|[@]docdir@|$(docdir)/|g' \
 		-e 's|[@]VERSION@|$(VERSION)|g' \
 		< "$<" > "$@"
