@@ -2,6 +2,9 @@ prefix=@prefix@
 exec_prefix=@exec_prefix@
 libdir=@libdir@
 includedir=@includedir@
+sysconfdir=@sysconfdir@
+gitversion=@gitversion@
+docdir=@docdir@
 
 Name: libopenzwave
 Description: A Open Source implementation of the ZWave Serial API
