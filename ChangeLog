@@ -211,6 +211,7 @@ Version 1.3
  - Pull Request #664 - Add ZMHAD1 Qubino support from Wackoracoon (Justin)
  - Pull Request #665 - Add ZMNHBD2 Flush 2 Relay from emdioh (Justin)
  - Pull Request #668 - Add some new variables to pkg-config from Ekarak (Justin)
+ - Add a ozw_config file as a replacement for pkg-config and update pkgconfig install dirs (Justin)
 
 Version 1.2 
  - Released on 15/10/14
