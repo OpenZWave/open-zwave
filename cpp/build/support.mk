@@ -91,9 +91,9 @@ endif
 
 #pkg-config doesn't exist, lets try to guess best place to put the pc file
 ifeq ($(PKGCONFIG),)
-pkgconfigdir = $(shell if [ -d "/usr/lib64/pkgconfig" ]; then echo "/usr/lib64/pkgconfig"; else echo "/usr/lib/pkgconfig"; fi)
+pkgconfigdir ?= $(shell if [ -d "/usr/lib64/pkgconfig" ]; then echo "/usr/lib64/pkgconfig"; else echo "/usr/lib/pkgconfig"; fi)
 else
-pkgconfigdir = $(shell pkg-config --variable pc_path pkg-config | awk '{split($$0,a,":"); print a[1]}')
+pkgconfigdir ?= $(shell pkg-config --variable pc_path pkg-config | awk '{split($$0,a,":"); print a[1]}')
 endif
 
 sysconfdir ?= $(PREFIX)/etc/openzwave/
