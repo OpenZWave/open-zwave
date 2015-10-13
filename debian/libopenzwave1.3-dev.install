@@ -1,3 +1,4 @@
 usr/lib/*/libopenzwave.so
 usr/include/openzwave/*
 usr/share/doc/openzwave*/* 
+usr/bin/ozw_config
