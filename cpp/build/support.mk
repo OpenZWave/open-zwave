@@ -89,13 +89,9 @@ else
 instlibdir ?= $(PREFIX)$(instlibdir.default)
 endif
 
-ifeq ($(PKGCONFIG),)
 #pkg-config doesn't exist, lets try to guess best place to put the pc file
-if [ -d "/usr/lib64/pkgconfig"] \
-pkgconfigdir = "/usr/lib64/pkgconfig" \
-else \
-pkgconfigdir = "/usr/lib/pkgconfig" \
-fi 
+ifeq ($(PKGCONFIG),)
+pkgconfigdir = $(shell if [ -d "/usr/lib64/pkgconfig" ]; then echo "/usr/lib64/pkgconfig"; else echo "/usr/lib/pkgconfig"; fi)
 else
 pkgconfigdir = $(shell pkg-config --variable pc_path pkg-config | awk '{split($$0,a,":"); print a[1]}')
 endif

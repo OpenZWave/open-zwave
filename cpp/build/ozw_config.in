@@ -11,7 +11,7 @@ function getValue {
 	do
 		if [ "--"$name == $1 ]
 		then
-			echo -n "${value//\"/}" | tr -d '\r\n'
+			echo "${value//\"/}" | tr -d '\r\n'
 		fi
 	done <<< $inputfile
 }
@@ -41,7 +41,7 @@ then
 	else
 		value=$(getValue $key)
 	fi
-	if [ ! -z $value ]
+	if [ ! -z "$value" ]
 	then
 		echo $value
 	else
