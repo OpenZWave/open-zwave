@@ -196,6 +196,7 @@ DISTFILES =	.gitignore \
 	cpp/build/Makefile \
 	cpp/build/OZW_RunTests.sh \
 	cpp/build/libopenzwave.pc.in \
+	cpp/build/ozw_config.in \
 	cpp/build/sh2ju.sh \
 	cpp/build/support.mk \
 	cpp/build/windows/GIT-VS-VERSION-GEN.bat \
