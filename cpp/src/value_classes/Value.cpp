@@ -31,7 +31,7 @@
 #include "Node.h"
 #include "Notification.h"
 #include "Msg.h"
-#include "value_classes/Value.h"
+#include "Value.h"
 #include "platform/Log.h"
 #include "command_classes/CommandClass.h"
 #include <ctime>

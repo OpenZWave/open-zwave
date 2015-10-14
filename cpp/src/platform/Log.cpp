@@ -27,14 +27,14 @@
 //-----------------------------------------------------------------------------
 #include <stdarg.h>
 
-#include "Defs.h"
-#include "platform/Mutex.h"
-#include "platform/Log.h"
+#include "../Defs.h"
+#include "Mutex.h"
+#include "Log.h"
 
 #ifdef WIN32
-#include "platform/windows/LogImpl.h"	// Platform-specific implementation of a log
+#include "windows/LogImpl.h"	// Platform-specific implementation of a log
 #else
-#include "platform/unix/LogImpl.h"	// Platform-specific implementation of a log
+#include "unix/LogImpl.h"	// Platform-specific implementation of a log
 #endif
 
 

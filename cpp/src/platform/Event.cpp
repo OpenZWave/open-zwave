@@ -25,13 +25,13 @@
 //	along with OpenZWave.  If not, see <http://www.gnu.org/licenses/>.
 //
 //-----------------------------------------------------------------------------
-#include "Defs.h"
-#include "platform/Event.h"
+#include "../Defs.h"
+#include "Event.h"
 
 #ifdef WIN32
-#include "platform/windows/EventImpl.h"	// Platform-specific implementation of an event
+#include "windows/EventImpl.h"	// Platform-specific implementation of an event
 #else
-#include "platform/unix/EventImpl.h"	// Platform-specific implementation of an event
+#include "unix/EventImpl.h"	// Platform-specific implementation of an event
 #endif
 
 using namespace OpenZWave;

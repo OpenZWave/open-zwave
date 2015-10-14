@@ -29,8 +29,8 @@
 #define _HidController_H
 
 #include <string>
-#include "Defs.h"
-#include "platform/Controller.h"
+#include "../Defs.h"
+#include "Controller.h"
 
 
 struct hid_device_;

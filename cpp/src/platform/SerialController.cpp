@@ -26,15 +26,15 @@
 //-----------------------------------------------------------------------------
 
 #include "Msg.h"
-#include "platform/Event.h"
-#include "platform/Thread.h" 
-#include "platform/SerialController.h"
-#include "platform/Log.h"
+#include "Event.h"
+#include "Thread.h" 
+#include "SerialController.h"
+#include "Log.h"
 
 #ifdef WIN32
-#include "platform/windows/SerialControllerImpl.h"	// Platform-specific implementation of a serial port
+#include "windows/SerialControllerImpl.h"	// Platform-specific implementation of a serial port
 #else
-#include "platform/unix/SerialControllerImpl.h"	// Platform-specific implementation of a serial port
+#include "unix/SerialControllerImpl.h"	// Platform-specific implementation of a serial port
 #endif
 
 using namespace OpenZWave;

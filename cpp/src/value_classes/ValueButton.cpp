@@ -26,7 +26,7 @@
 //-----------------------------------------------------------------------------
 
 #include "tinyxml.h"
-#include "value_classes/ValueButton.h"
+#include "ValueButton.h"
 #include "Manager.h"
 #include "Driver.h"
 #include "Node.h"

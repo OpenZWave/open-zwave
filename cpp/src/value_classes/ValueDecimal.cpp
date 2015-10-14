@@ -26,7 +26,7 @@
 //-----------------------------------------------------------------------------
 
 #include "tinyxml.h"
-#include "value_classes/ValueDecimal.h"
+#include "ValueDecimal.h"
 #include "Msg.h"
 #include "platform/Log.h"
 #include "Manager.h"

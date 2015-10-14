@@ -30,9 +30,9 @@
 
 #include <string>
 #include <list>
-#include "Defs.h"
+#include "../Defs.h"
 #include "Driver.h"
-#include "platform/Stream.h"
+#include "Stream.h"
 
 namespace OpenZWave
 {

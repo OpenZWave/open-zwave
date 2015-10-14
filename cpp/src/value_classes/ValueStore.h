@@ -29,8 +29,8 @@
 #define _ValueStore_H
 
 #include <map>
-#include "Defs.h"
-#include "value_classes/ValueID.h"
+#include "../Defs.h"
+#include "ValueID.h"
 
 class TiXmlElement;
 

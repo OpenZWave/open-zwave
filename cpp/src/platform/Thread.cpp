@@ -25,14 +25,14 @@
 //	along with OpenZWave.  If not, see <http://www.gnu.org/licenses/>.
 //
 //-----------------------------------------------------------------------------
-#include "Defs.h"
-#include "platform/Event.h"
-#include "platform/Thread.h"
+#include "../Defs.h"
+#include "Event.h"
+#include "Thread.h"
 
 #ifdef WIN32
-#include "platform/windows/ThreadImpl.h"	// Platform-specific implementation of a thread
+#include "windows/ThreadImpl.h"	// Platform-specific implementation of a thread
 #else
-#include "platform/unix/ThreadImpl.h"	// Platform-specific implementation of a thread
+#include "unix/ThreadImpl.h"	// Platform-specific implementation of a thread
 #endif
 
 using namespace OpenZWave;

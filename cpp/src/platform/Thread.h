@@ -29,8 +29,8 @@
 #define _Thread_H
 
 #include <string>
-#include "Defs.h"
-#include "platform/Wait.h"
+#include "../Defs.h"
+#include "Wait.h"
 
 namespace OpenZWave
 {
