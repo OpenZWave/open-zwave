@@ -61,7 +61,9 @@ enum
 	SwitchMultilevelIndex_Duration,
 	SwitchMultilevelIndex_Step,
 	SwitchMultilevelIndex_Inc,
-	SwitchMultilevelIndex_Dec
+	SwitchMultilevelIndex_Dec,
+	SwitchMultilevelIndex_DimReceived,
+	SwitchMultilevelIndex_BrightReceived
 };
 
 static uint8 c_directionParams[] =
@@ -166,70 +168,162 @@ bool SwitchMultilevel::HandleMsg
 	uint32 const _instance	// = 1
 )
 {
-	if( SwitchMultilevelCmd_Report == (SwitchMultilevelCmd)_data[0] )
-	{
-		Log::Write( LogLevel_Info, GetNodeId(), "Received SwitchMultiLevel report: level=%d", _data[1] );
-
-		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, SwitchMultilevelIndex_Level ) ) )
+	switch ((SwitchMultilevelCmd)_data[0])
+	{	
+		case SwitchMultilevelCmd_Report:
 		{
-			value->OnValueRefreshed( _data[1] );
-			value->Release();
-		}
-		return true;
-	}
+			Log::Write( LogLevel_Info, GetNodeId(), "Received SwitchMultiLevel report: level=%d", _data[1] );
 
-	if( SwitchMultilevelCmd_SupportedReport == (SwitchMultilevelCmd)_data[0] )
-	{
-		uint8 switchType1 = _data[1] & 0x1f;
-		uint8 switchType2 = _data[2] & 0x1f;
-		uint8 switchtype1label = switchType1;
-		uint8 switchtype2label = switchType2;
-		if (switchtype1label > 7) /* size of c_switchLabelsPos, c_switchLabelsNeg */
-		{
-			Log::Write (LogLevel_Warning, GetNodeId(), "switchtype1label Value was greater than range. Setting to Invalid");
-			switchtype1label = 0;
-		}
-		if (switchtype2label > 7) /* sizeof c_switchLabelsPos, c_switchLabelsNeg */
-		{
-			Log::Write (LogLevel_Warning, GetNodeId(), "switchtype2label Value was greater than range. Setting to Invalid");
-			switchtype2label = 0;
-		}
-
-
-		Log::Write( LogLevel_Info, GetNodeId(), "Received SwitchMultiLevel supported report: Switch1=%s/%s, Switch2=%s/%s", c_switchLabelsPos[switchtype1label], c_switchLabelsNeg[switchtype1label], c_switchLabelsPos[switchtype2label], c_switchLabelsNeg[switchtype2label] );
-		ClearStaticRequest( StaticRequest_Version );
-
-		// Set the labels on the values
-		ValueButton* button;
-
-		if( switchType1 )
-		{
-			if( NULL != ( button = static_cast<ValueButton*>( GetValue( _instance, SwitchMultilevelIndex_Bright ) ) ) )
+			if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, SwitchMultilevelIndex_Level ) ) )
 			{
-				button->SetLabel( c_switchLabelsPos[switchtype1label] );
-				button->Release();
+				value->OnValueRefreshed( _data[1] );
+				value->Release();
 			}
-			if( NULL != ( button = static_cast<ValueButton*>( GetValue( _instance, SwitchMultilevelIndex_Dim ) ) ) )
-			{
-				button->SetLabel( c_switchLabelsNeg[switchtype1label] );
-				button->Release();
-			}
+			return true;
 		}
 
-		if( switchType2 )
+		case SwitchMultilevelCmd_Set:
 		{
-			if( NULL != ( button = static_cast<ValueButton*>( GetValue( _instance, SwitchMultilevelIndex_Inc ) ) ) )
+			Log::Write( LogLevel_Info, GetNodeId(), "Received SwitchMultiLevel Set: level=%d", _data[1] );
+
+			if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, SwitchMultilevelIndex_Level ) ) )
 			{
-				button->SetLabel( c_switchLabelsPos[switchtype2label] );
-				button->Release();
+				value->OnValueRefreshed( _data[1] );
+				value->Release();
 			}
-			if( NULL != ( button = static_cast<ValueButton*>( GetValue( _instance, SwitchMultilevelIndex_Dec ) ) ) )
+
+			if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, SwitchMultilevelIndex_BrightReceived ) ) ) 
 			{
-				button->SetLabel( c_switchLabelsNeg[switchtype2label] );
-				button->Release();
+				value->OnValueRefreshed(false);
+				value->Release();
 			}
+
+			if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, SwitchMultilevelIndex_DimReceived ) ) ) 
+			{
+				value->OnValueRefreshed(false);
+				value->Release();
+			}
+
+			return true;
 		}
-		return true;
+
+		case SwitchMultilevelCmd_StartLevelChange:
+		{
+			Log::Write( LogLevel_Info, GetNodeId(), "Received SwitchMultiLevel StartLevelChange: data[1]=%d", _data[1] );
+
+			if (0x00 == _data[1])
+			{
+				ValueBool* value;
+
+				if( NULL != ( value = static_cast<ValueBool*>( GetValue( _instance, SwitchMultilevelIndex_BrightReceived ) ) ) )
+				{
+					value->OnValueRefreshed(true);
+					value->Release();
+				}
+			}
+			else if (0x40 == _data[1])
+			{
+				ValueBool* value;
+
+				if( NULL != ( value = static_cast<ValueBool*>( GetValue( _instance, SwitchMultilevelIndex_DimReceived ) ) ) )
+				{
+					value->OnValueRefreshed(true);
+					value->Release();
+				}
+			}
+			else
+			{
+				Log::Write( LogLevel_Info, GetNodeId(), "Unrecognized data[1]=%d", _data[1] );
+			}		
+			return true;
+		}
+
+		case SwitchMultilevelCmd_StopLevelChange:
+		{
+			Log::Write( LogLevel_Info, GetNodeId(), "Received SwitchMultiLevel StopLevelChange: data[1]=%d", _data[1] );
+
+			if (0x00 == _data[1])
+			{
+				ValueBool* value;
+
+				if( NULL != ( value = static_cast<ValueBool*>( GetValue( _instance, SwitchMultilevelIndex_BrightReceived ) ) ) )
+				{
+					value->OnValueRefreshed(false);
+					value->Release();
+				}
+			}
+			else if (0x40 == _data[1])
+			{
+				ValueBool* value;
+
+				if( NULL != ( value = static_cast<ValueBool*>( GetValue( _instance, SwitchMultilevelIndex_DimReceived ) ) ) )
+				{
+					value->OnValueRefreshed(false);
+					value->Release();
+				}
+			}
+			else
+			{
+				Log::Write( LogLevel_Info, GetNodeId(), "Unrecognized data[1]=%d", _data[1] );
+			}		
+			return true;
+		}
+
+		case SwitchMultilevelCmd_SupportedReport:
+		{
+			uint8 switchType1 = _data[1] & 0x1f;
+			uint8 switchType2 = _data[2] & 0x1f;
+			uint8 switchtype1label = switchType1;
+			uint8 switchtype2label = switchType2;
+			if (switchtype1label > 7) /* size of c_switchLabelsPos, c_switchLabelsNeg */
+			{
+				Log::Write (LogLevel_Warning, GetNodeId(), "switchtype1label Value was greater than range. Setting to Invalid");
+				switchtype1label = 0;
+			}
+			if (switchtype2label > 7) /* sizeof c_switchLabelsPos, c_switchLabelsNeg */
+			{
+				Log::Write (LogLevel_Warning, GetNodeId(), "switchtype2label Value was greater than range. Setting to Invalid");
+				switchtype2label = 0;
+			}
+
+
+			Log::Write( LogLevel_Info, GetNodeId(), "Received SwitchMultiLevel supported report: Switch1=%s/%s, Switch2=%s/%s", c_switchLabelsPos[switchtype1label], c_switchLabelsNeg[switchtype1label], c_switchLabelsPos[switchtype2label], c_switchLabelsNeg[switchtype2label] );
+			ClearStaticRequest( StaticRequest_Version );
+
+			// Set the labels on the values
+			ValueButton* button;
+
+			if( switchType1 )
+			{
+				if( NULL != ( button = static_cast<ValueButton*>( GetValue( _instance, SwitchMultilevelIndex_Bright ) ) ) )
+				{
+					button->SetLabel( c_switchLabelsPos[switchtype1label] );
+					button->Release();
+				}
+				if( NULL != ( button = static_cast<ValueButton*>( GetValue( _instance, SwitchMultilevelIndex_Dim ) ) ) )
+				{
+					button->SetLabel( c_switchLabelsNeg[switchtype1label] );
+					button->Release();
+				}
+			}
+
+			if( switchType2 )
+			{
+				if( NULL != ( button = static_cast<ValueButton*>( GetValue( _instance, SwitchMultilevelIndex_Inc ) ) ) )
+				{
+					button->SetLabel( c_switchLabelsPos[switchtype2label] );
+					button->Release();
+				}
+				if( NULL != ( button = static_cast<ValueButton*>( GetValue( _instance, SwitchMultilevelIndex_Dec ) ) ) )
+				{
+					button->SetLabel( c_switchLabelsNeg[switchtype2label] );
+					button->Release();
+				}
+			}
+			return true;
+		}
+		default:
+			return false;
 	}
 
 	return false;
@@ -621,6 +715,8 @@ void SwitchMultilevel::CreateVars
 				node->CreateValueButton( ValueID::ValueGenre_User, GetCommandClassId(), _instance, SwitchMultilevelIndex_Dim, "Dim", 0 );
 				node->CreateValueBool( ValueID::ValueGenre_System, GetCommandClassId(), _instance, SwitchMultilevelIndex_IgnoreStartLevel, "Ignore Start Level", "", false, false, true, 0 );
 				node->CreateValueByte( ValueID::ValueGenre_System, GetCommandClassId(), _instance, SwitchMultilevelIndex_StartLevel, "Start Level", "", false, false, 0, 0 );
+				node->CreateValueBool( ValueID::ValueGenre_User, GetCommandClassId(), _instance, SwitchMultilevelIndex_DimReceived, "Dim Request Received", "", true, false, 0, 0 );
+				node->CreateValueBool( ValueID::ValueGenre_User, GetCommandClassId(), _instance, SwitchMultilevelIndex_BrightReceived, "Bright Request Received", "", true, false, 0, 0 );
 				break;
 			}
 		}
