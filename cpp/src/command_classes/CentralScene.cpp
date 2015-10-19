@@ -171,7 +171,7 @@ bool CentralScene::HandleMsg
 			when = 60 * _data[2];
 		else
 			when = 0;
-		Log::Write( LogLevel_Info, GetNodeId(), "Received Central Scene set from node %d: scene id=%d in %s seconds. Sending event notification.", GetNodeId(), _data[3], when);
+		Log::Write( LogLevel_Info, GetNodeId(), "Received Central Scene set from node %d: scene id=%d in %d seconds. Sending event notification.", GetNodeId(), _data[3], when);
 
 		if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, _data[3] ) ) )
 		{
