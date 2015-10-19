@@ -401,9 +401,12 @@ void Node::AdvanceQueries
 				if ( pluscc )
 				{
 					m_queryPending = pluscc->RequestState( CommandClass::RequestFlag_Static, 1, Driver::MsgQueue_Query );
-					addQSC = m_queryPending;
 				}
-				else
+				if (m_queryPending) 
+				{
+					addQSC = m_queryPending;
+				} 
+				else 
 				{
 					// this is not a Zwave+ node, so move onto the next querystage
 					m_queryStage = QueryStage_SecurityReport;
