@@ -214,6 +214,7 @@ Version 1.3
  - Add a ozw_config file as a replacement for pkg-config and update pkgconfig install dirs (Justin)
  - Pull Request #670 - Typo: Changes "Temerature" to "Temperature" from cslarsen (Justin)
  - Added Aeotec DoorBell and Dry Contact Sensor (Justin)
+ - Issue #672 - Infinate Loop when refreshing ZWPlus Command Class (Justin)
 
 Version 1.2 
  - Released on 15/10/14
