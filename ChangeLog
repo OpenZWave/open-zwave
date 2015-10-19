@@ -216,6 +216,7 @@ Version 1.3
  - Added Aeotec DoorBell and Dry Contact Sensor (Justin)
  - Issue #672 - Infinate Loop when refreshing ZWPlus Command Class (Justin)
  - Issue #674 - Fix crash on Central Scene Message (Justin)
+ - Issue #671 - Updated Zwave.me ZME_WALLC-S Config file from rgroothuis (Justin)
 
 Version 1.2 
  - Released on 15/10/14
