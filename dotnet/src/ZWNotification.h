@@ -64,7 +64,8 @@ namespace OpenZWaveDotNet
 			Group							= Notification::Type_Group,				
 			NodeNew							= Notification::Type_NodeNew,
 			NodeAdded						= Notification::Type_NodeAdded,			
-			NodeRemoved						= Notification::Type_NodeRemoved,		
+			NodeRemoved						= Notification::Type_NodeRemoved,
+			NodeReset						= Notification::Type_NodeReset,
 			NodeProtocolInfo				= Notification::Type_NodeProtocolInfo,
 			NodeNaming						= Notification::Type_NodeNaming,
 			NodeEvent						= Notification::Type_NodeEvent,
@@ -115,6 +116,7 @@ namespace OpenZWaveDotNet
 		}
 
 		Type GetType(){ return m_type; }
+		Code GetCode() { return (Code)Enum::ToObject( Code::typeid, m_byte); }
 		uint32 GetHomeId(){ return m_valueId->GetHomeId(); }
 		uint8 GetNodeId(){ return m_valueId->GetNodeId(); }
 		ZWValueID^ GetValueID(){ return m_valueId; }
