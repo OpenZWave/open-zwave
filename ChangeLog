@@ -217,7 +217,9 @@ Version 1.3
  - Issue #672 - Infinate Loop when refreshing ZWPlus Command Class (Justin)
  - Issue #674 - Fix crash on Central Scene Message (Justin)
  - Issue #671 - Updated Zwave.me ZME_WALLC-S Config file from rgroothuis (Justin)
-
+ - Pull Request #676 - Fix Windows Build Version and a few enhancements to
+   the dotNet wrapper from bufferUnderrun (Justin)
+ 
 Version 1.2 
  - Released on 15/10/14
 
