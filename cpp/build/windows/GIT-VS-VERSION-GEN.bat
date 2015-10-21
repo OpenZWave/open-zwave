@@ -410,8 +410,8 @@ GOTO :EOF
 :: --------------------
 :OUT_HEADER
 :: --------------------
-ECHO unsigned short ozw_vers_minor = %nbMAJOR_PART%; >> "%HEADER_OUT_FILE%"
-ECHO unsigned short ozw_vers_major = %nbMINOR_PART%; >> "%HEADER_OUT_FILE%"
+ECHO unsigned short ozw_vers_major = %nbMAJOR_PART%; >> "%HEADER_OUT_FILE%"
+ECHO unsigned short ozw_vers_minor = %nbMINOR_PART%; >> "%HEADER_OUT_FILE%"
 ECHO unsigned short ozw_vers_revision = %nbFIX_PART%; >> "%HEADER_OUT_FILE%"
 ECHO char ozw_version_string[] = "%strFILE_VERSION%\0"; >> "%HEADER_OUT_FILE%"
 
@@ -425,7 +425,7 @@ SET nbPATCHES_PART=0
 :CON_OUT
 :: --------------------
 IF DEFINED fQUIET GOTO :EOF
-ECHO Version String::      %strFILE_VERSION%
+ECHO Version String:       %strFILE_VERSION%
 ECHO Digital Version ID:   %csvFILE_VERSION%
 ECHO Hex Version ID:       %hexFILE_VERSION%
 ECHO Comment:              %strCOMMENT%
