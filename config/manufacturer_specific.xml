@@ -441,8 +441,8 @@
 		<Product type="1102" id="0243" name="VRCS2-MRZ 2-Button Scene Controller with Switches"/>
 	</Manufacturer>
 	<Manufacturer id="014f" name="Linear">
-                <Product type="4450" id="3030" name="PD300Z-2 Plug-in Dimmer Module"/>
-                <Product type="4457" id="3034" name="WD500Z-1 Wall Dimmer Switch"/>
+                <Product type="4450" id="3030" name="PD300Z-2 Plug-in Dimmer Module" config="linear/PD300Z-2.xml"/>
+                <Product type="4457" id="3034" name="WD500Z-1 Wall Dimmer Switch" config="linear/WD500Z-1.xml"/>
                 <Product type="4457" id="3331" name="WD1000Z-1 Wall Dimmer Switch"/>
                 <Product type="5246" id="3133" name="FS20Z Isolated Contact Fixture Module"/>
                 <Product type="5250" id="3030" name="PS15Z-2 Plug-in Appliance Module"/>
