@@ -28,7 +28,7 @@
 #ifndef _TimeStamp_H
 #define _TimeStamp_H
 
-#include "Defs.h"
+#include "../Defs.h"
 
 namespace OpenZWave
 {

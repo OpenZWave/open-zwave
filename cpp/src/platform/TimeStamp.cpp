@@ -26,13 +26,13 @@
 //
 //-----------------------------------------------------------------------------
 #include <string>
-#include "Defs.h"
-#include "platform/TimeStamp.h"
+#include "../Defs.h"
+#include "TimeStamp.h"
 
 #ifdef WIN32
-#include "platform/windows/TimeStampImpl.h"	// Platform-specific implementation of a TimeStamp
+#include "windows/TimeStampImpl.h"	// Platform-specific implementation of a TimeStamp
 #else
-#include "platform/unix/TimeStampImpl.h"	// Platform-specific implementation of a TimeStamp
+#include "unix/TimeStampImpl.h"	// Platform-specific implementation of a TimeStamp
 #endif
 
 using namespace OpenZWave;

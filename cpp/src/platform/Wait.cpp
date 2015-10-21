@@ -26,15 +26,15 @@
 //
 //-----------------------------------------------------------------------------
 #include <stdio.h>
-#include "Defs.h"
-#include "platform/Wait.h"
-#include "platform/Event.h"
-#include "platform/Log.h"
+#include "../Defs.h"
+#include "Wait.h"
+#include "Event.h"
+#include "Log.h"
 
 #ifdef WIN32
-#include "platform/windows/WaitImpl.h"	// Platform-specific implementation of a Wait object
+#include "windows/WaitImpl.h"	// Platform-specific implementation of a Wait object
 #else
-#include "platform/unix/WaitImpl.h"	// Platform-specific implementation of a Wait object
+#include "unix/WaitImpl.h"	// Platform-specific implementation of a Wait object
 #endif
 
 using namespace OpenZWave;

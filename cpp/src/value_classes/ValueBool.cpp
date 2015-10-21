@@ -26,7 +26,7 @@
 //-----------------------------------------------------------------------------
 
 #include "tinyxml.h"
-#include "value_classes/ValueBool.h"
+#include "ValueBool.h"
 #include "Driver.h"
 #include "Node.h"
 #include "platform/Log.h"
