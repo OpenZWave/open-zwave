@@ -84,6 +84,26 @@ LogImpl::~LogImpl
 		fclose( this->pFile );
 }
 
+unsigned int LogImpl::toEscapeCode(LogLevel _level) {
+	unsigned int code;
+
+	switch (_level) {
+		case LogLevel_Debug: 	code = 34; break;   // 34=blue
+		case LogLevel_Detail: 	code = 34; break;	 // 34=blue
+		case LogLevel_Info:    	code = 39; break;   // 39=white
+		case LogLevel_Alert:	code = 33; break;   // 33=orange
+		case LogLevel_Warning:	code = 33; break;   // 31=red
+		case LogLevel_Error:	code = 31; break;
+		case LogLevel_Fatal:	code = 95; break;
+		case LogLevel_Always:  	code = 32; break;   // 95=magenta
+		default:            	code = 39; break;   // 39=white (reset to default)
+	}
+
+	return code;
+}
+
+
+
 //-----------------------------------------------------------------------------
 //	<LogImpl::Write>
 //	Write to the log
@@ -139,7 +159,9 @@ void LogImpl::Write
 				}
 				if( m_bConsoleOutput )
 				{
+					fprintf(stdout,"\x1B[%02um", toEscapeCode(_logLevel));
 					fputs( outBuf.c_str(), stdout );
+					fprintf(stdout, "\x1b[39m");
 				}
 			}
 		}
