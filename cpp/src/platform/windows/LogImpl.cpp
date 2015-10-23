@@ -112,6 +112,27 @@ LogImpl::~LogImpl
 )
 {
 }
+unsigned int LogImpl::toEscapeCode(LogLevel _level) {
+	unsigned short code;
+
+	switch (_level) {
+		case LogLevel_Debug: 	code = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY; break; //blue
+		case LogLevel_Detail:	code = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY; break; //blue
+		case LogLevel_Info:		code = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE; break; // white
+		case LogLevel_Alert:	code = FOREGROUND_RED | FOREGROUND_GREEN;                   break; // orange
+		case LogLevel_Warning:	code = FOREGROUND_RED | FOREGROUND_GREEN;                   break; // orange
+		case LogLevel_Error:	code = FOREGROUND_RED;                                      break; // red
+		case LogLevel_Fatal:	code = FOREGROUND_RED | FOREGROUND_INTENSITY;               break; // light red
+		case LogLevel_Always:	code = FOREGROUND_GREEN;					                break; // green
+		default: 				code = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE; break; // white
+	}
+
+	return (code);
+}
+
+
+
+
 
 //-----------------------------------------------------------------------------
 //	<LogImpl::Write>
@@ -171,8 +192,10 @@ void LogImpl::Write
 				}
 				if( m_bConsoleOutput )
 				{
+					SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), toEscapeCode(_logLevel));
 					printf( "%s", lineBuf );
 					printf( "\n" );
+					SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
 				}
 
 			}

@@ -219,6 +219,7 @@ Version 1.3
  - Issue #671 - Updated Zwave.me ZME_WALLC-S Config file from rgroothuis (Justin)
  - Pull Request #676 - Fix Windows Build Version and a few enhancements to
    the dotNet wrapper from bufferUnderrun (Justin)
+ - OOhhhh. Pretty Colors (Justin)
  
 Version 1.2 
  - Released on 15/10/14
