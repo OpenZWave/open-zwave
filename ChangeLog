@@ -220,6 +220,7 @@ Version 1.3
  - Pull Request #676 - Fix Windows Build Version and a few enhancements to
    the dotNet wrapper from bufferUnderrun (Justin)
  - OOhhhh. Pretty Colors (Justin)
+ - Pull Request #677 - Update for Linear Dimmers PD300Z-2 and WD500Z-1 from vexofp (Justin)
  
 Version 1.2 
  - Released on 15/10/14
