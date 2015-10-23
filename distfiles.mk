@@ -116,6 +116,8 @@ DISTFILES =	.gitignore \
 	config/leviton/vrf01.xml \
 	config/leviton/vri06.xml \
 	config/leviton/vri10.xml \
+	config/linear/PD300Z-2.xml \
+	config/linear/WD500Z-1.xml \
 	config/manufacturer_specific.xml \
 	config/manufacturer_specific.xsd \
 	config/mcohome/mhs311.xml \
