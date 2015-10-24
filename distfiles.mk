@@ -28,7 +28,9 @@ DISTFILES =	.gitignore \
 	config/act/zrp110.xml \
 	config/act/zrw103.xml \
 	config/aeotec/alms.xml \
+	config/aeotec/doorbell_gen5.xml \
 	config/aeotec/doorwindow.xml \
+	config/aeotec/drycontactsensor.xml \
 	config/aeotec/dsd31.xml \
 	config/aeotec/hdss_gen5.xml \
 	config/aeotec/hem.xml \
@@ -166,6 +168,7 @@ DISTFILES =	.gitignore \
 	config/schlagelink/minikeypad.xml \
 	config/swiid/swiidinter.xml \
 	config/swiid/swiidplug.xml \
+	config/thermofloor/multireg.xml \
 	config/trane/TZEMT400AB32MAA.xml \
 	config/trane/TZEMT400BB32MAA.xml \
 	config/vision/zd2102.xml \
