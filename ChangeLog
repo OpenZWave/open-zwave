@@ -221,7 +221,9 @@ Version 1.3
    the dotNet wrapper from bufferUnderrun (Justin)
  - OOhhhh. Pretty Colors (Justin)
  - Pull Request #677 - Update for Linear Dimmers PD300Z-2 and WD500Z-1 from vexofp (Justin)
- 
+ - Added Aeotec DoorBell and Dry Contact Sensors config files (Justin) 
+ - Issue #679 - Add Thermofloor TF 016 Terhmostat from Cog (Justin)
+
 Version 1.2 
  - Released on 15/10/14
 
