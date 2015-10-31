@@ -38,3 +38,6 @@ override_dh_auto_install:
 	VERSION_MAJ=$(MAJOR) VERSION_MIN=$(MINOR) VERSION_REV=$(REV) DESTDIR=$(DESTDIR) PREFIX=/usr sysconfdir=/etc/openzwave instlibdir=$(LIBDIR) make install
 	strip --strip-unneeded $(DESTDIR)/$(LIBDIR)/libopenzwave.so.$(MAJOR).$(MINOR)
 	strip --strip-unneeded $(DESTDIR)/usr/bin/MinOZW
+
+update_debian_version:
+	sed -i '1 s/(.*)/($(shell git describe --long --tags --dirty | sed s/-/./g | sed s/^v// ))/' debian/changelog
