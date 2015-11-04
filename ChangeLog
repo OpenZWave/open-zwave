@@ -223,6 +223,7 @@ Version 1.3
  - Pull Request #677 - Update for Linear Dimmers PD300Z-2 and WD500Z-1 from vexofp (Justin)
  - Added Aeotec DoorBell and Dry Contact Sensors config files (Justin) 
  - Issue #679 - Add Thermofloor TF 016 Terhmostat from Cog (Justin)
+ - Pull Request #686 - Add Australian Z-Stick Gen5 from phil-nelson (Justin)
 
 Version 1.2 
  - Released on 15/10/14
