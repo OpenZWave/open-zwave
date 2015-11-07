@@ -3207,7 +3207,7 @@ void Node::ReadDeviceClasses
 			if( keyStr )
 			{
 				char* pStop;
-				uint16 key = (uint16)strtol( keyStr, &pStop, 16 );
+				uint8 key = (uint8)strtol( keyStr, &pStop, 16 );
 
 				if( !strcmp( str, "Generic" ) )
 				{
