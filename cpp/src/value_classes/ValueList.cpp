@@ -74,7 +74,7 @@ ValueList::ValueList
 ):
 	Value(),
 	m_items( ),
-	m_valueIdx(),
+	m_valueIdx(0),
 	m_valueIdxCheck( 0 ),
 	m_newValueIdx( 0 ),
 	m_size(0)
@@ -355,12 +355,12 @@ bool ValueList::GetItemLabels
 // Get the Item at the Currently selected Index
 //-----------------------------------------------------------------------------
 ValueList::Item const *ValueList::GetItem() const {
-	try {
-		return &m_items.at(m_valueIdx);
-	} catch (const std::out_of_range& oor) {
+	if ((m_valueIdx < 0) || (m_valueIdx >= (int32)m_items.size()))
+	{
 		Log::Write(LogLevel_Warning, "Invalid Index Set on ValueList");
 		return NULL;
 	}
+	return &m_items.at(m_valueIdx);
 }
 
 
