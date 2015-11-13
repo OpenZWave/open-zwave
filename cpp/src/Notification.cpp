@@ -37,7 +37,7 @@ using namespace OpenZWave;
 // Return a string representation of OZW
 //-----------------------------------------------------------------------------
 
-string Notification::GetAsString() {
+string Notification::GetAsString() const {
 	string str;
 	switch (m_type) {
 		case Type_ValueAdded:
