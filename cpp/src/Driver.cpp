@@ -3871,7 +3871,7 @@ void Driver::CommonAddNodeStatusRequestHandler
 			state = ControllerState_Completed;
 			if( m_currentControllerCommand != NULL && m_currentControllerCommand->m_controllerCommandNode != 0xff )
 			{
-				InitNode( m_currentControllerCommand->m_controllerCommandNode, true, m_currentControllerCommand->m_controllerCommandArg, m_currentControllerCommand->m_controllerDeviceProtocolInfo, m_currentControllerCommand->m_controllerDeviceProtocolInfoLength );
+				InitNode( m_currentControllerCommand->m_controllerCommandNode, true, m_currentControllerCommand->m_controllerCommandArg != 0, m_currentControllerCommand->m_controllerDeviceProtocolInfo, m_currentControllerCommand->m_controllerDeviceProtocolInfoLength );
 			}
 
 			// Not sure about the new controller function here.

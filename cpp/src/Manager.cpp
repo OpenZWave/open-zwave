@@ -992,7 +992,7 @@ bool Manager::IsNodeZWavePlus
 		uint8 const _nodeId
 )
 {
-	uint8 version = 0;
+	bool version = false;
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
 		version = driver->IsNodeZWavePlus( _nodeId );
@@ -1282,7 +1282,7 @@ string Manager::GetNodeProductType
 // <Manager::GetNodeDeviceType>
 // Get the node device type as reported in the Z-Wave+ Info report.
 //-----------------------------------------------------------------------------
-uint8 Manager::GetNodeDeviceType
+uint16 Manager::GetNodeDeviceType
 (
 		uint32 const _homeId,
 		uint8 const _nodeId
