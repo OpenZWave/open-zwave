@@ -1,5 +1,5 @@
-openzwave (0.9) unstable; urgency=low
+openzwave (1.3.532.ge3defea) unstable; urgency=low
 
-  * build package for testing
+  * Initial Debian packaging.
 
- -- root <root@pluto.vt100.intra>  Thu, 26 Feb 2015 18:27:30 +0100
+ -- Lucas Nussbaum <lucas@debian.org>  Sat, 07 Nov 2015 10:46:13 +0100

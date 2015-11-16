@@ -499,24 +499,20 @@ DISTFILES =	.gitignore \
 	cpp/tinyxml/tinyxml.h \
 	cpp/tinyxml/tinyxmlerror.cpp \
 	cpp/tinyxml/tinyxmlparser.cpp \
-	debian/Makefile \
+	debian/MinOZW.1 \
+	debian/TODO \
 	debian/changelog \
 	debian/compat \
 	debian/control \
 	debian/copyright \
-	debian/format \
+	debian/libopenzwave-doc.doc-base \
 	debian/libopenzwave1.3-dev.install \
 	debian/libopenzwave1.3.install \
-	debian/libopenzwave1.3.links \
 	debian/libopenzwave1.3.lintian-overrides \
 	debian/openzwave.install \
-	debian/patches/series \
-	debian/postinst \
-	debian/postrm \
+	debian/openzwave.manpages \
 	debian/rules \
-	debian/shlibs.libopenzwave1.3 \
 	debian/source/format \
-	debian/version-increment.sh \
 	dist.mk \
 	distfiles.mk \
 	docs/Doxyfile.in \
