@@ -826,7 +826,7 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 * \param _nodeId The ID of the node to query.
 		 * \return the node's DeviceType
 		 */
-		uint8 GetNodeDeviceType( uint32 const _homeId, uint8 const _nodeId );
+		uint16 GetNodeDeviceType( uint32 const _homeId, uint8 const _nodeId );
 
 		/**
 		 * \brief Get the node device type as reported in the Z-Wave+ Info report.
