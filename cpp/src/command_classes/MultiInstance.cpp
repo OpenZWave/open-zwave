@@ -91,7 +91,8 @@ CommandClass( _homeId, _nodeId ),
 m_numEndPoints( 0 ),
 m_numEndPointsHint( 0 ),
 m_endPointMap( MultiInstanceMapAll ),
-m_endPointFindSupported( false )
+m_endPointFindSupported( false ),
+m_uniqueendpoints( false )
 {
 }
 
@@ -141,6 +142,11 @@ void MultiInstance::ReadXML
 	{
 		m_ignoreUnsolicitedMultiChannelCapabilityReport = !strcmp( str, "true");
 	}
+	str = _ccElement->Attribute("forceUniqueEndpoints");
+	if( str )
+	{
+		m_uniqueendpoints = !strcmp( str, "true");
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -170,6 +176,12 @@ void MultiInstance::WriteXML
 	{
 		_ccElement->SetAttribute( "findsupport", "true" );
 	}
+
+	if( m_uniqueendpoints )
+	{
+		_ccElement->SetAttribute( "forceUniqueEndpoints", "true" );
+	}
+
 }
 
 //-----------------------------------------------------------------------------
@@ -360,6 +372,12 @@ void MultiInstance::HandleMultiChannelEndPointReport
 
 	m_numEndPointsCanChange = (( _data[1] & 0x80 ) != 0 );	// Number of endpoints can change.
 	m_endPointsAreSameClass = (( _data[1] & 0x40 ) != 0 );	// All endpoints are the same command class.
+
+	/* some devices (eg, Aeotec Smart Dimmer 6 incorrectly report all endpoints are the same */
+	if( m_uniqueendpoints )
+		m_endPointsAreSameClass = false;
+
+
 	m_numEndPoints = _data[2] & 0x7f;
 	if( m_numEndPointsHint != 0 )
 	{
@@ -479,6 +497,7 @@ void MultiInstance::HandleMultiChannelCapabilityReport
 			// Create all the command classes for all the endpoints
 			for( uint8 i = 1; i <= len; i++ )
 			{
+				std::cout << "Num Instances: " << len << std::endl;
 				for( set<uint8>::iterator it = m_endPointCommandClasses.begin(); it != m_endPointCommandClasses.end(); ++it )
 				{
 					uint8 commandClassId = *it;
