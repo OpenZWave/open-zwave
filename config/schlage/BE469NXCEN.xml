@@ -66,7 +66,7 @@
 				back to the default setting.
 			</Help>
 			<Item label="Most Sensitive" value="1" />
-			<Item label="Medium/high Sensitivity value="2" />
+			<Item label="Medium/high Sensitivity" value="2" />
 			<Item label="Medium Sensitivity" value="3" />
 			<Item label="Medium/low Sensitivity" value="4" />
 			<Item label="Least Sensitivity" value="5" />
@@ -80,7 +80,7 @@
 				back to the default setting.
 			</Help>
 			<Item label="Most Sensitive" value="1" />
-			<Item label="Medium/high Sensitivity value="2" />
+			<Item label="Medium/high Sensitivity" value="2" />
 			<Item label="Medium Sensitivity" value="3" />
 			<Item label="Medium/low Sensitivity" value="4" />
 			<Item label="Least Sensitivity" value="5" />
@@ -94,7 +94,7 @@
 				back to the default setting.
 			</Help>
 			<Item label="Most Sensitive" value="1" />
-			<Item label="Medium/high Sensitivity value="2" />
+			<Item label="Medium/high Sensitivity" value="2" />
 			<Item label="Medium Sensitivity" value="3" />
 			<Item label="Medium/low Sensitivity" value="4" />
 			<Item label="Least Sensitivity" value="5" />
@@ -102,8 +102,6 @@
 		<Value type="list" index="11" label="Disable Local Alarm Controls" value="255">
 			<Help>
 				Enables/Disables local alarm on/off, mode change, sensitivity changes
-				0:   Disable local alarm controls
-				255: Enable local alarm controls
 			</Help>
 			<Item label="Disable local alarm controls" value="0" />
 			<Item label="Enable local alarm controls" value="255" />
@@ -112,7 +110,7 @@
 		<Value type="int" index="13" read_only="true" label="Mechanical transition count" />
 		<Value type="int" index="14" read_only="true" label="Electronic failed count">
 			<Help>
-				Each filed attempt increments this count by one.
+				Each failed electronic attempt increments this count by one.
 			</Help>
 		</Value>
 		<Value type="list" index="15" label="Auto lock" value="0">
@@ -126,6 +124,7 @@
 		<Value type="byte" index="16" label="User code pin length" min="4" max="8" value="4">
 			<Help>
 				User Code PIN length, a value between 4 and 8. 
+				IMPORTANT: All user codes must be the same length.
 			</Help>
 		</Value>
 		<Value type="int" index="17" label="Electrical High Preload Transition Count" read_only="true">
