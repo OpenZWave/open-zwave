@@ -99,6 +99,7 @@
 		<Product type="0003" id="0063" name="Smart Dimmer 6" config="aeotec/sd6.xml" />
 		<Product type="0103" id="0063" name="Smart Dimmer 6" config="aeotec/sd6.xml" />
 		<Product type="0203" id="0063" name="Smart Dimmer 6" config="aeotec/sd6.xml" />
+		<Product type="1D03" id="0063" name="Smart Dimmer 6" config="aeotec/sd6.xml" />
 	</Manufacturer>
         <Manufacturer id="0111" name="Airline Mechanical">
                 <Product type="8200" id="0200" name="ZDS-100"/>
