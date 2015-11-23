@@ -225,6 +225,9 @@
 		<Product type="0000" id="0000" name="ED2.0 Meter Adapter"/>
 		<Product type="0128" id="0000" name="ED2.0 Display"/>
 	</Manufacturer>
+	<Manufacturer id="011a" name="Enerwave">
+		<Product type="0801" id="0b03" name="ZWN-SC7 7-Button Scene Controller" config="enerwave/zwn-sc7.xml"/>
+	</Manufacturer>
 	<Manufacturer id="0060" name="Everspring">
 		<Product type="0001" id="0001" name="HSP02 Motion Detector" config="everspring/hsp02.xml"/>
 		<Product type="0001" id="0002" name="SP814 Motion Detector" config="everspring/sp814.xml"/>
