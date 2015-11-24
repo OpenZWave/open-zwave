@@ -63,6 +63,7 @@ DISTFILES =	.gitignore \
 	config/dragontech/wd-100.xml \
 	config/duwi/ZWES1000.xml \
 	config/duwi/ZWESJ300.xml \
+	config/enerwave/zwn-sc7.xml \
 	config/eurotronic/eur_stellaz.xml \
 	config/everspring/ad146.xml \
 	config/everspring/ad147.xml \
