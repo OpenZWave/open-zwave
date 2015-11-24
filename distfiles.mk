@@ -109,6 +109,7 @@ DISTFILES =	.gitignore \
 	config/greenwave/powernode6.xml \
 	config/homeseer/ezmotionplus.xml \
 	config/homeseer/hsm100.xml \
+	config/homeseer/hsm200.xml \
 	config/homeseer/ztroller.xml \
 	config/honeywell/th8320zw1000.xml \
 	config/horstmann/hrt4zw.xml \
