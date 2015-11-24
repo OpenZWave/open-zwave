@@ -379,7 +379,7 @@ bool ZWManager::GetNodeClassInformation
 //-----------------------------------------------------------------------------
 uint8 ZWManager::GetAllScenes
 (
-	[Out] cli::array<Byte>^ o_sceneIds
+	[Out] cli::array<Byte>^ %o_sceneIds
 )
 {
 	uint8* sceneIds;
