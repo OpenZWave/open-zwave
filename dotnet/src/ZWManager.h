@@ -1885,7 +1885,7 @@ namespace OpenZWaveDotNet
 		 * \return The number of scenes.
 		 * \see GetNumScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
 		 */
-		uint8 GetAllScenes( [Out] cli::array<Byte>^ sceneIds );
+		uint8 GetAllScenes( [Out] cli::array<Byte>^ %sceneIds );
 
 		/**
 		 * \brief Create a new Scene passing in Scene ID

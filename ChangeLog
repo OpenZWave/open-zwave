@@ -231,6 +231,7 @@ Version 1.3
  - Pull Request #696 - Config for HomeSeer HSM200, add config parameters for schlage touchscreen deadbolts from gwmullin (Justin)
  - Issue #698 - Add config file for Vision CP3102 from Erik-NA (Justin)
  - Issue #692 - Add Wenzhou TZ68 config file from gsolem (Justin)
+ - DotNet Wrapper fix for GetAllScenese from Bas Prins (Justin)
 
 Version 1.2 
  - Released on 15/10/14
