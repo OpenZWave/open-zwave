@@ -228,6 +228,7 @@ Version 1.3
  - Merge a few fixes from Gizmocuz for VisualStudio Warnings (Justin)
  - Update of Deb files from Lucas Nussbaum (Justin)
  - Pull Request #700 - Updated Linear switch configs and added Enerwave ZWN-SC7 config from Vexofp (Justin)
+ - Pull Request #696 - Config for HomeSeer HSM200, add config parameters for schlage touchscreen deadbolts from gwmullin (Justin)
 
 Version 1.2 
  - Released on 15/10/14
