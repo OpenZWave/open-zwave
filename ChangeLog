@@ -227,6 +227,7 @@ Version 1.3
  - Pull Request #693 - Notification::GetAsString needs to be Const from Ekarak (Justin)
  - Merge a few fixes from Gizmocuz for VisualStudio Warnings (Justin)
  - Update of Deb files from Lucas Nussbaum (Justin)
+ - Pull Request #700 - Updated Linear switch configs and added Enerwave ZWN-SC7 config from Vexofp (Justin)
 
 Version 1.2 
  - Released on 15/10/14
