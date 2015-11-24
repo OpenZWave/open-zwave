@@ -173,6 +173,7 @@ DISTFILES =	.gitignore \
 	config/thermofloor/multireg.xml \
 	config/trane/TZEMT400AB32MAA.xml \
 	config/trane/TZEMT400BB32MAA.xml \
+	config/vision/cp3102.xml \
 	config/vision/zd2102.xml \
 	config/vision/zm1601eu.xml \
 	config/vision/zm1602eu.xml \
