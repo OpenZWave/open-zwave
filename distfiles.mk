@@ -155,6 +155,7 @@ DISTFILES =	.gitignore \
 	config/qubino/ZMNHBD2.xml \
 	config/qubino/ZMNHCA2.xml \
 	config/qubino/ZMNHDA2.xml \
+	config/qubino/ZMNHDD1.xml \
 	config/qubino/ZMNHIA2.xml \
 	config/qubino/ZMNHJA2.xml \
 	config/rcs/em52-zw.xml \
