@@ -235,6 +235,7 @@ Version 1.3
  - Issue #688 - Qubino ZMNHDD1 Z-Wave Plus flush dimmer from bbqkees (Justin)
  - Issue #701 - FreeBSD Fixes from stromnet (Justin)
  - Issue #703 - Updated Config file for Benext DoorSensor from gizmocus (Justin)
+ - Issue #702 - Config file for Qubino ZMNHND1 Flush Relay from hanscbecker (Justin)
 
 Version 1.2 
  - Released on 15/10/14
