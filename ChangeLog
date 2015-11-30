@@ -233,6 +233,8 @@ Version 1.3
  - Issue #692 - Add Wenzhou TZ68 config file from gsolem (Justin)
  - DotNet Wrapper fix for GetAllScenese from Bas Prins (Justin)
  - Issue #688 - Qubino ZMNHDD1 Z-Wave Plus flush dimmer from bbqkees (Justin)
+ - Issue #701 - FreeBSD Fixes from stromnet (Justin)
+
 
 Version 1.2 
  - Released on 15/10/14
