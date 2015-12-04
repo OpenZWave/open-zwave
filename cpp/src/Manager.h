@@ -1985,7 +1985,7 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		bool CreateButton(uint32 const _homeId, uint8 const _nodeId, uint8 const _buttonid);
 
 		/**
-		 * \brief Dekete a handheld button id.
+		 * \brief Delete a handheld button id.
 		 *
 		 * Only intended for Bridge Firmware Controllers.
 		 *
