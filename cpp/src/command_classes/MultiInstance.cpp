@@ -497,7 +497,7 @@ void MultiInstance::HandleMultiChannelCapabilityReport
 			// Create all the command classes for all the endpoints
 			for( uint8 i = 1; i <= len; i++ )
 			{
-				std::cout << "Num Instances: " << len << std::endl;
+				//std::cout << "Num Instances: " << len << std::endl;
 				for( set<uint8>::iterator it = m_endPointCommandClasses.begin(); it != m_endPointCommandClasses.end(); ++it )
 				{
 					uint8 commandClassId = *it;
