@@ -237,6 +237,7 @@ Version 1.3
  - Issue #703 - Updated Config file for Benext DoorSensor from gizmocus (Justin)
  - Issue #702 - Config file for Qubino ZMNHND1 Flush Relay from hanscbecker (Justin)
  - Pull Request #705 - config files for fortrezz MIMOlite from gwmullin (Justin)
+ - Pull Request #706 - config files for Qubino ZMNHCDx from guillaumezin (Justin)
 
 Version 1.2 
  - Released on 15/10/14
