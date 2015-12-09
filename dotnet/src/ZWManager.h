@@ -394,10 +394,11 @@ namespace OpenZWaveDotNet
 		 * - Controller
 		 * - Enhanced Slave
 		 * - Slave            
-	     * - Installer
-	     * - Routing Slave
-	     * - Bridge Controller
+		 * - Installer
+		 * - Routing Slave
+		 * - Bridge Controller
 		 * - Device Under Test
+		 *
 		 * The controller should never return a slave library type.
 		 * For a more efficient test of whether a controller is a Bridge Controller, use
 		 * the IsBridgeController method.
