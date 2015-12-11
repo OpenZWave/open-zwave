@@ -58,36 +58,13 @@ Group::Group
 	m_groupIdx( _groupIdx ),
 	m_maxAssociations( _maxAssociations ),
 	m_auto( false ),
-        m_multiInstance( false )
+    m_multiInstance( false )
 {
 	char str[16];
 	snprintf( str, sizeof(str), "Group %d", m_groupIdx );
 	m_label = str;
 
-	// Auto-association by default is with group 1 or 255, with group 1 taking precedence.
-	// Group 255 is always created first, so if this is group 1, we need to turn off the
-	// auto flag in group 255.  All this messing about is to support the various behaviours
-	// of certain Cooper devices.
-	if( _groupIdx == 255 )
-	{
-		m_auto = true;
-	}
-	else if( _groupIdx == 1 )
-	{
-		m_auto = true;
-
-		// Clear the flag from Group 255, if it exists.
-		if( Driver* driver = Manager::Get()->GetDriver( m_homeId ) )
-		{
-			if( Node* node = driver->GetNodeUnsafe( m_nodeId ) )
-			{
-				if( Group* group = node->GetGroup( 255 ) )
-				{
-					group->SetAuto( false );
-				}
-			}
-		}	
-	}
+	CheckAuto();
 }
 
 //-----------------------------------------------------------------------------
@@ -111,10 +88,15 @@ Group::Group
 	char const* str;
 	vector<InstanceAssociation> pending;
 
+
+
 	if( TIXML_SUCCESS == _groupElement->QueryIntAttribute( "index", &intVal ) )
 	{
 		m_groupIdx = (uint8)intVal;
 	}
+
+	/* call this so the config can override if necessary */
+	CheckAuto();
 
 	if( TIXML_SUCCESS == _groupElement->QueryIntAttribute( "max_associations", &intVal ) )
 	{
@@ -169,6 +151,43 @@ Group::Group
 	// only works by a side effect of not finding the group.
 	OnGroupChanged( pending );
 }
+
+//-----------------------------------------------------------------------------
+// <Group::CheckAuto>
+// Check if we should AutoAssociate for this group
+//-----------------------------------------------------------------------------
+void Group::CheckAuto
+(
+
+)
+{
+	// Auto-association by default is with group 1 or 255, with group 1 taking precedence.
+	// Group 255 is always created first, so if this is group 1, we need to turn off the
+	// auto flag in group 255.  All this messing about is to support the various behaviours
+	// of certain Cooper devices.
+	if( m_groupIdx == 255 )
+	{
+		m_auto = true;
+	}
+	else if( m_groupIdx == 1 )
+	{
+		m_auto = true;
+
+		// Clear the flag from Group 255, if it exists.
+		if( Driver* driver = Manager::Get()->GetDriver( m_homeId ) )
+		{
+			if( Node* node = driver->GetNodeUnsafe( m_nodeId ) )
+			{
+				if( Group* group = node->GetGroup( 255 ) )
+				{
+					group->SetAuto( false );
+				}
+			}
+		}
+	}
+}
+
+
 
 //-----------------------------------------------------------------------------
 // <Group::WriteXML>
