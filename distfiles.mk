@@ -150,6 +150,7 @@ DISTFILES =	.gitignore \
 	config/popp/123580.xml \
 	config/popp/123601.xml \
 	config/popp/123658.xml \
+	config/popp/POPE009105.xml \
 	config/qees/reto-plugin-switch.xml \
 	config/qubino/ZMNHAA2.xml \
 	config/qubino/ZMNHAD1.xml \
