@@ -64,6 +64,7 @@ DISTFILES =	.gitignore \
 	config/duwi/ZWES1000.xml \
 	config/duwi/ZWESJ300.xml \
 	config/enerwave/zwn-sc7.xml \
+	config/eurotronic/eur_cometz.xml \
 	config/eurotronic/eur_stellaz.xml \
 	config/everspring/ad146.xml \
 	config/everspring/ad147.xml \
@@ -160,6 +161,7 @@ DISTFILES =	.gitignore \
 	config/qubino/ZMNHDD1.xml \
 	config/qubino/ZMNHIA2.xml \
 	config/qubino/ZMNHJA2.xml \
+	config/qubino/ZMNHND1.xml \
 	config/rcs/em52-zw.xml \
 	config/rcs/pm12-zw.xml \
 	config/rcs/therm0005.xml \
