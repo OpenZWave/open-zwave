@@ -2421,6 +2421,43 @@ bool Manager::GetValueListItems
 }
 
 //-----------------------------------------------------------------------------
+// <Manager::GetValueListValues>
+// Gets the list of items from a list value
+//-----------------------------------------------------------------------------
+bool Manager::GetValueListValues
+(
+		ValueID const& _id,
+		vector<int32>* o_value
+)
+{
+	bool res = false;
+
+	if( o_value )
+	{
+		if( ValueID::ValueType_List == _id.GetType() )
+		{
+			if( Driver* driver = GetDriver( _id.GetHomeId() ) )
+			{
+				LockGuard LG(driver->m_nodeMutex);
+				if( ValueList* value = static_cast<ValueList*>( driver->GetValue( _id ) ) )
+				{
+					o_value->clear();
+					res = value->GetItemValues( o_value );
+					value->Release();
+				} else {
+					OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to GetValueListValues");
+				}
+			}
+		} else {
+			OZW_ERROR(OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID, "ValueID passed to GetValueListValues is not a List Value");
+		}
+	}
+
+	return res;
+}
+
+
+//-----------------------------------------------------------------------------
 // <Manager::GetValueFloatPrecision>
 // Gets a value's scale as a uint8
 //-----------------------------------------------------------------------------
