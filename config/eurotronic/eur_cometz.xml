@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Product xmlns='http://code.google.com/p/open-zwave/'>
 
-        <CommandClass id="38">
-	        <Instance index="1" />
-	        <Value type="byte" genre="user" instance="1" index="0" label="Level" units="%" min="0" max="255" value="0"/>
-	</CommandClass>
-	<CommandClass id="49">
-	        <Instance index="1" />
-	        <Value type="decimal" genre="user" instance="1" index="1" label="Temperature" units="C" value="0"/>
-	</CommandClass>
         <CommandClass id="64" >
                 <Instance index="1" />
                 <Value type="list" genre="user" instance="1" index="0" label="Mode" min="0" max="11" value="0" size="1">
@@ -27,8 +19,4 @@
                 <Value type="decimal" genre="user" instance="1" index="1" label="Comfort setpoint" units="C" value="0"/>
                 <Value type="decimal" genre="user" instance="1" index="11" label="Energy saving setpoint" units="C" value="0"/>
         </CommandClass>
-	<CommandClass id="128">
-	        <Instance index="1" />
-	        <Value type="byte" genre="user" instance="1" index="0" label="Battery Level" units="%" min="0" max="255" value="0"/>
-	</CommandClass>
 </Product>
