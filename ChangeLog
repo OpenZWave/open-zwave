@@ -242,6 +242,7 @@ Version 1.3
  - Add additional codes for Fibaro FGRM222 Roller Shutter from proohu01 (Justin)
  - Add ZME_064381 IP44 Plug-in Switch config from Geoff Coupe (Justin)
  - Pull Request #712 - New Manager::GetValueListValues function to get the indexes of a List  from out4b (Justin)
+ - Pull Request #710 - Added config files for Eurotronic Comet thermostatic radiator valve (Justin)
 
 Version 1.2 
  - Released on 15/10/14
