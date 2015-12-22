@@ -174,6 +174,7 @@ DISTFILES =	.gitignore \
 	config/schlage/BE469NXCEN.xml \
 	config/schlagelink/itemp.xml \
 	config/schlagelink/minikeypad.xml \
+	config/sensative/strips-mazw.xml \
 	config/swiid/swiidinter.xml \
 	config/swiid/swiidplug.xml \
 	config/thermofloor/multireg.xml \
