@@ -633,6 +633,9 @@
 	</Manufacturer>
 	<Manufacturer id="0043" name="Senmatic A/S">
 	</Manufacturer>
+	<Manufacturer id="019a" name="Sensative AB">
+		<Product type="0003" id="0003" name="Strips-MAZW" config="sensative/strips-mazw.xml" />
+	</Manufacturer>
 	<Manufacturer id="0044" name="Sequoia Tech">
 	</Manufacturer>
 	<Manufacturer id="0151" name="Sercomm">
