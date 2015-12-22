@@ -202,6 +202,7 @@ DISTFILES =	.gitignore \
 	config/zwave.me/ZME_06436.xml \
 	config/zwave.me/ZME_064381.xml \
 	config/zwave.me/ZME_064435.xml \
+	config/zwave.me/ZME_KFOB-S.xml \
 	config/zwave.me/ZME_WALLC-S.xml \
 	config/zwave.me/ZME_WCD2.xml \
 	config/zwave.me/iTemp.xml \
