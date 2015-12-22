@@ -241,6 +241,7 @@ Version 1.3
  - Pull Request #711 - config files for POPP Wall Plug Switch Schuko from hellqvist (Justin)
  - Add additional codes for Fibaro FGRM222 Roller Shutter from proohu01 (Justin)
  - Add ZME_064381 IP44 Plug-in Switch config from Geoff Coupe (Justin)
+ - Pull Request #712 - New Manager::GetValueListValues function to get the indexes of a List  from out4b (Justin)
 
 Version 1.2 
  - Released on 15/10/14
