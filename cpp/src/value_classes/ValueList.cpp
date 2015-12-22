@@ -351,6 +351,28 @@ bool ValueList::GetItemLabels
 }
 
 //-----------------------------------------------------------------------------
+// <ValueList::GetItemValues>
+// Fill a vector with the item values
+//-----------------------------------------------------------------------------
+bool ValueList::GetItemValues
+(
+	vector<int32>* o_values
+)
+{
+	if( o_values )
+	{
+		for( vector<Item>::iterator it = m_items.begin(); it != m_items.end(); ++it )
+		{
+			o_values->push_back( (*it).m_value );
+		}
+
+		return true;
+	}
+
+	return false;
+}
+
+//-----------------------------------------------------------------------------
 // <ValueList::GetItem>
 // Get the Item at the Currently selected Index
 //-----------------------------------------------------------------------------
