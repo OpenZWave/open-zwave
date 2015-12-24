@@ -245,6 +245,8 @@ Version 1.3
  - Pull Request #710 - Added config files for Eurotronic Comet thermostatic radiator valve (Justin)
  - Issue #714 - Z-Wave.Me ZME_KFOB-C 4 Button Key Fob config files from pbda (Justin)
  - Issue #715 - Add Sensative Strips-MAZW config file from michapr (Justin)
+ - Issue #716 - Aeotec MultiSensor 6 config updates from michapr (Justin)
+
 
 Version 1.2 
  - Released on 15/10/14
