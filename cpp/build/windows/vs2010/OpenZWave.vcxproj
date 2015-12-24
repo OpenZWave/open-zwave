@@ -101,7 +101,7 @@
     </Lib>
     <PreBuildEvent>
       <Command>del ..\winversion.cpp
-CALL $(ProjectDir)\..\GIT-VS-VERSION-GEN.bat "$(ProjectDir)\" "..\winversion.cpp"
+CALL "$(ProjectDir)\..\GIT-VS-VERSION-GEN.bat" "$(ProjectDir)\" "..\winversion.cpp"
 exit 0</Command>
     </PreBuildEvent>
     <PreBuildEvent>
@@ -134,7 +134,7 @@ exit 0</Command>
     </Link>
     <PreBuildEvent>
       <Command>del ..\winversion.cpp
-CALL $(ProjectDir)\..\GIT-VS-VERSION-GEN.bat "$(ProjectDir)\" "..\winversion.cpp"
+CALL "$(ProjectDir)\..\GIT-VS-VERSION-GEN.bat" "$(ProjectDir)\" "..\winversion.cpp"
 exit 0</Command>
     </PreBuildEvent>
     <PreBuildEvent>
@@ -167,7 +167,7 @@ exit 0</Command>
     <PreBuildEvent>
       <Message>Export GIT Revision</Message>
       <Command>del ..\winversion.cpp
-CALL $(ProjectDir)\..\GIT-VS-VERSION-GEN.bat "$(ProjectDir)\" "..\winversion.cpp"
+CALL "$(ProjectDir)\..\GIT-VS-VERSION-GEN.bat" "$(ProjectDir)\" "..\winversion.cpp"
 exit 0</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
@@ -190,7 +190,7 @@ exit 0</Command>
     </Lib>
     <PreBuildEvent>
       <Command>del ..\winversion.cpp
-CALL $(ProjectDir)\..\GIT-VS-VERSION-GEN.bat "$(ProjectDir)\" "..\winversion.cpp"
+CALL "$(ProjectDir)\..\GIT-VS-VERSION-GEN.bat" "$(ProjectDir)\" "..\winversion.cpp"
 exit 0</Command>
     </PreBuildEvent>
     <PreBuildEvent>
