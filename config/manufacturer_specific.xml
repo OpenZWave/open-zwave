@@ -147,6 +147,9 @@
 	</Manufacturer>
 	<Manufacturer id="0023" name="Boca Devices">
 	</Manufacturer>
+	<Manufacturer id="0138" name="BRK">
+		<Product type="0001" id="0002" name="Smoke and Carbon and Monoxide Alarm"/>
+	</Manufacturer>
 	<Manufacturer id="002d" name="Broadband Energy">
 	</Manufacturer>
 	<Manufacturer id="0123" name="Iwatsu Electric Co">
