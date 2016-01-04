@@ -247,6 +247,7 @@ Version 1.3
  - Issue #714 - Z-Wave.Me ZME_KFOB-C 4 Button Key Fob config files from pbda (Justin)
  - Issue #715 - Add Sensative Strips-MAZW config file from michapr (Justin)
  - Issue #716 - Aeotec MultiSensor 6 config updates from michapr (Justin)
+ - Pull Request #720 - Added support for Merten Plug-in Roller Shutter Module from Marco (Justin)
 
 
 Version 1.2 
