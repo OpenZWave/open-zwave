@@ -29,7 +29,7 @@
     <Value type="list" genre="config" instance="1" index="6" label="Separation of association sending (key 1)" value="0" size="1">
       <Help>Activate/Deactivate association sending for group 1 - Also see param #16</Help>
       <Item label="Map status to all devices in group 1 (default)" value="0" />
-      <Item label="Map OFF status to all devices in group 1, Double click on key 1 will send ON to all devices in group 1, all dimmers set to prev.value" value="1" />
+      <Item label="Map OFF status to all devices in group 1, Double click on key 1 will send ON to all devices in group 1, all dimmers set to prev.value (e.g. 50%)" value="1" />
       <Item label="Map OFF status to all devices in group 1, Double click on key 1 will send ON to all devices in group 1, all dimmers set to 100%" value="2" />                
     </Value>
     
