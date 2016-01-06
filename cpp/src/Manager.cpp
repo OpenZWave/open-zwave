@@ -2422,7 +2422,7 @@ bool Manager::GetValueListItems
 
 //-----------------------------------------------------------------------------
 // <Manager::GetValueListValues>
-// Gets the list of items from a list value
+// Gets the list of values from a list value
 //-----------------------------------------------------------------------------
 bool Manager::GetValueListValues
 (
