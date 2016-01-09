@@ -1,10 +1,10 @@
 //-----------------------------------------------------------------------------
 //
-//	Thread.cpp
+//	EventImpl.cpp
 //
-//	Cross-platform threads
+//	WinRT implementation of a cross-platform event
 //
-//	Copyright (c) 2010 Mal Lansell <mal@lansell.org>
+//	Copyright (c) 2015 Microsoft Corporation
 //	All rights reserved.
 //
 //	SOFTWARE NOTICE AND LICENSE
@@ -25,101 +25,78 @@
 //	along with OpenZWave.  If not, see <http://www.gnu.org/licenses/>.
 //
 //-----------------------------------------------------------------------------
-#include "Defs.h"
-#include "platform/Event.h"
-#include "platform/Thread.h"
+#include <windows.h>
 
-#ifdef WIN32
-#include "platform/windows/ThreadImpl.h"	// Platform-specific implementation of a thread
-#elif defined WINRT
-#include "platform/winRT/ThreadImpl.h"	// Platform-specific implementation of a thread
-#else
-#include "platform/unix/ThreadImpl.h"	// Platform-specific implementation of a thread
-#endif
+#include "Defs.h"
+#include "EventImpl.h"
 
 using namespace OpenZWave;
 
 
 //-----------------------------------------------------------------------------
-//	<Thread::Thread>
+//	<EventImpl::EventImpl>
 //	Constructor
 //-----------------------------------------------------------------------------
-Thread::Thread
+EventImpl::EventImpl
 (
-	string const& _name
 )
 {
-	m_exitEvent = new Event();
-	m_pImpl = new ThreadImpl( this, _name );
+	// Create a manual reset event
+	m_hEvent = ::CreateEventEx( NULL, NULL, CREATE_EVENT_MANUAL_RESET, SYNCHRONIZE | EVENT_MODIFY_STATE );
 }
 
 //-----------------------------------------------------------------------------
-//	<Thread::~Thread>
+//	<EventImpl::~EventImpl>
 //	Destructor
 //-----------------------------------------------------------------------------
-Thread::~Thread
+EventImpl::~EventImpl
 (
 )
 {
-	delete m_pImpl;
-	m_exitEvent->Release();
+	::CloseHandle( m_hEvent );
 }
 
 //-----------------------------------------------------------------------------
-//	<Thread::Start>
-//	Start a function running on this thread
+//	<EventImpl::Set>
+//	Set the event to signalled
 //-----------------------------------------------------------------------------
-bool Thread::Start
-(
-	pfnThreadProc_t _pfnThreadProc,
-	void* _context
-)
-{
-	return( m_pImpl->Start( _pfnThreadProc, m_exitEvent, _context ) );
-}
-
-//-----------------------------------------------------------------------------
-//	<Thread::Stop>
-//	Stop a function running on this thread
-//-----------------------------------------------------------------------------
-bool Thread::Stop
+void EventImpl::Set
 (
 )
 {
-	int32 timeout = 2000;	// Give the thread 2 seconds to exit
-	m_exitEvent->Set();
-
-	if( Wait::Single( this, timeout ) < 0 )
-	{
-		// Timed out
-			m_pImpl->Terminate();
-		return false;
-	}
-
-	return true;
+	::SetEvent( m_hEvent );
 }
 
 //-----------------------------------------------------------------------------
-//	<Thread::Sleep>
-//	Causes the thread to sleep for the specified number of milliseconds.
+//	<EventImpl::Reset>
+//	Set the event to not signalled
 //-----------------------------------------------------------------------------
-void Thread::Sleep
+void EventImpl::Reset
 (
-	uint32 _milliseconds
 )
 {
-	return( m_pImpl->Sleep( _milliseconds ) );
+	::ResetEvent( m_hEvent );
 }
 
 //-----------------------------------------------------------------------------
-//	<Thread::IsSignalled>
+//	<EventImpl::IsSignalled>
 //	Test whether the event is set
 //-----------------------------------------------------------------------------
-bool Thread::IsSignalled
+bool EventImpl::IsSignalled
 (
 )
 {
-	return m_pImpl->IsSignalled();
+	return( WAIT_OBJECT_0 == WaitForSingleObjectEx( m_hEvent, 0, FALSE) );
 }
 
-
+//-----------------------------------------------------------------------------
+//	<EventImpl::Wait>
+//	Wait for the event to become signalled
+//-----------------------------------------------------------------------------
+bool EventImpl::Wait
+(
+	int32 const _timeout
+)
+{
+	return( WAIT_TIMEOUT != ::WaitForSingleObjectEx( m_hEvent, (DWORD)_timeout, FALSE ) );
+}

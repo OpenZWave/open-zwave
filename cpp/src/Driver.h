@@ -149,6 +149,7 @@ namespace OpenZWave
 		void RemoveQueues( uint8 const _nodeId );
 
 		Thread*					m_driverThread;			/**< Thread for reading from the Z-Wave controller, and for creating and managing the other threads for sending, polling etc. */
+		Mutex*					m_initMutex;            /**< Mutex to ensure proper ordering of initialization/deinitialization */
 		bool					m_exit;					/**< Flag that is set when the application is exiting. */
 		bool					m_init;					/**< Set to true once the driver has been initialised */
 		bool					m_awakeNodesQueried;	/**< Set to true once the driver has polled all awake nodes */
@@ -479,7 +480,7 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 * Controller States.
 		 * States reported via the callback handler passed into the BeginControllerCommand method.
 		 * \see Manager::BeginControllerCommand
-	     */
+		 */
 		enum ControllerState
 		{
 			ControllerState_Normal = 0,				/**< No command in progress. */
@@ -658,7 +659,7 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 				m_queryStage(Node::QueryStage_None),
 				m_retry(false),
 				m_cci(NULL)
-		  	{}
+			{}
 
 			bool operator == ( MsgQueueItem const& _other )const
 			{
