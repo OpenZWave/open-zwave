@@ -155,14 +155,14 @@ string ManufacturerSpecific::SetProductDetails
 		node->SetProductName( productName );
 	}
 
-	snprintf( str, sizeof(str), "%.4x", manufacturerId );
-	node->SetManufacturerId( str );
+//	snprintf( str, sizeof(str), "%.4x", manufacturerId );
+	node->SetManufacturerId( manufacturerId );
 
-	snprintf( str, sizeof(str), "%.4x", productType );
-	node->SetProductType( str );
+//	snprintf( str, sizeof(str), "%.4x", productType );
+	node->SetProductType( productType );
 
-	snprintf( str, sizeof(str), "%.4x", productId );
-	node->SetProductId( str );
+//	snprintf( str, sizeof(str), "%.4x", productId );
+	node->SetProductId( productId );
 
 	return configPath;
 }
@@ -200,6 +200,7 @@ bool ManufacturerSpecific::HandleMsg
 
 			Log::Write( LogLevel_Info, GetNodeId(), "Received manufacturer specific report from node %d: Manufacturer=%s, Product=%s",
 				    GetNodeId(), node->GetManufacturerName().c_str(), node->GetProductName().c_str() );
+			Log::Write( LogLevel_Info, GetNodeId(), "Node Identity Codes: %.4x:%.4x:%.4x", manufacturerId, productType, productId );
 			ClearStaticRequest( StaticRequest_Values );
 			node->m_manufacturerSpecificClassReceived = true;
 		}
@@ -422,9 +423,9 @@ void ManufacturerSpecific::ReLoadConfigXML
 	{
 		if (!s_bXmlLoaded) LoadProductXML();
 
-		uint16 manufacturerId = (uint16)strtol( node->GetManufacturerId().c_str(), NULL, 16 );
-		uint16 productType = (uint16)strtol( node->GetProductType().c_str(), NULL, 16 );
-		uint16 productId = (uint16)strtol( node->GetProductId().c_str(), NULL, 16 );
+		uint16 manufacturerId = node->GetManufacturerId();
+		uint16 productType = node->GetProductType();
+		uint16 productId = node->GetProductId();
 
 		map<uint16,string>::iterator mit = s_manufacturerMap.find( manufacturerId );
 		if( mit != s_manufacturerMap.end() )

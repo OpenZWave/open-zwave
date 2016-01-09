@@ -25,6 +25,9 @@
 //
 //-----------------------------------------------------------------------------
 
+#include <iomanip>
+
+
 #include "Node.h"
 #include "Defs.h"
 #include "Group.h"
@@ -149,9 +152,9 @@ m_manufacturerName( "" ),
 m_productName( "" ),
 m_nodeName( "" ),
 m_location( "" ),
-m_manufacturerId( "" ),
-m_productType( "" ),
-m_productId( "" ),
+m_manufacturerId( 0 ),
+m_productType( 0 ),
+m_productId( 0 ),
 m_deviceType( 0 ),
 m_role( 0 ),
 m_nodeType ( 0 ),
@@ -402,11 +405,11 @@ void Node::AdvanceQueries
 				{
 					m_queryPending = pluscc->RequestState( CommandClass::RequestFlag_Static, 1, Driver::MsgQueue_Query );
 				}
-				if (m_queryPending) 
+				if (m_queryPending)
 				{
 					addQSC = m_queryPending;
-				} 
-				else 
+				}
+				else
 				{
 					// this is not a Zwave+ node, so move onto the next querystage
 					m_queryStage = QueryStage_SecurityReport;
@@ -557,9 +560,13 @@ void Node::AdvanceQueries
 				}
 				break;
 			}
+			/* Probe1 is where we start if we are loading a device from our zwcfg_*.xml file rather than
+			 * a brand new device.
+			 */
 			case QueryStage_Probe1:
 			{
 				Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_Probe1" );
+				Log::Write( LogLevel_Info, GetNodeId(), "Node Identity Codes: %.4x:%.4x:%.4x", GetManufacturerId(), GetProductType(), GetProductId() );
 				//
 				// Send a NoOperation message to see if the node is awake
 				// and alive. Based on the response or lack of response
@@ -1047,7 +1054,7 @@ void Node::ReadXML
 				str = child->Attribute( "id" );
 				if( str )
 				{
-					m_manufacturerId = str;
+					m_manufacturerId = strtol(str, NULL, 16);
 				}
 
 				str = child->Attribute( "name" );
@@ -1062,13 +1069,13 @@ void Node::ReadXML
 					str = product->Attribute( "type" );
 					if( str )
 					{
-						m_productType = str;
+						m_productType = strtol(str, NULL, 16);
 					}
 
 					str = product->Attribute( "id" );
 					if( str )
 					{
-						m_productId = str;
+						m_productId = strtol(str, NULL, 16);
 					}
 
 					str = product->Attribute( "name" );
@@ -1084,7 +1091,7 @@ void Node::ReadXML
 		child = child->NextSiblingElement();
 	}
 
-	if( m_nodeName.length() > 0 || m_location.length() > 0 || m_manufacturerId.length() > 0 )
+	if( m_nodeName.length() > 0 || m_location.length() > 0 || m_manufacturerId > 0 )
 	{
 		// Notify the watchers of the name changes
 		Notification* notification = new Notification( Notification::Type_NodeNaming );
@@ -1291,14 +1298,30 @@ void Node::WriteXML
 	TiXmlElement* manufacturerElement = new TiXmlElement( "Manufacturer" );
 	nodeElement->LinkEndChild( manufacturerElement );
 
-	manufacturerElement->SetAttribute( "id", m_manufacturerId.c_str() );
+	/* this should be written in hex to avoid confusion... */
+	{
+		std::stringstream ss;
+		ss << std::hex << m_manufacturerId;
+		manufacturerElement->SetAttribute( "id", ss.str().c_str() );
+	}
 	manufacturerElement->SetAttribute( "name", m_manufacturerName.c_str() );
 
 	TiXmlElement* productElement = new TiXmlElement( "Product" );
 	manufacturerElement->LinkEndChild( productElement );
 
-	productElement->SetAttribute( "type", m_productType.c_str() );
-	productElement->SetAttribute( "id", m_productId.c_str() );
+	/* this should be written in hex to avoid confusion... */
+	{
+		std::stringstream ss;
+		ss << std::hex << m_productType;
+		productElement->SetAttribute( "type", ss.str().c_str() );
+	}
+
+	/* this should be written in hex to avoid confusion... */
+	{
+		std::stringstream ss;
+		ss << std::hex << m_productId;
+		productElement->SetAttribute( "id", ss.str().c_str() );
+	}
 	productElement->SetAttribute( "name", m_productName.c_str() );
 
 	// Write the command classes
