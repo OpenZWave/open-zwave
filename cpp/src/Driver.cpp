@@ -37,7 +37,9 @@
 #include "platform/Event.h"
 #include "platform/Mutex.h"
 #include "platform/SerialController.h"
+#ifndef NOLIBUDEV
 #include "platform/HidController.h"
+#endif
 #include "platform/Thread.h"
 #include "platform/Log.h"
 #include "platform/TimeStamp.h"
@@ -217,7 +219,7 @@ m_nonceReportSentAttempt( 0 )
 	// Initilize the Network Keys
 
 	initNetworkKeys(false);
-
+#ifndef NOLIBUDEV
 	if( ControllerInterface_Hid == _interface )
 	{
 		m_controller = new HidController();
@@ -226,6 +228,9 @@ m_nonceReportSentAttempt( 0 )
 	{
 		m_controller = new SerialController();
 	}
+#else
+	m_controller = new SerialController();
+#endif
 	m_controller->SetSignalThreshold( 1 );
 
 	Options::Get()->GetOptionAsBool( "NotifyTransactions", &m_notifytransactions );

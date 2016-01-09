@@ -33,7 +33,7 @@
 #include "SerialControllerImpl.h"
 #include "platform/Log.h"
 
-#ifdef __linux__
+#if defined (__linux__) && ! defined (NOLIBUDEV)
 #include <libudev.h>
 #endif
 
