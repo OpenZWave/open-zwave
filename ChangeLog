@@ -249,6 +249,8 @@ Version 1.3
  - Issue #716 - Aeotec MultiSensor 6 config updates from michapr (Justin)
  - Pull Request #720 - Added support for Merten Plug-in Roller Shutter Module from Marco (Justin)
  - Pull Request #721 - Create POP009303.xml from armaesiea (Justin)
+ - Pull Request #724 - Update config/fibaro/fgd212.xml from MHediund (Justin)
+ - Pull Request #727 - Update DotNet Wrapper from bufferUnderrun (Justin)
 
 
 Version 1.2 
