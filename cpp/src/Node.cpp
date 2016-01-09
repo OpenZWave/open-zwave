@@ -103,7 +103,7 @@ static char const* c_queryStageNames[] =
 		"Versions",
 		"Instances",
 		"Static",
-		"Probe1",
+		"CacheLoad",
 		"Associations",
 		"Neighbors",
 		"Session",
@@ -553,19 +553,19 @@ void Node::AdvanceQueries
 				if( !m_queryPending )
 				{
 					// when all (if any) static information has been retrieved, advance to the Associations stage
-					// Probe1 stage is for Nodes that are read in via the zw state file, as is skipped as we would
+					// CacheLoad stage is for Nodes that are read in via the zw state file, as is skipped as we would
 					// have already queried it at the discovery phase in Probe.
 					m_queryStage = QueryStage_Associations;
 					m_queryRetries = 0;
 				}
 				break;
 			}
-			/* Probe1 is where we start if we are loading a device from our zwcfg_*.xml file rather than
+			/* CacheLoad is where we start if we are loading a device from our zwcfg_*.xml file rather than
 			 * a brand new device.
 			 */
-			case QueryStage_Probe1:
+			case QueryStage_CacheLoad:
 			{
-				Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_Probe1" );
+				Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_CacheLoad" );
 				Log::Write( LogLevel_Info, GetNodeId(), "Node Identity Codes: %.4x:%.4x:%.4x", GetManufacturerId(), GetProductType(), GetProductId() );
 				//
 				// Send a NoOperation message to see if the node is awake
@@ -728,7 +728,7 @@ void Node::QueryStageComplete
 		// Move to the next stage
 		m_queryPending = false;
 		m_queryStage = (QueryStage)( (uint32)m_queryStage + 1 );
-		if( m_queryStage == QueryStage_Probe1 )
+		if( m_queryStage == QueryStage_CacheLoad )
 		{
 			m_queryStage = (QueryStage)( (uint32)m_queryStage + 1 );
 		}
@@ -760,7 +760,7 @@ void Node::QueryStageRetry
 		m_queryRetries = 0;
 		// We've retried too many times. Move to the next stage but only if
 		// we aren't in any of the probe stages.
-		if( m_queryStage != QueryStage_Probe && m_queryStage != QueryStage_Probe1 )
+		if( m_queryStage != QueryStage_Probe && m_queryStage != QueryStage_CacheLoad )
 		{
 			m_queryStage = (Node::QueryStage)( (uint32)(m_queryStage + 1) );
 		}
@@ -883,7 +883,7 @@ void Node::ReadXML
 		/* we cant use the SetQueryStage method here, as it only allows us to
 		 * go to a lower QueryStage, and not a higher QueryStage. As QueryStage_Complete is higher than
 		 * QueryStage_None (the default) we manually set it here. Note - in Driver::HandleSerialAPIGetInitDataResponse the
-		 * QueryStage is set to Probe1 (which is less than QueryStage_Associations) if this is a existing node read in via the zw state file.
+		 * QueryStage is set to CacheLoad (which is less than QueryStage_Associations) if this is a existing node read in via the zw state file.
 		 *
 		 */
 		m_queryStage = queryStage;
