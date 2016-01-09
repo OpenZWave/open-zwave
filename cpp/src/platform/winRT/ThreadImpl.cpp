@@ -1,10 +1,10 @@
 //-----------------------------------------------------------------------------
 //
-//	TimeStamp.h
+//	ThreadImpl.cpp
 //
-//	Cross-platform TimeStamp
+//	WinRT implementation of a cross-platform thread
 //
-//	Copyright (c) 2010 Mal Lansell <mal@lansell.org>
+//	Copyright (c) 2015 Microsoft Corporation
 //	All rights reserved.
 //
 //	SOFTWARE NOTICE AND LICENSE
@@ -25,84 +25,124 @@
 //	along with OpenZWave.  If not, see <http://www.gnu.org/licenses/>.
 //
 //-----------------------------------------------------------------------------
-#include <string>
 #include "Defs.h"
-#include "platform/TimeStamp.h"
-
-#ifdef WIN32
-#include "platform/windows/TimeStampImpl.h"	// Platform-specific implementation of a TimeStamp
-#elif defined WINRT
-#include "platform/winRT/TimeStampImpl.h"	// Platform-specific implementation of a TimeStamp
-#else
-#include "platform/unix/TimeStampImpl.h"	// Platform-specific implementation of a TimeStamp
-#endif
+#include "platform/Event.h"
+#include "platform/Thread.h"
+#include "ThreadImpl.h"
+#include "Options.h"
 
 using namespace OpenZWave;
+using namespace Concurrency;
+using namespace Windows::Foundation;
+using namespace Windows::System::Threading;
+
+int32 ThreadImpl::s_threadTerminateTimeout = -1;
 
 //-----------------------------------------------------------------------------
-//	<TimeStamp::TimeStamp>
+//	<ThreadImpl::ThreadImpl>
 //	Constructor
 //-----------------------------------------------------------------------------
-TimeStamp::TimeStamp
+ThreadImpl::ThreadImpl
 (
+	Thread* _owner,
+	string const& _name
 ):
-	m_pImpl( new TimeStampImpl() )
+	m_owner( _owner ),
+	m_bIsRunning( false ),
+	m_name( _name )
 {
+	static bool staticsInitialized = false;
+	if (!staticsInitialized)
+	{
+		if (Options::Get() != nullptr)
+		{
+			Options::Get()->GetOptionAsInt("ThreadTerminateTimeout", &s_threadTerminateTimeout);
+		}
+		staticsInitialized = true;
+	}
 }
 
 //-----------------------------------------------------------------------------
-//	<TimeStamp::~TimeStamp>
+//	<ThreadImpl::~ThreadImpl>
 //	Destructor
 //-----------------------------------------------------------------------------
-TimeStamp::~TimeStamp
-(
-)
+ThreadImpl::~ThreadImpl ()
 {
-	delete m_pImpl;
 }
 
 //-----------------------------------------------------------------------------
-//	<TimeStamp::SetTime>
-//	Sets the timestamp to now, plus an offset in milliseconds
+//	<ThreadImpl::Start>
+//	Start a function running on this thread
 //-----------------------------------------------------------------------------
-void TimeStamp::SetTime
+bool ThreadImpl::Start
 (
-	int32 _milliseconds	// = 0
+	Thread::pfnThreadProc_t _pfnThreadProc,
+	Event* _exitEvent,
+	void* _context
 )
 {
-	m_pImpl->SetTime( _milliseconds );
+	// Create a thread to run the specified function
+	m_pfnThreadProc = _pfnThreadProc;
+	m_context = _context;
+	m_exitEvent = _exitEvent;
+	m_exitEvent->Reset();
+
+	create_task([this]()
+	{
+		m_bIsRunning = true;
+		try
+		{
+			m_pfnThreadProc(m_exitEvent, m_context);
+		}
+		catch (Platform::Exception^)
+		{
+		}
+
+		m_bIsRunning = false;
+		// Let any watchers know that the thread has finished running.
+		m_owner->Notify();
+	});
+	return true;
 }
 
 //-----------------------------------------------------------------------------
-//	<TimeStamp::TimeRemaining>
-//	Gets the difference between now and the timestamp time in milliseconds
+//	<ThreadImpl::Sleep>
+//	Cause thread to sleep for the specified number of milliseconds
 //-----------------------------------------------------------------------------
-int32 TimeStamp::TimeRemaining
+void ThreadImpl::Sleep
 (
+	uint32 _millisecs
 )
 {
-	return m_pImpl->TimeRemaining();
+	::Sleep(_millisecs);
 }
 
 //-----------------------------------------------------------------------------
-//	<TimeStamp::GetAsString>
-//	Return object as a string
+//	<ThreadImpl::Terminate>
+//	Force the thread to stop
 //-----------------------------------------------------------------------------
-string TimeStamp::GetAsString
+bool ThreadImpl::Terminate
 (
 )
 {
-	return m_pImpl->GetAsString();
+	// No way to do this on WinRT, so give the thread a bit of extra time to exit on its own
+	if( !m_bIsRunning )
+	{
+		return false;
+	}
+
+	if (Wait::Single(m_owner, s_threadTerminateTimeout) < 0)
+	{
+		return false;
+	}
+	return true;
 }
+
 //-----------------------------------------------------------------------------
-//	<TimeStamp::operator->
-//	Overload the subtract operator to get the difference between two
-//	timestamps in milliseconds
+//	<ThreadImpl::IsSignalled>
+//	Test whether the thread has completed
 //-----------------------------------------------------------------------------
-int32 TimeStamp::operator-
-(
-	TimeStamp const& _other
-)
+bool ThreadImpl::IsSignalled()
 {
-	return (int32)(m_pImpl - _other.m_pImpl);
+	return !m_bIsRunning;
 }

@@ -33,6 +33,8 @@
 
 #ifdef WIN32
 #include "platform/windows/LogImpl.h"	// Platform-specific implementation of a log
+#elif defined WINRT
+#include "platform/winRT/LogImpl.h"	// Platform-specific implementation of a log
 #else
 #include "platform/unix/LogImpl.h"	// Platform-specific implementation of a log
 #endif
@@ -191,7 +193,7 @@ void Log::SetLoggingState
 
 	if( s_instance && s_dologging && s_instance->m_pImpl )
 	{
-	  	s_instance->m_logMutex->Lock();
+		s_instance->m_logMutex->Lock();
 		s_instance->m_pImpl->SetLoggingState( _saveLevel, _queueLevel, _dumpTrigger );
 		s_instance->m_logMutex->Unlock();
 	}
@@ -247,7 +249,7 @@ void Log::Write
 	if( s_instance && s_dologging && s_instance->m_pImpl )
 	{
 		if( _level != LogLevel_Internal )
-		  	s_instance->m_logMutex->Lock();
+			s_instance->m_logMutex->Lock();
 		va_list args;
 		va_start( args, _format );
 		s_instance->m_pImpl->Write( _level, _nodeId, _format, args );
@@ -267,7 +269,7 @@ void Log::QueueDump
 {
 	if( s_instance && s_dologging && s_instance->m_pImpl )
 	{
-	  	s_instance->m_logMutex->Lock();
+		s_instance->m_logMutex->Lock();
 		s_instance->m_pImpl->QueueDump();
 		s_instance->m_logMutex->Unlock();
 	}
@@ -283,7 +285,7 @@ void Log::QueueClear
 {
 	if( s_instance && s_dologging && s_instance->m_pImpl )
 	{
-	  	s_instance->m_logMutex->Lock();
+		s_instance->m_logMutex->Lock();
 		s_instance->m_pImpl->QueueClear();
 		s_instance->m_logMutex->Unlock();
 	}
@@ -300,7 +302,7 @@ void Log::SetLogFileName
 {
 	if( s_instance && s_dologging && s_instance->m_pImpl )
 	{
-	  	s_instance->m_logMutex->Lock();
+		s_instance->m_logMutex->Lock();
 		s_instance->m_pImpl->SetLogFileName( _filename );
 		s_instance->m_logMutex->Unlock();
 	}
@@ -321,8 +323,8 @@ Log::Log
 ):
 	m_logMutex( new Mutex() )
 {
-        if (NULL == m_pImpl)
-        	m_pImpl = new LogImpl( _filename, _bAppend, _bConsoleOutput, _saveLevel, _queueLevel, _dumpTrigger );
+		if (NULL == m_pImpl)
+			m_pImpl = new LogImpl( _filename, _bAppend, _bConsoleOutput, _saveLevel, _queueLevel, _dumpTrigger );
 }
 
 //-----------------------------------------------------------------------------
