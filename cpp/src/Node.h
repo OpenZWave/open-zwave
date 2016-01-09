@@ -145,7 +145,8 @@ namespace OpenZWave
 				QueryStage_Versions,					/**< Retrieve version information */
 				QueryStage_Instances,					/**< Retrieve information about multiple command class instances */
 				QueryStage_Static,					/**< Retrieve static information (doesn't change) */
-				QueryStage_Probe1,					/**< Ping a device upon starting with configuration */
+				QueryStage_CacheLoad,					/**< Ping a device upon restarting with cached config for the device */
+				QueryStage_Probe1 = QueryStage_CacheLoad, /** < Depreciated name. /todo Remove in 2.0 timeframe */
 				QueryStage_Associations,				/**< Retrieve information about associations */
 				QueryStage_Neighbors,					/**< Retrieve node neighbor list */
 				QueryStage_Session,					/**< Retrieve session information (changes infrequently) */

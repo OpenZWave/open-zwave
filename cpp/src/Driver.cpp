@@ -2648,7 +2648,7 @@ void Driver::HandleSerialAPIGetInitDataResponse
 							{
 								// The node was read in from the config, so we
 								// only need to get its current state
-								node->SetQueryStage( Node::QueryStage_Probe1 );
+								node->SetQueryStage( Node::QueryStage_CacheLoad );
 							}
 
 						}
@@ -3020,7 +3020,7 @@ void Driver::HandleSendDataRequest
 			{
 				if( m_currentMsg &&  m_currentMsg->IsNoOperation() && node != NULL &&
 						( node->GetCurrentQueryStage() == Node::QueryStage_Probe  ||
-								node->GetCurrentQueryStage() == Node::QueryStage_Probe1 ) )
+								node->GetCurrentQueryStage() == Node::QueryStage_CacheLoad ) )
 				{
 					node->QueryStageRetry( node->GetCurrentQueryStage(), 3 );
 				}
