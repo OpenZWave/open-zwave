@@ -257,6 +257,29 @@ bool ZWManager::GetValueListItems
 }
 
 //-----------------------------------------------------------------------------
+// <ZWManager::GetValueListValues>
+// Gets the list of values from a list value
+//-----------------------------------------------------------------------------
+bool ZWManager::GetValueListValues
+( 
+	ZWValueID^ id, 
+	[Out] cli::array<int>^ %o_value
+)
+{
+	vector<int32> items;
+	if( Manager::Get()->GetValueListValues(id->CreateUnmanagedValueID(), &items ) )
+	{
+		o_value = gcnew cli::array<int>(items.size());
+		for( uint32 i=0; i<items.size(); ++i )
+		{
+			o_value[i] = items[i];
+		}
+		return true;
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
 // <ZWManager::GetNeighbors>
 // Gets the neighbors for a node
 //-----------------------------------------------------------------------------
