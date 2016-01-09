@@ -28,6 +28,7 @@
 #include <algorithm>
 #include <string>
 #include <sstream>
+#include <iomanip>
 
 #include "Defs.h"
 #include "Manager.h"
@@ -1253,7 +1254,10 @@ string Manager::GetNodeManufacturerId
 {
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
-		return driver->GetNodeManufacturerId( _nodeId );
+		uint16 mid = driver->GetNodeManufacturerId( _nodeId );
+		std::stringstream ss;
+		ss << "0x" << std::hex << std::setw(4) << std::setfill('0') << mid;
+		return ss.str();
 	}
 
 	return "Unknown";
@@ -1271,7 +1275,10 @@ string Manager::GetNodeProductType
 {
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
-		return driver->GetNodeProductType( _nodeId );
+		uint16 mid = driver->GetNodeProductType( _nodeId );
+		std::stringstream ss;
+		ss << "0x" << std::hex << std::setw(4) << std::setfill('0') << mid;
+		return ss.str();
 	}
 
 	return "Unknown";
@@ -1395,7 +1402,10 @@ string Manager::GetNodeProductId
 {
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
-		return driver->GetNodeProductId( _nodeId );
+		uint16 mid = driver->GetNodeProductId( _nodeId );
+		std::stringstream ss;
+		ss << "0x" << std::hex << std::setw(4) << std::setfill('0') << mid;
+		return ss.str();
 	}
 
 	return "Unknown";

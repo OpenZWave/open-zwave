@@ -349,27 +349,30 @@ namespace OpenZWave
 			string GetNodeName()const{ return m_nodeName; }
 			string GetLocation()const{ return m_location; }
 
-			string GetManufacturerId()const{ return m_manufacturerId; }
-			string GetProductType()const{ return m_productType; }
-			string GetProductId()const{ return m_productId; }
+//			string GetManufacturerId()const{ return std::to_string(m_manufacturerId); }
+			uint16 GetManufacturerId()const{ return m_manufacturerId; }
+//			string GetProductType()const{ return string(m_productType); }
+			uint16 GetProductType()const{ return m_productType; }
+//			string GetProductId()const{ return string(m_productId); }
+			uint16 GetProductId()const{ return m_productId; }
 
 			void SetManufacturerName( string const& _manufacturerName ){ m_manufacturerName = _manufacturerName; }
 			void SetProductName( string const& _productName ){ m_productName = _productName; }
 			void SetNodeName( string const& _nodeName );
 			void SetLocation( string const& _location );
 
-			void SetManufacturerId( string const& _manufacturerId ){ m_manufacturerId = _manufacturerId; }
-			void SetProductType( string const& _productType ){ m_productType = _productType; }
-			void SetProductId( string const& _productId ){ m_productId = _productId; }
+			void SetManufacturerId( uint16 const& _manufacturerId ){ m_manufacturerId = _manufacturerId; }
+			void SetProductType( uint16 const& _productType ){ m_productType = _productType; }
+			void SetProductId( uint16 const& _productId ){ m_productId = _productId; }
 
 			string		m_manufacturerName;
 			string		m_productName;
 			string		m_nodeName;
 			string		m_location;
 
-			string		m_manufacturerId;
-			string		m_productType;
-			string		m_productId;
+			uint16		m_manufacturerId;
+			uint16		m_productType;
+			uint16		m_productId;
 
 			// zwave+ info
 			uint16 GetDeviceType() const { return m_deviceType; }

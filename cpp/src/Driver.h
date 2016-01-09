@@ -419,9 +419,9 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		bool IsNodeZWavePlus( uint8 const _nodeId );
 
 
-		string GetNodeManufacturerId( uint8 const _nodeId );
-		string GetNodeProductType( uint8 const _nodeId );
-		string GetNodeProductId( uint8 const _nodeId );
+		uint16 GetNodeManufacturerId( uint8 const _nodeId );
+		uint16 GetNodeProductType( uint8 const _nodeId );
+		uint16 GetNodeProductId( uint8 const _nodeId );
 		void SetNodeManufacturerName( uint8 const _nodeId, string const& _manufacturerName );
 		void SetNodeProductName( uint8 const _nodeId, string const& _productName );
 		void SetNodeName( uint8 const _nodeId, string const& _nodeName );

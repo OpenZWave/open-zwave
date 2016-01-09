@@ -4745,7 +4745,7 @@ string Driver::GetNodeLocation
 // Get the manufacturer Id string value with the specified ID
 // Returns a copy of the string rather than a const ref for thread safety
 //-----------------------------------------------------------------------------
-string Driver::GetNodeManufacturerId
+uint16 Driver::GetNodeManufacturerId
 (
 		uint8 const _nodeId
 )
@@ -4756,7 +4756,7 @@ string Driver::GetNodeManufacturerId
 		return node->GetManufacturerId();
 	}
 
-	return "";
+	return 0;
 }
 
 //-----------------------------------------------------------------------------
@@ -4764,7 +4764,7 @@ string Driver::GetNodeManufacturerId
 // Get the product type string value with the specified ID
 // Returns a copy of the string rather than a const ref for thread safety
 //-----------------------------------------------------------------------------
-string Driver::GetNodeProductType
+uint16 Driver::GetNodeProductType
 (
 		uint8 const _nodeId
 )
@@ -4775,7 +4775,7 @@ string Driver::GetNodeProductType
 		return node->GetProductType();
 	}
 
-	return "";
+	return 0;
 }
 
 //-----------------------------------------------------------------------------
@@ -4783,7 +4783,7 @@ string Driver::GetNodeProductType
 // Get the product Id string value with the specified ID
 // Returns a copy of the string rather than a const ref for thread safety
 //-----------------------------------------------------------------------------
-string Driver::GetNodeProductId
+uint16 Driver::GetNodeProductId
 (
 		uint8 const _nodeId
 )
@@ -4794,7 +4794,7 @@ string Driver::GetNodeProductId
 		return node->GetProductId();
 	}
 
-	return "";
+	return 0;
 }
 
 //-----------------------------------------------------------------------------
