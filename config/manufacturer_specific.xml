@@ -228,6 +228,7 @@
 	<Manufacturer id="011a" name="Enerwave">
 		<Product type="0801" id="0b03" name="ZWN-SC7 7-Button Scene Controller" config="enerwave/zwn-sc7.xml"/>
 		<Product type="0101" id="0603" name="ZW20R 20A Tamper Resistant Duplex Receptacle" config="enerwave/zw20r.xml"/>
+		<Product type="0101" id="0102" name="ZW15S 15A On/Off Switch" config="enerwave/zw15s.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0060" name="Everspring">
 		<Product type="0001" id="0001" name="HSP02 Motion Detector" config="everspring/hsp02.xml"/>
