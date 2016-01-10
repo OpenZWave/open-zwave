@@ -254,6 +254,7 @@ Version 1.3
  - Pull Request #728 - Fix FreeBSD compile from durin42 (Justin)
  - Store Manufacturer ID, Type and Product ID as shorts instead of strings. (Justin)
  - Change QueryStage_Probe1 to QueryStage_CacheLoad to reflect this is where we start when loading a device from Cache (Justin)
+ - Issue #729 - Add Qubino Flush Dimmer ZMNHJD1 from Stephane guillard (Justin)
 
 
 Version 1.2 
