@@ -11,7 +11,7 @@ License: LGPL-2.0+
 %else 
 License: LGPLv2+
 %endif
-Version: 1.2.730
+Version: 1.4.0
 Release: 1
 BuildRequires: gcc-c++ make libudev-devel doxygen graphviz
 %if 0%{?fedora} >= 18
