@@ -2,7 +2,7 @@ Format: 3.0 (quilt)
 Source: openzwave
 Binary: libopenzwave1.0, libopenzwave1.0-dev, openzwave
 Architecture: any
-Version: 1.2.742-1
+Version: 1.4.0-1
 Maintainer: Harald Klein <hari@vt100.at>
 Standards-Version: 3.9.3
 Build-Depends: debhelper (>= 9), dh-exec (>= 0.3), g++ (>= 4.4), quilt, libudev-dev
