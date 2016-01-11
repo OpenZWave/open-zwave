@@ -13,7 +13,7 @@ SET VERSION_FILE=GIT-VS-VERSION-FILE
 
 :: DEFAULT_VERSION - Version string to be processed when neither Git nor a
 ::                packed version file is available.
-SET DEFAULT_VERSION=v1.4.0
+SET DEFAULT_VERSION=v1.4.0-NoGit
 
 :: COUNT_PATCHES_FROM - Determines which tag to count the number of patches from
 ::                for the final portion of the digital version number.
@@ -106,7 +106,6 @@ IF DEFINED fGIT_AVAILABLE (
 )
 IF DEFINED fLEAVE_NOW GOTO END
 CALL :SET_BUILD_PARTS
-CALL :SET_FLAGS
 CALL :PREP_OUT
 CALL :WRITE_OUT
 GOTO END
@@ -166,26 +165,12 @@ GOTO :EOF
 :: --------------------
 :PARSE_GIT_STRING
 :: --------------------
-FOR /F "tokens=*" %%A IN ('"git describe --abbrev=5 HEAD"') DO (
+FOR /F "tokens=*" %%A IN ('"git describe --long --tags --dirty "') DO (
   SET strFILE_VERSION=%%A
 )
+echo %strFILE_VERSION%
 :: If HEAD is dirty then this is not part of an official build and even if a
 :: commit hasn't been made it should still be marked as dirty and patched.
-SET tmp=
-CALL git update-index -q --refresh >NUL 2>&1
-IF ERRORLEVEL 1 (
-  IF [%fFORCE%] EQU [1] (
-    verify > nul
-  ) ELSE (
-    ECHO >> The working tree index is not prepared for build testing!
-    ECHO >> Please check git status or use --force to ignore the index state.
-    SET fLEAVE_NOW=1
-  )
-)
-FOR /F %%A IN ('git diff-index --name-only HEAD --') DO SET tmp=%%A
-IF NOT "%tmp%" == "" (
-  SET strFILE_VERSION=%strFILE_VERSION%-dirty
-)
 SET tmp=
 GOTO :EOF
 
@@ -223,123 +208,6 @@ FOR /F "tokens=1,2,3,* delims=." %%A IN ("%strFile_Version%") DO (
   SET nbFIX_PART=%%C
   SET strTMP_STAGE_PART=%%D
 )
-CALL :SET_STAGE_PARTS
-IF DEFINED fGIT_AVAILABLE CALL :GET_GIT_PATCHES
-GOTO :EOF
-
-:: --------------------
-:SET_STAGE_PARTS
-:: --------------------
-SET nbSTAGE_VERSION=
-SET tmp=%strTMP_STAGE_PART:~,1%
-IF "%tmp%" == "a" (
-  SET strCOMMENT=Alpha Release
-  SET strSTAGE_PART=-alpha
-  CALL :APPEND_STAGE_VERSION %strTMP_STAGE_PART:~5%
-) ELSE (
-  IF "%tmp%" == "b" (
-    SET strCOMMENT=Beta Release
-    SET strSTAGE_PART=-beta
-    CALL :APPEND_STAGE_VERSION %strTMP_STAGE_PART:~4%
-  ) ELSE (
-    IF "%tmp%" == "r" (
-      SET strCOMMENT=Release Candidate
-      SET strSTAGE_PART=-rc
-      CALL :APPEND_STAGE_VERSION %strTMP_STAGE_PART:~2%
-    ) ELSE (
-      SET strComment=Major Version Release
-      SET strSTAGE_PART=
-    )
-  )
-)
-GOTO :EOF
-
-:: --------------------
-:APPEND_STAGE_VERSION
-:: --------------------
-:: [PARAM in] %1 - the numeric portion of strTMP_STAGE_PART and the remainder.
-::                 ie: rc1.13.g28456 is passed in as 1.13.g28456
-FOR /F "tokens=1 delims=." %%A IN ("%1") DO SET nbSTAGE_VERSION=%%A
-SET strCOMMENT=%strCOMMENT% %nbSTAGE_VERSION%
-IF NOT [%1] == [] SET fPRE_RELEASE=1
-GOTO :EOF
-
-:: --------------------
-:GET_GIT_PATCHES
-:: --------------------
-:: Read in the description of the current commit in terms of the earliest
-:: release stream tag.
-IF "%COUNT_PATCHES_FROM%" == "major" (
-  SET tmp=v%nbMAJOR_PART%.0.0*
-) ELSE (
-    IF "%COUNT_PATCHES_FROM%" == "minor" (
-      SET tmp=v%nbMAJOR_PART%.%nbMINOR_PART%.0*
-    ) ELSE (
-      SET tmp=v%nbMAJOR_PART%.%nbMINOR_PART%.%nbFIX_PART%*
-    )
-)
-SET git_cmd=git for-each-ref --count=1 --format=%%(refname:short)
-SET git_cmd=%git_cmd% --sort=taggerdate refs/tags/%tmp%
-FOR /F "tokens=* usebackq" %%A IN (`"%git_cmd%"`) DO SET tmp=%%A
-SET git_cmd=
-
-:: Full version releases have the Git patch count at the first '-' while
-:: pre-release versions have it at the second.
-IF [%USE_PRERELEASE_TAGS%] == [0] (
-  FOR /F "tokens=2 delims=-" %%A IN ('"git describe --match %tmp%"') DO (
-    SET nbPATCHES_PART=%%A
-  )
-) ELSE (
-  FOR /F "tokens=3 delims=-" %%A IN ('"git describe --match %tmp%"') DO (
-    SET nbPATCHES_PART=%%A
-  )
-)
-IF NOT DEFINED nbPATCHES_PART SET nbPATCHES_PART=0
-SET tmp=
-GOTO :EOF
-
-:: --------------------
-:SET_FLAGS
-:: --------------------
-:: PATCHED indicates that the build is taking place at a non-tagged commit.
-SET tmp=v%nbMAJOR_PART%.%nbMINOR_PART%.%nbFIX_PART%%strSTAGE_PART%%nbSTAGE_VERSION%
-IF DEFINED fGIT_AVAILABLE (
-  FOR /F "tokens=*" %%A IN ('"git describe HEAD"') DO SET tmp2=%%A
-)
-IF NOT "%tmp%" == "%tmp2%" SET fPATCHED=1
-
-:: When HEAD is dirty the build is considered both PRIVATE and PATCHED
-:: PRIVATE indicates that the HEAD is dirty, and the string Custom Build is used.
-SET tmp3=%strFILE_VERSION:*dirty=dirty%
-SET tmp3=%tmp3:~0,5%
-IF "%tmp3%" == "dirty" (
-  SET fPATCHED=1
-  SET fPRIVATE=1
-  SET strPRIVATE=Custom Build
-)
-
-:: Capture full version maintenance releases. (ie: v1.0.0.1)
-SET tmp=v%nbMAJOR_PART%.%nbMINOR_PART%.%nbFIX_PART%.%strTMP_STAGE_PART%
-IF [%fPATCHED%] == [1] (
-  IF [%fPRIVATE%] == [0] (
-    IF "%strCOMMENT:~0,5%" == "Major" (
-      IF "%tmp%" == "%tmp2%" (
-        SET strCOMMENT=%strCOMMENT:Major=Maintanence%
-        SET fPATCHED=0
-      ) ELSE (
-        SET fPRIVATE=1
-      )
-    )
-  )
-)
-
-:: The only flag not set here is the PRE_RELEASE flag.  It made more sense to
-:: set it in the APPEND_STAGE_VERSION since only PRE_RELEASE stages pass that
-:: function an argument.
-
-SET tmp=
-SET tmp2=
-SET tmp3=
 GOTO :EOF
 
 :: --------------------
@@ -428,140 +296,8 @@ IF DEFINED fQUIET GOTO :EOF
 ECHO Version String:       %strFILE_VERSION%
 ECHO Digital Version ID:   %csvFILE_VERSION%
 ECHO Hex Version ID:       %hexFILE_VERSION%
-ECHO Comment:              %strCOMMENT%
-ECHO Private Build String: %strPRIVATE%
-ECHO Is Private Build:     %fPRIVATE%
-ECHO Is Patched:           %fPATCHED%
-ECHO Is PreRelease:        %fPRE_RELEASE%
 GOTO :EOF
 
-:: --------------------
-:TEST
-:: --------------------
-:: Create the test directory & repo
-SET TERM=
-SET TESTING=1
-SET git-vs-version-test-dir=git-vs-version-test
-MKDIR %git-vs-version-test-dir%
-PUSHD %git-vs-version-test-dir%
-CALL git init >NUL 2>&1
-IF ERRORLEVEL 1 (
-  ECHO Test requires git.
-  GOTO END
-)
-
-:: Generate the test patches and tags
-SET test_stage=-alpha
-:TEST_LOOP
-FOR /L %%A IN (0,1,1) DO (
-      SET test_ver=%test_stage%%%A
-      IF "%test_stage%" == "" SET test_ver=
-      CALL git commit --allow-empty -m "Commit v1.0.0%%test_ver%%" >NUL
-      IF ERRORLEVEL 1 GOTO END
-      CALL git tag -a v1.0.0%%test_ver%% -m "Test v1.0.0%%test_ver%%"
-      IF ERRORLEVEL 1 GOTO END
-  FOR /L %%B IN (0,1,2) DO (
-      CALL git commit --allow-empty -m "Work on v1.0.0%%test_ver%%" >NUL
-      IF ERRORLEVEL 1 GOTO END
-  )
-  IF "%test_stage%" == "" GOTO TEST_MAINT
-)
-IF "%test_stage%" == "-alpha" SET test_stage=-beta& GOTO TEST_LOOP
-IF "%test_stage%" == "-beta" SET test_stage=-rc& GOTO TEST_LOOP
-IF "%test_stage%" == "-rc" SET test_stage=& GOTO TEST_LOOP
-SET test_stage=
-
-:TEST_MAINT
-:: Simulate a maint patch
-CALL git commit --allow-empty -m "Maint Work on v1.0.0.1" >NUL
-CALL git tag -a v1.0.0.1 -m "Test v1.0.0.1"
-
-:: Simulate the first patch for v1.0.1
-CALL git commit --allow-empty -m "Starting v1.0.1" >NUL
-CALL git tag -a v1.0.1-alpha0 -m "Test v1.0.1-alpha0"
-
-:: Simulate another maint patch
-CALL git commit --allow-empty -m "Maint Work on v1.0.0.2" >NUL
-CALL git tag -a v1.0.0.2 -m "Test v1.0.0.2"
-
-:: Generate the output
-ECHO TAG, Version, Hex, Maj, Min, Fix, Patches (from %COUNT_PATCHES_FROM%), PreRelease, Private, Patched, Comment
-
-SET git_cmd=git for-each-ref --format=%%(refname:short) refs/tags/
-FOR /F "tokens=* usebackq" %%A IN (`"%git_cmd%"`) DO (
-  CALL git reset --hard %%A >NUL
-  CALL :TEST_VERSION %%A
-)
-
-:: Builder checked out the parent of v1.0.0
-CALL git reset --hard v1.0.0~1 >NUL
-FOR /F "tokens=*" %%A IN ('"git describe HEAD"') DO SET tmp=%%A
-CALL :TEST_VERSION %tmp%
-
-:: Builder staged a file.
-CALL touch README >NUL
-CALL git add README
-FOR /F "tokens=*" %%A IN ('"git describe HEAD"') DO SET tmp=%%A
-CALL :TEST_VERSION %tmp%
-
-:: Builder checks out a tagged release and stages a file
-CALL git reset --hard v1.0.0 >NUL
-FOR /F "tokens=*" %%A IN ('"git describe HEAD"') DO SET tmp=%%A
-CALL touch README
-CALL git add README
-CALL :TEST_VERSION %tmp%
-
-:: Builder commits that file.
-CALL git commit -m "Modified Release" >NUL
-FOR /F "tokens=*" %%A IN ('"git describe HEAD"') DO SET tmp=%%A
-CALL :TEST_VERSION %tmp%
-
-:: Builder creates own tag
-CALL git tag v1.0.0-custom -m "Modified Release Tag"
-FOR /F "tokens=*" %%A IN ('"git describe HEAD"') DO SET tmp=%%A
-CALL :TEST_VERSION %tmp%
-
-:: Builder checked out a maint release and staged a file
-CALL git reset --hard v1.0.0.1 >NUL
-FOR /F "tokens=*" %%A IN ('"git describe HEAD"') DO SET tmp=%%A
-CALL touch README
-CALL git add README
-CALL :TEST_VERSION %tmp%
-
-:: Builder commits that file.
-CALL git commit -m "Modified Maint Release" >NUL
-FOR /F "tokens=*" %%A IN ('"git describe HEAD"') DO SET tmp=%%A
-CALL :TEST_VERSION %tmp%
-
-:: Builder creates own tag
-CALL git tag v1.0.0.1-custom -m "Modified Maint Release Tag"
-FOR /F "tokens=*" %%A IN ('"git describe HEAD"') DO SET tmp=%%A
-CALL :TEST_VERSION %tmp%
-
-ECHO.
-
-:: Cleanup the directory
-POPD
-RMDIR /S /Q %git-vs-version-test-dir%
-GOTO :EOF
-
-:: --------------------
-:TEST_VERSION
-:: --------------------
-SET TEST_OUT_STRING=%1
-CALL :START
-ECHO %TEST_OUT_STRING%
-SET TEST_OUT_STRING=
-GOTO :EOF
-
-:: --------------------
-:TEST_OUT
-:: --------------------
-SET TEST_OUT_STRING=%TEST_OUT_STRING%, %strFILE_VERSION%
-SET csvFILE_VERSION=%csvFILE_VERSION:,=, %
-SET TEST_OUT_STRING=%TEST_OUT_STRING%, %csvFILE_VERSION%, %hexFILE_VERSION%
-SET TEST_OUT_STRING=%TEST_OUT_STRING%, %fPRE_RELEASE%, %fPRIVATE%, %fPATCHED%, %strCOMMENT%
-GOTO :EOF
 
 :: --------------------
 :END
