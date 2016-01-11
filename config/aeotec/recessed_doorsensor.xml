@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Aeon Labs Recessed Door Sensor -->
-<Product xmlns='http://code.google.com/p/open-zwave/'>
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
     <!-- Configuration -->
     <CommandClass id="112">
         <Value type="byte" genre="config" instance="1" index="1" label="Toggle the sensor binary report value when the Magnet switch is opened/closed." min="0" max="1" value="0">

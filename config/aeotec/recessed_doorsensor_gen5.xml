@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Aeon Labs Recessed Door Sensor -->
-<Product xmlns='http://code.google.com/p/open-zwave/'>
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
     <!-- Configuration -->
     <!-- Alarm CC isn't supported on this device -->
     <CommandClass id="113" action="remove"/>

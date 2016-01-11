@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Product xmlns='http://code.google.com/p/open-zwave/'>
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
 
   <!-- Minimote requires at least firmware 1.17, 1.19 is highly recommend -->
   <!-- Minimote will normally not respond to Get commands, but Set is possible when woken up -->

@@ -1109,10 +1109,16 @@ void Node::ReadDeviceProtocolXML
 		TiXmlElement const* _ccsElement
 )
 {
+	char const *str = _ccsElement->Attribute("Revision");
+	if ( str ) {
+		m_ConfigRevision = atol(str);
+		Log::Write(LogLevel_Info, GetNodeId(), "  Configuration Revision is %d", m_ConfigRevision);
+	}
+
 	TiXmlElement const* ccElement = _ccsElement->FirstChildElement();
 	while( ccElement )
 	{
-		char const* str = ccElement->Value();
+		str = ccElement->Value();
 		if( str && !strcmp( str, "Protocol" ) )
 		{
 			str = ccElement->Attribute( "nodeinfosupported" );
