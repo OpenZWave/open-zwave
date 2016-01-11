@@ -648,7 +648,7 @@ bool Driver::ReadConfig
 	string userPath;
 	Options::Get()->GetOptionAsString( "UserPath", &userPath );
 
-	snprintf( str, sizeof(str), "zwcfg_0x%08x.xml", m_homeId );
+	snprintf( str, sizeof(str), "ozwcache_0x%08x.xml", m_homeId );
 	string filename =  userPath + string(str);
 
 	TiXmlDocument doc;
@@ -830,7 +830,7 @@ void Driver::WriteConfig
 	string userPath;
 	Options::Get()->GetOptionAsString( "UserPath", &userPath );
 
-	snprintf( str, sizeof(str), "zwcfg_0x%08x.xml", m_homeId );
+	snprintf( str, sizeof(str), "ozwcache_0x%08x.xml", m_homeId );
 	string filename =  userPath + string(str);
 
 	doc.SaveFile( filename.c_str() );
