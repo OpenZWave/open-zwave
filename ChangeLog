@@ -1,3 +1,9 @@
+Version 1.5
+ - Rename zwcfg_*.xml to zwcache_*.xml to reflect its not a config file, but a cache. (Justin)
+
+Version 1.4
+ - Released 10th Jan, 2016
+
 Version 1.3
  - Added support for Merten Plug-in Roller Shutter Module (Marco)
  - Fixed Issue 383 - Update Remotec ZXT-120 Config file thanks to yy.bendavid & gizmocuz (Alex)
