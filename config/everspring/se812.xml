@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- EVERSPRING SE812 SIREN -->
-<Product xmlns='http://code.google.com/p/open-zwave/'>
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
 	<!-- Configuration Parameters not supported -->
 	<!-- Wakeup doesn't respond -->
 	<CommandClass id="132" create_vars="false" />

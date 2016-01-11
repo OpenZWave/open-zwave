@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Product xmlns='http://code.google.com/p/open-zwave/'>
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
   <!-- Aeon Labs Smart Switch Gen5 -->
   <!--Source: http://ozw.my-ho.st/Aeon/Engineering%20Spec%20-%20Aeon%20Labs%20Smart%20Switch%20Gen5_V3.25.pdf-->
   <Protocol refreshonnodeinfoframe="false"/>

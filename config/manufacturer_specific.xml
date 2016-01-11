@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ManufacturerSpecificData xmlns='http://code.google.com/p/open-zwave/'>
+<ManufacturerSpecificData xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
 	<Manufacturer id="0040" name="2B Electronics">
 	</Manufacturer>
 	<Manufacturer id="0098" name="2GIG Technologies">

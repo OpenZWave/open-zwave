@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Product xmlns='http://code.google.com/p/open-zwave/'>
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
   <!-- Aeon Labs Key Fob Gen5 -->
   <!-- Basic and SwitchMultiLevel are for when the KeyFob is in Group Mode.
   You should configure the device to operate in Scene Mode instead if you
