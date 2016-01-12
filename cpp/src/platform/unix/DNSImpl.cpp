@@ -28,7 +28,8 @@
 #include <netinet/in.h>
 #include <arpa/nameser.h>
 #include <resolv.h>
-
+#include <string.h>
+#include <netdb.h>
 
 #include "DNSImpl.h"
 
@@ -42,15 +43,13 @@ DNSImpl::DNSImpl
 {
     res_init();
 }
+
 DNSImpl::~DNSImpl
 (
 )
 {
 
 }
-#include <string.h>
-#include <netdb.h>
-
 
 bool DNSImpl::LookupTxT
 (

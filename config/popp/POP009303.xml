@@ -1,4 +1,4 @@
-<Product xmlns="http://code.google.com/p/open-zwave/">
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
 
     <!-- Popp Battery Wall Switch Z-Wave+ -->
 	

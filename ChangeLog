@@ -1,5 +1,6 @@
 Version 1.5
  - Rename zwcfg_*.xml to zwcache_*.xml to reflect its not a config file, but a cache. (Justin)
+ - On *nix Platforms - Rename the threads to their functions, so its visible in ps/top etc (Justin)
 
 Version 1.4
  - Released 10th Jan, 2016
