@@ -19,6 +19,9 @@ RELEASE_CFLAGS  := -Wall -Wno-unknown-pragmas -Werror -Wno-format -Wno-error=seq
 #what flags we will use for linking in debug mode
 DEBUG_LDFLAGS	:= -g
 
+#default Libraries we should link with
+LIBS += -lresolv
+
 top_srcdir := $(abspath $(dir $(lastword $(MAKEFILE_LIST)))../../)
 
 include $(top_srcdir)/cpp/build/support.mk

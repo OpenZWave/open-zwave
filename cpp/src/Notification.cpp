@@ -226,6 +226,16 @@ string Notification::GetAsString() const {
 			case Type_NodeReset:
 				str = "Node Reset";
 				break;
+			case Type_UserAlerts:
+				switch (m_useralerttype) {
+					case Alert_None:
+						str = "User Alert - No Alert";
+						break;
+					case Alert_ConfigOutOfDate:
+						str = "User Alert - Config File out of Date";
+						break;
+				}
+			break;
 	}
 	return str;
 

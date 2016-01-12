@@ -159,6 +159,7 @@ m_deviceType( 0 ),
 m_role( 0 ),
 m_nodeType ( 0 ),
 m_secured ( false ),
+m_ConfigRevision ( 0 ),
 m_values( new ValueStore() ),
 m_sentCnt( 0 ),
 m_sentFailed( 0 ),
@@ -1038,6 +1039,12 @@ void Node::ReadXML
 	if ( str )
 		m_refreshonNodeInfoFrame = !strcmp (str, "true" );
 
+	str = _node->Attribute( "configrevision" );
+	if ( str )
+		m_ConfigRevision = atol(str);
+	else
+		m_ConfigRevision = 0;
+
 	// Read the manufacturer info and create the command classes
 	TiXmlElement const* child = _node->FirstChildElement();
 	while( child )
@@ -1091,6 +1098,9 @@ void Node::ReadXML
 		child = child->NextSiblingElement();
 	}
 
+	/* check if our Config is the latest version */
+	checkConfigRevision();
+
 	if( m_nodeName.length() > 0 || m_location.length() > 0 || m_manufacturerId > 0 )
 	{
 		// Notify the watchers of the name changes
@@ -1113,7 +1123,10 @@ void Node::ReadDeviceProtocolXML
 	if ( str ) {
 		m_ConfigRevision = atol(str);
 		Log::Write(LogLevel_Info, GetNodeId(), "  Configuration Revision is %d", m_ConfigRevision);
+	} else {
+		m_ConfigRevision = 0;
 	}
+	checkConfigRevision();
 
 	TiXmlElement const* ccElement = _ccsElement->FirstChildElement();
 	while( ccElement )
@@ -1295,6 +1308,9 @@ void Node::WriteXML
 	{
 		nodeElement->SetAttribute( "refreshonnodeinfoframe", "false" );
 	}
+
+	snprintf( str, 32, "%d", m_ConfigRevision);
+	nodeElement->SetAttribute( "configrevision", str );
 
 	nodeElement->SetAttribute( "query_stage", c_queryStageNames[m_queryStage] );
 
@@ -3523,3 +3539,19 @@ bool Node::IsNodeReset()
 
 
 }
+
+//-----------------------------------------------------------------------------
+// <Node::checkConfigRevision>
+// Check if our Config File is the latest
+//-----------------------------------------------------------------------------
+
+void Node::checkConfigRevision
+(
+)
+{
+	if (this->m_ConfigRevision > 0)
+		this->GetDriver()->CheckConfigRevision(this);
+
+}
+
+

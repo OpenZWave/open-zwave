@@ -433,6 +433,14 @@ namespace OpenZWave
 
 			map<uint8,CommandClass*>		m_commandClassMap;	/**< Map of command class ids and pointers to associated command class objects */
 			bool							m_secured; /**< Is this Node added Securely */
+
+			//-----------------------------------------------------------------------------
+			// Configuration Revision Related Classes
+			//-----------------------------------------------------------------------------
+
+			void checkConfigRevision();
+			uint32 getConfigRevision() { return m_ConfigRevision; };
+
 			uint32 m_ConfigRevision;
 			//-----------------------------------------------------------------------------
 			// Basic commands (helpers that go through the basic command class)
