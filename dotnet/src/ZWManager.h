@@ -1025,6 +1025,14 @@ namespace OpenZWaveDotNet
 		String^ GetValueHelp( ZWValueID^ id ){ return gcnew String(Manager::Get()->GetValueHelp(id->CreateUnmanagedValueID()).c_str()); }
 		
 		/**
+		 * \brief Sets a help string describing the value's purpose and usage.
+		 * \param id The unique identifier of the value.
+		 * \param value The new value of the help text.
+		 * \see ValueID
+		 */
+		void SetValueHelp( ZWValueID^ id, String^ value ) { Manager::Get()->SetValueHelp( id->CreateUnmanagedValueID(), (const char*)(Marshal::StringToHGlobalAnsi(value)).ToPointer()); }
+		
+		/**
 		 * \brief Test whether the value is read-only.
 		 *
 		 * \param id The unique identifier of the value.
