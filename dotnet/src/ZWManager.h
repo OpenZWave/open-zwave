@@ -1042,6 +1042,14 @@ namespace OpenZWaveDotNet
 		bool IsValueReadOnly( ZWValueID^ id ){ return Manager::Get()->IsValueReadOnly(id->CreateUnmanagedValueID()); }
 
 		/**
+		 * \brief Test whether the value is write-only.
+		 * \param _id The unique identifier of the value.
+		 * \return true if the value can only be written to and not read.
+		 * \see ValueID
+		 */
+		bool IsValueWriteOnly( ZWValueID^ id ){ return Manager::Get()->IsValueWriteOnly(id->CreateUnmanagedValueID()); }
+
+		/**
 		 * \brief Test whether the value has been set.
 		 *
 		 * \param id The unique identifier of the value.
