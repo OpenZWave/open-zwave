@@ -626,6 +626,14 @@ namespace OpenZWaveDotNet
 		uint8 GetNodeSecurity( uint32 const homeId, uint8 const nodeId ){ return Manager::Get()->GetNodeSecurity(homeId, nodeId); }
 		
 		/**
+		 * \brief Is this a ZWave+ Supported Node?
+		 * \param _homeId the HomeID of the Z-Wave controller that managed the node.
+		 * \param _nodeId the ID of the node to query.
+		 * \return If this node is a Z-Wave Plus Node
+		 */
+		bool IsNodeZWavePlus( uint32 const homeId, uint8 const nodeId ) { return Manager::Get()->IsNodeZWavePlus(homeId, nodeId); };
+		
+		/**
 		 * \brief Get a node's "basic" type.
 		 * \param homeId The Home ID of the Z-Wave controller that manages the node.
 		 * \param nodeId The ID of the node to query.
