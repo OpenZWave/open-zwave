@@ -33,6 +33,7 @@
 #include "Notification.h"
 #include "Scene.h"
 #include "ZWSecurity.h"
+#include "DNSThread.h"
 
 #include "platform/Event.h"
 #include "platform/Mutex.h"
@@ -71,6 +72,8 @@
 #endif
 #include <algorithm>
 #include <iostream>
+#include <sstream>
+#include <iomanip>
 
 using namespace OpenZWave;
 
@@ -141,6 +144,8 @@ Driver::Driver
 		ControllerInterface const& _interface
 ):
 m_driverThread( new Thread( "driver" ) ),
+m_dns ( new DNSThread(this) ),
+m_dnsThread ( new Thread( "dns" ) ),
 m_initMutex(new Mutex()),
 m_exit( false ),
 m_init( false ),
@@ -278,6 +283,10 @@ Driver::~Driver
 	m_pollThread->Stop();
 	m_pollThread->Release();
 
+	m_dnsThread->Stop();
+	m_dnsThread->Release();
+	delete m_dns;
+
 	m_driverThread->Stop();
 	m_driverThread->Release();
 
@@ -365,6 +374,7 @@ void Driver::Start
 {
 	// Start the thread that will handle communications with the Z-Wave network
 	m_driverThread->Start( Driver::DriverThreadEntryPoint, this );
+	m_dnsThread->Start ( DNSThread::DNSThreadEntryPoint, m_dns);
 }
 
 //-----------------------------------------------------------------------------
@@ -6911,5 +6921,40 @@ bool Driver::isNetworkKeySet() {
 		return false;
 	} else {
 		return networkKey.length() <= 0 ? false : true;
+	}
+}
+
+bool Driver::CheckConfigRevision
+(
+Node *node
+)
+{
+	DNSLookup *lu = new DNSLookup;
+	lu->NodeID = node->GetNodeId();
+	/* make up a string of what we want to look up */
+	std::stringstream ss;
+	ss << "0x" << std::hex << std::setw(4) << std::setfill('0') << node->GetProductId() << ".";
+	ss << "0x" << std::hex << std::setw(4) << std::setfill('0') << node->GetProductType() << ".";
+	ss << "0x" << std::hex << std::setw(4) << std::setfill('0') << node->GetManufacturerId() << ".db.openzwave.com.";
+
+	lu->lookup = ss.str();
+	return m_dns->sendRequest(lu);
+}
+
+void Driver::processConfigRevision
+(
+DNSLookup *result
+)
+{
+	if (result->status == DNSError_None) {
+		LockGuard LG(m_nodeMutex);
+		Node *node = this->GetNode(result->NodeID);
+		if (node->getConfigRevision() < atol(result->result.c_str())) {
+			Log::Write(LogLevel_Info, node->GetNodeId(), "Config for Device \"%s\" is out of date", node->GetProductName().c_str());
+			Notification* notification = new Notification( Notification::Type_UserAlerts );
+			notification->SetHomeAndNodeIds( m_homeId, node->GetNodeId() );
+			notification->SetUserAlertNofification(Notification::Alert_ConfigOutOfDate);
+			QueueNotification( notification );
+		}
 	}
 }

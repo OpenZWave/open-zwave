@@ -51,6 +51,8 @@ namespace OpenZWave
 	class Thread;
 	class ControllerReplication;
 	class Notification;
+	class DNSThread;
+	struct DNSLookup;
 
 	/** \brief The Driver class handles communication between OpenZWave
 	 *  and a device attached via a serial port (typically a controller).
@@ -62,6 +64,7 @@ namespace OpenZWave
 		friend class Group;
 		friend class CommandClass;
 		friend class ControllerReplication;
+		friend class DNSThread;
 		friend class Value;
 		friend class ValueStore;
 		friend class ValueButton;
@@ -149,6 +152,8 @@ namespace OpenZWave
 		void RemoveQueues( uint8 const _nodeId );
 
 		Thread*					m_driverThread;			/**< Thread for reading from the Z-Wave controller, and for creating and managing the other threads for sending, polling etc. */
+		DNSThread*				m_dns;					/**< DNSThread Class */
+		Thread*					m_dnsThread;			/**< Thread for DNS Queries */
 		Mutex*					m_initMutex;            /**< Mutex to ensure proper ordering of initialization/deinitialization */
 		bool					m_exit;					/**< Flag that is set when the application is exiting. */
 		bool					m_init;					/**< Set to true once the driver has been initialised */
@@ -845,6 +850,17 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		uint8 m_nonceReportSent;
 		uint8 m_nonceReportSentAttempt;
 		bool m_inclusionkeySet;
+
+
+	//-----------------------------------------------------------------------------
+	//	DNS Related
+	//-----------------------------------------------------------------------------
+
+	public:
+		bool CheckConfigRevision(Node *);
+	private:
+		void processConfigRevision(DNSLookup *);
+
 
 	};
 
