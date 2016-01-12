@@ -928,6 +928,53 @@ namespace OpenZWaveDotNet
 		 */
 		String^ GetNodeQueryStage( uint32 homeId, uint8 nodeId ) { return gcnew String(Manager::Get()->GetNodeQueryStage( homeId, nodeId).c_str()); }
 
+		/**
+		 * \brief Get the node device type as reported in the Z-Wave+ Info report.
+		 * \param homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param nodeId The ID of the node to query.
+		 * \return the node's DeviceType
+		 */
+		uint16 GetNodeDeviceType( uint32 homeId, uint8 nodeId ) { return Manager::Get()->GetNodeDeviceType(homeId, nodeId); };
+
+		/**
+		 * \brief Get the node device type as reported in the Z-Wave+ Info report.
+		 * \param homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param nodeId The ID of the node to query.
+		 * \return the node's Device Type as a string.
+		 */
+		String^ GetNodeDeviceTypeString( uint32 homeId, uint8 nodeId ) { return gcnew String(Manager::Get()->GetNodeDeviceTypeString( homeId, nodeId).c_str()); };
+
+		/**
+		 * \brief Get the node role as reported in the Z-Wave+ Info report.
+		 * \param homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param nodeId The ID of the node to query.
+		 * \return the node's user icon.
+		 */
+		uint8 GetNodeRole( uint32 homeId, uint8 nodeId ) { return Manager::Get()->GetNodeRole(homeId, nodeId); };
+
+		/**
+		 * \brief Get the node role as reported in the Z-Wave+ Info report.
+		 * \param homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param nodeId The ID of the node to query.
+		 * \return the node's role type as a string
+		 */
+		String^ GetNodeRoleString( uint32 homeId, uint8 nodeId ) { return gcnew String(Manager::Get()->GetNodeRoleString( homeId, nodeId).c_str()); };
+
+		/**
+		 * \brief Get the node PlusType as reported in the Z-Wave+ Info report.
+		 * \param homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param nodeId The ID of the node to query.
+		 * \return the node's PlusType
+		 */
+		uint8 GetNodePlusType( uint32 homeId, uint8 nodeId ) { return Manager::Get()->GetNodePlusType(homeId, nodeId); };
+		/**
+		 * \brief Get the node PlusType as reported in the Z-Wave+ Info report.
+		 * \param homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param nodeId The ID of the node to query.
+		 * \return the node's PlusType as a string
+		 */
+		String^ GetNodePlusTypeString( uint32 homeId, uint8 nodeId ) { return gcnew String(Manager::Get()->GetNodePlusTypeString( homeId, nodeId).c_str()); };
+
 	/*@}*/
 
 	//-----------------------------------------------------------------------------
