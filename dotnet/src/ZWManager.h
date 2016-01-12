@@ -1995,10 +1995,16 @@ namespace OpenZWaveDotNet
 		uint8 GetAllScenes( [Out] cli::array<Byte>^ %sceneIds );
 
 		/**
+		 * \brief Remove all the SceneIds.
+		 * \param homeId The Home ID of the Z-Wave controller. 0 for all devices from all scenes.
+		 * \see GetAllScenes, GetNumScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
+		 */
+		void RemoveAllScenes( uint32 homeId ) { Manager::Get()->RemoveAllScenes(homeId); }
+
+		/**
 		 * \brief Create a new Scene passing in Scene ID
 		 * \return uint8 Scene ID used to reference the scene. 0 is failure result.
 		 * \see GetNumScenes, GetAllScenes, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
-
 		 */
 		uint8 CreateScene(){ return Manager::Get()->CreateScene(); }
 
