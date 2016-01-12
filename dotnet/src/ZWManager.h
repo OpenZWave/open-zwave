@@ -1187,6 +1187,14 @@ namespace OpenZWaveDotNet
 		bool RefreshValue( ZWValueID^ id ){ return Manager::Get()->RefreshValue(id->CreateUnmanagedValueID()); }
 
 		/**
+		 * \brief determine if value changes upon a refresh should be verified.  If so, the
+		 * library will immediately refresh the value a second time whenever a change is observed.  This helps to filter
+		 * out spurious data reported occasionally by some devices.
+		 * \param _id The unique identifier of the value whose changes should or should not be verified.
+		 */
+		bool GetChangeVerified( ZWValueID^ id ) { return Manager::Get()->GetChangeVerified(id->CreateUnmanagedValueID()); };
+		
+		/**
 		 * \brief Sets a flag indicating whether value changes noted upon a refresh should be verified.  If so, the
 		 * library will immediately refresh the value a second time whenever a change is observed.  This helps to filter
 		 * out spurious data reported occasionally by some devices.
