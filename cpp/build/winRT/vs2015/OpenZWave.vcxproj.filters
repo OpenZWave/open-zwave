@@ -211,9 +211,6 @@
     <ClInclude Include="..\..\..\src\Defs.h">
       <Filter>Main</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\DoxygenMain.h">
-      <Filter>Main</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\Driver.h">
       <Filter>Main</Filter>
     </ClInclude>
@@ -351,6 +348,15 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\value_classes\ValueString.h">
       <Filter>Value Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\DNSThread.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\platform\DNS.h">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\platform\winRT\DNSImpl.h">
+      <Filter>Platform\WinRT</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -659,6 +665,15 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\value_classes\ValueString.cpp">
       <Filter>Value Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\DNSThread.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\platform\DNS.cpp">
+      <Filter>Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\platform\winRT\DNSImpl.cpp">
+      <Filter>Platform\WinRT</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
