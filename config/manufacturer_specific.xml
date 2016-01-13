@@ -582,17 +582,23 @@
 	</Manufacturer>
 	<Manufacturer id="0159" name="Qubino">
 		<Product type="0001" id="0001" name="ZMNHDA2 Flush Dimmer" config="qubino/ZMNHDA2.xml"/>
-		<Product type="0001" id="0051" name="ZMNHDD1 Z-Wave Plus Flush Dimmer" config="qubino/ZMNHDD1.xml"/>
 		<Product type="0002" id="0001" name="ZMNHBA2 Flush 2 Relays" config="qubino/ZMNHBA2.xml"/>
-		<Product type="0002" id="0051" name="ZMNHBD2 Flush 2 Relays" config="qubino/ZMNHBD2.xml"/>
 		<Product type="0002" id="0002" name="ZMNHAA2 Flush 1 Relay" config="qubino/ZMNHAA2.xml"/>
-		<Product type="0002" id="0052" name="ZMNHAD1 Flush 1 Relay" config="qubino/ZMNHAD1.xml"/>
-		<Product type="0002" id="0053" name="ZMNHND1 Flush 1D relay" config="qubino/ZMNHND1.xml"/>
 		<Product type="0003" id="0002" name="ZMNHCA2 Flush Shutter" config="qubino/ZMNHCA2.xml"/>
-                <Product type="0003" id="0052" name="ZMNHCD Flush Shutter" config="qubino/ZMNHCD.xml"/>
 		<Product type="0004" id="0001" name="ZMNHJA2 Flush Dimmer Fil Pilote" config="qubino/ZMNHJA2.xml"/>
-		<Product type="0004" id="0051" name="ZMNHJD1 Flush Pilot Wire Dimmer" config="qubino/ZMNHJD1.xml"/>
-		<Product type="0005" id="0001" name="ZMNHIA2 Flush on/off thermostat" config="qubino/ZMNHIA2.xml"/>
+		<Product type="0005" id="0001" name="ZMNHIA2 Flush On/Off Thermostat" config="qubino/ZMNHIA2.xml"/>
+		
+		<Product type="0001" id="0051" name="ZMNHDD1 Flush Dimmer Plus" config="qubino/ZMNHDD1.xml"/>
+		<Product type="0004" id="0051" name="ZMNHJD1 Flush Dimmer Fil Pilote Plus" config="qubino/ZMNHJD1.xml"/>
+		<Product type="0001" id="0052" name="ZMNHSD1 DIN Dimmer Plus" config="qubino/ZMNHSD1.xml"/>
+		<Product type="0004" id="0052" name="ZMNHUD1 DIN Fil Pilote Plus" config="qubino/ZMNHUD1.xml"/>
+		<Product type="0005" id="0051" name="ZMNHID1 Flush On/Off Thermostat Plus" config="qubino/ZMNHID1.xml"/>
+		<Product type="0005" id="0053" name="ZMNHLD1 Flush PWM Thermostat Plus" config="qubino/ZMNHLD1.xml"/>
+		<Product type="0002" id="0051" name="ZMNHBD1 Flush 2 Relays Plus" config="qubino/ZMNHBD1.xml"/>
+		<Product type="0002" id="0052" name="ZMNHAD1 Flush 1 Relay Plus" config="qubino/ZMNHAD1.xml"/>
+		<Product type="0002" id="0053" name="ZMNHND1 Flush 1D relay Plus" config="qubino/ZMNHND1.xml"/>
+		<Product type="0003" id="0052" name="ZMNHCD1 Flush Shutter Plus" config="qubino/ZMNHCD1.xml"/>
+		<Product type="0003" id="0053" name="ZMNHOD1 Flush Shutter DC Plus" config="qubino/ZMNHOD1.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0130" name="Quby">
 		<Product type="0001" id="0001" name="Energy Management System"/>
