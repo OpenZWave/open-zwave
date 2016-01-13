@@ -87,7 +87,7 @@
     <ClInclude Include="..\..\..\src\command_classes\Version.h" />
     <ClInclude Include="..\..\..\src\command_classes\WakeUp.h" />
     <ClInclude Include="..\..\..\src\Defs.h" />
-    <ClInclude Include="..\..\..\src\DoxygenMain.h" />
+    <ClInclude Include="..\..\..\src\DNSThread.h" />
     <ClInclude Include="..\..\..\src\Driver.h" />
     <ClInclude Include="..\..\..\src\Group.h" />
     <ClInclude Include="..\..\..\src\Manager.h" />
@@ -97,6 +97,7 @@
     <ClInclude Include="..\..\..\src\Options.h" />
     <ClInclude Include="..\..\..\src\OZWException.h" />
     <ClInclude Include="..\..\..\src\platform\Controller.h" />
+    <ClInclude Include="..\..\..\src\platform\DNS.h" />
     <ClInclude Include="..\..\..\src\platform\Event.h" />
     <ClInclude Include="..\..\..\src\platform\FileOps.h" />
     <ClInclude Include="..\..\..\src\platform\Log.h" />
@@ -107,6 +108,7 @@
     <ClInclude Include="..\..\..\src\platform\Thread.h" />
     <ClInclude Include="..\..\..\src\platform\TimeStamp.h" />
     <ClInclude Include="..\..\..\src\platform\Wait.h" />
+    <ClInclude Include="..\..\..\src\platform\winRT\DNSImpl.h" />
     <ClInclude Include="..\..\..\src\platform\winRT\EventImpl.h" />
     <ClInclude Include="..\..\..\src\platform\winRT\FileOpsImpl.h" />
     <ClInclude Include="..\..\..\src\platform\winRT\HidControllerWinRT.h" />
@@ -220,6 +222,7 @@
     <ClCompile Include="..\..\..\src\command_classes\UserCode.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\Version.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\WakeUp.cpp" />
+    <ClCompile Include="..\..\..\src\DNSThread.cpp" />
     <ClCompile Include="..\..\..\src\Driver.cpp" />
     <ClCompile Include="..\..\..\src\Group.cpp" />
     <ClCompile Include="..\..\..\src\Manager.cpp" />
@@ -228,6 +231,7 @@
     <ClCompile Include="..\..\..\src\Notification.cpp" />
     <ClCompile Include="..\..\..\src\Options.cpp" />
     <ClCompile Include="..\..\..\src\platform\Controller.cpp" />
+    <ClCompile Include="..\..\..\src\platform\DNS.cpp" />
     <ClCompile Include="..\..\..\src\platform\Event.cpp" />
     <ClCompile Include="..\..\..\src\platform\FileOps.cpp" />
     <ClCompile Include="..\..\..\src\platform\Log.cpp" />
@@ -237,6 +241,7 @@
     <ClCompile Include="..\..\..\src\platform\Thread.cpp" />
     <ClCompile Include="..\..\..\src\platform\TimeStamp.cpp" />
     <ClCompile Include="..\..\..\src\platform\Wait.cpp" />
+    <ClCompile Include="..\..\..\src\platform\winRT\DNSImpl.cpp" />
     <ClCompile Include="..\..\..\src\platform\winRT\EventImpl.cpp" />
     <ClCompile Include="..\..\..\src\platform\winRT\FileOpsImpl.cpp" />
     <ClCompile Include="..\..\..\src\platform\winRT\HidControllerWinRT.cpp" />
@@ -634,6 +639,7 @@ CALL $(ProjectDir)\..\..\windows\GIT-VS-VERSION-GEN.bat "$(ProjectDir)\" "..\..\
 Xcopy /E /I /Y ..\..\..\..\config config\
 exit 0</Command>
     </PreBuildEvent>
+    <Lib />
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm'">
     <ClCompile>

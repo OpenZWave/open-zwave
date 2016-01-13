@@ -70,7 +70,7 @@ Event* _exitEvent
 	while( true )
 	{
 		// DNSThread has been initialised
-		uint32 count = 2;
+		const uint32 count = 2;
 
 		Wait* waitObjects[count];
 
