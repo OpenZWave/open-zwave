@@ -34,7 +34,6 @@
 
 #include "Defs.h"
 #include "Group.h"
-#include "Http.h"
 #include "value_classes/ValueID.h"
 #include "Node.h"
 #include "platform/Event.h"
@@ -54,6 +53,8 @@ namespace OpenZWave
 	class Notification;
 	class DNSThread;
 	struct DNSLookup;
+	class i_HttpClient;
+	struct HttpDownload;
 
 	/** \brief The Driver class handles communication between OpenZWave
 	 *  and a device attached via a serial port (typically a controller).
@@ -66,6 +67,7 @@ namespace OpenZWave
 		friend class CommandClass;
 		friend class ControllerReplication;
 		friend class DNSThread;
+		friend class i_HttpClient;
 		friend class Value;
 		friend class ValueStore;
 		friend class ValueButton;
@@ -870,6 +872,7 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		bool SetHttpClient(i_HttpClient *client);
 		bool StartDownload(string url);
 	private:
+		void processDownload(HttpDownload *);
 		i_HttpClient *m_httpClient;
 
 

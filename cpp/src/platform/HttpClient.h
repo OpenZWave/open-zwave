@@ -194,6 +194,7 @@ public:
     void SetAcceptEncoding(const std::string& s) { _accept_encoding = s; }
     void SetFollowRedirect(bool follow) { _followRedir = follow; }
     void SetAlwaysHandle(bool h) { _alwaysHandle = h; }
+    void SetDownloadFile(std::string filename) { _filename = filename; }
 
     bool Download(const std::string& url, const char *extraRequest = NULL, void *user = NULL, const POST *post = NULL);
     bool SendRequest(Request& what, bool enqueue);
@@ -217,7 +218,7 @@ protected:
     virtual void _OnCloseInternal();
     virtual void _OnClose();
     virtual void _OnData(); // data received callback. Internal, should only be overloaded to call _OnRecv()
-    virtual void _OnRecv(void *buf, unsigned int size) = 0;
+    virtual void _OnRecv(void *buf, unsigned int size);
     virtual void _OnOpen(); // called when opene
     virtual bool _OnUpdate(); // called before reading from the socket
 
@@ -256,6 +257,8 @@ protected:
     bool _mustClose; // keep-alive specified, or not
     bool _followRedir; // Default true. Follow 3xx redirects if this is set.
     bool _alwaysHandle; // Also deliver to _OnRecv() if a non-success code was received.
+    std::string _filename;
+    FILE* _pFile;
 };
 
 
@@ -284,7 +287,7 @@ public:
         bool deleteWhenDone;
         // To be extended
     };
-    
+
     typedef std::map<TcpSocket*, SocketSetData> Store;
 
     Store _store;

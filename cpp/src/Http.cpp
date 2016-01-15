@@ -29,36 +29,125 @@
 #include <string>
 #include <sstream>
 #include <iomanip>
+#include <cstdio>
 
+#include "Driver.h"
 #include "Http.h"
-
+#include "platform/HttpClient.h"
+#include "Utils.h"
 
 using namespace OpenZWave;
 
+i_HttpClient::i_HttpClient
+(
+		Driver *driver
+):
+m_driver(driver)
+{
+};
 
+void i_HttpClient::FinishDownload(HttpDownload *transfer) {
+	m_driver->processDownload(transfer);
+}
 
 
 
 HttpClient::HttpClient
 (
-)
+		OpenZWave::Driver *drv
+):
+i_HttpClient(drv),
+m_exitEvent( new Event() ),
+m_httpThread ( new Thread( "HttpThread" ) ),
+m_httpThreadRunning(false),
+m_httpMutex ( new Mutex() ),
+m_httpDownloadEvent ( new Event() )
 {
-std::cout << "HttpClient Constructed" << std::endl;
 }
 
 HttpClient::~HttpClient
 (
 )
 {
-	std::cout << "HttpClient Destoryed" << std::endl;
-
+	m_exitEvent->Set();
 }
+
+
 
 bool HttpClient::StartDownload
 (
-string url
+		HttpDownload *transfer
 )
 {
-	std::cout << "Downloading " << url << std::endl;
+
+	if (!m_httpThreadRunning)
+		m_httpThread->Start(HttpClient::HttpThreadProc, this);
+
+	LockGuard LG(m_httpMutex);
+	m_httpDownlist.push_back(transfer);
+	m_httpDownloadEvent->Set();
 	return true;
+}
+void HttpClient::HttpThreadProc
+(
+		Event* _exitEvent,
+		void* _context
+)
+{
+	HttpClient *client = (HttpClient *)_context;
+	client->m_httpThreadRunning = true;
+
+	OpenZWave::InitNetwork();
+	bool keepgoing = true;
+	while( keepgoing )
+	{
+		const uint32 count = 2;
+
+		Wait* waitObjects[count];
+
+		int32 timeout = Wait::Timeout_Infinite;
+		timeout = 10000;
+
+		waitObjects[0] = client->m_exitEvent;					// Thread must exit.
+		waitObjects[1] = client->m_httpDownloadEvent;			// Http Request
+		// Wait for something to do
+
+		int32 res = Wait::Multiple( waitObjects, count, timeout );
+
+		switch (res) {
+			case -1: /* timeout */
+				Log::Write(LogLevel_Info, "HttpThread Exiting. No Transfers in timeout period");
+				keepgoing = false;
+				break;
+			case 0: /* exitEvent */
+				Log::Write(LogLevel_Info, "HttpThread Exiting.");
+				keepgoing = false;
+				break;
+			case 1: /* HttpEvent */
+				HttpDownload *download;
+				{
+					LockGuard LG(client->m_httpMutex);
+					download = client->m_httpDownlist.front();
+					client->m_httpDownlist.pop_front();
+					client->m_httpDownloadEvent->Reset();
+				}
+				HttpSocket *ht = new HttpSocket();
+			    ht->SetKeepAlive(0);
+			    ht->SetBufsizeIn(64 * 1024);
+			    ht->SetDownloadFile(download->filename);
+			    ht->Download(download->url);
+			    while (ht->isOpen())
+			    	ht->update();
+
+			    if (ht->IsSuccess())
+			    	download->transferStatus = HttpDownload::Ok;
+			    else
+			    	download->transferStatus = HttpDownload::Failed;
+			    delete ht;
+			    client->FinishDownload(download);
+				break;
+		}
+	}
+    OpenZWave::StopNetwork();
+    client->m_httpThreadRunning = false;
 }
