@@ -29,36 +29,77 @@
 #define _Http_H
 
 #include "Defs.h"
+#include "platform/Event.h"
+#include "platform/Thread.h"
+#include "platform/Mutex.h"
 
 namespace OpenZWave
 {
 
-/* This is a abstract class you can implement if you wish to override the built in HTTP Client
- * Code in OZW with your own code.
- *
- * The built in Code uses threads to download updated files to a temporary file
- * and then this class moves the files into the correct place.
- *
- */
+	/* This is a abstract class you can implement if you wish to override the built in HTTP Client
+	 * Code in OZW with your own code.
+	 *
+	 * The built in Code uses threads to download updated files to a temporary file
+	 * and then this class moves the files into the correct place.
+	 *
+	 */
 
-class i_HttpClient {
-public:
-	i_HttpClient() {};
-	virtual ~i_HttpClient() {};
-	virtual bool StartDownload(string url) = 0;
-};
+	struct HttpDownload {
+			string filename;
+			string url;
+			enum DownloadType
+			{
+				None,
+				Config
+			};
+			DownloadType operation;
+			enum Status
+			{
+				Ok,
+				Failed
+			};
+			Status transferStatus;
+
+	};
+
+	class Driver;
+
+	class i_HttpClient {
+		public:
+			i_HttpClient(Driver *);
+			virtual ~i_HttpClient() {};
+			virtual bool StartDownload(HttpDownload *transfer) = 0;
+			void FinishDownload(HttpDownload *transfer);
+		private:
+			Driver* 	m_driver;
+	};
 
 
-/* this is OZW's implementation of a Http Client. It uses threads to download Config Files in the background.
- *
- */
+	/* this is OZW's implementation of a Http Client. It uses threads to download Config Files in the background.
+	 *
+	 */
 
-class HttpClient : public i_HttpClient {
-	public:
-	HttpClient();
-	~HttpClient();
-	bool StartDownload(string url);
-};
+
+
+
+	class HttpClient : public i_HttpClient {
+		public:
+			HttpClient(Driver *);
+			~HttpClient();
+			bool StartDownload(HttpDownload *transfer);
+		private:
+
+			static void HttpThreadProc(Event* _exitEvent,  void* _context);
+			Driver* 	m_driver;
+			Event* 		m_exitEvent;
+
+			Thread*		m_httpThread;
+			bool		m_httpThreadRunning;
+			Mutex*			  m_httpMutex;
+			list<HttpDownload *> m_httpDownlist;
+			Event*			  m_httpDownloadEvent;
+
+	};
 
 
 

@@ -59,7 +59,6 @@
 #else
 #  define STRNICMP strncasecmp
 #endif
-#define _DEBUG
 #ifdef _DEBUG
 #  define traceprint(...) {printf(__VA_ARGS__);}
 #else
@@ -107,7 +106,7 @@ struct SSLCtx
     {
         const char *pers = "minihttp";
         const size_t perslen = strlen(pers);
-        
+
         int err = ctr_drbg_init(&ctr_drbg, entropy_func, &entropy, (unsigned char *)pers, perslen);
         if(err)
         {
@@ -115,7 +114,7 @@ struct SSLCtx
             return false;
         }
         _inited |= 1;
-        
+
         err = ssl_init(&ssl);
         if(err)
         {
@@ -574,7 +573,7 @@ unsigned int port
     traceprint("TcpSocket::open(): host = [%s], port = %d\n", host, port);
 
     assert(!SOCKETVALID(_s));
-    
+
     _recvSize = 0;
 
     {
@@ -743,8 +742,10 @@ unsigned int len
         }
         else if(ret < 0)
         {
-            int err = ret == -1 ? _GetError() : ret;
+#ifdef _DEBUG
+        	int err = ret == -1 ? _GetError() : ret;
             traceprint("SendBytes: error %d: %s\n", err, _GetErrorStr(err).c_str());
+#endif
             close();
             return false;
         }
@@ -930,7 +931,8 @@ _inProgress(false),
 _chunkedTransfer(false),
 _mustClose(true),
 _followRedir(true),
-_alwaysHandle(false)
+_alwaysHandle(false),
+_filename()
 {
 }
 
@@ -984,6 +986,10 @@ void *user,
 const POST *post
 )
 {
+	if (_filename.length() == 0) {
+		traceprint("No Filename Set\n");
+		return false;
+	}
     Request req;
     req.user = user;
     if(post)
@@ -1233,7 +1239,7 @@ void HttpSocket::_ProcessChunk
             return;
         }
         term += 2; // skip CRLF
-        
+
         // when we are here, the (next) chunk header was completely received.
         chunksize = strtoul(_readptr, NULL, 16);
         _remaining = chunksize + 2; // the http protocol specifies that each chunk has a trailing CRLF
@@ -1314,7 +1320,7 @@ bool HttpSocket::_HandleStatus
 
     const char *encoding = Hdr("transfer-encoding");
     _chunkedTransfer = encoding && !STRNICMP(encoding, "chunked", 7);
-    
+
     const char *conn = Hdr("connection"); // if its not keep-alive, server will close it, so we can too
     _mustClose = !conn || STRNICMP(conn, "keep-alive", 10);
 
@@ -1456,12 +1462,27 @@ void HttpSocket::_OnData
     // otherwise, the server sent just the header, with the data following in the next packet
 }
 
+void HttpSocket::_OnRecv(void *buf, unsigned int size)
+    {
+        if(!size)
+            return;
+
+        if (!_pFile)
+        	_pFile = fopen( _filename.c_str(), "w" );
+
+
+        fwrite(buf, size, 1, _pFile );
+    }
+
+
 void HttpSocket::_OnClose
 (
 )
 {
     if(!ExpectMoreData())
         _FinishRequest();
+    if (_pFile)
+    	fclose(_pFile);
 }
 
 void HttpSocket::_OnRecvInternal

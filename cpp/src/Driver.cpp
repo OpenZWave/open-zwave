@@ -34,6 +34,7 @@
 #include "Scene.h"
 #include "ZWSecurity.h"
 #include "DNSThread.h"
+#include "Http.h"
 
 #include "platform/Event.h"
 #include "platform/Mutex.h"
@@ -207,8 +208,7 @@ m_routedbusy( 0 ),
 m_broadcastReadCnt( 0 ),
 m_broadcastWriteCnt( 0 ),
 m_nonceReportSent( 0 ),
-m_nonceReportSentAttempt( 0 ),
-m_httpClient( new HttpClient() )
+m_nonceReportSentAttempt( 0 )
 {
 	// set a timestamp to indicate when this driver started
 	TimeStamp m_startTime;
@@ -242,6 +242,10 @@ m_httpClient( new HttpClient() )
 	Options::Get()->GetOptionAsBool( "NotifyTransactions", &m_notifytransactions );
 	Options::Get()->GetOptionAsInt( "PollInterval", &m_pollInterval );
 	Options::Get()->GetOptionAsBool( "IntervalBetweenPolls", &m_bIntervalBetweenPolls );
+
+	m_httpClient = new HttpClient(this);
+
+	this->StartDownload("http://www.dynam.ac/");
 }
 
 //-----------------------------------------------------------------------------
@@ -6958,6 +6962,7 @@ DNSLookup *result
 			QueueNotification( notification );
 		}
 	}
+	delete result;
 }
 
 
@@ -6977,5 +6982,19 @@ bool Driver::StartDownload
 string url
 )
 {
-	return m_httpClient->StartDownload(url);
+	HttpDownload *download = new HttpDownload();
+	download->url = url;
+	download->filename = "/tmp/test.txt";
+	download->operation = HttpDownload::Config;
+	Log::Write(LogLevel_Info, "Download Starting for %s saving to %s", download->url.c_str(), download->filename.c_str());
+
+	return m_httpClient->StartDownload(download);
 }
+
+void Driver::processDownload(HttpDownload *download) {
+
+	Log::Write(LogLevel_Info, "Download Finished: %s", download->filename.c_str());
+
+	delete download;
+}
+
