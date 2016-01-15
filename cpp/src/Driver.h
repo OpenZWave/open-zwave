@@ -34,6 +34,7 @@
 
 #include "Defs.h"
 #include "Group.h"
+#include "Http.h"
 #include "value_classes/ValueID.h"
 #include "Node.h"
 #include "platform/Event.h"
@@ -860,6 +861,16 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		bool CheckConfigRevision(Node *);
 	private:
 		void processConfigRevision(DNSLookup *);
+
+	//-----------------------------------------------------------------------------
+	//	HTTP Client Related
+	//-----------------------------------------------------------------------------
+
+	public:
+		bool SetHttpClient(i_HttpClient *client);
+		bool StartDownload(string url);
+	private:
+		i_HttpClient *m_httpClient;
 
 
 	};

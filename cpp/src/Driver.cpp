@@ -207,7 +207,8 @@ m_routedbusy( 0 ),
 m_broadcastReadCnt( 0 ),
 m_broadcastWriteCnt( 0 ),
 m_nonceReportSent( 0 ),
-m_nonceReportSentAttempt( 0 )
+m_nonceReportSentAttempt( 0 ),
+m_httpClient( new HttpClient() )
 {
 	// set a timestamp to indicate when this driver started
 	TimeStamp m_startTime;
@@ -6957,4 +6958,24 @@ DNSLookup *result
 			QueueNotification( notification );
 		}
 	}
+}
+
+
+bool Driver::SetHttpClient
+(
+i_HttpClient *client
+)
+{
+	if (m_httpClient)
+		delete m_httpClient;
+	m_httpClient = client;
+	return true;
+}
+
+bool Driver::StartDownload
+(
+string url
+)
+{
+	return m_httpClient->StartDownload(url);
 }

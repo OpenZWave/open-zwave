@@ -70,8 +70,11 @@ string &result
    	char outb[1025];
 
 
-
+#ifdef __APPLE_CC__
+    response= res_query(lookup.c_str(), ns_c_in, ns_t_txt, query_buffer, sizeof(query_buffer));
+#else
     response= res_query(lookup.c_str(), C_IN, ns_t_txt, query_buffer, sizeof(query_buffer));
+#endif
     if (response < 0) {
     	Log::Write(LogLevel_Warning, "Error looking up txt Record: %s - %s", lookup.c_str(), hstrerror(h_errno));
     	switch (h_errno) {
