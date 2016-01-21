@@ -408,18 +408,20 @@ void Driver::DriverThreadProc
 		Event* _exitEvent
 )
 {
+#define WAITOBJECTCOUNT 11
+
 	uint32 attempts = 0;
 	while( true )
 	{
 		if( Init( attempts ) )
 		{
 			// Driver has been initialised
-			Wait* waitObjects[11];
-			waitObjects[0] = _exitEvent;				// Thread must exit.
-			waitObjects[1] = m_notificationsEvent;			// Notifications waiting to be sent.
-			waitObjects[2] = m_controller;				// Controller has received data.
-			waitObjects[3] = m_queueEvent[MsgQueue_Command];	// A controller command is in progress.
-			waitObjects[4] = m_queueEvent[MsgQueue_Security];	// Security Related Commands (As they have a timeout)
+			Wait* waitObjects[WAITOBJECTCOUNT];
+			waitObjects[0] = _exitEvent;						// Thread must exit.
+			waitObjects[1] = m_notificationsEvent;				// Notifications waiting to be sent.
+			waitObjects[2] = m_controller;						// Controller has received data.
+			waitObjects[3] = m_queueMsgEvent;					// a DNS and HTTP Event
+			waitObjects[4] = m_queueEvent[MsgQueue_Command];	// A controller command is in progress.
 			waitObjects[5] = m_queueEvent[MsgQueue_NoOp];		// Send device probes and diagnostics messages
 			waitObjects[6] = m_queueEvent[MsgQueue_Controller];	// A multi-part controller command is in progress
 			waitObjects[7] = m_queueEvent[MsgQueue_WakeUp];		// A node has woken. Pending messages should be sent.
@@ -434,14 +436,14 @@ void Driver::DriverThreadProc
 			while( true )
 			{
 				Log::Write( LogLevel_StreamDetail, "      Top of DriverThreadProc loop." );
-				uint32 count = 11;
+				uint32 count = WAITOBJECTCOUNT;
 				int32 timeout = Wait::Timeout_Infinite;
 
 				// If we're waiting for a message to complete, we can only
-				// handle incoming data, notifications and exit events.
+				// handle incoming data, notifications, DNS/HTTP  and exit events.
 				if( m_waitingForAck || m_expectedCallbackId || m_expectedReply )
 				{
-					count = 3;
+					count = 4;
 					timeout = m_waitingForAck ? ACK_TIMEOUT : retryTimeStamp.TimeRemaining();
 					if( timeout < 0 )
 					{
@@ -450,7 +452,7 @@ void Driver::DriverThreadProc
 				}
 				else if( m_currentControllerCommand != NULL )
 				{
-					count = 7;
+					count = 6;
 				}
 				else
 				{
@@ -493,6 +495,12 @@ void Driver::DriverThreadProc
 					{
 						// Data has been received
 						ReadMsg();
+						break;
+					}
+					case 3:
+					{
+						// a DNS or HTTP Event has occured
+						ProcessEventMsg();
 						break;
 					}
 					default:
@@ -6991,10 +6999,32 @@ string url
 	return m_httpClient->StartDownload(download);
 }
 
-void Driver::processDownload(HttpDownload *download) {
+void Driver::processDownload
+(
+HttpDownload *download
+)
+{
 
 	Log::Write(LogLevel_Info, "Download Finished: %s", download->filename.c_str());
 
 	delete download;
+}
+
+void Driver::ProcessEventMsg
+(
+)
+{
+	EventMsg *event;
+	{
+		LockGuard LG(m_eventMutex);
+		event = m_eventQueueMsg.front();
+		m_eventQueueMsg.pop_front();
+	}
+	switch (event->type) {
+		case EventMsg::Event_DNS:
+			break;
+		case EventMsg::Event_Http:
+			break;
+	}
 }
 
