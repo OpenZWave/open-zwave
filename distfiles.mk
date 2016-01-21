@@ -32,6 +32,7 @@ DISTFILES =	.gitignore \
 	config/aeotec/doorwindow.xml \
 	config/aeotec/drycontactsensor.xml \
 	config/aeotec/dsd31.xml \
+	config/aeotec/dws6.xml \
 	config/aeotec/hdss_gen5.xml \
 	config/aeotec/hem.xml \
 	config/aeotec/hemg2.xml \
