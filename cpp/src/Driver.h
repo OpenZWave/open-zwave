@@ -572,7 +572,6 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		enum MsgQueue
 		{
 			MsgQueue_Command = 0,
-			MsgQueue_Security,
 			MsgQueue_NoOp,
 			MsgQueue_Controller,
 			MsgQueue_WakeUp,
@@ -853,6 +852,31 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		uint8 m_nonceReportSent;
 		uint8 m_nonceReportSentAttempt;
 		bool m_inclusionkeySet;
+
+	//-----------------------------------------------------------------------------
+	//	Event Signalling for DNS and HTTP Threads
+	//-----------------------------------------------------------------------------
+	private:
+		struct EventMsg {
+			enum EventType {
+				Event_DNS = 1,
+				Event_Http
+			};
+			EventType type;
+			union {
+					DNSLookup *lookup;
+					HttpDownload *httpdownload;
+			} event;
+		};
+
+		void ProcessEventMsg();
+
+
+		OPENZWAVE_EXPORT_WARNINGS_OFF
+				list<EventMsg *>			m_eventQueueMsg;
+		OPENZWAVE_EXPORT_WARNINGS_ON
+				Event*					m_queueMsgEvent;				// Events for each queue, which are signalled when the queue is not empty
+				Mutex*					m_eventMutex;						// Serialize access to the queues
 
 
 	//-----------------------------------------------------------------------------
