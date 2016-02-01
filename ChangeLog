@@ -4,6 +4,7 @@ Version 1.5
  - Pull Request #750 - Fix FreeBSD 10.1 and 10.2 Builds from stromnet (Justin)
  - Pull Request #751 - Fibaro FGD212 Australia Codes from daemondazz (Justin)
  - Pull Request #752 - Devolo Home Control Radiator Thermostat from blitzkneisser (Justin)
+ - Pull Request #753 - Fix Aeotec Minimote Default Value from nayrnet (Justin)
 
 Version 1.4
  - Released 10th Jan, 2016
