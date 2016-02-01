@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Product xmlns='http://code.google.com/p/open-zwave/'>
+  <!-- Configuration -->
+  <CommandClass id="112">
+  </CommandClass>
+
+  <!-- Association Groups -->
+  <CommandClass id="133">
+    <Associations>
+    </Associations>
+  </CommandClass>
+
+</Product>
