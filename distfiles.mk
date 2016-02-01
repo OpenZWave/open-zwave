@@ -161,15 +161,22 @@ DISTFILES =	.gitignore \
 	config/qubino/ZMNHAA2.xml \
 	config/qubino/ZMNHAD1.xml \
 	config/qubino/ZMNHBA2.xml \
+	config/qubino/ZMNHBD1.xml \
 	config/qubino/ZMNHBD2.xml \
 	config/qubino/ZMNHCA2.xml \
 	config/qubino/ZMNHCD.xml \
+	config/qubino/ZMNHCD1.xml \
 	config/qubino/ZMNHDA2.xml \
 	config/qubino/ZMNHDD1.xml \
 	config/qubino/ZMNHIA2.xml \
+	config/qubino/ZMNHID1.xml \
 	config/qubino/ZMNHJA2.xml \
 	config/qubino/ZMNHJD1.xml \
+	config/qubino/ZMNHLD1.xml \
 	config/qubino/ZMNHND1.xml \
+	config/qubino/ZMNHOD1.xml \
+	config/qubino/ZMNHSD1.xml \
+	config/qubino/ZMNHUD1.xml \
 	config/rcs/em52-zw.xml \
 	config/rcs/pm12-zw.xml \
 	config/rcs/therm0005.xml \
