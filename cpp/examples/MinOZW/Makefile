@@ -40,11 +40,17 @@ endif
 
 # Dup from main makefile, but that is not included when building here..
 ifeq ($(UNAME),FreeBSD)
-ifeq (,$(wildcard /usr/include/iconv.h))
+LDFLAGS+= -lusb
+
+ifeq ($(shell test $$(uname -U) -ge 1002000; echo $$?),1)
+ifeq (,$(wildcard /usr/local/include/iconv.h))
+$(error FreeBSD pre 10.2: Please install libiconv from ports)
+else
 CFLAGS += -I/usr/local/include
 LDFLAGS+= -L/usr/local/lib -liconv
 endif
-LDFLAGS+= -lusb
+endif
+
 endif
 
 $(OBJDIR)/MinOZW:	$(patsubst %.cpp,$(OBJDIR)/%.o,$(minozwsrc))
