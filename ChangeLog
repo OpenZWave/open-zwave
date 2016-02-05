@@ -11,6 +11,7 @@ Version 1.5
  - Issue #741 - Add new ID's for TZ68 Devices from philosifer (Justin)
  - Pull Request #761 - Add support for Fakro ARZ from pepeEL (Justin)
  - Pull Request #762 - Fix issues with Horstmann Thermostat from russdan (Justin)
+ - Pull Request #764 - Add Dlink DCH-Z510 Siren from pepeEL (Justin)
 
 Version 1.4
  - Released 10th Jan, 2016
