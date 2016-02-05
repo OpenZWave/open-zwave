@@ -14,6 +14,7 @@ Version 1.5
  - Pull Request #764 - Add Dlink DCH-Z510 Siren from pepeEL (Justin)
  - Pull Request #766 - Add zwave.me ZME_05461 Dual load wall switch from koelie (Justin)
  - Pull Request #767 - Correct update param. from manual for Fibaro FGS221 from pepeEL (Justin)
+ - Issue #757 - New ZMNHID1 config file stephaneguillard (Justin)
 
 
 Version 1.4
