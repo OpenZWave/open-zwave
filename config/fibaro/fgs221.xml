@@ -19,11 +19,11 @@
     </Value>
     
     <Value type="short" genre="config" instance="1" index="4" label="Relay 1: OFF-delay time" value="0">
-      <Help>Automatic turning off relay 1 after set time, (0-255) in 10ms increments for FW1.0 to FW2.0, (0-65535) in 100 ms increment for FW2.1+ . Default setting: 0</Help>
+      <Help>Automatic turning off relay 1 after set time. For FW1.0 to FW2.0: [1-255] (10ms - 2,5s)  10ms increments, 0 - Auto off disabled.  Default setting: 20 (200ms). For FW2.1+: [1- 65535] (0,1s – 6553,5s)  100ms increments, 0 - Auto off disabled.  Default setting: 0</Help>
     </Value>
     
     <Value type="short" genre="config" instance="1" index="5" label="Relay 2: OFF-delay time" value="0">
-      <Help>Automatic turning off relay 2 after set time, (0-255) in 10ms increments for FW1.0 to FW2.0, (0-65535) in 100 ms increment for FW2.1+ . Default setting: 0</Help>
+      <Help>Automatic turning off relay 1 after set time. For FW1.0 to FW2.0: [1-255] (10ms - 2,5s)  10ms increments, 0 - Auto off disabled.  Default setting: 20 (200ms). For FW2.1+: [1- 65535] (0,1s – 6553,5s)  100ms increments, 0 - Auto off disabled.  Default setting: 0</Help>
     </Value>
     
     <Value type="list" genre="config" instance="1" index="6" label="Managing the transmission of control commands to the devices from first group of associations (key 1)." value="0" size="1">
