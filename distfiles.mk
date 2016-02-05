@@ -147,6 +147,7 @@ DISTFILES =	.gitignore \
 	config/options.xml \
 	config/options.xsd \
 	config/philio/pan04.xml \
+	config/philio/pan08.xml \
 	config/philio/psm02.xml \
 	config/philio/pst02-1c.xml \
 	config/philio/pst02-b.xml \
