@@ -12,6 +12,8 @@ Version 1.5
  - Pull Request #761 - Add support for Fakro ARZ from pepeEL (Justin)
  - Pull Request #762 - Fix issues with Horstmann Thermostat from russdan (Justin)
  - Pull Request #764 - Add Dlink DCH-Z510 Siren from pepeEL (Justin)
+ - Pull Request #766 - Add zwave.me ZME_05461 Dual load wall switch from koelie (Justin)
+
 
 Version 1.4
  - Released 10th Jan, 2016
