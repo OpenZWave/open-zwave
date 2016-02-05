@@ -9,6 +9,7 @@ Version 1.5
  - Pull Request #759 - Qubino Supplied Config Files (Justin)
  - Add Vision ZF5201 Flood Sensor ID's from Emmanuel Pierre (Justin)
  - Issue #741 - Add new ID's for TZ68 Devices from philosifer (Justin)
+ - Pull RequestR#761 - Add support for Fakro ARZ from pepeEL (Justin)
 
 Version 1.4
  - Released 10th Jan, 2016
