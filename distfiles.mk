@@ -119,6 +119,7 @@ DISTFILES =	.gitignore \
 	config/homeseer/ztroller.xml \
 	config/honeywell/th8320zw1000.xml \
 	config/horstmann/hrt4zw.xml \
+	config/horstmann/scsc17.xml \
 	config/intermatic/ca8900.xml \
 	config/iris/rangeextender.xml \
 	config/leviton/rzi10.xml \
