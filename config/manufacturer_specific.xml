@@ -361,6 +361,14 @@
 	<Manufacturer id="0137" name="Followgood">
     		<Product type="3001" id="0002" name="SWZ-1002 Binary Power Switch"/>
 	</Manufacturer>
+	<Manufacturer id="0084" name="FortrezZ">
+		<Product type="0311" id="0109" name="SSA1 / SSA2 - Siren/Strobe Light Alarm" config="fortrezz/ssa2.xml"/>
+		<Product type="0311" id="010b" name="SSA1 / SSA2 - Siren/Strobe Light Alarm" config="fortrezz/ssa2.xml"/>
+		<Product type="0313" id="010b" name="SSA2 - Siren/Strobe Light Alarm" onfig="fortrezz/ssa2.xml"/>
+		<Product type="0331" id="010b" name="SSA3 - Siren/Strobe Light Alarm" config="fortrezz/ssa3.xml"/>
+		<Product type="0341" id="0205" name="SSA3 - Siren/Strobe Light Alarm" config="fortrezz/ssa3.xml"/>
+		<Product type="0453" id="0110" name="MIMOlite Wireless Interface/Bridge Module" config="fortrezz/mimolite.xml"/>
+	</Manufacturer>
 	<Manufacturer id="0110" name="Frostdale">
 		<Product type="2411" id="0001" name="Nanogrid: FDN2nxx light switch - where n is 1, 2, 3 or 4 buttons"/>
 		<Product type="7333" id="0031" name="Nanogrid: FDN2nxx light switch - where n is 1, 2, 3 or 4 buttons" config="frostdale/fdn2nxx.xml"/>
@@ -375,13 +383,6 @@
 		<Product type="0001" id="0002" name="One Gateway"/>
 		<Product type="0002" id="0002" name="PowerNode 1 port" config="greenwave/powernode1.xml"/>
 		<Product type="0003" id="0004" name="PowerNode 6 port" config="greenwave/powernode6.xml"/>
-	</Manufacturer>
-	<Manufacturer id="0084" name="FortrezZ">
-		<Product type="0311" id="0109" name="SSA1 / SSA2 - Siren/Strobe Light Alarm"/>
-		<Product type="0311" id="010b" name="SSA1 / SSA2 - Siren/Strobe Light Alarm"/>
-		<Product type="0313" id="010b" name="SSA2USR - Siren/Strobe Light Alarm"/>
-		<Product type="0331" id="010b" name="SSA3 - Siren/Strobe Light Alarm"/>
-		<Product type="0453" id="0110" name="MIMOlite Wireless Interface/Bridge Module" config="fortrezz/mimolite.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0017" name="HiTech Automation">
 	</Manufacturer>
