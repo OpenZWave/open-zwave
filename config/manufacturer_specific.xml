@@ -59,6 +59,7 @@
 		<Product type="0003" id="000b" name="Smart Energy Strip"/>
 		<Product type="0003" id="000c" name="Micro Smart Energy Switch" config="aeotec/ses.xml"/>
 		<Product type="0003" id="000d" name="Micro Smart Energy Illuminator"/>
+		<Product type="0003" id="000e" name="Micro Motor Controller" config="aeotec/mmc.xml"/>
 		<Product type="0003" id="000e" name="Micro Motor Controller"/>
 		<Product type="0003" id="0011" name="Micro Double Switch" />
 		<Product type="0003" id="0018" name="Smart Switch (2nd Edition)"/>
@@ -68,7 +69,7 @@
 		<Product type="0003" id="0013" name="Micro Smart Energy Dimmer v2" config="aeotec/msesv2.xml" />
 		<Product type="0003" id="004b" name="Smart Energy Switch Gen5" config="aeotec/ses2.xml"/>
 		<Product type="0003" id="004e" name="Heavy Duty Smart Switch Gen5" config="aeotec/hdss_gen5.xml" />
-		<Product type="0004" id="0025" name="Z-Wave Repeater"/>
+		<Product type="0004" id="0025" name="Z-Wave Repeater" config="aeotec/dsd37.xml" />
 		<Product type="0004" id="0050" name="DSD31 Siren Gen5" config="aeotec/dsd31.xml"/>
         	<!-- US-market products start with type prefix "01" -->
 		<Product type="0101" id="005a" name="Z-Stick Gen5" config="aeotec/zstickgen5.xml"/>
