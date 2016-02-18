@@ -411,10 +411,15 @@
 		<Product type="0001" id="0001" name="ASR-RF Thermostat Receiver"/>
 		<Product type="0001" id="0002" name="AS2-RF Thermostat Transmitter"/>
 		<Product type="0001" id="0003" name="HRT4-ZW Thermostat Transmitter" config="horstmann/hrt4zw.xml"/>
-		<Product type="0003" id="0001" name="ASR-ZW Thermostat Receiver"/>
+		<Product type="0001" id="0004" name="SRT 323 Electronic Room Thermostat and Temperature" config="horstmann/srt323.xml"/>
+		<Product type="0003" id="0001" name="ASR-ZW Thermostat Receiver" config="horstmann/asrzw.xml"/>
 		<Product type="0004" id="0001" name="SCSC17 Thermostat" config="horstmann/scsc17.xml"/>
 		<Product type="000d" id="0001" name="SES 301 Temperature Sensor"/>
+		<Product type="000d" id="0002" name="SES 302 Temperature Sensor" config="horstmann/ses302.xml"/>
+		<Product type="000d" id="0003" name="SES 303 Temperature and Humidity Sensor" config="horstmann/ses303.xml"/>
 		<Product type="000f" id="0001" name="SWM01 Water Meter Sensor"/>
+		<Product type="0010" id="0001" name="SIR321 RF Countdown Timer" config="horstmann/sir321.xml"/>
+		<Product type="0010" id="0002" name="SIR321 RF Countdown Timer with temperature" config="horstmann/sir321.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0121" name="IBR-ZW">
 		<Product type="0001" id="0001" name="I-Bridge Z-Wave Controller"/>
