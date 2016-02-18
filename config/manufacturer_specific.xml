@@ -297,6 +297,8 @@
 	</Manufacturer>
 	<Manufacturer id="0085" name="Fakro">
 		<Product type="0002" id="0002" name="ARZ Roof Window Roller Shutter" />
+		<Product type="0003" id="0001" name="ZWS12 Chain actuator 12VDC" config="fakro/zws12.xml" />
+		<Product type="0003" id="0002" name="ZWS230 Chain actuator 230VAC" config="fakro/zws230.xml" />
 	</Manufacturer>
 	<Manufacturer id="010f" name="FIBARO System">
 		<Product type="0501" id="0101" name="FGBS001 Universal Binary Sensor" config="fibaro/fgbs001.xml" />
