@@ -816,16 +816,17 @@
 	</Manufacturer>
 	<Manufacturer id="0115" name="Z-Wave.Me">
 		<Product type="0001" id="0001" name="Z-Wave USB Stick"/>
-		<Product type="0001" id="0069" name="Key Fob"/>
+		<Product type="0001" id="0069" name="Key Fob" config="zwave.me/kfob.xml"/>
 		<Product type="0002" id="0003" name="Z-Wave USB Stick"/>
 		<Product type="0024" id="0001" name="Floor Thermostat"/>
 		<Product type="0100" id="0001" name="ZME_KFOB 4 Button Key Fob" config="zwave.me/kfob.xml"/>
 		<Product type="0100" id="0004" name="ZME_WCD2 Double Paddle Wall Controller" config="zwave.me/ZME_WCD2.xml"/>
 		<Product type="0100" id="0101" name="ZME_WALLC-S Secure Wall Controller" config="zwave.me/ZME_WALLC-S.xml" />
 		<Product type="0100" id="0102" name="ZME_KFOB-S 4 Button Key Fob" config="zwave.me/ZME_KFOB-S.xml" />
-		<Product type="0100" id="0103" name="ZME_KFOB-C 4 Button Key Fob" config="zwave.me/ZME_KFOB-S.xml" />
+		<Product type="0100" id="0103" name="Popp KFOB-C Remote Control" config="zwave.me/popp_kfob-c.xml" />
 		<Product type="0100" id="0200" name="Smoke Detector"/>
 		<Product type="0100" id="0201" name="Smoke Detector"/>
+		<Product type="0100" id="0400" name="Z-Weather Wind and Weather Sensor" config="zwave.me/zweather.xml"/>
 		<Product type="0200" id="0001" name="iTemp Temperature Sensor" config="zwave.me/iTemp.xml"/>
 		<Product type="0201" id="0001" name="iTemp Temperature Sensor" config="zwave.me/iTemp.xml"/>
 		<Product type="0201" id="0002" name="Thermostat"/>
@@ -835,8 +836,7 @@
 		<Product type="1000" id="0002" name="ZME_06433/05433 Wall Flush-Mountable Dimmer" config="zwave.me/ZME_06433.xml"/>
 		<Product type="1000" id="0003" name="ZME_06436 Motor Control" config="zwave.me/ZME_06436.xml" />
 		<Product type="1000" id="0004" name="ZME_064435 Wall Controller" config="zwave.me/ZME_064435.xml"/>
-                <Product type="1000" id="0100" name="ZME_05461 Dual Load Wall Switch" config="zwave.me/ZME_05461.xml"/>
-		<Product type="1000" id="0200" name="ZME_064381 IP44 Plug-in Switch" config="zwave.me/ZME_064381.xml"/>
+		<Product type="1000" id="0300" name="ZME_RC2 Remote Control" config="zwave.me/ZME_RC2.xml"/>
 		<Product type="1100" id="0002" name="PLDE Plug-in Dimmer"/>
 	</Manufacturer>
 	<Manufacturer id="0147" name="Z-Wave.Me">
