@@ -804,14 +804,14 @@
 		<Product type="2007" id="0703" name="Plug-in Switch"/>
 		<Product type="2008" id="0803" name="ZL7101 Plug-in Dimmer Module"/>
 		<Product type="2009" id="0903" name="ZM1602 Main Operated Siren" config="vision/zm1602eu.xml"/>
-		<Product type="2009" id="0908" name="ZM1602 Main Operated Siren" config="vision/zm1602eu.xml"/>
-		<Product type="200a" id="0a02" name="ZG8101 Garage Door Detector"/>
+		<Product type="2009" id="0908" name="ZM1602+ DC/AC Power Siren" config="vision/zm1602eu5.xml"/>
+		<Product type="200a" id="0a02" name="ZG8101 Garage Door Detector" config="vision/zg8101.xml"/>
 		<Product type="200f" id="0f02" name="ZS6301 CO Detector"/>
 		<Product type="200f" id="0f03" name="ZS6301 CO Detector"/>
 		<Product type="2012" id="1203" name="ZR1202 Repeater"/>
 		<Product type="2014" id="1401" name="ZL7101 Plug-in Dimmer Module"/>
 		<Product type="2017" id="1717" name="ZL7432 In-Wall Switch, Dual Relay"/>
-		<Product type="201c" id="1c01" name="ZF5201 Flood Detector"/>
+		<Product type="201f" id="1f10" name="ZD2201 Multisensor 4in1" config="vision/zd2201.xml"/>
 		<Product type="3001" id="0104" name="ZM1602 Main Operated Siren"/>
 	</Manufacturer>
 	<Manufacturer id="0115" name="Z-Wave.Me">
