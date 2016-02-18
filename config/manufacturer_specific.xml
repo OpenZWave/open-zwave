@@ -211,6 +211,9 @@
 	</Manufacturer>
 	<Manufacturer id="0050" name="Digital 5">
 	</Manufacturer>
+	<Manufacturer id="020e" name="Domitech">
+		<Product type="4c42" id="3134" name="Smart LED Retrofit Kit ZE27EU" config="domitech/ze27eu.xml"/>
+	</Manufacturer>
 	<Manufacturer id="0184" name="Dragon Tech">
 		<Product type="4447" id="3034" name="In Wall Dimmer" config="dragontech/wd-100.xml" />
 	</Manufacturer>
