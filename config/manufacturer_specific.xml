@@ -590,11 +590,16 @@
 		<Product type="0001" id="0001" name="Polylock" config="polycontrol/polylock.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0154" name="Popp">
+		<Product type="0004" id="0002" name="Solar Powered Outdoor Siren" config="popp/solar-siren.xml" />
+		<Product type="0100" id="0101" name="009303 Battery Wall Controller" config="popp/009303.xml" />
+		<Product type="0100" id="0201" name="Smoke Detector and Siren" config="popp/smoke-detector.xml" />
 		<Product type="1100" id="0001" name="123601 Plug-in Switch" config="popp/123601.xml" />
 		<Product type="1100" id="0002" name="123580 Plug-in Dimmer" config="popp/123580.xml" />
 		<Product type="0001" id="0001" name="123658 Plug-in Switch plus Power Meter" config="popp/123658.xml" />
-		<Product type="0003" id="0001" name="POPE009105 Wall Plug switch Schuko (IP44) - Gen 5" config="popp/POPE009105.xml" />
-		<Product type="0100" id="0101" name="Battery Wall Switch Z-Wave+" config="popp/POP009303.xml" />
+		<Product type="0003" id="0001" name="009105 Wall Plug Switch Schuko (IP44)" config="popp/009105.xml" />
+	</Manufacturer>
+	<Manufacturer id="0169" name="Popp">
+		<Product type="0001" id="0001" name="ZWeather" config="popp/zweather.xml" />
 	</Manufacturer>
 	<Manufacturer id="0064" name="Popp / Duwi">
 		<Product type="0001" id="0000" name="ZW EDAN 300 Flush Mounted Dimmer" />
