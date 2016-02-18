@@ -199,6 +199,7 @@
 		<Product type="0004" id="000a" name="DCH-Z510 Siren" config="dlink/dch-z510.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0002" name="Danfoss">
+		<Product type="0003" id="8010" name="RS Room Sensor" config="danfoss/rsroom.xml"/>
 		<Product type="0005" id="0175" name="Devolo Home Control Radiator Thermostat" config="danfoss/z.xml"/>
 		<Product type="0005" id="0003" name="Z Thermostat" config="danfoss/z.xml"/>
 		<Product type="0005" id="0004" name="Z Thermostat 014G0013" config="danfoss/z.xml"/>
