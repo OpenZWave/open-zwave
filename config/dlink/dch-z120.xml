@@ -5,9 +5,10 @@
   <!-- Configuration Parameters -->
   <CommandClass id="112">
 
-    <Value type="byte" index="2" genre="config" label="2. Basic Set Level" min="-1" max="100" value="-1">
+    <Value type="byte" index="2" genre="config" label="2. Basic Set Level" min="0" max="255" value="255">
       <Help>
-          Setting the BASIC command value to turn on the light. The 0xFF (-1) means turn on the light. 
+          Set the BASIC command value to turn on the light.
+          255: always turn on the light. 
           For dimmer equipment 1 to 100 means the light strength. 0 means turn off the light.
 	  </Help>
     </Value>
