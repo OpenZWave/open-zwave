@@ -18,6 +18,7 @@ Version 1.5
  - Issue #754 - New Philio PAN08-1 config file from pbda (Justin)
  - Pull Request #768 - Update Fibaro FGS222 from manual from pepeEL (Justin)
  - Pull Request #768 - Small correct Fibaro FGS221 from manual from pepeEL (Justin)
+ - Pull Request #773 - Ecolink Door/Window Sensor from nayrnet (Justin)
 
 Version 1.4
  - Released 10th Jan, 2016
