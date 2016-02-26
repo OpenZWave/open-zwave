@@ -16,6 +16,7 @@ Version 1.5
  - Pull Request #767 - Correct update param. from manual for Fibaro FGS221 from pepeEL (Justin)
  - Issue #757 - New ZMNHID1 config file stephaneguillard (Justin)
  - Issue #754 - New Philio PAN08-1 config file from pbda (Justin)
+ - Pull Request #768 - Update Fibaro FGS222 from manual from pepeEL (Justin)
 
 Version 1.4
  - Released 10th Jan, 2016
