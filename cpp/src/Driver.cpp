@@ -3743,6 +3743,10 @@ bool Driver::HandleApplicationUpdateRequest
                         	// Request the node protocol info (also removes any existing node and creates a new one)
 			        InitNode( nodeId );	
                         }
+                        else 
+                        {
+                        	Log::Write(LogLevel_Info, nodeId, "Not Re-assigning NodeID as old and new NodeID match");
+                        }
 			
 			break;
 		}
