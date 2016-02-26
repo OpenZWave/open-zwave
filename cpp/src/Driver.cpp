@@ -3737,9 +3737,13 @@ bool Driver::HandleApplicationUpdateRequest
 		case UPDATE_STATE_NEW_ID_ASSIGNED:
 		{
 			Log::Write( LogLevel_Info, nodeId, "** Network change **: ID %d was assigned to a new Z-Wave node", nodeId );
-
-			// Request the node protocol info (also removes any existing node and creates a new one)
-			InitNode( nodeId );
+                        // Check if the new node id is equal to the current one.... if so no operation is needed, thus no remove and add is necessary
+                        if ( _data[3] != _data[6] )
+                        {
+                        	// Request the node protocol info (also removes any existing node and creates a new one)
+			        InitNode( nodeId );	
+                        }
+			
 			break;
 		}
 		case UPDATE_STATE_ROUTING_PENDING:
