@@ -211,6 +211,7 @@
 		<Product type="0001" id="0001" name="Switchkeeper Plug-in Appliance Module"/>
 	</Manufacturer>
         <Manufacturer id="014a" name="Ecolink">
+                <Product type="0001" id="0001" name="Door/Window Sensor"/>
                 <Product type="0001" id="0003" name="Garage Door Sensor"/>
         </Manufacturer>
 	<Manufacturer id="0087" name="Eka Systems">
