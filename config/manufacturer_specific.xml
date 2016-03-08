@@ -364,7 +364,7 @@
 	<Manufacturer id="0084" name="FortrezZ">
 		<Product type="0311" id="0109" name="SSA1 / SSA2 - Siren/Strobe Light Alarm" config="fortrezz/ssa2.xml"/>
 		<Product type="0311" id="010b" name="SSA1 / SSA2 - Siren/Strobe Light Alarm" config="fortrezz/ssa2.xml"/>
-		<Product type="0313" id="010b" name="SSA2 - Siren/Strobe Light Alarm" onfig="fortrezz/ssa2.xml"/>
+		<Product type="0313" id="010b" name="SSA2 - Siren/Strobe Light Alarm" config="fortrezz/ssa2.xml"/>
 		<Product type="0331" id="010b" name="SSA3 - Siren/Strobe Light Alarm" config="fortrezz/ssa3.xml"/>
 		<Product type="0341" id="0205" name="SSA3 - Siren/Strobe Light Alarm" config="fortrezz/ssa3.xml"/>
 		<Product type="0453" id="0110" name="MIMOlite Wireless Interface/Bridge Module" config="fortrezz/mimolite.xml"/>
