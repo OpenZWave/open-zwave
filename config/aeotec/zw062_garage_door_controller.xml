@@ -119,9 +119,8 @@
 			1. If you do not press the Temper Switch when starting the pairing mode, the pairing status will keep for 8 second and then exit the pairing status automatically.
 			2. The Sensor has been paired with the Garage Door Controller after factory.</Help>
 			<Item label="Normal" value="0"/>
-            <Item label="Start the pairing of Sensor" value="1431655681"/>
-            <Item label="Pairing is successful" value="511"/>
-            0x01FF
+	            	<Item label="Start the pairing of Sensor" value="1431655681"/>
+        		<Item label="Pairing is successful" value="511"/>
 		</Value>
 		<Value type="list" genre="config" index="252" label="Lock/Unlock Configuration" min="0" max="1" value="0">
 			<Help>Lock/ unlock all configuration parameters</Help>
