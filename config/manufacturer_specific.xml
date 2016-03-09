@@ -200,6 +200,7 @@
 		<Product type="0064" id="0001" name="RA Plus-W Radiator Thermostat"/>
 		<Product type="8004" id="2000" name="RXZ3 RF relay Switching Unit"/>
 		<Product type="8005" id="0001" name="Living Connect Radiator Thermostat" config="danfoss/living.xml"/>
+		<Product type="0003" id="8010" name="Room Sensor" config="danfoss/rs.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0031" name="Destiny Networks">
 	</Manufacturer>
@@ -583,6 +584,7 @@
 		<Product type="3002" id="0000" name="ZW ZSA 3500 Plugin Switch" />
 		<Product type="4001" id="0000" name="ZW ESJ Blind Control" config="duwi/ZWESJ300.xml" />
 		<Product type="5002" id="0000" name="Wireless Flush Mounted Switch" />
+		<Product type="5003" id="0000" name="Static Controller" />
 	</Manufacturer>
 	<Manufacturer id="0016" name="PowerLynx">
 	</Manufacturer>
