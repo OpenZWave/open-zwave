@@ -5939,14 +5939,17 @@ void Driver::NotifyWatchers
 		/* check the any ValueID's sent as part of the Notification are still valid */
 		switch (notification->GetType()) {
 			case Notification::Type_ValueChanged:
-			case Notification::Type_ValueRefreshed:
-				if (!GetValue(notification->GetValueID())) {
+			case Notification::Type_ValueRefreshed: {
+				Value *val = GetValue(notification->GetValueID());
+				if (!val) {
 					Log::Write(LogLevel_Info, notification->GetNodeId(), "Dropping Notification as ValueID does not exist");
 					nit = m_notifications.begin();
 					delete notification;
+					val->Release();
 					continue;
 				}
 				break;
+			}
 			default:
 				break;
 		}

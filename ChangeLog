@@ -23,6 +23,7 @@ Version 1.5
  - Pull Request #782 - If we recieve a UPDATE_STATE_NEW_ID_ASSIGNED and the Old and New NodeID's 
    are the same, don't reinitialize the Node from KillerCode (Justin)
  - Issue #774 - Improve support for Aeotec Double Smart switch from dnpwwo (Justin)
+ - Issue #796 - Fix NotifyWatchers not releasing Value References from jmattoni (Justin)
 
 Version 1.4
  - Released 10th Jan, 2016
