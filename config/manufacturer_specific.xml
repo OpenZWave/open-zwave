@@ -537,6 +537,10 @@
 	</Manufacturer>
 	<Manufacturer id="0083" name="MTC Maintronic">
 	</Manufacturer>
+	<Manufacturer id="0178" name="Nexia">
+		<!-- full name in Z-wave database: Ingersoll Rand - Nexia Home Intelligence -->
+		<Product type="4442" id="3130" name="DB100Z Doorbell Sensor" config="nexia/db100z.xml"/>
+	</Manufacturer>
 	<Manufacturer id="0165" name="NodOn">
     		<Product type="0001" id="0001" name="ASP-3-1-00 Smart Plug" config="nodon/asp3100SmartPlug.xml"/>
     		<Product type="0002" id="0001" name="CRC-3-1-00 Octan Remote" config="nodon/crc3100OctanRemote.xml"/>
