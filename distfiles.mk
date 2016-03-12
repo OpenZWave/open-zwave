@@ -110,6 +110,7 @@ DISTFILES =	.gitignore \
 	config/fibaro/fgwpe.xml \
 	config/fortrezz/mimolite.xml \
 	config/frostdale/fdn2nxx.xml \
+	config/ge/12724-dimmer.xml \
 	config/ge/dimmer.xml \
 	config/ge/dimmer_module.xml \
 	config/ge/relay.xml \
