@@ -68,6 +68,7 @@ DISTFILES =	.gitignore \
 	config/duwi/ZWESJ300.xml \
 	config/enerwave/zw15s.xml \
 	config/enerwave/zw20r.xml \
+	config/enerwave/zw20rm.xml \
 	config/enerwave/zw500d.xml \
 	config/enerwave/zwn-sc7.xml \
 	config/eurotronic/eur_cometz.xml \
