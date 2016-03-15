@@ -93,7 +93,7 @@ endif
 ifeq ($(PKGCONFIG),)
 pkgconfigdir ?= $(shell if [ -d "/usr/lib64/pkgconfig" ]; then echo "/usr/lib64/pkgconfig"; else echo "/usr/lib/pkgconfig"; fi)
 else
-pkgconfigdir ?= $(shell pkg-config --variable pc_path pkg-config | awk '{split($$0,a,":"); print a[1]}')
+pkgconfigdir ?= $(shell test -d "$(instlibdir)/pkgconfig" && echo "$(instlibdir)/pkgconfig" || pkg-config --variable pc_path pkg-config | awk -F: '{ print $$1 }')
 endif
 
 sysconfdir ?= $(PREFIX)/etc/openzwave/
