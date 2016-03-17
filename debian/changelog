@@ -1,6 +1,6 @@
-openzwave (1.4.1+79~gfaea7dd) unstable; urgency=low
+openzwave (1.4.79.gfaea7dd) unstable; urgency=low
 
-  * Update to a snapshot after 1.4.1
+  * Update to a 1.4.x snapshot.
 
  -- Julien Wajsberg <julien@mozilla.com>  Tue, 15 Mar 2016 15:45:00 +0100
 
