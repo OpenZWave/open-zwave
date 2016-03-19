@@ -76,13 +76,38 @@
 			<Help>Reset The Reporting Group Configuration (101 to 103) to default</Help>
 		</Value>
 		<Value type="int" index="101" genre="config" label="Group 1 Reports" value="241" size="4">
-			<Help>Which reports need to send automatically in timing intervals for group 1. Bitsets: 0 -> Battery report, 4 -> Ultraviolet, 5 -> Temperature, 6 -> Humidity, 7 -> Luminosity</Help>
+			<Help>Which reports need to send automatically in timing intervals for group 1.
+				Bitmask:
+				10000000 - 128 - Luminance
+				01000000 - 64 - Humidity
+				00100000 - 32 - Temperature
+				00010000 - 16 - Ultraviolet
+				00000001 - 1 - Battery
+				10100000 - 160 - Luminance and Temperature (32+128)
+				11110001 - 241 - All (1+16+32+64+128)
+			</Help>
 		</Value>
 		<Value type="int" index="102" genre="config" label="Group 2 Reports" value="0" size="4">
-			<Help>Which reports need to send automatically in timing intervals for group 2. Bitsets: 0 -> Battery report, 4 -> Ultraviolet, 5 -> Temperature, 6 -> Humidity, 7 -> Luminosity</Help>
+			<Help>Which reports need to send automatically in timing intervals for group 2.
+				Bitmask:
+				10000000 - 128 - Luminance
+				01000000 - 64 - Humidity
+				00100000 - 32 - Temperature
+				00010000 - 16 - Ultraviolet
+				00000001 - 1 - Battery
+				10100000 - 160 - Luminance and Temperature (32+128)
+				11110001 - 241 - All (1+16+32+64+128)</Help>
 		</Value>
 		<Value type="int" index="103" genre="config" label="Group 3 Reports" value="0" size="4">
-			<Help>Which reports need to send automatically in timing intervals for group 3. Bitsets: 0 -> Battery report, 4 -> Ultraviolet, 5 -> Temperature, 6 -> Humidity, 7 -> Luminosity</Help>
+			<Help>Which reports need to send automatically in timing intervals for group 3.
+				Bitmask:
+				10000000 - 128 - Luminance
+				01000000 - 64 - Humidity
+				00100000 - 32 - Temperature
+				00010000 - 16 - Ultraviolet
+				00000001 - 1 - Battery
+				10100000 - 160 - Luminance and Temperature (32+128)
+				11110001 - 241 - All (1+16+32+64+128)</Help>
 		</Value>
 		<Value type="button" index="110" genre="config" label="Reset Params 111-113 to Default" write_only="true" affects="111,112,113">
 			<Help>Reset The Reporting Group Interval Configuration (111 to 113) to default</Help>
