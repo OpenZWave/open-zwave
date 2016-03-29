@@ -70,6 +70,7 @@ DISTFILES =	.gitignore \
 	config/enerwave/zw20r.xml \
 	config/enerwave/zw500d.xml \
 	config/enerwave/zwn-sc7.xml \
+        config/enerwave/zwn-bpc.xml \
 	config/eurotronic/eur_cometz.xml \
 	config/eurotronic/eur_stellaz.xml \
 	config/everspring/ad146.xml \
