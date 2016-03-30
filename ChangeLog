@@ -24,6 +24,7 @@ Version 1.5
    are the same, don't reinitialize the Node from KillerCode (Justin)
  - Issue #774 - Improve support for Aeotec Double Smart switch from dnpwwo (Justin)
  - Issue #796 - Fix NotifyWatchers not releasing Value References from jmattoni (Justin)
+ - If UserCode returns a Available Status for a Slot, Don't set Random Values on the ValueID (Justin)
 
 Version 1.4
  - Released 10th Jan, 2016
