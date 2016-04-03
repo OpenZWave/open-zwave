@@ -3,6 +3,10 @@
 
   <!-- Configuration -->
   <CommandClass id="112">
+    <Value type="byte" genre="config" instance="1" index="0" label="Min. variation of load current" min="1" max="100" value="10" size="1">
+      <Help>Minimum variation in load current before a message is sent. Value in percent (30 => 30%)</Help>
+    </Value>
+
     <Value type="byte" genre="config" instance="1" index="1" label="No communication light" min="1" max="255" value="2">
       <Help>After how many minutes the GreenWave device should start flashing if the controller didn't communicate with this device</Help>
     </Value>
@@ -20,6 +24,21 @@
       <Item label="Pink (8)" value="136" />
       <Item label="Locked" value="137" />
     </Value>
+	
+	<!-- Power-on relay state. This configuration value seems to work only on devices with a firmware with Protocol Version: 3.41 and Application Version: 4.27 or higher -->
+	<Value type="list" genre="config" instance="1" index="3" label="Power-on relay state" min="0" max="2" value="1" size="1">
+      <Help>Default state after power loss</Help>
+	  <Item label="Off" value="0" />
+	  <Item label="Last state" value="1" />
+	  <Item label="On" value="2" />
+    </Value>
+	
+	<!-- Network error LED. This configuration value seems to work only on devices with a firmware with Protocol Version: 3.41 and Application Version: 4.27 or higher -->
+	<Value type="list" genre="config" instance="1" index="4" label="Network error LED" min="0" max="1" value="1" size="1">
+      <Help>If the LED should indicate a network error by flashing or not</Help>
+	  <Item label="LED flash Off" value="0" />
+	  <Item label="LED flash On" value="1" />
+    </Value>	
   </CommandClass>
 
   <CommandClass id="96" mapping="endpoints" />
@@ -31,10 +50,10 @@
   <!-- Association Groups -->
   <CommandClass id="133">
     <Associations num_groups="4">
-        <Group index="1" max_associations="1" label="Group1"/>
-        <Group index="2" max_associations="1" label="Group2"/>
-        <Group index="3" max_associations="1" label="Group3"/>
-        <Group index="4" max_associations="1" label="Group4"/>
+        <Group index="1" max_associations="1" label="Wheel group" />
+        <Group index="2" max_associations="1" label="Relay health group"/>
+        <Group index="3" max_associations="1" label="Power level group" auto="true"/>
+        <Group index="4" max_associations="1" label="Overcurrent protection group"/>
     </Associations>
   </CommandClass>
 
