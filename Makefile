@@ -44,6 +44,7 @@ xmltest:	$(XMLLINT)
 	@$(XMLLINT) --noout --schema $(top_srcdir)/config/options.xsd $(top_srcdir)/config/options.xml
 	@$(XMLLINT) --noout --schema $(top_srcdir)/config/manufacturer_specific.xsd $(top_srcdir)/config/manufacturer_specific.xml
 	@$(XMLLINT) --noout --schema $(top_srcdir)/config/device_configuration.xsd $(top_srcdir)/config/*/*.xml
+	-@cpp/build/testconfig.pl
 endif
 
 
