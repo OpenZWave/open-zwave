@@ -44,16 +44,9 @@ endif
 VERSION := $(VERSION_MAJ).$(VERSION_MIN)
 
 # support Cross Compiling options
-ifeq ($(UNAME),FreeBSD)
-# Actually hide behind c++ which works for both clang based 10.0 and earlier(?)
 CC     := $(CROSS_COMPILE)cc
 CXX    := $(CROSS_COMPILE)c++
 LD     := $(CROSS_COMPILE)c++
-else
-CC     := $(CROSS_COMPILE)gcc
-CXX    := $(CROSS_COMPILE)g++
-LD     := $(CROSS_COMPILE)g++
-endif
 ifeq ($(UNAME),Darwin)
 AR     := libtool -static -o 
 RANLIB := ranlib
