@@ -35,9 +35,8 @@ endif
 #if we are on a Mac, add these flags and libs to the compile and link phases 
 ifeq ($(UNAME),Darwin)
 CFLAGS	+= -c -DDARWIN
-TARCH	+= -arch i386 -arch x86_64
 LDFLAGS += -dynamiclib
-LIBS	+= -framework IOKit -framework CoreFoundation -arch i386 -arch x86_64
+LIBS	+= -framework IOKit -framework CoreFoundation
 else ifeq ($(UNAME),FreeBSD)
 LDFLAGS+= -shared -lusb
 
@@ -151,7 +150,7 @@ $(LIBDIR)/$(SHARED_LIB_NAME):	$(patsubst %.cpp,$(OBJDIR)/%.o,$(tinyxml)) \
 			$(patsubst %.cpp,$(OBJDIR)/%.o,$(indep)) \
 			$(OBJDIR)/vers.o
 	@echo "Linking Shared Library"
-	@$(LD) $(LDFLAGS) $(TARCH) -o $@ $+ $(LIBS)
+	@$(LD) $(LDFLAGS) -o $@ $+ $(LIBS)
 	@ln -sf $(SHARED_LIB_NAME) $(LIBDIR)/$(SHARED_LIB_UNVERSIONED)
 
 $(top_builddir)/libopenzwave.pc: $(top_srcdir)/cpp/build/libopenzwave.pc.in $(PKGCONFIG)
