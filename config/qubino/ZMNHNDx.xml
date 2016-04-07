@@ -81,7 +81,7 @@
 	<!-- Association Groups -->
 	<CommandClass id="133">
 		<Associations num_groups="5">
-			<Group index="1" max_associations="1" label="Lifeline" auto="true"/>
+			<Group index="1" max_associations="1" label="Lifeline" />
 			<Group index="2" max_associations="16" label="Basic on/off of the output state" />
 			<Group index="3" max_associations="16" label="Basic on/off of the input I2 state"/>		  
 			<Group index="4" max_associations="16" label="Binary Sensor Report of the input I2 state" />

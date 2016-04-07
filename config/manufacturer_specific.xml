@@ -526,7 +526,7 @@
 		<Product type="4102" id="0201" name="MH-S411 One-load" config="mcohome/mhs411.xml"/>
 		<Product type="4102" id="0202" name="MH-S412 Two-load" config="mcohome/mhs412.xml"/>
 		<!--US-->
-		<Product type="5102" id="0103" name="Touch Panel Switch MH-S513" config="mcohome\mhs513.xml"/>
+		<Product type="5102" id="0103" name="Touch Panel Switch MH-S513" config="mcohome/mhs513.xml"/>
 	</Manufacturer>
 	<Manufacturer id="007a" name="Merten">
 		<Product type="8001" id="0001" name="Plug-in Appliance Module"/>

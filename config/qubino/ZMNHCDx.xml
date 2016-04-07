@@ -116,7 +116,7 @@
 	<!-- Association Groups -->
 	<CommandClass id="133">
 		<Associations num_groups="9">
-			<Group index="1" max_associations="1"  label="Lifeline" auto="true"/>
+			<Group index="1" max_associations="1"  label="Lifeline" />
 			<Group index="2" max_associations="16" label="basic on/off (triggered at change of the input I1 state and reflecting its state)" />
 			<Group index="3" max_associations="16" label="basic on/off (triggered at change of the input I2 state and reflecting its state)" />
 			<Group index="4" max_associations="16" label="basic on/off (triggered at sensing moving direction of roller: up=FF, down=0)" />
