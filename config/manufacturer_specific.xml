@@ -245,6 +245,7 @@
 		<Product type="0128" id="0000" name="ED2.0 Display"/>
 	</Manufacturer>
 	<Manufacturer id="011a" name="Enerwave">
+		<Product type="0601" id="0901" name="ZWN-BPC Ceiling Mounted PIR Motion Sensor" config="enerwave/zwn-bpc.xml"/>
 		<Product type="0801" id="0b03" name="ZWN-SC7 7-Button Scene Controller" config="enerwave/zwn-sc7.xml"/>
 		<Product type="0101" id="0102" name="ZW15S 15A On/Off Switch" config="enerwave/zw15s.xml"/>
 		<Product type="0101" id="0603" name="ZW20R 20A Tamper Resistant Duplex Receptacle" config="enerwave/zw20r.xml"/>
