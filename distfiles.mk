@@ -71,6 +71,7 @@ DISTFILES =	.gitignore \
 	config/device_classes.xsd \
 	config/device_configuration.xsd \
 	config/dlink/dch-z110.xml \
+	config/dlink/dch-z120.xml \
 	config/dlink/dch-z510.xml \
 	config/domitech/ze27eu.xml \
 	config/dragontech/wd-100.xml \

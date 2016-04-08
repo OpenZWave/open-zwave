@@ -16,6 +16,15 @@ Version 1.5
  - Pull Request #767 - Correct update param. from manual for Fibaro FGS221 from pepeEL (Justin)
  - Issue #757 - New ZMNHID1 config file stephaneguillard (Justin)
  - Issue #754 - New Philio PAN08-1 config file from pbda (Justin)
+ - Pull Request #768 - Update Fibaro FGS222 from manual from pepeEL (Justin)
+ - Pull Request #768 - Small correct Fibaro FGS221 from manual from pepeEL (Justin)
+ - Pull Request #773 - Ecolink Door/Window Sensor from nayrnet (Justin)
+ - Pull Request #780 - Add D-Link dch-z120 PIR/motion sensor from mattwire (Justin)
+ - Pull Request #782 - If we recieve a UPDATE_STATE_NEW_ID_ASSIGNED and the Old and New NodeID's 
+   are the same, don't reinitialize the Node from KillerCode (Justin)
+ - Issue #774 - Improve support for Aeotec Double Smart switch from dnpwwo (Justin)
+ - Issue #796 - Fix NotifyWatchers not releasing Value References from jmattoni (Justin)
+ - If UserCode returns a Available Status for a Slot, Don't set Random Values on the ValueID (Justin)
 
 Version 1.4
  - Released 10th Jan, 2016
