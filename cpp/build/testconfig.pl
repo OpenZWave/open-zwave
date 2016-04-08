@@ -10,6 +10,10 @@ my %errors = ();
 my %warnings = ();
 
 sub LogError {
+if (CheckSuppression($_[0], $_[1])) {
+	return;
+}
+
 my $errordetail;
 $errordetail->{'file'} = $_[0];
 $errordetail->{'code'} = $_[1];
@@ -19,6 +23,10 @@ push(@{$errors{$_[0]}}, $errordetail);
 }
 
 sub LogWarning {
+if (CheckSuppression($_[0], $_[1])) {
+	return;
+}
+
 my $warningdetail;
 $warningdetail->{'file'} = $_[0];
 $warningdetail->{'code'} = $_[1];
@@ -105,7 +113,7 @@ foreach my $unreffile (keys %configfiles)
 }
 
 sub PrettyPrintErrors() {
-	print "\n\nErrors:\n";
+	print "\n\nErrors: (Please Correct before Submitting to OZW)\n";
 	while ((my $key, my $value) = each \%errors) 
 	{
 		foreach my $detail (@{$value}) 
@@ -117,7 +125,7 @@ sub PrettyPrintErrors() {
 }
 
 sub PrettyPrintWarnings() {
-	print "\n\nWarnings:\n";
+	print "\n\nWarnings: (Can be Ignored)\n";
 	while ((my $key, my $value) = each \%warnings) 
 	{
 		foreach my $detail (@{$value}) 
@@ -182,6 +190,45 @@ sub XMLPrintWarnings() {
 	close $fh;
 }
 
+# Read a configuration file
+#   The arg can be a relative or full path, or
+#   it can be a file located somewhere in @INC.
+sub ReadCfg
+{
+    my $file = "cpp/build/testconfigsuppressions.cfg";
+
+    our $err;
+
+    {   # Put config data into a separate namespace
+        package CFG;
+
+        # Process the contents of the config file
+        my $rc = do($file);
+
+        # Check for errors
+        if ($@) {
+            $::err = "ERROR: Failure compiling '$file' - $@";
+        } elsif (! defined($rc)) {
+            $::err = "ERROR: Failure reading '$file' - $!";
+        } elsif (! $rc) {
+            $::err = "ERROR: Failure processing '$file'";
+        }
+    }
+
+    return ($err);
+}
+
+sub CheckSuppression 
+{
+	my $file = $_[0];
+	my $code = $_[1];
+	if (defined($CFG::CFG{$file}) && $CFG::CFG{$file}{'code'} == $code) {
+		return 1
+	}
+	return;
+}	
+	
+
 
 my $doxml;
 my $printwarnings;
@@ -190,7 +237,10 @@ GetOptions(	"printwarnings" => \$printwarnings,
 			"outputxml" => \$doxml
 			) or die("Error in Command Line arguements\n");
 
-
+if (my $err = ReadCfg()) {
+    print(STDERR $err, "\n");
+    exit(1);
+}
 
 
 print "Checking Config Files... Please Wait\n";
