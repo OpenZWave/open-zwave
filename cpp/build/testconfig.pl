@@ -94,7 +94,7 @@ foreach my $manu (@{$data->{Manufacturer}})
 			if (defined($config->{config}))
 			{
 				#print Dumper($config->{config});
-				if (!-e lc "config/$config->{config}") 
+				if (!-e "config/$config->{config}") 
 				{
 					LogError("manufacturer_specific.xml", 5, "Config File config/$config->{config} Specified in manufacturer_specific.xml doesn't exist");
 				} else {
