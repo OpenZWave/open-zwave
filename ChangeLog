@@ -25,6 +25,9 @@ Version 1.5
  - Issue #774 - Improve support for Aeotec Double Smart switch from dnpwwo (Justin)
  - Issue #796 - Fix NotifyWatchers not releasing Value References from jmattoni (Justin)
  - If UserCode returns a Available Status for a Slot, Don't set Random Values on the ValueID (Justin)
+ - Pull Request #779 - Large Config Update from Jeedom project (Justin)
+ - Add Additional tests on Config Files for common errors (Justin)
+
 
 Version 1.4
  - Released 10th Jan, 2016
