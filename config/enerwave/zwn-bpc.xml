@@ -11,7 +11,7 @@
 
   <CommandClass id="133">
     <Associations num_groups="1">
-      <Group index="1" label="Reports" max_associations="5" auto="true" />
+      <Group index="1" label="Reports" max_associations="5"/>
     </Associations>
   </CommandClass>
 

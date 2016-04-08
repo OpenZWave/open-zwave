@@ -27,6 +27,11 @@ Version 1.5
  - If UserCode returns a Available Status for a Slot, Don't set Random Values on the ValueID (Justin)
  - Pull Request #779 - Large Config Update from Jeedom project (Justin)
  - Add Additional tests on Config Files for common errors (Justin)
+ - Pull Request #810 - Add Enerwave ZWN-BPC configuration from robbiet480 (Justin)
+ - Pull Request #809 - Correct spelling: faillure -> failure from Mashi (Justin)
+ - Pull Request #805 - New device: Everspring AN181 Miniplug with meter function from FredrikFornstad (Justin)
+ - Pull Request #803 - Configs for Remotec ZTS-110 thermostat from  gwmullin (Justin)
+ - Pull Request #797 - Leviton VRMX1-1LZ - additional hardware id from shanemadden (Justin)
 
 
 Version 1.4

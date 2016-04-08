@@ -170,7 +170,7 @@
 	<CommandClass id="133">
 		<Associations num_groups="3">
 			<Group index="1" max_associations="5" label="Heating Mode group. All associated nodes will recieve basic set command ON and OFF when heat is triggered/deactivated." auto="false"/>
-			<Group index="2" max_associations="5" label="Cooling Mode group. All associated nodes will recieve basic set command ON and OFF when cooling is triggered/deactivated." auto="false"/>
+			<Group index="2" max_associations="5" label="Cooling Mode group. All associated nodes will recieve basic set command ON and OFF when cooling is triggered/deactivated." />
 			<Group index="3" max_associations="1" label="Auto-report Group. Your controller/gateway should be associated in this group. All status changes will be reported to this node" auto="true"/>
 		</Associations>
 	</CommandClass>
