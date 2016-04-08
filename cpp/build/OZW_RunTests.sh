@@ -20,3 +20,4 @@ for file in $(find $topsrcdir/config/ \( -name "*.xml" ! -name "device_classes.x
 do
 	juLog -name=$file CheckXML "$topsrcdir/config/device_configuration.xsd $file"
 done		
+cpp/build/testconfig.pl --outputxml
