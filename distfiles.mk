@@ -81,8 +81,8 @@ DISTFILES =	.gitignore \
 	config/enerwave/zw15s.xml \
 	config/enerwave/zw20r.xml \
 	config/enerwave/zw500d.xml \
+	config/enerwave/zwn-bpc.xml \
 	config/enerwave/zwn-sc7.xml \
-        config/enerwave/zwn-bpc.xml \
 	config/eurotronic/eur_cometz.xml \
 	config/eurotronic/eur_stellaz.xml \
 	config/everspring/ad146.xml \
@@ -216,6 +216,7 @@ DISTFILES =	.gitignore \
 	config/rcs/therm0007.xml \
 	config/rcs/therm0009.xml \
 	config/remotec/zfm-80.xml \
+	config/remotec/zts-110.xml \
 	config/remotec/zurc.xml \
 	config/remotec/zxt-120.xml \
 	config/schlage/BE469NXCEN.xml \
