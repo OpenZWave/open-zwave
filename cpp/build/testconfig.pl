@@ -5,6 +5,8 @@ use strict;
 use XML::Simple;
 use Data::Dumper;
 use Getopt::Long qw(GetOptions);
+#use Digest::SHA1::File qw( file_md5_hex );
+use Digest::file qw(digest_file_hex);
 
 my %errors = ();
 my %warnings = ();
@@ -45,6 +47,39 @@ my $data = $xml->XMLin($_[0], ForceArray => [ 'Group' ]);
 
 # print output
 #print Dumper($data->{CommandClass}->{133});
+
+foreach my $rev ($data)
+{
+#	print $_[0]."-".Dumper($rev->{Revision});
+	my $md5 = digest_file_hex($_[0], "SHA-512");
+	if (defined(%CFG::versiondb->{$_[0]}))
+	{
+		if (%CFG::versiondb->{$_[0]}->{md5} != $md5) 
+		{
+			my $dbr = %CFG::versiondb->{$_[0]}->{Revision};
+			my $fr = $rev->{Revision};
+						if ($dbr ge $fr )
+			{
+				print $_[0]." - md5 does not match Database - Database Revision:";
+				print %CFG::versiondb->{$_[0]}->{Revision}." File Revision:".int $rev->{Revision};
+				print "\n";
+				LogError($_[0], 8, "Revision Number Was Not Bumped");	
+			} else {
+				my %versions;
+				$versions{md5} = $md5;
+				$versions{Revision} = $rev->{Revision};
+				%CFG::versiondb->{$_[0]} = \%versions;
+				print($_[0]." - Updating Database\n");
+			}			
+		}
+	} else { 
+		my %versions;
+		$versions{md5} = $md5;
+		$versions{Revision} = $rev->{Revision};
+		%CFG::versiondb->{$_[0]} = \%versions;
+		print($_[0]." - Adding new file to Database\n");
+	}
+}
 
 foreach my $group ($data->{CommandClass}->{133}->{Associations}->{Group}) 
 	{
@@ -218,6 +253,37 @@ sub ReadCfg
     return ($err);
 }
 
+# Read a configuration file
+#   The arg can be a relative or full path, or
+#   it can be a file located somewhere in @INC.
+sub ReadVersions
+{
+    my $file = "cpp/build/testconfigversions.cfg";
+
+    our $err;
+
+    {   # Put config data into a separate namespace
+        package CFG;
+        my %versiondb;
+
+        # Process the contents of the config file
+        my $rc = do($file);
+
+        # Check for errors
+        if ($@) {
+            $::err = "ERROR: Failure compiling '$file' - $@";
+        } elsif (! defined($rc)) {
+            $::err = "ERROR: Failure reading '$file' - $!";
+        } elsif (! $rc) {
+            $::err = "ERROR: Failure processing '$file'";
+        }
+    }
+
+    return ($err);
+}
+
+
+
 sub CheckSuppression 
 {
 	my $file = $_[0];
@@ -241,6 +307,9 @@ if (my $err = ReadCfg()) {
     print(STDERR $err, "\n");
     exit(1);
 }
+if (my $err = ReadVersions()) {
+    print(STDERR $err, "\n");
+}
 
 
 print "Checking Config Files... Please Wait\n";
@@ -249,6 +318,9 @@ opendir(DIR, $dirname);
 my @dirs = readdir(DIR);
 closedir DIR;
 my @filelist;
+
+
+
 foreach my $key (@dirs)
 {
  	next if ($key eq "."); 
@@ -268,6 +340,7 @@ foreach my $key (@dirs)
 } 
 CheckFileExists(\@filelist);
 
+
 if ($doxml == 0) { 
 	PrettyPrintErrors();
 }
@@ -281,4 +354,11 @@ if ($doxml == 1 && $printwarnings == 1) {
 	XMLPrintWarnings();
 }
 
-
+my $errorsize = keys %errors;
+if ($errorsize == 0) 
+{
+	print "\nSaving Revision Database\n";
+	open my $FH, '>', 'cpp/build/testconfigversions.cfg';
+	print $FH Data::Dumper->Dump([\%CFG::versiondb], ['*versiondb']);
+	close $FH;	
+}

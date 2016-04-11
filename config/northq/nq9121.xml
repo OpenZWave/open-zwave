@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- NorthQ NQ-9121 Gas Meter -->
-<Product xmlns='http://code.google.com/p/open-zwave/'>
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
   <!-- COMMAND_CLASS_BASIC -->
   <CommandClass id="32" getsupported="false"/>
         	
