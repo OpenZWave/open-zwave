@@ -1,5 +1,4 @@
 Version 1.5
- - Pull Request #811 - Updated GE GE 12724 3-Way Dimmer Switch, missing config (Halsafar)
  - Pull Request #743 - Updated Fibaro Devices from Navstev0 (Justin)
  - Pull Request #740 - Updated Fibaro FGMS-001 ID's from Technosf (Justin)
  - Pull Request #750 - Fix FreeBSD 10.1 and 10.2 Builds from stromnet (Justin)
@@ -33,6 +32,7 @@ Version 1.5
  - Pull Request #805 - New device: Everspring AN181 Miniplug with meter function from FredrikFornstad (Justin)
  - Pull Request #803 - Configs for Remotec ZTS-110 thermostat from  gwmullin (Justin)
  - Pull Request #797 - Leviton VRMX1-1LZ - additional hardware id from shanemadden (Justin)
+ - Pull Request #811 - Updated GE GE 12724 3-Way Dimmer Switch, missing config from Halsafar (Justin)
 
 
 Version 1.4
