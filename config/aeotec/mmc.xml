@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?> 
 <!-- Aeon Labs Micro Motor Controller base on Engineering Specifications and Advanced Functions for Developers(V1.29) -->
-<Product xmlns='http://code.google.com/p/open-zwave/'>
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
   <!-- Configuration Parameters -->
   <CommandClass id="112">
     <Value type="int" index="1" genre="config" label="Motor start delay time" units="ms" size="4" value="0">

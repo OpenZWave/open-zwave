@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Aeon Labs Micro SEI Micro Smart Energy Illuminator-->
-<Product xmlns='http://code.google.com/p/open-zwave/'>
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
   <!-- Configuration Parameters -->
   <CommandClass id="112">    
 	<Value type="short" index="2" genre="config" label="Make SEI blink" size="2" min="0" max="65535" value="0">
