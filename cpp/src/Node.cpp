@@ -2495,7 +2495,6 @@ bool Node::CreateValueFromXML
 	if( value )
 	{
 		value->ReadXML( m_homeId, m_nodeId, _commandClassId, _valueElement );
-
 		ValueStore* store = GetValueStore();
 		if( store->AddValue( value ) )
 		{
@@ -2545,8 +2544,16 @@ void Node::ReadValueFromXML
 	{
 		if( Value* value = store->GetValue( id.GetValueStoreKey() ) )
 		{
-			value->ReadXML( m_homeId, m_nodeId, _commandClassId, _valueElement );
-			value->Release();
+			// Check if values type are the same
+			ValueID::ValueType v_type = value->GetID().GetType();
+			if ( v_type == type ) {
+				value->ReadXML( m_homeId, m_nodeId, _commandClassId, _valueElement );
+				value->Release();
+			} else {
+				Log::Write( LogLevel_Info, m_nodeId, "xml value type (%s) is different to stored value type (%s). Value is recreate with xml params.", value->GetTypeNameFromEnum(type), value->GetTypeNameFromEnum(v_type) );
+				store->RemoveValue( value->GetID().GetValueStoreKey() );
+				CreateValueFromXML( _commandClassId, _valueElement );
+			}
 		}
 		else
 		{
