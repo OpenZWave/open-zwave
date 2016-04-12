@@ -379,6 +379,7 @@
 	</Manufacturer>
 	<Manufacturer id="0152" name="G.R.">
 		<Product type="0202" id="0511" name="Auto Valve"/>
+		<Product type="0003" id="0512" name="Auto Valve"/>
 	</Manufacturer>
 	<Manufacturer id="0020" name="General Electric">
 		<Product type="8007" id="1390" name="Wireless Lighting Control"/>
