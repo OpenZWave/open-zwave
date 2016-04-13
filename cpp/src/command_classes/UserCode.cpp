@@ -264,7 +264,8 @@ bool UserCode::HandleMsg
 				memcpy( data, &_data[3], size );
 				value->OnValueRefreshed( data, size );
 			} else {
-				value->OnValueRefreshed( 0x00, 1);
+				size = 0;
+				value->OnValueRefreshed( (uint8 const*)&size, 1);
 			}
 			value->Release();
 		}
