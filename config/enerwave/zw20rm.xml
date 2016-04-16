@@ -28,4 +28,9 @@
 			<Help>How much the wattage needs to change by to trigger the wattage change notifications. Units are 1-10th of a watt; 0-255: 0.0-25.5W</Help>
 		</Value>
 	</CommandClass>
+	<CommandClass id="133">
+		<Associations num_groups="1">
+			<Group index="1" max_associations="5" label="Reports" />
+		</Associations>
+	</CommandClass>
 </Product>
