@@ -262,10 +262,11 @@ bool UserCode::HandleMsg
 			m_userCodesStatus[i] = _data[2];
 			if (size > 0) {
 				memcpy( data, &_data[3], size );
-				value->OnValueRefreshed( data, size );
 			} else {
-				value->OnValueRefreshed( 0x00, 1);
+				size = 1;
+				data[0] = 0;
 			}
+			value->OnValueRefreshed( data, size );
 			value->Release();
 		}
 		Log::Write( LogLevel_Info, GetNodeId(), "Received User Code Report from node %d for User Code %d (%s)", GetNodeId(), i, CodeStatus( _data[2] ).c_str() );
