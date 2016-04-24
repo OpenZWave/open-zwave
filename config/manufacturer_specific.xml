@@ -764,6 +764,7 @@
 	</Manufacturer>
 	<Manufacturer id="0118" name="Wenzhou TKB Control System">
 		<Product type="0001" id="0001" name="TZ88 Smart Energy Plug-in Switch" config="wenzhou/tz88.xml"/>
+ 		<Product type="0001" id="0011" name="TZ88E Smart Energy Plug-in Switch" config="wenzhou/tz88.xml"/>
 		<Product type="0002" id="0001" name="SM103 Door/Window Sensor" config="wenzhou/sm103.xml"/>
 		<Product type="0002" id="0002" name="TSP01 3 in 1 PIR Motion Sensor" config="wenzhou/tsp01.xml" />
 		<Product type="0003" id="0002" name="TZ68 On/Off Switch Socket" config="wenzhou/tz68.xml"/>
