@@ -587,6 +587,7 @@
 		<Product type="0002" id="000e" name="PST02-C Door/Window 3 in 1 sensor" config="philio/pst02-1c.xml"/>
 		<Product type="0002" id="001f" name="PH-PAT02.eu Flood Multisensor 3in1" config="philio/phpat02.xml"/>
 		<Product type="0002" id="0020" name="PH-PAT02-B.eu Multisensor 2in1" config="philio/phpat02.xml"/>
+		<Product type="0004" id="000a" name="PH-PSE02.eu Zipato Indoor Siren" config="philio/pse02.xml"/>
 		<Product type="0009" id="0022" name="PSR04 Smart Color Button" config="philio/psr04.xml"/>
 	</Manufacturer>
 	<Manufacturer id="010e" name="Polycontrol">
@@ -597,6 +598,7 @@
 	<Manufacturer id="0154" name="Popp">
 		<Product type="0004" id="0002" name="Solar Powered Outdoor Siren" config="popp/solar-siren.xml" />
 		<Product type="0100" id="0101" name="009303 Battery Wall Controller" config="popp/009303.xml" />
+		<Product type="0100" id="0103" name="Popp KFOB-C Remote Control" config="zwave.me/ZME_KFOB-S.xml" />
 		<Product type="0100" id="0201" name="Smoke Detector and Siren" config="popp/smoke-detector.xml" />
 		<Product type="1100" id="0001" name="123601 Plug-in Switch" config="popp/123601.xml" />
 		<Product type="1100" id="0002" name="123580 Plug-in Dimmer" config="popp/123580.xml" />
