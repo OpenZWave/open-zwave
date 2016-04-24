@@ -848,6 +848,7 @@
 	<Manufacturer id="0147" name="Z-Wave.Me">
 		<Product type="0002" id="0003" name="RaZberry Controller"/>
 		<Product type="0400" id="0001" name="RaZberry Controller ZWave+"/>
+		<Product type="0400" id="0002" name="RaZberry Controller 2016 ZWave+"/>
 	</Manufacturer>
 	<Manufacturer id="004f" name="Z-Wave Technologia">
 	</Manufacturer>
