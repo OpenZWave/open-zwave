@@ -32,27 +32,25 @@
 
 	<!-- COMMAND_CLASS_ALARM. -->
 	<CommandClass id="113" name="COMMAND_CLASS_ALARM">
-		<Instance index="1" />
-		<Instance index="2" />
-		<Value type="byte" genre="user" instance="1" index="0" label="Power Applied" value="2">
-			<Help>
-				Once the power has been applied, Alarm Report Command will be sent to
-				Nodes in Grouping 1 to confirm the power applied status for HSM02.
-			</Help>
+		<Value type="byte" genre="user" instance="1" index="0" label="Alarm Type" units="" read_only="true" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="255" value="12">
+			<Help>Grouping 1, afterward, LED will light up for 1 sec to remind user when HSM02 is triggered due to open or close incidents.</Help>
 		</Value>
-		<Value type="byte" genre="user" instance="1" index="1" label="low battery" value="255">
+		<Value type="list" genre="user" instance="1" index="1" label="Alarm Report" read_only="true" write_only="false" verify_changes="false" poll_intensity="0" vindex="0" value="0" size="1">
 			<Help>
-				When HSM02 automatically wakes up, it will check the battery usage. When
+				No alarm : There is no alarm to report. 
+				Power applied : Once the power has been applied, Alarm Report Command will be sent to
+				Nodes in Grouping 1 to confirm the power applied status for HSM02. 
+				Tamper event : Grouping 1, afterward, LED will light up for 1 sec to remind user when HSM02 is
+				triggered due to open or close incidents. 
+				Low battery : When HSM02 automatically wakes up, it will check the battery usage. When
 				low battery is detected, Alarm Report Command will be sent to Nodes in
 				Grouping 1, afterward, LED will light up for 1 sec to remind user when HSM02 is
 				triggered due to open or close incidents.
 			</Help>
-		</Value>
-		<Value type="byte" genre="user" instance="2" index="0" label="Tamper event" value="17">
-			<Help>
-				Grouping 1, afterward, LED will light up for 1 sec to remind user when HSM02 is
-				triggered due to open or close incidents.
-			</Help>
+			<Item label="No alarm" value="0" />
+			<Item label="Power applied" value="2" />
+			<Item label="Tamper event" value="17" />
+			<Item label="Low battery" value="255" />
 		</Value>
 	</CommandClass>
 
