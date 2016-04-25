@@ -39,6 +39,7 @@ Version 1.5
  - Pull Request #858 / Issue #847 - Fix for devices sending empty UserCodes from Binli71 (Justin)
  - Issue #843 - Possible fix for setting Clock (Justin)
  - Pull Request #864 - Add 2gig CT50e thermostat with USNAP RTZW-01 module from neudorf (Justin)
+ - Pull Request #855 - Update MinOZW: Print the names for nodes and values that have beed detected in the network from alan-martinovic (Justin)
 
 Version 1.4
  - Released 10th Jan, 2016
