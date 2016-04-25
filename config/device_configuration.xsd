@@ -263,6 +263,7 @@
    <xs:attribute name='units' type='xs:string' use='optional'/>
    <xs:attribute name='min' type='xs:string' use='optional'/>
    <xs:attribute name='max' type='xs:string' use='optional'/>
+   <xs:attribute name='vindex' type='xs:string' use='optional'/>
    <xs:attribute name='value' type='xs:string' use='optional'/>
    <xs:attribute name='length' type='xs:string' use='optional'/>
    <xs:attribute name='read_only' use='optional'>
