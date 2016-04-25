@@ -43,6 +43,7 @@ Version 1.5
  - Pull Request #842 - add GR-105N from narfight (Justin)
  - Pull Request #838 - Fixed crash on Windows systems. Timestamp (m_stamp)not parsed as pointer (Used in the Control Panel) from gizmocuz (Justin)
  - Pull Request #802 - Debian Package Updates from julienw (Justin)
+ - Pull Request #800 - Device Support: Enerwave ZW20RM configuration params from shanemadden (Justin)
 
 Version 1.4
  - Released 10th Jan, 2016
