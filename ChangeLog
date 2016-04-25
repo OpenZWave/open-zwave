@@ -42,6 +42,7 @@ Version 1.5
  - Pull Request #855 - Update MinOZW: Print the names for nodes and values that have beed detected in the network from alan-martinovic (Justin)
  - Pull Request #842 - add GR-105N from narfight (Justin)
  - Pull Request #838 - Fixed crash on Windows systems. Timestamp (m_stamp)not parsed as pointer (Used in the Control Panel) from gizmocuz (Justin)
+ - Pull Request #802 - Debian Package Updates from julienw (Justin)
 
 Version 1.4
  - Released 10th Jan, 2016
