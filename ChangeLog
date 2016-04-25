@@ -1,5 +1,4 @@
 Version 1.5
- - Pull Request #744 - Add 2gig CT50e thermostat with USNAP RTZW-01 module from neudorf
  - Pull Request #743 - Updated Fibaro Devices from Navstev0 (Justin)
  - Pull Request #740 - Updated Fibaro FGMS-001 ID's from Technosf (Justin)
  - Pull Request #750 - Fix FreeBSD 10.1 and 10.2 Builds from stromnet (Justin)
@@ -39,6 +38,7 @@ Version 1.5
  - Issue #807 - Update doco to reflect correct values returned from Notifications
  - Pull Request #858 / Issue #847 - Fix for devices sending empty UserCodes from Binli71 (Justin)
  - Issue #843 - Possible fix for setting Clock (Justin)
+ - Pull Request #864 - Add 2gig CT50e thermostat with USNAP RTZW-01 module from neudorf (Justin)
 
 Version 1.4
  - Released 10th Jan, 2016
