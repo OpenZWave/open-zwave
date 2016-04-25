@@ -3760,9 +3760,17 @@ bool Driver::HandleApplicationUpdateRequest
 		case UPDATE_STATE_NEW_ID_ASSIGNED:
 		{
 			Log::Write( LogLevel_Info, nodeId, "** Network change **: ID %d was assigned to a new Z-Wave node", nodeId );
-
-			// Request the node protocol info (also removes any existing node and creates a new one)
-			InitNode( nodeId );
+                        // Check if the new node id is equal to the current one.... if so no operation is needed, thus no remove and add is necessary
+                        if ( _data[3] != _data[6] )
+                        {
+                        	// Request the node protocol info (also removes any existing node and creates a new one)
+			        InitNode( nodeId );	
+                        }
+                        else 
+                        {
+                        	Log::Write(LogLevel_Info, nodeId, "Not Re-assigning NodeID as old and new NodeID match");
+                        }
+			
 			break;
 		}
 		case UPDATE_STATE_ROUTING_PENDING:
@@ -5954,14 +5962,17 @@ void Driver::NotifyWatchers
 		/* check the any ValueID's sent as part of the Notification are still valid */
 		switch (notification->GetType()) {
 			case Notification::Type_ValueChanged:
-			case Notification::Type_ValueRefreshed:
-				if (!GetValue(notification->GetValueID())) {
+			case Notification::Type_ValueRefreshed: {
+				Value *val = GetValue(notification->GetValueID());
+				if (!val) {
 					Log::Write(LogLevel_Info, notification->GetNodeId(), "Dropping Notification as ValueID does not exist");
 					nit = m_notifications.begin();
 					delete notification;
+					val->Release();
 					continue;
 				}
 				break;
+			}
 			default:
 				break;
 		}
