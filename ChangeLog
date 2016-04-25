@@ -45,6 +45,7 @@ Version 1.5
  - Pull Request #802 - Debian Package Updates from julienw (Justin)
  - Pull Request #800 - Device Support: Enerwave ZW20RM configuration params from shanemadden (Justin)
  - Pull Request #799 - Device Support: GE 12724 Dimmer configuration params from shanemadden (Justin)
+ - Pull Request #798 - Device Support: Nexia DB100Z Z-Wave Doorbell Sensor configuration params from shanemadden (Justin)
 
 Version 1.4
  - Released 10th Jan, 2016
