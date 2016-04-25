@@ -9,6 +9,7 @@ DISTFILES =	.gitignore \
 	config/2gig/ct100.xml \
 	config/2gig/ct101.xml \
 	config/2gig/ct30.xml \
+	config/2gig/ct50e.xml \
 	config/BeNext/1poleswitch.xml \
 	config/BeNext/2poleswitch.xml \
 	config/BeNext/AlarmSound.xml \
@@ -177,6 +178,7 @@ DISTFILES =	.gitignore \
 	config/philio/pan04.xml \
 	config/philio/pan08.xml \
 	config/philio/phpat02.xml \
+	config/philio/pse02.xml \
 	config/philio/psm02.xml \
 	config/philio/psr04.xml \
 	config/philio/pst02-1c.xml \
