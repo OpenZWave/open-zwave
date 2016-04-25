@@ -131,6 +131,7 @@ DISTFILES =	.gitignore \
 	config/fortrezz/ssa2.xml \
 	config/fortrezz/ssa3.xml \
 	config/frostdale/fdn2nxx.xml \
+	config/ge/12724-dimmer.xml \
 	config/ge/dimmer.xml \
 	config/ge/dimmer_module.xml \
 	config/ge/relay.xml \
