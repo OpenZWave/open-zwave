@@ -229,12 +229,30 @@ bool Alarm::HandleMsg
 			value->OnValueRefreshed( _data[1] );
 			value->Release();
 		}
-		if( (value = static_cast<ValueByte*>( GetValue( _instance, AlarmIndex_Level ) )) )
+		// For device on version 1 the level could have different value. This level value correspond to a list of alarm type.
+		if ( Value* value = GetValue( _instance, AlarmIndex_Level ) )
 		{
-			value->OnValueRefreshed( _data[2] );
+			switch ( value->GetID().GetType() )
+			{
+				case ValueID::ValueType_Byte:
+				{
+					ValueByte* valueByte = static_cast<ValueByte*>( value );
+					valueByte->OnValueRefreshed( _data[2] );
+					break;
+				}
+				case ValueID::ValueType_List:
+				{
+					ValueList* valueList = static_cast<ValueList*>( value );
+					valueList->OnValueRefreshed( _data[2] );
+					break;
+				}
+				default:
+				{
+					Log::Write( LogLevel_Info, GetNodeId(), "Invalid type (%d) for Alarm Level %d", value->GetID().GetType(), _data[2] );
+				}
+			}
 			value->Release();
 		}
-
 		// With Version=2, the data has more detailed information about the alarm
 		if(( GetVersion() > 1 ) && ( _length >= 7  ))
 		{
