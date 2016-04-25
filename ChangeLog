@@ -36,6 +36,7 @@ Version 1.5
  - Pull Request #869 - New device TZ88E and RaZBerry, missing config from travellingkiwi (Nechry)
  - Pull Request #870 - New device Popp KFOB and PH-PSE02.eu Zipato Indoor Siren, missing config from RaymondNg2 (Nechry)
  - Issue #807 - Update doco to reflect correct values returned from Notifications
+ - Pull Request #858 / Issue #847 - Fix for devices sending empty UserCodes from Binli71 (Justin)
 
 Version 1.4
  - Released 10th Jan, 2016
