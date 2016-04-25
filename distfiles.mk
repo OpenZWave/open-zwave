@@ -168,6 +168,7 @@ DISTFILES =	.gitignore \
 	config/mcohome/mhs513.xml \
 	config/merten/507801.xml \
 	config/merten/50x5xx.xml \
+	config/nexia/db100z.xml \
 	config/nodon/asp3100SmartPlug.xml \
 	config/nodon/crc3100OctanRemote.xml \
 	config/nodon/crc360xSofremote.xml \
