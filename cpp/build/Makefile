@@ -61,7 +61,7 @@ else
 LDFLAGS += -shared -Wl,-soname,libopenzwave.so.$(VERSION)
 LIBS 	+= -ludev
 endif
-CFLAGS  += $(CPPFLAGS)
+CFLAGS  += "$(CPPFLAGS)"
 
 #where to put the temporary library
 LIBDIR	?= $(top_builddir)

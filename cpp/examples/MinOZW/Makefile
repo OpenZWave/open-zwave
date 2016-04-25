@@ -10,8 +10,8 @@
 .PHONY:	default clean
 
 
-DEBUG_CFLAGS    := -Wall -Wno-format -ggdb -DDEBUG $(CPPFLAGS)
-RELEASE_CFLAGS  := -Wall -Wno-unknown-pragmas -Wno-format -O3 $(CPPFLAGS)
+DEBUG_CFLAGS    := -Wall -Wno-format -ggdb -DDEBUG "$(CPPFLAGS)"
+RELEASE_CFLAGS  := -Wall -Wno-unknown-pragmas -Wno-format -O3 "$(CPPFLAGS)"
 
 DEBUG_LDFLAGS	:= -g
 
