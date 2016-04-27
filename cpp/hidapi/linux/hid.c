@@ -21,6 +21,8 @@
         http://github.com/signal11/hidapi .
 ********************************************************/
 
+#define _GNU_SOURCE /* needed for wcsdup() before glibc 2.10 */
+
 /* C */
 #include <stdio.h>
 #include <string.h>
