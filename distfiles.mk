@@ -9,6 +9,7 @@ DISTFILES =	.gitignore \
 	config/2gig/ct100.xml \
 	config/2gig/ct101.xml \
 	config/2gig/ct30.xml \
+	config/2gig/ct50e.xml \
 	config/BeNext/1poleswitch.xml \
 	config/BeNext/2poleswitch.xml \
 	config/BeNext/AlarmSound.xml \
@@ -80,6 +81,7 @@ DISTFILES =	.gitignore \
 	config/duwi/zwfb.xml \
 	config/enerwave/zw15s.xml \
 	config/enerwave/zw20r.xml \
+	config/enerwave/zw20rm.xml \
 	config/enerwave/zw500d.xml \
 	config/enerwave/zwn-bpc.xml \
 	config/enerwave/zwn-sc7.xml \
@@ -129,6 +131,7 @@ DISTFILES =	.gitignore \
 	config/fortrezz/ssa2.xml \
 	config/fortrezz/ssa3.xml \
 	config/frostdale/fdn2nxx.xml \
+	config/ge/12724-dimmer.xml \
 	config/ge/dimmer.xml \
 	config/ge/dimmer_module.xml \
 	config/ge/relay.xml \
@@ -165,6 +168,7 @@ DISTFILES =	.gitignore \
 	config/mcohome/mhs513.xml \
 	config/merten/507801.xml \
 	config/merten/50x5xx.xml \
+	config/nexia/db100z.xml \
 	config/nodon/asp3100SmartPlug.xml \
 	config/nodon/crc3100OctanRemote.xml \
 	config/nodon/crc360xSofremote.xml \
@@ -177,6 +181,7 @@ DISTFILES =	.gitignore \
 	config/philio/pan04.xml \
 	config/philio/pan08.xml \
 	config/philio/phpat02.xml \
+	config/philio/pse02.xml \
 	config/philio/psm02.xml \
 	config/philio/psr04.xml \
 	config/philio/pst02-1c.xml \

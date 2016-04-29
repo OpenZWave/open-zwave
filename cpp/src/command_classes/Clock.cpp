@@ -182,8 +182,21 @@ bool Clock::SetValue
 			ret = false;
 		} else {
 			uint8 day = dayValue->GetItem()->m_value;
+			if (_value.GetID() == dayValue->GetID()) {
+				ValueList const * dayvaluetmp = static_cast<ValueList const*>(&_value);
+				day = dayvaluetmp->GetItem()->m_value;
+			}
 			uint8 hour = hourValue->GetValue();
+			if (_value.GetID() == hourValue->GetID()) {
+				ValueByte const * hourvaluetmp = static_cast<ValueByte const*>(&_value);
+				hour = hourvaluetmp->GetValue();
+			}
 			uint8 minute = minuteValue->GetValue();
+			if (_value.GetID() == hourValue->GetID()) {
+				ValueByte const * minuteValuetmp = static_cast<ValueByte const*>(&_value);
+				minute = minuteValuetmp->GetValue();
+			}
+
 
 			Msg* msg = new Msg( "ClockCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 			msg->SetInstance( this, instance );
