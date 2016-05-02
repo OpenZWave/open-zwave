@@ -49,6 +49,7 @@ Version 1.5
  - Pull Request #871 - Fix warning on wcsdup implicit declaration from ffontaine (Justin)
  - Pull Request #874 - Device Support: Domitech Smart LED Light Bulb ZB22UK (Nechry)
  - Pull Request #795 - Add Danfoss RoomSensor and Duwi Static Controller (Nechry)
+ - Pull Request #877 - Add support for FGK101 with type 0701 / id 1001 from gizmocuz (Nechry)
 
 Version 1.4
  - Released 10th Jan, 2016
