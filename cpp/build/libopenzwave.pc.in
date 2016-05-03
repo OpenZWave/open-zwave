@@ -11,4 +11,4 @@ Description: A Open Source implementation of the ZWave Serial API
 URL: http://www.openzwave.org/
 Version: @VERSION@
 Libs: -L${libdir} -lopenzwave
-Cflags: -I${includedir} 
+Cflags: -I${includedir} -I${includedir}/openzwave
