@@ -52,6 +52,7 @@ Version 1.5
  - Pull Request #877 - Add support for FGK101 with type 0701 / id 1001 from gizmocuz (Nechry)
  - Pull Request #876 - fixed Botton typo in DoorLockLogging CC from hcooper (Justin)
  - Pull Request #873 - Fix libopenzwave.pc when using custom values from ffontaine (Justin)
+ - Pull Request #861 - Add support for building with BitBake Environment from binli71 (Justin)
 
 Version 1.4
  - Released 10th Jan, 2016
