@@ -91,7 +91,7 @@ static char const* c_DoorLockEventType[] =
 	"Locked via Access Code",
 	"Unlocked via Access Code",
 	"Locked via Lock Button",
-	"Unlocked via UnLock Botton",
+	"Unlocked via UnLock Button",
 	"Lock Attempt via Out of Schedule Access Code",
 	"Unlock Attemp via Out of Schedule Access Code",
 	"Illegal Access Code Entered",
