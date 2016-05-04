@@ -192,7 +192,7 @@ bool Clock::SetValue
 				hour = hourvaluetmp->GetValue();
 			}
 			uint8 minute = minuteValue->GetValue();
-			if (_value.GetID() == hourValue->GetID()) {
+			if (_value.GetID() == minuteValue->GetID()) {
 				ValueByte const * minuteValuetmp = static_cast<ValueByte const*>(&_value);
 				minute = minuteValuetmp->GetValue();
 			}
