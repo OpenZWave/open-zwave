@@ -27,6 +27,7 @@
 
 #include "DNSThread.h"
 #include "Utils.h"
+#include "Driver.h"
 
 using namespace OpenZWave;
 
@@ -69,7 +70,7 @@ Event* _exitEvent
 	Log::Write(LogLevel_Info, "Starting DNSThread");
 	while( true )
 	{
-		// DNSThread has been initialised
+		// DNSThread has been initialized
 		const uint32 count = 2;
 
 		Wait* waitObjects[count];
@@ -92,7 +93,7 @@ Event* _exitEvent
 				Log::Write(LogLevel_Info, "Stopping DNSThread");
 				return;
 			case 1: /* dnsEvent */
-				processRequest();
+				processResult();
 				break;
 		}
 	}
@@ -110,26 +111,35 @@ DNSLookup *lookup
 	return true;
 }
 
-void DNSThread::processRequest
+void DNSThread::processResult
 (
 )
 {
 	string result;
-	LockGuard LG(m_dnsMutex);
-	DNSLookup *lookup = m_dnslist.front();
-	m_dnslist.pop_front();
-
+	DNSLookup *lookup;
+	{
+		LockGuard LG(m_dnsMutex);
+		lookup = m_dnslist.front();
+		m_dnslist.pop_front();
+		if (m_dnslist.empty())
+			m_dnsRequestEvent->Reset();
+	}
 	Log::Write(LogLevel_Debug, "LookupTxT Checking %s", lookup->lookup.c_str());
 	if (!m_dnsresolver.LookupTxT(lookup->lookup, lookup->result)) {
 		Log::Write(LogLevel_Warning, "Lookup on %s Failed", lookup->lookup.c_str());
 	} else {
-		Log::Write(LogLevel_Debug, "Lookup for %s returned %s", lookup->lookup.c_str(), lookup->result.c_str());
+		Log::Write(LogLevel_Info, "Lookup for %s returned %s", lookup->lookup.c_str(), lookup->result.c_str());
 	}
 	lookup->status = m_dnsresolver.status;
-	m_dnsRequestEvent->Reset();
-	/* send the response back to the Driver for processing */
 
-	this->m_driver->processConfigRevision(lookup);
+	/* send the response back to the Driver for processing */
+	Driver::EventMsg *event = new Driver::EventMsg();
+	event->type = Driver::EventMsg::Event_DNS;
+	event->event.lookup = lookup;
+	this->m_driver->SubmitEventMsg(event);
+
+
+//	this->m_driver->processConfigRevision(lookup);
 }
 
 

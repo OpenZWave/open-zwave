@@ -406,7 +406,7 @@ bool ManufacturerSpecific::LoadConfigXML
 		}
 		_node->ReadCommandClassesXML( doc->RootElement() );
 	}
-
+	_node->ReadMetaDataFromXML( doc->RootElement() );
 	delete doc;
 	return true;
 }

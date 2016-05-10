@@ -631,6 +631,38 @@ namespace OpenZWave
 			private:
 			uint8 m_lastnonce;
 			uint8 m_nonces[8][8];
+
+			//-----------------------------------------------------------------------------
+			//	MetaData Related
+			//-----------------------------------------------------------------------------
+
+			public:
+			/**
+			 * MetaData Fields.
+			 * Available Fields that contain metadata about a device.
+			 * \see Manager::AddWatcher
+			 * \see Manager::BeginControllerCommand
+			 */
+			enum MetaDataFields
+			{
+				MetaData_OzwInfoPage,
+				MetaData_ZWProductPage,
+				MetaData_Pepper1Page,
+				MetaData_ProductPic,
+				MetaData_ProductManual,
+				MetaData_ProductPage,
+				MetaData_Invalid = 255
+			};
+
+			string const GetMetaData(MetaDataFields);
+			MetaDataFields const GetMetaDataId(string);
+			string const GetMetaDataString(MetaDataFields);
+
+
+			private:
+			void ReadMetaDataFromXML(TiXmlElement const* _valueElement);
+			void WriteMetaDataXML(TiXmlElement*);
+			map<MetaDataFields, string> m_metadata;
 	};
 
 

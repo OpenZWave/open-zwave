@@ -78,7 +78,7 @@ namespace OpenZWave
 			bool sendRequest(DNSLookup *);
 
 			/* process the most recent request recieved */
-			void processRequest();
+			void processResult();
 
 			Driver*			  m_driver;
 			Mutex*			  m_dnsMutex;
