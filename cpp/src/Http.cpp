@@ -47,7 +47,11 @@ m_driver(driver)
 };
 
 void i_HttpClient::FinishDownload(HttpDownload *transfer) {
-	m_driver->processDownload(transfer);
+	/* send the response back to the Driver for processing */
+	Driver::EventMsg *event = new Driver::EventMsg();
+	event->type = Driver::EventMsg::Event_Http;
+	event->event.httpdownload = transfer;
+	this->m_driver->SubmitEventMsg(event);
 }
 
 
@@ -129,7 +133,8 @@ void HttpClient::HttpThreadProc
 					LockGuard LG(client->m_httpMutex);
 					download = client->m_httpDownlist.front();
 					client->m_httpDownlist.pop_front();
-					client->m_httpDownloadEvent->Reset();
+					if (client->m_httpDownlist.empty())
+						client->m_httpDownloadEvent->Reset();
 				}
 				HttpSocket *ht = new HttpSocket();
 			    ht->SetKeepAlive(0);

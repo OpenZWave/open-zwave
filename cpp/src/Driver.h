@@ -869,6 +869,7 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 			} event;
 		};
 
+		void SubmitEventMsg(EventMsg *);
 		void ProcessEventMsg();
 
 
@@ -898,6 +899,13 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 	private:
 		void processDownload(HttpDownload *);
 		i_HttpClient *m_httpClient;
+
+	//-----------------------------------------------------------------------------
+	//	Metadata Related
+	//-----------------------------------------------------------------------------
+
+	public:
+		string GetMetaData(	uint8 const _nodeId, Node::MetaDataFields _metadata );
 
 
 	};

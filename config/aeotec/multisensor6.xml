@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Aeon Labs Multi Sensor 6 -->
-<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
-
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="2">
+	<MetaData>
+		<MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0086:0064:0002 OZWInfoPage</MetaDataItem>
+		<MetaDataItem name="ZWProductPage">http://www.openzwave.com/device-database/0086:0064:0002 ZWProductPage </MetaDataItem>
+		<MetaDataItem name="Pepper1Page">http://www.openzwave.com/device-database/0086:0064:0002 Pepper1Page </MetaDataItem>
+		<MetaDataItem name="ProductPic">http://www.openzwave.com/device-database/0086:0064:0002 ProductPic </MetaDataItem>
+		<MetaDataItem name="ProductManual">http://www.openzwave.com/device-database/0086:0064:0002 ProductManual </MetaDataItem>
+		<MetaDataItem name="ProductPage">http://www.openzwave.com/device-database/0086:0064:0002 ProductPage</MetaDataItem>
+	</MetaData>
 	<!-- Configuration Parameters -->
 	<CommandClass id="112">
 		<Value type="list" index="2" genre="config" label="Wake up 10 minutes on Power On" min="0" max="1" value="0" size="1">

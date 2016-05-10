@@ -208,7 +208,10 @@ m_routedbusy( 0 ),
 m_broadcastReadCnt( 0 ),
 m_broadcastWriteCnt( 0 ),
 m_nonceReportSent( 0 ),
-m_nonceReportSentAttempt( 0 )
+m_nonceReportSentAttempt( 0 ),
+m_queueMsgEvent (new Event() ),
+m_eventMutex (new Mutex() )
+
 {
 	// set a timestamp to indicate when this driver started
 	TimeStamp m_startTime;
@@ -243,9 +246,9 @@ m_nonceReportSentAttempt( 0 )
 	Options::Get()->GetOptionAsInt( "PollInterval", &m_pollInterval );
 	Options::Get()->GetOptionAsBool( "IntervalBetweenPolls", &m_bIntervalBetweenPolls );
 
-	m_httpClient = new HttpClient(this);
+    m_httpClient = new HttpClient(this);
 
-	this->StartDownload("http://www.dynam.ac/");
+    this->StartDownload("http://www.dynam.ac/");
 }
 
 //-----------------------------------------------------------------------------
@@ -452,7 +455,7 @@ void Driver::DriverThreadProc
 				}
 				else if( m_currentControllerCommand != NULL )
 				{
-					count = 6;
+					count = 7;
 				}
 				else
 				{
@@ -499,14 +502,14 @@ void Driver::DriverThreadProc
 					}
 					case 3:
 					{
-						// a DNS or HTTP Event has occured
+						// a DNS or HTTP Event has occurred
 						ProcessEventMsg();
 						break;
 					}
 					default:
 					{
 						// All the other events are sending message queue items
-						if( WriteNextMsg( (MsgQueue)(res-3) ) )
+						if( WriteNextMsg( (MsgQueue)(res-4) ) )
 						{
 							retryTimeStamp.SetTime( retryTimeout );
 						}
@@ -6974,14 +6977,14 @@ DNSLookup *result
 		LockGuard LG(m_nodeMutex);
 		Node *node = this->GetNode(result->NodeID);
 		if (node->getConfigRevision() < atol(result->result.c_str())) {
-			Log::Write(LogLevel_Info, node->GetNodeId(), "Config for Device \"%s\" is out of date", node->GetProductName().c_str());
+			Log::Write(LogLevel_Warning, node->GetNodeId(), "Config for Device \"%s\" is out of date", node->GetProductName().c_str());
 			Notification* notification = new Notification( Notification::Type_UserAlerts );
 			notification->SetHomeAndNodeIds( m_homeId, node->GetNodeId() );
 			notification->SetUserAlertNofification(Notification::Alert_ConfigOutOfDate);
 			QueueNotification( notification );
 		}
 	}
-	delete result;
+
 }
 
 
@@ -7018,8 +7021,15 @@ HttpDownload *download
 
 	Log::Write(LogLevel_Info, "Download Finished: %s", download->filename.c_str());
 
-	delete download;
+//	delete download;
 }
+
+void Driver::SubmitEventMsg(EventMsg *event) {
+	LockGuard LG(m_eventMutex);
+	m_eventQueueMsg.push_back(event);
+	m_queueMsgEvent->Set();
+}
+
 
 void Driver::ProcessEventMsg
 (
@@ -7030,12 +7040,38 @@ void Driver::ProcessEventMsg
 		LockGuard LG(m_eventMutex);
 		event = m_eventQueueMsg.front();
 		m_eventQueueMsg.pop_front();
+		if (m_eventQueueMsg.empty())
+			m_queueMsgEvent->Reset();
 	}
 	switch (event->type) {
 		case EventMsg::Event_DNS:
+			processConfigRevision(event->event.lookup);
+			delete event->event.lookup;
 			break;
 		case EventMsg::Event_Http:
+			processDownload(event->event.httpdownload);
+			delete event->event.httpdownload;
 			break;
 	}
+	delete event;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::GetNodeStatistics>
+// Retrieve driver based counters.
+//-----------------------------------------------------------------------------
+string Driver::GetMetaData
+(
+		uint8 const _nodeId,
+		Node::MetaDataFields _metadata
+)
+{
+	LockGuard LG(m_nodeMutex);
+	Node* node = GetNode( _nodeId );
+	if( node != NULL )
+	{
+		node->GetMetaData( _metadata );
+	}
+	return "";
 }
 

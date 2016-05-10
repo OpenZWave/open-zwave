@@ -1090,6 +1090,7 @@ void Node::ReadXML
 					{
 						m_productName = str;
 					}
+					ReadMetaDataFromXML(product);
 				}
 			}
 		}
@@ -1345,6 +1346,11 @@ void Node::WriteXML
 		productElement->SetAttribute( "id", ss.str().c_str() );
 	}
 	productElement->SetAttribute( "name", m_productName.c_str() );
+
+	// Write the MetaData out
+	TiXmlElement* mdElement = new TiXmlElement( "MetaData" );
+	productElement->LinkEndChild( mdElement );
+	WriteMetaDataXML(mdElement);
 
 	// Write the command classes
 	TiXmlElement* ccsElement = new TiXmlElement( "CommandClasses" );
@@ -3560,5 +3566,87 @@ void Node::checkConfigRevision
 		this->GetDriver()->CheckConfigRevision(this);
 
 }
+//-----------------------------------------------------------------------------
+// <Node::GetMetaData>
+// Get MetaData about a node
+//-----------------------------------------------------------------------------
+
+string const Node::GetMetaData(MetaDataFields field) {
+	if (this->m_metadata.find(field) != this->m_metadata.end()) {
+		return this->m_metadata[field];
+	}
+	return string();
+}
+
+Node::MetaDataFields const Node::GetMetaDataId(string name) {
+	if (name == "OzwInfoPage") return MetaData_OzwInfoPage;
+	if (name == "ZWProductPage") return MetaData_ZWProductPage;
+	if (name == "Pepper1Page") return MetaData_Pepper1Page;
+	if (name == "ProductPic") return MetaData_ProductPic;
+	if (name == "ProductManual") return MetaData_ProductManual;
+	if (name == "ProductPage") return MetaData_ProductPage;
+	return MetaData_Invalid;
+}
+string const Node::GetMetaDataString(Node::MetaDataFields id) {
+	switch (id) {
+	case MetaData_OzwInfoPage:
+		return "OzwInfoPage";
+	case MetaData_ZWProductPage:
+		return "ZWProductPage";
+	case MetaData_Pepper1Page:
+		return "Pepper1Page";
+	case MetaData_ProductPic:
+		return "ProductPic";
+	case MetaData_ProductManual:
+		return "ProductManual";
+	case MetaData_ProductPage:
+		return "ProductPage";
+	case MetaData_Invalid:
+		return "";
+	}
+	return "";
+}
 
 
+
+void Node::ReadMetaDataFromXML(TiXmlElement const* _valueElement) {
+	TiXmlElement const* ccElement = _valueElement->FirstChildElement();
+		while( ccElement )
+		{
+			if(!strcmp( ccElement->Value(), "MetaData" ) )
+			{
+				TiXmlElement const* metadata = ccElement->FirstChildElement();
+				while (metadata) {
+					if( !strcmp( metadata->Value(), "MetaDataItem" ) )
+					{
+						string name = metadata->Attribute( "name" );
+						if (GetMetaDataId(name) == MetaData_Invalid) {
+							Log::Write(LogLevel_Warning, m_nodeId, "Invalid MetaData Name in Config: %s", name.c_str());
+							continue;
+						}
+						this->m_metadata[GetMetaDataId(name)] = metadata->GetText();
+//						Log::Write(LogLevel_Warning, m_nodeId, "Got MetaData: %s - %s", name.c_str(), metadata->GetText());
+					}
+					metadata = metadata->NextSiblingElement();
+				}
+			}
+			ccElement = ccElement->NextSiblingElement();
+		}
+		GetDriver()->WriteConfig();
+}
+
+void Node::WriteMetaDataXML(TiXmlElement *mdElement) {
+	// Write out the MetaDataItems
+	for( map<MetaDataFields, string>::iterator it = m_metadata.begin(); it != m_metadata.end(); ++ it )
+	{
+		/* only write if its a valid MetaData */
+		if (it->first < Node::MetaData_Invalid) {
+			TiXmlElement* mdiElement = new TiXmlElement( "MetaDataItem" );
+			mdiElement->SetAttribute( "name", GetMetaDataString(it->first).c_str() );
+			TiXmlText* textElement = new TiXmlText( it->second.c_str() );
+			mdiElement->LinkEndChild( textElement );
+			mdElement->LinkEndChild( mdiElement );
+
+		}
+	}
+}

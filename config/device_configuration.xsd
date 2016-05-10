@@ -9,6 +9,7 @@
   <xs:complexType>
    <xs:sequence>
     <xs:element ref='Product:Protocol' minOccurs='0' maxOccurs='1'/>
+    <xs:element ref='Product:MetaData' minOccurs='0' maxOccurs='1'/>
     <xs:element ref='Product:CommandClass' minOccurs='0' maxOccurs='unbounded'/>
    </xs:sequence>
    <xs:attribute name='Revision' type='xs:integer' use='required'/>
@@ -335,4 +336,20 @@
    <xs:attribute name='id' type='xs:string' use='required'/>
   </xs:complexType>
  </xs:element>
+
+ <xs:element name='MetaData'>
+  <xs:complexType>
+   <xs:sequence>
+    <xs:element ref='Product:MetaDataItem' maxOccurs='unbounded'/>
+   </xs:sequence>
+  </xs:complexType>
+ </xs:element>
+
+ <xs:element name='MetaDataItem'>
+  <xs:complexType mixed='true'> 
+   <xs:attribute name='name' type='xs:string' use='required'/>
+  </xs:complexType>
+ </xs:element>
+
+
 </xs:schema>

@@ -134,7 +134,7 @@ int32 Wait::Multiple
 	// Add a watcher to each object in the list, passing in the event as the context.
 	for( i=0; i<_numObjects; ++i )
 	{
-//		Log::Write( LogLevel_Debug, "Wait::Multiple - Object %p %d", _objects[i], _objects[i]->IsSignalled());
+//		Log::Write( LogLevel_Info, "Wait::Multiple - Object %p %d", _objects[i], _objects[i]->IsSignalled());
 		_objects[i]->AddWatcher( WaitMultipleCallback, waitEvent );
 	}
 

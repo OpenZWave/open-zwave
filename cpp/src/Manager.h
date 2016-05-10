@@ -2376,6 +2376,26 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 */
 		void GetNodeStatistics( uint32 const _homeId, uint8 const _nodeId, Node::NodeData* _data );
 
+	/*@}*/
+
+	//-----------------------------------------------------------------------------
+	// MetaData interface
+	//-----------------------------------------------------------------------------
+	/** \name MetaData Interface
+	 *  Commands for retrieving information about Devices.
+	 */
+	/*@{*/
+	public:
+		/**
+		 * \brief Retrieve metadata about a node
+		 * \param _homeId The Home ID of the driver for the node
+		 * \param _nodeId The node number
+		 * \param _metadata the MetadataFields you are requesting.
+		 * \return a string containing the requested metadata
+		 */
+		string GetMetaData( uint32 const _homeId, uint8 const _nodeId, Node::MetaDataFields _metadata );
+
+	/*@}*/
 	};
 	/*@}*/
 } // namespace OpenZWave

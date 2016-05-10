@@ -4745,3 +4745,22 @@ void Manager::GetNodeStatistics
 	}
 
 }
+
+//-----------------------------------------------------------------------------
+// <Manager::GetNodeStatistics>
+// Retrieve driver based counters.
+//-----------------------------------------------------------------------------
+string Manager::GetMetaData
+(
+		uint32 const _homeId,
+		uint8 const _nodeId,
+		Node::MetaDataFields _metadata
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		return driver->GetMetaData( _nodeId, _metadata );
+	}
+	return "";
+}
+
