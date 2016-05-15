@@ -46,6 +46,7 @@ namespace OpenZWave
 		~LogImpl();
 
 		void Write( LogLevel _level, uint8 const _nodeId, char const* _format, va_list _args );
+		void Write( LogLevel _level, uint8 const _nodeId, uint8 const _instance, char const* _format, va_list _args );
 		void Queue( char const* _buffer );
 		void QueueDump();
 		void QueueClear();

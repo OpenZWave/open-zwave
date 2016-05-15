@@ -87,7 +87,7 @@ bool SwitchToggleBinary::RequestValue
 		GetDriver()->SendMsg( msg, _queue );
 		return true;
 	} else {
-		Log::Write(  LogLevel_Info, GetNodeId(), "SwitchToggleBinaryCmd_Get Not Supported on this node");
+		Log::Write(  LogLevel_Info, GetNodeId(), _instance, "SwitchToggleBinaryCmd_Get Not Supported on this node");
 	}
 	return false;
 }
@@ -105,7 +105,7 @@ bool SwitchToggleBinary::HandleMsg
 {
 	if( SwitchToggleBinaryCmd_Report == (SwitchToggleBinaryCmd)_data[0] )
 	{
-		Log::Write( LogLevel_Info, GetNodeId(), "Received SwitchToggleBinary report: %s", _data[1] ? "On" : "Off" );
+		Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received SwitchToggleBinary report: %s", _data[1] ? "On" : "Off" );
 
 		if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, 0 ) ) )
 		{

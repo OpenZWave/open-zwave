@@ -97,7 +97,7 @@ bool SwitchAll::RequestValue
 		GetDriver()->SendMsg( msg, _queue );
 		return true;
 	} else {
-		Log::Write(  LogLevel_Info, GetNodeId(), "SwitchAllCmd_Get Not Supported on this node");
+		Log::Write(  LogLevel_Info, GetNodeId(), _instance, "SwitchAllCmd_Get Not Supported on this node");
 	}
 	return false;
 }
@@ -120,9 +120,9 @@ bool SwitchAll::HandleMsg
 			value->OnValueRefreshed( (int32)_data[1] );
 			value->Release();
 			if (value->GetItem())
-				Log::Write( LogLevel_Info, GetNodeId(), "Received SwitchAll report from node %d: %s", GetNodeId(), value->GetItem()->m_label.c_str() );
+				Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received SwitchAll report from node %d: %s", GetNodeId(), value->GetItem()->m_label.c_str() );
 			else
-				Log::Write( LogLevel_Info, GetNodeId(), "Received SwitchAll report from node %d: %d", GetNodeId(), _data[1]);
+				Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received SwitchAll report from node %d: %d", GetNodeId(), _data[1]);
 		}
  		return true;
 	}

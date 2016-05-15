@@ -90,7 +90,7 @@ bool SwitchToggleMultilevel::RequestValue
 		GetDriver()->SendMsg( msg, _queue );
 		return true;
 	} else {
-		Log::Write(  LogLevel_Info, GetNodeId(), "SwitchToggleMultilevelCmd_Get Not Supported on this node");
+		Log::Write(  LogLevel_Info, GetNodeId(), _instance, "SwitchToggleMultilevelCmd_Get Not Supported on this node");
 	}
 	return false;
 }
@@ -108,7 +108,7 @@ bool SwitchToggleMultilevel::HandleMsg
 {
 	if( SwitchToggleMultilevelCmd_Report == (SwitchToggleMultilevelCmd)_data[0] )
 	{
-		Log::Write( LogLevel_Info, GetNodeId(), "Received SwitchToggleMultiLevel report: level=%d", _data[1] );
+		Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received SwitchToggleMultiLevel report: level=%d", _data[1] );
 
 		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, 0 ) ) )
 		{
