@@ -103,6 +103,67 @@ unsigned int LogImpl::toEscapeCode(LogLevel _level) {
 }
 
 
+//-----------------------------------------------------------------------------
+//      <LogImpl::Write>
+//      Write to the log
+//-----------------------------------------------------------------------------
+void LogImpl::Write(LogLevel _logLevel, uint8 const _nodeId, uint8 const _instance, char const* _format, va_list _args) {
+        // create a timestamp string
+        string timeStr = GetTimeStampString();
+        string nodeStr = GetNodeString( _nodeId, _instance );
+        string loglevelStr = GetLogLevelString(_logLevel);
+
+        // handle this message
+        if( (_logLevel <= m_queueLevel) || (_logLevel == LogLevel_Internal) ) {  // we're going to do something with this message...
+                char lineBuf[1024] = {0};
+                //int lineLen = 0;
+                if( _format != NULL && _format[0] != '\0' ) {
+                        va_list saveargs;
+                        va_copy( saveargs, _args );
+
+                        vsnprintf( lineBuf, sizeof(lineBuf), _format, _args );
+                        va_end( saveargs );
+                }
+
+                // should this message be saved to file (and possibly written to console?)
+                if( (_logLevel <= m_saveLevel) || (_logLevel == LogLevel_Internal) ) {
+                        std::string outBuf;
+
+                        if ( this->pFile != NULL || m_bConsoleOutput ) {
+                                if( _logLevel != LogLevel_Internal ) {                                           // don't add a second timestamp to display of queued messages
+                                        outBuf.append(timeStr);
+                                        outBuf.append(loglevelStr);
+                                        outBuf.append(nodeStr);
+                                        outBuf.append(lineBuf);
+                                        outBuf.append("\n");
+
+                                }
+
+                                // print message to file (and possibly screen)
+                                if( this->pFile != NULL ) {
+                                        fputs( outBuf.c_str(), pFile );
+                                }
+                                if( m_bConsoleOutput ) {
+                                        fprintf(stdout,"\x1B[%02um", toEscapeCode(_logLevel));
+                                        fputs( outBuf.c_str(), stdout );
+                                        fprintf(stdout, "\x1b[39m");
+                                }
+                        }
+                }
+
+                if( _logLevel != LogLevel_Internal ) {
+                        char queueBuf[1024];
+                        string threadStr = GetThreadId();
+                        snprintf( queueBuf, sizeof(queueBuf), "%s%s%s", timeStr.c_str(), threadStr.c_str(), lineBuf );
+                        Queue( queueBuf );
+                }
+        }
+
+        // now check to see if the _dumpTrigger has been hit
+        if( (_logLevel <= m_dumpTrigger) && (_logLevel != LogLevel_Internal) && (_logLevel != LogLevel_Always) ) {
+                QueueDump();
+        }
+}
 
 //-----------------------------------------------------------------------------
 //	<LogImpl::Write>
@@ -271,6 +332,24 @@ string LogImpl::GetTimeStampString
 			tm->tm_hour, tm->tm_min, tm->tm_sec, (int)tv.tv_usec / 1000 );
 	string str = buf;
 	return str;
+}
+
+//-----------------------------------------------------------------------------
+//	<LogImpl::GetNodeString>
+//	Generate a string with formatted node id
+//-----------------------------------------------------------------------------
+string LogImpl::GetNodeString(uint8 const _nodeId, uint8 const _instance) {
+  if( _nodeId == 0 ) {
+    return "";
+  } else if( _nodeId == 255 ) { 
+    // should make distinction between broadcast and controller better for SwitchAll broadcast
+    return "contrlr, ";
+  } else {
+    char buf[20];
+
+    snprintf( buf, sizeof(buf), "Node%03d:%03d, ", _nodeId, _instance);
+    return buf;
+  }
 }
 
 //-----------------------------------------------------------------------------

@@ -88,7 +88,7 @@ bool SwitchBinary::RequestValue
 		GetDriver()->SendMsg( msg, _queue );
 		return true;
 	} else {
-		Log::Write(  LogLevel_Info, GetNodeId(), "SwitchBinaryCmd_Get Not Supported on this node");
+		Log::Write(  LogLevel_Info, GetNodeId(), _instance, "SwitchBinaryCmd_Get Not Supported on this node");
 	}
 	return false;
 }
@@ -106,7 +106,7 @@ bool SwitchBinary::HandleMsg
 {
 	if (SwitchBinaryCmd_Report == (SwitchBinaryCmd)_data[0])
 	{
-		Log::Write( LogLevel_Info, GetNodeId(), "Received SwitchBinary report from node %d: level=%s", GetNodeId(), _data[1] ? "On" : "Off" );
+		Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received SwitchBinary report from node %d: level=%s", GetNodeId(), _data[1] ? "On" : "Off" );
 
 		if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, 0 ) ) )
 		{

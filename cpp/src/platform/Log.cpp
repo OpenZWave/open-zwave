@@ -260,6 +260,25 @@ void Log::Write
 }
 
 //-----------------------------------------------------------------------------
+//      <Log::Write>
+//      Write to the log
+//-----------------------------------------------------------------------------
+void Log::Write(LogLevel _level, uint8 const _nodeId, uint8 const _instance, char const* _format, ...) {
+  if( s_instance && s_dologging && s_instance->m_pImpl ) {
+    if( _level != LogLevel_Internal ) {
+      s_instance->m_logMutex->Lock();
+    }
+    va_list args;
+    va_start( args, _format );
+    s_instance->m_pImpl->Write( _level, _nodeId, _instance, _format, args );
+    va_end( args );
+    if( _level != LogLevel_Internal ) {
+      s_instance->m_logMutex->Unlock();
+    }
+  }
+}
+
+//-----------------------------------------------------------------------------
 //	<Log::QueueDump>
 //	Send queued messages to the log (and empty the queue)
 //-----------------------------------------------------------------------------
