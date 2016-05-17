@@ -1,6 +1,6 @@
 //-----------------------------------------------------------------------------
 //
-//	AssociationCommandConfiguration.cpp
+//	BarrierOperator.cpp
 //
 //	Implementation of the COMMAND_CLASS_BARRIER_OPERATOR
 //
