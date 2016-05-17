@@ -53,6 +53,8 @@ Version 1.5
  - Pull Request #876 - fixed Botton typo in DoorLockLogging CC from hcooper (Justin)
  - Pull Request #873 - Fix libopenzwave.pc when using custom values from ffontaine (Justin)
  - Pull Request #861 - Add support for building with BitBake Environment from binli71 (Justin)
+ - Pull Request #879 - Fixed setting Thermostat Clock from gizmocuz (Justin)
+
 
 Version 1.4
  - Released 10th Jan, 2016
