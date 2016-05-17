@@ -706,8 +706,8 @@
 	</Manufacturer>
 	<Manufacturer id="0047" name="Somfy">
 	</Manufacturer>
-	<Manufacturer id="166" name="Swiid">
-		<Product type="100" id="100" name="SwiidInter" config="swiid/swiidinter.xml"/>
+	<Manufacturer id="0166" name="Swiid">
+		<Product type="0100" id="0100" name="SwiidInter" config="swiid/swiidinter.xml"/>
                 <Product type="2007" id="0706" name="SwiidPlug" config="swiid/swiidplug.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0009" name="Sylvania">
@@ -719,7 +719,7 @@
 	<Manufacturer id="010c" name="There">
 		<Product type="0001" id="0001" name="ThereGate"/>
 	</Manufacturer>
-	<Manufacturer id="0019b" name="ThermoFloor AS">
+	<Manufacturer id="019b" name="ThermoFloor AS">
 		<Product type="0001" id="0001" name="Heatit Thermostat TF 021" config="thermofloor/heatit021.xml"/>
 	</Manufacturer>
 	<Manufacturer id="008b" name="Trane">
