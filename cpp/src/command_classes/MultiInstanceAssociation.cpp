@@ -106,10 +106,7 @@ void MultiInstanceAssociation::ReadXML
 	char const*  str = _ccElement->Attribute("ForceInstances");
 	if( str )
 	{
-		if( !strcmp( str, "true") == 0 )
-		{
-			m_alwaysSetInstance = true;
-		}
+                m_alwaysSetInstance = !strcmp( str, "true");
 	}
 
 }
