@@ -354,6 +354,7 @@
 		<Product type="0800" id="2001" name="FGMS001 Motion Sensor" config="fibaro/fgms.xml" />
 		<Product type="0800" id="4001" name="FGMS001 Motion Sensor" config="fibaro/fgms.xml" />
 		<Product type="0801" id="1001" name="FGMS001 Motion Sensor" config="fibaro/fgms.xml" />
+		<Product type="0801" id="2001" name="FGMS001 Motion Sensor" config="fibaro/fgms.xml" />
 		<Product type="0b00" id="3001" name="FGFS101 Flood Sensor" config="fibaro/fgfs101.xml" />
 		<Product type="0b00" id="1001" name="FGFS101 Flood Sensor" config="fibaro/fgfs101.xml" />
 		<Product type="0b00" id="9e00" name="FGFS101 Flood Sensor" config="fibaro/fgfs101.xml" />
