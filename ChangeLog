@@ -54,6 +54,7 @@ Version 1.5
  - Pull Request #873 - Fix libopenzwave.pc when using custom values from ffontaine (Justin)
  - Pull Request #861 - Add support for building with BitBake Environment from binli71 (Justin)
  - Pull Request #879 - Fixed setting Thermostat Clock from gizmocuz (Justin)
+ - Pull Request #888 - Added Fibaro FGMS001 2016 USA version from Clancey (Nechry)
 
 
 Version 1.4
