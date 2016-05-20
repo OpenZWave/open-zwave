@@ -107,7 +107,7 @@ bool ThermostatFanState::RequestValue
 		GetDriver()->SendMsg( msg, _queue );
 		return true;
 	} else {
-		Log::Write(  LogLevel_Info, GetNodeId(), "ThermostatFanStateCmd_Get Not Supported on this node");
+		Log::Write(  LogLevel_Info, GetNodeId(), _instance, "ThermostatFanStateCmd_Get Not Supported on this node");
 	}
 	return false;
 }
@@ -133,7 +133,7 @@ bool ThermostatFanState::HandleMsg
 
 			valueString->OnValueRefreshed( c_stateName[state] );
 			valueString->Release();
-			Log::Write( LogLevel_Info, GetNodeId(), "Received thermostat fan state: %s", valueString->GetValue().c_str() );
+			Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received thermostat fan state: %s", valueString->GetValue().c_str() );
 		}
 		return true;
 	}

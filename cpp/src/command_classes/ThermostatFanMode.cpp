@@ -212,7 +212,7 @@ bool ThermostatFanMode::RequestValue
 			GetDriver()->SendMsg( msg, _queue );
 			return true;
 		} else {
-			Log::Write(  LogLevel_Info, GetNodeId(), "ThermostatFanModeCmd_Get Not Supported on this node");
+			Log::Write(  LogLevel_Info, GetNodeId(), _instance, "ThermostatFanModeCmd_Get Not Supported on this node");
 		}
 	}
 	return false;
@@ -249,19 +249,19 @@ bool ThermostatFanMode::HandleMsg
 			{
 				valueList->OnValueRefreshed( (int32)_data[1] );
 				if (valueList->GetItem())
-					Log::Write( LogLevel_Info, GetNodeId(), "Received thermostat fan mode: %s", valueList->GetItem()->m_label.c_str() );
+					Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received thermostat fan mode: %s", valueList->GetItem()->m_label.c_str() );
 				else
-					Log::Write( LogLevel_Info, GetNodeId(), "Received thermostat fan mode: %d", _data[1]);
+					Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received thermostat fan mode: %d", _data[1]);
 				valueList->Release();
 			}
 			else
 			{
-				Log::Write( LogLevel_Info, GetNodeId(), "Received thermostat fan mode: index %d", mode );
+				Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received thermostat fan mode: index %d", mode );
 			}
 		}
 		else
 		{
-			Log::Write( LogLevel_Info, GetNodeId(), "Received unknown thermostat fan mode: %d", mode );
+			Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received unknown thermostat fan mode: %d", mode );
 		}
 		return true;
 	}
@@ -269,7 +269,7 @@ bool ThermostatFanMode::HandleMsg
 	if( ThermostatFanModeCmd_SupportedReport == (ThermostatFanModeCmd)_data[0] )
 	{
 		// We have received the supported thermostat fan modes from the Z-Wave device
-		Log::Write( LogLevel_Info, GetNodeId(), "Received supported thermostat fan modes" );
+		Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received supported thermostat fan modes" );
 
 		m_supportedModes.clear();
 		for( uint32 i=1; i<_length-1; ++i )
@@ -284,14 +284,14 @@ bool ThermostatFanMode::HandleMsg
 					/* Minus 1 here as the Unknown Entry is our addition */
 					if ((size_t)item.m_value >= (sizeof(c_modeName)/sizeof(*c_modeName) -1))
 					{
-						Log::Write( LogLevel_Info, GetNodeId(), "Received unknown fan mode: 0x%x", item.m_value);
+						Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received unknown fan mode: 0x%x", item.m_value);
 					}
 					else
 					{
 						item.m_label = c_modeName[item.m_value];
 						m_supportedModes.push_back( item );
 
-						Log::Write( LogLevel_Info, GetNodeId(), "    Added fan mode: %s", c_modeName[item.m_value].c_str() );
+						Log::Write( LogLevel_Info, GetNodeId(), _instance, "    Added fan mode: %s", c_modeName[item.m_value].c_str() );
 					}
 				}
 			}

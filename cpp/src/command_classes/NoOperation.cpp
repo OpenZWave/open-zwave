@@ -47,7 +47,7 @@ bool NoOperation::HandleMsg
 )
 {
 	// We have received a no operation from the Z-Wave device.
-	Log::Write( LogLevel_Info, GetNodeId(), "Received NoOperation command from node %d", GetNodeId() );
+	Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received NoOperation command from node %d", GetNodeId() );
 	return true;
 }
 

@@ -113,7 +113,7 @@ bool TimeParameters::RequestValue
 		GetDriver()->SendMsg( msg, _queue );
 		return true;
 	} else {
-		Log::Write(  LogLevel_Info, GetNodeId(), "TimeParametersCmd_Get Not Supported on this node");
+		Log::Write(  LogLevel_Info, GetNodeId(), _instance, "TimeParametersCmd_Get Not Supported on this node");
 	}
 	return false;
 }
@@ -138,7 +138,7 @@ bool TimeParameters::HandleMsg
 		uint8 minute = (_data[6] & 0x3F);
 		uint8 second = (_data[7] & 0x3F);
 
-		Log::Write( LogLevel_Info, GetNodeId(), "Received TimeParameters report: %02d/%02d/%04d %02d:%02d:%02d", (int)day, (int)month, (int)year, (int)hour, (int)minute, (int)second);
+		Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received TimeParameters report: %02d/%02d/%04d %02d:%02d:%02d", (int)day, (int)month, (int)year, (int)hour, (int)minute, (int)second);
 		if( ValueString* value = static_cast<ValueString*>( GetValue( _instance, TimeParametersIndex_Date ) ) )
 		{
 			char msg[512];

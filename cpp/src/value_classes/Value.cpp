@@ -366,7 +366,9 @@ bool Value::Set
 		{
 			if( CommandClass* cc = node->GetCommandClass( m_id.GetCommandClassId() ) )
 			{
-				Log::Write(LogLevel_Info, m_id.GetNodeId(), "Value::Set - %s - %s - %d - %d - %s", cc->GetCommandClassName().c_str(), this->GetLabel().c_str(), m_id.GetIndex(), m_id.GetInstance(), this->GetAsString().c_str());
+                                uint8 const _instance = m_id.GetInstance();
+
+				Log::Write(LogLevel_Info, m_id.GetNodeId(), _instance, "Value::Set - %s - %s - %d - %d - %s", cc->GetCommandClassName().c_str(), this->GetLabel().c_str(), m_id.GetIndex(), _instance, this->GetAsString().c_str());
 				// flag value as set and queue a "Set Value" message for transmission to the device
 				res = cc->SetValue( *this );
 
@@ -574,9 +576,11 @@ int Value::VerifyRefreshedValue
 	// focus on the actual variable storage, we should be able to accomplish this with
 	// memory functions.  It's really the strings that make things complicated(?).
 	// if this is the first read of a value, assume it is valid (and notify as a change)
+        uint8 const _instance = m_id.GetInstance();
+
 	if( !IsSet() )
 	{
-		Log::Write( LogLevel_Detail, m_id.GetNodeId(), "Initial read of value" );
+		Log::Write( LogLevel_Detail, m_id.GetNodeId(), _instance, "Initial read of value" );
 		Value::OnValueChanged();
 		return 2;		// confirmed change of value
 	}
@@ -587,39 +591,39 @@ int Value::VerifyRefreshedValue
 			case ValueID::ValueType_Button:			// Button is stored as a bool
 			case ValueID::ValueType_Bool:			// bool
 			{
-				Log::Write( LogLevel_Detail, m_id.GetNodeId(), "Refreshed Value: old value=%s, new value=%s, type=%s", *((bool*)_originalValue)?"true":"false", *((uint8*)_newValue)?"true":"false", GetTypeNameFromEnum(_type) );
+				Log::Write( LogLevel_Detail, m_id.GetNodeId(), _instance, "Refreshed Value: old value=%s, new value=%s, type=%s", *((bool*)_originalValue)?"true":"false", *((uint8*)_newValue)?"true":"false", GetTypeNameFromEnum(_type) );
 				break;
 			}
 			case ValueID::ValueType_Byte:			// byte
 			{
-				Log::Write( LogLevel_Detail, m_id.GetNodeId(), "Refreshed Value: old value=%d, new value=%d, type=%s", *((uint8*)_originalValue), *((uint8*)_newValue), GetTypeNameFromEnum(_type) );
+				Log::Write( LogLevel_Detail, m_id.GetNodeId(), _instance, "Refreshed Value: old value=%d, new value=%d, type=%s", *((uint8*)_originalValue), *((uint8*)_newValue), GetTypeNameFromEnum(_type) );
 				break;
 			}
 			case ValueID::ValueType_Decimal:		// decimal is stored as a string, so treat it as a string here
 			case ValueID::ValueType_String:			// string
 			{
-				Log::Write( LogLevel_Detail, m_id.GetNodeId(), "Refreshed Value: old value=%s, new value=%s, type=%s", ((string*)_originalValue)->c_str(), ((string*)_newValue)->c_str(), GetTypeNameFromEnum(_type) );
+				Log::Write( LogLevel_Detail, m_id.GetNodeId(), _instance, "Refreshed Value: old value=%s, new value=%s, type=%s", ((string*)_originalValue)->c_str(), ((string*)_newValue)->c_str(), GetTypeNameFromEnum(_type) );
 				break;
 			}
 			case ValueID::ValueType_Short:			// short
 			{
-				Log::Write( LogLevel_Detail, m_id.GetNodeId(), "Refreshed Value: old value=%d, new value=%d, type=%s", *((short*)_originalValue), *((short*)_newValue), GetTypeNameFromEnum(_type));
+				Log::Write( LogLevel_Detail, m_id.GetNodeId(), _instance, "Refreshed Value: old value=%d, new value=%d, type=%s", *((short*)_originalValue), *((short*)_newValue), GetTypeNameFromEnum(_type));
 				break;
 			}
 			case ValueID::ValueType_List:			// List Type is treated as a int32
 			case ValueID::ValueType_Int:			// int32
 			{
-				Log::Write( LogLevel_Detail, m_id.GetNodeId(), "Refreshed Value: old value=%d, new value=%d, type=%s", *((int32*)_originalValue), *((int32*)_newValue), GetTypeNameFromEnum(_type) );
+				Log::Write( LogLevel_Detail, m_id.GetNodeId(), _instance, "Refreshed Value: old value=%d, new value=%d, type=%s", *((int32*)_originalValue), *((int32*)_newValue), GetTypeNameFromEnum(_type) );
 				break;
 			}
 			case ValueID::ValueType_Raw:			// raw
 			{
-				Log::Write( LogLevel_Detail, m_id.GetNodeId(), "Refreshed Value: old value=%x, new value=%x, type=%s", _originalValue, _newValue, GetTypeNameFromEnum(_type) );
+				Log::Write( LogLevel_Detail, m_id.GetNodeId(), _instance, "Refreshed Value: old value=%x, new value=%x, type=%s", _originalValue, _newValue, GetTypeNameFromEnum(_type) );
 				break;
 			}
 			case ValueID::ValueType_Schedule:		// Schedule Type
 			{
-				Log::Write( LogLevel_Detail, m_id.GetNodeId(), "Refreshed Value: old value=%s, new value=%s, type=%s", _originalValue, _newValue, GetTypeNameFromEnum(_type) );
+				Log::Write( LogLevel_Detail, m_id.GetNodeId(), _instance, "Refreshed Value: old value=%s, new value=%s, type=%s", _originalValue, _newValue, GetTypeNameFromEnum(_type) );
 				/* we cant support verifyChanges yet... so always unset this */
 				m_verifyChanges = false;
 				break;
@@ -630,7 +634,7 @@ int Value::VerifyRefreshedValue
 
 	// check whether changes in this value should be verified (since some devices will report values that always
 	// change, where confirming changes is difficult or impossible)
-	Log::Write( LogLevel_Detail, m_id.GetNodeId(), "Changes to this value are %sverified", m_verifyChanges ? "" : "not " );
+	Log::Write( LogLevel_Detail, m_id.GetNodeId(), _instance, "Changes to this value are %sverified", m_verifyChanges ? "" : "not " );
 
 	if( !m_verifyChanges )
 	{
@@ -680,7 +684,7 @@ int Value::VerifyRefreshedValue
 		}
 
 		// values are different, so flag this as a verification refresh and queue it
-		Log::Write( LogLevel_Info, m_id.GetNodeId(), "Changed value (possible)--rechecking" );
+		Log::Write( LogLevel_Info, m_id.GetNodeId(), _instance, "Changed value (possible)--rechecking" );
 		SetCheckingChange( true );
 		Manager::Get()->RefreshValue( GetID() );
 		return 1;				// value has changed (to be confirmed)
@@ -718,7 +722,7 @@ int Value::VerifyRefreshedValue
 		}
 		if( bCheckEqual )
 		{
-			Log::Write( LogLevel_Info, m_id.GetNodeId(), "Changed value--confirmed" );
+			Log::Write( LogLevel_Info, m_id.GetNodeId(), _instance, "Changed value--confirmed" );
 			SetCheckingChange( false );
 
 			// update the saved value and send notification
@@ -730,7 +734,7 @@ int Value::VerifyRefreshedValue
 		// log this situation, but don't change the value or send a ValueChanged Notification
 		if( bOriginalEqual )
 		{
-			Log::Write( LogLevel_Info, m_id.GetNodeId(), "Spurious value change was noted." );
+			Log::Write( LogLevel_Info, m_id.GetNodeId(), _instance, "Spurious value change was noted." );
 			SetCheckingChange( false );
 			Value::OnValueRefreshed();
 			return 0;
@@ -738,7 +742,7 @@ int Value::VerifyRefreshedValue
 
 		// the second read is different than both the original value and the checked value...retry
 		// keep trying until we get the same value twice
-		Log::Write( LogLevel_Info, m_id.GetNodeId(), "Changed value (changed again)--rechecking" );
+		Log::Write( LogLevel_Info, m_id.GetNodeId(), _instance, "Changed value (changed again)--rechecking" );
 		SetCheckingChange( true );
 
 		// save a temporary copy of value and re-read value from device

@@ -78,13 +78,13 @@ bool CentralScene::RequestState
 		Driver::MsgQueue const _queue
 )
 {
-	Log::Write(LogLevel_Info, GetNodeId(), "CentralScene RequestState: %d", _requestFlags);
+	Log::Write(LogLevel_Info, GetNodeId(), _instance, "CentralScene RequestState: %d", _requestFlags);
 	bool requests = false;
 	if( ( _requestFlags & RequestFlag_AfterMark ))
 	{
 			requests = RequestValue( _requestFlags, CentralSceneCmd_Capability_Get, _instance, _queue );
 	} else {
-		Log::Write(LogLevel_Info, GetNodeId(), "CentralScene: Not a StaticRequest");
+		Log::Write(LogLevel_Info, GetNodeId(), _instance, "CentralScene: Not a StaticRequest");
 	}
 	return requests;
 }
@@ -171,14 +171,14 @@ bool CentralScene::HandleMsg
 			when = 60 * _data[2];
 		else
 			when = 0;
-		Log::Write( LogLevel_Info, GetNodeId(), "Received Central Scene set from node %d: scene id=%d in %d seconds. Sending event notification.", GetNodeId(), _data[3], when);
+		Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received Central Scene set from node %d: scene id=%d in %d seconds. Sending event notification.", GetNodeId(), _data[3], when);
 
 		if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, _data[3] ) ) )
 		{
 			value->OnValueRefreshed( when );
 			value->Release();
 		} else {
-			Log::Write( LogLevel_Warning, GetNodeId(), "No ValueID created for Scene %d", _data[3]);
+			Log::Write( LogLevel_Warning, GetNodeId(), _instance, "No ValueID created for Scene %d", _data[3]);
 			return false;
 		}
 		return true;
@@ -196,7 +196,7 @@ bool CentralScene::HandleMsg
 			value->OnValueRefreshed(m_scenecount);
 			value->Release();
 		} else {
-			Log::Write( LogLevel_Warning, GetNodeId(), "Can't find ValueID for SceneCount");
+			Log::Write( LogLevel_Warning, GetNodeId(), _instance, "Can't find ValueID for SceneCount");
 		}
 
 		if( Node* node = GetNodeUnsafe() )
@@ -208,7 +208,7 @@ bool CentralScene::HandleMsg
 				}
 
 		} else {
-			Log::Write(LogLevel_Info, GetNodeId(), "CentralScene: Can't find Node!");
+			Log::Write(LogLevel_Info, GetNodeId(), _instance, "CentralScene: Can't find Node!");
 		}
 	}
 

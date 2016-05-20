@@ -65,7 +65,7 @@ bool SceneActivation::HandleMsg
 			snprintf( msg, sizeof(msg), "%d minutes", _data[2] );
 		else
 			snprintf( msg, sizeof(msg), "via configuration" );
-		Log::Write( LogLevel_Info, GetNodeId(), "Received Scene Activation set from node %d: scene id=%d %s. Sending event notification.", GetNodeId(), _data[1], msg );
+		Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received Scene Activation set from node %d: scene id=%d %s. Sending event notification.", GetNodeId(), _data[1], msg );
 		Notification* notification = new Notification( Notification::Type_SceneEvent );
 		notification->SetHomeAndNodeIds( GetHomeId(), GetNodeId() );
 		notification->SetSceneId( _data[1] );

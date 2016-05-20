@@ -223,7 +223,7 @@ bool ThermostatMode::RequestValue
 			GetDriver()->SendMsg( msg, _queue );
 			return true;
 		} else {
-			Log::Write(  LogLevel_Info, GetNodeId(), "ThermostatModeCmd_Get Not Supported on this node");
+			Log::Write(  LogLevel_Info, GetNodeId(), _instance, "ThermostatModeCmd_Get Not Supported on this node");
 
 		}
 	}
@@ -261,19 +261,19 @@ bool ThermostatMode::HandleMsg
 			{
 				valueList->OnValueRefreshed( mode );
 				if (valueList->GetItem())
-					Log::Write( LogLevel_Info, GetNodeId(), "Received thermostat mode: %s", valueList->GetItem()->m_label.c_str() );
+					Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received thermostat mode: %s", valueList->GetItem()->m_label.c_str() );
 				else
-					Log::Write( LogLevel_Info, GetNodeId(), "Received thermostat mode: %d", mode);
+					Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received thermostat mode: %d", mode);
 				valueList->Release();
 			}
 			else
 			{
-				Log::Write( LogLevel_Info, GetNodeId(), "Received thermostat mode: index %d", mode );
+				Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received thermostat mode: index %d", mode );
 			}
 		}
 		else
 		{
-			 Log::Write( LogLevel_Info, GetNodeId(), "Received unknown thermostat mode: index %d", mode );
+			 Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received unknown thermostat mode: index %d", mode );
 		}
 		return true;
 	}
@@ -283,7 +283,7 @@ bool ThermostatMode::HandleMsg
 		// We have received the supported thermostat modes from the Z-Wave device
 		// these values are used to populate m_supportedModes which, in turn, is used to "seed" the values
 		// for each m_modes instance
-		Log::Write( LogLevel_Info, GetNodeId(), "Received supported thermostat modes" );
+		Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received supported thermostat modes" );
 
 		m_supportedModes.clear();
 		for( uint32 i=1; i<_length-1; ++i )
@@ -297,14 +297,14 @@ bool ThermostatMode::HandleMsg
 					/* minus 1 in the sizeof calc here, as the Unknown entry is our addition */
 					if ((size_t)item.m_value >= (sizeof(c_modeName)/sizeof(*c_modeName) -1))
 					{
-						Log::Write( LogLevel_Info, GetNodeId(), "Received unknown thermostat mode: 0x%x", item.m_value);
+						Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received unknown thermostat mode: 0x%x", item.m_value);
 					}
 					else
 					{
 						item.m_label = c_modeName[item.m_value];
 						m_supportedModes.push_back( item );
 
-						Log::Write( LogLevel_Info, GetNodeId(), "    Added mode: %s", c_modeName[item.m_value] );
+						Log::Write( LogLevel_Info, GetNodeId(), _instance, "    Added mode: %s", c_modeName[item.m_value] );
 					}
 				}
 			}

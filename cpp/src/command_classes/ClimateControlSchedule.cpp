@@ -174,11 +174,11 @@ bool ClimateControlSchedule::HandleMsg
 
 		if (day > 7) /* size of c_dayNames */
 		{
-			Log::Write (LogLevel_Warning, GetNodeId(), "Day Value was greater than range. Setting to Invalid");
+			Log::Write (LogLevel_Warning, GetNodeId(), _instance, "Day Value was greater than range. Setting to Invalid");
 			day = 0;
 		}
 
-		Log::Write( LogLevel_Info, GetNodeId(), "Received climate control schedule report for %s", c_dayNames[day] );
+		Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received climate control schedule report for %s", c_dayNames[day] );
 
 		if( ValueSchedule* value = static_cast<ValueSchedule*>( GetValue( _instance, day ) ) )
 		{
@@ -200,15 +200,15 @@ bool ClimateControlSchedule::HandleMsg
 
 				if( setback == 0x79 )
 				{
-					Log::Write( LogLevel_Info, GetNodeId(), "  Switch point at %02d:%02d, Frost Protection Mode", hours, minutes, c_dayNames[day] );
+					Log::Write( LogLevel_Info, GetNodeId(), _instance, "  Switch point at %02d:%02d, Frost Protection Mode", hours, minutes, c_dayNames[day] );
 				}
 				else if( setback == 0x7a )
 				{
-					Log::Write( LogLevel_Info, GetNodeId(), "  Switch point at %02d:%02d, Energy Saving Mode", hours, minutes, c_dayNames[day] );
+					Log::Write( LogLevel_Info, GetNodeId(), _instance, "  Switch point at %02d:%02d, Energy Saving Mode", hours, minutes, c_dayNames[day] );
 				}
 				else
 				{
-					Log::Write( LogLevel_Info, GetNodeId(), "  Switch point at %02d:%02d, Setback %+.1fC", hours, minutes, ((float)setback)*0.1f );
+					Log::Write( LogLevel_Info, GetNodeId(), _instance, "  Switch point at %02d:%02d, Setback %+.1fC", hours, minutes, ((float)setback)*0.1f );
 				}
 
 				value->SetSwitchPoint( hours, minutes, setback );
@@ -216,7 +216,7 @@ bool ClimateControlSchedule::HandleMsg
 
 			if( !value->GetNumSwitchPoints() )
 			{
-				Log::Write( LogLevel_Info, GetNodeId(), "  No Switch points have been set" );
+				Log::Write( LogLevel_Info, GetNodeId(), _instance, "  No Switch points have been set" );
 			}
 
 			// Notify the user
@@ -229,7 +229,7 @@ bool ClimateControlSchedule::HandleMsg
 
 	if( ClimateControlScheduleCmd_ChangedReport == (ClimateControlScheduleCmd)_data[0] )
 	{
-		Log::Write( LogLevel_Info, GetNodeId(), "Received climate control schedule changed report:" );
+		Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received climate control schedule changed report:" );
 
 		if( _data[1] )
 		{
@@ -240,7 +240,7 @@ bool ClimateControlSchedule::HandleMsg
 				// The schedule has changed and is not in override mode, so request reports for each day
 				for( int i=1; i<=7; ++i )
 				{
-					Log::Write(LogLevel_Info, GetNodeId(), "Get climate control schedule for %s", c_dayNames[i] );
+					Log::Write(LogLevel_Info, GetNodeId(), _instance, "Get climate control schedule for %s", c_dayNames[i] );
 
 					Msg* msg = new Msg( "ClimateControlScheduleCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 					msg->Append( GetNodeId() );
@@ -272,12 +272,12 @@ bool ClimateControlSchedule::HandleMsg
 		uint8 overrideState = _data[1] & 0x03;
 		if (overrideState > 3) /* size of c_overrideStateNames */
 		{
-			Log::Write (LogLevel_Warning, GetNodeId(), "overrideState Value was greater than range. Setting to Invalid");
+			Log::Write (LogLevel_Warning, GetNodeId(), _instance, "overrideState Value was greater than range. Setting to Invalid");
 			overrideState = 3;
 		}
 
-		Log::Write( LogLevel_Info, GetNodeId(), "Received climate control schedule override report:" );
-		Log::Write( LogLevel_Info, GetNodeId(), "  Override State: %s:", c_overrideStateNames[overrideState] );
+		Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received climate control schedule override report:" );
+		Log::Write( LogLevel_Info, GetNodeId(), _instance, "  Override State: %s:", c_overrideStateNames[overrideState] );
 
 		if( ValueList* valueList = static_cast<ValueList*>( GetValue( _instance, ClimateControlScheduleIndex_OverrideState ) ) )
 		{
@@ -290,15 +290,15 @@ bool ClimateControlSchedule::HandleMsg
 		{
 			if( setback == 0x79 )
 			{
-				Log::Write( LogLevel_Info, GetNodeId(), "  Override Setback: Frost Protection Mode" );
+				Log::Write( LogLevel_Info, GetNodeId(), _instance, "  Override Setback: Frost Protection Mode" );
 			}
 			else if( setback == 0x7a )
 			{
-				Log::Write( LogLevel_Info, GetNodeId(), "  Override Setback: Energy Saving Mode" );
+				Log::Write( LogLevel_Info, GetNodeId(), _instance, "  Override Setback: Energy Saving Mode" );
 			}
 			else
 			{
-				Log::Write( LogLevel_Info, GetNodeId(), "  Override Setback: %+.1fC", ((float)setback)*0.1f );
+				Log::Write( LogLevel_Info, GetNodeId(), _instance, "  Override Setback: %+.1fC", ((float)setback)*0.1f );
 			}
 		}
 
@@ -332,7 +332,7 @@ bool ClimateControlSchedule::SetValue
 		// Set a schedule
 		ValueSchedule const* value = static_cast<ValueSchedule const*>(&_value);
 
-		Log::Write( LogLevel_Info, GetNodeId(), "Set the climate control schedule for %s", c_dayNames[idx]);
+		Log::Write( LogLevel_Info, GetNodeId(), instance, "Set the climate control schedule for %s", c_dayNames[idx]);
 
 		Msg* msg = new Msg( "ClimateControlScheduleCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 		msg->SetInstance( this, instance );

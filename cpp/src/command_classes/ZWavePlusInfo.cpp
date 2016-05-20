@@ -116,7 +116,7 @@ bool ZWavePlusInfo::RequestValue
 		GetDriver()->SendMsg( msg, _queue );
 		return true;
 	} else {
-		Log::Write(  LogLevel_Info, GetNodeId(), "ZWavePlusInfoCmd_Get Not Supported on this node");
+		Log::Write(  LogLevel_Info, GetNodeId(), _instance, "ZWavePlusInfoCmd_Get Not Supported on this node");
 	}
 	return false;
 }

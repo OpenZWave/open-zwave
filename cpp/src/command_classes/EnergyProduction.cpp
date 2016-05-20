@@ -97,13 +97,13 @@ bool EnergyProduction::RequestValue
 {
 	if (_valueEnum > EnergyProductionIndex_Time)
 	{
-		Log::Write (LogLevel_Warning, GetNodeId(), "RequestValue _valueEnum was greater than range. Dropping");
+		Log::Write (LogLevel_Warning, GetNodeId(), _instance, "RequestValue _valueEnum was greater than range. Dropping");
 		return false;
 	}
 
 	if ( IsGetSupported() )
 	{
-		Log::Write( LogLevel_Info, GetNodeId(), "Requesting the %s value", c_energyParameterNames[_valueEnum] );
+		Log::Write( LogLevel_Info, GetNodeId(), _instance, "Requesting the %s value", c_energyParameterNames[_valueEnum] );
 		Msg* msg = new Msg( "EnergyProductionCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 		msg->SetInstance( this, _instance );
 		msg->Append( GetNodeId() );
@@ -115,7 +115,7 @@ bool EnergyProduction::RequestValue
 		GetDriver()->SendMsg( msg, _queue );
 		return true;
 	} else {
-		Log::Write(  LogLevel_Info, GetNodeId(), "EnergyProductionCmd_Get Not Supported on this node");
+		Log::Write(  LogLevel_Info, GetNodeId(), _instance, "EnergyProductionCmd_Get Not Supported on this node");
 	}
 	return false;
 }
@@ -138,11 +138,11 @@ bool EnergyProduction::HandleMsg
 		uint8 paramType = _data[1];
 		if (paramType > 4) /* size of  c_energyParameterNames minus Invalid Entry*/
 		{
-			Log::Write (LogLevel_Warning, GetNodeId(), "paramType Value was greater than range. Dropping Message");
+			Log::Write (LogLevel_Warning, GetNodeId(), _instance, "paramType Value was greater than range. Dropping Message");
 			return false;
 		}
 
-		Log::Write( LogLevel_Info, GetNodeId(), "Received an Energy production report: %s = %s", c_energyParameterNames[_data[1]], value.c_str() );
+		Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received an Energy production report: %s = %s", c_energyParameterNames[_data[1]], value.c_str() );
 		if( ValueDecimal* decimalValue = static_cast<ValueDecimal*>( GetValue( _instance, _data[1] ) ) )
 		{
 			decimalValue->OnValueRefreshed( value );

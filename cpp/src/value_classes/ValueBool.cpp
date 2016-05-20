@@ -97,7 +97,9 @@ void ValueBool::ReadXML
 	}
 	else
 	{
-		Log::Write( LogLevel_Info, "Missing default boolean value from xml configuration: node %d, class 0x%02x, instance %d, index %d", _nodeId,  _commandClassId, GetID().GetInstance(), GetID().GetIndex() );
+                uint8 const _instance = GetID().GetInstance();
+
+		Log::Write( LogLevel_Info, _instance, "Missing default boolean value from xml configuration: node %d, class 0x%02x, instance %d, index %d", _nodeId,  _commandClassId, _instance, GetID().GetIndex() );
 	}
 }
 

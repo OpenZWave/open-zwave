@@ -209,7 +209,7 @@ bool WakeUp::HandleMsg
 			if( _length < 6 )
 			{
 				Log::Write( LogLevel_Warning, "" );
-				Log::Write( LogLevel_Warning, GetNodeId(), "Unusual response: WakeUpCmd_IntervalReport with len = %d.  Ignored.", _length );
+				Log::Write( LogLevel_Warning, GetNodeId(), _instance, "Unusual response: WakeUpCmd_IntervalReport with len = %d.  Ignored.", _length );
 				value->Release();
 				return false;
 			}
@@ -220,7 +220,7 @@ bool WakeUp::HandleMsg
 
 			uint8 targetNodeId = _data[4];
 
-			Log::Write( LogLevel_Info, GetNodeId(), "Received Wakeup Interval report from node %d: Interval=%d, Target Node=%d", GetNodeId(), interval, targetNodeId );
+			Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received Wakeup Interval report from node %d: Interval=%d, Target Node=%d", GetNodeId(), interval, targetNodeId );
 
 			value->OnValueRefreshed( (int32)interval );
 
@@ -239,7 +239,7 @@ bool WakeUp::HandleMsg
 	else if( WakeUpCmd_Notification == (WakeUpCmd)_data[0] )
 	{
 		// The device is awake.
-		Log::Write( LogLevel_Info, GetNodeId(), "Received Wakeup Notification from node %d", GetNodeId() );
+		Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received Wakeup Notification from node %d", GetNodeId() );
 		SetAwake( true );
 		return true;
 	}
@@ -249,7 +249,7 @@ bool WakeUp::HandleMsg
 		uint32 maxinterval = (((uint32)_data[4]) << 16) | (((uint32)_data[5]) << 8) | ((uint32)_data[6]);
 		uint32 definterval = (((uint32)_data[7]) << 16) | (((uint32)_data[8]) << 8) | ((uint32)_data[9]);
 		uint32 stepinterval = (((uint32)_data[10]) << 16) | (((uint32)_data[11]) << 8) | ((uint32)_data[12]);
-		Log::Write( LogLevel_Info, GetNodeId(), "Received Wakeup Interval Capability report from node %d: Min Interval=%d, Max Interval=%d, Default Interval=%d, Interval Step=%d", GetNodeId(), mininterval, maxinterval, definterval, stepinterval );
+		Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received Wakeup Interval Capability report from node %d: Min Interval=%d, Max Interval=%d, Default Interval=%d, Interval Step=%d", GetNodeId(), mininterval, maxinterval, definterval, stepinterval );
 		if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, 1 ) ) )
 		{
 			value->OnValueRefreshed( (int32)mininterval );
