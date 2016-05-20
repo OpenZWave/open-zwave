@@ -90,7 +90,7 @@ bool Battery::RequestValue
 		GetDriver()->SendMsg( msg, _queue );
 		return true;
 	} else {
-		Log::Write(  LogLevel_Info, GetNodeId(), "BatteryCmd_Get Not Supported on this node");
+		Log::Write(  LogLevel_Info, GetNodeId(), _instance, "BatteryCmd_Get Not Supported on this node");
 	}
 	return false;
 }
@@ -116,7 +116,7 @@ bool Battery::HandleMsg
 			batteryLevel = 0;
 		}
 
-		Log::Write( LogLevel_Info, GetNodeId(), "Received Battery report from node %d: level=%d", GetNodeId(), batteryLevel );
+		Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received Battery report from node %d: level=%d", GetNodeId(), batteryLevel );
 
 		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, 0 ) ) )
 		{

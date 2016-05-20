@@ -97,7 +97,7 @@ bool Language::RequestValue
 		GetDriver()->SendMsg( msg, _queue );
 		return true;
 	} else {
-		Log::Write(  LogLevel_Info, GetNodeId(), "LanguageCmd_Get Not Supported on this node");
+		Log::Write(  LogLevel_Info, GetNodeId(), _instance, "LanguageCmd_Get Not Supported on this node");
 	}
 	return false;
 }
@@ -127,7 +127,7 @@ bool Language::HandleMsg
 		country[1] = _data[5];
 		country[2] = 0;
 
-		Log::Write( LogLevel_Info, GetNodeId(), "Received Language report: Language=%s, Country=%s", language, country );
+		Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received Language report: Language=%s, Country=%s", language, country );
 		ClearStaticRequest( StaticRequest_Values );
 
 		if( ValueString* languageValue = static_cast<ValueString*>( GetValue( _instance, LanguageIndex_Language ) ) )

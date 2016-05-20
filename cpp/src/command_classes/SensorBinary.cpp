@@ -146,7 +146,7 @@ bool SensorBinary::RequestValue
 		GetDriver()->SendMsg( msg, _queue );
 		return true;
 	} else {
-		Log::Write(  LogLevel_Info, GetNodeId(), "SensorBinaryCmd_Get Not Supported on this node");
+		Log::Write(  LogLevel_Info, GetNodeId(), _instance, "SensorBinaryCmd_Get Not Supported on this node");
 	}
 	return false;
 }
@@ -168,7 +168,7 @@ bool SensorBinary::HandleMsg
 	    {
 	        uint8 index = m_sensorsMap[_data[2]];
 
-            Log::Write( LogLevel_Info, GetNodeId(), "Received SensorBinary report: Sensor:%d State=%s", _data[2], _data[1] ? "On" : "Off" );
+            Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received SensorBinary report: Sensor:%d State=%s", _data[2], _data[1] ? "On" : "Off" );
 
             if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, index ) ) )
             {
@@ -180,7 +180,7 @@ bool SensorBinary::HandleMsg
 	    }
 	    else
 	    {
-            Log::Write( LogLevel_Info, GetNodeId(), "Received SensorBinary report: State=%s", _data[1] ? "On" : "Off" );
+            Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received SensorBinary report: State=%s", _data[1] ? "On" : "Off" );
 
             if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, 0 ) ) )
             {

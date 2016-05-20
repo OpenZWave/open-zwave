@@ -346,7 +346,7 @@ void MultiInstance::HandleMultiInstanceEncap
 
 		if( CommandClass* pCommandClass = node->GetCommandClass( commandClassId ) )
 		{
-			Log::Write( LogLevel_Info, GetNodeId(), "Received a MultiInstanceEncap from node %d, instance %d, for Command Class %s", GetNodeId(), instance, pCommandClass->GetCommandClassName().c_str() );
+			Log::Write( LogLevel_Info, GetNodeId(), instance, "Received a MultiInstanceEncap from node %d, instance %d, for Command Class %s", GetNodeId(), instance, pCommandClass->GetCommandClassName().c_str() );
 			pCommandClass->ReceivedCntIncr();
 			pCommandClass->HandleMsg( &_data[3], _length-3, instance );
 		}

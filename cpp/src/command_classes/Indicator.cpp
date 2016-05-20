@@ -87,7 +87,7 @@ bool Indicator::RequestValue
 		GetDriver()->SendMsg( msg, _queue );
 		return true;
 	} else {
-		Log::Write(  LogLevel_Info, GetNodeId(), "IndicatorCmd_Get Not Supported on this node");
+		Log::Write(  LogLevel_Info, GetNodeId(), _instance, "IndicatorCmd_Get Not Supported on this node");
 	}
 	return false;
 }
@@ -106,7 +106,7 @@ bool Indicator::HandleMsg
 {
 	if( IndicatorCmd_Report == (IndicatorCmd)_data[0] )
 	{
-		Log::Write( LogLevel_Info, GetNodeId(), "Received an Indicator report: Indicator=%d", _data[1] );
+		Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received an Indicator report: Indicator=%d", _data[1] );
 
 		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, 0 ) ) )
 		{
@@ -130,11 +130,12 @@ bool Indicator::SetValue
 {
 	if( ValueID::ValueType_Byte == _value.GetID().GetType() )
 	{
+                uint8 _instance = _value.GetID().GetInstance();
 		ValueByte const* value = static_cast<ValueByte const*>(&_value);
 
-		Log::Write( LogLevel_Info, GetNodeId(), "Indicator::SetValue - Setting indicator to %d", value->GetValue());
+		Log::Write( LogLevel_Info, GetNodeId(), _instance, "Indicator::SetValue - Setting indicator to %d", value->GetValue());
 		Msg* msg = new Msg( "IndicatorCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-		msg->SetInstance( this, _value.GetID().GetInstance() );
+		msg->SetInstance( this, _instance );
 		msg->Append( GetNodeId() );
 		msg->Append( 3 );
 		msg->Append( GetCommandClassId() );

@@ -107,7 +107,7 @@ bool Configuration::HandleMsg
 				}
 				default:
 				{
-					Log::Write( LogLevel_Info, GetNodeId(), "Invalid type (%d) for configuration parameter %d", value->GetID().GetType(), parameter );
+					Log::Write( LogLevel_Info, GetNodeId(), _instance, "Invalid type (%d) for configuration parameter %d", value->GetID().GetType(), parameter );
 				}
 			}
 			value->Release();
@@ -139,13 +139,13 @@ bool Configuration::HandleMsg
 					}
 					default:
 					{
-						Log::Write( LogLevel_Info, GetNodeId(), "Invalid size of %d bytes for configuration parameter %d", size, parameter );
+						Log::Write( LogLevel_Info, GetNodeId(), _instance, "Invalid size of %d bytes for configuration parameter %d", size, parameter );
 					}
 				}
 			}
 		}
 
-		Log::Write( LogLevel_Info, GetNodeId(), "Received Configuration report: Parameter=%d, Value=%d", parameter, paramValue );
+		Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received Configuration report: Parameter=%d, Value=%d", parameter, paramValue );
 		return true;
 	}
 
@@ -239,7 +239,7 @@ bool Configuration::RequestValue
 		GetDriver()->SendMsg( msg, _queue );
 		return true;
 	} else {
-		Log::Write(  LogLevel_Info, GetNodeId(), "ConfigurationCmd_Get Not Supported on this node");
+		Log::Write(  LogLevel_Info, GetNodeId(), _instance, "ConfigurationCmd_Get Not Supported on this node");
 	}
 	return false;
 }

@@ -100,7 +100,7 @@ bool ManufacturerSpecific::RequestValue
 		GetDriver()->SendMsg( msg, _queue );
 		return true;
 	} else {
-		Log::Write(  LogLevel_Info, GetNodeId(), "ManufacturerSpecificCmd_Get Not Supported on this node");
+		Log::Write(  LogLevel_Info, GetNodeId(), _instance, "ManufacturerSpecificCmd_Get Not Supported on this node");
 	}
 	return false;
 }
@@ -198,9 +198,9 @@ bool ManufacturerSpecific::HandleMsg
 				LoadConfigXML( node, configPath );
 			}
 
-			Log::Write( LogLevel_Info, GetNodeId(), "Received manufacturer specific report from node %d: Manufacturer=%s, Product=%s",
+			Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received manufacturer specific report from node %d: Manufacturer=%s, Product=%s",
 				    GetNodeId(), node->GetManufacturerName().c_str(), node->GetProductName().c_str() );
-			Log::Write( LogLevel_Info, GetNodeId(), "Node Identity Codes: %.4x:%.4x:%.4x", manufacturerId, productType, productId );
+			Log::Write( LogLevel_Info, GetNodeId(), _instance, "Node Identity Codes: %.4x:%.4x:%.4x", manufacturerId, productType, productId );
 			ClearStaticRequest( StaticRequest_Values );
 			node->m_manufacturerSpecificClassReceived = true;
 		}

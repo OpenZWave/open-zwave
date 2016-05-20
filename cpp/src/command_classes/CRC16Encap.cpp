@@ -70,14 +70,14 @@ bool CRC16Encap::HandleMsg
 {
 	if( CRC16EncapCmd_Encap == (CRC16EncapCmd)_data[0] )
 	{
-		Log::Write( LogLevel_Info, GetNodeId(), "Received CRC16-command from node %d", GetNodeId());
+		Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received CRC16-command from node %d", GetNodeId());
 
 		uint16 crcM = (_data[_length - 3] << 8) + _data[_length - 2] ; // crc as reported in msg
 		uint16 crcC = crc16(&_data[0], _length - 3 );				   // crc calculated
 
 		if ( crcM != crcC )
 		{
-			Log::Write( LogLevel_Info, GetNodeId(), "CRC check failed, message contains 0x%.4x but should be 0x%.4x", crcM, crcC);
+			Log::Write( LogLevel_Info, GetNodeId(), _instance, "CRC check failed, message contains 0x%.4x but should be 0x%.4x", crcM, crcC);
 			return false;
 		}
 
