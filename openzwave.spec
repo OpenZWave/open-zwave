@@ -11,7 +11,7 @@ License: LGPL-2.0+
 %else 
 License: LGPLv2+
 %endif
-Version: 1.4.0
+Version: 1.4.167
 Release: 1
 BuildRequires: gcc-c++ make libudev-devel doxygen graphviz
 %if 0%{?fedora} >= 18
@@ -23,8 +23,9 @@ BuildRequires: systemd-devel pkg-config
 BuildRequires: libudev-devel pkgconfig
 %endif
 %endif
-Source0: libopenzwave-%{version}.tar.gz
-#Source0: openzwave-%{version}.tar.gz
+#Source0: libopenzwave-%{version}.tar.gz
+Source0: openzwave-%{version}.tar.gz
+
 
 BuildRoot: %{_tmppath}/libopenzwave-root
 
@@ -84,14 +85,16 @@ Sample Executables for OpenZWave
 
 %prep
 
-%setup -q 
+%setup -q -n openzwave-%{version}
+
+
 
 
 %build
 major_ver=$(echo %{version} | awk -F \. {'print $1'})
 minor_ver=$(echo %{version} | awk -F \. {'print $2'})
 revision=$(echo %{version} | awk -F \. {'print $3'})
-VERSION_MAJ=$major_ver VERSION_MIN=$minor_ver VERSION_REV=$revision PREFIX=/usr sysconfdir=%{_sysconfdir}/openzwave/ includedir=%{_includedir} docdir=%{_defaultdocdir}/openzwave-%{version} instlibdir=%{_libdir} make
+VERSION_MAJ=$major_ver VERSION_MIN=$minor_ver VERSION_REV=$revision PREFIX=/usr sysconfdir=%{_sysconfdir}/openzwave/ includedir=%{_includedir} docdir=%{_defaultdocdir}/openzwave-%{version} instlibdir=%{_libdir} make %{?_smp_mflags}
 
 %install
 rm -rf %{buildroot}/*
@@ -124,6 +127,7 @@ rm -rf %{buildroot}%{_defaultdocdir}/openzwave-%{version}/html/
 
 %files -n libopenzwave-devel
 %defattr(-,root,root,-)
+%{_bindir}/ozw_config
 %{_includedir}/openzwave/
 %{_libdir}/libopenzwave.so
 %{_libdir}/pkgconfig/libopenzwave.pc
