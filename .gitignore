@@ -41,3 +41,5 @@ OZWForm.vshost.exe.manifest
 /dotnet/build/vs2010/OpenZWaveDotNet.v12.suo
 /dotnet/build/vs2013/OpenZWaveDotNet.sdf
 /dotnet/build/vs2013/OpenZWaveDotNet.v12.suo
+/cpp/build/windows/vs2013/OpenZWave.vcxproj.user
+/dotnet/build/vs2013/OpenZWaveDotNet.opensdf
