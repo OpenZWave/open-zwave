@@ -37,3 +37,7 @@ OZWForm.vshost.exe.manifest
 .gitignore
 /cpp/build/windows/winversion.cpp
 .distfiles
+/cpp/build/windows/vs2010/OpenZWave.vcxproj.user
+/dotnet/build/vs2010/OpenZWaveDotNet.v12.suo
+/dotnet/build/vs2013/OpenZWaveDotNet.sdf
+/dotnet/build/vs2013/OpenZWaveDotNet.v12.suo
