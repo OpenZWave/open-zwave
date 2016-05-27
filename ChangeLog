@@ -55,6 +55,7 @@ Version 1.5
  - Pull Request #861 - Add support for building with BitBake Environment from binli71 (Justin)
  - Pull Request #879 - Fixed setting Thermostat Clock from gizmocuz (Justin)
  - Pull Request #888 - Added Fibaro FGMS001 2016 USA version from Clancey (Nechry)
+ - Issue #895 - There are now 2 danfoss room sensor definitions with type="0003" id="8010" (Nechry)
 
 
 Version 1.4
