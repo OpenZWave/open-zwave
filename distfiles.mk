@@ -66,7 +66,7 @@ DISTFILES =	.gitignore \
 	config/cooper/RF9505-T.xml \
 	config/cooper/RF9540-N.xml \
 	config/danfoss/living.xml \
-	config/danfoss/rsroom.xml \
+	config/danfoss/rs.xml \
 	config/danfoss/z.xml \
 	config/device_classes.xml \
 	config/device_classes.xsd \
