@@ -693,6 +693,7 @@
 		<Product type="1182" id="4501" name="iTemp Dual Sensor" config="schlagelink/itemp.xml" />
 		<Product type="1188" id="4501" name="iTemp Dual Sensor" config="schlagelink/itemp.xml" />
 		<Product type="6131" id="4501" name="Mini Keypad RFID" config="schlagelink/minikeypad.xml" />
+		<Product type="6131" id="4101" name="Mini Keypad RFID" config="schlagelink/minikeypad.xml" />
 		<Product type="6941" id="5501" name="LE120 Appliance Module"/>
 		<Product type="6943" id="4501" name="On-Wall Power Socket"/>
 	</Manufacturer>
@@ -719,9 +720,9 @@
 	</Manufacturer>
 	<Manufacturer id="0047" name="Somfy">
 	</Manufacturer>
-	<Manufacturer id="166" name="Swiid">
-		<Product type="100" id="100" name="SwiidInter" config="swiid/swiidinter.xml"/>
-                <Product type="2007" id="0706" name="SwiidPlug" config="swiid/swiidplug.xml"/>
+	<Manufacturer id="0166" name="Swiid">
+		<Product type="0100" id="0100" name="SwiidInter" config="swiid/swiidinter.xml"/>
+    <Product type="2007" id="0706" name="SwiidPlug" config="swiid/swiidplug.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0009" name="Sylvania">
 	</Manufacturer>
@@ -732,7 +733,7 @@
 	<Manufacturer id="010c" name="There">
 		<Product type="0001" id="0001" name="ThereGate"/>
 	</Manufacturer>
-	<Manufacturer id="0019b" name="ThermoFloor AS">
+	<Manufacturer id="019b" name="ThermoFloor AS">
 		<Product type="0001" id="0001" name="Heatit Thermostat TF 021" config="thermofloor/heatit021.xml"/>
 	</Manufacturer>
 	<Manufacturer id="008b" name="Trane">
