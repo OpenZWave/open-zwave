@@ -604,6 +604,7 @@
 		<Product type="0002" id="0001" name="Danalock Keypad" config="polycontrol/keypad.xml"/>
 		<Product type="0003" id="0002" name="Danalock Circle/Square" config="polycontrol/doorlock.xml"/>
 		<Product type="0001" id="0001" name="Polylock" config="polycontrol/polylock.xml"/>
+		<Product type="0008" id="0002" name="Danalock V2 BTZE" config="polycontrol/doorlock.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0154" name="Popp">
 		<Product type="0004" id="0002" name="Solar Powered Outdoor Siren" config="popp/solar-siren.xml" />
