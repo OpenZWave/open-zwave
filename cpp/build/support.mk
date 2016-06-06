@@ -29,7 +29,7 @@ GIT		:= $(shell which git)
 ifeq ($(GIT),)
 VERSION_REV ?= 0
 else
-GITVERSION	:= $(shell $(GIT) --git-dir ./.git describe --long --tags --dirty 2>/dev/null | sed s/^v//)
+GITVERSION	:= $(shell $(GIT) --git-dir $(top_srcdir)/.git describe --long --tags --dirty 2>/dev/null | sed s/^v//)
 ifeq ($(GITVERSION),)
 GITVERSION	:= $(VERSION_MAJ).$(VERSION_MIN).-1
 VERSION_REV	:= 0
