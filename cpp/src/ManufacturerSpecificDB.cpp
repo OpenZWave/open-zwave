@@ -30,8 +30,12 @@
 #include "tinyxml.h"
 
 #include "Options.h"
+#include "Driver.h"
 #include "platform/Log.h"
 #include "platform/FileOps.h"
+#include "platform/Mutex.h"
+
+#include "Utils.h"
 
 using namespace OpenZWave;
 
@@ -64,7 +68,9 @@ void ManufacturerSpecificDB::Destroy
 
 ManufacturerSpecificDB::ManufacturerSpecificDB
 (
-)
+):
+m_MfsMutex(new Mutex()),
+m_initializing(true)
 {
 	// Ensure the singleton instance is set
 	s_instance = this;
@@ -92,8 +98,8 @@ bool ManufacturerSpecificDB::LoadProductXML
 (
 )
 {
-	s_bXmlLoaded = true;
-	FileOps *fo = FileOps::Create();
+	LockGuard LG(m_MfsMutex);
+
 
 	// Parse the Z-Wave manufacturer and product XML file.
 	string configPath;
@@ -190,17 +196,7 @@ bool ManufacturerSpecificDB::LoadProductXML
 					if( str )
 					{
 						dconfigPath = str;
-						/* check if the file exists */
-						string path = configPath + dconfigPath;
-						if (!fo->FileExists(path)) {
-							Log::Write( LogLevel_Warning, "Config File for %s does not exist", productName.c_str());
-							/* try to download it */
-
-						}
-
 					}
-
-
 
 					// Add the product to the map
 					Product* product = new Product( manufacturerId, productType, productId, productName, dconfigPath );
@@ -224,6 +220,7 @@ bool ManufacturerSpecificDB::LoadProductXML
 		// Move on to the next manufacturer.
 		manufacturerElement = manufacturerElement->NextSiblingElement();
 	}
+	s_bXmlLoaded = true;
 
 	delete pDoc;
 	return true;
@@ -237,6 +234,7 @@ void ManufacturerSpecificDB::UnloadProductXML
 (
 )
 {
+	LockGuard LG(m_MfsMutex);
 	if (s_bXmlLoaded)
 	{
 		map<int64,Product*>::iterator pit = s_productMap.begin();
@@ -255,5 +253,74 @@ void ManufacturerSpecificDB::UnloadProductXML
 		}
 
 		s_bXmlLoaded = false;
+	}
+}
+
+void ManufacturerSpecificDB::checkConfigFiles
+(
+	Driver *driver
+)
+{
+	LockGuard LG(m_MfsMutex);
+	if (s_bXmlLoaded)
+	{
+		string configPath;
+		Options::Get()->GetOptionAsString( "ConfigPath", &configPath );
+
+		map<int64,Product*>::iterator pit;
+		for (pit = s_productMap.begin(); pit != s_productMap.end(); pit++) {
+			Product *c = pit->second;
+			if (c->GetConfigPath().size() > 0) {
+				string path = configPath + c->GetConfigPath();
+
+				/* check if we are downloading already */
+				std::list<string>::iterator iter = std::find (m_downloading.begin(), m_downloading.end(), path);
+				/* check if the file exists */
+				if (iter == m_downloading.end() && !FileOps::Create()->FileExists(path)) {
+					Log::Write( LogLevel_Warning, "Config File for %s does not exist - %s", c->GetProductName().c_str(), path.c_str());
+					/* try to download it */
+					if (driver->startConfigDownload(c->GetManufacturerId(), c->GetProductType(), c->GetProductId(), path))
+						m_downloading.push_back(path);
+					else
+						Log::Write(LogLevel_Warning, "Can't download file %s", path.c_str());
+				} else if (iter != m_downloading.end()) {
+					Log::Write(LogLevel_Debug, "Config file for %s already queued", c->GetProductName().c_str());
+				}
+			}
+		}
+	}
+	checkInitialized();
+}
+
+void ManufacturerSpecificDB::configDownloaded
+(
+	string file,
+	bool success
+)
+{
+	/* check if we are downloading already */
+	std::list<string>::iterator iter = std::find (m_downloading.begin(), m_downloading.end(), file);
+	if (iter != m_downloading.end()) {
+		m_downloading.erase(iter);
+	} else {
+		Log::Write(LogLevel_Warning, "File is not in the list of downloading files: %s", file.c_str());
+	}
+	Log::Write(LogLevel_Debug, "Downloads Remaining: %d", m_downloading.size());
+	checkInitialized();
+}
+
+bool ManufacturerSpecificDB::isReady
+(
+)
+{
+	if (!m_initializing && (m_downloading.size() == 0))
+		return true;
+	return false;
+}
+
+void ManufacturerSpecificDB::checkInitialized() {
+	if (m_downloading.size() == 0) {
+		Log::Write(LogLevel_Info, "ManufacturerSpecificDB Initialized");
+		m_initializing = false;
 	}
 }

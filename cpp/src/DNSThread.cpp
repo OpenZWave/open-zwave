@@ -104,7 +104,7 @@ bool DNSThread::sendRequest
 DNSLookup *lookup
 )
 {
-	Log::Write(LogLevel_Info, lookup->NodeID, "Performing Lookup on %s for Node %d", lookup->lookup.c_str(), lookup->NodeID);
+	Log::Write(LogLevel_Info, lookup->NodeID, "Queuing Lookup on %s for Node %d", lookup->lookup.c_str(), lookup->NodeID);
 	LockGuard LG(m_dnsMutex);
 	m_dnslist.push_back(lookup);
 	m_dnsRequestEvent->Set();
@@ -124,7 +124,7 @@ void DNSThread::processResult
 		if (m_dnslist.empty())
 			m_dnsRequestEvent->Reset();
 	}
-	Log::Write(LogLevel_Debug, "LookupTxT Checking %s", lookup->lookup.c_str());
+	Log::Write(LogLevel_Info, "LookupTxT Checking %s", lookup->lookup.c_str());
 	if (!m_dnsresolver.LookupTxT(lookup->lookup, lookup->result)) {
 		Log::Write(LogLevel_Warning, "Lookup on %s Failed", lookup->lookup.c_str());
 	} else {

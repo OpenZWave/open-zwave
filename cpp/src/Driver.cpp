@@ -247,13 +247,12 @@ m_eventMutex (new Mutex() )
 	Options::Get()->GetOptionAsInt( "PollInterval", &m_pollInterval );
 	Options::Get()->GetOptionAsBool( "IntervalBetweenPolls", &m_bIntervalBetweenPolls );
 
+    m_httpClient = new HttpClient(this);
+
 	m_mfs = ManufacturerSpecificDB::Create();
 	CheckMFSConfigRevision();
 
-
-    m_httpClient = new HttpClient(this);
-
-    this->StartDownload("http://www.dynam.ac/");
+//    this->startDownload("http://www.dynam.ac/");
 }
 
 //-----------------------------------------------------------------------------
@@ -419,6 +418,7 @@ void Driver::DriverThreadProc
 #define WAITOBJECTCOUNT 11
 
 	uint32 attempts = 0;
+	bool mfsisReady = false;
 	while( true )
 	{
 		if( Init( attempts ) )
@@ -427,8 +427,8 @@ void Driver::DriverThreadProc
 			Wait* waitObjects[WAITOBJECTCOUNT];
 			waitObjects[0] = _exitEvent;						// Thread must exit.
 			waitObjects[1] = m_notificationsEvent;				// Notifications waiting to be sent.
-			waitObjects[2] = m_controller;						// Controller has received data.
-			waitObjects[3] = m_queueMsgEvent;					// a DNS and HTTP Event
+			waitObjects[2] = m_queueMsgEvent; ;					// a DNS and HTTP Event
+			waitObjects[3] = m_controller;					    // Controller has received data.
 			waitObjects[4] = m_queueEvent[MsgQueue_Command];	// A controller command is in progress.
 			waitObjects[5] = m_queueEvent[MsgQueue_NoOp];		// Send device probes and diagnostics messages
 			waitObjects[6] = m_queueEvent[MsgQueue_Controller];	// A multi-part controller command is in progress
@@ -447,9 +447,13 @@ void Driver::DriverThreadProc
 				uint32 count = WAITOBJECTCOUNT;
 				int32 timeout = Wait::Timeout_Infinite;
 
+				// if the ManufacturerDB class is setting up, we can't do anything yet
+				if (mfsisReady == false) {
+					count=3;
+
 				// If we're waiting for a message to complete, we can only
 				// handle incoming data, notifications, DNS/HTTP  and exit events.
-				if( m_waitingForAck || m_expectedCallbackId || m_expectedReply )
+				} else if( m_waitingForAck || m_expectedCallbackId || m_expectedReply )
 				{
 					count = 4;
 					timeout = m_waitingForAck ? ACK_TIMEOUT : retryTimeStamp.TimeRemaining();
@@ -501,14 +505,19 @@ void Driver::DriverThreadProc
 					}
 					case 2:
 					{
-						// Data has been received
-						ReadMsg();
+						// a DNS or HTTP Event has occurred
+						ProcessEventMsg();
+						if (mfsisReady == false && m_mfs->isReady()) {
+							Notification* notification = new Notification( Notification::Type_ManufacturerSpecificDBReady );
+							QueueNotification( notification );
+							mfsisReady = true;
+						}
 						break;
 					}
 					case 3:
 					{
-						// a DNS or HTTP Event has occurred
-						ProcessEventMsg();
+						// Data has been received
+						ReadMsg();
 						break;
 					}
 					default:
@@ -6965,9 +6974,9 @@ Node *node
 	lu->NodeID = node->GetNodeId();
 	/* make up a string of what we want to look up */
 	std::stringstream ss;
-	ss << "0x" << std::hex << std::setw(4) << std::setfill('0') << node->GetProductId() << ".";
-	ss << "0x" << std::hex << std::setw(4) << std::setfill('0') << node->GetProductType() << ".";
-	ss << "0x" << std::hex << std::setw(4) << std::setfill('0') << node->GetManufacturerId() << ".db.openzwave.com.";
+	ss << std::hex << std::setw(4) << std::setfill('0') << node->GetProductId() << ".";
+	ss << std::hex << std::setw(4) << std::setfill('0') << node->GetProductType() << ".";
+	ss << std::hex << std::setw(4) << std::setfill('0') << node->GetManufacturerId() << ".db.openzwave.com.";
 
 	lu->lookup = ss.str();
 	return m_dns->sendRequest(lu);
@@ -6999,6 +7008,9 @@ DNSLookup *result
 				notification->SetHomeAndNodeIds( m_homeId, node->GetNodeId() );
 				notification->SetUserAlertNofification(Notification::Alert_ConfigOutOfDate);
 				QueueNotification( notification );
+
+				/* XXX TODO - Download New Version */
+
 			}
 		} else if (result->NodeID == 0) {
 			/* manufacturer_specific */
@@ -7007,14 +7019,27 @@ DNSLookup *result
 				Notification* notification = new Notification( Notification::Type_UserAlerts );
 				notification->SetUserAlertNofification(Notification::Alert_MFSOutOfDate);
 				QueueNotification( notification );
+
+				/* XXX TODO - Download New Version */
+
+
+			} else {
+				/* its upto date - Check to make sure we have all the config files */
+				m_mfs->checkConfigFiles(this);
 			}
 		}
+	} else if (result->status == DNSError_NotFound) {
+		Log::Write(LogLevel_Info, "No match for Device record %s", result->lookup.c_str());
+	} else if (result->status == DNSError_DomainError) {
+		Log::Write(LogLevel_Warning, "Domain Error Looking up record %s", result->lookup.c_str());
+	} else if (result->status == DNSError_InternalError) {
+		Log::Write(LogLevel_Warning, "Internal DNS Error looking up record %s", result->lookup.c_str());
 	}
 
 }
 
 
-bool Driver::SetHttpClient
+bool Driver::setHttpClient
 (
 i_HttpClient *client
 )
@@ -7025,7 +7050,7 @@ i_HttpClient *client
 	return true;
 }
 
-bool Driver::StartDownload
+bool Driver::startDownload
 (
 string url
 )
@@ -7033,19 +7058,51 @@ string url
 	HttpDownload *download = new HttpDownload();
 	download->url = url;
 	download->filename = "/tmp/test.txt";
-	download->operation = HttpDownload::Config;
+	download->operation = HttpDownload::File;
 	Log::Write(LogLevel_Info, "Download Starting for %s saving to %s", download->url.c_str(), download->filename.c_str());
 
 	return m_httpClient->StartDownload(download);
 }
+
+
+bool Driver::startConfigDownload
+(
+	uint16 _manufacturerId,
+	uint16 _productType,
+	uint16 _productId,
+	string configfile
+)
+{
+	HttpDownload *download = new HttpDownload();
+	std::stringstream ss;
+	ss << std::hex << std::setw(4) << std::setfill('0') << _productId << ".";
+	ss << std::hex << std::setw(4) << std::setfill('0') << _productType << ".";
+	ss << std::hex << std::setw(4) << std::setfill('0') << _manufacturerId << ".xml";
+	download->url = "http://download.db.openzwave.com/" + ss.str();
+	download->filename = configfile;
+	download->operation = HttpDownload::Config;
+	Log::Write(LogLevel_Info, "Queuing download for %s", download->url.c_str());
+
+	return m_httpClient->StartDownload(download);
+}
+
 
 void Driver::processDownload
 (
 HttpDownload *download
 )
 {
+	if (download->transferStatus == HttpDownload::Ok) {
+		Log::Write(LogLevel_Info, "Download Finished: %s", download->filename.c_str());
+		m_mfs->configDownloaded(download->filename);
+	} else {
+		Log::Write(LogLevel_Warning, "Download of %s Failed", download->url.c_str());
+		m_mfs->configDownloaded(download->filename, false);
+		Notification* notification = new Notification( Notification::Type_UserAlerts );
+		notification->SetUserAlertNofification(Notification::Alert_ConfigFileDownloadFailed);
+		QueueNotification( notification );
+	}
 
-	Log::Write(LogLevel_Info, "Download Finished: %s", download->filename.c_str());
 
 //	delete download;
 }

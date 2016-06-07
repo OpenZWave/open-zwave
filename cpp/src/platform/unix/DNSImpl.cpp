@@ -85,13 +85,13 @@ string &result
     			status = DNSError_NotFound;
     			break;
     		case NO_RECOVERY:
-    			status = DNSError_InternaError;
+    			status = DNSError_InternalError;
     			break;
     		case TRY_AGAIN:
-    			status = DNSError_InternaError;
+    			status = DNSError_InternalError;
     			break;
     		default:
-    			status = DNSError_InternaError;
+    			status = DNSError_InternalError;
     			break;
 
     	}
@@ -105,7 +105,7 @@ string &result
    	p = start = ns_rr_rdata(rr);
    	rrlen = ns_rr_rdlen(rr);
    	if (rrlen > 1024) {
-   		status = DNSError_InternaError;
+   		status = DNSError_InternalError;
    		return false;
    	}
    	while(p < start + rrlen)

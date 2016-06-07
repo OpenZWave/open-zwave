@@ -37,6 +37,8 @@
 
 namespace OpenZWave
 {
+	class Mutex;
+	class Driver;
 
 	/** \brief The _ManufacturerSpecificDB class handles the Config File Database
 	 * that we use to configure devices.
@@ -50,10 +52,18 @@ namespace OpenZWave
 		bool LoadProductXML();
 		void UnloadProductXML();
 		uint8 GetRevision() { return m_revision;}
+		void checkConfigFiles(Driver *);
+		void configDownloaded(string file, bool success=true);
+		bool isReady();
 
 	private:
 		ManufacturerSpecificDB();
 		~ManufacturerSpecificDB();
+
+		void checkInitialized();
+
+
+		Mutex*					m_MfsMutex;            /**< Mutex to ensure its accessed by a single thread at a time */
 
 		static ManufacturerSpecificDB *s_instance;
 
@@ -105,7 +115,9 @@ namespace OpenZWave
 		static map<int64,Product*>	s_productMap;
 		static bool					s_bXmlLoaded;
 
+		list<string> m_downloading;
 		uint8 m_revision;
+		bool m_initializing;
 
 	};
 

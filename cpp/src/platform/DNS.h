@@ -43,7 +43,7 @@ namespace OpenZWave
 		DNSError_None = 0,
 		DNSError_NotFound,					/**< No Record Exists - There for no Config File exists */
 		DNSError_DomainError,					/**< Domain didn't resolve etc */
-		DNSError_InternaError					/**< A Internal Error Occured */
+		DNSError_InternalError					/**< A Internal Error Occured */
 	};
 
 

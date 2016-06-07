@@ -41,6 +41,9 @@
 #include <cerrno>
 #include <algorithm>
 #include <assert.h>
+#include <iostream>
+#include <string>
+
 
 #ifdef MINIHTTP_USE_POLARSSL
 #  include "polarssl/net.h"
@@ -53,6 +56,7 @@
 
 #define SOCKETVALID(s) ((s) != INVALID_SOCKET)
 
+//#define _DEBUG
 
 #ifdef _MSC_VER
 #  define STRNICMP _strnicmp
@@ -932,7 +936,8 @@ _chunkedTransfer(false),
 _mustClose(true),
 _followRedir(true),
 _alwaysHandle(false),
-_filename()
+_filename(),
+_pFile(NULL)
 {
 }
 
@@ -1467,8 +1472,9 @@ void HttpSocket::_OnRecv(void *buf, unsigned int size)
         if(!size)
             return;
 
-        if (!_pFile)
+        if (!_pFile) {
         	_pFile = fopen( _filename.c_str(), "w" );
+        }
 
 
         fwrite(buf, size, 1, _pFile );
@@ -1481,8 +1487,10 @@ void HttpSocket::_OnClose
 {
     if(!ExpectMoreData())
         _FinishRequest();
-    if (_pFile)
+    if (_pFile) {
     	fclose(_pFile);
+    	_pFile = NULL;
+    }
 }
 
 void HttpSocket::_OnRecvInternal

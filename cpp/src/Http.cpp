@@ -34,6 +34,7 @@
 #include "Driver.h"
 #include "Http.h"
 #include "platform/HttpClient.h"
+#include "platform/FileOps.h"
 #include "Utils.h"
 
 using namespace OpenZWave;
@@ -88,6 +89,28 @@ bool HttpClient::StartDownload
 		m_httpThread->Start(HttpClient::HttpThreadProc, this);
 
 	LockGuard LG(m_httpMutex);
+	switch (transfer->operation) {
+		case HttpDownload::None:
+			Log::Write(LogLevel_Warning, "Got a Transfer Type of NONE for %s", transfer->url.c_str());
+			delete transfer;
+			return false;
+		case HttpDownload::File:
+		case HttpDownload::Config:
+			/* make sure it has everything */
+			if ((transfer->url.size() <= 0) || (transfer->filename.size() <= 0)) {
+				Log::Write(LogLevel_Warning, "File Transfer had incomplete Params");
+				delete transfer;
+				return false;
+			}
+			/* make sure the target file is writeable */
+			if (!FileOps::Create()->FileWriteable(transfer->filename)) {
+				Log::Write(LogLevel_Warning, "File %s is not writable", transfer->filename.c_str());
+				delete transfer;
+				return false;
+			}
+			break;
+	}
+
 	m_httpDownlist.push_back(transfer);
 	m_httpDownloadEvent->Set();
 	return true;
@@ -136,6 +159,7 @@ void HttpClient::HttpThreadProc
 					if (client->m_httpDownlist.empty())
 						client->m_httpDownloadEvent->Reset();
 				}
+				Log::Write(LogLevel_Debug, "Download Starting for %s (%s)", download->url.c_str(), download->filename.c_str());
 				HttpSocket *ht = new HttpSocket();
 			    ht->SetKeepAlive(0);
 			    ht->SetBufsizeIn(64 * 1024);
