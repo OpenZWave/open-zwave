@@ -35,6 +35,7 @@
 #include "ZWSecurity.h"
 #include "DNSThread.h"
 #include "Http.h"
+#include "ManufacturerSpecificDB.h"
 
 #include "platform/Event.h"
 #include "platform/Mutex.h"
@@ -245,6 +246,10 @@ m_eventMutex (new Mutex() )
 	Options::Get()->GetOptionAsBool( "NotifyTransactions", &m_notifytransactions );
 	Options::Get()->GetOptionAsInt( "PollInterval", &m_pollInterval );
 	Options::Get()->GetOptionAsBool( "IntervalBetweenPolls", &m_bIntervalBetweenPolls );
+
+	m_mfs = ManufacturerSpecificDB::Create();
+	CheckMFSConfigRevision();
+
 
     m_httpClient = new HttpClient(this);
 
@@ -6951,7 +6956,7 @@ bool Driver::isNetworkKeySet() {
 	}
 }
 
-bool Driver::CheckConfigRevision
+bool Driver::CheckNodeConfigRevision
 (
 Node *node
 )
@@ -6968,20 +6973,41 @@ Node *node
 	return m_dns->sendRequest(lu);
 }
 
+bool Driver::CheckMFSConfigRevision
+(
+)
+{
+	DNSLookup *lu = new DNSLookup;
+	lu->NodeID = 0;
+	lu->lookup = "mfs.db.openzwave.com.";
+	return m_dns->sendRequest(lu);
+}
+
+
 void Driver::processConfigRevision
 (
 DNSLookup *result
 )
 {
 	if (result->status == DNSError_None) {
-		LockGuard LG(m_nodeMutex);
-		Node *node = this->GetNode(result->NodeID);
-		if (node->getConfigRevision() < atol(result->result.c_str())) {
-			Log::Write(LogLevel_Warning, node->GetNodeId(), "Config for Device \"%s\" is out of date", node->GetProductName().c_str());
-			Notification* notification = new Notification( Notification::Type_UserAlerts );
-			notification->SetHomeAndNodeIds( m_homeId, node->GetNodeId() );
-			notification->SetUserAlertNofification(Notification::Alert_ConfigOutOfDate);
-			QueueNotification( notification );
+		if (result->NodeID > 0) {
+			LockGuard LG(m_nodeMutex);
+			Node *node = this->GetNode(result->NodeID);
+			if (node->getConfigRevision() < atol(result->result.c_str())) {
+				Log::Write(LogLevel_Warning, node->GetNodeId(), "Config for Device \"%s\" is out of date", node->GetProductName().c_str());
+				Notification* notification = new Notification( Notification::Type_UserAlerts );
+				notification->SetHomeAndNodeIds( m_homeId, node->GetNodeId() );
+				notification->SetUserAlertNofification(Notification::Alert_ConfigOutOfDate);
+				QueueNotification( notification );
+			}
+		} else if (result->NodeID == 0) {
+			/* manufacturer_specific */
+			if (m_mfs->GetRevision() < atol(result->result.c_str())) {
+				Log::Write(LogLevel_Warning, "Config Revision of ManufacturerSpecific Database is out of date");
+				Notification* notification = new Notification( Notification::Type_UserAlerts );
+				notification->SetUserAlertNofification(Notification::Alert_MFSOutOfDate);
+				QueueNotification( notification );
+			}
 		}
 	}
 

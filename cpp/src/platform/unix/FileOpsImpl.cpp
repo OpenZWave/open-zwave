@@ -27,6 +27,9 @@
 //-----------------------------------------------------------------------------
 
 #include <dirent.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <fcntl.h>
 #include "FileOpsImpl.h"
 
 using namespace OpenZWave;
@@ -69,3 +72,22 @@ bool FileOpsImpl::FolderExists
 	else
 		return false;
 }
+
+bool FileOpsImpl::FileExists
+(
+	string _filename
+)
+{
+	  struct stat buffer;
+	  return (stat (_filename.c_str(), &buffer) == 0);
+}
+
+bool FileOpsImpl::FileWriteable
+(
+	string _filename
+)
+{
+	  return (access(_filename.c_str(), W_OK|F_OK) == 0);
+
+}
+

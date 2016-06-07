@@ -90,7 +90,7 @@ namespace OpenZWave
 		private:
 
 			static void HttpThreadProc(Event* _exitEvent,  void* _context);
-			Driver* 	m_driver;
+			//Driver* 	m_driver;
 			Event* 		m_exitEvent;
 
 			Thread*		m_httpThread;

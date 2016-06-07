@@ -55,6 +55,7 @@ namespace OpenZWave
 	struct DNSLookup;
 	class i_HttpClient;
 	struct HttpDownload;
+	class ManufacturerSpecificDB;
 
 	/** \brief The Driver class handles communication between OpenZWave
 	 *  and a device attached via a serial port (typically a controller).
@@ -854,7 +855,7 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		bool m_inclusionkeySet;
 
 	//-----------------------------------------------------------------------------
-	//	Event Signalling for DNS and HTTP Threads
+	//	Event Signaling for DNS and HTTP Threads
 	//-----------------------------------------------------------------------------
 	private:
 		struct EventMsg {
@@ -885,7 +886,8 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 	//-----------------------------------------------------------------------------
 
 	public:
-		bool CheckConfigRevision(Node *);
+		bool CheckNodeConfigRevision(Node *);
+		bool CheckMFSConfigRevision();
 	private:
 		void processConfigRevision(DNSLookup *);
 
@@ -906,6 +908,13 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 
 	public:
 		string GetMetaData(	uint8 const _nodeId, Node::MetaDataFields _metadata );
+
+	//-----------------------------------------------------------------------------
+	//	ManufacturerSpecificDB Related
+	//-----------------------------------------------------------------------------
+
+	public:
+		ManufacturerSpecificDB *m_mfs;
 
 
 	};

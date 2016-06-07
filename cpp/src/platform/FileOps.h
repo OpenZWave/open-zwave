@@ -61,6 +61,22 @@ namespace OpenZWave
 		 */
 		static bool FolderExists( const string &_folderName );
 
+		/**
+		 * FileExists. Check for the existance of a file.
+		 * \param string. file name.
+		 * \return Bool value indicating existance.
+		 */
+		static bool FileExists( const string &_fileName );
+
+		/**
+		 * FileWriteable. Check if we can write to a file.
+		 * \param string. file name.
+		 * \return Bool value indicating write permissions.
+		 */
+		static bool FileWriteable( const string &_fileName );
+
+
+
 	private:
 		FileOps();
 		~FileOps();
