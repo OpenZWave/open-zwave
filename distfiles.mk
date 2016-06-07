@@ -258,6 +258,7 @@ DISTFILES =	.gitignore \
 	config/vision/zm1602eu.xml \
 	config/vision/zm1602eu5.xml \
 	config/vision/zp3102.xml \
+	config/vision/zp3111.xml \
 	config/vision/zs5101eu.xml \
 	config/vitrum/vitrumBS.xml \
 	config/waynedalton/WDTC-20.xml \
