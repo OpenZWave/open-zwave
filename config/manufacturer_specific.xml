@@ -643,6 +643,7 @@
 		<Product type="0001" id="0000" name="ZW EDAN 300 Flush Mounted Dimmer" />
 		<Product type="1000" id="0002" name="Flush Mounted Switch"/>
 		<Product type="1001" id="0000" name="Plugin Dimmer" />
+		<Product type="1000" id="0009" name="Wall Dimmer Set for Busch-Jaeger DURO 2000" config="duwi/05458.xml"/>
 		<Product type="2001" id="0000" name="ZW ES 1000 Flush Mounted Switch" config="duwi/ZWES1000.xml" />
 		<Product type="3001" id="0000" name="ZW ZS 3500 Plugin Switch" />
 		<Product type="3002" id="0000" name="ZW ZSA 3500 Plugin Switch" />

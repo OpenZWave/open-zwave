@@ -86,6 +86,7 @@ DISTFILES =	.gitignore \
 	config/domitech/zb22uk.xml \
 	config/domitech/ze27eu.xml \
 	config/dragontech/wd-100.xml \
+	config/duwi/05458.xml \
 	config/duwi/ZWES1000.xml \
 	config/duwi/ZWESJ300.xml \
 	config/duwi/zwfb.xml \
