@@ -37,3 +37,4 @@ OZWForm.vshost.exe.manifest
 .gitignore
 /cpp/build/windows/winversion.cpp
 .distfiles
+.idea/*

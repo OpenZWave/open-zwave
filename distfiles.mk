@@ -229,7 +229,6 @@ DISTFILES =	.gitignore \
 	config/qubino/ZMNHNDx.xml \
 	config/qubino/ZMNHODx.xml \
 	config/qubino/ZMNHSDx.xml \
-	config/qubino/ZMNHTAx.xml \
 	config/qubino/ZMNHTDx.xml \
 	config/qubino/ZMNHUD1.xml \
 	config/rcs/em52-zw.xml \
