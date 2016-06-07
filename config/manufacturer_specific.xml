@@ -857,6 +857,7 @@
 		<Product type="2014" id="1401" name="ZL7101 Plug-in Dimmer Module"/>
 		<Product type="2017" id="1717" name="ZL7432 In-Wall Switch, Dual Relay"/>
 		<Product type="201f" id="1f10" name="ZD2201 Multisensor 4in1" config="vision/zd2201.xml"/>
+		<Product type="2021" id="2101" name="ZP3111 Multisensor 4in1" config="vision/zp3111.xml"/>
 		<Product type="3001" id="0104" name="ZM1602 Main Operated Siren"/>
 	</Manufacturer>
 	<Manufacturer id="0115" name="Z-Wave.Me">
