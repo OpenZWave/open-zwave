@@ -58,6 +58,7 @@ Version 1.5
  - Issue #895 - There are now 2 danfoss room sensor definitions with type="0003" id="8010" (Nechry)
  - Pull Request #901 - Jeedom Config Updates (Justin)
  - Pull Request #899 - Ensure correct git repository path from ffontaine  (Justin)
+ - Pull Request #904 - add vision zp3111 multisensor from N5QM (Nechry)
 
 
 Version 1.4
