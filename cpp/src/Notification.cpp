@@ -237,8 +237,15 @@ string Notification::GetAsString() const {
 					case Alert_MFSOutOfDate:
 						str = "User Alert - Manufacturer_specific.xml out of Date";
 						break;
+					case Alert_ConfigFileDownloadFailed:
+						str = "A Config File Failed to download";
+						break;
 				}
-			break;
+				break;
+			case Type_ManufacturerSpecificDBReady:
+				str = "ManufacturerSpecificDB Ready";
+				break;
+
 	}
 	return str;
 

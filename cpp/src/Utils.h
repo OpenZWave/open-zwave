@@ -107,6 +107,8 @@ namespace OpenZWave
 			Mutex* _ref;
 	};
 
+	string ozwdirname(string);
+
 
 
 } // namespace OpenZWave

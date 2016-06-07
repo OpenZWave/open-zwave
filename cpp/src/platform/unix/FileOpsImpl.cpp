@@ -30,7 +30,10 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <libgen.h>
+
 #include "FileOpsImpl.h"
+#include "Utils.h"
 
 using namespace OpenZWave;
 
@@ -60,7 +63,7 @@ FileOpsImpl::~FileOpsImpl
 //-----------------------------------------------------------------------------
 bool FileOpsImpl::FolderExists
 ( 
-	string _folderName
+	const string _folderName
 )
 {
 	DIR *dirp = opendir( _folderName.c_str() );
@@ -75,7 +78,7 @@ bool FileOpsImpl::FolderExists
 
 bool FileOpsImpl::FileExists
 (
-	string _filename
+	const string _filename
 )
 {
 	  struct stat buffer;
@@ -84,10 +87,15 @@ bool FileOpsImpl::FileExists
 
 bool FileOpsImpl::FileWriteable
 (
-	string _filename
+	const string _filename
 )
 {
-	  return (access(_filename.c_str(), W_OK|F_OK) == 0);
+	if (!FileExists(_filename)) {
+		string fn = ozwdirname(_filename);
+		return (access(fn.c_str(), W_OK|F_OK) == 0);
+	}
+
+	return (access(_filename.c_str(), W_OK|F_OK) == 0);
 
 }
 

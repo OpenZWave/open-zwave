@@ -135,3 +135,22 @@ string OpenZWave::PktToString(uint8 const *data, uint32 const length) {
 	return str;
 
 }
+
+static const char* separators()
+{
+#if __unix__
+	return "/";
+#else // __unix__
+	return "\\/";
+#endif // __unix__
+}
+
+string OpenZWave::ozwdirname(string m_path)
+{
+	const size_t lastSlash =  m_path.find_last_of(separators());
+	if (lastSlash == std::string::npos)
+		return "";
+
+	return m_path.substr(0, lastSlash);
+}
+

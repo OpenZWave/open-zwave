@@ -50,6 +50,7 @@ namespace OpenZWave
 			enum DownloadType
 			{
 				None,
+				File,
 				Config
 			};
 			DownloadType operation;

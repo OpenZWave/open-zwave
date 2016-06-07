@@ -43,9 +43,9 @@ namespace OpenZWave
 		FileOpsImpl();
 		~FileOpsImpl();
 
-		bool FolderExists( string _filename );
-		bool FileExists( string _filename );
-		bool FileWriteable ( string _filename );
+		bool FolderExists( const string _filename );
+		bool FileExists( const string _filename );
+		bool FileWriteable ( const string _filename );
 	};
 
 } // namespace OpenZWave
