@@ -121,7 +121,8 @@ namespace OpenZWave
 		enum UserAlertNofification
 		{
 			Alert_None,						/**< No Alert Currently Present */
-			Alert_ConfigOutOfDate			/**< One of the Config Files is out of date. Use GetNodeId to determine which node is affected. */
+			Alert_ConfigOutOfDate,			/**< One of the Config Files is out of date. Use GetNodeId to determine which node is affected. */
+			Alert_MFSOutOfDate				/**< the manufacturer_specific.xml file is out of date. */
 		};
 
 		/**

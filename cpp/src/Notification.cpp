@@ -234,6 +234,9 @@ string Notification::GetAsString() const {
 					case Alert_ConfigOutOfDate:
 						str = "User Alert - Config File out of Date";
 						break;
+					case Alert_MFSOutOfDate:
+						str = "User Alert - Manufacturer_specific.xml out of Date";
+						break;
 				}
 			break;
 	}

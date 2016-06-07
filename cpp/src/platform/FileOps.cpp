@@ -84,6 +84,42 @@ bool FileOps::FolderExists
 	return false;
 }
 
+/**
+ * FileExists. Check for the existance of a file.
+ * \param string. file name.
+ * \return Bool value indicating existance.
+ */
+bool FileOps::FileExists
+(
+	const string &_fileName
+)
+{
+	if( s_instance != NULL )
+	{
+		return s_instance->m_pImpl->FileExists( _fileName );
+	}
+	return false;
+}
+
+/**
+ * FileWriteable. Check if we can write to a file.
+ * \param string. file name.
+ * \return Bool value indicating write permissions.
+ */
+bool FileOps::FileWriteable
+(
+	const string &_fileName
+)
+{
+	if( s_instance != NULL )
+	{
+		return s_instance->m_pImpl->FileWriteable( _fileName );
+	}
+	return false;
+}
+
+
+
 //-----------------------------------------------------------------------------
 //	<FileOps::FileOps>
 //	Constructor

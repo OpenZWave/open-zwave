@@ -3563,7 +3563,7 @@ void Node::checkConfigRevision
 )
 {
 	if (this->m_ConfigRevision > 0)
-		this->GetDriver()->CheckConfigRevision(this);
+		this->GetDriver()->CheckNodeConfigRevision(this);
 
 }
 //-----------------------------------------------------------------------------
