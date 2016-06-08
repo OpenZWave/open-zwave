@@ -60,6 +60,7 @@ Version 1.5
  - Pull Request #899 - Ensure correct git repository path from ffontaine  (Justin)
  - Pull Request #904 - add vision zp3111 multisensor from N5QM (Nechry)
  - Add Wall Dimmer Set for Busch-Jaeger DURO 2000 (Nechry)
+ - Issue #900 - update ZME_WCD2 config file from gomba777 (Justin)
 
 Version 1.4
  - Released 10th Jan, 2016
