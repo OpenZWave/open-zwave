@@ -61,6 +61,7 @@ Version 1.5
  - Pull Request #904 - add vision zp3111 multisensor from N5QM (Nechry)
  - Add Wall Dimmer Set for Busch-Jaeger DURO 2000 (Nechry)
  - Issue #900 - update ZME_WCD2 config file from gomba777 (Justin)
+ - Issue #907 - Undocumented Vision ZD2102-5 Alarm Report response mark open contact as closed from NotTheEvilOne (Nechry)
 
 Version 1.4
  - Released 10th Jan, 2016
