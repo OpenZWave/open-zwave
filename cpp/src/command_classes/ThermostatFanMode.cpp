@@ -233,7 +233,8 @@ bool ThermostatFanMode::HandleMsg
 	{
 		uint8 mode = (int32)_data[1];
 
-		if( mode < m_supportedModes.size() )
+		/* Minus 1 here as the Unknown Entry is our addition */
+		if( mode < (sizeof(c_modeName)/sizeof(*c_modeName) -1) )
 		{
 			// We have received the thermostat mode from the Z-Wave device
 			if( ValueList* valueList = static_cast<ValueList*>( GetValue( _instance, 0 ) ) )
