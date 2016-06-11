@@ -232,6 +232,7 @@ DISTFILES =	.gitignore \
 	config/qubino/ZMNHSDx.xml \
 	config/qubino/ZMNHTDx.xml \
 	config/qubino/ZMNHUD1.xml \
+	config/qubino/ZMNHZDx.xml \
 	config/rcs/em52-zw.xml \
 	config/rcs/pm12-zw.xml \
 	config/rcs/therm0005.xml \
