@@ -120,7 +120,7 @@
     </CommandClass>
     <!-- Association Groups -->
     <CommandClass id="133">
-        <Associations num_groups="5">
+        <Associations num_groups="3">
             <Group index="1" max_associations="1" label="Lifeline"/>
             <Group index="2" max_associations="16" label="Wind Gauge alert"/>
             <Group index="3" max_associations="16" label="Rain rate alert"/>
