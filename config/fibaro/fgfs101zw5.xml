@@ -16,7 +16,7 @@
         <Value type="byte" genre="config" instance="1" index="7" label="Requested dimming level / roller blind opening level when sending turn on / open command to 2nd association group devices" min="1" max="255" value="255">
             <Help>Determines the requested "on" level to be sent to devices from 2nd association group upon flood event.</Help>
         </Value>
-        <Value type="list" genre="config" instance="1" index="9" label="Deactivate turning off devices in 2nd association group & alarm cancellation in 3rd group" value="1" size="1">
+        <Value type="list" genre="config" instance="1" index="9" label="Deactivate turning off devices in 2nd association group alarm cancellation in 3rd group" value="1" size="1">
             <Help>This setting decides whether device turn off commands and alarm cancellation notifications will be sent to devices in 2nd and 3rd association groups (respectively)</Help>
             <Item label="Alarm (flooding) cancellation INACTIVE" value="0" />
             <Item label="Alarm (flooding) cancellation ACTIVE" value="1" />
