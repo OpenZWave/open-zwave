@@ -65,6 +65,8 @@ Version 1.5
  - Add Qubino ZMNHZDx Weather Station Z-Wave+ (Nechry)
  - Add Fibaro FGFS101 Zwave+ Flood Sensor (Nechry)
  - Add Zipato PH-PSG01 Smoke Sensor (Nechry)
+ - Pull Request #909 - Add devices Leviton DZPD3-1LW and DZPA1-1LW from benweb (Nechry)
+ - Pull Request #910 - Add device Assa Abloy Yale Key Free Push Button Deadbolt from benweb (Nechry)
 
 Version 1.4
  - Released 10th Jan, 2016
