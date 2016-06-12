@@ -248,6 +248,7 @@ DISTFILES =	.gitignore \
 	config/schlagelink/itemp.xml \
 	config/schlagelink/minikeypad.xml \
 	config/sensative/strips.xml \
+	config/stelpro/stzw402.xml \
 	config/swiid/swiidinter.xml \
 	config/swiid/swiidplug.xml \
 	config/thermofloor/heatit021.xml \
