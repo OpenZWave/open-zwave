@@ -250,7 +250,8 @@
 	<Manufacturer id="0087" name="Eka Systems">
 	</Manufacturer>
 	<Manufacturer id="0033" name="Electronic Solutions Inc">
-		<Product type="5250" id="02" name="DBMZ Motor Control"/>
+		<Product type="5250" id="0002" name="DBMZ Motor Control" config="electronicsolutions/dbmz.xml"/>
+		<Product type="5250" id="3032" name="DBMZ Motor Control" config="electronicsolutions/dbmz.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0034" name="El-Gev Electronics">
 	</Manufacturer>
