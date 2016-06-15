@@ -242,6 +242,7 @@ DISTFILES =	.gitignore \
 	config/rcs/therm0007.xml \
 	config/rcs/therm0009.xml \
 	config/remotec/zfm-80.xml \
+	config/remotec/zrc-90.xml \
 	config/remotec/zts-110.xml \
 	config/remotec/zurc.xml \
 	config/remotec/zxt-120.xml \
