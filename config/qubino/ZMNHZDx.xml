@@ -8,6 +8,8 @@
     ZMNHZD4 869,0 MHz
     ZMNHZD5 916,0 MHz
     -->
+
+    <CommandClass id="49" getsupported="false" />
     <!-- Map endpoints to instances -->
     <CommandClass id="96" mapping="endpoints" />
     <!-- Configuration -->
@@ -126,4 +128,5 @@
             <Group index="3" max_associations="16" label="Rain rate alert"/>
         </Associations>
     </CommandClass>
+    <CommandClass id="142" ForceInstances="true" />
 </Product>
