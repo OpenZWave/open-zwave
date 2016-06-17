@@ -915,7 +915,11 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 	//-----------------------------------------------------------------------------
 
 	public:
+		ManufacturerSpecificDB *GetManufacturerSpecificDB();
+		int32 getCacheRevision();
+	private:
 		ManufacturerSpecificDB *m_mfs;
+		int32 m_cacherevision;
 
 
 	};

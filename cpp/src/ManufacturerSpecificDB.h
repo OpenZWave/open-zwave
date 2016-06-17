@@ -33,12 +33,68 @@
 #include <map>
 #include <list>
 
+#include "platform/Ref.h"
 #include "Defs.h"
 
 namespace OpenZWave
 {
 	class Mutex;
 	class Driver;
+
+
+	class ProductDescriptor : public Ref
+			{
+			public:
+				ProductDescriptor
+				(
+					uint16 _manufacturerId,
+					uint16 _productType,
+					uint16 _productId,
+					string const& _productName,
+					string const& _manufacturerName,
+					string const& _configPath
+				):
+					m_manufacturerId( _manufacturerId ),
+					m_productType( _productType ),
+					m_productId( _productId ),
+					m_productName( _productName ),
+					m_manufacturerName ( _manufacturerName ),
+					m_configPath( _configPath )
+				{
+				}
+				~ProductDescriptor() {
+
+				}
+				int64 GetKey()const
+				{
+					return( GetKey( m_manufacturerId, m_productType, m_productId ) );
+				}
+
+				static int64 GetKey( uint16 _manufacturerId, uint16 _productType, uint16 _productId )
+				{
+					int64 key = (((int64)_manufacturerId)<<32) | (((int64)_productType)<<16) | (int64)_productId;
+					return key;
+				}
+
+				uint16 GetManufacturerId()const{ return m_manufacturerId; }
+				string GetManufacturerName() const {return m_manufacturerName; }
+				uint16 GetProductType()const{ return m_productType; }
+				uint16 GetProductId()const{ return m_productId; }
+				string GetProductName()const{ return m_productName; }
+				string GetConfigPath()const{ return m_configPath; }
+
+			private:
+				uint16	m_manufacturerId;
+				uint16	m_productType;
+				uint16	m_productId;
+				string	m_productName;
+				string  m_manufacturerName;
+				string	m_configPath;
+			};
+
+
+
+
 
 	/** \brief The _ManufacturerSpecificDB class handles the Config File Database
 	 * that we use to configure devices.
@@ -66,53 +122,12 @@ namespace OpenZWave
 		Mutex*					m_MfsMutex;            /**< Mutex to ensure its accessed by a single thread at a time */
 
 		static ManufacturerSpecificDB *s_instance;
+	public:
+		ProductDescriptor *getProduct(uint16 _manufacturerId, uint16 _productType, uint16 _productId);
 
-		class Product
-				{
-				public:
-					Product
-					(
-						uint16 _manufacturerId,
-						uint16 _productType,
-						uint16 _productId,
-						string const& _productName,
-						string const& _configPath
-					):
-						m_manufacturerId( _manufacturerId ),
-						m_productType( _productType ),
-						m_productId( _productId ),
-						m_productName( _productName ),
-						m_configPath( _configPath )
-					{
-					}
-
-					int64 GetKey()const
-					{
-						return( GetKey( m_manufacturerId, m_productType, m_productId ) );
-					}
-
-					static int64 GetKey( uint16 _manufacturerId, uint16 _productType, uint16 _productId )
-					{
-						int64 key = (((int64)_manufacturerId)<<32) | (((int64)_productType)<<16) | (int64)_productId;
-						return key;
-					}
-
-					uint16 GetManufacturerId()const{ return m_manufacturerId; }
-					uint16 GetProductType()const{ return m_productType; }
-					uint16 GetProductId()const{ return m_productId; }
-					string GetProductName()const{ return m_productName; }
-					string GetConfigPath()const{ return m_configPath; }
-
-				private:
-					uint16	m_manufacturerId;
-					uint16	m_productType;
-					uint16	m_productId;
-					string	m_productName;
-					string	m_configPath;
-				};
-
+private:
 		static map<uint16,string>	s_manufacturerMap;
-		static map<int64,Product*>	s_productMap;
+		static map<int64,ProductDescriptor*>	s_productMap;
 		static bool					s_bXmlLoaded;
 
 		list<string> m_downloading;

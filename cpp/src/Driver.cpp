@@ -211,7 +211,8 @@ m_broadcastWriteCnt( 0 ),
 m_nonceReportSent( 0 ),
 m_nonceReportSentAttempt( 0 ),
 m_queueMsgEvent (new Event() ),
-m_eventMutex (new Mutex() )
+m_eventMutex (new Mutex() ),
+m_cacherevision ( 0 )
 
 {
 	// set a timestamp to indicate when this driver started
@@ -706,6 +707,13 @@ bool Driver::ReadConfig
 		return false;
 	}
 
+	// Capabilities
+	if( TIXML_SUCCESS == driverElement->QueryIntAttribute( "revision", &intVal ) )
+	{
+		m_cacherevision = intVal;
+	}
+
+
 	// Home ID
 	char const* homeIdStr = driverElement->Attribute( "home_id" );
 	if( homeIdStr )
@@ -837,6 +845,9 @@ void Driver::WriteConfig
 
 	snprintf( str, sizeof(str), "%d", c_configVersion );
 	driverElement->SetAttribute( "version", str );
+
+	snprintf( str, sizeof(str), "%d", GetManufacturerSpecificDB()->GetRevision());
+	driverElement->SetAttribute( "revision", str);
 
 	snprintf( str, sizeof(str), "0x%.8x", m_homeId );
 	driverElement->SetAttribute( "home_id", str );
@@ -4446,7 +4457,7 @@ void Driver::InitNode
 			Log::Write(LogLevel_Info, _nodeId, "Network Key Not Set - Secure Option is %s", secure ? "required" : "not required");
 		m_nodes[_nodeId]->SetProtocolInfo(_protocolInfo, _length);
 	}
-	Log::Write(LogLevel_Info, _nodeId, "Initilizing Node. New Node: %s (%s)", static_cast<Node *>(m_nodes[_nodeId])->IsAddingNode() ? "true" : "false", newNode ? "true" : "false");
+	Log::Write(LogLevel_Info, _nodeId, "Initializing Node. New Node: %s (%s)", static_cast<Node *>(m_nodes[_nodeId])->IsAddingNode() ? "true" : "false", newNode ? "true" : "false");
 }
 
 //-----------------------------------------------------------------------------
@@ -7156,5 +7167,19 @@ string Driver::GetMetaData
 		node->GetMetaData( _metadata );
 	}
 	return "";
+}
+
+ManufacturerSpecificDB *Driver::GetManufacturerSpecificDB
+(
+)
+{
+	return this->m_mfs;
+}
+
+int32 Driver::getCacheRevision
+(
+)
+{
+	return this->m_cacherevision;
 }
 
