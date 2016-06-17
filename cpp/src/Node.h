@@ -57,6 +57,7 @@ namespace OpenZWave
 	class ValueShort;
 	class ValueString;
 	class Mutex;
+	class ProductDescriptor;
 
 	/** \brief The Node class describes a Z-Wave node object...typically a device on the
 	 *  Z-Wave network.
@@ -437,9 +438,15 @@ namespace OpenZWave
 			//-----------------------------------------------------------------------------
 			// Configuration Revision Related Classes
 			//-----------------------------------------------------------------------------
-
+		public:
+			void SetProductDetails(ProductDescriptor *product);
+			string getConfigPath();
+		private:
 			void checkConfigRevision();
 			uint32 getConfigRevision() { return m_ConfigRevision; };
+
+			ProductDescriptor *m_Product;
+
 
 			uint32 m_ConfigRevision;
 			//-----------------------------------------------------------------------------

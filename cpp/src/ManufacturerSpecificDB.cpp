@@ -41,7 +41,7 @@ using namespace OpenZWave;
 
 ManufacturerSpecificDB *ManufacturerSpecificDB::s_instance = NULL;
 map<uint16,string> ManufacturerSpecificDB::s_manufacturerMap;
-map<int64,ManufacturerSpecificDB::Product*> ManufacturerSpecificDB::s_productMap;
+map<int64,ProductDescriptor*> ManufacturerSpecificDB::s_productMap;
 bool ManufacturerSpecificDB::s_bXmlLoaded = false;
 
 ManufacturerSpecificDB *ManufacturerSpecificDB::Create
@@ -199,10 +199,10 @@ bool ManufacturerSpecificDB::LoadProductXML
 					}
 
 					// Add the product to the map
-					Product* product = new Product( manufacturerId, productType, productId, productName, dconfigPath );
+					ProductDescriptor* product = new ProductDescriptor( manufacturerId, productType, productId, productName, s_manufacturerMap[manufacturerId], dconfigPath );
 					if ( s_productMap[product->GetKey()] != NULL )
 					{
-						Product *c = s_productMap[product->GetKey()];
+						ProductDescriptor *c = s_productMap[product->GetKey()];
 						Log::Write( LogLevel_Info, "Product name collision: %s type %x id %x manufacturerid %x, collides with %s, type %x id %x manufacturerid %x", productName.c_str(), productType, productId, manufacturerId, c->GetProductName().c_str(), c->GetProductType(), c->GetProductId(), c->GetManufacturerId());
 						delete product;
 					}
@@ -237,10 +237,10 @@ void ManufacturerSpecificDB::UnloadProductXML
 	LockGuard LG(m_MfsMutex);
 	if (s_bXmlLoaded)
 	{
-		map<int64,Product*>::iterator pit = s_productMap.begin();
+		map<int64,ProductDescriptor*>::iterator pit = s_productMap.begin();
 		while( !s_productMap.empty() )
 		{
-		  	delete pit->second;
+			pit->second->Release();
 			s_productMap.erase( pit );
 			pit = s_productMap.begin();
 		}
@@ -267,9 +267,9 @@ void ManufacturerSpecificDB::checkConfigFiles
 		string configPath;
 		Options::Get()->GetOptionAsString( "ConfigPath", &configPath );
 
-		map<int64,Product*>::iterator pit;
+		map<int64,ProductDescriptor*>::iterator pit;
 		for (pit = s_productMap.begin(); pit != s_productMap.end(); pit++) {
-			Product *c = pit->second;
+			ProductDescriptor *c = pit->second;
 			if (c->GetConfigPath().size() > 0) {
 				string path = configPath + c->GetConfigPath();
 
@@ -324,3 +324,29 @@ void ManufacturerSpecificDB::checkInitialized() {
 		m_initializing = false;
 	}
 }
+
+ProductDescriptor *ManufacturerSpecificDB::getProduct
+(
+		uint16 _manufacturerId,
+		uint16 _productType,
+		uint16 _productId
+)
+{
+
+	if (!s_bXmlLoaded) LoadProductXML();
+
+
+	// Try to get the real manufacturer and product names
+	map<uint16,string>::iterator mit = s_manufacturerMap.find( _manufacturerId );
+	if( mit != s_manufacturerMap.end() )
+	{
+		// Get the product
+		map<int64,ProductDescriptor*>::iterator pit = s_productMap.find( ProductDescriptor::GetKey( _manufacturerId, _productType, _productId ) );
+		if( pit != s_productMap.end() )
+		{
+			return pit->second;
+		}
+	}
+	return NULL;
+}
+

@@ -34,6 +34,7 @@
 #include "Options.h"
 #include "Manager.h"
 #include "Driver.h"
+#include "ManufacturerSpecificDB.h"
 #include "Notification.h"
 #include "Msg.h"
 #include "ZWSecurity.h"
@@ -159,6 +160,7 @@ m_deviceType( 0 ),
 m_role( 0 ),
 m_nodeType ( 0 ),
 m_secured ( false ),
+m_Product ( NULL ),
 m_ConfigRevision ( 0 ),
 m_values( new ValueStore() ),
 m_sentCnt( 0 ),
@@ -179,7 +181,10 @@ m_lastnonce ( 0 )
 	memset( m_neighbors, 0, sizeof(m_neighbors) );
 	memset( m_routeNodes, 0, sizeof(m_routeNodes) );
 	memset( m_nonces, 0, sizeof(m_nonces) );
+	/* Add NoOp Class */
 	AddCommandClass( 0 );
+	/* Add ManufacturerSpecific Class */
+	AddCommandClass( 114 );
 }
 
 //-----------------------------------------------------------------------------
@@ -346,10 +351,10 @@ void Node::AdvanceQueries
 				if( GetDriver()->GetControllerNodeId() == m_nodeId )
 				{
 					Log::Write( LogLevel_Detail, m_nodeId, "Load Controller Manufacturer Specific Config");
-					string configPath = ManufacturerSpecific::SetProductDetails( this, GetDriver()->GetManufacturerId(), GetDriver()->GetProductType(), GetDriver()->GetProductId() );
-					if( configPath.length() > 0 )
-					{
-						ManufacturerSpecific::LoadConfigXML( this, configPath );
+					ManufacturerSpecific* cc = static_cast<ManufacturerSpecific*>( GetCommandClass( ManufacturerSpecific::StaticGetCommandClassId() ) );
+					if( cc  ) {
+						cc->SetProductDetails(GetDriver()->GetManufacturerId(), GetDriver()->GetProductType(), GetDriver()->GetProductId() );
+						cc->LoadConfigXML();
 					}
 					m_queryStage = QueryStage_NodeInfo;
 					m_queryRetries = 0;
@@ -456,7 +461,8 @@ void Node::AdvanceQueries
 					// that we can modify the supported command classes list through the product XML files.
 					Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_ManufacturerSpecific2" );
 					ManufacturerSpecific* cc = static_cast<ManufacturerSpecific*>( GetCommandClass( ManufacturerSpecific::StaticGetCommandClassId() ) );
-					if( cc  )
+					/* don't do this if its the Controller Node */
+					if( cc && (GetDriver()->GetControllerNodeId() != m_nodeId))
 					{
 						m_queryPending = cc->RequestState( CommandClass::RequestFlag_Static, 1, Driver::MsgQueue_Query );
 						addQSC = m_queryPending;
@@ -567,6 +573,7 @@ void Node::AdvanceQueries
 			case QueryStage_CacheLoad:
 			{
 				Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_CacheLoad" );
+				Log::Write( LogLevel_Info, GetNodeId(), "Loading Cache for node %d: Manufacturer=%s, Product=%s", GetNodeId(), GetManufacturerName().c_str(), GetProductName().c_str() );
 				Log::Write( LogLevel_Info, GetNodeId(), "Node Identity Codes: %.4x:%.4x:%.4x", GetManufacturerId(), GetProductType(), GetProductId() );
 				//
 				// Send a NoOperation message to see if the node is awake
@@ -1058,10 +1065,13 @@ void Node::ReadXML
 			}
 			else if( !strcmp( str, "Manufacturer" ) )
 			{
+				uint16 manufacturerId = 0;
+				uint16 productType = 0;
+				uint16 productId = 0;
 				str = child->Attribute( "id" );
 				if( str )
 				{
-					m_manufacturerId = strtol(str, NULL, 16);
+					manufacturerId = strtol(str, NULL, 16);
 				}
 
 				str = child->Attribute( "name" );
@@ -1076,13 +1086,13 @@ void Node::ReadXML
 					str = product->Attribute( "type" );
 					if( str )
 					{
-						m_productType = strtol(str, NULL, 16);
+						productType = strtol(str, NULL, 16);
 					}
 
 					str = product->Attribute( "id" );
 					if( str )
 					{
-						m_productId = strtol(str, NULL, 16);
+						productId = strtol(str, NULL, 16);
 					}
 
 					str = product->Attribute( "name" );
@@ -1090,6 +1100,15 @@ void Node::ReadXML
 					{
 						m_productName = str;
 					}
+
+					ManufacturerSpecific* cc = static_cast<ManufacturerSpecific*>( GetCommandClass( ManufacturerSpecific::StaticGetCommandClassId() ) );
+					/* don't do this if its the Controller Node */
+					if( cc ) {
+						cc->SetProductDetails(manufacturerId, productType, productId);
+					} else {
+						Log::Write(LogLevel_Warning, GetNodeId(), "ManufacturerSpecific Class not loaded for ReadXML");
+					}
+
 					ReadMetaDataFromXML(product);
 				}
 			}
@@ -3566,6 +3585,30 @@ void Node::checkConfigRevision
 		this->GetDriver()->CheckNodeConfigRevision(this);
 
 }
+
+
+void Node::SetProductDetails
+(
+	ProductDescriptor *product
+)
+{
+	/* if there is a ProductDescriptor already assigned, remove the reference */
+	if (m_Product)
+		m_Product->Release();
+	/* add the new ProductDescriptor */
+	m_Product = product;
+	m_Product->AddRef();
+}
+
+string Node::getConfigPath
+(
+)
+{
+	return this->m_Product->GetConfigPath();
+
+}
+
+
 //-----------------------------------------------------------------------------
 // <Node::GetMetaData>
 // Get MetaData about a node
