@@ -27,6 +27,7 @@
 
 #include "command_classes/CommandClasses.h"
 #include "command_classes/Alarm.h"
+#include "command_classes/NodeNaming.h"
 #include "Defs.h"
 #include "Msg.h"
 #include "Node.h"
@@ -34,7 +35,9 @@
 #include "platform/Log.h"
 
 #include "value_classes/ValueByte.h"
-
+#include "value_classes/ValueBool.h"
+#include "value_classes/ValueList.h"
+#include "value_classes/ValueString.h"
 using namespace OpenZWave;
 
 enum AlarmCmd
@@ -50,7 +53,9 @@ enum
 {
 	AlarmIndex_Type = 0,
 	AlarmIndex_Level,
-	AlarmIndex_SourceNodeId
+	AlarmIndex_SourceNodeId,
+	AlarmIndex_Count,
+	AlarmIndex_Params = 200
 };
 
 enum
@@ -90,6 +95,148 @@ static char const* c_alarmTypeName[] =
 		"HomeHealth"
 };
 
+
+enum Alarm_Smoke_Event {
+	Alarm_Smoke_Detected_Location = 0x01,
+	Alarm_Smoke_Detected_UnknownLocation = 0x02,
+	Alarm_Smoke_Unknown_Event = 0xFE,
+};
+enum Alarm_CO_Event {
+	Alarm_CO_Detected_Location = 0x01,
+	Alarm_CO_Detected_UnknownLocation = 0x02,
+	Alarm_CO_Unknown_Event = 0xFE,
+};
+enum Alarm_CO2_Event {
+	Alarm_CO2_Detected_Location = 0x01,
+	Alarm_CO2_Detected_UnknownLocation = 0x02,
+	Alarm_CO2_Unknown_Event = 0xFE,
+};
+enum Alarm_Heat_Event {
+	Alarm_Heat_OverHeat_Location = 0x01,
+	Alarm_Heat_OverHeat_UnknownLocation = 0x02,
+	Alarm_Heat_RapidTempRise_Location = 0x03,
+	Alarm_Heat_RapidTempRise_UnknownLocation = 0x04,
+	Alarm_Heat_UnderHeat_Location = 0x05,
+	Alarm_Heat_UnderHeat_UnknownLocation = 0x06,
+	Alarm_Heat_Unknown_Event = 0xFE,
+};
+enum Alarm_Flood_Event {
+	Alarm_Flood_Leak_Location = 0x01,
+	Alarm_Flood_Leak_UnknownLocation = 0x02,
+	Alarm_Flood_Level_Location = 0x03,
+	Alarm_Flood_Level_UnknownLocation = 0x04,
+	Alarm_Flood_Unknown_Event = 0xFE,
+};
+enum Alarm_Access_Control_Event {
+	Alarm_Access_Control_Manual_Lock = 0x01,
+	Alarm_Access_Control_Manual_Unlock = 0x02,
+	Alarm_Access_Control_RF_Lock = 0x03,
+	Alarm_Access_Control_RF_Unlock = 0x04,
+	Alarm_Access_Control_KeyPad_Lock = 0x05,
+	Alarm_Access_Control_KeyPad_Unlock = 0x06,
+	Alarm_Access_Control_Unknown_Event = 0xFE,
+};
+enum Alarm_Burglar_Event {
+	Alarm_Burglar_Intrusion_Location = 0x01,
+	Alarm_Burglar_Intrusion_UnknownLocation = 0x02,
+	Alarm_Burglar_Intrusion_Tamper_CoverRemoved = 0x03,
+	Alarm_Burglar_Intrusion_Tamer_InvalidCode = 0x04,
+	Alarm_Burglar_GlassBreakage_Location = 0x05,
+	Alarm_Burglar_GlassBreakage_UnknownLocation = 0x06,
+	Alarm_Burglar_Unknown_Event = 0xFE,
+};
+enum Alarm_Power_Management_Event {
+	Alarm_Power_Management_PowerApplied = 0x01,
+	Alarm_Power_Management_AC_PowerLost = 0x02,
+	Alarm_Power_Management_AC_PowerRestored = 0x03,
+	Alarm_Power_Management_Surge = 0x04,
+	Alarm_Power_Management_Brownout = 0x05,
+	Alarm_Power_Management_Unknown_Event = 0xFE,
+};
+enum Alarm_System_Event {
+	Alarm_System_Hardware_Failure = 0x01,
+	Alarm_System_Software_Failure = 0x02,
+	Alarm_System_Unknown_Event = 0xFE,
+};
+enum Alarm_Emergency_Event {
+	Alarm_Emergency_Police = 0x01,
+	Alarm_Emergency_Fire = 0x02,
+	Alarm_Emergency_Medical = 0x03,
+	Alarm_Emergency_Unknown_Event = 0xFE,
+};
+enum Alarm_Clock_Event {
+	Alarm_Clock_Wakeup = 0x01
+};
+
+static std::map<uint8, std::map<uint8, std::string> > c_Alarm_Events;
+
+
+
+void SetupAlarmEventDescriptions() {
+	c_Alarm_Events[Alarm_Smoke][Alarm_Smoke_Detected_Location] = 						"Smoke Detected";
+	c_Alarm_Events[Alarm_Smoke][Alarm_Smoke_Detected_UnknownLocation] =		 			"Smoke Detected";
+	c_Alarm_Events[Alarm_Smoke][Alarm_Smoke_Unknown_Event] = 							"Smoke Detected - Unknown";
+
+	c_Alarm_Events[Alarm_CarbonMonoxide][Alarm_CO_Detected_Location] = 					"Carbon Monoxide Detected";
+	c_Alarm_Events[Alarm_CarbonMonoxide][Alarm_CO_Detected_UnknownLocation] = 			"Carbon Monoxide Detected";
+	c_Alarm_Events[Alarm_CarbonMonoxide][Alarm_CO_Unknown_Event] = 						"Carbon Monoxide Detected - Unknown";
+
+	c_Alarm_Events[Alarm_CarbonDioxide][Alarm_CO2_Detected_Location] = 					"Carbon Dioxide Detected";
+	c_Alarm_Events[Alarm_CarbonDioxide][Alarm_CO2_Detected_UnknownLocation] =			"Carbon Dioxide Detected";
+	c_Alarm_Events[Alarm_CarbonDioxide][Alarm_CO2_Unknown_Event] = 						"Carbon Dioxide Detected - Unknown";
+
+	c_Alarm_Events[Alarm_Heat][Alarm_Heat_OverHeat_Location] = 							"OverHeat";
+	c_Alarm_Events[Alarm_Heat][Alarm_Heat_OverHeat_UnknownLocation] = 					"OverHeat";
+	c_Alarm_Events[Alarm_Heat][Alarm_Heat_RapidTempRise_Location] = 					"Temperature Rise";
+	c_Alarm_Events[Alarm_Heat][Alarm_Heat_RapidTempRise_UnknownLocation] = 				"Temperature Rise";
+	c_Alarm_Events[Alarm_Heat][Alarm_Heat_UnderHeat_Location] = 						"UnderHeat";
+	c_Alarm_Events[Alarm_Heat][Alarm_Heat_UnderHeat_UnknownLocation] = 					"UnderHeat";
+	c_Alarm_Events[Alarm_Heat][Alarm_Heat_Unknown_Event] = 								"Heat Alarm - Unknown";
+
+	c_Alarm_Events[Alarm_Flood][Alarm_Flood_Leak_Location] = 							"Water Leak";
+	c_Alarm_Events[Alarm_Flood][Alarm_Flood_Leak_UnknownLocation] = 					"Water Leak";
+	c_Alarm_Events[Alarm_Flood][Alarm_Flood_Level_Location] = 							"Water Level";
+	c_Alarm_Events[Alarm_Flood][Alarm_Flood_Level_UnknownLocation] = 					"Water Level";
+	c_Alarm_Events[Alarm_Flood][Alarm_Flood_Unknown_Event] = 							"Water Alarm - Unknown";
+
+	c_Alarm_Events[Alarm_Access_Control][Alarm_Access_Control_Manual_Lock] = 			"Access Control - Manual Lock";
+	c_Alarm_Events[Alarm_Access_Control][Alarm_Access_Control_Manual_Unlock] = 			"Access Control - Manual Unlock";
+	c_Alarm_Events[Alarm_Access_Control][Alarm_Access_Control_RF_Lock] = 				"Access Control - RF Lock";
+	c_Alarm_Events[Alarm_Access_Control][Alarm_Access_Control_RF_Unlock] = 				"Access Control - RF Unlock";
+	c_Alarm_Events[Alarm_Access_Control][Alarm_Access_Control_KeyPad_Lock] = 			"Access Control - KeyPad Lock";
+	c_Alarm_Events[Alarm_Access_Control][Alarm_Access_Control_KeyPad_Unlock] = 			"Access Control - KeyPad Unlock";
+	c_Alarm_Events[Alarm_Access_Control][Alarm_Access_Control_Unknown_Event] = 			"Access Control - Unknown";
+
+	c_Alarm_Events[Alarm_Burglar][Alarm_Burglar_Intrusion_Location] = 					"Burglar Intrusion";
+	c_Alarm_Events[Alarm_Burglar][Alarm_Burglar_Intrusion_UnknownLocation] = 			"Burglar Intrusion";
+	c_Alarm_Events[Alarm_Burglar][Alarm_Burglar_Intrusion_Tamper_CoverRemoved] =		"Burglar Tamper - Cover Removed";
+	c_Alarm_Events[Alarm_Burglar][Alarm_Burglar_Intrusion_Tamer_InvalidCode] = 			"Burglar Tamper - Invalid Code";
+	c_Alarm_Events[Alarm_Burglar][Alarm_Burglar_GlassBreakage_Location] = 				"Glass Breakage";
+	c_Alarm_Events[Alarm_Burglar][Alarm_Burglar_GlassBreakage_UnknownLocation] =		"Glass Breakage";
+	c_Alarm_Events[Alarm_Burglar][Alarm_Burglar_Unknown_Event] = 						"Burglar - Unknown";
+
+	c_Alarm_Events[Alarm_Power_Management][Alarm_Power_Management_PowerApplied] = 		"Power Applied";
+	c_Alarm_Events[Alarm_Power_Management][Alarm_Power_Management_AC_PowerLost] = 		"AC Power Lost";
+	c_Alarm_Events[Alarm_Power_Management][Alarm_Power_Management_AC_PowerRestored] =	"AC Power Restored";
+	c_Alarm_Events[Alarm_Power_Management][Alarm_Power_Management_Surge] = 				"Power Surge";
+	c_Alarm_Events[Alarm_Power_Management][Alarm_Power_Management_Brownout] = 			"Power Brownout";
+	c_Alarm_Events[Alarm_Power_Management][Alarm_Power_Management_Unknown_Event] = 		"Power - Unknown";
+
+	c_Alarm_Events[Alarm_System][Alarm_System_Hardware_Failure] = 						"Hardware Failure";
+	c_Alarm_Events[Alarm_System][Alarm_System_Software_Failure] = 						"Software Failure";
+	c_Alarm_Events[Alarm_System][Alarm_System_Unknown_Event] = 							"System - Unknown";
+
+	c_Alarm_Events[Alarm_Emergency][Alarm_Emergency_Police] = 							"Emergency - Police";
+	c_Alarm_Events[Alarm_Emergency][Alarm_Emergency_Fire] = 							"Emergency - Fire";
+	c_Alarm_Events[Alarm_Emergency][Alarm_Emergency_Medical] = 							"Emergency - Medical";
+	c_Alarm_Events[Alarm_Emergency][Alarm_Emergency_Unknown_Event] = 					"Emergency - Unknown";
+
+	c_Alarm_Events[Alarm_Clock][Alarm_Clock_Wakeup] = 									"Alarm Clock - WakeUp";
+
+}
+
+
+
 //-----------------------------------------------------------------------------
 // <WakeUp::WakeUp>
 // Constructor
@@ -101,6 +248,9 @@ Alarm::Alarm
 ):
 CommandClass( _homeId, _nodeId )
 {
+	if (c_Alarm_Events.size() == 0)
+		SetupAlarmEventDescriptions();
+
 	SetStaticRequest( StaticRequest_Values );
 }
 
@@ -131,6 +281,16 @@ bool Alarm::RequestState
 			GetDriver()->SendMsg( msg, _queue );
 			return true;
 		}
+		else
+		{
+			/* create version 1 ValueID's */
+			if( Node* node = GetNodeUnsafe() )
+			{
+				node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, AlarmIndex_Type, "Alarm Type", "", true, false, 0, 0 );
+				node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, AlarmIndex_Level, "Alarm Level", "", true, false, 0, 0 );
+			}
+		}
+
 	}
 
 	if( _requestFlags & RequestFlag_Dynamic )
@@ -172,7 +332,7 @@ bool Alarm::RequestValue
 			bool res = false;
 			for( uint8 i = 0; i < Alarm_Count; i++ )
 			{
-				if( Value* value = GetValue( _instance, i + 3 ) ) {
+				if( Value* value = GetValue( _instance, i + AlarmIndex_Count ) ) {
 					value->Release();
 					Msg* msg = new Msg( "AlarmCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 					msg->SetInstance( this, _instance );
@@ -214,26 +374,18 @@ bool Alarm::HandleMsg
 		if( GetVersion() == 1 )
 		{
 			Log::Write( LogLevel_Info, GetNodeId(), "Received Alarm report: type=%d, level=%d", _data[1], _data[2] );
-		}
-		else
-		{
-			string alarm_type =  ( _data[5] < Alarm_Count ) ? c_alarmTypeName[_data[5]] : "Unknown type";
 
-			Log::Write( LogLevel_Info, GetNodeId(), "Received Alarm report: type=%d, level=%d, sensorSrcID=%d, type:%s event:%d, status=%d",
-							_data[1], _data[2], _data[3], alarm_type.c_str(), _data[6], _data[4] );
-		}
-
-		ValueByte* value;
-		if( (value = static_cast<ValueByte*>( GetValue( _instance, AlarmIndex_Type ) )) )
-		{
-			value->OnValueRefreshed( _data[1] );
-			value->Release();
-		}
-		// For device on version 1 the level could have different value. This level value correspond to a list of alarm type.
-		if ( Value* value = GetValue( _instance, AlarmIndex_Level ) )
-		{
-			switch ( value->GetID().GetType() )
+			ValueByte* value;
+			if( (value = static_cast<ValueByte*>( GetValue( _instance, AlarmIndex_Type ) )) )
 			{
+				value->OnValueRefreshed( _data[1] );
+				value->Release();
+			}
+			// For device on version 1 the level could have different value. This level value correspond to a list of alarm type.
+			if ( Value* value = GetValue( _instance, AlarmIndex_Level ) )
+			{
+				switch ( value->GetID().GetType() )
+				{
 				case ValueID::ValueType_Byte:
 				{
 					ValueByte* valueByte = static_cast<ValueByte*>( value );
@@ -250,23 +402,156 @@ bool Alarm::HandleMsg
 				{
 					Log::Write( LogLevel_Info, GetNodeId(), "Invalid type (%d) for Alarm Level %d", value->GetID().GetType(), _data[2] );
 				}
-			}
-			value->Release();
-		}
-		// With Version=2, the data has more detailed information about the alarm
-		if(( GetVersion() > 1 ) && ( _length >= 7  ))
-		{
-			if( (value = static_cast<ValueByte*>( GetValue( _instance, AlarmIndex_SourceNodeId ) )) )
-			{
-				value->OnValueRefreshed( _data[3] );
+				}
 				value->Release();
+			}
+		}
+		/* version 2 */
+		else if(( GetVersion() > 1 ) && ( _length >= 7  ))
+		{
+			// With Version=2, the data has more detailed information about the alarm
+
+			string alarm_type =  ( _data[5] < Alarm_Count ) ? c_alarmTypeName[_data[5]] : "Unknown type";
+			string alarm_event = ( c_Alarm_Events[_data[5]][_data[6]].empty() != true ) ? c_Alarm_Events[_data[5]][_data[6]] : "Unknown Event";
+
+			Log::Write( LogLevel_Info, GetNodeId(), "Received Alarm report: sensorSrcID=%d, type:%s event:%s, status=%s",
+					_data[3], alarm_type.c_str(), alarm_event.c_str(), _data[4] == 0x00 ? "false" : "true" );
+
+			{
+				ValueByte* value;
+
+				if( (value = static_cast<ValueByte*>( GetValue( _instance, AlarmIndex_SourceNodeId ) )) )
+				{
+					value->OnValueRefreshed( _data[3] );
+					value->Release();
+				}
+			}
+			{
+				ValueList *valuel;
+
+				if( (valuel = static_cast<ValueList*>( GetValue( _instance, _data[5]+AlarmIndex_Count ) )) )
+				{
+					/* if status is 0, then the alarm is inactive */
+					if (_data[4] == 0x00)
+						valuel->OnValueRefreshed( 0 );
+					else
+						valuel->OnValueRefreshed( _data[6] );
+					valuel->Release();
+				}
+			}
+			/* if the length byte is greater than 1, then there are params */
+			if (_data[7] > 0) {
+				/* first, delete our old Temp ValueID's */
+				for (multimap<uint8, uint8>::iterator it = m_TempValueIDs.begin(); it != m_TempValueIDs.end(); it++) {
+					/* first is index, second is instance*/
+					if (it->second == _instance) {
+						if( Node* node = GetNodeUnsafe() )
+						{
+							node->RemoveValue(GetCommandClassId(), _instance, it->first);
+							m_TempValueIDs.erase(it);
+						}
+					}
+				}
+
+				/* figure out what type of extra data we have */
+				switch (_data[5]) {
+					/* these alarm types have params */
+					case Alarm_Smoke:
+						switch(_data[6]) {
+							case Alarm_Smoke_Detected_Location:
+								string location = ExtractString(&_data[8], _data[7]);
+								if( Node* node = GetNodeUnsafe() )
+								{
+									node->CreateValueString( ValueID::ValueGenre_User, GetCommandClassId(), _instance, (AlarmIndex_Params+m_TempValueIDs.size()), "Location", "", true, false, location, 0 );
+									m_TempValueIDs.insert(std::pair<uint8, uint8>(AlarmIndex_Params+m_TempValueIDs.size(), _instance));
+								}
+							break;
+						};
+						break;
+					case Alarm_CarbonMonoxide:
+						switch(_data[6]) {
+							case Alarm_CO_Detected_Location:
+								string location = ExtractString(&_data[8], _data[7]);
+								if( Node* node = GetNodeUnsafe() )
+								{
+									node->CreateValueString( ValueID::ValueGenre_User, GetCommandClassId(), _instance, (AlarmIndex_Params+m_TempValueIDs.size()), "Location", "", true, false, location, 0 );
+									m_TempValueIDs.insert(std::pair<uint8, uint8>(AlarmIndex_Params+m_TempValueIDs.size(), _instance));
+								}
+							break;
+						};
+						break;
+					case Alarm_CarbonDioxide:
+						switch(_data[6]) {
+							case Alarm_CO2_Detected_Location:
+								string location = ExtractString(&_data[8], _data[7]);
+								if( Node* node = GetNodeUnsafe() )
+								{
+									node->CreateValueString( ValueID::ValueGenre_User, GetCommandClassId(), _instance, (AlarmIndex_Params+m_TempValueIDs.size()), "Location", "", true, false, location, 0 );
+									m_TempValueIDs.insert(std::pair<uint8, uint8>(AlarmIndex_Params+m_TempValueIDs.size(), _instance));
+								}
+							break;
+						};
+						break;
+					case Alarm_Heat:
+						switch(_data[6]) {
+							case Alarm_Heat_OverHeat_Location:
+							case Alarm_Heat_RapidTempRise_Location:
+							case Alarm_Heat_UnderHeat_Location:
+								string location = ExtractString(&_data[8], _data[7]);
+								if( Node* node = GetNodeUnsafe() )
+								{
+									node->CreateValueString( ValueID::ValueGenre_User, GetCommandClassId(), _instance, (AlarmIndex_Params+m_TempValueIDs.size()), "Location", "", true, false, location, 0 );
+									m_TempValueIDs.insert(std::pair<uint8, uint8>(AlarmIndex_Params+m_TempValueIDs.size(), _instance));
+								}
+							break;
+						};
+						break;
+					case Alarm_Flood:
+						switch(_data[6]) {
+							case Alarm_Flood_Leak_Location:
+							case Alarm_Flood_Leak_UnknownLocation:
+							case Alarm_Flood_Level_Location:
+								string location = ExtractString(&_data[8], _data[7]);
+								if( Node* node = GetNodeUnsafe() )
+								{
+									node->CreateValueString( ValueID::ValueGenre_User, GetCommandClassId(), _instance, (AlarmIndex_Params+m_TempValueIDs.size()), "Location", "", true, false, location, 0 );
+									m_TempValueIDs.insert(std::pair<uint8, uint8>(AlarmIndex_Params+m_TempValueIDs.size(), _instance));
+								}
+							break;
+						};
+						break;
+					case Alarm_Access_Control:
+						switch(_data[6]) {
+							case Alarm_Access_Control_KeyPad_Lock:
+							case Alarm_Access_Control_KeyPad_Unlock:
+								/* create version 1 ValueID's */
+								if( Node* node = GetNodeUnsafe() )
+								{
+									node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, (AlarmIndex_Params+m_TempValueIDs.size()), "UserCode", "", true, false, _data[8], 0 );
+									m_TempValueIDs.insert(std::pair<uint8, uint8>(AlarmIndex_Params+m_TempValueIDs.size(), _instance));
+								}
+							break;
+						};
+						break;
+					case Alarm_Burglar:
+						switch(_data[6]) {
+							case Alarm_Burglar_Intrusion_Location:
+							case Alarm_Burglar_GlassBreakage_Location:
+								string location = ExtractString(&_data[8], _data[7]);
+								if( Node* node = GetNodeUnsafe() )
+								{
+									node->CreateValueString( ValueID::ValueGenre_User, GetCommandClassId(), _instance, (AlarmIndex_Params+m_TempValueIDs.size()), "Location", "", true, false, location, 0 );
+									m_TempValueIDs.insert(std::pair<uint8, uint8>(AlarmIndex_Params+m_TempValueIDs.size(), _instance));
+								}
+							break;
+						};
+						break;
+				}
+
+
 			}
 
-			if( (value = static_cast<ValueByte*>( GetValue( _instance, _data[5]+3 ) )) )
-			{
-				value->OnValueRefreshed( _data[6] );
-				value->Release();
-			}
+
 		}
 
 		return true;
@@ -280,7 +565,6 @@ bool Alarm::HandleMsg
 			Log::Write( LogLevel_Info, GetNodeId(), "Received supported alarm types" );
 
 			node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, AlarmIndex_SourceNodeId, "SourceNodeId", "", true, false, 0, 0 );
-			Log::Write( LogLevel_Info, GetNodeId(), "    Added alarm SourceNodeId" );
 
 			// Parse the data for the supported alarm types
 			uint8 numBytes = _data[1];
@@ -293,7 +577,19 @@ bool Alarm::HandleMsg
 						int32 index = (int32)(i<<3) + bit;
 						if( index < Alarm_Count )
 						{
-							node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, index+3, c_alarmTypeName[index], "", true, false, 0, 0 );
+							vector<ValueList::Item> _items;
+							ValueList::Item item;
+							item.m_value = 0;
+							item.m_label = "Not Active";
+							_items.push_back( item );
+
+							for (map<uint8, std::string>::iterator it = c_Alarm_Events[index].begin(); it != c_Alarm_Events[index].end(); it++) {
+								ValueList::Item item;
+								item.m_value = it->first;
+								item.m_label = it->second;
+								_items.push_back( item );
+							}
+							node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, index+AlarmIndex_Count, c_alarmTypeName[index], "", false, false, _items.size(), _items, 0, 0 );
 							Log::Write( LogLevel_Info, GetNodeId(), "    Added alarm type: %s", c_alarmTypeName[index] );
 						} else {
 							Log::Write( LogLevel_Info, GetNodeId(), "    Unknown alarm type: %d", index );
@@ -310,19 +606,5 @@ bool Alarm::HandleMsg
 	return false;
 }
 
-//-----------------------------------------------------------------------------
-// <Alarm::CreateVars>
-// Create the values managed by this command class
-//-----------------------------------------------------------------------------
-void Alarm::CreateVars
-(
-		uint8 const _instance
-)
-{
-	if( Node* node = GetNodeUnsafe() )
-	{
-		node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, AlarmIndex_Type, "Alarm Type", "", true, false, 0, 0 );
-		node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, AlarmIndex_Level, "Alarm Level", "", true, false, 0, 0 );
-	}
-}
+
 

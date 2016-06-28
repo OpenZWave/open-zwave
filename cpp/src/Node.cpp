@@ -500,11 +500,15 @@ void Node::AdvanceQueries
 
 						if( cc->GetMaxVersion() > 1 )
 						{
-							Log::Write(LogLevel_Info, m_nodeId, "	ok");
 							// Get the version for each supported command class that
 							// we have implemented at greater than version one.
 							m_queryPending |= vcc->RequestCommandClassVersion( it->second );
-						}
+						} 
+						else 
+						{
+						        // set the Version to 1 
+						        cc->SetVersion( 1 );
+                                                }
 					}
 					addQSC = m_queryPending;
 				}

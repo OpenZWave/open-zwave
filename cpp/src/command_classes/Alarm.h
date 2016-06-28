@@ -59,11 +59,9 @@ namespace OpenZWave
 
 		virtual uint8 GetMaxVersion(){ return 3; }
 
-	protected:
-		virtual void CreateVars( uint8 const _instance );
-
 	private:
 		Alarm( uint32 const _homeId, uint8 const _nodeId );
+		multimap<uint8, uint8> m_TempValueIDs;
 	};
 
 } // namespace OpenZWave
