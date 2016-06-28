@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--Taken from http://pepper1.net/zwavedb/device/273 and http://www.pepper1.net/zwavedb/device/145 -->
-<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="2">
 	<!-- Configuration Parameters -->
 	<!--IMPORTANT: Controllers may only allow to configure signed values. 
 	    In order to set values in the range  128?255 for parameters 4,  5 and 6 the
@@ -117,7 +117,7 @@
 		<Associations num_groups="3">
 			<Group index="1" max_associations="8" label="Group 1" auto="false"/>
 			<Group index="2" max_associations="8" label="Group 2"  />
-			<Group index="3" max_associations="8" label="Send updates" auto="true"/>
+			<Group index="3" max_associations="8" label="Lifeline" auto="true"/>
 		</Associations>
 	</CommandClass>
 </Product>

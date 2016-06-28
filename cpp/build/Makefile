@@ -96,6 +96,10 @@ else
 hidapi := $(notdir $(wildcard $(top_srcdir)/cpp/hidapi/linux/*.c)) # we do not want the libusb version
 endif
 
+ifeq ($(BITBAKE_ENV),1)
+ar_option := "rc"
+endif
+
 cclasses := $(notdir $(wildcard $(top_srcdir)/cpp/src/command_classes/*.cpp))
 vclasses := $(notdir $(wildcard $(top_srcdir)/cpp/src/value_classes/*.cpp))
 pform := $(notdir $(wildcard $(top_srcdir)/cpp/src/platform/*.cpp)) \
@@ -142,7 +146,7 @@ $(LIBDIR)/libopenzwave.a:	$(patsubst %.cpp,$(OBJDIR)/%.o,$(tinyxml)) \
 			$(patsubst %.cpp,$(OBJDIR)/%.o,$(indep)) \
 			$(OBJDIR)/vers.o
 	@echo "Linking Static Library"
-	@$(AR) $@ $+
+	@$(AR) $(ar_option) $@ $+
 	@$(RANLIB) $@
 
 $(LIBDIR)/$(SHARED_LIB_NAME):	$(patsubst %.cpp,$(OBJDIR)/%.o,$(tinyxml)) \
@@ -163,8 +167,8 @@ $(top_builddir)/libopenzwave.pc: $(top_srcdir)/cpp/build/libopenzwave.pc.in $(PK
 		-e 's|[@]prefix@|$(PREFIX)|g' \
 		-e 's|[@]exec_prefix@|$(PREFIX)/bin|g' \
 		-e 's|[@]libdir@|$(instlibdir)|g' \
-		-e 's|[@]includedir@|$(PREFIX)/include/openzwave/|g' \
-                -e 's|[@]sysconfdir@|$(PREFIX)/etc/openzwave/|g' \
+		-e 's|[@]includedir@|$(includedir)/|g' \
+                -e 's|[@]sysconfdir@|$(sysconfdir)/|g' \
                 -e 's|[@]gitversion@|$(GITVERSION)|g' \
                 -e 's|[@]docdir@|$(docdir)/|g' \
 		-e 's|[@]VERSION@|$(VERSION)|g' \

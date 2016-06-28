@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="2">
   <!--MCOHome Touch Panel Switch MH-S314 -->
   <!-- Configuration -->
   <CommandClass id="112">    
@@ -23,7 +23,7 @@
       <Group index="2" max_associations="5" label="Button2" />
       <Group index="3" max_associations="5" label="Button3" />
       <Group index="4" max_associations="5" label="Button4" />
-      <Group index="5" max_associations="1" label="Lifeline" auto="true"/>
+	  <Group index="5" max_associations="1" label="Lifeline" auto="true"/>
     </Associations>
   </CommandClass>
 </Product>
