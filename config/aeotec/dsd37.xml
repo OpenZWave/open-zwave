@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Aeon Labs DSD37-ZWUS Repeater -->
-<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="2">
+<!-- 
+Aeotec DSD37-ZWUS Repeater 
+https://aeotec.freshdesk.com/helpdesk/attachments/6009584515
+-->
     <!-- Configuration -->
     <CommandClass id="112">
 		<Value type="list" index="200" genre="config" label="Partner ID" size="1" max="1" min="0" value="0">
@@ -18,7 +21,7 @@
     <!-- Association Groups -->
     <CommandClass id="133">
       <Associations num_groups="1">
-        <Group index="1" max_associations="5" label="Group 1"/>      
+        <Group index="1" max_associations="5" label="LifeLine"/>      
       </Associations>
     </CommandClass>    
 </Product>

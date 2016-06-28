@@ -29,7 +29,7 @@ GIT		:= $(shell which git)
 ifeq ($(GIT),)
 VERSION_REV ?= 0
 else
-GITVERSION	:= $(shell $(GIT) describe --long --tags --dirty 2>/dev/null | sed s/^v//)
+GITVERSION	:= $(shell $(GIT) --git-dir $(top_srcdir)/.git describe --long --tags --dirty 2>/dev/null | sed s/^v//)
 ifeq ($(GITVERSION),)
 GITVERSION	:= $(VERSION_MAJ).$(VERSION_MIN).-1
 VERSION_REV	:= 0
@@ -42,6 +42,15 @@ VERSION_REV ?= 0
 endif
 # version number to use on the shared library
 VERSION := $(VERSION_MAJ).$(VERSION_MIN)
+
+# using seting from bitbake
+ifeq ($(BITBAKE_ENV),1)
+CC     := $(CC)
+CXX    := $(CXX)
+LD     := $(CXX)
+AR     := $(AR)
+RANLIB := $(RANLIB)
+else
 
 # support Cross Compiling options
 ifeq ($(UNAME),FreeBSD)
@@ -60,6 +69,8 @@ RANLIB := ranlib
 else
 AR     := $(CROSS_COMPILE)ar rc
 RANLIB := $(CROSS_COMPILE)ranlib
+endif
+
 endif
 SED    := sed
 
@@ -93,12 +104,18 @@ endif
 ifeq ($(PKGCONFIG),)
 pkgconfigdir ?= $(shell if [ -d "/usr/lib64/pkgconfig" ]; then echo "/usr/lib64/pkgconfig"; else echo "/usr/lib/pkgconfig"; fi)
 else
-pkgconfigdir ?= $(shell pkg-config --variable pc_path pkg-config | awk '{split($$0,a,":"); print a[1]}')
+pkgconfigdir ?= $(shell test -d "$(instlibdir)/pkgconfig" && echo "$(instlibdir)/pkgconfig" || pkg-config --variable pc_path pkg-config | awk -F: '{ print $$1 }')
 endif
 
+ifeq ($(BITBAKE_ENV),1)
+sysconfdir := $(PREFIX)/etc/openzwave/
+includedir := $(PREFIX)/include/openzwave/
+docdir := $(PREFIX)/share/doc/openzwave-$(VERSION).$(VERSION_REV)
+else
 sysconfdir ?= $(PREFIX)/etc/openzwave/
 includedir ?= $(PREFIX)/include/openzwave/
 docdir ?= $(PREFIX)/share/doc/openzwave-$(VERSION).$(VERSION_REV)
+endif
 
 top_builddir ?= $(CURDIR)
 export top_builddir

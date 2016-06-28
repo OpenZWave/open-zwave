@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--Taken from http://manuals.zwaveeurope.com/make.php?lang=en&type=&sku=ZME_05431-->
-<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="2">
 	<!-- Configuration Parameters -->
 	<!--IMPORTANT: Controllers may only allow to configure signed values. 
 	    In order to set values in the range  128?255 for parameters 4,  5 and 6 the
@@ -89,7 +89,7 @@
 		<Associations num_groups="3">
 			<Group index="1" max_associations="8" label="Group 1 Single press and hold of up/down buttons" auto="false"/>
 			<Group index="2" max_associations="8" label="Group 2 Double press and press-hold of up/down buttons"  />
-			<Group index="3" max_associations="8" label="Group 3 Send Reports on switch state change" auto="true"/>
+			<Group index="3" max_associations="8" label="Lifeline" auto="true"/>
 		</Associations>
 	</CommandClass>
 </Product>

@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Vision Security Battery Siren -->
-<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="2">
     <!-- Configuration -->
     <CommandClass id="112">
-        <Value type="list" index="1" genre="config" label="Siren Strobe Mode" min="0" max="2" value="0" size="1">
+        <Value type="list" index="0" genre="config" label="Siren Strobe Mode" min="0" max="2" value="0" size="1">
             <Help>Defines the reaction of the siren: turn either Siren sound, Strobe light, or both when triggered</Help>
             <Item label="Strobe and Siren" value="0" />
             <Item label="Siren Only" value="1" />
             <Item label="Strobe Only" value="2" />
         </Value>
 
-        <Value type="list" index="2" genre="config" label="Alarm Auto Stop" min="0" max="3" value="0" size="1">
+        <Value type="list" index="1" genre="config" label="Alarm Auto Stop" min="0" max="3" value="0" size="1">
             <Help>Defines the auto time out of the alarm indication</Help>
             <Item label="30 seconds" value="0" />
             <Item label="60 seconds" value="1" />

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="2">
 <!-- SWIIDPLUG ADAPTER PLUG  -->
     <!-- Configuration -->
     <CommandClass id="112">
         <Value type="list" genre="config" instance="1" index="1" label="Switch All" min="0" max="255" value="255" size="1">
-            <Help>Activate/Deactive ALL ON/OFF</Help>
+            <Help>Enable/Disable ALL ON/OFF</Help>
             <Item label="Disabled" value="0" />
             <Item label="Enabled" value="255" />
         </Value>
