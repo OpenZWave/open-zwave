@@ -7013,7 +7013,7 @@ DNSLookup *result
 		if (result->NodeID > 0) {
 			LockGuard LG(m_nodeMutex);
 			Node *node = this->GetNode(result->NodeID);
-			if (node->getConfigRevision() < atol(result->result.c_str())) {
+			if (node->getConfigRevision() < (unsigned long)atol(result->result.c_str())) {
 				Log::Write(LogLevel_Warning, node->GetNodeId(), "Config for Device \"%s\" is out of date", node->GetProductName().c_str());
 				Notification* notification = new Notification( Notification::Type_UserAlerts );
 				notification->SetHomeAndNodeIds( m_homeId, node->GetNodeId() );
