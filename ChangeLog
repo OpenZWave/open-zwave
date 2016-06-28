@@ -39,6 +39,10 @@ Version 1.5
  - Pull Request #736 - Update dotNet wrapper with new Functions from bufferUnderrun (Justin)
  - Pull Request #746 - Fix HID exports on Windows from gizmocuz (Justin)
  - Issue #490 - Preliminary support for Barrier CC from Srirams (Justin)
+ - Refactor the Alarm CC to properly expose the Alarm Types, Events and
+   Params from Version 2 and above devices. See
+   https://github.com/OpenZWave/open-zwave/wiki/Alarm-Command-Class for
+   details - Addresses Issues #558, #481 #145 and #143 (Justin)
 
 Version 1.4
  - Released 10th Jan, 2016
