@@ -41,7 +41,9 @@ errno_t fopen_s(FILE** pFile, const char *filename, const char *mode)
 {
     if (!pFile)
     {
-#ifdef __MINGW64__
+#if defined(_MSC_VER) && _MSC_VER >= 1400
+        _set_errno(EINVAL);
+#elif defined(__MINGW64__)
 	_set_errno(EINVAL);
 #else
         errno = EINVAL;
