@@ -214,13 +214,13 @@ namespace OpenZWaveDotNet
    		/**
 		 * \brief Creates the Manager singleton object.
 		 *
-		 * The Manager provides the public interface to OpenZWave, exposing all the functionality required to add Z-Wave support to an application.
-		 * There can be only one Manager in an OpenZWave application.  Once the Manager has been created, call AddWatcher to install a notification
-		 * callback handler, and then call the AddDriver method for each attached PC Z-Wave controller in turn.
-		 * \param _configPath a string containing the path to the OpenZWave library config folder, which contains XML descriptions of Z-Wave manufacturers and products.
-		 * \param _userPath a string containing the path to the application's user data folder where the OpenZWave should store the Z-Wave network configuration and state.
-		 * \return a pointer to the newly created Manager object.
-		 * \see Destroy, AddWatcher, AddDriver
+		 * The Manager provides the public interface to OpenZWave, exposing all the functionality required
+		 * to add Z-Wave support to an application. There can be only one Manager in an OpenZWave application.
+		 * An Options object must be created and Locked first, otherwise the call to Manager::Create will
+		 * fail. Once the Manager has been created, attach event handler on notification event,
+		 * and then call the AddDriver method for each attached PC Z-Wave controller in turn.
+		 * \throws OZWException with Type OZWException::OZWEXCEPTION_OPTIONS if the Options Class is not setup and Locked
+		 * \see Options, Destroy, AddWatcher, AddDriver
 		 */
 		void Create();
 
@@ -271,8 +271,9 @@ namespace OpenZWaveDotNet
 
 		/**
 		 * \brief Sends current driver statistics to the log file
+		 * \param homeId The Home ID of the Z-Wave controller.
 		 */
-		void LogDriverStatistics(uint32 homeId ) { Manager::Get()->LogDriverStatistics(homeId); }
+		void LogDriverStatistics(uint32 const homeId ) { Manager::Get()->LogDriverStatistics(homeId); }
 	/*@}*/					   
 
 	//-----------------------------------------------------------------------------
@@ -626,13 +627,13 @@ namespace OpenZWaveDotNet
 		uint8 GetNodeSecurity( uint32 const homeId, uint8 const nodeId ){ return Manager::Get()->GetNodeSecurity(homeId, nodeId); }
 		
 		/**
-		 * \brief Is this a ZWave+ Supported Node?
-		 * \param _homeId the HomeID of the Z-Wave controller that managed the node.
-		 * \param _nodeId the ID of the node to query.
-		 * \return If this node is a Z-Wave Plus Node
-		 */
-		bool IsNodeZWavePlus( uint32 const homeId, uint8 const nodeId ) { return Manager::Get()->IsNodeZWavePlus(homeId, nodeId); };
-		
+		* \brief Is this a ZWave+ Supported Node?
+		* \param homeId the HomeID of the Z-Wave controller that managed the node.
+		* \param nodeId the ID of the node to query.
+		* \return If this node is a Z-Wave Plus Node
+		*/
+		bool IsNodeZWavePlus(uint32 const homeId, uint8 const nodeId) { return Manager::Get()->IsNodeZWavePlus(homeId, nodeId); }
+
 		/**
 		 * \brief Get a node's "basic" type.
 		 * \param homeId The Home ID of the Z-Wave controller that manages the node.
@@ -967,14 +968,14 @@ namespace OpenZWaveDotNet
 		 * \return the node's PlusType
 		 */
 		uint8 GetNodePlusType( uint32 homeId, uint8 nodeId ) { return Manager::Get()->GetNodePlusType(homeId, nodeId); }
+
 		/**
 		 * \brief Get the node PlusType as reported in the Z-Wave+ Info report.
 		 * \param homeId The Home ID of the Z-Wave controller that manages the node.
 		 * \param nodeId The ID of the node to query.
 		 * \return the node's PlusType as a string
 		 */
-		String^ GetNodePlusTypeString( uint32 homeId, uint8 nodeId ) { return gcnew String(Manager::Get()->GetNodePlusTypeString( homeId, nodeId).c_str()); }
-
+		String^ GetNodePlusTypeString(uint32 const homeId, uint8 const nodeId) { return gcnew String(Manager::Get()->GetNodePlusTypeString(homeId, nodeId).c_str()); }
 	/*@}*/
 
 	//-----------------------------------------------------------------------------
@@ -992,7 +993,7 @@ namespace OpenZWaveDotNet
 		 *
 		 * \param id The unique identifier of the value.
 		 * \return The value label.
-		 * \see ValueID
+		 * \see ZWValueID
 		 */
 		String^ GetValueLabel( ZWValueID^ id ){ return gcnew String(Manager::Get()->GetValueLabel(id->CreateUnmanagedValueID()).c_str()); }
 
@@ -1002,7 +1003,7 @@ namespace OpenZWaveDotNet
 		 * \param value The new value of the label.
 		 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_VALUEID if the ValueID is invalid
 		 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_HOMEID if the Driver cannot be found
-		 * \see ValueID
+		 * \see ZWValueID
 		 */
 		void SetValueLabel( ZWValueID^ id, String^ value ) { Manager::Get()->SetValueLabel( id->CreateUnmanagedValueID(), (const char*)(Marshal::StringToHGlobalAnsi(value)).ToPointer()); }
 
@@ -1011,19 +1012,39 @@ namespace OpenZWaveDotNet
 		 *
 		 * \param id The unique identifier of the value.
 		 * \return The value units.
-		 * \see ValueID
+		 * \see ZWValueID
 		 */
-		String^ GetValueUnits( ZWValueID^ id ){ return gcnew String(Manager::Get()->GetValueUnits(id->CreateUnmanagedValueID()).c_str()); }
+		String^ GetValueUnits( ZWValueID^ id ) { return gcnew String(Manager::Get()->GetValueUnits(id->CreateUnmanagedValueID()).c_str()); }
 		
 		/**
 		 * \brief Gets a help string describing the value's purpose and usage.
 		 *
 		 * \param id The unique identifier of the value.
 		 * \return The value help text.
-		 * \see ValueID
+		 * \see ZWValueID
 		 */
-		String^ GetValueHelp( ZWValueID^ id ){ return gcnew String(Manager::Get()->GetValueHelp(id->CreateUnmanagedValueID()).c_str()); }
+		String^ GetValueHelp( ZWValueID^ id ) { return gcnew String(Manager::Get()->GetValueHelp(id->CreateUnmanagedValueID()).c_str()); }
 		
+	   /**
+		* \brief Gets the minimum that this value may contain.
+		* \param id The unique identifier of the value.
+		* \return The value minimum.
+		* \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_VALUEID if the ValueID is invalid
+		* \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_HOMEID if the Driver cannot be found
+		* \see ZWValueID
+		*/
+		int32 GetValueMin(ZWValueID^ id) { return Manager::Get()->GetValueMin(id->CreateUnmanagedValueID()); }
+
+	   /**
+		* \brief Gets the maximum that this value may contain.
+		* \param id The unique identifier of the value.
+		* \return The value maximum.
+		* \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_VALUEID if the ValueID is invalid
+		* \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_HOMEID if the Driver cannot be found
+		* \see ZWValueID
+		*/
+		int32 GetValueMax(ZWValueID^ id) { return Manager::Get()->GetValueMax(id->CreateUnmanagedValueID()); }
+
 		/**
 		 * \brief Sets a help string describing the value's purpose and usage.
 		 * \param id The unique identifier of the value.
@@ -1037,17 +1058,19 @@ namespace OpenZWaveDotNet
 		 *
 		 * \param id The unique identifier of the value.
 		 * \return true if the value cannot be changed by the user.	
-		 * \see ValueID
+		 * \see ZWValueID
 		 */
-		bool IsValueReadOnly( ZWValueID^ id ){ return Manager::Get()->IsValueReadOnly(id->CreateUnmanagedValueID()); }
+		bool IsValueReadOnly( ZWValueID^ id ) { return Manager::Get()->IsValueReadOnly(id->CreateUnmanagedValueID()); }
 
 		/**
 		 * \brief Test whether the value is write-only.
-		 * \param _id The unique identifier of the value.
+		 * \param id The unique identifier of the value.
 		 * \return true if the value can only be written to and not read.
-		 * \see ValueID
+		 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_VALUEID if the ValueID is invalid
+		 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_HOMEID if the Driver cannot be found
+		 * \see ZWValueID
 		 */
-		bool IsValueWriteOnly( ZWValueID^ id ){ return Manager::Get()->IsValueWriteOnly(id->CreateUnmanagedValueID()); }
+		bool IsValueWriteOnly(ZWValueID^ id) { return Manager::Get()->IsValueWriteOnly(id->CreateUnmanagedValueID()); }
 
 		/**
 		 * \brief Test whether the value has been set.
@@ -1070,7 +1093,7 @@ namespace OpenZWaveDotNet
 		/**
 		 * \brief Gets a value as a bool.
 		 *
-		 * \param _id The unique identifier of the value.
+		 * \param id The unique identifier of the value.
 		 * \param o_value a Boolean that will be filled with the value.
 		 * \return true if the value was obtained.  Returns false if the value is not a ZWValueID::ValueType_Bool. The type can be tested with a call to ZWValueID::GetType.
 		 * \see ValueID::GetType, GetValueAsByte, GetValueAsDecimal, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListSelection, GetValueListItems 
@@ -1080,7 +1103,7 @@ namespace OpenZWaveDotNet
 		/**
 		 * \brief Gets a value as an 8-bit unsigned integer.
 		 *
-		 * \param _id The unique identifier of the value.
+		 * \param id The unique identifier of the value.
 		 * \param o_value a Byte that will be filled with the value.
 		 * \return true if the value was obtained.  Returns false if the value is not a ZWValueID::ValueType_Byte. The type can be tested with a call to ZWValueID::GetType
 		 * \see ValueID::GetType, GetValueAsBool, GetValueAsDecimal, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListSelection, GetValueListItems 
@@ -1090,7 +1113,7 @@ namespace OpenZWaveDotNet
 		/**
 		 * \brief Gets a value as a decimal.
 		 *
-		 * \param _id The unique identifier of the value.
+		 * \param id The unique identifier of the value.
 		 * \param o_value a Decimal that will be filled with the value.
 		 * \return true if the value was obtained.  Returns false if the value is not a ZWValueID::ValueType_Decimal. The type can be tested with a call to ZWValueID::GetType
 		 * \see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListSelection, GetValueListItems 
@@ -1100,7 +1123,7 @@ namespace OpenZWaveDotNet
 		/**
 		 * \brief Gets a value as a 32-bit signed integer.
 		 *
-		 * \param _id The unique identifier of the value.
+		 * \param id The unique identifier of the value.
 		 * \param o_value an Int32 that will be filled with the value.
 		 * \return true if the value was obtained.  Returns false if the value is not a ZWValueID::ValueType_Int. The type can be tested with a call to ZWValueID::GetType
 		 * \see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsDecimal, GetValueAsShort, GetValueAsString, GetValueListSelection, GetValueListItems 
@@ -1110,7 +1133,7 @@ namespace OpenZWaveDotNet
 		/**
 		 * \brief Gets a value as a 16-bit signed integer.
 		 *
-		 * \param _id The unique identifier of the value.
+		 * \param id The unique identifier of the value.
 		 * \param o_value an Int16 that will be filled with the value.
 		 * \return true if the value was obtained.  Returns false if the value is not a ZWValueID::ValueType_Short. The type can be tested with a call to ZWValueID::GetType
 		 * \see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsDecimal, GetValueAsInt, GetValueAsString, GetValueListSelection, GetValueListItems 
@@ -1121,7 +1144,7 @@ namespace OpenZWaveDotNet
 		 * \brief Gets a value as a string.
 		 *
 		 * Creates a string representation of a value, regardless of type.
-		 * \param _id The unique identifier of the value.
+		 * \param id The unique identifier of the value.
 		 * \param o_value a String that will be filled with the value.
 		 * \return true if the value was obtained.</returns>
 		 * \see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsDecimal, GetValueAsInt, GetValueAsShort, GetValueListSelection, GetValueListItems 
@@ -1131,7 +1154,7 @@ namespace OpenZWaveDotNet
 		/**
 		 * \brief Gets the selected item from a list value (as a string).
 		 *
-		 * \param _id The unique identifier of the value.
+		 * \param id The unique identifier of the value.
 		 * \param o_value A String that will be filled with the selected item.
 		 * \return True if the value was obtained.  Returns false if the value is not a ZWValueID::ValueType_List. The type can be tested with a call to ZWValueID::GetType
 		 * \see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsDecimal, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListItems 
@@ -1141,7 +1164,7 @@ namespace OpenZWaveDotNet
 		/**
 		 * \brief Gets the selected item from a list value (as an integer).
 		 *
-		 * \param _id The unique identifier of the value.
+		 * \param id The unique identifier of the value.
 		 * \param o_value An integer that will be filled with the selected item.
 		 * \return True if the value was obtained.  Returns false if the value is not a ZWValueID::ValueType_List. The type can be tested with a call to ZWValueID::GetType
 		 * \see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsDecimal, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListItems 
@@ -1161,7 +1184,7 @@ namespace OpenZWaveDotNet
 		/**
 		 * \brief Gets the list of values from a list value.
 		 *
-		 * \param _id The unique identifier of the value.
+		 * \param id The unique identifier of the value.
 		 * \param o_value Pointer to a vector of integers that will be filled with list items. The vector will be cleared before the items are added.
 		 * \return true if the list values were obtained.  Returns false if the value is not a ValueID::ValueType_List. The type can be tested with a call to ValueID::GetType.
 		 * \see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsFloat, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListSelection, GetValueAsRaw
@@ -1258,10 +1281,10 @@ namespace OpenZWaveDotNet
 		 * \brief Refreshes the specified value from the Z-Wave network.
 		 * A call to this function causes the library to send a message to the network to retrieve the current value
 		 * of the specified ValueID (just like a poll, except only one-time, not recurring).
-		 * \param _id The unique identifier of the value to be refreshed.
+		 * \param id The unique identifier of the value to be refreshed.
 		 * \return true if the driver and node were found; false otherwise
 		 */
-		bool RefreshValue( ZWValueID^ id ){ return Manager::Get()->RefreshValue(id->CreateUnmanagedValueID()); }
+		bool RefreshValue( ZWValueID^ id ) { return Manager::Get()->RefreshValue(id->CreateUnmanagedValueID()); }
 
 		/**
 		 * \brief determine if value changes upon a refresh should be verified.  If so, the
@@ -1275,10 +1298,21 @@ namespace OpenZWaveDotNet
 		 * \brief Sets a flag indicating whether value changes noted upon a refresh should be verified.  If so, the
 		 * library will immediately refresh the value a second time whenever a change is observed.  This helps to filter
 		 * out spurious data reported occasionally by some devices.
-		 * \param _id The unique identifier of the value whose changes should or should not be verified.
-		 * \param _verify if true, verify changes; if false, don't verify changes.
+		 * \param id The unique identifier of the value whose changes should or should not be verified.
+		 * \param verify if true, verify changes; if false, don't verify changes.
 		 */
-		void SetChangeVerified( ZWValueID^ id, bool verify ){ Manager::Get()->SetChangeVerified(id->CreateUnmanagedValueID(), verify); }
+		void SetChangeVerified( ZWValueID^ id, bool verify ) { Manager::Get()->SetChangeVerified(id->CreateUnmanagedValueID(), verify); }
+
+		/**
+		* \brief determine if value changes upon a refresh should be verified.  If so, the
+		* library will immediately refresh the value a second time whenever a change is observed.  This helps to filter
+		* out spurious data reported occasionally by some devices.
+		* \param id The unique identifier of the value whose changes should or should not be verified.
+		* \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_VALUEID if the ValueID is invalid
+		* \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_HOMEID if the Driver cannot be found
+		* \sa ZWManager::SetChangeVerified
+		*/
+		bool GetChangeVerified(ZWValueID^ id) { return Manager::Get()->GetChangeVerified(id->CreateUnmanagedValueID()); }
 
 		/**
 		 * \brief Starts an activity in a device.
@@ -1319,7 +1353,7 @@ namespace OpenZWaveDotNet
 
 		/**
 		 * \brief Get the number of switch points defined in a schedule.
-		 * \param _id The unique identifier of the schedule value.
+		 * \param id The unique identifier of the schedule value.
 		 * \return the number of switch points defined in this schedule.  Returns zero if the value is not a ValueID::ValueType_Schedule. The type can be tested with a call to ValueID::GetType.
 		 */
 		uint8 GetNumSwitchPoints( ZWValueID^ id ){ return Manager::Get()->GetNumSwitchPoints( id->CreateUnmanagedValueID() ); }
@@ -1366,8 +1400,8 @@ namespace OpenZWaveDotNet
 		/**
 		 * \brief Gets switch point data from the schedule.
 		 * Retrieves the time and setback values from a switch point in the schedule.
-		 * \param _id The unique identifier of the schedule value.
-		 * \param _idx The index of the switch point, between zero and one less than the value
+		 * \param id The unique identifier of the schedule value.
+		 * \param idx The index of the switch point, between zero and one less than the value
 		 * returned by GetNumSwitchPoints.
 		 * \param o_hours a pointer to a uint8 that will be filled with the hours part of the switch point data.
 		 * \param o_minutes a pointer to a uint8 that will be filled with the minutes part of the switch point data.
@@ -1429,7 +1463,7 @@ namespace OpenZWaveDotNet
 		 * change has been made.
 		 * \param homeId The Home ID of the Z-Wave controller that manages the node.
 		 * \param nodeId The ID of the node to configure.
-		 * \param _param The index of the parameter.
+		 * \param param The index of the parameter.
 		 * \param value The value to which the parameter should be set.
 		 * \return true if the a message setting the value was sent to the device.
 		 * \see RequestConfigParam
@@ -1508,6 +1542,16 @@ namespace OpenZWaveDotNet
 		 * \see GetNumGroups, AddAssociation, RemoveAssociation
 		 */
 		uint8 GetMaxAssociations( uint32 const homeId, uint8 const nodeId, uint8 const groupIdx ){ return Manager::Get()->GetMaxAssociations( homeId, nodeId, groupIdx ); }
+
+	   /**
+		* \brief Returns a label for the particular group of a node.
+		* This label is populated by the device specific configuration files.
+		* \param homeId The Home ID of the Z-Wave controller that manages the node.
+		* \param nodeId The ID of the node whose associations are to be changed.
+		* \param groupIdx One-based index of the group (because Z-Wave product manuals use one-based group numbering).
+		* \see GetNumGroups, GetAssociations, GetMaxAssociations, AddAssociation
+		*/
+		String^ GetGroupLabel(uint32 const homeId, uint8 const nodeId, uint8 const groupIdx) { return gcnew String(Manager::Get()->GetGroupLabel(homeId, nodeId, groupIdx).c_str()); }
 
 		/**
 		 * \brief Returns a label for the particular group of a node.
