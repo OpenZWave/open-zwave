@@ -237,6 +237,12 @@ namespace OpenZWaveDotNet
 		 */
 		String^ GetVersionAsString() { return gcnew String(Manager::Get()->getVersionAsString().c_str()); }
 
+	   /**
+		* \brief Get the Version Number including Git commit of OZW as a string
+		* \return a String representing the version number as MAJOR.MINOR.REVISION-gCOMMIT
+		*/
+		String^ GetVersionLongAsString() { return gcnew String(Manager::Get()->getVersionLongAsString().c_str()); }
+
 		/**
 		 * \brief Get the Version Number as the Version Struct (Only Major/Minor returned)
 		 * \return the version struct representing the version
