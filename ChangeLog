@@ -70,6 +70,9 @@ Version 1.5
  - Pull Request #913 - Add device Stelpro Electronic Thermostat STZW402+ from benweb (Nechry)
  - Pull Request #911 - Added Ecolink door/window sensor and fixed Ecolink PIR Motion sensor from gdombiak (Nechry)
  - Add Electronic Solutions Inc DBMZ Motor Control (Nechry)
+ - Add Remotec ZRC-90 (Nechry)
+ - Pull Request #914 - Update tz66d.xml from saintman23 (Nechry)
+ - Pull Request #915 - Update manufacturer_specific.xml saintman23 (Nechry)
 
 Version 1.4
  - Released 10th Jan, 2016
