@@ -508,10 +508,10 @@ bool SwitchMultilevel::StartLevelChange
 	{
 		if( ignoreStartLevel->GetValue() )
 		{
-			ignoreStartLevel->Release();
 			// Set the ignore start level flag
 			direction |= 0x20;
 		}
+		ignoreStartLevel->Release();
 	}
 	Log::Write( LogLevel_Info, GetNodeId(), "  Ignore Start Level: %s", (direction & 0x20) ? "True" : "False" );
 

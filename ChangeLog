@@ -74,6 +74,7 @@ Version 1.5
  - Pull Request #914 - Update tz66d.xml from saintman23 (Nechry)
  - Pull Request #915 - Update manufacturer_specific.xml saintman23 (Nechry)
  - Pull Request #925 - Adds support for the AU/NZ frequency of the Fibaro Door and Window Sensor, FGK101. philhawthorne (Nechry)
+ - Issue #924 - Fix Mem Leak in SwitchMultiLevel from jmattioni (Justin)
 
 Version 1.4
  - Released 10th Jan, 2016
