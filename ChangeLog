@@ -79,6 +79,8 @@ Version 1.5
  - Pull Request #930 - Update manufacturer_specific.xml from saintman23 (Nechry)
  - Pull Request #934 - Manufacturer ID for AU NZ update from Dilepa (Nechry)
  - Issue #935 - Qubino zmnhvd1 / Zmnhvd* not supported from machielw (Nechry)
+ - Pull Request #936 - Set G.R. 105n working from narfight (Nechry)
+ 
 
 Dev Branch:
  - Rename zwcfg_*.xml to zwcache_*.xml to reflect its not a config file, but a cache. (Justin)
