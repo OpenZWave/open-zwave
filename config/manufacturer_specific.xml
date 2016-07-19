@@ -682,6 +682,7 @@
 		<Product type="0001" id="0001" name="ZMNHDA2 Flush Dimmer" config="qubino/ZMNHDA2.xml"/>
 		<Product type="0001" id="0051" name="ZMNHDD1 Flush Dimmer" config="qubino/ZMNHDDx.xml"/>
 		<Product type="0001" id="0052" name="ZMNHSDx Din Dimmer" config="qubino/ZMNHSDx.xml"/>
+		<Product type="0001" id="0053" name="ZMNHVDx Flush Dimmer 0-10V" config="qubino/ZMNHVDx.xml"/>
 		<Product type="0002" id="0001" name="ZMNHBA2 Flush 2 Relays" config="qubino/ZMNHBA2.xml"/>
 		<Product type="0002" id="0051" name="ZMNHBDx Flush 2 Relays" config="qubino/ZMNHBDx.xml"/>
 		<Product type="0002" id="0002" name="ZMNHAA2 Flush 1 Relay" config="qubino/ZMNHAA2.xml"/>
