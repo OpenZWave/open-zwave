@@ -174,6 +174,61 @@ CommandClass* CommandClasses::CreateCommandClass
 	return creator( _homeId, _nodeId );
 }
 
+#define COMMAND_CLASSES \
+	COMMAND_CLASS( Alarm ) \
+	COMMAND_CLASS( ApplicationStatus ) \
+	COMMAND_CLASS( Association ) \
+	COMMAND_CLASS( AssociationCommandConfiguration ) \
+	COMMAND_CLASS( Basic ) \
+	COMMAND_CLASS( BasicWindowCovering ) \
+	COMMAND_CLASS( Battery ) \
+	COMMAND_CLASS( CentralScene ) \
+	COMMAND_CLASS( ClimateControlSchedule ) \
+	COMMAND_CLASS( Clock ) \
+	COMMAND_CLASS( Color ) \
+	COMMAND_CLASS( Configuration ) \
+	COMMAND_CLASS( ControllerReplication ) \
+	COMMAND_CLASS( CRC16Encap ) \
+	COMMAND_CLASS( DeviceResetLocally ) \
+	COMMAND_CLASS( DoorLock ) \
+	COMMAND_CLASS( DoorLockLogging ) \
+	COMMAND_CLASS( EnergyProduction ) \
+	COMMAND_CLASS( Hail ) \
+	COMMAND_CLASS( Indicator ) \
+	COMMAND_CLASS( Language ) \
+	COMMAND_CLASS( Lock ) \
+	COMMAND_CLASS( ManufacturerSpecific ) \
+	COMMAND_CLASS( Meter ) \
+	COMMAND_CLASS( MeterPulse ) \
+	COMMAND_CLASS( MultiCmd ) \
+	COMMAND_CLASS( MultiInstance ) \
+	COMMAND_CLASS( MultiInstanceAssociation ) \
+	COMMAND_CLASS( NodeNaming ) \
+	COMMAND_CLASS( NoOperation ) \
+	COMMAND_CLASS( Powerlevel ) \
+	COMMAND_CLASS( Proprietary ) \
+	COMMAND_CLASS( Protection ) \
+	COMMAND_CLASS( SceneActivation ) \
+	COMMAND_CLASS( Security ) \
+	COMMAND_CLASS( SensorAlarm ) \
+	COMMAND_CLASS( SensorBinary ) \
+	COMMAND_CLASS( SensorMultilevel ) \
+	COMMAND_CLASS( SwitchAll ) \
+	COMMAND_CLASS( SwitchBinary ) \
+	COMMAND_CLASS( SwitchMultilevel ) \
+	COMMAND_CLASS( SwitchToggleBinary ) \
+	COMMAND_CLASS( SwitchToggleMultilevel ) \
+	COMMAND_CLASS( TimeParameters ) \
+	COMMAND_CLASS( ThermostatFanMode ) \
+	COMMAND_CLASS( ThermostatFanState ) \
+	COMMAND_CLASS( ThermostatMode ) \
+	COMMAND_CLASS( ThermostatOperatingState ) \
+	COMMAND_CLASS( ThermostatSetpoint ) \
+	COMMAND_CLASS( UserCode ) \
+	COMMAND_CLASS( Version ) \
+	COMMAND_CLASS( WakeUp ) \
+	COMMAND_CLASS( ZWavePlusInfo )
+
 //-----------------------------------------------------------------------------
 //	<CommandClasses::RegisterCommandClasses>
 //	Register all our implemented command classes
@@ -183,59 +238,9 @@ void CommandClasses::RegisterCommandClasses
 )
 {
 	CommandClasses& cc = Get();
-	cc.Register( Alarm::StaticGetCommandClassId(), Alarm::StaticGetCommandClassName(), Alarm::Create );
-	cc.Register( ApplicationStatus::StaticGetCommandClassId(), ApplicationStatus::StaticGetCommandClassName(), ApplicationStatus::Create );
-	cc.Register( Association::StaticGetCommandClassId(), Association::StaticGetCommandClassName(), Association::Create );
-	cc.Register( AssociationCommandConfiguration::StaticGetCommandClassId(), AssociationCommandConfiguration::StaticGetCommandClassName(), AssociationCommandConfiguration::Create );
-	cc.Register( Basic::StaticGetCommandClassId(), Basic::StaticGetCommandClassName(), Basic::Create );
-	cc.Register( BasicWindowCovering::StaticGetCommandClassId(), BasicWindowCovering::StaticGetCommandClassName(), BasicWindowCovering::Create );
-	cc.Register( Battery::StaticGetCommandClassId(), Battery::StaticGetCommandClassName(), Battery::Create );
-	cc.Register( CentralScene::StaticGetCommandClassId(), CentralScene::StaticGetCommandClassName(), CentralScene::Create );
-	cc.Register( ClimateControlSchedule::StaticGetCommandClassId(), ClimateControlSchedule::StaticGetCommandClassName(), ClimateControlSchedule::Create );
-	cc.Register( Clock::StaticGetCommandClassId(), Clock::StaticGetCommandClassName(), Clock::Create );
-	cc.Register( Color::StaticGetCommandClassId(), Color::StaticGetCommandClassName(), Color::Create );
-	cc.Register( Configuration::StaticGetCommandClassId(), Configuration::StaticGetCommandClassName(), Configuration::Create );
-	cc.Register( ControllerReplication::StaticGetCommandClassId(), ControllerReplication::StaticGetCommandClassName(), ControllerReplication::Create );
-	cc.Register( CRC16Encap::StaticGetCommandClassId(), CRC16Encap::StaticGetCommandClassName(), CRC16Encap::Create );
-	cc.Register( DeviceResetLocally::StaticGetCommandClassId(), DeviceResetLocally::StaticGetCommandClassName(), DeviceResetLocally::Create );
-	cc.Register( DoorLock::StaticGetCommandClassId(), DoorLock::StaticGetCommandClassName(), DoorLock::Create );
-	cc.Register( DoorLockLogging::StaticGetCommandClassId(), DoorLockLogging::StaticGetCommandClassName(), DoorLockLogging::Create);
-	cc.Register( EnergyProduction::StaticGetCommandClassId(), EnergyProduction::StaticGetCommandClassName(), EnergyProduction::Create );
-	cc.Register( Hail::StaticGetCommandClassId(), Hail::StaticGetCommandClassName(), Hail::Create );
-	cc.Register( Indicator::StaticGetCommandClassId(), Indicator::StaticGetCommandClassName(), Indicator::Create );
-	cc.Register( Language::StaticGetCommandClassId(), Language::StaticGetCommandClassName(), Language::Create );
-	cc.Register( Lock::StaticGetCommandClassId(), Lock::StaticGetCommandClassName(), Lock::Create );
-	cc.Register( ManufacturerSpecific::StaticGetCommandClassId(), ManufacturerSpecific::StaticGetCommandClassName(), ManufacturerSpecific::Create );
-	cc.Register( Meter::StaticGetCommandClassId(), Meter::StaticGetCommandClassName(), Meter::Create );
-	cc.Register( MeterPulse::StaticGetCommandClassId(), MeterPulse::StaticGetCommandClassName(), MeterPulse::Create );
-	cc.Register( MultiCmd::StaticGetCommandClassId(), MultiCmd::StaticGetCommandClassName(), MultiCmd::Create );
-	cc.Register( MultiInstance::StaticGetCommandClassId(), MultiInstance::StaticGetCommandClassName(), MultiInstance::Create );
-	cc.Register( MultiInstanceAssociation::StaticGetCommandClassId(), MultiInstanceAssociation::StaticGetCommandClassName(), MultiInstanceAssociation::Create );
-	cc.Register( NodeNaming::StaticGetCommandClassId(), NodeNaming::StaticGetCommandClassName(), NodeNaming::Create );
-	cc.Register( NoOperation::StaticGetCommandClassId(), NoOperation::StaticGetCommandClassName(), NoOperation::Create );
-	cc.Register( Powerlevel::StaticGetCommandClassId(), Powerlevel::StaticGetCommandClassName(), Powerlevel::Create );
-	cc.Register( Proprietary::StaticGetCommandClassId(), Proprietary::StaticGetCommandClassName(), Proprietary::Create );
-	cc.Register( Protection::StaticGetCommandClassId(), Protection::StaticGetCommandClassName(), Protection::Create );
-	cc.Register( SceneActivation::StaticGetCommandClassId(), SceneActivation::StaticGetCommandClassName(), SceneActivation::Create );
-	cc.Register( Security::StaticGetCommandClassId(), Security::StaticGetCommandClassName(), Security::Create);
-	cc.Register( SensorAlarm::StaticGetCommandClassId(), SensorAlarm::StaticGetCommandClassName(), SensorAlarm::Create );
-	cc.Register( SensorBinary::StaticGetCommandClassId(), SensorBinary::StaticGetCommandClassName(), SensorBinary::Create );
-	cc.Register( SensorMultilevel::StaticGetCommandClassId(), SensorMultilevel::StaticGetCommandClassName(), SensorMultilevel::Create );
-	cc.Register( SwitchAll::StaticGetCommandClassId(), SwitchAll::StaticGetCommandClassName(), SwitchAll::Create );
-	cc.Register( SwitchBinary::StaticGetCommandClassId(), SwitchBinary::StaticGetCommandClassName(), SwitchBinary::Create );
-	cc.Register( SwitchMultilevel::StaticGetCommandClassId(), SwitchMultilevel::StaticGetCommandClassName(), SwitchMultilevel::Create );
-	cc.Register( SwitchToggleBinary::StaticGetCommandClassId(), SwitchToggleBinary::StaticGetCommandClassName(), SwitchToggleBinary::Create );
-	cc.Register( SwitchToggleMultilevel::StaticGetCommandClassId(), SwitchToggleMultilevel::StaticGetCommandClassName(), SwitchToggleMultilevel::Create );
-	cc.Register( TimeParameters::StaticGetCommandClassId(), TimeParameters::StaticGetCommandClassName(), TimeParameters::Create);
-	cc.Register( ThermostatFanMode::StaticGetCommandClassId(), ThermostatFanMode::StaticGetCommandClassName(), ThermostatFanMode::Create );
-	cc.Register( ThermostatFanState::StaticGetCommandClassId(), ThermostatFanState::StaticGetCommandClassName(), ThermostatFanState::Create );
-	cc.Register( ThermostatMode::StaticGetCommandClassId(), ThermostatMode::StaticGetCommandClassName(), ThermostatMode::Create );
-	cc.Register( ThermostatOperatingState::StaticGetCommandClassId(), ThermostatOperatingState::StaticGetCommandClassName(), ThermostatOperatingState::Create );
-	cc.Register( ThermostatSetpoint::StaticGetCommandClassId(), ThermostatSetpoint::StaticGetCommandClassName(), ThermostatSetpoint::Create );
-	cc.Register( UserCode::StaticGetCommandClassId(), UserCode::StaticGetCommandClassName(), UserCode::Create );
-	cc.Register( Version::StaticGetCommandClassId(), Version::StaticGetCommandClassName(), Version::Create );
-	cc.Register( WakeUp::StaticGetCommandClassId(), WakeUp::StaticGetCommandClassName(), WakeUp::Create );
-	cc.Register( ZWavePlusInfo::StaticGetCommandClassId(), ZWavePlusInfo::StaticGetCommandClassName(), ZWavePlusInfo::Create );
+#define COMMAND_CLASS(c) cc.Register( c::StaticGetCommandClassId(), c::StaticGetCommandClassName(), c::Create );
+	COMMAND_CLASSES
+#undef COMMAND_CLASS
 
 	// Now all the command classes have been registered, we can modify the
 	// supported command classes array according to the program options.
