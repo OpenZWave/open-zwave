@@ -179,8 +179,6 @@ namespace OpenZWave
 		Log( string const& _filename, bool const _bAppend, bool const _bConsoleOutput, LogLevel _saveLevel, LogLevel _queueLevel, LogLevel _dumpTrigger );
 		~Log();
 
-		static i_LogImpl*	m_pImpl;		/**< Pointer to an object that encapsulates the platform-specific logging implementation. */
-		static Log*	s_instance;
 		Mutex*		m_logMutex;
 	};
 } // namespace OpenZWave
