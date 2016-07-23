@@ -149,7 +149,7 @@ bool SwitchMultilevel::RequestValue
 			GetDriver()->SendMsg( msg, _queue );
 			return true;
 		} else {
-			Log::Write(  LogLevel_Info, GetNodeId(), "SwitchMultilevelCmd_Get Not Supported on this node");
+			Log::Write(  LogLevel_Info, GetNodeId(), _instance, "SwitchMultilevelCmd_Get Not Supported on this node");
 		}
 	}
 	return false;
@@ -168,7 +168,7 @@ bool SwitchMultilevel::HandleMsg
 {
 	if( SwitchMultilevelCmd_Report == (SwitchMultilevelCmd)_data[0] )
 	{
-		Log::Write( LogLevel_Info, GetNodeId(), "Received SwitchMultiLevel report: level=%d", _data[1] );
+		Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received SwitchMultiLevel report: level=%d", _data[1] );
 
 		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, SwitchMultilevelIndex_Level ) ) )
 		{
@@ -186,17 +186,17 @@ bool SwitchMultilevel::HandleMsg
 		uint8 switchtype2label = switchType2;
 		if (switchtype1label > 7) /* size of c_switchLabelsPos, c_switchLabelsNeg */
 		{
-			Log::Write (LogLevel_Warning, GetNodeId(), "switchtype1label Value was greater than range. Setting to Invalid");
+			Log::Write (LogLevel_Warning, GetNodeId(), _instance, "switchtype1label Value was greater than range. Setting to Invalid");
 			switchtype1label = 0;
 		}
 		if (switchtype2label > 7) /* sizeof c_switchLabelsPos, c_switchLabelsNeg */
 		{
-			Log::Write (LogLevel_Warning, GetNodeId(), "switchtype2label Value was greater than range. Setting to Invalid");
+			Log::Write (LogLevel_Warning, GetNodeId(), _instance, "switchtype2label Value was greater than range. Setting to Invalid");
 			switchtype2label = 0;
 		}
 
 
-		Log::Write( LogLevel_Info, GetNodeId(), "Received SwitchMultiLevel supported report: Switch1=%s/%s, Switch2=%s/%s", c_switchLabelsPos[switchtype1label], c_switchLabelsNeg[switchtype1label], c_switchLabelsPos[switchtype2label], c_switchLabelsNeg[switchtype2label] );
+		Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received SwitchMultiLevel supported report: Switch1=%s/%s, Switch2=%s/%s", c_switchLabelsPos[switchtype1label], c_switchLabelsNeg[switchtype1label], c_switchLabelsPos[switchtype2label], c_switchLabelsNeg[switchtype2label] );
 		ClearStaticRequest( StaticRequest_Version );
 
 		// Set the labels on the values
@@ -442,7 +442,7 @@ bool SwitchMultilevel::SetLevel
 	uint8 const _level
 )
 {
-	Log::Write( LogLevel_Info, GetNodeId(), "SwitchMultilevel::Set - Setting to level %d", _level );
+	Log::Write( LogLevel_Info, GetNodeId(), _instance, "SwitchMultilevel::Set - Setting to level %d", _level );
 	Msg* msg = new Msg( "SwitchMultilevelCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 	msg->SetInstance( this, _instance );
 	msg->Append( GetNodeId() );
@@ -453,15 +453,15 @@ bool SwitchMultilevel::SetLevel
 		durationValue->Release();
 		if( duration == 0xff )
 		{
-			Log::Write( LogLevel_Info, GetNodeId(), "  Duration: Default" );
+			Log::Write( LogLevel_Info, GetNodeId(), _instance, "  Duration: Default" );
 		}
 		else if( duration >= 0x80 )
 		{
-			Log::Write( LogLevel_Info, GetNodeId(), "  Duration: %d minutes", duration - 0x7f );
+			Log::Write( LogLevel_Info, GetNodeId(), _instance, "  Duration: %d minutes", duration - 0x7f );
 		}
 		else
 		{
-			Log::Write( LogLevel_Info, GetNodeId(), "  Duration: %d seconds", duration );
+			Log::Write( LogLevel_Info, GetNodeId(), _instance, "  Duration: %d seconds", duration );
 		}
 
 		msg->Append( 4 );
@@ -493,16 +493,16 @@ bool SwitchMultilevel::StartLevelChange
 	SwitchMultilevelDirection const _direction
 )
 {
-	Log::Write( LogLevel_Info, GetNodeId(), "SwitchMultilevel::StartLevelChange - Starting a level change" );
+	Log::Write( LogLevel_Info, GetNodeId(), _instance, "SwitchMultilevel::StartLevelChange - Starting a level change" );
 
 	uint8 length = 4;
 	if (_direction > 3) /* size of  c_directionParams, c_directionDebugLabels */
 	{
-		Log::Write (LogLevel_Warning, GetNodeId(), "_direction Value was greater than range. Dropping");
+		Log::Write (LogLevel_Warning, GetNodeId(), _instance, "_direction Value was greater than range. Dropping");
 		return false;
 	}
 	uint8 direction = c_directionParams[_direction];
-	Log::Write( LogLevel_Info, GetNodeId(), "  Direction:          %s", c_directionDebugLabels[_direction] );
+	Log::Write( LogLevel_Info, GetNodeId(), _instance, "  Direction:          %s", c_directionDebugLabels[_direction] );
 
 	if( ValueBool* ignoreStartLevel = static_cast<ValueBool*>( GetValue( _instance, SwitchMultilevelIndex_IgnoreStartLevel ) ) )
 	{
@@ -513,7 +513,7 @@ bool SwitchMultilevel::StartLevelChange
 		}
 		ignoreStartLevel->Release();
 	}
-	Log::Write( LogLevel_Info, GetNodeId(), "  Ignore Start Level: %s", (direction & 0x20) ? "True" : "False" );
+	Log::Write( LogLevel_Info, GetNodeId(), _instance, "  Ignore Start Level: %s", (direction & 0x20) ? "True" : "False" );
 
 	uint8 startLevel = 0;
 	if( ValueByte* startLevelValue = static_cast<ValueByte*>( GetValue( _instance, SwitchMultilevelIndex_StartLevel ) ) )
@@ -521,7 +521,7 @@ bool SwitchMultilevel::StartLevelChange
 		startLevel = startLevelValue->GetValue();
 		startLevelValue->Release();
 	}
-	Log::Write( LogLevel_Info, GetNodeId(), "  Start Level:        %d", startLevel );
+	Log::Write( LogLevel_Info, GetNodeId(), _instance, "  Start Level:        %d", startLevel );
 
 	uint8 duration = 0;
 	if( ValueByte* durationValue = static_cast<ValueByte*>( GetValue( _instance, SwitchMultilevelIndex_Duration ) ) )
@@ -529,7 +529,7 @@ bool SwitchMultilevel::StartLevelChange
 		length = 5;
 		duration = durationValue->GetValue();
 		durationValue->Release();
-		Log::Write( LogLevel_Info, GetNodeId(), "  Duration:           %d", duration );
+		Log::Write( LogLevel_Info, GetNodeId(), _instance, "  Duration:           %d", duration );
 	}
 
 	uint8 step = 0;
@@ -540,7 +540,7 @@ bool SwitchMultilevel::StartLevelChange
 			length = 6;
 			step = stepValue->GetValue();
 			stepValue->Release();
-			Log::Write( LogLevel_Info, GetNodeId(), "  Step Size:          %d", step );
+			Log::Write( LogLevel_Info, GetNodeId(), _instance, "  Step Size:          %d", step );
 		}
 	}
 
@@ -577,7 +577,7 @@ bool SwitchMultilevel::StopLevelChange
 	uint8 const _instance
 )
 {
-	Log::Write( LogLevel_Info, GetNodeId(), "SwitchMultilevel::StopLevelChange - Stopping the level change" );
+	Log::Write( LogLevel_Info, GetNodeId(), _instance, "SwitchMultilevel::StopLevelChange - Stopping the level change" );
 	Msg* msg = new Msg( "SwitchMultilevelCmd_StopLevelChange", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 	msg->SetInstance( this, _instance );
 	msg->Append( GetNodeId() );

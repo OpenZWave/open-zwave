@@ -220,7 +220,7 @@ bool SensorMultilevel::RequestValue
 {
 	bool res = false;
 	if ( !IsGetSupported() ) {
-		Log::Write(  LogLevel_Info, GetNodeId(), "SensorMultilevelCmd_Get Not Supported on this node");
+		Log::Write(  LogLevel_Info, GetNodeId(), _instance, "SensorMultilevelCmd_Get Not Supported on this node");
 		return false;
 	}
 	if( GetVersion() < 5 )
@@ -287,7 +287,7 @@ bool SensorMultilevel::HandleMsg
 						uint8 index = ( ( i - 1 ) * 8 ) + j + 1;
 						if (index >= SensorType_MaxType) /* max size for c_sensorTypeNames */
 						{
-							Log::Write (LogLevel_Warning, GetNodeId(), "SensorType Value was greater than range. Dropping");
+							Log::Write (LogLevel_Warning, GetNodeId(), _instance, "SensorType Value was greater than range. Dropping");
 							continue;
 						}
 						msg += c_sensorTypeNames[index];
@@ -300,7 +300,7 @@ bool SensorMultilevel::HandleMsg
 				}
 			}
 		}
-		Log::Write( LogLevel_Info, GetNodeId(), "Received SensorMultiLevel supported report from node %d: %s", GetNodeId(), msg.c_str() );
+		Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received SensorMultiLevel supported report from node %d: %s", GetNodeId(), msg.c_str() );
 	}
 	else if (SensorMultilevelCmd_Report == (SensorMultilevelCmd)_data[0])
 	{
@@ -336,7 +336,7 @@ bool SensorMultilevel::HandleMsg
 				case SensorType_TankCapacity: {
 					if (scale > 2) /* size of c_tankCapcityUnits minus invalid */
 					{
-						Log::Write (LogLevel_Warning, GetNodeId(), "Scale Value for c_tankCapcityUnits was greater than range. Setting to empty");
+						Log::Write (LogLevel_Warning, GetNodeId(), _instance, "Scale Value for c_tankCapcityUnits was greater than range. Setting to empty");
 						units = c_tankCapcityUnits[3]; /* empty entry */
 					}
 					else
@@ -348,7 +348,7 @@ bool SensorMultilevel::HandleMsg
 				case SensorType_Distance: {
 					if (scale > 2) /* size of c_distanceUnits minus invalid */
 					{
-						Log::Write (LogLevel_Warning, GetNodeId(), "Scale Value for c_distanceUnits was greater than range. Setting to empty");
+						Log::Write (LogLevel_Warning, GetNodeId(), _instance, "Scale Value for c_distanceUnits was greater than range. Setting to empty");
 						units = c_distanceUnits[3]; /* empty entry */
 					}
 					else
@@ -360,7 +360,7 @@ bool SensorMultilevel::HandleMsg
 				case SensorType_AnglePosition: {
 					if (scale > 2) /* size of c_anglePositionUnits minus invalid */
 					{
-						Log::Write (LogLevel_Warning, GetNodeId(), "Scale Value for c_anglePositionUnits was greater than range. Setting to empty");
+						Log::Write (LogLevel_Warning, GetNodeId(), _instance, "Scale Value for c_anglePositionUnits was greater than range. Setting to empty");
 						units = c_anglePositionUnits[3]; /* empty entry */
 					}
 					else
@@ -375,7 +375,7 @@ bool SensorMultilevel::HandleMsg
 				case SensorType_SeismicIntensity: {
 					if (scale > 3) /* size of c_seismicIntensityUnits minus invalid */
 					{
-						Log::Write (LogLevel_Warning, GetNodeId(), "Scale Value for c_seismicIntensityUnits was greater than range. Setting to empty");
+						Log::Write (LogLevel_Warning, GetNodeId(), _instance, "Scale Value for c_seismicIntensityUnits was greater than range. Setting to empty");
 						units = c_seismicIntensityUnits[4]; /* empty entry */
 					}
 					else
@@ -387,7 +387,7 @@ bool SensorMultilevel::HandleMsg
 				case SensorType_SeismicMagnitude: {
 					if (scale > 3) /* size of c_seismicMagnitudeUnits minus invalid */
 					{
-						Log::Write (LogLevel_Warning, GetNodeId(), "Scale Value for c_seismicMagnitudeUnits was greater than range. Setting to empty");
+						Log::Write (LogLevel_Warning, GetNodeId(), _instance, "Scale Value for c_seismicMagnitudeUnits was greater than range. Setting to empty");
 						units = c_seismicMagnitudeUnits[4]; /* empty entry */
 					}
 					else
@@ -403,7 +403,7 @@ bool SensorMultilevel::HandleMsg
 				case SensorType_Moisture: {
 					if (scale > 3) /* size of c_moistureUnits minus invalid */
 					{
-						Log::Write (LogLevel_Warning, GetNodeId(), "Scale Value for c_moistureUnits was greater than range. Setting to empty");
+						Log::Write (LogLevel_Warning, GetNodeId(), _instance, "Scale Value for c_moistureUnits was greater than range. Setting to empty");
 						units = c_moistureUnits[4]; /* empty entry */
 					}
 					else
@@ -413,7 +413,7 @@ bool SensorMultilevel::HandleMsg
 				}
 				break;
 				default: {
-					Log::Write (LogLevel_Warning, GetNodeId(), "sensorType Value was greater than range. Dropping");
+					Log::Write (LogLevel_Warning, GetNodeId(), _instance, "sensorType Value was greater than range. Dropping");
 					return false;
 				}
 				break;
@@ -431,7 +431,7 @@ bool SensorMultilevel::HandleMsg
 				value->SetUnits(units);
 			}
 
-			Log::Write( LogLevel_Info, GetNodeId(), "Received SensorMultiLevel report from node %d, instance %d, %s: value=%s%s", GetNodeId(), _instance, c_sensorTypeNames[sensorType], valueStr.c_str(), value->GetUnits().c_str() );
+			Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received SensorMultiLevel report from node %d, instance %d, %s: value=%s%s", GetNodeId(), _instance, c_sensorTypeNames[sensorType], valueStr.c_str(), value->GetUnits().c_str() );
 			if( value->GetPrecision() != precision )
 			{
 				value->SetPrecision( precision );

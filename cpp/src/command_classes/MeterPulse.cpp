@@ -86,7 +86,7 @@ bool MeterPulse::RequestValue
 		GetDriver()->SendMsg( msg, _queue );
 		return true;
 	} else {
-		Log::Write(  LogLevel_Info, GetNodeId(), "MeterPulseCmd_Get Not Supported on this node");
+		Log::Write(  LogLevel_Info, GetNodeId(), _instance, "MeterPulseCmd_Get Not Supported on this node");
 	}
 	return false;
 }
@@ -111,7 +111,7 @@ bool MeterPulse::HandleMsg
 			count |= (uint32)_data[i+1];
 		}
 
-		Log::Write( LogLevel_Info, GetNodeId(), "Received a meter pulse count: Count=%d", count );
+		Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received a meter pulse count: Count=%d", count );
 		if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, 0 ) ) )
 		{
 			value->OnValueRefreshed( count );

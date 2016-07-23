@@ -97,7 +97,7 @@ bool Protection::RequestValue
 		GetDriver()->SendMsg( msg, _queue );
 		return true;
 	} else {
-		Log::Write(  LogLevel_Info, GetNodeId(), "ProtectionCmd_Get Not Supported on this node");
+		Log::Write(  LogLevel_Info, GetNodeId(), _instance, "ProtectionCmd_Get Not Supported on this node");
 	}
 	return false;
 }
@@ -118,10 +118,10 @@ bool Protection::HandleMsg
 		int8 stateValue = _data[1];
 		if (stateValue > 2) /* size of c_protectionStateNames minus Invalid */
 		{
-			Log::Write (LogLevel_Warning, GetNodeId(), "State Value was greater than range. Setting to Invalid");
+			Log::Write (LogLevel_Warning, GetNodeId(), _instance, "State Value was greater than range. Setting to Invalid");
 			stateValue = 3;
 		}
-		Log::Write( LogLevel_Info, GetNodeId(), "Received a Protection report: %s", c_protectionStateNames[_data[1]] );
+		Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received a Protection report: %s", c_protectionStateNames[_data[1]] );
 		if( ValueList* value = static_cast<ValueList*>( GetValue( _instance, 0 ) ) )
 		{
 			value->OnValueRefreshed( (int)_data[1] );

@@ -139,6 +139,89 @@ unsigned int LogImpl::toEscapeCode(LogLevel _level) {
 
 
 
+//-----------------------------------------------------------------------------
+//      <LogImpl::Write>
+//      Write to the log
+//-----------------------------------------------------------------------------
+void LogImpl::Write
+(
+        LogLevel _logLevel,
+        uint8 const _nodeId,
+        uint8 const _instance,
+        char const* _format,
+        va_list _args
+)
+{
+        // create a timestamp string
+        string timeStr = GetTimeStampString();
+        string nodeStr = GetNodeString( _nodeId, _instance );
+        string logLevelStr = GetLogLevelString(_logLevel);
+
+        // handle this message
+        if( (_logLevel <= m_queueLevel) || (_logLevel == LogLevel_Internal) )   // we're going to do something with this message...
+        {
+                char lineBuf[1024];
+                if( !_format || ( _format[0] == 0 ) )
+                {
+                        strcpy_s( lineBuf, 1024, "" );
+                }
+                else
+                {
+                        vsprintf_s( lineBuf, sizeof(lineBuf), _format, _args );
+                }
+
+                // should this message be saved to file (and possibly written to console?)
+                if( (_logLevel <= m_saveLevel) || (_logLevel == LogLevel_Internal) )
+                {
+                        // save to file
+                        FILE* pFile = NULL;
+                        if( !fopen_s( &pFile, m_filename.c_str(), "a" ) || m_bConsoleOutput )
+                        {
+                                if( _logLevel != LogLevel_Internal )                                            // don't add a second timestamp to display of queued messages
+                                {
+                                        if( pFile != NULL )
+                                        {
+                                                fprintf( pFile, "%s%s%s", timeStr.c_str(), logLevelStr.c_str(), nodeStr.c_str() );
+                                        }
+                                        if( m_bConsoleOutput )
+                                        {
+                                                printf( "%s%s%s", timeStr.c_str(), logLevelStr.c_str(), nodeStr.c_str() );
+                                        }
+                                }
+
+                                // print message to file (and possibly screen)
+                                if( pFile != NULL )
+                                {
+                                        fprintf( pFile, "%s", lineBuf );
+                                        fprintf( pFile, "\n" );
+                                        fclose( pFile );
+                                }
+                                if( m_bConsoleOutput )
+                                {
+                                        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), toEscapeCode(_logLevel));
+                                        printf( "%s", lineBuf );
+                                        printf( "\n" );
+                                        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+                                }
+
+                        }
+                }
+
+                if( _logLevel != LogLevel_Internal )
+                {
+                        char queueBuf[1024];
+                        string threadStr = GetThreadId();
+                        sprintf_s( queueBuf, sizeof(queueBuf), "%s%s%s", timeStr.c_str(), threadStr.c_str(), lineBuf );
+                        Queue( queueBuf );
+                }
+        }
+
+        // now check to see if the _dumpTrigger has been hit
+        if( (_logLevel <= m_dumpTrigger) && (_logLevel != LogLevel_Internal) && (_logLevel != LogLevel_Always) )
+        {
+                QueueDump();
+        }
+}
 
 //-----------------------------------------------------------------------------
 //	<LogImpl::Write>
@@ -332,6 +415,33 @@ string LogImpl::GetNodeString
 			snprintf( buf, sizeof(buf), "Node%03d, ", _nodeId );
 			return buf;
 		}
+}
+
+//-----------------------------------------------------------------------------
+//      <LogImpl::GetNodeString>
+//      Generate a string with formatted node id
+//-----------------------------------------------------------------------------
+string LogImpl::GetNodeString
+(
+        uint8 const _nodeId,
+        uint8 const _instance
+)
+{
+        if( _nodeId == 0 )
+        {
+                return "";
+        }
+        else
+                if( _nodeId == 255 ) // should make distinction between broadcast and controller better for SwitchAll broadcast
+                {
+                        return "contrlr, ";
+                }
+                else
+                {
+                        char buf[20];
+                        snprintf( buf, sizeof(buf), "Node%03d:%03d, ", _nodeId, _instance );
+                        return buf;
+                }
 }
 
 //-----------------------------------------------------------------------------

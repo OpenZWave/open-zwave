@@ -107,7 +107,7 @@ bool Clock::RequestValue
 		GetDriver()->SendMsg( msg, _queue );
 		return true;
 	} else {
-		Log::Write(  LogLevel_Info, GetNodeId(), "ClockCmd_Get Not Supported on this node");
+		Log::Write(  LogLevel_Info, GetNodeId(), _instance, "ClockCmd_Get Not Supported on this node");
 	}
 	return false;
 }
@@ -131,11 +131,11 @@ bool Clock::HandleMsg
 
 		if (day > 7) /* size of c_dayNames */
 		{
-			Log::Write (LogLevel_Warning, GetNodeId(), "Day Value was greater than range. Setting to Invalid");
+			Log::Write (LogLevel_Warning, GetNodeId(), _instance, "Day Value was greater than range. Setting to Invalid");
 			day = 0;
 		}
 
-		Log::Write( LogLevel_Info, GetNodeId(), "Received Clock report: %s %.2d:%.2d", c_dayNames[day], hour, minute );
+		Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received Clock report: %s %.2d:%.2d", c_dayNames[day], hour, minute );
 
 
 		if( ValueList* dayValue = static_cast<ValueList*>( GetValue( _instance, ClockIndex_Day ) ) )

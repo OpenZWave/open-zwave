@@ -49,7 +49,7 @@ bool MultiCmd::HandleMsg
 {
 	if( MultiCmdCmd_Encap == (MultiCmdCmd)_data[0] )
 	{
-		Log::Write( LogLevel_Info, GetNodeId(), "Received encapsulated multi-command from node %d", GetNodeId() );
+		Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received encapsulated multi-command from node %d", GetNodeId() );
 
 		if( Node const* node = GetNodeUnsafe() )
 		{
@@ -69,7 +69,7 @@ bool MultiCmd::HandleMsg
 			}
 		}
 
-		Log::Write( LogLevel_Info, GetNodeId(), "End of encapsulated multi-command from node %d", GetNodeId() );
+		Log::Write( LogLevel_Info, GetNodeId(), _instance, "End of encapsulated multi-command from node %d", GetNodeId() );
 		return true;
 	}
 	return false;

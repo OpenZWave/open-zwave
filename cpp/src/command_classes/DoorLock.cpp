@@ -257,7 +257,7 @@ bool DoorLock::RequestValue
 			GetDriver()->SendMsg( msg, _queue );
 			return true;
 		} else {
-			Log::Write(  LogLevel_Info, GetNodeId(), "DoorLockCmd_Get Not Supported on this node");
+			Log::Write(  LogLevel_Info, GetNodeId(), _instance, "DoorLockCmd_Get Not Supported on this node");
 		}
 	}
 	return false;
@@ -281,11 +281,11 @@ bool DoorLock::HandleMsg
 		uint8 lockState = (_data[1] == 0xFF) ? 6 : _data[1];
 		if (lockState > 6) /* size of c_LockStateNames minus Invalid Entry */
 		{
-			Log::Write (LogLevel_Warning, GetNodeId(), "LockState Value was greater than range. Setting to Invalid");
+			Log::Write (LogLevel_Warning, GetNodeId(), _instance, "LockState Value was greater than range. Setting to Invalid");
 			lockState = 7;
 		}
 
-		Log::Write( LogLevel_Info, GetNodeId(), "Received DoorLock report: DoorLock is %s", c_LockStateNames[lockState] );
+		Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received DoorLock report: DoorLock is %s", c_LockStateNames[lockState] );
 
 		if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, Value_Lock ) ) )
 		{
@@ -320,7 +320,7 @@ bool DoorLock::HandleMsg
 			  	m_timeoutsecs = _data[4];
 				break;
 			default:
-				Log::Write(LogLevel_Warning, GetNodeId(), "Recieved a Unsupported Door Lock Config Report %d", _data[1]);
+				Log::Write(LogLevel_Warning, GetNodeId(), _instance, "Recieved a Unsupported Door Lock Config Report %d", _data[1]);
 		}
 
 		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, Value_System_Config_OutsideHandles ) ) )
@@ -357,7 +357,7 @@ bool DoorLock::SetValue
 	{
 		ValueBool const* value = static_cast<ValueBool const*>(&_value);
 
-		Log::Write( LogLevel_Info, GetNodeId(), "Value_Lock::Set - Requesting lock to be %s", value->GetValue() ? "Locked" : "Unlocked" );
+		Log::Write( LogLevel_Info, GetNodeId(), instance, "Value_Lock::Set - Requesting lock to be %s", value->GetValue() ? "Locked" : "Unlocked" );
 		Msg* msg = new Msg( "DoorLockCmd_Set",  GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 		msg->SetInstance( this, _value.GetID().GetInstance() );
 		msg->Append( GetNodeId() );
@@ -377,7 +377,7 @@ bool DoorLock::SetValue
 			return false;
 
 
-		Log::Write( LogLevel_Info, GetNodeId(), "Value_Lock_Mode::Set - Requesting lock to be %s", item->m_label.c_str() );
+		Log::Write( LogLevel_Info, GetNodeId(), instance, "Value_Lock_Mode::Set - Requesting lock to be %s", item->m_label.c_str() );
 		Msg* msg = new Msg( "DoorLockCmd_Set",  GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 		msg->SetInstance( this, _value.GetID().GetInstance() );
 		msg->Append( GetNodeId() );
@@ -437,7 +437,7 @@ bool DoorLock::SetValue
 				}
 				break;
 			default:
-				Log::Write(LogLevel_Warning, GetNodeId(), "DoorLock::SetValue - Unhandled System_Config Variable %d", _value.GetID().GetIndex());
+				Log::Write(LogLevel_Warning, GetNodeId(), instance, "DoorLock::SetValue - Unhandled System_Config Variable %d", _value.GetID().GetIndex());
 				sendmsg = false;
 				break;
 		}
@@ -451,7 +451,7 @@ bool DoorLock::SetValue
 					m_timeoutsupported = item->m_value;
 			} else {
 				ok = false;
-				Log::Write(LogLevel_Warning, GetNodeId(), "Failed To Retrieve Value_System_Config_Mode For SetValue");
+				Log::Write(LogLevel_Warning, GetNodeId(), instance, "Failed To Retrieve Value_System_Config_Mode For SetValue");
 			}
 			uint8 control = 0;
 			if( ValueByte* value = static_cast<ValueByte*>( GetValue( instance, Value_System_Config_OutsideHandles ) ) )
@@ -460,7 +460,7 @@ bool DoorLock::SetValue
 				m_insidehandlemode = control;
 			} else {
 				ok = false;
-				Log::Write(LogLevel_Warning, GetNodeId(), "Failed To Retrieve Value_System_Config_OutsideHandles For SetValue");
+				Log::Write(LogLevel_Warning, GetNodeId(), instance, "Failed To Retrieve Value_System_Config_OutsideHandles For SetValue");
 			}
 			if( ValueByte* value = static_cast<ValueByte*>( GetValue( instance, Value_System_Config_InsideHandles ) ) )
 			{
@@ -468,7 +468,7 @@ bool DoorLock::SetValue
 				m_outsidehandlemode = (value->GetValue() & 0x0F);
 			} else {
 				ok = false;
-				Log::Write(LogLevel_Warning, GetNodeId(), "Failed To Retrieve Value_System_Config_InsideHandles For SetValue");
+				Log::Write(LogLevel_Warning, GetNodeId(), instance, "Failed To Retrieve Value_System_Config_InsideHandles For SetValue");
 			}
 			if( ValueInt* value = static_cast<ValueInt*>( GetValue( instance, Value_System_Config_Minutes ) ) )
 			{

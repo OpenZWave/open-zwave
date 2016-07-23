@@ -214,7 +214,7 @@ bool Color::RequestState
 		 * by the device
 		 */
 		if (m_refreshinprogress == true) {
-			Log::Write(LogLevel_Info, GetNodeId(), "Color Refresh in progress");
+			Log::Write(LogLevel_Info, GetNodeId(), _instance, "Color Refresh in progress");
 			return false;
 		}
 
@@ -250,7 +250,7 @@ bool Color::RequestValue
 	{
 		if (m_coloridxbug && m_refreshinprogress == true)
 		{
-			Log::Write(LogLevel_Warning, GetNodeId(), "ColorRefresh is already in progress. Ignoring Get Request");
+			Log::Write(LogLevel_Warning, GetNodeId(), _instance, "ColorRefresh is already in progress. Ignoring Get Request");
 			return false;
 		}
 		for (int i = 0; i <= 9; i++) {
@@ -328,35 +328,35 @@ bool Color::HandleMsg
 	{
 		m_capabilities = (_data[1] + (_data[2] << 8));
 		string helpstr = "#RRGGBB";
-		Log::Write(LogLevel_Info, GetNodeId(), "Received an Color Capability Report: Capability=%xd", m_capabilities);
+		Log::Write(LogLevel_Info, GetNodeId(), _instance, "Received an Color Capability Report: Capability=%xd", m_capabilities);
 		if (m_capabilities & 0x04)
-			Log::Write(LogLevel_Info, GetNodeId(), "Red (0x02)");
+			Log::Write(LogLevel_Info, GetNodeId(), _instance, "Red (0x02)");
 		if (m_capabilities & 0x08)
-			Log::Write(LogLevel_Info, GetNodeId(), "Green (0x03)");
+			Log::Write(LogLevel_Info, GetNodeId(), _instance, "Green (0x03)");
 		if (m_capabilities & 0x10)
-			Log::Write(LogLevel_Info, GetNodeId(), "Blue (0x04)");
+			Log::Write(LogLevel_Info, GetNodeId(), _instance, "Blue (0x04)");
 		if (m_capabilities & 0x01) {
-			Log::Write(LogLevel_Info, GetNodeId(), "Warm White (0x00)");
+			Log::Write(LogLevel_Info, GetNodeId(), _instance, "Warm White (0x00)");
 			helpstr += "WW";
 		}
 		if (m_capabilities & 0x02) {
-			Log::Write(LogLevel_Info, GetNodeId(), "Cold White (0x01)");
+			Log::Write(LogLevel_Info, GetNodeId(), _instance, "Cold White (0x01)");
 			helpstr += "CW";
 		}
 		if (m_capabilities & 0x20) {
-			Log::Write(LogLevel_Info, GetNodeId(), "Amber (0x05)");
+			Log::Write(LogLevel_Info, GetNodeId(), _instance, "Amber (0x05)");
 			helpstr += "AM";
 		}
 		if (m_capabilities & 0x40) {
-			Log::Write(LogLevel_Info, GetNodeId(), "Cyan (0x06)");
+			Log::Write(LogLevel_Info, GetNodeId(), _instance, "Cyan (0x06)");
 			helpstr += "CY";
 		}
 		if (m_capabilities & 0x80) {
-			Log::Write(LogLevel_Info, GetNodeId(), "Purple (0x07)");
+			Log::Write(LogLevel_Info, GetNodeId(), _instance, "Purple (0x07)");
 			helpstr += "PR";
 		}
 		if (m_capabilities & 0x100)
-			Log::Write(LogLevel_Info, GetNodeId(), "Indexed Color (0x08)");
+			Log::Write(LogLevel_Info, GetNodeId(), _instance, "Indexed Color (0x08)");
 		if( ValueInt* colorchannels = static_cast<ValueInt*>( GetValue( _instance, Value_Color_Channels_Capabilities ) ) )
 		{
 			colorchannels->OnValueRefreshed( m_capabilities );
@@ -516,7 +516,7 @@ bool Color::HandleMsg
 			 * don't put anything in our Color String
 			 */
 
-			Log::Write(LogLevel_Info, GetNodeId(), "Received a updated Color from Device: %s", ss.str().c_str() );
+			Log::Write(LogLevel_Info, GetNodeId(), _instance, "Received a updated Color from Device: %s", ss.str().c_str() );
 			color->OnValueRefreshed( string(ss.str()) );
 			color->Release();
 

@@ -78,7 +78,7 @@ bool ApplicationStatus::HandleMsg
 				snprintf( msg, sizeof(msg), "Unknown status %d", _data[1] );
 			}
 		}
-		Log::Write( LogLevel_Info, GetNodeId(), "Received Application Status Busy: %s", msg );
+		Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received Application Status Busy: %s", msg );
 		return true;
 	}
 

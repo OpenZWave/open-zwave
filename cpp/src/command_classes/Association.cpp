@@ -225,7 +225,7 @@ bool Association::HandleMsg
 			// Retrieve the number of groups this device supports.
 			// The groups will be queried with the session data.
 			m_numGroups = _data[1];
-			Log::Write( LogLevel_Info, GetNodeId(), "Received Association Groupings report from node %d. Number of groups is %d", GetNodeId(), m_numGroups );
+			Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received Association Groupings report from node %d. Number of groups is %d", GetNodeId(), m_numGroups );
 			ClearStaticRequest( StaticRequest_Values );
 			handled = true;
 		}
@@ -242,13 +242,13 @@ bool Association::HandleMsg
 				{
 					uint8 numAssociations = _length - 5;
 
-					Log::Write( LogLevel_Info, GetNodeId(), "Received Association report from node %d, group %d, containing %d associations", GetNodeId(), groupIdx, numAssociations );
+					Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received Association report from node %d, group %d, containing %d associations", GetNodeId(), groupIdx, numAssociations );
 					if( numAssociations )
 					{
-						Log::Write( LogLevel_Info, GetNodeId(), "  The group contains:" );
+						Log::Write( LogLevel_Info, GetNodeId(), _instance, "  The group contains:" );
 						for( i=0; i<numAssociations; ++i )
 						{
-							Log::Write( LogLevel_Info, GetNodeId(), "    Node %d",  _data[i+4] );
+							Log::Write( LogLevel_Info, GetNodeId(), _instance, "    Node %d",  _data[i+4] );
 							m_pendingMembers.push_back( _data[i+4] );
 						}
 					}
@@ -257,7 +257,7 @@ bool Association::HandleMsg
 				if( numReportsToFollow )
 				{
 					// We're expecting more reports for this group
-					Log::Write( LogLevel_Info, GetNodeId(), "%d more association reports expected for node %d, group %d", numReportsToFollow, GetNodeId(), groupIdx );
+					Log::Write( LogLevel_Info, GetNodeId(), _instance, "%d more association reports expected for node %d, group %d", numReportsToFollow, GetNodeId(), groupIdx );
 					return true;
 				}
 				else
@@ -279,7 +279,7 @@ bool Association::HandleMsg
 			else
 			{
 				// maxAssociations is zero, so we've reached the end of the query process
-				Log::Write( LogLevel_Info, GetNodeId(), "Max associations for node %d, group %d is zero.  Querying associations for this node is complete.", GetNodeId(), groupIdx );
+				Log::Write( LogLevel_Info, GetNodeId(), _instance, "Max associations for node %d, group %d is zero.  Querying associations for this node is complete.", GetNodeId(), groupIdx );
 				node->AutoAssociate();
 				m_queryAll = false;
 			}
@@ -302,7 +302,7 @@ bool Association::HandleMsg
 				else
 				{
 					// We're all done
-					Log::Write( LogLevel_Info, GetNodeId(), "Querying associations for node %d is complete.", GetNodeId() );
+					Log::Write( LogLevel_Info, GetNodeId(), _instance, "Querying associations for node %d is complete.", GetNodeId() );
 					node->AutoAssociate();
 					m_queryAll = false;
 				}

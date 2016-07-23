@@ -233,7 +233,7 @@ bool MultiInstanceAssociation::HandleMsg
 			// Retrieve the number of groups this device supports.
 			// The groups will be queried with the session data.
 			m_numGroups = _data[1];
-			Log::Write( LogLevel_Info, GetNodeId(), "Received Multi Instance Association Groupings report from node %d. Number of groups is %d", GetNodeId(), m_numGroups );
+			Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received Multi Instance Association Groupings report from node %d. Number of groups is %d", GetNodeId(), m_numGroups );
 			ClearStaticRequest( StaticRequest_Values );
 			handled = true;
 		}
@@ -256,8 +256,8 @@ bool MultiInstanceAssociation::HandleMsg
 					//   instance #
 					//   node D
 					//   instance #
-					Log::Write( LogLevel_Info, GetNodeId(), "Received Multi Instance Association report from node %d, group %d", GetNodeId(), groupIdx );
-					Log::Write( LogLevel_Info, GetNodeId(), "  The group contains:" );
+					Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received Multi Instance Association report from node %d, group %d", GetNodeId(), groupIdx );
+					Log::Write( LogLevel_Info, GetNodeId(), _instance, "  The group contains:" );
 					bool pastMarker = false;
 					for( i=0; i < _length-5; ++i )
 					{	
@@ -269,7 +269,7 @@ bool MultiInstanceAssociation::HandleMsg
 						{
 							if (!pastMarker)
 							{
-								Log::Write( LogLevel_Info, GetNodeId(), "    Node %d",  _data[i+4] );
+								Log::Write( LogLevel_Info, GetNodeId(), _instance, "    Node %d",  _data[i+4] );
 								InstanceAssociation association;
 								association.m_nodeId=_data[i+4];
 								association.m_instance=0x00;
@@ -277,7 +277,7 @@ bool MultiInstanceAssociation::HandleMsg
 							} 
 							else 
 							{
-								Log::Write( LogLevel_Info, GetNodeId(), "    Node %d instance %d",  _data[i+4], _data[i+5] );
+								Log::Write( LogLevel_Info, GetNodeId(), _instance, "    Node %d instance %d",  _data[i+4], _data[i+5] );
 								InstanceAssociation association;
 								association.m_nodeId=_data[i+4];
 								association.m_instance=_data[i+5];								
@@ -291,7 +291,7 @@ bool MultiInstanceAssociation::HandleMsg
 				if( numReportsToFollow )
 				{
 					// We're expecting more reports for this group
-					Log::Write( LogLevel_Info, GetNodeId(), "%d more association reports expected for node %d, group %d", numReportsToFollow, GetNodeId(), groupIdx );
+					Log::Write( LogLevel_Info, GetNodeId(), _instance, "%d more association reports expected for node %d, group %d", numReportsToFollow, GetNodeId(), groupIdx );
 					return true;
 				}
 				else
@@ -314,7 +314,7 @@ bool MultiInstanceAssociation::HandleMsg
 			else
 			{
 				// maxAssociations is zero, so we've reached the end of the query process
-				Log::Write( LogLevel_Info, GetNodeId(), "Max associations for node %d, group %d is zero.  Querying associations for this node is complete.", GetNodeId(), groupIdx );
+				Log::Write( LogLevel_Info, GetNodeId(), _instance, "Max associations for node %d, group %d is zero.  Querying associations for this node is complete.", GetNodeId(), groupIdx );
 				node->AutoAssociate();
 				m_queryAll = false;
 			}
@@ -337,7 +337,7 @@ bool MultiInstanceAssociation::HandleMsg
 				else
 				{
 					// We're all done
-					Log::Write( LogLevel_Info, GetNodeId(), "Querying associations for node %d is complete.", GetNodeId() );
+					Log::Write( LogLevel_Info, GetNodeId(), _instance, "Querying associations for node %d is complete.", GetNodeId() );
 					node->AutoAssociate();
 					m_queryAll = false;
 				}
@@ -389,7 +389,7 @@ void MultiInstanceAssociation::Set
  	uint8 _instance
 )
 {
-	Log::Write( LogLevel_Info, GetNodeId(), "MultiInstanceAssociation::Set - Adding instance %d on node %d to group %d of node %d", 
+	Log::Write( LogLevel_Info, GetNodeId(), _instance, "MultiInstanceAssociation::Set - Adding instance %d on node %d to group %d of node %d", 
 	           _instance, _targetNodeId, _groupIdx, GetNodeId() );
 
 	if ( (_instance == 0x00 )
@@ -439,7 +439,7 @@ void MultiInstanceAssociation::Remove
  	uint8 _instance
 )
 {
-	Log::Write( LogLevel_Info, GetNodeId(), "MultiInstanceAssociation::Remove - Removing instance %d on node %d from group %d of node %d",
+	Log::Write( LogLevel_Info, GetNodeId(), _instance, "MultiInstanceAssociation::Remove - Removing instance %d on node %d from group %d of node %d",
 	           _instance, _targetNodeId, _groupIdx, GetNodeId());
 
 	if ( _instance == 0x00 )

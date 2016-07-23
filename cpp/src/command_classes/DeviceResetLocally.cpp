@@ -54,7 +54,7 @@ bool DeviceResetLocally::HandleMsg
 	if( DeviceResetLocallyCmd_Notification == _data[0] )
 	{
 		// device has been reset
-		Log::Write( LogLevel_Info, GetNodeId(), "Received Device Reset Locally from node %d", GetNodeId() );
+		Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received Device Reset Locally from node %d", GetNodeId() );
 
 		// send a NoOperation message to the node, this will fail since the node is no longer included in the network
 		// we must do this because the Controller will only remove failed nodes

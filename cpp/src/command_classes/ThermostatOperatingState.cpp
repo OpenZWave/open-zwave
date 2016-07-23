@@ -105,7 +105,7 @@ bool ThermostatOperatingState::RequestValue
 		GetDriver()->SendMsg( msg, _queue );
 		return true;
 	} else {
-		Log::Write(  LogLevel_Info, GetNodeId(), "ThermostatOperatingStateCmd_Get Not Supported on this node");
+		Log::Write(  LogLevel_Info, GetNodeId(), _instance, "ThermostatOperatingStateCmd_Get Not Supported on this node");
 	}
 	return false;
 }
@@ -129,7 +129,7 @@ bool ThermostatOperatingState::HandleMsg
 			/* no need bounds checking on c_stateName here, as it can only be 1 Byte anyway */
 			valueString->OnValueRefreshed( c_stateName[_data[1]&0x0f] );
 			valueString->Release();
-			Log::Write( LogLevel_Info, GetNodeId(), "Received thermostat operating state: %s", valueString->GetValue().c_str() );
+			Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received thermostat operating state: %s", valueString->GetValue().c_str() );
 		}
 		return true;
 	}

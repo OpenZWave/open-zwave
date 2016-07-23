@@ -158,7 +158,7 @@ bool UserCode::RequestValue
 	}
 	if ( !IsGetSupported() )
 	{
-		Log::Write(  LogLevel_Info, GetNodeId(), "UserNumberCmd_Get Not Supported on this node");
+		Log::Write(  LogLevel_Info, GetNodeId(), _instance, "UserNumberCmd_Get Not Supported on this node");
 		return false;
 	}
 	if( _userCodeIdx == UserCodeIndex_Count )
@@ -175,7 +175,7 @@ bool UserCode::RequestValue
 	}
 	if (_userCodeIdx == 0)
 	{
-		Log::Write( LogLevel_Warning, GetNodeId(), "UserCodeCmd_Get with Index 0 not Supported");
+		Log::Write( LogLevel_Warning, GetNodeId(), _instance, "UserCodeCmd_Get with Index 0 not Supported");
 		return false;
 	}
 	Msg* msg = new Msg( "UserCodeCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
@@ -211,11 +211,11 @@ bool UserCode::HandleMsg
 		ClearStaticRequest( StaticRequest_Values );
 		if( m_userCodeCount == 0 )
 		{
-			Log::Write( LogLevel_Info, GetNodeId(), "Received User Number report from node %d: Not supported", GetNodeId() );
+			Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received User Number report from node %d: Not supported", GetNodeId() );
 		}
 		else
 		{
-			Log::Write( LogLevel_Info, GetNodeId(), "Received User Number report from node %d: Supported Codes %d (%d)", GetNodeId(), m_userCodeCount, _data[1] );
+			Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received User Number report from node %d: Supported Codes %d (%d)", GetNodeId(), m_userCodeCount, _data[1] );
 		}
 
 		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, UserCodeIndex_Count ) ) )
@@ -255,10 +255,10 @@ bool UserCode::HandleMsg
 			int8 size = _length - 4;
 			if( size > UserCodeLength )
 			{
-				Log::Write( LogLevel_Warning, GetNodeId(), "User Code length %d is larger then maximum %d", size, UserCodeLength );
+				Log::Write( LogLevel_Warning, GetNodeId(), _instance, "User Code length %d is larger then maximum %d", size, UserCodeLength );
 				size = UserCodeLength;
 			}
-			Log::Write( LogLevel_Info, GetNodeId(), "User Code Packet is %d", size );
+			Log::Write( LogLevel_Info, GetNodeId(), _instance, "User Code Packet is %d", size );
 			m_userCodesStatus[i] = _data[2];
 			if (size > 0) {
 				memcpy( data, &_data[3], size );
@@ -269,7 +269,7 @@ bool UserCode::HandleMsg
 			value->OnValueRefreshed( data, size );
 			value->Release();
 		}
-		Log::Write( LogLevel_Info, GetNodeId(), "Received User Code Report from node %d for User Code %d (%s)", GetNodeId(), i, CodeStatus( _data[2] ).c_str() );
+		Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received User Code Report from node %d for User Code %d (%s)", GetNodeId(), i, CodeStatus( _data[2] ).c_str() );
 		if( m_queryAll && i == m_currentCode )
 		{
 
@@ -286,7 +286,7 @@ bool UserCode::HandleMsg
 					Options::Get()->GetOptionAsBool("RefreshAllUserCodes", &m_refreshUserCodes );
 				}
 			} else {
-				Log::Write( LogLevel_Info, GetNodeId(), "Not Requesting additional UserCode Slots as RefreshAllUserCodes is false, and slot %d is available", i);
+				Log::Write( LogLevel_Info, GetNodeId(), _instance, "Not Requesting additional UserCode Slots as RefreshAllUserCodes is false, and slot %d is available", i);
 				m_queryAll = false;
 			}
 		}

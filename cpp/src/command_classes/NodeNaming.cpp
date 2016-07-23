@@ -259,7 +259,7 @@ bool NodeNaming::RequestValue
 			GetDriver()->SendMsg( msg, _queue );
 			return true;
 		} else {
-			Log::Write(  LogLevel_Info, GetNodeId(), "NodeNamingCmd_Get Not Supported on this node");
+			Log::Write(  LogLevel_Info, GetNodeId(), _instance, "NodeNamingCmd_Get Not Supported on this node");
 		}
 		return false;
 	}
@@ -300,7 +300,7 @@ bool NodeNaming::HandleMsg
 			{
 				// We only overwrite the name if it is empty
 				node->m_nodeName = name;
-				Log::Write( LogLevel_Info, GetNodeId(), "Received the name: %s.", name.c_str() );
+				Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received the name: %s.", name.c_str() );
 				updated = true;
 			}
 		}
@@ -311,7 +311,7 @@ bool NodeNaming::HandleMsg
 			{
 				// We only overwrite the location if it is empty
 				node->m_location = location;
-				Log::Write( LogLevel_Info, GetNodeId(), "Received the location: %s.", location.c_str() );
+				Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received the location: %s.", location.c_str() );
 				updated = true;
 			}
 		}

@@ -192,7 +192,7 @@ bool Alarm::RequestValue
 			return res;
 		}
 	} else {
-		Log::Write(  LogLevel_Info, GetNodeId(), "AlarmCmd_Get Not Supported on this node");
+		Log::Write(  LogLevel_Info, GetNodeId(), _instance, "AlarmCmd_Get Not Supported on this node");
 	}
 	return false;
 }
@@ -213,13 +213,13 @@ bool Alarm::HandleMsg
 		// We have received a report from the Z-Wave device
 		if( GetVersion() == 1 )
 		{
-			Log::Write( LogLevel_Info, GetNodeId(), "Received Alarm report: type=%d, level=%d", _data[1], _data[2] );
+			Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received Alarm report: type=%d, level=%d", _data[1], _data[2] );
 		}
 		else
 		{
 			string alarm_type =  ( _data[5] < Alarm_Count ) ? c_alarmTypeName[_data[5]] : "Unknown type";
 
-			Log::Write( LogLevel_Info, GetNodeId(), "Received Alarm report: type=%d, level=%d, sensorSrcID=%d, type:%s event:%d, status=%d",
+			Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received Alarm report: type=%d, level=%d, sensorSrcID=%d, type:%s event:%d, status=%d",
 							_data[1], _data[2], _data[3], alarm_type.c_str(), _data[6], _data[4] );
 		}
 
@@ -259,10 +259,10 @@ bool Alarm::HandleMsg
 		if( Node* node = GetNodeUnsafe() )
 		{
 			// We have received the supported alarm types from the Z-Wave device
-			Log::Write( LogLevel_Info, GetNodeId(), "Received supported alarm types" );
+			Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received supported alarm types" );
 
 			node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, AlarmIndex_SourceNodeId, "SourceNodeId", "", true, false, 0, 0 );
-			Log::Write( LogLevel_Info, GetNodeId(), "    Added alarm SourceNodeId" );
+			Log::Write( LogLevel_Info, GetNodeId(), _instance, "    Added alarm SourceNodeId" );
 
 			// Parse the data for the supported alarm types
 			uint8 numBytes = _data[1];
@@ -276,9 +276,9 @@ bool Alarm::HandleMsg
 						if( index < Alarm_Count )
 						{
 							node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, index+3, c_alarmTypeName[index], "", true, false, 0, 0 );
-							Log::Write( LogLevel_Info, GetNodeId(), "    Added alarm type: %s", c_alarmTypeName[index] );
+							Log::Write( LogLevel_Info, GetNodeId(), _instance, "    Added alarm type: %s", c_alarmTypeName[index] );
 						} else {
-							Log::Write( LogLevel_Info, GetNodeId(), "    Unknown alarm type: %d", index );
+							Log::Write( LogLevel_Info, GetNodeId(), _instance, "    Unknown alarm type: %d", index );
 						}
 					}
 				}

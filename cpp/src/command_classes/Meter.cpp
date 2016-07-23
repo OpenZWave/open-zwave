@@ -188,7 +188,7 @@ bool Meter::RequestValue
 	bool res = false;
 	if ( !IsGetSupported())
 	{
-		Log::Write(  LogLevel_Info, GetNodeId(), "MeterCmd_Get Not Supported on this node");
+		Log::Write(  LogLevel_Info, GetNodeId(), _instance, "MeterCmd_Get Not Supported on this node");
 		return false;
 	}
 	for( uint8 i=0; i<8; ++i )
@@ -253,7 +253,7 @@ bool Meter::HandleSupportedReport
 	int8 meterType = (MeterType)(_data[1] & 0x1f);
 	if (meterType > 4) /* size of c_meterTypes */
 	{
-		Log::Write (LogLevel_Warning, GetNodeId(), "meterType Value was greater than range. Dropping Message");
+		Log::Write (LogLevel_Warning, GetNodeId(), _instance, "meterType Value was greater than range. Dropping Message");
 		return false;
 	}
 
@@ -347,7 +347,7 @@ bool Meter::HandleSupportedReport
 			node->CreateValueButton( ValueID::ValueGenre_System, GetCommandClassId(), _instance, MeterIndex_Reset, "Reset", 0 );
 		}
 
-		Log::Write( LogLevel_Info, GetNodeId(), "Received Meter supported report from node %d, %s", GetNodeId(), msg.c_str() );
+		Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received Meter supported report from node %d, %s", GetNodeId(), msg.c_str() );
 		return true;
 	}
 
@@ -384,7 +384,7 @@ bool Meter::HandleReport
 
 	if (scale > 7) /* size of c_electricityLabels, c_electricityUnits, c_gasUnits, c_waterUnits */
 	{
-		Log::Write (LogLevel_Warning, GetNodeId(), "Scale was greater than range. Setting to Invalid");
+		Log::Write (LogLevel_Warning, GetNodeId(), _instance, "Scale was greater than range. Setting to Invalid");
 		scale = 7;
 	}
 
@@ -397,7 +397,7 @@ bool Meter::HandleReport
 		int8 meterType = (MeterType)(_data[1] & 0x1f);
 		if (meterType > 4) /* size of c_meterTypes */
 		{
-			Log::Write (LogLevel_Warning, GetNodeId(), "meterType Value was greater than range. Dropping Message");
+			Log::Write (LogLevel_Warning, GetNodeId(), _instance, "meterType Value was greater than range. Dropping Message");
 			return false;
 		}
 
@@ -432,7 +432,7 @@ bool Meter::HandleReport
 
 		if( ValueDecimal* value = static_cast<ValueDecimal*>( GetValue( _instance, 0 ) ) )
 		{
-			Log::Write( LogLevel_Info, GetNodeId(), "Received Meter report from node %d: %s=%s%s", GetNodeId(), label.c_str(), valueStr.c_str(), units.c_str() );
+			Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received Meter report from node %d: %s=%s%s", GetNodeId(), label.c_str(), valueStr.c_str(), units.c_str() );
 			value->SetLabel( label );
 			value->SetUnits( units );
 			value->OnValueRefreshed( valueStr );
@@ -456,7 +456,7 @@ bool Meter::HandleReport
 
 		if( ValueDecimal* value = static_cast<ValueDecimal*>( GetValue( _instance, baseIndex ) ) )
 		{
-			Log::Write( LogLevel_Info, GetNodeId(), "Received Meter report from node %d: %s%s=%s%s", GetNodeId(), exporting ? "Exporting ": "", value->GetLabel().c_str(), valueStr.c_str(), value->GetUnits().c_str() );
+			Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received Meter report from node %d: %s%s=%s%s", GetNodeId(), exporting ? "Exporting ": "", value->GetLabel().c_str(), valueStr.c_str(), value->GetUnits().c_str() );
 			value->OnValueRefreshed( valueStr );
 			if( value->GetPrecision() != precision )
 			{
@@ -485,7 +485,7 @@ bool Meter::HandleReport
 				{
 					precision = 0;
 					valueStr = ExtractValue( &_data[2], &scale, &precision, 3+size );
-					Log::Write( LogLevel_Info, GetNodeId(), "    Previous value was %s%s, received %d seconds ago.", valueStr.c_str(), previous->GetUnits().c_str(), delta );
+					Log::Write( LogLevel_Info, GetNodeId(), _instance, "    Previous value was %s%s, received %d seconds ago.", valueStr.c_str(), previous->GetUnits().c_str(), delta );
 					previous->OnValueRefreshed( valueStr );
 					if( previous->GetPrecision() != precision )
 					{

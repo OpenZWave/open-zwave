@@ -170,7 +170,7 @@ bool Basic::RequestValue
 		GetDriver()->SendMsg( msg, _queue );
 		return true;
 	} else {
-		Log::Write(  LogLevel_Info, GetNodeId(), "BasicCmd_Get Not Supported on this node");
+		Log::Write(  LogLevel_Info, GetNodeId(), _instance, "BasicCmd_Get Not Supported on this node");
 	}
 	return false;
 }
@@ -189,7 +189,7 @@ bool Basic::HandleMsg
 	if( BasicCmd_Report == (BasicCmd)_data[0] )
 	{
 		// Level
-		Log::Write( LogLevel_Info, GetNodeId(), "Received Basic report from node %d: level=%d", GetNodeId(), _data[1] );
+		Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received Basic report from node %d: level=%d", GetNodeId(), _data[1] );
 		if( !m_ignoreMapping && m_mapping != 0 )
 		{
 			UpdateMappedClass( _instance, m_mapping, _data[1] );
@@ -199,7 +199,7 @@ bool Basic::HandleMsg
 			value->OnValueRefreshed( _data[1] );
 			value->Release();
 		} else {
-			Log::Write(LogLevel_Warning, GetNodeId(), "No Valid Mapping for Basic Command Class and No ValueID Exported. Error?");
+			Log::Write(LogLevel_Warning, GetNodeId(), _instance, "No Valid Mapping for Basic Command Class and No ValueID Exported. Error?");
 		}
 		return true;
 	}
@@ -208,7 +208,7 @@ bool Basic::HandleMsg
 	{
 		if( m_setAsReport )
 		{
-			Log::Write( LogLevel_Info, GetNodeId(), "Received Basic set from node %d: level=%d. Treating it as a Basic report.", GetNodeId(), _data[1] );
+			Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received Basic set from node %d: level=%d. Treating it as a Basic report.", GetNodeId(), _data[1] );
 			if( !m_ignoreMapping && m_mapping != 0 )
 			{
 				UpdateMappedClass( _instance, m_mapping, _data[1] );
@@ -222,7 +222,7 @@ bool Basic::HandleMsg
 		else
 		{
 			// Commmand received from the node.  Handle as a notification event
-			Log::Write( LogLevel_Info, GetNodeId(), "Received Basic set from node %d: level=%d.  Sending event notification.", GetNodeId(), _data[1] );
+			Log::Write( LogLevel_Info, GetNodeId(), _instance, "Received Basic set from node %d: level=%d.  Sending event notification.", GetNodeId(), _data[1] );
 
 			Notification* notification = new Notification( Notification::Type_NodeEvent );
 			notification->SetHomeNodeIdAndInstance( GetHomeId(), GetNodeId(), _instance );
