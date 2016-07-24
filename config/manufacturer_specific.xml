@@ -138,6 +138,7 @@
 		<Product type="0001" id="0000" name="Yale Real Living Cap-Touch Lever Lock"/>
 		<Product type="0002" id="0000" name="Yale Real Living Cap-Touch Deadbolt" config="assa_abloy/RealLivingCapTouch.xml" />
 		<Product type="0004" id="0800" name="Yale Real Living Key Free Push Button Deadbolt" config="assa_abloy/RealLivingCapTouch.xml"/>
+		<Product type="0006" id="0000" name="Yale Keyfree Connected Smart Lock" config="assa_abloy/KeyfreeConnected.xml"/>
 	</Manufacturer>
 	<Manufacturer id="005d" name="Aspalis">
 		<Product type="0202" id="0511" name="Plugin Lamp Module"/>
