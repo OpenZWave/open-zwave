@@ -80,6 +80,7 @@ Version 1.5
  - Pull Request #934 - Manufacturer ID for AU NZ update from Dilepa (Nechry)
  - Issue #935 - Qubino zmnhvd1 / Zmnhvd* not supported from machielw (Nechry)
  - Pull Request #936 - Set G.R. 105n working from narfight (Nechry)
+ - Issue #931 - Handle NONCE Report messages if we don't have a currentMsg (Justin)
  
 
 Version 1.4
