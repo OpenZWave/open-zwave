@@ -96,6 +96,17 @@ bool ValueButton::PressButton
 }
 
 //-----------------------------------------------------------------------------
+// <ValueButton::ResetButton>
+// Resets the state to not pressed
+//-----------------------------------------------------------------------------
+void ValueButton::ResetButton
+(
+)
+{
+	m_pressed = false;
+}
+
+//-----------------------------------------------------------------------------
 // <ValueButton::ReleaseButton>
 // Stop an activity in a device
 //-----------------------------------------------------------------------------

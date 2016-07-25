@@ -51,6 +51,7 @@ namespace OpenZWave
 
 		bool PressButton();
 		bool ReleaseButton();
+		void ResetButton();
 
 		virtual string const GetAsString() const { return ( IsPressed() ? "true" : "false" ); }
 
