@@ -398,12 +398,38 @@ bool SwitchMultilevel::SetValue
 		}
 		case SwitchMultilevelIndex_Stop:
 		{
-			// Dec
-			if ( ValueButton* button = static_cast<ValueButton*>( GetValue( instance, SwitchMultilevelIndex_StopLevelChange) ) )
+			// Stop
+			if( ValueButton* button = static_cast<ValueButton*>( GetValue( instance, SwitchMultilevelIndex_Stop ) ) )
 			{
 				button->ResetButton();
 				res = StopLevelChange( instance );
 				button->Release();
+
+				// Reset all other buttons
+				ValueButton *otherButton;
+				if( otherButton = static_cast<ValueButton*>( GetValue( instance, SwitchMultilevelIndex_Bright ) ) )
+				{
+					otherButton->ResetButton();
+					otherButton->Release();
+				}
+
+				if( otherButton = static_cast<ValueButton*>( GetValue( instance, SwitchMultilevelIndex_Dim ) ) )
+				{
+					otherButton->ResetButton();
+					otherButton->Release();
+				}
+
+				if( otherButton = static_cast<ValueButton*>( GetValue( instance, SwitchMultilevelIndex_Inc ) ) )
+				{
+					otherButton->ResetButton();
+					otherButton->Release();
+				}
+
+				if( otherButton = static_cast<ValueButton*>( GetValue( instance, SwitchMultilevelIndex_Dec ) ) )
+				{
+					otherButton->ResetButton();
+					otherButton->Release();
+				}
 			}
 			break;
 		}
