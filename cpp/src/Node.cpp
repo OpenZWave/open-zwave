@@ -689,6 +689,12 @@ void Node::AdvanceQueries
 				notification->SetHomeAndNodeIds( m_homeId, m_nodeId );
 				GetDriver()->QueueNotification( notification );
 
+				/* if its a sleeping node, this will send a NoMoreInformation Packet to the device */
+				WakeUp* cc = static_cast<WakeUp*>( GetCommandClass( WakeUp::StaticGetCommandClassId() ) );
+				if( cc )
+				{
+					cc->SendPending();
+				}
 				// Check whether all nodes are now complete
 				GetDriver()->CheckCompletedNodeQueries();
 				return;
