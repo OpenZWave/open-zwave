@@ -1863,6 +1863,12 @@ void Driver::ProcessMsg
 		if (SecurityCmd_NonceReport == _data[6]) {
 			Log::Write(LogLevel_Info,  _data[3], "Received SecurityCmd_NonceReport from node %d", _data[3] );
 
+			/* handle possible resends of NONCE_REPORT messages.... See Issue #931 */
+			if (!m_currentMsg) {
+				Log::Write(LogLevel_Warning, _data[3], "Received a NonceReport from node, but no pending messages. Dropping..");
+				return;
+			}
+
 			// No Need to triger a WriteMsg here - It should be handled automatically
 			m_currentMsg->setNonce(&_data[7]);
 			this->SendEncryptedMessage();

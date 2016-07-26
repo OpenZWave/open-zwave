@@ -58,16 +58,15 @@ enum WakeUpCmd
 //-----------------------------------------------------------------------------
 WakeUp::WakeUp
 (
-	uint32 const _homeId,
-	uint8 const _nodeId
+		uint32 const _homeId,
+		uint8 const _nodeId
 ):
-	CommandClass( _homeId, _nodeId ),
-	m_mutex( new Mutex() ),
-	m_pollRequired( false ),
-	m_notification( false )
+CommandClass( _homeId, _nodeId ),
+m_mutex( new Mutex() ),
+m_awake( true ),
+m_pollRequired( false )
 {
-        m_awake = true;
-        Options::Get()->GetOptionAsBool("AssumeAwake", &m_awake);
+	Options::Get()->GetOptionAsBool("AssumeAwake", &m_awake);
 
 	SetStaticRequest( StaticRequest_Values );
 }
@@ -119,9 +118,9 @@ void WakeUp::Init
 //-----------------------------------------------------------------------------
 bool WakeUp::RequestState
 (
-	uint32 const _requestFlags,
-	uint8 const _instance,
-	Driver::MsgQueue const _queue
+		uint32 const _requestFlags,
+		uint8 const _instance,
+		Driver::MsgQueue const _queue
 )
 {
 	bool requests = false;
@@ -150,10 +149,10 @@ bool WakeUp::RequestState
 //-----------------------------------------------------------------------------
 bool WakeUp::RequestValue
 (
-	uint32 const _requestFlags,
-	uint8 const _getTypeEnum,
-	uint8 const _instance,
-	Driver::MsgQueue const _queue
+		uint32 const _requestFlags,
+		uint8 const _getTypeEnum,
+		uint8 const _instance,
+		Driver::MsgQueue const _queue
 )
 {
 	if( _instance != 1 )
@@ -196,9 +195,9 @@ bool WakeUp::RequestValue
 //-----------------------------------------------------------------------------
 bool WakeUp::HandleMsg
 (
-	uint8 const* _data,
-	uint32 const _length,
-	uint32 const _instance	// = 1
+		uint8 const* _data,
+		uint32 const _length,
+		uint32 const _instance	// = 1
 )
 {
 	if( WakeUpCmd_IntervalReport == (WakeUpCmd)_data[0] )
@@ -234,14 +233,13 @@ bool WakeUp::HandleMsg
 				SetValue( *value );
 			}
 			value->Release();
- 		}
+		}
 		return true;
 	}
 	else if( WakeUpCmd_Notification == (WakeUpCmd)_data[0] )
 	{
 		// The device is awake.
 		Log::Write( LogLevel_Info, GetNodeId(), "Received Wakeup Notification from node %d", GetNodeId() );
-		m_notification = true;
 		SetAwake( true );
 		return true;
 	}
@@ -285,7 +283,7 @@ bool WakeUp::HandleMsg
 //-----------------------------------------------------------------------------
 bool WakeUp::SetValue
 (
-	Value const& _value
+		Value const& _value
 )
 {
 	if( ValueID::ValueType_Int == _value.GetID().GetType() )
@@ -326,7 +324,7 @@ bool WakeUp::SetValue
 //-----------------------------------------------------------------------------
 void WakeUp::SetVersion
 (
-	uint8 const _version
+		uint8 const _version
 )
 {
 	CommandClass::SetVersion( _version );
@@ -339,7 +337,7 @@ void WakeUp::SetVersion
 //-----------------------------------------------------------------------------
 void WakeUp::SetAwake
 (
-	bool _state
+		bool _state
 )
 {
 	if( m_awake != _state )
@@ -377,7 +375,7 @@ void WakeUp::SetAwake
 //-----------------------------------------------------------------------------
 void WakeUp::QueueMsg
 (
-	Driver::MsgQueueItem const& _item
+		Driver::MsgQueueItem const& _item
 )
 {
 	m_mutex->Lock();
@@ -449,10 +447,11 @@ void WakeUp::SendPending
 	m_mutex->Unlock();
 
 	// Send the device back to sleep, unless we have outstanding queries.
-	bool sendToSleep = m_notification;
+	bool sendToSleep = m_awake;
 	Node* node = GetNodeUnsafe();
 	if( node != NULL )
 	{
+
 		if( !node->AllQueriesCompleted() )
 		{
 			sendToSleep = false;
@@ -461,7 +460,6 @@ void WakeUp::SendPending
 
 	if( sendToSleep )
 	{
-		m_notification = false;
 		Msg* msg = new Msg( "WakeUpCmd_NoMoreInformation", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 		msg->Append( GetNodeId() );
 		msg->Append( 2 );
@@ -478,7 +476,7 @@ void WakeUp::SendPending
 //-----------------------------------------------------------------------------
 void WakeUp::CreateVars
 (
-	uint8 const _instance
+		uint8 const _instance
 )
 {
 	if( Node* node = GetNodeUnsafe() )
@@ -487,19 +485,19 @@ void WakeUp::CreateVars
 		{
 			switch( GetVersion() )
 			{
-				case 1:
-				{
-				  	node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 0, "Wake-up Interval", "Seconds", false, false, 3600, 0 );
-					break;
-				}
-				case 2:
-				{
-				  	node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 1, "Minimum Wake-up Interval", "Seconds", true, false, 0, 0 );
-					node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 2, "Maximum Wake-up Interval", "Seconds", true, false, 0, 0 );
-					node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 3, "Default Wake-up Interval", "Seconds", true, false, 0, 0 );
-					node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 4, "Wake-up Interval Step", "Seconds", true, false, 0, 0 );
-					break;
-				}
+			case 1:
+			{
+				node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 0, "Wake-up Interval", "Seconds", false, false, 3600, 0 );
+				break;
+			}
+			case 2:
+			{
+				node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 1, "Minimum Wake-up Interval", "Seconds", true, false, 0, 0 );
+				node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 2, "Maximum Wake-up Interval", "Seconds", true, false, 0, 0 );
+				node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 3, "Default Wake-up Interval", "Seconds", true, false, 0, 0 );
+				node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 4, "Wake-up Interval Step", "Seconds", true, false, 0, 0 );
+				break;
+			}
 			}
 		}
 	}
