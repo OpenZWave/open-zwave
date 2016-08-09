@@ -228,6 +228,7 @@
 		<Product type="0005" id="0003" name="Z Thermostat" config="danfoss/z.xml"/>
 		<Product type="0005" id="0004" name="Z Thermostat 014G0013" config="danfoss/z.xml"/>
 		<Product type="0064" id="0001" name="RA Plus-W Radiator Thermostat"/>
+		<Product type="0115" id="a010" name="Popp Radiator Thermostat" config="danfoss/z.xml"/>
 		<Product type="8004" id="2000" name="RXZ3 RF relay Switching Unit"/>
 		<Product type="8005" id="0001" name="Living Connect Radiator Thermostat" config="danfoss/living.xml"/>
 	</Manufacturer>
