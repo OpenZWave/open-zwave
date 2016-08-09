@@ -82,7 +82,8 @@ Version 1.5
  - Pull Request #936 - Set G.R. 105n working from narfight (Nechry)
  - Issue #931 - Handle NONCE Report messages if we don't have a currentMsg (Justin)
  - Add Aeotec ZW117 Range Extender 6 (Nechry)
-
+ - Pull Request #951 - Added GE 12727 In-Wall Smart Switch from vincemic (Nechry)
+ 
 Version 1.4
  - Released 10th Jan, 2016
 
