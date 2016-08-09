@@ -69,6 +69,7 @@ DISTFILES =	.gitignore \
 	config/aeotec/zw099.xml \
 	config/aeotec/zw100.xml \
 	config/aeotec/zw112.xml \
+	config/aeotec/zw117.xml \
 	config/aeotec/zw120.xml \
 	config/assa_abloy/RealLivingCapTouch.xml \
 	config/cooper/RF9505-T.xml \
