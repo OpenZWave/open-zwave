@@ -85,7 +85,8 @@ Version 1.5
  - Pull Request #951 - Added GE 12727 In-Wall Smart Switch from vincemic (Nechry)
  - Pull Request #941 - Add device Assa Abloy Yale Keyfree Connected Smart Lock from nickperry (Nechry)
  - Issue #954 - Add Popp Radiator Thermostat to config from daniarv (Nechry)
-  
+ - Add Aeotec ZW121 LED Strip (Nechry)
+
 Version 1.4
  - Released 10th Jan, 2016
 
