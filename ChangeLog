@@ -83,7 +83,8 @@ Version 1.5
  - Issue #931 - Handle NONCE Report messages if we don't have a currentMsg (Justin)
  - Add Aeotec ZW117 Range Extender 6 (Nechry)
  - Pull Request #951 - Added GE 12727 In-Wall Smart Switch from vincemic (Nechry)
- 
+ - Pull Request #941 - Add device Assa Abloy Yale Keyfree Connected Smart Lock from nickperry (Nechry)
+  
 Version 1.4
  - Released 10th Jan, 2016
 
