@@ -3,6 +3,8 @@
 Aeotec ZW117 Range Extender 6, base on Engineering Spec 5/31/2016
 -->
 <Product xmlns='http://code.google.com/p/open-zwave/'>
+    <!-- COMMAND_CLASS_BASIC -->
+    <CommandClass id="32" getsupported="false"/>
     <!-- Configuration Parameters -->
     <CommandClass id="112">
         <Value type="list" genre="config" instance="1" index="82" label="LED when the Range Extender relays Z-Wave message" min="0" max="1" value="0" size="1">
