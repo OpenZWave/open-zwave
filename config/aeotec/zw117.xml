@@ -5,15 +5,6 @@ Aeotec ZW117 Range Extender 6, base on Engineering Spec 5/31/2016
 <Product xmlns='http://code.google.com/p/open-zwave/'>
     <!-- Configuration Parameters -->
     <CommandClass id="112">
-        <Value type="int" index="33" genre="config" label="Quality test LED color" units="" value="4">
-            <Help>
-                Set the RGB value of the LED for the quality test of the LED diode
-                Value 1 (msb) Reserved
-                Value 2 Red value
-                Value 3 Red value
-                Value 4 Blue value
-            </Help>
-        </Value>
         <Value type="list" genre="config" instance="1" index="82" label="LED when the Range Extender relays Z-Wave message" min="0" max="1" value="0" size="1">
             <Help>Set the default status of the LED when the Range Extender relays Z-Wave message.</Help>
             <Item label="On for 2 seconds" value="0"/>
