@@ -118,6 +118,60 @@ bool FileOps::FileWriteable
 	return false;
 }
 
+/**
+ * FileRotate. Rotate a File
+ * \param string. file name.
+ * \return Bool value indicating write permissions.
+ */
+bool FileOps::FileRotate
+(
+	const string &_fileName
+)
+{
+	if( s_instance != NULL )
+	{
+		return s_instance->m_pImpl->FileRotate( _fileName );
+	}
+	return false;
+}
+
+/**
+ * FileCopy. Copy a File
+ * \param string. source file name.
+ * \param string. destination file name
+ * \return Bool value indicating success.
+ */
+bool FileOps::FileCopy
+(
+	const string &_fileName,
+	const string &_destfileName
+)
+{
+
+	if( s_instance != NULL )
+	{
+		return s_instance->m_pImpl->FileCopy( _fileName, _destfileName );
+	}
+	return false;
+}
+
+/**
+ * FolderCreate. Create a Folder
+ * \param string. folder name
+ * \return Bool value indicating success.
+ */
+bool FileOps::FolderCreate
+(
+	const string &_folderName
+)
+{
+
+	if( s_instance != NULL )
+	{
+		return s_instance->m_pImpl->FolderCreate( _folderName);
+	}
+	return false;
+}
 
 
 //-----------------------------------------------------------------------------

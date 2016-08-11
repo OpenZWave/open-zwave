@@ -182,9 +182,10 @@ m_lastnonce ( 0 )
 	memset( m_routeNodes, 0, sizeof(m_routeNodes) );
 	memset( m_nonces, 0, sizeof(m_nonces) );
 	/* Add NoOp Class */
-	AddCommandClass( 0 );
+	AddCommandClass( NoOperation::StaticGetCommandClassId() );
+
 	/* Add ManufacturerSpecific Class */
-	AddCommandClass( 114 );
+	AddCommandClass( ManufacturerSpecific::StaticGetCommandClassId() );
 }
 
 //-----------------------------------------------------------------------------
@@ -353,6 +354,7 @@ void Node::AdvanceQueries
 					Log::Write( LogLevel_Detail, m_nodeId, "Load Controller Manufacturer Specific Config");
 					ManufacturerSpecific* cc = static_cast<ManufacturerSpecific*>( GetCommandClass( ManufacturerSpecific::StaticGetCommandClassId() ) );
 					if( cc  ) {
+						cc->SetInstance(1);
 						cc->SetProductDetails(GetDriver()->GetManufacturerId(), GetDriver()->GetProductType(), GetDriver()->GetProductId() );
 						cc->LoadConfigXML();
 					}
@@ -371,6 +373,7 @@ void Node::AdvanceQueries
 					ManufacturerSpecific* cc = static_cast<ManufacturerSpecific*>( GetCommandClass( ManufacturerSpecific::StaticGetCommandClassId() ) );
 					if( cc  )
 					{
+						cc->SetInstance(1);
 						m_queryPending = cc->RequestState( CommandClass::RequestFlag_Static, 1, Driver::MsgQueue_Query );
 						addQSC = m_queryPending;
 					}
@@ -464,6 +467,7 @@ void Node::AdvanceQueries
 					/* don't do this if its the Controller Node */
 					if( cc && (GetDriver()->GetControllerNodeId() != m_nodeId))
 					{
+						cc->SetInstance(1);
 						m_queryPending = cc->RequestState( CommandClass::RequestFlag_Static, 1, Driver::MsgQueue_Query );
 						addQSC = m_queryPending;
 					}
@@ -478,6 +482,7 @@ void Node::AdvanceQueries
 					ManufacturerSpecific* cc = static_cast<ManufacturerSpecific*>( GetCommandClass( ManufacturerSpecific::StaticGetCommandClassId() ) );
 					if( cc  )
 					{
+						cc->SetInstance(1);
 						cc->ReLoadConfigXML();
 					}
 					m_queryStage = QueryStage_Versions;
@@ -1109,6 +1114,7 @@ void Node::ReadXML
 					/* don't do this if its the Controller Node */
 					if( cc ) {
 						cc->SetProductDetails(manufacturerId, productType, productId);
+						cc->setConfigRevision(m_ConfigRevision);
 					} else {
 						Log::Write(LogLevel_Warning, GetNodeId(), "ManufacturerSpecific Class not loaded for ReadXML");
 					}
@@ -3610,6 +3616,18 @@ string Node::getConfigPath
 {
 	return this->m_Product->GetConfigPath();
 
+}
+
+void Node::setLatestConfigRevision
+(
+	uint32 rev
+)
+{
+	ManufacturerSpecific* cc = static_cast<ManufacturerSpecific*>( GetCommandClass( ManufacturerSpecific::StaticGetCommandClassId() ) );
+	if( cc  )
+	{
+		cc->setLatestRevision(rev);
+	}
 }
 
 

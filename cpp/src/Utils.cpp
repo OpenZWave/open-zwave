@@ -154,3 +154,8 @@ string OpenZWave::ozwdirname(string m_path)
 	return m_path.substr(0, lastSlash);
 }
 
+
+string OpenZWave::intToString( int x ) {
+	return static_cast< std::ostringstream & >( ( std::ostringstream() << std::dec << x ) ).str();
+}
+

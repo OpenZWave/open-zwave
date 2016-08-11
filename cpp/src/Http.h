@@ -47,6 +47,7 @@ namespace OpenZWave
 	struct HttpDownload {
 			string filename;
 			string url;
+			uint8 node;
 			enum DownloadType
 			{
 				None,

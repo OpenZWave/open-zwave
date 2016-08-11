@@ -75,6 +75,28 @@ namespace OpenZWave
 		 */
 		static bool FileWriteable( const string &_fileName );
 
+		/**
+		 * FileRotate. Rotate a File
+		 * \param string. file name.
+		 * \return Bool value indicating write permissions.
+		 */
+		static bool FileRotate( const string &_fileName );
+
+		/**
+		 * FileCopy. Copy a File
+		 * \param string. source file name.
+		 * \param string. destination file name
+		 * \return Bool value indicating success.
+		 */
+		static bool FileCopy( const string &_fileName, const string &_destinationfile );
+
+		/**
+		 * FolderCreate. Create a Folder
+		 * \param string. folder name
+		 * \return Bool value indicating success.
+		 */
+		static bool FolderCreate( const string &_folderName);
+
 
 
 	private:

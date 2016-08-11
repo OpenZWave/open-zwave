@@ -56,8 +56,18 @@ namespace OpenZWave
 		
 		void ReLoadConfigXML();
 
+		void setLatestRevision(uint32 rev);
+		void setConfigRevision(uint32 rev);
+
+	protected:
+		virtual void CreateVars( uint8 const _instance );
+
+
 	private:
 		ManufacturerSpecific( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){ SetStaticRequest( StaticRequest_Values ); }
+
+		uint32 m_LatestRevision;
+		uint32 m_ConfigRevision;
 	};
 
 } // namespace OpenZWave
