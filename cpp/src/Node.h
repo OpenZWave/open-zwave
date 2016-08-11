@@ -84,6 +84,7 @@ namespace OpenZWave
 			friend class Language;
 			friend class Lock;
 			friend class ManufacturerSpecific;
+			friend class ManufacturerSpecificDB;
 			friend class Meter;
 			friend class MeterPulse;
 			friend class MultiInstance;
@@ -444,6 +445,7 @@ namespace OpenZWave
 		private:
 			void checkConfigRevision();
 			uint32 getConfigRevision() { return m_ConfigRevision; };
+			void setLatestConfigRevision(uint32 rev);
 
 			ProductDescriptor *m_Product;
 

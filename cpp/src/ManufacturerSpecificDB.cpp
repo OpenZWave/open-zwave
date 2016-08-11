@@ -294,7 +294,9 @@ void ManufacturerSpecificDB::checkConfigFiles
 
 void ManufacturerSpecificDB::configDownloaded
 (
+	Driver *driver,
 	string file,
+	uint8 node,
 	bool success
 )
 {
@@ -302,11 +304,14 @@ void ManufacturerSpecificDB::configDownloaded
 	std::list<string>::iterator iter = std::find (m_downloading.begin(), m_downloading.end(), file);
 	if (iter != m_downloading.end()) {
 		m_downloading.erase(iter);
+		if ((node > 0) && success) {
+			driver->refreshNodeConfig(node);
+		} else {
+			checkInitialized();
+		}
 	} else {
 		Log::Write(LogLevel_Warning, "File is not in the list of downloading files: %s", file.c_str());
 	}
-	Log::Write(LogLevel_Debug, "Downloads Remaining: %d", m_downloading.size());
-	checkInitialized();
 }
 
 bool ManufacturerSpecificDB::isReady
@@ -319,6 +324,7 @@ bool ManufacturerSpecificDB::isReady
 }
 
 void ManufacturerSpecificDB::checkInitialized() {
+	Log::Write(LogLevel_Debug, "Downloads Remaining: %d", m_downloading.size());
 	if (m_downloading.size() == 0) {
 		Log::Write(LogLevel_Info, "ManufacturerSpecificDB Initialized");
 		m_initializing = false;
@@ -349,4 +355,21 @@ ProductDescriptor *ManufacturerSpecificDB::getProduct
 	}
 	return NULL;
 }
+
+void ManufacturerSpecificDB::updateConfigFile
+(
+		Driver *driver,
+		Node *node
+)
+{
+	string configPath;
+	Options::Get()->GetOptionAsString( "ConfigPath", &configPath );
+	string path = configPath + node->getConfigPath();
+
+	if (driver->startConfigDownload(node->GetManufacturerId(), node->GetProductType(), node->GetProductId(), path, node->GetNodeId()))
+		m_downloading.push_back(path);
+	else
+		Log::Write(LogLevel_Warning, "Can't download Config file %s", node->getConfigPath().c_str());
+}
+
 

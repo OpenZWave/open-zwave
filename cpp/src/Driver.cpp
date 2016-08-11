@@ -7013,6 +7013,11 @@ DNSLookup *result
 		if (result->NodeID > 0) {
 			LockGuard LG(m_nodeMutex);
 			Node *node = this->GetNode(result->NodeID);
+			if (!node) {
+				Log::Write(LogLevel_Warning, result->NodeID, "Node disappeared when processing Config Revision");
+				return;
+			}
+			node->setLatestConfigRevision((unsigned long)atol(result->result.c_str()));
 			if (node->getConfigRevision() < (unsigned long)atol(result->result.c_str())) {
 				Log::Write(LogLevel_Warning, node->GetNodeId(), "Config for Device \"%s\" is out of date", node->GetProductName().c_str());
 				Notification* notification = new Notification( Notification::Type_UserAlerts );
@@ -7020,8 +7025,10 @@ DNSLookup *result
 				notification->SetUserAlertNofification(Notification::Alert_ConfigOutOfDate);
 				QueueNotification( notification );
 
-				/* XXX TODO - Download New Version */
-
+				bool update = false;
+				Options::Get()->GetOptionAsBool("AutoUpdateConfigFile", &update);
+				if (update)
+					m_mfs->updateConfigFile(this, node);
 			}
 		} else if (result->NodeID == 0) {
 			/* manufacturer_specific */
@@ -7061,6 +7068,7 @@ i_HttpClient *client
 	return true;
 }
 
+#if 0
 bool Driver::startDownload
 (
 string url
@@ -7074,14 +7082,15 @@ string url
 
 	return m_httpClient->StartDownload(download);
 }
-
+#endif
 
 bool Driver::startConfigDownload
 (
 	uint16 _manufacturerId,
 	uint16 _productType,
 	uint16 _productId,
-	string configfile
+	string configfile,
+	uint8 node
 )
 {
 	HttpDownload *download = new HttpDownload();
@@ -7092,30 +7101,41 @@ bool Driver::startConfigDownload
 	download->url = "http://download.db.openzwave.com/" + ss.str();
 	download->filename = configfile;
 	download->operation = HttpDownload::Config;
-	Log::Write(LogLevel_Info, "Queuing download for %s", download->url.c_str());
+	download->node = node;
+	Log::Write(LogLevel_Info, "Queuing download for %s (Node %d)", download->url.c_str(), download->node);
 
 	return m_httpClient->StartDownload(download);
+}
+
+bool Driver::refreshNodeConfig
+(
+	uint8 _nodeId
+)
+{
+	LockGuard LG(m_nodeMutex);
+	Log::Write(LogLevel_Info, _nodeId, "Refreshing Node Info after new Config File loaded");
+	/* this will reload the Node, ignoring any cache that exists etc */
+	InitNode(_nodeId);
+	return false;
 }
 
 
 void Driver::processDownload
 (
-HttpDownload *download
+	HttpDownload *download
 )
 {
 	if (download->transferStatus == HttpDownload::Ok) {
-		Log::Write(LogLevel_Info, "Download Finished: %s", download->filename.c_str());
-		m_mfs->configDownloaded(download->filename);
+		Log::Write(LogLevel_Info, "Download Finished: %s (Node: %d)", download->filename.c_str(), download->node);
+		m_mfs->configDownloaded(this, download->filename, download->node);
 	} else {
-		Log::Write(LogLevel_Warning, "Download of %s Failed", download->url.c_str());
-		m_mfs->configDownloaded(download->filename, false);
+		Log::Write(LogLevel_Warning, "Download of %s Failed (Node: %d)", download->url.c_str(), download->node);
+		m_mfs->configDownloaded(this, download->filename, download->node, false);
 		Notification* notification = new Notification( Notification::Type_UserAlerts );
 		notification->SetUserAlertNofification(Notification::Alert_ConfigFileDownloadFailed);
 		QueueNotification( notification );
 	}
 
-
-//	delete download;
 }
 
 void Driver::SubmitEventMsg(EventMsg *event) {

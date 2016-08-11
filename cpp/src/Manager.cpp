@@ -70,7 +70,7 @@ extern char ozw_version_string[];
 //-----------------------------------------------------------------------------
 //	Construction
 //-----------------------------------------------------------------------------
-
+#include "platform/FileOps.h"
 //-----------------------------------------------------------------------------
 //	<Manager::Create>
 //	Static creation of the singleton
@@ -79,6 +79,7 @@ Manager* Manager::Create
 (
 )
 {
+
 
 	if( Options::Get() && Options::Get()->AreLocked() )
 	{

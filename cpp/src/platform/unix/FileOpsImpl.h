@@ -33,6 +33,8 @@
 #include "Defs.h"
 #include "platform/FileOps.h"
 
+#define COPY_BUF_SIZE 4096
+
 namespace OpenZWave
 {
 	class FileOpsImpl
@@ -46,6 +48,10 @@ namespace OpenZWave
 		bool FolderExists( const string _filename );
 		bool FileExists( const string _filename );
 		bool FileWriteable ( const string _filename );
+		bool FileRotate ( const string _filename );
+		bool FileCopy (const string, const string);
+		bool FolderCreate( const string _dirname);
+
 	};
 
 } // namespace OpenZWave

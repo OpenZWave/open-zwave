@@ -33,6 +33,7 @@
 #include <map>
 #include <list>
 
+#include "Node.h"
 #include "platform/Ref.h"
 #include "Defs.h"
 
@@ -109,9 +110,9 @@ namespace OpenZWave
 		void UnloadProductXML();
 		uint8 GetRevision() { return m_revision;}
 		void checkConfigFiles(Driver *);
-		void configDownloaded(string file, bool success=true);
+		void configDownloaded(Driver *, string file, uint8 node, bool success = true);
 		bool isReady();
-
+		void updateConfigFile(Driver *, Node *);
 	private:
 		ManufacturerSpecificDB();
 		~ManufacturerSpecificDB();

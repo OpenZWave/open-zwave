@@ -898,8 +898,9 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 
 	public:
 		bool setHttpClient(i_HttpClient *client);
-		bool startDownload(string url);
-		bool startConfigDownload(uint16 _manufacturerId, uint16 _productType, uint16 _productId, string configfile);
+		//bool startDownload(string url);
+		bool startConfigDownload(uint16 _manufacturerId, uint16 _productType, uint16 _productId, string configfile, uint8 node = 0);
+		bool refreshNodeConfig(uint8 node);
 	private:
 		void processDownload(HttpDownload *);
 		i_HttpClient *m_httpClient;

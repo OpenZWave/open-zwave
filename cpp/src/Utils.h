@@ -109,6 +109,8 @@ namespace OpenZWave
 
 	string ozwdirname(string);
 
+	string intToString( int x );
+
 
 
 } // namespace OpenZWave

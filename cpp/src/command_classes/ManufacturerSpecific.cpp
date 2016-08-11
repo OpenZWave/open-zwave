@@ -41,6 +41,7 @@
 
 #include "value_classes/ValueStore.h"
 #include "value_classes/ValueString.h"
+#include "value_classes/ValueInt.h"
 
 using namespace OpenZWave;
 
@@ -243,4 +244,63 @@ void ManufacturerSpecific::ReLoadConfigXML
 )
 {
 			LoadConfigXML( );
+}
+
+//-----------------------------------------------------------------------------
+// <ManufacturerSpecific::CreateVars>
+// Create the values managed by this command class
+//-----------------------------------------------------------------------------
+void ManufacturerSpecific::CreateVars
+(
+	uint8 const _instance
+)
+{
+	if (_instance == 1) {
+		if( Node* node = GetNodeUnsafe() )
+		{
+			node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 0, "Loaded Config Revision", "", true, false, m_ConfigRevision, 0 );
+			node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 1, "Latest Config Revision", "", true, false, m_LatestRevision, 0 );
+		}
+	}
+
+}
+
+//-----------------------------------------------------------------------------
+// <ManufacturerSpecific::setLatestRevision>
+// Set the Latest Config Revision Available for this device
+//-----------------------------------------------------------------------------
+void ManufacturerSpecific::setLatestRevision
+(
+	uint32 rev
+)
+{
+
+	m_LatestRevision = rev;
+
+	if( ValueInt* value = static_cast<ValueInt*>( GetValue( 1, 1 ) ) )
+	{
+		value->OnValueRefreshed( rev );
+		value->Release();
+	}
+
+}
+
+//-----------------------------------------------------------------------------
+// <ManufacturerSpecific::setConfigRevision>
+// Set the Loaded Config Revision for this device
+//-----------------------------------------------------------------------------
+
+void ManufacturerSpecific::setConfigRevision
+(
+	uint32 rev
+)
+{
+	m_ConfigRevision = rev;
+
+	if( ValueInt* value = static_cast<ValueInt*>( GetValue( 1, 0 ) ) )
+	{
+		value->OnValueRefreshed( rev );
+		value->Release();
+	}
+
 }
