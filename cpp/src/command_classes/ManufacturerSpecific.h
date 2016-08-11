@@ -50,6 +50,8 @@ namespace OpenZWave
 		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }
 		virtual string const GetCommandClassName()const{ return StaticGetCommandClassName(); }
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );
+		virtual uint8 GetMaxVersion(){ return 2; }
+
 
 		void SetProductDetails( uint16 _manufacturerId, uint16 _productType, uint16 _productId );
 		bool LoadConfigXML();
@@ -59,12 +61,14 @@ namespace OpenZWave
 		void setLatestRevision(uint32 rev);
 		void setConfigRevision(uint32 rev);
 
+
+
 	protected:
 		virtual void CreateVars( uint8 const _instance );
 
 
 	private:
-		ManufacturerSpecific( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){ SetStaticRequest( StaticRequest_Values ); }
+		ManufacturerSpecific( uint32 const _homeId, uint8 const _nodeId );
 
 		uint32 m_LatestRevision;
 		uint32 m_ConfigRevision;
