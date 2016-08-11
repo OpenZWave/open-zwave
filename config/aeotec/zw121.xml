@@ -21,7 +21,7 @@ Aeotec ZW121 LED Strip, base on Engineering Spec 5/20/2016
                 Get the LED Strip color value
                 Value 1: (msb) Reserved
                 Value 2: Red color value
-                Value 3: Red color value
+                Value 3: Green color value
                 Value 4: Blue color value
             </Help>
         </Value>
