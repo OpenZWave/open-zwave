@@ -59,6 +59,7 @@ namespace OpenZWaveDotNet
 	// Logging levels
 	public enum class ZWLogLevel
 	{
+		Invalid		= LogLevel_Invalid,
 		None		= LogLevel_None,
 		Always		= LogLevel_Always,
 		Fatal		= LogLevel_Fatal,
