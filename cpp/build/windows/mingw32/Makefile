@@ -5,9 +5,9 @@
 .SUFFIXES:	.d .cpp .o .a
 .PHONY:	default clean
 
-CC     := $(CROSS_COMPILE)gcc
-CXX    := $(CROSS_COMPILE)g++
-LD     := $(CROSS_COMPILE)g++
+CC     := $(CROSS_COMPILE)cc
+CXX    := $(CROSS_COMPILE)c++
+LD     := $(CROSS_COMPILE)c++
 AR     := $(CROSS_COMPILE)ar rc
 RANLIB := $(CROSS_COMPILE)ranlib
 
