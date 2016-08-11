@@ -48,8 +48,40 @@ using namespace OpenZWave;
 enum ManufacturerSpecificCmd
 {
 	ManufacturerSpecificCmd_Get		= 0x04,
-	ManufacturerSpecificCmd_Report	= 0x05
+	ManufacturerSpecificCmd_Report	= 0x05,
+	ManufacturerSpecificCmd_DeviceGet = 0x06,
+	ManufacturerSpecificCmd_DeviceReport = 0x07
 };
+
+enum {
+        DeviceSpecificGet_DeviceIDType_FactoryDefault = 0x00,
+        DeviceSpecificGet_DeviceIDType_SerialNumber = 0x01,
+        DeviceSpecificGet_DeviceIDType_PseudoRandom = 0x02,
+};
+
+enum {
+    ManufacturerSpecific_LoadedConfig = 0,
+	ManufacturerSpecific_LatestConfig = 1,
+	ManufacturerSpecific_DeviceID = 2,
+    ManufacturerSpecific_SerialNumber =3
+};
+
+
+//-----------------------------------------------------------------------------
+// <ManufacturerSpecific::ManufacturerSpecific>
+// Constructor
+//-----------------------------------------------------------------------------
+ManufacturerSpecific::ManufacturerSpecific
+(
+    uint32 const _homeId,
+    uint8 const _nodeId
+):
+    CommandClass( _homeId, _nodeId ),
+	m_LatestRevision(0),
+	m_ConfigRevision(0)
+{
+    SetStaticRequest( StaticRequest_Values );
+}
 
 
 //-----------------------------------------------------------------------------
@@ -63,12 +95,47 @@ bool ManufacturerSpecific::RequestState
 	Driver::MsgQueue const _queue
 )
 {
-	if( ( _requestFlags & RequestFlag_Static ) && HasStaticRequest( StaticRequest_Values ) )
+
+	bool res = false;
+	if( GetVersion() > 1 )
 	{
-		return RequestValue( _requestFlags, 0, _instance, _queue );
+		if( _requestFlags & RequestFlag_Static )
+		{
+			{
+				Msg* msg = new Msg( "ManufacturerSpecificCmd_DeviceGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+				msg->SetInstance( this, _instance );
+				msg->Append( GetNodeId() );
+				msg->Append( 3 );
+				msg->Append( GetCommandClassId() );
+				msg->Append( ManufacturerSpecificCmd_DeviceGet );
+				msg->Append( DeviceSpecificGet_DeviceIDType_FactoryDefault );
+				msg->Append( GetDriver()->GetTransmitOptions() );
+				GetDriver()->SendMsg( msg, _queue );
+			}
+			{
+				Msg* msg = new Msg( "ManufacturerSpecificCmd_DeviceGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+				msg->SetInstance( this, _instance );
+				msg->Append( GetNodeId() );
+				msg->Append( 3 );
+				msg->Append( GetCommandClassId() );
+				msg->Append( ManufacturerSpecificCmd_DeviceGet );
+				msg->Append( DeviceSpecificGet_DeviceIDType_SerialNumber );
+				msg->Append( GetDriver()->GetTransmitOptions() );
+				GetDriver()->SendMsg( msg, _queue );
+			}
+
+			res = true;
+		}
 	}
 
-	return false;
+
+
+	if( ( _requestFlags & RequestFlag_Static ) && HasStaticRequest( StaticRequest_Values ) )
+	{
+		res |= RequestValue( _requestFlags, 0, _instance, _queue );
+	}
+
+	return res;
 }
 
 //-----------------------------------------------------------------------------
@@ -185,6 +252,43 @@ bool ManufacturerSpecific::HandleMsg
 		GetDriver()->QueueNotification( notification );
 
 		return true;
+	} else if( ManufacturerSpecificCmd_DeviceReport == (ManufacturerSpecificCmd)_data[0] ) {
+        uint8 deviceIDType = (_data[1] & 0x07);
+        uint8 dataFormat = (_data[2] & 0xe0)>>0x05;
+        uint8 data_length = (_data[2] & 0x1f);
+        uint8 const* deviceIDData = &_data[3];
+        string deviceID = "";
+        for (int i=0; i<data_length; i++) {
+                char temp_chr[32];
+                memset(temp_chr, 0, sizeof(temp_chr));
+                if (dataFormat == 0x00) {
+                        temp_chr[0] = deviceIDData[i];
+                } else {
+                        snprintf(temp_chr, sizeof(temp_chr), "%.2x", deviceIDData[i]);
+                }
+                deviceID += temp_chr;
+        }
+        if( Node* node = GetNodeUnsafe() ) {
+                if (deviceIDType == DeviceSpecificGet_DeviceIDType_FactoryDefault) {
+                        ValueString *default_value = static_cast<ValueString*>( GetValue(_instance, ManufacturerSpecific_DeviceID) );
+                        if (default_value == NULL) {
+                                node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ManufacturerSpecific_DeviceID, "Device ID", "", true, false, "", 0);
+                                default_value = static_cast<ValueString*>( GetValue(_instance, ManufacturerSpecific_DeviceID) );
+                        }
+                        default_value->OnValueRefreshed(deviceID);
+                        default_value->Release();
+                }
+                else if (deviceIDType == DeviceSpecificGet_DeviceIDType_SerialNumber) {
+                        ValueString *serial_value = static_cast<ValueString*>( GetValue(_instance, ManufacturerSpecific_SerialNumber) );
+                        if (serial_value == NULL) {
+                                node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ManufacturerSpecific_SerialNumber, "Serial Number", "", true, false, "", 0);
+                                serial_value = static_cast<ValueString*>( GetValue(_instance, ManufacturerSpecific_SerialNumber) );
+                        }
+                        serial_value->OnValueRefreshed(deviceID);
+                        serial_value->Release();
+                }
+        }
+        return true;
 	}
 
 	return false;
