@@ -86,6 +86,7 @@ Dev Branch:
    https://github.com/OpenZWave/open-zwave/wiki/Alarm-Command-Class for
    details - Addresses Issues #558, #481 #145 and #143 (Justin)
  - Pull Request #923 - Sync dot net zw manager bundle from PascalPiche (Justin)
+ - Pull Request #921 - Sync DotNet ZWLogLevel Enum with the CPP enum from  PascalPiche (Justin)
 
 Version 1.4
  - Released 10th Jan, 2016
