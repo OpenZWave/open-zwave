@@ -8,5 +8,11 @@
 			<Item label="Last Dim Setting" value="1" />
 		</Value>
   </CommandClass>
+  <!-- COMMAND_CLASS_ASSOCIATION -->
+  <CommandClass id="133">
+    <Associations num_groups="1">
+      <Group index="1" max_associations="5" label="Lifeline" />
+    </Associations>
+  </CommandClass>
 </Product>
 
