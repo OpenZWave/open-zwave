@@ -88,6 +88,7 @@ Version 1.5
  - Add Aeotec ZW121 LED Strip (Nechry)
  - Issue #947 - Add install_name to the library on OSX from irundaia (Justin)
  - Add Aeotec ZW130 WallMote Quad (Nechry)
+ - Add Linear LB60Z-1 Dimmable LED Light Bulb
 
 Version 1.4
  - Released 10th Jan, 2016
