@@ -61,7 +61,8 @@ enum
 	SwitchMultilevelIndex_Duration,
 	SwitchMultilevelIndex_Step,
 	SwitchMultilevelIndex_Inc,
-	SwitchMultilevelIndex_Dec
+	SwitchMultilevelIndex_Dec,
+	SwitchMultilevelIndex_Stop
 };
 
 static uint8 c_directionParams[] =
@@ -395,6 +396,43 @@ bool SwitchMultilevel::SetValue
 			}
 			break;
 		}
+		case SwitchMultilevelIndex_Stop:
+		{
+			// Stop
+			if( ValueButton* button = static_cast<ValueButton*>( GetValue( instance, SwitchMultilevelIndex_Stop ) ) )
+			{
+				button->ResetButton();
+				res = StopLevelChange( instance );
+				button->Release();
+
+				// Reset all other buttons
+				ValueButton *otherButton;
+				if( otherButton = static_cast<ValueButton*>( GetValue( instance, SwitchMultilevelIndex_Bright ) ) )
+				{
+					otherButton->ResetButton();
+					otherButton->Release();
+				}
+
+				if( otherButton = static_cast<ValueButton*>( GetValue( instance, SwitchMultilevelIndex_Dim ) ) )
+				{
+					otherButton->ResetButton();
+					otherButton->Release();
+				}
+
+				if( otherButton = static_cast<ValueButton*>( GetValue( instance, SwitchMultilevelIndex_Inc ) ) )
+				{
+					otherButton->ResetButton();
+					otherButton->Release();
+				}
+
+				if( otherButton = static_cast<ValueButton*>( GetValue( instance, SwitchMultilevelIndex_Dec ) ) )
+				{
+					otherButton->ResetButton();
+					otherButton->Release();
+				}
+			}
+			break;
+		}
 	}
 
 	return res;
@@ -604,9 +642,10 @@ void SwitchMultilevel::CreateVars
 		{
 			case 3:
 			{
-			  	node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, SwitchMultilevelIndex_Step, "Step Size", "", false, false, 0, 0 );
+				node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, SwitchMultilevelIndex_Step, "Step Size", "", false, false, 0, 0 );
 				node->CreateValueButton( ValueID::ValueGenre_User, GetCommandClassId(), _instance, SwitchMultilevelIndex_Inc, "Inc", 0 );
 				node->CreateValueButton( ValueID::ValueGenre_User, GetCommandClassId(), _instance, SwitchMultilevelIndex_Dec, "Dec", 0 );
+				node->CreateValueButton( ValueID::ValueGenre_User, GetCommandClassId(), _instance, SwitchMultilevelIndex_Stop, "Stop", 0 );
 				// Fall through to version 2
 			}
 			case 2:
