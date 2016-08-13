@@ -60,10 +60,18 @@ char const *OpenZWave::LogLevelString[] =
 };
 
 
-
-Log* Log::s_instance = NULL;
-i_LogImpl* Log::m_pImpl = NULL;
+static Log* s_instance = NULL;
+static i_LogImpl* m_pImpl = NULL;
 static bool s_dologging;
+
+namespace {
+	struct LogImplDeleter {
+		~LogImplDeleter() {
+			delete m_pImpl;
+		}
+	};
+	LogImplDeleter logImplDeleter;
+}
 
 //-----------------------------------------------------------------------------
 //	<Log::Create>
@@ -191,10 +199,10 @@ void Log::SetLoggingState
 		s_dologging = false;
 	}
 
-	if( s_instance && s_dologging && s_instance->m_pImpl )
+	if( s_instance && s_dologging && m_pImpl )
 	{
 		s_instance->m_logMutex->Lock();
-		s_instance->m_pImpl->SetLoggingState( _saveLevel, _queueLevel, _dumpTrigger );
+		m_pImpl->SetLoggingState( _saveLevel, _queueLevel, _dumpTrigger );
 		s_instance->m_logMutex->Unlock();
 	}
 
@@ -223,12 +231,12 @@ void Log::Write
 	...
 )
 {
-	if( s_instance && s_dologging && s_instance->m_pImpl )
+	if( s_instance && s_dologging && m_pImpl )
 	{
 		s_instance->m_logMutex->Lock(); // double locks if recursive
 		va_list args;
 		va_start( args, _format );
-		s_instance->m_pImpl->Write( _level, 0, _format, args );
+		m_pImpl->Write( _level, 0, _format, args );
 		va_end( args );
 		s_instance->m_logMutex->Unlock();
 	}
@@ -246,13 +254,13 @@ void Log::Write
 	...
 )
 {
-	if( s_instance && s_dologging && s_instance->m_pImpl )
+	if( s_instance && s_dologging && m_pImpl )
 	{
 		if( _level != LogLevel_Internal )
 			s_instance->m_logMutex->Lock();
 		va_list args;
 		va_start( args, _format );
-		s_instance->m_pImpl->Write( _level, _nodeId, _format, args );
+		m_pImpl->Write( _level, _nodeId, _format, args );
 		va_end( args );
 		if( _level != LogLevel_Internal )
 			s_instance->m_logMutex->Unlock();
@@ -267,10 +275,10 @@ void Log::QueueDump
 (
 )
 {
-	if( s_instance && s_dologging && s_instance->m_pImpl )
+	if( s_instance && s_dologging && m_pImpl )
 	{
 		s_instance->m_logMutex->Lock();
-		s_instance->m_pImpl->QueueDump();
+		m_pImpl->QueueDump();
 		s_instance->m_logMutex->Unlock();
 	}
 }
@@ -283,10 +291,10 @@ void Log::QueueClear
 (
 )
 {
-	if( s_instance && s_dologging && s_instance->m_pImpl )
+	if( s_instance && s_dologging && m_pImpl )
 	{
 		s_instance->m_logMutex->Lock();
-		s_instance->m_pImpl->QueueClear();
+		m_pImpl->QueueClear();
 		s_instance->m_logMutex->Unlock();
 	}
 }
@@ -300,10 +308,10 @@ void Log::SetLogFileName
 	const string &_filename
 )
 {
-	if( s_instance && s_dologging && s_instance->m_pImpl )
+	if( s_instance && s_dologging && m_pImpl )
 	{
 		s_instance->m_logMutex->Lock();
-		s_instance->m_pImpl->SetLogFileName( _filename );
+		m_pImpl->SetLogFileName( _filename );
 		s_instance->m_logMutex->Unlock();
 	}
 }
@@ -336,6 +344,4 @@ Log::~Log
 )
 {
 	m_logMutex->Release();
-	delete m_pImpl;
-	m_pImpl = NULL;
 }
