@@ -910,6 +910,7 @@
 		<Product type="0100" id="0200" name="Smoke Detector"/>
 		<Product type="0100" id="0201" name="Smoke Detector"/>
 		<Product type="0100" id="0400" name="Z-Weather Wind and Weather Sensor" config="zwave.me/zweather.xml"/>
+		<Product type="0110" id="0001" name="Z-Uno" config="zwave.me/zuno.xml"/>
 		<Product type="0200" id="0001" name="iTemp Temperature Sensor" config="zwave.me/iTemp.xml"/>
 		<Product type="0201" id="0001" name="iTemp Temperature Sensor" config="zwave.me/iTemp.xml"/>
 		<Product type="0201" id="0002" name="Thermostat"/>
