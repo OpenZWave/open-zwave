@@ -89,7 +89,6 @@ Version 1.5
  - Issue #947 - Add install_name to the library on OSX from irundaia (Justin)
  - Add Aeotec ZW130 WallMote Quad (Nechry)
  - Pull Request #959 - Add LB60Z-1 Dimmable LED Light Bulb from KyleARector (Nechry)
- - Add Aeotec ZW130 WallMote Quad (Nechry)
  - Add NorthQ  NQ-9021 Power Reader config file  (Nechry)
 
 Version 1.4
