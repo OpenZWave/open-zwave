@@ -69,7 +69,10 @@ DISTFILES =	.gitignore \
 	config/aeotec/zw099.xml \
 	config/aeotec/zw100.xml \
 	config/aeotec/zw112.xml \
+	config/aeotec/zw117.xml \
 	config/aeotec/zw120.xml \
+	config/aeotec/zw121.xml \
+	config/aeotec/zw130.xml \
 	config/assa_abloy/RealLivingCapTouch.xml \
 	config/cooper/RF9505-T.xml \
 	config/cooper/RF9540-N.xml \
@@ -172,6 +175,7 @@ DISTFILES =	.gitignore \
 	config/leviton/vrf01.xml \
 	config/leviton/vri06.xml \
 	config/leviton/vri10.xml \
+	config/linear/LB60Z-1.xml \
 	config/linear/PD300Z-2.xml \
 	config/linear/WD500Z-1.xml \
 	config/manufacturer_specific.xml \
@@ -235,6 +239,7 @@ DISTFILES =	.gitignore \
 	config/qubino/ZMNHSDx.xml \
 	config/qubino/ZMNHTDx.xml \
 	config/qubino/ZMNHUD1.xml \
+	config/qubino/ZMNHVDx.xml \
 	config/qubino/ZMNHZDx.xml \
 	config/rcs/em52-zw.xml \
 	config/rcs/pm12-zw.xml \

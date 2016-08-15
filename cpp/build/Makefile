@@ -39,7 +39,7 @@ endif
 ifeq ($(UNAME),Darwin)
 CFLAGS	+= -c -DDARWIN
 TARCH	+= -arch i386 -arch x86_64
-LDFLAGS += -dynamiclib
+LDFLAGS += -dynamiclib -install_name "$(DESTDIR)/$(instlibdir)/$(SHARED_LIB_NAME)"
 LIBS	+= -framework IOKit -framework CoreFoundation -arch i386 -arch x86_64
 else ifeq ($(UNAME),FreeBSD)
 LDFLAGS+= -shared -lusb
