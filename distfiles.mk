@@ -73,6 +73,7 @@ DISTFILES =	.gitignore \
 	config/aeotec/zw120.xml \
 	config/aeotec/zw121.xml \
 	config/aeotec/zw130.xml \
+	config/assa_abloy/KeyfreeConnected.xml \
 	config/assa_abloy/RealLivingCapTouch.xml \
 	config/cooper/RF9505-T.xml \
 	config/cooper/RF9540-N.xml \
@@ -153,6 +154,7 @@ DISTFILES =	.gitignore \
 	config/ge/dimmer.xml \
 	config/ge/dimmer_module.xml \
 	config/ge/relay.xml \
+	config/gr/gr105n.xml \
 	config/greenwave/powernode1.xml \
 	config/greenwave/powernode6.xml \
 	config/homeseer/ezmotionplus.xml \
@@ -306,6 +308,7 @@ DISTFILES =	.gitignore \
 	cpp/build/support.mk \
 	cpp/build/testconfig.pl \
 	cpp/build/testconfigsuppressions.cfg \
+	cpp/build/testconfigversions.cfg \
 	cpp/build/winRT/vs2015/OpenZWave.sln \
 	cpp/build/winRT/vs2015/OpenZWave.vcxproj \
 	cpp/build/winRT/vs2015/OpenZWave.vcxproj.filters \
@@ -373,14 +376,20 @@ DISTFILES =	.gitignore \
 	cpp/hidapi/windows/hidapi.vcproj \
 	cpp/hidapi/windows/hidtest.vcproj \
 	cpp/src/Bitfield.h \
+	cpp/src/DNSThread.cpp \
+	cpp/src/DNSThread.h \
 	cpp/src/Defs.h \
 	cpp/src/DoxygenMain.h \
 	cpp/src/Driver.cpp \
 	cpp/src/Driver.h \
 	cpp/src/Group.cpp \
 	cpp/src/Group.h \
+	cpp/src/Http.cpp \
+	cpp/src/Http.h \
 	cpp/src/Manager.cpp \
 	cpp/src/Manager.h \
+	cpp/src/ManufacturerSpecificDB.cpp \
+	cpp/src/ManufacturerSpecificDB.h \
 	cpp/src/Msg.cpp \
 	cpp/src/Msg.h \
 	cpp/src/Node.cpp \
@@ -415,6 +424,8 @@ DISTFILES =	.gitignore \
 	cpp/src/command_classes/Association.h \
 	cpp/src/command_classes/AssociationCommandConfiguration.cpp \
 	cpp/src/command_classes/AssociationCommandConfiguration.h \
+	cpp/src/command_classes/BarrierOperator.cpp \
+	cpp/src/command_classes/BarrierOperator.h \
 	cpp/src/command_classes/Basic.cpp \
 	cpp/src/command_classes/Basic.h \
 	cpp/src/command_classes/BasicWindowCovering.cpp \
@@ -519,12 +530,16 @@ DISTFILES =	.gitignore \
 	cpp/src/command_classes/ZWavePlusInfo.h \
 	cpp/src/platform/Controller.cpp \
 	cpp/src/platform/Controller.h \
+	cpp/src/platform/DNS.cpp \
+	cpp/src/platform/DNS.h \
 	cpp/src/platform/Event.cpp \
 	cpp/src/platform/Event.h \
 	cpp/src/platform/FileOps.cpp \
 	cpp/src/platform/FileOps.h \
 	cpp/src/platform/HidController.cpp \
 	cpp/src/platform/HidController.h \
+	cpp/src/platform/HttpClient.cpp \
+	cpp/src/platform/HttpClient.h \
 	cpp/src/platform/Log.cpp \
 	cpp/src/platform/Log.h \
 	cpp/src/platform/Mutex.cpp \
@@ -540,6 +555,8 @@ DISTFILES =	.gitignore \
 	cpp/src/platform/TimeStamp.h \
 	cpp/src/platform/Wait.cpp \
 	cpp/src/platform/Wait.h \
+	cpp/src/platform/unix/DNSImpl.cpp \
+	cpp/src/platform/unix/DNSImpl.h \
 	cpp/src/platform/unix/EventImpl.cpp \
 	cpp/src/platform/unix/EventImpl.h \
 	cpp/src/platform/unix/FileOpsImpl.cpp \
@@ -556,6 +573,8 @@ DISTFILES =	.gitignore \
 	cpp/src/platform/unix/TimeStampImpl.h \
 	cpp/src/platform/unix/WaitImpl.cpp \
 	cpp/src/platform/unix/WaitImpl.h \
+	cpp/src/platform/winRT/DNSImpl.cpp \
+	cpp/src/platform/winRT/DNSImpl.h \
 	cpp/src/platform/winRT/EventImpl.cpp \
 	cpp/src/platform/winRT/EventImpl.h \
 	cpp/src/platform/winRT/FileOpsImpl.cpp \
@@ -574,6 +593,8 @@ DISTFILES =	.gitignore \
 	cpp/src/platform/winRT/TimeStampImpl.h \
 	cpp/src/platform/winRT/WaitImpl.cpp \
 	cpp/src/platform/winRT/WaitImpl.h \
+	cpp/src/platform/windows/DNSImpl.cpp \
+	cpp/src/platform/windows/DNSImpl.h \
 	cpp/src/platform/windows/EventImpl.cpp \
 	cpp/src/platform/windows/EventImpl.h \
 	cpp/src/platform/windows/FileOpsImpl.cpp \

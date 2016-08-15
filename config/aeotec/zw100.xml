@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Aeon Labs Multi Sensor 6 -->
-<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="2">
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="3">
 	<MetaData>
 		<MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0086:0064:0002 OZWInfoPage</MetaDataItem>
 		<MetaDataItem name="ZWProductPage">http://www.openzwave.com/device-database/0086:0064:0002 ZWProductPage </MetaDataItem>

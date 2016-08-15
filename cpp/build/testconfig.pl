@@ -4,6 +4,7 @@
 use strict;
 use XML::Simple;
 use Data::Dumper;
+$Data::Dumper::Sortkeys  = 1;
 use Getopt::Long qw(GetOptions);
 #use Digest::SHA1::File qw( file_md5_hex );
 use Digest::file qw(digest_file_hex);
@@ -50,25 +51,25 @@ my $data = $xml->XMLin($_[0], ForceArray => [ 'Group' ]);
 
 foreach my $rev ($data)
 {
-#	print $_[0]."-".Dumper($rev->{Revision});
+	#print $_[0]."-".Dumper($rev->{Revision});
 	my $md5 = digest_file_hex($_[0], "SHA-512");
-	if (defined(%CFG::versiondb->{$_[0]}))
+	if (defined($CFG::versiondb{$_[0]}))
 	{
-		if (%CFG::versiondb->{$_[0]}->{md5} != $md5) 
+		if ($CFG::versiondb{$_[0]}{md5} != $md5) 
 		{
-			my $dbr = %CFG::versiondb->{$_[0]}->{Revision};
+			my $dbr = $CFG::versiondb{$_[0]}->{Revision};
 			my $fr = $rev->{Revision};
-						if ($dbr ge $fr )
+			if ($dbr ge $fr )
 			{
 				print $_[0]." - md5 does not match Database - Database Revision:";
-				print %CFG::versiondb->{$_[0]}->{Revision}." File Revision:".int $rev->{Revision};
+				print $CFG::versiondb{$_[0]}->{Revision}." File Revision:".int $rev->{Revision};
 				print "\n";
 				LogError($_[0], 8, "Revision Number Was Not Bumped");	
 			} else {
 				my %versions;
 				$versions{md5} = $md5;
 				$versions{Revision} = $rev->{Revision};
-				%CFG::versiondb->{$_[0]} = \%versions;
+				$CFG::versiondb{$_[0]} = \%versions;
 				print($_[0]." - Updating Database\n");
 			}			
 		}
@@ -76,7 +77,7 @@ foreach my $rev ($data)
 		my %versions;
 		$versions{md5} = $md5;
 		$versions{Revision} = $rev->{Revision};
-		%CFG::versiondb->{$_[0]} = \%versions;
+		$CFG::versiondb{$_[0]} = \%versions;
 		print($_[0]." - Adding new file to Database\n");
 	}
 }
