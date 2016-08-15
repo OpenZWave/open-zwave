@@ -35,6 +35,7 @@ namespace OpenZWave
 	class ValueDecimal;
 
 	/** \brief Implements COMMAND_CLASS_ENERGY_PRODUCTION (0x90), a Z-Wave device command class.
+	 * \ingroup CommandClass
 	 */
 	class EnergyProduction: public CommandClass
 	{

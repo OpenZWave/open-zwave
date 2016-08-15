@@ -144,7 +144,7 @@ void HttpClient::HttpThreadProc
 	HttpClient *client = (HttpClient *)_context;
 	client->m_httpThreadRunning = true;
 
-	OpenZWave::InitNetwork();
+	SimpleHTTPClient::InitNetwork();
 	bool keepgoing = true;
 	while( keepgoing )
 	{
@@ -180,7 +180,7 @@ void HttpClient::HttpThreadProc
 						client->m_httpDownloadEvent->Reset();
 				}
 				Log::Write(LogLevel_Debug, "Download Starting for %s (%s)", download->url.c_str(), download->filename.c_str());
-				HttpSocket *ht = new HttpSocket();
+				SimpleHTTPClient::HttpSocket *ht = new SimpleHTTPClient::HttpSocket();
 			    ht->SetKeepAlive(0);
 			    ht->SetBufsizeIn(64 * 1024);
 			    ht->SetDownloadFile(download->filename);
@@ -197,6 +197,6 @@ void HttpClient::HttpThreadProc
 				break;
 		}
 	}
-    OpenZWave::StopNetwork();
+	SimpleHTTPClient::StopNetwork();
     client->m_httpThreadRunning = false;
 }

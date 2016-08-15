@@ -50,32 +50,91 @@
 
 namespace OpenZWave
 {
+/** \defgroup SimpleHttpClient Basic HTTP(s) Client
+ *
+ * a Basic HTTP Client for talking to webservers
+ */
 
+namespace SimpleHTTPClient
+{
+
+/** \brief Initialize the Network for HTTP requests
+  * \ingroup SimpleHttpClient
+  *
+  * Initializes the Network for HTTP requests
+  *
+  * \returns success/failure
+  */
 bool InitNetwork();
+
+/** \brief Stop the Network for HTTP requests
+  * \ingroup SimpleHttpClient
+  *
+  * Stops the Network for HTTP requests and releases resources associated with it
+  */
 void StopNetwork();
+
+/** \brief Indicates if we support HTTPS requests
+  * \ingroup SimpleHttpClient
+  *
+  * Indicates if we support HTTPS requests
+  *
+  * \returns success/failure
+  * \todo SSL is not actually implemented yet.
+  */
 bool HasSSL();
 
+/** \brief Split a URL into its different parts/ports etc
+  * \ingroup SimpleHttpClient
+  *
+  * Split a URL Into the different parts/ports
+  *
+  * \param uri the URL to parse
+  * \param host the Hostname of the URL
+  * \param file the directory/file name of the URL
+  * \param port the port number of the URL, or 80 if not specified
+  *
+  * \returns success/failure
+  */
 bool SplitURI(const std::string& uri, std::string& host, std::string& file, int& port);
 
-// append to enc
+/** \brief Encode a String suitable for sending as a URL request (eg Get)
+  * \ingroup SimpleHttpClient
+  *
+  * Encode a String so it can be sent as part of a URL request
+  *
+  * \param s the string to encode
+  * \param enc the encoded version of the string that is returned
+  *
+  */
 void URLEncode(const std::string& s, std::string& enc);
 
+/** \brief Result Codes for SSL operations
+  * \ingroup SimpleHttpClient
+  *
+  */
 enum SSLResult
 {
-    SSLR_OK = 0x0,
-    SSLR_NO_SSL = 0x1,
-    SSLR_FAIL = 0x2,
-    SSLR_CERT_EXPIRED = 0x4,
-    SSLR_CERT_REVOKED = 0x8,
-    SSLR_CERT_CN_MISMATCH = 0x10,
-    SSLR_CERT_NOT_TRUSTED = 0x20,
-    SSLR_CERT_MISSING = 0x40,
-    SSLR_CERT_SKIP_VERIFY = 0x80,
-    SSLR_CERT_FUTURE = 0x100,
+    SSLR_OK = 0x0, 						/**< No Error */
+    SSLR_NO_SSL = 0x1,					/**< SSL Is not required */
+    SSLR_FAIL = 0x2,					/**< Internal SSL Engine Failure */
+    SSLR_CERT_EXPIRED = 0x4,			/**< SSL Certificate has expired */
+    SSLR_CERT_REVOKED = 0x8,			/**< SSL Certificate is revoked */
+    SSLR_CERT_CN_MISMATCH = 0x10,		/**< SSL CN Name does not match Hostname */
+    SSLR_CERT_NOT_TRUSTED = 0x20,		/**< SSL Certificate is not trusted */
+    SSLR_CERT_MISSING = 0x40,			/**< SSL Certificate is missing */
+    SSLR_CERT_SKIP_VERIFY = 0x80,		/**< SSL Certificate Verification is disabled */
+    SSLR_CERT_FUTURE = 0x100,			/**< SSL Certificate is valid in the future */
 
     _SSLR_FORCE32BIT = 0x7fffffff
 };
 
+/** \brief a TCP Socket that can optionally be protected via SSL
+  * \ingroup SimpleHttpClient
+  *
+  * This represents a TCP Socket that can be encrypted via SSL and
+  * is used to connect to a TCP Server (in this case, a HTTP(s) Server
+  */
 class TcpSocket
 {
 public:
@@ -147,6 +206,12 @@ enum HttpCode
     HTTP_NOTFOUND = 404,
 };
 
+/** \brief This class is used for Posting data to a HTTP(s) server
+  * \ingroup SimpleHttpClient
+  *
+  * Post some data to a HTTP(s) server
+  *
+  */
 class POST
 {
 public:
@@ -160,6 +225,12 @@ private:
     std::string data;
 };
 
+/** \brief Main class for making a HTTP request to a HTTP(s) server
+  * \ingroup SimpleHttpClient
+  *
+  * Make a request to a HTTP Server
+  *
+  */
 struct Request
 {
     Request() : port(80), user(NULL) {}
@@ -177,7 +248,13 @@ struct Request
     POST post; // if this is empty, it's a GET request, otherwise a POST request
 };
 
-class HttpSocket : public OpenZWave::TcpSocket
+/** \brief a Socket that speaks HTTP protocol.
+  * \ingroup SimpleHttpClient
+  *
+  * Talk to a HTTP(s) server
+  *
+  */
+class HttpSocket : public OpenZWave::SimpleHTTPClient::TcpSocket
 {
 public:
 
@@ -268,7 +345,12 @@ protected:
 
 #ifdef MINIHTTP_SUPPORT_SOCKET_SET
 
-
+/** \brief Support Multiple TCP Socket connections
+  * \ingroup SimpleHttpClient
+  *
+  * to Support multiple TCP Socket Connections
+  *
+  */
 class SocketSet
 {
 public:
@@ -295,7 +377,7 @@ public:
 
 #endif
 
-
+} // end HttpClient namespace
 } // end openzwave namespace
 
 

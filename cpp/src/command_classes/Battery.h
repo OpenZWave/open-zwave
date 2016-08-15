@@ -35,6 +35,7 @@ namespace OpenZWave
 	class ValueByte;
 
 	/** \brief Implements COMMAND_CLASS_BATTERY (0x80), a Z-Wave device command class.
+	 * \ingroup CommandClass
 	 */
 	class Battery: public CommandClass
 	{

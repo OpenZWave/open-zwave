@@ -35,6 +35,7 @@ namespace OpenZWave
 	class ValueByte;
 
 	/** \brief Implements COMMAND_CLASS_SWITCH_TOGGLE_MULTILEVEL (0x29), a Z-Wave device command class.
+	 * \ingroup CommandClass
 	 */
 	class SwitchToggleMultilevel: public CommandClass
 	{

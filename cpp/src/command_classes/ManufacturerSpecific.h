@@ -34,6 +34,7 @@
 namespace OpenZWave
 {
 	/** \brief Implements COMMAND_CLASS_MANUFACTURER_SPECIFIC (0x72), a Z-Wave device command class.
+	 * \ingroup CommandClass
 	 */
 	class ManufacturerSpecific: public CommandClass
 	{

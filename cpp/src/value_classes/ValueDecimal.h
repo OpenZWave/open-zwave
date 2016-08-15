@@ -40,6 +40,7 @@ namespace OpenZWave
 	class Node;
 
 	/** \brief Decimal value sent to/received from a node.
+	 * \ingroup ValueID
 	 */
 	class ValueDecimal: public Value
 	{

@@ -36,6 +36,7 @@ namespace OpenZWave
 	class ValueList;
 
 	/** \brief Implements COMMAND_CLASS_TIME_PARAMETERS (0x8B), a Z-Wave device command class.
+	 * \ingroup CommandClass
 	 */
 	class TimeParameters: public CommandClass
 	{

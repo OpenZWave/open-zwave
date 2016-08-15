@@ -37,6 +37,7 @@ namespace OpenZWave
 	class FileOpsImpl;
 
 	/** \brief Implements platform-independent File Operations.
+	 * \ingroup Platform
 	 */
 	class FileOps
 	{
@@ -55,16 +56,16 @@ namespace OpenZWave
 		static void Destroy();
 
 		/**
-		 * FolderExists. Check for the existance of a folder.
+		 * FolderExists. Check for the existence of a folder.
 		 * \param string. Folder name.
-		 * \return Bool value indicating existance.
+		 * \return Bool value indicating existence.
 		 */
 		static bool FolderExists( const string &_folderName );
 
 		/**
-		 * FileExists. Check for the existance of a file.
+		 * FileExists. Check for the existence of a file.
 		 * \param string. file name.
-		 * \return Bool value indicating existance.
+		 * \return Bool value indicating existence.
 		 */
 		static bool FileExists( const string &_fileName );
 

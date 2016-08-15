@@ -39,6 +39,7 @@ namespace OpenZWave
 	class Mutex;
 
 	/** \brief Implements COMMAND_CLASS_WAKE_UP (0x84), a Z-Wave device command class.
+	 * \ingroup CommandClass
 	 */
 	class WakeUp: public CommandClass
 	{

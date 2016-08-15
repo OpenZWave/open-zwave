@@ -38,6 +38,7 @@ namespace OpenZWave
 	class ValueString;
 
 	/** \brief Implements COMMAND_CLASS_THERMOSTAT_OPERATING_STATE (0x42), a Z-Wave device command class.
+	 * \ingroup CommandClass
 	 */
 	class ThermostatOperatingState: public CommandClass
 	{

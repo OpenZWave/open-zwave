@@ -40,8 +40,16 @@ namespace OpenZWave
 	class Msg;
 	class Node;
 	class Value;
+	/** \defgroup CommandClass Z-Wave CommandClass Support
+	 *
+	 * This is the CommandClasses that OZW currently supports. Typically, a Application does not need
+	 * to be aware of the CommandClasses a Device exposes, as they would be transparently exposed to the
+	 * application as ValueID's
+	 */
+
 
 	/** \brief Base class for all Z-Wave command classes.
+	 * \ingroup CommandClass
 	 */
 	class OPENZWAVE_EXPORT CommandClass
 	{
@@ -195,7 +203,7 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		uint32 m_sentCnt;				// Number of messages sent from this command class.
 		uint32 m_receivedCnt;				// Number of messages received from this commandclass.
 	};
-
+	//@}
 } // namespace OpenZWave
 
 #endif

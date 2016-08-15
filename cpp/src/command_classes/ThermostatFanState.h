@@ -38,6 +38,7 @@ namespace OpenZWave
 	class ValueString;
 
 	/** \brief Implements COMMAND_CLASS_THERMOSTAT_FAN_STATE (0x45), a Z-Wave device command class.
+	 * \ingroup CommandClass
 	 */
 	class ThermostatFanState: public CommandClass
 	{

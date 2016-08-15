@@ -71,6 +71,8 @@
 
 namespace OpenZWave
 {
+namespace SimpleHTTPClient
+{
 
 #ifdef MINIHTTP_USE_POLARSSL
 // ------------------------ SSL STUFF -------------------------
@@ -1571,4 +1573,5 @@ bool deleteWhenDone
 
 #endif
 
+} // namespace HttpClient
 } // namespace OpenZWave

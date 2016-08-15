@@ -34,8 +34,6 @@
 
 namespace OpenZWave
 {
-	/** \brief Implements COMMAND_CLASS_SECURITY (0x98), a Z-Wave device command class.
-	 */
 
 
 	enum SecurityCmd
@@ -59,6 +57,9 @@ namespace OpenZWave
 	};
 
 
+	/** \brief Implements COMMAND_CLASS_SECURITY (0x98), a Z-Wave device command class.
+	 * \ingroup CommandClass
+	 */
 
 	class Security: public CommandClass
 	{

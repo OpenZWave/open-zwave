@@ -43,6 +43,7 @@ namespace OpenZWave
 	class Node;
 
 	/** \brief Base class for values associated with a node.
+	 * \ingroup ValueID
 	 */
 	class Value: public Ref
 	{

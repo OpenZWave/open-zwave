@@ -34,6 +34,7 @@
 namespace OpenZWave
 {
 	/** \brief Implements COMMAND_CLASS_ASSOCIATION (0x85), a Z-Wave device command class.
+	 *\ingroup CommandClass
 	 */
 	class Association: public CommandClass
 	{

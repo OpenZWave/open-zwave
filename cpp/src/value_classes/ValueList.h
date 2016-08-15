@@ -41,6 +41,7 @@ namespace OpenZWave
 	class Node;
 
 	/** \brief List of values sent to/received from a node.
+	 * \ingroup ValueID
 	 */
 	class ValueList: public Value
 	{

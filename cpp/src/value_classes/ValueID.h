@@ -36,7 +36,16 @@ class TiXmlElement;
 
 namespace OpenZWave
 {
+    /** \defgroup ValueID ValueID Support
+     *
+     * ValueID's in OZW expose device functionality to the application. Many different
+     * types of ValueID's are exposed, and they represent the state of a device (such as a
+     * switch on or off) or configuration parameters of a device.
+     */
+
+
 	/** \brief Provides a unique ID for a value reported by a Z-Wave device.
+	 * \ingroup ValueID
 	 * 
 	 * The ValueID is used to uniquely identify a value reported by a 
 	 * Z-Wave device.

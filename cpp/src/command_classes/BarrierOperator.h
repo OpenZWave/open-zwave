@@ -36,6 +36,7 @@ namespace OpenZWave
 	class ValueBool;
 
 	/** \brief Implements COMMAND_CLASS_BARRIER_OPERATOR (0x66), a Z-Wave device command class.
+	 * \ingroup CommandClass
 	 */
 	class BarrierOperator: public CommandClass
 	{

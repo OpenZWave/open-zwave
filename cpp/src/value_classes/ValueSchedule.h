@@ -40,6 +40,7 @@ namespace OpenZWave
 	class Node;
 
 	/** \brief Schedule sent to/received from a node.
+	 * \ingroup ValueID
 	 */
 	class ValueSchedule: public Value
 	{

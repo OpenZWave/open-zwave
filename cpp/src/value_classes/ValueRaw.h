@@ -40,6 +40,7 @@ namespace OpenZWave
 	class Node;
 
 	/** \brief A collection of bytes sent to/received from a node.
+	 * \ingroup ValueID
 	 */
 	class ValueRaw: public Value
 	{

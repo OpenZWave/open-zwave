@@ -37,6 +37,7 @@ namespace OpenZWave
 	class ValueByte;
 
 	/** \brief Implements COMMAND_CLASS_CLIMATE_CONTROL_SCHEDULE (0x46), a Z-Wave device command class.
+	 * \ingroup CommandClass
 	 */
 	class ClimateControlSchedule: public CommandClass
 	{

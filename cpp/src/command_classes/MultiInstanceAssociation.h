@@ -35,6 +35,7 @@
 namespace OpenZWave
 {
 	/** \brief Implements COMMAND_CLASS_MULTI_INSTANCE_ASSOCIATION (0x8E), a Z-Wave device command class.
+	 * \ingroup CommandClass
 	 */
 	class MultiInstanceAssociation: public CommandClass
 	{

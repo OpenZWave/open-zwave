@@ -35,6 +35,7 @@ namespace OpenZWave
 	class ValueByte;
 
 	/** \brief Implements COMMAND_CLASS_CENTRAL_SCENE (0x5B), a Z-Wave device command class.
+	 * \ingroup CommandClass
 	 */
 	class CentralScene: public CommandClass
 	{

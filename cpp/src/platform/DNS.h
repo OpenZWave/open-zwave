@@ -38,6 +38,9 @@ namespace OpenZWave
 {
 	class DNSImpl;
 
+	/** \brief Return codes for DNS lookups
+	 * \ingroup Platform
+	 */
 	enum DNSError
 	{
 		DNSError_None = 0,
@@ -47,14 +50,25 @@ namespace OpenZWave
 	};
 
 
-	/** \brief Implements platform-independent File Operations.
+	/** \brief Implements platform-independent DNS lookup Operations.
+	 * \ingroup Platform
 	 */
 	class DNS
 	{
 	public:
 			DNS();
 			~DNS();
-			bool LookupTxT(string, string &);
+			/**
+			 * \brief Starts a DNS lookup for a TXT record
+			 *
+			 * This function will lookup the TXT record for a address
+			 *
+			 * \param lookup the DNS address to lookup
+			 * \param result the result of the lookup request, or empty if the lookup failed.
+			 *
+			 * \return success/failure of the Lookup request
+			 */
+			bool LookupTxT(string lookup, string &result);
 			DNSError status;
 	private:
 			DNSImpl *m_pImpl;

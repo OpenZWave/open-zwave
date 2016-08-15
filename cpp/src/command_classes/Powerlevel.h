@@ -35,6 +35,7 @@ namespace OpenZWave
 	class ValueList;
 
 	/** \brief Implements COMMAND_CLASS_POWERLEVEL (0x73), a Z-Wave device command class.
+	 * \ingroup CommandClass
 	 */
 	class Powerlevel: public CommandClass
 	{

@@ -35,6 +35,7 @@ namespace OpenZWave
 	class ValueByte;
 
 	/** \brief Implements COMMAND_CLASS_ALARM (0x71), a Z-Wave device command class.
+	 * \ingroup CommandClass
 	 */
 	class Alarm: public CommandClass
 	{

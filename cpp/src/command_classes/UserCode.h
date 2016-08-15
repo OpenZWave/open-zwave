@@ -33,6 +33,7 @@
 namespace OpenZWave
 {
 	/** \brief Implements COMMAND_CLASS_USER_CODE (0x63), a Z-Wave device command class.
+	 * \ingroup CommandClass
 	 */
 	class UserCode: public CommandClass
 	{

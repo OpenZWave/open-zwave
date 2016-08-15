@@ -40,6 +40,7 @@ namespace OpenZWave
 	class Node;
 
 	/** \brief String value sent to/received from a node.
+	 * \ingroup ValueID
 	 */
 	class ValueString: public Value
 	{

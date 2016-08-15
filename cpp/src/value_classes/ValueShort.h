@@ -40,6 +40,7 @@ namespace OpenZWave
 	class Node;
 
 	/** \brief Short value sent to/received from a node.
+	 * \ingroup ValueID
 	 */
 	class ValueShort: public Value
 	{

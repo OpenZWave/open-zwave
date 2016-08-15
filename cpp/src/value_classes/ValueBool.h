@@ -41,6 +41,7 @@ namespace OpenZWave
 	class CommandClass;
 
 	/** \brief Boolean value sent to/received from a node.
+	 * \ingroup ValueID
 	 */
 	class ValueBool: public Value
 	{

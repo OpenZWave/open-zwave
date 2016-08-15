@@ -34,12 +34,14 @@ namespace OpenZWave
 {
 
 	/** \brief Extract a String from a Z-Wave Encoded Packet
+	 * \ingroup CommandClass
 	 *
 	 *  this function is used by the NodeNaming CC as well as the Alarm CC
 	 */
 	string ExtractString( uint8 const* _data, uint32 const _length );
 
 	/** \brief Convert from UTF16 to UTF8
+	 * \ingroup CommandClass
 	 *
 	 *  this function is used by the NodeNaming CC as well as the Alarm CC
 	 */
@@ -47,6 +49,7 @@ namespace OpenZWave
 
 
 	/** \brief Implements COMMAND_CLASS_NODE_NAMING (0x77), a Z-Wave device command class.
+	 * \ingroup CommandClass
 	 */
 	class NodeNaming: public CommandClass
 	{

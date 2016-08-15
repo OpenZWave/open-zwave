@@ -35,6 +35,7 @@ namespace OpenZWave
 	class ValueByte;
 
 	/** \brief Implements COMMAND_CLASS_COLOR (0x33), a Z-Wave device command class.
+	 * \ingroup CommandClass
 	 */
 	class Color: public CommandClass
 	{

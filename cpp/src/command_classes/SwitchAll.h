@@ -35,6 +35,7 @@ namespace OpenZWave
 	class ValueList;
 
 	/** \brief Implements COMMAND_CLASS_SWITCH_ALL (0x27), a Z-Wave device command class.
+	 * \ingroup CommandClass
 	 */
 	class SwitchAll: public CommandClass
 	{

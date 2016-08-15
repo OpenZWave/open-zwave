@@ -37,6 +37,7 @@ namespace OpenZWave
 	class ValueDecimal;
 
 	/** \brief Implements COMMAND_CLASS_THERMOSTAT_SETPOINT (0x43), a Z-Wave device command class.
+	 * \ingroup CommandClass
 	 */
 	class ThermostatSetpoint: public CommandClass
 	{

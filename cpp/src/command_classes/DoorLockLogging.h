@@ -35,6 +35,7 @@ namespace OpenZWave
 	class ValueBool;
 
 	/** \brief Implements COMMAND_CLASS_DOOR_LOCK_LOGGING (0x4C), a Z-Wave device command class.
+	 * \ingroup CommandClass
 	 */
 	class DoorLockLogging: public CommandClass
 	{

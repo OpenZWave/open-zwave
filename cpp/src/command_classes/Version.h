@@ -35,6 +35,7 @@ namespace OpenZWave
 	class ValueString;
 
 	/** \brief Implements COMMAND_CLASS_VERSION (0x86), a Z-Wave device command class.
+	 * \ingroup CommandClass
 	 */
 	class Version: public CommandClass
 	{
