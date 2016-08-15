@@ -193,6 +193,7 @@ DISTFILES =	.gitignore \
 	config/nodon/crc3100OctanRemote.xml \
 	config/nodon/crc360xSofremote.xml \
 	config/nodon/cws3101wallswitch.xml \
+	config/northq/nq9021.xml \
 	config/northq/nq9121.xml \
 	config/northq/nq92021.xml \
 	config/options.xml \
