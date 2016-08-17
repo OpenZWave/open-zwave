@@ -107,7 +107,7 @@ bool HttpClient::StartDownload
 			/* make sure the Folder Exists */
 			if (!FileOps::Create()->FolderExists(ozwdirname(transfer->filename))) {
 				if (!FileOps::Create()->FolderCreate(ozwdirname(transfer->filename))) {
-					Log::Write(LogLevel_Warning, "File Transfer Failed. Could not create Destination Folder: %s", ozwdirname(transfer->filename));
+					Log::Write(LogLevel_Warning, "File Transfer Failed. Could not create Destination Folder: %s", ozwdirname(transfer->filename).c_str());
 					delete transfer;
 					return false;
 				}
@@ -116,7 +116,7 @@ bool HttpClient::StartDownload
 			/* does the file exist, if so, rotate it out (by doing a copy) */
 			if (FileOps::Create()->FileExists(transfer->filename)) {
 				if (!FileOps::Create()->FileRotate(transfer->filename)) {
-					Log::Write(LogLevel_Warning, "File Transfer Failed. Could not Rotate Existing File: %s", transfer->filename);
+					Log::Write(LogLevel_Warning, "File Transfer Failed. Could not Rotate Existing File: %s", transfer->filename.c_str());
 					delete transfer;
 					return false;
 				}
