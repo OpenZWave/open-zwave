@@ -34,6 +34,7 @@
 #include <iostream>
 #include <fstream>
 #include <string.h>
+#include <errno.h>
 
 #include "FileOpsImpl.h"
 #include "Utils.h"
@@ -151,7 +152,7 @@ bool FileOpsImpl::FileCopy
 
 	/* make sure the Destination Folder Exists */
 	if (!FolderExists(ozwdirname(_destfile))) {
-		Log::Write(LogLevel_Warning, "Destination Folder %s Doesn't Exist", ozwdirname(_destfile));
+		Log::Write(LogLevel_Warning, "Destination Folder %s Doesn't Exist", ozwdirname(_destfile).c_str());
 		return false;
 	}
 
