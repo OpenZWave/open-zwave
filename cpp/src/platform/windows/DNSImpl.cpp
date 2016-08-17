@@ -63,7 +63,7 @@ string &result
 	rc = DnsQuery(lookup.c_str(), DNS_TYPE_TEXT, DNS_QUERY_STANDARD, NULL, &qr, NULL);
 	if (rc != ERROR_SUCCESS) {
 		Log::Write(LogLevel_Warning, "Error looking up txt Record: %s - %d", lookup.c_str(), rc);
-		status = DNSError_InternaError;
+		status = DNSError_InternalError;
 		return false;
 	}
 
