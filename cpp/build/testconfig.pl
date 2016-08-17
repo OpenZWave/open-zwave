@@ -121,6 +121,37 @@ my $xml = new XML::Simple;
 
 # read XML file
 my $data = $xml->XMLin("config/manufacturer_specific.xml", KeyAttr => "", ForceArray => [ 'Product' ] );
+# do a check of MFS Revision etc 
+my $md5 = digest_file_hex("config/manufacturer_specific.xml", "SHA-512");
+if (defined($CFG::versiondb{"config/manufacturer_specific.xml"}))
+	{
+	if ($CFG::versiondb{"config/manufacturer_specific.xml"}{md5} != $md5) 
+		{
+		my $dbr = $CFG::versiondb{"config/manufacturer_specific.xml"}->{Revision};
+		my $fr = $data->{Revision};
+		if ($dbr ge $fr )
+		{
+			print "config/manufacturer_specific.xml"." - md5 does not match Database - Database Revision:";
+			print $CFG::versiondb{"config/manufacturer_specific.xml"}->{Revision}." File Revision:".int $data->{Revision};
+			print "\n";
+			LogError("config/manufacturer_specific.xml", 8, "Revision Number Was Not Bumped");	
+		} else {
+			my %versions;
+			$versions{md5} = $md5;
+			$versions{Revision} = $data->{Revision};
+			$CFG::versiondb{"config/manufacturer_specific.xml"} = \%versions;
+			print("config/manufacturer_specific.xml"." - Updating Database\n");
+		}			
+	}
+} else { 
+	my %versions;
+	$versions{md5} = $md5;
+	$versions{Revision} = $data->{Revision};
+	$CFG::versiondb{"config/manufacturer_specific.xml"} = \%versions;
+	print("config/manufacturer_specific.xml"." - Adding new file to Database\n");
+}
+
+
 foreach my $manu (@{$data->{Manufacturer}}) 
 {
 	if (defined($manu->{Product}))
