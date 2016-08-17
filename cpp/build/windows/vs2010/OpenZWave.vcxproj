@@ -96,7 +96,7 @@
     </ClCompile>
     <Lib>
       <OutputFile>$(OutDir)\$(ProjectName).lib</OutputFile>
-      <AdditionalDependencies>setupapi.lib;dnsapi.lib</AdditionalDependencies>
+      <AdditionalDependencies>setupapi.lib</AdditionalDependencies>
       <TargetMachine>MachineX86</TargetMachine>
     </Lib>
     <PreBuildEvent>
@@ -129,8 +129,10 @@ exit 0</Command>
     </Lib>
     <Link>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
-      <AdditionalDependencies>Setupapi.lib;dnsapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Setupapi.lib;Ws2_32.lib;dnsapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
     </Link>
     <PreBuildEvent>
       <Command>del ..\winversion.cpp
@@ -161,7 +163,7 @@ exit 0</Command>
       <TargetMachine>MachineX86</TargetMachine>
     </Lib>
     <Link>
-      <AdditionalDependencies>Setupapi.lib;dnsapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Setupapi.lib;Ws2_32.lib;dnsapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent />
     <PreBuildEvent>
@@ -186,7 +188,7 @@ exit 0</Command>
     </ClCompile>
     <Lib>
       <OutputFile>$(OutDir)\$(ProjectName).lib</OutputFile>
-      <AdditionalDependencies>setupapi.lib;dnsapi.lib</AdditionalDependencies>
+      <AdditionalDependencies>setupapi.lib;</AdditionalDependencies>
     </Lib>
     <PreBuildEvent>
       <Command>del ..\winversion.cpp
@@ -205,6 +207,7 @@ exit 0</Command>
     <ClInclude Include="..\..\..\src\aes\brg_endian.h" />
     <ClInclude Include="..\..\..\src\aes\brg_types.h" />
     <ClInclude Include="..\..\..\src\Bitfield.h" />
+    <ClInclude Include="..\..\..\src\command_classes\BarrierOperator.h" />
     <ClInclude Include="..\..\..\src\command_classes\DeviceResetLocally.h" />
     <ClInclude Include="..\..\..\src\command_classes\DoorLock.h" />
     <ClInclude Include="..\..\..\src\command_classes\DoorLockLogging.h" />
@@ -222,10 +225,13 @@ exit 0</Command>
     <ClInclude Include="..\..\..\src\Http.h" />
     <ClInclude Include="..\..\..\src\Group.h" />
     <ClInclude Include="..\..\..\src\Manager.h" />
+    <ClInclude Include="..\..\..\src\ManufacturerSpecificDB.h" />
     <ClInclude Include="..\..\..\src\Msg.h" />
     <ClInclude Include="..\..\..\src\Node.h" />
     <ClInclude Include="..\..\..\src\Notification.h" />
     <ClInclude Include="..\..\..\src\Options.h" />
+    <ClInclude Include="..\..\..\src\platform\FileOps.h" />
+    <ClInclude Include="..\..\..\src\platform\windows\FileOpsImpl.h" />
     <ClInclude Include="..\..\..\src\ZWSecurity.h" />
     <ClInclude Include="..\..\..\src\platform\Controller.h" />
     <ClInclude Include="..\..\..\src\platform\DNS.h" />
@@ -316,6 +322,7 @@ exit 0</Command>
     <ClCompile Include="..\..\..\src\aes\aeskey.c" />
     <ClCompile Include="..\..\..\src\aes\aestab.c" />
     <ClCompile Include="..\..\..\src\aes\aes_modes.c" />
+    <ClCompile Include="..\..\..\src\command_classes\BarrierOperator.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\DeviceResetLocally.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\DoorLock.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\DoorLockLogging.cpp" />
@@ -332,6 +339,7 @@ exit 0</Command>
     <ClCompile Include="..\..\..\src\Http.cpp" />
     <ClCompile Include="..\..\..\src\Group.cpp" />
     <ClCompile Include="..\..\..\src\Manager.cpp" />
+    <ClCompile Include="..\..\..\src\ManufacturerSpecificDB.cpp" />
     <ClCompile Include="..\..\..\src\Msg.cpp" />
     <ClCompile Include="..\..\..\src\Node.cpp" />
     <ClCompile Include="..\..\..\src\Notification.cpp" />
