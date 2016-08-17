@@ -443,7 +443,7 @@ namespace OpenZWave
 			void SetProductDetails(ProductDescriptor *product);
 			string getConfigPath();
 		private:
-			void checkConfigRevision();
+			void checkConfigRevision( bool force = false );
 			uint32 getConfigRevision() { return m_ConfigRevision; };
 			void setLatestConfigRevision(uint32 rev);
 

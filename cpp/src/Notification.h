@@ -28,6 +28,8 @@
 #ifndef _Notification_H
 #define _Notification_H
 
+#include <iostream>
+
 #include "Defs.h"
 #include "value_classes/ValueID.h"
 
@@ -53,6 +55,9 @@ namespace OpenZWave
 		friend class NoOperation;
 		friend class SceneActivation;
 		friend class WakeUp;
+		/* allow us to Stream a Notification */
+		//friend std::ostream &operator<<(std::ostream &os, const Notification &dt);
+
 
 	public:
 		/**
@@ -223,6 +228,9 @@ namespace OpenZWave
 	};
 
 } //namespace OpenZWave
+
+std::ostream& operator<<(std::ostream &os, const OpenZWave::Notification &dt);
+std::ostream& operator<<(std::ostream &os, const OpenZWave::Notification *dt);
 
 #endif //_Notification_H
 

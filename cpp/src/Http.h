@@ -52,7 +52,8 @@ namespace OpenZWave
 			{
 				None,
 				File,
-				Config
+				Config,
+				MFSConfig
 			};
 			DownloadType operation;
 			enum Status

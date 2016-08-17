@@ -1,8 +1,8 @@
 //-----------------------------------------------------------------------------
 //
-//	Security.cpp
+//	Notification.cpp
 //
-//	Common Security/Encryption Routines
+//	OZW to Application Notification Callbacks
 //
 //	Copyright (c) 2015 Justin Hammond <justin@dynam.ac>
 //
@@ -252,4 +252,15 @@ string Notification::GetAsString() const {
 }
 
 
+std::ostream& operator<<(std::ostream &os, const Notification &dt)
+{
+    os << dt.GetAsString();
+    return os;
+}
+
+std::ostream& operator<<(std::ostream &os, const Notification *dt)
+{
+    os << dt->GetAsString();
+    return os;
+}
 

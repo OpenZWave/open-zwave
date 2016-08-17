@@ -3576,7 +3576,7 @@ string Node::GetNodeTypeString() {
 
 //-----------------------------------------------------------------------------
 // <Node::GetRoleTypeString>
-// Get the ZWave+ NodeType as a String
+// Is the Node Reset?
 //-----------------------------------------------------------------------------
 bool Node::IsNodeReset()
 {
@@ -3595,9 +3595,10 @@ bool Node::IsNodeReset()
 
 void Node::checkConfigRevision
 (
+	bool force
 )
 {
-	if (this->m_ConfigRevision > 0)
+	if ((force) || (this->m_ConfigRevision != 0))
 		this->GetDriver()->CheckNodeConfigRevision(this);
 
 }

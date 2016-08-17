@@ -6993,7 +6993,7 @@ Node *node
 	std::stringstream ss;
 	ss << std::hex << std::setw(4) << std::setfill('0') << node->GetProductId() << ".";
 	ss << std::hex << std::setw(4) << std::setfill('0') << node->GetProductType() << ".";
-	ss << std::hex << std::setw(4) << std::setfill('0') << node->GetManufacturerId() << ".db.openzwave.com.";
+	ss << std::hex << std::setw(4) << std::setfill('0') << node->GetManufacturerId() << ".db.openzwave.com";
 
 	lu->lookup = ss.str();
 	return m_dns->sendRequest(lu);
@@ -7005,7 +7005,7 @@ bool Driver::CheckMFSConfigRevision
 {
 	DNSLookup *lu = new DNSLookup;
 	lu->NodeID = 0;
-	lu->lookup = "mfs.db.openzwave.com.";
+	lu->lookup = "mfs.db.openzwave.com";
 	return m_dns->sendRequest(lu);
 }
 
@@ -7044,22 +7044,29 @@ DNSLookup *result
 				notification->SetUserAlertNofification(Notification::Alert_MFSOutOfDate);
 				QueueNotification( notification );
 
-				/* XXX TODO - Download New Version */
-
+				bool update = false;
+				Options::Get()->GetOptionAsBool("AutoUpdateConfigFile", &update);
+				if (update)
+				{
+					m_mfs->updateMFSConfigFile(this);
+				} else {
+					m_mfs->checkInitialized();
+				}
 
 			} else {
 				/* its upto date - Check to make sure we have all the config files */
 				m_mfs->checkConfigFiles(this);
 			}
 		}
+		return;
 	} else if (result->status == DNSError_NotFound) {
-		Log::Write(LogLevel_Info, "No match for Device record %s", result->lookup.c_str());
+		Log::Write(LogLevel_Info, "Not Found for Device record %s", result->lookup.c_str());
 	} else if (result->status == DNSError_DomainError) {
 		Log::Write(LogLevel_Warning, "Domain Error Looking up record %s", result->lookup.c_str());
 	} else if (result->status == DNSError_InternalError) {
 		Log::Write(LogLevel_Warning, "Internal DNS Error looking up record %s", result->lookup.c_str());
 	}
-
+	m_mfs->checkInitialized();
 }
 
 
@@ -7113,6 +7120,21 @@ bool Driver::startConfigDownload
 	return m_httpClient->StartDownload(download);
 }
 
+bool Driver::startMFSDownload
+(
+	string configfile
+)
+{
+	HttpDownload *download = new HttpDownload();
+	download->url = "http://download.db.openzwave.com/mfs.xml";
+	download->filename = configfile;
+	download->operation = HttpDownload::MFSConfig;
+	download->node = 0;
+	Log::Write(LogLevel_Info, "Queuing download for %s", download->url.c_str());
+
+	return m_httpClient->StartDownload(download);
+}
+
 bool Driver::refreshNodeConfig
 (
 	uint8 _nodeId
@@ -7133,10 +7155,18 @@ void Driver::processDownload
 {
 	if (download->transferStatus == HttpDownload::Ok) {
 		Log::Write(LogLevel_Info, "Download Finished: %s (Node: %d)", download->filename.c_str(), download->node);
-		m_mfs->configDownloaded(this, download->filename, download->node);
+		if (download->operation == HttpDownload::Config) {
+			m_mfs->configDownloaded(this, download->filename, download->node);
+		} else if (download->operation == HttpDownload::MFSConfig) {
+			m_mfs->mfsConfigDownloaded(this, download->filename);
+		}
 	} else {
 		Log::Write(LogLevel_Warning, "Download of %s Failed (Node: %d)", download->url.c_str(), download->node);
-		m_mfs->configDownloaded(this, download->filename, download->node, false);
+		if (download->operation == HttpDownload::Config) {
+			m_mfs->configDownloaded(this, download->filename, download->node, false);
+		} else if (download->operation == HttpDownload::MFSConfig) {
+			m_mfs->mfsConfigDownloaded(this, download->filename, false);
+		}
 		Notification* notification = new Notification( Notification::Type_UserAlerts );
 		notification->SetUserAlertNofification(Notification::Alert_ConfigFileDownloadFailed);
 		QueueNotification( notification );

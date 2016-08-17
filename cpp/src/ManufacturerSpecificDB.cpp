@@ -311,7 +311,30 @@ void ManufacturerSpecificDB::configDownloaded
 		}
 	} else {
 		Log::Write(LogLevel_Warning, "File is not in the list of downloading files: %s", file.c_str());
+		checkInitialized();
 	}
+}
+
+void ManufacturerSpecificDB::mfsConfigDownloaded
+(
+	Driver *driver,
+	string file,
+	bool success
+)
+{
+	/* check if we are downloading already */
+	std::list<string>::iterator iter = std::find (m_downloading.begin(), m_downloading.end(), file);
+	if (iter != m_downloading.end()) {
+		m_downloading.erase(iter);
+		if (success) {
+			UnloadProductXML();
+			LoadProductXML();
+			checkConfigFiles(driver);
+		}
+	} else {
+		Log::Write(LogLevel_Warning, "File is not in the list of downloading files: %s", file.c_str());
+	}
+	checkInitialized();
 }
 
 bool ManufacturerSpecificDB::isReady
@@ -324,6 +347,8 @@ bool ManufacturerSpecificDB::isReady
 }
 
 void ManufacturerSpecificDB::checkInitialized() {
+	if (!m_initializing)
+		return;
 	Log::Write(LogLevel_Debug, "Downloads Remaining: %d", m_downloading.size());
 	if (m_downloading.size() == 0) {
 		Log::Write(LogLevel_Info, "ManufacturerSpecificDB Initialized");
@@ -371,5 +396,18 @@ void ManufacturerSpecificDB::updateConfigFile
 	else
 		Log::Write(LogLevel_Warning, "Can't download Config file %s", node->getConfigPath().c_str());
 }
+void ManufacturerSpecificDB::updateMFSConfigFile
+(
+	Driver *driver
+)
+{
+	string configPath;
+	Options::Get()->GetOptionAsString( "ConfigPath", &configPath );
+	string path = configPath + "manufacturer_specific.xml";
 
+	if (driver->startMFSDownload(path))
+		m_downloading.push_back(path);
+	else
+		Log::Write(LogLevel_Warning, "Can't download ManufacturerSpecifix.xml Config file");
+}
 

@@ -111,13 +111,16 @@ namespace OpenZWave
 		uint8 GetRevision() { return m_revision;}
 		void checkConfigFiles(Driver *);
 		void configDownloaded(Driver *, string file, uint8 node, bool success = true);
+		void mfsConfigDownloaded(Driver *, string file, bool success = true);
 		bool isReady();
 		void updateConfigFile(Driver *, Node *);
+		void updateMFSConfigFile(Driver *);
+		void checkInitialized();
+
 	private:
 		ManufacturerSpecificDB();
 		~ManufacturerSpecificDB();
 
-		void checkInitialized();
 
 
 		Mutex*					m_MfsMutex;            /**< Mutex to ensure its accessed by a single thread at a time */

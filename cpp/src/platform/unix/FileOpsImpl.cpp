@@ -140,8 +140,6 @@ bool FileOpsImpl::FileCopy
 )
 {
 
-	std::cout << _sourcefile << " -> " << _destfile << std::endl;
-
 	if (!FileExists(_sourcefile)) {
 		Log::Write(LogLevel_Warning, "Source File %s doesn't exist in FileCopy", _sourcefile.c_str());
 		return false;

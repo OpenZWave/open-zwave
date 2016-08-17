@@ -96,6 +96,7 @@ bool HttpClient::StartDownload
 			return false;
 		case HttpDownload::File:
 		case HttpDownload::Config:
+		case HttpDownload::MFSConfig:
 			/* make sure it has everything */
 			if ((transfer->url.size() <= 0) || (transfer->filename.size() <= 0)) {
 				Log::Write(LogLevel_Warning, "File Transfer had incomplete Params");
