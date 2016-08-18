@@ -80,6 +80,6 @@ string &result
 	return true;
 #endif
 	Log::Write(LogLevel_Error, "DNS Lookups Not Implemented on WinRT Platform");
-	status = DNSError_InternaError;
+	status = DNSError_InternalError;
 	return false;
 }

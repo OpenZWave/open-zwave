@@ -635,7 +635,7 @@ exit 0</Command>
     </Link>
     <PreBuildEvent>
       <Command>del ..\..\windows\winversion.cpp
-CALL $(ProjectDir)\..\..\windows\GIT-VS-VERSION-GEN.bat "$(ProjectDir)\" "..\..\windows\winversion.cpp"
+CALL "$(ProjectDir)\..\..\windows\GIT-VS-VERSION-GEN.bat" "$(ProjectDir)\" "..\..\windows\winversion.cpp"
 Xcopy /E /I /Y ..\..\..\..\config config\
 exit 0</Command>
     </PreBuildEvent>
@@ -656,7 +656,7 @@ exit 0</Command>
     </Link>
     <PreBuildEvent>
       <Command>del ..\..\windows\winversion.cpp
-CALL $(ProjectDir)\..\..\windows\GIT-VS-VERSION-GEN.bat "$(ProjectDir)\" "..\..\windows\winversion.cpp"
+CALL "$(ProjectDir)\..\..\windows\GIT-VS-VERSION-GEN.bat" "$(ProjectDir)\" "..\..\windows\winversion.cpp"
 Xcopy /E /I /Y ..\..\..\..\config config\
 exit 0</Command>
     </PreBuildEvent>
