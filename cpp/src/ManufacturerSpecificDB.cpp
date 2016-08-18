@@ -262,30 +262,30 @@ void ManufacturerSpecificDB::checkConfigFiles
 )
 {
 	LockGuard LG(m_MfsMutex);
-	if (s_bXmlLoaded)
-	{
-		string configPath;
-		Options::Get()->GetOptionAsString( "ConfigPath", &configPath );
+	if (!s_bXmlLoaded)
+		LoadProductXML();
 
-		map<int64,ProductDescriptor*>::iterator pit;
-		for (pit = s_productMap.begin(); pit != s_productMap.end(); pit++) {
-			ProductDescriptor *c = pit->second;
-			if (c->GetConfigPath().size() > 0) {
-				string path = configPath + c->GetConfigPath();
+	string configPath;
+	Options::Get()->GetOptionAsString( "ConfigPath", &configPath );
 
-				/* check if we are downloading already */
-				std::list<string>::iterator iter = std::find (m_downloading.begin(), m_downloading.end(), path);
-				/* check if the file exists */
-				if (iter == m_downloading.end() && !FileOps::Create()->FileExists(path)) {
-					Log::Write( LogLevel_Warning, "Config File for %s does not exist - %s", c->GetProductName().c_str(), path.c_str());
-					/* try to download it */
-					if (driver->startConfigDownload(c->GetManufacturerId(), c->GetProductType(), c->GetProductId(), path))
-						m_downloading.push_back(path);
-					else
-						Log::Write(LogLevel_Warning, "Can't download file %s", path.c_str());
-				} else if (iter != m_downloading.end()) {
-					Log::Write(LogLevel_Debug, "Config file for %s already queued", c->GetProductName().c_str());
-				}
+	map<int64,ProductDescriptor*>::iterator pit;
+	for (pit = s_productMap.begin(); pit != s_productMap.end(); pit++) {
+		ProductDescriptor *c = pit->second;
+		if (c->GetConfigPath().size() > 0) {
+			string path = configPath + c->GetConfigPath();
+
+			/* check if we are downloading already */
+			std::list<string>::iterator iter = std::find (m_downloading.begin(), m_downloading.end(), path);
+			/* check if the file exists */
+			if (iter == m_downloading.end() && !FileOps::Create()->FileExists(path)) {
+				Log::Write( LogLevel_Warning, "Config File for %s does not exist - %s", c->GetProductName().c_str(), path.c_str());
+				/* try to download it */
+				if (driver->startConfigDownload(c->GetManufacturerId(), c->GetProductType(), c->GetProductId(), path))
+					m_downloading.push_back(path);
+				else
+					Log::Write(LogLevel_Warning, "Can't download file %s", path.c_str());
+			} else if (iter != m_downloading.end()) {
+				Log::Write(LogLevel_Debug, "Config file for %s already queued", c->GetProductName().c_str());
 			}
 		}
 	}
@@ -395,6 +395,8 @@ void ManufacturerSpecificDB::updateConfigFile
 		m_downloading.push_back(path);
 	else
 		Log::Write(LogLevel_Warning, "Can't download Config file %s", node->getConfigPath().c_str());
+
+	checkInitialized();
 }
 void ManufacturerSpecificDB::updateMFSConfigFile
 (
@@ -409,5 +411,7 @@ void ManufacturerSpecificDB::updateMFSConfigFile
 		m_downloading.push_back(path);
 	else
 		Log::Write(LogLevel_Warning, "Can't download ManufacturerSpecifix.xml Config file");
+
+	checkInitialized();
 }
 

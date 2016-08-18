@@ -1288,14 +1288,6 @@ namespace OpenZWaveDotNet
 		bool RefreshValue( ZWValueID^ id ) { return Manager::Get()->RefreshValue(id->CreateUnmanagedValueID()); }
 
 		/**
-		 * \brief determine if value changes upon a refresh should be verified.  If so, the
-		 * library will immediately refresh the value a second time whenever a change is observed.  This helps to filter
-		 * out spurious data reported occasionally by some devices.
-		 * \param _id The unique identifier of the value whose changes should or should not be verified.
-		 */
-		bool GetChangeVerified( ZWValueID^ id ) { return Manager::Get()->GetChangeVerified(id->CreateUnmanagedValueID()); };
-		
-		/**
 		 * \brief Sets a flag indicating whether value changes noted upon a refresh should be verified.  If so, the
 		 * library will immediately refresh the value a second time whenever a change is observed.  This helps to filter
 		 * out spurious data reported occasionally by some devices.
@@ -1553,17 +1545,6 @@ namespace OpenZWaveDotNet
 		* \see GetNumGroups, GetAssociations, GetMaxAssociations, AddAssociation
 		*/
 		String^ GetGroupLabel(uint32 const homeId, uint8 const nodeId, uint8 const groupIdx) { return gcnew String(Manager::Get()->GetGroupLabel(homeId, nodeId, groupIdx).c_str()); }
-
-		/**
-		 * \brief Returns a label for the particular group of a node.
-		 * 
-		 * This label is populated by the device specific configuration files.
-		 * \param homeId The Home ID of the Z-Wave controller that manages the node.
-		 * \param nodeId The ID of the node whose associations are to be changed.
-		 * \param groupIdx One-based index of the group (because Z-Wave product manuals use one-based group numbering).
-		 * \see GetNumGroups, GetAssociations, GetMaxAssociations, AddAssociation
-		 */
-		String^ GetGroupLabel( uint32 homeId, uint8 nodeId, uint8 groupIdx ) { return gcnew String(Manager::Get()->GetGroupLabel( homeId, nodeId, groupIdx).c_str()); }
 
 		/**
 		 * \brief Adds a node to an association group.
