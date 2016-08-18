@@ -294,6 +294,7 @@ DISTFILES =	.gitignore \
 	config/zwave.me/ZME_RC2.xml \
 	config/zwave.me/ZME_WALLC-S.xml \
 	config/zwave.me/ZME_WCD2.xml \
+	config/zwave.me/ZUno.xml \
 	config/zwave.me/iTemp.xml \
 	config/zwave.me/kfob.xml \
 	config/zwave.me/popp_kfob-c.xml \
