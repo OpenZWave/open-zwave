@@ -616,6 +616,9 @@
 	</Manufacturer>
 	<Manufacturer id="0083" name="MTC Maintronic">
 	</Manufacturer>
+	<Manufacturer id="0258" name="Neo Coolcam">
+		<Product type="0003" id="1087" name="Power plug 12A" config="shenzen_neo/nas-wr01z.xml"/>
+	</Manufacturer>
 	<Manufacturer id="0178" name="Nexia">
 		<!-- full name in Z-wave database: Ingersoll Rand - Nexia Home Intelligence -->
 		<Product type="4442" id="3130" name="DB100Z Doorbell Sensor" config="nexia/db100z.xml"/>
@@ -938,8 +941,5 @@
 		<Product type="6131" id="4501" name="Zipato Mini Keypad" config="zipato/MiniKeypad.xml" />
 	</Manufacturer>
 	<Manufacturer id="0021" name="Zykronix">
-	</Manufacturer>
-	<Manufacturer id="0258" name="Neo Coolcam">
-		<Product type="0003" id="1087" name="Power plug 12A" config="shenzen_neo/nas-wr01z.xml"/>
-	</Manufacturer>
+	</Manufacturer>	
 </ManufacturerSpecificData>
