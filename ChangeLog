@@ -93,6 +93,7 @@ Version 1.5
  - Add Z-Wave.Me ZME_064381 Wall Plug switch Schuko (IP44) - Gen 5 (Nechry)
  - Add Z-Wave.Me Z-Uno (Nechry)
  - Pull Request #969 - Neo Coolcam Power Plug from LouiS22 (Nechry)
+ - Add Fibaro FGPB101 Button (Nechry)
 
 Version 1.4
  - Released 10th Jan, 2016
