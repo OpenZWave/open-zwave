@@ -29,12 +29,12 @@
       </Help>
     </Value>
     
-    <Value type="short" genre="config" instance="1" index="6" label="	Re-trigger Interval Setting" units="second" value="30" min="5" max="600" size="2">
-      <Help>	This Parameter can be used to adjust the interval of being re-triggered after the PIR detector has been triggered. This Parameter value must be less than Parameter 2#. If user set this parameter to default by Configure CC, the parameter #2 will be set to default value.
+    <Value type="short" genre="config" instance="1" index="6" label="Re-trigger Interval Setting" units="second" value="30" min="5" max="600" size="2">
+      <Help>This Parameter can be used to adjust the interval of being re-triggered after the PIR detector has been triggered. This Parameter value must be less than Parameter 2#. If user set this parameter to default by Configure CC, the parameter #2 will be set to default value.
       </Help>
     </Value>
     
-    <Value type="short" genre="config" instance="1" index="7" label="	Light Sensor Polling Interval" units="second" value="180" min="60" max="29535" size="2">
+    <Value type="short" genre="config" instance="1" index="7" label="Light Sensor Polling Interval" units="second" value="180" min="60" max="29535" size="2">
       <Help>This Parameter can be set the light sensor measure ambient illumination level interval time. NOTE: This Value Must Be less than Wakeup Interval Time.
       </Help>
     </Value>
