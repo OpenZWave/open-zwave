@@ -55,6 +55,7 @@ namespace OpenZWave
 		friend class NoOperation;
 		friend class SceneActivation;
 		friend class WakeUp;
+		friend class ManufacturerSpecificDB;
 		/* allow us to Stream a Notification */
 		//friend std::ostream &operator<<(std::ostream &os, const Notification &dt);
 
@@ -129,7 +130,9 @@ namespace OpenZWave
 			Alert_None,						/**< No Alert Currently Present */
 			Alert_ConfigOutOfDate,			/**< One of the Config Files is out of date. Use GetNodeId to determine which node is affected. */
 			Alert_MFSOutOfDate,				/**< the manufacturer_specific.xml file is out of date. */
-			Alert_ConfigFileDownloadFailed  /**< A Config File failed to download */
+			Alert_ConfigFileDownloadFailed, /**< A Config File failed to download */
+			Alert_DNSError,					/**< A error occurred performing a DNS Lookup */
+			Alert_NodeReloadReqired			/**< A new Config file has been discovered for this node, and its pending a Reload to Take Effect */
 		};
 
 		/**

@@ -2396,6 +2396,78 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		string GetMetaData( uint32 const _homeId, uint8 const _nodeId, Node::MetaDataFields _metadata );
 
 	/*@}*/
+		//-----------------------------------------------------------------------------
+		// Config File Revision interface
+		//-----------------------------------------------------------------------------
+		/** \name Config File Revision Methods
+		 *  These commands deal with checking/updating Config File's from the OZW master repository
+		 */
+		/*@{*/
+		public:
+			/**
+			 * \brief Check the Latest Revision of the Config File for this device
+			 *
+			 * and optionally update the local database with the latest version
+			 * Config Revisions are exposed on the ManufacturerSpecific CC. (both the latest and loaded version)
+			 *
+			 * Outdated Config Revisions are signaled via Notifications
+			 *
+			 * \param _homeId The Home ID of the driver for the node
+			 * \param _nodeId The node number
+			 * \param _update if the latest version should be downloaded.
+			 * \return Success/Failure of submitting the request.
+			 */
+			bool checkLatestConfigFileRevision(uint32 const _homeId, uint8 const _nodeId, bool _update);
+
+			/**
+			 * \brief Check the Latest Revision of the Manufacturer_Specific.xml file
+			 *
+			 * and optionally update to the latest version.
+			 *
+			 * Outdated Config Revisions are signaled via Notifications
+			 *
+			 * \param _homeId The Home ID of the driver for the node
+			 * \param _update if the latest version should be downloaded.
+			 * \return Success/Failure of submitting the request.
+			 */
+			bool checkLatestMFSRevision(uint32 const _homeId, bool _update);
+
+			/**
+			 * \brief Download the latest Config File Revision
+			 *
+			 * The Node will be reloaded depending upon the Option "ReloadAfterUpdate"
+			 * Valid Options include:
+			 * * Never - Never Reload a Node after updating the Config File. Manual Reload is Required.
+			 * * Immediate - Reload the Node Immediately after downloading the latest revision
+			 * * Awake - Reload Nodes only when they are awake (Always-On Nodes will reload immediately, Sleeping Nodes will reload
+			 * 			 when they wake up
+			 *
+			 * Errors are signaled via Notifications
+			 *
+			 * \param _homeId The Home ID of the driver for the node
+			 * \param _nodeId The Node ID of the Node to update the Config File for
+			 * \return Success/Failure of submitting the request.
+			 */
+			bool downloadLatestConfigFileRevision(uint32 const _homeId, uint8 const _nodeId);
+
+			/**
+			 * \brief Download the latest Config File Revision
+			 *
+			 * The ManufacturerSpecific File will be updated, and any new Config Files will also be downloaded.
+			 * Existing Config Files will not be checked/updated.
+			 *
+			 * Errors are signaled via Notifications
+			 *
+			 * \param _homeId The Home ID of the driver for the node
+			 * \return Success/Failure of submitting the request.
+			 */
+			bool downloadLatestMFSRevision(uint32 const _homeId);
+
+		/*@}*/
+
+
+
+
 	};
 	/*@}*/
 } // namespace OpenZWave

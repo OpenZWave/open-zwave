@@ -240,6 +240,14 @@ string Notification::GetAsString() const {
 					case Alert_ConfigFileDownloadFailed:
 						str = "A Config File Failed to download";
 						break;
+					case Alert_DNSError:
+						str = "A DNS Error Occurred";
+						break;
+					case Alert_NodeReloadReqired:
+						str = "Node Reload Is Required due to new Config File";
+						break;
+
+
 				}
 				break;
 			case Type_ManufacturerSpecificDBReady:

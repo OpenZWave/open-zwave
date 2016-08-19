@@ -34,7 +34,7 @@
 #include "platform/Log.h"
 #include "platform/FileOps.h"
 #include "platform/Mutex.h"
-
+#include "Notification.h"
 #include "Utils.h"
 
 using namespace OpenZWave;
@@ -70,6 +70,8 @@ ManufacturerSpecificDB::ManufacturerSpecificDB
 (
 ):
 m_MfsMutex(new Mutex()),
+m_revision(0),
+m_latestRevision(0),
 m_initializing(true)
 {
 	// Ensure the singleton instance is set
@@ -280,10 +282,14 @@ void ManufacturerSpecificDB::checkConfigFiles
 			if (iter == m_downloading.end() && !FileOps::Create()->FileExists(path)) {
 				Log::Write( LogLevel_Warning, "Config File for %s does not exist - %s", c->GetProductName().c_str(), path.c_str());
 				/* try to download it */
-				if (driver->startConfigDownload(c->GetManufacturerId(), c->GetProductType(), c->GetProductId(), path))
+				if (driver->startConfigDownload(c->GetManufacturerId(), c->GetProductType(), c->GetProductId(), path)) {
 					m_downloading.push_back(path);
-				else
+				} else {
 					Log::Write(LogLevel_Warning, "Can't download file %s", path.c_str());
+					Notification* notification = new Notification( Notification::Type_UserAlerts );
+					notification->SetUserAlertNofification(Notification::Alert_ConfigFileDownloadFailed);
+					driver->QueueNotification( notification );
+				}
 			} else if (iter != m_downloading.end()) {
 				Log::Write(LogLevel_Debug, "Config file for %s already queued", c->GetProductName().c_str());
 			}
@@ -381,37 +387,50 @@ ProductDescriptor *ManufacturerSpecificDB::getProduct
 	return NULL;
 }
 
-void ManufacturerSpecificDB::updateConfigFile
+bool ManufacturerSpecificDB::updateConfigFile
 (
 		Driver *driver,
 		Node *node
 )
 {
 	string configPath;
+	bool ret = false;
 	Options::Get()->GetOptionAsString( "ConfigPath", &configPath );
 	string path = configPath + node->getConfigPath();
 
-	if (driver->startConfigDownload(node->GetManufacturerId(), node->GetProductType(), node->GetProductId(), path, node->GetNodeId()))
+	if (driver->startConfigDownload(node->GetManufacturerId(), node->GetProductType(), node->GetProductId(), path, node->GetNodeId())) {
 		m_downloading.push_back(path);
-	else
+		ret = true;
+	} else {
 		Log::Write(LogLevel_Warning, "Can't download Config file %s", node->getConfigPath().c_str());
-
+		Notification* notification = new Notification( Notification::Type_UserAlerts );
+		notification->SetUserAlertNofification(Notification::Alert_ConfigFileDownloadFailed);
+		driver->QueueNotification( notification );
+	}
 	checkInitialized();
+	return ret;
 }
-void ManufacturerSpecificDB::updateMFSConfigFile
+bool ManufacturerSpecificDB::updateMFSConfigFile
 (
 	Driver *driver
 )
 {
+	bool ret = false;
 	string configPath;
 	Options::Get()->GetOptionAsString( "ConfigPath", &configPath );
 	string path = configPath + "manufacturer_specific.xml";
 
-	if (driver->startMFSDownload(path))
+	if (driver->startMFSDownload(path)) {
 		m_downloading.push_back(path);
-	else
+		ret = true;
+	} else {
 		Log::Write(LogLevel_Warning, "Can't download ManufacturerSpecifix.xml Config file");
+		Notification* notification = new Notification( Notification::Type_UserAlerts );
+		notification->SetUserAlertNofification(Notification::Alert_ConfigFileDownloadFailed);
+		driver->QueueNotification( notification );
+	}
 
 	checkInitialized();
+	return ret;
 }
 

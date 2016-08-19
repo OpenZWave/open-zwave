@@ -446,11 +446,12 @@ namespace OpenZWave
 			void checkConfigRevision( bool force = false );
 			uint32 getConfigRevision() { return m_ConfigRevision; };
 			void setLatestConfigRevision(uint32 rev);
-
+			uint32 getLatestConfigRevision();
 			ProductDescriptor *m_Product;
 
 
 			uint32 m_ConfigRevision;
+			uint32 m_LatestConfigRevision;
 			//-----------------------------------------------------------------------------
 			// Basic commands (helpers that go through the basic command class)
 			//-----------------------------------------------------------------------------

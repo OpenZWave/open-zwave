@@ -47,11 +47,18 @@ namespace OpenZWave
 	class Thread;
 
 
+	enum LookupType {
+		DNS_Lookup_ConfigRevision = 1
+	};
+
 	struct DNSLookup {
 			uint8 NodeID;
 			string lookup;
 			string result;
 			DNSError status;
+			bool nextAction;
+			LookupType type;
+
 	};
 
 

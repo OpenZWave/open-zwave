@@ -82,6 +82,7 @@ namespace OpenZWave
 		friend class WakeUp;
 		friend class Security;
 		friend class Msg;
+		friend class ManufacturerSpecificDB;
 
 	//-----------------------------------------------------------------------------
 	//	Controller Interfaces
@@ -656,7 +657,8 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		{
 			MsgQueueCmd_SendMsg = 0,
 			MsgQueueCmd_QueryStageComplete,
-			MsgQueueCmd_Controller
+			MsgQueueCmd_Controller,
+			MsgQueueCmd_ReloadNode
 		};
 
 		class MsgQueueItem
@@ -686,6 +688,11 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 					{
 						return( (_other.m_cci->m_controllerCommand == m_cci->m_controllerCommand) && (_other.m_cci->m_controllerCallback == m_cci->m_controllerCallback) );
 					}
+					else if (m_command == MsgQueueCmd_ReloadNode )
+					{
+						return (_other.m_nodeId == m_nodeId);
+					}
+
 				}
 
 				return false;
@@ -887,8 +894,10 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 	//-----------------------------------------------------------------------------
 
 	public:
-		bool CheckNodeConfigRevision(Node *);
-		bool CheckMFSConfigRevision();
+		bool CheckNodeConfigRevision(Node *, bool downloadUpdate = true);
+		bool CheckMFSConfigRevision(bool downloadUpdate = true);
+		void ReloadNode(uint8 const _nodeId);
+
 	private:
 		void processConfigRevision(DNSLookup *);
 
@@ -898,11 +907,10 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 
 	public:
 		bool setHttpClient(i_HttpClient *client);
-		//bool startDownload(string url);
+	private:
 		bool startConfigDownload(uint16 _manufacturerId, uint16 _productType, uint16 _productId, string configfile, uint8 node = 0);
 		bool startMFSDownload(string configfile);
 		bool refreshNodeConfig(uint8 node);
-	private:
 		void processDownload(HttpDownload *);
 		i_HttpClient *m_httpClient;
 
@@ -919,11 +927,10 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 
 	public:
 		ManufacturerSpecificDB *GetManufacturerSpecificDB();
-		int32 getCacheRevision();
+		bool downloadConfigRevision(Node *);
+		bool downloadMFSRevision();
 	private:
 		ManufacturerSpecificDB *m_mfs;
-		int32 m_cacherevision;
-
 
 	};
 

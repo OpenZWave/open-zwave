@@ -4765,3 +4765,81 @@ string Manager::GetMetaData
 	return "";
 }
 
+//-----------------------------------------------------------------------------
+// <Manager::checkLatestConfigFileRevision>
+// get the latest config file revision
+//-----------------------------------------------------------------------------
+bool Manager::checkLatestConfigFileRevision
+(
+	uint32 const _homeId,
+	uint8 const _nodeId,
+	bool _update
+)
+{
+	if (Driver *driver = GetDriver( _homeId ) )
+	{
+		LockGuard LG(driver->m_nodeMutex);
+		Node* node = driver->GetNode( _nodeId );
+		if( node )
+		{
+			return driver->CheckNodeConfigRevision(node, _update);
+		}
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::checkLatestMFSRevision>
+// get the latest ManufacturerSpecific.xml file revision
+//-----------------------------------------------------------------------------
+bool Manager::checkLatestMFSRevision
+(
+	uint32 const _homeId,
+	bool _update
+)
+{
+	if (Driver *driver = GetDriver( _homeId ) )
+	{
+		return driver->CheckMFSConfigRevision(_update);
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::downloadLatestConfigFileRevision>
+// Download the latest Config File Revision for a node.
+//-----------------------------------------------------------------------------
+bool Manager::downloadLatestConfigFileRevision
+(
+	uint32 const _homeId,
+	uint8 const _nodeId
+)
+{
+	if (Driver *driver = GetDriver( _homeId ) )
+	{
+		LockGuard LG(driver->m_nodeMutex);
+		Node* node = driver->GetNode( _nodeId );
+		if( node )
+		{
+			return driver->downloadConfigRevision(node);
+		}
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::downloadLatestMFSRevision>
+// Download the Latest ManufacturerSpecific Revision
+//-----------------------------------------------------------------------------
+bool Manager::downloadLatestMFSRevision
+(
+	uint32 const _homeId
+)
+{
+	if (Driver *driver = GetDriver( _homeId ) )
+	{
+		return driver->downloadMFSRevision();
+	}
+	return false;
+}
+

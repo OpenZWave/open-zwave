@@ -108,13 +108,15 @@ namespace OpenZWave
 
 		bool LoadProductXML();
 		void UnloadProductXML();
-		uint8 GetRevision() { return m_revision;}
+		uint32 getRevision() { return m_revision;}
+		uint32 getLatestRevision() { return m_latestRevision;};
+		void setLatestRevision(uint32 rev) { m_latestRevision = rev;};
 		void checkConfigFiles(Driver *);
 		void configDownloaded(Driver *, string file, uint8 node, bool success = true);
 		void mfsConfigDownloaded(Driver *, string file, bool success = true);
 		bool isReady();
-		void updateConfigFile(Driver *, Node *);
-		void updateMFSConfigFile(Driver *);
+		bool updateConfigFile(Driver *, Node *);
+		bool updateMFSConfigFile(Driver *);
 		void checkInitialized();
 
 	private:
@@ -135,7 +137,8 @@ private:
 		static bool					s_bXmlLoaded;
 
 		list<string> m_downloading;
-		uint8 m_revision;
+		uint32 m_revision;
+		uint32 m_latestRevision;
 		bool m_initializing;
 
 	};

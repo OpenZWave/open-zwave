@@ -139,7 +139,6 @@ void DNSThread::processResult
 	this->m_driver->SubmitEventMsg(event);
 
 
-//	this->m_driver->processConfigRevision(lookup);
 }
 
 

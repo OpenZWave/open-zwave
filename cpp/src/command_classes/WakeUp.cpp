@@ -424,7 +424,7 @@ void WakeUp::SendPending
 )
 {
 	m_awake = true;
-
+	bool reloading = false;
 	m_mutex->Lock();
 	list<Driver::MsgQueueItem>::iterator it = m_pendingQueue.begin();
 	while( it != m_pendingQueue.end() )
@@ -437,10 +437,16 @@ void WakeUp::SendPending
 		else if( Driver::MsgQueueCmd_QueryStageComplete == item.m_command )
 		{
 			GetDriver()->SendQueryStageComplete( item.m_nodeId, item.m_queryStage );
-		} else if( Driver::MsgQueueCmd_Controller == item.m_command )
+		}
+		else if( Driver::MsgQueueCmd_Controller == item.m_command )
 		{
 			GetDriver()->BeginControllerCommand( item.m_cci->m_controllerCommand, item.m_cci->m_controllerCallback, item.m_cci->m_controllerCallbackContext, item.m_cci->m_highPower, item.m_cci->m_controllerCommandNode, item.m_cci->m_controllerCommandArg );
 			delete item.m_cci;
+		}
+		else if ( Driver::MsgQueueCmd_ReloadNode == item.m_command )
+		{
+			GetDriver()->ReloadNode(item.m_nodeId);
+			reloading = true;
 		}
 		it = m_pendingQueue.erase( it );
 	}
@@ -458,7 +464,8 @@ void WakeUp::SendPending
 		}
 	}
 
-	if( sendToSleep )
+	/* if we are reloading, the QueryStage_Complete will take care of sending the device back to sleep */
+	if( sendToSleep && !reloading)
 	{
 		Msg* msg = new Msg( "WakeUpCmd_NoMoreInformation", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 		msg->Append( GetNodeId() );

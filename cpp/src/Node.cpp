@@ -3598,12 +3598,17 @@ void Node::checkConfigRevision
 	bool force
 )
 {
-	if ((force) || (this->m_ConfigRevision != 0))
-		this->GetDriver()->CheckNodeConfigRevision(this);
-
+	if ((force) || (m_ConfigRevision != 0)) {
+	    bool update = false;
+	    Options::Get()->GetOptionAsBool("AutoUpdateConfigFile", &update);
+		GetDriver()->CheckNodeConfigRevision(this, update);
+	}
 }
 
-
+//-----------------------------------------------------------------------------
+// <Node::SetProductDetails>
+// Assign a ProductDetails class to this node
+//-----------------------------------------------------------------------------
 void Node::SetProductDetails
 (
 	ProductDescriptor *product
@@ -3617,24 +3622,44 @@ void Node::SetProductDetails
 	m_Product->AddRef();
 }
 
+//-----------------------------------------------------------------------------
+// <Node::getConfigPath>
+// get the Path to the configFile for this device.
+//-----------------------------------------------------------------------------
 string Node::getConfigPath
 (
 )
 {
-	return this->m_Product->GetConfigPath();
+	return m_Product->GetConfigPath();
 
 }
 
+//-----------------------------------------------------------------------------
+// <Node::setLatestConfigRevisionn>
+// Set Latest Config File Revision
+//-----------------------------------------------------------------------------
 void Node::setLatestConfigRevision
 (
 	uint32 rev
 )
 {
+	m_LatestConfigRevision = rev;
 	ManufacturerSpecific* cc = static_cast<ManufacturerSpecific*>( GetCommandClass( ManufacturerSpecific::StaticGetCommandClassId() ) );
 	if( cc  )
 	{
 		cc->setLatestRevision(rev);
 	}
+}
+
+//-----------------------------------------------------------------------------
+// <Node::getLatestConfigRevision>
+// Get Latest Config File Revision
+//-----------------------------------------------------------------------------
+uint32 Node::getLatestConfigRevision
+(
+)
+{
+	return m_LatestConfigRevision;
 }
 
 
@@ -3650,6 +3675,10 @@ string const Node::GetMetaData(MetaDataFields field) {
 	return string();
 }
 
+//-----------------------------------------------------------------------------
+// <Node::GetMetaDataId>
+// Translate the MetaData String to a ID
+//-----------------------------------------------------------------------------
 Node::MetaDataFields const Node::GetMetaDataId(string name) {
 	if (name == "OzwInfoPage") return MetaData_OzwInfoPage;
 	if (name == "ZWProductPage") return MetaData_ZWProductPage;
@@ -3659,6 +3688,10 @@ Node::MetaDataFields const Node::GetMetaDataId(string name) {
 	if (name == "ProductPage") return MetaData_ProductPage;
 	return MetaData_Invalid;
 }
+//-----------------------------------------------------------------------------
+// <Node::GetMetaDataString(>
+// Translate the MetaDataID to a String
+//-----------------------------------------------------------------------------
 string const Node::GetMetaDataString(Node::MetaDataFields id) {
 	switch (id) {
 	case MetaData_OzwInfoPage:
@@ -3679,8 +3712,10 @@ string const Node::GetMetaDataString(Node::MetaDataFields id) {
 	return "";
 }
 
-
-
+//-----------------------------------------------------------------------------
+// <Node::ReadMetaDataFromXML(>
+// Read the MetaData from the Config File
+//-----------------------------------------------------------------------------
 void Node::ReadMetaDataFromXML(TiXmlElement const* _valueElement) {
 	TiXmlElement const* ccElement = _valueElement->FirstChildElement();
 		while( ccElement )
@@ -3706,7 +3741,10 @@ void Node::ReadMetaDataFromXML(TiXmlElement const* _valueElement) {
 		}
 		GetDriver()->WriteConfig();
 }
-
+//-----------------------------------------------------------------------------
+// <Node::WriteMetaDataXML>
+// Write the MetaData to the Cache File
+//-----------------------------------------------------------------------------
 void Node::WriteMetaDataXML(TiXmlElement *mdElement) {
 	// Write out the MetaDataItems
 	for( map<MetaDataFields, string>::iterator it = m_metadata.begin(); it != m_metadata.end(); ++ it )

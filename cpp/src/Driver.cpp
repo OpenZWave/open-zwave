@@ -211,9 +211,7 @@ m_broadcastWriteCnt( 0 ),
 m_nonceReportSent( 0 ),
 m_nonceReportSentAttempt( 0 ),
 m_queueMsgEvent (new Event() ),
-m_eventMutex (new Mutex() ),
-m_cacherevision ( 0 )
-
+m_eventMutex (new Mutex() )
 {
 	// set a timestamp to indicate when this driver started
 	TimeStamp m_startTime;
@@ -248,12 +246,14 @@ m_cacherevision ( 0 )
 	Options::Get()->GetOptionAsInt( "PollInterval", &m_pollInterval );
 	Options::Get()->GetOptionAsBool( "IntervalBetweenPolls", &m_bIntervalBetweenPolls );
 
-    m_httpClient = new HttpClient(this);
+	m_httpClient = new HttpClient(this);
 
 	m_mfs = ManufacturerSpecificDB::Create();
-	CheckMFSConfigRevision();
 
-//    this->startDownload("http://www.dynam.ac/");
+    bool update = false;
+    Options::Get()->GetOptionAsBool("AutoUpdateConfigFile", &update);
+	CheckMFSConfigRevision(update);
+
 }
 
 //-----------------------------------------------------------------------------
@@ -452,8 +452,8 @@ void Driver::DriverThreadProc
 				if (mfsisReady == false) {
 					count=3;
 
-				// If we're waiting for a message to complete, we can only
-				// handle incoming data, notifications, DNS/HTTP  and exit events.
+					// If we're waiting for a message to complete, we can only
+					// handle incoming data, notifications, DNS/HTTP  and exit events.
 				} else if( m_waitingForAck || m_expectedCallbackId || m_expectedReply )
 				{
 					count = 4;
@@ -477,59 +477,59 @@ void Driver::DriverThreadProc
 
 				switch( res )
 				{
-					case -1:
+				case -1:
+				{
+					// Wait has timed out - time to resend
+					if( m_currentMsg != NULL )
 					{
-						// Wait has timed out - time to resend
-						if( m_currentMsg != NULL )
-						{
-							Notification* notification = new Notification( Notification::Type_Notification );
-							notification->SetHomeAndNodeIds( m_homeId, m_currentMsg->GetTargetNodeId() );
-							notification->SetNotification( Notification::Code_Timeout );
-							QueueNotification( notification );
-						}
-						if( WriteMsg( "Wait Timeout" ) )
-						{
-							retryTimeStamp.SetTime( retryTimeout );
-						}
-						break;
+						Notification* notification = new Notification( Notification::Type_Notification );
+						notification->SetHomeAndNodeIds( m_homeId, m_currentMsg->GetTargetNodeId() );
+						notification->SetNotification( Notification::Code_Timeout );
+						QueueNotification( notification );
 					}
-					case 0:
+					if( WriteMsg( "Wait Timeout" ) )
 					{
-						// Exit has been signalled
-						return;
+						retryTimeStamp.SetTime( retryTimeout );
 					}
-					case 1:
+					break;
+				}
+				case 0:
+				{
+					// Exit has been signalled
+					return;
+				}
+				case 1:
+				{
+					// Notifications are waiting to be sent
+					NotifyWatchers();
+					break;
+				}
+				case 2:
+				{
+					// a DNS or HTTP Event has occurred
+					ProcessEventMsg();
+					if (mfsisReady == false && m_mfs->isReady()) {
+						Notification* notification = new Notification( Notification::Type_ManufacturerSpecificDBReady );
+						QueueNotification( notification );
+						mfsisReady = true;
+					}
+					break;
+				}
+				case 3:
+				{
+					// Data has been received
+					ReadMsg();
+					break;
+				}
+				default:
+				{
+					// All the other events are sending message queue items
+					if( WriteNextMsg( (MsgQueue)(res-4) ) )
 					{
-						// Notifications are waiting to be sent
-						NotifyWatchers();
-						break;
+						retryTimeStamp.SetTime( retryTimeout );
 					}
-					case 2:
-					{
-						// a DNS or HTTP Event has occurred
-						ProcessEventMsg();
-						if (mfsisReady == false && m_mfs->isReady()) {
-							Notification* notification = new Notification( Notification::Type_ManufacturerSpecificDBReady );
-							QueueNotification( notification );
-							mfsisReady = true;
-						}
-						break;
-					}
-					case 3:
-					{
-						// Data has been received
-						ReadMsg();
-						break;
-					}
-					default:
-					{
-						// All the other events are sending message queue items
-						if( WriteNextMsg( (MsgQueue)(res-4) ) )
-						{
-							retryTimeStamp.SetTime( retryTimeout );
-						}
-						break;
-					}
+					break;
+				}
 				}
 			}
 		}
@@ -654,6 +654,10 @@ void Driver::RemoveQueues
 				delete item.m_cci;
 				remove = true;
 			}
+			else if (MsgQueueCmd_ReloadNode == item.m_command && _nodeId == item.m_nodeId)
+			{
+				remove = true;
+			}
 			if( remove )
 			{
 				it = m_msgQueue[i].erase( it );
@@ -710,7 +714,7 @@ bool Driver::ReadConfig
 	// Capabilities
 	if( TIXML_SUCCESS == driverElement->QueryIntAttribute( "revision", &intVal ) )
 	{
-		m_cacherevision = intVal;
+		m_mfs->setLatestRevision(intVal);
 	}
 
 
@@ -846,7 +850,7 @@ void Driver::WriteConfig
 	snprintf( str, sizeof(str), "%d", c_configVersion );
 	driverElement->SetAttribute( "version", str );
 
-	snprintf( str, sizeof(str), "%d", GetManufacturerSpecificDB()->GetRevision());
+	snprintf( str, sizeof(str), "%d", GetManufacturerSpecificDB()->getRevision());
 	driverElement->SetAttribute( "revision", str);
 
 	snprintf( str, sizeof(str), "0x%.8x", m_homeId );
@@ -1100,8 +1104,7 @@ bool Driver::WriteNextMsg
 		m_sendMutex->Unlock();
 		return WriteMsg( "WriteNextMsg" );
 	}
-
-	if( MsgQueueCmd_QueryStageComplete == item.m_command )
+	else if( MsgQueueCmd_QueryStageComplete == item.m_command )
 	{
 		// Move to the next query stage
 		m_currentMsg = NULL;
@@ -1125,8 +1128,7 @@ bool Driver::WriteNextMsg
 			return true;
 		}
 	}
-
-	if( MsgQueueCmd_Controller == item.m_command )
+	else if( MsgQueueCmd_Controller == item.m_command )
 	{
 		// Run a multi-step controller command
 		m_currentControllerCommand = item.m_cci;
@@ -1169,6 +1171,20 @@ bool Driver::WriteNextMsg
 			m_queueEvent[_queue]->Reset();
 			m_sendMutex->Unlock();
 		}
+		return true;
+	}
+	else if (MsgQueueCmd_ReloadNode == item.m_command)
+	{
+		m_msgQueue[_queue].pop_front();
+		if( m_msgQueue[_queue].empty() )
+		{
+			m_queueEvent[_queue]->Reset();
+		}
+		m_sendMutex->Unlock();
+
+		Log::Write(LogLevel_Info, item.m_nodeId, "Refreshing Node Info after new Config File loaded");
+		/* this will reload the Node, ignoring any cache that exists etc */
+		InitNode(item.m_nodeId);
 		return true;
 	}
 
@@ -1695,150 +1711,150 @@ bool Driver::ReadMsg
 
 	switch( buffer[0] )
 	{
-		case SOF:
+	case SOF:
+	{
+		m_SOFCnt++;
+		if( m_waitingForAck )
 		{
-			m_SOFCnt++;
-			if( m_waitingForAck )
-			{
-				// This can happen on any normal network when a transmission overlaps an unexpected
-				// reception and the data in the buffer doesn't contain the ACK. The controller will
-				// notice and send us a CAN to retransmit.
-				Log::Write( LogLevel_Detail, "Unsolicited message received while waiting for ACK." );
-				m_ACKWaiting++;
-			}
+			// This can happen on any normal network when a transmission overlaps an unexpected
+			// reception and the data in the buffer doesn't contain the ACK. The controller will
+			// notice and send us a CAN to retransmit.
+			Log::Write( LogLevel_Detail, "Unsolicited message received while waiting for ACK." );
+			m_ACKWaiting++;
+		}
 
-			// Read the length byte.  Keep trying until we get it.
+		// Read the length byte.  Keep trying until we get it.
+		m_controller->SetSignalThreshold( 1 );
+		int32 response = Wait::Single( m_controller, 50 );
+		if( response < 0 )
+		{
+			Log::Write( LogLevel_Warning, "WARNING: 50ms passed without finding the length byte...aborting frame read");
+			m_readAborts++;
+			break;
+		}
+
+		m_controller->Read( &buffer[1], 1 );
+		m_controller->SetSignalThreshold( buffer[1] );
+		if( Wait::Single( m_controller, 500 ) < 0 )
+		{
+			Log::Write( LogLevel_Warning, "WARNING: 500ms passed without reading the rest of the frame...aborting frame read" );
+			m_readAborts++;
 			m_controller->SetSignalThreshold( 1 );
-			int32 response = Wait::Single( m_controller, 50 );
-			if( response < 0 )
-			{
-				Log::Write( LogLevel_Warning, "WARNING: 50ms passed without finding the length byte...aborting frame read");
-				m_readAborts++;
-				break;
-			}
-
-			m_controller->Read( &buffer[1], 1 );
-			m_controller->SetSignalThreshold( buffer[1] );
-			if( Wait::Single( m_controller, 500 ) < 0 )
-			{
-				Log::Write( LogLevel_Warning, "WARNING: 500ms passed without reading the rest of the frame...aborting frame read" );
-				m_readAborts++;
-				m_controller->SetSignalThreshold( 1 );
-				break;
-			}
-
-			m_controller->Read( &buffer[2], buffer[1] );
-			m_controller->SetSignalThreshold( 1 );
-
-			uint32 length = buffer[1] + 2;
-
-			// Log the data
-			string str = "";
-			for( uint32 i=0; i<length; ++i )
-			{
-				if( i )
-				{
-					str += ", ";
-				}
-
-				char byteStr[8];
-				snprintf( byteStr, sizeof(byteStr), "0x%.2x", buffer[i] );
-				str += byteStr;
-			}
-			uint8 nodeId = NodeFromMessage( buffer );
-			if( nodeId == 0 )
-			{
-				nodeId = GetNodeNumber( m_currentMsg );
-			}
-			Log::Write( LogLevel_Detail, nodeId, "  Received: %s", str.c_str() );
-
-			// Verify checksum
-			uint8 checksum = 0xff;
-			for( uint32 i=1; i<(length-1); ++i )
-			{
-				checksum ^= buffer[i];
-			}
-
-			if( buffer[length-1] == checksum )
-			{
-				// Checksum correct - send ACK
-				uint8 ack = ACK;
-				m_controller->Write( &ack, 1 );
-				m_readCnt++;
-
-				// Process the received message
-				ProcessMsg( &buffer[2] );
-			}
-			else
-			{
-				Log::Write( LogLevel_Warning, nodeId, "WARNING: Checksum incorrect - sending NAK" );
-				m_badChecksum++;
-				uint8 nak = NAK;
-				m_controller->Write( &nak, 1 );
-				m_controller->Purge();
-			}
 			break;
 		}
 
-		case CAN:
+		m_controller->Read( &buffer[2], buffer[1] );
+		m_controller->SetSignalThreshold( 1 );
+
+		uint32 length = buffer[1] + 2;
+
+		// Log the data
+		string str = "";
+		for( uint32 i=0; i<length; ++i )
 		{
-			// This is the other side of an unsolicited ACK. As mentioned there if we receive a message
-			// just after we transmitted one, the controller will notice and tell us to retransmit here.
-			// Don't increment the transmission counter as it is possible the message will never get out
-			// on very busy networks with lots of unsolicited messages being received. Increase the amount
-			// of retries but only up to a limit so we don't stay here forever.
-			Log::Write( LogLevel_Detail, GetNodeNumber( m_currentMsg ), "CAN received...triggering resend" );
-			m_CANCnt++;
-			if( m_currentMsg != NULL )
+			if( i )
 			{
-				m_currentMsg->SetMaxSendAttempts( m_currentMsg->GetMaxSendAttempts() + 1 );
+				str += ", ";
 			}
-			else
-			{
-				Log::Write( LogLevel_Warning, "m_currentMsg was NULL when trying to set MaxSendAttempts" );
-				Log::QueueDump();
-			}
-			WriteMsg( "CAN" );
-			break;
+
+			char byteStr[8];
+			snprintf( byteStr, sizeof(byteStr), "0x%.2x", buffer[i] );
+			str += byteStr;
+		}
+		uint8 nodeId = NodeFromMessage( buffer );
+		if( nodeId == 0 )
+		{
+			nodeId = GetNodeNumber( m_currentMsg );
+		}
+		Log::Write( LogLevel_Detail, nodeId, "  Received: %s", str.c_str() );
+
+		// Verify checksum
+		uint8 checksum = 0xff;
+		for( uint32 i=1; i<(length-1); ++i )
+		{
+			checksum ^= buffer[i];
 		}
 
-		case NAK:
+		if( buffer[length-1] == checksum )
 		{
-			Log::Write( LogLevel_Warning, GetNodeNumber( m_currentMsg ), "WARNING: NAK received...triggering resend" );
-			m_NAKCnt++;
-			WriteMsg( "NAK" );
-			break;
-		}
+			// Checksum correct - send ACK
+			uint8 ack = ACK;
+			m_controller->Write( &ack, 1 );
+			m_readCnt++;
 
-		case ACK:
-		{
-			m_ACKCnt++;
-			m_waitingForAck = false;
-			if( m_currentMsg == NULL )
-			{
-				Log::Write( LogLevel_StreamDetail, 255, "  ACK received" );
-			}
-			else
-			{
-				Log::Write( LogLevel_StreamDetail, GetNodeNumber( m_currentMsg ), "  ACK received CallbackId 0x%.2x Reply 0x%.2x", m_expectedCallbackId, m_expectedReply );
-				if( ( 0 == m_expectedCallbackId ) && ( 0 == m_expectedReply ) )
-				{
-					// Remove the message from the queue, now that it has been acknowledged.
-					RemoveCurrentMsg();
-				}
-			}
-			break;
+			// Process the received message
+			ProcessMsg( &buffer[2] );
 		}
-
-		default:
+		else
 		{
-			Log::Write( LogLevel_Warning, "WARNING: Out of frame flow! (0x%.2x).  Sending NAK.", buffer[0] );
-			m_OOFCnt++;
+			Log::Write( LogLevel_Warning, nodeId, "WARNING: Checksum incorrect - sending NAK" );
+			m_badChecksum++;
 			uint8 nak = NAK;
 			m_controller->Write( &nak, 1 );
 			m_controller->Purge();
-			break;
 		}
+		break;
+	}
+
+	case CAN:
+	{
+		// This is the other side of an unsolicited ACK. As mentioned there if we receive a message
+		// just after we transmitted one, the controller will notice and tell us to retransmit here.
+		// Don't increment the transmission counter as it is possible the message will never get out
+		// on very busy networks with lots of unsolicited messages being received. Increase the amount
+		// of retries but only up to a limit so we don't stay here forever.
+		Log::Write( LogLevel_Detail, GetNodeNumber( m_currentMsg ), "CAN received...triggering resend" );
+		m_CANCnt++;
+		if( m_currentMsg != NULL )
+		{
+			m_currentMsg->SetMaxSendAttempts( m_currentMsg->GetMaxSendAttempts() + 1 );
+		}
+		else
+		{
+			Log::Write( LogLevel_Warning, "m_currentMsg was NULL when trying to set MaxSendAttempts" );
+			Log::QueueDump();
+		}
+		WriteMsg( "CAN" );
+		break;
+	}
+
+	case NAK:
+	{
+		Log::Write( LogLevel_Warning, GetNodeNumber( m_currentMsg ), "WARNING: NAK received...triggering resend" );
+		m_NAKCnt++;
+		WriteMsg( "NAK" );
+		break;
+	}
+
+	case ACK:
+	{
+		m_ACKCnt++;
+		m_waitingForAck = false;
+		if( m_currentMsg == NULL )
+		{
+			Log::Write( LogLevel_StreamDetail, 255, "  ACK received" );
+		}
+		else
+		{
+			Log::Write( LogLevel_StreamDetail, GetNodeNumber( m_currentMsg ), "  ACK received CallbackId 0x%.2x Reply 0x%.2x", m_expectedCallbackId, m_expectedReply );
+			if( ( 0 == m_expectedCallbackId ) && ( 0 == m_expectedReply ) )
+			{
+				// Remove the message from the queue, now that it has been acknowledged.
+				RemoveCurrentMsg();
+			}
+		}
+		break;
+	}
+
+	default:
+	{
+		Log::Write( LogLevel_Warning, "WARNING: Out of frame flow! (0x%.2x).  Sending NAK.", buffer[0] );
+		m_OOFCnt++;
+		uint8 nak = NAK;
+		m_controller->Write( &nak, 1 );
+		m_controller->Purge();
+		break;
+	}
 	}
 
 	return true;
@@ -1960,375 +1976,375 @@ void Driver::ProcessMsg
 	{
 		switch( _data[1] )
 		{
-			case FUNC_ID_SERIAL_API_GET_INIT_DATA:
+		case FUNC_ID_SERIAL_API_GET_INIT_DATA:
+		{
+			Log::Write( LogLevel_Detail, "" );
+			HandleSerialAPIGetInitDataResponse( _data );
+			break;
+		}
+		case FUNC_ID_ZW_GET_CONTROLLER_CAPABILITIES:
+		{
+			Log::Write( LogLevel_Detail, "" );
+			HandleGetControllerCapabilitiesResponse( _data );
+			break;
+		}
+		case FUNC_ID_SERIAL_API_GET_CAPABILITIES:
+		{
+			Log::Write( LogLevel_Detail, "" );
+			HandleGetSerialAPICapabilitiesResponse( _data );
+			break;
+		}
+		case FUNC_ID_SERIAL_API_SOFT_RESET:
+		{
+			Log::Write( LogLevel_Detail, "" );
+			HandleSerialAPISoftResetResponse( _data );
+			break;
+		}
+		case FUNC_ID_ZW_SEND_DATA:
+		{
+			HandleSendDataResponse( _data, false );
+			handleCallback = false;			// Skip the callback handling - a subsequent FUNC_ID_ZW_SEND_DATA request will deal with that
+			break;
+		}
+		case FUNC_ID_ZW_GET_VERSION:
+		{
+			Log::Write( LogLevel_Detail, "" );
+			HandleGetVersionResponse( _data );
+			break;
+		}
+		case FUNC_ID_ZW_GET_RANDOM:
+		{
+			Log::Write( LogLevel_Detail, "" );
+			HandleGetRandomResponse( _data );
+			break;
+		}
+		case FUNC_ID_ZW_MEMORY_GET_ID:
+		{
+			Log::Write( LogLevel_Detail, "" );
+			HandleMemoryGetIdResponse( _data );
+			break;
+		}
+		case FUNC_ID_ZW_GET_NODE_PROTOCOL_INFO:
+		{
+			Log::Write( LogLevel_Detail, "" );
+			HandleGetNodeProtocolInfoResponse( _data );
+			break;
+		}
+		case FUNC_ID_ZW_REPLICATION_SEND_DATA:
+		{
+			HandleSendDataResponse( _data, true );
+			handleCallback = false;			// Skip the callback handling - a subsequent FUNC_ID_ZW_REPLICATION_SEND_DATA request will deal with that
+			break;
+		}
+		case FUNC_ID_ZW_ASSIGN_RETURN_ROUTE:
+		{
+			Log::Write( LogLevel_Detail, "" );
+			if( !HandleAssignReturnRouteResponse( _data ) )
 			{
-				Log::Write( LogLevel_Detail, "" );
-				HandleSerialAPIGetInitDataResponse( _data );
-				break;
+				m_expectedCallbackId = _data[2];		// The callback message won't be coming, so we force the transaction to complete
+				m_expectedReply = 0;
+				m_expectedCommandClassId = 0;
+				m_expectedNodeId = 0;
 			}
-			case FUNC_ID_ZW_GET_CONTROLLER_CAPABILITIES:
+			break;
+		}
+		case FUNC_ID_ZW_DELETE_RETURN_ROUTE:
+		{
+			Log::Write( LogLevel_Detail, "" );
+			if( !HandleDeleteReturnRouteResponse( _data ) )
 			{
-				Log::Write( LogLevel_Detail, "" );
-				HandleGetControllerCapabilitiesResponse( _data );
-				break;
+				m_expectedCallbackId = _data[2];		// The callback message won't be coming, so we force the transaction to complete
+				m_expectedReply = 0;
+				m_expectedCommandClassId = 0;
+				m_expectedNodeId = 0;
 			}
-			case FUNC_ID_SERIAL_API_GET_CAPABILITIES:
+			break;
+		}
+		case FUNC_ID_ZW_ENABLE_SUC:
+		{
+			Log::Write( LogLevel_Detail, "" );
+			HandleEnableSUCResponse( _data );
+			break;
+		}
+		case FUNC_ID_ZW_REQUEST_NETWORK_UPDATE:
+		{
+			Log::Write( LogLevel_Detail, "" );
+			if( !HandleNetworkUpdateResponse( _data ) )
 			{
-				Log::Write( LogLevel_Detail, "" );
-				HandleGetSerialAPICapabilitiesResponse( _data );
-				break;
+				m_expectedCallbackId = _data[2];	// The callback message won't be coming, so we force the transaction to complete
+				m_expectedReply = 0;
+				m_expectedCommandClassId = 0;
+				m_expectedNodeId = 0;
 			}
-			case FUNC_ID_SERIAL_API_SOFT_RESET:
+			break;
+		}
+		case FUNC_ID_ZW_SET_SUC_NODE_ID:
+		{
+			Log::Write( LogLevel_Detail, "" );
+			HandleSetSUCNodeIdResponse( _data );
+			break;
+		}
+		case FUNC_ID_ZW_GET_SUC_NODE_ID:
+		{
+			Log::Write( LogLevel_Detail, "" );
+			HandleGetSUCNodeIdResponse( _data );
+			break;
+		}
+		case FUNC_ID_ZW_REQUEST_NODE_INFO:
+		{
+			Log::Write( LogLevel_Detail, "" );
+			if( _data[2] )
 			{
-				Log::Write( LogLevel_Detail, "" );
-				HandleSerialAPISoftResetResponse( _data );
-				break;
+				Log::Write( LogLevel_Info, _data[3], "FUNC_ID_ZW_REQUEST_NODE_INFO Request successful." );
 			}
-			case FUNC_ID_ZW_SEND_DATA:
+			else
 			{
-				HandleSendDataResponse( _data, false );
-				handleCallback = false;			// Skip the callback handling - a subsequent FUNC_ID_ZW_SEND_DATA request will deal with that
-				break;
+				Log::Write( LogLevel_Info, _data[3], "FUNC_ID_ZW_REQUEST_NODE_INFO Request failed." );
 			}
-			case FUNC_ID_ZW_GET_VERSION:
+			break;
+		}
+		case FUNC_ID_ZW_REMOVE_FAILED_NODE_ID:
+		{
+			Log::Write( LogLevel_Detail, "" );
+			if( !HandleRemoveFailedNodeResponse( _data ) )
 			{
-				Log::Write( LogLevel_Detail, "" );
-				HandleGetVersionResponse( _data );
-				break;
+				m_expectedCallbackId = _data[2];	// The callback message won't be coming, so we force the transaction to complete
+				m_expectedReply = 0;
+				m_expectedCommandClassId = 0;
+				m_expectedNodeId = 0;
 			}
-			case FUNC_ID_ZW_GET_RANDOM:
+			break;
+		}
+		case FUNC_ID_ZW_IS_FAILED_NODE_ID:
+		{
+			Log::Write( LogLevel_Detail, "" );
+			HandleIsFailedNodeResponse( _data );
+			break;
+		}
+		case FUNC_ID_ZW_REPLACE_FAILED_NODE:
+		{
+			Log::Write( LogLevel_Detail, "" );
+			if( !HandleReplaceFailedNodeResponse( _data ) )
 			{
-				Log::Write( LogLevel_Detail, "" );
-				HandleGetRandomResponse( _data );
-				break;
+				m_expectedCallbackId = _data[2];	// The callback message won't be coming, so we force the transaction to complete
+				m_expectedReply = 0;
+				m_expectedCommandClassId = 0;
+				m_expectedNodeId = 0;
 			}
-			case FUNC_ID_ZW_MEMORY_GET_ID:
+			break;
+		}
+		case FUNC_ID_ZW_GET_ROUTING_INFO:
+		{
+			Log::Write( LogLevel_Detail, "" );
+			HandleGetRoutingInfoResponse( _data );
+			break;
+		}
+		case FUNC_ID_ZW_R_F_POWER_LEVEL_SET:
+		{
+			Log::Write( LogLevel_Detail, "" );
+			HandleRfPowerLevelSetResponse( _data );
+			break;
+		}
+		case FUNC_ID_ZW_READ_MEMORY:
+		{
+			Log::Write( LogLevel_Detail, "" );
+			HandleReadMemoryResponse( _data );
+			break;
+		}
+		case FUNC_ID_SERIAL_API_SET_TIMEOUTS:
+		{
+			Log::Write( LogLevel_Detail, "" );
+			HandleSerialApiSetTimeoutsResponse( _data );
+			break;
+		}
+		case FUNC_ID_MEMORY_GET_BYTE:
+		{
+			Log::Write( LogLevel_Detail, "" );
+			HandleMemoryGetByteResponse( _data );
+			break;
+		}
+		case FUNC_ID_ZW_GET_VIRTUAL_NODES:
+		{
+			Log::Write( LogLevel_Detail, "" );
+			HandleGetVirtualNodesResponse( _data );
+			break;
+		}
+		case FUNC_ID_ZW_SET_SLAVE_LEARN_MODE:
+		{
+			Log::Write( LogLevel_Detail, "" );
+			if( !HandleSetSlaveLearnModeResponse( _data ) )
 			{
-				Log::Write( LogLevel_Detail, "" );
-				HandleMemoryGetIdResponse( _data );
-				break;
+				m_expectedCallbackId = _data[2];	// The callback message won't be coming, so we force the transaction to complete
+				m_expectedReply = 0;
+				m_expectedCommandClassId = 0;
+				m_expectedNodeId = 0;
 			}
-			case FUNC_ID_ZW_GET_NODE_PROTOCOL_INFO:
+			break;
+		}
+		case FUNC_ID_ZW_SEND_SLAVE_NODE_INFO:
+		{
+			Log::Write( LogLevel_Detail, "" );
+			if( !HandleSendSlaveNodeInfoResponse( _data ) )
 			{
-				Log::Write( LogLevel_Detail, "" );
-				HandleGetNodeProtocolInfoResponse( _data );
-				break;
+				m_expectedCallbackId = _data[2];	// The callback message won't be coming, so we force the transaction to complete
+				m_expectedReply = 0;
+				m_expectedCommandClassId = 0;
+				m_expectedNodeId = 0;
 			}
-			case FUNC_ID_ZW_REPLICATION_SEND_DATA:
-			{
-				HandleSendDataResponse( _data, true );
-				handleCallback = false;			// Skip the callback handling - a subsequent FUNC_ID_ZW_REPLICATION_SEND_DATA request will deal with that
-				break;
-			}
-			case FUNC_ID_ZW_ASSIGN_RETURN_ROUTE:
-			{
-				Log::Write( LogLevel_Detail, "" );
-				if( !HandleAssignReturnRouteResponse( _data ) )
-				{
-					m_expectedCallbackId = _data[2];		// The callback message won't be coming, so we force the transaction to complete
-					m_expectedReply = 0;
-					m_expectedCommandClassId = 0;
-					m_expectedNodeId = 0;
-				}
-				break;
-			}
-			case FUNC_ID_ZW_DELETE_RETURN_ROUTE:
-			{
-				Log::Write( LogLevel_Detail, "" );
-				if( !HandleDeleteReturnRouteResponse( _data ) )
-				{
-					m_expectedCallbackId = _data[2];		// The callback message won't be coming, so we force the transaction to complete
-					m_expectedReply = 0;
-					m_expectedCommandClassId = 0;
-					m_expectedNodeId = 0;
-				}
-				break;
-			}
-			case FUNC_ID_ZW_ENABLE_SUC:
-			{
-				Log::Write( LogLevel_Detail, "" );
-				HandleEnableSUCResponse( _data );
-				break;
-			}
-			case FUNC_ID_ZW_REQUEST_NETWORK_UPDATE:
-			{
-				Log::Write( LogLevel_Detail, "" );
-				if( !HandleNetworkUpdateResponse( _data ) )
-				{
-					m_expectedCallbackId = _data[2];	// The callback message won't be coming, so we force the transaction to complete
-					m_expectedReply = 0;
-					m_expectedCommandClassId = 0;
-					m_expectedNodeId = 0;
-				}
-				break;
-			}
-			case FUNC_ID_ZW_SET_SUC_NODE_ID:
-			{
-				Log::Write( LogLevel_Detail, "" );
-				HandleSetSUCNodeIdResponse( _data );
-				break;
-			}
-			case FUNC_ID_ZW_GET_SUC_NODE_ID:
-			{
-				Log::Write( LogLevel_Detail, "" );
-				HandleGetSUCNodeIdResponse( _data );
-				break;
-			}
-			case FUNC_ID_ZW_REQUEST_NODE_INFO:
-			{
-				Log::Write( LogLevel_Detail, "" );
-				if( _data[2] )
-				{
-					Log::Write( LogLevel_Info, _data[3], "FUNC_ID_ZW_REQUEST_NODE_INFO Request successful." );
-				}
-				else
-				{
-					Log::Write( LogLevel_Info, _data[3], "FUNC_ID_ZW_REQUEST_NODE_INFO Request failed." );
-				}
-				break;
-			}
-			case FUNC_ID_ZW_REMOVE_FAILED_NODE_ID:
-			{
-				Log::Write( LogLevel_Detail, "" );
-				if( !HandleRemoveFailedNodeResponse( _data ) )
-				{
-					m_expectedCallbackId = _data[2];	// The callback message won't be coming, so we force the transaction to complete
-					m_expectedReply = 0;
-					m_expectedCommandClassId = 0;
-					m_expectedNodeId = 0;
-				}
-				break;
-			}
-			case FUNC_ID_ZW_IS_FAILED_NODE_ID:
-			{
-				Log::Write( LogLevel_Detail, "" );
-				HandleIsFailedNodeResponse( _data );
-				break;
-			}
-			case FUNC_ID_ZW_REPLACE_FAILED_NODE:
-			{
-				Log::Write( LogLevel_Detail, "" );
-				if( !HandleReplaceFailedNodeResponse( _data ) )
-				{
-					m_expectedCallbackId = _data[2];	// The callback message won't be coming, so we force the transaction to complete
-					m_expectedReply = 0;
-					m_expectedCommandClassId = 0;
-					m_expectedNodeId = 0;
-				}
-				break;
-			}
-			case FUNC_ID_ZW_GET_ROUTING_INFO:
-			{
-				Log::Write( LogLevel_Detail, "" );
-				HandleGetRoutingInfoResponse( _data );
-				break;
-			}
-			case FUNC_ID_ZW_R_F_POWER_LEVEL_SET:
-			{
-				Log::Write( LogLevel_Detail, "" );
-				HandleRfPowerLevelSetResponse( _data );
-				break;
-			}
-			case FUNC_ID_ZW_READ_MEMORY:
-			{
-				Log::Write( LogLevel_Detail, "" );
-				HandleReadMemoryResponse( _data );
-				break;
-			}
-			case FUNC_ID_SERIAL_API_SET_TIMEOUTS:
-			{
-				Log::Write( LogLevel_Detail, "" );
-				HandleSerialApiSetTimeoutsResponse( _data );
-				break;
-			}
-			case FUNC_ID_MEMORY_GET_BYTE:
-			{
-				Log::Write( LogLevel_Detail, "" );
-				HandleMemoryGetByteResponse( _data );
-				break;
-			}
-			case FUNC_ID_ZW_GET_VIRTUAL_NODES:
-			{
-				Log::Write( LogLevel_Detail, "" );
-				HandleGetVirtualNodesResponse( _data );
-				break;
-			}
-			case FUNC_ID_ZW_SET_SLAVE_LEARN_MODE:
-			{
-				Log::Write( LogLevel_Detail, "" );
-				if( !HandleSetSlaveLearnModeResponse( _data ) )
-				{
-					m_expectedCallbackId = _data[2];	// The callback message won't be coming, so we force the transaction to complete
-					m_expectedReply = 0;
-					m_expectedCommandClassId = 0;
-					m_expectedNodeId = 0;
-				}
-				break;
-			}
-			case FUNC_ID_ZW_SEND_SLAVE_NODE_INFO:
-			{
-				Log::Write( LogLevel_Detail, "" );
-				if( !HandleSendSlaveNodeInfoResponse( _data ) )
-				{
-					m_expectedCallbackId = _data[2];	// The callback message won't be coming, so we force the transaction to complete
-					m_expectedReply = 0;
-					m_expectedCommandClassId = 0;
-					m_expectedNodeId = 0;
-				}
-				break;
-			}
-			default:
-			{
-				Log::Write( LogLevel_Detail, "" );
-				Log::Write( LogLevel_Info, "**TODO: handle response for 0x%.2x** Please report this message.", _data[1] );
-				break;
-			}
+			break;
+		}
+		default:
+		{
+			Log::Write( LogLevel_Detail, "" );
+			Log::Write( LogLevel_Info, "**TODO: handle response for 0x%.2x** Please report this message.", _data[1] );
+			break;
+		}
 		}
 	}
 	else if( REQUEST == _data[0] )
 	{
 		switch( _data[1] )
 		{
-			case FUNC_ID_APPLICATION_COMMAND_HANDLER:
+		case FUNC_ID_APPLICATION_COMMAND_HANDLER:
+		{
+			Log::Write( LogLevel_Detail, "" );
+			HandleApplicationCommandHandlerRequest( _data, wasencrypted );
+			break;
+		}
+		case FUNC_ID_ZW_SEND_DATA:
+		{
+			HandleSendDataRequest( _data, false );
+			break;
+		}
+		case FUNC_ID_ZW_REPLICATION_COMMAND_COMPLETE:
+		{
+			if( m_controllerReplication )
 			{
 				Log::Write( LogLevel_Detail, "" );
-				HandleApplicationCommandHandlerRequest( _data, wasencrypted );
-				break;
+				m_controllerReplication->SendNextData();
 			}
-			case FUNC_ID_ZW_SEND_DATA:
-			{
-				HandleSendDataRequest( _data, false );
-				break;
-			}
-			case FUNC_ID_ZW_REPLICATION_COMMAND_COMPLETE:
-			{
-				if( m_controllerReplication )
-				{
-					Log::Write( LogLevel_Detail, "" );
-					m_controllerReplication->SendNextData();
-				}
-				break;
-			}
-			case FUNC_ID_ZW_REPLICATION_SEND_DATA:
-			{
-				HandleSendDataRequest( _data, true );
-				break;
-			}
-			case FUNC_ID_ZW_ASSIGN_RETURN_ROUTE:
-			{
-				Log::Write( LogLevel_Detail, "" );
-				HandleAssignReturnRouteRequest( _data );
-				break;
-			}
-			case FUNC_ID_ZW_DELETE_RETURN_ROUTE:
-			{
-				Log::Write( LogLevel_Detail, "" );
-				HandleDeleteReturnRouteRequest( _data );
-				break;
-			}
-			case FUNC_ID_ZW_SEND_NODE_INFORMATION:
-			{
-				Log::Write( LogLevel_Detail, "" );
-				HandleSendNodeInformationRequest( _data );
-				break;
-			}
-			case FUNC_ID_ZW_REQUEST_NODE_NEIGHBOR_UPDATE:
-			case FUNC_ID_ZW_REQUEST_NODE_NEIGHBOR_UPDATE_OPTIONS:
-			{
-				Log::Write( LogLevel_Detail, "" );
-				HandleNodeNeighborUpdateRequest( _data );
-				break;
-			}
-			case FUNC_ID_ZW_APPLICATION_UPDATE:
-			{
-				Log::Write( LogLevel_Detail, "" );
-				handleCallback = !HandleApplicationUpdateRequest( _data );
-				break;
-			}
-			case FUNC_ID_ZW_ADD_NODE_TO_NETWORK:
-			{
-				Log::Write( LogLevel_Detail, "" );
-				HandleAddNodeToNetworkRequest( _data );
-				break;
-			}
-			case FUNC_ID_ZW_REMOVE_NODE_FROM_NETWORK:
-			{
-				Log::Write( LogLevel_Detail, "" );
-				HandleRemoveNodeFromNetworkRequest( _data );
-				break;
-			}
-			case FUNC_ID_ZW_CREATE_NEW_PRIMARY:
-			{
-				Log::Write( LogLevel_Detail, "" );
-				HandleCreateNewPrimaryRequest( _data );
-				break;
-			}
-			case FUNC_ID_ZW_CONTROLLER_CHANGE:
-			{
-				Log::Write( LogLevel_Detail, "" );
-				HandleControllerChangeRequest( _data );
-				break;
-			}
-			case FUNC_ID_ZW_SET_LEARN_MODE:
-			{
-				Log::Write( LogLevel_Detail, "" );
-				HandleSetLearnModeRequest( _data );
-				break;
-			}
-			case FUNC_ID_ZW_REQUEST_NETWORK_UPDATE:
-			{
-				Log::Write( LogLevel_Detail, "" );
-				HandleNetworkUpdateRequest( _data );
-				break;
-			}
-			case FUNC_ID_ZW_REMOVE_FAILED_NODE_ID:
-			{
-				Log::Write( LogLevel_Detail, "" );
-				HandleRemoveFailedNodeRequest( _data );
-				break;
-			}
-			case FUNC_ID_ZW_REPLACE_FAILED_NODE:
-			{
-				Log::Write( LogLevel_Detail, "" );
-				HandleReplaceFailedNodeRequest( _data );
-				break;
-			}
-			case FUNC_ID_ZW_SET_SLAVE_LEARN_MODE:
-			{
-				Log::Write( LogLevel_Detail, "" );
-				HandleSetSlaveLearnModeRequest( _data );
-				break;
-			}
-			case FUNC_ID_ZW_SEND_SLAVE_NODE_INFO:
-			{
-				Log::Write( LogLevel_Detail, "" );
-				HandleSendSlaveNodeInfoRequest( _data );
-				break;
-			}
-			case FUNC_ID_APPLICATION_SLAVE_COMMAND_HANDLER:
-			{
-				Log::Write( LogLevel_Detail, "" );
-				HandleApplicationSlaveCommandRequest( _data );
-				break;
-			}
-			case FUNC_ID_PROMISCUOUS_APPLICATION_COMMAND_HANDLER:
-			{
-				Log::Write( LogLevel_Detail, "" );
-				HandlePromiscuousApplicationCommandHandlerRequest( _data );
-				break;
-			}
-			case FUNC_ID_ZW_SET_DEFAULT:
-			{
-				Log::Write( LogLevel_Detail, "" );
-				HandleSerialAPIResetRequest( _data );
-				break;
-			}
-			default:
-			{
-				Log::Write( LogLevel_Detail, "" );
-				Log::Write( LogLevel_Info, "**TODO: handle request for 0x%.2x** Please report this message.", _data[1] );
-				break;
-			}
+			break;
+		}
+		case FUNC_ID_ZW_REPLICATION_SEND_DATA:
+		{
+			HandleSendDataRequest( _data, true );
+			break;
+		}
+		case FUNC_ID_ZW_ASSIGN_RETURN_ROUTE:
+		{
+			Log::Write( LogLevel_Detail, "" );
+			HandleAssignReturnRouteRequest( _data );
+			break;
+		}
+		case FUNC_ID_ZW_DELETE_RETURN_ROUTE:
+		{
+			Log::Write( LogLevel_Detail, "" );
+			HandleDeleteReturnRouteRequest( _data );
+			break;
+		}
+		case FUNC_ID_ZW_SEND_NODE_INFORMATION:
+		{
+			Log::Write( LogLevel_Detail, "" );
+			HandleSendNodeInformationRequest( _data );
+			break;
+		}
+		case FUNC_ID_ZW_REQUEST_NODE_NEIGHBOR_UPDATE:
+		case FUNC_ID_ZW_REQUEST_NODE_NEIGHBOR_UPDATE_OPTIONS:
+		{
+			Log::Write( LogLevel_Detail, "" );
+			HandleNodeNeighborUpdateRequest( _data );
+			break;
+		}
+		case FUNC_ID_ZW_APPLICATION_UPDATE:
+		{
+			Log::Write( LogLevel_Detail, "" );
+			handleCallback = !HandleApplicationUpdateRequest( _data );
+			break;
+		}
+		case FUNC_ID_ZW_ADD_NODE_TO_NETWORK:
+		{
+			Log::Write( LogLevel_Detail, "" );
+			HandleAddNodeToNetworkRequest( _data );
+			break;
+		}
+		case FUNC_ID_ZW_REMOVE_NODE_FROM_NETWORK:
+		{
+			Log::Write( LogLevel_Detail, "" );
+			HandleRemoveNodeFromNetworkRequest( _data );
+			break;
+		}
+		case FUNC_ID_ZW_CREATE_NEW_PRIMARY:
+		{
+			Log::Write( LogLevel_Detail, "" );
+			HandleCreateNewPrimaryRequest( _data );
+			break;
+		}
+		case FUNC_ID_ZW_CONTROLLER_CHANGE:
+		{
+			Log::Write( LogLevel_Detail, "" );
+			HandleControllerChangeRequest( _data );
+			break;
+		}
+		case FUNC_ID_ZW_SET_LEARN_MODE:
+		{
+			Log::Write( LogLevel_Detail, "" );
+			HandleSetLearnModeRequest( _data );
+			break;
+		}
+		case FUNC_ID_ZW_REQUEST_NETWORK_UPDATE:
+		{
+			Log::Write( LogLevel_Detail, "" );
+			HandleNetworkUpdateRequest( _data );
+			break;
+		}
+		case FUNC_ID_ZW_REMOVE_FAILED_NODE_ID:
+		{
+			Log::Write( LogLevel_Detail, "" );
+			HandleRemoveFailedNodeRequest( _data );
+			break;
+		}
+		case FUNC_ID_ZW_REPLACE_FAILED_NODE:
+		{
+			Log::Write( LogLevel_Detail, "" );
+			HandleReplaceFailedNodeRequest( _data );
+			break;
+		}
+		case FUNC_ID_ZW_SET_SLAVE_LEARN_MODE:
+		{
+			Log::Write( LogLevel_Detail, "" );
+			HandleSetSlaveLearnModeRequest( _data );
+			break;
+		}
+		case FUNC_ID_ZW_SEND_SLAVE_NODE_INFO:
+		{
+			Log::Write( LogLevel_Detail, "" );
+			HandleSendSlaveNodeInfoRequest( _data );
+			break;
+		}
+		case FUNC_ID_APPLICATION_SLAVE_COMMAND_HANDLER:
+		{
+			Log::Write( LogLevel_Detail, "" );
+			HandleApplicationSlaveCommandRequest( _data );
+			break;
+		}
+		case FUNC_ID_PROMISCUOUS_APPLICATION_COMMAND_HANDLER:
+		{
+			Log::Write( LogLevel_Detail, "" );
+			HandlePromiscuousApplicationCommandHandlerRequest( _data );
+			break;
+		}
+		case FUNC_ID_ZW_SET_DEFAULT:
+		{
+			Log::Write( LogLevel_Detail, "" );
+			HandleSerialAPIResetRequest( _data );
+			break;
+		}
+		default:
+		{
+			Log::Write( LogLevel_Detail, "" );
+			Log::Write( LogLevel_Info, "**TODO: handle request for 0x%.2x** Please report this message.", _data[1] );
+			break;
+		}
 		}
 	}
 
@@ -2842,35 +2858,35 @@ bool Driver::HandleRemoveFailedNodeResponse
 		string reason;
 		switch( _data[2] )
 		{
-			case FAILED_NODE_NOT_FOUND:
-			{
-				reason = "Node not found";
-				error = ControllerError_NotFound;
-				break;
-			}
-			case FAILED_NODE_REMOVE_PROCESS_BUSY:
-			{
-				reason = "Remove process busy";
-				error = ControllerError_Busy;
-				break;
-			}
-			case FAILED_NODE_REMOVE_FAIL:
-			{
-				reason = "Remove failed";
-				error = ControllerError_Failed;
-				break;
-			}
-			case FAILED_NODE_NOT_PRIMARY_CONTROLLER:
-			{
-				reason = "Not Primary Controller";
-				error = ControllerError_NotPrimary;
-				break;
-			}
-			default:
-			{
-				reason = "Command failed";
-				break;
-			}
+		case FAILED_NODE_NOT_FOUND:
+		{
+			reason = "Node not found";
+			error = ControllerError_NotFound;
+			break;
+		}
+		case FAILED_NODE_REMOVE_PROCESS_BUSY:
+		{
+			reason = "Remove process busy";
+			error = ControllerError_Busy;
+			break;
+		}
+		case FAILED_NODE_REMOVE_FAIL:
+		{
+			reason = "Remove failed";
+			error = ControllerError_Failed;
+			break;
+		}
+		case FAILED_NODE_NOT_PRIMARY_CONTROLLER:
+		{
+			reason = "Not Primary Controller";
+			error = ControllerError_NotPrimary;
+			break;
+		}
+		default:
+		{
+			reason = "Command failed";
+			break;
+		}
 		}
 
 		Log::Write( LogLevel_Warning, GetNodeNumber( m_currentMsg ), "WARNING: Received reply to FUNC_ID_ZW_REMOVE_FAILED_NODE_ID - %s", reason.c_str() );
@@ -3120,39 +3136,39 @@ void Driver::HandleNetworkUpdateRequest
 	uint8 nodeId = GetNodeNumber( m_currentMsg );
 	switch( _data[3] )
 	{
-		case SUC_UPDATE_DONE:
-		{
-			Log::Write( LogLevel_Info, nodeId, "Received reply to FUNC_ID_ZW_REQUEST_NETWORK_UPDATE: Success" );
-			state = ControllerState_Completed;
-			break;
-		}
-		case SUC_UPDATE_ABORT:
-		{
-			Log::Write( LogLevel_Warning, nodeId, "WARNING: Received reply to FUNC_ID_ZW_REQUEST_NETWORK_UPDATE: Failed - Error. Process aborted." );
-			error = ControllerError_Failed;
-			break;
-		}
-		case SUC_UPDATE_WAIT:
-		{
-			Log::Write( LogLevel_Warning, nodeId, "WARNING: Received reply to FUNC_ID_ZW_REQUEST_NETWORK_UPDATE: Failed - SUC is busy." );
-			error = ControllerError_Busy;
-			break;
-		}
-		case SUC_UPDATE_DISABLED:
-		{
-			Log::Write( LogLevel_Warning, nodeId, "WARNING: Received reply to FUNC_ID_ZW_REQUEST_NETWORK_UPDATE: Failed - SUC is disabled." );
-			error = ControllerError_Disabled;
-			break;
-		}
-		case SUC_UPDATE_OVERFLOW:
-		{
-			Log::Write( LogLevel_Warning, nodeId, "WARNING: Received reply to FUNC_ID_ZW_REQUEST_NETWORK_UPDATE: Failed - Overflow. Full replication required." );
-			error = ControllerError_Overflow;
-			break;
-		}
-		default:
-		{
-		}
+	case SUC_UPDATE_DONE:
+	{
+		Log::Write( LogLevel_Info, nodeId, "Received reply to FUNC_ID_ZW_REQUEST_NETWORK_UPDATE: Success" );
+		state = ControllerState_Completed;
+		break;
+	}
+	case SUC_UPDATE_ABORT:
+	{
+		Log::Write( LogLevel_Warning, nodeId, "WARNING: Received reply to FUNC_ID_ZW_REQUEST_NETWORK_UPDATE: Failed - Error. Process aborted." );
+		error = ControllerError_Failed;
+		break;
+	}
+	case SUC_UPDATE_WAIT:
+	{
+		Log::Write( LogLevel_Warning, nodeId, "WARNING: Received reply to FUNC_ID_ZW_REQUEST_NETWORK_UPDATE: Failed - SUC is busy." );
+		error = ControllerError_Busy;
+		break;
+	}
+	case SUC_UPDATE_DISABLED:
+	{
+		Log::Write( LogLevel_Warning, nodeId, "WARNING: Received reply to FUNC_ID_ZW_REQUEST_NETWORK_UPDATE: Failed - SUC is disabled." );
+		error = ControllerError_Disabled;
+		break;
+	}
+	case SUC_UPDATE_OVERFLOW:
+	{
+		Log::Write( LogLevel_Warning, nodeId, "WARNING: Received reply to FUNC_ID_ZW_REQUEST_NETWORK_UPDATE: Failed - Overflow. Full replication required." );
+		error = ControllerError_Overflow;
+		break;
+	}
+	default:
+	{
+	}
 	}
 
 	UpdateControllerState( state, error );
@@ -3190,126 +3206,126 @@ void Driver::HandleRemoveNodeFromNetworkRequest
 
 	switch( _data[3] )
 	{
-		case REMOVE_NODE_STATUS_LEARN_READY:
+	case REMOVE_NODE_STATUS_LEARN_READY:
+	{
+		Log::Write( LogLevel_Info, "REMOVE_NODE_STATUS_LEARN_READY" );
+		state = ControllerState_Waiting;
+		m_currentControllerCommand->m_controllerCommandNode = 0;
+		break;
+	}
+	case REMOVE_NODE_STATUS_NODE_FOUND:
+	{
+		Log::Write( LogLevel_Info, "REMOVE_NODE_STATUS_NODE_FOUND" );
+		state = ControllerState_InProgress;
+		break;
+	}
+	case REMOVE_NODE_STATUS_REMOVING_SLAVE:
+	{
+		Log::Write( LogLevel_Info, "REMOVE_NODE_STATUS_REMOVING_SLAVE" );
+		if (_data[4] != 0)
 		{
-			Log::Write( LogLevel_Info, "REMOVE_NODE_STATUS_LEARN_READY" );
-			state = ControllerState_Waiting;
-			m_currentControllerCommand->m_controllerCommandNode = 0;
-			break;
-		}
-		case REMOVE_NODE_STATUS_NODE_FOUND:
-		{
-			Log::Write( LogLevel_Info, "REMOVE_NODE_STATUS_NODE_FOUND" );
-			state = ControllerState_InProgress;
-			break;
-		}
-		case REMOVE_NODE_STATUS_REMOVING_SLAVE:
-		{
-			Log::Write( LogLevel_Info, "REMOVE_NODE_STATUS_REMOVING_SLAVE" );
-			if (_data[4] != 0)
-			{
-				Log::Write( LogLevel_Info, "Removing node ID %d", _data[4] );
-				m_currentControllerCommand->m_controllerCommandNode = _data[4];
-			}
-			else
-			{
-				Log::Write( LogLevel_Warning, "Remove Node Failed - NodeID 0 Returned");
-				state = ControllerState_Failed;
-			}
-			break;
-		}
-		case REMOVE_NODE_STATUS_REMOVING_CONTROLLER:
-		{
-			Log::Write( LogLevel_Info, "REMOVE_NODE_STATUS_REMOVING_CONTROLLER" );
+			Log::Write( LogLevel_Info, "Removing node ID %d", _data[4] );
 			m_currentControllerCommand->m_controllerCommandNode = _data[4];
-			if( m_currentControllerCommand->m_controllerCommandNode == 0 ) // Some controllers don't return node number
+		}
+		else
+		{
+			Log::Write( LogLevel_Warning, "Remove Node Failed - NodeID 0 Returned");
+			state = ControllerState_Failed;
+		}
+		break;
+	}
+	case REMOVE_NODE_STATUS_REMOVING_CONTROLLER:
+	{
+		Log::Write( LogLevel_Info, "REMOVE_NODE_STATUS_REMOVING_CONTROLLER" );
+		m_currentControllerCommand->m_controllerCommandNode = _data[4];
+		if( m_currentControllerCommand->m_controllerCommandNode == 0 ) // Some controllers don't return node number
+		{
+			if( _data[5] >= 3 )
 			{
-				if( _data[5] >= 3 )
+				LockGuard LG(m_nodeMutex);
+				for( int i=0; i<256; i++ )
 				{
-					LockGuard LG(m_nodeMutex);
-					for( int i=0; i<256; i++ )
+					if( m_nodes[i] == NULL )
 					{
-						if( m_nodes[i] == NULL )
+						continue;
+					}
+					// Ignore primary controller
+					if( m_nodes[i]->m_nodeId == m_Controller_nodeId )
+					{
+						continue;
+					}
+					// See if we can match another way
+					if( m_nodes[i]->m_basic == _data[6] &&
+							m_nodes[i]->m_generic == _data[7] &&
+							m_nodes[i]->m_specific == _data[8] )
+					{
+						if( m_currentControllerCommand->m_controllerCommandNode != 0 )
 						{
-							continue;
+							Log::Write( LogLevel_Info, "Alternative controller lookup found more then one match. Using the first one found." );
 						}
-						// Ignore primary controller
-						if( m_nodes[i]->m_nodeId == m_Controller_nodeId )
+						else
 						{
-							continue;
-						}
-						// See if we can match another way
-						if( m_nodes[i]->m_basic == _data[6] &&
-								m_nodes[i]->m_generic == _data[7] &&
-								m_nodes[i]->m_specific == _data[8] )
-						{
-							if( m_currentControllerCommand->m_controllerCommandNode != 0 )
-							{
-								Log::Write( LogLevel_Info, "Alternative controller lookup found more then one match. Using the first one found." );
-							}
-							else
-							{
-								m_currentControllerCommand->m_controllerCommandNode = m_nodes[i]->m_nodeId;
-							}
+							m_currentControllerCommand->m_controllerCommandNode = m_nodes[i]->m_nodeId;
 						}
 					}
-					LG.Unlock();
 				}
-				else
-				{
-					Log::Write( LogLevel_Warning, "WARNING: Node is 0 but not enough data to perform alternative match." );
-				}
+				LG.Unlock();
 			}
 			else
 			{
-				m_currentControllerCommand->m_controllerCommandNode = _data[4];
+				Log::Write( LogLevel_Warning, "WARNING: Node is 0 but not enough data to perform alternative match." );
 			}
-			Log::Write( LogLevel_Info, "Removing controller ID %d", m_currentControllerCommand->m_controllerCommandNode );
-			break;
 		}
-		case REMOVE_NODE_STATUS_DONE:
+		else
 		{
-			Log::Write( LogLevel_Info, "REMOVE_NODE_STATUS_DONE" );
-			if( !m_currentControllerCommand->m_controllerCommandDone )
-			{
-
-				// Remove Node Stop calls back through here so make sure
-				// we do't do it again.
-				UpdateControllerState( ControllerState_Completed );
-				//AddNodeStop( FUNC_ID_ZW_REMOVE_NODE_FROM_NETWORK );
-				if ( m_currentControllerCommand->m_controllerCommandNode == 0 ) // never received "removing" update
-				{
-					if ( _data[4] != 0 ) // but message has the clue
-					{
-						m_currentControllerCommand->m_controllerCommandNode = _data[4];
-					}
-				}
-
-				if ( m_currentControllerCommand->m_controllerCommandNode != 0 && m_currentControllerCommand->m_controllerCommandNode != 0xff )
-				{
-					LockGuard LG(m_nodeMutex);
-					delete m_nodes[m_currentControllerCommand->m_controllerCommandNode];
-					m_nodes[m_currentControllerCommand->m_controllerCommandNode] = NULL;
-					LG.Unlock();
-
-					Notification* notification = new Notification( Notification::Type_NodeRemoved );
-					notification->SetHomeAndNodeIds( m_homeId, m_currentControllerCommand->m_controllerCommandNode );
-					QueueNotification( notification );
-				}
-			}
-			return;
+			m_currentControllerCommand->m_controllerCommandNode = _data[4];
 		}
-		case REMOVE_NODE_STATUS_FAILED:
+		Log::Write( LogLevel_Info, "Removing controller ID %d", m_currentControllerCommand->m_controllerCommandNode );
+		break;
+	}
+	case REMOVE_NODE_STATUS_DONE:
+	{
+		Log::Write( LogLevel_Info, "REMOVE_NODE_STATUS_DONE" );
+		if( !m_currentControllerCommand->m_controllerCommandDone )
 		{
+
+			// Remove Node Stop calls back through here so make sure
+			// we do't do it again.
+			UpdateControllerState( ControllerState_Completed );
 			//AddNodeStop( FUNC_ID_ZW_REMOVE_NODE_FROM_NETWORK );
-			Log::Write( LogLevel_Warning,  "WARNING: REMOVE_NODE_STATUS_FAILED" );
-			state = ControllerState_Failed;
-			break;
+			if ( m_currentControllerCommand->m_controllerCommandNode == 0 ) // never received "removing" update
+			{
+				if ( _data[4] != 0 ) // but message has the clue
+				{
+					m_currentControllerCommand->m_controllerCommandNode = _data[4];
+				}
+			}
+
+			if ( m_currentControllerCommand->m_controllerCommandNode != 0 && m_currentControllerCommand->m_controllerCommandNode != 0xff )
+			{
+				LockGuard LG(m_nodeMutex);
+				delete m_nodes[m_currentControllerCommand->m_controllerCommandNode];
+				m_nodes[m_currentControllerCommand->m_controllerCommandNode] = NULL;
+				LG.Unlock();
+
+				Notification* notification = new Notification( Notification::Type_NodeRemoved );
+				notification->SetHomeAndNodeIds( m_homeId, m_currentControllerCommand->m_controllerCommandNode );
+				QueueNotification( notification );
+			}
 		}
-		default:
-		{
-			break;
-		}
+		return;
+	}
+	case REMOVE_NODE_STATUS_FAILED:
+	{
+		//AddNodeStop( FUNC_ID_ZW_REMOVE_NODE_FROM_NETWORK );
+		Log::Write( LogLevel_Warning,  "WARNING: REMOVE_NODE_STATUS_FAILED" );
+		state = ControllerState_Failed;
+		break;
+	}
+	default:
+	{
+		break;
+	}
 	}
 
 	UpdateControllerState( state );
@@ -3360,53 +3376,53 @@ void Driver::HandleSetLearnModeRequest
 
 	switch( _data[3] )
 	{
-		case LEARN_MODE_STARTED:
-		{
-			Log::Write( LogLevel_Info, nodeId, "LEARN_MODE_STARTED" );
-			state = ControllerState_Waiting;
-			break;
-		}
-		case LEARN_MODE_DONE:
-		{
-			Log::Write( LogLevel_Info, nodeId, "LEARN_MODE_DONE" );
-			state = ControllerState_Completed;
+	case LEARN_MODE_STARTED:
+	{
+		Log::Write( LogLevel_Info, nodeId, "LEARN_MODE_STARTED" );
+		state = ControllerState_Waiting;
+		break;
+	}
+	case LEARN_MODE_DONE:
+	{
+		Log::Write( LogLevel_Info, nodeId, "LEARN_MODE_DONE" );
+		state = ControllerState_Completed;
 
-			// Stop learn mode
-			Msg* msg = new Msg( "End Learn Mode", 0xff, REQUEST, FUNC_ID_ZW_SET_LEARN_MODE, false, false );
-			msg->Append( 0 );
-			SendMsg( msg, MsgQueue_Command );
+		// Stop learn mode
+		Msg* msg = new Msg( "End Learn Mode", 0xff, REQUEST, FUNC_ID_ZW_SET_LEARN_MODE, false, false );
+		msg->Append( 0 );
+		SendMsg( msg, MsgQueue_Command );
 
-			// Rebuild all the node info.  Group and scene data that we stored
-			// during replication will be applied as we discover each node.
-			InitAllNodes();
-			break;
-		}
-		case LEARN_MODE_FAILED:
-		{
-			Log::Write( LogLevel_Warning, nodeId, "WARNING: LEARN_MODE_FAILED" );
-			state = ControllerState_Failed;
+		// Rebuild all the node info.  Group and scene data that we stored
+		// during replication will be applied as we discover each node.
+		InitAllNodes();
+		break;
+	}
+	case LEARN_MODE_FAILED:
+	{
+		Log::Write( LogLevel_Warning, nodeId, "WARNING: LEARN_MODE_FAILED" );
+		state = ControllerState_Failed;
 
-			// Stop learn mode
-			Msg* msg = new Msg( "End Learn Mode", 0xff, REQUEST, FUNC_ID_ZW_SET_LEARN_MODE, false, false );
-			msg->Append( 0 );
-			SendMsg( msg, MsgQueue_Command );
+		// Stop learn mode
+		Msg* msg = new Msg( "End Learn Mode", 0xff, REQUEST, FUNC_ID_ZW_SET_LEARN_MODE, false, false );
+		msg->Append( 0 );
+		SendMsg( msg, MsgQueue_Command );
 
-			// Rebuild all the node info, since it may have been partially
-			// updated by the failed command.  Group and scene data that we
-			// stored during replication will be applied as we discover each node.
-			InitAllNodes();
-			break;
-		}
-		case LEARN_MODE_DELETED:
-		{
-			Log::Write( LogLevel_Info, nodeId, "LEARN_MODE_DELETED" );
-			state = ControllerState_Failed;
-			// Stop learn mode
-			Msg* msg = new Msg( "End Learn Mode", 0xff, REQUEST, FUNC_ID_ZW_SET_LEARN_MODE, false, false );
-			msg->Append( 0 );
-			SendMsg( msg, MsgQueue_Command );
-			break;
-		}
+		// Rebuild all the node info, since it may have been partially
+		// updated by the failed command.  Group and scene data that we
+		// stored during replication will be applied as we discover each node.
+		InitAllNodes();
+		break;
+	}
+	case LEARN_MODE_DELETED:
+	{
+		Log::Write( LogLevel_Info, nodeId, "LEARN_MODE_DELETED" );
+		state = ControllerState_Failed;
+		// Stop learn mode
+		Msg* msg = new Msg( "End Learn Mode", 0xff, REQUEST, FUNC_ID_ZW_SET_LEARN_MODE, false, false );
+		msg->Append( 0 );
+		SendMsg( msg, MsgQueue_Command );
+		break;
+	}
 	}
 
 	UpdateControllerState( state );
@@ -3425,34 +3441,34 @@ void Driver::HandleRemoveFailedNodeRequest
 	uint8 nodeId = GetNodeNumber( m_currentMsg );
 	switch( _data[3] )
 	{
-		case FAILED_NODE_OK:
-		{
-			Log::Write( LogLevel_Warning, nodeId, "WARNING: Received reply to FUNC_ID_ZW_REMOVE_FAILED_NODE_ID - Node %d is OK, so command failed", m_currentControllerCommand->m_controllerCommandNode );
-			state = ControllerState_NodeOK;
-			break;
-		}
-		case FAILED_NODE_REMOVED:
-		{
-			Log::Write( LogLevel_Info, nodeId, "Received reply to FUNC_ID_ZW_REMOVE_FAILED_NODE_ID - node %d successfully moved to failed nodes list", m_currentControllerCommand->m_controllerCommandNode );
-			state = ControllerState_Completed;
+	case FAILED_NODE_OK:
+	{
+		Log::Write( LogLevel_Warning, nodeId, "WARNING: Received reply to FUNC_ID_ZW_REMOVE_FAILED_NODE_ID - Node %d is OK, so command failed", m_currentControllerCommand->m_controllerCommandNode );
+		state = ControllerState_NodeOK;
+		break;
+	}
+	case FAILED_NODE_REMOVED:
+	{
+		Log::Write( LogLevel_Info, nodeId, "Received reply to FUNC_ID_ZW_REMOVE_FAILED_NODE_ID - node %d successfully moved to failed nodes list", m_currentControllerCommand->m_controllerCommandNode );
+		state = ControllerState_Completed;
 
-			LockGuard LG(m_nodeMutex);
-			delete m_nodes[m_currentControllerCommand->m_controllerCommandNode];
-			m_nodes[m_currentControllerCommand->m_controllerCommandNode] = NULL;
-			LG.Unlock();
+		LockGuard LG(m_nodeMutex);
+		delete m_nodes[m_currentControllerCommand->m_controllerCommandNode];
+		m_nodes[m_currentControllerCommand->m_controllerCommandNode] = NULL;
+		LG.Unlock();
 
-			Notification* notification = new Notification( Notification::Type_NodeRemoved );
-			notification->SetHomeAndNodeIds( m_homeId, m_currentControllerCommand->m_controllerCommandNode );
-			QueueNotification( notification );
+		Notification* notification = new Notification( Notification::Type_NodeRemoved );
+		notification->SetHomeAndNodeIds( m_homeId, m_currentControllerCommand->m_controllerCommandNode );
+		QueueNotification( notification );
 
-			break;
-		}
-		case FAILED_NODE_NOT_REMOVED:
-		{
-			Log::Write( LogLevel_Warning, nodeId, "WARNING: Received reply to FUNC_ID_ZW_REMOVE_FAILED_NODE_ID - unable to move node %d to failed nodes list", m_currentControllerCommand->m_controllerCommandNode );
-			state = ControllerState_Failed;
-			break;
-		}
+		break;
+	}
+	case FAILED_NODE_NOT_REMOVED:
+	{
+		Log::Write( LogLevel_Warning, nodeId, "WARNING: Received reply to FUNC_ID_ZW_REMOVE_FAILED_NODE_ID - unable to move node %d to failed nodes list", m_currentControllerCommand->m_controllerCommandNode );
+		state = ControllerState_Failed;
+		break;
+	}
 	}
 
 	UpdateControllerState( state );
@@ -3471,36 +3487,36 @@ void Driver::HandleReplaceFailedNodeRequest
 	uint8 nodeId = GetNodeNumber( m_currentMsg );
 	switch( _data[3] )
 	{
-		case FAILED_NODE_OK:
-		{
-			Log::Write( LogLevel_Info, nodeId, "Received reply to FUNC_ID_ZW_REPLACE_FAILED_NODE - Node is OK, so command failed" );
-			state = ControllerState_NodeOK;
-			break;
-		}
-		case FAILED_NODE_REPLACE_WAITING:
-		{
-			Log::Write( LogLevel_Info, nodeId, "Received reply to FUNC_ID_ZW_REPLACE_FAILED_NODE - Waiting for new node" );
-			state = ControllerState_Waiting;
-			break;
-		}
-		case FAILED_NODE_REPLACE_DONE:
-		{
-			Log::Write( LogLevel_Info, nodeId, "Received reply to FUNC_ID_ZW_REPLACE_FAILED_NODE - Node successfully replaced" );
-			state = ControllerState_Completed;
+	case FAILED_NODE_OK:
+	{
+		Log::Write( LogLevel_Info, nodeId, "Received reply to FUNC_ID_ZW_REPLACE_FAILED_NODE - Node is OK, so command failed" );
+		state = ControllerState_NodeOK;
+		break;
+	}
+	case FAILED_NODE_REPLACE_WAITING:
+	{
+		Log::Write( LogLevel_Info, nodeId, "Received reply to FUNC_ID_ZW_REPLACE_FAILED_NODE - Waiting for new node" );
+		state = ControllerState_Waiting;
+		break;
+	}
+	case FAILED_NODE_REPLACE_DONE:
+	{
+		Log::Write( LogLevel_Info, nodeId, "Received reply to FUNC_ID_ZW_REPLACE_FAILED_NODE - Node successfully replaced" );
+		state = ControllerState_Completed;
 
-			// Request new node info for this device
-			if( m_currentControllerCommand != NULL )
-			{
-				InitNode( m_currentControllerCommand->m_controllerCommandNode, true );
-			}
-			break;
-		}
-		case FAILED_NODE_REPLACE_FAILED:
+		// Request new node info for this device
+		if( m_currentControllerCommand != NULL )
 		{
-			Log::Write( LogLevel_Info, nodeId, "Received reply to FUNC_ID_ZW_REPLACE_FAILED_NODE - Node replacement failed" );
-			state = ControllerState_Failed;
-			break;
+			InitNode( m_currentControllerCommand->m_controllerCommandNode, true );
 		}
+		break;
+	}
+	case FAILED_NODE_REPLACE_FAILED:
+	{
+		Log::Write( LogLevel_Info, nodeId, "Received reply to FUNC_ID_ZW_REPLACE_FAILED_NODE - Node replacement failed" );
+		state = ControllerState_Failed;
+		break;
+	}
 	}
 
 	UpdateControllerState( state );
@@ -3716,35 +3732,35 @@ void Driver::HandleNodeNeighborUpdateRequest
 	ControllerState state = ControllerState_Normal;
 	switch( _data[3] )
 	{
-		case REQUEST_NEIGHBOR_UPDATE_STARTED:
-		{
-			Log::Write( LogLevel_Info, nodeId, "REQUEST_NEIGHBOR_UPDATE_STARTED" );
-			state = ControllerState_InProgress;
-			break;
-		}
-		case REQUEST_NEIGHBOR_UPDATE_DONE:
-		{
-			Log::Write( LogLevel_Info, nodeId, "REQUEST_NEIGHBOR_UPDATE_DONE" );
-			state = ControllerState_Completed;
+	case REQUEST_NEIGHBOR_UPDATE_STARTED:
+	{
+		Log::Write( LogLevel_Info, nodeId, "REQUEST_NEIGHBOR_UPDATE_STARTED" );
+		state = ControllerState_InProgress;
+		break;
+	}
+	case REQUEST_NEIGHBOR_UPDATE_DONE:
+	{
+		Log::Write( LogLevel_Info, nodeId, "REQUEST_NEIGHBOR_UPDATE_DONE" );
+		state = ControllerState_Completed;
 
-			// We now request the neighbour information from the
-			// controller and store it in our node object.
-			if( m_currentControllerCommand != NULL )
-			{
-				RequestNodeNeighbors( m_currentControllerCommand->m_controllerCommandNode, 0 );
-			}
-			break;
-		}
-		case REQUEST_NEIGHBOR_UPDATE_FAILED:
+		// We now request the neighbour information from the
+		// controller and store it in our node object.
+		if( m_currentControllerCommand != NULL )
 		{
-			Log::Write( LogLevel_Warning, nodeId, "WARNING: REQUEST_NEIGHBOR_UPDATE_FAILED" );
-			state = ControllerState_Failed;
-			break;
+			RequestNodeNeighbors( m_currentControllerCommand->m_controllerCommandNode, 0 );
 		}
-		default:
-		{
-			break;
-		}
+		break;
+	}
+	case REQUEST_NEIGHBOR_UPDATE_FAILED:
+	{
+		Log::Write( LogLevel_Warning, nodeId, "WARNING: REQUEST_NEIGHBOR_UPDATE_FAILED" );
+		state = ControllerState_Failed;
+		break;
+	}
+	default:
+	{
+		break;
+	}
 	}
 
 	UpdateControllerState( state );
@@ -3771,86 +3787,86 @@ bool Driver::HandleApplicationUpdateRequest
 
 	switch( _data[2] )
 	{
-		case UPDATE_STATE_SUC_ID:
-		{
-			Log::Write( LogLevel_Info, nodeId, "UPDATE_STATE_SUC_ID from node %d", nodeId );
-			m_SUCNodeId = nodeId; // need to confirm real data here
-			break;
-		}
-		case UPDATE_STATE_DELETE_DONE:
-		{
-			Log::Write( LogLevel_Info, nodeId, "** Network change **: Z-Wave node %d was removed", nodeId );
+	case UPDATE_STATE_SUC_ID:
+	{
+		Log::Write( LogLevel_Info, nodeId, "UPDATE_STATE_SUC_ID from node %d", nodeId );
+		m_SUCNodeId = nodeId; // need to confirm real data here
+		break;
+	}
+	case UPDATE_STATE_DELETE_DONE:
+	{
+		Log::Write( LogLevel_Info, nodeId, "** Network change **: Z-Wave node %d was removed", nodeId );
 
-			LockGuard LG(m_nodeMutex);
-			delete m_nodes[nodeId];
-			m_nodes[nodeId] = NULL;
-			LG.Unlock();
+		LockGuard LG(m_nodeMutex);
+		delete m_nodes[nodeId];
+		m_nodes[nodeId] = NULL;
+		LG.Unlock();
 
-			Notification* notification = new Notification( Notification::Type_NodeRemoved );
-			notification->SetHomeAndNodeIds( m_homeId, nodeId );
-			QueueNotification( notification );
-			break;
-		}
-		case UPDATE_STATE_NEW_ID_ASSIGNED:
+		Notification* notification = new Notification( Notification::Type_NodeRemoved );
+		notification->SetHomeAndNodeIds( m_homeId, nodeId );
+		QueueNotification( notification );
+		break;
+	}
+	case UPDATE_STATE_NEW_ID_ASSIGNED:
+	{
+		Log::Write( LogLevel_Info, nodeId, "** Network change **: ID %d was assigned to a new Z-Wave node", nodeId );
+		// Check if the new node id is equal to the current one.... if so no operation is needed, thus no remove and add is necessary
+		if ( _data[3] != _data[6] )
 		{
-			Log::Write( LogLevel_Info, nodeId, "** Network change **: ID %d was assigned to a new Z-Wave node", nodeId );
-                        // Check if the new node id is equal to the current one.... if so no operation is needed, thus no remove and add is necessary
-                        if ( _data[3] != _data[6] )
-                        {
-                        	// Request the node protocol info (also removes any existing node and creates a new one)
-			        InitNode( nodeId );	
-                        }
-                        else 
-                        {
-                        	Log::Write(LogLevel_Info, nodeId, "Not Re-assigning NodeID as old and new NodeID match");
-                        }
-			
-			break;
+			// Request the node protocol info (also removes any existing node and creates a new one)
+			InitNode( nodeId );
 		}
-		case UPDATE_STATE_ROUTING_PENDING:
+		else
 		{
-			Log::Write( LogLevel_Info, nodeId, "UPDATE_STATE_ROUTING_PENDING from node %d", nodeId );
-			break;
+			Log::Write(LogLevel_Info, nodeId, "Not Re-assigning NodeID as old and new NodeID match");
 		}
-		case UPDATE_STATE_NODE_INFO_REQ_FAILED:
-		{
-			Log::Write( LogLevel_Warning, nodeId, "WARNING: FUNC_ID_ZW_APPLICATION_UPDATE: UPDATE_STATE_NODE_INFO_REQ_FAILED received" );
 
-			// Note: Unhelpfully, the nodeId is always zero in this message.  We have to
-			// assume the message came from the last node to which we sent a request.
-			if( m_currentMsg )
+		break;
+	}
+	case UPDATE_STATE_ROUTING_PENDING:
+	{
+		Log::Write( LogLevel_Info, nodeId, "UPDATE_STATE_ROUTING_PENDING from node %d", nodeId );
+		break;
+	}
+	case UPDATE_STATE_NODE_INFO_REQ_FAILED:
+	{
+		Log::Write( LogLevel_Warning, nodeId, "WARNING: FUNC_ID_ZW_APPLICATION_UPDATE: UPDATE_STATE_NODE_INFO_REQ_FAILED received" );
+
+		// Note: Unhelpfully, the nodeId is always zero in this message.  We have to
+		// assume the message came from the last node to which we sent a request.
+		if( m_currentMsg )
+		{
+			Node* tnode = GetNodeUnsafe( m_currentMsg->GetTargetNodeId() );
+			if( tnode )
 			{
-				Node* tnode = GetNodeUnsafe( m_currentMsg->GetTargetNodeId() );
-				if( tnode )
-				{
-					// Retry the query twice
-					tnode->QueryStageRetry( Node::QueryStage_NodeInfo, 2 );
+				// Retry the query twice
+				tnode->QueryStageRetry( Node::QueryStage_NodeInfo, 2 );
 
-					// Just in case the failure was due to the node being asleep, we try
-					// to move its pending messages to its wakeup queue.  If it is not
-					// a sleeping device, this will have no effect.
-					if( MoveMessagesToWakeUpQueue( tnode->GetNodeId(), true ) )
-					{
-						messageRemoved = true;
-					}
+				// Just in case the failure was due to the node being asleep, we try
+				// to move its pending messages to its wakeup queue.  If it is not
+				// a sleeping device, this will have no effect.
+				if( MoveMessagesToWakeUpQueue( tnode->GetNodeId(), true ) )
+				{
+					messageRemoved = true;
 				}
 			}
-			break;
 		}
-		case UPDATE_STATE_NODE_INFO_REQ_DONE:
+		break;
+	}
+	case UPDATE_STATE_NODE_INFO_REQ_DONE:
+	{
+		Log::Write( LogLevel_Info, nodeId, "UPDATE_STATE_NODE_INFO_REQ_DONE from node %d", nodeId );
+		break;
+	}
+	case UPDATE_STATE_NODE_INFO_RECEIVED:
+	{
+		Log::Write( LogLevel_Info, nodeId, "UPDATE_STATE_NODE_INFO_RECEIVED from node %d", nodeId );
+		if( node )
 		{
-			Log::Write( LogLevel_Info, nodeId, "UPDATE_STATE_NODE_INFO_REQ_DONE from node %d", nodeId );
-			break;
+			node->UpdateNodeInfo( &_data[8], _data[4] - 3 );
 		}
-		case UPDATE_STATE_NODE_INFO_RECEIVED:
-		{
-			Log::Write( LogLevel_Info, nodeId, "UPDATE_STATE_NODE_INFO_RECEIVED from node %d", nodeId );
-			if( node )
-			{
-				node->UpdateNodeInfo( &_data[8], _data[4] - 3 );
-			}
-			break;
-		}
+		break;
+	}
 	}
 
 	if( messageRemoved )
@@ -3883,120 +3899,120 @@ void Driver::CommonAddNodeStatusRequestHandler
 	}
 	switch( _data[3] )
 	{
-		case ADD_NODE_STATUS_LEARN_READY:
+	case ADD_NODE_STATUS_LEARN_READY:
+	{
+		Log::Write( LogLevel_Info, nodeId, "ADD_NODE_STATUS_LEARN_READY" );
+		m_currentControllerCommand->m_controllerAdded = false;
+		state = ControllerState_Waiting;
+		break;
+	}
+	case ADD_NODE_STATUS_NODE_FOUND:
+	{
+		Log::Write( LogLevel_Info, nodeId, "ADD_NODE_STATUS_NODE_FOUND" );
+		state = ControllerState_InProgress;
+		break;
+	}
+	case ADD_NODE_STATUS_ADDING_SLAVE:
+	{
+		Log::Write( LogLevel_Info, nodeId, "ADD_NODE_STATUS_ADDING_SLAVE" );
+		Log::Write( LogLevel_Info, nodeId, "Adding node ID %d - %s", _data[4], m_currentControllerCommand->m_controllerCommandArg ? "Secure" : "Non-Secure");
+		/* Discovered all the CC's are sent in this packet as well:
+		 * position description
+		 * 4 - Node ID
+		 * 5 - Length
+		 * 6 - Basic Device Class
+		 * 7 - Generic Device Class
+		 * 8 - Specific Device Class
+		 * 9 to Length - Command Classes
+		 * Last pck - CRC
+		 */
+		if( m_currentControllerCommand != NULL )
 		{
-			Log::Write( LogLevel_Info, nodeId, "ADD_NODE_STATUS_LEARN_READY" );
 			m_currentControllerCommand->m_controllerAdded = false;
-			state = ControllerState_Waiting;
-			break;
+			m_currentControllerCommand->m_controllerCommandNode = _data[4];
+			/* make sure we dont overrun our buffer. Its ok to truncate */
+			uint8 length = _data[5];
+			if (length > 254) length = 254;
+			memcpy(&m_currentControllerCommand->m_controllerDeviceProtocolInfo, &_data[6], length);
+			m_currentControllerCommand->m_controllerDeviceProtocolInfoLength = length;
 		}
-		case ADD_NODE_STATUS_NODE_FOUND:
-		{
-			Log::Write( LogLevel_Info, nodeId, "ADD_NODE_STATUS_NODE_FOUND" );
-			state = ControllerState_InProgress;
-			break;
-		}
-		case ADD_NODE_STATUS_ADDING_SLAVE:
-		{
-			Log::Write( LogLevel_Info, nodeId, "ADD_NODE_STATUS_ADDING_SLAVE" );
-			Log::Write( LogLevel_Info, nodeId, "Adding node ID %d - %s", _data[4], m_currentControllerCommand->m_controllerCommandArg ? "Secure" : "Non-Secure");
-			/* Discovered all the CC's are sent in this packet as well:
-			 * position description
-			 * 4 - Node ID
-			 * 5 - Length
-			 * 6 - Basic Device Class
-			 * 7 - Generic Device Class
-			 * 8 - Specific Device Class
-			 * 9 to Length - Command Classes
-			 * Last pck - CRC
-			 */
-			if( m_currentControllerCommand != NULL )
-			{
-				m_currentControllerCommand->m_controllerAdded = false;
-				m_currentControllerCommand->m_controllerCommandNode = _data[4];
-				/* make sure we dont overrun our buffer. Its ok to truncate */
-				uint8 length = _data[5];
-				if (length > 254) length = 254;
-				memcpy(&m_currentControllerCommand->m_controllerDeviceProtocolInfo, &_data[6], length);
-				m_currentControllerCommand->m_controllerDeviceProtocolInfoLength = length;
-			}
-//			AddNodeStop( _funcId );
-//			sleep(1);
-			break;
-		}
-		case ADD_NODE_STATUS_ADDING_CONTROLLER:
-		{
-			Log::Write( LogLevel_Info, nodeId, "ADD_NODE_STATUS_ADDING_CONTROLLER");
-			Log::Write( LogLevel_Info, nodeId, "Adding controller ID %d", _data[4] );
-			/* Discovered all the CC's are sent in this packet as well:
-			 * position description
-			 * 4 - Node ID
-			 * 5 - Length
-			 * 6 - Basic Device Class
-			 * 7 - Generic Device Class
-			 * 8 - Specific Device Class
-			 * 9 to Length - Command Classes
-			 * Last pck - CRC
-			 */
+		//			AddNodeStop( _funcId );
+		//			sleep(1);
+		break;
+	}
+	case ADD_NODE_STATUS_ADDING_CONTROLLER:
+	{
+		Log::Write( LogLevel_Info, nodeId, "ADD_NODE_STATUS_ADDING_CONTROLLER");
+		Log::Write( LogLevel_Info, nodeId, "Adding controller ID %d", _data[4] );
+		/* Discovered all the CC's are sent in this packet as well:
+		 * position description
+		 * 4 - Node ID
+		 * 5 - Length
+		 * 6 - Basic Device Class
+		 * 7 - Generic Device Class
+		 * 8 - Specific Device Class
+		 * 9 to Length - Command Classes
+		 * Last pck - CRC
+		 */
 
 
-			if( m_currentControllerCommand != NULL )
-			{
-				m_currentControllerCommand->m_controllerAdded = true;
-				m_currentControllerCommand->m_controllerCommandNode = _data[4];
-			}
-//			AddNodeStop( _funcId );
-			break;
-		}
-		case ADD_NODE_STATUS_PROTOCOL_DONE:
+		if( m_currentControllerCommand != NULL )
 		{
-			Log::Write( LogLevel_Info, nodeId, "ADD_NODE_STATUS_PROTOCOL_DONE" );
-			// We added a device.
-			// Get the controller out of add mode to avoid accidentally adding other devices.
-			// We used to call replication here.
-			AddNodeStop( _funcId );
-			break;
+			m_currentControllerCommand->m_controllerAdded = true;
+			m_currentControllerCommand->m_controllerCommandNode = _data[4];
 		}
-		case ADD_NODE_STATUS_DONE:
-		{
-			if (state == ControllerState_Failed) {
-				/* if it was a failed add, we just move on */
-				state = ControllerState_Completed;
-				break;
-			}
-
-			Log::Write( LogLevel_Info, nodeId, "ADD_NODE_STATUS_DONE" );
+		//			AddNodeStop( _funcId );
+		break;
+	}
+	case ADD_NODE_STATUS_PROTOCOL_DONE:
+	{
+		Log::Write( LogLevel_Info, nodeId, "ADD_NODE_STATUS_PROTOCOL_DONE" );
+		// We added a device.
+		// Get the controller out of add mode to avoid accidentally adding other devices.
+		// We used to call replication here.
+		AddNodeStop( _funcId );
+		break;
+	}
+	case ADD_NODE_STATUS_DONE:
+	{
+		if (state == ControllerState_Failed) {
+			/* if it was a failed add, we just move on */
 			state = ControllerState_Completed;
-			if( m_currentControllerCommand != NULL && m_currentControllerCommand->m_controllerCommandNode != 0xff )
-			{
-				InitNode( m_currentControllerCommand->m_controllerCommandNode, true, m_currentControllerCommand->m_controllerCommandArg != 0, m_currentControllerCommand->m_controllerDeviceProtocolInfo, m_currentControllerCommand->m_controllerDeviceProtocolInfoLength );
-			}
-
-			// Not sure about the new controller function here.
-			if( _funcId != FUNC_ID_ZW_ADD_NODE_TO_NETWORK && m_currentControllerCommand != NULL && m_currentControllerCommand->m_controllerAdded )
-			{
-				// Rebuild all the node info.  Group and scene data that we stored
-				// during replication will be applied as we discover each node.
-				InitAllNodes();
-			}
 			break;
 		}
-		case ADD_NODE_STATUS_FAILED:
+
+		Log::Write( LogLevel_Info, nodeId, "ADD_NODE_STATUS_DONE" );
+		state = ControllerState_Completed;
+		if( m_currentControllerCommand != NULL && m_currentControllerCommand->m_controllerCommandNode != 0xff )
 		{
-			Log::Write( LogLevel_Info, nodeId, "ADD_NODE_STATUS_FAILED" );
-			state = ControllerState_Failed;
-
-			// Remove the AddNode command from the queue
-			RemoveCurrentMsg();
-
-			// Get the controller out of add mode to avoid accidentally adding other devices.
-			AddNodeStop( _funcId );
-			break;
+			InitNode( m_currentControllerCommand->m_controllerCommandNode, true, m_currentControllerCommand->m_controllerCommandArg != 0, m_currentControllerCommand->m_controllerDeviceProtocolInfo, m_currentControllerCommand->m_controllerDeviceProtocolInfoLength );
 		}
-		default:
+
+		// Not sure about the new controller function here.
+		if( _funcId != FUNC_ID_ZW_ADD_NODE_TO_NETWORK && m_currentControllerCommand != NULL && m_currentControllerCommand->m_controllerAdded )
 		{
-			break;
+			// Rebuild all the node info.  Group and scene data that we stored
+			// during replication will be applied as we discover each node.
+			InitAllNodes();
 		}
+		break;
+	}
+	case ADD_NODE_STATUS_FAILED:
+	{
+		Log::Write( LogLevel_Info, nodeId, "ADD_NODE_STATUS_FAILED" );
+		state = ControllerState_Failed;
+
+		// Remove the AddNode command from the queue
+		RemoveCurrentMsg();
+
+		// Get the controller out of add mode to avoid accidentally adding other devices.
+		AddNodeStop( _funcId );
+		break;
+	}
+	default:
+	{
+		break;
+	}
 	}
 
 	UpdateControllerState( state );
@@ -5226,307 +5242,307 @@ void Driver::DoControllerCommand
 	UpdateControllerState( ControllerState_Starting );
 	switch( m_currentControllerCommand->m_controllerCommand )
 	{
-		case ControllerCommand_AddDevice:
+	case ControllerCommand_AddDevice:
+	{
+		if( !IsPrimaryController() )
 		{
-			if( !IsPrimaryController() )
-			{
-				UpdateControllerState( ControllerState_Error, ControllerError_NotPrimary );
-			}
-			else
-			{
-				Log::Write( LogLevel_Info, 0, "Add Device" );
-				Msg* msg = new Msg( "ControllerCommand_AddDevice", 0xff, REQUEST, FUNC_ID_ZW_ADD_NODE_TO_NETWORK, true );
-				uint8 options = ADD_NODE_ANY;
-				if (m_currentControllerCommand->m_highPower) options |= OPTION_HIGH_POWER;
-				if (IsAPICallSupported(FUNC_ID_ZW_EXPLORE_REQUEST_INCLUSION)) options |= OPTION_NWI;
-				msg->Append( options);
-				SendMsg( msg, MsgQueue_Command );
-			}
-			break;
+			UpdateControllerState( ControllerState_Error, ControllerError_NotPrimary );
 		}
-		case ControllerCommand_CreateNewPrimary:
+		else
 		{
-			if( IsPrimaryController() )
-			{
-				UpdateControllerState( ControllerState_Error, ControllerError_NotSecondary );
-			}
-			else if( !IsStaticUpdateController() )
-			{
-				UpdateControllerState( ControllerState_Error, ControllerError_NotSUC );
-			}
-			else
-			{
-				Log::Write( LogLevel_Info, 0, "Create New Primary" );
-				Msg* msg = new Msg( "ControllerCommand_CreateNewPrimary", 0xff, REQUEST, FUNC_ID_ZW_CREATE_NEW_PRIMARY, true );
-				msg->Append( CREATE_PRIMARY_START );
-				SendMsg( msg, MsgQueue_Command );
-			}
-			break;
-		}
-		case ControllerCommand_ReceiveConfiguration:
-		{
-			Log::Write( LogLevel_Info, 0, "Receive Configuration" );
-			Msg* msg = new Msg( "ControllerCommand_ReceiveConfiguration", 0xff, REQUEST, FUNC_ID_ZW_SET_LEARN_MODE, true );
-			msg->Append( 0xff );
+			Log::Write( LogLevel_Info, 0, "Add Device" );
+			Msg* msg = new Msg( "ControllerCommand_AddDevice", 0xff, REQUEST, FUNC_ID_ZW_ADD_NODE_TO_NETWORK, true );
+			uint8 options = ADD_NODE_ANY;
+			if (m_currentControllerCommand->m_highPower) options |= OPTION_HIGH_POWER;
+			if (IsAPICallSupported(FUNC_ID_ZW_EXPLORE_REQUEST_INCLUSION)) options |= OPTION_NWI;
+			msg->Append( options);
 			SendMsg( msg, MsgQueue_Command );
-			break;
 		}
-		case ControllerCommand_RemoveDevice:
+		break;
+	}
+	case ControllerCommand_CreateNewPrimary:
+	{
+		if( IsPrimaryController() )
 		{
-			if( !IsPrimaryController() )
+			UpdateControllerState( ControllerState_Error, ControllerError_NotSecondary );
+		}
+		else if( !IsStaticUpdateController() )
+		{
+			UpdateControllerState( ControllerState_Error, ControllerError_NotSUC );
+		}
+		else
+		{
+			Log::Write( LogLevel_Info, 0, "Create New Primary" );
+			Msg* msg = new Msg( "ControllerCommand_CreateNewPrimary", 0xff, REQUEST, FUNC_ID_ZW_CREATE_NEW_PRIMARY, true );
+			msg->Append( CREATE_PRIMARY_START );
+			SendMsg( msg, MsgQueue_Command );
+		}
+		break;
+	}
+	case ControllerCommand_ReceiveConfiguration:
+	{
+		Log::Write( LogLevel_Info, 0, "Receive Configuration" );
+		Msg* msg = new Msg( "ControllerCommand_ReceiveConfiguration", 0xff, REQUEST, FUNC_ID_ZW_SET_LEARN_MODE, true );
+		msg->Append( 0xff );
+		SendMsg( msg, MsgQueue_Command );
+		break;
+	}
+	case ControllerCommand_RemoveDevice:
+	{
+		if( !IsPrimaryController() )
+		{
+			UpdateControllerState( ControllerState_Error, ControllerError_NotPrimary );
+		}
+		else
+		{
+			Log::Write( LogLevel_Info, 0, "Remove Device" );
+			Msg* msg = new Msg( "ControllerCommand_RemoveDevice", 0xff, REQUEST, FUNC_ID_ZW_REMOVE_NODE_FROM_NETWORK, true );
+			msg->Append( m_currentControllerCommand->m_highPower ? REMOVE_NODE_ANY | OPTION_HIGH_POWER : REMOVE_NODE_ANY );
+			SendMsg( msg, MsgQueue_Command );
+		}
+		break;
+	}
+	case ControllerCommand_HasNodeFailed:
+	{
+		Log::Write( LogLevel_Info, 0, "Requesting whether node %d has failed", m_currentControllerCommand->m_controllerCommandNode );
+		Msg* msg = new Msg( "ControllerCommand_HasNodeFailed", 0xff, REQUEST, FUNC_ID_ZW_IS_FAILED_NODE_ID, false );
+		msg->Append( m_currentControllerCommand->m_controllerCommandNode );
+		SendMsg( msg, MsgQueue_Command );
+		break;
+	}
+	case ControllerCommand_RemoveFailedNode:
+	{
+		Log::Write( LogLevel_Info, 0, "ControllerCommand_RemoveFailedNode", m_currentControllerCommand->m_controllerCommandNode );
+		Msg* msg = new Msg( "ControllerCommand_RemoveFailedNode", 0xff, REQUEST, FUNC_ID_ZW_REMOVE_FAILED_NODE_ID, true );
+		msg->Append( m_currentControllerCommand->m_controllerCommandNode );
+		SendMsg( msg, MsgQueue_Command );
+		break;
+	}
+	case ControllerCommand_ReplaceFailedNode:
+	{
+		Log::Write( LogLevel_Info, 0, "Replace Failed Node %d", m_currentControllerCommand->m_controllerCommandNode );
+		Msg* msg = new Msg( "ControllerCommand_ReplaceFailedNode", 0xff, REQUEST, FUNC_ID_ZW_REPLACE_FAILED_NODE, true );
+		msg->Append( m_currentControllerCommand->m_controllerCommandNode );
+		SendMsg( msg, MsgQueue_Command );
+		break;
+	}
+	case ControllerCommand_TransferPrimaryRole:
+	{
+		if( !IsPrimaryController() )
+		{
+			UpdateControllerState( ControllerState_Error, ControllerError_NotPrimary );
+		}
+		else
+		{
+			Log::Write( LogLevel_Info, 0, "Transfer Primary Role" );
+			Msg* msg = new Msg( "ControllerCommand_TransferPrimaryRole", 0xff, REQUEST, FUNC_ID_ZW_CONTROLLER_CHANGE, true );
+			msg->Append( m_currentControllerCommand->m_highPower ? CONTROLLER_CHANGE_START | OPTION_HIGH_POWER : CONTROLLER_CHANGE_START );
+			SendMsg( msg, MsgQueue_Command );
+		}
+		break;
+	}
+	case ControllerCommand_RequestNetworkUpdate:
+	{
+		if( !IsStaticUpdateController() )
+		{
+			UpdateControllerState( ControllerState_Error, ControllerError_NotSUC );
+		}
+		else
+		{
+			Log::Write( LogLevel_Info, 0, "Request Network Update" );
+			Msg* msg = new Msg( "ControllerCommand_RequestNetworkUpdate", 0xff, REQUEST, FUNC_ID_ZW_REQUEST_NETWORK_UPDATE, true );
+			SendMsg( msg, MsgQueue_Command );
+		}
+		break;
+	}
+	case ControllerCommand_RequestNodeNeighborUpdate:
+	{
+		if( !IsPrimaryController() )
+		{
+			UpdateControllerState( ControllerState_Error, ControllerError_NotPrimary );
+		}
+		else
+		{
+			Log::Write( LogLevel_Info, 0, "Requesting Neighbor Update for node %d", m_currentControllerCommand->m_controllerCommandNode );
+			bool opts = IsAPICallSupported( FUNC_ID_ZW_REQUEST_NODE_NEIGHBOR_UPDATE_OPTIONS );
+			Msg* msg;
+			if( opts )
 			{
-				UpdateControllerState( ControllerState_Error, ControllerError_NotPrimary );
+				msg = new Msg( "ControllerCommand_RequestNodeNeighborUpdate", m_currentControllerCommand->m_controllerCommandNode, REQUEST, FUNC_ID_ZW_REQUEST_NODE_NEIGHBOR_UPDATE_OPTIONS, true );
 			}
 			else
 			{
-				Log::Write( LogLevel_Info, 0, "Remove Device" );
-				Msg* msg = new Msg( "ControllerCommand_RemoveDevice", 0xff, REQUEST, FUNC_ID_ZW_REMOVE_NODE_FROM_NETWORK, true );
-				msg->Append( m_currentControllerCommand->m_highPower ? REMOVE_NODE_ANY | OPTION_HIGH_POWER : REMOVE_NODE_ANY );
-				SendMsg( msg, MsgQueue_Command );
+				msg = new Msg( "ControllerCommand_RequestNodeNeighborUpdate", m_currentControllerCommand->m_controllerCommandNode, REQUEST, FUNC_ID_ZW_REQUEST_NODE_NEIGHBOR_UPDATE, true );
 			}
-			break;
-		}
-		case ControllerCommand_HasNodeFailed:
-		{
-			Log::Write( LogLevel_Info, 0, "Requesting whether node %d has failed", m_currentControllerCommand->m_controllerCommandNode );
-			Msg* msg = new Msg( "ControllerCommand_HasNodeFailed", 0xff, REQUEST, FUNC_ID_ZW_IS_FAILED_NODE_ID, false );
 			msg->Append( m_currentControllerCommand->m_controllerCommandNode );
+			if( opts )
+			{
+				msg->Append( GetTransmitOptions() );
+			}
 			SendMsg( msg, MsgQueue_Command );
-			break;
 		}
-		case ControllerCommand_RemoveFailedNode:
+		break;
+	}
+	case ControllerCommand_AssignReturnRoute:
+	{
+		Log::Write( LogLevel_Info, 0, "Assigning return route from node %d to node %d", m_currentControllerCommand->m_controllerCommandNode, m_currentControllerCommand->m_controllerCommandArg );
+		Msg* msg = new Msg( "ControllerCommand_AssignReturnRoute", m_currentControllerCommand->m_controllerCommandNode, REQUEST, FUNC_ID_ZW_ASSIGN_RETURN_ROUTE, true );
+		msg->Append( m_currentControllerCommand->m_controllerCommandNode );		// from the node
+		msg->Append( m_currentControllerCommand->m_controllerCommandArg );		// to the specific destination
+		SendMsg( msg, MsgQueue_Command );
+		break;
+	}
+	case ControllerCommand_DeleteAllReturnRoutes:
+	{
+		Log::Write( LogLevel_Info, 0, "Deleting all return routes from node %d", m_currentControllerCommand->m_controllerCommandNode );
+		Msg* msg = new Msg( "ControllerCommand_DeleteAllReturnRoutess", m_currentControllerCommand->m_controllerCommandNode, REQUEST, FUNC_ID_ZW_DELETE_RETURN_ROUTE, true );
+		msg->Append( m_currentControllerCommand->m_controllerCommandNode );		// from the node
+		SendMsg( msg, MsgQueue_Command );
+		break;
+	}
+	case ControllerCommand_SendNodeInformation:
+	{
+		Log::Write( LogLevel_Info, 0, "Sending a node information frame" );
+		Msg* msg = new Msg( "ControllerCommand_SendNodeInformation", m_currentControllerCommand->m_controllerCommandNode, REQUEST, FUNC_ID_ZW_SEND_NODE_INFORMATION, true );
+		msg->Append( m_currentControllerCommand->m_controllerCommandNode );		// to the node
+		msg->Append( GetTransmitOptions() );
+		SendMsg( msg, MsgQueue_Command );
+		break;
+	}
+	case ControllerCommand_ReplicationSend:
+	{
+		if( !IsPrimaryController() )
 		{
-			Log::Write( LogLevel_Info, 0, "ControllerCommand_RemoveFailedNode", m_currentControllerCommand->m_controllerCommandNode );
-			Msg* msg = new Msg( "ControllerCommand_RemoveFailedNode", 0xff, REQUEST, FUNC_ID_ZW_REMOVE_FAILED_NODE_ID, true );
-			msg->Append( m_currentControllerCommand->m_controllerCommandNode );
+			UpdateControllerState( ControllerState_Error, ControllerError_NotPrimary );
+		}
+		else
+		{
+			Log::Write( LogLevel_Info, 0, "Replication Send" );
+			Msg* msg = new Msg( "ControllerCommand_ReplicationSend", 0xff, REQUEST, FUNC_ID_ZW_ADD_NODE_TO_NETWORK, true );
+			msg->Append( m_currentControllerCommand->m_highPower ? ADD_NODE_CONTROLLER | OPTION_HIGH_POWER : ADD_NODE_CONTROLLER );
 			SendMsg( msg, MsgQueue_Command );
-			break;
 		}
-		case ControllerCommand_ReplaceFailedNode:
+		break;
+	}
+	case ControllerCommand_CreateButton:
+	{
+		if( IsBridgeController() )
 		{
-			Log::Write( LogLevel_Info, 0, "Replace Failed Node %d", m_currentControllerCommand->m_controllerCommandNode );
-			Msg* msg = new Msg( "ControllerCommand_ReplaceFailedNode", 0xff, REQUEST, FUNC_ID_ZW_REPLACE_FAILED_NODE, true );
-			msg->Append( m_currentControllerCommand->m_controllerCommandNode );
-			SendMsg( msg, MsgQueue_Command );
-			break;
-		}
-		case ControllerCommand_TransferPrimaryRole:
-		{
-			if( !IsPrimaryController() )
+			Node* node = GetNodeUnsafe( m_currentControllerCommand->m_controllerCommandNode );
+			if( node != NULL )
 			{
-				UpdateControllerState( ControllerState_Error, ControllerError_NotPrimary );
-			}
-			else
-			{
-				Log::Write( LogLevel_Info, 0, "Transfer Primary Role" );
-				Msg* msg = new Msg( "ControllerCommand_TransferPrimaryRole", 0xff, REQUEST, FUNC_ID_ZW_CONTROLLER_CHANGE, true );
-				msg->Append( m_currentControllerCommand->m_highPower ? CONTROLLER_CHANGE_START | OPTION_HIGH_POWER : CONTROLLER_CHANGE_START );
-				SendMsg( msg, MsgQueue_Command );
-			}
-			break;
-		}
-		case ControllerCommand_RequestNetworkUpdate:
-		{
-			if( !IsStaticUpdateController() )
-			{
-				UpdateControllerState( ControllerState_Error, ControllerError_NotSUC );
-			}
-			else
-			{
-				Log::Write( LogLevel_Info, 0, "Request Network Update" );
-				Msg* msg = new Msg( "ControllerCommand_RequestNetworkUpdate", 0xff, REQUEST, FUNC_ID_ZW_REQUEST_NETWORK_UPDATE, true );
-				SendMsg( msg, MsgQueue_Command );
-			}
-			break;
-		}
-		case ControllerCommand_RequestNodeNeighborUpdate:
-		{
-			if( !IsPrimaryController() )
-			{
-				UpdateControllerState( ControllerState_Error, ControllerError_NotPrimary );
-			}
-			else
-			{
-				Log::Write( LogLevel_Info, 0, "Requesting Neighbor Update for node %d", m_currentControllerCommand->m_controllerCommandNode );
-				bool opts = IsAPICallSupported( FUNC_ID_ZW_REQUEST_NODE_NEIGHBOR_UPDATE_OPTIONS );
-				Msg* msg;
-				if( opts )
+				if( node->m_buttonMap.find( m_currentControllerCommand->m_controllerCommandArg ) == node->m_buttonMap.end() && m_virtualNeighborsReceived )
 				{
-					msg = new Msg( "ControllerCommand_RequestNodeNeighborUpdate", m_currentControllerCommand->m_controllerCommandNode, REQUEST, FUNC_ID_ZW_REQUEST_NODE_NEIGHBOR_UPDATE_OPTIONS, true );
-				}
-				else
-				{
-					msg = new Msg( "ControllerCommand_RequestNodeNeighborUpdate", m_currentControllerCommand->m_controllerCommandNode, REQUEST, FUNC_ID_ZW_REQUEST_NODE_NEIGHBOR_UPDATE, true );
-				}
-				msg->Append( m_currentControllerCommand->m_controllerCommandNode );
-				if( opts )
-				{
-					msg->Append( GetTransmitOptions() );
-				}
-				SendMsg( msg, MsgQueue_Command );
-			}
-			break;
-		}
-		case ControllerCommand_AssignReturnRoute:
-		{
-			Log::Write( LogLevel_Info, 0, "Assigning return route from node %d to node %d", m_currentControllerCommand->m_controllerCommandNode, m_currentControllerCommand->m_controllerCommandArg );
-			Msg* msg = new Msg( "ControllerCommand_AssignReturnRoute", m_currentControllerCommand->m_controllerCommandNode, REQUEST, FUNC_ID_ZW_ASSIGN_RETURN_ROUTE, true );
-			msg->Append( m_currentControllerCommand->m_controllerCommandNode );		// from the node
-			msg->Append( m_currentControllerCommand->m_controllerCommandArg );		// to the specific destination
-			SendMsg( msg, MsgQueue_Command );
-			break;
-		}
-		case ControllerCommand_DeleteAllReturnRoutes:
-		{
-			Log::Write( LogLevel_Info, 0, "Deleting all return routes from node %d", m_currentControllerCommand->m_controllerCommandNode );
-			Msg* msg = new Msg( "ControllerCommand_DeleteAllReturnRoutess", m_currentControllerCommand->m_controllerCommandNode, REQUEST, FUNC_ID_ZW_DELETE_RETURN_ROUTE, true );
-			msg->Append( m_currentControllerCommand->m_controllerCommandNode );		// from the node
-			SendMsg( msg, MsgQueue_Command );
-			break;
-		}
-		case ControllerCommand_SendNodeInformation:
-		{
-			Log::Write( LogLevel_Info, 0, "Sending a node information frame" );
-			Msg* msg = new Msg( "ControllerCommand_SendNodeInformation", m_currentControllerCommand->m_controllerCommandNode, REQUEST, FUNC_ID_ZW_SEND_NODE_INFORMATION, true );
-			msg->Append( m_currentControllerCommand->m_controllerCommandNode );		// to the node
-			msg->Append( GetTransmitOptions() );
-			SendMsg( msg, MsgQueue_Command );
-			break;
-		}
-		case ControllerCommand_ReplicationSend:
-		{
-			if( !IsPrimaryController() )
-			{
-				UpdateControllerState( ControllerState_Error, ControllerError_NotPrimary );
-			}
-			else
-			{
-				Log::Write( LogLevel_Info, 0, "Replication Send" );
-				Msg* msg = new Msg( "ControllerCommand_ReplicationSend", 0xff, REQUEST, FUNC_ID_ZW_ADD_NODE_TO_NETWORK, true );
-				msg->Append( m_currentControllerCommand->m_highPower ? ADD_NODE_CONTROLLER | OPTION_HIGH_POWER : ADD_NODE_CONTROLLER );
-				SendMsg( msg, MsgQueue_Command );
-			}
-			break;
-		}
-		case ControllerCommand_CreateButton:
-		{
-			if( IsBridgeController() )
-			{
-				Node* node = GetNodeUnsafe( m_currentControllerCommand->m_controllerCommandNode );
-				if( node != NULL )
-				{
-					if( node->m_buttonMap.find( m_currentControllerCommand->m_controllerCommandArg ) == node->m_buttonMap.end() && m_virtualNeighborsReceived )
+					bool found = false;
+					for( uint8 n = 1; n <= 232 && !found; n++ )
 					{
-						bool found = false;
-						for( uint8 n = 1; n <= 232 && !found; n++ )
-						{
-							if( !IsVirtualNode( n ))
-								continue;
+						if( !IsVirtualNode( n ))
+							continue;
 
-							map<uint8,uint8>::iterator it = node->m_buttonMap.begin();
-							for( ; it != node->m_buttonMap.end(); ++it )
-							{
-								// is virtual node already in map?
-								if( it->second == n )
-									break;
-							}
-							if( it == node->m_buttonMap.end() ) // found unused virtual node
-							{
-								node->m_buttonMap[m_currentControllerCommand->m_controllerCommandArg] = n;
-								SendVirtualNodeInfo( n, m_currentControllerCommand->m_controllerCommandNode );
-								found = true;
-							}
+						map<uint8,uint8>::iterator it = node->m_buttonMap.begin();
+						for( ; it != node->m_buttonMap.end(); ++it )
+						{
+							// is virtual node already in map?
+							if( it->second == n )
+								break;
 						}
-						if( !found ) // create a new virtual node
+						if( it == node->m_buttonMap.end() ) // found unused virtual node
 						{
-							Log::Write( LogLevel_Info, 0, "AddVirtualNode" );
-							Msg* msg = new Msg( "FUNC_ID_SERIAL_API_SLAVE_NODE_INFO", 0xff, REQUEST, FUNC_ID_SERIAL_API_SLAVE_NODE_INFO, false, false );
-							msg->Append( 0 );		// node 0
-							msg->Append( 1 );		// listening
-							msg->Append( 0x09 );		// genericType window covering
-							msg->Append( 0x00 );		// specificType undefined
-							msg->Append( 0 );		// length
-							SendMsg( msg, MsgQueue_Command );
-
-							msg = new Msg( "FUNC_ID_ZW_SET_SLAVE_LEARN_MODE", 0xff, REQUEST, FUNC_ID_ZW_SET_SLAVE_LEARN_MODE, true );
-							msg->Append( 0 );		// node 0 to add
-							if( IsPrimaryController() || IsInclusionController() )
-							{
-								msg->Append( SLAVE_LEARN_MODE_ADD );
-							}
-							else
-							{
-								msg->Append( SLAVE_LEARN_MODE_ENABLE );
-							}
-							SendMsg( msg, MsgQueue_Command );
+							node->m_buttonMap[m_currentControllerCommand->m_controllerCommandArg] = n;
+							SendVirtualNodeInfo( n, m_currentControllerCommand->m_controllerCommandNode );
+							found = true;
 						}
 					}
-					else
+					if( !found ) // create a new virtual node
 					{
-						UpdateControllerState( ControllerState_Error, ControllerError_ButtonNotFound );
-					}
-				}
-				else
-				{
-					UpdateControllerState( ControllerState_Error, ControllerError_NodeNotFound );
-				}
-			} else
-			{
-				UpdateControllerState( ControllerState_Error, ControllerError_NotBridge );
-			}
-			break;
-		}
-		case ControllerCommand_DeleteButton:
-		{
-			if( IsBridgeController() )
-			{
-				Node* node = GetNodeUnsafe( m_currentControllerCommand->m_controllerCommandNode );
-				if( node != NULL )
-				{
-					// Make sure button is allocated to a virtual node.
-					if( node->m_buttonMap.find( m_currentControllerCommand->m_controllerCommandArg ) != node->m_buttonMap.end() )
-					{
-#ifdef notdef
-						// We would need a reference count to decide when to free virtual nodes
-						// We could do this by making the bitmap of virtual nodes into a map that also holds a reference count.
-						Log::Write( LogLevel_Info, 0, "RemoveVirtualNode %d", m_currentControllerCommand->m_controllerCommandNode );
-						Msg* msg = new Msg( "Remove Virtual Node", 0xff, REQUEST, FUNC_ID_ZW_SET_SLAVE_LEARN_MODE, true );
-						msg->Append( m_currentControllerCommand->m_controllerCommandNode );		// from the node
+						Log::Write( LogLevel_Info, 0, "AddVirtualNode" );
+						Msg* msg = new Msg( "FUNC_ID_SERIAL_API_SLAVE_NODE_INFO", 0xff, REQUEST, FUNC_ID_SERIAL_API_SLAVE_NODE_INFO, false, false );
+						msg->Append( 0 );		// node 0
+						msg->Append( 1 );		// listening
+						msg->Append( 0x09 );		// genericType window covering
+						msg->Append( 0x00 );		// specificType undefined
+						msg->Append( 0 );		// length
+						SendMsg( msg, MsgQueue_Command );
+
+						msg = new Msg( "FUNC_ID_ZW_SET_SLAVE_LEARN_MODE", 0xff, REQUEST, FUNC_ID_ZW_SET_SLAVE_LEARN_MODE, true );
+						msg->Append( 0 );		// node 0 to add
 						if( IsPrimaryController() || IsInclusionController() )
-							msg->Append( SLAVE_LEARN_MODE_REMOVE );
+						{
+							msg->Append( SLAVE_LEARN_MODE_ADD );
+						}
 						else
+						{
 							msg->Append( SLAVE_LEARN_MODE_ENABLE );
-						SendMsg( msg );
-#endif
-						node->m_buttonMap.erase( m_currentControllerCommand->m_controllerCommandArg );
-						SaveButtons();
-
-						Notification* notification = new Notification( Notification::Type_DeleteButton );
-						notification->SetHomeAndNodeIds( m_homeId, m_currentControllerCommand->m_controllerCommandNode );
-						notification->SetButtonId( m_currentControllerCommand->m_controllerCommandArg );
-						QueueNotification( notification );
-					}
-					else
-					{
-						UpdateControllerState( ControllerState_Error, ControllerError_ButtonNotFound );
+						}
+						SendMsg( msg, MsgQueue_Command );
 					}
 				}
 				else
 				{
-					UpdateControllerState( ControllerState_Error, ControllerError_NodeNotFound );
+					UpdateControllerState( ControllerState_Error, ControllerError_ButtonNotFound );
 				}
 			}
 			else
 			{
-				UpdateControllerState( ControllerState_Error, ControllerError_NotBridge );
+				UpdateControllerState( ControllerState_Error, ControllerError_NodeNotFound );
 			}
-			break;
-		}
-		case ControllerCommand_None:
+		} else
 		{
-			// To keep gcc quiet
-			break;
+			UpdateControllerState( ControllerState_Error, ControllerError_NotBridge );
 		}
+		break;
+	}
+	case ControllerCommand_DeleteButton:
+	{
+		if( IsBridgeController() )
+		{
+			Node* node = GetNodeUnsafe( m_currentControllerCommand->m_controllerCommandNode );
+			if( node != NULL )
+			{
+				// Make sure button is allocated to a virtual node.
+				if( node->m_buttonMap.find( m_currentControllerCommand->m_controllerCommandArg ) != node->m_buttonMap.end() )
+				{
+#ifdef notdef
+					// We would need a reference count to decide when to free virtual nodes
+					// We could do this by making the bitmap of virtual nodes into a map that also holds a reference count.
+					Log::Write( LogLevel_Info, 0, "RemoveVirtualNode %d", m_currentControllerCommand->m_controllerCommandNode );
+					Msg* msg = new Msg( "Remove Virtual Node", 0xff, REQUEST, FUNC_ID_ZW_SET_SLAVE_LEARN_MODE, true );
+					msg->Append( m_currentControllerCommand->m_controllerCommandNode );		// from the node
+					if( IsPrimaryController() || IsInclusionController() )
+						msg->Append( SLAVE_LEARN_MODE_REMOVE );
+					else
+						msg->Append( SLAVE_LEARN_MODE_ENABLE );
+					SendMsg( msg );
+#endif
+					node->m_buttonMap.erase( m_currentControllerCommand->m_controllerCommandArg );
+					SaveButtons();
+
+					Notification* notification = new Notification( Notification::Type_DeleteButton );
+					notification->SetHomeAndNodeIds( m_homeId, m_currentControllerCommand->m_controllerCommandNode );
+					notification->SetButtonId( m_currentControllerCommand->m_controllerCommandArg );
+					QueueNotification( notification );
+				}
+				else
+				{
+					UpdateControllerState( ControllerState_Error, ControllerError_ButtonNotFound );
+				}
+			}
+			else
+			{
+				UpdateControllerState( ControllerState_Error, ControllerError_NodeNotFound );
+			}
+		}
+		else
+		{
+			UpdateControllerState( ControllerState_Error, ControllerError_NotBridge );
+		}
+		break;
+	}
+	case ControllerCommand_None:
+	{
+		// To keep gcc quiet
+		break;
+	}
 	}
 }
 
@@ -5544,24 +5560,24 @@ void Driver::UpdateControllerState( ControllerState const _state, ControllerErro
 			m_currentControllerCommand->m_controllerState = _state;
 			switch( _state )
 			{
-				case ControllerState_Error:
-				case ControllerState_Cancel:
-				case ControllerState_Failed:
-				case ControllerState_Sleeping:
-				case ControllerState_NodeFailed:
-				case ControllerState_NodeOK:
-				case ControllerState_Completed:
-				{
-					m_currentControllerCommand->m_controllerCommandDone = true;
-					m_sendMutex->Lock();
-					m_queueEvent[MsgQueue_Controller]->Set();
-					m_sendMutex->Unlock();
-					break;
-				}
-				default:
-				{
-					break;
-				}
+			case ControllerState_Error:
+			case ControllerState_Cancel:
+			case ControllerState_Failed:
+			case ControllerState_Sleeping:
+			case ControllerState_NodeFailed:
+			case ControllerState_NodeOK:
+			case ControllerState_Completed:
+			{
+				m_currentControllerCommand->m_controllerCommandDone = true;
+				m_sendMutex->Lock();
+				m_queueEvent[MsgQueue_Controller]->Set();
+				m_sendMutex->Unlock();
+				break;
+			}
+			default:
+			{
+				break;
+			}
 			}
 
 		}
@@ -5598,73 +5614,73 @@ bool Driver::CancelControllerCommand
 
 	switch( m_currentControllerCommand->m_controllerCommand )
 	{
-		case ControllerCommand_AddDevice:
+	case ControllerCommand_AddDevice:
+	{
+		Log::Write( LogLevel_Info, 0, "Cancel Add Node" );
+		m_currentControllerCommand->m_controllerCommandNode = 0xff;		// identify the fact that there is no new node to initialize
+		AddNodeStop( FUNC_ID_ZW_ADD_NODE_TO_NETWORK );
+		break;
+	}
+	case ControllerCommand_CreateNewPrimary:
+	{
+		Log::Write( LogLevel_Info, 0, "Cancel Create New Primary" );
+		Msg* msg = new Msg( "CreateNewPrimary Stop", 0xff, REQUEST, FUNC_ID_ZW_CREATE_NEW_PRIMARY, true );
+		msg->Append( CREATE_PRIMARY_STOP );
+		SendMsg( msg, MsgQueue_Command );
+		break;
+	}
+	case ControllerCommand_ReceiveConfiguration:
+	{
+		Log::Write( LogLevel_Info, 0, "Cancel Receive Configuration" );
+		Msg* msg = new Msg( "ReceiveConfiguration Stop", 0xff, REQUEST, FUNC_ID_ZW_SET_LEARN_MODE, false, false );
+		msg->Append( 0 );
+		SendMsg( msg, MsgQueue_Command );
+		break;
+	}
+	case ControllerCommand_RemoveDevice:
+	{
+		Log::Write( LogLevel_Info, 0, "Cancel Remove Device" );
+		m_currentControllerCommand->m_controllerCommandNode = 0xff;		// identify the fact that there is no node to remove
+		AddNodeStop( FUNC_ID_ZW_REMOVE_NODE_FROM_NETWORK );
+		break;
+	}
+	case ControllerCommand_TransferPrimaryRole:
+	{
+		Log::Write( LogLevel_Info, 0, "Cancel Transfer Primary Role" );
+		Msg* msg = new Msg( "Transfer Primary Role Stop", 0xff, REQUEST, FUNC_ID_ZW_CONTROLLER_CHANGE, true );
+		msg->Append( CONTROLLER_CHANGE_STOP );
+		SendMsg( msg, MsgQueue_Command );
+		break;
+	}
+	case ControllerCommand_ReplicationSend:
+	{
+		Log::Write( LogLevel_Info, 0, "Cancel Replication Send" );
+		m_currentControllerCommand->m_controllerCommandNode = 0xff;		// identify the fact that there is no new node to initialize
+		AddNodeStop( FUNC_ID_ZW_ADD_NODE_TO_NETWORK );
+		break;
+	}
+	case ControllerCommand_CreateButton:
+	case ControllerCommand_DeleteButton:
+	{
+		if( m_currentControllerCommand->m_controllerCommandNode != 0 )
 		{
-			Log::Write( LogLevel_Info, 0, "Cancel Add Node" );
-			m_currentControllerCommand->m_controllerCommandNode = 0xff;		// identify the fact that there is no new node to initialize
-			AddNodeStop( FUNC_ID_ZW_ADD_NODE_TO_NETWORK );
-			break;
+			SendSlaveLearnModeOff();
 		}
-		case ControllerCommand_CreateNewPrimary:
-		{
-			Log::Write( LogLevel_Info, 0, "Cancel Create New Primary" );
-			Msg* msg = new Msg( "CreateNewPrimary Stop", 0xff, REQUEST, FUNC_ID_ZW_CREATE_NEW_PRIMARY, true );
-			msg->Append( CREATE_PRIMARY_STOP );
-			SendMsg( msg, MsgQueue_Command );
-			break;
-		}
-		case ControllerCommand_ReceiveConfiguration:
-		{
-			Log::Write( LogLevel_Info, 0, "Cancel Receive Configuration" );
-			Msg* msg = new Msg( "ReceiveConfiguration Stop", 0xff, REQUEST, FUNC_ID_ZW_SET_LEARN_MODE, false, false );
-			msg->Append( 0 );
-			SendMsg( msg, MsgQueue_Command );
-			break;
-		}
-		case ControllerCommand_RemoveDevice:
-		{
-			Log::Write( LogLevel_Info, 0, "Cancel Remove Device" );
-			m_currentControllerCommand->m_controllerCommandNode = 0xff;		// identify the fact that there is no node to remove
-			AddNodeStop( FUNC_ID_ZW_REMOVE_NODE_FROM_NETWORK );
-			break;
-		}
-		case ControllerCommand_TransferPrimaryRole:
-		{
-			Log::Write( LogLevel_Info, 0, "Cancel Transfer Primary Role" );
-			Msg* msg = new Msg( "Transfer Primary Role Stop", 0xff, REQUEST, FUNC_ID_ZW_CONTROLLER_CHANGE, true );
-			msg->Append( CONTROLLER_CHANGE_STOP );
-			SendMsg( msg, MsgQueue_Command );
-			break;
-		}
-		case ControllerCommand_ReplicationSend:
-		{
-			Log::Write( LogLevel_Info, 0, "Cancel Replication Send" );
-			m_currentControllerCommand->m_controllerCommandNode = 0xff;		// identify the fact that there is no new node to initialize
-			AddNodeStop( FUNC_ID_ZW_ADD_NODE_TO_NETWORK );
-			break;
-		}
-		case ControllerCommand_CreateButton:
-		case ControllerCommand_DeleteButton:
-		{
-			if( m_currentControllerCommand->m_controllerCommandNode != 0 )
-			{
-				SendSlaveLearnModeOff();
-			}
-			break;
-		}
-		case ControllerCommand_None:
-		case ControllerCommand_RequestNetworkUpdate:
-		case ControllerCommand_RequestNodeNeighborUpdate:
-		case ControllerCommand_AssignReturnRoute:
-		case ControllerCommand_DeleteAllReturnRoutes:
-		case ControllerCommand_RemoveFailedNode:
-		case ControllerCommand_HasNodeFailed:
-		case ControllerCommand_ReplaceFailedNode:
-		case ControllerCommand_SendNodeInformation:
-		{
-			// Cannot cancel
-			return false;
-		}
+		break;
+	}
+	case ControllerCommand_None:
+	case ControllerCommand_RequestNetworkUpdate:
+	case ControllerCommand_RequestNodeNeighborUpdate:
+	case ControllerCommand_AssignReturnRoute:
+	case ControllerCommand_DeleteAllReturnRoutes:
+	case ControllerCommand_RemoveFailedNode:
+	case ControllerCommand_HasNodeFailed:
+	case ControllerCommand_ReplaceFailedNode:
+	case ControllerCommand_SendNodeInformation:
+	{
+		// Cannot cancel
+		return false;
+	}
 	}
 
 	UpdateControllerState( ControllerState_Cancel );
@@ -5995,20 +6011,20 @@ void Driver::NotifyWatchers
 
 		/* check the any ValueID's sent as part of the Notification are still valid */
 		switch (notification->GetType()) {
-			case Notification::Type_ValueChanged:
-			case Notification::Type_ValueRefreshed: {
-				Value *val = GetValue(notification->GetValueID());
-				if (!val) {
-					Log::Write(LogLevel_Info, notification->GetNodeId(), "Dropping Notification as ValueID does not exist");
-					nit = m_notifications.begin();
-					delete notification;
-					val->Release();
-					continue;
-				}
-				break;
+		case Notification::Type_ValueChanged:
+		case Notification::Type_ValueRefreshed: {
+			Value *val = GetValue(notification->GetValueID());
+			if (!val) {
+				Log::Write(LogLevel_Info, notification->GetNodeId(), "Dropping Notification as ValueID does not exist");
+				nit = m_notifications.begin();
+				delete notification;
+				val->Release();
+				continue;
 			}
-			default:
-				break;
+			break;
+		}
+		default:
+			break;
 		}
 
 		Log::Write(LogLevel_Detail, notification->GetNodeId(), "Notification: %s", notification->GetAsString().c_str());
@@ -6418,51 +6434,51 @@ void Driver::HandleSetSlaveLearnModeRequest
 	SendSlaveLearnModeOff();
 	switch( _data[3] )
 	{
-		case SLAVE_ASSIGN_COMPLETE:
+	case SLAVE_ASSIGN_COMPLETE:
+	{
+		Log::Write( LogLevel_Info, nodeId, "SLAVE_ASSIGN_COMPLETE" );
+		if( _data[4] == 0 ) // original node is 0 so adding
 		{
-			Log::Write( LogLevel_Info, nodeId, "SLAVE_ASSIGN_COMPLETE" );
-			if( _data[4] == 0 ) // original node is 0 so adding
+			Log::Write( LogLevel_Info, nodeId, "Adding virtual node ID %d", _data[5] );
+			Node* node = GetNodeUnsafe( m_currentControllerCommand->m_controllerCommandNode );
+			if( node != NULL )
 			{
-				Log::Write( LogLevel_Info, nodeId, "Adding virtual node ID %d", _data[5] );
-				Node* node = GetNodeUnsafe( m_currentControllerCommand->m_controllerCommandNode );
-				if( node != NULL )
-				{
-					node->m_buttonMap[m_currentControllerCommand->m_controllerCommandArg] = _data[5];
-					SendVirtualNodeInfo( _data[5], m_currentControllerCommand->m_controllerCommandNode );
-				}
+				node->m_buttonMap[m_currentControllerCommand->m_controllerCommandArg] = _data[5];
+				SendVirtualNodeInfo( _data[5], m_currentControllerCommand->m_controllerCommandNode );
 			}
-			else
-				if( _data[5] == 0 )
-				{
-					Log::Write( LogLevel_Info, nodeId, "Removing virtual node ID %d", _data[4] );
-				}
-			break;
 		}
-		case SLAVE_ASSIGN_NODEID_DONE:
-		{
-			Log::Write( LogLevel_Info, nodeId, "SLAVE_ASSIGN_NODEID_DONE" );
-			if( _data[4] == 0 ) // original node is 0 so adding
+		else
+			if( _data[5] == 0 )
 			{
-				Log::Write( LogLevel_Info, nodeId, "Adding virtual node ID %d", _data[5] );
-				Node* node = GetNodeUnsafe( m_currentControllerCommand->m_controllerCommandNode );
-				if( node != NULL )
-				{
-					node->m_buttonMap[m_currentControllerCommand->m_controllerCommandArg] = _data[5];
-					SendVirtualNodeInfo( _data[5], m_currentControllerCommand->m_controllerCommandNode );
-				}
+				Log::Write( LogLevel_Info, nodeId, "Removing virtual node ID %d", _data[4] );
 			}
-			else
-				if( _data[5] == 0 )
-				{
-					Log::Write( LogLevel_Info, nodeId, "Removing virtual node ID %d", _data[4] );
-				}
-			break;
-		}
-		case SLAVE_ASSIGN_RANGE_INFO_UPDATE:
+		break;
+	}
+	case SLAVE_ASSIGN_NODEID_DONE:
+	{
+		Log::Write( LogLevel_Info, nodeId, "SLAVE_ASSIGN_NODEID_DONE" );
+		if( _data[4] == 0 ) // original node is 0 so adding
 		{
-			Log::Write( LogLevel_Info, nodeId, "SLAVE_ASSIGN_RANGE_INFO_UPDATE" );
-			break;
+			Log::Write( LogLevel_Info, nodeId, "Adding virtual node ID %d", _data[5] );
+			Node* node = GetNodeUnsafe( m_currentControllerCommand->m_controllerCommandNode );
+			if( node != NULL )
+			{
+				node->m_buttonMap[m_currentControllerCommand->m_controllerCommandArg] = _data[5];
+				SendVirtualNodeInfo( _data[5], m_currentControllerCommand->m_controllerCommandNode );
+			}
 		}
+		else
+			if( _data[5] == 0 )
+			{
+				Log::Write( LogLevel_Info, nodeId, "Removing virtual node ID %d", _data[4] );
+			}
+		break;
+	}
+	case SLAVE_ASSIGN_RANGE_INFO_UPDATE:
+	{
+		Log::Write( LogLevel_Info, nodeId, "SLAVE_ASSIGN_RANGE_INFO_UPDATE" );
+		break;
+	}
 	}
 	m_currentControllerCommand->m_controllerAdded = false;
 
@@ -6595,8 +6611,8 @@ uint8 Driver::NodeFromMessage
 	{
 		switch( buffer[3] )
 		{
-			case FUNC_ID_APPLICATION_COMMAND_HANDLER:		nodeId = buffer[5];	break;
-			case FUNC_ID_ZW_APPLICATION_UPDATE:			nodeId = buffer[5];	break;
+		case FUNC_ID_APPLICATION_COMMAND_HANDLER:		nodeId = buffer[5];	break;
+		case FUNC_ID_ZW_APPLICATION_UPDATE:			nodeId = buffer[5];	break;
 		}
 	}
 	return nodeId;
@@ -6984,7 +7000,8 @@ bool Driver::isNetworkKeySet() {
 
 bool Driver::CheckNodeConfigRevision
 (
-Node *node
+		Node *node,
+		bool downloadUpdate
 )
 {
 	DNSLookup *lu = new DNSLookup;
@@ -6996,75 +7013,87 @@ Node *node
 	ss << std::hex << std::setw(4) << std::setfill('0') << node->GetManufacturerId() << ".db.openzwave.com";
 
 	lu->lookup = ss.str();
+	lu->nextAction = downloadUpdate;
+	lu->type = DNS_Lookup_ConfigRevision;
 	return m_dns->sendRequest(lu);
 }
 
 bool Driver::CheckMFSConfigRevision
 (
+		bool downloadUpdate
 )
 {
 	DNSLookup *lu = new DNSLookup;
 	lu->NodeID = 0;
 	lu->lookup = "mfs.db.openzwave.com";
+	lu->nextAction = downloadUpdate;
+	lu->type = DNS_Lookup_ConfigRevision;
 	return m_dns->sendRequest(lu);
 }
 
 
 void Driver::processConfigRevision
 (
-DNSLookup *result
+		DNSLookup *result
 )
 {
 	if (result->status == DNSError_None) {
-		if (result->NodeID > 0) {
-			LockGuard LG(m_nodeMutex);
-			Node *node = this->GetNode(result->NodeID);
-			if (!node) {
-				Log::Write(LogLevel_Warning, result->NodeID, "Node disappeared when processing Config Revision");
-				return;
-			}
-			node->setLatestConfigRevision((unsigned long)atol(result->result.c_str()));
-			if (node->getConfigRevision() < (unsigned long)atol(result->result.c_str())) {
-				Log::Write(LogLevel_Warning, node->GetNodeId(), "Config for Device \"%s\" is out of date", node->GetProductName().c_str());
-				Notification* notification = new Notification( Notification::Type_UserAlerts );
-				notification->SetHomeAndNodeIds( m_homeId, node->GetNodeId() );
-				notification->SetUserAlertNofification(Notification::Alert_ConfigOutOfDate);
-				QueueNotification( notification );
-
-				bool update = false;
-				Options::Get()->GetOptionAsBool("AutoUpdateConfigFile", &update);
-				if (update)
-					m_mfs->updateConfigFile(this, node);
-			}
-		} else if (result->NodeID == 0) {
-			/* manufacturer_specific */
-			if (m_mfs->GetRevision() < atol(result->result.c_str())) {
-				Log::Write(LogLevel_Warning, "Config Revision of ManufacturerSpecific Database is out of date");
-				Notification* notification = new Notification( Notification::Type_UserAlerts );
-				notification->SetUserAlertNofification(Notification::Alert_MFSOutOfDate);
-				QueueNotification( notification );
-
-				bool update = false;
-				Options::Get()->GetOptionAsBool("AutoUpdateConfigFile", &update);
-				if (update)
-				{
-					m_mfs->updateMFSConfigFile(this);
-				} else {
-					m_mfs->checkInitialized();
+		if (result->type == DNS_Lookup_ConfigRevision) {
+			if (result->NodeID > 0) {
+				LockGuard LG(m_nodeMutex);
+				Node *node = this->GetNode(result->NodeID);
+				if (!node) {
+					Log::Write(LogLevel_Warning, result->NodeID, "Node disappeared when processing Config Revision");
+					return;
 				}
+				node->setLatestConfigRevision((unsigned long)atol(result->result.c_str()));
+				if (node->getConfigRevision() < (unsigned long)atol(result->result.c_str())) {
+					Log::Write(LogLevel_Warning, node->GetNodeId(), "Config for Device \"%s\" is out of date", node->GetProductName().c_str());
+					Notification* notification = new Notification( Notification::Type_UserAlerts );
+					notification->SetHomeAndNodeIds( m_homeId, node->GetNodeId() );
+					notification->SetUserAlertNofification(Notification::Alert_ConfigOutOfDate);
+					QueueNotification( notification );
 
-			} else {
-				/* its upto date - Check to make sure we have all the config files */
-				m_mfs->checkConfigFiles(this);
+					if (result->nextAction == true)
+						m_mfs->updateConfigFile(this, node);
+
+				}
+			} else if (result->NodeID == 0) {
+				/* manufacturer_specific */
+				m_mfs->setLatestRevision(atol(result->result.c_str()));
+				if (m_mfs->getRevision() < atol(result->result.c_str())) {
+					Log::Write(LogLevel_Warning, "Config Revision of ManufacturerSpecific Database is out of date");
+					Notification* notification = new Notification( Notification::Type_UserAlerts );
+					notification->SetUserAlertNofification(Notification::Alert_MFSOutOfDate);
+					QueueNotification( notification );
+
+					if (result->nextAction == true) {
+						m_mfs->updateMFSConfigFile(this);
+					} else {
+						m_mfs->checkInitialized();
+					}
+				} else {
+					/* its upto date - Check to make sure we have all the config files */
+					m_mfs->checkConfigFiles(this);
+				}
 			}
+			return;
 		}
-		return;
 	} else if (result->status == DNSError_NotFound) {
 		Log::Write(LogLevel_Info, "Not Found for Device record %s", result->lookup.c_str());
+		Notification* notification = new Notification( Notification::Type_UserAlerts );
+		notification->SetUserAlertNofification(Notification::Alert_DNSError);
+		QueueNotification( notification );
 	} else if (result->status == DNSError_DomainError) {
 		Log::Write(LogLevel_Warning, "Domain Error Looking up record %s", result->lookup.c_str());
+		Notification* notification = new Notification( Notification::Type_UserAlerts );
+		notification->SetUserAlertNofification(Notification::Alert_DNSError);
+		QueueNotification( notification );
 	} else if (result->status == DNSError_InternalError) {
 		Log::Write(LogLevel_Warning, "Internal DNS Error looking up record %s", result->lookup.c_str());
+		Notification* notification = new Notification( Notification::Type_UserAlerts );
+		notification->SetUserAlertNofification(Notification::Alert_DNSError);
+		QueueNotification( notification );
 	}
 	m_mfs->checkInitialized();
 }
@@ -7072,7 +7101,7 @@ DNSLookup *result
 
 bool Driver::setHttpClient
 (
-i_HttpClient *client
+		i_HttpClient *client
 )
 {
 	if (m_httpClient)
@@ -7081,29 +7110,14 @@ i_HttpClient *client
 	return true;
 }
 
-#if 0
-bool Driver::startDownload
-(
-string url
-)
-{
-	HttpDownload *download = new HttpDownload();
-	download->url = url;
-	download->filename = "/tmp/test.txt";
-	download->operation = HttpDownload::File;
-	Log::Write(LogLevel_Info, "Download Starting for %s saving to %s", download->url.c_str(), download->filename.c_str());
-
-	return m_httpClient->StartDownload(download);
-}
-#endif
 
 bool Driver::startConfigDownload
 (
-	uint16 _manufacturerId,
-	uint16 _productType,
-	uint16 _productId,
-	string configfile,
-	uint8 node
+		uint16 _manufacturerId,
+		uint16 _productType,
+		uint16 _productId,
+		string configfile,
+		uint8 node
 )
 {
 	HttpDownload *download = new HttpDownload();
@@ -7122,7 +7136,7 @@ bool Driver::startConfigDownload
 
 bool Driver::startMFSDownload
 (
-	string configfile
+		string configfile
 )
 {
 	HttpDownload *download = new HttpDownload();
@@ -7137,20 +7151,74 @@ bool Driver::startMFSDownload
 
 bool Driver::refreshNodeConfig
 (
-	uint8 _nodeId
+		uint8 _nodeId
 )
 {
 	LockGuard LG(m_nodeMutex);
-	Log::Write(LogLevel_Info, _nodeId, "Refreshing Node Info after new Config File loaded");
-	/* this will reload the Node, ignoring any cache that exists etc */
-	InitNode(_nodeId);
+	string action;
+	Options::Get()->GetOptionAsString("ReloadAfterUpdate",&action);
+	if (ToUpper(action) == "NEVER") {
+		Notification* notification = new Notification( Notification::Type_UserAlerts );
+		notification->SetUserAlertNofification(Notification::Alert_NodeReloadReqired);
+		QueueNotification( notification );
+		return true;
+	} else if (ToUpper(action) == "IMMEDIATE") {
+		Log::Write(LogLevel_Info, _nodeId, "Refreshing Node Info after new Config File loaded");
+		/* this will reload the Node, ignoring any cache that exists etc */
+		InitNode(_nodeId);
+		return true;
+	} else if (ToUpper(action) == "AWAKE") {
+		Node *node = GetNode(_nodeId);
+		if( !node->IsListeningDevice() )
+		{
+			if( WakeUp* wakeUp = static_cast<WakeUp*>( node->GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
+			{
+				if( !wakeUp->IsAwake() )
+				{
+					/* Node is Asleep. Queue it for WakeUp */
+					MsgQueueItem item;
+					item.m_command = MsgQueueCmd_ReloadNode;
+					item.m_nodeId = _nodeId;
+					wakeUp->QueueMsg( item );
+
+				} else {
+					/* Node is Awake. Reload it */
+					Log::Write(LogLevel_Info, _nodeId, "Refreshing Node Info after new Config File loaded");
+					ReloadNode(_nodeId);
+					return true;
+				}
+			}
+		}
+	}
 	return false;
 }
+
+//-----------------------------------------------------------------------------
+// <Driver::SendQueryStageComplete>
+// Queue an item on the query queue that indicates a stage is complete
+//-----------------------------------------------------------------------------
+void Driver::ReloadNode
+(
+		uint8 const _nodeId
+)
+{
+	MsgQueueItem item;
+	item.m_command = MsgQueueCmd_ReloadNode;
+	item.m_nodeId = _nodeId;
+
+	LockGuard LG(m_nodeMutex);
+	Log::Write( LogLevel_Detail, _nodeId, "Queuing (%s) Node Reload", c_sendQueueNames[MsgQueue_Command]);
+	m_sendMutex->Lock();
+	m_msgQueue[MsgQueue_Command].push_back( item );
+	m_queueEvent[MsgQueue_Command]->Set();
+	m_sendMutex->Unlock();
+}
+
 
 
 void Driver::processDownload
 (
-	HttpDownload *download
+		HttpDownload *download
 )
 {
 	if (download->transferStatus == HttpDownload::Ok) {
@@ -7174,6 +7242,52 @@ void Driver::processDownload
 
 }
 
+bool Driver::downloadConfigRevision
+(
+		Node *node
+)
+{
+	/* only download if the revision is 1 or higher. Revision 0's are for local testing only */
+	if (node->getConfigRevision() <= 0) {
+		Log::Write(LogLevel_Warning, node->GetNodeId(), "Config File Revision is 0. Not Updating");
+		Notification* notification = new Notification( Notification::Type_UserAlerts );
+		notification->SetUserAlertNofification(Notification::Alert_ConfigFileDownloadFailed);
+		QueueNotification( notification );
+		return false;
+	}
+	if (node->getConfigRevision() >= node->getLatestConfigRevision()) {
+		Log::Write(LogLevel_Warning, node->GetNodeId(), "Config File Revision %d is equal to or greater than current revision %d", node->getConfigRevision(), node->getLatestConfigRevision());
+		Notification* notification = new Notification( Notification::Type_UserAlerts );
+		notification->SetUserAlertNofification(Notification::Alert_ConfigFileDownloadFailed);
+		QueueNotification( notification );
+		return false;
+	} else {
+		m_mfs->updateConfigFile(this, node);
+		return true;
+	}
+}
+bool Driver::downloadMFSRevision
+(
+)
+{
+	if (m_mfs->getRevision() <= 0) {
+		Log::Write(LogLevel_Warning, "ManufacturerSpecific Revision is 0. Not Updating");
+		Notification* notification = new Notification( Notification::Type_UserAlerts );
+		notification->SetUserAlertNofification(Notification::Alert_ConfigFileDownloadFailed);
+		QueueNotification( notification );
+		return false;
+	}
+	if (m_mfs->getRevision() >= m_mfs->getLatestRevision()) {
+		Log::Write(LogLevel_Warning, "ManufacturerSpecific Revision %d is equal to or greater than current revision %d", m_mfs->getRevision(), m_mfs->getLatestRevision());
+		Notification* notification = new Notification( Notification::Type_UserAlerts );
+		notification->SetUserAlertNofification(Notification::Alert_ConfigFileDownloadFailed);
+		QueueNotification( notification );
+		return false;
+	}
+	m_mfs->updateMFSConfigFile(this);
+	return true;
+}
+
 void Driver::SubmitEventMsg(EventMsg *event) {
 	LockGuard LG(m_eventMutex);
 	m_eventQueueMsg.push_back(event);
@@ -7194,14 +7308,14 @@ void Driver::ProcessEventMsg
 			m_queueMsgEvent->Reset();
 	}
 	switch (event->type) {
-		case EventMsg::Event_DNS:
-			processConfigRevision(event->event.lookup);
-			delete event->event.lookup;
-			break;
-		case EventMsg::Event_Http:
-			processDownload(event->event.httpdownload);
-			delete event->event.httpdownload;
-			break;
+	case EventMsg::Event_DNS:
+		processConfigRevision(event->event.lookup);
+		delete event->event.lookup;
+		break;
+	case EventMsg::Event_Http:
+		processDownload(event->event.httpdownload);
+		delete event->event.httpdownload;
+		break;
 	}
 	delete event;
 }
@@ -7230,12 +7344,5 @@ ManufacturerSpecificDB *Driver::GetManufacturerSpecificDB
 )
 {
 	return this->m_mfs;
-}
-
-int32 Driver::getCacheRevision
-(
-)
-{
-	return this->m_cacherevision;
 }
 
