@@ -182,31 +182,6 @@ bool SwitchMultilevel::HandleMsg
 			return true;
 		}
 
-		case SwitchMultilevelCmd_Set:
-		{
-			Log::Write( LogLevel_Info, GetNodeId(), "Received SwitchMultiLevel Set: level=%d", _data[1] );
-
-			if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, SwitchMultilevelIndex_Level ) ) )
-			{
-				value->OnValueRefreshed( _data[1] );
-				value->Release();
-			}
-
-			if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, SwitchMultilevelIndex_BrightReceived ) ) ) 
-			{
-				value->OnValueRefreshed(false);
-				value->Release();
-			}
-
-			if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, SwitchMultilevelIndex_DimReceived ) ) ) 
-			{
-				value->OnValueRefreshed(false);
-				value->Release();
-			}
-
-			return true;
-		}
-
 		case SwitchMultilevelCmd_StartLevelChange:
 		{
 			Log::Write( LogLevel_Info, GetNodeId(), "Received SwitchMultiLevel StartLevelChange: data[1]=%d", _data[1] );
