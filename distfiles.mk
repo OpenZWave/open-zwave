@@ -134,6 +134,7 @@ DISTFILES =	.gitignore \
 	config/fibaro/fggc001.xml \
 	config/fibaro/fgk001.xml \
 	config/fibaro/fgms.xml \
+	config/fibaro/fgpb101.xml \
 	config/fibaro/fgr221.xml \
 	config/fibaro/fgr222.xml \
 	config/fibaro/fgrgbwm441.xml \
@@ -252,6 +253,7 @@ DISTFILES =	.gitignore \
 	config/remotec/zts-110.xml \
 	config/remotec/zurc.xml \
 	config/remotec/zxt-120.xml \
+	config/shenzen_neo/nas-wr01z.xml \
 	config/schlage/BE469NXCEN.xml \
 	config/schlagelink/itemp.xml \
 	config/schlagelink/minikeypad.xml \
