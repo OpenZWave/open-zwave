@@ -96,6 +96,8 @@ Version 1.5
  - Add Fibaro FGPB101 Button (Nechry)
  - Pull Request #970 - Neo CoolCam Door/Window Detector from LouiS22 (Nechry)
  - Add Fibaro fgs213 and 223 from sarakha63 (Nechry)
+ - Pull Request #974 - Add support for AU/NZ Frequency Remotec ZXT120 IR Controller from philhawthorne (Nechry)
+ - Pull Request #972 - Neo CoolCam Battery Powered PIR Sensor from LouiS22 (Nechry)
 
 Version 1.4
  - Released 10th Jan, 2016
