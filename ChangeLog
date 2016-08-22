@@ -98,6 +98,7 @@ Version 1.5
  - Add Fibaro fgs213 and 223 from sarakha63 (Nechry)
  - Pull Request #974 - Add support for AU/NZ Frequency Remotec ZXT120 IR Controller from philhawthorne (Nechry)
  - Pull Request #972 - Neo CoolCam Battery Powered PIR Sensor from LouiS22 (Nechry)
+ - Add Wenzhou TKB Control System TZ55 and TZ56 from sarakha63 (Nechry)
 
 Version 1.4
  - Released 10th Jan, 2016
@@ -359,7 +360,6 @@ Version 1.3
  - Store Manufacturer ID, Type and Product ID as shorts instead of strings. (Justin)
  - Change QueryStage_Probe1 to QueryStage_CacheLoad to reflect this is where we start when loading a device from Cache (Justin)
  - Issue #729 - Add Qubino Flush Dimmer ZMNHJD1 from Stephane guillard (Justin)
-
 
 Version 1.2 
  - Released on 15/10/14
