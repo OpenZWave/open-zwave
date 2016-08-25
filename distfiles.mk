@@ -151,6 +151,7 @@ DISTFILES =	.gitignore \
 	config/fortrezz/mimolite.xml \
 	config/fortrezz/ssa2.xml \
 	config/fortrezz/ssa3.xml \
+	config/fortrezz/wwa02.xml \
 	config/frostdale/fdn2nxx.xml \
 	config/ge/12724-dimmer.xml \
 	config/ge/dimmer.xml \
