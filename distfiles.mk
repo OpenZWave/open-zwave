@@ -157,6 +157,7 @@ DISTFILES =	.gitignore \
 	config/ge/dimmer.xml \
 	config/ge/dimmer_module.xml \
 	config/ge/relay.xml \
+	config/ge/receptacle.xml \
 	config/greenwave/powernode1.xml \
 	config/greenwave/powernode6.xml \
 	config/homeseer/ezmotionplus.xml \

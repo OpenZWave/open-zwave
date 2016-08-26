@@ -101,6 +101,9 @@ Version 1.5
  - Add Wenzhou TKB Control System TZ55 and TZ56 from sarakha63 (Nechry)
  - Add FortrezZ WWA-02 Water and Temperature Alarm (Nechry)
  - Pull Request #978 - Added the BeNext P1 Dongle to the manufacturer_specific.xml file from gizmocuz (Nechry)
+ - Pull Request #981 - Added support for GE 12721 Lighting Control Duplex Receptacle from ThomasADavis (Nechry)
+ - Pull Request #980 - Update manufacturer_specific.xml from bailz (Nechry)
+
 
 Version 1.4
  - Released 10th Jan, 2016
