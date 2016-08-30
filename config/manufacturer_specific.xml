@@ -429,7 +429,7 @@
 		<Product type="7333" id="0031" name="Nanogrid: FDN2nxx light switch - where n is 1, 2, 3 or 4 buttons" config="frostdale/fdn2nxx.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0152" name="G.R.">
-		<Product type="0202" id="0511" name="GR105 Auto Valve"/>
+		<Product type="0202" id="0511" name="GR105 Auto Valve" config="gr/gr105.xml"/>
 		<Product type="0003" id="0512" name="GR105n Auto Valve" config="gr/gr105n.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0020" name="General Electric">
