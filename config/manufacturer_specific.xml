@@ -636,6 +636,7 @@
 	</Manufacturer>
 	<Manufacturer id="0165" name="NodOn">
         <Product type="0001" id="0001" name="ASP-3-1-00 Smart Plug" config="nodon/asp3100SmartPlug.xml"/>
+		<Product type="0001" id="0003" name="MSP-3-1-XX Micro Smart Plug" config="nodon/msp31xxMicroSmartPlug.xml"/>
         <Product type="0002" id="0001" name="CRC-3-1-00 Octan Remote" config="nodon/crc3100OctanRemote.xml"/>
         <Product type="0002" id="0002" name="CRC-3-6-0x Soft Remote" config="nodon/crc360xSofremote.xml"/>
         <Product type="0002" id="0003" name="CWS-3-1-01 Wall Switch" config="nodon/cws3101wallswitch.xml"/>
