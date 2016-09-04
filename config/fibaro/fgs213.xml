@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Product xmlns='http://code.google.com/p/open-zwave/'>
   <!-- COMMAND_CLASS_SWITCH_MULTILEVEL. This class is in the list reported by the device, but it does not respond to requests -->
-  <CommandClass id="38" action="remove"/>
+  <CommandClass id="38" getsupported="false"/>
   <!-- Configuration -->
   <CommandClass id="112">
     <Value type="list" genre="config" instance="1" index="9" label="Saving state before power failure" value="1" size="1">
@@ -27,8 +27,11 @@
     <Value type="short" genre="config" instance="1" index="12" label="First channel - time parameter for delay/auto ON/OFF modes" value="50" min="1" max="32000" size="2">
       <Help>This parameter allows to set time parameter used in timed modes. (s)</Help>
     </Value>
-    <Value type="short" genre="config" instance="1" index="13" label="First channel - pulse time for flashing mode" value="50" min="1" max="32000" size="2">
-      <Help>This parameter allows to set time of switching to opposite state in flashing mode (s)</Help>
+    <Value type="short" genre="config" instance="1" index="13" label="First channel - pulse time for flashing mode" value="5" min="1" max="32000" size="2">
+      <Help>
+        This parameter allows to set time of switching to opposite state in flashing mode.
+        1-32000 (0.1-3200.0s, 0.1s step)
+      </Help>
     </Value>
     <Value type="list" genre="config" instance="1" index="15" label="Second channel - operating mode" value="0" size="1">
       <Help>This parameter allows to choose operating for the 2st channel controlled by the S2 switch.</Help>
@@ -48,8 +51,11 @@
     <Value type="short" genre="config" instance="1" index="17" label="Second channel - time parameter for delay/auto ON/OFF modes" value="50" min="1" max="32000" size="2">
       <Help>This parameter allows to set time parameter used in timed modes. (s)</Help>
     </Value>
-    <Value type="short" genre="config" instance="1" index="18" label="Second channel - pulse time for flashing mode" value="50" min="1" max="32000" size="2">
-      <Help>This parameter allows to set time of switching to opposite state in flashing mode (s)</Help>
+    <Value type="short" genre="config" instance="1" index="18" label="Second channel - pulse time for flashing mode" value="5" min="1" max="32000" size="2">
+      <Help>
+        This parameter allows to set time of switching to opposite state in flashing mode.
+        1-32000 (0.1-3200.0s, 0.1s step)
+      </Help>
     </Value>
     <Value type="list" genre="config" instance="1" index="20" label="Switch type" value="2" size="1">
       <Help>Inputs type configuration</Help>
