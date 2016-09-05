@@ -375,6 +375,26 @@ bool Options::Lock
 	ParseOptionsString( m_commandLine );
 	m_locked = true;
 
+	/* Log our Configured Options */
+	map<string,Option*>::iterator it;
+	Log::Write( LogLevel_Info, "Options:");
+	for (it = m_options.begin(); it != m_options.end(); it++) {
+		Option *opt = it->second;
+		switch (opt->m_type) {
+                        case OptionType_Bool:
+                        	Log::Write( LogLevel_Info, "\t%s: %s", it->first.c_str(), opt->m_valueBool == true ? "true" : "false");
+                        	break;
+                        case OptionType_Int:
+                        	Log::Write( LogLevel_Info, "\t%s: %d", it->first.c_str(), opt->m_valueInt);
+                        	break;
+                        case OptionType_String:
+                        	Log::Write( LogLevel_Info, "\t%s: %s", it->first.c_str(), opt->m_valueString.c_str());
+                        	break;
+			case OptionType_Invalid:
+				Log::Write( LogLevel_Info, "\t%s: Invalid Type");
+				break;
+		}
+	}	
 	return true;
 }
 
