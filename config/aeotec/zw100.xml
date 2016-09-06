@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Aeon Labs Multi Sensor 6 -->
-<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="3">
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="4">
 	<MetaData>
-		<MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0086:0064:0002 OZWInfoPage</MetaDataItem>
-		<MetaDataItem name="ZWProductPage">http://www.openzwave.com/device-database/0086:0064:0002 ZWProductPage </MetaDataItem>
-		<MetaDataItem name="Pepper1Page">http://www.openzwave.com/device-database/0086:0064:0002 Pepper1Page </MetaDataItem>
-		<MetaDataItem name="ProductPic">http://www.openzwave.com/device-database/0086:0064:0002 ProductPic </MetaDataItem>
-		<MetaDataItem name="ProductManual">http://www.openzwave.com/device-database/0086:0064:0002 ProductManual </MetaDataItem>
-		<MetaDataItem name="ProductPage">http://www.openzwave.com/device-database/0086:0064:0002 ProductPage</MetaDataItem>
+		<MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0086:0064:0002</MetaDataItem>
+		<MetaDataItem name="ZWProductPage">http://products.z-wavealliance.org/products/1812</MetaDataItem>
+		<MetaDataItem name="Pepper1Page">http://www.pepper1.net/zwavedb/device/824</MetaDataItem>
+		<MetaDataItem name="ProductPic">http://www.pepper1.net/zwavedb/uploads/resources/1c9f763dbd9e82b5c3d8d9518392c2bdbdafb2ee.png </MetaDataItem>
+		<MetaDataItem name="ProductManual">https://aeotec.freshdesk.com/support/solutions/folders/6000149641</MetaDataItem>
+		<MetaDataItem name="ProductPage">http://aeotec.com/z-wave-sensor</MetaDataItem>
 	</MetaData>
 	<!-- Configuration Parameters -->
 	<CommandClass id="112">

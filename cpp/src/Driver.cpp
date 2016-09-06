@@ -7352,7 +7352,7 @@ string Driver::GetMetaData
 	Node* node = GetNode( _nodeId );
 	if( node != NULL )
 	{
-		node->GetMetaData( _metadata );
+		return node->GetMetaData( _metadata );
 	}
 	return "";
 }
