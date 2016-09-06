@@ -132,7 +132,8 @@ namespace OpenZWave
 			Alert_MFSOutOfDate,				/**< the manufacturer_specific.xml file is out of date. */
 			Alert_ConfigFileDownloadFailed, /**< A Config File failed to download */
 			Alert_DNSError,					/**< A error occurred performing a DNS Lookup */
-			Alert_NodeReloadReqired			/**< A new Config file has been discovered for this node, and its pending a Reload to Take Effect */
+			Alert_NodeReloadReqired,		/**< A new Config file has been discovered for this node, and its pending a Reload to Take Effect */
+			Alert_UnsupportedController		/**< The Controller is not running a Firmware Library we support */
 		};
 
 		/**
