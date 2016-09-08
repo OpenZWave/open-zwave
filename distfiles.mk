@@ -209,6 +209,7 @@ DISTFILES =	.gitignore \
 	config/philio/pan03.xml \
 	config/philio/pan04.xml \
 	config/philio/pan08.xml \
+	config/philio/phpab01.xml \
 	config/philio/phpat02.xml \
 	config/philio/phpsg01.xml \
 	config/philio/pse02.xml \

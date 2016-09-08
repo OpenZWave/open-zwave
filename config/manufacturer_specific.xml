@@ -666,6 +666,7 @@
 		<Product type="0002" id="001f" name="PH-PAT02.eu Flood Multisensor 3in1" config="philio/phpat02.xml"/>
 		<Product type="0002" id="0020" name="PH-PAT02-B.eu Multisensor 2in1" config="philio/phpat02.xml"/>
 		<Product type="0004" id="000a" name="PH-PSE02.eu Zipato Indoor Siren" config="philio/pse02.xml"/>
+		<Product type="0006" id="001a" name="PH-PAB01.eu Micromodule Energy Meter" config="philio/phpab01.xml"/>
 		<Product type="0009" id="0022" name="PSR04 Smart Color Button" config="philio/psr04.xml"/>
 	</Manufacturer>
 	<Manufacturer id="010e" name="Polycontrol">
