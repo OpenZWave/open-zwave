@@ -3,7 +3,7 @@
     <!--MCOHome (Zipato) MH-P210 Mini Energy Dimmer -->
     <!-- Configuration -->
     <CommandClass id="112">
-        <Value type="byte" genre="config" instance="1" index="1" label="Report" size="1" value="0">
+        <Value type="byte" genre="config" instance="1" index="2" label="Report" size="1" value="0">
             <Help>
                 Bit 0: KWH Report
                 Bit 1: Voltage Report
@@ -12,7 +12,7 @@
                 (Bit Set to 1: enable 0:disable)
             </Help>
         </Value>
-        <Value type="short" genre="config" instance="1" index="2" label="Interval time" size="2" min="0" max="65535" units="second" value="600">
+        <Value type="short" genre="config" instance="1" index="3" label="Interval time" size="2" min="0" max="65535" units="second" value="600">
             <Help>0 to 65535 second.
             </Help>
         </Value>
