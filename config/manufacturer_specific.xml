@@ -910,6 +910,7 @@
 	<Manufacturer id="0149" name="wiDom">
 		<Product type="0012" id="0104" name="UBS104 Universal Relay Switch" config="widom/UBS104.xml"/>
 		<Product type="1214" id="0304" name="UME304 Energy Driven Switch" config="widom/UME304C_S.xml"/>
+		<Product type="1214" id="0504" name="WDS Universal Double Switch" config="widom/WDS.xml"/>
 	</Manufacturer>
 	<Manufacturer id="004c" name="Woodward Labs">
 	</Manufacturer>
