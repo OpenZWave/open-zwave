@@ -59,7 +59,7 @@ Aeotec ZW130 WallMote Quad, base on Engineering Spec 7/29/2016 (Initial draft.)
     <!-- Association Groups -->
     <CommandClass id="133">
         <Associations num_groups="9">
-            <Group index="1" max_associations="5" label="Lifeline"/>
+            <Group index="1" max_associations="1" label="Lifeline"/>
             <Group index="2" max_associations="5" label="Basic Set On/Off control via Button 1"/>
             <Group index="3" max_associations="5" label="Multilevel Switch Set Dimmer control via Button 1"/>
             <Group index="4" max_associations="5" label="Basic Set On/Off control via Button 2"/>
