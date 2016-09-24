@@ -418,6 +418,7 @@
 	</Manufacturer>
 	<Manufacturer id="0084" name="FortrezZ">
 		<Product type="0021" id="010a" name="WWA-02 Water and Temperature Alarm" config="fortrezz/wwa02.xml"/>
+		<Product type="0241" id="0300" name="WV-01 Automated Water Shut-Off Valve" config="fortrezz/wv01.xml"/>
 		<Product type="0311" id="0109" name="SSA1 / SSA2 - Siren/Strobe Light Alarm" config="fortrezz/ssa2.xml"/>
 		<Product type="0311" id="010b" name="SSA1 / SSA2 - Siren/Strobe Light Alarm" config="fortrezz/ssa2.xml"/>
 		<Product type="0313" id="010b" name="SSA2 - Siren/Strobe Light Alarm" config="fortrezz/ssa2.xml"/>
