@@ -48,9 +48,28 @@ enum CentralSceneCmd
 
 enum CentralScene_ValueID_Index
 {
-	CentralScene_Count		= 0x00
+	CentralScene_Count		        = 0x00,
+	CentralScene_SinglePress        = 0x01,
+	CentralScene_Released           = 0x02,
+	CentralScene_HeldDown           = 0x03,
+	CentralScene_DoublePress        = 0x04,
+	CentralScene_TriplePress        = 0x05,
+	CentralScene_Pressed4Times      = 0x06,
+	CentralScene_Pressed5Times      = 0x07
+
 };
 
+enum CentralScene_KeyAttributesMask
+{
+    CentralSceneMask_KeyPressed1time        = 0x01,
+    CentralSceneMask_KeyReleased            = 0x02,
+    CentralSceneMask_HeldDown               = 0x04,
+    CentralSceneMask_KeyPressed2times       = 0x08,
+    CentralSceneMask_KeyPressed3times       = 0x10,
+    CentralSceneMask_KeyPressed4times       = 0x20,
+    CentralSceneMask_KeyPressed5times       = 0x40,
+    CentralSceneMask_reserved               = 0x80,
+};
 //-----------------------------------------------------------------------------
 // <CentralScene::CentralScene>
 // Constructor
@@ -80,7 +99,7 @@ bool CentralScene::RequestState
 {
 	Log::Write(LogLevel_Info, GetNodeId(), "CentralScene RequestState: %d", _requestFlags);
 	bool requests = false;
-	if( ( _requestFlags & RequestFlag_AfterMark ))
+	if( ( _requestFlags & RequestFlag_Dynamic ))
 	{
 			requests = RequestValue( _requestFlags, CentralSceneCmd_Capability_Get, _instance, _queue );
 	} else {
@@ -162,34 +181,48 @@ bool CentralScene::HandleMsg
 	if( CentralSceneCmd_Set == (CentralSceneCmd)_data[0] )
 	{
 		// Central Scene Set received so send notification
-		int32 when;
-		if( _data[2] == 0 )
-			when = 0;
-		else if( _data[2] <= 0x7F )
-			when = _data[2];
-		else if( _data[2] <= 0xFE )
-			when = 60 * _data[2];
-		else
-			when = 0;
-		Log::Write( LogLevel_Info, GetNodeId(), "Received Central Scene set from node %d: scene id=%d in %d seconds. Sending event notification.", GetNodeId(), _data[3], when);
+		uint8 keyAttribute = _data[2];
+		uint8 sceneID = _data[3];
+		Log::Write( LogLevel_Info, GetNodeId(), "Received Central Scene set from node %d: scene id=%d with key Attribute %d. Sending event notification.", GetNodeId(), sceneID, keyAttribute);
 
-		if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, _data[3] ) ) )
+		int index = 1;
+		if      ( keyAttribute == 0) { index = CentralScene_SinglePress; }
+		else if ( keyAttribute == 1) { index = CentralScene_Released; }
+		else if ( keyAttribute == 2) { index = CentralScene_HeldDown; }
+		else if ( keyAttribute == 3) { index = CentralScene_DoublePress; }
+		else if ( keyAttribute == 4) { index = CentralScene_TriplePress; }
+		else if ( keyAttribute == 5) { index = CentralScene_Pressed4Times; }
+		else if ( keyAttribute == 6) { index = CentralScene_Pressed5Times;}
+
+		if( ValueInt* value = static_cast<ValueInt*>( GetValue( sceneID, index ) ) )
 		{
-			value->OnValueRefreshed( when );
+			value->OnValueRefreshed( 1 );
 			value->Release();
 		} else {
 			Log::Write( LogLevel_Warning, GetNodeId(), "No ValueID created for Scene %d", _data[3]);
 			return false;
 		}
 		return true;
-	} else if (CentralSceneCmd_Capability_Report == (CentralSceneCmd)_data[0]) {
+	}
+	else if (CentralSceneCmd_Capability_Report == (CentralSceneCmd)_data[0])
+	{
 		/* Create a Number of ValueID's based on the m_scenecount variable
 		 * We prefer what the Config File specifies rather than what is returned by
 		 * the Device...
 		 */
 		int scenecount = _data[1];
-		if (m_scenecount != 0)
+		if (scenecount != 0)
+		{
 			m_scenecount = scenecount;
+		}
+		bool identical = false;
+		bool version2orHigher = false;
+		if ( _length >= 2 )
+		{
+		    version2orHigher = true;
+		    identical = _data[2] & 0b00000001;
+		    Log::Write( LogLevel_Warning, GetNodeId(), "this is version 2 or higher, all scenes identical? %i",identical);
+		}
 
 		if ( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, CentralScene_Count)))
 		{
@@ -201,10 +234,52 @@ bool CentralScene::HandleMsg
 
 		if( Node* node = GetNodeUnsafe() )
 		{
-				char lbl[64];
-				for (int i = 1; i <= m_scenecount; i++) {
-					snprintf(lbl, 64, "Scene %d", i);
-					node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), _instance, i, lbl, "", true, false, 0, 0 );
+				for (int i = 1; i <= m_scenecount && i <= 31; i++) {
+					if ( version2orHigher )
+					{
+					    if ( identical )
+					    {
+					        // instance for scene number normaly isn't right, but in this case i think this is the best solution.
+					        // Because i higly doubt that someone will ever use the multichannel class together with the centralScene class.
+                            int keyAttributes = _data[3];
+                            if ( keyAttributes & CentralSceneMask_KeyPressed1time)
+                            {
+                                node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralScene_SinglePress, "Scene", "", true, false, 0, 0 );
+                            }
+                            if ( keyAttributes & CentralSceneMask_KeyPressed2times)
+                            {
+                                node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralScene_DoublePress, "Scene double press", "", true, false, 0, 0 );
+                            }
+                            if ( keyAttributes & CentralSceneMask_HeldDown)
+                            {
+                                node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralScene_HeldDown, "Scene held down", "", true, false, 0, 0 );
+                            }
+                            if ( keyAttributes & CentralSceneMask_KeyReleased)
+                            {
+                                node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralScene_Released, "Scene released", "", true, false, 0, 0 );
+                            }
+                            if ( keyAttributes & CentralSceneMask_KeyPressed3times)
+                            {
+                                node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralScene_TriplePress, "Scene triple press", "", true, false, 0, 0 );
+                            }
+                            if ( keyAttributes & CentralSceneMask_KeyPressed4times)
+                            {
+                                node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralScene_Pressed4Times, "Scene pressed 4 times", "", true, false, 0, 0 );
+                            }
+                            if ( keyAttributes & CentralSceneMask_KeyPressed5times)
+                            {
+                                node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralScene_Pressed5Times, "Scene pressed 5 times", "", true, false, 0, 0 );
+                            }
+                        }
+					    else
+					    {
+					        //in case not all scenes are identical, we need to loop through all keyAttribute Bytes and assign them according to the right instance.
+					    }
+                    }
+                    else
+                    {
+                        node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralScene_SinglePress, "Scene", "", true, false, 0, 0 );
+					}
 				}
 
 		} else {
