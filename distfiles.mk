@@ -83,6 +83,7 @@ DISTFILES =	.gitignore \
 	config/device_classes.xsd \
 	config/device_configuration.xsd \
 	config/devolo/mt02648.xml \
+	config/devolo/mt2646.xml \
 	config/dlink/dch-z110.xml \
 	config/dlink/dch-z120.xml \
 	config/dlink/dch-z510.xml \

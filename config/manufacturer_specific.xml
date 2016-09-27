@@ -246,6 +246,7 @@
 	</Manufacturer>
 	<Manufacturer id="0175" name="Devolo home Control">
 		<Product type="0002" id="000e" name="Door/Window Contact MT 02648" config="devolo/mt02648.xml"/>
+		<Product type="0001" id="0011" name="Metering Plug MT 2646" config="devolo/mt2646.xml"/>
     </Manufacturer>
 	<Manufacturer id="0103" name="DiehlControls">
         <Product type="0002" id="0002" name="Dimmer Actuator"/>
