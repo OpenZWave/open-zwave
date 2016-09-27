@@ -654,6 +654,10 @@
 	</Manufacturer>
 	<Manufacturer id="0041" name="OpenPeak Inc.">
 	</Manufacturer>
+	<Manufacturer id="0245" name="Permundo">
+        	<Product type="0003" id="0002" name="PSC132ZW Smart Mini Plug"/>
+		<Product type="0003" id="0001" name="PSC234ZW Smart Plug"/>
+    	</Manufacturer>
 	<Manufacturer id="013c" name="Philio Technology Corporation">
 		<Product type="0001" id="0001" name="PAN11-4 Smart Energy Plug In Switch"/>
 		<Product type="0001" id="0003" name="PAN04-1 Double Relay Switch 2x1.5kW with Power Measurement" config="philio/pan04.xml"/>
