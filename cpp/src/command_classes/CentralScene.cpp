@@ -82,6 +82,7 @@ CentralScene::CentralScene
 CommandClass( _homeId, _nodeId ),
 m_scenecount(0)
 {
+    SetStaticRequest( StaticRequest_Values );
 	Log::Write(LogLevel_Info, GetNodeId(), "CentralScene - Created %d", HasStaticRequest( StaticRequest_Values ));
 }
 
@@ -99,7 +100,7 @@ bool CentralScene::RequestState
 {
 	Log::Write(LogLevel_Info, GetNodeId(), "CentralScene RequestState: %d", _requestFlags);
 	bool requests = false;
-	if( ( _requestFlags & RequestFlag_Dynamic ))
+	if( (_requestFlags & RequestFlag_Static) && HasStaticRequest( StaticRequest_Values ) )
 	{
 			requests = RequestValue( _requestFlags, CentralSceneCmd_Capability_Get, _instance, _queue );
 	} else {
