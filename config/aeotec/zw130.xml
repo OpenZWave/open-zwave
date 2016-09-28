@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Aeotec ZW130 WallMote Quad, base on Engineering Spec 8/23/2016
+Aeotec ZW130 WallMote Quad, base on Engineering Spec 9/27/2016
 -->
 <Product xmlns='http://code.google.com/p/open-zwave/'>
     <!-- COMMAND_CLASS_BASIC -->
@@ -30,7 +30,7 @@ Aeotec ZW130 WallMote Quad, base on Engineering Spec 8/23/2016
             <Help>To configure which report will be sent when pressing the buttons</Help>
             <Item label="Send nothing" value="0"/>
             <Item label="Send Central Scene Command Notification" value="1"/>
-            <Item label="Send Central Scene Command Notification and Configuration report" value="2"/>
+            <Item label="Send Central Scene Command Notification and Configuration report" value="3"/>
         </Value>
         <Value type="int" index="5" genre="config" label="Color when button is pressed" units="" value="65280" >
             <Help>
