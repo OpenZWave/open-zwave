@@ -48,14 +48,14 @@ enum CentralSceneCmd
 
 enum CentralScene_ValueID_Index
 {
-	CentralScene_Count		        = 0x00,
-	CentralScene_SinglePress        = 0x01,
-	CentralScene_Released           = 0x02,
-	CentralScene_HeldDown           = 0x03,
-	CentralScene_DoublePress        = 0x04,
-	CentralScene_TriplePress        = 0x05,
-	CentralScene_Pressed4Times      = 0x06,
-	CentralScene_Pressed5Times      = 0x07
+	CentralSceneIndex_SceneCount         = 0x00,
+	CentralSceneIndex_SinglePress        = 0x01,
+	CentralSceneIndex_Released           = 0x02,
+	CentralSceneIndex_HeldDown           = 0x03,
+	CentralSceneIndex_DoublePress        = 0x04,
+	CentralSceneIndex_TriplePress        = 0x05,
+	CentralSceneIndex_Pressed4Times      = 0x06,
+	CentralSceneIndex_Pressed5Times      = 0x07
 
 };
 
@@ -186,13 +186,13 @@ bool CentralScene::HandleMsg
 		Log::Write( LogLevel_Info, GetNodeId(), "Received Central Scene set from node %d: scene id=%d with key Attribute %d. Sending event notification.", GetNodeId(), sceneID, keyAttribute);
 
 		int index = 1;
-		if      ( keyAttribute == 0) { index = CentralScene_SinglePress; }
-		else if ( keyAttribute == 1) { index = CentralScene_Released; }
-		else if ( keyAttribute == 2) { index = CentralScene_HeldDown; }
-		else if ( keyAttribute == 3) { index = CentralScene_DoublePress; }
-		else if ( keyAttribute == 4) { index = CentralScene_TriplePress; }
-		else if ( keyAttribute == 5) { index = CentralScene_Pressed4Times; }
-		else if ( keyAttribute == 6) { index = CentralScene_Pressed5Times;}
+		if      ( keyAttribute == 0) { index = CentralSceneIndex_SinglePress; }
+		else if ( keyAttribute == 1) { index = CentralSceneIndex_Released; }
+		else if ( keyAttribute == 2) { index = CentralSceneIndex_HeldDown; }
+		else if ( keyAttribute == 3) { index = CentralSceneIndex_DoublePress; }
+		else if ( keyAttribute == 4) { index = CentralSceneIndex_TriplePress; }
+		else if ( keyAttribute == 5) { index = CentralSceneIndex_Pressed4Times; }
+		else if ( keyAttribute == 6) { index = CentralSceneIndex_Pressed5Times;}
 
 		if( ValueInt* value = static_cast<ValueInt*>( GetValue( sceneID, index ) ) )
 		{
@@ -224,7 +224,7 @@ bool CentralScene::HandleMsg
 		    Log::Write( LogLevel_Warning, GetNodeId(), "this is version 2 or higher, all scenes identical? %i",identical);
 		}
 
-		if ( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, CentralScene_Count)))
+		if ( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, CentralSceneIndex_SceneCount)))
 		{
 			value->OnValueRefreshed(m_scenecount);
 			value->Release();
@@ -244,31 +244,31 @@ bool CentralScene::HandleMsg
                             int keyAttributes = _data[3];
                             if ( keyAttributes & CentralSceneMask_KeyPressed1time)
                             {
-                                node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralScene_SinglePress, "Scene", "", true, false, 0, 0 );
+                                node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralSceneIndex_SinglePress, "Scene", "", true, false, 0, 0 );
                             }
                             if ( keyAttributes & CentralSceneMask_KeyPressed2times)
                             {
-                                node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralScene_DoublePress, "Scene double press", "", true, false, 0, 0 );
+                                node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralSceneIndex_DoublePress, "Scene double press", "", true, false, 0, 0 );
                             }
                             if ( keyAttributes & CentralSceneMask_HeldDown)
                             {
-                                node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralScene_HeldDown, "Scene held down", "", true, false, 0, 0 );
+                                node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralSceneIndex_HeldDown, "Scene held down", "", true, false, 0, 0 );
                             }
                             if ( keyAttributes & CentralSceneMask_KeyReleased)
                             {
-                                node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralScene_Released, "Scene released", "", true, false, 0, 0 );
+                                node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralSceneIndex_Released, "Scene released", "", true, false, 0, 0 );
                             }
                             if ( keyAttributes & CentralSceneMask_KeyPressed3times)
                             {
-                                node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralScene_TriplePress, "Scene triple press", "", true, false, 0, 0 );
+                                node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralSceneIndex_TriplePress, "Scene triple press", "", true, false, 0, 0 );
                             }
                             if ( keyAttributes & CentralSceneMask_KeyPressed4times)
                             {
-                                node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralScene_Pressed4Times, "Scene pressed 4 times", "", true, false, 0, 0 );
+                                node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralSceneIndex_Pressed4Times, "Scene pressed 4 times", "", true, false, 0, 0 );
                             }
                             if ( keyAttributes & CentralSceneMask_KeyPressed5times)
                             {
-                                node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralScene_Pressed5Times, "Scene pressed 5 times", "", true, false, 0, 0 );
+                                node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralSceneIndex_Pressed5Times, "Scene pressed 5 times", "", true, false, 0, 0 );
                             }
                         }
 					    else
@@ -278,7 +278,7 @@ bool CentralScene::HandleMsg
                     }
                     else
                     {
-                        node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralScene_SinglePress, "Scene", "", true, false, 0, 0 );
+                        node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralSceneIndex_SinglePress, "Scene", "", true, false, 0, 0 );
 					}
 				}
 
@@ -301,7 +301,7 @@ void CentralScene::CreateVars
 {
 	if( Node* node = GetNodeUnsafe() )
 	{
-		node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, CentralScene_Count, "Scene Count", "", true, false, 0, 0 );
+		node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, CentralSceneIndex_SceneCount, "Scene Count", "", true, false, 0, 0 );
 	}
 }
 
