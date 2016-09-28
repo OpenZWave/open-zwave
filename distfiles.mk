@@ -73,6 +73,7 @@ DISTFILES =	.gitignore \
 	config/aeotec/zw120.xml \
 	config/aeotec/zw121.xml \
 	config/aeotec/zw130.xml \
+	config/assa_abloy/KeyfreeConnected.xml \
 	config/assa_abloy/RealLivingCapTouch.xml \
 	config/cooper/RF9505-T.xml \
 	config/cooper/RF9540-N.xml \
@@ -158,8 +159,8 @@ DISTFILES =	.gitignore \
 	config/ge/12724-dimmer.xml \
 	config/ge/dimmer.xml \
 	config/ge/dimmer_module.xml \
-	config/ge/relay.xml \
 	config/ge/receptacle.xml \
+	config/ge/relay.xml \
 	config/gr/gr105.xml \
 	config/gr/gr105n.xml \
 	config/greenwave/powernode1.xml \
@@ -264,13 +265,13 @@ DISTFILES =	.gitignore \
 	config/remotec/zts-110.xml \
 	config/remotec/zurc.xml \
 	config/remotec/zxt-120.xml \
-	config/shenzen_neo/nas-ds01z.xml \
-	config/shenzen_neo/nas-pd01z.xml \
-	config/shenzen_neo/nas-wr01z.xml \
 	config/schlage/BE469NXCEN.xml \
 	config/schlagelink/itemp.xml \
 	config/schlagelink/minikeypad.xml \
 	config/sensative/strips.xml \
+	config/shenzen_neo/nas-ds01z.xml \
+	config/shenzen_neo/nas-pd01z.xml \
+	config/shenzen_neo/nas-wr01z.xml \
 	config/stelpro/stzw402.xml \
 	config/swiid/swiidinter.xml \
 	config/swiid/swiidplug.xml \
