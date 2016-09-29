@@ -2,7 +2,7 @@
 <!-- Heatit Z-Wave thermostat TF 021 -->
 <Product xmlns='http://code.google.com/p/open-zwave/'>
 
-	<CommandClass id="64" name="COMMAND_CLASS_THERMOSTAT_MODE" value="1">
+	<CommandClass id="64" name="COMMAND_CLASS_THERMOSTAT_MODE">
 
 		<Value type="list" genre="user" instance="1" index="0" label="Mode" units="" read_only="false" write_only="false" min="0" max="0" value="0">
 			<Item label="Off" value="0"/>
