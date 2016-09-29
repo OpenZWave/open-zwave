@@ -212,7 +212,7 @@ bool CentralScene::HandleMsg
 		 * the Device...
 		 */
 		int scenecount = _data[1];
-		if (scenecount != 0)
+		if (m_scenecount == 0)
 		{
 			m_scenecount = scenecount;
 		}
@@ -235,80 +235,79 @@ bool CentralScene::HandleMsg
 
 		if( Node* node = GetNodeUnsafe() )
 		{
-				for (int i = 1; i <= m_scenecount ; i++) {
-					if ( version2orHigher )
-					{
-					    if ( identical )
-					    {
-					        // instance for scene number normaly isn't right, but in this case i think this is the best solution.
-					        // Because i higly doubt that someone will ever use the multichannel class together with the centralScene class.
-                            int keyAttributes = _data[3];
-                            if ( keyAttributes & CentralSceneMask_KeyPressed1time)
-                            {
-                                node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralSceneIndex_SinglePress, "Scene", "", true, false, 0, 0 );
-                            }
-                            if ( keyAttributes & CentralSceneMask_KeyPressed2times)
-                            {
-                                node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralSceneIndex_DoublePress, "Scene double press", "", true, false, 0, 0 );
-                            }
-                            if ( keyAttributes & CentralSceneMask_HeldDown)
-                            {
-                                node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralSceneIndex_HeldDown, "Scene held down", "", true, false, 0, 0 );
-                            }
-                            if ( keyAttributes & CentralSceneMask_KeyReleased)
-                            {
-                                node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralSceneIndex_Released, "Scene released", "", true, false, 0, 0 );
-                            }
-                            if ( keyAttributes & CentralSceneMask_KeyPressed3times)
-                            {
-                                node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralSceneIndex_TriplePress, "Scene triple press", "", true, false, 0, 0 );
-                            }
-                            if ( keyAttributes & CentralSceneMask_KeyPressed4times)
-                            {
-                                node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralSceneIndex_Pressed4Times, "Scene pressed 4 times", "", true, false, 0, 0 );
-                            }
-                            if ( keyAttributes & CentralSceneMask_KeyPressed5times)
-                            {
-                                node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralSceneIndex_Pressed5Times, "Scene pressed 5 times", "", true, false, 0, 0 );
-                            }
-                        }
-					    else
-					    {
-					        int numberOfBitMasks = _data[2] & 0b00000110;
-					        for ( int i = 1; i <= numberOfBitMasks; i++ )
-					        {
-					            int keyAttributes = _data[2 +i];
-					            if ( keyAttributes & CentralSceneMask_KeyPressed1time)
-					            {
-					                node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralSceneIndex_SinglePress, "Scene", "", true, false, 0, 0 );
-					            }
-					            if ( keyAttributes & CentralSceneMask_KeyPressed2times)
-					            {
-					                node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralSceneIndex_DoublePress, "Scene double press", "", true, false, 0, 0 );
-					            }
-					            if ( keyAttributes & CentralSceneMask_HeldDown)
-					            {
-					                node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralSceneIndex_HeldDown, "Scene held down", "", true, false, 0, 0 );
-					            }
-					            if ( keyAttributes & CentralSceneMask_KeyReleased)
-					            {
-					                node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralSceneIndex_Released, "Scene released", "", true, false, 0, 0 );
-					            }
-					            if ( keyAttributes & CentralSceneMask_KeyPressed3times)
-					            {
-					                node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralSceneIndex_TriplePress, "Scene triple press", "", true, false, 0, 0 );
-					            }
-					            if ( keyAttributes & CentralSceneMask_KeyPressed4times)
-					            {
-					                node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralSceneIndex_Pressed4Times, "Scene pressed 4 times", "", true, false, 0, 0 );
-					            }
-					            if ( keyAttributes & CentralSceneMask_KeyPressed5times)
-					            {
-					                node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralSceneIndex_Pressed5Times, "Scene pressed 5 times", "", true, false, 0, 0 );
-					            }
-					        }
-					        //in case not all scenes are identical, we need to loop through all keyAttribute Bytes and assign them according to the right instance.
-					    }
+		    for (int i = 1; i <= m_scenecount ; i++) {
+		        if ( version2orHigher )
+		        {
+		            if ( identical )
+		            {
+		                // instance for scene number normaly isn't right, but in this case i think this is the best solution.
+		                // Because i higly doubt that someone will ever use the multichannel class together with the centralScene class.
+		                int keyAttributes = _data[3];
+		                if ( keyAttributes & CentralSceneMask_KeyPressed1time)
+		                {
+		                    node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralSceneIndex_SinglePress, "Scene", "", true, false, 0, 0 );
+		                }
+		                if ( keyAttributes & CentralSceneMask_KeyPressed2times)
+		                {
+		                    node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralSceneIndex_DoublePress, "Scene double press", "", true, false, 0, 0 );
+		                }
+		                if ( keyAttributes & CentralSceneMask_HeldDown)
+		                {
+		                    node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralSceneIndex_HeldDown, "Scene held down", "", true, false, 0, 0 );
+		                }
+		                if ( keyAttributes & CentralSceneMask_KeyReleased)
+		                {
+		                    node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralSceneIndex_Released, "Scene released", "", true, false, 0, 0 );
+		                }
+		                if ( keyAttributes & CentralSceneMask_KeyPressed3times)
+		                {
+		                    node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralSceneIndex_TriplePress, "Scene triple press", "", true, false, 0, 0 );
+		                }
+		                if ( keyAttributes & CentralSceneMask_KeyPressed4times)
+		                {
+		                    node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralSceneIndex_Pressed4Times, "Scene pressed 4 times", "", true, false, 0, 0 );
+		                }
+		                if ( keyAttributes & CentralSceneMask_KeyPressed5times)
+		                {
+		                    node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralSceneIndex_Pressed5Times, "Scene pressed 5 times", "", true, false, 0, 0 );
+		                }
+		            }
+		            else
+		            {
+		                int numberOfBitMasks = _data[2] & 0b00000110;
+		                for ( int i = 1; i <= numberOfBitMasks; i++ )
+		                {
+		                    int keyAttributes = _data[2 +i];
+		                    if ( keyAttributes & CentralSceneMask_KeyPressed1time)
+		                    {
+		                        node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralSceneIndex_SinglePress, "Scene", "", true, false, 0, 0 );
+		                    }
+		                    if ( keyAttributes & CentralSceneMask_KeyPressed2times)
+		                    {
+		                        node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralSceneIndex_DoublePress, "Scene double press", "", true, false, 0, 0 );
+		                    }
+		                    if ( keyAttributes & CentralSceneMask_HeldDown)
+		                    {
+		                        node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralSceneIndex_HeldDown, "Scene held down", "", true, false, 0, 0 );
+		                    }
+		                    if ( keyAttributes & CentralSceneMask_KeyReleased)
+		                    {
+		                        node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralSceneIndex_Released, "Scene released", "", true, false, 0, 0 );
+		                    }
+		                    if ( keyAttributes & CentralSceneMask_KeyPressed3times)
+		                    {
+		                        node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralSceneIndex_TriplePress, "Scene triple press", "", true, false, 0, 0 );
+		                    }
+		                    if ( keyAttributes & CentralSceneMask_KeyPressed4times)
+		                    {
+		                        node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralSceneIndex_Pressed4Times, "Scene pressed 4 times", "", true, false, 0, 0 );
+		                    }
+		                    if ( keyAttributes & CentralSceneMask_KeyPressed5times)
+		                    {
+		                        node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralSceneIndex_Pressed5Times, "Scene pressed 5 times", "", true, false, 0, 0 );
+		                    }
+		                }
+		            }
                     }
                     else
                     {
