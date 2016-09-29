@@ -33,6 +33,8 @@
 #include "Driver.h"
 #include "platform/Log.h"
 #include "value_classes/ValueInt.h"
+#include "value_classes/ValueButton.h"
+#include "value_classes/ValueByte.h"
 
 #include "tinyxml.h"
 
@@ -48,14 +50,15 @@ enum CentralSceneCmd
 
 enum CentralScene_ValueID_Index
 {
-	CentralSceneIndex_SceneCount         = 0x00,
-	CentralSceneIndex_SinglePress        = 0x01,
-	CentralSceneIndex_Released           = 0x02,
-	CentralSceneIndex_HeldDown           = 0x03,
-	CentralSceneIndex_DoublePress        = 0x04,
-	CentralSceneIndex_TriplePress        = 0x05,
-	CentralSceneIndex_Pressed4Times      = 0x06,
-	CentralSceneIndex_Pressed5Times      = 0x07
+    CentralSceneIndex_SceneCount                         = 0x00,
+    CentralSceneIndex_Scene_KeyAttribute                 = 0x01,
+    CentralSceneIndex_SceneID                            = 0x02,
+    CentralSceneIndex_Button                             = 0x03,
+    CentralSceneIndex_Scenes_Identical                   = 0x04,
+    CentralSceneIndex_Supported_KeyAttributes_All_Scenes = 0x05,
+    CentralSceneIndex_Supported_KeyAttributes_Scene_1    = 0x06,
+    CentralSceneIndex_Supported_KeyAttributes_Scene_2    = 0x07,
+    CentralSceneIndex_Supported_KeyAttributes_Scene_3    = 0x08,
 
 };
 
@@ -69,6 +72,29 @@ enum CentralScene_KeyAttributesMask
     CentralSceneMask_KeyPressed4times       = 0x20,
     CentralSceneMask_KeyPressed5times       = 0x40,
     CentralSceneMask_reserved               = 0x80,
+};
+
+enum CentralScene_KeyAttributes
+{
+    CentralScene_KeyAttributes_KeyPressed1time        = 0,
+    CentralScene_KeyAttributes_KeyReleased            = 1,
+    CentralScene_KeyAttributes_KeyHeldDown            = 2,
+    CentralScene_KeyAttributes_KeyPressed2times       = 3,
+    CentralScene_KeyAttributes_KeyPressed3times       = 4,
+    CentralScene_KeyAttributes_KeyPressed4times       = 5,
+    CentralScene_KeyAttributes_KeyPressed5times       = 6,
+    CentralScene_KeyAttributes_reserved               = 7,
+};
+
+static char const* c_CentralScene_KeyAttributes[] =
+{
+        "Pressed 1 Time",
+        "Key Released",
+        "Key Held down",
+        "Pressed 2 Times",
+        "Pressed 3 Times",
+        "Pressed 4 Times",
+        "Pressed 5 Times"
 };
 //-----------------------------------------------------------------------------
 // <CentralScene::CentralScene>
@@ -186,23 +212,44 @@ bool CentralScene::HandleMsg
 		uint8 sceneID = _data[3];
 		Log::Write( LogLevel_Info, GetNodeId(), "Received Central Scene set from node %d: scene id=%d with key Attribute %d. Sending event notification.", GetNodeId(), sceneID, keyAttribute);
 
-		int index = 1;
-		if      ( keyAttribute == 0) { index = CentralSceneIndex_SinglePress; }
-		else if ( keyAttribute == 1) { index = CentralSceneIndex_Released; }
-		else if ( keyAttribute == 2) { index = CentralSceneIndex_HeldDown; }
-		else if ( keyAttribute == 3) { index = CentralSceneIndex_DoublePress; }
-		else if ( keyAttribute == 4) { index = CentralSceneIndex_TriplePress; }
-		else if ( keyAttribute == 5) { index = CentralSceneIndex_Pressed4Times; }
-		else if ( keyAttribute == 6) { index = CentralSceneIndex_Pressed5Times;}
-
-		if( ValueInt* value = static_cast<ValueInt*>( GetValue( sceneID, index ) ) )
+		if( ValueList* value = static_cast<ValueList*>( GetValue( _instance, CentralSceneIndex_Scene_KeyAttribute ) ) )
 		{
-			value->OnValueRefreshed( 1 );
+			value->OnValueRefreshed( keyAttribute );
 			value->Release();
 		} else {
-			Log::Write( LogLevel_Warning, GetNodeId(), "No ValueID created for Scene %d", _data[3]);
+			Log::Write( LogLevel_Warning, GetNodeId(), "No ValueID created for Scene Keyattribute");
 			return false;
 		}
+        if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, CentralSceneIndex_SceneID ) ) )
+        {
+            value->OnValueRefreshed( sceneID );
+            value->Release();
+        } else {
+            Log::Write( LogLevel_Warning, GetNodeId(), "No ValueID created for Scene ID");
+            return false;
+        }
+        if ( keyAttribute == CentralScene_KeyAttributes_KeyHeldDown )
+        {
+            if( ValueButton* value = static_cast<ValueButton*>( GetValue( _instance, CentralSceneIndex_Button ) ) )
+            {
+                value->PressButton();
+                value->Release();
+            } else {
+                Log::Write( LogLevel_Warning, GetNodeId(), "No ValueID created for Scene Button");
+                return false;
+            }
+        }
+        else if ( keyAttribute == CentralScene_KeyAttributes_KeyReleased )
+        {
+            if( ValueButton* value = static_cast<ValueButton*>( GetValue( _instance, CentralSceneIndex_Button ) ) )
+            {
+                value->ReleaseButton();
+                value->Release();
+            } else {
+                Log::Write( LogLevel_Warning, GetNodeId(), "No ValueID created for Scene Button");
+                return false;
+            }
+        }
 		return true;
 	}
 	else if (CentralSceneCmd_Capability_Report == (CentralSceneCmd)_data[0])
@@ -216,11 +263,18 @@ bool CentralScene::HandleMsg
 		{
 			m_scenecount = scenecount;
 		}
-		bool identical = false;
+		bool identical = true; //version 1 does not know this, so set it to true.
 		if ( GetVersion() >= 2 )
 		{
 		    identical = _data[2] & 0b00000001;
 		    Log::Write( LogLevel_Detail, GetNodeId(), "this is version 2 or higher, all scenes identical? %i",identical);
+		}
+		if ( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, CentralSceneIndex_Scenes_Identical)))
+		{
+		    value->OnValueRefreshed(identical);
+		    value->Release();
+		} else {
+		    Log::Write( LogLevel_Warning, GetNodeId(), "Can't find ValueID for Scenes_Identical");
 		}
 
 		if ( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, CentralSceneIndex_SceneCount)))
@@ -231,90 +285,40 @@ bool CentralScene::HandleMsg
 			Log::Write( LogLevel_Warning, GetNodeId(), "Can't find ValueID for SceneCount");
 		}
 
-		if( Node* node = GetNodeUnsafe() )
-		{
-		    for (int i = 1; i <= m_scenecount ; i++) {
-		        if ( GetVersion() >= 2 )
+		for (int i = 1; i <= m_scenecount ; i++) {
+		    if ( GetVersion() == 1 )
+		    {
+		        // version 1 does not tell us which keyAttributes are supported, but only single press, released and held down are supported, so add these 3
+		        if( Node* node = GetNodeUnsafe() )
 		        {
-		            if ( identical )
+		            vector<ValueList::Item> items;
+		            for( unsigned int i=0; i < 3; i++)
 		            {
-		                // instance for scene number normaly isn't right, but in this case i think this is the best solution.
-		                // Because i higly doubt that someone will ever use the multichannel class together with the centralScene class.
-		                int keyAttributes = _data[3];
-		                if ( keyAttributes & CentralSceneMask_KeyPressed1time)
-		                {
-		                    node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralSceneIndex_SinglePress, "Scene", "", true, false, 0, 0 );
-		                }
-		                if ( keyAttributes & CentralSceneMask_KeyPressed2times)
-		                {
-		                    node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralSceneIndex_DoublePress, "Scene double press", "", true, false, 0, 0 );
-		                }
-		                if ( keyAttributes & CentralSceneMask_HeldDown)
-		                {
-		                    node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralSceneIndex_HeldDown, "Scene held down", "", true, false, 0, 0 );
-		                }
-		                if ( keyAttributes & CentralSceneMask_KeyReleased)
-		                {
-		                    node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralSceneIndex_Released, "Scene released", "", true, false, 0, 0 );
-		                }
-		                if ( keyAttributes & CentralSceneMask_KeyPressed3times)
-		                {
-		                    node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralSceneIndex_TriplePress, "Scene triple press", "", true, false, 0, 0 );
-		                }
-		                if ( keyAttributes & CentralSceneMask_KeyPressed4times)
-		                {
-		                    node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralSceneIndex_Pressed4Times, "Scene pressed 4 times", "", true, false, 0, 0 );
-		                }
-		                if ( keyAttributes & CentralSceneMask_KeyPressed5times)
-		                {
-		                    node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralSceneIndex_Pressed5Times, "Scene pressed 5 times", "", true, false, 0, 0 );
-		                }
+		                ValueList::Item item;
+		                item.m_label = c_CentralScene_KeyAttributes[i];
+		                item.m_value = i;
+		                items.push_back( item );
 		            }
-		            else
-		            {
-		                int numberOfBitMasks = _data[2] & 0b00000110;
-		                for ( int i = 1; i <= numberOfBitMasks; i++ )
-		                {
-		                    int keyAttributes = _data[2 +i];
-		                    if ( keyAttributes & CentralSceneMask_KeyPressed1time)
-		                    {
-		                        node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralSceneIndex_SinglePress, "Scene", "", true, false, 0, 0 );
-		                    }
-		                    if ( keyAttributes & CentralSceneMask_KeyPressed2times)
-		                    {
-		                        node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralSceneIndex_DoublePress, "Scene double press", "", true, false, 0, 0 );
-		                    }
-		                    if ( keyAttributes & CentralSceneMask_HeldDown)
-		                    {
-		                        node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralSceneIndex_HeldDown, "Scene held down", "", true, false, 0, 0 );
-		                    }
-		                    if ( keyAttributes & CentralSceneMask_KeyReleased)
-		                    {
-		                        node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralSceneIndex_Released, "Scene released", "", true, false, 0, 0 );
-		                    }
-		                    if ( keyAttributes & CentralSceneMask_KeyPressed3times)
-		                    {
-		                        node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralSceneIndex_TriplePress, "Scene triple press", "", true, false, 0, 0 );
-		                    }
-		                    if ( keyAttributes & CentralSceneMask_KeyPressed4times)
-		                    {
-		                        node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralSceneIndex_Pressed4Times, "Scene pressed 4 times", "", true, false, 0, 0 );
-		                    }
-		                    if ( keyAttributes & CentralSceneMask_KeyPressed5times)
-		                    {
-		                        node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralSceneIndex_Pressed5Times, "Scene pressed 5 times", "", true, false, 0, 0 );
-		                    }
-		                }
-		            }
+		            node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, CentralSceneIndex_Supported_KeyAttributes_All_Scenes, "Supported Key Attributes All Scenes", "", false, false, 3, items, 0, 0 );
+		        }
+		    }
+		    if ( GetVersion() >= 2 )
+		    {
+		        if ( identical )
+		        {
+		            int keyAttributes = _data[3];
+		            createSupportedKeyAttributesValues(keyAttributes,0,CentralSceneIndex_Supported_KeyAttributes_All_Scenes,_instance);
 		        }
 		        else
 		        {
-		            node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralSceneIndex_SinglePress, "Scene", "", true, false, 0, 0 );
+		            int numberOfBitMasks = (_data[2] & 0b00000110) >> 1;
+		            for ( int i = 1; i <= numberOfBitMasks; i++ )
+		            {
+		                int keyAttributes = _data[2 +i];
+		                createSupportedKeyAttributesValues(keyAttributes,i,CentralSceneIndex_Supported_KeyAttributes_All_Scenes+i,_instance);
+		            }
 		        }
 		    }
-
-		} else {
-			Log::Write(LogLevel_Info, GetNodeId(), "CentralScene: Can't find Node!");
 		}
 	}
 
@@ -332,8 +336,100 @@ void CentralScene::CreateVars
 {
 	if( Node* node = GetNodeUnsafe() )
 	{
-		node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, CentralSceneIndex_SceneCount, "Scene Count", "", true, false, 0, 0 );
+		node->CreateValueInt( ValueID::ValueGenre_User, GetCommandClassId(), _instance, CentralSceneIndex_SceneCount, "Scene Count", "", true, false, 0, 0 );
+
+        vector<ValueList::Item> items;
+        unsigned int size = (sizeof(c_CentralScene_KeyAttributes)/sizeof(c_CentralScene_KeyAttributes[0]));
+        for( unsigned int i=0; i < size; i++)
+        {
+            ValueList::Item item;
+            item.m_label = c_CentralScene_KeyAttributes[i];
+            item.m_value = i;
+            items.push_back( item );
+        }
+        node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, CentralSceneIndex_Scene_KeyAttribute, "Scene KeyAttribute", "", false, false, size, items, 0, 0 );
+
+        node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, CentralSceneIndex_SceneID, "Scene ID", "", true, false, 0, 0 );
+        node->CreateValueButton(ValueID::ValueGenre_User, GetCommandClassId(), _instance, CentralSceneIndex_Button, "Button", 0 );
+        node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, CentralSceneIndex_Scenes_Identical, "Scenes Identical", "", true, false, 0, 0 );
 	}
 }
 
+void CentralScene::createSupportedKeyAttributesValues(uint8 keyAttributes, uint8 sceneNumber, uint8 index, uint8 instance)
+{
+    if( Node* node = GetNodeUnsafe() )
+    {
+        vector<ValueList::Item> items;
 
+        for(int i = 0; i < 8; i++)
+        {
+            if ( keyAttributes & ( 1 << i) )
+            {
+                ValueList::Item item;
+                item.m_label = c_CentralScene_KeyAttributes[i];
+                item.m_value = i;
+                items.push_back( item );
+            }
+        }
+
+//        if ( keyAttributes & CentralSceneMask_KeyPressed1time)
+//        {
+//            ValueList::Item item;
+//            item.m_label = c_CentralScene_KeyAttributes[0];
+//            item.m_value = 0;
+//            items.push_back( item );
+//        }
+//        if ( keyAttributes & CentralSceneMask_KeyReleased)
+//        {
+//            ValueList::Item item;
+//            item.m_label = c_CentralScene_KeyAttributes[1];
+//            item.m_value = 1;
+//            items.push_back( item );
+//        }
+//        if ( keyAttributes & CentralSceneMask_HeldDown)
+//        {
+//            ValueList::Item item;
+//            item.m_label = c_CentralScene_KeyAttributes[2];
+//            item.m_value = 2;
+//            items.push_back( item );
+//        }
+//        if ( keyAttributes & CentralSceneMask_KeyPressed2times)
+//        {
+//            ValueList::Item item;
+//            item.m_label = c_CentralScene_KeyAttributes[3];
+//            item.m_value = 3;
+//            items.push_back( item );
+//        }
+//        if ( keyAttributes & CentralSceneMask_KeyPressed3times)
+//        {
+//            ValueList::Item item;
+//            item.m_label = c_CentralScene_KeyAttributes[4];
+//            item.m_value = 4;
+//            items.push_back( item );
+//        }
+//        if ( keyAttributes & CentralSceneMask_KeyPressed4times)
+//        {
+//            ValueList::Item item;
+//            item.m_label = c_CentralScene_KeyAttributes[5];
+//            item.m_value = 5;
+//            items.push_back( item );
+//        }
+//        if ( keyAttributes & CentralSceneMask_KeyPressed5times)
+//        {
+//            ValueList::Item item;
+//            item.m_label = c_CentralScene_KeyAttributes[6];
+//            item.m_value = 6;
+//            items.push_back( item );
+//        }
+        if ( index == CentralSceneIndex_Supported_KeyAttributes_All_Scenes )
+        {
+            node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), instance, index, "Supported Key Attributes All Scenes", "", false, false, items.size(), items, 0, 0 );
+        }
+        else
+        {
+            char lbl[64];
+            snprintf(lbl, 64, "Supported Key Attributes Scene %d", sceneNumber);
+            node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), instance, index, lbl, "", false, false, items.size(), items, 0, 0 );
+        }
+    }
+}
