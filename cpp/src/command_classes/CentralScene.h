@@ -52,6 +52,7 @@ namespace OpenZWave
 		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }
 		/** \brief Get a string containing the name of this command class. (Inherited from CommandClass) */
 		virtual string const GetCommandClassName()const{ return StaticGetCommandClassName(); }
+		virtual uint8 GetMaxVersion(){ return 3; }
 		/** \brief Handle a response to a message associated with this command class. (Inherited from CommandClass) */
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );
 		/** \brief Create Default Vars for this CC */

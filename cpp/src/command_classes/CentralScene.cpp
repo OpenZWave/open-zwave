@@ -217,12 +217,10 @@ bool CentralScene::HandleMsg
 			m_scenecount = scenecount;
 		}
 		bool identical = false;
-		bool version2orHigher = false;
-		if ( _length >= 2 )
+		if ( GetVersion() >= 2 )
 		{
-		    version2orHigher = true;
 		    identical = _data[2] & 0b00000001;
-		    Log::Write( LogLevel_Warning, GetNodeId(), "this is version 2 or higher, all scenes identical? %i",identical);
+		    Log::Write( LogLevel_Detail, GetNodeId(), "this is version 2 or higher, all scenes identical? %i",identical);
 		}
 
 		if ( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, CentralSceneIndex_SceneCount)))
@@ -236,7 +234,7 @@ bool CentralScene::HandleMsg
 		if( Node* node = GetNodeUnsafe() )
 		{
 		    for (int i = 1; i <= m_scenecount ; i++) {
-		        if ( version2orHigher )
+		        if ( GetVersion() >= 2 )
 		        {
 		            if ( identical )
 		            {
@@ -308,12 +306,12 @@ bool CentralScene::HandleMsg
 		                    }
 		                }
 		            }
-                    }
-                    else
-                    {
-                        node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralSceneIndex_SinglePress, "Scene", "", true, false, 0, 0 );
-					}
-				}
+		        }
+		        else
+		        {
+		            node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), i, CentralSceneIndex_SinglePress, "Scene", "", true, false, 0, 0 );
+		        }
+		    }
 
 		} else {
 			Log::Write(LogLevel_Info, GetNodeId(), "CentralScene: Can't find Node!");
