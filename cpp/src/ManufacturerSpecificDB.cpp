@@ -91,6 +91,49 @@ ManufacturerSpecificDB::~ManufacturerSpecificDB
 
 }
 
+//-----------------------------------------------------------------------------
+// <ManufacturerSpecificDB::LoadConfigFileRevision>
+// Load the Config File Revision from each config file specified in our 
+// ManufacturerSpecific.xml file
+//-----------------------------------------------------------------------------
+void ManufacturerSpecificDB::LoadConfigFileRevision
+(
+	ProductDescriptor *product
+)
+{
+	// Parse the Z-Wave manufacturer and product XML file.
+	string configPath;
+	Options::Get()->GetOptionAsString( "ConfigPath", &configPath );
+
+	if (product->GetConfigPath().size() > 0) {
+		string path = configPath + product->GetConfigPath();
+	
+		TiXmlDocument* pDoc = new TiXmlDocument();
+		if( !pDoc->LoadFile( path.c_str(), TIXML_ENCODING_UTF8 ) )
+		{
+			delete pDoc;
+			Log::Write( LogLevel_Info, "Unable to load config file %s", path.c_str() );
+			return;
+		}
+
+		TiXmlElement const* root = pDoc->RootElement();
+		char const *str = root->Value();
+		if( str && !strcmp( str, "Product" ) )
+		{
+			// Read in the revision attributes
+			str = root->Attribute( "Revision" );
+			if( !str )
+			{
+				Log::Write( LogLevel_Info, "Error in Product Config file at line %d - missing Revision  attribute", root->Row() );
+				delete pDoc;
+				return;
+			}
+			product->SetConfigRevision(atol(str));
+		}
+		delete pDoc;
+	}
+}
+
 
 //-----------------------------------------------------------------------------
 // <ManufacturerSpecificDB::LoadProductXML>
@@ -210,6 +253,7 @@ bool ManufacturerSpecificDB::LoadProductXML
 					}
 					else
 					{
+						LoadConfigFileRevision(product);
 						s_productMap[product->GetKey()] = product;
 					}
 				}

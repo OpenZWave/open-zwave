@@ -60,7 +60,8 @@ namespace OpenZWave
 					m_productId( _productId ),
 					m_productName( _productName ),
 					m_manufacturerName ( _manufacturerName ),
-					m_configPath( _configPath )
+					m_configPath( _configPath ),
+					m_configrevision( 0 )
 				{
 				}
 				~ProductDescriptor() {
@@ -83,7 +84,8 @@ namespace OpenZWave
 				uint16 GetProductId()const{ return m_productId; }
 				string GetProductName()const{ return m_productName; }
 				string GetConfigPath()const{ return m_configPath; }
-
+				void SetConfigRevision(uint32 revision) { m_configrevision = revision;}
+				uint32 GetConfigRevision()const{ return m_configrevision; }
 			private:
 				uint16	m_manufacturerId;
 				uint16	m_productType;
@@ -91,6 +93,7 @@ namespace OpenZWave
 				string	m_productName;
 				string  m_manufacturerName;
 				string	m_configPath;
+				uint32  m_configrevision;
 			};
 
 
@@ -120,6 +123,7 @@ namespace OpenZWave
 		void checkInitialized();
 
 	private:
+		void LoadConfigFileRevision (ProductDescriptor *product);
 		ManufacturerSpecificDB();
 		~ManufacturerSpecificDB();
 

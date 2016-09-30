@@ -879,7 +879,7 @@ uint32 Node::GetNeighbors
 
 //-----------------------------------------------------------------------------
 // <Node::ReadXML>
-// Read the node config from XML
+// Read the node config from the OZW Cache File...
 //-----------------------------------------------------------------------------
 void Node::ReadXML
 (
@@ -1061,11 +1061,14 @@ void Node::ReadXML
 	if ( str )
 		m_refreshonNodeInfoFrame = !strcmp (str, "true" );
 
+
+	/* this is the revision of the config file that was present when we created the cache */
 	str = _node->Attribute( "configrevision" );
 	if ( str )
 		m_ConfigRevision = atol(str);
 	else
 		m_ConfigRevision = 0;
+
 
 	// Read the manufacturer info and create the command classes
 	TiXmlElement const* child = _node->FirstChildElement();
@@ -1148,7 +1151,8 @@ void Node::ReadXML
 
 //-----------------------------------------------------------------------------
 // <Node::ReadDeviceProtocolXML>
-// Read the device's protocol configuration from XML
+// Read the device's protocol configuration from a device config file (Not 
+// cache)
 //-----------------------------------------------------------------------------
 void Node::ReadDeviceProtocolXML
 (
@@ -1162,7 +1166,7 @@ void Node::ReadDeviceProtocolXML
 	} else {
 		m_ConfigRevision = 0;
 	}
-	checkConfigRevision();
+//	checkConfigRevision();
 
 	TiXmlElement const* ccElement = _ccsElement->FirstChildElement();
 	while( ccElement )
@@ -3601,7 +3605,7 @@ void Node::checkConfigRevision
 	if ((force) || (m_ConfigRevision != 0)) {
 	    bool update = false;
 	    Options::Get()->GetOptionAsBool("AutoUpdateConfigFile", &update);
-		GetDriver()->CheckNodeConfigRevision(this, update);
+	    GetDriver()->CheckNodeConfigRevision(this, update);
 	}
 }
 
@@ -3732,7 +3736,6 @@ void Node::ReadMetaDataFromXML(TiXmlElement const* _valueElement) {
 							continue;
 						}
 						this->m_metadata[GetMetaDataId(name)] = metadata->GetText();
-//						Log::Write(LogLevel_Warning, m_nodeId, "Got MetaData: %s - %s", name.c_str(), metadata->GetText());
 					}
 					metadata = metadata->NextSiblingElement();
 				}
