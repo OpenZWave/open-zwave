@@ -77,8 +77,9 @@ ManufacturerSpecific::ManufacturerSpecific
     uint8 const _nodeId
 ):
     CommandClass( _homeId, _nodeId ),
-	m_LatestRevision(0),
-	m_ConfigRevision(0)
+	m_fileConfigRevision(0),
+	m_loadedConfigRevision(0),
+	m_latestConfigRevision(0)
 {
     SetStaticRequest( StaticRequest_Values );
 }
@@ -362,8 +363,9 @@ void ManufacturerSpecific::CreateVars
 	if (_instance == 1) {
 		if( Node* node = GetNodeUnsafe() )
 		{
-			node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 0, "Loaded Config Revision", "", true, false, m_ConfigRevision, 0 );
-			node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 1, "Latest Config Revision", "", true, false, m_LatestRevision, 0 );
+			node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 0, "Loaded Config Revision", "", true, false, m_loadedConfigRevision, 0 );
+			node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 1, "Config File Revision", "", true, false, m_fileConfigRevision, 0 );
+			node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 2, "Latest Available Config File Revision", "", true, false, m_latestConfigRevision, 0 );
 		}
 	}
 
@@ -373,13 +375,33 @@ void ManufacturerSpecific::CreateVars
 // <ManufacturerSpecific::setLatestRevision>
 // Set the Latest Config Revision Available for this device
 //-----------------------------------------------------------------------------
-void ManufacturerSpecific::setLatestRevision
+void ManufacturerSpecific::setLatestConfigRevision
 (
 	uint32 rev
 )
 {
 
-	m_LatestRevision = rev;
+	m_latestConfigRevision = rev;
+
+	if( ValueInt* value = static_cast<ValueInt*>( GetValue( 1, 2 ) ) )
+	{
+		value->OnValueRefreshed( rev );
+		value->Release();
+	}
+
+}
+
+//-----------------------------------------------------------------------------
+// <ManufacturerSpecific::setFileConfigRevision>
+// Set the File Config Revision for this device
+//-----------------------------------------------------------------------------
+
+void ManufacturerSpecific::setFileConfigRevision
+(
+	uint32 rev
+)
+{
+	m_fileConfigRevision = rev;
 
 	if( ValueInt* value = static_cast<ValueInt*>( GetValue( 1, 1 ) ) )
 	{
@@ -390,16 +412,16 @@ void ManufacturerSpecific::setLatestRevision
 }
 
 //-----------------------------------------------------------------------------
-// <ManufacturerSpecific::setConfigRevision>
-// Set the Loaded Config Revision for this device
+// <ManufacturerSpecific::setFileConfigRevision>
+// Set the File Config Revision for this device
 //-----------------------------------------------------------------------------
 
-void ManufacturerSpecific::setConfigRevision
+void ManufacturerSpecific::setLoadedConfigRevision
 (
 	uint32 rev
 )
 {
-	m_ConfigRevision = rev;
+	m_latestConfigRevision = rev;
 
 	if( ValueInt* value = static_cast<ValueInt*>( GetValue( 1, 0 ) ) )
 	{

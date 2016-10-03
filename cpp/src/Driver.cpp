@@ -252,7 +252,7 @@ m_eventMutex (new Mutex() )
 
     bool update = false;
     Options::Get()->GetOptionAsBool("AutoUpdateConfigFile", &update);
-	CheckMFSConfigRevision(update);
+	CheckMFSConfigRevision();
 
 }
 
@@ -7000,8 +7000,7 @@ bool Driver::isNetworkKeySet() {
 
 bool Driver::CheckNodeConfigRevision
 (
-		Node *node,
-		bool downloadUpdate
+		Node *node
 )
 {
 	DNSLookup *lu = new DNSLookup;
@@ -7013,20 +7012,17 @@ bool Driver::CheckNodeConfigRevision
 	ss << std::hex << std::setw(4) << std::setfill('0') << node->GetManufacturerId() << ".db.openzwave.com";
 
 	lu->lookup = ss.str();
-	lu->nextAction = downloadUpdate;
 	lu->type = DNS_Lookup_ConfigRevision;
 	return m_dns->sendRequest(lu);
 }
 
 bool Driver::CheckMFSConfigRevision
 (
-		bool downloadUpdate
 )
 {
 	DNSLookup *lu = new DNSLookup;
 	lu->NodeID = 0;
 	lu->lookup = "mfs.db.openzwave.com";
-	lu->nextAction = downloadUpdate;
 	lu->type = DNS_Lookup_ConfigRevision;
 	return m_dns->sendRequest(lu);
 }
@@ -7047,14 +7043,17 @@ void Driver::processConfigRevision
 					return;
 				}
 				node->setLatestConfigRevision((unsigned long)atol(result->result.c_str()));
-				if (node->getConfigRevision() < (unsigned long)atol(result->result.c_str())) {
-					Log::Write(LogLevel_Warning, node->GetNodeId(), "Config for Device \"%s\" is out of date", node->GetProductName().c_str());
+				if (node->getFileConfigRevision() < node->getLatestConfigRevision()) {
+					Log::Write(LogLevel_Warning, node->GetNodeId(), "Config File for Device \"%s\" is out of date", node->GetProductName().c_str());
 					Notification* notification = new Notification( Notification::Type_UserAlerts );
 					notification->SetHomeAndNodeIds( m_homeId, node->GetNodeId() );
 					notification->SetUserAlertNofification(Notification::Alert_ConfigOutOfDate);
 					QueueNotification( notification );
 
-					if (result->nextAction == true)
+					bool update = false;
+				    Options::Get()->GetOptionAsBool("AutoUpdateConfigFile", &update);
+
+					if (update)
 						m_mfs->updateConfigFile(this, node);
 
 				}
@@ -7067,8 +7066,11 @@ void Driver::processConfigRevision
 					notification->SetUserAlertNofification(Notification::Alert_MFSOutOfDate);
 					QueueNotification( notification );
 
-					if (result->nextAction == true) {
-						m_mfs->updateMFSConfigFile(this);
+					bool update = false;
+				    Options::Get()->GetOptionAsBool("AutoUpdateConfigFile", &update);
+
+				    if (update) {
+				    	m_mfs->updateMFSConfigFile(this);
 					} else {
 						m_mfs->checkInitialized();
 					}
@@ -7248,15 +7250,15 @@ bool Driver::downloadConfigRevision
 )
 {
 	/* only download if the revision is 1 or higher. Revision 0's are for local testing only */
-	if (node->getConfigRevision() <= 0) {
+	if (node->getFileConfigRevision() <= 0) {
 		Log::Write(LogLevel_Warning, node->GetNodeId(), "Config File Revision is 0. Not Updating");
 		Notification* notification = new Notification( Notification::Type_UserAlerts );
 		notification->SetUserAlertNofification(Notification::Alert_ConfigFileDownloadFailed);
 		QueueNotification( notification );
 		return false;
 	}
-	if (node->getConfigRevision() >= node->getLatestConfigRevision()) {
-		Log::Write(LogLevel_Warning, node->GetNodeId(), "Config File Revision %d is equal to or greater than current revision %d", node->getConfigRevision(), node->getLatestConfigRevision());
+	if (node->getFileConfigRevision() >= node->getLatestConfigRevision()) {
+		Log::Write(LogLevel_Warning, node->GetNodeId(), "Config File Revision %d is equal to or greater than current revision %d", node->getFileConfigRevision(), node->getLatestConfigRevision());
 		Notification* notification = new Notification( Notification::Type_UserAlerts );
 		notification->SetUserAlertNofification(Notification::Alert_ConfigFileDownloadFailed);
 		QueueNotification( notification );

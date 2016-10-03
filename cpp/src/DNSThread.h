@@ -56,7 +56,6 @@ namespace OpenZWave
 			string lookup;
 			string result;
 			DNSError status;
-			bool nextAction;
 			LookupType type;
 
 	};

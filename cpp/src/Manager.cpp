@@ -4772,8 +4772,7 @@ string Manager::GetMetaData
 bool Manager::checkLatestConfigFileRevision
 (
 	uint32 const _homeId,
-	uint8 const _nodeId,
-	bool _update
+	uint8 const _nodeId
 )
 {
 	if (Driver *driver = GetDriver( _homeId ) )
@@ -4782,7 +4781,7 @@ bool Manager::checkLatestConfigFileRevision
 		Node* node = driver->GetNode( _nodeId );
 		if( node )
 		{
-			return driver->CheckNodeConfigRevision(node, _update);
+			return driver->CheckNodeConfigRevision(node);
 		}
 	}
 	return false;
@@ -4794,13 +4793,12 @@ bool Manager::checkLatestConfigFileRevision
 //-----------------------------------------------------------------------------
 bool Manager::checkLatestMFSRevision
 (
-	uint32 const _homeId,
-	bool _update
+	uint32 const _homeId
 )
 {
 	if (Driver *driver = GetDriver( _homeId ) )
 	{
-		return driver->CheckMFSConfigRevision(_update);
+		return driver->CheckMFSConfigRevision();
 	}
 	return false;
 }

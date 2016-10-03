@@ -59,8 +59,9 @@ namespace OpenZWave
 		
 		void ReLoadConfigXML();
 
-		void setLatestRevision(uint32 rev);
-		void setConfigRevision(uint32 rev);
+		void setLatestConfigRevision(uint32 rev);
+		void setFileConfigRevision(uint32 rev);
+		void setLoadedConfigRevision(uint32 rev);
 
 
 
@@ -71,8 +72,9 @@ namespace OpenZWave
 	private:
 		ManufacturerSpecific( uint32 const _homeId, uint8 const _nodeId );
 
-		uint32 m_LatestRevision;
-		uint32 m_ConfigRevision;
+		uint32 m_fileConfigRevision;
+		uint32 m_loadedConfigRevision;
+		uint32 m_latestConfigRevision;
 	};
 
 } // namespace OpenZWave

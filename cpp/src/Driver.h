@@ -894,8 +894,8 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 	//-----------------------------------------------------------------------------
 
 	public:
-		bool CheckNodeConfigRevision(Node *, bool downloadUpdate = true);
-		bool CheckMFSConfigRevision(bool downloadUpdate = true);
+		bool CheckNodeConfigRevision(Node *);
+		bool CheckMFSConfigRevision();
 		void ReloadNode(uint8 const _nodeId);
 
 	private:

@@ -441,17 +441,55 @@ namespace OpenZWave
 			//-----------------------------------------------------------------------------
 		public:
 			void SetProductDetails(ProductDescriptor *product);
+			/** Get a path to the config file for this device
+			 *
+			 * @return a path relative to the config directory for the config file. returns a empty string if a config file is not present.
+			 */
 			string getConfigPath();
-		private:
-			void checkConfigRevision( bool force = false );
-			uint32 getConfigRevision() { return m_ConfigRevision; };
+			/** Get the latest local revision of the config file for this node
+			 *
+			 * @return a revision number
+			 */
+			uint32 getFileConfigRevision() { return m_fileConfigRevision; };
+			/** Get the Revision number of the config that is laoded for this Node
+			 *
+			 * @return the revision number currently loaded.
+			 */
+			uint32 getLoadedConfigRevision() { return m_loadedConfigRevision; };
+			/** Get the Latest Config File revision available at openzwave.com
+			 *
+			 * @return The latest revision number available
+			 */
+			uint32 getLatestConfigRevision() { return m_latestConfigRevision; };
+			/** Set the revision number of the Config File for this device
+			 *
+			 * @param rev the revision number
+			 */
+			void setFileConfigRevision(uint32 rev);
+			/** Set the revision number of the config that is loaded for this device
+			 *
+			 * @param rev the revision number
+			 */
+			void setLoadedConfigRevision(uint32 rev);
+			/** Set the revision number of the latest available config file for this device
+			 *
+			 * @param rev the revision number
+			 */
 			void setLatestConfigRevision(uint32 rev);
-			uint32 getLatestConfigRevision();
+			/** Check the latest available revision number for this device.
+			 *
+			 */
+			void checkLatestConfigRevision( );
+
+		private:
+
+
 			ProductDescriptor *m_Product;
 
 
-			uint32 m_ConfigRevision;
-			uint32 m_LatestConfigRevision;
+			uint32 m_fileConfigRevision;
+			uint32 m_loadedConfigRevision;
+			uint32 m_latestConfigRevision;
 			//-----------------------------------------------------------------------------
 			// Basic commands (helpers that go through the basic command class)
 			//-----------------------------------------------------------------------------

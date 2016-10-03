@@ -2414,10 +2414,9 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 			 *
 			 * \param _homeId The Home ID of the driver for the node
 			 * \param _nodeId The node number
-			 * \param _update if the latest version should be downloaded.
 			 * \return Success/Failure of submitting the request.
 			 */
-			bool checkLatestConfigFileRevision(uint32 const _homeId, uint8 const _nodeId, bool _update);
+			bool checkLatestConfigFileRevision(uint32 const _homeId, uint8 const _nodeId);
 
 			/**
 			 * \brief Check the Latest Revision of the Manufacturer_Specific.xml file
@@ -2427,10 +2426,9 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 			 * Outdated Config Revisions are signaled via Notifications
 			 *
 			 * \param _homeId The Home ID of the driver for the node
-			 * \param _update if the latest version should be downloaded.
 			 * \return Success/Failure of submitting the request.
 			 */
-			bool checkLatestMFSRevision(uint32 const _homeId, bool _update);
+			bool checkLatestMFSRevision(uint32 const _homeId);
 
 			/**
 			 * \brief Download the latest Config File Revision

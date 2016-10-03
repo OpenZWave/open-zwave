@@ -161,7 +161,9 @@ m_role( 0 ),
 m_nodeType ( 0 ),
 m_secured ( false ),
 m_Product ( NULL ),
-m_ConfigRevision ( 0 ),
+m_fileConfigRevision ( 0 ),
+m_loadedConfigRevision ( 0 ),
+m_latestConfigRevision ( 0 ),
 m_values( new ValueStore() ),
 m_sentCnt( 0 ),
 m_sentFailed( 0 ),
@@ -1065,9 +1067,9 @@ void Node::ReadXML
 	/* this is the revision of the config file that was present when we created the cache */
 	str = _node->Attribute( "configrevision" );
 	if ( str )
-		m_ConfigRevision = atol(str);
+		this->setLoadedConfigRevision(atol(str));
 	else
-		m_ConfigRevision = 0;
+		this->setLoadedConfigRevision(0);
 
 
 	// Read the manufacturer info and create the command classes
@@ -1123,7 +1125,7 @@ void Node::ReadXML
 					/* don't do this if its the Controller Node */
 					if( cc ) {
 						cc->SetProductDetails(manufacturerId, productType, productId);
-						cc->setConfigRevision(m_ConfigRevision);
+						cc->setLoadedConfigRevision(m_loadedConfigRevision);
 					} else {
 						Log::Write(LogLevel_Warning, GetNodeId(), "ManufacturerSpecific Class not loaded for ReadXML");
 					}
@@ -1136,9 +1138,6 @@ void Node::ReadXML
 		// Move to the next child node
 		child = child->NextSiblingElement();
 	}
-
-	/* check if our Config is the latest version */
-	checkConfigRevision();
 
 	if( m_nodeName.length() > 0 || m_location.length() > 0 || m_manufacturerId > 0 )
 	{
@@ -1161,12 +1160,16 @@ void Node::ReadDeviceProtocolXML
 {
 	char const *str = _ccsElement->Attribute("Revision");
 	if ( str ) {
-		m_ConfigRevision = atol(str);
-		Log::Write(LogLevel_Info, GetNodeId(), "  Configuration Revision is %d", m_ConfigRevision);
+		/* as we are loading the Node from the device config file, both the
+		 * File and Loaded Revisions will be the same
+		 */
+		this->setFileConfigRevision(atol(str));
+		this->setLoadedConfigRevision(m_fileConfigRevision);
+		Log::Write(LogLevel_Info, GetNodeId(), "  Configuration File Revision is %d", m_fileConfigRevision);
 	} else {
-		m_ConfigRevision = 0;
+		this->setFileConfigRevision(0);
+		this->setLoadedConfigRevision(m_fileConfigRevision);
 	}
-//	checkConfigRevision();
 
 	TiXmlElement const* ccElement = _ccsElement->FirstChildElement();
 	while( ccElement )
@@ -1349,7 +1352,7 @@ void Node::WriteXML
 		nodeElement->SetAttribute( "refreshonnodeinfoframe", "false" );
 	}
 
-	snprintf( str, 32, "%d", m_ConfigRevision);
+	snprintf( str, 32, "%d", m_loadedConfigRevision);
 	nodeElement->SetAttribute( "configrevision", str );
 
 	nodeElement->SetAttribute( "query_stage", c_queryStageNames[m_queryStage] );
@@ -3592,22 +3595,6 @@ bool Node::IsNodeReset()
 
 }
 
-//-----------------------------------------------------------------------------
-// <Node::checkConfigRevision>
-// Check if our Config File is the latest
-//-----------------------------------------------------------------------------
-
-void Node::checkConfigRevision
-(
-	bool force
-)
-{
-	if ((force) || (m_ConfigRevision != 0)) {
-	    bool update = false;
-	    Options::Get()->GetOptionAsBool("AutoUpdateConfigFile", &update);
-	    GetDriver()->CheckNodeConfigRevision(this, update);
-	}
-}
 
 //-----------------------------------------------------------------------------
 // <Node::SetProductDetails>
@@ -3639,6 +3626,44 @@ string Node::getConfigPath
 }
 
 //-----------------------------------------------------------------------------
+// <Node::setFileConfigRevision>
+// Set Loaded Config File Revision
+//-----------------------------------------------------------------------------
+void Node::setFileConfigRevision
+(
+	uint32 rev
+)
+{
+	m_fileConfigRevision = rev;
+	ManufacturerSpecific* cc = static_cast<ManufacturerSpecific*>( GetCommandClass( ManufacturerSpecific::StaticGetCommandClassId() ) );
+	if( cc  )
+	{
+		cc->setFileConfigRevision(rev);
+	}
+	/* check if this is the latest */
+	checkLatestConfigRevision();
+}
+
+//-----------------------------------------------------------------------------
+// <Node::setLoadedConfigRevision>
+// Set Loaded Config File Revision
+//-----------------------------------------------------------------------------
+void Node::setLoadedConfigRevision
+(
+	uint32 rev
+)
+{
+	m_loadedConfigRevision = rev;
+	ManufacturerSpecific* cc = static_cast<ManufacturerSpecific*>( GetCommandClass( ManufacturerSpecific::StaticGetCommandClassId() ) );
+	if( cc  )
+	{
+		cc->setLoadedConfigRevision(rev);
+	}
+
+}
+
+
+//-----------------------------------------------------------------------------
 // <Node::setLatestConfigRevisionn>
 // Set Latest Config File Revision
 //-----------------------------------------------------------------------------
@@ -3647,24 +3672,29 @@ void Node::setLatestConfigRevision
 	uint32 rev
 )
 {
-	m_LatestConfigRevision = rev;
+	m_latestConfigRevision = rev;
 	ManufacturerSpecific* cc = static_cast<ManufacturerSpecific*>( GetCommandClass( ManufacturerSpecific::StaticGetCommandClassId() ) );
 	if( cc  )
 	{
-		cc->setLatestRevision(rev);
+		cc->setLatestConfigRevision(rev);
 	}
 }
 
+
 //-----------------------------------------------------------------------------
-// <Node::getLatestConfigRevision>
-// Get Latest Config File Revision
+// <Node::checkConfigRevision>
+// Check if our Config File is the latest
 //-----------------------------------------------------------------------------
-uint32 Node::getLatestConfigRevision
+
+void Node::checkLatestConfigRevision
 (
 )
 {
-	return m_LatestConfigRevision;
+	if (m_fileConfigRevision != 0) {
+	    GetDriver()->CheckNodeConfigRevision(this);
+	}
 }
+
 
 
 //-----------------------------------------------------------------------------
