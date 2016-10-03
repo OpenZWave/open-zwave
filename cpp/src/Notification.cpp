@@ -246,7 +246,9 @@ string Notification::GetAsString() const {
 					case Alert_NodeReloadReqired:
 						str = "Node Reload Is Required due to new Config File";
 						break;
-
+					case Alert_UnsupportedController:
+						str = "Controller Library is not a type we support";
+						break;
 
 				}
 				break;

@@ -250,8 +250,6 @@ m_eventMutex (new Mutex() )
 
 	m_mfs = ManufacturerSpecificDB::Create();
 
-    bool update = false;
-    Options::Get()->GetOptionAsBool("AutoUpdateConfigFile", &update);
 	CheckMFSConfigRevision();
 
 }
@@ -2427,6 +2425,24 @@ void Driver::HandleGetVersionResponse
 	}
 	Log::Write( LogLevel_Info, GetNodeNumber( m_currentMsg ), "Received reply to FUNC_ID_ZW_GET_VERSION:" );
 	Log::Write( LogLevel_Info, GetNodeNumber( m_currentMsg ), "    %s library, version %s", m_libraryTypeName.c_str(), m_libraryVersion.c_str() );
+	if ( !((m_libraryType == ZW_LIB_CONTROLLER_STATIC ) || (m_libraryType == ZW_LIB_CONTROLLER)) ) {
+		Log::Write( LogLevel_Fatal, GetNodeNumber( m_currentMsg), "Z-Wave Interface is not a Supported Library Type: %s", m_libraryTypeName.c_str());
+		Log::Write( LogLevel_Fatal, GetNodeNumber( m_currentMsg), "Z-Wave Interface should be a Static Controller Library Type");
+
+		{
+			Notification* notification = new Notification( Notification::Type_UserAlerts );
+			notification->SetUserAlertNofification( Notification::Alert_UnsupportedController );
+			QueueNotification( notification );
+		}
+		{
+			Notification* notification = new Notification(Notification::Type_DriverFailed);
+			notification->SetHomeAndNodeIds(m_homeId, m_currentMsg->GetTargetNodeId());
+			QueueNotification(notification);
+		}
+		NotifyWatchers();
+		m_driverThread->Stop();
+	}
+	return;
 }
 
 //-----------------------------------------------------------------------------
@@ -7336,7 +7352,7 @@ string Driver::GetMetaData
 	Node* node = GetNode( _nodeId );
 	if( node != NULL )
 	{
-		node->GetMetaData( _metadata );
+		return node->GetMetaData( _metadata );
 	}
 	return "";
 }

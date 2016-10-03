@@ -395,4 +395,16 @@ namespace OpenZWave
 #define COMMAND_CLASS_APPLICATION_STATUS 				0x22
 #define COMMAND_CLASS_HAIL								0x82
 
+/* library types */
+#define ZW_LIB_CONTROLLER_STATIC  						0x01
+#define ZW_LIB_CONTROLLER         						0x02
+#define ZW_LIB_SLAVE_ENHANCED     						0x03
+#define ZW_LIB_SLAVE              						0x04
+#define ZW_LIB_INSTALLER          						0x05
+#define ZW_LIB_SLAVE_ROUTING      						0x06
+#define ZW_LIB_CONTROLLER_BRIDGE  						0x07
+#define ZW_LIB_DUT                						0x08
+
+
+
 #endif // _Defs_H

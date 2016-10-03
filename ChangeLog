@@ -105,6 +105,7 @@ Dev Branch:
  - Pull Request #921 - Sync DotNet ZWLogLevel Enum with the CPP enum from  PascalPiche (Justin)
  - Implement DeviceID and Serial Number retrieval in ManufacturerSpecific CC (Justin)
  - Print out effective Options when starting the Driver (Justin)
+ - Check the Controller Library Loaded, and dont' proceed if we don't support the Library when starting the Driver Class (Justin)
 
 Version 1.4
  - Released 10th Jan, 2016
