@@ -48,6 +48,6 @@ Of course, for Open Source applications, as long as you abide by our License (LG
 And for those that are wondering, you cannot use OZW to create Z-Wave Nodes. This is not the goal of the library. We allow applications to talk to Z-Wave nodes on the network via a Z-Wave Controller. 
 
 <p align="center">
-![Z-Wave Alliance](https://github.com/OpenZWave/open-zwave/raw/master/docs/images%2Bcss/zwalliance_250x100.jpg "Member of the")
-OpenZWave is a affliate member of the Z-Wave Alliance
+<img src="https://github.com/OpenZWave/open-zwave/raw/master/docs/images%2Bcss/zwalliance_250x100.jpg"><br>
+OpenZWave is a Affiliate Member of the Z-Wave Alliance
 </p>
