@@ -410,7 +410,7 @@
 		<Product type="0f01" id="1000" name="FGPB101 Button" config="fibaro/fgpb101.xml" />
   	</Manufacturer>
 	<Manufacturer id="0138" name="First Alert">
-        <Product type="0001" id="0002" name="ZCombo Smoke and Carbon Monoxide Detector" />
+        <Product type="0001" id="0002" name="ZCombo Smoke and Carbon Monoxide Detector"  config="firstalert/zcombo.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0037" name="Foard Sys">
 	</Manufacturer>
