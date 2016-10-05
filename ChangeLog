@@ -111,6 +111,7 @@ Version 1.5
  - Add FortrezZ WV-01 Automated Water Shut-Off Valve (Nechry)
  - Pull Request #992 - Devolo Metering Plug and Permundo Plugs from tobiasgraf (Nechry)
  - Add configuration file for First Alert ZCombo Smoke and Carbon Monoxide Detector (Nechry)
+ - Add Zooz ZEN07 Mini Plug from DeviantEng (Nechry)
 
 Version 1.4
  - Released 10th Jan, 2016

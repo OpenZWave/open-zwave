@@ -305,6 +305,7 @@ DISTFILES =	.gitignore \
 	config/widom/WDS.xml \
 	config/zipato/MiniKeypad.xml \
 	config/zipato/RGBBulb.xml \
+	config/zooz/zen07.xml \
 	config/zwave.me/ZME_05431.xml \
 	config/zwave.me/ZME_06433.xml \
 	config/zwave.me/ZME_06436.xml \
