@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Qubino: ZMNHKDx Flush Heat & Cool thermostat Z-Wave+
+Qubino: ZMNHKDx Flush Heat Cool thermostat Z-Wave+
 ZMNHKD1 868,4 MHz
 ZMNHKD2 921,4 MHz
 ZMNHKD3 908,4 MHz
@@ -46,7 +46,7 @@ ref: http://qubino.com/products/flush-heat-cool-thermostat/
         <Value type="short" genre="config" instance="1" index="11" label="I1 Functionality selection" size="2" min="0" max="65535" value="1">
             <Help>
                 Default value 1.
-                32767 - input I1 does not influence on the Heat & Cool process
+                32767 - input I1 does not influence on the Heat and Cool process
                 1 - Input I1 changes the mode of the thermostat between Off and Auto. In this case, function on window sensor is disabled.
                 2 - Input I1 influences on cooling and heating valves according to status of window sensor. In this case, function of Off and Auto selection bi I1 us disabled.
             </Help>
@@ -54,7 +54,7 @@ ref: http://qubino.com/products/flush-heat-cool-thermostat/
         <Value type="short" genre="config" instance="1" index="12" label="I2 Functionality selection" size="2" min="0" max="65535" value="32767">
             <Help>
                 Default value 32767.
-                32767 - input I2 does not influence on the Heat & Cool process
+                32767 - input I2 does not influence on the Heat and Cool process
                 From 0 to 990 - set point from 0.0 C to 99.0 C
                 From 1001 to 1150 - set point from -0.1 C to -15.0 C
                 2000 - Input I2 influences on the cooling valve according to status of condense sensor
