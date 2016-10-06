@@ -9,8 +9,15 @@
 	ZMNHLD5 916,0 MHz
 	 -->
 	 
-	<!-- This thermostat's setpoint descriptions are 0 based, not 1 -->
-    <CommandClass id="67" base="0" />
+	<!-- The thermostat does not properly report its operating modes -->
+	<CommandClass id="64">
+   		<SupportedModes>
+     		<Mode index="0" label="Off" />
+     		<Mode index="1" label="Auto" />
+   		</SupportedModes>
+	</CommandClass>
+
+    <CommandClass id="67" override_precision="2"  />
     
 	<!-- Configuration -->
 	<CommandClass id="112">
