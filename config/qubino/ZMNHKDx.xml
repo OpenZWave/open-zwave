@@ -236,7 +236,7 @@ ref: http://qubino.com/products/flush-heat-cool-thermostat/
     </CommandClass>
     <!-- Association Groups -->
     <CommandClass id="133">
-        <Associations num_groups="9">
+        <Associations num_groups="8">
             <Group index="1" max_associations="1" label="Lifeline" />
             <Group index="2" max_associations="16" label="Basic on/off (triggered at change of the output Q1 or Q2 state and reflecting its state) up to 16 nodes" />
             <Group index="3" max_associations="16" label="SENSOR_MULTILEVEL_GET (triggered once per minute if Parameter 121 is not 0) up to 16 nodes" />
