@@ -13,7 +13,7 @@
 	<CommandClass id="64">
    		<SupportedModes>
      		<Mode index="0" label="Off" />
-     		<Mode index="1" label="Auto" />
+     		<Mode index="1" label="Heat" />
    		</SupportedModes>
 	</CommandClass>
 
