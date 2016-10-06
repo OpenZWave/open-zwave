@@ -738,6 +738,7 @@
 		<Product type="0004" id="0052" name="ZMNHUD1 DIN Pilot Wire" config="qubino/ZMNHUD1.xml"/>
 		<Product type="0005" id="0001" name="ZMNHIA2 Flush on/off thermostat" config="qubino/ZMNHIA2.xml"/>
 		<Product type="0005" id="0051" name="ZMNHIDx Flush on/off thermostat" config="qubino/ZMNHIDx.xml"/>
+		<Product type="0005" id="0052" name="ZMNHKDx Flush Heat & Cool thermostat" config="qubino/ZMNHKDx.xml"/>
 		<Product type="0005" id="0003" name="ZMNHLA2 Flush PWM thermostat" config="qubino/ZMNHLAx.xml"/>
 		<Product type="0007" id="0052" name="ZMNHTDx Smart meter" config="qubino/ZMNHTDx.xml"/>
 		<Product type="0007" id="0053" name="ZMNHZDx Weather Station" config="qubino/ZMNHZDx.xml"/>
