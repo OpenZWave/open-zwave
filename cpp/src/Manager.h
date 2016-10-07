@@ -754,9 +754,11 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 * last known level, if supported by the device, otherwise it will turn	it on at 100%.
 		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
 		 * \param _nodeId The ID of the node to be changed.
+		 * \deprecated This method has been depreciated in setting the ValueID's directly (Remove in 1.8)
+		 *
 		 * \see SetNodeOff, SetNodeLevel
 		 */
-		void SetNodeOn( uint32 const _homeId, uint8 const _nodeId );
+		DEPRECATED void SetNodeOn( uint32 const _homeId, uint8 const _nodeId );
 
 		/**
 		 * \brief Turns a node off
@@ -765,9 +767,10 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 * a ValueChanged notification from that class.
 		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
 		 * \param _nodeId The ID of the node to be changed.
+		 * \deprecated This method has been depreciated in setting the ValueID's directly (Remove in 1.8)
 		 * \see SetNodeOn, SetNodeLevel
 		 */
-		void SetNodeOff( uint32 const _homeId, uint8 const _nodeId );
+		DEPRECATED void SetNodeOff( uint32 const _homeId, uint8 const _nodeId );
 
 		/**
 		 * \brief Sets the basic level of a node
@@ -778,9 +781,10 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 * \param _nodeId The ID of the node to be changed.
 		 * \param _level The level to set the node.  Valid values are 0-99 and 255.  Zero is off and
 		 * 99 is fully on.  255 will turn on the device at its last known level (if supported).
+		 * \deprecated This method has been depreciated in setting the ValueID's directly (Remove in 1.8)
 		 * \see SetNodeOn, SetNodeOff
 		 */
-		void SetNodeLevel( uint32 const _homeId, uint8 const _nodeId, uint8 const _level );
+		DEPRECATED void SetNodeLevel( uint32 const _homeId, uint8 const _nodeId, uint8 const _level );
 
 		/**
 		 * \brief Get whether the node information has been received
@@ -1723,7 +1727,7 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 * - Driver::ControllerState_InProgress - the controller is in the process of adding or removing the chosen node.  It is now too late to cancel the command.
 		 * - Driver::ControllerState_Complete - the controller has finished adding or removing the node, and the command is complete.
 		 * - Driver::ControllerState_Failed - will be sent if the command fails for any reason.
-		 * \deprecated This method has been depreciated in favour of the methods in the \ref Network_Commands section
+		 * \deprecated This method has been depreciated in favour of the methods in the \ref Network_Commands section (Remove in 1.8)
 		 *
 		 * \see AddNode RemoveNode RemoveFailedNode HasNodeFailed RequestNodeNeighborUpdate AssignReturnRoute DeleteAllReturnRoutes SendNodeInformation CreateNewPrimary ReceiveConfiguration ReplaceFailedNode TransferPrimaryRole RequestNetworkUpdate ReplicationSend CreateButton DeleteButton
 		 *
