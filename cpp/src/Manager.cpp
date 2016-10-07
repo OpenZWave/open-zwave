@@ -175,7 +175,7 @@ m_notificationMutex( new Mutex() )
 	Options::Get()->GetOptionAsInt( "QueueLogLevel", &nQueueLogLevel );
 	if ((nQueueLogLevel == 0) || (nQueueLogLevel > LogLevel_StreamDetail)) {
 		Log::Write(LogLevel_Warning, "Invalid LogLevel Specified for QueueLogLevel in Options.xml");
-		nSaveLogLevel = (int) LogLevel_Debug;
+		nQueueLogLevel = (int) LogLevel_Debug;
 	}
 
 	int nDumpTrigger = (int) LogLevel_Warning;

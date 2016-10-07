@@ -373,6 +373,9 @@ Driver::~Driver
 	m_notificationsEvent->Release();
 	m_nodeMutex->Release();
 
+	delete this->AuthKey;
+	delete this->EncryptKey;
+
 }
 
 //-----------------------------------------------------------------------------
