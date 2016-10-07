@@ -841,7 +841,8 @@ bool Color::SetValue
 			msg->Append( GetCommandClassId() );
 			msg->Append(ColorCmd_Set); //cmd
 			msg->Append(nocols);
-			bool cwset, wwset = false;
+			bool cwset = false;
+			bool wwset = false;
 			/* fake it */
 			switch (index) {
 				case 0: /* "Off" */

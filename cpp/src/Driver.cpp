@@ -375,6 +375,7 @@ Driver::~Driver
 
 	delete this->AuthKey;
 	delete this->EncryptKey;
+	delete this->m_httpClient;
 
 }
 
