@@ -66,7 +66,7 @@ version 1.07
 			2. The default value is 10, which means that a 10% change in battery will trigger a report.
 			</Help>
 		</Value>
-		<Value type="byte" index="45" genre="config" label="UV Reporting Threshold" units="" min="0" max="255" value="2">
+		<Value type="byte" index="45" genre="config" label="UV Reporting Threshold" units="" min="0" max="255" value="2" read_only="true">
 			<Help>Threshold change in ultraviolet to induce an automatic report.
 			</Help>
 		</Value>
