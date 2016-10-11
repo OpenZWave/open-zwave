@@ -19,6 +19,7 @@ DISTFILES =	.gitignore \
 	config/BeNext/HeatingControl.xml \
 	config/BeNext/Molite.xml \
 	config/BeNext/PanicButton.xml \
+	config/BeNext/PanicWatch.xml \
 	config/BeNext/PluginDimmer.xml \
 	config/BeNext/SceneController.xml \
 	config/BeNext/TagReader.xml \
