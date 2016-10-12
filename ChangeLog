@@ -115,6 +115,7 @@ Version 1.5
  - Issue #999 - Add new id in Fibaro fgd212.xml from DeviantEng (Nechry)
  - Issue #1004 - Add support config for Neo Coolcam NAS-WS02Z water leakage sensor from nmaster2042 (Nechry)
  - Add BeNext Panic Watch (Nechry)
+ - Pull Request #1006 Unknown: id=0176 Unknown: type=0005, id=0001 (Telldus TZDW-100 Magnet Switch) from ic3cool (Nechry)
 
 Version 1.4
  - Released 10th Jan, 2016
