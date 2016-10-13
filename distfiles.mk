@@ -86,6 +86,7 @@ DISTFILES =	.gitignore \
 	config/device_configuration.xsd \
 	config/devolo/mt02648.xml \
 	config/devolo/mt2646.xml \
+	config/devolo/mt2647.xml \
 	config/dlink/dch-z110.xml \
 	config/dlink/dch-z120.xml \
 	config/dlink/dch-z510.xml \
@@ -136,6 +137,7 @@ DISTFILES =	.gitignore \
 	config/fibaro/fgfs101zw5.xml \
 	config/fibaro/fggc001.xml \
 	config/fibaro/fgk001.xml \
+	config/fibaro/fgk10x.xml \
 	config/fibaro/fgms.xml \
 	config/fibaro/fgpb101.xml \
 	config/fibaro/fgr221.xml \

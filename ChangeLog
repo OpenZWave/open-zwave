@@ -116,6 +116,8 @@ Version 1.5
  - Issue #1004 - Add support config for Neo Coolcam NAS-WS02Z water leakage sensor from nmaster2042 (Nechry)
  - Add BeNext Panic Watch (Nechry)
  - Pull Request #1006 Unknown: id=0176 Unknown: type=0005, id=0001 (Telldus TZDW-100 Magnet Switch) from ic3cool (Nechry)
+ - Pull Request #1007 Fibaro_FGK10x from tobiasgraf (Nechry)
+ - Pull Request #1008 Devolo devices from tobiasgraf (Nechry)
 
 Version 1.4
  - Released 10th Jan, 2016
