@@ -10,10 +10,10 @@
 		Autolock Mode, Manuallock mode, Activate Away Mode, Deactivate Away Mode.
 		Default Value : 1 ( Disable Away / Auto Lock Mode )
       </Help>
-      	<Item label="Disable Away Manual Lock" value="0" />
-      	<Item label="Disable Away Auto Lock" value="1" />
-	<Item label="Enable Away Manual Lock" value="2" />
-	<Item label="Enable Away Auto Lock" value="3" />
+      	<Item label="Disable Away, Manual Lock" value="0" />
+      	<Item label="Disable Away, Auto Lock" value="1" />
+	<Item label="Enable Away, Manual Lock" value="2" />
+	<Item label="Enable Away, Auto Lock" value="3" />
     </Value>
 	<Value type="list" index="2" genre="config" label="RFID Registration Configuration" units="" min="0" max="3" size="1">
       <Help>
