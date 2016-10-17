@@ -32,7 +32,7 @@
             <CommandClass id="133">
                 <Instance index="1" />
                 <Associations num_groups="1">
-                    <Group index="1" max_associations="1" label="IDLock" auto="true">
+                    <Group index="1" max_associations="5" label="Lifeline">
                      </Group>
                 </Associations>
             </CommandClass>
