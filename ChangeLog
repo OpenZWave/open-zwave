@@ -89,6 +89,35 @@ Version 1.5
  - Issue #947 - Add install_name to the library on OSX from irundaia (Justin)
  - Add Aeotec ZW130 WallMote Quad (Nechry)
  - Pull Request #959 - Add LB60Z-1 Dimmable LED Light Bulb from KyleARector (Nechry)
+ - Add NorthQ  NQ-9021 Power Reader config file  (Nechry)
+ - Add Z-Wave.Me ZME_064381 Wall Plug switch Schuko (IP44) - Gen 5 (Nechry)
+ - Add Z-Wave.Me Z-Uno (Nechry)
+ - Pull Request #969 - Neo Coolcam Power Plug from LouiS22 (Nechry)
+ - Add Fibaro FGPB101 Button (Nechry)
+ - Pull Request #970 - Neo CoolCam Door/Window Detector from LouiS22 (Nechry)
+ - Add Fibaro fgs213 and 223 from sarakha63 (Nechry)
+ - Pull Request #974 - Add support for AU/NZ Frequency Remotec ZXT120 IR Controller from philhawthorne (Nechry)
+ - Pull Request #972 - Neo CoolCam Battery Powered PIR Sensor from LouiS22 (Nechry)
+ - Add Wenzhou TKB Control System TZ55 and TZ56 from sarakha63 (Nechry)
+ - Add FortrezZ WWA-02 Water and Temperature Alarm (Nechry)
+ - Pull Request #978 - Added the BeNext P1 Dongle to the manufacturer_specific.xml file from gizmocuz (Nechry)
+ - Pull Request #981 - Added support for GE 12721 Lighting Control Duplex Receptacle from ThomasADavis (Nechry)
+ - Pull Request #980 - Update manufacturer_specific.xml from bailz (Nechry)
+ - Add GR GR105 Auto Valve config file (Nechry)
+ - Add NodOn MSP-3-1-XX Micro Smart Plug from sarakha63 (Nechry)
+ - Add Zipato PH-PAB01.eu Micromodule Energy Meter (Nechry)
+ - Add Zipato MH-P210 Mini Energy Dimmer, Mcohome branded (Nechry)
+ - Add WiDom WDS Universal Double Switch (Nechry)
+ - Add FortrezZ WV-01 Automated Water Shut-Off Valve (Nechry)
+ - Pull Request #992 - Devolo Metering Plug and Permundo Plugs from tobiasgraf (Nechry)
+ - Add configuration file for First Alert ZCombo Smoke and Carbon Monoxide Detector (Nechry)
+ - Issue #998 - Add Zooz ZEN07 Mini Plug from DeviantEng (Nechry)
+ - Issue #999 - Add new id in Fibaro fgd212.xml from DeviantEng (Nechry)
+ - Issue #1004 - Add support config for Neo Coolcam NAS-WS02Z water leakage sensor from nmaster2042 (Nechry)
+ - Add BeNext Panic Watch (Nechry)
+ - Pull Request #1006 Unknown: id=0176 Unknown: type=0005, id=0001 (Telldus TZDW-100 Magnet Switch) from ic3cool (Nechry)
+ - Pull Request #1007 Fibaro_FGK10x from tobiasgraf (Nechry)
+ - Pull Request #1008 Devolo devices from tobiasgraf (Nechry)
 
 Dev Branch:
  - Rename zwcfg_*.xml to zwcache_*.xml to reflect its not a config file, but a cache. (Justin)
@@ -368,7 +397,6 @@ Version 1.3
  - Store Manufacturer ID, Type and Product ID as shorts instead of strings. (Justin)
  - Change QueryStage_Probe1 to QueryStage_CacheLoad to reflect this is where we start when loading a device from Cache (Justin)
  - Issue #729 - Add Qubino Flush Dimmer ZMNHJD1 from Stephane guillard (Justin)
-
 
 Version 1.2 
  - Released on 15/10/14
