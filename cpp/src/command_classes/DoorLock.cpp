@@ -390,7 +390,7 @@ bool DoorLock::SetValue
 		return true;
 	}
 	/* if its any of our System Messages.... */
-	if ( Value_System_Config_Mode >= _value.GetID().GetIndex() )
+	if ( Value_System_Config_Mode <= _value.GetID().GetIndex() && Value_System_Config_InsideHandles >= _value.GetID().GetIndex() )
 	{
 		bool sendmsg = true;
 		switch (_value.GetID().GetIndex()) {
