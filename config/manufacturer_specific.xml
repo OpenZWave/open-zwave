@@ -828,6 +828,7 @@
 	<Manufacturer id="0012" name="Tell It Online">
 	</Manufacturer>
         <Manufacturer id="0176" name="Telldus">
+                <Product type="0003" id="0001" name="TZWP-100 Plug-in Switch"/>
                 <Product type="0005" id="0001" name="TZDW-100 Magnet Switch" config="telldus/tzdw100.xml"/>
         </Manufacturer>
 	<Manufacturer id="0048" name="Telsey">
