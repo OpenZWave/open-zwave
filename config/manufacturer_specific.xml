@@ -506,6 +506,9 @@
 	</Manufacturer>
 	<Manufacturer id="0011" name="iCOM Tech">
 	</Manufacturer>
+	<Manufacturer id="0230" name="ID Lock">
+		<Product type="0003" id="0001" name="ID Lock 101" config="idlock/idlock101.xml"/>
+	</Manufacturer>
 	<Manufacturer id="003a" name="Inlon Srl">
 	</Manufacturer>
 	<Manufacturer id="0077" name="Innovus">
