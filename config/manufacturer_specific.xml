@@ -405,7 +405,8 @@
 		<Product type="0b00" id="4001" name="FGFS101 Flood Sensor" config="fibaro/fgfs101.xml" />
 		<Product type="0b00" id="1001" name="FGFS101 Flood Sensor" config="fibaro/fgfs101.xml" />
 		<Product type="0b00" id="9e00" name="FGFS101 Flood Sensor" config="fibaro/fgfs101.xml" />
-        <Product type="0b01" id="1002" name="FGFS101 Zwave+ Flood Sensor" config="fibaro/fgfs101zw5.xml" />
+                <Product type="0b01" id="1002" name="FGFS101 Zwave+ Flood Sensor" config="fibaro/fgfs101zw5.xml" />
+                <Product type="0b01" id="2002" name="FGFS101 Zwave+ Flood Sensor" config="fibaro/fgfs101zw5.xml" />
 		<Product type="0900" id="1000" name="FGRGBWM441 RGBW Controller" config="fibaro/fgrgbwm441.xml" />
 		<Product type="0900" id="2000" name="FGRGBWM441 RGBW Controller" config="fibaro/fgrgbwm441.xml"/>
 		<Product type="0900" id="4000" name="FGRGBWM441 RGBW Controller" config="fibaro/fgrgbwm441.xml" />
