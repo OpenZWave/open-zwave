@@ -1846,12 +1846,12 @@ void Driver::ProcessMsg
 			/* if this message is encrypted, decrypt it first */
 		} else if ((SecurityCmd_MessageEncap == _data[6]) || (SecurityCmd_MessageEncapNonceGet == _data[6])) {
 			uint8 _newdata[256];
+			uint8 SecurityCmd = _data[6];
 			uint8 *_nonce;
 
 			/* clear out NONCE Report tracking */
 			m_nonceReportSent = 0;
 			m_nonceReportSentAttempt = 0;
-
 
 			/* make sure the Node Exists, and it has the Security CC */
 			{
@@ -1879,22 +1879,37 @@ void Driver::ProcessMsg
 				//PrintHex("Decrypted Packet", _data, _data[4]+5);
 
 				/* if the Node has something else to send, it will encrypt a message and send it as a MessageEncapNonceGet */
-				if (SecurityCmd_MessageEncapNonceGet == _data[6])
+				if (SecurityCmd_MessageEncapNonceGet == SecurityCmd )
 				{
-					Log::Write(LogLevel_Info,  _data[3], "Received SecurityCmd_MessageEncapNonceGet from node %d - Sending New Nonce", _data[3] );
-					LockGuard LG(m_nodeMutex);
-					Node* node = GetNode( _data[3] );
-					if( node ) {
-						_nonce = node->GenerateNonceKey();
-					} else {
-						Log::Write(LogLevel_Warning, _data[3], "Couldn't Generate Nonce Key for Node %d", _data[3]);
-						return;
-					}
-					SendNonceKey(_data[3], _nonce);
+				    Log::Write(LogLevel_Info,  _data[3], "Received SecurityCmd_MessageEncapNonceGet from node %d - Sending New Nonce", _data[3] );
+				    LockGuard LG(m_nodeMutex);
+				    Node* node = GetNode( _data[3] );
+				    if( node ) {
+				        _nonce = node->GenerateNonceKey();
+				    } else {
+				        Log::Write(LogLevel_Warning, _data[3], "Couldn't Generate Nonce Key for Node %d", _data[3]);
+				        return;
+				    }
+				    SendNonceKey(_data[3], _nonce);
 				}
+
 				wasencrypted = true;
 
 			} else {
+			    /* if the Node has something else to send, it will encrypt a message and send it as a MessageEncapNonceGet */
+			    if (SecurityCmd_MessageEncapNonceGet == SecurityCmd )
+			    {
+			        Log::Write(LogLevel_Info,  _data[3], "Received SecurityCmd_MessageEncapNonceGet from node %d - Sending New Nonce", _data[3] );
+			        LockGuard LG(m_nodeMutex);
+			        Node* node = GetNode( _data[3] );
+			        if( node ) {
+			            _nonce = node->GenerateNonceKey();
+			        } else {
+			            Log::Write(LogLevel_Warning, _data[3], "Couldn't Generate Nonce Key for Node %d", _data[3]);
+			            return;
+			        }
+			        SendNonceKey(_data[3], _nonce);
+			    }
 				/* it failed for some reason, lets just move on */
 				m_expectedReply = 0;
 				m_expectedNodeId = 0;
