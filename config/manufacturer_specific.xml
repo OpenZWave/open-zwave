@@ -985,6 +985,7 @@
 	</Manufacturer>
     <Manufacturer id="027a" name="Zooz">
         <Product type="0003" id="0082" name="ZSE08 Contact Sensor" config="zooz/zse08.xml"/>
+        <Product type="0003" id="0083" name="ZSE09 Mini Sensor" config="zooz/zse09.xml"/>        
         <Product type="0003" id="0087" name="ZEN07 Mini Plug" config="zooz/zen07.xml"/>
     </Manufacturer>
 	<Manufacturer id="0021" name="Zykronix">
