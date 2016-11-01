@@ -181,6 +181,7 @@ DISTFILES =	.gitignore \
 	config/horstmann/ses303.xml \
 	config/horstmann/sir321.xml \
 	config/horstmann/srt323.xml \
+	config/idlock/idlock101.xml \
 	config/intermatic/ca8900.xml \
 	config/iris/rangeextender.xml \
 	config/kwikset/smartcode.xml \
@@ -312,6 +313,7 @@ DISTFILES =	.gitignore \
 	config/zipato/MiniKeypad.xml \
 	config/zipato/RGBBulb.xml \
 	config/zooz/zen07.xml \
+	config/zooz/zse08.xml \
 	config/zwave.me/ZME_05431.xml \
 	config/zwave.me/ZME_06433.xml \
 	config/zwave.me/ZME_06436.xml \
