@@ -314,6 +314,7 @@ DISTFILES =	.gitignore \
 	config/zipato/RGBBulb.xml \
 	config/zooz/zen07.xml \
 	config/zooz/zse08.xml \
+	config/zooz/zse09.xml \
 	config/zwave.me/ZME_05431.xml \
 	config/zwave.me/ZME_06433.xml \
 	config/zwave.me/ZME_06436.xml \

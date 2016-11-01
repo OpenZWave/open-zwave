@@ -118,6 +118,13 @@ Version 1.5
  - Pull Request #1006 Unknown: id=0176 Unknown: type=0005, id=0001 (Telldus TZDW-100 Magnet Switch) from ic3cool (Nechry)
  - Pull Request #1007 Fibaro_FGK10x from tobiasgraf (Nechry)
  - Pull Request #1008 Devolo devices from tobiasgraf (Nechry)
+ - Pull Request #1010 Suggestion for adding support for ID Lock 101 from christerr (Nechry)
+ - Pull Request #1024 - Added new device, zooz zse09 from DeviantEng (Nechry)
+ - Issue #1012 - New Telldus Plug-in Switch Configuration (Nechry)
+ - Add new id for FGFS101 Zwave+ Flood Sensor (Nechry)
+ - Pull Request #1021 - Added Zooz ZSE08 Contact Sensor from DeviantEng (Nechry)
+ - Pull Request #1023 - Add product type for ZXT-120US from daradib (Nechry)
+ - Pull Request #1024 - Added new device, zooz zse09 from DeviantEng (Nechry)
 
 Version 1.4
  - Released 10th Jan, 2016
