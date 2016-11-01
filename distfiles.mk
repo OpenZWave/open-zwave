@@ -248,7 +248,8 @@ DISTFILES =	.gitignore \
 	config/qubino/ZMNHDA2.xml \
 	config/qubino/ZMNHDDx.xml \
 	config/qubino/ZMNHIA2.xml \
-	config/qubino/ZMNHIDx.xml \
+	config/qubino/ZMNHIDxS1.xml \
+	config/qubino/ZMNHIDxS2.xml \
 	config/qubino/ZMNHJA2.xml \
 	config/qubino/ZMNHJD1.xml \
 	config/qubino/ZMNHLAx.xml \
