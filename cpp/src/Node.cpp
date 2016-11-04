@@ -3621,7 +3621,10 @@ string Node::getConfigPath
 (
 )
 {
-	return m_Product->GetConfigPath();
+	if (m_Product)
+		return m_Product->GetConfigPath();
+	else
+		return "";
 
 }
 
