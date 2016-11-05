@@ -575,6 +575,7 @@
         <Product type="4450" id="3030" name="PD300Z-2 Plug-in Dimmer Module" config="linear/PD300Z-2.xml"/>
         <Product type="4457" id="3034" name="WD500Z-1 Wall Dimmer Switch" config="linear/WD500Z-1.xml"/>
         <Product type="4457" id="3331" name="WD1000Z-1 Wall Dimmer Switch"/>
+        <Product type="5343" id="3132" name="WA00Z-1 Scene Switch" config="linear/WA00Z-1.xml"/>
         <Product type="5246" id="3133" name="FS20Z Isolated Contact Fixture Module"/>
         <Product type="5250" id="3030" name="PS15Z-2 Plug-in Appliance Module"/>
         <Product type="5252" id="3530" name="WO15Z-1 Single Wall Outlet"/>

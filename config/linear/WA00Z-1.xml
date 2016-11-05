@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Product xmlns='http://code.google.com/p/open-zwave/'>
+	<!-- Configuration Parameters -->
+	<CommandClass id="112">
+		<Value type="list" index="2" genre="config" label="Control Mode" size="1" value="0">
+			<Help>Set the switch to control other devices or issue various scene activation commands to a central controller.</Help>
+			<Item label="Scenes and groups" value="0" />
+			<Item label="Scenes only" value="1" />
+			<Item label="Groups only" value="2" />
+		</Value>
+		<Value type="bool" index="4" genre="config" label="Invert Switch" size="1" value="False">
+			<Help>Change the top of the switch to OFF and the bottom of the switch to ON.</Help>
+		</Value>
+	</CommandClass>
+	<!-- Association Groups -->
+	<CommandClass id="133">
+		<Associations num_groups="3">
+			<Group index="1" max_associations="1" label="Group 1"/>
+			<Group index="2" max_associations="5" label="Group 2"/>
+			<Group index="3" max_associations="5" label="Group 3"/>
+		</Associations>
+	</CommandClass>
+</Product>
+
