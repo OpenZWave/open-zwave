@@ -482,4 +482,3 @@ Version 1.1
  - Remove the hidapi.h include from our headers so we don't have to
    distribute the hidapi header files (Justin)
  - Fixed Issue 375 - Add Ecolink Garage Door Sensor - (Justin)
- - Added Config File for GE 32563 Hinge Pin Smart Door Sensor (Vince)_
