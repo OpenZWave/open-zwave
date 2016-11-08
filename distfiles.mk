@@ -288,6 +288,7 @@ DISTFILES =	.gitignore \
 	config/trane/TZEMT400BB32MAA.xml \
 	config/vision/zd2102.xml \
 	config/vision/zd2201.xml \
+	config/vision/zd2301.xml \
 	config/vision/zg8101.xml \
 	config/vision/zm1601eu.xml \
 	config/vision/zm1601eu5.xml \
