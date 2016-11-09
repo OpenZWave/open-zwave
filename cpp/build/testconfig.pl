@@ -74,6 +74,22 @@ foreach my $group ($data->{CommandClass}->{133}->{Associations}->{Group})
 		}
 	}
 
+my $data = $xml->XMLin($_[0], ForceArray => [ 'Value' ]);
+# print output
+foreach my $valueItem ($data->{CommandClass}->{112}->{Value})
+	{
+		if (defined($valueItem))
+		{
+		foreach my $configuration (@{$valueItem})
+        	{
+			if ((defined($configuration->{type})) && (lc $configuration->{type} eq "list") && (not defined($configuration->{size})))
+                {
+                    LogError($_[0], 2, "Configuration of type list $configuration->{index} size not defined");
+                }
+             }
+		}
+	}
+
 }
 
 # check files match entries in manufacture_specific.xml 
