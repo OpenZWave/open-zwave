@@ -141,7 +141,6 @@ DISTFILES =	.gitignore \
 	config/fibaro/fgms.xml \
 	config/fibaro/fgpb101.xml \
 	config/fibaro/fgr221.xml \
-	config/fibaro/fgr222.xml \
 	config/fibaro/fgrgbwm441.xml \
 	config/fibaro/fgrm222.xml \
 	config/fibaro/fgs211.xml \
