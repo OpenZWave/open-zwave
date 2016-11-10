@@ -127,6 +127,7 @@ Version 1.5
  - Pull Request #1024 - Added new device, zooz zse09 from DeviantEng (Nechry)
  - Add CT30 Thermostat config file (Nechry)
  - Add ZD2301 Multisensor 4in1 (Nechry)
+ - Add Ecolink Sensor specific configuration (Nechry)
 
 Version 1.4
  - Released 10th Jan, 2016

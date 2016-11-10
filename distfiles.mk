@@ -97,6 +97,7 @@ DISTFILES =	.gitignore \
 	config/duwi/ZWES1000.xml \
 	config/duwi/ZWESJ300.xml \
 	config/duwi/zwfb.xml \
+	config/ecolink/sensor.xml \
 	config/electronicsolutions/dbmz.xml \
 	config/enerwave/zw15s.xml \
 	config/enerwave/zw20r.xml \
