@@ -128,6 +128,7 @@ Version 1.5
  - Add CT30 Thermostat config file (Nechry)
  - Add ZD2301 Multisensor 4in1 (Nechry)
  - Add Ecolink Sensor specific configuration (Nechry)
+ - Add Zipato VS-ZD2102 Door/Window Sensor (Nechry)
 
 Version 1.4
  - Released 10th Jan, 2016

@@ -313,6 +313,7 @@ DISTFILES =	.gitignore \
 	config/widom/WDS.xml \
 	config/zipato/MiniKeypad.xml \
 	config/zipato/RGBBulb.xml \
+	config/zipato/vszd2102.xml \
 	config/zooz/zen07.xml \
 	config/zooz/zse08.xml \
 	config/zooz/zse09.xml \
