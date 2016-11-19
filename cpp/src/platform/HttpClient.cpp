@@ -10,7 +10,10 @@
 #  endif
 #endif
 
-#ifdef _WIN32
+#ifdef WINRT
+#  include <winsock2.h>
+#  include <ws2tcpip.h>
+#elif _WIN32
 #  ifndef _WIN32_WINNT
 #    define _WIN32_WINNT 0x0501
 #  endif
@@ -176,7 +179,14 @@ int e
 )
 {
     std::string ret;
-#ifdef _WIN32
+#ifdef WINRT
+	LPTSTR s = (LPTSTR)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, 512);
+	FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, NULL, e, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), s, 512, NULL );
+	char buffer[1024];
+	wcstombs(buffer, s, sizeof(buffer));
+	HeapFree(GetProcessHeap(), 0, s);
+	ret = buffer;
+#elif _WIN32
     LPTSTR s;
     ::FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, NULL, e, 0, (LPTSTR)&s, 0, NULL);
     if(s)
