@@ -232,6 +232,7 @@ DISTFILES =	.gitignore \
 	config/polycontrol/polylock.xml \
 	config/popp/009105.xml \
 	config/popp/009303.xml \
+	config/popp/012501.xml \
 	config/popp/123580.xml \
 	config/popp/123601.xml \
 	config/popp/123658.xml \

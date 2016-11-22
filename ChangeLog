@@ -129,6 +129,7 @@ Version 1.5
  - Add ZD2301 Multisensor 4in1 (Nechry)
  - Add Ecolink Sensor specific configuration (Nechry)
  - Add Zipato VS-ZD2102 Door/Window Sensor (Nechry)
+ - Issue #1047 - Add add the Popp 012501 Strike Lock Control (Nechry)
 
 Version 1.4
  - Released 10th Jan, 2016
