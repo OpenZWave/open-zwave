@@ -149,10 +149,11 @@
 	<Manufacturer id="0029" name="Asia Heading">
 	</Manufacturer>
 	<Manufacturer id="0129" name="Assa Abloy">
-		<Product type="0001" id="0000" name="Yale Real Living Cap-Touch Lever Lock"/>
-		<Product type="0002" id="0000" name="Yale Real Living Cap-Touch Deadbolt" config="assa_abloy/RealLivingCapTouch.xml" />
-		<Product type="0004" id="0800" name="Yale Real Living Key Free Push Button Deadbolt" config="assa_abloy/RealLivingCapTouch.xml"/>
-		<Product type="0006" id="0000" name="Yale Keyfree Connected Smart Lock" config="assa_abloy/KeyfreeConnected.xml"/>
+		<Product type="0001" id="0000" name="Yale Touchscreen Lever (YRL220)" config="assa_abloy/TouchLever.xml"/>
+		<Product type="0002" id="0000" name="Yale Touchscreen Deadbolt (YRD220)" config="assa_abloy/TouchDeadbolt.xml" />
+		<Product type="0003" id="0800" name="Yale Push Button Lever Lock (YRL210)" config="assa_abloy/PushButtonLever.xml"/>
+		<Product type="0004" id="0800" name="Yale Push Button Deadbolt (YRD210)" config="assa_abloy/PushButtonDeadbolt.xml"/>		
+		<Product type="0006" id="0000" name="Yale Key Free Touchscreen Deadbolt (YRD240)" config="assa_abloy/KeyfreeConnected.xml"/>
 	</Manufacturer>
 	<Manufacturer id="005d" name="Aspalis">
 		<Product type="0202" id="0511" name="Plugin Lamp Module"/>
