@@ -184,6 +184,7 @@ DISTFILES =	.gitignore \
 	config/idlock/idlock101.xml \
 	config/intermatic/ca8900.xml \
 	config/iris/rangeextender.xml \
+	config/kaipule/im20.xml \
 	config/kwikset/smartcode.xml \
 	config/leviton/rzi10.xml \
 	config/leviton/vrcpg.xml \

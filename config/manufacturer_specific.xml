@@ -547,6 +547,9 @@
 		<Product type="0102" id="0102" name="NE-4CT-2P Electric Power Measuring Equipment"/>
 		<Product type="0103" id="0103" name="NE-4CT Electric Power Measuring Equipment"/>
 	</Manufacturer>
+	<Manufacturer id="0214" name="Kaipule">
+		<Product type="0002" id="0001" name="IM20 Door/Window Sensor" config="kaipule/im20.xml"/>
+	</Manufacturer>	
 	<Manufacturer id="0091" name="Kamstrup">
 	</Manufacturer>
 	<Manufacturer id="0090" name="Kwikset">

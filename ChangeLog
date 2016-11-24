@@ -132,6 +132,7 @@ Version 1.5
  - Issue #1047 - Add the Popp 012501 Strike Lock Control (Nechry)
  - Issue #1044 - Fibaro FGWPE Wall Plug is now type="0602" id="1001" (Nechry)
  - Issue #1031 - Neo CoolCam PIR sensor incomplete Config from fozzyg (Nechry)
+ - Add Kaipule IM20 Door/Window Sensor (Nechry)
 
 Version 1.4
  - Released 10th Jan, 2016
