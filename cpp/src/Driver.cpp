@@ -3860,7 +3860,7 @@ void Driver::CommonAddNodeStatusRequestHandler
 			 */
 			if( m_currentControllerCommand != NULL )
 			{
-                Log::Write( LogLevel_Info, nodeId, "Adding node ID %d - %s", _data[4], m_currentControllerCommand->m_controllerCommandArg ? "Secure" : "Non-Secure");
+				Log::Write( LogLevel_Info, nodeId, "Adding node ID %d - %s", _data[4], m_currentControllerCommand->m_controllerCommandArg ? "Secure" : "Non-Secure");
 				m_currentControllerCommand->m_controllerAdded = false;
 				m_currentControllerCommand->m_controllerCommandNode = _data[4];
 				/* make sure we dont overrun our buffer. Its ok to truncate */
