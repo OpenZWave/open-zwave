@@ -168,23 +168,6 @@
                 </Value>
 
         </CommandClass>
-<commandClass id="0085" version="2"/>
-<commandClass id="0059"/>
-<commandClass id="0020" version="2" controlled="true"/>
-<commandClass id="0025" version="2" controlled="true"/>
-<commandClass id="0028" controlled="true"/>
-<commandClass id="005b" version="2"/>
-<commandClass id="0070"/>
-<commandClass id="005a"/>
-<commandClass id="007a" version="2"/>
-<commandClass id="0087"/>
-<commandClass id="0072" version="2"/>
-<commandClass id="0060" version="4"/>
-<commandClass id="008e" version="3"/>
-<commandClass id="0026" version="4" controlled="true"/>
-<commandClass id="0073"/>
-<commandClass id="0086" version="2"/>
-<commandClass id="005e" version="2"/>
 
 <!-- Association Groups -->
 <CommandClass id="133">
