@@ -2,15 +2,21 @@
 <!--http://www.benext.eu/static/manual/heatingcontrol.pdf-->
 <Product xmlns='http://code.google.com/p/open-zwave/'>
 
-  <CommandClass id="64">
+  <CommandClass id="64" name="COMMAND_CLASS_THERMOSTAT_MODE">
     <Value type="list" genre="user" instance="1" index="0" label="Mode" units="" read_only="false" write_only="false" min="0" max="0" value="0">
-      <Item label="Heating" value="1"/>
-      <Item label="Energy Save heating" value="11"/>
+      <Item label="Heat" value="1"/>
+      <Item label="Energy Heat" value="11"/>
     </Value>
     <SupportedModes>
-      <Mode index="0" label="Heating"/>
-      <Mode index="1" label="Energy Save heating"/>
+      <Mode index="1" label="Heat"/>
+      <Mode index="11" label="Energy Heat"/>
     </SupportedModes>
+  </CommandClass>
+
+  <CommandClass id="67" name="COMMAND_CLASS_THERMOSTAT_SETPOINT" version="1" request_flags="4" create_vars="true" base="0">
+    <Instance index="1"/>
+    <Value type="decimal" genre="user" instance="1" index="1" label="Heating" units="C" read_only="false" write_only="false" min="0" max="0" value="20"/>
+    <Value type="decimal" genre="user" instance="1" index="11" label="Energy Heat" units="C" read_only="false" write_only="false" min="0" max="0" value="16"/>
   </CommandClass>
 
   <!-- Configuration -->
