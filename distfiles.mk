@@ -287,6 +287,7 @@ DISTFILES =	.gitignore \
 	config/stelpro/stzw402.xml \
 	config/swiid/swiidinter.xml \
 	config/swiid/swiidplug.xml \
+	config/telldus/tzwp100.xml \
 	config/telldus/tzdw100.xml \
 	config/thermofloor/heatit021.xml \
 	config/trane/TZEMT400AB32MAA.xml \
