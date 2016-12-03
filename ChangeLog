@@ -138,6 +138,7 @@ Version 1.5
  - Add Yale variante for Keyless Connected Smart Lock (Nechry)
  - Add add Heating Control variante (Nechry)
  - Issue #1056 Added Configuration Variables for Telldus Plugin Switch TZWP-100 from fozzyg (Nechry)
+ - Add hank scene controllers from sarakha63 (Nechry)
 
 Version 1.4
  - Released 10th Jan, 2016

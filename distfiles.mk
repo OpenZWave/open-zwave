@@ -172,6 +172,8 @@ DISTFILES =	.gitignore \
 	config/gr/gr105n.xml \
 	config/greenwave/powernode1.xml \
 	config/greenwave/powernode6.xml \
+	config/hank/scenecontroller1.xml \
+	config/hank/scenecontroller4.xml \
 	config/homeseer/ezmotionplus.xml \
 	config/homeseer/hsm100.xml \
 	config/homeseer/hsm200.xml \
