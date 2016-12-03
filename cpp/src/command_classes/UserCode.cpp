@@ -310,12 +310,24 @@ bool UserCode::SetValue
 		ValueRaw const* value = static_cast<ValueRaw const*>(&_value);
 		uint8* s = value->GetValue();
 		uint8 len = value->GetLength();
+		uint8 status = UserCode_Occupied;
 
 		if( len > UserCodeLength )
 		{
 			return false;
 		}
-		m_userCodesStatus[value->GetID().GetIndex()] = UserCode_Occupied;
+
+		/*
+			Not sure of the cleanest way, but I'm going with when the user specifies [0,0,0,0], they mean clear.
+			Z-Wave Command Class Specification N-Z.pdf (pg 333 of 420) specifies fields[4] must equal [0,0,0,0] when status is 'Available'
+			Otherwise, we are sending non-zero data with status set to UserCode_Occupied.
+		*/
+		if ((len == 4) && (*(uint32*)s == 0))
+		{
+			status = UserCode_Available;
+		}
+
+		m_userCodesStatus[value->GetID().GetIndex()] = status;
 		Msg* msg = new Msg( "UserCodeCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 		msg->SetInstance( this, _value.GetID().GetInstance() );
 		msg->Append( GetNodeId() );
@@ -323,7 +335,7 @@ bool UserCode::SetValue
 		msg->Append( GetCommandClassId() );
 		msg->Append( UserCodeCmd_Set );
 		msg->Append( value->GetID().GetIndex() );
-		msg->Append( UserCode_Occupied );
+		msg->Append( status );
 		for( uint8 i = 0; i < len; i++ )
 		{
 			msg->Append( s[i] );
