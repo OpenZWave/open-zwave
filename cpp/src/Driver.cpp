@@ -4412,7 +4412,7 @@ void Driver::InitNode
 			Log::Write(LogLevel_Info, _nodeId, "Network Key Not Set - Secure Option is %s", secure ? "required" : "not required");
 		m_nodes[_nodeId]->SetProtocolInfo(_protocolInfo, _length);
 	}
-	Log::Write(LogLevel_Info, _nodeId, "Initilizing Node. New Node: %s (%s)", static_cast<Node *>(m_nodes[_nodeId])->IsAddingNode() ? "true" : "false", newNode ? "true" : "false");
+	Log::Write(LogLevel_Info, _nodeId, "Initializing Node. New Node: %s (%s)", static_cast<Node *>(m_nodes[_nodeId])->IsAddingNode() ? "true" : "false", newNode ? "true" : "false");
 }
 
 //-----------------------------------------------------------------------------

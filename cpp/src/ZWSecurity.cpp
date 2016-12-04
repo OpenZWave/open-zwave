@@ -284,7 +284,7 @@ namespace OpenZWave {
 		PrintHex("Raw", e_buffer, e_length);
 
 		if (e_length < 19) {
-			Log::Write(LogLevel_Warning, _sendingNode, "Recieved a Encrypted Message that is too Short. Dropping it");
+			Log::Write(LogLevel_Warning, _sendingNode, "Received a Encrypted Message that is too Short. Dropping it");
 			return false;
 		}
 
