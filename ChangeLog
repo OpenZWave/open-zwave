@@ -139,6 +139,7 @@ Version 1.5
  - Add add Heating Control variante (Nechry)
  - Issue #1056 Added Configuration Variables for Telldus Plugin Switch TZWP-100 from fozzyg (Nechry)
  - Add hank scene controllers from sarakha63 (Nechry)
+ - Add Vision Security ZF5201 Flood sensor (Nechry)
 
 Version 1.4
  - Released 10th Jan, 2016
