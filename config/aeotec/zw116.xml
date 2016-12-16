@@ -16,17 +16,25 @@ Product Type ID: EU=0x00, US=0x01, AU=0x02 CN=0x1D
             <Item label="Disable" value="0"/>
             <Item label="Enable" value="1"/>
         </Value>
+		<Value type="list" index="20" genre="config" label="Status re-power on" size="1" value="0">
+			<Help>Configure the output load status after re-power on</Help>
+			<Item label="The last status before the power outage" value="0"/>
+			<Item label="Always on" value="1"/>
+			<Item label="Always off" value="2"/>
 		</Value>
+		<Value type="list" index="80" genre="config" label="Notification report association group 1" units="" size="1" value="3">
 			<Help>To set which notification would be sent to the associated nodes in association group 1 when the state of output load is changed</Help>
 			<Item label="None" value="0" />
 			<Item label="Hail" value="1" />
 			<Item label="Basic" value="2" />
 			<Item label="Hail CC when using the external switch to switch the loads" value="3" />
 		</Value>		
+		<Value type="list" index="81" genre="config" label="Notification report using the external switch 1" units="" size="1" value="1">
 			<Help>To set which notification would be sent to the associated nodes in association group 3 when using the external switch 1 to switch the loads</Help>
 			<Item label="None" value="0" />
 			<Item label="Basic" value="1" />
 		</Value>		
+		<Value type="list" index="82" genre="config" label="Notification report using the external switch 2" units="" size="1" value="1">
 			<Help>To set which notification would be sent to the associated nodes in association group 4 when using the external switch 2 to switch the loads</Help>
 			<Item label="None" value="0" />
 			<Item label="Basic" value="1" />
