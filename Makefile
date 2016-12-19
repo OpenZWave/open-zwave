@@ -17,8 +17,8 @@ PREFIX ?= /usr/local
 export PREFIX
 
 all: 
-	CPPFLAGS=$(CPPFLAGS) $(MAKE) -C $(top_srcdir)/cpp/build/ -$(MAKEFLAGS) 
-	CPPFLAGS=$(CPPFLAGS) $(MAKE) -C $(top_srcdir)/cpp/examples/MinOZW/ -$(MAKEFLAGS) 
+	CPPFLAGS="$(CPPFLAGS)" $(MAKE) -C $(top_srcdir)/cpp/build/ -$(MAKEFLAGS)
+	CPPFLAGS="$(CPPFLAGS)" $(MAKE) -C $(top_srcdir)/cpp/examples/MinOZW/ -$(MAKEFLAGS)
 
 install:
 	$(MAKE) -C $(top_srcdir)/cpp/build/ -$(MAKEFLAGS) $(MAKECMDGOALS)
