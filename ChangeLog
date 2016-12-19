@@ -141,6 +141,7 @@ Version 1.5
  - Add hank scene controllers from sarakha63 (Nechry)
  - Add Vision Security ZF5201 Flood sensor (Nechry)
  - Add Aeotec ZW116 Nano Switch (Nechry)
+ - Issue #1046 - Add Config for TZ45A from RCS (darrinsmart)
 
 Version 1.4
  - Released 10th Jan, 2016
