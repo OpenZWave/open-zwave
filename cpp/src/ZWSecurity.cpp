@@ -167,8 +167,7 @@ namespace OpenZWave {
 		 * and we add it also to the start of the payload
 		 */
 		for (int i = 0; i < 8; i++) {
-			//initializationVector[i] = (rand()%0xFF)+1;
-			initializationVector[i] = 0xAA;
+			initializationVector[i] = (uint8) (255.0 * rand() / (RAND_MAX + 1.0));
 			e_buffer[len++] = initializationVector[i];
 		}
 		/* the remaining 8 bytes are the NONCE we got from the device */
@@ -176,6 +175,11 @@ namespace OpenZWave {
 			initializationVector[8+i] = m_nonce[i];
 		}
 
+		/* we need a copy b/c aes_ofb_encrypt will overwrite it */
+		uint8 iv_dup[16];
+		for (int i = 0; i < 16; i++) {
+			iv_dup[i] = initializationVector[i];
+		}
 
 		uint8 plaintextmsg[32];
 		/* add the Sequence Flag
@@ -209,19 +213,9 @@ namespace OpenZWave {
 		e_buffer[len++] = m_nonce[0];
 
 
-		/* regenerate the IV */
-		for (int i = 0; i < 8; i++) {
-			//initializationVector[i] = (rand()%0xFF)+1;
-			initializationVector[i] = 0xAA;
-		}
-		/* the remaining 8 bytes are the NONCE we got from the device */
-		for (int i = 0; i < 8; i++) {
-			initializationVector[8+i] = m_nonce[i];
-		}
-
 		/* now calculate the MAC and append it */
 		uint8 mac[8];
-		GenerateAuthentication(&e_buffer[7], e_buffer[5], driver, _sendingNode, _receivingNode, initializationVector, mac);
+		GenerateAuthentication(&e_buffer[7], e_buffer[5], driver, _sendingNode, _receivingNode, iv_dup, mac);
 		for(int i=0; i<8; ++i )
 		{
 			e_buffer[len++] = mac[i];
