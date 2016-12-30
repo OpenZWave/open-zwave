@@ -142,6 +142,7 @@ Version 1.5
  - Add Vision Security ZF5201 Flood sensor (Nechry)
  - Add Aeotec ZW116 Nano Switch (Nechry)
  - Issue #1046 - Add Config for TZ45A from RCS (darrinsmart)
+ - Add Zipato ZP3102-EU Multisensor Duo (Nechry)
 
 Version 1.4
  - Released 10th Jan, 2016
