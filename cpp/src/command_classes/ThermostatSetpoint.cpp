@@ -51,8 +51,8 @@ enum ThermostatSetpointCmd
 enum
 {
 	ThermostatSetpoint_Unused0	= 0,
-	ThermostatSetpoint_Heating1,
-	ThermostatSetpoint_Cooling1,
+	ThermostatSetpoint_Heating,
+	ThermostatSetpoint_Cooling,
 	ThermostatSetpoint_Unused3,
 	ThermostatSetpoint_Unused4,
 	ThermostatSetpoint_Unused5,
@@ -70,8 +70,8 @@ enum
 static char const* c_setpointName[] =
 {
 	"Unused 0",
-	"Heating 1",
-	"Cooling 1",
+	"Heating",
+	"Cooling",
 	"Unused 3",
 	"Unused 4",
 	"Unused 5",
@@ -84,6 +84,23 @@ static char const* c_setpointName[] =
 	"Cooling Econ",
 	"Away Heating"
 };
+
+// ThermostatSetpointCmd_SupportedGet bits to setpoints ID mapping (interpretation A)
+static const uint8 ThermostatSetpoint_BitsCount = 10;
+static const uint8 i_setpointBitmap[ThermostatSetpoint_BitsCount] =
+{
+	ThermostatSetpoint_Unused0,			// bit 0
+	ThermostatSetpoint_Heating,			// bit 1
+	ThermostatSetpoint_Cooling,			// bit 2
+	ThermostatSetpoint_Furnace,			// bit 3
+	ThermostatSetpoint_DryAir,			// bit 4
+	ThermostatSetpoint_MoistAir,		// bit 5
+	ThermostatSetpoint_AutoChangeover,	// bit 6
+	ThermostatSetpoint_HeatingEcon,		// bit 7
+	ThermostatSetpoint_CoolingEcon,		// bit 8
+	ThermostatSetpoint_AwayHeating,		// bit 9
+};
+
 
 //-----------------------------------------------------------------------------
 // <ThermostatSetpoint::ThermostatSetpoint>
@@ -251,18 +268,21 @@ bool ThermostatSetpoint::HandleMsg
 			Log::Write( LogLevel_Info, GetNodeId(), "Received supported thermostat setpoints" );
 
 			// Parse the data for the supported setpoints
-			for( uint32 i=1; i<_length-1; ++i )
+			for( uint32 i=0; i<_length-2; ++i )
 			{
-				for( int32 bit=0; bit<8; ++bit )
+				for( uint32 bit=0; bit<8; ++bit )
 				{
-					if( ( _data[i] & (1<<bit) ) != 0 )
+					if( ( _data[i+1] & (1<<bit) ) != 0 )
 					{
 						// Add supported setpoint
-						int32 index = (int32)((i-1)<<3) + bit + m_setPointBase;
-						if( index < ThermostatSetpoint_Count )
+						uint32 bitNum = (i<<3) + bit + m_setPointBase;
+						if ( bitNum < ThermostatSetpoint_BitsCount )
 						{
-						  	node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, index, c_setpointName[index], "C", false, false, "0.0", 0 );
-							Log::Write( LogLevel_Info, GetNodeId(), "    Added setpoint: %s", c_setpointName[index] );
+							int32 setpointID = i_setpointBitmap[bitNum];
+							Log::Write( LogLevel_Debug, GetNodeId(), "  Supported setpoint, Byte:%d, Bit: %d, BitNum: %d, setpointId: %d", i, bit, bitNum, setpointID );
+							
+							node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, setpointID, c_setpointName[setpointID], "C", false, false, "0.0", 0 );
+							Log::Write( LogLevel_Info, GetNodeId(), "    Added setpoint: %s", c_setpointName[setpointID] );
 						}
 					}
 				}
