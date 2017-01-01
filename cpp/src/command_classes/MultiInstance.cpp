@@ -435,7 +435,7 @@ void MultiInstance::HandleMultiChannelCapabilityReport
 		 */
 		if ((m_ignoreUnsolicitedMultiChannelCapabilityReport && (node->GetCurrentQueryStage() != Node::QueryStage_Instances))
 				&& !dynamic && m_endPointCommandClasses.size() > 0) {
-			Log::Write(LogLevel_Error, GetNodeId(), "Recieved a Unsolicited MultiChannelEncap when we are not in QueryState_Instances");
+			Log::Write(LogLevel_Error, GetNodeId(), "Received a Unsolicited MultiChannelEncap when we are not in QueryState_Instances");
 			return;
 		}
 
@@ -685,7 +685,7 @@ void MultiInstance::HandleMultiChannelEncap
 				pCommandClass->HandleMsg( &_data[4], _length-4, instance );
 			}
 		} else {
-			Log::Write(LogLevel_Error, GetNodeId(), "Recieved a MultiChannelEncap for endpoint %d for Command Class %d, which we can't find", endPoint, commandClassId);
+			Log::Write(LogLevel_Error, GetNodeId(), "Received a MultiChannelEncap for endpoint %d for Command Class %d, which we can't find", endPoint, commandClassId);
 		}
 	}
 }

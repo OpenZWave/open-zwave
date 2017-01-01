@@ -70,6 +70,7 @@ DISTFILES =	.gitignore \
 	config/aeotec/zw099.xml \
 	config/aeotec/zw100.xml \
 	config/aeotec/zw112.xml \
+	config/aeotec/zw116.xml \
 	config/aeotec/zw117.xml \
 	config/aeotec/zw120.xml \
 	config/aeotec/zw121.xml \
@@ -322,6 +323,7 @@ DISTFILES =	.gitignore \
 	config/widom/WDS.xml \
 	config/zipato/MiniKeypad.xml \
 	config/zipato/RGBBulb.xml \
+	config/zipato/zp3102.xml \
 	config/zipato/vszd2102.xml \
 	config/zooz/zen07.xml \
 	config/zooz/zse08.xml \

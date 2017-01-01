@@ -3848,7 +3848,6 @@ void Driver::CommonAddNodeStatusRequestHandler
 		case ADD_NODE_STATUS_ADDING_SLAVE:
 		{
 			Log::Write( LogLevel_Info, nodeId, "ADD_NODE_STATUS_ADDING_SLAVE" );
-			Log::Write( LogLevel_Info, nodeId, "Adding node ID %d - %s", _data[4], m_currentControllerCommand->m_controllerCommandArg ? "Secure" : "Non-Secure");
 			/* Discovered all the CC's are sent in this packet as well:
 			 * position description
 			 * 4 - Node ID
@@ -3861,6 +3860,7 @@ void Driver::CommonAddNodeStatusRequestHandler
 			 */
 			if( m_currentControllerCommand != NULL )
 			{
+				Log::Write( LogLevel_Info, nodeId, "Adding node ID %d - %s", _data[4], m_currentControllerCommand->m_controllerCommandArg ? "Secure" : "Non-Secure");
 				m_currentControllerCommand->m_controllerAdded = false;
 				m_currentControllerCommand->m_controllerCommandNode = _data[4];
 				/* make sure we dont overrun our buffer. Its ok to truncate */
@@ -4412,7 +4412,7 @@ void Driver::InitNode
 			Log::Write(LogLevel_Info, _nodeId, "Network Key Not Set - Secure Option is %s", secure ? "required" : "not required");
 		m_nodes[_nodeId]->SetProtocolInfo(_protocolInfo, _length);
 	}
-	Log::Write(LogLevel_Info, _nodeId, "Initilizing Node. New Node: %s (%s)", static_cast<Node *>(m_nodes[_nodeId])->IsAddingNode() ? "true" : "false", newNode ? "true" : "false");
+	Log::Write(LogLevel_Info, _nodeId, "Initializing Node. New Node: %s (%s)", static_cast<Node *>(m_nodes[_nodeId])->IsAddingNode() ? "true" : "false", newNode ? "true" : "false");
 }
 
 //-----------------------------------------------------------------------------
