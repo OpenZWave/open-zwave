@@ -16,8 +16,8 @@
 
 		<Value type="list" genre="config" instance="1" index="1" label="Always on function" value="0" size="1">
 			<Help>Once activated, Wall Plug will keep a connected device constantly ON, will stop reacting to alarm frames and B-button push. "Always on" function turns the Plug into a power and energy meter. Also, connected device will not be turned off upon receiving an alarm frame from another Z-Wave device (parameter 31 will be ignored). In "Always on" mode, connected device may be turned off only after user defined power has been exceeded (parameter 3). In such a case, connected device can be turned on again by pushing the B-button or sending a control frame. By default, overload protection is inactive. Default setting: 0</Help>
-			<Item label="function inactive" value="0" />
-			<Item label="function activated" value="1" />
+			<Item label="Inactive" value="0" />
+			<Item label="Active" value="1" />
 		</Value>
 
 		<Value type="list" genre="config" instance="1" index="2" label="Remember device status after a power failure" value="0" size="1">
@@ -52,8 +52,8 @@
 
 		<Value type="list" genre="config" instance="1" index="15" label="Measuring energy consumed by the Wall Plug itself" value="1" size="1">
 			<Help>This parameter determines whether energy metering should include the amount of energy consumed by the Wall Plug itself. Results are being added to energy consumed by controlled device. Default setting: 0</Help>
-			<Item label="function inactive" value="0" />
-			<Item label="function activated" value="1" />
+			<Item label="Inactive" value="0" />
+			<Item label="Active" value="1" />
 		</Value>
 
 		<Value type="list" genre="config" instance="1" index="20" label="Control of On/Off (button) association group(2) devices" value="0" size="1">
@@ -163,9 +163,9 @@
 	<!-- Association Groups -->
 	<CommandClass id="133">
 		<Associations num_groups="3">
-			<Group index="1" max_associations="16" label="Lifeline" auto="true"/>
+			<Group index="1" max_associations="16" label="Lifeline"/>
 			<Group index="2" max_associations="16" label="On/Off (button)"  />
-			<Group index="3" max_associations="1" label="On/Off (power)" auto="false"/>
+			<Group index="3" max_associations="1" label="On/Off (power)"/>
 		</Associations>
 	</CommandClass>
 
