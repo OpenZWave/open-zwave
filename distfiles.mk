@@ -176,6 +176,7 @@ DISTFILES =	.gitignore \
 	config/hank/scenecontroller1.xml \
 	config/hank/scenecontroller4.xml \
 	config/homeseer/ezmotionplus.xml \
+	config/homeseer/hs-wd100plus.xml \
 	config/homeseer/hsm100.xml \
 	config/homeseer/hsm200.xml \
 	config/homeseer/ztroller.xml \
