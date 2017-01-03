@@ -65,7 +65,7 @@
       <Item label="Enable" value="1" />
      </Value>
     
-    <Value type="short" genre="config" instance="1" index="9" label="Ambient illumination Lux Level Report" units="lux" value="100" min="0" max="255" size="2">
+    <Value type="byte" genre="config" instance="1" index="9" label="Ambient illumination Lux Level Report" units="lux" value="100" min="0" max="255" size="1">
       <Help>This parameter defines by how much Lux Level must change, in lux, to be reported to the main controller.</Help>
     </Value>
 	
