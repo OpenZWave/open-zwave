@@ -20,13 +20,13 @@
 			<Item label="Active" value="1" />
 		</Value>
 
-		<Value type="list" genre="config" instance="1" index="2" label="Remember device status after a power failure" value="0" size="1">
+		<Value type="list" genre="config" instance="1" index="2" label="Remember device status after a power failure" value="1" size="1">
 			<Help>This parameter determines how the Wall Plug will react in the event of power supply failure (e.g. taking out from the electrical outlet). After the power supply is back on, the Wall Plug can be restored to previous state or remain switched off. This parameter is ignored in Always On mode - the device automatically turns ON after plugging it into the socket. Default setting: 1</Help>
 			<Item label="Wall Plug does not memorize its state after a power failure" value="0" />
 			<Item label="Wall Plug memorizes its state after a power failure" value="1" />
 		</Value>
 
-		<Value type="short" genre="config" instance="1" index="3" label="Overload safety switch" value="0" size="2">
+		<Value type="short" genre="config" instance="1" index="3" label="Overload safety switch" value="0" min="0" max="30000" size="2">
 			<Help>This function allows for turning off the controlled device in case of exceeding the defined power. Controlled device will be turned off even if "always on" function is active (parameter 1). Controlled device can be turned back on via B-button or sending a control frame. Available settings: 10 - 30000 (1,0W - 3000,0W step 0,1W). Default setting: 0 (function inactive)</Help>
 		</Value>
 
@@ -34,11 +34,11 @@
 			<Help>This parameter determines the minimum percentage change in active power that will result in sending power report to the main controller with the highest priority in the Z-Wave network. By default, the Wall Plug immediately sends the power report if the power load changes by 80%. Available settings: 1-99:power change in percent, 100:reports are disabled. Default setting: 80 (80%)</Help>
 		</Value>
 
-		<Value type="byte" genre="config" instance="1" index="11" label="Standard power load reporting" value="15" min="0" max="100" size="1">
+		<Value type="byte" genre="config" instance="1" index="11" label="Standard power load reporting" value="15" min="1" max="100" size="1">
 			<Help>This parameter determines the minimum percentage change in active power that will result in sending power report to the main controller Compared to parameter 10, the maximum number of reports sent is reduced (parameter 12) to 5 in a specified time interval. In addition, the frames are not sent in EXPLORE mode, which prevents overloading the Z-Wave network. By default changes in power load may be reported up to 5 times per 30 seconds, when power load changes by 15%. Available settings: 1-99:power change in percent, 100:reports are disabled. Default setting: 15 (15%)</Help>
 		</Value>
 
-		<Value type="short" genre="config" instance="1" index="12" label="Power reporting interval" value="30" min="1" max="600" size="2">
+		<Value type="short" genre="config" instance="1" index="12" label="Power reporting interval" value="30" min="5" max="600" size="2">
 			<Help>This parameter defines how frequently standard power reports (parameter 11) will be sent. By default Wall Plug sends up to 5 reports each 30 seconds, provided the power load changes by 15%.  Available setttings: 5-600 (in seconds). Default setting: 30 (s)</Help>
 		</Value>
 
@@ -50,7 +50,7 @@
 			<Help>This parameter defines time period between reports sent when changes in power load have not been recorded or if changes are insignificant (not exceeding values of parameters 20, 21 and 23). By default reports are sent every hour. Available settings: 5 - 32400 (s). 0 - periodic reports inactive. Reports will be sent only in case of power load / energy consumption changes (parameters 20,21,23) or in case of polling. Default setting: 3600</Help>
 		</Value>
 
-		<Value type="list" genre="config" instance="1" index="15" label="Measuring energy consumed by the Wall Plug itself" value="1" size="1">
+		<Value type="list" genre="config" instance="1" index="15" label="Measuring energy consumed by the Wall Plug itself" value="0" size="1">
 			<Help>This parameter determines whether energy metering should include the amount of energy consumed by the Wall Plug itself. Results are being added to energy consumed by controlled device. Default setting: 0</Help>
 			<Item label="Inactive" value="0" />
 			<Item label="Active" value="1" />
@@ -96,7 +96,7 @@
 			<Item label="All alarms" value="63" />
 		</Value>
 
-		<Value type="list" genre="config" instance="1" index="31" label="Response to alarm frames" value="0" size="1">
+		<Value type="short" genre="config" instance="1" index="31" label="Response to alarm frames" value="0" min="0" max="50" size="1">
 			<Help>This parameter defines how the Wall Plug will respond to alarms (device’s status change). In case of values 1 or 2 the Wall Plug is operating normally and LED ring signals an alarm through time defined in parameter 32 or until the alarm is cancelled. In case of values 5 to 50 the Wall Plug does not report status change, power changes, ignores BASIC SET command frames. After time defined in parameter 32 or after the alarm cancellation, connected device is set to the previous state.. 0- no reaction 1-turn connected device on 2-turn connected device off 5-50(0,5-50,0s step 0,1s)-cyclically change device state with set period. Default setting:0-no reaction</Help>
 		</Value>
 
@@ -108,7 +108,7 @@
 			<Help>Function is active only when parameter 41 is set to 0 or 1. Available settings: 1000 - 30000 (100,0W - 3000,0W, step 0,1W). Default setting: 25000 (2500W)</Help>
 		</Value>
 
-		<Value type="list" genre="config" instance="1" index="41" label="LED ring illumination colour when controlled device is on" value="5" size="1">
+		<Value type="list" genre="config" instance="1" index="41" label="LED ring illumination colour when controlled device is on" value="1" size="1">
 			<Help>0 - Illumination turned off completely, 1 - LED ring illumination colour changes continuously depending on active power, 2 - LED ring illumination colour changes in steps, depending on active power,  3 - White illumination, 4 - Red illumination, 5 - Green illumination, 6 - Blue illumination, 7 - Yellow illumination, 8 - Cyan illumination, 9 - Magenta illumination. Default setting: 1</Help>
 			<Item label="illumination turned off completely" value="0" />
 			<Item label="Colour changes continuously depending on active power" value="1" />
@@ -136,8 +136,8 @@
 
 		</Value>
 
-		<Value type="list" genre="config" instance="1" index="43" label="LED ring illumination colour at the Z-Wave network alarm detection" value="0" size="1">
-			<Help>0 - illumination turned off completely, 1 - No change in colour. LED ring illumination colour determined by parameters 41 or 42 settings, 2 - LED ring flashes red/blue/white (default), 3 - White illumination, 4 - Red illumination, 5 - Green illumination, 6 - Blue illumination, 7 - Yellow illumination, 8 - Cyan illumination, 9 - Magenta illumination. Default setting: 0</Help>
+		<Value type="list" genre="config" instance="1" index="43" label="LED ring illumination colour at the Z-Wave network alarm detection" value="2" size="1">
+			<Help>0 - illumination turned off completely, 1 - No change in colour. LED ring illumination colour determined by parameters 41 or 42 settings, 2 - LED ring flashes red/blue/white (default), 3 - White illumination, 4 - Red illumination, 5 - Green illumination, 6 - Blue illumination, 7 - Yellow illumination, 8 - Cyan illumination, 9 - Magenta illumination. Default setting: 2</Help>
 			<Item label="illumination turned off completely" value="0" />
 			<Item label="No change in colour" value="1" />
 			<Item label="LED ring flashes red / blue / white" value="2" />
@@ -163,9 +163,9 @@
 	<!-- Association Groups -->
 	<CommandClass id="133">
 		<Associations num_groups="3">
-			<Group index="1" max_associations="16" label="Lifeline"/>
-			<Group index="2" max_associations="16" label="On/Off (button)"  />
-			<Group index="3" max_associations="1" label="On/Off (power)"/>
+			<Group index="1" max_associations="1" label="Lifeline"/>
+			<Group index="2" max_associations="10" label="On/Off (button)"  />
+			<Group index="3" max_associations="10" label="On/Off (power)"/>
 		</Associations>
 	</CommandClass>
 
