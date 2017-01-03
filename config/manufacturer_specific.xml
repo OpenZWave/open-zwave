@@ -482,9 +482,6 @@
 		<Product type="0002" id="0002" name="EZMotion+ 3-in-1 Sensor" config="homeseer/ezmotionplus.xml"/>
 		<Product type="0004" id="0001" name="HSM200 Wireless Multi-Sensor" config="homeseer/hsm200.xml"/>
 	</Manufacturer>
-	<Manufacturer id="000c" name="HomeSeer">
-		<Product type="4447" id="3034" name="HS-WD100+ Wall Dimmer" config="homeseer/hs-wd100plus.xml"/>
-	</Manufacturer>
 	<Manufacturer id="0030" name="HomeSeer Tech">
 	</Manufacturer>
 	<Manufacturer id="0039" name="Honeywell">
