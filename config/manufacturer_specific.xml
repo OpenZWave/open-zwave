@@ -612,6 +612,9 @@
 	<Manufacturer id="015e" name="Locstar">
         <Product type="8015" id="0001" name="LS-8015-ZW Single Latch Door Lock"/>
 	</Manufacturer>
+	<Manufacturer id="0234" name="Logic Soft">
+                <Product type="0003" id="010a" name="ZHC5010 Wall switch" config="logicsoft/ZHC5010.xml"/>
+        </Manufacturer>
 	<Manufacturer id="007f" name="Logitech">
 	</Manufacturer>
 	<Manufacturer id="0025" name="Loudwater Tech">
