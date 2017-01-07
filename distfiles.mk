@@ -193,6 +193,7 @@ DISTFILES =	.gitignore \
 	config/horstmann/sir321.xml \
 	config/horstmann/srt323.xml \
 	config/idlock/idlock101.xml \
+	config/ingersoll/dwzwave1.xml \
 	config/intermatic/ca8900.xml \
 	config/iris/rangeextender.xml \
 	config/kaipule/im20.xml \
