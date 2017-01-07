@@ -80,8 +80,11 @@ DISTFILES =	.gitignore \
 	config/assa_abloy/PushButtonLever.xml \
 	config/assa_abloy/TouchDeadbolt.xml \
 	config/assa_abloy/TouchLever.xml \
+	config/cooper/RF9501.xml \
 	config/cooper/RF9505-T.xml \
+	config/cooper/RF9517.xml \
 	config/cooper/RF9540-N.xml \
+	config/cooper/RF9542-Z.xml \
 	config/danfoss/living.xml \
 	config/danfoss/rsroom.xml \
 	config/danfoss/z.xml \

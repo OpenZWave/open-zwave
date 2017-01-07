@@ -145,6 +145,7 @@ Version 1.5
  - Add Zipato ZP3102-EU Multisensor Duo (Nechry)
  - Add homeseer hs-wd100plus (Nechry)
  - Add Fibaro FGMS001-ZW5 Motion Sensor (Nechry)
+ - Pull Request #1086 - Add definitions for 3 Cooper Aspire RF devices from drkp (Nechry)
 
 Version 1.4
  - Released 10th Jan, 2016
