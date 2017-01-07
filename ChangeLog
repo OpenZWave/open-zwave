@@ -148,6 +148,7 @@ Version 1.5
  - Pull Request #1086 - Add definitions for 3 Cooper Aspire RF devices from drkp (Nechry)
  - Add Coolcam Siren Alarm NAS-AB01Z (Nechry)
  - Add Ingersoll Rand DWZWAVE1 (Nechry)
+ - Pull Request #1087 - Add Schlage BE468 lock from webdestroya (Nechry)
 
 Version 1.4
  - Released 10th Jan, 2016
