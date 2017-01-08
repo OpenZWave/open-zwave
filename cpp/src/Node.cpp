@@ -971,7 +971,13 @@ void Node::ReadXML
 		m_nodeType = (uint8)intVal;
 		m_nodePlusInfoReceived = true;
 	}
-
+	
+    	m_toSleep = 0;
+    	if( TIXML_SUCCESS == _node->QueryIntAttribute( "toSleep", &intVal ) )
+    	{
+        	m_toSleep = (uint32)intVal;
+    	}
+	
 	str = _node->Attribute( "type" );
 	if( str )
 	{
@@ -1275,6 +1281,11 @@ void Node::WriteXML
 	snprintf( str, 32, "%d", m_version );
 	nodeElement->SetAttribute( "version", str );
 
+    	if (m_toSleep > 0){
+        	snprintf( str, 32, "%d", m_toSleep );
+        	nodeElement->SetAttribute( "toSleep", str );
+    	}
+	
 	if( m_security )
 	{
 		nodeElement->SetAttribute( "security", "true" );
@@ -1833,6 +1844,22 @@ void Node::SetLocation
 		// The node supports naming, so we try to write the location into the device
 		cc->SetLocation( _location );
 	}
+}
+
+//-----------------------------------------------------------------------------
+// <Node::toSleep>
+// Set toSleep value for the node
+//-----------------------------------------------------------------------------
+void Node::SettoSleep
+(
+        uint32 const& _toSleep
+)
+{
+    	m_toSleep = _toSleep;
+    	// Notify the watchers of the value changes
+    	Notification* notification = new Notification( Notification::Type_NodeNaming );
+    	notification->SetHomeAndNodeIds( m_homeId, m_nodeId );
+    	GetDriver()->QueueNotification( notification );
 }
 
 //-----------------------------------------------------------------------------
