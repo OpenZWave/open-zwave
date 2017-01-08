@@ -1282,6 +1282,17 @@ void Driver::RemoveCurrentMsg
 (
 )
 {
+    //OJO: set a sleep time interval (microseconds) for slow nodes, usleep(microseconds)
+    uint8 nodeId = GetNodeNumber( m_currentMsg );
+    if( Node* node = GetNodeUnsafe( nodeId ) )
+    {
+       uint32 toSleep = node->GettoSleep();
+       if (toSleep > 0)
+        {
+            usleep(toSleep);
+        }
+
+    }
 	Log::Write( LogLevel_Detail, GetNodeNumber( m_currentMsg ), "Removing current message" );
 	if( m_currentMsg != NULL)
 	{
@@ -4528,7 +4539,24 @@ uint32 Driver::GetNodeMaxBaudRate
 
 	return baud;
 }
+//-----------------------------------------------------------------------------
+// <Driver::GetNodetoSleep>
+// Get the value of toSleep for delay between commands
+//-----------------------------------------------------------------------------
+uint32 Driver::GetNodetoSleep
+(
+        uint8 const _nodeId
+)
+{
+    uint16 tsleep = 0;
+    LockGuard LG(m_nodeMutex);
+    if( Node* node = GetNode( _nodeId ) )
+    {
+        tsleep = node->GettoSleep();
+    }
 
+    return tsleep;
+}
 //-----------------------------------------------------------------------------
 // <Driver::GetNodeVersion>
 // Get the version number of a node
@@ -4992,7 +5020,22 @@ void Driver::SetNodeLocation
 		node->SetLocation( _location );
 	}
 }
-
+//-----------------------------------------------------------------------------
+// <Driver::SetNodetoSleep>
+// Set the toSleep value with the specified ID
+//-----------------------------------------------------------------------------
+void Driver::SetNodetoSleep
+(
+        uint8 const _nodeId,
+        uint32 const& _toSpeed
+)
+{
+    LockGuard LG(m_nodeMutex);
+    if( Node* node = GetNode( _nodeId ) )
+    {
+        node->SettoSleep( _toSpeed );
+    }
+}
 //-----------------------------------------------------------------------------
 // <Driver::SetNodeLevel>
 // Helper to set the node level through the basic command class
