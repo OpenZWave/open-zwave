@@ -418,8 +418,8 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		uint8 GetNodePlusType( uint8 const _nodeId );
 		string GetNodePlusTypeString ( uint8 const _nodeId );
 		bool IsNodeZWavePlus( uint8 const _nodeId );
-
-
+		uint32 GetNodetoSleep(uint8 const _nodeId);
+		
 		uint16 GetNodeManufacturerId( uint8 const _nodeId );
 		uint16 GetNodeProductType( uint8 const _nodeId );
 		uint16 GetNodeProductId( uint8 const _nodeId );
@@ -430,9 +430,8 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		void SetNodeLevel( uint8 const _nodeId, uint8 const _level );
 		void SetNodeOn( uint8 const _nodeId );
 		void SetNodeOff( uint8 const _nodeId );
-
+		void SetNodetoSleep(uint8 const _nodeId, uint32 const& _toSleep);
 		Value* GetValue( ValueID const& _id );
-
 		bool IsAPICallSupported( uint8 const _apinum )const{ return (( m_apiMask[( _apinum - 1 ) >> 3] & ( 1 << (( _apinum - 1 ) & 0x07 ))) != 0 ); }
 		void SetAPICall( uint8 const _apinum, bool _toSet )
 		{
