@@ -1412,6 +1412,43 @@ string Manager::GetNodeProductId
 }
 
 //-----------------------------------------------------------------------------
+// <Manager::SetNodetoSleep>
+// Set a value for toSleep of a node
+//-----------------------------------------------------------------------------
+void Manager::SetNodetoSleep
+(
+        uint32 const _homeId,
+        uint8 const _nodeId,
+        uint32 const& _toSleep
+
+)
+{
+    if( Driver* driver = GetDriver( _homeId ) )
+    {
+        driver->SetNodetoSleep( _nodeId, _toSleep );
+    }
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::GetNodetoSleep>
+// Get the toSleep value of a node
+//-----------------------------------------------------------------------------
+uint32 Manager::GetNodetoSleep
+(
+        uint32 const _homeId,
+        uint8 const _nodeId
+)
+{
+    if( Driver* driver = GetDriver( _homeId ) )
+    {
+        uint32 mid = driver->GetNodetoSleep( _nodeId );
+        return mid;
+    }
+
+    return 0;
+}
+
+//-----------------------------------------------------------------------------
 // <Manager::SetNodeOn>
 // Helper method to turn a node on
 //-----------------------------------------------------------------------------
