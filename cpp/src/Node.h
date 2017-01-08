@@ -356,7 +356,8 @@ namespace OpenZWave
 			uint16 GetProductType()const{ return m_productType; }
 //			string GetProductId()const{ return string(m_productId); }
 			uint16 GetProductId()const{ return m_productId; }
-
+ 			uint32 GettoSleep() const{ return m_toSleep;}
+		
 			void SetManufacturerName( string const& _manufacturerName ){ m_manufacturerName = _manufacturerName; }
 			void SetProductName( string const& _productName ){ m_productName = _productName; }
 			void SetNodeName( string const& _nodeName );
@@ -365,12 +366,14 @@ namespace OpenZWave
 			void SetManufacturerId( uint16 const& _manufacturerId ){ m_manufacturerId = _manufacturerId; }
 			void SetProductType( uint16 const& _productType ){ m_productType = _productType; }
 			void SetProductId( uint16 const& _productId ){ m_productId = _productId; }
-
+            		void   SettoSleep(uint32 const& _toSleep);
+		
 			string		m_manufacturerName;
 			string		m_productName;
 			string		m_nodeName;
 			string		m_location;
-
+ 			uint32      m_toSleep; 
+		
 			uint16		m_manufacturerId;
 			uint16		m_productType;
 			uint16		m_productId;
