@@ -870,7 +870,13 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 * \return the node's PlusType as a string
 		 */
 		string GetNodePlusTypeString ( uint32 const _homeId, uint8 const _nodeId );
-
+		/*
+		* Get and Set th toSleep value for node
+		* This value is for a time interval between two commands sent one after one
+		* and so allow the device process the first command before receive the second one.
+		*/
+        	uint32 GetNodetoSleep(uint32 const _homeId, uint8 const _nodeId);
+        	void SetNodetoSleep( uint32 const _homeId, uint8 const _nodeId, uint32 const& _toSleep);
 
 
 	/*@}*/
