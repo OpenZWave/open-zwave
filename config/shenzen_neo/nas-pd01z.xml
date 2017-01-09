@@ -18,14 +18,14 @@
         For instance, this parameter is set to 30(second), the PIR detector will send a BASIC_SET Command to an associated device with value basic set level if PIR detector is triggered and the associated device will be turned on 30(second) before it is turned off.
         This Parameter value must be large than Parameter 6#.
         If user set this parameter to default by Configure CC, the parameter #6 will be set to default value.
-        Available Settings：5 to 600(second).
+        Available Settings:5 to 600(second).
       </Help>
     </Value>
 
     <Value type="byte" genre="config" instance="1" index="3" label="Basic Set Level" value="255" min="0" max="255" size="1">
       <Help>Basic Set Command will be sent where contains a value when PIR detector is triggered, the receiver will take it for consideration; for instance, if a lamp module is received the Basic Set Command of which value is decisive as to how bright of dim level of lamp module shall be.
         This Parameter is used to some associated devices.
-        Available Settings： 0, 1 to 99 or 255.
+        Available Settings: 0, 1 to 99 or 255.
       </Help>
     </Value>
     
@@ -47,14 +47,14 @@
       <Help>This Parameter can be used to adjust the interval of being re-triggered after the PIR detector has been triggered.
         This Parameter value must be less than Parameter 2#.
         If user set this parameter to default by Configure CC, the parameter #2 will be set to default value.
-        Available Settings： 1 to 8(s).
+        Available Settings: 1 to 8(s).
       </Help>
     </Value>
     
     <Value type="short" genre="config" instance="1" index="7" label="Light Sensor Polling Interval" units="second" value="180" min="60" max="36000" size="2">
       <Help>This Parameter can be set the light sensor measure ambient illumination level interval time.
         NOTE: This Value Must Be less than Wakeup Interval Time.
-        Available Settings： 60 ~ 36000(second).
+        Available Settings: 60 ~ 36000(second).
       </Help>
     </Value>
     
