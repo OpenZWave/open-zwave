@@ -37,6 +37,19 @@ sub LogWarning {
 
 # check common config file mistakes 
 sub CheckConfig {
+    use strict;
+    use warnings;
+    my $file = $_[0];
+    my $count = 1;
+    open my $info, $file or die "Could not open $file: $!";
+    while( my $line = <$info>)  {
+        if ($line =~ /[[:^ascii:]]/) {
+            LogError($file, 5, "Line $count, contains non ASCII characters");
+        }
+        ++$count;
+    }
+    close $info;
+
     # create object
     my $xml = new XML::Simple;
     # read XML file
