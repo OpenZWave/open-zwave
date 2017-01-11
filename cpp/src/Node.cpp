@@ -972,10 +972,10 @@ void Node::ReadXML
 		m_nodePlusInfoReceived = true;
 	}
 	
-    	m_toSleep = 0;
-    	if( TIXML_SUCCESS == _node->QueryIntAttribute( "toSleep", &intVal ) )
+    	m_PacketDelay = 0;
+    	if( TIXML_SUCCESS == _node->QueryIntAttribute( "PacketDelay", &intVal ) )
     	{
-        	m_toSleep = (uint32)intVal;
+        	m_PacketDelay = (uint32)intVal;
     	}
 	
 	str = _node->Attribute( "type" );
@@ -1281,9 +1281,9 @@ void Node::WriteXML
 	snprintf( str, 32, "%d", m_version );
 	nodeElement->SetAttribute( "version", str );
 
-    	if (m_toSleep > 0){
-        	snprintf( str, 32, "%d", m_toSleep );
-        	nodeElement->SetAttribute( "toSleep", str );
+    	if (m_PacketDelay > 0){
+        	snprintf( str, 32, "%d", m_PacketDelay );
+        	nodeElement->SetAttribute( "PacketDelay", str );
     	}
 	
 	if( m_security )
@@ -1847,15 +1847,15 @@ void Node::SetLocation
 }
 
 //-----------------------------------------------------------------------------
-// <Node::toSleep>
-// Set toSleep value for the node
+// <Node::PacketDelay>
+// Set PacketDelay value for the node
 //-----------------------------------------------------------------------------
-void Node::SettoSleep
+void Node::SetPacketDelay
 (
-        uint32 const& _toSleep
+        uint32 const& _PacketDelay
 )
 {
-    	m_toSleep = _toSleep;
+    	m_PacketDelay = _PacketDelay;
     	// Notify the watchers of the value changes
     	Notification* notification = new Notification( Notification::Type_NodeNaming );
     	notification->SetHomeAndNodeIds( m_homeId, m_nodeId );
