@@ -871,12 +871,19 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 */
 		string GetNodePlusTypeString ( uint32 const _homeId, uint8 const _nodeId );
 		/*
-		* Get and Set th toSleep value for node
-		* This value is for a time interval between two commands sent one after one
-		* and so allow the device process the first command before receive the second one.
-		*/
-        	uint32 GetNodetoSleep(uint32 const _homeId, uint8 const _nodeId);
-        	void SetNodetoSleep( uint32 const _homeId, uint8 const _nodeId, uint32 const& _toSleep);
+		* \brief Get and Set th PacketDelay value for time interval between consecutives commands to slow nodes
+		* \param _homeId The Home ID of the Z-Wave controller that manages the node.
+		* \param _nodeId The ID of the node to query.
+		* \return the time interval PacketDelay
+		*/ 
+        	uint32 GetNodePacketDelay(uint32 const _homeId, uint8 const _nodeId);
+		/*
+		* \brief Set and Set th PacketDelay value for time interval between consecutives commands to slow nodes
+		* \param _homeId The Home ID of the Z-Wave controller that manages the node.
+		* \param _nodeId The ID of the node to query.
+		* \param _PacketDelay the time interval, microseconds less than 10000000
+		*/ 
+        	void SetNodePacketDelay( uint32 const _homeId, uint8 const _nodeId, uint32 const& _PacketDelay);
 
 
 	/*@}*/
