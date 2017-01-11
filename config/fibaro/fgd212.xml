@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <Product xmlns='http://code.google.com/p/open-zwave/'>
-
-  <!-- config based on FGD-212-EN-T-v1.2-3.5.pdf -->
-
+  <!-- 
+  Fibaro FGD-212
+  config based on http://manuals.fibaro.com/content/manuals/en/FGD-212/FGD-212-EN-T-v1.2.pdf
+  -->
   <!-- Configuration -->
   <CommandClass id="112">
     <Value type="byte" genre="config" instance="1" index="1" label="Minimum brightness level" min="1" max="98" units="%" value="1">
