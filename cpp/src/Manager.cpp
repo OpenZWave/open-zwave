@@ -1412,28 +1412,28 @@ string Manager::GetNodeProductId
 }
 
 //-----------------------------------------------------------------------------
-// <Manager::SetNodetoSleep>
-// Set a value for toSleep of a node
+// <Manager::SetNodePacketDelay>
+// Set a value for PacketDelay of a node
 //-----------------------------------------------------------------------------
-void Manager::SetNodetoSleep
+void Manager::SetNodePacketDelay
 (
         uint32 const _homeId,
         uint8 const _nodeId,
-        uint32 const& _toSleep
+        uint32 const& _PacketDelay
 
 )
 {
     if( Driver* driver = GetDriver( _homeId ) )
     {
-        driver->SetNodetoSleep( _nodeId, _toSleep );
+        driver->SetNodePacketDelay( _nodeId, _PacketDelay );
     }
 }
 
 //-----------------------------------------------------------------------------
-// <Manager::GetNodetoSleep>
-// Get the toSleep value of a node
+// <Manager::GetNodePacketDelay>
+// Get the PacketDelayvalue of a node
 //-----------------------------------------------------------------------------
-uint32 Manager::GetNodetoSleep
+uint32 Manager::GetNodePacketDelay
 (
         uint32 const _homeId,
         uint8 const _nodeId
@@ -1441,7 +1441,7 @@ uint32 Manager::GetNodetoSleep
 {
     if( Driver* driver = GetDriver( _homeId ) )
     {
-        uint32 mid = driver->GetNodetoSleep( _nodeId );
+        uint32 mid = driver->GetNodePacketDelay( _nodeId );
         return mid;
     }
 
