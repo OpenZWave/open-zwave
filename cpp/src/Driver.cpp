@@ -1286,10 +1286,10 @@ void Driver::RemoveCurrentMsg
     uint8 nodeId = GetNodeNumber( m_currentMsg );
     if( Node* node = GetNodeUnsafe( nodeId ) )
     {
-       uint32 toSleep = node->GettoSleep();
-       if (toSleep > 0)
+       uint32 PacketDelay = node->GetPacketDelay();
+       if (PacketDelay > 0)
         {
-            usleep(toSleep);
+            usleep(PacketDelay);
         }
 
     }
@@ -4540,10 +4540,10 @@ uint32 Driver::GetNodeMaxBaudRate
 	return baud;
 }
 //-----------------------------------------------------------------------------
-// <Driver::GetNodetoSleep>
-// Get the value of toSleep for delay between commands
+// <Driver::GetNodePacketDelay>
+// Get the value of PacketDelay for delay between commands
 //-----------------------------------------------------------------------------
-uint32 Driver::GetNodetoSleep
+uint32 Driver::GetNodePacketDelay
 (
         uint8 const _nodeId
 )
@@ -4552,7 +4552,7 @@ uint32 Driver::GetNodetoSleep
     LockGuard LG(m_nodeMutex);
     if( Node* node = GetNode( _nodeId ) )
     {
-        tsleep = node->GettoSleep();
+        tsleep = node->GetPacketDelay();
     }
 
     return tsleep;
@@ -5021,10 +5021,10 @@ void Driver::SetNodeLocation
 	}
 }
 //-----------------------------------------------------------------------------
-// <Driver::SetNodetoSleep>
-// Set the toSleep value with the specified ID
+// <Driver::SetNodePacketDelay>
+// Set the PacketDelay value with the specified ID
 //-----------------------------------------------------------------------------
-void Driver::SetNodetoSleep
+void Driver::SetNodePacketDelay
 (
         uint8 const _nodeId,
         uint32 const& _toSpeed
@@ -5033,7 +5033,7 @@ void Driver::SetNodetoSleep
     LockGuard LG(m_nodeMutex);
     if( Node* node = GetNode( _nodeId ) )
     {
-        node->SettoSleep( _toSpeed );
+        node->SetPacketDelay( _toSpeed );
     }
 }
 //-----------------------------------------------------------------------------
