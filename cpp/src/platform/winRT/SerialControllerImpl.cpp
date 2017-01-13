@@ -79,7 +79,7 @@ bool SerialControllerImpl::Open()
 
 	try
 	{
-		auto selector = SerialDevice::GetDeviceSelectorFromUsbVidPid(0x10C4, 0xEA60);
+		auto selector = SerialDevice::GetDeviceSelector();
 
 		return create_task(DeviceInformation::FindAllAsync(selector))
 			.then([this](DeviceInformationCollection ^ devices) -> IAsyncOperation<SerialDevice ^> ^
