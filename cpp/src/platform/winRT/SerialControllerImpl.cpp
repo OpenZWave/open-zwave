@@ -189,6 +189,8 @@ void SerialControllerImpl::StartReadTask()
 				create_task(m_serialDevice->InputStream->ReadAsync(buffer, readBufferLength, InputStreamOptions::None))
 					.then([&, this](IBuffer ^ outBuffer)
 				{
+					if (token.is_canceled()) 
+						return;
 					auto reader = DataReader::FromBuffer(outBuffer);
 					auto bytesRead = reader->UnconsumedBufferLength;
 
