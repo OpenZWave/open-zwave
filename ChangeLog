@@ -149,6 +149,7 @@ Version 1.5
  - Add Coolcam Siren Alarm NAS-AB01Z (Nechry)
  - Add Ingersoll Rand DWZWAVE1 (Nechry)
  - Pull Request #1087 - Add Schlage BE468 lock from webdestroya (Nechry)
+ - Add Philio PAN11 Smart Energy Plug In Switch from daniarv (Nechry)
 
 Version 1.4
  - Released 10th Jan, 2016
