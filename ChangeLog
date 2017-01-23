@@ -150,6 +150,7 @@ Version 1.5
  - Add Ingersoll Rand DWZWAVE1 (Nechry)
  - Pull Request #1087 - Add Schlage BE468 lock from webdestroya (Nechry)
  - Add Philio PAN11 Smart Energy Plug In Switch from daniarv (Nechry)
+ - Add TKB TZ69E Smart energy plug in switch (Nechry)
 
 Version 1.4
  - Released 10th Jan, 2016
