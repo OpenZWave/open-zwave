@@ -207,6 +207,7 @@ DISTFILES =	.gitignore \
 	config/linear/PD300Z-2.xml \
 	config/linear/WD500Z-1.xml \
 	config/linear/WT00Z-1.xml \
+	config/linear/WS15Z-1.xml \
 	config/manufacturer_specific.xml \
 	config/manufacturer_specific.xsd \
 	config/mcohome/mhp210.xml \

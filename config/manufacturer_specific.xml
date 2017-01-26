@@ -466,6 +466,7 @@
 		<Product type="4450" id="3030" name="45602 Lamp Dimmer Module" config="ge/dimmer_module.xml"/>
 		<Product type="4457" id="3230" name="45606 2-Way Dimmer Switch" config="ge/dimmer.xml"/>
 		<Product type="4944" id="3031" name="12724 3-Way Dimmer Switch" config="ge/12724-dimmer.xml"/>
+		<Product type="4944" id="3033" name="12729 3-Way Dimmer Switch" config="ge/12724-dimmer.xml"/>
                 <Product type="4944" id="3034" name="12730 Fan Control Switch" config="ge/12724-dimmer.xml"/>
 		<Product type="5250" id="3030" name="45603 Plugin Appliance Module"/>
 		<Product type="5250" id="3130" name="45604 Outdoor Module"/>
@@ -613,7 +614,7 @@
 		<Product type="5246" id="3133" name="FS20Z Isolated Contact Fixture Module"/>
 		<Product type="5250" id="3030" name="PS15Z-2 Plug-in Appliance Module"/>
 		<Product type="5252" id="3530" name="WO15Z-1 Single Wall Outlet"/>
-		<Product type="5257" id="3533" name="WS15Z-1"/>
+		<Product type="5257" id="3533" name="WS15Z-1 Wall Switch" config="linear/WS15Z-1.xml"/>
 		<Product type="5343" id="3132" name="WA00Z-1 Scene Switch" config="linear/WA00Z-1.xml"/>
 		<Product type="5457" id="3033" name="WT00Z-1 3-Way Wall Accessory Switch" config="linear/WT00Z-1.xml"/>
 	</Manufacturer>
