@@ -168,6 +168,7 @@ DISTFILES =	.gitignore \
 	config/fortrezz/wv01.xml \
 	config/fortrezz/wwa02.xml \
 	config/frostdale/fdn2nxx.xml \
+	config/ge/12491-switch.xml \
 	config/ge/12724-dimmer.xml \
 	config/ge/dimmer.xml \
 	config/ge/dimmer_module.xml \

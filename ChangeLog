@@ -151,7 +151,13 @@ Version 1.5
  - Pull Request #1087 - Add Schlage BE468 lock from webdestroya (Nechry)
  - Add Philio PAN11 Smart Energy Plug In Switch from daniarv (Nechry)
  - Add TKB TZ69E Smart energy plug in switch (Nechry)
-
+ - Pull Request #1107 - Typo in fgmszw5.xml from bobvanoijen (Nechry)
+ - Pull Request #1114 - Add GE 12729 Dimmer Switch from eiddor (Nechry)
+ - Pull Request #1113 - Add device configuration file for Linear WS15Z-1 Wall Switch from singularitycoder (Nechry)
+ - Pull Request #1112 - Add device configuration file for Linear WT00Z-1 3-Way Wall Accessory Switch from singularitycoder (Nechry)
+ - Pull Request #1111 - Typo's & indentation from bobvanoijen (Nechry)
+ - Pull Request #1109 - Add support for GE 12491 Z-Wave Plus switch from drkp  (Nechry)
+ 
 Version 1.4
  - Released 10th Jan, 2016
 
