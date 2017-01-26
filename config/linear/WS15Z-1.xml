@@ -10,4 +10,5 @@
 		<Value type="bool" index="4" genre="config" label="Invert Switch" size="1" value="False">
 			<Help>Change the top of the switch to OFF and the bottom of the switch to ON.</Help>
 		</Value>
+	</CommandClass>
 </Product>
