@@ -999,7 +999,7 @@ bool Manager::IsNodeZWavePlus
 		version = driver->IsNodeZWavePlus( _nodeId );
 	}
 
-	return version;
+	return (version != 0);
 }
 
 
@@ -1297,7 +1297,7 @@ uint16 Manager::GetNodeDeviceType
 {
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
-		return driver->GetNodeDeviceType( _nodeId );
+		return (uint8)driver->GetNodeDeviceType( _nodeId );
 	}
 
 	return 0x00; // unknown
