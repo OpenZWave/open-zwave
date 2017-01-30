@@ -5531,6 +5531,7 @@ void Driver::UpdateControllerState( ControllerState const _state, ControllerErro
 		}
 		Notification* notification = new Notification( Notification::Type_ControllerCommand );
 		notification->SetHomeAndNodeIds(m_homeId, 0);
+		notification->SetCommand(m_currentControllerCommand->m_controllerCommand);
 		notification->SetEvent(_state);
 
 		if( _error != ControllerError_None )
