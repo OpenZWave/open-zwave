@@ -782,7 +782,8 @@
 	<Manufacturer id="0065" name="RS Scene">
 	</Manufacturer>
 	<Manufacturer id="0150" name="Samsung SmartThings">
-		<Product type="0002" id="0006" name="SmartThings Hub" />
+		<Product type="0002" id="0006" name="SmartThings Hub v2" />
+    		<Product type="0001" id="0191" name="SmartThings Hub v1" />
 	</Manufacturer>
 	<Manufacturer id="003b" name="Schlage">
 		<Product type="634b" id="504c" name="FE599GR Wireless Door Lock"/>
