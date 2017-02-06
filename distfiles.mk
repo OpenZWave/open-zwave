@@ -69,6 +69,7 @@ DISTFILES =	.gitignore \
 	config/aeotec/zw098.xml \
 	config/aeotec/zw099.xml \
 	config/aeotec/zw100.xml \
+	config/aeotec/zw111.xml \
 	config/aeotec/zw112.xml \
 	config/aeotec/zw116.xml \
 	config/aeotec/zw117.xml \

@@ -157,6 +157,7 @@ Version 1.5
  - Pull Request #1112 - Add device configuration file for Linear WT00Z-1 3-Way Wall Accessory Switch from singularitycoder (Nechry)
  - Pull Request #1111 - Typo's & indentation from bobvanoijen (Nechry)
  - Pull Request #1109 - Add support for GE 12491 Z-Wave Plus switch from drkp  (Nechry)
+ - Add Aeotec ZW111 Nano Dimmer (Nechry)
  
 Version 1.4
  - Released 10th Jan, 2016
