@@ -299,7 +299,7 @@ bool CentralScene::HandleMsg
 		                item.m_value = i;
 		                items.push_back( item );
 		            }
-		            node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, CentralSceneIndex_Supported_KeyAttributes_All_Scenes, "Supported Key Attributes All Scenes", "", false, false, 3, items, 0, 0 );
+		            node->CreateValueList( ValueID::ValueGenre_System, GetCommandClassId(), _instance, CentralSceneIndex_Supported_KeyAttributes_All_Scenes, "Supported Key Attributes All Scenes", "", false, false, 3, items, 0, 0 );
 		        }
 		    }
 		    if ( GetVersion() >= 2 )
@@ -336,7 +336,7 @@ void CentralScene::CreateVars
 {
 	if( Node* node = GetNodeUnsafe() )
 	{
-		node->CreateValueInt( ValueID::ValueGenre_User, GetCommandClassId(), _instance, CentralSceneIndex_SceneCount, "Scene Count", "", true, false, 0, 0 );
+		node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, CentralSceneIndex_SceneCount, "Scene Count", "", true, false, 0, 0 );
 
         vector<ValueList::Item> items;
         unsigned int size = (sizeof(c_CentralScene_KeyAttributes)/sizeof(c_CentralScene_KeyAttributes[0]));
@@ -351,7 +351,7 @@ void CentralScene::CreateVars
 
         node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, CentralSceneIndex_SceneID, "Scene ID", "", true, false, 0, 0 );
         node->CreateValueButton(ValueID::ValueGenre_User, GetCommandClassId(), _instance, CentralSceneIndex_Button, "Button", 0 );
-        node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, CentralSceneIndex_Scenes_Identical, "Scenes Identical", "", true, false, 0, 0 );
+        node->CreateValueByte( ValueID::ValueGenre_System, GetCommandClassId(), _instance, CentralSceneIndex_Scenes_Identical, "Scenes Identical", "", true, false, 0, 0 );
 	}
 }
 
