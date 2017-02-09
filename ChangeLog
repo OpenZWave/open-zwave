@@ -158,6 +158,10 @@ Version 1.5
  - Pull Request #1111 - Typo's & indentation from bobvanoijen (Nechry)
  - Pull Request #1109 - Add support for GE 12491 Z-Wave Plus switch from drkp  (Nechry)
  - Add Aeotec ZW111 Nano Dimmer (Nechry)
+ - Pull Request #1120 - Add Ecolink TILTZWAVE2.5-ECO Garage Door Sensor from adreznec (Nechry)
+ - Add Ecolink Z-Wave Plus FireFighter (Nechry)
+ - Add Ecolink Ecolink Motion Detector (Nechry)
+ - Add Ecolink Door Window Sensor (Nechry)
  
 Version 1.4
  - Released 10th Jan, 2016
