@@ -1,3 +1,4 @@
+- Apply ForceInstances patch to association removal too.
 Version 1.5
  - Pull Request #743 - Updated Fibaro Devices from Navstev0 (Justin)
  - Pull Request #740 - Updated Fibaro FGMS-001 ID's from Technosf (Justin)
