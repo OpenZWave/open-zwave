@@ -392,8 +392,15 @@ void MultiInstanceAssociation::Set
 	Log::Write( LogLevel_Info, GetNodeId(), "MultiInstanceAssociation::Set - Adding instance %d on node %d to group %d of node %d", 
 	           _instance, _targetNodeId, _groupIdx, GetNodeId() );
 
-	if ( (_instance == 0x00 )
-			&& (m_alwaysSetInstance == false) )
+	/* for Qubino devices, we should always set a Instance if its the ControllerNode, so MultChannelEncap works.  - See Bug #857 */
+	if ( ( m_alwaysSetInstance  == true )
+			&& ( _instance == 0 )
+			&& ( GetDriver()->GetControllerNodeId() == _targetNodeId ) )
+	{
+		_instance = 0x01;
+	}
+
+	if ( _instance == 0x00 )
 	{
 		Msg* msg = new Msg( "MultiInstanceAssociationCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 		msg->Append( GetNodeId() );
@@ -407,13 +414,6 @@ void MultiInstanceAssociation::Set
 	}
 	else 
 	{
-		/* for Qubino devices, we should always set a Instance if its the ControllerNode, so MultChannelEncap works.  - See Bug #857 */
-		if ( ( m_alwaysSetInstance  == true )
-				&& ( _instance == 0 )
-				&& ( GetDriver()->GetControllerNodeId() == _targetNodeId ) )
-		{
-			_instance = 0x01;
-		}
 		Msg* msg = new Msg( "MultiInstanceAssociationCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 		msg->Append( GetNodeId() );
 		msg->Append( 6 );
