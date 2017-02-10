@@ -61,6 +61,13 @@ namespace OpenZWave
 		void Remove( uint8 const _group, uint8 const _nodeId, uint8 const _instance );
 
 	private:
+		enum ForceInstance
+		{
+			ForceInstance_None = 0,
+			ForceInstance_ControllerNode,
+			ForceInstance_AllNodes
+		};
+
 		MultiInstanceAssociation( uint32 const _homeId, uint8 const _nodeId );
 		void QueryGroup( uint8 _groupIdx, uint32 const _requestFlags );
 		void AutoAssociate();
@@ -68,8 +75,7 @@ namespace OpenZWave
 		bool			m_queryAll;			// When true, once a group has been queried, we request the next one.
 		uint8			m_numGroups;		// Number of groups supported by the device.  255 is reported by certain manufacturers and requires special handling.
 		vector<InstanceAssociation>	m_pendingMembers;	// Used to build a list of group members from multiple reports
-		bool			m_alwaysSetInstance; // Should we also set a instance, even if a instance wasn't specified (for Qubino devices - See bug #857)
-			
+		ForceInstance	m_forceInstance;	// Should we always set a instance, even if a instance wasn't specified (for some devices - See bug #857)
 	};
 
 } // namespace OpenZWave
