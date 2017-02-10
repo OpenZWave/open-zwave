@@ -60,9 +60,9 @@ https://aeotec.freshdesk.com/helpdesk/attachments/6009584689
 				Percentage change in wattage to induce a automatic report (Clamp 3).
 			</Help>
 		</Value>
-		<Value type="list" index="13" genre="config" label="Reporting CRC-16 Encapsulation" units="" min="0" max="1" value="1" size="1">
+		<Value type="list" index="13" genre="config" label="Reporting CRC-16 Encapsulation Command" units="" min="0" max="1" value="1" size="1">
 			<Help>
-				Enable selective reporting only when power change reaches a certain threshold or percentage set in 4-11 below. This is used to reduce network traffic.
+				Enable /disable reporting CRC-16 Encapsulation Command.
 			</Help>
 			<Item label="Disable" value="0"/>
 			<Item label="Enable" value="1"/>
