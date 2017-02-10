@@ -451,7 +451,8 @@ void MultiInstanceAssociation::Remove
 	Log::Write( LogLevel_Info, GetNodeId(), "MultiInstanceAssociation::Remove - Removing instance %d on node %d from group %d of node %d",
 	           _instance, _targetNodeId, _groupIdx, GetNodeId());
 
-	if ( _instance == 0x00 )
+	if ( (_instance == 0x00 )
+			&& (m_forceInstance != ForceInstance_AllNodes) )
 	{
 		Msg* msg = new Msg( "MultiInstanceAssociationCmd_Remove", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 		msg->Append( GetNodeId() );
