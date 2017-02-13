@@ -756,6 +756,7 @@
 		<Product type="0001" id="0001" name="123658 Plug-in Switch plus Power Meter" config="popp/123658.xml" />
 		<Product type="0003" id="0001" name="009105 Wall Plug Switch Schuko (IP44)" config="popp/009105.xml" />
 		<Product type="0005" id="0001" name="012501 Strike Lock Control" config="popp/012501.xml" />
+		<Product type="0004" id="0004" name="009402 10-Year Smoke Detector" config="popp/009402.xml" />
 	</Manufacturer>
 	<Manufacturer id="0169" name="Popp">
 		<Product type="0001" id="0001" name="ZWeather" config="popp/zweather.xml" />
