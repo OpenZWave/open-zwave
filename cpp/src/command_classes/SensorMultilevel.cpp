@@ -213,7 +213,7 @@ bool SensorMultilevel::RequestState
 bool SensorMultilevel::RequestValue
 (
 		uint32 const _requestFlags,
-		uint8 const _dummy,		// = 0 (not used)
+		uint16 const _dummy,		// = 0 (not used)
 		uint8 const _instance,
 		Driver::MsgQueue const _queue
 )

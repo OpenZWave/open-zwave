@@ -152,7 +152,7 @@ namespace OpenZWave
 		 * to use OpenZWave, but this information is exposed in case it is of interest.
 		 * \return the value index within the command class.
 	     */
-		uint8 GetIndex()const{ return( (uint8)( (m_id & 0x00000ff0) >> 4 ) ); }
+		uint16 GetIndex()const{ return( (uint8)( (m_id & 0x00003ff0) >> 4 ) ); }
 
 		/** 
 		 * Get the type of the value.  The type describes the data held by the value
@@ -231,7 +231,7 @@ namespace OpenZWave
 			ValueGenre const _genre,
 			uint8 const _commandClassId,
 			uint8 const _instance,
-			uint8 const _valueIndex,
+			uint16 const _valueIndex,
 			ValueType const _type
 		):
 			m_homeId( _homeId )
@@ -239,7 +239,7 @@ namespace OpenZWave
 			m_id = (((uint32)_nodeId)<<24)
 				 | (((uint32)_genre)<<22)
 				 | (((uint32)_commandClassId)<<14)
-				 | (((uint32)_valueIndex)<<4)
+				 | (((uint32)(_valueIndex & 0x3FF))<<4)
 				 | ((uint32)_type);
 			m_id1 = (((uint32)_instance)<<24);
 		}
@@ -284,12 +284,12 @@ namespace OpenZWave
 		}
 
 		// Generate a key from its component parts
-		static uint32 GetValueStoreKey( uint8 const _commandClassId, uint8 const _instance, uint8 const _valueIndex )
+		static uint32 GetValueStoreKey( uint8 const _commandClassId, uint8 const _instance, uint16 const _valueIndex )
 		{ 
 
 			uint32 key = (((uint32)_instance)<<24)
 				 | (((uint32)_commandClassId)<<14)
-				 | (((uint32)_valueIndex)<<4);
+				 | (((uint32)(_valueIndex & 0x3FF))<<4);
 			
 			return key;
 		}
@@ -299,8 +299,7 @@ namespace OpenZWave
 		// 24-31:	8 bits. Node ID of device
 		// 22-23:	2 bits. genre of value (see ValueGenre enum).
 		// 14-21:	8 bits. ID of command class that created and manages this value.
-		// 12-13:	2 bits. Unused.
-		// 04-11:	8 bits. Index of value within all the value created by the command class
+		// 04-13:	10 bits. Index of value within all the value created by the command class
 		//                  instance (in configuration parameters, this is also the parameter ID).
 		// 00-03:	4 bits. Type of value (bool, byte, string etc).
 		uint32	m_id;
