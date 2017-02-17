@@ -721,7 +721,7 @@ bool Driver::ReadConfig
 	char const* cstr = driverElement->Attribute( "poll_interval_between" );
 	if( cstr )
 	{
-		m_bIntervalBetweenPolls = !strcmp( str, "true" );
+		m_bIntervalBetweenPolls = !strcmp( cstr, "true" );
 	}
 
 	// Read the nodes
