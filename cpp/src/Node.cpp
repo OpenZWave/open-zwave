@@ -1856,10 +1856,6 @@ void Node::SetPacketDelay
 )
 {
     	m_PacketDelay = _PacketDelay;
-    	// Notify the watchers of the value changes
-    	Notification* notification = new Notification( Notification::Type_NodeNaming );
-    	notification->SetHomeAndNodeIds( m_homeId, m_nodeId );
-    	GetDriver()->QueueNotification( notification );
 }
 
 //-----------------------------------------------------------------------------
