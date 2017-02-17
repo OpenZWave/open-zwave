@@ -150,6 +150,7 @@ DISTFILES =	.gitignore \
 	config/fibaro/fggc001.xml \
 	config/fibaro/fgk001.xml \
 	config/fibaro/fgk10x.xml \
+	config/fibaro/fgkf601.xml \
 	config/fibaro/fgms.xml \
 	config/fibaro/fgmszw5.xml \
 	config/fibaro/fgpb101.xml \
