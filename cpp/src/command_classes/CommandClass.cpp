@@ -350,21 +350,25 @@ void CommandClass::ReadValueRefreshXML
 				RefreshValue *arcc = new RefreshValue();
 				if (child->QueryIntAttribute( "CommandClass", &temp) != TIXML_SUCCESS) {
 					Log::Write(LogLevel_Warning, GetNodeId(), "    Invalid XML - CommandClass Attribute is wrong type or missing");
+					child = child->NextSiblingElement();
 					continue;
 				}
 				arcc->cc = (uint8)temp;
 				if (child->QueryIntAttribute( "RequestFlags", &temp) != TIXML_SUCCESS) {
 					Log::Write(LogLevel_Warning, GetNodeId(), "    Invalid XML - RequestFlags Attribute is wrong type or missing");
+					child = child->NextSiblingElement();
 					continue;
 				}
 				arcc->genre = (uint8)temp;
 				if (child->QueryIntAttribute( "Instance", &temp) != TIXML_SUCCESS) {
 					Log::Write(LogLevel_Warning, GetNodeId(), "    Invalid XML - Instance Attribute is wrong type or missing");
+					child = child->NextSiblingElement();
 					continue;
 				}
 				arcc->instance = (uint8)temp;
 				if (child->QueryIntAttribute( "Index", &temp) != TIXML_SUCCESS) {
 					Log::Write(LogLevel_Warning, GetNodeId(), "    Invalid XML - Index Attribute is wrong type or missing");
+					child = child->NextSiblingElement();
 					continue;
 				}
 				arcc->index = (uint8)temp;
