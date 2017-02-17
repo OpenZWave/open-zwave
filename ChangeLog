@@ -162,6 +162,7 @@ Version 1.5
  - Add Ecolink Z-Wave Plus FireFighter (Nechry)
  - Add Ecolink Ecolink Motion Detector (Nechry)
  - Add Ecolink Door Window Sensor (Nechry)
+ - Pull Request #1105 - Replace some of the Explicit Locking with Scoped Locks (from tobiasgraf) - Also additional checking on the Unix Mutex Class to detect unbalanced Locking (Justin)
  
 Version 1.4
  - Released 10th Jan, 2016
