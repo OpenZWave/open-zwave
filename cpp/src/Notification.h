@@ -235,7 +235,7 @@ namespace OpenZWave
 		ValueID				m_valueId;
 		uint8				m_byte;
 		uint8				m_event;
-		uint8               m_command;
+		uint8				m_command;
 		UserAlertNofification m_useralerttype;
 	};
 
