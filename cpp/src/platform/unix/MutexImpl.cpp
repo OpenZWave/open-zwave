@@ -85,6 +85,7 @@ bool MutexImpl::Lock
 			++m_lockCount;
 			return true;
 		}
+		Log::Write(LogLevel_Error, "MutexImpl::Lock failed with error: %d (%d)\n", errno, err);
 		fprintf(stderr, "MutexImpl::Lock error %d (%d)\n", errno, err);
 		return false;
 	}
@@ -118,6 +119,7 @@ void MutexImpl::Unlock
 		int err = pthread_mutex_unlock( &m_criticalSection );
 		if( err != 0 )
 		{
+		    Log::Write(LogLevel_Error, "MutexImpl::UnLock failed with error: %d (%d)\n", errno, err);
 			fprintf(stderr, "MutexImpl::Unlock error %d (%d)\n", errno, err);
 		}
 	}
