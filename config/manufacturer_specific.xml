@@ -159,6 +159,7 @@
 	<Manufacturer id="0129" name="Assa Abloy">
 		<Product type="0001" id="0000" name="Yale Touchscreen Lever (YRL220)" config="assa_abloy/TouchLever.xml"/>
 		<Product type="0002" id="0000" name="Yale Touchscreen Deadbolt (YRD220)" config="assa_abloy/TouchDeadbolt.xml" />
+		<Product type="0002" id="0209" name="Yale Key Free Touchscreen Deadbolt (YRD240)" config="assa_abloy/TouchDeadbolt.xml"/>
 		<Product type="0002" id="0800" name="Yale Touchscreen Deadbolt (YRD120)" config="assa_abloy/TouchDeadbolt.xml" />
 		<Product type="0003" id="0800" name="Yale Push Button Lever Lock (YRL210)" config="assa_abloy/PushButtonLever.xml"/>
 		<Product type="0004" id="0000" name="Yale Push Button Deadbolt (YRD210)" config="assa_abloy/PushButtonDeadbolt.xml"/>		
