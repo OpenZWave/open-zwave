@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Philio: PAN07-1 TWO SPDT Switch module with meter. -->
+<!-- From: http://telldus.se/wp-content/uploads/311664-PAN07-1-2-3A-manual-20141028.pdf -->
+<Product xmlns='http://code.google.com/p/open-zwave/'>
+
+	<!-- Configuration Parameters -->
+	<CommandClass id="112">
+		<Value type="short" instance="1" index="1" genre="config" label="Watt Meter Report Period" min="1" max="32000" value="720">
+			<Help>If the setting is configured for 1hour (set value =720), the device will report its instant power consumption every 1 hour to Z-Wave Controller. Unit: 5 seconds.</Help>
+		</Value>
+
+		<Value type="short" instance="1" index="2" genre="config" label="kWh meter report period" min="1" max="32000" value="6">
+			<Help>If the setting is configured for 1hour (set value =6), the device will report its power consumption in KWh every 1 hour to Z-Wave Controller. Unit: 10 minutes.</Help>
+		</Value>
+
+		<Value type="byte" instance="1" index="3" genre="config" label="Selected end point" min="0" max="3" value="1">
+			 <Help>1: Relay 1 and Relay 2. 2: Relay 1. 3: Relay 2</Help>
+		</Value>
+	
+		<Value type="byte" instance="1" index="4" genre="config" label="Edge or Pulse mode or Edge-Togle mode" min="0" max="3" value="1">
+			<Help>Edge or Pulse mode or Edge-Togle mode defines the operating mode of the externally connected switch. Default: Edge Mode</Help>
+			<Item label="Edge Mode" value="1" />
+			<Item label="Toggle Mode" value="2" />
+			<Item label="Edge/Toggle Mode" value="3" />
+		</Value>
+	
+		<Value type="short" instance="1" index="5" genre="config" label="Threshold of Current for Load Caution" min="10" max="600" value="600">
+			<Help>Threshold of Current for Load Caution. Unit 0.01A</Help>
+		</Value>
+
+		<Value type="short" instance="1" index="6" genre="config" label="Threshold of kWh for Load Caution" min="0" max="10000" value="10000">
+			 <Help>Threshold of kWh for Load Caution. Unit 1KWh</Help>
+		</Value>
+
+		<Value type="byte" instance="1" index="7" genre="config" label="Relay control mode" min="1" max="2" value="1">
+		        <Help>Relay control mode. Default: Power mode</Help>
+		        <Item label=" Relay controlling is referred to the meter wattage: When PAN07/PAN09
+				gets an instruction from RF command or the manual switch, to switch on
+				or off, it will check the wattage of the load first. If the wattage value is
+				greater than 2 watts, the switch state means ON; on the other hand, it
+				means OFF. When the switch state is ON, only SWITCH OFF instruction
+				will be accept; on the other hand, when the switch state is OFF, only
+				SWITCH ON instruction will be accept." value="1" />
+			<Item label="Control relay directly: Whenever PAN07/PAN09 get an SWITCH ON
+				instruction, it will close the relay; on the other hand, it will open the relay" value="2" />
+		</Value>
+		<Value type="byte" instance="1" index="8" genre="config" label="Restore relay state mode" min="0" max="2" value="1">
+			<Help>Restore switch state mode</Help>
+			<Item label="NC terminal" value="0" />
+                        <Item label="Last relay switch state" value="1" />
+                        <Item label="NC terminal" value="2" />
+                </Value>
+		<Value type="byte" instance="1" index="9" genre="config" label="Existence of endpoint 3" min="1" max="2" value="1">
+			<Help>1: Exists, 2: Doesn't exists.</Help>
+		</Value>
+	</CommandClass>
+</Product>
