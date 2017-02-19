@@ -51,7 +51,7 @@ MutexImpl::MutexImpl
 	int err = pthread_mutex_init( &m_criticalSection, &ma );
 	if( err != 0 )
 	{
-		fprintf(stderr, "MutexImpl::MutexImpl error %d (%d)\n", errno, err );
+		Log::Write(LogLevel_Error, "MutexImpl::MutexImpl error %d (%d)\n", errno, err );
 	}
 	pthread_mutexattr_destroy( &ma );
 }
@@ -64,6 +64,9 @@ MutexImpl::~MutexImpl
 (
 )
 {
+	if (m_lockCount != 0) {
+		Log::Write(LogLevel_Error, "MutexImpl:~MutexImpl: - Destroying a Locked Mutex: %d", m_lockCount);
+	}
 	pthread_mutex_destroy( &m_criticalSection );
 }
 
@@ -76,6 +79,11 @@ bool MutexImpl::Lock
 	bool const _bWait
 )
 {
+	if (m_lockCount < 0) {
+		Log::Write(LogLevel_Error, "MutexImpl:Lock - Lock is Negative: %d", m_lockCount);
+		m_lockCount = 0;
+	}
+
 	if( _bWait )
 	{
 		// We will wait for the lock
@@ -85,7 +93,7 @@ bool MutexImpl::Lock
 			++m_lockCount;
 			return true;
 		}
-		fprintf(stderr, "MutexImpl::Lock error %d (%d)\n", errno, err);
+		Log::Write(LogLevel_Error, "MutexImpl::Lock failed with error: %d (%d)", errno, err);
 		return false;
 	}
 
@@ -107,19 +115,22 @@ void MutexImpl::Unlock
 (
 )
 {
-	if( !m_lockCount )
+	if(m_lockCount < 0 )
 	{
 		// No locks - we have a mismatched lock/release pair
-		assert(0);
+		Log::Write(LogLevel_Error, "MutexImpl:Unlock - Lock is Negative - MisMatched Lock/Release Pair: %d", m_lockCount);
+		/* reset the lockCount to 0 */
+		m_lockCount = 0;
 	}
 	else
 	{
 		--m_lockCount;
-		int err = pthread_mutex_unlock( &m_criticalSection );
-		if( err != 0 )
-		{
-			fprintf(stderr, "MutexImpl::Unlock error %d (%d)\n", errno, err);
-		}
+	}
+	/* try to unlock Regardless of the lockCount */
+	int err = pthread_mutex_unlock( &m_criticalSection );
+	if( err != 0 )
+	{
+	    Log::Write(LogLevel_Error, "MutexImpl::UnLock failed with error: %d (%d)\n", errno, err);
 	}
 }
 
