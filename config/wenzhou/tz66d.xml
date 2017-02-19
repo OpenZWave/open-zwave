@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<<<<<<< HEAD
 <Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="2">
   <!-- Configuration -->
 	<CommandClass id="112">

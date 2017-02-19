@@ -2,7 +2,7 @@
 <!-- Devolo Metering Plug MT 2646
 http://www.pepper1.net/zwavedb/device/911
  -->
-<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="2">
   <!-- Configuration Parameters -->
   <CommandClass id="112">
     <Value type="short" index="1" genre="config" label="Watt Meter" min="1" max="32767" value="720">

@@ -9,7 +9,7 @@ ZMNHID5 916,0 MHz
 
 ref: http://qubino.com/download/1506/
 -->
-<Product xmlns='http://code.google.com/p/open-zwave/'>
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
 
     <CommandClass id="67" override_precision="2"  />
     <!-- Configuration -->

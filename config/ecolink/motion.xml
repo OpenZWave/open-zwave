@@ -3,7 +3,7 @@
 Ecolink Motion Detector
 http://products.z-wavealliance.org/ProductManual/File?folder=&filename=Manuals/1500/Ecolink%20PIR%20Zwave%20Plus%20Manual%20R1.04%20021116kgs.docx
 -->
-<Product xmlns='http://code.google.com/p/open-zwave/'>
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
     <!-- Basic set as report-->
 	<CommandClass id="32" setasreport="true"/>
     <!-- Configuration Parameters -->
