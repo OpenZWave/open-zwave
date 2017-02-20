@@ -46,7 +46,7 @@ namespace OpenZWave
 
 		bool IsSignalled();
 
-		uint32				m_lockCount;				// Keep track of the locks (there can be more than one if they occur on the same thread.
+		int32				m_lockCount;				// Keep track of the locks (there can be more than one if they occur on the same thread.
 		pthread_mutex_t		m_criticalSection;
 	};
 

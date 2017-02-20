@@ -295,7 +295,7 @@ bool Security::HandleMsg
 		case SecurityCmd_MessageEncap:
 		case SecurityCmd_MessageEncapNonceGet:
 		{
-			Log::Write(LogLevel_Warning, GetNodeId(), "Recieved a Security Message that should have been handled in the Driver");
+			Log::Write(LogLevel_Warning, GetNodeId(), "Received a Security Message that should have been handled in the Driver");
 			break;
 		}
 		default:

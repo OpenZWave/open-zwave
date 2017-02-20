@@ -1913,7 +1913,7 @@ void Node::ApplicationCommandHandler
 	if( CommandClass* pCommandClass = GetCommandClass( _data[5] ) )
 	{
 		if (pCommandClass->IsSecured() && !encrypted) {
-			Log::Write( LogLevel_Warning, m_nodeId, "Recieved a Clear Text Message for the CommandClass %s which is Secured", pCommandClass->GetCommandClassName().c_str());
+			Log::Write( LogLevel_Warning, m_nodeId, "Received a Clear Text Message for the CommandClass %s which is Secured", pCommandClass->GetCommandClassName().c_str());
 			bool drop = true;
 			Options::Get()->GetOptionAsBool("EnforceSecureReception", &drop);
 			if (drop) {
@@ -3498,9 +3498,31 @@ Node::DeviceClass* Node::GenericDeviceClass::GetSpecificDeviceClass
 //-----------------------------------------------------------------------------
 uint8 *Node::GenerateNonceKey() {
 	uint8 idx = this->m_lastnonce;
-	for (int i = 0; i < 8; i++) {
-		this->m_nonces[idx][i] = (rand()%0xFF)+1;
+
+	/* The first byte must be unique and non-zero.  The others are random.
+	   Per Numerical Recipes in C its best to use the high-order byte.  The
+	   floating point calculation here doesn't assume the size of the random
+	   integer, otherwise we could just shift the high byte over.
+	*/
+	uint8 match = 0;
+	do {
+		this->m_nonces[idx][0] = 1 + (uint8) (255.0 * rand() / (RAND_MAX + 1.0));
+		match = 0;
+		for (int i = 0; i < 8; i++) {
+			if (i == idx) {
+				continue;
+			}
+			if (this->m_nonces[idx][0] == this->m_nonces[i][0]) {
+				match = 1;
+			}
+		}
+	} while (match);
+
+	/* The other bytes have no restrictions. */
+	for (int i = 1; i < 8; i++) {
+		this->m_nonces[idx][i] = (int) (256.0 * rand() / (RAND_MAX + 1.0));
 	}
+
 	this->m_lastnonce++;
 	if (this->m_lastnonce >= 8)
 		this->m_lastnonce = 0;

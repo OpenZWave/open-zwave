@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- PH-PAB01.eu Micromodule Energy Meter  -->
-<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="2">
     <!-- Remove COMMAND_CLASS_BASIC -->
     <CommandClass id="32" action="remove"/>
     <!-- Map endpoints to instances -->
@@ -13,7 +13,7 @@
         <Value type="short" instance="1" index="2" genre="config" label="kWh meter report period" units="5 sec" min="1" max="32767" value="720">
             <Help></Help>
         </Value>
-        <Value type="list" instance="1" index="3" genre="config" label="Slected End Point" size="1" min="1" max="3" value="1">
+        <Value type="list" instance="1" index="3" genre="config" label="Selected End Point" size="1" min="1" max="3" value="1">
             <Help></Help>
             <Item label="CT1 and CT2" value="1"/>
             <Item label="CT1" value="2"/>

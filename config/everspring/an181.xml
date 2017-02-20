@@ -1,4 +1,4 @@
-<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="2">
     <!-- Everspring - AN181 - Miniplug On/Off with meter function -->
     <!-- Configuration Parameters -->
     <CommandClass id="112">
@@ -15,7 +15,7 @@
                 The delaying time to report to Group 1
             </Help>
         </Value>
-        <Value type="list" index="3" genre="config" label="Remember Last" units="" min="0" max="1" value="1">
+        <Value type="list" index="3" genre="config" label="Remember Last" units="" min="0" max="1" size="1" value="1">
             <Help>
                 Remember the last status on plug
             </Help>

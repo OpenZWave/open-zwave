@@ -40,6 +40,20 @@ push(@{$warnings{$_[0]}}, $warningdetail);
 
 # check common config file mistakes 
 sub CheckConfig {
+
+use strict;
+use warnings;
+my $file = $_[0];
+my $count = 1;
+open my $info, $file or die "Could not open $file: $!";
+while( my $line = <$info>)  {
+	if ($line =~ /[[:^ascii:]]/) {
+		LogError($file, 5, "Line $count, contains non ASCII characters");
+	}
+	++$count;
+}
+close $info;
+
 # create object
 my $xml = new XML::Simple;
 
@@ -55,7 +69,7 @@ foreach my $rev ($data)
 	my $md5 = digest_file_hex($_[0], "SHA-512");
 	if (defined($CFG::versiondb{$_[0]}))
 	{
-		if ($CFG::versiondb{$_[0]}{md5} != $md5) 
+		if ($CFG::versiondb{$_[0]}{md5} ne $md5) 
 		{
 			my $dbr = $CFG::versiondb{$_[0]}->{Revision};
 			my $fr = $rev->{Revision};
@@ -181,7 +195,7 @@ foreach my $unreffile (keys %configfiles)
 
 sub PrettyPrintErrors() {
 	print "\n\nErrors: (Please Correct before Submitting to OZW)\n";
-	while ((my $key, my $value) = each \%errors) 
+	while ((my $key, my $value) = each %errors) 
 	{
 		foreach my $detail (@{$value}) 
 		{
@@ -193,7 +207,7 @@ sub PrettyPrintErrors() {
 
 sub PrettyPrintWarnings() {
 	print "\n\nWarnings: (Can be Ignored)\n";
-	while ((my $key, my $value) = each \%warnings) 
+	while ((my $key, my $value) = each %warnings) 
 	{
 		foreach my $detail (@{$value}) 
 		{
@@ -205,7 +219,7 @@ sub PrettyPrintWarnings() {
 
 sub XMLPrintErrors() {
 	my $numerrs  = 0;
-	while ((my $key, my $value) = each \%errors) 
+	while ((my $key, my $value) = each %errors) 
 	{
 		foreach my $detail (@{$value}) 
 		{
@@ -214,7 +228,7 @@ sub XMLPrintErrors() {
 	}
 	open(my $fh, '>', 'results/OZW_CheckConfig.xml') or die "Could not open file results\OZW_CheckConfig.xml $!";
 	print $fh "<testsuite failures=\"0\" assertions=\"\" name=\"OZW_CheckConfig\" tests=\"1\" errors=\"$numerrs\" time=\"\">\n";
-	while ((my $key, my $value) = each \%errors) 
+	while ((my $key, my $value) = each %errors) 
 	{
 		foreach my $detail (@{$value}) 
 		{
@@ -232,7 +246,7 @@ sub XMLPrintErrors() {
 
 sub XMLPrintWarnings() {
 	my $numerrs  = 0;
-	while ((my $key, my $value) = each \%warnings) 
+	while ((my $key, my $value) = each %warnings) 
 	{
 		foreach my $detail (@{$value}) 
 		{
@@ -241,7 +255,7 @@ sub XMLPrintWarnings() {
 	}
 	open(my $fh, '>', 'results/OZW_CheckConfigWarnings.xml') or die "Could not open file results\OZW_CheckConfig.xml $!";
 	print $fh "<testsuite failures=\"0\" assertions=\"\" name=\"OZW_CheckConfigWarnings\" tests=\"1\" errors=\"$numerrs\" time=\"\">\n";
-	while ((my $key, my $value) = each \%warnings) 
+	while ((my $key, my $value) = each %warnings) 
 	{
 		foreach my $detail (@{$value}) 
 		{

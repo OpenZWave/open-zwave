@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- GE(Jasco) 12724 3-Way Dimmer Switch -->
-<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="2">
 	<!-- Configuration Parameters - per http://www.ezzwave.com/advanced-operation/ -->
 	<CommandClass id="112">
 		<Value type="list" index="3" genre="config" label="LED Light" min="0" max="2" value="0" size="1">
@@ -14,7 +14,7 @@
 			<Item label="No" value="0" />
 			<Item label="Yes" value="1" />
 		</Value>
-		<!-- Both the number of steps (or levels) that the dimmer will change and the timing of the steps can be modified to suit personal preferences. The timing of the steps can be adjusted in 10 millisecond intervals. As an example, the default setting for parameter 8 is “3”. This means that the lighting level will change every 30 milliseconds when the Dim Command is received. A value of 255 would mean that the level would change every 2.55 seconds. Combined, the two parameters allow dim rate adjustments from 10 milliseconds to 4.2 minutes to go from maximum-to-minimum or minimum-to-maximum brightness levels. -->
+		<!-- Both the number of steps (or levels) that the dimmer will change and the timing of the steps can be modified to suit personal preferences. The timing of the steps can be adjusted in 10 millisecond intervals. As an example, the default setting for parameter 8 is 3. This means that the lighting level will change every 30 milliseconds when the Dim Command is received. A value of 255 would mean that the level would change every 2.55 seconds. Combined, the two parameters allow dim rate adjustments from 10 milliseconds to 4.2 minutes to go from maximum-to-minimum or minimum-to-maximum brightness levels. -->
 		<Value type="byte" index="7" genre="config" label="Z-Wave Command Dim Step" units="" min="1" max="99" value="1">
 			<Help>Indicates how many levels the dimmer will change for each dimming step.</Help>
 		</Value>

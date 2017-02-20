@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- SCSC17 (Secure / Horstmann) -->
-<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="2">
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="3">
   <!-- The thermostat does not properly report its operating modes -->
   <CommandClass id="64" getsupported="false">
     <SupportedModes>
@@ -13,7 +13,7 @@
 
   <!-- Configuration Parameters -->
   <CommandClass id="112">
-    <Value type="list" instance="1" index="1" genre="config" label="Temperature Scale" value="0">
+    <Value type="list" instance="1" index="1" genre="config" label="Temperature Scale" size="1" value="0">
       <Help>Controls the temperature sensor scale</Help>
       <Item label="Celsius" value="1"/>
       <Item label="Fahrenheit" value="128"/>
