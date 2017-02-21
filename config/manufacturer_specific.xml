@@ -833,6 +833,7 @@
 		<Product type="0107" id="8377" name="ZXT-120IL" config="remotec/zxt-120.xml"/>
 		<Product type="0108" id="8377" name="ZXT-120BR" config="remotec/zxt-120.xml"/>
 		<Product type="0001" id="8510" name="ZRC-90" config="remotec/zrc-90.xml"/>
+		<Product type="0002" id="8510" name="ZRC-90" config="remotec/zrc-90.xml"/>
 		<Product type="8201" id="8120" name="ZFM-X10EU Dual Mode Insert Module "/>
 		<Product type="8000" id="0002" name="ZFM-80" config="remotec/zfm-80.xml" />
 		<Product type="0200" id="8031" name="ZTS-110" config="remotec/zts-110.xml" />
