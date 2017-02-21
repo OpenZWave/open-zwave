@@ -128,6 +128,7 @@
     <xs:simpleType>
      <xs:restriction base='xs:string'>
       <xs:enumeration value='true'/>
+      <xs:enumeration value='controller'/>
       <xs:enumeration value='false'/>
      </xs:restriction>
     </xs:simpleType>

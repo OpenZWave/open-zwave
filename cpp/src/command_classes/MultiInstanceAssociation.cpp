@@ -58,7 +58,7 @@ MultiInstanceAssociation::MultiInstanceAssociation
 	CommandClass( _homeId, _nodeId ),
 	m_queryAll(false),
 	m_numGroups(0),
-	m_alwaysSetInstance(false)
+	m_forceInstance(ForceInstance_None)
 {
 	SetStaticRequest( StaticRequest_Values );
 }
@@ -103,12 +103,16 @@ void MultiInstanceAssociation::ReadXML
 
 		associationsElement = associationsElement->NextSiblingElement();
 	}
+
+	m_forceInstance = ForceInstance_None;
 	char const*  str = _ccElement->Attribute("ForceInstances");
 	if( str )
 	{
-                m_alwaysSetInstance = !strcmp( str, "true");
+		if ( !strcmp( str, "true") )
+			m_forceInstance = ForceInstance_AllNodes;
+		else if ( !strcmp( str, "controller") )
+			m_forceInstance = ForceInstance_ControllerNode;
 	}
-
 }
 
 //-----------------------------------------------------------------------------
@@ -133,8 +137,12 @@ void MultiInstanceAssociation::WriteXML
 		_ccElement->LinkEndChild( associationsElement );
 		node->WriteGroups( associationsElement );
 	}
-	if (m_alwaysSetInstance) {
+
+	if (m_forceInstance == ForceInstance_AllNodes) {
 		_ccElement->SetAttribute("ForceInstances", "true");
+	}
+	else if (m_forceInstance == ForceInstance_ControllerNode) {
+		_ccElement->SetAttribute("ForceInstances", "controller");
 	}
 }
 
@@ -392,8 +400,16 @@ void MultiInstanceAssociation::Set
 	Log::Write( LogLevel_Info, GetNodeId(), "MultiInstanceAssociation::Set - Adding instance %d on node %d to group %d of node %d", 
 	           _instance, _targetNodeId, _groupIdx, GetNodeId() );
 
+	/* for some devices, we should always set a Instance if its the ControllerNode, so MultChannelEncap works.  - See Bug #857 */
+	if ( ( m_forceInstance != ForceInstance_None )
+			&& ( _instance == 0 )
+			&& ( GetDriver()->GetControllerNodeId() == _targetNodeId ) )
+	{
+		_instance = 0x01;
+	}
+
 	if ( (_instance == 0x00 )
-			&& (m_alwaysSetInstance == false) )
+			&& (m_forceInstance != ForceInstance_AllNodes) )
 	{
 		Msg* msg = new Msg( "MultiInstanceAssociationCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 		msg->Append( GetNodeId() );
@@ -407,13 +423,6 @@ void MultiInstanceAssociation::Set
 	}
 	else 
 	{
-		/* for Qubino devices, we should always set a Instance if its the ControllerNode, so MultChannelEncap works.  - See Bug #857 */
-		if ( ( m_alwaysSetInstance  == true )
-				&& ( _instance == 0 )
-				&& ( GetDriver()->GetControllerNodeId() == _targetNodeId ) )
-		{
-			_instance = 0x01;
-		}
 		Msg* msg = new Msg( "MultiInstanceAssociationCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 		msg->Append( GetNodeId() );
 		msg->Append( 6 );
@@ -442,7 +451,8 @@ void MultiInstanceAssociation::Remove
 	Log::Write( LogLevel_Info, GetNodeId(), "MultiInstanceAssociation::Remove - Removing instance %d on node %d from group %d of node %d",
 	           _instance, _targetNodeId, _groupIdx, GetNodeId());
 
-	if ( _instance == 0x00 )
+	if ( (_instance == 0x00 )
+			&& (m_forceInstance != ForceInstance_AllNodes) )
 	{
 		Msg* msg = new Msg( "MultiInstanceAssociationCmd_Remove", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 		msg->Append( GetNodeId() );
