@@ -482,8 +482,8 @@
 		<Product type="4457" id="3230" name="45606 2-Way Dimmer Switch" config="ge/dimmer.xml"/>
 		<Product type="4944" id="3031" name="12724 3-Way Dimmer Switch" config="ge/12724-dimmer.xml"/>
 		<Product type="4944" id="3033" name="12729 3-Way Dimmer Switch" config="ge/12724-dimmer.xml"/>
-                <Product type="4944" id="3034" name="12730 Fan Control Switch" config="ge/12724-dimmer.xml"/>
-                <Product type="4952" id="3036" name="14291 In-Wall Smart Switch" config="ge/14291-switch.xml"/>
+		<Product type="4944" id="3034" name="12730 Fan Control Switch" config="ge/12724-dimmer.xml"/>
+		<Product type="4952" id="3036" name="14291 In-Wall Smart Switch" config="ge/14291-switch.xml"/>
 		<Product type="5250" id="3030" name="45603 Plugin Appliance Module"/>
 		<Product type="5250" id="3130" name="45604 Outdoor Module"/>
 		<Product type="4f50" id="3031" name="12720 Outdoor Smart Switch"/>
@@ -493,7 +493,7 @@
 		<Product type="4952" id="3031" name="12721 Lighting Control Duplex Receptacle" config="ge/receptacle.xml"/>
 		<Product type="4952" id="3032" name="12722 On/Off Relay Switch" config="ge/relay.xml"/>
 		<Product type="4952" id="3033" name="12727 In-Wall Smart Switch (Toggle)"/>
-  	<Product type="4953" id="3032" name="32563 Hinge Pin Smart Door Sensor" config="ge/hinge-pin.xml"/>
+		<Product type="4953" id="3032" name="32563 Hinge Pin Smart Door Sensor" config="ge/hinge-pin.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0099" name="GreenWave">
 		<Product type="0001" id="0002" name="One Gateway"/>
@@ -618,7 +618,7 @@
 		<Product type="0c01" id="0206" name="VRCPG-SG RF Handheld Remote Controller" config="leviton/vrcpg.xml"/>
 		<Product type="1001" id="0209" name="VRF01-1LZ Multilevel Scene Switch - 1.5A Fan" config="leviton/vrf01.xml"/>
 		<Product type="1102" id="0243" name="VRCS2-MRZ 2-Button Scene Controller with Switches"/>
-            	<Product type="1902" id="0334" name="DZPD3-1LW Plug-In Dimming Lamp Module"/>
+        <Product type="1902" id="0334" name="DZPD3-1LW Plug-In Dimming Lamp Module"/>
 		<Product type="1a02" id="0334" name="DZPA1-1LW Plug-In Appliance Module"/>
 	</Manufacturer>
 	<Manufacturer id="014f" name="Linear">
@@ -638,8 +638,8 @@
         <Product type="8015" id="0001" name="LS-8015-ZW Single Latch Door Lock"/>
 	</Manufacturer>
 	<Manufacturer id="0234" name="Logic Soft">
-                <Product type="0003" id="010a" name="ZHC5010 Wall switch" config="logicsoft/ZHC5010.xml"/>
-        </Manufacturer>
+        <Product type="0003" id="010a" name="ZHC5010 Wall switch" config="logicsoft/ZHC5010.xml"/>
+    </Manufacturer>
 	<Manufacturer id="007f" name="Logitech">
 	</Manufacturer>
 	<Manufacturer id="0025" name="Loudwater Tech">
@@ -723,9 +723,9 @@
 	<Manufacturer id="0041" name="OpenPeak Inc.">
 	</Manufacturer>
 	<Manufacturer id="0245" name="Permundo">
-        	<Product type="0003" id="0002" name="PSC132ZW Smart Mini Plug"/>
+		<Product type="0003" id="0002" name="PSC132ZW Smart Mini Plug"/>
 		<Product type="0003" id="0001" name="PSC234ZW Smart Plug"/>
-    	</Manufacturer>
+    </Manufacturer>
 	<Manufacturer id="013c" name="Philio Technology Corporation">
 		<Product type="0001" id="0001" name="PAN11-4 Smart Energy Plug In Switch"/>
 		<Product type="0001" id="0003" name="PAN04-1 Double Relay Switch 2x1.5kW with Power Measurement" config="philio/pan04.xml"/>
@@ -898,10 +898,10 @@
 	</Manufacturer>
 	<Manufacturer id="0012" name="Tell It Online">
 	</Manufacturer>
-        <Manufacturer id="0176" name="Telldus">
-                <Product type="0003" id="0001" name="TZWP-100 Plug-in Switch" config="telldus/tzwp100.xml"/>
-                <Product type="0005" id="0001" name="TZDW-100 Magnet Switch" config="telldus/tzdw100.xml"/>
-        </Manufacturer>
+	<Manufacturer id="0176" name="Telldus">
+		<Product type="0003" id="0001" name="TZWP-100 Plug-in Switch" config="telldus/tzwp100.xml"/>
+		<Product type="0005" id="0001" name="TZDW-100 Magnet Switch" config="telldus/tzdw100.xml"/>
+	</Manufacturer>
 	<Manufacturer id="0048" name="Telsey">
 	</Manufacturer>
 	<Manufacturer id="010c" name="There">
