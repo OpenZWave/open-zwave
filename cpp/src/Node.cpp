@@ -51,7 +51,7 @@
 #include "command_classes/ControllerReplication.h"
 #include "command_classes/ManufacturerSpecific.h"
 #include "command_classes/MultiInstance.h"
-#include "command_classes/MultiInstanceAssociation.h"
+#include "command_classes/MultiChannelAssociation.h"
 #include "command_classes/Security.h"
 #include "command_classes/WakeUp.h"
 #include "command_classes/NodeNaming.h"
@@ -591,7 +591,7 @@ void Node::AdvanceQueries
 			{
 				// if this device supports COMMAND_CLASS_ASSOCIATION, determine to which groups this node belong
 				Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_Associations" );
-				MultiInstanceAssociation* macc = static_cast<MultiInstanceAssociation*>( GetCommandClass( MultiInstanceAssociation::StaticGetCommandClassId() ) );
+				MultiChannelAssociation* macc = static_cast<MultiChannelAssociation*>( GetCommandClass( MultiChannelAssociation::StaticGetCommandClassId() ) );
 				if( macc )
 				{
 					macc->RequestAllGroups( 0 );

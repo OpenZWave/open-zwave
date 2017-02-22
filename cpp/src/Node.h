@@ -86,7 +86,7 @@ namespace OpenZWave
 			friend class Meter;
 			friend class MeterPulse;
 			friend class MultiInstance;
-			friend class MultiInstanceAssociation;
+			friend class MultiChannelAssociation;
 			friend class NodeNaming;
 			friend class Protection;
 			friend class Security;
