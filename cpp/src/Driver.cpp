@@ -1184,11 +1184,12 @@ bool Driver::WriteNextMsg
 		}
 		m_sendMutex->Unlock();
 
-		Log::Write(LogLevel_Info, item.m_nodeId, "Refreshing Node Info after new Config File loaded");
+		Log::Write(LogLevel_Info, item.m_nodeId, "Reloading Sleeping Node");
 		/* this will reload the Node, ignoring any cache that exists etc */
-		InitNode(item.m_nodeId);
+		ReloadNode(item.m_nodeId);
 		return true;
-	}
+}
+
 
 	return false;
 }
@@ -7199,9 +7200,9 @@ bool Driver::refreshNodeConfig
 		QueueNotification( notification );
 		return true;
 	} else if (ToUpper(action) == "IMMEDIATE") {
-		Log::Write(LogLevel_Info, _nodeId, "Refreshing Node Info after new Config File loaded");
+		Log::Write(LogLevel_Info, _nodeId, "Reloading Node after new Config File loaded");
 		/* this will reload the Node, ignoring any cache that exists etc */
-		InitNode(_nodeId);
+		ReloadNode(_nodeId);
 		return true;
 	} else if (ToUpper(action) == "AWAKE") {
 		Node *node = GetNode(_nodeId);
@@ -7212,18 +7213,21 @@ bool Driver::refreshNodeConfig
 				if( !wakeUp->IsAwake() )
 				{
 					/* Node is Asleep. Queue it for WakeUp */
+					Log::Write(LogLevel_Info, _nodeId, "Queuing Sleeping Node Reload after New Config File Loaded");
 					MsgQueueItem item;
 					item.m_command = MsgQueueCmd_ReloadNode;
 					item.m_nodeId = _nodeId;
 					wakeUp->QueueMsg( item );
-
 				} else {
 					/* Node is Awake. Reload it */
-					Log::Write(LogLevel_Info, _nodeId, "Refreshing Node Info after new Config File loaded");
+					Log::Write(LogLevel_Info, _nodeId, "Reloading Awake Node after new Config File loaded");
 					ReloadNode(_nodeId);
 					return true;
 				}
 			}
+		} else {
+			Log::Write(LogLevel_Info, _nodeId, "Reloading Node after new Config File Loaded");
+			ReloadNode(_nodeId);
 		}
 	}
 	return false;
@@ -7238,16 +7242,44 @@ void Driver::ReloadNode
 		uint8 const _nodeId
 )
 {
-	MsgQueueItem item;
-	item.m_command = MsgQueueCmd_ReloadNode;
-	item.m_nodeId = _nodeId;
-
 	LockGuard LG(m_nodeMutex);
-	Log::Write( LogLevel_Detail, _nodeId, "Queuing (%s) Node Reload", c_sendQueueNames[MsgQueue_Command]);
-	m_sendMutex->Lock();
-	m_msgQueue[MsgQueue_Command].push_back( item );
-	m_queueEvent[MsgQueue_Command]->Set();
-	m_sendMutex->Unlock();
+	Log::Write( LogLevel_Detail, _nodeId, "Reloading Node");
+	/* delete any cached information about this node so we start from fresh */
+	char str[32];
+	int32 intVal;
+
+	string userPath;
+	Options::Get()->GetOptionAsString( "UserPath", &userPath );
+
+	snprintf( str, sizeof(str), "ozwcache_0x%08x.xml", m_homeId );
+	string filename =  userPath + string(str);
+
+	TiXmlDocument doc;
+	if( doc.LoadFile( filename.c_str(), TIXML_ENCODING_UTF8 ) )
+	{
+		TiXmlElement * driverElement = doc.RootElement();
+
+		TiXmlNode * nodeElement = driverElement->FirstChild();
+		while( nodeElement )
+		{
+			char const* str = nodeElement->ToElement()->Value();
+			if( str && !strcmp( str, "Node" ) )
+			{
+				// Get the node Id from the XML
+				if( TIXML_SUCCESS == nodeElement->ToElement()->QueryIntAttribute( "id", &intVal ) )
+				{
+					if (intVal == _nodeId)
+						driverElement->RemoveChild(nodeElement);
+				}
+			}
+		}
+
+		nodeElement = nodeElement->NextSibling();
+	}
+	doc.SaveFile(filename.c_str());
+	LG.Unlock();
+
+	InitNode(_nodeId);
 }
 
 

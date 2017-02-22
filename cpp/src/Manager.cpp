@@ -772,12 +772,8 @@ bool Manager::RefreshNodeInfo
 		// Cause the node's data to be obtained from the Z-Wave network
 		// in the same way as if it had just been added.
 		LockGuard LG(driver->m_nodeMutex);
-		Node* node = driver->GetNode( _nodeId );
-		if( node )
-		{
-			node->SetQueryStage( Node::QueryStage_ProtocolInfo );
-			return true;
-		}
+		driver->ReloadNode(_nodeId);
+		return true;
 	}
 
 	return false;

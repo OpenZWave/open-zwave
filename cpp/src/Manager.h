@@ -434,17 +434,17 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 	/*@{*/
 	public:
 		/**
-		 * \brief Trigger the fetching of fixed data about a node.
-		 * Causes the node's data to be obtained from the Z-Wave network in the same way as if it had just been added.
-		 * This method would normally be called automatically by OpenZWave, but if you know that a node has been
-		 * changed, calling this method will force a refresh of all of the data held by the library.  This can be especially
-		 * useful for devices that were asleep when the application was first run. This is the
-		 * same as the query state starting from the beginning.
+		 * \brief Refresh a Node and Reload it into OZW
+		 * Causes the node's Supported CommandClasses and Capabilities to be obtained from the Z-Wave network
+		 * This method would normally be called automatically by OpenZWave, but if you know that a node's capabilities or command classes
+		 * has been changed, calling this method will force a refresh of that information.
+		 * This call shouldn't be needed except in special circumstances.
 		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
 		 * \param _nodeId The ID of the node to query.
 		 * \return True if the request was sent successfully.
 		 */
 		bool RefreshNodeInfo( uint32 const _homeId, uint8 const _nodeId );
+
 
 		/**
 		 * \brief Trigger the fetching of dynamic value data for a node.
