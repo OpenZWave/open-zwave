@@ -216,7 +216,7 @@ void ValueList::WriteXML
 
 //-----------------------------------------------------------------------------
 // <ValueList::SetByValue>
-// Set a new value in the device, selected by item index
+// Set a new value in the device, selected by item value
 //-----------------------------------------------------------------------------
 bool ValueList::SetByValue
 (
@@ -225,7 +225,29 @@ bool ValueList::SetByValue
 {
 	// create a temporary copy of this value to be submitted to the Set() call and set its value to the function param
   	ValueList* tempValue = new ValueList( *this );
-	tempValue->m_valueIdx = _value;
+	tempValue->m_valueIdx = GetItemIdxByValue(_value);
+
+	// Set the value in the device.
+	bool ret = ((Value*)tempValue)->Set();
+
+	// clean up the temporary value
+	delete tempValue;
+
+	return ret;
+}
+
+//-----------------------------------------------------------------------------
+// <ValueList::SetByIndex>
+// Set a new value in the device, selected by item index
+//-----------------------------------------------------------------------------
+bool ValueList::SetByIndex
+(
+	int32 const _index
+)
+{
+	// create a temporary copy of this value to be submitted to the Set() call and set its value to the function param
+  	ValueList* tempValue = new ValueList( *this );
+	tempValue->m_valueIdx = _index;
 
 	// Set the value in the device.
 	bool ret = ((Value*)tempValue)->Set();
@@ -253,7 +275,7 @@ bool ValueList::SetByLabel
 		return false;
 	}
 
-	return SetByValue( index );
+	return SetByIndex( index );
 }
 
 //-----------------------------------------------------------------------------
