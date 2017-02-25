@@ -110,6 +110,7 @@ DISTFILES =	.gitignore \
 	config/ecolink/motion.xml \
 	config/ecolink/sensor.xml \
 	config/electronicsolutions/dbmz.xml \
+	config/enerwave/zw15rmplus.xml \
 	config/enerwave/zw15s.xml \
 	config/enerwave/zw20r.xml \
 	config/enerwave/zw20rm.xml \
@@ -166,6 +167,7 @@ DISTFILES =	.gitignore \
 	config/fibaro/fgsd002.xml \
 	config/fibaro/fgss101.xml \
 	config/fibaro/fgwpe.xml \
+	config/fibaro/fgwpfzw5.xml \
 	config/firstalert/zcombo.xml \
 	config/fortrezz/mimolite.xml \
 	config/fortrezz/ssa2.xml \
@@ -173,10 +175,11 @@ DISTFILES =	.gitignore \
 	config/fortrezz/wv01.xml \
 	config/fortrezz/wwa02.xml \
 	config/frostdale/fdn2nxx.xml \
-	config/ge/12491-switch.xml \
 	config/ge/12724-dimmer.xml \
+	config/ge/14291-switch.xml \
 	config/ge/dimmer.xml \
 	config/ge/dimmer_module.xml \
+	config/ge/hinge-pin.xml \
 	config/ge/receptacle.xml \
 	config/ge/relay.xml \
 	config/gr/gr105.xml \
@@ -211,9 +214,12 @@ DISTFILES =	.gitignore \
 	config/leviton/vri10.xml \
 	config/linear/LB60Z-1.xml \
 	config/linear/PD300Z-2.xml \
+	config/linear/WA00Z-1.xml \
+	config/linear/WAPIRZ-1.xml \
 	config/linear/WD500Z-1.xml \
-	config/linear/WT00Z-1.xml \
 	config/linear/WS15Z-1.xml \
+	config/linear/WT00Z-1.xml \
+	config/logicsoft/ZHC5010.xml \
 	config/manufacturer_specific.xml \
 	config/manufacturer_specific.xsd \
 	config/mcohome/mhp210.xml \
@@ -238,6 +244,7 @@ DISTFILES =	.gitignore \
 	config/options.xsd \
 	config/philio/pan03.xml \
 	config/philio/pan04.xml \
+	config/philio/pan07.xml \
 	config/philio/pan08.xml \
 	config/philio/pan11.xml \
 	config/philio/phpab01.xml \
@@ -254,6 +261,7 @@ DISTFILES =	.gitignore \
 	config/polycontrol/polylock.xml \
 	config/popp/009105.xml \
 	config/popp/009303.xml \
+	config/popp/009402.xml \
 	config/popp/012501.xml \
 	config/popp/123580.xml \
 	config/popp/123601.xml \
@@ -276,7 +284,9 @@ DISTFILES =	.gitignore \
 	config/qubino/ZMNHIDxS2.xml \
 	config/qubino/ZMNHJA2.xml \
 	config/qubino/ZMNHJD1.xml \
+	config/qubino/ZMNHKDx.xml \
 	config/qubino/ZMNHLAx.xml \
+	config/qubino/ZMNHLDx.xml \
 	config/qubino/ZMNHNDx.xml \
 	config/qubino/ZMNHODx.xml \
 	config/qubino/ZMNHSDx.xml \
@@ -307,8 +317,8 @@ DISTFILES =	.gitignore \
 	config/stelpro/stzw402.xml \
 	config/swiid/swiidinter.xml \
 	config/swiid/swiidplug.xml \
-	config/telldus/tzwp100.xml \
 	config/telldus/tzdw100.xml \
+	config/telldus/tzwp100.xml \
 	config/thermofloor/heatit021.xml \
 	config/trane/TZEMT400AB32MAA.xml \
 	config/trane/TZEMT400BB32MAA.xml \
@@ -341,8 +351,8 @@ DISTFILES =	.gitignore \
 	config/widom/WDS.xml \
 	config/zipato/MiniKeypad.xml \
 	config/zipato/RGBBulb.xml \
-	config/zipato/zp3102.xml \
 	config/zipato/vszd2102.xml \
+	config/zipato/zp3102.xml \
 	config/zooz/zen07.xml \
 	config/zooz/zse08.xml \
 	config/zooz/zse09.xml \
@@ -526,12 +536,12 @@ DISTFILES =	.gitignore \
 	cpp/src/command_classes/Meter.h \
 	cpp/src/command_classes/MeterPulse.cpp \
 	cpp/src/command_classes/MeterPulse.h \
+	cpp/src/command_classes/MultiChannelAssociation.cpp \
+	cpp/src/command_classes/MultiChannelAssociation.h \
 	cpp/src/command_classes/MultiCmd.cpp \
 	cpp/src/command_classes/MultiCmd.h \
 	cpp/src/command_classes/MultiInstance.cpp \
 	cpp/src/command_classes/MultiInstance.h \
-	cpp/src/command_classes/MultiInstanceAssociation.cpp \
-	cpp/src/command_classes/MultiInstanceAssociation.h \
 	cpp/src/command_classes/NoOperation.cpp \
 	cpp/src/command_classes/NoOperation.h \
 	cpp/src/command_classes/NodeNaming.cpp \
@@ -717,6 +727,7 @@ DISTFILES =	.gitignore \
 	docs/images+css/Doxywizard5.JPG \
 	docs/images+css/OpenZWave.css \
 	docs/images+css/image003.gif \
+	docs/images+css/zwalliance_250x100.jpg \
 	dotnet/build/vs2008/OpenZWaveDotNet.sln \
 	dotnet/build/vs2008/OpenZWaveDotNet.vcproj \
 	dotnet/build/vs2010/OpenZWaveDotNet.sln \
