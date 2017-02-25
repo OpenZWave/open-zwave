@@ -861,11 +861,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\command_classes\MultiInstanceAssociation.cpp"
+				RelativePath="..\..\..\src\command_classes\MultiChannelAssociation.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\command_classes\MultiInstanceAssociation.h"
+				RelativePath="..\..\..\src\command_classes\MultiChannelAssociation.h"
 				>
 			</File>
 			<File
