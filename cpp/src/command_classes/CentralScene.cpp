@@ -128,6 +128,7 @@ void CentralScene::ReadXML
 	if( TIXML_SUCCESS == _ccElement->QueryIntAttribute( "scenecount", &intVal ) )
 	{
 		m_scenecount = intVal;
+		CreateSceneValues();
 	}
 }
 
@@ -163,7 +164,17 @@ bool CentralScene::HandleMsg
 	{
 		// Central Scene Set received so send notification
 		int32 when;
-		if( _data[2] == 0 )
+		//Table 32
+		//0x00 Key Pressed
+		//0x01 Key Released
+		//0x02 Key Held Down
+		//Table 34
+		//0x03 Key Pressed 2 times
+		//0x04 Key Pressed 3 times
+		//0x05 Key Pressed 4 times
+		//0x06 Key Pressed 5 times
+
+		if (_data[2] == 0)
 			when = 0;
 		else if( _data[2] <= 0x7F )
 			when = _data[2];
@@ -195,21 +206,8 @@ bool CentralScene::HandleMsg
 		{
 			value->OnValueRefreshed(m_scenecount);
 			value->Release();
-		} else {
-			Log::Write( LogLevel_Warning, GetNodeId(), "Can't find ValueID for SceneCount");
 		}
-
-		if( Node* node = GetNodeUnsafe() )
-		{
-				char lbl[64];
-				for (int i = 1; i <= m_scenecount; i++) {
-					snprintf(lbl, 64, "Scene %d", i);
-					node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), _instance, i, lbl, "", true, false, 0, 0 );
-				}
-
-		} else {
-			Log::Write(LogLevel_Info, GetNodeId(), "CentralScene: Can't find Node!");
-		}
+		CreateSceneValues();
 	}
 
 	return false;
@@ -230,4 +228,22 @@ void CentralScene::CreateVars
 	}
 }
 
+//-----------------------------------------------------------------------------
+// <CentralScene::CreateSceneValues>
+// Create m_scenecount Scene Values
+//-----------------------------------------------------------------------------
+void CentralScene::CreateSceneValues()
+{
+	if (Node* node = GetNodeUnsafe())
+	{
+		char lbl[64];
+		for (int i = 1; i <= m_scenecount; i++) {
+			snprintf(lbl, 64, "Scene %d", i);
+			node->CreateValueInt(ValueID::ValueGenre_User, GetCommandClassId(), 1, i, lbl, "", true, false, 0, 0);
+		}
 
+	}
+	else {
+		Log::Write(LogLevel_Info, GetNodeId(), "CentralScene: Can't find Node!");
+	}
+}
