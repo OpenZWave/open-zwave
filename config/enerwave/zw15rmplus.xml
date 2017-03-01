@@ -3,7 +3,7 @@
 <Product xmlns='http://code.google.com/p/open-zwave/'>
 	<!-- Configuration Parameters -->
 	<CommandClass id="112">
-		<Value type="list" index="1" genre="config" label="LED mode" size="1" value="0">
+		<Value type="list" index="1" genre="config" label="LED mode" min="0" max="1" size="1" value="0">
 			<Help>Synchronization of load power and LED indicator</Help>
 			<Item label="Power on, LED off" value="0" />
 			<Item label="Power on, LED on" value="1" />
