@@ -5,7 +5,7 @@ Vision ZP3111-5 4 in 1 Multi-Sensor
 http://products.z-wavealliance.org/ProductManual/File?folder=&filename=Manuals/1572/ZP3111-5_R0_20151113%20-%20VISION.pdf
 
 Zooz ZSE40 4-in-1 Multi-Sensor
-http://www.getzooz.com/downloads/zooz-zse40-4-in-1-sensor-manual.pdf
+http://getzooz.com/downloads/zooz-z-wave-plus-4-in-1-sensor-zse40-manual-v2.pdf
 -->
 	<CommandClass id="112">
 		<Value type="list" genre="config"  index="1" label="Temperature Unit" size="1" min="0" max="1" value="0">
@@ -41,11 +41,12 @@ http://www.getzooz.com/downloads/zooz-zse40-4-in-1-sensor-manual.pdf
                 1 to 7 ( 1 = Most Sensitive )
             </Help>
         </Value>
-        <Value type="byte" genre="config" instance="1" index="7" label="LED Mode" units="" min="1" max="3" value="3">
+        <Value type="byte" genre="config" instance="1" index="7" label="LED Mode" units="" min="1" max="4" value="3">
             <Help>
 		1 - Turn Off LED
 		2 - Breathing Light Mode (High Battery Consumption)
 		3 - Quick Flash on Sensor Reporting or Motion Trigger
+		4 - No Indication for Temperature, Motion Indicated with Flashing Light
             </Help>
         </Value>
 
