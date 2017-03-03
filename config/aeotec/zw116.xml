@@ -157,7 +157,7 @@ Product Type ID: EU=0x00, US=0x01, AU=0x02 CN=0x1D
 			<Item label="momentary button" value="3"/>
 		</Value>
 		<Value type="list" index="121" genre="config" label="Set the external S2 mode" units="" min="0" max="3" size="1" value="0">
-			<Help>When the switch mode of S1 is determined or identified or configured, this mode value will not be reset after exclusion</Help>
+			<Help>When the switch mode of S2 is determined or identified or configured, this mode value will not be reset after exclusion</Help>
 			<Item label="Enter automatic identification" value="0"/>
 			<Item label="2-state switch" value="1"/>
 			<Item label="3-way switch" value="2"/>
