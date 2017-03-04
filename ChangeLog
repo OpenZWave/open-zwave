@@ -522,3 +522,4 @@ Version 1.1
  - Remove the hidapi.h include from our headers so we don't have to
    distribute the hidapi header files (Justin)
  - Fixed Issue 375 - Add Ecolink Garage Door Sensor - (Justin)
+ - Add additional CT30 Thermostat config entry to manufacturer specific list
