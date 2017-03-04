@@ -228,9 +228,9 @@ bool UserCode::HandleMsg
 
 		if( Node* node = GetNodeUnsafe() )
 		{
-			uint8 data[m_userCodeLength];
+			uint8 data[UserCodeLength];
 
-			memset( data, 0, m_userCodeLength );
+			memset( data, 0, UserCodeLength );
 
 			//
 			//	create all initial user codes in XML
