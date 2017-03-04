@@ -31,7 +31,6 @@
 #include "Node.h"
 #include "Options.h"
 #include "platform/Log.h"
-#include <unistd.h>
 #include "value_classes/ValueByte.h"
 #include "value_classes/ValueRaw.h"
 
