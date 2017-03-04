@@ -23,6 +23,7 @@ DISTFILES =	.gitignore \
 	config/BeNext/PluginDimmer.xml \
 	config/BeNext/SceneController.xml \
 	config/BeNext/TagReader.xml \
+	config/BeNext/TagReader500.xml \
 	config/act/lfm20.xml \
 	config/act/zdm230.xml \
 	config/act/zdw103.xml \

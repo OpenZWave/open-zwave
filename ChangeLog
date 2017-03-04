@@ -166,6 +166,7 @@ Version 1.5
  - Pull Request #1105 - Replace some of the Explicit Locking with Scoped Locks (from tobiasgraf) - Also additional checking on the Unix Mutex Class to detect unbalanced Locking (Justin)
  - If the TriggerRefreshValue XML is invalid, we could get into a infinite loop when trying to read the params (Justin)
  - Add Fibaro FGKF601 Keyfob (Nechry)
+ - Add BeNext TagReader500 from hvbommel (Nechry)
  
 Version 1.4
  - Released 10th Jan, 2016
