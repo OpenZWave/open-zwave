@@ -31,7 +31,6 @@
 #include "Node.h"
 #include "Options.h"
 #include "platform/Log.h"
-
 #include "value_classes/ValueByte.h"
 #include "value_classes/ValueRaw.h"
 
@@ -43,13 +42,13 @@ enum UserCodeCmd
 	UserCodeCmd_Get			= 0x02,
 	UserCodeCmd_Report		= 0x03,
 	UserNumberCmd_Get		= 0x04,
-	UserNumberCmd_Report		= 0x05
+	UserNumberCmd_Report	= 0x05
 };
 
 enum
 {
 	UserCodeIndex_Refresh	= 254,
-	UserCodeIndex_Count		= 255
+	UserCodeIndex_Count	= 255
 };
 
 const uint8 UserCodeLength = 10;
@@ -67,6 +66,7 @@ UserCode::UserCode
 	m_queryAll( false ),
 	m_currentCode( 0 ),
 	m_userCodeCount( 0 ),
+	m_userCodeLength( UserCodeLength ),
 	m_refreshUserCodes(false)
 {
 	SetStaticRequest( StaticRequest_Values );
@@ -202,7 +202,9 @@ bool UserCode::HandleMsg
 {
 	if( UserNumberCmd_Report == (UserCodeCmd)_data[0] )
 	{
-		m_userCodeCount = _data[1];
+		m_userCodeCount 	= _data[1];
+		m_userCodeLength 	= UserCodeLength;
+
 		if( m_userCodeCount > 254 )
 		{
 			// Make space for code count.
@@ -229,18 +231,23 @@ bool UserCode::HandleMsg
 			uint8 data[UserCodeLength];
 
 			memset( data, 0, UserCodeLength );
+
+			//
+			//	create all initial user codes in XML
+			//
 			for( uint8 i = 0; i <= m_userCodeCount; i++ )
 			{
 				char str[16];
+
 				if (i == 0)
 				{
 					snprintf( str, sizeof(str), "Enrollment Code");
-					node->CreateValueRaw( ValueID::ValueGenre_User, GetCommandClassId(), _instance, i, str, "", true, false, data, UserCodeLength, 0 );
+					node->CreateValueRaw( ValueID::ValueGenre_User, GetCommandClassId(), _instance, i, str, "", true, false, data, m_userCodeLength, 0 );
 				}
 				else
 				{
 					snprintf( str, sizeof(str), "Code %d:", i);
-					node->CreateValueRaw( ValueID::ValueGenre_User, GetCommandClassId(), _instance, i, str, "", false, false, data, UserCodeLength, 0 );
+					node->CreateValueRaw( ValueID::ValueGenre_User, GetCommandClassId(), _instance, i, str, "", false, false, data, m_userCodeLength, 0 );
 				}
 			}
 		}
@@ -248,45 +255,76 @@ bool UserCode::HandleMsg
 	}
 	else if( UserCodeCmd_Report == (UserCodeCmd)_data[0] )
 	{
-		int i = _data[1];
-		if( ValueRaw* value = static_cast<ValueRaw*>( GetValue( _instance, i ) ) )
+		int index = _data[1];
+
+		if (index == 0)
 		{
-			uint8 data[UserCodeLength];
-			int8 size = _length - 4;
+			//
+			//	UserID == 0, we are in the first phase of enrollment, keep the actual user code length
+			//
+			m_userCodeLength = _length - 4;
+
+			if (m_userCodeLength > UserCodeLength)
+			{
+				m_userCodeLength = UserCodeLength;
+			}
+		}
+
+		if( ValueRaw* value = static_cast<ValueRaw*>( GetValue( _instance, index ) ) )
+		{
+			uint8 data[m_userCodeLength];
+			int8 size = m_userCodeLength;
+
 			if( size > UserCodeLength )
 			{
 				Log::Write( LogLevel_Warning, GetNodeId(), "User Code length %d is larger then maximum %d", size, UserCodeLength );
-				size = UserCodeLength;
+				size = m_userCodeLength;
 			}
+
 			Log::Write( LogLevel_Info, GetNodeId(), "User Code Packet is %d", size );
-			m_userCodesStatus[i] = _data[2];
-			if (size > 0) {
+
+			m_userCodesStatus[index] = _data[2];
+
+			if (size > 0)
+			{
+				//
+				//	create new entry
+				//
 				memcpy( data, &_data[3], size );
-			} else {
+			}
+			else
+			{
+				//
+				//	delete entry
+				//
 				size = 1;
 				data[0] = 0;
 			}
 			value->OnValueRefreshed( data, size );
 			value->Release();
 		}
-		Log::Write( LogLevel_Info, GetNodeId(), "Received User Code Report from node %d for User Code %d (%s)", GetNodeId(), i, CodeStatus( _data[2] ).c_str() );
-		if( m_queryAll && i == m_currentCode )
+
+		Log::Write( LogLevel_Info, GetNodeId(), "Received User Code Report from node %d for User Code %d (%s)", GetNodeId(), index, CodeStatus( _data[2] ).c_str() );
+
+		if( m_queryAll && index == m_currentCode )
 		{
 
 			if (m_refreshUserCodes || (_data[2] != UserCode_Available)) {
-				if( ++i <= m_userCodeCount )
+				if( ++index <= m_userCodeCount )
 				{
-					m_currentCode = i;
+					m_currentCode = index;
 					RequestValue( 0, m_currentCode, _instance, Driver::MsgQueue_Query );
 				}
 				else
 				{
 					m_queryAll = false;
+
 					/* we might have reset this as part of the RefreshValues Button Value */
 					Options::Get()->GetOptionAsBool("RefreshAllUserCodes", &m_refreshUserCodes );
 				}
-			} else {
-				Log::Write( LogLevel_Info, GetNodeId(), "Not Requesting additional UserCode Slots as RefreshAllUserCodes is false, and slot %d is available", i);
+			} else
+			{
+				Log::Write( LogLevel_Info, GetNodeId(), "Not Requesting additional UserCode Slots as RefreshAllUserCodes is false, and slot %d is available", index);
 				m_queryAll = false;
 			}
 		}
@@ -308,6 +346,7 @@ bool UserCode::SetValue
 	if( (ValueID::ValueType_Raw == _value.GetID().GetType()) && (_value.GetID().GetIndex() < UserCodeIndex_Refresh) )
 	{
 		ValueRaw const* value = static_cast<ValueRaw const*>(&_value);
+
 		uint8* s = value->GetValue();
 		uint8 len = value->GetLength();
 
@@ -319,19 +358,23 @@ bool UserCode::SetValue
 		Msg* msg = new Msg( "UserCodeCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 		msg->SetInstance( this, _value.GetID().GetInstance() );
 		msg->Append( GetNodeId() );
-		msg->Append( 4 + len );
+		msg->Append( 4 + m_userCodeLength );
 		msg->Append( GetCommandClassId() );
 		msg->Append( UserCodeCmd_Set );
 		msg->Append( value->GetID().GetIndex() );
 		msg->Append( UserCode_Occupied );
-		for( uint8 i = 0; i < len; i++ )
+
+		for( uint8 i = 0; i < m_userCodeLength; i++ )
 		{
 			msg->Append( s[i] );
 		}
+
 		msg->Append( GetDriver()->GetTransmitOptions() );
 		GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
+
 		return true;
 	}
+
 	if ( (ValueID::ValueType_Button == _value.GetID().GetType()) && (_value.GetID().GetIndex() == UserCodeIndex_Refresh) )
 	{
 		m_refreshUserCodes = true;
