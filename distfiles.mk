@@ -359,6 +359,7 @@ DISTFILES =	.gitignore \
 	config/zooz/zse09.xml \
 	config/zooz/zse40.xml \
 	config/zwave.me/ZME_05431.xml \
+	config/zwave.me/ZME_05461.xml \
 	config/zwave.me/ZME_06433.xml \
 	config/zwave.me/ZME_06436.xml \
 	config/zwave.me/ZME_064381.xml \
