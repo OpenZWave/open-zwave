@@ -6,7 +6,7 @@
 	<CommandClass id="133">
 		<Associations num_groups="2">
 			<Group index="1" max_associations="1" label="Lifeline" />
-			<Group index="2" max_associations="5" label="StatusReport: Send basic report" />
+			<Group index="2" max_associations="5" label="Send basic report" />
 		</Associations>
 	</CommandClass>
 </Product>
