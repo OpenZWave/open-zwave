@@ -78,6 +78,7 @@ DISTFILES =	.gitignore \
 	config/aeotec/zw121.xml \
 	config/aeotec/zw130.xml \
 	config/assa_abloy/KeyfreeConnected.xml \
+	config/assa_abloy/nexTouch.xml \
 	config/assa_abloy/PushButtonDeadbolt.xml \
 	config/assa_abloy/PushButtonLever.xml \
 	config/assa_abloy/TouchDeadbolt.xml \
