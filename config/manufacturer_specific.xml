@@ -145,6 +145,10 @@
         <Product type="0103" id="0079" name="ZW121 LED Strip" config="aeotec/zw121.xml"/>
         <Product type="0203" id="0079" name="ZW121 LED Strip" config="aeotec/zw121.xml"/>
         <Product type="0A03" id="0079" name="ZW121 LED Strip" config="aeotec/zw121.xml"/>
+		<Product type="0002" id="0081" name="ZW129 WallMote Duo" config="aeotec/zw129.xml"/>
+		<Product type="0102" id="0081" name="ZW129 WallMote Duo" config="aeotec/zw129.xml"/>
+		<Product type="0202" id="0081" name="ZW129 WallMote Duo" config="aeotec/zw129.xml"/>
+		<Product type="1D02" id="0081" name="ZW129 WallMote Duo" config="aeotec/zw129.xml"/>
 		<Product type="0002" id="0082" name="ZW130 WallMote Quad" config="aeotec/zw130.xml"/>
 		<Product type="0102" id="0082" name="ZW130 WallMote Quad" config="aeotec/zw130.xml"/>
 		<Product type="0202" id="0082" name="ZW130 WallMote Quad" config="aeotec/zw130.xml"/>

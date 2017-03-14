@@ -76,6 +76,7 @@ DISTFILES =	.gitignore \
 	config/aeotec/zw117.xml \
 	config/aeotec/zw120.xml \
 	config/aeotec/zw121.xml \
+	config/aeotec/zw129.xml \
 	config/aeotec/zw130.xml \
 	config/assa_abloy/KeyfreeConnected.xml \
 	config/assa_abloy/nexTouch.xml \
