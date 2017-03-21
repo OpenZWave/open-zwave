@@ -138,9 +138,14 @@ bool Basic::RequestState
 	Driver::MsgQueue const _queue
 )
 {
+	if (IsAfterMark()) 
+	{
+		Log::Write (LogLevel_Info, GetNodeId(), "Controlled Class");
+		return false;
+	}
 	if( _requestFlags & RequestFlag_Dynamic )
 	{
-		if ( (m_ignoreMapping || (!m_ignoreMapping && m_mapping == 0)))
+		if ((m_ignoreMapping || (!m_ignoreMapping && m_mapping == 0)))
 			return RequestValue( _requestFlags, 0, _instance, _queue );
 	}
 	return false;

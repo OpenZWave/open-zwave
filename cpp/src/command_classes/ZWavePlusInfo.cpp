@@ -79,7 +79,7 @@ bool ZWavePlusInfo::RequestState
 	Driver::MsgQueue const _queue
 )
 {
-	if( (_requestFlags & RequestFlag_Static) && HasStaticRequest( StaticRequest_Values ) )
+	if (_requestFlags & RequestFlag_Static)
 	{
 		return RequestValue( _requestFlags, 0, _instance, _queue );
 	}
@@ -99,11 +99,6 @@ bool ZWavePlusInfo::RequestValue
 	Driver::MsgQueue const _queue
 )
 {
-	if( _instance != 1 )
-	{
-		// This command class doesn't work with multiple instances
-		return false;
-	}
 	if ( IsGetSupported() )
 	{
 		Msg* msg = new Msg( "ZWavePlusInfoCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
@@ -141,12 +136,15 @@ bool ZWavePlusInfo::HandleMsg
 		uint16 installerIcon = (_data[4]<< 8) | _data[5];
 		uint16 deviceType		 = (_data[6]<< 8) | _data[7];
 
-		if( Node* node = GetNodeUnsafe() )
-		{
-			node->SetPlusDeviceClasses(	role, nodeType, deviceType );
+		/* Only set the role, NodeType and DeviceType on Instance 1 Reports. The other instances
+		 * Just have unique Icons for each endpoint */
+		if (_instance == 1) { 
+			if( Node* node = GetNodeUnsafe() )
+			{
+				node->SetPlusDeviceClasses(	role, nodeType, deviceType );
+			}
+//			ClearStaticRequest( StaticRequest_Values );
 		}
-		ClearStaticRequest( StaticRequest_Values );
-
 		ValueByte* value;
 		if( (value = static_cast<ValueByte*>( GetValue( _instance, ZWavePlusInfoIndex_Version ) )) )
 		{
