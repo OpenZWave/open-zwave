@@ -7094,8 +7094,8 @@ void Driver::processConfigRevision
 				}
 			} else if (result->NodeID == 0) {
 				/* manufacturer_specific */
-				m_mfs->setLatestRevision(atol(result->result.c_str()));
-				if (m_mfs->getRevision() < atol(result->result.c_str())) {
+				m_mfs->setLatestRevision((unsigned long)atol(result->result.c_str()));
+				if (m_mfs->getRevision() < (unsigned long)atol(result->result.c_str())) {
 					Log::Write(LogLevel_Warning, "Config Revision of ManufacturerSpecific Database is out of date");
 					Notification* notification = new Notification( Notification::Type_UserAlerts );
 					notification->SetUserAlertNofification(Notification::Alert_MFSOutOfDate);
