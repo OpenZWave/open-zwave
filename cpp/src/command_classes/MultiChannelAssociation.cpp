@@ -1,8 +1,8 @@
 //-----------------------------------------------------------------------------
 //
-//	MultiInstanceAssociation.cpp
+//	MultiChannelAssociation.cpp
 //
-//	Implementation of the Z-Wave COMMAND_CLASS_MULTI_INSTANCE_ASSOCIATION
+//	Implementation of the Z-Wave COMMAND_CLASS_MULTI_CHANNEL_ASSOCIATION
 //
 //	Copyright (c) 2010 Mal Lansell <openzwave@lansell.org>
 //
@@ -27,7 +27,7 @@
 
 #include "tinyxml.h"
 #include "command_classes/CommandClasses.h"
-#include "command_classes/MultiInstanceAssociation.h"
+#include "command_classes/MultiChannelAssociation.h"
 #include "Defs.h"
 #include "Msg.h"
 #include "Driver.h"
@@ -37,20 +37,20 @@
 
 using namespace OpenZWave;
 
-enum MultiInstanceAssociationCmd
+enum MultiChannelAssociationCmd
 {
-	MultiInstanceAssociationCmd_Set				= 0x01,
-	MultiInstanceAssociationCmd_Get				= 0x02,
-	MultiInstanceAssociationCmd_Report			= 0x03,
-	MultiInstanceAssociationCmd_Remove			= 0x04,
-	MultiInstanceAssociationCmd_GroupingsGet	= 0x05,
-	MultiInstanceAssociationCmd_GroupingsReport	= 0x06
+	MultiChannelAssociationCmd_Set				= 0x01,
+	MultiChannelAssociationCmd_Get				= 0x02,
+	MultiChannelAssociationCmd_Report			= 0x03,
+	MultiChannelAssociationCmd_Remove			= 0x04,
+	MultiChannelAssociationCmd_GroupingsGet	= 0x05,
+	MultiChannelAssociationCmd_GroupingsReport	= 0x06
 };
 
-// <MultiInstanceAssociation::MultiInstanceAssociation>
+// <MultiChannelAssociation::MultiChannelAssociation>
 // Constructor
 //-----------------------------------------------------------------------------
-MultiInstanceAssociation::MultiInstanceAssociation
+MultiChannelAssociation::MultiChannelAssociation
 (
 	uint32 const _homeId,
 	uint8 const _nodeId
@@ -64,10 +64,10 @@ MultiInstanceAssociation::MultiInstanceAssociation
 }
 
 //-----------------------------------------------------------------------------
-// <MultiInstanceAssociation::ReadXML>
+// <MultiChannelAssociation::ReadXML>
 // Read the saved association data
 //-----------------------------------------------------------------------------
-void MultiInstanceAssociation::ReadXML
+void MultiChannelAssociation::ReadXML
 (
 	TiXmlElement const* _ccElement
 )
@@ -112,10 +112,10 @@ void MultiInstanceAssociation::ReadXML
 }
 
 //-----------------------------------------------------------------------------
-// <MultiInstanceAssociation::WriteXML>
+// <MultiChannelAssociation::WriteXML>
 // Save the association data
 //-----------------------------------------------------------------------------
-void MultiInstanceAssociation::WriteXML
+void MultiChannelAssociation::WriteXML
 (
 	TiXmlElement* _ccElement
 )
@@ -139,10 +139,10 @@ void MultiInstanceAssociation::WriteXML
 }
 
 //-----------------------------------------------------------------------------
-// <MultiInstanceAssociation::RequestState>
+// <MultiChannelAssociation::RequestState>
 // Nothing to do for Association
 //-----------------------------------------------------------------------------
-bool MultiInstanceAssociation::RequestState
+bool MultiChannelAssociation::RequestState
 (
 	uint32 const _requestFlags,
 	uint8 const _instance,
@@ -159,10 +159,10 @@ bool MultiInstanceAssociation::RequestState
 }
 
 //-----------------------------------------------------------------------------
-// <MultiInstanceAssociation::RequestValue>
+// <MultiChannelAssociation::RequestValue>
 // Nothing to do for Association
 //-----------------------------------------------------------------------------
-bool MultiInstanceAssociation::RequestValue
+bool MultiChannelAssociation::RequestValue
 (
 	uint32 const _requestFlags,
 	uint8 const _dummy1,	// = 0 (not used)
@@ -176,11 +176,11 @@ bool MultiInstanceAssociation::RequestValue
 		return false;
 	}
 	// Request the supported group info
-	Msg* msg = new Msg( "MultiInstanceAssociationCmd_GroupingsGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+	Msg* msg = new Msg( "MultiChannelAssociationCmd_GroupingsGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 	msg->Append( GetNodeId() );
 	msg->Append( 2 );
 	msg->Append( GetCommandClassId() );
-	msg->Append( MultiInstanceAssociationCmd_GroupingsGet );
+	msg->Append( MultiChannelAssociationCmd_GroupingsGet );
 	msg->Append( GetDriver()->GetTransmitOptions() );
 	GetDriver()->SendMsg( msg, _queue );
 	return true;
@@ -190,7 +190,7 @@ bool MultiInstanceAssociation::RequestValue
 // <Association::RequestAllGroups>
 // Request the contents of each group in turn
 //-----------------------------------------------------------------------------
-void MultiInstanceAssociation::RequestAllGroups
+void MultiChannelAssociation::RequestAllGroups
 (
 	uint32 const _requestFlags
 )
@@ -213,10 +213,10 @@ void MultiInstanceAssociation::RequestAllGroups
 }
 
 //-----------------------------------------------------------------------------
-// <MultiInstanceAssociation::HandleMsg>
+// <MultiChannelAssociation::HandleMsg>
 // Handle a message from the Z-Wave network
 //-----------------------------------------------------------------------------
-bool MultiInstanceAssociation::HandleMsg
+bool MultiChannelAssociation::HandleMsg
 (
 	uint8 const* _data,
 	uint32 const _length,
@@ -228,7 +228,7 @@ bool MultiInstanceAssociation::HandleMsg
 
 	if( Node* node = GetNodeUnsafe() )
 	{
-		if( MultiInstanceAssociationCmd_GroupingsReport == (MultiInstanceAssociationCmd)_data[0] )
+		if( MultiChannelAssociationCmd_GroupingsReport == (MultiChannelAssociationCmd)_data[0] )
 		{
 			// Retrieve the number of groups this device supports.
 			// The groups will be queried with the session data.
@@ -237,7 +237,7 @@ bool MultiInstanceAssociation::HandleMsg
 			ClearStaticRequest( StaticRequest_Values );
 			handled = true;
 		}
-		else if( MultiInstanceAssociationCmd_Report == (MultiInstanceAssociationCmd)_data[0] )
+		else if( MultiChannelAssociationCmd_Report == (MultiChannelAssociationCmd)_data[0] )
 		{
 			// Get the group info
 			uint8 groupIdx = _data[1];
@@ -351,10 +351,10 @@ bool MultiInstanceAssociation::HandleMsg
 }
 
 //-----------------------------------------------------------------------------
-// <MultiInstanceAssociation::QueryGroup>
+// <MultiChannelAssociation::QueryGroup>
 // Request details of an association group
 //-----------------------------------------------------------------------------
-void MultiInstanceAssociation::QueryGroup
+void MultiChannelAssociation::QueryGroup
 (
 	uint8 _groupIdx,
 	uint32 const _requestFlags
@@ -362,44 +362,52 @@ void MultiInstanceAssociation::QueryGroup
 {
 	if ( IsGetSupported() )
 	{
-		Log::Write( LogLevel_Info, GetNodeId(), "Get MultiInstanceAssociation for group %d of node %d", _groupIdx, GetNodeId() );
-		Msg* msg = new Msg( "MultiInstanceAssociationCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		Log::Write( LogLevel_Info, GetNodeId(), "Get MultiChannelAssociation for group %d of node %d", _groupIdx, GetNodeId() );
+		Msg* msg = new Msg( "MultiChannelAssociationCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 		msg->Append( GetNodeId() );
 		msg->Append( 3 );
 		msg->Append( GetCommandClassId() );
-		msg->Append( MultiInstanceAssociationCmd_Get );
+		msg->Append( MultiChannelAssociationCmd_Get );
 		msg->Append( _groupIdx );
 		msg->Append( GetDriver()->GetTransmitOptions() );
 		GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 		return;
 	} else {
-		Log::Write(  LogLevel_Info, GetNodeId(), "MultiInstanceAssociationCmd_Get Not Supported on this node");
+		Log::Write(  LogLevel_Info, GetNodeId(), "MultiChannelAssociationCmd_Get Not Supported on this node");
 	}
 	return;
 }
 
 //-----------------------------------------------------------------------------
-// <MultiInstanceAssociation::Set>
+// <MultiChannelAssociation::Set>
 // Add an association between devices
 //-----------------------------------------------------------------------------
-void MultiInstanceAssociation::Set
+void MultiChannelAssociation::Set
 (
 	uint8 _groupIdx,
 	uint8 _targetNodeId,
  	uint8 _instance
 )
 {
-	Log::Write( LogLevel_Info, GetNodeId(), "MultiInstanceAssociation::Set - Adding instance %d on node %d to group %d of node %d", 
+
+	/* for Qubino devices, we should always set a Instance if its the ControllerNode, so MultChannelEncap works.  - See Bug #857 */
+	if ( ( m_alwaysSetInstance  == true )
+			&& ( _instance == 0 )
+			&& ( GetDriver()->GetControllerNodeId() == _targetNodeId ) )
+	{
+		_instance = 0x01;
+	}
+
+	Log::Write( LogLevel_Info, GetNodeId(), "MultiChannelAssociation::Set - Adding instance %d on node %d to group %d of node %d", 
 	           _instance, _targetNodeId, _groupIdx, GetNodeId() );
 
-	if ( (_instance == 0x00 )
-			&& (m_alwaysSetInstance == false) )
+	if ( _instance == 0x00 )
 	{
-		Msg* msg = new Msg( "MultiInstanceAssociationCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+		Msg* msg = new Msg( "MultiChannelAssociationCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 		msg->Append( GetNodeId() );
 		msg->Append( 4 );
 		msg->Append( GetCommandClassId() );
-		msg->Append( MultiInstanceAssociationCmd_Set );
+		msg->Append( MultiChannelAssociationCmd_Set );
 		msg->Append( _groupIdx );
 		msg->Append( _targetNodeId );
 		msg->Append( GetDriver()->GetTransmitOptions() );
@@ -407,18 +415,11 @@ void MultiInstanceAssociation::Set
 	}
 	else 
 	{
-		/* for Qubino devices, we should always set a Instance if its the ControllerNode, so MultChannelEncap works.  - See Bug #857 */
-		if ( ( m_alwaysSetInstance  == true )
-				&& ( _instance == 0 )
-				&& ( GetDriver()->GetControllerNodeId() == _targetNodeId ) )
-		{
-			_instance = 0x01;
-		}
-		Msg* msg = new Msg( "MultiInstanceAssociationCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+		Msg* msg = new Msg( "MultiChannelAssociationCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 		msg->Append( GetNodeId() );
 		msg->Append( 6 );
 		msg->Append( GetCommandClassId() );
-		msg->Append( MultiInstanceAssociationCmd_Set );
+		msg->Append( MultiChannelAssociationCmd_Set );
 		msg->Append( _groupIdx );
 		msg->Append( 0x00 ); // marker
 		msg->Append( _targetNodeId );
@@ -429,26 +430,26 @@ void MultiInstanceAssociation::Set
 }
 
 //-----------------------------------------------------------------------------
-// <MultiInstanceAssociation::Remove>
+// <MultiChannelAssociation::Remove>
 // Remove an association between devices
 //-----------------------------------------------------------------------------
-void MultiInstanceAssociation::Remove
+void MultiChannelAssociation::Remove
 (
 	uint8 _groupIdx,
 	uint8 _targetNodeId,
  	uint8 _instance
 )
 {
-	Log::Write( LogLevel_Info, GetNodeId(), "MultiInstanceAssociation::Remove - Removing instance %d on node %d from group %d of node %d",
+	Log::Write( LogLevel_Info, GetNodeId(), "MultiChannelAssociation::Remove - Removing instance %d on node %d from group %d of node %d",
 	           _instance, _targetNodeId, _groupIdx, GetNodeId());
 
 	if ( _instance == 0x00 )
 	{
-		Msg* msg = new Msg( "MultiInstanceAssociationCmd_Remove", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+		Msg* msg = new Msg( "MultiChannelAssociationCmd_Remove", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 		msg->Append( GetNodeId() );
 		msg->Append( 4 );
 		msg->Append( GetCommandClassId() );
-		msg->Append( MultiInstanceAssociationCmd_Remove );
+		msg->Append( MultiChannelAssociationCmd_Remove );
 		msg->Append( _groupIdx );
 		msg->Append( _targetNodeId );
 		msg->Append( GetDriver()->GetTransmitOptions() );
@@ -456,11 +457,11 @@ void MultiInstanceAssociation::Remove
 	}
 	else
 	{
-		Msg* msg = new Msg( "MultiInstanceAssociationCmd_Remove", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+		Msg* msg = new Msg( "MultiChannelAssociationCmd_Remove", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 		msg->Append( GetNodeId() );
 		msg->Append( 6 );
 		msg->Append( GetCommandClassId() );
-		msg->Append( MultiInstanceAssociationCmd_Remove );
+		msg->Append( MultiChannelAssociationCmd_Remove );
 		msg->Append( _groupIdx );
 		msg->Append( 0x00 ); // marker
 		msg->Append( _targetNodeId );

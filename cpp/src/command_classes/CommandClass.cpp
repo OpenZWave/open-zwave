@@ -333,8 +333,11 @@ void CommandClass::ReadValueRefreshXML
 	rcc->cc = GetCommandClassId();
 	genre = _ccElement->Attribute( "Genre" );
 	rcc->genre = Value::GetGenreEnumFromName(genre);
-	_ccElement->QueryIntAttribute( "Instance", (int*)&rcc->instance);
-	_ccElement->QueryIntAttribute( "Index", (int*)&rcc->index);
+	int temp;
+	_ccElement->QueryIntAttribute( "Instance", &temp);
+	rcc->instance = (uint8)temp;
+	_ccElement->QueryIntAttribute( "Index", &temp);
+	rcc->index = (uint8)temp;
 	Log::Write(LogLevel_Info, GetNodeId(), "Value Refresh triggered by CommandClass: %s, Genre: %d, Instance: %d, Index: %d for:", GetCommandClassName().c_str(), rcc->genre, rcc->instance, rcc->index);
 	TiXmlElement const* child = _ccElement->FirstChildElement();
 	while( child )
@@ -345,22 +348,30 @@ void CommandClass::ReadValueRefreshXML
 			if ( !strcmp(str, "RefreshClassValue"))
 			{
 				RefreshValue *arcc = new RefreshValue();
-				if (child->QueryIntAttribute( "CommandClass", (int*)&arcc->cc) != TIXML_SUCCESS) {
+				if (child->QueryIntAttribute( "CommandClass", &temp) != TIXML_SUCCESS) {
 					Log::Write(LogLevel_Warning, GetNodeId(), "    Invalid XML - CommandClass Attribute is wrong type or missing");
+					child = child->NextSiblingElement();
 					continue;
 				}
-				if (child->QueryIntAttribute( "RequestFlags", (int*)&arcc->genre) != TIXML_SUCCESS) {
+				arcc->cc = (uint8)temp;
+				if (child->QueryIntAttribute( "RequestFlags", &temp) != TIXML_SUCCESS) {
 					Log::Write(LogLevel_Warning, GetNodeId(), "    Invalid XML - RequestFlags Attribute is wrong type or missing");
+					child = child->NextSiblingElement();
 					continue;
 				}
-				if (child->QueryIntAttribute( "Instance", (int*)&arcc->instance) != TIXML_SUCCESS) {
+				arcc->genre = (uint8)temp;
+				if (child->QueryIntAttribute( "Instance", &temp) != TIXML_SUCCESS) {
 					Log::Write(LogLevel_Warning, GetNodeId(), "    Invalid XML - Instance Attribute is wrong type or missing");
+					child = child->NextSiblingElement();
 					continue;
 				}
-				if (child->QueryIntAttribute( "Index", (int*)&arcc->index) != TIXML_SUCCESS) {
+				arcc->instance = (uint8)temp;
+				if (child->QueryIntAttribute( "Index", &temp) != TIXML_SUCCESS) {
 					Log::Write(LogLevel_Warning, GetNodeId(), "    Invalid XML - Index Attribute is wrong type or missing");
+					child = child->NextSiblingElement();
 					continue;
 				}
+				arcc->index = (uint8)temp;
 				Log::Write(LogLevel_Info, GetNodeId(), "    CommandClass: %s, RequestFlags: %d, Instance: %d, Index: %d", CommandClasses::GetName(arcc->cc).c_str(), arcc->genre, arcc->instance, arcc->index);
 				rcc->RefreshClasses.push_back(arcc);
 				ok = true;

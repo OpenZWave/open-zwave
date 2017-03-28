@@ -1,3 +1,4 @@
+- ForceInstances now limited to association with the controller node.
 Version 1.5
  - Pull Request #743 - Updated Fibaro Devices from Navstev0 (Justin)
  - Pull Request #740 - Updated Fibaro FGMS-001 ID's from Technosf (Justin)
@@ -157,6 +158,24 @@ Version 1.5
  - Pull Request #1112 - Add device configuration file for Linear WT00Z-1 3-Way Wall Accessory Switch from singularitycoder (Nechry)
  - Pull Request #1111 - Typo's & indentation from bobvanoijen (Nechry)
  - Pull Request #1109 - Add support for GE 12491 Z-Wave Plus switch from drkp  (Nechry)
+ - Add Aeotec ZW111 Nano Dimmer (Nechry)
+ - Pull Request #1120 - Add Ecolink TILTZWAVE2.5-ECO Garage Door Sensor from adreznec (Nechry)
+ - Add Ecolink Z-Wave Plus FireFighter (Nechry)
+ - Add Ecolink Ecolink Motion Detector (Nechry)
+ - Add Ecolink Door Window Sensor (Nechry)
+ - Pull Request #1105 - Replace some of the Explicit Locking with Scoped Locks (from tobiasgraf) - Also additional checking on the Unix Mutex Class to detect unbalanced Locking (Justin)
+ - If the TriggerRefreshValue XML is invalid, we could get into a infinite loop when trying to read the params (Justin)
+ - Add Fibaro FGKF601 Keyfob (Nechry)
+ - Add BeNext TagReader500 from hvbommel (Nechry)
+ - Restore Z-Wave.Me ZME_05461 (Nechry)
+ - Add Domux Wall Plug DX2SK-Z (Nechry)
+ - Add Yale Key Free Touchscreen Deadbolt YRD446 (Nechry)
+ - Add Yale nexTouch Wireless Touchscreen (Nechry)
+ - Add Fakro ZWRS Roller Shutter FLiRS module
+ - Add Homeseer HS-WS100+ Wall Switch
+ - Add alias for FGPB101 Button
+ - Add Aeotec ZW129 WallMote Duo (Nechry)
+ - Add Aeotec ZW132, ZW139 and ZW140 Nano Switch (Nechry)
  
 Version 1.4
  - Released 10th Jan, 2016
@@ -513,3 +532,4 @@ Version 1.1
  - Remove the hidapi.h include from our headers so we don't have to
    distribute the hidapi header files (Justin)
  - Fixed Issue 375 - Add Ecolink Garage Door Sensor - (Justin)
+ - Add additional CT30 Thermostat config entry to manufacturer specific list
