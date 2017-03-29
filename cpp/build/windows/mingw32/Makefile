@@ -11,13 +11,13 @@ LD     := $(CROSS_COMPILE)g++
 AR     := $(CROSS_COMPILE)ar rc
 RANLIB := $(CROSS_COMPILE)ranlib
 
-DEBUG_CFLAGS    := -Wall -Wno-format -g -DDEBUG -DLOG_STDERR -DMINGW
-RELEASE_CFLAGS  := -Wall -Wno-unknown-pragmas -Wno-format -O3 -DMINGW
+DEBUG_CFLAGS    := -DDEBUG -DLOG_STDERR
+RELEASE_CFLAGS  := -O3
 
 DEBUG_LDFLAGS	:= -g
 
 # Change for DEBUG or RELEASE
-CFLAGS	:= -c $(DEBUG_CFLAGS)
+CFLAGS	:= -c -Wall -Wno-unknown-pragmas -Wno-format -DMINGW $(DEBUG_CFLAGS)
 LDFLAGS	:= $(DEBUG_LDFLAGS)
 
 LIBDIR	:= ../../../lib/windows-mingw32
