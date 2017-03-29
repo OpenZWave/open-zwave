@@ -72,5 +72,9 @@ $(LIBDIR)/openzwave.a:	$(patsubst %.cpp,%.o,$(tinyxml)) \
 			$(patsubst %.cpp,%.o,$(cclasses)) \
 			$(patsubst %.cpp,%.o,$(vclasses)) \
 			$(patsubst %.cpp,%.o,$(pform)) \
-			$(patsubst %.cpp,%.o,$(indep)) vers.o
+			$(patsubst %.cpp,%.o,$(indep)) vers.o \
+			| $(LIBDIR)/
 	$(AR) $@ $?
+
+$(LIBDIR)/:
+	mkdir -p $@
