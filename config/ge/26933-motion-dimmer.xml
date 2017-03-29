@@ -88,7 +88,7 @@
 		<Associations num_groups="1">
 			<Group index="1" max_associations="5" label="Lifeline" />
 			<Group index="2" max_associations="5" label="Basic Set" />
-			<Group index="3" max_associations="5" label="Ba" />
+			<Group index="3" max_associations="5" label="Basic Set" />
 		</Associations>
 	</CommandClass>
 </Product>
