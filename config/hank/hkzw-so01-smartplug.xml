@@ -35,7 +35,7 @@
         <Value type="list" genre="config" instance="1" index="27" label="Indicator Modes" size="1" min="0" max="1" value="0">
             <Help>After smart plug being included into a Z-Wave network, the LED in the device will indicator the state of load.
               0 - The LED will follow the status(on/off) of its load
-              1 - When the satte of Switch's load changed, THe LED will follow the status(on/off) of its load, but the red LED will turn off after 5 seconds if there is no any switch action.
+              1 - When the state of Switch's load changed, THe LED will follow the status(on/off) of its load, but the red LED will turn off after 5 seconds if there is no any switch action.
             </Help>
             <Item label="Enabled" value="0"/>
             <Item label="Disabled" value="1"/>
