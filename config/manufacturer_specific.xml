@@ -534,7 +534,7 @@
 	</Manufacturer>
 	<Manufacturer id="0208" name="Hank">
 		<Product type="0101" id="0005" name="HKZW-SO01 Smart Plug" config="hank/hkzw-so01-smartplug.xml"/>
-		<Product type="0101" id="0005" name="HKZW-SO05 Smart Plug" config="hank/hkzw-so05-smartplug.xml"/>
+		<Product type="0100" id="000a" name="HKZW-SO05 Smart Plug" config="hank/hkzw-so05-smartplug.xml"/>
 		<Product type="0200" id="0009" name="Scene Controller 1 Button" config="hank/scenecontroller1.xml"/>
 		<Product type="0200" id="000b" name="Scene Controller 4 Button" config="hank/scenecontroller4.xml"/>
 	</Manufacturer>
