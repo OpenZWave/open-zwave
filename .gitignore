@@ -15,11 +15,14 @@ libopenzwave.so
 *.log
 *.tlog
 /dotnet/build/vs2010/Debug/app.res
+/dotnet/build/vs2017/.vs
 Debug
 /dotnet/examples/OZWForm/src/OZWForm.csproj
 /dotnet/examples/OZWForm/src/OZWForm.sdf
 /dotnet/examples/OZWForm/src/OZWForm.sln
 /dotnet/examples/OZWForm/src/OZWForm.v12.suo
+/dotnet/examples/OZWForm/src/.vs
+/dotnet/examples/OZWForm/build/vs2017/.vs
 *.cache
 *.res
 *.lib
