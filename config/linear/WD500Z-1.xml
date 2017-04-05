@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="2">
 	<!-- Configuration Parameters -->
 	<CommandClass id="112">
 		<Value type="list" index="3" genre="config" label="LED Mode" size="1" value="0">
-			<Help>In night-light mode the LED on the switch will turn ON when the switch is turned OFF, instead of folliwng the state of the load.</Help>
+			<Help>In night-light mode the LED on the switch will turn ON when the switch is turned OFF, instead of following the state of the load.</Help>
 			<Item label="Normal" value="0" />
 			<Item label="Night-light" value="1" />
 		</Value>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Philio: PAN07-1 TWO SPDT Switch module with meter. -->
 <!-- From: http://telldus.se/wp-content/uploads/311664-PAN07-1-2-3A-manual-20141028.pdf -->
-<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="2">
 
 	<!-- Configuration Parameters -->
 	<CommandClass id="112">
@@ -20,8 +20,8 @@
 			<Item label="Relay 2" value="3" />
 		</Value>
 
-		<Value type="list" instance="1" index="4" genre="config" label="Edge or Pulse mode or Edge-Togle mode" min="1" max="3" value="1" size="1">
-			<Help>Edge or Pulse mode or Edge-Togle mode defines the operating mode of the externally connected switch. Default: Edge Mode</Help>
+		<Value type="list" instance="1" index="4" genre="config" label="Edge or Pulse mode or Edge-Toggle mode" min="1" max="3" value="1" size="1">
+			<Help>Edge or Pulse mode or Edge-Toggle mode defines the operating mode of the externally connected switch. Default: Edge Mode</Help>
 			<Item label="Edge Mode" value="1" />
 			<Item label="Toggle Mode" value="2" />
 			<Item label="Edge/Toggle Mode" value="3" />

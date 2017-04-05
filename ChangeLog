@@ -165,6 +165,17 @@ Version 1.5
  - Pull Request #1105 - Replace some of the Explicit Locking with Scoped Locks (from tobiasgraf) - Also additional checking on the Unix Mutex Class to detect unbalanced Locking (Justin)
  - If the TriggerRefreshValue XML is invalid, we could get into a infinite loop when trying to read the params (Justin)
  - Add Fibaro FGKF601 Keyfob (Nechry)
+ - Add BeNext TagReader500 from hvbommel (Nechry)
+ - Restore Z-Wave.Me ZME_05461 (Nechry)
+ - Add Domux Wall Plug DX2SK-Z (Nechry)
+ - Add Yale Key Free Touchscreen Deadbolt YRD446 (Nechry)
+ - Add Yale nexTouch Wireless Touchscreen (Nechry)
+ - Add Fakro ZWRS Roller Shutter FLiRS module
+ - Add Homeseer HS-WS100+ Wall Switch
+ - Add alias for FGPB101 Button
+ - Add Aeotec ZW129 WallMote Duo (Nechry)
+ - Add Aeotec ZW132, ZW139 and ZW140 Nano Switch (Nechry)
+ - ForceInstances now limited to association with the controller node.
 
 Dev Branch:
  - Rename zwcfg_*.xml to zwcache_*.xml to reflect its not a config file, but a cache. (Justin)
@@ -184,6 +195,7 @@ Dev Branch:
  - Check the Controller Library Loaded, and dont' proceed if we don't support the Library when starting the Driver Class (Justin)
  - SetNodeOn/Off/Level are depreciated and will be removed in 1.8 (Justin)
 
+ 
 Version 1.4
  - Released 10th Jan, 2016
 
@@ -539,3 +551,4 @@ Version 1.1
  - Remove the hidapi.h include from our headers so we don't have to
    distribute the hidapi header files (Justin)
  - Fixed Issue 375 - Add Ecolink Garage Door Sensor - (Justin)
+ - Add additional CT30 Thermostat config entry to manufacturer specific list

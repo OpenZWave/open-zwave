@@ -27,6 +27,7 @@ DISTFILES =	.gitignore \
 	config/BeNext/PluginDimmer.xml \
 	config/BeNext/SceneController.xml \
 	config/BeNext/TagReader.xml \
+	config/BeNext/TagReader500.xml \
 	config/act/lfm20.xml \
 	config/act/zdm230.xml \
 	config/act/zdw103.xml \
@@ -87,8 +88,13 @@ DISTFILES =	.gitignore \
 	config/aeotec/zw117.xml \
 	config/aeotec/zw120.xml \
 	config/aeotec/zw121.xml \
+	config/aeotec/zw129.xml \
 	config/aeotec/zw130.xml \
+	config/aeotec/zw132.xml \
+	config/aeotec/zw139.xml \
+	config/aeotec/zw140.xml \
 	config/assa_abloy/KeyfreeConnected.xml \
+	config/assa_abloy/nexTouch.xml \
 	config/assa_abloy/PushButtonDeadbolt.xml \
 	config/assa_abloy/PushButtonLever.xml \
 	config/assa_abloy/TouchDeadbolt.xml \
@@ -114,6 +120,7 @@ DISTFILES =	.gitignore \
 	config/dlink/dch-z510.xml \
 	config/domitech/zb22uk.xml \
 	config/domitech/ze27eu.xml \
+	config/domux/dx2skz.xml \
 	config/dragontech/wd-100.xml \
 	config/duwi/05458.xml \
 	config/duwi/ZWES1000.xml \
@@ -155,6 +162,8 @@ DISTFILES =	.gitignore \
 	config/evolve/lrm-as.xml \
 	config/evolve/lsm-15.xml \
 	config/evolve/ltm-5.xml \
+	config/fakro/zwp10.xml \
+	config/fakro/zwrs.xml \
 	config/fakro/zws12.xml \
 	config/fakro/zws230.xml \
 	config/fibaro/fgbs001.xml \
@@ -195,8 +204,8 @@ DISTFILES =	.gitignore \
 	config/fortrezz/wv01.xml \
 	config/fortrezz/wwa02.xml \
 	config/frostdale/fdn2nxx.xml \
-	config/ge/12491-switch.xml \
 	config/ge/12724-dimmer.xml \
+	config/ge/14291-switch.xml \
 	config/ge/dimmer.xml \
 	config/ge/dimmer_module.xml \
 	config/ge/hinge-pin.xml \
@@ -265,6 +274,7 @@ DISTFILES =	.gitignore \
 	config/options.xsd \
 	config/philio/pan03.xml \
 	config/philio/pan04.xml \
+	config/philio/pan07.xml \
 	config/philio/pan08.xml \
 	config/philio/pan11.xml \
 	config/philio/phpab01.xml \
@@ -390,6 +400,7 @@ DISTFILES =	.gitignore \
 	config/zooz/zse09.xml \
 	config/zooz/zse40.xml \
 	config/zwave.me/ZME_05431.xml \
+	config/zwave.me/ZME_05461.xml \
 	config/zwave.me/ZME_06433.xml \
 	config/zwave.me/ZME_06436.xml \
 	config/zwave.me/ZME_064381.xml \
@@ -583,12 +594,12 @@ DISTFILES =	.gitignore \
 	cpp/src/command_classes/Meter.h \
 	cpp/src/command_classes/MeterPulse.cpp \
 	cpp/src/command_classes/MeterPulse.h \
+	cpp/src/command_classes/MultiChannelAssociation.cpp \
+	cpp/src/command_classes/MultiChannelAssociation.h \
 	cpp/src/command_classes/MultiCmd.cpp \
 	cpp/src/command_classes/MultiCmd.h \
 	cpp/src/command_classes/MultiInstance.cpp \
 	cpp/src/command_classes/MultiInstance.h \
-	cpp/src/command_classes/MultiInstanceAssociation.cpp \
-	cpp/src/command_classes/MultiInstanceAssociation.h \
 	cpp/src/command_classes/NoOperation.cpp \
 	cpp/src/command_classes/NoOperation.h \
 	cpp/src/command_classes/NodeNaming.cpp \
