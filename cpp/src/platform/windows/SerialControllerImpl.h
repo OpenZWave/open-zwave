@@ -28,7 +28,7 @@
 #ifndef _SerialControllerImpl_H
 #define _SerialControllerImpl_H
 
-#include <Windows.h>
+#include <windows.h>
 
 #include "Defs.h"
 #include "platform/SerialController.h"
