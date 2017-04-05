@@ -194,7 +194,7 @@ Dev Branch:
  - Print out effective Options when starting the Driver (Justin)
  - Check the Controller Library Loaded, and dont' proceed if we don't support the Library when starting the Driver Class (Justin)
  - SetNodeOn/Off/Level are depreciated and will be removed in 1.8 (Justin)
-
+ - dotNet Wrapper is now maintained by dotMorten https://github.com/OpenZWave/openzwave-dotnet-uwp (Justin)
  
 Version 1.4
  - Released 10th Jan, 2016
