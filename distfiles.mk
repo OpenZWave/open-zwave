@@ -3,11 +3,7 @@
 
 DISTFILES =	.gitignore \
 	ChangeLog \
-	ChangeLog \
-	ChangeLog \
 	INSTALL \
-	Makefile \
-	Makefile \
 	Makefile \
 	README.md \
 	config/2gig/ct100.xml \
@@ -61,8 +57,6 @@ DISTFILES =	.gitignore \
 	config/aeotec/dsd37.xml \
 	config/aeotec/zw056.xml \
 	config/aeotec/zw062.xml \
-	config/aeotec/zw062.xml \
-	config/aeotec/zw062.xml \
 	config/aeotec/zw074.xml \
 	config/aeotec/zw075.xml \
 	config/aeotec/zw078.xml \
@@ -71,16 +65,10 @@ DISTFILES =	.gitignore \
 	config/aeotec/zw089.xml \
 	config/aeotec/zw090.xml \
 	config/aeotec/zw095.xml \
-	config/aeotec/zw095.xml \
-	config/aeotec/zw095.xml \
 	config/aeotec/zw096.xml \
 	config/aeotec/zw097.xml \
 	config/aeotec/zw098.xml \
-	config/aeotec/zw098.xml \
-	config/aeotec/zw098.xml \
 	config/aeotec/zw099.xml \
-	config/aeotec/zw100.xml \
-	config/aeotec/zw100.xml \
 	config/aeotec/zw100.xml \
 	config/aeotec/zw111.xml \
 	config/aeotec/zw112.xml \
@@ -94,11 +82,11 @@ DISTFILES =	.gitignore \
 	config/aeotec/zw139.xml \
 	config/aeotec/zw140.xml \
 	config/assa_abloy/KeyfreeConnected.xml \
-	config/assa_abloy/nexTouch.xml \
 	config/assa_abloy/PushButtonDeadbolt.xml \
 	config/assa_abloy/PushButtonLever.xml \
 	config/assa_abloy/TouchDeadbolt.xml \
 	config/assa_abloy/TouchLever.xml \
+	config/assa_abloy/nexTouch.xml \
 	config/cooper/RF9501.xml \
 	config/cooper/RF9505-T.xml \
 	config/cooper/RF9517.xml \
@@ -106,8 +94,6 @@ DISTFILES =	.gitignore \
 	config/cooper/RF9542-Z.xml \
 	config/danfoss/living.xml \
 	config/danfoss/rsroom.xml \
-	config/danfoss/z.xml \
-	config/danfoss/z.xml \
 	config/danfoss/z.xml \
 	config/device_classes.xml \
 	config/device_classes.xsd \
@@ -138,6 +124,7 @@ DISTFILES =	.gitignore \
 	config/enerwave/zw500d.xml \
 	config/enerwave/zwn-bpc.xml \
 	config/enerwave/zwn-sc7.xml \
+	config/enerwave/zwnrsm1plus.xml \
 	config/eurotronic/eur_cometz.xml \
 	config/eurotronic/eur_stellaz.xml \
 	config/everspring/ad146.xml \
@@ -169,8 +156,6 @@ DISTFILES =	.gitignore \
 	config/fibaro/fgbs001.xml \
 	config/fibaro/fgd211.xml \
 	config/fibaro/fgd212.xml \
-	config/fibaro/fgd212.xml \
-	config/fibaro/fgd212.xml \
 	config/fibaro/fgfs101.xml \
 	config/fibaro/fgfs101zw5.xml \
 	config/fibaro/fggc001.xml \
@@ -178,13 +163,9 @@ DISTFILES =	.gitignore \
 	config/fibaro/fgk10x.xml \
 	config/fibaro/fgkf601.xml \
 	config/fibaro/fgms.xml \
-	config/fibaro/fgms.xml \
-	config/fibaro/fgms.xml \
 	config/fibaro/fgmszw5.xml \
 	config/fibaro/fgpb101.xml \
 	config/fibaro/fgr221.xml \
-	config/fibaro/fgr222.xml \
-	config/fibaro/fgr222.xml \
 	config/fibaro/fgrgbwm441.xml \
 	config/fibaro/fgrm222.xml \
 	config/fibaro/fgs211.xml \
@@ -206,6 +187,8 @@ DISTFILES =	.gitignore \
 	config/frostdale/fdn2nxx.xml \
 	config/ge/12724-dimmer.xml \
 	config/ge/14291-switch.xml \
+	config/ge/14294-dimmer.xml \
+	config/ge/26933-motion-dimmer.xml \
 	config/ge/dimmer.xml \
 	config/ge/dimmer_module.xml \
 	config/ge/hinge-pin.xml \
@@ -215,11 +198,13 @@ DISTFILES =	.gitignore \
 	config/gr/gr105n.xml \
 	config/greenwave/powernode1.xml \
 	config/greenwave/powernode6.xml \
+	config/hank/hkzw-so01-smartplug.xml \
+	config/hank/hkzw-so05-smartplug.xml \
 	config/hank/scenecontroller1.xml \
 	config/hank/scenecontroller4.xml \
 	config/homeseer/ezmotionplus.xml \
 	config/homeseer/hs-wd100plus.xml \
-	config/homeseer/hs-wd100plus.xml \
+	config/homeseer/hs-ws100plus.xml \
 	config/homeseer/hsm100.xml \
 	config/homeseer/hsm200.xml \
 	config/homeseer/ztroller.xml \
@@ -342,8 +327,6 @@ DISTFILES =	.gitignore \
 	config/shenzen_neo/nas-ab01z.xml \
 	config/shenzen_neo/nas-ds01z.xml \
 	config/shenzen_neo/nas-pd01z.xml \
-	config/shenzen_neo/nas-pd01z.xml \
-	config/shenzen_neo/nas-pd01z.xml \
 	config/shenzen_neo/nas-wr01z.xml \
 	config/shenzen_neo/nas-ws02z.xml \
 	config/stelpro/stzw402.xml \
@@ -351,6 +334,7 @@ DISTFILES =	.gitignore \
 	config/swiid/swiidplug.xml \
 	config/telldus/tzdw100.xml \
 	config/telldus/tzwp100.xml \
+	config/telldus/zd2301.xml \
 	config/thermofloor/heatit021.xml \
 	config/trane/TZEMT400AB32MAA.xml \
 	config/trane/TZEMT400BB32MAA.xml \
@@ -365,8 +349,6 @@ DISTFILES =	.gitignore \
 	config/vision/zm1602eu5.xml \
 	config/vision/zp3102.xml \
 	config/vision/zp3111.xml \
-	config/vision/zp3111.xml \
-	config/vision/zp3111.xml \
 	config/vision/zs5101eu.xml \
 	config/vitrum/vitrumBS.xml \
 	config/waynedalton/WDTC-20.xml \
@@ -376,17 +358,9 @@ DISTFILES =	.gitignore \
 	config/wenzhou/tz56.xml \
 	config/wenzhou/tz65d.xml \
 	config/wenzhou/tz66d.xml \
-	config/wenzhou/tz66d.xml \
-	config/wenzhou/tz66d.xml \
 	config/wenzhou/tz67.xml \
-	config/wenzhou/tz67.xml \
-	config/wenzhou/tz67.xml \
-	config/wenzhou/tz68.xml \
-	config/wenzhou/tz68.xml \
 	config/wenzhou/tz68.xml \
 	config/wenzhou/tz69.xml \
-	config/wenzhou/tz88.xml \
-	config/wenzhou/tz88.xml \
 	config/wenzhou/tz88.xml \
 	config/widom/UBS104.xml \
 	config/widom/UME304C_S.xml \
@@ -422,8 +396,6 @@ DISTFILES =	.gitignore \
 	cpp/build/ozw_config.in \
 	cpp/build/sh2ju.sh \
 	cpp/build/support.mk \
-	cpp/build/testconfig.pl \
-	cpp/build/testconfig.pl \
 	cpp/build/testconfig.pl \
 	cpp/build/testconfigsuppressions.cfg \
 	cpp/build/testconfigversions.cfg \
@@ -499,8 +471,6 @@ DISTFILES =	.gitignore \
 	cpp/src/Defs.h \
 	cpp/src/DoxygenMain.h \
 	cpp/src/Driver.cpp \
-	cpp/src/Driver.cpp \
-	cpp/src/Driver.cpp \
 	cpp/src/Driver.h \
 	cpp/src/Group.cpp \
 	cpp/src/Group.h \
@@ -514,8 +484,6 @@ DISTFILES =	.gitignore \
 	cpp/src/Msg.h \
 	cpp/src/Node.cpp \
 	cpp/src/Node.h \
-	cpp/src/Notification.cpp \
-	cpp/src/Notification.cpp \
 	cpp/src/Notification.cpp \
 	cpp/src/Notification.h \
 	cpp/src/OZWException.h \
@@ -664,8 +632,6 @@ DISTFILES =	.gitignore \
 	cpp/src/platform/HttpClient.h \
 	cpp/src/platform/Log.cpp \
 	cpp/src/platform/Log.h \
-	cpp/src/platform/Log.h \
-	cpp/src/platform/Log.h \
 	cpp/src/platform/Mutex.cpp \
 	cpp/src/platform/Mutex.h \
 	cpp/src/platform/Ref.h \
@@ -782,8 +748,6 @@ DISTFILES =	.gitignore \
 	debian/rules \
 	debian/source/format \
 	dist.mk \
-	distfiles.mk \
-	distfiles.mk \
 	distfiles.mk \
 	docs/Doxyfile.in \
 	docs/default.htm \
