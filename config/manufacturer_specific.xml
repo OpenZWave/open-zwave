@@ -159,10 +159,13 @@
 	<Manufacturer id="0129" name="Assa Abloy">
 		<Product type="0001" id="0000" name="Yale Touchscreen Lever (YRL220)" config="assa_abloy/TouchLever.xml"/>
 		<Product type="0002" id="0000" name="Yale Touchscreen Deadbolt (YRD220)" config="assa_abloy/TouchDeadbolt.xml" />
+		<Product type="0002" id="0209" name="Yale Key Free Touchscreen Deadbolt (YRD240)" config="assa_abloy/TouchDeadbolt.xml"/>
 		<Product type="0002" id="0800" name="Yale Touchscreen Deadbolt (YRD120)" config="assa_abloy/TouchDeadbolt.xml" />
+		<Product type="0003" id="0409" name="Yale Push Button Lever Lock (YRL210)" config="assa_abloy/PushButtonLever.xml"/>
 		<Product type="0003" id="0800" name="Yale Push Button Lever Lock (YRL210)" config="assa_abloy/PushButtonLever.xml"/>
-		<Product type="0004" id="0000" name="Yale Push Button Deadbolt (YRD210)" config="assa_abloy/PushButtonDeadbolt.xml"/>		
-		<Product type="0004" id="0800" name="Yale Push Button Deadbolt (YRD110)" config="assa_abloy/PushButtonDeadbolt.xml"/>		
+		<Product type="0004" id="0000" name="Yale Push Button Deadbolt (YRD210)" config="assa_abloy/PushButtonDeadbolt.xml"/>
+		<Product type="0004" id="0209" name="Yale Push Button Deadbolt (YRD210)" config="assa_abloy/PushButtonDeadbolt.xml"/>
+		<Product type="0004" id="0800" name="Yale Push Button Deadbolt (YRD110)" config="assa_abloy/PushButtonDeadbolt.xml"/>
 		<Product type="0006" id="0000" name="Yale Key Free Touchscreen Deadbolt (YRD240)" config="assa_abloy/TouchDeadbolt.xml"/>
 		<Product type="0007" id="0000" name="Yale Keyless Connected Smart Lock (YSL)" config="assa_abloy/KeyfreeConnected.xml"/>			
 		<Product type="1bef" id="9230" name="Yale Keyless Connected Smart Lock (YSL)" config="assa_abloy/KeyfreeConnected.xml"/>
@@ -727,6 +730,7 @@
 		<Product type="0001" id="0001" name="PAN11-4 Smart Energy Plug In Switch"/>
 		<Product type="0001" id="0003" name="PAN04-1 Double Relay Switch 2x1.5kW with Power Measurement" config="philio/pan04.xml"/>
 		<Product type="0001" id="0004" name="PAN06-1 In Wall Dual Relay (1 Way) Switch Module"/>
+		<Product type="0001" id="0005" name="PAN07-1 TWO SPDT Switch module with meter" config="philio/pan07.xml"/>
 		<Product type="0001" id="0006" name="PAN08-1 In Wall Roller Shutter Controller" config="philio/pan08.xml"/>
 		<Product type="0001" id="000f" name="PAN03 Switch Module with meter 3 KW X1" config="philio/pan03.xml"/>
 		<Product type="0001" id="0011" name="PAN11 Smart Energy Plug In Switch" config="philio/pan11.xml"/>
@@ -830,6 +834,7 @@
 		<Product type="0107" id="8377" name="ZXT-120IL" config="remotec/zxt-120.xml"/>
 		<Product type="0108" id="8377" name="ZXT-120BR" config="remotec/zxt-120.xml"/>
 		<Product type="0001" id="8510" name="ZRC-90" config="remotec/zrc-90.xml"/>
+		<Product type="0002" id="8510" name="ZRC-90" config="remotec/zrc-90.xml"/>
 		<Product type="8201" id="8120" name="ZFM-X10EU Dual Mode Insert Module "/>
 		<Product type="8000" id="0002" name="ZFM-80" config="remotec/zfm-80.xml" />
 		<Product type="0200" id="8031" name="ZTS-110" config="remotec/zts-110.xml" />
