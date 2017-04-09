@@ -71,19 +71,22 @@ bool ManufacturerProprietary::HandleMsg
 				FIBARO_VENETIEN_BLINDS_REPORT_ID[1] == payload[1] &&
 				FIBARO_VENETIEN_BLINDS_REPORT_ID[2] == payload[2] )
 		{
-			uint8 blinds = payload[3];
-			uint8 slats = payload[4];
-			ValueByte* blindsValue = static_cast<ValueByte*>( GetValue( _instance, FibaroVenetianBlindsValueIds_Blinds ) );
-			ValueByte* tiltValue = static_cast<ValueByte*>( GetValue( _instance, FibaroVenetianBlindsValueIds_Tilt ) );
-
-			Log::Write( LogLevel_Info, GetNodeId(), "Received Fibaro proprietary blind/slat position for node %d: Blinds: %d Slats: %d",
-						    GetNodeId(), blinds, slats);
-
-			blindsValue->OnValueRefreshed(blinds);
-			blindsValue->Release();
-			tiltValue->OnValueRefreshed(slats);
-			tiltValue->Release();
-
+      ValueByte* blindsValue = static_cast<ValueByte*>( GetValue( _instance, FibaroVenetianBlindsValueIds_Blinds ) );
+      ValueByte* tiltValue   = static_cast<ValueByte*>( GetValue( _instance, FibaroVenetianBlindsValueIds_Tilt ) );
+      
+			if( NULL != blindsValue and NULL != tiltValue)
+      {
+	        Log::Write( LogLevel_Info, GetNodeId(), "Received Fibaro proprietary blind/slat position for node %d: Blinds: %d Slats: %d",
+		              GetNodeId(), payload[3], payload[4] );
+		      blindsValue->OnValueRefreshed( payload[3] );
+		      tiltValue->OnValueRefreshed( payload[4] );
+		      blindsValue->Release();
+		      tiltValue->Release();
+      }
+      else
+      {
+	        Log::Write( LogLevel_Warning, GetNodeId(), "Error setting Fibaro blind/slat position. Values were not found." );      
+      }
 			return true;
 		}
 		else
