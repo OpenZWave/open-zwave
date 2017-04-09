@@ -79,7 +79,7 @@ bool SerialControllerImpl::Open()
 
 	try
 	{
-		auto selector = SerialDevice::GetDeviceSelectorFromUsbVidPid(0x10C4, 0xEA60);
+		auto selector = SerialDevice::GetDeviceSelector();
 
 		return create_task(DeviceInformation::FindAllAsync(selector))
 			.then([this](DeviceInformationCollection ^ devices) -> IAsyncOperation<SerialDevice ^> ^
@@ -189,6 +189,8 @@ void SerialControllerImpl::StartReadTask()
 				create_task(m_serialDevice->InputStream->ReadAsync(buffer, readBufferLength, InputStreamOptions::None))
 					.then([&, this](IBuffer ^ outBuffer)
 				{
+					if (token.is_canceled()) 
+						return;
 					auto reader = DataReader::FromBuffer(outBuffer);
 					auto bytesRead = reader->UnconsumedBufferLength;
 

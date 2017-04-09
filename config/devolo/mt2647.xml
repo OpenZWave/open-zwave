@@ -2,7 +2,7 @@
 <!-- Devolo Metering Plug MT 2646
 http://www.pepper1.net/zwavedb/device/912
  -->
-<Product xmlns="http://code.google.com/p/open-zwave/"> 
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="2">
   <!-- Configuration Parameters -->
   <CommandClass id="112">
     <Value type="byte" index="2" genre="config" label="Basic Set Level" min="-1" max="255" value="255">

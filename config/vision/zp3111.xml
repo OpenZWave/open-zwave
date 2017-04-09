@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Product xmlns='http://code.google.com/p/open-zwave/'>
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="2">
+	<!-- Vision ZP3111 Multisensor 4in1 -->
 <!-- 
 Vision ZP3111-5 4 in 1 Multi-Sensor
 http://products.z-wavealliance.org/ProductManual/File?folder=&filename=Manuals/1572/ZP3111-5_R0_20151113%20-%20VISION.pdf

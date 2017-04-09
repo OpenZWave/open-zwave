@@ -146,7 +146,7 @@ bool UserCode::RequestState
 bool UserCode::RequestValue
 (
 	uint32 const _requestFlags,
-	uint8 const _userCodeIdx,
+	uint16 const _userCodeIdx,
 	uint8 const _instance,
 	Driver::MsgQueue const _queue
 )
@@ -183,7 +183,7 @@ bool UserCode::RequestValue
 	msg->Append( 3 );
 	msg->Append( GetCommandClassId() );
 	msg->Append( UserCodeCmd_Get );
-	msg->Append( _userCodeIdx );
+	msg->Append( (_userCodeIdx & 0xFF) );
 	msg->Append( GetDriver()->GetTransmitOptions() );
 	GetDriver()->SendMsg( msg, _queue );
 	return true;

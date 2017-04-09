@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- SmartHome by Everspring In Wall Dimmer - AD146-0 -->
-<Product xmlns='http://code.google.com/p/open-zwave/'>
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
   <!-- Configuration Parameters -->
   <CommandClass id="112">
     <Value type="short" index="1" genre="config" label="Basic Set Command value" units="" min="0" max="255" value="255">

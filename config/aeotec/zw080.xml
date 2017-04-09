@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 
-Aeotec ZW080 Siren Gen5 
-https://aeotec.freshdesk.com/helpdesk/attachments/6009584694
--->
-<Product xmlns='http://code.google.com/p/open-zwave/'>
+<!-- Aeon Labs DSD31 Siren Gen5 -->
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
 	<Protocol refreshonnodeinfoframe="false"/>
 	<!-- Configuration Parameters -->
 	<CommandClass id="112">

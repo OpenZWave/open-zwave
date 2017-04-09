@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Philio: PAN07-1 TWO SPDT Switch module with meter. -->
 <!-- From: http://telldus.se/wp-content/uploads/311664-PAN07-1-2-3A-manual-20141028.pdf -->
-<Product xmlns='http://code.google.com/p/open-zwave/'>
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="2">
 
 	<!-- Configuration Parameters -->
 	<CommandClass id="112">

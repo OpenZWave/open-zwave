@@ -161,7 +161,7 @@ bool Configuration::SetValue
 	Value const& _value
 )
 {
-	uint8 param = _value.GetID().GetIndex();
+	uint16 param = _value.GetID().GetIndex();
 	switch( _value.GetID().GetType() )
 	{
 		case ValueID::ValueType_Bool:
@@ -217,7 +217,7 @@ bool Configuration::SetValue
 bool Configuration::RequestValue
 (
 	uint32 const _requestFlags,
-	uint8 const _parameter,			// parameter number is encoded as the Index portion of ValueID
+	uint16 const _parameter,			// parameter number is encoded as the Index portion of ValueID
 	uint8 const _instance,
 	Driver::MsgQueue const _queue
 )
@@ -234,7 +234,7 @@ bool Configuration::RequestValue
 		msg->Append( 3 );
 		msg->Append( GetCommandClassId() );
 		msg->Append( ConfigurationCmd_Get );
-		msg->Append( _parameter );
+		msg->Append( (_parameter & 0xFF) );
 		msg->Append( GetDriver()->GetTransmitOptions() );
 		GetDriver()->SendMsg( msg, _queue );
 		return true;
@@ -249,7 +249,7 @@ bool Configuration::RequestValue
 //-----------------------------------------------------------------------------
 void Configuration::Set
 (
-	uint8 const _parameter,
+	uint16 const _parameter,
 	int32 const _value,
 	uint8 const _size
 )
@@ -261,7 +261,7 @@ void Configuration::Set
 	msg->Append( 4 + _size );
 	msg->Append( GetCommandClassId() );
 	msg->Append( ConfigurationCmd_Set );
-	msg->Append( _parameter );
+	msg->Append( (_parameter & 0xFF) );
 	msg->Append( _size );
 	if( _size > 2 )
 	{

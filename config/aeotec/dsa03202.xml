@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
 <!-- 
 Aeotec DSA03202 Minimote 
 https://aeotec.freshdesk.com/helpdesk/attachments/6009584532 
 -->
-<Product xmlns='http://code.google.com/p/open-zwave/'>
   <!-- Minimote requires at least firmware 1.17, 1.19 is highly recommend -->
   <!-- Minimote will normally not respond to Get commands, but Set is possible when woken up -->
   <!-- Configuration Parameters -->

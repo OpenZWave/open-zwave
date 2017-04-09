@@ -189,7 +189,7 @@ bool ThermostatMode::RequestState
 bool ThermostatMode::RequestValue
 (
 	uint32 const _requestFlags,
-	uint8 const _getTypeEnum,
+	uint16 const _getTypeEnum,
 	uint8 const _instance,
 	Driver::MsgQueue const _queue
 )

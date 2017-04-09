@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Vision ZG8101 -->
-<Product xmlns='http://code.google.com/p/open-zwave/'>
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
         <!-- COMMAND_CLASS_CONFIGURATION -->
         <!--    IMPORTANT: Controllers may only allow to configure signed values.
                 In order to set values in the range 128...255 the value sent in the application shall be the desired value minus 256.

@@ -455,6 +455,7 @@ void MultiInstance::HandleMultiChannelCapabilityReport
 			if( commandClassId == 0xef )
 			{
 				afterMark = true;
+				Log::Write( LogLevel_Info, GetNodeId(), "    Controlled CommandClasses (Ignored):");
 				continue;
 			}
 
@@ -462,17 +463,20 @@ void MultiInstance::HandleMultiChannelCapabilityReport
 
 			// Ensure the node supports this command class
 			CommandClass* cc = node->GetCommandClass( commandClassId );
-			if( !cc )
+			/* Dont add Controlled Command Classes Currently */
+			if( !cc && !afterMark)
 			{
 				cc = node->AddCommandClass( commandClassId );
-				if( cc && afterMark )
-				{
-					cc->SetAfterMark();
-				}
+			}
+			if( cc && afterMark )
+			{
+				cc->SetAfterMark();
 			}
 			if( cc )
 			{
 				Log::Write( LogLevel_Info, GetNodeId(), "        %s", cc->GetCommandClassName().c_str() );
+			} else {
+				Log::Write( LogLevel_Info, GetNodeId(), "        0x%.2x (Unsupported/Removed)", commandClassId );
 			}
 		}
 

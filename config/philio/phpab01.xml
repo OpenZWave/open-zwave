@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- PH-PAB01.eu Micromodule Energy Meter  -->
-<Product xmlns='http://code.google.com/p/open-zwave/'>
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="2">
     <!-- Remove COMMAND_CLASS_BASIC -->
     <CommandClass id="32" action="remove"/>
     <!-- Map endpoints to instances -->

@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 
-Aeotec ZW074 MultiSensor Gen5
-https://aeotec.freshdesk.com/helpdesk/attachments/6009584696
--->
-<Product xmlns='http://code.google.com/p/open-zwave/'>
+<!-- Aeon Labs Multi Sensor -->
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
 
 	<!-- Configuration Parameters -->
 	<CommandClass id="112">

@@ -129,6 +129,8 @@ Options* Options::Create
 		s_instance->AddOptionString(	"SecurityStrategy", 		"SUPPORTED", 	false);		// Should we encrypt CC's that are available via both clear text and Security CC?
 		s_instance->AddOptionString(	"CustomSecuredCC", 			"0x62,0x4c,0x63", 	false);	// What List of Custom CC should we always encrypt if SecurityStrategy is CUSTOM
 		s_instance->AddOptionBool(		"EnforceSecureReception",	true);						// if we recieve a clear text message for a CC that is Secured, should we drop the message
+		s_instance->AddOptionBool(      "AutoUpdateConfigFile",     true);						// if we should automatically update config files for devices if they are out of date
+		s_instance->AddOptionString(	"ReloadAfterUpdate",	    "AWAKE", 	false);			// Should we automatically Reload Nodes after a update
 
 #if defined WINRT
 		s_instance->AddOptionInt(       "ThreadTerminateTimeout",   -1);						// Since threads cannot be terminated in WinRT, Thread::Terminate will simply wait for them to exit on there own
@@ -373,6 +375,26 @@ bool Options::Lock
 	ParseOptionsString( m_commandLine );
 	m_locked = true;
 
+	/* Log our Configured Options */
+	map<string,Option*>::iterator it;
+	Log::Write( LogLevel_Info, "Options:");
+	for (it = m_options.begin(); it != m_options.end(); it++) {
+		Option *opt = it->second;
+		switch (opt->m_type) {
+                        case OptionType_Bool:
+                        	Log::Write( LogLevel_Info, "\t%s: %s", it->first.c_str(), opt->m_valueBool == true ? "true" : "false");
+                        	break;
+                        case OptionType_Int:
+                        	Log::Write( LogLevel_Info, "\t%s: %d", it->first.c_str(), opt->m_valueInt);
+                        	break;
+                        case OptionType_String:
+                        	Log::Write( LogLevel_Info, "\t%s: %s", it->first.c_str(), opt->m_valueString.c_str());
+                        	break;
+			case OptionType_Invalid:
+				Log::Write( LogLevel_Info, "\t%s: Invalid Type");
+				break;
+		}
+	}	
 	return true;
 }
 

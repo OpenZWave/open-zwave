@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Product xmlns='http://code.google.com/p/open-zwave/'>
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="2">
 
-<!-- Qubino: ZMNHJD1 Flush Dimmer Fils Pilotes -->
+<!-- Qubino: ZMNHJD1 Flush Pilot Wire Dimmer -->
 
 	<!-- Configuration -->
 	<CommandClass id="112">

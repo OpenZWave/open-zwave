@@ -162,6 +162,8 @@ void LogImpl::Write
 					fprintf(stdout,"\x1B[%02um", toEscapeCode(_logLevel));
 					fputs( outBuf.c_str(), stdout );
 					fprintf(stdout, "\x1b[39m");
+					/* always return to normal */
+					fprintf(stdout,"\x1B[%02um", toEscapeCode(LogLevel_Info));
 				}
 			}
 		}

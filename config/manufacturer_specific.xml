@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ManufacturerSpecificData xmlns='http://code.google.com/p/open-zwave/'>
+<ManufacturerSpecificData xmlns='https://github.com/OpenZWave/open-zwave' Revision="4">
 	<Manufacturer id="0040" name="2B Electronics">
 	</Manufacturer>
 	<Manufacturer id="0098" name="2GIG Technologies">
@@ -887,6 +887,10 @@
 	</Manufacturer>
 	<Manufacturer id="0065" name="RS Scene">
 	</Manufacturer>
+	<Manufacturer id="0150" name="Samsung SmartThings">
+		<Product type="0002" id="0006" name="SmartThings Hub v2" />
+    		<Product type="0001" id="0191" name="SmartThings Hub v1" />
+	</Manufacturer>
 	<Manufacturer id="003b" name="Schlage">
 		<Product type="634b" id="504c" name="FE599GR Wireless Door Lock"/>
 		<Product type="6341" id="5044" name="BE469NXCEN Touchscreen DeadBolt" config="schlage/BE469NXCEN.xml"/>
@@ -928,7 +932,7 @@
 	</Manufacturer>
 	<Manufacturer id="0166" name="Swiid">
 		<Product type="0100" id="0100" name="SwiidInter" config="swiid/swiidinter.xml"/>
-    <Product type="2007" id="0706" name="SwiidPlug" config="swiid/swiidplug.xml"/>
+    		<Product type="2007" id="0706" name="SwiidPlug" config="swiid/swiidplug.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0009" name="Sylvania">
 	</Manufacturer>

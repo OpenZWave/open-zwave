@@ -2,7 +2,7 @@
 <!--
 Ecolink Z-Wave Sensor Z-Wave
 -->
-<Product xmlns='http://code.google.com/p/open-zwave/'>
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
     <!-- Basic set as report-->
 	<CommandClass id="32" setasreport="true"/>
     <!-- Configuration Parameters -->

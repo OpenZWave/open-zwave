@@ -3,7 +3,7 @@
 Zipato Multisensor Duo
 https://www.zipato.com/wp-content/uploads/2015/09/vs-zp3102-Zipato-Multi-Sensor-Dual-User-Manual-v1.4.pdf
 -->
-<Product xmlns='http://code.google.com/p/open-zwave/'>
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
         <!-- COMMAND_CLASS_CONFIGURATION -->
         <CommandClass id="112">
                 <Value type="byte" genre="config" index="1" label="Re-Trigger Waiting Time" units="minutes" min="1" max="255" value="3">
