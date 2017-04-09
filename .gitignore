@@ -42,8 +42,13 @@ OZWForm.vshost.exe.manifest
 .gitignore
 /cpp/build/windows/winversion.cpp
 .distfiles
+.idea/*
+.cproject
+zwcfg_*.xml
+zwscene.xml
 *.dylib
 *.txt
 ozw_config
 .project
 *~
+
