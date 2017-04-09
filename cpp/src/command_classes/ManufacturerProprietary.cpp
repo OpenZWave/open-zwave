@@ -36,18 +36,19 @@
 
 using namespace OpenZWave;
 
-enum ProprietaryCmd
+
+const uint8 MANUFACTURER_ID_FIBARO[2] = { 0x01, 0x0f };
+//manufacturer proprietary message identifier for venetian blinds reports
+const uint8 FIBARO_VENETIEN_BLINDS_REPORT_ID[3] = {0x26, 0x03, 0x03};
+
+enum FibaroVenetianBlindsValueIds
 {
-	ProprietaryCmd_Set		= 0x01,
-	ProprietaryCmd_Get		= 0x02,
-	ProprietaryCmd_Report	= 0x03
+		FibaroVenetianBlindsValueIds_Blinds = 0,
+		FibaroVenetianBlindsValueIds_Slats = 1
 };
 
-const uint8 FIBARO[2] = { 0x01, 0x0f };
-const uint8 FIBARO_BLINDS_SLATS[3] = {0x26, 0x03, 0x03};
-
 //-----------------------------------------------------------------------------
-// <Proprietary::HandleMsg>
+// <ManufacturerProprietary::HandleMsg>
 // Handle a message from the Z-Wave network
 //-----------------------------------------------------------------------------
 bool ManufacturerProprietary::HandleMsg
@@ -58,16 +59,18 @@ bool ManufacturerProprietary::HandleMsg
 )
 {
 	uint8 const* payload = _data+2;
-	if( FIBARO[0] == _data[0] &&
-			FIBARO[1] == _data[1] ){
+	if( MANUFACTURER_ID_FIBARO[0] == _data[0] &&
+			MANUFACTURER_ID_FIBARO[1] == _data[1] )
+	{
 
-		if( FIBARO_BLINDS_SLATS[0] == payload[0] &&
-				FIBARO_BLINDS_SLATS[1] == payload[1] &&
-				FIBARO_BLINDS_SLATS[2] == payload[2] ){
+		if( FIBARO_VENETIEN_BLINDS_REPORT_ID[0] == payload[0] &&
+				FIBARO_VENETIEN_BLINDS_REPORT_ID[1] == payload[1] &&
+				FIBARO_VENETIEN_BLINDS_REPORT_ID[2] == payload[2] )
+		{
 			uint8 blinds = payload[3];
 			uint8 slats = payload[4];
-			ValueByte* blindsValue = static_cast<ValueByte*>( GetValue( _instance, 0 ) );
-			ValueByte* slatsValue = static_cast<ValueByte*>( GetValue( _instance, 1 ) );
+			ValueByte* blindsValue = static_cast<ValueByte*>( GetValue( _instance, FibaroVenetianBlindsValueIds_Blinds ) );
+			ValueByte* slatsValue = static_cast<ValueByte*>( GetValue( _instance, FibaroVenetianBlindsValueIds_Slats ) );
 
 			Log::Write( LogLevel_Info, GetNodeId(), "Received Fibaro proprietary blind/slat position for node %d: Blinds: %d Slats: %d",
 						    GetNodeId(), blinds, slats);
@@ -78,7 +81,9 @@ bool ManufacturerProprietary::HandleMsg
 			slatsValue->Release();
 
 			return true;
-		} else {
+		}
+		else
+		{
 			Log::Write( LogLevel_Warning, GetNodeId(), "Received unknown Fibaro proprietary message for node %d.",
 						    GetNodeId());
 			return false;
