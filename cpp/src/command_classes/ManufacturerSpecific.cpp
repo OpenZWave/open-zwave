@@ -257,6 +257,8 @@ bool ManufacturerSpecific::HandleMsg
         uint8 deviceIDType = (_data[1] & 0x07);
         uint8 dataFormat = (_data[2] & 0xe0)>>0x05;
         uint8 data_length = (_data[2] & 0x1f);
+        if (data_length==0)
+			return false;
         uint8 const* deviceIDData = &_data[3];
         string deviceID = "";
         for (int i=0; i<data_length; i++) {
