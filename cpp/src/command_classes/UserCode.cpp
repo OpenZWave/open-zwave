@@ -255,15 +255,15 @@ bool UserCode::HandleMsg
 
 		if (i == 0)
 		{
-                        //
-                        //      UserID == 0, we are in the first phase of enrollment, keep the actual user code length
-                        //
-                        m_userCodeLength = _length - 4;
+			//
+			//	UserID == 0, we are in the first phase of enrollment, keep the actual user code length
+			//
+			m_userCodeLength = _length - 4;
 
-                        if (m_userCodeLength > UserCodeLength)
-                        {
-                                m_userCodeLength = UserCodeLength;
-                        }
+			if (m_userCodeLength > UserCodeLength)
+			{
+				m_userCodeLength = UserCodeLength;
+			}
 		}
 
 
