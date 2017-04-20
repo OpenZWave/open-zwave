@@ -231,7 +231,8 @@ DISTFILES =	.gitignore \
 	config/logicsoft/ZHC5010.xml \
 	config/manufacturer_specific.xml \
 	config/manufacturer_specific.xsd \
-	config/mcohome/mhp210.xml \
+	config/mcohome/mh8fceu.xml \
+    config/mcohome/mhp210.xml \
 	config/mcohome/mhs311.xml \
 	config/mcohome/mhs312.xml \
 	config/mcohome/mhs314.xml \

@@ -698,6 +698,7 @@
 		<Product type="3102" id="0204" name="MH-S314 Four-load" config="mcohome/mhs314.xml"/>
 		<Product type="4102" id="0201" name="MH-S411 One-load" config="mcohome/mhs411.xml"/>
 		<Product type="4102" id="0202" name="MH-S412 Two-load" config="mcohome/mhs412.xml"/>
+		<Product type="0801" id="3102" name="MH8-FC-EU Thermostat" config="mcohome/mh8fceu.xml"/>
 		<!--US-->
 		<Product type="5102" id="0103" name="Touch Panel Switch MH-S513" config="mcohome/mhs513.xml"/>
 	</Manufacturer>
