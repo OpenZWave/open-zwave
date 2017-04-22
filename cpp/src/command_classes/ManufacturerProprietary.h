@@ -1,6 +1,6 @@
 //-----------------------------------------------------------------------------
 //
-//	Proprietary.h
+//	ManufacturerProprietary.h
 //
 //	Implementation of the Z-Wave COMMAND_CLASS_PROPRIETARY
 //
@@ -47,6 +47,7 @@ namespace OpenZWave
 		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }
 		virtual string const GetCommandClassName()const{ return StaticGetCommandClassName(); }
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );
+		virtual bool RequestValue( uint32 const _requestFlags, uint16 const _index, uint8 const _instance, Driver::MsgQueue const _queue );
 
 	private:
 		ManufacturerProprietary( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}

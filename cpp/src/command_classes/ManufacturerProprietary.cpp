@@ -1,6 +1,6 @@
 //-----------------------------------------------------------------------------
 //
-//	Proprietary.cpp
+//	ManufacturerProprietary.cpp
 //
 //	Implementation of the Z-Wave COMMAND_CLASS_PROPRIETARY
 //
@@ -37,9 +37,13 @@
 using namespace OpenZWave;
 
 
-const uint8 MANUFACTURER_ID_FIBARO[2] = { 0x01, 0x0f };
-//manufacturer proprietary message identifier for venetian blinds reports
-const uint8 FIBARO_VENETIEN_BLINDS_REPORT_ID[3] = {0x26, 0x03, 0x03};
+const uint8 const MANUFACTURER_ID_FIBARO[2] = { 0x01, 0x0f };
+//manufacturer proprietary message identifier for venetian blinds reports and get/set
+const uint8 const FIBARO_VENETIEN_BLINDS_REPORT_ID[3] = { 0x26, 0x03, 0x03 };
+const uint8 const FIBARO_VENETIAN_BLINDS_GET_POSITION_TILT[5] = { 0x26, 0x02, 0x02, 0x00, 0x00 };
+const uint8 const FIBARO_VENETIAN_BLINDS_SET_TILT[3] =          { 0x26, 0x01, 0x01 };
+const uint8 const FIBARO_VENETIAN_BLINDS_SET_POSITION[3] =      { 0x26, 0x01, 0x02 };
+
 
 enum FibaroVenetianBlindsValueIds
 {
@@ -94,3 +98,37 @@ bool ManufacturerProprietary::HandleMsg
 	return false;
 }
 
+//-----------------------------------------------------------------------------
+// <ManufacturerProprietary::RequestValue>
+// Request current value from the device
+//-----------------------------------------------------------------------------
+bool ManufacturerProprietary::RequestValue
+(
+	uint32 const _requestFlags,
+	uint16 const _index,
+	uint8 const _instance,
+	Driver::MsgQueue const _queue
+)
+{
+	if ( IsGetSupported() )
+	{
+		Msg* msg = new Msg( "ManufacturerProprietary_RequestValue", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+		if (FibaroVenetianBlindsValueIds_Blinds == _index || FibaroVenetianBlindsValueIds_Slats == _index){
+			msg->SetInstance( this, _instance );
+			msg->Append( GetNodeId() );
+			msg->Append( 1+sizeof(MANUFACTURER_ID_FIBARO)+sizeof(FIBARO_VENETIAN_BLINDS_GET_POSITION_TILT) ); // length of data
+			msg->Append( GetCommandClassId() );
+			msg->AppendArray( MANUFACTURER_ID_FIBARO, sizeof(MANUFACTURER_ID_FIBARO) );
+			msg->AppendArray( FIBARO_VENETIAN_BLINDS_GET_POSITION_TILT, sizeof(FIBARO_VENETIAN_BLINDS_GET_POSITION_TILT) );
+			msg->Append( GetDriver()->GetTransmitOptions() );
+			GetDriver()->SendMsg( msg, _queue );
+			return true;
+		} else {
+			Log::Write(  LogLevel_Info, GetNodeId(), "ManufacturerProprietary_RequestValue Not Supported for value index %d",
+					_index);
+		}
+	} else {
+		Log::Write(  LogLevel_Info, GetNodeId(), "ManufacturerProprietary_RequestValue Not Supported on this node");
+	}
+	return false;
+}
