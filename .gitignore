@@ -50,3 +50,4 @@ ozw_config
 /.cproject
 /zwscene.xml
 /ozwcache_*.xml
+.idea/
