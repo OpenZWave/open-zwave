@@ -137,6 +137,21 @@ void Msg::Append
 }
 
 //-----------------------------------------------------------------------------
+// <Msg::AppendArray>
+// Add a byte array to the message
+//-----------------------------------------------------------------------------
+void Msg::AppendArray
+(
+		const uint8* const _data,
+		const uint8 _length
+)
+{
+	for (uint8 i=0 ; i<_length ; i++) {
+		this->Append( _data[i] );
+	}
+}
+
+//-----------------------------------------------------------------------------
 // <Msg::Finalize>
 // Fill in the length and checksum values for the message
 //-----------------------------------------------------------------------------
