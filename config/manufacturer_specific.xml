@@ -98,12 +98,12 @@
 		<Product type="0002" id="0059" name="ZW089 Recessed Door Sensor Gen5" config="aeotec/zw089.xml"/>
 		<Product type="0102" id="0059" name="ZW089 Recessed Door Sensor Gen5" config="aeotec/zw089.xml"/>
 		<Product type="0202" id="0059" name="ZW089 Recessed Door Sensor Gen5" config="aeotec/zw089.xml"/>
-		<Product type="0001" id="005a" name="ZW090 Z-Stick Gen5" config="aeotec/zw090.xml"/>
-		<Product type="0101" id="005a" name="ZW090 Z-Stick Gen5" config="aeotec/zw090.xml"/>
-		<Product type="0201" id="005a" name="ZW090 Z-Stick Gen5" config="aeotec/zw090.xml"/>
-		<Product type="0001" id="005c" name="ZW092 Z-Stick Lite Gen5"/>
-		<Product type="0101" id="005c" name="ZW092 Z-Stick Lite Gen5"/>
-		<Product type="0201" id="005c" name="ZW092 Z-Stick Lite Gen5"/>
+		<Product type="0001" id="005a" name="ZW090 Z-Stick Gen5 EU" config="aeotec/zw090.xml"/>
+		<Product type="0101" id="005a" name="ZW090 Z-Stick Gen5 US" config="aeotec/zw090.xml"/>
+		<Product type="0201" id="005a" name="ZW090 Z-Stick Gen5 AU" config="aeotec/zw090.xml"/>
+		<Product type="0001" id="005c" name="ZW092 Z-Stick Lite Gen5 EU"/>
+		<Product type="0101" id="005c" name="ZW092 Z-Stick Lite Gen5 US"/>
+		<Product type="0201" id="005c" name="ZW092 Z-Stick Lite Gen5 AU"/>
 		<Product type="0002" id="005f" name="ZW095 Home Energy Meter Gen5" config="aeotec/zw095.xml" />
  		<Product type="0102" id="005f" name="ZW095 Home Energy Meter Gen5" config="aeotec/zw095.xml" />
  		<Product type="0202" id="005f" name="ZW095 Home Energy Meter Gen5" config="aeotec/zw095.xml" />
