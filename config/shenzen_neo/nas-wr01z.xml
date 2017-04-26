@@ -3,7 +3,7 @@
   <!-- Configuration Parameters -->
   <CommandClass id="112">
     <Value type="list" genre="config" instance="1" index="1" label="Send Meter Report" value="1" size="1">
-      <Help>Send Meter Report</Help>
+      <Help>This parameter defines Disable/Enable meter report measure data to controller.</Help>
       <Item label="Disable" value="0" />
       <Item label="Enable" value="1" />
     </Value>
@@ -18,9 +18,9 @@
         If user set this parameter to default by Configure CC, the parameter #4 will be set to default value.
       </Help>
     </Value>
-    <Value type="short" genre="config" instance="1" index="4" label="Configure maximum over-load current" units="Ampere" value="12" min="1" max="16" size="1">
+    <Value type="short" genre="config" instance="1" index="4" label="Configure maximum Alarm current" units="Ampere" value="12" min="1" max="16" size="1">
       <Help>
-        This parameter defines maximum current (in Amperes), if the current plug provide to load is great than this parameter, the plug will light yellow LED, but plug cannot cut-off power.This parameter value must be less than parameter #3. 
+        This parameter defines maximum current (in Amperes), if the current plug provide to load is greater than this parameter, the plug will send over-current notification to the controller and the LED will turn RED, but plug cannot cut-off power. This parameter value must be less than parameter #3. 
         If user set this parameter to default by Configure CC, the parameter #3 will be set to default value.
     </Help>
     </Value>
@@ -32,10 +32,9 @@
       <Item label="Disable" value="0" />
       <Item label="Enable" value="1" />
     </Value>
-    <Value type="short" genre="config" instance="1" index="6" label="Configure maximum over-load current" units="Ampere" value="5" min="1" max="100" size="1">
+    <Value type="short" genre="config" instance="1" index="6" label="Configure power report" units="Ampere" value="5" min="1" max="100" size="1">
       <Help>
-        This parameter defines by how much current changed must change to be reported to the Z-Wave Controller or Z-Wave Gateway, in percents. 
-        If the rate of power consumed change ratio is greater than this parameter, the plug will report the results, voltage, current, power and energy, that plug measure to Z-Wave Controller or Z-Wave Gateway.
+        This parameter defines by how much power consumed must change to be reported to the Z-Wave Controller or Z-Wave Gateway, in percents. If the rate of power consumed change ratio is greater than this parameter, the plug will report the results, voltage, current, power and energy, that plug measure to Z-Wave Controller or Z-Wave Gateway
       </Help>
     </Value>
     <Value type="list" genre="config" instance="1" index="7" label="Remember Relay ON/OFF status" value="0" size="1">
@@ -56,7 +55,7 @@
       <Item label="Disable" value="0" />
       <Item label="Enable" value="1" />
     </Value>
-    <Value type="short" genre="config" instance="1" index="9" label="Configure maximum over-load current" units="minute" value="150" min="1" max="65535" size="2">
+    <Value type="short" genre="config" instance="1" index="9" label="Configure Time switch Period" units="minute" value="150" min="1" max="65535" size="2">
       <Help>
         This parameter defines the time period that plug time switch off. This parameter can be configured 1 - 65535(in minutes). 
         If Parameter #9 is enabled, and relay is turn-on, the relay will be turn-off after delay this parameter.
