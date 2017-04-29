@@ -82,11 +82,11 @@ DISTFILES =	.gitignore \
 	config/aeotec/zw139.xml \
 	config/aeotec/zw140.xml \
 	config/assa_abloy/KeyfreeConnected.xml \
-	config/assa_abloy/nexTouch.xml \
 	config/assa_abloy/PushButtonDeadbolt.xml \
 	config/assa_abloy/PushButtonLever.xml \
 	config/assa_abloy/TouchDeadbolt.xml \
 	config/assa_abloy/TouchLever.xml \
+	config/assa_abloy/nexTouch.xml \
 	config/cooper/RF9501.xml \
 	config/cooper/RF9505-T.xml \
 	config/cooper/RF9517.xml \
@@ -124,6 +124,7 @@ DISTFILES =	.gitignore \
 	config/enerwave/zw500d.xml \
 	config/enerwave/zwn-bpc.xml \
 	config/enerwave/zwn-sc7.xml \
+	config/enerwave/zwnrsm1plus.xml \
 	config/eurotronic/eur_cometz.xml \
 	config/eurotronic/eur_stellaz.xml \
 	config/everspring/ad146.xml \
@@ -186,6 +187,7 @@ DISTFILES =	.gitignore \
 	config/frostdale/fdn2nxx.xml \
 	config/ge/12724-dimmer.xml \
 	config/ge/14291-switch.xml \
+	config/ge/14294-dimmer.xml \
 	config/ge/dimmer.xml \
 	config/ge/dimmer_module.xml \
 	config/ge/hinge-pin.xml \
@@ -199,6 +201,7 @@ DISTFILES =	.gitignore \
 	config/hank/scenecontroller4.xml \
 	config/homeseer/ezmotionplus.xml \
 	config/homeseer/hs-wd100plus.xml \
+	config/homeseer/hs-ws100plus.xml \
 	config/homeseer/hsm100.xml \
 	config/homeseer/hsm200.xml \
 	config/homeseer/ztroller.xml \
@@ -210,6 +213,7 @@ DISTFILES =	.gitignore \
 	config/horstmann/ses303.xml \
 	config/horstmann/sir321.xml \
 	config/horstmann/srt323.xml \
+	config/horstmann/ssr302.xml \
 	config/idlock/idlock101.xml \
 	config/ingersoll/dwzwave1.xml \
 	config/intermatic/ca8900.xml \
