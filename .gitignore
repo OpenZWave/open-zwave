@@ -47,3 +47,7 @@ OZWForm.vshost.exe.manifest
 ozw_config
 .project
 *~
+/.cproject
+/zwscene.xml
+/ozwcache_*.xml
+.idea/
