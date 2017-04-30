@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE coverity SYSTEM "config.dtd">
+<coverity>
+
+<metrics>
+    <metric>
+        <name>time</name>
+        <value>1</value>
+    </metric>
+    <metric>
+        <name>args</name>
+        <value>cov-build -dir cov-int</value>
+    </metric>
+    <metric>
+        <name>host</name>
+        <value>hammond-mbpr15.internal.synopsys.com</value>
+    </metric>
+    <metric>
+        <name>short-platform</name>
+        <value>macosx</value>
+    </metric>
+    <metric>
+        <name>platform</name>
+        <value>Darwin 15.6.0 x86_64</value>
+    </metric>
+    <metric>
+        <name>ident</name>
+        <value>8.5.0.2 (build e50416d0e6 p-kent-push-26368.934)</value>
+    </metric>
+    <metric>
+        <name>user</name>
+        <value>hammond</value>
+    </metric>
+    <metric>
+        <name>cwd</name>
+        <value>/Users/hammond/Development/open-zwave/cpp/build</value>
+    </metric>
+    <metric>
+        <name>config</name>
+        <value>/Users/hammond/Development/cov-analysis-macosx-8.5.0.2/config/coverity_config.xml</value>
+    </metric>
+    <metric>
+        <name>intermediatedir</name>
+        <value>/Users/hammond/Development/open-zwave/cpp/build/cov-int</value>
+    </metric>
+    <metric>
+        <name>outputdir</name>
+        <value>/Users/hammond/Development/open-zwave/cpp/build/cov-int/output</value>
+    </metric>
+    <metric>
+        <name>emitdir</name>
+        <value>/Users/hammond/Development/open-zwave/cpp/build/cov-int/emit</value>
+    </metric>
+    <metric>
+        <name>force</name>
+        <value>no</value>
+    </metric>
+    <metric>
+        <name>cygwin</name>
+        <value>no</value>
+    </metric>
+    <metric>
+        <name>failures</name>
+        <value>0</value>
+    </metric>
+    <metric>
+        <name>successes</name>
+        <value>0</value>
+    </metric>
+    <metric>
+        <name>recoverable-errors</name>
+        <value>0</value>
+    </metric>
+    <metric>
+        <name>cs-webapps-detected</name>
+        <value>0</value>
+    </metric>
+    <metric>
+        <name>cs-webapp-successes</name>
+        <value>0</value>
+    </metric>
+    <metric>
+        <name>cs-webapp-compilation-secs</name>
+        <value>0</value>
+    </metric>
+    <metric>
+        <name>buildcmd</name>
+        <value>make</value>
+    </metric>
+</metrics>
+</coverity>
