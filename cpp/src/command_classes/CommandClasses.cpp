@@ -144,7 +144,8 @@ void CommandClasses::Register
 (
 	uint8 const _commandClassId,
 	string const& _commandClassName,
-	pfnCreateCommandClass_t _creator
+	pfnCreateCommandClass_t _creator,
+	bool advertised
 )
 {
 	m_commandClassCreators[_commandClassId] = _creator;
@@ -153,6 +154,14 @@ void CommandClasses::Register
 	Get().m_supportedCommandClasses[_commandClassId>>5] |= (1u<<(_commandClassId&0x1f));
 
 	m_namesToIDs[_commandClassName] = _commandClassId;
+	if (advertised)
+	{
+		/* ZWavePlus CC must always be first */
+		if (_commandClassId == ZWavePlusInfo::StaticGetCommandClassId())
+			m_advertisedCommandClasses.push_front(_commandClassId);
+		else
+			m_advertisedCommandClasses.push_back(_commandClassId);
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -240,7 +249,7 @@ void CommandClasses::RegisterCommandClasses
 	cc.Register( UserCode::StaticGetCommandClassId(), UserCode::StaticGetCommandClassName(), UserCode::Create );
 	cc.Register( Version::StaticGetCommandClassId(), Version::StaticGetCommandClassName(), Version::Create );
 	cc.Register( WakeUp::StaticGetCommandClassId(), WakeUp::StaticGetCommandClassName(), WakeUp::Create );
-	cc.Register( ZWavePlusInfo::StaticGetCommandClassId(), ZWavePlusInfo::StaticGetCommandClassName(), ZWavePlusInfo::Create );
+	cc.Register( ZWavePlusInfo::StaticGetCommandClassId(), ZWavePlusInfo::StaticGetCommandClassName(), ZWavePlusInfo::Create, true);
 
 	// Now all the command classes have been registered, we can modify the
 	// supported command classes array according to the program options.
@@ -324,6 +333,18 @@ uint8 CommandClasses::GetCommandClassId
 	}
 
 	return 0xff;
+}
+
+//-----------------------------------------------------------------------------
+//	<CommandClasses::GetAdvertisedCommandClasses>
+//	return a list of Advertised CommandClasses
+//-----------------------------------------------------------------------------
+list<uint8> CommandClasses::GetAdvertisedCommandClasses
+(
+)
+{
+	CommandClasses& cc = Get();
+	return cc.m_advertisedCommandClasses;
 }
 
 

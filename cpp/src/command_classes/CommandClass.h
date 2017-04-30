@@ -74,6 +74,7 @@ namespace OpenZWave
 		virtual uint8 const GetCommandClassId()const = 0;
 		virtual string const GetCommandClassName()const = 0;
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 ) = 0;
+		virtual bool HandleIncommingMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 ) { return false; }
 		virtual bool SetValue( Value const& _value ){ return false; }
 		virtual void SetValueBasic( uint8 const _instance, uint8 const _level ){}		// Class specific handling of BASIC value mapping
 		virtual void SetVersion( uint8 const _version ){ m_version = _version; }

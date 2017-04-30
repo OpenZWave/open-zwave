@@ -1492,6 +1492,19 @@ void Node::UpdateProtocolInfo
 		{
 			GetDriver()->ReadButtons( m_nodeId );
 		}
+		/* load the Advertised CommandClasses on the Controller Node
+		 *
+		 */
+		if( GetDriver()->GetControllerNodeId() == m_nodeId )
+		{
+			Log::Write( LogLevel_Info, m_nodeId, "  Advertised CommandClasses on Controller Node:");
+			list<uint8> advertisedCommandClasses = CommandClasses::GetAdvertisedCommandClasses();
+			for (list<uint8>::iterator it = advertisedCommandClasses.begin(); it != advertisedCommandClasses.end(); ++it) {
+				CommandClass *cc = AddCommandClass(*it, true);
+				Log::Write( LogLevel_Info, m_nodeId, "    %s", cc->GetCommandClassName().c_str());
+			}
+		}
+
 		m_basicprotocolInfoReceived = true;
 	} else {
 		/* we have to setup the Wakeup CC if needed here, because
@@ -1612,7 +1625,7 @@ void Node::SetSecuredClasses
 			continue;
 		}
 		/* Check if this is a CC that is already registered with the node */
-		if (CommandClass *pCommandClass = GetCommandClass(_data[i]))
+		if (CommandClass *pCommandClass = GetCommandClass(_data[i], afterMark))
 		{
 			/* if it was specified int he NIF frame, and came in as part of the Security SupportedReport message
 			 * then it can support both Clear Text and Secured Comms. So do a check first
@@ -1636,7 +1649,7 @@ void Node::SetSecuredClasses
 		 * encrypt it regardless */
 		else if( CommandClasses::IsSupported( _data[i] ) )
 		{
-			if( CommandClass* pCommandClass = AddCommandClass( _data[i] ) )
+			if( CommandClass* pCommandClass = AddCommandClass( _data[i], afterMark ) )
 			{
 				// If this class came after the COMMAND_CLASS_MARK, then we do not create values.
 				if( afterMark )
@@ -1731,7 +1744,7 @@ void Node::UpdateNodeInfo
 					Log::Write (LogLevel_Info, m_nodeId, "    %s (Disabled - Network Key Not Set)", Security::StaticGetCommandClassName().c_str());
 					continue;
 				}
-				if( CommandClass* pCommandClass = AddCommandClass( _data[i] ) )
+				if( CommandClass* pCommandClass = AddCommandClass( _data[i] , afterMark) )
 				{
 					/* this CC was in the NIF frame */
 					pCommandClass->SetInNIF();
@@ -1748,6 +1761,10 @@ void Node::UpdateNodeInfo
 					newCommandClasses = true;
 					Log::Write( LogLevel_Info, m_nodeId, "    %s", pCommandClass->GetCommandClassName().c_str() );
 				} else if (CommandClass *pCommandClass = GetCommandClass( _data[i] ) ) {
+					/* this CC was in the NIF frame */
+					pCommandClass->SetInNIF();
+					Log::Write( LogLevel_Info, m_nodeId, "    %s (Existing)", pCommandClass->GetCommandClassName().c_str() );
+				} else if (CommandClass *pCommandClass = GetCommandClass( _data[i], true ) ) {
 					/* this CC was in the NIF frame */
 					pCommandClass->SetInNIF();
 					Log::Write( LogLevel_Info, m_nodeId, "    %s (Existing)", pCommandClass->GetCommandClassName().c_str() );
@@ -1780,6 +1797,8 @@ void Node::UpdateNodeInfo
 	{
 		wakeUp->SetAwake( true );
 	}
+
+
 }
 
 //-----------------------------------------------------------------------------
@@ -1927,6 +1946,23 @@ void Node::ApplicationCommandHandler
 		pCommandClass->ReceivedCntIncr();
 		pCommandClass->HandleMsg( &_data[6], _data[4] );
 	}
+	else if( CommandClass* pCommandClass = GetCommandClass( _data[5], true ) )
+	{
+		if (pCommandClass->IsSecured() && !encrypted) {
+			Log::Write( LogLevel_Warning, m_nodeId, "Received a Clear Text Message for the Advertised CommandClass %s which is Secured", pCommandClass->GetCommandClassName().c_str());
+			bool drop = true;
+			Options::Get()->GetOptionAsBool("EnforceSecureReception", &drop);
+			if (drop) {
+				Log::Write( LogLevel_Warning, m_nodeId, "   Dropping Message");
+				return;
+			} else {
+				Log::Write( LogLevel_Warning, m_nodeId, "   Allowing Message (EnforceSecureReception is not set)");
+			}
+		}
+
+		pCommandClass->ReceivedCntIncr();
+		pCommandClass->HandleIncommingMsg( &_data[6], _data[4] );
+	}
 	else
 	{
 		if( _data[5] == ControllerReplication::StaticGetCommandClassId() )
@@ -1951,13 +1987,24 @@ void Node::ApplicationCommandHandler
 //-----------------------------------------------------------------------------
 CommandClass* Node::GetCommandClass
 (
-		uint8 const _commandClassId
+		uint8 const _commandClassId,
+		bool advertised
 )const
 {
-	map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.find( _commandClassId );
-	if( it != m_commandClassMap.end() )
+	if (!advertised) {
+		map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.find( _commandClassId );
+		if( it != m_commandClassMap.end() )
+		{
+			return it->second;
+		}
+	}
+	else
 	{
-		return it->second;
+		map<uint8, CommandClass*>::const_iterator it = m_advertisedCommandClassMap.find( _commandClassId );
+		if (it != m_advertisedCommandClassMap.end() )
+		{
+			return it->second;
+		}
 	}
 
 	// Not found
@@ -1970,10 +2017,11 @@ CommandClass* Node::GetCommandClass
 //-----------------------------------------------------------------------------
 CommandClass* Node::AddCommandClass
 (
-		uint8 const _commandClassId
+		uint8 const _commandClassId,
+		bool advertised
 )
 {
-	if( GetCommandClass( _commandClassId ) )
+	if( GetCommandClass( _commandClassId ) || GetCommandClass( _commandClassId, true))
 	{
 		// Class and instance have already been added
 		return NULL;
@@ -1982,7 +2030,15 @@ CommandClass* Node::AddCommandClass
 	// Create the command class object and add it to our map
 	if( CommandClass* pCommandClass = CommandClasses::CreateCommandClass( _commandClassId, m_homeId, m_nodeId ) )
 	{
-		m_commandClassMap[_commandClassId] = pCommandClass;
+		if (!advertised)
+		{
+			m_commandClassMap[_commandClassId] = pCommandClass;
+		}
+		else
+		{
+			m_advertisedCommandClassMap[_commandClassId] = pCommandClass;
+			pCommandClass->SetAfterMark();
+		}
 		return pCommandClass;
 	}
 	else

@@ -399,7 +399,7 @@ namespace OpenZWave
 			 * \return Pointer to the requested CommandClass object if supported, otherwise NULL.
 			 * \see CommandClass, m_commandClassMap
 			 */
-			CommandClass* GetCommandClass( uint8 const _commandClassId )const;
+			CommandClass* GetCommandClass( uint8 const _commandClassId, bool advertised = false )const;
 			void ApplicationCommandHandler( uint8 const* _data, bool encrypted );
 
 			/**
@@ -416,11 +416,12 @@ namespace OpenZWave
 			 * m_commandClassMap) if it doesn't exist.
 			 * No new object is created if it already exists for this node.
 			 * \param _commandClassId Class ID (a single byte value) identifying the command class requested.
+			 * \param advertised if the CommandClass is Advertised by this node
 			 * \return Pointer to the CommandClass object just added to the map (NULL if the object
 			 * was already there or if the CommandClass object creation failed).
 			 * \see CommandClass, CommandClasses::CreateCommandClass, m_commandClassMap
 			 */
-			CommandClass* AddCommandClass( uint8 const _commandClassId );
+			CommandClass* AddCommandClass( uint8 const _commandClassId, bool advertised = false);
 			/**
 			 * Removes a command class object from the node (via the m_commandClassMap).  Before removing the
 			 * object, this function also removes any values stored in the object's ValueStore.
@@ -434,6 +435,7 @@ namespace OpenZWave
 			void WriteXML( TiXmlElement* _nodeElement );
 
 			map<uint8,CommandClass*>		m_commandClassMap;	/**< Map of command class ids and pointers to associated command class objects */
+			map<uint8,CommandClass*>		m_advertisedCommandClassMap; /**< Map of Command Class Id's and Pointers to the Class for Advertised CommandClasses */
 			bool							m_secured; /**< Is this Node added Securely */
 
 			//-----------------------------------------------------------------------------
