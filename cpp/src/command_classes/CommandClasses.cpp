@@ -124,7 +124,8 @@ bool CommandClasses::IsSupported
 	// Test the bit representing the command class
 	return( (Get().m_supportedCommandClasses[_commandClassId>>5] & (1u<<(_commandClassId&0x1f))) != 0 );
 }
-string CommandClasses::GetName(
+string CommandClasses::GetName
+(
 	uint8 const _commandClassId
 )
 {
