@@ -19,7 +19,7 @@
 
   <!-- Associate Group Info (V1):
     Only one association group is supported Group 1:
-    Name - “Lifeline”
+    Name - "Lifeline"
     Profile MSB - ASSOCIATION_GROUP_INFO_REPORT_PROFILE_GENERAL
     Profile LSB - ASSOCIATION_GROUP_INFO_REPORT_PROFILE_GENERAL_LIFELINE
     Supported Command class and command - COMMAND_CLASS_SWITCH_BINARY, SWITCH_BINARY_REPORT
@@ -31,7 +31,7 @@
   </CommandClass>
 
   <!-- Thermostat mode (v1): 
-    Only ‘Idle Mode’ and ‘Heat Mode’ are supported within this command class, which can either set or read.
+    Only 'Idle Mode' and 'Heat Mode' are supported within this command class, which can either set or read.
     The SSR 302 has a failsafe mode where by the relay is turned off if another Thermostat Mode SET command has not been received within 60 minutes.
   -->
   <CommandClass id="64">
