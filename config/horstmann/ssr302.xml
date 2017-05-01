@@ -44,7 +44,6 @@
     Supports SET and GET to control the relay.
     Opposed to the Thermostat command class there is no failsafe mode. If Binary Switch SET command is received than previously active failsafe mode closed.
   -->
-  <CommandClass id="37" />
 
   <!-- Basic (V1):
     The Basic command class has been mapped to Switch Binary command class as follows:
@@ -53,13 +52,11 @@
     Basic Report : Mapped to Switch Binary Report
     Same as Switch Binary command class there is no failsafe mode. If Basic SET command is received than previously active failsafe mode closed.
   -->
-  <CommandClass id="32" />
 
   <!--
     Power Level (V1):
     Power Level Command Class defines RF transmit power controlling commands useful when installing or testing a network.
   -->
-  <CommandClass id="115" />
   
   <!-- Mutli Channel (V4):
     This command is used to independently access the two channels available on the SSR 302.
