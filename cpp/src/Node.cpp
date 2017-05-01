@@ -1944,7 +1944,10 @@ void Node::ApplicationCommandHandler
 		}
 
 		pCommandClass->ReceivedCntIncr();
-		pCommandClass->HandleMsg( &_data[6], _data[4] );
+		if (!pCommandClass->HandleMsg( &_data[6], _data[4] ) )
+		{
+			Log::Write( LogLevel_Warning, m_nodeId, "CommandClass %s HandlerMsg Returned False", pCommandClass->GetCommandClassName().c_str());
+		}
 	}
 	else if( CommandClass* pCommandClass = GetCommandClass( _data[5], true ) )
 	{
@@ -1961,7 +1964,10 @@ void Node::ApplicationCommandHandler
 		}
 
 		pCommandClass->ReceivedCntIncr();
-		pCommandClass->HandleIncommingMsg( &_data[6], _data[4] );
+		if (!pCommandClass->HandleIncomingMsg( &_data[6], _data[4] ) )
+		{
+			Log::Write (LogLevel_Warning, m_nodeId, "CommandClass %s HandleIncommingMsg returned false", pCommandClass->GetCommandClassName().c_str());
+		}
 	}
 	else
 	{
