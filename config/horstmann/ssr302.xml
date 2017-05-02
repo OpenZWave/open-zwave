@@ -6,26 +6,6 @@
   -->
   <CommandClass id="133">
     <Associations num_groups="1">
-    </Associations>
-  </CommandClass>
-
-  <!-- Mutli Channel Associate V3:
-    Used to add nodes having endpoints. Product supports one group (Lifeline) and has a maximum of 4 nodes. 
-  -->
-  <CommandClass id="142">
-    <Associations num_groups="1">
-    </Associations>
-  </CommandClass>
-
-  <!-- Associate Group Info (V1):
-    Only one association group is supported Group 1:
-    Name - "Lifeline"
-    Profile MSB - ASSOCIATION_GROUP_INFO_REPORT_PROFILE_GENERAL
-    Profile LSB - ASSOCIATION_GROUP_INFO_REPORT_PROFILE_GENERAL_LIFELINE
-    Supported Command class and command - COMMAND_CLASS_SWITCH_BINARY, SWITCH_BINARY_REPORT
-  -->
-  <CommandClass id="89">
-    <Associations num_groups="1">
       <Group index="1" max_associations="4" label="Lifeline"/>
     </Associations>
   </CommandClass>
