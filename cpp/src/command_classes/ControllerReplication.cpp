@@ -137,7 +137,7 @@ bool ControllerReplication::SetValue
 	{
 		case ControllerReplicationIndex_NodeId:
 		{
-			if( ValueByte* value = static_cast<ValueByte*>( GetValue( instance, ControllerReplicationIndex_NodeId ) ) )
+			if( ValueByte* value = static_cast<ValueByte*>( GetValue( instance, (uint16)ControllerReplicationIndex_NodeId ) ) )
 			{
 				value->OnValueRefreshed( (static_cast<ValueByte const*>( &_value))->GetValue() );
 				value->Release();
