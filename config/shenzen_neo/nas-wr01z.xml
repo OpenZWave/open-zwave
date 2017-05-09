@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Product xmlns='http://code.google.com/p/open-zwave/'>
+  <!--
+  Shenzhen NEO Electronics (Neo-CoolCam) Smart Power Plug
+  http://products.z-wavealliance.org/products/1783
+  -->
   <!-- Configuration Parameters -->
   <CommandClass id="112">
     <Value type="list" genre="config" instance="1" index="1" label="Send Meter Report" value="1" size="1">
