@@ -732,7 +732,9 @@
 	<Manufacturer id="0083" name="MTC Maintronic">
 	</Manufacturer>
 	<Manufacturer id="0258" name="Neo CoolCam">
-		<Product type="0003" id="1082" name="Door/Window Detector" config="shenzen_neo/nas-ds01z.xml"/> 
+		<Product type="0003" id="1082" name="Door/Window Detector" config="shenzen_neo/nas-ds01z.xml"/>
+		<Product type="0003" id="0082" name="Door/Window Detector" config="shenzen_neo/nas-ds01z.xml"/>
+		<Product type="0003" id="0087" name="Power plug 12A" config="shenzen_neo/nas-wr01z.xml"/>
 		<Product type="0003" id="1087" name="Power plug 12A" config="shenzen_neo/nas-wr01z.xml"/>
 		<Product type="0003" id="0083" name="Battery Powered PIR Sensor" config="shenzen_neo/nas-pd01z.xml"/>
 		<Product type="0003" id="1083" name="Battery Powered PIR Sensor" config="shenzen_neo/nas-pd01z.xml"/>
