@@ -156,6 +156,7 @@ DISTFILES =	.gitignore \
 	config/fibaro/fgbs001.xml \
 	config/fibaro/fgd211.xml \
 	config/fibaro/fgd212.xml \
+	config/fibaro/fgdw2.xml \
 	config/fibaro/fgfs101.xml \
 	config/fibaro/fgfs101zw5.xml \
 	config/fibaro/fggc001.xml \
