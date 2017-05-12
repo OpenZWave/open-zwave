@@ -122,13 +122,15 @@ sub CheckFileExists {
 }
 
 sub PrettyPrintErrors() {
-	print "\n\nErrors: (Please Correct before Submitting to OZW)\n";
-	while ((my $key, my $value) = each %errors) {
-		foreach my $detail (@{$value}) {
-			print $key.": ".$detail->{description}." - Error Code $detail->{code}\n";
-		}
-		print "\n";
-	}
+    if (length(%errors) != 0) {
+        print "\n\nErrors: (Please Correct before Submitting to OZW)\n";
+        while ((my $key, my $value) = each %errors) {
+            foreach my $detail (@{$value}) {
+                print $key.": ".$detail->{description}." - Error Code $detail->{code}\n";
+            }
+            print "\n";
+        }
+    }
 }
 
 sub PrettyPrintWarnings() {
