@@ -858,7 +858,8 @@
 		<Product type="0005" id="0052" name="ZMNHKDx Flush Heat and Cool thermostat" config="qubino/ZMNHKDx.xml"/>
 		<Product type="0005" id="0053" name="ZMNHLDx Flush PWM thermostat" config="qubino/ZMNHLDx.xml"/>
 		<Product type="0005" id="0003" name="ZMNHLA2 Flush PWM thermostat" config="qubino/ZMNHLAx.xml"/>
-		<Product type="0007" id="0052" name="ZMNHTDx Smart meter" config="qubino/ZMNHTDx.xml"/>
+		<!--<Product type="0007" id="0052" name="ZMNHTDx Smart meter S1 S2 S3" config="qubino/ZMNHTDxS3.xml"/>-->
+		<Product type="0007" id="0052" name="ZMNHTDx Smart meter S4 S5 S6" config="qubino/ZMNHTDx.xml"/>
 		<Product type="0007" id="0053" name="ZMNHZDx Weather Station" config="qubino/ZMNHZDx.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0130" name="Quby">
