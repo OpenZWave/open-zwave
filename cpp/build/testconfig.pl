@@ -122,7 +122,7 @@ sub CheckFileExists {
 }
 
 sub PrettyPrintErrors() {
-    if (length(%errors) != 0) {
+    if (length(%errors) > 1) {
         print "\n\nErrors: (Please Correct before Submitting to OZW)\n";
         while ((my $key, my $value) = each %errors) {
             foreach my $detail (@{$value}) {
@@ -130,6 +130,9 @@ sub PrettyPrintErrors() {
             }
             print "\n";
         }
+    }
+    else {
+        print "\n\nNo errors detected (You can submit your changes to OZW)\n";
     }
 }
 
