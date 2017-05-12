@@ -61,8 +61,7 @@
     <Value type="byte" genre="config" instance="1" index="15" label="Burnt out bulb detection" min="1" max="99" units="%" value="30">
       <Help>Function based on the sudden power variation of a specific value, interpreted as a LOAD ERROR. Available settings: 0 - function disabled; 1-99 - percentage value of power variation, compared to standard power consumption, measured during the calibration procedure (to be interpreted as load error/burnt out bulb) Default setting: 30</Help>
     </Value>
-    <!-- size of two and max 255 seems off -->
-    <Value type="byte" size="2" genre="config" instance="1" index="16" label="Time delay of a burnt out bulb" min="0" max="255" units="%" value="5">
+    <Value type="byte" size="1" genre="config" instance="1" index="16" label="Time delay of a burnt out bulb" min="0" max="255" units="%" value="5">
       <Help>Time of delay (in seconds) for power variation detection, interpreted as a LOAD ERROR or OVERLOAD detection (too much power connected to the Dimmer). Available settings: 0 - detection of a burnt out bulb disabled; 1-255 - delay time in seconds; Default setting: 5</Help>
     </Value>
     <Value type="byte" genre="config" instance="1" index="19" label="Forced switch on brightness level" min="0" max="99" units="%" value="0">
