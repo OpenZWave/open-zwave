@@ -53,7 +53,7 @@ ZMNHTD5 916,0 MHz
 			</Help>
 		</Value>
 
-		<Value type="short" genre="config" instance="1" index="14" label="Automatic turning on External relay output after set time" size="1" min="0" max="32535" value="0">
+		<Value type="short" genre="config" instance="1" index="14" label="Automatic turning on External relay output after set time" size="2" min="0" max="32535" value="0">
 			<Help>0 - Auto ON disabled.
 				1 second to 32535 seconds Auto ON enabled with defined time, step is 1 second.
 				Default value 0.
@@ -149,7 +149,7 @@ ZMNHTD5 916,0 MHz
 			<Help>Returns Qt in deci-kVAR.</Help>
 		</Value>
 
-		<Value type="int" genre="config" instance="1" index="144" label="Power factor PFt" units="milli" size="2" read_only="true" value="0">
+		<Value type="int" genre="config" instance="1" index="144" label="Power factor PFt" units="milli" size="4" read_only="true" value="0">
 			<Help>Returns PFt(x1000).</Help>
 		</Value>
 
