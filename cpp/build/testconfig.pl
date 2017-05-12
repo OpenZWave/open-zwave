@@ -84,7 +84,16 @@ sub CheckConfig {
         if (defined($valueItem)) {
             foreach my $configuration (@{$valueItem}) {
                 if ((defined($configuration->{type})) && (lc $configuration->{type} eq "list") && (not defined($configuration->{size}))) {
-                    LogError($_[0], 2, "Configuration of type list $configuration->{index} size not defined");
+                    LogError($_[0], 2, "Parameter: $configuration->{index} The size must be set for a list");
+                }
+                if ((defined($configuration->{type})) && (lc $configuration->{type} eq "byte") && (defined($configuration->{size}) && ($configuration->{size} != 1 ))) {
+                    LogError($_[0], 2, "Parameter: $configuration->{index} The size is wrong for a byte");
+                }
+                if ((defined($configuration->{type})) && (lc $configuration->{type} eq "short") && (defined($configuration->{size}) && ($configuration->{size} != 2 ))) {
+                    LogError($_[0], 2, "Parameter: $configuration->{index} The size is wrong for a short");
+                }
+                if ((defined($configuration->{type})) && (lc $configuration->{type} eq "int") && (defined($configuration->{size}) && ($configuration->{size} != 3 && $configuration->{size} != 4 ))) {
+                    LogError($_[0], 2, "Parameter: $configuration->{index} The size is wrong for a int");
                 }
              }
         }
