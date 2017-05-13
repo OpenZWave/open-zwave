@@ -6,7 +6,7 @@
     -->
     <!-- COMMAND_CLASS_CONFIGURATION. Configuration Parameters -->
     <CommandClass id="112">
-        <Value type="lst" genre="config" instance="1" index="5" label="Operation Mode" size="1" value="0">
+        <Value type="list" genre="config" instance="1" index="5" label="Operation Mode" size="1" value="0">
             <Help>
             </Help>
             <Item label="Fahrenheit" value="0"/>
