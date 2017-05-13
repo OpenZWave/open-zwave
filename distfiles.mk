@@ -98,9 +98,17 @@ DISTFILES =	.gitignore \
 	config/device_classes.xml \
 	config/device_classes.xsd \
 	config/device_configuration.xsd \
-	config/devolo/mt02648.xml \
+	config/devolo/connectz.xml \
 	config/devolo/mt2646.xml \
 	config/devolo/mt2647.xml \
+	config/devolo/mt2652.xml \
+	config/devolo/mt2653.xml \
+	config/devolo/mt2756.xml \
+	config/devolo/mt02648.xml \
+    config/devolo/mt02755.xml \
+    config/devolo/mt02758.xml \
+    config/devolo/mt02792.xml \
+    config/devolo/rs014G0159.xml \
 	config/dlink/dch-z110.xml \
 	config/dlink/dch-z120.xml \
 	config/dlink/dch-z510.xml \
