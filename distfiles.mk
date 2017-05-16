@@ -275,6 +275,7 @@ DISTFILES =	.gitignore \
 	config/philio/phpsg01.xml \
 	config/philio/pse02.xml \
 	config/philio/psm02.xml \
+	config/philio/psp05-d.xml \
 	config/philio/psr04.xml \
 	config/philio/pst02-1c.xml \
 	config/philio/pst02-b.xml \
