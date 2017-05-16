@@ -36,6 +36,7 @@ http://products.z-wavealliance.org/products/2308
     <!-- Basic set as report -->
     <CommandClass id="32" setasreport="true"/>
     <!-- Different Sounds by using COMMAND_CLASS_SWITCH_BINARY-->
+    <!--
     <CommandClass id="36" action="add" getsupported="false" create_vars="false">
         <Instance index="1"/>
         <Value type="list" genre="user" instance="1" index="0" label="Sounds" min="0" max="255" value="0" size="1" write_only="true">
@@ -58,6 +59,7 @@ http://products.z-wavealliance.org/products/2308
             <Item label="Beep Beep" value="6"/>
         </Value>
     </CommandClass>
+    -->
     <!-- Association Groups -->
     <CommandClass id="133">
         <Associations num_groups="1">
