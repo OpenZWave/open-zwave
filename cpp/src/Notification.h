@@ -196,6 +196,8 @@ namespace OpenZWave
 			return converted;
 		}
 
+		const unsigned char* GetRaw()const{ return &m_raw[0]; }
+
 	private:
 		Notification( NotificationType _type ): m_type( _type ), m_byte(0), m_event(0) {}
 		~Notification(){}
