@@ -210,11 +210,11 @@ namespace OpenZWave
 		void SetNotification( uint8 const _noteId ){ assert((Type_Notification==m_type) || (Type_ControllerCommand == m_type)); m_byte = _noteId; }
 		void SetRaw( uint8* _raw){ m_raw.assign(&_raw[0], &_raw[sizeof(_raw)]);	}
 
-		NotificationType			m_type;
-		ValueID								m_valueId;
-		uint8									m_byte;
-		uint8									m_event;
-		vector<uint8_t>				m_raw;
+		NotificationType	m_type;
+		ValueID			m_valueId;
+		uint8			m_byte;
+		uint8			m_event;
+		vector<uint8_t>		m_raw;
 	};
 
 } //namespace OpenZWave
