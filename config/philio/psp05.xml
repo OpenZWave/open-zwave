@@ -51,6 +51,7 @@ http://products.z-wavealliance.org/ProductManual/File?folder=&filename=Manuals/2
           Bit 5: Disable Multi CC in auto report (1:Disable, 0:Enable). 
           Bit 6: Disable to report battery state when the device triggered (1:Disable, 0:Enable)
           Bit 7: Reserve.
+	       ozw recommended setting: 00010110 : 22
        </Help>
     </Value>
 
