@@ -129,7 +129,7 @@ http://products.z-wavealliance.org/products/1131
   <CommandClass id="133">
     <Associations num_groups="2">
       <Group index="1" max_associations="8" label="Lifeline" />
-      <Group index="1" max_associations="8" label="Basic Set" />
+      <Group index="2" max_associations="8" label="Basic Set" />
     </Associations>
   </CommandClass>
 </Product>
