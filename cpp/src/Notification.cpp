@@ -39,6 +39,7 @@ using namespace OpenZWave;
 
 string Notification::GetAsString() const {
 	string str;
+	string command;
 	switch (m_type) {
 		case Type_ValueAdded:
 			str = "ValueAdded";
@@ -147,15 +148,66 @@ string Notification::GetAsString() const {
 			str = "DriverRemoved";
 			break;
 		case Type_ControllerCommand:
+            switch ( m_command )
+            {
+                case Driver::ControllerCommand_AddDevice:
+                    command = "AddDevice ";
+                    break;
+                case Driver::ControllerCommand_AssignReturnRoute:
+                    command = "AssignReturnRoute ";
+                    break;
+                case Driver::ControllerCommand_CreateButton:
+                    command = "CreateButton ";
+                    break;
+                case Driver::ControllerCommand_CreateNewPrimary:
+                    command = "CreateNewPrimary ";
+                    break;
+                case Driver::ControllerCommand_DeleteAllReturnRoutes:
+                    command = "DeleteAllReturnRoutes ";
+                    break;
+                case Driver::ControllerCommand_DeleteButton:
+                    command = "DeleteButton ";
+                    break;
+                case Driver::ControllerCommand_HasNodeFailed:
+                    command = "HasNodeFailed ";
+                    break;
+                case Driver::ControllerCommand_ReceiveConfiguration:
+                    command = "ReceiveConfiguration ";
+                    break;
+                case Driver::ControllerCommand_RemoveDevice:
+                    command = "RemoveDevice ";
+                    break;
+                case Driver::ControllerCommand_RemoveFailedNode:
+                    command = "RemoveFailedNode ";
+                    break;
+                case Driver::ControllerCommand_ReplaceFailedNode:
+                    command = "ReplaceFailedNode ";
+                    break;
+                case Driver::ControllerCommand_ReplicationSend:
+                    command = "ReplicationSend ";
+                    break;
+                case Driver::ControllerCommand_RequestNetworkUpdate:
+                    command = "RequestNetworkUpdate ";
+                    break;
+                case Driver::ControllerCommand_RequestNodeNeighborUpdate:
+                    command = "RequestNodeNeighborUpdate ";
+                    break;
+                case Driver::ControllerCommand_SendNodeInformation:
+                    command = "SendNodeInformation ";
+                    break;
+                case Driver::ControllerCommand_TransferPrimaryRole:
+                    command = "TransferPrimaryRole ";
+                    break;
+		    }
 			switch (m_event) {
 				case Driver::ControllerState_Normal:
-					str = "ControllerCommand - Normal";
+					str = command + "ControllerCommand - Normal";
 					break;
 				case Driver::ControllerState_Starting:
-					str = "ControllerCommand - Starting";
+					str = command + "ControllerCommand - Starting";
 					break;
 				case Driver::ControllerState_Cancel:
-					str = "ControllerCommand - Canceled";
+					str = command + "ControllerCommand - Canceled";
 					break;
 				case Driver::ControllerState_Error:
 					switch (m_byte) {
@@ -201,25 +253,25 @@ string Notification::GetAsString() const {
 					}
 					break;
 				case Driver::ControllerState_Waiting:
-					str = "ControllerCommand - Waiting";
+					str = command + "ControllerCommand - Waiting";
 					break;
 				case Driver::ControllerState_Sleeping:
-					str = "ControllerCommand - Sleeping";
+					str = command + "ControllerCommand - Sleeping";
 					break;
 				case Driver::ControllerState_InProgress:
-					str = "ControllerCommand - InProgress";
+					str = command + "ControllerCommand - InProgress";
 					break;
 				case Driver::ControllerState_Completed:
-					str = "ControllerCommand - Completed";
+					str = command + "ControllerCommand - Completed";
 					break;
 				case Driver::ControllerState_Failed:
-					str = "ControllerCommand - Failed";
+					str = command + "ControllerCommand - Failed";
 					break;
 				case Driver::ControllerState_NodeOK:
-					str = "ControllerCommand - NodeOK";
+					str = command + "ControllerCommand - NodeOK";
 					break;
 				case Driver::ControllerState_NodeFailed:
-					str = "ControllerCommand - NodeFailed";
+					str = command + "ControllerCommand - NodeFailed";
 					break;
 			}
 			break;

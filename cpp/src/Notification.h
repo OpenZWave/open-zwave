@@ -169,6 +169,12 @@ namespace OpenZWave
 		 */
 		uint8 GetNotification()const{ assert((Type_Notification==m_type) || (Type_ControllerCommand == m_type)); return m_byte; }
 
+        /**
+         * Get the (controller) command from a notification. Only valid for Notification::Type_ControllerCommand notifications.
+         * \return the (controller) command code.
+         */
+        uint8 GetCommand()const{ assert(Type_ControllerCommand == m_type); return m_command; }
+		
 		/**
 		 * Helper function to simplify wrapping the notification class.  Should not normally need to be called.
 		 * \return the internal byte value of the notification.
@@ -183,7 +189,7 @@ namespace OpenZWave
 
 
 	private:
-		Notification( NotificationType _type ): m_type( _type ), m_byte(0), m_event(0) {}
+		Notification( NotificationType _type ): m_type( _type ), m_byte(0), m_event(0),m_command(0) {}
 		~Notification(){}
 
 		void SetHomeAndNodeIds( uint32 const _homeId, uint8 const _nodeId ){ m_valueId = ValueID( _homeId, _nodeId ); }
@@ -194,11 +200,13 @@ namespace OpenZWave
 		void SetSceneId( uint8 const _sceneId ){ assert(Type_SceneEvent==m_type); m_byte = _sceneId; }
 		void SetButtonId( uint8 const _buttonId ){ assert(Type_CreateButton==m_type||Type_DeleteButton==m_type||Type_ButtonOn==m_type||Type_ButtonOff==m_type); m_byte = _buttonId; }
 		void SetNotification( uint8 const _noteId ){ assert((Type_Notification==m_type) || (Type_ControllerCommand == m_type)); m_byte = _noteId; }
+		void SetCommand( uint8 const _command ){ assert(Type_ControllerCommand == m_type); m_command = _command; }
 
 		NotificationType		m_type;
 		ValueID				m_valueId;
 		uint8				m_byte;
 		uint8				m_event;
+		uint8               m_command;
 	};
 
 } //namespace OpenZWave
