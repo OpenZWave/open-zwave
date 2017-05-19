@@ -289,7 +289,7 @@
 	</Manufacturer>
 	<Manufacturer id="0175" name="Devolo home Control">
 		<Product type="0001" id="0011" name="Metering Plug MT02646" config="devolo/mt2646.xml"/>
-		<Product type="0001" id="0012" name="Home Control Smart Metering Plug MT02792" config="devolo/mt02792.xml"/>
+		<Product type="0001" id="0012" name="Smart Metering Plug MT02792" config="devolo/mt02792.xml"/>
 		<Product type="0002" id="000e" name="Door/Window Contact MT02648" config="devolo/mt02648.xml"/>
 		<Product type="0002" id="0020" name="Humidity Sensor MT02755" config="devolo/mt02755.xml"/>
 		<Product type="0002" id="0021" name="Flood Sensor MT02756" config="devolo/mt2756.xml"/>
@@ -298,7 +298,7 @@
 		<Product type="0004" id="000a" name="Siren MT02758" config="devolo/mt02758.xml"/>
 		<Product type="0005" id="0175" name="Thermostats Danfoss Connect Z" config="devolo/connectz.xml"/>
 		<Product type="0100" id="0101" name="Scene Switch MT2652" config="devolo/mt2652.xml" />
-		<Product type="0100" id="0102" name="Home Control Key MT2653" config="devolo/mt2653.xml" />
+		<Product type="0100" id="0102" name="Key MT2653" config="devolo/mt2653.xml" />
     </Manufacturer>
 	<Manufacturer id="0103" name="DiehlControls">
         <Product type="0002" id="0002" name="Dimmer Actuator"/>
