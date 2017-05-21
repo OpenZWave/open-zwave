@@ -1,14 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- SCSC17 (Secure / Horstmann) -->
 <Product xmlns='http://code.google.com/p/open-zwave/'>
-  <!-- The thermostat does not properly report its operating modes -->
-  <CommandClass id="64" getsupported="false">
-    <SupportedModes>
-      <Mode index="0" label="Off"/>
-      <Mode index="1" label="Heat"/>
-    </SupportedModes>
-  </CommandClass>
-  <!-- This thermostat's setpoint descriptions are 0 based, not 1 -->
+
   <CommandClass id="67" base="0" override_precision="0"/>
 
   <!-- Configuration Parameters -->
@@ -26,7 +19,7 @@
     </Value>
     <Value type="byte" instance="1" index="4" genre="config" label="Delta T: Temperature change" min="1" max="50" value="5">
       <Help>Change between temperatures to trigger a temperature report (step 0.1)
-        1 to 50, 1 or 0.1 (Default 5 = 0,5C) -> (1C = 10)
+        1 to 50 (Default 5 = 0,5C)
       </Help>
     </Value>
   </CommandClass>
