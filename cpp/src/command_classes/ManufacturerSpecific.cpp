@@ -60,10 +60,11 @@ enum {
 };
 
 enum {
-    ManufacturerSpecific_LoadedConfig = 0,
-	ManufacturerSpecific_LatestConfig = 1,
-	ManufacturerSpecific_DeviceID = 2,
-    ManufacturerSpecific_SerialNumber =3
+    ManufacturerSpecific_LoadedConfig,
+	ManufacturerSpecific_LocalConfig,
+	ManufacturerSpecific_LatestConfig,
+	ManufacturerSpecific_DeviceID,
+    ManufacturerSpecific_SerialNumber
 };
 
 
@@ -269,26 +270,16 @@ bool ManufacturerSpecific::HandleMsg
                 }
                 deviceID += temp_chr;
         }
-        if( Node* node = GetNodeUnsafe() ) {
-                if (deviceIDType == DeviceSpecificGet_DeviceIDType_FactoryDefault) {
-                        ValueString *default_value = static_cast<ValueString*>( GetValue(_instance, ManufacturerSpecific_DeviceID) );
-                        if (default_value == NULL) {
-                                node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ManufacturerSpecific_DeviceID, "Device ID", "", true, false, "", 0);
-                                default_value = static_cast<ValueString*>( GetValue(_instance, ManufacturerSpecific_DeviceID) );
-                        }
-                        default_value->OnValueRefreshed(deviceID);
-                        default_value->Release();
-                }
-                else if (deviceIDType == DeviceSpecificGet_DeviceIDType_SerialNumber) {
-                        ValueString *serial_value = static_cast<ValueString*>( GetValue(_instance, ManufacturerSpecific_SerialNumber) );
-                        if (serial_value == NULL) {
-                                node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ManufacturerSpecific_SerialNumber, "Serial Number", "", true, false, "", 0);
-                                serial_value = static_cast<ValueString*>( GetValue(_instance, ManufacturerSpecific_SerialNumber) );
-                        }
-                        serial_value->OnValueRefreshed(deviceID);
-                        serial_value->Release();
-                }
-        }
+		if (deviceIDType == DeviceSpecificGet_DeviceIDType_FactoryDefault) {
+				ValueString *default_value = static_cast<ValueString*>( GetValue(_instance, ManufacturerSpecific_DeviceID) );
+				default_value->OnValueRefreshed(deviceID);
+				default_value->Release();
+		}
+		else if (deviceIDType == DeviceSpecificGet_DeviceIDType_SerialNumber) {
+				ValueString *serial_value = static_cast<ValueString*>( GetValue(_instance, ManufacturerSpecific_SerialNumber) );
+				serial_value->OnValueRefreshed(deviceID);
+				serial_value->Release();
+		}
         return true;
 	}
 
@@ -363,9 +354,11 @@ void ManufacturerSpecific::CreateVars
 	if (_instance == 1) {
 		if( Node* node = GetNodeUnsafe() )
 		{
-			node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 0, "Loaded Config Revision", "", true, false, m_loadedConfigRevision, 0 );
-			node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 1, "Config File Revision", "", true, false, m_fileConfigRevision, 0 );
-			node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 2, "Latest Available Config File Revision", "", true, false, m_latestConfigRevision, 0 );
+			node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ManufacturerSpecific_LoadedConfig, "Loaded Config Revision", "", true, false, m_loadedConfigRevision, 0 );
+			node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ManufacturerSpecific_LocalConfig, "Config File Revision", "", true, false, m_fileConfigRevision, 0 );
+			node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ManufacturerSpecific_LatestConfig, "Latest Available Config File Revision", "", true, false, m_latestConfigRevision, 0 );
+            node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ManufacturerSpecific_DeviceID, "Device ID", "", true, false, "", 0);
+            node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ManufacturerSpecific_SerialNumber, "Serial Number", "", true, false, "", 0);
 		}
 	}
 
@@ -383,7 +376,7 @@ void ManufacturerSpecific::setLatestConfigRevision
 
 	m_latestConfigRevision = rev;
 
-	if( ValueInt* value = static_cast<ValueInt*>( GetValue( 1, 2 ) ) )
+	if( ValueInt* value = static_cast<ValueInt*>( GetValue( 1, ManufacturerSpecific_LatestConfig ) ) )
 	{
 		value->OnValueRefreshed( rev );
 		value->Release();
@@ -403,7 +396,7 @@ void ManufacturerSpecific::setFileConfigRevision
 {
 	m_fileConfigRevision = rev;
 
-	if( ValueInt* value = static_cast<ValueInt*>( GetValue( 1, 1 ) ) )
+	if( ValueInt* value = static_cast<ValueInt*>( GetValue( 1, ManufacturerSpecific_LocalConfig ) ) )
 	{
 		value->OnValueRefreshed( rev );
 		value->Release();
@@ -423,7 +416,7 @@ void ManufacturerSpecific::setLoadedConfigRevision
 {
 	m_latestConfigRevision = rev;
 
-	if( ValueInt* value = static_cast<ValueInt*>( GetValue( 1, 0 ) ) )
+	if( ValueInt* value = static_cast<ValueInt*>( GetValue( 1, ManufacturerSpecific_LoadedConfig ) ) )
 	{
 		value->OnValueRefreshed( rev );
 		value->Release();
