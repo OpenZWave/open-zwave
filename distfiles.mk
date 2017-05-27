@@ -2,6 +2,7 @@
 # Any Edits on this file will be lost next time dist-update is run
 
 DISTFILES =	.gitignore \
+	BSDmakefile \
 	ChangeLog \
 	INSTALL \
 	Makefile \
@@ -556,6 +557,8 @@ DISTFILES =	.gitignore \
 	cpp/src/command_classes/Language.h \
 	cpp/src/command_classes/Lock.cpp \
 	cpp/src/command_classes/Lock.h \
+	cpp/src/command_classes/ManufacturerProprietary.cpp \
+	cpp/src/command_classes/ManufacturerProprietary.h \
 	cpp/src/command_classes/ManufacturerSpecific.cpp \
 	cpp/src/command_classes/ManufacturerSpecific.h \
 	cpp/src/command_classes/Meter.cpp \
@@ -764,67 +767,6 @@ DISTFILES =	.gitignore \
 	docs/images+css/OpenZWave.css \
 	docs/images+css/image003.gif \
 	docs/images+css/zwalliance_250x100.jpg \
-	dotnet/build/vs2008/OpenZWaveDotNet.sln \
-	dotnet/build/vs2008/OpenZWaveDotNet.vcproj \
-	dotnet/build/vs2010/OpenZWaveDotNet.sln \
-	dotnet/build/vs2010/OpenZWaveDotNet.vcxproj \
-	dotnet/build/vs2010/OpenZWaveDotNet.vcxproj.filters \
-	dotnet/examples/OZWForm/CopyFilesVS2008.cmd \
-	dotnet/examples/OZWForm/CopyFilesVS2010.cmd \
-	dotnet/examples/OZWForm/README.TXT \
-	dotnet/examples/OZWForm/build/vs2008/OZWForm.csproj \
-	dotnet/examples/OZWForm/build/vs2008/OZWForm.sln \
-	dotnet/examples/OZWForm/build/vs2010/OZWForm.csproj \
-	dotnet/examples/OZWForm/build/vs2010/OZWForm.sln \
-	dotnet/examples/OZWForm/src/ConfigurationWakeUpDlg.Designer.cs \
-	dotnet/examples/OZWForm/src/ConfigurationWakeUpDlg.cs \
-	dotnet/examples/OZWForm/src/ConfigurationWakeUpDlg.resx \
-	dotnet/examples/OZWForm/src/ControllerCommandDlg.Designer.cs \
-	dotnet/examples/OZWForm/src/ControllerCommandDlg.cs \
-	dotnet/examples/OZWForm/src/ControllerCommandDlg.resx \
-	dotnet/examples/OZWForm/src/MainForm.Designer.cs \
-	dotnet/examples/OZWForm/src/MainForm.cs \
-	dotnet/examples/OZWForm/src/MainForm.resx \
-	dotnet/examples/OZWForm/src/Node.cs \
-	dotnet/examples/OZWForm/src/NodeForm.Designer.cs \
-	dotnet/examples/OZWForm/src/NodeForm.cs \
-	dotnet/examples/OZWForm/src/NodeForm.resx \
-	dotnet/examples/OZWForm/src/Program.cs \
-	dotnet/examples/OZWForm/src/Properties/AssemblyInfo.cs \
-	dotnet/examples/OZWForm/src/Properties/Resources.Designer.cs \
-	dotnet/examples/OZWForm/src/Properties/Resources.resx \
-	dotnet/examples/OZWForm/src/Properties/Settings.Designer.cs \
-	dotnet/examples/OZWForm/src/Properties/Settings.settings \
-	dotnet/examples/OZWForm/src/ValuePanel.Designer.cs \
-	dotnet/examples/OZWForm/src/ValuePanel.cs \
-	dotnet/examples/OZWForm/src/ValuePanel.resx \
-	dotnet/examples/OZWForm/src/ValuePanelBool.cs \
-	dotnet/examples/OZWForm/src/ValuePanelBool.resx \
-	dotnet/examples/OZWForm/src/ValuePanelButton.cs \
-	dotnet/examples/OZWForm/src/ValuePanelButton.resx \
-	dotnet/examples/OZWForm/src/ValuePanelByte.cs \
-	dotnet/examples/OZWForm/src/ValuePanelByte.resx \
-	dotnet/examples/OZWForm/src/ValuePanelDecimal.cs \
-	dotnet/examples/OZWForm/src/ValuePanelDecimal.resx \
-	dotnet/examples/OZWForm/src/ValuePanelInt.cs \
-	dotnet/examples/OZWForm/src/ValuePanelInt.resx \
-	dotnet/examples/OZWForm/src/ValuePanelList.cs \
-	dotnet/examples/OZWForm/src/ValuePanelList.resx \
-	dotnet/examples/OZWForm/src/ValuePanelShort.cs \
-	dotnet/examples/OZWForm/src/ValuePanelShort.resx \
-	dotnet/examples/OZWForm/src/ValuePanelString.cs \
-	dotnet/examples/OZWForm/src/ValuePanelString.resx \
-	dotnet/examples/OZWForm/src/app.config \
-	dotnet/src/AssemblyInfo.cpp \
-	dotnet/src/ZWManager.cpp \
-	dotnet/src/ZWManager.h \
-	dotnet/src/ZWNotification.h \
-	dotnet/src/ZWOptions.cpp \
-	dotnet/src/ZWOptions.h \
-	dotnet/src/ZWValueID.h \
-	dotnet/src/app.ico \
-	dotnet/src/app.rc \
-	dotnet/src/resource.h \
 	license/Apache-License-2.0.txt \
 	license/gpl.txt \
 	license/lgpl.txt \
