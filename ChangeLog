@@ -181,6 +181,7 @@ Version 1.5
  - Add Qubino ZMNHTDx Smart meter Z-Wave+ config for version 1 to 3 and 4 to 6, assume new device as 4 to 6 (Nechry)
  - Add Devolo devices (Nechry)
  - Pull Request #1224 - Add Philio PSP05-D Motionsensor from superjunky (Nechry)
+ - Add Domux devices (Nechry)
  
 Version 1.4
  - Released 10th Jan, 2016
