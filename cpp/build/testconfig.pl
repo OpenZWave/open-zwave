@@ -123,7 +123,26 @@ foreach my $group ($data->{CommandClass}->{133}->{Associations}->{Group})
 			LogWarning($_[0], 3, "No Association Groups Defined for device");
 		}
 	}
-
+     $data = $xml->XMLin($_[0], ForceArray => [ 'Value' ]);
+     # print output
+     foreach my $valueItem ($data->{CommandClass}->{112}->{Value}) {
+         if (defined($valueItem)) {
+             foreach my $configuration (@{$valueItem}) {
+                 if ((defined($configuration->{type})) && (lc $configuration->{type} eq "list") && (not defined($configuration->{size}))) {
+                    LogError($_[0], 2, "Parameter: $configuration->{index} The size must be set for a list");
+                }
+                if ((defined($configuration->{type})) && (lc $configuration->{type} eq "byte") && (defined($configuration->{size}) && ($configuration->{size} != 1 ))) {
+                    LogError($_[0], 2, "Parameter: $configuration->{index} The size is wrong for a byte");
+                }
+                if ((defined($configuration->{type})) && (lc $configuration->{type} eq "short") && (defined($configuration->{size}) && ($configuration->{size} != 2 ))) {
+                    LogError($_[0], 2, "Parameter: $configuration->{index} The size is wrong for a short");
+                }
+                if ((defined($configuration->{type})) && (lc $configuration->{type} eq "int") && (defined($configuration->{size}) && ($configuration->{size} != 3 && $configuration->{size} != 4 ))) {
+                    LogError($_[0], 2, "Parameter: $configuration->{index} The size is wrong for a int");
+                }
+             }
+        }
+    }
 }
 
 # check files match entries in manufacture_specific.xml 
@@ -194,14 +213,18 @@ foreach my $unreffile (keys %configfiles)
 }
 
 sub PrettyPrintErrors() {
-	print "\n\nErrors: (Please Correct before Submitting to OZW)\n";
-	while ((my $key, my $value) = each %errors) 
-	{
-		foreach my $detail (@{$value}) 
+	if (length(%errors) > 1) {
+		print "\n\nErrors: (Please Correct before Submitting to OZW)\n";
+		while ((my $key, my $value) = each %errors) 
 		{
-			print $key.": ".$detail->{description}." - Error Code $detail->{code}\n";
+			foreach my $detail (@{$value}) 
+			{
+				print $key.": ".$detail->{description}." - Error Code $detail->{code}\n";
+			}
+			print "\n";
 		}
-		print "\n";
+	} else {
+		print "\n\nNo errors detected (You can submit your changes to OZW)\n";
 	}
 }
 

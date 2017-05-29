@@ -51,3 +51,5 @@ ozw_config
 /zwscene.xml
 /ozwcache_*.xml
 .idea/
+.idea/*
+ozw_config

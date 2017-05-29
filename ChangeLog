@@ -176,6 +176,12 @@ Version 1.5
  - Add Aeotec ZW129 WallMote Duo (Nechry)
  - Add Aeotec ZW132, ZW139 and ZW140 Nano Switch (Nechry)
  - ForceInstances now limited to association with the controller node.
+ - Add MCOHome Thermostat fan coil MH8-FC-EU (Nechry)
+ - Add Fibaro FGDW002 Door Opening Sensor 2 (Nechry)
+ - Add Qubino ZMNHTDx Smart meter Z-Wave+ config for version 1 to 3 and 4 to 6, assume new device as 4 to 6 (Nechry)
+ - Add Devolo devices (Nechry)
+ - Pull Request #1224 - Add Philio PSP05-D Motionsensor from superjunky (Nechry)
+ - Add Domux devices (Nechry)
 
 Dev Branch:
  - Rename zwcfg_*.xml to zwcache_*.xml to reflect its not a config file, but a cache. (Justin)

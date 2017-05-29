@@ -99,14 +99,29 @@ DISTFILES =	.gitignore \
 	config/device_classes.xml \
 	config/device_classes.xsd \
 	config/device_configuration.xsd \
-	config/devolo/mt02648.xml \
+	config/devolo/connectz.xml \
 	config/devolo/mt2646.xml \
 	config/devolo/mt2647.xml \
+	config/devolo/mt2652.xml \
+	config/devolo/mt2653.xml \
+	config/devolo/mt2756.xml \
+	config/devolo/mt02648.xml \
+    config/devolo/mt02755.xml \
+    config/devolo/mt02758.xml \
+    config/devolo/mt02792.xml \
+    config/devolo/rs014G0159.xml \
 	config/dlink/dch-z110.xml \
 	config/dlink/dch-z120.xml \
 	config/dlink/dch-z510.xml \
 	config/domitech/zb22uk.xml \
 	config/domitech/ze27eu.xml \
+	config/domux/dx1caz.xml \
+	config/domux/dx1cgz.xml \
+	config/domux/dx1dsz.xml \
+	config/domux/dx1htz.xml \
+	config/domux/dx1msz.xml \
+	config/domux/dx1saz.xml \
+	config/domux/dx1wlz.xml \
 	config/domux/dx2skz.xml \
 	config/dragontech/wd-100.xml \
 	config/duwi/05458.xml \
@@ -157,6 +172,7 @@ DISTFILES =	.gitignore \
 	config/fibaro/fgbs001.xml \
 	config/fibaro/fgd211.xml \
 	config/fibaro/fgd212.xml \
+	config/fibaro/fgdw2.xml \
 	config/fibaro/fgfs101.xml \
 	config/fibaro/fgfs101zw5.xml \
 	config/fibaro/fggc001.xml \
@@ -189,7 +205,6 @@ DISTFILES =	.gitignore \
 	config/ge/12724-dimmer.xml \
 	config/ge/14291-switch.xml \
 	config/ge/14294-dimmer.xml \
-	config/ge/26933-motion-dimmer.xml \
 	config/ge/dimmer.xml \
 	config/ge/dimmer_module.xml \
 	config/ge/hinge-pin.xml \
@@ -217,6 +232,7 @@ DISTFILES =	.gitignore \
 	config/horstmann/ses303.xml \
 	config/horstmann/sir321.xml \
 	config/horstmann/srt323.xml \
+	config/horstmann/ssr302.xml \
 	config/idlock/idlock101.xml \
 	config/ingersoll/dwzwave1.xml \
 	config/intermatic/ca8900.xml \
@@ -238,7 +254,8 @@ DISTFILES =	.gitignore \
 	config/logicsoft/ZHC5010.xml \
 	config/manufacturer_specific.xml \
 	config/manufacturer_specific.xsd \
-	config/mcohome/mhp210.xml \
+	config/mcohome/mh8fceu.xml \
+    config/mcohome/mhp210.xml \
 	config/mcohome/mhs311.xml \
 	config/mcohome/mhs312.xml \
 	config/mcohome/mhs314.xml \
@@ -268,6 +285,7 @@ DISTFILES =	.gitignore \
 	config/philio/phpsg01.xml \
 	config/philio/pse02.xml \
 	config/philio/psm02.xml \
+	config/philio/psp05.xml \
 	config/philio/psr04.xml \
 	config/philio/pst02-1c.xml \
 	config/philio/pst02-b.xml \
