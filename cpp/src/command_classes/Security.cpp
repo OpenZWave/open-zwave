@@ -106,7 +106,7 @@ bool Security::Init
 	msg->Append( SecurityCmd_SupportedGet );
 	msg->Append( GetDriver()->GetTransmitOptions() );
 	msg->setEncrypted();
-	GetDriver()->SendMsg( msg, Driver::MsgQueue_Security);
+	GetDriver()->SendMsg( msg, Driver::MsgQueue_Command);
 	return true;
 }
 //-----------------------------------------------------------------------------
@@ -126,7 +126,7 @@ bool Security::ExchangeNetworkKeys
 		msg->Append( 0 );
 		msg->Append( GetDriver()->GetTransmitOptions() );
 		/* SchemeGet is unencrypted */
-		GetDriver()->SendMsg(msg, Driver::MsgQueue_Security);
+		GetDriver()->SendMsg(msg, Driver::MsgQueue_Command);
 		return true;
 	}
 	return false;
@@ -161,7 +161,7 @@ bool Security::RequestState
 bool Security::RequestValue
 (
 		uint32 const _requestFlags,
-		uint8 const _index,
+		uint16 const _index,
 		uint8 const _instance,
 		Driver::MsgQueue const _queue
 )
@@ -243,7 +243,7 @@ bool Security::HandleMsg
 					msg->Append(GetDriver()->GetNetworkKey()[i]);
 				msg->Append( GetDriver()->GetTransmitOptions() );
 				msg->setEncrypted();
-				GetDriver()->SendMsg( msg, Driver::MsgQueue_Security);
+				GetDriver()->SendMsg( msg, Driver::MsgQueue_Command);
 				m_schemeagreed = true;
 			}
 			else
@@ -277,7 +277,7 @@ bool Security::HandleMsg
 			msg->Append( SecurityCmd_SupportedGet );
 			msg->Append( GetDriver()->GetTransmitOptions() );
 			msg->setEncrypted();
-			GetDriver()->SendMsg( msg, Driver::MsgQueue_Security);
+			GetDriver()->SendMsg( msg, Driver::MsgQueue_Command);
 
 			break;
 		}

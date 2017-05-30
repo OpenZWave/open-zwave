@@ -45,7 +45,7 @@ ValueSchedule::ValueSchedule
 	ValueID::ValueGenre const _genre,
 	uint8 const _commandClassId,
 	uint8 const _instance,
-	uint8 const _index,
+	uint16 const _index,
 	string const& _label,
 	string const& _units,
 	bool const _readOnly,

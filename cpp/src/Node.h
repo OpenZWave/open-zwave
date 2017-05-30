@@ -57,6 +57,7 @@ namespace OpenZWave
 	class ValueShort;
 	class ValueString;
 	class Mutex;
+	class ProductDescriptor;
 
 	/** \brief The Node class describes a Z-Wave node object...typically a device on the
 	 *  Z-Wave network.
@@ -83,6 +84,7 @@ namespace OpenZWave
 			friend class Language;
 			friend class Lock;
 			friend class ManufacturerSpecific;
+			friend class ManufacturerSpecificDB;
 			friend class Meter;
 			friend class MeterPulse;
 			friend class MultiInstance;
@@ -397,7 +399,7 @@ namespace OpenZWave
 			 * \return Pointer to the requested CommandClass object if supported, otherwise NULL.
 			 * \see CommandClass, m_commandClassMap
 			 */
-			CommandClass* GetCommandClass( uint8 const _commandClassId )const;
+			CommandClass* GetCommandClass( uint8 const _commandClassId, bool advertised = false )const;
 			void ApplicationCommandHandler( uint8 const* _data, bool encrypted );
 
 			/**
@@ -414,11 +416,12 @@ namespace OpenZWave
 			 * m_commandClassMap) if it doesn't exist.
 			 * No new object is created if it already exists for this node.
 			 * \param _commandClassId Class ID (a single byte value) identifying the command class requested.
+			 * \param advertised if the CommandClass is Advertised by this node
 			 * \return Pointer to the CommandClass object just added to the map (NULL if the object
 			 * was already there or if the CommandClass object creation failed).
 			 * \see CommandClass, CommandClasses::CreateCommandClass, m_commandClassMap
 			 */
-			CommandClass* AddCommandClass( uint8 const _commandClassId );
+			CommandClass* AddCommandClass( uint8 const _commandClassId, bool advertised = false);
 			/**
 			 * Removes a command class object from the node (via the m_commandClassMap).  Before removing the
 			 * object, this function also removes any values stored in the object's ValueStore.
@@ -432,7 +435,63 @@ namespace OpenZWave
 			void WriteXML( TiXmlElement* _nodeElement );
 
 			map<uint8,CommandClass*>		m_commandClassMap;	/**< Map of command class ids and pointers to associated command class objects */
+			map<uint8,CommandClass*>		m_advertisedCommandClassMap; /**< Map of Command Class Id's and Pointers to the Class for Advertised CommandClasses */
 			bool							m_secured; /**< Is this Node added Securely */
+
+			//-----------------------------------------------------------------------------
+			// Configuration Revision Related Classes
+			//-----------------------------------------------------------------------------
+		public:
+			void SetProductDetails(ProductDescriptor *product);
+			/** Get a path to the config file for this device
+			 *
+			 * @return a path relative to the config directory for the config file. returns a empty string if a config file is not present.
+			 */
+			string getConfigPath();
+			/** Get the latest local revision of the config file for this node
+			 *
+			 * @return a revision number
+			 */
+			uint32 getFileConfigRevision() { return m_fileConfigRevision; };
+			/** Get the Revision number of the config that is laoded for this Node
+			 *
+			 * @return the revision number currently loaded.
+			 */
+			uint32 getLoadedConfigRevision() { return m_loadedConfigRevision; };
+			/** Get the Latest Config File revision available at openzwave.com
+			 *
+			 * @return The latest revision number available
+			 */
+			uint32 getLatestConfigRevision() { return m_latestConfigRevision; };
+			/** Set the revision number of the Config File for this device
+			 *
+			 * @param rev the revision number
+			 */
+			void setFileConfigRevision(uint32 rev);
+			/** Set the revision number of the config that is loaded for this device
+			 *
+			 * @param rev the revision number
+			 */
+			void setLoadedConfigRevision(uint32 rev);
+			/** Set the revision number of the latest available config file for this device
+			 *
+			 * @param rev the revision number
+			 */
+			void setLatestConfigRevision(uint32 rev);
+			/** Check the latest available revision number for this device.
+			 *
+			 */
+			void checkLatestConfigRevision( );
+
+		private:
+
+
+			ProductDescriptor *m_Product;
+
+
+			uint32 m_fileConfigRevision;
+			uint32 m_loadedConfigRevision;
+			uint32 m_latestConfigRevision;
 			//-----------------------------------------------------------------------------
 			// Basic commands (helpers that go through the basic command class)
 			//-----------------------------------------------------------------------------
@@ -622,6 +681,38 @@ namespace OpenZWave
 			private:
 			uint8 m_lastnonce;
 			uint8 m_nonces[8][8];
+
+			//-----------------------------------------------------------------------------
+			//	MetaData Related
+			//-----------------------------------------------------------------------------
+
+			public:
+			/**
+			 * MetaData Fields.
+			 * Available Fields that contain metadata about a device.
+			 * \see Manager::AddWatcher
+			 * \see Manager::BeginControllerCommand
+			 */
+			enum MetaDataFields
+			{
+				MetaData_OzwInfoPage,
+				MetaData_ZWProductPage,
+				MetaData_Pepper1Page,
+				MetaData_ProductPic,
+				MetaData_ProductManual,
+				MetaData_ProductPage,
+				MetaData_Invalid = 255
+			};
+
+			string const GetMetaData(MetaDataFields);
+			MetaDataFields const GetMetaDataId(string);
+			string const GetMetaDataString(MetaDataFields);
+
+
+			private:
+			void ReadMetaDataFromXML(TiXmlElement const* _valueElement);
+			void WriteMetaDataXML(TiXmlElement*);
+			map<MetaDataFields, string> m_metadata;
 	};
 
 

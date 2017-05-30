@@ -1,16 +1,18 @@
 <?xml version='1.0'?>
 <xs:schema
   xmlns:xs='http://www.w3.org/2001/XMLSchema'
-  targetNamespace='http://code.google.com/p/open-zwave/'
-  xmlns:Product='http://code.google.com/p/open-zwave/'
+  targetNamespace='https://github.com/OpenZWave/open-zwave'
+  xmlns:Product='https://github.com/OpenZWave/open-zwave'
   elementFormDefault='qualified'>
 
  <xs:element name='Product'>
   <xs:complexType>
    <xs:sequence>
     <xs:element ref='Product:Protocol' minOccurs='0' maxOccurs='1'/>
+    <xs:element ref='Product:MetaData' minOccurs='0' maxOccurs='1'/>
     <xs:element ref='Product:CommandClass' minOccurs='0' maxOccurs='unbounded'/>
    </xs:sequence>
+   <xs:attribute name='Revision' type='xs:integer' use='required'/>
   </xs:complexType>
  </xs:element>
 
@@ -270,6 +272,7 @@
    <xs:attribute name='units' type='xs:string' use='optional'/>
    <xs:attribute name='min' type='xs:string' use='optional'/>
    <xs:attribute name='max' type='xs:string' use='optional'/>
+   <xs:attribute name='vindex' type='xs:string' use='optional'/>
    <xs:attribute name='value' type='xs:string' use='optional'/>
    <xs:attribute name='length' type='xs:string' use='optional'/>
    <xs:attribute name='read_only' use='optional'>
@@ -341,4 +344,20 @@
    <xs:attribute name='id' type='xs:string' use='required'/>
   </xs:complexType>
  </xs:element>
+
+ <xs:element name='MetaData'>
+  <xs:complexType>
+   <xs:sequence>
+    <xs:element ref='Product:MetaDataItem' maxOccurs='unbounded'/>
+   </xs:sequence>
+  </xs:complexType>
+ </xs:element>
+
+ <xs:element name='MetaDataItem'>
+  <xs:complexType mixed='true'> 
+   <xs:attribute name='name' type='xs:string' use='required'/>
+  </xs:complexType>
+ </xs:element>
+
+
 </xs:schema>

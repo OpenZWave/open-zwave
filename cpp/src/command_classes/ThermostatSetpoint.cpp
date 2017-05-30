@@ -168,7 +168,7 @@ bool ThermostatSetpoint::RequestState
 bool ThermostatSetpoint::RequestValue
 (
 	uint32 const _requestFlags,
-	uint8 const _setPointIndex,
+	uint16 const _setPointIndex,
 	uint8 const _instance,
 	Driver::MsgQueue const _queue
 )
@@ -202,7 +202,7 @@ bool ThermostatSetpoint::RequestValue
 		msg->Append( 3 );
 		msg->Append( GetCommandClassId() );
 		msg->Append( ThermostatSetpointCmd_Get );
-		msg->Append( _setPointIndex );
+		msg->Append( (_setPointIndex & 0xFF) );
 		msg->Append( GetDriver()->GetTransmitOptions() );
 		GetDriver()->SendMsg( msg, _queue );
 		return true;

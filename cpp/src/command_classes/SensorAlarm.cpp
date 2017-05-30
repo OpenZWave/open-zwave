@@ -111,7 +111,7 @@ bool SensorAlarm::RequestState
 bool SensorAlarm::RequestValue
 (
 	uint32 const _requestFlags,
-	uint8 const _alarmType,
+	uint16 const _alarmType,
 	uint8 const _instance,
 	Driver::MsgQueue const _queue
 )
@@ -140,7 +140,7 @@ bool SensorAlarm::RequestValue
 			msg->Append( 3 );
 			msg->Append( GetCommandClassId() );
 			msg->Append( SensorAlarmCmd_Get );
-			msg->Append( _alarmType );
+			msg->Append( (_alarmType & 0xFF) );
 			msg->Append( GetDriver()->GetTransmitOptions() );
 			GetDriver()->SendMsg( msg, _queue );
 			return true;

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- GE(Jasco) 14294 Z-Wave Plus Dimmer Switch -->
-<Product xmlns='http://code.google.com/p/open-zwave/'>
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
 	<!-- Configuration Parameters - per
              http://products.z-wavealliance.org/products/1442 -->
 	<CommandClass id="112">

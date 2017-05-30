@@ -84,6 +84,96 @@ bool FileOps::FolderExists
 	return false;
 }
 
+/**
+ * FileExists. Check for the existance of a file.
+ * \param string. file name.
+ * \return Bool value indicating existance.
+ */
+bool FileOps::FileExists
+(
+	const string &_fileName
+)
+{
+	if( s_instance != NULL )
+	{
+		return s_instance->m_pImpl->FileExists( _fileName );
+	}
+	return false;
+}
+
+/**
+ * FileWriteable. Check if we can write to a file.
+ * \param string. file name.
+ * \return Bool value indicating write permissions.
+ */
+bool FileOps::FileWriteable
+(
+	const string &_fileName
+)
+{
+	if( s_instance != NULL )
+	{
+		return s_instance->m_pImpl->FileWriteable( _fileName );
+	}
+	return false;
+}
+
+/**
+ * FileRotate. Rotate a File
+ * \param string. file name.
+ * \return Bool value indicating write permissions.
+ */
+bool FileOps::FileRotate
+(
+	const string &_fileName
+)
+{
+	if( s_instance != NULL )
+	{
+		return s_instance->m_pImpl->FileRotate( _fileName );
+	}
+	return false;
+}
+
+/**
+ * FileCopy. Copy a File
+ * \param string. source file name.
+ * \param string. destination file name
+ * \return Bool value indicating success.
+ */
+bool FileOps::FileCopy
+(
+	const string &_fileName,
+	const string &_destfileName
+)
+{
+
+	if( s_instance != NULL )
+	{
+		return s_instance->m_pImpl->FileCopy( _fileName, _destfileName );
+	}
+	return false;
+}
+
+/**
+ * FolderCreate. Create a Folder
+ * \param string. folder name
+ * \return Bool value indicating success.
+ */
+bool FileOps::FolderCreate
+(
+	const string &_folderName
+)
+{
+
+	if( s_instance != NULL )
+	{
+		return s_instance->m_pImpl->FolderCreate( _folderName);
+	}
+	return false;
+}
+
+
 //-----------------------------------------------------------------------------
 //	<FileOps::FileOps>
 //	Constructor

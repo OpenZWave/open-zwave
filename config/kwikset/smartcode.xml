@@ -3,7 +3,7 @@
 Kwikset smartcode 
 http://s7d5.scene7.com/is/content/BDHHI/z-wave-configuration
 -->
-<Product xmlns='http://code.google.com/p/open-zwave/'>
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="2">
 	<!-- Configuration Parameters -->
 	<CommandClass id="112">		
 		<Value type="list" genre="config" instance="1" index="1" label="1 User Code Type" min="0" max="255" value="1" size="1" >

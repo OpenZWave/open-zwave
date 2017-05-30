@@ -115,7 +115,7 @@ bool Powerlevel::RequestState
 bool Powerlevel::RequestValue
 (
 	uint32 const _requestFlags,
-	uint8 const _index,
+	uint16 const _index,
 	uint8 const _instance,
 	Driver::MsgQueue const _queue
 )

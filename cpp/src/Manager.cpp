@@ -70,7 +70,7 @@ extern char ozw_version_string[];
 //-----------------------------------------------------------------------------
 //	Construction
 //-----------------------------------------------------------------------------
-
+#include "platform/FileOps.h"
 //-----------------------------------------------------------------------------
 //	<Manager::Create>
 //	Static creation of the singleton
@@ -79,6 +79,7 @@ Manager* Manager::Create
 (
 )
 {
+
 
 	if( Options::Get() && Options::Get()->AreLocked() )
 	{
@@ -174,7 +175,7 @@ m_notificationMutex( new Mutex() )
 	Options::Get()->GetOptionAsInt( "QueueLogLevel", &nQueueLogLevel );
 	if ((nQueueLogLevel == 0) || (nQueueLogLevel > LogLevel_StreamDetail)) {
 		Log::Write(LogLevel_Warning, "Invalid LogLevel Specified for QueueLogLevel in Options.xml");
-		nSaveLogLevel = (int) LogLevel_Debug;
+		nQueueLogLevel = (int) LogLevel_Debug;
 	}
 
 	int nDumpTrigger = (int) LogLevel_Warning;
@@ -771,12 +772,8 @@ bool Manager::RefreshNodeInfo
 		// Cause the node's data to be obtained from the Z-Wave network
 		// in the same way as if it had just been added.
 		LockGuard LG(driver->m_nodeMutex);
-		Node* node = driver->GetNode( _nodeId );
-		if( node )
-		{
-			node->SetQueryStage( Node::QueryStage_ProtocolInfo );
-			return true;
-		}
+		driver->ReloadNode(_nodeId);
+		return true;
 	}
 
 	return false;
@@ -3561,7 +3558,19 @@ void Manager::ResetController
 		AddDriver( path, intf );
 		Wait::Multiple( NULL, 0, 500 );
 	}
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable: 4996)
+#else
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
 	RemoveAllScenes( _homeId );
+#ifdef _MSC_VER
+#pragma warning(pop)
+#else
+#pragma GCC diagnostic pop
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -4745,3 +4754,98 @@ void Manager::GetNodeStatistics
 	}
 
 }
+
+//-----------------------------------------------------------------------------
+// <Manager::GetNodeStatistics>
+// Retrieve driver based counters.
+//-----------------------------------------------------------------------------
+string Manager::GetMetaData
+(
+		uint32 const _homeId,
+		uint8 const _nodeId,
+		Node::MetaDataFields _metadata
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		return driver->GetMetaData( _nodeId, _metadata );
+	}
+	return "";
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::checkLatestConfigFileRevision>
+// get the latest config file revision
+//-----------------------------------------------------------------------------
+bool Manager::checkLatestConfigFileRevision
+(
+	uint32 const _homeId,
+	uint8 const _nodeId
+)
+{
+	if (Driver *driver = GetDriver( _homeId ) )
+	{
+		LockGuard LG(driver->m_nodeMutex);
+		Node* node = driver->GetNode( _nodeId );
+		if( node )
+		{
+			return driver->CheckNodeConfigRevision(node);
+		}
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::checkLatestMFSRevision>
+// get the latest ManufacturerSpecific.xml file revision
+//-----------------------------------------------------------------------------
+bool Manager::checkLatestMFSRevision
+(
+	uint32 const _homeId
+)
+{
+	if (Driver *driver = GetDriver( _homeId ) )
+	{
+		return driver->CheckMFSConfigRevision();
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::downloadLatestConfigFileRevision>
+// Download the latest Config File Revision for a node.
+//-----------------------------------------------------------------------------
+bool Manager::downloadLatestConfigFileRevision
+(
+	uint32 const _homeId,
+	uint8 const _nodeId
+)
+{
+	if (Driver *driver = GetDriver( _homeId ) )
+	{
+		LockGuard LG(driver->m_nodeMutex);
+		Node* node = driver->GetNode( _nodeId );
+		if( node )
+		{
+			return driver->downloadConfigRevision(node);
+		}
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::downloadLatestMFSRevision>
+// Download the Latest ManufacturerSpecific Revision
+//-----------------------------------------------------------------------------
+bool Manager::downloadLatestMFSRevision
+(
+	uint32 const _homeId
+)
+{
+	if (Driver *driver = GetDriver( _homeId ) )
+	{
+		return driver->downloadMFSRevision();
+	}
+	return false;
+}
+

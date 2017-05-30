@@ -130,7 +130,7 @@ bool Version::RequestState
 bool Version::RequestValue
 (
 	uint32 const _requestFlags,
-	uint8 const _dummy1,		// = 0
+	uint16 const _dummy1,		// = 0
 	uint8 const _instance,
 	Driver::MsgQueue const _queue
 )

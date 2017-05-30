@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Fibaro FGFS101 Zwave+ Flood Sensor -->
-<Product xmlns='http://code.google.com/p/open-zwave/'>
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="2">
     <!-- Configuration -->
     <CommandClass id="112">
         <Value type="short" genre="config" instance="1" index="1" label="Alarm Cancellation Delay" min="0" max="3600" value="0">

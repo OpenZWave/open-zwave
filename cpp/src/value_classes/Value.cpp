@@ -74,7 +74,7 @@ Value::Value
 	ValueID::ValueGenre const _genre,
 	uint8 const _commandClassId,
 	uint8 const _instance,
-	uint8 const _index,
+	uint16 const _index,
 	ValueID::ValueType const _type,
 	string const& _label,
 	string const& _units,
@@ -161,10 +161,11 @@ void Value::ReadXML
 		instance = (uint8)intVal;
 	}
 
-	uint8 index = 0;
+	uint16 index = 0;
 	if( TIXML_SUCCESS == _valueElement->QueryIntAttribute( "index", &intVal ) )
 	{
-		index = (uint8)intVal;
+		/* index is only 10 bytes in the ValueID class */
+		index = (uint16)(intVal & 0x3FF);
 	}
 
 	m_id = ValueID( _homeId, _nodeId, genre, _commandClassId, instance, index, type );
@@ -294,7 +295,7 @@ void Value::WriteXML
 	snprintf( str, sizeof(str), "%d", m_id.GetInstance() );
 	_valueElement->SetAttribute( "instance", str );
 
-	snprintf( str, sizeof(str), "%d", m_id.GetIndex() );
+	snprintf( str, sizeof(str), "%d", (m_id.GetIndex() & 0x3FF) );
 	_valueElement->SetAttribute( "index", str );
 
 	_valueElement->SetAttribute( "label", m_label.c_str() );

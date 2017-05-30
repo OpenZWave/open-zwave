@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 
-Aeotec ZW089 Recessed Door Sensor Gen5
-https://aeotec.freshdesk.com/helpdesk/attachments/6009584697 
--->
-<Product xmlns='http://code.google.com/p/open-zwave/'>
+<!-- Aeon Labs Recessed Door Sensor -->
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="2">
     <!-- Configuration -->
     <!-- Alarm CC isn't supported on this device -->
     <CommandClass id="113" action="remove"/>

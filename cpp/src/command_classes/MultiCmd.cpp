@@ -60,9 +60,14 @@ bool MultiCmd::HandleMsg
 				uint8 length = _data[base];
 				uint8 commandClassId = _data[base+1];
 
-				if( CommandClass* pCommandClass = node->GetCommandClass( commandClassId ) )
+				if( CommandClass* pCommandClass = node->GetCommandClass( commandClassId, false ) )
 				{
 					pCommandClass->HandleMsg( &_data[base+2], length-1 );
+				}
+
+				if( CommandClass* pCommandClass = node->GetCommandClass( commandClassId, true ) )
+				{
+					pCommandClass->HandleIncomingMsg( &_data[base+2], length-1 );
 				}
 
 				base += (length + 1);

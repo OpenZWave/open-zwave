@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Aeotec LED Bulb -->
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="2">
 <!-- 
 Aeotec ZW098 LED Bulb
 https://aeotec.freshdesk.com/helpdesk/attachments/6009584691 v1.04 
 https://aeotec.freshdesk.com/helpdesk/attachments/6034356249 v1.05
 -->
-<Product xmlns='http://code.google.com/p/open-zwave/'>
 	<!-- Configuration Parameters -->
 	<CommandClass id="112">
 		<Value type="list" index="20" genre="config" label="State after re-power" min="0" max="2" value="1" size="1">

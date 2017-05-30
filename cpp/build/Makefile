@@ -13,11 +13,14 @@
 
 
 # what flags we will use for compiling in debug mode
-DEBUG_CFLAGS    := -Wall -Wno-unknown-pragmas -Wno-inline -Wno-format -Werror -Wno-error=sequence-point -Wno-sequence-point -ggdb -DDEBUG -fPIC  -DSYSCONFDIR="\"$(PREFIX)/etc/openzwave/\""
+DEBUG_CFLAGS    := -Wall -Wno-unknown-pragmas -Wno-inline -Wno-format -Werror -Wno-error=sequence-point -Wno-sequence-point -ggdb -DDEBUG -fPIC  -DSYSCONFDIR="\"$(PREFIX)/etc/openzwave/\"" -DOPENZWAVE_ENABLE_EXCEPTIONS=1
 # what flags we will use for compiling in release mode
-RELEASE_CFLAGS  := -Wall -Wno-unknown-pragmas -Werror -Wno-format -Wno-error=sequence-point -Wno-sequence-point -O3 -DNDEBUG -fPIC  -DSYSCONFDIR="\"$(PREFIX)/etc/openzwave/\""
+RELEASE_CFLAGS  := -Wall -Wno-unknown-pragmas -Werror -Wno-format -Wno-error=sequence-point -Wno-sequence-point -O3 -DNDEBUG -fPIC  -DSYSCONFDIR="\"$(PREFIX)/etc/openzwave/\"" -DOPENZWAVE_ENABLE_EXCEPTIONS=1
 #what flags we will use for linking in debug mode
 DEBUG_LDFLAGS	:= -g
+
+#default Libraries we should link with
+LIBS += -lresolv
 
 top_srcdir := $(abspath $(dir $(lastword $(MAKEFILE_LIST)))../../)
 

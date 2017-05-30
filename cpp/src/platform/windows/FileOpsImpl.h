@@ -44,6 +44,12 @@ namespace OpenZWave
 		~FileOpsImpl();
 
 		bool FolderExists( const string &_filename );
+		bool FileExists( const string _filename );
+		bool FileWriteable ( const string _filename );
+		bool FileRotate ( const string _filename );
+		bool FileCopy (const string, const string);
+		bool FolderCreate( const string _dirname);
+
 	};
 
 } // namespace OpenZWave

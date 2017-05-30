@@ -3,7 +3,7 @@
 Aeotec DSB29 Door/Window Sensor (2nd Edition) 
 https://aeotec.freshdesk.com/helpdesk/attachments/6009584513
 -->
-<Product xmlns='http://code.google.com/p/open-zwave/'>
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
 
 	<!-- Configuration Parameters -->
 	<CommandClass id="112">

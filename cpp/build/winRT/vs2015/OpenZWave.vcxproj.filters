@@ -211,9 +211,6 @@
     <ClInclude Include="..\..\..\src\Defs.h">
       <Filter>Main</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\DoxygenMain.h">
-      <Filter>Main</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\Driver.h">
       <Filter>Main</Filter>
     </ClInclude>
@@ -351,6 +348,36 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\value_classes\ValueString.h">
       <Filter>Value Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\DNSThread.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\platform\DNS.h">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\platform\winRT\DNSImpl.h">
+      <Filter>Platform\WinRT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\command_classes\BarrierOperator.h">
+      <Filter>Command Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\command_classes\Color.h">
+      <Filter>Command Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\command_classes\ZWavePlusInfo.h">
+      <Filter>Command Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ManufacturerSpecificDB.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\command_classes\DeviceResetLocally.h">
+      <Filter>Command Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Http.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\platform\HttpClient.h">
+      <Filter>Platform</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -659,6 +686,36 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\value_classes\ValueString.cpp">
       <Filter>Value Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\DNSThread.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\platform\DNS.cpp">
+      <Filter>Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\platform\winRT\DNSImpl.cpp">
+      <Filter>Platform\WinRT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\command_classes\BarrierOperator.cpp">
+      <Filter>Command Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\command_classes\Color.cpp">
+      <Filter>Command Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\command_classes\ZWavePlusInfo.cpp">
+      <Filter>Command Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\ManufacturerSpecificDB.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\command_classes\DeviceResetLocally.cpp">
+      <Filter>Command Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Http.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\platform\HttpClient.cpp">
+      <Filter>Platform</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
