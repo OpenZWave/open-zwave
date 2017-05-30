@@ -1436,14 +1436,16 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		/**
 		 * \brief Switch all devices on.
 		 * All devices that support the SwitchAll command class will be turned on.
+		 * \deprecated This method has been depreciated. Please use the ValueID interface instead.
 		 */
-		void SwitchAllOn( uint32 const _homeId );
+		DEPRECATED void SwitchAllOn( uint32 const _homeId );
 
 		/**
 		 * \brief Switch all devices off.
 		 * All devices that support the SwitchAll command class will be turned off.
+		 * \deprecated This method has been depreciated. Please use the ValueID interface instead.
 		 */
-		void SwitchAllOff( uint32 const _homeId );
+		DEPRECATED void SwitchAllOff( uint32 const _homeId );
 
 	/*@}*/
 
@@ -2024,46 +2026,53 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 	//-----------------------------------------------------------------------------
 	/** \name Scene Commands
 	 *  Commands for Z-Wave scene interface.
+	 * \deprecated The Scene Methods have been depreciated. (This is not the same as the CENTRAL_SCENE CommandClass)
+	 *
 	 */
 	/*@{*/
 	public:
 		/**
 		 * \brief Gets the number of scenes that have been defined.
 		 * \return The number of scenes.
+		 * \deprecated The Scene Methods have been depreciated. (This is not the same as the CENTRAL_SCENE CommandClass)
 		 * \see GetAllScenes, RemoveAllScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
 		 */
-		uint8 GetNumScenes( );
+		DEPRECATED uint8 GetNumScenes( );
 
 		/**
 		 * \brief Gets a list of all the SceneIds.
 		 * \param _sceneIds is a pointer to an array of integers.
 		 * \return The number of scenes. If zero, _sceneIds will be NULL and doesn't need to be freed.
+		 * \deprecated The Scene Methods have been depreciated. (This is not the same as the CENTRAL_SCENE CommandClass)
 		 * \see GetNumScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
 		 */
-		uint8 GetAllScenes( uint8** _sceneIds );
+		DEPRECATED uint8 GetAllScenes( uint8** _sceneIds );
 
 		/**
 		 * \brief Remove all the SceneIds.
 		 * \param _homeId The Home ID of the Z-Wave controller. 0 for all devices from all scenes.
+		 * \deprecated The Scene Methods have been depreciated. (This is not the same as the CENTRAL_SCENE CommandClass)
 		 * \see GetAllScenes, GetNumScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
 		 */
-		void RemoveAllScenes( uint32 const _homeId );
+		DEPRECATED void RemoveAllScenes( uint32 const _homeId );
 
 		/**
 		 * \brief Create a new Scene passing in Scene ID
 		 * \return uint8 Scene ID used to reference the scene. 0 is failure result.
+		 * \deprecated The Scene Methods have been depreciated. (This is not the same as the CENTRAL_SCENE CommandClass)
 		 * \see GetNumScenes, GetAllScenes, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
 
 		 */
-		uint8 CreateScene();
+		DEPRECATED uint8 CreateScene();
 
 		/**
 		 * \brief Remove an existing Scene.
 		 * \param _sceneId is an integer representing the unique Scene ID to be removed.
 		 * \return true if scene was removed.
+		 * \deprecated The Scene Methods have been depreciated. (This is not the same as the CENTRAL_SCENE CommandClass)
 		 * \see GetNumScenes, GetAllScenes, CreateScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
 		 */
-		bool RemoveScene( uint8 const _sceneId );
+		DEPRECATED bool RemoveScene( uint8 const _sceneId );
 
 		/**
 		 * \brief Add a bool Value ID to an existing scene.
@@ -2071,9 +2080,10 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 * \param _valueId is the Value ID to be added.
 		 * \param _value is the bool value to be saved.
 		 * \return true if Value ID was added.
+		 * \deprecated The Scene Methods have been depreciated. (This is not the same as the CENTRAL_SCENE CommandClass)
 		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
 		 */
-		bool AddSceneValue( uint8 const _sceneId, ValueID const& _valueId, bool const _value );
+		DEPRECATED bool AddSceneValue( uint8 const _sceneId, ValueID const& _valueId, bool const _value );
 
 		/**
 		 * \brief Add a byte Value ID to an existing scene.
@@ -2081,9 +2091,10 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 * \param _valueId is the Value ID to be added.
 		 * \param _value is the byte value to be saved.
 		 * \return true if Value ID was added.
+		 * \deprecated The Scene Methods have been depreciated. (This is not the same as the CENTRAL_SCENE CommandClass)
 		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
 		 */
-		bool AddSceneValue( uint8 const _sceneId, ValueID const& _valueId, uint8 const _value );
+		DEPRECATED bool AddSceneValue( uint8 const _sceneId, ValueID const& _valueId, uint8 const _value );
 
 		/**
 		 * \brief Add a decimal Value ID to an existing scene.
@@ -2091,9 +2102,10 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 * \param _valueId is the Value ID to be added.
 		 * \param _value is the float value to be saved.
 		 * \return true if Value ID was added.
+		 * \deprecated The Scene Methods have been depreciated. (This is not the same as the CENTRAL_SCENE CommandClass)
 		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
 		 */
-		bool AddSceneValue( uint8 const _sceneId, ValueID const& _valueId, float const _value );
+		DEPRECATED bool AddSceneValue( uint8 const _sceneId, ValueID const& _valueId, float const _value );
 
 		/**
 		 * \brief Add a 32-bit signed integer Value ID to an existing scene.
@@ -2101,9 +2113,10 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 * \param _valueId is the Value ID to be added.
 		 * \param _value is the int32 value to be saved.
 		 * \return true if Value ID was added.
+		 * \deprecated The Scene Methods have been depreciated. (This is not the same as the CENTRAL_SCENE CommandClass)
 		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
 		 */
-		bool AddSceneValue( uint8 const _sceneId, ValueID const& _valueId, int32 const _value );
+		DEPRECATED bool AddSceneValue( uint8 const _sceneId, ValueID const& _valueId, int32 const _value );
 
 		/**
 		 * \brief Add a 16-bit signed integer Value ID to an existing scene.
@@ -2111,9 +2124,10 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 * \param _valueId is the Value ID to be added.
 		 * \param _value is the int16 value to be saved.
 		 * \return true if Value ID was added.
+		 * \deprecated The Scene Methods have been depreciated. (This is not the same as the CENTRAL_SCENE CommandClass)
 		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
 		 */
-		bool AddSceneValue( uint8 const _sceneId, ValueID const& _valueId, int16 const _value );
+		DEPRECATED bool AddSceneValue( uint8 const _sceneId, ValueID const& _valueId, int16 const _value );
 
 		/**
 		 * \brief Add a string Value ID to an existing scene.
@@ -2121,9 +2135,10 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 * \param _valueId is the Value ID to be added.
 		 * \param _value is the string value to be saved.
 		 * \return true if Value ID was added.
+		 * \deprecated The Scene Methods have been depreciated. (This is not the same as the CENTRAL_SCENE CommandClass)
 		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
 		 */
-		bool AddSceneValue( uint8 const _sceneId, ValueID const& _valueId, string const& _value );
+		DEPRECATED bool AddSceneValue( uint8 const _sceneId, ValueID const& _valueId, string const& _value );
 
 		/**
 		 * \brief Add the selected item list Value ID to an existing scene (as a string).
@@ -2131,9 +2146,10 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 * \param _valueId is the Value ID to be added.
 		 * \param _value is the string value to be saved.
 		 * \return true if Value ID was added.
+		 * \deprecated The Scene Methods have been depreciated. (This is not the same as the CENTRAL_SCENE CommandClass)
 		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
 		 */
-		bool AddSceneValueListSelection( uint8 const _sceneId, ValueID const& _valueId, string const& _value );
+		DEPRECATED bool AddSceneValueListSelection( uint8 const _sceneId, ValueID const& _valueId, string const& _value );
 
 		/**
 		 * \brief Add the selected item list Value ID to an existing scene (as a integer).
@@ -2141,27 +2157,30 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 * \param _valueId is the Value ID to be added.
 		 * \param _value is the integer value to be saved.
 		 * \return true if Value ID was added.
+		 * \deprecated The Scene Methods have been depreciated. (This is not the same as the CENTRAL_SCENE CommandClass)
 		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
 		 */
-		bool AddSceneValueListSelection( uint8 const _sceneId, ValueID const& _valueId, int32 const _value );
+		DEPRECATED bool AddSceneValueListSelection( uint8 const _sceneId, ValueID const& _valueId, int32 const _value );
 
 		/**
 		 * \brief Remove the Value ID from an existing scene.
 		 * \param _sceneId is an integer representing the unique Scene ID.
 		 * \param _valueId is the Value ID to be removed.
 		 * \return true if Value ID was removed.
+		 * \deprecated The Scene Methods have been depreciated. (This is not the same as the CENTRAL_SCENE CommandClass)
 		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, AddSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
 		 */
-		bool RemoveSceneValue( uint8 const _sceneId, ValueID const& _valueId );
+		DEPRECATED bool RemoveSceneValue( uint8 const _sceneId, ValueID const& _valueId );
 
 		/**
 		 * \brief Retrieves the scene's list of values.
 		 * \param _sceneId The Scene ID of the scene to retrieve the value from.
 		 * \param o_value Pointer to an array of ValueIDs if return is non-zero.
 		 * \return The number of nodes in the o_value array. If zero, the array will point to NULL and does not need to be deleted.
+		 * \deprecated The Scene Methods have been depreciated. (This is not the same as the CENTRAL_SCENE CommandClass)
 		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
 		 */
-		int SceneGetValues( uint8 const _sceneId, vector<ValueID>* o_value );
+		DEPRECATED int SceneGetValues( uint8 const _sceneId, vector<ValueID>* o_value );
 
 		/**
 		 * \brief Retrieves a scene's value as a bool.
@@ -2169,9 +2188,10 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 * \param _valueId The Value ID of the value to retrieve.
 		 * \param o_value Pointer to a bool that will be filled with the returned value.
 		 * \return true if the value was obtained.
+		 * \deprecated The Scene Methods have been depreciated. (This is not the same as the CENTRAL_SCENE CommandClass)
 		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
 		 */
-		bool SceneGetValueAsBool( uint8 const _sceneId, ValueID const& _valueId, bool* o_value );
+		DEPRECATED bool SceneGetValueAsBool( uint8 const _sceneId, ValueID const& _valueId, bool* o_value );
 
 		/**
 		 * \brief Retrieves a scene's value as an 8-bit unsigned integer.
@@ -2179,9 +2199,10 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 * \param _valueId The Value ID of the value to retrieve.
 		 * \param o_value Pointer to a uint8 that will be filled with the returned value.
 		 * \return true if the value was obtained.
+		 * \deprecated The Scene Methods have been depreciated. (This is not the same as the CENTRAL_SCENE CommandClass)
 		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
 		 */
-		bool SceneGetValueAsByte( uint8 const _sceneId, ValueID const& _valueId, uint8* o_value );
+		DEPRECATED bool SceneGetValueAsByte( uint8 const _sceneId, ValueID const& _valueId, uint8* o_value );
 
 		/**
 		 * \brief Retrieves a scene's value as a float.
@@ -2189,9 +2210,10 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 * \param _valueId The Value ID of the value to retrieve.
 		 * \param o_value Pointer to a float that will be filled with the returned value.
 		 * \return true if the value was obtained.
+		 * \deprecated The Scene Methods have been depreciated. (This is not the same as the CENTRAL_SCENE CommandClass)
 		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
 		 */
-		bool SceneGetValueAsFloat( uint8 const _sceneId, ValueID const& _valueId, float* o_value );
+		DEPRECATED bool SceneGetValueAsFloat( uint8 const _sceneId, ValueID const& _valueId, float* o_value );
 
 		/**
 		 * \brief Retrieves a scene's value as a 32-bit signed integer.
@@ -2199,9 +2221,10 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 * \param _valueId The Value ID of the value to retrieve.
 		 * \param o_value Pointer to a int32 that will be filled with the returned value.
 		 * \return true if the value was obtained.
+		 * \deprecated The Scene Methods have been depreciated. (This is not the same as the CENTRAL_SCENE CommandClass)
 		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
 		 */
-		bool SceneGetValueAsInt( uint8 const _sceneId, ValueID const& _valueId, int32* o_value );
+		DEPRECATED bool SceneGetValueAsInt( uint8 const _sceneId, ValueID const& _valueId, int32* o_value );
 
 		/**
 		 * \brief Retrieves a scene's value as a 16-bit signed integer.
@@ -2209,9 +2232,10 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 * \param _valueId The Value ID of the value to retrieve.
 		 * \param o_value Pointer to a int16 that will be filled with the returned value.
 		 * \return true if the value was obtained.
+		 * \deprecated The Scene Methods have been depreciated. (This is not the same as the CENTRAL_SCENE CommandClass)
 		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
 		 */
-		bool SceneGetValueAsShort( uint8 const _sceneId, ValueID const& _valueId, int16* o_value );
+		DEPRECATED bool SceneGetValueAsShort( uint8 const _sceneId, ValueID const& _valueId, int16* o_value );
 
 		/**
 		 * \brief Retrieves a scene's value as a string.
@@ -2219,9 +2243,10 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 * \param _valueId The Value ID of the value to retrieve.
 		 * \param o_value Pointer to a string that will be filled with the returned value.
 		 * \return true if the value was obtained.
+		 * \deprecated The Scene Methods have been depreciated. (This is not the same as the CENTRAL_SCENE CommandClass)
 		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
 		 */
-		bool SceneGetValueAsString( uint8 const _sceneId, ValueID const& _valueId, string* o_value );
+		DEPRECATED bool SceneGetValueAsString( uint8 const _sceneId, ValueID const& _valueId, string* o_value );
 
 		/**
 		 * \brief Retrieves a scene's value as a list (as a string).
@@ -2229,9 +2254,10 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 * \param _valueId The Value ID of the value to retrieve.
 		 * \param o_value Pointer to a string that will be filled with the returned value.
 		 * \return true if the value was obtained.
+		 * \deprecated The Scene Methods have been depreciated. (This is not the same as the CENTRAL_SCENE CommandClass)
 		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
 		 */
-		bool SceneGetValueListSelection( uint8 const _sceneId, ValueID const& _valueId, string* o_value );
+		DEPRECATED bool SceneGetValueListSelection( uint8 const _sceneId, ValueID const& _valueId, string* o_value );
 
 		/**
 		 * \brief Retrieves a scene's value as a list (as a integer).
@@ -2239,9 +2265,10 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 * \param _valueId The Value ID of the value to retrieve.
 		 * \param o_value Pointer to a integer that will be filled with the returned value.
 		 * \return true if the value was obtained.
+		 * \deprecated The Scene Methods have been depreciated. (This is not the same as the CENTRAL_SCENE CommandClass)
 		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
 		 */
-		bool SceneGetValueListSelection( uint8 const _sceneId, ValueID const& _valueId, int32* o_value );
+		DEPRECATED bool SceneGetValueListSelection( uint8 const _sceneId, ValueID const& _valueId, int32* o_value );
 
 		/**
 		 * \brief Set a bool Value ID to an existing scene's ValueID
@@ -2249,9 +2276,10 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 * \param _valueId is the Value ID to be added.
 		 * \param _value is the bool value to be saved.
 		 * \return true if Value ID was added.
+		 * \deprecated The Scene Methods have been depreciated. (This is not the same as the CENTRAL_SCENE CommandClass)
 		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
 		 */
-		bool SetSceneValue( uint8 const _sceneId, ValueID const& _valueId, bool const _value );
+		DEPRECATED bool SetSceneValue( uint8 const _sceneId, ValueID const& _valueId, bool const _value );
 
 		/**
 		 * \brief Set a byte Value ID to an existing scene's ValueID
@@ -2259,9 +2287,10 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 * \param _valueId is the Value ID to be added.
 		 * \param _value is the byte value to be saved.
 		 * \return true if Value ID was added.
+		 * \deprecated The Scene Methods have been depreciated. (This is not the same as the CENTRAL_SCENE CommandClass)
 		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
 		 */
-		bool SetSceneValue( uint8 const _sceneId, ValueID const& _valueId, uint8 const _value );
+		DEPRECATED bool SetSceneValue( uint8 const _sceneId, ValueID const& _valueId, uint8 const _value );
 
 		/**
 		 * \brief Set a decimal Value ID to an existing scene's ValueID
@@ -2269,9 +2298,10 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 * \param _valueId is the Value ID to be added.
 		 * \param _value is the float value to be saved.
 		 * \return true if Value ID was added.
+		 * \deprecated The Scene Methods have been depreciated. (This is not the same as the CENTRAL_SCENE CommandClass)
 		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
 		 */
-		bool SetSceneValue( uint8 const _sceneId, ValueID const& _valueId, float const _value );
+		DEPRECATED bool SetSceneValue( uint8 const _sceneId, ValueID const& _valueId, float const _value );
 
 		/**
 		 * \brief Set a 32-bit signed integer Value ID to an existing scene's ValueID
@@ -2279,9 +2309,10 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 * \param _valueId is the Value ID to be added.
 		 * \param _value is the int32 value to be saved.
 		 * \return true if Value ID was added.
+		 * \deprecated The Scene Methods have been depreciated. (This is not the same as the CENTRAL_SCENE CommandClass)
 		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
 		 */
-		bool SetSceneValue( uint8 const _sceneId, ValueID const& _valueId, int32 const _value );
+		DEPRECATED bool SetSceneValue( uint8 const _sceneId, ValueID const& _valueId, int32 const _value );
 
 		/**
 		 * \brief Set a 16-bit integer Value ID to an existing scene's ValueID
@@ -2289,9 +2320,10 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 * \param _valueId is the Value ID to be added.
 		 * \param _value is the int16 value to be saved.
 		 * \return true if Value ID was added.
+		 * \deprecated The Scene Methods have been depreciated. (This is not the same as the CENTRAL_SCENE CommandClass)
 		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
 		 */
-		bool SetSceneValue( uint8 const _sceneId, ValueID const& _valueId, int16 const _value );
+		DEPRECATED bool SetSceneValue( uint8 const _sceneId, ValueID const& _valueId, int16 const _value );
 
 		/**
 		 * \brief Set a string Value ID to an existing scene's ValueID
@@ -2299,9 +2331,10 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 * \param _valueId is the Value ID to be added.
 		 * \param _value is the string value to be saved.
 		 * \return true if Value ID was added.
+		 * \deprecated The Scene Methods have been depreciated. (This is not the same as the CENTRAL_SCENE CommandClass)
 		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
 		 */
-		bool SetSceneValue( uint8 const _sceneId, ValueID const& _valueId, string const& _value );
+		DEPRECATED bool SetSceneValue( uint8 const _sceneId, ValueID const& _valueId, string const& _value );
 
 		/**
 		 * \brief Set the list selected item Value ID to an existing scene's ValueID (as a string).
@@ -2309,9 +2342,10 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 * \param _valueId is the Value ID to be added.
 		 * \param _value is the string value to be saved.
 		 * \return true if Value ID was added.
+		 * \deprecated The Scene Methods have been depreciated. (This is not the same as the CENTRAL_SCENE CommandClass)
 		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
 		 */
-		bool SetSceneValueListSelection( uint8 const _sceneId, ValueID const& _valueId, string const& _value );
+		DEPRECATED bool SetSceneValueListSelection( uint8 const _sceneId, ValueID const& _valueId, string const& _value );
 
 		/**
 		 * \brief Set the list selected item Value ID to an existing scene's ValueID (as a integer).
@@ -2319,41 +2353,46 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 * \param _valueId is the Value ID to be added.
 		 * \param _value is the integer value to be saved.
 		 * \return true if Value ID was added.
+		 * \deprecated The Scene Methods have been depreciated. (This is not the same as the CENTRAL_SCENE CommandClass)
 		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
 		 */
-		bool SetSceneValueListSelection( uint8 const _sceneId, ValueID const& _valueId, int32 const _value );
+		DEPRECATED bool SetSceneValueListSelection( uint8 const _sceneId, ValueID const& _valueId, int32 const _value );
 
 		/**
 		 * \brief Returns a label for the particular scene.
 		 * \param _sceneId The Scene ID
 		 * \return The label string.
+		 * \deprecated The Scene Methods have been depreciated. (This is not the same as the CENTRAL_SCENE CommandClass)
 		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, SetSceneLabel, SceneExists, ActivateScene
 		 */
-		string GetSceneLabel( uint8 const _sceneId );
+		DEPRECATED string GetSceneLabel( uint8 const _sceneId );
 
 		/**
 		 * \brief Sets a label for the particular scene.
 		 * \param _sceneId The Scene ID
 		 * \param _value The new value of the label.
+		 * \deprecated The Scene Methods have been depreciated. (This is not the same as the CENTRAL_SCENE CommandClass)
 		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SceneExists, ActivateScene
 		 */
-		void SetSceneLabel( uint8 const _sceneId, string const& _value );
+		DEPRECATED void SetSceneLabel( uint8 const _sceneId, string const& _value );
 
 		/**
 		 * \brief Check if a Scene ID is defined.
 		 * \param _sceneId The Scene ID.
 		 * \return true if Scene ID exists.
+		 * \deprecated The Scene Methods have been depreciated. (This is not the same as the CENTRAL_SCENE CommandClass)
 		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, ActivateScene
 		 */
-		bool SceneExists( uint8 const _sceneId );
+		DEPRECATED bool SceneExists( uint8 const _sceneId );
 
 		/**
 		 * \brief Activate given scene to perform all its actions.
 		 * \param _sceneId The Scene ID.
 		 * \return true if it is successful.
+		 * \deprecated The Scene Methods have been depreciated. (This is not the same as the CENTRAL_SCENE CommandClass)
 		 * \see GetNumScenes, GetAllScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists
 		 */
-		bool ActivateScene( uint8 const _sceneId );
+		DEPRECATED bool ActivateScene( uint8 const _sceneId );
 
 	/*@}*/
 

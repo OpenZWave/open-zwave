@@ -3558,7 +3558,19 @@ void Manager::ResetController
 		AddDriver( path, intf );
 		Wait::Multiple( NULL, 0, 500 );
 	}
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable: 4996)
+#else
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
 	RemoveAllScenes( _homeId );
+#ifdef _MSC_VER
+#pragma warning(pop)
+#else
+#pragma GCC diagnostic pop
+#endif
 }
 
 //-----------------------------------------------------------------------------
