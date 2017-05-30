@@ -224,6 +224,7 @@ bool ValueList::SetByValue
 )
 {
 	// create a temporary copy of this value to be submitted to the Set() call and set its value to the function param
+	// param is an index
   	ValueList* tempValue = new ValueList( *this );
 	tempValue->m_valueIdx = _value;
 
