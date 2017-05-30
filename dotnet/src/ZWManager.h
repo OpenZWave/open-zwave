@@ -238,6 +238,12 @@ namespace OpenZWaveDotNet
 		String^ GetVersionAsString() { return gcnew String(Manager::Get()->getVersionAsString().c_str()); }
 
 		/**
+ 		 * \brief Get the Version Number of OZW as a string
+ 		 * \return a String representing the version number as MAJOR.MINOR.REVISION-gCOMMIT
+ 		*/
+		String^ GetVersionLongAsString() { return gcnew String(Manager::Get()->getVersionLongAsString().c_str()); }
+
+		/**
 		 * \brief Get the Version Number as the Version Struct (Only Major/Minor returned)
 		 * \return the version struct representing the version
 		 */
@@ -620,6 +626,14 @@ namespace OpenZWaveDotNet
 		uint8 GetNodeSecurity( uint32 const homeId, uint8 const nodeId ){ return Manager::Get()->GetNodeSecurity(homeId, nodeId); }
 		
 		/**
+		 * \brief Is this a ZWave+ Supported Node?
+		 * \param _homeId the HomeID of the Z-Wave controller that managed the node.
+		 * \param _nodeId the ID of the node to query.
+		 * \return If this node is a Z-Wave Plus Node
+		 */
+		bool IsNodeZWavePlus( uint32 const homeId, uint8 const nodeId ) { return Manager::Get()->IsNodeZWavePlus(homeId, nodeId); };
+		
+		/**
 		 * \brief Get a node's "basic" type.
 		 * \param homeId The Home ID of the Z-Wave controller that manages the node.
 		 * \param nodeId The ID of the node to query.
@@ -914,6 +928,53 @@ namespace OpenZWaveDotNet
 		 */
 		String^ GetNodeQueryStage( uint32 homeId, uint8 nodeId ) { return gcnew String(Manager::Get()->GetNodeQueryStage( homeId, nodeId).c_str()); }
 
+		/**
+		 * \brief Get the node device type as reported in the Z-Wave+ Info report.
+		 * \param homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param nodeId The ID of the node to query.
+		 * \return the node's DeviceType
+		 */
+		uint16 GetNodeDeviceType( uint32 homeId, uint8 nodeId ) { return Manager::Get()->GetNodeDeviceType(homeId, nodeId); }
+
+		/**
+		 * \brief Get the node device type as reported in the Z-Wave+ Info report.
+		 * \param homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param nodeId The ID of the node to query.
+		 * \return the node's Device Type as a string.
+		 */
+		String^ GetNodeDeviceTypeString( uint32 homeId, uint8 nodeId ) { return gcnew String(Manager::Get()->GetNodeDeviceTypeString( homeId, nodeId).c_str()); }
+
+		/**
+		 * \brief Get the node role as reported in the Z-Wave+ Info report.
+		 * \param homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param nodeId The ID of the node to query.
+		 * \return the node's user icon.
+		 */
+		uint8 GetNodeRole( uint32 homeId, uint8 nodeId ) { return Manager::Get()->GetNodeRole(homeId, nodeId); }
+
+		/**
+		 * \brief Get the node role as reported in the Z-Wave+ Info report.
+		 * \param homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param nodeId The ID of the node to query.
+		 * \return the node's role type as a string
+		 */
+		String^ GetNodeRoleString( uint32 homeId, uint8 nodeId ) { return gcnew String(Manager::Get()->GetNodeRoleString( homeId, nodeId).c_str()); }
+
+		/**
+		 * \brief Get the node PlusType as reported in the Z-Wave+ Info report.
+		 * \param homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param nodeId The ID of the node to query.
+		 * \return the node's PlusType
+		 */
+		uint8 GetNodePlusType( uint32 homeId, uint8 nodeId ) { return Manager::Get()->GetNodePlusType(homeId, nodeId); }
+		/**
+		 * \brief Get the node PlusType as reported in the Z-Wave+ Info report.
+		 * \param homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param nodeId The ID of the node to query.
+		 * \return the node's PlusType as a string
+		 */
+		String^ GetNodePlusTypeString( uint32 homeId, uint8 nodeId ) { return gcnew String(Manager::Get()->GetNodePlusTypeString( homeId, nodeId).c_str()); }
+
 	/*@}*/
 
 	//-----------------------------------------------------------------------------
@@ -964,6 +1025,14 @@ namespace OpenZWaveDotNet
 		String^ GetValueHelp( ZWValueID^ id ){ return gcnew String(Manager::Get()->GetValueHelp(id->CreateUnmanagedValueID()).c_str()); }
 		
 		/**
+		 * \brief Sets a help string describing the value's purpose and usage.
+		 * \param id The unique identifier of the value.
+		 * \param value The new value of the help text.
+		 * \see ValueID
+		 */
+		void SetValueHelp( ZWValueID^ id, String^ value ) { Manager::Get()->SetValueHelp( id->CreateUnmanagedValueID(), (const char*)(Marshal::StringToHGlobalAnsi(value)).ToPointer()); }
+		
+		/**
 		 * \brief Test whether the value is read-only.
 		 *
 		 * \param id The unique identifier of the value.
@@ -971,6 +1040,14 @@ namespace OpenZWaveDotNet
 		 * \see ValueID
 		 */
 		bool IsValueReadOnly( ZWValueID^ id ){ return Manager::Get()->IsValueReadOnly(id->CreateUnmanagedValueID()); }
+
+		/**
+		 * \brief Test whether the value is write-only.
+		 * \param _id The unique identifier of the value.
+		 * \return true if the value can only be written to and not read.
+		 * \see ValueID
+		 */
+		bool IsValueWriteOnly( ZWValueID^ id ){ return Manager::Get()->IsValueWriteOnly(id->CreateUnmanagedValueID()); }
 
 		/**
 		 * \brief Test whether the value has been set.
@@ -1186,6 +1263,14 @@ namespace OpenZWaveDotNet
 		 */
 		bool RefreshValue( ZWValueID^ id ){ return Manager::Get()->RefreshValue(id->CreateUnmanagedValueID()); }
 
+		/**
+		 * \brief determine if value changes upon a refresh should be verified.  If so, the
+		 * library will immediately refresh the value a second time whenever a change is observed.  This helps to filter
+		 * out spurious data reported occasionally by some devices.
+		 * \param _id The unique identifier of the value whose changes should or should not be verified.
+		 */
+		bool GetChangeVerified( ZWValueID^ id ) { return Manager::Get()->GetChangeVerified(id->CreateUnmanagedValueID()); };
+		
 		/**
 		 * \brief Sets a flag indicating whether value changes noted upon a refresh should be verified.  If so, the
 		 * library will immediately refresh the value a second time whenever a change is observed.  This helps to filter
@@ -1423,6 +1508,17 @@ namespace OpenZWaveDotNet
 		 * \see GetNumGroups, AddAssociation, RemoveAssociation
 		 */
 		uint8 GetMaxAssociations( uint32 const homeId, uint8 const nodeId, uint8 const groupIdx ){ return Manager::Get()->GetMaxAssociations( homeId, nodeId, groupIdx ); }
+
+		/**
+		 * \brief Returns a label for the particular group of a node.
+		 * 
+		 * This label is populated by the device specific configuration files.
+		 * \param homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param nodeId The ID of the node whose associations are to be changed.
+		 * \param groupIdx One-based index of the group (because Z-Wave product manuals use one-based group numbering).
+		 * \see GetNumGroups, GetAssociations, GetMaxAssociations, AddAssociation
+		 */
+		String^ GetGroupLabel( uint32 homeId, uint8 nodeId, uint8 groupIdx ) { return gcnew String(Manager::Get()->GetGroupLabel( homeId, nodeId, groupIdx).c_str()); }
 
 		/**
 		 * \brief Adds a node to an association group.
@@ -1899,10 +1995,16 @@ namespace OpenZWaveDotNet
 		uint8 GetAllScenes( [Out] cli::array<Byte>^ %sceneIds );
 
 		/**
+		 * \brief Remove all the SceneIds.
+		 * \param homeId The Home ID of the Z-Wave controller. 0 for all devices from all scenes.
+		 * \see GetAllScenes, GetNumScenes, CreateScene, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
+		 */
+		void RemoveAllScenes( uint32 homeId ) { Manager::Get()->RemoveAllScenes(homeId); }
+
+		/**
 		 * \brief Create a new Scene passing in Scene ID
 		 * \return uint8 Scene ID used to reference the scene. 0 is failure result.
 		 * \see GetNumScenes, GetAllScenes, RemoveScene, AddSceneValue, RemoveSceneValue, SceneGetValues, SceneGetValueAsBool, SceneGetValueAsByte, SceneGetValueAsFloat, SceneGetValueAsInt, SceneGetValueAsShort, SceneGetValueAsString, SetSceneValue, GetSceneLabel, SetSceneLabel, SceneExists, ActivateScene
-
 		 */
 		uint8 CreateScene(){ return Manager::Get()->CreateScene(); }
 
