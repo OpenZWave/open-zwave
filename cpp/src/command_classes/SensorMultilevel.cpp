@@ -29,7 +29,6 @@
 #include "command_classes/SensorMultilevel.h"
 #include "command_classes/MultiInstance.h"
 #include "Defs.h"
-#include "Bitfield.h"
 #include "Msg.h"
 #include "Node.h"
 #include "Driver.h"
