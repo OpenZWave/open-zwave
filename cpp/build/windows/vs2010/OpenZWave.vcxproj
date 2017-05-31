@@ -211,6 +211,7 @@ exit 0</Command>
     <ClInclude Include="..\..\..\src\command_classes\DeviceResetLocally.h" />
     <ClInclude Include="..\..\..\src\command_classes\DoorLock.h" />
     <ClInclude Include="..\..\..\src\command_classes\DoorLockLogging.h" />
+    <ClInclude Include="..\..\..\src\command_classes\ManufacturerProprietary.h" />
     <ClInclude Include="..\..\..\src\command_classes\NoOperation.h" />
     <ClInclude Include="..\..\..\src\command_classes\SceneActivation.h" />
     <ClInclude Include="..\..\..\src\command_classes\Security.h" />
@@ -326,6 +327,7 @@ exit 0</Command>
     <ClCompile Include="..\..\..\src\command_classes\DeviceResetLocally.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\DoorLock.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\DoorLockLogging.cpp" />
+    <ClCompile Include="..\..\..\src\command_classes\ManufacturerProprietary.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\NoOperation.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\SceneActivation.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\Security.cpp" />

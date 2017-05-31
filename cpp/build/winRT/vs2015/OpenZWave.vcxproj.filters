@@ -379,6 +379,9 @@
     <ClInclude Include="..\..\..\src\platform\HttpClient.h">
       <Filter>Platform</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\command_classes\ManufacturerProprietary.h">
+      <Filter>Command Classes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\aes\aes_modes.c">
@@ -716,6 +719,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\platform\HttpClient.cpp">
       <Filter>Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\command_classes\ManufacturerProprietary.cpp">
+      <Filter>Command Classes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
