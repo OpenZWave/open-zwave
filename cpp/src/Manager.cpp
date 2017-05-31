@@ -3558,19 +3558,9 @@ void Manager::ResetController
 		AddDriver( path, intf );
 		Wait::Multiple( NULL, 0, 500 );
 	}
-#ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable: 4996)
-#else
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-#endif
+OPENZWAVE_DEPRECATED_WARNINGS_OFF;
 	RemoveAllScenes( _homeId );
-#ifdef _MSC_VER
-#pragma warning(pop)
-#else
-#pragma GCC diagnostic pop
-#endif
+OPENZWAVE_DEPRECATED_WARNINGS_ON;
 }
 
 //-----------------------------------------------------------------------------
@@ -4056,7 +4046,9 @@ void Manager::RemoveAllScenes
 	{
 		if( _homeId == 0 )	// remove every device from every scene
 		{
+			OPENZWAVE_DEPRECATED_WARNINGS_OFF
 			RemoveScene( i );
+			OPENZWAVE_DEPRECATED_WARNINGS_ON
 		}
 		else
 		{
