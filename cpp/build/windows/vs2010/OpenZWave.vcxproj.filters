@@ -378,6 +378,9 @@
     <ClInclude Include="..\..\..\src\command_classes\BarrierOperator.h">
       <Filter>Command Classes</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\command_classes\ManufacturerProprietary.h">
+      <Filter>Command Classes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\Driver.cpp">
@@ -720,6 +723,9 @@
       <Filter>Main</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\command_classes\BarrierOperator.cpp">
+      <Filter>Command Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\command_classes\ManufacturerProprietary.cpp">
       <Filter>Command Classes</Filter>
     </ClCompile>
   </ItemGroup>
