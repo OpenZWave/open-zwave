@@ -99,7 +99,7 @@ uint32 Bitfield::GetNumSetBits() const
 uint32 Bitfield::GetValue() const
 {
 	uint32 value = 0;
-	for (int i = 0; i < m_bits.size(); i++) {
+	for (unsigned int i = 0; i < m_bits.size(); i++) {
 		//value =
 	}
 	return value;
