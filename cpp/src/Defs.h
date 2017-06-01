@@ -64,6 +64,22 @@
 #endif
 
 
+#ifdef _MSC_VER
+#define OPENZWAVE_DEPRECATED_WARNINGS_OFF 	__pragma( warning(push) )\
+                                                __pragma( warning(disable: 4996) )
+#else
+#define OPENZWAVE_DEPRECATED_WARNINGS_OFF 	_Pragma ( "GCC diagnostic push" )\
+                                                _Pragma ( "GCC diagnostic ignored \"-Wdeprecated-declarations\"" )
+#endif
+
+#ifdef _MSC_VER
+#define OPENZWAVE_DEPRECATED_WARNINGS_ON 	__pragma( warning(pop) )
+#else
+#define OPENZWAVE_DEPRECATED_WARNINGS_ON 	_Pragma ( "GCC diagnostic pop" )
+#endif
+
+
+
 #ifdef NULL
 #undef NULL
 #endif

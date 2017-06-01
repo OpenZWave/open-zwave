@@ -59,6 +59,7 @@
     <ClInclude Include="..\..\..\src\command_classes\Indicator.h" />
     <ClInclude Include="..\..\..\src\command_classes\Language.h" />
     <ClInclude Include="..\..\..\src\command_classes\Lock.h" />
+    <ClInclude Include="..\..\..\src\command_classes\ManufacturerProprietary.h" />
     <ClInclude Include="..\..\..\src\command_classes\ManufacturerSpecific.h" />
     <ClInclude Include="..\..\..\src\command_classes\Meter.h" />
     <ClInclude Include="..\..\..\src\command_classes\MeterPulse.h" />
@@ -202,6 +203,7 @@
     <ClCompile Include="..\..\..\src\command_classes\Indicator.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\Language.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\Lock.cpp" />
+    <ClCompile Include="..\..\..\src\command_classes\ManufacturerProprietary.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\ManufacturerSpecific.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\Meter.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\MeterPulse.cpp" />
