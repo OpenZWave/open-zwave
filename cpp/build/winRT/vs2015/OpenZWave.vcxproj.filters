@@ -723,6 +723,9 @@
     <ClCompile Include="..\..\..\src\command_classes\ManufacturerProprietary.cpp">
       <Filter>Command Classes</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\Bitfield.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\..\src\aes\aes.txt">
