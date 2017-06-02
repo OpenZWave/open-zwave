@@ -9,8 +9,8 @@
     <CommandClass id="112">
         <Value type="list" genre="config" instance="1" index="14" label="BASIC SET command" size="1" min="0" max="1" value="0">
             <Help>Enable/Disable BASIC SET command</Help>
-            <Item label="Enabled" value="0"/>
-            <Item label="Disabled" value="1"/>
+            <Item label="Disabled" value="0"/>
+            <Item label="Enabled" value="1"/>
         </Value>
         <Value type="list" genre="config" instance="1" index="15" label="Value of the BASIC SET" size="1" min="0" max="1" value="0">
             <Help>
