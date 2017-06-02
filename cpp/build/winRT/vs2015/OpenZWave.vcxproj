@@ -178,6 +178,7 @@
       <CompileAsWinRT Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsWinRT>
       <CompileAsWinRT Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsWinRT>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\Bitfield.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\Alarm.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\ApplicationStatus.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\Association.cpp" />
