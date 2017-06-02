@@ -39,13 +39,14 @@ class OPENZWAVE_EXPORT Bitfield
 
 public:
 	Bitfield();
-	Bitfield(uint32 value, uint8 size);
+	Bitfield(uint32 value);
 	~Bitfield();
-	void Set( uint32 _idx );
-	void Clear( uint32 _idx );
-	bool IsSet( uint32 _idx ) const;
+	bool Set( uint8 _idx );
+	bool Clear( uint8 _idx );
+	bool IsSet( uint8 _idx ) const;
 	uint32 GetNumSetBits() const;
 	uint32 GetValue() const;
+	bool SetValue(uint32 val);
 	uint32 GetSize() const;
 	class Iterator
 	{
@@ -76,7 +77,6 @@ private:
 	OPENZWAVE_EXPORT_WARNINGS_ON
 	uint32			m_numSetBits;
 	uint32			m_value;
-	uint8			m_size;
 };
 } // namespace OpenZWave
 

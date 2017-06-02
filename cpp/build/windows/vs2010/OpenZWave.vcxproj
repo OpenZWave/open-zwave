@@ -263,6 +263,7 @@ exit 0</Command>
     <ClInclude Include="..\..\..\tinyxml\tinystr.h" />
     <ClInclude Include="..\..\..\tinyxml\tinyxml.h" />
     <ClInclude Include="..\..\..\src\value_classes\Value.h" />
+    <ClInclude Include="..\..\..\src\value_classes\ValueBitSet.h" />
     <ClInclude Include="..\..\..\src\value_classes\ValueBool.h" />
     <ClInclude Include="..\..\..\src\value_classes\ValueByte.h" />
     <ClInclude Include="..\..\..\src\value_classes\ValueDecimal.h" />
@@ -380,6 +381,7 @@ exit 0</Command>
     <ClCompile Include="..\..\..\tinyxml\tinyxmlerror.cpp" />
     <ClCompile Include="..\..\..\tinyxml\tinyxmlparser.cpp" />
     <ClCompile Include="..\..\..\src\value_classes\Value.cpp" />
+    <ClCompile Include="..\..\..\src\value_classes\ValueBitSet.cpp" />
     <ClCompile Include="..\..\..\src\value_classes\ValueBool.cpp" />
     <ClCompile Include="..\..\..\src\value_classes\ValueByte.cpp" />
     <ClCompile Include="..\..\..\src\value_classes\ValueDecimal.cpp" />

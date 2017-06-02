@@ -48,6 +48,7 @@
 #include "command_classes/WakeUp.h"
 
 #include "value_classes/ValueID.h"
+#include "value_classes/ValueBitSet.h"
 #include "value_classes/ValueBool.h"
 #include "value_classes/ValueButton.h"
 #include "value_classes/ValueByte.h"
@@ -58,6 +59,7 @@
 #include "value_classes/ValueSchedule.h"
 #include "value_classes/ValueShort.h"
 #include "value_classes/ValueString.h"
+#include "value_classes/ValueBitSet.h"
 
 using namespace OpenZWave;
 
@@ -2289,15 +2291,19 @@ bool Manager::GetValueAsString
 					}
 					break;
 				}
-
-#if 0
-				/* comment this out so if we miss a ValueID, GCC warns us loudly! */
-				default:
+				case ValueID::ValueType_BitSet:
 				{
-					// To keep GCC happy
+					if( ValueBitSet* value = static_cast<ValueBitSet*>( driver->GetValue( _id ) ) )
+					{
+						*o_value = value->GetAsString();
+						value->Release();
+						res = true;
+					} else {
+						OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to GetValueAsString");
+					}
 					break;
 				}
-#endif
+
 			}
 
 		}
@@ -2897,6 +2903,18 @@ bool Manager::SetValue
 					OZW_ERROR(OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID, "ValueID passed to GetValueFloatPrecision is not a Decimal Value");
 					break;
 				}
+				case ValueID::ValueType_BitSet:
+				{
+					if( ValueBitSet* value = static_cast<ValueBitSet*>( driver->GetValue( _id ) ) )
+					{
+						res = value->SetFromString( _value );
+						value->Release();
+					} else {
+						OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to SetValue");
+					}
+					break;
+				}
+
 			}
 		}
 	}

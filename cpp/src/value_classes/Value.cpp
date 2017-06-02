@@ -31,6 +31,7 @@
 #include "Node.h"
 #include "Notification.h"
 #include "Msg.h"
+#include "Bitfield.h"
 #include "value_classes/Value.h"
 #include "platform/Log.h"
 #include "command_classes/CommandClass.h"
@@ -60,6 +61,7 @@ static char const* c_typeName[] =
 	"string",
 	"button",
 	"raw",
+	"bitset",
 	"invalid type"
 };
 
@@ -609,6 +611,7 @@ int Value::VerifyRefreshedValue
 			}
 			case ValueID::ValueType_List:			// List Type is treated as a int32
 			case ValueID::ValueType_Int:			// int32
+			case ValueID::ValueType_BitSet:			// BitSet
 			{
 				Log::Write( LogLevel_Detail, m_id.GetNodeId(), "Refreshed Value: old value=%d, new value=%d, type=%s", *((int32*)_originalValue), *((int32*)_newValue), GetTypeNameFromEnum(_type) );
 				break;
@@ -668,6 +671,9 @@ int Value::VerifyRefreshedValue
 	case ValueID::ValueType_Schedule:		// Schedule
 		/* Should not get here */
 		break;
+	case ValueID::ValueType_BitSet:			// BitSet
+		bOriginalEqual = ( ((Bitfield *)_originalValue)->GetValue() == ((Bitfield *)_newValue)->GetValue() );
+		break;
 	}
 
 		// if this is the first refresh of the value, test to see if the value has changed
@@ -715,6 +721,9 @@ int Value::VerifyRefreshedValue
 			break;
 		case ValueID::ValueType_Schedule:
 			/* Should not get here */
+			break;
+		case ValueID::ValueType_BitSet:			// BitSet
+			bCheckEqual = ( ((Bitfield *)_checkValue)->GetValue() == ((Bitfield *)_newValue)->GetValue() );;
 			break;
 		}
 		if( bCheckEqual )

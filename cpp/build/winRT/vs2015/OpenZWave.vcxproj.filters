@@ -313,6 +313,9 @@
     <ClInclude Include="..\..\..\src\value_classes\Value.h">
       <Filter>Value Classes</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\value_classes\ValueBitSet.h">
+      <Filter>Value Classes</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\value_classes\ValueBool.h">
       <Filter>Value Classes</Filter>
     </ClInclude>
@@ -655,6 +658,9 @@
       <Filter>TinyXML</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\value_classes\Value.cpp">
+      <Filter>Value Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\value_classes\ValueBitSet.cpp">
       <Filter>Value Classes</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\value_classes\ValueBool.cpp">

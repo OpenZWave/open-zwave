@@ -37,18 +37,15 @@ using namespace OpenZWave;
 
 Bitfield::Bitfield() :
 				m_numSetBits(0),
-				m_value(0),
-				m_size(0)
+				m_value(0)
 {
 }
 
-Bitfield::Bitfield(uint32 value, uint8 size) :
+Bitfield::Bitfield(uint32 value) :
 		m_numSetBits(0),
-		m_value(value),
-		m_size(size)
+		m_value(value)
 {
-	/* convert the value into the bitset */
-	for (int i = 0; i < 8 * size; i++) {
+	for (int i = 0; i < 8 * sizeof(uint32); i++) {
 		if (m_value & (1 << i)) {
 			Set(i);
 		}
@@ -59,8 +56,22 @@ Bitfield::~Bitfield()
 
 }
 
-void Bitfield::Set( uint32 _idx )
+bool Bitfield::SetValue(uint32 val) {
+	for (int i = 0; i < 8 * sizeof(uint32); i++) {
+		if (m_value & (1 << i)) {
+			Set(i);
+		}
+	}
+	return true;
+}
+
+
+bool Bitfield::Set( uint8 _idx )
 {
+	if (_idx > 0x1F) {
+		return false;
+	}
+
 	if( !IsSet(_idx) )
 	{
 		uint32 newSize = (_idx>>5)+1;
@@ -71,19 +82,27 @@ void Bitfield::Set( uint32 _idx )
 		m_bits[_idx>>5] |= (1<<(_idx&0x1f));
 		++m_numSetBits;
 	}
+	return true;
 }
 
-void Bitfield::Clear( uint32 _idx )
+bool Bitfield::Clear( uint8 _idx )
 {
+	if (_idx > 0x1F) {
+		return false;
+	}
 	if( IsSet(_idx) )
 	{
 		m_bits[_idx>>5] &= ~(1<<(_idx&0x1f));
 		--m_numSetBits;
 	}
+	return true;
 }
 
-bool Bitfield::IsSet( uint32 _idx )const
+bool Bitfield::IsSet( uint8 _idx )const
 {
+	if (_idx > 0x1F) {
+		return false;
+	}
 	if( (_idx>>5) < m_bits.size() )
 	{
 		return( ( m_bits[_idx>>5] & (1<<(_idx&0x1f)) ) !=0 );
@@ -100,14 +119,14 @@ uint32 Bitfield::GetValue() const
 {
 	uint32 value = 0;
 	for (unsigned int i = 0; i < m_bits.size(); i++) {
-		//value =
+		value += ( m_bits[i] << (8*i) );
 	}
 	return value;
 }
 
 uint32 Bitfield::GetSize() const
 {
-	return m_size;
+	return m_bits.size() * sizeof(uint32) * 8;
 }
 
 Bitfield::Iterator Bitfield::Begin() const
