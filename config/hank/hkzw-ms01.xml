@@ -63,7 +63,7 @@
                 1 to 100 the change in humidity level resulting in humidity report being sent to the main controller.
             </Help>
         </Value>
-        <Value type="short" genre="config" instance="1" index="184" label="Luminance report threshold" units="lux" size="1" min="0" max="65535" value="0">
+        <Value type="short" genre="config" instance="1" index="184" label="Luminance report threshold" units="lux" size="2" min="0" max="65535" value="0">
             <Help>
                 0 Reports are not sent.
                 1 to 65535 the change in luminance level resulting in luminance report being sent to the main controller.
