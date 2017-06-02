@@ -276,7 +276,7 @@ bool CentralScene::HandleMsg
 		bool identical = true; //version 1 does not know this, so set it to true.
 		if ( GetVersion() >= 2 )
 		{
-		    identical = _data[2] & 0b00000001;
+		    identical = _data[2] & 0x01
 		    Log::Write( LogLevel_Detail, GetNodeId(), "this is version 2 or higher, all scenes identical? %i",identical);
 		}
 		if ( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, CentralSceneIndex_Scenes_Identical)))
@@ -321,7 +321,7 @@ bool CentralScene::HandleMsg
 		        }
 		        else
 		        {
-		            int numberOfBitMasks = (_data[2] & 0b00000110) >> 1;
+		            int numberOfBitMasks = (_data[2] & 0x06) >> 1;
 		            for ( int i = 1; i <= numberOfBitMasks; i++ )
 		            {
 		                int keyAttributes = _data[2 +i];
