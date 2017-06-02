@@ -183,6 +183,7 @@ Version 1.5
  - Pull Request #1224 - Add Philio PSP05-D Motionsensor from superjunky (Nechry)
  - Add Domux devices (Nechry)
  - Add Hank HKZW-DWS01 Door/Window Sensor (Nechry)
+ - Add Hank HKZW-MS01 Multisensor (Nechry)
  
 Version 1.4
  - Released 10th Jan, 2016
