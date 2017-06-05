@@ -45,7 +45,7 @@ Bitfield::Bitfield(uint32 value) :
 		m_numSetBits(0),
 		m_value(value)
 {
-	for (int i = 0; i < 8 * sizeof(uint32); i++) {
+	for (unsigned int i = 0; i < 8 * sizeof(uint32); i++) {
 		if (m_value & (1 << i)) {
 			Set(i);
 		}
@@ -57,7 +57,7 @@ Bitfield::~Bitfield()
 }
 
 bool Bitfield::SetValue(uint32 val) {
-	for (int i = 0; i < 8 * sizeof(uint32); i++) {
+	for (unsigned int i = 0; i < 8 * sizeof(uint32); i++) {
 		if (m_value & (1 << i)) {
 			Set(i);
 		}
@@ -103,7 +103,7 @@ bool Bitfield::IsSet( uint8 _idx )const
 	if (_idx > 0x1F) {
 		return false;
 	}
-	if( (_idx>>5) < m_bits.size() )
+	if( (_idx>>5) < (unsigned int)m_bits.size() )
 	{
 		return( ( m_bits[_idx>>5] & (1<<(_idx&0x1f)) ) !=0 );
 	}
