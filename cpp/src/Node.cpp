@@ -66,6 +66,7 @@
 
 #include "value_classes/ValueID.h"
 #include "value_classes/Value.h"
+#include "value_classes/ValueBitSet.h"
 #include "value_classes/ValueBool.h"
 #include "value_classes/ValueButton.h"
 #include "value_classes/ValueByte.h"
@@ -2284,6 +2285,39 @@ ValueID Node::CreateValueID
 }
 
 //-----------------------------------------------------------------------------
+// <Node::CreateValueBitSet>
+// Helper to create a BitSet ValueID
+//-----------------------------------------------------------------------------
+bool Node::CreateValueBitSet
+(
+		ValueID::ValueGenre const _genre,
+		uint8 const _commandClassId,
+		uint8 const _instance,
+		uint8 const _valueIndex,
+		string const& _label,
+		string const& _units,
+		bool const _readOnly,
+		bool const _writeOnly,
+		int32 const _default,
+		uint8 const _pollIntensity
+)
+{
+	ValueBitSet* value = new ValueBitSet( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default, _pollIntensity );
+	ValueStore* store = GetValueStore();
+	if( store->AddValue( value ) )
+	{
+		value->Release();
+		return true;
+	}
+
+	value->Release();
+	return false;
+}
+
+
+
+
+//-----------------------------------------------------------------------------
 // <Node::CreateValueBool>
 // Helper to create a new bool value and add it to the value store
 //-----------------------------------------------------------------------------
@@ -2611,17 +2645,17 @@ bool Node::CreateValueFromXML
 
 	switch( type )
 	{
+		case ValueID::ValueType_BitSet:		{	value = new ValueBitSet(); 		break;  }
 		case ValueID::ValueType_Bool:		{	value = new ValueBool();		break;	}
 		case ValueID::ValueType_Byte:		{	value = new ValueByte();		break;	}
 		case ValueID::ValueType_Decimal:	{	value = new ValueDecimal();		break;	}
 		case ValueID::ValueType_Int:		{	value = new ValueInt();			break;	}
 		case ValueID::ValueType_List:		{	value = new ValueList();		break;	}
-		case ValueID::ValueType_Schedule:	{	value = new ValueSchedule();		break;	}
+		case ValueID::ValueType_Schedule:	{	value = new ValueSchedule();	break;	}
 		case ValueID::ValueType_Short:		{	value = new ValueShort();		break;	}
 		case ValueID::ValueType_String:		{	value = new ValueString();		break;	}
 		case ValueID::ValueType_Button:		{	value = new ValueButton();		break;	}
 		case ValueID::ValueType_Raw:		{	value = new ValueRaw();			break;  }
-		default:				{	Log::Write( LogLevel_Info, m_nodeId, "Unknown ValueType in XML: %s", _valueElement->Attribute( "type" ) ); break; }
 	}
 
 	if( value )
@@ -2635,6 +2669,8 @@ bool Node::CreateValueFromXML
 		}
 
 		value->Release();
+	} else {
+		Log::Write( LogLevel_Info, m_nodeId, "Unknown ValueType in XML: %s", _valueElement->Attribute( "type" ) );
 	}
 
 	return false;

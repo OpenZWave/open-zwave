@@ -76,6 +76,9 @@ namespace OpenZWave
 		string GetBitLabel(uint8 _idx);
 		bool SetBitLabel(uint8 _idx, string label);
 
+		uint8 GetSize() const;
+		void SetSize(uint8 size);
+
 	private:
 		bool isValidBit(uint8 _idx) const;
 		Bitfield	m_value;				// the current index in the m_items vector
@@ -84,6 +87,7 @@ namespace OpenZWave
 		uint32		m_BitMask;				// Valid Bits
 		std::map<uint8, string> m_BitHelpString;	// Help Strings for each Bit
 		std::map<uint8, string> m_BitLabelString;	// Labels for each Bit
+		uint8 		m_size;					// Number of bytes in size
 	};
 
 } // namespace OpenZWave

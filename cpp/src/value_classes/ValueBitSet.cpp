@@ -59,7 +59,8 @@ ValueBitSet::ValueBitSet
 	m_value( _value ),
 	m_valueCheck( false ),
 	m_newValue( false ),
-	m_BitMask(0xFFFFFFFF)
+	m_BitMask(0xFFFFFFFF),
+	m_size(0)
 {
 }
 
@@ -142,6 +143,25 @@ void ValueBitSet::ReadXML
 	{
 		Log::Write( LogLevel_Info, "Missing default integer value from xml configuration: node %d, class 0x%02x, instance %d, index %d", _nodeId,  _commandClassId, GetID().GetInstance(), GetID().GetIndex() );
 	}
+	// Get size of values
+	int intSize;
+	if ( TIXML_SUCCESS == _valueElement->QueryIntAttribute( "size", &intSize ) )
+	{
+		if( intSize == 1 || intSize == 2 || intSize == 4 )
+		{
+			m_size = intSize;
+		}
+		else
+		{
+			Log::Write( LogLevel_Info, "Value size is invalid. Only 1, 2 & 4 supported for node %d, class 0x%02x, instance %d, index %d", _nodeId, _commandClassId, GetID().GetInstance(), GetID().GetIndex() );
+			m_size = 1;
+		}
+	}
+	else
+	{
+		Log::Write( LogLevel_Info, "Value list size is not set, assuming 1 bytes for node %d, class 0x%02x, instance %d, index %d", _nodeId, _commandClassId, GetID().GetInstance(), GetID().GetIndex() );
+		m_size = 1;
+	}
 	TiXmlElement const *helpElement = _valueElement->FirstChildElement("Help");
 	TiXmlElement const *BitSetHelpElement = helpElement->FirstChildElement("BitSet");
 	while (BitSetHelpElement) {
@@ -179,6 +199,9 @@ void ValueBitSet::WriteXML
 
 	snprintf( str, sizeof(str), "%d", m_value.GetValue() );
 	_valueElement->SetAttribute( "value", str );
+
+	snprintf( str, sizeof(str), "%d", m_size );
+	_valueElement->SetAttribute( "size", str );
 
 	TiXmlElement *helpElement = _valueElement->FirstChildElement("Help");
 	for (std::map<uint8, string>::iterator it = m_BitHelpString.begin(); it != m_BitHelpString.end(); ++it) {
@@ -347,6 +370,21 @@ bool ValueBitSet::SetBitLabel
 	return false;
 
 }
+
+uint8 ValueBitSet::GetSize
+(
+) const
+{
+	return m_size;
+}
+void ValueBitSet::SetSize
+(
+		uint8 size
+)
+{
+	m_size = size;
+}
+
 
 //-----------------------------------------------------------------------------
 // <ValueBitSet::OnValueRefreshed>

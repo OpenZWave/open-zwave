@@ -32,6 +32,7 @@
 #include "Driver.h"
 #include "Node.h"
 #include "platform/Log.h"
+#include "value_classes/ValueBitSet.h"
 #include "value_classes/ValueBool.h"
 #include "value_classes/ValueButton.h"
 #include "value_classes/ValueByte.h"
@@ -75,6 +76,12 @@ bool Configuration::HandleMsg
 		{
 			switch ( value->GetID().GetType() )
 			{
+				case ValueID::ValueType_BitSet:
+				{
+					ValueBitSet* vbs = static_cast<ValueBitSet*>( value );
+					vbs->OnValueRefreshed( paramValue != 0 );
+					break;
+				}
 				case ValueID::ValueType_Bool:
 				{
 					ValueBool* valueBool = static_cast<ValueBool*>( value );
@@ -164,6 +171,12 @@ bool Configuration::SetValue
 	uint16 param = _value.GetID().GetIndex();
 	switch( _value.GetID().GetType() )
 	{
+		case ValueID::ValueType_BitSet:
+		{
+			ValueBitSet const& vbs = static_cast<ValueBitSet const&>( _value );
+			Set( param, (int32)vbs.GetValue(), vbs.GetSize() );
+			return true;
+		}
 		case ValueID::ValueType_Bool:
 		{
 			ValueBool const& valueBool = static_cast<ValueBool const&>( _value );
