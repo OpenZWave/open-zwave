@@ -73,6 +73,8 @@ namespace OpenZWave
 
 		string GetBitHelp(uint8 _idx);
 		bool SetBitHelp(uint8 _idx, string help);
+		string GetBitLabel(uint8 _idx);
+		bool SetBitLabel(uint8 _idx, string label);
 
 	private:
 		bool isValidBit(uint8 _idx) const;
@@ -81,6 +83,7 @@ namespace OpenZWave
 		Bitfield	m_newValue;				// a new value to be set on the appropriate device
 		uint32		m_BitMask;				// Valid Bits
 		std::map<uint8, string> m_BitHelpString;	// Help Strings for each Bit
+		std::map<uint8, string> m_BitLabelString;	// Labels for each Bit
 	};
 
 } // namespace OpenZWave

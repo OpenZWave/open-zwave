@@ -1617,22 +1617,33 @@ void Manager::SetNodeLevel
 //-----------------------------------------------------------------------------
 string Manager::GetValueLabel
 (
-		ValueID const& _id
+		ValueID const& _id,
+		int32 _pos
 )
 {
 	string label;
 	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 	{
 		LockGuard LG(driver->m_nodeMutex);
-		if( Value* value = driver->GetValue( _id ) )
-		{
-			label = value->GetLabel();
+		if (_pos != -1) {
+			if (_id.GetType() != ValueID::ValueType_BitSet) {
+				OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "ValueID passed to GetValueLabel is not a BitSet but a position was requested");
+				return label;
+			}
+			ValueBitSet *value = static_cast<ValueBitSet *>(driver->GetValue( _id ));
+			label = value->GetBitLabel(_pos);
 			value->Release();
+			return label;
 		} else {
-			OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to GetValueLabel");
+			if( Value* value = driver->GetValue( _id ) )
+			{
+				label = value->GetLabel();
+				value->Release();
+				return label;
+			}
 		}
+		OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to GetValueLabel");
 	}
-
 	return label;
 }
 
@@ -1643,19 +1654,31 @@ string Manager::GetValueLabel
 void Manager::SetValueLabel
 (
 		ValueID const& _id,
-		string const& _value
+		string const& _value,
+		int32 _pos
 )
 {
 	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 	{
 		LockGuard LG(driver->m_nodeMutex);
-		if( Value* value = driver->GetValue( _id ) )
-		{
-			value->SetLabel( _value );
+		if (_pos != -1) {
+			if (_id.GetType() != ValueID::ValueType_BitSet) {
+				OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "ValueID passed to SetValueLabel is not a BitSet but a position was requested");
+				return;
+			}
+			ValueBitSet *value = static_cast<ValueBitSet *>(driver->GetValue( _id ));
+			value->SetBitLabel(_pos, _value);
 			value->Release();
+			return;
 		} else {
-			OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to SetValueLabel");
+			if( Value* value = driver->GetValue( _id ) )
+			{
+				value->SetLabel( _value );
+				value->Release();
+				return;
+			}
 		}
+		OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to SetValueLabel");
 	}
 }
 

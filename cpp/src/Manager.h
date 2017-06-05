@@ -892,22 +892,24 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		/**
 		 * \brief Gets the user-friendly label for the value.
 		 * \param _id The unique identifier of the value.
+		 * \param _pos the Bit To Get the Label for if its a BitSet ValueID
 		 * \return The value label.
  		 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_VALUEID if the ValueID is invalid
 		 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_HOMEID if the Driver cannot be found
 		 * \see ValueID
 		 */
-		string GetValueLabel( ValueID const& _id );
+		string GetValueLabel( ValueID const& _id, int32 _pos = -1 );
 
 		/**
 		 * \brief Sets the user-friendly label for the value.
 		 * \param _id The unique identifier of the value.
+		 * \param _pos the Bit To set the Label for if its a BitSet ValueID
 		 * \param _value The new value of the label.
 		 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_VALUEID if the ValueID is invalid
 		 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_HOMEID if the Driver cannot be found
 		 * \see ValueID
 		 */
-		void SetValueLabel( ValueID const& _id, string const& _value );
+		void SetValueLabel( ValueID const& _id, string const& _value, int32 _pos = -1 );
 
 		/**
 		 * \brief Gets the units that the value is measured in.

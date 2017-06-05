@@ -150,6 +150,11 @@ void ValueBitSet::ReadXML
 			{
 				id = (uint8)intVal;
 			}
+		char const* label = _valueElement->Attribute( "label" );
+		if( label )
+		{
+			m_BitLabelString[id] = label;
+		}
 		string helpstring = BitSetHelpElement->GetText();
 		m_BitHelpString[id] = helpstring;
 		BitSetHelpElement = BitSetHelpElement->NextSiblingElement("BitSet");
@@ -178,7 +183,8 @@ void ValueBitSet::WriteXML
 	TiXmlElement *helpElement = _valueElement->FirstChildElement("Help");
 	for (std::map<uint8, string>::iterator it = m_BitHelpString.begin(); it != m_BitHelpString.end(); ++it) {
 		TiXmlElement* BitSethelpElement = new TiXmlElement( "BitSet" );
-		BitSethelpElement->SetAttribute("bit", it->first);
+		BitSethelpElement->SetAttribute("id", it->first);
+		BitSethelpElement->SetAttribute("label", m_BitLabelString.at(it->first).c_str());
 		TiXmlText* textElement = new TiXmlText(it->second.c_str());
 		BitSethelpElement->LinkEndChild( textElement );
 		helpElement->LinkEndChild( BitSethelpElement );
@@ -313,6 +319,33 @@ bool ValueBitSet::isValidBit
 	if (((m_BitMask) & (1 << _idx)) == 0)
 		return false;
 	return true;
+}
+
+string ValueBitSet::GetBitLabel
+(
+		uint8 _idx
+)
+{
+	if (isValidBit(_idx)) {
+		return m_BitLabelString.at(_idx);
+	}
+	Log::Write(LogLevel_Warning, m_id.GetNodeId(), "GetBitLabel: Bit %d is not valid with BitMask %d", _idx, m_BitMask);
+	return "";
+
+}
+bool ValueBitSet::SetBitLabel
+(
+		uint8 _idx,
+		string label
+)
+{
+	if (isValidBit(_idx)) {
+		m_BitLabelString[_idx] = label;
+		return true;
+	}
+	Log::Write(LogLevel_Warning, m_id.GetNodeId(), "SetBitLabel: Bit %d is not valid with BitMask %d", _idx, m_BitMask);
+	return false;
+
 }
 
 //-----------------------------------------------------------------------------
