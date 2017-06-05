@@ -51,6 +51,7 @@ namespace OpenZWave
 	class SerialPort;
 	class Thread;
 	class Notification;
+	class ValueBitSet;
 	class ValueBool;
 	class ValueByte;
 	class ValueDecimal;
@@ -931,22 +932,24 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		/**
 		 * \brief Gets a help string describing the value's purpose and usage.
 		 * \param _id The unique identifier of the value.
+		 * \param _pos Get the Help for associated Bits (Valid with ValueBitSet only)
 		 * \return The value help text.
  		 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_VALUEID if the ValueID is invalid
 		 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_HOMEID if the Driver cannot be found
 		 * \see ValueID
 		 */
-		string GetValueHelp( ValueID const& _id );
+		string GetValueHelp( ValueID const& _id, int32 _pos = -1 );
 
 		/**
 		 * \brief Sets a help string describing the value's purpose and usage.
 		 * \param _id The unique identifier of the value.
 		 * \param _value The new value of the help text.
+		 * \param __pos Set the Help for a associated Bit (Valid with ValueBitSet Only)
  		 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_VALUEID if the ValueID is invalid
 		 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_HOMEID if the Driver cannot be found
 		 * \see ValueID
 		 */
-		void SetValueHelp( ValueID const& _id, string const& _value );
+		void SetValueHelp( ValueID const& _id, string const& _value, int32 _pos = -1 );
 
 		/**
 		 * \brief Gets the minimum that this value may contain.
@@ -1009,6 +1012,19 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		bool IsValuePolled( ValueID const& _id );
 
 		/**
+		 * \brief Gets a the value of a Bit from a BitSet ValueID
+		 * \param _id The unique identifier of the value.
+		 * \param _pos the Bit you want to test for
+		 * \param o_value Pointer to a bool that will be filled with the value.
+		 * \return true if the value was obtained.  Returns false if the value is not a ValueID::ValueType_Bool. The type can be tested with a call to ValueID::GetType.
+		 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_VALUEID if the ValueID is invalid
+		 * \throws OZWException with Type OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID if the Actual Value is off a different type
+		 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_HOMEID if the Driver cannot be found
+		 * \see ValueID::GetType, GetValueAsBitSet, GetValueAsByte, GetValueAsFloat, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListSelection, GetValueListItems, GetValueAsRaw
+		 */
+		bool GetValueAsBitSet( ValueID const& _id, uint8 _pos, bool* o_value );
+
+		/**
 		 * \brief Gets a value as a bool.
 		 * \param _id The unique identifier of the value.
 		 * \param o_value Pointer to a bool that will be filled with the value.
@@ -1016,7 +1032,7 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_VALUEID if the ValueID is invalid
 		 * \throws OZWException with Type OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID if the Actual Value is off a different type
 		 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_HOMEID if the Driver cannot be found
-		 * \see ValueID::GetType, GetValueAsByte, GetValueAsFloat, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListSelection, GetValueListItems, GetValueAsRaw
+		 * \see ValueID::GetType, GetValueAsBitSet, GetValueAsByte, GetValueAsFloat, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListSelection, GetValueListItems, GetValueAsRaw
 		 */
 		bool GetValueAsBool( ValueID const& _id, bool* o_value );
 
@@ -1028,7 +1044,7 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_VALUEID if the ValueID is invalid
 		 * \throws OZWException with Type OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID if the Actual Value is off a different type
 		 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_HOMEID if the Driver cannot be found
-		 * \see ValueID::GetType, GetValueAsBool, GetValueAsFloat, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListSelection, GetValueListItems, GetValueAsRaw
+		 * \see ValueID::GetType, GetValueAsBitSet, GetValueAsBool, GetValueAsFloat, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListSelection, GetValueListItems, GetValueAsRaw
 		 */
 		bool GetValueAsByte( ValueID const& _id, uint8* o_value );
 
@@ -1040,7 +1056,7 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_VALUEID if the ValueID is invalid
 		 * \throws OZWException with Type OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID if the Actual Value is off a different type
 		 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_HOMEID if the Driver cannot be found
-		 * \see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListSelection, GetValueListItems, GetValueAsRaw
+		 * \see ValueID::GetType, GetValueAsBitSet, GetValueAsBool, GetValueAsByte, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListSelection, GetValueListItems, GetValueAsRaw
 		 */
 		bool GetValueAsFloat( ValueID const& _id, float* o_value );
 
@@ -1052,7 +1068,7 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_VALUEID if the ValueID is invalid
 		 * \throws OZWException with Type OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID if the Actual Value is off a different type
 		 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_HOMEID if the Driver cannot be found
-		 * \see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsFloat, GetValueAsShort, GetValueAsString, GetValueListSelection, GetValueListItems, GetValueAsRaw
+		 * \see ValueID::GetType, GetValueAsBitSet, GetValueAsBool, GetValueAsByte, GetValueAsFloat, GetValueAsShort, GetValueAsString, GetValueListSelection, GetValueListItems, GetValueAsRaw
 		 */
 		bool GetValueAsInt( ValueID const& _id, int32* o_value );
 
@@ -1064,7 +1080,7 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_VALUEID if the ValueID is invalid
 		 * \throws OZWException with Type OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID if the Actual Value is off a different type
 		 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_HOMEID if the Driver cannot be found
-		 * \see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsFloat, GetValueAsInt, GetValueAsString, GetValueListSelection, GetValueListItems, GetValueAsRaw
+		 * \see ValueID::GetType, GetValueAsBitSet, GetValueAsBool, GetValueAsByte, GetValueAsFloat, GetValueAsInt, GetValueAsString, GetValueListSelection, GetValueListItems, GetValueAsRaw
 		 */
 		bool GetValueAsShort( ValueID const& _id, int16* o_value );
 
@@ -1077,7 +1093,7 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_VALUEID if the ValueID is invalid
 		 * \throws OZWException with Type OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID if the Actual Value is off a different type
 		 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_HOMEID if the Driver cannot be found
-		 * \see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsFloat, GetValueAsInt, GetValueAsShort, GetValueListSelection, GetValueListItems, GetValueAsRaw
+		 * \see ValueID::GetType, GetValueAsBitSet, GetValueAsBool, GetValueAsByte, GetValueAsFloat, GetValueAsInt, GetValueAsShort, GetValueListSelection, GetValueListItems, GetValueAsRaw
 		 */
 		bool GetValueAsString( ValueID const& _id, string* o_value );
 
@@ -1090,7 +1106,7 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_VALUEID if the ValueID is invalid
 		 * \throws OZWException with Type OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID if the Actual Value is off a different type
 		 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_HOMEID if the Driver cannot be found
-		 * \see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsFloat, GetValueAsInt, GetValueAsShort, GetValueListSelection, GetValueListItems, GetValueAsRaw
+		 * \see ValueID::GetType, GetValueAsBitSet, GetValueAsBool, GetValueAsByte, GetValueAsFloat, GetValueAsInt, GetValueAsShort, GetValueListSelection, GetValueListItems, GetValueAsRaw
 		 */
 		bool GetValueAsRaw( ValueID const& _id, uint8** o_value, uint8* o_length );
 
@@ -1102,7 +1118,7 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_VALUEID if the ValueID is invalid
 		 * \throws OZWException with Type OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID if the Actual Value is off a different type
 		 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_HOMEID if the Driver cannot be found
-		 * \see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsFloat, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListItems, GetValueAsRaw
+		 * \see ValueID::GetType, GetValueAsBitSet, GetValueAsBool, GetValueAsByte, GetValueAsFloat, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListItems, GetValueAsRaw
 		 */
 		bool GetValueListSelection( ValueID const& _id, string* o_value );
 
@@ -1114,7 +1130,7 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_VALUEID if the ValueID is invalid
 		 * \throws OZWException with Type OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID if the Actual Value is off a different type
 		 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_HOMEID if the Driver cannot be found
-		 * \see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsFloat, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListItems, GetValueAsRaw
+		 * \see ValueID::GetType, GetValueAsBitSet, GetValueAsBool, GetValueAsByte, GetValueAsFloat, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListItems, GetValueAsRaw
 		 */
 		bool GetValueListSelection( ValueID const& _id, int32* o_value );
 
@@ -1126,7 +1142,7 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_VALUEID if the ValueID is invalid
 		 * \throws OZWException with Type OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID if the Actual Value is off a different type
 		 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_HOMEID if the Driver cannot be found
-		 * \see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsFloat, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListSelection, GetValueAsRaw
+		 * \see ValueID::GetType, GetValueAsBitSet, GetValueAsBool, GetValueAsByte, GetValueAsFloat, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListSelection, GetValueAsRaw
 		 */
 		bool GetValueListItems( ValueID const& _id, vector<string>* o_value );
 
@@ -1138,7 +1154,7 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_VALUEID if the ValueID is invalid
 		 * \throws OZWException with Type OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID if the Actual Value is off a different type
 		 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_HOMEID if the Driver cannot be found
-		 * \see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsFloat, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListSelection, GetValueAsRaw
+		 * \see ValueID::GetType, GetValueAsBitSet, GetValueAsBool, GetValueAsByte, GetValueAsFloat, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListSelection, GetValueAsRaw
 		 */
 		bool GetValueListValues( ValueID const& _id, vector<int32>* o_value );
 
@@ -1150,9 +1166,25 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_VALUEID if the ValueID is invalid
 		 * \throws OZWException with Type OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID if the Actual Value is off a different type
 		 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_HOMEID if the Driver cannot be found
-		 * \see ValueID::GetType, GetValueAsBool, GetValueAsByte, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListSelection, GetValueListItems
+		 * \see ValueID::GetType, GetValueAsBitSet, GetValueAsBool, GetValueAsByte, GetValueAsInt, GetValueAsShort, GetValueAsString, GetValueListSelection, GetValueListItems
 		 */
 		bool GetValueFloatPrecision( ValueID const& _id, uint8* o_value );
+
+		/**
+		 * \brief Sets the state of a bit in a BitSet ValueID.
+		 * Due to the possibility of a device being asleep, the command is assumed to succeed, and the value
+		 * held by the node is updated directly.  This will be reverted by a future status message from the device
+		 * if the Z-Wave message actually failed to get through.  Notification callbacks will be sent in both cases.
+		 * \param _id The unique identifier of the BitSet value.
+		 * \param _pos the Position of the Bit you want to Set
+		 * \param _value The new value of the bool.
+		 * \return true if the value was set.  Returns false if the value is not a ValueID::ValueType_Bool. The type can be tested with a call to ValueID::GetType.
+		 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_VALUEID if the ValueID is invalid
+		 * \throws OZWException with Type OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID if the Actual Value is off a different type
+		 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_HOMEID if the Driver cannot be found
+		 *
+		 */
+		bool SetValue( ValueID const& _id,  uint8 _pos, bool const _value );
 
 		/**
 		 * \brief Sets the state of a bool.
@@ -1324,6 +1356,33 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_HOMEID if the Driver cannot be found
 		 */
 		bool ReleaseButton( ValueID const& _id );
+
+		/**
+		 * \brief Sets the Valid BitMask for a BitSet ValueID
+		 * Sets a BitMask of Valid Bits for a BitSet ValueID
+		 * \param _id The unique identifier of the integer value.
+		 * \param _mask The Mask to set
+		 * \return true if the mask was applied.  Returns false if the value is not a ValueID::ValueType_BitSet or the Mask was invalid. The type can be tested with a call to ValueID::GetType.
+		 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_VALUEID if the ValueID is invalid
+		 * \throws OZWException with Type OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID if the Actual Value is off a different type
+		 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_HOMEID if the Driver cannot be found
+		 */
+		bool SetBitMask( ValueID const& _id, uint32 _mask );
+
+		/**
+		 * \brief Gets the Valid BitMask for a BitSet ValueID
+		 * Gets a BitMask of Valid Bits for a BitSet ValueID
+		 * \param _id The unique identifier of the integer value.
+		 * \param o_mask The Mask to for the BitSet
+		 * \return true if the mask was retrieved.  Returns false if the value is not a ValueID::ValueType_BitSet or the Mask was invalid. The type can be tested with a call to ValueID::GetType.
+		 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_VALUEID if the ValueID is invalid
+		 * \throws OZWException with Type OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID if the Actual Value is off a different type
+		 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_HOMEID if the Driver cannot be found
+		 */
+		bool GetBitMask( ValueID const& _id, int32* o_mask );
+
+
+
 	/*@}*/
 
 	//-----------------------------------------------------------------------------

@@ -58,7 +58,8 @@ ValueBitSet::ValueBitSet
   	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Bool, _label, _units, _readOnly, _writeOnly, false, _pollIntensity ),
 	m_value( _value ),
 	m_valueCheck( false ),
-	m_newValue( false )
+	m_newValue( false ),
+	m_BitMask(0xFFFFFFFF)
 {
 }
 
@@ -69,7 +70,6 @@ bool ValueBitSet::SetFromString
 {
 	int32 val = atoi( _value.c_str() );
 	return Set( val );
-	return false;
 }
 
 string const ValueBitSet::GetAsString
@@ -79,6 +79,16 @@ string const ValueBitSet::GetAsString
 	stringstream ss;
 	ss << GetValue();
 	return ss.str();
+}
+
+string const ValueBitSet::GetAsBinaryString
+(
+) const
+{
+	uint32 n = GetValue();
+	std::string r;
+    while(n!=0) {r=(n%2==0 ?"0":"1")+r; n/=2;}
+    return "0b" + r;
 }
 
 uint32 ValueBitSet::GetValue
@@ -92,7 +102,11 @@ bool ValueBitSet::GetBit
 		uint8 _idx
 ) const
 {
-	return m_value.IsSet(_idx);
+	if (isValidBit(_idx))
+		return m_value.IsSet(_idx);
+	Log::Write(LogLevel_Warning, m_id.GetNodeId(), "GetBit Index %d is not valid with BitMask %d", _idx, m_BitMask);
+	return false;
+
 }
 
 
@@ -112,6 +126,14 @@ void ValueBitSet::ReadXML
 	Value::ReadXML( _homeId, _nodeId, _commandClassId, _valueElement );
 
 	int intVal;
+	if( TIXML_SUCCESS == _valueElement->QueryIntAttribute( "bitmask", &intVal ) )
+	{
+		m_BitMask = (uint32)intVal;
+	}
+	else
+	{
+		Log::Write( LogLevel_Info, "Missing BitMask value from xml configuration: node %d, class 0x%02x, instance %d, index %d", _nodeId,  _commandClassId, GetID().GetInstance(), GetID().GetIndex() );
+	}
 	if( TIXML_SUCCESS == _valueElement->QueryIntAttribute( "value", &intVal ) )
 	{
 		m_value.SetValue((uint32)intVal);
@@ -120,6 +142,19 @@ void ValueBitSet::ReadXML
 	{
 		Log::Write( LogLevel_Info, "Missing default integer value from xml configuration: node %d, class 0x%02x, instance %d, index %d", _nodeId,  _commandClassId, GetID().GetInstance(), GetID().GetIndex() );
 	}
+	TiXmlElement const *helpElement = _valueElement->FirstChildElement("Help");
+	TiXmlElement const *BitSetHelpElement = helpElement->FirstChildElement("BitSet");
+	while (BitSetHelpElement) {
+		uint8 id;
+		if( TIXML_SUCCESS == BitSetHelpElement->QueryIntAttribute( "id", &intVal ) )
+			{
+				id = (uint8)intVal;
+			}
+		string helpstring = BitSetHelpElement->GetText();
+		m_BitHelpString[id] = helpstring;
+		BitSetHelpElement = BitSetHelpElement->NextSiblingElement("BitSet");
+	}
+
 }
 
 //-----------------------------------------------------------------------------
@@ -133,8 +168,21 @@ void ValueBitSet::WriteXML
 {
 	Value::WriteXML( _valueElement );
 	char str[16];
+
+	snprintf(str, sizeof(str), "%d", m_BitMask);
+	_valueElement->SetAttribute( "bitmask", str);
+
 	snprintf( str, sizeof(str), "%d", m_value.GetValue() );
 	_valueElement->SetAttribute( "value", str );
+
+	TiXmlElement *helpElement = _valueElement->FirstChildElement("Help");
+	for (std::map<uint8, string>::iterator it = m_BitHelpString.begin(); it != m_BitHelpString.end(); ++it) {
+		TiXmlElement* BitSethelpElement = new TiXmlElement( "BitSet" );
+		BitSethelpElement->SetAttribute("bit", it->first);
+		TiXmlText* textElement = new TiXmlText(it->second.c_str());
+		BitSethelpElement->LinkEndChild( textElement );
+		helpElement->LinkEndChild( BitSethelpElement );
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -146,9 +194,15 @@ bool ValueBitSet::Set
 	uint32 const _value
 )
 {
+	if (_value & ~ m_BitMask) {
+		Log::Write(LogLevel_Warning, m_id.GetNodeId(), "Set: Value %d is not valid with BitMask %d", _value, m_BitMask);
+		return false;
+	}
+
+
 	// create a temporary copy of this value to be submitted to the Set() call and set its value to the function param
   	ValueBitSet* tempValue = new ValueBitSet( *this );
-	tempValue->m_value = _value;
+	tempValue->m_value.SetValue(_value);
 
 	// Set the value in the device.
 	bool ret = ((Value*)tempValue)->Set();
@@ -164,6 +218,14 @@ bool ValueBitSet::SetBit
 		uint8 const _idx
 )
 {
+	/* is the bits valid */
+	if (!isValidBit(_idx)) {
+		std::cout << "notok" << std::endl;
+		Log::Write(LogLevel_Warning, m_id.GetNodeId(), "SetBit: Bit %d is not valid with BitMask %d", _idx, m_BitMask);
+		return false;
+	}
+
+
 	// create a temporary copy of this value to be submitted to the Set() call and set its value to the function param
   	ValueBitSet* tempValue = new ValueBitSet( *this );
 	tempValue->m_value.Set(_idx);
@@ -181,6 +243,13 @@ bool ValueBitSet::ClearBit
 		uint8 const _idx
 )
 {
+
+	/* is the bits valid */
+	if (!isValidBit(_idx)) {
+		Log::Write(LogLevel_Warning, m_id.GetNodeId(), "ClearBit: Bit %d is not valid with BitMask %d", _idx, m_BitMask);
+		return false;
+	}
+
 	// create a temporary copy of this value to be submitted to the Set() call and set its value to the function param
   	ValueBitSet* tempValue = new ValueBitSet( *this );
 	tempValue->m_value.Clear(_idx);
@@ -194,6 +263,57 @@ bool ValueBitSet::ClearBit
 	return ret;
 }
 
+bool ValueBitSet::SetBitMask
+(
+		uint32 _bitMask
+)
+{
+	m_BitMask = _bitMask;
+	return true;
+}
+
+uint32 ValueBitSet::GetBitMask
+(
+) const
+{
+	return m_BitMask;
+}
+
+string ValueBitSet::GetBitHelp
+(
+		uint8 _idx
+)
+{
+	if (isValidBit(_idx)) {
+		return m_BitHelpString.at(_idx);
+	}
+	Log::Write(LogLevel_Warning, m_id.GetNodeId(), "SetBitHelp: Bit %d is not valid with BitMask %d", _idx, m_BitMask);
+	return "";
+}
+
+bool ValueBitSet::SetBitHelp
+(
+		uint8 _idx,
+		string help
+)
+{
+	if (isValidBit(_idx)) {
+		m_BitHelpString[_idx] = help;
+		return true;
+	}
+	Log::Write(LogLevel_Warning, m_id.GetNodeId(), "SetBitHelp: Bit %d is not valid with BitMask %d", _idx, m_BitMask);
+	return false;
+}
+
+bool ValueBitSet::isValidBit
+(
+		uint8 _idx
+) const
+{
+	if (((m_BitMask) & (1 << _idx)) == 0)
+		return false;
+	return true;
+}
 
 //-----------------------------------------------------------------------------
 // <ValueBitSet::OnValueRefreshed>

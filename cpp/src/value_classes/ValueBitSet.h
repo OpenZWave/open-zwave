@@ -29,6 +29,7 @@
 #define _ValueBitSet_H
 
 #include <string>
+#include <map>
 #include "Defs.h"
 #include "value_classes/Value.h"
 #include "Bitfield.h"
@@ -52,23 +53,34 @@ namespace OpenZWave
 		virtual ~ValueBitSet(){}
 
 		bool Set( uint32 const _value );
+		uint32 GetValue() const;
+
 		bool SetBit( uint8 const _idx);
 		bool ClearBit(uint8 const _idx);
+		bool GetBit(uint8 _idx) const;
+
+		bool SetBitMask(uint32 _bitMask);
+		uint32 GetBitMask() const;
+
 		void OnValueRefreshed( uint32 const _value );
 
 		// From Value
 		virtual string const GetAsString() const;
+		virtual string const GetAsBinaryString() const;
 		virtual bool SetFromString( string const& _value );
 		virtual void ReadXML( uint32 const _homeId, uint8 const _nodeId, uint8 const _commandClassId, TiXmlElement const* _valueElement );
 		virtual void WriteXML( TiXmlElement* _valueElement );
 
-		uint32 GetValue() const;
-		bool GetBit(uint8 _idx) const;
+		string GetBitHelp(uint8 _idx);
+		bool SetBitHelp(uint8 _idx, string help);
 
 	private:
+		bool isValidBit(uint8 _idx) const;
 		Bitfield	m_value;				// the current index in the m_items vector
 		Bitfield	m_valueCheck;			// the previous value (used for double-checking spurious value reads)
 		Bitfield	m_newValue;				// a new value to be set on the appropriate device
+		uint32		m_BitMask;				// Valid Bits
+		std::map<uint8, string> m_BitHelpString;	// Help Strings for each Bit
 	};
 
 } // namespace OpenZWave

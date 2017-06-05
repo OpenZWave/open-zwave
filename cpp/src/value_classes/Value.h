@@ -107,9 +107,10 @@ namespace OpenZWave
 
 		time_t		m_refreshTime;			// time_t identifying when this value was last refreshed
 		bool		m_verifyChanges;		// if true, apparent changes are verified; otherwise, they're not
+		ValueID		m_id;
+
 
 	private:
-		ValueID		m_id;
 		string		m_label;
 		string		m_units;
 		string		m_help;
