@@ -103,7 +103,7 @@ bool Bitfield::IsSet( uint8 _idx )const
 	if (_idx > 0x1F) {
 		return false;
 	}
-	if( (_idx>>5) < (unsigned int)m_bits.size() )
+	if( (unsigned int)(_idx>>5) < (unsigned int)m_bits.size() )
 	{
 		return( ( m_bits[_idx>>5] & (1<<(_idx&0x1f)) ) !=0 );
 	}
