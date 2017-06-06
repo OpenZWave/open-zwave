@@ -256,6 +256,7 @@ DISTFILES =	.gitignore \
 	config/manufacturer_specific.xml \
 	config/manufacturer_specific.xsd \
 	config/mcohome/mh8fceu.xml \
+	config/mcohome/mh9co2.xml \
     config/mcohome/mhp210.xml \
 	config/mcohome/mhs311.xml \
 	config/mcohome/mhs312.xml \
