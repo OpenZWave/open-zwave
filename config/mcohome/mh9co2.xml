@@ -3,7 +3,7 @@
     <!--MCOHome CO2 Monitor MH9-CO2-WD -->
     <!-- Configuration -->
     <CommandClass id="112">
-        <Value type="short" genre="config" instance="1" index="1" label="CO2 Notification threshold" size="2" min="1" max="1200" units="ppm" value="1">
+        <Value type="short" genre="config" instance="1" index="1" label="CO2 Notification threshold" size="2" min="1" max="1200" units="ppm" value="1000">
             <Help>CO2 Notification threshold 1 to 2000ppm</Help>
         </Value>
     </CommandClass>
