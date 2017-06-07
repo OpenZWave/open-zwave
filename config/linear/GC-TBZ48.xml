@@ -121,52 +121,6 @@
         Sets the delta from setpoint that stage 2 cooling stops
       </Help>
     </Value>
-    <Value type="list" index="21" genre="config" label="Mechanical Status" units="" min="1" max="256" size="2">
-      <Help>
-        Mechanical Status
-      </Help>
-      <Item label="MECH_H1" value="1" />
-      <Item label="MECH_H2" value="2" />
-      <Item label="MECH_H3" value="4" />
-      <Item label="MECH_C1" value="8" />
-      <Item label="MECH_C2" value="16" />
-      <Item label="PHANTOM_F" value="32" />
-      <Item label="MECH_F" value="64" />
-      <Item label="MANUAL_F" value="128" />
-      <Item label="reserved" value="256" />
-    </Value>
-    <Value type="list" index="22" genre="config" label="SCP Status" units="" min="1" max="128" size="1">
-      <Help>
-        SCP Status
-      </Help>
-      <Item label="STATE_HEAT" value="1" />
-      <Item label="STATE_COOL" value="2" />
-      <Item label="STATE_2ND" value="4" />
-      <Item label="STATE_3RD" value="8" />
-      <Item label="STATE_FAN" value="16" />
-      <Item label="STATE_LAST" value="32" />
-      <Item label="STATE_MOT" value="64" />
-      <Item label="STATE_MRT" value="128" />
-    </Value>
-    <Value type="list" index="23" genre="config" label="Autosend Enable Bits" units="" min="1" max="32768" size="2">
-      <Help>
-        Autosend Enable Bits
-      </Help>
-      <Item label="Temperature" value="1" />
-      <Item label="Setpoint H" value="2" />
-      <Item label="Setpoint C" value="4" />
-      <Item label="Mode" value="8" />
-      <Item label="Fan Mode" value="16" />
-      <Item label="Fan State" value="32" />
-      <Item label="Operating State" value="64" />
-      <Item label="Schedule Enable" value="128" />
-      <Item label="Setback" value="256" />
-      <Item label="Runhold" value="512" />
-      <Item label="Display Lock" value="1024" />
-      <Item label="Battery" value="8192" />
-      <Item label="Mechanical Status" value="16384" />
-      <Item label="SCP Status" value="32768" />
-    </Value>
     <Value type="list" index="24" genre="config" label="Display Lock" units="" min="1" max="1" value="0" size="1">
       <Help>
         Display Lock
