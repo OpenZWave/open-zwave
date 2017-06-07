@@ -1127,6 +1127,7 @@
         <Product type="0003" id="0083" name="ZSE09 Mini Sensor" config="zooz/zse09.xml" />        
         <Product type="0003" id="0087" name="ZEN07 Mini Plug" config="zooz/zen07.xml" />
         <Product type="2021" id="2101" name="ZSE40 4-in-1 sensor" config="zooz/zse40.xml" />
+        <Product type="0003" id="0088" name="ZSE33 Smart Chime" config="zooz/zse33.xml" />
     </Manufacturer>
     <Manufacturer id="015d" name="Zooz">
         <Product type="0651" id="f51c" name="ZEN20 Power Strip" />
