@@ -63,6 +63,9 @@ namespace OpenZWave
 	private:
 		CentralScene( uint32 const _homeId, uint8 const _nodeId );
 		int32 m_scenecount;
+		/** \brief Create m_scenecount scene values */
+		void CreateSceneValues();
+		int32 m_scenecount;
 	};
 
 } // namespace OpenZWave
