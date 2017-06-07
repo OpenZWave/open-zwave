@@ -192,5 +192,24 @@
 			<Item label="Disabled" value="0" />
 			<Item label="Enabled" value="1" />
     </Value>
+    <Value type="list" index="39" genre="config" label="Run/Hold Mode" units="" min="0" max="1" value="0" size="1">
+      <Help>
+				0 = Hold, 1 = Run
+      </Help>
+			<Item label="Hold" value="0" />
+			<Item label="Run" value="1" />
+    </Value>
+    <Value type="list" index="40" genre="config" label="Setback Mode" units="" min="0" max="2" value="0" size="1">
+      <Help>
+				0 = No setback, 2 = Un-occupied mode
+      </Help>
+			<Item label="No Setback" value="0" />
+			<Item label="Unoccupied Mode" value="2" />
+    </Value>
+    <Value type="byte" index="41" genre="config" label="Un-Occupied HSP" units="degrees" min="30" max="109" value="70" size="1">
+      <Help>
+				Heat Setpoint for Unoccupied mode
+      </Help>
+    </Value>
 	</CommandClass>
 </Product>
