@@ -15,7 +15,7 @@
             <Item label="Medium" value="2" />
             <Item label="High" value="3" />
         </Value>
-        <Value type="list" index="2" genre="config" label="Siren Alarm Duration" units="" min="0" max="255" value="1">
+        <Value type="list" index="2" genre="config" label="Siren Alarm Duration" units="" min="0" max="255" size="1" value="1">
             <Help>
                 Duration of siren alarm.  Default is 30 seconds.
             </Help>
