@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <Product xmlns="http://code.google.com/p/open-zwave/">
-  <CommandClass id="67" base="0"/>
+  <CommandClass id="67" name="COMMAND_CLASS_THERMOSTAT_SETPOINT" version="1" request_flags="4" create_vars="true" base="0">
+    <Instance index="1" />
+    <Value type="decimal" genre="user" instance="1" index="1" label="Heating 1" read_only="false" write_only="false" />
+    <Value type="decimal" genre="user" instance="1" index="2" label="Cooling 1" read_only="false" write_only="false" />
+  </CommandClass>
   <CommandClass id="112">
     <Value type="list" index="1" genre="config" label="System Type" units="" min="0" max="1" value="0" size="1">
       <Help>
