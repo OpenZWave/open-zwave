@@ -1,4 +1,4 @@
-//-----------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 //
 //	UserCode.cpp
 //
@@ -67,6 +67,7 @@ UserCode::UserCode
 	m_queryAll( false ),
 	m_currentCode( 0 ),
 	m_userCodeCount( 0 ),
+	m_userCodeLength( UserCodeLength ),
 	m_refreshUserCodes(false)
 {
 	SetStaticRequest( StaticRequest_Values );
@@ -203,6 +204,8 @@ bool UserCode::HandleMsg
 	if( UserNumberCmd_Report == (UserCodeCmd)_data[0] )
 	{
 		m_userCodeCount = _data[1];
+		m_userCodeLength = UserCodeLength;
+
 		if( m_userCodeCount > 254 )
 		{
 			// Make space for code count.
@@ -235,12 +238,12 @@ bool UserCode::HandleMsg
 				if (i == 0)
 				{
 					snprintf( str, sizeof(str), "Enrollment Code");
-					node->CreateValueRaw( ValueID::ValueGenre_User, GetCommandClassId(), _instance, i, str, "", true, false, data, UserCodeLength, 0 );
+					node->CreateValueRaw( ValueID::ValueGenre_User, GetCommandClassId(), _instance, i, str, "", true, false, data, m_userCodeLength, 0 );
 				}
 				else
 				{
 					snprintf( str, sizeof(str), "Code %d:", i);
-					node->CreateValueRaw( ValueID::ValueGenre_User, GetCommandClassId(), _instance, i, str, "", false, false, data, UserCodeLength, 0 );
+					node->CreateValueRaw( ValueID::ValueGenre_User, GetCommandClassId(), _instance, i, str, "", false, false, data, m_userCodeLength, 0 );
 				}
 			}
 		}
@@ -249,14 +252,29 @@ bool UserCode::HandleMsg
 	else if( UserCodeCmd_Report == (UserCodeCmd)_data[0] )
 	{
 		int i = _data[1];
+
+		if (i == 0)
+		{
+			//
+			//	UserID == 0, we are in the first phase of enrollment, keep the actual user code length
+			//
+			m_userCodeLength = _length - 4;
+
+			if (m_userCodeLength > UserCodeLength)
+			{
+				m_userCodeLength = UserCodeLength;
+			}
+		}
+
+
 		if( ValueRaw* value = static_cast<ValueRaw*>( GetValue( _instance, i ) ) )
 		{
 			uint8 data[UserCodeLength];
-			int8 size = _length - 4;
+			int8 size = m_userCodeLength;
 			if( size > UserCodeLength )
 			{
 				Log::Write( LogLevel_Warning, GetNodeId(), "User Code length %d is larger then maximum %d", size, UserCodeLength );
-				size = UserCodeLength;
+				size = m_userCodeLength;
 			}
 			Log::Write( LogLevel_Info, GetNodeId(), "User Code Packet is %d", size );
 			m_userCodesStatus[i] = _data[2];
@@ -319,12 +337,12 @@ bool UserCode::SetValue
 		Msg* msg = new Msg( "UserCodeCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 		msg->SetInstance( this, _value.GetID().GetInstance() );
 		msg->Append( GetNodeId() );
-		msg->Append( 4 + len );
+		msg->Append( 4 + m_userCodeLength );
 		msg->Append( GetCommandClassId() );
 		msg->Append( UserCodeCmd_Set );
 		msg->Append( value->GetID().GetIndex() );
 		msg->Append( UserCode_Occupied );
-		for( uint8 i = 0; i < len; i++ )
+		for( uint8 i = 0; i < m_userCodeLength; i++ )
 		{
 			msg->Append( s[i] );
 		}
