@@ -12,7 +12,7 @@
         0 = Standard, 1 = Heat Pump
       </Help>
       <Item label="Standard" value="0" />
-      <Item label="Head Pump" value="1" />
+      <Item label="Heat Pump" value="1" />
     </Value>
     <Value type="list" index="2" genre="config" label="Fan Type" units="fahrenheit" min="0" max="1" value="0" size="1">
       <Help>
@@ -174,7 +174,7 @@
       <Item label="Unlocked" value="0" />
       <Item label="Locked" value="1" />
     </Value>
-    <Value type="byte" index="26" genre="config" label="Backlight Timer" units="seconds" min="10" max="30" value="10" size="1">
+    <Value type="byte" index="26" genre="config" label="Backlight Timer" units="seconds" min="10" max="30" value="20" size="1">
       <Help>
         Sets the time from last button press that the backlight will turn OFF
       </Help>
