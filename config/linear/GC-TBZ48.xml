@@ -210,9 +210,64 @@
       <Item label="No Setback" value="0" />
       <Item label="Unoccupied Mode" value="2" />
     </Value>
-    <Value type="byte" index="41" genre="config" label="Un-Occupied HSP" units="degrees" min="30" max="109" value="70" size="1">
+    <Value type="byte" index="41" genre="config" label="Un-Occupied HSP" units="degrees" min="30" max="109" value="62" size="1">
       <Help>
         Heat Setpoint for Unoccupied mode
+      </Help>
+    </Value>
+    <Value type="byte" index="42" genre="config" label="Un-Occupied CSP" units="degrees" min="33" max="112" value="70" size="1">
+      <Help>
+        Cool Setpoint for Unoccupied mode
+      </Help>
+    </Value>
+    <Value type="byte" index="43" genre="config" label="Remote Sensor 1 Node Number" units="" min="0" max="252" size="1">
+      <Help>
+        Node number for Remote Sensor 1
+      </Help>
+    </Value>
+    <Value type="byte" index="46" genre="config" label="Remote Sensor 1 Temperature" units="degrees" min="0" max="0" value="0" size="1">
+      <Help>
+        Temperature of Remote Sensor 1
+      </Help>
+    </Value>
+    <Value type="byte" index="48" genre="config" label="Internal Sensor Temp Offset" units="degrees" min="-7" max="7" value="7" size="1">
+      <Help>
+        Internal Sensor Temperature Offset
+      </Help>
+    </Value>
+    <Value type="byte" index="49" genre="config" label="R1 Sensor Temp Offset" units="degrees" min="-7" max="7" value="7" size="1">
+      <Help>
+        R1 Sensor Temperature Offset
+      </Help>
+    </Value>
+    <Value type="byte" index="52" genre="config" label="Filter Timer" units="hours" min="0" max="4000" value="4000" size="2">
+      <Help>
+        Timer to let know when to change or clean the filter
+      </Help>
+    </Value>
+    <Value type="byte" index="53" genre="config" label="Max Filter Timer" units="hours" min="0" max="4000" value="4000" size="2">
+      <Help>
+        Maximum allowed value for filter timer
+      </Help>
+    </Value>
+    <Value type="byte" index="54" genre="config" label="Heat Timer" units="hours" min="0" max="4000" value="0" size="2">
+      <Help>
+        Heat Timer in hours
+      </Help>
+    </Value>
+    <Value type="byte" index="55" genre="config" label="Cool Timer" units="hours" min="0" max="4000" value="0" size="2">
+      <Help>
+        Cool Timer in hours
+      </Help>
+    </Value>
+    <Value type="byte" index="61" genre="config" label="Fan Purge Heat" units="seconds" min="0" max="90" value="0" size="1">
+      <Help>
+        Fan purge period for Heat mode
+      </Help>
+    </Value>
+    <Value type="byte" index="62" genre="config" label="Fan Purge Cool" units="hours" min="0" max="90" value="0" size="1">
+      <Help>
+        Fan purge period for Cool mode
       </Help>
     </Value>
   </CommandClass>
