@@ -1,26 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Product xmlns='http://code.google.com/p/open-zwave/'>
-    <!-- Zooz ZSE33 Smart Chime -->
+    <!-- 
+    Zooz ZSE33 Smart Chime
+    http://products.z-wavealliance.org/products/2175
+    -->
 
     <!-- Configuration Parameters -->
-    <CommandClass id="112" name="COMMAND_CLASS_CONFIGURATION">
+    <CommandClass id="112">
         <Value type="list" index="1" genre="config" label="Siren Volume" units="" min="1" max="3" value="3" size="1">
             <Help>
                 Siren volume level; low, medium, high (default).
             </Help>
-            <Item label="low" value="1" />
-            <Item label="medium" value="2" />
-            <Item label="high" value="3" />
+            <Item label="Low" value="1" />
+            <Item label="Medium" value="2" />
+            <Item label="High" value="3" />
         </Value>
         <Value type="list" index="2" genre="config" label="Siren Alarm Duration" units="" min="0" max="255" value="1">
             <Help>
                 Duration of siren alarm.  Default is 30 seconds.
             </Help>
-            <Item label="off" value="0" />
+            <Item label="Off" value="0" />
             <Item label="30 seconds" value="1" />
             <Item label="60 seconds" value="2" />
             <Item label="5 minutes" value="3" />
-            <Item label="until battery drains" value="255" />
+            <Item label="Until battery drains" value="255" />
         </Value>
         <Value type="byte" index="3" genre="config" label="Doorbell Chime Sound Duration" units="times" min="0" max="255" value="1">
             <Help>
@@ -31,9 +34,9 @@
             <Help>
                 Doorbell chime volume level; low, medium, high (default).
             </Help>
-            <Item label="low" value="1" />
-            <Item label="medium" value="2" />
-            <Item label="high" value="3" />
+            <Item label="Low" value="1" />
+            <Item label="Medium" value="2" />
+            <Item label="High" value="3" />
         </Value>
         <Value type="byte" index="5" genre="config" label="Siren Alarm Tone" units="" min="1" max="10" value="10">
             <Help>
@@ -69,11 +72,11 @@
     </CommandClass>
 
     <!-- Association Groups -->
-    <CommandClass id="133" name="COMMAND_CLASS_ASSOCIATION">
+    <CommandClass id="133">
         <Associations num_groups="3">
             <Group index="1" max_associations="5" label="Lifeline"/>
-            <Group index="2" max_associations="5" label="Status Notifications"/>
-            <Group index="3" max_associations="5" label="Notification"/>
+            <Group index="2" max_associations="5" label="Switch binary report"/>
+            <Group index="3" max_associations="5" label="Notification report"/>
         </Associations>
     </CommandClass>
 </Product>
