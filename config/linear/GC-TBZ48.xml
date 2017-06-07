@@ -215,7 +215,7 @@
         Heat Setpoint for Unoccupied mode
       </Help>
     </Value>
-    <Value type="byte" index="42" genre="config" label="Un-Occupied CSP" units="degrees" min="33" max="112" value="70" size="1">
+    <Value type="byte" index="42" genre="config" label="Un-Occupied CSP" units="degrees" min="33" max="112" value="80" size="1">
       <Help>
         Cool Setpoint for Unoccupied mode
       </Help>
@@ -225,17 +225,17 @@
         Node number for Remote Sensor 1
       </Help>
     </Value>
-    <Value type="byte" index="46" genre="config" label="Remote Sensor 1 Temperature" units="degrees" min="0" max="0" value="0" size="1">
+    <Value type="byte" index="46" genre="config" label="Remote Sensor 1 Temperature" units="degrees" min="0" max="112" size="1">
       <Help>
         Temperature of Remote Sensor 1
       </Help>
     </Value>
-    <Value type="byte" index="48" genre="config" label="Internal Sensor Temp Offset" units="degrees" min="-7" max="7" value="7" size="1">
+    <Value type="byte" index="48" genre="config" label="Internal Sensor Temp Offset" units="degrees" min="-7" max="7" value="0" size="1">
       <Help>
         Internal Sensor Temperature Offset
       </Help>
     </Value>
-    <Value type="byte" index="49" genre="config" label="R1 Sensor Temp Offset" units="degrees" min="-7" max="7" value="7" size="1">
+    <Value type="byte" index="49" genre="config" label="R1 Sensor Temp Offset" units="degrees" min="-7" max="7" value="0" size="1">
       <Help>
         R1 Sensor Temperature Offset
       </Help>
@@ -245,7 +245,7 @@
         Timer to let know when to change or clean the filter
       </Help>
     </Value>
-    <Value type="byte" index="53" genre="config" label="Max Filter Timer" units="hours" min="0" max="4000" value="4000" size="2">
+    <Value type="byte" index="53" genre="config" label="Max Filter Timer" units="hours" min="0" max="4000" value="44" size="2">
       <Help>
         Maximum allowed value for filter timer
       </Help>
