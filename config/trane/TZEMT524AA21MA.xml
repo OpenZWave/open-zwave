@@ -5,38 +5,30 @@
 
 	<!-- Configuration Parameters -->
 	<CommandClass id="112">
-	  <Value type="list" index="1" genre="config" label="System Type" units="" min="0" max="1" value="0">
-	    <Help>
-	      0 = Gas/Elec, 1 = HeatPump
-	    </Help>
-	    <Item label="Gas/Elec" value="0" />
+	  <Value type="list" index="1" genre="config" label="System Type" units="" min="0" max="1" size="1" value="0">
+	    <Help></Help>
+	    <Item label="Gas/Electric" value="0" />
 	    <Item label="HeatPump" value="1" />
 	  </Value>
-	  <Value type="list" index="2" genre="config" label="Fan Type" units="" min="0" max="1" value="0">
+	  <Value type="list" index="2" genre="config" label="Fan Type" units="" min="0" max="1" size="1" value="0">
 	    <Help>
 	      0 = Gas, 1 = Elec
 	    </Help>
 	    <Item label="Gas" value="0" />
-	    <Item label="Elec" value="1" />
+	    <Item label="Electric" value="1" />
 	  </Value>
-	  <Value type="list" index="3" genre="config" label="Change Over Type" units="" min="0" max="1" value="0">
-	    <Help>
-	      0 = w/Cool, 1 = w/Heat
-	    </Help>
+	  <Value type="list" index="3" genre="config" label="Change Over Type" units="" min="0" max="1" size="1" value="0">
+	    <Help></Help>
 	    <Item label="w/Cool" value="0" />
 	    <Item label="w/Heat" value="1" />
 	  </Value>
-	  <Value type="list" index="4" genre="config" label="F/C Units" units="" min="0" max="1" value="1">
-	    <Help>
-	      0 = C, 1 = F
-	    </Help>
-	    <Item label="C" value="0" />
-	    <Item label="F" value="1" />
+	  <Value type="list" index="4" genre="config" label="Units" units="" min="0" max="1" size="1" value="1">
+	    <Help></Help>
+	    <Item label="Celsius" value="0" />
+	    <Item label="Fahrenheit" value="1" />
 	  </Value>
-	  <Value type="list" index="9" genre="config" label="Display Lock" units="" min="0" max="1" value="0">
-	    <Help>
-	      0 = Unlocked, 1 = Locked
-	    </Help>
+	  <Value type="list" index="9" genre="config" label="Display Lock" units="" min="0" max="1" size="1" value="0">
+	    <Help></Help>
 	    <Item label="Unlocked" value="0" />
 	    <Item label="Locked" value="1" />
 	  </Value>
@@ -105,7 +97,7 @@
 	      Sets the minimum separation between the heating and cooling setpoints.  Attempts to lower the cooling below the heating setpoint by this amount will PUSH the heating setpoint down to maintain this separation. Same for setting the heating setpoint above the cooling setpoint, it will PUSH the cooling setpoint up to maintain this separation. Settings in F.
 	    </Help>
 	  </Value>
-	  <Value type="list" index="25" genre="config" label="SetBack Mode" units="" min="0" max="2" value="0">
+	  <Value type="list" index="25" genre="config" label="SetBack Mode" units="" min="0" max="2" size="1" value="0">
 	    <Help>
 	      0 = No Setback, 1 = Setback, 2 if ESM
 	    </Help>
@@ -133,28 +125,28 @@
 	      The fan cycler function cycles the HVAC system fan for an ON period followed by an OFF period continuously. Used to provide minimum air ventilation requirements. When the Fan ON time is set to a value greater than 0, an additional Cycler Fan mode is present when pressing the FAN button on the thermostat.
 	    </Help>
 	  </Value>
-	  <Value type="list" index="77" genre="config" label="2nd Stage Heat Enable" units="" min="0" max="1" value="0">
+	  <Value type="list" index="77" genre="config" label="2nd Stage Heat Enable" units="" min="0" max="1" size="1" value="0">
 	    <Help>
 	      0 = no 2nd stage heat, 1 = 2nd stage heat.
 	    </Help>
 	    <Item label="no 2nd stage heat" value="0" />
 	    <Item label="2nd stage heat" value="1" />
 	  </Value>
-	  <Value type="list" index="78" genre="config" label="Aux Heat Enable" units="" min="0" max="1" value="1">
+	  <Value type="list" index="78" genre="config" label="Aux Heat Enable" units="" min="0" max="1" size="1" value="1">
 	    <Help>
 	      0 = no aux heat, 1 = aux heat enabled.
 	    </Help>
 	    <Item label="no aux heat" value="0" />
 	    <Item label="aux heat enabled" value="1" />
 	  </Value>
-	  <Value type="list" index="79" genre="config" label="2nd Stage Cool Enable" units="" min="0" max="1" value="0">
+	  <Value type="list" index="79" genre="config" label="2nd Stage Cool Enable" units="" min="0" max="1" size="1" value="0">
 	    <Help>
 	      0 = no 2nd stage cool, 1 = 2nd stage cool
 	    </Help>
 	    <Item label="no 2nd stage cool" value="0" />
 	    <Item label="2nd stage cool" value="1" />
 	  </Value>
-	  <Value type="list" index="132" genre="config" label="Run Schedule" units="" min="" max="" value="0">
+	  <Value type="list" index="132" genre="config" label="Run Schedule" units="" min="" max="" size="1" value="0">
 	    <Help>
 	      Set to 1 if running schedule (RUN is displayed on the thermostat screen).
 	    </Help>
