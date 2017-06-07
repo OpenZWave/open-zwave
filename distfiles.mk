@@ -99,16 +99,16 @@ DISTFILES =	.gitignore \
 	config/device_classes.xsd \
 	config/device_configuration.xsd \
 	config/devolo/connectz.xml \
+	config/devolo/mt02648.xml \
+	config/devolo/mt02755.xml \
+	config/devolo/mt02758.xml \
+	config/devolo/mt02792.xml \
 	config/devolo/mt2646.xml \
 	config/devolo/mt2647.xml \
 	config/devolo/mt2652.xml \
 	config/devolo/mt2653.xml \
 	config/devolo/mt2756.xml \
-	config/devolo/mt02648.xml \
-    config/devolo/mt02755.xml \
-    config/devolo/mt02758.xml \
-    config/devolo/mt02792.xml \
-    config/devolo/rs014G0159.xml \
+	config/devolo/rs014G0159.xml \
 	config/dlink/dch-z110.xml \
 	config/dlink/dch-z120.xml \
 	config/dlink/dch-z510.xml \
@@ -204,11 +204,13 @@ DISTFILES =	.gitignore \
 	config/ge/12724-dimmer.xml \
 	config/ge/14291-switch.xml \
 	config/ge/14294-dimmer.xml \
+	config/ge/26933-motion-dimmer.xml \
 	config/ge/dimmer.xml \
 	config/ge/dimmer_module.xml \
 	config/ge/hinge-pin.xml \
 	config/ge/receptacle.xml \
 	config/ge/relay.xml \
+	config/gocontrol/GC-TBZ48L.xml \
 	config/gr/gr105.xml \
 	config/gr/gr105n.xml \
 	config/greenwave/powernode1.xml \
@@ -245,6 +247,7 @@ DISTFILES =	.gitignore \
 	config/leviton/vrf01.xml \
 	config/leviton/vri06.xml \
 	config/leviton/vri10.xml \
+	config/linear/GC-TBZ48.xml \
 	config/linear/LB60Z-1.xml \
 	config/linear/PD300Z-2.xml \
 	config/linear/WA00Z-1.xml \
@@ -257,7 +260,7 @@ DISTFILES =	.gitignore \
 	config/manufacturer_specific.xsd \
 	config/mcohome/mh8fceu.xml \
 	config/mcohome/mh9co2.xml \
-    config/mcohome/mhp210.xml \
+	config/mcohome/mhp210.xml \
 	config/mcohome/mhs311.xml \
 	config/mcohome/mhs312.xml \
 	config/mcohome/mhs314.xml \
@@ -327,8 +330,10 @@ DISTFILES =	.gitignore \
 	config/qubino/ZMNHODx.xml \
 	config/qubino/ZMNHSDx.xml \
 	config/qubino/ZMNHTDx.xml \
+	config/qubino/ZMNHTDxS3.xml \
 	config/qubino/ZMNHUD1.xml \
 	config/qubino/ZMNHVDx.xml \
+	config/qubino/ZMNHWD1.xml \
 	config/qubino/ZMNHZDx.xml \
 	config/rcs/em52-zw.xml \
 	config/rcs/pm12-zw.xml \

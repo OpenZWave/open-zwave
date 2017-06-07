@@ -542,6 +542,9 @@
 		<Product type="4952" id="3033" name="12727 In-Wall Smart Switch (Toggle)"/>
 		<Product type="4953" id="3032" name="32563 Hinge Pin Smart Door Sensor" config="ge/hinge-pin.xml"/>
 	</Manufacturer>
+  <Manufacturer id="0014" name="GoControl">
+		<Product type="5442" id="5436" name="GC-TBZ48L Battery Powered Z-Wave Plus Thermostat" config="gocontrol/GC-TBZ48L.xml" />
+  </Manufacturer>
 	<Manufacturer id="0099" name="GreenWave">
 		<Product type="0001" id="0002" name="One Gateway"/>
 		<Product type="0002" id="0002" name="PowerNode 1 port" config="greenwave/powernode1.xml"/>
@@ -687,7 +690,6 @@
 		<Product type="5343" id="3132" name="WA00Z-1 Scene Switch" config="linear/WA00Z-1.xml"/>
 		<Product type="5457" id="3033" name="WT00Z-1 3-Way Wall Accessory Switch" config="linear/WT00Z-1.xml"/>
 		<Product type="5442" id="5431" name="GC-TBZ48 Battery Powered Z-Wave Thermostat" config="linear/GC-TBZ48.xml" />
-		<Product type="5442" id="5436" name="GC-TBZ48L Battery Powered Z-Wave Plus Thermostat" config="linear/GC-TBZ48L.xml" />
 	</Manufacturer>
 	<Manufacturer id="015e" name="Locstar">
         <Product type="8015" id="0001" name="LS-8015-ZW Single Latch Door Lock"/>

@@ -240,22 +240,22 @@
         R1 Sensor Temperature Offset
       </Help>
     </Value>
-    <Value type="byte" index="52" genre="config" label="Filter Timer" units="hours" min="0" max="4000" value="4000" size="2">
+    <Value type="short" index="52" genre="config" label="Filter Timer" units="hours" min="0" max="4000" value="4000" size="2">
       <Help>
         Timer to let know when to change or clean the filter
       </Help>
     </Value>
-    <Value type="byte" index="53" genre="config" label="Max Filter Timer" units="hours" min="0" max="4000" value="44" size="2">
+    <Value type="short" index="53" genre="config" label="Max Filter Timer" units="hours" min="0" max="4000" value="44" size="2">
       <Help>
         Maximum allowed value for filter timer
       </Help>
     </Value>
-    <Value type="byte" index="54" genre="config" label="Heat Timer" units="hours" min="0" max="4000" value="0" size="2">
+    <Value type="short" index="54" genre="config" label="Heat Timer" units="hours" min="0" max="4000" value="0" size="2">
       <Help>
         Heat Timer in hours
       </Help>
     </Value>
-    <Value type="byte" index="55" genre="config" label="Cool Timer" units="hours" min="0" max="4000" value="0" size="2">
+    <Value type="short" index="55" genre="config" label="Cool Timer" units="hours" min="0" max="4000" value="0" size="2">
       <Help>
         Cool Timer in hours
       </Help>
