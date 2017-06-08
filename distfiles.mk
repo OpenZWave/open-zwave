@@ -363,6 +363,7 @@ DISTFILES =	.gitignore \
 	config/thermofloor/heatit021.xml \
 	config/trane/TZEMT400AB32MAA.xml \
 	config/trane/TZEMT400BB32MAA.xml \
+	config/trane/TZEMT524AA21MA.xml \
 	config/vision/zd2102.xml \
 	config/vision/zd2201.xml \
 	config/vision/zd2301.xml \
