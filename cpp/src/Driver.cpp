@@ -2345,6 +2345,11 @@ void Driver::ProcessMsg
 				Log::Write( LogLevel_Detail, _data[3], "  Message transaction complete" );
 				Log::Write( LogLevel_Detail, "" );
 
+				Notification* notification_raw = new Notification( Notification::Type_NotificationRaw );
+				notification_raw->SetHomeAndNodeIds( m_homeId, _data[3] );
+				notification_raw->SetRaw(_data);
+				QueueNotification( notification_raw );
+				
 				if( m_notifytransactions )
 				{
 					Notification* notification = new Notification( Notification::Type_Notification );

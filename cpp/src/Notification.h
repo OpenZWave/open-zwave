@@ -31,6 +31,9 @@
 #include "Defs.h"
 #include "value_classes/ValueID.h"
 
+#include <stdlib.h>
+#include <vector>
+
 namespace OpenZWave
 {
 	/** \brief Provides a container for data sent via the notification callback
@@ -94,7 +97,8 @@ namespace OpenZWave
 			Type_DriverRemoved,					/**< The Driver is being removed. (either due to Error or by request) Do Not Call Any Driver Related Methods after receiving this call */
 			Type_ControllerCommand,				/**< When Controller Commands are executed, Notifications of Success/Failure etc are communicated via this Notification
 												  * Notification::GetEvent returns Driver::ControllerState and Notification::GetNotification returns Driver::ControllerError if there was a error */
-			Type_NodeReset						/**< The Device has been reset and thus removed from the NodeList in OZW */
+			Type_NodeReset,						/**< The Device has been reset and thus removed from the NodeList in OZW */
+			Type_NotificationRaw			/**< When a message is complete this notification is used to send the complete raw message */
 		};
 
 		/**
@@ -181,6 +185,18 @@ namespace OpenZWave
 		 */
 		string GetAsString()const;
 
+		string GetRawString()const{
+			vector<uint8_t>::size_type size = m_raw.size();
+			char converted[size * 2 + 1];
+
+			for(vector<uint8_t>::size_type i = 0; i != size; i++) {
+				sprintf( &converted[i*2], "%02X", m_raw[i] );
+			}
+
+			return converted;
+		}
+
+		vector<uint8_t> GetRaw()const{ return m_raw; }
 
 	private:
 		Notification( NotificationType _type ): m_type( _type ), m_byte(0), m_event(0) {}
@@ -194,14 +210,15 @@ namespace OpenZWave
 		void SetSceneId( uint8 const _sceneId ){ assert(Type_SceneEvent==m_type); m_byte = _sceneId; }
 		void SetButtonId( uint8 const _buttonId ){ assert(Type_CreateButton==m_type||Type_DeleteButton==m_type||Type_ButtonOn==m_type||Type_ButtonOff==m_type); m_byte = _buttonId; }
 		void SetNotification( uint8 const _noteId ){ assert((Type_Notification==m_type) || (Type_ControllerCommand == m_type)); m_byte = _noteId; }
+		void SetRaw( uint8* _raw){ m_raw.assign(&_raw[0], &_raw[sizeof(_raw)]);	}
 
-		NotificationType		m_type;
-		ValueID				m_valueId;
-		uint8				m_byte;
-		uint8				m_event;
+		NotificationType			m_type;
+		ValueID								m_valueId;
+		uint8									m_byte;
+		uint8									m_event;
+		vector<uint8_t>				m_raw;
 	};
 
 } //namespace OpenZWave
 
 #endif //_Notification_H
-

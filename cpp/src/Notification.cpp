@@ -223,9 +223,12 @@ string Notification::GetAsString() const {
 					break;
 			}
 			break;
-			case Type_NodeReset:
-				str = "Node Reset";
-				break;
+		case Type_NodeReset:
+			str = "Node Reset";
+			break;
+		case Type_NotificationRaw:
+			str = "NotificationRaw";
+			break;
 	}
 	return str;
 
