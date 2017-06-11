@@ -680,6 +680,7 @@
 		<Product type="1102" id="0243" name="VRCS2-MRZ 2-Button Scene Controller with Switches"/>
 		<Product type="1902" id="0334" name="DZPD3-1LW Plug-In Dimming Lamp Module"/>
 		<Product type="1a02" id="0334" name="DZPA1-1LW Plug-In Appliance Module"/>
+		<Product type="3401" id="0001" name="DZ15S-1BZ Decora Smart Switch" config="leviton/dz15s.xml"/>
 	</Manufacturer>
 	<Manufacturer id="014f" name="Linear">
 		<Product type="2002" id="0203" name="WAPIRZ-1 Motion Sensor" config="linear/WAPIRZ-1.xml"/>
