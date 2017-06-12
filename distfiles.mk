@@ -203,6 +203,7 @@ DISTFILES =	.gitignore \
 	config/fortrezz/wwa02.xml \
 	config/frostdale/fdn2nxx.xml \
 	config/ge/12724-dimmer.xml \
+	config/ge/14282-plugin-switch.xml \
 	config/ge/14291-switch.xml \
 	config/ge/14294-dimmer.xml \
 	config/ge/26933-motion-dimmer.xml \
@@ -399,6 +400,7 @@ DISTFILES =	.gitignore \
 	config/zooz/zen07.xml \
 	config/zooz/zse08.xml \
 	config/zooz/zse09.xml \
+	config/zooz/zse33.xml \
 	config/zooz/zse40.xml \
 	config/zwave.me/ZME_05431.xml \
 	config/zwave.me/ZME_05461.xml \
