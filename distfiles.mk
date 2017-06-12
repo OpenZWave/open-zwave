@@ -301,6 +301,7 @@ DISTFILES =	.gitignore \
 	config/polycontrol/doorlock.xml \
 	config/polycontrol/keypad.xml \
 	config/polycontrol/polylock.xml \
+	config/popp/004407.xml \
 	config/popp/009105.xml \
 	config/popp/009303.xml \
 	config/popp/009402.xml \

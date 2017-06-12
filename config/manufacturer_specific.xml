@@ -823,17 +823,18 @@
 		<Product type="0008" id="0002" name="Danalock V2 BTZE" config="polycontrol/doorlock.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0154" name="Popp">
+		<Product type="0001" id="0001" name="123658 Plug-in Switch plus Power Meter" config="popp/123658.xml"/>
+		<Product type="0003" id="0001" name="009105 Wall Plug Switch Schuko (IP44)" config="popp/009105.xml"/>
 		<Product type="0004" id="0002" name="Solar Powered Outdoor Siren" config="popp/solar-siren.xml" />
+		<Product type="0004" id="0003" name="004407 CO Detector" config="popp/004407.xml"/>
+		<Product type="0004" id="0004" name="009402 10-Year Smoke Detector" config="popp/009402.xml"/>
+		<Product type="0005" id="0001" name="012501 Strike Lock Control" config="popp/012501.xml"/>
 		<Product type="0100" id="0101" name="009303 Battery Wall Controller" config="popp/009303.xml" />
 		<Product type="0100" id="0103" name="Popp KFOB-C Remote Control" config="zwave.me/ZME_KFOB-S.xml" />
 		<Product type="0100" id="0201" name="Smoke Detector and Siren" config="popp/smoke-detector.xml" />
+		<Product type="0100" id="0400" name="ZWeather" config="popp/zweather.xml"/>
 		<Product type="1100" id="0001" name="123601 Plug-in Switch" config="popp/123601.xml" />
 		<Product type="1100" id="0002" name="123580 Plug-in Dimmer" config="popp/123580.xml" />
-		<Product type="0001" id="0001" name="123658 Plug-in Switch plus Power Meter" config="popp/123658.xml" />
-		<Product type="0003" id="0001" name="009105 Wall Plug Switch Schuko (IP44)" config="popp/009105.xml" />
-		<Product type="0005" id="0001" name="012501 Strike Lock Control" config="popp/012501.xml" />
-		<Product type="0004" id="0004" name="009402 10-Year Smoke Detector" config="popp/009402.xml" />
-		<Product type="0100" id="0400" name="ZWeather" config="popp/zweather.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0169" name="Popp">
 		<Product type="0001" id="0001" name="ZWeather" config="popp/zweather.xml" />
