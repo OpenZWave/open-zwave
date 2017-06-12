@@ -251,6 +251,7 @@ DISTFILES =	.gitignore \
 	config/leviton/vri10.xml \
 	config/leviton/dz15s.xml \
 	config/leviton/dz6hd.xml \
+	config/leviton/dzpd3.xml \
 	config/linear/GC-TBZ48.xml \
 	config/linear/LB60Z-1.xml \
 	config/linear/PD300Z-2.xml \
