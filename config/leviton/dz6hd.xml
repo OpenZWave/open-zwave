@@ -6,13 +6,18 @@ Leviton Decora 1000W Dimmer, http://products.z-wavealliance.org/products/1956
 <Product xmlns='http://code.google.com/p/open-zwave/'>
 	<!-- Configuration Parameters -->
 	<CommandClass id="112">
-		<Value type="byte" index="1" genre="config" label="Fade On Time" units="" min="0" max="253" size="1" value="2">
-			<Help>The amount of time to take to fade the lights from off to on.  A value of zero is instant (no fade), values between 1 and 127 represent 1 to 127 seconds, and values from 128 to 253 represent from 1 to 126 minutes.</Help>
-			<Item label="Instant On" value="0" />
+		<Value type="byte" index="1" genre="config" label="Fade On Time" units="seconds" min="0" max="253" size="1" value="2">
+			<Help>
+				The amount of time to take to fade the lights from off to on.
+				A value of zero is instant (no fade), values between 1 and 127 represent 1 to 127 seconds, and values from 128 to 253 represent from 1 to 126 minutes.
+			</Help>
 		</Value>
-		<Value type="byte" index="2" genre="config" label="Fade Off Time" units="" min="0" max="253" size="1" value="2">
-			<Help>The amount of time to take to fade the lights from on to off.  A value of zero is instant (no fade), values between 1 and 127 represent 1 to 127 seconds, and values from 128 to 253 represent from 1 to 126 minutes.</Help>
-			<Item label="Instant Off" value="0" />
+		<Value type="byte" index="2" genre="config" label="Fade Off Time" units="seconds" min="0" max="253" size="1" value="2">
+			<Help>
+				The amount of time to take to fade the lights from on to off.  
+				A value of zero is instant (no fade), values between 1 and 127 represent 1 to 127 seconds, and values from 128 to 253 represent from 1 to 126 minutes.
+			</Help>
+			
 		</Value>
 		<Value type="byte" index="3" genre="config" label="Minimum Light Level" units="" min="0" max="100" size="1" value="10">
 			<Help>Smallest dimming value permitted.</Help>
@@ -21,10 +26,12 @@ Leviton Decora 1000W Dimmer, http://products.z-wavealliance.org/products/1956
 			<Help>Largest dimming value permitted.</Help>
 		</Value>
 		<Value type="byte" index="5" genre="config" label="Preset Light Level" units="" min="0" max="100" size="1" value="0">
-			<Help>The dimming level of the lights when turned from off to on via the switch.  If the value of "0" is used, this means the restore dimming to the last dimming value.</Help>
-			<Item label="Last dim state" value="0" />
+			<Help>
+				The dimming level of the lights when turned from off to on via the switch.
+				If the value of 0 is used, this means the restore dimming to the last dimming value.
+			</Help>
 		</Value>
-		<Value type="byte" index="6" genre="config" label="LED Dim Level Indicator Timeout" units="" min="0" max="255" size="1" value="3">
+		<Value type="list" index="6" genre="config" label="LED Dim Level Indicator Timeout" units="" min="0" max="255" size="1" value="3">
 			<Help>The length of time in seconds that the level indicators should stay illuminated after the dimming level is changed.  A value of 0 means the indicator is always off, and a value of 255 means the indicators are always on.</Help>
 			<Item label="Level Indicators Always Off" value="0" />
 			<Item label="Level Indicators Always On" value="255" />
