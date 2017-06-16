@@ -683,7 +683,10 @@
 		<Product type="1102" id="0243" name="VRCS2-MRZ 2-Button Scene Controller with Switches"/>
 		<Product type="1902" id="0334" name="DZPD3-1LW Plug-In Dimming Lamp Module"/>
 		<Product type="1a02" id="0334" name="DZPA1-1LW Plug-In Appliance Module"/>
+		<Product type="3201" id="0001" name="DZ6HD-1BZ Decora 600W Smart Dimmer" config="leviton/dz6hd.xml"/>
+		<Product type="3301" id="0001" name="DZ1KD-1BZ Decora 1000W Smart Dimmer" config="leviton/dz6hd.xml"/>
 		<Product type="3401" id="0001" name="DZ15S-1BZ Decora Smart Switch" config="leviton/dz15s.xml"/>
+		<Product type="3501" id="0001" name="DZPD3-2BW Decora 300W Plug-In Smart Dimmer" config="leviton/dzpd3.xml"/>
 	</Manufacturer>
 	<Manufacturer id="014f" name="Linear">
 		<Product type="2002" id="0203" name="WAPIRZ-1 Motion Sensor" config="linear/WAPIRZ-1.xml"/>
