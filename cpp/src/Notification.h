@@ -216,6 +216,12 @@ namespace OpenZWave
 		 */
 		UserAlertNofification GetUserAlertType()const {return m_useralerttype;};
 
+		/**
+		 * Return the Comport associated with the DriverFailed Message
+		 * \return a string representing the Comport
+		 */
+		string GetComPort()const { return m_comport; };
+
 	private:
 		Notification( NotificationType _type ): m_type( _type ), m_byte(0), m_event(0), m_command(0), m_useralerttype(Alert_None) {}
 		~Notification(){}
@@ -230,6 +236,7 @@ namespace OpenZWave
 		void SetNotification( uint8 const _noteId ){ assert((Type_Notification==m_type) || (Type_ControllerCommand == m_type)); m_byte = _noteId; }
 		void SetUserAlertNofification(UserAlertNofification const alerttype){ assert(Type_UserAlerts==m_type); m_useralerttype = alerttype; }
 		void SetCommand( uint8 const _command ){ assert(Type_ControllerCommand == m_type); m_command = _command; }
+		void SetComPort( string comport) { assert(Type_DriverFailed == m_type); m_comport = comport; }
 
 		NotificationType		m_type;
 		ValueID				m_valueId;
@@ -237,6 +244,7 @@ namespace OpenZWave
 		uint8				m_event;
 		uint8				m_command;
 		UserAlertNofification m_useralerttype;
+		string				m_comport;
 	};
 
 } //namespace OpenZWave

@@ -1311,6 +1311,7 @@ bool Driver::WriteMsg
 			//so send notification
 			Notification* notification = new Notification(Notification::Type_DriverFailed);
 			notification->SetHomeAndNodeIds(m_homeId, m_currentMsg->GetTargetNodeId());
+			notification->SetComPort(m_controllerPath);
 			QueueNotification(notification);
 			NotifyWatchers();
 
@@ -2457,6 +2458,7 @@ void Driver::HandleGetVersionResponse
 		{
 			Notification* notification = new Notification(Notification::Type_DriverFailed);
 			notification->SetHomeAndNodeIds(m_homeId, m_currentMsg->GetTargetNodeId());
+			notification->SetComPort(m_controllerPath);
 			QueueNotification(notification);
 		}
 		NotifyWatchers();

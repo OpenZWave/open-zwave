@@ -406,14 +406,18 @@ void Manager::SetDriverReady
 		if (success) {
 			Log::Write( LogLevel_Info, "mgr,     Driver with Home ID of 0x%.8x is now ready.", _driver->GetHomeId() );
 			Log::Write( LogLevel_Info, "" );
+
+			// Add the driver to the ready map
+			m_readyDrivers[_driver->GetHomeId()] = _driver;
+
 		}
 
-		// Add the driver to the ready map
-		m_readyDrivers[_driver->GetHomeId()] = _driver;
 
 		// Notify the watchers
 		Notification* notification = new Notification(success ? Notification::Type_DriverReady : Notification::Type_DriverFailed );
 		notification->SetHomeAndNodeIds( _driver->GetHomeId(), _driver->GetControllerNodeId() );
+		if (!success)
+			notification->SetComPort(_driver->GetControllerPath());
 		_driver->QueueNotification( notification );
 	}
 }

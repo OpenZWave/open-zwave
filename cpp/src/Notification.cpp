@@ -99,7 +99,7 @@ string Notification::GetAsString() const {
 			str = "DriverReady";
 			break;
 		case Type_DriverFailed:
-			str = "DriverFailed";
+			str = "DriverFailed: " + m_comport;
 			break;
 		case Type_DriverReset:
 			str = "DriverReset";
