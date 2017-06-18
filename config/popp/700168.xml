@@ -25,7 +25,7 @@
 			<Help>
 			This multiplier allows to adapt the display to certain controllers not being able to handle very low numbers.
       Size: 2 Byte, Default Value: 1
-			<Item label="1" value="1" />
+			<Item label="Multiply by 1" value="1" />
 			<Item label="Multiply by 10" value="10" />
 			<Item label="Multiply by 100" value="100" />
 			<Item label="Multiply by 1000" value="1000" />
@@ -54,8 +54,8 @@
 	<CommandClass id="133">
 		<Associations num_groups="3">
 			<Group index="1" max_associations="5" label="Lifeline"/>
-			<Group index="2" max_associations="5" label="Switching Command when Rain (> 0 mm/h). Basic Set Command is sent." />
-			<Group index="3" max_associations="5" label="Heavy Rain detected. Basic Set Command is sent." />
+			<Group index="2" max_associations="5" label="Switching Command when Rain" />
+			<Group index="3" max_associations="5" label="Heavy Rain detected" />
 		</Associations>
 	</CommandClass>
 </Product>
