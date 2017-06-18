@@ -21,11 +21,14 @@
       Size: 1 Byte, Default Value: 0
 			</Help>
 		</Value>
-    <Value type="short" genre="config" instance="1" index="4" label="Meter Multiplier" size="2" units="" value="1">
+    <Value type="list" genre="config" instance="1" index="4" label="Meter Multiplier" size="2" units="" value="1">
 			<Help>
 			This multiplier allows to adapt the display to certain controllers not being able to handle very low numbers.
-      Availible settings: 1, 10, 100 and 1000
       Size: 2 Byte, Default Value: 1
+			<Item label="1" value="1" />
+			<Item label="Multiply by 10" value="10" />
+			<Item label="Multiply by 100" value="100" />
+			<Item label="Multiply by 1000" value="1000" />
 			</Help>
 		</Value>
     <Value type="byte" genre="config" instance="1" index="5" label="Heavy Rain" size="1" min="0" max="255" units="mm" value="255">
