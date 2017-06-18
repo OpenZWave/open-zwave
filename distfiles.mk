@@ -100,16 +100,16 @@ DISTFILES =	.gitignore \
 	config/device_classes.xsd \
 	config/device_configuration.xsd \
 	config/devolo/connectz.xml \
+	config/devolo/mt02648.xml \
+	config/devolo/mt02755.xml \
+	config/devolo/mt02758.xml \
+	config/devolo/mt02792.xml \
 	config/devolo/mt2646.xml \
 	config/devolo/mt2647.xml \
 	config/devolo/mt2652.xml \
 	config/devolo/mt2653.xml \
 	config/devolo/mt2756.xml \
-	config/devolo/mt02648.xml \
-    config/devolo/mt02755.xml \
-    config/devolo/mt02758.xml \
-    config/devolo/mt02792.xml \
-    config/devolo/rs014G0159.xml \
+	config/devolo/rs014G0159.xml \
 	config/dlink/dch-z110.xml \
 	config/dlink/dch-z120.xml \
 	config/dlink/dch-z510.xml \
@@ -205,6 +205,7 @@ DISTFILES =	.gitignore \
 	config/ge/12724-dimmer.xml \
 	config/ge/14291-switch.xml \
 	config/ge/14294-dimmer.xml \
+	config/ge/26933-motion-dimmer.xml \
 	config/ge/dimmer.xml \
 	config/ge/dimmer_module.xml \
 	config/ge/hinge-pin.xml \
@@ -255,7 +256,7 @@ DISTFILES =	.gitignore \
 	config/manufacturer_specific.xml \
 	config/manufacturer_specific.xsd \
 	config/mcohome/mh8fceu.xml \
-    config/mcohome/mhp210.xml \
+	config/mcohome/mhp210.xml \
 	config/mcohome/mhs311.xml \
 	config/mcohome/mhs312.xml \
 	config/mcohome/mhs314.xml \
@@ -325,8 +326,10 @@ DISTFILES =	.gitignore \
 	config/qubino/ZMNHODx.xml \
 	config/qubino/ZMNHSDx.xml \
 	config/qubino/ZMNHTDx.xml \
+	config/qubino/ZMNHTDxS3.xml \
 	config/qubino/ZMNHUD1.xml \
 	config/qubino/ZMNHVDx.xml \
+	config/qubino/ZMNHWD1.xml \
 	config/qubino/ZMNHZDx.xml \
 	config/rcs/em52-zw.xml \
 	config/rcs/pm12-zw.xml \
@@ -484,6 +487,7 @@ DISTFILES =	.gitignore \
 	cpp/hidapi/windows/hidapi.sln \
 	cpp/hidapi/windows/hidapi.vcproj \
 	cpp/hidapi/windows/hidtest.vcproj \
+	cpp/src/Bitfield.cpp \
 	cpp/src/Bitfield.h \
 	cpp/src/DNSThread.cpp \
 	cpp/src/DNSThread.h \
@@ -724,6 +728,8 @@ DISTFILES =	.gitignore \
 	cpp/src/platform/windows/WaitImpl.h \
 	cpp/src/value_classes/Value.cpp \
 	cpp/src/value_classes/Value.h \
+	cpp/src/value_classes/ValueBitSet.cpp \
+	cpp/src/value_classes/ValueBitSet.h \
 	cpp/src/value_classes/ValueBool.cpp \
 	cpp/src/value_classes/ValueBool.h \
 	cpp/src/value_classes/ValueButton.cpp \
@@ -747,6 +753,45 @@ DISTFILES =	.gitignore \
 	cpp/src/value_classes/ValueStore.h \
 	cpp/src/value_classes/ValueString.cpp \
 	cpp/src/value_classes/ValueString.h \
+	cpp/test/Makefile \
+	cpp/test/ValueID_test.cpp \
+	cpp/test/include/gtest/gtest-death-test.h \
+	cpp/test/include/gtest/gtest-message.h \
+	cpp/test/include/gtest/gtest-param-test.h \
+	cpp/test/include/gtest/gtest-param-test.h.pump \
+	cpp/test/include/gtest/gtest-printers.h \
+	cpp/test/include/gtest/gtest-spi.h \
+	cpp/test/include/gtest/gtest-test-part.h \
+	cpp/test/include/gtest/gtest-typed-test.h \
+	cpp/test/include/gtest/gtest.h \
+	cpp/test/include/gtest/gtest_pred_impl.h \
+	cpp/test/include/gtest/gtest_prod.h \
+	cpp/test/include/gtest/internal/custom/gtest-port.h \
+	cpp/test/include/gtest/internal/custom/gtest-printers.h \
+	cpp/test/include/gtest/internal/custom/gtest.h \
+	cpp/test/include/gtest/internal/gtest-death-test-internal.h \
+	cpp/test/include/gtest/internal/gtest-filepath.h \
+	cpp/test/include/gtest/internal/gtest-internal.h \
+	cpp/test/include/gtest/internal/gtest-linked_ptr.h \
+	cpp/test/include/gtest/internal/gtest-param-util-generated.h \
+	cpp/test/include/gtest/internal/gtest-param-util-generated.h.pump \
+	cpp/test/include/gtest/internal/gtest-param-util.h \
+	cpp/test/include/gtest/internal/gtest-port-arch.h \
+	cpp/test/include/gtest/internal/gtest-port.h \
+	cpp/test/include/gtest/internal/gtest-string.h \
+	cpp/test/include/gtest/internal/gtest-tuple.h \
+	cpp/test/include/gtest/internal/gtest-tuple.h.pump \
+	cpp/test/include/gtest/internal/gtest-type-util.h \
+	cpp/test/include/gtest/internal/gtest-type-util.h.pump \
+	cpp/test/src/gtest-death-test.cc \
+	cpp/test/src/gtest-filepath.cc \
+	cpp/test/src/gtest-internal-inl.h \
+	cpp/test/src/gtest-port.cc \
+	cpp/test/src/gtest-printers.cc \
+	cpp/test/src/gtest-test-part.cc \
+	cpp/test/src/gtest-typed-test.cc \
+	cpp/test/src/gtest.cc \
+	cpp/test/src/gtest_main.cc \
 	cpp/tinyxml/Makefile \
 	cpp/tinyxml/tinystr.cpp \
 	cpp/tinyxml/tinystr.h \
