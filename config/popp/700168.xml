@@ -3,7 +3,7 @@
 	<!-- Popp: Z-Wave Rain Sensor http://products.z-wavealliance.org/products/2418 -->
 	<!-- Configuration  -->
 	<CommandClass id="112">
-		<Value type="byte" genre="config" instance="1" index="1" label="Rain Counter" size="2" min="0" max="32000" units="mm" value="0">
+		<Value type="short" genre="config" instance="1" index="1" label="Rain Counter" size="2" min="0" max="32000" units="mm" value="0">
 			<Help>
 			Ths values shows the total count of rain from the moment of inclusion in mm waterlevel. By writing this value this counter can be reset.
       Size: 2 Byte, Default Value: 0
@@ -21,17 +21,17 @@
       Size: 1 Byte, Default Value: 0
 			</Help>
 		</Value>
-    <Value type="byte" genre="config" instance="1" index="4" label="Meter Multiplier" size="2" min="1" max="1000" units="" value="1">
+    <Value type="short" genre="config" instance="1" index="4" label="Meter Multiplier" size="2" units="" value="1">
 			<Help>
 			This multiplier allows to adapt the display to certain controllers not being able to handle very low numbers.
       Availible settings: 1, 10, 100 and 1000
       Size: 2 Byte, Default Value: 1
 			</Help>
 		</Value>
-    <Value type="byte" genre="config" instance="1" index="5" label="Heavy Rain" size="1" min="0" max="255" units="mm" value="256">
+    <Value type="byte" genre="config" instance="1" index="5" label="Heavy Rain" size="1" min="0" max="255" units="mm" value="255">
 			<Help>
 			This threshold defines when a heavy rain condition is hit. In most countries this is defined as > 15 mm rain per hour. The edefaut value however is to turn this function off.
-      Size: 1 Byte, Default Value: 256
+      Size: 1 Byte, Default Value: 255
 			</Help>
 		</Value>
     <Value type="byte" genre="config" instance="1" index="6" label="Heavy Rain Start Command" size="1" min="0" max="99" units="" value="99">
