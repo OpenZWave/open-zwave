@@ -21,8 +21,8 @@ top_srcdir := $(abspath $(dir $(lastword $(MAKEFILE_LIST)))../../)
 LIBDIR  	?= $(top_builddir)
 
 INCLUDES	:= -I $(top_srcdir)/cpp/test/ -I $(top_srcdir)/cpp/test/include/ -I $(top_srcdir)/cpp/src -I $(top_srcdir)/cpp/tinyxml/ -I $(top_srcdir)/cpp/hidapi/hidapi/
-LIBS =  $(wildcard $(LIBDIR)/*.so $(LIBDIR)/*.dylib $(top_builddir)/cpp/build/*.so $(top_builddir)/cpp/build/*.dylib )
-LIBSDIR = $(abspath $(dir $(firstword $(LIBS))))
+LIBS = $(wildcard $(LIBDIR)/*.a )
+#LIBSDIR = $(abspath $(dir $(firstword $(LIBS))))
 SOURCES  := $(top_srcdir)/cpp/test/src/ $(top_srcdir)/cpp/test/
 gtestsrc := $(notdir $(wildcard $(top_srcdir)/cpp/test/src/*.cc))
 testsrc := $(notdir $(wildcard $(top_srcdir)/cpp/test/*.cpp))
@@ -71,7 +71,7 @@ $(OBJDIR)/%.o : %.cc
 $(top_builddir)/gtest-main:	$(patsubst %.cc,$(OBJDIR)/%.o,$(gtestsrc)) \
 	$(patsubst %.cpp,$(OBJDIR)/%.o,$(testsrc))
 	@echo "Linking $@"
-	@$(LD) $(LDFLAGS) $(TARCH) -o $@ $+ $(LIBS) -pthread
+	$(LD) $(LDFLAGS) $(TARCH) -o $@ $+ $(LIBS) -pthread
 
 test:	$(top_builddir)/gtest-main
 	$(top_builddir)/gtest-main
