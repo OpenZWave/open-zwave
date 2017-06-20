@@ -105,15 +105,7 @@ bool ValueButton::ReleaseButton
 {
 	// Set the value in the device.
 	m_pressed = false;
-	bool res = Value::Set();
-	if( Driver* driver = Manager::Get()->GetDriver( GetID().GetHomeId() ) )
-	{
-		if( Node* node = driver->GetNodeUnsafe( GetID().GetNodeId() ) )
-		{
-			node->RequestDynamicValues();
-		}
-	}
-	return res;
+	return Value::Set();
 }
 
 
