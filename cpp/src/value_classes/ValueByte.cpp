@@ -81,7 +81,7 @@ string const ValueByte::GetAsString
 ) const
 {
 	stringstream ss;
-	ss << GetValue();
+	ss << (uint32)GetValue();
 	return ss.str();
 }
 

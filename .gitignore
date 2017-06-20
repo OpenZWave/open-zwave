@@ -38,3 +38,4 @@ OZWForm.vshost.exe.manifest
 /cpp/build/windows/winversion.cpp
 .distfiles
 .idea/*
+ozw_config

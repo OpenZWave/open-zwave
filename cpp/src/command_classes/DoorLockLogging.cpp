@@ -281,7 +281,7 @@ bool DoorLockLogging::HandleMsg
 		if (EventType >= DoorLockEventType_Max)
 			EventType = DoorLockEventType_Max;
 
-		Log::Write (LogLevel_Info, GetNodeId(), "Recieved a DoorLockLogging Record %d which is \"%s\"", _data[1], c_DoorLockEventType[EventType-1]);
+		Log::Write (LogLevel_Info, GetNodeId(), "Received a DoorLockLogging Record %d which is \"%s\"", _data[1], c_DoorLockEventType[EventType-1]);
 
 		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, Value_GetRecordNo ) ) )
 		{

@@ -34,7 +34,7 @@
 #include "Options.h"
 #include "command_classes/Association.h"
 #include "command_classes/AssociationCommandConfiguration.h"
-#include "command_classes/MultiInstanceAssociation.h"
+#include "command_classes/MultiChannelAssociation.h"
 #include "platform/Log.h"
 
 #include "tinyxml.h"
@@ -263,7 +263,7 @@ void Group::AddAssociation
 	{
 		if( Node* node = driver->GetNodeUnsafe( m_nodeId ) )
 		{
-			MultiInstanceAssociation* cc = static_cast<MultiInstanceAssociation*>( node->GetCommandClass( MultiInstanceAssociation::StaticGetCommandClassId() ));
+			MultiChannelAssociation* cc = static_cast<MultiChannelAssociation*>( node->GetCommandClass( MultiChannelAssociation::StaticGetCommandClassId() ));
 			if( cc && IsMultiInstance() )
 			{
 				cc->Set( m_groupIdx, _nodeId, _instance );
@@ -296,7 +296,7 @@ void Group::RemoveAssociation
 	{
 		if( Node* node = driver->GetNodeUnsafe( m_nodeId ) )
 		{
-			MultiInstanceAssociation* cc = static_cast<MultiInstanceAssociation*>( node->GetCommandClass( MultiInstanceAssociation::StaticGetCommandClassId() ));
+			MultiChannelAssociation* cc = static_cast<MultiChannelAssociation*>( node->GetCommandClass( MultiChannelAssociation::StaticGetCommandClassId() ));
 			if( cc && IsMultiInstance() )
 			{
 				cc->Remove( m_groupIdx, _nodeId, _instance );

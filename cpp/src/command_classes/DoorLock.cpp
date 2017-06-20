@@ -320,7 +320,7 @@ bool DoorLock::HandleMsg
 			  	m_timeoutsecs = _data[4];
 				break;
 			default:
-				Log::Write(LogLevel_Warning, GetNodeId(), "Recieved a Unsupported Door Lock Config Report %d", _data[1]);
+				Log::Write(LogLevel_Warning, GetNodeId(), "Received a Unsupported Door Lock Config Report %d", _data[1]);
 		}
 
 		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, Value_System_Config_OutsideHandles ) ) )
@@ -390,7 +390,7 @@ bool DoorLock::SetValue
 		return true;
 	}
 	/* if its any of our System Messages.... */
-	if ( Value_System_Config_Mode >= _value.GetID().GetIndex() )
+	if ( Value_System_Config_Mode <= _value.GetID().GetIndex() && Value_System_Config_InsideHandles >= _value.GetID().GetIndex() )
 	{
 		bool sendmsg = true;
 		switch (_value.GetID().GetIndex()) {

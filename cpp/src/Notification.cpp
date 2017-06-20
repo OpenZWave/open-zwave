@@ -149,10 +149,10 @@ string Notification::GetAsString() const {
 		case Type_ControllerCommand:
 			switch (m_event) {
 				case Driver::ControllerState_Normal:
-					str = "ControlerCommand - Normal";
+					str = "ControllerCommand - Normal";
 					break;
 				case Driver::ControllerState_Starting:
-					str = "ControllerComand - Starting";
+					str = "ControllerCommand - Starting";
 					break;
 				case Driver::ControllerState_Cancel:
 					str = "ControllerCommand - Canceled";
