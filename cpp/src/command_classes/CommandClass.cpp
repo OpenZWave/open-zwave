@@ -772,7 +772,7 @@ void CommandClass::UpdateMappedClass
 		if( Node* node = GetNodeUnsafe() )
 		{
 			CommandClass* cc = node->GetCommandClass( _classId );
-			if( node->GetCurrentQueryStage() == Node::QueryStage_Complete && cc != NULL )
+			if( cc != NULL )
 			{
 				cc->SetValueBasic( _instance, _level );
 			}
