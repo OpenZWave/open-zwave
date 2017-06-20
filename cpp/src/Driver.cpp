@@ -6898,7 +6898,7 @@ bool Driver::SendNonceRequest(string logmsg) {
 	{
 		m_buffer[10] ^= m_buffer[i];
 	}
-	Log::Write(LogLevel_Info, m_currentMsg->GetTargetNodeId(), "Sending (%s) message (Callback ID=0x%.2x, Expected Reply=0x%.2x) - Nonce_Get(%s) - %s:", c_sendQueueNames[m_currentMsgQueueSource], m_expectedCallbackId, m_expectedReply, logmsg.c_str(), PktToString(m_buffer, 10).c_str());
+	Log::Write(LogLevel_Info, m_currentMsg->GetTargetNodeId(), "Sending (%s) message (Callback ID=0x%.2x, Expected Reply=0x%.2x) - Nonce_Get(%s) - %s:", c_sendQueueNames[m_currentMsgQueueSource], 2, m_expectedReply, logmsg.c_str(), PktToString(m_buffer, 10).c_str());
 
 	m_controller->Write(m_buffer, 11);
 
