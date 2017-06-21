@@ -314,17 +314,6 @@
 		<Product type="4c42" id="3134" name="Smart LED Retrofit Kit ZE27EU" config="domitech/ze27eu.xml"/>
 		<Product type="4c42" id="3135" name="Smart LED Light Bulb ZB22UK" config="domitech/zb22uk.xml"/>
 	</Manufacturer>
-	<Manufacturer id="0260" name="Domux">
-		<Product type="0168" id="0168" name="Door Sensor DX1DS-Z" config="domux/dx1dsz.xml"/>
-		<Product type="8001" id="1000" name="Motion Sensor DX1MS-Z" config="domux/dx1msz.xml"/>
-		<Product type="8002" id="1000" name="Smart Smoke Sensor DX1SA-Z" config="domux/dx1saz.xml"/>
-		<Product type="8003" id="1000" name="Gaz Sensor DX1CG-Z" config="domux/dx1cgz.xml"/>
-		<Product type="8004" id="1000" name="Flood Sensor DX1WL-Z" config="domux/dx1wlz.xml"/>
-		<Product type="8005" id="1000" name="CO Sensor DX1CA-Z" config="domux/dx1caz.xml"/>
-		<Product type="8006" id="1000" name="Smart Metering Plug DX2SK-Z" config="domux/dx2skz.xml"/>
-		<Product type="8007" id="1000" name="Temperature Humidity Sensor DX1HT-Z" config="domux/dx1htz.xml"/>
-		<Product type="8008" id="1000" name="Smart Plug HS2SK-Z" config="domux/dx2skz.xml"/>
-	</Manufacturer>
 	<Manufacturer id="0184" name="Dragon Tech">
 		<Product type="4447" id="3034" name="In Wall Dimmer" config="dragontech/wd-100.xml" />
 	</Manufacturer>
@@ -566,6 +555,17 @@
 		<Product type="0200" id="0008" name="HKZW-DWS01 Door/Window Sensor" config="hank/hkzw-dws01.xml"/>
 		<Product type="0200" id="0009" name="HKZW-SCN01 Scene Controller" config="hank/scenecontroller1.xml"/>
 		<Product type="0200" id="000b" name="HKZW-SCN04 Scene Controller" config="hank/scenecontroller4.xml"/>
+	</Manufacturer>
+	<Manufacturer id="0260" name="Heiman">
+		<Product type="0168" id="0168" name="Door Sensor HS1DS-Z" config="heiman/HS1DS-Z.xml"/>
+		<Product type="8001" id="1000" name="Motion Sensor HS1MS-Z" config="heiman/HS1MS-Z.xml"/>
+		<Product type="8002" id="1000" name="Smart Smoke Sensor HS1SA-Z" config="heiman/HS1SA-Z.xml"/>
+		<Product type="8003" id="1000" name="Combustible Gas Sensor HS1CG-Z" config="heiman/HS1CG-Z.xml"/>
+		<Product type="8004" id="1000" name="Water Leakage Sensor HS1WL-Z" config="heiman/HS1WL-Z.xml"/>
+		<Product type="8005" id="1000" name="CO Sensor HS1CA-Z" config="heiman/HS1CA-Z.xml"/>
+		<Product type="8006" id="1000" name="Smart Metering Plug HS2SK-Z" config="heiman/HS2SK-Z.xml"/>
+		<Product type="8007" id="1000" name="Temperature Humidity Sensor HS1HT-Z" config="heiman/HS1HT-Z.xml"/>
+		<Product type="8008" id="1000" name="Smart Plug HS2SK-Z" config="heiman/HS2SK-Z.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0017" name="HiTech Automation">
 	</Manufacturer>

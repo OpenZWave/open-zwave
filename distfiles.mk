@@ -115,14 +115,6 @@ DISTFILES =	.gitignore \
 	config/dlink/dch-z510.xml \
 	config/domitech/zb22uk.xml \
 	config/domitech/ze27eu.xml \
-	config/domux/dx1caz.xml \
-	config/domux/dx1cgz.xml \
-	config/domux/dx1dsz.xml \
-	config/domux/dx1htz.xml \
-	config/domux/dx1msz.xml \
-	config/domux/dx1saz.xml \
-	config/domux/dx1wlz.xml \
-	config/domux/dx2skz.xml \
 	config/dragontech/wd-100.xml \
 	config/duwi/05458.xml \
 	config/duwi/ZWES1000.xml \
@@ -223,6 +215,15 @@ DISTFILES =	.gitignore \
 	config/hank/hkzw-so05-smartplug.xml \
 	config/hank/scenecontroller1.xml \
 	config/hank/scenecontroller4.xml \
+	config/heiman/HS1DS-Z.xml \
+    config/heiman/HS1MS-Z.xml \
+    config/heiman/HS1SA-Z.xml \
+    config/heiman/HS1CG-Z.xml \
+    config/heiman/HS1WL-Z.xml \
+    config/heiman/HS1CA-Z.xml \
+    config/heiman/HS2SK-Z.xml \
+    config/heiman/HS1HT-Z.xml \
+    config/heiman/HS2SK-Z.xml \
 	config/homeseer/ezmotionplus.xml \
 	config/homeseer/hs-wd100plus.xml \
 	config/homeseer/hs-ws100plus.xml \
