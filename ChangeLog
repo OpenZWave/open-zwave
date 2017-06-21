@@ -189,6 +189,7 @@ Version 1.5
  - Pull Request #1246 Add GE plug-in 2-outlet smart switch from aaronwolen (Nechry)
  - Pull Request #1247 Add Leviton DZ15S Switch from bmenchaca (Nechry)
  - Add Popp: Z-Wave CO Detector (Nechry)
+ - Issue #1258 - Add PAN16 Smart energy plug in switch from krejkrejkrej (Nechry)
  
 Version 1.4
  - Released 10th Jan, 2016
