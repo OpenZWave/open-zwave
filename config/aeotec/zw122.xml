@@ -67,13 +67,13 @@ http://products.z-wavealliance.org/products/2437
 			<Help>
 				Set the recover limit value of temperature sensor.
 				Note:
-				1. When the current measurement less than or equal (Upper limit – Recover limit), the upper limit report is enabled and then it would send out a sensor report when the next measurement is more than the upper limit.
-				After that the upper limit report would be disabled again until the measurement less than or equal (Upper limit – Recover limit).
+				1. When the current measurement less than or equal (Upper limit - Recover limit), the upper limit report is enabled and then it would send out a sensor report when the next measurement is more than the upper limit.
+				After that the upper limit report would be disabled again until the measurement less than or equal (Upper limit - Recover limit).
 				2. When the current measurement greater than or equal (Lower limit + Recover limit), the lower limit report is enabled and then it would send out a sensor report when the next measurement is less than the lower limit.
 				After that the lower limit report would be disabled again until the measurement >= (Lower limit + Recover limit).
 				3. High byte is the recover limit value. Low byte is the unit (0x00=Celsius, 0x01=Fahrenheit).
 				4. Recover limit range: 1.0 to 25.5 C/F (0x0100 to 0xFF00 or 0x0101 to 0xFF01).
-				E.g. The default recover limit value is 2.0 C/F (0x1400/0x1401), when the measurement is less than (Upper limit – 2), the upper limit report would be enabled one time or when the measurement is more than (Lower limit + 2), the lower limit report would be enabled one time.
+				E.g. The default recover limit value is 2.0 C/F (0x1400/0x1401), when the measurement is less than (Upper limit - 2), the upper limit report would be enabled one time or when the measurement is more than (Lower limit + 2), the lower limit report would be enabled one time.
 			</Help>
 		</Value>
 		<Value type="list" genre="config" instance="1" index="64" label="Unit of the automatic temperature report" min="0" max="1" size="1" value="0">
