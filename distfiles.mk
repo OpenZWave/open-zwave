@@ -115,14 +115,14 @@ DISTFILES =	.gitignore \
 	config/dlink/dch-z510.xml \
 	config/domitech/zb22uk.xml \
 	config/domitech/ze27eu.xml \
-	config/domux/dx1caz.xml \
-    config/domux/dx1cgz.xml \
-    config/domux/dx1dsz.xml \
-    config/domux/dx1htz.xml \
-    config/domux/dx1msz.xml \
-    config/domux/dx1saz.xml \
-    config/domux/dx1wlz.xml \
-    config/domux/dx2skz.xml \
+	config/domux/DX1CA-Z.xml \
+	config/domux/DX1CG-Z.xml \
+	config/domux/DX1DS-Z.xml \
+	config/domux/DX1HT-Z.xml \
+	config/domux/DX1MS-Z.xml \
+	config/domux/DX1SA-Z.xml \
+	config/domux/DX1WL-Z.xml \
+	config/domux/DX2SK-Z.xml \
 	config/dragontech/wd-100.xml \
 	config/duwi/05458.xml \
 	config/duwi/ZWES1000.xml \
@@ -223,15 +223,14 @@ DISTFILES =	.gitignore \
 	config/hank/hkzw-so05-smartplug.xml \
 	config/hank/scenecontroller1.xml \
 	config/hank/scenecontroller4.xml \
+	config/heiman/HS1CA-Z.xml \
+	config/heiman/HS1CG-Z.xml \
 	config/heiman/HS1DS-Z.xml \
-    config/heiman/HS1MS-Z.xml \
-    config/heiman/HS1SA-Z.xml \
-    config/heiman/HS1CG-Z.xml \
-    config/heiman/HS1WL-Z.xml \
-    config/heiman/HS1CA-Z.xml \
-    config/heiman/HS2SK-Z.xml \
-    config/heiman/HS1HT-Z.xml \
-    config/heiman/HS2SK-Z.xml \
+	config/heiman/HS1HT-Z.xml \
+	config/heiman/HS1MS-Z.xml \
+	config/heiman/HS1SA-Z.xml \
+	config/heiman/HS1WL-Z.xml \
+	config/heiman/HS2SK-Z.xml \
 	config/homeseer/ezmotionplus.xml \
 	config/homeseer/hs-wd100plus.xml \
 	config/homeseer/hs-ws100plus.xml \
@@ -253,14 +252,14 @@ DISTFILES =	.gitignore \
 	config/iris/rangeextender.xml \
 	config/kaipule/im20.xml \
 	config/kwikset/smartcode.xml \
+	config/leviton/dz15s.xml \
+	config/leviton/dz6hd.xml \
+	config/leviton/dzpd3.xml \
 	config/leviton/rzi10.xml \
 	config/leviton/vrcpg.xml \
 	config/leviton/vrf01.xml \
 	config/leviton/vri06.xml \
 	config/leviton/vri10.xml \
-	config/leviton/dz15s.xml \
-	config/leviton/dz6hd.xml \
-	config/leviton/dzpd3.xml \
 	config/linear/GC-TBZ48.xml \
 	config/linear/LB60Z-1.xml \
 	config/linear/PD300Z-2.xml \
