@@ -30,7 +30,7 @@ http://products.z-wavealliance.org/products/2437
 			<Item label="Battery power, keep awake for 10 minutes after re-power on" value="257"/>
 			<Item label="Battery power, always awake state" value="513"/>
 		</Value>
-		<Value type="int" genre="config" instance="1" index="10" label="Alarm time for the Buzzer" min="0" max="1" value="0" size="1968650">
+		<Value type="int" genre="config" instance="1" index="10" label="Alarm time for the Buzzer" min="655360" max="2147483647" value="1968650" size="4">
 			<Help>
 				Set the alarm time for the Buzzer when the sensor is triggered.
 				1 to 255 Repeated cycle of Buzzer alarm.
@@ -38,7 +38,7 @@ http://products.z-wavealliance.org/products/2437
 				65536 to 2147483647 The time of Buzzer keeping OFF state.
 			</Help>
 		</Value>
-		<Value type="byte" genre="config" instance="1" index="39" label="Set the low battery value" min="10" max="50" value="20" size="1">
+		<Value type="byte" genre="config" instance="1" index="39" label="Set the low battery value" min="10" max="50" value="20" units="%" size="1">
 			<Help>10% to 50%</Help>
 		</Value>
 		<Value type="list" genre="config" instance="1" index="48" label="Sensor report" min="0" max="1" size="1" value="1">
