@@ -115,6 +115,14 @@ DISTFILES =	.gitignore \
 	config/dlink/dch-z510.xml \
 	config/domitech/zb22uk.xml \
 	config/domitech/ze27eu.xml \
+	config/domux/dx1caz.xml \
+    config/domux/dx1cgz.xml \
+    config/domux/dx1dsz.xml \
+    config/domux/dx1htz.xml \
+    config/domux/dx1msz.xml \
+    config/domux/dx1saz.xml \
+    config/domux/dx1wlz.xml \
+    config/domux/dx2skz.xml \
 	config/dragontech/wd-100.xml \
 	config/duwi/05458.xml \
 	config/duwi/ZWES1000.xml \
