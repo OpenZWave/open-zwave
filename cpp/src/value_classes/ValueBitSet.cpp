@@ -165,18 +165,18 @@ void ValueBitSet::ReadXML
 	TiXmlElement const *helpElement = _valueElement->FirstChildElement("Help");
 	TiXmlElement const *BitSetHelpElement = helpElement->FirstChildElement("BitSet");
 	while (BitSetHelpElement) {
-		uint8 id;
+		uint8 id = 0;
 		if( TIXML_SUCCESS == BitSetHelpElement->QueryIntAttribute( "id", &intVal ) )
 			{
 				id = (uint8)intVal;
+				char const* label = _valueElement->Attribute( "label" );
+				if( label )
+				{
+					m_BitLabelString[id] = label;
+				}
+				string helpstring = BitSetHelpElement->GetText();
+				m_BitHelpString[id] = helpstring;
 			}
-		char const* label = _valueElement->Attribute( "label" );
-		if( label )
-		{
-			m_BitLabelString[id] = label;
-		}
-		string helpstring = BitSetHelpElement->GetText();
-		m_BitHelpString[id] = helpstring;
 		BitSetHelpElement = BitSetHelpElement->NextSiblingElement("BitSet");
 	}
 
