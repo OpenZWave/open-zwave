@@ -46,16 +46,16 @@ http://products.z-wavealliance.org/products/2437
 			<Item label="Disabled" value="0"/>
 			<Item label="Enabled" value="1"/>
 		</Value>
-		<Value type="int" genre="config" instance="1" index="49" label="Upper limit value" size="4" min="0" max="2147483647" value="26214400">
+		<Value type="int" genre="config" instance="1" index="49" label="Upper limit value" size="4" min="65536" max="2147483647" value="26214400">
 			<Help>
 				Set the upper limit value (overheat).
 				0 Celsius unit
 				1 Fahrenheit unit
 				65536 to 2147483647 Temperature value.
-				Default: 0x01800000 => 40.0C
+				Default: 0x01900000 => 40.0C
 			</Help>
 		</Value>
-		<Value type="int" genre="config" instance="1" index="50" label="Lower limit value" size="4" min="0" max="2147483647" value="0">
+		<Value type="int" genre="config" instance="1" index="50" label="Lower limit value" size="4" min="65536" max="2147483647" value="0">
 			<Help>
 				Set the lower limit value (under heat).
 				0 Celsius unit
