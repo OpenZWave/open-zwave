@@ -704,6 +704,7 @@
 	</Manufacturer>
 	<Manufacturer id="014f" name="Linear">
 		<Product type="2002" id="0203" name="WAPIRZ-1 Motion Sensor" config="linear/WAPIRZ-1.xml"/>
+		<Product type="2009" id="0903" name="WA105DBZ-1 Main Operated Siren" config="linear/WA105DBZ-1.xml"/>
 		<Product type="4450" id="3030" name="PD300Z-2 Plug-in Dimmer Module" config="linear/PD300Z-2.xml"/>
 		<Product type="4457" id="3034" name="WD500Z-1 Wall Dimmer Switch" config="linear/WD500Z-1.xml"/>
 		<Product type="4457" id="3331" name="WD1000Z-1 Wall Dimmer Switch"/>

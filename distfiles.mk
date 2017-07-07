@@ -263,6 +263,7 @@ DISTFILES =	.gitignore \
 	config/linear/GC-TBZ48.xml \
 	config/linear/LB60Z-1.xml \
 	config/linear/PD300Z-2.xml \
+	config/linear/WA105DBZ-1.xml \
 	config/linear/WA00Z-1.xml \
 	config/linear/WAPIRZ-1.xml \
 	config/linear/WD500Z-1.xml \
