@@ -182,6 +182,19 @@ Version 1.5
  - Add Devolo devices (Nechry)
  - Pull Request #1224 - Add Philio PSP05-D Motionsensor from superjunky (Nechry)
  - Add Domux devices (Nechry)
+ - Add Hank HKZW-DWS01 Door/Window Sensor (Nechry)
+ - Add Hank HKZW-MS01 Multisensor (Nechry)
+ - Add MCOHome MH9-CO2-WD CO2 Monitor (Nechry)
+ - Add Aeotec ZW122 Water Sensor 6 (Nechry)
+ - Pull Request #1246 Add GE plug-in 2-outlet smart switch from aaronwolen (Nechry)
+ - Pull Request #1247 Add Leviton DZ15S Switch from bmenchaca (Nechry)
+ - Add Popp: Z-Wave CO Detector (Nechry)
+ - Issue #1258 - Add PAN16 Smart energy plug in switch from krejkrejkrej (Nechry)
+ - Issue #1259 - wrong manufacturer DOMUX in XML from michapr (Nechry)
+ - Add Zipato Bulb 2 (Nechry)
+ - Add Zipato rebranded devices from Heiman (Nechry)
+ - Add Domux rebranded devices from Heiman (Nechry)
+ - Issue #1265 New Device: Linear Mains Siren from Ittiz (Nechry)
 
 Dev Branch:
  - Rename zwcfg_*.xml to zwcache_*.xml to reflect its not a config file, but a cache. (Justin)
@@ -203,7 +216,7 @@ Dev Branch:
  - dotNet Wrapper is now maintained by dotMorten https://github.com/OpenZWave/openzwave-dotnet-uwp (Justin)
  - Exceptions are now enabled by Default (Justin)
  - Depreciate the builtin Scene Methods (not related to CENTRAL_SCENE) (Justin)
- 
+
 Version 1.4
  - Released 10th Jan, 2016
 
