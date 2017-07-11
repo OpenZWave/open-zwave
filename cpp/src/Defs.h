@@ -146,14 +146,13 @@ static inline int version_cmp(struct ozwversion a, struct ozwversion b)
 }
 
 #include "OZWException.h"
-#define OPENZWAVE_DISABLE_EXCEPTIONS
 #if defined(_MSC_VER)
 #  define __MYFUNCTION__ __FUNCTION__
 #else
 #  define __MYFUNCTION__ __FILE__
 #endif
-// Exceptions : define OPENZWAVE_DISABLE_EXCEPTIONS in compiler flags to enable exceptions instead of exit function
-#ifndef OPENZWAVE_DISABLE_EXCEPTIONS
+// Exceptions : define OPENZWAVE_ENABLE_EXCEPTIONS in compiler flags to enable exceptions instead of exit function
+#ifdef OPENZWAVE_ENABLE_EXCEPTIONS
 
 #  define OZW_FATAL_ERROR(exitCode, msg)   	Log::Write( LogLevel_Error,"Exception: %s:%d - %d - %s", std::string(__MYFUNCTION__).substr(std::string(__MYFUNCTION__).find_last_of("/\\") + 1).c_str(), __LINE__, exitCode, msg); \
 											throw OZWException(__MYFUNCTION__, __LINE__, exitCode, msg)
