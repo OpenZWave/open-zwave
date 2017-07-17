@@ -147,14 +147,14 @@ version 1.07 (4.11.2016)
 			E.g. The default lower limit is 50%, when the measurement is less than 50%, it will be triggered to send out a humidity sensor report. 
 			</Help>
 		</Value>
-		<Value type="short" index="53" genre="config" label="Set the upper limit value of Lighting sensor" units="lux" min="0" max="100" value="1000" >
+		<Value type="short" index="53" genre="config" label="Set the upper limit value of Lighting sensor" units="lux" min="0" max="3000" value="1000" >
 			<Help>
 			When the measurement is more than this upper limit, which will trigger to sent out a sensor report.
 			Upper limit range: 0 to 30000 Lux.
 			E.g. The default upper limit is 1000Lux, when the measurement is more than 1000Lux, it will be triggered to send out a Lighting sensor report. 
 			</Help>
 		</Value>
-		<Value type="short" index="54" genre="config" label="Set the lower limit value of Lighting sensor" units="lux" min="0" max="100" value="50" >
+		<Value type="short" index="54" genre="config" label="Set the lower limit value of Lighting sensor" units="lux" min="0" max="3000" value="50" >
 			<Help>
 			When the measurement is less than this lower limit, which will trigger to sent out a sensor report.
 			Lower limit range: 0 to 30000 Lux.
