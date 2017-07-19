@@ -285,7 +285,7 @@ exit 0</Command>
     <ClInclude Include="..\..\..\src\command_classes\MeterPulse.h" />
     <ClInclude Include="..\..\..\src\command_classes\MultiCmd.h" />
     <ClInclude Include="..\..\..\src\command_classes\MultiInstance.h" />
-    <ClInclude Include="..\..\..\src\command_classes\MultiInstanceAssociation.h" />
+    <ClInclude Include="..\..\..\src\command_classes\MultiChannelAssociation.h" />
     <ClInclude Include="..\..\..\src\command_classes\NodeNaming.h" />
     <ClInclude Include="..\..\..\src\command_classes\Powerlevel.h" />
     <ClInclude Include="..\..\..\src\command_classes\Proprietary.h" />
@@ -392,7 +392,7 @@ exit 0</Command>
     <ClCompile Include="..\..\..\src\command_classes\MeterPulse.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\MultiCmd.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\MultiInstance.cpp" />
-    <ClCompile Include="..\..\..\src\command_classes\MultiInstanceAssociation.cpp" />
+    <ClCompile Include="..\..\..\src\command_classes\MultiChannelAssociation.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\NodeNaming.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\Powerlevel.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\Proprietary.cpp" />

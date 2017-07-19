@@ -225,7 +225,7 @@ bool ValueList::SetByValue
 {
 	// create a temporary copy of this value to be submitted to the Set() call and set its value to the function param
   	ValueList* tempValue = new ValueList( *this );
-	tempValue->m_valueIdx = GetItemIdxByValue(_value);
+	tempValue->m_valueIdx = _value;
 
 	// Set the value in the device.
 	bool ret = ((Value*)tempValue)->Set();
@@ -292,10 +292,10 @@ void ValueList::OnValueRefreshed
 // <ValueList::GetItemIdxByLabel>
 // Get the index of an item from its label
 //-----------------------------------------------------------------------------
-int32 const ValueList::GetItemIdxByLabel
+int32 ValueList::GetItemIdxByLabel
 (
 	string const& _label
-)
+) const
 {
 	for( int32 i=0; i<(int32)m_items.size(); ++i )
 	{
@@ -312,10 +312,10 @@ int32 const ValueList::GetItemIdxByLabel
 // <ValueList::GetItemIdxByValue>
 // Get the index of an item from its value
 //-----------------------------------------------------------------------------
-int32 const ValueList::GetItemIdxByValue
+int32 ValueList::GetItemIdxByValue
 (
 	int32 const _value
-)
+) const
 {
 	for( int32 i=0; i<(int32)m_items.size(); ++i )
 	{

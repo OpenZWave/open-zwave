@@ -721,7 +721,7 @@ bool Driver::ReadConfig
 	char const* cstr = driverElement->Attribute( "poll_interval_between" );
 	if( cstr )
 	{
-		m_bIntervalBetweenPolls = !strcmp( str, "true" );
+		m_bIntervalBetweenPolls = !strcmp( cstr, "true" );
 	}
 
 	// Read the nodes
@@ -1526,27 +1526,28 @@ void Driver::CheckCompletedNodeQueries
 		bool sleepingOnly = true;
 		bool deadFound = false;
 
-		LockGuard LG(m_nodeMutex);
-		for( int i=0; i<256; ++i )
 		{
-			if( m_nodes[i] )
+			LockGuard LG(m_nodeMutex);
+			for( int i=0; i<256; ++i )
 			{
-				if( m_nodes[i]->GetCurrentQueryStage() != Node::QueryStage_Complete )
+				if( m_nodes[i] )
 				{
-					if ( !m_nodes[i]->IsNodeAlive() )
+					if ( m_nodes[i]->GetCurrentQueryStage() != Node::QueryStage_Complete )
 					{
-						deadFound = true;
-						continue;
-					}
-					all = false;
-					if( m_nodes[i]->IsListeningDevice() )
-					{
-						sleepingOnly = false;
+						if( !m_nodes[i]->IsNodeAlive() )
+						{
+							deadFound = true;
+							continue;
+						}
+						all = false;
+						if( m_nodes[i]->IsListeningDevice() )
+						{
+							sleepingOnly = false;
+						}
 					}
 				}
 			}
 		}
-		LG.Unlock();
 
 		Log::Write( LogLevel_Warning, "CheckCompletedNodeQueries all=%d, deadFound=%d sleepingOnly=%d", all, deadFound, sleepingOnly );
 		if( all )
@@ -1846,12 +1847,12 @@ void Driver::ProcessMsg
 			/* if this message is encrypted, decrypt it first */
 		} else if ((SecurityCmd_MessageEncap == _data[6]) || (SecurityCmd_MessageEncapNonceGet == _data[6])) {
 			uint8 _newdata[256];
+			uint8 SecurityCmd = _data[6];
 			uint8 *_nonce;
 
 			/* clear out NONCE Report tracking */
 			m_nonceReportSent = 0;
 			m_nonceReportSentAttempt = 0;
-
 
 			/* make sure the Node Exists, and it has the Security CC */
 			{
@@ -1879,22 +1880,37 @@ void Driver::ProcessMsg
 				//PrintHex("Decrypted Packet", _data, _data[4]+5);
 
 				/* if the Node has something else to send, it will encrypt a message and send it as a MessageEncapNonceGet */
-				if (SecurityCmd_MessageEncapNonceGet == _data[6])
+				if (SecurityCmd_MessageEncapNonceGet == SecurityCmd )
 				{
-					Log::Write(LogLevel_Info,  _data[3], "Received SecurityCmd_MessageEncapNonceGet from node %d - Sending New Nonce", _data[3] );
-					LockGuard LG(m_nodeMutex);
-					Node* node = GetNode( _data[3] );
-					if( node ) {
-						_nonce = node->GenerateNonceKey();
-					} else {
-						Log::Write(LogLevel_Warning, _data[3], "Couldn't Generate Nonce Key for Node %d", _data[3]);
-						return;
-					}
-					SendNonceKey(_data[3], _nonce);
+				    Log::Write(LogLevel_Info,  _data[3], "Received SecurityCmd_MessageEncapNonceGet from node %d - Sending New Nonce", _data[3] );
+				    LockGuard LG(m_nodeMutex);
+				    Node* node = GetNode( _data[3] );
+				    if( node ) {
+				        _nonce = node->GenerateNonceKey();
+				    } else {
+				        Log::Write(LogLevel_Warning, _data[3], "Couldn't Generate Nonce Key for Node %d", _data[3]);
+				        return;
+				    }
+				    SendNonceKey(_data[3], _nonce);
 				}
+
 				wasencrypted = true;
 
 			} else {
+			    /* if the Node has something else to send, it will encrypt a message and send it as a MessageEncapNonceGet */
+			    if (SecurityCmd_MessageEncapNonceGet == SecurityCmd )
+			    {
+			        Log::Write(LogLevel_Info,  _data[3], "Received SecurityCmd_MessageEncapNonceGet from node %d - Sending New Nonce", _data[3] );
+			        LockGuard LG(m_nodeMutex);
+			        Node* node = GetNode( _data[3] );
+			        if( node ) {
+			            _nonce = node->GenerateNonceKey();
+			        } else {
+			            Log::Write(LogLevel_Warning, _data[3], "Couldn't Generate Nonce Key for Node %d", _data[3]);
+			            return;
+			        }
+			        SendNonceKey(_data[3], _nonce);
+			    }
 				/* it failed for some reason, lets just move on */
 				m_expectedReply = 0;
 				m_expectedNodeId = 0;
@@ -3202,7 +3218,6 @@ void Driver::HandleRemoveNodeFromNetworkRequest
 							}
 						}
 					}
-					LG.Unlock();
 				}
 				else
 				{
@@ -3236,11 +3251,11 @@ void Driver::HandleRemoveNodeFromNetworkRequest
 
 				if ( m_currentControllerCommand->m_controllerCommandNode != 0 && m_currentControllerCommand->m_controllerCommandNode != 0xff )
 				{
-					LockGuard LG(m_nodeMutex);
-					delete m_nodes[m_currentControllerCommand->m_controllerCommandNode];
-					m_nodes[m_currentControllerCommand->m_controllerCommandNode] = NULL;
-					LG.Unlock();
-
+					{
+						LockGuard LG(m_nodeMutex);
+						delete m_nodes[m_currentControllerCommand->m_controllerCommandNode];
+						m_nodes[m_currentControllerCommand->m_controllerCommandNode] = NULL;
+					}
 					Notification* notification = new Notification( Notification::Type_NodeRemoved );
 					notification->SetHomeAndNodeIds( m_homeId, m_currentControllerCommand->m_controllerCommandNode );
 					QueueNotification( notification );
@@ -3385,11 +3400,11 @@ void Driver::HandleRemoveFailedNodeRequest
 			Log::Write( LogLevel_Info, nodeId, "Received reply to FUNC_ID_ZW_REMOVE_FAILED_NODE_ID - node %d successfully moved to failed nodes list", m_currentControllerCommand->m_controllerCommandNode );
 			state = ControllerState_Completed;
 
-			LockGuard LG(m_nodeMutex);
-			delete m_nodes[m_currentControllerCommand->m_controllerCommandNode];
-			m_nodes[m_currentControllerCommand->m_controllerCommandNode] = NULL;
-			LG.Unlock();
-
+			{
+				LockGuard LG(m_nodeMutex);
+				delete m_nodes[m_currentControllerCommand->m_controllerCommandNode];
+				m_nodes[m_currentControllerCommand->m_controllerCommandNode] = NULL;
+			}
 			Notification* notification = new Notification( Notification::Type_NodeRemoved );
 			notification->SetHomeAndNodeIds( m_homeId, m_currentControllerCommand->m_controllerCommandNode );
 			QueueNotification( notification );
@@ -3730,10 +3745,11 @@ bool Driver::HandleApplicationUpdateRequest
 		{
 			Log::Write( LogLevel_Info, nodeId, "** Network change **: Z-Wave node %d was removed", nodeId );
 
-			LockGuard LG(m_nodeMutex);
-			delete m_nodes[nodeId];
-			m_nodes[nodeId] = NULL;
-			LG.Unlock();
+			{
+				LockGuard LG(m_nodeMutex);
+				delete m_nodes[nodeId];
+				m_nodes[nodeId] = NULL;
+			}
 
 			Notification* notification = new Notification( Notification::Type_NodeRemoved );
 			notification->SetHomeAndNodeIds( m_homeId, nodeId );
@@ -3848,7 +3864,6 @@ void Driver::CommonAddNodeStatusRequestHandler
 		case ADD_NODE_STATUS_ADDING_SLAVE:
 		{
 			Log::Write( LogLevel_Info, nodeId, "ADD_NODE_STATUS_ADDING_SLAVE" );
-			Log::Write( LogLevel_Info, nodeId, "Adding node ID %d - %s", _data[4], m_currentControllerCommand->m_controllerCommandArg ? "Secure" : "Non-Secure");
 			/* Discovered all the CC's are sent in this packet as well:
 			 * position description
 			 * 4 - Node ID
@@ -3861,6 +3876,7 @@ void Driver::CommonAddNodeStatusRequestHandler
 			 */
 			if( m_currentControllerCommand != NULL )
 			{
+				Log::Write( LogLevel_Info, nodeId, "Adding node ID %d - %s", _data[4], m_currentControllerCommand->m_controllerCommandArg ? "Secure" : "Non-Secure");
 				m_currentControllerCommand->m_controllerAdded = false;
 				m_currentControllerCommand->m_controllerCommandNode = _data[4];
 				/* make sure we dont overrun our buffer. Its ok to truncate */
@@ -4353,17 +4369,17 @@ void Driver::InitAllNodes
 )
 {
 	// Delete all the node data
-	LockGuard LG(m_nodeMutex);
-	for( int i=0; i<256; ++i )
 	{
-		if( m_nodes[i] )
+		LockGuard LG(m_nodeMutex);
+		for( int i=0; i<256; ++i )
 		{
-			delete m_nodes[i];
-			m_nodes[i] = NULL;
+			if( m_nodes[i] )
+			{
+				delete m_nodes[i];
+				m_nodes[i] = NULL;
+			}
 		}
 	}
-	LG.Unlock();
-
 	// Fetch new node data from the Z-Wave network
 	m_controller->PlayInitSequence( this );
 }
@@ -4412,7 +4428,7 @@ void Driver::InitNode
 			Log::Write(LogLevel_Info, _nodeId, "Network Key Not Set - Secure Option is %s", secure ? "required" : "not required");
 		m_nodes[_nodeId]->SetProtocolInfo(_protocolInfo, _length);
 	}
-	Log::Write(LogLevel_Info, _nodeId, "Initilizing Node. New Node: %s (%s)", static_cast<Node *>(m_nodes[_nodeId])->IsAddingNode() ? "true" : "false", newNode ? "true" : "false");
+	Log::Write(LogLevel_Info, _nodeId, "Initializing Node. New Node: %s (%s)", static_cast<Node *>(m_nodes[_nodeId])->IsAddingNode() ? "true" : "false", newNode ? "true" : "false");
 }
 
 //-----------------------------------------------------------------------------

@@ -108,7 +108,7 @@
     <ClInclude Include="..\..\..\src\command_classes\MultiInstance.h">
       <Filter>Command Classes</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\command_classes\MultiInstanceAssociation.h">
+    <ClInclude Include="..\..\..\src\command_classes\MultiChannelAssociation.h">
       <Filter>Command Classes</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\command_classes\NodeNaming.h">
@@ -515,7 +515,7 @@
     <ClCompile Include="..\..\..\src\command_classes\MultiInstance.cpp">
       <Filter>Command Classes</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\command_classes\MultiInstanceAssociation.cpp">
+    <ClCompile Include="..\..\..\src\command_classes\MultiChannelAssociation.cpp">
       <Filter>Command Classes</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\command_classes\NodeNaming.cpp">

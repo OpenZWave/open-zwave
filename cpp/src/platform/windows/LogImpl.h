@@ -31,7 +31,7 @@
 #include "Defs.h"
 #include <string>
 #include "platform/Log.h"
-#include "Windows.h"
+#include <windows.h>
 
 namespace OpenZWave
 {

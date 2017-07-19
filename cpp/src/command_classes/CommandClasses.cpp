@@ -58,7 +58,7 @@ using namespace OpenZWave;
 #include "command_classes/MeterPulse.h"
 #include "command_classes/MultiCmd.h"
 #include "command_classes/MultiInstance.h"
-#include "command_classes/MultiInstanceAssociation.h"
+#include "command_classes/MultiChannelAssociation.h"
 #include "command_classes/NodeNaming.h"
 #include "command_classes/NoOperation.h"
 #include "command_classes/Powerlevel.h"
@@ -210,7 +210,7 @@ void CommandClasses::RegisterCommandClasses
 	cc.Register( MeterPulse::StaticGetCommandClassId(), MeterPulse::StaticGetCommandClassName(), MeterPulse::Create );
 	cc.Register( MultiCmd::StaticGetCommandClassId(), MultiCmd::StaticGetCommandClassName(), MultiCmd::Create );
 	cc.Register( MultiInstance::StaticGetCommandClassId(), MultiInstance::StaticGetCommandClassName(), MultiInstance::Create );
-	cc.Register( MultiInstanceAssociation::StaticGetCommandClassId(), MultiInstanceAssociation::StaticGetCommandClassName(), MultiInstanceAssociation::Create );
+	cc.Register( MultiChannelAssociation::StaticGetCommandClassId(), MultiChannelAssociation::StaticGetCommandClassName(), MultiChannelAssociation::Create );
 	cc.Register( NodeNaming::StaticGetCommandClassId(), NodeNaming::StaticGetCommandClassName(), NodeNaming::Create );
 	cc.Register( NoOperation::StaticGetCommandClassId(), NoOperation::StaticGetCommandClassName(), NoOperation::Create );
 	cc.Register( Powerlevel::StaticGetCommandClassId(), Powerlevel::StaticGetCommandClassName(), Powerlevel::Create );

@@ -15,14 +15,14 @@
     <!-- Configuration -->
     <CommandClass id="112">
 
-        <Value type="short" genre="config" instance="1" index="1" label="Wind Gust Top Value" size="1" min="0" max="8800" value="1000">
+        <Value type="short" genre="config" instance="1" index="1" label="Wind Gust Top Value" size="2" min="0" max="8800" value="1000">
             <Help>
                 If the Wind Gust is Higher than the Parameter Value, a device triggers an Association.
                 0 to 8800 = value from 0.00 m/s to 88.00 m/s.
                 Default value 1000 (10,00 m/s).
             </Help>
         </Value>
-        <Value type="short" genre="config" instance="1" index="2" label="Rain Rate Top Value" size="1" min="0" max="30000" value="200">
+        <Value type="short" genre="config" instance="1" index="2" label="Rain Rate Top Value" size="2" min="0" max="30000" value="200">
             <Help>
                 If the Sensor Rain Rate is Higher than the Parameter Value, a device triggers an Association.
                 0 to 30000 = value from 0.00 mm/h to 300.00 mm/h.
@@ -39,52 +39,52 @@
             <Item label="0x00" value="0" />
             <Item label="0xFF" value="1" />
         </Value>
-        <Value type="list" genre="config" instance="1" index="5" label="End point 1 – Unsolicited Report" size="1" min="0" max="1" value="1">
+        <Value type="list" genre="config" instance="1" index="5" label="End point 1 - Unsolicited Report" size="1" min="0" max="1" value="1">
             <Help>If you enable Unsolicited Reports on the End Points, the USB Key will send data to the controller every time it receives data from the 433MHz sensors, which are different from the precious data.</Help>
             <Item label="Disabled" value="0" />
             <Item label="Enabled" value="1" />
         </Value>
-        <Value type="list" genre="config" instance="1" index="6" label="End point 2 – Unsolicited Report" size="1" min="0" max="1" value="1">
+        <Value type="list" genre="config" instance="1" index="6" label="End point 2 - Unsolicited Report" size="1" min="0" max="1" value="1">
             <Help>If you enable Unsolicited Reports on the End Points, the USB Key will send data to the controller every time it receives data from the 433MHz sensors, which are different from the precious data.</Help>
             <Item label="Disabled" value="0" />
             <Item label="Enabled" value="1" />
         </Value>
-        <Value type="list" genre="config" instance="1" index="7" label="End point 3 – Unsolicited Report" size="1" min="0" max="1" value="1">
+        <Value type="list" genre="config" instance="1" index="7" label="End point 3 - Unsolicited Report" size="1" min="0" max="1" value="1">
             <Help>If you enable Unsolicited Reports on the End Points, the USB Key will send data to the controller every time it receives data from the 433MHz sensors, which are different from the precious data.</Help>
             <Item label="Disabled" value="0" />
             <Item label="Enabled" value="1" />
         </Value>
-        <Value type="list" genre="config" instance="1" index="8" label="End point 4 – Unsolicited Report" size="1" min="0" max="1" value="1">
+        <Value type="list" genre="config" instance="1" index="8" label="End point 4 - Unsolicited Report" size="1" min="0" max="1" value="1">
             <Help>If you enable Unsolicited Reports on the End Points, the USB Key will send data to the controller every time it receives data from the 433MHz sensors, which are different from the precious data.</Help>
             <Item label="Disabled" value="0" />
             <Item label="Enabled" value="1" />
         </Value>
-        <Value type="list" genre="config" instance="1" index="9" label="End point 5 – Unsolicited Report" size="1" min="0" max="1" value="1">
+        <Value type="list" genre="config" instance="1" index="9" label="End point 5 - Unsolicited Report" size="1" min="0" max="1" value="1">
             <Help>If you enable Unsolicited Reports on the End Points, the USB Key will send data to the controller every time it receives data from the 433MHz sensors, which are different from the precious data.</Help>
             <Item label="Disabled" value="0" />
             <Item label="Enabled" value="1" />
         </Value>
-        <Value type="list" genre="config" instance="1" index="10" label="End point 6 – Unsolicited Report" size="1" min="0" max="1" value="1">
+        <Value type="list" genre="config" instance="1" index="10" label="End point 6 - Unsolicited Report" size="1" min="0" max="1" value="1">
             <Help>If you enable Unsolicited Reports on the End Points, the USB Key will send data to the controller every time it receives data from the 433MHz sensors, which are different from the precious data.</Help>
             <Item label="Disabled" value="0" />
             <Item label="Enabled" value="1" />
         </Value>
-        <Value type="list" genre="config" instance="1" index="11" label="End point 7 – Unsolicited Report" size="1" min="0" max="1" value="1">
+        <Value type="list" genre="config" instance="1" index="11" label="End point 7 - Unsolicited Report" size="1" min="0" max="1" value="1">
             <Help>If you enable Unsolicited Reports on the End Points, the USB Key will send data to the controller every time it receives data from the 433MHz sensors, which are different from the precious data.</Help>
             <Item label="Disabled" value="0" />
             <Item label="Enabled" value="1" />
         </Value>
-        <Value type="list" genre="config" instance="1" index="12" label="End point 8 – Unsolicited Report" size="1" min="0" max="1" value="1">
+        <Value type="list" genre="config" instance="1" index="12" label="End point 8 - Unsolicited Report" size="1" min="0" max="1" value="1">
             <Help>If you enable Unsolicited Reports on the End Points, the USB Key will send data to the controller every time it receives data from the 433MHz sensors, which are different from the precious data.</Help>
             <Item label="Disabled" value="0" />
             <Item label="Enabled" value="1" />
         </Value>
-        <Value type="list" genre="config" instance="1" index="13" label="End point 9 – Unsolicited Report" size="1" min="0" max="1" value="1">
+        <Value type="list" genre="config" instance="1" index="13" label="End point 9 - Unsolicited Report" size="1" min="0" max="1" value="1">
             <Help>If you enable Unsolicited Reports on the End Points, the USB Key will send data to the controller every time it receives data from the 433MHz sensors, which are different from the precious data.</Help>
             <Item label="Disabled" value="0" />
             <Item label="Enabled" value="1" />
         </Value>
-        <Value type="list" genre="config" instance="1" index="14" label="End point 10 – Unsolicited Report" size="1" min="0" max="1" value="1">
+        <Value type="list" genre="config" instance="1" index="14" label="End point 10 - Unsolicited Report" size="1" min="0" max="1" value="1">
             <Help>If you enable Unsolicited Reports on the End Points, the USB Key will send data to the controller every time it receives data from the 433MHz sensors, which are different from the precious data.</Help>
             <Item label="Disabled" value="0" />
             <Item label="Enabled" value="1" />

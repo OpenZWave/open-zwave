@@ -25,6 +25,8 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+				Description="Export GIT Revision"
+				CommandLine="del ..\winversion.cpp&#x0D;&#x0A;CALL &quot;$(ProjectDir)\..\GIT-VS-VERSION-GEN.bat&quot; &quot;$(ProjectDir)\&quot; &quot;..\winversion.cpp&quot;&#x0D;&#x0A;exit 0&#x0D;&#x0A;"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -90,6 +92,8 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+				Description="Export GIT Revision"
+				CommandLine="del ..\winversion.cpp&#x0D;&#x0A;CALL &quot;$(ProjectDir)\..\GIT-VS-VERSION-GEN.bat&quot; &quot;$(ProjectDir)\&quot; &quot;..\winversion.cpp&quot;&#x0D;&#x0A;exit 0&#x0D;&#x0A;"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -153,6 +157,8 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+				Description="Export GIT Revision"
+				CommandLine="del ..\winversion.cpp&#x0D;&#x0A;CALL &quot;$(ProjectDir)\..\GIT-VS-VERSION-GEN.bat&quot; &quot;$(ProjectDir)\&quot; &quot;..\winversion.cpp&quot;&#x0D;&#x0A;exit 0&#x0D;&#x0A;"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -225,6 +231,8 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+				Description="Export GIT Revision"
+				CommandLine="del ..\winversion.cpp&#x0D;&#x0A;CALL &quot;$(ProjectDir)\..\GIT-VS-VERSION-GEN.bat&quot; &quot;$(ProjectDir)\&quot; &quot;..\winversion.cpp&quot;&#x0D;&#x0A;exit 0&#x0D;&#x0A;"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -341,6 +349,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\Notification.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\Notification.h"
 				>
 			</File>
@@ -366,6 +378,18 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\Utils.h"
+				>
+			</File>
+			<File
+				RelativePath="..\winversion.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\ZWSecurity.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\ZWSecurity.h"
 				>
 			</File>
 		</Filter>
@@ -725,6 +749,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\command_classes\CentralScene.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\command_classes\CentralScene.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\command_classes\ClimateControlSchedule.cpp"
 				>
 			</File>
@@ -738,6 +770,14 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\command_classes\Clock.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\command_classes\Color.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\command_classes\Color.h"
 				>
 			</File>
 			<File
@@ -778,6 +818,30 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\command_classes\CRC16Encap.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\command_classes\DeviceResetLocally.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\command_classes\DeviceResetLocally.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\command_classes\DoorLock.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\command_classes\DoorLock.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\command_classes\DoorLockLogging.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\command_classes\DoorLockLogging.h"
 				>
 			</File>
 			<File
@@ -845,6 +909,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\command_classes\MultiChannelAssociation.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\command_classes\MultiChannelAssociation.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\command_classes\MultiCmd.cpp"
 				>
 			</File>
@@ -858,14 +930,6 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\command_classes\MultiInstance.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\command_classes\MultiInstanceAssociation.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\command_classes\MultiInstanceAssociation.h"
 				>
 			</File>
 			<File
@@ -914,6 +978,14 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\command_classes\SceneActivation.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\command_classes\Security.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\command_classes\Security.h"
 				>
 			</File>
 			<File
@@ -1021,6 +1093,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\command_classes\TimeParameters.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\command_classes\TimeParameters.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\command_classes\UserCode.cpp"
 				>
 			</File>
@@ -1044,6 +1124,14 @@
 				RelativePath="..\..\..\src\command_classes\WakeUp.h"
 				>
 			</File>
+			<File
+				RelativePath="..\..\..\src\command_classes\ZWavePlusInfo.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\command_classes\ZWavePlusInfo.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="HIDAPI"
@@ -1054,6 +1142,46 @@
 			</File>
 			<File
 				RelativePath="..\..\..\hidapi\hidapi\hidapi.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="AES"
+			>
+			<File
+				RelativePath="..\..\..\src\aes\aes.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\aes\aes_modes.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\aes\aescrypt.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\aes\aeskey.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\aes\aesopt.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\aes\aestab.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\aes\aestab.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\aes\brg_endian.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\aes\brg_types.h"
 				>
 			</File>
 		</Filter>
