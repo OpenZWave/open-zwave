@@ -322,7 +322,7 @@ bool UserCode::SetValue
 			Z-Wave Command Class Specification N-Z.pdf (pg 333 of 420) specifies fields[4] must equal [0,0,0,0] when status is 'Available'
 			Otherwise, we are sending non-zero data with status set to UserCode_Occupied.
 		*/
-		if ((len == 4) && (*(uint32*)s == 0))
+		if ((len >= 4) && (*(uint32*)s == 0))
 		{
 			status = UserCode_Available;
 		}
