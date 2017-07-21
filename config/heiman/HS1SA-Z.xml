@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-CO Sensor DX1CA-Z
-http://products.z-wavealliance.org/products/1940
+Smart Smoke Sensor HS1SA-Z
+http://products.z-wavealliance.org/products/1936
 -->
 <Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
     <!-- Association Groups -->

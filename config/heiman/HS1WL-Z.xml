@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Flood Sensor DX1WL-Z
+Flood Sensor HS1WL-Z
 http://products.z-wavealliance.org/products/2322
 -->
 <Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
