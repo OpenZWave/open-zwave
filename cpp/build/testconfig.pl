@@ -128,8 +128,14 @@ foreach my $group ($data->{CommandClass}->{133}->{Associations}->{Group})
      foreach my $valueItem ($data->{CommandClass}->{112}->{Value}) {
          if (defined($valueItem)) {
              foreach my $configuration (@{$valueItem}) {
-                 if ((defined($configuration->{type})) && (lc $configuration->{type} eq "list") && (not defined($configuration->{size}))) {
+                if ((defined($configuration->{type})) && (lc $configuration->{type} eq "list") && (not defined($configuration->{size}))) {
                     LogError($_[0], 2, "Parameter: $configuration->{index} The size must be set for a list");
+                }
+                if ((defined($configuration->{type})) && (lc $configuration->{type} eq "bitset") && (not defined($configuration->{size}))) {
+                    LogError($_[0], 2, "Parameter: $configuration->{index} The size must be set for a bitset");
+                }
+                if ((defined($configuration->{type})) && (lc $configuration->{type} eq "bitset") && (not defined($configuration->{bitmask}))) {
+                    LogError($_[0], 2, "Parameter: $configuration->{index} The bitmask must be set for a bitset");
                 }
                 if ((defined($configuration->{type})) && (lc $configuration->{type} eq "byte") && (defined($configuration->{size}) && ($configuration->{size} != 1 ))) {
                     LogError($_[0], 2, "Parameter: $configuration->{index} The size is wrong for a byte");

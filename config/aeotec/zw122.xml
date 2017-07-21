@@ -3,7 +3,7 @@
 Aeotec ZW122 Water Sensor 6
 http://products.z-wavealliance.org/products/2437
 -->
-<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="2">
 	<!-- Basic get not supported -->
 	<CommandClass id="32" getsupported="false"/>
 	<!-- COMMAND_CLASS_BINARY_SENSOR. This class is in the list reported by the device, but it does not respond to requests-->
@@ -91,15 +91,13 @@ http://products.z-wavealliance.org/products/2437
 			<Item label="Disabled" value="0"/>
 			<Item label="Enabled" value="1"/>
 		</Value>
-		<Value type="byte" genre="config" instance="1" index="87" label="Sensor is triggered the buzzer will alarm" size="1" min="0" max="55" value="55">
+		<Value type="bitset" genre="config" instance="1" index="87" label="Sensor is triggered the buzzer will alarm" size="4" min="0" max="55" value="55" bitmask="55">
 			<Help>
-				To set which sensor is triggered the buzzer will alarm.
-				1 If the Water leak is triggered, the buzzer will alarm.
-				2 If the vibration is triggered, the buzzer will alarm.
-				4 If the tilt sensor is triggered, the buzzer will alarm.
-				16 If the under heat is triggered, the buzzer will alarm.
-				32 If the overheat is triggered, the buzzer will alarm.
-				Note: if the value = 1+2+4+16+32=55, which means if any sensor is triggered, the buzzer will alarm.
+				<BitSet id="1" label="Water Leak">If the Water leak is triggered, the buzzer will alarm.</BitSet>
+				<BitSet id="2" label="Vibration">If the vibration is triggered, the buzzer will alarm.</BitSet>
+				<BitSet id="3" label="Tilt Sensor">If the Tilt Sensor is triggered, the buzzer will alarm.</BitSet>
+				<BitSet id="5" label="UnderHeat">If the Under Heat Temperature is triggered, the buzzer will alarm.</BitSet>
+				<BitSet id="6" label="OverHeat">If the Over Heat Temperature is triggered, the buzzer will alarm.</BitSet>
 			</Help>
 		</Value>
 		<Value type="list" genre="config" instance="1" index="88" label="Probe 1 Basic Set on grp 3" min="0" max="2" size="1" value="0">

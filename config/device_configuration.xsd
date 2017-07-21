@@ -252,6 +252,7 @@
 	 <xs:enumeration value='string'/>
 	 <xs:enumeration value='button'/>
 	 <xs:enumeration value='raw'/>
+	 <xs:enumeration value='bitset'/>
        </xs:restriction>
      </xs:simpleType>
    </xs:attribute>
@@ -274,6 +275,7 @@
    <xs:attribute name='max' type='xs:string' use='optional'/>
    <xs:attribute name='vindex' type='xs:string' use='optional'/>
    <xs:attribute name='value' type='xs:string' use='optional'/>
+   <xs:attribute name='bitmask' type='xs:string' use='optional'/>
    <xs:attribute name='length' type='xs:string' use='optional'/>
    <xs:attribute name='read_only' use='optional'>
     <xs:simpleType>
@@ -306,8 +308,19 @@
 
  <xs:element name='Help'>
   <xs:complexType mixed='true'>
+    <xs:sequence>
+      <xs:element ref="Product:BitSet" minOccurs='0' maxOccurs='unbounded'/>
+    </xs:sequence>
   </xs:complexType>
  </xs:element>
+
+ <xs:element name='BitSet'>
+  <xs:complexType mixed='true'>
+   <xs:attribute name='label' type='xs:string' use='required'/>
+   <xs:attribute name='id' type='xs:string' use='required'/>
+  </xs:complexType>
+ </xs:element>
+ 
 
  <xs:element name='Item'>
   <xs:complexType>

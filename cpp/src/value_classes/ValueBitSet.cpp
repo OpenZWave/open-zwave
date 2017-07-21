@@ -165,21 +165,21 @@ void ValueBitSet::ReadXML
 	TiXmlElement const *helpElement = _valueElement->FirstChildElement("Help");
 	TiXmlElement const *BitSetHelpElement = helpElement->FirstChildElement("BitSet");
 	while (BitSetHelpElement) {
-		uint8 id = 0;
+		uint32 id = 0;
 		if( TIXML_SUCCESS == BitSetHelpElement->QueryIntAttribute( "id", &intVal ) )
 			{
-				id = (uint8)intVal;
-				char const* label = _valueElement->Attribute( "label" );
+				id = (uint32)intVal;
+				char const* label = BitSetHelpElement->Attribute( "label" );
 				if( label )
 				{
 					m_BitLabelString[id] = label;
 				}
 				string helpstring = BitSetHelpElement->GetText();
 				m_BitHelpString[id] = helpstring;
+				std::cout << "Pos: " << (int32)id << " " << m_BitLabelString.at(id) << " " << m_BitHelpString.at(id) << std::endl;
 			}
 		BitSetHelpElement = BitSetHelpElement->NextSiblingElement("BitSet");
 	}
-
 }
 
 //-----------------------------------------------------------------------------
@@ -204,6 +204,10 @@ void ValueBitSet::WriteXML
 	_valueElement->SetAttribute( "size", str );
 
 	TiXmlElement *helpElement = _valueElement->FirstChildElement("Help");
+	if (!helpElement) {
+		helpElement = new TiXmlElement( "Help" );
+		_valueElement->LinkEndChild( helpElement );
+	}
 	for (std::map<uint8, string>::iterator it = m_BitHelpString.begin(); it != m_BitHelpString.end(); ++it) {
 		TiXmlElement* BitSethelpElement = new TiXmlElement( "BitSet" );
 		BitSethelpElement->SetAttribute("id", it->first);
@@ -339,7 +343,7 @@ bool ValueBitSet::isValidBit
 		uint8 _idx
 ) const
 {
-	if (((m_BitMask) & (1 << _idx)) == 0)
+	if (((m_BitMask) & (1 << (_idx -1))) == 0)
 		return false;
 	return true;
 }
@@ -350,10 +354,14 @@ string ValueBitSet::GetBitLabel
 )
 {
 	if (isValidBit(_idx)) {
-		return m_BitLabelString.at(_idx);
+		if (m_BitLabelString.find(_idx) == m_BitLabelString.end()) {
+			Log::Write(LogLevel_Warning, m_id.GetNodeId(), "GetBitLabel: Bit %d does not have a Label", _idx);
+			return "Reserved";
+		} else
+			return m_BitLabelString.at(_idx);
 	}
 	Log::Write(LogLevel_Warning, m_id.GetNodeId(), "GetBitLabel: Bit %d is not valid with BitMask %d", _idx, m_BitMask);
-	return "";
+	return "Reserved";
 
 }
 bool ValueBitSet::SetBitLabel
