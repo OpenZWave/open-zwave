@@ -7269,19 +7269,20 @@ void Driver::ReloadNode
 		TiXmlNode * nodeElement = driverElement->FirstChild();
 		while( nodeElement )
 		{
-			char const* str = nodeElement->ToElement()->Value();
-			if( str && !strcmp( str, "Node" ) )
-			{
-				// Get the node Id from the XML
-				if( TIXML_SUCCESS == nodeElement->ToElement()->QueryIntAttribute( "id", &intVal ) )
+			if (nodeElement->ToElement()) {
+				char const* str2 = nodeElement->ToElement()->Value();
+				if( str2 && !strcmp( str2, "Node" ) )
 				{
-					if (intVal == _nodeId)
-						driverElement->RemoveChild(nodeElement);
+					// Get the node Id from the XML
+					if( TIXML_SUCCESS == nodeElement->ToElement()->QueryIntAttribute( "id", &intVal ) )
+					{
+						if (intVal == _nodeId)
+							driverElement->RemoveChild(nodeElement);
+					}
 				}
 			}
+			nodeElement = nodeElement->NextSibling();
 		}
-
-		nodeElement = nodeElement->NextSibling();
 	}
 	doc.SaveFile(filename.c_str());
 	LG.Unlock();

@@ -56,6 +56,8 @@
 #endif
 
 #include "platform/HttpClient.h"
+#include "platform/Log.h"
+#include "Utils.h"
 
 #define SOCKETVALID(s) ((s) != INVALID_SOCKET)
 
@@ -909,13 +911,6 @@ bool TcpSocket::update
 // ==========================
 #ifdef MINIHTTP_SUPPORT_HTTP
 
-static void strToLower
-(
-std::string& s
-)
-{
-    std::transform(s.begin(), s.end(), s.begin(), tolower);
-}
 
 POST& POST::add
 (
@@ -1304,7 +1299,7 @@ size_t size
         while(isspace(*val) && val < valEnd) // skip spaces after the colon
             ++val;
         std::string key(s, colon - s);
-        strToLower(key);
+        key = ToLower(key);
         std::string valstr(val, valEnd - val);
         _hdrs[key] = valstr;
         traceprint("HDR: %s: %s\n", key.c_str(), valstr.c_str());
@@ -1487,7 +1482,10 @@ void HttpSocket::_OnRecv(void *buf, unsigned int size)
         if (!_pFile) {
         	_pFile = fopen( _filename.c_str(), "w" );
         }
-
+        if (!_pFile) {
+        	Log::Write(LogLevel_Error, "Failed to open file %s: %s", _filename.c_str(), strerror(errno));
+        	return;
+        }
 
         fwrite(buf, size, 1, _pFile );
     }
