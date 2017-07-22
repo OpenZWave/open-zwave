@@ -703,6 +703,7 @@
 		<Product type="3601" id="0001" name="Leviton DZPA1 Plugin Outlet" config="leviton/dz15s.xml"/>
 	</Manufacturer>
 	<Manufacturer id="014f" name="Linear">
+		<Product type="2001" id="0102" name="WADWAZ-1 Door/Window Sensor" config="linear/WADWAZ-1.xml"/>
 		<Product type="2002" id="0203" name="WAPIRZ-1 Motion Sensor" config="linear/WAPIRZ-1.xml"/>
 		<Product type="2009" id="0903" name="WA105DBZ-1 Main Operated Siren" config="linear/WA105DBZ-1.xml"/>
 		<Product type="4450" id="3030" name="PD300Z-2 Plug-in Dimmer Module" config="linear/PD300Z-2.xml"/>
