@@ -132,7 +132,8 @@ bool ZWManager::GetValueAsDecimal
 	if( Manager::Get()->GetValueAsString(id->CreateUnmanagedValueID(), &value ) )
 	{
 		String^ decimal = gcnew String(value.c_str());
-		o_value = Decimal::Parse( decimal );
+		// Use InvariantCulture to avoid problems on systems not using . (period) as decimal point
+		o_value = Decimal::Parse( decimal, System::Globalization::CultureInfo::InvariantCulture); 
 		return true;
 	}
 	return false;
