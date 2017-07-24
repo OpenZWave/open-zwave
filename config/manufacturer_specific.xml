@@ -1183,9 +1183,9 @@
 		<Product type="0003" id="0088" name="ZSE33 Smart Chime" config="zooz/zse33.xml" />
 	</Manufacturer>
 	<Manufacturer id="015d" name="Zooz">
-		<Product type="0651" id="f51c" name="ZEN20 Power Strip" />
-		<Product type="1111" id="1e1c" name="ZEN23 Toggle Switch" />
-		<Product type="0111" id="1f1c" name="ZEN24 Dimmer Switch" />
+		<Product type="0651" id="f51c" name="ZEN20 Power Strip" config="zooz/zen20.xml" />
+		<Product type="1111" id="1e1c" name="ZEN23 Toggle Switch" config="zooz/zen23.xml" />
+		<Product type="0111" id="1f1c" name="ZEN24 Dimmer Switch" config="zooz/zen24.xml" />
 	</Manufacturer>
 	<Manufacturer id="0021" name="Zykronix">
 	</Manufacturer>
