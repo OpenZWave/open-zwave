@@ -1184,6 +1184,8 @@
 	</Manufacturer>
 	<Manufacturer id="015d" name="Zooz">
 		<Product type="0651" id="f51c" name="ZEN20 Power Strip" />
+		<Product type="1111" id="1e1c" name="ZEN23 Toggle Switch" />
+		<Product type="0111" id="1f1c" name="ZEN24 Dimmer Switch" />
 	</Manufacturer>
 	<Manufacturer id="0021" name="Zykronix">
 	</Manufacturer>
