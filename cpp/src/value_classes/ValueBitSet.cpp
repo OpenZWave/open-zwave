@@ -104,7 +104,7 @@ bool ValueBitSet::GetBit
 ) const
 {
 	if (isValidBit(_idx))
-		return m_value.IsSet(_idx);
+		return m_value.IsSet(_idx-1);
 	Log::Write(LogLevel_Warning, m_id.GetNodeId(), "GetBit Index %d is not valid with BitMask %d", _idx, m_BitMask);
 	return false;
 
@@ -176,7 +176,6 @@ void ValueBitSet::ReadXML
 				}
 				string helpstring = BitSetHelpElement->GetText();
 				m_BitHelpString[id] = helpstring;
-				std::cout << "Pos: " << (int32)id << " " << m_BitLabelString.at(id) << " " << m_BitHelpString.at(id) << std::endl;
 			}
 		BitSetHelpElement = BitSetHelpElement->NextSiblingElement("BitSet");
 	}
@@ -232,7 +231,6 @@ bool ValueBitSet::Set
 		return false;
 	}
 
-
 	// create a temporary copy of this value to be submitted to the Set() call and set its value to the function param
   	ValueBitSet* tempValue = new ValueBitSet( *this );
 	tempValue->m_value.SetValue(_value);
@@ -253,7 +251,6 @@ bool ValueBitSet::SetBit
 {
 	/* is the bits valid */
 	if (!isValidBit(_idx)) {
-		std::cout << "notok" << std::endl;
 		Log::Write(LogLevel_Warning, m_id.GetNodeId(), "SetBit: Bit %d is not valid with BitMask %d", _idx, m_BitMask);
 		return false;
 	}
@@ -261,7 +258,7 @@ bool ValueBitSet::SetBit
 
 	// create a temporary copy of this value to be submitted to the Set() call and set its value to the function param
   	ValueBitSet* tempValue = new ValueBitSet( *this );
-	tempValue->m_value.Set(_idx);
+	tempValue->m_value.Set(_idx -1);
 
 	// Set the value in the device.
 	bool ret = ((Value*)tempValue)->Set();
@@ -285,7 +282,7 @@ bool ValueBitSet::ClearBit
 
 	// create a temporary copy of this value to be submitted to the Set() call and set its value to the function param
   	ValueBitSet* tempValue = new ValueBitSet( *this );
-	tempValue->m_value.Clear(_idx);
+	tempValue->m_value.Clear(_idx -1);
 
 	// Set the value in the device.
 	bool ret = ((Value*)tempValue)->Set();
@@ -408,10 +405,10 @@ void ValueBitSet::OnValueRefreshed
 	case 0:		// value hasn't changed, nothing to do
 		break;
 	case 1:		// value has changed (not confirmed yet), save _value in m_valueCheck
-		m_valueCheck = _value;
+		m_valueCheck.SetValue(_value);
 		break;
 	case 2:		// value has changed (confirmed), save _value in m_value
-		m_value = _value;
+        m_value.SetValue(_value);
 		break;
 	case 3:		// all three values are different, so wait for next refresh to try again
 		break;

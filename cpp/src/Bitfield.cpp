@@ -58,8 +58,10 @@ Bitfield::~Bitfield()
 
 bool Bitfield::SetValue(uint32 val) {
 	for (unsigned int i = 0; i < 8 * sizeof(uint32); i++) {
-		if (m_value & (1 << i)) {
+		if (val & (1 << i)) {
 			Set(i);
+		} else {
+			Clear(i);
 		}
 	}
 	return true;
