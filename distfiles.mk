@@ -266,6 +266,7 @@ DISTFILES =	.gitignore \
 	config/linear/PD300Z-2.xml \
 	config/linear/WA00Z-1.xml \
 	config/linear/WA105DBZ-1.xml \
+	config/linear/WADWAZ-1.xml \
 	config/linear/WAPIRZ-1.xml \
 	config/linear/WD500Z-1.xml \
 	config/linear/WS15Z-1.xml \
@@ -363,8 +364,8 @@ DISTFILES =	.gitignore \
 	config/remotec/zts-110.xml \
 	config/remotec/zurc.xml \
 	config/remotec/zxt-120.xml \
-	config/schlage/BE468CAM619.xml \
-	config/schlage/BE469NXCEN.xml \
+	config/schlage/BE468.xml \
+	config/schlage/BE469.xml \
 	config/schlagelink/itemp.xml \
 	config/schlagelink/minikeypad.xml \
 	config/sensative/strips.xml \
