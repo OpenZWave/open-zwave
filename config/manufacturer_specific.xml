@@ -1099,6 +1099,7 @@
 		<Product type="0003" id="0003" name="TZ56 Wall Switch On/Off" config="wenzhou/tz56.xml"/>
 		<Product type="0003" id="0004" name="TZ55 Wall Switch Dimmer" config="wenzhou/tz55.xml"/>
 		<Product type="0004" id="0002" name="TZ69 Smart energy plug in switch" config="wenzhou/tz69.xml"/>
+		<Product type="0311" id="0103" name="TZ69E Smart energy plug in switch" config="wenzhou/tz69.xml"/>
 		<Product type="0116" id="3119" name="TZ69F Smart energy plug in switch" config="wenzhou/tz69.xml"/>
 		<Product type="000b" id="0001" name="ST812 Flood Detector" config="everspring/st812.xml"/>
 		<Product type="0808" id="0808" name="TZ65 Dual Wall Dimmer" config="wenzhou/tz65d.xml"/>
