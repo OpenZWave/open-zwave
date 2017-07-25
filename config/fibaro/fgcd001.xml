@@ -49,7 +49,7 @@
 			<Help>
 				Parameter defines how commands are sent in specified association groups: as secure or non-secure. 
 				Parameter is active only in Z-Wave network security mode. 
-				It does not apply to 1st “Lifeline” association group.
+				It does not apply to 1st Lifeline association group.
 				Available settings: 
 				1 - 2nd group sent as secure.
 				2 - 3rd group sent as secure.
@@ -58,7 +58,7 @@
 				16 - 6th group sent as secure.
 				32 - 7th group sent as secure.
 				Default setting: 63.
-				NOTE Parameter 7 values may be combined, e.g. 1+2=3 means that 2nd & 3rd group are sent as secure.
+				NOTE Parameter 7 values may be combined, e.g. 1+2=3 means that 2nd and 3rd group are sent as secure.
 			</Help>
 		</Value>
 		<Value type="list" genre="config" instance="1" index="10" label="Commands sent to 2nd association group (CO Alarm)" min="0" max="2" value="3" size="1">
@@ -127,7 +127,7 @@
 		<Value type="byte" genre="config" instance="1" index="21" label="Temperature report hysteresis" value="2" min="1" max="20" >
 			<Help>
 				This parameter defines a minimum change in temperature resulting in a report being sent to the main Z-Wave controller.
-				Available settings: 1-20 (0.5C - 10°C, each 0.5C)
+				Available settings: 1-20 (0.5C - 10C, each 0.5C)
 				Default setting: 2 (1C) P</Help>
 		</Value>
 		<Value type="byte" genre="config" instance="1" index="22" label="Threshold of exceeding the temperature" units="Celsius" value="55" min="1" max="85" size="1">
