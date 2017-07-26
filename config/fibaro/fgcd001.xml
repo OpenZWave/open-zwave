@@ -17,25 +17,27 @@
 			<Item label="Exceeding temperature threshold notification enabled" value="2" />
 			<Item label="All notifications enabled" value="3" />
 		</Value>
-		<Value type="list" genre="config" instance="1" index="3" label="LED diode indications" min="0" max="4" value="0" size="1">
+		<Value type="byte" genre="config" instance="1" index="3" label="LED diode indications" min="0" max="4" value="0" size="1">
 			<Help>
 				This parameter allows to set the actions which result in LED diode indications.
+				0=All actions disabled.
+				1=Tampering (opened casing).
+				2=Exceeding the temperature.
+				4=Lack of Z-Wave range.
 				This parameter does not apply to the most important actions, such as CO Alarm, Malfunction Alarm and Low Battery Alarm.
+				NOTE: Parameter 3 values may be combined, e.g. 1+2+4=7 means that all actions will be active.
 			</Help>
-			<Item label="All actions disabled" value="0" />
-			<Item label="Tampering (opened casing)" value="1" />
-			<Item label="Exceeding the temperature" value="2" />
-			<Item label="Lack of Z-Wave range" value="4" />
 		</Value>
-		<Value type="list" genre="config" instance="1" index="4" label="Acoustic signals" min="0" max="4" value="0" size="1">
+		<Value type="byte" genre="config" instance="1" index="4" label="Acoustic signals" min="0" max="4" value="0" size="1">
 			<Help>
 				This parameter allows to set the actions which result in acoustic signals.
+				0=All actions disabled.
+				1=Tampering (opened casing).
+				2=Exceeding the temperature.
+				4=Lack of Z-Wave range.
 				This parameter does not apply to the most important actions, such as CO Alarm, Malfunction Alarm and Low Battery Alarm.
+				NOTE: Parameter 4 values may be combined, e.g. 1+2+4=7 means that all actions will be active.
 			</Help>
-			<Item label="all actions disabled" value="0" />
-			<Item label="tampering (opened casing)" value="1" />
-			<Item label="exceeding the temperature" value="2" />
-			<Item label="lack of Z-Wave range" value="4" />
 		</Value>
 		<Value type="byte" genre="config" instance="1" index="7" label="Associations in Z-Wave network security mode" min="0" max="63" value="63">
 			<Help>
