@@ -1046,6 +1046,15 @@ bool Driver::WriteNextMsg
 		{
 			m_queueEvent[_queue]->Reset();
 		}
+		if (m_nonceReportSent > 0) {
+			MsgQueueItem item_new;
+			item_new.m_command = MsgQueueCmd_SendMsg;
+			item_new.m_nodeId = item.m_msg->GetTargetNodeId();
+			item_new.m_retry = item.m_retry;
+			item_new.m_msg = new Msg(*item.m_msg);
+			m_msgQueue[_queue].push_front(item_new);
+			m_queueEvent[_queue]->Set();
+		}
 		m_sendMutex->Unlock();
 		return WriteMsg( "WriteNextMsg" );
 	}
