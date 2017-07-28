@@ -1108,8 +1108,8 @@ bool Driver::WriteNextMsg
 			if( m_currentControllerCommand->m_controllerCallback )
 			{
 				m_currentControllerCommand->m_controllerCallback( m_currentControllerCommand->m_controllerState, m_currentControllerCommand->m_controllerReturnError, m_currentControllerCommand->m_controllerCallbackContext );
-				m_currentControllerCommand->m_controllerStateChanged = false;
 			}
+			m_currentControllerCommand->m_controllerStateChanged = false;
 		}
 		else
 		{
