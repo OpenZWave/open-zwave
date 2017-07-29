@@ -793,7 +793,7 @@
 	</Manufacturer>
 	<Manufacturer id="0083" name="MTC Maintronic">
 	</Manufacturer>
-	<Manufacturer id="0258" name="Neo CoolCam">
+	<Manufacturer id="0258" name="Neo Coolcam">
 		<Product type="0003" id="1082" name="Door/Window Detector" config="shenzen_neo/nas-ds01z.xml"/>
 		<Product type="0003" id="0082" name="Door/Window Detector" config="shenzen_neo/nas-ds01z.xml"/>
 		<Product type="0003" id="0087" name="Power plug 12A" config="shenzen_neo/nas-wr01z.xml"/>
@@ -804,6 +804,7 @@
 		<Product type="0003" id="6085" name="Water Leakage Detector" config="shenzen_neo/nas-ws02z.xml"/>
 		<Product type="0003" id="0088" name="Siren Alarm" config="shenzen_neo/nas-ab01z.xml"/>
 		<Product type="0003" id="1088" name="Siren Alarm" config="shenzen_neo/nas-ab01z.xml"/>
+		<Product type="0003" id="108c" name="1CH Wall Switch" config="shenzen_neo/nas-sc01ze.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0178" name="Nexia">
 		<!-- full name in Z-wave database: Ingersoll Rand - Nexia Home Intelligence -->
