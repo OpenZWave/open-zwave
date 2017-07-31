@@ -646,6 +646,11 @@
 		<Product type="0001" id="0002" name="RAone SmartPower Wall Appliance Module"/>
 		<Product type="0001" id="0001" name="RAone SmartDimmer Wall Dimmer Module"/>
 	</Manufacturer>
+	<Manufacturer id="0312" name="Inovelli">
+		<Product type="b211" id="241c" name="NZW36 Smart Plug-In Module (1 Channel)"/>
+		<Product type="b221" id="251c" name="NZW37 Smart Plug-In Module (2 Channel)"/>
+		<Product type="b212" id="271c" name="NZW39 Smart Plug (Dimmer)"/>
+	</Manufacturer>
 	<Manufacturer id="0006" name="Intel">
 	</Manufacturer>
 	<Manufacturer id="001c" name="IntelliCon">
