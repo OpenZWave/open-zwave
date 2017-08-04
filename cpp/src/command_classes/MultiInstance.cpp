@@ -533,6 +533,15 @@ void MultiInstance::HandleMultiChannelCapabilityReport
 				CommandClass* cc = node->GetCommandClass( commandClassId );
 				if( cc )
 				{
+					// get instance gets an instance for an endpoint
+					// but i'm only interested if there is a related instance for an endpoint and not in the actual result
+					// soo if the result is != 0, the endpoint is already handled
+					bool endpointAlreadyHandled = cc->GetInstance( endPoint ) != 0 ; 
+					if ( endpointAlreadyHandled )
+					{
+						Log::Write( LogLevel_Warning, GetNodeId(), "Received MultiChannelCapabilityReport from node %d for endpoint %d - Endpoint already handled for CommandClass %d", GetNodeId(), endPoint, cc->GetCommandClassId() );
+						continue;
+					}
 					uint8 i;
 					// Find the next free instance of this class
 					for( i = 1; i <= 127; i++ )
