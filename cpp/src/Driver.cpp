@@ -4548,14 +4548,14 @@ uint32 Driver::GetNodePacketDelay
         uint8 const _nodeId
 )
 {
-    uint16 tsleep = 0;
+    uint32 t_delay= 0;
     LockGuard LG(m_nodeMutex);
     if( Node* node = GetNode( _nodeId ) )
     {
-        tsleep = node->GetPacketDelay();
+        t_delay = node->GetPacketDelay();
     }
 
-    return tsleep;
+    return t_delay;
 }
 //-----------------------------------------------------------------------------
 // <Driver::GetNodeVersion>
