@@ -512,6 +512,9 @@
 	<Manufacturer id="0137" name="Followgood">
 		<Product type="3001" id="0002" name="SWZ-1002 Binary Power Switch"/>
 	</Manufacturer>
+	<Manufacturer id="0207" name="Forest Group Nederland B.V.">
+		<Product type="0027" id="0100" name="Shuttle L Z-Wave" config="forest/fs2z5232000002.xml"/>
+	</Manufacturer>
 	<Manufacturer id="0084" name="FortrezZ">
 		<Product type="0021" id="010a" name="WWA-02 Water and Temperature Alarm" config="fortrezz/wwa02.xml"/>
 		<Product type="0241" id="0300" name="WV-01 Automated Water Shut-Off Valve" config="fortrezz/wv01.xml"/>
