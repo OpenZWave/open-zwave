@@ -13,7 +13,7 @@
         </Value>
         <Value type="byte" genre="config" index="2" label="Audio Alarm Beep Interval" size="1" min="1" max="255" units="minutes" value="1">
           <Help>
-            Set the beeping frequency for the sensor’s audio alarm.
+            Set the beeping frequency for the sensors audio alarm.
             The interval between beeps can be as low as 1 minute.
           </Help>
         </Value>
@@ -47,7 +47,7 @@
         You can choose if your Water Sensor turns an associated device on or off when sending the basic set command. 
         Use value 0 to turn the associated device OFF and value 255 to turn it ON.
         Adjust brightness level for a Z-Wave dimmer (Multilevel switch) by putting in any value between 1 and 99. 
-        Values: 0 – OFF; 1 – 99 (% of light); 255 - ON (default).
+        Values: 0 - OFF; 1 - 99 (% of light); 255 - ON (default).
       </Help>
     </Value>        
     </CommandClass>
