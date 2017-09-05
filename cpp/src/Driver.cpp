@@ -173,6 +173,9 @@ m_pollThread( new Thread( "poll" ) ),
 m_pollMutex( new Mutex() ),
 m_pollInterval( 0 ),
 m_bIntervalBetweenPolls( false ),				// if set to true (via SetPollInterval), the pollInterval will be interspersed between each poll (so a much smaller m_pollInterval like 100, 500, or 1,000 may be appropriate)
+m_timerThread( new Thread( "timer" ) ),
+m_timerEvent( new Event() ),
+m_timerMutex( new Mutex() ),
 m_currentControllerCommand( NULL ),
 m_SUCNodeId( 0 ),
 m_controllerResetEvent( NULL ),
@@ -558,6 +561,7 @@ bool Driver::Init
 
 	// Controller opened successfully, so we need to start all the worker threads
 	m_pollThread->Start( Driver::PollThreadEntryPoint, this );
+	m_timerThread->Start( Driver::TimerThreadEntryPoint, this );
 
 	// Send a NAK to the ZWave device
 	uint8 nak = NAK;
@@ -4354,6 +4358,107 @@ void Driver::PollThreadProc
 			}
 		}
 	}
+}
+
+
+//-----------------------------------------------------------------------------
+//	Timer based actions
+//-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+// <Driver::TimerThreadEntryPoint>
+// Entry point of the thread for timer based actions
+//-----------------------------------------------------------------------------
+void Driver::TimerThreadEntryPoint
+(
+		Event* _exitEvent,
+		void* _context
+)
+{
+	Driver* driver = (Driver*)_context;
+	if( driver )
+	{
+		driver->TimerThreadProc( _exitEvent );
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::TimerThreadProc>
+// Thread for timer based actions
+//-----------------------------------------------------------------------------
+void Driver::TimerThreadProc
+(
+		Event* _exitEvent
+)
+{
+	Log::Write( LogLevel_Info, "Timer thread starting" );
+
+	Wait* waitObjects[2];
+	waitObjects[0] = _exitEvent;
+	waitObjects[1] = m_timerEvent;
+	uint32 count = 2;
+
+	// Initially no timer events so infinite timeout.
+	m_timerTimeout = Wait::Timeout_Infinite;
+
+	while( 1 )
+	{
+		Log::Write( LogLevel_Detail, "Timer thread waiting with timeout %d", m_timerTimeout );
+		int32 res = Wait::Multiple( waitObjects, count, m_timerTimeout );
+
+		if (res == 0)
+		{
+			// Exit has been signalled
+			return;
+
+		} else {
+			// Timeout or new entry to timer list.
+			m_timerTimeout = Wait::Timeout_Infinite;
+
+			// Go through all waiting actions, and see if any need to be performed.
+			m_timerMutex->Lock();
+			list<TimerWakeUpEntry *>::iterator it = m_timerWakeUpList.begin();
+			while( it != m_timerWakeUpList.end() ) {
+				int32 tr = (*it)->timestamp.TimeRemaining();
+				if (tr <= 0) {
+					// Expired so perform action and remove from list.
+					Log::Write( LogLevel_Info, "Timer delayed WakeUp event for node %d", (*it)->wakeup->GetNodeId() );
+					(*it)->wakeup->SetAwake( true );
+					delete (*it);
+					it = m_timerWakeUpList.erase( it );
+
+				} else {
+					// Time remaining.
+					m_timerTimeout = (m_timerTimeout == Wait::Timeout_Infinite) ? tr : std::min(m_timerTimeout, tr);
+					++it;
+				}
+			}
+			m_timerEvent->Reset();
+			m_timerMutex->Unlock();
+		}
+	} // while( 1 )
+}
+
+//-----------------------------------------------------------------------------
+// <Driver::TimerSetWakeup>
+//-----------------------------------------------------------------------------
+void Driver::TimerSetWakeup
+(
+		WakeUp *wakeup,
+		int32 milliseconds
+)
+{
+	Log::Write( LogLevel_Info, "Timer adding wakeup event in %d ms", milliseconds );
+	TimerWakeUpEntry *te = new TimerWakeUpEntry();
+	te->timestamp.SetTime(milliseconds);
+	te->wakeup = wakeup;
+
+	// Don't want driver thread and timer thread accessing list at the same time.
+	m_timerMutex->Lock();
+	m_timerWakeUpList.push_back(te);
+	m_timerEvent->Set();
+	m_timerMutex->Unlock();
+	return;
 }
 
 //-----------------------------------------------------------------------------
