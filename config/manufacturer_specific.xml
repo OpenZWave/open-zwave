@@ -313,6 +313,9 @@
 	</Manufacturer>
 	<Manufacturer id="0050" name="Digital 5">
 	</Manufacturer>
+	<Manufacturer id="021f" name="Dome">
+		<Product type="0003" id="0101" name="Door/Window Sensor" config="dome/0101.xml"/>
+	</Manufacturer>
 	<Manufacturer id="020e" name="Domitech">
 		<Product type="4c42" id="3134" name="Smart LED Retrofit Kit ZE27EU" config="domitech/ze27eu.xml"/>
 		<Product type="4c42" id="3135" name="Smart LED Light Bulb ZB22UK" config="domitech/zb22uk.xml"/>
