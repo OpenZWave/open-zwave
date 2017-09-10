@@ -136,7 +136,7 @@ https://aeotec.freshdesk.com/helpdesk/attachments/6048080397
         <Value type="int" index="113" genre="config" label="Send Interval for Reporting Group 3" units="seconds" min="0" max="2147483647" value="600">
             <Help>Defines the time interval when the defined report for group 3 is sent.</Help>
         </Value>
-        <Value type="list" index="120" genre="config" label="Set the external switch mode for S1" units="" min="0" max="3" size="1" value="0">
+        <Value type="list" index="120" genre="config" label="Set the external switch mode for S1" units="" min="0" max="4" size="1" value="0">
             <Help>When the mode is determined, this mode value will not be reset after exclusion</Help>
             <Item label="Unidentified" value="0"/>
             <Item label="2-state switch" value="1"/>
@@ -144,7 +144,7 @@ https://aeotec.freshdesk.com/helpdesk/attachments/6048080397
             <Item label="Momentary button" value="3"/>
             <Item label="Enter automatic identification" value="4"/>
         </Value>
-        <Value type="list" index="121" genre="config" label="Set the external switch mode for S2" units="" min="0" max="3" size="1" value="0">
+        <Value type="list" index="121" genre="config" label="Set the external switch mode for S2" units="" min="0" max="4" size="1" value="0">
             <Help>When the mode is determined, this mode value will not be reset after exclusion</Help>
             <Item label="Unidentified" value="0"/>
             <Item label="2-state switch" value="1"/>
