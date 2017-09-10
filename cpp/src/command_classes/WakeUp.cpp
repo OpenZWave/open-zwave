@@ -38,6 +38,8 @@
 #include "platform/Mutex.h"
 #include "value_classes/ValueInt.h"
 
+#include "tinyxml.h"
+
 using namespace OpenZWave;
 
 enum WakeUpCmd
@@ -64,7 +66,8 @@ WakeUp::WakeUp
 CommandClass( _homeId, _nodeId ),
 m_mutex( new Mutex() ),
 m_awake( true ),
-m_pollRequired( false )
+m_pollRequired( false ),
+m_delayWakeupMilli( 0 )
 {
 	Options::Get()->GetOptionAsBool("AssumeAwake", &m_awake);
 
@@ -94,6 +97,45 @@ WakeUp::~WakeUp
 		m_pendingQueue.pop_front();
 	}
 }
+
+//-----------------------------------------------------------------------------
+// <WakeUp::ReadXML>
+// Read configuration.
+//-----------------------------------------------------------------------------
+void WakeUp::ReadXML
+(
+		TiXmlElement const* _ccElement
+)
+{
+	int32 delayms;
+
+	CommandClass::ReadXML( _ccElement );
+	if( TIXML_SUCCESS == _ccElement->QueryIntAttribute( "wakeupdelayms", &delayms ) )
+	{
+		Log::Write( LogLevel_Info, GetNodeId(), "Delayed Wakeup for node %d of %dms", GetNodeId(), delayms );
+		m_delayWakeupMilli = delayms;
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <WakeUp::WriteXML>
+// Save changed configuration
+//-----------------------------------------------------------------------------
+void WakeUp::WriteXML
+(
+		TiXmlElement* _ccElement
+)
+{
+	CommandClass::WriteXML( _ccElement );
+
+	if( m_delayWakeupMilli > 0 )
+	{
+		char str[32];
+		snprintf( str, sizeof(str), "%d", m_delayWakeupMilli );
+		_ccElement->SetAttribute( "wakeupdelayms", str );
+	}
+}
+
 
 //-----------------------------------------------------------------------------
 // <WakeUp::Init>
@@ -239,8 +281,14 @@ bool WakeUp::HandleMsg
 	else if( WakeUpCmd_Notification == (WakeUpCmd)_data[0] )
 	{
 		// The device is awake.
-		Log::Write( LogLevel_Info, GetNodeId(), "Received Wakeup Notification from node %d", GetNodeId() );
-		SetAwake( true );
+    if (m_delayWakeupMilli > 0) {
+		  Log::Write( LogLevel_Info, GetNodeId(), "Received Wakeup Notification from node %d (delayed)", GetNodeId() );
+		  GetDriver()->TimerSetWakeup(this, m_delayWakeupMilli);
+    } else {
+		  Log::Write( LogLevel_Info, GetNodeId(), "Received Wakeup Notification from node %d", GetNodeId() );
+		  SetAwake( true );
+    }
+
 		return true;
 	}
 	else if( WakeUpCmd_IntervalCapabilitiesReport == (WakeUpCmd)_data[0] )

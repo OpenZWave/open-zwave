@@ -51,6 +51,7 @@ namespace OpenZWave
 	class Thread;
 	class ControllerReplication;
 	class Notification;
+	class WakeUp;
 
 	/** \brief The Driver class handles communication between OpenZWave
 	 *  and a device attached via a serial port (typically a controller).
@@ -370,6 +371,30 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		Mutex*					m_pollMutex;								// Serialize access to the polling list
 		int32					m_pollInterval;								// Time interval during which all nodes must be polled
 		bool					m_bIntervalBetweenPolls;					// if true, the library intersperses m_pollInterval between polls; if false, the library attempts to complete all polls within m_pollInterval
+
+	//-----------------------------------------------------------------------------
+	//  Timer based actions
+	//-----------------------------------------------------------------------------
+	public:
+		void TimerSetWakeup( WakeUp *wakeup, int32 milliseconds );
+
+	private:
+		static void TimerThreadEntryPoint( Event* _exitEvent, void* _context );
+		void TimerThreadProc( Event* _exitEvent );
+
+		struct TimerWakeUpEntry
+		{
+			TimeStamp timestamp;
+			WakeUp *wakeup;
+		};
+OPENZWAVE_EXPORT_WARNINGS_OFF
+		list<TimerWakeUpEntry *> m_timerWakeUpList; // List of nodes that need to be polled
+OPENZWAVE_EXPORT_WARNINGS_ON
+
+		Thread*				m_timerThread;  // Thread for performing actions on a timer
+		Event*				m_timerEvent;   // Event to signal new timed action requested
+		Mutex*				m_timerMutex;   // Serialize access to the timeout members
+		int32					m_timerTimeout; // Time to wait until next event
 
 	//-----------------------------------------------------------------------------
 	//	Retrieving Node information
