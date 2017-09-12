@@ -134,6 +134,7 @@
      </xs:restriction>
     </xs:simpleType>
    </xs:attribute>
+   <xs:attribute name='delay_no_more_info' type='xs:string' use='optional'/>
    <xs:attribute name='version' type='xs:string' use='optional'/>
    <xs:attribute name='request_flags' type='xs:string' use='optional'/>
    <xs:attribute name='endpoints' type='xs:string' use='optional'/>

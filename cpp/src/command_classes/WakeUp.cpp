@@ -34,9 +34,12 @@
 #include "Node.h"
 #include "Notification.h"
 #include "Options.h"
+#include "TimerThread.h"
 #include "platform/Log.h"
 #include "platform/Mutex.h"
 #include "value_classes/ValueInt.h"
+
+#include "tinyxml.h"
 
 using namespace OpenZWave;
 
@@ -64,7 +67,8 @@ WakeUp::WakeUp
 CommandClass( _homeId, _nodeId ),
 m_mutex( new Mutex() ),
 m_awake( true ),
-m_pollRequired( false )
+m_pollRequired( false ),
+m_delayNoMoreInfo( 0 )
 {
 	Options::Get()->GetOptionAsBool("AssumeAwake", &m_awake);
 
@@ -92,6 +96,44 @@ WakeUp::~WakeUp
 			delete item.m_cci;
 		}
 		m_pendingQueue.pop_front();
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <WakeUp::ReadXML>
+// Read configuration.
+//-----------------------------------------------------------------------------
+void WakeUp::ReadXML
+(
+		TiXmlElement const* _ccElement
+)
+{
+	int32 delayms;
+
+	CommandClass::ReadXML( _ccElement );
+	if( TIXML_SUCCESS == _ccElement->QueryIntAttribute( "delay_no_more_info", &delayms ) )
+	{
+		Log::Write( LogLevel_Info, GetNodeId(), "Delayed no more information for node %d of %dms", GetNodeId(), delayms );
+		m_delayNoMoreInfo = delayms;
+	}
+}
+
+//-----------------------------------------------------------------------------
+// <WakeUp::WriteXML>
+// Save changed configuration
+//-----------------------------------------------------------------------------
+void WakeUp::WriteXML
+(
+		TiXmlElement* _ccElement
+)
+{
+	CommandClass::WriteXML( _ccElement );
+
+	if( m_delayNoMoreInfo > 0 )
+	{
+		char str[32];
+		snprintf( str, sizeof(str), "%d", m_delayNoMoreInfo );
+		_ccElement->SetAttribute( "delay_no_more_info", str );
 	}
 }
 
@@ -365,7 +407,7 @@ void WakeUp::SetAwake
 		}
 
 		// Send all pending messages
-		SendPending();
+		SendPending(true);
 	}
 }
 
@@ -421,6 +463,7 @@ void WakeUp::QueueMsg
 //-----------------------------------------------------------------------------
 void WakeUp::SendPending
 (
+		bool allowDelay
 )
 {
 	m_awake = true;
@@ -457,7 +500,6 @@ void WakeUp::SendPending
 	Node* node = GetNodeUnsafe();
 	if( node != NULL )
 	{
-
 		if( !node->AllQueriesCompleted() )
 		{
 			sendToSleep = false;
@@ -465,15 +507,21 @@ void WakeUp::SendPending
 	}
 
 	/* if we are reloading, the QueryStage_Complete will take care of sending the device back to sleep */
-	if( sendToSleep && !reloading)
+	if( sendToSleep && !reloading )
 	{
-		Msg* msg = new Msg( "WakeUpCmd_NoMoreInformation", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-		msg->Append( GetNodeId() );
-		msg->Append( 2 );
-		msg->Append( GetCommandClassId() );
-		msg->Append( WakeUpCmd_NoMoreInformation );
-		msg->Append( GetDriver()->GetTransmitOptions() );
-		GetDriver()->SendMsg( msg, Driver::MsgQueue_WakeUp );
+		if( !allowDelay || m_delayNoMoreInfo == 0 ) {
+			Msg* msg = new Msg( "WakeUpCmd_NoMoreInformation", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+			msg->Append( GetNodeId() );
+			msg->Append( 2 );
+			msg->Append( GetCommandClassId() );
+			msg->Append( WakeUpCmd_NoMoreInformation );
+			msg->Append( GetDriver()->GetTransmitOptions() );
+			GetDriver()->SendMsg( msg, Driver::MsgQueue_WakeUp );
+		} else {
+			Log::Write( LogLevel_Info, GetNodeId(), "  Node %d has delayed sleep of %dms", GetNodeId(), m_delayNoMoreInfo );
+			TimerThread::TimerCallback callback = TT_STDBIND(&WakeUp::SendPending, this, false);
+			GetDriver()->GetTimer()->TimerSetEvent(m_delayNoMoreInfo, callback);
+		}
 	}
 }
 

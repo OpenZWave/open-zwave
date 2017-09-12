@@ -713,7 +713,7 @@ void Node::AdvanceQueries
 				WakeUp* cc = static_cast<WakeUp*>( GetCommandClass( WakeUp::StaticGetCommandClassId() ) );
 				if( cc )
 				{
-					cc->SendPending();
+					cc->SendPending(true);
 				}
 				// Check whether all nodes are now complete
 				GetDriver()->CheckCompletedNodeQueries();
