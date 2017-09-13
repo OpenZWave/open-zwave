@@ -94,7 +94,7 @@ ThermostatSetpoint::ThermostatSetpoint
 	uint32 const _homeId,
 	uint8 const _nodeId
 ):
-	CommandClass( _homeId, _nodeId ), m_setPointBase( 1 )
+	CommandClass( _homeId, _nodeId ), m_setPointBase( 1 ), m_setPointTypeInterpretation( 0x0B )
 {
 	SetStaticRequest( StaticRequest_Values );
 }
@@ -115,6 +115,16 @@ void ThermostatSetpoint::ReadXML
 	{
 		m_setPointBase = (uint8)intVal;
 	}
+	char const* str;
+
+	str = _ccElement->Attribute( "typeInterpretation" );
+	if ( str )
+	{
+		if ( strcmp(str,"A") == 0)
+		{
+			m_setPointTypeInterpretation = 0x0A ;
+		}
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -131,6 +141,14 @@ void ThermostatSetpoint::WriteXML
 	char str[8];
 	snprintf( str, 8, "%d", m_setPointBase );
 	_ccElement->SetAttribute( "base", str );
+	if ( m_setPointTypeInterpretation == 0x0A )
+	{
+		_ccElement->SetAttribute("typeInterpretation","A");
+	}
+	else
+	{
+		_ccElement->SetAttribute("typeInterpretation","B");
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -257,12 +275,22 @@ bool ThermostatSetpoint::HandleMsg
 				{
 					if( ( _data[i] & (1<<bit) ) != 0 )
 					{
+						uint8 type = ((i-1)<<3) + bit;
+						if ( m_setPointTypeInterpretation == 0x0A )
+						{
+							// for interpretation A the setpoint identifier makes a jump of 4 after the 2nd bit ... wtf @ zensys
+							if ( type > 2 )
+							{
+								type += 4;
+							}
+						}
+						int32 index = (int32)type + m_setPointBase;
 						// Add supported setpoint
-						int32 index = (int32)((i-1)<<3) + bit + m_setPointBase;
 						if( index < ThermostatSetpoint_Count )
 						{
-						  	node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, index, c_setpointName[index], "C", false, false, "0.0", 0 );
-							Log::Write( LogLevel_Info, GetNodeId(), "    Added setpoint: %s", c_setpointName[index] );
+							string setpointName = c_setpointName[index];
+							node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, index, setpointName, "C", false, false, "0.0", 0 );
+							Log::Write( LogLevel_Info, GetNodeId(), "    Added setpoint: %s", setpointName );
 						}
 					}
 				}
