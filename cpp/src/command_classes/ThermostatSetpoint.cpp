@@ -323,7 +323,7 @@ bool ThermostatSetpoint::HandleMsg
 							string setpointName = c_setpointName[index];
 
 							node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, index, setpointName, "C", false, false, "0.0", 0 );
-							Log::Write( LogLevel_Info, GetNodeId(), "    Added setpoint: %s", setpointName );
+							Log::Write( LogLevel_Info, GetNodeId(), "    Added setpoint: %s", setpointName.c_str() );
 						}
 					}
 				}
@@ -354,7 +354,7 @@ bool ThermostatSetpoint::HandleMsg
 
 				node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ThermostatSetpoint_Minimum + index, setpointName + "_minimum", "C", false, false, minValue, 0 );
 				node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ThermostatSetpoint_Maximum + index, setpointName + "_maximum", "C", false, false, maxValue, 0 );
-				Log::Write( LogLevel_Info, GetNodeId(), "    Added setpoint: %s", setpointName );
+				Log::Write( LogLevel_Info, GetNodeId(), "    Added setpoint: %s", setpointName.c_str() );
 			}
 
 		}
