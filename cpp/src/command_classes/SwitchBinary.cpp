@@ -238,8 +238,9 @@ bool SwitchBinary::SetState
 	msg->SetInstance( this, _instance );
 	msg->Append( nodeId );
 	
-	if( ValueByte* durationValue = static_cast<ValueByte*>( GetValue( _instance, SwitchBinaryIndex_Duration ) ) )
+	if( GetVersion() >= 2 )
 	{
+		ValueByte* durationValue = static_cast<ValueByte*>( GetValue( _instance, SwitchBinaryIndex_Duration ) );
 		uint8 duration = durationValue->GetValue();
 		durationValue->Release();
 		if( duration == 0xff )
