@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Product xmlns="http://code.google.com/p/open-zwave/">
+  <!-- https://products.z-wavealliance.org/products/1901 -->
 
   <!-- Configuration Parameters -->
   <CommandClass id="112">
@@ -25,22 +26,22 @@
       <Item value="0" label="Display power consumption always"/>
       <Item value="1" label="Display power consumption at state change"/>
     </Value>
-    <Value genre="config" instance="1" index="151" value="50" label="Power Report Value Threshold" units="" size="2" min="0" max="65535" type="short">
+    <Value genre="config" instance="1" index="151" value="50" label="Power Report Value Threshold" units="Watts" size="2" min="0" max="65535" type="short">
       <Help>Minimum change in watts to report</Help>
     </Value>
-    <Value genre="config" instance="1" index="152" value="10" label="Power Report Percentage Threshold" units="" size="1" min="0" max="255" type="byte">
+    <Value genre="config" instance="1" index="152" value="10" label="Power Report Percentage Threshold" units="%" size="1" min="0" max="255" type="byte">
       <Help>Minimum percentage change to report</Help>
     </Value>
-    <Value genre="config" instance="1" index="171" value="30" label="Power Report Frequency" units="" size="4" min="0" max="2678400" type="int">
+    <Value genre="config" instance="1" index="171" value="30" label="Power Report Frequency" units="seconds" size="4" min="0" max="2678400" type="int">
       <Help>How often to report power consumption (W) in secs</Help>
     </Value>
-    <Value genre="config" instance="1" index="172" value="300" label="Energy Report Frequency " units="" size="4" min="0" max="2678400" type="int">
+    <Value genre="config" instance="1" index="172" value="300" label="Energy Report Frequency " units="seconds" size="4" min="0" max="2678400" type="int">
       <Help>How often to report energy usage (KWH) in secs</Help>
     </Value>
-    <Value genre="config" instance="1" index="173" value="0" label="Voltage Report Frequency " units="" size="4" min="0" max="2678400" type="int">
+    <Value genre="config" instance="1" index="173" value="0" label="Voltage Report Frequency " units="seconds" size="4" min="0" max="2678400" type="int">
       <Help>How often to report voltage (V) in secs</Help>
     </Value>
-    <Value genre="config" instance="1" index="174" value="0" label="Electricity Report Frequency" units="" size="4" min="0" max="2678400" type="int">
+    <Value genre="config" instance="1" index="174" value="0" label="Electricity Report Frequency" units="seconds" size="4" min="0" max="2678400" type="int">
       <Help>How often to report electrical current (A) in secs</Help>
     </Value>
   </CommandClass>
