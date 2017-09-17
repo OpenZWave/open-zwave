@@ -1201,15 +1201,22 @@
 	<Manufacturer id="027a" name="Zooz">
 		<Product type="0003" id="0082" name="ZSE08 Contact Sensor" config="zooz/zse08.xml" />
 		<Product type="0003" id="0083" name="ZSE09 Mini Sensor" config="zooz/zse09.xml" />
+		<Product type="b112" id="1f1c" name="ZEN22 Dimmer V2" config="zooz/zen22v2.xml"/>
 		<Product type="0003" id="0085" name="ZSE30 Water Sensor" config="zooz/zse30.xml" />
 		<Product type="0003" id="0087" name="ZEN07 Mini Plug" config="zooz/zen07.xml" />
 		<Product type="2021" id="2101" name="ZSE40 4-in-1 sensor" config="zooz/zse40.xml" />
 		<Product type="0003" id="0088" name="ZSE33 Smart Chime" config="zooz/zse33.xml" />
+		<Product type="0101" id="000a" name="ZEN06" config="zooz/zen06.xml"/>
 	</Manufacturer>
 	<Manufacturer id="015d" name="Zooz">
 		<Product type="0651" id="f51c" name="ZEN20 Power Strip" config="zooz/zen20.xml" />
+		<Product type="0111" id="231c" name="ZEN21 Switch" config="zooz/zen21.xml"/>
+		<Product type="0112" id="241c" name="ZEN22 Dimmer" config="zooz/zen22.xml"/>
 		<Product type="1111" id="1e1c" name="ZEN23 Toggle Switch" config="zooz/zen23.xml" />
 		<Product type="0111" id="1f1c" name="ZEN24 Dimmer Switch" config="zooz/zen24.xml" />
+	</Manufacturer>
+	<Manufacturer id="0315" name="Z Wave Products Inc.">
+    		<Product type="4447" id="3034" name="WD-100" config="zwp/WD-100.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0021" name="Zykronix">
 	</Manufacturer>

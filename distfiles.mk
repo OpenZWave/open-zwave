@@ -18,6 +18,7 @@ DISTFILES =	.gitignore \
 	config/BeNext/EnergySwitch.xml \
 	config/BeNext/HeatingControl.xml \
 	config/BeNext/Molite.xml \
+	config/BeNext/P1dongle.xml \
 	config/BeNext/PanicButton.xml \
 	config/BeNext/PanicWatch.xml \
 	config/BeNext/PluginDimmer.xml \
@@ -113,6 +114,7 @@ DISTFILES =	.gitignore \
 	config/dlink/dch-z110.xml \
 	config/dlink/dch-z120.xml \
 	config/dlink/dch-z510.xml \
+	config/dome/0101.xml \
 	config/domitech/zb22uk.xml \
 	config/domitech/ze27eu.xml \
 	config/domux/DX1CA-Z.xml \
@@ -170,6 +172,7 @@ DISTFILES =	.gitignore \
 	config/fakro/zws12.xml \
 	config/fakro/zws230.xml \
 	config/fibaro/fgbs001.xml \
+	config/fibaro/fgcd001.xml \
 	config/fibaro/fgd211.xml \
 	config/fibaro/fgd212.xml \
 	config/fibaro/fgdw2.xml \
@@ -196,6 +199,7 @@ DISTFILES =	.gitignore \
 	config/fibaro/fgwpe.xml \
 	config/fibaro/fgwpfzw5.xml \
 	config/firstalert/zcombo.xml \
+	config/forest/fs2z5232000002.xml \
 	config/fortrezz/mimolite.xml \
 	config/fortrezz/ssa2.xml \
 	config/fortrezz/ssa3.xml \
@@ -206,12 +210,14 @@ DISTFILES =	.gitignore \
 	config/ge/14282-plugin-switch.xml \
 	config/ge/14291-switch.xml \
 	config/ge/14294-dimmer.xml \
+	config/ge/26931-motion-switch.xml \
 	config/ge/26933-motion-dimmer.xml \
 	config/ge/dimmer.xml \
 	config/ge/dimmer_module.xml \
 	config/ge/hinge-pin.xml \
 	config/ge/receptacle.xml \
 	config/ge/relay.xml \
+	config/ge/zw4001-switch.xml \
 	config/gocontrol/GC-TBZ48L.xml \
 	config/gr/gr105.xml \
 	config/gr/gr105n.xml \
@@ -248,6 +254,7 @@ DISTFILES =	.gitignore \
 	config/horstmann/ssr302.xml \
 	config/idlock/idlock101.xml \
 	config/ingersoll/dwzwave1.xml \
+	config/inovelli/simple_module.xml \
 	config/intermatic/ca8900.xml \
 	config/iris/rangeextender.xml \
 	config/kaipule/im20.xml \
@@ -263,8 +270,8 @@ DISTFILES =	.gitignore \
 	config/linear/GC-TBZ48.xml \
 	config/linear/LB60Z-1.xml \
 	config/linear/PD300Z-2.xml \
-	config/linear/WA105DBZ-1.xml \
 	config/linear/WA00Z-1.xml \
+	config/linear/WA105DBZ-1.xml \
 	config/linear/WADWAZ-1.xml \
 	config/linear/WAPIRZ-1.xml \
 	config/linear/WD500Z-1.xml \
@@ -368,6 +375,8 @@ DISTFILES =	.gitignore \
 	config/schlagelink/itemp.xml \
 	config/schlagelink/minikeypad.xml \
 	config/sensative/strips.xml \
+	config/shenzen_neo/ls01ch.xml \
+	config/shenzen_neo/ls02ch.xml \
 	config/shenzen_neo/nas-ab01z.xml \
 	config/shenzen_neo/nas-ds01z.xml \
 	config/shenzen_neo/nas-pd01z.xml \
@@ -416,8 +425,12 @@ DISTFILES =	.gitignore \
 	config/zipato/vszd2102.xml \
 	config/zipato/zp3102.xml \
 	config/zooz/zen07.xml \
+	config/zooz/zen20.xml \
+	config/zooz/zen23.xml \
+	config/zooz/zen24.xml \
 	config/zooz/zse08.xml \
 	config/zooz/zse09.xml \
+	config/zooz/zse30.xml \
 	config/zooz/zse33.xml \
 	config/zooz/zse40.xml \
 	config/zwave.me/ZME_05431.xml \
