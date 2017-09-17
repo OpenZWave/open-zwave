@@ -84,6 +84,7 @@ namespace OpenZWave
 		friend class Security;
 		friend class Msg;
 		friend class ManufacturerSpecificDB;
+		friend class TimerThread;
 
 	//-----------------------------------------------------------------------------
 	//	Controller Interfaces

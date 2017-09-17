@@ -53,10 +53,11 @@ namespace OpenZWave
 		void Init();	// Starts the process of requesting node state from a sleeping device.
 		void QueueMsg( Driver::MsgQueueItem const& _item );
 
-		/** \brief Send all pending messages followed by a no more information message.
-		 * \param allowDelay If true then there can be a delay before the no more information message is sent.
-		 */
-		void SendPending( bool allowDelay );
+		/** \brief Send all pending messages followed by a no more information message. */
+		void SendPending();
+
+		/** \brief Send a no more information message. */
+		void SendNoMoreInfo();
 
 		bool IsAwake()const{ return m_awake; }
 		void SetAwake( bool _state );

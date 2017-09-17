@@ -407,7 +407,7 @@ void WakeUp::SetAwake
 		}
 
 		// Send all pending messages
-		SendPending(true);
+		SendPending();
 	}
 }
 
@@ -463,7 +463,6 @@ void WakeUp::QueueMsg
 //-----------------------------------------------------------------------------
 void WakeUp::SendPending
 (
-		bool allowDelay
 )
 {
 	m_awake = true;
@@ -509,20 +508,32 @@ void WakeUp::SendPending
 	/* if we are reloading, the QueryStage_Complete will take care of sending the device back to sleep */
 	if( sendToSleep && !reloading )
 	{
-		if( !allowDelay || m_delayNoMoreInfo == 0 ) {
-			Msg* msg = new Msg( "WakeUpCmd_NoMoreInformation", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-			msg->Append( GetNodeId() );
-			msg->Append( 2 );
-			msg->Append( GetCommandClassId() );
-			msg->Append( WakeUpCmd_NoMoreInformation );
-			msg->Append( GetDriver()->GetTransmitOptions() );
-			GetDriver()->SendMsg( msg, Driver::MsgQueue_WakeUp );
+		if( m_delayNoMoreInfo == 0 ) {
+			SendNoMoreInfo();
+
 		} else {
 			Log::Write( LogLevel_Info, GetNodeId(), "  Node %d has delayed sleep of %dms", GetNodeId(), m_delayNoMoreInfo );
-			TimerThread::TimerCallback callback = TT_STDBIND(&WakeUp::SendPending, this, false);
+			TimerThread::TimerCallback callback = bind(&WakeUp::SendNoMoreInfo, this);
 			GetDriver()->GetTimer()->TimerSetEvent(m_delayNoMoreInfo, callback);
 		}
 	}
+}
+
+//-----------------------------------------------------------------------------
+// <WakeUp::SendNoMoreInfo>
+// Send a no more information message
+//-----------------------------------------------------------------------------
+void WakeUp::SendNoMoreInfo
+(
+)
+{
+	Msg* msg = new Msg( "WakeUpCmd_NoMoreInformation", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+	msg->Append( GetNodeId() );
+	msg->Append( 2 );
+	msg->Append( GetCommandClassId() );
+	msg->Append( WakeUpCmd_NoMoreInformation );
+	msg->Append( GetDriver()->GetTransmitOptions() );
+	GetDriver()->SendMsg( msg, Driver::MsgQueue_WakeUp );
 }
 
 //-----------------------------------------------------------------------------

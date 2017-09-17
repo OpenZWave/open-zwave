@@ -28,15 +28,14 @@
 #ifndef _TIMERTHREAD_H_
 #define _TIMERTHREAD_H_
 
-#define USE_TR1
-#ifdef USE_TR1
-#include <tr1/functional>
-#define TT_STDBIND std::tr1::bind
-#define TT_STDFUNCTION std::tr1::function
-#else
+#if __cplusplus >= 201103L
 #include <functional>
-#define TT_STDBIND std::bind
-#define TT_STDFUNCTION std::function
+using std::bind;
+using std::function;
+#else
+#include <tr1/functional>
+using std::tr1::bind;
+using std::tr1::function;
 #endif
 
 #include "Defs.h"
@@ -46,6 +45,7 @@
 
 namespace OpenZWave
 {
+	class Driver;
 	class Thread;
 
 	/** \brief The TimerThread class makes it possible to schedule events to happen
@@ -59,12 +59,12 @@ namespace OpenZWave
 	//-----------------------------------------------------------------------------
 	public:
 		/** A timer callback function. */
-		typedef TT_STDFUNCTION<void()> TimerCallback;
+		typedef function<void()> TimerCallback;
 
 		/**
 		 * Constructor.
 		 */
-		TimerThread();
+		TimerThread( Driver *_driver );
 
 		/**
 		 * Destructor.
@@ -86,6 +86,7 @@ namespace OpenZWave
 		static void TimerThreadEntryPoint( Event* _exitEvent, void* _context );
 
 	private:
+		Driver*	m_driver;
 
 		/**
 		 * Main class entry point for the timer thread. Contains the main timer loop.

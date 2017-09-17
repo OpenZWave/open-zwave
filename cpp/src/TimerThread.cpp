@@ -26,7 +26,9 @@
 //-----------------------------------------------------------------------------
 
 #include "TimerThread.h"
+#include "Utils.h"
 #include "platform/Log.h"
+#include "Driver.h"
 
 using namespace OpenZWave;
 
@@ -53,7 +55,9 @@ void TimerThread::TimerThreadEntryPoint
 //-----------------------------------------------------------------------------
 TimerThread::TimerThread
 (
+		Driver *_driver
 ):
+m_driver( _driver ),
 m_timerEvent( new Event() ),
 m_timerMutex( new Mutex() ),
 m_timerTimeout( Wait::Timeout_Infinite )
@@ -68,11 +72,12 @@ TimerThread::~TimerThread
 (
 )
 {
-	m_timerMutex->Lock();
-	for ( list<TimerEventEntry *>::iterator it = m_timerEventList.begin(); it != m_timerEventList.end(); ++it ) {
-		delete (*it);
+	{
+		LockGuard LG(m_timerMutex);
+		for ( list<TimerEventEntry *>::iterator it = m_timerEventList.begin(); it != m_timerEventList.end(); ++it ) {
+			delete (*it);
+		}
 	}
-	m_timerMutex->Unlock();
 	m_timerMutex->Release();
 	m_timerEvent->Release();
 }
@@ -99,7 +104,7 @@ void TimerThread::TimerThreadProc
 
 	while( 1 )
 	{
-		Log::Write( LogLevel_Detail, "Timer: waiting with timeout %d", m_timerTimeout );
+		Log::Write( LogLevel_Detail, "Timer: waiting with timeout %d ms", m_timerTimeout );
 		int32 res = Wait::Multiple( waitObjects, count, m_timerTimeout );
 
 		if (res == 0)
@@ -112,7 +117,7 @@ void TimerThread::TimerThreadProc
 			m_timerTimeout = Wait::Timeout_Infinite;
 
 			// Go through all waiting actions, and see if any need to be performed.
-			m_timerMutex->Lock();
+			LockGuard LG(m_timerMutex);
 			list<TimerEventEntry *>::iterator it = m_timerEventList.begin();
 			while( it != m_timerEventList.end() ) {
 				int32 tr = (*it)->timestamp.TimeRemaining();
@@ -130,7 +135,6 @@ void TimerThread::TimerThreadProc
 				}
 			}
 			m_timerEvent->Reset();
-			m_timerMutex->Unlock();
 		}
 	} // while( 1 )
 }
@@ -150,9 +154,8 @@ void TimerThread::TimerSetEvent
 	te->callback = _callback;
 
 	// Don't want driver thread and timer thread accessing list at the same time.
-	m_timerMutex->Lock();
+	LockGuard LG(m_timerMutex);
 	m_timerEventList.push_back(te);
 	m_timerEvent->Set();
-	m_timerMutex->Unlock();
 	return;
 }
