@@ -124,10 +124,8 @@ void TimerThread::TimerThreadProc
 				if (tr <= 0) {
 					// Expired so perform action and remove from list.
 					Log::Write( LogLevel_Info, "Timer: delayed event" );
-					(*it)->callback();
-					delete (*it);
-					it = m_timerEventList.erase( it );
-
+					(*it)->instance->TimerFireEvent((*it));
+					TimerDelEvent(*it);
 				} else {
 					// Time remaining.
 					m_timerTimeout = (m_timerTimeout == Wait::Timeout_Infinite) ? tr : std::min(m_timerTimeout, tr);
@@ -145,13 +143,15 @@ void TimerThread::TimerThreadProc
 TimerThread::TimerEventEntry* TimerThread::TimerSetEvent
 (
 		int32 _milliseconds,
-		TimerCallback _callback
+		TimerCallback _callback,
+		Timer *_instance
 )
 {
 	Log::Write( LogLevel_Info, "Timer: adding event in %d ms", _milliseconds );
 	TimerEventEntry *te = new TimerEventEntry();
 	te->timestamp.SetTime(_milliseconds);
 	te->callback = _callback;
+	te->instance = _instance;
 
 	// Don't want driver thread and timer thread accessing list at the same time.
 	LockGuard LG(m_timerMutex);
@@ -159,3 +159,136 @@ TimerThread::TimerEventEntry* TimerThread::TimerSetEvent
 	m_timerEvent->Set();
 	return te;
 }
+
+//-----------------------------------------------------------------------------
+// <TimerThread::TimerDelEvent>
+// Delete the Specific Timer
+//-----------------------------------------------------------------------------
+
+void TimerThread::TimerDelEvent
+(
+		TimerEventEntry *te
+)
+{
+	LockGuard LG(m_timerMutex);
+	list<TimerEventEntry *>::iterator it = find(m_timerEventList.begin(),m_timerEventList.end(), te);
+	if (it != m_timerEventList.end()) {
+		delete ((*it));
+		m_timerEventList.erase(it);
+	} else {
+		Log::Write(LogLevel_Warning, "Cant Find TimerEvent to Delete in TimerDelEvent");
+	}
+
+}
+
+//-----------------------------------------------------------------------------
+// <Timer::Timer>
+// Constuctor for Timer SubClass with Driver passed in
+//-----------------------------------------------------------------------------
+Timer::Timer
+(
+		Driver *_driver
+):
+m_driver(_driver)
+{
+};
+//-----------------------------------------------------------------------------
+// <Timer::Timer>
+// Default Constuctor for Timer SubClass
+//-----------------------------------------------------------------------------
+
+Timer::Timer
+(
+):
+m_driver(NULL)
+{
+
+};
+//-----------------------------------------------------------------------------
+// <Timer::~Timer>
+// Deconstuctor for Timer SubClass
+//-----------------------------------------------------------------------------
+
+Timer::~Timer
+(
+)
+{
+	TimerDelEvents();
+}
+
+//-----------------------------------------------------------------------------
+// <Timer::TimerSetEvent>
+// Create a new TimerCallback
+//-----------------------------------------------------------------------------
+TimerThread::TimerEventEntry* Timer::TimerSetEvent
+(
+		int32 _milliseconds,
+		TimerThread::TimerCallback _callback
+)
+{
+	TimerThread::TimerEventEntry *te = m_driver->GetTimer()->TimerSetEvent(_milliseconds, _callback, this);
+	if (te) {
+		m_timerEventList.push_back(te);
+		return te;
+	}
+	Log::Write(LogLevel_Warning, "Could Not Register Timer Callback");
+	return NULL;
+}
+
+//-----------------------------------------------------------------------------
+// <Timer::TimerDelEvents>
+// Delete all TimerEvents associated with this instance
+//-----------------------------------------------------------------------------
+void Timer::TimerDelEvents
+(
+)
+{
+	list<TimerThread::TimerEventEntry *>::iterator it = m_timerEventList.begin();
+	while( it != m_timerEventList.end() ) {
+		m_driver->GetTimer()->TimerDelEvent((*it));
+		m_timerEventList.erase(it);
+	}
+}
+//-----------------------------------------------------------------------------
+// <Timer::SetDriver>
+// Associate this instance with a Driver
+//-----------------------------------------------------------------------------
+void Timer::SetDriver
+(
+		Driver *_driver
+)
+{
+	m_driver = _driver;
+}
+//-----------------------------------------------------------------------------
+// <Timer::TimerDelEvent>
+// Delete a specific TimerEvent
+//-----------------------------------------------------------------------------
+void Timer::TimerDelEvent
+(
+		TimerThread::TimerEventEntry *te
+)
+{
+	list<TimerThread::TimerEventEntry *>::iterator it = find(m_timerEventList.begin(),m_timerEventList.end(), te);
+	if (it != m_timerEventList.end()) {
+		m_driver->GetTimer()->TimerDelEvent((*it));
+		m_timerEventList.erase(it);
+	} else {
+		Log::Write(LogLevel_Warning, "Cant Find TimerEvent to Delete in TimerDelEvent");
+	}
+
+}
+//-----------------------------------------------------------------------------
+// <Timer::TimerFireEvent>
+// Execute a Callback
+//-----------------------------------------------------------------------------
+void Timer::TimerFireEvent
+(
+		TimerThread::TimerEventEntry *te
+)
+{
+	te->callback();
+	TimerDelEvent(te);
+}
+
+

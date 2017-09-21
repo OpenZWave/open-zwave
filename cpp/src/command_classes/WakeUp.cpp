@@ -70,6 +70,7 @@ m_awake( true ),
 m_pollRequired( false ),
 m_delayNoMoreInfo( 0 )
 {
+	Timer::SetDriver(GetDriver());
 	Options::Get()->GetOptionAsBool("AssumeAwake", &m_awake);
 
 	SetStaticRequest( StaticRequest_Values );
@@ -514,7 +515,7 @@ void WakeUp::SendPending
 		} else {
 			Log::Write( LogLevel_Info, GetNodeId(), "  Node %d has delayed sleep of %dms", GetNodeId(), m_delayNoMoreInfo );
 			TimerThread::TimerCallback callback = bind(&WakeUp::SendNoMoreInfo, this);
-			GetDriver()->GetTimer()->TimerSetEvent(m_delayNoMoreInfo, callback);
+			TimerSetEvent(m_delayNoMoreInfo, callback);
 		}
 	}
 }

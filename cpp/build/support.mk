@@ -78,9 +78,11 @@ SED    := sed
 #determine if we are release or debug Build and set appropriate flags
 ifeq ($(BUILD), release)
 CFLAGS	+= -c $(RELEASE_CFLAGS)
+CPPFLAGS += $(RELEASE_CPPFLAGS)
 LDFLAGS	+= $(RELEASE_LDFLAGS)
 else
 CFLAGS	+= -c $(DEBUG_CFLAGS)
+CPPFLAGS += $(DEBUG_CPPFLAGS)
 LDFLAGS	+= $(DEBUG_LDFLAGS)
 endif
 
@@ -128,13 +130,13 @@ DEPDIR = $(top_builddir)/.dep
 
 $(OBJDIR)/%.o : %.cpp
 	@echo "Building $(notdir $@)"
-	@$(CXX) -MM $(CFLAGS) $(INCLUDES) $< > $(DEPDIR)/$*.d
+	@$(CXX) -MM $(CFLAGS) $(CPPFLAGS) $(INCLUDES) $< > $(DEPDIR)/$*.d
 	@mv -f $(DEPDIR)/$*.d $(DEPDIR)/$*.d.tmp
 	@$(SED) -e 's|.*:|$(OBJDIR)/$*.o: $(DEPDIR)/$*.d|' < $(DEPDIR)/$*.d.tmp > $(DEPDIR)/$*.d;
 	@$(SED) -e 's/.*://' -e 's/\\$$//' < $(DEPDIR)/$*.d.tmp | fmt -1 | \
 	  $(SED) -e 's/^ *//' -e 's/$$/:/' >> $(DEPDIR)/.$*.d;
 	@rm -f $(DEPDIR)/$*.d.tmp
-	@$(CXX) $(CFLAGS) $(TARCH) $(INCLUDES) -o $@ $<
+	@$(CXX) $(CFLAGS) $(CPPFLAGS) $(TARCH) $(INCLUDES) -o $@ $<
 
 
 $(OBJDIR)/%.o : %.c

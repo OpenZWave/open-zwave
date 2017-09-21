@@ -13,9 +13,11 @@
 
 
 # what flags we will use for compiling in debug mode
-DEBUG_CFLAGS    := -std=c++11 -Wall -Wno-unknown-pragmas -Wno-inline -Wno-format -Werror -Wno-error=sequence-point -Wno-sequence-point -ggdb -DDEBUG -fPIC  -DSYSCONFDIR="\"$(PREFIX)/etc/openzwave/\"" -DOPENZWAVE_ENABLE_EXCEPTIONS=1
+DEBUG_CFLAGS    := -Wall -Wno-unknown-pragmas -Wno-inline -Wno-format -Werror -Wno-error=sequence-point -Wno-sequence-point -ggdb -DDEBUG -fPIC  -DSYSCONFDIR="\"$(PREFIX)/etc/openzwave/\"" -DOPENZWAVE_ENABLE_EXCEPTIONS=1
+DEBUG_CPPFLAGS  := -std=c++11 
 # what flags we will use for compiling in release mode
-RELEASE_CFLAGS  := -std=c++11 -Wall -Wno-unknown-pragmas -Werror -Wno-format -Wno-error=sequence-point -Wno-sequence-point -O3 -DNDEBUG -fPIC  -DSYSCONFDIR="\"$(PREFIX)/etc/openzwave/\"" -DOPENZWAVE_ENABLE_EXCEPTIONS=1
+RELEASE_CFLAGS  := -Wall -Wno-unknown-pragmas -Werror -Wno-format -Wno-error=sequence-point -Wno-sequence-point -O3 -DNDEBUG -fPIC  -DSYSCONFDIR="\"$(PREFIX)/etc/openzwave/\"" -DOPENZWAVE_ENABLE_EXCEPTIONS=1
+RELEASE_CPPFLAGS := -std=c++11
 #what flags we will use for linking in debug mode
 DEBUG_LDFLAGS	:= -g
 
@@ -64,7 +66,7 @@ else
 LDFLAGS += -shared -Wl,-soname,$(SHARED_LIB_NAME)
 LIBS 	+= -ludev
 endif
-CFLAGS  += $(CPPFLAGS)
+#CFLAGS  += $(CPPFLAGS)
 
 #where to put the temporary library
 LIBDIR	?= $(top_builddir)

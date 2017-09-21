@@ -47,13 +47,14 @@ namespace OpenZWave
 {
 	class Driver;
 	class Thread;
+	class Timer;
 
 	/** \brief The TimerThread class makes it possible to schedule events to happen
 	 *  at a certain time in the future.
 	 */
 	class OPENZWAVE_EXPORT TimerThread
 	{
-
+		friend class Timer;
 	//-----------------------------------------------------------------------------
 	//  Timer based actions
 	//-----------------------------------------------------------------------------
@@ -73,16 +74,10 @@ namespace OpenZWave
 
 		struct TimerEventEntry
 		{
+			Timer *instance;
 			TimeStamp timestamp;
 			TimerCallback callback;
 		};
-
-		/**
-		 * Schedule an event.
-		 * \param _milliseconds The number of milliseconds before the event should happen
-		 * \param _callback The function to be called when the time is reached
-		 */
-		TimerEventEntry* TimerSetEvent( int32 _milliseconds, TimerCallback _callback );
 
 		/**
 		 * Main entry point for the timer thread. Wrapper around TimerThreadProc.
@@ -93,6 +88,20 @@ namespace OpenZWave
 
 	private:
 		//Driver*	m_driver;
+
+		/**
+		 * Schedule an event.
+		 * \param _milliseconds The number of milliseconds before the event should happen
+		 * \param _callback The function to be called when the time is reached
+		 * \param _instance The Timer SubClass where this Event should be executed from
+		 */
+		TimerEventEntry* TimerSetEvent( int32 _milliseconds, TimerCallback _callback, Timer *_instance );
+
+		/**
+		 * Remove a Event
+		 *
+		 */
+		void TimerDelEvent(TimerEventEntry *);
 
 		/**
 		 * Main class entry point for the timer thread. Contains the main timer loop.
@@ -109,6 +118,60 @@ namespace OpenZWave
 		int32					m_timerTimeout; // Time in milliseconds to wait until next event
 	};
 
+	/**
+	 * \brief Timer SubClass for automatically registering/unregistering Timer Callbacks
+	 * if the instance goes out of scope
+	 *
+	 */
+
+	class OPENZWAVE_EXPORT Timer
+	{
+	public:
+		/**
+		 * \brief Constructor with the _driver this instance is associated with
+		 * \param _driver The Driver that this instance is associated with
+		 */
+		Timer( Driver *_driver );
+		/**
+		 * \brief Default Constructor
+		 */
+
+		Timer();
+		/**
+		 * \brief Destructor
+		 */
+		~Timer();
+		/**
+		 * \brief Schedule an event.
+		 * \param _milliseconds The number of milliseconds before the event should happen
+		 * \param _callback The function to be called when the time is reached
+		 */
+		TimerThread::TimerEventEntry* TimerSetEvent( int32 _milliseconds, TimerThread::TimerCallback _callback );
+		/**
+		 *  \brief Delete All Events registered to this instance
+		 */
+		void TimerDelEvents();
+		/**
+		 * \brief Delete a Specific Event Registered to this instance
+		 * \param te The TimerEventEntry Struct that was returned when Setting a Event
+		 */
+		void TimerDelEvent(TimerThread::TimerEventEntry *te);
+		/**
+		 * \brief Register the Driver Associated with this Instance
+		 * \param _driver The Driver
+		 */
+		void SetDriver(Driver *_driver);
+		/**
+		 * \brief Called From the TimerThread Class to execute a callback
+		 * \param te The TimerEventEntry structure for the callback to execute
+		 */
+		void TimerFireEvent(TimerThread::TimerEventEntry *te);
+	private:
+		Driver*	m_driver;
+		list<TimerThread::TimerEventEntry *> m_timerEventList;
+
+
+	};
 } // namespace OpenZWave
 
 #endif // _TIMERTHREAD_H_
