@@ -54,6 +54,7 @@ namespace OpenZWave
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );
 		virtual bool SetValue( Value const& _value );
 		virtual void SetValueBasic( uint8 const _instance, uint8 const _value );
+		bool SetState( uint8 const _instance, bool const _state );
 
 		virtual uint8 GetMaxVersion(){ return 2; }
 		

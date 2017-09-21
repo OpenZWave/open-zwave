@@ -37,6 +37,7 @@
 #include "platform/Log.h"
 
 #include "value_classes/ValueBool.h"
+#include "value_classes/ValueByte.h"
 
 using namespace OpenZWave;
 
@@ -49,7 +50,7 @@ enum SwitchBinaryCmd
 
 enum SwitchBinaryIndex
 {
-	SwitchBinaryIndex_State = 0,
+	SwitchBinaryIndex_Level = 0,
 	SwitchBinaryIndex_TargetState,
 	SwitchBinaryIndex_Duration
 };
@@ -118,7 +119,7 @@ bool SwitchBinary::HandleMsg
 		Log::Write( LogLevel_Info, GetNodeId(), "Received SwitchBinary report from node %d: level=%s", GetNodeId(), _data[1] ? "On" : "Off" );
 
 		// data[1] => Switch state
-		if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, SwitchBinaryIndex_State ) ) )
+		if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, SwitchBinaryIndex_Level ) ) )
 		{
 			value->OnValueRefreshed( _data[1] != 0 );
 			value->Release();
@@ -163,9 +164,9 @@ bool SwitchBinary::SetValue
 
 	switch( _value.GetID().GetIndex() )
 	{
-		case SwitchBinaryIndex_State:
+		case SwitchBinaryIndex_Level:
 		{
-			if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, SwitchBinaryIndex_State ) ) )
+			if( ValueBool* value = static_cast<ValueBool*>( GetValue( instance, SwitchBinaryIndex_Level ) ) )
 			{
 				res = SetState( instance, (static_cast<ValueBool const*>(&_value))->GetValue() );
 				value->Release();
