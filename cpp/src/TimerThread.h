@@ -28,7 +28,7 @@
 #ifndef _TIMERTHREAD_H_
 #define _TIMERTHREAD_H_
 
-#if __cplusplus >= 201103L
+#if __cplusplus >= 201103L || __APPLE__
 #include <functional>
 using std::bind;
 using std::function;
@@ -71,12 +71,18 @@ namespace OpenZWave
 		 */
 		~TimerThread();
 
+		struct TimerEventEntry
+		{
+			TimeStamp timestamp;
+			TimerCallback callback;
+		};
+
 		/**
 		 * Schedule an event.
 		 * \param _milliseconds The number of milliseconds before the event should happen
 		 * \param _callback The function to be called when the time is reached
 		 */
-		void TimerSetEvent( int32 _milliseconds, TimerCallback _callback );
+		TimerEventEntry* TimerSetEvent( int32 _milliseconds, TimerCallback _callback );
 
 		/**
 		 * Main entry point for the timer thread. Wrapper around TimerThreadProc.
@@ -86,7 +92,7 @@ namespace OpenZWave
 		static void TimerThreadEntryPoint( Event* _exitEvent, void* _context );
 
 	private:
-		Driver*	m_driver;
+		//Driver*	m_driver;
 
 		/**
 		 * Main class entry point for the timer thread. Contains the main timer loop.
@@ -94,11 +100,6 @@ namespace OpenZWave
 		 */
 		void TimerThreadProc( Event* _exitEvent );
 
-		struct TimerEventEntry
-		{
-			TimeStamp timestamp;
-			TimerCallback callback;
-		};
 
     /** A list of upcoming timer events */
 		list<TimerEventEntry *> m_timerEventList;

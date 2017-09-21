@@ -156,6 +156,10 @@ string OpenZWave::ozwdirname(string m_path)
 
 
 string OpenZWave::intToString( int x ) {
+#if __cplusplus==201103L || __APPLE__
+	return to_string(x);
+#else
 	return static_cast< std::ostringstream & >( ( std::ostringstream() << std::dec << x ) ).str();
+#endif
 }
 

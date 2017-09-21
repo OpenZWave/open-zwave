@@ -57,7 +57,7 @@ TimerThread::TimerThread
 (
 		Driver *_driver
 ):
-m_driver( _driver ),
+//m_driver( _driver ),
 m_timerEvent( new Event() ),
 m_timerMutex( new Mutex() ),
 m_timerTimeout( Wait::Timeout_Infinite )
@@ -142,7 +142,7 @@ void TimerThread::TimerThreadProc
 //-----------------------------------------------------------------------------
 // <TimerThread::TimerSetEvent>
 //-----------------------------------------------------------------------------
-void TimerThread::TimerSetEvent
+TimerThread::TimerEventEntry* TimerThread::TimerSetEvent
 (
 		int32 _milliseconds,
 		TimerCallback _callback
@@ -157,5 +157,5 @@ void TimerThread::TimerSetEvent
 	LockGuard LG(m_timerMutex);
 	m_timerEventList.push_back(te);
 	m_timerEvent->Set();
-	return;
+	return te;
 }
