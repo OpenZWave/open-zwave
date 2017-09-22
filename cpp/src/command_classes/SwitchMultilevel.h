@@ -66,9 +66,9 @@ namespace OpenZWave
 		enum SwitchMultilevelDirection
 		{
 			SwitchMultilevelDirection_Up = 0,
-			SwitchMultilevelDirection_Down = 0x40,
-			SwitchMultilevelDirection_Inc = 0,
-			SwitchMultilevelDirection_Dec = 0x40
+			SwitchMultilevelDirection_Down,
+			SwitchMultilevelDirection_Inc,
+			SwitchMultilevelDirection_Dec
 		};
 
 		SwitchMultilevel( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}

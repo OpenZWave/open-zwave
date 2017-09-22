@@ -66,10 +66,10 @@ enum
 
 static uint8 c_directionParams[] =
 {
-	0x18,
-	0x58,
-	0xc0,
-	0xc8
+	0x00,
+	0x40,
+	0x00,
+	0x40
 };
 
 static char const* c_directionDebugLabels[] =
