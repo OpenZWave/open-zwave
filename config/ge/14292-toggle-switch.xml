@@ -11,9 +11,9 @@
 	<!-- Association Groups -->
 	<CommandClass id="133">
 		<Associations num_groups="3">
-			<Group index="1" max_associations="1" label="Lifeline" />
-			<Group index="2" max_associations="1" label="Basic - Local Load" />
-			<Group index="3" max_associations="1" label="Basic - Double Tap" />
+			<Group index="1" max_associations="5" label="Lifeline" />
+			<Group index="2" max_associations="5" label="Basic - Local Load" />
+			<Group index="3" max_associations="5" label="Basic - Double Tap" />
 		</Associations>
 	</CommandClass>
 </Product>
