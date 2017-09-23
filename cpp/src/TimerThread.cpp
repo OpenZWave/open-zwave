@@ -124,8 +124,8 @@ void TimerThread::TimerThreadProc
 				if (tr <= 0) {
 					// Expired so perform action and remove from list.
 					Log::Write( LogLevel_Info, "Timer: delayed event" );
-					(*it)->instance->TimerFireEvent((*it));
-					TimerDelEvent(*it);
+					TimerEventEntry *te = *(it++);
+					te->instance->TimerFireEvent(te);
 				} else {
 					// Time remaining.
 					m_timerTimeout = (m_timerTimeout == Wait::Timeout_Infinite) ? tr : std::min(m_timerTimeout, tr);
@@ -178,7 +178,6 @@ void TimerThread::TimerDelEvent
 	} else {
 		Log::Write(LogLevel_Warning, "Cant Find TimerEvent to Delete in TimerDelEvent");
 	}
-
 }
 
 //-----------------------------------------------------------------------------
@@ -246,7 +245,7 @@ void Timer::TimerDelEvents
 	list<TimerThread::TimerEventEntry *>::iterator it = m_timerEventList.begin();
 	while( it != m_timerEventList.end() ) {
 		m_driver->GetTimer()->TimerDelEvent((*it));
-		m_timerEventList.erase(it);
+		it = m_timerEventList.erase(it);
 	}
 }
 //-----------------------------------------------------------------------------
@@ -290,5 +289,4 @@ void Timer::TimerFireEvent
 	te->callback();
 	TimerDelEvent(te);
 }
-
 
