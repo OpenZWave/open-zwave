@@ -55,7 +55,7 @@ version 1.07 (4.11.2016)
 			<Item label="Disabled" value="0" />
 			<Item label="Enabled" value="1" />
 		</Value>
-		<Value type="short" index="41" genre="config" label="Temperature Reporting Threshold" units="%" min="0" max="39321" value="20" size="2">
+		<Value type="short" index="41" genre="config" label="Temperature Reporting Threshold" units="C/F" min="0" max="39321" value="20" size="2">
 			<Help>Threshold change in temperature to induce an automatic report.  
 			Note: 
 			1. The unit is Fahrenheit for US version, Celsius for EU/AU version.
