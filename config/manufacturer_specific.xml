@@ -1192,6 +1192,7 @@
 	<Manufacturer id="0131" name="Zipato">
 		<Product type="0002" id="0002" name="RGBW LED Bulb" config="zipato/RGBBulb.xml" />
 		<Product type="0002" id="0003" name="Bulb 2" config="zipato/RGBBulb2.xml"/>
+		<Product type="0002" id="000c" name="PST02-A 4 in 1 Multi-Sensor" config="philio/pst02.xml"/>
 		<Product type="6131" id="4501" name="Zipato Mini Keypad" config="zipato/MiniKeypad.xml" />
 		<Product type="2001" id="0106" name="VS-ZD2102 Door/Window Sensor" config="zipato/vszd2102.xml" />
 		<Product type="2002" id="0205" name="ZP3102-EU Multisensor Duo" config="zipato/zp3102.xml"/>
@@ -1209,6 +1210,7 @@
 		<Product type="2021" id="2101" name="ZSE40 4-in-1 sensor" config="zooz/zse40.xml" />
 		<Product type="0003" id="0088" name="ZSE33 Smart Chime" config="zooz/zse33.xml" />
 		<Product type="0101" id="000a" name="ZEN06" config="zooz/zen06.xml"/>
+		<Product type="b111" id="251c" name="ZEN23 Toggle Switch V2" config="zooz/zen23.xml" />
 	</Manufacturer>
 	<Manufacturer id="015d" name="Zooz">
 		<Product type="0651" id="f51c" name="ZEN20 Power Strip" config="zooz/zen20.xml" />
