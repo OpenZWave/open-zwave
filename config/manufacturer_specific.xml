@@ -971,6 +971,7 @@
 		<Product type="8000" id="0002" name="ZFM-80" config="remotec/zfm-80.xml" />
 		<Product type="0200" id="8031" name="ZTS-110" config="remotec/zts-110.xml" />
 		<Product type="0202" id="8031" name="ZTS-110" config="remotec/zts-110.xml" />
+		<Product type="0200" id="8170" name="ZTS-500" config="remotec/zts-500.xml" />
 	</Manufacturer>
 	<Manufacturer id="0010" name="RCS">
 		<Product type="0001" id="0002" name="TZ43 Thermostat" config="rcs/therm0009.xml" />
