@@ -551,9 +551,11 @@
 		<Product type="4944" id="3034" name="12730 Fan Control Switch" config="ge/12724-dimmer.xml"/>
 		<Product type="4944" id="3131" name="14287 Fan Control Switch" config="ge/12724-dimmer.xml"/>
 		<Product type="4944" id="3038" name="14294 In-Wall Smart Dimmer" config="ge/14294-dimmer.xml"/>
+		<Product type="4944" id="3130" name="14295 In-Wall Smart Toggle Dimmer" config="ge/14295-dimmer-toggle.xml"/>
 		<Product type="494d" id="3032" name="26931 Smart Motion Switch" config="ge/26931-motion-switch.xml"/>
 		<Product type="494d" id="3034" name="26933 Smart Motion Dimmer" config="ge/26933-motion-dimmer.xml"/>
 		<Product type="4952" id="3036" name="14291 In-Wall Smart Switch" config="ge/14291-switch.xml"/>
+		<Product type="4952" id="3037" name="14292 In-Wall Smart Toggle Switch" config="ge/14292-toggle-switch.xml"/>
 		<Product type="5250" id="3030" name="45603 Plugin Appliance Module"/>
 		<Product type="5250" id="3130" name="45604 Outdoor Module"/>
 		<Product type="4f50" id="3031" name="12720 Outdoor Smart Switch"/>
@@ -739,6 +741,7 @@
 		<Product type="4450" id="3030" name="PD300Z-2 Plug-in Dimmer Module" config="linear/PD300Z-2.xml"/>
 		<Product type="4457" id="3034" name="WD500Z-1 Wall Dimmer Switch" config="linear/WD500Z-1.xml"/>
 		<Product type="4457" id="3331" name="WD1000Z-1 Wall Dimmer Switch"/>
+		<Product type="4744" id="3030" name="GD00Z-4 Garage Door Opener Remote Controller"/>
 		<Product type="4754" id="3038" name="LB60Z-1 Dimmable LED Light Bulb" config="linear/LB60Z-1.xml"/>
 		<Product type="5246" id="3133" name="FS20Z Isolated Contact Fixture Module"/>
 		<Product type="5250" id="3030" name="PS15Z-2 Plug-in Appliance Module"/>
@@ -875,6 +878,7 @@
 		<Product type="0003" id="0002" name="Danalock Circle/Square" config="polycontrol/doorlock.xml"/>
 		<Product type="0001" id="0001" name="Polylock" config="polycontrol/polylock.xml"/>
 		<Product type="0008" id="0002" name="Danalock V2 BTZE" config="polycontrol/doorlock.xml"/>
+		<Product type="0009" id="0001" name="Danalock V3 BTZE" config="polycontrol/doorlockv3.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0154" name="Popp">
 		<Product type="0001" id="0001" name="123658 Plug-in Switch plus Power Meter" config="popp/123658.xml"/>
@@ -1189,9 +1193,11 @@
 	<Manufacturer id="0131" name="Zipato">
 		<Product type="0002" id="0002" name="RGBW LED Bulb" config="zipato/RGBBulb.xml" />
 		<Product type="0002" id="0003" name="Bulb 2" config="zipato/RGBBulb2.xml"/>
+		<Product type="0002" id="000c" name="PST02-A 4 in 1 Multi-Sensor" config="philio/pst02.xml"/>
 		<Product type="6131" id="4501" name="Zipato Mini Keypad" config="zipato/MiniKeypad.xml" />
 		<Product type="2001" id="0106" name="VS-ZD2102 Door/Window Sensor" config="zipato/vszd2102.xml" />
 		<Product type="2002" id="0205" name="ZP3102-EU Multisensor Duo" config="zipato/zp3102.xml"/>
+		<Product type="201f" id="1f20" name="ZD2301 Multisensor 4in1" config="vision/zd2301.xml"/>
 		<Product type="8002" id="1000" name="Smart Smoke Sensor HS1SA-Z" config="heiman/HS1SA-Z.xml"/>
 		<Product type="8003" id="1000" name="Combustible Gas Sensor HS1CG-Z" config="heiman/HS1CG-Z.xml"/>
 		<Product type="8004" id="1000" name="Water Leakage Sensor HS1WL-Z" config="heiman/HS1WL-Z.xml"/>
@@ -1200,15 +1206,23 @@
 	<Manufacturer id="027a" name="Zooz">
 		<Product type="0003" id="0082" name="ZSE08 Contact Sensor" config="zooz/zse08.xml" />
 		<Product type="0003" id="0083" name="ZSE09 Mini Sensor" config="zooz/zse09.xml" />
+		<Product type="b112" id="1f1c" name="ZEN22 Dimmer V2" config="zooz/zen22v2.xml"/>
 		<Product type="0003" id="0085" name="ZSE30 Water Sensor" config="zooz/zse30.xml" />
 		<Product type="0003" id="0087" name="ZEN07 Mini Plug" config="zooz/zen07.xml" />
 		<Product type="2021" id="2101" name="ZSE40 4-in-1 sensor" config="zooz/zse40.xml" />
 		<Product type="0003" id="0088" name="ZSE33 Smart Chime" config="zooz/zse33.xml" />
+		<Product type="0101" id="000a" name="ZEN06" config="zooz/zen06.xml"/>
+		<Product type="b111" id="251c" name="ZEN23 Toggle Switch V2" config="zooz/zen23.xml" />
 	</Manufacturer>
 	<Manufacturer id="015d" name="Zooz">
 		<Product type="0651" id="f51c" name="ZEN20 Power Strip" config="zooz/zen20.xml" />
+		<Product type="0111" id="231c" name="ZEN21 Switch" config="zooz/zen21.xml"/>
+		<Product type="0112" id="241c" name="ZEN22 Dimmer" config="zooz/zen22.xml"/>
 		<Product type="1111" id="1e1c" name="ZEN23 Toggle Switch" config="zooz/zen23.xml" />
 		<Product type="0111" id="1f1c" name="ZEN24 Dimmer Switch" config="zooz/zen24.xml" />
+	</Manufacturer>
+	<Manufacturer id="0315" name="Z Wave Products Inc.">
+    		<Product type="4447" id="3034" name="WD-100" config="zwp/WD-100.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0021" name="Zykronix">
 	</Manufacturer>

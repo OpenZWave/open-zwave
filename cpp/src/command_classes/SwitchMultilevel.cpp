@@ -66,10 +66,10 @@ enum
 
 static uint8 c_directionParams[] =
 {
-	0x18,
-	0x58,
-	0xc0,
-	0xc8
+	0x00,
+	0x40,
+	0x00,
+	0x40
 };
 
 static char const* c_directionDebugLabels[] =
@@ -550,6 +550,13 @@ bool SwitchMultilevel::StartLevelChange
 	msg->Append( length );
 	msg->Append( GetCommandClassId() );
 	msg->Append( SwitchMultilevelCmd_StartLevelChange );
+	if (GetVersion() == 2) {
+		direction &= 0x60;
+	} else if (GetVersion() >= 3) {
+		/* we don't support secondary switch, so we mask that out as well */
+		direction &= 0xE0;
+	}
+
 	msg->Append( direction );
 	msg->Append( startLevel );
 

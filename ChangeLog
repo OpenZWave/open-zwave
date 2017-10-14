@@ -1,4 +1,3 @@
-- ForceInstances now limited to association with the controller node.
 Version 1.5
  - Pull Request #743 - Updated Fibaro Devices from Navstev0 (Justin)
  - Pull Request #740 - Updated Fibaro FGMS-001 ID's from Technosf (Justin)
@@ -195,6 +194,9 @@ Version 1.5
  - Add Zipato rebranded devices from Heiman (Nechry)
  - Add Domux rebranded devices from Heiman (Nechry)
  - Issue #1265 New Device: Linear Mains Siren from Ittiz (Nechry)
+ - ForceInstances now limited to association with the controller node.
+ - Issue #1309 - Fix RollerShutter Increment/Decrement in SwitchMultiLevel (Justin)
+
  
 Version 1.4
  - Released 10th Jan, 2016
