@@ -40,7 +40,7 @@
 				6(0x06)= 6 F / 3.0 C
 			</Help>
             <Item label="3 F / 1.5 C" value="3" />
-            <Item label="4 F / 2.0 C (default)" value="4" />
+            <Item label="4 F / 2.0 C" value="4" />
             <Item label="5 F / 2.5 C" value="5" />
             <Item label="6 F / 3.0 C" value="6" />
 		</Value>
@@ -121,7 +121,7 @@
             <Item label="-3 F / -1.5 C" value="-3" />
             <Item label="-2 F / -1.0 C" value="-2" />
             <Item label="-1 F / -0.5 C" value="-1" />
-            <Item label="0 F / 0 C (default)" value="0" />
+            <Item label="0 F / 0 C" value="0" />
             <Item label="1 F / 0.5 C" value="1" />
             <Item label="2 F / 1.0 C" value="2" />
             <Item label="3 F / 1.5 C" value="3" />
@@ -140,7 +140,7 @@
                     3 (0x03) = Level-3 (bright)
             </Help>
         </Value>
-        <Value type="byte" index="12" genre="config" label="Sleep timer" value="5" size="1">
+        <Value type="byte" index="12" genre="config" label="Sleep timer" value="5" units="seconds" size="1">
             <Help>
                     3 (0x03) to 60 (0x3C) seconds,
                     255 (0xFF) = Always On
@@ -149,7 +149,7 @@
                     24Vac = 60s, default
             </Help>
         </Value>
-		<Value type="byte" index="13" genre="config" label="Repeat basic set counter" value="0" size="1">
+		<Value type="byte" index="13" genre="config" label="Repeat basic set counter" value="0" units="minutes" size="1">
 			<Help>
 				Repeat basic set counter (Association Group A and B only)
 				Value(X): 0 (0x00), 3 (0x03) to 255 (0xFF)
@@ -175,8 +175,8 @@
 				7 (0x07) = 7 F (3.5 C)
 				8 (0x08) = 8 F (4.0 C)
 			</Help>
-            <Item label="1 F / 0.5 C (default for 24Vac)" value="1" />
-            <Item label="2 F / 1.0 C (default for battery)" value="2" />
+            <Item label="1 F / 0.5 C" value="1" />
+            <Item label="2 F / 1.0 C" value="2" />
             <Item label="3 F / 1.5 C" value="3" />
             <Item label="4 F / 2.0 C" value="4" />
             <Item label="5 F / 2.5 C" value="5" />
@@ -230,8 +230,8 @@
 	<!-- Association Groups -->
 	<CommandClass id="133">
 		<Associations num_groups="3">
-			<Group index="1" max_associations="1" label="Lifeline" auto="true"/>
-			<Group index="2" max_associations="5" label="Heating Mode group" auto="false"/>
+			<Group index="1" max_associations="1" label="Lifeline" />
+			<Group index="2" max_associations="5" label="Heating Mode group" />
 			<Group index="3" max_associations="5" label="Cooling Mode group" />
 		</Associations>
 	</CommandClass>
