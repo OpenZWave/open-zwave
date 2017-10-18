@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Product xmlns='http://code.google.com/p/open-zwave/'>
+    <CommandClass id="67" base="0" typeInterpretation="A" />
+    <CommandClass id="64" >
+        <Instance index="1" />
+        <Value type="list" genre="user" instance="1" index="0" label="Mode">
+                <Item label="Off" value="0" />
+                <Item label="Heat" value="1" />
+                <Item label="Heat Econ" value="11" />
+                <Item label="Full Power" value="15" />
+                <Item label="Manufacturer Specific" value="31" />
+        </Value>
+        <SupportedModes>
+                <Mode index="0" label="Off" />
+                <Mode index="1" label="Heat" />
+                <Mode index="11" label="Heat Econ" />
+                <Mode index="15" label="Full Power" />
+                <Mode index="31" label="Manufacturer Specific" />
+        </SupportedModes>
+    </CommandClass>
+
+    <CommandClass id="112">
+        <Value type="byte" genre="config" instance="1" index="1" label="Invert LCD" min="0" max="1" units="" value="0">
+            <Help>
+                    0x00 LCD normal
+                    0x01 LCD inverted / upside down
+                    Default: 0x00
+            </Help>
+        </Value>
+        <Value type="byte" genre="config" instance="1" index="2" label="LCD Timeout" min="0" max="30" units="" value="0">
+            <Help>
+                    0x00 No Timeout, LCD always on
+                    0x05-0x1E Timeout after 5 - 30s
+                    default: 0x00
+            </Help>
+        </Value>
+        <Value type="byte" genre="config" instance="1" index="3" label="Backlight" min="0" max="1" units="" value="1">
+            <Help>
+                0x00 No Backlight
+                0x01 Backlight active
+                default: 0x01
+            </Help>
+        </Value>
+        <Value type="byte" genre="config" instance="1" index="4" label="Battery Status" min="0" max="1" units="" value="1">
+            <Help>
+                0x00 Only send battery status as notification
+                0x01 send battery status 1x daily
+                default: 0x01
+            </Help>
+        </Value>
+        <Value type="byte" genre="config" instance="1" index="5" label="Temperature Report Threshold" min="0" max="50" units="°C" value="5">
+            <Help>
+                0x00 Don't send temperature automatically
+                0x01 – 0x32 Report temperature at 0,1 - 5.0°C temperature difference
+                default 0x05 (Delta = 0,5°C )
+            </Help>
+        </Value>
+        <Value type="byte" genre="config" instance="1" index="6" label="Valve Opening Degree" min="0" max="100" units="" value="0">
+            <Help>
+                0x00 Don't send Valve opening degree automatically 
+                0x01-0x64 report valve opening degree at a delta of 1 - 100%.
+                default 0x00
+            </Help>
+        </Value>   
+        <Value type="byte" genre="config" instance="1" index="7" label="Open Window Detection" min="0" max="3" units="" value="2">
+            <Help>
+                0x00 Disabled
+                0x01 low sensibility
+                0x02 medium sensibility
+                0x03 high sensibility
+                default: 0x02
+            </Help>
+        </Value>
+        <Value type="byte" genre="config" instance="1" index="8" label="Temperature Offset" min="-50" max="128" units="" value="0">
+            <Help>
+                0xCE-0x32 -5,0°C – (+)5,0°C
+                0x80 External Temperature Sensor
+                default: 0x00 0,0°C Offset
+            </Help>
+        </Value>
+    </CommandClass>
+</Product>
+
