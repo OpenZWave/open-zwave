@@ -51,6 +51,7 @@ Stream::Stream
 	m_mutex( new Mutex() )
 {
 	m_buffer = new uint8[m_bufferSize];
+	memset(m_buffer, 0x00, m_bufferSize);
 }
 
 //-----------------------------------------------------------------------------
