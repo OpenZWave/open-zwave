@@ -269,6 +269,7 @@
 		<Product type="5244" id="0000" name="RF9505-T Split Control Duplex Receptacle" config="cooper/RF9505-T.xml"/>
 		<Product type="534c" id="0000" name="RF9501 Light Switch" config="cooper/RF9501.xml"/>
 		<Product type="5352" id="0000" name="RF9517 Accessory Light Switch" config="cooper/RF9517.xml"/>
+		<Product type="574d" id="0000" name="RFWC5/RFWDC Scene Controller" config="cooper/RFWC5.xml"/>
 	</Manufacturer>
 	<Manufacturer id="009d" name="Coventive">
 	</Manufacturer>
