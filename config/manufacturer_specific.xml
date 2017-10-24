@@ -314,8 +314,9 @@
 	<Manufacturer id="0050" name="Digital 5">
 	</Manufacturer>
 	<Manufacturer id="021f" name="Dome">
-		<Product type="0003" id="0101" name="Door/Window Sensor" config="dome/0101.xml"/>
 		<Product type="0003" id="0002" name="Water Shut-Off Valve" config="dome/0002.xml"/>
+		<Product type="0003" id="0088" name="Siren" config="dome/0088.xml"/>
+		<Product type="0003" id="0101" name="Door/Window Sensor" config="dome/0101.xml"/>
 	</Manufacturer>
 	<Manufacturer id="020e" name="Domitech">
 		<Product type="4c42" id="3134" name="Smart LED Retrofit Kit ZE27EU" config="domitech/ze27eu.xml"/>
