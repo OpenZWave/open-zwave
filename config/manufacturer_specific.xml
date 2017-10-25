@@ -523,16 +523,25 @@
 		<Product type="0027" id="0100" name="Shuttle L Z-Wave" config="forest/fs2z5232000002.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0084" name="FortrezZ">
+		<Product type="0013" id="0210" name="WWA-01AA - Wireless Water and Freeze Alarm" />
 		<Product type="0021" id="010a" name="WWA-02 Water and Temperature Alarm" config="fortrezz/wwa02.xml"/>
+		<Product type="0023" id="0109" name="WWA-02 Water and Temperature Alarm" config="fortrezz/wwa02.xml"/>
+		<Product type="0213" id="020c" name="WV-01 Automated Water Shut-Off Valve" config="fortrezz/wv01.xml"/>
 		<Product type="0241" id="0300" name="WV-01 Automated Water Shut-Off Valve" config="fortrezz/wv01.xml"/>
+		<Product type="0243" id="0216" name="WV-01 Automated Water Shut-Off Valve" config="fortrezz/wv01.xml"/>
 		<Product type="0311" id="0109" name="SSA1 / SSA2 - Siren/Strobe Light Alarm" config="fortrezz/ssa2.xml"/>
 		<Product type="0311" id="010b" name="SSA1 / SSA2 - Siren/Strobe Light Alarm" config="fortrezz/ssa2.xml"/>
+		<Product type="0313" id="0107" name="SSA1 / SSA2 - Siren/Strobe Light Alarm" config="fortrezz/ssa2.xml"/>
 		<Product type="0313" id="010b" name="SSA2 - Siren/Strobe Light Alarm" config="fortrezz/ssa2.xml"/>
 		<Product type="0331" id="010b" name="SSA3 - Siren/Strobe Light Alarm" config="fortrezz/ssa3.xml"/>
 		<Product type="0341" id="0205" name="SSA3 - Siren/Strobe Light Alarm" config="fortrezz/ssa3.xml"/>
+		<Product type="0343" id="0205" name="SSA3 - Siren/Strobe Light Alarm" config="fortrezz/ssa3.xml"/>
 		<Product type="0451" id="0111" name="MIMOlite" config="fortrezz/mimolite.xml"/>
 		<Product type="0453" id="0110" name="MIMOlite" config="fortrezz/mimolite.xml"/>
 		<Product type="0453" id="0111" name="MIMOlite" config="fortrezz/mimolite.xml"/>
+		<Product type="0463" id="0204" name="MIMO2+" config="fortrezz/mimo2plus.xml"/>
+		<Product type="0473" id="0110" name="FMI Flow Meter" config="fortrezz/fmi.xml"/>
+		<Product type="0513" id="0111" name="GDC1 Siren/Strobe Light Alarm"/>
 	</Manufacturer>
 	<Manufacturer id="0110" name="Frostdale">
 		<Product type="2411" id="0001" name="Nanogrid: FDN2nxx light switch - where n is 1, 2, 3 or 4 buttons"/>
