@@ -41,30 +41,30 @@
         <Value type="list" genre="config" instance="1" index="5" label="Alarm Music Index" min="1" max="10" size="1" value="10">
             <Help>This parameter defines the alarm music index for siren play different music when alarm occurs.
                 There are 10 different music for user selection</Help>
-            <Item label="1" value="1"/>
-            <Item label="2" value="2"/>
-            <Item label="3" value="3"/>
-            <Item label="4" value="4"/>
-            <Item label="5" value="5"/>
-            <Item label="6" value="6"/>
-            <Item label="7" value="7"/>
-            <Item label="8" value="8"/>
-            <Item label="9" value="9"/>
-            <Item label="10" value="10"/>
+            <Item label="One" value="1"/>
+            <Item label="Two" value="2"/>
+            <Item label="Three" value="3"/>
+            <Item label="Four" value="4"/>
+            <Item label="Five" value="5"/>
+            <Item label="Six" value="6"/>
+            <Item label="Seven" value="7"/>
+            <Item label="Eight" value="8"/>
+            <Item label="Nine" value="9"/>
+            <Item label="Ten" value="10"/>
         </Value>
         <Value type="list" genre="config" instance="1" index="6" label="Door Bell Music Index" min="1" max="10" size="1" value="9">
             <Help>This parameter defines the door bell music index for siren play different music when alarm occurs.
                 There are 10 different music for user selection.</Help>
-            <Item label="1" value="1"/>
-            <Item label="2" value="2"/>
-            <Item label="3" value="3"/>
-            <Item label="4" value="4"/>
-            <Item label="5" value="5"/>
-            <Item label="6" value="6"/>
-            <Item label="7" value="7"/>
-            <Item label="8" value="8"/>
-            <Item label="9" value="9"/>
-            <Item label="10" value="10"/>
+            <Item label="One" value="1"/>
+            <Item label="Two" value="2"/>
+            <Item label="Three" value="3"/>
+            <Item label="Four" value="4"/>
+            <Item label="Five" value="5"/>
+            <Item label="Six" value="6"/>
+            <Item label="Seven" value="7"/>
+            <Item label="Eight" value="8"/>
+            <Item label="Nine" value="9"/>
+            <Item label="Ten" value="10"/>
         </Value>
         <Value type="list" genre="config" instance="1" index="7" label="Configure Default Siren On Mode" min="1" max="2" size="1" value="1">
             <Help>This parameter defines the default music index, volume and the duration time for 3 siren on.
