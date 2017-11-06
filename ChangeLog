@@ -196,6 +196,7 @@ Version 1.5
  - Issue #1265 New Device: Linear Mains Siren from Ittiz (Nechry)
  - ForceInstances now limited to association with the controller node.
  - Issue #1309 - Fix RollerShutter Increment/Decrement in SwitchMultiLevel (Justin)
+ - Add Dome On/Off Plug-In Switch (Nechry)
 
  
 Version 1.4
