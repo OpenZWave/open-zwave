@@ -115,6 +115,7 @@ DISTFILES =	.gitignore \
 	config/dlink/dch-z120.xml \
 	config/dlink/dch-z510.xml \
 	config/dome/0002.xml \
+	config/dome/0088.xml \
 	config/dome/0101.xml \
 	config/domitech/zb22uk.xml \
 	config/domitech/ze27eu.xml \
@@ -201,12 +202,15 @@ DISTFILES =	.gitignore \
 	config/fibaro/fgwpfzw5.xml \
 	config/firstalert/zcombo.xml \
 	config/forest/fs2z5232000002.xml \
+	config/fortrezz/fmi.xml \
+	config/fortrezz/mimo2plus.xml \
 	config/fortrezz/mimolite.xml \
 	config/fortrezz/ssa2.xml \
 	config/fortrezz/ssa3.xml \
 	config/fortrezz/wv01.xml \
 	config/fortrezz/wwa02.xml \
 	config/frostdale/fdn2nxx.xml \
+	config/ge/12719-plugin-switch.xml \
 	config/ge/12724-dimmer.xml \
 	config/ge/14282-plugin-switch.xml \
 	config/ge/14291-switch.xml \
