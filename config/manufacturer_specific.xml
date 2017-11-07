@@ -317,6 +317,7 @@
 		<Product type="0003" id="0002" name="Water Shut-Off Valve" config="dome/0002.xml"/>
 		<Product type="0003" id="0083" name="Motion Detector" config="dome/0083.xml"/>
 		<Product type="0003" id="0085" name="Leak Sensor" config="dome/0085.xml"/>
+		<Product type="0003" id="0086" name="Mouser" config="dome/0086.xml"/>
 		<Product type="0003" id="0087" name="On/Off Plug-In Switch" config="dome/0087.xml"/>
 		<Product type="0003" id="0088" name="Siren" config="dome/0088.xml"/>
 		<Product type="0003" id="0101" name="Door/Window Sensor" config="dome/0101.xml"/>

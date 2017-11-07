@@ -117,6 +117,7 @@ DISTFILES =	.gitignore \
 	config/dome/0002.xml \
 	config/dome/0083.xml \
 	config/dome/0085.xml \
+	config/dome/0086.xml \
 	config/dome/0087.xml \
 	config/dome/0088.xml \
 	config/dome/0101.xml \
