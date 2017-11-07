@@ -1066,6 +1066,9 @@
 	</Manufacturer>
 	<Manufacturer id="006b" name="Tricklestar">
 	</Manufacturer>
+	<Manufacturer id="0330" name="Tronika">
+		<Product type="0003" id="a10d" name="Touch Panel Wall Controller - ZSC-01D" config="tronika/zsc01d.xml"/>
+	</Manufacturer>
 	<Manufacturer id="0049" name="Twisthink">
 	</Manufacturer>
 	<Manufacturer id="0080" name="Vero Duco">

@@ -197,7 +197,7 @@ Version 1.5
  - ForceInstances now limited to association with the controller node.
  - Issue #1309 - Fix RollerShutter Increment/Decrement in SwitchMultiLevel (Justin)
  - Add Dome On/Off Plug-In Switch (Nechry)
-
+ - Add Tronika Touch Panel Wall Controller - ZSC-01D (Nechry)
  
 Version 1.4
  - Released 10th Jan, 2016
