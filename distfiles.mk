@@ -115,6 +115,7 @@ DISTFILES =	.gitignore \
 	config/dlink/dch-z120.xml \
 	config/dlink/dch-z510.xml \
 	config/dome/0002.xml \
+	config/dome/0083.xml \
 	config/dome/0087.xml \
 	config/dome/0088.xml \
 	config/dome/0101.xml \
