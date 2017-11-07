@@ -118,6 +118,7 @@ DISTFILES =	.gitignore \
 	config/dome/0087.xml \
 	config/dome/0088.xml \
 	config/dome/0101.xml \
+	config/dome/0201.xml \
 	config/domitech/zb22uk.xml \
 	config/domitech/ze27eu.xml \
 	config/domux/DX1CA-Z.xml \
