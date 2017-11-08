@@ -5,7 +5,7 @@
   <CommandClass id="112">
     <Value type="list" index="1" genre="config" label="Dim level when light is turned ON" units="" min="0" max="1" size="1" value="0">
       <Help>You may select the dim level whenever the light is turned back ON to be either full brightness (100% dim level) or be the same as the last dim setting when the light is ON by flicking the wall switch</Help>
-      <Item label="Full brightness (Default)" value="0"/>
+      <Item label="Full brightness" value="0"/>
       <Item label="Last brightness setting" value="1"/>
     </Value>
     <Value type="byte" genre="config" instance="1" index="9" label="Dimming/Brightening Step Level" min="1" max="99" value="1" size="1">
