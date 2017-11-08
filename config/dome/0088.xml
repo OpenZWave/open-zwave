@@ -29,26 +29,53 @@
       <Item label="Medium" value="2"/>
       <Item label="High" value="3"/>
     </Value>
-    <Value type="byte" genre="config" index="5" label="Primary Notification Sound" value="10" min="1" max="10" size="1">
-      <Help>The Siren offers ten different sounds to use as the Siren (primary) notification. This parameter sets the Siren (primary) notification sound.</Help>
+    <Value type="list" genre="config" index="5" label="Primary Notification Sound" value="10" min="1" max="10" size="1">
+      <Help>
+        The Siren offers ten different sounds to use as the Siren (primary) notification.
+        This parameter sets the Siren (primary) notification sound.
+      </Help>
+      <Item label="Doorbell" value="1"/>
+      <Item label="Bagatelle" value="2"/>
+      <Item label="Chord" value="3"/>
+      <Item label="Ring" value="4"/>
+      <Item label="Happy birthday" value="5"/>
+      <Item label="Ring tone" value="6"/>
+      <Item label="Police" value="7"/>
+      <Item label="Error" value="8"/>
+      <Item label="Bip Bip" value="9"/>
+      <Item label="Alert" value="10"/>
     </Value>
-    <Value type="byte" genre="config" index="6" label="Secondary Notification Sound" value="9" min="1" max="10" size="1">
-      <Help>If Parameter 7 is set to 02, the Siren will play a secondary chime sound instead of the main alarm. The Siren offers ten different sounds to use as the Chime (secondary) notification. This parameter sets the Chime (secondary) notification sound.</Help>
+    <Value type="list" genre="config" index="6" label="Secondary Notification Sound" value="9" min="1" max="10" size="1">
+      <Help>
+        If Parameter 7 is set to 02, the Siren will play a secondary chime sound instead of the main alarm.
+        The Siren offers ten different sounds to use as the Chime (secondary) notification.
+        This parameter sets the Chime (secondary) notification sound.
+      </Help>
+      <Item label="Doorbell" value="1"/>
+      <Item label="Bagatelle" value="2"/>
+      <Item label="Chord" value="3"/>
+      <Item label="Ring" value="4"/>
+      <Item label="Happy birthday" value="5"/>
+      <Item label="Ring tone" value="6"/>
+      <Item label="Police" value="7"/>
+      <Item label="Error" value="8"/>
+      <Item label="Bip Bip" value="9"/>
+      <Item label="Alert" value="10"/>
     </Value>
     <Value type="list" genre="config" index="7" label="Toggle Secondary Chime" value="1" min="1" max="2" size="1">
       <Help>This Parameter toggles between the Primary and Secondary notification sound to be played when the Siren receives a BINARY_SWITCH_SET(FF) command.</Help>
     <Item label="Primary Notification Will Play" value="1"/>
     <Item label="Secondary Notification Will Play" value="2"/>
     </Value>
-    <Value type="list" genre="config" index="8" label="Enable/Disable Primary Notification Strobe" value="1" min="1" max="2" size="1">
+    <Value type="list" genre="config" index="8" label="Primary Notification Strobe" value="1" min="0" max="1" size="1">
       <Help>This Parameter enables or disables the Flashing LED Ring (strobe) accompanying the Primary Notification.</Help>
-    <Item label="LED Ring Will Not Flash" value="1"/>
-    <Item label="LED Ring Will Flash" value="2"/>
+    <Item label="LED Ring Will Not Flash" value="0"/>
+    <Item label="LED Ring Will Flash" value="1"/>
     </Value>
-    <Value type="list" genre="config" index="9" label="Enable/Disable Secondary Notification Strobe" value="1" min="1" max="2" size="1">
+    <Value type="list" genre="config" index="9" label="Secondary Notification Strobe" value="0" min="0" max="1" size="1">
       <Help>This Parameter enables or disables the Flashing LED Ring (strobe) accompanying the Secondary Notification.</Help>
-    <Item label="LED Ring Will Not Flash" value="1"/>
-    <Item label="LED Ring Will Flash" value="2"/>
+    <Item label="LED Ring Will Not Flash" value="0"/>
+    <Item label="LED Ring Will Flash" value="1"/>
     </Value>
   </CommandClass>
   <!-- Association Groups -->
