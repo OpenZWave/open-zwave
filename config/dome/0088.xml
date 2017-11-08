@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Product xmlns='http://code.google.com/p/open-zwave/'>
   <!--
-  Dome Siren
-  https://docs.domeha.com/#compatible-command-classes19
+  Dome Siren DMS01
+  https://docs.domeha.com/#siren
   -->
   <!-- Configuration Parameters -->
   <CommandClass id="112">
@@ -39,7 +39,7 @@
       <Item label="Chord" value="3"/>
       <Item label="Ring" value="4"/>
       <Item label="Happy birthday" value="5"/>
-      <Item label="Ring tone" value="6"/>
+      <Item label="Ringtone" value="6"/>
       <Item label="Police" value="7"/>
       <Item label="Error" value="8"/>
       <Item label="Bip Bip" value="9"/>
@@ -56,7 +56,7 @@
       <Item label="Chord" value="3"/>
       <Item label="Ring" value="4"/>
       <Item label="Happy birthday" value="5"/>
-      <Item label="Ring tone" value="6"/>
+      <Item label="Ringtone" value="6"/>
       <Item label="Police" value="7"/>
       <Item label="Error" value="8"/>
       <Item label="Bip Bip" value="9"/>
