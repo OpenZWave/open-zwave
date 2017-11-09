@@ -35,15 +35,15 @@
         This parameter sets the Siren (primary) notification sound.
       </Help>
       <Item label="Doorbell" value="1"/>
-      <Item label="Bagatelle" value="2"/>
-      <Item label="Chord" value="3"/>
-      <Item label="Ring" value="4"/>
-      <Item label="Happy birthday" value="5"/>
-      <Item label="Ringtone" value="6"/>
-      <Item label="Police" value="7"/>
-      <Item label="Error" value="8"/>
-      <Item label="Bip Bip" value="9"/>
-      <Item label="Alert" value="10"/>
+      <Item label="Fur Elise" value="2"/>
+      <Item label="Doorbell Extended" value="3"/>
+      <Item label="Alert" value="4"/>
+      <Item label="William Tell" value="5"/>
+      <Item label="Rondo Alla Turca" value="6"/>
+      <Item label="Police Siren" value="7"/>
+      <Item label="Evacuation" value="8"/>
+      <Item label="Beep Beep" value="9"/>
+      <Item label="Beep" value="10"/>
     </Value>
     <Value type="list" genre="config" index="6" label="Secondary Notification Sound" value="9" min="1" max="10" size="1">
       <Help>
@@ -52,15 +52,15 @@
         This parameter sets the Chime (secondary) notification sound.
       </Help>
       <Item label="Doorbell" value="1"/>
-      <Item label="Bagatelle" value="2"/>
-      <Item label="Chord" value="3"/>
-      <Item label="Ring" value="4"/>
-      <Item label="Happy birthday" value="5"/>
-      <Item label="Ringtone" value="6"/>
-      <Item label="Police" value="7"/>
-      <Item label="Error" value="8"/>
-      <Item label="Bip Bip" value="9"/>
-      <Item label="Alert" value="10"/>
+      <Item label="Fur Elise" value="2"/>
+      <Item label="Doorbell Extended" value="3"/>
+      <Item label="Alert" value="4"/>
+      <Item label="William Tell" value="5"/>
+      <Item label="Rondo Alla Turca" value="6"/>
+      <Item label="Police Siren" value="7"/>
+      <Item label="Evacuation" value="8"/>
+      <Item label="Beep Beep" value="9"/>
+      <Item label="Beep" value="10"/>
     </Value>
     <Value type="list" genre="config" index="7" label="Toggle Secondary Chime" value="1" min="1" max="2" size="1">
       <Help>This Parameter toggles between the Primary and Secondary notification sound to be played when the Siren receives a BINARY_SWITCH_SET(FF) command.</Help>
