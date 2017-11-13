@@ -231,6 +231,7 @@
 		<Product type="0020" id="0001" name="Energy Switch plus" config="BeNext/EnergySwitch.xml"/>
 		<Product type="0021" id="0001" name="Heating Control" config="BeNext/HeatingControl.xml"/>
 		<Product type="0021" id="0100" name="Heating Control" config="BeNext/HeatingControl.xml"/>
+		<Product type="0021" id="0102" name="Heating Control" config="BeNext/HeatingControl.xml"/>
 		<Product type="002f" id="0100" name="P1 Dongle" config="BeNext/P1dongle.xml"/>
 	</Manufacturer>
 	<Manufacturer id="002c" name="BeSafer">
