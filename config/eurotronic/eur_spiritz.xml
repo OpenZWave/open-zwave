@@ -71,7 +71,7 @@
                 default: 0x02
             </Help>
         </Value>
-        <Value type="byte" genre="config" instance="1" index="8" label="Temperature Offset" min="-50" max="128" units="" value="0">
+        <Value type="byte" genre="config" instance="1" index="8" label="Temperature Offset" min="-128" max="50" units="" value="0">
             <Help>
                 0xCE-0x32 -5,0°C – (+)5,0°C
                 0x80 External Temperature Sensor
