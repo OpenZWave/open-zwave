@@ -366,7 +366,6 @@
 		<Product type="0003" id="0002" name="EUR_SPIRITZ Wall Radiator Thermostat" config="eurotronic/eur_spiritz.xml"/>
 		<Product type="0003" id="0003" name="EUR_SPIRITZ Wall Radiator Thermostat" config="eurotronic/eur_spiritz.xml"/>
 	</Manufacturer>
-	</Manufacturer>
 	<Manufacturer id="0128" name="Eneco">
 		<Product type="0000" id="0000" name="ED2.0 Meter Adapter"/>
 		<Product type="0128" id="0000" name="ED2.0 Display"/>
