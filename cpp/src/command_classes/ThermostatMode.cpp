@@ -363,15 +363,6 @@ bool ThermostatMode::HandleMsg
 				}
 			}
 		}
-//		if ( GetVersion() >= 3)
-//		{
-//			ValueList::Item item;
-//			item.m_value = ThermostatMode_ManufacturerSpecific;
-//			item.m_label = c_modeName[item.m_value];
-//			m_supportedModes.push_back( item );
-//			Log::Write( LogLevel_Info, GetNodeId(), "    Added mode: %s", c_modeName[item.m_value] );
-//		}
-
 		ClearStaticRequest( StaticRequest_Values );
 		CreateVars( _instance );
 		return true;
