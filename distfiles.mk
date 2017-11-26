@@ -229,6 +229,7 @@ DISTFILES =	.gitignore \
 	config/ge/hinge-pin.xml \
 	config/ge/receptacle.xml \
 	config/ge/relay.xml \
+	config/ge/ze26i.xml \
 	config/ge/zw4001-switch.xml \
 	config/gocontrol/GC-TBZ48L.xml \
 	config/gr/gr105.xml \

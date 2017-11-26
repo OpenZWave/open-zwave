@@ -13,6 +13,7 @@
 		<Product type="6402" id="0001" name="CT100 Plus Thermostat" config="2gig/ct100.xml"/>
 		<Product type="6501" id="000c" name="CT101 Thermostat (Iris)" config="2gig/ct101.xml"/>
 		<Product type="6501" id="000d" name="CT101 Thermostat" config="2gig/ct101.xml"/>
+		<Product type="5003" id="0109" name="CT80 Thermostat" config="2gig/ct80.xml"/>
 	</Manufacturer>
 	<Manufacturer id="002a" name="3e Technologies">
 	</Manufacturer>
