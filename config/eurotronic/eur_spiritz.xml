@@ -16,21 +16,21 @@ Tech manual: https://www.eurotronic.org/fileadmin/user_upload/eurotronic.org/Pro
         <Value type="list" genre="user" instance="1" index="0" label="Mode">
             <Help>
                 Off: No heating, only frost protection.
-                Auto: Room temperature will be kept at the configured setpoint.
-                Eco: Energy save heating mode. Room temperature will be lowered to the configured eco setpoint in order to save energy.
+                Heat: Room temperature will be kept at the configured setpoint.
+                Heat Eco: Energy save heating mode. Room temperature will be lowered to the configured eco setpoint in order to save energy.
                 Full Power: Full power heating. This mode is left automatically after 5 minutes.
                 Manufacturer Specific: Direct valve control mode. The valve opening percentage can be controlled using the switch multilevel command class.
             </Help>
             <Item label="Off" value="0" />
-            <Item label="Auto" value="1" />
-            <Item label="Eco" value="11" />
+            <Item label="Heat" value="1" />
+            <Item label="Heat Eco" value="11" />
             <Item label="Full Power" value="15" />
             <Item label="Manufacturer Specific" value="31" />
         </Value>
         <SupportedModes>
             <Mode index="0" label="Off" />
-            <Mode index="1" label="Auto" />
-            <Mode index="11" label="Eco" />
+            <Mode index="1" label="Heat" />
+            <Mode index="11" label="Heat Eco" />
             <Mode index="15" label="Full Power" />
             <Mode index="31" label="Manufacturer Specific" />
         </SupportedModes>
@@ -39,8 +39,8 @@ Tech manual: https://www.eurotronic.org/fileadmin/user_upload/eurotronic.org/Pro
     <!-- Setpoints -->
     <CommandClass id="67" base="0" typeInterpretation="A">
         <Instance index="1"/>
-        <Value type="decimal" genre="user" instance="1" index="1" label="Target Temperature" units="&#x00b0;C" read_only="false" write_only="false" min="8" max="28" value="20"/>
-        <Value type="decimal" genre="user" instance="1" index="11" label="Target Temperature Eco" units="&#x00b0;C" read_only="false" write_only="false" min="8" max="28" value="16"/>
+        <Value type="decimal" genre="user" instance="1" index="1" label="Heat" units="&#x00b0;C" read_only="false" write_only="false" min="8" max="28" value="20"/>
+        <Value type="decimal" genre="user" instance="1" index="11" label="Heat Eco" units="&#x00b0;C" read_only="false" write_only="false" min="8" max="28" value="16"/>
     </CommandClass>
 
     <!-- Configuration Parameters -->
