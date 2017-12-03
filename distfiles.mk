@@ -10,6 +10,7 @@ DISTFILES =	.gitignore \
 	config/2gig/ct101.xml \
 	config/2gig/ct30.xml \
 	config/2gig/ct50e.xml \
+	config/2gig/ct80.xml \
 	config/BeNext/1poleswitch.xml \
 	config/BeNext/2poleswitch.xml \
 	config/BeNext/AlarmSound.xml \
@@ -229,6 +230,7 @@ DISTFILES =	.gitignore \
 	config/ge/hinge-pin.xml \
 	config/ge/receptacle.xml \
 	config/ge/relay.xml \
+	config/ge/ze26i.xml \
 	config/ge/zw4001-switch.xml \
 	config/gocontrol/GC-TBZ48L.xml \
 	config/gr/gr105.xml \
