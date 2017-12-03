@@ -10,6 +10,7 @@ DISTFILES =	.gitignore \
 	config/2gig/ct101.xml \
 	config/2gig/ct30.xml \
 	config/2gig/ct50e.xml \
+	config/2gig/ct80.xml \
 	config/BeNext/1poleswitch.xml \
 	config/BeNext/2poleswitch.xml \
 	config/BeNext/AlarmSound.xml \
