@@ -201,6 +201,8 @@ m_nondelivery( 0 ),
 m_routedbusy( 0 ),
 m_broadcastReadCnt( 0 ),
 m_broadcastWriteCnt( 0 ),
+AuthKey( 0 ),
+EncryptKey( 0 ),
 m_nonceReportSent( 0 ),
 m_nonceReportSentAttempt( 0 )
 {
@@ -352,7 +354,8 @@ Driver::~Driver
 
 	m_notificationsEvent->Release();
 	m_nodeMutex->Release();
-
+	delete AuthKey;
+	delete EncryptKey;
 }
 
 //-----------------------------------------------------------------------------

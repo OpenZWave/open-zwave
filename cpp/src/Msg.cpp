@@ -81,6 +81,9 @@ Msg::Msg
 		m_expectedReply = _expectedReply ? _expectedReply : _function;
 	}
 
+	memset(m_buffer, 0x00, 256);
+	memset(e_buffer, 0x00, 256);
+
 	m_buffer[0] = SOF;
 	m_buffer[1] = 0;					// Length of the following data, filled in during Finalize.
 	m_buffer[2] = _msgType;
