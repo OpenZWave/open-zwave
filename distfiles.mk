@@ -399,6 +399,7 @@ DISTFILES =	.gitignore \
 	config/shenzen_neo/nas-pd01z.xml \
 	config/shenzen_neo/nas-wr01z.xml \
 	config/shenzen_neo/nas-ws02z.xml \
+	config/steinel/is140-2.xml \
 	config/stelpro/stzw402.xml \
 	config/swiid/swiidinter.xml \
 	config/swiid/swiidplug.xml \
