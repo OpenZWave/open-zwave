@@ -51,7 +51,7 @@
                 Available settings: 0-255.
                 0 - Lamp is switched on and remains so until any new motion event (local or remote) is received.
                 It then works normally via current motion evaluation.
-                Notice – during the day, this mode cannot be ended remotely due to motion events not being transmitted – only via local motion sensor if enabled.
+                Notice - during the day, this mode cannot be ended remotely due to motion events not being transmitted - only via local motion sensor if enabled.
             </Help>
         </Value>
         <Value genre="config" instance="1" index="12" type="short" label="On behaviour time over" units="" size="2" min="0" max="209" value="204">
@@ -79,7 +79,7 @@
             <Help>Available settings: 0-255.
                 0 - Lamp is switched on and remains so until any new motion event (local or remote) is received.
                 It then works normally via current motion evaluation.
-                Notice – during the day, this mode cannot be ended remotely due to motion events not being transmitted – only via local motion sensor if enabled.
+                Notice - during the day, this mode cannot be ended remotely due to motion events not being transmitted - only via local motion sensor if enabled.
                 1 to 100 timeout: 1 second (1) to 100 seconds (100) in 1-second resolution.
                 101 to 200 timeout: 1 minute (101) to 100 minutes (200) 1-minute resolution.
                 201 to 209 (Default) timeout: 1 hour (201) to 9 hours (209) in 1-hour resolution.
