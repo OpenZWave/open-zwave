@@ -31,7 +31,7 @@ http://www.cooperindustries.com/content/dam/public/wiringdevices/products/docume
 	<!-- Used to set a device into Panic Mode (On-Off flashing at time intervals determined in the device configuration),
 	     To turn ON send a ALARM_REPORT command to the device with an Alarm Type of 1 and a value of 255.
 	     To turn OFF send a ALARM_REPORT command with an Alarm Type of 1 and a value of 0.-->
-	<CommandClass id="113" name="COMMAND_CLASS_ALARM" version="1" request_flags="4" innif="true"/>
+	<CommandClass id="113" name="COMMAND_CLASS_ALARM" version="1" request_flags="4" />
 
 	<!-- Association Groups -->
 	<CommandClass id="133">
