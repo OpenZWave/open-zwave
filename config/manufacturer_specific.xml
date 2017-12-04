@@ -755,8 +755,7 @@
 		<Product type="3301" id="0001" name="DZ1KD-1BZ Decora 1000W Smart Dimmer" config="leviton/dz6hd.xml"/>
 		<Product type="3401" id="0001" name="DZ15S-1BZ Decora Smart Switch" config="leviton/dz15s.xml"/>
 		<Product type="3501" id="0001" name="DZPD3-2BW Decora 300W Plug-In Smart Dimmer" config="leviton/dzpd3.xml"/>
-		<Product type="3601" id="0001" name="Leviton DZPA1 Plugin Outlet" config="leviton/dz15s.xml"/>
-		<Product type="3601" id="0001" name="Leviton DZPA1 Plug-In Outlet" config="leviton/dz15s.xml"/>
+		<Product type="3601" id="0001" name="DZPA1-2BW Plug-In Outlet" config="leviton/dz15s.xml"/>
 	</Manufacturer>
 	<Manufacturer id="014f" name="Linear">
 		<Product type="2001" id="0102" name="WADWAZ-1 Door/Window Sensor" config="linear/WADWAZ-1.xml"/>
