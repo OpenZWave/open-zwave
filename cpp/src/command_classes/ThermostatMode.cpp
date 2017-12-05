@@ -48,6 +48,43 @@ enum ThermostatModeCmd
 	ThermostatModeCmd_SupportedReport	= 0x05
 };
 
+enum
+{
+	ThermostatMode_Off	= 0,
+	ThermostatMode_Heat,
+	ThermostatMode_Cool,
+	ThermostatMode_Auto,
+	ThermostatMode_Auxiliary,
+	ThermostatMode_Resume_On,
+	ThermostatMode_Fan,
+	ThermostatMode_Furnance,
+	ThermostatMode_Dry,
+	ThermostatMode_Moist,
+	ThermostatMode_AutoChangeover,
+	ThermostatMode_HeatingEcon,
+	ThermostatMode_CoolingEcon,
+	ThermostatMode_Away,
+	ThermostatMode_Reserved0E = 0x0E,
+	ThermostatMode_FullPower,
+	ThermostatMode_Reserved10 = 0x10,
+	ThermostatMode_Reserved11,
+	ThermostatMode_Reserved12,
+	ThermostatMode_Reserved13,
+	ThermostatMode_Reserved14,
+	ThermostatMode_Reserved15,
+	ThermostatMode_Reserved16,
+	ThermostatMode_Reserved17,
+	ThermostatMode_Reserved18,
+	ThermostatMode_Reserved19,
+	ThermostatMode_Reserved1A,
+	ThermostatMode_Reserved1B,
+	ThermostatMode_Reserved1C,
+	ThermostatMode_Reserved1D,
+	ThermostatMode_Reserved1E,
+	ThermostatMode_ManufacturerSpecific = 0x1F,
+	ThermostatMode_Count,
+};
+
 static char const* c_modeName[] =
 {
 	"Off",
@@ -64,7 +101,24 @@ static char const* c_modeName[] =
 	"Heat Econ",
 	"Cool Econ",
 	"Away",
-	"Unknown"
+	"Unknown",
+	"Full Power",
+	"Unknown",
+	"Unknown",
+	"Unknown",
+	"Unknown",
+	"Unknown",
+	"Unknown",
+	"Unknown",
+	"Unknown",
+	"Unknown",
+	"Unknown",
+	"Unknown",
+	"Unknown",
+	"Unknown",
+	"Unknown",
+	"Unknown",
+	"Manufacturer Specific"
 };
 
 //-----------------------------------------------------------------------------
@@ -94,10 +148,10 @@ void ThermostatMode::ReadXML
 					int index;
 					if( TIXML_SUCCESS == modeElement->QueryIntAttribute( "index", &index ) )
 					{
-						if (index > 13) /* size of c_modeName minus Invalid */
+						if (index > ThermostatMode_Count)
 						{
 							Log::Write (LogLevel_Warning, GetNodeId(), "index Value in XML was greater than range. Setting to Invalid");
-							index = 14;
+							index = ThermostatMode_Count+1;
 						}
 						ValueList::Item item;
 						item.m_value = index;
@@ -309,7 +363,6 @@ bool ThermostatMode::HandleMsg
 				}
 			}
 		}
-
 		ClearStaticRequest( StaticRequest_Values );
 		CreateVars( _instance );
 		return true;
