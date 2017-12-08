@@ -780,6 +780,7 @@
 	</Manufacturer>
 	<Manufacturer id="0234" name="Logic Soft">
 		<Product type="0003" id="010a" name="ZHC5010 Wall switch" config="logicsoft/ZHC5010.xml"/>
+		<Product type="0003" id="010c" name="ZHC5002 Z-Scene Controller" config="logicsoft/ZHC5002.xml"/>
 	</Manufacturer>
 	<Manufacturer id="007f" name="Logitech">
 	</Manufacturer>
