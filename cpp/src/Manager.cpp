@@ -200,20 +200,19 @@ Manager::~Manager
 (
 )
 {
-	// Clear the pending list
-	while( !m_pendingDrivers.empty() )
-	{
-		list<Driver*>::iterator it = m_pendingDrivers.begin();
-		delete *it;
-		m_pendingDrivers.erase( it );
-	}
-
 	// Clear the ready map
 	while( !m_readyDrivers.empty() )
 	{
 		map<uint32,Driver*>::iterator it = m_readyDrivers.begin();
-		delete it->second;
 		m_readyDrivers.erase( it );
+	}
+
+	// Clear the driver map
+	while( !m_drivers.empty() )
+	{
+		map<string,Driver*>::iterator it = m_drivers.begin();
+		delete it->second;
+		m_drivers.erase( it );
 	}
 
 	m_notificationMutex->Release();
@@ -278,28 +277,15 @@ bool Manager::AddDriver
 {
 	// Make sure we don't already have a driver for this controller
 
-	// Search the pending list
-	for( list<Driver*>::iterator pit = m_pendingDrivers.begin(); pit != m_pendingDrivers.end(); ++pit )
-	{
-		if( _controllerPath == (*pit)->GetControllerPath() )
-		{
-			Log::Write( LogLevel_Info, "mgr,     Cannot add driver for controller %s - driver already exists", _controllerPath.c_str() );
-			return false;
-		}
-	}
-
-	// Search the ready map
-	for( map<uint32,Driver*>::iterator rit = m_readyDrivers.begin(); rit != m_readyDrivers.end(); ++rit )
-	{
-		if( _controllerPath == rit->second->GetControllerPath() )
-		{
-			Log::Write( LogLevel_Info, "mgr,     Cannot add driver for controller %s - driver already exists", _controllerPath.c_str() );
-			return false;
-		}
+	// Search the driver map
+	map<string,Driver*>::iterator pit = m_drivers.find( _controllerPath );
+	if ( pit != m_drivers.end() ) {
+		Log::Write( LogLevel_Info, "mgr,     Cannot add driver for controller %s - driver already exists", _controllerPath.c_str() );
+		return false;
 	}
 
 	Driver* driver = new Driver( _controllerPath, _interface );
-	m_pendingDrivers.push_back( driver );
+	m_drivers[_controllerPath] = driver;
 	driver->Start();
 
 	Log::Write( LogLevel_Info, "mgr,     Added driver for controller %s", _controllerPath.c_str() );
@@ -315,42 +301,23 @@ bool Manager::RemoveDriver
 		string const& _controllerPath
 )
 {
-	// Search the pending list
-	for( list<Driver*>::iterator pit = m_pendingDrivers.begin(); pit != m_pendingDrivers.end(); ++pit )
-	{
-		if( _controllerPath == (*pit)->GetControllerPath() )
-		{
-			delete *pit;
-			m_pendingDrivers.erase( pit );
-			Log::Write( LogLevel_Info, "mgr,     Driver for controller %s removed", _controllerPath.c_str() );
-			return true;
-		}
-	}
-
 	// Search the ready map
 	for( map<uint32,Driver*>::iterator rit = m_readyDrivers.begin(); rit != m_readyDrivers.end(); ++rit )
 	{
 		if( _controllerPath == rit->second->GetControllerPath() )
 		{
-			/* data race right here:
-			 * Before, we were deleting the Driver Class direct from the Map... this was causing a datarace:
-			 * 1) Driver::~Driver destructor starts deleting everything....
-			 * 2) This Triggers Notifications such as ValueDeleted etc
-			 * 3) Notifications are delivered to applications, and applications start calling
-			 *    Manager Functions which require the Driver (such as IsPolled(valueid))
-			 * 4) Manager looks up the Driver in the m_readyDriver and returns a pointer to the Driver Class
-			 *    which is currently being destructed.
-			 * 5) All Hell Breaks loose and we crash and burn.
-			 *
-			 * But we can't change this, as the Driver Destructor triggers internal GetDriver calls... which
-			 * will crash and burn if they can't get a valid Driver back...
-			 */
 			Log::Write( LogLevel_Info, "mgr,     Driver for controller %s pending removal", _controllerPath.c_str() );
-			delete rit->second;
 			m_readyDrivers.erase( rit );
-			Log::Write( LogLevel_Info, "mgr,     Driver for controller %s removed", _controllerPath.c_str() );
-			return true;
 		}
+	}
+
+	// Search the driver map
+	map<string,Driver*>::iterator pit = m_drivers.find( _controllerPath );
+	if ( pit != m_drivers.end() ) {
+		delete pit->second;
+		m_drivers.erase( pit );
+		Log::Write( LogLevel_Info, "mgr,     Driver for controller %s removed", _controllerPath.c_str() );
+		return true;
 	}
 
 	Log::Write( LogLevel_Info, "mgr,     Failed to remove driver for controller %s", _controllerPath.c_str() );
@@ -380,7 +347,7 @@ Driver* Manager::GetDriver
 
 //-----------------------------------------------------------------------------
 // <Manager::SetDriverReady>
-// Move a driver from pending to ready, and notify any watchers
+// Register a driver as ready, and notify any watchers
 //-----------------------------------------------------------------------------
 void Manager::SetDriverReady
 (
@@ -388,14 +355,12 @@ void Manager::SetDriverReady
 		bool success
 )
 {
-	// Search the pending list
+	// Search the driver map
 	bool found = false;
-	for( list<Driver*>::iterator it = m_pendingDrivers.begin(); it != m_pendingDrivers.end(); ++it )
+	for( map<string,Driver*>::iterator it = m_drivers.begin(); it != m_drivers.end(); ++it )
 	{
-		if( (*it) == _driver )
+		if( (it->second) == _driver )
 		{
-			// Remove the driver from the pending list
-			m_pendingDrivers.erase( it );
 			found = true;
 			break;
 		}
@@ -628,13 +593,9 @@ int32 Manager::GetPollInterval
 (
 )
 {
-	for( map<uint32,Driver*>::iterator rit = m_readyDrivers.begin(); rit != m_readyDrivers.end(); ++rit )
+	for( map<string,Driver*>::iterator pit = m_drivers.begin(); pit != m_drivers.end(); ++pit )
 	{
-		return rit->second->GetPollInterval();
-	}
-	for( list<Driver*>::iterator pit = m_pendingDrivers.begin(); pit != m_pendingDrivers.end(); ++pit )
-	{
-		return (*pit)->GetPollInterval();
+		return pit->second->GetPollInterval();
 	}
 	return 0;
 
@@ -650,14 +611,9 @@ void Manager::SetPollInterval
 		bool _bIntervalBetweenPolls
 )
 {
-	for( list<Driver*>::iterator pit = m_pendingDrivers.begin(); pit != m_pendingDrivers.end(); ++pit )
+	for( map<string,Driver*>::iterator pit = m_drivers.begin(); pit != m_drivers.end(); ++pit )
 	{
-		(*pit)->SetPollInterval( _milliseconds, _bIntervalBetweenPolls );
-	}
-
-	for( map<uint32,Driver*>::iterator rit = m_readyDrivers.begin(); rit != m_readyDrivers.end(); ++rit )
-	{
-		rit->second->SetPollInterval( _milliseconds, _bIntervalBetweenPolls );
+		pit->second->SetPollInterval( _milliseconds, _bIntervalBetweenPolls );
 	}
 }
 
