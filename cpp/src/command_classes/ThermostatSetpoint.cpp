@@ -41,11 +41,13 @@ using namespace OpenZWave;
 
 enum ThermostatSetpointCmd
 {
-	ThermostatSetpointCmd_Set				= 0x01,
-	ThermostatSetpointCmd_Get				= 0x02,
-	ThermostatSetpointCmd_Report			= 0x03,
-	ThermostatSetpointCmd_SupportedGet		= 0x04,
-	ThermostatSetpointCmd_SupportedReport	= 0x05
+	ThermostatSetpointCmd_Set					= 0x01,
+	ThermostatSetpointCmd_Get					= 0x02,
+	ThermostatSetpointCmd_Report				= 0x03,
+	ThermostatSetpointCmd_SupportedGet			= 0x04,
+	ThermostatSetpointCmd_SupportedReport		= 0x05,
+	ThermostatSetpointCmd_CapabilitiesGet		= 0x09,
+ 	ThermostatSetpointCmd_CapabilitiesReport	= 0x0A
 };
 
 enum
@@ -64,8 +66,13 @@ enum
 	ThermostatSetpoint_HeatingEcon,
 	ThermostatSetpoint_CoolingEcon,
 	ThermostatSetpoint_AwayHeating,
-	ThermostatSetpoint_Count
+	ThermostatSetpoint_CoolingHeating,
+	ThermostatSetpoint_Count,
+
+	ThermostatSetpoint_Minimum = 100,
+	ThermostatSetpoint_Maximum = 200
 };
+
 
 static char const* c_setpointName[] =
 {
@@ -82,7 +89,9 @@ static char const* c_setpointName[] =
 	"Auto Changeover",
 	"Heating Econ",
 	"Cooling Econ",
-	"Away Heating"
+	"Away Heating",
+	"Away Cooling",
+	"Full Power"
 };
 
 //-----------------------------------------------------------------------------
@@ -94,7 +103,7 @@ ThermostatSetpoint::ThermostatSetpoint
 	uint32 const _homeId,
 	uint8 const _nodeId
 ):
-	CommandClass( _homeId, _nodeId ), m_setPointBase( 1 )
+	CommandClass( _homeId, _nodeId ), m_setPointBase( 1 ), m_setPointTypeInterpretation( 0x0B )
 {
 	SetStaticRequest( StaticRequest_Values );
 }
@@ -115,6 +124,16 @@ void ThermostatSetpoint::ReadXML
 	{
 		m_setPointBase = (uint8)intVal;
 	}
+	char const* str;
+
+	str = _ccElement->Attribute( "typeInterpretation" );
+	if ( str )
+	{
+		if ( strcmp(str,"A") == 0)
+		{
+			m_setPointTypeInterpretation = 0x0A ;
+		}
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -131,6 +150,14 @@ void ThermostatSetpoint::WriteXML
 	char str[8];
 	snprintf( str, 8, "%d", m_setPointBase );
 	_ccElement->SetAttribute( "base", str );
+	if ( m_setPointTypeInterpretation == 0x0A )
+	{
+		_ccElement->SetAttribute("typeInterpretation","A");
+	}
+	else
+	{
+		_ccElement->SetAttribute("typeInterpretation","B");
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -243,7 +270,7 @@ bool ThermostatSetpoint::HandleMsg
 		return true;
 	}
 
-	if( ThermostatSetpointCmd_SupportedReport == (ThermostatSetpointCmd)_data[0] )
+	else if( ThermostatSetpointCmd_SupportedReport == (ThermostatSetpointCmd)_data[0] )
 	{
 		if( Node* node = GetNodeUnsafe() )
 		{
@@ -257,12 +284,46 @@ bool ThermostatSetpoint::HandleMsg
 				{
 					if( ( _data[i] & (1<<bit) ) != 0 )
 					{
+						if ( GetVersion() >= 3)
+						{
+							// Request the supported setpoints
+							Msg* msg = new Msg( "ThermostatSetpointCmd_CapabilitesGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+							msg->SetInstance( this, _instance );
+							msg->Append( GetNodeId() );
+							msg->Append( 3 );
+							msg->Append( GetCommandClassId() );
+							msg->Append( ThermostatSetpointCmd_CapabilitiesGet );
+							uint8 type = ((i-1)<<3) + bit;
+							if ( m_setPointTypeInterpretation == 0x0A )
+							{
+								// for interpretation A the setpoint identifier makes a jump of 4 after the 2nd bit ... wtf @ zensys
+								if ( type > 2 )
+								{
+									type += 4;
+								}
+							}
+							msg->Append(type);
+							msg->Append( GetDriver()->GetTransmitOptions() );
+							GetDriver()->SendMsg( msg, OpenZWave::Driver::MsgQueue_Query );
+						}
+
+						uint8 type = ((i-1)<<3) + bit;
+						if ( m_setPointTypeInterpretation == 0x0A )
+						{
+							// for interpretation A the setpoint identifier makes a jump of 4 after the 2nd bit ... wtf @ zensys
+							if ( type > 2 )
+							{
+								type += 4;
+							}
+						}
+						int32 index = (int32)type + m_setPointBase;
 						// Add supported setpoint
-						int32 index = (int32)((i-1)<<3) + bit + m_setPointBase;
 						if( index < ThermostatSetpoint_Count )
 						{
-						  	node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, index, c_setpointName[index], "C", false, false, "0.0", 0 );
-							Log::Write( LogLevel_Info, GetNodeId(), "    Added setpoint: %s", c_setpointName[index] );
+							string setpointName = c_setpointName[index];
+
+							node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, index, setpointName, "C", false, false, "0.0", 0 );
+							Log::Write( LogLevel_Info, GetNodeId(), "    Added setpoint: %s", setpointName.c_str() );
 						}
 					}
 				}
@@ -271,6 +332,32 @@ bool ThermostatSetpoint::HandleMsg
 
 		ClearStaticRequest( StaticRequest_Values );
 		return true;
+	}
+	else if( ThermostatSetpointCmd_CapabilitiesReport == (ThermostatSetpointCmd)_data[0] )
+	{
+		if( Node* node = GetNodeUnsafe() )
+		{
+			// We have received the capabilites for supported setpoint Type
+			uint8 scale;
+			uint8 precision = 0;
+			uint8 size = _data[2] & 0x07;
+			string minValue = ExtractValue( &_data[2], &scale, &precision );
+			string maxValue = ExtractValue( &_data[2+size+1], &scale, &precision );
+
+			Log::Write( LogLevel_Info, GetNodeId(), "Received capabilites of thermostat setpoint type %d, min %s max %s" , (int)_data[1], minValue.c_str(), maxValue.c_str());
+
+			uint8 index = _data[1];
+			// Add supported setpoint
+			if( index < ThermostatSetpoint_Count )
+			{
+				string setpointName = c_setpointName[index];
+
+				node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ThermostatSetpoint_Minimum + index, setpointName + "_minimum", "C", false, false, minValue, 0 );
+				node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ThermostatSetpoint_Maximum + index, setpointName + "_maximum", "C", false, false, maxValue, 0 );
+				Log::Write( LogLevel_Info, GetNodeId(), "    Added setpoint: %s", setpointName.c_str() );
+			}
+
+		}
 	}
 
 	return false;
