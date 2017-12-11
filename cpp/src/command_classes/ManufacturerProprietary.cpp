@@ -74,7 +74,7 @@ bool ManufacturerProprietary::HandleMsg
         ValueByte* blindsValue = static_cast<ValueByte*>( GetValue( _instance, FibaroVenetianBlindsValueIds_Blinds ) );
         ValueByte* tiltValue   = static_cast<ValueByte*>( GetValue( _instance, FibaroVenetianBlindsValueIds_Tilt ) );
 
-        if( NULL != blindsValue and NULL != tiltValue)
+        if( NULL != blindsValue && NULL != tiltValue)
         {
             Log::Write( LogLevel_Info, GetNodeId(), "Received Fibaro proprietary blind/slat position for node %d: Blinds: %d Slats: %d",
                         GetNodeId(), payload[3], payload[4] );
