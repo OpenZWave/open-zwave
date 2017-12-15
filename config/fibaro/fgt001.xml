@@ -38,7 +38,7 @@
             <Item label="Enabled LED indications when controlling remotely" value="8"/>
             <Item label="Protect from setting Full ON and Full OFF mode by turning the knob manually" value="16"/>
         </Value>
-        <Value type="list" genre="config" instance="1" index="3" label="Additional functions status" value="0" size="4" read-only="true">
+        <Value type="list" genre="config" instance="1" index="3" label="Additional functions status" value="0" size="4" read_only="true">
             <Help>This parameter allows to enable di erent additional functions of the device.</Help>
             <Item label="None" value="0"/>
             <Item label="Optional temperature sensor connected and operational" value="1"/>
