@@ -536,6 +536,7 @@
 		<Product type="0013" id="0210" name="WWA-01AA - Wireless Water and Freeze Alarm" />
 		<Product type="0021" id="010a" name="WWA-02 Water and Temperature Alarm" config="fortrezz/wwa02.xml"/>
 		<Product type="0023" id="0109" name="WWA-02 Water and Temperature Alarm" config="fortrezz/wwa02.xml"/>
+		<Product type="0053" id="0216" name="WWA-01AA Wireless Water and Freeze Alarm" />
 		<Product type="0213" id="020c" name="WV-01 Automated Water Shut-Off Valve" config="fortrezz/wv01.xml"/>
 		<Product type="0241" id="0300" name="WV-01 Automated Water Shut-Off Valve" config="fortrezz/wv01.xml"/>
 		<Product type="0243" id="0216" name="WV-01 Automated Water Shut-Off Valve" config="fortrezz/wv01.xml"/>
@@ -563,6 +564,7 @@
 	</Manufacturer>
 	<Manufacturer id="0020" name="General Electric">
 		<Product type="8007" id="1390" name="Wireless Lighting Control"/>
+		<Product type="8007" id="1391" name="45601 Advanced Remote"/>
 	</Manufacturer>
 	<Manufacturer id="0063" name="GE">
 		<Product type="4450" id="3030" name="45602 Lamp Dimmer Module" config="ge/dimmer_module.xml"/>
@@ -747,6 +749,7 @@
 		<Product type="1001" id="0334" name="VRF01-1LZ Quiet Fan Speed Control" config="leviton/vrf01.xml"/>
 		<Product type="1001" id="0209" name="VRF01-1LZ Multilevel Scene Switch - 1.5A Fan" config="leviton/vrf01.xml"/>
 		<Product type="1102" id="0243" name="VRCS2-MRZ 2-Button Scene Controller with Switches"/>
+		<Product type="1202" id="0243" name="VRCZ4-MRZ 4-Button Zone Controller with Switch"/>
 		<Product type="1902" id="0334" name="DZPD3-1LW Plug-In Dimming Lamp Module"/>
 		<Product type="1a02" id="0334" name="DZPA1-1LW Plug-In Appliance Module"/>
 		<Product type="1b03" id="0334" name="DZMX1-1LZ Dimmer"/>
