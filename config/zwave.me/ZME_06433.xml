@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Taken from http://pepper1.net/zwavedb/device/273 and http://www.pepper1.net/zwavedb/device/145 -->
 <Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="2">
 	<!-- Configuration Parameters -->
 	<!--IMPORTANT: Controllers may only allow to configure signed values. 

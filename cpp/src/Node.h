@@ -698,7 +698,6 @@ namespace OpenZWave
 			{
 				MetaData_OzwInfoPage,
 				MetaData_ZWProductPage,
-				MetaData_Pepper1Page,
 				MetaData_ProductPic,
 				MetaData_ProductManual,
 				MetaData_ProductPage,

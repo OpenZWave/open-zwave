@@ -3839,7 +3839,6 @@ string const Node::GetMetaData(MetaDataFields field) {
 Node::MetaDataFields const Node::GetMetaDataId(string name) {
 	if (name == "OzwInfoPage") return MetaData_OzwInfoPage;
 	if (name == "ZWProductPage") return MetaData_ZWProductPage;
-	if (name == "Pepper1Page") return MetaData_Pepper1Page;
 	if (name == "ProductPic") return MetaData_ProductPic;
 	if (name == "ProductManual") return MetaData_ProductManual;
 	if (name == "ProductPage") return MetaData_ProductPage;
@@ -3855,8 +3854,6 @@ string const Node::GetMetaDataString(Node::MetaDataFields id) {
 		return "OzwInfoPage";
 	case MetaData_ZWProductPage:
 		return "ZWProductPage";
-	case MetaData_Pepper1Page:
-		return "Pepper1Page";
 	case MetaData_ProductPic:
 		return "ProductPic";
 	case MetaData_ProductManual:

@@ -13,7 +13,6 @@
 				For Lighting Mode: Send a value of 0 to Configuration Parameter #17.
 				For Alarm Mode: Send a value of 1 to Configuration Parameter #17.
 				For Sensor Mode: Send a value of 2 to Configuration Parameter # 17.
-				Information reproduced from: http://www.pepper1.net/zwavedb/uploads/resources/bdf086a9388325a2fb8b8aa298e24e512faec65d.pdf
 			</Help>
 			<Item label="Lighting" value="0" />
 			<Item label="Alarm" value="1" />
@@ -25,7 +24,6 @@
 				This parameter can be configured with the value of 0 through 255.
 				Where 0 means no delay and 255 means 255 minutes of delay.
 				Default appears to be 1 min.
-				Information reproduced from: http://www.pepper1.net/zwavedb/uploads/resources/bdf086a9388325a2fb8b8aa298e24e512faec65d.pdf
 			</Help>
 		</Value>
 		<Value type="list" index="19" genre="config" label="Unsolicited Commands" value="1" size="1">
@@ -33,7 +31,6 @@
 				The ZIR010 can be disabled from sending commands unsolicited without removing associated devices by
 				setting Configuration Parameter # 19 to 0 (when asked for number of bytes, select 1).
 				Setting it back to 1 will re-enable the ZIR010.
-				Information reproduced from: http://www.pepper1.net/zwavedb/uploads/resources/bdf086a9388325a2fb8b8aa298e24e512faec65d.pdf
 			</Help>
 			<Item label="No" value="0" />
 			<Item label="Yes" value="1" />
@@ -44,7 +41,6 @@
 				to 45 to the ZIR010 using Configuration Parameter # 22 (when asked for the number of bytes, select 1).
 				This awake time period starts over every time the ZIR010 receives a command or request.
 				Defaults to 30 seconds.
-				Information reproduced from: http://www.pepper1.net/zwavedb/uploads/resources/bdf086a9388325a2fb8b8aa298e24e512faec65d.pdf
 			</Help>
 		</Value>
 	</CommandClass>
