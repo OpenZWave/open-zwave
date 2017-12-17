@@ -28,21 +28,28 @@
     <!-- Configuration -->
     <CommandClass id="112">
         <Value type="int" genre="config" instance="1" index="1" label="Override Schedule duration" min="10" max="10000" value="240">
-            <Help>This parameter determines duration of Override Schedule after turn- ing the knob while normal schedule is active (set by Schedule CC).</Help>
+            <Help>This parameter determines duration of Override Schedule after turning the knob while normal schedule is active (set by Schedule CC).</Help>
         </Value>
-        <Value type="list" genre="config" instance="1" index="2" label="Additional functions" value="1" size="4">
-            <Help>This parameter allows to enable di erent additional functions of the device.</Help>
-            <Item label="Enable Open Window Detector" value="1"/>
-            <Item label="Enable fast Open Window Detector" value="2"/>
-            <Item label="Increase receiver sensitivity" value="4"/>
-            <Item label="Enabled LED indications when controlling remotely" value="8"/>
-            <Item label="Protect from setting Full ON and Full OFF mode by turning the knob manually" value="16"/>
+        <Value type="int" genre="config" instance="1" index="2" label="Additional functions" value="1" size="4">
+            <Help>This parameter allows to enable different additional functions of the device.
+                1) Enable open window detector
+                2) Enable fast open window detector
+                4) Increase receiver sensitivity (shortens battery life)
+                8) Enable LED indications when controlling remotely
+                16) Protect from setting Full ON and Full OFF mode by turning the knob manually
+                NOTE: Parameter values may be combined, e.g. 1+8=9 means than open window detector and LED indications when controlling remotely are enabled.
+            </Help>
         </Value>
         <Value type="list" genre="config" instance="1" index="3" label="Additional functions status" value="0" size="4" read_only="true">
-            <Help>This parameter allows to enable di erent additional functions of the device.</Help>
+            <Help>This parameter allows to check status of different additional functions.
+                1) Optional temperature sensor connected and operational
+                2) Open window detected
+                NOTE: Parameter values may be combined, e.g. 1+2=3 means than optional sensor works properly and open window detection was triggered.
+            </Help>
             <Item label="None" value="0"/>
             <Item label="Optional temperature sensor connected and operational" value="1"/>
             <Item label="Open window detected" value="2"/>
+            <Item label="Optional temperature sensor and Open window detected" value="3"/>
         </Value>
     </CommandClass>
 
