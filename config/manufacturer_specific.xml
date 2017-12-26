@@ -1143,6 +1143,7 @@
 		<Product type="2009" id="0903" name="ZM1602 Main Operated Siren" config="vision/zm1602eu.xml"/>
 		<Product type="2009" id="0908" name="ZM1602+ DC/AC Power Siren" config="vision/zm1602eu5.xml"/>
 		<Product type="200a" id="0a02" name="ZG8101 Garage Door Detector" config="vision/zg8101.xml"/>
+		<Product type="200c" id="0c02" name="ZL7431 In-Wall Switch Single Relay" config="vision/zl7431.xml"/>
 		<Product type="200f" id="0f02" name="ZS6301 CO Detector"/>
 		<Product type="200f" id="0f03" name="ZS6301 CO Detector"/>
 		<Product type="2012" id="1203" name="ZR1202 Repeater"/>

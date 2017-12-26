@@ -419,6 +419,7 @@ DISTFILES =	.gitignore \
 	config/vision/zf5201.xml \
 	config/vision/zg8101.xml \
 	config/vision/zl7261.xml \
+	config/vision/zl7431.xml \
 	config/vision/zm1601eu.xml \
 	config/vision/zm1601eu5.xml \
 	config/vision/zm1602eu.xml \

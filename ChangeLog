@@ -206,6 +206,7 @@ Version 1.5
  - Add Fibaro FGT-001 - The Heat Controller Radiator Thermostat (Nechry)
  - Issue #1407 - add TKB TZ79 Power meter Relay Switch from PhP71 (Nechry)
  - Issue #1405 - add ZW6302 Portable Smart Motion Sensor from jkavenaugh (Nechry)
+ - Pull Request #1365 Added Vision ZL7431 - Single Relay Switch from belyalov (Nechry)
 
 Version 1.4
  - Released 10th Jan, 2016
