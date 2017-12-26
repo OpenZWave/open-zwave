@@ -1083,6 +1083,7 @@
 		<Product type="5452" id="5433" name="Model TZEMT400BB32MAA" config="trane/TZEMT400BB32MAA.xml"/>
 		<Product type="5452" id="5436" name="Model TZEMT400BB32MAA" config="trane/TZEMT400BB32MAA.xml"/>
 		<Product type="5452" id="5442" name="Model TZEMT524AA21MA" config="trane/TZEMT524AA21MA.xml"/>
+		<Product type="5452" id="5439" name="Model TCONT624AS42DAA" config="trane/TZEMT524AA21MA.xml"/>
 	</Manufacturer>
 	<Manufacturer id="006b" name="Tricklestar">
 	</Manufacturer>
