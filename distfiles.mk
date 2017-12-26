@@ -234,6 +234,7 @@ DISTFILES =	.gitignore \
 	config/ge/relay.xml \
 	config/ge/ze26i.xml \
 	config/ge/zw4001-switch.xml \
+	config/ge/zw6302.xml \
 	config/gocontrol/GC-TBZ48L.xml \
 	config/gr/gr105.xml \
 	config/gr/gr105n.xml \
