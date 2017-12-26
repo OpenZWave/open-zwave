@@ -437,6 +437,7 @@ DISTFILES =	.gitignore \
 	config/wenzhou/tz68.xml \
 	config/wenzhou/tz69.xml \
 	config/wenzhou/tz88.xml \
+	config/wenzhou/tz79.xml \
 	config/widom/UBS104.xml \
 	config/widom/UME304C_S.xml \
 	config/widom/WDS.xml \
