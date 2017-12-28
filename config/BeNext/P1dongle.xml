@@ -6,7 +6,7 @@
 			<Help>Set all configuration values to default values (factory settings).</Help>
 		</Value>
 		<Value type="byte" genre="config" instance="1" index="3" label="HW Pullup" size="1" value="0">
-			<Help>For some Smart meters you will need an external pullup resistor to receive the data, one of it is the Kaifa meter 0x00: disabled. 0x01-0xFF: enabled (default 0x00)</Help>
+			<Help>For some Smart meters you will need an external pullup resistor to receive the data, one of it is the Kaifa meter. 0x00: disabled. 0x01-0xFF: enabled (default 0x00)</Help>
 		</Value>
 		<Value type="short" genre="config" instance="1" index="4" label="Baud rate" size="2" value="1152">
 			<Help>value x 100 = baud rate</Help>
