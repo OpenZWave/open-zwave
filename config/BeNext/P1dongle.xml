@@ -2,11 +2,13 @@
 <Product xmlns='http://code.google.com/p/open-zwave/'>
 	<!-- Configuration -->
 	<CommandClass id="112">
-		<Value type="byte" genre="config" instance="1" index="1" label="Set to Default" >
+		<Value type="byte" genre="config" instance="1" index="1" label="Set to Default" size="1">
 			<Help>Set all configuration values to default values (factory settings).</Help>
 		</Value>
-		<Value type="byte" genre="config" instance="1" index="3" label="Enable HW Pullup" value="0">
+		<Value type="list" genre="config" instance="1" index="3" label="HW Pullup" size="1" value="0">
 			<Help>For some Smart meters you will need an external pullup resistor to receive the data, one of it is the Kaifa meter</Help>
+			<Item label="Enabled" value="0"/>
+			<Item label="Disabled" value="1"/>
 		</Value>
 		<Value type="short" genre="config" instance="1" index="4" label="Baud rate" size="2" value="1152">
 			<Help>value x 100 = baud rate</Help>
