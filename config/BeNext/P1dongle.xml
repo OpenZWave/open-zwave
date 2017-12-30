@@ -5,15 +5,13 @@
 		<Value type="byte" genre="config" instance="1" index="1" label="Set to Default" size="1">
 			<Help>Set all configuration values to default values (factory settings).</Help>
 		</Value>
-		<Value type="list" genre="config" instance="1" index="3" label="HW Pullup" size="1" value="0">
-			<Help>For some Smart meters you will need an external pullup resistor to receive the data, one of it is the Kaifa meter</Help>
-			<Item label="Enabled" value="0"/>
-			<Item label="Disabled" value="1"/>
+		<Value type="byte" genre="config" instance="1" index="3" label="HW Pullup" size="1" value="0">
+			<Help>For some Smart meters you will need an external pullup resistor to receive the data, one of it is the Kaifa meter. 0x00: disabled. 0x01-0xFF: enabled (default 0x00)</Help>
 		</Value>
 		<Value type="short" genre="config" instance="1" index="4" label="Baud rate" size="2" value="1152">
 			<Help>value x 100 = baud rate</Help>
 		</Value>
-		<Value type="byte" genre="config" instance="1" index="5" label="Data validation" value="51">
+		<Value type="byte" genre="config" instance="1" index="5" label="Data validation" size="1" value="51">
 			<Help>Settings for data validation LED. Bit 7-4: Data received timeout (x 10). Bit 3-0: Framecount when data is valid (default 0x33 (0x30|0x03))</Help>
 		</Value>
 		<Value type="list" genre="config" instance="1" index="6" label="CRC check" size="1" value="1">
