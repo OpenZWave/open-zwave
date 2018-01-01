@@ -295,6 +295,7 @@ DISTFILES =	.gitignore \
 	config/linear/WD500Z-1.xml \
 	config/linear/WS15Z-1.xml \
 	config/linear/WT00Z-1.xml \
+	config/logicsoft/ZHC5002.xml \
 	config/logicsoft/ZHC5010.xml \
 	config/manufacturer_specific.xml \
 	config/manufacturer_specific.xsd \
@@ -322,6 +323,7 @@ DISTFILES =	.gitignore \
 	config/options.xsd \
 	config/philio/pan03.xml \
 	config/philio/pan04.xml \
+	config/philio/pan06.xml \
 	config/philio/pan07.xml \
 	config/philio/pan08.xml \
 	config/philio/pan11.xml \
@@ -439,8 +441,8 @@ DISTFILES =	.gitignore \
 	config/wenzhou/tz67.xml \
 	config/wenzhou/tz68.xml \
 	config/wenzhou/tz69.xml \
-	config/wenzhou/tz88.xml \
 	config/wenzhou/tz79.xml \
+	config/wenzhou/tz88.xml \
 	config/widom/UBS104.xml \
 	config/widom/UME304C_S.xml \
 	config/widom/WDS.xml \
