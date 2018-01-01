@@ -1,4 +1,3 @@
-- ForceInstances now limited to association with the controller node.
 Version 1.5
  - Pull Request #743 - Updated Fibaro Devices from Navstev0 (Justin)
  - Pull Request #740 - Updated Fibaro FGMS-001 ID's from Technosf (Justin)
@@ -195,7 +194,21 @@ Version 1.5
  - Add Zipato rebranded devices from Heiman (Nechry)
  - Add Domux rebranded devices from Heiman (Nechry)
  - Issue #1265 New Device: Linear Mains Siren from Ittiz (Nechry)
- 
+ - ForceInstances now limited to association with the controller node.
+ - Issue #1309 - Fix RollerShutter Increment/Decrement in SwitchMultiLevel (Justin)
+ - Add Dome On/Off Plug-In Switch (Nechry)
+ - Add Tronika Touch Panel Wall Controller - ZSC-01D (Nechry)
+ - Add Dome Door/Window Sensor Pro (Nechry)
+ - Add Dome Motion Detector (Nechry)
+ - Add Dome Leak Sensor (Nechry)
+ - Add Dome Mouser (Nechry)
+ - Add Steinel IS140 from Karhujarvi (Nechry)
+ - Add Fibaro FGT-001 - The Heat Controller Radiator Thermostat (Nechry)
+ - Issue #1407 - add TKB TZ79 Power meter Relay Switch from PhP71 (Nechry)
+ - Issue #1405 - add ZW6302 Portable Smart Motion Sensor from jkavenaugh (Nechry)
+ - Pull Request #1365 Added Vision ZL7431 - Single Relay Switch from belyalov (Nechry)
+ - Add Everspring Outdoor Motion Detector SP816 (Nechry)
+
 Version 1.4
  - Released 10th Jan, 2016
 
