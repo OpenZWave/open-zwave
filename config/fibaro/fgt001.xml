@@ -8,7 +8,7 @@
     -->
     <!-- Thermostat -->
     <CommandClass id="64" name="COMMAND_CLASS_THERMOSTAT_MODE">
-        <Value type="list" genre="user" instance="1" index="0" label="Mode" units="" verify_changes="true" read_only="false" write_only="false" min="0" max="255" value="0">
+        <Value type="list" genre="user" instance="1" index="0" label="Mode" units="" read_only="false" write_only="false" min="0" max="255" value="0">
             <Item label="Off" value="0"/>
             <Item label="Heat" value="1"/>
             <Item label="Manual Valve Control" value="31"/>
@@ -22,7 +22,7 @@
 
     <CommandClass id="67" name="COMMAND_CLASS_THERMOSTAT_SETPOINT" version="1" request_flags="4" create_vars="true" base="0">
         <Instance index="1"/>
-        <Value type="decimal" genre="user" instance="1" index="1" label="Heating" units="C" read_only="false" verify_changes="true" write_only="false" min="16" max="24" value="20"/>
+        <Value type="decimal" genre="user" instance="1" index="1" label="Heating" units="C" read_only="false" write_only="false" min="16" max="24" value="20"/>
     </CommandClass>
 
     <!-- Configuration -->
