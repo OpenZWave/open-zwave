@@ -17,7 +17,7 @@
         </CommandClass>
 	<CommandClass id="133">
 		<Associations num_groups="3">
-			<Group index="1" max_associations="1" label="Lifeline: Send device reset locally notification" />
+			<Group index="1" max_associations="1" label="Lifeline" />
 			<Group index="2" max_associations="3" label="StatusReport_EP1: Switch Binary Report" />
 			<Group index="3" max_associations="3" label="StatusReport_EP2: Switch Binary Report" />
 		</Associations>
