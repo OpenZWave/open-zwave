@@ -29,8 +29,8 @@
     <!-- Association Groups -->
     <CommandClass id="133">
         <Associations num_groups="2">
-            <Group index="1" max_associations="5" label="Basic Set" auto="false"/>
-            <Group index="2" max_associations="1" label="Lifeline" auto="true"/>
+            <Group index="1" max_associations="5" label="Lifeline" />
+            <Group index="2" max_associations="5" label="Basic Set" />
         </Associations>
     </CommandClass>
 </Product>
