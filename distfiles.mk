@@ -402,6 +402,7 @@ DISTFILES =	.gitignore \
 	config/shenzen_neo/nas-ab01z.xml \
 	config/shenzen_neo/nas-ds01z.xml \
 	config/shenzen_neo/nas-pd01z.xml \
+	config/shenzen_neo/nas-rc01z.xml \
 	config/shenzen_neo/nas-wr01z.xml \
 	config/shenzen_neo/nas-ws02z.xml \
 	config/steinel/is140-2.xml \
