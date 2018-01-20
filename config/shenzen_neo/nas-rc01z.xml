@@ -21,9 +21,9 @@
         <Value type="list" genre="config" instance="1" index="3" label="SOS Configuration" min="1" max="2" size="1" value="2">
             <Help>
                 This parameter defines the SOS key function, the SOS key can be configured as emergency event key or central scene notification key.
-                <Item label="Central Scene" value="1"/>
-                <Item label="Emergency event" value="2"/>
             </Help>
+            <Item label="Central Scene" value="1"/>
+            <Item label="Emergency event" value="2"/>
         </Value>
     </CommandClass>
     <!-- Association Groups -->
