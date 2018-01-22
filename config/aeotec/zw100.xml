@@ -8,8 +8,7 @@ V1.10 + V1.11 (12/14/2017)
 	<MetaData>
 		<MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0086:0064:0002</MetaDataItem>
 		<MetaDataItem name="ZWProductPage">http://products.z-wavealliance.org/products/1812</MetaDataItem>
-		<MetaDataItem name="Pepper1Page">http://www.pepper1.net/zwavedb/device/824</MetaDataItem>
-		<MetaDataItem name="ProductPic">http://www.pepper1.net/zwavedb/uploads/resources/1c9f763dbd9e82b5c3d8d9518392c2bdbdafb2ee.png </MetaDataItem>
+		<MetaDataItem name="ProductPic">https://products.z-wavealliance.org/ProductImages/Index?productName=ZC10-16065113</MetaDataItem>
 		<MetaDataItem name="ProductManual">https://aeotec.freshdesk.com/support/solutions/folders/6000149641</MetaDataItem>
 		<MetaDataItem name="ProductPage">http://aeotec.com/z-wave-sensor</MetaDataItem>
 	</MetaData>
