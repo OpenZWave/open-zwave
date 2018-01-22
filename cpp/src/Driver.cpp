@@ -207,6 +207,8 @@ m_nondelivery( 0 ),
 m_routedbusy( 0 ),
 m_broadcastReadCnt( 0 ),
 m_broadcastWriteCnt( 0 ),
+AuthKey( 0 ),
+EncryptKey( 0 ),
 m_nonceReportSent( 0 ),
 m_nonceReportSentAttempt( 0 ),
 m_queueMsgEvent (new Event() ),
@@ -371,11 +373,9 @@ Driver::~Driver
 
 	m_notificationsEvent->Release();
 	m_nodeMutex->Release();
-
 	delete this->AuthKey;
 	delete this->EncryptKey;
 	delete this->m_httpClient;
-
 }
 
 //-----------------------------------------------------------------------------
@@ -1102,6 +1102,15 @@ bool Driver::WriteNextMsg
 		{
 			m_queueEvent[_queue]->Reset();
 		}
+		if (m_nonceReportSent > 0) {
+			MsgQueueItem item_new;
+			item_new.m_command = MsgQueueCmd_SendMsg;
+			item_new.m_nodeId = item.m_msg->GetTargetNodeId();
+			item_new.m_retry = item.m_retry;
+			item_new.m_msg = new Msg(*item.m_msg);
+			m_msgQueue[_queue].push_front(item_new);
+			m_queueEvent[_queue]->Set();
+		}
 		m_sendMutex->Unlock();
 		return WriteMsg( "WriteNextMsg" );
 	}
@@ -1162,8 +1171,8 @@ bool Driver::WriteNextMsg
 			if( m_currentControllerCommand->m_controllerCallback )
 			{
 				m_currentControllerCommand->m_controllerCallback( m_currentControllerCommand->m_controllerState, m_currentControllerCommand->m_controllerReturnError, m_currentControllerCommand->m_controllerCallbackContext );
-				m_currentControllerCommand->m_controllerStateChanged = false;
 			}
+			m_currentControllerCommand->m_controllerStateChanged = false;
 		}
 		else
 		{

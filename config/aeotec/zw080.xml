@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Aeon Labs DSD31 Siren Gen5 -->
-<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="2">
 	<Protocol refreshonnodeinfoframe="false"/>
 	<!-- Configuration Parameters -->
 	<CommandClass id="112">
@@ -21,6 +21,11 @@
 			<Item label="Sound 5 - Low Volume" value="1281"/>
 			<Item label="Sound 5 - Mid Volume" value="1282"/>
 			<Item label="Sound 5 - High Volume" value="1283"/>
+		</Value>
+		<Value type="list" index="38" genre="config" label="Enable/disable the action button" units="" min="0" max="1" value="1" size="1">
+			<Help>Enable/disable to turn off the alarm sound via pressing the Action Button. </Help>
+			<Item label="Disable" value="0" />
+			<Item label="Enable" value="1" />
 		</Value>
 		<Value type="list" index="80" genre="config" label="Send Notifications" units="" min="0" max="1" value="0" size="1">
 			<Help>Enable to send notifications to associated devices (Group 1) when the state of Siren changed</Help>

@@ -110,7 +110,7 @@ bool Indicator::HandleMsg
 
 		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, 0 ) ) )
 		{
-			value->OnValueRefreshed( _data[1] != 0 );
+			value->OnValueRefreshed( _data[1] );
 			value->Release();
 		}
 		return true;
@@ -162,5 +162,3 @@ void Indicator::CreateVars
 	  	node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Indicator", "", false, false, false, 0 );
 	}
 }
-
-
