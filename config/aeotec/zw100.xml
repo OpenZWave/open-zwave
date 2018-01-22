@@ -4,7 +4,7 @@ Aeotec ZW100 MultiSensor 6
 https://aeotec.freshdesk.com/helpdesk/attachments/6028954764
 V1.10 + V1.11 (12/14/2017)
 -->
-<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="8">
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="9">
 	<MetaData>
 		<MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0086:0064:0002</MetaDataItem>
 		<MetaDataItem name="ZWProductPage">http://products.z-wavealliance.org/products/1812</MetaDataItem>
