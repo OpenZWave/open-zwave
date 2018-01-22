@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Product xmlns='http://code.google.com/p/open-zwave/'>
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
 <!-- Remotec ZTS-500 Thermostat
      http://www.zwaveproducts.com/product-documentation/F-BW8170US%20(ZTS-500US)%20User_Manual_V1.01_Z-Wave%20validation_20160510.pdf
      http://products.z-wavealliance.org/products/1767/configs -->

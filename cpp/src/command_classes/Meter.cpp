@@ -29,7 +29,6 @@
 #include "command_classes/Meter.h"
 #include "command_classes/MultiInstance.h"
 #include "Defs.h"
-#include "Bitfield.h"
 #include "Msg.h"
 #include "Node.h"
 #include "Driver.h"
@@ -180,7 +179,7 @@ bool Meter::RequestState
 bool Meter::RequestValue
 (
 	uint32 const _requestFlags,
-	uint8 const _dummy1,	// = 0 (not used)
+	uint16 const _dummy1,	// = 0 (not used)
 	uint8 const _instance,
 	Driver::MsgQueue const _queue
 )

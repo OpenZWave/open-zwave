@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
 <!--
 Aeotec DSC10 Heavy-Duty Smart Switch
 -->
-<Product xmlns='http://code.google.com/p/open-zwave/'>  
   <Protocol refreshonnodeinfoframe="false"/>
   <!-- Configuration Parameters -->
   <CommandClass id="112">

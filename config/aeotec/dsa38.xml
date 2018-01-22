@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
 <!-- 
 Aeon Labs Panic Button Gen5 
 https://aeotec.freshdesk.com/helpdesk/attachments/6009584530
 -->
-<Product xmlns='http://code.google.com/p/open-zwave/'>  
   <!-- Basic and SwitchMultiLevel are for when the KeyFob is in Group Mode.
   You should configure the device to operate in Scene Mode instead if you
   wish to integrate it with your application -->

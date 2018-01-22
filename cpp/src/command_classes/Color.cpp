@@ -241,7 +241,7 @@ bool Color::RequestState
 bool Color::RequestValue
 (
 		uint32 const _requestFlags,
-		uint8 const _what,
+		uint16 const _what,
 		uint8 const _instance,
 		Driver::MsgQueue const _queue
 )
@@ -841,7 +841,8 @@ bool Color::SetValue
 			msg->Append( GetCommandClassId() );
 			msg->Append(ColorCmd_Set); //cmd
 			msg->Append(nocols);
-			bool cwset, wwset = false;
+			bool cwset = false;
+			bool wwset = false;
 			/* fake it */
 			switch (index) {
 				case 0: /* "Off" */

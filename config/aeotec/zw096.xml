@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-Aeotec Smart Switch 6
-https://aeotec.freshdesk.com/helpdesk/attachments/6009584701
--->
-<Product xmlns='http://code.google.com/p/open-zwave/'>
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="2">
+  <!-- Aeon Labs Smart Switch 6 -->
   <Protocol refreshonnodeinfoframe="false"/>
   <!-- Configuration Parameters -->
   <CommandClass id="112">

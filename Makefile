@@ -27,6 +27,10 @@ install:
 clean:
 	$(MAKE) -C $(top_srcdir)/cpp/build/ -$(MAKEFLAGS) $(MAKECMDGOALS)
 	$(MAKE) -C $(top_srcdir)/cpp/examples/MinOZW/ -$(MAKEFLAGS) $(MAKECMDGOALS)
+	$(MAKE) -C $(top_srcdir)/cpp/test/ -$(MAKEFLAGS) $(MAKECMDGOALS)
+
+test:
+	$(MAKE) -C $(top_srcdir)/cpp/test/ -$(MAKEFLAGS) $(MAKECMDGOALS)
 
 cpp/src/vers.cpp:
 	LDFLAGS="$(LDFLAGS)" CPPFLAGS="$(CPPFLAGS)" $(MAKE) -C $(top_srcdir)/cpp/build/ -$(MAKEFLAGS) $(top_srcdir)/cpp/src/vers.cpp

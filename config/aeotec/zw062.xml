@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="3">
 <!-- 
 Aeotec Garage ZW062 Door Controller
 https://aeotec.freshdesk.com/helpdesk/attachments/6009584687
 -->
-<Product xmlns='http://code.google.com/p/open-zwave/'>
 	<!-- the Device Doesn't support Get for Alarm Class -->
 	<CommandClass id="113" getsupported="false"/>
 	<!-- Configuration Parameters -->

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Product xmlns='http://code.google.com/p/open-zwave/'>
   <!--
   NorthQ NQ-92021 Power Reader & Power Manager
   http://products.z-wavealliance.org/products/69
   http://northq.com/wp-content/uploads/2016/01/Technical-Integration.pdf
   -->
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="3">
   <!-- Configuration Parameters -->
   <CommandClass id="112">
     <Value type="int" index="1" genre="config" label="Pulse factor" units="pulses" min="10" max="1000000" value="10000">

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Product xmlns='http://code.google.com/p/open-zwave/'>
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="2">
 	<CommandClass id="112">
 		<Value type="list" genre="config" instance="1" index="1" label="Upper paddle buttons mode" min="0" max="1" value="0" size="1" >
 			<Help>Configuration of Pair Mode for the upper two buttons (button #1 and #2).</Help>

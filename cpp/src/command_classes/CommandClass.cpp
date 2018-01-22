@@ -135,7 +135,7 @@ Node* CommandClass::GetNodeUnsafe
 Value* CommandClass::GetValue
 (
 		uint8 const _instance,
-		uint8 const _index
+		uint16 const _index
 )
 {
 	Value* value = NULL;
@@ -153,7 +153,7 @@ Value* CommandClass::GetValue
 bool CommandClass::RemoveValue
 (
 		uint8 const _instance,
-		uint8 const _index
+		uint16 const _index
 )
 {
 	if( Node* node = GetNodeUnsafe() )
@@ -772,7 +772,7 @@ void CommandClass::UpdateMappedClass
 		if( Node* node = GetNodeUnsafe() )
 		{
 			CommandClass* cc = node->GetCommandClass( _classId );
-			if( node->GetCurrentQueryStage() == Node::QueryStage_Complete && cc != NULL )
+			if( cc != NULL )
 			{
 				cc->SetValueBasic( _instance, _level );
 			}

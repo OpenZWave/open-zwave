@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
 <!-- 
 Aeotec DSC24 Smart Switch (2nd Edition) 
 https://aeotec.freshdesk.com/helpdesk/attachments/6009584528
 -->
-<Product xmlns='http://code.google.com/p/open-zwave/'>  
   <Protocol refreshonnodeinfoframe="false"/>
   <!-- Configuration Parameters -->
   <CommandClass id="112">

@@ -175,6 +175,7 @@ Version 1.5
  - Add alias for FGPB101 Button
  - Add Aeotec ZW129 WallMote Duo (Nechry)
  - Add Aeotec ZW132, ZW139 and ZW140 Nano Switch (Nechry)
+ - ForceInstances now limited to association with the controller node.
  - Add MCOHome Thermostat fan coil MH8-FC-EU (Nechry)
  - Add Fibaro FGDW002 Door Opening Sensor 2 (Nechry)
  - Add Qubino ZMNHTDx Smart meter Z-Wave+ config for version 1 to 3 and 4 to 6, assume new device as 4 to 6 (Nechry)
@@ -209,6 +210,27 @@ Version 1.5
  - Pull Request #1365 Added Vision ZL7431 - Single Relay Switch from belyalov (Nechry)
  - Add Everspring Outdoor Motion Detector SP816 (Nechry)
  - Add Coolcam SOS Remote Key-Fob RC01Z (Nechry)
+
+Dev Branch:
+ - Rename zwcfg_*.xml to zwcache_*.xml to reflect its not a config file, but a cache. (Justin)
+ - On *nix Platforms - Rename the threads to their functions, so its visible in ps/top etc (Justin)
+ - Pull Request #732 - Fix CPPFLAGS being passed to secondary Makefiles from asac (Justin)
+ - Pull Request #736 - Update dotNet wrapper with new Functions from bufferUnderrun (Justin)
+ - Pull Request #746 - Fix HID exports on Windows from gizmocuz (Justin)
+ - Issue #490 - Preliminary support for Barrier CC from Srirams (Justin)
+ - Refactor the Alarm CC to properly expose the Alarm Types, Events and
+   Params from Version 2 and above devices. See
+   https://github.com/OpenZWave/open-zwave/wiki/Alarm-Command-Class for
+   details - Addresses Issues #558, #481 #145 and #143 (Justin)
+ - Pull Request #923 - Sync dot net zw manager bundle from PascalPiche (Justin)
+ - Pull Request #921 - Sync DotNet ZWLogLevel Enum with the CPP enum from  PascalPiche (Justin)
+ - Implement DeviceID and Serial Number retrieval in ManufacturerSpecific CC (Justin)
+ - Print out effective Options when starting the Driver (Justin)
+ - Check the Controller Library Loaded, and dont' proceed if we don't support the Library when starting the Driver Class (Justin)
+ - SetNodeOn/Off/Level are depreciated and will be removed in 1.8 (Justin)
+ - dotNet Wrapper is now maintained by dotMorten https://github.com/OpenZWave/openzwave-dotnet-uwp (Justin)
+ - Exceptions are now enabled by Default (Justin)
+ - Depreciate the builtin Scene Methods (not related to CENTRAL_SCENE) (Justin)
 
 Version 1.4
  - Released 10th Jan, 2016

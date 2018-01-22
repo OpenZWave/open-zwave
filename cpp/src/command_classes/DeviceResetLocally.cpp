@@ -60,7 +60,7 @@ bool DeviceResetLocally::HandleMsg
 		// we must do this because the Controller will only remove failed nodes
 		if( Node* node = GetNodeUnsafe() )
 		{
-			if( NoOperation* noop = static_cast<NoOperation*>( node->GetCommandClass( NoOperation::StaticGetCommandClassId() ) ) )
+			if( NoOperation* noop = static_cast<NoOperation*>( node->GetCommandClass( NoOperation::StaticGetCommandClassId(), false ) ) )
 			{
 				noop->Set( true );
 			}

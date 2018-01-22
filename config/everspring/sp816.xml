@@ -3,7 +3,7 @@
 Everspring Outdoor Motion Detector SP816-1
 https://products.z-wavealliance.org/products/2656
 -->
-<Product xmlns='http://code.google.com/p/open-zwave/'>
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
   <!-- Configuration not Supported-->
   <!-- Basic set as report -->
   <CommandClass id="32" setasreport="true"/>

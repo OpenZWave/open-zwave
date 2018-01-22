@@ -58,7 +58,7 @@ MultiChannelAssociation::MultiChannelAssociation
 	CommandClass( _homeId, _nodeId ),
 	m_queryAll(false),
 	m_numGroups(0),
-	m_alwaysSetInstance(false)
+	m_alwaysSetInstance(true)
 {
 	SetStaticRequest( StaticRequest_Values );
 }
@@ -106,7 +106,7 @@ void MultiChannelAssociation::ReadXML
 	char const*  str = _ccElement->Attribute("ForceInstances");
 	if( str )
 	{
-                m_alwaysSetInstance = !strcmp( str, "true");
+                m_alwaysSetInstance = !strcmp( str, "false");
 	}
 
 }
@@ -133,8 +133,8 @@ void MultiChannelAssociation::WriteXML
 		_ccElement->LinkEndChild( associationsElement );
 		node->WriteGroups( associationsElement );
 	}
-	if (m_alwaysSetInstance) {
-		_ccElement->SetAttribute("ForceInstances", "true");
+	if (!m_alwaysSetInstance) {
+		_ccElement->SetAttribute("ForceInstances", "false");
 	}
 }
 
@@ -165,7 +165,7 @@ bool MultiChannelAssociation::RequestState
 bool MultiChannelAssociation::RequestValue
 (
 	uint32 const _requestFlags,
-	uint8 const _dummy1,	// = 0 (not used)
+	uint16 const _dummy1,	// = 0 (not used)
 	uint8 const _instance,
 	Driver::MsgQueue const _queue
 )

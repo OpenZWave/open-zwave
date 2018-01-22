@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Aeon Labs Multi Sensor -->
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
 <!-- 
 Aeotec DSB05 Multisensor
 https://aeotec.freshdesk.com/helpdesk/attachments/6009584510
 -->
-<Product xmlns='http://code.google.com/p/open-zwave/'>
 	<!-- Configuration Parameters -->
 	<CommandClass id="112">
 		<Value type="list" index="2" genre="config" label="Wake up 10 minutes when batteries are inserted" min="0" max="1" value="0" size="1">

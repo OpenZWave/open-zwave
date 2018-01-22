@@ -597,6 +597,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\value_classes\ValueBitSet.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\value_classes\ValueBitSet.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\value_classes\ValueBool.cpp"
 				>
 			</File>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<Product xmlns="http://code.google.com/p/open-zwave/">
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
   <CommandClass id="67" name="COMMAND_CLASS_THERMOSTAT_SETPOINT" version="1" request_flags="4" create_vars="true" base="0">
     <Instance index="1" />
     <Value type="decimal" genre="user" instance="1" index="1" label="Heating 1" read_only="false" write_only="false" />

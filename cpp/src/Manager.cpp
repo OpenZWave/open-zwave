@@ -48,6 +48,7 @@
 #include "command_classes/WakeUp.h"
 
 #include "value_classes/ValueID.h"
+#include "value_classes/ValueBitSet.h"
 #include "value_classes/ValueBool.h"
 #include "value_classes/ValueButton.h"
 #include "value_classes/ValueByte.h"
@@ -58,6 +59,7 @@
 #include "value_classes/ValueSchedule.h"
 #include "value_classes/ValueShort.h"
 #include "value_classes/ValueString.h"
+#include "value_classes/ValueBitSet.h"
 
 using namespace OpenZWave;
 
@@ -70,7 +72,7 @@ extern char ozw_version_string[];
 //-----------------------------------------------------------------------------
 //	Construction
 //-----------------------------------------------------------------------------
-
+#include "platform/FileOps.h"
 //-----------------------------------------------------------------------------
 //	<Manager::Create>
 //	Static creation of the singleton
@@ -79,6 +81,7 @@ Manager* Manager::Create
 (
 )
 {
+
 
 	if( Options::Get() && Options::Get()->AreLocked() )
 	{
@@ -174,7 +177,7 @@ m_notificationMutex( new Mutex() )
 	Options::Get()->GetOptionAsInt( "QueueLogLevel", &nQueueLogLevel );
 	if ((nQueueLogLevel == 0) || (nQueueLogLevel > LogLevel_StreamDetail)) {
 		Log::Write(LogLevel_Warning, "Invalid LogLevel Specified for QueueLogLevel in Options.xml");
-		nSaveLogLevel = (int) LogLevel_Debug;
+		nQueueLogLevel = (int) LogLevel_Debug;
 	}
 
 	int nDumpTrigger = (int) LogLevel_Warning;
@@ -403,14 +406,18 @@ void Manager::SetDriverReady
 		if (success) {
 			Log::Write( LogLevel_Info, "mgr,     Driver with Home ID of 0x%.8x is now ready.", _driver->GetHomeId() );
 			Log::Write( LogLevel_Info, "" );
+
+			// Add the driver to the ready map
+			m_readyDrivers[_driver->GetHomeId()] = _driver;
+
 		}
 
-		// Add the driver to the ready map
-		m_readyDrivers[_driver->GetHomeId()] = _driver;
 
 		// Notify the watchers
 		Notification* notification = new Notification(success ? Notification::Type_DriverReady : Notification::Type_DriverFailed );
 		notification->SetHomeAndNodeIds( _driver->GetHomeId(), _driver->GetControllerNodeId() );
+		if (!success)
+			notification->SetComPort(_driver->GetControllerPath());
 		_driver->QueueNotification( notification );
 	}
 }
@@ -771,12 +778,8 @@ bool Manager::RefreshNodeInfo
 		// Cause the node's data to be obtained from the Z-Wave network
 		// in the same way as if it had just been added.
 		LockGuard LG(driver->m_nodeMutex);
-		Node* node = driver->GetNode( _nodeId );
-		if( node )
-		{
-			node->SetQueryStage( Node::QueryStage_ProtocolInfo );
-			return true;
-		}
+		driver->ReloadNode(_nodeId);
+		return true;
 	}
 
 	return false;
@@ -1618,22 +1621,33 @@ void Manager::SetNodeLevel
 //-----------------------------------------------------------------------------
 string Manager::GetValueLabel
 (
-		ValueID const& _id
+		ValueID const& _id,
+		int32 _pos
 )
 {
 	string label;
 	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 	{
 		LockGuard LG(driver->m_nodeMutex);
-		if( Value* value = driver->GetValue( _id ) )
-		{
-			label = value->GetLabel();
+		if (_pos != -1) {
+			if (_id.GetType() != ValueID::ValueType_BitSet) {
+				OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "ValueID passed to GetValueLabel is not a BitSet but a position was requested");
+				return label;
+			}
+			ValueBitSet *value = static_cast<ValueBitSet *>(driver->GetValue( _id ));
+			label = value->GetBitLabel(_pos);
 			value->Release();
+			return label;
 		} else {
-			OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to GetValueLabel");
+			if( Value* value = driver->GetValue( _id ) )
+			{
+				label = value->GetLabel();
+				value->Release();
+				return label;
+			}
 		}
+		OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to GetValueLabel");
 	}
-
 	return label;
 }
 
@@ -1644,19 +1658,31 @@ string Manager::GetValueLabel
 void Manager::SetValueLabel
 (
 		ValueID const& _id,
-		string const& _value
+		string const& _value,
+		int32 _pos
 )
 {
 	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 	{
 		LockGuard LG(driver->m_nodeMutex);
-		if( Value* value = driver->GetValue( _id ) )
-		{
-			value->SetLabel( _value );
+		if (_pos != -1) {
+			if (_id.GetType() != ValueID::ValueType_BitSet) {
+				OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "ValueID passed to SetValueLabel is not a BitSet but a position was requested");
+				return;
+			}
+			ValueBitSet *value = static_cast<ValueBitSet *>(driver->GetValue( _id ));
+			value->SetBitLabel(_pos, _value);
 			value->Release();
+			return;
 		} else {
-			OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to SetValueLabel");
+			if( Value* value = driver->GetValue( _id ) )
+			{
+				value->SetLabel( _value );
+				value->Release();
+				return;
+			}
 		}
+		OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to SetValueLabel");
 	}
 }
 
@@ -1714,22 +1740,33 @@ void Manager::SetValueUnits
 //-----------------------------------------------------------------------------
 string Manager::GetValueHelp
 (
-		ValueID const& _id
+		ValueID const& _id,
+		int32 _pos
 )
 {
 	string help;
 	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 	{
 		LockGuard LG(driver->m_nodeMutex);
-		if( Value* value = driver->GetValue( _id ) )
-		{
-			help = value->GetHelp();
+		if (_pos != -1) {
+			if (_id.GetType() != ValueID::ValueType_BitSet) {
+				OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "ValueID passed to GetValueHelp is not a BitSet but a position was requested");
+				return help;
+			}
+			ValueBitSet *value = static_cast<ValueBitSet *>(driver->GetValue( _id ));
+			help = value->GetBitHelp(_pos);
 			value->Release();
+			return help;
 		} else {
-			OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to GetValueHelp");
+			if( Value* value = driver->GetValue( _id ) )
+			{
+				help = value->GetHelp();
+				value->Release();
+				return help;
+			}
 		}
 	}
-
+	OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to GetValueHelp");
 	return help;
 }
 
@@ -1740,20 +1777,32 @@ string Manager::GetValueHelp
 void Manager::SetValueHelp
 (
 		ValueID const& _id,
-		string const& _value
+		string const& _value,
+		int32 _pos
 )
 {
 	if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 	{
 		LockGuard LG(driver->m_nodeMutex);
-		if( Value* value = driver->GetValue( _id ) )
-		{
-			value->SetHelp( _value );
+		if (_pos != -1) {
+			if (_id.GetType() != ValueID::ValueType_BitSet) {
+				OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "ValueID passed to SetValueHelp is not a BitSet but a position was requested");
+				return;
+			}
+			ValueBitSet *value = static_cast<ValueBitSet *>(driver->GetValue( _id ));
+			value->SetBitHelp(_pos, _value);
 			value->Release();
+			return;
 		} else {
-			OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to SetValueHelp");
+			if( Value* value = driver->GetValue( _id ) )
+			{
+				value->SetHelp( _value );
+				value->Release();
+				return;
+			}
 		}
 	}
+	OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to SetValueHelp");
 }
 
 //-----------------------------------------------------------------------------
@@ -1907,6 +1956,41 @@ bool Manager::IsValuePolled
 }
 
 //-----------------------------------------------------------------------------
+// <Manager::GetValueAsBitSet>
+// Gets a bit from a BitSet as a bool
+//-----------------------------------------------------------------------------
+bool Manager::GetValueAsBitSet
+(
+		ValueID const& _id,
+		uint8 _pos,
+		bool* o_value
+)
+{
+
+	if( o_value )
+	{
+		if( ValueID::ValueType_BitSet == _id.GetType() )
+		{
+			if( Driver* driver = GetDriver( _id.GetHomeId() ) )
+			{
+				LockGuard LG(driver->m_nodeMutex);
+				if( ValueBitSet* value = static_cast<ValueBitSet*>( driver->GetValue( _id ) ) )
+				{
+					*o_value = value->GetBit(_pos);
+					value->Release();
+					return true;
+				} else {
+					OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to GetValueAsBitSet");
+				}
+			}
+		} else {
+			OZW_ERROR(OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID, "ValueID passed to GetValueAsBitSet is not a BitSet Value");
+		}
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
 // <Manager::GetValueAsBool>
 // Gets a value as a bool
 //-----------------------------------------------------------------------------
@@ -2044,22 +2128,40 @@ bool Manager::GetValueAsInt
 
 	if( o_value )
 	{
-		if( ValueID::ValueType_Int == _id.GetType() )
+		if( Driver* driver = GetDriver( _id.GetHomeId() ) )
 		{
-			if( Driver* driver = GetDriver( _id.GetHomeId() ) )
+			LockGuard LG(driver->m_nodeMutex);
+
+			if( ValueID::ValueType_Int == _id.GetType() )
 			{
-				LockGuard LG(driver->m_nodeMutex);
 				if( ValueInt* value = static_cast<ValueInt*>( driver->GetValue( _id ) ) )
 				{
 					*o_value = value->GetValue();
 					value->Release();
 					res = true;
-				} else {
+				}
+				else
+				{
 					OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to GetValueAsInt");
 				}
 			}
-		} else {
-			OZW_ERROR(OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID, "ValueID passed to GetValueAsInt is not a Int Value");
+			else if (ValueID::ValueType_BitSet == _id.GetType() )
+			{
+				if (ValueBitSet* value = static_cast<ValueBitSet*>( driver->GetValue( _id ) ) )
+				{
+					*o_value = value->GetValue();
+					value->Release();
+					res = true;
+				}
+				else
+				{
+					OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to GetValueAsInt");
+				}
+			}
+			else
+			{
+			OZW_ERROR(OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID, "ValueID passed to GetValueAsInt is not a Int or BitSet Value");
+			}
 		}
 	}
 
@@ -2162,6 +2264,18 @@ bool Manager::GetValueAsString
 
 			switch( _id.GetType() )
 			{
+				case ValueID::ValueType_BitSet:
+				{
+					if( ValueBitSet* value = static_cast<ValueBitSet*>( driver->GetValue( _id ) ) )
+					{
+						*o_value = value->GetAsString();
+						value->Release();
+						res = true;
+					} else {
+						OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to GetValueAsString");
+					}
+					break;
+				}
 				case ValueID::ValueType_Bool:
 				{
 					if( ValueBool* value = static_cast<ValueBool*>( driver->GetValue( _id ) ) )
@@ -2292,15 +2406,6 @@ bool Manager::GetValueAsString
 					}
 					break;
 				}
-
-#if 0
-				/* comment this out so if we miss a ValueID, GCC warns us loudly! */
-				default:
-				{
-					// To keep GCC happy
-					break;
-				}
-#endif
 			}
 
 		}
@@ -2498,6 +2603,45 @@ bool Manager::GetValueFloatPrecision
 		} else {
 			OZW_ERROR(OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID, "ValueID passed to GetValueFloatPrecision is not a Decimal Value");
 		}
+	}
+
+	return res;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::SetValue>
+// Sets a bit in a BitSet Value
+//-----------------------------------------------------------------------------
+bool Manager::SetValue
+(
+		ValueID const& _id,
+		uint8 _pos,
+		bool const _value
+)
+{
+	bool res = false;
+
+	if( ValueID::ValueType_BitSet == _id.GetType() )
+	{
+		if( Driver* driver = GetDriver( _id.GetHomeId() ) )
+		{
+			if( _id.GetNodeId() != driver->GetControllerNodeId() )
+			{
+				LockGuard LG(driver->m_nodeMutex);
+				if( ValueBitSet* value = static_cast<ValueBitSet*>( driver->GetValue( _id ) ) )
+				{
+					if (_value)
+						res = value->SetBit(_pos);
+					else
+						res = value->ClearBit(_pos);
+					value->Release();
+				} else {
+					OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to SetValue");
+				}
+			}
+		}
+	} else {
+		OZW_ERROR(OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID, "ValueID passed to SetValue is not a BitSet Value");
 	}
 
 	return res;
@@ -2790,6 +2934,18 @@ bool Manager::SetValue
 
 			switch( _id.GetType() )
 			{
+				case ValueID::ValueType_BitSet:
+				{
+					if( ValueBitSet* value = static_cast<ValueBitSet*>( driver->GetValue( _id ) ) )
+					{
+
+						res = value->SetFromString(_value);
+						value->Release();
+					} else {
+						OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to SetValue");
+					}
+					break;
+				}
 				case ValueID::ValueType_Bool:
 				{
 					if( ValueBool* value = static_cast<ValueBool*>( driver->GetValue( _id ) ) )
@@ -3051,6 +3207,76 @@ bool Manager::ReleaseButton
 
 	return res;
 }
+
+//-----------------------------------------------------------------------------
+// <Manager::SetBitMask>
+// Sets a BitMask on a BitSet ValueID
+//-----------------------------------------------------------------------------
+bool Manager::SetBitMask
+(
+		ValueID const& _id,
+		uint32 _mask
+)
+{
+	bool res = false;
+
+	if( ValueID::ValueType_BitSet == _id.GetType() )
+	{
+		if( Driver* driver = GetDriver( _id.GetHomeId() ) )
+		{
+			LockGuard LG(driver->m_nodeMutex);
+			if( ValueBitSet* value = static_cast<ValueBitSet*>( driver->GetValue( _id ) ) )
+			{
+				res = value->SetBitMask(_mask);
+				value->Release();
+			} else {
+				OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to SetBitMask");
+			}
+		}
+	} else {
+		OZW_ERROR(OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID, "ValueID passed to SetBitMask is not a BitSet Value");
+	}
+
+	return res;
+
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::GetBitMask>
+// Gets a BitMask on a BitSet ValueID
+//-----------------------------------------------------------------------------
+bool Manager::GetBitMask
+(
+		ValueID const& _id,
+		int32* o_mask
+)
+{
+	bool res = false;
+
+	if( o_mask )
+	{
+		if( ValueID::ValueType_BitSet == _id.GetType() )
+		{
+			if( Driver* driver = GetDriver( _id.GetHomeId() ) )
+			{
+				LockGuard LG(driver->m_nodeMutex);
+				if( ValueBitSet* value = static_cast<ValueBitSet*>( driver->GetValue( _id ) ) )
+				{
+					*o_mask = value->GetBitMask();
+					value->Release();
+					res = true;
+				} else {
+					OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to GetBitMask");
+				}
+			}
+		} else {
+			OZW_ERROR(OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID, "ValueID passed to GetBitMask is not a BitSet Value");
+		}
+	}
+
+	return res;
+}
+
 
 //-----------------------------------------------------------------------------
 // Climate Control Schedules
@@ -3561,7 +3787,9 @@ void Manager::ResetController
 		AddDriver( path, intf );
 		Wait::Multiple( NULL, 0, 500 );
 	}
+OPENZWAVE_DEPRECATED_WARNINGS_OFF;
 	RemoveAllScenes( _homeId );
+OPENZWAVE_DEPRECATED_WARNINGS_ON;
 }
 
 //-----------------------------------------------------------------------------
@@ -4047,7 +4275,9 @@ void Manager::RemoveAllScenes
 	{
 		if( _homeId == 0 )	// remove every device from every scene
 		{
+			OPENZWAVE_DEPRECATED_WARNINGS_OFF
 			RemoveScene( i );
+			OPENZWAVE_DEPRECATED_WARNINGS_ON
 		}
 		else
 		{
@@ -4745,3 +4975,98 @@ void Manager::GetNodeStatistics
 	}
 
 }
+
+//-----------------------------------------------------------------------------
+// <Manager::GetNodeStatistics>
+// Retrieve driver based counters.
+//-----------------------------------------------------------------------------
+string Manager::GetMetaData
+(
+		uint32 const _homeId,
+		uint8 const _nodeId,
+		Node::MetaDataFields _metadata
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		return driver->GetMetaData( _nodeId, _metadata );
+	}
+	return "";
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::checkLatestConfigFileRevision>
+// get the latest config file revision
+//-----------------------------------------------------------------------------
+bool Manager::checkLatestConfigFileRevision
+(
+	uint32 const _homeId,
+	uint8 const _nodeId
+)
+{
+	if (Driver *driver = GetDriver( _homeId ) )
+	{
+		LockGuard LG(driver->m_nodeMutex);
+		Node* node = driver->GetNode( _nodeId );
+		if( node )
+		{
+			return driver->CheckNodeConfigRevision(node);
+		}
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::checkLatestMFSRevision>
+// get the latest ManufacturerSpecific.xml file revision
+//-----------------------------------------------------------------------------
+bool Manager::checkLatestMFSRevision
+(
+	uint32 const _homeId
+)
+{
+	if (Driver *driver = GetDriver( _homeId ) )
+	{
+		return driver->CheckMFSConfigRevision();
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::downloadLatestConfigFileRevision>
+// Download the latest Config File Revision for a node.
+//-----------------------------------------------------------------------------
+bool Manager::downloadLatestConfigFileRevision
+(
+	uint32 const _homeId,
+	uint8 const _nodeId
+)
+{
+	if (Driver *driver = GetDriver( _homeId ) )
+	{
+		LockGuard LG(driver->m_nodeMutex);
+		Node* node = driver->GetNode( _nodeId );
+		if( node )
+		{
+			return driver->downloadConfigRevision(node);
+		}
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::downloadLatestMFSRevision>
+// Download the Latest ManufacturerSpecific Revision
+//-----------------------------------------------------------------------------
+bool Manager::downloadLatestMFSRevision
+(
+	uint32 const _homeId
+)
+{
+	if (Driver *driver = GetDriver( _homeId ) )
+	{
+		return driver->downloadMFSRevision();
+	}
+	return false;
+}
+

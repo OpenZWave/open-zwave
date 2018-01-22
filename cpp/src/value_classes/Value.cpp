@@ -31,6 +31,7 @@
 #include "Node.h"
 #include "Notification.h"
 #include "Msg.h"
+#include "Bitfield.h"
 #include "value_classes/Value.h"
 #include "platform/Log.h"
 #include "command_classes/CommandClass.h"
@@ -60,6 +61,7 @@ static char const* c_typeName[] =
 	"string",
 	"button",
 	"raw",
+	"bitset",
 	"invalid type"
 };
 
@@ -74,7 +76,7 @@ Value::Value
 	ValueID::ValueGenre const _genre,
 	uint8 const _commandClassId,
 	uint8 const _instance,
-	uint8 const _index,
+	uint16 const _index,
 	ValueID::ValueType const _type,
 	string const& _label,
 	string const& _units,
@@ -161,10 +163,11 @@ void Value::ReadXML
 		instance = (uint8)intVal;
 	}
 
-	uint8 index = 0;
+	uint16 index = 0;
 	if( TIXML_SUCCESS == _valueElement->QueryIntAttribute( "index", &intVal ) )
 	{
-		index = (uint8)intVal;
+		/* index is only 10 bytes in the ValueID class */
+		index = (uint16)(intVal & 0x3FF);
 	}
 
 	m_id = ValueID( _homeId, _nodeId, genre, _commandClassId, instance, index, type );
@@ -294,7 +297,7 @@ void Value::WriteXML
 	snprintf( str, sizeof(str), "%d", m_id.GetInstance() );
 	_valueElement->SetAttribute( "instance", str );
 
-	snprintf( str, sizeof(str), "%d", m_id.GetIndex() );
+	snprintf( str, sizeof(str), "%d", (m_id.GetIndex() & 0x3FF) );
 	_valueElement->SetAttribute( "index", str );
 
 	_valueElement->SetAttribute( "label", m_label.c_str() );
@@ -608,6 +611,7 @@ int Value::VerifyRefreshedValue
 			}
 			case ValueID::ValueType_List:			// List Type is treated as a int32
 			case ValueID::ValueType_Int:			// int32
+			case ValueID::ValueType_BitSet:			// BitSet
 			{
 				Log::Write( LogLevel_Detail, m_id.GetNodeId(), "Refreshed Value: old value=%d, new value=%d, type=%s", *((int32*)_originalValue), *((int32*)_newValue), GetTypeNameFromEnum(_type) );
 				break;
@@ -667,6 +671,9 @@ int Value::VerifyRefreshedValue
 	case ValueID::ValueType_Schedule:		// Schedule
 		/* Should not get here */
 		break;
+	case ValueID::ValueType_BitSet:			// BitSet
+		bOriginalEqual = ( ((Bitfield *)_originalValue)->GetValue() == ((Bitfield *)_newValue)->GetValue() );
+		break;
 	}
 
 		// if this is the first refresh of the value, test to see if the value has changed
@@ -714,6 +721,9 @@ int Value::VerifyRefreshedValue
 			break;
 		case ValueID::ValueType_Schedule:
 			/* Should not get here */
+			break;
+		case ValueID::ValueType_BitSet:			// BitSet
+			bCheckEqual = ( ((Bitfield *)_checkValue)->GetValue() == ((Bitfield *)_newValue)->GetValue() );;
 			break;
 		}
 		if( bCheckEqual )

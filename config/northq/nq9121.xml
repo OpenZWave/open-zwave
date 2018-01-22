@@ -3,7 +3,7 @@
 NorthQ NQ-9121 Gas Meter
 http://northq.com/wp-content/uploads/2016/01/Technical-Integration.pdf
 -->
-<Product xmlns='http://code.google.com/p/open-zwave/'>
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="3">
   <!-- COMMAND_CLASS_BASIC -->
   <CommandClass id="32" getsupported="false"/>
   <!-- Configuration Parameters -->

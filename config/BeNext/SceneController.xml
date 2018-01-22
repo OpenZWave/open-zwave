@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--http://benext.eu/static/manual/scenecontroller.pdf-->
-<Product xmlns='http://code.google.com/p/open-zwave/'>
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
   <CommandClass id="91" action="add" scenecount="16" />
   <!-- Configuration -->
   <CommandClass id="112">

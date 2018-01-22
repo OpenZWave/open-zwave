@@ -4,8 +4,7 @@ Cooper Wallmount 5-Scene Controller RFWC5/RFWDC
 http://www.cooperindustries.com/content/dam/public/wiringdevices/products/documents/instruction_sheets/rfwcddsc_rev._a_.pdf
 http://www.cooperindustries.com/content/dam/public/wiringdevices/products/documents/technical_specifications/advancedtechinfo_V2.pdf
 -->
-<Product xmlns='http://code.google.com/p/open-zwave/'>
-
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
 	<!-- Configuration Parameters -->
 	<CommandClass id="112">
 		<Value type="byte" index="1" genre="config" label="Group 1 Level" units="" min="1" max="255" value="10">

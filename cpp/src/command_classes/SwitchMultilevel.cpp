@@ -130,7 +130,7 @@ bool SwitchMultilevel::RequestState
 bool SwitchMultilevel::RequestValue
 (
 	uint32 const _requestFlags,
-	uint8 const _index,
+	uint16 const _index,
 	uint8 const _instance,
 	Driver::MsgQueue const _queue
 )
@@ -154,6 +154,33 @@ bool SwitchMultilevel::RequestValue
 	}
 	return false;
 }
+
+bool SwitchMultilevel::HandleIncomingMsg
+(
+	uint8 const* _data,
+	uint32 const _length,
+	uint32 const _instance	// = 1
+)
+{
+	if ( SwitchMultilevelCmd_Set == (SwitchMultilevelCmd)_data[0] )
+	{
+		Log::Write( LogLevel_Info, GetNodeId(), "Received SwitchMultiLevel Set: level=%d", _data[1] );
+		return true;
+	}
+	else if ( SwitchMultilevelCmd_StartLevelChange == (SwitchMultilevelCmd)_data[0] )
+	{
+		Log::Write( LogLevel_Info, GetNodeId(), "Received SwitchMultiLevel StartLevelChange: level=%d", _data[1] );
+
+	}
+	else if ( SwitchMultilevelCmd_StopLevelChange == (SwitchMultilevelCmd)_data[0] )
+	{
+		Log::Write( LogLevel_Info, GetNodeId(), "Received SwitchMultiLevel StopLevelChange: level=%d", _data[1] );
+
+	}
+
+	return true;
+}
+
 
 //-----------------------------------------------------------------------------
 // <SwitchMultilevel::HandleMsg>

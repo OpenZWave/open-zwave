@@ -227,7 +227,7 @@ bool DoorLock::RequestState
 bool DoorLock::RequestValue
 (
 	uint32 const _requestFlags,
-	uint8 const _what,
+	uint16 const _what,
 	uint8 const _instance,
 	Driver::MsgQueue const _queue
 )

@@ -134,6 +134,7 @@ int32 Wait::Multiple
 	// Add a watcher to each object in the list, passing in the event as the context.
 	for( i=0; i<_numObjects; ++i )
 	{
+//		Log::Write( LogLevel_Info, "Wait::Multiple - Object %p %d", _objects[i], _objects[i]->IsSignalled());
 		_objects[i]->AddWatcher( WaitMultipleCallback, waitEvent );
 	}
 
@@ -155,7 +156,7 @@ int32 Wait::Multiple
 			}
 		}
 	}
-	//Log::Write( LogLevel_Debug, "Wait::Multiple res=%d num=%d >%s", res, _numObjects, str.c_str() );
+//	Log::Write( LogLevel_Debug, "Wait::Multiple res=%d num=%d >%s", res, _numObjects, str.c_str() );
 
 	// Remove the watchers
 	for( i=0; i<_numObjects; ++i )

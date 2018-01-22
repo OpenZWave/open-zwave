@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Product xmlns='http://code.google.com/p/open-zwave/'>
 	<!-- https://products.z-wavealliance.org/products/271 -->
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="2">
 	<!-- Configuration Parameters -->
 	<CommandClass id="112">
 		<Value type="byte" index="1" genre="config" label="Basic Set Level" units="%" min="0" max="99" value="99">
