@@ -29,7 +29,7 @@
         <Value type="short" index="151" genre="config" label="Power Report Value Threshold" units="watts" min="1" max="65535" value="0" size="2">
 	        <Help>Number of Watts the appliance needs to go over for the change to be reported</Help>
         </Value>
-        <Value type="int" index="152" genre="config" label="Power Report Percentage Threshold" units="%" min="1" max="255" value="10" size="2">
+        <Value type="int" index="152" genre="config" label="Power Report Percentage Threshold" units="%" min="1" max="255" value="10" size="4">
 	        <Help>Percentage in power usage change the appliance needs to go over for the event to be reported (Default 10)</Help>
         </Value>
         <Value type="int" index="171" genre="config" label="Power Report Frequency" min="5" max="2678400" value="0" size="4">
