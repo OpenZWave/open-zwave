@@ -7,7 +7,7 @@ https://products.z-wavealliance.org/products/2535/configs
 	<!-- Configuration -->
 	<CommandClass id="112">
 		<Value type="list" size="1" genre="config" instance="1" index="1" label="Volume" value="3">
-			<Help>Disable the door sensor alarm function.</Help>
+			<Help>Volume of the tones</Help>
 			<Item label="Silent" value="1" />
 			<Item label="Low" value="2" />
 			<Item label="High" value="3" />
