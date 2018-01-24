@@ -355,7 +355,7 @@ namespace OpenZWave
 		void SetDriverReady( Driver* _driver, bool success );		/**< Indicate that the Driver is ready to be used, and send the notification callback. */
 
 OPENZWAVE_EXPORT_WARNINGS_OFF
-		list<Driver*>		m_pendingDrivers;		/**< Drivers that are in the process of reading saved data and querying their Z-Wave network for basic information. */
+		map<string,Driver*>	m_drivers;			/**< All Drivers. */
 		map<uint32,Driver*>	m_readyDrivers;			/**< Drivers that are ready to be used by the application. */
 OPENZWAVE_EXPORT_WARNINGS_ON
 
