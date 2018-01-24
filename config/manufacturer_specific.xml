@@ -886,6 +886,10 @@
 	</Manufacturer>
 	<Manufacturer id="0040" name="Novar EDS">
 	</Manufacturer>
+	<Manufacturer id="016a" name="Oomi">
+		<Product type="1D02" id="0064" name="FT100 MultiSensor 6" config="oomi/ft100.xml" />
+		<Product type="1D03" id="006F" name="FT111 In Wall Dimmer" config="oomi/ft111.xml" />
+	</Manufacturer>
 	<Manufacturer id="0041" name="OpenPeak Inc.">
 	</Manufacturer>
 	<Manufacturer id="0245" name="Permundo">
