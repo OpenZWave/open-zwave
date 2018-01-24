@@ -4,24 +4,24 @@
          Configuration Parameters -->
   <Protocol refreshonnodeinfoframe="true"/>
     <CommandClass id="112">
-        <Value  type="list" index="20" genre="config" label="Overload Protection" min="0" max="1" vindex="1" size="1">
+        <Value  type="list" index="20" genre="config" label="Overload Protection" min="0" max="1" value="1" size="1">
             <Help>Overload protection.</Help>
             <Item value="0" label="Disabled" />
             <Item value="1" label="Enabled" />
         </Value>
-        <Value type="list" index="21" genre="config" label="On/Off Status Recovery After Power Failure" min="0" max="2" vindex="0" size="1">
+        <Value type="list" index="21" genre="config" label="On/Off Status Recovery After Power Failure" min="0" max="2" value="0" size="1">
             <Help>Choose the recovery state for your Power Switch if power outage occurs.</Help>
             <Item value="0" label="Previous state" />
             <Item value="1" label="ON" />
             <Item value="2" label="OFF" />
         </Value>
-        <Value type="list" index="24" genre="config" label="On/Off Status Change Notifications" min="0" max="2" vindex="1" size="1">
+        <Value type="list" index="24" genre="config" label="On/Off Status Change Notifications" min="0" max="2" value="1" size="1">
             <Help>Send On/Off Status Change Notifications</Help>
             <Item value="0" label="Disabled" />
             <Item value="1" label="Sends notification if status is changed manually or remotely" />
             <Item value="2" label="Sends notification ONLY if status is changed manually" />
         </Value>
-        <Value type="list" index="27" genre="config" label="LED Indicator Control" min="0" max="1" vindex="0" size="1">
+        <Value type="list" index="27" genre="config" label="LED Indicator Control" min="0" max="1" value="0" size="1">
 	        <Help>0 - LED indicator will display power consumption whenever the device is plugged in. 1 - LED indicator will display the level of power consumption for 5 seconds only whenever the device is turned on or off</Help>
 	        <Item label="Display whenever the device is plugged in (Default)" value="0" />
 	        <Item label="Display power consumption for 5 seconds" value="1" />
