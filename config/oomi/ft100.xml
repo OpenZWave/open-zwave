@@ -4,7 +4,7 @@ Oomi FT100 MultiSensor 6
 https://products.z-wavealliance.org/products/2592
 V1.09 (01/24/2018)
 -->
-<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
+<Product xmlns='http://code.google.com/p/open-zwave/'>
 	<!-- Configuration Parameters -->
 	<CommandClass id="112">
 		<Value type="list" index="2" genre="config" label="Wake up 10 minutes on Power On" min="0" max="1" value="0" size="1">
