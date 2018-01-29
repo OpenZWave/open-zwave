@@ -826,6 +826,7 @@ DISTFILES =	.gitignore \
 	debian/rules \
 	debian/source/format \
 	dist.mk \
+	distfiles.mk \
 	docs/Doxyfile.in \
 	docs/default.htm \
 	docs/general/DoxygenStepByStep.html \
