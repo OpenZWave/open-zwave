@@ -7,6 +7,7 @@
 		<Product type="1e10" id="0158" name="CT30 Thermostat" config="2gig/ct30.xml"/>
 		<Product type="1e12" id="015c" name="CT30 Thermostat" config="2gig/ct30.xml"/>
 		<Product type="1e12" id="015e" name="CT30 Thermostat" config="2gig/ct30.xml"/>
+		<Product type="2002" id="0100" name="CT32 Thermostat" config="2gig/ct32.xml"/>
 		<Product type="6401" id="0105" name="CT100 Thermostat" config="2gig/ct100.xml"/>
 		<Product type="6401" id="0107" name="CT100 Thermostat USA" config="2gig/ct100.xml"/>
 		<Product type="6402" id="0100" name="CT100 Plus Thermostat" config="2gig/ct100.xml"/>
