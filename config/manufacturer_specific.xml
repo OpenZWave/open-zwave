@@ -733,6 +733,7 @@
 	</Manufacturer>
 	<Manufacturer id="0214" name="Kaipule">
 		<Product type="0002" id="0001" name="IM20 Door/Window Sensor" config="kaipule/im20.xml"/>
+		<Product type="0003" id="0002" name="PIR Celling Sensor" config="kaipule/ix32.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0091" name="Kamstrup">
 	</Manufacturer>

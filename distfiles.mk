@@ -282,6 +282,7 @@ DISTFILES =	.gitignore \
 	config/intermatic/ca8900.xml \
 	config/iris/rangeextender.xml \
 	config/kaipule/im20.xml \
+	config/kaipule/ix32.xml \
 	config/kwikset/smartcode.xml \
 	config/leviton/dz15s.xml \
 	config/leviton/dz6hd.xml \
