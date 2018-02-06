@@ -9,6 +9,7 @@ DISTFILES =	.gitignore \
 	config/2gig/ct100.xml \
 	config/2gig/ct101.xml \
 	config/2gig/ct30.xml \
+	config/2gig/ct32.xml \
 	config/2gig/ct50e.xml \
 	config/2gig/ct80.xml \
 	config/BeNext/1poleswitch.xml \
@@ -152,6 +153,7 @@ DISTFILES =	.gitignore \
 	config/enerwave/zwn-bpc.xml \
 	config/enerwave/zwn-sc7.xml \
 	config/enerwave/zwnrsm1plus.xml \
+	config/enerwave/zwnrsm2plus.xml \
 	config/eurotronic/eur_cometz.xml \
 	config/eurotronic/eur_stellaz.xml \
 	config/everspring/ad146.xml \
@@ -222,6 +224,7 @@ DISTFILES =	.gitignore \
 	config/ge/12719-plugin-switch.xml \
 	config/ge/12724-dimmer.xml \
 	config/ge/14282-plugin-switch.xml \
+	config/ge/14288-outlet.xml \
 	config/ge/14291-switch.xml \
 	config/ge/14292-toggle-switch.xml \
 	config/ge/14294-dimmer.xml \
@@ -243,7 +246,9 @@ DISTFILES =	.gitignore \
 	config/greenwave/powernode6.xml \
 	config/hank/hkzw-dws01.xml \
 	config/hank/hkzw-ms01.xml \
+	config/hank/hkzw-rgb01.xml \
 	config/hank/hkzw-so01-smartplug.xml \
+	config/hank/hkzw-so03.xml \
 	config/hank/hkzw-so05-smartplug.xml \
 	config/hank/scenecontroller1.xml \
 	config/hank/scenecontroller4.xml \
@@ -261,6 +266,7 @@ DISTFILES =	.gitignore \
 	config/homeseer/hsm100.xml \
 	config/homeseer/hsm200.xml \
 	config/homeseer/ztroller.xml \
+	config/honeywell/lynx-touch-l5100.xml \
 	config/honeywell/th8320zw1000.xml \
 	config/horstmann/asrzw.xml \
 	config/horstmann/hrt4zw.xml \
@@ -276,6 +282,7 @@ DISTFILES =	.gitignore \
 	config/intermatic/ca8900.xml \
 	config/iris/rangeextender.xml \
 	config/kaipule/im20.xml \
+	config/kaipule/ix32.xml \
 	config/kwikset/smartcode.xml \
 	config/leviton/dz15s.xml \
 	config/leviton/dz6hd.xml \
