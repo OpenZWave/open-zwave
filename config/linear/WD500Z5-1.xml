@@ -35,12 +35,5 @@
 			<Help>The Dim Timer (how fast the dim steps happen). It can be set to a value of 1 to 255. This value indicates in 10 millisecond resolution, how often the dim level will change.</Help>
 		</Value>
   </CommandClass>
-	<!-- Set the correct parameters for COMMAND_CLASS_CENTRAL_SCENE -->
-	<CommandClass id="91" name="COMMAND_CLASS_CENTRAL_SCENE" version="1" request_flags="4" innif="true" scenecount="2">
-    <Instance index="1" />
-    <Value type="int" genre="system" instance="1" index="0" label="Scene Count" units="" read_only="true" write_only="false" verify_changes="false" poll_intensity="0" min="-2147483648" max="2147483647" value="2" />
-    <Value type="int" genre="user" instance="1" index="1" label="Top Paddle Scene" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="-2147483648" max="2147483647" value="0" />
-    <Value type="int" genre="user" instance="1" index="2" label="Bottom Paddle Scene" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="-2147483648" max="2147483647" value="0" />
-  </CommandClass>
 </Product>
 

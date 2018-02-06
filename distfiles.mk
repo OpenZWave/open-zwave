@@ -85,6 +85,8 @@ DISTFILES =	.gitignore \
 	config/aeotec/zw132.xml \
 	config/aeotec/zw139.xml \
 	config/aeotec/zw140.xml \
+	config/assa_abloy/ConexisL1.xml \
+	config/assa_abloy/KeyfreeConnected-plus.xml \
 	config/assa_abloy/KeyfreeConnected.xml \
 	config/assa_abloy/PushButtonDeadbolt.xml \
 	config/assa_abloy/PushButtonLever.xml \
@@ -300,6 +302,7 @@ DISTFILES =	.gitignore \
 	config/linear/WADWAZ-1.xml \
 	config/linear/WAPIRZ-1.xml \
 	config/linear/WD500Z-1.xml \
+	config/linear/WD500Z5-1.xml \
 	config/linear/WS15Z-1.xml \
 	config/linear/WT00Z-1.xml \
 	config/logicsoft/ZHC5002.xml \
@@ -326,6 +329,8 @@ DISTFILES =	.gitignore \
 	config/northq/nq9021.xml \
 	config/northq/nq9121.xml \
 	config/northq/nq92021.xml \
+	config/oomi/ft100.xml \
+	config/oomi/ft111.xml \
 	config/options.xml \
 	config/options.xsd \
 	config/philio/pan03.xml \
@@ -461,6 +466,7 @@ DISTFILES =	.gitignore \
 	config/zipato/zp3102.xml \
 	config/zooz/zen06.xml \
 	config/zooz/zen07.xml \
+	config/zooz/zen15.xml \
 	config/zooz/zen20.xml \
 	config/zooz/zen21.xml \
 	config/zooz/zen22.xml \
