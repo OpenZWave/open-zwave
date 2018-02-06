@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Product xmlns='http://code.google.com/p/open-zwave/'>
+	<!-- Configuration Parameters -->
+	<CommandClass id="112">
+		<Value type="list" index="3" genre="config" label="Night Light" size="1" value="0">
+			<Help>By default, the Dimmer LED will turn OFF when the load attached is turned ON.</Help>
+			<Item label="Night-light Mode" value="0" />
+			<Item label="LED ON when load is on" value="1" />
+			<Item label="LED always ON" value="2" />
+			<Item label="LED always OFF" value="3" />
+			<Item label="LED blink during RF transmission" value="4" />
+		</Value>
+		<Value type="bool" index="4" genre="config" label="Invert Switch" size="1" value="False">
+			<Help>Change the top of the switch to OFF and the bottom of the switch to ON.</Help>
+		</Value>
+    <Value type="bool" index="5" genre="config" label="Ignore Start-Level" size="1" value="True">
+			<Help>This dimmer will always start dimming from its current level, ignoring any commanded start level.</Help>
+		</Value>
+    <Value type="byte" index="7" genre="config" label="Dim Remote On/Off Step" units="steps" min="1" max="99" value="3" size="1">
+			<Help>Dim Step can be set to a value of 1 to 99. This value indicates how many levels the dimmer will change each time the Dim Timer expires.</Help>
+		</Value>
+    <Value type="byte" index="8" genre="config" label="Dim Remote On/Off Timer" units="ms" min="1" max="255" value="10" size="1">
+			<Help>The Dim Timer (how fast the dim steps happen). It can be set to a value of 1 to 255. This value indicates in 10 millisecond resolution, how often the dim level will change.</Help>
+		</Value>
+    <Value type="byte" index="9" genre="config" label="Dim Local On/Off Step" units="steps" min="1" max="99" value="10" size="1">
+			<Help>Dim Step can be set to a value of 1 to 99. This value indicates how many levels the dimmer will change each time the Dim Timer expires.</Help>
+		</Value>
+    <Value type="byte" index="10" genre="config" label="Dim Local On/Off Timer" units="ms" min="1" max="255" value="10" size="1">
+			<Help>The Dim Timer (how fast the dim steps happen). It can be set to a value of 1 to 255. This value indicates in 10 millisecond resolution, how often the dim level will change.</Help>
+		</Value>
+    <Value type="byte" index="11" genre="config" label="Dim ALL On/Off Step" units="steps" min="1" max="99" value="10" size="1">
+			<Help>Dim Step can be set to a value of 1 to 99. This value indicates how many levels the dimmer will change each time the Dim Timer expires.</Help>
+		</Value>
+    <Value type="byte" index="12" genre="config" label="Dim ALL On/Off Timer" units="ms" min="1" max="255" value="10" size="1">
+			<Help>The Dim Timer (how fast the dim steps happen). It can be set to a value of 1 to 255. This value indicates in 10 millisecond resolution, how often the dim level will change.</Help>
+		</Value>
+  </CommandClass>
+	<!-- Set the correct parameters for COMMAND_CLASS_CENTRAL_SCENE -->
+	<CommandClass id="91" name="COMMAND_CLASS_CENTRAL_SCENE" version="1" request_flags="4" innif="true" scenecount="2">
+    <Instance index="1" />
+    <Value type="int" genre="system" instance="1" index="0" label="Scene Count" units="" read_only="true" write_only="false" verify_changes="false" poll_intensity="0" min="-2147483648" max="2147483647" value="2" />
+    <Value type="int" genre="user" instance="1" index="1" label="Top Paddle Scene" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="-2147483648" max="2147483647" value="0" />
+    <Value type="int" genre="user" instance="1" index="2" label="Bottom Paddle Scene" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="-2147483648" max="2147483647" value="0" />
+  </CommandClass>
+	  <!-- Set correct max level for COMMAND_CLASS_SWITCH_MULTILEVEL, the dimmer will ignore any commands to set value >99 -->
+  <CommandClass id="38">
+    <Value type="byte" genre="user" index="0" label="Level" min="0" max="100" value="0" />
+  </CommandClass>
+</Product>
+
