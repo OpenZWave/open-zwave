@@ -793,6 +793,7 @@
 		<Product type="5457" id="3033" name="WT00Z-1 3-Way Wall Accessory Switch" config="linear/WT00Z-1.xml"/>
 		<Product type="5442" id="5431" name="GC-TBZ48 Battery Powered Z-Wave Thermostat" config="linear/GC-TBZ48.xml" />
 		<Product type="5442" id="5436" name="GC-TBZ48 Battery Powered Z-Wave Thermostat" config="linear/GC-TBZ48.xml" />
+		<Product type="5744" id="3530" name="WD500Z5-1 Wall Mounted Dimmer" config="linear/WD500Z5-1.xml" />
 	</Manufacturer>
 	<Manufacturer id="015e" name="Locstar">
 		<Product type="8015" id="0001" name="LS-8015-ZW Single Latch Door Lock"/>
