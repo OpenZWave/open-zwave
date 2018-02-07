@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+GoControl in-wall lighting dimmer switch WD500Z5-1 
+https://products.z-wavealliance.org/products/1883
+-->
 <Product xmlns='http://code.google.com/p/open-zwave/'>
 	<!-- Configuration Parameters -->
 	<CommandClass id="112">
@@ -10,11 +14,15 @@
 			<Item label="LED always OFF" value="3" />
 			<Item label="LED blink during RF transmission" value="4" />
 		</Value>
-		<Value type="bool" index="4" genre="config" label="Invert Switch" size="1" value="False">
+		<Value type="list" index="4" genre="config" label="Invert Switch" size="1" value="0">
 			<Help>Change the top of the switch to OFF and the bottom of the switch to ON.</Help>
+			<Item label="Normal" value="0" />
+			<Item label="Invert" value="1" />
 		</Value>
-    <Value type="bool" index="5" genre="config" label="Ignore Start-Level" size="1" value="True">
+    <Value type="list" index="5" genre="config" label="Ignore Start-Level" size="1" value="1">
 			<Help>This dimmer will always start dimming from its current level, ignoring any commanded start level.</Help>
+	    		<Item label="No" value="0" />
+			<Item label="Yes" value="1" />
 		</Value>
     <Value type="byte" index="7" genre="config" label="Dim Remote On/Off Step" units="steps" min="1" max="99" value="3" size="1">
 			<Help>Dim Step can be set to a value of 1 to 99. This value indicates how many levels the dimmer will change each time the Dim Timer expires.</Help>
@@ -35,5 +43,11 @@
 			<Help>The Dim Timer (how fast the dim steps happen). It can be set to a value of 1 to 255. This value indicates in 10 millisecond resolution, how often the dim level will change.</Help>
 		</Value>
   </CommandClass>
+	<!-- Association Groups -->
+	<CommandClass id="133">		
+		<Associations num_groups="1">
+			<Group index="1" max_associations="5" label="Lifeline" />
+		</Associations>
+</CommandClass>
 </Product>
 
