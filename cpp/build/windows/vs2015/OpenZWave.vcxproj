@@ -171,6 +171,7 @@
     </Lib>
     <PreBuildEvent>
       <Command>del ..\winversion.cpp
+del /F /Q /S Debug
 CALL "$(ProjectDir)\..\GIT-VS-VERSION-GEN.bat" "$(ProjectDir)\" "..\winversion.cpp"
 exit 0</Command>
     </PreBuildEvent>
@@ -197,6 +198,7 @@ exit 0</Command>
     </Lib>
     <PreBuildEvent>
       <Command>del ..\winversion.cpp
+del /F /Q /S x64\Debug
 CALL "$(ProjectDir)\..\GIT-VS-VERSION-GEN.bat" "$(ProjectDir)\" "..\winversion.cpp"
 exit 0</Command>
     </PreBuildEvent>
@@ -230,6 +232,7 @@ exit 0</Command>
     </Link>
     <PreBuildEvent>
       <Command>del ..\winversion.cpp
+del /F /Q /S DebugDLL
 CALL "$(ProjectDir)\..\GIT-VS-VERSION-GEN.bat" "$(ProjectDir)\" "..\winversion.cpp"
 exit 0</Command>
     </PreBuildEvent>
@@ -262,6 +265,7 @@ exit 0</Command>
     </Link>
     <PreBuildEvent>
       <Command>del ..\winversion.cpp
+del /F /Q /S x64\DebugDLL
 CALL "$(ProjectDir)\..\GIT-VS-VERSION-GEN.bat" "$(ProjectDir)\" "..\winversion.cpp"
 exit 0</Command>
     </PreBuildEvent>
@@ -295,6 +299,7 @@ exit 0</Command>
     <PreBuildEvent>
       <Message>Export GIT Revision</Message>
       <Command>del ..\winversion.cpp
+del /F /Q /S ReleaseDLL
 CALL "$(ProjectDir)\..\GIT-VS-VERSION-GEN.bat" "$(ProjectDir)\" "..\winversion.cpp"
 exit 0</Command>
     </PreBuildEvent>
@@ -324,6 +329,7 @@ exit 0</Command>
     <PreBuildEvent>
       <Message>Export GIT Revision</Message>
       <Command>del ..\winversion.cpp
+del /F /Q /S x64\ReleaseDLL
 CALL "$(ProjectDir)\..\GIT-VS-VERSION-GEN.bat" "$(ProjectDir)\" "..\winversion.cpp"
 exit 0</Command>
     </PreBuildEvent>
@@ -347,6 +353,7 @@ exit 0</Command>
     </Lib>
     <PreBuildEvent>
       <Command>del ..\winversion.cpp
+del /F /Q /S Release
 CALL "$(ProjectDir)\..\GIT-VS-VERSION-GEN.bat" "$(ProjectDir)\" "..\winversion.cpp"
 exit 0</Command>
     </PreBuildEvent>
@@ -373,6 +380,7 @@ exit 0</Command>
     </Lib>
     <PreBuildEvent>
       <Command>del ..\winversion.cpp
+del /F /Q /S x64\Release
 CALL "$(ProjectDir)\..\GIT-VS-VERSION-GEN.bat" "$(ProjectDir)\" "..\winversion.cpp"
 exit 0</Command>
     </PreBuildEvent>
