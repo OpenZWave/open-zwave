@@ -1069,6 +1069,7 @@
 	</Manufacturer>
 	<Manufacturer id="019a" name="Sensative">
 		<Product type="0003" id="0003" name="Strips" config="sensative/strips.xml" />
+		<Product type="0003" id="000a" name="Strips Comfort" config="sensative/stripsconfort.xml" />
 	</Manufacturer>
 	<Manufacturer id="0044" name="Sequoia Tech">
 	</Manufacturer>
