@@ -25,9 +25,9 @@
 //	along with OpenZWave.  If not, see <http://www.gnu.org/licenses/>.
 //
 //-----------------------------------------------------------------------------
-#include "Defs.h"
-#include "platform/Event.h"
-#include "platform/Thread.h"
+#include "../../Defs.h"
+#include "../Event.h"
+#include "../Thread.h"
 #include "ThreadImpl.h"
 
 using namespace OpenZWave;

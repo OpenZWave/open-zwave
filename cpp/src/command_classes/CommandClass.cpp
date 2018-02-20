@@ -27,17 +27,17 @@
 
 #include <math.h>
 #include <locale.h>
-#include "tinyxml.h"
-#include "command_classes/CommandClass.h"
-#include "command_classes/Basic.h"
-#include "command_classes/MultiInstance.h"
-#include "command_classes/CommandClasses.h"
-#include "Msg.h"
-#include "Node.h"
-#include "Driver.h"
-#include "Manager.h"
-#include "platform/Log.h"
-#include "value_classes/ValueStore.h"
+#include <tinyxml.h>
+#include "CommandClass.h"
+#include "Basic.h"
+#include "MultiInstance.h"
+#include "CommandClasses.h"
+#include "../Msg.h"
+#include "../Node.h"
+#include "../Driver.h"
+#include "../Manager.h"
+#include "../platform/Log.h"
+#include "../value_classes/ValueStore.h"
 
 using namespace OpenZWave;
 

@@ -29,7 +29,7 @@
 #include <cstring>
 #include <pthread.h>
 #include <iostream>
-#include "Defs.h"
+#include "../../Defs.h"
 #include "LogImpl.h"
 
 using namespace OpenZWave;

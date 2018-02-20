@@ -37,7 +37,7 @@
 #include "command_classes/MultiChannelAssociation.h"
 #include "platform/Log.h"
 
-#include "tinyxml.h"
+#include <tinyxml.h>
 
 using namespace OpenZWave;
 

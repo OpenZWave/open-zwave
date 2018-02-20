@@ -26,10 +26,10 @@
 //
 //-----------------------------------------------------------------------------
 
-#include "Defs.h"
+#include "../../Defs.h"
 #include "SerialControllerImpl.h"
 
-#include "platform/Log.h"
+#include "../Log.h"
 #include <winstring.h>
 #include <ppltasks.h>
 

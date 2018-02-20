@@ -25,12 +25,12 @@
 //
 //-----------------------------------------------------------------------------
 
-#include "tinyxml.h"
-#include "value_classes/ValueBool.h"
-#include "Driver.h"
-#include "Node.h"
-#include "platform/Log.h"
-#include "Manager.h"
+#include <tinyxml.h>
+#include "ValueBool.h"
+#include "../Driver.h"
+#include "../Node.h"
+#include "../platform/Log.h"
+#include "../Manager.h"
 #include <ctime>
 
 using namespace OpenZWave;

@@ -28,7 +28,7 @@
 #ifndef _SwitchAll_H
 #define _SwitchAll_H
 
-#include "command_classes/CommandClass.h"
+#include "CommandClass.h"
 
 namespace OpenZWave
 {

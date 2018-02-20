@@ -29,7 +29,7 @@
 #define _ManufacturerSpecific_H
 
 #include <map>
-#include "command_classes/CommandClass.h"
+#include "CommandClass.h"
 
 namespace OpenZWave
 {

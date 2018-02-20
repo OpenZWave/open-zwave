@@ -29,8 +29,8 @@
 #define _Security_H
 
 #include <ctime>
-#include "aes/aescpp.h"
-#include "command_classes/CommandClass.h"
+#include "../aes/aescpp.h"
+#include "CommandClass.h"
 
 namespace OpenZWave
 {

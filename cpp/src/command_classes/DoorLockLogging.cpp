@@ -25,20 +25,20 @@
 //
 //-----------------------------------------------------------------------------
 
-#include "command_classes/CommandClasses.h"
-#include "command_classes/DoorLockLogging.h"
-#include "Defs.h"
-#include "Msg.h"
-#include "Node.h"
-#include "Driver.h"
-#include "platform/Log.h"
+#include "CommandClasses.h"
+#include "DoorLockLogging.h"
+#include "../Defs.h"
+#include "../Msg.h"
+#include "../Node.h"
+#include "../Driver.h"
+#include "../platform/Log.h"
 
-#include "value_classes/ValueBool.h"
-#include "value_classes/ValueByte.h"
-#include "value_classes/ValueInt.h"
-#include "value_classes/ValueString.h"
+#include "../value_classes/ValueBool.h"
+#include "../value_classes/ValueByte.h"
+#include "../value_classes/ValueInt.h"
+#include "../value_classes/ValueString.h"
 
-#include "tinyxml.h"
+#include <tinyxml.h>
 
 using namespace OpenZWave;
 

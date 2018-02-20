@@ -29,7 +29,7 @@
 #define _MultiInstance_H
 
 #include <set>
-#include "command_classes/CommandClass.h"
+#include "CommandClass.h"
 
 namespace OpenZWave
 {

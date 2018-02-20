@@ -30,7 +30,7 @@
 
 #include <string>
 #include <assert.h>
-#include "Defs.h"
+#include "../Defs.h"
 
 class TiXmlElement;
 

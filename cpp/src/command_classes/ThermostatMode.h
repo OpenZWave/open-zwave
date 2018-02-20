@@ -30,8 +30,8 @@
 
 #include <vector>
 #include <string>
-#include "command_classes/CommandClass.h"
-#include "value_classes/ValueList.h"
+#include "CommandClass.h"
+#include "../value_classes/ValueList.h"
 
 namespace OpenZWave
 {

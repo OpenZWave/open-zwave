@@ -26,10 +26,10 @@
 //	along with OpenZWave.  If not, see <http://www.gnu.org/licenses/>.
 //
 //-----------------------------------------------------------------------------
-#include "Defs.h"
-#include "platform/Wait.h"
+#include "../../Defs.h"
+#include "../Wait.h"
 #include "WaitImpl.h"
-#include "platform/Log.h"
+#include "../Log.h"
 
 using namespace OpenZWave;
 

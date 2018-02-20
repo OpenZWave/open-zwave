@@ -28,7 +28,7 @@
 #ifndef _Color_H
 #define _Color_H
 
-#include "command_classes/CommandClass.h"
+#include "CommandClass.h"
 
 namespace OpenZWave
 {
