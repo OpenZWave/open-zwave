@@ -25,11 +25,11 @@
 //
 //-----------------------------------------------------------------------------
 
-#include "tinyxml.h"
-#include "value_classes/ValueString.h"
-#include "Msg.h"
-#include "platform/Log.h"
-#include "Manager.h"
+#include <tinyxml.h>
+#include "ValueString.h"
+#include "../Msg.h"
+#include "../platform/Log.h"
+#include "../Manager.h"
 
 using namespace OpenZWave;
 

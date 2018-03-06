@@ -28,10 +28,10 @@
 #ifndef _LogImpl_H
 #define _LogImpl_H
 
-#include "Defs.h"
+#include "../../Defs.h"
 #include <string>
-#include "platform/Log.h"
-#include "Windows.h"
+#include "../Log.h"
+#include <Windows.h>
 
 namespace OpenZWave
 {

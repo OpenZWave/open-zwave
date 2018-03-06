@@ -33,7 +33,7 @@
 #include "Scene.h"
 #include "Options.h"
 
-#include "tinyxml.h"
+#include <tinyxml.h>
 
 using namespace OpenZWave;
 

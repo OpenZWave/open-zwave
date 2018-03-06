@@ -31,9 +31,9 @@
 #include <string>
 #include <vector>
 #include <map>
-#include "Defs.h"
-#include "Bitfield.h"
-#include "Driver.h"
+#include "../Defs.h"
+#include "../Bitfield.h"
+#include "../Driver.h"
 
 namespace OpenZWave
 {

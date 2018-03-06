@@ -28,7 +28,7 @@
 #ifndef _CentralScene_H
 #define _CentralScene_H
 
-#include "command_classes/CommandClass.h"
+#include "CommandClass.h"
 
 namespace OpenZWave
 {

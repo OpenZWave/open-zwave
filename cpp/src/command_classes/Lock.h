@@ -28,7 +28,7 @@
 #ifndef _Lock_H
 #define _Lock_H
 
-#include "command_classes/CommandClass.h"
+#include "CommandClass.h"
 
 namespace OpenZWave
 {

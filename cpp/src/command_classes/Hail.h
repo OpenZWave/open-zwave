@@ -28,7 +28,7 @@
 #ifndef _Hail_H
 #define _Hail_H
 
-#include "command_classes/CommandClass.h"
+#include "CommandClass.h"
 
 namespace OpenZWave
 {

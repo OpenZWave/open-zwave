@@ -41,7 +41,7 @@
 #include "platform/Mutex.h"
 #include "Utils.h"
 
-#include "tinyxml.h"
+#include <tinyxml.h>
 
 #include "command_classes/CommandClasses.h"
 #include "command_classes/CommandClass.h"

@@ -28,9 +28,9 @@
 #ifndef _LogImpl_H
 #define _LogImpl_H
 
-#include "Defs.h"
+#include "../../Defs.h"
 #include <string>
-#include "platform/Log.h"
+#include "../Log.h"
 #include <windows.h>
 
 namespace OpenZWave

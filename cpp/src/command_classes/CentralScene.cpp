@@ -25,16 +25,16 @@
 //
 //-----------------------------------------------------------------------------
 
-#include "command_classes/CommandClasses.h"
-#include "command_classes/CentralScene.h"
-#include "Defs.h"
-#include "Msg.h"
-#include "Node.h"
-#include "Driver.h"
-#include "platform/Log.h"
-#include "value_classes/ValueInt.h"
+#include "CommandClasses.h"
+#include "CentralScene.h"
+#include "../Defs.h"
+#include "../Msg.h"
+#include "../Node.h"
+#include "../Driver.h"
+#include "../platform/Log.h"
+#include "../value_classes/ValueInt.h"
 
-#include "tinyxml.h"
+#include <tinyxml.h>
 
 using namespace OpenZWave;
 

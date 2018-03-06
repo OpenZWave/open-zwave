@@ -66,7 +66,7 @@ CFLAGS  += $(CPPFLAGS)
 #where to put the temporary library
 LIBDIR	?= $(top_builddir)
 
-INCLUDES	:= -I $(top_srcdir)/cpp/src -I $(top_srcdir)/cpp/tinyxml/ -I $(top_srcdir)/cpp/hidapi/hidapi/
+INCLUDES	:= -I $(top_srcdir)/cpp/tinyxml/ -I $(top_srcdir)/cpp/hidapi/hidapi/
 
 ifeq ($(UNAME),Darwin)
 SOURCES_HIDAPI =$(top_srcdir)/cpp/hidapi/mac

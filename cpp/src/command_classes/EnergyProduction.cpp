@@ -25,15 +25,15 @@
 //
 //-----------------------------------------------------------------------------
 
-#include "command_classes/CommandClasses.h"
-#include "command_classes/EnergyProduction.h"
-#include "Defs.h"
-#include "Msg.h"
-#include "Node.h"
-#include "Driver.h"
-#include "platform/Log.h"
+#include "CommandClasses.h"
+#include "EnergyProduction.h"
+#include "../Defs.h"
+#include "../Msg.h"
+#include "../Node.h"
+#include "../Driver.h"
+#include "../platform/Log.h"
 
-#include "value_classes/ValueDecimal.h"
+#include "../value_classes/ValueDecimal.h"
 
 using namespace OpenZWave;
 

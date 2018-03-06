@@ -31,7 +31,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <sys/time.h>
-#include "Defs.h"
+#include "../../Defs.h"
 
 namespace OpenZWave
 {

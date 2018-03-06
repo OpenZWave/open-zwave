@@ -25,10 +25,10 @@
 //
 //-----------------------------------------------------------------------------
 
-#include "value_classes/ValueStore.h"
-#include "value_classes/Value.h"
-#include "Manager.h"
-#include "Notification.h"
+#include "ValueStore.h"
+#include "Value.h"
+#include "../Manager.h"
+#include "../Notification.h"
 
 using namespace OpenZWave;
 

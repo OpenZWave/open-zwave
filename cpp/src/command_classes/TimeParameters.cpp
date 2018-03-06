@@ -26,16 +26,16 @@
 //-----------------------------------------------------------------------------
 
 #include <time.h>
-#include "command_classes/CommandClasses.h"
-#include "command_classes/TimeParameters.h"
-#include "Defs.h"
-#include "Msg.h"
-#include "Node.h"
-#include "Driver.h"
-#include "platform/Log.h"
+#include "CommandClasses.h"
+#include "TimeParameters.h"
+#include "../Defs.h"
+#include "../Msg.h"
+#include "../Node.h"
+#include "../Driver.h"
+#include "../platform/Log.h"
 
-#include "value_classes/ValueButton.h"
-#include "value_classes/ValueString.h"
+#include "../value_classes/ValueButton.h"
+#include "../value_classes/ValueString.h"
 
 using namespace OpenZWave;
 

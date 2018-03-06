@@ -26,9 +26,9 @@
 //
 //-----------------------------------------------------------------------------
 #include <unistd.h>
-#include "Defs.h"
-#include "platform/Event.h"
-#include "platform/Thread.h"
+#include "../../Defs.h"
+#include "../Event.h"
+#include "../Thread.h"
 #include "ThreadImpl.h"
 
 #ifdef DARWIN
