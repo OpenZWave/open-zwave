@@ -123,6 +123,7 @@ Color::Color
 CommandClass( _homeId, _nodeId ),
 m_capabilities ( 0 ),
 m_coloridxbug ( false ),
+m_zipatobulb2colorbug( false ),
 m_refreshinprogress ( false ),
 m_coloridxcount ( 0 )
 {
@@ -154,6 +155,12 @@ void Color::ReadXML
 	if( str )
 	{
 		m_coloridxbug = !strcmp( str, "true");
+	}
+
+	str = _ccElement->Attribute("zipatobulb2colorbug");
+	if( str )
+	{
+		m_zipatobulb2colorbug = !strcmp( str, "true");
 	}
 }
 
@@ -324,9 +331,11 @@ bool Color::HandleMsg
 		uint32 const _instance	// = 1
 )
 {
+
 	if (ColorCmd_Capability_Report == (ColorCmd)_data[0])
 	{
-		m_capabilities = (_data[1] + (_data[2] << 8));
+		if (!m_zipatobulb2colorbug) m_capabilities = (_data[1] + (_data[2] << 8));
+		else m_capabilities = 0x1F;
 		string helpstr = "#RRGGBB";
 		Log::Write(LogLevel_Info, GetNodeId(), "Received an Color Capability Report: Capability=%xd", m_capabilities);
 		if (m_capabilities & 0x04)

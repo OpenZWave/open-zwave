@@ -20,5 +20,10 @@
       <Group index="1" max_associations="5" label="Report"  />
     </Associations>
   </CommandClass>
+
+  <CommandClass id="51" zipatobul2colorbug="true" >
+         <!--  The Fibaro doesn't report immediate color values, so we need to verify the value -->
+        <Value type="string" genre="user" instance="1" index="0" label="Color" units="#RRGGBBWW" verify_changes="false" value="#00000000" />
+  </CommandClass>
 </Product>
 
