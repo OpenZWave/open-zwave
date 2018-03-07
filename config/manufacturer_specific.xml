@@ -209,6 +209,8 @@
 	</Manufacturer>
 	<Manufacturer id="002b" name="Atech">
 	</Manufacturer>
+	<Manufacturer id="033f" name="August">
+                <Product type="0001" id="0001" name="August Smart Lock Rev 3"/>
 	<Manufacturer id="0018" name="Balboa Inst.">
 	</Manufacturer>
 	<Manufacturer id="008a" name="BeNext">
