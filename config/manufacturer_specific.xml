@@ -209,6 +209,9 @@
 	</Manufacturer>
 	<Manufacturer id="002b" name="Atech">
 	</Manufacturer>
+	<Manufacturer id="033f" name="August">
+		<Product type="0001" id="0001" name="ASL-03 Smart Lock" config="august/asl-03.xml"/>
+	</Manufacturer>
 	<Manufacturer id="0018" name="Balboa Inst.">
 	</Manufacturer>
 	<Manufacturer id="008a" name="BeNext">
