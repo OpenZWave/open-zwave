@@ -233,8 +233,8 @@ https://aeotec.freshdesk.com/helpdesk/attachments/6048080397
                 Bit 2 = 0, the function of factory reset is disabled.
                 Bit 2 = 1, the function of factory reset is enabled.
                 Bit 3- Bit 6 = reserved.
-                Bit 7 = 0, the setting for Bit 0 –Bit 2 are ineffective.
-                Bit 7 = 1, the setting for Bit 0 –Bit 2 are effective.
+                Bit 7 = 0, the setting for Bit 0 -Bit 2 are ineffective.
+                Bit 7 = 1, the setting for Bit 0 -Bit 2 are effective.
             </Help>
         </Value>
         <Value type="list" index="249" genre="config" label="Recognition way of load" units="" min="0" max="2" size="1" value="2">
