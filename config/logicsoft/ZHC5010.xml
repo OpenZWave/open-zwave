@@ -285,6 +285,10 @@
 	<CommandClass id="39" getsupported="false" />
 	<!-- MultiInstance Command Class. Note: If you do not need Dedicated Relay Control instance, change below mapping to "endpoints", then rejoin the node to your network. -->
 	<CommandClass id="96" mapping="all" />
+	<!-- Central Scene always come from root device -->
+	<CommandClass id="91">
+		<Instance index="1" endpoint="0" />
+	</CommandClass>
 	<!-- Multi Channel Association Groups -->
 	<CommandClass id="142" ForceInstances="true"/>
 	<!-- Association Groups -->
