@@ -277,6 +277,7 @@ DISTFILES =	.gitignore \
 	config/horstmann/ses302.xml \
 	config/horstmann/ses303.xml \
 	config/horstmann/sir321.xml \
+	config/horstmann/srt321.xml \
 	config/horstmann/srt323.xml \
 	config/horstmann/ssr302.xml \
 	config/idlock/idlock101.xml \

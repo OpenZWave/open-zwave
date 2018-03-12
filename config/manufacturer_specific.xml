@@ -677,6 +677,7 @@
 		<Product type="0001" id="0002" name="AS2-RF Thermostat Transmitter"/>
 		<Product type="0001" id="0003" name="HRT4-ZW Thermostat Transmitter" config="horstmann/hrt4zw.xml"/>
 		<Product type="0001" id="0004" name="SRT 323 Electronic Room Thermostat and Temperature" config="horstmann/srt323.xml"/>
+        <Product type="0001" id="0005" name="SRT-321 Thermostat-HVAC" config="horstmann/srt321.xml"/>
 		<Product type="0003" id="0001" name="ASR-ZW Thermostat Receiver" config="horstmann/asrzw.xml"/>
 		<Product type="0003" id="0002" name="SSR 302 2-zone Thermostat Receiver" config="horstmann/ssr302.xml"/>
 		<Product type="0004" id="0001" name="SCSC17 Thermostat" config="horstmann/scsc17.xml"/>
