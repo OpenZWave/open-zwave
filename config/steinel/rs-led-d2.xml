@@ -78,13 +78,12 @@
 
 	<!-- Association Groups -->
 	<CommandClass id="133">
-		<Associations num_groups="5">
-			<Group index="0" label="Root" max_associations="1" auto="true" />
+		<Associations num_groups="4">			
 			<Group index="1" label="Lifeline" max_associations="1" />
-			<Group index="2" label="Control: Key01" max_associations="16" auto="true" />
-			<Group index="3" label="Motion Begin/End (PIR/radar/iHF)" max_associations="16" auto="true" />
-			<Group index="4" label="Ambient light" max_associations="15" auto="true" />
-			</Associations>
+			<Group index="2" label="Control: Key01" max_associations="16" />
+			<Group index="3" label="Motion Begin/End (PIR/radar/iHF)" max_associations="16"  />
+			<Group index="4" label="Ambient light" max_associations="16"  />
+		</Associations>
 	</CommandClass>
 
 </Product>
