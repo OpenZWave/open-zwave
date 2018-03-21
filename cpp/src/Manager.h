@@ -1383,6 +1383,18 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 */
 		bool GetBitMask( ValueID const& _id, int32* o_mask );
 
+		/**
+		 * \brief Gets the size of a BitMask ValueID 
+		 * Gets the size of a BitMask ValueID - Either 1, 2 or 4
+		 * \param _id The unique identifier of the integer value.
+		 * \param o_size The Size of the BitSet
+		 * \return true if the size was retrieved.  Returns false if the value is not a ValueID::ValueType_BitSet or the Mask was invalid. The type can be tested with a call to ValueID::GetType.
+		 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_VALUEID if the ValueID is invalid
+		 * \throws OZWException with Type OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID if the Actual Value is off a different type
+		 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_HOMEID if the Driver cannot be found
+		 */
+		bool GetBitSetSize( ValueID const& _id, uint8* o_size );
+
 
 
 	/*@}*/

@@ -3277,6 +3277,44 @@ bool Manager::GetBitMask
 	return res;
 }
 
+//-----------------------------------------------------------------------------
+// <Manager::GetBitSetSize
+// Gets the size of a BitMask (1, 2 or 4)
+//-----------------------------------------------------------------------------
+bool Manager::GetBitSetSize
+( 
+	ValueID const& _id, 
+	uint8* o_size 
+)
+{
+	bool res = false;
+
+	if( o_size )
+	{
+		if( ValueID::ValueType_BitSet == _id.GetType() )
+		{
+			if( Driver* driver = GetDriver( _id.GetHomeId() ) )
+			{
+				LockGuard LG(driver->m_nodeMutex);
+				if( ValueBitSet* value = static_cast<ValueBitSet*>( driver->GetValue( _id ) ) )
+				{
+					*o_size = value->GetSize();
+					value->Release();
+					res = true;
+				} else {
+					OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to GetBitSetSize");
+				}
+			}
+		} else {
+			OZW_ERROR(OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID, "ValueID passed to GetBitSetSize is not a BitSet Value");
+		}
+	}
+
+	return res;
+}
+
+
+
 
 //-----------------------------------------------------------------------------
 // Climate Control Schedules
