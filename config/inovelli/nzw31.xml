@@ -23,10 +23,10 @@
       <Help>Automatically turn the switch off after this many seconds. 0 is disabled</Help>
     </Value>
     <Value genre="config" index="8" value="0" label="Default value when turned on at switch" min="0" max="99" size="1" type="byte">
-      <Help>Default brightness when switch is turned on locally.  0 is previous"</Help>
+      <Help>Default brightness when switch is turned on locally.  0 is previous. Firmware 1.2+"</Help>
     </Value>
     <Value genre="config" index="9" value="0" label="Default value when turned on via zwave" min="0" max="99" size="1" type="byte">
-      <Help>Default brightness when switch is turned on via zwave.  0 is previous"</Help>
+      <Help>Default brightness when switch is turned on via zwave.  0 is previous.  Firmware 1.2+"</Help>
     </Value>
   </CommandClass>
 
