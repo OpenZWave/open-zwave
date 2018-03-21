@@ -286,6 +286,7 @@ DISTFILES =	.gitignore \
 	config/ingersoll/dwzwave1.xml \
 	config/inovelli/nzw30.xml \
 	config/inovelli/nzw31.xml \
+	config/inovelli/nzw97.xml \
 	config/inovelli/simple_module.xml \
 	config/intermatic/ca8900.xml \
 	config/iris/rangeextender.xml \
