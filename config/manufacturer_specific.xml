@@ -711,8 +711,12 @@
 		<Product type="b211" id="241c" name="NZW36 Smart Plug-In Module (1 Channel)" config="inovelli/simple_module.xml"/>
 		<Product type="b221" id="251c" name="NZW37 Smart Plug-In Module (2 Channel)" config="inovelli/simple_module.xml"/>
 		<Product type="b212" id="271c" name="NZW39 Smart Plug (Dimmer)" config="inovelli/simple_module.xml"/>
-		<Product type="1f01" id="1f01" name="NZW31 Smart Dimmer(non-scene)" config="inovelli/simple_module.xml"/>
-		<Product type="1e01" id="1e01" name="NZW30 Smart Toggle Switch" config="inovelli/simple_module.xml"/>
+		<Product type="1f01" id="1f01" name="NZW31 Dimmer" config="inovelli/nzw31.xml"/>
+		<Product type="1f00" id="1f00" name="NZW31S Dimmer(scene)" config="inovelli/nzw31.xml"/>
+		<Product type="1f02" id="1f02" name="NZW31T Dimmer(scene)" config="inovelli/nzw31.xml"/>
+		<Product type="1e01" id="1e01" name="NZW30 On/Off Switch" config="inovelli/simple_module.xml"/>
+		<Product type="1e00" id="1e00" name="NZW30S On/Off Switch(scene)" config="inovelli/simple_module.xml"/>
+		<Product type="1e02" id="1e02" name="NZW30T On/Off Toggle(scene)" config="inovelli/simple_module.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0006" name="Intel">
 	</Manufacturer>

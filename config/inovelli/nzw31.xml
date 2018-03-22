@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Inovelli Dimmer NZW31 -->
+<Product xmlns='http://code.google.com/p/open-zwave/'>
+  <!-- Configuration Parameters -->
+  <CommandClass id="112">
+  	<Value genre="config" type="byte" instance="1" index="1" label="Dimming Step Size" min="1" max="99" units="%" value="1">
+		<Help>Percentage of step when switch is dimming up or down, range 1-99%</Help>
+	</Value>
+	<Value genre="config" type="byte" instance="1" index="2" label="Minimum Level" min="1" max="99" units="%" value="1">
+		<Help>Minimum dimming level for attached light, range 1-99%</Help>
+	</Value>
+    <Value genre="config" type="list" index="3" label="LED Indicator Control" units="" size="1" min="0" max="1" value="0">
+      <Help>Choose if you want the LED indicator to turn on when switch is on, off, or never</Help>
+      <Item value="0" label="LED on when switch is off"/>
+      <Item value="1" label="LED on when switch is on"/>
+      <Item value="2" label="LED disabled"/>
+    </Value>
+    <Value genre="config" type="list" index="4" label="Orientation" units="" size="1" min="0" max="1" value="0">
+      <Help>Controls the on/off orientation of the rocker switch</Help>
+      <Item value="0" label="Normal"/>
+      <Item value="1" label="Inverted"/>
+    </Value>
+    <Value type="short" index="5" genre="config" label="Auto off timer" min="0" max="32767" value="0" units="second">
+      <Help>
+      	  Automatically turn switch off after this number of seconds (0 to disable, or up to 32767 seconds)
+      </Help>
+    </Value> 
+  </CommandClass>
+  <!-- Association Groups -->
+  <CommandClass id="133">
+    <Associations num_groups="1">
+      <Group index="1" max_associations="5" label="Lifeline" />
+    </Associations>
+  </CommandClass>
+</Product>
