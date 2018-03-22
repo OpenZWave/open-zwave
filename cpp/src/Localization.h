@@ -55,7 +55,7 @@ public:
     }
     void AddLabel(string label, string lang = "");
     uint64 GetIdx();
-    string GetLabel();
+    string GetLabel(string lang);
 
 private:
     uint8 m_index;
@@ -83,9 +83,9 @@ public:
 
     }
     uint64 GetIdx();
-    string GetHelpText();
+    string GetHelpText(string lang);
     void AddHelp(string HelpText, string lang = NULL);
-    string GetLabelText();
+    string GetLabelText(string lang);
     void AddLabel(string Label, string lang = NULL);
 
 private:
@@ -127,6 +127,7 @@ private:
     static Localization* m_instance;
     static map<int64,ValueLocalizationEntry*> m_valueLocalizationMap;
     static map<uint8,LabelLocalizationEntry*> m_commandClassLocalizationMap;
+    static string m_selectedLang;
 
 
 };

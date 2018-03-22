@@ -36,6 +36,7 @@ using namespace OpenZWave;
 Localization *Localization::m_instance = NULL;
 map<int64,ValueLocalizationEntry*> Localization::m_valueLocalizationMap;
 map<uint8,LabelLocalizationEntry*> Localization::m_commandClassLocalizationMap;
+string Localization::m_selectedLang = NULL;
 
 
 void LabelLocalizationEntry::AddLabel
@@ -45,9 +46,9 @@ void LabelLocalizationEntry::AddLabel
         )
 {
     if (lang.empty())
-        this->m_defaultLabel = label;
+        m_defaultLabel = label;
     else
-        this->m_Label[lang] = label;
+        m_Label[lang] = label;
 }
 uint64 LabelLocalizationEntry::GetIdx
 (
@@ -59,33 +60,41 @@ uint64 LabelLocalizationEntry::GetIdx
 }
 string LabelLocalizationEntry::GetLabel
 (
-        )
+        string lang
+)
 {
-    return this->m_defaultLabel;
+    if (lang.empty() || (m_Label.find(lang) == m_Label.end()))
+        return m_defaultLabel;
+    else
+        return m_Label[lang];
+
 }
 
 
 uint64 ValueLocalizationEntry::GetIdx
 (
-
-        )
+)
 {
     uint64 key = ((uint64)m_commandClass << 48) | ((uint64)m_index << 32) | ((uint64)m_pos);
     return key;
 }
 string ValueLocalizationEntry::GetHelpText
 (
+        string lang
+)
 
-        )
 {
-    return m_DefaultHelpText;
+    if (lang.empty() || (m_HelpText.find(lang) == m_HelpText.end()))
+        return m_DefaultHelpText;
+    else
+        return m_HelpText[lang];
 }
 
 void ValueLocalizationEntry::AddHelp
 (
         string HelpText,
         string lang
-        )
+)
 {
     if (lang.empty())
         m_DefaultHelpText = HelpText;
@@ -95,15 +104,19 @@ void ValueLocalizationEntry::AddHelp
 }
 string ValueLocalizationEntry::GetLabelText
 (
-        )
+    string lang
+)
 {
-    return m_DefaultLabelText;
+    if (lang.empty() || (m_LabelText.find(lang) == m_LabelText.end()))
+        return m_DefaultLabelText;
+    else
+        return m_LabelText[lang];
 }
 void ValueLocalizationEntry::AddLabel
 (
         string Label,
         string lang
-        )
+)
 {
     if (lang.empty())
         m_DefaultLabelText = Label;
@@ -288,8 +301,8 @@ void Localization::SetupValue
 {
     uint64 key = GetValueKey(value->GetID().GetCommandClassId(), value->GetID().GetIndex());
     if (m_valueLocalizationMap.find(key) != m_valueLocalizationMap.end()) {
-        value->SetHelp(m_valueLocalizationMap[key]->GetHelpText());
-        value->SetLabel(m_valueLocalizationMap[key]->GetLabelText());
+        value->SetHelp(m_valueLocalizationMap[key]->GetHelpText(m_selectedLang));
+        value->SetLabel(m_valueLocalizationMap[key]->GetLabelText(m_selectedLang));
     } else {
         Log::Write( LogLevel_Warning, "Localization Warning: No Entry for ValueID - CC: %d, Index: %d", value->GetID().GetCommandClassId(), value->GetID().GetIndex());
     }
@@ -300,8 +313,8 @@ void Localization::SetupValue
         for (int i = 0; i < size; ++i) {
             key = GetValueKey(value->GetID().GetCommandClassId(), value->GetID().GetIndex(), i);
             if (m_valueLocalizationMap.find(key) != m_valueLocalizationMap.end()) {
-                vbs->SetBitHelp(i, m_valueLocalizationMap[key]->GetHelpText());
-                vbs->SetBitLabel(i, m_valueLocalizationMap[key]->GetLabelText());
+                vbs->SetBitHelp(i, m_valueLocalizationMap[key]->GetHelpText(m_selectedLang));
+                vbs->SetBitLabel(i, m_valueLocalizationMap[key]->GetLabelText(m_selectedLang));
             } else {
                 Log::Write( LogLevel_Warning, "Localization Warning: No Entry for ValueID - CC: %d, Index: %d, Pos %d", value->GetID().GetCommandClassId(), value->GetID().GetIndex(), i);
             }
@@ -315,7 +328,7 @@ void Localization::SetupCommandClass
 {
     uint8 ccID = cc->GetCommandClassId();
     if (m_commandClassLocalizationMap.find(ccID) != m_commandClassLocalizationMap.end()) {
-        cc->SetCommandClassLabel(m_commandClassLocalizationMap[ccID]->GetLabel());
+        cc->SetCommandClassLabel(m_commandClassLocalizationMap[ccID]->GetLabel(m_selectedLang));
     } else {
         Log::Write( LogLevel_Warning, "Localization Warning: No Entry for CommandClass - CC: %d", ccID);
         cc->SetCommandClassLabel(cc->GetCommandClassName());
@@ -334,5 +347,8 @@ Localization *Localization::Get
     }
     m_instance = new Localization();
     ReadXML();
+    Options::Get()->GetOptionAsString( "Language", &m_selectedLang );
+std::cout << "Loaded" << std::endl;
+exit(1);
     return m_instance;
 }

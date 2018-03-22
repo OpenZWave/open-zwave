@@ -4,16 +4,16 @@
         <Label>CommandClass</Label>
         <Label lang="fr">CommandClass-FR</Label>
         <Value index="1">
-            <Label>ValueID</Label>
             <Help>This is Generic Help</Help>
-            <Label lang="fr">ValueID-FR</Label>
             <Help lang="fr">Help In French</Help>
+            <Label lang="fr">ValueID-FR</Label>
+            <Label>ValueID</Label>
         </Value>
         <Value index="2" pos="1">
-            <Label>ValueID pos1</Label>
             <Help>This is Generic Help</Help>
-            <Label lang="fr">ValueID-FR pos1</Label>
             <Help lang="fr">Help In French</Help>
+            <Label>ValueID pos1</Label>
+            <Label lang="fr">ValueID-FR pos1</Label>
         </Value>
     </CommandClass>
     <CommandClass id="113">

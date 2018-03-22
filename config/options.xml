@@ -16,4 +16,6 @@
   "available" usercode slot rather than retrieve every one -->
   <Option name="RefreshAllUserCodes" value="false" />
   <Option name="ThreadTerminateTimeout" value="5000" />
+  <!-- Language we should use for ValueID Labels and Help Text -->
+  <!-- <Option name="Language" value="fr" /> -->
 </Options>
