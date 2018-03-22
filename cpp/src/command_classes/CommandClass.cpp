@@ -825,4 +825,27 @@ bool CommandClass::RequestStateForAllInstances
 	return res;
 }
 
+//-----------------------------------------------------------------------------
+// <CommandClass::RequestStateForAllInstances>
+// Request current state from the device
+//-----------------------------------------------------------------------------
+string const CommandClass::GetCommandClassLabel
+(
+)
+{
+    return m_commandClassLabel;
+}
+
+//-----------------------------------------------------------------------------
+// <CommandClass::RequestStateForAllInstances>
+// Request current state from the device
+//-----------------------------------------------------------------------------
+void CommandClass::SetCommandClassLabel
+(
+        string label
+)
+{
+    m_commandClassLabel = label;
+}
+
 

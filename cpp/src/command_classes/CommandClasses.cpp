@@ -100,6 +100,7 @@ using namespace OpenZWave;
 #include "Manager.h"
 #include "Options.h"
 #include "Utils.h"
+#include "Localization.h"
 
 //-----------------------------------------------------------------------------
 //	<CommandClasses::CommandClasses>
@@ -183,7 +184,9 @@ CommandClass* CommandClasses::CreateCommandClass
 	}
 
 	// Create an instance of the command class
-	return creator( _homeId, _nodeId );
+        CommandClass *cc = creator( _homeId, _nodeId);
+        Localization::Get()->SetupCommandClass(cc);
+        return cc;
 }
 
 //-----------------------------------------------------------------------------

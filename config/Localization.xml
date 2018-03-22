@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Localization xmlns='http://code.google.com/p/open-zwave/'>
+    <CommandClass id="1">
+        <Label>CommandClass</Label>
+        <Label lang="fr">CommandClass-FR</Label>
+        <Value index="1">
+            <Label>ValueID</Label>
+            <Help>This is Generic Help</Help>
+            <Label lang="fr">ValueID-FR</Label>
+            <Help lang="fr">Help In French</Help>
+        </Value>
+        <Value index="2" pos="1">
+            <Label>ValueID pos1</Label>
+            <Help>This is Generic Help</Help>
+            <Label lang="fr">ValueID-FR pos1</Label>
+            <Help lang="fr">Help In French</Help>
+        </Value>
+    </CommandClass>
+    <CommandClass id="113">
+        <Label>COMMAND_CLASS_ALARM</Label>
+	</CommandClass>
+    <CommandClass id="34">
+        <Label>COMMAND_CLASS_APPLICATION_STATUS</Label>
+	</CommandClass>
+    <CommandClass id="133">
+        <Label>COMMAND_CLASS_ASSOCIATION</Label>
+	</CommandClass>
+    <CommandClass id="155">
+        <Label>COMMAND_CLASS_ASSOCIATION_COMMAND_CONFIGURATION</Label>
+	</CommandClass>
+    <CommandClass id="102">
+        <Label>COMMAND_CLASS_BARRIER_OPERATOR</Label>
+	</CommandClass>
+    <CommandClass id="20">
+        <Label>COMMAND_CLASS_BASIC</Label>
+	</CommandClass>
+    <CommandClass id="80">
+        <Label>COMMAND_CLASS_BASIC_WINDOW_COVERING</Label>
+	</CommandClass>
+    <CommandClass id="128">
+        <Label>COMMAND_CLASS_BATTERY</Label>
+	</CommandClass>
+    <CommandClass id="91">
+        <Label>COMMAND_CLASS_CENTRAL_SCENE</Label>
+	</CommandClass>
+    <CommandClass id="70">
+        <Label>COMMAND_CLASS_CLIMATE_CONTROL_SCHEDULE</Label>
+	</CommandClass>
+    <CommandClass id="129">
+        <Label>COMMAND_CLASS_CLOCK</Label>
+	</CommandClass>
+    <CommandClass id="51">
+        <Label>COMMAND_CLASS_COLOR</Label>
+	</CommandClass>
+    <CommandClass id="112">
+        <Label>COMMAND_CLASS_CONFIGURATION</Label>
+	</CommandClass>
+    <CommandClass id="33">
+        <Label>COMMAND_CLASS_CONTROLLER_REPLICATION</Label>
+	</CommandClass>
+    <CommandClass id="86">
+        <Label>COMMAND_CLASS_CRC_16_ENCAP</Label>
+	</CommandClass>
+    <CommandClass id="90">
+        <Label>COMMAND_CLASS_DEVICE_RESET_LOCALLY</Label>
+	</CommandClass>
+    <CommandClass id="98">
+        <Label>COMMAND_CLASS_DOOR_LOCK</Label>
+	</CommandClass>
+    <CommandClass id="76">
+        <Label>COMMAND_CLASS_DOOR_LOCK_LOGGING</Label>
+	</CommandClass>
+    <CommandClass id="144">
+        <Label>COMMAND_CLASS_ENERGY_PRODUCTION</Label>
+	</CommandClass>
+    <CommandClass id="130">
+        <Label>COMMAND_CLASS_HAIL</Label>
+	</CommandClass>
+    <CommandClass id="135">
+        <Label>COMMAND_CLASS_INDICATOR</Label>
+	</CommandClass>
+    <CommandClass id="137">
+        <Label>COMMAND_CLASS_LANGUAGE</Label>
+	</CommandClass>
+    <CommandClass id="118">
+        <Label>COMMAND_CLASS_LOCK</Label>
+	</CommandClass>
+    <CommandClass id="145">
+        <Label>COMMAND_CLASS_PROPRIETARY</Label>
+	</CommandClass>
+    <CommandClass id="114">
+        <Label>COMMAND_CLASS_MANUFACTURER_SPECIFIC</Label>
+	</CommandClass>
+    <CommandClass id="50">
+        <Label>COMMAND_CLASS_METER</Label>
+	</CommandClass>
+    <CommandClass id="53">
+        <Label>COMMAND_CLASS_METER_PULSE</Label>
+	</CommandClass>
+    <CommandClass id="142">
+        <Label>COMMAND_CLASS_MULTI_CHANNEL_ASSOCIATION</Label>
+	</CommandClass>
+    <CommandClass id="143">
+        <Label>COMMAND_CLASS_MULTI_CMD</Label>
+	</CommandClass>
+    <CommandClass id="96">
+        <Label>COMMAND_CLASS_MULTI_INSTANCE</Label>
+	</CommandClass>
+    <CommandClass id="77">
+        <Label>COMMAND_CLASS_NODE_NAMING</Label>
+	</CommandClass>
+    <CommandClass id="0">
+        <Label>COMMAND_CLASS_NO_OPERATION</Label>
+	</CommandClass>
+    <CommandClass id="115">
+        <Label>COMMAND_CLASS_POWERLEVEL</Label>
+	</CommandClass>
+    <CommandClass id="136">
+        <Label>COMMAND_CLASS_PROPRIETARY</Label>
+	</CommandClass>
+    <CommandClass id="117">
+        <Label>COMMAND_CLASS_PROTECTION</Label>
+	</CommandClass>
+    <CommandClass id="43">
+        <Label>COMMAND_CLASS_SCENE_ACTIVATION</Label>
+	</CommandClass>
+    <CommandClass id="152">
+        <Label>COMMAND_CLASS_SECURITY</Label>
+	</CommandClass>
+    <CommandClass id="156">
+        <Label>COMMAND_CLASS_SENSOR_ALARM</Label>
+	</CommandClass>
+    <CommandClass id="48">
+        <Label>COMMAND_CLASS_SENSOR_BINARY</Label>
+	</CommandClass>
+    <CommandClass id="49">
+        <Label>COMMAND_CLASS_SENSOR_MULTILEVEL</Label>
+	</CommandClass>
+    <CommandClass id="39">
+        <Label>COMMAND_CLASS_SWITCH_ALL</Label>
+	</CommandClass>
+    <CommandClass id="37">
+        <Label>COMMAND_CLASS_SWITCH_BINARY</Label>
+	</CommandClass>
+    <CommandClass id="38">
+        <Label>COMMAND_CLASS_SWITCH_MULTILEVEL</Label>
+	</CommandClass>
+    <CommandClass id="40">
+        <Label>COMMAND_CLASS_SWITCH_TOGGLE_BINARY</Label>
+	</CommandClass>
+    <CommandClass id="41">
+        <Label>COMMAND_CLASS_SWITCH_TOGGLE_MULTILEVEL</Label>
+	</CommandClass>
+    <CommandClass id="68">
+        <Label>COMMAND_CLASS_THERMOSTAT_FAN_MODE</Label>
+	</CommandClass>
+    <CommandClass id="69">
+        <Label>COMMAND_CLASS_THERMOSTAT_FAN_STATE</Label>
+	</CommandClass>
+    <CommandClass id="64">
+        <Label>COMMAND_CLASS_THERMOSTAT_MODE</Label>
+	</CommandClass>
+    <CommandClass id="66">
+        <Label>COMMAND_CLASS_THERMOSTAT_OPERATING_STATE</Label>
+	</CommandClass>
+    <CommandClass id="67">
+        <Label>COMMAND_CLASS_THERMOSTAT_SETPOINT</Label>
+	</CommandClass>
+    <CommandClass id="139">
+        <Label>COMMAND_CLASS_TIME_PARAMETERS</Label>
+	</CommandClass>
+    <CommandClass id="99">
+        <Label>COMMAND_CLASS_USER_CODE</Label>
+	</CommandClass>
+    <CommandClass id="134">
+        <Label>COMMAND_CLASS_VERSION</Label>
+	</CommandClass>
+    <CommandClass id="132">
+        <Label>COMMAND_CLASS_WAKE_UP</Label>
+	</CommandClass>
+    <CommandClass id="94">
+        <Label>COMMAND_CLASS_ZWAVE_PLUS_INFO</Label>
+	</CommandClass>
+</Localization>

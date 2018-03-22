@@ -29,6 +29,7 @@
 #include "value_classes/Value.h"
 #include "Manager.h"
 #include "Notification.h"
+#include "Localization.h"
 
 using namespace OpenZWave;
 
@@ -63,7 +64,7 @@ bool ValueStore::AddValue
 	{
 		return false;
 	}
-
+        Localization::Get()->SetupValue(_value);
 	uint32 key = _value->GetID().GetValueStoreKey();
 	map<uint32,Value*>::iterator it = m_values.find( key );
 	if( it != m_values.end() )

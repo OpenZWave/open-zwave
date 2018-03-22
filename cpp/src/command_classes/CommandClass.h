@@ -73,6 +73,8 @@ namespace OpenZWave
 
 		virtual uint8 const GetCommandClassId()const = 0;
 		virtual string const GetCommandClassName()const = 0;
+                string const GetCommandClassLabel();
+                void SetCommandClassLabel(string label);
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 ) = 0;
 		virtual bool HandleIncomingMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 ) { return false; }
 		virtual bool SetValue( Value const& _value ){ return false; }
@@ -173,7 +175,8 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		bool		m_SecureSupport; 	// Does this commandclass support secure encryption (eg, the Security CC doesn't encrypt itself, so it doesn't support encryption)
 		std::vector<RefreshValue *> m_RefreshClassValues; // what Command Class Values should we refresh ?
 		bool		m_inNIF; 			// Was this command class present in the NIF Frame we recieved (or was it created from our device_classes.xml file, or because it was in the Security SupportedReport message
-	//-----------------------------------------------------------------------------
+                string          m_commandClassLabel;
+        //-----------------------------------------------------------------------------
 	// Record which items of static data have been read from the device
 	//-----------------------------------------------------------------------------
 	public:
