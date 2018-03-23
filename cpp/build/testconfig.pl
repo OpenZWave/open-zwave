@@ -331,7 +331,7 @@ sub ReadCfg {
 #   it can be a file located somewhere in @INC.
 sub ReadVersions
 {
-    my $file = "cpp/build/testconfigversions.cfg";
+    my $file = "./cpp/build/testconfigversions.cfg";
 
     our $err;
 

@@ -1,21 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Localization xmlns='http://code.google.com/p/open-zwave/'>
-    <CommandClass id="1">
-        <Label>CommandClass</Label>
-        <Label lang="fr">CommandClass-FR</Label>
-        <Value index="1">
-            <Help>This is Generic Help</Help>
-            <Help lang="fr">Help In French</Help>
-            <Label lang="fr">ValueID-FR</Label>
-            <Label>ValueID</Label>
-        </Value>
-        <Value index="2" pos="1">
-            <Help>This is Generic Help</Help>
-            <Help lang="fr">Help In French</Help>
-            <Label>ValueID pos1</Label>
-            <Label lang="fr">ValueID-FR pos1</Label>
-        </Value>
-    </CommandClass>
     <CommandClass id="113">
         <Label>COMMAND_CLASS_ALARM</Label>
 	</CommandClass>
@@ -31,8 +15,14 @@
     <CommandClass id="102">
         <Label>COMMAND_CLASS_BARRIER_OPERATOR</Label>
 	</CommandClass>
-    <CommandClass id="20">
+    <CommandClass id="32">
         <Label>COMMAND_CLASS_BASIC</Label>
+        <Value index="0">
+            <Help>Basic status of the node</Help>
+            <Help lang="fr">Basic status of the node</Help>
+            <Label lang="fr">Basic</Label>
+            <Label>Basic</Label>
+        </Value>
 	</CommandClass>
     <CommandClass id="80">
         <Label>COMMAND_CLASS_BASIC_WINDOW_COVERING</Label>

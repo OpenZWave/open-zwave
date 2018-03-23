@@ -3883,6 +3883,7 @@ void Node::ReadMetaDataFromXML(TiXmlElement const* _valueElement) {
 						string name = metadata->Attribute( "name" );
 						if (GetMetaDataId(name) == MetaData_Invalid) {
 							Log::Write(LogLevel_Warning, m_nodeId, "Invalid MetaData Name in Config: %s", name.c_str());
+							metadata = metadata->NextSiblingElement();
 							continue;
 						}
 						this->m_metadata[GetMetaDataId(name)] = metadata->GetText();

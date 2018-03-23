@@ -41,18 +41,8 @@ namespace OpenZWave
 class LabelLocalizationEntry : public Ref
 {
 public:
-    LabelLocalizationEntry
-    (
-            uint16 _index,
-            uint32 _pos = -1
-    ):
-        m_index( _index ),
-        m_pos( _pos )
-    {
-    }
-    ~LabelLocalizationEntry() {
-
-    }
+    LabelLocalizationEntry (uint16 _index, uint32 _pos = -1);
+    ~LabelLocalizationEntry() {}
     void AddLabel(string label, string lang = "");
     uint64 GetIdx();
     string GetLabel(string lang);
@@ -68,25 +58,15 @@ private:
 class ValueLocalizationEntry : public Ref
 {
 public:
-    ValueLocalizationEntry
-    (
-            uint8 _commandClass,
-            uint16 _index,
-            uint32 _pos = -1
-            ):
-        m_commandClass( _commandClass ),
-        m_index( _index ),
-        m_pos( _pos )
-    {
-    }
+    ValueLocalizationEntry ( uint8 _commandClass, uint16 _index, uint32 _pos = -1 );
     ~ValueLocalizationEntry() {
 
     }
     uint64 GetIdx();
     string GetHelpText(string lang);
-    void AddHelp(string HelpText, string lang = NULL);
+    void AddHelp(string HelpText, string lang = "");
     string GetLabelText(string lang);
-    void AddLabel(string Label, string lang = NULL);
+    void AddLabel(string Label, string lang = "");
 
 private:
     uint8 m_commandClass;
