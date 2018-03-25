@@ -1282,7 +1282,7 @@ void Driver::RemoveCurrentMsg
 (
 )
 {
-    //OJO: set a sleep time interval (microseconds) for slow nodes, usleep(microseconds)
+    //OJO: set a delay time interval (microseconds) for slow nodes, usleep(microseconds)
     uint8 nodeId = GetNodeNumber( m_currentMsg );
     if( Node* node = GetNodeUnsafe( nodeId ) )
     {
