@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Product xmlns="http://code.google.com/p/open-zwave/">
+	<!-- https://products.z-wavealliance.org/products/2243/ -->
+	<!-- Configuration Parameters -->
+    <CommandClass id="112">
+		<Value genre="config" instance="1" index="1" value="180" label="Time [s]" units="seconds" size="2" min="5" max="900" type="short">
+			<Help>
+				Duration of light after motion detection.
+			</Help>
+		</Value>
+		<Value genre="config" instance="1" index="2" value="2000" label="Light threshold [lx]" units="" size="2" min="2" max="2000" type="short">
+			<Help>
+				LIGHT
+			</Help>
+		</Value>
+		<Value genre="config" instance="1" index="4" value="500" label="Motion Radar Range [cm]" units="cm" size="2" min="100" max="500" type="short">
+			<Help>
+				RANGE
+			</Help>
+		</Value>
+		<Value genre="config" instance="1" index="5" value="100" label="Motion Radar Sensitivity [%]" units="" size="1" min="2" max="100" type="byte">
+			<Help>
+				SENSITIVITY
+			</Help>
+		</Value>
+		<Value genre="config" instance="1" index="6" value="0" label="Brightness measuring interval [min]" units="" size="1" min="5" max="120" type="byte">
+			<Help>
+				(only SLAMP)
+			</Help>
+		</Value>
+		<Value genre="config" instance="1" index="8" value="1" label="Use external Ambient Light value" units="" size="1" min="0" max="1" type="byte">
+			<Help>
+				GLOBAL_LIGHT
+			</Help>
+		</Value>
+		<Value genre="config" instance="1" index="9" value="2" label="Disable local control" units="" size="1" min="0" max="4" type="byte">
+			<Help>
+				SLAVE_MODE
+			</Help>
+		</Value>
+		<Value genre="config" instance="1" index="10" value="10" label="Off behaviour (timeout)" units="" size="2" min="0" max="209" type="list">
+			<Help>
+				OFF_BEHAVIOUR
+			</Help>
+			<Item value="255" label="Lamp/relay is switched off for TIME (cfg 1)"/>
+		</Value>
+		<Value genre="config" instance="1" index="11" value="255" label="On behaviour (timeout)" units="" size="2" min="2" max="209" type="short">
+			<Help>
+				ON_BEHAVIOUR
+			</Help>
+		</Value>
+		<Value genre="config" instance="1" index="12" value="204" label="On behaviour time over (timeout)" units="" size="2" min="0" max="209" type="short">
+			<Help>
+				ON_TIME_OVER
+			</Help>
+		</Value>
+		<Value genre="config" instance="1" index="13" value="204" label="Sequence On-Off behaviour (timeout)" units="" size="2" min="0" max="209" type="short">
+			<Help>
+				ON_OFF_ BEHAVIOUR
+			</Help>
+		</Value>
+		<Value genre="config" instance="1" index="14" value="204" label="Sequence Off-On behaviour (timeout)" units="" size="2" min="0" max="209" type="short">
+			<Help>
+				OFF_ON_ BEHAVIOUR
+			</Help>
+		</Value>
+		<Value genre="config" instance="1" index="15" value="10" label="Sequence timing" units="" size="1" min="10" max="50" type="byte">
+			<Help>
+				SEQUENCE_TIME
+			</Help>
+		</Value>
+		<Value genre="config" instance="1" index="16" value="0" label="Motion Off behaviour (timeout)" units="" size="2" min="2" max="209" type="short">
+			<Help>
+				MOTION_ DISABLE
+			</Help>
+		</Value>
+	</CommandClass>
+
+	<!-- Association Groups -->
+	<CommandClass id="133">
+		<Associations num_groups="4">			
+			<Group index="1" label="Lifeline" max_associations="1" />
+			<Group index="2" label="Control: Key01" max_associations="16" />
+			<Group index="3" label="Motion Begin/End (PIR/radar/iHF)" max_associations="16"  />
+			<Group index="4" label="Ambient light" max_associations="16"  />
+		</Associations>
+	</CommandClass>
+
+</Product>
