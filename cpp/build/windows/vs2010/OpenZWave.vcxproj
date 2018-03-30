@@ -229,6 +229,7 @@ exit 0</Command>
     <ClInclude Include="..\..\..\src\DNSThread.h" />
     <ClInclude Include="..\..\..\src\Http.h" />
     <ClInclude Include="..\..\..\src\Group.h" />
+    <ClInclude Include="..\..\..\src\Localization.h" />
     <ClInclude Include="..\..\..\src\Manager.h" />
     <ClInclude Include="..\..\..\src\ManufacturerSpecificDB.h" />
     <ClInclude Include="..\..\..\src\Msg.h" />
@@ -346,6 +347,7 @@ exit 0</Command>
     <ClCompile Include="..\..\..\src\DNSThread.cpp" />
     <ClCompile Include="..\..\..\src\Http.cpp" />
     <ClCompile Include="..\..\..\src\Group.cpp" />
+    <ClCompile Include="..\..\..\src\Localization.cpp" />
     <ClCompile Include="..\..\..\src\Manager.cpp" />
     <ClCompile Include="..\..\..\src\ManufacturerSpecificDB.cpp" />
     <ClCompile Include="..\..\..\src\Msg.cpp" />
