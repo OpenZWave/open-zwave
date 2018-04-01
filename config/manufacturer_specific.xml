@@ -62,7 +62,7 @@
 		<Product type="0003" id="000c" name="DSC12104 Micro Smart Energy Switch" config="aeotec/dsc12104.xml"/>
 		<Product type="0003" id="000d" name="DSC13104 Micro Smart Energy Illuminator" config="aeotec/dsc13104.xml"/>
 		<Product type="0003" id="000e" name="DSC14104 Micro Motor Controller" config="aeotec/dsc14104.xml"/>
-		<Product type="0003" id="0012" name="DSC18103 Micro Smart Switch (2nd Edition)" config="aeotec/dsc18103.xml" />
+		<Product type="0003" id="0012" name="DSC18103 Micro Smart Switch (2nd Edition)AU" config="aeotec/dsc18103.xml" />
 		<Product type="0003" id="0013" name="DSC19103 Micro Smart Dimmer (2nd Edition)" config="aeotec/dsc19103.xml" />
 		<Product type="0003" id="001a" name="DSC26103 Micro Switch (2nd Edition)" config="aeotec/dsc26103.xml"/>
 		<Product type="0003" id="001b" name="DSC27103 Micro Dimmer (2nd Edition)" config="aeotec/dsc27103.xml"/>
