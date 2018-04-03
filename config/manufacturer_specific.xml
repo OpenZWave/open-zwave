@@ -176,6 +176,10 @@
 		<Product type="0203" id="008c" name="ZW140 Dual Nano Switch" config="aeotec/zw140.xml"/>
 		<Product type="1d03" id="008c" name="ZW140 Dual Nano Switch" config="aeotec/zw140.xml"/>
 	</Manufacturer>
+	<Manufacturer id="0371" name="Aeotec">
+		<Product type="0003" id="0001" name="ZWA001 LED Bulb 6 Multi-White" config="aeotec/zwa001.xml"/>
+		<Product type="0103" id="0001" name="ZWA001 LED Bulb 6 Multi-White" config="aeotec/zwa001.xml"/>
+	</Manufacturer>
 	<Manufacturer id="0111" name="Airline Mechanical">
 		<Product type="8200" id="0200" name="ZDS-100"/>
 	</Manufacturer>
@@ -708,15 +712,15 @@
 		<Product type="0001" id="0001" name="RAone SmartDimmer Wall Dimmer Module"/>
 	</Manufacturer>
 	<Manufacturer id="0312" name="Inovelli">
+		<Product type="1e00" id="1e00" name="NZW30S On/Off Switch(scene)" config="inovelli/nzw30.xml"/>
+		<Product type="1e01" id="1e01" name="NZW30 On/Off Switch" config="inovelli/nzw30.xml"/>
+		<Product type="1e02" id="1e02" name="NZW30T On/Off Toggle(scene)" config="inovelli/nzw30.xml"/>
+		<Product type="1f00" id="1f00" name="NZW31S Dimmer(scene)" config="inovelli/nzw31.xml"/>
+		<Product type="1f01" id="1f01" name="NZW31 Dimmer" config="inovelli/nzw31.xml"/>
+		<Product type="1f02" id="1f02" name="NZW31T Dimmer(scene)" config="inovelli/nzw31.xml"/>
 		<Product type="b211" id="241c" name="NZW36 Smart Plug-In Module (1 Channel)" config="inovelli/simple_module.xml"/>
 		<Product type="b221" id="251c" name="NZW37 Smart Plug-In Module (2 Channel)" config="inovelli/simple_module.xml"/>
 		<Product type="b212" id="271c" name="NZW39 Smart Plug (Dimmer)" config="inovelli/simple_module.xml"/>
-		<Product type="1f01" id="1f01" name="NZW31 Dimmer" config="inovelli/nzw31.xml"/>
-		<Product type="1f00" id="1f00" name="NZW31S Dimmer(scene)" config="inovelli/nzw31.xml"/>
-		<Product type="1f02" id="1f02" name="NZW31T Dimmer(scene)" config="inovelli/nzw31.xml"/>
-		<Product type="1e01" id="1e01" name="NZW30 On/Off Switch" config="inovelli/simple_module.xml"/>
-		<Product type="1e00" id="1e00" name="NZW30S On/Off Switch(scene)" config="inovelli/simple_module.xml"/>
-		<Product type="1e02" id="1e02" name="NZW30T On/Off Toggle(scene)" config="inovelli/simple_module.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0006" name="Intel">
 	</Manufacturer>
@@ -1313,7 +1317,7 @@
 		<Product type="0112" id="241c" name="ZEN22 Dimmer" config="zooz/zen22.xml"/>
 		<Product type="1111" id="1e1c" name="ZEN23 Toggle Switch" config="zooz/zen23.xml" />
 		<Product type="0111" id="1f1c" name="ZEN24 Dimmer Switch" config="zooz/zen24.xml" />
-		<Product type="6100" id="6100" name="NZW97 Inovelli Dual Outdoor Z-Wave Plug" config="inovelli/simple_module.xml"/>
+		<Product type="6100" id="6100" name="NZW97 Inovelli Dual Outdoor Z-Wave Plug" config="inovelli/nzw97.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0315" name="Z Wave Products Inc.">
     		<Product type="4447" id="3034" name="WD-100" config="zwp/WD-100.xml"/>
