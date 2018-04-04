@@ -58,7 +58,7 @@ https://aeotec.freshdesk.com/helpdesk/attachments/6048080397
 				E.g. The default setting is the Night light mode is enabled at 12: 00 and disabled at 8:00 0x12000800.
 			</Help>
 		</Value>
-        <Value type="int" index="85" genre="config" label="State appointment 1" value="2566920192">
+        <Value type="int" index="85" genre="config" label="State appointment 1" value="1179747">
             <Help>State appointment
                 Set the ON time of output load.
                 Value1 = 0, disable or = non zero, enable (day, bit0 - bit6 represent Mon to Sun).
@@ -67,7 +67,7 @@ https://aeotec.freshdesk.com/helpdesk/attachments/6048080397
                 Value4 = ON (brightness level)
             </Help>
         </Value>
-        <Value type="int" index="86" genre="config" label="State appointment 2" value="8960">
+        <Value type="int" index="86" genre="config" label="State appointment 2" value="1507328">
             <Help>State appointment
                 Set the ON time of output load.
                 Value1 = 0, disable or = non zero, enable (day, bit0 - bit6 represent Mon to Sun).
