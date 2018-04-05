@@ -35,7 +35,7 @@
 
 
 // Compilation export flags
-#if (defined _WINDOWS || defined WIN32 || defined _MSC_VER) && !defined MINGW
+#if (defined _WINDOWS || defined WIN32 || defined _MSC_VER) && !defined MINGW && !defined __MINGW32__ && !defined __MINGW64__
 #	if defined OPENZWAVE_MAKEDLL	// Create the dynamic library.
 #		define OPENZWAVE_EXPORT    __declspec(dllexport)
 #	elif defined OPENZWAVE_USEDLL	// Use the dynamic library
