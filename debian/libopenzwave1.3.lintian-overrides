@@ -1,5 +1,0 @@
-# this is a modified version
-libopenzwave1.3: embedded-library usr/lib/*/libopenzwave.so.1.3: tinyxml
-#due to arch- and optimisation-dependent symbols the symbols-file is not
-#maintainable and FTBSs occur on lots of architectures
-libopenzwave1.3: no-symbols-control-file
