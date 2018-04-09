@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-ZWA004 ZWA003 NanoMote Quad
+ZWA003 NanoMote Quad
 -->
 <Product xmlns='http://code.google.com/p/open-zwave/'>
 	<!-- Configuration Parameters -->
-	<CommandClass id="112"><CommandClass id="112">
+	<CommandClass id="112">
 		<Value type="byte" index="32" genre="config" label="Low battery level" units="%" min="10" max="50" value="20">
 			<Help>
 				Set the low battery value.
