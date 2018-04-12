@@ -193,19 +193,26 @@ void Localization::ReadXML
                 continue;
             }
             uint8 ccID = (uint8)strtol( str, &pStopChar, 10 );
-            TiXmlElement const* LabelElement = CCElement->FirstChildElement();
-            while (LabelElement)
-            {
-                str = LabelElement->Value();
-                if (str && !strcmp( str, "Label" ) )
-                {
-                    ReadXMLLabel(ccID, LabelElement);
-                }
-                if (str && !strcmp( str, "Value" ) )
-                {
-                    ReadXMLValue(ccID, LabelElement);
-                }
-                LabelElement = LabelElement->NextSiblingElement();
+            TiXmlElement const* LangElement = CCElement->FirstChildElement();
+            while (LangElement) {
+            	str = LangElement->Value();
+            	if (str && !strcmp( str, "Lang" ) ) {
+            		TiXmlElement const* LabelElement = LangElement->FirstChildElement();
+					while (LabelElement)
+					{
+						str = LabelElement->Value();
+						if (str && !strcmp( str, "Label" ) )
+						{
+							ReadXMLLabel(ccID, LabelElement);
+						}
+						if (str && !strcmp( str, "Value" ) )
+						{
+							ReadXMLValue(ccID, LabelElement);
+						}
+						LabelElement = LabelElement->NextSiblingElement();
+					}
+            	}
+            	LangElement = LangElement->NextSiblingElement();
             }
         }
 
