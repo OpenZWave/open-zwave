@@ -422,7 +422,7 @@ void BarrierOperator::CreateVars
 				item.m_value = i;
 				items.push_back( item );
 			}
-			node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, BarrierOperatorLabel_Index, "Barrier State Label", "", false, false, size, items, 0, 0 );
+			node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, BarrierOperatorLabel_Index, "Barrier State", "", false, false, size, items, 0, 0 );
 		}
 		{
 			vector<ValueList::Item> items;

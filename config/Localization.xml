@@ -2,6 +2,23 @@
 <Localization xmlns='http://code.google.com/p/open-zwave/'>
     <CommandClass id="113">
         <Label>COMMAND_CLASS_ALARM</Label>
+        <Value index="0">
+        <Help>Alarm Type Received</Help>
+        <Label>Alarm Type</Label>
+        </Value>
+        <Value index="1">
+        <Help>Alarm Level Received</Help>
+        <Label>Alarm Level</Label>
+        </Value>
+        <Value index="2">
+        <Help>Source Of the Alarm Event</Help>
+        <Label>SourceNode</Label>
+        </Value>
+        <!-- 
+        <Value index="3">
+        <help></help>
+        </Value>
+        -->
 	</CommandClass>
     <CommandClass id="34">
         <Label>COMMAND_CLASS_APPLICATION_STATUS</Label>
@@ -11,9 +28,45 @@
 	</CommandClass>
     <CommandClass id="155">
         <Label>COMMAND_CLASS_ASSOCIATION_COMMAND_CONFIGURATION</Label>
+        <value index="0">
+        <help>Maximum Command Length that can be stored on this node</help>
+        <Label>Max Command Length</Label>
+        </value>
+        <Value index="1">
+        <Help>True - Only Basic Set Messages are stored. False - Full Commands may be stored</Help>
+        <Label>Commands are Values</Label>
+        </Value>
+        <Value index="2">
+        <Help>A Application can configure the commands sent</Help>
+        <Label>Commands are Configurable</Label>
+        </Value>
+        <Value index="3">
+        <Help>The Amount of free commands that can be stored</Help>
+        <Label>Free Commands</Label>
+        </Value>
+        <Value index="4">
+        <Help>The Maximum Number of commands that can be stored</Help>
+        <Label>Max Commands</Label>
+        </Value>
 	</CommandClass>
     <CommandClass id="102">
         <Label>COMMAND_CLASS_BARRIER_OPERATOR</Label>
+        <Value index="1">
+        <help>The Current State of the Barrier</help>
+        <Label>Barrier State</Label>
+        </Value>
+        <Value index="2">
+        <Help>Supported Operations for the Barrier</Help>
+        <Label>Supported Signals</Label>
+        </Value>
+        <Value index="3">
+        <Help>Enable Audible Notifications of Barrier State Change</Help>
+        <Label>Audible Notification</Label>
+        </Value>
+        <Value index="4">
+        <Help>Enable Visual Notifications of Barrier State Change</Help>
+        <Label>Visual Notification</Label>
+        </Value>
 	</CommandClass>
     <CommandClass id="32">
         <Label>COMMAND_CLASS_BASIC</Label>
@@ -26,27 +79,120 @@
 	</CommandClass>
     <CommandClass id="80">
         <Label>COMMAND_CLASS_BASIC_WINDOW_COVERING</Label>
+        <Value index="0">
+        <Help>Open the Window Covering</Help>
+        <Label>Open</Label>
+        </Value>
+        <Value index="1">
+        <Help>Close the Window Covering</Help>
+        <Label>Close</Label>
+        </Value>
 	</CommandClass>
     <CommandClass id="128">
         <Label>COMMAND_CLASS_BATTERY</Label>
+        <Value index="0">
+        <Help>Current Battery Level</Help>
+        <Label>Battery Level</Label>
+        </Value>
 	</CommandClass>
     <CommandClass id="91">
         <Label>COMMAND_CLASS_CENTRAL_SCENE</Label>
 	</CommandClass>
     <CommandClass id="70">
         <Label>COMMAND_CLASS_CLIMATE_CONTROL_SCHEDULE</Label>
+        <Value index="0">
+        <Help>Schedule</Help>
+        <Label>Invalid</Label>
+        </Value>
+        <Value index="1">
+        <Help>Schedule for Monday</Help>
+        <Label>Monday</Label>
+        </Value>
+        <Value index="2">
+        <Help>Schedule for Tuesday</Help>
+        <Label>Tuesday</Label>
+        </Value>
+        <Value index="3">
+        <Help>Schedule for Wednesday</Help>
+        <Label>Wednesday</Label>
+        </Value>
+        <Value index="4">
+        <Help>Schedule for Thursday</Help>
+        <Label>Thursday</Label>
+        </Value>
+        <Value index="5">
+        <Help>Schedule for Friday</Help>
+        <Label>Friday</Label>
+        </Value>
+        <Value index="6">
+        <Help>Schedule for Saturday</Help>
+        <Label>Saturday</Label>
+        </Value>
+        <Value index="7">
+        <Help>Schedule for Sunday</Help>
+        <Label>Sunday</Label>
+        </Value>
+        <Value index="8">
+        <Help>Override Schedule</Help>
+        <Label>Override State</Label>
+        </Value>
+        <Value index="9">
+        <Help>Override Setback</Help>
+        <Label>Override Setback</Label>
+        </Value>
 	</CommandClass>
     <CommandClass id="129">
         <Label>COMMAND_CLASS_CLOCK</Label>
+        <Value index="0">
+        <Help>Day of Week</Help>
+        <Label>Day></Label>
+        </Value>
+        <Value index="1">
+        <Help>Hour</Help>
+        <Label>Hour</Label>
+        </Value>
+        <Value index="2">
+        <Help>Minute</Help>
+        <Label>Minute</Label>
+        </Value>
 	</CommandClass>
     <CommandClass id="51">
         <Label>COMMAND_CLASS_COLOR</Label>
+        <Value index="0">
+        <Help>Color (in RGB format)</Help>
+        <Label>Color</Label>
+        </Value>
+        <Value index="1">
+        <Help>Preset Color</Help>
+        <Label>Color Index</Label>
+        </Value>
+        <Value index="2">
+        <Help>Color Capabilities of the device</Help>
+        <Label>Color Channels</Label>
+        </Value>
+        <Value index="3">
+        <Help>Duration to change colors</Help>
+        <Label>Duration</Label>
+        </Value>
 	</CommandClass>
     <CommandClass id="112">
         <Label>COMMAND_CLASS_CONFIGURATION</Label>
+        <!--  We dont do any here - this should come from device configuration files -->
 	</CommandClass>
     <CommandClass id="33">
         <Label>COMMAND_CLASS_CONTROLLER_REPLICATION</Label>
+        <Value index="0">
+        <Help>Node to Perform the replication with</Help>
+        <Label>Node</Label>
+        </Value>
+        <Value index="1">
+        <Help>What Features should be replicated</Help>
+        <Label>Functions</Label>
+        </Value>
+        <Value index="2">
+        <Help>Start the Replication</Help>
+        <Label>Replicate</Label>
+        </Value>
 	</CommandClass>
     <CommandClass id="86">
         <Label>COMMAND_CLASS_CRC_16_ENCAP</Label>
@@ -56,30 +202,123 @@
 	</CommandClass>
     <CommandClass id="98">
         <Label>COMMAND_CLASS_DOOR_LOCK</Label>
+        <Value index="0">
+        <Help>State of the Lock</Help>
+        <Label>Locked</Label>
+        </Value>
+        <Value index="1">
+        <Help>State of the Lock (Advanced)</Help>
+        <Label>Locked (Advanced)</Label>
+        </Value>
+        <Value index="2">
+        <Help>Timeout Mode for Reverting Lock State</Help>
+        <Label>Timeout Mode</Label>
+        </Value>
+        <Value index="3">
+        <Help>How Many Minutes before reverting Lock State</Help>
+        <Label>Timeout Minutes</Label>
+        </Value>
+        <Value index="4">
+        <Help>How Many Seconds before reverting Lock State</Help>
+        <Label>Timeout Seconds</Label>
+        </Value>
+        <Value index="5">
+        <Help>State of the Exterior Handle Control</Help>
+        <Label>Outside Handle Control</Label>
+        </Value>
+        <Value index="6">
+        <Help>State of the Exterior Handle Control</Help>
+        <Label>Inside Handle Control</Label>
+        </Value>
 	</CommandClass>
     <CommandClass id="76">
         <Label>COMMAND_CLASS_DOOR_LOCK_LOGGING</Label>
+        <Value index="0">
+        <Help>Max Number of Logging Records Stored</Help>
+        <Label>Max Number of Records</Label>
+        </Value>
+        <Value index="0">
+        <Help>Current Log Record Number</Help>
+        <Label>Current Record Number</Label>
+        </Value>
+        <Value index="0">
+        <Help>Log Entry</Help>
+        <Label>Log Record</Label>
+        </Value>
 	</CommandClass>
     <CommandClass id="144">
         <Label>COMMAND_CLASS_ENERGY_PRODUCTION</Label>
+        <value index="0">
+        <Help>Current Energy Production Value</Help>
+        <Label>Instant energy production</Label>
+        </value>
+        <value index="1">
+        <Help>Total Amount of Energy Produced</Help>
+        <Label>Total energy production</Label>
+        </value>
+        <value index="2">
+        <Help>Total Amount of Energy Produced Today</Help>
+        <Label>Energy production today</Label>
+        </value>
+        <value index="3">
+        <Help>Total Time Producing Energy</Help>
+        <Label>Total production time</Label>
+        </value>
 	</CommandClass>
     <CommandClass id="130">
         <Label>COMMAND_CLASS_HAIL</Label>
 	</CommandClass>
     <CommandClass id="135">
         <Label>COMMAND_CLASS_INDICATOR</Label>
+        <Value index="0">
+        <Help>Current Indicator State</Help>
+        <Label>Indicator</Label>
+        </Value>
 	</CommandClass>
     <CommandClass id="137">
         <Label>COMMAND_CLASS_LANGUAGE</Label>
+        <Value index="0">
+		<Help>Current Language Setting of the Device is ISO639-2 Format</Help>
+		<Label>Language</Label>
+        </Value>
+        <Value index="0">
+		<Help>Current Country Setting of the Device in IS3166-1 Format</Help>
+		<Label>Country</Label>
+        </Value>
 	</CommandClass>
     <CommandClass id="118">
         <Label>COMMAND_CLASS_LOCK</Label>
+        <Value index="0">
+        <Help>Current State of the Device</Help>
+        <Label>Locked</Label>
+        </Value>
 	</CommandClass>
     <CommandClass id="145">
         <Label>COMMAND_CLASS_PROPRIETARY</Label>
 	</CommandClass>
     <CommandClass id="114">
         <Label>COMMAND_CLASS_MANUFACTURER_SPECIFIC</Label>
+        <Value index="0">
+        <Help>Revision of the Config file currently loaded</Help>
+        <Label>Loaded Config Revision</Label>
+        </Value>
+        <Value index="1">
+        <Help>Revision of the Config file on the File System</Help>
+        <Label>Config File Revision</Label>
+        </Value>
+        <Value index="2">
+        <Help>Latest Revision of the Config file available for download</Help>
+        <Label>Latest Available Config File Revision</Label>
+        </Value>
+        <Value index="3">
+        <Help>Manufacturer Specific Device ID/Model</Help>
+        <Label>Device ID</Label>
+        </Value>
+        <Value index="4">
+        <Help>Device Serial Number</Help>
+        <Label>Serial Number</Label>
+        </Value>
+        
 	</CommandClass>
     <CommandClass id="50">
         <Label>COMMAND_CLASS_METER</Label>
