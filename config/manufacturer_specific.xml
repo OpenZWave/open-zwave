@@ -636,7 +636,7 @@
 		<Product type="0200" id="0009" name="HKZW-SCN01 Scene Controller" config="hank/scenecontroller1.xml"/>
 		<Product type="0200" id="000b" name="HKZW-SCN04 Scene Controller" config="hank/scenecontroller4.xml"/>
 		<Product type="0100" id="0004" name="HKZW-RGB01 RGB bulb" config="hank/hkzw-rgb01.xml"/>
-    	        <Product type="0101" id="0004" name="HKZW-RGB01 RGB bulb" config="hank/hkzw-rgb01.xml"/>
+		<Product type="0101" id="0004" name="HKZW-RGB01 RGB bulb" config="hank/hkzw-rgb01.xml"/>
 		<Product type="0101" id="000a" name="HKZW-SO03 Smart Plug" config="hank/hkzw-so03.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0260" name="Heiman">
@@ -687,7 +687,7 @@
 		<Product type="0001" id="0002" name="AS2-RF Thermostat Transmitter"/>
 		<Product type="0001" id="0003" name="HRT4-ZW Thermostat Transmitter" config="horstmann/hrt4zw.xml"/>
 		<Product type="0001" id="0004" name="SRT 323 Electronic Room Thermostat and Temperature" config="horstmann/srt323.xml"/>
-        <Product type="0001" id="0005" name="SRT-321 Thermostat-HVAC" config="horstmann/srt321.xml"/>
+		<Product type="0001" id="0005" name="SRT-321 Thermostat-HVAC" config="horstmann/srt321.xml"/>
 		<Product type="0003" id="0001" name="ASR-ZW Thermostat Receiver" config="horstmann/asrzw.xml"/>
 		<Product type="0003" id="0002" name="SSR 302 2-zone Thermostat Receiver" config="horstmann/ssr302.xml"/>
 		<Product type="0004" id="0001" name="SCSC17 Thermostat" config="horstmann/scsc17.xml"/>
@@ -1310,7 +1310,7 @@
 		<Product type="0003" id="0088" name="ZSE33 Smart Chime" config="zooz/zse33.xml" />
 		<Product type="0101" id="000a" name="ZEN06" config="zooz/zen06.xml"/>
 		<Product type="b111" id="251c" name="ZEN23 Toggle Switch V2" config="zooz/zen23.xml" />
-        <Product type="0101" id="000D" name="ZEN15 Power Switch" config="zooz/zen15.xml" />
+		<Product type="0101" id="000D" name="ZEN15 Power Switch" config="zooz/zen15.xml" />
 	</Manufacturer>
 	<Manufacturer id="015d" name="Zooz">
 		<Product type="0651" id="f51c" name="ZEN20 Power Strip" config="zooz/zen20.xml" />
@@ -1321,7 +1321,7 @@
 		<Product type="6100" id="6100" name="NZW97 Inovelli Dual Outdoor Z-Wave Plug" config="inovelli/nzw97.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0315" name="Z Wave Products Inc.">
-    		<Product type="4447" id="3034" name="WD-100" config="zwp/WD-100.xml"/>
+		<Product type="4447" id="3034" name="WD-100" config="zwp/WD-100.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0021" name="Zykronix">
 	</Manufacturer>
