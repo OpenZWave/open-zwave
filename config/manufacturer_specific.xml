@@ -638,6 +638,7 @@
 		<Product type="0100" id="0004" name="HKZW-RGB01 RGB bulb" config="hank/hkzw-rgb01.xml"/>
     	        <Product type="0101" id="0004" name="HKZW-RGB01 RGB bulb" config="hank/hkzw-rgb01.xml"/>
 		<Product type="0101" id="000a" name="HKZW-SO03 Smart Plug" config="hank/hkzw-so03.xml"/>
+		<Product type="0200" id="000f" name="HKZW-FLD01 Flood Sensor" config="hank/hkzw-fld01.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0260" name="Heiman">
 		<Product type="0168" id="0168" name="Door Sensor HS1DS-Z" config="heiman/HS1DS-Z.xml"/>
