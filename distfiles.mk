@@ -251,6 +251,7 @@ DISTFILES =	.gitignore \
 	config/greenwave/powernode1.xml \
 	config/greenwave/powernode6.xml \
 	config/hank/hkzw-dws01.xml \
+	config/hank/hkzw-fld01.xml \
 	config/hank/hkzw-ms01.xml \
 	config/hank/hkzw-rgb01.xml \
 	config/hank/hkzw-so01-smartplug.xml \
