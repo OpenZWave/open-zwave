@@ -32,7 +32,6 @@
             <Item value="0" label="Disable"/>
             <Item value="1" label="Enable"/>
         </Value>
-        <!-- what default value? -->
         <Value type="short" genre="config" instance="1" index="20" label="Set the high temperature alarm trigger value" size="2" min="-670" max="2570">
             <Help>US: -670 - 2570 (-67 - 257 F)
             Other: -550 - 1250 (-55 - 125 C)</Help>
