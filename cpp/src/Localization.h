@@ -90,10 +90,10 @@ private:
     ~Localization();
 
     static void ReadXML();
-    static void ReadXMLLabel(uint8 ccID, const TiXmlElement *labelElement);
-    static void ReadXMLValue(uint8 ccID, const TiXmlElement *valueElement);
-    static void ReadXMLVIDLabel(uint8 ccID, uint16 indexId, uint32 pos, const TiXmlElement *labelElement);
-    static void ReadXMLVIDHelp(uint8 ccID, uint16 indexId, uint32 pos, const TiXmlElement *helpElement);
+    static void ReadXMLLabel(uint8 ccID, const TiXmlElement *labelElement, const string Language);
+    static void ReadXMLValue(uint8 ccID, const TiXmlElement *valueElement, const string Language);
+    static void ReadXMLVIDLabel(uint8 ccID, uint16 indexId, uint32 pos, const TiXmlElement *labelElement, const string Language);
+    static void ReadXMLVIDHelp(uint8 ccID, uint16 indexId, uint32 pos, const TiXmlElement *helpElement, const string Language);
     static uint64 GetValueKey (uint8 _commandClass, uint16 _index, uint32 _pos = -1);
 public:
     static Localization* Get();

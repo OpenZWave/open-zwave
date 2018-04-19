@@ -77,7 +77,6 @@ extern char ozw_version_string[];
 //	<Manager::Create>
 //	Static creation of the singleton
 //-----------------------------------------------------------------------------
-#include "Localization.h"
 Manager* Manager::Create
 (
 )
@@ -90,8 +89,6 @@ Manager* Manager::Create
 		{
 			s_instance = new Manager();
 		}
-		Localization *l = Localization::Get();
-		l->GetSelectedLang();
 		return s_instance;
 	}
 
