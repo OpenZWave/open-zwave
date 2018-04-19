@@ -99,7 +99,7 @@ public:
     static Localization* Get();
     void SetupValue(Value *value);
     void SetupCommandClass(CommandClass *cc);
-
+    string GetSelectedLang() { return Localization::m_selectedLang;};
     //-----------------------------------------------------------------------------
     // Instance Functions
     //-----------------------------------------------------------------------------

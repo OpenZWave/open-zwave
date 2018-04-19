@@ -173,9 +173,10 @@ void Localization::ReadXML
     if( !pDoc->LoadFile( path.c_str(), TIXML_ENCODING_UTF8 ) )
     {
         delete pDoc;
-        Log::Write( LogLevel_Info, "Unable to load ValueHelp file %s", path.c_str() );
+        Log::Write( LogLevel_Warning, "Unable to load ValueHelp file %s", path.c_str() );
         return;
     }
+    Log::Write( LogLevel_Info, "Loading Localization File %s", path.c_str() );
 
     TiXmlElement const* root = pDoc->RootElement();
     TiXmlElement const* CCElement = root->FirstChildElement();
