@@ -98,7 +98,7 @@
 		<Product type="0204" id="0050" name="ZW080 Siren Gen5" config="aeotec/zw080.xml"/>
 		<Product type="0001" id="0058" name="ZW088 Key Fob Gen5" config="aeotec/zw088.xml"/>
 		<Product type="0101" id="0058" name="ZW088 Key Fob Gen5" config="aeotec/zw088.xml"/>
-		<Product type="0201" id="0058" name="ZW088 Key Fob Gen5AU" config="aeotec/zw088.xml"/>
+		<Product type="0201" id="0058" name="ZW088 Key Fob Gen5" config="aeotec/zw088.xml"/>
 		<Product type="0002" id="0059" name="ZW089 Recessed Door Sensor Gen5" config="aeotec/zw089.xml"/>
 		<Product type="0102" id="0059" name="ZW089 Recessed Door Sensor Gen5" config="aeotec/zw089.xml"/>
 		<Product type="0202" id="0059" name="ZW089 Recessed Door Sensor Gen5" config="aeotec/zw089.xml"/>
@@ -113,7 +113,7 @@
 		<Product type="0202" id="005f" name="ZW095 Home Energy Meter Gen5" config="aeotec/zw095.xml" />
 		<Product type="0003" id="0060" name="ZW096 Smart Switch 6" config="aeotec/zw096.xml" />
 		<Product type="0103" id="0060" name="ZW096 Smart Switch 6" config="aeotec/zw096.xml" />
-		<Product type="0203" id="0060" name="ZW096 Smart Switch 6AU" config="aeotec/zw096.xml" />
+		<Product type="0203" id="0060" name="ZW096 Smart Switch 6" config="aeotec/zw096.xml" />
 		<Product type="0002" id="0061" name="ZW097 Dry Contact Sensor Gen5" config="aeotec/zw097.xml" />
 		<Product type="0102" id="0061" name="ZW097 Dry Contact Sensor Gen5" config="aeotec/zw097.xml" />
 		<Product type="0202" id="0061" name="ZW097 Dry Contact Sensor Gen5" config="aeotec/zw097.xml" />
@@ -122,11 +122,11 @@
 		<Product type="0203" id="0062" name="ZW098 LED Bulb" config="aeotec/zw098.xml" />
 		<Product type="0003" id="0063" name="ZW099 Smart Dimmer 6" config="aeotec/zw099.xml" />
 		<Product type="0103" id="0063" name="ZW099 Smart Dimmer 6" config="aeotec/zw099.xml" />
-		<Product type="0203" id="0063" name="ZW099 Smart Dimmer 6 AU" config="aeotec/zw099.xml" />
+		<Product type="0203" id="0063" name="ZW099 Smart Dimmer 6" config="aeotec/zw099.xml" />
 		<Product type="1D03" id="0063" name="ZW099 Smart Dimmer 6" config="aeotec/zw099.xml" />
 		<Product type="0002" id="0064" name="ZW100 MultiSensor 6" config="aeotec/zw100.xml" />
 		<Product type="0102" id="0064" name="ZW100 MultiSensor 6" config="aeotec/zw100.xml" />
-		<Product type="0202" id="0064" name="ZW100 MultiSensor 6AU" config="aeotec/zw100.xml" />
+		<Product type="0202" id="0064" name="ZW100 MultiSensor 6" config="aeotec/zw100.xml" />
 		<Product type="0003" id="006f" name="ZW111 Nano Dimmer" config="aeotec/zw111.xml"/>
 		<Product type="0103" id="006f" name="ZW111 Nano Dimmer" config="aeotec/zw111.xml"/>
 		<Product type="0203" id="006f" name="ZW111 Nano Dimmer" config="aeotec/zw111.xml"/>
@@ -136,7 +136,7 @@
 		<Product type="0202" id="0070" name="ZW112 Door Window Sensor 6" config="aeotec/zw112.xml" />
 		<Product type="0003" id="0074" name="ZW116 Nano Switch" config="aeotec/zw116.xml"/>
 		<Product type="0103" id="0074" name="ZW116 Nano Switch" config="aeotec/zw116.xml"/>
-		<Product type="0203" id="0074" name="ZW116 Nano Switch AU" config="aeotec/zw116.xml"/>
+		<Product type="0203" id="0074" name="ZW116 Nano Switch" config="aeotec/zw116.xml"/>
 		<Product type="1d03" id="0074" name="ZW116 Nano Switch" config="aeotec/zw116.xml"/>
 		<Product type="0004" id="0075" name="ZW117 Range Extender 6" config="aeotec/zw117.xml"/>
 		<Product type="0104" id="0075" name="ZW117 Range Extender 6" config="aeotec/zw117.xml"/>
