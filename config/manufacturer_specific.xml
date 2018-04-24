@@ -181,6 +181,8 @@
 		<Product type="0102" id="0003" name="ZWA003 NanoMote Quad" config="aeotec/zwa003.xml"/>
 		<Product type="0002" id="0004" name="ZWA004 NanoMote One" config="aeotec/zwa004.xml"/>
 		<Product type="0102" id="0004" name="ZWA004 NanoMote One" config="aeotec/zwa004.xml"/>
+		<Product type="0002" id="0005" name="ZWA005 TriSensor" config="aeotec/zwa005.xml"/>
+		<Product type="0102" id="0005" name="ZWA005 TriSensor" config="aeotec/zwa005.xml"/>
 		<Product type="0003" id="0001" name="ZWA001 LED Bulb 6 Multi-White" config="aeotec/zwa001.xml"/>
 		<Product type="0103" id="0001" name="ZWA001 LED Bulb 6 Multi-White" config="aeotec/zwa001.xml"/>
 	</Manufacturer>
