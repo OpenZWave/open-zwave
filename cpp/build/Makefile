@@ -57,6 +57,9 @@ endif
 endif
 # For 10.2 and later, use iconv from base, no extra include path required.
 
+else ifeq ($(UNAME),NetBSD)
+CFLAGS += -I/usr/pkg/include/libusb-1.0
+LDFLAGS+= -shared -L/usr/pkg/lib -lusb-1.0 -Wl,-rpath=/usr/pkg/lib
 else
 LDFLAGS += -shared -Wl,-soname,$(SHARED_LIB_NAME)
 LIBS 	+= -ludev
@@ -72,6 +75,8 @@ ifeq ($(UNAME),Darwin)
 SOURCES_HIDAPI =$(top_srcdir)/cpp/hidapi/mac
 else ifeq ($(UNAME),FreeBSD)
 SOURCES_HIDAPI =$(top_srcdir)/cpp/hidapi/libusb
+else ifeq ($(UNAME),NetBSD)
+SOURCES_HIDAPI =$(top_srcdir)/cpp/hidapi/libusb
 else
 SOURCES_HIDAPI =$(top_srcdir)/cpp/hidapi/linux
 endif
@@ -81,13 +86,14 @@ SOURCES		:= $(top_srcdir)/cpp/src $(top_srcdir)/cpp/src/command_classes $(top_sr
 	$(top_srcdir)/cpp/src/value_classes $(top_srcdir)/cpp/src/platform $(top_srcdir)/cpp/src/platform/unix $(SOURCES_HIDAPI) $(top_srcdir)/cpp/src/aes/
 VPATH = $(top_srcdir)/cpp/src:$(top_srcdir)/cpp/src/command_classes:$(top_srcdir)/cpp/tinyxml:\
 	$(top_srcdir)/cpp/src/value_classes:$(top_srcdir)/cpp/src/platform:$(top_srcdir)/cpp/src/platform/unix:$(SOURCES_HIDAPI):$(top_srcdir)/cpp/src/aes/
-	
 
 tinyxml := $(notdir $(wildcard $(top_srcdir)/cpp/tinyxml/*.cpp))
 
 ifeq ($(UNAME),Darwin)
 hidapi := $(notdir $(wildcard $(top_srcdir)/cpp/hidapi/mac/*.c))
 else ifeq ($(UNAME),FreeBSD)
+hidapi := $(notdir $(wildcard $(top_srcdir)/cpp/hidapi/libusb/*.c))
+else ifeq ($(UNAME),NetBSD)
 hidapi := $(notdir $(wildcard $(top_srcdir)/cpp/hidapi/libusb/*.c))
 else
 hidapi := $(notdir $(wildcard $(top_srcdir)/cpp/hidapi/linux/*.c)) # we do not want the libusb version
@@ -130,7 +136,7 @@ $(top_srcdir)/cpp/src/vers.cpp:
 	@echo 'uint16_t ozw_vers_minor = $(VERSION_MIN);' >> $(top_srcdir)/cpp/src/vers.cpp
 	@echo 'uint16_t ozw_vers_revision = $(VERSION_REV);' >> $(top_srcdir)/cpp/src/vers.cpp
 	@echo 'char ozw_version_string[] = "$(GITVERSION)";' >> $(top_srcdir)/cpp/src/vers.cpp
-	
+
 
 #$(OBJDIR)/vers.o:	$(top_builddir)/vers.cpp
 
@@ -176,7 +182,7 @@ $(top_builddir)/ozw_config: $(top_srcdir)/cpp/build/ozw_config.in
 		-e 's|[@]pkgconfigfile@|$(pkgconfigdir)/libopenzwave.pc|g' \
 		< "$<" > "$@"
 	@chmod +x $(top_builddir)/ozw_config
-	
+
 ifeq ($(DOT),)
 HAVE_DOT = -e 's|[@]HAVE_DOT@|NO|g' 
 else
@@ -234,7 +240,7 @@ install: $(LIBDIR)/$(SHARED_LIB_NAME) doc $(top_builddir)/libopenzwave.pc $(top_
 	@cp $(top_builddir)/ozw_config $(DESTDIR)/$(PREFIX)/bin/ozw_config
 	@chmod 755 $(DESTDIR)/$(PREFIX)/bin/ozw_config
 
-	
+
 
 .SUFFIXES:	.d .cpp .o .a
 .PHONY:	default clean install doc
