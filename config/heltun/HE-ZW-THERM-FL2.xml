@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- HELTUN-ZWAVE-THERMOSTAT-FLOOR2 -->
+<Product xmlns='http://code.google.com/p/open-zwave/'>
+
+	<CommandClass id="32" name="COMMAND_CLASS_BASIC" version="1" request_flags="4"   mapping="67">
+		<Instance index="1" />
+	</CommandClass>
+	<CommandClass id="49" name="COMMAND_CLASS_SENSOR_MULTILEVEL" version="11"  >
+		<Instance index="1" />
+		<Value type="decimal" genre="user" instance="1" index="1" label="Temperature" units="C" read_only="true" write_only="false" min="0" max="0" value="22" />
+		<Value type="decimal" genre="user" instance="1" index="3" label="Luminance" units="lux" read_only="true" write_only="false" min="0" max="0" value="378" />
+		<Value type="decimal" genre="user" instance="1" index="5" label="Relative Humidity" units="%" read_only="true" write_only="false" min="0" max="0" value="39" />
+		<Value type="decimal" genre="user" instance="1" index="24" label="Soil Temperature" units="C" read_only="true" write_only="false" min="0" max="0" value="22" />
+	</CommandClass>
+	<CommandClass id="50" name="COMMAND_CLASS_METER" version="4" request_flags="2"  >
+		<Instance index="1" />
+		<Value type="decimal" genre="user" instance="1" index="0" label="Energy" units="kWh" read_only="true" write_only="false" min="0" max="0" value="0.0" />
+		<Value type="decimal" genre="user" instance="1" index="8" label="Power" units="W" read_only="true" write_only="false" min="0" max="0" value="0" />
+		<Value type="bool" genre="user" instance="1" index="32" label="Exporting" units="" read_only="true" write_only="false" min="0" max="0" value="False" />
+		<Value type="button" genre="system" instance="1" index="33" label="Reset" units="" read_only="false" write_only="true" min="0" max="0" />
+	</CommandClass>
+	<CommandClass id="64" name="COMMAND_CLASS_THERMOSTAT_MODE" version="1" request_flags="4"  >
+		<Instance index="1" />
+		<Value type="list" genre="user" instance="1" index="0" label="Mode" units="" read_only="false" write_only="false" min="0" max="0"   size="1">
+			<Item label="Off" value="0" />
+			<Item label="Comfort" value="1" />
+			<Item label="Dry flor" value="8" />
+			<Item label="Auto" value="10" />
+			<Item label="Heat Econ" value="11" />
+			<Item label="Vacation" value="13" />
+		</Value>
+		<SupportedModes>
+			<Mode index="0" label="Off" />
+			<Mode index="1" label="Comfort" />
+			<Mode index="8" label="Dry floor" />
+			<Mode index="10" label="Auto" />
+			<Mode index="11" label="Heat Econ" />
+			<Mode index="13" label="Vacation" />
+		</SupportedModes>
+	</CommandClass>
+	<CommandClass id="66" name="COMMAND_CLASS_THERMOSTAT_OPERATING_STATE" version="1" request_flags="4"  >
+		<Instance index="1" />
+		<Value type="string" genre="user" instance="1" index="0" label="Operating State" units="" read_only="true" write_only="false" verify_changes="false" min="0" max="0" value="Idle" />
+	</CommandClass>
+		<CommandClass id="67" name="COMMAND_CLASS_THERMOSTAT_SETPOINT" base="0" override_precision="2">
+				<Instance index="1" />
+				<Value type="decimal" genre="user" instance="1" index="1" units="C" value="0" label="Setpoint"/>
+			</CommandClass>
+	<CommandClass id="90" name="COMMAND_CLASS_DEVICE_RESET_LOCALLY" version="1" request_flags="4"  >
+		<Instance index="1" />
+	</CommandClass>
+	<CommandClass id="94" name="COMMAND_CLASS_ZWAVE_PLUS_INFO" version="1" request_flags="4"  >
+		<Instance index="1" />
+		<Value type="byte" genre="system" instance="1" index="0" label="ZWave+ Version" units="" read_only="true" write_only="false" verify_changes="false" min="0" max="255" value="1" />
+		<Value type="short" genre="system" instance="1" index="1" label="InstallerIcon" units="" read_only="true" write_only="false" verify_changes="false" min="-32768" max="32767" value="4608" />
+		<Value type="short" genre="system" instance="1" index="2" label="UserIcon" units="" read_only="true" write_only="false" verify_changes="false" min="-32768" max="32767" value="4608" />
+	</CommandClass>
+	<CommandClass id="112" name="COMMAND_CLASS_CONFIGURATION" version="1" request_flags="4"  >
+		<Value type="list" genre="config" index="1" label="Degree mode" value="0">
+			<Item label="Celsius" value="0"/>
+			<Item label="Fahrenheit" value="1"/>
+		</Value>
+		<Value type="list" genre="config" index="2" label="EXT Input mode" value="0">
+			<Help>
+				The thermostat can be connected to an external device (like security system) dry output
+				contacts and control the thermostat operating modes depending on the contacts state.
+				If parameter value is 0 no action will be take (the input state is ignored by the thermostat
+				logic). If parameter value is 1 the thermostat will be switched to the operating mode selected
+				in Parameter 3 if the output was short-circuited. The thermostat will go back to previous mode
+				as soon as the input is open. If parameter value is 2 the thermostat will be switched to the
+				operating mode selected in Parameter 3 if the output was short-circuited. But the thermostat
+				will not undertake any action if the input is open again.
+			</Help>
+			<Item label="No external input" value="0"/>
+			<Item label="Turn on parm 3 mode" value="1"/>
+			<Item label="Turn on parm 3 mode, back on disconnect" value="2"/>
+		</Value>
+		<Value type="list" genre="config" index="3" label="Mode number EXT input" value="2">
+			<Help>
+				This parameter allows selecting which operating mode the thermostat should go to if the
+				external input is short-circuited. 1=COM, 2=TIME, 3=DRY, 4=ECO, 5=VAC, 6=MAN.
+				Note: When thermostat goes to MAN mode it will be in IDLE state till HEATING key is not
+				pressed manually.
+				Factory default value is 2
+			</Help>
+			<Item label="Manual(Off)" value="1" />
+			<Item label="Comfort" value="2" />
+			<Item label="Time" value="3" />
+			<Item label="Dry floor" value="4" />
+			<Item label="Economy" value="5" />
+			<Item label="Manual (On)" value="6" />
+		</Value>
+		<Value type="list" genre="config" index="4" label="Source sensor" value="1">
+			<Item label="Air sensor" value="1" />
+			<Item label="Air sensor + Floor sensor" value="2" />
+			<Item label="Floor sensor" value="3" />
+			<Item label="Floor sensor + Air sensor" value="4" />
+			<Item label="Power regulator" value="5" />
+			<Item label="Power regulator + Air sensor" value="6" />
+			<Item label="Power regulator + Floor sensor" value="7" />
+		</Value>
+		<Value type="byte" genre="config" index="5" label="Power Regulation ON time" units="Minutes" min="10" max="90" value="15">
+			<Help>
+				This parameter defines floor HEATING time in minutes when Power Regulator (P, PAor PF)
+				is selected as the source sensor in Param 04. Time can be changed in range 10 - 90 minutes.
+				Factory default value is 15 minutes.
+			</Help>
+		</Value>
+		<Value type="byte" genre="config" instance="1" index="6" label="Power Regulation OFF time" units="Minutes" min="10" max="90" value="15">
+			<Help>
+				Floor IDLE time in minutes when Power Regulator (P, PA or PF) is selected as the source
+				sensor. Time can be changed in range 10 - 90 minutes.
+				Factory default value is 15 minutes.</Help>
+		</Value>
+		<Value type="byte" genre="config" instance="1" index="7" label="Dry time" units="Minutes" min="5" max="90" value="30">
+			<Help>
+				This parameter specifies how long in minutes the thermostat will be in HEATING mode when
+				the DRY mode is selected. After this time the thermostat will go to the TIME mode. The time
+				range is 5-90 minutes.
+				Factory default time is 30 minutes.
+			</Help>
+		</Value>
+		<Value type="list" genre="config" instance="1" index="8" label="Automatic time adjustment" min="0" max="1" value="1">
+			<Help>
+				Pull date and time from zwave controller?
+			</Help>
+			<Item label="Yes" value="1" />
+			<Item label="No" value="0" />
+		</Value>
+		<Value type="list" genre="config" instance="1" index="9" label="24Hour / 12Hour" min="0" max="1" value="0">
+			<Help>
+				24 Hour vs 12 hour?
+			</Help>
+			<Item label="24" value="0" />
+			<Item label="12" value="1" />
+		</Value>
+		<Value type="list" genre="config" index="10" label="Week day" value="1" min="1" max="7">
+			<Item label="Monday" value="1"/>
+			<Item label="Tuesday" value="2"/>
+			<Item label="Wednesday" value="3"/>
+			<Item label="Thursday" value="4"/>
+			<Item label="Friday" value="5"/>
+			<Item label="Saturday" value="6"/>
+			<Item label="Sunday" value="7"/>
+		</Value>
+		<Value type="byte" genre="config" index="11" label="Time hour" value="0" min="0" max="23">
+			<Help>
+				Time hour. 0-23
+			</Help>
+		</Value>
+		<Value type="byte" genre="config" index="12" label="Time minute" value="0" min="0" max="59">
+		<Help>
+			Time minute. 0-59
+		</Help>
+		</Value>
+		<Value type="byte" genre="config" index="22" label="Active brightness level" min="1" max="4" value="4">
+			<Help>
+				The brightness level can be selected in the active state from values 1 (lowest brightness) to 4
+				(highest brightness) but the level cannot be lower than the level of brightness for the inactive
+				state (param 23).
+				Factory default value is 4.
+			</Help>
+		</Value>
+		<Value type="byte" genre="config" index="23" label="Inactive brightness level" min="1" max="4" value="3">
+			<Help>
+				Parameter 23 (brL) - Display brightness low level
+				This parameter defines the brightness level of the display in the inactive state. The level can
+				be selected from values 1 to 4 but the level cannot be higher than the level of brightness for
+				the active state (param 22).
+				Factory default value is 3.
+			</Help>
+		</Value>
+		<Value type="list" genre="config" instance="1" index="24" label="Auto brightness" min="0" max="1" value="1">
+			<Help>
+				The thermostat can adjust its display brightness automatically depending on the illumination
+				of the ambient environment. The comfort brightness of the screen can be chosen depending
+				on the room illumination in Parameters 25, 26 and 27.
+				Value 1 = Active the function, Value 0 = Inactive the function
+				Factory default value is 1.
+			</Help>
+			<Item label="Auto brightness" value="1" />
+			<Item label="Manual brightness" value="0" />
+		</Value>
+	</CommandClass>
+	<CommandClass id="114" name="COMMAND_CLASS_MANUFACTURER_SPECIFIC" version="1" request_flags="4"  >
+		<Instance index="1" />
+	</CommandClass>
+	<CommandClass id="115" name="COMMAND_CLASS_POWERLEVEL" version="1" request_flags="4"  >
+		<Instance index="1" />
+		<Value type="list" genre="system" instance="1" index="0" label="Powerlevel" units="dB" read_only="false" write_only="false" value="0">
+			<Item label="Normal" value="0" />
+			<Item label="-1dB" value="1" />
+			<Item label="-2dB" value="2" />
+			<Item label="-3dB" value="3" />
+			<Item label="-4dB" value="4" />
+			<Item label="-5dB" value="5" />
+			<Item label="-6dB" value="6" />
+			<Item label="-7dB" value="7" />
+			<Item label="-8dB" value="8" />
+			<Item label="-9dB" value="9" />
+		</Value>
+		<Value type="byte" genre="system" instance="1" index="1" label="Timeout" units="seconds" read_only="false" write_only="false" min="0" max="255" value="0" />
+		<Value type="button" genre="system" instance="1" index="2" label="Set Powerlevel" units="" read_only="false" write_only="true" min="0" max="0" />
+		<Value type="byte" genre="system" instance="1" index="3" label="Test Node" units="" read_only="false" write_only="false" min="0" max="255" value="0" />
+		<Value type="list" genre="system" instance="1" index="4" label="Test Powerlevel" units="dB" read_only="false" write_only="false" min="0" max="0"  >
+			<Item label="Normal" value="0" />
+			<Item label="-1dB" value="1" />
+			<Item label="-2dB" value="2" />
+			<Item label="-3dB" value="3" />
+			<Item label="-4dB" value="4" />
+			<Item label="-5dB" value="5" />
+			<Item label="-6dB" value="6" />
+			<Item label="-7dB" value="7" />
+			<Item label="-8dB" value="8" />
+			<Item label="-9dB" value="9" />
+		</Value>
+		<Value type="short" genre="system" instance="1" index="5" label="Frame Count" units="" read_only="false" write_only="false" verify_changes="false" min="-32768" max="32767" value="0" />
+		<Value type="button" genre="system" instance="1" index="6" label="Test" units="" read_only="false" write_only="true" verify_changes="false" min="0" max="0" />
+		<Value type="button" genre="system" instance="1" index="7" label="Report" units="" read_only="false" write_only="true" verify_changes="false" min="0" max="0" />
+		<Value type="list" genre="system" instance="1" index="8" label="Test Status" units="" read_only="true" write_only="false" verify_changes="false" min="0" max="0"   size="1">
+			<Item label="Failed" value="0" />
+			<Item label="Success" value="1" />
+			<Item label="In Progress" value="2" />
+		</Value>
+		<Value type="short" genre="system" instance="1" index="9" label="Acked Frames" units="" read_only="true" write_only="false" verify_changes="false" min="-32768" max="32767" value="0" />
+	</CommandClass>
+	<CommandClass id="129" name="COMMAND_CLASS_CLOCK" version="1" request_flags="4"  >
+		<Instance index="1" />
+		<Value type="list" genre="user" instance="1" index="0" label="Day" units="" read_only="false" write_only="false" value="1">
+			<Item label="Monday" value="1" />
+			<Item label="Tuesday" value="2" />
+			<Item label="Wednesday" value="3" />
+			<Item label="Thursday" value="4" />
+			<Item label="Friday" value="5" />
+			<Item label="Saturday" value="6" />
+			<Item label="Sunday" value="7" />
+		</Value>
+		<Value type="byte" genre="user" instance="1" index="1" label="Hour" units="" read_only="false" write_only="false" verify_changes="false" min="0" max="255" value="17" />
+		<Value type="byte" genre="user" instance="1" index="2" label="Minute" units="" read_only="false" write_only="false" verify_changes="false" min="0" max="255" value="4" />
+	</CommandClass>
+	<CommandClass id="133" name="COMMAND_CLASS_ASSOCIATION" version="1" request_flags="4"  >
+		<Instance index="1" />
+		<Associations num_groups="2">
+			<Group index="1" max_associations="10" label="Group 1" auto="true" multiInstance="true">
+				<Node id="1" />
+			</Group>
+			<Group index="2" max_associations="10" label="Group 2" auto="false" multiInstance="true" />
+		</Associations>
+	</CommandClass>
+	<CommandClass id="134" name="COMMAND_CLASS_VERSION" version="1" request_flags="4"  >
+		<Instance index="1" />
+		<Value type="string" genre="system" instance="1" index="0" label="Library Version" units="" read_only="true" write_only="false" verify_changes="false" min="0" max="0" value="3" />
+		<Value type="string" genre="system" instance="1" index="1" label="Protocol Version" units="" read_only="true" write_only="false" verify_changes="false" min="0" max="0" value="4.61" />
+		<Value type="string" genre="system" instance="1" index="2" label="Application Version" units="" read_only="true" write_only="false" verify_changes="false" min="0" max="0" value="1.00" />
+	</CommandClass>
+	<CommandClass id="142" name="COMMAND_CLASS_MULTI_CHANNEL_ASSOCIATION" version="1" request_flags="4"  >
+		<Instance index="1" />
+		<Associations num_groups="2">
+			<Group index="1" max_associations="10" label="Group 1" auto="true" multiInstance="true">
+				<Node id="1" />
+			</Group>
+			<Group index="2" max_associations="10" label="Group 2" auto="false" multiInstance="true" />
+		</Associations>
+	</CommandClass>
+	<CommandClass id="143" name="COMMAND_CLASS_MULTI_CMD" version="1" request_flags="4">
+		<Instance index="1" />
+	</CommandClass>
+
+</Product>

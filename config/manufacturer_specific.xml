@@ -657,6 +657,9 @@
 	</Manufacturer>
 	<Manufacturer id="005b" name="HAI">
 	</Manufacturer>
+	<Manufacturer id="0344" name="Heltun">
+	<Product type="0003" id="0001" name="Floor thermostat HE-ZW-THERM-FL2" config="heltun/HE-ZW-THERM-FL2.xml"/>
+	</Manufacturer>
 	<Manufacturer id="009a" name="Home Auto. Euro">
 	</Manufacturer>
 	<Manufacturer id="0038" name="Home Director">
@@ -1111,8 +1114,8 @@
 		<Product type="0001" id="0001" name="STZW402+ Electronic Thermostat" config="stelpro/stzw402.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0271" name="Steinel">
-		<Product type="0002" id="1a72" name="IS140-2" config="steinel/is140-2.xml"/>	
-		<Product type="0001" id="1a74" name="RS LED D2" config="steinel/rs-led-d2.xml"/> 
+		<Product type="0002" id="1a72" name="IS140-2" config="steinel/is140-2.xml"/>
+		<Product type="0001" id="1a74" name="RS LED D2" config="steinel/rs-led-d2.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0166" name="Swiid">
 		<Product type="0100" id="0100" name="SwiidInter" config="swiid/swiidinter.xml"/>
