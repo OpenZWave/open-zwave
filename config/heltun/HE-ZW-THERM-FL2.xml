@@ -1,24 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!-- HELTUN-ZWAVE-THERMOSTAT-FLOOR2 -->
 <Product xmlns='http://code.google.com/p/open-zwave/'>
-
-	<CommandClass id="32" name="COMMAND_CLASS_BASIC" version="1" request_flags="4"   mapping="67">
-		<Instance index="1" />
-	</CommandClass>
-	<CommandClass id="49" name="COMMAND_CLASS_SENSOR_MULTILEVEL" version="11"  >
-		<Instance index="1" />
-		<Value type="decimal" genre="user" instance="1" index="1" label="Temperature" units="C" read_only="true" write_only="false" min="0" max="0" value="22" />
-		<Value type="decimal" genre="user" instance="1" index="3" label="Luminance" units="lux" read_only="true" write_only="false" min="0" max="0" value="378" />
-		<Value type="decimal" genre="user" instance="1" index="5" label="Relative Humidity" units="%" read_only="true" write_only="false" min="0" max="0" value="39" />
-		<Value type="decimal" genre="user" instance="1" index="24" label="Soil Temperature" units="C" read_only="true" write_only="false" min="0" max="0" value="22" />
-	</CommandClass>
-	<CommandClass id="50" name="COMMAND_CLASS_METER" version="4" request_flags="2"  >
-		<Instance index="1" />
-		<Value type="decimal" genre="user" instance="1" index="0" label="Energy" units="kWh" read_only="true" write_only="false" min="0" max="0" value="0.0" />
-		<Value type="decimal" genre="user" instance="1" index="8" label="Power" units="W" read_only="true" write_only="false" min="0" max="0" value="0" />
-		<Value type="bool" genre="user" instance="1" index="32" label="Exporting" units="" read_only="true" write_only="false" min="0" max="0" value="False" />
-		<Value type="button" genre="system" instance="1" index="33" label="Reset" units="" read_only="false" write_only="true" min="0" max="0" />
-	</CommandClass>
 	<CommandClass id="64" name="COMMAND_CLASS_THERMOSTAT_MODE" version="1" request_flags="4"  >
 		<Instance index="1" />
 		<Value type="list" genre="user" instance="1" index="0" label="Mode" units="" read_only="false" write_only="false" min="0" max="0"   size="1">
@@ -46,15 +28,6 @@
 				<Instance index="1" />
 				<Value type="decimal" genre="user" instance="1" index="1" units="C" value="0" label="Setpoint"/>
 			</CommandClass>
-	<CommandClass id="90" name="COMMAND_CLASS_DEVICE_RESET_LOCALLY" version="1" request_flags="4"  >
-		<Instance index="1" />
-	</CommandClass>
-	<CommandClass id="94" name="COMMAND_CLASS_ZWAVE_PLUS_INFO" version="1" request_flags="4"  >
-		<Instance index="1" />
-		<Value type="byte" genre="system" instance="1" index="0" label="ZWave+ Version" units="" read_only="true" write_only="false" verify_changes="false" min="0" max="255" value="1" />
-		<Value type="short" genre="system" instance="1" index="1" label="InstallerIcon" units="" read_only="true" write_only="false" verify_changes="false" min="-32768" max="32767" value="4608" />
-		<Value type="short" genre="system" instance="1" index="2" label="UserIcon" units="" read_only="true" write_only="false" verify_changes="false" min="-32768" max="32767" value="4608" />
-	</CommandClass>
 	<CommandClass id="112" name="COMMAND_CLASS_CONFIGURATION" version="1" request_flags="4"  >
 		<Value type="list" genre="config" index="1" label="Degree mode" value="0">
 			<Item label="Celsius" value="0"/>
@@ -182,88 +155,4 @@
 			<Item label="Manual brightness" value="0" />
 		</Value>
 	</CommandClass>
-	<CommandClass id="114" name="COMMAND_CLASS_MANUFACTURER_SPECIFIC" version="1" request_flags="4"  >
-		<Instance index="1" />
-	</CommandClass>
-	<CommandClass id="115" name="COMMAND_CLASS_POWERLEVEL" version="1" request_flags="4"  >
-		<Instance index="1" />
-		<Value type="list" genre="system" instance="1" index="0" label="Powerlevel" units="dB" read_only="false" write_only="false" value="0">
-			<Item label="Normal" value="0" />
-			<Item label="-1dB" value="1" />
-			<Item label="-2dB" value="2" />
-			<Item label="-3dB" value="3" />
-			<Item label="-4dB" value="4" />
-			<Item label="-5dB" value="5" />
-			<Item label="-6dB" value="6" />
-			<Item label="-7dB" value="7" />
-			<Item label="-8dB" value="8" />
-			<Item label="-9dB" value="9" />
-		</Value>
-		<Value type="byte" genre="system" instance="1" index="1" label="Timeout" units="seconds" read_only="false" write_only="false" min="0" max="255" value="0" />
-		<Value type="button" genre="system" instance="1" index="2" label="Set Powerlevel" units="" read_only="false" write_only="true" min="0" max="0" />
-		<Value type="byte" genre="system" instance="1" index="3" label="Test Node" units="" read_only="false" write_only="false" min="0" max="255" value="0" />
-		<Value type="list" genre="system" instance="1" index="4" label="Test Powerlevel" units="dB" read_only="false" write_only="false" min="0" max="0"  >
-			<Item label="Normal" value="0" />
-			<Item label="-1dB" value="1" />
-			<Item label="-2dB" value="2" />
-			<Item label="-3dB" value="3" />
-			<Item label="-4dB" value="4" />
-			<Item label="-5dB" value="5" />
-			<Item label="-6dB" value="6" />
-			<Item label="-7dB" value="7" />
-			<Item label="-8dB" value="8" />
-			<Item label="-9dB" value="9" />
-		</Value>
-		<Value type="short" genre="system" instance="1" index="5" label="Frame Count" units="" read_only="false" write_only="false" verify_changes="false" min="-32768" max="32767" value="0" />
-		<Value type="button" genre="system" instance="1" index="6" label="Test" units="" read_only="false" write_only="true" verify_changes="false" min="0" max="0" />
-		<Value type="button" genre="system" instance="1" index="7" label="Report" units="" read_only="false" write_only="true" verify_changes="false" min="0" max="0" />
-		<Value type="list" genre="system" instance="1" index="8" label="Test Status" units="" read_only="true" write_only="false" verify_changes="false" min="0" max="0"   size="1">
-			<Item label="Failed" value="0" />
-			<Item label="Success" value="1" />
-			<Item label="In Progress" value="2" />
-		</Value>
-		<Value type="short" genre="system" instance="1" index="9" label="Acked Frames" units="" read_only="true" write_only="false" verify_changes="false" min="-32768" max="32767" value="0" />
-	</CommandClass>
-	<CommandClass id="129" name="COMMAND_CLASS_CLOCK" version="1" request_flags="4"  >
-		<Instance index="1" />
-		<Value type="list" genre="user" instance="1" index="0" label="Day" units="" read_only="false" write_only="false" value="1">
-			<Item label="Monday" value="1" />
-			<Item label="Tuesday" value="2" />
-			<Item label="Wednesday" value="3" />
-			<Item label="Thursday" value="4" />
-			<Item label="Friday" value="5" />
-			<Item label="Saturday" value="6" />
-			<Item label="Sunday" value="7" />
-		</Value>
-		<Value type="byte" genre="user" instance="1" index="1" label="Hour" units="" read_only="false" write_only="false" verify_changes="false" min="0" max="255" value="17" />
-		<Value type="byte" genre="user" instance="1" index="2" label="Minute" units="" read_only="false" write_only="false" verify_changes="false" min="0" max="255" value="4" />
-	</CommandClass>
-	<CommandClass id="133" name="COMMAND_CLASS_ASSOCIATION" version="1" request_flags="4"  >
-		<Instance index="1" />
-		<Associations num_groups="2">
-			<Group index="1" max_associations="10" label="Group 1" auto="true" multiInstance="true">
-				<Node id="1" />
-			</Group>
-			<Group index="2" max_associations="10" label="Group 2" auto="false" multiInstance="true" />
-		</Associations>
-	</CommandClass>
-	<CommandClass id="134" name="COMMAND_CLASS_VERSION" version="1" request_flags="4"  >
-		<Instance index="1" />
-		<Value type="string" genre="system" instance="1" index="0" label="Library Version" units="" read_only="true" write_only="false" verify_changes="false" min="0" max="0" value="3" />
-		<Value type="string" genre="system" instance="1" index="1" label="Protocol Version" units="" read_only="true" write_only="false" verify_changes="false" min="0" max="0" value="4.61" />
-		<Value type="string" genre="system" instance="1" index="2" label="Application Version" units="" read_only="true" write_only="false" verify_changes="false" min="0" max="0" value="1.00" />
-	</CommandClass>
-	<CommandClass id="142" name="COMMAND_CLASS_MULTI_CHANNEL_ASSOCIATION" version="1" request_flags="4"  >
-		<Instance index="1" />
-		<Associations num_groups="2">
-			<Group index="1" max_associations="10" label="Group 1" auto="true" multiInstance="true">
-				<Node id="1" />
-			</Group>
-			<Group index="2" max_associations="10" label="Group 2" auto="false" multiInstance="true" />
-		</Associations>
-	</CommandClass>
-	<CommandClass id="143" name="COMMAND_CLASS_MULTI_CMD" version="1" request_flags="4">
-		<Instance index="1" />
-	</CommandClass>
-
 </Product>
