@@ -52,7 +52,9 @@ EventImpl::EventImpl
 	
 	pthread_condattr_t ca;
 	pthread_condattr_init( &ca );
+#ifndef __NetBSD__
 	pthread_condattr_setpshared( &ca, PTHREAD_PROCESS_PRIVATE );
+#endif
 	pthread_cond_init( &m_condition, &ca );
 	pthread_condattr_destroy( &ca );
 }

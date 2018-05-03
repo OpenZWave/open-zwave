@@ -123,15 +123,18 @@ export top_builddir
 OBJDIR = $(top_builddir)/.lib
 DEPDIR = $(top_builddir)/.dep
 
-
-
+ifeq ($(UNAME),NetBSD)
+FMTCMD = fmt -g 1
+else
+FMTCMD = fmt -1
+endif
 
 $(OBJDIR)/%.o : %.cpp
 	@echo "Building $(notdir $@)"
 	@$(CXX) -MM $(CFLAGS) $(INCLUDES) $< > $(DEPDIR)/$*.d
 	@mv -f $(DEPDIR)/$*.d $(DEPDIR)/$*.d.tmp
 	@$(SED) -e 's|.*:|$(OBJDIR)/$*.o: $(DEPDIR)/$*.d|' < $(DEPDIR)/$*.d.tmp > $(DEPDIR)/$*.d;
-	@$(SED) -e 's/.*://' -e 's/\\$$//' < $(DEPDIR)/$*.d.tmp | fmt -1 | \
+	@$(SED) -e 's/.*://' -e 's/\\$$//' < $(DEPDIR)/$*.d.tmp | $(FMTCMD) | \
 	  $(SED) -e 's/^ *//' -e 's/$$/:/' >> $(DEPDIR)/.$*.d;
 	@rm -f $(DEPDIR)/$*.d.tmp
 	@$(CXX) $(CFLAGS) $(TARCH) $(INCLUDES) -o $@ $<
@@ -142,7 +145,7 @@ $(OBJDIR)/%.o : %.c
 	@$(CC) -MM $(CFLAGS) $(INCLUDES) $< > $(DEPDIR)/$*.d
 	@mv -f $(DEPDIR)/$*.d $(DEPDIR)/$*.d.tmp
 	@$(SED) -e 's|.*:|$(OBJDIR)/$*.o: $(DEPDIR)/$*.d|' < $(DEPDIR)/$*.d.tmp > $(DEPDIR)/$*.d;
-	@$(SED) -e 's/.*://' -e 's/\\$$//' < $(DEPDIR)/$*.d.tmp | fmt -1 | \
+	@$(SED) -e 's/.*://' -e 's/\\$$//' < $(DEPDIR)/$*.d.tmp | $(FMTCMD) | \
 	  $(SED) -e 's/^ *//' -e 's/$$/:/' >> $(DEPDIR)/.$*.d;
 	@rm -f $(DEPDIR)/$*.d.tmp
 	@$(CC) $(CFLAGS) $(TARCH) $(INCLUDES) -o $@ $<
