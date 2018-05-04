@@ -35,7 +35,7 @@
 			<Help>Show the led state compared to the relay state.</Help>
 			<Item label="Led off" value="0"/>
 			<Item label="Led on / Relay on" value="1"/>
-			<Item label="Led off / Relay off" value="2"/>
+			<Item label="Led on / Relay off" value="2"/>
 		</Value>
 	</CommandClass>
 
