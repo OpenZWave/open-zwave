@@ -6,7 +6,7 @@
     <Value type="list" genre="config" instance="1" index="1" label="Set to default" size="1" value="0x55">
 			<Help>Set all config values to default values (factory settings).</Help>
 			<Item label="Normal operation" value="0x55"/>
-			<Item label="Reset" value="0x0"/>  any value other than 0x55 will reset to default 
+			<Item label="Reset" value="0x0"/>
 		</Value>
     <Value type="byte" genre="config" instance="1" index="2" label="Measure decimals" value="0" min="0" max="3">
 			<Help>The number of decimals the instant energy is reported [0-3].</Help>
