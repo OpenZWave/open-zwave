@@ -3,22 +3,39 @@
 <Product xmlns='http://code.google.com/p/open-zwave/'>
 	<!-- Configuration -->
 	<CommandClass id="112">
-		<Value type="byte" genre="config" instance="1" index="1" label="Set to Default" value="-1">
-			<Help>Set all configuration values to default values (factory settings).</Help>
+    <Value type="list" genre="config" instance="1" index="1" label="Set to default" size="1" value="0x55">
+			<Help>Set all config values to default values (factory settings).</Help>
+			<Item label="Normal operation" value="0x55"/>
+			<Item label="Reset" value="0x0"/>  any value other than 0x55 will reset to default 
 		</Value>
-		<Value type="list" genre="config" instance="1" index="2" label="Startup with last known socket status" size="1" value="0">
+    <Value type="byte" genre="config" instance="1" index="2" label="Measure decimals" value="0" min="0" max="3">
+			<Help>The number of decimals the instant energy is reported [0-3].</Help>
+		</Value>
+    <Value type="short" genre="config" instance="1" index="3" label="Power limit" value="4500" min="0" max="4500" units="Watt">
+			<Help>The relay automatically switches off when the instant measured powered is higher than configured value [0-4500].</Help>
+		</Value>
+		<Value type="list" genre="config" instance="1" index="4" label="Startup with last known socket status" size="1" value="0" >
 			<Help>The state in what the switch is when power is supplied.</Help>
 			<Item label="Off" value="0"/>
-			<Item label="Previous state" value="1"/>
+			<Item label="Last state" value="1"/>
 		</Value>
-		<Value type="byte" genre="config" instance="1" index="9" label="Relay delay time" value="50" units="ms">
-			<Help>When the relay is switched it can't be switched again until the configured time has passed.</Help>
+    <Value type="byte" genre="config" instance="1" index="6" label="Auto meter report: Percentage" value="20" units="%" min="10" max="100">
+			<Help>A percentage that a energy value must be different compared to a previous sent value before a unsolicited meter report is sent [10-100].</Help>
 		</Value>
-		<Value type="list" genre="config" instance="1" index="10" label="Led indicator" size="1" value="1">
+    <Value type="byte" genre="config" instance="1" index="7" label="Auto meter report: Watt" value="10" units="Watt" min="5" max="255">
+			<Help>A watt value that an energy value must be different compared to a previous sent value before a unsolicited meter report is sent [5-255].</Help>
+		</Value>
+    <Value type="byte" genre="config" instance="1" index="8" label="Auto meter report: Time" value="20" units="Seconds" min="10" max="255">
+			<Help>A time value that has to be passed compared to a previous sent value before a unsolicited meter report is sent [10-255].</Help>
+		</Value>
+		<Value type="byte" genre="config" instance="1" index="9" label="Relay delay time" value="50" units="x10 Milliseconds">
+			<Help>When the relay is switched it can't be switched again until the (manual or Z-Wave) configured time has passed.</Help>
+		</Value>
+		<Value type="list" genre="config" instance="1" index="10" label="Light indicator" size="1" value="1">
 			<Help>Show the led state compared to the relay state.</Help>
 			<Item label="Led off" value="0"/>
 			<Item label="Led on / Relay on" value="1"/>
-			<Item label="Led on / Relay off" value="2"/>
+			<Item label="Led off / Relay off" value="2"/>
 		</Value>
 	</CommandClass>
 
