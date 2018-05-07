@@ -92,6 +92,7 @@ ValueRaw::~ValueRaw
 )
 {
 	delete [] m_value;
+	if ( m_valueCheck != NULL ) delete[] m_valueCheck;
 }
 
 string const ValueRaw::GetAsString
