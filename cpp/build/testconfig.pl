@@ -84,7 +84,16 @@ sub CheckConfig {
         if (defined($valueItem)) {
             foreach my $configuration (@{$valueItem}) {
                 if ((defined($configuration->{type})) && (lc $configuration->{type} eq "list") && (not defined($configuration->{size}))) {
-                    LogError($_[0], 2, "Configuration of type list $configuration->{index} size not defined");
+                    LogError($_[0], 2, "Parameter: $configuration->{index} The size must be set for a list");
+                }
+                if ((defined($configuration->{type})) && (lc $configuration->{type} eq "byte") && (defined($configuration->{size}) && ($configuration->{size} != 1 ))) {
+                    LogError($_[0], 2, "Parameter: $configuration->{index} The size is wrong for a byte");
+                }
+                if ((defined($configuration->{type})) && (lc $configuration->{type} eq "short") && (defined($configuration->{size}) && ($configuration->{size} != 2 ))) {
+                    LogError($_[0], 2, "Parameter: $configuration->{index} The size is wrong for a short");
+                }
+                if ((defined($configuration->{type})) && (lc $configuration->{type} eq "int") && (defined($configuration->{size}) && ($configuration->{size} != 3 && $configuration->{size} != 4 ))) {
+                    LogError($_[0], 2, "Parameter: $configuration->{index} The size is wrong for a int");
                 }
              }
         }
@@ -122,13 +131,18 @@ sub CheckFileExists {
 }
 
 sub PrettyPrintErrors() {
-	print "\n\nErrors: (Please Correct before Submitting to OZW)\n";
-	while ((my $key, my $value) = each %errors) {
-		foreach my $detail (@{$value}) {
-			print $key.": ".$detail->{description}." - Error Code $detail->{code}\n";
-		}
-		print "\n";
-	}
+    if (length(%errors) > 1) {
+        print "\n\nErrors: (Please Correct before Submitting to OZW)\n";
+        while ((my $key, my $value) = each %errors) {
+            foreach my $detail (@{$value}) {
+                print $key.": ".$detail->{description}." - Error Code $detail->{code}\n";
+            }
+            print "\n";
+        }
+    }
+    else {
+        print "\n\nNo errors detected (You can submit your changes to OZW)\n";
+    }
 }
 
 sub PrettyPrintWarnings() {
@@ -191,7 +205,7 @@ sub XMLPrintWarnings() {
 #   The arg can be a relative or full path, or
 #   it can be a file located somewhere in @INC.
 sub ReadCfg {
-    my $file = "cpp/build/testconfigsuppressions.cfg";
+    my $file = "./cpp/build/testconfigsuppressions.cfg";
     our $err;
     {   # Put config data into a separate namespace
         package CFG;

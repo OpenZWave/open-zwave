@@ -292,10 +292,10 @@ void ValueList::OnValueRefreshed
 // <ValueList::GetItemIdxByLabel>
 // Get the index of an item from its label
 //-----------------------------------------------------------------------------
-int32 const ValueList::GetItemIdxByLabel
+int32 ValueList::GetItemIdxByLabel
 (
 	string const& _label
-)
+) const
 {
 	for( int32 i=0; i<(int32)m_items.size(); ++i )
 	{
@@ -312,10 +312,10 @@ int32 const ValueList::GetItemIdxByLabel
 // <ValueList::GetItemIdxByValue>
 // Get the index of an item from its value
 //-----------------------------------------------------------------------------
-int32 const ValueList::GetItemIdxByValue
+int32 ValueList::GetItemIdxByValue
 (
 	int32 const _value
-)
+) const
 {
 	for( int32 i=0; i<(int32)m_items.size(); ++i )
 	{

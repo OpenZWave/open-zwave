@@ -185,7 +185,11 @@ bool SerialControllerImpl::Init
 	
 	Log::Write( LogLevel_Info, "Trying to open serial port %s (attempt %d)", device.c_str(), _attempts );
 	
+#ifdef __NetBSD__
+	m_hSerialController = open( device.c_str(), O_RDWR | O_NOCTTY | O_NONBLOCK);
+#else
 	m_hSerialController = open( device.c_str(), O_RDWR | O_NOCTTY, 0 );
+#endif
 
 	if( -1 == m_hSerialController )
 	{

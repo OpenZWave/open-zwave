@@ -1,4 +1,3 @@
-- ForceInstances now limited to association with the controller node.
 Version 1.5
  - Pull Request #743 - Updated Fibaro Devices from Navstev0 (Justin)
  - Pull Request #740 - Updated Fibaro FGMS-001 ID's from Technosf (Justin)
@@ -21,7 +20,7 @@ Version 1.5
  - Pull Request #768 - Small correct Fibaro FGS221 from manual from pepeEL (Justin)
  - Pull Request #773 - Ecolink Door/Window Sensor from nayrnet (Justin)
  - Pull Request #780 - Add D-Link dch-z120 PIR/motion sensor from mattwire (Justin)
- - Pull Request #782 - If we recieve a UPDATE_STATE_NEW_ID_ASSIGNED and the Old and New NodeID's 
+ - Pull Request #782 - If we recieve a UPDATE_STATE_NEW_ID_ASSIGNED and the Old and New NodeID's
    are the same, don't reinitialize the Node from KillerCode (Justin)
  - Issue #774 - Improve support for Aeotec Double Smart switch from dnpwwo (Justin)
  - Issue #796 - Fix NotifyWatchers not releasing Value References from jmattoni (Justin)
@@ -135,7 +134,7 @@ Version 1.5
  - Issue #1031 - Neo CoolCam PIR sensor incomplete Config from fozzyg (Nechry)
  - Add Kaipule IM20 Door/Window Sensor (Nechry)
  - Add Add Yale door lock missing parameters (Nechry)
- - Add Yale Keyless Connected Smart Lock (Nechry) 
+ - Add Yale Keyless Connected Smart Lock (Nechry)
  - Add Yale variante for Keyless Connected Smart Lock (Nechry)
  - Add add Heating Control variante (Nechry)
  - Issue #1056 Added Configuration Variables for Telldus Plugin Switch TZWP-100 from fozzyg (Nechry)
@@ -177,7 +176,49 @@ Version 1.5
  - Add Aeotec ZW129 WallMote Duo (Nechry)
  - Add Aeotec ZW132, ZW139 and ZW140 Nano Switch (Nechry)
  - Add MCOHome Thermostat fan coil MH8-FC-EU (Nechry)
- 
+ - Add Fibaro FGDW002 Door Opening Sensor 2 (Nechry)
+ - Add Qubino ZMNHTDx Smart meter Z-Wave+ config for version 1 to 3 and 4 to 6, assume new device as 4 to 6 (Nechry)
+ - Add Devolo devices (Nechry)
+ - Pull Request #1224 - Add Philio PSP05-D Motionsensor from superjunky (Nechry)
+ - Add Domux devices (Nechry)
+ - Add Hank HKZW-DWS01 Door/Window Sensor (Nechry)
+ - Add Hank HKZW-MS01 Multisensor (Nechry)
+ - Add MCOHome MH9-CO2-WD CO2 Monitor (Nechry)
+ - Add Aeotec ZW122 Water Sensor 6 (Nechry)
+ - Pull Request #1246 Add GE plug-in 2-outlet smart switch from aaronwolen (Nechry)
+ - Pull Request #1247 Add Leviton DZ15S Switch from bmenchaca (Nechry)
+ - Add Popp: Z-Wave CO Detector (Nechry)
+ - Issue #1258 - Add PAN16 Smart energy plug in switch from krejkrejkrej (Nechry)
+ - Issue #1259 - wrong manufacturer DOMUX in XML from michapr (Nechry)
+ - Add Zipato Bulb 2 (Nechry)
+ - Add Zipato rebranded devices from Heiman (Nechry)
+ - Add Domux rebranded devices from Heiman (Nechry)
+ - Issue #1265 New Device: Linear Mains Siren from Ittiz (Nechry)
+ - ForceInstances now limited to association with the controller node.
+ - Issue #1309 - Fix RollerShutter Increment/Decrement in SwitchMultiLevel (Justin)
+ - Add Dome On/Off Plug-In Switch (Nechry)
+ - Add Tronika Touch Panel Wall Controller - ZSC-01D (Nechry)
+ - Add Dome Door/Window Sensor Pro (Nechry)
+ - Add Dome Motion Detector (Nechry)
+ - Add Dome Leak Sensor (Nechry)
+ - Add Dome Mouser (Nechry)
+ - Add Steinel IS140 from Karhujarvi (Nechry)
+ - Add Fibaro FGT-001 - The Heat Controller Radiator Thermostat (Nechry)
+ - Issue #1407 - add TKB TZ79 Power meter Relay Switch from PhP71 (Nechry)
+ - Issue #1405 - add ZW6302 Portable Smart Motion Sensor from jkavenaugh (Nechry)
+ - Pull Request #1365 Added Vision ZL7431 - Single Relay Switch from belyalov (Nechry)
+ - Add Everspring Outdoor Motion Detector SP816 (Nechry)
+ - Add Coolcam SOS Remote Key-Fob RC01Z (Nechry)
+ - Add 2GIG Technologies CT32 Thermostat (Nechry)
+ - Add KAIPULEK Celling PIR Sensor (Nechry)
+ - Add Sensative Strips Comfort (Nechry)
+ - Add Secure Controls (Horstmann) SRT-321 Thermostat (Nechry)
+ - Add Aeotec ZWA001 LED Bulb 6 Multi-White (Nechry)
+ - Add Aeotec ZWA003 NanoMote Quad (Nechry)
+ - Add Aeotec ZWA004 NanoMote One (Nechry)
+ - Add Aeotec ZWA005 TriSensor (Nechry)
+ - Add Devolo Smoke Detector MT02651 (Nechry)
+
 Version 1.4
  - Released 10th Jan, 2016
 
@@ -207,7 +248,7 @@ Version 1.3
  - Fixed issue 406 - Add Remotec ZFM-80 (Justin)
  - Fixed issue 410 - Add Vision ZP3102 (Justin)
  - Fixed issue 412 - Updated Zipato RGB Bulb Config (Justin)
- - Fixed Issue 343 - Add Exceptions instead of Exit for some fatal errors 
+ - Fixed Issue 343 - Add Exceptions instead of Exit for some fatal errors
    Also, add Exceptions if any of the GetValue or SetValue calls in the
    Manager class are passed invalid ValueID's (Justin)
  - Fixed duplicate Vision devices and added a missing id for ZP3102 (Alex)
@@ -228,7 +269,7 @@ Version 1.3
    Issue 367 (Justin)
  - Fixed issue 425 - Bail out of Decrypting Packets if they are too short
    (Justin)
- - Fixed Fibaro FGD211 device config, removed automatic association for group 1&2 (Alex) 
+ - Fixed Fibaro FGD211 device config, removed automatic association for group 1&2 (Alex)
  - Updated Z-Wave.Me device list thanks to Willem (Alex)
  - Fixed Issue 431 - Update Fibaro fgrgbwm441 config thanks to Piotr (Alex)
  - Fixed Issue 433 - Update Fibaro fgwpe config thanks to Piotr (Alex)
@@ -236,7 +277,7 @@ Version 1.3
  - Fixed Issue 434 - Update Fibaro fgbs001 config thanks to Piotr (Alex)
  - Fixed Issue 436 - Update Fibaro fgd211 config thanks to Piotr (Alex)
  - Fixed Issue 437 - Update Qubino ZMNHDA2 config thanks to Piotr (Alex)
- - Added Aeon Siren Gen5 device thanks to Alle (Alex) 
+ - Added Aeon Siren Gen5 device thanks to Alle (Alex)
  - Added GE 12724 3-Way Dimmer Switch device thanks to Dax (Alex)
  - Added additional Fibaro FGBS001 device id thanks to Stef (Alex)
  - Added ConnectHome CH-201 device thanks to Tehnoinstyle (Alex)
@@ -309,7 +350,7 @@ Version 1.3
  - Pull Request #529 - Updated Config for the Zipato MiniKeyPad from Nechry (Justin)
  - Pull Request #528 and #527 - Add Aeon Labs Key Fob Gen5 Config from Nechry (Justin)
  - Add new ID's for BeNext Energy Switch from Rob (Justin)
- - Depreciate the ControllerCommand method in the Manager class and replace with direct 
+ - Depreciate the ControllerCommand method in the Manager class and replace with direct
    function calls (Justin)
  - Pull Request #538 and #541 - Add SwiidInter to manufacturer_specific from Nechry (Justin)
  - Pull Request #545 - Add Philio PST02-A 4 in 1 MultiSensor from Nechry (Justin)
@@ -321,7 +362,7 @@ Version 1.3
  - Fix a crash when dumping the Queue to the Log, reported by Gizmocuz (Justin)
  - Pull Request #555 - Update the dotNet wrapper and OZWForm to use the new
    Manager Methods that replace the BeginControllerCommand Method. From
-   JKlessens (Justin) 
+   JKlessens (Justin)
  - Pull Request #564 - Add Cooper Configs from Stevejbauer (Justin)
  - Pull Request #561 - Add Version String Method from Ikkemaniac (Justin)
  - Pull Request #562 - Fix Windows Build Event with wrong directory from douglasbeck (Justin)
@@ -405,7 +446,7 @@ Version 1.3
    the dotNet wrapper from bufferUnderrun (Justin)
  - OOhhhh. Pretty Colors (Justin)
  - Pull Request #677 - Update for Linear Dimmers PD300Z-2 and WD500Z-1 from vexofp (Justin)
- - Added Aeotec DoorBell and Dry Contact Sensors config files (Justin) 
+ - Added Aeotec DoorBell and Dry Contact Sensors config files (Justin)
  - Issue #679 - Add Thermofloor TF 016 Terhmostat from Cog (Justin)
  - Pull Request #686 - Add Australian Z-Stick Gen5 from phil-nelson (Justin)
  - Pull Request #693 - Notification::GetAsString needs to be Const from Ekarak (Justin)
@@ -439,7 +480,7 @@ Version 1.3
  - Change QueryStage_Probe1 to QueryStage_CacheLoad to reflect this is where we start when loading a device from Cache (Justin)
  - Issue #729 - Add Qubino Flush Dimmer ZMNHJD1 from Stephane guillard (Justin)
 
-Version 1.2 
+Version 1.2
  - Released on 15/10/14
 
 Version 1.1
@@ -480,7 +521,7 @@ Version 1.1
  - Fixed Issue 329 - Update Fibaro FGD211 Config File (Alex)
  - Fixed Issue 330 - Update Fibaro FGS211 Config File (Alex)
  - Fixed Issue 331 - Update Fibaro RGBWM441 Config File (Alex)
- - Add new id for GE Duplex Receptacle (Alex) 
+ - Add new id for GE Duplex Receptacle (Alex)
  - Add 18 new ids for Vision devices (Alex)
  - Add Device Qees RETO Plug-in Switch Plus Config File (Alex)
  - Implement DoorLockLogging Command Class (Justin)
@@ -499,13 +540,13 @@ Version 1.1
  - Fixed Issue 340 - Add Remotec ZRC-100 Remote Control (Alex)
  - Fixed Issue 301 - Add Philio PAN04-1 Relay Insert (Alex)
  - Fixed Issue 341 - Corrected directory/filename errors in manufacturer xml (Alex)
- - Fixed Issue 342 - Added 4 Qubino devices thanks to jeanfrancois (Alex) 
+ - Fixed Issue 342 - Added 4 Qubino devices thanks to jeanfrancois (Alex)
  - Fixed Issue 345 - Added new ids for Fibaro FGK101 and FGBS001 (Alex)
  - Fixed Issue 351 - Added new ids for Vision VS6301 and updated Product Name (Justin)
  - Fixed Issue 348 - Typo in Config Index Number for zwave.me ZME_06436 (Justin)
  - Fix Several Warnings/Initilizers etc (Justin)
  - Fixed Issue 357 - Fixed Qubino manufacturer id from 345 (dec) to 159 (hex) (Alex)
- - Fixed Issue 356 - New ID for Fibaro FGMS001 (Alex) 
+ - Fixed Issue 356 - New ID for Fibaro FGMS001 (Alex)
  - Do Not Open and Close the Log file on each message. Close it during the
    Destructor (Justin)
  - Race Condition in the RemoveDriver call and Notifications. Add a new

@@ -51,6 +51,7 @@ Stream::Stream
 	m_mutex( new Mutex() )
 {
 	m_buffer = new uint8[m_bufferSize];
+	memset(m_buffer, 0x00, m_bufferSize);
 }
 
 //-----------------------------------------------------------------------------
@@ -150,8 +151,9 @@ bool Stream::Put
 
 		memcpy( &m_buffer[m_head], _buffer, block1 );
 		memcpy( m_buffer, &_buffer[block1], block2 );
+		uint8 * logpos = m_buffer + m_head;
 		m_head = block2;
-		LogData( m_buffer + m_head - block1, block1, "      Read (controller->buffer):  ");
+		LogData( logpos, block1, "      Read (controller->buffer):  ");
 		LogData( m_buffer, block2, "      Read (controller->buffer):  ");
 	}
 	else
