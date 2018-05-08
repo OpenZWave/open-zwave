@@ -574,6 +574,7 @@
 		<Product type="0453" id="0110" name="MIMOlite" config="fortrezz/mimolite.xml"/>
 		<Product type="0453" id="0111" name="MIMOlite" config="fortrezz/mimolite.xml"/>
 		<Product type="0463" id="0204" name="MIMO2+" config="fortrezz/mimo2plus.xml"/>
+		<Product type="0463" id="0208" name="MIMO2+" config="fortrezz/mimo2plus.xml"/>
 		<Product type="0473" id="0110" name="FMI Flow Meter" config="fortrezz/fmi.xml"/>
 		<Product type="0513" id="0111" name="GDC1 Siren/Strobe Light Alarm"/>
 	</Manufacturer>
