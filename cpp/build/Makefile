@@ -32,7 +32,7 @@ SHARED_LIB_NAME=libopenzwave.so.$(VERSION)
 SHARED_LIB_UNVERSIONED=libopenzwave.so
 endif
 
-#if we are on a Mac, add these flags and libs to the compile and link phases 
+#if we are on a Mac, add these flags and libs to the compile and link phases
 ifeq ($(UNAME),Darwin)
 CFLAGS	+= -c -DDARWIN
 TARCH	+= -arch i386 -arch x86_64
@@ -117,7 +117,7 @@ clean:
 	@rm -rf $(DEPDIR) $(OBJDIR) $(LIBDIR)/libopenzwave.so* $(LIBDIR)/libopenzwave*.dylib $(LIBDIR)/libopenzwave.a $(top_builddir)/libopenzwave.pc $(top_builddir)/docs/api $(top_builddir)/Doxyfile $(top_srcdir)/cpp/src/vers.cpp
 
 printversion:
-	@echo "Building OpenZWave Version $(GITVERSION)"	
+	@echo "Building OpenZWave Version $(GITVERSION)"
 
 
 -include $(patsubst %.cpp,$(DEPDIR)/%.d,$(tinyxml))
@@ -184,9 +184,9 @@ $(top_builddir)/ozw_config: $(top_srcdir)/cpp/build/ozw_config.in
 	@chmod +x $(top_builddir)/ozw_config
 
 ifeq ($(DOT),)
-HAVE_DOT = -e 's|[@]HAVE_DOT@|NO|g' 
+HAVE_DOT = -e 's|[@]HAVE_DOT@|NO|g'
 else
-HAVE_DOT = -e 's|[@]HAVE_DOT@|YES|g' 
+HAVE_DOT = -e 's|[@]HAVE_DOT@|YES|g'
 endif
 
 $(top_builddir)/Doxyfile: $(top_srcdir)/docs/Doxyfile.in $(top_srcdir)/cpp/src/vers.cpp
@@ -221,7 +221,7 @@ install: $(LIBDIR)/$(SHARED_LIB_NAME) doc $(top_builddir)/libopenzwave.pc $(top_
 	@install -d $(DESTDIR)/$(includedir)/value_classes/
 	@install -m 0644 $(top_srcdir)/cpp/src/value_classes/*.h $(DESTDIR)/$(includedir)/value_classes/
 	@install -d $(DESTDIR)/$(includedir)/platform/
-	@install -m 0644 $(top_srcdir)/cpp/src/platform/*.h $(DESTDIR)/$(includedir)/platform/	
+	@install -m 0644 $(top_srcdir)/cpp/src/platform/*.h $(DESTDIR)/$(includedir)/platform/
 	@install -d $(DESTDIR)/$(includedir)/platform/unix/
 	@install -m 0644 $(top_srcdir)/cpp/src/platform/unix/*.h $(DESTDIR)/$(includedir)/platform/unix/
 	@install -d $(DESTDIR)/$(includedir)/aes/
@@ -234,8 +234,8 @@ install: $(LIBDIR)/$(SHARED_LIB_NAME) doc $(top_builddir)/libopenzwave.pc $(top_
 	@cp -r $(top_srcdir)/docs/* $(DESTDIR)/$(docdir)
 	@if [ -d "$(top_builddir)/docs/html/" ]; then cp -r $(top_builddir)/docs/html/* $(DESTDIR)/$(docdir); fi
 	@echo "Installing Pkg-config Files"
-	@install -d $(pkgconfigdir) 
-	@cp $(top_builddir)/libopenzwave.pc $(pkgconfigdir)
+	@install -d $(DESTDIR)/$(pkgconfigdir)
+	@cp $(top_builddir)/libopenzwave.pc $(DESTDIR)/$(pkgconfigdir)
 	@install -d $(DESTDIR)/$(PREFIX)/bin/
 	@cp $(top_builddir)/ozw_config $(DESTDIR)/$(PREFIX)/bin/ozw_config
 	@chmod 755 $(DESTDIR)/$(PREFIX)/bin/ozw_config
