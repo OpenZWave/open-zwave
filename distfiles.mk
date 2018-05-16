@@ -475,6 +475,7 @@ DISTFILES =	.gitignore \
 	config/widom/UBS104.xml \
 	config/widom/UME304C_S.xml \
 	config/widom/WDS.xml \
+	config/zipato/pan04.xml \
 	config/zipato/MiniKeypad.xml \
 	config/zipato/RGBBulb.xml \
 	config/zipato/RGBBulb2.xml \
