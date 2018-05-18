@@ -89,7 +89,7 @@ bool ThreadImpl::Start
 	pthread_create ( &m_hThread, &ta, ThreadImpl::ThreadProc, this );
 	string threadname("OZW-");
 	threadname.append(m_name);
-#ifndef __APPLE_CC__
+#if !defined(__APPLE_CC__) && !defined(__FreeBSD__)
 	pthread_setname_np( m_hThread, threadname.c_str() );
 #endif
 	//fprintf(stderr, "thread %s starting %08x\n", m_name.c_str(), m_hThread);
