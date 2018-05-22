@@ -6,7 +6,7 @@
     -->
     <!-- Configuration Parameters -->
     <CommandClass id="112">
-        <Value type="list" index="12" genre="config" label="Motion Sensor Sensitivity" min="0" max="8" value="8">
+        <Value type="list" index="12" genre="config" label="Motion Sensor Sensitivity" min="0" max="8" size="1" value="8">
             <Help>Motion Sensor Sensitivity. 0 - Sensor is OFF, 8 - Max sensitivity.</Help>
             <Item label="OFF" value="0"/>
             <Item label="1" value="1"/>
@@ -23,7 +23,7 @@
             <Item label="Disable" value="0"/>
             <Item label="Enable" value="1"/>
         </Value>
-        <Value type="list" index="15" genre="config" label="Value for Basic Set Command" units="" min="0" max="1" value="0">
+        <Value type="list" index="15" genre="config" label="Value for Basic Set Command" units="" min="0" max="1" size="1" value="0">
             <Help>
                 Define BASIC SET VALUE to nodes associated with group 2 when motion alarm is triggered and is canceled.
             </Help>
@@ -39,7 +39,7 @@
         <Value type="short" index="18" genre="config" label="Motion Timeout Interval" units="seconds" min="0" max="65525" value="600">
             <Help>Motion Timeout Interval, seconds</Help>
         </Value>
-        <Value type="list" index="32" genre="config" label="Low battery threshold" units="%" min="0" max="50" value="20">
+        <Value type="list" index="32" genre="config" label="Low battery threshold" units="%" min="0" max="50" size="1" value="20">
             <Help>Low battery reporting threshold, %</Help>
             <Item label="0" value="0"/>
             <Item label="10" value="10"/>
