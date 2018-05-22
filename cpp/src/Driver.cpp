@@ -37,10 +37,12 @@
 #include "platform/Event.h"
 #include "platform/Mutex.h"
 #include "platform/SerialController.h"
+#ifdef USE_HID
 #ifdef WINRT
 #include "platform/winRT/HidControllerWinRT.h"
 #else
 #include "platform/HidController.h"
+#endif
 #endif
 #include "platform/Thread.h"
 #include "platform/Log.h"
@@ -225,11 +227,13 @@ m_nonceReportSentAttempt( 0 )
 
 	initNetworkKeys(false);
 
+#ifdef USE_HID
 	if( ControllerInterface_Hid == _interface )
 	{
 		m_controller = new HidController();
 	}
 	else
+#endif
 	{
 		m_controller = new SerialController();
 	}
