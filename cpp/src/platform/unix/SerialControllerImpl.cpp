@@ -34,10 +34,6 @@
 #include "SerialControllerImpl.h"
 #include "platform/Log.h"
 
-#ifdef __linux__
-#include <libudev.h>
-#endif
-
 using namespace OpenZWave;
 
 //-----------------------------------------------------------------------------
