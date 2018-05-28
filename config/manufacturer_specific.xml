@@ -628,6 +628,12 @@
 	<Manufacturer id="0014" name="GoControl">
 		<Product type="5442" id="5436" name="GC-TBZ48L Battery Powered Z-Wave Plus Thermostat" config="gocontrol/GC-TBZ48L.xml" />
 	</Manufacturer>
+	<Manufacturer id="026e" name="Graber">
+		<Product type="4252" id="5a31" name="BRZ1 Remote Control" config="graber/brz1.xml"/>
+		<Product type="5253" id="5a31" name="RSZ1 Roller Shade"/>
+		<Product type="5643" id="5a31" name="VCZ1 Virtual Cord Remote Control" config="graber/vcz1.xml"/>
+		<Product type="4353" id="5a31" name="CSZ1 Cellular Shade"/>
+	</Manufacturer>
 	<Manufacturer id="0099" name="GreenWave">
 		<Product type="0001" id="0002" name="One Gateway"/>
 		<Product type="0002" id="0002" name="PowerNode 1 port" config="greenwave/powernode1.xml"/>
