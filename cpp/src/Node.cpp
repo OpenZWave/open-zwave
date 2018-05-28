@@ -1848,7 +1848,7 @@ void Node::SetLocation
 
 //-----------------------------------------------------------------------------
 // <Node::PacketDelay>
-// Set PacketDelay value for the node
+// Set the new param PacketDelay value for the node
 //-----------------------------------------------------------------------------
 void Node::SetPacketDelay
 (
