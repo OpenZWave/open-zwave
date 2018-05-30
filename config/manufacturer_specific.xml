@@ -512,6 +512,7 @@
 		<Product type="0202" id="1002" name="FGS222 Double Relay Switch 2x1.5kW" config="fibaro/fgs222.xml" />
 		<Product type="0202" id="3002" name="FGS222 Double Relay Switch 2x1.5kW" config="fibaro/fgs222.xml" />
 		<Product type="0203" id="1000" name="FGS223 Double Relay" config="fibaro/fgs223.xml"/>
+		<Product type="0203" id="2000" name="FGS223 Double Relay" config="fibaro/fgs223.xml"/>
 		<Product type="0203" id="3000" name="FGS223 Double Relay" config="fibaro/fgs223.xml"/>
 		<Product type="0600" id="1000" name="FGWPE/F Wall Plug" config="fibaro/fgwpe.xml" />
 		<Product type="0200" id="1000" name="FGWPE/F Wall Plug" config="fibaro/fgwpe.xml"/>
@@ -1123,8 +1124,8 @@
 		<Product type="0001" id="0001" name="STZW402+ Electronic Thermostat" config="stelpro/stzw402.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0271" name="Steinel">
-		<Product type="0002" id="1a72" name="IS140-2" config="steinel/is140-2.xml"/>	
-		<Product type="0001" id="1a74" name="RS LED D2" config="steinel/rs-led-d2.xml"/> 
+		<Product type="0002" id="1a72" name="IS140-2" config="steinel/is140-2.xml"/>
+		<Product type="0001" id="1a74" name="RS LED D2" config="steinel/rs-led-d2.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0166" name="Swiid">
 		<Product type="0100" id="0100" name="SwiidInter" config="swiid/swiidinter.xml"/>
