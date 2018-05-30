@@ -85,6 +85,11 @@ DISTFILES =	.gitignore \
 	config/aeotec/zw132.xml \
 	config/aeotec/zw139.xml \
 	config/aeotec/zw140.xml \
+	config/aeotec/zwa001.xml \
+	config/aeotec/zwa002.xml \
+	config/aeotec/zwa003.xml \
+	config/aeotec/zwa004.xml \
+	config/aeotec/zwa005.xml \
 	config/assa_abloy/ConexisL1.xml \
 	config/assa_abloy/KeyfreeConnected-plus.xml \
 	config/assa_abloy/KeyfreeConnected.xml \
@@ -93,6 +98,7 @@ DISTFILES =	.gitignore \
 	config/assa_abloy/TouchDeadbolt.xml \
 	config/assa_abloy/TouchLever.xml \
 	config/assa_abloy/nexTouch.xml \
+	config/august/asl-03.xml \
 	config/cooper/RF9501.xml \
 	config/cooper/RF9505-T.xml \
 	config/cooper/RF9517.xml \
@@ -112,6 +118,7 @@ DISTFILES =	.gitignore \
 	config/devolo/mt02792.xml \
 	config/devolo/mt2646.xml \
 	config/devolo/mt2647.xml \
+	config/devolo/mt2651.xml \
 	config/devolo/mt2652.xml \
 	config/devolo/mt2653.xml \
 	config/devolo/mt2756.xml \
@@ -247,6 +254,7 @@ DISTFILES =	.gitignore \
 	config/greenwave/powernode1.xml \
 	config/greenwave/powernode6.xml \
 	config/hank/hkzw-dws01.xml \
+	config/hank/hkzw-fld01.xml \
 	config/hank/hkzw-ms01.xml \
 	config/hank/hkzw-rgb01.xml \
 	config/hank/hkzw-so01-smartplug.xml \
@@ -264,7 +272,9 @@ DISTFILES =	.gitignore \
 	config/heiman/HS2SK-Z.xml \
 	config/homeseer/ezmotionplus.xml \
 	config/homeseer/hs-wd100plus.xml \
+	config/homeseer/hs-wd200plus.xml \
 	config/homeseer/hs-ws100plus.xml \
+	config/homeseer/hs-ws200plus.xml \
 	config/homeseer/hsm100.xml \
 	config/homeseer/hsm200.xml \
 	config/homeseer/ztroller.xml \
@@ -276,10 +286,14 @@ DISTFILES =	.gitignore \
 	config/horstmann/ses302.xml \
 	config/horstmann/ses303.xml \
 	config/horstmann/sir321.xml \
+	config/horstmann/srt321.xml \
 	config/horstmann/srt323.xml \
 	config/horstmann/ssr302.xml \
 	config/idlock/idlock101.xml \
 	config/ingersoll/dwzwave1.xml \
+	config/inovelli/nzw30.xml \
+	config/inovelli/nzw31.xml \
+	config/inovelli/nzw97.xml \
 	config/inovelli/simple_module.xml \
 	config/intermatic/ca8900.xml \
 	config/iris/rangeextender.xml \
@@ -409,7 +423,7 @@ DISTFILES =	.gitignore \
 	config/schlagelink/itemp.xml \
 	config/schlagelink/minikeypad.xml \
 	config/sensative/strips.xml \
-	config/sensative/stripsconfort.xml \
+	config/sensative/stripscomfort.xml \
 	config/shenzen_neo/ls01ch.xml \
 	config/shenzen_neo/ls02ch.xml \
 	config/shenzen_neo/nas-ab01z.xml \
@@ -419,6 +433,7 @@ DISTFILES =	.gitignore \
 	config/shenzen_neo/nas-wr01z.xml \
 	config/shenzen_neo/nas-ws02z.xml \
 	config/steinel/is140-2.xml \
+	config/steinel/rs-led-d2.xml \
 	config/stelpro/stzw402.xml \
 	config/swiid/swiidinter.xml \
 	config/swiid/swiidplug.xml \
@@ -460,6 +475,7 @@ DISTFILES =	.gitignore \
 	config/widom/UBS104.xml \
 	config/widom/UME304C_S.xml \
 	config/widom/WDS.xml \
+	config/zipato/pan04.xml \
 	config/zipato/MiniKeypad.xml \
 	config/zipato/RGBBulb.xml \
 	config/zipato/RGBBulb2.xml \
