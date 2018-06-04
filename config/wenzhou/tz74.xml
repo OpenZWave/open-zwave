@@ -12,8 +12,11 @@
       <Value type="byte" genre="config" instance="1" index="3" label="Invert switch" min="0" max="1" value="0">
         <Help>To change the top of the switch to OFF and the bottom of the switch ON , set parameter 4 to 1.</Help>
       </Value>
-      <Value type="byte" genre="config" instance="1" index="4" label="Edge or Pulse mode" min="0" max="3" value="3">
-        <Help>1:Edge mode 2:Pulse mode 3:Edge-toggle mode</Help>
+      <Value type="list" genre="config" instance="1" index="4" label="Edge or Pulse mode" min="1" max="3" value="3" size="1">
+        <Help>switch mode</Help>
+        <Item label="Edge Mode" value="1" />
+        <Item label="Pulse Mode" value="2" />
+        <Item label="Edge-toggle Mode" value="3" />
       </Value>
     </CommandClass>
 </Product>
