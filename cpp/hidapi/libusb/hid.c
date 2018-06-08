@@ -369,7 +369,11 @@ static wchar_t *get_usb_string(libusb_device_handle *dev, uint8_t idx)
 	inbytes = len-2;
 	outptr = (char*) wbuf;
 	outbytes = sizeof(wbuf);
+#ifdef __NetBSD__
 	res = iconv(ic, (const char ** restrict)&inptr, &inbytes, &outptr, &outbytes);
+#else
+	res = iconv(ic, &inptr, &inbytes, &outptr, &outbytes);
+#endif
 	if (res == (size_t)-1) {
 		LOG("iconv() failed\n");
 		goto err;
