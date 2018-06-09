@@ -59,6 +59,12 @@ extern "C" {
 #define LOG(...) do {} while (0)
 #endif
 
+#ifdef __NetBSD__
+#define ICONV_CONST const
+#else
+#define ICONV_CONST
+#endif
+
 #ifndef __FreeBSD__
 #define DETACH_KERNEL_DRIVER
 #else
@@ -369,11 +375,7 @@ static wchar_t *get_usb_string(libusb_device_handle *dev, uint8_t idx)
 	inbytes = len-2;
 	outptr = (char*) wbuf;
 	outbytes = sizeof(wbuf);
-#ifdef __NetBSD__
-	res = iconv(ic, (const char ** restrict)&inptr, &inbytes, &outptr, &outbytes);
-#else
-	res = iconv(ic, &inptr, &inbytes, &outptr, &outbytes);
-#endif
+	res = iconv(ic, (ICONV_CONST char **)&inptr, &inbytes, &outptr, &outbytes);
 	if (res == (size_t)-1) {
 		LOG("iconv() failed\n");
 		goto err;
