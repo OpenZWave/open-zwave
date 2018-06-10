@@ -58,8 +58,8 @@ endif
 # For 10.2 and later, use iconv from base, no extra include path required.
 
 else ifeq ($(UNAME),NetBSD)
-CFLAGS += -I/usr/pkg/include/libusb-1.0
-LDFLAGS+= -shared -L/usr/pkg/lib -lusb-1.0 -Wl,-rpath=/usr/pkg/lib
+CFLAGS += $(shell pkgconf --cflags libusb-1.0)
+LDFLAGS+= -shared $(shell pkgconf --libs libusb-1.0)
 else
 LDFLAGS += -shared -Wl,-soname,$(SHARED_LIB_NAME)
 LIBS 	+= -ludev
