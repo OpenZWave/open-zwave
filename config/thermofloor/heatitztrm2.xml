@@ -91,7 +91,7 @@
 		</Value>
 		<Value type="list" genre="config" index="17" size="1" label="Temperature display" value="0">
 			<Item label="Display setpoint temperature" value="0"/>
-			<Item label="Display calculated temperature" value="0"/>
+			<Item label="Display calculated temperature" value="1"/>
 		</Value>
 		<Value type="short" index="18" genre="config" label="Button brightness - Dimmed state" min="0" max="100" size="1" value="50">
 			<Help>0-100 (0 - 100%)</Help>
