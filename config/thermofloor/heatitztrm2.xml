@@ -126,7 +126,7 @@
 	</CommandClass>
 
 	<CommandClass id="133" name="COMMAND_CLASS_ASSOCIATION">
-		<Associations num_groups="2">
+		<Associations num_groups="5">
 			<Group index="1" max_associations="7" label="Lifeline"/>
 			<Group index="2" max_associations="7" label="On/Off switch of internal relay"/>
 			<Group index="3" max_associations="7" label="Multilevel sensor reports - Internal sensor"/>
@@ -134,5 +134,11 @@
 			<Group index="5" max_associations="7" label="Multilevel sensor reports - Floor sensor"/>
 		</Associations>
 	</CommandClass>
+
+	<!-- COMMAND_CLASS_MULTI_CHANNEL_ASSOCIATION_V2-->
+	<CommandClass id="142" ForceInstances="true" />
+
+	<!--COMMAND_CLASS_MULTI_CHANNEL_V2 Map endpoints to instances -->
+	<CommandClass id="96" mapping="endpoints" />
 
 </Product>
