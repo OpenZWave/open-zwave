@@ -65,7 +65,7 @@
       <Help>New, reported energy value is calculated based on last reported value. Default setting: 10 (0,1 kWh). Available settings: 1 - 254 (0,01kWh - 2,54kWh). Value of 255 - changes in consumed energy will not be reported. Reports will be sent only in case of polling. Default Setting: 10 (0,1 kWh)</Help>
     </Value>
 
-    <Value type="short" genre="config" instance="1" index="47" label="Time period between reports on power load and energy consumption." value="3600" size="2">
+    <Value type="short" genre="config" instance="1" index="47" label="Time period between reports on power load and energy consumption" value="3600" size="2">
       <Help>Parameter defines time period between reports sent when changes in power load have not been recorded. By default, if power load changes have not been recorded, reports are sent every hour.  Default setting: 3 600 (s), Available settings: 1 - 65534 (s). Value of 65535 - no periodic reports. Reports will be sent only in case of power load / energy consumption changes (parameters 40, 42, 43,45) or in case of polling. Default setting: 3600</Help>
     </Value>
 
@@ -87,7 +87,7 @@
       <Help>Parameter defines the way 2nd association group devices are controlled, depending on the current power load. Available settings: 0 - function inactive, 1 - turn the associated devices on, once the power drops below DOWN value (parameter 50), 2 - turn the associated devices off, once the power drops below DOWN value (parameter 50), 3 - turn the associated devices on, once the power rises above UP value (parameter 51), 4 - turn the associated devices off, once the power rises above UP value (parameter 51), 5 - 1 and 4 combined. Turn the associated devices on, once the power drops below DOWN value (parameter 50). Turn the associated devices off, once the power rises above UP value (parameter 51).  6 - 2 and 3 combined. Turn the associated devices off, once the power drops below DOWN value (parameter 50). Turn the associated devices on, once the power rises above UP value (parameter 51). Default setting: 6</Help>
       <Item label="Function inactive" value="0" />
       <Item label="Turn the associated devices on, once the power drops below DOWN value (parameter 50)" value="1" />
-      <Item label="Turn the associated devices off, once the power drops below DOWN value (parameter 50)  " value="2" />
+      <Item label="Turn the associated devices off, once the power drops below DOWN value (parameter 50)" value="2" />
       <Item label="Turn the associated devices on, once the power rises above UP value (parameter 51)" value="3" />
       <Item label="Turn the associated devices off, once the power rises above UP value (parameter 51)" value="4" />
       <Item label="Turn the associated devices on, once the power drops below DOWN value (parameter 50). Turn the associated devices off, once the power rises above UP value (parameter 51)" value="5" />
@@ -125,7 +125,7 @@
        <Item label="illumination turned off completely" value="8" />
     </Value>
 
-    <Value type="list" genre="config" instance="1" index="63" label="LED ring illumination colour at the Z-Wave network alarm detection. " value="1" size="1">
+    <Value type="list" genre="config" instance="1" index="63" label="LED ring illumination colour at the Z-Wave network alarm detection" value="1" size="1">
       <Help>Default setting: LED ring flashes red / blue / white</Help>
       <Item label="No change in colour. LED ring illumination colour determined by parameters 61 or 62 settings" value="0" />
       <Item label="LED ring flashes red / blue / white" value="1" />
