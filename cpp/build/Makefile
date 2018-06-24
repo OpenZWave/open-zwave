@@ -20,7 +20,9 @@ RELEASE_CFLAGS  := -Wall -Wno-unknown-pragmas -Werror -Wno-format -Wno-error=seq
 DEBUG_LDFLAGS	:= -g
 
 #default Libraries we should link with
+ifneq ($(UNAME),FreeBSD)
 LIBS += -lresolv
+endif
 
 top_srcdir := $(abspath $(dir $(lastword $(MAKEFILE_LIST)))../../)
 

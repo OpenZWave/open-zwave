@@ -16,6 +16,9 @@ export top_builddir
 PREFIX ?= /usr/local
 export PREFIX
 
+UNAME := $(shell uname)
+export UNAME
+
 all: 
 	LDFLAGS="$(LDFLAGS)" CPPFLAGS="$(CPPFLAGS)" $(MAKE) -C $(top_srcdir)/cpp/build/ -$(MAKEFLAGS)
 	LDFLAGS="$(LDFLAGS)" CPPFLAGS="$(CPPFLAGS)" $(MAKE) -C $(top_srcdir)/cpp/examples/MinOZW/ -$(MAKEFLAGS)
