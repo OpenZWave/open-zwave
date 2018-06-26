@@ -538,6 +538,7 @@
 		<Product type="0900" id="4000" name="FGRGBWM441 RGBW Controller" config="fibaro/fgrgbwm441.xml" />
 		<Product type="0c00" id="1000" name="FGSS101 Smoke Sensor" config="fibaro/fgss101.xml" />
 		<Product type="0c02" id="1002" name="FGSD002 Smoke Sensor" config="fibaro/fgsd002.xml" />
+		<Product type="0c02" id="1003" name="FGSD002 Smoke Sensor" config="fibaro/fgsd002.xml" />
 		<Product type="0d01" id="1000" name="FGGC001 Swipe" config="fibaro/fggc001.xml" />
 		<Product type="0d01" id="2000" name="FGGC001 Swipe" config="fibaro/fggc001.xml"/>
 		<Product type="0f01" id="1000" name="FGPB101 Button" config="fibaro/fgpb101.xml" />
