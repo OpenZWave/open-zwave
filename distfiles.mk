@@ -258,6 +258,7 @@ DISTFILES =	.gitignore \
 	config/hank/hkzw-dws01.xml \
 	config/hank/hkzw-fld01.xml \
 	config/hank/hkzw-ms01.xml \
+	config/hank/hkzw-ms02.xml \
 	config/hank/hkzw-rgb01.xml \
 	config/hank/hkzw-so01-smartplug.xml \
 	config/hank/hkzw-so03.xml \
@@ -437,11 +438,13 @@ DISTFILES =	.gitignore \
 	config/shenzen_neo/nas-ws02z.xml \
 	config/steinel/is140-2.xml \
 	config/steinel/rs-led-d2.xml \
+	config/steinel/xled-home-2.xml \
 	config/stelpro/stzw402.xml \
 	config/swiid/swiidinter.xml \
 	config/swiid/swiidplug.xml \
 	config/telldus/tzdw100.xml \
 	config/telldus/tzwp100.xml \
+	config/telldus/tzwp102.xml \
 	config/thermofloor/heatit021.xml \
 	config/thermofloor/heatitztrm2.xml \
 	config/trane/TZEMT400AB32MAA.xml \
