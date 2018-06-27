@@ -62,7 +62,7 @@
                 1 to 100 timeout: 1 second (1) to 100 seconds (100) in 1-second resolution.
                 101 to 200 timeout: 1 minute (101) to 100 minutes (200) 1-minute resolution.
                 201 to 209 timeout: 1 hour (201) to 9 hours (209) in 1-hour resolution.
-                Notice – during the day, this mode cannot be ended remotely due to motion events not being transmitted – only via local motion sensor if enabled.
+                Notice - during the day, this mode cannot be ended remotely due to motion events not being transmitted - only via local motion sensor if enabled.
                 255 Lamp is switched on for TIME (cfg 1). It does not wait for a motion event and works normally via current motion evaluation.
             </Help>
         </Value>
@@ -103,7 +103,7 @@
             <Help>
                 Available settings: 10-50.
                 Time in [100 miliseconds] of maximum delay between BASIC ON and BASIC OFF (and vice versa) to consider this as a sequence.
-                It is typically 1 second, but can be exceptionally longer due to retransmissions and overload – in this case, a longer interval can be allowed (up to 5 seconds).
+                It is typically 1 second, but can be exceptionally longer due to retransmissions and overload - in this case, a longer interval can be allowed (up to 5 seconds).
             </Help>
         </Value>
         <Value genre="config" instance="1" index="16" type="short" label="Motion Off behaviour" units="" size="2" min="0" max="255" value="0">
