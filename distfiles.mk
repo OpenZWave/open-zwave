@@ -251,11 +251,14 @@ DISTFILES =	.gitignore \
 	config/gocontrol/GC-TBZ48L.xml \
 	config/gr/gr105.xml \
 	config/gr/gr105n.xml \
+	config/graber/brz1.xml \
+	config/graber/vcz1.xml \
 	config/greenwave/powernode1.xml \
 	config/greenwave/powernode6.xml \
 	config/hank/hkzw-dws01.xml \
 	config/hank/hkzw-fld01.xml \
 	config/hank/hkzw-ms01.xml \
+	config/hank/hkzw-ms02.xml \
 	config/hank/hkzw-rgb01.xml \
 	config/hank/hkzw-so01-smartplug.xml \
 	config/hank/hkzw-so03.xml \
@@ -271,6 +274,7 @@ DISTFILES =	.gitignore \
 	config/heiman/HS1WL-Z.xml \
 	config/heiman/HS2SK-Z.xml \
 	config/homeseer/ezmotionplus.xml \
+	config/homeseer/hs-ms100plus.xml \
 	config/homeseer/hs-wd100plus.xml \
 	config/homeseer/hs-wd200plus.xml \
 	config/homeseer/hs-ws100plus.xml \
@@ -434,12 +438,15 @@ DISTFILES =	.gitignore \
 	config/shenzen_neo/nas-ws02z.xml \
 	config/steinel/is140-2.xml \
 	config/steinel/rs-led-d2.xml \
+	config/steinel/xled-home-2.xml \
 	config/stelpro/stzw402.xml \
 	config/swiid/swiidinter.xml \
 	config/swiid/swiidplug.xml \
 	config/telldus/tzdw100.xml \
 	config/telldus/tzwp100.xml \
+	config/telldus/tzwp102.xml \
 	config/thermofloor/heatit021.xml \
+	config/thermofloor/heatitztrm2.xml \
 	config/trane/TZEMT400AB32MAA.xml \
 	config/trane/TZEMT400BB32MAA.xml \
 	config/trane/TZEMT524AA21MA.xml \
@@ -470,15 +477,16 @@ DISTFILES =	.gitignore \
 	config/wenzhou/tz67.xml \
 	config/wenzhou/tz68.xml \
 	config/wenzhou/tz69.xml \
+	config/wenzhou/tz74.xml \
 	config/wenzhou/tz79.xml \
 	config/wenzhou/tz88.xml \
 	config/widom/UBS104.xml \
 	config/widom/UME304C_S.xml \
 	config/widom/WDS.xml \
-	config/zipato/pan04.xml \
 	config/zipato/MiniKeypad.xml \
 	config/zipato/RGBBulb.xml \
 	config/zipato/RGBBulb2.xml \
+	config/zipato/pan04.xml \
 	config/zipato/vszd2102.xml \
 	config/zipato/zp3102.xml \
 	config/zooz/zen06.xml \
