@@ -175,6 +175,9 @@
 		<Product type="0103" id="008c" name="ZW140 Dual Nano Switch" config="aeotec/zw140.xml"/>
 		<Product type="0203" id="008c" name="ZW140 Dual Nano Switch" config="aeotec/zw140.xml"/>
 		<Product type="1d03" id="008c" name="ZW140 Dual Nano Switch" config="aeotec/zw140.xml"/>
+		<Product type="0003" id="008d" name="ZW141 Nano Shutter" config="aeotec/zw141.xml"/>
+		<Product type="0103" id="008d" name="ZW141 Nano Shutter" config="aeotec/zw141.xml"/>
+		<Product type="0203" id="008d" name="ZW141 Nano Shutter" config="aeotec/zw141.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0371" name="Aeotec">
 		<Product type="0003" id="0001" name="ZWA001 LED Bulb 6 Multi-White" config="aeotec/zwa001.xml"/>
