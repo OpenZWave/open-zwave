@@ -447,7 +447,7 @@ DISTFILES =	.gitignore \
 	config/telldus/tzwp100.xml \
 	config/telldus/tzwp102.xml \
 	config/thermofloor/heatit021.xml \
-	config/thermofloor/heatitztrm2.xml \
+	config/thermofloor/heatit033.xml \
 	config/trane/TZEMT400AB32MAA.xml \
 	config/trane/TZEMT400BB32MAA.xml \
 	config/trane/TZEMT524AA21MA.xml \
