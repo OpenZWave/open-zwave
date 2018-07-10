@@ -150,6 +150,7 @@ m_numRouteNodes( 0 ),
 m_addingNode( false ),
 m_manufacturerName( "" ),
 m_productName( "" ),
+m_PacketDelay ( 0 ),
 m_nodeName( "" ),
 m_location( "" ),
 m_manufacturerId( 0 ),
@@ -1281,10 +1282,10 @@ void Node::WriteXML
 	snprintf( str, 32, "%d", m_version );
 	nodeElement->SetAttribute( "version", str );
 
-    	if (m_PacketDelay > 0){
-        	snprintf( str, 32, "%d", m_PacketDelay );
-        	nodeElement->SetAttribute( "PacketDelay", str );
-    	}
+    	
+        snprintf( str, 32, "%d", m_PacketDelay );
+        nodeElement->SetAttribute( "PacketDelay", str );
+    	
 	
 	if( m_security )
 	{
