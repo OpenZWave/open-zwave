@@ -24,10 +24,10 @@ LIBDIR := /usr/lib/$(DEB_HOST_MULTIARCH)/
 	dh $@
 
 override_dh_auto_build:
-	CPPFLAGS=$(CPPFLAGS) VERSION_MAJ=$(MAJOR) VERSION_MIN=$(MINOR) VERSION_REV=$(REV) PREFIX=/usr SYSCONFDIR=/etc/openzwave instlibdir=$(LIBDIR) make
+	CPPFLAGS="$(CPPFLAGS)" VERSION_MAJ="$(MAJOR)" VERSION_MIN="$(MINOR)" VERSION_REV="$(REV)" PREFIX="/usr" SYSCONFDIR="/etc/openzwave" instlibdir="$(LIBDIR)" make
 
 override_dh_auto_install:
-	VERSION_MAJ=$(MAJOR) VERSION_MIN=$(MINOR) VERSION_REV=$(REV) DESTDIR=$(DESTDIR) PREFIX=/usr SYSCONFDIR=/etc/openzwave instlibdir=$(LIBDIR) make install
+	VERSION_MAJ="$(MAJOR)" VERSION_MIN="$(MINOR)" VERSION_REV="$(REV)" DESTDIR="$(DESTDIR)" PREFIX=/usr SYSCONFDIR="/etc/openzwave" instlibdir="$(LIBDIR)" make install
 	# install docs in /usr/share/doc/openzwave/, not openzwave-VERSION
 	install -d debian/libopenzwave-doc/usr/share/doc
 	mv debian/tmp/usr/share/doc/openzwave-1* debian/libopenzwave-doc/usr/share/doc/openzwave
