@@ -2,6 +2,6 @@
 <Product xmlns='http://code.google.com/p/open-zwave/'>
 
   <!-- Map endpoints to instances -->
-  <CommandClass id="96" version="2" mapping="all" forceUniqueEndpoints="true" />
+  <CommandClass id="96" version="2" mapping="endpoints" />
   
 </Product>
