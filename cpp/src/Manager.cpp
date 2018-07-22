@@ -3507,7 +3507,14 @@ bool Manager::RemoveWatcher
 		if( ((*it)->m_callback == _watcher ) && ( (*it)->m_context == _context ) )
 		{
 			delete (*it);
-			m_watchers.erase( it );
+			list<Watcher*>::iterator next = m_watchers.erase( it );
+			for( list<list<Watcher*>::iterator*>::iterator extIt = m_watcherIterators.begin(); extIt != m_watcherIterators.end(); ++extIt )
+			{
+				if( (**extIt) == it )
+				{
+					(**extIt) = next;
+				}
+			}
 			m_notificationMutex->Unlock();
 			return true;
 		}
@@ -3528,11 +3535,14 @@ void Manager::NotifyWatchers
 )
 {
 	m_notificationMutex->Lock();
-	for( list<Watcher*>::iterator it = m_watchers.begin(); it != m_watchers.end(); ++it )
+	list<Watcher*>::iterator it = m_watchers.begin();
+	m_watcherIterators.push_back(&it);
+	while( it != m_watchers.end() )
 	{
-		Watcher* pWatcher = *it;
+		Watcher* pWatcher = *(it++);
 		pWatcher->m_callback( _notification, pWatcher->m_context );
 	}
+	m_watcherIterators.pop_back();
 	m_notificationMutex->Unlock();
 }
 
