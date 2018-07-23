@@ -1,3 +1,16 @@
+Version 1.4.3107 - gr-multichannel branch
+   * This PR suuports the U-Fairy G.R. IOT Tech (http://www.gr-smarthome.com/en/) Multichannel witch Module Embedded 3 gang Switch (http://www.gr-smarthome.com/en/h-pd-46.html#_pp=0_304_3_-1) to be used in  OZW and (in my case) on Home Assistant through python-openzwave
+   * That buggy chinese switches incorrectly reports as 0 the COMMAND_CLASS_MULTICHANNEL/MULTIINSTANCE version and causes the V1 of the CC to be used by OZW. The module doesn't support that (after reading the spec I'm not sure if it should, though) and ignores the On/Off commands.
+   * The patch includes:
+      - Added the product ID to the manufacturer_specific.xml file and the specific config file (grb3.xml)
+      - Added a new attribute "version" that fixes the version the CC__MULTICHANNEL/MULTIINSTANCE supports in grb3.xml
+      - Modified MultiInstance::ReadXML() to read the new "version" attribute 
+      - Modified CommandClass::SetVersion() to out-of-line to allow overriding in descendant classes
+      - Overrode MultiInstance::SetVersion() to check and prevent version downgrading or modifying a hinted version  
+    * This branch is forked from 1.4.3107 because is the one currently used in Home Assistant/python-openzwave. Perhaps in the future the people at HA project will unfreeze that dependency, but I was neeeding this change to be effective now.
+    * Tested succesfully with python-openzwave v0.4.3 and Home Assistant 0.69.1 on a RasPI3
+
+
 Version 1.5
  - Pull Request #743 - Updated Fibaro Devices from Navstev0 (Justin)
  - Pull Request #740 - Updated Fibaro FGMS-001 ID's from Technosf (Justin)
