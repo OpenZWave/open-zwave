@@ -1005,7 +1005,13 @@
 	<Manufacturer id="5254" name="Remotec">
 		<Product type="0000" id="531f" name="Z-URC" config="remotec/zurc.xml"/>
 		<Product type="0001" id="8380" name="ZRC-100"/>
-		<Product type="0101" id="8371" name="ZXT-310EU"/>
+		<Product type="0100" id="8371" name="ZXT-310US" config="remotec/zxt-310.xml"/>
+		<Product type="0101" id="8371" name="ZXT-310EU" config="remotec/zxt-310.xml"/>
+		<Product type="0102" id="8371" name="ZXT-310AU" config="remotec/zxt-310.xml"/>
+		<Product type="0103" id="8371" name="ZXT-310IN" config="remotec/zxt-310.xml"/>
+		<Product type="0106" id="8371" name="ZXT-310RU" config="remotec/zxt-310.xml"/>
+		<Product type="0107" id="8371" name="ZXT-310IL" config="remotec/zxt-310.xml"/>
+		<Product type="0108" id="8371" name="ZXT-310BR" config="remotec/zxt-310.xml"/>
 		<Product type="0100" id="8377" name="ZXT-120US" config="remotec/zxt-120.xml"/>
 		<Product type="0101" id="8377" name="ZXT-120EU" config="remotec/zxt-120.xml"/>
 		<Product type="0102" id="8377" name="ZXT-120AU" config="remotec/zxt-120.xml"/>

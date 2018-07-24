@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Product xmlns='http://code.google.com/p/open-zwave/'>
+  <CommandClass id="148" name="COMMAND_CLASS_SIMPLE_AV_CONTROL" version="1" request_flags="5" innif="true">
+		<Instance index="1" endpoint="1" />
+		<Instance index="2" endpoint="2" />
+		<Instance index="3" endpoint="3" />
+		<Instance index="4" endpoint="4" />
+		<Instance index="5" endpoint="5" />
+		<Instance index="6" endpoint="6" />
+		<Value type="short" genre="user" instance="1" index="1" label="Output_1" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="-32768" max="32767" value="0" >
+			<Help>Endpoint 1 output AV command</Help>
+		</Value>
+		<Value type="short" genre="user" instance="2" index="2" label="Output_2" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="-32768" max="32767" value="0" >
+			<Help>Endpoint 2 output AV command</Help>
+		</Value>
+		<Value type="short" genre="user" instance="3" index="3" label="Output_3" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="-32768" max="32767" value="0" >
+			<Help>Endpoint 3 output AV command</Help>
+		</Value>
+		<Value type="short" genre="user" instance="4" index="4" label="Output_4" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="-32768" max="32767" value="0" >
+			<Help>Endpoint 4 output AV command</Help>
+		</Value>
+		<Value type="short" genre="user" instance="5" index="5" label="Output_5" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="-32768" max="32767" value="0" >
+			<Help>Endpoint 5 output AV command</Help>
+		</Value>
+		<Value type="short" genre="user" instance="6" index="6" label="Output_6" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="-32768" max="32767" value="0" >
+			<Help>Endpoint 6 output AV command</Help>
+		</Value>
+	</CommandClass>
+  <CommandClass id="32" name="COMMAND_CLASS_BASIC" version="1" request_flags="5" innif="true">
+    <Instance index="1" endpoint="1" />
+    <Instance index="2" endpoint="2" />
+    <Instance index="3" endpoint="3" />
+    <Instance index="4" endpoint="4" />
+    <Instance index="5" endpoint="5" />
+    <Instance index="6" endpoint="6" />
+    <Value type="byte" genre="basic" instance="1" index="0" label="Basic" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="255" value="255" />
+  </CommandClass>
+  <CommandClass id="96" name="COMMAND_CLASS_MULTI_INSTANCE/CHANNEL" version="3" request_flags="1" innif="true">
+    <Instance index="1" />
+  </CommandClass>
+  <CommandClass id="112" name="COMMAND_CLASS_CONFIGURATION" version="1" request_flags="5" innif="true">
+    <Instance index="1" />
+    <Instance index="2" endpoint="1" />
+    <Instance index="3" endpoint="2" />
+    <Instance index="4" endpoint="3" />
+    <Instance index="5" endpoint="4" />
+    <Instance index="6" endpoint="5" />
+    <Instance index="7" endpoint="6" />
+    <Value type="short" index="27" genre="config" label="IR code number from table" units="">
+      <Help>
+        IR code number for built-in code library. Refer "Code list" for details.
+      </Help>
+    </Value>
+    <Value type="byte" index="38" genre="config" label="End-point selection control" units="" min="1" max="6">
+      <Help>
+        * 1 (0x01) = EP1 
+        * 1 (0x02) = EP2 
+        * 1 (0x03) = EP3 
+        * 1 (0x04) = EP4 
+        * 1 (0x05) = EP5 
+        * 1 (0x06) = EP6 
+      </Help>
+    </Value>
+    <Value type="byte" index="29" genre="config" label="IR Port Mapping" units="" min="1" max="6">
+      <Help>
+        IR output port routing. 
+        Please make sure that the "End point selection control" has completed (if necessary) before process the following setup.
+      </Help>
+    </Value>
+    <Value type="byte" index="28" genre="config" label="IR Output Power" units="" min="0" max="255">
+      <Help>
+        Please  make  sure  that  the  "End  point  selection  control"  has completed (if necessary) before process the following setup. 
+        
+        Set IR output power level by entering: 
+        * 0 (0x00) Normal power mode; 
+        * 255 (0xFF) High power mode; 
+        (default is in high power mode). 
+      </Help>
+    </Value>
+    <Value type="short" index="25" genre="config" label="IR Code Learning" units="">
+      <Help>
+        Please make sure that the "End point selection control" has completed (if necessary) before process the following setup.
+
+        Place the ZXT-310 and your original remote on a flat surface, aimed at each other and 1-3 cm apart from the "L" learning mark.
+        Press and keep holding the key on your original equipment remote which you want to learn for a few seconds.
+
+        Value is the Simple AV command number or key going to be learned.
+        Any incoming operation may probably to wait up to 15s to release until the internal process of parameter has finished.
+
+        (Z-Wave Cmd#, e.g. if POWER key is going to be learnt, input the value: 39 (0x27))
+      </Help>
+    </Value>
+    <Value type="byte" index="26" genre="config" label="Learning status register" units="" read_only="true">
+      <Help>
+        * 0 (0x00): IR channel idle (default)
+        * 1 (0x01): OK
+        * 2 (0x02): Learning
+        * 3 (0x03): Command Full
+        * 4 (0x04): Learning Fail
+      </Help>
+    </Value>
+    <Value type="byte" index="31" genre="config" label="IR transmission mode" units="" min="0" max="255">
+      <Help>
+        Please make sure that the "End point selection control" has completed (if necessary) before process the following setup. 
+
+        * 0 (0x00): Continuous IR transmission mode (default); 
+        * 255 (0xFF): Single shot IR transmission mode; 
+      </Help>
+    </Value>
+  </CommandClass>
+  <CommandClass id="114" name="COMMAND_CLASS_MANUFACTURER_SPECIFIC" version="1" request_flags="1" innif="true">
+    <Instance index="1" />
+    <Value type="int" genre="system" instance="1" index="0" label="Loaded Config Revision" units="" read_only="true" write_only="false" verify_changes="false" poll_intensity="0" min="-2147483648" max="2147483647" value="0" />
+    <Value type="int" genre="system" instance="1" index="1" label="Config File Revision" units="" read_only="true" write_only="false" verify_changes="false" poll_intensity="0" min="-2147483648" max="2147483647" value="0" />
+    <Value type="int" genre="system" instance="1" index="2" label="Latest Available Config File Revision" units="" read_only="true" write_only="false" verify_changes="false" poll_intensity="0" min="-2147483648" max="2147483647" value="0" />
+    <Value type="string" genre="system" instance="1" index="3" label="Device ID" units="" read_only="true" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="0" value="" />
+    <Value type="string" genre="system" instance="1" index="4" label="Serial Number" units="" read_only="true" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="0" value="" />
+  </CommandClass>
+  <CommandClass id="134" name="COMMAND_CLASS_VERSION" version="1" request_flags="5" innif="true">
+    <Instance index="1" />
+    <Value type="string" genre="system" instance="1" index="0" label="Library Version" units="" read_only="true" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="0" />
+    <Value type="string" genre="system" instance="1" index="1" label="Protocol Version" units="" read_only="true" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="0" />
+    <Value type="string" genre="system" instance="1" index="2" label="Application Version" units="" read_only="true" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="0" />
+  </CommandClass>
+</Product>
