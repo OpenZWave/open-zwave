@@ -381,6 +381,7 @@ DISTFILES =	.gitignore \
 	config/popp/123580.xml \
 	config/popp/123601.xml \
 	config/popp/123658.xml \
+	config/popp/700045.xml \
 	config/popp/700168.xml \
 	config/popp/smoke-detector.xml \
 	config/popp/solar-siren.xml \

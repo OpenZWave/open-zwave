@@ -997,6 +997,7 @@
 		<Product type="0004" id="0004" name="009402 10-Year Smoke Detector" config="popp/009402.xml"/>
 		<Product type="0004" id="0011" name="Popp Z-Rain Rain Sensor" config="popp/700168.xml"/>
 		<Product type="0005" id="0001" name="012501 Strike Lock Control" config="popp/012501.xml"/>
+		<Product type="0005" id="0002" name="700045 Universal Keypad" config="popp/700045.xml"/>
 		<Product type="0100" id="0101" name="009303 Battery Wall Controller" config="popp/009303.xml" />
 		<Product type="0100" id="0103" name="Popp KFOB-C Remote Control" config="zwave.me/ZME_KFOB-S.xml" />
 		<Product type="0100" id="0201" name="Smoke Detector and Siren" config="popp/smoke-detector.xml" />
