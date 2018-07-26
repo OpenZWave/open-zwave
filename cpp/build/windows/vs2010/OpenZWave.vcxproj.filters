@@ -387,6 +387,9 @@
     <ClInclude Include="..\..\..\src\command_classes\AVSimple.h">
       <Filter>Command Classes</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\command_classes\AVSimpleCommandItem.h">
+      <Filter>Command Classes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\Driver.cpp">
@@ -741,6 +744,9 @@
       <Filter>Main</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\command_classes\AVSimple.cpp">
+      <Filter>Command Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\command_classes\AVSimpleCommandItem.cpp">
       <Filter>Command Classes</Filter>
     </ClCompile>
   </ItemGroup>
