@@ -26,4 +26,24 @@ namespace OpenZWave
 		uint8 m_sequence;
 	};
 
+	class AVSimpleCommand
+	{
+	public: 
+		AVSimpleCommand(uint16 const _code, string _name, string _description, uint16 const _version);
+		uint16 GetCode();
+		string GetName();
+		string GetDescription();
+		uint16 GetVersion();
+
+		static vector<AVSimpleCommand> GetCommands();
+
+	private:
+		uint16 m_code;
+		string m_name;
+		string m_description;
+		uint16 m_version;
+
+		static vector<AVSimpleCommand> m_commands;
+	};
+
 } // namespace OpenZWave
