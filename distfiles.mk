@@ -85,9 +85,12 @@ DISTFILES =	.gitignore \
 	config/aeotec/zw132.xml \
 	config/aeotec/zw139.xml \
 	config/aeotec/zw140.xml \
+	config/aeotec/zw141.xml \
 	config/aeotec/zwa001.xml \
+	config/aeotec/zwa002.xml \
 	config/aeotec/zwa003.xml \
 	config/aeotec/zwa004.xml \
+	config/aeotec/zwa005.xml \
 	config/assa_abloy/ConexisL1.xml \
 	config/assa_abloy/KeyfreeConnected-plus.xml \
 	config/assa_abloy/KeyfreeConnected.xml \
@@ -116,6 +119,7 @@ DISTFILES =	.gitignore \
 	config/devolo/mt02792.xml \
 	config/devolo/mt2646.xml \
 	config/devolo/mt2647.xml \
+	config/devolo/mt2651.xml \
 	config/devolo/mt2652.xml \
 	config/devolo/mt2653.xml \
 	config/devolo/mt2756.xml \
@@ -248,10 +252,14 @@ DISTFILES =	.gitignore \
 	config/gocontrol/GC-TBZ48L.xml \
 	config/gr/gr105.xml \
 	config/gr/gr105n.xml \
+	config/graber/brz1.xml \
+	config/graber/vcz1.xml \
 	config/greenwave/powernode1.xml \
 	config/greenwave/powernode6.xml \
 	config/hank/hkzw-dws01.xml \
+	config/hank/hkzw-fld01.xml \
 	config/hank/hkzw-ms01.xml \
+	config/hank/hkzw-ms02.xml \
 	config/hank/hkzw-rgb01.xml \
 	config/hank/hkzw-so01-smartplug.xml \
 	config/hank/hkzw-so03.xml \
@@ -267,6 +275,7 @@ DISTFILES =	.gitignore \
 	config/heiman/HS1WL-Z.xml \
 	config/heiman/HS2SK-Z.xml \
 	config/homeseer/ezmotionplus.xml \
+	config/homeseer/hs-ms100plus.xml \
 	config/homeseer/hs-wd100plus.xml \
 	config/homeseer/hs-wd200plus.xml \
 	config/homeseer/hs-ws100plus.xml \
@@ -372,6 +381,7 @@ DISTFILES =	.gitignore \
 	config/popp/123580.xml \
 	config/popp/123601.xml \
 	config/popp/123658.xml \
+	config/popp/700045.xml \
 	config/popp/700168.xml \
 	config/popp/smoke-detector.xml \
 	config/popp/solar-siren.xml \
@@ -402,6 +412,7 @@ DISTFILES =	.gitignore \
 	config/qubino/ZMNHUD1.xml \
 	config/qubino/ZMNHVDx.xml \
 	config/qubino/ZMNHWD1.xml \
+	config/qubino/ZMNHXDx.xml \
 	config/qubino/ZMNHZDx.xml \
 	config/rcs/em52-zw.xml \
 	config/rcs/pm12-zw.xml \
@@ -430,12 +441,15 @@ DISTFILES =	.gitignore \
 	config/shenzen_neo/nas-ws02z.xml \
 	config/steinel/is140-2.xml \
 	config/steinel/rs-led-d2.xml \
+	config/steinel/xled-home-2.xml \
 	config/stelpro/stzw402.xml \
 	config/swiid/swiidinter.xml \
 	config/swiid/swiidplug.xml \
 	config/telldus/tzdw100.xml \
 	config/telldus/tzwp100.xml \
+	config/telldus/tzwp102.xml \
 	config/thermofloor/heatit021.xml \
+	config/thermofloor/heatit033.xml \
 	config/trane/TZEMT400AB32MAA.xml \
 	config/trane/TZEMT400BB32MAA.xml \
 	config/trane/TZEMT524AA21MA.xml \
@@ -466,6 +480,7 @@ DISTFILES =	.gitignore \
 	config/wenzhou/tz67.xml \
 	config/wenzhou/tz68.xml \
 	config/wenzhou/tz69.xml \
+	config/wenzhou/tz74.xml \
 	config/wenzhou/tz79.xml \
 	config/wenzhou/tz88.xml \
 	config/widom/UBS104.xml \
@@ -474,6 +489,7 @@ DISTFILES =	.gitignore \
 	config/zipato/MiniKeypad.xml \
 	config/zipato/RGBBulb.xml \
 	config/zipato/RGBBulb2.xml \
+	config/zipato/pan04.xml \
 	config/zipato/vszd2102.xml \
 	config/zipato/zp3102.xml \
 	config/zooz/zen06.xml \
