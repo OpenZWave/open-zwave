@@ -1,0 +1,6 @@
+version=3
+opts=repack,repacksuffix=+ds,\
+dversionmangle=s/\+(debian|dfsg|ds|deb)(\.\d+)?$//,\
+filenamemangle=s/.*\/[vV]?([\d\.-]+)\.tar\.gz/openzwave-$1.tar.gz/ \
+https://github.com/OpenZWave/open-zwave/releases \
+.*/archive/[vV]?([\d\.]+).tar.gz
