@@ -9,6 +9,7 @@
 #include <chrono>
 
 #include "value_classes/ValueShort.h"
+#include "value_classes/ValueList.h"
 
 using namespace OpenZWave;
 
