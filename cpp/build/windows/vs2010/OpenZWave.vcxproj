@@ -28,18 +28,22 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>$(DefaultPlatformToolset)</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>$(DefaultPlatformToolset)</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>$(DefaultPlatformToolset)</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>$(DefaultPlatformToolset)</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -225,6 +229,7 @@ exit 0</Command>
     <ClInclude Include="..\..\..\src\DNSThread.h" />
     <ClInclude Include="..\..\..\src\Http.h" />
     <ClInclude Include="..\..\..\src\Group.h" />
+    <ClInclude Include="..\..\..\src\Localization.h" />
     <ClInclude Include="..\..\..\src\Manager.h" />
     <ClInclude Include="..\..\..\src\ManufacturerSpecificDB.h" />
     <ClInclude Include="..\..\..\src\Msg.h" />
@@ -342,6 +347,7 @@ exit 0</Command>
     <ClCompile Include="..\..\..\src\DNSThread.cpp" />
     <ClCompile Include="..\..\..\src\Http.cpp" />
     <ClCompile Include="..\..\..\src\Group.cpp" />
+    <ClCompile Include="..\..\..\src\Localization.cpp" />
     <ClCompile Include="..\..\..\src\Manager.cpp" />
     <ClCompile Include="..\..\..\src\ManufacturerSpecificDB.cpp" />
     <ClCompile Include="..\..\..\src\Msg.cpp" />
