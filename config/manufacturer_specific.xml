@@ -1357,4 +1357,18 @@
 	</Manufacturer>
 	<Manufacturer id="0021" name="Zykronix">
 	</Manufacturer>
+	<Manufacturer id="016A" name="Fantem">
+		<Product type="0003" id="0060" name="FT096 Smart Plug" config="Fantem/FT096.xml" />
+		<Product type="0103" id="0060" name="FT096 Smart Plug" config="Fantem/FT096.xml" />
+		<Product type="0203" id="0060" name="FT096 Smart Plug" config="Fantem/FT096.xml" />
+		<Product type="0002" id="0064" name="FT100 Multi Sensor(6 in 1)" config="Fantem/FT100.xml" />
+		<Product type="0102" id="0064" name="FT100 Multi Sensor(6 in 1)" config="Fantem/FT100.xml" />
+		<Product type="0202" id="0064" name="FT100 Multi Sensor(6 in 1)" config="Fantem/FT100.xml" />
+		<Product type="0002" id="0082" name="FT130 Wall Switch-4" config="Fantem/FT130.xml"/>
+		<Product type="0102" id="0082" name="FT130 Wall Switch-4" config="Fantem/FT130.xml"/>
+		<Product type="0202" id="0082" name="FT130 Wall Switch-4" config="Fantem/FT130.xml"/>
+		<Product type="0004" id="0050" name="FT080 Siren" config="Fantem/FT080.xml"/>
+		<Product type="0104" id="0050" name="FT080 Siren" config="Fantem/FT080.xml"/>
+		<Product type="0204" id="0050" name="FT080 Siren" config="Fantem/FT080.xml"/>
+	</Manufacturer>	
 </ManufacturerSpecificData>
