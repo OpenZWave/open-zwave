@@ -60,6 +60,9 @@ endif
 else ifeq ($(UNAME),NetBSD)
 CFLAGS += $(shell pkgconf --cflags libusb-1.0)
 LDFLAGS+= -shared $(shell pkgconf --libs libusb-1.0)
+else ifeq ($(UNAME),SunOS)
+CFLAGS+=  -I$(PREFIX)/include/libusb-1.0
+LDFLAGS+= -shared -lusb-1.0 -liconv
 else
 LDFLAGS += -shared -Wl,-soname,$(SHARED_LIB_NAME)
 LIBS 	+= -ludev
@@ -76,6 +79,8 @@ SOURCES_HIDAPI =$(top_srcdir)/cpp/hidapi/mac
 else ifeq ($(UNAME),FreeBSD)
 SOURCES_HIDAPI =$(top_srcdir)/cpp/hidapi/libusb
 else ifeq ($(UNAME),NetBSD)
+SOURCES_HIDAPI =$(top_srcdir)/cpp/hidapi/libusb
+else ifeq ($(UNAME),SunOS)
 SOURCES_HIDAPI =$(top_srcdir)/cpp/hidapi/libusb
 else
 SOURCES_HIDAPI =$(top_srcdir)/cpp/hidapi/linux
@@ -94,6 +99,8 @@ hidapi := $(notdir $(wildcard $(top_srcdir)/cpp/hidapi/mac/*.c))
 else ifeq ($(UNAME),FreeBSD)
 hidapi := $(notdir $(wildcard $(top_srcdir)/cpp/hidapi/libusb/*.c))
 else ifeq ($(UNAME),NetBSD)
+hidapi := $(notdir $(wildcard $(top_srcdir)/cpp/hidapi/libusb/*.c))
+else ifeq ($(UNAME),SunOS)
 hidapi := $(notdir $(wildcard $(top_srcdir)/cpp/hidapi/libusb/*.c))
 else
 hidapi := $(notdir $(wildcard $(top_srcdir)/cpp/hidapi/linux/*.c)) # we do not want the libusb version

@@ -38,6 +38,15 @@
 #include <libudev.h>
 #endif
 
+#ifdef __sun
+// SunOS doesn't have the cfsetspeed convenience function.
+int
+cfsetspeed(struct termios *tios, speed_t speed)
+{
+	return (cfsetispeed(tios, speed) || cfsetospeed(tios, speed));
+}
+#endif
+
 using namespace OpenZWave;
 
 //-----------------------------------------------------------------------------
@@ -134,7 +143,7 @@ void SerialControllerImpl::ReadThreadProc
 )
 {  
 	uint32 attempts = 0;
-	while( true )
+	while( !_exitEvent->IsSignalled() )
 	{
 		// Init must have been called successfully during Open, so we
 		// don't do it again until the end of the loop
@@ -142,7 +151,7 @@ void SerialControllerImpl::ReadThreadProc
 		{
 			// Enter read loop.  Call will only return if
 			// an exit is requested or an error occurs
-			Read();
+			Read(_exitEvent);
 
 			// Reset the attempts, so we get a rapid retry for temporary errors
 			attempts = 0;
@@ -315,11 +324,12 @@ SerialOpenFailure:
 //-----------------------------------------------------------------------------
 void SerialControllerImpl::Read
 (
+    Event* _exitEvent
 )
 {
 	uint8 buffer[256];
 
-	while( 1 )
+	while( !_exitEvent->IsSignalled() )
         {
 		int32 bytesRead;
 		int err;
