@@ -107,35 +107,56 @@ void AVSimple::CreateVars
 				items.push_back(item);
 
 				// ValueList - create command description for help
-				string codeStr = "ZWave command number: " + command.GetCode();
+				string codeStr = string("ZWave command number: ").append(to_string(command.GetCode()));
 				string descriptionFull = "";
 				if (command.GetDescription() == "")
 				{
-					descriptionFull = command.GetName() + " (" + codeStr + ")\n";
+					descriptionFull = 
+						command
+						.GetName()
+						.append(" (")
+						.append(codeStr)
+						.append(")\n");
 				}
 				else
 				{
-					descriptionFull = command.GetName() + " (" + command.GetDescription() + "; " + codeStr + ")\n";
+					descriptionFull = 
+						command
+						.GetName()
+						.append(" (")
+						.append(command.GetDescription())
+						.append("; ")
+						.append(codeStr)
+						.append(")\n");
 				}
-				helpList +=  descriptionFull;
+				helpList += descriptionFull;
 
 				// ValueShort - create command description for help 
 				if (command.GetDescription() == "")
 				{
-					descriptionFull = command.GetCode() + " (" + command.GetName() + ")\n";
+					descriptionFull = 
+						to_string(command.GetCode())
+						.append(" (")
+						.append(command.GetName())
+						.append(")\n");
 				}
 				else
 				{
-					descriptionFull = command.GetCode() + " (" + command.GetName() + "; " + command.GetDescription() + ")\n";
+					descriptionFull =
+						to_string(command.GetCode())
+						.append(" (")
+						.append(command.GetName())
+						.append("; ")
+						.append(command.GetDescription())
+						.append(")\n");
 				}
 				helpNumeric += descriptionFull;
 			}
 		}
 
-		node->CreateValueList(ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "OutputAVCommand_" + _instance, "", false, true, 2, items, 0, 0, helpList);
+		node->CreateValueList(ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, string("OutputAVCommand_").append(to_string(_instance)), "", false, true, 2, items, 0, 0, helpList);
 		
 		// Create a similar numeric value
-		node->CreateValueShort(ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "OutputAVCommandNumber_" + _instance, "", false, true, 0, 0, helpNumeric);
+		// node->CreateValueShort(ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, string("OutputAVCommandNumber_").append(to_string(_instance)), "", false, true, 0, 0, helpNumeric);
 	}
-
 }

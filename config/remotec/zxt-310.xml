@@ -7,24 +7,6 @@
 		<Instance index="4" endpoint="4" />
 		<Instance index="5" endpoint="5" />
 		<Instance index="6" endpoint="6" />
-		<Value type="short" genre="user" instance="1" index="1" label="Output_1" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="-32768" max="32767" value="0" >
-			<Help>Endpoint 1 output AV command</Help>
-		</Value>
-		<Value type="short" genre="user" instance="2" index="2" label="Output_2" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="-32768" max="32767" value="0" >
-			<Help>Endpoint 2 output AV command</Help>
-		</Value>
-		<Value type="short" genre="user" instance="3" index="3" label="Output_3" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="-32768" max="32767" value="0" >
-			<Help>Endpoint 3 output AV command</Help>
-		</Value>
-		<Value type="short" genre="user" instance="4" index="4" label="Output_4" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="-32768" max="32767" value="0" >
-			<Help>Endpoint 4 output AV command</Help>
-		</Value>
-		<Value type="short" genre="user" instance="5" index="5" label="Output_5" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="-32768" max="32767" value="0" >
-			<Help>Endpoint 5 output AV command</Help>
-		</Value>
-		<Value type="short" genre="user" instance="6" index="6" label="Output_6" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="-32768" max="32767" value="0" >
-			<Help>Endpoint 6 output AV command</Help>
-		</Value>
 	</CommandClass>
   <CommandClass id="32" name="COMMAND_CLASS_BASIC" version="1" request_flags="5" innif="true">
     <Instance index="1" endpoint="1" />
