@@ -1,11 +1,5 @@
-openzwave (1.4.79.gfaea7dd) unstable; urgency=low
+openzwave (1.4+ds-1) unstable; urgency=medium
 
-  * Update to a 1.4.x snapshot.
+  * Initial release 
 
- -- Julien Wajsberg <julien@mozilla.com>  Tue, 15 Mar 2016 15:45:00 +0100
-
-openzwave (1.3.532.ge3defea) unstable; urgency=low
-
-  * Initial Debian packaging.
-
- -- Lucas Nussbaum <lucas@debian.org>  Sat, 07 Nov 2015 10:46:13 +0100
+ -- Justin Hammond <justin@dynam.ac>  Thur, 16 July 2018 22:36:00 +0800

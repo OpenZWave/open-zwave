@@ -381,6 +381,7 @@ DISTFILES =	.gitignore \
 	config/popp/123580.xml \
 	config/popp/123601.xml \
 	config/popp/123658.xml \
+	config/popp/700045.xml \
 	config/popp/700168.xml \
 	config/popp/smoke-detector.xml \
 	config/popp/solar-siren.xml \
@@ -411,6 +412,7 @@ DISTFILES =	.gitignore \
 	config/qubino/ZMNHUD1.xml \
 	config/qubino/ZMNHVDx.xml \
 	config/qubino/ZMNHWD1.xml \
+	config/qubino/ZMNHXDx.xml \
 	config/qubino/ZMNHZDx.xml \
 	config/rcs/em52-zw.xml \
 	config/rcs/pm12-zw.xml \
@@ -536,6 +538,7 @@ DISTFILES =	.gitignore \
 	cpp/build/windows/GIT-VS-VERSION-GEN.bat \
 	cpp/build/windows/installer/buildall.bat \
 	cpp/build/windows/installer/openzwave.nsi \
+	cpp/build/windows/mingw-w64/Makefile \
 	cpp/build/windows/mingw32/Makefile \
 	cpp/build/windows/vs2008/OpenZWave.sln \
 	cpp/build/windows/vs2008/OpenZWave.vcproj \
@@ -847,20 +850,33 @@ DISTFILES =	.gitignore \
 	cpp/tinyxml/tinyxmlerror.cpp \
 	cpp/tinyxml/tinyxmlparser.cpp \
 	debian/MinOZW.1 \
-	debian/TODO \
 	debian/changelog \
 	debian/compat \
 	debian/control \
 	debian/copyright \
+	debian/format \
 	debian/libopenzwave-doc.doc-base \
-	debian/libopenzwave1.3-dev.install \
-	debian/libopenzwave1.3.install \
-	debian/libopenzwave1.3.lintian-overrides \
+	debian/libopenzwave-doc.install \
+	debian/libopenzwave-doc.lintian-overrides-not-needed \
+	debian/libopenzwave1.4-dev.install \
+	debian/libopenzwave1.4.install \
+	debian/libopenzwave1.4.lintian-overrides \
+	debian/openzwave.dsc \
 	debian/openzwave.install \
 	debian/openzwave.manpages \
+	debian/patches/cppflags.patch \
+	debian/patches/gcc8.patch \
+	debian/patches/hardening.patch \
+	debian/patches/series \
+	debian/patches/spelling.patch \
 	debian/rules \
+	debian/shlibs.libopenzwave1.4 \
 	debian/source/format \
+	debian/version-increment.sh \
+	debian/watch \
 	dist.mk \
+	dist/libopenzwave.changes \
+	dist/libopenzwave.spec \
 	distfiles.mk \
 	docs/Doxyfile.in \
 	docs/default.htm \
@@ -943,6 +959,4 @@ DISTFILES =	.gitignore \
 	license/lgpl.txt \
 	license/license.txt \
 	makedist \
-	openzwave.dsc \
-	openzwave.spec \
 	cpp/src/vers.cpp
