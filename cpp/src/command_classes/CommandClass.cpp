@@ -826,3 +826,15 @@ bool CommandClass::RequestStateForAllInstances
 }
 
 
+//-----------------------------------------------------------------------------
+// <CommandClass::SetVersion>
+// Made out-of-line to allow overriding
+//-----------------------------------------------------------------------------
+void CommandClass::SetVersion
+( 
+	uint8 const _version 
+)
+{ 
+	m_version = _version; 
+}
+
