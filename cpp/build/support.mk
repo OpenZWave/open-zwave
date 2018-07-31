@@ -8,6 +8,8 @@ BUILD	?= release
 #the prefix to install the library into
 PREFIX	?= /usr/local
 
+# Don't build HID support by default
+USE_HID ?= 1
 
 #the System we are building on
 UNAME  := $(shell uname -s)

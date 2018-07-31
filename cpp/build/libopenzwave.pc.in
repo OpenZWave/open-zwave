@@ -12,3 +12,4 @@ URL: http://www.openzwave.org/
 Version: @VERSION@
 Libs: -L${libdir} -lopenzwave
 Cflags: -I${includedir} 
+Libs.private: @LIBS@
