@@ -9,7 +9,7 @@ BUILD	?= release
 PREFIX	?= /usr/local
 
 # Don't build HID support by default
-USE_HID ?= 0
+USE_HID ?= 1
 
 #the System we are building on
 UNAME  := $(shell uname -s)
