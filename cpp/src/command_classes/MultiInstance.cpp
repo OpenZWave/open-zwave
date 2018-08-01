@@ -92,8 +92,7 @@ m_numEndPoints( 0 ),
 m_numEndPointsHint( 0 ),
 m_endPointMap( MultiInstanceMapAll ),
 m_endPointFindSupported( false ),
-m_uniqueendpoints( false ),
-m_versionHint( 0 )
+m_uniqueendpoints( false )
 {
 }
 
@@ -148,22 +147,6 @@ void MultiInstance::ReadXML
 	{
 		m_uniqueendpoints = !strcmp( str, "true");
 	}
-	str = _ccElement->Attribute("version");
-	if( TIXML_SUCCESS == _ccElement->QueryIntAttribute( "version", &intVal ) )
-	{
-		m_versionHint = (uint8)intVal;
-		CommandClass::SetVersion(m_versionHint);
-		Log::Write( LogLevel_Info, GetNodeId(), "Version for Command Class %s fixed to %d", GetCommandClassName().c_str(), m_versionHint);
-
-	}
-	str = _ccElement->Attribute("version");
-	if( TIXML_SUCCESS == _ccElement->QueryIntAttribute( "version", &intVal ) )
-	{
-		m_versionHint = (uint8)intVal;
-		CommandClass::SetVersion(m_versionHint);
-		Log::Write( LogLevel_Info, GetNodeId(), "Version for Command Class %s fixed to %d", GetCommandClassName().c_str(), m_versionHint);
-
-	}
 }
 
 //-----------------------------------------------------------------------------
@@ -197,18 +180,6 @@ void MultiInstance::WriteXML
 	if( m_uniqueendpoints )
 	{
 		_ccElement->SetAttribute( "forceUniqueEndpoints", "true" );
-	}
-
-	if( m_versionHint != 0 )
-	{
-		snprintf( str, sizeof(str), "%d", m_versionHint );
-		_ccElement->SetAttribute( "version", str);
-	}
-
-	if( m_versionHint != 0 )
-	{
-		snprintf( str, sizeof(str), "%d", m_versionHint );
-		_ccElement->SetAttribute( "version", str);
 	}
 
 }
@@ -731,33 +702,3 @@ void MultiInstance::HandleMultiChannelEncap
 		}
 	}
 }
-
-
-//-----------------------------------------------------------------------------
-// <MultiInstance::SetVersion>
-// Handle SetVersion() to respect Version Hint and avoid downgrade
-//-----------------------------------------------------------------------------
-void MultiInstance::SetVersion
-(
-	uint8 const _version 
-)
-{ 
-	if( m_versionHint == 0 )
-	{
-		if( _version >= GetVersion() ) 
-		{
-			CommandClass::SetVersion(_version);
-		}
-		else {
-			Log::Write( LogLevel_Warning, GetNodeId(), "Trying to downgrade Command Class %s version from %d to %d. Ignored", GetCommandClassName().c_str(), GetVersion(), _version);
-		}
-	}
-	else {
-		CommandClass::SetVersion(m_versionHint);	// Paranoid code. It should had been set on ReadXML
-		Log::Write( LogLevel_Warning, GetNodeId(), "Trying to modify user-defined Command Class %s version from %d to %d. Ignored", GetCommandClassName().c_str(), m_versionHint, _version);
-	}
-}
-
-
-
-

@@ -77,8 +77,6 @@ namespace OpenZWave
 		virtual string const GetCommandClassName()const{ return StaticGetCommandClassName(); }
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );
 		virtual uint8 GetMaxVersion(){ return 2; }
-		virtual void SetVersion( uint8 const _version );		// To check avoid downgrades
-
 
 		MultiInstanceMapping GetEndPointMap(){ return m_endPointMap; }
 
@@ -107,7 +105,6 @@ namespace OpenZWave
 		bool		m_endPointFindSupported;	// for nodes that (someday may) support endpointfind
 		bool 		m_ignoreUnsolicitedMultiChannelCapabilityReport;
 		bool		m_uniqueendpoints;
-		uint8		m_versionHint;			// for nodes that do not report correct CC version 
 	};
 
 } // namespace OpenZWave
