@@ -33,6 +33,7 @@
 #include "Defs.h"
 #include "Manager.h"
 #include "Driver.h"
+#include "Localization.h"
 #include "Node.h"
 #include "Notification.h"
 #include "Options.h"
@@ -190,6 +191,8 @@ m_notificationMutex( new Mutex() )
 	CommandClasses::RegisterCommandClasses();
 	Scene::ReadScenes();
 	Log::Write(LogLevel_Always, "OpenZwave Version %s Starting Up", getVersionAsString().c_str());
+	Log::Write(LogLevel_Always, "Using Language Localization %s", Localization::Get()->GetSelectedLang().c_str());
+
 }
 
 //-----------------------------------------------------------------------------

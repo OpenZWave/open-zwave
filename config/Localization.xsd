@@ -16,15 +16,6 @@
  <xs:element name='CommandClass'>
   <xs:complexType>
   <xs:sequence>
-   <xs:element ref='Localization:Lang' minOccurs='1' maxOccurs='unbounded'/>
-  </xs:sequence>
-  <xs:attribute name='id' type='xs:string' use='required'/>
-  </xs:complexType>
-</xs:element>
-
- <xs:element name='Lang'>
-  <xs:complexType>
-  <xs:sequence>
    <xs:element ref='Localization:Label' minOccurs='1' maxOccurs='unbounded'/>
    <xs:element ref='Localization:Value' minOccurs='0' maxOccurs='unbounded'/>
   </xs:sequence>

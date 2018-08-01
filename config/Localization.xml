@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Localization xmlns="https://github.com/OpenZWave/open-zwave">
   <CommandClass id="113">
-    <Lang id="en">
       <Label>COMMAND_CLASS_ALARM</Label>
       <Value index="0">
         <Help>Alarm Type Received</Help>
@@ -20,20 +19,14 @@
         <help></help>
         </Value>
         -->
-    </Lang>
   </CommandClass>
   <CommandClass id="34">
-    <Lang id="en">
       <Label>COMMAND_CLASS_APPLICATION_STATUS</Label>
-    </Lang>
   </CommandClass>
   <CommandClass id="133">
-    <Lang id="en">
       <Label>COMMAND_CLASS_ASSOCIATION</Label>
-    </Lang>
   </CommandClass>
   <CommandClass id="155">
-    <Lang id="en">
       <Label>COMMAND_CLASS_ASSOCIATION_COMMAND_CONFIGURATION</Label>
       <Value index="0">
         <Help>Maximum Command Length that can be stored on this node</Help>
@@ -55,10 +48,8 @@
         <Help>The Maximum Number of commands that can be stored</Help>
         <Label>Max Commands</Label>
       </Value>
-    </Lang>
   </CommandClass>
   <CommandClass id="102">
-    <Lang id="en">
       <Label>COMMAND_CLASS_BARRIER_OPERATOR</Label>
       <Value index="1">
         <Help>The Current State of the Barrier</Help>
@@ -76,21 +67,18 @@
         <Help>Enable Visual Notifications of Barrier State Change</Help>
         <Label>Visual Notification</Label>
       </Value>
-    </Lang>
   </CommandClass>
   <CommandClass id="32">
-    <Lang id="en">
       <Label>COMMAND_CLASS_BASIC</Label>
+      <Label lang="fr">COMMAND_CLASS_BASIC</Label>
       <Value index="0">
         <Help>Basic status of the node</Help>
         <Help lang="fr">Basic status of the node</Help>
-        <Label lang="fr">Basic</Label>
         <Label>Basic</Label>
+        <Label lang="fr">Basic</Label>
       </Value>
-    </Lang>
   </CommandClass>
   <CommandClass id="80">
-    <Lang id="en">
       <Label>COMMAND_CLASS_BASIC_WINDOW_COVERING</Label>
       <Value index="0">
         <Help>Open the Window Covering</Help>
@@ -100,24 +88,18 @@
         <Help>Close the Window Covering</Help>
         <Label>Close</Label>
       </Value>
-    </Lang>
   </CommandClass>
   <CommandClass id="128">
-    <Lang id="en">
       <Label>COMMAND_CLASS_BATTERY</Label>
       <Value index="0">
         <Help>Current Battery Level</Help>
         <Label>Battery Level</Label>
       </Value>
-    </Lang>
   </CommandClass>
   <CommandClass id="91">
-    <Lang id="en">
       <Label>COMMAND_CLASS_CENTRAL_SCENE</Label>
-    </Lang>
   </CommandClass>
   <CommandClass id="70">
-    <Lang id="en">
       <Label>COMMAND_CLASS_CLIMATE_CONTROL_SCHEDULE</Label>
       <Value index="0">
         <Help>Schedule</Help>
@@ -159,10 +141,8 @@
         <Help>Override Setback</Help>
         <Label>Override Setback</Label>
       </Value>
-    </Lang>
   </CommandClass>
   <CommandClass id="129">
-    <Lang id="en">
       <Label>COMMAND_CLASS_CLOCK</Label>
       <Value index="0">
         <Help>Day of Week</Help>
@@ -176,10 +156,8 @@
         <Help>Minute</Help>
         <Label>Minute</Label>
       </Value>
-    </Lang>
   </CommandClass>
   <CommandClass id="51">
-    <Lang id="en">
       <Label>COMMAND_CLASS_COLOR</Label>
       <Value index="0">
         <Help>Color (in RGB format)</Help>
@@ -197,16 +175,12 @@
         <Help>Duration to change colors</Help>
         <Label>Duration</Label>
       </Value>
-    </Lang>
   </CommandClass>
   <CommandClass id="112">
-    <Lang id="en">
       <Label>COMMAND_CLASS_CONFIGURATION</Label>
       <!--  We dont do any here - this should come from device configuration files -->
-    </Lang>
   </CommandClass>
   <CommandClass id="33">
-    <Lang id="en">
       <Label>COMMAND_CLASS_CONTROLLER_REPLICATION</Label>
       <Value index="0">
         <Help>Node to Perform the replication with</Help>
@@ -220,20 +194,14 @@
         <Help>Start the Replication</Help>
         <Label>Replicate</Label>
       </Value>
-    </Lang>
   </CommandClass>
   <CommandClass id="86">
-    <Lang id="en">
       <Label>COMMAND_CLASS_CRC_16_ENCAP</Label>
-    </Lang>
   </CommandClass>
   <CommandClass id="90">
-    <Lang id="en">
       <Label>COMMAND_CLASS_DEVICE_RESET_LOCALLY</Label>
-    </Lang>
   </CommandClass>
   <CommandClass id="98">
-    <Lang id="en">
       <Label>COMMAND_CLASS_DOOR_LOCK</Label>
       <Value index="0">
         <Help>State of the Lock</Help>
@@ -263,10 +231,8 @@
         <Help>State of the Exterior Handle Control</Help>
         <Label>Inside Handle Control</Label>
       </Value>
-    </Lang>
   </CommandClass>
   <CommandClass id="76">
-    <Lang id="en">
       <Label>COMMAND_CLASS_DOOR_LOCK_LOGGING</Label>
       <Value index="0">
         <Help>Max Number of Logging Records Stored</Help>
@@ -280,10 +246,8 @@
         <Help>Log Entry</Help>
         <Label>Log Record</Label>
       </Value>
-    </Lang>
   </CommandClass>
   <CommandClass id="144">
-    <Lang id="en">
       <Label>COMMAND_CLASS_ENERGY_PRODUCTION</Label>
       <Value index="0">
         <Help>Current Energy Production Value</Help>
@@ -301,24 +265,18 @@
         <Help>Total Time Producing Energy</Help>
         <Label>Total production time</Label>
       </Value>
-    </Lang>
   </CommandClass>
   <CommandClass id="130">
-    <Lang id="en">
       <Label>COMMAND_CLASS_HAIL</Label>
-    </Lang>
   </CommandClass>
   <CommandClass id="135">
-    <Lang id="en">
       <Label>COMMAND_CLASS_INDICATOR</Label>
       <Value index="0">
         <Help>Current Indicator State</Help>
         <Label>Indicator</Label>
       </Value>
-    </Lang>
   </CommandClass>
   <CommandClass id="137">
-    <Lang id="en">
       <Label>COMMAND_CLASS_LANGUAGE</Label>
       <Value index="0">
         <Help>Current Language Setting of the Device is ISO639-2 Format</Help>
@@ -328,24 +286,18 @@
         <Help>Current Country Setting of the Device in IS3166-1 Format</Help>
         <Label>Country</Label>
       </Value>
-    </Lang>
   </CommandClass>
   <CommandClass id="118">
-    <Lang id="en">
       <Label>COMMAND_CLASS_LOCK</Label>
       <Value index="0">
         <Help>Current State of the Device</Help>
         <Label>Locked</Label>
       </Value>
-    </Lang>
   </CommandClass>
   <CommandClass id="145">
-    <Lang id="en">
       <Label>COMMAND_CLASS_PROPRIETARY</Label>
-    </Lang>
   </CommandClass>
   <CommandClass id="114">
-    <Lang id="en">
       <Label>COMMAND_CLASS_MANUFACTURER_SPECIFIC</Label>
       <Value index="0">
         <Help>Revision of the Config file currently loaded</Help>
@@ -367,50 +319,34 @@
         <Help>Device Serial Number</Help>
         <Label>Serial Number</Label>
       </Value>
-    </Lang>
   </CommandClass>
   <CommandClass id="50">
-    <Lang id="en">
       <Label>COMMAND_CLASS_METER</Label>
       <!--  This has some complex ValueID creation rules. Come back to it later -->
-    </Lang>
   </CommandClass>
   <CommandClass id="53">
-    <Lang id="en">
       <Label>COMMAND_CLASS_METER_PULSE</Label>
       <Value index="0">
         <Help>Number of Pulses sent by the Meter</Help>
         <Label>Count</Label>
       </Value>
-    </Lang>
   </CommandClass>
   <CommandClass id="142">
-    <Lang id="en">
       <Label>COMMAND_CLASS_MULTI_CHANNEL_ASSOCIATION</Label>
-    </Lang>
   </CommandClass>
   <CommandClass id="143">
-    <Lang id="en">
       <Label>COMMAND_CLASS_MULTI_CMD</Label>
-    </Lang>
   </CommandClass>
   <CommandClass id="96">
-    <Lang id="en">
       <Label>COMMAND_CLASS_MULTI_INSTANCE</Label>
-    </Lang>
   </CommandClass>
   <CommandClass id="77">
-    <Lang id="en">
       <Label>COMMAND_CLASS_NODE_NAMING</Label>
-    </Lang>
   </CommandClass>
   <CommandClass id="0">
-    <Lang id="en">
       <Label>COMMAND_CLASS_NO_OPERATION</Label>
-    </Lang>
   </CommandClass>
   <CommandClass id="115">
-    <Lang id="en">
       <Label>COMMAND_CLASS_POWERLEVEL</Label>
       <Value index="0">
         <Help>Output RF PowerLevel</Help>
@@ -452,38 +388,28 @@
         <Help>Number of Messages successfully Acked by the Target Node</Help>
         <Label>Acked Frames</Label>
       </Value>
-    </Lang>
   </CommandClass>
   <CommandClass id="136">
-    <Lang id="en">
       <Label>COMMAND_CLASS_PROPRIETARY</Label>
-    </Lang>
   </CommandClass>
   <CommandClass id="117">
-    <Lang id="en">
       <Label>COMMAND_CLASS_PROTECTION</Label>
       <Value index="0">
         <Help>Protect a device against unintentional control</Help>
         <Label>Protection</Label>
       </Value>
-    </Lang>
   </CommandClass>
   <CommandClass id="43">
-    <Lang id="en">
       <Label>COMMAND_CLASS_SCENE_ACTIVATION</Label>
-    </Lang>
   </CommandClass>
   <CommandClass id="152">
-    <Lang id="en">
       <Label>COMMAND_CLASS_SECURITY</Label>
       <Value index="0">
         <Help>Is Communication with Device Encrypted</Help>
         <Label>Secured</Label>
       </Value>
-    </Lang>
   </CommandClass>
   <CommandClass id="156">
-    <Lang id="en">
       <Label>COMMAND_CLASS_SENSOR_ALARM</Label>
       <Value index="0">
         <Help>General Alarm</Help>
@@ -509,19 +435,15 @@
         <Help>Flood Alarm</Help>
         <Label>Flood</Label>
       </Value>
-    </Lang>
   </CommandClass>
   <CommandClass id="48">
-    <Lang id="en">
       <Label>COMMAND_CLASS_SENSOR_BINARY</Label>
       <Value index="0">
         <Help>Binary Sensor State</Help>
         <Label>Sensor</Label>
       </Value>
-    </Lang>
   </CommandClass>
   <CommandClass id="49">
-    <Lang id="en">
       <Label>COMMAND_CLASS_SENSOR_MULTILEVEL</Label>
       <Value index="0">
         <Help>Undefined Sensor State</Help>
@@ -655,19 +577,15 @@
         <Help>Moisture Sensor Value</Help>
         <Label>Moisture</Label>
       </Value>
-    </Lang>
   </CommandClass>
   <CommandClass id="39">
-    <Lang id="en">
       <Label>COMMAND_CLASS_SWITCH_ALL</Label>
       <Value index="0">
         <Help>Switch All Devices On/Off</Help>
         <Label>Switch All</Label>
       </Value>
-    </Lang>
   </CommandClass>
   <CommandClass id="37">
-    <Lang id="en">
       <Label>COMMAND_CLASS_SWITCH_BINARY</Label>
       <Value index="0">
         <Help>Turn On/Off Device</Help>
@@ -681,10 +599,8 @@
         <Help>How Long to Transition to new State</Help>
         <Label>Transition Duration</Label>
       </Value>
-    </Lang>
   </CommandClass>
   <CommandClass id="38">
-    <Lang id="en">
       <Label>COMMAND_CLASS_SWITCH_MULTILEVEL</Label>
       <Value index="0">
         <Help>The Current Level of the Device</Help>
@@ -722,64 +638,50 @@
         <Help>Decrement the Level of a Device</Help>
         <Label>Dec</Label>
       </Value>
-    </Lang>
   </CommandClass>
   <CommandClass id="40">
-    <Lang id="en">
       <Label>COMMAND_CLASS_SWITCH_TOGGLE_BINARY</Label>
       <Value index="0">
         <Help>Turn On/Off a Device</Help>
         <Label>Toggle Switch</Label>
       </Value>
-    </Lang>
   </CommandClass>
   <CommandClass id="41">
-    <Lang id="en">
       <Label>COMMAND_CLASS_SWITCH_TOGGLE_MULTILEVEL</Label>
       <Value index="0">
         <Help>Set the Device to a Level</Help>
         <Label>Level</Label>
       </Value>
-    </Lang>
   </CommandClass>
   <CommandClass id="68">
-    <Lang id="en">
       <Label>COMMAND_CLASS_THERMOSTAT_FAN_MODE</Label>
       <Value index="0">
         <Help>Set the Fan Mode</Help>
         <Label>Fan Mode</Label>
       </Value>
-    </Lang>
   </CommandClass>
   <CommandClass id="69">
-    <Lang id="en">
       <Label>COMMAND_CLASS_THERMOSTAT_FAN_STATE</Label>
       <Value index="0">
         <Help>Set the Fan State</Help>
         <Label>Fan State</Label>
       </Value>
-    </Lang>
   </CommandClass>
   <CommandClass id="64">
-    <Lang id="en">
       <Label>COMMAND_CLASS_THERMOSTAT_MODE</Label>
       <Value index="0">
         <Help>Set the Thermostat Mode</Help>
         <Label>Mode</Label>
       </Value>
-    </Lang>
   </CommandClass>
   <CommandClass id="66">
-    <Lang id="en">
       <Label>COMMAND_CLASS_THERMOSTAT_OPERATING_STATE</Label>
       <Value index="0">
         <Help>Set the Thermostat Operating State</Help>
         <Label>Operating State</Label>
       </Value>
-    </Lang>
   </CommandClass>
   <CommandClass id="67">
-    <Lang id="en">
       <Label>COMMAND_CLASS_THERMOSTAT_SETPOINT</Label>
       <Value index="0">
         <Help>Set the Thermostat Setpoint Unused 0</Help>
@@ -846,10 +748,8 @@
         <Label>Full Power</Label>
       </Value>
       <!--  Need to find a way to add the *_minimum and *_maximum valueID's as well -->
-    </Lang>
   </CommandClass>
   <CommandClass id="139">
-    <Lang id="en">
       <Label>COMMAND_CLASS_TIME_PARAMETERS</Label>
       <Value index="0">
         <Help>Current Date</Help>
@@ -867,10 +767,8 @@
         <Help>Refresh the Date/Time</Help>
         <Label>Refresh Date/Time</Label>
       </Value>
-    </Lang>
   </CommandClass>
   <CommandClass id="99">
-    <Lang id="en">
       <Label>COMMAND_CLASS_USER_CODE</Label>
       <Value index="0">
         <Help>UserCode 0</Help>
@@ -1896,10 +1794,8 @@
         <Help>Number of User Codes supported by the Device</Help>
         <Label>Code Count</Label>
       </Value>
-    </Lang>
   </CommandClass>
   <CommandClass id="134">
-    <Lang id="en">
       <Label>COMMAND_CLASS_VERSION</Label>
       <Value index="0">
         <Help>Z-Wave Library Version</Help>
@@ -1913,10 +1809,8 @@
         <Help>Application Version</Help>
         <Label>Application Version</Label>
       </Value>
-    </Lang>
   </CommandClass>
   <CommandClass id="132">
-    <Lang id="en">
       <Label>COMMAND_CLASS_WAKE_UP</Label>
       <Value index="0">
         <Help>How often the Device will Wake up to check for pending commands</Help>
@@ -1938,10 +1832,8 @@
         <Help>Step Size on Wake-up interval</Help>
         <Label>Wake-up Interval Step</Label>
       </Value>
-    </Lang>
   </CommandClass>
   <CommandClass id="94">
-    <Lang id="en">
       <Label>COMMAND_CLASS_ZWAVE_PLUS_INFO</Label>
       <Value index="0">
         <Help>ZWave+ Version Supported on the Device</Help>
@@ -1955,6 +1847,5 @@
         <Help>Icon File to use for the User Application</Help>
         <Label>UserIcon</Label>
       </Value>
-    </Lang>
   </CommandClass>
 </Localization>
