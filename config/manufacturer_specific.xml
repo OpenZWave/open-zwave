@@ -738,12 +738,12 @@
 		<Product type="0001" id="0001" name="RAone SmartDimmer Wall Dimmer Module"/>
 	</Manufacturer>
 	<Manufacturer id="0312" name="Inovelli">
-                <Product type="1e01" id="1e01" name="NZW30 Smart Switch" config="inovelli/nzw30.xml"/>
+		<Product type="1e01" id="1e01" name="NZW30 Smart Switch" config="inovelli/nzw30.xml"/>
 		<Product type="1e00" id="1e00" name="NZW30 Smart Switch (w/Scene)" config="inovelli/nzw30.xml"/>
-                <Product type="1e02" id="1e02" name="NZW30 Smart Toggle Switch (w/Scene)" config="inovelli/nzw30.xml"/>
+		<Product type="1e02" id="1e02" name="NZW30 Smart Toggle Switch (w/Scene)" config="inovelli/nzw30.xml"/>
 		<Product type="1f01" id="1f01" name="NZW31 Smart Dimmer" config="inovelli/nzw31.xml"/>
 		<Product type="1f00" id="1f00" name="NZW31 Smart Dimmer (w/Scene)" config="inovelli/nzw31.xml"/>
-                <Product type="1f02" id="1f02" name="NZW31 Smart Toggle Dimmer (w/Scene)" config="inovelli/nzw31.xml"/>
+		<Product type="1f02" id="1f02" name="NZW31 Smart Toggle Dimmer (w/Scene)" config="inovelli/nzw31.xml"/>
 		<Product type="b211" id="241c" name="NZW36 1-Channel Smart Plug-In Module" config="inovelli/simple_module.xml"/>
 		<Product type="2400" id="2400" name="NZW36 1-Channel Smart Plug (w/Scene)" config="inovelli/nzw36.xml"/>
 		<Product type="b221" id="251c" name="NZW37 2-Channel Smart Plug" config="inovelli/simple_module.xml"/>
