@@ -28,6 +28,7 @@
 #include "tinyxml.h"
 #include "Manager.h"
 #include "Driver.h"
+#include "Localization.h"
 #include "Node.h"
 #include "Notification.h"
 #include "Msg.h"
@@ -90,9 +91,7 @@ Value::Value
 	m_refreshTime(0),
 	m_verifyChanges( false ),
 	m_id( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, _type ),
-	m_label( _label ),
 	m_units( _units ),
-	m_help( "" ),
 	m_readOnly( _readOnly ),
 	m_writeOnly( _writeOnly ),
 	m_isSet( _isSet ),
@@ -102,6 +101,7 @@ Value::Value
 	m_checkChange( false ),
 	m_pollIntensity( _pollIntensity )
 {
+	SetLabel(_label);
 }
 
 //-----------------------------------------------------------------------------
@@ -175,7 +175,7 @@ void Value::ReadXML
 	char const* label = _valueElement->Attribute( "label" );
 	if( label )
 	{
-		m_label = label;
+		SetLabel(label);
 	}
 
 	char const* units = _valueElement->Attribute( "units" );
@@ -268,14 +268,8 @@ void Value::ReadXML
 		char const* str = helpElement->Value();
 		if( str && !strcmp( str, "Help" ) )
 		{
-			str = helpElement->GetText();
-			if( str )
-			{
-				m_help = str;
-			}
-			break;
+			Localization::Get()->ReadXMLVIDHelp(_commandClassId, index, -1, helpElement);
 		}
-
 		helpElement = helpElement->NextSiblingElement();
 	}
 }
@@ -300,7 +294,7 @@ void Value::WriteXML
 	snprintf( str, sizeof(str), "%d", (m_id.GetIndex() & 0x3FF) );
 	_valueElement->SetAttribute( "index", str );
 
-	_valueElement->SetAttribute( "label", m_label.c_str() );
+	_valueElement->SetAttribute( "label", GetLabel().c_str() );
 	_valueElement->SetAttribute( "units", m_units.c_str() );
 	_valueElement->SetAttribute( "read_only", m_readOnly ? "true" : "false" );
 	_valueElement->SetAttribute( "write_only", m_writeOnly ? "true" : "false" );
@@ -334,15 +328,7 @@ void Value::WriteXML
 		}
 		_valueElement->SetAttribute( "affects", s.c_str() );
 	}
-
-	if( m_help.length() > 0 )
-	{
-		TiXmlElement* helpElement = new TiXmlElement( "Help" );
-		_valueElement->LinkEndChild( helpElement );
-
-		TiXmlText* textElement = new TiXmlText( m_help.c_str() );
-		helpElement->LinkEndChild( textElement );
-	}
+	Localization::Get()->WriteXMLVIDHelp(m_id.GetCommandClassId(), m_id.GetIndex(),-1, _valueElement);
 }
 
 //-----------------------------------------------------------------------------
@@ -756,3 +742,36 @@ int Value::VerifyRefreshedValue
 		return 1;
 	}
 }
+
+
+string const Value::GetHelp
+(
+) const
+{
+	return Localization::Get()->GetValueHelp(m_id.GetCommandClassId(), m_id.GetIndex(), -1);
+}
+void Value::SetHelp
+(
+		string const& _help,
+		string const lang
+)
+{
+	Localization::Get()->SetValueHelp(m_id.GetCommandClassId(), m_id.GetIndex(), -1, _help, lang);
+}
+
+string const Value::GetLabel
+(
+) const
+{
+	return Localization::Get()->GetValueLabel(m_id.GetCommandClassId(), m_id.GetIndex(), -1);
+}
+void Value::SetLabel
+(
+		string const& _label,
+		string const lang
+)
+{
+	Localization::Get()->SetValueHelp(m_id.GetCommandClassId(), m_id.GetIndex(), -1, _label, lang);
+}
+
+

@@ -97,13 +97,18 @@ private:
     static void ReadCCXMLLabel(uint8 ccID, const TiXmlElement *labelElement);
     static void ReadXMLValue(uint8 ccID, const TiXmlElement *valueElement);
     static void ReadXMLVIDLabel(uint8 ccID, uint16 indexId, uint32 pos, const TiXmlElement *labelElement);
-    static void ReadXMLVIDHelp(uint8 ccID, uint16 indexId, uint32 pos, const TiXmlElement *helpElement);
     static uint64 GetValueKey (uint8 _commandClass, uint16 _index, uint32 _pos = -1);
 public:
     static Localization* Get();
-    void SetupValue(Value *value);
     void SetupCommandClass(CommandClass *cc);
     string GetSelectedLang() { return Localization::m_selectedLang;};
+    bool SetValueHelp(uint8 ccID, uint16 indexID, uint32 pos, string help, string lang="");
+    string const GetValueHelp(uint8 ccID, uint16 indexId, uint32 pos);
+    bool SetValueLabel(uint8 ccID, uint16 indexID, uint32 pos, string help, string lang="");
+    string const GetValueLabel(uint8 ccID, uint16 indexId, int32 pos) const;
+
+    static void ReadXMLVIDHelp(uint8 ccID, uint16 indexId, uint32 pos, const TiXmlElement *helpElement);
+    bool WriteXMLVIDHelp(uint8 ccID, uint16 indexId, uint32 pos, TiXmlElement *valueElement);
     //-----------------------------------------------------------------------------
     // Instance Functions
     //-----------------------------------------------------------------------------

@@ -238,7 +238,8 @@
  <xs:element name='Value'>
   <xs:complexType>
    <xs:sequence>
-    <xs:element ref='Product:Help' minOccurs='0' maxOccurs='1'/>
+    <xs:element ref='Product:Help' minOccurs='0' maxOccurs='unbounded'/>
+    <xs:element ref='Product:Label' minOccurs='0' maxOccurs='unbounded'/>
     <xs:element ref='Product:Item' minOccurs='0' maxOccurs='unbounded'/>
    </xs:sequence>
    <xs:attribute name='type' use='required'>
@@ -313,6 +314,16 @@
     <xs:sequence>
       <xs:element ref="Product:BitSet" minOccurs='0' maxOccurs='unbounded'/>
     </xs:sequence>
+    <xs:attribute name="lang" type="xs:string" use='optional'/>
+  </xs:complexType>
+ </xs:element>
+
+ <xs:element name='Label'>
+  <xs:complexType mixed='true'>
+    <xs:sequence>
+      <xs:element ref="Product:BitSet" minOccurs='0' maxOccurs='unbounded'/>
+    </xs:sequence>
+    <xs:attribute name="lang" type="xs:string" use='optional'/>
   </xs:complexType>
  </xs:element>
 

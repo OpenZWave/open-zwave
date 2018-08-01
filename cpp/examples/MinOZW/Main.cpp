@@ -339,7 +339,7 @@ int main( int argc, char* argv[] )
 			NodeInfo* nodeInfo = *it;
 
 			// skip the controller (most likely node 1)
-			if( nodeInfo->m_nodeId == 1) continue;
+			//if( nodeInfo->m_nodeId == 1) continue;
 
 			printf("NodeID: %d \n ", nodeInfo->m_nodeId);
 			printf("\t NodeName: %s \n ", Manager::Get()->GetNodeName(nodeInfo->m_homeId,nodeInfo->m_nodeId).c_str());

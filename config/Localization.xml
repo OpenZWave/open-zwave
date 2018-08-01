@@ -73,7 +73,7 @@
       <Label lang="fr">COMMAND_CLASS_BASIC</Label>
       <Value index="0">
         <Help>Basic status of the node</Help>
-        <Help lang="fr">Basic status of the node</Help>
+        <Help lang="fr">Basic status of the node in French</Help>
         <Label>Basic</Label>
         <Label lang="fr">Basic</Label>
       </Value>

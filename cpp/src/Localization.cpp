@@ -51,8 +51,6 @@ LabelLocalizationEntry::LabelLocalizationEntry
 m_index( _index ),
 m_pos( _pos )
 {
-	//std::cout << "Index: " << unsigned(m_index) << " pos: " << unsigned(m_pos) << std::endl;
-	//std::cout << "Key: " << GetIdx() << " " << std::bitset<64>(GetIdx()) << std::endl;
 }
 
 
@@ -112,10 +110,6 @@ m_commandClass( _commandClass ),
 m_index( _index ),
 m_pos( _pos )
 {
-	//std::cout << "CommandClass: " << unsigned(m_commandClass) << " Index: " << unsigned(m_index) << " pos: " << unsigned(m_pos) << std::endl;
-	//std::cout << "Key: " << GetIdx() << " " << std::bitset<64>(GetIdx()) << std::endl;
-
-
 }
 
 
@@ -214,11 +208,8 @@ void Localization::ReadXML
 	TiXmlDocument* pDoc = new TiXmlDocument();
 	if( !pDoc->LoadFile( path.c_str(), TIXML_ENCODING_UTF8 ) )
 	{
-		std::cout<< pDoc->ErrorDesc() << std::endl;
 		delete pDoc;
-	    char the_path[256];
-	    getcwd(the_path, 255);
-		Log::Write( LogLevel_Warning, "Unable to load Localization file %s (cwd %s)", path.c_str(), the_path );
+		Log::Write( LogLevel_Warning, "Unable to load Localization file %s", path.c_str());
 		return;
 	}
 	Log::Write( LogLevel_Info, "Loading Localization File %s", path.c_str() );
@@ -266,12 +257,9 @@ void Localization::ReadCCXMLLabel(uint8 ccID, const TiXmlElement *labelElement) 
 
 	if (m_commandClassLocalizationMap.find(ccID) == m_commandClassLocalizationMap.end()) {
 		m_commandClassLocalizationMap[ccID] = new LabelLocalizationEntry(0);
-		std::cout << "Adding New " << unsigned(ccID) << " Label: " << labelElement->GetText() << " Lang: " << Language << std::endl;
 	} else if (m_commandClassLocalizationMap[ccID]->HasLabel(Language)) {
 		Log::Write( LogLevel_Warning, "Localization::ReadXMLLabel: Error in Localization.xml at line %d - Duplicate Entry for CommandClass %d: %s (Lang: %s)", labelElement->Row(), ccID, labelElement->GetText(), Language.c_str() );
 		return;
-	} else {
-		std::cout << "Adding Existing " << unsigned(ccID) << " Label: " << labelElement->GetText() << " Lang: " << Language << std::endl;
 	}
 	if( Language.empty() )
 	{
@@ -326,12 +314,9 @@ void Localization::ReadXMLVIDLabel(uint8 ccID, uint16 indexId, uint32 pos, const
 
 	if (m_valueLocalizationMap.find(key) == m_valueLocalizationMap.end()) {
 		m_valueLocalizationMap[key] = new ValueLocalizationEntry(ccID, indexId, pos);
-		std::cout << "Adding New " << unsigned(ccID) << " Value " << unsigned(indexId) << " Label: " << labelElement->GetText() << " Lang: " << Language << std::endl;
 	} else if (m_valueLocalizationMap[key]->HasLabel(Language)) {
 		Log::Write( LogLevel_Warning, "Localization::ReadXMLVIDLabel: Error in Localization.xml at line %d - Duplicate Entry for CommandClass %d, ValueID: %d (%d):  %s (Lang: %s)", labelElement->Row(), ccID, indexId, pos, labelElement->GetText(), Language.c_str() );
 		return;
-	} else {
-		std::cout << "Adding Existing " << unsigned(ccID) << " Value " << unsigned(indexId) << " Label: " << labelElement->GetText() << " Lang: " << Language << std::endl;
 	}
 
 	if( Language.empty() )
@@ -352,12 +337,9 @@ void Localization::ReadXMLVIDHelp(uint8 ccID, uint16 indexId, uint32 pos, const 
 	uint64 key = GetValueKey(ccID, indexId, pos);
 	if (m_valueLocalizationMap.find(key) == m_valueLocalizationMap.end()) {
 		m_valueLocalizationMap[key] = new ValueLocalizationEntry(indexId, pos);
-		std::cout << "Adding New " << unsigned(ccID) << " Value " << unsigned(indexId) << " Help: " << labelElement->GetText() << " Lang: " << Language << std::endl;
 	} else if (m_valueLocalizationMap[key]->HasLabel(Language)) {
 		Log::Write( LogLevel_Warning, "Localization::ReadXMLVIDHelp: Error in Localization.xml at line %d - Duplicate Entry for CommandClass %d, ValueID: %d (%d):  %s (Lang: %s)", labelElement->Row(), ccID, indexId, pos, labelElement->GetText(), Language.c_str() );
 		return;
-	} else {
-		std::cout << "Adding Existing " << unsigned(ccID) << " Value " << unsigned(indexId) << " Help: " << labelElement->GetText() << " Lang: " << Language << std::endl;
 	}
 
 	if( Language.empty() )
@@ -380,34 +362,6 @@ uint64 Localization::GetValueKey
 	return ((uint64)_commandClass << 48) | ((uint64)_index << 32) | ((uint64)_pos);
 }
 
-void Localization::SetupValue
-(
-		Value *value
-)
-{
-	uint64 key = GetValueKey(value->GetID().GetCommandClassId(), value->GetID().GetIndex());
-	if (m_valueLocalizationMap.find(key) != m_valueLocalizationMap.end()) {
-		value->SetHelp(m_valueLocalizationMap[key]->GetHelp(m_selectedLang));
-		value->SetLabel(m_valueLocalizationMap[key]->GetLabel(m_selectedLang));
-	} else {
-		/* dont warn on Configuration CC */
-		if (value->GetID().GetCommandClassId() != Configuration::StaticGetCommandClassId()) Log::Write( LogLevel_Warning, "Localization::SetupValue: Localization Warning: No Entry for ValueID - CC: %d, Index: %d", value->GetID().GetCommandClassId(), value->GetID().GetIndex());
-	}
-	/* if its a bitset we need to set the help/label for each bit entry */
-	if (value->GetID().GetType() == ValueID::ValueType_BitSet) {
-		ValueBitSet *vbs = static_cast<ValueBitSet *>(value);
-		uint8 size = vbs->GetSize();
-		for (int i = 0; i < size; ++i) {
-			key = GetValueKey(value->GetID().GetCommandClassId(), value->GetID().GetIndex(), i);
-			if (m_valueLocalizationMap.find(key) != m_valueLocalizationMap.end()) {
-				vbs->SetBitHelp(i, m_valueLocalizationMap[key]->GetHelp(m_selectedLang));
-				vbs->SetBitLabel(i, m_valueLocalizationMap[key]->GetLabel(m_selectedLang));
-			} else {
-				if (value->GetID().GetCommandClassId() != Configuration::StaticGetCommandClassId()) Log::Write( LogLevel_Warning, "Localization Warning: No Entry for ValueID - CC: %d, Index: %d, Pos %d", value->GetID().GetCommandClassId(), value->GetID().GetIndex(), i);
-			}
-		}
-	}
-}
 void Localization::SetupCommandClass
 (
 		CommandClass *cc
@@ -420,6 +374,110 @@ void Localization::SetupCommandClass
 		Log::Write( LogLevel_Warning, "Localization::SetupCommandClass: Localization Warning: No Entry for CommandClass - CC: %d (%s)", ccID, cc->GetCommandClassName().c_str());
 		cc->SetCommandClassLabel(cc->GetCommandClassName());
 	}
+}
+
+bool Localization::SetValueHelp
+(
+		uint8 ccID,
+		uint16 indexId,
+		uint32 pos,
+		string help,
+		string lang
+)
+{
+	uint64 key = GetValueKey(ccID, indexId, pos);
+	if (m_valueLocalizationMap.find(key) == m_valueLocalizationMap.end()) {
+		m_valueLocalizationMap[key] = new ValueLocalizationEntry(indexId, pos);
+	} else if (m_valueLocalizationMap[key]->HasHelp(lang)) {
+		Log::Write( LogLevel_Warning, "Localization::SetValueHelp: Duplicate Entry for CommandClass %d, ValueID: %d (%d):  %s (Lang: %s)", ccID, indexId, pos, help.c_str(), lang.c_str() );
+	}
+
+	if( lang.empty() )
+	{
+		m_valueLocalizationMap[key]->AddHelp(help);
+	}
+	else
+	{
+		m_valueLocalizationMap[key]->AddHelp(help, lang);
+	}
+	return true;
+}
+bool Localization::SetValueLabel
+(
+		uint8 ccID,
+		uint16 indexId,
+		uint32 pos,
+		string help,
+		string lang
+)
+{
+	uint64 key = GetValueKey(ccID, indexId, pos);
+	if (m_valueLocalizationMap.find(key) == m_valueLocalizationMap.end()) {
+		m_valueLocalizationMap[key] = new ValueLocalizationEntry(indexId, pos);
+	} else if (m_valueLocalizationMap[key]->HasLabel(lang)) {
+		Log::Write( LogLevel_Warning, "Localization::SetValueLabel: Duplicate Entry for CommandClass %d, ValueID: %d (%d):  %s (Lang: %s)", ccID, indexId, pos, help.c_str(), lang.c_str() );
+	}
+
+	if( lang.empty() )
+	{
+		m_valueLocalizationMap[key]->AddLabel(help);
+	}
+	else
+	{
+		m_valueLocalizationMap[key]->AddLabel(help, lang);
+	}
+	return true;
+}
+
+string const Localization::GetValueHelp
+(
+		uint8 ccID,
+		uint16 indexId,
+		uint32 pos
+)
+{
+	uint64 key = GetValueKey(ccID, indexId, pos);
+	if (m_valueLocalizationMap.find(key) == m_valueLocalizationMap.end()) {
+		Log::Write( LogLevel_Warning, "Localization::GetValueHelp: No Help for CommandClass %d, ValueID: %d (%d)", ccID, indexId, pos);
+		return "";
+	}
+	return m_valueLocalizationMap[key]->GetHelp(m_selectedLang);
+}
+
+string const Localization::GetValueLabel
+(
+		uint8 ccID,
+		uint16 indexId,
+		int32 pos
+) const
+{
+	uint64 key = GetValueKey(ccID, indexId, pos);
+	if (m_valueLocalizationMap.find(key) == m_valueLocalizationMap.end()) {
+		Log::Write( LogLevel_Warning, "Localization::GetValueHelp: No Help for CommandClass %d, ValueID: %d (%d)", ccID, indexId, pos);
+		return "";
+	}
+	return m_valueLocalizationMap[key]->GetLabel(m_selectedLang);
+}
+
+bool Localization::WriteXMLVIDHelp
+(
+		uint8 ccID,
+		uint16 indexId,
+		uint32 pos,
+		TiXmlElement *valueElement
+)
+{
+	uint64 key = GetValueKey(ccID, indexId, pos);
+	if (m_valueLocalizationMap.find(key) == m_valueLocalizationMap.end()) {
+		Log::Write( LogLevel_Warning, "Localization::GetValueHelp: No Help for CommandClass %d, ValueID: %d (%d)", ccID, indexId, pos);
+		return false;
+	}
+	TiXmlElement* helpElement = new TiXmlElement( "Help" );
+	valueElement->LinkEndChild( helpElement );
+
+	TiXmlText* textElement = new TiXmlText( m_valueLocalizationMap[key]->GetHelp(m_selectedLang).c_str() );
+	helpElement->LinkEndChild( textElement );
+	return true;
 }
 
 
