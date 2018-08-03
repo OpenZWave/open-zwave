@@ -68,7 +68,8 @@ m_SecureSupport( true ),
 m_inNIF(false),
 m_staticRequests( 0 ),
 m_sentCnt( 0 ),
-m_receivedCnt( 0 )
+m_receivedCnt( 0 ),
+m_versionHint( 0 )
 {
 }
 
@@ -216,6 +217,7 @@ void CommandClass::ReadXML
 	if( TIXML_SUCCESS == _ccElement->QueryIntAttribute( "version", &intVal ) )
 	{
 		m_version = (uint8)intVal;
+		m_versionHint = m_version;
 	}
 
 	uint8 instances = 1;
@@ -858,6 +860,20 @@ void CommandClass::SetVersion
 	uint8 const _version 
 )
 { 
-	m_version = _version; 
+	if( m_versionHint == 0 )
+	{
+		if( _version >= m_version ) 
+		{
+			m_version = _version; 
+		}
+		else {
+			Log::Write( LogLevel_Warning, GetNodeId(), "Trying to downgrade Command Class %s version from %d to %d. Ignored", GetCommandClassName().c_str(), m_version, _version);
+		}
+	}
+	else {
+		m_version = m_versionHint; 
+		Log::Write( LogLevel_Warning, GetNodeId(), "Trying to modify user-defined Command Class %s version from %d to %d. Ignored", GetCommandClassName().c_str(), m_versionHint, _version);
+	}
+
 }
 
