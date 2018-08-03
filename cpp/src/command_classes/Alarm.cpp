@@ -281,16 +281,6 @@ bool Alarm::RequestState
 			GetDriver()->SendMsg( msg, _queue );
 			return true;
 		}
-		else
-		{
-			/* create version 1 ValueID's */
-			if( Node* node = GetNodeUnsafe() )
-			{
-				node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, AlarmIndex_Type, "Alarm Type", "", true, false, 0, 0 );
-				node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, AlarmIndex_Level, "Alarm Level", "", true, false, 0, 0 );
-			}
-		}
-
 	}
 
 	if( _requestFlags & RequestFlag_Dynamic )
@@ -371,43 +361,41 @@ bool Alarm::HandleMsg
 	if (AlarmCmd_Report == (AlarmCmd)_data[0])
 	{
 		// We have received a report from the Z-Wave device
-		if( GetVersion() == 1 )
-		{
-			Log::Write( LogLevel_Info, GetNodeId(), "Received Alarm report: type=%d, level=%d", _data[1], _data[2] );
+		Log::Write( LogLevel_Info, GetNodeId(), "Received Alarm report: type=%d, level=%d", _data[1], _data[2] );
 
-			ValueByte* value;
-			if( (value = static_cast<ValueByte*>( GetValue( _instance, AlarmIndex_Type ) )) )
-			{
-				value->OnValueRefreshed( _data[1] );
-				value->Release();
-			}
-			// For device on version 1 the level could have different value. This level value correspond to a list of alarm type.
-			if ( Value* value = GetValue( _instance, AlarmIndex_Level ) )
-			{
-				switch ( value->GetID().GetType() )
-				{
-				case ValueID::ValueType_Byte:
-				{
-					ValueByte* valueByte = static_cast<ValueByte*>( value );
-					valueByte->OnValueRefreshed( _data[2] );
-					break;
-				}
-				case ValueID::ValueType_List:
-				{
-					ValueList* valueList = static_cast<ValueList*>( value );
-					valueList->OnValueRefreshed( _data[2] );
-					break;
-				}
-				default:
-				{
-					Log::Write( LogLevel_Info, GetNodeId(), "Invalid type (%d) for Alarm Level %d", value->GetID().GetType(), _data[2] );
-				}
-				}
-				value->Release();
-			}
+		ValueByte* value;
+		if( (value = static_cast<ValueByte*>( GetValue( _instance, AlarmIndex_Type ) )) )
+		{
+			value->OnValueRefreshed( _data[1] );
+			value->Release();
 		}
+		// For device on version 1 the level could have different value. This level value correspond to a list of alarm type.
+		if ( Value* value = GetValue( _instance, AlarmIndex_Level ) )
+		{
+			switch ( value->GetID().GetType() )
+			{
+			case ValueID::ValueType_Byte:
+			{
+				ValueByte* valueByte = static_cast<ValueByte*>( value );
+				valueByte->OnValueRefreshed( _data[2] );
+				break;
+			}
+			case ValueID::ValueType_List:
+			{
+				ValueList* valueList = static_cast<ValueList*>( value );
+				valueList->OnValueRefreshed( _data[2] );
+				break;
+			}
+			default:
+			{
+				Log::Write( LogLevel_Info, GetNodeId(), "Invalid type (%d) for Alarm Level %d", value->GetID().GetType(), _data[2] );
+			}
+			}
+			value->Release();
+		}
+
 		/* version 2 */
-		else if(( GetVersion() > 1 ) && ( _length >= 7  ))
+		if(( GetVersion() > 1 ) && ( _length >= 7  ))
 		{
 			// With Version=2, the data has more detailed information about the alarm
 
@@ -607,4 +595,18 @@ bool Alarm::HandleMsg
 }
 
 
-
+//-----------------------------------------------------------------------------
+// <Alarm::CreateVars>
+// Create the values managed by this command class
+//-----------------------------------------------------------------------------
+void Alarm::CreateVars
+(
+		uint8 const _instance
+)
+{
+	if( Node* node = GetNodeUnsafe() )
+	{
+		node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, AlarmIndex_Type, "Alarm Type", "", true, false, 0, 0 );
+		node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, AlarmIndex_Level, "Alarm Level", "", true, false, 0, 0 );
+	}
+}
