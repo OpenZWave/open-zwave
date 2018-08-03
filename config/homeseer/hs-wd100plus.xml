@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="2">
-        <!-- Configuration Parameters -->
+<Product xmlns='http://code.google.com/p/open-zwave/'>
+    <!-- Configuration Parameters -->
     <CommandClass id="112">
         <Value type="list" index="4" genre="config" label="Invert switch" min="0" max="1" size="1" value="0">
             <Help>Change the top of the switch to OFF and the bottom of the switch to ON if the switch was installed upside down.</Help>
