@@ -34,7 +34,7 @@
         <Item label="Turn off report" value="0" />
         <Item label="Report level change" value="1" />
       </Value>
-      <Value type="byte" genre="config" index="6" label="Lux Delta Level" size="2" value="0">
+      <Value type="short" genre="config" index="6" label="Lux Delta Level" size="2" value="0">
         <Help>
           =0 Turn off report
           >=20 Report when change >
@@ -56,55 +56,55 @@
         <Item label="Turn off report" value="0" />
         <Item label="Report change" value="1" />
       </Value>
-      <Value type="byte" genre="config" index="10" label="Smoke Timer" size="2" value="0">
+      <Value type="short" genre="config" index="10" label="Smoke Timer" size="2" value="0">
         <Help>
           =0 Turn off report
           >10 Report every n * 1s interval
         </Help>
       </Value>
-      <Value type="byte" genre="config" index="11" label="PIR Timer" size="2" value="0">
+      <Value type="short" genre="config" index="11" label="PIR Timer" size="2" value="0">
         <Help>
           =0 Turn off report
           >10 Report every n * 1s interval
         </Help>
       </Value>
-      <Value type="byte" genre="config" index="12" label="PM 2.5 Timer" size="2" value="60">
+      <Value type="short" genre="config" index="12" label="PM 2.5 Timer" size="2" value="60">
         <Help>
           =0 Turn off report
           >10 Report every n * 1s interval
         </Help>
       </Value>
-      <Value type="byte" genre="config" index="13" label="CO2 Timer" size="2" value="60">
+      <Value type="short" genre="config" index="13" label="CO2 Timer" size="2" value="60">
         <Help>
           =0 Turn off report
           >10 Report every n * 1s interval
         </Help>
       </Value>
-      <Value type="byte" genre="config" index="14" label="Temperature Timer" size="2" value="60">
+      <Value type="short" genre="config" index="14" label="Temperature Timer" size="2" value="60">
         <Help>
           =0 Turn off report
           >10 Report every n * 1s interval
         </Help>
       </Value>
-      <Value type="byte" genre="config" index="15" label="Humidity Timer" size="2" value="60">
+      <Value type="short" genre="config" index="15" label="Humidity Timer" size="2" value="60">
         <Help>
           =0 Turn off report
           >10 Report every n * 1s interval
         </Help>
       </Value>
-      <Value type="byte" genre="config" index="16" label="VOC Timer" size="2" value="60">
+      <Value type="short" genre="config" index="16" label="VOC Timer" size="2" value="60">
         <Help>
           =0 Turn off report
           >10 Report every n * 1s interval
         </Help>
       </Value>
-      <Value type="byte" genre="config" index="17" label="Lux Timer" size="2" value="60">
+      <Value type="short" genre="config" index="17" label="Lux Timer" size="2" value="60">
         <Help>
           =0 Turn off report
           >10 Report every n * 1s interval
         </Help>
       </Value>
-      <Value type="byte" genre="config" index="18" label="dB Timer" size="2" value="60">
+      <Value type="short" genre="config" index="18" label="dB Timer" size="2" value="60">
         <Help>
           =0 Turn off report
           >10 Report every n * 1s interval
@@ -126,7 +126,7 @@
           -20.0 ~ 20.0%
         </Help>
       </Value>
-      <Value type="byte" genre="config" index="22" label="CO2 Offset" size="2" value="500">
+      <Value type="short" genre="config" index="22" label="CO2 Offset" size="2" value="500">
         <Help>
           0 ~ 1000
           -500 ~ 500ppm
@@ -138,7 +138,7 @@
           -100 ~ 100ug/m3
         </Help>
       </Value>
-      <Value type="byte" genre="config" index="24" label="Lux Offset" size="2" value="5000">
+      <Value type="short" genre="config" index="24" label="Lux Offset" size="2" value="5000">
         <Help>
           0 ~ 10000
           -5000 ~ 5000lux
