@@ -296,8 +296,13 @@ DISTFILES =	.gitignore \
 	config/horstmann/ssr302.xml \
 	config/idlock/idlock101.xml \
 	config/ingersoll/dwzwave1.xml \
+	config/inovelli/nzw1201.xml \
 	config/inovelli/nzw30.xml \
 	config/inovelli/nzw31.xml \
+	config/inovelli/nzw36.xml \
+	config/inovelli/nzw37.xml \
+	config/inovelli/nzw39.xml \
+	config/inovelli/nzw96.xml \
 	config/inovelli/nzw97.xml \
 	config/inovelli/simple_module.xml \
 	config/intermatic/ca8900.xml \
@@ -328,6 +333,7 @@ DISTFILES =	.gitignore \
 	config/logicsoft/ZHC5010.xml \
 	config/manufacturer_specific.xml \
 	config/manufacturer_specific.xsd \
+	config/mcohome/a8-9.xml \
 	config/mcohome/mh8fceu.xml \
 	config/mcohome/mh9co2.xml \
 	config/mcohome/mhp210.xml \

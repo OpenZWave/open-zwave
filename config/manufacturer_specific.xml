@@ -881,6 +881,7 @@
 		<Product type="0801" id="3102" name="MH8-FC-EU Thermostat" config="mcohome/mh8fceu.xml"/>
 		<Product type="0802" id="3102" name="MH8-FC4-EU Thermostat" config="mcohome/mh8fceu.xml"/>
 		<Product type="0905" id="0201" name="MH9-CO2-WD CO2 Monitor" config="mcohome/mh9co2.xml"/>
+		<Product type="a800" id="1352" name="A8-9 Multi-sensor" config="mcohome/a8-9.xml"/>
 		<!--US-->
 		<Product type="5102" id="0103" name="Touch Panel Switch MH-S513" config="mcohome/mhs513.xml"/>
 	</Manufacturer>
