@@ -38,15 +38,15 @@
         <Value type="short" index="20" genre="config" label="High temperature trigger value" units="" min="-670" max="2570" size="2" value="1040">
             <Help>
                 Set the high temperature alarm trigger value.
-                Available: -670 to 2570 (-67.0 to 257.0 °F)
-                Default: 1040 (104.0 °F)
+                Available: -670 to 2570 (-67.0 to 257.0 F)
+                Default: 1040 (104.0 F)
             </Help>
         </Value>
         <Value type="short" index="22" genre="config" label="Low temperature trigger value" units="" min="-670" max="2570" size="2" value="320">
             <Help>
                 Set the low temperature alarm trigger value.
-                Available: -670 to 2570 (-67.0 to 257.0 °F)
-                Default: 320 (32.0 °F)
+                Available: -670 to 2570 (-67.0 to 257.0 F)
+                Default: 320 (32.0 F)
             </Help>
         </Value>
         <Value type="list" index="24" genre="config" label="Blinking LED when alarm triggers" min="0" max="1" size="1" value="1">
@@ -69,7 +69,7 @@
 
     <!-- Association Groups -->
     <CommandClass id="133">
-        <Associations num_groups="1">
+        <Associations num_groups="2">
             <Group index="1" max_associations="5" label="Lifeline"/>
             <Group index="2" max_associations="5" label="Basic Set"/>
         </Associations>
