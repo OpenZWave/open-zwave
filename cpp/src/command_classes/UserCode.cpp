@@ -298,7 +298,7 @@ bool UserCode::HandleMsg
 
 //-----------------------------------------------------------------------------
 // <UserCode::SetValue>
-// Set a User Code value
+// Set a User Code value or clear a User Code by writing empty or NULLs-only value
 //-----------------------------------------------------------------------------
 bool UserCode::SetValue
 (
@@ -323,10 +323,37 @@ bool UserCode::SetValue
 		msg->Append( GetCommandClassId() );
 		msg->Append( UserCodeCmd_Set );
 		msg->Append( value->GetID().GetIndex() );
-		msg->Append( UserCode_Occupied );
+
+		// Check if the value is empty or consists of NULLs only
+		bool valueEmptyOrNullsOnly = true;
 		for( uint8 i = 0; i < len; i++ )
 		{
-			msg->Append( s[i] );
+			if (s[i] != 0) {
+				valueEmptyOrNullsOnly = false;
+				break;
+			}
+		}
+		if (valueEmptyOrNullsOnly)
+		{
+			// The value is empty or just NULLs. In this case
+			// we're going to clear the user code rather than
+			// setting it.
+			// The spec says that in this case we want to mark
+			// the slot as available and send four NULLs as
+			// user code.
+			msg->Append( UserCode_Available );
+			for ( uint8 i = 0; i < 4; i++ )
+			{
+				msg->Append( 0 );
+			}
+		} else {
+			// The value is not empty and contains at least one
+			// non-NULL byte. Send this as the new user code.
+			msg->Append( UserCode_Occupied );
+			for( uint8 i = 0; i < len; i++ )
+			{
+				msg->Append( s[i] );
+			}
 		}
 		msg->Append( GetDriver()->GetTransmitOptions() );
 		GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
