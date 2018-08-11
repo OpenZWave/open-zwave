@@ -654,6 +654,7 @@
 		<Product type="0201" id="0008" name="HKZW-DWS01 Door/Window Sensor" config="hank/hkzw-dws01.xml"/>
 		<Product type="0200" id="0009" name="HKZW-SCN01 Scene Controller" config="hank/scenecontroller1.xml"/>
 		<Product type="0200" id="000b" name="HKZW-SCN04 Scene Controller" config="hank/scenecontroller4.xml"/>
+		<Product type="0201" id="000b" name="HKZW-SCN04 Scene Controller" config="hank/scenecontroller4.xml"/>
 		<Product type="0100" id="0004" name="HKZW-RGB01 RGB bulb" config="hank/hkzw-rgb01.xml"/>
 		<Product type="0101" id="0004" name="HKZW-RGB01 RGB bulb" config="hank/hkzw-rgb01.xml"/>
 		<Product type="0101" id="000a" name="HKZW-SO03 Smart Plug" config="hank/hkzw-so03.xml"/>
