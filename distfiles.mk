@@ -85,6 +85,7 @@ DISTFILES =	.gitignore \
 	config/aeotec/zw132.xml \
 	config/aeotec/zw139.xml \
 	config/aeotec/zw140.xml \
+	config/aeotec/zw141.xml \
 	config/aeotec/zwa001.xml \
 	config/aeotec/zwa002.xml \
 	config/aeotec/zwa003.xml \
@@ -251,11 +252,14 @@ DISTFILES =	.gitignore \
 	config/gocontrol/GC-TBZ48L.xml \
 	config/gr/gr105.xml \
 	config/gr/gr105n.xml \
+	config/graber/brz1.xml \
+	config/graber/vcz1.xml \
 	config/greenwave/powernode1.xml \
 	config/greenwave/powernode6.xml \
 	config/hank/hkzw-dws01.xml \
 	config/hank/hkzw-fld01.xml \
 	config/hank/hkzw-ms01.xml \
+	config/hank/hkzw-ms02.xml \
 	config/hank/hkzw-rgb01.xml \
 	config/hank/hkzw-so01-smartplug.xml \
 	config/hank/hkzw-so03.xml \
@@ -271,6 +275,8 @@ DISTFILES =	.gitignore \
 	config/heiman/HS1WL-Z.xml \
 	config/heiman/HS2SK-Z.xml \
 	config/homeseer/ezmotionplus.xml \
+	config/homeseer/hs-ls100plus.xml \
+	config/homeseer/hs-ms100plus.xml \
 	config/homeseer/hs-wd100plus.xml \
 	config/homeseer/hs-wd200plus.xml \
 	config/homeseer/hs-ws100plus.xml \
@@ -291,8 +297,13 @@ DISTFILES =	.gitignore \
 	config/horstmann/ssr302.xml \
 	config/idlock/idlock101.xml \
 	config/ingersoll/dwzwave1.xml \
+	config/inovelli/nzw1201.xml \
 	config/inovelli/nzw30.xml \
 	config/inovelli/nzw31.xml \
+	config/inovelli/nzw36.xml \
+	config/inovelli/nzw37.xml \
+	config/inovelli/nzw39.xml \
+	config/inovelli/nzw96.xml \
 	config/inovelli/nzw97.xml \
 	config/inovelli/simple_module.xml \
 	config/intermatic/ca8900.xml \
@@ -323,6 +334,7 @@ DISTFILES =	.gitignore \
 	config/logicsoft/ZHC5010.xml \
 	config/manufacturer_specific.xml \
 	config/manufacturer_specific.xsd \
+	config/mcohome/a8-9.xml \
 	config/mcohome/mh8fceu.xml \
 	config/mcohome/mh9co2.xml \
 	config/mcohome/mhp210.xml \
@@ -376,6 +388,7 @@ DISTFILES =	.gitignore \
 	config/popp/123580.xml \
 	config/popp/123601.xml \
 	config/popp/123658.xml \
+	config/popp/700045.xml \
 	config/popp/700168.xml \
 	config/popp/smoke-detector.xml \
 	config/popp/solar-siren.xml \
@@ -406,6 +419,7 @@ DISTFILES =	.gitignore \
 	config/qubino/ZMNHUD1.xml \
 	config/qubino/ZMNHVDx.xml \
 	config/qubino/ZMNHWD1.xml \
+	config/qubino/ZMNHXDx.xml \
 	config/qubino/ZMNHZDx.xml \
 	config/rcs/em52-zw.xml \
 	config/rcs/pm12-zw.xml \
@@ -434,12 +448,15 @@ DISTFILES =	.gitignore \
 	config/shenzen_neo/nas-ws02z.xml \
 	config/steinel/is140-2.xml \
 	config/steinel/rs-led-d2.xml \
+	config/steinel/xled-home-2.xml \
 	config/stelpro/stzw402.xml \
 	config/swiid/swiidinter.xml \
 	config/swiid/swiidplug.xml \
 	config/telldus/tzdw100.xml \
 	config/telldus/tzwp100.xml \
+	config/telldus/tzwp102.xml \
 	config/thermofloor/heatit021.xml \
+	config/thermofloor/heatit033.xml \
 	config/trane/TZEMT400AB32MAA.xml \
 	config/trane/TZEMT400BB32MAA.xml \
 	config/trane/TZEMT524AA21MA.xml \
@@ -470,15 +487,16 @@ DISTFILES =	.gitignore \
 	config/wenzhou/tz67.xml \
 	config/wenzhou/tz68.xml \
 	config/wenzhou/tz69.xml \
+	config/wenzhou/tz74.xml \
 	config/wenzhou/tz79.xml \
 	config/wenzhou/tz88.xml \
 	config/widom/UBS104.xml \
 	config/widom/UME304C_S.xml \
 	config/widom/WDS.xml \
-	config/zipato/pan04.xml \
 	config/zipato/MiniKeypad.xml \
 	config/zipato/RGBBulb.xml \
 	config/zipato/RGBBulb2.xml \
+	config/zipato/pan04.xml \
 	config/zipato/vszd2102.xml \
 	config/zipato/zp3102.xml \
 	config/zooz/zen06.xml \
@@ -527,6 +545,7 @@ DISTFILES =	.gitignore \
 	cpp/build/windows/GIT-VS-VERSION-GEN.bat \
 	cpp/build/windows/installer/buildall.bat \
 	cpp/build/windows/installer/openzwave.nsi \
+	cpp/build/windows/mingw-w64/Makefile \
 	cpp/build/windows/mingw32/Makefile \
 	cpp/build/windows/vs2008/OpenZWave.sln \
 	cpp/build/windows/vs2008/OpenZWave.vcproj \
@@ -838,20 +857,33 @@ DISTFILES =	.gitignore \
 	cpp/tinyxml/tinyxmlerror.cpp \
 	cpp/tinyxml/tinyxmlparser.cpp \
 	debian/MinOZW.1 \
-	debian/TODO \
 	debian/changelog \
 	debian/compat \
 	debian/control \
 	debian/copyright \
+	debian/format \
 	debian/libopenzwave-doc.doc-base \
-	debian/libopenzwave1.3-dev.install \
-	debian/libopenzwave1.3.install \
-	debian/libopenzwave1.3.lintian-overrides \
+	debian/libopenzwave-doc.install \
+	debian/libopenzwave-doc.lintian-overrides-not-needed \
+	debian/libopenzwave1.4-dev.install \
+	debian/libopenzwave1.4.install \
+	debian/libopenzwave1.4.lintian-overrides \
+	debian/openzwave.dsc \
 	debian/openzwave.install \
 	debian/openzwave.manpages \
+	debian/patches/cppflags.patch \
+	debian/patches/gcc8.patch \
+	debian/patches/hardening.patch \
+	debian/patches/series \
+	debian/patches/spelling.patch \
 	debian/rules \
+	debian/shlibs.libopenzwave1.4 \
 	debian/source/format \
+	debian/version-increment.sh \
+	debian/watch \
 	dist.mk \
+	dist/libopenzwave.changes \
+	dist/libopenzwave.spec \
 	distfiles.mk \
 	docs/Doxyfile.in \
 	docs/default.htm \
@@ -934,6 +966,4 @@ DISTFILES =	.gitignore \
 	license/lgpl.txt \
 	license/license.txt \
 	makedist \
-	openzwave.dsc \
-	openzwave.spec \
 	cpp/src/vers.cpp

@@ -304,12 +304,13 @@ bool DoorLockLogging::HandleMsg
 			}
 			uint8 userid = (_data[10]);
 			uint8 usercodelength = (_data[11]);
-			char usercode[254];
+			char usercode[254], tmpusercode[254];
 			snprintf(usercode, sizeof(usercode), "UserCode:");
 			if (usercodelength > 0)
 				for (int i = 0; i < usercodelength; i++ )
 				{
-					snprintf(usercode, sizeof(usercode), "%s %d", usercode, (int)_data[12+i]);
+					strncpy(tmpusercode, usercode, sizeof(tmpusercode));
+                                        snprintf(usercode, sizeof(usercode), "%s %d", tmpusercode, (int)_data[12+i]);
 				}
 
 			if (valid) {

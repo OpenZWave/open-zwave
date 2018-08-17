@@ -1,8 +1,8 @@
-Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: open-zwave
 Upstream-Contact: Mal Lansell <openzwave@lansell.org>
 Source: https://github.com/OpenZWave/open-zwave
-Files-Excluded: debian, cpp/hidapi/windows
+Files-Excluded: cpp/hidapi/windows debian
 
 Files: *
 Copyright: 2010 Mal Lansell <openzwave@lansell.org>
@@ -10,11 +10,12 @@ Copyright: 2010 Mal Lansell <openzwave@lansell.org>
            2014 Justin Hammond <justin@dynam.ac>
            2010 Jason Frazier <frazierjason@gmail.com>
            2010 Amer Harb <harb_amer@hotmail.com>
+           2015 Microsoft Corporation
 License: LGPL-3+
 
 Files: cpp/hidapi/*
 Copyright: 2010, Alan Ott, Signal 11 Software
-License: HIDAPI or GPL-3 or OZBSD or OriginalHIDAPI
+License: HIDAPIlicense or GPL-3 or OZBSD or OriginalHIDAPI
 
 Files: cpp/build/sh2ju.sh
 Copyright: 2010 Manuel Carrasco Moñino. (manolo at apache.org) 
@@ -30,7 +31,7 @@ Copyright: Yves Berquin
            2005, Tyge Lovset
 License: TINY
 
-License: HIDAPI
+License: HIDAPIlicense
  HIDAPI can be used under one of three licenses.
  .
  1. The GNU General Public License, version 3.0, in LICENSE-gpl3.txt (-> see GPL-3)
@@ -96,6 +97,46 @@ License: AESBSD
  This software is provided 'as is' with no explicit or implied warranties
  in respect of its operation, including, but not limited to, correctness
  and fitness for purpose.
+Comment:
+ This license text is the official license text of Brian Gladman. The
+ term "is allowed without the payment of fees or royalties" shall make
+ it clear that this software is now available for free (as in beer)
+ and will always be. 
+ The rest of the license takes care of the free as in speech.
+ Nevertheless Brian permits others to distribute the software under
+ other licenses. Especially he allowed me to distribute the software
+ under the following conditions, which is the normal BSD license without
+ mentioning fees:
+ > /*
+ > ---------------------------------------------------------------------------
+ > Copyright (c) 1998-2013, Brian Gladman, Worcester, UK. All rights reserved.
+ > 
+ > The redistribution and use of this software (with or without changes)
+ > is allowed provided that:
+ > 
+ >    source code distributions include the above copyright notice, this
+ >    list of conditions and the following disclaimer;
+ > 
+ >    binary distributions include the above copyright notice, this list
+ >    of conditions and the following disclaimer in their documentation.
+ > 
+ > This software is provided 'as is' with no explicit or implied warranties
+ > in respect of its operation, including, but not limited to, correctness
+ > and fitness for purpose.
+ > ---------------------------------------------------------------------------
+ > */
+ .
+ Hi Thorsten,
+ .
+ I am content with this and would be happy for you to replace my current
+ license with is one on any files that you wish to use.
+ .
+ If you need a more formal agreement from me, I am sure we will be able
+ to find a way of achieving this.
+ .
+ best regards,
+ .
+ Brian
 
 License: TINY
  This software is provided 'as-is', without any express or implied
