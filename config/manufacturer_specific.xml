@@ -616,6 +616,7 @@
 		<Product type="5250" id="3030" name="45603 Plugin Appliance Module"/>
 		<Product type="5250" id="3130" name="45604 Outdoor Module"/>
 		<Product type="4f50" id="3031" name="12720 Outdoor Smart Switch"/>
+		<Product type="4f50" id="3032" name="14284 Outdoor Smart Switch"/>
 		<Product type="5252" id="3530" name="45605 Duplex Receptacle" config="ge/receptacle.xml"/>
 		<Product type="4952" id="3133" name="14288 Duplex Receptacle" config="ge/receptacle.xml"/>
 		<Product type="5257" id="3533" name="45609 On/Off Relay Switch" config="ge/relay.xml"/>
