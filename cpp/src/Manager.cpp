@@ -3402,6 +3402,25 @@ uint8 Manager::GetMaxAssociations
 }
 
 //-----------------------------------------------------------------------------
+// <Manager::IsMultiInstance>
+// Returns true is group supports multi instance.
+//-----------------------------------------------------------------------------
+bool Manager::IsMultiInstance
+(
+		uint32 const _homeId,
+		uint8 const _nodeId,
+		uint8 const _groupIdx
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		return driver->IsMultiInstance( _nodeId, _groupIdx );
+	}
+
+	return 0;
+}
+
+//-----------------------------------------------------------------------------
 // <Manager::GetGroupLabel>
 // Gets the label for a particular group
 //-----------------------------------------------------------------------------
