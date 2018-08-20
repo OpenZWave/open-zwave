@@ -1357,7 +1357,8 @@
 		<Product type="0003" id="0088" name="ZSE33 Smart Chime" config="zooz/zse33.xml" />
 		<Product type="0101" id="000a" name="ZEN06" config="zooz/zen06.xml"/>
 		<Product type="b111" id="251c" name="ZEN23 Toggle Switch V2" config="zooz/zen23.xml" />
-		<Product type="0101" id="000D" name="ZEN15 Power Switch" config="zooz/zen15.xml" />
+	  <Product type="0101" id="000D" name="ZEN15 Power Switch" config="zooz/zen15.xml" />
+		<Product type="0301" id="0012" name="ZSE18 Motion Sensor" config="zooz/zse18.xml" />
 	</Manufacturer>
 	<Manufacturer id="015d" name="Zooz">
 		<Product type="0651" id="f51c" name="ZEN20 Power Strip" config="zooz/zen20.xml" />
