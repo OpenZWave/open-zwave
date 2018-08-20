@@ -2743,7 +2743,7 @@ bool Node::IsMultiInstance
 	bool multiinstance = false;
 	if( Group* group = GetGroup( _groupIdx ) )
 	{
-		maxAssociations = group->IsMultiInstance();
+		multiinstance = group->IsMultiInstance();
 	}
 
 	return multiinstance;

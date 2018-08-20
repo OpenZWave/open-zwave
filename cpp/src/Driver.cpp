@@ -5895,6 +5895,21 @@ uint8 Driver::GetMaxAssociations
 }
 
 //-----------------------------------------------------------------------------
+// <Driver::IsMultiInstance>
+// Returns true if group supports multi instance
+//-----------------------------------------------------------------------------
+bool Driver::IsMultiInstance(uint8 const _nodeId, uint8 const _groupIdx) {
+	bool multiinstance = false;
+	LockGuard LG(m_nodeMutex);
+	if( Node* node = GetNode( _nodeId ) )
+	{
+		multiinstance = node->IsMultiInstance( _groupIdx );
+	}
+
+	return multiinstance;
+}
+
+//-----------------------------------------------------------------------------
 // <Driver::GetGroupLabel>
 // Gets the label for a particular group
 //-----------------------------------------------------------------------------
