@@ -328,7 +328,7 @@ bool Color::HandleMsg
 	{
 		m_capabilities = (_data[1] + (_data[2] << 8));
 		string helpstr = "#RRGGBB";
-		Log::Write(LogLevel_Info, GetNodeId(), "Received an Color Capability Report: Capability=%xd", m_capabilities);
+		Log::Write(LogLevel_Info, GetNodeId(), "Received an Color Capability Report: Capability=%x", m_capabilities);
 		if (m_capabilities & 0x04)
 			Log::Write(LogLevel_Info, GetNodeId(), "Red (0x02)");
 		if (m_capabilities & 0x08)

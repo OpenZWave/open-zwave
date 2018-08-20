@@ -25,6 +25,8 @@
 //
 //-----------------------------------------------------------------------------
 
+#ifdef USE_HID
+
 #include "Msg.h"
 #include "platform/Thread.h"
 #include "platform/Event.h"
@@ -539,3 +541,4 @@ int HidController::SendFeatureReport
 	return result;
 }
 
+#endif /* USE_HID */

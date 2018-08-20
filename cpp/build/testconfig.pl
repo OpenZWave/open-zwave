@@ -205,7 +205,7 @@ sub XMLPrintWarnings() {
 #   The arg can be a relative or full path, or
 #   it can be a file located somewhere in @INC.
 sub ReadCfg {
-    my $file = "cpp/build/testconfigsuppressions.cfg";
+    my $file = "./cpp/build/testconfigsuppressions.cfg";
     our $err;
     {   # Put config data into a separate namespace
         package CFG;

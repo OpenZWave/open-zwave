@@ -63,6 +63,7 @@ char const *OpenZWave::LogLevelString[] =
 
 Log* Log::s_instance = NULL;
 i_LogImpl* Log::m_pImpl = NULL;
+bool Log::s_customLogger = false;
 static bool s_dologging;
 
 //-----------------------------------------------------------------------------
@@ -134,8 +135,10 @@ bool Log::SetLoggingClass
 	i_LogImpl *LogClass
 )
 {
-	delete m_pImpl;
+	if (!s_customLogger) 
+		delete m_pImpl;
 	m_pImpl = LogClass;
+	s_customLogger = true;
 	return true;
 }
 
@@ -323,8 +326,10 @@ Log::Log
 ):
 	m_logMutex( new Mutex() )
 {
-		if (NULL == m_pImpl)
+		if (NULL == m_pImpl) {
+			s_customLogger = false;
 			m_pImpl = new LogImpl( _filename, _bAppend, _bConsoleOutput, _saveLevel, _queueLevel, _dumpTrigger );
+		}
 }
 
 //-----------------------------------------------------------------------------
@@ -336,6 +341,8 @@ Log::~Log
 )
 {
 	m_logMutex->Release();
-	delete m_pImpl;
-	m_pImpl = NULL;
+	if (!s_customLogger) {
+		delete m_pImpl;
+		m_pImpl = NULL;
+	}
 }
