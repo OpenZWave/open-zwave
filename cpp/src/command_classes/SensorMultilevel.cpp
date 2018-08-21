@@ -82,6 +82,7 @@ enum SensorType
 	SensorType_Moisture,
 	SensorType_Frequency,
 	SensorType_Time,
+	SensorType_TargetTemperature,
 	SensorType_MaxType
 };
 
@@ -121,6 +122,7 @@ static char const* c_sensorTypeNames[] =
 		"Moisture",
 		"Frequency",
 		"Time",
+		"Target Temperature",
 };
 
 static char const* c_tankCapcityUnits[] =
@@ -418,6 +420,7 @@ bool SensorMultilevel::HandleMsg
 				break;
 				case SensorType_Frequency:				units = scale? "kHz" : "Hz";			break;
 				case SensorType_Time:					units = "s";					break;
+				case SensorType_TargetTemperature:			units = scale ? "F" : "C";			break;
 				default: {
 					Log::Write (LogLevel_Warning, GetNodeId(), "sensorType Value was greater than range. Dropping");
 					return false;
