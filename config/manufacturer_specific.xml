@@ -1054,6 +1054,7 @@
 		<Product type="0002" id="0002" name="ZMNHAA2 Flush 1 Relay" config="qubino/ZMNHAA2.xml"/>
 		<Product type="0002" id="0052" name="ZMNHADx Flush 1 Relay" config="qubino/ZMNHADx.xml"/>
 		<Product type="0002" id="0053" name="ZMNHND1 Flush 1D relay" config="qubino/ZMNHNDx.xml"/>
+		<Product type="0002" id="0054" name="ZMNHYDx Smart Plug 16A" config="qubino/ZMNHYDx.xml"/>
 		<Product type="0003" id="0002" name="ZMNHCA2 Flush Shutter" config="qubino/ZMNHCA2.xml"/>
 		<Product type="0003" id="0052" name="ZMNHCDx Flush Shutter" config="qubino/ZMNHCDx.xml"/>
 		<Product type="0003" id="0053" name="ZMNHOD1 Flush Shutter DC" config="qubino/ZMNHODx.xml"/>
