@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Product xmlns='http://code.google.com/p/open-zwave/'>
+	<!-- 
+	Qubino ZMNHYDx Smart Plug 16A 
+	ZMNHYD1 868,4 MHz
+	ZMNHYD2 921,4 MHz
+	ZMNHYD3 908,4 MHz
+	ZMNHYD4 869,0 MHz
+	ZMNHYD5 916,0 MHz
+	-->
+	
+	<!-- Configuration  -->
+	<CommandClass id="112">
+		<Value type="list" genre="config" instance="1" index="10" label="Activate / deactivate functions ALL ON/ALL OFF" size="2" min="0" max="255" value="255">
+			<Help>Smart Plug 16A module responds to commands ALL ON / ALL OFF that may be sent by the main controller or by other controller belonging to the system</Help>
+			<Item label="ALL ON active, ALL OFF active" value="255" />
+			<Item label="ALL ON is not active ALL OFF is not active" value="0" />
+			<Item label="ALL ON is not active ALL OFF active" value="1" />
+			<Item label="ALL ON active ALL OFF is not active" value="2" />
+		</Value> 		
+		<Value type="short" genre="config" instance="1" index="11" label="Automatic turning off relay after set time" size="2" min="0" max="32535" value="0">
+			<Help>
+			0 => Auto OFF disabled. 
+			1 - 32535  => 1 second (0,01s) - 32535 seconds (325,35s). 
+			Auto OFF enabled with define time, step is 1s or 10ms according to parameter 15. Default value 0</Help>
+		</Value>		
+        <Value type="short" genre="config" instance="1" index="12" label="Automatic turning on relay after set time" size="2" min="0" max="32535" value="0">
+            <Help>
+			0 - Auto OFF disabled. 
+			1 - 32535  => 1 second (0,01s) - 32535 seconds (325,35s).
+			Auto ON enabled with define time, step is 1s or 10ms according to parameter 15. Default value 0</Help>
+        </Value>
+        <Value type="list" genre="config" instance="1" index="15" label="Automatic turning on/off seconds or milliseconds selection" size="1" min="0" max="1" value="0">
+            <Help/>
+            <Item label="seconds" value="0" />
+            <Item label="milliseconds" value="1" />
+        </Value>
+		<Value type="list" genre="config" instance="1" index="30" label="Saving the state of the relay after a power failure" size="1" min="0" max="1" value="0">
+			<Help/>
+			<Item label="Smart Plug 16A module saves its state before power failure (it returns to the last position saved before a power failure)" value="0" />
+			<Item label="Smart Plug 16A module does not save the state after a power failure, it returns to off position." value="1" />
+		</Value>		
+		<Value type="list" genre="config" instance="1" index="40" label="Watt Power Consumption Reporting Threshold for Smart plug 16A" size="1" min="0" max="100" value="0">
+			<Help>
+			default value 20 
+            - 0 - Power consumption reporting disabled
+            - 1 - 100 = 1% - 100% Power consumption reporting enabled. New value is reported only when Wattage in real time changes by more than the percentage value set in this parameter compared to the previous Wattage reading, starting at 1% (the lowest value possible).</Help>
+		</Value>
+		<Value type="list" genre="config" instance="1" index="42" label="Watt Power Consumption Reporting Time Threshold for Smart plug 16A Load" size="2" min="0" max="32535" value="0">
+			<Help>
+			default value 20 
+            - 0 - Power consumption reporting disabled
+            - 30 - 32535 = 30 - 32535 seconds. Power consumption reporting enabled. Report is sent according to time interval (value) set here.</Help>
+		</Value>		
+		<Value type="list" genre="config" instance="1" index="50" label="Down value" size="2" min="0" max="4000" value="0">
+			<Help>
+			Lower power threshold used in parameter no. 52.
+			default value 30 = 30 W
+            - 0 – 4000 = 0W – 4000 W
+            - Down value cannot be higher than a value specified in parameter no. 51</Help>
+		</Value>
+		<Value type="list" genre="config" instance="1" index="51" label="Up value" size="2" min="0" max="4000" value="0">
+			<Help>
+			Upper power threshold used in parameter no. 52
+			default value 50 = 50 W
+            - 0 – 4000 = 0 W – 400 W
+            - Up value cannot be lower than a value specified in parameter no. 50.</Help>
+		</Value>
+		<Value type="list" genre="config" instance="1" index="52" label="Action in case of exceeding defined power values (parameters 50 and 51)" size="1" min="0" max="255" value="0">
+			<Help>
+			Parameter defines the way 3rd association group devices are controlled, depending on the current power load
+            - default value 6
+            - 0 – function inactive
+            - 1 – turn the associated devices on, once the power drops below Down value (parameter no. 50)
+            - 2 – turn the associated devices off, once the power drops below Down value (parameter no. 50)
+            - 3 – turn the associated devices on, once the power rises above Up value (parameter no. 51)
+            - 4 – turn the associated devices off, once the power rises above Up value (parameter no. 51)
+            - 5 – 1 and 4 combined. Turn the associated devices on, once the power drops below Down value (parameter no. 50). Turn the associated devices off, once the power rises above Up value (parameter no. 51).
+            - 6 – 2 and 3 combined. Turn the associated devices off, once the power drops below Down value (parameter 50). Turn the associated devices on, once the power rises above Up value (parameter no. 51).</Help>
+		</Value>
+		<Value type="list" genre="config" instance="1" index="70" label="Overload safety switch" size="2" min="0" max="4000" value="0">
+			<Help>
+			The function allows for turning off the controlled device in case of exceeding the defined power for more than 3.1s. Controlled device can be turned back on by S-button or sending a control frame. By default this function is inactive.
+			default value 0
+            - 1 – 4000 = 1 W – 4000W
+            - 0 = function not active</Help>
+		</Value>
+		<Value type="list" genre="config" instance="1" index="249" label="Enable/Disable Reporting on Set command" size="1" min="0" max="1" value="0">
+			<Help/>
+			<Item label="disable reporting" value="0" />
+			<Item label="enable reporting" value="1" />
+		</Value>
+	</CommandClass>
+
+	<!-- Association Groups -->
+	<CommandClass id="133">
+		<Associations num_groups="5">
+			<Group index="1" max_associations="1" label="Lifeline"/>
+			<Group index="2" max_associations="16" label="Basic on/off of the output state"/>
+		</Associations>
+	</CommandClass>
+
+	<!-- Remove COMMAND_CLASS_BASIC -->
+	<CommandClass id="32" action="remove" />
+
+</Product>
