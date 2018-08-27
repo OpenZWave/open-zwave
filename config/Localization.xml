@@ -4,15 +4,21 @@
       <Label>COMMAND_CLASS_ALARM</Label>
       <Value index="0">
         <Help>Alarm Type Received</Help>
+        <Help lang="fr">Type d'alarme reçu</Help>
         <Label>Alarm Type</Label>
+        <Label lang="fr">Type d'alarme</Label>
       </Value>
       <Value index="1">
         <Help>Alarm Level Received</Help>
+        <Help lang="fr">Niveau d'alarme reçu</Help>
         <Label>Alarm Level</Label>
+        <Label lang="fr">Niveau d'alarme</Label>
       </Value>
       <Value index="2">
         <Help>Source Of the Alarm Event</Help>
+        <Help lang="fr">Source de l'événement d'alarme</Help>
         <Label>SourceNode</Label>
+        <Label lang="fr">Noeud source</Label>
       </Value>
       <!-- 
         <Value index="3">
