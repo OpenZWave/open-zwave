@@ -766,6 +766,7 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		uint32 GetAssociations( uint8 const _nodeId, uint8 const _groupIdx, uint8** o_associations );
 		uint32 GetAssociations( uint8 const _nodeId, uint8 const _groupIdx, InstanceAssociation** o_associations );
 		uint8 GetMaxAssociations( uint8 const _nodeId, uint8 const _groupIdx );
+		bool IsMultiInstance( uint8 const _nodeId, uint8 const _groupIdx );
 		string GetGroupLabel( uint8 const _nodeId, uint8 const _groupIdx );
 		void AddAssociation( uint8 const _nodeId, uint8 const _groupIdx, uint8 const _targetNodeId, uint8 const _instance = 0x00 );
 		void RemoveAssociation( uint8 const _nodeId, uint8 const _groupIdx, uint8 const _targetNodeId, uint8 const _instance = 0x00 );

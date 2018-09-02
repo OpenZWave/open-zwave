@@ -2901,6 +2901,23 @@ uint8 Node::GetMaxAssociations
 }
 
 //-----------------------------------------------------------------------------
+// <Node::IsMultiInstance>
+// Returns true if group supports multi instance
+//-----------------------------------------------------------------------------
+bool Node::IsMultiInstance
+(
+		uint8 const _groupIdx
+)
+{
+	bool multiInstance = false;
+	if( Group* group = GetGroup( _groupIdx ) )
+	{
+		multiInstance = group->IsMultiInstance();
+	}
+	return multiInstance;
+}
+
+//-----------------------------------------------------------------------------
 // <Node::GetGroupLabel>
 // Gets the label for a particular group
 //-----------------------------------------------------------------------------
