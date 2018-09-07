@@ -1634,6 +1634,16 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		uint8 GetMaxAssociations( uint32 const _homeId, uint8 const _nodeId, uint8 const _groupIdx );
 
 		/**
+		 * \brief Returns true is group supports multi instance.
+		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
+		 * \param _nodeId The ID of the node whose associations we are interested in.
+		 * \param _groupIdx one-based index of the group (because Z-Wave product manuals use one-based group numbering).
+		 * \return True if group supports multi instance.
+		 * \see GetNumGroups, AddAssociation, RemoveAssociation, GetAssociations, GetMaxAssociations
+		 */
+		bool IsMultiInstance( uint32 const _homeId, uint8 const _nodeId, uint8 const _groupIdx );
+
+		/**
 		 * \brief Returns a label for the particular group of a node.
 		 * This label is populated by the device specific configuration files.
 		 * \param _homeId The Home ID of the Z-Wave controller that manages the node.
