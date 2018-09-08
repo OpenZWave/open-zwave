@@ -180,6 +180,7 @@ DISTFILES =	.gitignore \
 	config/everspring/sm103.xml \
 	config/everspring/sp103.xml \
 	config/everspring/sp814.xml \
+	config/everspring/sp815.xml \
 	config/everspring/sp816.xml \
 	config/everspring/st812.xml \
 	config/everspring/st814.xml \
