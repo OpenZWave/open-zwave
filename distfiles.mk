@@ -361,6 +361,7 @@ DISTFILES =	.gitignore \
 	config/oomi/ft111.xml \
 	config/options.xml \
 	config/options.xsd \
+	config/philio/pad02.xml \
 	config/philio/pan03.xml \
 	config/philio/pan04.xml \
 	config/philio/pan06.xml \
