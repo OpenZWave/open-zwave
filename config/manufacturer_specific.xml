@@ -989,6 +989,7 @@
 		<Product type="0004" id="0002" name="Solar Powered Outdoor Siren" config="popp/solar-siren.xml" />
 		<Product type="0004" id="0003" name="004407 CO Detector" config="popp/004407.xml"/>
 		<Product type="0004" id="0004" name="009402 10-Year Smoke Detector" config="popp/009402.xml"/>
+		<Product type="0005" id="0003" name="009501 Flow Stop" config="popp/009501.xml"/>
 		<Product type="0004" id="0011" name="Popp Z-Rain Rain Sensor" config="popp/700168.xml"/>
 		<Product type="0005" id="0001" name="012501 Strike Lock Control" config="popp/012501.xml"/>
 		<Product type="0100" id="0101" name="009303 Battery Wall Controller" config="popp/009303.xml" />
