@@ -221,6 +221,7 @@ DISTFILES =	.gitignore \
 	config/fibaro/fgt001.xml \
 	config/fibaro/fgwpe.xml \
 	config/fibaro/fgwpfzw5.xml \
+	config/fibaro/fgwpg111.xml \
 	config/firstalert/zcombo.xml \
 	config/forest/fs2z5232000002.xml \
 	config/fortrezz/fmi.xml \
