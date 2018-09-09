@@ -435,6 +435,7 @@ DISTFILES =	.gitignore \
 	config/remotec/zts-500.xml \
 	config/remotec/zurc.xml \
 	config/remotec/zxt-120.xml \
+	config/remotec/zxt-600.xml \
 	config/schlage/BE468.xml \
 	config/schlage/BE469.xml \
 	config/schlagelink/itemp.xml \
