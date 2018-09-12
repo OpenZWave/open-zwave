@@ -452,6 +452,7 @@ DISTFILES =	.gitignore \
 	config/shenzen_neo/nas-wr01z.xml \
 	config/shenzen_neo/nas-ws02z.xml \
 	config/steinel/is140-2.xml \
+	config/steinel/l810-led-ihf.xml \
 	config/steinel/rs-led-d2.xml \
 	config/steinel/xled-home-2.xml \
 	config/stelpro/stzw402.xml \
@@ -516,6 +517,7 @@ DISTFILES =	.gitignore \
 	config/zooz/zen24.xml \
 	config/zooz/zse08.xml \
 	config/zooz/zse09.xml \
+	config/zooz/zse18.xml \
 	config/zooz/zse30.xml \
 	config/zooz/zse33.xml \
 	config/zooz/zse40.xml \
