@@ -564,7 +564,9 @@ int Value::VerifyRefreshedValue
 	void* _checkValue,
 	void* _newValue,
 	ValueID::ValueType _type,
-	int _length	// = 0
+	int _originalValueLength, // = 0,
+	int _checkValueLength, // = 0,
+	int _newValueLength // = 0
 )
 {
 	// TODO: this is pretty rough code, but it's reused by each value type.  It would be
@@ -662,7 +664,8 @@ int Value::VerifyRefreshedValue
 		bOriginalEqual = ( *((bool*)_originalValue) == *((bool*)_newValue) );
 		break;
 	case ValueID::ValueType_Raw:			// raw
-		bOriginalEqual = ( memcmp( _originalValue, _newValue, _length ) == 0 );
+		bOriginalEqual = ( _originalValueLength == _newValueLength );	// first check length of arrays
+		if(bOriginalEqual) bOriginalEqual = ( memcmp( _originalValue, _newValue, _newValueLength ) == 0 );	// if length is the same, then check content
 		break;
 	case ValueID::ValueType_Schedule:		// Schedule
 		/* Should not get here */
@@ -710,7 +713,8 @@ int Value::VerifyRefreshedValue
 			bCheckEqual = ( *((bool*)_checkValue) == *((bool*)_newValue) );
 			break;
 		case ValueID::ValueType_Raw:
-			bCheckEqual = ( memcmp( _checkValue, _newValue, _length ) == 0 );
+			bCheckEqual = ( _checkValueLength == _newValueLength );	// first check length of arrays
+			if (bCheckEqual) bCheckEqual = ( memcmp( _checkValue, _newValue, _newValueLength ) == 0 );	// if length is the same, then check content
 			break;
 		case ValueID::ValueType_Schedule:
 			/* Should not get here */
