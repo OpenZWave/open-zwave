@@ -36,6 +36,7 @@
 #include "Manager.h"
 #include "Driver.h"
 #include "Notification.h"
+#include "Utils.h"
 #include "platform/Log.h"
 
 #include "value_classes/ValueStore.h"
@@ -52,6 +53,7 @@ enum ManufacturerSpecificCmd
 map<uint16,string> ManufacturerSpecific::s_manufacturerMap;
 map<int64,ManufacturerSpecific::Product*> ManufacturerSpecific::s_productMap;
 bool ManufacturerSpecific::s_bXmlLoaded = false;
+Mutex* ManufacturerSpecific::s_xmlMutex=new Mutex();
 
 //-----------------------------------------------------------------------------
 // <ManufacturerSpecific::RequestState>
@@ -115,8 +117,6 @@ string ManufacturerSpecific::SetProductDetails
 {
 	char str[64];
 
-	if (!s_bXmlLoaded) LoadProductXML();
-
 	snprintf( str, sizeof(str), "Unknown: id=%.4x", manufacturerId );
 	string manufacturerName = str;
 
@@ -125,19 +125,24 @@ string ManufacturerSpecific::SetProductDetails
 
 	string configPath = "";
 
-	// Try to get the real manufacturer and product names
-	map<uint16,string>::iterator mit = s_manufacturerMap.find( manufacturerId );
-	if( mit != s_manufacturerMap.end() )
 	{
-		// Replace the id with the real name
-		manufacturerName = mit->second;
+		LockGuard LG(s_xmlMutex);	// global manufacturerMap mutex
+		if (!s_bXmlLoaded) LoadProductXML();
 
-		// Get the product
-		map<int64,Product*>::iterator pit = s_productMap.find( Product::GetKey( manufacturerId, productType, productId ) );
-		if( pit != s_productMap.end() )
+		// Try to get the real manufacturer and product names
+		map<uint16,string>::iterator mit = s_manufacturerMap.find( manufacturerId );
+		if( mit != s_manufacturerMap.end() )
 		{
-			productName = pit->second->GetProductName();
-			configPath = pit->second->GetConfigPath();
+			// Replace the id with the real name
+			manufacturerName = mit->second;
+
+			// Get the product
+			map<int64,Product*>::iterator pit = s_productMap.find( Product::GetKey( manufacturerId, productType, productId ) );
+			if( pit != s_productMap.end() )
+			{
+				productName = pit->second->GetProductName();
+				configPath = pit->second->GetConfigPath();
+			}
 		}
 	}
 
@@ -224,6 +229,7 @@ bool ManufacturerSpecific::LoadProductXML
 (
 )
 {
+	LockGuard LG(s_xmlMutex);	// global manufacturerMap mutex
 	s_bXmlLoaded = true;
 
 	// Parse the Z-Wave manufacturer and product XML file.
@@ -349,6 +355,7 @@ void ManufacturerSpecific::UnloadProductXML
 (
 )
 {
+	LockGuard LG(s_xmlMutex);	// global manufacturerMap mutex
 	if (s_bXmlLoaded)
 	{
 		map<int64,Product*>::iterator pit = s_productMap.begin();
@@ -421,24 +428,28 @@ void ManufacturerSpecific::ReLoadConfigXML
 {
 	if( Node* node = GetNodeUnsafe() )
 	{
-		if (!s_bXmlLoaded) LoadProductXML();
-
-		uint16 manufacturerId = node->GetManufacturerId();
-		uint16 productType = node->GetProductType();
-		uint16 productId = node->GetProductId();
-
-		map<uint16,string>::iterator mit = s_manufacturerMap.find( manufacturerId );
-		if( mit != s_manufacturerMap.end() )
+		string configPath;
 		{
-			map<int64,Product*>::iterator pit = s_productMap.find( Product::GetKey( manufacturerId, productType, productId ) );
-			if( pit != s_productMap.end() )
+			LockGuard LG(s_xmlMutex);	// global manufacturerMap mutex
+			if (!s_bXmlLoaded) LoadProductXML();
+
+			uint16 manufacturerId = node->GetManufacturerId();
+			uint16 productType = node->GetProductType();
+			uint16 productId = node->GetProductId();
+
+			map<uint16,string>::iterator mit = s_manufacturerMap.find( manufacturerId );
+			if( mit != s_manufacturerMap.end() )
 			{
-				string configPath = pit->second->GetConfigPath();
-				if( configPath.size() > 0 )
+				map<int64,Product*>::iterator pit = s_productMap.find( Product::GetKey( manufacturerId, productType, productId ) );
+				if( pit != s_productMap.end() )
 				{
-					LoadConfigXML( node, configPath );
+					string configPath = pit->second->GetConfigPath();
 				}
 			}
+		}
+		if( configPath.size() > 0 )
+		{
+			LoadConfigXML( node, configPath );
 		}
 	}
 }

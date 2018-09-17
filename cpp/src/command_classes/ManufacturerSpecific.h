@@ -30,6 +30,7 @@
 
 #include <map>
 #include "command_classes/CommandClass.h"
+#include "platform/Mutex.h"
 
 namespace OpenZWave
 {
@@ -108,6 +109,7 @@ namespace OpenZWave
 		static map<uint16,string>	s_manufacturerMap;
 		static map<int64,Product*>	s_productMap;
 		static bool					s_bXmlLoaded;
+		static Mutex*				s_xmlMutex;
 	};
 
 } // namespace OpenZWave
