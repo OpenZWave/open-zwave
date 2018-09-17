@@ -53,3 +53,5 @@ ozw_config
 .idea/
 .idea/*
 ozw_config
+
+cpp/src/command_classes/\.DS_Store
