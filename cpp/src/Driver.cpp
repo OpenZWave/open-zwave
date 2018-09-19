@@ -1651,7 +1651,9 @@ bool Driver::ReadMsg
 (
 )
 {
-	uint8 buffer[1024] = {0};
+	uint8 buffer[1024];
+
+	memset(buffer, 0, sizeof(uint8)* 1024);
 
 	if( !m_controller->Read( buffer, 1 ) )
 	{
