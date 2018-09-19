@@ -244,6 +244,7 @@ Dev Branch:
  - dotNet Wrapper is now maintained by dotMorten https://github.com/OpenZWave/openzwave-dotnet-uwp (Justin)
  - Exceptions are now enabled by Default (Justin)
  - Depreciate the builtin Scene Methods (not related to CENTRAL_SCENE) (Justin)
+ - Fix a build error on OSX - Issue #1593 (Justin)
 
 Version 1.4
  - Released 10th Jan, 2016

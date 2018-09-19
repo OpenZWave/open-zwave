@@ -498,7 +498,7 @@ bool SensorMultilevel::HandleMsg
 				case SensorType_SoilReactivity:				units = "pH";			break;
 				case SensorType_SoilSalinity:				units = "mol/m3";			break;
 				case SensorType_HeartRate:				units = "bpm";			break;
-				case SensorType_BloodPressure:				units = "mmHg " + scale ? "(Diastollic)" : "(Systollic)";			break;
+				case SensorType_BloodPressure:				units = scale ? "mmHg (Diastollic)" : "mmHg (Systollic)";	break;
 				case SensorType_MuscleMass:				units = "kg";			break;
 				case SensorType_FatMass:				units = "kg";			break;
 				case SensorType_BoneMass:				units = "kg";			break;
