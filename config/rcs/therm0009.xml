@@ -57,6 +57,12 @@
 	<CommandClass id="112" name="COMMAND_CLASS_CONFIGURATION" version="1" request_flags="4" innif="true">
 		<Instance index="1" />
 		<Value type="byte" genre="config" instance="1" index="24" label="Parameter #24" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="255" value="0" />
+		<Value type="byte" genre="config" instance="1" index="156" label="Parameter #156" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="255" value="1" />
+		<Value type="byte" genre="config" instance="1" index="158" label="Parameter #158" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="255" value="55" />
+		<Value type="byte" genre="config" instance="1" index="160" label="Parameter #160" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="255" value="5" />
+		<Value type="byte" genre="config" instance="1" index="161" label="Parameter #161" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="255" value="2" />
+		<Value type="byte" genre="config" instance="1" index="163" label="Parameter #163" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="255" value="30" />
+		<Value type="byte" genre="config" instance="1" index="164" label="Parameter #164" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="255" value="30" />
 	</CommandClass>
 	<CommandClass id="114" name="COMMAND_CLASS_MANUFACTURER_SPECIFIC" version="1" request_flags="4" innif="true">
 		<Instance index="1" />
