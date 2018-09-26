@@ -35,9 +35,9 @@ endif
 #if we are on a Mac, add these flags and libs to the compile and link phases 
 ifeq ($(UNAME),Darwin)
 CFLAGS	+= -c -DDARWIN
-TARCH	+= -arch i386 -arch x86_64
+TARCH	+= -arch x86_64
 LDFLAGS += -dynamiclib -install_name "$(DESTDIR)/$(instlibdir)/$(SHARED_LIB_NAME)"
-LIBS	+= -framework IOKit -framework CoreFoundation -arch i386 -arch x86_64
+LIBS	+= -framework IOKit -framework CoreFoundation -arch x86_64
 else ifeq ($(UNAME),FreeBSD)
 LDFLAGS+= -shared -lusb -Wl,-soname,$(SHARED_LIB_NAME)
 
