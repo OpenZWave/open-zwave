@@ -704,6 +704,7 @@
 		<Product type="4447" id="3036" name="HS-WD200+ Wall Dimmer" config="homeseer/hs-wd200plus.xml"/>
 		<Product type="201"  id="9"    name="HS-MS100+ Motion Sensor" config="homeseer/hs-ms100plus.xml"/>
 		<Product type="201"  id="a"    name="HS-LS100+ Leak Sensor" config="homeseer/hs-ls100plus.xml"/>
+		<Product type="0201" id="000b" name="HS-FLS100+ Floodlight Sensor" config="homeseer/hs-fls100plus.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0030" name="HomeSeer Tech">
 	</Manufacturer>
