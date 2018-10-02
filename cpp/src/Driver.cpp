@@ -7304,8 +7304,10 @@ void Driver::ReloadNode
 					// Get the node Id from the XML
 					if( TIXML_SUCCESS == nodeElement->ToElement()->QueryIntAttribute( "id", &intVal ) )
 					{
-						if (intVal == _nodeId)
+						if (intVal == _nodeId) {
 							driverElement->RemoveChild(nodeElement);
+							break;
+						}
 					}
 				}
 			}
