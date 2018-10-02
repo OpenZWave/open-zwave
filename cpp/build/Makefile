@@ -34,16 +34,16 @@ endif
 
 #if we are on a Mac, add these flags and libs to the compile and link phases 
 ifeq ($(UNAME),Darwin)
-CFLAGS	+= -c -DDARWIN -Wno-unused-private-field
 ifeq ($(DARWIN_MOJAVE_UP),1)
 # Newer macOS releases don't support i386 so only build 64-bit
-TARCH	+= -arch x86_64
+DARWIN_BUILD_TARGET = -arch x86_64
 else
-# Support older versions of OSX that may need to build both 32-bit and 64-bit
-TARCH	+= -arch i386 -arch x86_64
+DARWIN_BUILD_TARGET = -arch i386 -arch x86_64
 endif
+CFLAGS	+= -c -DDARWIN -Wno-unused-private-field
+TARCH	+= $(DARWIN_BUILD_TARGET)
 LDFLAGS += -dynamiclib -install_name "$(DESTDIR)/$(instlibdir)/$(SHARED_LIB_NAME)"
-LIBS	+= -framework IOKit -framework CoreFoundation -arch x86_64
+LIBS	+= -framework IOKit -framework CoreFoundation $(DARWIN_BUILD_TARGET)
 else ifeq ($(UNAME),FreeBSD)
 LDFLAGS+= -shared -lusb -Wl,-soname,$(SHARED_LIB_NAME)
 
