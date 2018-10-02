@@ -350,6 +350,11 @@ void MultiInstance::HandleMultiInstanceEncap
 			pCommandClass->ReceivedCntIncr();
 			pCommandClass->HandleMsg( &_data[3], _length-3, instance );
 		}
+		else
+		{
+			Log::Write( LogLevel_Warning, GetNodeId(), "Received invalid MultiInstanceReport from node %d. Attempting to process as MultiChannel", GetNodeId());
+			HandleMultiChannelEncap( _data, _length );
+		}
 	}
 }
 
