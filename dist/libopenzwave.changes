@@ -1,0 +1,17 @@
+-------------------------------------------------------------------
+Fri Jun 21 11:16:35 UTC 2013 - justin@dynam.ac
+
+Add MultiInstance.patch to handle buggy devices such as Vitrum that
+send wrong commands 
+
+-------------------------------------------------------------------
+Fri Jun 21 08:02:24 UTC 2013 - justin@dynam.ac
+
+Remove debug output from RPM installation commands- 
+
+-------------------------------------------------------------------
+Fri Jun 21 06:46:23 UTC 2013 - justin@dynam.ac
+
+Initial RPM Packages that should work for all Platforms
+- 
+

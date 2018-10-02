@@ -53,6 +53,10 @@ LDFLAGS+= -L/usr/local/lib -liconv
 endif
 endif
 
+else ifeq ($(UNAME),NetBSD)
+LDFLAGS+= -L/usr/pkg/lib -lusb-1.0
+else ifeq ($(UNAME),SunOS)
+LDFLAGS+= -lusb-1.0
 endif
 
 $(OBJDIR)/MinOZW:	$(patsubst %.cpp,$(OBJDIR)/%.o,$(minozwsrc))

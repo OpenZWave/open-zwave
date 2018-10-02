@@ -85,12 +85,21 @@ DISTFILES =	.gitignore \
 	config/aeotec/zw132.xml \
 	config/aeotec/zw139.xml \
 	config/aeotec/zw140.xml \
+	config/aeotec/zw141.xml \
+	config/aeotec/zwa001.xml \
+	config/aeotec/zwa002.xml \
+	config/aeotec/zwa003.xml \
+	config/aeotec/zwa004.xml \
+	config/aeotec/zwa005.xml \
+	config/assa_abloy/ConexisL1.xml \
+	config/assa_abloy/KeyfreeConnected-plus.xml \
 	config/assa_abloy/KeyfreeConnected.xml \
 	config/assa_abloy/PushButtonDeadbolt.xml \
 	config/assa_abloy/PushButtonLever.xml \
 	config/assa_abloy/TouchDeadbolt.xml \
 	config/assa_abloy/TouchLever.xml \
 	config/assa_abloy/nexTouch.xml \
+	config/august/asl-03.xml \
 	config/cooper/RF9501.xml \
 	config/cooper/RF9505-T.xml \
 	config/cooper/RF9517.xml \
@@ -110,6 +119,7 @@ DISTFILES =	.gitignore \
 	config/devolo/mt02792.xml \
 	config/devolo/mt2646.xml \
 	config/devolo/mt2647.xml \
+	config/devolo/mt2651.xml \
 	config/devolo/mt2652.xml \
 	config/devolo/mt2653.xml \
 	config/devolo/mt2756.xml \
@@ -170,6 +180,7 @@ DISTFILES =	.gitignore \
 	config/everspring/sm103.xml \
 	config/everspring/sp103.xml \
 	config/everspring/sp814.xml \
+	config/everspring/sp815.xml \
 	config/everspring/sp816.xml \
 	config/everspring/st812.xml \
 	config/everspring/st814.xml \
@@ -211,6 +222,7 @@ DISTFILES =	.gitignore \
 	config/fibaro/fgt001.xml \
 	config/fibaro/fgwpe.xml \
 	config/fibaro/fgwpfzw5.xml \
+	config/fibaro/fgwpg111.xml \
 	config/firstalert/zcombo.xml \
 	config/forest/fs2z5232000002.xml \
 	config/fortrezz/fmi.xml \
@@ -231,6 +243,7 @@ DISTFILES =	.gitignore \
 	config/ge/14295-dimmer-toggle.xml \
 	config/ge/26931-motion-switch.xml \
 	config/ge/26933-motion-dimmer.xml \
+	config/ge/28167-plugin-dimmer.xml \
 	config/ge/dimmer.xml \
 	config/ge/dimmer_module.xml \
 	config/ge/hinge-pin.xml \
@@ -242,10 +255,14 @@ DISTFILES =	.gitignore \
 	config/gocontrol/GC-TBZ48L.xml \
 	config/gr/gr105.xml \
 	config/gr/gr105n.xml \
+	config/graber/brz1.xml \
+	config/graber/vcz1.xml \
 	config/greenwave/powernode1.xml \
 	config/greenwave/powernode6.xml \
 	config/hank/hkzw-dws01.xml \
+	config/hank/hkzw-fld01.xml \
 	config/hank/hkzw-ms01.xml \
+	config/hank/hkzw-ms02.xml \
 	config/hank/hkzw-rgb01.xml \
 	config/hank/hkzw-so01-smartplug.xml \
 	config/hank/hkzw-so03.xml \
@@ -261,8 +278,12 @@ DISTFILES =	.gitignore \
 	config/heiman/HS1WL-Z.xml \
 	config/heiman/HS2SK-Z.xml \
 	config/homeseer/ezmotionplus.xml \
+	config/homeseer/hs-ls100plus.xml \
+	config/homeseer/hs-ms100plus.xml \
 	config/homeseer/hs-wd100plus.xml \
+	config/homeseer/hs-wd200plus.xml \
 	config/homeseer/hs-ws100plus.xml \
+	config/homeseer/hs-ws200plus.xml \
 	config/homeseer/hsm100.xml \
 	config/homeseer/hsm200.xml \
 	config/homeseer/ztroller.xml \
@@ -274,10 +295,19 @@ DISTFILES =	.gitignore \
 	config/horstmann/ses302.xml \
 	config/horstmann/ses303.xml \
 	config/horstmann/sir321.xml \
+	config/horstmann/srt321.xml \
 	config/horstmann/srt323.xml \
 	config/horstmann/ssr302.xml \
 	config/idlock/idlock101.xml \
 	config/ingersoll/dwzwave1.xml \
+	config/inovelli/nzw1201.xml \
+	config/inovelli/nzw30.xml \
+	config/inovelli/nzw31.xml \
+	config/inovelli/nzw36.xml \
+	config/inovelli/nzw37.xml \
+	config/inovelli/nzw39.xml \
+	config/inovelli/nzw96.xml \
+	config/inovelli/nzw97.xml \
 	config/inovelli/simple_module.xml \
 	config/intermatic/ca8900.xml \
 	config/iris/rangeextender.xml \
@@ -289,6 +319,7 @@ DISTFILES =	.gitignore \
 	config/leviton/dzpd3.xml \
 	config/leviton/rzi10.xml \
 	config/leviton/vrcpg.xml \
+	config/leviton/vre06.xml \
 	config/leviton/vrf01.xml \
 	config/leviton/vri06.xml \
 	config/leviton/vri10.xml \
@@ -300,12 +331,14 @@ DISTFILES =	.gitignore \
 	config/linear/WADWAZ-1.xml \
 	config/linear/WAPIRZ-1.xml \
 	config/linear/WD500Z-1.xml \
+	config/linear/WD500Z5-1.xml \
 	config/linear/WS15Z-1.xml \
 	config/linear/WT00Z-1.xml \
 	config/logicsoft/ZHC5002.xml \
 	config/logicsoft/ZHC5010.xml \
 	config/manufacturer_specific.xml \
 	config/manufacturer_specific.xsd \
+	config/mcohome/a8-9.xml \
 	config/mcohome/mh8fceu.xml \
 	config/mcohome/mh9co2.xml \
 	config/mcohome/mhp210.xml \
@@ -326,8 +359,11 @@ DISTFILES =	.gitignore \
 	config/northq/nq9021.xml \
 	config/northq/nq9121.xml \
 	config/northq/nq92021.xml \
+	config/oomi/ft100.xml \
+	config/oomi/ft111.xml \
 	config/options.xml \
 	config/options.xsd \
+	config/philio/pad02.xml \
 	config/philio/pan03.xml \
 	config/philio/pan04.xml \
 	config/philio/pan06.xml \
@@ -357,6 +393,7 @@ DISTFILES =	.gitignore \
 	config/popp/123580.xml \
 	config/popp/123601.xml \
 	config/popp/123658.xml \
+	config/popp/700045.xml \
 	config/popp/700168.xml \
 	config/popp/smoke-detector.xml \
 	config/popp/solar-siren.xml \
@@ -387,6 +424,8 @@ DISTFILES =	.gitignore \
 	config/qubino/ZMNHUD1.xml \
 	config/qubino/ZMNHVDx.xml \
 	config/qubino/ZMNHWD1.xml \
+	config/qubino/ZMNHXDx.xml \
+	config/qubino/ZMNHYDx.xml \
 	config/qubino/ZMNHZDx.xml \
 	config/rcs/em52-zw.xml \
 	config/rcs/pm12-zw.xml \
@@ -399,11 +438,13 @@ DISTFILES =	.gitignore \
 	config/remotec/zts-500.xml \
 	config/remotec/zurc.xml \
 	config/remotec/zxt-120.xml \
+	config/remotec/zxt-600.xml \
 	config/schlage/BE468.xml \
 	config/schlage/BE469.xml \
 	config/schlagelink/itemp.xml \
 	config/schlagelink/minikeypad.xml \
 	config/sensative/strips.xml \
+	config/sensative/stripscomfort.xml \
 	config/shenzen_neo/ls01ch.xml \
 	config/shenzen_neo/ls02ch.xml \
 	config/shenzen_neo/nas-ab01z.xml \
@@ -413,12 +454,17 @@ DISTFILES =	.gitignore \
 	config/shenzen_neo/nas-wr01z.xml \
 	config/shenzen_neo/nas-ws02z.xml \
 	config/steinel/is140-2.xml \
+	config/steinel/l810-led-ihf.xml \
+	config/steinel/rs-led-d2.xml \
+	config/steinel/xled-home-2.xml \
 	config/stelpro/stzw402.xml \
 	config/swiid/swiidinter.xml \
 	config/swiid/swiidplug.xml \
 	config/telldus/tzdw100.xml \
 	config/telldus/tzwp100.xml \
+	config/telldus/tzwp102.xml \
 	config/thermofloor/heatit021.xml \
+	config/thermofloor/heatit033.xml \
 	config/trane/TZEMT400AB32MAA.xml \
 	config/trane/TZEMT400BB32MAA.xml \
 	config/trane/TZEMT524AA21MA.xml \
@@ -444,11 +490,13 @@ DISTFILES =	.gitignore \
 	config/wenzhou/tsp01.xml \
 	config/wenzhou/tz55.xml \
 	config/wenzhou/tz56.xml \
+	config/wenzhou/tz57.xml \
 	config/wenzhou/tz65d.xml \
 	config/wenzhou/tz66d.xml \
 	config/wenzhou/tz67.xml \
 	config/wenzhou/tz68.xml \
 	config/wenzhou/tz69.xml \
+	config/wenzhou/tz74.xml \
 	config/wenzhou/tz79.xml \
 	config/wenzhou/tz88.xml \
 	config/widom/UBS104.xml \
@@ -457,10 +505,12 @@ DISTFILES =	.gitignore \
 	config/zipato/MiniKeypad.xml \
 	config/zipato/RGBBulb.xml \
 	config/zipato/RGBBulb2.xml \
+	config/zipato/pan04.xml \
 	config/zipato/vszd2102.xml \
 	config/zipato/zp3102.xml \
 	config/zooz/zen06.xml \
 	config/zooz/zen07.xml \
+	config/zooz/zen15.xml \
 	config/zooz/zen20.xml \
 	config/zooz/zen21.xml \
 	config/zooz/zen22.xml \
@@ -469,6 +519,7 @@ DISTFILES =	.gitignore \
 	config/zooz/zen24.xml \
 	config/zooz/zse08.xml \
 	config/zooz/zse09.xml \
+	config/zooz/zse18.xml \
 	config/zooz/zse30.xml \
 	config/zooz/zse33.xml \
 	config/zooz/zse40.xml \
@@ -504,6 +555,7 @@ DISTFILES =	.gitignore \
 	cpp/build/windows/GIT-VS-VERSION-GEN.bat \
 	cpp/build/windows/installer/buildall.bat \
 	cpp/build/windows/installer/openzwave.nsi \
+	cpp/build/windows/mingw-w64/Makefile \
 	cpp/build/windows/mingw32/Makefile \
 	cpp/build/windows/vs2008/OpenZWave.sln \
 	cpp/build/windows/vs2008/OpenZWave.vcproj \
@@ -815,20 +867,33 @@ DISTFILES =	.gitignore \
 	cpp/tinyxml/tinyxmlerror.cpp \
 	cpp/tinyxml/tinyxmlparser.cpp \
 	debian/MinOZW.1 \
-	debian/TODO \
 	debian/changelog \
 	debian/compat \
 	debian/control \
 	debian/copyright \
+	debian/format \
 	debian/libopenzwave-doc.doc-base \
-	debian/libopenzwave1.3-dev.install \
-	debian/libopenzwave1.3.install \
-	debian/libopenzwave1.3.lintian-overrides \
+	debian/libopenzwave-doc.install \
+	debian/libopenzwave-doc.lintian-overrides-not-needed \
+	debian/libopenzwave1.4-dev.install \
+	debian/libopenzwave1.4.install \
+	debian/libopenzwave1.4.lintian-overrides \
+	debian/openzwave.dsc \
 	debian/openzwave.install \
 	debian/openzwave.manpages \
+	debian/patches/cppflags.patch \
+	debian/patches/gcc8.patch \
+	debian/patches/hardening.patch \
+	debian/patches/series \
+	debian/patches/spelling.patch \
 	debian/rules \
+	debian/shlibs.libopenzwave1.4 \
 	debian/source/format \
+	debian/version-increment.sh \
+	debian/watch \
 	dist.mk \
+	dist/libopenzwave.changes \
+	dist/libopenzwave.spec \
 	distfiles.mk \
 	docs/Doxyfile.in \
 	docs/default.htm \
@@ -911,6 +976,4 @@ DISTFILES =	.gitignore \
 	license/lgpl.txt \
 	license/license.txt \
 	makedist \
-	openzwave.dsc \
-	openzwave.spec \
 	cpp/src/vers.cpp
