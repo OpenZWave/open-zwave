@@ -405,7 +405,7 @@ bool Localization::SetValueLabel
 		uint8 ccID,
 		uint16 indexId,
 		uint32 pos,
-		string help,
+		string label,
 		string lang
 )
 {
@@ -413,16 +413,16 @@ bool Localization::SetValueLabel
 	if (m_valueLocalizationMap.find(key) == m_valueLocalizationMap.end()) {
 		m_valueLocalizationMap[key] = new ValueLocalizationEntry(indexId, pos);
 	} else if (m_valueLocalizationMap[key]->HasLabel(lang)) {
-		Log::Write( LogLevel_Warning, "Localization::SetValueLabel: Duplicate Entry for CommandClass %d, ValueID: %d (%d):  %s (Lang: %s)", ccID, indexId, pos, help.c_str(), lang.c_str() );
+		Log::Write( LogLevel_Warning, "Localization::SetValueLabel: Duplicate Entry for CommandClass %d, ValueID: %d (%d):  %s (Lang: %s)", ccID, indexId, pos, label.c_str(), lang.c_str() );
 	}
 
 	if( lang.empty() )
 	{
-		m_valueLocalizationMap[key]->AddLabel(help);
+		m_valueLocalizationMap[key]->AddLabel(label);
 	}
 	else
 	{
-		m_valueLocalizationMap[key]->AddLabel(help, lang);
+		m_valueLocalizationMap[key]->AddLabel(label, lang);
 	}
 	return true;
 }
@@ -451,7 +451,7 @@ string const Localization::GetValueLabel
 {
 	uint64 key = GetValueKey(ccID, indexId, pos);
 	if (m_valueLocalizationMap.find(key) == m_valueLocalizationMap.end()) {
-		Log::Write( LogLevel_Warning, "Localization::GetValueHelp: No Help for CommandClass %d, ValueID: %d (%d)", ccID, indexId, pos);
+		Log::Write( LogLevel_Warning, "Localization::GetValueLabel: No Label for CommandClass %d, ValueID: %d (%d)", ccID, indexId, pos);
 		return "";
 	}
 	return m_valueLocalizationMap[key]->GetLabel(m_selectedLang);

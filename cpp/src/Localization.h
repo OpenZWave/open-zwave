@@ -104,7 +104,7 @@ public:
     string GetSelectedLang() { return Localization::m_selectedLang;};
     bool SetValueHelp(uint8 ccID, uint16 indexID, uint32 pos, string help, string lang="");
     string const GetValueHelp(uint8 ccID, uint16 indexId, uint32 pos);
-    bool SetValueLabel(uint8 ccID, uint16 indexID, uint32 pos, string help, string lang="");
+    bool SetValueLabel(uint8 ccID, uint16 indexID, uint32 pos, string label, string lang="");
     string const GetValueLabel(uint8 ccID, uint16 indexId, int32 pos) const;
 
     static void ReadXMLVIDHelp(uint8 ccID, uint16 indexId, uint32 pos, const TiXmlElement *helpElement);
