@@ -34,13 +34,15 @@ endif
 
 #if we are on a Mac, add these flags and libs to the compile and link phases 
 ifeq ($(UNAME),Darwin)
+CFLAGS	+= -c -DDARWIN
 ifeq ($(DARWIN_MOJAVE_UP),1)
 # Newer macOS releases don't support i386 so only build 64-bit
 DARWIN_BUILD_TARGET = -arch x86_64
+# Disable an implicitly-set build flag that causes the build to needlessly fail
+CFLAGS	+= -Wno-unused-private-field
 else
 DARWIN_BUILD_TARGET = -arch i386 -arch x86_64
 endif
-CFLAGS	+= -c -DDARWIN -Wno-unused-private-field
 TARCH	+= $(DARWIN_BUILD_TARGET)
 LDFLAGS += -dynamiclib -install_name "$(DESTDIR)/$(instlibdir)/$(SHARED_LIB_NAME)"
 LIBS	+= -framework IOKit -framework CoreFoundation $(DARWIN_BUILD_TARGET)
