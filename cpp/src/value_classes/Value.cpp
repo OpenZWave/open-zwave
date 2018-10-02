@@ -771,7 +771,7 @@ void Value::SetLabel
 		string const lang
 )
 {
-	Localization::Get()->SetValueHelp(m_id.GetCommandClassId(), m_id.GetIndex(), -1, _label, lang);
+	Localization::Get()->SetValueLabel(m_id.GetCommandClassId(), m_id.GetIndex(), -1, _label, lang);
 }
 
 
