@@ -217,6 +217,7 @@
 		<Product type="0007" id="0000" name="Yale Keyless Connected Smart Lock (YSL)" config="assa_abloy/KeyfreeConnected.xml"/>
 		<Product type="1bef" id="9230" name="Yale Keyless Connected Smart Lock (YSL)" config="assa_abloy/KeyfreeConnected.xml"/>
 		<Product type="6600" id="0002" name="Yale Conexis L1 (SD-L1000-CH)" config="assa_abloy/ConexisL1.xml"/>
+		<Product type="0007" id="0001" name="Keyless Connected (YD-01-CON)" config="assa_abloy/KeyfreeConnected-plus.xml"/>
 		<Product type="0006" id="0001" name="Yale Keyfree Connected Smart Lock (YKFCON)" config="assa_abloy/KeyfreeConnected-plus.xml"/>
 		<Product type="8001" id="0b00" name="Yale nexTouch Wireless Push Button (NTB610)" config="assa_abloy/nexTouch.xml"/>
 		<Product type="8003" id="0b00" name="Yale nexTouch Wireless Push Button (NTB620)" config="assa_abloy/nexTouch.xml"/>
