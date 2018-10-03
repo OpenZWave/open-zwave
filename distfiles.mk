@@ -180,6 +180,7 @@ DISTFILES =	.gitignore \
 	config/everspring/sm103.xml \
 	config/everspring/sp103.xml \
 	config/everspring/sp814.xml \
+	config/everspring/sp815.xml \
 	config/everspring/sp816.xml \
 	config/everspring/st812.xml \
 	config/everspring/st814.xml \
@@ -221,6 +222,7 @@ DISTFILES =	.gitignore \
 	config/fibaro/fgt001.xml \
 	config/fibaro/fgwpe.xml \
 	config/fibaro/fgwpfzw5.xml \
+	config/fibaro/fgwpg111.xml \
 	config/firstalert/zcombo.xml \
 	config/forest/fs2z5232000002.xml \
 	config/fortrezz/fmi.xml \
@@ -241,6 +243,7 @@ DISTFILES =	.gitignore \
 	config/ge/14295-dimmer-toggle.xml \
 	config/ge/26931-motion-switch.xml \
 	config/ge/26933-motion-dimmer.xml \
+	config/ge/28167-plugin-dimmer.xml \
 	config/ge/dimmer.xml \
 	config/ge/dimmer_module.xml \
 	config/ge/hinge-pin.xml \
@@ -275,6 +278,7 @@ DISTFILES =	.gitignore \
 	config/heiman/HS1WL-Z.xml \
 	config/heiman/HS2SK-Z.xml \
 	config/homeseer/ezmotionplus.xml \
+	config/homeseer/hs-ls100plus.xml \
 	config/homeseer/hs-ms100plus.xml \
 	config/homeseer/hs-wd100plus.xml \
 	config/homeseer/hs-wd200plus.xml \
@@ -296,8 +300,13 @@ DISTFILES =	.gitignore \
 	config/horstmann/ssr302.xml \
 	config/idlock/idlock101.xml \
 	config/ingersoll/dwzwave1.xml \
+	config/inovelli/nzw1201.xml \
 	config/inovelli/nzw30.xml \
 	config/inovelli/nzw31.xml \
+	config/inovelli/nzw36.xml \
+	config/inovelli/nzw37.xml \
+	config/inovelli/nzw39.xml \
+	config/inovelli/nzw96.xml \
 	config/inovelli/nzw97.xml \
 	config/inovelli/simple_module.xml \
 	config/intermatic/ca8900.xml \
@@ -310,6 +319,7 @@ DISTFILES =	.gitignore \
 	config/leviton/dzpd3.xml \
 	config/leviton/rzi10.xml \
 	config/leviton/vrcpg.xml \
+	config/leviton/vre06.xml \
 	config/leviton/vrf01.xml \
 	config/leviton/vri06.xml \
 	config/leviton/vri10.xml \
@@ -328,6 +338,7 @@ DISTFILES =	.gitignore \
 	config/logicsoft/ZHC5010.xml \
 	config/manufacturer_specific.xml \
 	config/manufacturer_specific.xsd \
+	config/mcohome/a8-9.xml \
 	config/mcohome/mh8fceu.xml \
 	config/mcohome/mh9co2.xml \
 	config/mcohome/mhp210.xml \
@@ -352,6 +363,7 @@ DISTFILES =	.gitignore \
 	config/oomi/ft111.xml \
 	config/options.xml \
 	config/options.xsd \
+	config/philio/pad02.xml \
 	config/philio/pan03.xml \
 	config/philio/pan04.xml \
 	config/philio/pan06.xml \
@@ -413,6 +425,7 @@ DISTFILES =	.gitignore \
 	config/qubino/ZMNHVDx.xml \
 	config/qubino/ZMNHWD1.xml \
 	config/qubino/ZMNHXDx.xml \
+	config/qubino/ZMNHYDx.xml \
 	config/qubino/ZMNHZDx.xml \
 	config/rcs/em52-zw.xml \
 	config/rcs/pm12-zw.xml \
@@ -425,6 +438,7 @@ DISTFILES =	.gitignore \
 	config/remotec/zts-500.xml \
 	config/remotec/zurc.xml \
 	config/remotec/zxt-120.xml \
+	config/remotec/zxt-600.xml \
 	config/schlage/BE468.xml \
 	config/schlage/BE469.xml \
 	config/schlagelink/itemp.xml \
@@ -440,6 +454,7 @@ DISTFILES =	.gitignore \
 	config/shenzen_neo/nas-wr01z.xml \
 	config/shenzen_neo/nas-ws02z.xml \
 	config/steinel/is140-2.xml \
+	config/steinel/l810-led-ihf.xml \
 	config/steinel/rs-led-d2.xml \
 	config/steinel/xled-home-2.xml \
 	config/stelpro/stzw402.xml \
@@ -475,6 +490,7 @@ DISTFILES =	.gitignore \
 	config/wenzhou/tsp01.xml \
 	config/wenzhou/tz55.xml \
 	config/wenzhou/tz56.xml \
+	config/wenzhou/tz57.xml \
 	config/wenzhou/tz65d.xml \
 	config/wenzhou/tz66d.xml \
 	config/wenzhou/tz67.xml \
@@ -503,6 +519,7 @@ DISTFILES =	.gitignore \
 	config/zooz/zen24.xml \
 	config/zooz/zse08.xml \
 	config/zooz/zse09.xml \
+	config/zooz/zse18.xml \
 	config/zooz/zse30.xml \
 	config/zooz/zse33.xml \
 	config/zooz/zse40.xml \
