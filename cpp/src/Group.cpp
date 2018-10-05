@@ -536,8 +536,7 @@ Group::AssociationCommand::AssociationCommand
 (
 	uint8 const _length,
 	uint8 const* _data
-):
-	m_length( _length )
+)
 {
 	m_data = new uint8[_length];
 	memcpy( m_data, _data, _length );
