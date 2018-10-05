@@ -565,6 +565,3 @@ void SensorMultilevel::CreateVars
 {
 	// Don't create anything here. We do it in the report.
 }
-
-
-
