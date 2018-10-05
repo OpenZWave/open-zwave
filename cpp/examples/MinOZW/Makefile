@@ -37,7 +37,13 @@ include $(top_srcdir)/cpp/build/support.mk
 #if we are on a Mac, add these flags and libs to the compile and link phases 
 ifeq ($(UNAME),Darwin)
 CFLAGS += -DDARWIN
-TARCH += -arch i386 -arch x86_64
+ifeq ($(DARWIN_MOJAVE_UP),1)
+# Newer macOS releases don't support i386 so only build 64-bit
+TARCH	+= -arch x86_64
+else
+# Support older versions of OSX that may need to build both 32-bit and 64-bit
+TARCH	+= -arch i386 -arch x86_64
+endif
 endif
 
 # Dup from main makefile, but that is not included when building here..
