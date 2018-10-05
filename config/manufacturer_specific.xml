@@ -715,6 +715,7 @@
 	<Manufacturer id="0039" name="Honeywell">
 		<Product type="0011" id="0001" name="TH8320ZW1000 Touchscreen Thermostat" config="honeywell/th8320zw1000.xml"/>
 		<Product type="0001" id="0003" name="Lynx Touch L5100 / L7000" config="honeywell/lynx-touch-l5100.xml"/>
+		<Product type="4944" id="3038" name="39351 / ZW3005 In-Wall Smart Dimmer" config="honeywell/39351-ZW3005.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0059" name="Horstmann">
 		<Product type="0001" id="0001" name="ASR-RF Thermostat Receiver"/>
