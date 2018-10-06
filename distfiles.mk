@@ -278,6 +278,7 @@ DISTFILES =	.gitignore \
 	config/heiman/HS1WL-Z.xml \
 	config/heiman/HS2SK-Z.xml \
 	config/homeseer/ezmotionplus.xml \
+	config/homeseer/hs-fls100plus.xml \
 	config/homeseer/hs-ls100plus.xml \
 	config/homeseer/hs-ms100plus.xml \
 	config/homeseer/hs-wd100plus.xml \
@@ -287,6 +288,7 @@ DISTFILES =	.gitignore \
 	config/homeseer/hsm100.xml \
 	config/homeseer/hsm200.xml \
 	config/homeseer/ztroller.xml \
+	config/honeywell/39351-ZW3005.xml \
 	config/honeywell/lynx-touch-l5100.xml \
 	config/honeywell/th8320zw1000.xml \
 	config/horstmann/asrzw.xml \
@@ -298,6 +300,7 @@ DISTFILES =	.gitignore \
 	config/horstmann/srt321.xml \
 	config/horstmann/srt323.xml \
 	config/horstmann/ssr302.xml \
+	config/horstmann/ssr303.xml \
 	config/idlock/idlock101.xml \
 	config/ingersoll/dwzwave1.xml \
 	config/inovelli/nzw1201.xml \
