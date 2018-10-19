@@ -54,7 +54,7 @@
 			<Item label="47k ntc" value="5"/>
 		</Value>
 		<Value type="short" index="4" genre="config" label="DIFF l. Temperature control Hysteresis" min="0" max="30" size="1" value="5">
-			<Help>3-30 (0,3C - 3.0C)</Help>
+			<Help>0-30 (0,3C - 3.0C)</Help>
 		</Value>
 		<Value type="short" index="5" genre="config" label="FLo: Floor min limit" min="50" max="400" size="2" value="50">
 			<Help>50-400 (5.0C - 40.0C)</Help>
