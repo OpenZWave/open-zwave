@@ -4,16 +4,16 @@
 
 namespace OpenZWave
 {
-	class AVSimpleCommandItem
+	class SimpleAVCommandItem
 	{
 	public:
-		AVSimpleCommandItem(uint16 const _code, string _name, string _description, uint16 const _version);
+		SimpleAVCommandItem(uint16 const _code, string _name, string _description, uint16 const _version);
 		uint16 GetCode();
 		string GetName();
 		string GetDescription();
 		uint16 GetVersion();
 
-		static vector<AVSimpleCommandItem> GetCommands();
+		static vector<SimpleAVCommandItem> GetCommands();
 
 	private:
 		uint16 m_code;

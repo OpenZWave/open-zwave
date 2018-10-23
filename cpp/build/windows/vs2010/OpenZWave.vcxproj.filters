@@ -384,10 +384,10 @@
     <ClInclude Include="..\..\..\src\command_classes\ManufacturerProprietary.h">
       <Filter>Command Classes</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\command_classes\AVSimple.h">
+    <ClInclude Include="..\..\..\src\command_classes\SimpleAV.h">
       <Filter>Command Classes</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\command_classes\AVSimpleCommandItem.h">
+    <ClInclude Include="..\..\..\src\command_classes\SimpleAVCommandItem.h">
       <Filter>Command Classes</Filter>
     </ClInclude>
   </ItemGroup>
@@ -743,10 +743,10 @@
     <ClCompile Include="..\..\..\src\Bitfield.cpp">
       <Filter>Main</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\command_classes\AVSimple.cpp">
+    <ClCompile Include="..\..\..\src\command_classes\SimpleAV.cpp">
       <Filter>Command Classes</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\command_classes\AVSimpleCommandItem.cpp">
+    <ClCompile Include="..\..\..\src\command_classes\SimpleAVCommandItem.cpp">
       <Filter>Command Classes</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,33 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Product xmlns='http://code.google.com/p/open-zwave/'>
-  <CommandClass id="148" name="COMMAND_CLASS_SIMPLE_AV_CONTROL" version="1" request_flags="5" innif="true">
-		<Instance index="1" endpoint="1" />
-		<Instance index="2" endpoint="2" />
-		<Instance index="3" endpoint="3" />
-		<Instance index="4" endpoint="4" />
-		<Instance index="5" endpoint="5" />
-		<Instance index="6" endpoint="6" />
-	</CommandClass>
-  <CommandClass id="32" name="COMMAND_CLASS_BASIC" version="1" request_flags="5" innif="true">
-    <Instance index="1" endpoint="1" />
-    <Instance index="2" endpoint="2" />
-    <Instance index="3" endpoint="3" />
-    <Instance index="4" endpoint="4" />
-    <Instance index="5" endpoint="5" />
-    <Instance index="6" endpoint="6" />
-    <Value type="byte" genre="basic" instance="1" index="0" label="Basic" units="" read_only="false" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="255" value="255" />
-  </CommandClass>
-  <CommandClass id="96" name="COMMAND_CLASS_MULTI_INSTANCE/CHANNEL" version="3" request_flags="1" innif="true">
-    <Instance index="1" />
-  </CommandClass>
-  <CommandClass id="112" name="COMMAND_CLASS_CONFIGURATION" version="1" request_flags="5" innif="true">
-    <Instance index="1" />
-    <Instance index="2" endpoint="1" />
-    <Instance index="3" endpoint="2" />
-    <Instance index="4" endpoint="3" />
-    <Instance index="5" endpoint="4" />
-    <Instance index="6" endpoint="5" />
-    <Instance index="7" endpoint="6" />
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
+  <CommandClass id="112">
     <Value type="short" index="27" genre="config" label="IR code number from table" units="">
       <Help>
         IR code number for built-in code library. Refer "Code list" for details.
@@ -89,19 +62,5 @@
         * 255 (0xFF): Single shot IR transmission mode; 
       </Help>
     </Value>
-  </CommandClass>
-  <CommandClass id="114" name="COMMAND_CLASS_MANUFACTURER_SPECIFIC" version="1" request_flags="1" innif="true">
-    <Instance index="1" />
-    <Value type="int" genre="system" instance="1" index="0" label="Loaded Config Revision" units="" read_only="true" write_only="false" verify_changes="false" poll_intensity="0" min="-2147483648" max="2147483647" value="0" />
-    <Value type="int" genre="system" instance="1" index="1" label="Config File Revision" units="" read_only="true" write_only="false" verify_changes="false" poll_intensity="0" min="-2147483648" max="2147483647" value="0" />
-    <Value type="int" genre="system" instance="1" index="2" label="Latest Available Config File Revision" units="" read_only="true" write_only="false" verify_changes="false" poll_intensity="0" min="-2147483648" max="2147483647" value="0" />
-    <Value type="string" genre="system" instance="1" index="3" label="Device ID" units="" read_only="true" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="0" value="" />
-    <Value type="string" genre="system" instance="1" index="4" label="Serial Number" units="" read_only="true" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="0" value="" />
-  </CommandClass>
-  <CommandClass id="134" name="COMMAND_CLASS_VERSION" version="1" request_flags="5" innif="true">
-    <Instance index="1" />
-    <Value type="string" genre="system" instance="1" index="0" label="Library Version" units="" read_only="true" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="0" />
-    <Value type="string" genre="system" instance="1" index="1" label="Protocol Version" units="" read_only="true" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="0" />
-    <Value type="string" genre="system" instance="1" index="2" label="Application Version" units="" read_only="true" write_only="false" verify_changes="false" poll_intensity="0" min="0" max="0" />
   </CommandClass>
 </Product>

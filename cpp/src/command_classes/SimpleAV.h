@@ -3,11 +3,11 @@
 namespace OpenZWave
 {
 	/** Implements COMMAND_CLASS_SIMPLE_AV_CONTROL (0x94), a Z-Wave device command class. */
-	class AVSimple : public CommandClass
+	class SimpleAV : public CommandClass
 	{
 	public:
-		static CommandClass* Create(uint32 const _homeId, uint8 const _nodeId) { return new AVSimple(_homeId, _nodeId); }
-		virtual ~AVSimple() {}
+		static CommandClass* Create(uint32 const _homeId, uint8 const _nodeId) { return new SimpleAV(_homeId, _nodeId); }
+		virtual ~SimpleAV() {}
 
 		static uint8 const StaticGetCommandClassId() { return 0x94; }
 		static string const StaticGetCommandClassName() { return "COMMAND_CLASS_SIMPLE_AV_CONTROL"; }
@@ -22,7 +22,7 @@ namespace OpenZWave
 		virtual void CreateVars(uint8 const _instance);
 		
 	private:
-		AVSimple(uint32 const _homeId, uint8 const _nodeId) : CommandClass(_homeId, _nodeId) {}
+		SimpleAV(uint32 const _homeId, uint8 const _nodeId) : CommandClass(_homeId, _nodeId) {}
 		uint8 m_sequence;
 	};
 
