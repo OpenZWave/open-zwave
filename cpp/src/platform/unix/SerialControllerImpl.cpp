@@ -34,8 +34,13 @@
 #include "SerialControllerImpl.h"
 #include "platform/Log.h"
 
-#ifdef __linux__
-#include <libudev.h>
+#ifdef __sun
+// SunOS doesn't have the cfsetspeed convenience function.
+int
+cfsetspeed(struct termios *tios, speed_t speed)
+{
+	return (cfsetispeed(tios, speed) || cfsetospeed(tios, speed));
+}
 #endif
 
 using namespace OpenZWave;

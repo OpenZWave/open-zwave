@@ -8,9 +8,21 @@ BUILD	?= release
 #the prefix to install the library into
 PREFIX	?= /usr/local
 
+# build HID support by default
+USE_HID ?= 1
 
 #the System we are building on
 UNAME  := $(shell uname -s)
+# The version of macOS we might be building on
+DARWIN_VERSION = 0
+# A simple flag to help determine if we're building on 10.14 or greater
+# 0 = false, 1 = true
+DARWIN_MOJAVE_UP = 0
+ifeq ($(UNAME),Darwin)
+# Returns a macOS version number as `10.14`
+DARWIN_VERSION := $(shell sw_vers -productVersion)
+DARWIN_MOJAVE_UP := $(shell expr $(DARWIN_VERSION) \>= 10.14)
+endif
 #the location of Doxygen to generate our api documentation
 DOXYGEN := $(shell which doxygen)
 #dot is required for doxygen (part of Graphviz)

@@ -59,7 +59,7 @@ extern "C" {
 #define LOG(...) do {} while (0)
 #endif
 
-#ifdef __NetBSD__
+#if defined(__NetBSD__) || defined(__sun)
 #define ICONV_CONST const
 #else
 #define ICONV_CONST
