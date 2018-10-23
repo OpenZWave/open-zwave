@@ -1021,6 +1021,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\command_classes\SimpleAV.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\command_classes\SimpleAV.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\command_classes\SwitchAll.cpp"
 				>
 			</File>

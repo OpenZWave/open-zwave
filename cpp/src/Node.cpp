@@ -2469,28 +2469,27 @@ bool Node::CreateValueInt
 //-----------------------------------------------------------------------------
 bool Node::CreateValueList
 (
-		ValueID::ValueGenre const _genre,
-		uint8 const _commandClassId,
-		uint8 const _instance,
-		uint8 const _valueIndex,
-		string const& _label,
-		string const& _units,
-		bool const _readOnly,
-		bool const _writeOnly,
-		uint8 const _size,
-		vector<ValueList::Item> const& _items,
-		int32 const _default,
-		uint8 const _pollIntensity
+	ValueID::ValueGenre const _genre,
+	uint8 const _commandClassId,
+	uint8 const _instance,
+	uint8 const _valueIndex,
+	string const& _label,
+	string const& _units,
+	bool const _readOnly,
+	bool const _writeOnly,
+	uint8 const _size,
+	vector<ValueList::Item> const& _items,
+	int32 const _default,
+	uint8 const _pollIntensity
 )
 {
-	ValueList* value = new ValueList( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _items, _default, _pollIntensity, _size );
+	ValueList* value = new ValueList(m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _items, _default, _pollIntensity, _size);
 	ValueStore* store = GetValueStore();
-	if( store->AddValue( value ) )
+	if (store->AddValue(value))
 	{
 		value->Release();
 		return true;
 	}
-
 	value->Release();
 	return false;
 }

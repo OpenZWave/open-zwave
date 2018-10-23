@@ -211,6 +211,8 @@ exit 0</Command>
     <ClInclude Include="..\..\..\src\aes\brg_endian.h" />
     <ClInclude Include="..\..\..\src\aes\brg_types.h" />
     <ClInclude Include="..\..\..\src\Bitfield.h" />
+    <ClInclude Include="..\..\..\src\command_classes\SimpleAV.h" />
+    <ClInclude Include="..\..\..\src\command_classes\SimpleAVCommandItem.h" />
     <ClInclude Include="..\..\..\src\command_classes\BarrierOperator.h" />
     <ClInclude Include="..\..\..\src\command_classes\DeviceResetLocally.h" />
     <ClInclude Include="..\..\..\src\command_classes\DoorLock.h" />
@@ -330,6 +332,8 @@ exit 0</Command>
     <ClCompile Include="..\..\..\src\aes\aestab.c" />
     <ClCompile Include="..\..\..\src\aes\aes_modes.c" />
     <ClCompile Include="..\..\..\src\Bitfield.cpp" />
+    <ClCompile Include="..\..\..\src\command_classes\SimpleAV.cpp" />
+    <ClCompile Include="..\..\..\src\command_classes\SimpleAVCommandItem.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\BarrierOperator.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\DeviceResetLocally.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\DoorLock.cpp" />

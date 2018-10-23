@@ -384,6 +384,12 @@
     <ClInclude Include="..\..\..\src\command_classes\ManufacturerProprietary.h">
       <Filter>Command Classes</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\command_classes\SimpleAV.h">
+      <Filter>Command Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\command_classes\SimpleAVCommandItem.h">
+      <Filter>Command Classes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\Driver.cpp">
@@ -736,6 +742,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\Bitfield.cpp">
       <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\command_classes\SimpleAV.cpp">
+      <Filter>Command Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\command_classes\SimpleAVCommandItem.cpp">
+      <Filter>Command Classes</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
