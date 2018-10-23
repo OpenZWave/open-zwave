@@ -2,7 +2,7 @@
 //
 //	ZWavePlusInfo.cpp
 //
-//	Implementation of the Z-Wave COMMAND_CLASS_ZWAVE_PLUS_INFO
+//	Implementation of the Z-Wave COMMAND_CLASS_ZWAVEPLUS_INFO
 //
 //	Copyright (c) 2015
 //
