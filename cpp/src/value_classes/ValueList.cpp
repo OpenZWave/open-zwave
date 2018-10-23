@@ -60,7 +60,6 @@ ValueList::ValueList
 	m_items( _items ),
 	m_valueIdx( _valueIdx ),
 	m_valueIdxCheck( 0 ),
-	m_newValueIdx( 0 ),
 	m_size( _size )
 {
 }
@@ -76,7 +75,6 @@ ValueList::ValueList
 	m_items( ),
 	m_valueIdx(),
 	m_valueIdxCheck( 0 ),
-	m_newValueIdx( 0 ),
 	m_size(0)
 {
 }

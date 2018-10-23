@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="2">
 <!-- Remotec ZTS-500 Thermostat
      http://www.zwaveproducts.com/product-documentation/F-BW8170US%20(ZTS-500US)%20User_Manual_V1.01_Z-Wave%20validation_20160510.pdf
      http://products.z-wavealliance.org/products/1767/configs -->
@@ -10,9 +10,9 @@
 	<!-- Configuration Parameters -->
 	<CommandClass id="112">
         <Value type="list" index="1" genre="config" label="Scale of temperature" min="0" max="1" value="1" size="1">
-                <Help>Celsius or Farienheit.</Help>
+                <Help>Celsius or Fahrenheit.</Help>
                 <Item label="Celsius" value="0" />
-                <Item label="Farienheit" value="1" />
+                <Item label="Fahrenheit" value="1" />
         </Value>
 		<Value type="byte" index="2" genre="config" label="Swing" min="0" max="4" value="2" size="1">
 			<Help>

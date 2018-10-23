@@ -1,0 +1,77 @@
+Author: Thorsten Alteholz <debian@alteholz.de>
+Description: introduce hardening flags to Makefile
+Last-Updated: 2015-06-28
+
+Index: openzwave/Makefile
+===================================================================
+--- openzwave.orig/Makefile	2015-06-28 15:06:55.419193182 +0200
++++ openzwave/Makefile	2015-06-28 15:06:55.415193189 +0200
+@@ -17,8 +17,8 @@
+ export PREFIX
+ 
+ all: 
+-	$(MAKE) -C $(top_srcdir)/cpp/build/ -$(MAKEFLAGS) 
+-	$(MAKE) -C $(top_srcdir)/cpp/examples/MinOZW/ -$(MAKEFLAGS) 
++	CPPFLAGS=$(CPPFLAGS) $(MAKE) -C $(top_srcdir)/cpp/build/ -$(MAKEFLAGS)
++	CPPFLAGS=$(CPPFLAGS) $(MAKE) -C $(top_srcdir)/cpp/examples/MinOZW/ -$(MAKEFLAGS)
+ 
+ install:
+ 	$(MAKE) -C $(top_srcdir)/cpp/build/ -$(MAKEFLAGS) $(MAKECMDGOALS)
+@@ -29,7 +29,7 @@
+ 	$(MAKE) -C $(top_srcdir)/cpp/examples/MinOZW/ -$(MAKEFLAGS) $(MAKECMDGOALS)
+ 
+ cpp/src/vers.cpp:
+-	$(MAKE) -C $(top_srcdir)/cpp/build/ -$(MAKEFLAGS) cpp/src/vers.cpp
++	CPPFLAGS=$(CPPFLAGS) $(MAKE) -C $(top_srcdir)/cpp/build/ -$(MAKEFLAGS) cpp/src/vers.cpp
+ 
+ check: xmltest
+ 
+@@ -55,4 +55,4 @@
+ DIST_FORMATS ?= gzip
+ 
+ include $(top_srcdir)/distfiles.mk
+-include $(top_srcdir)/dist.mk
+\ No newline at end of file
++include $(top_srcdir)/dist.mk
+Index: openzwave/cpp/build/Makefile
+===================================================================
+--- openzwave.orig/cpp/build/Makefile	2015-06-28 15:06:55.419193182 +0200
++++ openzwave/cpp/build/Makefile	2015-06-28 15:06:55.415193189 +0200
+@@ -34,6 +34,7 @@
+ else
+ LDFLAGS += -Wl,-soname,libopenzwave.so.$(VERSION)
+ LIBS 	+= -ludev
++CFLAGS  += $(CPPFLAGS)
+ endif
+ 
+ #where to put the temporary library
+Index: openzwave/cpp/examples/MinOZW/Makefile
+===================================================================
+--- openzwave.orig/cpp/examples/MinOZW/Makefile	2014-10-15 15:55:48.000000000 +0200
++++ openzwave/cpp/examples/MinOZW/Makefile	2015-06-28 15:08:06.855047366 +0200
+@@ -10,8 +10,8 @@
+ .PHONY:	default clean
+ 
+ 
+-DEBUG_CFLAGS    := -Wall -Wno-format -ggdb -DDEBUG
+-RELEASE_CFLAGS  := -Wall -Wno-unknown-pragmas -Wno-format -O3
++DEBUG_CFLAGS    := -Wall -Wno-format -ggdb -DDEBUG $(CPPFLAGS)
++RELEASE_CFLAGS  := -Wall -Wno-unknown-pragmas -Wno-format -O3 $(CPPFLAGS)
+ 
+ DEBUG_LDFLAGS	:= -g
+ 
+Index: openzwave/cpp/tinyxml/Makefile
+===================================================================
+--- openzwave.orig/cpp/tinyxml/Makefile	2014-10-15 15:55:46.000000000 +0200
++++ openzwave/cpp/tinyxml/Makefile	2015-06-28 15:07:34.591113079 +0200
+@@ -25,8 +25,8 @@
+ AR     := ar rc
+ RANLIB := ranlib
+ 
+-DEBUG_CFLAGS     := -Wall -Wno-format -g -DDEBUG
+-RELEASE_CFLAGS   := -Wall -Wno-unknown-pragmas -Wno-format -O3
++DEBUG_CFLAGS     := -Wall -Wno-format -g -DDEBUG $(CPPFLAGS)
++RELEASE_CFLAGS   := -Wall -Wno-unknown-pragmas -Wno-format -O3 $(CPPFLAGS)
+ 
+ LIBS		 :=
+ 

@@ -59,7 +59,7 @@ ValueRaw::ValueRaw
 	m_value( NULL ),
 	m_valueLength( _length ),
 	m_valueCheck ( NULL ),
-	m_newValue ( NULL )
+	m_valueCheckLength ( 0 )
 {
 	m_value = new uint8[_length];
 	memcpy( m_value, _value, _length );
@@ -75,10 +75,10 @@ ValueRaw::ValueRaw
 (
 ): 
         m_value( NULL ),
+		m_valueLength( 0 ),
         m_valueCheck ( NULL ),
-        m_newValue ( NULL )
+		m_valueCheckLength ( 0 )
 {
-	m_valueLength = 0;
 	m_min = 0;
 	m_max = 0;
 }
@@ -92,6 +92,7 @@ ValueRaw::~ValueRaw
 )
 {
 	delete [] m_value;
+	if ( m_valueCheck != NULL ) delete[] m_valueCheck;
 }
 
 string const ValueRaw::GetAsString
@@ -259,7 +260,7 @@ void ValueRaw::OnValueRefreshed
 	uint8 const _length
 )
 {
-	switch( VerifyRefreshedValue( (void*)m_value, (void*)m_valueCheck, (void*)_value, ValueID::ValueType_Raw, _length ) )
+	switch( VerifyRefreshedValue( (void*)m_value, (void*)m_valueCheck, (void*)_value, ValueID::ValueType_Raw, m_valueLength, m_valueCheckLength, _length ) )
 	{
 	case 0:		// value hasn't changed, nothing to do
 		break;
@@ -269,6 +270,7 @@ void ValueRaw::OnValueRefreshed
 			delete [] m_valueCheck;
 		}
 		m_valueCheck = new uint8[_length];
+		m_valueCheckLength = _length;
 		memcpy( m_valueCheck, _value, _length );
 		break;
 	case 2:		// value has changed (confirmed), save _value in m_value
@@ -277,6 +279,7 @@ void ValueRaw::OnValueRefreshed
 			delete [] m_value;
 		}
 		m_value = new uint8[_length];
+		m_valueLength = _length;
 		memcpy( m_value, _value, _length );
 		break;
 	case 3:		// all three values are different, so wait for next refresh to try again

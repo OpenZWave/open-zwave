@@ -63,14 +63,14 @@ namespace OpenZWave
 		bool IsSet()const{ return m_isSet; }
 		bool IsPolled()const{ return m_pollIntensity != 0; }
 
-		string const& GetLabel()const{ return m_label; }
-		void SetLabel( string const& _label ){ m_label = _label; }
+		string const GetLabel()const;
+		void SetLabel( string const& _label, string const lang="");
 
 		string const& GetUnits()const{ return m_units; }
 		void SetUnits( string const& _units ){ m_units = _units; }
 
-		string const& GetHelp()const{ return m_help; }
-		void SetHelp( string const& _help ){ m_help = _help; }
+		string const GetHelp()const;
+		void SetHelp( string const& _help, string const lang="");
 
 		uint8 const& GetPollIntensity()const{ return m_pollIntensity; }
 		void SetPollIntensity( uint8 const& _intensity ){ m_pollIntensity = _intensity; }
@@ -100,7 +100,7 @@ namespace OpenZWave
 		void SetCheckingChange( bool _check ) { m_checkChange = _check; }
 		void OnValueRefreshed();			// A value in a device has been refreshed
 		void OnValueChanged();				// The refreshed value actually changed
-		int VerifyRefreshedValue( void* _originalValue, void* _checkValue, void* _newValue, ValueID::ValueType _type, int _length = 0 );
+		int VerifyRefreshedValue( void* _originalValue, void* _checkValue, void* _newValue, ValueID::ValueType _type, int _originalValueLength = 0, int _checkValueLength = 0, int _newValueLength = 0 );
 
 		int32		m_min;
 		int32		m_max;
@@ -111,9 +111,7 @@ namespace OpenZWave
 
 
 	private:
-		string		m_label;
 		string		m_units;
-		string		m_help;
 		bool		m_readOnly;
 		bool		m_writeOnly;
 		bool		m_isSet;

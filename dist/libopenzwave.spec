@@ -23,8 +23,7 @@ BuildRequires: systemd-devel pkg-config
 BuildRequires: libudev-devel pkgconfig
 %endif
 %endif
-#Source0: libopenzwave-%{version}.tar.gz
-Source0: openzwave-%{version}.tar.gz
+Source0: open-zwave-%{version}.tar.gz
 
 
 BuildRoot: %{_tmppath}/libopenzwave-root
@@ -64,7 +63,6 @@ Group: Development/Libraries
 Group: Development/Libraries/C and C++
 %endif
 Requires: %{name} = %{version}-%{release}
-#BuildRequires: %{name}
 
 %description -n libopenzwave-devel
 header files needed when you want to compile your own 
@@ -78,14 +76,13 @@ Group: Development/Libraries
 Group: Development/Libraries/C and C++
 %endif
 Requires: %{name} = %{version}-%{release}
-#BuildRequires: %{name}
 
 %description -n openzwave
 Sample Executables for OpenZWave
 
 %prep
 
-%setup -q -n openzwave-%{version}
+%setup -q -n open-zwave-%{version}
 
 
 
@@ -94,7 +91,7 @@ Sample Executables for OpenZWave
 major_ver=$(echo %{version} | awk -F \. {'print $1'})
 minor_ver=$(echo %{version} | awk -F \. {'print $2'})
 revision=$(echo %{version} | awk -F \. {'print $3'})
-VERSION_MAJ=$major_ver VERSION_MIN=$minor_ver VERSION_REV=$revision PREFIX=/usr sysconfdir=%{_sysconfdir}/openzwave/ includedir=%{_includedir} docdir=%{_defaultdocdir}/openzwave-%{version} instlibdir=%{_libdir} make %{?_smp_mflags}
+CPPFLAGS=-g VERSION_MAJ=$major_ver VERSION_MIN=$minor_ver VERSION_REV=$revision PREFIX=/usr sysconfdir=%{_sysconfdir}/openzwave/ includedir=%{_includedir} docdir=%{_defaultdocdir}/openzwave-%{version} instlibdir=%{_libdir} make %{?_smp_mflags}
 
 %install
 rm -rf %{buildroot}/*

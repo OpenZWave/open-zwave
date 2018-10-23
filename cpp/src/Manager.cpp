@@ -33,6 +33,7 @@
 #include "Defs.h"
 #include "Manager.h"
 #include "Driver.h"
+#include "Localization.h"
 #include "Node.h"
 #include "Notification.h"
 #include "Options.h"
@@ -190,6 +191,8 @@ m_notificationMutex( new Mutex() )
 	CommandClasses::RegisterCommandClasses();
 	Scene::ReadScenes();
 	Log::Write(LogLevel_Always, "OpenZwave Version %s Starting Up", getVersionAsString().c_str());
+	Log::Write(LogLevel_Always, "Using Language Localization %s", Localization::Get()->GetSelectedLang().c_str());
+
 }
 
 //-----------------------------------------------------------------------------
@@ -3666,6 +3669,24 @@ uint8 Manager::GetMaxAssociations
 }
 
 //-----------------------------------------------------------------------------
+// <Manager::IsMultiInstance>
+// Returns true is group supports multi instance.
+//-----------------------------------------------------------------------------
+bool Manager::IsMultiInstance
+(
+		uint32 const _homeId,
+		uint8 const _nodeId,
+		uint8 const _groupIdx
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		return driver->IsMultiInstance( _nodeId, _groupIdx );
+	}
+	return 0;
+}
+
+//-----------------------------------------------------------------------------
 // <Manager::GetGroupLabel>
 // Gets the label for a particular group
 //-----------------------------------------------------------------------------
@@ -3771,7 +3792,14 @@ bool Manager::RemoveWatcher
 		if( ((*it)->m_callback == _watcher ) && ( (*it)->m_context == _context ) )
 		{
 			delete (*it);
-			m_watchers.erase( it );
+			list<Watcher*>::iterator next = m_watchers.erase( it );
+			for( list<list<Watcher*>::iterator*>::iterator extIt = m_watcherIterators.begin(); extIt != m_watcherIterators.end(); ++extIt )
+			{
+				if( (**extIt) == it )
+				{
+					(**extIt) = next;
+				}
+			}
 			m_notificationMutex->Unlock();
 			return true;
 		}
@@ -3792,11 +3820,14 @@ void Manager::NotifyWatchers
 )
 {
 	m_notificationMutex->Lock();
-	for( list<Watcher*>::iterator it = m_watchers.begin(); it != m_watchers.end(); ++it )
+	list<Watcher*>::iterator it = m_watchers.begin();
+	m_watcherIterators.push_back(&it);
+	while( it != m_watchers.end() )
 	{
-		Watcher* pWatcher = *it;
+		Watcher* pWatcher = *(it++);
 		pWatcher->m_callback( _notification, pWatcher->m_context );
 	}
+	m_watcherIterators.pop_back();
 	m_notificationMutex->Unlock();
 }
 

@@ -46,6 +46,7 @@ public:
     void AddLabel(string label, string lang = "");
     uint64 GetIdx();
     string GetLabel(string lang);
+    bool HasLabel(string lang);
 
 private:
     uint8 m_index;
@@ -63,10 +64,13 @@ public:
 
     }
     uint64 GetIdx();
-    string GetHelpText(string lang);
+    string GetHelp(string lang);
     void AddHelp(string HelpText, string lang = "");
-    string GetLabelText(string lang);
+    bool HasHelp(string lang);
+    string GetLabel(string lang);
     void AddLabel(string Label, string lang = "");
+    bool HasLabel(string lang);
+
 
 private:
     uint8 m_commandClass;
@@ -90,16 +94,21 @@ private:
     ~Localization();
 
     static void ReadXML();
-    static void ReadXMLLabel(uint8 ccID, const TiXmlElement *labelElement, const string Language);
-    static void ReadXMLValue(uint8 ccID, const TiXmlElement *valueElement, const string Language);
-    static void ReadXMLVIDLabel(uint8 ccID, uint16 indexId, uint32 pos, const TiXmlElement *labelElement, const string Language);
-    static void ReadXMLVIDHelp(uint8 ccID, uint16 indexId, uint32 pos, const TiXmlElement *helpElement, const string Language);
+    static void ReadCCXMLLabel(uint8 ccID, const TiXmlElement *labelElement);
+    static void ReadXMLValue(uint8 ccID, const TiXmlElement *valueElement);
+    static void ReadXMLVIDLabel(uint8 ccID, uint16 indexId, uint32 pos, const TiXmlElement *labelElement);
     static uint64 GetValueKey (uint8 _commandClass, uint16 _index, uint32 _pos = -1);
 public:
     static Localization* Get();
-    void SetupValue(Value *value);
     void SetupCommandClass(CommandClass *cc);
     string GetSelectedLang() { return Localization::m_selectedLang;};
+    bool SetValueHelp(uint8 ccID, uint16 indexID, uint32 pos, string help, string lang="");
+    string const GetValueHelp(uint8 ccID, uint16 indexId, uint32 pos);
+    bool SetValueLabel(uint8 ccID, uint16 indexID, uint32 pos, string label, string lang="");
+    string const GetValueLabel(uint8 ccID, uint16 indexId, int32 pos) const;
+
+    static void ReadXMLVIDHelp(uint8 ccID, uint16 indexId, uint32 pos, const TiXmlElement *helpElement);
+    bool WriteXMLVIDHelp(uint8 ccID, uint16 indexId, uint32 pos, TiXmlElement *valueElement);
     //-----------------------------------------------------------------------------
     // Instance Functions
     //-----------------------------------------------------------------------------

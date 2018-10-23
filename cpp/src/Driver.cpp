@@ -40,10 +40,12 @@
 #include "platform/Event.h"
 #include "platform/Mutex.h"
 #include "platform/SerialController.h"
+#ifdef USE_HID
 #ifdef WINRT
 #include "platform/winRT/HidControllerWinRT.h"
 #else
 #include "platform/HidController.h"
+#endif
 #endif
 #include "platform/Thread.h"
 #include "platform/Log.h"
@@ -233,11 +235,13 @@ m_eventMutex (new Mutex() )
 
 	initNetworkKeys(false);
 
+#ifdef USE_HID
 	if( ControllerInterface_Hid == _interface )
 	{
 		m_controller = new HidController();
 	}
 	else
+#endif
 	{
 		m_controller = new SerialController();
 	}
@@ -1714,7 +1718,9 @@ bool Driver::ReadMsg
 (
 )
 {
-	uint8 buffer[1024] = {0};
+	uint8 buffer[1024];
+
+	memset(buffer, 0, sizeof(uint8)* 1024);
 
 	if( !m_controller->Read( buffer, 1 ) )
 	{
@@ -5976,6 +5982,25 @@ uint8 Driver::GetMaxAssociations
 }
 
 //-----------------------------------------------------------------------------
+// <Driver::IsMultiInstance>
+// Returns true if group supports multi instance
+//-----------------------------------------------------------------------------
+bool Driver::IsMultiInstance
+(
+		uint8 const _nodeId,
+		uint8 const _groupIdx
+)
+{
+	bool multiInstance = false;
+	LockGuard LG(m_nodeMutex);
+	if( Node* node = GetNode( _nodeId ) )
+	{
+		multiInstance = node->IsMultiInstance( _groupIdx );
+	}
+	return multiInstance;
+}
+
+//-----------------------------------------------------------------------------
 // <Driver::GetGroupLabel>
 // Gets the label for a particular group
 //-----------------------------------------------------------------------------
@@ -7285,8 +7310,10 @@ void Driver::ReloadNode
 					// Get the node Id from the XML
 					if( TIXML_SUCCESS == nodeElement->ToElement()->QueryIntAttribute( "id", &intVal ) )
 					{
-						if (intVal == _nodeId)
+						if (intVal == _nodeId) {
 							driverElement->RemoveChild(nodeElement);
+							break;
+						}
 					}
 				}
 			}

@@ -185,16 +185,19 @@ bool Clock::SetValue
 			if (_value.GetID() == dayValue->GetID()) {
 				ValueList const * dayvaluetmp = static_cast<ValueList const*>(&_value);
 				day = dayvaluetmp->GetItem()->m_value;
+				dayValue->OnValueRefreshed(day);
 			}
 			uint8 hour = hourValue->GetValue();
 			if (_value.GetID() == hourValue->GetID()) {
 				ValueByte const * hourvaluetmp = static_cast<ValueByte const*>(&_value);
 				hour = hourvaluetmp->GetValue();
+				hourValue->OnValueRefreshed(hour);
 			}
 			uint8 minute = minuteValue->GetValue();
 			if (_value.GetID() == minuteValue->GetID()) {
 				ValueByte const * minuteValuetmp = static_cast<ValueByte const*>(&_value);
 				minute = minuteValuetmp->GetValue();
+				minuteValue->OnValueRefreshed(minute);
 			}
 
 

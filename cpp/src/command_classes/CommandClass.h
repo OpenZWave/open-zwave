@@ -79,7 +79,7 @@ namespace OpenZWave
 		virtual bool HandleIncomingMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 ) { return false; }
 		virtual bool SetValue( Value const& _value ){ return false; }
 		virtual void SetValueBasic( uint8 const _instance, uint8 const _level ){}		// Class specific handling of BASIC value mapping
-		virtual void SetVersion( uint8 const _version ){ m_version = _version; }
+		virtual void SetVersion( uint8 const _version ); // Made out-of-line to allow checks against downgrade
 
 		bool RequestStateForAllInstances( uint32 const _requestFlags, Driver::MsgQueue const _queue );
 		bool CheckForRefreshValues(Value const* _value );
@@ -206,6 +206,8 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 	private:
 		uint32 m_sentCnt;				// Number of messages sent from this command class.
 		uint32 m_receivedCnt;				// Number of messages received from this commandclass.
+		uint8  m_versionHint;			// for nodes that do not report correct CC version 
+
 	};
 	//@}
 } // namespace OpenZWave

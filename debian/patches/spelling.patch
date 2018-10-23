@@ -1,0 +1,104 @@
+Author: Thorsten Alteholz <debian@alteholz.de>
+Description: take care of spelling errors
+Last-Updated: 2015-06-06
+
+Index: openzwave/cpp/src/command_classes/DoorLock.cpp
+===================================================================
+--- openzwave.orig/cpp/src/command_classes/DoorLock.cpp	2016-09-05 12:31:52.000000000 +0200
++++ openzwave/cpp/src/command_classes/DoorLock.cpp	2016-09-05 12:31:52.000000000 +0200
+@@ -320,7 +320,7 @@
+ 			  	m_timeoutsecs = _data[4];
+ 				break;
+ 			default:
+-				Log::Write(LogLevel_Warning, GetNodeId(), "Recieved a Unsupported Door Lock Config Report %d", _data[1]);
++				Log::Write(LogLevel_Warning, GetNodeId(), "Received a Unsupported Door Lock Config Report %d", _data[1]);
+ 		}
+ 
+ 		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, Value_System_Config_OutsideHandles ) ) )
+Index: openzwave/cpp/src/command_classes/DoorLockLogging.cpp
+===================================================================
+--- openzwave.orig/cpp/src/command_classes/DoorLockLogging.cpp	2016-09-05 12:31:52.000000000 +0200
++++ openzwave/cpp/src/command_classes/DoorLockLogging.cpp	2016-09-05 12:31:52.000000000 +0200
+@@ -281,7 +281,7 @@
+ 		if (EventType >= DoorLockEventType_Max)
+ 			EventType = DoorLockEventType_Max;
+ 
+-		Log::Write (LogLevel_Info, GetNodeId(), "Recieved a DoorLockLogging Record %d which is \"%s\"", _data[1], c_DoorLockEventType[EventType-1]);
++		Log::Write (LogLevel_Info, GetNodeId(), "Received a DoorLockLogging Record %d which is \"%s\"", _data[1], c_DoorLockEventType[EventType-1]);
+ 
+ 		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, Value_GetRecordNo ) ) )
+ 		{
+Index: openzwave/cpp/src/command_classes/MultiInstance.cpp
+===================================================================
+--- openzwave.orig/cpp/src/command_classes/MultiInstance.cpp	2016-09-05 12:31:52.000000000 +0200
++++ openzwave/cpp/src/command_classes/MultiInstance.cpp	2016-09-05 12:31:52.000000000 +0200
+@@ -435,7 +435,7 @@
+ 		 */
+ 		if ((m_ignoreUnsolicitedMultiChannelCapabilityReport && (node->GetCurrentQueryStage() != Node::QueryStage_Instances))
+ 				&& !dynamic && m_endPointCommandClasses.size() > 0) {
+-			Log::Write(LogLevel_Error, GetNodeId(), "Recieved a Unsolicited MultiChannelEncap when we are not in QueryState_Instances");
++			Log::Write(LogLevel_Error, GetNodeId(), "Received a Unsolicited MultiChannelEncap when we are not in QueryState_Instances");
+ 			return;
+ 		}
+ 
+@@ -685,7 +685,7 @@
+ 				pCommandClass->HandleMsg( &_data[4], _length-4, instance );
+ 			}
+ 		} else {
+-			Log::Write(LogLevel_Error, GetNodeId(), "Recieved a MultiChannelEncap for endpoint %d for Command Class %d, which we can't find", endPoint, commandClassId);
++			Log::Write(LogLevel_Error, GetNodeId(), "Received a MultiChannelEncap for endpoint %d for Command Class %d, which we can't find", endPoint, commandClassId);
+ 		}
+ 	}
+ }
+Index: openzwave/cpp/src/Driver.cpp
+===================================================================
+--- openzwave.orig/cpp/src/Driver.cpp	2016-09-05 12:31:52.000000000 +0200
++++ openzwave/cpp/src/Driver.cpp	2016-09-05 12:31:52.000000000 +0200
+@@ -4398,7 +4398,7 @@
+ 			Log::Write(LogLevel_Info, _nodeId, "Network Key Not Set - Secure Option is %s", secure ? "required" : "not required");
+ 		m_nodes[_nodeId]->SetProtocolInfo(_protocolInfo, _length);
+ 	}
+-	Log::Write(LogLevel_Info, _nodeId, "Initilizing Node. New Node: %s (%s)", static_cast<Node *>(m_nodes[_nodeId])->IsAddingNode() ? "true" : "false", newNode ? "true" : "false");
++	Log::Write(LogLevel_Info, _nodeId, "Initializing Node. New Node: %s (%s)", static_cast<Node *>(m_nodes[_nodeId])->IsAddingNode() ? "true" : "false", newNode ? "true" : "false");
+ }
+ 
+ //-----------------------------------------------------------------------------
+Index: openzwave/cpp/src/Node.cpp
+===================================================================
+--- openzwave.orig/cpp/src/Node.cpp	2016-09-05 12:31:52.000000000 +0200
++++ openzwave/cpp/src/Node.cpp	2016-09-05 12:31:52.000000000 +0200
+@@ -1843,7 +1843,7 @@
+ 	if( CommandClass* pCommandClass = GetCommandClass( _data[5] ) )
+ 	{
+ 		if (pCommandClass->IsSecured() && !encrypted) {
+-			Log::Write( LogLevel_Warning, m_nodeId, "Recieved a Clear Text Message for the CommandClass %s which is Secured", pCommandClass->GetCommandClassName().c_str());
++			Log::Write( LogLevel_Warning, m_nodeId, "Received a Clear Text Message for the CommandClass %s which is Secured", pCommandClass->GetCommandClassName().c_str());
+ 			bool drop = true;
+ 			Options::Get()->GetOptionAsBool("EnforceSecureReception", &drop);
+ 			if (drop) {
+Index: openzwave/cpp/src/ZWSecurity.cpp
+===================================================================
+--- openzwave.orig/cpp/src/ZWSecurity.cpp	2016-09-05 12:31:52.000000000 +0200
++++ openzwave/cpp/src/ZWSecurity.cpp	2016-09-05 12:31:52.000000000 +0200
+@@ -284,7 +284,7 @@
+ 		PrintHex("Raw", e_buffer, e_length);
+ 
+ 		if (e_length < 19) {
+-			Log::Write(LogLevel_Warning, _sendingNode, "Recieved a Encrypted Message that is too Short. Dropping it");
++			Log::Write(LogLevel_Warning, _sendingNode, "Received a Encrypted Message that is too Short. Dropping it");
+ 			return false;
+ 		}
+ 
+Index: openzwave/cpp/src/command_classes/Security.cpp
+===================================================================
+--- openzwave.orig/cpp/src/command_classes/Security.cpp	2016-01-11 16:02:44.000000000 +0100
++++ openzwave/cpp/src/command_classes/Security.cpp	2016-09-05 12:33:06.000000000 +0200
+@@ -295,7 +295,7 @@
+ 		case SecurityCmd_MessageEncap:
+ 		case SecurityCmd_MessageEncapNonceGet:
+ 		{
+-			Log::Write(LogLevel_Warning, GetNodeId(), "Recieved a Security Message that should have been handled in the Driver");
++			Log::Write(LogLevel_Warning, GetNodeId(), "Received a Security Message that should have been handled in the Driver");
+ 			break;
+ 		}
+ 		default:

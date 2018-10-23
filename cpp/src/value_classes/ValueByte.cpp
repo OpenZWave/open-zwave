@@ -57,8 +57,7 @@ ValueByte::ValueByte
 ):
 	Value( _homeId, _nodeId, _genre, _commandClassId, _instance, _index, ValueID::ValueType_Byte, _label, _units, _readOnly, _writeOnly, false, _pollIntensity ),
 	m_value( _value ),
-	m_valueCheck( false ),
-	m_newValue( false )
+	m_valueCheck( false )
 {
 	m_min = 0;
 	m_max = 255;
