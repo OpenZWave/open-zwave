@@ -378,6 +378,7 @@
 		<Product type="0004" id="0002" name="Door/Window Sensor" config="ecolink/doorwindow.xml"/>
 		<Product type="0004" id="0003" name="Garage Door Tilt Sensor" config="ecolink/sensor.xml"/>
 		<Product type="0005" id="000f" name="FireFighter" config="ecolink/firefighter.xml"/>
+		<Product type="0005" id="0010" name="Flood/Freeze Sensor" config="ecolink/waterfreezesensor.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0087" name="Eka Systems">
 	</Manufacturer>
