@@ -247,7 +247,7 @@
   </CommandClass>
   <CommandClass id="133">
     <Associations num_groups="3">
-      <Group index="1" max_associations="5" label="Lifeline" />
+      <Group index="1" max_associations="5" label="Lifeline" auto="true" />
       <Group index="2" max_associations="5" label="Cool" />
       <Group index="3" max_associations="5" label="Heat" />
     </Associations>
