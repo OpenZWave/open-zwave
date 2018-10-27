@@ -121,6 +121,26 @@
         Sets the delta from setpoint that stage 2 cooling stops
       </Help>
     </Value>
+    <Value type="int" index="23" genre="config" label="Lifeline Association Group Report To Send" min="0" max="65535" value="8319" size="2">
+      <Help>
+        Report to send to the Lifeline Association Group upon change in thermostat state. 
+        Bitmask values:
+          1 = Temperature
+          2 = Heat Setpoint
+          4 = Cool Setpoint
+          8 = Thermostat Heat/Cooling Mode
+          16 = Fan Mode
+          32 = Fan State
+          64 = Operating State
+          128 = Schedule (send CC parameter 38)
+          256 = Setback (send CC parameter 40)
+          512 = Run Hold (send CC parameter 39)
+          1024 = Display Lock (send CC parameter 24)
+          8192 = Battery Level
+          16834 = Mechanical Relay State (send CC parameter 21)
+          32768 = Thermostat State Config (send CC parameter 22)        
+      </Help>
+    </Value>
     <Value type="list" index="24" genre="config" label="Display Lock" units="" min="1" max="1" value="0" size="1">
       <Help>
         Display Lock
@@ -224,5 +244,12 @@
         Fan purge period for Cool mode
       </Help>
     </Value>
+  </CommandClass>
+  <CommandClass id="133">
+    <Associations num_groups="3">
+      <Group index="1" max_associations="5" label="Lifeline" />
+      <Group index="2" max_associations="5" label="Cool" />
+      <Group index="3" max_associations="5" label="Heat" />
+    </Associations>
   </CommandClass>
 </Product>
