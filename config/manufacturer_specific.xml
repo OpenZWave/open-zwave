@@ -806,6 +806,9 @@
 	</Manufacturer>
 	<Manufacturer id="0091" name="Kamstrup">
 	</Manufacturer>
+	<Manufacturer id="037b" name="KeyWe">
+		<Product type="0002" id="0001" name="Door Lock Key Pad"/>
+	</Manufacturer>
 	<Manufacturer id="0090" name="Kwikset">
 		<Product type="0001" id="0001" name="Touchpad Electronic Deadbolt" config="kwikset/smartcode.xml"/>
 	</Manufacturer>
