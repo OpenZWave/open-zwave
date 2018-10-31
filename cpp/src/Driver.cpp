@@ -2227,6 +2227,25 @@ void Driver::ProcessMsg
 			}
 			break;
 		}
+		/* Ignore these. They are manufacturer proprietary */
+		case FUNC_ID_PROPRIETARY_0:
+		case FUNC_ID_PROPRIETARY_1:
+		case FUNC_ID_PROPRIETARY_2:
+		case FUNC_ID_PROPRIETARY_3:
+		case FUNC_ID_PROPRIETARY_4:
+		case FUNC_ID_PROPRIETARY_5:
+		case FUNC_ID_PROPRIETARY_6:
+		case FUNC_ID_PROPRIETARY_7:
+		case FUNC_ID_PROPRIETARY_8:
+		case FUNC_ID_PROPRIETARY_9:
+		case FUNC_ID_PROPRIETARY_A:
+		case FUNC_ID_PROPRIETARY_B:
+		case FUNC_ID_PROPRIETARY_C:
+		case FUNC_ID_PROPRIETARY_D:
+		case FUNC_ID_PROPRIETARY_E:
+		{
+			break;
+		}
 		default:
 		{
 			Log::Write( LogLevel_Detail, "" );
@@ -2371,6 +2390,25 @@ void Driver::ProcessMsg
 		{
 			Log::Write( LogLevel_Detail, "" );
 			HandleSerialAPIResetRequest( _data );
+			break;
+		}
+		/* Ignore these. They are manufacturer proprietary */
+		case FUNC_ID_PROPRIETARY_0:
+		case FUNC_ID_PROPRIETARY_1:
+		case FUNC_ID_PROPRIETARY_2:
+		case FUNC_ID_PROPRIETARY_3:
+		case FUNC_ID_PROPRIETARY_4:
+		case FUNC_ID_PROPRIETARY_5:
+		case FUNC_ID_PROPRIETARY_6:
+		case FUNC_ID_PROPRIETARY_7:
+		case FUNC_ID_PROPRIETARY_8:
+		case FUNC_ID_PROPRIETARY_9:
+		case FUNC_ID_PROPRIETARY_A:
+		case FUNC_ID_PROPRIETARY_B:
+		case FUNC_ID_PROPRIETARY_C:
+		case FUNC_ID_PROPRIETARY_D:
+		case FUNC_ID_PROPRIETARY_E:
+		{
 			break;
 		}
 		default:

@@ -313,6 +313,23 @@ namespace OpenZWave
 #define FUNC_ID_ZW_SET_PROMISCUOUS_MODE					0xD0	// Set controller into promiscuous mode to listen to all frames
 #define FUNC_ID_PROMISCUOUS_APPLICATION_COMMAND_HANDLER	0xD1
 
+#define FUNC_ID_PROPRIETARY_0                           0xF0
+#define FUNC_ID_PROPRIETARY_1                           0xF1
+#define FUNC_ID_PROPRIETARY_2                           0xF2
+#define FUNC_ID_PROPRIETARY_3                           0xF3
+#define FUNC_ID_PROPRIETARY_4                           0xF4
+#define FUNC_ID_PROPRIETARY_5                           0xF5
+#define FUNC_ID_PROPRIETARY_6                           0xF6
+#define FUNC_ID_PROPRIETARY_7                           0xF7
+#define FUNC_ID_PROPRIETARY_8                           0xF8
+#define FUNC_ID_PROPRIETARY_9                           0xF9
+#define FUNC_ID_PROPRIETARY_A                           0xFA
+#define FUNC_ID_PROPRIETARY_B                           0xFB
+#define FUNC_ID_PROPRIETARY_C                           0xFC
+#define FUNC_ID_PROPRIETARY_D                           0xFD
+#define FUNC_ID_PROPRIETARY_E                           0xFE
+
+
 #define ADD_NODE_ANY									0x01
 #define ADD_NODE_CONTROLLER								0x02
 #define ADD_NODE_SLAVE									0x03
