@@ -30,6 +30,7 @@
 #include "Msg.h"
 #include "platform/Log.h"
 #include "Manager.h"
+#include "Localization.h"
 #include <ctime>
 
 using namespace OpenZWave;
@@ -62,6 +63,13 @@ ValueList::ValueList
 	m_valueIdxCheck( 0 ),
 	m_size( _size )
 {
+	for( vector<Item>::iterator it = m_items.begin(); it != m_items.end(); ++it )
+	{
+		/* first what is currently in m_label is the default text for a Item, so set it */
+		Localization::Get()->SetValueItemLabel(_commandClassId, _index, -1, it->m_value, it->m_label, "");
+		/* now set to the Localized Value */
+		it->m_label = Localization::Get()->GetValueItemLabel(_commandClassId, _index, -1, it->m_value);
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -77,6 +85,7 @@ ValueList::ValueList
 	m_valueIdxCheck( 0 ),
 	m_size(0)
 {
+
 }
 
 //-----------------------------------------------------------------------------
@@ -120,7 +129,9 @@ void ValueList::ReadXML
 		if( str && !strcmp( str, "Item" ) )
 		{
 			char const* labelStr = itemElement->Attribute( "label" );
-
+			char const* lang = "";
+			if (itemElement->Attribute( "lang" ))
+				lang = itemElement->Attribute( "lang" );
 			int value = 0;
 			if (itemElement->QueryIntAttribute( "value", &value ) != TIXML_SUCCESS) {
 				Log::Write( LogLevel_Info, "Item value %s is wrong type or does not exist in xml configuration for node %d, class 0x%02x, instance %d, index %d", labelStr, _nodeId, _commandClassId, GetID().GetInstance(), GetID().GetIndex() );
@@ -132,8 +143,9 @@ void ValueList::ReadXML
 			}
 			else
 			{
+				Localization::Get()->SetValueItemLabel(m_id.GetCommandClassId(), m_id.GetIndex(), -1, value, labelStr, lang)
+
 				Item item;
-				item.m_label = labelStr;
 				item.m_value = value;
 
 				m_items.push_back( item );
@@ -142,6 +154,14 @@ void ValueList::ReadXML
 
 		itemElement = itemElement->NextSiblingElement();
 	}
+
+	/* setup any Localization now as we should have read all available languages already */
+	for( vector<Item>::iterator it = m_items.begin(); it != m_items.end(); ++it )
+	{
+		it->m_label = Localization::Get()->GetValueItemLabel(m_id.GetCommandClassId(), m_id.GetIndex(), -1, it->m_value);
+	}
+
+
 
 	// Set the value
 	bool valSet = false;
@@ -207,6 +227,8 @@ void ValueList::WriteXML
 
 		snprintf( str, sizeof(str), "%d", (*it).m_value );
 		pItemElement->SetAttribute( "value", str );
+
+		pItemElement->SetAttribute( "lang", Localization::Get()->GetSelectedLang().c_str());
 
 		_valueElement->LinkEndChild( pItemElement );
 	}

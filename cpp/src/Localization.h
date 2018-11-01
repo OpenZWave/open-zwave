@@ -44,8 +44,8 @@ public:
     LabelLocalizationEntry (uint16 _index, uint32 _pos = -1);
     ~LabelLocalizationEntry() {}
     void AddLabel(string label, string lang = "");
-    uint64 GetIdx();
     string GetLabel(string lang);
+    uint64 GetIdx();
     bool HasLabel(string lang);
 
 private:
@@ -70,6 +70,9 @@ public:
     string GetLabel(string lang);
     void AddLabel(string Label, string lang = "");
     bool HasLabel(string lang);
+    void AddItemLabel(string label, int32 itemIndex, string lang = "");
+    string GetItemLabel(string lang, int32 itemIndex);
+    bool HasItemLabel(int32 itemIndex, string lang);
 
 
 private:
@@ -78,8 +81,10 @@ private:
     uint32 m_pos;
     map<string, string> m_HelpText;
     map<string, string> m_LabelText;
+    map<string, map<int32, string> > m_ItemLabelText;
     string m_DefaultHelpText;
     string m_DefaultLabelText;
+    map<int32, string> m_DefaultItemLabelText;
 };
 
 
@@ -97,6 +102,7 @@ private:
     static void ReadCCXMLLabel(uint8 ccID, const TiXmlElement *labelElement);
     static void ReadXMLValue(uint8 ccID, const TiXmlElement *valueElement);
     static void ReadXMLVIDLabel(uint8 ccID, uint16 indexId, uint32 pos, const TiXmlElement *labelElement);
+    static void ReadXMLVIDItemLabel(uint8 ccID, uint16 indexId, uint32 pos, const TiXmlElement *labelElement);
     static uint64 GetValueKey (uint8 _commandClass, uint16 _index, uint32 _pos = -1);
 public:
     static Localization* Get();
@@ -106,6 +112,8 @@ public:
     string const GetValueHelp(uint8 ccID, uint16 indexId, uint32 pos);
     bool SetValueLabel(uint8 ccID, uint16 indexID, uint32 pos, string label, string lang="");
     string const GetValueLabel(uint8 ccID, uint16 indexId, int32 pos) const;
+    string const GetValueItemLabel(uint8 ccID, uint16 indexId, int32 pos, int32 itemIndex) const;
+    bool SetValueItemLabel(uint8 ccID, uint16 indexId, int32 pos, int32 itemIndex, string label, string lang="");
 
     static void ReadXMLVIDHelp(uint8 ccID, uint16 indexId, uint32 pos, const TiXmlElement *helpElement);
     bool WriteXMLVIDHelp(uint8 ccID, uint16 indexId, uint32 pos, TiXmlElement *valueElement);

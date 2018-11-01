@@ -357,6 +357,17 @@
       <Value index="0">
         <Help>Output RF PowerLevel</Help>
         <Label>Powerlevel</Label>
+        <ItemLabel lang="fr" itemIndex="0">Normal-fr</ItemLabel>
+        <ItemLabel lang="fr" itemIndex="1">-1dB-fr</ItemLabel>
+        <ItemLabel lang="fr" itemIndex="2">-2dB-fr</ItemLabel>
+        <ItemLabel lang="fr" itemIndex="3">-3dB-fr</ItemLabel>
+        <ItemLabel lang="fr" itemIndex="4">-4dB-fr</ItemLabel>
+        <ItemLabel lang="fr" itemIndex="5">-5dB-fr</ItemLabel>
+        <ItemLabel lang="fr" itemIndex="6">-6dB-fr</ItemLabel>
+        <ItemLabel lang="fr" itemIndex="7">-7dB-fr</ItemLabel>
+        <ItemLabel lang="fr" itemIndex="8">-8dB-fr</ItemLabel>
+        <ItemLabel lang="fr" itemIndex="9">-9dB-fr</ItemLabel>
+        <ItemLabel lang="fr" itemIndex="10">unknown-fr</ItemLabel>
       </Value>
       <Value index="1">
         <Help>Timeout till the PowerLevel is reset to Normal</Help>

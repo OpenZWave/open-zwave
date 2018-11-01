@@ -3909,7 +3909,6 @@ void Node::ReadMetaDataFromXML(TiXmlElement const* _valueElement) {
 			}
 			ccElement = ccElement->NextSiblingElement();
 		}
-		GetDriver()->WriteConfig();
 }
 //-----------------------------------------------------------------------------
 // <Node::WriteMetaDataXML>

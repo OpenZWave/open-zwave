@@ -188,6 +188,48 @@ void ValueLocalizationEntry::AddLabel
 		m_LabelText[lang] = Label;
 }
 
+void ValueLocalizationEntry::AddItemLabel
+(
+		string label,
+		int32 itemindex,
+		string lang
+)
+{
+	if (lang.empty()) {
+		m_DefaultItemLabelText[itemindex] = label;
+	} else {
+		m_ItemLabelText[lang][itemindex] = label;
+	}
+
+}
+string ValueLocalizationEntry::GetItemLabel
+(
+		string lang,
+		int32 itemindex
+)
+{
+	if (lang.empty() || (m_ItemLabelText.find(lang) == m_ItemLabelText.end()) || m_ItemLabelText[lang].find(itemindex) == m_ItemLabelText[lang].end()) {
+		if (m_DefaultItemLabelText.find(itemindex) == m_DefaultItemLabelText.end()) {
+			Log::Write( LogLevel_Warning, "ValueLocalizationEntry::GetItemLabel: Unable to find Default Item Label Text for %d (%s)", itemindex, m_DefaultLabelText.c_str());
+			return "undefined";
+		}
+		return m_DefaultItemLabelText[itemindex];
+	} else {
+		return m_ItemLabelText[lang][itemindex];
+	}
+}
+
+bool ValueLocalizationEntry::HasItemLabel
+(
+		int32 itemIndex,
+		string lang
+)
+{
+	if (lang.empty() || (m_ItemLabelText.find(lang) == m_ItemLabelText.end()) || m_ItemLabelText[lang].find(itemIndex) == m_ItemLabelText[lang].end())
+		return false;
+	return true;
+}
+
 
 
 Localization::Localization()
@@ -299,6 +341,11 @@ void Localization::ReadXMLValue(uint8 ccID, const TiXmlElement *valueElement) {
 		{
 			ReadXMLVIDHelp(ccID, indexId, pos, valueIDElement);
 		}
+		if (str && !strcmp( str, "ItemLabel" ) )
+		{
+			ReadXMLVIDItemLabel(ccID, indexId, pos, valueIDElement);
+		}
+
 		valueIDElement = valueIDElement->NextSiblingElement();
 	}
 }
@@ -309,6 +356,10 @@ void Localization::ReadXMLVIDLabel(uint8 ccID, uint16 indexId, uint32 pos, const
 	string Language;
 	if (labelElement->Attribute( "lang" ))
 		 Language = labelElement->Attribute( "lang" );
+	if (!labelElement->GetText()) {
+		Log::Write( LogLevel_Warning, "Localization::ReadXMLVIDLabel: Error in Localization.xml (or cache) at line %d - No Label Entry for CommandClass %d, ValueID: %d (%d):  %s (Lang: %s)", labelElement->Row(), ccID, indexId, pos, labelElement->GetText(), Language.c_str() );
+		return;
+	}
 
 	if (m_valueLocalizationMap.find(key) == m_valueLocalizationMap.end()) {
 		m_valueLocalizationMap[key] = new ValueLocalizationEntry(ccID, indexId, pos);
@@ -332,14 +383,18 @@ void Localization::ReadXMLVIDHelp(uint8 ccID, uint16 indexId, uint32 pos, const 
 	string Language;
 	if (labelElement->Attribute( "lang" ))
 		 Language = labelElement->Attribute( "lang" );
+	if (!labelElement->GetText()) {
+		Log::Write( LogLevel_Warning, "Localization::ReadXMLVIDHelp: Error in Localization.xml (or cache) at line %d - No Help Entry for CommandClass %d, ValueID: %d (%d):  %s (Lang: %s)", labelElement->Row(), ccID, indexId, pos, labelElement->GetText(), Language.c_str() );
+		return;
+	}
+
 	uint64 key = GetValueKey(ccID, indexId, pos);
 	if (m_valueLocalizationMap.find(key) == m_valueLocalizationMap.end()) {
 		m_valueLocalizationMap[key] = new ValueLocalizationEntry(indexId, pos);
 	} else if (m_valueLocalizationMap[key]->HasLabel(Language)) {
-		Log::Write( LogLevel_Warning, "Localization::ReadXMLVIDHelp: Error in Localization.xml at line %d - Duplicate Entry for CommandClass %d, ValueID: %d (%d):  %s (Lang: %s)", labelElement->Row(), ccID, indexId, pos, labelElement->GetText(), Language.c_str() );
+		Log::Write( LogLevel_Warning, "Localization::ReadXMLVIDHelp: Error in Localization.xml  (or cache) at line %d - Duplicate Entry for CommandClass %d, ValueID: %d (%d):  %s (Lang: %s)", labelElement->Row(), ccID, indexId, pos, labelElement->GetText(), Language.c_str() );
 		return;
 	}
-
 	if( Language.empty() )
 	{
 		m_valueLocalizationMap[key]->AddHelp(labelElement->GetText());
@@ -349,6 +404,43 @@ void Localization::ReadXMLVIDHelp(uint8 ccID, uint16 indexId, uint32 pos, const 
 		m_valueLocalizationMap[key]->AddHelp(labelElement->GetText(), Language);
 	}
 }
+
+void Localization::ReadXMLVIDItemLabel(uint8 ccID, uint16 indexId, uint32 pos, const TiXmlElement *labelElement) {
+
+	uint64 key = GetValueKey(ccID, indexId, pos);
+	string Language;
+	int32 itemIndex;
+	if (labelElement->Attribute( "lang" ))
+		 Language = labelElement->Attribute( "lang" );
+	if (!labelElement->GetText()) {
+		Log::Write( LogLevel_Warning, "Localization::ReadXMLVIDItemLabel: Error in Localization.xml (or cache) at line %d - No ItemIndex Label Entry for CommandClass %d, ValueID: %d (%d):  %s (Lang: %s)", labelElement->Row(), ccID, indexId, pos, labelElement->GetText(), Language.c_str() );
+		return;
+	}
+
+	if (TIXML_SUCCESS != labelElement->QueryIntAttribute( "itemIndex", &itemIndex )) {
+		Log::Write( LogLevel_Warning, "Localization::ReadXMLVIDItemLabel: Error in Localization.xml at line %d - No itemIndex Entry for CommandClass %d, ValueID: %d (%d):  %s (Lang: %s)", labelElement->Row(), ccID, indexId, pos, labelElement->GetText(), Language.c_str() );
+		return;
+	}
+
+	if (m_valueLocalizationMap.find(key) == m_valueLocalizationMap.end()) {
+		Log::Write( LogLevel_Warning, "Localization::ReadXMLVIDItemLabel: Error in Localization.xml at line %d - No Value Entry for CommandClass %d, ValueID: %d (%d):  %s (Lang: %s)", labelElement->Row(), ccID, indexId, pos, labelElement->GetText(), Language.c_str() );
+		return;
+	} else if (m_valueLocalizationMap[key]->HasItemLabel(itemIndex, Language)) {
+		Log::Write( LogLevel_Warning, "Localization::ReadXMLVIDItemLabel: Error in Localization.xml at line %d - Duplicate ItemLabel Entry for CommandClass %d, ValueID: %d (%d):  %s (Lang: %s)", labelElement->Row(), ccID, indexId, pos, labelElement->GetText(), Language.c_str() );
+		return;
+	}
+
+	if( Language.empty() )
+	{
+		m_valueLocalizationMap[key]->AddItemLabel(labelElement->GetText(), itemIndex);
+	}
+	else
+	{
+		m_valueLocalizationMap[key]->AddItemLabel(labelElement->GetText(), itemIndex, Language);
+	}
+}
+
+
 
 uint64 Localization::GetValueKey
 (
@@ -436,7 +528,7 @@ string const Localization::GetValueHelp
 {
 	uint64 key = GetValueKey(ccID, indexId, pos);
 	if (m_valueLocalizationMap.find(key) == m_valueLocalizationMap.end()) {
-		Log::Write( LogLevel_Warning, "Localization::GetValueHelp: No Help for CommandClass %d, ValueID: %d (%d)", ccID, indexId, pos);
+		Log::Write( LogLevel_Warning, "Localization::GetValueHelp: No Help for CommandClass %xd, ValueID: %d (%d)", ccID, indexId, pos);
 		return "";
 	}
 	return m_valueLocalizationMap[key]->GetHelp(m_selectedLang);
@@ -451,11 +543,50 @@ string const Localization::GetValueLabel
 {
 	uint64 key = GetValueKey(ccID, indexId, pos);
 	if (m_valueLocalizationMap.find(key) == m_valueLocalizationMap.end()) {
-		Log::Write( LogLevel_Warning, "Localization::GetValueLabel: No Label for CommandClass %d, ValueID: %d (%d)", ccID, indexId, pos);
+		Log::Write( LogLevel_Warning, "Localization::GetValueLabel: No Label for CommandClass %xd, ValueID: %d (%d)", ccID, indexId, pos);
 		return "";
 	}
 	return m_valueLocalizationMap[key]->GetLabel(m_selectedLang);
 }
+
+
+string const Localization::GetValueItemLabel
+(
+		uint8 ccID,
+		uint16 indexId,
+		int32 pos,
+		int32 itemIndex
+) const
+{
+	uint64 key = GetValueKey(ccID, indexId, pos);
+	if (m_valueLocalizationMap.find(key) == m_valueLocalizationMap.end()) {
+		Log::Write( LogLevel_Warning, "Localization::GetValueItemLabel: No ValueLocalizationMap for CommandClass %xd, ValueID: %d (%d) ItemIndex %d", ccID, indexId, pos, itemIndex);
+		return "";
+	}
+	return m_valueLocalizationMap[key]->GetItemLabel(m_selectedLang, itemIndex);
+}
+
+bool Localization::SetValueItemLabel
+(
+		uint8 ccID,
+		uint16 indexId,
+		int32 pos,
+		int32 itemIndex,
+		string label,
+		string lang
+)
+{
+	uint64 key = GetValueKey(ccID, indexId, pos);
+	if (m_valueLocalizationMap.find(key) == m_valueLocalizationMap.end()) {
+		m_valueLocalizationMap[key] = new ValueLocalizationEntry(indexId, pos);
+	} else if (m_valueLocalizationMap[key]->HasItemLabel(itemIndex, lang)) {
+		Log::Write( LogLevel_Warning, "Localization::SetValueItemLabel: Duplicate Item Entry for CommandClass %d, ValueID: %d (%d):  %s (Lang: %s)", ccID, indexId, pos, label.c_str(), lang.c_str() );
+	}
+	m_valueLocalizationMap[key]->AddItemLabel(label, itemIndex, lang);
+	return true;
+}
+
+
 
 bool Localization::WriteXMLVIDHelp
 (
