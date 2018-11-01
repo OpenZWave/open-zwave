@@ -4,7 +4,7 @@ Aeotec ZW100 MultiSensor 6
 https://aeotec.freshdesk.com/helpdesk/attachments/6028954764
 V1.10 + V1.11 (12/14/2017)
 -->
-<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="10">
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="11">
 	<MetaData>
 		<MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0086:0064:0002</MetaDataItem>
 		<MetaDataItem name="ZWProductPage">http://products.z-wavealliance.org/products/1812</MetaDataItem>
@@ -17,6 +17,8 @@ V1.10 + V1.11 (12/14/2017)
 			<Help>Enable/Disable waking up for 10 minutes when re-power on (battery mode) the MultiSensor</Help>
 			<Item label="Disable" value="0" />
 			<Item label="Enable" value="1" />
+			<Item label="Disable-fr" value="0" lang="fr"/>
+			<Item label="Enable-Fr" value="1" lang="fr"/>
 		</Value>
 		<Value type="short" index="3" genre="config" label="On time" units="seconds" min="10" max="3600" value="240">
 			<Help>Duration that the motion sensor must observe no motion before it will return to the no-motion state.

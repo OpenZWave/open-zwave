@@ -120,18 +120,21 @@ void ValueList::ReadXML
 		Log::Write( LogLevel_Info, "Value list size is not set, assuming 4 bytes for node %d, class 0x%02x, instance %d, index %d", _nodeId, _commandClassId, GetID().GetInstance(), GetID().GetIndex() );
 	}
 
-	// Read the items
-	m_items.clear();
 	TiXmlElement const* itemElement = _valueElement->FirstChildElement();
 	while( itemElement )
 	{
 		char const* str = itemElement->Value();
 		if( str && !strcmp( str, "Item" ) )
 		{
+			bool AddItem = true;
 			char const* labelStr = itemElement->Attribute( "label" );
 			char const* lang = "";
-			if (itemElement->Attribute( "lang" ))
+			if (itemElement->Attribute( "lang" )) {
 				lang = itemElement->Attribute( "lang" );
+				AddItem = false;
+			} else {
+				AddItem = true;
+			}
 			int value = 0;
 			if (itemElement->QueryIntAttribute( "value", &value ) != TIXML_SUCCESS) {
 				Log::Write( LogLevel_Info, "Item value %s is wrong type or does not exist in xml configuration for node %d, class 0x%02x, instance %d, index %d", labelStr, _nodeId, _commandClassId, GetID().GetInstance(), GetID().GetIndex() );
@@ -143,12 +146,13 @@ void ValueList::ReadXML
 			}
 			else
 			{
-				Localization::Get()->SetValueItemLabel(m_id.GetCommandClassId(), m_id.GetIndex(), -1, value, labelStr, lang)
-
-				Item item;
-				item.m_value = value;
-
-				m_items.push_back( item );
+				Localization::Get()->SetValueItemLabel(m_id.GetCommandClassId(), m_id.GetIndex(), -1, value, labelStr, lang);
+				if (AddItem) {
+					Item item;
+					item.m_label = labelStr;
+					item.m_value = value;
+					m_items.push_back( item );
+				}
 			}
 		}
 
@@ -227,8 +231,6 @@ void ValueList::WriteXML
 
 		snprintf( str, sizeof(str), "%d", (*it).m_value );
 		pItemElement->SetAttribute( "value", str );
-
-		pItemElement->SetAttribute( "lang", Localization::Get()->GetSelectedLang().c_str());
 
 		_valueElement->LinkEndChild( pItemElement );
 	}

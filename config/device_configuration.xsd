@@ -339,6 +339,7 @@
   <xs:complexType>
    <xs:attribute name='label' type='xs:string' use='required'/>
    <xs:attribute name='value' type='xs:string' use='required'/>
+   <xs:attribute name='lang' type='xs:string' use='optional'/>
   </xs:complexType>
  </xs:element>
 
