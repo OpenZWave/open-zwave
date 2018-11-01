@@ -108,7 +108,7 @@ void SimpleAV::CreateVars
 
 #if 0
 				// ValueList - create command description for help
-				string codeStr = string("ZWave command number: ").append(to_string(command.GetCode()));
+				string codeStr = string("ZWave command number: ").append(std::to_string(command.GetCode()));
 				string descriptionFull = "";
 				if (command.GetDescription() == "")
 				{
@@ -136,7 +136,7 @@ void SimpleAV::CreateVars
 				if (command.GetDescription() == "")
 				{
 					descriptionFull = 
-						to_string(command.GetCode())
+						std::to_string(command.GetCode())
 						.append(" (")
 						.append(command.GetName())
 						.append(")\n");
@@ -144,7 +144,7 @@ void SimpleAV::CreateVars
 				else
 				{
 					descriptionFull =
-						to_string(command.GetCode())
+						std::to_string(command.GetCode())
 						.append(" (")
 						.append(command.GetName())
 						.append("; ")
@@ -156,9 +156,9 @@ void SimpleAV::CreateVars
 			}
 		}
 
-		node->CreateValueList(ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, string("OutputAVCommand_").append(to_string(_instance)), "", false, true, 2, items, 0, 0);
+		node->CreateValueList(ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, string("OutputAVCommand_").append(std::to_string(_instance)), "", false, true, 2, items, 0, 0);
 		
 		// Create a similar numeric value
-		// node->CreateValueShort(ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, string("OutputAVCommandNumber_").append(to_string(_instance)), "", false, true, 0, 0, helpNumeric);
+		// node->CreateValueShort(ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, string("OutputAVCommandNumber_").append(std::to_string(_instance)), "", false, true, 0, 0, helpNumeric);
 	}
 }
