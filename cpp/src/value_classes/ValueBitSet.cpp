@@ -31,6 +31,7 @@
 #include "Node.h"
 #include "platform/Log.h"
 #include "Manager.h"
+#include "Localization.h"
 #include <ctime>
 
 using namespace OpenZWave;
@@ -162,22 +163,28 @@ void ValueBitSet::ReadXML
 		Log::Write( LogLevel_Info, "Value list size is not set, assuming 1 bytes for node %d, class 0x%02x, instance %d, index %d", _nodeId, _commandClassId, GetID().GetInstance(), GetID().GetIndex() );
 		m_size = 1;
 	}
-	TiXmlElement const *helpElement = _valueElement->FirstChildElement("Help");
-	TiXmlElement const *BitSetHelpElement = helpElement->FirstChildElement("BitSet");
-	while (BitSetHelpElement) {
+	TiXmlElement const *BitSetElement = _valueElement->FirstChildElement("BitSet");
+	while (BitSetElement) {
 		uint32 id = 0;
-		if( TIXML_SUCCESS == BitSetHelpElement->QueryIntAttribute( "id", &intVal ) )
+		if( TIXML_SUCCESS == BitSetElement->QueryIntAttribute( "id", &intVal ) )
 			{
 				id = (uint32)intVal;
-				char const* label = BitSetHelpElement->Attribute( "label" );
-				if( label )
-				{
-					m_BitLabelString[id] = label;
+				TiXmlElement const *BitSetLabelElement = BitSetElement->FirstChildElement("Label");
+				while (BitSetLabelElement) {
+					char const* lang = BitSetLabelElement->Attribute( "lang" );
+					Localization::Get()->SetValueItemLabel(m_id.GetCommandClassId(), m_id.GetIndex(), -1, id, BitSetLabelElement->GetText(), lang ? lang : "");
+
+					BitSetLabelElement = BitSetLabelElement->NextSiblingElement("Label");
 				}
-				string helpstring = BitSetHelpElement->GetText();
-				m_BitHelpString[id] = helpstring;
+				TiXmlElement const *BitSetHelpElement = BitSetElement->FirstChildElement("Help");
+				while (BitSetHelpElement) {
+					char const* lang = BitSetHelpElement->Attribute( "lang" );
+					Localization::Get()->SetValueItemHelp(m_id.GetCommandClassId(), m_id.GetIndex(), -1, id, BitSetHelpElement->GetText(), lang ? lang : "");
+					BitSetHelpElement = BitSetHelpElement->NextSiblingElement("Help");
+				}
+				m_bits.push_back(id);
 			}
-		BitSetHelpElement = BitSetHelpElement->NextSiblingElement("BitSet");
+		BitSetElement = BitSetElement->NextSiblingElement("BitSet");
 	}
 }
 
@@ -207,13 +214,20 @@ void ValueBitSet::WriteXML
 		helpElement = new TiXmlElement( "Help" );
 		_valueElement->LinkEndChild( helpElement );
 	}
-	for (std::map<uint8, string>::iterator it = m_BitHelpString.begin(); it != m_BitHelpString.end(); ++it) {
-		TiXmlElement* BitSethelpElement = new TiXmlElement( "BitSet" );
-		BitSethelpElement->SetAttribute("id", it->first);
-		BitSethelpElement->SetAttribute("label", m_BitLabelString.at(it->first).c_str());
-		TiXmlText* textElement = new TiXmlText(it->second.c_str());
-		BitSethelpElement->LinkEndChild( textElement );
-		helpElement->LinkEndChild( BitSethelpElement );
+	for (std::vector<int32>::iterator it = m_bits.begin(); it != m_bits.end(); ++it) {
+		TiXmlElement* BitSetElement = new TiXmlElement( "BitSet" );
+		BitSetElement->SetAttribute("id", *it);
+		_valueElement->LinkEndChild( BitSetElement );
+
+		TiXmlElement* BitSetLabelElement = new TiXmlElement( "Label" );
+		TiXmlText* labeltextElement = new TiXmlText(Localization::Get()->GetValueItemLabel(m_id.GetCommandClassId(), m_id.GetIndex(), -1, *it).c_str());
+		BitSetLabelElement->LinkEndChild( labeltextElement );
+		BitSetElement->LinkEndChild( BitSetLabelElement );
+
+		TiXmlElement* BitSetHelpElement = new TiXmlElement( "Help" );
+		TiXmlText* helptextElement = new TiXmlText(Localization::Get()->GetValueItemHelp(m_id.GetCommandClassId(), m_id.GetIndex(), -1, *it).c_str());
+		BitSetHelpElement->LinkEndChild( helptextElement );
+		BitSetElement->LinkEndChild( BitSetHelpElement );
 	}
 }
 
@@ -315,7 +329,7 @@ string ValueBitSet::GetBitHelp
 )
 {
 	if (isValidBit(_idx)) {
-		return m_BitHelpString.at(_idx);
+		return Localization::Get()->GetValueItemHelp(m_id.GetCommandClassId(), m_id.GetIndex(), -1, _idx);
 	}
 	Log::Write(LogLevel_Warning, m_id.GetNodeId(), "SetBitHelp: Bit %d is not valid with BitMask %d", _idx, m_BitMask);
 	return "";
@@ -328,7 +342,7 @@ bool ValueBitSet::SetBitHelp
 )
 {
 	if (isValidBit(_idx)) {
-		m_BitHelpString[_idx] = help;
+		Localization::Get()->SetValueItemHelp(m_id.GetCommandClassId(), m_id.GetIndex(), -1, _idx, Localization::Get()->GetSelectedLang());
 		return true;
 	}
 	Log::Write(LogLevel_Warning, m_id.GetNodeId(), "SetBitHelp: Bit %d is not valid with BitMask %d", _idx, m_BitMask);
@@ -351,11 +365,7 @@ string ValueBitSet::GetBitLabel
 )
 {
 	if (isValidBit(_idx)) {
-		if (m_BitLabelString.find(_idx) == m_BitLabelString.end()) {
-			Log::Write(LogLevel_Warning, m_id.GetNodeId(), "GetBitLabel: Bit %d does not have a Label", _idx);
-			return "Reserved";
-		} else
-			return m_BitLabelString.at(_idx);
+			return Localization::Get()->GetValueItemLabel(m_id.GetCommandClassId(), m_id.GetIndex(), -1, _idx);
 	}
 	Log::Write(LogLevel_Warning, m_id.GetNodeId(), "GetBitLabel: Bit %d is not valid with BitMask %d", _idx, m_BitMask);
 	return "Reserved";
@@ -368,7 +378,7 @@ bool ValueBitSet::SetBitLabel
 )
 {
 	if (isValidBit(_idx)) {
-		m_BitLabelString[_idx] = label;
+		Localization::Get()->SetValueItemLabel(m_id.GetCommandClassId(), m_id.GetIndex(), -1, _idx, label, Localization::Get()->GetSelectedLang());
 		return true;
 	}
 	Log::Write(LogLevel_Warning, m_id.GetNodeId(), "SetBitLabel: Bit %d is not valid with BitMask %d", _idx, m_BitMask);

@@ -706,7 +706,7 @@ bool Driver::ReadConfig
 	{
 		return false;
 	}
-
+	doc.SetUserData((void *)filename.c_str());
 	TiXmlElement const* driverElement = doc.RootElement();
 
 	// Version
@@ -6424,7 +6424,7 @@ void Driver::ReadButtons
 		Log::Write( LogLevel_Debug, "Driver::ReadButtons - zwbutton.xml file not found.");
 		return;
 	}
-
+	doc.SetUserData((void *)filename.c_str());
 	TiXmlElement const* nodesElement = doc.RootElement();
 	str = nodesElement->Value();
 	if( str && strcmp( str, "Nodes" ))
@@ -7336,6 +7336,7 @@ void Driver::ReloadNode
 	TiXmlDocument doc;
 	if( doc.LoadFile( filename.c_str(), TIXML_ENCODING_UTF8 ) )
 	{
+		doc.SetUserData((void *)filename.c_str());
 		TiXmlElement * driverElement = doc.RootElement();
 
 		TiXmlNode * nodeElement = driverElement->FirstChild();

@@ -507,6 +507,7 @@ bool Options::ParseOptionsXML
 		Log::Write(LogLevel_Warning, "Failed to Parse %s: %s", _filename.c_str(), doc.ErrorDesc());
 		return false;
 	}
+	doc.SetUserData((void *)_filename.c_str());
 	Log::Write(LogLevel_Info, "Reading %s for Options", _filename.c_str());
 
 	TiXmlElement const* optionsElement = doc.RootElement();

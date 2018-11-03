@@ -4,7 +4,7 @@ Aeotec ZW100 MultiSensor 6
 https://aeotec.freshdesk.com/helpdesk/attachments/6028954764
 V1.10 + V1.11 (12/14/2017)
 -->
-<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="11">
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="12">
 	<MetaData>
 		<MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0086:0064:0002</MetaDataItem>
 		<MetaDataItem name="ZWProductPage">http://products.z-wavealliance.org/products/1812</MetaDataItem>
@@ -122,15 +122,57 @@ V1.10 + V1.11 (12/14/2017)
 			Enable/disable to send a report when the measurement is more than the upper limit value or less than the lower limit value.
 			Note: 
 			If USB power, the Sensor will check the limit every 10 seconds. If battery power, the Sensor will check the limit when it is waken up. 
-				<BitSet id="1" label="Lower Temperature">Lower Temperature Threshold</BitSet>
-				<BitSet id="2" label="Lower Humidity">Lower Humdity Threshold</BitSet>
-				<BitSet id="3" label="Lower Luminance">Lower Luminance Threshold</BitSet>
-				<BitSet id="4" label="Lower Ultraviolet">Lower Ultraviolet Threshold</BitSet>
-				<BitSet id="5" label="Upper Temperature">Upper Temerature Threshold</BitSet>
-				<BitSet id="6" label="Upper Humidity">Upper Humdity Threshold</BitSet>
-				<BitSet id="7" label="Upper Luminance">Upper Luminance Threshold</BitSet>
-				<BitSet id="8" label="Upper Ultraviolet">Upper Ultraviolet Threshold</BitSet>
 			</Help>
+			<Help lang="fr">French Help</Help>
+			<Label lang="fr">Enable/disable to send a report on Threshold-fr</Label>
+			<BitSet id="1">
+				<Label>Lower Temperature</Label>
+				<Label lang="fr">Lower Temperature-fr</Label>
+				<Help>Lower Temperature Threshold</Help>
+				<Help lang="fr">Lower Temperature Threshold-fr</Help>
+			</BitSet>
+			<BitSet id="2">
+				<Label>Lower Humidity</Label>
+				<Label lang="fr">Lower Humidity-fr</Label>
+				<Help>Lower Humdity Threshold</Help>
+				<Help lang="fr">Lower Humdity Threshold-fr</Help>
+			</BitSet>
+			<BitSet id="3">
+				<Label>Lower Luminance</Label>
+				<Label lang="fr">Lower Luminance-fr</Label>
+				<Help>Lower Luminance Threshold</Help>
+				<Help lang="fr">Lower Luminance Threshold</Help>
+			</BitSet>
+			<BitSet id="4">
+				<Label>Lower Ultraviolet</Label>
+				<Label lang="fr">Lower Ultraviolet-fr</Label>
+				<Help>Lower Ultraviolet Threshold</Help>
+				<Help lang="fr">Lower Ultraviolet Threshold-fr</Help>
+			</BitSet>
+			<BitSet id="5">
+				<Label>Upper Temperature</Label>
+				<Label lang="fr">Upper Temperature-fr</Label>
+				<Help>Upper Temerature Threshold</Help>
+				<Help lang="fr">Upper Temerature Threshold-fr</Help>
+			</BitSet>
+			<BitSet id="6">
+				<Label>Upper Humidity</Label>
+				<Label lang="fr">Upper Humidity-fr</Label>
+				<Help>Upper Humdity Threshold</Help>
+				<Help lang="fr">Upper Humdity Threshold-fr</Help>
+			</BitSet>
+			<BitSet id="7">
+				<Label>Upper Luminance</Label>
+				<Label lang="fr">Upper Luminance-fr</Label>
+				<Help>Upper Luminance Threshold</Help>
+				<Help lang="fr">Upper Luminance Threshold-fr</Help>
+			</BitSet>
+			<BitSet id="8">
+				<Label>Upper Ultraviolet</Label>
+				<Label lang="fr">Upper Ultraviolet-fr</Label>
+				<Help>Upper Ultraviolet Threshold</Help>
+				<Help lang="fr">Upper Ultraviolet Threshold-fr</Help>
+			</BitSet>
 		</Value> 
 		<Value type="int" index="49" genre="config" label="Set the upper limit value of temperature sensor" value="71681" >
 			<Help>

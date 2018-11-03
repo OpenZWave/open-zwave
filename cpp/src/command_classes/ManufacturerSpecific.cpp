@@ -313,6 +313,7 @@ bool ManufacturerSpecific::LoadConfigXML
 		Log::Write( LogLevel_Info, GetNodeId(), "Unable to find or load Config Param file %s", filename.c_str() );
 		return false;
 	}
+	doc->SetUserData((void *)filename.c_str());
 	Node::QueryStage qs = GetNodeUnsafe()->GetCurrentQueryStage();
 	if( qs == Node::QueryStage_ManufacturerSpecific1 )
 	{

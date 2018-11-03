@@ -3,7 +3,7 @@
 Aeotec ZW122 Water Sensor 6
 http://products.z-wavealliance.org/products/2437
 -->
-<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="4">
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="5">
 	<!-- Basic get not supported -->
 	<CommandClass id="32" getsupported="false"/>
 	<!-- COMMAND_CLASS_BINARY_SENSOR. This class is in the list reported by the device, but it does not respond to requests-->
@@ -97,13 +97,27 @@ http://products.z-wavealliance.org/products/2437
 			<Item label="Enabled" value="1"/>
 		</Value>
 		<Value type="bitset" genre="config" instance="1" index="87" label="Sensor is triggered the buzzer will alarm" size="4" min="0" max="55" value="55" bitmask="55">
-			<Help>
-				<BitSet id="1" label="Water Leak">If the Water leak is triggered, the buzzer will alarm.</BitSet>
-				<BitSet id="2" label="Vibration">If the vibration is triggered, the buzzer will alarm.</BitSet>
-				<BitSet id="3" label="Tilt Sensor">If the Tilt Sensor is triggered, the buzzer will alarm.</BitSet>
-				<BitSet id="5" label="UnderHeat">If the Under Heat Temperature is triggered, the buzzer will alarm.</BitSet>
-				<BitSet id="6" label="OverHeat">If the Over Heat Temperature is triggered, the buzzer will alarm.</BitSet>
-			</Help>
+			<Help>What Sensors Trigger the Buzzer</Help>
+			<BitSet id="1">
+				<Label>Water Leak</Label>
+				<Help>If the Water leak is triggered, the buzzer will alarm.</Help>
+			</BitSet>
+			<BitSet id="2">
+				<Label>Vibration</Label>
+				<Help>If the vibration is triggered, the buzzer will alarm.</Help>
+			</BitSet>
+			<BitSet id="3">
+				<Label>Tilt Sensor</Label>
+				<Help>If the Tilt Sensor is triggered, the buzzer will alarm.</Help>
+			</BitSet>
+			<BitSet id="5"> 
+				<Label>UnderHeat</Label>
+				<Help>If the Under Heat Temperature is triggered, the buzzer will alarm.</Help>
+			</BitSet>
+			<BitSet id="6">
+				<Label>OverHeat</Label>
+				<Help>If the Over Heat Temperature is triggered, the buzzer will alarm.</Help>
+			</BitSet>
 		</Value>
 		<Value type="list" genre="config" instance="1" index="88" label="Probe 1 Basic Set on grp 3" min="0" max="2" size="1" value="0">
 			<Help>To set which value of the Basic Set will be sent to the associated nodes in association Group 3 when the Sensor probe 1 is triggered.</Help>

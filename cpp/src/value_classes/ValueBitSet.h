@@ -81,13 +81,12 @@ namespace OpenZWave
 
 	private:
 		bool isValidBit(uint8 _idx) const;
-		Bitfield	m_value;				// the current index in the m_items vector
-		Bitfield	m_valueCheck;			// the previous value (used for double-checking spurious value reads)
-		Bitfield	m_newValue;				// a new value to be set on the appropriate device
-		uint32		m_BitMask;				// Valid Bits
-		std::map<uint8, string> m_BitHelpString;	// Help Strings for each Bit
-		std::map<uint8, string> m_BitLabelString;	// Labels for each Bit
-		uint8 		m_size;					// Number of bytes in size
+		Bitfield		m_value;				// the current index in the m_items vector
+		Bitfield		m_valueCheck;			// the previous value (used for double-checking spurious value reads)
+		Bitfield		m_newValue;				// a new value to be set on the appropriate device
+		uint32			m_BitMask;				// Valid Bits
+		uint8 			m_size;					// Number of bytes in size
+		vector<int32>   m_bits;
 	};
 
 } // namespace OpenZWave

@@ -115,7 +115,7 @@ void ManufacturerSpecificDB::LoadConfigFileRevision
 			Log::Write( LogLevel_Info, "Unable to load config file %s", path.c_str() );
 			return;
 		}
-
+		pDoc->SetUserData((void *)path.c_str());
 		TiXmlElement const* root = pDoc->RootElement();
 		char const *str = root->Value();
 		if( str && !strcmp( str, "Product" ) )
@@ -159,7 +159,7 @@ bool ManufacturerSpecificDB::LoadProductXML
 		Log::Write( LogLevel_Info, "Unable to load %s", filename.c_str() );
 		return false;
 	}
-
+	pDoc->SetUserData((void *)filename.c_str());
 	TiXmlElement const* root = pDoc->RootElement();
 
 	char const* str;

@@ -3407,7 +3407,7 @@ void Node::ReadDeviceClasses
 		Log::Write( LogLevel_Info, "Check that the config path provided when creating the Manager points to the correct location." );
 		return;
 	}
-
+	doc.SetUserData((void *)filename.c_str());
 	TiXmlElement const* deviceClassesElement = doc.RootElement();
 
 	// Read the basic and generic device classes

@@ -270,6 +270,10 @@ void Value::ReadXML
 		{
 			Localization::Get()->ReadXMLVIDHelp(_commandClassId, index, -1, helpElement);
 		}
+		if (str && !strcmp( str, "Label" ) )
+		{
+			Localization::Get()->ReadXMLVIDLabel(_commandClassId, index, -1, helpElement);
+		}
 		helpElement = helpElement->NextSiblingElement();
 	}
 }
