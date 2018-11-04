@@ -2072,6 +2072,23 @@ bool Manager::GetValueAsByte
 					OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to GetValueAsByte");
 				}
 			}
+		} else if (ValueID::ValueType_BitSet == _id.GetType() ) {
+			if( Driver* driver = GetDriver( _id.GetHomeId() ) )
+			{
+				LockGuard LG(driver->m_nodeMutex);
+				if (ValueBitSet* value = static_cast<ValueBitSet*>( driver->GetValue( _id ) ) )
+				{
+					if (value->GetSize() == 1) {
+						*o_value = value->GetValue();
+						value->Release();
+						res = true;
+					} else {
+						OZW_ERROR(OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID, "BitSet ValueID passed to GetValueAsByte is not of size 1");
+					}
+				} else {
+					OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to GetValueAsInt");
+				}
+			}
 		} else {
 			OZW_ERROR(OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID, "ValueID passed to GetValueAsByte is not a Byte Value");
 		}
@@ -2236,6 +2253,25 @@ bool Manager::GetValueAsShort
 					res = true;
 				} else {
 					OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to GetValueAsShort");
+				}
+			}
+		} else if (ValueID::ValueType_BitSet == _id.GetType() ) {
+			if( Driver* driver = GetDriver( _id.GetHomeId() ) )
+			{
+				LockGuard LG(driver->m_nodeMutex);
+				if (ValueBitSet* value = static_cast<ValueBitSet*>( driver->GetValue( _id ) ) )
+				{
+					if (value->GetSize() == 2) {
+						*o_value = value->GetValue();
+						value->Release();
+						res = true;
+					} else {
+						OZW_ERROR(OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID, "BitSet ValueID passed to GetValueAsShort is not of size 2");
+					}
+				}
+				else
+				{
+					OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to GetValueAsInt");
 				}
 			}
 		} else {
@@ -2713,7 +2749,27 @@ bool Manager::SetValue
 				}
 			}
 		}
-	} else {
+	} else if( ValueID::ValueType_BitSet == _id.GetType() )
+	{
+		if( Driver* driver = GetDriver( _id.GetHomeId() ) )
+		{
+			if( _id.GetNodeId() != driver->GetControllerNodeId() )
+			{
+				LockGuard LG(driver->m_nodeMutex);
+				if( ValueBitSet* value = static_cast<ValueBitSet*>( driver->GetValue( _id ) ) )
+				{
+					if (value->GetSize() == 1) {
+						res = value->Set(_value);
+						value->Release();
+					} else {
+						OZW_ERROR(OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID, "BitSet ValueID is Not of Size 1 (SetValue uint8)");
+					}
+				} else {
+					OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to SetValue");
+				}
+			}
+		}
+    } else {
 		OZW_ERROR(OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID, "ValueID passed to SetValue is not a Byte Value");
 	}
 
@@ -2803,7 +2859,27 @@ bool Manager::SetValue
 				}
 			}
 		}
-	} else {
+	} else if( ValueID::ValueType_BitSet == _id.GetType() )
+	{
+		if( Driver* driver = GetDriver( _id.GetHomeId() ) )
+		{
+			if( _id.GetNodeId() != driver->GetControllerNodeId() )
+			{
+				LockGuard LG(driver->m_nodeMutex);
+				if( ValueBitSet* value = static_cast<ValueBitSet*>( driver->GetValue( _id ) ) )
+				{
+					if (value->GetSize() == 4) {
+						res = value->Set(_value);
+						value->Release();
+					} else {
+						OZW_ERROR(OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID, "BitSet ValueID is Not of Size 4 (SetValue uint32)");
+					}
+				} else {
+					OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to SetValue");
+				}
+			}
+		}
+    } else {
 		OZW_ERROR(OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID, "ValueID passed to SetValue is not a Int Value");
 	}
 
@@ -2874,7 +2950,27 @@ bool Manager::SetValue
 				}
 			}
 		}
-	} else {
+	} else if( ValueID::ValueType_BitSet == _id.GetType() )
+	{
+		if( Driver* driver = GetDriver( _id.GetHomeId() ) )
+		{
+			if( _id.GetNodeId() != driver->GetControllerNodeId() )
+			{
+				LockGuard LG(driver->m_nodeMutex);
+				if( ValueBitSet* value = static_cast<ValueBitSet*>( driver->GetValue( _id ) ) )
+				{
+					if (value->GetSize() == 2) {
+						res = value->Set(_value);
+						value->Release();
+					} else {
+						OZW_ERROR(OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID, "BitSet ValueID is Not of Size 2 (SetValue uint16)");
+					}
+				} else {
+					OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to SetValue");
+				}
+			}
+		}
+    } else {
 		OZW_ERROR(OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID, "ValueID passed to SetValue is not a Short Value");
 	}
 

@@ -116,7 +116,6 @@ V1.10 + V1.11 (12/14/2017)
 			If USB power, the Sensor will check the limit every 10 seconds. If battery power, the Sensor will check the limit when it is waken up. 
 			</Help>
 		</Value> 
-		-->
 		<Value type="bitset" index="48" genre="config" label="Enable/disable to send a report on Threshold" units="" bitmask="255" size="1" value="0" >
 			<Help>
 			Enable/disable to send a report when the measurement is more than the upper limit value or less than the lower limit value.
@@ -317,7 +316,7 @@ V1.10 + V1.11 (12/14/2017)
 		<Value type="button" index="100" genre="config" label="Reset Params 101-103 to Default" write_only="true" affects="101,102,103">
 			<Help>Reset The Reporting Group Configuration (101 to 103) to default</Help>
 		</Value>
-		<Value type="int" index="101" genre="config" label="Group 1 Reports" value="241">
+		<Value type="bitset" index="101" genre="config" label="Group 1 Reports" bitmask="241" size="4" value="241">
 			<Help>Which reports need to send automatically in timing intervals for group 1.
 				Bitmask:
 				10000000 - 128 - Luminance
@@ -326,8 +325,30 @@ V1.10 + V1.11 (12/14/2017)
 				00010000 - 16 - Ultraviolet
 				00000001 - 1 - Battery
 				10100000 - 160 - Luminance and Temperature (32+128)
-				11110001 - 241 - All (1+16+32+64+128)</Help>
+				11110001 - 241 - All (1+16+32+64+128)
+			</Help>
+			<BitSet id="1">
+				<Label>Battery</Label>
+				<Help>Send Battery Report</Help>
+			</BitSet>
+			<BitSet id="5">
+				<Label>Ultraviolet</Label>
+				<Help>Send Ultraviolet Report</Help>
+			</BitSet>
+			<BitSet id="6">
+				<Label>Temperature</Label>
+				<Help>Send Temperature Report</Help>
+			</BitSet>
+			<BitSet id="7">
+				<Label>Humidity</Label>
+				<Help>Send Humidity Report</Help>
+			</BitSet>
+			<BitSet id="8">
+				<Label>Luminance</Label>
+				<Help>Send Luminance Report</Help>
+			</BitSet>
 		</Value>
+		
 		<Value type="int" index="102" genre="config" label="Group 2 Reports" value="0">
 			<Help>Which reports need to send automatically in timing intervals for group 2.
 				Bitmask:

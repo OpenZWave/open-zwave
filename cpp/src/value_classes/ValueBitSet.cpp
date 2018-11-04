@@ -244,10 +244,10 @@ bool ValueBitSet::Set
 		Log::Write(LogLevel_Warning, m_id.GetNodeId(), "Set: Value %d is not valid with BitMask %d", _value, m_BitMask);
 		return false;
 	}
-
 	// create a temporary copy of this value to be submitted to the Set() call and set its value to the function param
   	ValueBitSet* tempValue = new ValueBitSet( *this );
-	tempValue->m_value.SetValue(_value);
+
+  	tempValue->m_value.SetValue(_value);
 
 	// Set the value in the device.
 	bool ret = ((Value*)tempValue)->Set();
@@ -269,10 +269,10 @@ bool ValueBitSet::SetBit
 		return false;
 	}
 
-
 	// create a temporary copy of this value to be submitted to the Set() call and set its value to the function param
   	ValueBitSet* tempValue = new ValueBitSet( *this );
-	tempValue->m_value.Set(_idx -1);
+
+  	tempValue->m_value.Set(_idx -1);
 
 	// Set the value in the device.
 	bool ret = ((Value*)tempValue)->Set();
