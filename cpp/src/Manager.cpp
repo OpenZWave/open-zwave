@@ -2072,23 +2072,6 @@ bool Manager::GetValueAsByte
 					OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to GetValueAsByte");
 				}
 			}
-		} else if (ValueID::ValueType_BitSet == _id.GetType() ) {
-			if( Driver* driver = GetDriver( _id.GetHomeId() ) )
-			{
-				LockGuard LG(driver->m_nodeMutex);
-				if (ValueBitSet* value = static_cast<ValueBitSet*>( driver->GetValue( _id ) ) )
-				{
-					if (value->GetSize() == 1) {
-						*o_value = value->GetValue();
-						value->Release();
-						res = true;
-					} else {
-						OZW_ERROR(OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID, "BitSet ValueID passed to GetValueAsByte is not of size 1");
-					}
-				} else {
-					OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to GetValueAsInt");
-				}
-			}
 		} else {
 			OZW_ERROR(OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID, "ValueID passed to GetValueAsByte is not a Byte Value");
 		}
@@ -2253,25 +2236,6 @@ bool Manager::GetValueAsShort
 					res = true;
 				} else {
 					OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to GetValueAsShort");
-				}
-			}
-		} else if (ValueID::ValueType_BitSet == _id.GetType() ) {
-			if( Driver* driver = GetDriver( _id.GetHomeId() ) )
-			{
-				LockGuard LG(driver->m_nodeMutex);
-				if (ValueBitSet* value = static_cast<ValueBitSet*>( driver->GetValue( _id ) ) )
-				{
-					if (value->GetSize() == 2) {
-						*o_value = value->GetValue();
-						value->Release();
-						res = true;
-					} else {
-						OZW_ERROR(OZWException::OZWEXCEPTION_CANNOT_CONVERT_VALUEID, "BitSet ValueID passed to GetValueAsShort is not of size 2");
-					}
-				}
-				else
-				{
-					OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_VALUEID, "Invalid ValueID passed to GetValueAsInt");
 				}
 			}
 		} else {

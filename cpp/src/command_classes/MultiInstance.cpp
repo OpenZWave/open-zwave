@@ -242,6 +242,17 @@ bool MultiInstance::RequestInstances
 	return res;
 }
 
+bool MultiInstance::HandleIncomingMsg
+(
+		uint8 const* _data,
+		uint32 const _length,
+		uint32 const _instance
+)
+{
+	return HandleMsg(_data, _length, _instance);
+}
+
+
 //-----------------------------------------------------------------------------
 // <MultiInstance::HandleMsg>
 // Handle a message from the Z-Wave network

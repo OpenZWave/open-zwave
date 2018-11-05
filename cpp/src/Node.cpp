@@ -1855,13 +1855,14 @@ void Node::SetStaticRequests
 {
 	uint8 request = 0;
 
-	if( GetCommandClass( MultiInstance::StaticGetCommandClassId() ) )
+	if( GetCommandClass( MultiInstance::StaticGetCommandClassId(), false ) )
 	{
 		// Request instances
+		std::cout << "Static Requests " << std::endl;
 		request |= (uint8)CommandClass::StaticRequest_Instances;
 	}
 
-	if( GetCommandClass( Version::StaticGetCommandClassId() ) )
+	if( GetCommandClass( Version::StaticGetCommandClassId(), false ) )
 	{
 		// Request versions
 		request |= (uint8)CommandClass::StaticRequest_Version;
@@ -1980,6 +1981,25 @@ void Node::ApplicationCommandHandler
 
 			Msg* msg = new Msg( "Replication Command Complete", m_nodeId, REQUEST, FUNC_ID_ZW_REPLICATION_COMMAND_COMPLETE, false );
 			GetDriver()->SendMsg( msg, Driver::MsgQueue_Command );
+		}
+		else if ( _data[5] == MultiInstance::StaticGetCommandClassId() ) {
+			// Devices that support MultiChannelAssociation may send a MultiChannel Encapsulated message if there is a Instance set in the Association Groups
+			// So we will dynamically load the MultiChannel CC if we receive a encapsulated message
+			// We only do this after the QueryStage is Complete as we don't want to Add this CC to the list, and then confusing OZW that
+			// The device supports the MultiChannel CC (eg, the Device might be asleep, we have not got the NIF and it actually does support it versus sending to a MultiChannelAssociation Endpoint
+			if (GetCurrentQueryStage() != QueryStage_Complete) {
+				Log::Write( LogLevel_Info, m_nodeId, "ApplicationCommandHandler - Received a MultiInstance Message, but QueryStage Isn't Complete yet");
+				return;
+			}
+
+			Log::Write (LogLevel_Info, m_nodeId, "ApplicationCommandHandler - Received a MultiInstance Message but MulitInstance CC isn't loaded. Loading it... ");
+			if (CommandClass* pCommandClass = AddCommandClass(MultiInstance::StaticGetCommandClassId(), true)) {
+				pCommandClass->ReceivedCntIncr();
+				if (!pCommandClass->HandleIncomingMsg( &_data[6], _data[4] ) )
+				{
+					Log::Write (LogLevel_Warning, m_nodeId, "CommandClass %s HandleIncommingMsg returned false", pCommandClass->GetCommandClassName().c_str());
+				}
+			}
 		}
 		else
 		{

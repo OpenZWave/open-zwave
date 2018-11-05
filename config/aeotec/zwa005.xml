@@ -4,6 +4,8 @@ ZWA005 TriSensor
 -->
 <Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
 	<!-- Configuration Parameters -->
+	<CommandClass id="32" getsupported="false">
+	</CommandClass>
 	<CommandClass id="112">
 		<Value type="short" index="1" genre="config" label="Motion Re-trigger Time" units="Second" min="0" max="32767" value="30" >
             <Help>
