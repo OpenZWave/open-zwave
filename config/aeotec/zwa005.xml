@@ -2,7 +2,7 @@
 <!--
 ZWA005 TriSensor
 -->
-<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="2">
 	<!-- Configuration Parameters -->
 	<CommandClass id="32" getsupported="false">
 	</CommandClass>
