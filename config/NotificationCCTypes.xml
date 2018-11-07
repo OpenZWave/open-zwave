@@ -1,0 +1,486 @@
+<?xml version="1.0" encoding="utf-8"?>
+<NotificationTypes xmlns='https://github.com/OpenZWave/open-zwave' revision="1">
+	<AlarmType id="1" name="Alarm_Smoke_Event">
+		<AlarmEvent id="0" name="Alarm_Smoke_Clear">
+		</AlarmEvent>
+		<AlarmEvent id="1" name="Alarm_Smoke_Detected_Location">
+			<AlarmEventParam id="1" type="location" name="Location" />
+		</AlarmEvent>
+		<AlarmEvent id="2" name="Alarm_Smoke_Detected_UnknownLocation">
+		</AlarmEvent>
+		<AlarmEvent id="3" name="Alarm_Smoke_Alarm_Test">
+		</AlarmEvent>
+		<AlarmEvent id="4" name="Alarm_Smoke_Replacement_Required_Unspecified">
+		</AlarmEvent>
+		<AlarmEvent id="5" name="Alarm_Smoke_Replacement_Required_End_Of_Life">
+		</AlarmEvent>
+		<AlarmEvent id="6" name="Alarm_Smoke_Silenced">
+		</AlarmEvent>
+		<AlarmEvent id="7" name="Alarm_Smoke_Maintenance_Required_Periodic_Inspection">
+		</AlarmEvent>
+		<AlarmEvent id="8" name="Alarm_Smoke_Maintenance_Required_Dust_In_Device">
+		</AlarmEvent>
+		<AlarmEvent id="254" name="Alarm_Smoke_Unknown_Event">
+		</AlarmEvent>
+	</AlarmType>
+	
+	<AlarmType id="2" name="Alarm_CO_Event">
+		<AlarmEvent id="0" name="Alarm_CO_Clear">
+		</AlarmEvent>
+		<AlarmEvent id="1" name="Alarm_CO_Detected_Location">
+			<AlarmEventParam id="1" type="location" name="Location" />
+		</AlarmEvent>
+		<AlarmEvent id="2" name="Alarm_CO_Detected_UnknownLocation">
+		</AlarmEvent>
+		<AlarmEvent id="3" name="Alarm_CO_Carbon_Monoxied_Test">
+			<AlarmEventParam id="1" type="list" name="Result">
+				<Item id="1" label="Ok"/>
+				<Item id="2" label="Failed"/>
+			</AlarmEventParam>
+		</AlarmEvent>
+		<AlarmEvent id="4" name="Alarm_CO_Replacement_Required_Unspecified">
+		</AlarmEvent>
+		<AlarmEvent id="5" name="Alarm_CO_Replacement_Required_End_Of_Life">
+		</AlarmEvent>
+		<AlarmEvent id="6" name="Alarm_CO_Silenced">
+		</AlarmEvent>
+		<AlarmEvent id="7" name="Alarm_CO_Maintence_Required_Periodic_Inspection">
+		</AlarmEvent>
+		<AlarmEvent id="254" name="Alarm_CO_Unknown_Event">
+		</AlarmEvent>
+	</AlarmType>
+	
+	<AlarmType id="3" name="Alarm_CO2_Event">
+		<AlarmEvent id="0" name="Alarm_CO2_Clear">
+		</AlarmEvent>
+		<AlarmEvent id="1" name="Alarm_CO2_Detected_Location">
+			<AlarmEventParam id="1" type="location" name="Location" />
+		</AlarmEvent>
+		<AlarmEvent id="2" name="Alarm_CO2_Detected_UnknownLocation">
+		</AlarmEvent>
+		<AlarmEvent id="3" name="Alarm_CO2_Carbon_Dioxide_Test">
+			<AlarmEventParam id="1" type="list" name="Result">
+				<Item id="1" label="Ok"/>
+				<Item id="2" label="Failed"/>
+			</AlarmEventParam>
+		</AlarmEvent>
+		<AlarmEvent id="4" name="Alarm_CO2_Replacement_Required_Unspecified">
+		</AlarmEvent>
+		<AlarmEvent id="5" name="Alarm_CO2_Replacement_Required_End_Of_Life">
+		</AlarmEvent>
+		<AlarmEvent id="6" name="Alarm_CO2_Silenced">
+		</AlarmEvent>
+		<AlarmEvent id="7" name="Alarm_CO2_Maintence_Required_Periodic_Inspection">
+		</AlarmEvent>
+		<AlarmEvent id="254" name="Alarm_CO2_Unknown_Event">
+		</AlarmEvent>
+	</AlarmType>
+	
+	<AlarmType id="4" name="Alarm_Heat_Event">
+		<AlarmEvent id="0" name="Alarm_Heat_Clear">
+		</AlarmEvent>
+		<AlarmEvent id="1" name="Alarm_Heat_OverHeat_Location">
+			<AlarmEventParam id="1" type="location" name="Location" />
+		</AlarmEvent>
+		<AlarmEvent id="2" name="Alarm_Heat_OverHeat_UnknownLocation">
+		</AlarmEvent>
+		<AlarmEvent id="3" name="Alarm_Heat_RapidTempRise_Location">
+			<AlarmEventParam id="1" type="location" name="Location" />
+		</AlarmEvent>
+		<AlarmEvent id="4" name="Alarm_Heat_RapidTempRise_UnknownLocation">
+		</AlarmEvent>
+		<AlarmEvent id="5" name="Alarm_Heat_UnderHeat_Location">
+			<AlarmEventParam id="1" type="location" name="Location" />
+		</AlarmEvent>
+		<AlarmEvent id="6" name="Alarm_Heat_UnderHeat_UnknownLocation">
+		</AlarmEvent>
+		<AlarmEvent id="7" name="Alarm_Heat_Alarm_Test">
+		</AlarmEvent>
+		<AlarmEvent id="8" name="Alarm_Heat_Replacement_Required_End_Of_Life">
+		</AlarmEvent>
+		<AlarmEvent id="9" name="Alarm_Heat_Silenced">
+		</AlarmEvent>
+		<AlarmEvent id="10" name="Alarm_Heat_Maintenance_Required_Dust_In_Device">
+		</AlarmEvent>
+		<AlarmEvent id="11" name="Alarm_Heat_Maintenance_Required_Periodic_Inspection">
+		</AlarmEvent>
+		<AlarmEvent id="254" name="Alarm_Heat_Unknown_Event">
+		</AlarmEvent>
+	</AlarmType>
+	
+	<AlarmType id="5" name="Alarm_Flood_Event">
+		<AlarmEvent id="0" name="Alarm_Flood_Clear">
+		</AlarmEvent>
+		<AlarmEvent id="1" name="Alarm_Flood_Leak_Location">
+			<AlarmEventParam id="1" type="location" name="Location" />
+		</AlarmEvent>
+		<AlarmEvent id="2" name="Alarm_Flood_Leak_UnknownLocation">
+		</AlarmEvent>
+		<AlarmEvent id="3" name="Alarm_Flood_Drop_Location">
+			<AlarmEventParam id="1" type="location" name="Location" />
+		</AlarmEvent>
+		<AlarmEvent id="4" name="Alarm_Flood_Drop_UnknownLocation">
+		</AlarmEvent>
+		<AlarmEvent id="5" name="Alarm_Flood_Replace_Filter">
+		</AlarmEvent>
+		<AlarmEvent id="6" name="Alarm_Flood_Flow">
+			<AlarmEventParam id="1" type="list" name="Type">
+				<Item id="1" label="No Data"/>
+				<Item id="2" label="Below Low Threshold"/>
+				<Item id="3" label="Above High Threshold"/>
+				<Item id="4" label="Max"/>
+			</AlarmEventParam>		
+		</AlarmEvent>
+		<AlarmEvent id="7" name="Alarm_Flood_Pressure">
+			<AlarmEventParam id="1" type="list" name="Type">
+				<Item id="1" label="No Data"/>
+				<Item id="2" label="Below Low Threshold"/>
+				<Item id="3" label="Above High Threshold"/>
+				<Item id="4" label="Max"/>
+			</AlarmEventParam>			
+		</AlarmEvent>
+		<AlarmEvent id="254" name="Alarm_Flood_Unknown_Event">
+		</AlarmEvent>
+	</AlarmType>
+	
+	<AlarmType id="6" name="Alarm_Access_Control_Event">
+		<AlarmEvent id="0" name="Alarm_Access_Control_Clear">
+		</AlarmEvent>
+		<AlarmEvent id="1" name="Alarm_Access_Control_Manual_Lock">
+		</AlarmEvent>
+		<AlarmEvent id="2" name="Alarm_Access_Control_Manual_Unlock">
+		</AlarmEvent>
+		<AlarmEvent id="3" name="Alarm_Access_Control_RF_Lock">
+		</AlarmEvent>
+		<AlarmEvent id="4" name="Alarm_Access_Control_RF_Unlock">
+		</AlarmEvent>
+		<AlarmEvent id="5" name="Alarm_Access_Control_Keypad_Lock">
+			<AlarmEventParam id="1" type="usercodereport" name="User Code"/>
+		</AlarmEvent>
+		<AlarmEvent id="6" name="Alarm_Access_Control_Keypad_Unlock">
+			<AlarmEventParam id="1" type="usercodereport" name="User Code"/>
+		</AlarmEvent>
+		<AlarmEvent id="7" name="Alarm_Access_Control_Manual_Not_Fully_Locked">
+		</AlarmEvent>
+		<AlarmEvent id="8" name="Alarm_Access_Control_RF_Not_Fully_Locked">
+		</AlarmEvent>
+		<AlarmEvent id="9" name="Alarm_Access_Control_Auto_Lock">
+		</AlarmEvent>
+		<AlarmEvent id="10" name="Alarm_Access_Control_Auto_Lock_Not_Fully_Locked">
+		</AlarmEvent>
+		<AlarmEvent id="11" name="Alarm_Access_Control_Locked_Jamed">
+		</AlarmEvent>
+		<AlarmEvent id="12" name="Alarm_Access_Control_User_Codes_ALl_Deleted">
+		</AlarmEvent>
+		<AlarmEvent id="13" name="Alarm_Access_Control_User_Codes_Single_Deleted">
+		</AlarmEvent>
+		<AlarmEvent id="14" name="Alarm_Access_Control_User_Codes_Code_Added">
+		</AlarmEvent>
+		<AlarmEvent id="15" name="Alarm_Access_Control_User_Codes_Not_Added_Duplicate">
+		</AlarmEvent>
+		<AlarmEvent id="16" name="Alarm_Access_Control_Keypad_Disabled">
+		</AlarmEvent>
+		<AlarmEvent id="17" name="Alarm_Access_Control_Keypad_Busy">
+		</AlarmEvent>
+		<AlarmEvent id="18" name="Alarm_Access_Control_New_Program_Code_Entered">
+		</AlarmEvent>
+		<AlarmEvent id="19" name="Alarm_Access_Control_User_Codes_Exceeds_Limit">
+		</AlarmEvent>
+		<AlarmEvent id="20" name="Alarm_Access_Control_RF_Unlock_Invalid_UserCode">
+		</AlarmEvent>
+		<AlarmEvent id="21" name="Alarm_Access_Control_RF_Lock_Invalid_UserCode">
+		</AlarmEvent>
+		<AlarmEvent id="22" name="Alarm_Access_Control_Door_Window_Open">
+		</AlarmEvent>
+		<AlarmEvent id="23" name="Alarm_Access_Control_Door_Window_Closed">
+		</AlarmEvent>
+		<AlarmEvent id="64" name="Alarm_Access_Control_Barrier_Initializing">
+			<AlarmEventParam id="1" type="list" name="Progress">
+				<Item id="0" label="Process Complete"/>
+				<Item id="255" label="Performing Process"/>
+			</AlarmEventParam>		
+		</AlarmEvent>
+		<AlarmEvent id="65" name="Alarm_Access_Control_Barrier_Force_Exceeded">
+		</AlarmEvent>
+		<AlarmEvent id="66" name="Alarm_Access_Control_Barrier_Motor_Time_Exceeded">
+		</AlarmEvent>
+		<AlarmEvent id="67" name="Alarm_Access_Control_Barrier_Physical_Limits_Exceeded">
+		</AlarmEvent>
+		<AlarmEvent id="68" name="Alarm_Access_Control_Barrier_Failed_Operation_UL">
+		</AlarmEvent>
+		<AlarmEvent id="69" name="Alarm_Access_Control_Barrier_Unattended_Disabled_UL">
+		</AlarmEvent>
+		<AlarmEvent id="70" name="Alarm_Access_Control_Barrier_Malfunction">
+		</AlarmEvent>
+		<AlarmEvent id="71" name="Alarm_Access_Control_Barrier_Vacaction_Mode">
+		</AlarmEvent>
+		<AlarmEvent id="72" name="Alarm_Access_Control_Barrier_Saftey_Beam_Obstruction">
+		</AlarmEvent>
+		<AlarmEvent id="73" name="Alarm_Access_Control_Barrier_Sensor_Not_Detected">
+		</AlarmEvent>
+		<AlarmEvent id="74" name="Alarm_Access_Control_Barrier_Battery_Low">
+		</AlarmEvent>
+		<AlarmEvent id="75" name="Alarm_Access_Control_Barrier_Short_Wall_Station_Wires">
+		</AlarmEvent>
+		<AlarmEvent id="76" name="Alarm_Access_Control_Barrier_Associated_Non_ZWave_Device">
+		</AlarmEvent>
+		<AlarmEvent id="254" name="Alarm_Access_Control_Unknown_Event">
+		</AlarmEvent>
+	</AlarmType>
+	
+	<AlarmType id="7" name="Alarm_HomeSecurity_Event">
+		<AlarmEvent id="0" name="Alarm_HomeSecurity_Clear">
+		</AlarmEvent>
+		<AlarmEvent id="1" name="Alarm_HomeSecurity_Intrusion_Location">
+			<AlarmEventParam id="1" type="location" name="Location" />
+		</AlarmEvent>
+		<AlarmEvent id="2" name="Alarm_HomeSecurity_Intrusion_UnknownLocation">
+		</AlarmEvent>
+		<AlarmEvent id="3" name="Alarm_HomeSecurity_Intrusion_Tamper_CoverRemoved">
+		</AlarmEvent>
+		<AlarmEvent id="4" name="Alarm_HomeSecurity_Intrusion_Tamer_InvalidCode">
+		</AlarmEvent>
+		<AlarmEvent id="5" name="Alarm_HomeSecurity_GlassBreakage_Location">
+			<AlarmEventParam id="1" type="location" name="Location" />
+		</AlarmEvent>
+		<AlarmEvent id="6" name="Alarm_HomeSecurity_GlassBreakage_UnknownLocation">
+		</AlarmEvent>
+		<AlarmEvent id="7" name="Alarm_HomeSecurity_Motion_Detected_Location">
+			<AlarmEventParam id="1" type="location" name="Location" />
+		</AlarmEvent>
+		<AlarmEvent id="8" name="Alarm_HomeSecurity_Motion_Detected_Location_Unknown">
+		</AlarmEvent>
+		<AlarmEvent id="9" name="Alarm_HomeSecurity_Tampering_Product_Moved">
+		</AlarmEvent>
+		<AlarmEvent id="254" name="Alarm_HomeSecurity_Unknown_Event">
+		</AlarmEvent>
+	</AlarmType>
+	
+	<AlarmType id="8" name="Alarm_Power_Management_Event">
+		<AlarmEvent id="0" name="Alarm_Power_Management_Clear">
+		</AlarmEvent>
+		<AlarmEvent id="1" name="Alarm_Power_Management_PowerApplied">
+		</AlarmEvent>
+		<AlarmEvent id="2" name="Alarm_Power_Management_AC_PowerLost">
+		</AlarmEvent>
+		<AlarmEvent id="3" name="Alarm_Power_Management_AC_PowerRestored">
+		</AlarmEvent>
+		<AlarmEvent id="4" name="Alarm_Power_Management_Surge">
+		</AlarmEvent>
+		<AlarmEvent id="5" name="Alarm_Power_Management_Brownout">
+		</AlarmEvent>
+		<AlarmEvent id="6" name="Alarm_Power_Management_Over_Current">
+		</AlarmEvent>
+		<AlarmEvent id="7" name="Alarm_Power_Management_Over_Voltage">
+		</AlarmEvent>
+		<AlarmEvent id="8" name="Alarm_Power_Management_Over_Load">
+		</AlarmEvent>
+		<AlarmEvent id="9" name="Alarm_Power_Management_Load_Error">
+		</AlarmEvent>
+		<AlarmEvent id="10" name="Alarm_Power_Management_Replace_Battery_Soon">
+		</AlarmEvent>
+		<AlarmEvent id="11" name="Alarm_Power_Management_Replace_Battery_Now">
+		</AlarmEvent>
+		<AlarmEvent id="12" name="Alarm_Power_Management_Battery_Charging">
+		</AlarmEvent>
+		<AlarmEvent id="13" name="Alarm_Power_Management_Battery_Charged">
+		</AlarmEvent>
+		<AlarmEvent id="14" name="Alarm_Power_Management_Battery_Low">
+		</AlarmEvent>
+		<AlarmEvent id="15" name="Alarm_Power_Management_Battery_Critical">
+		</AlarmEvent>
+		<AlarmEvent id="254" name="Alarm_Power_Management_Unknown_Event">
+		</AlarmEvent>
+	</AlarmType>
+	
+	<AlarmType id="9" name="Alarm_System_Event">
+		<AlarmEvent id="0" name="Alarm_System_Clear">
+		</AlarmEvent>
+		<AlarmEvent id="1" name="Alarm_System_Hardware_Failure">
+		</AlarmEvent>
+		<AlarmEvent id="2" name="Alarm_System_Software_Failure">
+		</AlarmEvent>
+		<AlarmEvent id="3" name="Alarm_System_Hardware_Failure_Code">
+		</AlarmEvent>
+		<AlarmEvent id="4" name="Alarm_System_Software_Failure_Code">
+		</AlarmEvent>
+		<AlarmEvent id="5" name="Alarm_System_Heartbeat">
+		</AlarmEvent>
+		<AlarmEvent id="6" name="Alarm_System_Tampering">
+		</AlarmEvent>
+		<AlarmEvent id="7" name="Alarm_System_Emergency_Shutoff">
+		</AlarmEvent>
+		<AlarmEvent id="254" name="Alarm_System_Unknown_Event">
+		</AlarmEvent>
+	</AlarmType>
+	
+	<AlarmType id="10" name="Alarm_Emergency_Event">
+		<AlarmEvent id="0" name="Alarm_Emergency_Clear">
+		</AlarmEvent>
+		<AlarmEvent id="1" name="Alarm_Emergency_Police">
+		</AlarmEvent>
+		<AlarmEvent id="2" name="Alarm_Emergency_Fire">
+		</AlarmEvent>
+		<AlarmEvent id="3" name="Alarm_Emergency_Medical">
+		</AlarmEvent>
+		<AlarmEvent id="254" name="Alarm_Emergency_Unknown_Event">
+		</AlarmEvent>
+	</AlarmType>
+	
+	<AlarmType id="11" name="Alarm_Clock_Event">
+		<AlarmEvent id="0" name="Alarm_Clock_Clear">
+		</AlarmEvent>
+		<AlarmEvent id="1" name="Alarm_Clock_Wakeup">
+		</AlarmEvent>
+		<AlarmEvent id="2" name="Alarm_Clock_Timer">
+		</AlarmEvent>
+		<AlarmEvent id="3" name="Alarm_Clock_Time_Remaining">
+		</AlarmEvent>
+		<AlarmEvent id="254" name="Alarm_Clock_Unknown_Event">
+		</AlarmEvent>
+	</AlarmType>
+	
+	<AlarmType id="12" name="Alarm_Appliance_Event">
+		<AlarmEvent id="0" name="Alarm_Appliance_Clear">
+		</AlarmEvent>
+		<AlarmEvent id="1" name="Alarm_Appliance_Program_Started">
+		</AlarmEvent>
+		<AlarmEvent id="2" name="Alarm_Appliance_Program_In_Progress">
+		</AlarmEvent>
+		<AlarmEvent id="3" name="Alarm_Appliance_Program_Completed">
+		</AlarmEvent>
+		<AlarmEvent id="4" name="Alarm_Appliance_Replace_Main_Filter">
+		</AlarmEvent>
+		<AlarmEvent id="5" name="Alarm_Appliance_Failure_To_Set_Temp">
+		</AlarmEvent>
+		<AlarmEvent id="6" name="Alarm_Appliance_Water_Supply_ok">
+		</AlarmEvent>
+		<AlarmEvent id="7" name="Alarm_Appliance_Water_Supply_Failure">
+		</AlarmEvent>
+		<AlarmEvent id="8" name="Alarm_Appliance_Boiling">
+		</AlarmEvent>
+		<AlarmEvent id="9" name="Alarm_Appliance_Boiling_Failure">
+		</AlarmEvent>
+		<AlarmEvent id="10" name="Alarm_Appliance_Washing">
+		</AlarmEvent>
+		<AlarmEvent id="11" name="Alarm_Appliance_Washing_Failure">
+		</AlarmEvent>
+		<AlarmEvent id="12" name="Alarm_Appliance_Rinsing">
+		</AlarmEvent>
+		<AlarmEvent id="13" name="Alarm_Appliance_Rinsing_Failure">
+		</AlarmEvent>
+		<AlarmEvent id="14" name="Alarm_Appliance_Draining">
+		</AlarmEvent>
+		<AlarmEvent id="15" name="Alarm_Appliance_Draining_Failure">
+		</AlarmEvent>
+		<AlarmEvent id="16" name="Alarm_Appliance_Spinning">
+		</AlarmEvent>
+		<AlarmEvent id="17" name="Alarm_Appliance_Spinning_Failure">
+		</AlarmEvent>
+		<AlarmEvent id="18" name="Alarm_Appliance_Drying">
+		</AlarmEvent>
+		<AlarmEvent id="19" name="Alarm_Appliance_Drying_Failure">
+		</AlarmEvent>
+		<AlarmEvent id="20" name="Alarm_Appliance_Fan_Failure">
+		</AlarmEvent>
+		<AlarmEvent id="21" name="Alarm_Appliance_Compressor_Failure">
+		</AlarmEvent>
+		<AlarmEvent id="254" name="Alarm_Appliance_Unknown_Event">
+		</AlarmEvent>
+	</AlarmType>	
+	
+	<AlarmType id="13" name="Alarm_HomeHealth">
+		<AlarmEvent id="0" name="Alarm_HomeHealth_Clear">
+		</AlarmEvent>
+		<AlarmEvent id="1" name="Alarm_HomeHealth_Leaving_Bed">
+		</AlarmEvent>
+		<AlarmEvent id="2" name="Alarm_HomeHealth_Sitting_On_Bed">
+		</AlarmEvent>
+		<AlarmEvent id="3" name="Alarm_HomeHealth_Lying_On_Bed">
+		</AlarmEvent>
+		<AlarmEvent id="4" name="Alarm_HomeHealth_Posture_Changed">
+		</AlarmEvent>
+		<AlarmEvent id="5" name="Alarm_HomeHealth_Sitting_On_Edge_Of_Bed">
+		</AlarmEvent>
+		<AlarmEvent id="6" name="Alarm_HomeHealth_Volatile_Organic_Level">
+		</AlarmEvent>
+		<AlarmEvent id="254" name="Alarm_HomeHealth_Unknown_Event">
+		</AlarmEvent>
+	</AlarmType>	
+	
+	<AlarmType id="14" name="Alarm_Siren">
+		<AlarmEvent id="0" name="Alarm_Siren_Clear">
+		</AlarmEvent>
+		<AlarmEvent id="1" name="Alarm_Siren_Active">
+		</AlarmEvent>
+		<AlarmEvent id="254" name="Alarm_Siren_Unknown_Event">
+		</AlarmEvent>
+	</AlarmType>
+	
+	<AlarmType id="15" name="Alarm_WaterValve">
+		<AlarmEvent id="0" name="Alarm_WaterValve_Clear">
+		</AlarmEvent>
+		<AlarmEvent id="1" name="Alarm_WaterValve_Valve_Operation">
+		</AlarmEvent>
+		<AlarmEvent id="2" name="Alarm_WaterValve_Master_Valve_Operation">
+		</AlarmEvent>
+		<AlarmEvent id="3" name="Alarm_WaterValve_Valve_Short_Circuit">
+		</AlarmEvent>
+		<AlarmEvent id="4" name="Alarm_WaterValve_Master_Valve_Short_Circuit">
+		</AlarmEvent>
+		<AlarmEvent id="5" name="Alarm_WaterValve_Valve_Current_Alarm">
+		</AlarmEvent>
+		<AlarmEvent id="6" name="Alarm_WaterValve_Master_Valve_Current_Alarm">
+		</AlarmEvent>
+		<AlarmEvent id="254" name="Alarm_WaterValve_Unknown_Event">
+		</AlarmEvent>
+	</AlarmType>	
+	
+	<AlarmType id="16" name="Alarm_Weather">
+		<AlarmEvent id="0" name="Alarm_Weather_Clear">
+		</AlarmEvent>
+		<AlarmEvent id="1" name="Alarm_Weather_Rain">
+		</AlarmEvent>
+		<AlarmEvent id="2" name="Alarm_Weather_Moisture">
+		</AlarmEvent>
+		<AlarmEvent id="254" name="Alarm_Weather_Unknown_Event">
+		</AlarmEvent>
+	</AlarmType>	
+	
+	<AlarmType id="17" name="Alarm_Irrigation">
+		<AlarmEvent id="0" name="Alarm_Irrigation_Clear">
+		</AlarmEvent>
+		<AlarmEvent id="1" name="Alarm_Irrigation_Schedule_Started">
+		</AlarmEvent>
+		<AlarmEvent id="2" name="Alarm_Irrigation_Schedule_Finished">
+		</AlarmEvent>
+		<AlarmEvent id="3" name="Alarm_Irrigation_Valve_Table_Run_Started">
+		</AlarmEvent>
+		<AlarmEvent id="4" name="Alarm_Irrigation_Valve_Table_Run_Finished">
+		</AlarmEvent>
+		<AlarmEvent id="5" name="Alarm_Irrigation_Device_Not_Configured">
+		</AlarmEvent>
+		<AlarmEvent id="254" name="Alarm_Irrigation_Unknown_Event">
+		</AlarmEvent>
+	</AlarmType>	
+	
+	<AlarmType id="18" name="Alarm_Gas">
+		<AlarmEvent id="0" name="Alarm_Gas_Clear">
+		</AlarmEvent>
+		<AlarmEvent id="1" name="Alarm_Gas_Combustable_Gas_Detected">
+		</AlarmEvent>
+		<AlarmEvent id="2" name="Alarm_Gas_Combustable_Gas_Detected_Unknown_Location">
+		</AlarmEvent>
+		<AlarmEvent id="3" name="Alarm_Gas_Toxic_Gas_Detected">
+		</AlarmEvent>
+		<AlarmEvent id="4" name="Alarm_Gas_Toxic_Gas_Detected_Unknown_Location">
+		</AlarmEvent>
+		<AlarmEvent id="5" name="Alarm_Gas_Alarm_Test">
+		</AlarmEvent>
+		<AlarmEvent id="6" name="Alarm_Gas_Replacement_Required_Unspecified_Reason">
+		</AlarmEvent>
+		<AlarmEvent id="254" name="Alarm_Gas_Unknown_Event">
+		</AlarmEvent>
+	</AlarmType>
+
+</NotificationTypes>

@@ -360,8 +360,15 @@ static std::map<uint8, std::map<uint8, std::string> > c_Alarm_Events;
 
 
 void SetupAlarmEventDescriptions() {
+	c_Alarm_Events[Alarm_Smoke][Alarm_Smoke_Clear] = 									"Cleared";
 	c_Alarm_Events[Alarm_Smoke][Alarm_Smoke_Detected_Location] = 						"Smoke Detected";
 	c_Alarm_Events[Alarm_Smoke][Alarm_Smoke_Detected_UnknownLocation] =		 			"Smoke Detected";
+	c_Alarm_Events[Alarm_Smoke][Alarm_Smoke_Alarm_Test] = 								"Smoke Alarm Test";
+	c_Alarm_Events[Alarm_Smoke][Alarm_Smoke_Replacement_Required_Unspecified] = 		"Replacement Required - Unspecified";
+	c_Alarm_Events[Alarm_Smoke][Alarm_Smoke_Replacement_Required_End_Of_Life]  = 		"Replacement Required - End of Life";
+	c_Alarm_Events[Alarm_Smoke][Alarm_Smoke_Silenced] = 								"Alarm Silenced";
+	c_Alarm_Events[Alarm_Smoke][Alarm_Smoke_Maintenance_Required_Periodic_Inspection] = "Maintenance Required - Period Inspection";
+	c_Alarm_Events[Alarm_Smoke][Alarm_Smoke_Maintenance_Required_Dust_In_Device] = 		"Maintenance Requird - Dust in Device";
 	c_Alarm_Events[Alarm_Smoke][Alarm_Smoke_Unknown_Event] = 							"Smoke Detected - Unknown";
 
 	c_Alarm_Events[Alarm_CarbonMonoxide][Alarm_CO_Detected_Location] = 					"Carbon Monoxide Detected";

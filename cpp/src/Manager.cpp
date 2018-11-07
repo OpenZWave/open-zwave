@@ -36,6 +36,7 @@
 #include "Localization.h"
 #include "Node.h"
 #include "Notification.h"
+#include "NotificationCCTypes.h"
 #include "Options.h"
 #include "Scene.h"
 #include "Utils.h"
@@ -90,6 +91,7 @@ Manager* Manager::Create
 		{
 			s_instance = new Manager();
 		}
+		NotificationCCTypes::Get()->test();
 		return s_instance;
 	}
 
