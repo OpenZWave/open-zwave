@@ -170,7 +170,7 @@ namespace OpenZWave
 	     */
 		uint16 GetIndex()const
 			{
-				return( (uint8)( (m_id1 & 0xFFFF0000) >> 16 ) );
+				return( (uint16)( (m_id1 & 0xFFFF0000) >> 16 ) );
 			}
 
 		/** 

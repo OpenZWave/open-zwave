@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<NotificationTypes xmlns='https://github.com/OpenZWave/open-zwave' revision="1">
+<NotificationTypes xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
 	<AlarmType id="1" name="Alarm_Smoke_Event">
 		<AlarmEvent id="0" name="Alarm_Smoke_Clear">
 		</AlarmEvent>

@@ -62,7 +62,8 @@ namespace OpenZWave
 
 	private:
 		Alarm( uint32 const _homeId, uint8 const _nodeId );
-		multimap<uint8, uint8> m_TempValueIDs;
+
+		bool m_v1Params;
 	};
 
 } // namespace OpenZWave

@@ -36,6 +36,7 @@ using namespace OpenZWave;
 
 NotificationCCTypes *NotificationCCTypes::m_instance = NULL;
 std::map<uint32, NotificationCCTypes::NotificationTypes *> NotificationCCTypes::Notifications;
+uint32 NotificationCCTypes::m_revision(0);
 
 NotificationCCTypes::NotificationCCTypes()
 {
@@ -61,6 +62,19 @@ void NotificationCCTypes::ReadXML
 	Log::Write( LogLevel_Info, "Loading NotificationCCTypes File %s", path.c_str() );
 
 	TiXmlElement const* root = pDoc->RootElement();
+	char const *str = root->Value();
+	if( str && !strcmp( str, "NotificationTypes" ) )
+	{
+		// Read in the revision attributes
+		str = root->Attribute( "Revision" );
+		if( !str )
+		{
+			Log::Write( LogLevel_Info, "Error in Product Config file at line %d - missing Revision  attribute", root->Row() );
+			delete pDoc;
+			return;
+		}
+		m_revision = atol(str);
+	}
 	TiXmlElement const* AlarmTypeElement = root->FirstChildElement();
 	while( AlarmTypeElement )
 	{
@@ -149,20 +163,25 @@ void NotificationCCTypes::ReadXML
 									str = listElement->Value();
 									if (str && !strcmp( str, "Item" ) )
 									{
-										str = nextElement->Attribute( "id" );
+										str = listElement->Attribute( "id" );
 										if ( !str )
 										{
-											Log::Write( LogLevel_Warning, "NotificationCCTypes::ReadXML: Error in %s at line %d - missing Item id attribute", nextElement->GetDocument()->GetUserData(), nextElement->Row() );
+											Log::Write( LogLevel_Warning, "NotificationCCTypes::ReadXML: Error in %s at line %d - missing Item id attribute", listElement->GetDocument()->GetUserData(), nextElement->Row() );
 											listElement = listElement->NextSiblingElement();
 											continue;
 										}
-										//uint32 listID = (uint32)strtol( str, &pStopChar, 10 );
-										str = nextElement->Attribute( "name" );
+										uint32 listID = (uint32)strtol( str, &pStopChar, 10 );
+										str = listElement->Attribute( "label" );
 										if ( !str )
 										{
-											Log::Write( LogLevel_Warning, "NotificationCCTypes::ReadXML: Error in %s at line %d - missing Item name attribute", nextElement->GetDocument()->GetUserData(), nextElement->Row() );
+											Log::Write( LogLevel_Warning, "NotificationCCTypes::ReadXML: Error in %s at line %d - missing Item name attribute", listElement->GetDocument()->GetUserData(), nextElement->Row() );
 											listElement = listElement->NextSiblingElement();
 											continue;
+										}
+										if (aep->ListItems.find(listID) == aep->ListItems.end()) {
+											aep->ListItems.insert(std::pair<int32, string>(listID, str));
+										} else {
+											Log::Write( LogLevel_Warning, "NotificationCCTypes::ReadXML: Error in %s - A AlarmEventElement with id %d already exists. Skipping ", listElement->GetDocument()->GetUserData(), ne->id);
 										}
 									}
 									listElement = listElement->NextSiblingElement();
@@ -184,30 +203,115 @@ void NotificationCCTypes::ReadXML
 							}
 							aep->name = str;
 
-							ne->EventParams[aep->id] = aep;
+							if (ne->EventParams.find(aep->id) == ne->EventParams.end())
+								ne->EventParams[aep->id] = aep;
+							else {
+								Log::Write( LogLevel_Warning, "NotificationCCTypes::ReadXML: Error in %s - A AlarmEventParam with id %d already exists. Skipping ", nextElement->GetDocument()->GetUserData(), aep->id);
+								delete aep;
+							}
 						}
 						nextElement = nextElement->NextSiblingElement();
 					}
-					nt->Events[ne->id] = ne;
+					if (nt->Events.find(ne->id) == nt->Events.end())
+						nt->Events[ne->id] = ne;
+					else {
+						Log::Write( LogLevel_Warning, "NotificationCCTypes::ReadXML: Error in %s - A AlarmEventElement with id %d already exists. Skipping ", AlarmEventElement->GetDocument()->GetUserData(), ne->id);
+						delete ne;
+					}
 				}
 				AlarmEventElement = AlarmEventElement->NextSiblingElement();
 			}
-			Notifications[nt->id] = nt;
+			if (Notifications.find(nt->id) == Notifications.end())
+				Notifications[nt->id] = nt;
+			else {
+				Log::Write( LogLevel_Warning, "NotificationCCTypes::ReadXML: Error in %s - A AlarmTypeElement with id %d already exists. Skipping ", AlarmTypeElement->GetDocument()->GetUserData(), nt->id);
+				delete nt;
+			}
 		}
 		AlarmTypeElement = AlarmTypeElement->NextSiblingElement();
 	}
+	Log::Write(LogLevel_Info, "Loaded %s With Revision %d", pDoc->GetUserData(), m_revision);
+#if 0
+	std::cout << "NotificationCCTypes" << std::endl;
+	for (std::map<uint32, NotificationCCTypes::NotificationTypes *>::iterator it = Notifications.begin(); it != Notifications.end(); it++) {
+		std::cout << "\tAlarmType:" << it->first << " Name: " << it->second->name << std::endl;
+		for (std::map<uint32, NotificationCCTypes::NotificationEvents *>::iterator it2 = it->second->Events.begin(); it2 != it->second->Events.end(); it2++) {
+			std::cout << "\t\tAlarmEvents: " << it2->first << " Name: " << it2->second->name << std::endl;
+			for (std::map<uint32, NotificationCCTypes::NotificationEventParams* >::iterator it3 = it2->second->EventParams.begin(); it3 != it2->second->EventParams.end(); it3++) {
+				std::cout << "\t\t\tEventParams: " << it3->first << " Name: " << it3->second->name << " Type: " << GetEventParamNames(it3->second->type) << std::endl;
+				for (std::map<uint32, string>::iterator it4 = it3->second->ListItems.begin(); it4 != it3->second->ListItems.end(); it4++) {
+					std::cout << "\t\t\t\tEventParamsList: " << it4->first << " Name: " << it4->second << std::endl;
+				}
+			}
+		}
+	}
+#endif
+
+}
+
+string NotificationCCTypes::GetEventParamNames(NotificationEventParamTypes type) {
+	switch (type) {
+	case NEPT_Location:
+		return "Location";
+		break;
+	case NEPT_List:
+		return "List";
+		break;
+	case NEPT_UserCodeReport:
+		return "UserCodeReport";
+		break;
+	};
+	return "Unknown";
+}
+
+string NotificationCCTypes::GetAlarmType(uint32 type) {
+	if (Notifications.find(type) != Notifications.end()) {
+		return Notifications.at(type)->name;
+	}
+	Log::Write( LogLevel_Warning, "NotificationCCTypes::GetAlarmType - Unknown AlarmType %d", type);
+	return "Unknown";
+}
+
+const NotificationCCTypes::NotificationTypes* NotificationCCTypes::GetAlarmNotificationTypes
+(
+		uint32 type
+)
+{
+	if (Notifications.find(type) != Notifications.end()) {
+		return Notifications.at(type);
+	}
+	else
+	{
+		Log::Write( LogLevel_Warning, "NotificationCCTypes::GetAlarmNotificationTypes - Unknown Alarm Type %d", type);
+	}
+	return NULL;
+}
+
+const NotificationCCTypes::NotificationEvents* NotificationCCTypes::GetAlarmNotificationEvents
+(
+		uint32 type,
+		uint32 event
+)
+{
+	if (const NotificationCCTypes::NotificationTypes *nt = GetAlarmNotificationTypes(type)) {
+		if (nt->Events.find(event) != nt->Events.end()) {
+			return nt->Events.at(event);
+		}
+		Log::Write( LogLevel_Warning, "NotificationCCTypes::GetAlarmNotificationEvents - Uknown Alarm Event %d for Alarm Type %s (%d)", event, GetAlarmType(type).c_str(), type);
+	}
+	return NULL;
 }
 
 
-	NotificationCCTypes *NotificationCCTypes::Get
-	(
-	)
+NotificationCCTypes *NotificationCCTypes::Get
+(
+)
+{
+	if ( m_instance != NULL )
 	{
-		if ( m_instance != NULL )
-		{
-			return m_instance;
-		}
-		m_instance = new NotificationCCTypes();
-		ReadXML();
 		return m_instance;
 	}
+	m_instance = new NotificationCCTypes();
+	ReadXML();
+	return m_instance;
+}

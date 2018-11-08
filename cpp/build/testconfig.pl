@@ -219,6 +219,79 @@ foreach my $unreffile (keys %configfiles)
 }
 }
 
+sub CheckLocalization {
+my %configfiles = map { lc $_ => 1} @{$_[0]};
+# create object
+my $xml = new XML::Simple;
+my $data = $xml->XMLin("config/Localization.xml", KeyAttr => "", ForceArray => [ 'Localization' ] );
+# do a check of MFS Revision etc 
+my $md5 = digest_file_hex("config/Localization.xml", "SHA-512");
+if (defined($CFG::versiondb{"config/Localization.xml"}))
+	{
+	if ($CFG::versiondb{"config/Localization.xml"}{md5} != $md5) 
+		{
+		my $dbr = $CFG::versiondb{"config/Localization.xml"}->{Revision};
+		my $fr = $data->{Revision};
+		if ($dbr ge $fr )
+		{
+			print "config/Localization.xml"." - md5 does not match Database - Database Revision:";
+			print $CFG::versiondb{"config/Localization.xml"}->{Revision}." File Revision:".int $data->{Revision};
+			print "\n";
+			LogError("config/Localization.xml", 8, "Revision Number Was Not Bumped");	
+		} else {
+			my %versions;
+			$versions{md5} = $md5;
+			$versions{Revision} = $data->{Revision};
+			$CFG::versiondb{"config/Localization.xml"} = \%versions;
+			print("config/Localization.xml"." - Updating Database\n");
+		}			
+	}
+} else { 
+	my %versions;
+	$versions{md5} = $md5;
+	$versions{Revision} = $data->{Revision};
+	$CFG::versiondb{"config/Localization.xml"} = \%versions;
+	print("config/Localization.xml"." - Adding new file to Database\n");
+}
+}
+
+sub CheckNotificationCCTypes {
+my %configfiles = map { lc $_ => 1} @{$_[0]};
+# create object
+my $xml = new XML::Simple;
+my $data = $xml->XMLin("config/NotificationCCTypes.xml", KeyAttr => "", ForceArray => [ 'NotificationTypes' ] );
+# do a check of MFS Revision etc 
+my $md5 = digest_file_hex("config/NotificationCCTypes.xml", "SHA-512");
+if (defined($CFG::versiondb{"config/NotificationCCTypes.xml"}))
+	{
+	if ($CFG::versiondb{"config/NotificationCCTypes.xml"}{md5} != $md5) 
+		{
+		my $dbr = $CFG::versiondb{"config/NotificationCCTypes.xml"}->{Revision};
+		my $fr = $data->{Revision};
+		if ($dbr ge $fr )
+		{
+			print "config/NotificationCCTypes.xml"." - md5 does not match Database - Database Revision:";
+			print $CFG::versiondb{"config/NotificationCCTypes.xml"}->{Revision}." File Revision:".int $data->{Revision};
+			print "\n";
+			LogError("config/NotificationCCTypes.xml", 8, "Revision Number Was Not Bumped");	
+		} else {
+			my %versions;
+			$versions{md5} = $md5;
+			$versions{Revision} = $data->{Revision};
+			$CFG::versiondb{"config/NotificationCCTypes.xml"} = \%versions;
+			print("config/NotificationCCTypes.xml"." - Updating Database\n");
+		}			
+	}
+} else { 
+	my %versions;
+	$versions{md5} = $md5;
+	$versions{Revision} = $data->{Revision};
+	$CFG::versiondb{"config/NotificationCCTypes.xml"} = \%versions;
+	print("config/NotificationCCTypes.xml"." - Adding new file to Database\n");
+}
+}
+
+
 sub PrettyPrintErrors() {
 	if (length(%errors) > 1) {
 		print "\n\nErrors: (Please Correct before Submitting to OZW)\n";
@@ -413,7 +486,8 @@ foreach my $key (@dirs)
   	}
 } 
 CheckFileExists(\@filelist);
-
+CheckLocalization();
+CheckNotificationCCTypes();
 
 if ($doxml == 0) { 
 	PrettyPrintErrors();

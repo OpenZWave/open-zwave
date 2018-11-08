@@ -10,6 +10,7 @@
    <xs:sequence>
     <xs:element ref='Localization:CommandClass' minOccurs='0' maxOccurs='unbounded'/>
    </xs:sequence>
+   <xs:attribute name='Revision' type='xs:integer' use='required'/>
   </xs:complexType>
  </xs:element>
 

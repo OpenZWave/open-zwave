@@ -40,6 +40,7 @@ namespace OpenZWave
 
 class NotificationCCTypes
 {
+public:
 	enum NotificationEventParamTypes {
 		NEPT_Location = 0x01,
 		NEPT_List,
@@ -50,7 +51,8 @@ class NotificationCCTypes
 	public:
 		uint32 id;
 		string name;
-		uint8 type;
+		NotificationEventParamTypes type;
+		std::map<uint32, string> ListItems;
 	};
 	class NotificationEvents {
 	public:
@@ -75,13 +77,19 @@ private:
     static void ReadXML();
 public:
     static NotificationCCTypes* Get();
+    static string GetEventParamNames(NotificationEventParamTypes);
     void test() { return; };
+    string GetAlarmType(uint32);
+    const NotificationTypes *GetAlarmNotificationTypes(uint32);
+    const NotificationEvents *GetAlarmNotificationEvents(uint32, uint32);
+
     //-----------------------------------------------------------------------------
     // Instance Functions
     //-----------------------------------------------------------------------------
 private:
     static NotificationCCTypes* m_instance;
     static std::map<uint32, NotificationCCTypes::NotificationTypes *> Notifications;
+    static uint32 m_revision;
 };
 
 };

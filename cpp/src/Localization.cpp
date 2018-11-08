@@ -40,6 +40,7 @@ Localization *Localization::m_instance = NULL;
 map<int64,ValueLocalizationEntry*> Localization::m_valueLocalizationMap;
 map<uint8,LabelLocalizationEntry*> Localization::m_commandClassLocalizationMap;
 string Localization::m_selectedLang = "";
+uint32 Localization::m_revision = 0;
 
 LabelLocalizationEntry::LabelLocalizationEntry
 (
@@ -312,6 +313,20 @@ void Localization::ReadXML
 	Log::Write( LogLevel_Info, "Loading Localization File %s", path.c_str() );
 
 	TiXmlElement const* root = pDoc->RootElement();
+	char const *str = root->Value();
+	if( str && !strcmp( str, "Localization" ) )
+	{
+		// Read in the revision attributes
+		str = root->Attribute( "Revision" );
+		if( !str )
+		{
+			Log::Write( LogLevel_Info, "Error in Product Config file at line %d - missing Revision  attribute", root->Row() );
+			delete pDoc;
+			return;
+		}
+		m_revision = atol(str);
+	}
+
 	TiXmlElement const* CCElement = root->FirstChildElement();
 	while( CCElement )
 	{
@@ -345,6 +360,7 @@ void Localization::ReadXML
 
 		CCElement = CCElement->NextSiblingElement();
 	}
+	Log::Write(LogLevel_Info, "Loaded %s With Revision %d", pDoc->GetUserData(), m_revision);
 }
 void Localization::ReadCCXMLLabel(uint8 ccID, const TiXmlElement *labelElement) {
 

@@ -132,6 +132,7 @@ private:
     static map<int64,ValueLocalizationEntry*> m_valueLocalizationMap;
     static map<uint8,LabelLocalizationEntry*> m_commandClassLocalizationMap;
     static string m_selectedLang;
+    static uint32 m_revision;
 
 
 };

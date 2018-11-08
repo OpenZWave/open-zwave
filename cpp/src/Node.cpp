@@ -1858,7 +1858,6 @@ void Node::SetStaticRequests
 	if( GetCommandClass( MultiInstance::StaticGetCommandClassId(), false ) )
 	{
 		// Request instances
-		std::cout << "Static Requests " << std::endl;
 		request |= (uint8)CommandClass::StaticRequest_Instances;
 	}
 
@@ -2297,7 +2296,7 @@ ValueID Node::CreateValueID
 		ValueID::ValueGenre const _genre,
 		uint8 const _commandClassId,
 		uint8 const _instance,
-		uint8 const _valueIndex,
+		uint16 const _valueIndex,
 		ValueID::ValueType const _type
 )
 {
@@ -2313,7 +2312,7 @@ bool Node::CreateValueBitSet
 		ValueID::ValueGenre const _genre,
 		uint8 const _commandClassId,
 		uint8 const _instance,
-		uint8 const _valueIndex,
+		uint16 const _valueIndex,
 		string const& _label,
 		string const& _units,
 		bool const _readOnly,
@@ -2346,7 +2345,7 @@ bool Node::CreateValueBool
 		ValueID::ValueGenre const _genre,
 		uint8 const _commandClassId,
 		uint8 const _instance,
-		uint8 const _valueIndex,
+		uint16 const _valueIndex,
 		string const& _label,
 		string const& _units,
 		bool const _readOnly,
@@ -2376,7 +2375,7 @@ bool Node::CreateValueButton
 		ValueID::ValueGenre const _genre,
 		uint8 const _commandClassId,
 		uint8 const _instance,
-		uint8 const _valueIndex,
+		uint16 const _valueIndex,
 		string const& _label,
 		uint8 const _pollIntensity
 )
@@ -2402,7 +2401,7 @@ bool Node::CreateValueByte
 		ValueID::ValueGenre const _genre,
 		uint8 const _commandClassId,
 		uint8 const _instance,
-		uint8 const _valueIndex,
+		uint16 const _valueIndex,
 		string const& _label,
 		string const& _units,
 		bool const _readOnly,
@@ -2432,7 +2431,7 @@ bool Node::CreateValueDecimal
 		ValueID::ValueGenre const _genre,
 		uint8 const _commandClassId,
 		uint8 const _instance,
-		uint8 const _valueIndex,
+		uint16 const _valueIndex,
 		string const& _label,
 		string const& _units,
 		bool const _readOnly,
@@ -2462,7 +2461,7 @@ bool Node::CreateValueInt
 		ValueID::ValueGenre const _genre,
 		uint8 const _commandClassId,
 		uint8 const _instance,
-		uint8 const _valueIndex,
+		uint16 const _valueIndex,
 		string const& _label,
 		string const& _units,
 		bool const _readOnly,
@@ -2492,7 +2491,7 @@ bool Node::CreateValueList
 	ValueID::ValueGenre const _genre,
 	uint8 const _commandClassId,
 	uint8 const _instance,
-	uint8 const _valueIndex,
+	uint16 const _valueIndex,
 	string const& _label,
 	string const& _units,
 	bool const _readOnly,
@@ -2523,7 +2522,7 @@ bool Node::CreateValueRaw
 		ValueID::ValueGenre const _genre,
 		uint8 const _commandClassId,
 		uint8 const _instance,
-		uint8 const _valueIndex,
+		uint16 const _valueIndex,
 		string const& _label,
 		string const& _units,
 		bool const _readOnly,
@@ -2554,7 +2553,7 @@ bool Node::CreateValueSchedule
 		ValueID::ValueGenre const _genre,
 		uint8 const _commandClassId,
 		uint8 const _instance,
-		uint8 const _valueIndex,
+		uint16 const _valueIndex,
 		string const& _label,
 		string const& _units,
 		bool const _readOnly,
@@ -2583,7 +2582,7 @@ bool Node::CreateValueShort
 		ValueID::ValueGenre const _genre,
 		uint8 const _commandClassId,
 		uint8 const _instance,
-		uint8 const _valueIndex,
+		uint16 const _valueIndex,
 		string const& _label,
 		string const& _units,
 		bool const _readOnly,
@@ -2613,7 +2612,7 @@ bool Node::CreateValueString
 		ValueID::ValueGenre const _genre,
 		uint8 const _commandClassId,
 		uint8 const _instance,
-		uint8 const _valueIndex,
+		uint16 const _valueIndex,
 		string const& _label,
 		string const& _units,
 		bool const _readOnly,
@@ -2716,10 +2715,10 @@ void Node::ReadValueFromXML
 		instance = (uint8)intVal;
 	}
 
-	uint8 index = 0;
+	uint16 index = 0;
 	if( TIXML_SUCCESS == _valueElement->QueryIntAttribute( "index", &intVal ) )
 	{
-		index = (uint8)intVal;
+		index = (uint16)intVal;
 	}
 
 	ValueID id = ValueID( m_homeId, m_nodeId, genre, _commandClassId, instance, index, type );
@@ -2770,7 +2769,7 @@ Value* Node::GetValue
 (
 		uint8 const _commandClassId,
 		uint8 const _instance,
-		uint8 const _valueIndex
+		uint16 const _valueIndex
 )
 {
 	Value* value = NULL;
@@ -2788,7 +2787,7 @@ bool Node::RemoveValue
 (
 		uint8 const _commandClassId,
 		uint8 const _instance,
-		uint8 const _valueIndex
+		uint16 const _valueIndex
 )
 {
 	ValueStore* store = GetValueStore();
