@@ -53,6 +53,7 @@ namespace OpenZWave
 	class Notification;
 	class DNSThread;
 	struct DNSLookup;
+	class TimerThread;
 	class i_HttpClient;
 	struct HttpDownload;
 	class ManufacturerSpecificDB;
@@ -83,6 +84,7 @@ namespace OpenZWave
 		friend class Security;
 		friend class Msg;
 		friend class ManufacturerSpecificDB;
+		friend class TimerThread;
 
 	//-----------------------------------------------------------------------------
 	//	Controller Interfaces
@@ -175,6 +177,16 @@ namespace OpenZWave
 		void RequestConfig();							// Get the network configuration from the Z-Wave network
 		bool ReadConfig();								// Read the configuration from a file
 		void WriteConfig();								// Save the configuration to a file
+
+	//-----------------------------------------------------------------------------
+	//	Timer
+	//-----------------------------------------------------------------------------
+	private:
+		TimerThread*    m_timer;					/**< TimerThread Class */
+		Thread*         m_timerThread;    /**< Thread for timer events */
+
+	public:
+		TimerThread*		GetTimer() { return m_timer; }
 
 	//-----------------------------------------------------------------------------
 	//	Controller

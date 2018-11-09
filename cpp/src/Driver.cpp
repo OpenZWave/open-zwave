@@ -34,6 +34,7 @@
 #include "Scene.h"
 #include "ZWSecurity.h"
 #include "DNSThread.h"
+#include "TimerThread.h"
 #include "Http.h"
 #include "ManufacturerSpecificDB.h"
 
@@ -155,6 +156,8 @@ m_init( false ),
 m_awakeNodesQueried( false ),
 m_allNodesQueried( false ),
 m_notifytransactions( false ),
+m_timer ( new TimerThread( this ) ),
+m_timerThread ( new Thread( "timer" ) ),
 m_controllerInterfaceType( _interface ),
 m_controllerPath( _controllerPath ),
 m_controller( NULL ),
@@ -306,6 +309,10 @@ Driver::~Driver
 	m_driverThread->Stop();
 	m_driverThread->Release();
 
+  m_timerThread->Stop();
+  m_timerThread->Release();
+  delete m_timer;
+
 	m_sendMutex->Release();
 
 	m_controller->Close();
@@ -393,6 +400,7 @@ void Driver::Start
 	// Start the thread that will handle communications with the Z-Wave network
 	m_driverThread->Start( Driver::DriverThreadEntryPoint, this );
 	m_dnsThread->Start ( DNSThread::DNSThreadEntryPoint, m_dns);
+  m_timerThread->Start( TimerThread::TimerThreadEntryPoint, m_timer );
 }
 
 //-----------------------------------------------------------------------------
