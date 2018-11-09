@@ -93,6 +93,7 @@
     <ClInclude Include="..\..\..\src\command_classes\ZWavePlusInfo.h" />
     <ClInclude Include="..\..\..\src\Defs.h" />
     <ClInclude Include="..\..\..\src\DNSThread.h" />
+    <ClInclude Include="..\..\..\src\TimerThread.h" />
     <ClInclude Include="..\..\..\src\Driver.h" />
     <ClInclude Include="..\..\..\src\Group.h" />
     <ClInclude Include="..\..\..\src\Http.h" />
@@ -240,6 +241,7 @@
     <ClCompile Include="..\..\..\src\command_classes\WakeUp.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\ZWavePlusInfo.cpp" />
     <ClCompile Include="..\..\..\src\DNSThread.cpp" />
+    <ClCompile Include="..\..\..\src\TimerThread.cpp" />
     <ClCompile Include="..\..\..\src\Driver.cpp" />
     <ClCompile Include="..\..\..\src\Group.cpp" />
     <ClCompile Include="..\..\..\src\Http.cpp" />

@@ -336,117 +336,114 @@ bool Alarm::HandleMsg
 			if (EventParamLength > 0) {
 				const std::map<uint32, NotificationCCTypes::NotificationEventParams* > nep = NotificationCCTypes::Get()->GetAlarmNotificationEventParams(NotificationType, NotificationEvent);
 				if (nep.size() > 0) {
-					if( Node* node = GetNodeUnsafe() ) {
-						for (std::map<uint32, NotificationCCTypes::NotificationEventParams* >::const_iterator it = nep.begin(); it != nep.end(); it++) {
-							switch (it->second->type) {
-							case NotificationCCTypes::NEPT_Location: {
-								/* _data[8] should be COMMAND_CLASS_NODE_NAMING
-								 * _data[9] should be NodeNamingCmd_Report (0x03)
-								 */
-								if ((_data[8] == NodeNaming::StaticGetCommandClassId()) && (_data[9] == 0x03) && EventParamLength > 2) {
-									if (ValueString *value = static_cast<ValueString *>(GetValue(_instance, AlarmIndex_Type_ParamLocation)))
-									{
-										value->OnValueRefreshed(ExtractString(&_data[10], EventParamLength-2));
-										value->Release();
-										m_ParamsSet.push_back(AlarmIndex_Type_ParamLocation);
-									} else {
-										Log::Write( LogLevel_Warning, GetNodeId(), "Couldn't Find AlarmIndex_Type_ParamLocation");
-									}
-								} else {
-									Log::Write( LogLevel_Warning, GetNodeId(), "Location Param didn't have correct Header, or was too small");
-								}
-								break;
-							}
-							case NotificationCCTypes::NEPT_List: {
-								if (EventParamLength == 1) {
-									if (ValueList *value = static_cast<ValueList *>(GetValue(_instance, AlarmIndex_Type_ParamList)))
-									{
-										value->OnValueRefreshed(_data[8]);
-										value->Release();
-										m_ParamsSet.push_back(AlarmIndex_Type_ParamList);
-									} else {
-										Log::Write( LogLevel_Warning, GetNodeId(), "Couldn't Find AlarmIndex_Type_ParamList");
-									}
-								} else {
-									Log::Write( LogLevel_Warning, GetNodeId(), "List Param size was not equal to 1");
-								}
-								break;
-							}
-							case NotificationCCTypes::NEPT_UserCodeReport: {
-								/* _data[8] should be COMMAND_CLASS_USER_CODE
-								 * _data[9] should be UserCodeCmd_Report (0x03)
-								 * _data[10] is the UserID
-								 * _data[11] is the UserID Status (Ignored)
-								 * _data[12] onwards is the UserCode Entered (minimum 4 Bytes)
-								 */
-								if ((EventParamLength >= 8 ) && (_data[8] == UserCode::StaticGetCommandClassId()) && (_data[9] == 0x03)) {
-									if (ValueByte *value = static_cast<ValueByte *>(GetValue(_instance, AlarmIndex_Type_ParamUserCodeid)))
-									{
-										value->OnValueRefreshed(_data[11]);
-										value->Release();
-										m_ParamsSet.push_back(AlarmIndex_Type_ParamUserCodeid);
-									} else {
-										Log::Write( LogLevel_Warning, GetNodeId(), "Couldn't Find AlarmIndex_Type_ParamUserCodeid");
-									}
-									if (ValueString *value = static_cast<ValueString *>(GetValue(_instance, AlarmIndex_Type_ParamUserCodeEntered)))
-									{
-										value->OnValueRefreshed(ExtractString(&_data[12], EventParamLength-4));
-										value->Release();
-										m_ParamsSet.push_back(AlarmIndex_Type_ParamUserCodeEntered);
-									} else {
-										Log::Write( LogLevel_Warning, GetNodeId(), "Couldn't Find AlarmIndex_Type_ParamUserCodeEntered");
-									}
-								} else {
-									Log::Write( LogLevel_Warning, GetNodeId(), "UserCode Param didn't have correct Header, or was too small");
-								}
-								break;
-							}
-							case NotificationCCTypes::NEPT_Byte: {
-								if (EventParamLength == 1) {
-									if (ValueByte *value = static_cast<ValueByte *>(GetValue(_instance, AlarmIndex_Type_ParamByte)))
-									{
-										value->OnValueRefreshed(_data[8]);
-										value->Release();
-										m_ParamsSet.push_back(AlarmIndex_Type_ParamByte);
-									} else {
-										Log::Write( LogLevel_Warning, GetNodeId(), "Couldn't Find AlarmIndex_Type_ParamByte");
-									}
-								} else {
-									Log::Write( LogLevel_Warning, GetNodeId(), "Byte Param size was not equal to 1");
-								}
-								break;
-							}
-							case NotificationCCTypes::NEPT_String: {
-								if (ValueString *value = static_cast<ValueString *>(GetValue(_instance, AlarmIndex_Type_ParamString)))
+					for (std::map<uint32, NotificationCCTypes::NotificationEventParams* >::const_iterator it = nep.begin(); it != nep.end(); it++) {
+						switch (it->second->type) {
+						case NotificationCCTypes::NEPT_Location: {
+							/* _data[8] should be COMMAND_CLASS_NODE_NAMING
+							 * _data[9] should be NodeNamingCmd_Report (0x03)
+							 */
+							if ((_data[8] == NodeNaming::StaticGetCommandClassId()) && (_data[9] == 0x03) && EventParamLength > 2) {
+								if (ValueString *value = static_cast<ValueString *>(GetValue(_instance, AlarmIndex_Type_ParamLocation)))
 								{
 									value->OnValueRefreshed(ExtractString(&_data[10], EventParamLength-2));
 									value->Release();
-									m_ParamsSet.push_back(AlarmIndex_Type_ParamString);
+									m_ParamsSet.push_back(AlarmIndex_Type_ParamLocation);
 								} else {
-									Log::Write( LogLevel_Warning, GetNodeId(), "Couldn't Find AlarmIndex_Type_ParamString");
+									Log::Write( LogLevel_Warning, GetNodeId(), "Couldn't Find AlarmIndex_Type_ParamLocation");
 								}
-								break;
+							} else {
+								Log::Write( LogLevel_Warning, GetNodeId(), "Location Param didn't have correct Header, or was too small");
 							}
-							case NotificationCCTypes::NEPT_Time: {
-								/* This is a Duration Entry, we will expose as seconds. Its 3 Bytes from the Event */
-								if (EventParamLength == 3) {
-									uint32 duration = (_data[10] * 3600) + (_data[11] * 60) + (_data[12]);
-									if (ValueInt *value = static_cast<ValueInt *>(GetValue(_instance, AlarmIndex_Type_Duration)))
-									{
-										value->OnValueRefreshed(duration);
-										value->Release();
-										m_ParamsSet.push_back(AlarmIndex_Type_Duration);
-									} else {
-										Log::Write( LogLevel_Warning, GetNodeId(), "Couldn't Find AlarmIndex_Type_Duration");
-									}
+							break;
+						}
+						case NotificationCCTypes::NEPT_List: {
+							if (EventParamLength == 1) {
+								if (ValueList *value = static_cast<ValueList *>(GetValue(_instance, AlarmIndex_Type_ParamList)))
+								{
+									value->OnValueRefreshed(_data[8]);
+									value->Release();
+									m_ParamsSet.push_back(AlarmIndex_Type_ParamList);
 								} else {
-									Log::Write( LogLevel_Warning, GetNodeId(), "Duration Param size was not equal to 3");
+									Log::Write( LogLevel_Warning, GetNodeId(), "Couldn't Find AlarmIndex_Type_ParamList");
 								}
-								node->CreateValueInt( ValueID::ValueGenre_User, GetCommandClassId(), _instance, AlarmIndex_Type_Duration, it->second->name, "", true, false, 0, 0);
-								break;
+							} else {
+								Log::Write( LogLevel_Warning, GetNodeId(), "List Param size was not equal to 1");
 							}
+							break;
+						}
+						case NotificationCCTypes::NEPT_UserCodeReport: {
+							/* _data[8] should be COMMAND_CLASS_USER_CODE
+							 * _data[9] should be UserCodeCmd_Report (0x03)
+							 * _data[10] is the UserID
+							 * _data[11] is the UserID Status (Ignored)
+							 * _data[12] onwards is the UserCode Entered (minimum 4 Bytes)
+							 */
+							if ((EventParamLength >= 8 ) && (_data[8] == UserCode::StaticGetCommandClassId()) && (_data[9] == 0x03)) {
+								if (ValueByte *value = static_cast<ValueByte *>(GetValue(_instance, AlarmIndex_Type_ParamUserCodeid)))
+								{
+									value->OnValueRefreshed(_data[11]);
+									value->Release();
+									m_ParamsSet.push_back(AlarmIndex_Type_ParamUserCodeid);
+								} else {
+									Log::Write( LogLevel_Warning, GetNodeId(), "Couldn't Find AlarmIndex_Type_ParamUserCodeid");
+								}
+								if (ValueString *value = static_cast<ValueString *>(GetValue(_instance, AlarmIndex_Type_ParamUserCodeEntered)))
+								{
+									value->OnValueRefreshed(ExtractString(&_data[12], EventParamLength-4));
+									value->Release();
+									m_ParamsSet.push_back(AlarmIndex_Type_ParamUserCodeEntered);
+								} else {
+									Log::Write( LogLevel_Warning, GetNodeId(), "Couldn't Find AlarmIndex_Type_ParamUserCodeEntered");
+								}
+							} else {
+								Log::Write( LogLevel_Warning, GetNodeId(), "UserCode Param didn't have correct Header, or was too small");
+							}
+							break;
+						}
+						case NotificationCCTypes::NEPT_Byte: {
+							if (EventParamLength == 1) {
+								if (ValueByte *value = static_cast<ValueByte *>(GetValue(_instance, AlarmIndex_Type_ParamByte)))
+								{
+									value->OnValueRefreshed(_data[8]);
+									value->Release();
+									m_ParamsSet.push_back(AlarmIndex_Type_ParamByte);
+								} else {
+									Log::Write( LogLevel_Warning, GetNodeId(), "Couldn't Find AlarmIndex_Type_ParamByte");
+								}
+							} else {
+								Log::Write( LogLevel_Warning, GetNodeId(), "Byte Param size was not equal to 1");
+							}
+							break;
+						}
+						case NotificationCCTypes::NEPT_String: {
+							if (ValueString *value = static_cast<ValueString *>(GetValue(_instance, AlarmIndex_Type_ParamString)))
+							{
+								value->OnValueRefreshed(ExtractString(&_data[10], EventParamLength-2));
+								value->Release();
+								m_ParamsSet.push_back(AlarmIndex_Type_ParamString);
+							} else {
+								Log::Write( LogLevel_Warning, GetNodeId(), "Couldn't Find AlarmIndex_Type_ParamString");
+							}
+							break;
+						}
+						case NotificationCCTypes::NEPT_Time: {
+							/* This is a Duration Entry, we will expose as seconds. Its 3 Bytes from the Event */
+							if (EventParamLength == 3) {
+								uint32 duration = (_data[10] * 3600) + (_data[11] * 60) + (_data[12]);
+								if (ValueInt *value = static_cast<ValueInt *>(GetValue(_instance, AlarmIndex_Type_Duration)))
+								{
+									value->OnValueRefreshed(duration);
+									value->Release();
+									m_ParamsSet.push_back(AlarmIndex_Type_Duration);
+								} else {
+									Log::Write( LogLevel_Warning, GetNodeId(), "Couldn't Find AlarmIndex_Type_Duration");
+								}
+							} else {
+								Log::Write( LogLevel_Warning, GetNodeId(), "Duration Param size was not equal to 3");
+							}
+							break;
+						}
 
-							}
 						}
 					}
 				}
@@ -490,7 +487,7 @@ bool Alarm::HandleMsg
 									item.m_label = it->second->name;
 									_items.push_back( item );
 								}
-								node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, index, NotificationCCTypes::Get()->GetAlarmType(index), "", false, false, _items.size(), _items, 0, 0 );
+								node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, index, NotificationCCTypes::Get()->GetAlarmType(index), "", true, false, _items.size(), _items, 0, 0 );
 							}
 							ClearStaticRequest( StaticRequest_Values );
 						}
@@ -539,7 +536,7 @@ bool Alarm::HandleMsg
 			}
 			if( Node* node = GetNodeUnsafe() )
 			{
-				node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, type, NotificationCCTypes::Get()->GetAlarmType(type), "", false, false, _items.size(), _items, 0, 0 );
+				node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, type, NotificationCCTypes::Get()->GetAlarmType(type), "", true, false, _items.size(), _items, 0, 0 );
 			}
 		}
 		ClearStaticRequest( StaticRequest_Values );
@@ -578,7 +575,7 @@ void Alarm::SetupEvents
 						Paramitem.m_label = ne->name;
 						_Paramitems.push_back( Paramitem );
 					}
-					node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, AlarmIndex_Type_ParamList, it->second->name, "", false, false, _Paramitems.size(), _Paramitems, 0, 0 );
+					node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, AlarmIndex_Type_ParamList, it->second->name, "", true, false, _Paramitems.size(), _Paramitems, 0, 0 );
 					break;
 				}
 				case NotificationCCTypes::NEPT_UserCodeReport: {
