@@ -23,7 +23,7 @@
 	<xs:element name='AlarmEvent'>
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref='NotificationTypes:AlarmEventParam' minOccurs='0' maxOccurs='unbounded' />
+				<xs:element ref='NotificationTypes:AlarmEventParam' minOccurs='0' maxOccurs='1' />
 			</xs:sequence>
 			<xs:attribute name='id' type='xs:string' use='required' />
 			<xs:attribute name='name' type='xs:string' use='required' />
@@ -41,7 +41,10 @@
 					<xs:restriction base='xs:string'>
 						<xs:enumeration value='location' />
 						<xs:enumeration value='list' />
-						<xs:enumeration value="usercodereport" />
+						<xs:enumeration value='usercodereport' />
+						<xs:enumeration value='byte' />
+						<xs:enumeration value='string' />
+						<xs:enumeration value='duration' />
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:attribute>

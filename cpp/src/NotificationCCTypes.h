@@ -44,7 +44,10 @@ public:
 	enum NotificationEventParamTypes {
 		NEPT_Location = 0x01,
 		NEPT_List,
-		NEPT_UserCodeReport
+		NEPT_UserCodeReport,
+		NEPT_Byte,
+		NEPT_String,
+		NEPT_Time
 	};
 
 	class NotificationEventParams {
@@ -77,11 +80,13 @@ private:
     static void ReadXML();
 public:
     static NotificationCCTypes* Get();
+    static bool Create();
     static string GetEventParamNames(NotificationEventParamTypes);
-    void test() { return; };
     string GetAlarmType(uint32);
+    string GetEventForAlarmType(uint32, uint32);
     const NotificationTypes *GetAlarmNotificationTypes(uint32);
     const NotificationEvents *GetAlarmNotificationEvents(uint32, uint32);
+    const std::map<uint32, NotificationCCTypes::NotificationEventParams* > GetAlarmNotificationEventParams(uint32, uint32);
 
     //-----------------------------------------------------------------------------
     // Instance Functions

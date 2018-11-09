@@ -34,6 +34,7 @@
 #include "command_classes/CommandClasses.h"
 #include "command_classes/Alarm.h"
 #include "command_classes/NodeNaming.h"
+#include "command_classes/UserCode.h"
 #include "Defs.h"
 #include "Msg.h"
 #include "Node.h"
@@ -45,6 +46,7 @@
 #include "value_classes/ValueBool.h"
 #include "value_classes/ValueList.h"
 #include "value_classes/ValueString.h"
+#include "value_classes/ValueInt.h"
 using namespace OpenZWave;
 
 enum AlarmCmd
@@ -62,11 +64,15 @@ enum AlarmCmd
 
 enum
 {
-	AlarmIndex_Type = 256,
-	AlarmIndex_Level,
-	AlarmIndex_SourceNodeId,
-	AlarmIndex_Count,
-	AlarmIndex_Params
+	AlarmIndex_Type_ParamUserCodeid = 256,
+	AlarmIndex_Type_ParamUserCodeEntered,
+	AlarmIndex_Type_ParamLocation,
+	AlarmIndex_Type_ParamList,
+	AlarmIndex_Type_ParamByte,
+	AlarmIndex_Type_ParamString,
+	AlarmIndex_Type_Duration,
+	AlarmIndex_Type = 512,
+	AlarmIndex_Level
 };
 
 
@@ -147,7 +153,6 @@ bool Alarm::RequestValue
 		Driver::MsgQueue const _queue
 )
 {
-#if 0
 	if( IsGetSupported() )
 	{
 		if( GetVersion() == 1 )
@@ -162,34 +167,27 @@ bool Alarm::RequestValue
 			GetDriver()->SendMsg( msg, _queue );
 			return true;
 		}
-		else
+		else if (GetVersion() >= 3)
 		{
 			bool res = false;
-			for( uint8 i = 0; i < Alarm_Count; i++ )
-			{
-				if( Value* value = GetValue( _instance, i + AlarmIndex_Count ) ) {
-					value->Release();
-					Msg* msg = new Msg( "AlarmCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-					msg->SetInstance( this, _instance );
-					msg->Append( GetNodeId() );
-					msg->Append( GetVersion() == 2 ? 4 : 5);
-					msg->Append( GetCommandClassId() );
-					msg->Append( AlarmCmd_Get );
-					msg->Append( 0x00); // ? proprietary alarm ?
-					msg->Append( i );
-					if( GetVersion() > 2 )
-						msg->Append(0x01); //get first event of type.
-					msg->Append( GetDriver()->GetTransmitOptions() );
-					GetDriver()->SendMsg( msg, _queue );
-					res = true;
-				}
-			}
+			Msg* msg = new Msg( "AlarmCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+			msg->SetInstance( this, _instance );
+			msg->Append( GetNodeId() );
+			msg->Append( GetVersion() == 2 ? 4 : 5);
+			msg->Append( GetCommandClassId() );
+			msg->Append( AlarmCmd_Get );
+			msg->Append( 0x00 ); /* we don't get Version 1/2 Alarm Types  */
+			msg->Append( 0xFF );
+			if( GetVersion() > 2 )
+				msg->Append(0x00); //get first event of type.
+			msg->Append( GetDriver()->GetTransmitOptions() );
+			GetDriver()->SendMsg( msg, _queue );
+			res = true;
 			return res;
 		}
 	} else {
 		Log::Write(  LogLevel_Info, GetNodeId(), "AlarmCmd_Get Not Supported on this node");
 	}
-#endif
 	return false;
 }
 
@@ -204,42 +202,22 @@ bool Alarm::HandleMsg
 		uint32 const _instance	// = 1
 )
 {
-#if 0
 	if (AlarmCmd_Report == (AlarmCmd)_data[0])
 	{
 		// We have received a report from the Z-Wave device
-		if( GetVersion() == 1 )
+		if( GetVersion() == 1)
 		{
 			Log::Write( LogLevel_Info, GetNodeId(), "Received Alarm report: type=%d, level=%d", _data[1], _data[2] );
 
-			ValueByte* value;
-			if( (value = static_cast<ValueByte*>( GetValue( _instance, AlarmIndex_Type ) )) )
+			if( ValueByte *value = static_cast<ValueByte*>( GetValue( _instance, AlarmIndex_Type ) ) )
 			{
 				value->OnValueRefreshed( _data[1] );
 				value->Release();
 			}
 			// For device on version 1 the level could have different value. This level value correspond to a list of alarm type.
-			if ( Value* value = GetValue( _instance, AlarmIndex_Level ) )
+			if ( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, AlarmIndex_Level ) ) )
 			{
-				switch ( value->GetID().GetType() )
-				{
-				case ValueID::ValueType_Byte:
-				{
-					ValueByte* valueByte = static_cast<ValueByte*>( value );
-					valueByte->OnValueRefreshed( _data[2] );
-					break;
-				}
-				case ValueID::ValueType_List:
-				{
-					ValueList* valueList = static_cast<ValueList*>( value );
-					valueList->OnValueRefreshed( _data[2] );
-					break;
-				}
-				default:
-				{
-					Log::Write( LogLevel_Info, GetNodeId(), "Invalid type (%d) for Alarm Level %d", value->GetID().GetType(), _data[2] );
-				}
-				}
+				value->OnValueRefreshed( _data[2] );
 				value->Release();
 			}
 		}
@@ -247,153 +225,236 @@ bool Alarm::HandleMsg
 		else if(( GetVersion() > 1 ) && ( _length >= 7  ))
 		{
 			// With Version=2, the data has more detailed information about the alarm
+			if (m_v1Params) {
 
-			string alarm_type =  ( _data[5] < Alarm_Count ) ? c_alarmTypeName[_data[5]] : "Unknown type";
-			string alarm_event = ( c_Alarm_Events[_data[5]][_data[6]].empty() != true ) ? c_Alarm_Events[_data[5]][_data[6]] : "Unknown Event";
+				Log::Write( LogLevel_Info, GetNodeId(), "Received Notification report (v1): type:%d event:%d",
+						_data[1], _data[2] );
 
-			Log::Write( LogLevel_Info, GetNodeId(), "Received Alarm report: sensorSrcID=%d, type:%s event:%s, status=%s",
-					_data[3], alarm_type.c_str(), alarm_event.c_str(), _data[4] == 0x00 ? "false" : "true" );
-
-			{
-				ValueByte* value;
-
-				if( (value = static_cast<ValueByte*>( GetValue( _instance, AlarmIndex_SourceNodeId ) )) )
+				if( ValueByte *value = static_cast<ValueByte*>( GetValue( _instance, AlarmIndex_Type ) ) )
 				{
-					value->OnValueRefreshed( _data[3] );
+					value->OnValueRefreshed( _data[1] );
+					value->Release();
+				}
+				// For device on version 1 the level could have different value. This level value correspond to a list of alarm type.
+				if ( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, AlarmIndex_Level ) ) )
+				{
+					value->OnValueRefreshed( _data[2] );
 					value->Release();
 				}
 			}
-			{
-				ValueList *valuel;
+			/* ok. Its a AlarmCC/NotificationCC Version 2 or above. */
+			bool NotificationStatus = false;
+			if (_data[4] == 0xFF)
+				NotificationStatus = true;
 
-				if( (valuel = static_cast<ValueList*>( GetValue( _instance, _data[5]+AlarmIndex_Count ) )) )
-				{
-					/* if status is 0, then the alarm is inactive */
-					if (_data[4] == 0x00)
-						valuel->OnValueRefreshed( 0 );
-					else
-						valuel->OnValueRefreshed( _data[6] );
-					valuel->Release();
+			uint8 NotificationType = _data[5];
+			uint8 NotificationEvent = _data[6];
+			bool NotificationSequencePresent = (_data[7] & 0x80);
+			uint8 EventParamLength = (_data[7] & 0x1F);
+			uint8 NotificationSequence = 0;
+			if (NotificationSequencePresent) {
+				NotificationSequence = _data[7+EventParamLength];
+			}
+			Log::Write( LogLevel_Info, GetNodeId(), "Received Notification report (>v1): Type: %s (%d) Event: %s (%d) Status: %s, Param Length: %d", NotificationCCTypes::Get()->GetAlarmType(NotificationType).c_str(), NotificationType, NotificationCCTypes::Get()->GetEventForAlarmType(NotificationType, NotificationEvent).c_str(), NotificationEvent, NotificationStatus ? "true" : "false", EventParamLength);
+			if (NotificationSequencePresent)
+				Log::Write ( LogLevel_Info, GetNodeId(), "\t Sequence Number: %d", NotificationSequence);
+
+			/* update the actual value */
+			if ( ValueList *value = static_cast<ValueList *>( GetValue( _instance, NotificationType ) ) )
+			{
+				value->OnValueRefreshed(NotificationEvent);
+				value->Release();
+			} else {
+				Log::Write ( LogLevel_Warning, GetNodeId(), "Couldn't Find a ValueList for Notification Type %d (%d)", NotificationType, _instance);
+			}
+			/* Reset Any of the Params that may have been previously set with another event */
+			for (std::vector<uint32>::iterator it = m_ParamsSet.begin(); it != m_ParamsSet.end(); it++)
+			{
+				switch (*it) {
+				case AlarmIndex_Type_ParamUserCodeid: {
+					if (ValueByte *value = static_cast<ValueByte *>(GetValue(_instance, AlarmIndex_Type_ParamUserCodeid)))
+					{
+						value->OnValueRefreshed(0);
+						value->Release();
+					}
+				}
+				break;
+				case AlarmIndex_Type_ParamUserCodeEntered: {
+					if (ValueString *value = static_cast<ValueString *>(GetValue(_instance, AlarmIndex_Type_ParamUserCodeEntered)))
+					{
+						value->OnValueRefreshed("");
+						value->Release();
+					}
+				}
+				break;
+				case AlarmIndex_Type_ParamLocation: {
+					if (ValueString *value = static_cast<ValueString *>(GetValue(_instance, AlarmIndex_Type_ParamLocation)))
+					{
+						value->OnValueRefreshed("");
+						value->Release();
+					}
+				}
+				break;
+				case AlarmIndex_Type_ParamList: {
+					if (ValueList *value = static_cast<ValueList *>(GetValue(_instance, AlarmIndex_Type_ParamList)))
+					{
+						value->OnValueRefreshed(0);
+						value->Release();
+					}
+				}
+				break;
+				case AlarmIndex_Type_ParamByte: {
+					if (ValueByte *value = static_cast<ValueByte *>(GetValue(_instance, AlarmIndex_Type_ParamByte)))
+					{
+						value->OnValueRefreshed(0);
+						value->Release();
+					}
+				}
+				break;
+				case AlarmIndex_Type_ParamString: {
+					if (ValueString *value = static_cast<ValueString *>(GetValue(_instance, AlarmIndex_Type_ParamString)))
+					{
+						value->OnValueRefreshed("");
+						value->Release();
+					}
+				}
+				break;
+				case AlarmIndex_Type_Duration: {
+					if (ValueInt *value = static_cast<ValueInt *>(GetValue(_instance, AlarmIndex_Type_Duration)))
+					{
+						value->OnValueRefreshed(0);
+						value->Release();
+					}
+				}
+				break;
+
 				}
 			}
-			/* if the length byte is greater than 1, then there are params */
-			if (_data[7] > 0) {
-				/* first, delete our old Temp ValueID's */
-				for (multimap<uint8, uint8>::iterator it = m_TempValueIDs.begin(); it != m_TempValueIDs.end(); it++) {
-					/* first is index, second is instance*/
-					if (it->second == _instance) {
-						if( Node* node = GetNodeUnsafe() )
-						{
-							node->RemoveValue(GetCommandClassId(), _instance, it->first);
-							m_TempValueIDs.erase(it);
+
+			m_ParamsSet.clear();
+			/* do any Event Params that are sent over */
+			if (EventParamLength > 0) {
+				const std::map<uint32, NotificationCCTypes::NotificationEventParams* > nep = NotificationCCTypes::Get()->GetAlarmNotificationEventParams(NotificationType, NotificationEvent);
+				if (nep.size() > 0) {
+					if( Node* node = GetNodeUnsafe() ) {
+						for (std::map<uint32, NotificationCCTypes::NotificationEventParams* >::const_iterator it = nep.begin(); it != nep.end(); it++) {
+							switch (it->second->type) {
+							case NotificationCCTypes::NEPT_Location: {
+								/* _data[8] should be COMMAND_CLASS_NODE_NAMING
+								 * _data[9] should be NodeNamingCmd_Report (0x03)
+								 */
+								if ((_data[8] == NodeNaming::StaticGetCommandClassId()) && (_data[9] == 0x03) && EventParamLength > 2) {
+									if (ValueString *value = static_cast<ValueString *>(GetValue(_instance, AlarmIndex_Type_ParamLocation)))
+									{
+										value->OnValueRefreshed(ExtractString(&_data[10], EventParamLength-2));
+										value->Release();
+										m_ParamsSet.push_back(AlarmIndex_Type_ParamLocation);
+									} else {
+										Log::Write( LogLevel_Warning, GetNodeId(), "Couldn't Find AlarmIndex_Type_ParamLocation");
+									}
+								} else {
+									Log::Write( LogLevel_Warning, GetNodeId(), "Location Param didn't have correct Header, or was too small");
+								}
+								break;
+							}
+							case NotificationCCTypes::NEPT_List: {
+								if (EventParamLength == 1) {
+									if (ValueList *value = static_cast<ValueList *>(GetValue(_instance, AlarmIndex_Type_ParamList)))
+									{
+										value->OnValueRefreshed(_data[8]);
+										value->Release();
+										m_ParamsSet.push_back(AlarmIndex_Type_ParamList);
+									} else {
+										Log::Write( LogLevel_Warning, GetNodeId(), "Couldn't Find AlarmIndex_Type_ParamList");
+									}
+								} else {
+									Log::Write( LogLevel_Warning, GetNodeId(), "List Param size was not equal to 1");
+								}
+								break;
+							}
+							case NotificationCCTypes::NEPT_UserCodeReport: {
+								/* _data[8] should be COMMAND_CLASS_USER_CODE
+								 * _data[9] should be UserCodeCmd_Report (0x03)
+								 * _data[10] is the UserID
+								 * _data[11] is the UserID Status (Ignored)
+								 * _data[12] onwards is the UserCode Entered (minimum 4 Bytes)
+								 */
+								if ((EventParamLength >= 8 ) && (_data[8] == UserCode::StaticGetCommandClassId()) && (_data[9] == 0x03)) {
+									if (ValueByte *value = static_cast<ValueByte *>(GetValue(_instance, AlarmIndex_Type_ParamUserCodeid)))
+									{
+										value->OnValueRefreshed(_data[11]);
+										value->Release();
+										m_ParamsSet.push_back(AlarmIndex_Type_ParamUserCodeid);
+									} else {
+										Log::Write( LogLevel_Warning, GetNodeId(), "Couldn't Find AlarmIndex_Type_ParamUserCodeid");
+									}
+									if (ValueString *value = static_cast<ValueString *>(GetValue(_instance, AlarmIndex_Type_ParamUserCodeEntered)))
+									{
+										value->OnValueRefreshed(ExtractString(&_data[12], EventParamLength-4));
+										value->Release();
+										m_ParamsSet.push_back(AlarmIndex_Type_ParamUserCodeEntered);
+									} else {
+										Log::Write( LogLevel_Warning, GetNodeId(), "Couldn't Find AlarmIndex_Type_ParamUserCodeEntered");
+									}
+								} else {
+									Log::Write( LogLevel_Warning, GetNodeId(), "UserCode Param didn't have correct Header, or was too small");
+								}
+								break;
+							}
+							case NotificationCCTypes::NEPT_Byte: {
+								if (EventParamLength == 1) {
+									if (ValueByte *value = static_cast<ValueByte *>(GetValue(_instance, AlarmIndex_Type_ParamByte)))
+									{
+										value->OnValueRefreshed(_data[8]);
+										value->Release();
+										m_ParamsSet.push_back(AlarmIndex_Type_ParamByte);
+									} else {
+										Log::Write( LogLevel_Warning, GetNodeId(), "Couldn't Find AlarmIndex_Type_ParamByte");
+									}
+								} else {
+									Log::Write( LogLevel_Warning, GetNodeId(), "Byte Param size was not equal to 1");
+								}
+								break;
+							}
+							case NotificationCCTypes::NEPT_String: {
+								if (ValueString *value = static_cast<ValueString *>(GetValue(_instance, AlarmIndex_Type_ParamString)))
+								{
+									value->OnValueRefreshed(ExtractString(&_data[10], EventParamLength-2));
+									value->Release();
+									m_ParamsSet.push_back(AlarmIndex_Type_ParamString);
+								} else {
+									Log::Write( LogLevel_Warning, GetNodeId(), "Couldn't Find AlarmIndex_Type_ParamString");
+								}
+								break;
+							}
+							case NotificationCCTypes::NEPT_Time: {
+								/* This is a Duration Entry, we will expose as seconds. Its 3 Bytes from the Event */
+								if (EventParamLength == 3) {
+									uint32 duration = (_data[10] * 3600) + (_data[11] * 60) + (_data[12]);
+									if (ValueInt *value = static_cast<ValueInt *>(GetValue(_instance, AlarmIndex_Type_Duration)))
+									{
+										value->OnValueRefreshed(duration);
+										value->Release();
+										m_ParamsSet.push_back(AlarmIndex_Type_Duration);
+									} else {
+										Log::Write( LogLevel_Warning, GetNodeId(), "Couldn't Find AlarmIndex_Type_Duration");
+									}
+								} else {
+									Log::Write( LogLevel_Warning, GetNodeId(), "Duration Param size was not equal to 3");
+								}
+								node->CreateValueInt( ValueID::ValueGenre_User, GetCommandClassId(), _instance, AlarmIndex_Type_Duration, it->second->name, "", true, false, 0, 0);
+								break;
+							}
+
+							}
 						}
 					}
 				}
-
-				/* figure out what type of extra data we have */
-				switch (_data[5]) {
-				/* these alarm types have params */
-				case Alarm_Smoke:
-					switch(_data[6]) {
-					case Alarm_Smoke_Detected_Location:
-						string location = ExtractString(&_data[8], _data[7]);
-						if( Node* node = GetNodeUnsafe() )
-						{
-							node->CreateValueString( ValueID::ValueGenre_User, GetCommandClassId(), _instance, (AlarmIndex_Params+m_TempValueIDs.size()), "Location", "", true, false, location, 0 );
-							m_TempValueIDs.insert(std::pair<uint8, uint8>(AlarmIndex_Params+m_TempValueIDs.size(), _instance));
-						}
-						break;
-					};
-					break;
-					case Alarm_CarbonMonoxide:
-						switch(_data[6]) {
-						case Alarm_CO_Detected_Location:
-							string location = ExtractString(&_data[8], _data[7]);
-							if( Node* node = GetNodeUnsafe() )
-							{
-								node->CreateValueString( ValueID::ValueGenre_User, GetCommandClassId(), _instance, (AlarmIndex_Params+m_TempValueIDs.size()), "Location", "", true, false, location, 0 );
-								m_TempValueIDs.insert(std::pair<uint8, uint8>(AlarmIndex_Params+m_TempValueIDs.size(), _instance));
-							}
-							break;
-						};
-						break;
-						case Alarm_CarbonDioxide:
-							switch(_data[6]) {
-							case Alarm_CO2_Detected_Location:
-								string location = ExtractString(&_data[8], _data[7]);
-								if( Node* node = GetNodeUnsafe() )
-								{
-									node->CreateValueString( ValueID::ValueGenre_User, GetCommandClassId(), _instance, (AlarmIndex_Params+m_TempValueIDs.size()), "Location", "", true, false, location, 0 );
-									m_TempValueIDs.insert(std::pair<uint8, uint8>(AlarmIndex_Params+m_TempValueIDs.size(), _instance));
-								}
-								break;
-							};
-							break;
-							case Alarm_Heat:
-								switch(_data[6]) {
-								case Alarm_Heat_OverHeat_Location:
-								case Alarm_Heat_RapidTempRise_Location:
-								case Alarm_Heat_UnderHeat_Location:
-									string location = ExtractString(&_data[8], _data[7]);
-									if( Node* node = GetNodeUnsafe() )
-									{
-										node->CreateValueString( ValueID::ValueGenre_User, GetCommandClassId(), _instance, (AlarmIndex_Params+m_TempValueIDs.size()), "Location", "", true, false, location, 0 );
-										m_TempValueIDs.insert(std::pair<uint8, uint8>(AlarmIndex_Params+m_TempValueIDs.size(), _instance));
-									}
-									break;
-								};
-								break;
-								case Alarm_Flood:
-									switch(_data[6]) {
-									case Alarm_Flood_Leak_Location:
-									case Alarm_Flood_Leak_UnknownLocation:
-									case Alarm_Flood_Drop_Location:
-										string location = ExtractString(&_data[8], _data[7]);
-										if( Node* node = GetNodeUnsafe() )
-										{
-											node->CreateValueString( ValueID::ValueGenre_User, GetCommandClassId(), _instance, (AlarmIndex_Params+m_TempValueIDs.size()), "Location", "", true, false, location, 0 );
-											m_TempValueIDs.insert(std::pair<uint8, uint8>(AlarmIndex_Params+m_TempValueIDs.size(), _instance));
-										}
-										break;
-									};
-									break;
-									case Alarm_Access_Control:
-										switch(_data[6]) {
-										case Alarm_Access_Control_Keypad_Lock:
-										case Alarm_Access_Control_Keypad_Unlock:
-											/* create version 1 ValueID's */
-											if( Node* node = GetNodeUnsafe() )
-											{
-												node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, (AlarmIndex_Params+m_TempValueIDs.size()), "UserCode", "", true, false, _data[8], 0 );
-												m_TempValueIDs.insert(std::pair<uint8, uint8>(AlarmIndex_Params+m_TempValueIDs.size(), _instance));
-											}
-											break;
-										};
-										break;
-										case Alarm_HomeSecurity:
-											switch(_data[6]) {
-											case Alarm_HomeSecurity_Intrusion_Location:
-											case Alarm_HomeSecurity_GlassBreakage_Location:
-												string location = ExtractString(&_data[8], _data[7]);
-												if( Node* node = GetNodeUnsafe() )
-												{
-													node->CreateValueString( ValueID::ValueGenre_User, GetCommandClassId(), _instance, (AlarmIndex_Params+m_TempValueIDs.size()), "Location", "", true, false, location, 0 );
-													m_TempValueIDs.insert(std::pair<uint8, uint8>(AlarmIndex_Params+m_TempValueIDs.size(), _instance));
-												}
-												break;
-											};
-											break;
-				}
-
-
 			}
-
-
 		}
-
 		return true;
 	}
-#endif
+
 	if( AlarmCmd_SupportedReport == (AlarmCmd)_data[0] )
 	{
 		if( Node* node = GetNodeUnsafe() )
@@ -463,19 +524,7 @@ bool Alarm::HandleMsg
 			uint8 numBytes = (_data[2] & 0x1F);
 			vector<ValueList::Item> _items;
 			/* always Add the Clear Event Type */
-			if (const NotificationCCTypes::NotificationEvents *ne = NotificationCCTypes::Get()->GetAlarmNotificationEvents(type, 0)) {
-				ValueList::Item item;
-				item.m_value = ne->id;
-				item.m_label = ne->name;
-				_items.push_back( item );
-			} else {
-				/* it doesn't exist. This is a Config Error in the XML File */
-				Log::Write( LogLevel_Warning, GetNodeId(), "Clear Event is Missing from NotificationCCTypes.xml for Alarm Type %s (%d)",NotificationCCTypes::Get()->GetAlarmType(type).c_str(), type);
-				ValueList::Item item;
-				item.m_value = 0;
-				item.m_label = string("Clear");
-				_items.push_back( item );
-			}
+			SetupEvents(type, 0, &_items, _instance);
 
 			for( uint32 i=0; i<numBytes; ++i )
 			{
@@ -484,19 +533,7 @@ bool Alarm::HandleMsg
 					if( ( _data[i+3] & (1<<bit) ) != 0 )
 					{
 						uint32 index = (int32)(i<<3) + bit;
-						if (const NotificationCCTypes::NotificationEvents *ne = NotificationCCTypes::Get()->GetAlarmNotificationEvents(type, index)) {
-							Log::Write( LogLevel_Info, GetNodeId(), "\tEvent Type %d: %s ", ne->id, ne->name.c_str());
-							ValueList::Item item;
-							item.m_value = ne->id;
-							item.m_label = ne->name;
-							_items.push_back( item );
-						} else {
-							Log::Write (LogLevel_Info, GetNodeId(), "\tEvent Type %d: Unknown", index);
-							ValueList::Item item;
-							item.m_value = index;
-							item.m_label = string("Unknown");
-							_items.push_back( item );
-						}
+						SetupEvents(type, index, &_items, _instance);
 					}
 				}
 			}
@@ -510,4 +547,65 @@ bool Alarm::HandleMsg
 	}
 
 	return false;
+}
+void Alarm::SetupEvents
+(
+		uint32 type,
+		uint32 index,
+		vector<ValueList::Item> *_items,
+		uint32 const _instance
+)
+{
+	if (const NotificationCCTypes::NotificationEvents *ne = NotificationCCTypes::Get()->GetAlarmNotificationEvents(type, index)) {
+		Log::Write( LogLevel_Info, GetNodeId(), "\tEvent Type %d: %s ", ne->id, ne->name.c_str());
+		ValueList::Item item;
+		item.m_value = ne->id;
+		item.m_label = ne->name;
+		_items->push_back( item );
+		/* If there are Params - Lets create the correct types now */
+		if ( Node* node = GetNodeUnsafe() ) {
+			for (std::map<uint32, NotificationCCTypes::NotificationEventParams* >::const_iterator it = ne->EventParams.begin(); it != ne->EventParams.end(); it++ ) {
+				switch (it->second->type) {
+				case NotificationCCTypes::NEPT_Location: {
+					node->CreateValueString( ValueID::ValueGenre_User, GetCommandClassId(), _instance, AlarmIndex_Type_ParamLocation, it->second->name, "", true, false, "", 0);
+					break;
+				}
+				case NotificationCCTypes::NEPT_List: {
+					vector<ValueList::Item> _Paramitems;
+					for (std::map<uint32, string>::iterator it2 = it->second->ListItems.begin(); it2 != it->second->ListItems.end(); it++) {
+						ValueList::Item Paramitem;
+						Paramitem.m_value = ne->id;
+						Paramitem.m_label = ne->name;
+						_Paramitems.push_back( Paramitem );
+					}
+					node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, AlarmIndex_Type_ParamList, it->second->name, "", false, false, _Paramitems.size(), _Paramitems, 0, 0 );
+					break;
+				}
+				case NotificationCCTypes::NEPT_UserCodeReport: {
+					node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, AlarmIndex_Type_ParamUserCodeid, it->second->name, "", true, false, 0, 0);
+					node->CreateValueString(ValueID::ValueGenre_User, GetCommandClassId(), _instance, AlarmIndex_Type_ParamUserCodeEntered, it->second->name, "", true, false, "", 0);
+					break;
+				}
+				case NotificationCCTypes::NEPT_Byte: {
+					node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, AlarmIndex_Type_ParamByte, it->second->name, "", true, false, 0, 0);
+					break;
+				}
+				case NotificationCCTypes::NEPT_String: {
+					node->CreateValueString( ValueID::ValueGenre_User, GetCommandClassId(), _instance, AlarmIndex_Type_ParamString, it->second->name, "", true, false, "", 0);
+					break;
+				}
+				case NotificationCCTypes::NEPT_Time: {
+					node->CreateValueInt( ValueID::ValueGenre_User, GetCommandClassId(), _instance, AlarmIndex_Type_Duration, it->second->name, "", true, false, 0, 0);
+					break;
+				}
+				}
+			}
+		}
+	} else {
+		Log::Write (LogLevel_Info, GetNodeId(), "\tEvent Type %d: Unknown", index);
+		ValueList::Item item;
+		item.m_value = index;
+		item.m_label = string("Unknown");
+		_items->push_back( item );
+	}
 }

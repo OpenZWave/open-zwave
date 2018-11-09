@@ -188,6 +188,12 @@ void NotificationCCTypes::ReadXML
 								}
 							} else if (!strcasecmp(str, "usercodereport")) {
 								aep->type = NotificationCCTypes::NEPT_UserCodeReport;
+							} else if (!strcasecmp(str, "byte")) {
+								aep->type = NotificationCCTypes::NEPT_Byte;
+							} else if (!strcasecmp(str, "string")) {
+								aep->type = NotificationCCTypes::NEPT_String;
+							} else if (!strcasecmp(str, "duration")) {
+								aep->type = NotificationCCTypes::NEPT_Time;
 							} else {
 								Log::Write( LogLevel_Warning, "NotificationCCTypes::ReadXML: Error in %s at line %d - unknown AlarmEventParam type attribute (%s)", nextElement->GetDocument()->GetUserData(), nextElement->Row(), str );
 								nextElement = nextElement->NextSiblingElement();
@@ -249,7 +255,11 @@ void NotificationCCTypes::ReadXML
 
 }
 
-string NotificationCCTypes::GetEventParamNames(NotificationEventParamTypes type) {
+string NotificationCCTypes::GetEventParamNames
+(
+		NotificationEventParamTypes type
+)
+{
 	switch (type) {
 	case NEPT_Location:
 		return "Location";
@@ -260,17 +270,45 @@ string NotificationCCTypes::GetEventParamNames(NotificationEventParamTypes type)
 	case NEPT_UserCodeReport:
 		return "UserCodeReport";
 		break;
+	case NEPT_Byte:
+		return "Byte";
+		break;
+	case NEPT_String:
+		return "String";
+		break;
+	case NEPT_Time:
+		return "Duration";
+		break;
 	};
 	return "Unknown";
 }
 
-string NotificationCCTypes::GetAlarmType(uint32 type) {
+string NotificationCCTypes::GetAlarmType
+(
+		uint32 type
+)
+{
 	if (Notifications.find(type) != Notifications.end()) {
 		return Notifications.at(type)->name;
 	}
 	Log::Write( LogLevel_Warning, "NotificationCCTypes::GetAlarmType - Unknown AlarmType %d", type);
 	return "Unknown";
 }
+
+string NotificationCCTypes::GetEventForAlarmType
+(
+		uint32 type,
+		uint32 event
+)
+{
+	if ( const NotificationCCTypes::NotificationEvents *ne = NotificationCCTypes::GetAlarmNotificationEvents(type, event)) {
+		return ne->name;
+	}
+	Log::Write( LogLevel_Warning, "NotificationCCTypes::GetEventForAlarmType - Unknown AlarmType/Event %d/d", type, event);
+	return "Unknown";
+}
+
+
 
 const NotificationCCTypes::NotificationTypes* NotificationCCTypes::GetAlarmNotificationTypes
 (
@@ -297,10 +335,39 @@ const NotificationCCTypes::NotificationEvents* NotificationCCTypes::GetAlarmNoti
 		if (nt->Events.find(event) != nt->Events.end()) {
 			return nt->Events.at(event);
 		}
-		Log::Write( LogLevel_Warning, "NotificationCCTypes::GetAlarmNotificationEvents - Uknown Alarm Event %d for Alarm Type %s (%d)", event, GetAlarmType(type).c_str(), type);
+		Log::Write( LogLevel_Warning, "NotificationCCTypes::GetAlarmNotificationEvents - Unknown Alarm Event %d for Alarm Type %s (%d)", event, GetAlarmType(type).c_str(), type);
 	}
 	return NULL;
 }
+
+const std::map<uint32, NotificationCCTypes::NotificationEventParams* > NotificationCCTypes::GetAlarmNotificationEventParams
+(
+		uint32 type,
+		uint32 event
+)
+{
+	if (const NotificationCCTypes::NotificationTypes *nt = GetAlarmNotificationTypes(type)) {
+		if (nt->Events.find(event) != nt->Events.end()) {
+			return nt->Events.at(event)->EventParams;
+		}
+		Log::Write( LogLevel_Warning, "NotificationCCTypes::GetAlarmNotificationEventParams - Unknown Alarm Event %d for Alarm Type %s (%d)", event, GetAlarmType(type).c_str(), type);
+	}
+	return std::map<uint32, NotificationCCTypes::NotificationEventParams* >();
+}
+
+bool NotificationCCTypes::Create
+(
+)
+{
+	if (m_instance != NULL)
+	{
+		return true;
+	}
+	m_instance = new NotificationCCTypes();
+	ReadXML();
+	return true;
+}
+
 
 
 NotificationCCTypes *NotificationCCTypes::Get

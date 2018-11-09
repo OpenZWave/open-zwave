@@ -91,7 +91,6 @@ Manager* Manager::Create
 		{
 			s_instance = new Manager();
 		}
-		NotificationCCTypes::Get()->test();
 		return s_instance;
 	}
 
@@ -194,6 +193,7 @@ m_notificationMutex( new Mutex() )
 	Scene::ReadScenes();
 	Log::Write(LogLevel_Always, "OpenZwave Version %s Starting Up", getVersionAsString().c_str());
 	Log::Write(LogLevel_Always, "Using Language Localization %s", Localization::Get()->GetSelectedLang().c_str());
+	NotificationCCTypes::Create();
 
 }
 

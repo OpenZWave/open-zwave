@@ -62,8 +62,9 @@ namespace OpenZWave
 
 	private:
 		Alarm( uint32 const _homeId, uint8 const _nodeId );
-
+		void SetupEvents(uint32 type, uint32 index, vector<ValueList::Item> *_items, uint32 const _instance);
 		bool m_v1Params;
+		std::vector<uint32> m_ParamsSet;
 	};
 
 } // namespace OpenZWave
