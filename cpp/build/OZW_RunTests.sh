@@ -17,7 +17,8 @@ juLog  -name=CheckDeviceClassesXML		CheckXML "$topsrcdir/config/device_classes.x
 juLog  -name=CheckOptionsXML			CheckXML "$topsrcdir/config/options.xsd $topsrcdir/config/options.xml"
 juLog  -name=CheckManufactureSpecificXML	CheckXML "$topsrcdir/config/manufacturer_specific.xsd $topsrcdir/config/manufacturer_specific.xml"
 juLog  -name=CheckLocalizationXML		CheckXML "$topsrcdir/config/Localization.xsd $topsrcdir/config/Localization.xml"
-for file in $(find $topsrcdir/config/ \( -name "*.xml" ! -name "device_classes.xml" ! -name "options.xml" ! -name "manufacturer_specific.xml" ! -name "Localization.xml" \) )
+juLog  -name=CheckNotificationTypesXML		CheckXML "$topsrcdir/config/NotificationCCTypes.xsd $topsrcdir/config/NotificationCCTypes.xml"
+for file in $(find $topsrcdir/config/ \( -name "*.xml" ! -name "device_classes.xml" ! -name "options.xml" ! -name "manufacturer_specific.xml" ! -name "Localization.xml" ! -name "NotificationCCTypes.xml" \) )
 do
 	juLog -name=$file CheckXML "$topsrcdir/config/device_configuration.xsd $file"
 done		
