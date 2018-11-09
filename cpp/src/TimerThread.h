@@ -28,7 +28,7 @@
 #ifndef _TIMERTHREAD_H_
 #define _TIMERTHREAD_H_
 
-#if __cplusplus >= 201103L || __APPLE__
+#if __cplusplus >= 201103L || __APPLE__ || _MSC_VER
 #include <functional>
 using std::bind;
 using std::function;
