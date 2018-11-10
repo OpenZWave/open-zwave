@@ -227,13 +227,18 @@ TimerThread::TimerEventEntry* Timer::TimerSetEvent
 		uint32 id
 )
 {
-	TimerThread::TimerEventEntry *te = m_driver->GetTimer()->TimerSetEvent(_milliseconds, _callback, this, id);
-	if (te) {
-		m_timerEventList.push_back(te);
-		return te;
+	if (m_driver) {
+		TimerThread::TimerEventEntry *te = m_driver->GetTimer()->TimerSetEvent(_milliseconds, _callback, this, id);
+		if (te) {
+			m_timerEventList.push_back(te);
+			return te;
+		}
+		Log::Write(LogLevel_Warning, "Could Not Register Timer Callback");
+		return NULL;
+	} else {
+		Log::Write(LogLevel_Warning, "Driver Not Set for TimerThread");
+		return NULL;
 	}
-	Log::Write(LogLevel_Warning, "Could Not Register Timer Callback");
-	return NULL;
 }
 
 //-----------------------------------------------------------------------------
@@ -244,11 +249,16 @@ void Timer::TimerDelEvents
 (
 )
 {
-	list<TimerThread::TimerEventEntry *>::iterator it = m_timerEventList.begin();
-	while( it != m_timerEventList.end() ) {
-		m_driver->GetTimer()->TimerDelEvent((*it));
-		it = m_timerEventList.erase(it);
+	if (m_driver) {
+		list<TimerThread::TimerEventEntry *>::iterator it = m_timerEventList.begin();
+		while( it != m_timerEventList.end() ) {
+			m_driver->GetTimer()->TimerDelEvent((*it));
+			it = m_timerEventList.erase(it);
+		}
+	} else {
+		Log::Write(LogLevel_Warning, "Driver Not Set for Timer");
 	}
+
 }
 //-----------------------------------------------------------------------------
 // <Timer::SetDriver>
@@ -270,12 +280,17 @@ void Timer::TimerDelEvent
 		TimerThread::TimerEventEntry *te
 )
 {
-	list<TimerThread::TimerEventEntry *>::iterator it = find(m_timerEventList.begin(),m_timerEventList.end(), te);
-	if (it != m_timerEventList.end()) {
-		m_driver->GetTimer()->TimerDelEvent((*it));
-		m_timerEventList.erase(it);
+	if (m_driver) {
+		list<TimerThread::TimerEventEntry *>::iterator it = find(m_timerEventList.begin(),m_timerEventList.end(), te);
+		if (it != m_timerEventList.end()) {
+			m_driver->GetTimer()->TimerDelEvent((*it));
+			m_timerEventList.erase(it);
+		} else {
+			Log::Write(LogLevel_Warning, "Cant Find TimerEvent to Delete in TimerDelEvent");
+		}
 	} else {
-		Log::Write(LogLevel_Warning, "Cant Find TimerEvent to Delete in TimerDelEvent");
+		Log::Write(LogLevel_Warning, "Driver Not Set for Timer");
+		return;
 	}
 
 }
@@ -289,14 +304,20 @@ void Timer::TimerDelEvent
 		uint32 id
 )
 {
-	for (list<TimerThread::TimerEventEntry *>::iterator it = m_timerEventList.begin(); it != m_timerEventList.end(); it++ ) {
-		if ((*it)->id == id) {
-			m_driver->GetTimer()->TimerDelEvent((*it));
-			m_timerEventList.erase(it);
-		} else {
-			Log::Write(LogLevel_Warning, "Cant Find TimerEvent %d to Delete in TimerDelEvent", id);
+	if (m_driver) {
+		for (list<TimerThread::TimerEventEntry *>::iterator it = m_timerEventList.begin(); it != m_timerEventList.end(); it++ ) {
+			if ((*it)->id == id) {
+				m_driver->GetTimer()->TimerDelEvent((*it));
+				m_timerEventList.erase(it);
+			} else {
+				Log::Write(LogLevel_Warning, "Cant Find TimerEvent %d to Delete in TimerDelEvent", id);
+			}
 		}
+	} else {
+		Log::Write(LogLevel_Warning, "Driver Not Set for TimerThread");
+		return;
 	}
+
 }
 
 //-----------------------------------------------------------------------------

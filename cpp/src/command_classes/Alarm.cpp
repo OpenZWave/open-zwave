@@ -72,7 +72,8 @@ enum
 	AlarmIndex_Type_ParamString,
 	AlarmIndex_Type_Duration,
 	AlarmIndex_Type = 512,
-	AlarmIndex_Level
+	AlarmIndex_Level,
+	AlarmIndex_AutoClearEvents
 };
 
 
@@ -88,8 +89,10 @@ Alarm::Alarm
 		uint8 const _nodeId
 ):
 CommandClass( _homeId, _nodeId ),
-m_v1Params(false)
+m_v1Params(false),
+m_ClearTimeout ( 5000 )
 {
+	Timer::SetDriver(GetDriver());
 	SetStaticRequest( StaticRequest_Values );
 }
 
@@ -118,7 +121,6 @@ bool Alarm::RequestState
 			msg->Append( AlarmCmd_SupportedGet );
 			msg->Append( GetDriver()->GetTransmitOptions() );
 			GetDriver()->SendMsg( msg, _queue );
-			return true;
 		}
 		else
 		{
@@ -130,6 +132,11 @@ bool Alarm::RequestState
 				node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, AlarmIndex_Level, "Alarm Level", "", true, false, 0, 0 );
 			}
 		}
+		if (GetVersion() < 4) {
+			if ( Node* node = GetNodeUnsafe() ) {
+				node->CreateValueInt( ValueID::ValueGenre_Config, GetCommandClassId(), _instance, AlarmIndex_AutoClearEvents, "Automatically Clear Events", "ms", false, false, m_ClearTimeout, 0);
+			}
+		}
 
 	}
 
@@ -138,6 +145,19 @@ bool Alarm::RequestState
 		return RequestValue( _requestFlags, 0, _instance, _queue );
 	}
 
+	return false;
+}
+
+bool Alarm::SetValue
+(
+		Value const& _value
+)
+{
+	if ((ValueID::ValueType_Int== _value.GetID().GetType()) && (_value.GetID().GetIndex() == AlarmIndex_AutoClearEvents)) {
+		ValueInt const *value = static_cast<ValueInt const *>(&_value);
+		m_ClearTimeout = value->GetValue();
+		return true;
+	}
 	return false;
 }
 
@@ -259,77 +279,7 @@ bool Alarm::HandleMsg
 			if (NotificationSequencePresent)
 				Log::Write ( LogLevel_Info, GetNodeId(), "\t Sequence Number: %d", NotificationSequence);
 
-			/* update the actual value */
-			if ( ValueList *value = static_cast<ValueList *>( GetValue( _instance, NotificationType ) ) )
-			{
-				value->OnValueRefreshed(NotificationEvent);
-				value->Release();
-			} else {
-				Log::Write ( LogLevel_Warning, GetNodeId(), "Couldn't Find a ValueList for Notification Type %d (%d)", NotificationType, _instance);
-			}
-			/* Reset Any of the Params that may have been previously set with another event */
-			for (std::vector<uint32>::iterator it = m_ParamsSet.begin(); it != m_ParamsSet.end(); it++)
-			{
-				switch (*it) {
-				case AlarmIndex_Type_ParamUserCodeid: {
-					if (ValueByte *value = static_cast<ValueByte *>(GetValue(_instance, AlarmIndex_Type_ParamUserCodeid)))
-					{
-						value->OnValueRefreshed(0);
-						value->Release();
-					}
-				}
-				break;
-				case AlarmIndex_Type_ParamUserCodeEntered: {
-					if (ValueString *value = static_cast<ValueString *>(GetValue(_instance, AlarmIndex_Type_ParamUserCodeEntered)))
-					{
-						value->OnValueRefreshed("");
-						value->Release();
-					}
-				}
-				break;
-				case AlarmIndex_Type_ParamLocation: {
-					if (ValueString *value = static_cast<ValueString *>(GetValue(_instance, AlarmIndex_Type_ParamLocation)))
-					{
-						value->OnValueRefreshed("");
-						value->Release();
-					}
-				}
-				break;
-				case AlarmIndex_Type_ParamList: {
-					if (ValueList *value = static_cast<ValueList *>(GetValue(_instance, AlarmIndex_Type_ParamList)))
-					{
-						value->OnValueRefreshed(0);
-						value->Release();
-					}
-				}
-				break;
-				case AlarmIndex_Type_ParamByte: {
-					if (ValueByte *value = static_cast<ValueByte *>(GetValue(_instance, AlarmIndex_Type_ParamByte)))
-					{
-						value->OnValueRefreshed(0);
-						value->Release();
-					}
-				}
-				break;
-				case AlarmIndex_Type_ParamString: {
-					if (ValueString *value = static_cast<ValueString *>(GetValue(_instance, AlarmIndex_Type_ParamString)))
-					{
-						value->OnValueRefreshed("");
-						value->Release();
-					}
-				}
-				break;
-				case AlarmIndex_Type_Duration: {
-					if (ValueInt *value = static_cast<ValueInt *>(GetValue(_instance, AlarmIndex_Type_Duration)))
-					{
-						value->OnValueRefreshed(0);
-						value->Release();
-					}
-				}
-				break;
-
-				}
-			}
+			ClearEventParams(_instance);
 
 			m_ParamsSet.clear();
 			/* do any Event Params that are sent over */
@@ -448,6 +398,24 @@ bool Alarm::HandleMsg
 					}
 				}
 			}
+
+			/* update the actual value only after we set the Params */
+			if ( ValueList *value = static_cast<ValueList *>( GetValue( _instance, NotificationType ) ) )
+			{
+				value->OnValueRefreshed(NotificationEvent);
+				value->Release();
+			} else {
+				Log::Write ( LogLevel_Warning, GetNodeId(), "Couldn't Find a ValueList for Notification Type %d (%d)", NotificationType, _instance);
+			}
+
+			/* Any Version below 4 doesn't have a Clear Event, so we trigger a timer to manually clear it */
+			if ((NotificationEvent != 0) && (GetVersion() < 4)) {
+				Log::Write( LogLevel_Info, GetNodeId(), "Automatically Clearing Alarm in %dms", m_ClearTimeout );
+				m_TimersToInstances.insert(std::pair<uint32, uint32>(NotificationType, _instance));
+				TimerThread::TimerCallback callback = bind(&Alarm::ClearAlarm, this, NotificationType);
+				TimerSetEvent(m_ClearTimeout, callback, 1);
+			}
+
 		}
 		return true;
 	}
@@ -606,3 +574,94 @@ void Alarm::SetupEvents
 		_items->push_back( item );
 	}
 }
+
+void Alarm::ClearEventParams
+(
+		uint32 const _instance
+)
+{
+	/* Reset Any of the Params that may have been previously set with another event */
+	for (std::vector<uint32>::iterator it = m_ParamsSet.begin(); it != m_ParamsSet.end(); it++)
+	{
+		switch (*it) {
+		case AlarmIndex_Type_ParamUserCodeid: {
+			if (ValueByte *value = static_cast<ValueByte *>(GetValue(_instance, AlarmIndex_Type_ParamUserCodeid)))
+			{
+				value->OnValueRefreshed(0);
+				value->Release();
+			}
+		}
+		break;
+		case AlarmIndex_Type_ParamUserCodeEntered: {
+			if (ValueString *value = static_cast<ValueString *>(GetValue(_instance, AlarmIndex_Type_ParamUserCodeEntered)))
+			{
+				value->OnValueRefreshed("");
+				value->Release();
+			}
+		}
+		break;
+		case AlarmIndex_Type_ParamLocation: {
+			if (ValueString *value = static_cast<ValueString *>(GetValue(_instance, AlarmIndex_Type_ParamLocation)))
+			{
+				value->OnValueRefreshed("");
+				value->Release();
+			}
+		}
+		break;
+		case AlarmIndex_Type_ParamList: {
+			if (ValueList *value = static_cast<ValueList *>(GetValue(_instance, AlarmIndex_Type_ParamList)))
+			{
+				value->OnValueRefreshed(0);
+				value->Release();
+			}
+		}
+		break;
+		case AlarmIndex_Type_ParamByte: {
+			if (ValueByte *value = static_cast<ValueByte *>(GetValue(_instance, AlarmIndex_Type_ParamByte)))
+			{
+				value->OnValueRefreshed(0);
+				value->Release();
+			}
+		}
+		break;
+		case AlarmIndex_Type_ParamString: {
+			if (ValueString *value = static_cast<ValueString *>(GetValue(_instance, AlarmIndex_Type_ParamString)))
+			{
+				value->OnValueRefreshed("");
+				value->Release();
+			}
+		}
+		break;
+		case AlarmIndex_Type_Duration: {
+			if (ValueInt *value = static_cast<ValueInt *>(GetValue(_instance, AlarmIndex_Type_Duration)))
+			{
+				value->OnValueRefreshed(0);
+				value->Release();
+			}
+		}
+		break;
+
+		}
+	}
+}
+
+void Alarm::ClearAlarm(uint32 type) {
+	uint32 _instance;
+	if (m_TimersToInstances.find(type) != m_TimersToInstances.end()) {
+		_instance = m_TimersToInstances.at(type);
+		m_TimersToInstances.erase(type);
+	} else {
+		Log::Write(LogLevel_Warning, GetNodeId(), "Cant Find Notification Type %d in m_TimersToInstances", type);
+		return;
+	}
+	ClearEventParams(_instance);
+	/* update the actual value only after we set the Params */
+	if ( ValueList *value = static_cast<ValueList *>( GetValue( _instance, type ) ) )
+	{
+		value->OnValueRefreshed(0);
+		value->Release();
+	} else {
+		Log::Write ( LogLevel_Warning, GetNodeId(), "Couldn't Find a ValueList to ClearAlarm for Notification Type %d (%d)", type, _instance);
+	}
+}
+

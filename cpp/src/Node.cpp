@@ -516,7 +516,7 @@ void Node::AdvanceQueries
 						{
 						        // set the Version to 1 
 						        cc->SetVersion( 1 );
-                                                }
+                        }
 					}
 					addQSC = m_queryPending;
 				}
