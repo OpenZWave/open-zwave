@@ -57,14 +57,16 @@ namespace OpenZWave
 		virtual string const GetCommandClassName()const{ return StaticGetCommandClassName(); }
 		/** \brief Handle a response to a message associated with this command class. (Inherited from CommandClass) */
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );
-
 		virtual uint8 GetMaxVersion(){ return 8; }
+
+
 
 	private:
 		Alarm( uint32 const _homeId, uint8 const _nodeId );
 		void SetupEvents(uint32 type, uint32 index, vector<ValueList::Item> *_items, uint32 const _instance);
 		bool m_v1Params;
 		std::vector<uint32> m_ParamsSet;
+
 	};
 
 } // namespace OpenZWave

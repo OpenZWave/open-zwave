@@ -510,12 +510,12 @@ void WakeUp::SendPending
 	if( sendToSleep && !reloading )
 	{
 		if( m_delayNoMoreInfo == 0 ) {
-			SendNoMoreInfo();
+			SendNoMoreInfo(1);
 
 		} else {
 			Log::Write( LogLevel_Info, GetNodeId(), "  Node %d has delayed sleep of %dms", GetNodeId(), m_delayNoMoreInfo );
-			TimerThread::TimerCallback callback = bind(&WakeUp::SendNoMoreInfo, this);
-			TimerSetEvent(m_delayNoMoreInfo, callback);
+			TimerThread::TimerCallback callback = bind(&WakeUp::SendNoMoreInfo, this, 1);
+			TimerSetEvent(m_delayNoMoreInfo, callback, 1);
 		}
 	}
 }
@@ -526,6 +526,7 @@ void WakeUp::SendPending
 //-----------------------------------------------------------------------------
 void WakeUp::SendNoMoreInfo
 (
+		uint32 id
 )
 {
 	Msg* msg = new Msg( "WakeUpCmd_NoMoreInformation", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );

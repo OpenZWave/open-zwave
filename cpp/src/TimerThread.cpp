@@ -144,7 +144,8 @@ TimerThread::TimerEventEntry* TimerThread::TimerSetEvent
 (
 		int32 _milliseconds,
 		TimerCallback _callback,
-		Timer *_instance
+		Timer *_instance,
+		uint32 id
 )
 {
 	Log::Write( LogLevel_Info, "Timer: adding event in %d ms", _milliseconds );
@@ -152,7 +153,7 @@ TimerThread::TimerEventEntry* TimerThread::TimerSetEvent
 	te->timestamp.SetTime(_milliseconds);
 	te->callback = _callback;
 	te->instance = _instance;
-
+	te->id = id;
 	// Don't want driver thread and timer thread accessing list at the same time.
 	LockGuard LG(m_timerMutex);
 	m_timerEventList.push_back(te);
@@ -222,10 +223,11 @@ Timer::~Timer
 TimerThread::TimerEventEntry* Timer::TimerSetEvent
 (
 		int32 _milliseconds,
-		TimerThread::TimerCallback _callback
+		TimerThread::TimerCallback _callback,
+		uint32 id
 )
 {
-	TimerThread::TimerEventEntry *te = m_driver->GetTimer()->TimerSetEvent(_milliseconds, _callback, this);
+	TimerThread::TimerEventEntry *te = m_driver->GetTimer()->TimerSetEvent(_milliseconds, _callback, this, id);
 	if (te) {
 		m_timerEventList.push_back(te);
 		return te;
@@ -277,6 +279,26 @@ void Timer::TimerDelEvent
 	}
 
 }
+
+//-----------------------------------------------------------------------------
+// <Timer::TimerDelEvent>
+// Delete a specific TimerEvent
+//-----------------------------------------------------------------------------
+void Timer::TimerDelEvent
+(
+		uint32 id
+)
+{
+	for (list<TimerThread::TimerEventEntry *>::iterator it = m_timerEventList.begin(); it != m_timerEventList.end(); it++ ) {
+		if ((*it)->id == id) {
+			m_driver->GetTimer()->TimerDelEvent((*it));
+			m_timerEventList.erase(it);
+		} else {
+			Log::Write(LogLevel_Warning, "Cant Find TimerEvent %d to Delete in TimerDelEvent", id);
+		}
+	}
+}
+
 //-----------------------------------------------------------------------------
 // <Timer::TimerFireEvent>
 // Execute a Callback
@@ -286,7 +308,7 @@ void Timer::TimerFireEvent
 		TimerThread::TimerEventEntry *te
 )
 {
-	te->callback();
+	te->callback(te->id);
 	TimerDelEvent(te);
 }
 

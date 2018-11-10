@@ -60,7 +60,7 @@ namespace OpenZWave
 	//-----------------------------------------------------------------------------
 	public:
 		/** A timer callback function. */
-		typedef function<void()> TimerCallback;
+		typedef function<void(uint32)> TimerCallback;
 
 		/**
 		 * Constructor.
@@ -77,6 +77,7 @@ namespace OpenZWave
 			Timer *instance;
 			TimeStamp timestamp;
 			TimerCallback callback;
+			uint32 id;
 		};
 
 		/**
@@ -95,7 +96,7 @@ namespace OpenZWave
 		 * \param _callback The function to be called when the time is reached
 		 * \param _instance The Timer SubClass where this Event should be executed from
 		 */
-		TimerEventEntry* TimerSetEvent( int32 _milliseconds, TimerCallback _callback, Timer *_instance );
+		TimerEventEntry* TimerSetEvent( int32 _milliseconds, TimerCallback _callback, Timer *_instance, uint32 id );
 
 		/**
 		 * Remove a Event
@@ -145,8 +146,9 @@ namespace OpenZWave
 		 * \brief Schedule an event.
 		 * \param _milliseconds The number of milliseconds before the event should happen
 		 * \param _callback The function to be called when the time is reached
+		 * \param _id The ID of the Timer
 		 */
-		TimerThread::TimerEventEntry* TimerSetEvent( int32 _milliseconds, TimerThread::TimerCallback _callback );
+		TimerThread::TimerEventEntry* TimerSetEvent( int32 _milliseconds, TimerThread::TimerCallback _callback, uint32 id );
 		/**
 		 *  \brief Delete All Events registered to this instance
 		 */
@@ -156,6 +158,12 @@ namespace OpenZWave
 		 * \param te The TimerEventEntry Struct that was returned when Setting a Event
 		 */
 		void TimerDelEvent(TimerThread::TimerEventEntry *te);
+		/**
+		 * \brief Delete a Specific Event Registered to this instance
+		 * \param id The ID of the Timer To Delete
+		 */
+		void TimerDelEvent(uint32 id);
+
 		/**
 		 * \brief Register the Driver Associated with this Instance
 		 * \param _driver The Driver

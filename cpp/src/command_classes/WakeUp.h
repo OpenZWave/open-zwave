@@ -58,7 +58,7 @@ namespace OpenZWave
 		void SendPending();
 
 		/** \brief Send a no more information message. */
-		void SendNoMoreInfo();
+		void SendNoMoreInfo(uint32 id);
 
 		bool IsAwake()const{ return m_awake; }
 		void SetAwake( bool _state );
