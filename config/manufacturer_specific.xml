@@ -641,6 +641,7 @@
 		<Product type="4953" id="3032" name="32563 Hinge Pin Smart Door Sensor" config="ge/hinge-pin.xml"/>
 		<Product type="5052" id="3031" name="12719 Plug-in Smart Switch" config="ge/12719-plugin-switch.xml"/>
 		<Product type="5052" id="3033" name="14282 Plug-In Two-Outlet Smart Switch" config="ge/14282-plugin-switch.xml"/>
+		<Product type="5052" id="3038" name="28169 Plug-In One-Outlet Smart Switch" config="ge/28169-plugin-switch.xml"/>
 		<Product type="6363" id="3533" name="ZW4001 In-Wall Decora Style On/Off Relay Switch" config="ge/zw4001-switch.xml"/>
 		<Product type="4c42" id="3031" name="ZW7101 Smart LED Light Bulb ZE26I" config="ge/ze26i.xml"/>
 		<Product type="4953" id="3133" name="ZW6302 Portable Smart Motion Sensor" config="ge/zw6302.xml"/>
