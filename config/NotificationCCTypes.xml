@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<NotificationTypes xmlns='https://github.com/OpenZWave/open-zwave' Revision="4">
+<NotificationTypes xmlns='https://github.com/OpenZWave/open-zwave' Revision="5">
 	<AlarmType id="1" name="Smoke Alarm">
 		<AlarmEvent id="0" name="Clear">
 			<AlarmEventParam id="256" type="byte" name="Previous Event Cleared" />
@@ -201,7 +201,7 @@
 		<AlarmEvent id="23" name="Door/Window Closed">
 		</AlarmEvent>
 		<AlarmEvent id="64" name="Barrier Initializing">
-			<AlarmEventParam id="261" type="list" name="Progress">
+			<AlarmEventParam id="262" type="list" name="Progress">
 				<Item id="0" label="Process Complete" />
 				<Item id="255" label="Performing Process" />
 			</AlarmEventParam>
@@ -220,22 +220,22 @@
 		<AlarmEvent id="70" name="Barrier Malfunction">
 		</AlarmEvent>
 		<AlarmEvent id="71" name="Barrier Vacaction Mode">
-			<AlarmEventParam id="262" type="list" name="Mode">
+			<AlarmEventParam id="263" type="list" name="Mode">
 				<Item id="0" label="Disabled" />
 				<Item id="255" label="Enabled" />
 			</AlarmEventParam>
 		</AlarmEvent>
 		<AlarmEvent id="72" name="Barrier Saftey Beam Obstruction">
-			<AlarmEventParam id="263" type="list" name="Obstruction">
+			<AlarmEventParam id="264" type="list" name="Obstruction">
 				<Item id="0" label="No Obstruction" />
 				<Item id="255" label="Obstruction" />
 			</AlarmEventParam>
 		</AlarmEvent>
 		<AlarmEvent id="73" name="Barrier Sensor Not Detected">
-			<AlarmEventParam id="264" type="byte" name="Sensor ID" />
+			<AlarmEventParam id="265" type="byte" name="Sensor ID" />
 		</AlarmEvent>
 		<AlarmEvent id="74" name="Barrier Battery Low">
-			<AlarmEventParam id="264" type="byte" name="Sensor ID" />
+			<AlarmEventParam id="265" type="byte" name="Sensor ID" />
 		</AlarmEvent>
 		<AlarmEvent id="75" name="Barrier Short in Wall Station Wires">
 		</AlarmEvent>
@@ -321,10 +321,10 @@
 		<AlarmEvent id="2" name="Software Failure">
 		</AlarmEvent>
 		<AlarmEvent id="3" name="Hardware Failure Code">
-			<AlarmEventParam id="265" type="string" name="Error Code" />
+			<AlarmEventParam id="266" type="string" name="Error Code" />
 		</AlarmEvent>
 		<AlarmEvent id="4" name="Software Failure Code">
-			<AlarmEventParam id="265" type="string" name="Error Code" />
+			<AlarmEventParam id="266" type="string" name="Error Code" />
 		</AlarmEvent>
 		<AlarmEvent id="5" name="Heartbeat">
 		</AlarmEvent>
@@ -359,7 +359,7 @@
 		<AlarmEvent id="2" name="Timer Ending">
 		</AlarmEvent>
 		<AlarmEvent id="3" name="Time Remaining">
-			<AlarmEventParam id="266" type="duration" name="Duration" />
+			<AlarmEventParam id="267" type="duration" name="Duration" />
 		</AlarmEvent>
 		<AlarmEvent id="254" name="Unknown Event">
 		</AlarmEvent>
@@ -430,7 +430,7 @@
 		<AlarmEvent id="5" name="Sitting On Edge Of Bed">
 		</AlarmEvent>
 		<AlarmEvent id="6" name="Volatile Organic Level">
-			<AlarmEventParam id="267" type="list" name="Pollution Level">
+			<AlarmEventParam id="268" type="list" name="Pollution Level">
 				<Item id="1" label="Clean" />
 				<Item id="2" label="Slightly Polluted" />
 				<Item id="3" label="Moderately Polluted" />
@@ -456,13 +456,13 @@
 			<AlarmEventParam id="256" type="byte" name="Previous Event Cleared" />
 		</AlarmEvent>
 		<AlarmEvent id="1" name="Valve Operation">
-			<AlarmEventParam id="268" type="list" name="Status">
+			<AlarmEventParam id="269" type="list" name="Status">
 				<Item id="0" label="Off" />
 				<Item id="1" label="On" />
 			</AlarmEventParam>
 		</AlarmEvent>
 		<AlarmEvent id="2" name="Master Valve Operation">
-			<AlarmEventParam id="268" type="list" name="Status">
+			<AlarmEventParam id="269" type="list" name="Status">
 				<Item id="0" label="Off" />
 				<Item id="1" label="On" />
 			</AlarmEventParam>
@@ -508,16 +508,16 @@
 			<AlarmEventParam id="256" type="byte" name="Previous Event Cleared" />
 		</AlarmEvent>
 		<AlarmEvent id="1" name="Schedule Started">
-			<AlarmEventParam id="269" type="byte" name="Schedule ID" />
+			<AlarmEventParam id="270" type="byte" name="Schedule ID" />
 		</AlarmEvent>
 		<AlarmEvent id="2" name="Schedule Finished">
-			<AlarmEventParam id="269" type="byte" name="Schedule ID" />
+			<AlarmEventParam id="270" type="byte" name="Schedule ID" />
 		</AlarmEvent>
 		<AlarmEvent id="3" name="Valve Table Run Started">
-			<AlarmEventParam id="270" type="byte" name="Valve Table ID" />
+			<AlarmEventParam id="271" type="byte" name="Valve Table ID" />
 		</AlarmEvent>
 		<AlarmEvent id="4" name="Valve Table Run Finished">
-			<AlarmEventParam id="270" type="byte" name="Valve Table ID" />
+			<AlarmEventParam id="271" type="byte" name="Valve Table ID" />
 		</AlarmEvent>
 		<AlarmEvent id="5" name="Device Not Configured">
 		</AlarmEvent>

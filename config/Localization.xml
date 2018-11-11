@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Localization xmlns="https://github.com/OpenZWave/open-zwave" Revision="2">
+<Localization xmlns="https://github.com/OpenZWave/open-zwave" Revision="3">
 	<CommandClass id="113">
 		<!-- Please Keep updates in the Notification CC in sync with NotificationCCTypes.xml as well -->
 		<Label>COMMAND_CLASS_NOTIFICATION</Label>
@@ -295,40 +295,45 @@
 			<ItemLabel itemIndex="4">Max</ItemLabel>
 		</Value>
 		<Value index="260">
-			<Help>User Code that was used</Help>
-			<Label>User Code</Label>
+			<Help>User Code ID that was used</Help>
+			<Label>User Code ID</Label>
 		</Value>
 		<Value index="261">
+			<Help>User Codethat was used</Help>
+			<Label>User Code</Label>
+		</Value>
+
+		<Value index="262">
 			<Help>Progress of Operation</Help>
 			<Label>Progress</Label>
 			<ItemLabel itemIndex="0">Process Complete</ItemLabel>
 			<ItemLabel itemIndex="255">Performing Process</ItemLabel>
 		</Value>
-		<Value index="262">
+		<Value index="263">
 			<Help>Enabled Mode</Help>
 			<Label>Mode</Label>
 			<ItemLabel itemIndex="0">Disabled</ItemLabel>
 			<ItemLabel itemIndex="255">Enabled</ItemLabel>
 		</Value>
-		<Value index="263">
+		<Value index="264">
 			<Help>The status of the obstruction</Help>
 			<Label>Obstruction</Label>
 			<ItemLabel itemIndex="0">No Obstruction</ItemLabel>
 			<ItemLabel itemIndex="255">Obstruction</ItemLabel>
 		</Value>
-		<Value index="264">
+		<Value index="265">
 			<Help>The ID of the Sensor that triggered the alert</Help>
 			<Label>Sensor ID</Label>
 		</Value>
-		<Value index="265">
+		<Value index="266">
 			<Help>The Error Code returned by the device</Help>
 			<Label>Error Code</Label>
 		</Value>
-		<Value index="266">
+		<Value index="267">
 			<Help>Duration remaining in seconds</Help>
 			<Label>Duration</Label>
 		</Value>
-		<Value index="267">
+		<Value index="268">
 			<Help>The Pollution Level Detected</Help>
 			<Label>Pollution Level</Label>
 			<ItemLabel itemIndex="1">Clean</ItemLabel>
@@ -336,17 +341,17 @@
 			<ItemLabel itemIndex="3">Moderately Polluted</ItemLabel>
 			<ItemLabel itemIndex="4">Highly Polluted</ItemLabel>
 		</Value>
-		<Value index="268">
+		<Value index="269">
 			<Help>The Status of the Device</Help>
 			<Label>Status</Label>
 			<ItemLabel itemIndex="0">Off</ItemLabel>
 			<ItemLabel itemIndex="1">On</ItemLabel>
 		</Value>
-		<Value index="269">
+		<Value index="270">
 			<Help>The ID of the Schedule that triggered this alert</Help>
 			<Label>Schedule ID</Label>
 		</Value>
-		<Value index="270">
+		<Value index="271">
 			<Help>The ID of the Valve Table that triggered this alert</Help>
 			<Label>Valve Table ID</Label>
 		</Value>
