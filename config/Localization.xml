@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Localization xmlns="https://github.com/OpenZWave/open-zwave" Revision="3">
+<Localization xmlns="https://github.com/OpenZWave/open-zwave" Revision="4">
 	<CommandClass id="113">
 		<!-- Please Keep updates in the Notification CC in sync with NotificationCCTypes.xml as well -->
 		<Label>COMMAND_CLASS_NOTIFICATION</Label>
@@ -294,6 +294,9 @@
 			<ItemLabel itemIndex="3">Above High Threshold</ItemLabel>
 			<ItemLabel itemIndex="4">Max</ItemLabel>
 		</Value>
+		<!--  UserCode Param has two ValueID's (id, and UserCode). We only
+		identify index 260 in NotificationCCTypes.xml but 
+		Index 261 is automatically created. -->
 		<Value index="260">
 			<Help>User Code ID that was used</Help>
 			<Label>User Code ID</Label>
