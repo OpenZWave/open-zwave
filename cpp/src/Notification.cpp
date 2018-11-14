@@ -301,7 +301,14 @@ string Notification::GetAsString() const {
 					case Alert_UnsupportedController:
 						str = "Controller Library is not a type we support";
 						break;
-
+					case Alert_ApplicationStatus_Retry:
+						str = "Application Status: Retry Later";
+						break;
+					case Alert_ApplicationStatus_Queued:
+						str = "Application Status: Command has been queued for execution later";
+						break;
+					case Alert_ApplicationStatus_Rejected:
+						str =  "Application Status: Command Rejected";
 				}
 				break;
 			case Type_ManufacturerSpecificDBReady:

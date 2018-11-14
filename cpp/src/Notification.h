@@ -55,6 +55,7 @@ namespace OpenZWave
 		friend class NoOperation;
 		friend class SceneActivation;
 		friend class WakeUp;
+		friend class ApplicationStatus;
 		friend class ManufacturerSpecificDB;
 		/* allow us to Stream a Notification */
 		//friend std::ostream &operator<<(std::ostream &os, const Notification &dt);
@@ -127,13 +128,16 @@ namespace OpenZWave
 		 */
 		enum UserAlertNofification
 		{
-			Alert_None,						/**< No Alert Currently Present */
-			Alert_ConfigOutOfDate,			/**< One of the Config Files is out of date. Use GetNodeId to determine which node is affected. */
-			Alert_MFSOutOfDate,				/**< the manufacturer_specific.xml file is out of date. */
-			Alert_ConfigFileDownloadFailed, /**< A Config File failed to download */
-			Alert_DNSError,					/**< A error occurred performing a DNS Lookup */
-			Alert_NodeReloadReqired,		/**< A new Config file has been discovered for this node, and its pending a Reload to Take Effect */
-			Alert_UnsupportedController		/**< The Controller is not running a Firmware Library we support */
+			Alert_None,							/**< No Alert Currently Present */
+			Alert_ConfigOutOfDate,				/**< One of the Config Files is out of date. Use GetNodeId to determine which node is affected. */
+			Alert_MFSOutOfDate,					/**< the manufacturer_specific.xml file is out of date. */
+			Alert_ConfigFileDownloadFailed, 	/**< A Config File failed to download */
+			Alert_DNSError,						/**< A error occurred performing a DNS Lookup */
+			Alert_NodeReloadReqired,			/**< A new Config file has been discovered for this node, and its pending a Reload to Take Effect */
+			Alert_UnsupportedController,		/**< The Controller is not running a Firmware Library we support */
+			Alert_ApplicationStatus_Retry,  	/**< Application Status CC returned a Retry Later Message */
+			Alert_ApplicationStatus_Queued, 	/**< Command Has been Queued for execution later */
+			Alert_ApplicationStatus_Rejected,	/**< Command has been rejected */
 		};
 
 		/**
@@ -205,6 +209,12 @@ namespace OpenZWave
 		uint8 GetByte()const{ return m_byte; }
 
 		/**
+		 * Helper function to return the Timeout to wait for. Only valid for Notification::Type_UserAlerts - Notification::Alert_ApplicationStatus_Retry
+		 * \return The time to wait before retrying
+		 */
+		uint8 GetRetry()const{ assert((Type_UserAlerts == m_type) && (Alert_ApplicationStatus_Retry == m_useralerttype)); return m_byte; }
+
+		/**
 		 * Helper Function to return the Notification as a String
 		 * \return A string representation of this Notification
 		 */
@@ -237,6 +247,7 @@ namespace OpenZWave
 		void SetUserAlertNofification(UserAlertNofification const alerttype){ assert(Type_UserAlerts==m_type); m_useralerttype = alerttype; }
 		void SetCommand( uint8 const _command ){ assert(Type_ControllerCommand == m_type); m_command = _command; }
 		void SetComPort( string comport) { assert(Type_DriverFailed == m_type); m_comport = comport; }
+		void SetRetry (uint8 const timeout) { assert(Type_UserAlerts == m_type); m_byte = timeout; }
 
 		NotificationType		m_type;
 		ValueID				m_valueId;

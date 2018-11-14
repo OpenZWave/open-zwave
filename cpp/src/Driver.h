@@ -81,6 +81,7 @@ namespace OpenZWave
 		friend class NoOperation;
 		friend class SceneActivation;
 		friend class WakeUp;
+		friend class ApplicationStatus; /* for Notification messages */
 		friend class Security;
 		friend class Msg;
 		friend class ManufacturerSpecificDB;
