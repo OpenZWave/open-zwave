@@ -2063,7 +2063,7 @@ void Driver::ProcessMsg
 		case FUNC_ID_SERIAL_API_SETUP:
 		{
 			Log::Write( LogLevel_Detail, "" );
-			HandleSerialAPISetup( _data );
+			HandleSerialAPISetupResponse( _data );
 			break;
 		}
 		case FUNC_ID_ZW_MEMORY_GET_ID:
