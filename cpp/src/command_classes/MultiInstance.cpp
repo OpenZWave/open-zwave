@@ -688,6 +688,15 @@ void MultiInstance::HandleMultiChannelEncap
 		uint8 commandClassId = _data[3];
 		if( CommandClass* pCommandClass = node->GetCommandClass( commandClassId ) )
 		{
+			/* 4.85.13 - If the Root Device is originating a command to an End Point in another node, the Source End Point MUST be set to 0.
+			 *
+			 */
+			if (endPoint == 0) {
+				Log::Write( LogLevel_Error, GetNodeId(), "MultiChannelEncap with endpoint set to 0 - Send to Root Device");
+				pCommandClass->HandleMsg(&_data[4], _length-4);
+				return;
+			}
+
 			uint8 instance = pCommandClass->GetInstance( endPoint );
 			if( instance == 0 )
 			{
