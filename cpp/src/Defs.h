@@ -266,6 +266,8 @@ namespace OpenZWave
 #define FUNC_ID_SERIAL_API_GET_CAPABILITIES				0x07
 #define FUNC_ID_SERIAL_API_SOFT_RESET					0x08
 
+#define FUNC_ID_SERIAL_API_SETUP						0x0b
+
 #define FUNC_ID_ZW_SEND_NODE_INFORMATION				0x12
 #define FUNC_ID_ZW_SEND_DATA							0x13
 #define FUNC_ID_ZW_GET_VERSION							0x15
@@ -438,6 +440,12 @@ namespace OpenZWave
 #define ZW_LIB_SLAVE_ROUTING      						0x06
 #define ZW_LIB_CONTROLLER_BRIDGE  						0x07
 #define ZW_LIB_DUT                						0x08
+
+/* Serial API Setup Commands */
+#define SERIAL_API_SETUP_CMD_TX_STATUS_REPORT			0x02
+#define SERIAL_API_SETUP_CMD_TX_POWERLEVEL_SET 			0x04
+#define SERIAL_API_SETUP_CMD_TX_POWERLEVEL_GET 			0x08
+#define SERIAL_API_SETUP_CMD_TX_GET_MAX_PAYLOAD_SIZE	0x10
 
 
 

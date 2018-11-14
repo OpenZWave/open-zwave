@@ -302,6 +302,7 @@ namespace OpenZWave
 
 		void HandleGetVersionResponse( uint8* _data );
 		void HandleGetRandomResponse( uint8* _data );
+		void HandleSerialAPISetupResponse( uint8* _data );
 		void HandleGetControllerCapabilitiesResponse( uint8* _data );
 		void HandleGetSerialAPICapabilitiesResponse( uint8* _data );
 		void HandleSerialAPISoftResetResponse( uint8* _data );

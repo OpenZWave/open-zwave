@@ -2060,6 +2060,12 @@ void Driver::ProcessMsg
 			HandleGetRandomResponse( _data );
 			break;
 		}
+		case FUNC_ID_SERIAL_API_SETUP:
+		{
+			Log::Write( LogLevel_Detail, "" );
+			HandleSerialAPISetup( _data );
+			break;
+		}
 		case FUNC_ID_ZW_MEMORY_GET_ID:
 		{
 			Log::Write( LogLevel_Detail, "" );
@@ -2538,7 +2544,16 @@ void Driver::HandleGetRandomResponse
 		uint8* _data
 )
 {
-	Log::Write( LogLevel_Info, GetNodeNumber( m_currentMsg ), "Received reply to FUNC_ID_ZW_GET_RANDOM: %s", _data[2] ? "true" : "false" );
+	Log::Write( LogLevel_Info, "Received reply to FUNC_ID_ZW_GET_RANDOM: %s", _data[2] ? "true" : "false" );
+}
+
+void Driver::HandleSerialAPISetupResponse
+(
+		uint8* _data
+)
+{
+	Log::Write( LogLevel_Info, "Received reply to FUNC_ID_SERIAL_API_SETUP");
+
 }
 
 //-----------------------------------------------------------------------------
@@ -2605,13 +2620,24 @@ void Driver::HandleGetSerialAPICapabilitiesResponse
 	{
 		SendMsg( new Msg( "FUNC_ID_ZW_GET_VIRTUAL_NODES", 0xff, REQUEST, FUNC_ID_ZW_GET_VIRTUAL_NODES, false ), MsgQueue_Command);
 	}
-	else if( IsAPICallSupported( FUNC_ID_ZW_GET_RANDOM ) )
+	if( IsAPICallSupported( FUNC_ID_ZW_GET_RANDOM ) )
 
 	{
 		Msg *msg = new Msg( "FUNC_ID_ZW_GET_RANDOM", 0xff, REQUEST, FUNC_ID_ZW_GET_RANDOM, false );
 		msg->Append( 32 );      // 32 bytes
 		SendMsg( msg, MsgQueue_Command );
 	}
+
+	if( IsAPICallSupported( FUNC_ID_SERIAL_API_SETUP ) )
+
+	{
+		Msg *msg = new Msg( "FUNC_ID_SERIAL_API_SETUP", 0xff, REQUEST, FUNC_ID_SERIAL_API_SETUP, false );
+		msg->Append( SERIAL_API_SETUP_CMD_TX_STATUS_REPORT );
+		msg->Append( 1 );
+		SendMsg( msg, MsgQueue_Command );
+	}
+
+
 	SendMsg( new Msg( "FUNC_ID_SERIAL_API_GET_INIT_DATA", 0xff, REQUEST, FUNC_ID_SERIAL_API_GET_INIT_DATA, false ), MsgQueue_Command);
 	if( !IsBridgeController() )
 	{
