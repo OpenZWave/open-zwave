@@ -244,6 +244,7 @@ DISTFILES =	.gitignore \
 	config/ge/26931-motion-switch.xml \
 	config/ge/26933-motion-dimmer.xml \
 	config/ge/28167-plugin-dimmer.xml \
+	config/ge/29169-plugin-switch.xml \
 	config/ge/dimmer.xml \
 	config/ge/dimmer_module.xml \
 	config/ge/hinge-pin.xml \
