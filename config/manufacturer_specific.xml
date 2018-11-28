@@ -557,6 +557,7 @@
 		<Product type="0d01" id="2000" name="FGGC001 Swipe" config="fibaro/fggc001.xml"/>
 		<Product type="0f01" id="1000" name="FGPB101 Button" config="fibaro/fgpb101.xml" />
 		<Product type="0f01" id="2000" name="FGPB101 Button" config="fibaro/fgpb101.xml" />
+		<Product type="0f01" id="3000" name="FGPB101 Button" config="fibaro/fgpb101.xml" />
 		<Product type="1001" id="1000" name="FGKF601 Keyfob" config="fibaro/fgkf601.xml" />
 		<Product type="1001" id="2000" name="FGKF601 Keyfob" config="fibaro/fgkf601.xml" />
 		<Product type="1201" id="1000" name="FGSD001 CO Sensor" config="fibaro/fgcd001.xml" />
