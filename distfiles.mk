@@ -165,6 +165,7 @@ DISTFILES =	.gitignore \
 	config/enerwave/zwnrsm1plus.xml \
 	config/enerwave/zwnrsm2plus.xml \
 	config/eurotronic/eur_cometz.xml \
+	config/eurotronic/eur_spiritz.xml \
 	config/eurotronic/eur_stellaz.xml \
 	config/everspring/ad146.xml \
 	config/everspring/ad147.xml \
@@ -244,7 +245,7 @@ DISTFILES =	.gitignore \
 	config/ge/26931-motion-switch.xml \
 	config/ge/26933-motion-dimmer.xml \
 	config/ge/28167-plugin-dimmer.xml \
-	config/ge/29169-plugin-switch.xml \
+	config/ge/28169-plugin-switch.xml \
 	config/ge/dimmer.xml \
 	config/ge/dimmer_module.xml \
 	config/ge/hinge-pin.xml \

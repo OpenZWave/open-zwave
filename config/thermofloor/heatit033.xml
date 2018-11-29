@@ -32,29 +32,29 @@
 
 	<CommandClass id="112" name="COMMAND_CLASS_CONFIGURATION">
 		<Value type="list" genre="config" index="1" label="Operation mode" value="1">
+			<Help>Set operation mode</Help>
 			<Item label="Off" value="0"/>
 			<Item label="Heat" value="1"/>
 			<Item label="Cool" value="2"/>
 			<Item label="Energy save heat" value="11"/>
-			<Help>Set operation mode</Help>
 		</Value>
 		<Value type="list" genre="config" index="2" label="Sensor mode" value="1">
+			<Help>Set sensor mode</Help>
 			<Item label="F - Floor sensor" value="0"/>
 			<Item label="A - Internal room sensor" value="1"/>
 			<Item label="AF - Internal room sensor and floor sensor" value="2"/>
 			<Item label="A2 - External room sensor" value="3"/>
 			<Item label="P - Power regulator" value="4"/>
 			<Item label="FP - Floor sensor and power regulator" value="5"/>
-			<Help>Set sensor mode</Help>
 		</Value>
 		<Value type="list" genre="config" index="3" label="Floor sensor type" value="0">
+			<Help>Floor sensor type (10K NTC Default)</Help>
 			<Item label="10k ntc" value="0"/>
 			<Item label="12k ntc" value="1"/>
 			<Item label="15k ntc" value="2"/>
 			<Item label="22k ntc" value="3"/>
 			<Item label="33k ntc" value="4"/>
 			<Item label="47k ntc" value="5"/>
-			<Help>Floor sensor type (10K NTC Default)</Help>
 		</Value>
 		<Value type="byte" index="4" genre="config" label="DIFF l. Temperature control Hysteresis" min="0" max="30" size="1" value="5">
 			<Help>0-30 (0,3C - 3.0C)</Help>
@@ -99,9 +99,9 @@
 			<Help>Temperature correction 0 - 4.0C (Default: 0). For positive value 40 = 4.0C. Negative value is not working (Adjust negativ calibration on thermostat)</Help>
 		</Value>
 		<Value type="list" genre="config" index="17" size="1" label="Temperature display" value="0">
+			<Help>Show setpoint or calculated temperature on display(</Help>
 			<Item label="Display setpoint temperature" value="0"/>
 			<Item label="Display calculated temperature" value="1"/>
-			<Help>Show setpoint or calculated temperature on display(</Help>
 		</Value>
 		<Value type="byte" index="18" genre="config" label="Button brightness - Dimmed state" min="0" max="100" size="1" value="50">
 			<Help>0-100 (0 - 100%)</Help>
