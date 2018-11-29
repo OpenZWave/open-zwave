@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="2">
   <CommandClass id="67" name="COMMAND_CLASS_THERMOSTAT_SETPOINT" version="1" request_flags="4" create_vars="true" base="0">
     <Instance index="1" />
     <Value type="decimal" genre="user" instance="1" index="1" label="Heating 1" read_only="false" write_only="false" />
@@ -121,7 +121,7 @@
         Sets the delta from setpoint that stage 2 cooling stops
       </Help>
     </Value>
-    <Value type="int" index="23" genre="config" label="Lifeline Association Group Report To Send" min="0" max="65535" value="8319" size="2">
+    <Value type="int" index="23" genre="config" label="Lifeline Association Group Report To Send" min="0" max="65535" value="8319" size="4">
       <Help>
         Report to send to the Lifeline Association Group upon change in thermostat state. 
         Bitmask values:
