@@ -6,11 +6,11 @@
   <!-- Configuration Parameters -->
   <CommandClass id="112">
     <Value type="list" genre="config" instance="1" index="1" label="Motion detection sensitivity" value="12" min="8" max="255" size="1">
+      <Help>Adapt the sensitivity of the motion detection.</Help>
       <Item label="High Sensitivity" value="8" />
       <Item label="Normal Sensitivity" value="12" />
       <Item label="Lower Sensitivity" value="128" />
       <Item label="Lowest Sensitivity" value="255" />
-      <Help>Adapt the sensitivity of the motion detection.</Help>
     </Value>
     
     <Value type="short" genre="config" instance="1" index="2" label="Motion detection ON time" units="second" value="30" min="5" max="600" size="2">
