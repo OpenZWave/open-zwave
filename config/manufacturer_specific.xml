@@ -977,9 +977,11 @@
 	<Manufacturer id="0040" name="Novar EDS">
 	</Manufacturer>
 	<Manufacturer id="016a" name="Oomi">
-		<!-- US-market products start with type prefix "01" -->
+		<!-- EU-market products seems to start with type prefix "00" -->
+                <!-- US-market products start with type prefix "01" -->
 		<!-- AU-market products start with type prefix "02" -->
 		<!-- CN-market products start with type prefix "1D" -->
+		<Product type="0002" id="0064" name="FT100 MultiSensor 6" config="oomi/ft100.xml" />
 		<Product type="0102" id="0064" name="FT100 MultiSensor 6" config="oomi/ft100.xml" />
 		<Product type="0202" id="0064" name="FT100 MultiSensor 6" config="oomi/ft100.xml" />
 		<Product type="1D02" id="0064" name="FT100 MultiSensor 6" config="oomi/ft100.xml" />
