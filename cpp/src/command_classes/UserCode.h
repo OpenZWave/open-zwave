@@ -43,7 +43,7 @@ namespace OpenZWave
 			UserCode_Available		= 0x00,
 			UserCode_Occupied		= 0x01,
 			UserCode_Reserved		= 0x02,
-			UserCode_NotAvailable		= 0xfe,
+			UserCode_NotAvailable	= 0xfe,
 			UserCode_Unset			= 0xff
 		};
 
@@ -101,9 +101,9 @@ namespace OpenZWave
 		}
 
 		bool		m_queryAll;				// True while we are requesting all the user codes.
-		uint8		m_currentCode;
-		uint8		m_userCodeCount;
-		uint8		m_userCodesStatus[256];
+		uint16		m_currentCode;
+		uint16		m_userCodeCount;
+		uint8		m_userCodesStatus[sizeof(uint16)];
 		bool		m_refreshUserCodes;
 	};
 
