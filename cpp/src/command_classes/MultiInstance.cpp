@@ -488,10 +488,11 @@ void MultiInstance::HandleMultiChannelCapabilityReport
 				cc->SetAfterMark();
 				Log::Write( LogLevel_Info, GetNodeId(), "        %s", cc->GetCommandClassName().c_str() );
 			}
-			else
+			else if ( cc ) 
 			{
-				Log::Write( LogLevel_Warning, GetNodeId(), "        %xd (Invalid)", commandClassId);
+				Log::Write( LogLevel_Info, GetNodeId(), "        %s", cc->GetCommandClassName().c_str() );
 			}
+			/* The AddCommandClass will bitch about unsupported CC's so we don't need to duplicate that output */
 		}
 
 		// Create internal library instances for each command class in the list
