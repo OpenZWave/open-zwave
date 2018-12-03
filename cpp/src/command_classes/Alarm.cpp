@@ -342,6 +342,16 @@ bool Alarm::HandleMsg
 								} else {
 									Log::Write( LogLevel_Warning, GetNodeId(), "Couldn't Find AlarmIndex_Type_ParamUserCodeEntered");
 								}
+							} else if (EventParamLength == 1) {
+								/* some devices (Like BeNext TagReader) don't send a Proper UserCodeCmd_Report Message, Just the Index of the Code that Triggered */
+								if (ValueByte *value = static_cast<ValueByte *>(GetValue(_instance, it->first)))
+								{
+									value->OnValueRefreshed(_data[11]);
+									value->Release();
+									m_ParamsSet.push_back(it->first);
+								} else {
+									Log::Write( LogLevel_Warning, GetNodeId(), "Couldn't Find AlarmIndex_Type_ParamUserCodeid");
+								}
 							} else {
 								Log::Write( LogLevel_Warning, GetNodeId(), "UserCode Param didn't have correct Header, or was too small");
 							}
@@ -446,11 +456,14 @@ bool Alarm::HandleMsg
 							if (const NotificationCCTypes::NotificationTypes *nt = NotificationCCTypes::Get()->GetAlarmNotificationTypes(index)) {
 								for (std::map<uint32, NotificationCCTypes::NotificationEvents *>::const_iterator it = nt->Events.begin(); it != nt->Events.end(); it++) {
 									/* Create it */
-									Log::Write ( LogLevel_Info, GetNodeId(), "\t\tAll Events - Alarm CC Version 2");
+									SetupEvents(index, it->first, &_items, _instance);
+#if 0
+									Log::Write ( LogLevel_Info, GetNodeId(), "\t\tAll Events - Alarm CC Version 2 - %s", it->second->name);
 									ValueList::Item item;
 									item.m_value = it->first;
 									item.m_label = it->second->name;
 									_items.push_back( item );
+#endif
 								}
 								node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, index, NotificationCCTypes::Get()->GetAlarmType(index), "", true, false, _items.size(), _items, 0, 0 );
 							}
@@ -534,7 +547,7 @@ void Alarm::SetupEvents
 				}
 				case NotificationCCTypes::NEPT_List: {
 					vector<ValueList::Item> _Paramitems;
-					for (std::map<uint32, string>::iterator it2 = it->second->ListItems.begin(); it2 != it->second->ListItems.end(); it++) {
+					for (std::map<uint32, string>::iterator it2 = it->second->ListItems.begin(); it2 != it->second->ListItems.end(); it2++) {
 						ValueList::Item Paramitem;
 						Paramitem.m_value = ne->id;
 						Paramitem.m_label = ne->name;
