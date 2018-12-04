@@ -614,7 +614,6 @@ void CentralScene::createSupportedKeyAttributesValues
 			item.m_value = 0;
 			items.push_back( item );
 		}
-		std::cout << "Key Attributes: " << (int)keyAttributes << std::endl;
 
 		if ( keyAttributes & CentralSceneMask_KeyPressed1time)
 		{
