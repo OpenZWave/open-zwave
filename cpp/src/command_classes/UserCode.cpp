@@ -35,6 +35,7 @@
 
 #include "value_classes/ValueShort.h"
 #include "value_classes/ValueString.h"
+#include "value_classes/ValueRaw.h"
 
 using namespace OpenZWave;
 
@@ -305,10 +306,11 @@ enum
 	UserCodeIndex_Pos_254		= 254,
 	UserCodeIndex_Refresh		= 255,
 	UserCodeIndex_RemoveCode	= 256,
-	UserCodeIndex_Count			= 257
+	UserCodeIndex_Count			= 257,
+	UserCodeIndex_RawValue		= 258,
+	UserCodeIndex_RawValueIndex	= 259
 };
 
-const uint8 UserCodeLength = 10;
 
 //-----------------------------------------------------------------------------
 // <UserCode::UserCode>
@@ -323,10 +325,11 @@ UserCode::UserCode
 	m_queryAll( false ),
 	m_currentCode( 0 ),
 	m_userCodeCount( 0 ),
-	m_refreshUserCodes(false)
+	m_refreshUserCodes(false),
+	m_exposeRawValueID(false)
+
 {
 	SetStaticRequest( StaticRequest_Values );
-	memset( m_userCodesStatus, 0xff, sizeof(m_userCodesStatus) );
 	Options::Get()->GetOptionAsBool("RefreshAllUserCodes", &m_refreshUserCodes );
 
 }
@@ -347,8 +350,13 @@ void UserCode::ReadXML
 	{
 		m_userCodeCount = intVal;
 	}
+	char const* str;
+	str = _ccElement->Attribute( "exposeRawUserCodes" );
+	if( str )
+	{
+		m_exposeRawValueID = !strcmp( str, "true" );
+	}
 }
-
 //-----------------------------------------------------------------------------
 // <UserCode::WriteXML>
 // Class specific configuration
@@ -434,6 +442,11 @@ bool UserCode::RequestValue
 		Log::Write( LogLevel_Warning, GetNodeId(), "UserCodeCmd_Get with Index 0 not Supported");
 		return false;
 	}
+	if (_userCodeIdx > m_userCodeCount)
+	{
+		Log::Write( LogLevel_Warning, GetNodeId(), "UserCodeCmd_Get with index %d is greater than max UserCodes", _userCodeIdx);
+		return false;
+	}
 	Msg* msg = new Msg( "UserCodeCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 	msg->Append( GetNodeId() );
 	msg->Append( 3 );
@@ -497,6 +510,12 @@ bool UserCode::HandleMsg
 					snprintf( str, sizeof(str), "Code %d:", i);
 					node->CreateValueString( ValueID::ValueGenre_User, GetCommandClassId(), _instance, i, str, "", false, false, data, 0 );
 				}
+				m_userCode[i].status = UserCode_Available;
+				bzero(&m_userCode[i].usercode, 10);
+			}
+			if (m_exposeRawValueID) {
+				node->CreateValueRaw( ValueID::ValueGenre_User, GetCommandClassId(), _instance, UserCodeIndex_RawValue, "Raw UserCode", "", false, false, 0, 0, 0);
+				node->CreateValueShort( ValueID::ValueGenre_User, GetCommandClassId(), _instance, UserCodeIndex_RawValueIndex, "Raw UserCode Index", "", false, false, 0, 0);
 			}
 		}
 		return true;
@@ -504,22 +523,36 @@ bool UserCode::HandleMsg
 	else if( UserCodeCmd_Report == (UserCodeCmd)_data[0] )
 	{
 		int i = _data[1];
+		Log::Write( LogLevel_Info, GetNodeId(), "Received User Code Report from node %d for User Code %d (%s)", GetNodeId(), i, CodeStatus( _data[2] ).c_str() );
+
+		int8 size = _length - 4;
+		if( size > 10 )
+		{
+			Log::Write( LogLevel_Warning, GetNodeId(), "User Code length %d is larger then maximum 10", size );
+			size = 10;
+		}
+		m_userCode[i].status = (UserCodeStatus)_data[2];
+		memcpy(&m_userCode[i].usercode, &_data[3], size);
 		if( ValueString* value = static_cast<ValueString*>( GetValue( _instance, i ) ) )
 		{
 			string data;
-			int8 size = _length - 4;
-			if( size > UserCodeLength )
-			{
-				Log::Write( LogLevel_Warning, GetNodeId(), "User Code length %d is larger then maximum %d", size, UserCodeLength );
-				size = UserCodeLength;
-			}
+			/* Max UserCode Length is 10 */
 			Log::Write( LogLevel_Info, GetNodeId(), "User Code Packet is %d", size );
-			m_userCodesStatus[i] = _data[2];
 			data.assign((const char*)&_data[3], size);	
 			value->OnValueRefreshed( data );
 			value->Release();
 		}
-		Log::Write( LogLevel_Info, GetNodeId(), "Received User Code Report from node %d for User Code %d (%s)", GetNodeId(), i, CodeStatus( _data[2] ).c_str() );
+		if (m_exposeRawValueID) {
+			if( ValueShort* value = static_cast<ValueShort*>( GetValue( _instance, UserCodeIndex_RawValueIndex ) ) ) {
+				value->OnValueRefreshed(i);
+				value->Release();
+			}
+			if( ValueRaw* value = static_cast<ValueRaw*>( GetValue( _instance, UserCodeIndex_RawValue ) ) ) {
+				value->OnValueRefreshed(&_data[3], (_length - 4));
+				value->Release();
+			}
+		}
+
 		if( m_queryAll && i == m_currentCode )
 		{
 
@@ -560,8 +593,12 @@ bool UserCode::SetValue
 		ValueString const* value = static_cast<ValueString const*>(&_value);
 		string s = value->GetValue();
 		uint8 len = s.length();
+		if (value->GetID().GetIndex() == 0 || value->GetID().GetIndex() > m_userCodeCount) {
+			Log::Write( LogLevel_Warning, GetNodeId(), "Index %d is out of range of UserCodeCount", value->GetID().GetIndex());
+			return false;
+		}
 
-		m_userCodesStatus[value->GetID().GetIndex()] = UserCode_Occupied;
+
 		Msg* msg = new Msg( "UserCodeCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 		msg->SetInstance( this, _value.GetID().GetInstance() );
 		msg->Append( GetNodeId() );
@@ -576,6 +613,7 @@ bool UserCode::SetValue
 		}
 		msg->Append( GetDriver()->GetTransmitOptions() );
 		GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
+
 		return true;
 	}
 	if ( (ValueID::ValueType_Button == _value.GetID().GetType()) && (_value.GetID().GetIndex() == UserCodeIndex_Refresh) )
@@ -590,8 +628,10 @@ bool UserCode::SetValue
 	{
 		ValueShort const* value = static_cast<ValueShort const*>(&_value);
 		uint16 index = value->GetValue();
-
-		m_userCodesStatus[index] = UserCode_Available;
+		if (index == 0 || index > m_userCodeCount) {
+			Log::Write( LogLevel_Warning, GetNodeId(), "Index %d is out of range of UserCodeCount", index);
+			return false;
+		}
 		Msg* msg = new Msg( "UserCodeCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
 		msg->SetInstance( this, _value.GetID().GetInstance() );
 		msg->Append( GetNodeId() );
@@ -606,6 +646,10 @@ bool UserCode::SetValue
 		}
 		msg->Append( GetDriver()->GetTransmitOptions() );
 		GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
+
+		RequestValue(0, index, _value.GetID().GetInstance(), Driver::MsgQueue_Send);
+
+#if 0
 		/* Reset Our Local Copy here */
 		
 		if( ValueString* oldvalue = static_cast<ValueString*>( GetValue(  _value.GetID().GetInstance(), index ) ) )
@@ -614,10 +658,57 @@ bool UserCode::SetValue
 			oldvalue->OnValueRefreshed( data );
 			oldvalue->Release();
 		}
-		
-		return true;
+#endif
+		return false;
 	}
+	if ( (ValueID::ValueType_Short == _value.GetID().GetType()) && (_value.GetID().GetIndex() == UserCodeIndex_RawValueIndex) )
+	{
+		ValueShort const* value = static_cast<ValueShort const*>(&_value);
+		uint16 index = value->GetValue();
+		if (index == 0 || index > m_userCodeCount) {
+			Log::Write( LogLevel_Warning, GetNodeId(), "Index %d is out of range of UserCodeCount", index);
+			return false;
+		}
+		if( ValueRaw* oldvalue = static_cast<ValueRaw*>( GetValue(  _value.GetID().GetInstance(), UserCodeIndex_RawValue ) ) )
+		{
+			oldvalue->OnValueRefreshed((const uint8*)&m_userCode[index].usercode, 10);
+			oldvalue->Release();
+		}
+		return false;
+	}
+	if ( (ValueID::ValueType_Raw == _value.GetID().GetType()) && (_value.GetID().GetIndex() == UserCodeIndex_RawValue) )
+	{
+		ValueRaw const* value = static_cast<ValueRaw const*>(&_value);
+		uint16 index = 0;
+		if( ValueShort* valueindex = static_cast<ValueShort*>( GetValue(  _value.GetID().GetInstance(), UserCodeIndex_RawValueIndex ) ) )
+		{
+			index = valueindex->GetValue();
+		}
+		if (index == 0 || index > m_userCodeCount) {
+			Log::Write( LogLevel_Warning, GetNodeId(), "Index %d is out of range of UserCodeCount", index);
+			return false;
+		}
+		uint8 *s = value->GetValue();
+		uint8 len = value->GetLength();
 
+		Msg* msg = new Msg( "UserCodeCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+		msg->SetInstance( this, _value.GetID().GetInstance() );
+		msg->Append( GetNodeId() );
+		msg->Append( 4 + len );
+		msg->Append( GetCommandClassId() );
+		msg->Append( UserCodeCmd_Set );
+		msg->Append( index );
+		msg->Append( UserCode_Occupied );
+		for( uint8 i = 0; i < len; i++ )
+		{
+			msg->Append( s[i] );
+		}
+		msg->Append( GetDriver()->GetTransmitOptions() );
+		GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
+		RequestValue(0, index, _value.GetID().GetInstance(), Driver::MsgQueue_Send);
+
+		return false;
+	}
 	
 	
 	return false;
