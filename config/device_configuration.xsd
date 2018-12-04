@@ -70,6 +70,14 @@
    <xs:attribute name='override_precision' type='xs:string' use='optional'/>
    <xs:attribute name='scenecount' type='xs:string' use='optional'/>
    <xs:attribute name='typeInterpretation' type='xs:string' use='optional'/>
+   <xs:attribute name='exposeRawUserCodes' use='optional'>
+    <xs:simpleType>
+     <xs:restriction base='xs:string'>
+      <xs:enumeration value='true'/>
+      <xs:enumeration value='false'/>
+     </xs:restriction>
+    </xs:simpleType>
+   </xs:attribute>
    <xs:attribute name='create_vars' use='optional'>
     <xs:simpleType>
      <xs:restriction base='xs:string'>
