@@ -314,6 +314,7 @@ exit 0</Command>
     <ClInclude Include="..\..\..\src\command_classes\Protection.h" />
     <ClInclude Include="..\..\..\src\command_classes\SensorBinary.h" />
     <ClInclude Include="..\..\..\src\command_classes\SensorMultilevel.h" />
+    <ClInclude Include="..\..\..\src\command_classes\SoundSwitch.h" />
     <ClInclude Include="..\..\..\src\command_classes\SwitchAll.h" />
     <ClInclude Include="..\..\..\src\command_classes\SwitchBinary.h" />
     <ClInclude Include="..\..\..\src\command_classes\SwitchMultilevel.h" />
@@ -436,6 +437,7 @@ exit 0</Command>
     <ClCompile Include="..\..\..\src\command_classes\Protection.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\SensorBinary.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\SensorMultilevel.cpp" />
+    <ClCompile Include="..\..\..\src\command_classes\SoundSwitch.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\SwitchAll.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\SwitchBinary.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\SwitchMultilevel.cpp" />

@@ -1,10 +1,10 @@
 //-----------------------------------------------------------------------------
 //
-//	UserCode.h
+//	SoundSwitch.h
 //
-//	Implementation of the Z-Wave COMMAND_CLASS_USER_CODE
+//	Implementation of the Z-Wave COMMAND_CLASS_SOUND_SWITCH
 //
-//	Copyright (c) 2012 Greg Satz <satz@iranger.com>
+//	Copyright (c) 2014 Justin Hammond <Justin@dynam.ac>
 //
 //	SOFTWARE NOTICE AND LICENSE
 //
@@ -25,41 +25,34 @@
 //
 //-----------------------------------------------------------------------------
 
-#ifndef _UserCode_H
-#define _UserCode_H
+#ifndef _SoundSwitch_H
+#define _SoundSwitch_H
 
 #include "command_classes/CommandClass.h"
 
 namespace OpenZWave
 {
-	/** \brief Implements COMMAND_CLASS_USER_CODE (0x63), a Z-Wave device command class.
+	class ValueByte;
+	class ValueList;
+
+	/** \brief Implements COMMAND_CLASS_SOUND_SWITCH (0x79), a Z-Wave device command class.
 	 * \ingroup CommandClass
 	 */
-	class UserCode: public CommandClass
+	class SoundSwitch: public CommandClass
 	{
 	private:
-		enum UserCodeStatus
-		{
-			UserCode_Available		= 0x00,
-			UserCode_Occupied		= 0x01,
-			UserCode_Reserved		= 0x02,
-			UserCode_NotAvailable	= 0xfe,
-			UserCode_Unset			= 0xff
-		};
-		struct UserCodeEntry {
-			UserCodeStatus status;
-			uint8 usercode[10];
+		struct SoundSwitchToneInfo {
+			uint16 duration;
+			string name;
 		};
 	public:
-		static CommandClass* Create( uint32 const _homeId, uint8 const _nodeId ){ return new UserCode( _homeId, _nodeId ); }
-		virtual ~UserCode(){}
+		static CommandClass* Create( uint32 const _homeId, uint8 const _nodeId ){ return new SoundSwitch( _homeId, _nodeId ); }
+		virtual ~SoundSwitch(){}
 
-		static uint8 const StaticGetCommandClassId(){ return 0x63; }
-		static string const StaticGetCommandClassName(){ return "COMMAND_CLASS_USER_CODE"; }
+		static uint8 const StaticGetCommandClassId(){ return 0x79; }
+		static string const StaticGetCommandClassName(){ return "COMMAND_CLASS_SOUND_SWITCH"; }
 
 		// From CommandClass
-		virtual void ReadXML( TiXmlElement const* _ccElement );
-		virtual void WriteXML( TiXmlElement* _ccElement );
 		virtual bool RequestState( uint32 const _requestFlags, uint8 const _instance, Driver::MsgQueue const _queue );
 		virtual bool RequestValue( uint32 const _requestFlags, uint16 const _index, uint8 const _instance, Driver::MsgQueue const _queue );
 		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }
@@ -71,49 +64,13 @@ namespace OpenZWave
 		virtual void CreateVars( uint8 const _instance );
 
 	private:
-		UserCode( uint32 const _homeId, uint8 const _nodeId );
+		SoundSwitch( uint32 const _homeId, uint8 const _nodeId );
 
-		string CodeStatus( uint8 const _byte )
-		{
-			switch( _byte )
-			{
-				case UserCode_Available:
-				{
-					return "Available";
-				}
-				case UserCode_Occupied:
-				{
-					return "Occupied";
-				}
-				case UserCode_Reserved:
-				{
-					return "Reserved";
-				}
-				case UserCode_NotAvailable:
-				{
-					return "Not Available";
-				}
-				case UserCode_Unset:
-				{
-					return "Unset";
-				}
-				default:
-				{
-					return "Unknown";
-				}
-			}
-		}
-
-		bool		m_queryAll;				// True while we are requesting all the user codes.
-		uint16		m_currentCode;
-		uint16		m_userCodeCount;
-		std::map<uint16, UserCodeEntry>	m_userCode;
-		bool		m_refreshUserCodes;
-		bool		m_exposeRawValueID;
+		uint8 m_toneCount;
+		std::map<uint8, SoundSwitchToneInfo> m_toneInfo;
 	};
 
 } // namespace OpenZWave
 
 #endif
-
 

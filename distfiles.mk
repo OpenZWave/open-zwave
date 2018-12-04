@@ -8,8 +8,6 @@ DISTFILES =	.gitignore \
 	Makefile \
 	README.md \
 	config/2gig/ct100.xml \
-	config/2gig/ct100.xml \
-	config/2gig/ct100.xml \
 	config/2gig/ct101.xml \
 	config/2gig/ct30.xml \
 	config/2gig/ct32.xml \
@@ -32,6 +30,8 @@ DISTFILES =	.gitignore \
 	config/BeNext/TagReader500.xml \
 	config/Localization.xml \
 	config/Localization.xsd \
+	config/NotificationCCTypes.xml \
+	config/NotificationCCTypes.xsd \
 	config/act/lfm20.xml \
 	config/act/zdm230.xml \
 	config/act/zdw103.xml \
@@ -107,6 +107,7 @@ DISTFILES =	.gitignore \
 	config/august/asl-03.xml \
 	config/cooper/RF9501.xml \
 	config/cooper/RF9505-T.xml \
+	config/cooper/RF9505-T.xml.zip \
 	config/cooper/RF9517.xml \
 	config/cooper/RF9540-N.xml \
 	config/cooper/RF9542-Z.xml \
@@ -116,8 +117,6 @@ DISTFILES =	.gitignore \
 	config/danfoss/z.xml \
 	config/device_classes.xml \
 	config/device_classes.xsd \
-	config/device_configuration.xsd \
-	config/device_configuration.xsd \
 	config/device_configuration.xsd \
 	config/devolo/connectz.xml \
 	config/devolo/mt02648.xml \
@@ -263,6 +262,7 @@ DISTFILES =	.gitignore \
 	config/gocontrol/GC-TBZ48L.xml \
 	config/gr/gr105.xml \
 	config/gr/gr105n.xml \
+	config/gr/grb3.xml \
 	config/graber/brz1.xml \
 	config/graber/vcz1.xml \
 	config/greenwave/powernode1.xml \
@@ -286,6 +286,7 @@ DISTFILES =	.gitignore \
 	config/heiman/HS1WL-Z.xml \
 	config/heiman/HS2SK-Z.xml \
 	config/homeseer/ezmotionplus.xml \
+	config/homeseer/hs-fls100plus.xml \
 	config/homeseer/hs-ls100plus.xml \
 	config/homeseer/hs-ms100plus.xml \
 	config/homeseer/hs-wd100plus.xml \
@@ -306,6 +307,7 @@ DISTFILES =	.gitignore \
 	config/horstmann/srt321.xml \
 	config/horstmann/srt323.xml \
 	config/horstmann/ssr302.xml \
+	config/horstmann/ssr303.xml \
 	config/idlock/idlock101.xml \
 	config/ingersoll/dwzwave1.xml \
 	config/inovelli/nzw1201.xml \
@@ -319,8 +321,6 @@ DISTFILES =	.gitignore \
 	config/inovelli/simple_module.xml \
 	config/intermatic/ca8900.xml \
 	config/iris/rangeextender.xml \
-	config/kaipule/im20.xml \
-	config/kaipule/im20.xml \
 	config/kaipule/im20.xml \
 	config/kaipule/ix32.xml \
 	config/kwikset/smartcode.xml \
@@ -448,6 +448,7 @@ DISTFILES =	.gitignore \
 	config/remotec/zts-500.xml \
 	config/remotec/zurc.xml \
 	config/remotec/zxt-120.xml \
+	config/remotec/zxt-310.xml \
 	config/remotec/zxt-600.xml \
 	config/schlage/BE468.xml \
 	config/schlage/BE469.xml \
@@ -652,11 +653,15 @@ DISTFILES =	.gitignore \
 	cpp/src/Node.h \
 	cpp/src/Notification.cpp \
 	cpp/src/Notification.h \
+	cpp/src/NotificationCCTypes.cpp \
+	cpp/src/NotificationCCTypes.h \
 	cpp/src/OZWException.h \
 	cpp/src/Options.cpp \
 	cpp/src/Options.h \
 	cpp/src/Scene.cpp \
 	cpp/src/Scene.h \
+	cpp/src/TimerThread.cpp \
+	cpp/src/TimerThread.h \
 	cpp/src/Utils.cpp \
 	cpp/src/Utils.h \
 	cpp/src/ZWSecurity.cpp \
@@ -756,6 +761,10 @@ DISTFILES =	.gitignore \
 	cpp/src/command_classes/SensorBinary.h \
 	cpp/src/command_classes/SensorMultilevel.cpp \
 	cpp/src/command_classes/SensorMultilevel.h \
+	cpp/src/command_classes/SimpleAV.cpp \
+	cpp/src/command_classes/SimpleAV.h \
+	cpp/src/command_classes/SimpleAVCommandItem.cpp \
+	cpp/src/command_classes/SimpleAVCommandItem.h \
 	cpp/src/command_classes/SwitchAll.cpp \
 	cpp/src/command_classes/SwitchAll.h \
 	cpp/src/command_classes/SwitchBinary.cpp \
@@ -970,8 +979,6 @@ DISTFILES =	.gitignore \
 	dist.mk \
 	dist/libopenzwave.changes \
 	dist/libopenzwave.spec \
-	distfiles.mk \
-	distfiles.mk \
 	distfiles.mk \
 	docs/Doxyfile.in \
 	docs/default.htm \

@@ -1029,6 +1029,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\command_classes\SoundSwitch.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\command_classes\SoundSwitch.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\command_classes\SwitchAll.cpp"
 				>
 			</File>
