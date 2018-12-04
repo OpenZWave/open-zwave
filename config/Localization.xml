@@ -1138,8 +1138,8 @@
 	<CommandClass id="99">
 		<Label>COMMAND_CLASS_USER_CODE</Label>
 		<Value index="0">
-			<Help>UserCode 0</Help>
-			<Label>UserCode 0</Label>
+			<Help>Enrollment Code</Help>
+			<Label>Enrollment Code</Label>
 		</Value>
 		<Value index="1">
 			<Help>UserCode 1</Help>
@@ -2153,13 +2153,33 @@
 			<Help>UserCode 253</Help>
 			<Label>UserCode 253</Label>
 		</Value>
+		<Value index="253">
+			<Help>UserCode 253</Help>
+			<Label>UserCode 253</Label>
+		</Value>
 		<Value index="254">
+			<Help>UserCode 254</Help>
+			<Label>UserCode 254</Label>
+		</Value>
+		<Value index="255">
 			<Help>Refresh All UserCodes Stored on Device</Help>
 			<Label>Refresh All UserCodes</Label>
 		</Value>
-		<Value index="255">
+		<Value index="256">
+			<Help>Remove A UserCode at the Specified Index</Help>
+			<Label>Remove UserCode</Label>
+		</Value>
+		<Value index="257">
 			<Help>Number of User Codes supported by the Device</Help>
 			<Label>Code Count</Label>
+		</Value>
+		<Value index="258">
+			<Help>The Raw UserCode as specified at the Postition in Raw UserCode Index </Help>
+			<Label>Raw UserCode</Label>
+		</Value>
+		<Value index="259">
+			<Help>Get the Raw User Code for the Index Specified in this value </Help>
+			<Label>Raw UserCode Index</Label>
 		</Value>
 	</CommandClass>
 	<CommandClass id="134">
