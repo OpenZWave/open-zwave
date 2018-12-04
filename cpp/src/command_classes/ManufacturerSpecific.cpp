@@ -235,6 +235,8 @@ bool ManufacturerSpecific::HandleMsg
 		{
 			// Attempt to create the config parameters
 			SetProductDetails(manufacturerId, productType, productId);
+			ClearStaticRequest( StaticRequest_Values );
+			node->m_manufacturerSpecificClassReceived = true;
 
 			if( node->getConfigPath().size() > 0 )
 			{
@@ -244,8 +246,6 @@ bool ManufacturerSpecific::HandleMsg
 			Log::Write( LogLevel_Info, GetNodeId(), "Received manufacturer specific report from node %d: Manufacturer=%s, Product=%s",
 				    GetNodeId(), node->GetManufacturerName().c_str(), node->GetProductName().c_str() );
 			Log::Write( LogLevel_Info, GetNodeId(), "Node Identity Codes: %.4x:%.4x:%.4x", manufacturerId, productType, productId );
-			ClearStaticRequest( StaticRequest_Values );
-			node->m_manufacturerSpecificClassReceived = true;
 		}
 
 		// Notify the watchers of the name changes
@@ -325,8 +325,8 @@ bool ManufacturerSpecific::LoadConfigXML
 		{
 			 GetNodeUnsafe()->ReadDeviceProtocolXML( doc->RootElement() );
 		}
-		 GetNodeUnsafe()->ReadCommandClassesXML( doc->RootElement() );
 	}
+	GetNodeUnsafe()->ReadCommandClassesXML( doc->RootElement() );
 	GetNodeUnsafe()->ReadMetaDataFromXML( doc->RootElement() );
 	delete doc;
 	return true;
