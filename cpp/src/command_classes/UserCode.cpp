@@ -511,7 +511,7 @@ bool UserCode::HandleMsg
 					node->CreateValueString( ValueID::ValueGenre_User, GetCommandClassId(), _instance, i, str, "", false, false, data, 0 );
 				}
 				m_userCode[i].status = UserCode_Available;
-				bzero(&m_userCode[i].usercode, 10);
+				memcpy(&m_userCode[i].usercode, 0, 10);
 			}
 			if (m_exposeRawValueID) {
 				node->CreateValueRaw( ValueID::ValueGenre_User, GetCommandClassId(), _instance, UserCodeIndex_RawValue, "Raw UserCode", "", false, false, 0, 0, 0);
