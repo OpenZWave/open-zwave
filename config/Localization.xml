@@ -945,6 +945,26 @@
 			<Label>Moisture</Label>
 		</Value>
 	</CommandClass>
+		<CommandClass id="121">
+		<Label>COMMAND_CLASS_SOUND_SWITCH</Label>
+		<Value index="0">
+			<Help>The Number of Available Tones on the Node</Help>
+			<Label>Number of Tones</Label>
+		</Value>
+		<Value index="1">
+			<Help>A List of Available Tones on the Device</Help>
+			<Label>Tones</Label>
+		</Value>
+		<Value index="2">
+			<Help>The Volume to play the tone at</Help>
+			<Label>Volume</Label>
+		</Value>
+		<Value index="3">
+			<Help>The default tone to play when none is specified in a Play Command</Help>
+			<Label>Default Tones</Label>
+		</Value>
+		
+	</CommandClass>
 	<CommandClass id="39">
 		<Label>COMMAND_CLASS_SWITCH_ALL</Label>
 		<Value index="0">

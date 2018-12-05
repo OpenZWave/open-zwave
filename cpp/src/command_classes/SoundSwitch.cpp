@@ -192,7 +192,7 @@ bool SoundSwitch::HandleMsg
 			}
 			if (Node* node = GetNodeUnsafe()) {
 				node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, SoundSwitchIndex_Tones, "Tones", "", false, false, m_toneCount, items, 0, 0 );
-				node->CreateValueList( ValueID::ValueGenre_Config, GetCommandClassId(), _instance, SoundSwitchIndex_Default_Tone, "Default Tones", "", false, false, m_toneCount, items, 0, 0 );
+				node->CreateValueList( ValueID::ValueGenre_Config, GetCommandClassId(), _instance, SoundSwitchIndex_Default_Tone, "Default Tone", "", false, false, m_toneCount, items, 0, 0 );
 			}
 			/* after we got the list of Tones, Get the Configuration */
 			Msg* msg = new Msg( "SoundSwitchCmd_Tones_Config_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
