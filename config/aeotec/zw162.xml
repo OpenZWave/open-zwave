@@ -61,7 +61,7 @@ ZW162 Doorbell 6
       <Help>Please Refer to Engineering Specification - Aeotec Doorbell 6
       </Help>
     </Value>
-    <Value type="list" genre="config" index="17" label="Vibration Sensor Alarm Volume" value="8" size="1">
+    <Value type="list" genre="config" index="17" label="Vibration Sensor Alarm Volume" value="7" size="1">
       <Help>Volume of the Vibration Sensor Alarm</Help>
       <Item label="Mute" value="0"/>
       <Item label="1" value="1"/>
