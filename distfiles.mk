@@ -384,6 +384,7 @@ DISTFILES =	.gitignore \
 	config/philio/pse02.xml \
 	config/philio/psm02.xml \
 	config/philio/psp05.xml \
+	config/philio/psr03-1b.xml \
 	config/philio/psr04.xml \
 	config/philio/pst02-1c.xml \
 	config/philio/pst02-b.xml \
