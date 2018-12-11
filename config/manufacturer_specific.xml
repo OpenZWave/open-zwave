@@ -827,7 +827,6 @@
 		<Product type="0202" id="030b" name="VRP03-1LW Lamp Module"/>
 		<Product type="0301" id="0206" name="RZS15-1LX Binary Scene Switch"/>
 		<Product type="0301" id="0209" name="VRS15-1LZ Binary Scene Switch"/>
-		<Product type="0301" id="0209" name="VRS15-1LZ Switch"/>
 		<Product type="0301" id="0334" name="VRS15-1LZ Switch"/>
 		<Product type="0401" id="0206" name="RZI10-1LX Multilevel Scene Switch" config="leviton/rzi10.xml"/>
 		<Product type="0401" id="0209" name="VRI06-1LX Multilevel Scene Switch" config="leviton/vri06.xml"/>
@@ -840,9 +839,8 @@
 		<Product type="0b02" id="030b" name="VRC0P-1LW Plug-in Serial Interface Module"/>
 		<Product type="0c01" id="0206" name="VRCPG-SG RF Handheld Remote Controller" config="leviton/vrcpg.xml"/>
 		<Product type="0e01" id="0334" name="VRE06-1LZ Multilevel Scene Switch" config="leviton/vre06.xml"/>
-		<Product type="1001" id="0209" name="VRF01-1LZ Quiet Fan Speed Control" config="leviton/vrf01.xml"/>
+		<Product type="1001" id="0209" name="VRF01-1LZ Scene Capable Quiet Fan Speed Control" config="leviton/vrf01.xml"/>
 		<Product type="1001" id="0334" name="VRF01-1LZ Quiet Fan Speed Control" config="leviton/vrf01.xml"/>
-		<Product type="1001" id="0209" name="VRF01-1LZ Multilevel Scene Switch - 1.5A Fan" config="leviton/vrf01.xml"/>
 		<Product type="1102" id="0243" name="VRCS2-MRZ 2-Button Scene Controller with Switches"/>
 		<Product type="1202" id="0243" name="VRCZ4-MRZ 4-Button Zone Controller with Switch"/>
 		<Product type="1902" id="0334" name="DZPD3-1LW Plug-In Dimming Lamp Module"/>
