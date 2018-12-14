@@ -1403,6 +1403,7 @@
 		<Product type="0101" id="000D" name="ZEN15 Power Switch" config="zooz/zen15.xml" />
 		<Product type="0301" id="0012" name="ZSE18 Motion Sensor" config="zooz/zse18.xml" />
 		<Product type="0401" id="0002" name="ZST10 S2 Z-Wave Plus USB Stick" />
+		<Product type="a000" id="a001" name="ZEN26 S2 On Off Wall Switch" config="zooz/zen26.xml" />
 	</Manufacturer>
 	<Manufacturer id="015d" name="Zooz">
 		<Product type="0651" id="f51c" name="ZEN20 Power Strip" config="zooz/zen20.xml" />
