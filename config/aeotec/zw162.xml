@@ -3,6 +3,10 @@
 ZW162 Doorbell 6
 -->
 <Product xmlns="http://code.google.com/p/open-zwave/">
+  <!--
+  Aeotec Doorbell 6
+  https://aeotec.freshdesk.com/helpdesk/attachments/6073850754
+  -->
   <!-- Configuration Parameters -->
   <CommandClass id="112">
     <Value type="int" index="2" genre="config" label="Browse Siren Alerts" value="872873984">
