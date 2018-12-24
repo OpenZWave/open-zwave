@@ -500,6 +500,7 @@ DISTFILES =	.gitignore \
 	config/wenzhou/tsp01.xml \
 	config/wenzhou/tz55.xml \
 	config/wenzhou/tz56.xml \
+	config/wenzhou/tz56s.xml \
 	config/wenzhou/tz57.xml \
 	config/wenzhou/tz65d.xml \
 	config/wenzhou/tz66d.xml \
