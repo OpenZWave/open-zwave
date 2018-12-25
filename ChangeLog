@@ -231,6 +231,7 @@ Version 1.5
  - Clear Buffer when reading a new packet - Issue #1596 (Justin)
  - Add additional mapping for MCO Home MHS-314 switch
  - Add Zipato PSR03-1B.EU Keyfob 5 Remote (Nechry)
+ - Add Fibaro FGR223 Roller Shutter Controller 3 (Nechry)
 
 Version 1.4
  - Released 10th Jan, 2016
