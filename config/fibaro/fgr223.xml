@@ -16,8 +16,8 @@
         <Value type="list" genre="config" instance="1" index="24" label="Inputs orientation" size="1" value="0">
             <Help>
                 This parameter allows reversing the operation of switches connected to S1 and S2 without changing the wiring.
-                Default:  S1 –> 1st channel, S2 –> 2nd channel.
-                Reversed: S1 –> 2nd channel, S2 –> 1st channel.
+                Default:  S1 -> 1st channel, S2 -> 2nd channel.
+                Reversed: S1 -> 2nd channel, S2 -> 1st channel.
             </Help>
             <Item label="Default" value="0" />
             <Item label="Reversed" value="1" />
@@ -26,8 +26,8 @@
         <Value type="list" genre="config" instance="1" index="25" label="Outputs orientation" size="1" value="0">
             <Help>
                 This parameter allows reversing the operation of Q1 and Q2 without changing the wiring (in case of invalid motor connection) to ensure proper operation.
-                - Default:  Q1 –> 1st channel, Q2 –> 2nd channel.
-                - Reversed: Q1 –> 2nd channel, Q2 –> 1st channel.
+                - Default:  Q1 -> 1st channel, Q2 -> 2nd channel.
+                - Reversed: Q1 -> 2nd channel, Q2 -> 1st channel.
             </Help>
             <Item label="Default" value="0" />
             <Item label="Reversed" value="1" />
@@ -163,7 +163,7 @@
             <Help>
                 This parameter determines the minimum change in consumed energy that will result in sending new energy report to the main controller.
                 0: reports are disabled.
-                1-500 (0.01 – 5 kWh): change in energy.
+                1-500 (0.01 - 5 kWh): change in energy.
                 Default setting: 10 (0.1 kWh).
             </Help>
         </Value>
@@ -203,7 +203,7 @@
                 For Venetian blinds (parameter 151 set to 2) the parameter determines time of full turn cycle of the slats.
                 For gates (parameter 151 set to 3 or 4) the parameter determines time after which open gate will start closing automatically (if set to 0, gate will not close).
                 The parameter is irrelevant for other modes.
-                0-90000 (0 – 900s, every 0.01s) time of turn.
+                0-90000 (0 - 900s, every 0.01s) time of turn.
                 Default setting: 150 (1.5s).
             </Help>
         </Value>
@@ -222,7 +222,7 @@
             <Help>
                 For blinds (parameter 151 set to 1, 2, 5 or 6) the parameter determines the time after which the motor will be stopped after end switch contacts are closed.
                 For gates (parameter 151 set to 3 or 4) the parameter determines the time after which the gate will start closing automatically if S2 contacts are opened (if set to 0, gate will not close).
-                0-600 (0 – 60s).
+                0-600 (0 - 60s).
                 Default setting: 10 (1s).
             </Help>
         </Value>
@@ -240,7 +240,7 @@
             <Help>
                 This parameter determines the time needed for roller blinds to reach the top.
                 For modes with positioning value is set automatically during calibration, otherwise, it must be set manually.
-                1-90000 (0.01 – 900.00s).
+                1-90000 (0.01 - 900.00s).
                 Default setting: 6000 (60s).
             </Help>
         </Value>
@@ -249,7 +249,7 @@
             <Help>
                 This parameter determines time needed for roller blinds to reach the bottom.
                 For modes with positioning value is set automatically during calibration, otherwise, it must be set manually.
-                1-90000 (0.01 – 900.00s).
+                1-90000 (0.01 - 900.00s).
                 Default setting: 6000 (60s).
             </Help>
         </Value>
