@@ -198,7 +198,7 @@
             <Item label="roller blind with built-in driver (impulse)" value="6" />
         </Value>
 
-        <Value type="short" genre="config" instance="1" index="152" label="Venetian blind - time of full turn of the slats" size="4" min="0" max="90000" units="0.1 second" value="150">
+        <Value type="int" genre="config" instance="1" index="152" label="Venetian blind - time of full turn of the slats" size="4" min="0" max="90000" units="0.1 second" value="150">
             <Help>
                 For Venetian blinds (parameter 151 set to 2) the parameter determines time of full turn cycle of the slats.
                 For gates (parameter 151 set to 3 or 4) the parameter determines time after which open gate will start closing automatically (if set to 0, gate will not close).
