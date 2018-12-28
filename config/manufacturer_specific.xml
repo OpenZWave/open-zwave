@@ -743,7 +743,10 @@
 	<Manufacturer id="0011" name="iCOM Tech">
 	</Manufacturer>
 	<Manufacturer id="0230" name="ID Lock">
-		<Product type="0003" id="0001" name="ID Lock 101" config="idlock/idlock101.xml"/>
+		<Product type="0003" id="0001" name="101" config="idlock/idlock101.xml"/>
+	</Manufacturer>
+	<Manufacturer id="0373" name="ID Lock">
+		<Product type="0003" id="0001" name="150" config="idlock/idlock150.xml"/>
 	</Manufacturer>
 	<Manufacturer id="011f" name="Ingersoll Rand">
 		<Product type="0001" id="0002" name="DWZWAVE1" config="ingersoll/dwzwave1.xml"/>
