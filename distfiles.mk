@@ -309,6 +309,7 @@ DISTFILES =	.gitignore \
 	config/horstmann/ssr302.xml \
 	config/horstmann/ssr303.xml \
 	config/idlock/idlock101.xml \
+	config/idlock/idlock150.xml \
 	config/ingersoll/dwzwave1.xml \
 	config/inovelli/nzw1201.xml \
 	config/inovelli/nzw30.xml \

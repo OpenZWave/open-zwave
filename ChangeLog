@@ -1,4 +1,5 @@
 Version 1.5
+ - Add Smartlock Idlock 150
  - Pull Request #xxxx - gr-multichannel branch
    * This PR supports the U-Fairy G.R. IOT Tech (http://www.gr-smarthome.com/en/) Multichannel witch Module Embedded 3 gang Switch (http://www.gr-smarthome.com/en/h-pd-46.html#_pp=0_304_3_-1) to be   used in  OZW and (in my case) on Home Assistant through python-openzwave
    * That buggy chinese switches incorrectly reports as 0 the COMMAND_CLASS_MULTICHANNEL/MULTIINSTANCE version and causes the V1 of the CC to be used by OZW. The module doesn't support that (after reading the spec I'm not sure if it should, though) and ignores the On/Off commands.
