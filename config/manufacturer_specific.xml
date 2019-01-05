@@ -518,6 +518,7 @@
 		<Product type="0400" id="400a" name="FGS211 Switch 3kW" config="fibaro/fgs211.xml" />
 		<Product type="0402" id="1002" name="FGS212 Switch 3kW" config="fibaro/fgs212.xml" />
 		<Product type="0402" id="3002" name="FGS212 Switch 3kW" config="fibaro/fgs212.xml" />
+		<Product type="0402" id="4002" name="FGS212 Switch 3kW" config="fibaro/fgs212.xml" />
 		<Product type="0403" id="1000" name="FGS213 Switch" config="fibaro/fgs213.xml"/>
 		<Product type="0403" id="2000" name="FGS213 Switch" config="fibaro/fgs213.xml"/>
 		<Product type="0403" id="4000" name="FGS213 Switch" config="fibaro/fgs213.xml"/>
