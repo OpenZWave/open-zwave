@@ -11,6 +11,7 @@
 		<Product type="5002" id="0100" name="CT80 Thermostat" config="2gig/ct80.xml"/>
 		<Product type="5003" id="0109" name="CT80 Thermostat" config="2gig/ct80.xml"/>
 		<Product type="6401" id="0105" name="CT100 Thermostat" config="2gig/ct100.xml"/>
+		<Product type="6401" id="0106" name="CT100 Thermostat USA" config="2gig/ct100.xml"/>
 		<Product type="6401" id="0107" name="CT100 Thermostat USA" config="2gig/ct100.xml"/>
 		<Product type="6401" id="01fd" name="CT100 Thermostat USA" config="2gig/ct100.xml"/>
 		<Product type="6402" id="0100" name="CT100 Plus Thermostat" config="2gig/ct100.xml"/>
