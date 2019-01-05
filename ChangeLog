@@ -234,6 +234,7 @@ Version 1.5
  - Add Fibaro FGR223 Roller Shutter Controller 3 (Nechry)
  - Add commented config entry  for Neo coolcam Battery Powered PIR Sensor (Nechry)
  - Add SmartLock Idlock 150 from sveip  (Nechry)
+ - Pull Request #1686 Added brand Simon from afimar (Nechry)
 
 Version 1.4
  - Released 10th Jan, 2016
