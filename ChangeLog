@@ -235,6 +235,7 @@ Version 1.5
  - Add commented config entry  for Neo coolcam Battery Powered PIR Sensor (Nechry)
  - Add SmartLock Idlock 150 from sveip  (Nechry)
  - Pull Request #1686 Added brand Simon from afimar (Nechry)
+ - Fix ThermostatMode CC not working with instances (Justin)
 
 Version 1.4
  - Released 10th Jan, 2016

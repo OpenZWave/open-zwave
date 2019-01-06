@@ -335,6 +335,7 @@ bool ThermostatMode::SetValue
 		uint8 state = (uint8)value->GetItem()->m_value;
 
 		Msg* msg = new Msg( "ThermostatModeCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+		msg->SetInstance( this, _value.GetID().GetInstance() );
 		msg->Append( GetNodeId() );
 		msg->Append( 3 );
 		msg->Append( GetCommandClassId() );
