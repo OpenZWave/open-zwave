@@ -7,7 +7,7 @@ https://products.z-wavealliance.org/products/2674
     <!-- COMMAND_CLASS_SWITCH_MULTILEVEL. This class is in the list reported by the device, but it does not respond to requests -->
     <!-- Configuration -->
     <CommandClass id="112">
-        <Value type="list" genre="config" instance="1" index="1" label="Association LED" value="1" min="255" max="1">
+        <Value type="list" genre="config" instance="1" index="1" label="Association LED" value="1" min="255" max="1" size="1">
             <Help>Activates the Central LED.</Help>
             <Item label="Turns the center LED OFF" value="0"/>
             <Item label="Turns the center LED ON" value="255"/>
