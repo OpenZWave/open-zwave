@@ -1187,7 +1187,9 @@
 		<Product type="0001" id="0001" name="UZB Z-Wave USB Adapter"/>
 	</Manufacturer>
 	<Manufacturer id="0267" name="Simon">
-		<Product type="0001" id="0000" name="Simon iO Switch" config="simon/10002034-13X.xml"/>
+		<Product type="0001" id="0000" name="S100 Socket iO" config="simon/10002034-13X.xml"/>
+		<Product type="0001" id="00da" name="S100 Socket iO" config="simon/10002034-13X.xml"/>
+		<Product type="0009" id="0022" name="S100 Socket iO" config="simon/10002041-13X.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0045" name="Sine Wireless">
 	</Manufacturer>

@@ -466,6 +466,7 @@ DISTFILES =	.gitignore \
 	config/shenzen_neo/nas-wr01z.xml \
 	config/shenzen_neo/nas-ws02z.xml \
 	config/simon/10002034-13X.xml \
+	config/simon/10002041-13X.xml \
 	config/steinel/is140-2.xml \
 	config/steinel/l810-led-ihf.xml \
 	config/steinel/rs-led-d2.xml \
