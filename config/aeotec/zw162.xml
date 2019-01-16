@@ -71,57 +71,57 @@ ZW162 Doorbell 6
     </Value>
     <Value type="list" genre="config" index="32" label="Basic Set to nodes in Group 2" size="1" value="3">
       <Help>Configure how to send Basic Set to nodes in Group 2</Help>
-      <Item label="Don’t send Basic Set" value="0"/>
-      <Item label="When Chime starts playing tone, send Basic Set 0xFF. When Chime stops playing tone, don’t send Basic Set" value="1"/>
-      <Item label="When Chime starts playing tone, send Basic Set 0x00. When Chime stops playing tone, don’t send Basic Set" value="2"/>
+      <Item label="Don't send Basic Set" value="0"/>
+      <Item label="When Chime starts playing tone, send Basic Set 0xFF. When Chime stops playing tone, don't send Basic Set" value="1"/>
+      <Item label="When Chime starts playing tone, send Basic Set 0x00. When Chime stops playing tone, don't send Basic Set" value="2"/>
       <Item label="When Chime starts playing tone, send Basic Set 0xFF. When Chime stops playing tone, send Basic Set 0x00" value="3"/>
       <Item label="When Chime starts playing tone, send Basic Set 0x00. When Chime stops playing tone, send Basic Set 0xFF" value="4"/>
     </Value>
     <Value type="list" genre="config" index="33" label="Basic Set to nodes in Group 3" size="1" value="3">
       <Help>Configure how to send Basic Set to nodes in Group 3</Help>
-      <Item label="Don’t send Basic Set" value="0"/>
-      <Item label="When Chime starts playing tone, send Basic Set 0xFF. When Chime stops playing tone, don’t send Basic Set" value="1"/>
-      <Item label="When Chime starts playing tone, send Basic Set 0x00. When Chime stops playing tone, don’t send Basic Set" value="2"/>
+      <Item label="Don't send Basic Set" value="0"/>
+      <Item label="When Chime starts playing tone, send Basic Set 0xFF. When Chime stops playing tone, don't send Basic Set" value="1"/>
+      <Item label="When Chime starts playing tone, send Basic Set 0x00. When Chime stops playing tone, don't send Basic Set" value="2"/>
       <Item label="When Chime starts playing tone, send Basic Set 0xFF. When Chime stops playing tone, send Basic Set 0x00" value="3"/>
       <Item label="When Chime starts playing tone, send Basic Set 0x00. When Chime stops playing tone, send Basic Set 0xFF" value="4"/>
     </Value>
     <Value type="list" genre="config" index="34" label="Basic Set to nodes in Group 4" size="1" value="3">
       <Help>Configure how to send Basic Set to nodes in Group 4</Help>
-      <Item label="Don’t send Basic Set" value="0"/>
-      <Item label="When Chime starts playing tone, send Basic Set 0xFF. When Chime stops playing tone, don’t send Basic Set" value="1"/>
-      <Item label="When Chime starts playing tone, send Basic Set 0x00. When Chime stops playing tone, don’t send Basic Set" value="2"/>
+      <Item label="Don't send Basic Set" value="0"/>
+      <Item label="When Chime starts playing tone, send Basic Set 0xFF. When Chime stops playing tone, don't send Basic Set" value="1"/>
+      <Item label="When Chime starts playing tone, send Basic Set 0x00. When Chime stops playing tone, don't send Basic Set" value="2"/>
       <Item label="When Chime starts playing tone, send Basic Set 0xFF. When Chime stops playing tone, send Basic Set 0x00" value="3"/>
       <Item label="When Chime starts playing tone, send Basic Set 0x00. When Chime stops playing tone, send Basic Set 0xFF" value="4"/>
     </Value>
     <Value type="list" genre="config" index="35" label="Basic Set to nodes in Group 5" size="1" value="3">
       <Help>Configure how to send Basic Set to nodes in Group 5</Help>
-      <Item label="Don’t send Basic Set" value="0"/>
-      <Item label="When Chime starts playing tone, send Basic Set 0xFF. When Chime stops playing tone, don’t send Basic Set" value="1"/>
-      <Item label="When Chime starts playing tone, send Basic Set 0x00. When Chime stops playing tone, don’t send Basic Set" value="2"/>
+      <Item label="Don't send Basic Set" value="0"/>
+      <Item label="When Chime starts playing tone, send Basic Set 0xFF. When Chime stops playing tone, don't send Basic Set" value="1"/>
+      <Item label="When Chime starts playing tone, send Basic Set 0x00. When Chime stops playing tone, don't send Basic Set" value="2"/>
       <Item label="When Chime starts playing tone, send Basic Set 0xFF. When Chime stops playing tone, send Basic Set 0x00" value="3"/>
       <Item label="When Chime starts playing tone, send Basic Set 0x00. When Chime stops playing tone, send Basic Set 0xFF" value="4"/>
     </Value>
     <Value type="list" genre="config" index="36" label="Basic Set to nodes in Group 6" size="1" value="3">
       <Help>Configure how to send Basic Set to nodes in Group 6</Help>
-      <Item label="Don’t send Basic Set" value="0"/>
-      <Item label="When Chime starts playing tone, send Basic Set 0xFF. When Chime stops playing tone, don’t send Basic Set" value="1"/>
-      <Item label="When Chime starts playing tone, send Basic Set 0x00. When Chime stops playing tone, don’t send Basic Set" value="2"/>
+      <Item label="Don't send Basic Set" value="0"/>
+      <Item label="When Chime starts playing tone, send Basic Set 0xFF. When Chime stops playing tone, don't send Basic Set" value="1"/>
+      <Item label="When Chime starts playing tone, send Basic Set 0x00. When Chime stops playing tone, don't send Basic Set" value="2"/>
       <Item label="When Chime starts playing tone, send Basic Set 0xFF. When Chime stops playing tone, send Basic Set 0x00" value="3"/>
       <Item label="When Chime starts playing tone, send Basic Set 0x00. When Chime stops playing tone, send Basic Set 0xFF" value="4"/>
     </Value>
     <Value type="list" genre="config" index="38" label="Basic Set to nodes in Group 8" size="1" value="3">
       <Help>Configure how to send Basic Set to nodes in Group 8</Help>
-      <Item label="Don’t send Basic Set" value="0"/>
-      <Item label="When Chime starts playing tone, send Basic Set 0xFF. When Chime stops playing tone, don’t send Basic Set" value="1"/>
-      <Item label="When Chime starts playing tone, send Basic Set 0x00. When Chime stops playing tone, don’t send Basic Set" value="2"/>
+      <Item label="Don't send Basic Set" value="0"/>
+      <Item label="When Chime starts playing tone, send Basic Set 0xFF. When Chime stops playing tone, don't send Basic Set" value="1"/>
+      <Item label="When Chime starts playing tone, send Basic Set 0x00. When Chime stops playing tone, don't send Basic Set" value="2"/>
       <Item label="When Chime starts playing tone, send Basic Set 0xFF. When Chime stops playing tone, send Basic Set 0x00" value="3"/>
       <Item label="When Chime starts playing tone, send Basic Set 0x00. When Chime stops playing tone, send Basic Set 0xFF" value="4"/>
     </Value>
     <Value type="list" genre="config" index="39" label="Basic Set to nodes in Group 9" size="1" value="3">
       <Help>Configure how to send Basic Set to nodes in Group 9</Help>
-      <Item label="Don’t send Basic Set" value="0"/>
-      <Item label="When Chime starts playing tone, send Basic Set 0xFF. When Chime stops playing tone, don’t send Basic Set" value="1"/>
-      <Item label="When Chime starts playing tone, send Basic Set 0x00. When Chime stops playing tone, don’t send Basic Set" value="2"/>
+      <Item label="Don't send Basic Set" value="0"/>
+      <Item label="When Chime starts playing tone, send Basic Set 0xFF. When Chime stops playing tone, don't send Basic Set" value="1"/>
+      <Item label="When Chime starts playing tone, send Basic Set 0x00. When Chime stops playing tone, don't send Basic Set" value="2"/>
       <Item label="When Chime starts playing tone, send Basic Set 0xFF. When Chime stops playing tone, send Basic Set 0x00" value="3"/>
       <Item label="When Chime starts playing tone, send Basic Set 0x00. When Chime stops playing tone, send Basic Set 0xFF" value="4"/>
     </Value>
