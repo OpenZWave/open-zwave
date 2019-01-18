@@ -2377,8 +2377,24 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 */
 		void GetNodeStatistics( uint32 const _homeId, uint8 const _nodeId, Node::NodeData* _data );
 
+	//-----------------------------------------------------------------------------
+	// Raw interface
+	//-----------------------------------------------------------------------------
+	/** \name Raw Interface
+	 *  Commands for sending raw messages.
+	 */
+	/*@{*/
+	public:
+		/**
+		 *  \brief Send a custom message to a node.
+		 */
+		void SendRawData(uint32 const _homeId, uint8 const _nodeId, string const& _logText, uint8 const _msgType, uint8 const* _content, uint8 const _length);
+
+	/*@}*/
+
 	};
 	/*@}*/
+
 } // namespace OpenZWave
 
 #endif // _Manager_H

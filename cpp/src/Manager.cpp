@@ -4755,3 +4755,30 @@ void Manager::GetNodeStatistics
 	}
 
 }
+
+//-----------------------------------------------------------------------------
+// <Manager::SendRawData>
+// Send a custom message to a node.
+//-----------------------------------------------------------------------------
+void Manager::SendRawData
+(
+	uint32 const  _homeId,
+	uint8  const  _nodeId,
+	string const& _logText,
+	uint8  const  _msgType,
+	uint8  const* _content,
+	uint8  const  _length
+)
+{
+	if ( Driver *driver = GetDriver( _homeId ) )
+	{
+		Msg* msg = new Msg( _logText, _nodeId, _msgType, FUNC_ID_ZW_SEND_DATA, true );
+		for( uint8 i = 0; i < _length; i++ )
+		{
+			msg->Append( _content[i] );
+		}
+		msg->Append( driver->GetTransmitOptions() );
+		driver->SendMsg( msg, Driver::MsgQueue_Send );
+	}
+}
+
