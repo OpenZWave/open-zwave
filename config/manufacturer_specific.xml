@@ -1421,6 +1421,7 @@
 		<Product type="0401" id="0002" name="ZST10 S2 Z-Wave Plus USB Stick" />
 		<Product type="a000" id="a001" name="ZEN26 S2 On Off Wall Switch" config="zooz/zen26.xml" />
 		<Product type="a000" id="a002" name="ZEN27 S2 Dimmer Wall Switch" config="zooz/zen27.xml" />
+		<Product type="b111" id="1e1c" name="ZEN21 Switch V2.0" config="zooz/zen21.xml" />
 	</Manufacturer>
 	<Manufacturer id="015d" name="Zooz">
 		<Product type="0651" id="f51c" name="ZEN20 Power Strip" config="zooz/zen20.xml" />
