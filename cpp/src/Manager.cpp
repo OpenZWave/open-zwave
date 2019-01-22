@@ -209,9 +209,10 @@ Manager::~Manager
 	while( !m_pendingDrivers.empty() )
 	{
 		list<Driver*>::iterator it = m_pendingDrivers.begin();
-		delete *it;
+	        delete *it;
 		m_pendingDrivers.erase( it );
 	}
+	m_pendingDrivers.clear();
 
 	// Clear the ready map
 	while( !m_readyDrivers.empty() )
@@ -220,6 +221,7 @@ Manager::~Manager
 		delete it->second;
 		m_readyDrivers.erase( it );
 	}
+	m_readyDrivers.clear();
 
 	m_notificationMutex->Release();
 
@@ -228,16 +230,51 @@ Manager::~Manager
 	{
 		list<Watcher*>::iterator it = m_watchers.begin();
 		delete *it;
-		m_watchers.erase( it );
+	        m_watchers.erase( it );
 	}
+	m_watchers.clear();
 
 	// Clear the generic device class list
 	while( !Node::s_genericDeviceClasses.empty() )
 	{
-		map<uint8,Node::GenericDeviceClass*>::iterator git = Node::s_genericDeviceClasses.begin();
-		delete git->second;
+	        map<uint8,Node::GenericDeviceClass*>::iterator git = Node::s_genericDeviceClasses.begin();
+	        delete git->second;
 		Node::s_genericDeviceClasses.erase( git );
 	}
+	Node::s_genericDeviceClasses.clear();
+
+
+        while ( !Node::s_basicDeviceClasses.empty() )
+        {
+                map<uint8, string>::iterator git = Node::s_basicDeviceClasses.begin();
+                Node::s_basicDeviceClasses.erase(git);
+        }
+        Node::s_basicDeviceClasses.clear();
+
+
+        while ( !Node::s_roleDeviceClasses.empty() )
+        {
+                map<uint8, Node::DeviceClass*>::iterator git = Node::s_roleDeviceClasses.begin();
+                delete git->second;
+                Node::s_roleDeviceClasses.erase(git);
+        }
+        Node::s_roleDeviceClasses.clear();
+
+        while ( !Node::s_deviceTypeClasses.empty() )
+        {
+                map<uint16, Node::DeviceClass*>::iterator git = Node::s_deviceTypeClasses.begin();
+                delete git->second;
+                Node::s_deviceTypeClasses.erase(git);
+        }
+        Node::s_deviceTypeClasses.clear();
+
+        while ( !Node::s_nodeTypes.empty() )
+        {
+                map<uint8, Node::DeviceClass*>::iterator git = Node::s_nodeTypes.begin();
+                delete git->second;
+                Node::s_nodeTypes.erase(git);
+        }
+        Node::s_nodeTypes.clear();
 
 	Log::Destroy();
 }
