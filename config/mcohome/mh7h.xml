@@ -39,7 +39,7 @@
       <Item value="3" label="Upload the difference+timing upload mode"/>
     </Value>
     <Value genre="config" instance="1" index="3" value="5" label="Upload temperature difference" units="" size="2" min="3" max="1000" type="short">
-      <Help>Base on 0.1Â°C unit, 5 by default, 5*0.1Â°C=0.5Â°C</Help>
+      <Help>Base on 0.1C unit, 5 by default, 5*0.1C=0.5C</Help>
     </Value>
     <Value genre="config" instance="1" index="4" value="30" label="Upload time interval regularly" units="" size="2" min="19" max="65535" type="short">
       <Help>Base on 1s unit, it suggest to be set above 30s</Help>
