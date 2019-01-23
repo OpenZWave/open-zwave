@@ -37,7 +37,7 @@
 #include "command_classes/Security.h"
 #include "aes/aescpp.h"
 
-
+#define DEBUG
 namespace OpenZWave {
 	//using namespace OpenZWave;
 
@@ -231,6 +231,10 @@ namespace OpenZWave {
 			csum ^= e_buffer[i];
 		}
 		e_buffer[len++] = csum;
+#ifdef DEBUG
+		PrintHex("Encrypted Packet", e_buffer, len);
+		Log::Write(LogLevel_Info, "Length: %d", len);
+#endif
 		return true;
 	}
 

@@ -1600,7 +1600,8 @@ void Node::SetSecured(bool secure) {
 void Node::SetSecuredClasses
 (
 		uint8 const* _data,
-		uint8 const _length
+		uint8 const _length,
+		uint32 const _instance
 )
 {
 	uint32 i;
@@ -1628,7 +1629,7 @@ void Node::SetSecuredClasses
 		/* Check if this is a CC that is already registered with the node */
 		if (CommandClass *pCommandClass = GetCommandClass(_data[i], afterMark))
 		{
-			/* if it was specified int he NIF frame, and came in as part of the Security SupportedReport message
+			/* if it was specified the he NIF frame, and came in as part of the Security SupportedReport message
 			 * then it can support both Clear Text and Secured Comms. So do a check first
 			 */
 			if (pCommandClass->IsInNIF()) {

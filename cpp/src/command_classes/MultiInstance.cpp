@@ -30,6 +30,7 @@
 #include "command_classes/Basic.h"
 #include "command_classes/MultiInstance.h"
 #include "command_classes/NoOperation.h"
+#include "command_classes/Security.h"
 #include "Defs.h"
 #include "Msg.h"
 #include "Driver.h"
@@ -539,6 +540,18 @@ void MultiInstance::HandleMultiChannelCapabilityReport
 								basic->SetEndPoint( i, endPoint );
 							}
 						}
+						/* if its the Security CC, on a instance > 1, then this has come from the Security CC found in a MultiInstance Capability Report.
+						 * So we need to Query the endpoint for Secured CC's
+						 */
+						if ((commandClassId == Security::StaticGetCommandClassId()) && (i > 1)) {
+							Log::Write(LogLevel_Info, GetNodeId(), "        Sending Security_Supported_Get to Instance %d", i);
+							Security *seccc = static_cast<Security*>(node->GetCommandClass(Security::StaticGetCommandClassId(), afterMark));
+							/* this will trigger a SecurityCmd_SupportedGet on the _instance of the Device. */
+							if (seccc) {
+								seccc->Init(i);
+							}
+						}
+
 					}
 				}
 				endPoint++;

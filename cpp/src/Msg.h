@@ -143,9 +143,7 @@ namespace OpenZWave
 				return m_buffer[6];
 			}
 			return 0;
-
 		}
-
 		bool isEncrypted() {
 			return m_encrypted;
 		}

@@ -407,8 +407,9 @@ namespace OpenZWave
 			 * as Secured if they exist, and if they don't, it creates new Command Classes and sets them up as Secured
 			 * @param _data a list of Command Classes that are Secured by the Device
 			 * @param _length the length of the _data string
+			 * @param _instance the instance of the Class thats Secured.
 			 */
-			void SetSecuredClasses( uint8 const* _data, uint8 const _length );
+			void SetSecuredClasses( uint8 const* _data, uint8 const _length, uint32 const _instance = 1);
 			void SetSecured(bool secure);
 		private:
 			/**

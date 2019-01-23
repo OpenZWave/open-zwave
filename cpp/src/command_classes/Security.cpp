@@ -97,9 +97,11 @@ void Security::WriteXML
 
 bool Security::Init
 (
+	uint32 const _instance
 )
 {
 	Msg* msg = new Msg( "SecurityCmd_SupportedGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+	msg->SetInstance( this, _instance );
 	msg->Append( GetNodeId() );
 	msg->Append( 2 );
 	msg->Append( GetCommandClassId() );
@@ -174,14 +176,15 @@ bool Security::RequestValue
 bool Security::HandleSupportedReport
 (
 		uint8 const* _data,
-		uint32 const _length
+		uint32 const _length,
+		uint32 const _instance
 )
 {
 
 #ifdef DEBUG
 	PrintHex("Security Classes", _data, _length);
 #endif
-	GetNodeUnsafe()->SetSecuredClasses(_data, _length);
+	GetNodeUnsafe()->SetSecuredClasses(_data, _length, _instance);
 	return true;
 }
 
@@ -216,7 +219,7 @@ bool Security::HandleMsg
 				value->OnValueRefreshed( m_secured );
 				value->Release();
 			}
-			HandleSupportedReport(&_data[2], _length-2);
+			HandleSupportedReport(&_data[2], _length-2, _instance);
 			break;
 		}
 		case SecurityCmd_SchemeReport:

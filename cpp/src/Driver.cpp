@@ -1044,7 +1044,7 @@ void Driver::SendMsg
 		if( Node* node = GetNode(_msg->GetTargetNodeId()) )
 		{
 			/* if the node Supports the Security Class - check if this message is meant to be encapsulated */
-			if ( node->GetCommandClass(Security::StaticGetCommandClassId() ) )
+			if ( node->GetCommandClass(Security::StaticGetCommandClassId()) )
 			{
 				CommandClass *cc = node->GetCommandClass(_msg->GetSendingCommandClass());
 				if ( (cc) && (cc->IsSecured()) )
