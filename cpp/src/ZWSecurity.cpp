@@ -37,7 +37,6 @@
 #include "command_classes/Security.h"
 #include "aes/aescpp.h"
 
-#define DEBUG
 namespace OpenZWave {
 	//using namespace OpenZWave;
 
