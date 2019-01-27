@@ -2388,7 +2388,7 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		/**
 		 *  \brief Send a custom message to a node.
 		 */
-		void SendRawData(uint32 const _homeId, uint8 const _nodeId, string const& _logText, uint8 const _msgType, uint8 const* _content, uint8 const _length);
+		void SendRawData(uint32 const _homeId, uint8 const _nodeId, string const& _logText, uint8 const _msgType, const bool _sendSecure, uint8 const* _content, uint8 const _length);
 
 	/*@}*/
 

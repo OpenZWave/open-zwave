@@ -4766,19 +4766,28 @@ void Manager::SendRawData
 	uint8  const  _nodeId,
 	string const& _logText,
 	uint8  const  _msgType,
+	bool   const  _sendSecure,
 	uint8  const* _content,
 	uint8  const  _length
 )
 {
 	if ( Driver *driver = GetDriver( _homeId ) )
 	{
-		Msg* msg = new Msg( _logText, _nodeId, _msgType, FUNC_ID_ZW_SEND_DATA, true );
-		for( uint8 i = 0; i < _length; i++ )
+		Node* node = driver->GetNode( _nodeId );
+		if ( node )
 		{
-			msg->Append( _content[i] );
+			Msg* msg = new Msg( _logText, _nodeId, _msgType, FUNC_ID_ZW_SEND_DATA, true );
+			for( uint8 i = 0; i < _length; i++ )
+			{
+				msg->Append( _content[i] );
+			}
+			msg->Append( driver->GetTransmitOptions() );
+			if ( _sendSecure )
+			{
+				msg->setEncrypted();
+			}
+			driver->SendMsg( msg, Driver::MsgQueue_Send );
 		}
-		msg->Append( driver->GetTransmitOptions() );
-		driver->SendMsg( msg, Driver::MsgQueue_Send );
 	}
 }
 
