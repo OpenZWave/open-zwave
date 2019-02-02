@@ -348,6 +348,7 @@ DISTFILES =	.gitignore \
 	config/manufacturer_specific.xml \
 	config/manufacturer_specific.xsd \
 	config/mcohome/a8-9.xml \
+	config/mcohome/mh7h.xml \
 	config/mcohome/mh8fceu.xml \
 	config/mcohome/mh9co2.xml \
 	config/mcohome/mhp210.xml \
@@ -532,6 +533,8 @@ DISTFILES =	.gitignore \
 	config/zooz/zen22v2.xml \
 	config/zooz/zen23.xml \
 	config/zooz/zen24.xml \
+	config/zooz/zen26.xml \
+	config/zooz/zen27.xml \
 	config/zooz/zse08.xml \
 	config/zooz/zse09.xml \
 	config/zooz/zse18.xml \
