@@ -2238,6 +2238,7 @@
 		<Product type="a000" id="a002" name="ZEN27 S2 Dimmer Wall Switch" config="zooz/zen27.xml" />
 		<Product type="b111" id="1e1c" name="ZEN21 Switch V2.0" config="zooz/zen21.xml" />
 		<Product type="000c" id="0003" name="ZSE19 S2 Multisiren" config="zooz/zse19.xml" />
+		<Product type="a000" id="a004" name="ZSE20 V2.0 Power Strip" config="zooz/zen20v2.xml" />
 	</Manufacturer>
 	<Manufacturer id="015d" name="Zooz (Willis Electric)">
 		<Product type="0651" id="f51c" name="ZEN20 Power Strip" config="zooz/zen20.xml" />
