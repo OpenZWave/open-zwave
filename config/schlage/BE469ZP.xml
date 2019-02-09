@@ -130,7 +130,7 @@
 				Adjust door and strike plate to ensure the bolt can move freely. This will save battery power. 
 			</Help>
 		</Value>
-		<Value type="int" index="18" genre="config" label="Bootloader Version" read_only="true" size="1">
+		<Value type="byte" index="18" genre="config" label="Bootloader Version" read_only="true" size="1">
 			<Help>The version of the bootloader in the lock.</Help>
 		</Value>
 	</CommandClass>
