@@ -4,10 +4,10 @@
 
   <!-- Configuration Parameters -->
   <CommandClass id="112">
-    <Value genre="config" type="byte" index="1" label="Siren Alarm Duration" units="seconds" size="2" min="10" max="600" value="600">
+    <Value genre="config" type="short" index="1" label="Siren Alarm Duration" units="seconds" size="2" min="10" max="600" value="600">
       <Help>Siren Alarm Duration, in seconds.  Defaults to 600 (10 minutes).</Help>
     </Value>
-    <Value genre="config" type="byte" index="2" label="Temp/Humidity Reporting Interval" units="minutes" size="2" min="1" max="1440" value="1440">
+    <Value genre="config" type="short" index="2" label="Temp/Humidity Reporting Interval" units="minutes" size="2" min="1" max="1440" value="1440">
       <Help>Reporting interval for temperature and humidity sensor, in miuntes.  Defaults to 1440 (24 hours).</Help>
     </Value>
     <Value genre="config" type="byte" index="3" label="Custom Sound Selection for Audio Speaker" units="" size="1" min="0" max="99" value="0">
