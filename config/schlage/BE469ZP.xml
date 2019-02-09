@@ -5,8 +5,8 @@
 			<Help>
 				Enable or disable the keypad beeper.
 			</Help>
-			<Item label="Enable Beeper" value="255" />
-			<Item label="Disable Beeper" value="0" />
+			<Item label="Enable" value="255" />
+			<Item label="Disable" value="0" />
 		</Value>
 		<Value type="list" index="4" genre="config" label="Vacation Mode" units="" min="1" max="255" value="0" size="1">
 			<Help>
@@ -14,8 +14,8 @@
 				Disables all user codes, preventing all codes from unlocking the deadbolt.
 				Enable for extra security while you are away for an extended period of time.
 			</Help>
-			<Item label="Enable Vacation Mode" value="255" />
-			<Item label="Disable Vacation Mode" value="0" />
+			<Item label="Enable" value="255" />
+			<Item label="Disable" value="0" />
 		</Value>
 		<Value type="list" index="5" genre="config" label="Lock and Leave Mode" units="" min="1" max="255" value="255" size="1">
 			<Help>
@@ -23,8 +23,8 @@
 				When enabled: Press the Schlage button on the keypad to lock the deadbolt (Default setting).
 				When disabled: Press the Schlage button on the keypad and then enter a user code to lock the deadbolt.
 			</Help>
-			<Item label="Enable Lock and Leave Mode" value="255" />
-			<Item label="Disable Lock and Leave Mode" value="0" />
+			<Item label="Enable" value="255" />
+			<Item label="Disable" value="0" />
 		</Value>
 		<Value type="list" index="7" genre="config" label="Lock Alarm Mode" units="" min="0" max="3" value="0" size="1">
 			<Help>
@@ -111,8 +111,8 @@
 			<Help>
 				When enabled, the lock will automatically relock 30 seconds after unlocking. (Disabled by default.)
 			</Help>
-			<Item label="Enable auto lock" value="255" />
-			<Item label="Disable auto lock" value="0" />
+			<Item label="Enable" value="255" />
+			<Item label="Disable" value="0" />
 		</Value>
 		<Value type="byte" index="16" genre="config" label="User code legnth " units="" min="4" max="8" value="4" size="1">
 			<Help>
