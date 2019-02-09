@@ -102,6 +102,7 @@
 			<Help>
 				Indicates the number of transitions from locked to unlocked or unlocked to locked state via mechanical activation.
 			</Help>
+		</Value>
 		<Value type="int" index="14" genre="config" label="Electronic failed count" read_only="true" size="4">
 			<Help>
 				Indicates the number of failed electronic activation attempts for this lock.
