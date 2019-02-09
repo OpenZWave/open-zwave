@@ -98,6 +98,7 @@
 			<Help>
 				Indicates the number of transitions from locked to unlocked or unlocked to locked state via electronic activation.
 			</Help>
+		</Value>
 		<Value type="int" index="13" genre="config" label="Mechanical transition count" read_only="true" size="4">
 			<Help>
 				Indicates the number of transitions from locked to unlocked or unlocked to locked state via mechanical activation.
