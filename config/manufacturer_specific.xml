@@ -1703,6 +1703,7 @@
 		<Product type="634b" id="504c" name="FE599GR Wireless Door Lock"/>
 		<Product type="6341" id="5044" name="BE469 Touchscreen Deadbolt" config="schlage/BE469.xml"/>
 		<Product type="6349" id="5044" name="BE468 Touchscreen Deadbolt" config="schlage/BE468.xml"/>
+		<Product type="0001" id="0469" name="BE469ZP Connect Smart Deadbolt" config="schlage/BE469ZP.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0097" name="Schlage Link (Wintop)">
 		<Product type="1182" id="4501" name="iTemp Dual Sensor" config="schlagelink/itemp.xml" />
