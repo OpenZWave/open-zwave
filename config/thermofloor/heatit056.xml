@@ -34,7 +34,7 @@
 			<Help>Set operation mode</Help>
 			<Item label="Off" value="0"/>
 			<Item label="Heat" value="1"/>
-            <Item label="Cooling Mode (Not implemented)" value="2"/>
+            		<Item label="Cooling Mode" value="2"/>
 			<Item label="Heat Energy Saving" value="11"/>
 		</Value>
 		<Value type="list" genre="config" instance="1" index="2" label="Sensor mode" value="1">
