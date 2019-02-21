@@ -1925,7 +1925,7 @@
 	</Manufacturer>
 	<Manufacturer id="019b" name="ThermoFloor AS">
 		<Product type="0001" id="0001" name="Heatit Thermostat TF 021" config="thermofloor/heatit021.xml"/>
-		<Product type="0003" id="0202" name="Heatit Thermostat TF 033" config="thermofloor/heatit033.xml"/>
+		<Product type="0003" id="0202" name="Heatit Thermostat TF 056" config="thermofloor/heatit056.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0317" name="Think Simple srl">
 	</Manufacturer>
