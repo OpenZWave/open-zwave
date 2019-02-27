@@ -303,6 +303,7 @@ namespace OpenZWave
 			bool IsBeamingDevice()const{ return m_beaming; }
 			bool IsRoutingDevice()const{ return m_routing; }
 			bool IsSecurityDevice()const{ return m_security; }
+			bool UseDestAsSource()const{ return m_useDestAsSrc; }
 			uint32 GetMaxBaudRate()const{ return m_maxBaudRate; }
 			uint8 GetVersion()const{ return m_version; }
 			uint8 GetSecurity()const{ return m_security; }
@@ -324,6 +325,7 @@ namespace OpenZWave
 			bool		m_frequentListening;
 			bool		m_beaming;
 			bool		m_routing;
+			bool		m_useDestAsSrc;
 			uint32		m_maxBaudRate;
 			uint8		m_version;
 			bool		m_security;

@@ -444,7 +444,12 @@ void MultiInstance::HandleMultiChannelCapabilityReport
 			return;
 		}
 
-		uint8 endPoint = _data[1] & 0x7f;
+		uint8 endPoint;
+		if (node->UseDestAsSource()) {
+			endPoint = _data[2] & 0x7f;
+		} else {
+			endPoint = _data[1] & 0x7f;
+		}
 
 		Log::Write( LogLevel_Info, GetNodeId(), "Received MultiChannelCapabilityReport from node %d for endpoint %d", GetNodeId(), endPoint );
 		Log::Write( LogLevel_Info, GetNodeId(), "    Endpoint is%sdynamic, and is a %s", dynamic ? " " : " not ", node->GetEndPointDeviceClassLabel( _data[2], _data[3] ).c_str() );
