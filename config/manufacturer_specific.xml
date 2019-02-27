@@ -977,6 +977,7 @@
 		<Product type="8008" id="1000" name="Smart Plug HS2SK-Z" config="heiman/HS2SK-Z.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0344" name="HELTUN">
+		<Product type="0003" id="0001" name="HE-ZW-THERM-FL2 Heating Thermostat" config="heltun/he-zw-therm-fl2.xml"/>
 	</Manufacturer>
 	<Manufacturer id="020F" name="Herald Datanetics Limited">
 	</Manufacturer>
