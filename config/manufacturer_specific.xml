@@ -1772,7 +1772,7 @@
 		<Product type="0003" id="2082" name="Door/Window Detector" config="shenzen_neo/nas-ds01z.xml"/>
 		<Product type="0003" id="0087" name="Power plug 12A" config="shenzen_neo/nas-wr01z.xml"/>
 		<Product type="0003" id="1087" name="Power plug 12A" config="shenzen_neo/nas-wr01z.xml"/>
-		<Product type="0200" id="1027" name="Power plug 12A" config="shenzen_neo/nas-wr01z.xml"/>
+		<Product type="0200" id="1027" name="Power plug 12A EU" config="shenzen_neo/nas-wr01ze.xml"/>
 		<Product type="0003" id="0083" name="Battery Powered PIR Sensor" config="shenzen_neo/nas-pd01z.xml"/>
 		<Product type="0003" id="1083" name="Battery Powered PIR Sensor" config="shenzen_neo/nas-pd01z.xml"/>
 		<Product type="0003" id="108d" name="Battery Powered PIR Sensor V2" config="shenzen_neo/nas-pd02z.xml"/>
