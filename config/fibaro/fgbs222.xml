@@ -140,7 +140,7 @@
       <Item label="contacts normally closed" value="1" />
     </Value>
 
-    <Value type="byte" genre="config" instance="1" index="156" label="Output 1 - auto off" min="0" max="27000" value="0">
+    <Value type="short" genre="config" instance="1" index="156" label="Output 1 - auto off" min="0" max="27000" value="0">
       <Help>
         This parameter defines time after which OUT1 will be automatically deactivated.
         Available settings:
@@ -150,7 +150,7 @@
       </Help>
     </Value>
 
-    <Value type="byte" genre="config" instance="1" index="157" label="Output 2 - auto off" min="0" max="27000" value="0">
+    <Value type="short" genre="config" instance="1" index="157" label="Output 2 - auto off" min="0" max="27000" value="0">
       <Help>
         This parameter defines time after which OUT2 will be automatically deactivated.
         Available settings:
@@ -160,7 +160,7 @@
       </Help>
     </Value>
 
-    <Value type="short" genre="config" instance="1" index="63" label="Analog inputs - minimal change to report" min="0" max="100" value="5">
+    <Value type="byte" genre="config" instance="1" index="63" label="Analog inputs - minimal change to report" min="0" max="100" value="5">
       <Help>
         This parameter defines minimal change (from the last reported) of
         analog input value that results in sending new report. Parameter is
