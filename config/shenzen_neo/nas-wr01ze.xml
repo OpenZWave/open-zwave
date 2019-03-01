@@ -65,10 +65,10 @@
         If user set this parameter to default by Configure CC, the parameter #10 will be set to default value.
       </Help>
     </Value>
-	 <Value type="byte" genre="config" instance="1" index="9" label="Configure power report" units="cA" value="50" min="1" max="1600" size="2">
+	 <Value type="short" genre="config" instance="1" index="9" label="Configure power report" units="cA" value="50" min="1" max="1600" size="2">
       <Help>
         This parameter defines by how much power consumed must change to be reported to the Z-Wave Controller or Z-Wave Gateway, in centiAmperes (1-1600). If the rate of power consumed change ratio is greater than this parameter, the plug will report the results, voltage, current, power and energy, that plug measure to Z-Wave Controller or Z-Wave Gateway
-        The changed value = [Value] × 0.01A
+        The changed value = [Value] x 0.01A
       </Help>
     </Value>
     <Value type="byte" genre="config" instance="1" index="10" label="Configure maximum Alarm current" units="Ampere" value="13" min="1" max="16" size="1">
