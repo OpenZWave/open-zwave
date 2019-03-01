@@ -348,6 +348,7 @@ DISTFILES =	.gitignore \
 	config/manufacturer_specific.xml \
 	config/manufacturer_specific.xsd \
 	config/mcohome/a8-9.xml \
+	config/mcohome/mh7h.xml \
 	config/mcohome/mh8fceu.xml \
 	config/mcohome/mh9co2.xml \
 	config/mcohome/mhp210.xml \
@@ -452,6 +453,7 @@ DISTFILES =	.gitignore \
 	config/remotec/zxt-600.xml \
 	config/schlage/BE468.xml \
 	config/schlage/BE469.xml \
+	config/schlage/BE469ZP.xml \
 	config/schlagelink/itemp.xml \
 	config/schlagelink/minikeypad.xml \
 	config/sensative/strips.xml \
@@ -479,6 +481,7 @@ DISTFILES =	.gitignore \
 	config/telldus/tzwp102.xml \
 	config/thermofloor/heatit021.xml \
 	config/thermofloor/heatit033.xml \
+	config/thermofloor/heatit056.xml \
 	config/trane/TZEMT400AB32MAA.xml \
 	config/trane/TZEMT400BB32MAA.xml \
 	config/trane/TZEMT524AA21MA.xml \
@@ -527,14 +530,18 @@ DISTFILES =	.gitignore \
 	config/zooz/zen07.xml \
 	config/zooz/zen15.xml \
 	config/zooz/zen20.xml \
+	config/zooz/zen20v2.xml \
 	config/zooz/zen21.xml \
 	config/zooz/zen22.xml \
 	config/zooz/zen22v2.xml \
 	config/zooz/zen23.xml \
 	config/zooz/zen24.xml \
+	config/zooz/zen26.xml \
+	config/zooz/zen27.xml \
 	config/zooz/zse08.xml \
 	config/zooz/zse09.xml \
 	config/zooz/zse18.xml \
+	config/zooz/zse19.xml \
 	config/zooz/zse30.xml \
 	config/zooz/zse33.xml \
 	config/zooz/zse40.xml \
