@@ -166,17 +166,17 @@
         Auto LCD brightness control
       </Help>
     </Value>
-    <Value type="byte" index="25" genre="config" label="Auto bright level 1" units="lumens" min="0" max="5000" value="30" size="2">
+    <Value type="short" index="25" genre="config" label="Auto bright level 1" units="lumens" min="0" max="5000" value="30" size="2">
       <Help>
         Auto brightness level 1 max lumens
       </Help>
     </Value>
-    <Value type="byte" index="26" genre="config" label="Auto bright level 2" units="lumens" min="0" max="5000" value="200" size="2">
+    <Value type="short" index="26" genre="config" label="Auto bright level 2" units="lumens" min="0" max="5000" value="200" size="2">
       <Help>
         Auto brightness level 2 max lumens
       </Help>
     </Value>
-    <Value type="byte" index="27" genre="config" label="Auto bright level 3" units="lumens" min="0" max="5000" value="3000" size="2">
+    <Value type="short" index="27" genre="config" label="Auto bright level 3" units="lumens" min="0" max="5000" value="3000" size="2">
       <Help>
         Auto brightness level 3 max lumens
       </Help>
