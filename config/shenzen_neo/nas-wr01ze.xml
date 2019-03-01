@@ -40,14 +40,17 @@
       <Item label="Disable" value="0"/>
       <Item label="Enable" value="1"/>
     </Value>
-	<Value type="short" genre="config" instance="1" index="5" label="Configure Time switch Period" units="minute" value="120" min="1" max="32767" size="2">
+	<Value type="short" genre="config" instance="1" index="5" label="Configure Time switch Period" units="minute" value="120" min="0" max="32767" size="2">
       <Help>
-        This parameter defines the time period that plug time switch off. This parameter can be configured 1 - 32767(in minutes).
+        This parameter defines the time period that plug time switch off. This parameter can be configured 0 - 32767(in minutes).
         If Parameter #4 is enabled, and relay is turn-on, the relay will be turn-off after delay this parameter.
       </Help>
     </Value>
     <Value type="list" genre="config" instance="1" index="6" label="Send Meter Report" value="1" size="1">
-      <Help>This parameter defines Disable/Enable meter report measure data to controller.</Help>
+      <Help>
+        This parameter defines Disable/Enable meter report measure data to controller.
+        When device is detected an OCP event or the relay turned on or turned off, device still will report all meter values once if this configuration is disabled. 
+      </Help>
       <Item label="Disable" value="0"/>
       <Item label="Enable" value="1"/>
     </Value>
@@ -65,6 +68,7 @@
 	 <Value type="byte" genre="config" instance="1" index="9" label="Configure power report" units="cA" value="50" min="1" max="1600" size="2">
       <Help>
         This parameter defines by how much power consumed must change to be reported to the Z-Wave Controller or Z-Wave Gateway, in centiAmperes (1-1600). If the rate of power consumed change ratio is greater than this parameter, the plug will report the results, voltage, current, power and energy, that plug measure to Z-Wave Controller or Z-Wave Gateway
+        The changed value = [Value] × 0.01A
       </Help>
     </Value>
     <Value type="byte" genre="config" instance="1" index="10" label="Configure maximum Alarm current" units="Ampere" value="13" min="1" max="16" size="1">
