@@ -875,6 +875,7 @@
 		<Product type="4944" id="3131" name="14287 Fan Control Switch" config="ge/12724-dimmer.xml"/>
 		<Product type="4952" id="3134" name="14288 In-Wall Tamper Resistant Smart Outlet" config="ge/14288-outlet.xml"/>
 		<Product type="4944" id="3038" name="14294 In-Wall Smart Dimmer" config="ge/14294-dimmer.xml"/>
+		<Product type="4944" id="3039" name="14299 In-Wall 1000W Smart Dimmer" config="ge/14294-dimmer.xml"/>
 		<Product type="4944" id="3130" name="14295 In-Wall Smart Toggle Dimmer" config="ge/14295-dimmer-toggle.xml"/>
 		<Product type="494d" id="3032" name="26931 Smart Motion Switch" config="ge/26931-motion-switch.xml"/>
 		<Product type="494d" id="3034" name="26933 Smart Motion Dimmer" config="ge/26933-motion-dimmer.xml"/>
