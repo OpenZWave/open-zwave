@@ -172,6 +172,7 @@ DISTFILES =	.gitignore \
 	config/everspring/ad147.xml \
 	config/everspring/an145.xml \
 	config/everspring/an158.xml \
+	config/everspring/an163.xml \
 	config/everspring/an179.xml \
 	config/everspring/an180.xml \
 	config/everspring/an181.xml \
