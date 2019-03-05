@@ -173,6 +173,7 @@ DISTFILES =	.gitignore \
 	config/everspring/ad147.xml \
 	config/everspring/an145.xml \
 	config/everspring/an158.xml \
+	config/everspring/an163.xml \
 	config/everspring/an179.xml \
 	config/everspring/an180.xml \
 	config/everspring/an181.xml \
@@ -282,6 +283,7 @@ DISTFILES =	.gitignore \
 	config/heiman/HS1SA-Z.xml \
 	config/heiman/HS1WL-Z.xml \
 	config/heiman/HS2SK-Z.xml \
+	config/heltun/he-zw-therm-fl2.xml \
 	config/homeseer/ezmotionplus.xml \
 	config/homeseer/hs-fc200plus.xml \
 	config/homeseer/hs-fls100plus.xml \
@@ -467,6 +469,7 @@ DISTFILES =	.gitignore \
 	config/shenzen_neo/nas-pd02z.xml \
 	config/shenzen_neo/nas-rc01z.xml \
 	config/shenzen_neo/nas-wr01z.xml \
+	config/shenzen_neo/nas-wr01ze.xml \
 	config/shenzen_neo/nas-ws02z.xml \
 	config/simon/10002034-13X.xml \
 	config/simon/10002041-13X.xml \
