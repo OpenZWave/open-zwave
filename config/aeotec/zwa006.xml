@@ -15,7 +15,7 @@ https://products.z-wavealliance.org/products/3067
 			<Item label="Power off" value="2"/>
 			<Item label="Return to standard schedule" value="3"/>
 		</Value>
-		<Value type="list" index="2" genre="config" label="LED status" units="" min="0" max="2" value="1" >
+		<Value type="list" index="2" genre="config" label="LED status" units="" min="0" max="2" value="1" size="1">
             <Help>
                 Configure LED (except boost) to be off irrespective of switch status.
             </Help>
