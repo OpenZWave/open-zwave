@@ -11,11 +11,6 @@ ZWA003 NanoMote Quad
 				Range: 10% - 50%.
 			</Help>
 		</Value>
-		<Value type="list" genre="config" instance="1" index="41" label="Enable send central scene notification" min="0" max="1" size="1">
-			<Help>Enable/disable the sending central scene notification</Help>
-			<Item label="Disable" value="0" />
-			<Item label="Enable" value="1" />
-		</Value>
 		<Value type="byte" index="42" genre="config" label="Duration of the command switch multilevel" units="" min="0" max="255" value="255">
 			<Help>
 				Setting the duration value of the command switch multilevel.
