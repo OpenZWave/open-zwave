@@ -769,6 +769,7 @@
 		<Product type="0203" id="1000" name="FGS223 Double Relay" config="fibaro/fgs223.xml"/>
 		<Product type="0203" id="2000" name="FGS223 Double Relay" config="fibaro/fgs223.xml"/>
 		<Product type="0203" id="3000" name="FGS223 Double Relay" config="fibaro/fgs223.xml"/>
+		<Product type="0203" id="4000" name="FGS223 Double Relay" config="fibaro/fgs223.xml"/>
 		<Product type="0303" id="1000" name="FGR223 Roller Shutter Controller 3" config="fibaro/fgr223.xml"/>
 		<Product type="0600" id="1000" name="FGWPE/F Wall Plug" config="fibaro/fgwpe.xml" />
 		<Product type="0200" id="1000" name="FGWPE/F Wall Plug" config="fibaro/fgwpe.xml"/>
