@@ -1500,6 +1500,7 @@
 		<Product type="0001" id="0001" name="PAN11-4 Smart Energy Plug In Switch"/>
 		<Product type="0001" id="0003" name="PAN04-1 Double Relay Switch 2x1.5kW with Power Measurement" config="philio/pan04.xml"/>
 		<Product type="0001" id="0004" name="PAN06-1 In Wall Dual Relay (1 Way) Switch Module" config="philio/pan06.xml"/>
+		<Product type="0001" id="0004" name="PAN05-1 In Wall Single relay (1 way) Switch" config="philio/pan05.xml"/>
 		<Product type="0001" id="0005" name="PAN07-1 TWO SPDT Switch module with meter" config="philio/pan07.xml"/>
 		<Product type="0001" id="0006" name="PAN08-1 In Wall Roller Shutter Controller" config="philio/pan08.xml"/>
 		<Product type="0001" id="000f" name="PAN03 Switch Module with meter 3 KW X1" config="philio/pan03.xml"/>
