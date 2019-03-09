@@ -18,8 +18,8 @@
       <Item label="0 - Disable to send Basic report" value="0"/>
       <Item label="1 - Enable to send Basic report" value="1"/>
     </Value>
-    <Value type="byte" genre="config" instance="1" index="4" label="Fade time." min="0" max="255" value="0">
-      <Help>Default fade time (unit is second, this value has the same function as Duration of Multilevel) Valid value: "0 -255" 0x00 - 0xFF. Default 1.</Help>
+    <Value type="byte" genre="config" instance="1" index="4" label="Fade time." min="0" max="255" value="1">
+      <Help>Fade time (unit is second, this value has the same function as Duration of Multilevel). Default 1.</Help>
     </Value>
     <Value type="byte" genre="config" instance="1" index="5" label="Setting minimum brightness value" min="0" max="50" units="%" value="0">
       <Help>Setting minimum brightness value, Valid value: 0 - 50, the bigger the value is, the higher the load’s minimum brightness is. Note: when configure this value, the value of Multilevel will be configured as 1$
@@ -34,5 +34,13 @@
       <Item label="0 – disable" value="0"/>
       <Item label="1 – enable" value="1"/>
     </Value>
+  </CommandClass>
+  <!-- Association Groups -->
+  <CommandClass id="133">
+    <Associations num_groups="5">
+      <Group index="1" max_associations="1" label="Lifeline"/>
+      <Group index="2" max_associations="8" label="On/Off"/>
+      <Group index="3" max_associations="8" label="Dimmer"/>
+    </Associations>
   </CommandClass>
 </Product>
