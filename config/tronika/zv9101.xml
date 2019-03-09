@@ -18,7 +18,7 @@
       <Item label="0 - Disable to send Basic report" value="0"/>
       <Item label="1 - Enable to send Basic report" value="1"/>
     </Value>
-    <Value type="short" genre="config" instance="1" index="4" label="Default fade time." min="0" max="255" units="sec" value="1">
+    <Value type="short" genre="config" instance="1" index="4" label="Fade time." min="0" max="255" units="sec" value="1">
       <Help>Default fade time (unit is second, this value has the same function as Duration of Multilevel). Default 1.</Help>
     </Value>
     <Value type="byte" genre="config" instance="1" index="5" label="Setting minimum brightness value" min="0" max="50" units="%" value="0">
