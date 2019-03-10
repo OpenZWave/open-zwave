@@ -37,7 +37,7 @@ effect of minimum brightness value</Help>
       <Item label="1 – leading edge" value="1"/>
     </Value>
     <Value type="list" genre="config" instance="1" index="7" label="Enable/disable external switch to be added to and removed from a network" size="1" value="1">
-      <Help>Enable/disable external switch to be added to and removed from a network (when enables this function, triple press the external switch within 1.5 seconds to be added to or removed from a net-work)". Defaul$</Help>
+      <Help>Enable/disable external switch to be added to and removed from a network (when enables this function, triple press the external switch within 1.5 seconds to be added to or removed from a net-work)". Defaul 1</Help>
       <Item label="0 – disable" value="0"/>
       <Item label="1 – enable" value="1"/>
     </Value>
