@@ -331,6 +331,7 @@ DISTFILES =	.gitignore \
 	config/leviton/dzpd3.xml \
 	config/leviton/rzi10.xml \
 	config/leviton/vrcpg.xml \
+	config/leviton/vrcz4.xml \
 	config/leviton/vre06.xml \
 	config/leviton/vrf01.xml \
 	config/leviton/vri06.xml \
@@ -490,6 +491,7 @@ DISTFILES =	.gitignore \
 	config/trane/TZEMT400BB32MAA.xml \
 	config/trane/TZEMT524AA21MA.xml \
 	config/tronika/zsc01d.xml \
+	config/tronika/zv9101.xml \
 	config/vision/zd2102.xml \
 	config/vision/zd2105us5.xml \
 	config/vision/zd2201.xml \
