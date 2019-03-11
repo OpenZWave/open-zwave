@@ -2,7 +2,7 @@
 <!--
 Aeotec ZW130 WallMote Quad, base on Engineering Spec 9/27/2016
 -->
-<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="3">
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="4">
     <!-- COMMAND_CLASS_BASIC -->
     <CommandClass id="32" getsupported="false"/>
     <!-- COMMAND_CLASS_SWITCH_BINARY -->
@@ -10,6 +10,14 @@ Aeotec ZW130 WallMote Quad, base on Engineering Spec 9/27/2016
     <!-- COMMAND_CLASS_SWITCH_MULTILEVEL -->
     <CommandClass id="38" getsupported="false"/>
     <!-- Configuration Parameters -->
+    <!-- Central Scene -->
+    <CommandClass id="91" name="COMMAND_CLASS_CENTRAL_SCENE" version="2" request_flags="4" scenecount="4">
+        <Value type="int" genre="system" instance="1" index="0" label="Scene Count" units="" read_only="true" write_only="false" verify_changes="false" min="-2147483648" max="2147483647" value="4" />
+        <Value type="int" genre="user" instance="1" index="1" label="Top Left Button Scene" units="" read_only="false" write_only="false" verify_changes="false" min="-2147483648" max="2147483647" value="0" />
+        <Value type="int" genre="user" instance="1" index="2" label="Top Right Button Scene" units="" read_only="false" write_only="false" verify_changes="false" min="-2147483648" max="2147483647" value="0" />
+        <Value type="int" genre="user" instance="1" index="3" label="Bottom Left Button Scene" units="" read_only="false" write_only="false" verify_changes="false" min="-2147483648" max="2147483647" value="0" />
+        <Value type="int" genre="user" instance="1" index="4" label="Bottom Right Button Scene" units="" read_only="false" write_only="false" verify_changes="false" min="-2147483648" max="2147483647" value="0" />
+    </CommandClass>
     <CommandClass id="112">
         <Value type="list" genre="config" instance="1" index="1" label="Touch sound" min="0" max="1" value="1" size="1">
             <Help>This will enable or disable the sound effects when you press or touch  the sensing area</Help>
@@ -26,7 +34,7 @@ Aeotec ZW130 WallMote Quad, base on Engineering Spec 9/27/2016
             <Item label="Disable" value="0"/>
             <Item label="Enable" value="1"/>
         </Value>
-        <Value type="list" genre="config" instance="1" index="4" label="Report type" min="0" max="1" value="1" size="1">
+        <Value type="list" genre="config" instance="1" index="4" label="Report type" min="0" max="2" value="1" size="1">
             <Help>To configure which report will be sent when pressing the buttons</Help>
             <Item label="Send nothing" value="0"/>
             <Item label="Send Central Scene Command Notification" value="1"/>
@@ -39,6 +47,24 @@ Aeotec ZW130 WallMote Quad, base on Engineering Spec 9/27/2016
                 Value 2: Green.
                 Value 3: Blue.
                 Value 4: Reserved
+            </Help>
+        </Value>
+        <Value type="int" index="9" genre="config" label="Swipe Start" units="" read_only="true" value="0" >
+            <Help>
+                When parameter 4 is set to 3, then parameters 9 and 10 will report
+                swipes.
+                Value 1: Button number (1-4) that swipe was started in
+                Value 2: 0 = Swipe down, 1 = Swipe up
+                Value 3/4: Swipe start position (0 = bottom, around 52000 = top)
+            </Help>
+        </Value>
+        <Value type="int" index="10" genre="config" label="Swipe End" units="" read_only="true" value="0" >
+            <Help>
+                When parameter 4 is set to 3, then parameters 9 and 10 will report
+                swipes.
+                Value 1: Button number (1-4) that swipe was started in
+                Value 2: 0 = Swipe down, 1 = Swipe up
+                Value 3/4: Swipe end position (0 = bottom, around 52000 = top)
             </Help>
         </Value>
         <Value type="int" index="33" genre="config" label="Test the LED, buzzer and vibrator" units="" value="0" read_only="true">
