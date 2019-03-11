@@ -1995,6 +1995,7 @@
 	</Manufacturer>
 	<Manufacturer id="0330" name="Tronika">
 		<Product type="0003" id="a10d" name="Touch Panel Wall Controller - ZSC-01D" config="tronika/zsc01d.xml"/>
+		<Product type="0200" id="d005" name="Dimmer ZV-9101" config="tronika/zv9101.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0049" name="Twisthink">
 	</Manufacturer>
