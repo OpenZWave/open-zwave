@@ -513,6 +513,7 @@
 		<Product type="0005" id="0175" name="Thermostats Danfoss Connect Z" config="devolo/connectz.xml"/>
 		<Product type="0100" id="0101" name="Scene Switch MT2652" config="devolo/mt2652.xml" />
 		<Product type="0100" id="0102" name="Key MT2653" config="devolo/mt2653.xml" />
+		<Product type="2004" id="04a4" name="Smoke Detector MT2651" config="devolo/mt2651.xml" />
 		<Product type="2004" id="2004" name="Smoke Detector MT2651" config="devolo/mt2651.xml" />
 	</Manufacturer>
 	<Manufacturer id="0103" name="Diehl AKO">
