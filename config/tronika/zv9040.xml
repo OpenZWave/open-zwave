@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Product xmlns='http://code.google.com/p/open-zwave/'>
     <!--
-    Nexa/Tronika ZV-9101
-    https://www.nexa.se/wp-content/uploads/2019/02/ZV-9101_manual.pdf
+    Tronika ZV9040
+    Manual: https://www.robbshop.nl/amfilerating/file/download/file_id/833/
     -->
 
   <!-- Configuration -->
