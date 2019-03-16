@@ -15,7 +15,7 @@
          <Item label="Switch On" value="2" />
       </Value>
 	  <Value type="list" genre="config" instance="1" index="3" label="Manual On/Off mode" min="0" max="1" value="1" size="1">
-         <Help>The On/Off function of S1、S2 and learn switch can be disabled or enabled by this parameter, default value is Enable. But the learning operation won’t be affected. When manual On/Off function is disabled, the RF command can only switch On but not Off. This is useful function for keeping the device in switch on state</Help>
+         <Help>The On/Off function of S1,S2 and learn switch can be disabled or enabled by this parameter, default value is Enable. But the learning operation wont be affected. When manual On/Off function is disabled, the RF command can only switch On but not Off. This is useful function for keeping the device in switch on state</Help>
          <Item label="Disable manual On/Off" value="0" />
          <Item label="Enable manual On/Off" value="1" />
       </Value>
