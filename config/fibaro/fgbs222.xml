@@ -10,22 +10,22 @@
   <CommandClass id="112">
     <Value type="list" genre="config" instance="1" index="20" label="Input 1 - operating mode" value="2" size="1">
       <Help>This parameter allows to choose mode of 1st input (IN1). Change it depending on connected device.</Help>
-      <Item label="Normally closed alarm input (Notification)" value="0" />
-      <Item label="Normally open alarm input (Notification)" value="1" />
-      <Item label="Monostable button (Central Scene)" value="2" />
-      <Item label="Bistable button (Central Scene)" value="3" />
-      <Item label="Analog input without internal pull-up (Sensor Multilevel)" value="4" />
-      <Item label="Analog input with internal pullup (Sensor Multilevel)" value="5" />
+      <Item label="0 - Normally closed alarm input (Notification)" value="0" />
+      <Item label="1 - Normally open alarm input (Notification)" value="1" />
+      <Item label="2 - Monostable button (Central Scene)" value="2" />
+      <Item label="3 - Bistable button (Central Scene)" value="3" />
+      <Item label="4 - Analog input without internal pull-up (Sensor Multilevel)" value="4" />
+      <Item label="5 - Analog input with internal pullup (Sensor Multilevel)" value="5" />
     </Value>
 
     <Value type="list" genre="config" instance="1" index="21" label="Input 2 - operating mode" value="2" size="1">
       <Help>This parameter allows to choose mode of 2nd input (IN2). Change it depending on connected device.</Help>
-      <Item label="Normally closed alarm input (Notification)" value="0" />
-      <Item label="Normally open alarm input (Notification)" value="1" />
-      <Item label="Monostable button (Central Scene)" value="2" />
-      <Item label="Bistable button (Central Scene)" value="3" />
-      <Item label="Analog input without internal pull-up (Sensor Multilevel)" value="4" />
-      <Item label="Analog input with internal pullup (Sensor Multilevel)" value="5" />
+      <Item label="0 - Normally closed alarm input (Notification)" value="0" />
+      <Item label="1 - Normally open alarm input (Notification)" value="1" />
+      <Item label="2 - Monostable button (Central Scene)" value="2" />
+      <Item label="3 - Bistable button (Central Scene)" value="3" />
+      <Item label="4 - Analog input without internal pull-up (Sensor Multilevel)" value="4" />
+      <Item label="5 - Analog input with internal pullup (Sensor Multilevel)" value="5" />
     </Value>
 
     <Value type="list" genre="config" instance="1" index="24" label="Inputs orientation" value="0" size="1">
