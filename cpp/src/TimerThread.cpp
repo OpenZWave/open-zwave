@@ -309,10 +309,11 @@ void Timer::TimerDelEvent
 			if ((*it)->id == id) {
 				m_driver->GetTimer()->TimerDelEvent((*it));
 				m_timerEventList.erase(it);
-			} else {
-				Log::Write(LogLevel_Warning, "Cant Find TimerEvent %d to Delete in TimerDelEvent", id);
+				return;
 			}
 		}
+		Log::Write(LogLevel_Warning, "Cant Find TimerEvent %d to Delete in TimerDelEvent", id);
+		return;
 	} else {
 		Log::Write(LogLevel_Warning, "Driver Not Set for TimerThread");
 		return;
