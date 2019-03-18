@@ -18,10 +18,10 @@ ZWA003 NanoMote Quad
 			</Help>
 		</Value>
 		<Value type="list" genre="config" instance="1" index="43" label="Battery low buzzer alarm" min="0" max="1" value="1" size="1">
-            		<Help>Enable/disable the buzzer alarm when battery is running low</Help>
-            		<Item label="Disable" value="0"/>
-            		<Item label="Enable" value="1"/>
-		</Value>    
+			<Help>Enable/disable the buzzer alarm when battery is running low</Help>
+			<Item label="Disable" value="0"/>
+			<Item label="Enable" value="1"/>
+		</Value>
 	</CommandClass>
 	<!-- Association Groups -->
 	<CommandClass id="133">
@@ -36,5 +36,14 @@ ZWA003 NanoMote Quad
 			<Group index="8" max_associations="5" label="On/Off control via Button 4"/>
 			<Group index="9" max_associations="5" label="Dimmer control via Button 4"/>
 		</Associations>
+	</CommandClass>
+	<!-- Central Scene Reports -->
+	<CommandClass id="91">
+		<Instance index="1" />
+		<Value type="int" genre="system" instance="1" index="0" label="Scene Count" units="" read_only="true" write_only="false" verify_changes="false" min="-2147483648" max="2147483647" value="0" />
+		<Value type="int" genre="user" instance="1" index="1" label="Button One" units="" read_only="true" write_only="false" verify_changes="false" min="-2147483648" max="2147483647" value="0" />
+		<Value type="int" genre="user" instance="1" index="2" label="Button Two" units="" read_only="true" write_only="false" verify_changes="false" min="-2147483648" max="2147483647" value="0" />
+		<Value type="int" genre="user" instance="1" index="3" label="Button Three" units="" read_only="true" write_only="false" verify_changes="false" min="-2147483648" max="2147483647" value="0" />
+		<Value type="int" genre="user" instance="1" index="4" label="Button Four" units="" read_only="true" write_only="false" verify_changes="false" min="-2147483648" max="2147483647" value="0" />
 	</CommandClass>
 </Product>
