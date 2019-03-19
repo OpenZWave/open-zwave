@@ -61,6 +61,7 @@
         2 => Key pressed 2 times.
         4 => Key pressed 3 times.
         8 => Key hold down and key released.
+      </Help>
     </Value>
 
     <Value type="byte" genre="config" instance="1" index="41" label="Input 2 sent scenes" value="0" size="1">
