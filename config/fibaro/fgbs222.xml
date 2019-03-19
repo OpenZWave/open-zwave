@@ -5,6 +5,7 @@
     Fibaro Smart Implant
     https://www.fibaro.com/us/products/smart-implant/
     https://manuals.fibaro.com/content/manuals/en/FGBS-222/FGBS-222-EN-T-v1.0.pdf
+    https://products.z-wavealliance.org/products/3195
     -->
   <!-- Configuration -->
   <CommandClass id="112">
