@@ -199,6 +199,7 @@ DISTFILES =	.gitignore \
 	config/fakro/zws12.xml \
 	config/fakro/zws230.xml \
 	config/fibaro/fgbs001.xml \
+	config/fibaro/fgbs222.xml \
 	config/fibaro/fgcd001.xml \
 	config/fibaro/fgd211.xml \
 	config/fibaro/fgd212.xml \
