@@ -92,6 +92,7 @@ DISTFILES =	.gitignore \
 	config/aeotec/zwa003.xml \
 	config/aeotec/zwa004.xml \
 	config/aeotec/zwa005.xml \
+	config/aeotec/zwa006.xml \
 	config/assa_abloy/ConexisL1.xml \
 	config/assa_abloy/KeyfreeConnected-plus.xml \
 	config/assa_abloy/KeyfreeConnected.xml \
@@ -172,6 +173,7 @@ DISTFILES =	.gitignore \
 	config/everspring/ad147.xml \
 	config/everspring/an145.xml \
 	config/everspring/an158.xml \
+	config/everspring/an163.xml \
 	config/everspring/an179.xml \
 	config/everspring/an180.xml \
 	config/everspring/an181.xml \
@@ -197,6 +199,7 @@ DISTFILES =	.gitignore \
 	config/fakro/zws12.xml \
 	config/fakro/zws230.xml \
 	config/fibaro/fgbs001.xml \
+	config/fibaro/fgbs222.xml \
 	config/fibaro/fgcd001.xml \
 	config/fibaro/fgd211.xml \
 	config/fibaro/fgd212.xml \
@@ -281,6 +284,7 @@ DISTFILES =	.gitignore \
 	config/heiman/HS1SA-Z.xml \
 	config/heiman/HS1WL-Z.xml \
 	config/heiman/HS2SK-Z.xml \
+	config/heltun/he-zw-therm-fl2.xml \
 	config/homeseer/ezmotionplus.xml \
 	config/homeseer/hs-fc200plus.xml \
 	config/homeseer/hs-fls100plus.xml \
@@ -328,6 +332,7 @@ DISTFILES =	.gitignore \
 	config/leviton/dzpd3.xml \
 	config/leviton/rzi10.xml \
 	config/leviton/vrcpg.xml \
+	config/leviton/vrcz4.xml \
 	config/leviton/vre06.xml \
 	config/leviton/vrf01.xml \
 	config/leviton/vri06.xml \
@@ -348,6 +353,7 @@ DISTFILES =	.gitignore \
 	config/manufacturer_specific.xml \
 	config/manufacturer_specific.xsd \
 	config/mcohome/a8-9.xml \
+	config/mcohome/mh7h.xml \
 	config/mcohome/mh8fceu.xml \
 	config/mcohome/mh9co2.xml \
 	config/mcohome/mhp210.xml \
@@ -452,6 +458,7 @@ DISTFILES =	.gitignore \
 	config/remotec/zxt-600.xml \
 	config/schlage/BE468.xml \
 	config/schlage/BE469.xml \
+	config/schlage/BE469ZP.xml \
 	config/schlagelink/itemp.xml \
 	config/schlagelink/minikeypad.xml \
 	config/sensative/strips.xml \
@@ -464,8 +471,10 @@ DISTFILES =	.gitignore \
 	config/shenzen_neo/nas-pd02z.xml \
 	config/shenzen_neo/nas-rc01z.xml \
 	config/shenzen_neo/nas-wr01z.xml \
+	config/shenzen_neo/nas-wr01ze.xml \
 	config/shenzen_neo/nas-ws02z.xml \
 	config/simon/10002034-13X.xml \
+	config/simon/10002041-13X.xml \
 	config/steinel/is140-2.xml \
 	config/steinel/l810-led-ihf.xml \
 	config/steinel/rs-led-d2.xml \
@@ -478,10 +487,12 @@ DISTFILES =	.gitignore \
 	config/telldus/tzwp102.xml \
 	config/thermofloor/heatit021.xml \
 	config/thermofloor/heatit033.xml \
+	config/thermofloor/heatit056.xml \
 	config/trane/TZEMT400AB32MAA.xml \
 	config/trane/TZEMT400BB32MAA.xml \
 	config/trane/TZEMT524AA21MA.xml \
 	config/tronika/zsc01d.xml \
+	config/tronika/zv9101.xml \
 	config/vision/zd2102.xml \
 	config/vision/zd2105us5.xml \
 	config/vision/zd2201.xml \
@@ -526,14 +537,18 @@ DISTFILES =	.gitignore \
 	config/zooz/zen07.xml \
 	config/zooz/zen15.xml \
 	config/zooz/zen20.xml \
+	config/zooz/zen20v2.xml \
 	config/zooz/zen21.xml \
 	config/zooz/zen22.xml \
 	config/zooz/zen22v2.xml \
 	config/zooz/zen23.xml \
 	config/zooz/zen24.xml \
+	config/zooz/zen26.xml \
+	config/zooz/zen27.xml \
 	config/zooz/zse08.xml \
 	config/zooz/zse09.xml \
 	config/zooz/zse18.xml \
+	config/zooz/zse19.xml \
 	config/zooz/zse30.xml \
 	config/zooz/zse33.xml \
 	config/zooz/zse40.xml \

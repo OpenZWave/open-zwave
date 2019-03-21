@@ -236,6 +236,8 @@ Version 1.5
  - Add SmartLock Idlock 150 from sveip  (Nechry)
  - Pull Request #1686 Added brand Simon from afimar (Nechry)
  - Fix ThermostatMode CC not working with instances (Justin)
+ - Pull Request #1693 Update manufacturer_specific.xml from afimar (Nechry)
+ - Add Aeotec ZWA006 Smart Boost Timer Switch (Nechry)
 
 Version 1.4
  - Released 10th Jan, 2016
