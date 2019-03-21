@@ -51,8 +51,8 @@ namespace OpenZWave
 		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }
 		virtual string const GetCommandClassName()const{ return StaticGetCommandClassName(); }
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );
-		
-		virtual uint8 GetMaxVersion(){ return 5; }
+
+		virtual uint8 GetMaxVersion(){ return 11; }
 
 	protected:
 		virtual void CreateVars( uint8 const _instance );
