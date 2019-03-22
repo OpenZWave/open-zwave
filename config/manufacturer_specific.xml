@@ -1884,6 +1884,9 @@
 	</Manufacturer>
 	<Manufacturer id="028B" name="Sunjet Components">
 	</Manufacturer>
+	<Manufacturer id="0330" name="Sunricher">
+		<Product type="0300" id="a10d" name="Z-Wave Wall Controller SR-ZV9001T4-DIM-EU" config="sunricher/srzv9001t4dimeu.xml"/>
+	</Manufacturer>
 	<Manufacturer id="0054" name="Superna">
 	</Manufacturer>
 	<Manufacturer id="0191" name="Swann Communications">
@@ -1997,11 +2000,6 @@
 	</Manufacturer>
 	<Manufacturer id="0111" name="Tronico Technology Co. Ltd.">
 		<Product type="8200" id="0200" name="ZDS-100"/>
-	</Manufacturer>
-	<Manufacturer id="0330" name="Tronika">
-		<Product type="0003" id="a10d" name="Touch Panel Wall Controller - ZSC-01D" config="tronika/zsc01d.xml"/>
-		<Product type="0200" id="d005" name="Dimmer ZV-9101" config="tronika/zv9101.xml"/>
-		<Product type="0200" id="d00c" name="Dimmer ZV9040" config="tronika/zv9040.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0049" name="Twisthink">
 	</Manufacturer>
