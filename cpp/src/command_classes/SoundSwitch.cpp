@@ -148,7 +148,7 @@ bool SoundSwitch::HandleMsg
 			value->Release();
 		}
 		for (int i = 1; i <= m_toneCount; i++) {
-			Msg* msg = new Msg( "SoundSwitchCmd_Tones_Number_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+			Msg* msg = new Msg( "SoundSwitchCmd_Tones_Info_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 			msg->SetInstance( this, _instance );
 			msg->Append( GetNodeId() );
 			msg->Append( 3 );
@@ -167,6 +167,7 @@ bool SoundSwitch::HandleMsg
 		string name((const char *)&_data[5], _data[4]);
 		m_toneInfo[index].duration = duration;
 		m_toneInfo[index].name = name;
+		Log::Write( LogLevel_Info, GetNodeId(), "Received SoundSwitch Tone Info Report: %d - %s - %d sec", index, name.c_str(), duration);
 		if (index == m_toneCount) {
 			vector<ValueList::Item> items;
 			{
@@ -211,6 +212,7 @@ bool SoundSwitch::HandleMsg
 		uint8 defaulttone = _data[2];
 		if (volume > 100)
 			volume = 100;
+		Log::Write( LogLevel_Info, GetNodeId(), "Received SoundSwitch Tone Config report - Volume: %d, defaulttone: %d", volume, defaulttone);
 		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, SoundSwitchIndex_Volume ) ) )
 		{
 			value->OnValueRefreshed( volume );

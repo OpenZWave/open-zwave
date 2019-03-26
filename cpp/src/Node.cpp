@@ -1606,8 +1606,7 @@ void Node::SetSecuredClasses
 {
 	uint32 i;
 	m_secured = true;
-	Log::Write( LogLevel_Info, m_nodeId, "  Secured command classes for node %d:", m_nodeId );
-
+	Log::Write( LogLevel_Info, m_nodeId, "  Secured command classes for node %d (instance %d):", m_nodeId, _instance );
 	if (!GetDriver()->isNetworkKeySet()) {
 		Log::Write (LogLevel_Warning, m_nodeId, "  Secured Command Classes cannot be enabled as Network Key is not set");
 		return;
@@ -1645,6 +1644,15 @@ void Node::SetSecuredClasses
 					Log::Write( LogLevel_Info, m_nodeId, "    %s (Secured) - %s", pCommandClass->GetCommandClassName().c_str(), pCommandClass->IsInNIF() ? "InNIF": "NotInNIF");
 				}
 			}
+			if (_instance > 1) {
+				/* we need to get the endpoint from the Security CC, to map over to the target CC if this
+				 * is triggered by a SecurityCmd_SupportedReport from a instance
+				 */
+				CommandClass *secc = GetCommandClass(Security::StaticGetCommandClassId(), false);
+				int ep = secc->GetEndPoint(_instance);
+				pCommandClass->SetEndPoint(_instance, ep);
+				pCommandClass->SetInstance(_instance);
+			}
 		}
 		/* it might be a new CC we havn't seen as part of the NIF. In that case
 		 * its only supported via the Security CC, so no need to check our SecurityStrategy, just
@@ -1665,7 +1673,10 @@ void Node::SetSecuredClasses
 				// Start with an instance count of one.  If the device supports COMMMAND_CLASS_MULTI_INSTANCE
 				// then some command class instance counts will increase once the responses to the RequestState
 				// call at the end of this method have been processed.
-				pCommandClass->SetInstance( 1 );
+				if (_instance > 1)
+					pCommandClass->SetInstance( _instance );
+				else
+					pCommandClass->SetInstance( 1 );
 
 				/* set our Static Request Flags */
 				uint8 request = 0;
@@ -1693,7 +1704,7 @@ void Node::SetSecuredClasses
 			Log::Write( LogLevel_Info, m_nodeId, "    Secure CommandClass 0x%.2x - NOT SUPPORTED", _data[i] );
 		}
 	}
-	Log::Write( LogLevel_Info, m_nodeId, "  UnSecured command classes for node %d:", m_nodeId );
+	Log::Write( LogLevel_Info, m_nodeId, "  UnSecured command classes for node %d (instance %d):", m_nodeId, _instance );
 	for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
 	{
 		if (!it->second->IsSecured())

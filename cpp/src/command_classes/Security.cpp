@@ -212,14 +212,14 @@ bool Security::HandleMsg
 			 * This means we must do a SecurityCmd_SupportedGet request ASAP so we dont have
 			 * Command Classes created after the Discovery Phase is completed!
 			 */
-			Log::Write(LogLevel_Info, GetNodeId(), "Received SecurityCmd_SupportedReport from node %d", GetNodeId() );
+			Log::Write(LogLevel_Info, GetNodeId(), "Received SecurityCmd_SupportedReport from node %d (instance %d)", GetNodeId(), _instance );
 			m_secured = true;
 			if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, 0 ) ) )
 			{
 				value->OnValueRefreshed( m_secured );
 				value->Release();
 			}
-			HandleSupportedReport(&_data[2], _length-2, _instance);
+			HandleSupportedReport(&_data[2], _length-3, _instance);
 			break;
 		}
 		case SecurityCmd_SchemeReport:
