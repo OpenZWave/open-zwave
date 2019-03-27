@@ -480,6 +480,9 @@ DISTFILES =	.gitignore \
 	config/steinel/rs-led-d2.xml \
 	config/steinel/xled-home-2.xml \
 	config/stelpro/stzw402.xml \
+	config/sunricher/srzv9001t4dimeu.xml \
+	config/sunricher/srzv9101sachpeu.xml \
+	config/sunricher/zv9001.xml \
 	config/swiid/swiidinter.xml \
 	config/swiid/swiidplug.xml \
 	config/telldus/tzdw100.xml \
@@ -491,8 +494,6 @@ DISTFILES =	.gitignore \
 	config/trane/TZEMT400AB32MAA.xml \
 	config/trane/TZEMT400BB32MAA.xml \
 	config/trane/TZEMT524AA21MA.xml \
-	config/tronika/zsc01d.xml \
-	config/tronika/zv9101.xml \
 	config/vision/zd2102.xml \
 	config/vision/zd2105us5.xml \
 	config/vision/zd2201.xml \
