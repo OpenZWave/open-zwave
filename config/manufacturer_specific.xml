@@ -1886,6 +1886,8 @@
 	</Manufacturer>
 	<Manufacturer id="0330" name="Sunricher">
 		<Product type="0300" id="a10d" name="Z-Wave Wall Controller SR-ZV9001T4-DIM-EU" config="sunricher/srzv9001t4dimeu.xml"/>
+		<Product type="0200" id="d005" name="In-wall Dimmer SR-ZV9101SAC-HP-EU" config="sunricher/srzv9101sachpeu.xml"/>
+		<Product type="0200" id="d00c" name="Nexa/Tronika ZV-9101" config="sunricher/zv9101.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0054" name="Superna">
 	</Manufacturer>
