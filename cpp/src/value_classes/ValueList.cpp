@@ -112,20 +112,30 @@ void ValueList::ReadXML
 		}
 		else
 		{
-			Log::Write( LogLevel_Info, "Value size is invalid. Only 1, 2 & 4 supported for node %d, class 0x%02x, instance %d, index %d", _nodeId, _commandClassId, GetID().GetInstance(), GetID().GetIndex() );
+			Log::Write( LogLevel_Warning, "Value size is invalid (%d). Only 1, 2 & 4 supported for node %d, class 0x%02x, instance %d, index %d", intSize, _nodeId, _commandClassId, GetID().GetInstance(), GetID().GetIndex() );
 		}
 	}
 	else
 	{
-		Log::Write( LogLevel_Info, "Value list size is not set, assuming 4 bytes for node %d, class 0x%02x, instance %d, index %d", _nodeId, _commandClassId, GetID().GetInstance(), GetID().GetIndex() );
+		Log::Write( LogLevel_Warning, "Value list size is not set, assuming 4 bytes for node %d, class 0x%02x, instance %d, index %d", _nodeId, _commandClassId, GetID().GetInstance(), GetID().GetIndex() );
 	}
 
 	TiXmlElement const* itemElement = _valueElement->FirstChildElement();
+
+	bool shouldclearlist = true;
 	while( itemElement )
 	{
 		char const* str = itemElement->Value();
 		if( str && !strcmp( str, "Item" ) )
 		{
+			/* clear the existing list, if we have Item entries. (static list entries are created in the constructor
+			 * here, we load up any localized labels
+			 */
+			if (shouldclearlist) {
+				m_items.clear();
+				shouldclearlist = false;
+			}
+
 			bool AddItem = true;
 			char const* labelStr = itemElement->Attribute( "label" );
 			char const* lang = "";
@@ -137,12 +147,12 @@ void ValueList::ReadXML
 			}
 			int value = 0;
 			if (itemElement->QueryIntAttribute( "value", &value ) != TIXML_SUCCESS) {
-				Log::Write( LogLevel_Info, "Item value %s is wrong type or does not exist in xml configuration for node %d, class 0x%02x, instance %d, index %d", labelStr, _nodeId, _commandClassId, GetID().GetInstance(), GetID().GetIndex() );
+				Log::Write( LogLevel_Warning, "Item value %s is wrong type or does not exist in xml configuration for node %d, class 0x%02x, instance %d, index %d", labelStr, _nodeId, _commandClassId, GetID().GetInstance(), GetID().GetIndex() );
 				continue;
 			}
 			if(( m_size == 1 && value > 255 ) || ( m_size == 2 && value > 65535) )
 			{
-				Log::Write( LogLevel_Info, "Item value %s is incorrect size in xml configuration for node %d, class 0x%02x, instance %d, index %d", labelStr, _nodeId, _commandClassId, GetID().GetInstance(), GetID().GetIndex() );
+				Log::Write( LogLevel_Warning, "Item value %s is incorrect size in xml configuration for node %d, class 0x%02x, instance %d, index %d", labelStr, _nodeId, _commandClassId, GetID().GetInstance(), GetID().GetIndex() );
 			}
 			else
 			{
@@ -158,7 +168,6 @@ void ValueList::ReadXML
 
 		itemElement = itemElement->NextSiblingElement();
 	}
-
 	/* setup any Localization now as we should have read all available languages already */
 	for( vector<Item>::iterator it = m_items.begin(); it != m_items.end(); ++it )
 	{
@@ -181,7 +190,7 @@ void ValueList::ReadXML
 		}
 		else
 		{
-			Log::Write( LogLevel_Info, "Value is not found in xml configuration for node %d, class 0x%02x, instance %d, index %d", _nodeId, _commandClassId, GetID().GetInstance(), GetID().GetIndex() );
+			Log::Write( LogLevel_Warning, "Value is not found in xml configuration for node %d, class 0x%02x, instance %d, index %d", _nodeId, _commandClassId, GetID().GetInstance(), GetID().GetIndex() );
 		}
 	}
 
@@ -197,13 +206,16 @@ void ValueList::ReadXML
 		}
 		else
 		{
-			Log::Write( LogLevel_Info, "Vindex is out of range for index in xml configuration for node %d, class 0x%02x, instance %d, index %d", _nodeId, _commandClassId, GetID().GetInstance(), GetID().GetIndex() );
+			Log::Write( LogLevel_Warning, "Vindex is out of range for index in xml configuration for node %d, class 0x%02x, instance %d, index %d", _nodeId, _commandClassId, GetID().GetInstance(), GetID().GetIndex() );
 		}
 	}
 	if( !valSet && !indSet )
 	{
-		Log::Write( LogLevel_Info, "Missing default list value or vindex from xml configuration: node %d, class 0x%02x, instance %d, index %d", _nodeId,  _commandClassId, GetID().GetInstance(), GetID().GetIndex() );
+		Log::Write( LogLevel_Warning, "Missing default list value or vindex from xml configuration: node %d, class 0x%02x, instance %d, index %d", _nodeId,  _commandClassId, GetID().GetInstance(), GetID().GetIndex() );
 	}
+
+
+
 }
 
 //-----------------------------------------------------------------------------

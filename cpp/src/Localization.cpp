@@ -457,8 +457,12 @@ void Localization::ReadXMLVIDHelp(uint8 ccID, uint16 indexId, uint32 pos, const 
 	if (labelElement->Attribute( "lang" ))
 		 Language = labelElement->Attribute( "lang" );
 	if (!labelElement->GetText()) {
-		Log::Write( LogLevel_Warning, "Localization::ReadXMLVIDHelp: Error in %s at line %d - No Help Entry for CommandClass %d, ValueID: %d (%d):  %s (Lang: %s)", labelElement->GetDocument()->GetUserData(), labelElement->Row(), ccID, indexId, pos, labelElement->GetText(), Language.c_str() );
+		if (ccID != 112) {
+			/* Dont Log About the Configuration CC */
+			Log::Write( LogLevel_Warning, "Localization::ReadXMLVIDHelp: Error in %s at line %d - No Help Entry for CommandClass %d, ValueID: %d (%d):  %s (Lang: %s)", labelElement->GetDocument()->GetUserData(), labelElement->Row(), ccID, indexId, pos, labelElement->GetText(), Language.c_str() );
+		}
 		return;
+
 	}
 
 	uint64 key = GetValueKey(ccID, indexId, pos);
