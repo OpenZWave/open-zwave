@@ -32,7 +32,6 @@
 
 namespace OpenZWave
 {
-<<<<<<< HEAD
 	/** \brief Implements COMMAND_CLASS_ZWAVEPLUS_INFO (0x5E), a Z-Wave device command class.
 	 * \ingroup CommandClass
 	 */
