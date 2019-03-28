@@ -89,12 +89,11 @@ MultiInstance::MultiInstance
 ):
 CommandClass( _homeId, _nodeId ),
 m_numEndPoints( 0 ),
+m_useDestAsSrc(false),
 m_numEndPointsHint( 0 ),
 m_endPointMap( MultiInstanceMapAll ),
 m_endPointFindSupported( false ),
-m_uniqueendpoints( false ),
-m_useDestAsSrc(false)
-
+m_uniqueendpoints( false )
 {
 }
 
@@ -149,8 +148,7 @@ void MultiInstance::ReadXML
 	{
 		m_uniqueendpoints = !strcmp( str, "true");
 	}
-	m_useDestAsSrc = true;
-	str = _node->Attribute( "invertEndpointSource" );
+	str = _ccElement->Attribute( "invertEndpointSource" );
 	if( str )
 	{
 		m_useDestAsSrc = !strcmp( str, "true" );
@@ -189,6 +187,10 @@ void MultiInstance::WriteXML
 	if( m_uniqueendpoints )
 	{
 		_ccElement->SetAttribute( "forceUniqueEndpoints", "true" );
+	}
+	if ( m_useDestAsSrc )
+	{
+		_ccElement->SetAttribute( "invertEndpointSource", "true" );
 	}
 
 }
