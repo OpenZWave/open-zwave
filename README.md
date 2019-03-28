@@ -14,7 +14,7 @@ There is a example application on how to interface with the library called MinOZ
 If you are using a Application that uses OZW, you should first check with the Application Developers for support. As OZW is a library used by dozens of large opensource home automation applications, we can not support application related issues here. If your application developer indicates the problem may be with OZW, please follow the guidelines below. 
 
 First thing you should do if you are running into troubles is search our [mailing list](https://groups.google.com/forum/#!forum/openzwave). There is a high chance that your problem may have already been discussed on the list. 
-If your still having problems, you should Generate a Log file and upload your Log to the [Log Analyzer on our homepage](http://www.openzwave.com/log-analyzer), which will check for common issues, and provide some basic recommendations. Please follow the instructions on that page to ensure your log file contains the relevant information. 
+If you're still having problems, you should Generate a Log file and upload your Log to the [Log Analyzer on our homepage](http://www.openzwave.com/log-analyzer), which will check for common issues, and provide some basic recommendations. Please follow the instructions on that page to ensure your log file contains the relevant information. 
 
 If you think you have found a bug, please see the next section. 
 

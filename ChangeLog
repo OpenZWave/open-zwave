@@ -242,6 +242,15 @@ Version 1.5
  - Add TKB TZ57 Two channel switch (Nechry)
  - Add Qubino ZMNHYD1 Smart Plug 16A (Nechry)
  - Clear Buffer when reading a new packet - Issue #1596 (Justin)
+ - Add additional mapping for MCO Home MHS-314 switch
+ - Add Zipato PSR03-1B.EU Keyfob 5 Remote (Nechry)
+ - Add Fibaro FGR223 Roller Shutter Controller 3 (Nechry)
+ - Add commented config entry  for Neo coolcam Battery Powered PIR Sensor (Nechry)
+ - Add SmartLock Idlock 150 from sveip  (Nechry)
+ - Pull Request #1686 Added brand Simon from afimar (Nechry)
+ - Fix ThermostatMode CC not working with instances (Justin)
+ - Pull Request #1693 Update manufacturer_specific.xml from afimar (Nechry)
+ - Add Aeotec ZWA006 Smart Boost Timer Switch (Nechry)
 
 Dev Branch:
  - Rename zwcfg_*.xml to zwcache_*.xml to reflect its not a config file, but a cache. (Justin)

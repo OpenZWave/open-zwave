@@ -45,8 +45,6 @@ CFLAGS	+= -c -DDARWIN
 ifeq ($(DARWIN_MOJAVE_UP),1)
 # Newer macOS releases don't support i386 so only build 64-bit
 DARWIN_BUILD_TARGET = -arch x86_64
-# Disable an implicitly-set build flag that causes the build to needlessly fail
-CFLAGS += -Wno-unused-private-field
 else
 DARWIN_BUILD_TARGET = -arch i386 -arch x86_64
 endif

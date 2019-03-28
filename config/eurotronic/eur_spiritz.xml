@@ -4,7 +4,7 @@ Eurotronic Spirit Z-Wave Plus Thermostat
 Product website: https://www.eurotronic.org/produkte/spirit-z-wave-plus.html
 Tech manual: https://www.eurotronic.org/fileadmin/user_upload/eurotronic.org/Produktbilder/spirit_z_wave_plus/Spirit_Z-Wave_BAL_web_EN_view_04.pdf
 -->
-<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="2">
     <!-- Multilevel switch for setting valve opening -->
     <CommandClass id="38">
         <Value type="byte" genre="user" index="0" label="Valve Opening" units="%" min="0" max="100" value="0" />
