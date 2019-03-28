@@ -92,7 +92,9 @@ m_numEndPoints( 0 ),
 m_numEndPointsHint( 0 ),
 m_endPointMap( MultiInstanceMapAll ),
 m_endPointFindSupported( false ),
-m_uniqueendpoints( false )
+m_uniqueendpoints( false ),
+m_useDestAsSrc(false)
+
 {
 }
 
@@ -147,6 +149,13 @@ void MultiInstance::ReadXML
 	{
 		m_uniqueendpoints = !strcmp( str, "true");
 	}
+	m_useDestAsSrc = true;
+	str = _node->Attribute( "invertEndpointSource" );
+	if( str )
+	{
+		m_useDestAsSrc = !strcmp( str, "true" );
+	}
+
 }
 
 //-----------------------------------------------------------------------------
@@ -445,7 +454,7 @@ void MultiInstance::HandleMultiChannelCapabilityReport
 		}
 
 		uint8 endPoint;
-		if (node->UseDestAsSource()) {
+		if (m_useDestAsSrc) {
 			endPoint = _data[2] & 0x7f;
 		} else {
 			endPoint = _data[1] & 0x7f;

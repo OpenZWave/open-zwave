@@ -1006,13 +1006,6 @@ void Node::ReadXML
 		m_routing = !strcmp( str, "true" );
 	}
 
-	m_useDestAsSrc = true;
-	str = _node->Attribute( "dest_as_source" );
-	if( str )
-	{
-		m_useDestAsSrc = !strcmp( str, "true" );
-	}
-
 	m_maxBaudRate = 0;
 	if( TIXML_SUCCESS == _node->QueryIntAttribute( "max_baud_rate", &intVal ) )
 	{
