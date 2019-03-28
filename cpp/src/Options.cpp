@@ -119,7 +119,7 @@ Options* Options::Create
 		s_instance->AddOptionBool(		"IntervalBetweenPolls",		false );					// if false, try to execute the entire poll list within the PollInterval time frame
 																								// if true, wait for PollInterval milliseconds between polls
 		s_instance->AddOptionBool(		"SuppressValueRefresh",		false );					// if true, notifications for refreshed (but unchanged) values will not be sent
-		s_instance->AddOptionBool(		"PerformReturnRoutes",		true );					// if true, return routes will be updated
+		s_instance->AddOptionBool(		"PerformReturnRoutes",		false );					// if true, return routes will be updated
 		s_instance->AddOptionString(	"NetworkKey", 				string(""), 			false);
 		s_instance->AddOptionBool(		"RefreshAllUserCodes",		false ); 					// if true, during startup, we refresh all the UserCodes the device reports it supports. If False, we stop after we get the first "Available" slot (Some devices have 250+ usercode slots! - That makes our Session Stage Very Long )
 		s_instance->AddOptionInt( 		"RetryTimeout", 			RETRY_TIMEOUT);				// How long do we wait to timeout messages sent
@@ -381,15 +381,15 @@ bool Options::Lock
 	for (it = m_options.begin(); it != m_options.end(); it++) {
 		Option *opt = it->second;
 		switch (opt->m_type) {
-                        case OptionType_Bool:
-                        	Log::Write( LogLevel_Info, "\t%s: %s", it->first.c_str(), opt->m_valueBool == true ? "true" : "false");
-                        	break;
-                        case OptionType_Int:
-                        	Log::Write( LogLevel_Info, "\t%s: %d", it->first.c_str(), opt->m_valueInt);
-                        	break;
-                        case OptionType_String:
-                        	Log::Write( LogLevel_Info, "\t%s: %s", it->first.c_str(), opt->m_valueString.c_str());
-                        	break;
+			case OptionType_Bool:
+				Log::Write( LogLevel_Info, "\t%s: %s", it->first.c_str(), opt->m_valueBool == true ? "true" : "false");
+				break;
+			case OptionType_Int:
+				Log::Write( LogLevel_Info, "\t%s: %d", it->first.c_str(), opt->m_valueInt);
+				break;
+			case OptionType_String:
+				Log::Write( LogLevel_Info, "\t%s: %s", it->first.c_str(), opt->m_valueString.c_str());
+				break;
 			case OptionType_Invalid:
 				Log::Write( LogLevel_Info, "\t%s: Invalid Type");
 				break;
