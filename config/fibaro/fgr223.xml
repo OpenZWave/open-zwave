@@ -120,7 +120,7 @@
             </Help>
         </Value>
 
-        <Value type="list" genre="config" instance="1" index="41" label="S2 switch - scenes sent" size="1" value="0">
+        <Value type="byte" genre="config" instance="1" index="41" label="S2 switch - scenes sent" size="1" value="0">
             <Help>
                 This parameter determines which actions result in sending scene IDs assigned to them.
                 Sum of:
