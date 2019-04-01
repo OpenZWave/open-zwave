@@ -1,3 +1,5 @@
+### This is a fork of [Open Z-Wave](https://github.com/OpenZWave/open-zwave), licensed under the [LGPL license](https://github.com/OpenZWave/open-zwave/blob/master/license/lgpl.txt).
+
 ![Open-ZWave Library](https://github.com/OpenZWave/open-zwave-web/raw/master/gfx/OZW_SF.png)
 ==================
 
