@@ -84,7 +84,7 @@ namespace OpenZWave
 			Type_NodeEvent,						/**< A node has triggered an event.  This is commonly caused when a node sends a Basic_Set command to the controller.  The event value is stored in the notification. */
 			Type_PollingDisabled,				/**< Polling of a node has been successfully turned off by a call to Manager::DisablePoll */
 			Type_PollingEnabled,				/**< Polling of a node has been successfully turned on by a call to Manager::EnablePoll */
-			Type_SceneEvent,					/**< Scene Activation Set received */
+			Type_SceneEvent,					/**< Scene Activation Set received (Depreciated in 1.8) */
 			Type_CreateButton,					/**< Handheld controller button event created */
 			Type_DeleteButton,					/**< Handheld controller button event deleted */
 			Type_ButtonOn,						/**< Handheld controller button on pressed event */
@@ -186,9 +186,10 @@ namespace OpenZWave
 
 		/**
 		 * Get the scene Id of a notification.  Only valid in Notification::Type_SceneEvent notifications.
+		 * The SceneActivation CC now exposes ValueID's that convey this information
 		 * \return the event value.
 		 */
-		uint8 GetSceneId()const{ assert(Type_SceneEvent==m_type); return m_byte; }
+		DEPRECATED uint8 GetSceneId()const{ assert(Type_SceneEvent==m_type); return m_byte; }
 
 		/**
 		 * Get the notification code from a notification. Only valid for Notification::Type_Notification or Notification::Type_ControllerCommand notifications.
