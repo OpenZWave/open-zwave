@@ -33,6 +33,7 @@
 #include "Driver.h"
 #include "Notification.h"
 #include "platform/Log.h"
+#include "value_classes/ValueInt.h"
 
 using namespace OpenZWave;
 
@@ -41,12 +42,31 @@ enum SceneActivationCmd
 	SceneActivationCmd_Set				= 0x01
 };
 
+enum
+{
+	SceneActivationIndex_SceneID 	= 0,
+	SceneActivationIndex_Duration	= 1,
+};
 
 //-----------------------------------------------------------------------------
-// <SceneActivation::HandleMsg>
+// <SceneActivation::SceneActivation>
+// Constructor
+//-----------------------------------------------------------------------------
+SceneActivation::SceneActivation
+(
+		uint32 const _homeId,
+		uint8 const _nodeId
+):
+CommandClass( _homeId, _nodeId )
+{
+	Timer::SetDriver(GetDriver());
+}
+
+//-----------------------------------------------------------------------------
+// <SceneActivation::HandleIncommingMsg>
 // Handle a message from the Z-Wave network
 //-----------------------------------------------------------------------------
-bool SceneActivation::HandleMsg
+bool SceneActivation::HandleIncommingMsg
 (
 	uint8 const* _data,
 	uint32 const _length,
@@ -57,22 +77,94 @@ bool SceneActivation::HandleMsg
 	{
 		// Scene Activation Set received so send notification
 		char msg[64];
-		if( _data[2] == 0 )
+		uint32 duration;
+		if( _data[2] == 0 ) {
 			snprintf( msg, sizeof(msg), "now" );
-		else if( _data[2] <= 0x7F )
+			duration = 0;
+		} else if( _data[2] <= 0x7F ) {
 			snprintf( msg, sizeof(msg), "%d seconds", _data[2] );
-		else if( _data[2] <= 0xFE )
+			duration = _data[2];
+		} else if( _data[2] <= 0xFE ) {
 			snprintf( msg, sizeof(msg), "%d minutes", _data[2] );
-		else
+			duration = _data[2] * 60;
+		} else {
 			snprintf( msg, sizeof(msg), "via configuration" );
-		Log::Write( LogLevel_Info, GetNodeId(), "Received Scene Activation set from node %d: scene id=%d %s. Sending event notification.", GetNodeId(), _data[1], msg );
+			duration = 0;
+		}
+		Log::Write( LogLevel_Info, GetNodeId(), "Received SceneActivation set from node %d: scene id=%d %s. Sending event notification.", GetNodeId(), _data[1], msg );
+		/* Sending the Scene ID via a notification should be depreciated in 1.8 */
 		Notification* notification = new Notification( Notification::Type_SceneEvent );
 		notification->SetHomeAndNodeIds( GetHomeId(), GetNodeId() );
 		notification->SetSceneId( _data[1] );
 		GetDriver()->QueueNotification( notification );
+
+		Log::Write( LogLevel_Info, GetNodeId(), "Received SceneActivation report: %d (duration: %d)", _data[1]);
+		if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, SceneActivationIndex_SceneID ) ) )
+		{
+			value->OnValueRefreshed( _data[1] );
+			value->Release();
+		}
+		if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, SceneActivationIndex_Duration ) ) )
+		{
+			value->OnValueRefreshed( duration );
+			value->Release();
+		}
+
+		Log::Write( LogLevel_Info, GetNodeId(), "Automatically Clearing Alarm in %d ms", duration );
+		TimerThread::TimerCallback callback = bind(&SceneActivation::ClearScene, this, _instance);
+		TimerSetEvent(duration, callback, _instance);
 		return true;
 	}
 
 	return false;
 }
 
+//-----------------------------------------------------------------------------
+// <SceneActivation::HandleIncommingMsg>
+// Handle a message from the Z-Wave network
+//-----------------------------------------------------------------------------
+bool SceneActivation::HandleMsg
+(
+	uint8 const* _data,
+	uint32 const _length,
+	uint32 const _instance	// = 1
+)
+{
+	Log::Write( LogLevel_Warning, GetNodeId(), "Received a SceneActivation Message for a Controlled CommandClass");
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// <SceneActivation::ClearScene>
+// Return the Scene ValueID's to defaults, after the duration has expired
+//-----------------------------------------------------------------------------
+void SceneActivation::ClearScene(uint32 _instance) {
+	if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, SceneActivationIndex_SceneID ) ) )
+	{
+		value->OnValueRefreshed( 0 );
+		value->Release();
+	}
+	if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, SceneActivationIndex_Duration ) ) )
+	{
+		value->OnValueRefreshed( 0 );
+		value->Release();
+	}
+}
+
+
+
+//-----------------------------------------------------------------------------
+// <SceneActivation::CreateVars>
+// Create the values managed by this command class
+//-----------------------------------------------------------------------------
+void SceneActivation::CreateVars
+(
+	uint8 const _instance
+)
+{
+	if( Node* node = GetNodeUnsafe() )
+	{
+	  	node->CreateValueInt(  ValueID::ValueGenre_User, GetCommandClassId(), _instance, SceneActivationIndex_SceneID, "Scene", "", true, false, 0, 0 );
+	  	node->CreateValueInt(  ValueID::ValueGenre_User, GetCommandClassId(), _instance, SceneActivationIndex_Duration, "Duration", "", true, false, 0, 0 );
+	}
+}
