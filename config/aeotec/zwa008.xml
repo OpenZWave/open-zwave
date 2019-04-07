@@ -16,7 +16,7 @@ ZWA008 Door Window Sensor 7
             <Help>
                 Parameter defines state of the sensor when the magnet is close.
                 If the alarm sensor is connected, it determines the output type.
-                Parameter inactive in external button mode (parameter “Operation Mode” set to 1).
+                Parameter inactive in external button mode (parameter Operation Mode set to 1).
             </Help>
             <Item label="Closed" value="0"/>
             <Item label="Opened" value="1"/>
@@ -43,7 +43,7 @@ ZWA008 Door Window Sensor 7
                 Parameter defines events which result in sending On/Off commands to devices added to the 2nd Association Group.
                 These commands are sent alternately to switch the devices On and Off.
                 Commands represent the values of BASIC SET command frames.
-                Parameter is inactive in external dry-contact mode (parameter “Operation Mode” set to 1).
+                Parameter is inactive in external dry-contact mode (parameter Operation Mode set to 1).
             </Help>
             <Item label="Switch after opening and closing" value="0"/>
             <Item label="Switch after opening" value="1"/>
