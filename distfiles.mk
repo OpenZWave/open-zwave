@@ -93,6 +93,7 @@ DISTFILES =	.gitignore \
 	config/aeotec/zwa004.xml \
 	config/aeotec/zwa005.xml \
 	config/aeotec/zwa006.xml \
+	config/aeotec/zwa008.xml \
 	config/assa_abloy/ConexisL1.xml \
 	config/assa_abloy/KeyfreeConnected-plus.xml \
 	config/assa_abloy/KeyfreeConnected.xml \
