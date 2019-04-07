@@ -216,7 +216,7 @@ bool Security::HandleMsg
 				value->OnValueRefreshed( m_secured );
 				value->Release();
 			}
-			HandleSupportedReport(&_data[2], _length-2);
+			HandleSupportedReport(&_data[2], _length-3);
 			break;
 		}
 		case SecurityCmd_SchemeReport:
