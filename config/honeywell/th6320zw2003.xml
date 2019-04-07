@@ -13,7 +13,67 @@
       <Item label="5-1-1 Schedule" value="3"/>
       <Item label="Every day individual" value="4"/>
     </Value>
-    <Value type="list" index="10" genre="config" label="EM Heat Type" units="" min="0" max="1" value="0" size="1">
+    <Value type="list" index="2" genre="config" label="Temperature Scale" units="" min="0" max="1" value="0" size="1">
+      <Help>
+        Temperature Scale
+      </Help>
+      <Item label="Fahrenheit" value="0"/>
+      <Item label="Celsius" value="1"/>
+    </Value>
+    <Value type="list" index="3" genre="config" label="Outdoor Temperature" units="" min="0" max="1" value="0" size="1">
+      <Help>
+        Outdoor Temperature Sensor
+      </Help>
+      <Item label="No" value="0"/>
+      <Item label="Wired" value="1"/>
+    </Value>
+    <Value type="list" index="4" genre="config" label="Equipment Type" units="" min="0" max="9" value="2" size="1">
+      <Help>
+        Equipment Type
+      </Help>
+      <Item label="None" value="0"/>
+      <Item label="Standard Gas" value="1"/>
+      <Item label="High Efficiency Gas" value="2"/>
+      <Item label="Oil" value="3"/>
+      <Item label="Electric" value="4"/>
+      <Item label="Fan Coil" value="5"/>
+      <Item label="Air to Air Heat pump" value="6"/>
+      <Item label="Geothermal Heat Pump" value="7"/>
+      <Item label="Hot Water" value="8"/>
+      <Item label="Steam" value="9"/>
+    </Value>
+    <Value type="list" index="5" genre="config" label="Reversing Valve" units="" min="0" max="1" value="0" size="1">
+      <Help>
+        Reversing Valve
+      </Help>
+      <Item label="O/B on Cool" value="0"/>
+      <Item label="O/B on Heat" value="1"/>
+    </Value>
+    <Value type="byte" index="6" genre="config" label="Cool Stages" units="" min="0" max="2" value="1" size="1">
+      <Help>
+        Stages
+      </Help>
+    </Value>
+    <Value type="byte" index="7" genre="config" label="Heat Stages Auxiliary/Emergency stages" units="" min="0" max="2" value="1" size="1">
+      <Help>
+        Stages
+      </Help>
+    </Value>
+    <Value type="list" index="8" genre="config" label="Auxiliary/Emergency Control" units="" min="0" max="1" value="0" size="1">
+      <Help>
+
+      </Help>
+      <Item label="Both Aux and E" value="0"/>
+      <Item label="Either Aux/E" value="1"/>
+    </Value>
+    <Value type="list" index="9" genre="config" label="Auxiliary Heat Type" units="" min="0" max="1" value="0" size="1">
+      <Help>
+        Auxiliary Heat Control
+      </Help>
+      <Item label="Electric" value="0"/>
+      <Item label="Gas/Oil" value="1"/>
+    </Value>
+    <Value type="list" index="10" genre="config" label="Emergency Heat Type" units="" min="0" max="1" value="0" size="1">
       <Help>
         Emergency Heat Type
       </Help>
@@ -22,7 +82,7 @@
     </Value>
     <Value type="list" index="11" genre="config" label="Fossil Kit Control" units="" min="0" max="1" value="0" size="1">
       <Help>
-        Fossile Kit Control
+        Fossil Kit Control
       </Help>
       <Item label="Thermostat" value="0"/>
       <Item label="External" value="1"/>
@@ -34,7 +94,7 @@
       <Item label="Off" value="0"/>
       <Item label="On" value="1"/>
     </Value>
-    <Value type="int" index="13" genre="config" label="Auto Differential" units="F" min="0" max="5" value="0" size="1">
+    <Value type="byte" index="13" genre="config" label="Auto Differential" units="F" min="0" max="5" value="0" size="1">
       <Help>
         Auto Differential in degrees Fahrenheit
       </Help>
@@ -53,7 +113,7 @@
       <Item label="No" value="0"/>
       <Item label="Yes" value="1"/>
     </Value>
-    <Value type="list" index="16" genre="config" label="Aux Heat Droop" units="F" min="0" max="15" value="0" size="1">
+    <Value type="list" index="16" genre="config" label="Auxiliary Heat Droop" units="F" min="0" max="15" value="0" size="1">
       <Help>
         0 = Comfort (1 is not accepted) Integer from 2 to 15 degrees of Fahrenheit from setpoint
       </Help>
@@ -75,7 +135,7 @@
     </Value>
     <Value type="list" index="17" genre="config" label="Up Stage Timer Aux Heat" units="" min="0" max="15" value="0" size="1">
       <Help>
-        Up Stage Timer Auxilary Heat
+        Up Stage Timer Auxiliary Heat
       </Help>
       <Item label="Off" value="0"/>
       <Item label="30 minutes" value="1"/>
@@ -128,44 +188,37 @@
       <Item label="Aux Heat Lockout 60 degrees Fahrenheit" value="60"/>
       <Item label="Aux Heat Lockout 65 degrees Fahrenheit" value="65"/>
     </Value>
-    <Value type="list" index="2" genre="config" label="Temperature Scale" units="" min="0" max="1" value="0" size="1">
-      <Help>
-        Temperature Scale
-      </Help>
-      <Item label="Fahrenheit" value="0"/>
-      <Item label="Celsius" value="1"/>
-    </Value>
-    <Value type="int" index="20" genre="config" label="Cool 1 CPH (Cooling cycle rate stage 1)" units="" min="1" max="6" value="3" size="1">
+    <Value type="byte" index="20" genre="config" label="Cool 1 CPH (Cooling cycle rate stage 1)" units="" min="1" max="6" value="3" size="1">
       <Help>
         Cycle rates per hour
       </Help>
     </Value>
-    <Value type="int" index="21" genre="config" label="Cool 2 CPH (Cooling cycle rate stage 2)" units="" min="1" max="6" value="3" size="1">
+    <Value type="byte" index="21" genre="config" label="Cool 2 CPH (Cooling cycle rate stage 2)" units="" min="1" max="6" value="3" size="1">
       <Help>
         Cycle rates per hour
       </Help>
     </Value>
-    <Value type="int" index="22" genre="config" label="Heat 1 CPH (Heating cycle rate stage 1)" units="" min="1" max="12" value="3" size="1">
+    <Value type="byte" index="22" genre="config" label="Heat 1 CPH (Heating cycle rate stage 1)" units="" min="1" max="12" value="3" size="1">
       <Help>
         Cycle rates per hour
       </Help>
     </Value>
-    <Value type="int" index="23" genre="config" label="Heat 2 CPH (Heating cycle rate stage 2)" units="" min="1" max="12" value="3" size="1">
+    <Value type="byte" index="23" genre="config" label="Heat 2 CPH (Heating cycle rate stage 2)" units="" min="1" max="12" value="3" size="1">
       <Help>
         Cycle rates per hour
       </Help>
     </Value>
-    <Value type="int" index="24" genre="config" label="Aux Heat CPH (Heating cycle rate Auxiliary Heat)" units="" min="1" max="12" value="9" size="1">
+    <Value type="byte" index="24" genre="config" label="Aux Heat CPH (Heating cycle rate Auxiliary Heat)" units="" min="1" max="12" value="9" size="1">
       <Help>
         Cycle rates per hour
       </Help>
     </Value>
-    <Value type="int" index="25" genre="config" label="EM Heat CPH (Heating cycle rate Emergency Heat)" units="" min="1" max="12" value="9" size="1">
+    <Value type="byte" index="25" genre="config" label="EM Heat CPH (Heating cycle rate Emergency Heat)" units="" min="1" max="12" value="9" size="1">
       <Help>
         Cycle rates per hour
       </Help>
     </Value>
-    <Value type="list" index="26" genre="config" label="Compressor Protection" units="" min="0" max="5" value="5" size="1">
+    <Value type="byte" index="26" genre="config" label="Compressor Protection" units="" min="0" max="5" value="5" size="1">
       <Help>
         0 = Off Integer from 1-5 minutes
       </Help>
@@ -183,24 +236,17 @@
       <Item label="Off" value="0"/>
       <Item label="On" value="1"/>
     </Value>
-    <Value type="int" index="28" genre="config" label="Minimum Cool Temperature" units="F" min="50" max="99" value="50" size="1">
+    <Value type="byte" index="28" genre="config" label="Minimum Cool Temperature" units="F" min="50" max="99" value="50" size="1">
       <Help>
         Degrees Fahrenheit
       </Help>
     </Value>
-    <Value type="int" index="29" genre="config" label="Maximum Heat Temperature" units="F" min="40" max="90" value="90" size="1">
+    <Value type="byte" index="29" genre="config" label="Maximum Heat Temperature" units="F" min="40" max="90" value="90" size="1">
       <Help>
         Degrees Fahrenheit
       </Help>
     </Value>
-    <Value type="list" index="3" genre="config" label="Outdoor Temperature" units="" min="0" max="1" value="0" size="1">
-      <Help>
-        Outdoor Temperature Sensor
-      </Help>
-      <Item label="No" value="0"/>
-      <Item label="Wired" value="1"/>
-    </Value>
-    <Value type="int" index="30" genre="config" label="Air Filters" units="" min="0" max="2" value="0" size="1">
+    <Value type="byte" index="30" genre="config" label="Air Filters" units="" min="0" max="2" value="0" size="1">
       <Help>
         Number of air filters
       </Help>
@@ -263,7 +309,7 @@
       <Item label="6 Calendar Months" value="1"/>
       <Item label="12 Calendar Months" value="2"/>
     </Value>
-    <Value type="int" index="34" genre="config" label="Dehumidification Filter Reminder" units="" min="0" max="12" value="0" size="1">
+    <Value type="byte" index="34" genre="config" label="Dehumidification Filter Reminder" units="" min="0" max="12" value="0" size="1">
       <Help>
         0 = Off, 1-12 Calendar Months
       </Help>
@@ -278,7 +324,7 @@
       <Item label="Reminder in 9 Months" value="9"/>
       <Item label="Reminder in 12 Months" value="12"/>
     </Value>
-    <Value type="int" index="36" genre="config" label="UV Devices" units="" min="0" max="2" value="0" size="1">
+    <Value type="byte" index="36" genre="config" label="UV Devices" units="" min="0" max="2" value="0" size="1">
       <Help>
         UV Devices
       </Help>
@@ -301,25 +347,10 @@
       <Item label="Reminder in 12 Months" value="12"/>
       <Item label="Reminder in 24 Months" value="24"/>
     </Value>
-    <Value type="int" index="39" genre="config" label="Idle Brightness" units="" min="0" max="5" value="0" size="1">
+    <Value type="byte" index="39" genre="config" label="Idle Brightness" units="" min="0" max="5" value="0" size="1">
       <Help>
         Brightness level
       </Help>
-    </Value>
-    <Value type="list" index="4" genre="config" label="Equipment Type" units="" min="0" max="9" value="2" size="1">
-      <Help>
-        Equipment Type
-      </Help>
-      <Item label="None" value="0"/>
-      <Item label="Standard Gas" value="1"/>
-      <Item label="High Efficiency Gas" value="2"/>
-      <Item label="Oil" value="3"/>
-      <Item label="Electric" value="4"/>
-      <Item label="Fan Coil" value="5"/>
-      <Item label="Air to Air Heat pump" value="6"/>
-      <Item label="Geothermal Heat Pump" value="7"/>
-      <Item label="Hot Water" value="8"/>
-      <Item label="Steam" value="9"/>
     </Value>
     <Value type="list" index="40" genre="config" label="Clock Format" units="" min="0" max="1" value="0" size="1">
       <Help>
@@ -346,37 +377,6 @@
       <Item label="+1" value="1"/>
       <Item label="+2" value="2"/>
       <Item label="+3" value="3"/>
-    </Value>
-    <Value type="list" index="5" genre="config" label="Reversing Valve" units="" min="0" max="1" value="0" size="1">
-      <Help>
-        Reversing Valve
-      </Help>
-      <Item label="O/B on Cool" value="0"/>
-      <Item label="O/B on Heat" value="1"/>
-    </Value>
-    <Value type="int" index="6" genre="config" label="Cool Stages" units="" min="0" max="2" value="1" size="1">
-      <Help>
-        Stages
-      </Help>
-    </Value>
-    <Value type="int" index="7" genre="config" label="Heat Stages; AUX/E stages" units="" min="0" max="2" value="1" size="1">
-      <Help>
-        Stages
-      </Help>
-    </Value>
-    <Value type="list" index="8" genre="config" label="Aux/E Control" units="" min="0" max="1" value="0" size="1">
-      <Help>
-        Auxilary/Emergency Control
-      </Help>
-      <Item label="Both Aux and E" value="0"/>
-      <Item label="Either Aux/E" value="1"/>
-    </Value>
-    <Value type="list" index="9" genre="config" label="Aux Heat Type" units="" min="0" max="1" value="0" size="1">
-      <Help>
-        Auxilary Heat Control
-      </Help>
-      <Item label="Electric" value="0"/>
-      <Item label="Gas/Oil" value="1"/>
     </Value>
   </CommandClass>
   <CommandClass id="133">
