@@ -300,6 +300,7 @@ DISTFILES =	.gitignore \
 	config/homeseer/ztroller.xml \
 	config/honeywell/39351-ZW3005.xml \
 	config/honeywell/lynx-touch-l5100.xml \
+	config/honeywell/th6320zw2003.xml \
 	config/honeywell/th8320zw1000.xml \
 	config/horstmann/asrzw.xml \
 	config/horstmann/hrt4zw.xml \
@@ -382,6 +383,7 @@ DISTFILES =	.gitignore \
 	config/philio/pad02.xml \
 	config/philio/pan03.xml \
 	config/philio/pan04.xml \
+	config/philio/pan05.xml \
 	config/philio/pan06.xml \
 	config/philio/pan07.xml \
 	config/philio/pan08.xml \
@@ -413,6 +415,7 @@ DISTFILES =	.gitignore \
 	config/popp/123658.xml \
 	config/popp/700045.xml \
 	config/popp/700168.xml \
+	config/popp/700397.xml \
 	config/popp/smoke-detector.xml \
 	config/popp/solar-siren.xml \
 	config/popp/zweather.xml \
@@ -483,7 +486,7 @@ DISTFILES =	.gitignore \
 	config/stelpro/stzw402.xml \
 	config/sunricher/srzv9001t4dimeu.xml \
 	config/sunricher/srzv9101sachpeu.xml \
-	config/sunricher/zv9001.xml \
+	config/sunricher/zv9101.xml \
 	config/swiid/swiidinter.xml \
 	config/swiid/swiidplug.xml \
 	config/telldus/tzdw100.xml \
