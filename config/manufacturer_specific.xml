@@ -1043,6 +1043,7 @@
 		<Product type="201"  id="a"    name="HS-LS100+ Leak Sensor" config="homeseer/hs-ls100plus.xml"/>
 		<Product type="0201" id="000b" name="HS-FLS100+ Floodlight Sensor" config="homeseer/hs-fls100plus.xml"/>
 		<Product type="0203" id="0001" name="HS-FC200+ Z-Wave Plus Fan Controller" config="homeseer/hs-fc200plus.xml"/>
+		<Product type="0202" id="0001" name="HS-FS100+ Flex Sensor" config="homeseer/hs-fs100plus.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0275" name="Honest Technology">
 	</Manufacturer>
