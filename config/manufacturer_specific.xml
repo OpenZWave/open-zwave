@@ -1845,6 +1845,7 @@
 	<Manufacturer id="029C" name="SoftAtHome">
 	</Manufacturer>
 	<Manufacturer id="0047" name="Somfy">
+		<Product type="5a52" id="5400" name="1811265 Z-Wave to RTS Interface" config="somfy/1811265_ZRTSI.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0394" name="SONG JIANG YUN-AN TECHNOLOGY">
 	</Manufacturer>
