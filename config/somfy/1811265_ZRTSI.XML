@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ProductExport xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Id>874</Id>
+  <Name>Z-Wave to RTS Interface II - ZRTSII</Name>
+  <Description>Z-Wave to RTS Interface II (ZRTSII).
+
+This device wil convert Z-Wave to RTS, a proprietary RF. This device is capable of having up to 17 Z-Wave nodes (1 Base node/static controller &amp; 16 Virtual nodes.</Description>
+  <Brand>Somfy</Brand>
+  <Identifier>1811265</Identifier>
+  <CertificationNumber>ZC08-13080005</CertificationNumber>
+  <OemVersion>01.08.06</OemVersion>
+  <HardwarePlatform>ZM3102</HardwarePlatform>
+  <ZWaveVersion>4.54.01</ZWaveVersion>
+  <LibraryType>Static Controller, No Repeater, No MR</LibraryType>
+  <SpecificDeviceClass>Motor Control Class A</SpecificDeviceClass>
+  <GenericDeviceClass>Switch Multilevel</GenericDeviceClass>
+  <DeviceType>Central Controller</DeviceType>
+  <ManufacturerId>0x0047</ManufacturerId>
+  <ProductTypeId>0x0005</ProductTypeId>
+  <ProductId>0x5400</ProductId>
+  <FrequencyName>U.S. / Canada / Mexico</FrequencyName>
+  <ProductUrl />
+  <SupportUrl />
+  <InclusionDescription />
+  <ExclusionDescription />
+  <LearnModeDescription />
+  <ResetDescription />
+  <WakeupDescription />
+  <OtherSpecialFeaturesDescription />
+  <CertificationApprovedDate>0001-01-01T00:00:00</CertificationApprovedDate>
+  <Image>https://products.z-wavealliance.org/ProductImages/Index?productName=ZC08-13080005</Image>
+  <Categories>
+    <string>Window Covering</string>
+  </Categories>
+  <SupportedCommandClasses>
+    <CommandClassExport>
+      <Name>Command Class Basic</Name>
+      <Identifier>COMMAND_CLASS_BASIC</Identifier>
+    </CommandClassExport>
+    <CommandClassExport>
+      <Name>Command Class Manufacturer Specific</Name>
+      <Identifier>COMMAND_CLASS_MANUFACTURER_SPECIFIC</Identifier>
+    </CommandClassExport>
+    <CommandClassExport>
+      <Name>Command Class Scene Activation</Name>
+      <Identifier>COMMAND_CLASS_SCENE_ACTIVATION</Identifier>
+    </CommandClassExport>
+    <CommandClassExport>
+      <Name>Command Class Scene Actuator Conf</Name>
+      <Identifier>COMMAND_CLASS_SCENE_ACTUATOR_CONF</Identifier>
+    </CommandClassExport>
+    <CommandClassExport>
+      <Name>Command Class Switch Binary</Name>
+      <Identifier>COMMAND_CLASS_SWITCH_BINARY</Identifier>
+    </CommandClassExport>
+    <CommandClassExport>
+      <Name>Command Class Switch Multilevel</Name>
+      <Identifier>COMMAND_CLASS_SWITCH_MULTILEVEL</Identifier>
+    </CommandClassExport>
+    <CommandClassExport>
+      <Name>Command Class Version</Name>
+      <Identifier>COMMAND_CLASS_VERSION</Identifier>
+    </CommandClassExport>
+  </SupportedCommandClasses>
+  <ControlledCommandClasses />
+  <S2Classes />
+  <AssociationGroups />
+  <ConfigurationParameters />
+  <Features />
+  <Supports_NWI>true</Supports_NWI>
+  <Supports_Explorer>true</Supports_Explorer>
+  <is_FLiRS>false</is_FLiRS>
+  <Supports_SmartStart>false</Supports_SmartStart>
+</ProductExport>
