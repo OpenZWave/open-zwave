@@ -148,7 +148,6 @@ m_basic( 0 ),
 m_generic( 0 ),
 m_specific( 0 ),
 m_type( "" ),
-m_numRouteNodes( 0 ),
 m_addingNode( false ),
 m_manufacturerName( "" ),
 m_productName( "" ),
@@ -179,11 +178,25 @@ m_averageResponseRTT( 0 ),
 m_quality( 0 ),
 m_lastReceivedMessage(),
 m_errors( 0 ),
+m_txStatusReportSupported ( false ),
+m_txTime( 0 ),
+m_hops( 0 ),
+m_ackChannel( 0 ),
+m_lastTxChannel( 0 ),
+m_routeScheme( (TXSTATUS_ROUTING_SCHEME)0 ),
+m_routeUsed { },
+m_routeSpeed( (TXSTATUS_ROUTE_SPEED)0 ),
+m_routeTries( 0 ),
+m_lastFailedLinkFrom( 0 ),
+m_lastFailedLinkTo( 0 ),
 m_lastnonce ( 0 )
 {
 	memset( m_neighbors, 0, sizeof(m_neighbors) );
-	memset( m_routeNodes, 0, sizeof(m_routeNodes) );
 	memset( m_nonces, 0, sizeof(m_nonces) );
+	memset( m_rssi_1, 0, sizeof(m_rssi_1) );
+	memset( m_rssi_2, 0, sizeof(m_rssi_2) );
+	memset( m_rssi_3, 0, sizeof(m_rssi_3) );
+	memset( m_rssi_4, 0, sizeof(m_rssi_4) );
 	/* Add NoOp Class */
 	AddCommandClass( NoOperation::StaticGetCommandClassId() );
 
@@ -3508,6 +3521,24 @@ void Node::GetNodeStatistics
 	_data->m_receivedTS = m_receivedTS.GetAsString();
 	_data->m_averageRequestRTT = m_averageRequestRTT;
 	_data->m_averageResponseRTT = m_averageResponseRTT;
+	_data->m_txStatusReportSupported = m_txStatusReportSupported;
+	_data->m_txTime = m_txTime;
+	_data->m_hops = m_hops;
+	strncpy(m_rssi_1, _data->m_rssi_1, sizeof(m_rssi_1) );
+	strncpy(m_rssi_2, _data->m_rssi_2, sizeof(m_rssi_2) );
+	strncpy(m_rssi_3, _data->m_rssi_3, sizeof(m_rssi_3) );
+	strncpy(m_rssi_4, _data->m_rssi_4, sizeof(m_rssi_4) );
+	_data->m_ackChannel = m_ackChannel;
+	_data->m_lastTxChannel = m_lastTxChannel;
+	_data->m_routeScheme = m_routeScheme;
+	_data->m_routeUsed[0] = m_routeUsed[0];
+	_data->m_routeUsed[1] = m_routeUsed[1];
+	_data->m_routeUsed[2] = m_routeUsed[2];
+	_data->m_routeUsed[3] = m_routeUsed[3];
+	_data->m_routeTries = m_routeTries;
+	_data->m_lastFailedLinkFrom = m_lastFailedLinkFrom;
+	_data->m_lastFailedLinkTo = m_lastFailedLinkTo;
+
 	_data->m_quality = m_quality;
 	memcpy( _data->m_lastReceivedMessage, m_lastReceivedMessage, sizeof(m_lastReceivedMessage) );
 	for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )

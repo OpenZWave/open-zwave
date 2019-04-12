@@ -2522,6 +2522,20 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 */
 		void GetNodeStatistics( uint32 const _homeId, uint8 const _nodeId, Node::NodeData* _data );
 
+		/**
+		 * \brief Get a Human Readable String for the RouteScheme in the Extended TX Status Frame
+		 * \param _data Pointer to the structure Node::NodeData return from GetNodeStatistics
+		 * \return String containing the Route Scheme Used
+		 */
+		static string GetNodeRouteScheme(Node::NodeData *_data);
+
+		/**
+		 * \brief Get Humand Readable String for the RouteSpeed in the Extended TX Status Frame
+		 * \param _data Pointer to the structure Node::NodeData returned from GetNodeStatistics
+		 * \return String containing the Speed
+		 */
+		static string GetNodeRouteSpeed(Node::NodeData *_data);
+
 	/*@}*/
 
 	//-----------------------------------------------------------------------------

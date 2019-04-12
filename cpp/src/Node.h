@@ -652,26 +652,57 @@ namespace OpenZWave
 					uint8 m_quality;					// Node quality measure
 					uint8 m_lastReceivedMessage[254];
 					list<CommandClassData> m_ccData;
+					bool m_txStatusReportSupported;
+					uint16 m_txTime;
+					uint8 m_hops;
+					char m_rssi_1[8];
+					char m_rssi_2[8];
+					char m_rssi_3[8];
+					char m_rssi_4[8];
+					uint8 m_ackChannel;
+					uint8 m_lastTxChannel;
+					TXSTATUS_ROUTING_SCHEME m_routeScheme;
+					char m_routeUsed[9];
+					TXSTATUS_ROUTE_SPEED m_routeSpeed;
+					uint8 m_routeTries;
+					uint8 m_lastFailedLinkFrom;
+					uint8 m_lastFailedLinkTo;
 			};
 
 			private:
 			void GetNodeStatistics( NodeData* _data );
 
-			uint32 m_sentCnt;				// Number of messages sent from this node.
+			uint32 m_sentCnt;					// Number of messages sent from this node.
 			uint32 m_sentFailed;				// Number of sent messages failed
-			uint32 m_retries;				// Number of message retries
+			uint32 m_retries;					// Number of message retries
 			uint32 m_receivedCnt;				// Number of messages received from this node.
 			uint32 m_receivedDups;				// Number of duplicated messages received;
-			uint32 m_receivedUnsolicited;			// Number of messages received unsolicited
+			uint32 m_receivedUnsolicited;		// Number of messages received unsolicited
 			uint32 m_lastRequestRTT;			// Last message request RTT
 			uint32 m_lastResponseRTT;			// Last message response RTT
-			TimeStamp m_sentTS;				// Last message sent time
+			TimeStamp m_sentTS;					// Last message sent time
 			TimeStamp m_receivedTS;				// Last message received time
 			uint32 m_averageRequestRTT;			// Average Request round trip time.
-			uint32 m_averageResponseRTT;			// Average Response round trip time.
-			uint8 m_quality;				// Node quality measure
-			uint8 m_lastReceivedMessage[254];		// Place to hold last received message
-			uint8 m_errors;					// Count errors for dead node detection
+			uint32 m_averageResponseRTT;		// Average Response round trip time.
+			uint8 m_quality;					// Node quality measure
+			uint8 m_lastReceivedMessage[254];	// Place to hold last received message
+			uint8 m_errors;
+			bool m_txStatusReportSupported;		// if Extended Status Reports are available
+			uint16 m_txTime;					// Time Taken to Transmit the last frame
+			uint8 m_hops;						// Hops taken in transmitting last frame
+			char m_rssi_1[8];					// RSSI Level of last transmission
+			char m_rssi_2[8];					// RSSI Level of last transmission
+			char m_rssi_3[8];					// RSSI Level of last transmission
+			char m_rssi_4[8];					// RSSI Level of last transmission
+			uint8 m_ackChannel;					// Channel we received the last ACK on
+			uint8 m_lastTxChannel;				// Channel we transmitted the last frame on
+			TXSTATUS_ROUTING_SCHEME m_routeScheme;				// The Scheme used to route the last frame
+			uint8 m_routeUsed[4];				// The Route Taken in the last frame
+			TXSTATUS_ROUTE_SPEED m_routeSpeed;					// Baud Rate of the last frame
+			uint8 m_routeTries;					// The number of attempts to route the last frame
+			uint8 m_lastFailedLinkFrom;			// The last failed link from
+			uint8 m_lastFailedLinkTo;			// The last failed link to
+
 
 			//-----------------------------------------------------------------------------
 			//	Encryption Related

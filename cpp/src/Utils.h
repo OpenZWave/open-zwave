@@ -111,7 +111,7 @@ namespace OpenZWave
 
 	string intToString( int x );
 
-
+	const char* rssi_to_string(uint8 _data);
 
 } // namespace OpenZWave
 

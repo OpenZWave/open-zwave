@@ -5178,8 +5178,60 @@ void Manager::GetNodeStatistics
 }
 
 //-----------------------------------------------------------------------------
-// <Manager::GetNodeStatistics>
-// Retrieve driver based counters.
+// <Manager::GetNodeRouteScheme>
+// Convert the RouteScheme to a String
+//-----------------------------------------------------------------------------
+string Manager::GetNodeRouteScheme
+(
+		Node::NodeData *_data
+)
+{
+	switch (_data->m_routeScheme) {
+		case ROUTINGSCHEME_IDLE:
+			return "Idle";
+		case ROUTINGSCHEME_DIRECT:
+			return "Direct";
+		case ROUTINGSCHEME_CACHED_ROUTE_SR:
+			return "Static Route";
+		case ROUTINGSCHEME_CACHED_ROUTE:
+			return "Last Working Route";
+		case ROUTINGSCHEME_CACHED_ROUTE_NLWR:
+			return "Next to Last Working Route";
+		case ROUTINGSCHEME_ROUTE:
+			return "Auto Route";
+		case ROUTINGSCHEME_RESORT_DIRECT:
+			return "Resort to Direct";
+		case ROUTINGSCHEME_RESORT_EXPLORE:
+			return "Explorer Route";
+	}
+	return "Unknown";
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::GetNodeRouteSpeed>
+// Convert the RouteSpeed to a String.
+//-----------------------------------------------------------------------------
+string Manager::GetNodeRouteSpeed
+(
+		Node::NodeData *_data
+)
+{
+	switch(_data->m_routeSpeed) {
+		case ROUTE_SPEED_AUTO:
+			return "Auto";
+		case ROUTE_SPEED_9600:
+			return "9600";
+		case ROUTE_SPEED_40K:
+			return "40K";
+		case ROUTE_SPEED_100K:
+			return "100K";
+	}
+	return "Unknown";
+}
+
+//-----------------------------------------------------------------------------
+// <Manager::GetMetaData>
+// Retrieve MetaData about a Node.
 //-----------------------------------------------------------------------------
 string Manager::GetMetaData
 (

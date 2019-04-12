@@ -298,7 +298,7 @@ namespace OpenZWave
 	//-----------------------------------------------------------------------------
 	private:
 		bool ReadMsg();
-		void ProcessMsg( uint8* _data );
+		void ProcessMsg( uint8* _data, uint8 _length );
 
 		void HandleGetVersionResponse( uint8* _data );
 		void HandleGetRandomResponse( uint8* _data );
@@ -334,7 +334,7 @@ namespace OpenZWave
 		bool HandleNetworkUpdateResponse( uint8* _data );
 		void HandleGetRoutingInfoResponse( uint8* _data );
 
-		void HandleSendDataRequest( uint8* _data, bool _replication );
+		void HandleSendDataRequest( uint8* _data, uint8 _length, bool _replication );
 		void HandleAddNodeToNetworkRequest( uint8* _data );
 		void HandleCreateNewPrimaryRequest( uint8* _data );
 		void HandleControllerChangeRequest( uint8* _data );
@@ -819,13 +819,13 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 			uint32 m_badroutes;			// Number of failed messages due to bad route response
 			uint32 m_noack;				// Number of no ACK returned errors
 			uint32 m_netbusy;			// Number of network busy/failure messages
-			uint32 m_notidle;
+			uint32 m_notidle;			// Number of RF Network Busy messages
+			uint32 m_txverified;		// Number of TX Verified messages
 			uint32 m_nondelivery;		// Number of messages not delivered to network
 			uint32 m_routedbusy;		// Number of messages received with routed busy status
 			uint32 m_broadcastReadCnt;	// Number of broadcasts read
 			uint32 m_broadcastWriteCnt;	// Number of broadcasts sent
 		};
-
 		void LogDriverStatistics();
 
 	private:
@@ -849,6 +849,7 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		uint32 m_noack;				// Number of no ACK returned errors
 		uint32 m_netbusy;			// Number of network busy/failure messages
 		uint32 m_notidle;			// Number of not idle messages
+		uint32 m_txverified;		// Number of TX Verified messages
 		uint32 m_nondelivery;		// Number of messages not delivered to network
 		uint32 m_routedbusy;		// Number of messages received with routed busy status
 		uint32 m_broadcastReadCnt;	// Number of broadcasts read

@@ -208,6 +208,7 @@ m_badroutes( 0 ),
 m_noack( 0 ),
 m_netbusy( 0 ),
 m_notidle( 0 ),
+m_txverified( 0 ),
 m_nondelivery( 0 ),
 m_routedbusy( 0 ),
 m_broadcastReadCnt( 0 ),
@@ -1592,6 +1593,11 @@ bool Driver::HandleErrorResponse
 		m_notidle++;
 		Log::Write( LogLevel_Info, _nodeId, "ERROR: %s failed. Network is busy.", _funcStr );
 	}
+	else if ( _error == TRANSMIT_COMPLETE_VERIFIED )
+	{
+		m_txverified++;
+		Log::Write( LogLevel_Info, _nodeId, "ERROR: %s failed. Transmit Verified.", _funcStr );
+	}
 	if( Node* node = GetNodeUnsafe( _nodeId ) )
 	{
 		if( ++node->m_errors >= 3 )
@@ -1810,7 +1816,7 @@ bool Driver::ReadMsg
 			m_readCnt++;
 
 			// Process the received message
-			ProcessMsg( &buffer[2] );
+			ProcessMsg( &buffer[2], length-2 );
 		}
 		else
 		{
@@ -1893,7 +1899,8 @@ bool Driver::ReadMsg
 //-----------------------------------------------------------------------------
 void Driver::ProcessMsg
 (
-		uint8* _data
+		uint8* _data,
+		uint8 _length
 )
 {
 	bool handleCallback = true;
@@ -2280,7 +2287,7 @@ void Driver::ProcessMsg
 		}
 		case FUNC_ID_ZW_SEND_DATA:
 		{
-			HandleSendDataRequest( _data, false );
+			HandleSendDataRequest( _data, _length, false );
 			break;
 		}
 		case FUNC_ID_ZW_REPLICATION_COMMAND_COMPLETE:
@@ -2294,7 +2301,7 @@ void Driver::ProcessMsg
 		}
 		case FUNC_ID_ZW_REPLICATION_SEND_DATA:
 		{
-			HandleSendDataRequest( _data, true );
+			HandleSendDataRequest( _data, _length, true );
 			break;
 		}
 		case FUNC_ID_ZW_ASSIGN_RETURN_ROUTE:
@@ -3172,6 +3179,7 @@ void Driver::HandleGetRoutingInfoResponse
 void Driver::HandleSendDataRequest
 (
 		uint8* _data,
+		uint8 _length,
 		bool _replication
 )
 {
@@ -3186,7 +3194,7 @@ void Driver::HandleSendDataRequest
 		Node* node = GetNodeUnsafe( nodeId );
 		if( node != NULL )
 		{
-			if( _data[3] != 0 )
+			if( _data[3] != TRANSMIT_COMPLETE_OK )
 			{
 				node->m_sentFailed++;
 			}
@@ -3206,6 +3214,36 @@ void Driver::HandleSendDataRequest
 				}
 				Log::Write(LogLevel_Info, nodeId, "Request RTT %d Average Request RTT %d", node->m_lastRequestRTT, node->m_averageRequestRTT );
 			}
+			/* if the frame has txStatus message, then extract it */
+			if (_length > 7) {
+				node->m_txStatusReportSupported = true;
+				node->m_txTime = _data[5] + (_data[4] << 8);
+				node->m_hops = _data[6];
+				strncpy(node->m_rssi_1, rssi_to_string(_data[7]), sizeof(node->m_rssi_1));
+				strncpy(node->m_rssi_2, rssi_to_string(_data[8]), sizeof(node->m_rssi_2));
+				strncpy(node->m_rssi_3, rssi_to_string(_data[9]), sizeof(node->m_rssi_3));
+				strncpy(node->m_rssi_4, rssi_to_string(_data[10]), sizeof(node->m_rssi_4));
+				node->m_ackChannel = _data[11];
+				node->m_lastTxChannel = _data[12];
+				node->m_routeScheme = (TXSTATUS_ROUTING_SCHEME)_data[13];
+				node->m_routeUsed[0] = _data[14];
+				node->m_routeUsed[1] = _data[15];
+				node->m_routeUsed[2] = _data[16];
+				node->m_routeUsed[3] = _data[17];
+				node->m_routeSpeed = (TXSTATUS_ROUTE_SPEED)_data[18];
+				node->m_routeTries = _data[19];
+				node->m_lastFailedLinkFrom = _data[20];
+				node->m_lastFailedLinkTo = _data[21];
+				Node::NodeData nd;
+				node->GetNodeStatistics(&nd);
+				Log::Write( LogLevel_Detail, nodeId, "Extended TxStatus: Time: %d, Hops: %d, Rssi: %s %s %s %s, ChannelAck: %d, TxChannel: %d, RouteScheme: %s, Route: %d %d %d %d, RouteSpeed: %s, RouteTries: %d, FailedLinkFrom: %d, FailedLinkTo: %d",
+						nd.m_txTime, nd.m_hops, nd.m_rssi_1, nd.m_rssi_2, nd.m_rssi_3, nd.m_rssi_4,
+						nd.m_ackChannel, nd.m_lastTxChannel, Manager::GetNodeRouteScheme(&nd).c_str(), nd.m_routeUsed[0],
+						nd.m_routeUsed[1], nd.m_routeUsed[2], nd.m_routeUsed[3], Manager::GetNodeRouteSpeed(&nd).c_str(),
+						nd.m_routeTries, nd.m_lastFailedLinkFrom, nd.m_lastFailedLinkTo);
+				exit(1);
+			}
+
 		}
 
 		// We do this here since HandleErrorResponse/MoveMessagesToWakeUpQueue can delete m_currentMsg
@@ -3218,7 +3256,7 @@ void Driver::HandleSendDataRequest
 		}
 
 		// Callback ID matches our expectation
-		if( _data[3] != 0 )
+		if( _data[3] != TRANSMIT_COMPLETE_OK )
 		{
 			if( !HandleErrorResponse( _data[3], nodeId, _replication ? "ZW_REPLICATION_END_DATA" : "ZW_SEND_DATA", !_replication ) )
 			{
@@ -3802,7 +3840,7 @@ void Driver::HandleDeleteReturnRouteRequest
 	{
 		return;
 	}
-	if( _data[3] )
+	if( _data[3] != TRANSMIT_COMPLETE_OK)
 	{
 		// Failed
 		HandleErrorResponse( _data[3], m_currentControllerCommand->m_controllerCommandNode, "ZW_DELETE_RETURN_ROUTE", true );
@@ -3833,7 +3871,7 @@ void Driver::HandleSendNodeInformationRequest
 	{
 		return;
 	}
-	if( _data[3] )
+	if( _data[3] != TRANSMIT_COMPLETE_OK )
 	{
 		// Failed
 		HandleErrorResponse( _data[3], m_currentControllerCommand->m_controllerCommandNode, "ZW_SEND_NODE_INFORMATION" );
@@ -6684,7 +6722,7 @@ void Driver::HandleSendSlaveNodeInfoRequest
 	{
 		return;
 	}
-	if( _data[3] == 0 )	// finish up
+	if( _data[3] == TRANSMIT_COMPLETE_OK )	// finish up
 	{
 		Log::Write( LogLevel_Info, GetNodeNumber( m_currentMsg ), "SEND_SLAVE_NODE_INFO_COMPLETE OK" );
 		SaveButtons();
@@ -6855,6 +6893,7 @@ void Driver::GetDriverStatistics
 	_data->m_noack = m_noack;
 	_data->m_netbusy = m_netbusy;
 	_data->m_notidle = m_notidle;
+	_data->m_txverified = m_txverified;
 	_data->m_nondelivery = m_nondelivery;
 	_data->m_routedbusy = m_routedbusy;
 	_data->m_broadcastReadCnt = m_broadcastReadCnt;
