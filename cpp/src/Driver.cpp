@@ -3241,7 +3241,6 @@ void Driver::HandleSendDataRequest
 						nd.m_ackChannel, nd.m_lastTxChannel, Manager::GetNodeRouteScheme(&nd).c_str(), nd.m_routeUsed[0],
 						nd.m_routeUsed[1], nd.m_routeUsed[2], nd.m_routeUsed[3], Manager::GetNodeRouteSpeed(&nd).c_str(),
 						nd.m_routeTries, nd.m_lastFailedLinkFrom, nd.m_lastFailedLinkTo);
-				exit(1);
 			}
 
 		}
