@@ -1627,6 +1627,7 @@
 		<Product type="0007" id="0052" name="ZMNHTDx Smart meter S4 S5 S6" config="qubino/ZMNHTDx.xml"/>
 		<Product type="0007" id="0053" name="ZMNHZDx Weather Station" config="qubino/ZMNHZDx.xml"/>
 		<Product type="0007" id="0054" name="ZMNHXDx 3-phase Smart Meter" config="qubino/ZMNHXDx.xml"/>
+		<Product type="0005" id="0054" name="ZMNKIDx OnOff Thermostat 2" config="qubino/ZMNKIDx.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0130" name="Quby">
 		<Product type="0001" id="0001" name="Energy Management System"/>
