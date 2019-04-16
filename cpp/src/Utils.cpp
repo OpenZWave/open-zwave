@@ -180,14 +180,15 @@ const char* OpenZWave::rssi_to_string(uint8 _data) {
 			break;
 		}
 		default:
+            // petergebruers swap true/false
 			if (_data >= 11 && _data <= 124)
 			{
-				snprintf(buf, 5, "%4d", (unsigned int)_data - 256);
-				return buf;
+				return "UNK";
 			}
 			else
 			{
-				return "UNK";
+                snprintf(buf, 5, "%4d", (unsigned int)_data - 256);
+				return buf;
 			}
 	}
 }
