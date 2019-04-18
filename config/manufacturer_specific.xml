@@ -986,6 +986,7 @@
 		<Product type="8006" id="1000" name="Smart Metering Plug HS2SK-Z" config="heiman/HS2SK-Z.xml"/>
 		<Product type="8007" id="1000" name="Temperature Humidity Sensor HS1HT-Z" config="heiman/HS1HT-Z.xml"/>
 		<Product type="8008" id="1000" name="Smart Plug HS2SK-Z" config="heiman/HS2SK-Z.xml"/>
+		<Product type="8009" id="1000" name="Indoor Siren HS2WD-Z" config="heiman/HS2WD-Z.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0344" name="HELTUN">
 		<Product type="0003" id="0001" name="HE-ZW-THERM-FL2 Heating Thermostat" config="heltun/he-zw-therm-fl2.xml"/>
