@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Zooz ZEN25 S2 Duble Plug with USB Port
+Zooz ZEN26 S2 On Off Wall Switch 
 https://products.z-wavealliance.org/products/3192
 -->
 <Product xmlns="http://code.google.com/p/open-zwave/">
@@ -74,6 +74,14 @@ https://products.z-wavealliance.org/products/3192
       <Item value="1" label="LED displays power consumption whenever device is plugged in (LED is only on if outlet is ON)"/>
       <Item value="2" label="LED displays power consumption for 5 seconds when device is turned on or off"/>
       <Item value="3" label="LED is OFF at all times except for inclusion, exclusion and Z-Wave range test"/>
+    </Value>
+    <Value type="list" genre="config" index="18" label="Enable/Disable Power Reports" units="" size="1" min="0" max="4" value="0">
+      <Help>Enable (or disable) power reports sent to the hub (requires firmware version 2 or higher)</Help>
+      <Item value="0" label="Enable power monitoring and reports from USB port"/>
+      <Item value="1" label="Disable power monitoring on both outlets and reports from USB port"/>
+      <Item value="2" label="Disable power monitoring of left outlet"/>
+      <Item value="3" label="Disable power monitoring of right outlet"/>
+      <Item value="4" label="Disable reports from USB port only"/>
     </Value>
   </CommandClass>
 
