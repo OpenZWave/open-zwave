@@ -59,7 +59,7 @@ namespace OpenZWave
 		virtual void SetValueBasic( uint8 const _instance, uint8 const _value );
 		virtual void SetVersion( uint8 const _version );
 
-		virtual uint8 GetMaxVersion(){ return 3; }
+		virtual uint8 GetMaxVersion(){ return 4; }
 
 	protected:
 		virtual void CreateVars( uint8 const _instance );

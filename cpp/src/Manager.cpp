@@ -50,7 +50,6 @@
 #include "command_classes/WakeUp.h"
 
 #include "value_classes/ValueID.h"
-#include "value_classes/ValueBitSet.h"
 #include "value_classes/ValueBool.h"
 #include "value_classes/ValueButton.h"
 #include "value_classes/ValueByte.h"

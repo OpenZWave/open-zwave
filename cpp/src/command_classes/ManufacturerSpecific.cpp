@@ -358,8 +358,8 @@ void ManufacturerSpecific::CreateVars
 			node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ManufacturerSpecific_LoadedConfig, "Loaded Config Revision", "", true, false, m_loadedConfigRevision, 0 );
 			node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ManufacturerSpecific_LocalConfig, "Config File Revision", "", true, false, m_fileConfigRevision, 0 );
 			node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ManufacturerSpecific_LatestConfig, "Latest Available Config File Revision", "", true, false, m_latestConfigRevision, 0 );
-            node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ManufacturerSpecific_DeviceID, "Device ID", "", true, false, "", 0);
-            node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ManufacturerSpecific_SerialNumber, "Serial Number", "", true, false, "", 0);
+			node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ManufacturerSpecific_DeviceID, "Device ID", "", true, false, "", 0);
+			node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ManufacturerSpecific_SerialNumber, "Serial Number", "", true, false, "", 0);
 		}
 	}
 
