@@ -416,6 +416,7 @@ DISTFILES =	.gitignore \
 	config/popp/700045.xml \
 	config/popp/700168.xml \
 	config/popp/700397.xml \
+	config/popp/700793.xml \
 	config/popp/smoke-detector.xml \
 	config/popp/solar-siren.xml \
 	config/popp/zweather.xml \

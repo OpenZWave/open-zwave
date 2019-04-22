@@ -1543,6 +1543,7 @@
 		<Product type="0001" id="0001" name="123658 Plug-in Switch plus Power Meter" config="popp/123658.xml"/>
 		<Product type="0003" id="0001" name="009105 Wall Plug Switch Schuko (IP44)" config="popp/009105.xml"/>
 		<Product type="0003" id="000a" name="700397 Wall Plug Switch Outdoor Schuko (IP44)" config="popp/700397.xml"/>
+		<Product type="0003" id="1002" name="700793 Power Plug" config="popp/700793.xml"/>
 		<Product type="0004" id="0002" name="Solar Powered Outdoor Siren" config="popp/solar-siren.xml" />
 		<Product type="0004" id="0003" name="004407 CO Detector" config="popp/004407.xml"/>
 		<Product type="0004" id="0004" name="009402 10-Year Smoke Detector" config="popp/009402.xml"/>
