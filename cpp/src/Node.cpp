@@ -2259,7 +2259,23 @@ bool Node::RequestDynamicValues
 
 	return res;
 }
+//-----------------------------------------------------------------------------
+// <Node::RefreshValuesOnWakeup>
+// Request an update of all known dynamic values from the device
+//-----------------------------------------------------------------------------
+void Node::RefreshValuesOnWakeup
+(
+)
+{
+	for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
+	{
+		if( !it->second->IsAfterMark() )
+		{
+			it->second->refreshValuesOnWakeup();
+		}
+	}
 
+}
 //-----------------------------------------------------------------------------
 // <Node::SetLevel>
 // Helper method to set a device's basic level

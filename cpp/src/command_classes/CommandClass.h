@@ -70,6 +70,8 @@ public:
 	virtual void WriteXML( TiXmlElement* _ccElement );
 	virtual bool RequestState( uint32 const _requestFlags, uint8 const _instance, Driver::MsgQueue const _queue ){ return false; }
 	virtual bool RequestValue( uint32 const _requestFlags, uint16 const _index, uint8 const _instance, Driver::MsgQueue const _queue ) { return false; }
+	virtual void refreshValuesOnWakeup();
+
 
 	virtual uint8 const GetCommandClassId()const = 0;
 	virtual string const GetCommandClassName()const = 0;
@@ -127,6 +129,7 @@ public:
 	void SetSecureSupport() { m_SecureSupport = true; }
 	void SetInNIF() { m_inNIF = true; }
 	bool IsInNIF() { return m_inNIF; }
+	bool IsRefreshOnWakeup() { return m_refreshOnWakeup; }
 
 	// Helper methods
 	string ExtractValue( uint8 const* _data, uint8* _scale, uint8* _precision, uint8 _valueOffset = 1 )const;
@@ -175,7 +178,8 @@ private:
 	bool		m_SecureSupport; 	// Does this commandclass support secure encryption (eg, the Security CC doesn't encrypt itself, so it doesn't support encryption)
 	std::vector<RefreshValue *> m_RefreshClassValues; // what Command Class Values should we refresh ?
 	bool		m_inNIF; 			// Was this command class present in the NIF Frame we recieved (or was it created from our device_classes.xml file, or because it was in the Security SupportedReport message
-	string          m_commandClassLabel;
+	string		m_commandClassLabel;
+	bool		m_refreshOnWakeup; // refresh values when Device Wakes up
 	//-----------------------------------------------------------------------------
 	// Record which items of static data have been read from the device
 	//-----------------------------------------------------------------------------

@@ -66,6 +66,7 @@ m_getSupported( true ),
 m_isSecured( false ),
 m_SecureSupport( true ),
 m_inNIF(false),
+m_refreshOnWakeup( false ),
 m_staticRequests( 0 ),
 m_sentCnt( 0 ),
 m_receivedCnt( 0 ),
@@ -272,6 +273,11 @@ void CommandClass::ReadXML
 	if( str )
 	{
 		m_inNIF = !strcmp( str, "true" );
+	}
+	str = _ccElement->Attribute( "refreshonwakeup");
+	if ( str )
+	{
+		m_refreshOnWakeup = !strcmp( str, "true" );
 	}
 
 
@@ -488,6 +494,10 @@ void CommandClass::WriteXML
 	if ( m_inNIF )
 	{
 		_ccElement->SetAttribute( "innif", "true" );
+	}
+	if ( m_refreshOnWakeup )
+	{
+		_ccElement->SetAttribute( "refreshonwakeup", "true" );
 	}
 
 
@@ -877,3 +887,16 @@ void CommandClass::SetVersion
 
 }
 
+//-----------------------------------------------------------------------------
+// <CommandClass::refreshValuesOnWakeup>
+// Refresh Values upon Wakeup Notification
+//-----------------------------------------------------------------------------
+void CommandClass::refreshValuesOnWakeup
+(
+)
+{
+	if (m_refreshOnWakeup) {
+		Log::Write(LogLevel_Debug, GetNodeId(), "Refreshing Dynamic Values on Wakeup for CommandClass %s", GetCommandClassName().c_str());
+		RequestStateForAllInstances( CommandClass::RequestFlag_Dynamic, Driver::MsgQueue_Send );
+	}
+}
