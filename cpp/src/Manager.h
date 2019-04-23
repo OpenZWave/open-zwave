@@ -192,16 +192,17 @@ namespace OpenZWave
 	/*@{*/
 	public:
 		/**
-		 * \brief Saves the configuration of a PC Controller's Z-Wave network to the application's user data folder.
+		 * \brief Saves a cache of a PC Controller's Z-Wave network to the application's user data folder.
 		 * This method does not normally need to be called, since OpenZWave will save the state automatically
 		 * during the shutdown process.  It is provided here only as an aid to development.
 		 * The configuration of each PC Controller's Z-Wave network is stored in a separate file.  The filename
-		 * consists of the 8 digit hexadecimal version of the controller's Home ID, prefixed with the string 'zwcfg_'.
+		 * consists of the 8 digit hexadecimal version of the controller's Home ID, prefixed with the string 'ozwcache_'.
 		 * This convention allows OpenZWave to find the correct configuration file for a controller, even if it is
 		 * attached to a different serial port, USB device path, etc.
+		 * \deprecated OZW handles writing out the cache automatically. This does not need to be called anymore.
 		 * \param _homeId The Home ID of the Z-Wave controller to save.
 		 */
-		void WriteConfig( uint32 const _homeId );
+		DEPRECATED void WriteConfig( uint32 const _homeId );
 
 		/**
 		 * \brief Gets a pointer to the locked Options object.

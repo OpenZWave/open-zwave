@@ -385,6 +385,15 @@ void WakeUp::SetAwake
 {
 	if( m_awake != _state )
 	{
+		/* we do the call on RefreshValuesOnWakeup here, so any duplicates in the wakeup Queue are handled appropriately
+		 *
+		 */
+		if ( m_awake == false ) {
+			Node* node = GetNodeUnsafe();
+			if (node)
+				node->RefreshValuesOnWakeup();
+		}
+
 		m_awake = _state;
 		Log::Write( LogLevel_Info, GetNodeId(), "  Node %d has been marked as %s", GetNodeId(), m_awake ? "awake" : "asleep" );
 		Notification* notification = new Notification( Notification::Type_Notification );
@@ -406,9 +415,10 @@ void WakeUp::SetAwake
 			}
 			m_pollRequired = false;
 		}
-
 		// Send all pending messages
 		SendPending();
+
+
 	}
 }
 

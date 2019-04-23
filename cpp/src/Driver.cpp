@@ -288,7 +288,7 @@ Driver::~Driver
 	{
 		if( save )
 		{
-			WriteConfig();
+			WriteCache();
 			Scene::WriteXML( "zwscene.xml" );
 		}
 	}
@@ -693,10 +693,10 @@ void Driver::RemoveQueues
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-// <Driver::ReadConfig>
+// <Driver::ReadCache>
 // Read our configuration from an XML document
 //-----------------------------------------------------------------------------
-bool Driver::ReadConfig
+bool Driver::ReadCache
 (
 )
 {
@@ -721,7 +721,7 @@ bool Driver::ReadConfig
 	// Version
 	if( TIXML_SUCCESS != driverElement->QueryIntAttribute( "version", &intVal ) || (uint32)intVal != c_configVersion )
 	{
-		Log::Write( LogLevel_Warning, "WARNING: Driver::ReadConfig - %s is from an older version of OpenZWave and cannot be loaded.", filename.c_str() );
+		Log::Write( LogLevel_Warning, "WARNING: Driver::ReadCache - %s is from an older version of OpenZWave and cannot be loaded.", filename.c_str() );
 		return false;
 	}
 
@@ -741,13 +741,13 @@ bool Driver::ReadConfig
 
 		if( homeId != m_homeId )
 		{
-			Log::Write( LogLevel_Warning, "WARNING: Driver::ReadConfig - Home ID in file %s is incorrect", filename.c_str() );
+			Log::Write( LogLevel_Warning, "WARNING: Driver::ReadCache - Home ID in file %s is incorrect", filename.c_str() );
 			return false;
 		}
 	}
 	else
 	{
-		Log::Write( LogLevel_Warning, "WARNING: Driver::ReadConfig - Home ID is missing from file %s", filename.c_str() );
+		Log::Write( LogLevel_Warning, "WARNING: Driver::ReadCache - Home ID is missing from file %s", filename.c_str() );
 		return false;
 	}
 
@@ -756,13 +756,13 @@ bool Driver::ReadConfig
 	{
 		if( (uint8)intVal != m_Controller_nodeId )
 		{
-			Log::Write( LogLevel_Warning, "WARNING: Driver::ReadConfig - Controller Node ID in file %s is incorrect", filename.c_str() );
+			Log::Write( LogLevel_Warning, "WARNING: Driver::ReadCache - Controller Node ID in file %s is incorrect", filename.c_str() );
 			return false;
 		}
 	}
 	else
 	{
-		Log::Write( LogLevel_Warning, "WARNING: Driver::ReadConfig - Node ID is missing from file %s", filename.c_str() );
+		Log::Write( LogLevel_Warning, "WARNING: Driver::ReadCache - Node ID is missing from file %s", filename.c_str() );
 		return false;
 	}
 
@@ -838,10 +838,10 @@ bool Driver::ReadConfig
 }
 
 //-----------------------------------------------------------------------------
-// <Driver::WriteConfig>
+// <Driver::WriteCache>
 // Write ourselves to an XML document
 //-----------------------------------------------------------------------------
-void Driver::WriteConfig
+void Driver::WriteCache
 (
 )
 {
@@ -892,7 +892,10 @@ void Driver::WriteConfig
 		{
 			if( m_nodes[i] )
 			{
-				m_nodes[i]->WriteXML( driverElement );
+				if (m_nodes[i]->GetCurrentQueryStage() == Node::QueryStage_Complete)
+					m_nodes[i]->WriteXML( driverElement );
+				else
+					Log::Write(LogLevel_Debug, i, "Skipping Cache Save for Node %d as its not QueryStage_Complete", i);
 			}
 		}
 	}
@@ -1667,6 +1670,8 @@ void Driver::CheckCompletedNodeQueries
 			}
 			m_awakeNodesQueried = true;
 			m_allNodesQueried = true;
+			/* save our Cache */
+			WriteCache();
 		}
 		else if( sleepingOnly )
 		{
@@ -1678,6 +1683,8 @@ void Driver::CheckCompletedNodeQueries
 				notification->SetHomeAndNodeIds( m_homeId, 0xff );
 				QueueNotification( notification );
 				m_awakeNodesQueried = true;
+				/* save our Cache */
+				WriteCache();
 			}
 		}
 	}
@@ -1982,35 +1989,35 @@ void Driver::ProcessMsg
 				/* if the Node has something else to send, it will encrypt a message and send it as a MessageEncapNonceGet */
 				if (SecurityCmd_MessageEncapNonceGet == SecurityCmd )
 				{
-				    Log::Write(LogLevel_Info,  _data[3], "Received SecurityCmd_MessageEncapNonceGet from node %d - Sending New Nonce", _data[3] );
-				    LockGuard LG(m_nodeMutex);
-				    Node* node = GetNode( _data[3] );
-				    if( node ) {
-				        _nonce = node->GenerateNonceKey();
-				    } else {
-				        Log::Write(LogLevel_Warning, _data[3], "Couldn't Generate Nonce Key for Node %d", _data[3]);
-				        return;
-				    }
-				    SendNonceKey(_data[3], _nonce);
+					Log::Write(LogLevel_Info,  _data[3], "Received SecurityCmd_MessageEncapNonceGet from node %d - Sending New Nonce", _data[3] );
+					LockGuard LG(m_nodeMutex);
+					Node* node = GetNode( _data[3] );
+					if( node ) {
+						_nonce = node->GenerateNonceKey();
+					} else {
+						Log::Write(LogLevel_Warning, _data[3], "Couldn't Generate Nonce Key for Node %d", _data[3]);
+						return;
+					}
+					SendNonceKey(_data[3], _nonce);
 				}
 
 				wasencrypted = true;
 
 			} else {
-			    /* if the Node has something else to send, it will encrypt a message and send it as a MessageEncapNonceGet */
-			    if (SecurityCmd_MessageEncapNonceGet == SecurityCmd )
-			    {
-			        Log::Write(LogLevel_Info,  _data[3], "Received SecurityCmd_MessageEncapNonceGet from node %d - Sending New Nonce", _data[3] );
-			        LockGuard LG(m_nodeMutex);
-			        Node* node = GetNode( _data[3] );
-			        if( node ) {
-			            _nonce = node->GenerateNonceKey();
-			        } else {
-			            Log::Write(LogLevel_Warning, _data[3], "Couldn't Generate Nonce Key for Node %d", _data[3]);
-			            return;
-			        }
-			        SendNonceKey(_data[3], _nonce);
-			    }
+				/* if the Node has something else to send, it will encrypt a message and send it as a MessageEncapNonceGet */
+				if (SecurityCmd_MessageEncapNonceGet == SecurityCmd )
+				{
+					Log::Write(LogLevel_Info,  _data[3], "Received SecurityCmd_MessageEncapNonceGet from node %d - Sending New Nonce", _data[3] );
+					LockGuard LG(m_nodeMutex);
+					Node* node = GetNode( _data[3] );
+					if( node ) {
+						_nonce = node->GenerateNonceKey();
+					} else {
+						Log::Write(LogLevel_Warning, _data[3], "Couldn't Generate Nonce Key for Node %d", _data[3]);
+						return;
+					}
+					SendNonceKey(_data[3], _nonce);
+				}
 				/* it failed for some reason, lets just move on */
 				m_expectedReply = 0;
 				m_expectedNodeId = 0;
@@ -2820,7 +2827,7 @@ void Driver::HandleSerialAPIGetInitDataResponse
 		Manager::Get()->SetDriverReady( this, true );
 
 		// Read the config file first, to get the last known state
-		ReadConfig();
+		ReadCache();
 	}
 	else
 	{
@@ -3215,22 +3222,22 @@ void Driver::HandleSendDataRequest
 				Log::Write(LogLevel_Info, nodeId, "Request RTT %d Average Request RTT %d", node->m_lastRequestRTT, node->m_averageRequestRTT );
 			}
 			/* if the frame has txStatus message, then extract it */
-            // petergebruers, changed test (_length > 7) to >= 23 to avoid extracting non-existent data, highest is _data[22]
+			// petergebruers, changed test (_length > 7) to >= 23 to avoid extracting non-existent data, highest is _data[22]
 			if (_length >= 23) {
 				node->m_txStatusReportSupported = true;
-                // petergebruers:
-                // because OpenZWave uses "ms" everywhere, and wTransmitTicks
-                // has "10 ms" as unit... multiply by 10. This wil avoid
-                // confusion when people look at stats or log files.
+				// petergebruers:
+				// because OpenZWave uses "ms" everywhere, and wTransmitTicks
+				// has "10 ms" as unit... multiply by 10. This wil avoid
+				// confusion when people look at stats or log files.
 				node->m_txTime = (_data[5] + (_data[4] << 8)) * 10;
 				node->m_hops = _data[6];
-                // petergebruers: there are 5 rssi values because there are
-                // 4 repeaters + 1 sending node
-				strncpy(node->m_rssi_1, rssi_to_string(_data[7]), sizeof(node->m_rssi_1));
-				strncpy(node->m_rssi_2, rssi_to_string(_data[8]), sizeof(node->m_rssi_2));
-				strncpy(node->m_rssi_3, rssi_to_string(_data[9]), sizeof(node->m_rssi_3));
-				strncpy(node->m_rssi_4, rssi_to_string(_data[10]), sizeof(node->m_rssi_4));
-                strncpy(node->m_rssi_5, rssi_to_string(_data[11]), sizeof(node->m_rssi_5));
+				// petergebruers: there are 5 rssi values because there are
+				// 4 repeaters + 1 sending node
+				strncpy(node->m_rssi_1, rssi_to_string(_data[7]), sizeof(node->m_rssi_1) - 1);
+				strncpy(node->m_rssi_2, rssi_to_string(_data[8]), sizeof(node->m_rssi_2) - 1);
+				strncpy(node->m_rssi_3, rssi_to_string(_data[9]), sizeof(node->m_rssi_3) - 1);
+				strncpy(node->m_rssi_4, rssi_to_string(_data[10]), sizeof(node->m_rssi_4) - 1);
+				strncpy(node->m_rssi_5, rssi_to_string(_data[11]), sizeof(node->m_rssi_5) - 1);
 				node->m_ackChannel = _data[12];
 				node->m_lastTxChannel = _data[13];
 				node->m_routeScheme = (TXSTATUS_ROUTING_SCHEME)_data[14];
@@ -3244,13 +3251,12 @@ void Driver::HandleSendDataRequest
 				node->m_lastFailedLinkTo = _data[22];
 				Node::NodeData nd;
 				node->GetNodeStatistics(&nd);
-                // petergebruers: changed to ChannelAck to AckChannel, to be consistent with docs and TxChannel
+				// petergebruers: changed "ChannelAck" to "AckChannel", to be consistent with docs and "TxChannel"
 				Log::Write( LogLevel_Detail, nodeId, "Extended TxStatus: Time: %d, Hops: %d, Rssi: %s %s %s %s %s, AckChannel: %d, TxChannel: %d, RouteScheme: %s, Route: %d %d %d %d, RouteSpeed: %s, RouteTries: %d, FailedLinkFrom: %d, FailedLinkTo: %d",
 						nd.m_txTime, nd.m_hops, nd.m_rssi_1, nd.m_rssi_2, nd.m_rssi_3, nd.m_rssi_4, nd.m_rssi_4,
 						nd.m_ackChannel, nd.m_lastTxChannel, Manager::GetNodeRouteScheme(&nd).c_str(), nd.m_routeUsed[0],
 						nd.m_routeUsed[1], nd.m_routeUsed[2], nd.m_routeUsed[3], Manager::GetNodeRouteSpeed(&nd).c_str(),
 						nd.m_routeTries, nd.m_lastFailedLinkFrom, nd.m_lastFailedLinkTo);
-				// exit(1);
 			}
 
 		}
@@ -7247,7 +7253,7 @@ void Driver::processConfigRevision
 					QueueNotification( notification );
 
 					bool update = false;
-				    Options::Get()->GetOptionAsBool("AutoUpdateConfigFile", &update);
+					Options::Get()->GetOptionAsBool("AutoUpdateConfigFile", &update);
 
 					if (update)
 						m_mfs->updateConfigFile(this, node);
@@ -7263,10 +7269,10 @@ void Driver::processConfigRevision
 					QueueNotification( notification );
 
 					bool update = false;
-				    Options::Get()->GetOptionAsBool("AutoUpdateConfigFile", &update);
+					Options::Get()->GetOptionAsBool("AutoUpdateConfigFile", &update);
 
-				    if (update) {
-				    	m_mfs->updateMFSConfigFile(this);
+					if (update) {
+						m_mfs->updateMFSConfigFile(this);
 					} else {
 						m_mfs->checkInitialized();
 					}

@@ -50,7 +50,6 @@
 #include "command_classes/WakeUp.h"
 
 #include "value_classes/ValueID.h"
-#include "value_classes/ValueBitSet.h"
 #include "value_classes/ValueBool.h"
 #include "value_classes/ValueButton.h"
 #include "value_classes/ValueByte.h"
@@ -294,7 +293,7 @@ void Manager::WriteConfig
 {
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
-		driver->WriteConfig();
+		driver->WriteCache();
 		Log::Write( LogLevel_Info, "mgr,     Manager::WriteConfig completed for driver with home ID of 0x%.8x", _homeId );
 	}
 	else

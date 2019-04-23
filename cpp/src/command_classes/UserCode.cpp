@@ -371,6 +371,8 @@ void UserCode::WriteXML
 	CommandClass::WriteXML( _ccElement );
 	snprintf( str, sizeof(str), "%d", m_userCodeCount );
 	_ccElement->SetAttribute( "codes", str);
+	
+	_ccElement->SetAttribute( "exposeRawUserCodes", m_exposeRawValueID ? "true" : "false");
 }
 
 //-----------------------------------------------------------------------------
