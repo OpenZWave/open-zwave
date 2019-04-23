@@ -288,7 +288,7 @@ Driver::~Driver
 	{
 		if( save )
 		{
-			WriteConfig();
+			WriteCache();
 			Scene::WriteXML( "zwscene.xml" );
 		}
 	}
@@ -693,10 +693,10 @@ void Driver::RemoveQueues
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-// <Driver::ReadConfig>
+// <Driver::ReadCache>
 // Read our configuration from an XML document
 //-----------------------------------------------------------------------------
-bool Driver::ReadConfig
+bool Driver::ReadCache
 (
 )
 {
@@ -721,7 +721,7 @@ bool Driver::ReadConfig
 	// Version
 	if( TIXML_SUCCESS != driverElement->QueryIntAttribute( "version", &intVal ) || (uint32)intVal != c_configVersion )
 	{
-		Log::Write( LogLevel_Warning, "WARNING: Driver::ReadConfig - %s is from an older version of OpenZWave and cannot be loaded.", filename.c_str() );
+		Log::Write( LogLevel_Warning, "WARNING: Driver::ReadCache - %s is from an older version of OpenZWave and cannot be loaded.", filename.c_str() );
 		return false;
 	}
 
@@ -741,13 +741,13 @@ bool Driver::ReadConfig
 
 		if( homeId != m_homeId )
 		{
-			Log::Write( LogLevel_Warning, "WARNING: Driver::ReadConfig - Home ID in file %s is incorrect", filename.c_str() );
+			Log::Write( LogLevel_Warning, "WARNING: Driver::ReadCache - Home ID in file %s is incorrect", filename.c_str() );
 			return false;
 		}
 	}
 	else
 	{
-		Log::Write( LogLevel_Warning, "WARNING: Driver::ReadConfig - Home ID is missing from file %s", filename.c_str() );
+		Log::Write( LogLevel_Warning, "WARNING: Driver::ReadCache - Home ID is missing from file %s", filename.c_str() );
 		return false;
 	}
 
@@ -756,13 +756,13 @@ bool Driver::ReadConfig
 	{
 		if( (uint8)intVal != m_Controller_nodeId )
 		{
-			Log::Write( LogLevel_Warning, "WARNING: Driver::ReadConfig - Controller Node ID in file %s is incorrect", filename.c_str() );
+			Log::Write( LogLevel_Warning, "WARNING: Driver::ReadCache - Controller Node ID in file %s is incorrect", filename.c_str() );
 			return false;
 		}
 	}
 	else
 	{
-		Log::Write( LogLevel_Warning, "WARNING: Driver::ReadConfig - Node ID is missing from file %s", filename.c_str() );
+		Log::Write( LogLevel_Warning, "WARNING: Driver::ReadCache - Node ID is missing from file %s", filename.c_str() );
 		return false;
 	}
 
@@ -838,10 +838,10 @@ bool Driver::ReadConfig
 }
 
 //-----------------------------------------------------------------------------
-// <Driver::WriteConfig>
+// <Driver::WriteCache>
 // Write ourselves to an XML document
 //-----------------------------------------------------------------------------
-void Driver::WriteConfig
+void Driver::WriteCache
 (
 )
 {
@@ -892,7 +892,10 @@ void Driver::WriteConfig
 		{
 			if( m_nodes[i] )
 			{
-				m_nodes[i]->WriteXML( driverElement );
+				if (m_nodes[i]->GetCurrentQueryStage() == Node::QueryStage_Complete)
+					m_nodes[i]->WriteXML( driverElement );
+				else
+					Log::Write(LogLevel_Debug, i, "Skipping Cache Save for Node %d as its not QueryStage_Complete", i);
 			}
 		}
 	}
@@ -1667,6 +1670,8 @@ void Driver::CheckCompletedNodeQueries
 			}
 			m_awakeNodesQueried = true;
 			m_allNodesQueried = true;
+			/* save our Cache */
+			WriteCache();
 		}
 		else if( sleepingOnly )
 		{
@@ -1678,6 +1683,8 @@ void Driver::CheckCompletedNodeQueries
 				notification->SetHomeAndNodeIds( m_homeId, 0xff );
 				QueueNotification( notification );
 				m_awakeNodesQueried = true;
+				/* save our Cache */
+				WriteCache();
 			}
 		}
 	}
@@ -2820,7 +2827,7 @@ void Driver::HandleSerialAPIGetInitDataResponse
 		Manager::Get()->SetDriverReady( this, true );
 
 		// Read the config file first, to get the last known state
-		ReadConfig();
+		ReadCache();
 	}
 	else
 	{

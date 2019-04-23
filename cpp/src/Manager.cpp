@@ -293,7 +293,7 @@ void Manager::WriteConfig
 {
 	if( Driver* driver = GetDriver( _homeId ) )
 	{
-		driver->WriteConfig();
+		driver->WriteCache();
 		Log::Write( LogLevel_Info, "mgr,     Manager::WriteConfig completed for driver with home ID of 0x%.8x", _homeId );
 	}
 	else

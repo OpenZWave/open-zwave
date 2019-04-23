@@ -176,8 +176,8 @@ namespace OpenZWave
 	//-----------------------------------------------------------------------------
 	private:
 		void RequestConfig();							// Get the network configuration from the Z-Wave network
-		bool ReadConfig();								// Read the configuration from a file
-		void WriteConfig();								// Save the configuration to a file
+		bool ReadCache();								// Read the configuration from a file
+		void WriteCache();								// Save the configuration to a file
 
 	//-----------------------------------------------------------------------------
 	//	Timer
