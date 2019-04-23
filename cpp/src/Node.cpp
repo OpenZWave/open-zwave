@@ -197,6 +197,7 @@ m_lastnonce ( 0 )
 	memset( m_rssi_2, 0, sizeof(m_rssi_2) );
 	memset( m_rssi_3, 0, sizeof(m_rssi_3) );
 	memset( m_rssi_4, 0, sizeof(m_rssi_4) );
+	memset( m_rssi_5, 0, sizeof(m_rssi_5) );
 	/* Add NoOp Class */
 	AddCommandClass( NoOperation::StaticGetCommandClassId() );
 
@@ -3543,11 +3544,11 @@ void Node::GetNodeStatistics
 	// petergebruers swap src and dst
 	// petergebruers there are 5 rssi values because there are
 	// 4 repeaters + 1 sending node
-	strncpy(_data->m_rssi_1, m_rssi_1, sizeof(_data->m_rssi_1) - 1);
-	strncpy(_data->m_rssi_2, m_rssi_2, sizeof(_data->m_rssi_2) - 1);
-	strncpy(_data->m_rssi_3, m_rssi_3, sizeof(_data->m_rssi_3) - 1);
-	strncpy(_data->m_rssi_4, m_rssi_4, sizeof(_data->m_rssi_4) - 1);
-	strncpy(_data->m_rssi_5, m_rssi_5, sizeof(_data->m_rssi_5) - 1);
+	strncpy(_data->m_rssi_1, m_rssi_1, sizeof(_data->m_rssi_1));
+	strncpy(_data->m_rssi_2, m_rssi_2, sizeof(_data->m_rssi_2));
+	strncpy(_data->m_rssi_3, m_rssi_3, sizeof(_data->m_rssi_3));
+	strncpy(_data->m_rssi_4, m_rssi_4, sizeof(_data->m_rssi_4));
+	strncpy(_data->m_rssi_5, m_rssi_5, sizeof(_data->m_rssi_5));
 	_data->m_ackChannel = m_ackChannel;
 	_data->m_lastTxChannel = m_lastTxChannel;
 	_data->m_routeScheme = m_routeScheme;
