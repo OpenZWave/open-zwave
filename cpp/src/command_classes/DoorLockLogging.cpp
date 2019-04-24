@@ -310,7 +310,7 @@ bool DoorLockLogging::HandleMsg
 				for (int i = 0; i < usercodelength; i++ )
 				{
                                         snprintf(tmpusercode, sizeof(tmpusercode), "%d", (int)_data[12+i]);
-                                        strncat(usercode, tmpusercode, sizeof(usercode));
+                                        strncat(usercode, tmpusercode, sizeof(usercode) - strlen(usercode) - 1 );
 				}
 
 			if (valid) {
