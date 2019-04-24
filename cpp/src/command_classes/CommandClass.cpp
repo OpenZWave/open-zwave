@@ -35,6 +35,7 @@
 #include "Msg.h"
 #include "Node.h"
 #include "Driver.h"
+#include "Localization.h"
 #include "Manager.h"
 #include "platform/Log.h"
 #include "value_classes/ValueStore.h"
@@ -227,7 +228,7 @@ string CommandClass::GetInstanceLabel
 {
 	if ( m_instanceLabel.count(_instance) )
 	{
-		return m_instanceLabel[_instance];
+		return Localization::Get()->GetGlobalLabel(m_instanceLabel[_instance]);
 	}
 	return string();
 }
@@ -339,6 +340,18 @@ void CommandClass::ReadXML
 				if ( str )
 				{
 					SetInstanceLabel(instance, (char *)str);
+					Localization::Get()->SetGlobalLabel(str, str, "");
+					TiXmlElement const *labellang = child->FirstChildElement();
+					while ( labellang )
+					{
+						char const* str2 = labellang->Value();
+						if ( str2 && !strcmp( str2, "Label" ) )
+						{
+							char const *lang = labellang->Attribute("lang");
+							Localization::Get()->SetGlobalLabel(str, labellang->GetText(), lang);
+						}
+						labellang = labellang->NextSiblingElement();
+					}
 				}
 			}
 			else if( !strcmp( str, "Value" ) )
@@ -551,7 +564,7 @@ void CommandClass::WriteXML
 			instanceElement->SetAttribute( "endpoint", str );
 		}
 		if ( m_instanceLabel.count(*it) > 0 )
-			instanceElement->SetAttribute( "label", m_instanceLabel[*it].c_str());
+			instanceElement->SetAttribute( "label", GetInstanceLabel(*it).c_str());
 	}
 
 	// Write out the values for this command class

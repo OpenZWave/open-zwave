@@ -851,7 +851,7 @@ void Driver::WriteCache
 		Log::Write( LogLevel_Warning, "WARNING: Tried to write driver config with no home ID set");
 		return;
 	}
-
+	Log::Write(LogLevel_Info, "Saving Cache");
 	// Create a new XML document to contain the driver configuration
 	TiXmlDocument doc;
 	TiXmlDeclaration* decl = new TiXmlDeclaration( "1.0", "utf-8", "" );
@@ -859,7 +859,7 @@ void Driver::WriteCache
 	doc.LinkEndChild( decl );
 	doc.LinkEndChild( driverElement );
 
-	driverElement->SetAttribute( "xmlns", "http://code.google.com/p/open-zwave/" );
+	driverElement->SetAttribute( "xmlns", "https://github.com/OpenZWave/open-zwave" );
 
 	snprintf( str, sizeof(str), "%d", c_configVersion );
 	driverElement->SetAttribute( "version", str );
@@ -892,10 +892,12 @@ void Driver::WriteCache
 		{
 			if( m_nodes[i] )
 			{
-				if (m_nodes[i]->GetCurrentQueryStage() == Node::QueryStage_Complete)
+				if (m_nodes[i]->GetCurrentQueryStage() == Node::QueryStage_Complete) {
 					m_nodes[i]->WriteXML( driverElement );
-				else
-					Log::Write(LogLevel_Debug, i, "Skipping Cache Save for Node %d as its not QueryStage_Complete", i);
+					Log::Write(LogLevel_Info, i, "Cache Save for Node %d as its QueryStage_Complete", i);
+				} else {
+					Log::Write(LogLevel_Info, i, "Skipping Cache Save for Node %d as its not QueryStage_Complete", i);
+				}
 			}
 		}
 	}

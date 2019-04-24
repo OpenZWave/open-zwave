@@ -49,7 +49,7 @@ public:
     bool HasLabel(string lang);
 
 private:
-    uint8 m_index;
+    uint16 m_index;
     uint32 m_pos;
     map<string, string> m_Label;
     string m_defaultLabel;
@@ -107,6 +107,7 @@ private:
     static void ReadCCXMLLabel(uint8 ccID, const TiXmlElement *labelElement);
     static void ReadXMLValue(uint8 ccID, const TiXmlElement *valueElement);
     static void ReadXMLVIDItemLabel(uint8 ccID, uint16 indexId, uint32 pos, const TiXmlElement *labelElement);
+    static void ReadGlobalXMLLabel(const TiXmlElement *labelElement);
     static uint64 GetValueKey (uint8 _commandClass, uint16 _index, uint32 _pos = -1);
 public:
     static Localization* Get();
@@ -120,7 +121,8 @@ public:
     bool SetValueItemLabel(uint8 ccID, uint16 indexId, int32 pos, int32 itemIndex, string label, string lang="");
     string const GetValueItemHelp(uint8 ccID, uint16 indexId, int32 pos, int32 itemIndex) const;
     bool SetValueItemHelp(uint8 ccID, uint16 indexId, int32 pos, int32 itemIndex, string label, string lang="");
-
+    string const GetGlobalLabel(string text);
+    bool SetGlobalLabel(string index, string text, string lang);
     static void ReadXMLVIDLabel(uint8 ccID, uint16 indexId, uint32 pos, const TiXmlElement *labelElement);
     static void ReadXMLVIDHelp(uint8 ccID, uint16 indexId, uint32 pos, const TiXmlElement *helpElement);
     bool WriteXMLVIDHelp(uint8 ccID, uint16 indexId, uint32 pos, TiXmlElement *valueElement);
@@ -129,8 +131,9 @@ public:
     //-----------------------------------------------------------------------------
 private:
     static Localization* m_instance;
-    static map<int64,ValueLocalizationEntry*> m_valueLocalizationMap;
+    static map<uint64,ValueLocalizationEntry*> m_valueLocalizationMap;
     static map<uint8,LabelLocalizationEntry*> m_commandClassLocalizationMap;
+    static map<string, LabelLocalizationEntry*> m_globalLabelLocalizationMap;
     static string m_selectedLang;
     static uint32 m_revision;
 

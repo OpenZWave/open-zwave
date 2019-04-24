@@ -34,6 +34,7 @@
 #include "Options.h"
 #include "Manager.h"
 #include "Driver.h"
+#include "Localization.h"
 #include "ManufacturerSpecificDB.h"
 #include "Notification.h"
 #include "Msg.h"
@@ -1639,7 +1640,7 @@ string Node::GetInstanceLabel
 		else {
 			/* construct a Default Label */
 			std::ostringstream sstream;
-			sstream << "Instance " << (int)_instance << ":";
+			sstream << Localization::Get()->GetGlobalLabel("Instance") << " " << (int)_instance << ":";
 			label = sstream.str();
 		}
 	}

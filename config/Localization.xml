@@ -2255,4 +2255,8 @@
 			<Label>UserIcon</Label>
 		</Value>
 	</CommandClass>
+	<GlobalText>
+		<Label name="Instance">Instance</Label>
+		<Label name="Instance" lang="fr">Exemple</Label>
+	</GlobalText>
 </Localization>

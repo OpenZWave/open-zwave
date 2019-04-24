@@ -37,8 +37,9 @@
 using namespace OpenZWave;
 
 Localization *Localization::m_instance = NULL;
-map<int64,ValueLocalizationEntry*> Localization::m_valueLocalizationMap;
+map<uint64,ValueLocalizationEntry*> Localization::m_valueLocalizationMap;
 map<uint8,LabelLocalizationEntry*> Localization::m_commandClassLocalizationMap;
+map<string, LabelLocalizationEntry*> Localization::m_globalLabelLocalizationMap;
 string Localization::m_selectedLang = "";
 uint32 Localization::m_revision = 0;
 
@@ -305,8 +306,8 @@ void Localization::ReadXML
 	TiXmlDocument* pDoc = new TiXmlDocument();
 	if( !pDoc->LoadFile( path.c_str(), TIXML_ENCODING_UTF8 ) )
 	{
+		Log::Write( LogLevel_Warning, "Unable to load Localization file %s: %s", path.c_str(), pDoc->ErrorDesc());
 		delete pDoc;
-		Log::Write( LogLevel_Warning, "Unable to load Localization file %s", path.c_str());
 		return;
 	}
 	pDoc->SetUserData((void*)path.c_str());
@@ -356,12 +357,54 @@ void Localization::ReadXML
 				nextElement = nextElement->NextSiblingElement();
 			}
 		}
+		else if ( str && !strcmp( str, "GlobalText" ) )
+		{
+			TiXmlElement const* nextElement = CCElement->FirstChildElement();
+			while (nextElement) {
+				str = nextElement->Value();
+				if ( str && !strcmp( str, "Label" ) )
+				{
+					ReadGlobalXMLLabel(nextElement);
+				}
+				nextElement = nextElement->NextSiblingElement();
+			}
+		}
 
 
 		CCElement = CCElement->NextSiblingElement();
 	}
 	Log::Write(LogLevel_Info, "Loaded %s With Revision %d", pDoc->GetUserData(), m_revision);
 }
+
+void Localization::ReadGlobalXMLLabel(const TiXmlElement *labelElement) {
+
+	string Language;
+	char const *str = labelElement->Attribute( "name" );
+	if ( !str )
+	{
+		Log::Write( LogLevel_Warning, "Localization::ReadGlobalXMLLabel: Error in %s at line %d - missing GlobalText name attribute", labelElement->GetDocument()->GetUserData(), labelElement->Row() );
+		return;
+	}
+	if (labelElement->Attribute( "lang" ))
+		 Language = labelElement->Attribute( "lang" );
+	if (m_globalLabelLocalizationMap.find(str) == m_globalLabelLocalizationMap.end()) {
+		m_globalLabelLocalizationMap[str] = new LabelLocalizationEntry(0);
+	} else if (m_globalLabelLocalizationMap[str]->HasLabel(Language)) {
+		Log::Write( LogLevel_Warning, "Localization::ReadGlobalXMLLabel: Error in %s at line %d - Duplicate Entry for GlobalText %s: %s (Lang: %s)", labelElement->GetDocument()->GetUserData(), labelElement->Row(), str, labelElement->GetText(), Language.c_str() );
+		return;
+	}
+	if( Language.empty() )
+	{
+		m_globalLabelLocalizationMap[str]->AddLabel(labelElement->GetText());
+
+	}
+	else
+	{
+		m_globalLabelLocalizationMap[str]->AddLabel(labelElement->GetText(), Language);
+
+	}
+}
+
 void Localization::ReadCCXMLLabel(uint8 ccID, const TiXmlElement *labelElement) {
 
 	string Language;
@@ -699,8 +742,43 @@ bool Localization::SetValueItemHelp
 	return true;
 }
 
+string const Localization::GetGlobalLabel
+(
+		string index
+)
+{
+	if (m_globalLabelLocalizationMap.find(index) == m_globalLabelLocalizationMap.end()) {
+		Log::Write( LogLevel_Warning, "Localization::GetGlobalLabel: No globalLabelLocalizationMap for Index %s", index.c_str());
+		return index;
+	}
+	return m_globalLabelLocalizationMap[index]->GetLabel(m_selectedLang);
 
+}
+bool Localization::SetGlobalLabel
+(
+		string index,
+		string text,
+		string lang
+)
+{
+	if (m_globalLabelLocalizationMap.find(index) == m_globalLabelLocalizationMap.end()) {
+		m_globalLabelLocalizationMap[index] = new LabelLocalizationEntry(0);
+	} else if (m_globalLabelLocalizationMap[index]->HasLabel(lang)) {
+		Log::Write( LogLevel_Warning, "Localization::SetGlobalLabel: Duplicate Entry for GlobalText %s: %s (Lang: %s)", index.c_str(), text.c_str(), lang.c_str() );
+		return false;
+	}
+	if( lang.empty() )
+	{
+		m_globalLabelLocalizationMap[index]->AddLabel(text);
 
+	}
+	else
+	{
+		m_globalLabelLocalizationMap[index]->AddLabel(text, lang);
+
+	}
+	return true;
+}
 
 bool Localization::WriteXMLVIDHelp
 (
