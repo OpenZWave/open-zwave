@@ -78,6 +78,7 @@ namespace OpenZWave
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );
 		virtual bool HandleIncomingMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );
 		virtual uint8 GetMaxVersion(){ return 2; }
+		void SetInstanceLabel(uint8 const _instance, char *label);
 
 		MultiInstanceMapping GetEndPointMap(){ return m_endPointMap; }
 

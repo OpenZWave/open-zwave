@@ -204,6 +204,35 @@ void CommandClass::SetInstance
 }
 
 //-----------------------------------------------------------------------------
+// <CommandClass::SetInstanceLabel>
+// Set the Label for a Instance of this CommandClass
+//-----------------------------------------------------------------------------
+void CommandClass::SetInstanceLabel
+(
+		uint8 const _instance,
+		char *label
+)
+{
+	m_instanceLabel[_instance] = string(label);
+}
+//-----------------------------------------------------------------------------
+// <CommandClass::GetInstanceLabel>
+// Get the Label for a Instance of this CommandClass
+//-----------------------------------------------------------------------------
+
+string CommandClass::GetInstanceLabel
+(
+		uint8 const _instance
+)
+{
+	if ( m_instanceLabel.count(_instance) )
+	{
+		return m_instanceLabel[_instance];
+	}
+	return string();
+}
+
+//-----------------------------------------------------------------------------
 // <CommandClass::ReadXML>
 // Read the saved command class data
 //-----------------------------------------------------------------------------
@@ -305,6 +334,11 @@ void CommandClass::ReadXML
 				{
 					uint8 endpoint = (uint8)intVal;
 					SetEndPoint( instance, endpoint );
+				}
+				str = child->Attribute( "label");
+				if ( str )
+				{
+					SetInstanceLabel(instance, (char *)str);
 				}
 			}
 			else if( !strcmp( str, "Value" ) )
@@ -516,6 +550,8 @@ void CommandClass::WriteXML
 			snprintf( str, sizeof(str), "%d", eit->second );
 			instanceElement->SetAttribute( "endpoint", str );
 		}
+		if ( m_instanceLabel.count(*it) > 0 )
+			instanceElement->SetAttribute( "label", m_instanceLabel[*it].c_str());
 	}
 
 	// Write out the values for this command class

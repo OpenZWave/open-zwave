@@ -131,7 +131,8 @@ Options* Options::Create
 		s_instance->AddOptionBool(		"EnforceSecureReception",	true);						// if we recieve a clear text message for a CC that is Secured, should we drop the message
 		s_instance->AddOptionBool(      "AutoUpdateConfigFile",     true);						// if we should automatically update config files for devices if they are out of date
 		s_instance->AddOptionString(	"ReloadAfterUpdate",	    "AWAKE", 	false);			// Should we automatically Reload Nodes after a update
-                s_instance->AddOptionString(    "Language",                 "",         false);                 // Language we should use
+		s_instance->AddOptionString(    "Language",                 "",         false);			// Language we should use
+		s_instance->AddOptionBool(		"IncludeInstanceLabel",		true);						// Should we include the Instance Label in Value Labels on MultiInstance Devices
 #if defined WINRT
 		s_instance->AddOptionInt(       "ThreadTerminateTimeout",   -1);						// Since threads cannot be terminated in WinRT, Thread::Terminate will simply wait for them to exit on there own
 #endif

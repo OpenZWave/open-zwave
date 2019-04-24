@@ -117,6 +117,10 @@ public:
 
 	void SetInstances( uint8 const _instances );
 	void SetInstance( uint8 const _endPoint );
+	/* overridden in the MultiInstance CC to set the Global Label for each Instance */
+	virtual void SetInstanceLabel(uint8 const _instance, char *label);
+	string GetInstanceLabel(uint8 const _instance);
+	uint8 GetNumInstances() { return m_endPointMap.size(); };
 	void SetAfterMark(){ m_afterMark = true; }
 	void SetEndPoint( uint8 const _instance, uint8 const _endpoint){ m_endPointMap[_instance] = _endpoint; }
 	bool IsAfterMark()const{ return m_afterMark; }
@@ -169,6 +173,7 @@ private:
 	Bitfield	m_instances;
 	OPENZWAVE_EXPORT_WARNINGS_OFF
 	map<uint8,uint8> m_endPointMap;
+	map<uint8, string> m_instanceLabel;
 	OPENZWAVE_EXPORT_WARNINGS_ON
 	bool		m_afterMark;		// Set to true if the command class is listed after COMMAND_CLASS_MARK, and should not create any values.
 	bool		m_createVars;		// Do we want to create variables

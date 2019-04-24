@@ -747,3 +747,21 @@ void MultiInstance::HandleMultiChannelEncap
 		}
 	}
 }
+//-----------------------------------------------------------------------------
+// <MultiInstance::HandleMultiChannelEncap>
+// Handle a message from the Z-Wave network
+//-----------------------------------------------------------------------------
+void MultiInstance::SetInstanceLabel
+(
+		uint8 const _instance,
+		char *label
+)
+{
+	CommandClass::SetInstanceLabel(_instance, label);
+	/* Set the Default Global Instance Label for CC that don't define their own instance labels */
+	if( Node* node = GetNodeUnsafe() )
+	{
+		node->SetInstanceLabel(_instance, label);
+	}
+}
+

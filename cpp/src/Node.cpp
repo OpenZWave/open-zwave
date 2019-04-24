@@ -1604,10 +1604,66 @@ void Node::SetProtocolInfo
 	m_basicprotocolInfoReceived = true;
 }
 
-void Node::SetSecured(bool secure) {
+void Node::SetSecured
+(
+		bool secure
+)
+{
 	m_secured = secure;
 }
 
+void Node::SetInstanceLabel
+(
+		uint8 const _instance,
+		char *label
+)
+{
+	m_globalInstanceLabel[_instance] = string(label);
+}
+
+string Node::GetInstanceLabel
+(
+		uint8 const _ccid,
+		uint8 const _instance
+)
+{
+	string label;
+	/* find the CommandClass */
+	CommandClass *_cc = GetCommandClass(_ccid);
+	if ( _cc )
+		label = _cc->GetInstanceLabel(_instance);
+	/* if the Label is Empty - Then use the Global Label */
+	if ( label.empty() ) {
+		if ( m_globalInstanceLabel.count(_instance) )
+			label = m_globalInstanceLabel[_instance];
+		else {
+			/* construct a Default Label */
+			std::ostringstream sstream;
+			sstream << "Instance " << (int)_instance << ":";
+			label = sstream.str();
+		}
+	}
+	return label;
+}
+
+uint8 Node::GetNumInstances
+(
+		uint8 const _ccid
+)
+{
+	uint8 ccid = _ccid;
+	int instances = 1;
+	if ( _ccid == 0 )
+	{
+		ccid = MultiInstance::StaticGetCommandClassId();
+	}
+	if ( CommandClass *cc = GetCommandClass(ccid) )
+	{
+		return cc->GetNumInstances();
+	}
+
+	return instances;
+}
 
 
 void Node::SetSecuredClasses

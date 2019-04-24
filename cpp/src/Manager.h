@@ -882,6 +882,40 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 	/*@}*/
 
 	//-----------------------------------------------------------------------------
+	// Instances
+	//-----------------------------------------------------------------------------
+	/** \name Instances
+	 *  Methods for accessing Instance Information.
+	 */
+	/*@{*/
+	public:
+		/**
+		 *\brief Get the Instance Label for a specific ValueID
+		 * returns the Instance Label for a Specific ValueID on a CommandClass, or the Global Instance Label
+		 * if there is no specific label for the CommandClass
+		 *\param _id The unique identifier of the value
+		 *\return The Instance Label
+ 		 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_VALUEID if the ValueID is invalid
+		 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_HOMEID if the Driver cannot be found
+		 */
+		string GetInstanceLabel( ValueID const &_id);
+
+		/**
+		 *\brief Get the Instance Label for a specific CommandClass
+		 * returns the Label for a Specific Instance on a Specific CommandClass, or the Global Instance Label
+		 * if there is no specific label for the CommandClass
+		 *\param _homeId the HomeID for the network you are querying
+		 *\param _node The Node you are interested in.
+		 *\param _cc The CommandClass for the Label you are interested in
+		 *\param _instance the Instance you are querying for
+		 *\return The Instance Label
+ 		 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_VALUEID if the ValueID is invalid
+		 * \throws OZWException with Type OZWException::OZWEXCEPTION_INVALID_HOMEID if the Driver cannot be found
+		 */
+		string GetInstanceLabel(uint32 const _homeId, uint8 const _node, uint8 const _cc, uint8 const _instance);
+
+	/*@}*/
+	//-----------------------------------------------------------------------------
 	// Values
 	//-----------------------------------------------------------------------------
 	/** \name Values

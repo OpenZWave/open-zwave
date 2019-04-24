@@ -411,6 +411,21 @@ namespace OpenZWave
 			 */
 			void SetSecuredClasses( uint8 const* _data, uint8 const _length, uint32 const _instance = 1);
 			void SetSecured(bool secure);
+
+			/**
+			 * This function sets a Global Instance Label for all CommandClasses that don't define their
+			 * own labels
+			 */
+			void SetInstanceLabel(uint8 const _instance, char *label);
+			/** This function gets a Instance Label for a ValueID. It either users the Global Instance Label
+			 * above, or a Label for a Specific CC
+			 */
+			string GetInstanceLabel(uint8 const _ccid, uint8 const _instance);
+
+			/** Get The Number of Instances on this node
+			 *
+			 */
+			uint8 GetNumInstances(uint8 const _ccid);
 		private:
 			/**
 			 * Creates the specified command class object and adds it to the node (via the
@@ -438,7 +453,7 @@ namespace OpenZWave
 			map<uint8,CommandClass*>		m_commandClassMap;	/**< Map of command class ids and pointers to associated command class objects */
 			map<uint8,CommandClass*>		m_advertisedCommandClassMap; /**< Map of Command Class Id's and Pointers to the Class for Advertised CommandClasses */
 			bool							m_secured; /**< Is this Node added Securely */
-
+			map<uint8, string>				m_globalInstanceLabel; /** < The Global Labels for Instances for CC that dont define their own labels */
 			//-----------------------------------------------------------------------------
 			// Configuration Revision Related Classes
 			//-----------------------------------------------------------------------------

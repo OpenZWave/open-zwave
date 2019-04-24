@@ -1653,6 +1653,51 @@ void Manager::SetNodeLevel
 }
 
 //-----------------------------------------------------------------------------
+//	Instances
+//-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+// <Manager::GetInstanceLabel>
+// Gets the user-friendly Instance label for the valueID
+//-----------------------------------------------------------------------------
+string Manager::GetInstanceLabel
+(
+		ValueID const &_id
+)
+{
+	return GetInstanceLabel(_id.GetHomeId(), _id.GetNodeId(), _id.GetCommandClassId(), _id.GetInstance());
+}
+//-----------------------------------------------------------------------------
+// <Manager::GetInstanceLabel>
+// Gets the user-friendly Instance label for the cc and instance
+//-----------------------------------------------------------------------------
+string Manager::GetInstanceLabel
+(
+		uint32 const _homeId,
+		uint8 const _node,
+		uint8 const _cc,
+		uint8 const _instance
+)
+{
+	string label;
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		LockGuard LG(driver->m_nodeMutex);
+		if( Node* node = driver->GetNode( _node ) )
+		{
+			label = node->GetInstanceLabel(_cc, _instance);
+			return label;
+		}
+		OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_NODEID, "Invalid Node passed to GetInstanceLabel");
+	}
+	else
+	{
+		OZW_ERROR(OZWException::OZWEXCEPTION_INVALID_HOMEID, "Invalid HomeId passed to GetInstanceLabel");
+	}
+	return label;
+}
+
+//-----------------------------------------------------------------------------
 //	Values
 //-----------------------------------------------------------------------------
 
@@ -1680,9 +1725,20 @@ string Manager::GetValueLabel
 			value->Release();
 			return label;
 		} else {
-			if( Value* value = driver->GetValue( _id ) )
+			bool useinstancelabels = true;
+			Options::Get()->GetOptionAsBool( "IncludeInstanceLabel", &useinstancelabels );
+			Node* node = driver->GetNode( _id.GetNodeId() );
+			if ( (useinstancelabels) && ( node ) )
 			{
-				label = value->GetLabel();
+				if ( node->GetNumInstances(_id.GetCommandClassId()) > 1 )
+				{
+					label = GetInstanceLabel(_id).append(" ");
+				}
+			}
+			if ( Value* value = driver->GetValue( _id ) )
+			{
+
+				label.append(value->GetLabel());
 				value->Release();
 				return label;
 			}
