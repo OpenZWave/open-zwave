@@ -571,14 +571,17 @@ void Node::AdvanceQueries
 				// Request any other static values associated with each command class supported by this node
 				// examples are supported thermostat operating modes, setpoints and fan modes
 				Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_Static" );
-				for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
-				{
-					if( !it->second->IsAfterMark() )
+				/* Dont' do this for Controller Nodes */
+				if ( GetDriver()->GetControllerNodeId() != m_nodeId ) {
+					for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
 					{
-						m_queryPending |= it->second->RequestStateForAllInstances( CommandClass::RequestFlag_Static, Driver::MsgQueue_Query );
-					} else {
-						/* Controlling CC's might still need to retrieve some info */
-						m_queryPending |= it->second->RequestStateForAllInstances( CommandClass::RequestFlag_AfterMark, Driver::MsgQueue_Query );
+						if( !it->second->IsAfterMark() )
+						{
+							m_queryPending |= it->second->RequestStateForAllInstances( CommandClass::RequestFlag_Static, Driver::MsgQueue_Query );
+						} else {
+							/* Controlling CC's might still need to retrieve some info */
+							m_queryPending |= it->second->RequestStateForAllInstances( CommandClass::RequestFlag_AfterMark, Driver::MsgQueue_Query );
+						}
 					}
 				}
 				addQSC = m_queryPending;

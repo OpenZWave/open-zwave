@@ -1672,8 +1672,6 @@ void Driver::CheckCompletedNodeQueries
 			}
 			m_awakeNodesQueried = true;
 			m_allNodesQueried = true;
-			/* save our Cache */
-			WriteCache();
 		}
 		else if( sleepingOnly )
 		{
@@ -1685,11 +1683,10 @@ void Driver::CheckCompletedNodeQueries
 				notification->SetHomeAndNodeIds( m_homeId, 0xff );
 				QueueNotification( notification );
 				m_awakeNodesQueried = true;
-				/* save our Cache */
-				WriteCache();
 			}
 		}
 	}
+	WriteCache();
 }
 
 //-----------------------------------------------------------------------------
