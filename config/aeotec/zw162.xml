@@ -2,7 +2,7 @@
 <!--
 ZW162 Doorbell 6
 -->
-<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="2">
   <!--
   Aeotec Doorbell 6
   https://aeotec.freshdesk.com/helpdesk/attachments/6073850754

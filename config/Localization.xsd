@@ -9,6 +9,7 @@
   <xs:complexType>
    <xs:sequence>
     <xs:element ref='Localization:CommandClass' minOccurs='0' maxOccurs='unbounded'/>
+    <xs:element ref='Localization:GlobalText' minOccurs='0' maxOccurs='unbounded' />
    </xs:sequence>
    <xs:attribute name='Revision' type='xs:integer' use='required'/>
   </xs:complexType>
@@ -39,6 +40,7 @@
  <xs:element name='Label'>
   <xs:complexType mixed='true'>
    <xs:attribute name='lang' type='xs:string' use='optional'/>
+   <xs:attribute name='name' type='xs:string' use='optional'/>
   </xs:complexType>
  </xs:element>
 
@@ -54,6 +56,14 @@
   <xs:attribute name='itemIndex' type='xs:string' use='required'/>
  </xs:complexType>
  </xs:element>
+
+ <xs:element name='GlobalText'>
+  <xs:complexType>
+  <xs:sequence>
+   <xs:element ref='Localization:Label' minOccurs='1' maxOccurs='unbounded'/>
+  </xs:sequence>
+  </xs:complexType>
+</xs:element>
 
 
 </xs:schema>
