@@ -1613,6 +1613,13 @@ void Node::SetSecured
 	m_secured = secure;
 }
 
+bool Node::IsSecured
+(
+)
+{
+	return m_secured;
+}
+
 void Node::SetInstanceLabel
 (
 		uint8 const _instance,

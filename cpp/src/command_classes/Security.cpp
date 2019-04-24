@@ -100,15 +100,20 @@ bool Security::Init
 	uint32 const _instance
 )
 {
-	Msg* msg = new Msg( "SecurityCmd_SupportedGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
-	msg->SetInstance( this, _instance );
-	msg->Append( GetNodeId() );
-	msg->Append( 2 );
-	msg->Append( GetCommandClassId() );
-	msg->Append( SecurityCmd_SupportedGet );
-	msg->Append( GetDriver()->GetTransmitOptions() );
-	msg->setEncrypted();
-	GetDriver()->SendMsg( msg, Driver::MsgQueue_Command);
+	if ( Node *node = GetNodeUnsafe() )
+	{
+		if ( node->IsSecured()) {
+			Msg* msg = new Msg( "SecurityCmd_SupportedGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+			msg->SetInstance( this, _instance );
+			msg->Append( GetNodeId() );
+			msg->Append( 2 );
+			msg->Append( GetCommandClassId() );
+			msg->Append( SecurityCmd_SupportedGet );
+			msg->Append( GetDriver()->GetTransmitOptions() );
+			msg->setEncrypted();
+			GetDriver()->SendMsg( msg, Driver::MsgQueue_Command);
+		}
+	}
 	return true;
 }
 //-----------------------------------------------------------------------------

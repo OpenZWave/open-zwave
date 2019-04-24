@@ -544,11 +544,15 @@ void MultiInstance::HandleMultiChannelCapabilityReport
 						 * So we need to Query the endpoint for Secured CC's
 						 */
 						if ((commandClassId == Security::StaticGetCommandClassId()) && (i > 1)) {
-							Log::Write(LogLevel_Info, GetNodeId(), "        Sending Security_Supported_Get to Instance %d", i);
-							Security *seccc = static_cast<Security*>(node->GetCommandClass(Security::StaticGetCommandClassId(), afterMark));
-							/* this will trigger a SecurityCmd_SupportedGet on the _instance of the Device. */
-							if (seccc) {
-								seccc->Init(i);
+							if (!node->IsSecured()) {
+									Log::Write(LogLevel_Info, GetNodeId(), "        Skipping Security_Supported_Get, as the Node is not Secured");
+							} else {
+								Log::Write(LogLevel_Info, GetNodeId(), "        Sending Security_Supported_Get to Instance %d", i);
+								Security *seccc = static_cast<Security*>(node->GetCommandClass(Security::StaticGetCommandClassId(), afterMark));
+								/* this will trigger a SecurityCmd_SupportedGet on the _instance of the Device. */
+								if (seccc) {
+									seccc->Init(i);
+								}
 							}
 						}
 

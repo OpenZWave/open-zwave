@@ -411,7 +411,7 @@ namespace OpenZWave
 			 */
 			void SetSecuredClasses( uint8 const* _data, uint8 const _length, uint32 const _instance = 1);
 			void SetSecured(bool secure);
-
+			bool IsSecured();
 			/**
 			 * This function sets a Global Instance Label for all CommandClasses that don't define their
 			 * own labels
