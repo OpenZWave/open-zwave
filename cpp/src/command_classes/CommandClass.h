@@ -120,7 +120,7 @@ public:
 	/* overridden in the MultiInstance CC to set the Global Label for each Instance */
 	virtual void SetInstanceLabel(uint8 const _instance, char *label);
 	string GetInstanceLabel(uint8 const _instance);
-	uint8 GetNumInstances() { return m_endPointMap.size(); };
+	uint8 GetNumInstances() { return (uint8)m_endPointMap.size(); };
 	void SetAfterMark(){ m_afterMark = true; }
 	void SetEndPoint( uint8 const _instance, uint8 const _endpoint){ m_endPointMap[_instance] = _endpoint; }
 	bool IsAfterMark()const{ return m_afterMark; }
