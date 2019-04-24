@@ -198,6 +198,7 @@ m_lastnonce ( 0 )
 	memset( m_rssi_2, 0, sizeof(m_rssi_2) );
 	memset( m_rssi_3, 0, sizeof(m_rssi_3) );
 	memset( m_rssi_4, 0, sizeof(m_rssi_4) );
+	memset( m_rssi_5, 0, sizeof(m_rssi_5) );
 	/* Add NoOp Class */
 	AddCommandClass( NoOperation::StaticGetCommandClassId() );
 
@@ -528,9 +529,9 @@ void Node::AdvanceQueries
 						} 
 						else 
 						{
-						        // set the Version to 1 
-						        cc->SetVersion( 1 );
-                        }
+							// set the Version to 1 
+							cc->SetVersion( 1 );
+						}
 					}
 					addQSC = m_queryPending;
 				}
@@ -3607,10 +3608,14 @@ void Node::GetNodeStatistics
 	_data->m_txStatusReportSupported = m_txStatusReportSupported;
 	_data->m_txTime = m_txTime;
 	_data->m_hops = m_hops;
-	strncpy(m_rssi_1, _data->m_rssi_1, sizeof(m_rssi_1) );
-	strncpy(m_rssi_2, _data->m_rssi_2, sizeof(m_rssi_2) );
-	strncpy(m_rssi_3, _data->m_rssi_3, sizeof(m_rssi_3) );
-	strncpy(m_rssi_4, _data->m_rssi_4, sizeof(m_rssi_4) );
+	// petergebruers swap src and dst
+	// petergebruers there are 5 rssi values because there are
+	// 4 repeaters + 1 sending node
+	strncpy(_data->m_rssi_1, m_rssi_1, sizeof(_data->m_rssi_1));
+	strncpy(_data->m_rssi_2, m_rssi_2, sizeof(_data->m_rssi_2));
+	strncpy(_data->m_rssi_3, m_rssi_3, sizeof(_data->m_rssi_3));
+	strncpy(_data->m_rssi_4, m_rssi_4, sizeof(_data->m_rssi_4));
+	strncpy(_data->m_rssi_5, m_rssi_5, sizeof(_data->m_rssi_5));
 	_data->m_ackChannel = m_ackChannel;
 	_data->m_lastTxChannel = m_lastTxChannel;
 	_data->m_routeScheme = m_routeScheme;
@@ -3618,6 +3623,8 @@ void Node::GetNodeStatistics
 	_data->m_routeUsed[1] = m_routeUsed[1];
 	_data->m_routeUsed[2] = m_routeUsed[2];
 	_data->m_routeUsed[3] = m_routeUsed[3];
+	//petergebruers: missed m_routeSpeed
+	_data->m_routeSpeed= m_routeSpeed;
 	_data->m_routeTries = m_routeTries;
 	_data->m_lastFailedLinkFrom = m_lastFailedLinkFrom;
 	_data->m_lastFailedLinkTo = m_lastFailedLinkTo;
@@ -3975,7 +3982,7 @@ void Node::checkLatestConfigRevision
 )
 {
 	if (m_fileConfigRevision != 0) {
-	    GetDriver()->CheckNodeConfigRevision(this);
+		GetDriver()->CheckNodeConfigRevision(this);
 	}
 }
 

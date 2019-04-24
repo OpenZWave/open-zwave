@@ -69,22 +69,22 @@ std::string &OpenZWave::trim
 		std::string &s
 )
 {
-    if(s.size() == 0)
-    {
-        return s;
-    }
+	if(s.size() == 0)
+	{
+		return s;
+	}
 
-    int val = 0;
-    for (size_t cur = 0; cur < s.size(); cur++)
-    {
-        if(s[cur] != ' ' && isalnum(s[cur]))
-        {
-            s[val] = s[cur];
-            val++;
-        }
-    }
-    s.resize(val);
-    return s;
+	int val = 0;
+	for (size_t cur = 0; cur < s.size(); cur++)
+	{
+		if(s[cur] != ' ' && isalnum(s[cur]))
+		{
+			s[val] = s[cur];
+			val++;
+		}
+	}
+	s.resize(val);
+	return s;
 }
 
 //-----------------------------------------------------------------------------
@@ -99,20 +99,20 @@ void OpenZWave::split
 		bool remove_empty
 )
 {
-    std::ostringstream word;
-    for (size_t n = 0; n < input.size(); ++n)
-    {
-        if (std::string::npos == separators.find(input[n]))
-            word << input[n];
-        else
-        {
-            if (!word.str().empty() || !remove_empty)
-                lst.push_back(word.str());
-            word.str("");
-        }
-    }
-    if (!word.str().empty() || !remove_empty)
-        lst.push_back(word.str());
+	std::ostringstream word;
+	for (size_t n = 0; n < input.size(); ++n)
+	{
+		if (std::string::npos == separators.find(input[n]))
+			word << input[n];
+		else
+		{
+			if (!word.str().empty() || !remove_empty)
+				lst.push_back(word.str());
+			word.str("");
+		}
+	}
+	if (!word.str().empty() || !remove_empty)
+		lst.push_back(word.str());
 }
 
 void OpenZWave::PrintHex(std::string prefix, uint8_t const *data, uint32 const length) {
@@ -182,12 +182,12 @@ const char* OpenZWave::rssi_to_string(uint8 _data) {
 		default:
 			if (_data >= 11 && _data <= 124)
 			{
-				snprintf(buf, 5, "%4d", (unsigned int)_data - 256);
-				return buf;
+				return "UNK";
 			}
 			else
 			{
-				return "UNK";
+				snprintf(buf, 5, "%4d", (unsigned int)_data - 256);
+				return buf;
 			}
 	}
 }

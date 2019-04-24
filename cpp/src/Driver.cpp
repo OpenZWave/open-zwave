@@ -1988,35 +1988,35 @@ void Driver::ProcessMsg
 				/* if the Node has something else to send, it will encrypt a message and send it as a MessageEncapNonceGet */
 				if (SecurityCmd_MessageEncapNonceGet == SecurityCmd )
 				{
-				    Log::Write(LogLevel_Info,  _data[3], "Received SecurityCmd_MessageEncapNonceGet from node %d - Sending New Nonce", _data[3] );
-				    LockGuard LG(m_nodeMutex);
-				    Node* node = GetNode( _data[3] );
-				    if( node ) {
-				        _nonce = node->GenerateNonceKey();
-				    } else {
-				        Log::Write(LogLevel_Warning, _data[3], "Couldn't Generate Nonce Key for Node %d", _data[3]);
-				        return;
-				    }
-				    SendNonceKey(_data[3], _nonce);
+					Log::Write(LogLevel_Info,  _data[3], "Received SecurityCmd_MessageEncapNonceGet from node %d - Sending New Nonce", _data[3] );
+					LockGuard LG(m_nodeMutex);
+					Node* node = GetNode( _data[3] );
+					if( node ) {
+						_nonce = node->GenerateNonceKey();
+					} else {
+						Log::Write(LogLevel_Warning, _data[3], "Couldn't Generate Nonce Key for Node %d", _data[3]);
+						return;
+					}
+					SendNonceKey(_data[3], _nonce);
 				}
 
 				wasencrypted = true;
 
 			} else {
-			    /* if the Node has something else to send, it will encrypt a message and send it as a MessageEncapNonceGet */
-			    if (SecurityCmd_MessageEncapNonceGet == SecurityCmd )
-			    {
-			        Log::Write(LogLevel_Info,  _data[3], "Received SecurityCmd_MessageEncapNonceGet from node %d - Sending New Nonce", _data[3] );
-			        LockGuard LG(m_nodeMutex);
-			        Node* node = GetNode( _data[3] );
-			        if( node ) {
-			            _nonce = node->GenerateNonceKey();
-			        } else {
-			            Log::Write(LogLevel_Warning, _data[3], "Couldn't Generate Nonce Key for Node %d", _data[3]);
-			            return;
-			        }
-			        SendNonceKey(_data[3], _nonce);
-			    }
+				/* if the Node has something else to send, it will encrypt a message and send it as a MessageEncapNonceGet */
+				if (SecurityCmd_MessageEncapNonceGet == SecurityCmd )
+				{
+					Log::Write(LogLevel_Info,  _data[3], "Received SecurityCmd_MessageEncapNonceGet from node %d - Sending New Nonce", _data[3] );
+					LockGuard LG(m_nodeMutex);
+					Node* node = GetNode( _data[3] );
+					if( node ) {
+						_nonce = node->GenerateNonceKey();
+					} else {
+						Log::Write(LogLevel_Warning, _data[3], "Couldn't Generate Nonce Key for Node %d", _data[3]);
+						return;
+					}
+					SendNonceKey(_data[3], _nonce);
+				}
 				/* it failed for some reason, lets just move on */
 				m_expectedReply = 0;
 				m_expectedNodeId = 0;
@@ -3221,29 +3221,38 @@ void Driver::HandleSendDataRequest
 				Log::Write(LogLevel_Info, nodeId, "Request RTT %d Average Request RTT %d", node->m_lastRequestRTT, node->m_averageRequestRTT );
 			}
 			/* if the frame has txStatus message, then extract it */
-			if (_length > 7) {
+			// petergebruers, changed test (_length > 7) to >= 23 to avoid extracting non-existent data, highest is _data[22]
+			if (_length >= 23) {
 				node->m_txStatusReportSupported = true;
-				node->m_txTime = _data[5] + (_data[4] << 8);
+				// petergebruers:
+				// because OpenZWave uses "ms" everywhere, and wTransmitTicks
+				// has "10 ms" as unit... multiply by 10. This wil avoid
+				// confusion when people look at stats or log files.
+				node->m_txTime = (_data[5] + (_data[4] << 8)) * 10;
 				node->m_hops = _data[6];
-				strncpy(node->m_rssi_1, rssi_to_string(_data[7]), sizeof(node->m_rssi_1));
-				strncpy(node->m_rssi_2, rssi_to_string(_data[8]), sizeof(node->m_rssi_2));
-				strncpy(node->m_rssi_3, rssi_to_string(_data[9]), sizeof(node->m_rssi_3));
-				strncpy(node->m_rssi_4, rssi_to_string(_data[10]), sizeof(node->m_rssi_4));
-				node->m_ackChannel = _data[11];
-				node->m_lastTxChannel = _data[12];
-				node->m_routeScheme = (TXSTATUS_ROUTING_SCHEME)_data[13];
-				node->m_routeUsed[0] = _data[14];
-				node->m_routeUsed[1] = _data[15];
-				node->m_routeUsed[2] = _data[16];
-				node->m_routeUsed[3] = _data[17];
-				node->m_routeSpeed = (TXSTATUS_ROUTE_SPEED)_data[18];
-				node->m_routeTries = _data[19];
-				node->m_lastFailedLinkFrom = _data[20];
-				node->m_lastFailedLinkTo = _data[21];
+				// petergebruers: there are 5 rssi values because there are
+				// 4 repeaters + 1 sending node
+				strncpy(node->m_rssi_1, rssi_to_string(_data[7]), sizeof(node->m_rssi_1) - 1);
+				strncpy(node->m_rssi_2, rssi_to_string(_data[8]), sizeof(node->m_rssi_2) - 1);
+				strncpy(node->m_rssi_3, rssi_to_string(_data[9]), sizeof(node->m_rssi_3) - 1);
+				strncpy(node->m_rssi_4, rssi_to_string(_data[10]), sizeof(node->m_rssi_4) - 1);
+				strncpy(node->m_rssi_5, rssi_to_string(_data[11]), sizeof(node->m_rssi_5) - 1);
+				node->m_ackChannel = _data[12];
+				node->m_lastTxChannel = _data[13];
+				node->m_routeScheme = (TXSTATUS_ROUTING_SCHEME)_data[14];
+				node->m_routeUsed[0] = _data[15];
+				node->m_routeUsed[1] = _data[16];
+				node->m_routeUsed[2] = _data[17];
+				node->m_routeUsed[3] = _data[18];
+				node->m_routeSpeed = (TXSTATUS_ROUTE_SPEED)_data[19];
+				node->m_routeTries = _data[20];
+				node->m_lastFailedLinkFrom = _data[21];
+				node->m_lastFailedLinkTo = _data[22];
 				Node::NodeData nd;
 				node->GetNodeStatistics(&nd);
-				Log::Write( LogLevel_Detail, nodeId, "Extended TxStatus: Time: %d, Hops: %d, Rssi: %s %s %s %s, ChannelAck: %d, TxChannel: %d, RouteScheme: %s, Route: %d %d %d %d, RouteSpeed: %s, RouteTries: %d, FailedLinkFrom: %d, FailedLinkTo: %d",
-						nd.m_txTime, nd.m_hops, nd.m_rssi_1, nd.m_rssi_2, nd.m_rssi_3, nd.m_rssi_4,
+				// petergebruers: changed "ChannelAck" to "AckChannel", to be consistent with docs and "TxChannel"
+				Log::Write( LogLevel_Detail, nodeId, "Extended TxStatus: Time: %d, Hops: %d, Rssi: %s %s %s %s %s, AckChannel: %d, TxChannel: %d, RouteScheme: %s, Route: %d %d %d %d, RouteSpeed: %s, RouteTries: %d, FailedLinkFrom: %d, FailedLinkTo: %d",
+						nd.m_txTime, nd.m_hops, nd.m_rssi_1, nd.m_rssi_2, nd.m_rssi_3, nd.m_rssi_4, nd.m_rssi_4,
 						nd.m_ackChannel, nd.m_lastTxChannel, Manager::GetNodeRouteScheme(&nd).c_str(), nd.m_routeUsed[0],
 						nd.m_routeUsed[1], nd.m_routeUsed[2], nd.m_routeUsed[3], Manager::GetNodeRouteSpeed(&nd).c_str(),
 						nd.m_routeTries, nd.m_lastFailedLinkFrom, nd.m_lastFailedLinkTo);
@@ -7243,7 +7252,7 @@ void Driver::processConfigRevision
 					QueueNotification( notification );
 
 					bool update = false;
-				    Options::Get()->GetOptionAsBool("AutoUpdateConfigFile", &update);
+					Options::Get()->GetOptionAsBool("AutoUpdateConfigFile", &update);
 
 					if (update)
 						m_mfs->updateConfigFile(this, node);
@@ -7259,10 +7268,10 @@ void Driver::processConfigRevision
 					QueueNotification( notification );
 
 					bool update = false;
-				    Options::Get()->GetOptionAsBool("AutoUpdateConfigFile", &update);
+					Options::Get()->GetOptionAsBool("AutoUpdateConfigFile", &update);
 
-				    if (update) {
-				    	m_mfs->updateMFSConfigFile(this);
+					if (update) {
+						m_mfs->updateMFSConfigFile(this);
 					} else {
 						m_mfs->checkInitialized();
 					}
