@@ -204,6 +204,7 @@ namespace OpenZWave
 #define strcasecmp _stricmp
 #define sscanf sscanf_s
 #define strncpy strncpy_s
+#define strncat strncat_s
 
 #endif
 
