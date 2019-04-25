@@ -31,7 +31,7 @@
             <Item label="Enable" value="1"/>
         </Value>
         <Value type="byte" index="5" genre="config" label="Light detection delay" units="seconds" min="0" max="20" size="1" value="0">
-            <Help>Set delay to avoid continuous notifications when detecting flashing LED’s. Flex Sensor will not send notification until flashing LED status changes. Note: Use only when detecting flashing LED’s.</Help>
+            <Help>Set delay to avoid continuous notifications when detecting flashing LEDs. Flex Sensor will not send notification until flashing LED status changes. Note: Use only when detecting flashing LEDs.</Help>
         </Value>
     </CommandClass>
 
