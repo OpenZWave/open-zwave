@@ -270,7 +270,8 @@ DISTFILES =	.gitignore \
 	config/hank/hkzw-dws01.xml \
 	config/hank/hkzw-fld01.xml \
 	config/hank/hkzw-ms01.xml \
-	config/hank/hkzw-ms02.xml \
+	config/hank/hkzw-ms02-200.xml \
+	config/hank/hkzw-ms02-300.xml \
 	config/hank/hkzw-rgb01.xml \
 	config/hank/hkzw-so01-smartplug.xml \
 	config/hank/hkzw-so03.xml \
