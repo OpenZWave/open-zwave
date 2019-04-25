@@ -576,6 +576,7 @@ DISTFILES =	.gitignore \
 	config/zwave.me/popp_kfob-c.xml \
 	config/zwave.me/zweather.xml \
 	config/zwcfg.xsd \
+	config/zwp/PA-100.xml \
 	config/zwp/WD-100.xml \
 	config/zwscene.xsd \
 	cpp/build/Makefile \
