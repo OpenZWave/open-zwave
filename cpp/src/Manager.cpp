@@ -190,7 +190,10 @@ m_notificationMutex( new Mutex() )
 
 	CommandClasses::RegisterCommandClasses();
 	Scene::ReadScenes();
-	Log::Write(LogLevel_Always, "OpenZwave Version %s Starting Up", getVersionAsString().c_str());
+	// petergebruers replace getVersionAsString() with getVersionLongAsString() because
+	// the latter prints more information, based on the status of the repository
+	// when "make" was run. A Makefile gets this info from git describe --long --tags --dirty
+	Log::Write(LogLevel_Always, "OpenZwave Version %s Starting Up", getVersionLongAsString().c_str());
 	Log::Write(LogLevel_Always, "Using Language Localization %s", Localization::Get()->GetSelectedLang().c_str());
 	NotificationCCTypes::Create();
 

@@ -270,8 +270,11 @@ int main( int argc, char* argv[] )
 
 	pthread_mutex_lock( &initMutex );
 
+	// petergebruers replace getVersionAsString() with getVersionLongAsString() because
+	// the latter prints more information, based on the status of the repository
+	// when "make" was run. A Makefile gets this info from git describe --long --tags --dirty
 
-	printf("Starting MinOZW with OpenZWave Version %s\n", Manager::getVersionAsString().c_str());
+	printf("Starting MinOZW with OpenZWave Version %s\n", Manager::getVersionLongAsString().c_str());
 
 	// Create the OpenZWave Manager.
 	// The first argument is the path to the config files (where the manufacturer_specific.xml file is located
