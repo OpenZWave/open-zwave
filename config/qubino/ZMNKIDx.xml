@@ -36,20 +36,20 @@
             <Help>
                 Choose by how much power consumption needs to increase or decrease to be reported. Values correspond to percentages so if 10 is set, for example, the device will report any power consumption changes of 10% or more compared to the last reading. 
 				Values (size is 1 byte dec):
-				•	default value 10 
-				•	0 - Power consumption reporting disabled 
-				•	1 - 100 = 1% - 100% Power consumption reporting enabled. New value is reported only when Wattage in real time changes by more than the percentage value set in this parameter compared to the previous Wattage reading, starting at 1% (the lowest value possible).
+					default value 10 
+					0 - Power consumption reporting disabled 
+					1 - 100 = 1% - 100% Power consumption reporting enabled. New value is reported only when Wattage in real time changes by more than the percentage value set in this parameter compared to the previous Wattage reading, starting at 1% (the lowest value possible).
 				NOTE: Power consumption needs to increase or decrease by at least 1 Watt to be reported, REGARDLESS of percentage set in this parameter.  
 			</Help>
         </Value>
 
 		<Value type="short" genre="config" instance="1" index="42" label="Watt Power Consumption Reporting Time Threshold for Q" size="2" min="0" max="32767" units="seconds" value="0">
             <Help>
-                Set value refers to the time interval with which power consumption in Watts is reported (30 – 32767 seconds). If for example 300 is entered, energy consumption reports will be sent to the gateway (hub) every 300 seconds (or 5 minutes).
+                Set value refers to the time interval with which power consumption in Watts is reported (30 - 32767 seconds). If for example 300 is entered, energy consumption reports will be sent to the gateway (hub) every 300 seconds (or 5 minutes).
 				Values (size is 2 byte dec):
-				•	default value 0 (power report is disabled)
-				•	0 - Power consumption reporting disabled
-				•	30 - 32767 = 30 - 32767 seconds. Power consumption reporting enabled. Report is sent according to time interval (value) set here. 
+					default value 0 (power report is disabled)
+					0 - Power consumption reporting disabled
+					30 - 32767 = 30 - 32767 seconds. Power consumption reporting enabled. Report is sent according to time interval (value) set here. 
 			</Help>
         </Value>
 		
@@ -57,10 +57,10 @@
             <Help>
                 This parameter defines minimum temperature difference between real measured temperature and set-point temperature to turn device on in heat mode or turn device off in cool mode.
 				Values (size is 2 byte dec):
-				•	default value 5 (0.5 °C)
-				•	0 – 450
-				NOTE1: If configuration parameter 78 (Scale selection) is set to Celsius, then valid interval is 0 – 250 (0.0 °C – 25.0 °C, resolution 0.1 °C)
-				NOTE2: If configuration parameter 78 (Scale selection) is set to Fahrenheit, then valid interval is 0 – 450 (0.0 °F – 45.0 °F, resolution 0.1 °F)
+					default value 5 (0.5 C)
+					0 - 450
+				NOTE1: If configuration parameter 78 (Scale selection) is set to Celsius, then valid interval is 0 - 250 (0.0 C - 25.0 C, resolution 0.1 C)
+				NOTE2: If configuration parameter 78 (Scale selection) is set to Fahrenheit, then valid interval is 0 - 450 (0.0 F - 45.0 F, resolution 0.1 F)
 				NOTE3: If configuration parameter 78 (Scale selection) is set to Fahrenheit, note that Fahrenheit values will be converted to Celsius degrees. Due to conversion algorithm please be advised that configuration value could drift when converting values back and forth.
 			</Help>
         </Value>
@@ -69,10 +69,10 @@
             <Help>
                 This parameter defines minimum temperature difference between real measured temperature and set-point temperature to turn device off in heat mode or turn device on in cool mode.
 				Values (size is 2 byte dec):
-				•	default value 5 (0.5 °C)
-				•	0 - 450
-				NOTE1: If configuration parameter 78 (Scale selection) is set to Celsius, then valid interval is 0 – 250 (0.0 °C – 25.0 °C, resolution 0.1 °C)
-				NOTE2: If configuration parameter 78 (Scale selection) is set to Fahrenheit, then valid interval is 0 – 450 (0.0 °F – 45.0 °F, resolution 0.1 °F)
+					default value 5 (0.5 C)
+					0 - 450
+				NOTE1: If configuration parameter 78 (Scale selection) is set to Celsius, then valid interval is 0 - 250 (0.0 C - 25.0 C, resolution 0.1 C)
+				NOTE2: If configuration parameter 78 (Scale selection) is set to Fahrenheit, then valid interval is 0 - 450 (0.0 F - 45.0 F, resolution 0.1 F)
 				NOTE3: If configuration parameter 78 (Scale selection) is set to Fahrenheit, note that Fahrenheit values will be converted to Celsius degrees. Due to conversion algorithm please be advised that configuration value could drift when converting values back and forth.
 			</Help>
         </Value>
@@ -81,12 +81,12 @@
             <Help>
 				Set value determines at which temperature the device will be turned on even (if the thermostat was manually set to off). 
 				Values (size is 2 byte dec):
-				•	default value 50 (5.0 °C)
-				•	-125 - 545
-				•	1000 - Antifreeze functionality disabled
-				NOTE1: Antifreeze is activated only in heating mode and it uses hysteresis of ±0.5°C. 
-				NOTE2: If configuration parameter 78 (Scale selection) is set to Celsius, then valid interval is -125 – 125 (-12.5 °C – 12.5 °C, resolution 0.1 °C)
-				NOTE3: If configuration parameter 78 (Scale selection) is set to Fahrenheit, then valid interval is 95 – 545 (9.5 °F – 54.5 °F, resolution 0.1 °F)
+					default value 50 (5.0 C)
+					-125 - 545
+					1000 - Antifreeze functionality disabled
+				NOTE1: Antifreeze is activated only in heating mode and it uses hysteresis of +-0.5C. 
+				NOTE2: If configuration parameter 78 (Scale selection) is set to Celsius, then valid interval is -125 - 125 (-12.5 C - 12.5 C, resolution 0.1 C)
+				NOTE3: If configuration parameter 78 (Scale selection) is set to Fahrenheit, then valid interval is 95 - 545 (9.5 F - 54.5 F, resolution 0.1 F)
 				NOTE4: If configuration parameter 78 (Scale selection) is set to Fahrenheit, note that Fahrenheit values will be converted to Celsius degrees. Due to conversion algorithm please be advised that configuration value could drift when converting values back and forth.
 			</Help>
         </Value>
@@ -104,11 +104,11 @@
             <Help>
 				This parameter determines the temperature at which the device sends a command to the associated device - to turn ON device or to turn OFF device.
 				Values (size is 2 byte dec):
-				•	Default value 50 (Too low temperature limit is 5.0 °C)
-				•	-150 - 2120
+					Default value 50 (Too low temperature limit is 5.0 C)
+					-150 - 2120
 				NOTE1: Too low temperature limit is used with Association Group 3.
-				NOTE2: If configuration parameter 78 (Scale selection) is set to Celsius, then valid interval is -150 – 1000 (-15.0 °C – 100.0 °C, resolution 0.1 °C)
-				NOTE3: If configuration parameter 78 (Scale selection) is set to Fahrenheit, then valid interval is 50 – 2120 (5.0 °F – 212.0 °F, resolution 0.1 °F)
+				NOTE2: If configuration parameter 78 (Scale selection) is set to Celsius, then valid interval is -150 - 1000 (-15.0 C - 100.0 C, resolution 0.1 C)
+				NOTE3: If configuration parameter 78 (Scale selection) is set to Fahrenheit, then valid interval is 50 - 2120 (5.0 F - 212.0 F, resolution 0.1 F)
 				NOTE4: If configuration parameter 78 (Scale selection) is set to Fahrenheit, note that Fahrenheit values will be converted to Celsius degrees. Due to conversion algorithm please be advised that configuration value could drift when converting values back and forth.
 			</Help>
         </Value>
@@ -117,11 +117,11 @@
             <Help>
 				This parameter determines the temperature at which the device sends a command to the associated device, to turn ON device or to turn OFF device.
 				Values (size is 2 byte dec):
-				•	default value 700 (too high temperature limit is 70.0 °C)
-				•	1 - 2120
+					default value 700 (too high temperature limit is 70.0 C)
+					1 - 2120
 				NOTE1: Too high temperature limit is used with Association Group 3.
-				NOTE2: If configuration parameter 78 (Scale selection) is set to Celsius, then valid interval is 1 – 1000 (0.1 °C – 100.0 °C, resolution 0.1 °C)
-				NOTE3: If configuration parameter 78 (Scale selection) is set to Fahrenheit, then valid interval is 322 – 2120 (32.2 °F – 212.0 °F, resolution 0.1 °F)
+				NOTE2: If configuration parameter 78 (Scale selection) is set to Celsius, then valid interval is 1 - 1000 (0.1 C - 100.0 C, resolution 0.1 C)
+				NOTE3: If configuration parameter 78 (Scale selection) is set to Fahrenheit, then valid interval is 322 - 2120 (32.2 F - 212.0 F, resolution 0.1 F)
 				NOTE4: If configuration parameter 78 (Scale selection) is set to Fahrenheit, note that Fahrenheit values will be converted to Celsius degrees. Due to conversion algorithm please be advised that configuration value could drift when converting values back and forth.
 			</Help>
         </Value>
@@ -149,8 +149,8 @@
 		<Value type="short" genre="config" instance="1" index="110" label="Temperature Sensor Offset Settings" size="2" min="-270" max="270" value="0">
             <Help>
 				Set value is added to or subtracted from the actually measured value to adjust the temperature report sent by an external sensor.
-				NOTE1: If configuration parameter 78 (Scale selection) is set to Celsius, then valid interval is -150 – 150 (-15.0 °C – 15.0 °C, resolution 0.1 °C)
-				NOTE2: If configuration parameter 78 (Scale selection) is set to Fahrenheit, then valid interval is -270 - 270 (-27.0 °F – 27.0 °F, resolution 0.1 °F)
+				NOTE1: If configuration parameter 78 (Scale selection) is set to Celsius, then valid interval is -150 - 150 (-15.0 C - 15.0 C, resolution 0.1 C)
+				NOTE2: If configuration parameter 78 (Scale selection) is set to Fahrenheit, then valid interval is -270 - 270 (-27.0 F - 27.0 F, resolution 0.1 F)
 				NOTE3: If configuration parameter 78 (Scale selection) is set to Fahrenheit, note that Fahrenheit values will be converted to Celsius degrees. Due to conversion algorithm please be advised that configuration value could drift when converting values back and forth.
 				Default value: 0.
 			</Help>
@@ -159,8 +159,8 @@
 		<Value type="short" genre="config" instance="1" index="120" label="Temperature Sensor Reporting Threshold" size="2" min="0" max="270" value="5">
             <Help>
 				This configuration parameters sets reporting threshold between reported temperature and actual temperature for reporting temperature at association group 4.
-				NOTE1: If configuration parameter 78 (Scale selection) is set to Celsius, then valid interval is 0 – 150 (0 °C – 15.0 °C, resolution 0.1 °C)
-				NOTE2: If configuration parameter 78 (Scale selection) is set to Fahrenheit, then valid interval is 0 - 270 (0 °F – 27.0 °F, resolution 0.1 °F)
+				NOTE1: If configuration parameter 78 (Scale selection) is set to Celsius, then valid interval is 0 - 150 (0 C - 15.0 C, resolution 0.1 C)
+				NOTE2: If configuration parameter 78 (Scale selection) is set to Fahrenheit, then valid interval is 0 - 270 (0 F - 27.0 F, resolution 0.1 F)
 				NOTE3: If configuration parameter 78 (Scale selection) is set to Fahrenheit, note that Fahrenheit values will be converted to Celsius degrees. Due to conversion algorithm please be advised that configuration value could drift when converting values back and forth.
 				Default value: 5.
 			</Help>
