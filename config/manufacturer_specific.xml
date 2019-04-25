@@ -1880,7 +1880,7 @@
 		<Product type="0002" id="1a72" name="IS140-2" config="steinel/is140-2.xml"/>
 		<Product type="0001" id="1a74" name="RS LED D2" config="steinel/rs-led-d2.xml"/>
 		<Product type="0001" id="1a73" name="XLED HOME 2" config="steinel/xled-home-2.xml"/>
-                <Product type="0001" id="1a75" name="L810 LED iHF" config="steinel/l810-led-ihf.xml"/>
+        <Product type="0001" id="1a75" name="L810 LED iHF" config="steinel/l810-led-ihf.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0239" name="Stelpro">
 		<Product type="0001" id="0001" name="STZW402+ Electronic Thermostat" config="stelpro/stzw402.xml"/>
