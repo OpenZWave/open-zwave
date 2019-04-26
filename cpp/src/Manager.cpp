@@ -31,6 +31,7 @@
 #include <iomanip>
 
 #include "Defs.h"
+#include "CompatOptionManager.h"
 #include "Manager.h"
 #include "Driver.h"
 #include "Localization.h"

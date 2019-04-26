@@ -57,9 +57,9 @@ MultiChannelAssociation::MultiChannelAssociation
 ):
 	CommandClass( _homeId, _nodeId ),
 	m_queryAll(false),
-	m_numGroups(0),
-	m_alwaysSetInstance(true)
+	m_numGroups(0)
 {
+	m_com.EnableFlag(COMPAT_FLAG_MCA_FORCEINSTANCES, true);
 	SetStaticRequest( StaticRequest_Values );
 }
 
@@ -103,11 +103,6 @@ void MultiChannelAssociation::ReadXML
 
 		associationsElement = associationsElement->NextSiblingElement();
 	}
-	char const*  str = _ccElement->Attribute("ForceInstances");
-	if( str )
-	{
-                m_alwaysSetInstance = !strcmp( str, "false");
-	}
 
 }
 
@@ -132,9 +127,6 @@ void MultiChannelAssociation::WriteXML
 
 		_ccElement->LinkEndChild( associationsElement );
 		node->WriteGroups( associationsElement );
-	}
-	if (!m_alwaysSetInstance) {
-		_ccElement->SetAttribute("ForceInstances", "false");
 	}
 }
 
@@ -360,7 +352,7 @@ void MultiChannelAssociation::QueryGroup
 	uint32 const _requestFlags
 )
 {
-	if ( IsGetSupported() )
+	if ( m_com.GetFlagBool(COMPAT_FLAG_GETSUPPORTED) )
 	{
 		Log::Write( LogLevel_Info, GetNodeId(), "Get MultiChannelAssociation for group %d of node %d", _groupIdx, GetNodeId() );
 		Msg* msg = new Msg( "MultiChannelAssociationCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
@@ -391,7 +383,7 @@ void MultiChannelAssociation::Set
 {
 
 	/* for Qubino devices, we should always set a Instance if its the ControllerNode, so MultChannelEncap works.  - See Bug #857 */
-	if ( ( m_alwaysSetInstance  == true )
+	if ( ( m_com.GetFlagBool(COMPAT_FLAG_MCA_FORCEINSTANCES)  == true )
 			&& ( _instance == 0 )
 			&& ( GetDriver()->GetControllerNodeId() == _targetNodeId ) )
 	{

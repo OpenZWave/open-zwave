@@ -199,7 +199,7 @@ bool ThermostatFanMode::RequestValue
 
 	if( _getTypeEnum == ThermostatFanModeCmd_Get || _getTypeEnum == 0 )
 	{
-		if ( IsGetSupported() )
+		if ( m_com.GetFlagBool(COMPAT_FLAG_GETSUPPORTED) )
 		{
 			// Request the current fan mode
 			Msg* msg = new Msg( "ThermostatFanModeCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );

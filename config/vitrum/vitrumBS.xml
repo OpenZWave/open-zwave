@@ -1,5 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
-	<!-- Multi-Instance configuration -->
- 	<CommandClass id="96" mapping="endpoints" ignoreUnsolicitedMultiChnCapReport="true" />
+<Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
+  <!-- Multi-Instance configuration -->
+  <CommandClass id="96">
+    <Compatibility>
+      <IgnoreMCCapReports>true</IgnoreMCCapReports>
+      <MapRootToEndpoint>true</MapRootToEndpoint>
+    </Compatibility>
+  </CommandClass>
 </Product>

@@ -113,7 +113,7 @@ bool ManufacturerProprietary::RequestValue
     Driver::MsgQueue const _queue
 )
 {
-    if ( IsGetSupported() )
+    if ( m_com.GetFlagBool(COMPAT_FLAG_GETSUPPORTED) )
     {
         Msg* msg = new Msg( "ManufacturerProprietary_RequestValue", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
         if (FibaroVenetianBlindsValueIds_Blinds == _index || FibaroVenetianBlindsValueIds_Tilt == _index){

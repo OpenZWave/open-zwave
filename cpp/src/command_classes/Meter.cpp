@@ -185,7 +185,7 @@ bool Meter::RequestValue
 )
 {
 	bool res = false;
-	if ( !IsGetSupported())
+	if ( !m_com.GetFlagBool(COMPAT_FLAG_GETSUPPORTED))
 	{
 		Log::Write(  LogLevel_Info, GetNodeId(), "MeterCmd_Get Not Supported on this node");
 		return false;

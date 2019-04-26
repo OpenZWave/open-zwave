@@ -1,8 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="3">
+<Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
   <!-- http://www.popp.eu/wp-content/uploads/2016/07/Manual_Thermostat_POPP_en.pdf -->
   <!-- COMMAND_CLASS_BASIC does not respond to requests -->
-  <CommandClass id="32" action="remove" />
+  <CommandClass action="remove" id="32"/>
   <!-- This thermostat's setpoint descriptions are 0 based -->
-  <CommandClass id="67" base="0" override_precision="2" />
+  <CommandClass id="67">
+    <Compatibility>
+      <OverridePrecision>2</OverridePrecision>
+      <Base>0</Base>
+    </Compatibility>
+  </CommandClass>
 </Product>

@@ -354,11 +354,11 @@ CentralScene::CentralScene
 		uint8 const _nodeId
 ):
 CommandClass( _homeId, _nodeId ),
-m_scenecount(0),
 m_slowrefresh( false ),
-m_sequence( 0 ),
-m_ClearTimeout( 1000 )
+m_sequence( 0 )
 {
+	m_dom.EnableFlag(STATE_FLAG_CS_SCENECOUNT, 0);
+	m_dom.EnableFlag(STATE_FLAG_CS_CLEARTIMEOUT, 1000);
 	Timer::SetDriver(GetDriver());
 	SetStaticRequest( StaticRequest_Values );
 }
@@ -419,56 +419,11 @@ bool CentralScene::SetValue
 {
 	if ((ValueID::ValueType_Int == _value.GetID().GetType()) && (_value.GetID().GetIndex() == CentralSceneIndex_ClearSceneTimeout)) {
 		ValueInt const *value = static_cast<ValueInt const *>(&_value);
-		m_ClearTimeout = value->GetValue();
+		m_dom.SetFlagInt(STATE_FLAG_CS_CLEARTIMEOUT, value->GetValue());
 		return true;
 	}
 	return false;
 }
-
-//-----------------------------------------------------------------------------
-// <CentralScene::ReadXML>
-// Class specific configuration
-//-----------------------------------------------------------------------------
-void CentralScene::ReadXML
-(
-		TiXmlElement const* _ccElement
-)
-{
-	int32 intVal;
-
-	CommandClass::ReadXML( _ccElement );
-	if( TIXML_SUCCESS == _ccElement->QueryIntAttribute( "scenecount", &intVal ) )
-	{
-		m_scenecount = intVal;
-	}
-	if( TIXML_SUCCESS == _ccElement->QueryIntAttribute( "scenetimeout", &intVal ) )
-	{
-		m_ClearTimeout = intVal;
-	}
-
-
-}
-
-//-----------------------------------------------------------------------------
-// <CentralScene::WriteXML>
-// Class specific configuration
-//-----------------------------------------------------------------------------
-void CentralScene::WriteXML
-(
-		TiXmlElement* _ccElement
-)
-{
-	char str[32];
-
-	CommandClass::WriteXML( _ccElement );
-	snprintf( str, sizeof(str), "%d", m_scenecount );
-	_ccElement->SetAttribute( "scenecount", str);
-
-	snprintf( str, sizeof(str), "%d", m_ClearTimeout );
-	_ccElement->SetAttribute( "scenetimeout", str);
-
-}
-
 
 //-----------------------------------------------------------------------------
 // <CentralScene::HandleMsg>
@@ -500,7 +455,7 @@ bool CentralScene::HandleMsg
 			value->OnValueRefreshed( keyAttribute +1  );
 			value->Release();
 			/* Start up a Timer to set this back to Inactive */
-			Log::Write( LogLevel_Info, GetNodeId(), "Automatically Clearing Scene %d in %dms", sceneID, m_ClearTimeout );
+			Log::Write( LogLevel_Info, GetNodeId(), "Automatically Clearing Scene %d in %dms", sceneID, m_dom.GetFlagInt(STATE_FLAG_CS_CLEARTIMEOUT) );
 			if (m_TimersSet.find(sceneID) == m_TimersSet.end()) {
 				m_TimersSet.insert(std::pair<uint32, uint32>(sceneID, _instance));
 			} else {
@@ -509,7 +464,7 @@ bool CentralScene::HandleMsg
 				/* no need to pop it off the list, as we will add it again below */
 			}
 			TimerThread::TimerCallback callback = bind(&CentralScene::ClearScene, this, sceneID);
-			TimerSetEvent(m_ClearTimeout, callback, sceneID);
+			TimerSetEvent(m_dom.GetFlagInt(STATE_FLAG_CS_CLEARTIMEOUT), callback, sceneID);
 		} else {
 			Log::Write( LogLevel_Warning, GetNodeId(), "No ValueID created for Scene %d", sceneID);
 			return false;
@@ -518,14 +473,14 @@ bool CentralScene::HandleMsg
 	}
 	else if (CentralSceneCmd_Capability_Report == (CentralSceneCmd)_data[0])
 	{
-		/* Create a Number of ValueID's based on the m_scenecount variable
+		/* Create a Number of ValueID's based on the STATE_FLAG_CS_SCENECOUNT variable
 		 * We prefer what the Config File specifies rather than what is returned by
 		 * the Device...
 		 */
 		int scenecount = _data[1];
-		if (m_scenecount == 0)
+		if (m_dom.GetFlagByte(STATE_FLAG_CS_SCENECOUNT) == 0)
 		{
-			m_scenecount = scenecount;
+			m_dom.SetFlagByte(STATE_FLAG_CS_SCENECOUNT, scenecount);
 		}
 		bool identical = true; //version 1 does not know this, so set it to true.
 		if ( GetVersion() >= 2 )
@@ -538,13 +493,13 @@ bool CentralScene::HandleMsg
 
 		if ( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, CentralSceneIndex_SceneCount)))
 		{
-			value->OnValueRefreshed(m_scenecount);
+			value->OnValueRefreshed(m_dom.GetFlagByte(STATE_FLAG_CS_SCENECOUNT));
 			value->Release();
 		} else {
 			Log::Write( LogLevel_Warning, GetNodeId(), "Can't find ValueID for SceneCount");
 		}
 
-		for (int sceneID = 1; sceneID <= m_scenecount ; sceneID++) {
+		for (int sceneID = 1; sceneID <= m_dom.GetFlagByte(STATE_FLAG_CS_SCENECOUNT) ; sceneID++) {
 			if ( GetVersion() == 1 )
 			{
 				// version 1 does not tell us which keyAttributes are supported, but only single press, released and held down are supported, so add these 3
@@ -594,7 +549,7 @@ void CentralScene::CreateVars
 	if( Node* node = GetNodeUnsafe() )
 	{
 		node->CreateValueInt( ValueID::ValueGenre_User, GetCommandClassId(), _instance, CentralSceneIndex_SceneCount, "Scene Count", "", true, false, 0, 0 );
-		node->CreateValueInt( ValueID::ValueGenre_Config, GetCommandClassId(), _instance, CentralSceneIndex_ClearSceneTimeout, "Scene Reset Timeout", "", false, false, m_ClearTimeout, 0);
+		node->CreateValueInt( ValueID::ValueGenre_Config, GetCommandClassId(), _instance, CentralSceneIndex_ClearSceneTimeout, "Scene Reset Timeout", "", false, false, m_dom.GetFlagInt(STATE_FLAG_CS_CLEARTIMEOUT), 0);
 	}
 }
 

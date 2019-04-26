@@ -109,7 +109,7 @@ bool SoundSwitch::RequestValue
 )
 {
 	if (_index == SoundSwitchIndex_Tone_Count ) {
-		if ( IsGetSupported() )
+		if ( m_com.GetFlagBool(COMPAT_FLAG_GETSUPPORTED) )
 		{
 			Msg* msg = new Msg( "SoundSwitchCmd_Tones_Number_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 			msg->SetInstance( this, _instance );

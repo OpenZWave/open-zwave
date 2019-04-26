@@ -77,40 +77,18 @@ static char const* c_overrideStateNames[] =
 	"Permanent",
 	"Invalid"
 };
-
-
 //-----------------------------------------------------------------------------
-// <ClimateControlSchedule::ReadXML>
-// Read the saved change-counter value
+// <ClimateControlSchedule::ClimateControlSchedule>
+// Constructor
 //-----------------------------------------------------------------------------
-void ClimateControlSchedule::ReadXML
+ClimateControlSchedule::ClimateControlSchedule
 (
-	TiXmlElement const* _ccElement
-)
+		uint32 const _homeId,
+		uint8 const _nodeId
+):
+CommandClass( _homeId, _nodeId )
 {
-	CommandClass::ReadXML( _ccElement );
-
-	int intVal;
-	if( TIXML_SUCCESS == _ccElement->QueryIntAttribute( "change_counter", &intVal ) )
-	{
-		m_changeCounter = (uint8)intVal;
-	}
-}
-
-//-----------------------------------------------------------------------------
-// <ClimateControlSchedule::WriteXML>
-// Write the change-counter value
-//-----------------------------------------------------------------------------
-void ClimateControlSchedule::WriteXML
-(
-	TiXmlElement* _ccElement
-)
-{
-	CommandClass::WriteXML( _ccElement );
-
-	char str[8];
-	snprintf( str, 8, "%d", m_changeCounter );
-	_ccElement->SetAttribute( "change_counter", str );
+	m_dom.EnableFlag(STATE_FLAG_CCS_CHANGECOUNTER, 0);
 }
 
 //-----------------------------------------------------------------------------
@@ -233,9 +211,9 @@ bool ClimateControlSchedule::HandleMsg
 
 		if( _data[1] )
 		{
-			if( _data[1] != m_changeCounter )
+			if( _data[1] != m_dom.GetFlagByte(STATE_FLAG_CCS_CHANGECOUNTER) )
 			{
-				m_changeCounter = _data[1];
+				m_dom.SetFlagByte(STATE_FLAG_CCS_CHANGECOUNTER, _data[1]);
 
 				// The schedule has changed and is not in override mode, so request reports for each day
 				for( int i=1; i<=7; ++i )

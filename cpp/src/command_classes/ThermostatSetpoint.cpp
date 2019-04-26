@@ -103,61 +103,11 @@ ThermostatSetpoint::ThermostatSetpoint
 	uint32 const _homeId,
 	uint8 const _nodeId
 ):
-	CommandClass( _homeId, _nodeId ), m_setPointBase( 1 ), m_setPointTypeInterpretation( 0x0B )
+	CommandClass( _homeId, _nodeId )
 {
+	m_com.EnableFlag(COMPAT_FLAG_TSSP_BASE, 1);
+	m_com.EnableFlag(COMPAT_FLAG_TSSP_ALTTYPEINTERPRETATION, true);
 	SetStaticRequest( StaticRequest_Values );
-}
-
-//-----------------------------------------------------------------------------
-// <ThermostatSetpoint::ReadXML>
-// Read the saved change-counter value
-//-----------------------------------------------------------------------------
-void ThermostatSetpoint::ReadXML
-(
-	TiXmlElement const* _ccElement
-)
-{
-	CommandClass::ReadXML( _ccElement );
-
-	int intVal;
-	if( TIXML_SUCCESS == _ccElement->QueryIntAttribute( "base", &intVal ) )
-	{
-		m_setPointBase = (uint8)intVal;
-	}
-	char const* str;
-
-	str = _ccElement->Attribute( "typeInterpretation" );
-	if ( str )
-	{
-		if ( strcmp(str,"A") == 0)
-		{
-			m_setPointTypeInterpretation = 0x0A ;
-		}
-	}
-}
-
-//-----------------------------------------------------------------------------
-// <ThermostatSetpoint::WriteXML>
-// Write the change-counter value
-//-----------------------------------------------------------------------------
-void ThermostatSetpoint::WriteXML
-(
-	TiXmlElement* _ccElement
-)
-{
-	CommandClass::WriteXML( _ccElement );
-
-	char str[8];
-	snprintf( str, 8, "%d", m_setPointBase );
-	_ccElement->SetAttribute( "base", str );
-	if ( m_setPointTypeInterpretation == 0x0A )
-	{
-		_ccElement->SetAttribute("typeInterpretation","A");
-	}
-	else
-	{
-		_ccElement->SetAttribute("typeInterpretation","B");
-	}
 }
 
 //-----------------------------------------------------------------------------
@@ -213,7 +163,7 @@ bool ThermostatSetpoint::RequestValue
 		GetDriver()->SendMsg( msg, _queue );
 		return true;
 	}
-	if ( !IsGetSupported() )
+	if ( !m_com.GetFlagBool(COMPAT_FLAG_GETSUPPORTED) )
 	{
 		Log::Write(  LogLevel_Info, GetNodeId(), "ThermostatSetpointCmd_Get Not Supported on this node");
 		return false;
@@ -294,7 +244,7 @@ bool ThermostatSetpoint::HandleMsg
 							msg->Append( GetCommandClassId() );
 							msg->Append( ThermostatSetpointCmd_CapabilitiesGet );
 							uint8 type = ((i-1)<<3) + bit;
-							if ( m_setPointTypeInterpretation == 0x0A )
+							if ( m_com.GetFlagBool(COMPAT_FLAG_TSSP_ALTTYPEINTERPRETATION) == false )
 							{
 								// for interpretation A the setpoint identifier makes a jump of 4 after the 2nd bit ... wtf @ zensys
 								if ( type > 2 )
@@ -308,7 +258,7 @@ bool ThermostatSetpoint::HandleMsg
 						}
 
 						uint8 type = ((i-1)<<3) + bit;
-						if ( m_setPointTypeInterpretation == 0x0A )
+						if ( m_com.GetFlagBool(COMPAT_FLAG_TSSP_ALTTYPEINTERPRETATION) == false )
 						{
 							// for interpretation A the setpoint identifier makes a jump of 4 after the 2nd bit ... wtf @ zensys
 							if ( type > 2 )
@@ -316,7 +266,7 @@ bool ThermostatSetpoint::HandleMsg
 								type += 4;
 							}
 						}
-						int32 index = (int32)type + m_setPointBase;
+						int32 index = (int32)type + m_com.GetFlagByte(COMPAT_FLAG_TSSP_BASE);
 						// Add supported setpoint
 						if( index < ThermostatSetpoint_Count )
 						{

@@ -170,7 +170,7 @@ bool Alarm::RequestValue
 		Driver::MsgQueue const _queue
 )
 {
-	if( IsGetSupported() )
+	if( m_com.GetFlagBool(COMPAT_FLAG_GETSUPPORTED) )
 	{
 		if( GetVersion() == 1 )
 		{

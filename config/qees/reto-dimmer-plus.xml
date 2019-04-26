@@ -1,14 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- QEES RETO Dimmer Plus 2013 -->
-<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="3">
-	<!-- COMMAND_CLASS_SWITCH_MULTILEVEL. This class is in the list reported by the device, but it does not respond to requests -->
-	<CommandClass id="38" action="remove" />
-	<!-- Basic set as report -->
-	<CommandClass id="32" setasreport="true"/>
-	<!-- Association Groups -->
-	<CommandClass id="133">
-		<Associations num_groups="1">
-			<Group index="1" max_associations="232" label="Lifeline"/>
-		</Associations>
-	</CommandClass>
+<!-- QEES RETO Dimmer Plus 2013 --><Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
+  <!-- COMMAND_CLASS_SWITCH_MULTILEVEL. This class is in the list reported by the device, but it does not respond to requests -->
+  <CommandClass action="remove" id="38"/>
+  <!-- Basic set as report -->
+  <CommandClass id="32">
+    <Compatibility>
+      <SetAsReport>true</SetAsReport>
+    </Compatibility>
+  </CommandClass>
+  <!-- Association Groups -->
+  <CommandClass id="133">
+    <Associations num_groups="1">
+      <Group index="1" label="Lifeline" max_associations="232"/>
+    </Associations>
+  </CommandClass>
 </Product>

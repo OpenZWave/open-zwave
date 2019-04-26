@@ -1,10 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!-- EVERSPRING SP103 MOTION DETECTOR -->
-<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="2">
-	<!-- Configuration Parameters -->
-	<CommandClass id="112">
-		<Value type="byte" index="1" genre="config" label="ON Phase Level" units="" min="0" max="127" value="0">
-			<Help>
+<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
+  <!-- Configuration Parameters -->
+  <CommandClass id="112">
+    <Value genre="config" index="1" label="ON Phase Level" max="127" min="0" type="byte" units="" value="0">
+      <Help>
 				Phase Level of ON Command
 				The Configuration parameter that can be used to adjust the phase level of ON command is transmitted is Configuration Parameter # 1.
 				This parameter can be configured with the value of 0 through 127.
@@ -14,9 +13,9 @@
 				Note: 0xFF means the device will be on to the last phase before the device was turned off.
 				Information reproduced from: http://www.techstyleuk.co.uk/index_files/sp103_manual.pdf
 			</Help>
-		</Value>
-		<Value type="byte" index="3" genre="config" label="Power Saving" units="" min="0" max="127" value="1">
-			<Help>
+    </Value>
+    <Value genre="config" index="3" label="Power Saving" max="127" min="0" type="byte" units="" value="1">
+      <Help>
 				Enabling/Disabling Power Saving Function (for testing)
 				When no movement has been detected for 10 seconds, the SP103 will enter the power saving mode.
 				It can be disabled or enabled power saving function by setting Configuration Parameter # 3.
@@ -24,15 +23,19 @@
 				PS : As long as the batteries have been refitted, the Detector will enable the power saving function automatically.
 				Information reproduced from: http://www.techstyleuk.co.uk/index_files/sp103_manual.pdf
 			</Help>
-		</Value>
-	</CommandClass>
-	<CommandClass id="32" setasreport="true" />
-	<!-- COMMAND_CLASS_ALARM.  This class is supported but is missing from the list reported by the SP103 -->
-	<CommandClass id="113" action="add" />
-	<!-- Association Groups -->
-	<CommandClass id="133">
-		<Associations num_groups="1">
-			<Group index="1" max_associations="5" label="Motion" />
-		</Associations>
-	</CommandClass>
+    </Value>
+  </CommandClass>
+  <CommandClass id="32">
+    <Compatibility>
+      <SetAsReport>true</SetAsReport>
+    </Compatibility>
+  </CommandClass>
+  <!-- COMMAND_CLASS_ALARM.  This class is supported but is missing from the list reported by the SP103 -->
+  <CommandClass action="add" id="113"/>
+  <!-- Association Groups -->
+  <CommandClass id="133">
+    <Associations num_groups="1">
+      <Group index="1" label="Motion" max_associations="5"/>
+    </Associations>
+  </CommandClass>
 </Product>

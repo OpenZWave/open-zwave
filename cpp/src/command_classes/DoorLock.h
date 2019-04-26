@@ -47,8 +47,6 @@ namespace OpenZWave
 		static string const StaticGetCommandClassName(){ return "COMMAND_CLASS_DOOR_LOCK"; }
 
 		// From CommandClass
-		virtual void ReadXML( TiXmlElement const* _ccElement );
-		virtual void WriteXML( TiXmlElement* _ccElement );
 		virtual bool RequestState( uint32 const _requestFlags, uint8 const _instance, Driver::MsgQueue const _queue );
 		virtual bool RequestValue( uint32 const _requestFlags, uint16 const _index, uint8 const _instance, Driver::MsgQueue const _queue );
 		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }
@@ -62,12 +60,6 @@ namespace OpenZWave
 
 	private:
 		DoorLock( uint32 const _homeId, uint8 const _nodeId );
-		uint8 m_timeoutsupported;
-		uint8 m_insidehandlemode;
-		uint8 m_outsidehandlemode;
-		uint8 m_timeoutmins;
-		uint8 m_timeoutsecs;
-
 	};
 
 } // namespace OpenZWave

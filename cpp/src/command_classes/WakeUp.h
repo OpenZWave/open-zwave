@@ -65,8 +65,6 @@ namespace OpenZWave
 		void SetPollRequired(){ m_pollRequired = true; }
 
 		// From CommandClass
-		virtual void ReadXML( TiXmlElement const* _ccElement );
-		virtual void WriteXML( TiXmlElement* _ccElement );
 		virtual bool RequestState( uint32 const _requestFlags, uint8 const _instance, Driver::MsgQueue const _queue );
 		virtual bool RequestValue( uint32 const _requestFlags, uint16 const _index, uint8 const _instance, Driver::MsgQueue const _queue );
 		virtual uint8 const GetCommandClassId()const{ return StaticGetCommandClassId(); }
@@ -87,7 +85,6 @@ namespace OpenZWave
 		list<Driver::MsgQueueItem>	m_pendingQueue;		// Messages waiting to be sent when the device wakes up
 		bool						m_awake;
 		bool						m_pollRequired;
-		int							m_delayNoMoreInfo; // Wait this many milliseconds before sending no more information
 	};
 
 } // namespace OpenZWave

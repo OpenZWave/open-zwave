@@ -67,12 +67,11 @@ WakeUp::WakeUp
 CommandClass( _homeId, _nodeId ),
 m_mutex( new Mutex() ),
 m_awake( true ),
-m_pollRequired( false ),
-m_delayNoMoreInfo( 0 )
+m_pollRequired( false )
 {
 	Timer::SetDriver(GetDriver());
 	Options::Get()->GetOptionAsBool("AssumeAwake", &m_awake);
-
+	m_com.EnableFlag(COMPAT_FLAG_WAKEUP_DELAYNMI, 0);
 	SetStaticRequest( StaticRequest_Values );
 }
 
@@ -97,44 +96,6 @@ WakeUp::~WakeUp
 			delete item.m_cci;
 		}
 		m_pendingQueue.pop_front();
-	}
-}
-
-//-----------------------------------------------------------------------------
-// <WakeUp::ReadXML>
-// Read configuration.
-//-----------------------------------------------------------------------------
-void WakeUp::ReadXML
-(
-		TiXmlElement const* _ccElement
-)
-{
-	int32 delayms;
-
-	CommandClass::ReadXML( _ccElement );
-	if( TIXML_SUCCESS == _ccElement->QueryIntAttribute( "delay_no_more_info", &delayms ) )
-	{
-		Log::Write( LogLevel_Info, GetNodeId(), "Delayed no more information for node %d of %dms", GetNodeId(), delayms );
-		m_delayNoMoreInfo = delayms;
-	}
-}
-
-//-----------------------------------------------------------------------------
-// <WakeUp::WriteXML>
-// Save changed configuration
-//-----------------------------------------------------------------------------
-void WakeUp::WriteXML
-(
-		TiXmlElement* _ccElement
-)
-{
-	CommandClass::WriteXML( _ccElement );
-
-	if( m_delayNoMoreInfo > 0 )
-	{
-		char str[32];
-		snprintf( str, sizeof(str), "%d", m_delayNoMoreInfo );
-		_ccElement->SetAttribute( "delay_no_more_info", str );
 	}
 }
 
@@ -519,13 +480,13 @@ void WakeUp::SendPending
 	/* if we are reloading, the QueryStage_Complete will take care of sending the device back to sleep */
 	if( sendToSleep && !reloading )
 	{
-		if( m_delayNoMoreInfo == 0 ) {
+		if( m_com.GetFlagInt(COMPAT_FLAG_WAKEUP_DELAYNMI) == 0 ) {
 			SendNoMoreInfo(1);
 
 		} else {
-			Log::Write( LogLevel_Info, GetNodeId(), "  Node %d has delayed sleep of %dms", GetNodeId(), m_delayNoMoreInfo );
+			Log::Write( LogLevel_Info, GetNodeId(), "  Node %d has delayed sleep of %dms", GetNodeId(), m_com.GetFlagInt(COMPAT_FLAG_WAKEUP_DELAYNMI) );
 			TimerThread::TimerCallback callback = bind(&WakeUp::SendNoMoreInfo, this, 1);
-			TimerSetEvent(m_delayNoMoreInfo, callback, 1);
+			TimerSetEvent(m_com.GetFlagInt(COMPAT_FLAG_WAKEUP_DELAYNMI), callback, 1);
 		}
 	}
 }

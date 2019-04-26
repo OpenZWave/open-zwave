@@ -325,7 +325,7 @@ void Association::QueryGroup
 	uint32 const _requestFlags
 )
 {
-	if ( IsGetSupported() )
+	if ( m_com.GetFlagBool(COMPAT_FLAG_GETSUPPORTED) )
 	{
 		Log::Write( LogLevel_Info, GetNodeId(), "Get Associations for group %d of node %d", _groupIdx, GetNodeId() );
 		Msg* msg = new Msg( "AssociationCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );

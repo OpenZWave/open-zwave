@@ -59,8 +59,6 @@ namespace OpenZWave
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );
 		/** \brief Create Default Vars for this CC */
 		void CreateVars( uint8 const _instance );
-		void ReadXML( TiXmlElement const* _ccElement	);
-		void WriteXML( TiXmlElement* _ccElement );
 		bool RequestState( uint32 const _requestFlags, uint8 const _instance, Driver::MsgQueue const _queue );
 		bool RequestValue( uint32 const _requestFlags, uint16 const _what, uint8 const _instance, Driver::MsgQueue const _queue );
 		bool SetValue( Value const& _value);
@@ -75,11 +73,9 @@ namespace OpenZWave
 		void createSupportedKeyAttributesValues(uint8 keyAttributes, uint8 sceneNumber, uint8 instance);
 		void ClearScene(uint32 sceneID);
 		CentralScene( uint32 const _homeId, uint8 const _nodeId );
-		int32 m_scenecount;
 		bool m_slowrefresh;
 		uint8 m_sequence;
 		std::map<uint32, uint32> m_TimersSet;
-		uint32 m_ClearTimeout;
 	};
 
 } // namespace OpenZWave

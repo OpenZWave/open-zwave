@@ -324,55 +324,13 @@ UserCode::UserCode
 	CommandClass( _homeId, _nodeId ),
 	m_queryAll( false ),
 	m_currentCode( 0 ),
-	m_userCodeCount( 0 ),
-	m_refreshUserCodes(false),
-	m_exposeRawValueID(false)
-
+	m_refreshUserCodes(false)
 {
+	m_com.EnableFlag(COMPAT_FLAG_UC_EXPOSERAWVALUE, false);
+	m_dom.EnableFlag(STATE_FLAG_USERCODE_COUNT, 0);
 	SetStaticRequest( StaticRequest_Values );
 	Options::Get()->GetOptionAsBool("RefreshAllUserCodes", &m_refreshUserCodes );
 
-}
-
-//-----------------------------------------------------------------------------
-// <UserCode::ReadXML>
-// Class specific configuration
-//-----------------------------------------------------------------------------
-void UserCode::ReadXML
-(
-	TiXmlElement const* _ccElement
-)
-{
-	int32 intVal;
-
-	CommandClass::ReadXML( _ccElement );
-	if( TIXML_SUCCESS == _ccElement->QueryIntAttribute( "codes", &intVal ) )
-	{
-		m_userCodeCount = intVal;
-	}
-	char const* str;
-	str = _ccElement->Attribute( "exposeRawUserCodes" );
-	if( str )
-	{
-		m_exposeRawValueID = !strcmp( str, "true" );
-	}
-}
-//-----------------------------------------------------------------------------
-// <UserCode::WriteXML>
-// Class specific configuration
-//-----------------------------------------------------------------------------
-void UserCode::WriteXML
-(
-	TiXmlElement* _ccElement
-)
-{
-	char str[32];
-
-	CommandClass::WriteXML( _ccElement );
-	snprintf( str, sizeof(str), "%d", m_userCodeCount );
-	_ccElement->SetAttribute( "codes", str);
-	
-	_ccElement->SetAttribute( "exposeRawUserCodes", m_exposeRawValueID ? "true" : "false");
 }
 
 //-----------------------------------------------------------------------------
@@ -394,7 +352,7 @@ bool UserCode::RequestState
 
 	if( _requestFlags & RequestFlag_Session )
 	{
-		if( m_userCodeCount > 0 )
+		if( m_dom.GetFlagByte(STATE_FLAG_USERCODE_COUNT) > 0 )
 		{
 			m_queryAll = true;
 			m_currentCode = 1;
@@ -422,7 +380,7 @@ bool UserCode::RequestValue
 		// This command class doesn't work with multiple instances
 		return false;
 	}
-	if ( !IsGetSupported() )
+	if ( !m_com.GetFlagBool(COMPAT_FLAG_GETSUPPORTED) )
 	{
 		Log::Write(  LogLevel_Info, GetNodeId(), "UserNumberCmd_Get Not Supported on this node");
 		return false;
@@ -444,7 +402,7 @@ bool UserCode::RequestValue
 		Log::Write( LogLevel_Warning, GetNodeId(), "UserCodeCmd_Get with Index 0 not Supported");
 		return false;
 	}
-	if (_userCodeIdx > m_userCodeCount)
+	if (_userCodeIdx > m_dom.GetFlagByte(STATE_FLAG_USERCODE_COUNT))
 	{
 		Log::Write( LogLevel_Warning, GetNodeId(), "UserCodeCmd_Get with index %d is greater than max UserCodes", _userCodeIdx);
 		return false;
@@ -473,25 +431,20 @@ bool UserCode::HandleMsg
 {
 	if( UserNumberCmd_Report == (UserCodeCmd)_data[0] )
 	{
-		m_userCodeCount = _data[1];
-		if( m_userCodeCount > 255 )
-		{
-			// We only support upto 255 UserCodes. 
-			m_userCodeCount = 255;
-		}
+		m_dom.SetFlagByte(STATE_FLAG_USERCODE_COUNT, _data[1]);
 		ClearStaticRequest( StaticRequest_Values );
-		if( m_userCodeCount == 0 )
+		if( _data[1] == 0 )
 		{
 			Log::Write( LogLevel_Info, GetNodeId(), "Received User Number report from node %d: Not supported", GetNodeId() );
 		}
 		else
 		{
-			Log::Write( LogLevel_Info, GetNodeId(), "Received User Number report from node %d: Supported Codes %d (%d)", GetNodeId(), m_userCodeCount, _data[1] );
+			Log::Write( LogLevel_Info, GetNodeId(), "Received User Number report from node %d: Supported Codes %d (%d)", GetNodeId(), _data[1], _data[1] );
 		}
 
 		if( ValueShort* value = static_cast<ValueShort*>( GetValue( _instance, UserCodeIndex_Count ) ) )
 		{
-			value->OnValueRefreshed( m_userCodeCount );
+			value->OnValueRefreshed( _data[1] );
 			value->Release();
 		}
 
@@ -499,7 +452,7 @@ bool UserCode::HandleMsg
 		{
 			string data;
 
-			for( uint16 i = 0; i <= m_userCodeCount; i++ )
+			for( uint16 i = 0; i <= m_dom.GetFlagByte(STATE_FLAG_USERCODE_COUNT); i++ )
 			{
 				char str[16];
 				if (i == 0)
@@ -515,7 +468,7 @@ bool UserCode::HandleMsg
 				m_userCode[i].status = UserCode_Available;
 				memcpy(&m_userCode[i].usercode, 0, 10);
 			}
-			if (m_exposeRawValueID) {
+			if (m_com.GetFlagBool(COMPAT_FLAG_UC_EXPOSERAWVALUE)) {
 				node->CreateValueRaw( ValueID::ValueGenre_User, GetCommandClassId(), _instance, UserCodeIndex_RawValue, "Raw UserCode", "", false, false, 0, 0, 0);
 				node->CreateValueShort( ValueID::ValueGenre_User, GetCommandClassId(), _instance, UserCodeIndex_RawValueIndex, "Raw UserCode Index", "", false, false, 0, 0);
 			}
@@ -544,7 +497,7 @@ bool UserCode::HandleMsg
 			value->OnValueRefreshed( data );
 			value->Release();
 		}
-		if (m_exposeRawValueID) {
+		if (m_com.GetFlagBool(COMPAT_FLAG_UC_EXPOSERAWVALUE)) {
 			if( ValueShort* value = static_cast<ValueShort*>( GetValue( _instance, UserCodeIndex_RawValueIndex ) ) ) {
 				value->OnValueRefreshed(i);
 				value->Release();
@@ -559,7 +512,7 @@ bool UserCode::HandleMsg
 		{
 
 			if (m_refreshUserCodes || (_data[2] != UserCode_Available)) {
-				if( ++i <= m_userCodeCount )
+				if( ++i <= m_dom.GetFlagByte(STATE_FLAG_USERCODE_COUNT) )
 				{
 					m_currentCode = i;
 					RequestValue( 0, m_currentCode, _instance, Driver::MsgQueue_Query );
@@ -595,7 +548,7 @@ bool UserCode::SetValue
 		ValueString const* value = static_cast<ValueString const*>(&_value);
 		string s = value->GetValue();
 		uint8 len = s.length();
-		if (value->GetID().GetIndex() == 0 || value->GetID().GetIndex() > m_userCodeCount) {
+		if (value->GetID().GetIndex() == 0 || value->GetID().GetIndex() > m_dom.GetFlagByte(STATE_FLAG_USERCODE_COUNT)) {
 			Log::Write( LogLevel_Warning, GetNodeId(), "Index %d is out of range of UserCodeCount", value->GetID().GetIndex());
 			return false;
 		}
@@ -630,7 +583,7 @@ bool UserCode::SetValue
 	{
 		ValueShort const* value = static_cast<ValueShort const*>(&_value);
 		uint16 index = value->GetValue();
-		if (index == 0 || index > m_userCodeCount) {
+		if (index == 0 || index > m_dom.GetFlagByte(STATE_FLAG_USERCODE_COUNT)) {
 			Log::Write( LogLevel_Warning, GetNodeId(), "Index %d is out of range of UserCodeCount", index);
 			return false;
 		}
@@ -667,7 +620,7 @@ bool UserCode::SetValue
 	{
 		ValueShort const* value = static_cast<ValueShort const*>(&_value);
 		uint16 index = value->GetValue();
-		if (index == 0 || index > m_userCodeCount) {
+		if (index == 0 || index > m_dom.GetFlagByte(STATE_FLAG_USERCODE_COUNT)) {
 			Log::Write( LogLevel_Warning, GetNodeId(), "Index %d is out of range of UserCodeCount", index);
 			return false;
 		}
@@ -686,7 +639,7 @@ bool UserCode::SetValue
 		{
 			index = valueindex->GetValue();
 		}
-		if (index == 0 || index > m_userCodeCount) {
+		if (index == 0 || index > m_dom.GetFlagByte(STATE_FLAG_USERCODE_COUNT)) {
 			Log::Write( LogLevel_Warning, GetNodeId(), "Index %d is out of range of UserCodeCount", index);
 			return false;
 		}

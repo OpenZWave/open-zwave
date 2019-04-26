@@ -182,12 +182,13 @@ void ThermostatMode::WriteXML
 	TiXmlElement* _ccElement
 )
 {
+	CommandClass::WriteXML( _ccElement );
+
 	if( m_supportedModes.empty() )
 	{
 		return;
 	}
 
-	CommandClass::WriteXML( _ccElement );
 
 	if( GetNodeUnsafe() )
 	{
@@ -264,7 +265,7 @@ bool ThermostatMode::RequestValue
 
 	if( _getTypeEnum == 0 )		// get current mode
 	{
-		if ( IsGetSupported() )
+		if ( m_com.GetFlagBool(COMPAT_FLAG_GETSUPPORTED) )
 		{
 			// Request the current mode
 			Msg* msg = new Msg( "ThermostatModeCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );

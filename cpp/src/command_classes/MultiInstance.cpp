@@ -89,100 +89,12 @@ MultiInstance::MultiInstance
 		uint8 const _nodeId
 ):
 CommandClass( _homeId, _nodeId ),
-m_numEndPoints( 0 ),
-m_numEndPointsHint( 0 ),
-m_endPointMap( MultiInstanceMapAll ),
-m_endPointFindSupported( false ),
-m_uniqueendpoints( false )
+m_numEndPoints( 0 )
 {
-}
-
-//-----------------------------------------------------------------------------
-// <MultiInstance::ReadXML>
-// Class specific configuration
-//-----------------------------------------------------------------------------
-void MultiInstance::ReadXML
-(
-		TiXmlElement const* _ccElement
-)
-{
-	int32 intVal;
-	char const* str;
-
-	CommandClass::ReadXML( _ccElement );
-
-	if( TIXML_SUCCESS == _ccElement->QueryIntAttribute( "endpoints", &intVal ) )
-	{
-		m_numEndPointsHint = (uint8)intVal;
-	}
-
-	str = _ccElement->Attribute("mapping");
-	if( str )
-	{
-		if( strcmp( str, "all") == 0 )
-		{
-			m_endPointMap = MultiInstanceMapAll;
-		}
-		else if( strcmp( str, "endpoints") == 0 )
-		{
-			m_endPointMap = MultiInstanceMapEndPoints;
-		}
-		else
-		{
-			Log::Write( LogLevel_Info, GetNodeId(), "Bad value for mapping: %s", str);
-		}
-	}
-
-	str = _ccElement->Attribute("findsupport");
-	if( str )
-	{
-		m_endPointFindSupported = !strcmp( str, "true");
-	}
-	str = _ccElement->Attribute("ignoreUnsolicitedMultiChnCapReport");
-	if( str )
-	{
-		m_ignoreUnsolicitedMultiChannelCapabilityReport = !strcmp( str, "true");
-	}
-	str = _ccElement->Attribute("forceUniqueEndpoints");
-	if( str )
-	{
-		m_uniqueendpoints = !strcmp( str, "true");
-	}
-}
-
-//-----------------------------------------------------------------------------
-// <MultiInstance::WriteXML>
-// Class specific configuration
-//-----------------------------------------------------------------------------
-void MultiInstance::WriteXML
-(
-		TiXmlElement* _ccElement
-)
-{
-	char str[32];
-
-	CommandClass::WriteXML( _ccElement );
-	if( m_numEndPointsHint != 0 )
-	{
-		snprintf( str, sizeof(str), "%d", m_numEndPointsHint );
-		_ccElement->SetAttribute( "endpoints", str);
-	}
-
-	if( m_endPointMap == MultiInstanceMapEndPoints )
-	{
-		_ccElement->SetAttribute( "mapping", "endpoints" );
-	}
-
-	if( m_endPointFindSupported )
-	{
-		_ccElement->SetAttribute( "findsupport", "true" );
-	}
-
-	if( m_uniqueendpoints )
-	{
-		_ccElement->SetAttribute( "forceUniqueEndpoints", "true" );
-	}
-
+	m_com.EnableFlag(COMPAT_FLAG_MI_MAPROOTTOENDPOINT, false);
+	m_com.EnableFlag(COMPAT_FLAG_MI_FORCEUNIQUEENDPOINTS, false);
+	m_com.EnableFlag(COMPAT_FLAG_MI_IGNMCCAPREPORTS, false);
+	m_com.EnableFlag(COMPAT_FLAG_MI_ENDPOINTHINT, 0);
 }
 
 //-----------------------------------------------------------------------------
@@ -391,14 +303,14 @@ void MultiInstance::HandleMultiChannelEndPointReport
 	m_endPointsAreSameClass = (( _data[1] & 0x40 ) != 0 );	// All endpoints are the same command class.
 
 	/* some devices (eg, Aeotec Smart Dimmer 6 incorrectly report all endpoints are the same */
-	if( m_uniqueendpoints )
+	if (m_com.GetFlagBool(COMPAT_FLAG_MI_FORCEUNIQUEENDPOINTS))
 		m_endPointsAreSameClass = false;
 
 
 	m_numEndPoints = _data[2] & 0x7f;
-	if( m_numEndPointsHint != 0 )
+	if( m_com.GetFlagByte(COMPAT_FLAG_MI_ENDPOINTHINT) != 0 )
 	{
-		m_numEndPoints = m_numEndPointsHint;		// don't use device's number
+		m_numEndPoints = m_com.GetFlagByte(COMPAT_FLAG_MI_ENDPOINTHINT);		// don't use device's number
 	}
 
 	len = m_numEndPoints;
@@ -450,7 +362,7 @@ void MultiInstance::HandleMultiChannelCapabilityReport
 		 * updating the commandclasses, see this email thread:
 		 * https://groups.google.com/d/topic/openzwave/IwepxScRAVo/discussion
 		 */
-		if ((m_ignoreUnsolicitedMultiChannelCapabilityReport && (node->GetCurrentQueryStage() != Node::QueryStage_Instances))
+		if ((m_com.GetFlagBool(COMPAT_FLAG_MI_IGNMCCAPREPORTS) && (node->GetCurrentQueryStage() != Node::QueryStage_Instances))
 				&& !dynamic && m_endPointCommandClasses.size() > 0) {
 			Log::Write(LogLevel_Error, GetNodeId(), "Received a Unsolicited MultiChannelEncap when we are not in QueryState_Instances");
 			return;
@@ -503,7 +415,7 @@ void MultiInstance::HandleMultiChannelCapabilityReport
 		{
 			int len;
 
-			if( m_endPointMap == MultiInstanceMapAll )	// Include the non-endpoint instance
+			if( m_com.GetFlagBool(COMPAT_FLAG_MI_MAPROOTTOENDPOINT) == false )	// Include the non-endpoint instance
 			{
 				endPoint = 0;
 				len = m_numEndPoints + 1;
@@ -525,7 +437,7 @@ void MultiInstance::HandleMultiChannelCapabilityReport
 					if( cc )
 					{
 						cc->SetInstance( i );
-						if( m_endPointMap != MultiInstanceMapAll || i != 1 )
+						if( m_com.GetFlagBool(COMPAT_FLAG_MI_MAPROOTTOENDPOINT) != false || i != 1 )
 						{
 							cc->SetEndPoint( i, endPoint );
 						}
@@ -535,7 +447,7 @@ void MultiInstance::HandleMultiChannelCapabilityReport
 						if( basic != NULL && basic->GetMapping() == commandClassId )
 						{
 							basic->SetInstance( i );
-							if( m_endPointMap != MultiInstanceMapAll || i != 1 )
+							if( m_com.GetFlagBool(COMPAT_FLAG_MI_MAPROOTTOENDPOINT) != false || i != 1 )
 							{
 								basic->SetEndPoint( i, endPoint );
 							}
@@ -582,7 +494,7 @@ void MultiInstance::HandleMultiChannelCapabilityReport
 					// Find the next free instance of this class
 					for( i = 1; i <= 127; i++ )
 					{
-						if( m_endPointMap == MultiInstanceMapAll ) // Include the non-endpoint instance
+						if( m_com.GetFlagBool(COMPAT_FLAG_MI_MAPROOTTOENDPOINT) == false ) // Include the non-endpoint instance
 						{
 							if( !cc->GetInstances()->IsSet( i ) )
 							{

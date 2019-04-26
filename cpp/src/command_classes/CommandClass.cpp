@@ -57,22 +57,24 @@ CommandClass::CommandClass
 		uint32 const _homeId,
 		uint8 const _nodeId
 ):
+m_com(CompatOptionType_Compatibility, this),
+m_dom(CompatOptionType_Discovery, this),
 m_homeId( _homeId ),
 m_nodeId( _nodeId ),
-m_version( 1 ),
-m_afterMark( false ),
-m_createVars( true ),
-m_overridePrecision( -1 ),
-m_getSupported( true ),
-m_isSecured( false ),
 m_SecureSupport( true ),
-m_inNIF(false),
-m_refreshOnWakeup( false ),
-m_staticRequests( 0 ),
 m_sentCnt( 0 ),
-m_receivedCnt( 0 ),
-m_versionHint( 0 )
+m_receivedCnt( 0 )
 {
+	m_com.EnableFlag(COMPAT_FLAG_GETSUPPORTED, true);
+	m_com.EnableFlag(COMPAT_FLAG_OVERRIDEPRECISION, 0);
+	m_com.EnableFlag(COMPAT_FLAG_FORCEVERSION, 0);
+	m_com.EnableFlag(COMPAT_FLAG_CREATEVARS, true);
+	m_com.EnableFlag(COMPAT_FLAG_REFRESHONWAKEUP, false);
+	m_dom.EnableFlag(STATE_FLAG_CCVERSION, 1);
+	m_dom.EnableFlag(STATE_FLAG_STATIC_REQUESTS, 0);
+	m_dom.EnableFlag(STATE_FLAG_AFTERMARK, false);
+	m_dom.EnableFlag(STATE_FLAG_ENCRYPTED, false);
+	m_dom.EnableFlag(STATE_FLAG_INNIF, false);
 }
 
 //-----------------------------------------------------------------------------
@@ -176,7 +178,7 @@ void CommandClass::SetInstances
 )
 {
 	// Ensure we have a set of reported variables for each new instance
-	if( !m_afterMark )
+	if( !m_dom.GetFlagBool(STATE_FLAG_AFTERMARK) )
 	{
 		for( uint8 i=0; i<_instances; ++i )
 		{
@@ -197,7 +199,7 @@ void CommandClass::SetInstance
 	if( !m_instances.IsSet( _endPoint ) )
 	{
 		m_instances.Set( _endPoint );
-		if( IsCreateVars() )
+		if( m_com.GetFlagBool(COMPAT_FLAG_CREATEVARS) )
 		{
 			CreateVars( _endPoint );
 		}
@@ -245,74 +247,8 @@ void CommandClass::ReadXML
 	int32 intVal;
 	char const* str;
 
-	if( TIXML_SUCCESS == _ccElement->QueryIntAttribute( "version", &intVal ) )
-	{
-		m_version = (uint8)intVal;
-		m_versionHint = m_version;
-	}
-
-	uint8 instances = 1;
-	if( TIXML_SUCCESS == _ccElement->QueryIntAttribute( "instances", &intVal ) )
-	{
-		instances = (uint8)intVal;
-	}
-
-	if( TIXML_SUCCESS == _ccElement->QueryIntAttribute( "request_flags", &intVal ) )
-	{
-		m_staticRequests = (uint8)intVal;
-	}
-
-	if( TIXML_SUCCESS == _ccElement->QueryIntAttribute( "override_precision", &intVal ) )
-	{
-		m_overridePrecision = (int8)intVal;
-	}
-
-	str = _ccElement->Attribute( "after_mark" );
-	if( str )
-	{
-		m_afterMark = !strcmp( str, "true" );
-	}
-
-	str = _ccElement->Attribute( "create_vars" );
-	if( str )
-	{
-		m_createVars = !strcmp( str, "true" );
-	}
-
-	// Make sure previously created values are removed if create_vars=false
-	if( !m_createVars )
-	{
-		if( Node* node = GetNodeUnsafe() )
-		{
-			node->GetValueStore()->RemoveCommandClassValues( GetCommandClassId() );
-		}
-	}
-
-	str = _ccElement->Attribute( "getsupported" );
-	if( str )
-	{
-		m_getSupported = !strcmp( str, "true" );
-	}
-
-	str = _ccElement->Attribute( "issecured" );
-	if( str )
-	{
-		m_isSecured = !strcmp( str, "true" );
-	}
-	str = _ccElement->Attribute( "innif" );
-	if( str )
-	{
-		m_inNIF = !strcmp( str, "true" );
-	}
-	str = _ccElement->Attribute( "refreshonwakeup");
-	if ( str )
-	{
-		m_refreshOnWakeup = !strcmp( str, "true" );
-	}
-
-
-	// Setting the instance count will create all the values.
-	SetInstances( instances );
+	m_com.ReadXML(_ccElement);
+	m_dom.ReadXML(_ccElement);
 
 	// Apply any differences from the saved XML to the values
 	TiXmlElement const* child = _ccElement->FirstChildElement();
@@ -367,6 +303,16 @@ void CommandClass::ReadXML
 
 		child = child->NextSiblingElement();
 	}
+	// Make sure previously created values are removed if create_vars=false
+	if( !m_com.GetFlagBool(COMPAT_FLAG_CREATEVARS) )
+	{
+		if( Node* node = GetNodeUnsafe() )
+		{
+			node->GetValueStore()->RemoveCommandClassValues( GetCommandClassId() );
+		}
+	}
+
+
 }
 
 //-----------------------------------------------------------------------------
@@ -501,51 +447,15 @@ void CommandClass::WriteXML
 {
 	char str[32];
 
+	m_com.WriteXML(_ccElement);
+	m_dom.WriteXML(_ccElement);
+
+
 	snprintf( str, sizeof(str), "%d", GetCommandClassId() );
 	_ccElement->SetAttribute( "id", str );
 	_ccElement->SetAttribute( "name", GetCommandClassName().c_str() );
 
-	snprintf( str, sizeof(str), "%d", GetVersion() );
-	_ccElement->SetAttribute( "version", str );
 
-	if( m_staticRequests )
-	{
-		snprintf( str, sizeof(str), "%d", m_staticRequests );
-		_ccElement->SetAttribute( "request_flags", str );
-	}
-
-	if( m_overridePrecision >= 0 )
-	{
-		snprintf( str, sizeof(str), "%d", m_overridePrecision );
-		_ccElement->SetAttribute( "override_precision", str );
-	}
-
-	if( m_afterMark )
-	{
-		_ccElement->SetAttribute( "after_mark", "true" );
-	}
-
-	if( !m_createVars )
-	{
-		_ccElement->SetAttribute( "create_vars", "false" );
-	}
-
-	if( !m_getSupported )
-	{
-		_ccElement->SetAttribute( "getsupported", "false" );
-	}
-	if ( m_isSecured )
-	{
-		_ccElement->SetAttribute( "issecured", "true" );
-	}
-	if ( m_inNIF )
-	{
-		_ccElement->SetAttribute( "innif", "true" );
-	}
-	if ( m_refreshOnWakeup )
-	{
-		_ccElement->SetAttribute( "refreshonwakeup", "true" );
-	}
 
 
 	// Write out the instances
@@ -776,9 +686,10 @@ int32 CommandClass::ValueToInteger
 		val = atol( str.c_str() );
 	}
 
-	if ( m_overridePrecision > 0 )
+	uint8_t orp = m_com.GetFlagByte(COMPAT_FLAG_OVERRIDEPRECISION);
+	if ( orp > 0 )
 	{
-		while ( precision < m_overridePrecision ) {
+		while ( precision < orp ) {
 			precision++;
 			val *= 10;
 		}
@@ -847,10 +758,26 @@ void CommandClass::UpdateMappedClass
 //-----------------------------------------------------------------------------
 void CommandClass::ClearStaticRequest
 (
-		uint8 _request
+		uint8_t _request
 )
 {
-	m_staticRequests &= ~_request;
+	uint8_t f_staticRequests = m_dom.GetFlagByte(STATE_FLAG_STATIC_REQUESTS);
+	f_staticRequests &= ~_request;
+	m_dom.SetFlagByte(STATE_FLAG_STATIC_REQUESTS, f_staticRequests);
+}
+//-----------------------------------------------------------------------------
+// <CommandClass::ClearStaticRequest>
+// The static data for this command class has been read from the device
+//-----------------------------------------------------------------------------
+
+void CommandClass::SetStaticRequest
+(
+		uint8_t _request
+)
+{
+	uint8_t f_staticRequests = m_dom.GetFlagByte(STATE_FLAG_STATIC_REQUESTS);
+	f_staticRequests |= _request;
+	m_dom.SetFlagByte(STATE_FLAG_STATIC_REQUESTS, f_staticRequests);
 }
 
 //-----------------------------------------------------------------------------
@@ -864,7 +791,7 @@ bool CommandClass::RequestStateForAllInstances
 )
 {
 	bool res = false;
-	if( m_createVars )
+	if( m_com.GetFlagBool(COMPAT_FLAG_CREATEVARS) )
 	{
 		if( Node* node = GetNodeUnsafe() )
 		{
@@ -919,19 +846,20 @@ void CommandClass::SetVersion
 	uint8 const _version 
 )
 { 
-	if( m_versionHint == 0 )
+	if( m_com.GetFlagByte(COMPAT_FLAG_FORCEVERSION) == 0 )
 	{
-		if( _version >= m_version ) 
+		if( _version >= m_dom.GetFlagByte(STATE_FLAG_CCVERSION) )
 		{
-			m_version = _version; 
+			m_dom.SetFlagByte(STATE_FLAG_CCVERSION, _version);
 		}
 		else {
-			Log::Write( LogLevel_Warning, GetNodeId(), "Trying to downgrade Command Class %s version from %d to %d. Ignored", GetCommandClassName().c_str(), m_version, _version);
+			Log::Write( LogLevel_Warning, GetNodeId(), "Trying to Downgrade Command Class %s version from %d to %d. Ignored", GetCommandClassName().c_str(), m_dom.GetFlagByte(STATE_FLAG_CCVERSION), _version);
 		}
 	}
-	else {
-		m_version = m_versionHint; 
-		Log::Write( LogLevel_Warning, GetNodeId(), "Trying to modify user-defined Command Class %s version from %d to %d. Ignored", GetCommandClassName().c_str(), m_versionHint, _version);
+	else
+	{
+		m_dom.SetFlagByte(STATE_FLAG_CCVERSION, m_com.GetFlagByte(COMPAT_FLAG_FORCEVERSION));
+		Log::Write( LogLevel_Warning, GetNodeId(), "Attempt to update Command Class %s version from %d to %d. Ignored", GetCommandClassName().c_str(), m_dom.GetFlagByte(STATE_FLAG_CCVERSION), _version);
 	}
 
 }
@@ -944,8 +872,9 @@ void CommandClass::refreshValuesOnWakeup
 (
 )
 {
-	if (m_refreshOnWakeup) {
+	if (m_com.GetFlagBool(COMPAT_FLAG_REFRESHONWAKEUP)) {
 		Log::Write(LogLevel_Debug, GetNodeId(), "Refreshing Dynamic Values on Wakeup for CommandClass %s", GetCommandClassName().c_str());
 		RequestStateForAllInstances( CommandClass::RequestFlag_Dynamic, Driver::MsgQueue_Send );
 	}
 }
+

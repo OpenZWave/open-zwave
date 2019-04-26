@@ -34,6 +34,7 @@
 #include "Defs.h"
 #include "Bitfield.h"
 #include "Driver.h"
+#include "CompatOptionManager.h"
 
 namespace OpenZWave
 {
@@ -90,7 +91,7 @@ public:
 	// to do version gets on command classes that override this with a number greater than one.
 	virtual uint8 GetMaxVersion(){ return 1; }
 
-	uint8 GetVersion()const{ return m_version; }
+	uint8 GetVersion()const{ return m_dom.GetFlagByte(STATE_FLAG_CCVERSION); }
 	Bitfield const* GetInstances()const{ return &m_instances; }
 	uint32 GetHomeId()const{ return m_homeId; }
 	uint8 GetNodeId()const{ return m_nodeId; }
@@ -121,19 +122,16 @@ public:
 	virtual void SetInstanceLabel(uint8 const _instance, char *label);
 	string GetInstanceLabel(uint8 const _instance);
 	uint8 GetNumInstances() { return (uint8)m_endPointMap.size(); };
-	void SetAfterMark(){ m_afterMark = true; }
+	void SetAfterMark(){ m_dom.SetFlagBool(STATE_FLAG_AFTERMARK, true); }
 	void SetEndPoint( uint8 const _instance, uint8 const _endpoint){ m_endPointMap[_instance] = _endpoint; }
-	bool IsAfterMark()const{ return m_afterMark; }
-	bool IsCreateVars()const{ return m_createVars; }
-	bool IsGetSupported()const{ return m_getSupported; }
-	bool IsSecured()const{ return m_isSecured; }
-	void SetSecured(){ m_isSecured = true; }
+	bool IsAfterMark()const{ return m_dom.GetFlagBool(STATE_FLAG_AFTERMARK); }
+	bool IsSecured()const{ return m_dom.GetFlagBool(STATE_FLAG_ENCRYPTED); }
+	void SetSecured(){ m_dom.SetFlagBool(STATE_FLAG_ENCRYPTED, true); }
 	bool IsSecureSupported()const { return m_SecureSupport; }
 	void ClearSecureSupport() { m_SecureSupport = false; }
 	void SetSecureSupport() { m_SecureSupport = true; }
-	void SetInNIF() { m_inNIF = true; }
-	bool IsInNIF() { return m_inNIF; }
-	bool IsRefreshOnWakeup() { return m_refreshOnWakeup; }
+	void SetInNIF() { m_dom.SetFlagBool(STATE_FLAG_INNIF, true); }
+	bool IsInNIF() { return m_dom.GetFlagBool(STATE_FLAG_INNIF); }
 
 	// Helper methods
 	string ExtractValue( uint8 const* _data, uint8* _scale, uint8* _precision, uint8 _valueOffset = 1 )const;
@@ -162,6 +160,9 @@ public:
 protected:
 	virtual void CreateVars( uint8 const _instance ){}
 	void ReadValueRefreshXML ( TiXmlElement const* _ccElement );
+	CompatOptionManager m_com;
+	CompatOptionManager m_dom;
+
 
 public:
 	virtual void CreateVars( uint8 const _instance, uint8 const _index ){}
@@ -169,22 +170,14 @@ public:
 private:
 	uint32		m_homeId;
 	uint8		m_nodeId;
-	uint8		m_version;
 	Bitfield	m_instances;
 	OPENZWAVE_EXPORT_WARNINGS_OFF
 	map<uint8,uint8> m_endPointMap;
 	map<uint8, string> m_instanceLabel;
 	OPENZWAVE_EXPORT_WARNINGS_ON
-	bool		m_afterMark;		// Set to true if the command class is listed after COMMAND_CLASS_MARK, and should not create any values.
-	bool		m_createVars;		// Do we want to create variables
-	int8		m_overridePrecision;	// Override precision when writing values if >=0
-	bool		m_getSupported;	    	// Get operation supported
-	bool		m_isSecured;		// is this command class secured with the Security Command Class
 	bool		m_SecureSupport; 	// Does this commandclass support secure encryption (eg, the Security CC doesn't encrypt itself, so it doesn't support encryption)
 	std::vector<RefreshValue *> m_RefreshClassValues; // what Command Class Values should we refresh ?
-	bool		m_inNIF; 			// Was this command class present in the NIF Frame we recieved (or was it created from our device_classes.xml file, or because it was in the Security SupportedReport message
 	string		m_commandClassLabel;
-	bool		m_refreshOnWakeup; // refresh values when Device Wakes up
 	//-----------------------------------------------------------------------------
 	// Record which items of static data have been read from the device
 	//-----------------------------------------------------------------------------
@@ -196,12 +189,10 @@ public:
 		StaticRequest_Version		= 0x04
 	};
 
-	bool HasStaticRequest( uint8 _request )const{ return( (m_staticRequests & _request) != 0 ); }
-	void SetStaticRequest( uint8 _request ){ m_staticRequests |= _request; }
-	void ClearStaticRequest( uint8 _request );
+	bool HasStaticRequest( uint8_t _request )const{ return( (m_dom.GetFlagByte(STATE_FLAG_STATIC_REQUESTS) & _request) != 0 ); }
+	void SetStaticRequest( uint8_t _request );
+	void ClearStaticRequest( uint8_t _request );
 
-private:
-	uint8   m_staticRequests;
 
 	//-----------------------------------------------------------------------------
 	//	Statistics
@@ -215,7 +206,6 @@ public:
 private:
 	uint32 m_sentCnt;				// Number of messages sent from this command class.
 	uint32 m_receivedCnt;				// Number of messages received from this commandclass.
-	uint8  m_versionHint;			// for nodes that do not report correct CC version
 
 };
 //@}

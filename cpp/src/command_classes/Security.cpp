@@ -69,31 +69,6 @@ Security::~Security
 {
 }
 
-//-----------------------------------------------------------------------------
-// <Version::ReadXML>
-// Read configuration.
-//-----------------------------------------------------------------------------
-void Security::ReadXML
-(
-		TiXmlElement const* _ccElement
-)
-{
-	CommandClass::ReadXML( _ccElement );
-}
-
-//-----------------------------------------------------------------------------
-// <Version::WriteXML>
-// Save changed configuration
-//-----------------------------------------------------------------------------
-void Security::WriteXML
-(
-		TiXmlElement* _ccElement
-)
-{
-	CommandClass::WriteXML( _ccElement );
-}
-
-
 
 bool Security::Init
 (
