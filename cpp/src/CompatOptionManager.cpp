@@ -33,25 +33,25 @@ namespace OpenZWave {
 
 CompatOptionFlagDefintions availableCompatFlags[] =
 {
-		{ "getsupported",			COMPAT_FLAG_GETSUPPORTED,				COMPAT_FLAG_TYPE_BOOL },
-		{ "override_precision", 	COMPAT_FLAG_OVERRIDEPRECISION,			COMPAT_FLAG_TYPE_BYTE },
-		{ "forceversion",			COMPAT_FLAG_FORCEVERSION,				COMPAT_FLAG_TYPE_BYTE },
-		{ "create_vars",			COMPAT_FLAG_CREATEVARS,					COMPAT_FLAG_TYPE_BOOL },
-		{ "refreshonwakeup",		COMPAT_FLAG_REFRESHONWAKEUP,			COMPAT_FLAG_TYPE_BOOL },
-		{ "ignoreremapping",		COMPAT_FLAG_BASIC_IGNOREREMAPPING,		COMPAT_FLAG_TYPE_BOOL },
-		{ "setasreport",			COMPAT_FLAG_BASIC_SETASREPORT,			COMPAT_FLAG_TYPE_BOOL },
-		{ "mapping",				COMPAT_FLAG_BASIC_MAPPING,				COMPAT_FLAG_TYPE_BYTE },
-		{ "coloridxbug",			COMPAT_FLAG_COLOR_IDXBUG,				COMPAT_FLAG_TYPE_BOOL }, // Fibaro RGBW before version 25.25 always reported the coloridx as 3 in the Report Message. Work around it
-		{ "forceinstances",			COMPAT_FLAG_MCA_FORCEINSTANCES,			COMPAT_FLAG_TYPE_BOOL },
-		{ "maproottoendpoint",		COMPAT_FLAG_MI_MAPROOTTOENDPOINT,		COMPAT_FLAG_TYPE_BOOL }, // was mapping in old version. was 0 or false in old version. when mapping=endpoints, thats = true
-		{ "forceuniqueendpoints",	COMPAT_FLAG_MI_FORCEUNIQUEENDPOINTS,	COMPAT_FLAG_TYPE_BOOL },
-		{ "ignoremccapreports",		COMPAT_FLAG_MI_IGNMCCAPREPORTS,			COMPAT_FLAG_TYPE_BOOL }, // was ignoreUnsolicitedMultiChnCapReport
-		{ "endpointhint",			COMPAT_FLAG_MI_ENDPOINTHINT,			COMPAT_FLAG_TYPE_BYTE },
-		{ "base",					COMPAT_FLAG_TSSP_BASE,					COMPAT_FLAG_TYPE_BYTE },
-		{ "alttypeinterpretation",	COMPAT_FLAG_TSSP_ALTTYPEINTERPRETATION,	COMPAT_FLAG_TYPE_BOOL },
-		{ "exposeRawUserCodes",		COMPAT_FLAG_UC_EXPOSERAWVALUE,			COMPAT_FLAG_TYPE_BOOL },
-		{ "classgetsupported",		COMPAT_FLAG_VERSION_GETCLASSVERSION,	COMPAT_FLAG_TYPE_BOOL },
-		{ "delay_no_more_info",		COMPAT_FLAG_WAKEUP_DELAYNMI,			COMPAT_FLAG_TYPE_INT  },
+		{ "GetSupported",				COMPAT_FLAG_GETSUPPORTED,				COMPAT_FLAG_TYPE_BOOL },
+		{ "OverridePrecision",			COMPAT_FLAG_OVERRIDEPRECISION,			COMPAT_FLAG_TYPE_BYTE },
+		{ "ForceVersion",				COMPAT_FLAG_FORCEVERSION,				COMPAT_FLAG_TYPE_BYTE },
+		{ "CreateVars",					COMPAT_FLAG_CREATEVARS,					COMPAT_FLAG_TYPE_BOOL },
+		{ "RefreshOnWakeup",			COMPAT_FLAG_REFRESHONWAKEUP,			COMPAT_FLAG_TYPE_BOOL },
+		{ "IgnoreMapping",				COMPAT_FLAG_BASIC_IGNOREREMAPPING,		COMPAT_FLAG_TYPE_BOOL },
+		{ "SetAsReport",				COMPAT_FLAG_BASIC_SETASREPORT,			COMPAT_FLAG_TYPE_BOOL },
+		{ "Mapping",					COMPAT_FLAG_BASIC_MAPPING,				COMPAT_FLAG_TYPE_BYTE },
+		{ "ColorIndexBug",				COMPAT_FLAG_COLOR_IDXBUG,				COMPAT_FLAG_TYPE_BOOL }, // Fibaro RGBW before version 25.25 always reported the coloridx as 3 in the Report Message. Work around it
+		{ "ForceInstances",				COMPAT_FLAG_MCA_FORCEINSTANCES,			COMPAT_FLAG_TYPE_BOOL },
+		{ "MapRootToEndpoint",			COMPAT_FLAG_MI_MAPROOTTOENDPOINT,		COMPAT_FLAG_TYPE_BOOL }, // was mapping in old version. was 0 or false in old version. when mapping=endpoints, thats = true
+		{ "ForceUniqueEndpoints",		COMPAT_FLAG_MI_FORCEUNIQUEENDPOINTS,	COMPAT_FLAG_TYPE_BOOL },
+		{ "IgnoreMCCapReports",			COMPAT_FLAG_MI_IGNMCCAPREPORTS,			COMPAT_FLAG_TYPE_BOOL }, // was ignoreUnsolicitedMultiChnCapReport
+		{ "EndpointHint",				COMPAT_FLAG_MI_ENDPOINTHINT,			COMPAT_FLAG_TYPE_BYTE },
+		{ "Base",						COMPAT_FLAG_TSSP_BASE,					COMPAT_FLAG_TYPE_BYTE },
+		{ "AltTypeInterpretation",		COMPAT_FLAG_TSSP_ALTTYPEINTERPRETATION,	COMPAT_FLAG_TYPE_BOOL },
+		{ "ExposeRawUserCodes",			COMPAT_FLAG_UC_EXPOSERAWVALUE,			COMPAT_FLAG_TYPE_BOOL },
+		{ "ClassGetVersionSupported",	COMPAT_FLAG_VERSION_GETCLASSVERSION,	COMPAT_FLAG_TYPE_BOOL },
+		{ "DelayNoMoreInfo",			COMPAT_FLAG_WAKEUP_DELAYNMI,			COMPAT_FLAG_TYPE_INT  },
 };
 
 uint16_t availableCompatFlagsCount = sizeof(availableCompatFlags) / sizeof(availableCompatFlags[0]);
