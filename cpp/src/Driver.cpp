@@ -2565,8 +2565,29 @@ void Driver::HandleSerialAPISetupResponse
 		uint8* _data
 )
 {
+	// See INS13954 for description of FUNC_ID_SERIAL_API_SETUP with command 
+	// SERIAL_API_SETUP_CMD_TX_STATUS_REPORT
+	// Note: SERIAL_API_SETUP can do more things than enable this report...
+
 	Log::Write( LogLevel_Info, "Received reply to FUNC_ID_SERIAL_API_SETUP");
 
+	switch (_data[0])
+	{
+	case 1:
+		Log::Write(LogLevel_Info, "Successfully enabled extended txStatusReport.");
+		m_hasExtendedTxStatus = true;
+		break;
+
+	case 0:
+		Log::Write(LogLevel_Info, "Failed to enable extended txStatusReport. Controller might not support it.");
+		m_hasExtendedTxStatus = false;
+		break;
+
+	default:
+		Log::Write(LogLevel_Info, "FUNC_ID_SERIAL_API_SETUP returned unknown status: %u", _data[0]);
+		m_hasExtendedTxStatus = false;
+		break;
+	}
 }
 
 //-----------------------------------------------------------------------------

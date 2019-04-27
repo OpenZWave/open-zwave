@@ -555,6 +555,24 @@ bool Manager::IsBridgeController
 }
 
 //-----------------------------------------------------------------------------
+// <Manager::HasExtendedTxStatus>
+//
+//-----------------------------------------------------------------------------
+bool Manager::HasExtendedTxStatus
+(
+		uint32 const _homeId
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		return driver->HasExtendedTxStatus();
+	}
+
+	Log::Write( LogLevel_Info, "mgr,     HasExtendedTxStatus() failed - _homeId %d not found", _homeId );
+	return false;
+}
+
+//-----------------------------------------------------------------------------
 // <Manager::GetLibraryVersion>
 //
 //-----------------------------------------------------------------------------

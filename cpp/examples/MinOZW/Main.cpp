@@ -212,6 +212,18 @@ void OnNotification
 		case Notification::Type_DriverReady:
 		{
 			g_homeId = _notification->GetHomeId();
+			printf("Driver ready with HomeID: 0x%.8x\n", g_homeId);
+			bool ext_tx = Manager::Get()->HasExtendedTxStatus(g_homeId);
+
+			if (ext_tx)
+			{
+				printf("Controller has extended TxStatus.\n");
+			}
+			else
+			{
+				printf("Controller does not have extended TxStatus.\n");
+			}
+
 			break;
 		}
 

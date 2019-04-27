@@ -298,6 +298,15 @@ namespace OpenZWave
 		bool IsBridgeController( uint32 const _homeId );
 
 		/**
+		 * \brief Query if the controller support "extended status information"
+		 * On IMA enabled targets build on SDK >= 6.60.00
+		 * ZW_SendData can return information about TX time, route tries and more.
+		 * \param _homeId The Home ID of the Z-Wave controller.
+		 * \return true if the controller accepted to turn on extended status.
+		 */
+		bool HasExtendedTxStatus( uint32 const _homeId );
+
+		/**
 		 * \brief Get the version of the Z-Wave API library used by a controller.
 		 * \param _homeId The Home ID of the Z-Wave controller.
 		 * \return a string containing the library version. For example, "Z-Wave 2.48".
