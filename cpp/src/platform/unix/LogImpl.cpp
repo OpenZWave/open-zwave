@@ -263,8 +263,11 @@ string LogImpl::GetTimeStampString
 	// Get a timestamp
 	struct timeval tv;
 	gettimeofday(&tv, NULL);
-	struct tm *tm;
-	tm = localtime( &tv.tv_sec );
+	// use threadsafe verion of localtime. Reported by nihilus, 2019-04
+	// https://www.gnu.org/software/libc/manual/html_node/Broken_002ddown-Time.html#Broken_002ddown-Time
+	struct tm *tm, xtm;
+	memset(&xtm, 0, sizeof(xtm));
+	tm = localtime_r( &tv.tv_sec, &xtm);
 
 	// create a time stamp string for the log message
 	char buf[100];
