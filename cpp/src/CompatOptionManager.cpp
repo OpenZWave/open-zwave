@@ -111,7 +111,7 @@ void CompatOptionManager::EnableFlag
 		uint32_t defaultval
 )
 {
-	for (int i = 0; i < m_availableFlagsCount; i++) {
+	for (uint32_t i = 0; i < m_availableFlagsCount; i++) {
 		if (m_availableFlags[i].flag == flag) {
 			m_enabledCompatFlags[m_availableFlags[i].name] = flag;
 			m_CompatVals[flag].type = m_availableFlags[i].type;
@@ -416,7 +416,7 @@ string CompatOptionManager::GetFlagName
 		CompatOptionFlags flag
 ) const
 {
-	for (int i = 0; i < m_availableFlagsCount; i++) {
+	for (uint32_t i = 0; i < m_availableFlagsCount; i++) {
 		if (m_availableFlags[i].flag == flag) {
 			return m_availableFlags[i].name;
 		}
@@ -432,6 +432,8 @@ string CompatOptionManager::GetXMLTagName
 			return "Compatibility";
 		case CompatOptionType_Discovery:
 			return "State";
+		default:
+			return "Unknown";
 	}
 }
 } /* namespace OpenZWave */
