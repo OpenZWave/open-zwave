@@ -305,6 +305,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\CompatOptionManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\CompatOptionManager.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\Defs.h"
 				>
 			</File>
