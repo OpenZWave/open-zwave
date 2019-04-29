@@ -112,8 +112,11 @@ string TimeStampImpl::GetAsString
 )
 {
 	char str[100];
-	struct tm *tm;
-	tm = localtime( &m_stamp.tv_sec );
+    // use threadsafe verion of localtime. Reported by nihilus, 2019-04
+	// https://www.gnu.org/software/libc/manual/html_node/Broken_002ddown-Time.html#Broken_002ddown-Time
+	struct tm *tm, xtm;
+	memset(&xtm, 0, sizeof(xtm));
+	tm = localtime_r( &m_stamp.tv_sec, &xtm);
 
 	snprintf( str, sizeof(str), "%04d-%02d-%02d %02d:%02d:%02d:%03d ", 
 		  tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday,

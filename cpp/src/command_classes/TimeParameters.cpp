@@ -178,14 +178,12 @@ bool TimeParameters::SetValue
 		time_t rawtime;
 		struct tm *timeinfo;
 		time(&rawtime);
-#ifdef WINAPI_FAMILY_APP
-#pragma warning(push)
-#pragma warning(disable:4996)
-#endif
-		timeinfo = localtime(&rawtime);
-#ifdef WINAPI_FAMILY_APP
-#pragma warning(pop)
-#endif
+		// use threadsafe verion of localtime. Reported by nihilus, 2019-04
+		// https://www.gnu.org/software/libc/manual/html_node/Broken_002ddown-Time.html#Broken_002ddown-Time
+		struct tm xtm;
+		memset(&xtm, 0, sizeof(xtm));
+		timeinfo = localtime_r( &rawtime, &xtm);
+
 		Msg* msg = new Msg( "TimeParametersCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 		msg->SetInstance( this, instance );
 		msg->Append( GetNodeId() );
