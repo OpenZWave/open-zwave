@@ -174,7 +174,6 @@ DISTFILES =	.gitignore \
 	config/enerwave/zwnrsm2plus.xml \
 	config/eurotronic/eur_cometz.xml \
 	config/eurotronic/eur_spiritz.xml \
-	config/eurotronic/eur_spiritz.xml \
 	config/eurotronic/eur_stellaz.xml \
 	config/everspring/ad146.xml \
 	config/everspring/ad147.xml \
@@ -349,8 +348,6 @@ DISTFILES =	.gitignore \
 	config/linear/LB60Z-1.xml \
 	config/linear/PD300Z-2.xml \
 	config/linear/WA00Z-1.xml \
-	config/linear/WA00Z-1.xml \
-	config/linear/WA00Z-1.xml \
 	config/linear/WA105DBZ-1.xml \
 	config/linear/WADWAZ-1.xml \
 	config/linear/WAPIRZ-1.xml \
@@ -360,8 +357,6 @@ DISTFILES =	.gitignore \
 	config/linear/WT00Z-1.xml \
 	config/logicsoft/ZHC5002.xml \
 	config/logicsoft/ZHC5010.xml \
-	config/manufacturer_specific.xml \
-	config/manufacturer_specific.xml \
 	config/manufacturer_specific.xml \
 	config/manufacturer_specific.xsd \
 	config/mcohome/a8-9.xml \
@@ -492,8 +487,6 @@ DISTFILES =	.gitignore \
 	config/simon/10002041-13X.xml \
 	config/steinel/is140-2.xml \
 	config/steinel/l810-led-ihf.xml \
-	config/steinel/l810-led-ihf.xml \
-	config/steinel/l810-led-ihf.xml \
 	config/steinel/rs-led-d2.xml \
 	config/steinel/xled-home-2.xml \
 	config/stelpro/stzw402.xml \
@@ -502,9 +495,7 @@ DISTFILES =	.gitignore \
 	config/telldus/tzdw100.xml \
 	config/telldus/tzwp100.xml \
 	config/telldus/tzwp102.xml \
-	config/telldus/zd2301.xml \
 	config/thermofloor/heatit021.xml \
-	config/thermofloor/heatit033.xml \
 	config/thermofloor/heatit056.xml \
 	config/trane/TZEMT400AB32MAA.xml \
 	config/trane/TZEMT400BB32MAA.xml \
@@ -667,6 +658,8 @@ DISTFILES =	.gitignore \
 	cpp/hidapi/windows/hidtest.vcproj \
 	cpp/src/Bitfield.cpp \
 	cpp/src/Bitfield.h \
+	cpp/src/CompatOptionManager.cpp \
+	cpp/src/CompatOptionManager.h \
 	cpp/src/DNSThread.cpp \
 	cpp/src/DNSThread.h \
 	cpp/src/Defs.h \
@@ -790,8 +783,6 @@ DISTFILES =	.gitignore \
 	cpp/src/command_classes/SceneActivation.cpp \
 	cpp/src/command_classes/SceneActivation.h \
 	cpp/src/command_classes/Security.cpp \
-	cpp/src/command_classes/Security.cpp \
-	cpp/src/command_classes/Security.cpp \
 	cpp/src/command_classes/Security.h \
 	cpp/src/command_classes/SensorAlarm.cpp \
 	cpp/src/command_classes/SensorAlarm.h \
@@ -834,8 +825,6 @@ DISTFILES =	.gitignore \
 	cpp/src/command_classes/WakeUp.cpp \
 	cpp/src/command_classes/WakeUp.h \
 	cpp/src/command_classes/ZWavePlusInfo.cpp \
-	cpp/src/command_classes/ZWavePlusInfo.h \
-	cpp/src/command_classes/ZWavePlusInfo.h \
 	cpp/src/command_classes/ZWavePlusInfo.h \
 	cpp/src/platform/Controller.cpp \
 	cpp/src/platform/Controller.h \
@@ -1021,8 +1010,6 @@ DISTFILES =	.gitignore \
 	dist.mk \
 	dist/libopenzwave.changes \
 	dist/libopenzwave.spec \
-	distfiles.mk \
-	distfiles.mk \
 	distfiles.mk \
 	docs/Doxyfile.in \
 	docs/default.htm \
