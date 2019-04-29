@@ -33,7 +33,6 @@
 #include <stdint.h>
 
 
-
 // Compilation export flags
 #if (defined _WINDOWS || defined WIN32 || defined _MSC_VER) && (!defined MINGW && !defined __MINGW32__ && !defined __MINGW64__)
 #	if defined OPENZWAVE_MAKEDLL	// Create the dynamic library.
@@ -205,12 +204,6 @@ namespace OpenZWave
 #define sscanf sscanf_s
 #define strncpy strncpy_s
 #define strncat strncat_s
-/* Windows doesn't have localtime_r - use the "secure" version instead */
-struct tm *localtime_r(time_t *_clock, struct tm *_result)
-{
-    _localtime64_s(_result, _clock);
-    return _result;
-}
 
 
 

@@ -33,6 +33,7 @@
 #include "Node.h"
 #include "Driver.h"
 #include "platform/Log.h"
+#include "Utils.h"
 
 #include "value_classes/ValueButton.h"
 #include "value_classes/ValueString.h"
