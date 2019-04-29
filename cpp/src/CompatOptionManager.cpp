@@ -432,8 +432,6 @@ string CompatOptionManager::GetXMLTagName
 			return "Compatibility";
 		case CompatOptionType_Discovery:
 			return "State";
-		default:
-			return "Unknown";
 	}
 }
 } /* namespace OpenZWave */
