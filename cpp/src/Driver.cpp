@@ -4547,8 +4547,8 @@ void Driver::PollThreadProc
 						// Request an update of the value
 						CommandClass* cc = node->GetCommandClass( valueId.GetCommandClassId() );
 						if (cc) {
-							uint8 index = valueId.GetIndex();
-							uint8 instance = valueId.GetInstance();
+							uint16_t index = valueId.GetIndex();
+							uint8_t instance = valueId.GetInstance();
 							Log::Write( LogLevel_Detail, node->m_nodeId, "Polling: %s index = %d instance = %d (poll queue has %d messages)", cc->GetCommandClassName().c_str(), index, instance, m_msgQueue[MsgQueue_Poll].size() );
 							cc->RequestValue( 0, index, instance, MsgQueue_Poll );
 						}

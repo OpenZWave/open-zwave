@@ -41,8 +41,6 @@ using namespace OpenZWave;
 /* Callback for normal messages start at 10. Special Messages using a Callback prior to 10 */
 uint8 Msg::s_nextCallbackId = 10;
 
-#define DEBUG 1
-
 //-----------------------------------------------------------------------------
 // <Msg::Msg>
 // Constructor

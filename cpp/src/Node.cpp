@@ -1110,7 +1110,7 @@ void Node::ReadXML
 				str = child->Attribute( "id" );
 				if( str )
 				{
-					manufacturerId = strtol(str, NULL, 16);
+					manufacturerId = (uint16_t)(strtol(str, NULL, 16) & 0xFFFF);
 				}
 
 				str = child->Attribute( "name" );
@@ -1125,13 +1125,13 @@ void Node::ReadXML
 					str = product->Attribute( "type" );
 					if( str )
 					{
-						productType = strtol(str, NULL, 16);
+						productType = (uint16_t)(strtol(str, NULL, 16) & 0xFFFF);
 					}
 
 					str = product->Attribute( "id" );
 					if( str )
 					{
-						productId = strtol(str, NULL, 16);
+						productId = (uint16_t)(strtol(str, NULL, 16) & 0xFFFF);
 					}
 
 					str = product->Attribute( "name" );
@@ -3549,23 +3549,24 @@ void Node::ReadDeviceClasses
 			if( keyStr )
 			{
 				char* pStop;
-				uint16 key = (uint16)strtol( keyStr, &pStop, 16 );
+				/* we do a short here, as they key can be a DeviceType Key which is short */
+				uint16_t key = (uint16)strtol( keyStr, &pStop, 16 );
 
 				if( !strcmp( str, "Generic" ) )
 				{
-					s_genericDeviceClasses[key] = new GenericDeviceClass( child );
+					s_genericDeviceClasses[(uint8_t)(key & 0xFF)] = new GenericDeviceClass( child );
 				}
 				else if( !strcmp( str, "Basic" ) )
 				{
 					char const* label = child->Attribute( "label" );
 					if( label )
 					{
-						s_basicDeviceClasses[key] = label;
+						s_basicDeviceClasses[(uint8_t)(key & 0xFF)] = label;
 					}
 				}
 				else if( !strcmp( str, "Role" ) )
 				{
-					s_roleDeviceClasses[key] = new DeviceClass( child );
+					s_roleDeviceClasses[(uint8_t)(key & 0xFF)] = new DeviceClass( child );
 				}
 				else if( !strcmp( str, "DeviceType" ) )
 				{
@@ -3573,7 +3574,7 @@ void Node::ReadDeviceClasses
 				}
 				else if (!strcmp( str, "NodeType" ) )
 				{
-					s_nodeTypes[key] = new DeviceClass( child );
+					s_nodeTypes[(uint8_t)(key & 0xFF)] = new DeviceClass( child );
 				}
 			}
 		}

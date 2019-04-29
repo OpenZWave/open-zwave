@@ -19,10 +19,18 @@
 #  endif
 #  include <winsock2.h>
 #  include <ws2tcpip.h>
+#if !defined(EWOULDBLOCK)
 #  define EWOULDBLOCK WSAEWOULDBLOCK
+#endif
+#if !defined(ETIMEDOUT)
 #  define ETIMEDOUT WSAETIMEDOUT
+#endif
+#if !defined(ECONNRESET)
 #  define ECONNRESET WSAECONNRESET
+#endif
+#if !defined(ENOTCONN)
 #  define ENOTCONN WSAENOTCONN
+#endif
 #  include <io.h>
 #else
 #  include <sys/types.h>

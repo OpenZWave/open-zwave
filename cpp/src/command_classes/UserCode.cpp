@@ -547,7 +547,15 @@ bool UserCode::SetValue
 	{
 		ValueString const* value = static_cast<ValueString const*>(&_value);
 		string s = value->GetValue();
-		uint8 len = s.length();
+		if (s.length() < 4) {
+			Log::Write( LogLevel_Warning, GetNodeId(), "UserCode is smaller than 4 digits", value->GetID().GetIndex());
+			return false;
+		}
+		if (s.length() > 10) {
+			Log::Write( LogLevel_Warning, GetNodeId(), "UserCode is larger than 10 digits", value->GetID().GetIndex());
+			return false;
+		}
+		uint8 len = (uint8_t)(s.length() & 0xFF);
 		if (value->GetID().GetIndex() == 0 || value->GetID().GetIndex() > m_dom.GetFlagByte(STATE_FLAG_USERCODE_COUNT)) {
 			Log::Write( LogLevel_Warning, GetNodeId(), "Index %d is out of range of UserCodeCount", value->GetID().GetIndex());
 			return false;
@@ -560,7 +568,7 @@ bool UserCode::SetValue
 		msg->Append( 4 + len );
 		msg->Append( GetCommandClassId() );
 		msg->Append( UserCodeCmd_Set );
-		msg->Append( value->GetID().GetIndex() );
+		msg->Append( (uint8_t)(value->GetID().GetIndex() & 0xFF) );
 		msg->Append( UserCode_Occupied );
 		for( uint8 i = 0; i < len; i++ )
 		{
@@ -582,7 +590,7 @@ bool UserCode::SetValue
 	if ( (ValueID::ValueType_Short == _value.GetID().GetType()) && (_value.GetID().GetIndex() == UserCodeIndex_RemoveCode) )
 	{
 		ValueShort const* value = static_cast<ValueShort const*>(&_value);
-		uint16 index = value->GetValue();
+		uint8_t index = (uint8_t)(value->GetValue() & 0xFF);
 		if (index == 0 || index > m_dom.GetFlagByte(STATE_FLAG_USERCODE_COUNT)) {
 			Log::Write( LogLevel_Warning, GetNodeId(), "Index %d is out of range of UserCodeCount", index);
 			return false;
@@ -652,7 +660,7 @@ bool UserCode::SetValue
 		msg->Append( 4 + len );
 		msg->Append( GetCommandClassId() );
 		msg->Append( UserCodeCmd_Set );
-		msg->Append( index );
+		msg->Append( (uint8_t)(index & 0xFF) );
 		msg->Append( UserCode_Occupied );
 		for( uint8 i = 0; i < len; i++ )
 		{

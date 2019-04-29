@@ -636,8 +636,8 @@ bool Color::SetValue
 		}
 
 		/* the size of the string tells us how many colors are set */
-		uint8 nocols = (s.length() -1) / 2;
-		uint16 colvals[8] = { 0, 0, 0, 0, 0, 0, 0, 0};
+		uint8_t nocols = (uint8_t)((s.length() -1) / 2) & 0xFF;
+		uint8_t colvals[8] = { 0, 0, 0, 0, 0, 0, 0, 0};
 		bool colvalset[8] = { false, false, false, false, false, false, false, false };
 
 

@@ -488,7 +488,7 @@ bool CentralScene::HandleMsg
 			identical = _data[2] & 0x01;
 			Log::Write( LogLevel_Detail, GetNodeId(), "CentralScene: all scenes identical? %i",identical);
 			if ( GetVersion() >= 3 )
-				m_slowrefresh = _data[2] & 0x80;
+				m_slowrefresh = (_data[2] & 0x80) == 1 ? true : false;
 		}
 
 		if ( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, CentralSceneIndex_SceneCount)))
@@ -621,7 +621,7 @@ void CentralScene::createSupportedKeyAttributesValues
 		}
 		char lbl[64];
 		snprintf(lbl, 64, "Scene %d", sceneNumber);
-		node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), instance, sceneNumber, lbl, "", true, false, items.size(), items, 0, 0 );
+		node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), instance, sceneNumber, lbl, "", true, false, (uint8_t)(items.size() & 0xFF), items, 0, 0 );
 	}
 }
 

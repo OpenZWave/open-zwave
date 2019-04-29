@@ -340,7 +340,7 @@ bool BarrierOperator::SetValue
 	Value const& _value
 	)
 {
-	uint8 idx = _value.GetID().GetIndex();
+	uint8 idx = (uint8_t)(_value.GetID().GetIndex() & 0xFF);
 	if (ValueID::ValueType_List == _value.GetID().GetType())
 	{
 		if (idx == BarrierOperatorLabel_Index)
