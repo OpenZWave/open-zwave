@@ -1,6 +1,8 @@
 .dep/
 .lib/
+# ignore MinOZW file, but not MinOZW directory
 MinOZW
+!MinOZW/
 cpp/src/vers.cpp
 libopenzwave.a
 libopenzwave.pc
@@ -52,6 +54,17 @@ ozw_config
 /ozwcache_*.xml
 .idea/
 .idea/*
-ozw_config
-
 cpp/src/command_classes/\.DS_Store
+
+# Visual Studio 2015/2017 cache/options directory
+.vs/
+# Visual Studio User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+zwscene.xml
+ozwcache_*.xml
+GIT-VS-VERSION-FILE
