@@ -22,6 +22,7 @@
     <ProjectGuid>{497F9828-DEC2-4C80-B9E0-AD066CCB587C}</ProjectGuid>
     <RootNamespace>OpenZWave</RootNamespace>
     <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -220,11 +221,16 @@ exit 0</Command>
     <ClInclude Include="..\..\..\src\command_classes\SceneActivation.h" />
     <ClInclude Include="..\..\..\src\command_classes\Security.h" />
     <ClInclude Include="..\..\..\src\command_classes\CentralScene.h" />
+    <ClInclude Include="..\..\..\src\command_classes\SimpleAV.h" />
+    <ClInclude Include="..\..\..\src\command_classes\SimpleAVCommandItem.h" />
+    <ClInclude Include="..\..\..\src\command_classes\SoundSwitch.h" />
     <ClInclude Include="..\..\..\src\command_classes\TimeParameters.h" />
     <ClInclude Include="..\..\..\src\command_classes\SensorAlarm.h" />
     <ClInclude Include="..\..\..\src\command_classes\UserCode.h" />
     <ClInclude Include="..\..\..\src\command_classes\ZWavePlusInfo.h" />
+    <ClInclude Include="..\..\..\src\CompatOptionManager.h" />
     <ClInclude Include="..\..\..\src\Defs.h" />
+    <ClInclude Include="..\..\..\src\DoxygenMain.h" />
     <ClInclude Include="..\..\..\src\Driver.h" />
     <ClInclude Include="..\..\..\src\DNSThread.h" />
     <ClInclude Include="..\..\..\src\Http.h" />
@@ -235,9 +241,12 @@ exit 0</Command>
     <ClInclude Include="..\..\..\src\Msg.h" />
     <ClInclude Include="..\..\..\src\Node.h" />
     <ClInclude Include="..\..\..\src\Notification.h" />
+    <ClInclude Include="..\..\..\src\NotificationCCTypes.h" />
     <ClInclude Include="..\..\..\src\Options.h" />
+    <ClInclude Include="..\..\..\src\OZWException.h" />
     <ClInclude Include="..\..\..\src\platform\FileOps.h" />
     <ClInclude Include="..\..\..\src\platform\windows\FileOpsImpl.h" />
+    <ClInclude Include="..\..\..\src\TimerThread.h" />
     <ClInclude Include="..\..\..\src\ZWSecurity.h" />
     <ClInclude Include="..\..\..\src\platform\Controller.h" />
     <ClInclude Include="..\..\..\src\platform\DNS.h" />
@@ -339,10 +348,14 @@ exit 0</Command>
     <ClCompile Include="..\..\..\src\command_classes\SceneActivation.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\Security.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\CentralScene.cpp" />
+    <ClCompile Include="..\..\..\src\command_classes\SimpleAV.cpp" />
+    <ClCompile Include="..\..\..\src\command_classes\SimpleAVCommandItem.cpp" />
+    <ClCompile Include="..\..\..\src\command_classes\SoundSwitch.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\TimeParameters.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\SensorAlarm.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\UserCode.cpp" />
     <ClCompile Include="..\..\..\src\command_classes\ZWavePlusInfo.cpp" />
+    <ClCompile Include="..\..\..\src\CompatOptionManager.cpp" />
     <ClCompile Include="..\..\..\src\Driver.cpp" />
     <ClCompile Include="..\..\..\src\DNSThread.cpp" />
     <ClCompile Include="..\..\..\src\Http.cpp" />
@@ -353,7 +366,9 @@ exit 0</Command>
     <ClCompile Include="..\..\..\src\Msg.cpp" />
     <ClCompile Include="..\..\..\src\Node.cpp" />
     <ClCompile Include="..\..\..\src\Notification.cpp" />
+    <ClCompile Include="..\..\..\src\NotificationCCTypes.cpp" />
     <ClCompile Include="..\..\..\src\Options.cpp" />
+    <ClCompile Include="..\..\..\src\TimerThread.cpp" />
     <ClCompile Include="..\..\..\src\ZWSecurity.cpp" />
     <ClCompile Include="..\..\..\src\platform\Controller.cpp" />
     <ClCompile Include="..\..\..\src\platform\DNS.cpp" />

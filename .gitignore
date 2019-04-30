@@ -65,6 +65,9 @@ cpp/src/command_classes/\.DS_Store
 *.userosscache
 *.sln.docstates
 
+#Visual Studio Code local files
+.vscode/
+
 zwscene.xml
 ozwcache_*.xml
 GIT-VS-VERSION-FILE
