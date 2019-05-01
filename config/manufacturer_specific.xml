@@ -1226,6 +1226,7 @@
 		<Product type="0001" id="0001" name="Touchpad Electronic Deadbolt" config="kwikset/smartcode.xml"/>
 		<Product type="0003" id="0642" name="SmartCode 916" config="kwikset/smartcode.xml"/>
 		<Product type="0006" id="0440" name="SmartCode 10" config="kwikset/smartcode.xml"/>
+		<Product type="0003" id="0440" name="SmartCode 914 Z-Wave Plus" config="kwikset/smartcode.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0051" name="Lagotek Corp">
 	</Manufacturer>
