@@ -2266,7 +2266,7 @@
 		<Product type="a000" id="a003" name="ZEN25 S2 Double Plug" config="zooz/zen25.xml" />
 		<Product type="a000" id="a001" name="ZEN26 S2 On Off Wall Switch" config="zooz/zen26.xml" />
 		<Product type="a000" id="a002" name="ZEN27 S2 Dimmer Wall Switch" config="zooz/zen27.xml" />
-		<Product type="b111" id="1e1c" name="ZEN21 Switch V2.0" config="zooz/zen21.xml" />
+		<Product type="b111" id="1e1c" name="ZEN21 Switch V2.0" config="zooz/zen21v2.xml" />
 		<Product type="000c" id="0003" name="ZSE19 S2 Multisiren" config="zooz/zse19.xml" />
 		<Product type="a000" id="a004" name="ZEN20 V2.0 Power Strip" config="zooz/zen20v2.xml" />
 	</Manufacturer>
