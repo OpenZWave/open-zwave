@@ -305,7 +305,8 @@ DISTFILES =	.gitignore \
 	config/hank/hkzw-dws01.xml \
 	config/hank/hkzw-fld01.xml \
 	config/hank/hkzw-ms01.xml \
-	config/hank/hkzw-ms02.xml \
+	config/hank/hkzw-ms02-200.xml \
+	config/hank/hkzw-ms02-300.xml \
 	config/hank/hkzw-rgb01.xml \
 	config/hank/hkzw-so01-smartplug.xml \
 	config/hank/hkzw-so03.xml \
@@ -320,10 +321,12 @@ DISTFILES =	.gitignore \
 	config/heiman/HS1SA-Z.xml \
 	config/heiman/HS1WL-Z.xml \
 	config/heiman/HS2SK-Z.xml \
+	config/heiman/HS2WD-Z.xml \
 	config/heltun/he-zw-therm-fl2.xml \
 	config/homeseer/ezmotionplus.xml \
 	config/homeseer/hs-fc200plus.xml \
 	config/homeseer/hs-fls100plus.xml \
+	config/homeseer/hs-fs100plus.xml \
 	config/homeseer/hs-ls100plus.xml \
 	config/homeseer/hs-ms100plus.xml \
 	config/homeseer/hs-wd100plus.xml \
@@ -686,6 +689,7 @@ DISTFILES =	.gitignore \
 	config/qubino/ZMNHXDx.xml \
 	config/qubino/ZMNHYDx.xml \
 	config/qubino/ZMNHZDx.xml \
+	config/qubino/ZMNKIDx.xml \
 	config/quby/qb2.xml \
 	config/rcs/em52-zw.xml \
 	config/rcs/pm12-zw.xml \
@@ -724,6 +728,7 @@ DISTFILES =	.gitignore \
 	config/simon/10002034-13X.xml \
 	config/simon/10002041-13X.xml \
 	config/smartthings/pgc401m.xml \
+	config/somfy/1811265_ZRTSI.xml \
 	config/steinel/is140-2.xml \
 	config/steinel/l810-led-ihf.xml \
 	config/steinel/rs-led-d2.xml \
@@ -805,10 +810,12 @@ DISTFILES =	.gitignore \
 	config/zooz/zen20.xml \
 	config/zooz/zen20v2.xml \
 	config/zooz/zen21.xml \
+	config/zooz/zen21v2.xml \
 	config/zooz/zen22.xml \
 	config/zooz/zen22v2.xml \
 	config/zooz/zen23.xml \
 	config/zooz/zen24.xml \
+	config/zooz/zen25.xml \
 	config/zooz/zen26.xml \
 	config/zooz/zen27.xml \
 	config/zooz/zse08.xml \
@@ -834,6 +841,7 @@ DISTFILES =	.gitignore \
 	config/zwave.me/popp_kfob-c.xml \
 	config/zwave.me/zweather.xml \
 	config/zwcfg.xsd \
+	config/zwp/PA-100.xml \
 	config/zwp/WD-100.xml \
 	config/zwscene.xsd \
 	cpp/build/Makefile \
