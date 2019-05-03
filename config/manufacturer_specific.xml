@@ -38,7 +38,7 @@
     <Product config="act/zdm230.xml" id="3330" name="ZDM230 Wall Dimmer Module" type="444d"/>
     <Product config="act/zrp100.xml" id="3030" name="ZRP100 Plugin Appliance Module" type="5250"/>
     <Product config="act/zrp110.xml" id="3130" name="ZRP110 Exterior Appliance Module" type="5250"/>
-    <Product id="3330" name="ZRW230 Wall Appliance Module" type="5257"/>
+    <Product config="act/zrw230.xml" id="3330" name="ZRW230 Wall Appliance Module" type="5257"/>
     <Product config="act/lfm20.xml" id="3133" name="LFM-20 Relay Fixture Module" type="5246"/>
     <Product config="act/zrw103.xml" id="3033" name="ZRW103 Wall Switch Module" type="5257"/>
     <Product id="3330" name="ZRM230 Wall Appliance Module" type="524d"/>
