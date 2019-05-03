@@ -1,13 +1,28 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- EVERSPRING SE812 SIREN -->
-<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="2">
-	<!-- Configuration Parameters not supported -->
+<!-- EVERSPRING SE812 SIREN --><Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
+  <MetaData>
+    <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0060:0001:000C</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/everspring/se812.png</MetaDataItem>
+    <MetaDataItem id="0001" name="ZWProductPage" type="000C">https://products.z-wavealliance.org/products/273/</MetaDataItem>
+    <MetaDataItem id="0001" name="FrequencyName" type="000C">CEPT (Europe)</MetaDataItem>
+    <MetaDataItem name="ProductSupport">http://www.everspring.com/SE812.aspx</MetaDataItem>
+    <MetaDataItem id="0001" name="Identifier" type="000C">SE812</MetaDataItem>
+    <MetaDataItem name="Name">Indoor Siren</MetaDataItem>
+    <MetaDataItem name="ProductPage">http://www.everspring.com/SE812.aspx</MetaDataItem>
+    <MetaDataItem name="Description">The Indoor Siren is a Z-Wave enabled device and is fully compatible with any Z-Wave enabled network. Z-Wave enabled devices displaying the Z-Wave logo can also be used with it regardless of the manufacturer, and ours can also be used in other manufacturer’s Z-Wave enabled networks.  Inclusion of this Indoor Siren on other manufacturer’s Wireless Controller menu allows a full alarm condition to be generated once a connected Z-Wave enabled device has been triggered.  Z-Wave enabled devices (refer to nodes) in the system also act as repeaters, so as to re-transmit the RF signal to ensure that the signal is received by its intended destination by routing the signal around obstacles and radio dead spots.
+
+The Indoor Siren integrates both functions of siren and strobe into one unit.  Two sound levels, 100dB and 90dB, are available for selection.  When it receives a RF command, it will either activate its sounder and flash lights or stop these visual and audible alarm indications. 
+</MetaDataItem>
+    <ChangeLog>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="3">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/273/xml</Entry>
+    </ChangeLog>
+  </MetaData>
+  <!-- Configuration Parameters not supported -->
 	<!-- Wakeup doesn't respond
 	<CommandClass id="132" create_vars="false" />-->
 	<!-- Association Groups -->
-	<CommandClass id="133">
-		<Associations num_groups="1">
-			<Group index="1" max_associations="5" label="Lifeline" />
-		</Associations>
-	</CommandClass>
+  <CommandClass id="133">
+    <Associations num_groups="1">
+      <Group index="1" label="Lifeline" max_associations="5"/>
+    </Associations>
+  </CommandClass>
 </Product>
