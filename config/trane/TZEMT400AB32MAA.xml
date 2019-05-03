@@ -1,4 +1,22 @@
-<Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
+  <MetaData>
+    <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/008B:5431:5452</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/trane/TZEMT400AB32MAA.png</MetaDataItem>
+    <MetaDataItem id="5431" name="ZWProductPage" type="5452">https://products.z-wavealliance.org/products/109/</MetaDataItem>
+    <MetaDataItem name="ProductSupport">http://nexiahome.com/SupportCenter/Pages/supportcenter.aspx?page=support</MetaDataItem>
+    <MetaDataItem name="Description">Create the perfect climate in your home, at the perfect time, which is anytime now that there are Nexia™ Home Intelligence and Trane® ComfortLink™ thermostats. Away on vacation or business, you can check your home’s temperature settings and adjust to save energy. Heading home from the beach? Turn up the a/c so it’s nice and cool when you arrive. As the weather changes, so can your pre-set heating and cooling schedules, with a touch or a click. Now you have remote capability to control your home’s comfort and efficiency quite easily via most web-accessible computers, tablets or smart phones.
+
+This product is only available through a participating Trane Dealer.
+This product is only available in the U.S. and Canada
+</MetaDataItem>
+    <MetaDataItem name="ProductPage">http://nexiahome.com/Products/ProductDetail.aspx?model=ComfortLink</MetaDataItem>
+    <MetaDataItem name="Name">Trane T400A</MetaDataItem>
+    <MetaDataItem id="5431" name="FrequencyName" type="5452">U.S. / Canada / Mexico</MetaDataItem>
+    <MetaDataItem id="5431" name="Identifier" type="5452">T400A</MetaDataItem>
+    <ChangeLog>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="3">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/109/xml</Entry>
+    </ChangeLog>
+  </MetaData>
   <!-- Trane Thermostat Model TZEMT400AB32MAA -->
 
 	<!-- Configuration Parameters -->
