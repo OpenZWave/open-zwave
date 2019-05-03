@@ -754,7 +754,7 @@
     <Product config="ge/14291-switch.xml" id="3036" name="14291 In-Wall Smart Switch" type="4952"/>
     <Product config="ge/14292-toggle-switch.xml" id="3037" name="14292 In-Wall Smart Toggle Switch" type="4952"/>
     <Product config="ge/14292-toggle-switch.xml" id="3038" name="14293 In-Wall Smart Toggle Switch" type="4952"/>
-    <Product id="3030" name="45603 Plugin Appliance Module" type="5250"/>
+    <Product config="ge/45604.xml" id="3030" name="45603 Plugin Appliance Module" type="5250"/>
     <Product id="3130" name="45604 Outdoor Module" type="5250"/>
     <Product id="3031" name="12720 Outdoor Smart Switch" type="4f50"/>
     <Product id="3032" name="14284 Outdoor Smart Switch" type="4f50"/>
