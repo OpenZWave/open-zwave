@@ -1266,7 +1266,7 @@
     <Product id="0000" name="ZW ZSA 3500 Plugin Switch" type="3002"/>
     <Product config="duwi/ZWESJ300.xml" id="0000" name="ZW ESJ Blind Control" type="4001"/>
     <Product config="duwi/zwfb.xml" id="0000" name="ZW FB Wireless remote control 10-channel" type="5001"/>
-    <Product id="0000" name="Wireless Flush Mounted Switch" type="5002"/>
+    <Product config="duwi/zwws.xml" id="0000" name="Wireless Flush Mounted Switch" type="5002"/>
     <Product id="0000" name="Static Controller" type="5003"/>
   </Manufacturer>
   <Manufacturer id="0170" name="Powerhouse Dynamics"></Manufacturer>
