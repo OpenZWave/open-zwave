@@ -1659,7 +1659,7 @@
     <Product config="vision/zs5101eu.xml" id="0302" name="ZS5101 Shock and Vibration Sensor" type="2003"/>
     <Product config="vision/zs5101eu.xml" id="0306" name="ZS5101 Shock and Vibration Sensor" type="2003"/>
     <Product config="vision/zs5101eu.xml" id="0307" name="ZS5101 Shock and Vibration Sensor" type="2003"/>
-    <Product id="0403" name="ZS6101 Smoke Detector" type="2004"/>
+    <Product config="vision/zs610eu.xml" id="0403" name="ZS6101 Smoke Detector" type="2004"/>
     <Product config="vision/zm1601eu.xml" id="0503" name="ZM1601 Battery Operated Siren" type="2005"/>
     <Product config="vision/zm1601eu.xml" id="0505" name="ZM1601 Battery Operated Siren" type="2005"/>
     <Product config="vision/zm1601eu5.xml" id="0508" name="ZM1601EU-5 Battery Operated Siren" type="2005"/>
