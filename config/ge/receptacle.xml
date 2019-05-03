@@ -1,8 +1,8 @@
-<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0063:3530:5252</MetaDataItem>
     <MetaDataItem name="ProductPic">images/ge/receptacle.png</MetaDataItem>
-    <MetaDataItem id="3530" name="ZWProductPage" type="5252">https://products.z-wavealliance.org/products/657/</MetaDataItem>
+    <MetaDataItem id="3530" name="ZWProductPage" type="5252">https://products.z-wavealliance.org/products/724/</MetaDataItem>
     <MetaDataItem name="ProductSupport">http://www.jascoproducts.com/support/</MetaDataItem>
     <MetaDataItem name="Description">"Transform any home into a smart home with the Jasco Z-Wave Wireless Lighting Control Duplex Receptacle. The Jasco Z-Wave duplex receptacle enables wireless control of on/off functions from the Z-Wave controlled outlet, and is compatible with incandescent, LED, Xenon, Halogen, fluorescent and compact fluorescent bulbs. The duplex receptacle includes a blue LED indicator light to easily locate the receptacle in a dark room. The receptacle replaces your current electrical outlet, uses your existing wiring and provides a Z-Wave enabled outlet for the lamp or appliance that you would like to control and a standard pass-through AC outlet for other electrical appliances. The receptacle requires in-wall installation with hardwired connections. Take control of your home lighting with Jasco Z-Wave Wireless Lighting Controls!
 
@@ -12,9 +12,10 @@ Z-Wave is the world’s largest ecosystem of interoperable smart home products. 
     <MetaDataItem id="3530" name="FrequencyName" type="5252">U.S. / Canada / Mexico</MetaDataItem>
     <MetaDataItem name="ProductPage">www.ezzwave.com</MetaDataItem>
     <MetaDataItem name="Name">In-Wall Duplex Receptacle, One Always On Outlet</MetaDataItem>
-    <MetaDataItem id="3530" name="Identifier" type="5252">45605 / ZW1001</MetaDataItem>
+    <MetaDataItem id="3530" name="Identifier" type="5252">45636/ZW1001</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="3">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/657/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="4">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/724/xml</Entry>
     </ChangeLog>
   </MetaData>
   <!-- Configuration Parameters -->
