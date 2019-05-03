@@ -1642,7 +1642,7 @@
     <Product config="vitrum/vitrumI-Switch.xml" id="6100" name="Vitrum I EU Wireless On-off" type="1400"/>
   </Manufacturer>
   <Manufacturer id="0109" name="Vision Security">
-    <Product id="0101" name="ZU1401 Z-Wave USB Stick" type="1001"/>
+    <Product config="vision/zu1401jp.xml" id="0101" name="ZU1401 Z-Wave USB Stick" type="1001"/>
     <Product id="0104" name="ZU1401 Z-Wave USB Stick" type="1001"/>
     <Product id="0105" name="ZU1401 Z-Wave USB Stick" type="1001"/>
     <Product config="vision/zd2102.xml" id="0101" name="ZD2102 US Door/Window Sensor" type="2001"/>
