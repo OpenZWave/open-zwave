@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ManufacturerSpecificData xmlns='https://github.com/OpenZWave/open-zwave' Revision="17">
+<ManufacturerSpecificData xmlns='https://github.com/OpenZWave/open-zwave' Revision="18">
 	<Manufacturer id="0028" name="2B Electronics">
 	</Manufacturer>
 	<Manufacturer id="0098" name="2GIG Technologies">
@@ -578,10 +578,10 @@
 	<Manufacturer id="014a" name="Ecolink">
 		<Product type="0001" id="0001" name="Motion Sensor" config="ecolink/sensor.xml"/>
 		<Product type="0001" id="0002" name="Door/Window Sensor" config="ecolink/doorwindow.xml"/>
-		<Product type="0001" id="0003" name="Tilt Sensor" config="ecolink/sensor.xml"/>
+		<Product type="0001" id="0003" name="Tilt Sensor" config="ecolink/tiltsensor.xml"/>
 		<Product type="0004" id="0001" name="Motion Detector" config="ecolink/motion.xml"/>
 		<Product type="0004" id="0002" name="Door/Window Sensor" config="ecolink/doorwindow.xml"/>
-		<Product type="0004" id="0003" name="Garage Door Tilt Sensor" config="ecolink/sensor.xml"/>
+		<Product type="0004" id="0003" name="Tilt Sensor" config="ecolink/tiltsensor.xml"/>
 		<Product type="0005" id="000f" name="FireFighter" config="ecolink/firefighter.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0157" name="EcoNet Controls">
