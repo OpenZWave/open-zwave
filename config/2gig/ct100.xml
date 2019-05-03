@@ -1,4 +1,26 @@
-<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
+  <MetaData>
+    <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0098:0106:6401</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/2gig/ct100.png</MetaDataItem>
+    <MetaDataItem id="0106" name="ZWProductPage" type="6401">https://products.z-wavealliance.org/products/782/</MetaDataItem>
+    <MetaDataItem id="0106" name="FrequencyName" type="6401">Australia / New Zealand</MetaDataItem>
+    <MetaDataItem name="Name">CT100 Thermostat</MetaDataItem>
+    <MetaDataItem name="Description">ENERGY MANAGEMENT MADE EASY. 
+
+The CT100 brings together everything you need to create an energy-intelligent home: remote control, seven-day programming, and seamless integration with the Go!Control panel. 
+
+•	Ultra Slim Form Factor 
+•	Two Year Battery Life 
+•	4 Stage Heat, 2 Cool 
+•	Bright Display with Touch Screen 
+•	Improved Z-Wave Range 
+•	Auto Mode 
+•	Improved User Experience </MetaDataItem>
+    <MetaDataItem id="0106" name="Identifier" type="6401">CT100-ANZ</MetaDataItem>
+    <ChangeLog>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="4">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/782/xml</Entry>
+    </ChangeLog>
+  </MetaData>
   <!--
 	Radio Thermostat Company of America CT100 Plus Thermostat manual available at:
 	https://products.z-wavealliance.org/ProductManual/File?folder=&filename=Manuals/1798/CT100_Plus_UserGuide_20160504.pdf
@@ -93,6 +115,7 @@
       <Item label="HVAC: Normal, Aux Stages: 2, Aux Setup: Elec, Heat Pump Stages: 2, Cool Stages: 2" value="19005954"/>
       <!-- 0x01,0x2,0x2,0x02,0x02 -->
       <Item label="HVAC: Heat Pump, Aux Stages: 2, Aux Setup: Elec, Heat Pump Stages: 2, Cool Stages: 2" value="35783170"/>
+    
     <!-- 0x02,0x2,0x2,0x02,0x02 -->
     </Value>
     <Value genre="config" index="3" label="Utility Lock" max="255" min="0" size="1" type="list" units="" value="0" write_only="true">
