@@ -1,26 +1,20 @@
-<Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0063:3030:4450</MetaDataItem>
     <MetaDataItem name="ProductPic">images/ge/dimmer_module.png</MetaDataItem>
-    <MetaDataItem id="3030" name="ZWProductPage" type="4450">https://products.z-wavealliance.org/products/672/</MetaDataItem>
-    <MetaDataItem name="ProductPage">http://nexiahome.com/Products/ProductDetail.aspx?model=043156296323</MetaDataItem>
-    <MetaDataItem id="3030" name="Identifier" type="4450">043156296323</MetaDataItem>
+    <MetaDataItem id="3030" name="ZWProductPage" type="4450">https://products.z-wavealliance.org/products/726/</MetaDataItem>
+    <MetaDataItem name="ProductPage">www.ezzwave.com</MetaDataItem>
+    <MetaDataItem id="3030" name="Identifier" type="4450">45639/ZW3101</MetaDataItem>
     <MetaDataItem name="ProductSupport">http://nexiahome.com/SupportCenter/Pages/supportcenter.aspx?page=suppor</MetaDataItem>
     <MetaDataItem id="3030" name="FrequencyName" type="4450">U.S. / Canada / Mexico</MetaDataItem>
-    <MetaDataItem name="Description">Schlage The Schlage Home Dimmer Module puts smart home lighting control in your hands, from anywhere. All you need is Nexia™ Home Intelligence and most any web-connected computer, tablet or smart phone. It lets you do so much more than turn on a light.
- 
-·         Set Nexia to automatically trigger “lights on” with a Schlage Home Keypad Lock when you enter your code at the door.
-·         Reduce energy use and save money by turning lights off after you leave the house.
-·         Control table and floor lamps remotely through your Nexia subscription.
-·         Brighten or dim a room on your way home to prepare a comfortable setting.
-·         The Home Dimmer Module expands the reach of Nexia in your home by extending its range up to 200 additional feet so you can add more Nexia devices. 
-·         The Home Dimmer Module provides one Nexia AC outlet and one standard AC outlet so you’re not sacrificing any outlet space.
- 
- 
-Remote management with a Nexia™ Home Intelligence system requires the Nexia Bridge and a monthly subscription of $8.99.</MetaDataItem>
-    <MetaDataItem name="Name"> Lamp Module for Schlage</MetaDataItem>
+    <MetaDataItem name="Description">"Transform any home into a smart home with the Jasco Z-Wave Wireless Lighting Control Dimmer Switch. The Jasco Z-Wave Wireless Lighting Control Dimmer Switch enables wireless control of on/off and dim functions of hard-wired incandescent lighting. The dimmer switch replaces your current light switch, uses your existing wiring, and provides Z-Wave wireless and in-wall control of overhead lighting. Use the dimmer feature to customize the lighting output and create the perfect ambiance for any room. Providing ultimate flexibility, the Jasco Z-Wave Wireless Lighting Control Dimmer Switch allows you to operate the switch by itself or easily integrate the switch with two-way, three-way or four-way wiring configurations by adding the Jasco Auxiliary switch for Z-Wave. Two-way wiring configuration turns the light or appliance on/off from one location. Three-way wiring configuration turns the light or appliance on/off from two separate locations. Four-way wiring configuration turns the light or appliance on/off from three separate locations. The Jasco Auxiliary Switch for Z-Wave is required for three-way or four-way installations.  The dimmer switch includes an LED indicator light to easily locate the switch in a dark room. Take control of your home lighting with Jasco Z-Wave Wireless Lighting Controls!
+
+Z-Wave is the world’s largest ecosystem of interoperable smart home products. Z-Wave lighting controls provide an easy-to-install and affordable system to control lighting and small appliances in your home. Add Jasco Z-Wave lighting controls to a Z-Wave certified gateway to access and control your home from anywhere in the world using your smartphone, tablet or computer as a home automation command center. Never worry if you accidentally left the lights on because you can turn them off remotely or program your lights to go on/off at specific times. Create customized lighting scenes for any occasion such as a “go to sleep” scene or a “movie night” scene. Give the illusion that someone is home by programming the lights to turn on/off while you are away—perfect for deterring crime and adding additional security!"
+</MetaDataItem>
+    <MetaDataItem name="Name">In-Wall Decora Style Incandescent Dimmer Switch, No Neutral, White</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="1">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/672/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="2">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/726/xml</Entry>
     </ChangeLog>
   </MetaData>
   <!-- Configuration Parameters -->
