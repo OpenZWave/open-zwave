@@ -555,7 +555,7 @@
   </Manufacturer>
   <Manufacturer id="0113" name="Evolve Guest Controls">
     <Product config="evolve/lrm-as.xml" id="3034" name="LRM-AS Wall Dimmer 500W" type="4457"/>
-    <Product id="3133" name="LFM-20 Fixture Module" type="5246"/>
+    <Product config="evolve/lfm-20.xml" id="3133" name="LFM-20 Fixture Module" type="5246"/>
     <Product config="evolve/lsm-15.xml" id="3533" name="LSM-15 Wall Switch" type="5257"/>
     <Product config="evolve/ltm-5.xml" id="3033" name="LTM-5 Wall Switch Transmitter" type="5457"/>
   </Manufacturer>
