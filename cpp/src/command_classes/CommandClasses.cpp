@@ -35,6 +35,8 @@ using namespace OpenZWave;
 #include "command_classes/ApplicationStatus.h"
 #include "command_classes/Association.h"
 #include "command_classes/AssociationCommandConfiguration.h"
+#include "command_classes/SimpleAV.h"
+#include "command_classes/BarrierOperator.h"
 #include "command_classes/Basic.h"
 #include "command_classes/BasicWindowCovering.h"
 #include "command_classes/Battery.h"
@@ -53,6 +55,7 @@ using namespace OpenZWave;
 #include "command_classes/Indicator.h"
 #include "command_classes/Language.h"
 #include "command_classes/Lock.h"
+#include "command_classes/ManufacturerProprietary.h"
 #include "command_classes/ManufacturerSpecific.h"
 #include "command_classes/Meter.h"
 #include "command_classes/MeterPulse.h"
@@ -69,6 +72,7 @@ using namespace OpenZWave;
 #include "command_classes/SensorAlarm.h"
 #include "command_classes/SensorBinary.h"
 #include "command_classes/SensorMultilevel.h"
+#include "command_classes/SoundSwitch.h"
 #include "command_classes/SwitchAll.h"
 #include "command_classes/SwitchBinary.h"
 #include "command_classes/SwitchMultilevel.h"
@@ -98,6 +102,7 @@ using namespace OpenZWave;
 #include "Manager.h"
 #include "Options.h"
 #include "Utils.h"
+#include "Localization.h"
 
 //-----------------------------------------------------------------------------
 //	<CommandClasses::CommandClasses>
@@ -123,7 +128,8 @@ bool CommandClasses::IsSupported
 	// Test the bit representing the command class
 	return( (Get().m_supportedCommandClasses[_commandClassId>>5] & (1u<<(_commandClassId&0x1f))) != 0 );
 }
-string CommandClasses::GetName(
+string CommandClasses::GetName
+(
 	uint8 const _commandClassId
 )
 {
@@ -141,7 +147,8 @@ void CommandClasses::Register
 (
 	uint8 const _commandClassId,
 	string const& _commandClassName,
-	pfnCreateCommandClass_t _creator
+	pfnCreateCommandClass_t _creator,
+	bool advertised
 )
 {
 	m_commandClassCreators[_commandClassId] = _creator;
@@ -150,6 +157,14 @@ void CommandClasses::Register
 	Get().m_supportedCommandClasses[_commandClassId>>5] |= (1u<<(_commandClassId&0x1f));
 
 	m_namesToIDs[_commandClassName] = _commandClassId;
+	if (advertised)
+	{
+		/* ZWavePlus CC must always be first */
+		if (_commandClassId == ZWavePlusInfo::StaticGetCommandClassId())
+			m_advertisedCommandClasses.push_front(_commandClassId);
+		else
+			m_advertisedCommandClasses.push_back(_commandClassId);
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -171,7 +186,9 @@ CommandClass* CommandClasses::CreateCommandClass
 	}
 
 	// Create an instance of the command class
-	return creator( _homeId, _nodeId );
+        CommandClass *cc = creator( _homeId, _nodeId);
+        Localization::Get()->SetupCommandClass(cc);
+        return cc;
 }
 
 //-----------------------------------------------------------------------------
@@ -187,6 +204,8 @@ void CommandClasses::RegisterCommandClasses
 	cc.Register( ApplicationStatus::StaticGetCommandClassId(), ApplicationStatus::StaticGetCommandClassName(), ApplicationStatus::Create );
 	cc.Register( Association::StaticGetCommandClassId(), Association::StaticGetCommandClassName(), Association::Create );
 	cc.Register( AssociationCommandConfiguration::StaticGetCommandClassId(), AssociationCommandConfiguration::StaticGetCommandClassName(), AssociationCommandConfiguration::Create );
+	cc.Register( SimpleAV::StaticGetCommandClassId(), AssociationCommandConfiguration::StaticGetCommandClassName(), SimpleAV::Create );
+	cc.Register( BarrierOperator::StaticGetCommandClassId(), BarrierOperator::StaticGetCommandClassName(), BarrierOperator::Create);
 	cc.Register( Basic::StaticGetCommandClassId(), Basic::StaticGetCommandClassName(), Basic::Create );
 	cc.Register( BasicWindowCovering::StaticGetCommandClassId(), BasicWindowCovering::StaticGetCommandClassName(), BasicWindowCovering::Create );
 	cc.Register( Battery::StaticGetCommandClassId(), Battery::StaticGetCommandClassName(), Battery::Create );
@@ -205,6 +224,7 @@ void CommandClasses::RegisterCommandClasses
 	cc.Register( Indicator::StaticGetCommandClassId(), Indicator::StaticGetCommandClassName(), Indicator::Create );
 	cc.Register( Language::StaticGetCommandClassId(), Language::StaticGetCommandClassName(), Language::Create );
 	cc.Register( Lock::StaticGetCommandClassId(), Lock::StaticGetCommandClassName(), Lock::Create );
+	cc.Register( ManufacturerProprietary::StaticGetCommandClassId(), ManufacturerProprietary::StaticGetCommandClassName(), ManufacturerProprietary::Create );
 	cc.Register( ManufacturerSpecific::StaticGetCommandClassId(), ManufacturerSpecific::StaticGetCommandClassName(), ManufacturerSpecific::Create );
 	cc.Register( Meter::StaticGetCommandClassId(), Meter::StaticGetCommandClassName(), Meter::Create );
 	cc.Register( MeterPulse::StaticGetCommandClassId(), MeterPulse::StaticGetCommandClassName(), MeterPulse::Create );
@@ -221,6 +241,7 @@ void CommandClasses::RegisterCommandClasses
 	cc.Register( SensorAlarm::StaticGetCommandClassId(), SensorAlarm::StaticGetCommandClassName(), SensorAlarm::Create );
 	cc.Register( SensorBinary::StaticGetCommandClassId(), SensorBinary::StaticGetCommandClassName(), SensorBinary::Create );
 	cc.Register( SensorMultilevel::StaticGetCommandClassId(), SensorMultilevel::StaticGetCommandClassName(), SensorMultilevel::Create );
+	cc.Register( SoundSwitch::StaticGetCommandClassId(), SoundSwitch::StaticGetCommandClassName(), SoundSwitch::Create );
 	cc.Register( SwitchAll::StaticGetCommandClassId(), SwitchAll::StaticGetCommandClassName(), SwitchAll::Create );
 	cc.Register( SwitchBinary::StaticGetCommandClassId(), SwitchBinary::StaticGetCommandClassName(), SwitchBinary::Create );
 	cc.Register( SwitchMultilevel::StaticGetCommandClassId(), SwitchMultilevel::StaticGetCommandClassName(), SwitchMultilevel::Create );
@@ -235,7 +256,7 @@ void CommandClasses::RegisterCommandClasses
 	cc.Register( UserCode::StaticGetCommandClassId(), UserCode::StaticGetCommandClassName(), UserCode::Create );
 	cc.Register( Version::StaticGetCommandClassId(), Version::StaticGetCommandClassName(), Version::Create );
 	cc.Register( WakeUp::StaticGetCommandClassId(), WakeUp::StaticGetCommandClassName(), WakeUp::Create );
-	cc.Register( ZWavePlusInfo::StaticGetCommandClassId(), ZWavePlusInfo::StaticGetCommandClassName(), ZWavePlusInfo::Create );
+	cc.Register( ZWavePlusInfo::StaticGetCommandClassId(), ZWavePlusInfo::StaticGetCommandClassName(), ZWavePlusInfo::Create, true);
 
 	// Now all the command classes have been registered, we can modify the
 	// supported command classes array according to the program options.
@@ -319,6 +340,18 @@ uint8 CommandClasses::GetCommandClassId
 	}
 
 	return 0xff;
+}
+
+//-----------------------------------------------------------------------------
+//	<CommandClasses::GetAdvertisedCommandClasses>
+//	return a list of Advertised CommandClasses
+//-----------------------------------------------------------------------------
+list<uint8> CommandClasses::GetAdvertisedCommandClasses
+(
+)
+{
+	CommandClasses& cc = Get();
+	return cc.m_advertisedCommandClasses;
 }
 
 

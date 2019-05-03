@@ -29,7 +29,6 @@
 #include "command_classes/Meter.h"
 #include "command_classes/MultiInstance.h"
 #include "Defs.h"
-#include "Bitfield.h"
 #include "Msg.h"
 #include "Node.h"
 #include "Driver.h"
@@ -180,13 +179,13 @@ bool Meter::RequestState
 bool Meter::RequestValue
 (
 	uint32 const _requestFlags,
-	uint8 const _dummy1,	// = 0 (not used)
+	uint16 const _dummy1,	// = 0 (not used)
 	uint8 const _instance,
 	Driver::MsgQueue const _queue
 )
 {
 	bool res = false;
-	if ( !IsGetSupported())
+	if ( !m_com.GetFlagBool(COMPAT_FLAG_GETSUPPORTED))
 	{
 		Log::Write(  LogLevel_Info, GetNodeId(), "MeterCmd_Get Not Supported on this node");
 		return false;

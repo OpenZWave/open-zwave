@@ -90,7 +90,7 @@ bool EnergyProduction::RequestState
 bool EnergyProduction::RequestValue
 (
 	uint32 const _requestFlags,
-	uint8 const _valueEnum,		// one of EnergyProductionIndex enums
+	uint16 const _valueEnum,		// one of EnergyProductionIndex enums
 	uint8 const _instance,
 	Driver::MsgQueue const _queue
 )
@@ -101,7 +101,7 @@ bool EnergyProduction::RequestValue
 		return false;
 	}
 
-	if ( IsGetSupported() )
+	if ( m_com.GetFlagBool(COMPAT_FLAG_GETSUPPORTED) )
 	{
 		Log::Write( LogLevel_Info, GetNodeId(), "Requesting the %s value", c_energyParameterNames[_valueEnum] );
 		Msg* msg = new Msg( "EnergyProductionCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
@@ -110,7 +110,7 @@ bool EnergyProduction::RequestValue
 		msg->Append( 3 );
 		msg->Append( GetCommandClassId() );
 		msg->Append( EnergyProductionCmd_Get );
-		msg->Append( _valueEnum );
+		msg->Append( (_valueEnum & 0xFF) );
 		msg->Append( GetDriver()->GetTransmitOptions() );
 		GetDriver()->SendMsg( msg, _queue );
 		return true;

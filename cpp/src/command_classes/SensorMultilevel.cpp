@@ -29,7 +29,6 @@
 #include "command_classes/SensorMultilevel.h"
 #include "command_classes/MultiInstance.h"
 #include "Defs.h"
-#include "Bitfield.h"
 #include "Msg.h"
 #include "Node.h"
 #include "Driver.h"
@@ -50,7 +49,7 @@ enum SensorMultilevelCmd
 enum SensorType
 {
 	SensorType_Temperature = 1,
-	SensorType_General,
+	SensorType_General, /* deprecated by v11 */
 	SensorType_Luminance,
 	SensorType_Power,
 	SensorType_RelativeHumidity,
@@ -80,6 +79,43 @@ enum SensorType
 	SensorType_ElectricalConductivity,
 	SensorType_Loudness,
 	SensorType_Moisture,
+	SensorType_Frequency,
+	SensorType_Time,
+	SensorType_TargetTemperature,
+	SensorType_PM25,
+	SensorType_CH2O,
+	SensorType_RadonConcentration,
+	SensorType_CH4Density,
+	SensorType_VOC,
+	SensorType_CO,
+	SensorType_SoilHumidity,
+	SensorType_SoilReactivity,
+	SensorType_SoilSalinity,
+	SensorType_HeartRate,
+	SensorType_BloodPressure,
+	SensorType_MuscleMass,
+	SensorType_FatMass,
+	SensorType_BoneMass,
+	SensorType_TBW,
+	SensorType_BMR,
+	SensorType_BMI,
+	SensorType_AccelerationX,
+	SensorType_AccelerationY,
+	SensorType_AccelerationZ,
+	SensorType_SmokeDensity,
+	SensorType_WaterFlow,
+	SensorType_WaterPressure,
+	SensorType_RFSignalStrength,
+	SensorType_PM10,
+	SensorType_RespiratoryRate,
+	SensorType_RelativeModulationLevel,
+	SensorType_BoilerWaterTemperature,
+	SensorType_DHWTemperature,
+	SensorType_OutsideTemperature,
+	SensorType_ExhaustTemperature,
+	SensorType_WaterChlorineLevel,
+	SensorType_WaterAcidity,
+	SensorType_WaterOxidation,
 	SensorType_MaxType
 };
 
@@ -116,7 +152,44 @@ static char const* c_sensorTypeNames[] =
 		"Electrical Resistivity",
 		"Electrical Conductivity",
 		"Loudness",
-		"Moisture"
+		"Moisture",
+		"Frequency",
+		"Time",
+		"Target Temperature",
+		"Particulate Matter 2.5",
+		"Formaldehyde CH20-level",
+		"Radon Concentration",
+		"Methane (CH4) Density",
+		"Volatile Organic Compound Level",
+		"CO Level",
+		"Soil Humidity",
+		"Soil Reactivity",
+		"Soil Salinity",
+		"Heart Rate",
+		"Blood Pressure",
+		"Muscle Mass",
+		"Fat Mass",
+		"Bone Mass",
+		"Total Body Water",
+		"Basis Metabolic Rate",
+		"Body Mass Index",
+		"Acceleration X-axis",
+		"Acceleration Y-axis",
+		"Acceleration Z-axis",
+		"Smoke Density",
+		"Water Flow",
+		"Water Pressure",
+		"RF Signal Strength",
+		"Particulate Matter 10",
+		"Respiratory Rate",
+		"Relative Mdulation Level",
+		"Boiler Water Temperature",
+		"Domestic Hot Water Temperature",
+		"Outside Temperature",
+		"Exhaust Temperature",
+		"Water Chlorine Level",
+		"Water Acidity",
+		"Water Oxidation"
 };
 
 static char const* c_tankCapcityUnits[] =
@@ -213,13 +286,13 @@ bool SensorMultilevel::RequestState
 bool SensorMultilevel::RequestValue
 (
 		uint32 const _requestFlags,
-		uint8 const _dummy,		// = 0 (not used)
+		uint16 const _dummy,		// = 0 (not used)
 		uint8 const _instance,
 		Driver::MsgQueue const _queue
 )
 {
 	bool res = false;
-	if ( !IsGetSupported() ) {
+	if ( !m_com.GetFlagBool(COMPAT_FLAG_GETSUPPORTED) ) {
 		Log::Write(  LogLevel_Info, GetNodeId(), "SensorMultilevelCmd_Get Not Supported on this node");
 		return false;
 	}
@@ -412,6 +485,43 @@ bool SensorMultilevel::HandleMsg
 					}
 				}
 				break;
+				case SensorType_Frequency:				units = scale ? "kHz" : "Hz";			break;
+				case SensorType_Time:				units = "s";			break;
+				case SensorType_TargetTemperature:				units = scale ? "F" : "C";			break;
+				case SensorType_PM25:				units = scale ? "ug/m3" : "mol/m3";			break;
+				case SensorType_CH2O:				units = "mol/m3";			break;
+				case SensorType_RadonConcentration:				units = scale ? "pCi/l" : "bq/m3";			break;
+				case SensorType_CH4Density:				units = "mol/m3";			break;
+				case SensorType_VOC:				units = scale ? "ppm" : "mol/m3";			break;
+				case SensorType_CO:				units = scale ? "ppm" : "mol/m3";			break;
+				case SensorType_SoilHumidity:				units = "%";			break;
+				case SensorType_SoilReactivity:				units = "pH";			break;
+				case SensorType_SoilSalinity:				units = "mol/m3";			break;
+				case SensorType_HeartRate:				units = "bpm";			break;
+				case SensorType_BloodPressure:				units = scale ? "mmHg (Diastollic)" : "mmHg (Systollic)";	break;
+				case SensorType_MuscleMass:				units = "kg";			break;
+				case SensorType_FatMass:				units = "kg";			break;
+				case SensorType_BoneMass:				units = "kg";			break;
+				case SensorType_TBW:				units = "kg";			break;
+				case SensorType_BMR:				units = "J";			break;
+				case SensorType_BMI:				units = "";			break;
+				case SensorType_AccelerationX:				units = "m/s2";			break;
+				case SensorType_AccelerationY:				units = "m/s2";			break;
+				case SensorType_AccelerationZ:				units = "m/s2";			break;
+				case SensorType_SmokeDensity:				units = "%";			break;
+				case SensorType_WaterFlow:				units = "l/h";			break;
+				case SensorType_WaterPressure:				units = "kPa";			break;
+				case SensorType_RFSignalStrength:				units = scale ? "dBm" : "% (RSSI)";			break;
+				case SensorType_PM10:				units = scale ? "ug/m3" : "mol/m3";			break;
+				case SensorType_RespiratoryRate:				units = "bpm";			break;
+				case SensorType_RelativeModulationLevel:				units = "%";			break;
+				case SensorType_BoilerWaterTemperature:				units = "C";			break;
+				case SensorType_DHWTemperature:				units = "C";			break;
+				case SensorType_OutsideTemperature:				units = "C";			break;
+				case SensorType_ExhaustTemperature:				units = "C";			break;
+				case SensorType_WaterChlorineLevel:				units = "mg/l";			break;
+				case SensorType_WaterAcidity:				units = "pH";			break;
+				case SensorType_WaterOxidation:				units = "mV";			break;
 				default: {
 					Log::Write (LogLevel_Warning, GetNodeId(), "sensorType Value was greater than range. Dropping");
 					return false;
@@ -455,6 +565,3 @@ void SensorMultilevel::CreateVars
 {
 	// Don't create anything here. We do it in the report.
 }
-
-
-

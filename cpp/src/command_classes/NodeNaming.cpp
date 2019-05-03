@@ -234,7 +234,7 @@ bool NodeNaming::RequestState
 bool NodeNaming::RequestValue
 (
 	uint32 const _requestFlags,
-	uint8 const _getTypeEnum,
+	uint16 const _getTypeEnum,
 	uint8 const _instance,
 	Driver::MsgQueue const _queue
 )
@@ -248,7 +248,7 @@ bool NodeNaming::RequestValue
 	Msg* msg;
 	if( _getTypeEnum == NodeNamingCmd_Get )
 	{
-		if ( IsGetSupported() )
+		if ( m_com.GetFlagBool(COMPAT_FLAG_GETSUPPORTED) )
 		{
 			msg = new Msg( "NodeNamingCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 			msg->Append( GetNodeId() );
@@ -392,10 +392,10 @@ void NodeNaming::SetLocation
 }
 
 //-----------------------------------------------------------------------------
-// <NodeNaming::ExtractString>
+// <ExtractString>
 // Extract a string from the report data
 //-----------------------------------------------------------------------------
-string NodeNaming::ExtractString
+string OpenZWave::ExtractString
 (
 	uint8 const* _data,
 	uint32 const _length
@@ -468,10 +468,10 @@ string NodeNaming::ExtractString
 }
 
 //-----------------------------------------------------------------------------
-// <NodeNaming::ConvertUFT16ToUTF8>
+// <ConvertUFT16ToUTF8>
 // Convert a UTF-16 string into UTF-8 encoding.
 //-----------------------------------------------------------------------------
-uint32 NodeNaming::ConvertUFT16ToUTF8
+uint32 OpenZWave::ConvertUFT16ToUTF8
 (
 	uint16 _utf16,
 	char* _buffer,

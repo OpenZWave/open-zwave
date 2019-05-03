@@ -41,8 +41,6 @@ using namespace OpenZWave;
 /* Callback for normal messages start at 10. Special Messages using a Callback prior to 10 */
 uint8 Msg::s_nextCallbackId = 10;
 
-#define DEBUG 1
-
 //-----------------------------------------------------------------------------
 // <Msg::Msg>
 // Constructor
@@ -137,6 +135,21 @@ void Msg::Append
 )
 {
 	m_buffer[m_length++] = _data;
+}
+
+//-----------------------------------------------------------------------------
+// <Msg::AppendArray>
+// Add a byte array to the message
+//-----------------------------------------------------------------------------
+void Msg::AppendArray
+(
+		const uint8* const _data,
+		const uint8 _length
+)
+{
+	for (uint8 i=0 ; i<_length ; i++) {
+		this->Append( _data[i] );
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -312,16 +325,19 @@ Driver* Msg::GetDriver
 }
 
 
-uint8* Msg::GetBuffer() {
+uint8* Msg::GetBuffer
+(
+)
+{
+	Log::Write(LogLevel_Info, m_targetNodeId, "Encrypted Flag is %d", m_encrypted);
 	if (m_encrypted == false)
 		return m_buffer;
 	else
 		if (EncyrptBuffer(m_buffer, m_length, GetDriver(), GetDriver()->GetControllerNodeId(), m_targetNodeId, m_nonce, e_buffer)) {
 			return e_buffer;
 		} else {
-			Log::Write(LogLevel_Warning, m_targetNodeId, "Failed to Encyrpt Packet");
+			Log::Write(LogLevel_Warning, m_targetNodeId, "Failed to Encrypt Packet");
 			return NULL;
 		}
 }
-
 

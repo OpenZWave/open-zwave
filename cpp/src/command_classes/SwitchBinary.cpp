@@ -23,6 +23,8 @@
 //	You should have received a copy of the GNU Lesser General Public License
 //	along with OpenZWave.  If not, see <http://www.gnu.org/licenses/>.
 //
+//  spec: http://zwavepublic.com/sites/default/files/command_class_specs_2017A/SDS13781-3%20Z-Wave%20Application%20Command%20Class%20Specification.pdf
+//        pp. 78ff
 //-----------------------------------------------------------------------------
 
 #include "command_classes/CommandClasses.h"
@@ -35,6 +37,7 @@
 #include "platform/Log.h"
 
 #include "value_classes/ValueBool.h"
+#include "value_classes/ValueByte.h"
 
 using namespace OpenZWave;
 
@@ -43,6 +46,13 @@ enum SwitchBinaryCmd
 	SwitchBinaryCmd_Set		= 0x01,
 	SwitchBinaryCmd_Get		= 0x02,
 	SwitchBinaryCmd_Report	= 0x03
+};
+
+enum SwitchBinaryIndex
+{
+	SwitchBinaryIndex_Level = 0,
+	SwitchBinaryIndex_TargetState,
+	SwitchBinaryIndex_Duration
 };
 
 //-----------------------------------------------------------------------------
@@ -71,12 +81,12 @@ bool SwitchBinary::RequestState
 bool SwitchBinary::RequestValue
 (
 	uint32 const _requestFlags,
-	uint8 const _dummy1,	// = 0 (not used)
+	uint16 const _dummy1,	// = 0 (not used)
 	uint8 const _instance,
 	Driver::MsgQueue const _queue
 )
 {
-	if ( IsGetSupported() )
+	if ( m_com.GetFlagBool(COMPAT_FLAG_GETSUPPORTED) )
 	{
 		Msg* msg = new Msg( "SwitchBinaryCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 		msg->SetInstance( this, _instance );
@@ -108,11 +118,32 @@ bool SwitchBinary::HandleMsg
 	{
 		Log::Write( LogLevel_Info, GetNodeId(), "Received SwitchBinary report from node %d: level=%s", GetNodeId(), _data[1] ? "On" : "Off" );
 
-		if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, 0 ) ) )
+		// data[1] => Switch state
+		if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, SwitchBinaryIndex_Level ) ) )
 		{
 			value->OnValueRefreshed( _data[1] != 0 );
 			value->Release();
 		}
+
+		if ( GetVersion() >= 2) {
+
+			// data[2] => target state
+			if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, SwitchBinaryIndex_TargetState ) ) )
+			{
+				value->OnValueRefreshed( _data[2] != 0 );
+				value->Release();
+			}
+				
+			// data[3] might be duration
+			if (_length > 3) {
+				if ( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, SwitchBinaryIndex_Duration ) ) )
+				{
+					value->OnValueRefreshed( _data[3] );
+					value->Release();
+				}
+			}
+		}
+
 		return true;
 	}
 
@@ -128,24 +159,34 @@ bool SwitchBinary::SetValue
 	Value const& _value
 )
 {
-	if( ValueID::ValueType_Bool == _value.GetID().GetType() )
-	{
-		ValueBool const* value = static_cast<ValueBool const*>(&_value);
+	bool res = false;
+	uint8 instance = _value.GetID().GetInstance();
 
-		Log::Write( LogLevel_Info, GetNodeId(), "SwitchBinary::Set - Setting node %d to %s", GetNodeId(), value->GetValue() ? "On" : "Off" );
-		Msg* msg = new Msg( "SwitchBinaryCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-		msg->SetInstance( this, _value.GetID().GetInstance() );
-		msg->Append( GetNodeId() );
-		msg->Append( 3 );
-		msg->Append( GetCommandClassId() );
-		msg->Append( SwitchBinaryCmd_Set );
-		msg->Append( value->GetValue() ? 0xff : 0x00 );
-		msg->Append( GetDriver()->GetTransmitOptions() );
-		GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
-		return true;
+	switch( _value.GetID().GetIndex() )
+	{
+		case SwitchBinaryIndex_Level:
+		{
+			if( ValueBool* value = static_cast<ValueBool*>( GetValue( instance, SwitchBinaryIndex_Level ) ) )
+			{
+				res = SetState( instance, (static_cast<ValueBool const*>(&_value))->GetValue() );
+				value->Release();
+			}
+			break;
+		}
+		case SwitchBinaryIndex_Duration:
+		{
+			if( ValueByte* value = static_cast<ValueByte*>( GetValue( instance, SwitchBinaryIndex_Duration ) ) )
+			{
+				value->OnValueRefreshed( (static_cast<ValueByte const*>(&_value))->GetValue() );
+				value->Release();
+			}
+			res = true;
+			break;
+		}
+		
 	}
 
-	return false;
+	return res;
 }
 
 //-----------------------------------------------------------------------------
@@ -181,6 +222,61 @@ void SwitchBinary::SetValueBasic
 }
 
 //-----------------------------------------------------------------------------
+// <SwitchBinary::SetState>
+// Set a new state for the switch
+//-----------------------------------------------------------------------------
+bool SwitchBinary::SetState
+(
+	uint8 const _instance,
+	bool const _state
+)
+{
+	uint8 const nodeId = GetNodeId();
+	uint8 const targetValue = _state ? 0xff : 0;
+
+	Log::Write( LogLevel_Info, nodeId, "SwitchBinary::Set - Setting to %s", _state ? "On" : "Off");
+	Msg* msg = new Msg( "SwitchBinaryCmd_Set", nodeId, REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+	msg->SetInstance( this, _instance );
+	msg->Append( nodeId );
+	
+	if( GetVersion() >= 2 )
+	{
+		ValueByte* durationValue = static_cast<ValueByte*>( GetValue( _instance, SwitchBinaryIndex_Duration ) );
+		uint8 duration = durationValue->GetValue();
+		durationValue->Release();
+		if( duration == 0xff )
+		{
+			Log::Write( LogLevel_Info, GetNodeId(), "  Duration: Default" );
+		}
+		else if( duration >= 0x80 )
+		{
+			Log::Write( LogLevel_Info, GetNodeId(), "  Duration: %d minutes", duration - 0x7f );
+		}
+		else
+		{
+			Log::Write( LogLevel_Info, GetNodeId(), "  Duration: %d seconds", duration );
+		}
+
+		msg->Append( 4 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( SwitchBinaryCmd_Set );
+		msg->Append( targetValue );
+		msg->Append( duration );
+	}
+	else
+	{
+		msg->Append( 3 );
+		msg->Append( GetCommandClassId() );
+		msg->Append( SwitchBinaryCmd_Set );
+		msg->Append( targetValue );
+	}
+
+	msg->Append( GetDriver()->GetTransmitOptions() );
+	GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
+	return true;
+}
+
+//-----------------------------------------------------------------------------
 // <SwitchBinary::CreateVars>
 // Create the values managed by this command class
 //-----------------------------------------------------------------------------
@@ -191,6 +287,19 @@ void SwitchBinary::CreateVars
 {
 	if( Node* node = GetNodeUnsafe() )
 	{
-	  	node->CreateValueBool( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Switch", "", false, false, false, 0 );
+		switch( GetVersion() )
+		{
+			case 2:
+			{
+				node->CreateValueByte( ValueID::ValueGenre_System, GetCommandClassId(), _instance, SwitchBinaryIndex_Duration, "Transition Duration", "", false, false, 0xff, 0 );
+				node->CreateValueBool( ValueID::ValueGenre_System, GetCommandClassId(), _instance, SwitchBinaryIndex_TargetState, "Target State", "", true, false, true, 0 );
+				// Fall through to version 1
+			}
+			case 1:
+			{
+				node->CreateValueBool( ValueID::ValueGenre_User, GetCommandClassId(), _instance, SwitchBinaryIndex_Level, "Switch", "", false, false, false, 0 );
+				break;
+			}
+		}
 	}
 }

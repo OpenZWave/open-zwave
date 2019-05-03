@@ -51,7 +51,7 @@ enum SwitchMultilevelCmd
 	SwitchMultilevelCmd_SupportedReport				= 0x07
 };
 
-enum
+enum SwitchMultilevelIndex
 {
 	SwitchMultilevelIndex_Level = 0,
 	SwitchMultilevelIndex_Bright,
@@ -61,7 +61,8 @@ enum
 	SwitchMultilevelIndex_Duration,
 	SwitchMultilevelIndex_Step,
 	SwitchMultilevelIndex_Inc,
-	SwitchMultilevelIndex_Dec
+	SwitchMultilevelIndex_Dec,
+	SwitchMultilevelIndex_TargetValue
 };
 
 static uint8 c_directionParams[] =
@@ -130,14 +131,14 @@ bool SwitchMultilevel::RequestState
 bool SwitchMultilevel::RequestValue
 (
 	uint32 const _requestFlags,
-	uint8 const _index,
+	uint16 const _index,
 	uint8 const _instance,
 	Driver::MsgQueue const _queue
 )
 {
 	if( _index == SwitchMultilevelIndex_Level )
 	{
-		if ( IsGetSupported() )
+		if ( m_com.GetFlagBool(COMPAT_FLAG_GETSUPPORTED) )
 		{
 			Msg* msg = new Msg( "SwitchMultilevelCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 			msg->SetInstance( this, _instance );
@@ -154,6 +155,33 @@ bool SwitchMultilevel::RequestValue
 	}
 	return false;
 }
+
+bool SwitchMultilevel::HandleIncomingMsg
+(
+	uint8 const* _data,
+	uint32 const _length,
+	uint32 const _instance	// = 1
+)
+{
+	if ( SwitchMultilevelCmd_Set == (SwitchMultilevelCmd)_data[0] )
+	{
+		Log::Write( LogLevel_Info, GetNodeId(), "Received SwitchMultiLevel Set: level=%d", _data[1] );
+		return true;
+	}
+	else if ( SwitchMultilevelCmd_StartLevelChange == (SwitchMultilevelCmd)_data[0] )
+	{
+		Log::Write( LogLevel_Info, GetNodeId(), "Received SwitchMultiLevel StartLevelChange: level=%d", _data[1] );
+
+	}
+	else if ( SwitchMultilevelCmd_StopLevelChange == (SwitchMultilevelCmd)_data[0] )
+	{
+		Log::Write( LogLevel_Info, GetNodeId(), "Received SwitchMultiLevel StopLevelChange: level=%d", _data[1] );
+
+	}
+
+	return true;
+}
+
 
 //-----------------------------------------------------------------------------
 // <SwitchMultilevel::HandleMsg>
@@ -175,6 +203,26 @@ bool SwitchMultilevel::HandleMsg
 			value->OnValueRefreshed( _data[1] );
 			value->Release();
 		}
+
+		if( GetVersion() >= 4) {
+
+			// data[2] => target value
+			if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, SwitchMultilevelIndex_TargetValue ) ) )
+			{
+				value->OnValueRefreshed( _data[2]);
+				value->Release();
+			}
+				
+			// data[3] might be duration
+			if(_length > 3) {
+				if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, SwitchMultilevelIndex_Duration ) ) )
+				{
+					value->OnValueRefreshed( _data[3] );
+					value->Release();
+				}
+			}
+		}
+
 		return true;
 	}
 
@@ -246,7 +294,7 @@ void SwitchMultilevel::SetVersion
 {
 	CommandClass::SetVersion( _version );
 
-	if( _version == 3 )
+	if( _version >= 3 )
 	{
 		// Request the supported switch types
 		Msg* msg = new Msg( "SwitchMultilevelCmd_SupportedGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
@@ -447,8 +495,9 @@ bool SwitchMultilevel::SetLevel
 	msg->SetInstance( this, _instance );
 	msg->Append( GetNodeId() );
 
-	if( ValueByte* durationValue = static_cast<ValueByte*>( GetValue( _instance, SwitchMultilevelIndex_Duration ) ) )
+	if( GetVersion() >= 2 )
 	{
+		ValueByte* durationValue = static_cast<ValueByte*>( GetValue( _instance, SwitchMultilevelIndex_Duration ) );
 		uint8 duration = durationValue->GetValue();
 		durationValue->Release();
 		if( duration == 0xff )
@@ -609,6 +658,11 @@ void SwitchMultilevel::CreateVars
 	{
 		switch( GetVersion() )
 		{
+			case 4:
+			{
+				node->CreateValueByte( ValueID::ValueGenre_System, GetCommandClassId(), _instance, SwitchMultilevelIndex_TargetValue, "Target Value", "", true, false, 0, 0 );
+				// Fall through to version 3
+			}
 			case 3:
 			{
 			  	node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, SwitchMultilevelIndex_Step, "Step Size", "", false, false, 0, 0 );

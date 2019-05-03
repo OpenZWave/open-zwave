@@ -69,22 +69,22 @@ std::string &OpenZWave::trim
 		std::string &s
 )
 {
-    if(s.size() == 0)
-    {
-        return s;
-    }
+	if(s.size() == 0)
+	{
+		return s;
+	}
 
-    int val = 0;
-    for (size_t cur = 0; cur < s.size(); cur++)
-    {
-        if(s[cur] != ' ' && isalnum(s[cur]))
-        {
-            s[val] = s[cur];
-            val++;
-        }
-    }
-    s.resize(val);
-    return s;
+	int val = 0;
+	for (size_t cur = 0; cur < s.size(); cur++)
+	{
+		if(s[cur] != ' ' && isalnum(s[cur]))
+		{
+			s[val] = s[cur];
+			val++;
+		}
+	}
+	s.resize(val);
+	return s;
 }
 
 //-----------------------------------------------------------------------------
@@ -99,20 +99,20 @@ void OpenZWave::split
 		bool remove_empty
 )
 {
-    std::ostringstream word;
-    for (size_t n = 0; n < input.size(); ++n)
-    {
-        if (std::string::npos == separators.find(input[n]))
-            word << input[n];
-        else
-        {
-            if (!word.str().empty() || !remove_empty)
-                lst.push_back(word.str());
-            word.str("");
-        }
-    }
-    if (!word.str().empty() || !remove_empty)
-        lst.push_back(word.str());
+	std::ostringstream word;
+	for (size_t n = 0; n < input.size(); ++n)
+	{
+		if (std::string::npos == separators.find(input[n]))
+			word << input[n];
+		else
+		{
+			if (!word.str().empty() || !remove_empty)
+				lst.push_back(word.str());
+			word.str("");
+		}
+	}
+	if (!word.str().empty() || !remove_empty)
+		lst.push_back(word.str());
 }
 
 void OpenZWave::PrintHex(std::string prefix, uint8_t const *data, uint32 const length) {
@@ -135,3 +135,68 @@ string OpenZWave::PktToString(uint8 const *data, uint32 const length) {
 	return str;
 
 }
+
+static const char* separators()
+{
+#if __unix__
+	return "/";
+#else // __unix__
+	return "\\/";
+#endif // __unix__
+}
+
+string OpenZWave::ozwdirname(string m_path)
+{
+	const size_t lastSlash =  m_path.find_last_of(separators());
+	if (lastSlash == std::string::npos)
+		return "";
+
+	return m_path.substr(0, lastSlash);
+}
+
+
+string OpenZWave::intToString( int x ) {
+#if __cplusplus==201103L || __APPLE__
+	return to_string(x);
+#else
+	return static_cast< std::ostringstream & >( ( std::ostringstream() << std::dec << x ) ).str();
+#endif
+}
+
+const char* OpenZWave::rssi_to_string(uint8 _data) {
+	static char buf[8];
+
+	switch (_data) {
+		case 127: {
+			return "---";
+			break;
+		}
+		case 126: {
+			return "MAX";
+			break;
+		}
+		case 125: {
+			return "MIN";
+			break;
+		}
+		default:
+			if (_data >= 11 && _data <= 124)
+			{
+				return "UNK";
+			}
+			else
+			{
+				snprintf(buf, 5, "%4d", (unsigned int)_data - 256);
+				return buf;
+			}
+	}
+}
+#if (defined _WINDOWS || defined WIN32 || defined _MSC_VER) && (!defined MINGW && !defined __MINGW32__ && !defined __MINGW64__)
+
+/* Windows doesn't have localtime_r - use the "secure" version instead */
+struct tm *localtime_r(time_t *_clock, struct tm *_result)
+{
+	_localtime64_s(_result, _clock);
+	return _result;
+}
+#endif

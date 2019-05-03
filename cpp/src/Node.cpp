@@ -34,6 +34,8 @@
 #include "Options.h"
 #include "Manager.h"
 #include "Driver.h"
+#include "Localization.h"
+#include "ManufacturerSpecificDB.h"
 #include "Notification.h"
 #include "Msg.h"
 #include "ZWSecurity.h"
@@ -65,6 +67,7 @@
 
 #include "value_classes/ValueID.h"
 #include "value_classes/Value.h"
+#include "value_classes/ValueBitSet.h"
 #include "value_classes/ValueBool.h"
 #include "value_classes/ValueButton.h"
 #include "value_classes/ValueByte.h"
@@ -146,7 +149,6 @@ m_basic( 0 ),
 m_generic( 0 ),
 m_specific( 0 ),
 m_type( "" ),
-m_numRouteNodes( 0 ),
 m_addingNode( false ),
 m_manufacturerName( "" ),
 m_productName( "" ),
@@ -159,6 +161,10 @@ m_deviceType( 0 ),
 m_role( 0 ),
 m_nodeType ( 0 ),
 m_secured ( false ),
+m_Product ( NULL ),
+m_fileConfigRevision ( 0 ),
+m_loadedConfigRevision ( 0 ),
+m_latestConfigRevision ( 0 ),
 m_values( new ValueStore() ),
 m_sentCnt( 0 ),
 m_sentFailed( 0 ),
@@ -173,12 +179,31 @@ m_averageResponseRTT( 0 ),
 m_quality( 0 ),
 m_lastReceivedMessage(),
 m_errors( 0 ),
+m_txStatusReportSupported ( false ),
+m_txTime( 0 ),
+m_hops( 0 ),
+m_ackChannel( 0 ),
+m_lastTxChannel( 0 ),
+m_routeScheme( (TXSTATUS_ROUTING_SCHEME)0 ),
+m_routeUsed { },
+m_routeSpeed( (TXSTATUS_ROUTE_SPEED)0 ),
+m_routeTries( 0 ),
+m_lastFailedLinkFrom( 0 ),
+m_lastFailedLinkTo( 0 ),
 m_lastnonce ( 0 )
 {
 	memset( m_neighbors, 0, sizeof(m_neighbors) );
-	memset( m_routeNodes, 0, sizeof(m_routeNodes) );
 	memset( m_nonces, 0, sizeof(m_nonces) );
-	AddCommandClass( 0 );
+	memset( m_rssi_1, 0, sizeof(m_rssi_1) );
+	memset( m_rssi_2, 0, sizeof(m_rssi_2) );
+	memset( m_rssi_3, 0, sizeof(m_rssi_3) );
+	memset( m_rssi_4, 0, sizeof(m_rssi_4) );
+	memset( m_rssi_5, 0, sizeof(m_rssi_5) );
+	/* Add NoOp Class */
+	AddCommandClass( NoOperation::StaticGetCommandClassId() );
+
+	/* Add ManufacturerSpecific Class */
+	AddCommandClass( ManufacturerSpecific::StaticGetCommandClassId() );
 }
 
 //-----------------------------------------------------------------------------
@@ -345,10 +370,11 @@ void Node::AdvanceQueries
 				if( GetDriver()->GetControllerNodeId() == m_nodeId )
 				{
 					Log::Write( LogLevel_Detail, m_nodeId, "Load Controller Manufacturer Specific Config");
-					string configPath = ManufacturerSpecific::SetProductDetails( this, GetDriver()->GetManufacturerId(), GetDriver()->GetProductType(), GetDriver()->GetProductId() );
-					if( configPath.length() > 0 )
-					{
-						ManufacturerSpecific::LoadConfigXML( this, configPath );
+					ManufacturerSpecific* cc = static_cast<ManufacturerSpecific*>( GetCommandClass( ManufacturerSpecific::StaticGetCommandClassId() ) );
+					if( cc  ) {
+						cc->SetInstance(1);
+						cc->SetProductDetails(GetDriver()->GetManufacturerId(), GetDriver()->GetProductType(), GetDriver()->GetProductId() );
+						cc->LoadConfigXML();
 					}
 					m_queryStage = QueryStage_NodeInfo;
 					m_queryRetries = 0;
@@ -365,6 +391,7 @@ void Node::AdvanceQueries
 					ManufacturerSpecific* cc = static_cast<ManufacturerSpecific*>( GetCommandClass( ManufacturerSpecific::StaticGetCommandClassId() ) );
 					if( cc  )
 					{
+						cc->SetInstance(1);
 						m_queryPending = cc->RequestState( CommandClass::RequestFlag_Static, 1, Driver::MsgQueue_Query );
 						addQSC = m_queryPending;
 					}
@@ -455,8 +482,10 @@ void Node::AdvanceQueries
 					// that we can modify the supported command classes list through the product XML files.
 					Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_ManufacturerSpecific2" );
 					ManufacturerSpecific* cc = static_cast<ManufacturerSpecific*>( GetCommandClass( ManufacturerSpecific::StaticGetCommandClassId() ) );
-					if( cc  )
+					/* don't do this if its the Controller Node */
+					if( cc && (GetDriver()->GetControllerNodeId() != m_nodeId))
 					{
+						cc->SetInstance(1);
 						m_queryPending = cc->RequestState( CommandClass::RequestFlag_Static, 1, Driver::MsgQueue_Query );
 						addQSC = m_queryPending;
 					}
@@ -471,6 +500,7 @@ void Node::AdvanceQueries
 					ManufacturerSpecific* cc = static_cast<ManufacturerSpecific*>( GetCommandClass( ManufacturerSpecific::StaticGetCommandClassId() ) );
 					if( cc  )
 					{
+						cc->SetInstance(1);
 						cc->ReLoadConfigXML();
 					}
 					m_queryStage = QueryStage_Versions;
@@ -493,10 +523,14 @@ void Node::AdvanceQueries
 
 						if( cc->GetMaxVersion() > 1 )
 						{
-							Log::Write(LogLevel_Info, m_nodeId, "	ok");
 							// Get the version for each supported command class that
 							// we have implemented at greater than version one.
 							m_queryPending |= vcc->RequestCommandClassVersion( it->second );
+						} 
+						else 
+						{
+							// set the Version to 1 
+							cc->SetVersion( 1 );
 						}
 					}
 					addQSC = m_queryPending;
@@ -538,14 +572,17 @@ void Node::AdvanceQueries
 				// Request any other static values associated with each command class supported by this node
 				// examples are supported thermostat operating modes, setpoints and fan modes
 				Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_Static" );
-				for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
-				{
-					if( !it->second->IsAfterMark() )
+				/* Dont' do this for Controller Nodes */
+				if ( GetDriver()->GetControllerNodeId() != m_nodeId ) {
+					for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
 					{
-						m_queryPending |= it->second->RequestStateForAllInstances( CommandClass::RequestFlag_Static, Driver::MsgQueue_Query );
-					} else {
-						/* Controlling CC's might still need to retrieve some info */
-						m_queryPending |= it->second->RequestStateForAllInstances( CommandClass::RequestFlag_AfterMark, Driver::MsgQueue_Query );
+						if( !it->second->IsAfterMark() )
+						{
+							m_queryPending |= it->second->RequestStateForAllInstances( CommandClass::RequestFlag_Static, Driver::MsgQueue_Query );
+						} else {
+							/* Controlling CC's might still need to retrieve some info */
+							m_queryPending |= it->second->RequestStateForAllInstances( CommandClass::RequestFlag_AfterMark, Driver::MsgQueue_Query );
+						}
 					}
 				}
 				addQSC = m_queryPending;
@@ -566,6 +603,7 @@ void Node::AdvanceQueries
 			case QueryStage_CacheLoad:
 			{
 				Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_CacheLoad" );
+				Log::Write( LogLevel_Info, GetNodeId(), "Loading Cache for node %d: Manufacturer=%s, Product=%s", GetNodeId(), GetManufacturerName().c_str(), GetProductName().c_str() );
 				Log::Write( LogLevel_Info, GetNodeId(), "Node Identity Codes: %.4x:%.4x:%.4x", GetManufacturerId(), GetProductType(), GetProductId() );
 				//
 				// Send a NoOperation message to see if the node is awake
@@ -862,7 +900,7 @@ uint32 Node::GetNeighbors
 
 //-----------------------------------------------------------------------------
 // <Node::ReadXML>
-// Read the node config from XML
+// Read the node config from the OZW Cache File...
 //-----------------------------------------------------------------------------
 void Node::ReadXML
 (
@@ -1044,6 +1082,15 @@ void Node::ReadXML
 	if ( str )
 		m_refreshonNodeInfoFrame = !strcmp (str, "true" );
 
+
+	/* this is the revision of the config file that was present when we created the cache */
+	str = _node->Attribute( "configrevision" );
+	if ( str )
+		this->setLoadedConfigRevision(atol(str));
+	else
+		this->setLoadedConfigRevision(0);
+
+
 	// Read the manufacturer info and create the command classes
 	TiXmlElement const* child = _node->FirstChildElement();
 	while( child )
@@ -1057,10 +1104,13 @@ void Node::ReadXML
 			}
 			else if( !strcmp( str, "Manufacturer" ) )
 			{
+				uint16 manufacturerId = 0;
+				uint16 productType = 0;
+				uint16 productId = 0;
 				str = child->Attribute( "id" );
 				if( str )
 				{
-					m_manufacturerId = strtol(str, NULL, 16);
+					manufacturerId = (uint16_t)(strtol(str, NULL, 16) & 0xFFFF);
 				}
 
 				str = child->Attribute( "name" );
@@ -1075,13 +1125,13 @@ void Node::ReadXML
 					str = product->Attribute( "type" );
 					if( str )
 					{
-						m_productType = strtol(str, NULL, 16);
+						productType = (uint16_t)(strtol(str, NULL, 16) & 0xFFFF);
 					}
 
 					str = product->Attribute( "id" );
 					if( str )
 					{
-						m_productId = strtol(str, NULL, 16);
+						productId = (uint16_t)(strtol(str, NULL, 16) & 0xFFFF);
 					}
 
 					str = product->Attribute( "name" );
@@ -1089,6 +1139,17 @@ void Node::ReadXML
 					{
 						m_productName = str;
 					}
+
+					ManufacturerSpecific* cc = static_cast<ManufacturerSpecific*>( GetCommandClass( ManufacturerSpecific::StaticGetCommandClassId() ) );
+					/* don't do this if its the Controller Node */
+					if( cc ) {
+						cc->SetProductDetails(manufacturerId, productType, productId);
+						cc->setLoadedConfigRevision(m_loadedConfigRevision);
+					} else {
+						Log::Write(LogLevel_Warning, GetNodeId(), "ManufacturerSpecific Class not loaded for ReadXML");
+					}
+
+					ReadMetaDataFromXML(product);
 				}
 			}
 		}
@@ -1108,17 +1169,31 @@ void Node::ReadXML
 
 //-----------------------------------------------------------------------------
 // <Node::ReadDeviceProtocolXML>
-// Read the device's protocol configuration from XML
+// Read the device's protocol configuration from a device config file (Not 
+// cache)
 //-----------------------------------------------------------------------------
 void Node::ReadDeviceProtocolXML
 (
 		TiXmlElement const* _ccsElement
 )
 {
+	char const *str = _ccsElement->Attribute("Revision");
+	if ( str ) {
+		/* as we are loading the Node from the device config file, both the
+		 * File and Loaded Revisions will be the same
+		 */
+		this->setFileConfigRevision(atol(str));
+		this->setLoadedConfigRevision(m_fileConfigRevision);
+		Log::Write(LogLevel_Info, GetNodeId(), "  Configuration File Revision is %d", m_fileConfigRevision);
+	} else {
+		this->setFileConfigRevision(0);
+		this->setLoadedConfigRevision(m_fileConfigRevision);
+	}
+
 	TiXmlElement const* ccElement = _ccsElement->FirstChildElement();
 	while( ccElement )
 	{
-		char const* str = ccElement->Value();
+		str = ccElement->Value();
 		if( str && !strcmp( str, "Protocol" ) )
 		{
 			str = ccElement->Attribute( "nodeinfosupported" );
@@ -1296,6 +1371,9 @@ void Node::WriteXML
 		nodeElement->SetAttribute( "refreshonnodeinfoframe", "false" );
 	}
 
+	snprintf( str, 32, "%d", m_loadedConfigRevision);
+	nodeElement->SetAttribute( "configrevision", str );
+
 	nodeElement->SetAttribute( "query_stage", c_queryStageNames[m_queryStage] );
 
 	// Write the manufacturer and product data in the same format
@@ -1329,6 +1407,11 @@ void Node::WriteXML
 		productElement->SetAttribute( "id", ss.str().c_str() );
 	}
 	productElement->SetAttribute( "name", m_productName.c_str() );
+
+	// Write the MetaData out
+	TiXmlElement* mdElement = new TiXmlElement( "MetaData" );
+	productElement->LinkEndChild( mdElement );
+	WriteMetaDataXML(mdElement);
 
 	// Write the command classes
 	TiXmlElement* ccsElement = new TiXmlElement( "CommandClasses" );
@@ -1428,6 +1511,19 @@ void Node::UpdateProtocolInfo
 		{
 			GetDriver()->ReadButtons( m_nodeId );
 		}
+		/* load the Advertised CommandClasses on the Controller Node
+		 *
+		 */
+		if( GetDriver()->GetControllerNodeId() == m_nodeId )
+		{
+			Log::Write( LogLevel_Info, m_nodeId, "  Advertised CommandClasses on Controller Node:");
+			list<uint8> advertisedCommandClasses = CommandClasses::GetAdvertisedCommandClasses();
+			for (list<uint8>::iterator it = advertisedCommandClasses.begin(); it != advertisedCommandClasses.end(); ++it) {
+				CommandClass *cc = AddCommandClass(*it, true);
+				Log::Write( LogLevel_Info, m_nodeId, "    %s", cc->GetCommandClassName().c_str());
+			}
+		}
+
 		m_basicprotocolInfoReceived = true;
 	} else {
 		/* we have to setup the Wakeup CC if needed here, because
@@ -1513,22 +1609,85 @@ void Node::SetProtocolInfo
 	m_basicprotocolInfoReceived = true;
 }
 
-void Node::SetSecured(bool secure) {
+void Node::SetSecured
+(
+		bool secure
+)
+{
 	m_secured = secure;
 }
 
+bool Node::IsSecured
+(
+)
+{
+	return m_secured;
+}
+
+void Node::SetInstanceLabel
+(
+		uint8 const _instance,
+		char *label
+)
+{
+	m_globalInstanceLabel[_instance] = string(label);
+}
+
+string Node::GetInstanceLabel
+(
+		uint8 const _ccid,
+		uint8 const _instance
+)
+{
+	string label;
+	/* find the CommandClass */
+	CommandClass *_cc = GetCommandClass(_ccid);
+	if ( _cc )
+		label = _cc->GetInstanceLabel(_instance);
+	/* if the Label is Empty - Then use the Global Label */
+	if ( label.empty() ) {
+		if ( m_globalInstanceLabel.count(_instance) )
+			label = m_globalInstanceLabel[_instance];
+		else {
+			/* construct a Default Label */
+			std::ostringstream sstream;
+			sstream << Localization::Get()->GetGlobalLabel("Instance") << " " << (int)_instance << ":";
+			label = sstream.str();
+		}
+	}
+	return label;
+}
+
+uint8 Node::GetNumInstances
+(
+		uint8 const _ccid
+)
+{
+	uint8 ccid = _ccid;
+	int instances = 1;
+	if ( _ccid == 0 )
+	{
+		ccid = MultiInstance::StaticGetCommandClassId();
+	}
+	if ( CommandClass *cc = GetCommandClass(ccid) )
+	{
+		return cc->GetNumInstances();
+	}
+
+	return instances;
+}
 
 
 void Node::SetSecuredClasses
 (
 		uint8 const* _data,
-		uint8 const _length
+		uint8 const _length,
+		uint32 const _instance
 )
 {
 	uint32 i;
 	m_secured = true;
-	Log::Write( LogLevel_Info, m_nodeId, "  Secured command classes for node %d:", m_nodeId );
-
+	Log::Write( LogLevel_Info, m_nodeId, "  Secured command classes for node %d (instance %d):", m_nodeId, _instance );
 	if (!GetDriver()->isNetworkKeySet()) {
 		Log::Write (LogLevel_Warning, m_nodeId, "  Secured Command Classes cannot be enabled as Network Key is not set");
 		return;
@@ -1548,9 +1707,9 @@ void Node::SetSecuredClasses
 			continue;
 		}
 		/* Check if this is a CC that is already registered with the node */
-		if (CommandClass *pCommandClass = GetCommandClass(_data[i]))
+		if (CommandClass *pCommandClass = GetCommandClass(_data[i], afterMark))
 		{
-			/* if it was specified int he NIF frame, and came in as part of the Security SupportedReport message
+			/* if it was specified the he NIF frame, and came in as part of the Security SupportedReport message
 			 * then it can support both Clear Text and Secured Comms. So do a check first
 			 */
 			if (pCommandClass->IsInNIF()) {
@@ -1566,13 +1725,22 @@ void Node::SetSecuredClasses
 					Log::Write( LogLevel_Info, m_nodeId, "    %s (Secured) - %s", pCommandClass->GetCommandClassName().c_str(), pCommandClass->IsInNIF() ? "InNIF": "NotInNIF");
 				}
 			}
+			if (_instance > 1) {
+				/* we need to get the endpoint from the Security CC, to map over to the target CC if this
+				 * is triggered by a SecurityCmd_SupportedReport from a instance
+				 */
+				CommandClass *secc = GetCommandClass(Security::StaticGetCommandClassId(), false);
+				int ep = secc->GetEndPoint(_instance);
+				pCommandClass->SetEndPoint(_instance, ep);
+				pCommandClass->SetInstance(_instance);
+			}
 		}
 		/* it might be a new CC we havn't seen as part of the NIF. In that case
 		 * its only supported via the Security CC, so no need to check our SecurityStrategy, just
 		 * encrypt it regardless */
 		else if( CommandClasses::IsSupported( _data[i] ) )
 		{
-			if( CommandClass* pCommandClass = AddCommandClass( _data[i] ) )
+			if( CommandClass* pCommandClass = AddCommandClass( _data[i], afterMark ) )
 			{
 				// If this class came after the COMMAND_CLASS_MARK, then we do not create values.
 				if( afterMark )
@@ -1586,7 +1754,10 @@ void Node::SetSecuredClasses
 				// Start with an instance count of one.  If the device supports COMMMAND_CLASS_MULTI_INSTANCE
 				// then some command class instance counts will increase once the responses to the RequestState
 				// call at the end of this method have been processed.
-				pCommandClass->SetInstance( 1 );
+				if (_instance > 1)
+					pCommandClass->SetInstance( _instance );
+				else
+					pCommandClass->SetInstance( 1 );
 
 				/* set our Static Request Flags */
 				uint8 request = 0;
@@ -1614,7 +1785,7 @@ void Node::SetSecuredClasses
 			Log::Write( LogLevel_Info, m_nodeId, "    Secure CommandClass 0x%.2x - NOT SUPPORTED", _data[i] );
 		}
 	}
-	Log::Write( LogLevel_Info, m_nodeId, "  UnSecured command classes for node %d:", m_nodeId );
+	Log::Write( LogLevel_Info, m_nodeId, "  UnSecured command classes for node %d (instance %d):", m_nodeId, _instance );
 	for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
 	{
 		if (!it->second->IsSecured())
@@ -1667,7 +1838,7 @@ void Node::UpdateNodeInfo
 					Log::Write (LogLevel_Info, m_nodeId, "    %s (Disabled - Network Key Not Set)", Security::StaticGetCommandClassName().c_str());
 					continue;
 				}
-				if( CommandClass* pCommandClass = AddCommandClass( _data[i] ) )
+				if( CommandClass* pCommandClass = AddCommandClass( _data[i] , afterMark) )
 				{
 					/* this CC was in the NIF frame */
 					pCommandClass->SetInNIF();
@@ -1684,6 +1855,10 @@ void Node::UpdateNodeInfo
 					newCommandClasses = true;
 					Log::Write( LogLevel_Info, m_nodeId, "    %s", pCommandClass->GetCommandClassName().c_str() );
 				} else if (CommandClass *pCommandClass = GetCommandClass( _data[i] ) ) {
+					/* this CC was in the NIF frame */
+					pCommandClass->SetInNIF();
+					Log::Write( LogLevel_Info, m_nodeId, "    %s (Existing)", pCommandClass->GetCommandClassName().c_str() );
+				} else if (CommandClass *pCommandClass = GetCommandClass( _data[i], true ) ) {
 					/* this CC was in the NIF frame */
 					pCommandClass->SetInNIF();
 					Log::Write( LogLevel_Info, m_nodeId, "    %s (Existing)", pCommandClass->GetCommandClassName().c_str() );
@@ -1716,6 +1891,8 @@ void Node::UpdateNodeInfo
 	{
 		wakeUp->SetAwake( true );
 	}
+
+
 }
 
 //-----------------------------------------------------------------------------
@@ -1771,13 +1948,13 @@ void Node::SetStaticRequests
 {
 	uint8 request = 0;
 
-	if( GetCommandClass( MultiInstance::StaticGetCommandClassId() ) )
+	if( GetCommandClass( MultiInstance::StaticGetCommandClassId(), false ) )
 	{
 		// Request instances
 		request |= (uint8)CommandClass::StaticRequest_Instances;
 	}
 
-	if( GetCommandClass( Version::StaticGetCommandClassId() ) )
+	if( GetCommandClass( Version::StaticGetCommandClassId(), false ) )
 	{
 		// Request versions
 		request |= (uint8)CommandClass::StaticRequest_Version;
@@ -1861,7 +2038,30 @@ void Node::ApplicationCommandHandler
 		}
 
 		pCommandClass->ReceivedCntIncr();
-		pCommandClass->HandleMsg( &_data[6], _data[4] );
+		if (!pCommandClass->HandleMsg( &_data[6], _data[4] ) )
+		{
+			Log::Write( LogLevel_Warning, m_nodeId, "CommandClass %s HandlerMsg Returned False", pCommandClass->GetCommandClassName().c_str());
+		}
+	}
+	else if( CommandClass* pCommandClass = GetCommandClass( _data[5], true ) )
+	{
+		if (pCommandClass->IsSecured() && !encrypted) {
+			Log::Write( LogLevel_Warning, m_nodeId, "Received a Clear Text Message for the Advertised CommandClass %s which is Secured", pCommandClass->GetCommandClassName().c_str());
+			bool drop = true;
+			Options::Get()->GetOptionAsBool("EnforceSecureReception", &drop);
+			if (drop) {
+				Log::Write( LogLevel_Warning, m_nodeId, "   Dropping Message");
+				return;
+			} else {
+				Log::Write( LogLevel_Warning, m_nodeId, "   Allowing Message (EnforceSecureReception is not set)");
+			}
+		}
+
+		pCommandClass->ReceivedCntIncr();
+		if (!pCommandClass->HandleIncomingMsg( &_data[6], _data[4] ) )
+		{
+			Log::Write (LogLevel_Warning, m_nodeId, "CommandClass %s HandleIncommingMsg returned false", pCommandClass->GetCommandClassName().c_str());
+		}
 	}
 	else
 	{
@@ -1873,6 +2073,25 @@ void Node::ApplicationCommandHandler
 
 			Msg* msg = new Msg( "Replication Command Complete", m_nodeId, REQUEST, FUNC_ID_ZW_REPLICATION_COMMAND_COMPLETE, false );
 			GetDriver()->SendMsg( msg, Driver::MsgQueue_Command );
+		}
+		else if ( _data[5] == MultiInstance::StaticGetCommandClassId() ) {
+			// Devices that support MultiChannelAssociation may send a MultiChannel Encapsulated message if there is a Instance set in the Association Groups
+			// So we will dynamically load the MultiChannel CC if we receive a encapsulated message
+			// We only do this after the QueryStage is Complete as we don't want to Add this CC to the list, and then confusing OZW that
+			// The device supports the MultiChannel CC (eg, the Device might be asleep, we have not got the NIF and it actually does support it versus sending to a MultiChannelAssociation Endpoint
+			if (GetCurrentQueryStage() != QueryStage_Complete) {
+				Log::Write( LogLevel_Info, m_nodeId, "ApplicationCommandHandler - Received a MultiInstance Message, but QueryStage Isn't Complete yet");
+				return;
+			}
+
+			Log::Write (LogLevel_Info, m_nodeId, "ApplicationCommandHandler - Received a MultiInstance Message but MulitInstance CC isn't loaded. Loading it... ");
+			if (CommandClass* pCommandClass = AddCommandClass(MultiInstance::StaticGetCommandClassId(), true)) {
+				pCommandClass->ReceivedCntIncr();
+				if (!pCommandClass->HandleIncomingMsg( &_data[6], _data[4] ) )
+				{
+					Log::Write (LogLevel_Warning, m_nodeId, "CommandClass %s HandleIncommingMsg returned false", pCommandClass->GetCommandClassName().c_str());
+				}
+			}
 		}
 		else
 		{
@@ -1887,13 +2106,24 @@ void Node::ApplicationCommandHandler
 //-----------------------------------------------------------------------------
 CommandClass* Node::GetCommandClass
 (
-		uint8 const _commandClassId
+		uint8 const _commandClassId,
+		bool advertised
 )const
 {
-	map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.find( _commandClassId );
-	if( it != m_commandClassMap.end() )
+	if (!advertised) {
+		map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.find( _commandClassId );
+		if( it != m_commandClassMap.end() )
+		{
+			return it->second;
+		}
+	}
+	else
 	{
-		return it->second;
+		map<uint8, CommandClass*>::const_iterator it = m_advertisedCommandClassMap.find( _commandClassId );
+		if (it != m_advertisedCommandClassMap.end() )
+		{
+			return it->second;
+		}
 	}
 
 	// Not found
@@ -1906,10 +2136,11 @@ CommandClass* Node::GetCommandClass
 //-----------------------------------------------------------------------------
 CommandClass* Node::AddCommandClass
 (
-		uint8 const _commandClassId
+		uint8 const _commandClassId,
+		bool advertised
 )
 {
-	if( GetCommandClass( _commandClassId ) )
+	if( GetCommandClass( _commandClassId ) || GetCommandClass( _commandClassId, true))
 	{
 		// Class and instance have already been added
 		return NULL;
@@ -1918,7 +2149,15 @@ CommandClass* Node::AddCommandClass
 	// Create the command class object and add it to our map
 	if( CommandClass* pCommandClass = CommandClasses::CreateCommandClass( _commandClassId, m_homeId, m_nodeId ) )
 	{
-		m_commandClassMap[_commandClassId] = pCommandClass;
+		if (!advertised)
+		{
+			m_commandClassMap[_commandClassId] = pCommandClass;
+		}
+		else
+		{
+			m_advertisedCommandClassMap[_commandClassId] = pCommandClass;
+			pCommandClass->SetAfterMark();
+		}
 		return pCommandClass;
 	}
 	else
@@ -2088,7 +2327,23 @@ bool Node::RequestDynamicValues
 
 	return res;
 }
+//-----------------------------------------------------------------------------
+// <Node::RefreshValuesOnWakeup>
+// Request an update of all known dynamic values from the device
+//-----------------------------------------------------------------------------
+void Node::RefreshValuesOnWakeup
+(
+)
+{
+	for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
+	{
+		if( !it->second->IsAfterMark() )
+		{
+			it->second->refreshValuesOnWakeup();
+		}
+	}
 
+}
 //-----------------------------------------------------------------------------
 // <Node::SetLevel>
 // Helper method to set a device's basic level
@@ -2150,12 +2405,45 @@ ValueID Node::CreateValueID
 		ValueID::ValueGenre const _genre,
 		uint8 const _commandClassId,
 		uint8 const _instance,
-		uint8 const _valueIndex,
+		uint16 const _valueIndex,
 		ValueID::ValueType const _type
 )
 {
 	return ValueID( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _type );
 }
+
+//-----------------------------------------------------------------------------
+// <Node::CreateValueBitSet>
+// Helper to create a BitSet ValueID
+//-----------------------------------------------------------------------------
+bool Node::CreateValueBitSet
+(
+		ValueID::ValueGenre const _genre,
+		uint8 const _commandClassId,
+		uint8 const _instance,
+		uint16 const _valueIndex,
+		string const& _label,
+		string const& _units,
+		bool const _readOnly,
+		bool const _writeOnly,
+		int32 const _default,
+		uint8 const _pollIntensity
+)
+{
+	ValueBitSet* value = new ValueBitSet( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _default, _pollIntensity );
+	ValueStore* store = GetValueStore();
+	if( store->AddValue( value ) )
+	{
+		value->Release();
+		return true;
+	}
+
+	value->Release();
+	return false;
+}
+
+
+
 
 //-----------------------------------------------------------------------------
 // <Node::CreateValueBool>
@@ -2166,7 +2454,7 @@ bool Node::CreateValueBool
 		ValueID::ValueGenre const _genre,
 		uint8 const _commandClassId,
 		uint8 const _instance,
-		uint8 const _valueIndex,
+		uint16 const _valueIndex,
 		string const& _label,
 		string const& _units,
 		bool const _readOnly,
@@ -2196,7 +2484,7 @@ bool Node::CreateValueButton
 		ValueID::ValueGenre const _genre,
 		uint8 const _commandClassId,
 		uint8 const _instance,
-		uint8 const _valueIndex,
+		uint16 const _valueIndex,
 		string const& _label,
 		uint8 const _pollIntensity
 )
@@ -2222,7 +2510,7 @@ bool Node::CreateValueByte
 		ValueID::ValueGenre const _genre,
 		uint8 const _commandClassId,
 		uint8 const _instance,
-		uint8 const _valueIndex,
+		uint16 const _valueIndex,
 		string const& _label,
 		string const& _units,
 		bool const _readOnly,
@@ -2252,7 +2540,7 @@ bool Node::CreateValueDecimal
 		ValueID::ValueGenre const _genre,
 		uint8 const _commandClassId,
 		uint8 const _instance,
-		uint8 const _valueIndex,
+		uint16 const _valueIndex,
 		string const& _label,
 		string const& _units,
 		bool const _readOnly,
@@ -2282,7 +2570,7 @@ bool Node::CreateValueInt
 		ValueID::ValueGenre const _genre,
 		uint8 const _commandClassId,
 		uint8 const _instance,
-		uint8 const _valueIndex,
+		uint16 const _valueIndex,
 		string const& _label,
 		string const& _units,
 		bool const _readOnly,
@@ -2309,28 +2597,27 @@ bool Node::CreateValueInt
 //-----------------------------------------------------------------------------
 bool Node::CreateValueList
 (
-		ValueID::ValueGenre const _genre,
-		uint8 const _commandClassId,
-		uint8 const _instance,
-		uint8 const _valueIndex,
-		string const& _label,
-		string const& _units,
-		bool const _readOnly,
-		bool const _writeOnly,
-		uint8 const _size,
-		vector<ValueList::Item> const& _items,
-		int32 const _default,
-		uint8 const _pollIntensity
+	ValueID::ValueGenre const _genre,
+	uint8 const _commandClassId,
+	uint8 const _instance,
+	uint16 const _valueIndex,
+	string const& _label,
+	string const& _units,
+	bool const _readOnly,
+	bool const _writeOnly,
+	uint8 const _size,
+	vector<ValueList::Item> const& _items,
+	int32 const _default,
+	uint8 const _pollIntensity
 )
 {
-	ValueList* value = new ValueList( m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _items, _default, _pollIntensity, _size );
+	ValueList* value = new ValueList(m_homeId, m_nodeId, _genre, _commandClassId, _instance, _valueIndex, _label, _units, _readOnly, _writeOnly, _items, _default, _pollIntensity, _size);
 	ValueStore* store = GetValueStore();
-	if( store->AddValue( value ) )
+	if (store->AddValue(value))
 	{
 		value->Release();
 		return true;
 	}
-
 	value->Release();
 	return false;
 }
@@ -2344,7 +2631,7 @@ bool Node::CreateValueRaw
 		ValueID::ValueGenre const _genre,
 		uint8 const _commandClassId,
 		uint8 const _instance,
-		uint8 const _valueIndex,
+		uint16 const _valueIndex,
 		string const& _label,
 		string const& _units,
 		bool const _readOnly,
@@ -2375,7 +2662,7 @@ bool Node::CreateValueSchedule
 		ValueID::ValueGenre const _genre,
 		uint8 const _commandClassId,
 		uint8 const _instance,
-		uint8 const _valueIndex,
+		uint16 const _valueIndex,
 		string const& _label,
 		string const& _units,
 		bool const _readOnly,
@@ -2404,7 +2691,7 @@ bool Node::CreateValueShort
 		ValueID::ValueGenre const _genre,
 		uint8 const _commandClassId,
 		uint8 const _instance,
-		uint8 const _valueIndex,
+		uint16 const _valueIndex,
 		string const& _label,
 		string const& _units,
 		bool const _readOnly,
@@ -2434,7 +2721,7 @@ bool Node::CreateValueString
 		ValueID::ValueGenre const _genre,
 		uint8 const _commandClassId,
 		uint8 const _instance,
-		uint8 const _valueIndex,
+		uint16 const _valueIndex,
 		string const& _label,
 		string const& _units,
 		bool const _readOnly,
@@ -2485,23 +2772,22 @@ bool Node::CreateValueFromXML
 
 	switch( type )
 	{
+		case ValueID::ValueType_BitSet:		{	value = new ValueBitSet(); 		break;  }
 		case ValueID::ValueType_Bool:		{	value = new ValueBool();		break;	}
 		case ValueID::ValueType_Byte:		{	value = new ValueByte();		break;	}
 		case ValueID::ValueType_Decimal:	{	value = new ValueDecimal();		break;	}
 		case ValueID::ValueType_Int:		{	value = new ValueInt();			break;	}
 		case ValueID::ValueType_List:		{	value = new ValueList();		break;	}
-		case ValueID::ValueType_Schedule:	{	value = new ValueSchedule();		break;	}
+		case ValueID::ValueType_Schedule:	{	value = new ValueSchedule();	break;	}
 		case ValueID::ValueType_Short:		{	value = new ValueShort();		break;	}
 		case ValueID::ValueType_String:		{	value = new ValueString();		break;	}
 		case ValueID::ValueType_Button:		{	value = new ValueButton();		break;	}
 		case ValueID::ValueType_Raw:		{	value = new ValueRaw();			break;  }
-		default:				{	Log::Write( LogLevel_Info, m_nodeId, "Unknown ValueType in XML: %s", _valueElement->Attribute( "type" ) ); break; }
 	}
 
 	if( value )
 	{
 		value->ReadXML( m_homeId, m_nodeId, _commandClassId, _valueElement );
-
 		ValueStore* store = GetValueStore();
 		if( store->AddValue( value ) )
 		{
@@ -2510,6 +2796,8 @@ bool Node::CreateValueFromXML
 		}
 
 		value->Release();
+	} else {
+		Log::Write( LogLevel_Info, m_nodeId, "Unknown ValueType in XML: %s", _valueElement->Attribute( "type" ) );
 	}
 
 	return false;
@@ -2536,10 +2824,10 @@ void Node::ReadValueFromXML
 		instance = (uint8)intVal;
 	}
 
-	uint8 index = 0;
+	uint16 index = 0;
 	if( TIXML_SUCCESS == _valueElement->QueryIntAttribute( "index", &intVal ) )
 	{
-		index = (uint8)intVal;
+		index = (uint16)intVal;
 	}
 
 	ValueID id = ValueID( m_homeId, m_nodeId, genre, _commandClassId, instance, index, type );
@@ -2551,8 +2839,16 @@ void Node::ReadValueFromXML
 	{
 		if( Value* value = store->GetValue( id.GetValueStoreKey() ) )
 		{
-			value->ReadXML( m_homeId, m_nodeId, _commandClassId, _valueElement );
-			value->Release();
+			// Check if values type are the same
+			ValueID::ValueType v_type = value->GetID().GetType();
+			if ( v_type == type ) {
+				value->ReadXML( m_homeId, m_nodeId, _commandClassId, _valueElement );
+				value->Release();
+			} else {
+				Log::Write( LogLevel_Info, m_nodeId, "xml value type (%s) is different to stored value type (%s). Value is recreate with xml params.", value->GetTypeNameFromEnum(type), value->GetTypeNameFromEnum(v_type) );
+				store->RemoveValue( value->GetID().GetValueStoreKey() );
+				CreateValueFromXML( _commandClassId, _valueElement );
+			}
 		}
 		else
 		{
@@ -2582,7 +2878,7 @@ Value* Node::GetValue
 (
 		uint8 const _commandClassId,
 		uint8 const _instance,
-		uint8 const _valueIndex
+		uint16 const _valueIndex
 )
 {
 	Value* value = NULL;
@@ -2600,7 +2896,7 @@ bool Node::RemoveValue
 (
 		uint8 const _commandClassId,
 		uint8 const _instance,
-		uint8 const _valueIndex
+		uint16 const _valueIndex
 )
 {
 	ValueStore* store = GetValueStore();
@@ -2729,6 +3025,23 @@ uint8 Node::GetMaxAssociations
 	}
 
 	return maxAssociations;
+}
+
+//-----------------------------------------------------------------------------
+// <Node::IsMultiInstance>
+// Returns true if group supports multi instance
+//-----------------------------------------------------------------------------
+bool Node::IsMultiInstance
+(
+		uint8 const _groupIdx
+)
+{
+	bool multiInstance = false;
+	if( Group* group = GetGroup( _groupIdx ) )
+	{
+		multiInstance = group->IsMultiInstance();
+	}
+	return multiInstance;
 }
 
 //-----------------------------------------------------------------------------
@@ -3222,7 +3535,7 @@ void Node::ReadDeviceClasses
 		Log::Write( LogLevel_Info, "Check that the config path provided when creating the Manager points to the correct location." );
 		return;
 	}
-
+	doc.SetUserData((void *)filename.c_str());
 	TiXmlElement const* deviceClassesElement = doc.RootElement();
 
 	// Read the basic and generic device classes
@@ -3236,23 +3549,24 @@ void Node::ReadDeviceClasses
 			if( keyStr )
 			{
 				char* pStop;
-				uint16 key = (uint16)strtol( keyStr, &pStop, 16 );
+				/* we do a short here, as they key can be a DeviceType Key which is short */
+				uint16_t key = (uint16)strtol( keyStr, &pStop, 16 );
 
 				if( !strcmp( str, "Generic" ) )
 				{
-					s_genericDeviceClasses[key] = new GenericDeviceClass( child );
+					s_genericDeviceClasses[(uint8_t)(key & 0xFF)] = new GenericDeviceClass( child );
 				}
 				else if( !strcmp( str, "Basic" ) )
 				{
 					char const* label = child->Attribute( "label" );
 					if( label )
 					{
-						s_basicDeviceClasses[key] = label;
+						s_basicDeviceClasses[(uint8_t)(key & 0xFF)] = label;
 					}
 				}
 				else if( !strcmp( str, "Role" ) )
 				{
-					s_roleDeviceClasses[key] = new DeviceClass( child );
+					s_roleDeviceClasses[(uint8_t)(key & 0xFF)] = new DeviceClass( child );
 				}
 				else if( !strcmp( str, "DeviceType" ) )
 				{
@@ -3260,7 +3574,7 @@ void Node::ReadDeviceClasses
 				}
 				else if (!strcmp( str, "NodeType" ) )
 				{
-					s_nodeTypes[key] = new DeviceClass( child );
+					s_nodeTypes[(uint8_t)(key & 0xFF)] = new DeviceClass( child );
 				}
 			}
 		}
@@ -3292,6 +3606,30 @@ void Node::GetNodeStatistics
 	_data->m_receivedTS = m_receivedTS.GetAsString();
 	_data->m_averageRequestRTT = m_averageRequestRTT;
 	_data->m_averageResponseRTT = m_averageResponseRTT;
+	_data->m_txStatusReportSupported = m_txStatusReportSupported;
+	_data->m_txTime = m_txTime;
+	_data->m_hops = m_hops;
+	// petergebruers swap src and dst
+	// petergebruers there are 5 rssi values because there are
+	// 4 repeaters + 1 sending node
+	strncpy(_data->m_rssi_1, m_rssi_1, sizeof(_data->m_rssi_1));
+	strncpy(_data->m_rssi_2, m_rssi_2, sizeof(_data->m_rssi_2));
+	strncpy(_data->m_rssi_3, m_rssi_3, sizeof(_data->m_rssi_3));
+	strncpy(_data->m_rssi_4, m_rssi_4, sizeof(_data->m_rssi_4));
+	strncpy(_data->m_rssi_5, m_rssi_5, sizeof(_data->m_rssi_5));
+	_data->m_ackChannel = m_ackChannel;
+	_data->m_lastTxChannel = m_lastTxChannel;
+	_data->m_routeScheme = m_routeScheme;
+	_data->m_routeUsed[0] = m_routeUsed[0];
+	_data->m_routeUsed[1] = m_routeUsed[1];
+	_data->m_routeUsed[2] = m_routeUsed[2];
+	_data->m_routeUsed[3] = m_routeUsed[3];
+	//petergebruers: missed m_routeSpeed
+	_data->m_routeSpeed= m_routeSpeed;
+	_data->m_routeTries = m_routeTries;
+	_data->m_lastFailedLinkFrom = m_lastFailedLinkFrom;
+	_data->m_lastFailedLinkTo = m_lastFailedLinkTo;
+
 	_data->m_quality = m_quality;
 	memcpy( _data->m_lastReceivedMessage, m_lastReceivedMessage, sizeof(m_lastReceivedMessage) );
 	for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
@@ -3534,7 +3872,7 @@ string Node::GetNodeTypeString() {
 
 //-----------------------------------------------------------------------------
 // <Node::GetRoleTypeString>
-// Get the ZWave+ NodeType as a String
+// Is the Node Reset?
 //-----------------------------------------------------------------------------
 bool Node::IsNodeReset()
 {
@@ -3544,4 +3882,315 @@ bool Node::IsNodeReset()
 	else return false;
 
 
+}
+
+
+//-----------------------------------------------------------------------------
+// <Node::SetProductDetails>
+// Assign a ProductDetails class to this node
+//-----------------------------------------------------------------------------
+void Node::SetProductDetails
+(
+	ProductDescriptor *product
+)
+{
+	/* if there is a ProductDescriptor already assigned, remove the reference */
+	if (m_Product)
+		m_Product->Release();
+	/* add the new ProductDescriptor */
+	m_Product = product;
+	m_Product->AddRef();
+}
+
+//-----------------------------------------------------------------------------
+// <Node::getConfigPath>
+// get the Path to the configFile for this device.
+//-----------------------------------------------------------------------------
+string Node::getConfigPath
+(
+)
+{
+	if (m_Product)
+		return m_Product->GetConfigPath();
+	else
+		return "";
+
+}
+
+//-----------------------------------------------------------------------------
+// <Node::setFileConfigRevision>
+// Set Loaded Config File Revision
+//-----------------------------------------------------------------------------
+void Node::setFileConfigRevision
+(
+	uint32 rev
+)
+{
+	m_fileConfigRevision = rev;
+	ManufacturerSpecific* cc = static_cast<ManufacturerSpecific*>( GetCommandClass( ManufacturerSpecific::StaticGetCommandClassId() ) );
+	if( cc  )
+	{
+		cc->setFileConfigRevision(rev);
+	}
+	/* check if this is the latest */
+	checkLatestConfigRevision();
+}
+
+//-----------------------------------------------------------------------------
+// <Node::setLoadedConfigRevision>
+// Set Loaded Config File Revision
+//-----------------------------------------------------------------------------
+void Node::setLoadedConfigRevision
+(
+	uint32 rev
+)
+{
+	m_loadedConfigRevision = rev;
+	ManufacturerSpecific* cc = static_cast<ManufacturerSpecific*>( GetCommandClass( ManufacturerSpecific::StaticGetCommandClassId() ) );
+	if( cc  )
+	{
+		cc->setLoadedConfigRevision(rev);
+	}
+
+}
+
+
+//-----------------------------------------------------------------------------
+// <Node::setLatestConfigRevisionn>
+// Set Latest Config File Revision
+//-----------------------------------------------------------------------------
+void Node::setLatestConfigRevision
+(
+	uint32 rev
+)
+{
+	m_latestConfigRevision = rev;
+	ManufacturerSpecific* cc = static_cast<ManufacturerSpecific*>( GetCommandClass( ManufacturerSpecific::StaticGetCommandClassId() ) );
+	if( cc  )
+	{
+		cc->setLatestConfigRevision(rev);
+	}
+}
+
+
+//-----------------------------------------------------------------------------
+// <Node::checkConfigRevision>
+// Check if our Config File is the latest
+//-----------------------------------------------------------------------------
+
+void Node::checkLatestConfigRevision
+(
+)
+{
+	if (m_fileConfigRevision != 0) {
+		GetDriver()->CheckNodeConfigRevision(this);
+	}
+}
+
+
+
+//-----------------------------------------------------------------------------
+// <Node::GetMetaData>
+// Get MetaData about a node
+//-----------------------------------------------------------------------------
+
+string const Node::GetMetaData
+(
+		MetaDataFields field
+)
+{
+	if (this->m_metadata.find(field) != this->m_metadata.end()) {
+		return this->m_metadata[field];
+	}
+	return string();
+}
+
+//-----------------------------------------------------------------------------
+// <Node::GetChangeLog>
+// Get MetaData about a node
+//-----------------------------------------------------------------------------
+Node::ChangeLogEntry const Node::GetChangeLog
+(
+		uint32_t revision
+)
+{
+	if (this->m_changeLog.find(revision) != this->m_changeLog.end()) {
+		return this->m_changeLog[revision];
+	}
+	ChangeLogEntry cle;
+	cle.revision = -1;
+	return cle;
+}
+
+//-----------------------------------------------------------------------------
+// <Node::GetMetaDataId>
+// Translate the MetaData String to a ID
+//-----------------------------------------------------------------------------
+Node::MetaDataFields const Node::GetMetaDataId(string name) {
+	if (name == "OzwInfoPage") return MetaData_OzwInfoPage_URL;
+	if (name == "ZWProductPage") return MetaData_ZWProductPage_URL;
+	if (name == "ProductPic") return MetaData_ProductPic;
+	if (name == "Description") return MetaData_Description;
+	if (name == "ProductManual") return MetaData_ProductManual_URL;
+	if (name == "ProductPage") return MetaData_ProductPage_URL;
+	if (name == "InclusionDescription") return MetaData_InclusionHelp;
+	if (name == "ExclusionDescription") return MetaData_ExclusionHelp;
+	if (name == "ResetDescription") return MetaData_ResetHelp;
+	if (name == "WakeupDescription") return MetaData_WakeupHelp;
+	if (name == "ProductSupport") return MetaData_ProductSupport_URL;
+	if (name == "FrequencyName") return MetaData_Frequency;
+	if (name == "Name") return MetaData_Name;
+	if (name == "Identifier") return MetaData_Identifier;
+	return MetaData_Invalid;
+}
+//-----------------------------------------------------------------------------
+// <Node::GetMetaDataString(>
+// Translate the MetaDataID to a String
+//-----------------------------------------------------------------------------
+string const Node::GetMetaDataString(Node::MetaDataFields id) {
+	switch (id) {
+	case MetaData_OzwInfoPage_URL:
+		return "OzwInfoPage";
+	case MetaData_ZWProductPage_URL:
+		return "ZWProductPage";
+	case MetaData_ProductPic:
+		return "ProductPic";
+	case MetaData_Description:
+		return "Description";
+	case MetaData_ProductManual_URL:
+		return "ProductManual";
+	case MetaData_ProductPage_URL:
+		return "ProductPage";
+	case MetaData_InclusionHelp:
+		return "InclusionDescription";
+	case MetaData_ExclusionHelp:
+		return "ExclusionDescription";
+	case MetaData_ResetHelp:
+		return "ResetDescription";
+	case MetaData_WakeupHelp:
+		return "WakeupDescription";
+	case MetaData_ProductSupport_URL:
+		return "ProductSupport";
+	case MetaData_Frequency:
+		return "FrequencyName";
+	case MetaData_Name:
+		return "Name";
+	case MetaData_Identifier:
+		return "Identifier";
+	case MetaData_Invalid:
+		return "";
+	}
+	return "";
+}
+
+//-----------------------------------------------------------------------------
+// <Node::ReadMetaDataFromXML(>
+// Read the MetaData from the Config File
+//-----------------------------------------------------------------------------
+void Node::ReadMetaDataFromXML(TiXmlElement const* _valueElement) {
+	TiXmlElement const* ccElement = _valueElement->FirstChildElement();
+		while( ccElement )
+		{
+			if(!strcmp( ccElement->Value(), "MetaData" ) )
+			{
+				TiXmlElement const* metadata = ccElement->FirstChildElement();
+				while (metadata) {
+					if( !strcmp( metadata->Value(), "MetaDataItem" ) )
+					{
+						string name = metadata->Attribute( "name" );
+						if (GetMetaDataId(name) == MetaData_Invalid) {
+							Log::Write(LogLevel_Warning, m_nodeId, "Invalid MetaData Name in Config: %s", name.c_str());
+							metadata = metadata->NextSiblingElement();
+							continue;
+						}
+						/* these are the MetaData that have type/id entries */
+						switch (GetMetaDataId(name)) {
+							case MetaData_ZWProductPage_URL:
+							case MetaData_Identifier:
+							case MetaData_Frequency:
+							{
+								int intVal;
+								uint16_t type = 0;
+								uint16_t id = 0;
+								if( TIXML_SUCCESS == metadata->QueryIntAttribute( "type", &intVal ) )
+								{
+									type = (uint16_t)intVal;
+								}
+								if( TIXML_SUCCESS == metadata->QueryIntAttribute( "id", &intVal ) )
+								{
+									id = (uint16_t)intVal;
+								}
+								if ((type != GetProductType()) ||
+										(id != GetProductId()) ) {
+									metadata = metadata->NextSiblingElement();
+									continue;
+								}
+								break;
+							}
+							/* for the rest, just take the standard entry */
+							default:
+								break;
+						}
+						this->m_metadata[GetMetaDataId(name)] = metadata->GetText();
+					} else if (!strcmp( metadata->Value(), "ChangeLog" )) {
+						TiXmlElement const* entry = metadata->FirstChildElement("Entry");
+						while (entry) {
+							ChangeLogEntry cle;
+							cle.author = entry->Attribute("author");
+							cle.date = entry->Attribute("date");
+							cle.description = entry->GetText();
+							metadata->QueryIntAttribute( "id", &cle.revision );
+							m_changeLog[cle.revision] = cle;
+							entry = entry->NextSiblingElement("Entry");
+						}
+
+					}
+					metadata = metadata->NextSiblingElement();
+				}
+			}
+			ccElement = ccElement->NextSiblingElement();
+		}
+}
+//-----------------------------------------------------------------------------
+// <Node::WriteMetaDataXML>
+// Write the MetaData to the Cache File
+//-----------------------------------------------------------------------------
+void Node::WriteMetaDataXML(TiXmlElement *mdElement) {
+	// Write out the MetaDataItems
+	for( map<MetaDataFields, string>::iterator it = m_metadata.begin(); it != m_metadata.end(); ++ it )
+	{
+		/* only write if its a valid MetaData */
+		if (it->first < Node::MetaData_Invalid) {
+			TiXmlElement* mdiElement = new TiXmlElement( "MetaDataItem" );
+			mdiElement->SetAttribute( "name", GetMetaDataString(it->first).c_str() );
+			switch (it->first) {
+				case MetaData_ZWProductPage_URL:
+				case MetaData_Identifier:
+				case MetaData_Frequency:
+					mdiElement->SetAttribute("type", GetProductType());
+					mdiElement->SetAttribute("id", GetProductId());
+					break;
+				/* for the rest, just take the standard entry */
+				default:
+					break;
+			}
+			TiXmlText* textElement = new TiXmlText( it->second.c_str() );
+			mdiElement->LinkEndChild( textElement );
+			mdElement->LinkEndChild( mdiElement );
+
+		}
+	}
+	if (m_changeLog.size() > 0) {
+		TiXmlElement* cl = new TiXmlElement( "ChangeLog" );
+		for (map<uint32_t, ChangeLogEntry>::iterator it = m_changeLog.begin(); it != m_changeLog.end(); ++ it )
+		{
+			TiXmlElement* cle = new TiXmlElement( "Entry" );
+			cle->SetAttribute( "author", it->second.author.c_str() );
+			cle->SetAttribute( "date", it->second.date.c_str() );
+			cle->SetAttribute( "revision", it->second.revision );
+			TiXmlText* textElement = new TiXmlText( it->second.description.c_str() );
+			cle->LinkEndChild(textElement);
+		}
+		mdElement->LinkEndChild(cl);
+	}
 }

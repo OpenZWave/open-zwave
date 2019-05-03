@@ -34,9 +34,12 @@
 #include "Node.h"
 #include "Notification.h"
 #include "Options.h"
+#include "TimerThread.h"
 #include "platform/Log.h"
 #include "platform/Mutex.h"
 #include "value_classes/ValueInt.h"
+
+#include "tinyxml.h"
 
 using namespace OpenZWave;
 
@@ -66,8 +69,9 @@ m_mutex( new Mutex() ),
 m_awake( true ),
 m_pollRequired( false )
 {
+	Timer::SetDriver(GetDriver());
 	Options::Get()->GetOptionAsBool("AssumeAwake", &m_awake);
-
+	m_com.EnableFlag(COMPAT_FLAG_WAKEUP_DELAYNMI, 0);
 	SetStaticRequest( StaticRequest_Values );
 }
 
@@ -150,7 +154,7 @@ bool WakeUp::RequestState
 bool WakeUp::RequestValue
 (
 		uint32 const _requestFlags,
-		uint8 const _getTypeEnum,
+		uint16 const _getTypeEnum,
 		uint8 const _instance,
 		Driver::MsgQueue const _queue
 )
@@ -342,6 +346,15 @@ void WakeUp::SetAwake
 {
 	if( m_awake != _state )
 	{
+		/* we do the call on RefreshValuesOnWakeup here, so any duplicates in the wakeup Queue are handled appropriately
+		 *
+		 */
+		if ( m_awake == false ) {
+			Node* node = GetNodeUnsafe();
+			if (node)
+				node->RefreshValuesOnWakeup();
+		}
+
 		m_awake = _state;
 		Log::Write( LogLevel_Info, GetNodeId(), "  Node %d has been marked as %s", GetNodeId(), m_awake ? "awake" : "asleep" );
 		Notification* notification = new Notification( Notification::Type_Notification );
@@ -363,9 +376,10 @@ void WakeUp::SetAwake
 			}
 			m_pollRequired = false;
 		}
-
 		// Send all pending messages
 		SendPending();
+
+
 	}
 }
 
@@ -424,7 +438,7 @@ void WakeUp::SendPending
 )
 {
 	m_awake = true;
-
+	bool reloading = false;
 	m_mutex->Lock();
 	list<Driver::MsgQueueItem>::iterator it = m_pendingQueue.begin();
 	while( it != m_pendingQueue.end() )
@@ -437,10 +451,16 @@ void WakeUp::SendPending
 		else if( Driver::MsgQueueCmd_QueryStageComplete == item.m_command )
 		{
 			GetDriver()->SendQueryStageComplete( item.m_nodeId, item.m_queryStage );
-		} else if( Driver::MsgQueueCmd_Controller == item.m_command )
+		}
+		else if( Driver::MsgQueueCmd_Controller == item.m_command )
 		{
 			GetDriver()->BeginControllerCommand( item.m_cci->m_controllerCommand, item.m_cci->m_controllerCallback, item.m_cci->m_controllerCallbackContext, item.m_cci->m_highPower, item.m_cci->m_controllerCommandNode, item.m_cci->m_controllerCommandArg );
 			delete item.m_cci;
+		}
+		else if ( Driver::MsgQueueCmd_ReloadNode == item.m_command )
+		{
+			GetDriver()->ReloadNode(item.m_nodeId);
+			reloading = true;
 		}
 		it = m_pendingQueue.erase( it );
 	}
@@ -451,23 +471,42 @@ void WakeUp::SendPending
 	Node* node = GetNodeUnsafe();
 	if( node != NULL )
 	{
-
 		if( !node->AllQueriesCompleted() )
 		{
 			sendToSleep = false;
 		}
 	}
 
-	if( sendToSleep )
+	/* if we are reloading, the QueryStage_Complete will take care of sending the device back to sleep */
+	if( sendToSleep && !reloading )
 	{
-		Msg* msg = new Msg( "WakeUpCmd_NoMoreInformation", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
-		msg->Append( GetNodeId() );
-		msg->Append( 2 );
-		msg->Append( GetCommandClassId() );
-		msg->Append( WakeUpCmd_NoMoreInformation );
-		msg->Append( GetDriver()->GetTransmitOptions() );
-		GetDriver()->SendMsg( msg, Driver::MsgQueue_WakeUp );
+		if( m_com.GetFlagInt(COMPAT_FLAG_WAKEUP_DELAYNMI) == 0 ) {
+			SendNoMoreInfo(1);
+
+		} else {
+			Log::Write( LogLevel_Info, GetNodeId(), "  Node %d has delayed sleep of %dms", GetNodeId(), m_com.GetFlagInt(COMPAT_FLAG_WAKEUP_DELAYNMI) );
+			TimerThread::TimerCallback callback = bind(&WakeUp::SendNoMoreInfo, this, 1);
+			TimerSetEvent(m_com.GetFlagInt(COMPAT_FLAG_WAKEUP_DELAYNMI), callback, 1);
+		}
 	}
+}
+
+//-----------------------------------------------------------------------------
+// <WakeUp::SendNoMoreInfo>
+// Send a no more information message
+//-----------------------------------------------------------------------------
+void WakeUp::SendNoMoreInfo
+(
+		uint32 id
+)
+{
+	Msg* msg = new Msg( "WakeUpCmd_NoMoreInformation", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
+	msg->Append( GetNodeId() );
+	msg->Append( 2 );
+	msg->Append( GetCommandClassId() );
+	msg->Append( WakeUpCmd_NoMoreInformation );
+	msg->Append( GetDriver()->GetTransmitOptions() );
+	GetDriver()->SendMsg( msg, Driver::MsgQueue_WakeUp );
 }
 
 //-----------------------------------------------------------------------------

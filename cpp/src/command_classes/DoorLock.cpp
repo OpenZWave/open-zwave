@@ -117,80 +117,15 @@ DoorLock::DoorLock
 	uint32 const _homeId,
 	uint8 const _nodeId
 ):
-	CommandClass( _homeId, _nodeId ),
-	m_timeoutsupported(0),
-	m_insidehandlemode(0),
-	m_outsidehandlemode(0),
-	m_timeoutmins(0xFE),
-	m_timeoutsecs(0xFE)
+	CommandClass( _homeId, _nodeId )
 {
+	m_dom.EnableFlag(STATE_FLAG_DOORLOCK_TIMEOUT, 0);
+	m_dom.EnableFlag(STATE_FLAG_DOORLOCK_INSIDEMODE, 0);
+	m_dom.EnableFlag(STATE_FLAG_DOORLOCK_OUTSIDEMODE, 0);
+	m_dom.EnableFlag(STATE_FLAG_DOORLOCK_TIMEOUTMINS, 0xFE);
+	m_dom.EnableFlag(STATE_FLAG_DOORLOCK_TIMEOUTSECS, 0xFE);
 	SetStaticRequest( StaticRequest_Values );
 }
-
-//-----------------------------------------------------------------------------
-// <UserCode::ReadXML>
-// Class specific configuration
-//-----------------------------------------------------------------------------
-void DoorLock::ReadXML
-(
-	TiXmlElement const* _ccElement
-)
-{
-	int32 intVal;
-
-	CommandClass::ReadXML( _ccElement );
-	if( TIXML_SUCCESS == _ccElement->QueryIntAttribute( "m_timeoutsupported", &intVal ) )
-	{
-		m_timeoutsupported = intVal;
-	}
-	if( TIXML_SUCCESS == _ccElement->QueryIntAttribute( "m_insidehandlemode", &intVal ) )
-	{
-		m_insidehandlemode = intVal;
-	}
-	if( TIXML_SUCCESS == _ccElement->QueryIntAttribute( "m_outsidehandlemode", &intVal ) )
-	{
-		m_outsidehandlemode = intVal;
-	}
-	if( TIXML_SUCCESS == _ccElement->QueryIntAttribute( "m_timeoutmins", &intVal ) )
-	{
-		m_timeoutmins = intVal;
-	}
-	if( TIXML_SUCCESS == _ccElement->QueryIntAttribute( "m_timeoutsecs", &intVal ) )
-	{
-		m_timeoutsecs = intVal;
-	}
-}
-
-//-----------------------------------------------------------------------------
-// <UserCode::WriteXML>
-// Class specific configuration
-//-----------------------------------------------------------------------------
-void DoorLock::WriteXML
-(
-	TiXmlElement* _ccElement
-)
-{
-	char str[32];
-
-	CommandClass::WriteXML( _ccElement );
-	snprintf( str, sizeof(str), "%d", m_timeoutsupported );
-	_ccElement->SetAttribute( "m_timeoutsupported", str);
-
-	snprintf( str, sizeof(str), "%d", m_insidehandlemode );
-	_ccElement->SetAttribute( "m_insidehandlemode", str);
-
-	snprintf( str, sizeof(str), "%d", m_outsidehandlemode );
-	_ccElement->SetAttribute( "m_outsidehandlemode", str);
-
-	snprintf( str, sizeof(str), "%d", m_timeoutmins );
-	_ccElement->SetAttribute( "m_timeoutmins", str);
-
-	snprintf( str, sizeof(str), "%d", m_timeoutsecs );
-	_ccElement->SetAttribute( "m_timeoutsecs", str);
-
-}
-
-
 
 //-----------------------------------------------------------------------------
 // <DoorLock::RequestState>
@@ -227,7 +162,7 @@ bool DoorLock::RequestState
 bool DoorLock::RequestValue
 (
 	uint32 const _requestFlags,
-	uint8 const _what,
+	uint16 const _what,
 	uint8 const _instance,
 	Driver::MsgQueue const _queue
 )
@@ -245,7 +180,7 @@ bool DoorLock::RequestValue
 
 	} else if ((_what == Value_Lock) || (_what == Value_Lock_Mode)) {
 
-		if ( IsGetSupported() )
+		if ( m_com.GetFlagBool(COMPAT_FLAG_GETSUPPORTED) )
 		{
 			Msg* msg = new Msg( "DoorLockCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 			msg->SetInstance( this, _instance );
@@ -302,11 +237,11 @@ bool DoorLock::HandleMsg
 	{
 		switch (_data[1]) {
 			case DoorLockConfig_NoTimeout:
-				m_timeoutsupported = DoorLockConfig_NoTimeout;
+				m_dom.SetFlagByte(STATE_FLAG_DOORLOCK_TIMEOUT, DoorLockConfig_NoTimeout);
 				RemoveValue(_instance, Value_System_Config_Minutes);
 				RemoveValue(_instance, Value_System_Config_Seconds);
-			  	m_timeoutmins = 0xFE;
-			  	m_timeoutsecs = 0xFE;
+			  	m_dom.SetFlagByte(STATE_FLAG_DOORLOCK_TIMEOUTMINS, 0xFE);
+			  	m_dom.SetFlagByte(STATE_FLAG_DOORLOCK_TIMEOUTSECS, 0xFE);
 				break;
 			case DoorLockConfig_Timeout:
 				/* if we have a timeout, then create the Values for the timeout config */
@@ -315,9 +250,9 @@ bool DoorLock::HandleMsg
 					node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, Value_System_Config_Minutes, "Timeout Minutes", "Mins", false, false, _data[3], 0 );
 					node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, Value_System_Config_Seconds, "Timeout Seconds", "Secs", false, false, _data[4], 0 );
 				}
-			  	m_timeoutsupported = DoorLockConfig_Timeout;
-			  	m_timeoutmins = _data[3];
-			  	m_timeoutsecs = _data[4];
+				m_dom.SetFlagByte(STATE_FLAG_DOORLOCK_TIMEOUT, DoorLockConfig_Timeout);
+				m_dom.SetFlagByte(STATE_FLAG_DOORLOCK_TIMEOUTMINS, _data[3]);
+				m_dom.SetFlagByte(STATE_FLAG_DOORLOCK_TIMEOUTSECS, _data[4]);
 				break;
 			default:
 				Log::Write(LogLevel_Warning, GetNodeId(), "Received a Unsupported Door Lock Config Report %d", _data[1]);
@@ -327,13 +262,13 @@ bool DoorLock::HandleMsg
 		{
 			value->OnValueRefreshed( ((_data[2] & 0xF0)>>4) );
 			value->Release();
-			m_outsidehandlemode = ((_data[2] & 0xF0)>>4);
+			m_dom.SetFlagByte(STATE_FLAG_DOORLOCK_OUTSIDEMODE, ((_data[2] & 0xF0)>>4));
 		}
 		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, Value_System_Config_InsideHandles ) ) )
 		{
 			value->OnValueRefreshed( (_data[2] & 0x0F) );
 			value->Release();
-			m_insidehandlemode = (_data[2] & 0x0F);
+			m_dom.SetFlagByte(STATE_FLAG_DOORLOCK_INSIDEMODE, (_data[2] & 0x0F));
 		}
 
 
@@ -448,7 +383,7 @@ bool DoorLock::SetValue
 			if( ValueList* value = static_cast<ValueList*>( GetValue( instance, Value_System_Config_Mode ) ) ) {
 				ValueList::Item const *item = value->GetItem();
 				if (item != NULL)
-					m_timeoutsupported = item->m_value;
+					m_dom.SetFlagByte(STATE_FLAG_DOORLOCK_TIMEOUT, item->m_value);
 			} else {
 				ok = false;
 				Log::Write(LogLevel_Warning, GetNodeId(), "Failed To Retrieve Value_System_Config_Mode For SetValue");
@@ -457,7 +392,7 @@ bool DoorLock::SetValue
 			if( ValueByte* value = static_cast<ValueByte*>( GetValue( instance, Value_System_Config_OutsideHandles ) ) )
 			{
 				control = (value->GetValue() << 4);
-				m_insidehandlemode = control;
+				m_dom.SetFlagByte(STATE_FLAG_DOORLOCK_INSIDEMODE, control);
 			} else {
 				ok = false;
 				Log::Write(LogLevel_Warning, GetNodeId(), "Failed To Retrieve Value_System_Config_OutsideHandles For SetValue");
@@ -465,24 +400,24 @@ bool DoorLock::SetValue
 			if( ValueByte* value = static_cast<ValueByte*>( GetValue( instance, Value_System_Config_InsideHandles ) ) )
 			{
 				control += (value->GetValue() & 0x0F);
-				m_outsidehandlemode = (value->GetValue() & 0x0F);
+				m_dom.SetFlagByte(STATE_FLAG_DOORLOCK_OUTSIDEMODE, (value->GetValue() & 0x0F));
 			} else {
 				ok = false;
 				Log::Write(LogLevel_Warning, GetNodeId(), "Failed To Retrieve Value_System_Config_InsideHandles For SetValue");
 			}
 			if( ValueInt* value = static_cast<ValueInt*>( GetValue( instance, Value_System_Config_Minutes ) ) )
 			{
-				m_timeoutmins = value->GetValue();
+				m_dom.SetFlagByte(STATE_FLAG_DOORLOCK_TIMEOUTMINS, value->GetValue());
 			} else {
 				/* Minutes and Seconds Might Not Exist, this is fine. Set to 0xFE */
-				m_timeoutmins = 0xFE;
+				m_dom.SetFlagByte(STATE_FLAG_DOORLOCK_TIMEOUTMINS, 0xFE);
 			}
 			if( ValueInt* value = static_cast<ValueInt*>( GetValue( instance, Value_System_Config_Seconds ) ) )
 			{
-				m_timeoutsecs = value->GetValue();
+				m_dom.SetFlagByte(STATE_FLAG_DOORLOCK_TIMEOUTSECS, value->GetValue());
 			} else {
 				/* Minutes and Seconds Might Not Exist, this is fine. Set to 0xFE */
-				m_timeoutsecs = 0xFE;
+				m_dom.SetFlagByte(STATE_FLAG_DOORLOCK_TIMEOUTSECS, 0xFE);
 			}
 			if (ok) {
 				Msg* msg = new Msg( "DoorLockCmd_Configuration_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
@@ -491,10 +426,10 @@ bool DoorLock::SetValue
 				msg->Append( 6 );
 				msg->Append( GetCommandClassId() );
 				msg->Append( DoorLockCmd_Configuration_Set );
-				msg->Append( m_timeoutsupported );
+				msg->Append( m_dom.GetFlagByte(STATE_FLAG_DOORLOCK_TIMEOUT) );
 				msg->Append( control );
-				msg->Append( m_timeoutmins );
-				msg->Append( m_timeoutsecs );
+				msg->Append( m_dom.GetFlagByte(STATE_FLAG_DOORLOCK_TIMEOUTMINS) );
+				msg->Append( m_dom.GetFlagByte(STATE_FLAG_DOORLOCK_TIMEOUTSECS) );
 				msg->Append( GetDriver()->GetTransmitOptions() );
 				GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 				return true;

@@ -305,6 +305,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\CompatOptionManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\CompatOptionManager.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\Defs.h"
 				>
 			</File>
@@ -594,6 +602,14 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\value_classes\Value.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\value_classes\ValueBitSet.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\value_classes\ValueBitSet.h"
 				>
 			</File>
 			<File
@@ -1010,6 +1026,22 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\command_classes\SensorMultilevel.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\command_classes\SimpleAV.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\command_classes\SimpleAV.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\command_classes\SoundSwitch.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\command_classes\SoundSwitch.h"
 				>
 			</File>
 			<File

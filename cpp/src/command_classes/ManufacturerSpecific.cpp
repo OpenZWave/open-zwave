@@ -35,23 +35,56 @@
 #include "Options.h"
 #include "Manager.h"
 #include "Driver.h"
+#include "ManufacturerSpecificDB.h"
 #include "Notification.h"
 #include "platform/Log.h"
 
 #include "value_classes/ValueStore.h"
 #include "value_classes/ValueString.h"
+#include "value_classes/ValueInt.h"
 
 using namespace OpenZWave;
 
 enum ManufacturerSpecificCmd
 {
 	ManufacturerSpecificCmd_Get		= 0x04,
-	ManufacturerSpecificCmd_Report	= 0x05
+	ManufacturerSpecificCmd_Report	= 0x05,
+	ManufacturerSpecificCmd_DeviceGet = 0x06,
+	ManufacturerSpecificCmd_DeviceReport = 0x07
 };
 
-map<uint16,string> ManufacturerSpecific::s_manufacturerMap;
-map<int64,ManufacturerSpecific::Product*> ManufacturerSpecific::s_productMap;
-bool ManufacturerSpecific::s_bXmlLoaded = false;
+enum {
+        DeviceSpecificGet_DeviceIDType_FactoryDefault = 0x00,
+        DeviceSpecificGet_DeviceIDType_SerialNumber = 0x01,
+        DeviceSpecificGet_DeviceIDType_PseudoRandom = 0x02,
+};
+
+enum {
+    ManufacturerSpecific_LoadedConfig,
+	ManufacturerSpecific_LocalConfig,
+	ManufacturerSpecific_LatestConfig,
+	ManufacturerSpecific_DeviceID,
+    ManufacturerSpecific_SerialNumber
+};
+
+
+//-----------------------------------------------------------------------------
+// <ManufacturerSpecific::ManufacturerSpecific>
+// Constructor
+//-----------------------------------------------------------------------------
+ManufacturerSpecific::ManufacturerSpecific
+(
+    uint32 const _homeId,
+    uint8 const _nodeId
+):
+    CommandClass( _homeId, _nodeId ),
+	m_fileConfigRevision(0),
+	m_loadedConfigRevision(0),
+	m_latestConfigRevision(0)
+{
+    SetStaticRequest( StaticRequest_Values );
+}
+
 
 //-----------------------------------------------------------------------------
 // <ManufacturerSpecific::RequestState>
@@ -64,12 +97,47 @@ bool ManufacturerSpecific::RequestState
 	Driver::MsgQueue const _queue
 )
 {
-	if( ( _requestFlags & RequestFlag_Static ) && HasStaticRequest( StaticRequest_Values ) )
+
+	bool res = false;
+	if( GetVersion() > 1 )
 	{
-		return RequestValue( _requestFlags, 0, _instance, _queue );
+		if( _requestFlags & RequestFlag_Static )
+		{
+			{
+				Msg* msg = new Msg( "ManufacturerSpecificCmd_DeviceGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+				msg->SetInstance( this, _instance );
+				msg->Append( GetNodeId() );
+				msg->Append( 3 );
+				msg->Append( GetCommandClassId() );
+				msg->Append( ManufacturerSpecificCmd_DeviceGet );
+				msg->Append( DeviceSpecificGet_DeviceIDType_FactoryDefault );
+				msg->Append( GetDriver()->GetTransmitOptions() );
+				GetDriver()->SendMsg( msg, _queue );
+			}
+			{
+				Msg* msg = new Msg( "ManufacturerSpecificCmd_DeviceGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
+				msg->SetInstance( this, _instance );
+				msg->Append( GetNodeId() );
+				msg->Append( 3 );
+				msg->Append( GetCommandClassId() );
+				msg->Append( ManufacturerSpecificCmd_DeviceGet );
+				msg->Append( DeviceSpecificGet_DeviceIDType_SerialNumber );
+				msg->Append( GetDriver()->GetTransmitOptions() );
+				GetDriver()->SendMsg( msg, _queue );
+			}
+
+			res = true;
+		}
 	}
 
-	return false;
+
+
+	if( ( _requestFlags & RequestFlag_Static ) && HasStaticRequest( StaticRequest_Values ) )
+	{
+		res |= RequestValue( _requestFlags, 0, _instance, _queue );
+	}
+
+	return res;
 }
 
 //-----------------------------------------------------------------------------
@@ -79,7 +147,7 @@ bool ManufacturerSpecific::RequestState
 bool ManufacturerSpecific::RequestValue
 (
 	uint32 const _requestFlags,
-	uint8 const _dummy1,	// = 0 (not used)
+	uint16 const _dummy1,	// = 0 (not used)
 	uint8 const _instance,
 	Driver::MsgQueue const _queue
 )
@@ -89,7 +157,7 @@ bool ManufacturerSpecific::RequestValue
 		// This command class doesn't work with multiple instances
 		return false;
 	}
-	if ( IsGetSupported() )
+	if ( m_com.GetFlagBool(COMPAT_FLAG_GETSUPPORTED) )
 	{
 		Msg* msg = new Msg( "ManufacturerSpecificCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 		msg->Append( GetNodeId() );
@@ -105,66 +173,40 @@ bool ManufacturerSpecific::RequestValue
 	return false;
 }
 
-string ManufacturerSpecific::SetProductDetails
+void ManufacturerSpecific::SetProductDetails
 (
-	Node* node,
 	uint16 manufacturerId,
 	uint16 productType,
 	uint16 productId
 )
 {
-	char str[64];
-
-	if (!s_bXmlLoaded) LoadProductXML();
-
-	snprintf( str, sizeof(str), "Unknown: id=%.4x", manufacturerId );
-	string manufacturerName = str;
-
-	snprintf( str, sizeof(str), "Unknown: type=%.4x, id=%.4x", productType, productId );
-	string productName = str;
 
 	string configPath = "";
+	ProductDescriptor *product = GetDriver()->GetManufacturerSpecificDB()->getProduct(manufacturerId, productType, productId);
 
-	// Try to get the real manufacturer and product names
-	map<uint16,string>::iterator mit = s_manufacturerMap.find( manufacturerId );
-	if( mit != s_manufacturerMap.end() )
-	{
-		// Replace the id with the real name
-		manufacturerName = mit->second;
+	Node *node = GetNodeUnsafe();
+	if (!product) {
+			char str[64];
+			snprintf( str, sizeof(str), "Unknown: id=%.4x", manufacturerId );
+			string manufacturerName = str;
 
-		// Get the product
-		map<int64,Product*>::iterator pit = s_productMap.find( Product::GetKey( manufacturerId, productType, productId ) );
-		if( pit != s_productMap.end() )
-		{
-			productName = pit->second->GetProductName();
-			configPath = pit->second->GetConfigPath();
-		}
+			snprintf( str, sizeof(str), "Unknown: type=%.4x, id=%.4x", productType, productId );
+			string productName = str;
+
+			node->SetManufacturerName( manufacturerName );
+			node->SetProductName( productName );
+	} else {
+			node->SetManufacturerName( product->GetManufacturerName() );
+			node->SetProductName( product->GetProductName() );
+			node->SetProductDetails(product);
 	}
 
-	// Set the values into the node
-
-	// Only set the manufacturer and product name if they are
-	// empty - we don't want to overwrite any user defined names.
-	if( node->GetManufacturerName() == "" )
-	{
-		node->SetManufacturerName( manufacturerName );
-	}
-
-	if( node->GetProductName() == "" )
-	{
-		node->SetProductName( productName );
-	}
-
-//	snprintf( str, sizeof(str), "%.4x", manufacturerId );
 	node->SetManufacturerId( manufacturerId );
 
-//	snprintf( str, sizeof(str), "%.4x", productType );
 	node->SetProductType( productType );
 
-//	snprintf( str, sizeof(str), "%.4x", productId );
 	node->SetProductId( productId );
 
-	return configPath;
 }
 
 
@@ -192,17 +234,18 @@ bool ManufacturerSpecific::HandleMsg
 		if( Node* node = GetNodeUnsafe() )
 		{
 			// Attempt to create the config parameters
-			string configPath = SetProductDetails( node, manufacturerId, productType, productId);
-			if( configPath.size() > 0 )
+			SetProductDetails(manufacturerId, productType, productId);
+			ClearStaticRequest( StaticRequest_Values );
+			node->m_manufacturerSpecificClassReceived = true;
+
+			if( node->getConfigPath().size() > 0 )
 			{
-				LoadConfigXML( node, configPath );
+				LoadConfigXML( );
 			}
 
 			Log::Write( LogLevel_Info, GetNodeId(), "Received manufacturer specific report from node %d: Manufacturer=%s, Product=%s",
 				    GetNodeId(), node->GetManufacturerName().c_str(), node->GetProductName().c_str() );
 			Log::Write( LogLevel_Info, GetNodeId(), "Node Identity Codes: %.4x:%.4x:%.4x", manufacturerId, productType, productId );
-			ClearStaticRequest( StaticRequest_Values );
-			node->m_manufacturerSpecificClassReceived = true;
 		}
 
 		// Notify the watchers of the name changes
@@ -211,164 +254,39 @@ bool ManufacturerSpecific::HandleMsg
 		GetDriver()->QueueNotification( notification );
 
 		return true;
+	} else if( ManufacturerSpecificCmd_DeviceReport == (ManufacturerSpecificCmd)_data[0] ) {
+        uint8 deviceIDType = (_data[1] & 0x07);
+        uint8 dataFormat = (_data[2] & 0xe0)>>0x05;
+        uint8 data_length = (_data[2] & 0x1f);
+        uint8 const* deviceIDData = &_data[3];
+        string deviceID = "";
+        for (int i=0; i<data_length; i++) {
+                char temp_chr[32];
+                memset(temp_chr, 0, sizeof(temp_chr));
+                if (dataFormat == 0x00) {
+                        temp_chr[0] = deviceIDData[i];
+                } else {
+                        snprintf(temp_chr, sizeof(temp_chr), "%.2x", deviceIDData[i]);
+                }
+                deviceID += temp_chr;
+        }
+		if (deviceIDType == DeviceSpecificGet_DeviceIDType_FactoryDefault) {
+				ValueString *default_value = static_cast<ValueString*>( GetValue(_instance, ManufacturerSpecific_DeviceID) );
+				default_value->OnValueRefreshed(deviceID);
+				default_value->Release();
+		}
+		else if (deviceIDType == DeviceSpecificGet_DeviceIDType_SerialNumber) {
+				ValueString *serial_value = static_cast<ValueString*>( GetValue(_instance, ManufacturerSpecific_SerialNumber) );
+				serial_value->OnValueRefreshed(deviceID);
+				serial_value->Release();
+		}
+        return true;
 	}
 
 	return false;
 }
 
-//-----------------------------------------------------------------------------
-// <ManufacturerSpecific::LoadProductXML>
-// Load the XML that maps manufacturer and product IDs to human-readable names
-//-----------------------------------------------------------------------------
-bool ManufacturerSpecific::LoadProductXML
-(
-)
-{
-	s_bXmlLoaded = true;
 
-	// Parse the Z-Wave manufacturer and product XML file.
-	string configPath;
-	Options::Get()->GetOptionAsString( "ConfigPath", &configPath );
-
-	string filename =  configPath + "manufacturer_specific.xml";
-
-	TiXmlDocument* pDoc = new TiXmlDocument();
-	if( !pDoc->LoadFile( filename.c_str(), TIXML_ENCODING_UTF8 ) )
-	{
-		delete pDoc;
-		Log::Write( LogLevel_Info, "Unable to load %s", filename.c_str() );
-		return false;
-	}
-
-	TiXmlElement const* root = pDoc->RootElement();
-
-	char const* str;
-	char* pStopChar;
-
-	TiXmlElement const* manufacturerElement = root->FirstChildElement();
-	while( manufacturerElement )
-	{
-		str = manufacturerElement->Value();
-		if( str && !strcmp( str, "Manufacturer" ) )
-		{
-			// Read in the manufacturer attributes
-			str = manufacturerElement->Attribute( "id" );
-			if( !str )
-			{
-				Log::Write( LogLevel_Info, "Error in manufacturer_specific.xml at line %d - missing manufacturer id attribute", manufacturerElement->Row() );
-				delete pDoc;
-				return false;
-			}
-			uint16 manufacturerId = (uint16)strtol( str, &pStopChar, 16 );
-
-			str = manufacturerElement->Attribute( "name" );
-			if( !str )
-			{
-				Log::Write( LogLevel_Info, "Error in manufacturer_specific.xml at line %d - missing manufacturer name attribute", manufacturerElement->Row() );
-				delete pDoc;
-				return false;
-			}
-
-			// Add this manufacturer to the map
-			s_manufacturerMap[manufacturerId] = str;
-
-			// Parse all the products for this manufacturer
-			TiXmlElement const* productElement = manufacturerElement->FirstChildElement();
-			while( productElement )
-			{
-				str = productElement->Value();
-				if( str && !strcmp( str, "Product" ) )
-				{
-					str = productElement->Attribute( "type" );
-					if( !str )
-					{
-						Log::Write( LogLevel_Info, "Error in manufacturer_specific.xml at line %d - missing product type attribute", productElement->Row() );
-						delete pDoc;
-						return false;
-					}
-					uint16 productType = (uint16)strtol( str, &pStopChar, 16 );
-
-					str = productElement->Attribute( "id" );
-					if( !str )
-					{
-						Log::Write( LogLevel_Info, "Error in manufacturer_specific.xml at line %d - missing product id attribute", productElement->Row() );
-						delete pDoc;
-						return false;
-					}
-					uint16 productId = (uint16)strtol( str, &pStopChar, 16 );
-
-					str = productElement->Attribute( "name" );
-					if( !str )
-					{
-						Log::Write( LogLevel_Info, "Error in manufacturer_specific.xml at line %d - missing product name attribute", productElement->Row() );
-						delete pDoc;
-						return false;
-					}
-					string productName = str;
-
-					// Optional config path
-					string configPath;
-					str = productElement->Attribute( "config" );
-					if( str )
-					{
-						configPath = str;
-					}
-
-					// Add the product to the map
-					Product* product = new Product( manufacturerId, productType, productId, productName, configPath );
-					if ( s_productMap[product->GetKey()] != NULL )
-					{
-						Product *c = s_productMap[product->GetKey()];
-						Log::Write( LogLevel_Info, "Product name collision: %s type %x id %x manufacturerid %x, collides with %s, type %x id %x manufacturerid %x", productName.c_str(), productType, productId, manufacturerId, c->GetProductName().c_str(), c->GetProductType(), c->GetProductId(), c->GetManufacturerId());
-						delete product;
-					}
-					else
-					{
-						s_productMap[product->GetKey()] = product;
-					}
-				}
-
-				// Move on to the next product.
-				productElement = productElement->NextSiblingElement();
-			}
-		}
-
-		// Move on to the next manufacturer.
-		manufacturerElement = manufacturerElement->NextSiblingElement();
-	}
-
-	delete pDoc;
-	return true;
-}
-
-//-----------------------------------------------------------------------------
-// <ManufacturerSpecific::UnloadProductXML>
-// Free the XML that maps manufacturer and product IDs
-//-----------------------------------------------------------------------------
-void ManufacturerSpecific::UnloadProductXML
-(
-)
-{
-	if (s_bXmlLoaded)
-	{
-		map<int64,Product*>::iterator pit = s_productMap.begin();
-		while( !s_productMap.empty() )
-		{
-		  	delete pit->second;
-			s_productMap.erase( pit );
-			pit = s_productMap.begin();
-		}
-
-		map<uint16,string>::iterator mit = s_manufacturerMap.begin();
-		while( !s_manufacturerMap.empty() )
-		{
-			s_manufacturerMap.erase( mit );
-			mit = s_manufacturerMap.begin();
-		}
-
-		s_bXmlLoaded = false;
-	}
-}
 
 //-----------------------------------------------------------------------------
 // <ManufacturerSpecific::LoadConfigXML>
@@ -376,37 +294,40 @@ void ManufacturerSpecific::UnloadProductXML
 //-----------------------------------------------------------------------------
 bool ManufacturerSpecific::LoadConfigXML
 (
-	Node* _node,
-	string const& _configXML
 )
 {
+	if (GetNodeUnsafe()->getConfigPath().size() == 0)
+		return false;
+
+
 	string configPath;
 	Options::Get()->GetOptionAsString( "ConfigPath", &configPath );
 
-	string filename =  configPath + _configXML;
+	string filename =  configPath + GetNodeUnsafe()->getConfigPath();
 
 	TiXmlDocument* doc = new TiXmlDocument();
-	Log::Write( LogLevel_Info, _node->GetNodeId(), "  Opening config param file %s", filename.c_str() );
+	Log::Write( LogLevel_Info, GetNodeId(), "  Opening config param file %s", filename.c_str() );
 	if( !doc->LoadFile( filename.c_str(), TIXML_ENCODING_UTF8 ) )
 	{
 		delete doc;
-		Log::Write( LogLevel_Info, _node->GetNodeId(), "Unable to find or load Config Param file %s", filename.c_str() );
+		Log::Write( LogLevel_Info, GetNodeId(), "Unable to find or load Config Param file %s", filename.c_str() );
 		return false;
 	}
-	Node::QueryStage qs = _node->GetCurrentQueryStage();
+	doc->SetUserData((void *)filename.c_str());
+	Node::QueryStage qs = GetNodeUnsafe()->GetCurrentQueryStage();
 	if( qs == Node::QueryStage_ManufacturerSpecific1 )
 	{
-		_node->ReadDeviceProtocolXML( doc->RootElement() );
+		 GetNodeUnsafe()->ReadDeviceProtocolXML( doc->RootElement() );
 	}
 	else
 	{
-		if( !_node->m_manufacturerSpecificClassReceived )
+		if( ! GetNodeUnsafe()->m_manufacturerSpecificClassReceived )
 		{
-			_node->ReadDeviceProtocolXML( doc->RootElement() );
+			 GetNodeUnsafe()->ReadDeviceProtocolXML( doc->RootElement() );
 		}
-		_node->ReadCommandClassesXML( doc->RootElement() );
 	}
-
+	GetNodeUnsafe()->ReadCommandClassesXML( doc->RootElement() );
+	GetNodeUnsafe()->ReadMetaDataFromXML( doc->RootElement() );
 	delete doc;
 	return true;
 }
@@ -419,26 +340,87 @@ void ManufacturerSpecific::ReLoadConfigXML
 (
 )
 {
-	if( Node* node = GetNodeUnsafe() )
-	{
-		if (!s_bXmlLoaded) LoadProductXML();
+			LoadConfigXML( );
+}
 
-		uint16 manufacturerId = node->GetManufacturerId();
-		uint16 productType = node->GetProductType();
-		uint16 productId = node->GetProductId();
-
-		map<uint16,string>::iterator mit = s_manufacturerMap.find( manufacturerId );
-		if( mit != s_manufacturerMap.end() )
+//-----------------------------------------------------------------------------
+// <ManufacturerSpecific::CreateVars>
+// Create the values managed by this command class
+//-----------------------------------------------------------------------------
+void ManufacturerSpecific::CreateVars
+(
+	uint8 const _instance
+)
+{
+	if (_instance == 1) {
+		if( Node* node = GetNodeUnsafe() )
 		{
-			map<int64,Product*>::iterator pit = s_productMap.find( Product::GetKey( manufacturerId, productType, productId ) );
-			if( pit != s_productMap.end() )
-			{
-				string configPath = pit->second->GetConfigPath();
-				if( configPath.size() > 0 )
-				{
-					LoadConfigXML( node, configPath );
-				}
-			}
+			node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ManufacturerSpecific_LoadedConfig, "Loaded Config Revision", "", true, false, m_loadedConfigRevision, 0 );
+			node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ManufacturerSpecific_LocalConfig, "Config File Revision", "", true, false, m_fileConfigRevision, 0 );
+			node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ManufacturerSpecific_LatestConfig, "Latest Available Config File Revision", "", true, false, m_latestConfigRevision, 0 );
+			node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ManufacturerSpecific_DeviceID, "Device ID", "", true, false, "", 0);
+			node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ManufacturerSpecific_SerialNumber, "Serial Number", "", true, false, "", 0);
 		}
 	}
+
+}
+
+//-----------------------------------------------------------------------------
+// <ManufacturerSpecific::setLatestRevision>
+// Set the Latest Config Revision Available for this device
+//-----------------------------------------------------------------------------
+void ManufacturerSpecific::setLatestConfigRevision
+(
+	uint32 rev
+)
+{
+
+	m_latestConfigRevision = rev;
+
+	if( ValueInt* value = static_cast<ValueInt*>( GetValue( 1, ManufacturerSpecific_LatestConfig ) ) )
+	{
+		value->OnValueRefreshed( rev );
+		value->Release();
+	}
+
+}
+
+//-----------------------------------------------------------------------------
+// <ManufacturerSpecific::setFileConfigRevision>
+// Set the File Config Revision for this device
+//-----------------------------------------------------------------------------
+
+void ManufacturerSpecific::setFileConfigRevision
+(
+	uint32 rev
+)
+{
+	m_fileConfigRevision = rev;
+
+	if( ValueInt* value = static_cast<ValueInt*>( GetValue( 1, ManufacturerSpecific_LocalConfig ) ) )
+	{
+		value->OnValueRefreshed( rev );
+		value->Release();
+	}
+
+}
+
+//-----------------------------------------------------------------------------
+// <ManufacturerSpecific::setFileConfigRevision>
+// Set the File Config Revision for this device
+//-----------------------------------------------------------------------------
+
+void ManufacturerSpecific::setLoadedConfigRevision
+(
+	uint32 rev
+)
+{
+	m_latestConfigRevision = rev;
+
+	if( ValueInt* value = static_cast<ValueInt*>( GetValue( 1, ManufacturerSpecific_LoadedConfig ) ) )
+	{
+		value->OnValueRefreshed( rev );
+		value->Release();
+	}
+
 }

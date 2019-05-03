@@ -3,7 +3,7 @@
 Aeotec ZW095 Home Energy Meter Gen5
 https://aeotec.freshdesk.com/helpdesk/attachments/6009584689
 -->
-<Product xmlns='http://code.google.com/p/open-zwave/'>
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="2">
 	<!-- Configuration Parameters -->
 	<CommandClass id="112">
 		<Value type="list" index="2" genre="config" label="Power, energy detection mode" units="" min="0" max="3" value="0" size="1">

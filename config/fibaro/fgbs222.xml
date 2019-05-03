@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<Product xmlns='http://code.google.com/p/open-zwave/'>
+<Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
   <!--
     Fibaro Smart Implant
     https://www.fibaro.com/us/products/smart-implant/
@@ -9,51 +7,47 @@
     -->
   <!-- Configuration -->
   <CommandClass id="112">
-    <Value type="list" genre="config" instance="1" index="20" label="Input 1 operating mode" value="2" size="1">
+    <Value genre="config" index="20" instance="1" label="Input 1 operating mode" size="1" type="list" value="2">
       <Help>
         This parameter allows to choose mode of 1st input (IN1). 
         Change it depending on connected device.
       </Help>
-      <Item label="Normally closed alarm input" value="0" />
-      <Item label="Normally open alarm input" value="1" />
-      <Item label="Monostable button" value="2" />
-      <Item label="Bistable button" value="3" />
-      <Item label="Analog input without internal pull-up" value="4" />
-      <Item label="Analog input with internal pullup" value="5" />
+      <Item label="Normally closed alarm input" value="0"/>
+      <Item label="Normally open alarm input" value="1"/>
+      <Item label="Monostable button" value="2"/>
+      <Item label="Bistable button" value="3"/>
+      <Item label="Analog input without internal pull-up" value="4"/>
+      <Item label="Analog input with internal pullup" value="5"/>
     </Value>
-
-    <Value type="list" genre="config" instance="1" index="21" label="Input 2 operating mode" value="2" size="1">
+    <Value genre="config" index="21" instance="1" label="Input 2 operating mode" size="1" type="list" value="2">
       <Help>
         This parameter allows to choose mode of 2nd input (IN2). 
         Change it depending on connected device.
       </Help>
-      <Item label="Normally closed alarm input" value="0" />
-      <Item label="Normally open alarm input" value="1" />
-      <Item label="Monostable button" value="2" />
-      <Item label="Bistable button" value="3" />
-      <Item label="Analog input without internal pull-up" value="4" />
-      <Item label="Analog input with internal pullup" value="5" />
+      <Item label="Normally closed alarm input" value="0"/>
+      <Item label="Normally open alarm input" value="1"/>
+      <Item label="Monostable button" value="2"/>
+      <Item label="Bistable button" value="3"/>
+      <Item label="Analog input without internal pull-up" value="4"/>
+      <Item label="Analog input with internal pullup" value="5"/>
     </Value>
-
-    <Value type="list" genre="config" instance="1" index="24" label="Inputs orientation" value="0" size="1">
+    <Value genre="config" index="24" instance="1" label="Inputs orientation" size="1" type="list" value="0">
       <Help>
         This parameter allows reversing operation of IN1 and IN2 inputs without changing the wiring. 
         Use in case of incorrect wiring.
       </Help>
-      <Item label="Default (IN1 - 1st input, IN2 - 2nd input)" value="0" />
-      <Item label="Reversed (IN1 - 2nd input, IN2 - 1st input)" value="1" />
+      <Item label="Default (IN1 - 1st input, IN2 - 2nd input)" value="0"/>
+      <Item label="Reversed (IN1 - 2nd input, IN2 - 1st input)" value="1"/>
     </Value>
-
-    <Value type="list" genre="config" instance="1" index="25" label="Outputs orientation" value="0" size="1">
+    <Value genre="config" index="25" instance="1" label="Outputs orientation" size="1" type="list" value="0">
       <Help>
         This parameter allows reversing operation of OUT1 and OUT2 inputs without changing the wiring. 
         Use in case of incorrect wiring.
       </Help>
-      <Item label="Default (OUT1 - 1st output, OUT2 - 2nd output)" value="0" />
-      <Item label="Reversed (OUT1 - 2nd output, OUT2 - 1st output)" value="1" />
+      <Item label="Default (OUT1 - 1st output, OUT2 - 2nd output)" value="0"/>
+      <Item label="Reversed (OUT1 - 2nd output, OUT2 - 1st output)" value="1"/>
     </Value>
-
-    <Value type="byte" genre="config" instance="1" index="40" label="Input 1 sent scenes" value="0" size="1">
+    <Value genre="config" index="40" instance="1" label="Input 1 sent scenes" size="1" type="byte" value="0">
       <Help>
         This parameter defines which actions result in sending scene ID and attribute assigned to them. 
         Parameter is relevant only if parameter 20 is set to 2 or 3. bitmask.
@@ -64,8 +58,7 @@
         8 => Key hold down and key released.
       </Help>
     </Value>
-
-    <Value type="byte" genre="config" instance="1" index="41" label="Input 2 sent scenes" value="0" size="1">
+    <Value genre="config" index="41" instance="1" label="Input 2 sent scenes" size="1" type="byte" value="0">
       <Help>
         This parameter defines which actions result in sending scene ID and attribute assigned to them. 
         Parameter is relevant only if parameter 21 is set to 2 or 3. bitmask.
@@ -76,40 +69,35 @@
         8 => Key hold down and key released.
       </Help>
     </Value>
-
-    <Value type="short" genre="config" instance="1" index="47" label="Input 1 value sent to 2nd association group when activated" min="0" max="255" value="255">
+    <Value genre="config" index="47" instance="1" label="Input 1 value sent to 2nd association group when activated" max="255" min="0" type="short" value="255">
       <Help>
         This parameter defines value sent to devices in 2nd association group when IN1 input is triggered (using Basic Command Class).
         Available settings: 0-255.
         Default setting: 255.
       </Help>
     </Value>
-
-    <Value type="short" genre="config" instance="1" index="49" label="Input 1 value sent to 2nd association group when deactivated" min="0" max="255" value="255">
+    <Value genre="config" index="49" instance="1" label="Input 1 value sent to 2nd association group when deactivated" max="255" min="0" type="short" value="255">
       <Help>
         This parameter defines value sent to devices in 2nd association group when IN1 input is deactivated (using Basic Command Class).
         Available settings: 0-255.
         Default setting: 255.
       </Help>
     </Value>
-
-    <Value type="short" genre="config" instance="1" index="52" label="Input 2 value sent to 3rd association group when activated" min="0" max="255" value="255">
+    <Value genre="config" index="52" instance="1" label="Input 2 value sent to 3rd association group when activated" max="255" min="0" type="short" value="255">
       <Help>
         This parameter defines value sent to devices in 3rd association group when IN2 input is triggered (using Basic Command Class).
         Available settings: 0-255.
         Default setting: 255.
       </Help>
     </Value>
-
-    <Value type="short" genre="config" instance="1" index="54" label="Input 2 value sent to 3rd association group when deactivated" min="0" max="255" value="255">
+    <Value genre="config" index="54" instance="1" label="Input 2 value sent to 3rd association group when deactivated" max="255" min="0" type="short" value="255">
       <Help>
         This parameter defines value sent to devices in 3rd association group when IN2 input is deactivated (using Basic Command Class).
         Available settings: 0-255.
         Default setting: 255.
       </Help>
     </Value>
-
-    <Value type="byte" genre="config" instance="1" index="150" label="Input 1 sensitivity" min="1" max="100" units="10ms" value="10">
+    <Value genre="config" index="150" instance="1" label="Input 1 sensitivity" max="100" min="1" type="byte" units="10ms" value="10">
       <Help>
         This parameter defines the inertia time of IN1 input in alarm modes.
         Adjust this parameter to prevent bouncing or signal disruptions. 
@@ -118,8 +106,7 @@
         Default setting: 10 (100ms).
       </Help>
     </Value>
-
-    <Value type="byte" genre="config" instance="1" index="151" label="Input 2 sensitivity" min="1" max="100" units="10ms" value="10">
+    <Value genre="config" index="151" instance="1" label="Input 2 sensitivity" max="100" min="1" type="byte" units="10ms" value="10">
       <Help>
         This parameter defines the inertia time of IN2 input in alarm modes.
         Adjust this parameter to prevent bouncing or signal disruptions. Parameter is relevant only if parameter 21 is set to 0 or 1 (alarm mode).
@@ -127,8 +114,7 @@
         Default setting: 10 (100ms).
       </Help>
     </Value>
-
-    <Value type="short" genre="config" instance="1" index="152" label="Input 1 delay of alarm cancellation" min="0" max="3600" units="seconds" value="0">
+    <Value genre="config" index="152" instance="1" label="Input 1 delay of alarm cancellation" max="3600" min="0" type="short" units="seconds" value="0">
       <Help>
         This parameter defines additional delay of cancelling the alarm on IN1 input. 
         Parameter is relevant only if parameter 20 is set to 0 or 1 (alarm mode).
@@ -138,8 +124,7 @@
         Default setting: 0 (no delay).
       </Help>
     </Value>
-
-    <Value type="short" genre="config" instance="1" index="153" label="Input 2 delay of alarm cancellation" min="0" max="3600" units="seconds" value="0">
+    <Value genre="config" index="153" instance="1" label="Input 2 delay of alarm cancellation" max="3600" min="0" type="short" units="seconds" value="0">
       <Help>
         This parameter defines additional delay of cancelling the alarm on IN2 input. 
         Parameter is relevant only if parameter 21 is set to 0 or 1 (alarm mode).
@@ -149,20 +134,17 @@
         Default setting: 0 (no delay).
       </Help>
     </Value>
-
-    <Value type="list" genre="config" instance="1" index="154" label="Output 1 logic of operation" value="0" size="1">
+    <Value genre="config" index="154" instance="1" label="Output 1 logic of operation" size="1" type="list" value="0">
       <Help>This parameter defines logic of OUT1 output operation.</Help>
-      <Item label="contacts normally open" value="0" />
-      <Item label="contacts normally closed" value="1" />
+      <Item label="contacts normally open" value="0"/>
+      <Item label="contacts normally closed" value="1"/>
     </Value>
-
-    <Value type="list" genre="config" instance="1" index="155" label="Output 2 logic of operation" value="0" size="1">
+    <Value genre="config" index="155" instance="1" label="Output 2 logic of operation" size="1" type="list" value="0">
       <Help>This parameter defines logic of OUT2 output operation.</Help>
-      <Item label="contacts normally open" value="0" />
-      <Item label="contacts normally closed" value="1" />
+      <Item label="contacts normally open" value="0"/>
+      <Item label="contacts normally closed" value="1"/>
     </Value>
-
-    <Value type="short" genre="config" instance="1" index="156" label="Output 1 auto off" min="0" max="27000" units="0.1s" value="0">
+    <Value genre="config" index="156" instance="1" label="Output 1 auto off" max="27000" min="0" type="short" units="0.1s" value="0">
       <Help>
         This parameter defines time after which OUT1 will be automatically deactivated.
         Available settings:
@@ -171,8 +153,7 @@
         Default setting: 0 (auto off disabled).
       </Help>
     </Value>
-
-    <Value type="short" genre="config" instance="1" index="157" label="Output 2 auto off" min="0" max="27000" units="0.1s" value="0">
+    <Value genre="config" index="157" instance="1" label="Output 2 auto off" max="27000" min="0" type="short" units="0.1s" value="0">
       <Help>
         This parameter defines time after which OUT2 will be automatically deactivated.
         Available settings:
@@ -181,8 +162,7 @@
         Default setting: 0 (auto off disabled).
       </Help>
     </Value>
-
-    <Value type="byte" genre="config" instance="1" index="63" label="Analog inputs minimal change to report" min="0" max="100" units="0.1v" value="5">
+    <Value genre="config" index="63" instance="1" label="Analog inputs minimal change to report" max="100" min="0" type="byte" units="0.1v" value="5">
       <Help>
         This parameter defines minimal change (from the last reported) of
         analog input value that results in sending new report. Parameter is
@@ -193,8 +173,7 @@
         Default setting: 5 (0.5V).
       </Help>
     </Value>
-
-    <Value type="short" genre="config" instance="1" index="64" label="Analog inputs periodical reports" min="0" max="32400" units="seconds" value="0">
+    <Value genre="config" index="64" instance="1" label="Analog inputs periodical reports" max="32400" min="0" type="short" units="seconds" value="0">
       <Help>
         This parameter defines reporting period of analog inputs value.
         Periodical reports are independent from changes in value (parameter 63). Parameter is relevant only for analog inputs (parameter
@@ -205,8 +184,7 @@
         Default setting: 0 (periodical reports disabled).
       </Help>
     </Value>
-
-    <Value type="short" genre="config" instance="1" index="65" label="Internal temperature sensor minimal change to report" min="0" max="255" value="5">
+    <Value genre="config" index="65" instance="1" label="Internal temperature sensor minimal change to report" max="255" min="0" type="short" value="5">
       <Help>
         This parameter defines minimal change (from the last reported)
         of internal temperature sensor value that results in sending new
@@ -217,8 +195,7 @@
         Default setting: 5 (0.5C).
       </Help>
     </Value>
-
-    <Value type="short" genre="config" instance="1" index="66" label="Internal temperature sensor periodical reports" min="0" max="32400" units="seconds" value="0">
+    <Value genre="config" index="66" instance="1" label="Internal temperature sensor periodical reports" max="32400" min="0" type="short" units="seconds" value="0">
       <Help>
         This parameter defines reporting period of internal temperature
         sensor value. Periodical reports are independent from changes in
@@ -229,8 +206,7 @@
         Default setting: 0 (periodical reports disabled).
       </Help>
     </Value>
-
-    <Value type="short" genre="config" instance="1" index="67" label="External sensors minimal change to report" min="0" max="255" value="5">
+    <Value genre="config" index="67" instance="1" label="External sensors minimal change to report" max="255" min="0" type="short" value="5">
       <Help>
         This parameter defines minimal change (from the last reported) of
         external sensors values (DS18B20 or DHT22) that results in sending new
@@ -242,8 +218,7 @@
         Default setting: 5 (0.5 units)
       </Help>
     </Value>
-
-    <Value type="short" genre="config" instance="1" index="68" label="External sensors periodical reports" min="0" max="32400" units="seconds" value="0">
+    <Value genre="config" index="68" instance="1" label="External sensors periodical reports" max="32400" min="0" type="short" units="seconds" value="0">
       <Help>
         This parameter defines reporting period of analog inputs value.
         Periodical reports are independent from changes in value (parameter 67).
@@ -255,17 +230,22 @@
       </Help>
     </Value>
   </CommandClass>
-
-  <CommandClass id="96" mapping="endpoints" />
-  <CommandClass id="32" setasreport="true" />
-
+  <CommandClass id="96">
+    <Compatibility>
+      <MapRootToEndpoint>true</MapRootToEndpoint>
+    </Compatibility>
+  </CommandClass>
+  <CommandClass id="32">
+    <Compatibility>
+      <SetAsReport>true</SetAsReport>
+    </Compatibility>
+  </CommandClass>
   <!-- Association Groups -->
   <CommandClass id="133">
     <Associations num_groups="3">
-      <Group index="1" max_associations="1" label="Lifeline" />
-      <Group index="2" max_associations="5" label="Input IN1" />
-      <Group index="3" max_associations="5" label="Input IN2" />
+      <Group index="1" label="Lifeline" max_associations="1"/>
+      <Group index="2" label="Input IN1" max_associations="5"/>
+      <Group index="3" label="Input IN2" max_associations="5"/>
     </Associations>
   </CommandClass>
-
 </Product>

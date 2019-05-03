@@ -63,45 +63,10 @@ Version::Version
 	uint32 const _homeId,
 	uint8 const _nodeId
 ):
-	CommandClass( _homeId, _nodeId ),
-	m_classGetSupported( true )
+	CommandClass( _homeId, _nodeId )
 {
+	m_com.EnableFlag(COMPAT_FLAG_VERSION_GETCLASSVERSION, true);
 	SetStaticRequest( StaticRequest_Values );
-}
-
-//-----------------------------------------------------------------------------
-// <Version::ReadXML>
-// Read configuration.
-//-----------------------------------------------------------------------------
-void Version::ReadXML
-(
-	TiXmlElement const* _ccElement
-)
-{
-	CommandClass::ReadXML( _ccElement );
-
-	char const* str = _ccElement->Attribute("classgetsupported");
-	if( str )
-	{
-		m_classGetSupported = !strcmp( str, "true");
-	}
-}
-
-//-----------------------------------------------------------------------------
-// <Version::WriteXML>
-// Save changed configuration
-//-----------------------------------------------------------------------------
-void Version::WriteXML
-(
-	TiXmlElement* _ccElement
-)
-{
-	CommandClass::WriteXML( _ccElement );
-
-	if( !m_classGetSupported )
-	{
-		_ccElement->SetAttribute( "classgetsupported", "false" );
-	}
 }
 
 //-----------------------------------------------------------------------------
@@ -130,7 +95,7 @@ bool Version::RequestState
 bool Version::RequestValue
 (
 	uint32 const _requestFlags,
-	uint8 const _dummy1,		// = 0
+	uint16 const _dummy1,		// = 0
 	uint8 const _instance,
 	Driver::MsgQueue const _queue
 )
@@ -140,7 +105,7 @@ bool Version::RequestValue
 		// This command class doesn't work with multiple instances
 		return false;
 	}
-	if ( IsGetSupported() )
+	if ( m_com.GetFlagBool(COMPAT_FLAG_GETSUPPORTED) )
 	{
 		Msg* msg = new Msg( "VersionCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 		msg->Append( GetNodeId() );
@@ -226,7 +191,7 @@ bool Version::RequestCommandClassVersion
 	CommandClass const* _commandClass
 )
 {
-	if( m_classGetSupported )
+	if( m_com.GetFlagBool(COMPAT_FLAG_VERSION_GETCLASSVERSION) )
 	{
 		if( _commandClass->HasStaticRequest( StaticRequest_Version ) )
 		{

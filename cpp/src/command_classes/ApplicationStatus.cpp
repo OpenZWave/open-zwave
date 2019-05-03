@@ -30,6 +30,7 @@
 #include "Defs.h"
 #include "Msg.h"
 #include "Driver.h"
+#include "Notification.h"
 #include "platform/Log.h"
 
 using namespace OpenZWave;
@@ -52,42 +53,45 @@ bool ApplicationStatus::HandleMsg
 	uint32 const _instance	// = 1
 )
 {
+	Notification* notification = new Notification( Notification::Type_Notification );
+	notification->SetHomeAndNodeIds( GetHomeId(), GetNodeId() );
+	notification->SetNotification( Notification::Type_UserAlerts );
 	if( ApplicationStatusCmd_Busy == (ApplicationStatusCmd)_data[0] )
 	{
-		char msg[64];
 		switch( _data[1] )
 		{
 			case 0:
 			{
-				snprintf( msg, sizeof(msg), "Try again later" );
+				notification->SetUserAlertNofification(Notification::Alert_ApplicationStatus_Retry);
 				break;
 			}
 			case 1:
 			{
-				snprintf( msg, sizeof(msg), "Try again in %d seconds", _data[2] );
+				notification->SetUserAlertNofification(Notification::Alert_ApplicationStatus_Retry);
+				notification->SetRetry(_data[2]);
 				break;
 			}
 			case 2:
 			{
-				snprintf( msg, sizeof(msg), "Request queued, will be executed later" );
+				notification->SetUserAlertNofification(Notification::Alert_ApplicationStatus_Queued);
 				break;
 			}
 			default:
 			{
 				// Invalid status
-				snprintf( msg, sizeof(msg), "Unknown status %d", _data[1] );
+				Log::Write( LogLevel_Warning, GetNodeId(), "Received a unknown Application Status Message %d - Assuming Rejected", _data[1]);
+				notification->SetUserAlertNofification(Notification::Alert_ApplicationStatus_Rejected);
 			}
 		}
-		Log::Write( LogLevel_Info, GetNodeId(), "Received Application Status Busy: %s", msg );
-		return true;
 	}
 
 	if( ApplicationStatusCmd_RejectedRequest == (ApplicationStatusCmd)_data[0] )
 	{
-		Log::Write( LogLevel_Info, "Received Application Rejected Request: Status=%d", _data[1] );
-		return true;
+		notification->SetUserAlertNofification(Notification::Alert_ApplicationStatus_Rejected);
 	}
 
-	return false;
+	GetDriver()->QueueNotification( notification );
+
+	return true;
 }
 

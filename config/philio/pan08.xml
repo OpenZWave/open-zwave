@@ -1,37 +1,55 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Philio: PAN08-1 In Wall Roller Shutter Controller with Power Measurement -->
-<Product xmlns='http://code.google.com/p/open-zwave/'>
-
-	<!-- Configuration Parameters -->
-	<CommandClass id="112">
-		<Value type="short" instance="1" index="1" genre="config" label="Watt meter report period" min="1" max="32767" value="720">
-			<Help>Watt Meter Report Period. Unit: 5 seconds.</Help>
-		</Value>
-
-		<Value type="short" instance="1" index="2" genre="config" label="kWh meter report period" min="1" max="32767" value="6">
-			<Help>kWH Meter Report Period. Unit: 10 minutes.</Help>
-		</Value>
-
-		<Value type="short" instance="1" index="3" genre="config" label="Threshold of Watt for Load Caution" min="10" max="1100" value="1100">
-			 <Help>Threshold of Watt for Load Caution. Unit: 1 watt</Help>
-		</Value>
-
-		<Value type="short" instance="1" index="4" genre="config" label="Threshold of kWh for Load Caution" min="1" max="10000" value="10000">
-			 <Help>Threshold of kWH for Load Caution. Unit: 1 kWH</Help>
-		</Value>
-
-		<Value type="byte" instance="1" index="5" genre="config" label="External switch type" min="1" max="2" value="1">
-			 <Help>External switch type: 1-> One Push button, 2->Two Push button</Help>
-		</Value>
-
-		<Value type="byte" instance="1" index="6" genre="config" label="Level report mode" min="1" max="2" value="1">
-			 <Help>Level report mode: 1-> Report destination level in 5s, 2-> Report 10 percent level while running</Help>
-		</Value>
-	</CommandClass>
-	<CommandClass id="133">
-		<Associations num_groups="1">
-			<Group index="1" max_associations="1" label="Lifeline" />
-		</Associations>
-	</CommandClass>
-
+<!-- Philio: PAN08-1 In Wall Roller Shutter Controller with Power Measurement --><Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
+  <MetaData>
+    <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/013C:0006:0001</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/philio/pan08.png</MetaDataItem>
+    <MetaDataItem id="0006" name="ZWProductPage" type="0001">https://products.z-wavealliance.org/products/891/</MetaDataItem>
+    <MetaDataItem id="0006" name="FrequencyName" type="0001">CEPT (Europe) / U.S. / Canada / Mexico</MetaDataItem>
+    <MetaDataItem name="ProductPage">http://www.philio-tech.com/p_switch.htm</MetaDataItem>
+    <MetaDataItem name="Description">Features
+* Adopt newest Z-wave 400series chip, support multichannel operation and higher data rate (9.6/40/100kbps).
+* Adopt Z-Wave protocol to secure the success of wireless two way communication.
+* Higher RF output power (+2.5dBm output power as compared to -2.5dBm 300 series Z-wave module) to enhance the communication range.
+* Slim design, easy install.
+* Max load up to 1100W.
+* After calibration, the controller can feedback the roller shutter position.
+* Overload protection.
+* Z-Wave V6.02
+* Very low electricity consumption, meet Europe year 2012 energy-related products requirement directive 2009/125/EC no. 1275/2008.
+* LVD:EN 60669-2-1:2004+A1:2009+A12:2010,
+* EN 60669-2-2 :2006
+* EN 60669-1:1999+A1:2002+A2:2008+IS1:2009
+* R&amp;TTE: EN 301489, EN 300200,</MetaDataItem>
+    <MetaDataItem name="Name">Roller Shutter Controller</MetaDataItem>
+    <MetaDataItem id="0006" name="Identifier" type="0001">PAN08-2</MetaDataItem>
+    <ChangeLog>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="3">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/880/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="4">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/891/xml</Entry>
+    </ChangeLog>
+  </MetaData>
+  <!-- Configuration Parameters -->
+  <CommandClass id="112">
+    <Value genre="config" index="1" instance="1" label="Watt meter report period" max="32767" min="1" type="short" value="720">
+      <Help>Watt Meter Report Period. Unit: 5 seconds.</Help>
+    </Value>
+    <Value genre="config" index="2" instance="1" label="kWh meter report period" max="32767" min="1" type="short" value="6">
+      <Help>kWH Meter Report Period. Unit: 10 minutes.</Help>
+    </Value>
+    <Value genre="config" index="3" instance="1" label="Threshold of Watt for Load Caution" max="1100" min="10" type="short" value="1100">
+      <Help>Threshold of Watt for Load Caution. Unit: 1 watt</Help>
+    </Value>
+    <Value genre="config" index="4" instance="1" label="Threshold of kWh for Load Caution" max="10000" min="1" type="short" value="10000">
+      <Help>Threshold of kWH for Load Caution. Unit: 1 kWH</Help>
+    </Value>
+    <Value genre="config" index="5" instance="1" label="External switch type" max="2" min="1" type="byte" value="1">
+      <Help>External switch type: 1-> One Push button, 2->Two Push button</Help>
+    </Value>
+    <Value genre="config" index="6" instance="1" label="Level report mode" max="2" min="1" type="byte" value="1">
+      <Help>Level report mode: 1-> Report destination level in 5s, 2-> Report 10 percent level while running</Help>
+    </Value>
+  </CommandClass>
+  <CommandClass id="133">
+    <Associations num_groups="1">
+      <Group index="1" label="Lifeline" max_associations="1"/>
+    </Associations>
+  </CommandClass>
 </Product>

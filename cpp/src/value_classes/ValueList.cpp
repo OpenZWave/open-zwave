@@ -30,6 +30,7 @@
 #include "Msg.h"
 #include "platform/Log.h"
 #include "Manager.h"
+#include "Localization.h"
 #include <ctime>
 
 using namespace OpenZWave;
@@ -46,7 +47,7 @@ ValueList::ValueList
 	ValueID::ValueGenre const _genre,
 	uint8 const _commandClassId,
 	uint8 const _instance,
-	uint8 const _index,
+	uint16 const _index,
 	string const& _label,
 	string const& _units,
 	bool const _readOnly,
@@ -62,6 +63,13 @@ ValueList::ValueList
 	m_valueIdxCheck( 0 ),
 	m_size( _size )
 {
+	for( vector<Item>::iterator it = m_items.begin(); it != m_items.end(); ++it )
+	{
+		/* first what is currently in m_label is the default text for a Item, so set it */
+		Localization::Get()->SetValueItemLabel(_commandClassId, _index, -1, it->m_value, it->m_label, "");
+		/* now set to the Localized Value */
+		it->m_label = Localization::Get()->GetValueItemLabel(_commandClassId, _index, -1, it->m_value);
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -77,6 +85,7 @@ ValueList::ValueList
 	m_valueIdxCheck( 0 ),
 	m_size(0)
 {
+
 }
 
 //-----------------------------------------------------------------------------
@@ -103,45 +112,69 @@ void ValueList::ReadXML
 		}
 		else
 		{
-			Log::Write( LogLevel_Info, "Value size is invalid. Only 1, 2 & 4 supported for node %d, class 0x%02x, instance %d, index %d", _nodeId, _commandClassId, GetID().GetInstance(), GetID().GetIndex() );
+			Log::Write( LogLevel_Warning, "Value size is invalid (%d). Only 1, 2 & 4 supported for node %d, class 0x%02x, instance %d, index %d", intSize, _nodeId, _commandClassId, GetID().GetInstance(), GetID().GetIndex() );
 		}
 	}
 	else
 	{
-		Log::Write( LogLevel_Info, "Value list size is not set, assuming 4 bytes for node %d, class 0x%02x, instance %d, index %d", _nodeId, _commandClassId, GetID().GetInstance(), GetID().GetIndex() );
+		Log::Write( LogLevel_Warning, "Value list size is not set, assuming 4 bytes for node %d, class 0x%02x, instance %d, index %d", _nodeId, _commandClassId, GetID().GetInstance(), GetID().GetIndex() );
 	}
 
-	// Read the items
-	m_items.clear();
 	TiXmlElement const* itemElement = _valueElement->FirstChildElement();
+
+	bool shouldclearlist = true;
 	while( itemElement )
 	{
 		char const* str = itemElement->Value();
 		if( str && !strcmp( str, "Item" ) )
 		{
-			char const* labelStr = itemElement->Attribute( "label" );
+			/* clear the existing list, if we have Item entries. (static list entries are created in the constructor
+			 * here, we load up any localized labels
+			 */
+			if (shouldclearlist) {
+				m_items.clear();
+				shouldclearlist = false;
+			}
 
+			bool AddItem = true;
+			char const* labelStr = itemElement->Attribute( "label" );
+			char const* lang = "";
+			if (itemElement->Attribute( "lang" )) {
+				lang = itemElement->Attribute( "lang" );
+				AddItem = false;
+			} else {
+				AddItem = true;
+			}
 			int value = 0;
 			if (itemElement->QueryIntAttribute( "value", &value ) != TIXML_SUCCESS) {
-				Log::Write( LogLevel_Info, "Item value %s is wrong type or does not exist in xml configuration for node %d, class 0x%02x, instance %d, index %d", labelStr, _nodeId, _commandClassId, GetID().GetInstance(), GetID().GetIndex() );
+				Log::Write( LogLevel_Warning, "Item value %s is wrong type or does not exist in xml configuration for node %d, class 0x%02x, instance %d, index %d", labelStr, _nodeId, _commandClassId, GetID().GetInstance(), GetID().GetIndex() );
 				continue;
 			}
 			if(( m_size == 1 && value > 255 ) || ( m_size == 2 && value > 65535) )
 			{
-				Log::Write( LogLevel_Info, "Item value %s is incorrect size in xml configuration for node %d, class 0x%02x, instance %d, index %d", labelStr, _nodeId, _commandClassId, GetID().GetInstance(), GetID().GetIndex() );
+				Log::Write( LogLevel_Warning, "Item value %s is incorrect size in xml configuration for node %d, class 0x%02x, instance %d, index %d", labelStr, _nodeId, _commandClassId, GetID().GetInstance(), GetID().GetIndex() );
 			}
 			else
 			{
-				Item item;
-				item.m_label = labelStr;
-				item.m_value = value;
-
-				m_items.push_back( item );
+				Localization::Get()->SetValueItemLabel(m_id.GetCommandClassId(), m_id.GetIndex(), -1, value, labelStr, lang);
+				if (AddItem) {
+					Item item;
+					item.m_label = labelStr;
+					item.m_value = value;
+					m_items.push_back( item );
+				}
 			}
 		}
 
 		itemElement = itemElement->NextSiblingElement();
 	}
+	/* setup any Localization now as we should have read all available languages already */
+	for( vector<Item>::iterator it = m_items.begin(); it != m_items.end(); ++it )
+	{
+		it->m_label = Localization::Get()->GetValueItemLabel(m_id.GetCommandClassId(), m_id.GetIndex(), -1, it->m_value);
+	}
+
+
 
 	// Set the value
 	bool valSet = false;
@@ -157,7 +190,7 @@ void ValueList::ReadXML
 		}
 		else
 		{
-			Log::Write( LogLevel_Info, "Value is not found in xml configuration for node %d, class 0x%02x, instance %d, index %d", _nodeId, _commandClassId, GetID().GetInstance(), GetID().GetIndex() );
+			Log::Write( LogLevel_Warning, "Value is not found in xml configuration for node %d, class 0x%02x, instance %d, index %d", _nodeId, _commandClassId, GetID().GetInstance(), GetID().GetIndex() );
 		}
 	}
 
@@ -173,13 +206,16 @@ void ValueList::ReadXML
 		}
 		else
 		{
-			Log::Write( LogLevel_Info, "Vindex is out of range for index in xml configuration for node %d, class 0x%02x, instance %d, index %d", _nodeId, _commandClassId, GetID().GetInstance(), GetID().GetIndex() );
+			Log::Write( LogLevel_Warning, "Vindex is out of range for index in xml configuration for node %d, class 0x%02x, instance %d, index %d", _nodeId, _commandClassId, GetID().GetInstance(), GetID().GetIndex() );
 		}
 	}
 	if( !valSet && !indSet )
 	{
-		Log::Write( LogLevel_Info, "Missing default list value or vindex from xml configuration: node %d, class 0x%02x, instance %d, index %d", _nodeId,  _commandClassId, GetID().GetInstance(), GetID().GetIndex() );
+		Log::Write( LogLevel_Warning, "Missing default list value or vindex from xml configuration: node %d, class 0x%02x, instance %d, index %d", _nodeId,  _commandClassId, GetID().GetInstance(), GetID().GetIndex() );
 	}
+
+
+
 }
 
 //-----------------------------------------------------------------------------
@@ -378,7 +414,7 @@ ValueList::Item const *ValueList::GetItem() const {
 	try {
 		return &m_items.at(m_valueIdx);
 	} catch (const std::out_of_range& oor) {
-		Log::Write(LogLevel_Warning, "Invalid Index Set on ValueList");
+		Log::Write(LogLevel_Warning, "Invalid Index Set on ValueList: %s", oor.what());
 		return NULL;
 	}
 }

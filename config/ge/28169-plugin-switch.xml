@@ -3,7 +3,7 @@
 GE Plug-in Smart Switch, Single Outlet 28169
 http://products.z-wavealliance.org/products/2533
  -->
-<Product xmlns='http://code.google.com/p/open-zwave/'>
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
 	<CommandClass id="112">
 		<Value type="list" index="3" genre="config" label="LED Light" size="1" value="0">
 			<Help>

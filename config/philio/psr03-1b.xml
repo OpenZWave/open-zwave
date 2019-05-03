@@ -3,7 +3,7 @@
 Zipato Keyfob 5 Remote
 https://products.z-wavealliance.org/products/2432
 -->
-<Product xmlns='http://code.google.com/p/open-zwave/'>
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
 <!-- Configuration Parameters -->
 	<CommandClass id="112">
 		<Value type="byte" genre="config" index="2" label="Basic Set Level" units="" min="0" max="255" value="255">

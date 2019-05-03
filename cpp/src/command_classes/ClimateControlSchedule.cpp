@@ -77,40 +77,18 @@ static char const* c_overrideStateNames[] =
 	"Permanent",
 	"Invalid"
 };
-
-
 //-----------------------------------------------------------------------------
-// <ClimateControlSchedule::ReadXML>
-// Read the saved change-counter value
+// <ClimateControlSchedule::ClimateControlSchedule>
+// Constructor
 //-----------------------------------------------------------------------------
-void ClimateControlSchedule::ReadXML
+ClimateControlSchedule::ClimateControlSchedule
 (
-	TiXmlElement const* _ccElement
-)
+		uint32 const _homeId,
+		uint8 const _nodeId
+):
+CommandClass( _homeId, _nodeId )
 {
-	CommandClass::ReadXML( _ccElement );
-
-	int intVal;
-	if( TIXML_SUCCESS == _ccElement->QueryIntAttribute( "change_counter", &intVal ) )
-	{
-		m_changeCounter = (uint8)intVal;
-	}
-}
-
-//-----------------------------------------------------------------------------
-// <ClimateControlSchedule::WriteXML>
-// Write the change-counter value
-//-----------------------------------------------------------------------------
-void ClimateControlSchedule::WriteXML
-(
-	TiXmlElement* _ccElement
-)
-{
-	CommandClass::WriteXML( _ccElement );
-
-	char str[8];
-	snprintf( str, 8, "%d", m_changeCounter );
-	_ccElement->SetAttribute( "change_counter", str );
+	m_dom.EnableFlag(STATE_FLAG_CCS_CHANGECOUNTER, 0);
 }
 
 //-----------------------------------------------------------------------------
@@ -140,7 +118,7 @@ bool ClimateControlSchedule::RequestState
 bool ClimateControlSchedule::RequestValue
 (
 	uint32 const _requestFlags,
-	uint8 const _dummy1,	// = 0 (not used)
+	uint16 const _dummy1,	// = 0 (not used)
 	uint8 const _instance,
 	Driver::MsgQueue const _queue
 )
@@ -233,9 +211,9 @@ bool ClimateControlSchedule::HandleMsg
 
 		if( _data[1] )
 		{
-			if( _data[1] != m_changeCounter )
+			if( _data[1] != m_dom.GetFlagByte(STATE_FLAG_CCS_CHANGECOUNTER) )
 			{
-				m_changeCounter = _data[1];
+				m_dom.SetFlagByte(STATE_FLAG_CCS_CHANGECOUNTER, _data[1]);
 
 				// The schedule has changed and is not in override mode, so request reports for each day
 				for( int i=1; i<=7; ++i )
@@ -324,8 +302,8 @@ bool ClimateControlSchedule::SetValue
 )
 {
 //	bool res = false;
-	uint8 instance = _value.GetID().GetInstance();
-	uint8 idx = _value.GetID().GetIndex();
+	uint8_t instance = _value.GetID().GetInstance();
+	uint8_t idx = (uint8_t)(_value.GetID().GetIndex() & 0xFF);
 
 	if( idx < 8 )
 	{
@@ -342,10 +320,10 @@ bool ClimateControlSchedule::SetValue
 		msg->Append( ClimateControlScheduleCmd_Set );
 		msg->Append( idx );	// Day of week
 
-		for( uint8 i=0; i<9; ++i )
+		for( uint8_t i=0; i<9; ++i )
 		{
-			uint8 hours;
-			uint8 minutes;
+			uint8_t hours;
+			uint8_t minutes;
 			int8 setback;
 			if( value->GetSwitchPoint( i, &hours, &minutes, &setback ) )
 			{

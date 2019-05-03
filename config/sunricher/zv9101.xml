@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Product xmlns='http://code.google.com/p/open-zwave/'>
+<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
     <!--
     Nexa/Tronika ZV-9101
     https://www.nexa.se/wp-content/uploads/2019/02/ZV-9101_manual.pdf

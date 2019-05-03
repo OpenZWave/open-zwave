@@ -142,47 +142,11 @@ DoorLockLogging::DoorLockLogging
 	uint8 const _nodeId
 ):
 	CommandClass( _homeId, _nodeId ),
-	m_MaxRecords(0),
 	m_CurRecord(0)
 {
+	m_dom.EnableFlag(STATE_FLAG_DOORLOCKLOG_MAXRECORDS, 0);
 	SetStaticRequest( StaticRequest_Values );
 }
-
-//-----------------------------------------------------------------------------
-// <UserCode::ReadXML>
-// Class specific configuration
-//-----------------------------------------------------------------------------
-void DoorLockLogging::ReadXML
-(
-	TiXmlElement const* _ccElement
-)
-{
-	int32 intVal;
-
-	CommandClass::ReadXML( _ccElement );
-	if( TIXML_SUCCESS == _ccElement->QueryIntAttribute( "m_MaxRecords", &intVal ) )
-	{
-		m_MaxRecords = intVal;
-	}
-}
-
-//-----------------------------------------------------------------------------
-// <UserCode::WriteXML>
-// Class specific configuration
-//-----------------------------------------------------------------------------
-void DoorLockLogging::WriteXML
-(
-	TiXmlElement* _ccElement
-)
-{
-	char str[32];
-
-	CommandClass::WriteXML( _ccElement );
-	snprintf( str, sizeof(str), "%d", m_MaxRecords );
-	_ccElement->SetAttribute( "m_MaxRecords", str);
-}
-
-
 
 //-----------------------------------------------------------------------------
 // <DoorLockLogging::RequestState>
@@ -219,7 +183,7 @@ bool DoorLockLogging::RequestState
 bool DoorLockLogging::RequestValue
 (
 	uint32 const _requestFlags,
-	uint8 const _what,
+	uint16 const _what,
 	uint8 const _instance,
 	Driver::MsgQueue const _queue
 )
@@ -266,11 +230,11 @@ bool DoorLockLogging::HandleMsg
 	if( DoorLockLoggingCmd_RecordSupported_Report == (DoorLockLoggingCmd)_data[0] )
 	{
 		Log::Write( LogLevel_Info, GetNodeId(), "Received DoorLockLoggingCmd_RecordSupported_Report: Max Records is %d ", _data[1]);
-		m_MaxRecords = _data[1];
+		m_dom.SetFlagByte(STATE_FLAG_DOORLOCKLOG_MAXRECORDS, _data[1]);
 		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, Value_System_Config_MaxRecords ) ) )
 		{
 
-			value->OnValueRefreshed( m_MaxRecords );
+			value->OnValueRefreshed( _data[1] );
 			value->Release();
 		}
 		ClearStaticRequest( StaticRequest_Values );
@@ -305,12 +269,12 @@ bool DoorLockLogging::HandleMsg
 			uint8 userid = (_data[10]);
 			uint8 usercodelength = (_data[11]);
 			char usercode[254], tmpusercode[254];
-			snprintf(usercode, sizeof(usercode), "UserCode: ");
+			snprintf(usercode, sizeof(usercode), "UserCode:");
 			if (usercodelength > 0)
 				for (int i = 0; i < usercodelength; i++ )
 				{
-                                        snprintf(tmpusercode, sizeof(tmpusercode), "%d", (int)_data[12+i]);
-                                        strncat(usercode, tmpusercode, sizeof(usercode) - strlen(usercode) - 1 );
+					snprintf(tmpusercode, sizeof(tmpusercode), "%d", (int)_data[12+i]);
+					strncat(usercode, tmpusercode, sizeof(usercode) - strlen(usercode) - 1 );
 				}
 
 			if (valid) {

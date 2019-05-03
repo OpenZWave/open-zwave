@@ -26,6 +26,7 @@
 //
 //-----------------------------------------------------------------------------
 #include <windows.h>
+#include <cerrno>
 #include <list>
 
 #include "Defs.h"

@@ -30,6 +30,7 @@
 #include "command_classes/Basic.h"
 #include "command_classes/MultiInstance.h"
 #include "command_classes/NoOperation.h"
+#include "command_classes/Security.h"
 #include "Defs.h"
 #include "Msg.h"
 #include "Driver.h"
@@ -88,111 +89,12 @@ MultiInstance::MultiInstance
 		uint8 const _nodeId
 ):
 CommandClass( _homeId, _nodeId ),
-m_numEndPoints( 0 ),
-m_useDestAsSrc(false),
-m_numEndPointsHint( 0 ),
-m_endPointMap( MultiInstanceMapAll ),
-m_endPointFindSupported( false ),
-m_uniqueendpoints( false )
+m_numEndPoints( 0 )
 {
-}
-
-//-----------------------------------------------------------------------------
-// <MultiInstance::ReadXML>
-// Class specific configuration
-//-----------------------------------------------------------------------------
-void MultiInstance::ReadXML
-(
-		TiXmlElement const* _ccElement
-)
-{
-	int32 intVal;
-	char const* str;
-
-	CommandClass::ReadXML( _ccElement );
-
-	if( TIXML_SUCCESS == _ccElement->QueryIntAttribute( "endpoints", &intVal ) )
-	{
-		m_numEndPointsHint = (uint8)intVal;
-	}
-
-	str = _ccElement->Attribute("mapping");
-	if( str )
-	{
-		if( strcmp( str, "all") == 0 )
-		{
-			m_endPointMap = MultiInstanceMapAll;
-		}
-		else if( strcmp( str, "endpoints") == 0 )
-		{
-			m_endPointMap = MultiInstanceMapEndPoints;
-		}
-		else
-		{
-			Log::Write( LogLevel_Info, GetNodeId(), "Bad value for mapping: %s", str);
-		}
-	}
-
-	str = _ccElement->Attribute("findsupport");
-	if( str )
-	{
-		m_endPointFindSupported = !strcmp( str, "true");
-	}
-	str = _ccElement->Attribute("ignoreUnsolicitedMultiChnCapReport");
-	if( str )
-	{
-		m_ignoreUnsolicitedMultiChannelCapabilityReport = !strcmp( str, "true");
-	}
-	str = _ccElement->Attribute("forceUniqueEndpoints");
-	if( str )
-	{
-		m_uniqueendpoints = !strcmp( str, "true");
-	}
-	str = _ccElement->Attribute( "invertEndpointSource" );
-	if( str )
-	{
-		m_useDestAsSrc = !strcmp( str, "true" );
-	}
-
-}
-
-//-----------------------------------------------------------------------------
-// <MultiInstance::WriteXML>
-// Class specific configuration
-//-----------------------------------------------------------------------------
-void MultiInstance::WriteXML
-(
-		TiXmlElement* _ccElement
-)
-{
-	char str[32];
-
-	CommandClass::WriteXML( _ccElement );
-	if( m_numEndPointsHint != 0 )
-	{
-		snprintf( str, sizeof(str), "%d", m_numEndPointsHint );
-		_ccElement->SetAttribute( "endpoints", str);
-	}
-
-	if( m_endPointMap == MultiInstanceMapEndPoints )
-	{
-		_ccElement->SetAttribute( "mapping", "endpoints" );
-	}
-
-	if( m_endPointFindSupported )
-	{
-		_ccElement->SetAttribute( "findsupport", "true" );
-	}
-
-	if( m_uniqueendpoints )
-	{
-		_ccElement->SetAttribute( "forceUniqueEndpoints", "true" );
-	}
-	if ( m_useDestAsSrc )
-	{
-		_ccElement->SetAttribute( "invertEndpointSource", "true" );
-	}
-
+	m_com.EnableFlag(COMPAT_FLAG_MI_MAPROOTTOENDPOINT, false);
+	m_com.EnableFlag(COMPAT_FLAG_MI_FORCEUNIQUEENDPOINTS, false);
+	m_com.EnableFlag(COMPAT_FLAG_MI_IGNMCCAPREPORTS, false);
+	m_com.EnableFlag(COMPAT_FLAG_MI_ENDPOINTHINT, 0);
 }
 
 //-----------------------------------------------------------------------------
@@ -252,6 +154,17 @@ bool MultiInstance::RequestInstances
 
 	return res;
 }
+
+bool MultiInstance::HandleIncomingMsg
+(
+		uint8 const* _data,
+		uint32 const _length,
+		uint32 const _instance
+)
+{
+	return HandleMsg(_data, _length, _instance);
+}
+
 
 //-----------------------------------------------------------------------------
 // <MultiInstance::HandleMsg>
@@ -390,14 +303,14 @@ void MultiInstance::HandleMultiChannelEndPointReport
 	m_endPointsAreSameClass = (( _data[1] & 0x40 ) != 0 );	// All endpoints are the same command class.
 
 	/* some devices (eg, Aeotec Smart Dimmer 6 incorrectly report all endpoints are the same */
-	if( m_uniqueendpoints )
+	if (m_com.GetFlagBool(COMPAT_FLAG_MI_FORCEUNIQUEENDPOINTS))
 		m_endPointsAreSameClass = false;
 
 
 	m_numEndPoints = _data[2] & 0x7f;
-	if( m_numEndPointsHint != 0 )
+	if( m_com.GetFlagByte(COMPAT_FLAG_MI_ENDPOINTHINT) != 0 )
 	{
-		m_numEndPoints = m_numEndPointsHint;		// don't use device's number
+		m_numEndPoints = m_com.GetFlagByte(COMPAT_FLAG_MI_ENDPOINTHINT);		// don't use device's number
 	}
 
 	len = m_numEndPoints;
@@ -449,18 +362,13 @@ void MultiInstance::HandleMultiChannelCapabilityReport
 		 * updating the commandclasses, see this email thread:
 		 * https://groups.google.com/d/topic/openzwave/IwepxScRAVo/discussion
 		 */
-		if ((m_ignoreUnsolicitedMultiChannelCapabilityReport && (node->GetCurrentQueryStage() != Node::QueryStage_Instances))
+		if ((m_com.GetFlagBool(COMPAT_FLAG_MI_IGNMCCAPREPORTS) && (node->GetCurrentQueryStage() != Node::QueryStage_Instances))
 				&& !dynamic && m_endPointCommandClasses.size() > 0) {
 			Log::Write(LogLevel_Error, GetNodeId(), "Received a Unsolicited MultiChannelEncap when we are not in QueryState_Instances");
 			return;
 		}
 
-		uint8 endPoint;
-		if (m_useDestAsSrc) {
-			endPoint = _data[2] & 0x7f;
-		} else {
-			endPoint = _data[1] & 0x7f;
-		}
+		uint8 endPoint = _data[1] & 0x7f;
 
 		Log::Write( LogLevel_Info, GetNodeId(), "Received MultiChannelCapabilityReport from node %d for endpoint %d", GetNodeId(), endPoint );
 		Log::Write( LogLevel_Info, GetNodeId(), "    Endpoint is%sdynamic, and is a %s", dynamic ? " " : " not ", node->GetEndPointDeviceClassLabel( _data[2], _data[3] ).c_str() );
@@ -476,25 +384,28 @@ void MultiInstance::HandleMultiChannelCapabilityReport
 			if( commandClassId == 0xef )
 			{
 				afterMark = true;
-				continue;
+				Log::Write( LogLevel_Info, GetNodeId(), "    Controlled CommandClasses:");
 			}
 
 			m_endPointCommandClasses.insert( commandClassId );
 
 			// Ensure the node supports this command class
-			CommandClass* cc = node->GetCommandClass( commandClassId );
+			CommandClass* cc = node->GetCommandClass( commandClassId, afterMark );
+
 			if( !cc )
 			{
-				cc = node->AddCommandClass( commandClassId );
-				if( cc && afterMark )
-				{
-					cc->SetAfterMark();
-				}
+				cc = node->AddCommandClass( commandClassId, afterMark );
 			}
-			if( cc )
+			if( cc && afterMark )
+			{
+				cc->SetAfterMark();
+				Log::Write( LogLevel_Info, GetNodeId(), "        %s", cc->GetCommandClassName().c_str() );
+			}
+			else if ( cc ) 
 			{
 				Log::Write( LogLevel_Info, GetNodeId(), "        %s", cc->GetCommandClassName().c_str() );
 			}
+			/* The AddCommandClass will bitch about unsupported CC's so we don't need to duplicate that output */
 		}
 
 		// Create internal library instances for each command class in the list
@@ -504,7 +415,7 @@ void MultiInstance::HandleMultiChannelCapabilityReport
 		{
 			int len;
 
-			if( m_endPointMap == MultiInstanceMapAll )	// Include the non-endpoint instance
+			if( m_com.GetFlagBool(COMPAT_FLAG_MI_MAPROOTTOENDPOINT) == false )	// Include the non-endpoint instance
 			{
 				endPoint = 0;
 				len = m_numEndPoints + 1;
@@ -526,7 +437,7 @@ void MultiInstance::HandleMultiChannelCapabilityReport
 					if( cc )
 					{
 						cc->SetInstance( i );
-						if( m_endPointMap != MultiInstanceMapAll || i != 1 )
+						if( m_com.GetFlagBool(COMPAT_FLAG_MI_MAPROOTTOENDPOINT) != false || i != 1 )
 						{
 							cc->SetEndPoint( i, endPoint );
 						}
@@ -536,11 +447,27 @@ void MultiInstance::HandleMultiChannelCapabilityReport
 						if( basic != NULL && basic->GetMapping() == commandClassId )
 						{
 							basic->SetInstance( i );
-							if( m_endPointMap != MultiInstanceMapAll || i != 1 )
+							if( m_com.GetFlagBool(COMPAT_FLAG_MI_MAPROOTTOENDPOINT) != false || i != 1 )
 							{
 								basic->SetEndPoint( i, endPoint );
 							}
 						}
+						/* if its the Security CC, on a instance > 1, then this has come from the Security CC found in a MultiInstance Capability Report.
+						 * So we need to Query the endpoint for Secured CC's
+						 */
+						if ((commandClassId == Security::StaticGetCommandClassId()) && (i > 1)) {
+							if (!node->IsSecured()) {
+									Log::Write(LogLevel_Info, GetNodeId(), "        Skipping Security_Supported_Get, as the Node is not Secured");
+							} else {
+								Log::Write(LogLevel_Info, GetNodeId(), "        Sending Security_Supported_Get to Instance %d", i);
+								Security *seccc = static_cast<Security*>(node->GetCommandClass(Security::StaticGetCommandClassId(), afterMark));
+								/* this will trigger a SecurityCmd_SupportedGet on the _instance of the Device. */
+								if (seccc) {
+									seccc->Init(i);
+								}
+							}
+						}
+
 					}
 				}
 				endPoint++;
@@ -567,7 +494,7 @@ void MultiInstance::HandleMultiChannelCapabilityReport
 					// Find the next free instance of this class
 					for( i = 1; i <= 127; i++ )
 					{
-						if( m_endPointMap == MultiInstanceMapAll ) // Include the non-endpoint instance
+						if( m_com.GetFlagBool(COMPAT_FLAG_MI_MAPROOTTOENDPOINT) == false ) // Include the non-endpoint instance
 						{
 							if( !cc->GetInstances()->IsSet( i ) )
 							{
@@ -714,17 +641,43 @@ void MultiInstance::HandleMultiChannelEncap
 			}
 
 			uint8 instance = pCommandClass->GetInstance( endPoint );
-			if( instance == 0 )
-			{
-				Log::Write( LogLevel_Error, GetNodeId(), "Cannot find endpoint map to instance for Command Class %s endpoint %d", pCommandClass->GetCommandClassName().c_str(), endPoint );
-			}
-			else
-			{
-				Log::Write( LogLevel_Info, GetNodeId(), "Received a MultiChannelEncap from node %d, endpoint %d for Command Class %s", GetNodeId(), endPoint, pCommandClass->GetCommandClassName().c_str() );
-				pCommandClass->HandleMsg( &_data[4], _length-4, instance );
-			}
-		} else {
+			/* we can never have a 0 Instance */
+			if (instance == 0)
+				instance = 1;
+			Log::Write( LogLevel_Info, GetNodeId(), "Received a MultiChannelEncap from node %d, endpoint %d for Command Class %s", GetNodeId(), endPoint, pCommandClass->GetCommandClassName().c_str() );
+			pCommandClass->HandleMsg( &_data[4], _length-4, instance );
+		}
+		else if (CommandClass* pCommandClass = node->GetCommandClass( commandClassId, true ) )
+		{
+			uint8 instance = pCommandClass->GetInstance( endPoint );
+			/* we can never have a 0 Instance */
+			if (instance == 0)
+				instance = 1;
+			Log::Write( LogLevel_Info, GetNodeId(), "Received a Incoming MultiChannelEncap from node %d, endpoint %d for Command Class %s", GetNodeId(), endPoint, pCommandClass->GetCommandClassName().c_str() );
+			pCommandClass->HandleIncomingMsg( &_data[4], _length-4, instance );
+
+		}
+		else
+		{
 			Log::Write(LogLevel_Error, GetNodeId(), "Received a MultiChannelEncap for endpoint %d for Command Class %d, which we can't find", endPoint, commandClassId);
 		}
 	}
 }
+//-----------------------------------------------------------------------------
+// <MultiInstance::HandleMultiChannelEncap>
+// Handle a message from the Z-Wave network
+//-----------------------------------------------------------------------------
+void MultiInstance::SetInstanceLabel
+(
+		uint8 const _instance,
+		char *label
+)
+{
+	CommandClass::SetInstanceLabel(_instance, label);
+	/* Set the Default Global Instance Label for CC that don't define their own instance labels */
+	if( Node* node = GetNodeUnsafe() )
+	{
+		node->SetInstanceLabel(_instance, label);
+	}
+}
+

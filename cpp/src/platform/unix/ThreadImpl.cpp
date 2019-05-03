@@ -71,7 +71,7 @@ bool ThreadImpl::Start
 (
 	Thread::pfnThreadProc_t _pfnThreadProc,
 	Event* _exitEvent,
-	void* _pContext 
+	void* _pContext
 )
 {
 	pthread_attr_t ta;
@@ -87,6 +87,11 @@ bool ThreadImpl::Start
 	m_exitEvent->Reset();
 
 	pthread_create ( &m_hThread, &ta, ThreadImpl::ThreadProc, this );
+	string threadname("OZW-");
+	threadname.append(m_name);
+#if !defined(__APPLE_CC__) && !defined(__FreeBSD__)
+	pthread_setname_np( m_hThread, threadname.c_str() );
+#endif
 	//fprintf(stderr, "thread %s starting %08x\n", m_name.c_str(), m_hThread);
 	//fflush(stderr);
 
@@ -151,8 +156,8 @@ bool ThreadImpl::IsSignalled
 //	Entry point for running a function on this thread
 //-----------------------------------------------------------------------------
 void *ThreadImpl::ThreadProc
-( 
-	void* _pArg 
+(
+	void* _pArg
 )
 {
 	ThreadImpl* pImpl = (ThreadImpl*)_pArg;
@@ -169,13 +174,13 @@ void *ThreadImpl::ThreadProc
 //	Entry point for running a function on this thread
 //-----------------------------------------------------------------------------
 void ThreadImpl::Run
-( 
+(
 )
 {
 	m_bIsRunning = true;
 	m_pfnThreadProc( m_exitEvent, m_pContext );
 	m_bIsRunning = false;
-    
+
 	// Let any watchers know that the thread has finished running
 	m_owner->Notify();
 }

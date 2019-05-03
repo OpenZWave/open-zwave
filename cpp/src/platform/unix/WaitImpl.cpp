@@ -32,6 +32,7 @@
 
 #include <stdio.h>
 #include <errno.h>
+#include <string.h>
 
 using namespace OpenZWave;
 
@@ -77,16 +78,17 @@ void WaitImpl::AddWatcher
 	Watcher watcher;
 	watcher.m_callback = _callback;
 	watcher.m_context = _context;
+	int err;
 	
-	if( pthread_mutex_lock( &m_criticalSection ) != 0 )
+	if( (err = pthread_mutex_lock( &m_criticalSection )) != 0 )
 	{
-		fprintf(stderr, "WaitImpl::AddWatcher lock error %d\n", errno );
+		fprintf(stderr, "WaitImpl::AddWatcher lock error %s\n", strerror(err) );
 		assert( 0 );
 	}
 	m_watchers.push_back( watcher );
-	if( pthread_mutex_unlock( &m_criticalSection ) != 0 )
+	if( (err = pthread_mutex_unlock( &m_criticalSection )) != 0 )
 	{
-		fprintf(stderr, "WaitImpl::AddWatcher unlock error %d\n", errno );
+		fprintf(stderr, "WaitImpl::AddWatcher unlock error %s\n", strerror(err) );
 		assert( 0 );
 	}
 

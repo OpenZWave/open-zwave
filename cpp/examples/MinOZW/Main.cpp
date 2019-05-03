@@ -47,8 +47,6 @@
 
 using namespace OpenZWave;
 
-        bool temp = false;
-
 
 static uint32 g_homeId = 0;
 static bool   g_initFailed = false;
@@ -101,6 +99,8 @@ void OnNotification
 {
 	// Must do this inside a critical section to avoid conflicts with the main thread
 	pthread_mutex_lock( &g_criticalSection );
+
+	std::cout << "Notification: " << _notification << std::endl;
 
 	switch( _notification->GetType() )
 	{
@@ -159,9 +159,6 @@ void OnNotification
 			nodeInfo->m_nodeId = _notification->GetNodeId();
 			nodeInfo->m_polled = false;		
 			g_nodes.push_back( nodeInfo );
-		        if (temp == true) {
-			    Manager::Get()->CancelControllerCommand( _notification->GetHomeId() );
-                        }
 			break;
 		}
 
@@ -215,6 +212,18 @@ void OnNotification
 		case Notification::Type_DriverReady:
 		{
 			g_homeId = _notification->GetHomeId();
+			printf("Driver ready with HomeID: 0x%.8x\n", g_homeId);
+			bool ext_tx = Manager::Get()->HasExtendedTxStatus(g_homeId);
+
+			if (ext_tx)
+			{
+				printf("Controller has extended TxStatus.\n");
+			}
+			else
+			{
+				printf("Controller does not have extended TxStatus.\n");
+			}
+
 			break;
 		}
 
@@ -238,7 +247,19 @@ void OnNotification
 		case Notification::Type_NodeNaming:
 		case Notification::Type_NodeProtocolInfo:
 		case Notification::Type_NodeQueriesComplete:
-		default:
+		case Notification::Type_NodeNew:
+		case Notification::Type_SceneEvent:
+		case Notification::Type_CreateButton:
+		case Notification::Type_DeleteButton:
+		case Notification::Type_ButtonOn:
+		case Notification::Type_ButtonOff:
+		case Notification::Type_EssentialNodeQueriesComplete:
+		case Notification::Type_DriverRemoved:
+		case Notification::Type_ControllerCommand:
+		case Notification::Type_NodeReset:
+		case Notification::Type_UserAlerts:
+		case Notification::Type_ManufacturerSpecificDBReady:
+		case Notification::Type_ValueRefreshed:
 		{
 		}
 	}
@@ -261,8 +282,11 @@ int main( int argc, char* argv[] )
 
 	pthread_mutex_lock( &initMutex );
 
+	// petergebruers replace getVersionAsString() with getVersionLongAsString() because
+	// the latter prints more information, based on the status of the repository
+	// when "make" was run. A Makefile gets this info from git describe --long --tags --dirty
 
-	printf("Starting MinOZW with OpenZWave Version %s\n", Manager::getVersionAsString().c_str());
+	printf("Starting MinOZW with OpenZWave Version %s\n", Manager::getVersionLongAsString().c_str());
 
 	// Create the OpenZWave Manager.
 	// The first argument is the path to the config files (where the manufacturer_specific.xml file is located
@@ -330,7 +354,7 @@ int main( int argc, char* argv[] )
 			NodeInfo* nodeInfo = *it;
 
 			// skip the controller (most likely node 1)
-			if( nodeInfo->m_nodeId == 1) continue;
+			//if( nodeInfo->m_nodeId == 1) continue;
 
 			printf("NodeID: %d \n ", nodeInfo->m_nodeId);
 			printf("\t NodeName: %s \n ", Manager::Get()->GetNodeName(nodeInfo->m_homeId,nodeInfo->m_nodeId).c_str());

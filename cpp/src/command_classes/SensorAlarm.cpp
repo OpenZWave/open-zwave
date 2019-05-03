@@ -111,7 +111,7 @@ bool SensorAlarm::RequestState
 bool SensorAlarm::RequestValue
 (
 	uint32 const _requestFlags,
-	uint8 const _alarmType,
+	uint16 const _alarmType,
 	uint8 const _instance,
 	Driver::MsgQueue const _queue
 )
@@ -132,7 +132,7 @@ bool SensorAlarm::RequestValue
 	else
 	{
 		// Request the alarm state
-		if ( IsGetSupported() )
+		if ( m_com.GetFlagBool(COMPAT_FLAG_GETSUPPORTED) )
 		{
 			Msg* msg = new Msg( "SensorAlarmCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
 			msg->SetInstance( this, _instance );
@@ -140,7 +140,7 @@ bool SensorAlarm::RequestValue
 			msg->Append( 3 );
 			msg->Append( GetCommandClassId() );
 			msg->Append( SensorAlarmCmd_Get );
-			msg->Append( _alarmType );
+			msg->Append( (_alarmType & 0xFF) );
 			msg->Append( GetDriver()->GetTransmitOptions() );
 			GetDriver()->SendMsg( msg, _queue );
 			return true;
