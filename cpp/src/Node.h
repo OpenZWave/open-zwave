@@ -751,23 +751,40 @@ namespace OpenZWave
 			 */
 			enum MetaDataFields
 			{
-				MetaData_OzwInfoPage,
-				MetaData_ZWProductPage,
+				MetaData_OzwInfoPage_URL,
+				MetaData_ZWProductPage_URL,
 				MetaData_ProductPic,
-				MetaData_ProductManual,
-				MetaData_ProductPage,
+				MetaData_Description,
+				MetaData_ProductManual_URL,
+				MetaData_ProductPage_URL,
+				MetaData_InclusionHelp,
+				MetaData_ExclusionHelp,
+				MetaData_ResetHelp,
+				MetaData_WakeupHelp,
+				MetaData_ProductSupport_URL,
+				MetaData_Frequency,
+				MetaData_Name,
+				MetaData_Identifier,
 				MetaData_Invalid = 255
 			};
 
+			struct ChangeLogEntry {
+				string author;
+				string date;
+				int revision;
+				string description;
+			};
 			string const GetMetaData(MetaDataFields);
 			MetaDataFields const GetMetaDataId(string);
 			string const GetMetaDataString(MetaDataFields);
+			ChangeLogEntry const GetChangeLog(uint32_t);
 
 
 			private:
 			void ReadMetaDataFromXML(TiXmlElement const* _valueElement);
 			void WriteMetaDataXML(TiXmlElement*);
 			map<MetaDataFields, string> m_metadata;
+			map<uint32_t, ChangeLogEntry> m_changeLog;
 	};
 
 

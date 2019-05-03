@@ -7580,10 +7580,10 @@ void Driver::ProcessEventMsg
 }
 
 //-----------------------------------------------------------------------------
-// <Manager::GetNodeStatistics>
-// Retrieve driver based counters.
+// <Manager::GetMetaData>
+// Retrieve MetaData about a Node.
 //-----------------------------------------------------------------------------
-string Driver::GetMetaData
+string const Driver::GetMetaData
 (
 		uint8 const _nodeId,
 		Node::MetaDataFields _metadata
@@ -7597,6 +7597,28 @@ string Driver::GetMetaData
 	}
 	return "";
 }
+
+//-----------------------------------------------------------------------------
+// <Manager::GetMetaData>
+// Retrieve MetaData about a Node.
+//-----------------------------------------------------------------------------
+Node::ChangeLogEntry const Driver::GetChangeLog
+(
+		uint8 const _nodeId,
+		uint32_t revision
+)
+{
+	LockGuard LG(m_nodeMutex);
+	Node* node = GetNode( _nodeId );
+	if( node != NULL )
+	{
+		return node->GetChangeLog( revision );
+	}
+	Node::ChangeLogEntry cle;
+	cle.revision = -1;
+	return cle;
+}
+
 
 ManufacturerSpecificDB *Driver::GetManufacturerSpecificDB
 (

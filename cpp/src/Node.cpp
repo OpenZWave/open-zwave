@@ -3994,7 +3994,11 @@ void Node::checkLatestConfigRevision
 // Get MetaData about a node
 //-----------------------------------------------------------------------------
 
-string const Node::GetMetaData(MetaDataFields field) {
+string const Node::GetMetaData
+(
+		MetaDataFields field
+)
+{
 	if (this->m_metadata.find(field) != this->m_metadata.end()) {
 		return this->m_metadata[field];
 	}
@@ -4002,15 +4006,41 @@ string const Node::GetMetaData(MetaDataFields field) {
 }
 
 //-----------------------------------------------------------------------------
+// <Node::GetChangeLog>
+// Get MetaData about a node
+//-----------------------------------------------------------------------------
+Node::ChangeLogEntry const Node::GetChangeLog
+(
+		uint32_t revision
+)
+{
+	if (this->m_changeLog.find(revision) != this->m_changeLog.end()) {
+		return this->m_changeLog[revision];
+	}
+	ChangeLogEntry cle;
+	cle.revision = -1;
+	return cle;
+}
+
+//-----------------------------------------------------------------------------
 // <Node::GetMetaDataId>
 // Translate the MetaData String to a ID
 //-----------------------------------------------------------------------------
 Node::MetaDataFields const Node::GetMetaDataId(string name) {
-	if (name == "OzwInfoPage") return MetaData_OzwInfoPage;
-	if (name == "ZWProductPage") return MetaData_ZWProductPage;
+	if (name == "OzwInfoPage") return MetaData_OzwInfoPage_URL;
+	if (name == "ZWProductPage") return MetaData_ZWProductPage_URL;
 	if (name == "ProductPic") return MetaData_ProductPic;
-	if (name == "ProductManual") return MetaData_ProductManual;
-	if (name == "ProductPage") return MetaData_ProductPage;
+	if (name == "Description") return MetaData_Description;
+	if (name == "ProductManual") return MetaData_ProductManual_URL;
+	if (name == "ProductPage") return MetaData_ProductPage_URL;
+	if (name == "InclusionDescription") return MetaData_InclusionHelp;
+	if (name == "ExclusionDescription") return MetaData_ExclusionHelp;
+	if (name == "ResetDescription") return MetaData_ResetHelp;
+	if (name == "WakeupDescription") return MetaData_WakeupHelp;
+	if (name == "ProductSupport") return MetaData_ProductSupport_URL;
+	if (name == "FrequencyName") return MetaData_Frequency;
+	if (name == "Name") return MetaData_Name;
+	if (name == "Identifier") return MetaData_Identifier;
 	return MetaData_Invalid;
 }
 //-----------------------------------------------------------------------------
@@ -4019,16 +4049,34 @@ Node::MetaDataFields const Node::GetMetaDataId(string name) {
 //-----------------------------------------------------------------------------
 string const Node::GetMetaDataString(Node::MetaDataFields id) {
 	switch (id) {
-	case MetaData_OzwInfoPage:
+	case MetaData_OzwInfoPage_URL:
 		return "OzwInfoPage";
-	case MetaData_ZWProductPage:
+	case MetaData_ZWProductPage_URL:
 		return "ZWProductPage";
 	case MetaData_ProductPic:
 		return "ProductPic";
-	case MetaData_ProductManual:
+	case MetaData_Description:
+		return "Description";
+	case MetaData_ProductManual_URL:
 		return "ProductManual";
-	case MetaData_ProductPage:
+	case MetaData_ProductPage_URL:
 		return "ProductPage";
+	case MetaData_InclusionHelp:
+		return "InclusionDescription";
+	case MetaData_ExclusionHelp:
+		return "ExclusionDescription";
+	case MetaData_ResetHelp:
+		return "ResetDescription";
+	case MetaData_WakeupHelp:
+		return "WakeupDescription";
+	case MetaData_ProductSupport_URL:
+		return "ProductSupport";
+	case MetaData_Frequency:
+		return "FrequencyName";
+	case MetaData_Name:
+		return "Name";
+	case MetaData_Identifier:
+		return "Identifier";
 	case MetaData_Invalid:
 		return "";
 	}
@@ -4055,7 +4103,47 @@ void Node::ReadMetaDataFromXML(TiXmlElement const* _valueElement) {
 							metadata = metadata->NextSiblingElement();
 							continue;
 						}
+						/* these are the MetaData that have type/id entries */
+						switch (GetMetaDataId(name)) {
+							case MetaData_ZWProductPage_URL:
+							case MetaData_Identifier:
+							case MetaData_Frequency:
+							{
+								int intVal;
+								uint16_t type = 0;
+								uint16_t id = 0;
+								if( TIXML_SUCCESS == metadata->QueryIntAttribute( "type", &intVal ) )
+								{
+									type = (uint16_t)intVal;
+								}
+								if( TIXML_SUCCESS == metadata->QueryIntAttribute( "id", &intVal ) )
+								{
+									id = (uint16_t)intVal;
+								}
+								if ((type != GetProductType()) ||
+										(id != GetProductId()) ) {
+									metadata = metadata->NextSiblingElement();
+									continue;
+								}
+								break;
+							}
+							/* for the rest, just take the standard entry */
+							default:
+								break;
+						}
 						this->m_metadata[GetMetaDataId(name)] = metadata->GetText();
+					} else if (!strcmp( metadata->Value(), "ChangeLog" )) {
+						TiXmlElement const* entry = metadata->FirstChildElement("Entry");
+						while (entry) {
+							ChangeLogEntry cle;
+							cle.author = entry->Attribute("author");
+							cle.date = entry->Attribute("date");
+							cle.description = entry->GetText();
+							metadata->QueryIntAttribute( "id", &cle.revision );
+							m_changeLog[cle.revision] = cle;
+							entry = entry->NextSiblingElement("Entry");
+						}
+
 					}
 					metadata = metadata->NextSiblingElement();
 				}
@@ -4075,10 +4163,34 @@ void Node::WriteMetaDataXML(TiXmlElement *mdElement) {
 		if (it->first < Node::MetaData_Invalid) {
 			TiXmlElement* mdiElement = new TiXmlElement( "MetaDataItem" );
 			mdiElement->SetAttribute( "name", GetMetaDataString(it->first).c_str() );
+			switch (it->first) {
+				case MetaData_ZWProductPage_URL:
+				case MetaData_Identifier:
+				case MetaData_Frequency:
+					mdiElement->SetAttribute("type", GetProductType());
+					mdiElement->SetAttribute("id", GetProductId());
+					break;
+				/* for the rest, just take the standard entry */
+				default:
+					break;
+			}
 			TiXmlText* textElement = new TiXmlText( it->second.c_str() );
 			mdiElement->LinkEndChild( textElement );
 			mdElement->LinkEndChild( mdiElement );
 
 		}
+	}
+	if (m_changeLog.size() > 0) {
+		TiXmlElement* cl = new TiXmlElement( "ChangeLog" );
+		for (map<uint32_t, ChangeLogEntry>::iterator it = m_changeLog.begin(); it != m_changeLog.end(); ++ it )
+		{
+			TiXmlElement* cle = new TiXmlElement( "Entry" );
+			cle->SetAttribute( "author", it->second.author.c_str() );
+			cle->SetAttribute( "date", it->second.date.c_str() );
+			cle->SetAttribute( "revision", it->second.revision );
+			TiXmlText* textElement = new TiXmlText( it->second.description.c_str() );
+			cle->LinkEndChild(textElement);
+		}
+		mdElement->LinkEndChild(cl);
 	}
 }

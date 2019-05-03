@@ -5310,7 +5310,7 @@ string Manager::GetNodeRouteSpeed
 // <Manager::GetMetaData>
 // Retrieve MetaData about a Node.
 //-----------------------------------------------------------------------------
-string Manager::GetMetaData
+string const Manager::GetMetaData
 (
 		uint32 const _homeId,
 		uint8 const _nodeId,
@@ -5323,6 +5323,27 @@ string Manager::GetMetaData
 	}
 	return "";
 }
+
+//-----------------------------------------------------------------------------
+// <Manager::GetChangeLog>
+// Retrieve ChangeLog of a Configuration File about a Node.
+//-----------------------------------------------------------------------------
+Node::ChangeLogEntry const Manager::GetChangeLog
+(
+		uint32 const _homeId,
+		uint8 const _nodeId,
+		uint32_t revision
+)
+{
+	if( Driver* driver = GetDriver( _homeId ) )
+	{
+		return driver->GetChangeLog( _nodeId, revision );
+	}
+	Node::ChangeLogEntry cle;
+	cle.revision = -1;
+	return cle;
+}
+
 
 //-----------------------------------------------------------------------------
 // <Manager::checkLatestConfigFileRevision>
