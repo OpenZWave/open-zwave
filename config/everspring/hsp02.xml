@@ -1,4 +1,21 @@
-<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
+  <MetaData>
+    <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0060:0001:0001</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/everspring/hsp02.png</MetaDataItem>
+    <MetaDataItem id="0001" name="ZWProductPage" type="0001">https://products.z-wavealliance.org/products/24/</MetaDataItem>
+    <MetaDataItem id="0001" name="FrequencyName" type="0001">Malaysia</MetaDataItem>
+    <MetaDataItem id="0001" name="Identifier" type="0001">SP103</MetaDataItem>
+    <MetaDataItem name="Description">The Motion Detector is a Z-Wave enabled device and is fully compatible with any Z-Wave enabled network.
+
+The Motion Detector is designed to detect movement in a protected area by detecting changes in infra-red radiation levels caused, for example, when a person moves within or across the devices field of vision, a trigger radio signal will be transmitted.
+
+The IP44 design let the detector can be applied to outdoor use.</MetaDataItem>
+    <MetaDataItem name="ProductPage">http://www.everspring.com/SP103.aspx</MetaDataItem>
+    <MetaDataItem name="Name">Motion Sensor</MetaDataItem>
+    <ChangeLog>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="4">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/24/xml</Entry>
+    </ChangeLog>
+  </MetaData>
   <!-- Configuration Parameters -->
   <CommandClass id="112">
     <Value genre="config" index="1" label="Basic Set Level" max="99" min="0" type="byte" units="" value="99">
