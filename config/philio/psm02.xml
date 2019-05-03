@@ -1,15 +1,33 @@
-<Product Revision="5" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="6" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/013C:0002:0002</MetaDataItem>
     <MetaDataItem name="ProductPic">images/philio/psm02.png</MetaDataItem>
-    <MetaDataItem id="0002" name="ZWProductPage" type="0002">https://products.z-wavealliance.org/products/821/</MetaDataItem>
-    <MetaDataItem id="0002" name="Identifier" type="0002">PSM02-1</MetaDataItem>
-    <MetaDataItem name="Description">Multi-sensor PSM02 has PIR, door/window, temperature and illumination, 4 sensors function in one, based on Z-Wave technology</MetaDataItem>
-    <MetaDataItem name="Name">PSM02-1 Multi-Sensor</MetaDataItem>
-    <MetaDataItem id="0002" name="FrequencyName" type="0002">CEPT (Europe)</MetaDataItem>
+    <MetaDataItem id="0002" name="ZWProductPage" type="0002">https://products.z-wavealliance.org/products/835/</MetaDataItem>
+    <MetaDataItem id="0002" name="Identifier" type="0002">PSM02-3</MetaDataItem>
+    <MetaDataItem name="Description">PIR, door/window, temperature and illumination, 4 sensors function in one.
+
+Features
+
+ - (1)Door/window (2)PIR (3)illumination and (4)temperature functions in one sensor
+ - Adopt newest Z-wave 400 series chip, support multichannel operation and higher data rate (9.6/40/100kbps)
+ - Higher output power (+2.5dBm output power as compared to -2.5dBm 300 series Z-wave module) to enhance the communication range
+ - 1500mA CR123A lithium battery to guarantee 2 year battery life
+ - Built in light sensor while applied to light control
+ - Adopt Z-Wave protocol to secure the success of wireless two way communication
+ - With Tamper proof protection
+ - Easy install
+ - Low battery indication
+ - Z-Wave V6.02
+ - Auto report the open/close status and battery status
+ - FCC part15.249 / EN300 220-1/ certification
+ - NCC</MetaDataItem>
+    <MetaDataItem name="Name">PSM02-3 Slim Multi-Sensor</MetaDataItem>
+    <MetaDataItem id="0002" name="FrequencyName" type="0002">CEPT (Europe) / Japan</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="5">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/821/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="6">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/835/xml</Entry>
     </ChangeLog>
+    <MetaDataItem name="ProductPage">http://philio-tech.com/</MetaDataItem>
   </MetaData>
   <!-- Configuration Parameters -->
   <CommandClass id="112">
