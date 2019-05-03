@@ -278,7 +278,7 @@
   <Manufacturer id="0196" name="Bellatrix Systems Inc."></Manufacturer>
   <Manufacturer id="032D" name="Benetek"></Manufacturer>
   <Manufacturer id="008a" name="BeNext">
-    <Product id="0100" name="myGate" type="0001"/>
+    <Product config="BeNext/mygate.xml" id="0100" name="myGate" type="0001"/>
     <Product config="BeNext/mydisplay.xml" id="0100" name="myDisplay" type="0002"/>
     <Product config="BeNext/Molite.xml" id="0100" name="MoLiTe Sensor" type="0003"/>
     <Product config="BeNext/Molite.xml" id="0101" name="DHS-ZW-SNMT-01 Multi Sensor" type="0003"/>
