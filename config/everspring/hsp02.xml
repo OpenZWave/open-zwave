@@ -1,41 +1,23 @@
-<Product Revision="5" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="6" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0060:0001:0001</MetaDataItem>
     <MetaDataItem name="ProductPic">images/everspring/hsp02.png</MetaDataItem>
-    <MetaDataItem id="0001" name="ZWProductPage" type="0001">https://products.z-wavealliance.org/products/35/</MetaDataItem>
-    <MetaDataItem id="0001" name="FrequencyName" type="0001">Malaysia / Hong Kong</MetaDataItem>
-    <MetaDataItem id="0001" name="Identifier" type="0001">SP103</MetaDataItem>
-    <MetaDataItem name="Description">Z-Wave PIR Movement Sensor(EU) - 300 SeriesAN148 On/Off Plug
-Specification：
-Protocol
-Z-Wave
-Frequency
-AN148-2: 868.42 MHz (Germany)
-AN148-3: 868.42 MHz (UK)
-Code Type
-Learning
-Transceiver
-Yes
-Operating Range
-Up to 100 feet
-LED Indication
-Yes
-Max Load
-AN148-2: 3500W
-AN148-3: 2990W
-Power
-AC220-240V/50Hz
-Operating Temp.
-0°C-40°C (32°F~104°F)
-Protection Degree
-Indoor use</MetaDataItem>
-    <MetaDataItem name="ProductPage">http://www.everspring.com.tw/Products/Home_Automation_Detail.asp?parentUID=83&amp;UID=477&amp;CateUIDList=0,83</MetaDataItem>
-    <MetaDataItem name="Name">Everspring AN148-2 PIR HK</MetaDataItem>
+    <MetaDataItem id="0001" name="ZWProductPage" type="0001">https://products.z-wavealliance.org/products/392/</MetaDataItem>
+    <MetaDataItem id="0001" name="FrequencyName" type="0001">Malaysia / Hong Kong / CEPT (Europe)</MetaDataItem>
+    <MetaDataItem id="0001" name="Identifier" type="0001">SP103-EU</MetaDataItem>
+    <MetaDataItem name="Description">The Motion Detector is a Z-Wave enabled device and is fully compatible with any Z-Wave enabled network.
+
+The Motion Detector is designed to detect movement in a protected area by detecting changes in infra-red radiation levels caused, for example, when a person moves within or across the devices field of vision, a trigger radio signal will be transmitted.
+
+The IP44 design let the detector can be applied to outdoor use.</MetaDataItem>
+    <MetaDataItem name="ProductPage">http://www.everspring.com/SP103.aspx</MetaDataItem>
+    <MetaDataItem name="Name">Motion Sensor</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="4">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/24/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="5">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/35/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="6">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/392/xml</Entry>
     </ChangeLog>
-    <MetaDataItem name="ProductSupport">http://www.everspring.com.tw/contact-us/index.asp</MetaDataItem>
+    <MetaDataItem name="ProductSupport">http://www.everspring.com/SP103.aspx</MetaDataItem>
   </MetaData>
   <!-- Configuration Parameters -->
   <CommandClass id="112">
