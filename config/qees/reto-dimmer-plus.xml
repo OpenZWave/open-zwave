@@ -1,34 +1,23 @@
-<!-- QEES RETO Dimmer Plus 2013 --><Product Revision="5" xmlns="https://github.com/OpenZWave/open-zwave">
+<!-- QEES RETO Dimmer Plus 2013 --><Product Revision="6" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0095:0001:3101</MetaDataItem>
     <MetaDataItem name="ProductPic">images/qees/reto-dimmer-plus.png</MetaDataItem>
-    <MetaDataItem id="0001" name="ZWProductPage" type="3101">https://products.z-wavealliance.org/products/594/</MetaDataItem>
-    <MetaDataItem id="0001" name="Identifier" type="3101">UNI US</MetaDataItem>
-    <MetaDataItem name="ProductSupport">http://www.qees.eu/support</MetaDataItem>
+    <MetaDataItem id="0001" name="ZWProductPage" type="3101">https://products.z-wavealliance.org/products/595/</MetaDataItem>
+    <MetaDataItem id="0001" name="Identifier" type="3101">311-AQ(WB)-A2</MetaDataItem>
+    <MetaDataItem name="ProductSupport">http://www.qees.eu/products/standard-retofit-series/turtle-shell/product/115/127/Standard-Retofit-Series/Standard-RETO-Shell/qees-reto-shell-dimmer-standard-us</MetaDataItem>
     <MetaDataItem id="0001" name="FrequencyName" type="3101">U.S. / Canada / Mexico</MetaDataItem>
-    <MetaDataItem name="Name">QEES Dimmer UNI US</MetaDataItem>
-    <MetaDataItem name="Description">Software updatable dimmer including power meter.QEES Plug-in Socket Dimmer brings along comfort and elegance with an extremely easy setup and a unique design. With its help you can now wirelessly control all the dimmable loads you have inside your home.
+    <MetaDataItem name="Name">QEES Power 16A US</MetaDataItem>
+    <MetaDataItem name="Description">311-AQ(WB)-A2 Software updatable binary switch including power meter. QEES RETO Shell Dimmer Standard is a highly aesthetic Z-Wave-controlled (US frequency) 400W universal dimmer for any kind of dimmable load: Energy saving, halogen, LED and incandescent light bulbs.
  
-QEES Plug-in Socket Dimmer is a Z-Wave-controlled 400W universal dimmer (EU frequency) with US plug-in socket outlet, multi-color LED feedback and one programmable group for retrofit installation.
+QEES RETO Shell Dimmer Standard is a wirelessly controlled universal dimmer for retrofit installation. It can be operated locally by pushing the top cover; this action will dim the local load.
  
-QEES Plug-in Socket Dimmer is compatible with all Z-Wave certified devices from other manufacturers. It also acts as a repeater inside your Z-Wave network increasing the range for your remote control.
+QEES RETO Shell Dimmer Standard is compatible with all Z-Wave certified devices from other manufacturers. It also acts as a repeater inside your Z-Wave network increasing the range for your remote control.
  
-Like all QEES products, QEES Plug-in Socket Dimmer can switch off the device that otherwise would consume power when not needed (in stand by mode).
-Z-Wave-controlled
-Up to 400W UNI
-100-240V, 50/60Hz
-Top cover can be operated as a local switch
-For indoor use only - IP 20
- 
-
-1 programmable group
-LED action feedback (multi-color RGB)
-White; other colors on request
-Operating Temperature: -20 Celsius up to +50 Celsius
-Range - 30m indoor</MetaDataItem>
-    <MetaDataItem name="ProductPage">http://www.qees.eu/products/standard-retofit-series/plug-in-socket-outlets/plug-in-socket-dimmer-us/product/108/135/Standard-Reto</MetaDataItem>
+Like all QEES products, QEES RETO Shell Dimmer Standard can switch off devices that otherwise would consume power when not needed (in standby mode).</MetaDataItem>
+    <MetaDataItem name="ProductPage">http://www.qees.eu/products/standard-retofit-series/turtle-shell/product/115/127/Standard-Retofit-Series/Standard-RETO-Shell/qees-reto-shell-dimmer-standard-us</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="5">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/594/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="6">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/595/xml</Entry>
     </ChangeLog>
   </MetaData>
   <!-- COMMAND_CLASS_SWITCH_MULTILEVEL. This class is in the list reported by the device, but it does not respond to requests -->
