@@ -1,22 +1,23 @@
-<Product Revision="5" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="6" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0063:3230:4457</MetaDataItem>
     <MetaDataItem name="ProductPic">images/ge/dimmer.png</MetaDataItem>
-    <MetaDataItem id="3230" name="ZWProductPage" type="4457">https://products.z-wavealliance.org/products/844/</MetaDataItem>
+    <MetaDataItem id="3230" name="ZWProductPage" type="4457">https://products.z-wavealliance.org/products/846/</MetaDataItem>
     <MetaDataItem id="3230" name="FrequencyName" type="4457">U.S. / Canada / Mexico</MetaDataItem>
     <MetaDataItem name="ProductSupport">http://www.jascoproducts.com/support/</MetaDataItem>
-    <MetaDataItem id="3230" name="Identifier" type="4457">45742/ZW3004</MetaDataItem>
+    <MetaDataItem id="3230" name="Identifier" type="4457">45762/ZW3004</MetaDataItem>
     <MetaDataItem name="Description">"Transform any home into a smart home with the Jasco Z-Wave Wireless Lighting Control Dimmer Switch. The Jasco Z-Wave Wireless Lighting Control Dimmer Switch enables wireless control of on/off and dim functions of hard-wired CFL/LED and Incandescent lighting. The dimmer switch replaces your current light switch, uses your existing wiring, and provides Z-Wave wireless and in-wall control of overhead lighting. Use the dimmer feature to customize the lighting output and create the perfect ambiance for any room. Providing ultimate flexibility, the Jasco Z-Wave Wireless Lighting Control Dimmer Switch allows you to operate the switch by itself or easily integrate the switch with two-way, three-way or four-way wiring configurations by adding the Jasco Auxiliary switch for Z-Wave. Two-way wiring configuration turns the light or appliance on/off from one location. Three-way wiring configuration turns the light or appliance on/off from two separate locations. Four-way wiring configuration turns the light or appliance on/off from three separate locations. The Jasco Auxiliary Switch for Z-Wave is required for three-way or four-way installations.  The dimmer switch includes an LED indicator light to easily locate the switch in a dark room. Take control of your home lighting with Jasco Z-Wave Wireless Lighting Controls!
 
 Z-Wave is the world’s largest ecosystem of interoperable smart home products. Z-Wave lighting controls provide an easy-to-install and affordable system to control lighting and small appliances in your home. Add Jasco Z-Wave lighting controls to a Z-Wave certified gateway to access and control your home from anywhere in the world using your smartphone, tablet or computer as a home automation command center. Never worry if you accidentally left the lights on because you can turn them off remotely or program your lights to go on/off at specific times. Create customized lighting scenes for any occasion such as a “go to sleep” scene or a “movie night” scene. Give the illusion that someone is home by programming the lights to turn on/off while you are away—perfect for deterring crime and adding additional security!"
 </MetaDataItem>
-    <MetaDataItem name="Name">In-Wall Toggle Style CFL/LED Light Dimmer, Neutral Required, White</MetaDataItem>
+    <MetaDataItem name="Name">In-Wall Toggle Style CFL/LED Light Dimmer, Neutral Required, Almond</MetaDataItem>
     <MetaDataItem name="ProductPage">www.ezzwave.com</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="1">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/293/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="2">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/654/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="3">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/842/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="4">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/844/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="5">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/846/xml</Entry>
     </ChangeLog>
   </MetaData>
   <!-- Configuration Parameters -->
