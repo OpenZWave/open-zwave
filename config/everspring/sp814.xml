@@ -1,9 +1,9 @@
-<Product Revision="7" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="8" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0060:0002:0001</MetaDataItem>
     <MetaDataItem name="ProductPic">images/everspring/sp814.png</MetaDataItem>
-    <MetaDataItem id="0002" name="ZWProductPage" type="0001">https://products.z-wavealliance.org/products/617/</MetaDataItem>
-    <MetaDataItem id="0002" name="FrequencyName" type="0001">U.S. / Canada / Mexico / CEPT (Europe) / Australia / New Zealand</MetaDataItem>
+    <MetaDataItem id="0002" name="ZWProductPage" type="0001">https://products.z-wavealliance.org/products/977/</MetaDataItem>
+    <MetaDataItem id="0002" name="FrequencyName" type="0001">U.S. / Canada / Mexico / CEPT (Europe) / Australia / New Zealand / U.S. / Canada / Mexico</MetaDataItem>
     <MetaDataItem name="Name">PIR Sensor</MetaDataItem>
     <MetaDataItem name="Description">The Motion Detector is designed with two detecting sensors, Passive Infra-Red (PIR) sensor and light sensor, to detect movement within a protected area, operating at 868.42 , 908.42, and 921.42 MHz. 
 
@@ -11,11 +11,12 @@ The detector can be used as a security device or home automation device.  When t
 
 Two mounting methods are provided for varying detection range.  The detector can be mounted on a wall for farther detecting distance but narrower coverage; while for ceiling mounting, shorter detecting distance can be made but desired coverage can be expected at user’s disposal.
 </MetaDataItem>
-    <MetaDataItem id="0002" name="Identifier" type="0001">SP814-ANZ</MetaDataItem>
+    <MetaDataItem id="0002" name="Identifier" type="0001">SP814-2</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="5">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="6">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/216/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="7">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/617/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="8">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/977/xml</Entry>
     </ChangeLog>
     <MetaDataItem name="ProductPage">http://www.everspring.com/SP814.aspx</MetaDataItem>
     <MetaDataItem name="ProductSupport">http://www.everspring.com/SP814.aspx</MetaDataItem>
