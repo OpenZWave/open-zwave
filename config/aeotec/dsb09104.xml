@@ -1,4 +1,20 @@
-<Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
+  <MetaData>
+    <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0086:0009:0002</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/aeotec/dsb09104.png</MetaDataItem>
+    <MetaDataItem id="0009" name="ZWProductPage" type="0002">https://products.z-wavealliance.org/products/140/</MetaDataItem>
+    <MetaDataItem name="ProductPage">http://www.aeon-labs.com/site/products/view/4/</MetaDataItem>
+    <MetaDataItem name="ProductSupport">http://www.aeon-labs.com/site/support/</MetaDataItem>
+    <MetaDataItem name="Description">Whole Home Energy MeterThe Aeon Labs Smart Energy Monitor is a low-cost energy monitor for the entire home. It can wirelessly report immediate wattage and kWh usage to central control point gateways such as the 4HomeMedia CP and can be easily and safely installed by anyone. 
+
+Ease and safety are paramount: Electricians are not required to install the Aeon Labs Smart Energy Monitor; the customer never needs to handle hot exposed wiring. Current transformer clamps clamp around the AC Mains to detect energy usage for the entire house. The main body is anchored using a back mount which opens to easily for battery replacement every 1 years. </MetaDataItem>
+    <MetaDataItem id="0009" name="FrequencyName" type="0002">U.S. / Canada / Mexico</MetaDataItem>
+    <MetaDataItem name="Name">Aeon Labs Home Energy Meter</MetaDataItem>
+    <MetaDataItem id="0009" name="Identifier" type="0002">DSB09xxx-ZWUS v1.54</MetaDataItem>
+    <ChangeLog>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="3">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/140/xml</Entry>
+    </ChangeLog>
+  </MetaData>
   <!-- 
 Aeotec DSB09104 Home Energy Meter
 https://aeotec.freshdesk.com/helpdesk/attachments/6009584509
