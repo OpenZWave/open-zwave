@@ -31,7 +31,7 @@
     <Product config="act/zir010.xml" id="3030" name="ZIR000 PIR Motion Sensor" type="4952"/>
     <Product config="act/zir010.xml" id="3330" name="ZIR010 PIR Motion Sensor" type="4952"/>
     <Product config="act/zir010.xml" id="3130" name="ZIR010 PIR Motion Sensor" type="4952"/>
-    <Product id="3030" name="ZDP100 Plugin Lamp Module" type="4450"/>
+    <Product config="act/zdp100.xml" id="3030" name="ZDP100 Plugin Lamp Module" type="4450"/>
     <Product config="act/zdw103.xml" id="3033" name="ZDW103 Wall Dimmer Module" type="4457"/>
     <Product id="3330" name="ZDW230 Wall Dimmer Module" type="4457"/>
     <Product config="act/zdw232.xml" id="3332" name="ZDW232 Wall Dimmer Module" type="4457"/>
