@@ -1,17 +1,17 @@
-<Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="5" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0060:0001:0007</MetaDataItem>
     <MetaDataItem name="ProductPic">images/everspring/st815.png</MetaDataItem>
-    <MetaDataItem id="0001" name="ZWProductPage" type="0007">https://products.z-wavealliance.org/products/210/</MetaDataItem>
+    <MetaDataItem id="0001" name="ZWProductPage" type="0007">https://products.z-wavealliance.org/products/975/</MetaDataItem>
     <MetaDataItem name="Name">Illumination Sensor</MetaDataItem>
-    <MetaDataItem id="0001" name="FrequencyName" type="0007">U.S. / Canada / Mexico / CEPT (Europe)</MetaDataItem>
+    <MetaDataItem id="0001" name="FrequencyName" type="0007">U.S. / Canada / Mexico / CEPT (Europe) / U.S. / Canada / Mexico</MetaDataItem>
     <MetaDataItem name="ProductPage">http://www.everspring.com/ST815.aspx</MetaDataItem>
-    <MetaDataItem name="Description">The Illumination Sensor is designed to monitor the current illumination of ambient environment. The reading of illumination can be reported to you on a regular base at your disposal. If illumination reaches set points, the sensor will send alerts to associated devices for further execution (such as trigger on connected lightings or remote curtain control). The Illumination Sensor is suitable for use in darkness and outdoor.
-</MetaDataItem>
-    <MetaDataItem id="0001" name="Identifier" type="0007">ST815</MetaDataItem>
+    <MetaDataItem name="Description">The Illumination Sensor is designed to monitor the current illumination of ambient environment. The reading of illumination can be reported to you on a regular base at your disposal. If illumination reaches set points, the sensor will send alerts to associated devices for further execution (such as trigger on connected lightings or remote curtain control). The Illumination Sensor is suitable for use in darkness and outdoor.</MetaDataItem>
+    <MetaDataItem id="0001" name="Identifier" type="0007">ST815-2</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="3">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="4">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/210/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="5">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/975/xml</Entry>
     </ChangeLog>
   </MetaData>
   <!-- Configuration Parameters -->
