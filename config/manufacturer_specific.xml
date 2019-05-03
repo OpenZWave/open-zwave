@@ -494,7 +494,7 @@
   <Manufacturer id="0284" name="Empers Tech Co., Ltd."></Manufacturer>
   <Manufacturer id="0336" name="EMT Controls"></Manufacturer>
   <Manufacturer id="014d" name="Enblink">
-    <Product id="0001" name="SS201-US-W Z-Wave Controller" type="0001"/>
+    <Product config="enblink/ss201-us-w_1308.xml" id="0001" name="SS201-US-W Z-Wave Controller" type="0001"/>
   </Manufacturer>
   <Manufacturer id="0219" name="Enwox Technologies s.r.o."></Manufacturer>
   <Manufacturer id="006F" name="Erone">

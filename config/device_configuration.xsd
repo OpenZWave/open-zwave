@@ -72,23 +72,23 @@
 
  <xs:element name='Compatibility'>
   <xs:complexType>
-  <xs:sequence>
-   <xs:element name="GetSupported" type="xs:string"/>
-   <xs:element name="CreateVars" type="xs:string"/>
-   <xs:element name="RefreshOnWakeup" type="xs:string"/>
-   <xs:element name="IgnoreMapping" type="xs:string"/>
-   <xs:element name="SetAsReport" type="xs:string"/>
-   <xs:element name="ColorIndexBug" type="xs:string"/>
-   <xs:element name="ForceInstances" type="xs:string"/>
-   <xs:element name="MapRootToEndpoint" type="xs:string"/>
-   <xs:element name="ForceUniqueEndpoints" type="xs:string"/>
-   <xs:element name="IgnoreMCCapReports" type="xs:string"/>
-   <xs:element name="AltTypeInterpretation" type="xs:string"/>
-   <xs:element name="ExposeRawUserCodes" type="xs:string"/>
-   <xs:element name="ClassGetVersionSupported" type="xs:string"/>
-   <xs:element name="ForceUniqueEndpoints" type="xs:string"/>
-   <xs:element name="ForceUniqueEndpoints" type="xs:string"/>
-  </xs:sequence>
+	  <xs:sequence>
+		   <xs:element name="GetSupported" type="xs:string" minOccurs='0' maxOccurs='1'/>
+		   <xs:element name="CreateVars" type="xs:string" minOccurs='0' maxOccurs='1'/>
+		   <xs:element name="RefreshOnWakeup" type="xs:string" minOccurs='0' maxOccurs='1'/>
+		   <xs:element name="IgnoreMapping" type="xs:string"/>
+		   <xs:element name="SetAsReport" type="xs:string"/>
+		   <xs:element name="ColorIndexBug" type="xs:string"/>
+		   <xs:element name="ForceInstances" type="xs:string"/>
+		   <xs:element name="MapRootToEndpoint" type="xs:string"/>
+		   <xs:element name="ForceUniqueEndpoints" type="xs:string"/>
+		   <xs:element name="IgnoreMCCapReports" type="xs:string"/>
+		   <xs:element name="AltTypeInterpretation" type="xs:string"/>
+		   <xs:element name="ExposeRawUserCodes" type="xs:string"/>
+		   <xs:element name="ClassGetVersionSupported" type="xs:string"/>
+		   <xs:element name="ForceUniqueEndpoints" type="xs:string"/>
+		   <xs:element name="ForceUniqueEndpoints" type="xs:string"/>
+	  </xs:sequence>
   </xs:complexType>
  </xs:element>
 
@@ -329,6 +329,8 @@
  <xs:element name='MetaDataItem'>
   <xs:complexType mixed='true'> 
    <xs:attribute name='name' type='xs:string' use='required'/>
+   <xs:attribute name='type' type='xs:string' use='optional'/>
+   <xs:attribute name='id' type='xs:string' use='optional'/>
   </xs:complexType>
  </xs:element>
 
