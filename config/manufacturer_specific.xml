@@ -1005,7 +1005,7 @@
   <Manufacturer id="0187" name="LEVION Technologies GmbH"></Manufacturer>
   <Manufacturer id="001d" name="Leviton">
     <Product id="0206" name="RZP15-1LW Binary Scene Switch" type="0101"/>
-    <Product id="0206" name="RZP03-1LW Binary Scene Switch" type="0201"/>
+    <Product config="leviton/vrcs2.xml" id="0206" name="RZP03-1LW Binary Scene Switch" type="0201"/>
     <Product id="030b" name="VRP03-1LW Lamp Module" type="0202"/>
     <Product id="0206" name="RZS15-1LX Binary Scene Switch" type="0301"/>
     <Product id="0209" name="VRS15-1LZ Binary Scene Switch" type="0301"/>
