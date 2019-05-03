@@ -1,17 +1,20 @@
-<Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0060:0001:0004</MetaDataItem>
     <MetaDataItem name="ProductPic">images/everspring/an157.png</MetaDataItem>
-    <MetaDataItem id="0001" name="ZWProductPage" type="0004">https://products.z-wavealliance.org/products/34/</MetaDataItem>
-    <MetaDataItem id="0001" name="FrequencyName" type="0004">Malaysia / Hong Kong</MetaDataItem>
-    <MetaDataItem name="ProductSupport">http://www.everspring.com.tw/contact-us/index.asp</MetaDataItem>
-    <MetaDataItem name="ProductPage">http://www.everspring.com.tw/Products/Home_Automation_Detail.asp?parentUID=83&amp;UID=501&amp;CateUIDList=0,83</MetaDataItem>
-    <MetaDataItem name="Description">The LPT_SM1H is a plug-in Slave to receive the Command from the Controller or Routing Slave and through Controller or Routing Slave controls the ON/OFF status of the plug-in lighting fixures, of which power loading can't exceed 600 W.</MetaDataItem>
-    <MetaDataItem name="Name">Plug Switch 919.8 MHz Z-Wave ON/OFF Plug - 300 Series</MetaDataItem>
+    <MetaDataItem id="0001" name="ZWProductPage" type="0004">https://products.z-wavealliance.org/products/207/</MetaDataItem>
+    <MetaDataItem id="0001" name="FrequencyName" type="0004">Malaysia / Hong Kong / U.S. / Canada / Mexico</MetaDataItem>
+    <MetaDataItem name="ProductSupport">http://www.everspring.com/AN128.aspx</MetaDataItem>
+    <MetaDataItem name="ProductPage">http://www.everspring.com/AN128.aspx</MetaDataItem>
+    <MetaDataItem name="Description">This plug-in ON/OFF Module is a transceiver which is a Z-WaveTM enabled device and is fully compatible with any Z-WaveTM enabled network. Z-WaveTM enabled devices displaying the Z-WaveTM logo can also be used with it regardless of the manufacturer, and ours can also be used in other manufacturer’s Z-WaveTM enabled networks. Remote On/Off control of the connected load is possible with other manufacturer’s Wireless Controller. Each module is designed to act as a repeater.  Repeaters will re-transmit the RF signal to ensure that the signal is received by its intended destination by routing the signal around obstacles and radio dead spots. The plug-in ON/OFF Module is compatible with our Motion Detectors SP814 HSP02 and Door/Window Detectors SM103.HSM02
+</MetaDataItem>
+    <MetaDataItem name="Name">ON/OFF Plug</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="1">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/33/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="2">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/34/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="3">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/207/xml</Entry>
     </ChangeLog>
+    <MetaDataItem id="0001" name="Identifier" type="0004">AN128</MetaDataItem>
   </MetaData>
   <CommandClass id="112"/>
 </Product>
