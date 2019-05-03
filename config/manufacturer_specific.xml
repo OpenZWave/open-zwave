@@ -1145,7 +1145,7 @@
   <Manufacturer id="0125" name="Motion Control Systems"></Manufacturer>
   <Manufacturer id="003F" name="Motorola"></Manufacturer>
   <Manufacturer id="0122" name="MSK Miyakawa Seisakusho">
-    <Product id="0001" name="ME-D101 Electric Power Measuring Instrument" type="0001"/>
+    <Product config="miyakawaelectric/me-d101.xml" id="0001" name="ME-D101 Electric Power Measuring Instrument" type="0001"/>
     <Product id="0000" name="ZW-GW Smart Bridge" type="8000"/>
   </Manufacturer>
   <Manufacturer id="0083" name="MTC Maintronic"></Manufacturer>
