@@ -1,16 +1,17 @@
-<Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="5" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0118:0001:0001</MetaDataItem>
     <MetaDataItem name="ProductPic">images/wenzhou/tz88.png</MetaDataItem>
-    <MetaDataItem id="0001" name="ZWProductPage" type="0001">https://products.z-wavealliance.org/products/786/</MetaDataItem>
+    <MetaDataItem id="0001" name="ZWProductPage" type="0001">https://products.z-wavealliance.org/products/787/</MetaDataItem>
     <MetaDataItem name="ProductPage">http://www.tkbhome.com/?cn-p-d-259.html</MetaDataItem>
-    <MetaDataItem name="Description">Smart Energy Plug In Switch for France</MetaDataItem>
-    <MetaDataItem name="Name">TZ88F Smart Energy Plug In Switch for France</MetaDataItem>
-    <MetaDataItem id="0001" name="Identifier" type="0001">TZ88F</MetaDataItem>
+    <MetaDataItem name="Description">Smart Energy Plug In Switch for UK</MetaDataItem>
+    <MetaDataItem name="Name">TZ88E Smart Energy Plug In Switch for UK</MetaDataItem>
+    <MetaDataItem id="0001" name="Identifier" type="0001">TZ88E</MetaDataItem>
     <MetaDataItem id="0001" name="FrequencyName" type="0001">CEPT (Europe)</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="3">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/785/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="4">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/786/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="5">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/787/xml</Entry>
     </ChangeLog>
   </MetaData>
   <!-- http://products.z-wavealliance.org/products/786 -->
