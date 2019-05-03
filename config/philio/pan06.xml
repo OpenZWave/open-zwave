@@ -1,15 +1,30 @@
-<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/013C:0004:0001</MetaDataItem>
     <MetaDataItem name="ProductPic">images/philio/pan06.png</MetaDataItem>
-    <MetaDataItem id="0004" name="ZWProductPage" type="0001">https://products.z-wavealliance.org/products/822/</MetaDataItem>
-    <MetaDataItem id="0004" name="Identifier" type="0001">PAN06-1</MetaDataItem>
-    <MetaDataItem name="Name">PAN06-1 Dual Relay Switch Module</MetaDataItem>
-    <MetaDataItem id="0004" name="FrequencyName" type="0001">CEPT (Europe)</MetaDataItem>
-    <MetaDataItem name="Description">In Wall Dual Relay (1 Way) Switch Module</MetaDataItem>
+    <MetaDataItem id="0004" name="ZWProductPage" type="0001">https://products.z-wavealliance.org/products/854/</MetaDataItem>
+    <MetaDataItem id="0004" name="Identifier" type="0001">PAN06-2</MetaDataItem>
+    <MetaDataItem name="Name">In-Wall Switch Module</MetaDataItem>
+    <MetaDataItem id="0004" name="FrequencyName" type="0001">CEPT (Europe) / U.S. / Canada / Mexico</MetaDataItem>
+    <MetaDataItem name="Description">Features:
+- World first two relay Z-wave 400 series module in a very slim case.
+- Input voltage AC100~240V / DC24~60V.
+- Adopt Z-Wave protocol to secure the success of wireless two way communication.
+- Slim design, easy install.
+- Adopt newest Z-wave 400series chip, support multichannel operation and higher data rate (9.6/40/100kbps).
+- Resistive load 1500W X 2.
+- Two dry contact relay.
+- Z-Wave V6.02
+- Very low electricity consumption, meet Europe year 2012 energy-related products requirement directive 2009/125/EC no. 1275/2008.
+- LVD:EN 60669-2-1:2004+A1:2009+A12:2010,
+- EN 60669-2-2 :2006
+- EN 60669-1:1999+A1:2002+A2:2008+IS1:2009
+- R&amp;TTE: EN 301489, EN 300200,</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="3">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/822/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="4">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/854/xml</Entry>
     </ChangeLog>
+    <MetaDataItem name="ProductPage">http://philio-tech.com/</MetaDataItem>
   </MetaData>
   <!-- Configuration Parameters -->
   <CommandClass id="112">
