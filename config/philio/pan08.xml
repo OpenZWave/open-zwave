@@ -1,9 +1,9 @@
-<!-- Philio: PAN08-1 In Wall Roller Shutter Controller with Power Measurement --><Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
+<!-- Philio: PAN08-1 In Wall Roller Shutter Controller with Power Measurement --><Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/013C:0006:0001</MetaDataItem>
     <MetaDataItem name="ProductPic">images/philio/pan08.png</MetaDataItem>
-    <MetaDataItem id="0006" name="ZWProductPage" type="0001">https://products.z-wavealliance.org/products/880/</MetaDataItem>
-    <MetaDataItem id="0006" name="FrequencyName" type="0001">CEPT (Europe)</MetaDataItem>
+    <MetaDataItem id="0006" name="ZWProductPage" type="0001">https://products.z-wavealliance.org/products/891/</MetaDataItem>
+    <MetaDataItem id="0006" name="FrequencyName" type="0001">CEPT (Europe) / U.S. / Canada / Mexico</MetaDataItem>
     <MetaDataItem name="ProductPage">http://www.philio-tech.com/p_switch.htm</MetaDataItem>
     <MetaDataItem name="Description">Features
 * Adopt newest Z-wave 400series chip, support multichannel operation and higher data rate (9.6/40/100kbps).
@@ -19,10 +19,11 @@
 * EN 60669-2-2 :2006
 * EN 60669-1:1999+A1:2002+A2:2008+IS1:2009
 * R&amp;TTE: EN 301489, EN 300200,</MetaDataItem>
-    <MetaDataItem name="Name">Roller Shutter Control</MetaDataItem>
-    <MetaDataItem id="0006" name="Identifier" type="0001">PAN08-1</MetaDataItem>
+    <MetaDataItem name="Name">Roller Shutter Controller</MetaDataItem>
+    <MetaDataItem id="0006" name="Identifier" type="0001">PAN08-2</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="3">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/880/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="4">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/891/xml</Entry>
     </ChangeLog>
   </MetaData>
   <!-- Configuration Parameters -->
