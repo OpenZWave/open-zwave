@@ -1,21 +1,21 @@
-<Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="5" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0060:0001:0004</MetaDataItem>
     <MetaDataItem name="ProductPic">images/everspring/an157.png</MetaDataItem>
-    <MetaDataItem id="0001" name="ZWProductPage" type="0004">https://products.z-wavealliance.org/products/214/</MetaDataItem>
-    <MetaDataItem id="0001" name="FrequencyName" type="0004">Malaysia / Hong Kong / U.S. / Canada / Mexico / U.S. / Canada / Mexico</MetaDataItem>
+    <MetaDataItem id="0001" name="ZWProductPage" type="0004">https://products.z-wavealliance.org/products/215/</MetaDataItem>
+    <MetaDataItem id="0001" name="FrequencyName" type="0004">Malaysia / Hong Kong / U.S. / Canada / Mexico / U.S. / Canada / Mexico / CEPT (Europe)</MetaDataItem>
     <MetaDataItem name="ProductSupport">http://www.everspring.com/AN145.aspx</MetaDataItem>
     <MetaDataItem name="ProductPage">http://www.everspring.com/AN145.aspx</MetaDataItem>
-    <MetaDataItem name="Description">The AN145 Screw-in On/Off Module is a transceiver which is a Z-Wave enabled device and is fully compatible with any Z-Wave enabled network. Z-Wave enabled devices displaying the Z-Wave logo can also be used with it regardless of the manufacturer, and ours can also be used in other manufacturer’s Z-Wave enabled networks. Inclusion of this Module on other manufacturer’s Wireless Controller allows remote turn-on of On/Off status. Each Module is designed to act as a repeater.  Repeaters will re-transmit the RF signal to ensure that the signal is received by its intended destination by routing the signal around obstacles and radio dead spots.
-</MetaDataItem>
+    <MetaDataItem name="Description">The AN145 Screw-in On/Off Module is a transceiver which is a Z-Wave enabled device and is fully compatible with any Z-Wave enabled network. Z-Wave enabled devices displaying the Z-Wave logo can also be used with it regardless of the manufacturer, and ours can also be used in other manufacturer’s Z-Wave enabled networks. Inclusion of this Module on other manufacturer’s Wireless Controller allows remote turn-on of On/Off status. Each Module is designed to act as a repeater. Repeaters will re-transmit the RF signal to ensure that the signal is received by its intended destination by routing the signal around obstacles and radio dead spots. </MetaDataItem>
     <MetaDataItem name="Name">Lamp Holder</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="1">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/33/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="2">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/34/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="3">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/207/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="4">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/214/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="5">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/215/xml</Entry>
     </ChangeLog>
-    <MetaDataItem id="0001" name="Identifier" type="0004">AN145-1_Ever_0907</MetaDataItem>
+    <MetaDataItem id="0001" name="Identifier" type="0004">AN145-2</MetaDataItem>
   </MetaData>
   <CommandClass id="112"/>
 </Product>
