@@ -57,7 +57,7 @@
     <Product id="0000" name="Z-Wave Extender" type="0000"/>
     <Product id="0001" name="Z-Stick" type="0001"/>
     <Product id="0002" name="DSA02203 Z-Stick S2" type="0001"/>
-    <Product id="0001" name="DSA02203 Z-Stick S2" type="0002"/>
+    <Product config="aeotec/dsb28-zweu.xml" id="0001" name="DSA02203 Z-Stick S2" type="0002"/>
     <Product id="0007" name="DSA07203 Z-Stick Lite" type="0001"/>
     <Product config="aeotec/dsa03202.xml" id="0003" name="DSA03202 Minimote" type="0001"/>
     <Product config="aeotec/dsa22.xml" id="0016" name="DSA22 Key Fob" type="0001"/>
