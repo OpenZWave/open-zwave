@@ -1129,7 +1129,7 @@
     <Product id="0001" name="Wall Appliance Module" type="4002"/>
     <Product config="merten/50x5xx.xml" id="0001" name="Wall Roller Shutter Module" type="4004"/>
     <Product id="8001" name="Receiver Flush-Mounted 1-Gang Switch" type="8001"/>
-    <Product id="0004" name="Transmitter Flush-Mounted 4-Gang Switch" type="0003"/>
+    <Product config="merten/506004.xml" id="0004" name="Transmitter Flush-Mounted 4-Gang Switch" type="0003"/>
     <Product id="0002" name="Transmitter 1-Gang Switch" type="0001"/>
     <Product id="0004" name="Transmitter 2-Gang Switch" type="0001"/>
     <Product id="0001" name="Transmitter Move" type="0002"/>
