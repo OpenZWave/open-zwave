@@ -1,4 +1,16 @@
-<Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="5" xmlns="https://github.com/OpenZWave/open-zwave">
+  <MetaData>
+    <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/013C:0002:0002</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/philio/psm02.png</MetaDataItem>
+    <MetaDataItem id="0002" name="ZWProductPage" type="0002">https://products.z-wavealliance.org/products/821/</MetaDataItem>
+    <MetaDataItem id="0002" name="Identifier" type="0002">PSM02-1</MetaDataItem>
+    <MetaDataItem name="Description">Multi-sensor PSM02 has PIR, door/window, temperature and illumination, 4 sensors function in one, based on Z-Wave technology</MetaDataItem>
+    <MetaDataItem name="Name">PSM02-1 Multi-Sensor</MetaDataItem>
+    <MetaDataItem id="0002" name="FrequencyName" type="0002">CEPT (Europe)</MetaDataItem>
+    <ChangeLog>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="5">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/821/xml</Entry>
+    </ChangeLog>
+  </MetaData>
   <!-- Configuration Parameters -->
   <CommandClass id="112">
     <Value genre="config" index="2" instance="1" label="Basic Set Level" max="255" min="1" type="byte" value="255">
