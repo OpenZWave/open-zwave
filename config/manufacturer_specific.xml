@@ -1132,7 +1132,7 @@
     <Product config="merten/506004.xml" id="0004" name="Transmitter Flush-Mounted 4-Gang Switch" type="0003"/>
     <Product id="0002" name="Transmitter 1-Gang Switch" type="0001"/>
     <Product id="0004" name="Transmitter 2-Gang Switch" type="0001"/>
-    <Product id="0001" name="Transmitter Move" type="0002"/>
+    <Product config="merten/508244.xml" id="0001" name="Transmitter Move" type="0002"/>
   </Manufacturer>
   <Manufacturer id="0238" name="Milanity Inc"></Manufacturer>
   <Manufacturer id="0112" name="MITSUMI"></Manufacturer>
