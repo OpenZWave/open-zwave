@@ -333,7 +333,7 @@ bool ThermostatSetpoint::SetValue
 		msg->Append( 4 + GetAppendValueSize( value->GetValue() ) );
 		msg->Append( GetCommandClassId() );
 		msg->Append( ThermostatSetpointCmd_Set );
-		msg->Append( value->GetID().GetIndex() );
+		msg->Append( (uint8_t)(value->GetID().GetIndex() & 0xFF) );
 		AppendValue( msg, value->GetValue(), scale );
 		msg->Append( GetDriver()->GetTransmitOptions() );
 		GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );

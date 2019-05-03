@@ -302,8 +302,8 @@ bool ClimateControlSchedule::SetValue
 )
 {
 //	bool res = false;
-	uint8 instance = _value.GetID().GetInstance();
-	uint8 idx = _value.GetID().GetIndex();
+	uint8_t instance = _value.GetID().GetInstance();
+	uint8_t idx = (uint8_t)(_value.GetID().GetIndex() & 0xFF);
 
 	if( idx < 8 )
 	{
@@ -320,10 +320,10 @@ bool ClimateControlSchedule::SetValue
 		msg->Append( ClimateControlScheduleCmd_Set );
 		msg->Append( idx );	// Day of week
 
-		for( uint8 i=0; i<9; ++i )
+		for( uint8_t i=0; i<9; ++i )
 		{
-			uint8 hours;
-			uint8 minutes;
+			uint8_t hours;
+			uint8_t minutes;
 			int8 setback;
 			if( value->GetSwitchPoint( i, &hours, &minutes, &setback ) )
 			{

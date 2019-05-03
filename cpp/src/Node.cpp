@@ -1110,7 +1110,7 @@ void Node::ReadXML
 				str = child->Attribute( "id" );
 				if( str )
 				{
-					manufacturerId = strtol(str, NULL, 16);
+					manufacturerId = (uint16_t)(strtol(str, NULL, 16) & 0xFFFF);
 				}
 
 				str = child->Attribute( "name" );

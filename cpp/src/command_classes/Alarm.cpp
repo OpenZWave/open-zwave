@@ -266,7 +266,7 @@ bool Alarm::HandleMsg
 
 			uint8 NotificationType = _data[5];
 			uint8 NotificationEvent = _data[6];
-			bool NotificationSequencePresent = (_data[7] & 0x80);
+			bool NotificationSequencePresent = ((_data[7] & 0x80) == 1);
 			uint8 EventParamLength = (_data[7] & 0x1F);
 			uint8 NotificationSequence = 0;
 			if (NotificationSequencePresent) {
@@ -465,7 +465,7 @@ bool Alarm::HandleMsg
 									_items.push_back( item );
 #endif
 								}
-								node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, index, NotificationCCTypes::Get()->GetAlarmType(index), "", true, false, _items.size(), _items, 0, 0 );
+								node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, index, NotificationCCTypes::Get()->GetAlarmType(index), "", true, false, (const uint8_t)(_items.size() & 0xFF), _items, 0, 0 );
 							}
 							ClearStaticRequest( StaticRequest_Values );
 						}
@@ -514,7 +514,7 @@ bool Alarm::HandleMsg
 			}
 			if( Node* node = GetNodeUnsafe() )
 			{
-				node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, type, NotificationCCTypes::Get()->GetAlarmType(type), "", true, false, _items.size(), _items, 0, 0 );
+				node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, type, NotificationCCTypes::Get()->GetAlarmType(type), "", true, false, (uint8_t)(_items.size() & 0xFF), _items, 0, 0 );
 			}
 		}
 		ClearStaticRequest( StaticRequest_Values );
@@ -553,7 +553,7 @@ void Alarm::SetupEvents
 						Paramitem.m_label = ne->name;
 						_Paramitems.push_back( Paramitem );
 					}
-					node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, it->first, it->second->name, "", true, false, _Paramitems.size(), _Paramitems, 0, 0 );
+					node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, it->first, it->second->name, "", true, false, (uint8_t)(_Paramitems.size() & 0xFF), _Paramitems, 0, 0 );
 					break;
 				}
 				case NotificationCCTypes::NEPT_UserCodeReport: {
