@@ -1,4 +1,4 @@
-<Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="5" xmlns="https://github.com/OpenZWave/open-zwave">
   <CommandClass id="112">
     <Value genre="config" index="1" instance="1" label="Upper paddle buttons mode" max="1" min="0" size="1" type="list" value="0">
       <Help>Configuration of Pair Mode for the upper two buttons (button #1 and #2).</Help>
@@ -289,7 +289,7 @@
   <!-- MultiInstance Command Class. Note: If you do not need Dedicated Relay Control instance, change below mapping to "endpoints", then rejoin the node to your network. -->
   <CommandClass id="96">
     <Compatibility>
-      <MapRootToEndpoint>all</MapRootToEndpoint>
+      <MapRootToEndpoint>true</MapRootToEndpoint>
     </Compatibility>
   </CommandClass>
   <!-- Multi Channel Association Groups -->

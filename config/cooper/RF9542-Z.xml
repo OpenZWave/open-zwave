@@ -8,8 +8,8 @@
     <MetaDataItem name="Description">Aspire RF™ Accessory Dimmers replace regular switches or dimmers to provide local and remote ON/OFF/DIM/BRIGHT control. The device also provides multi-location control or virtual 3-way remote ON/OFF/DIM/BRIGHT control without the need for traditional 3-way wiring or a dedicated traveler wire. Aspire RF Accessory Dimmers provide other programmable functions (scenes, events, association, child lockout, etc.) when used with Aspire RF or other Z-Wave® compliant controller*. Each dimmer can be manually controlled and remotely controlled by commands sent from an Aspire RF controller (RFHDCSG, RFTDCSG, RFBER) or other Z-Wave compatible controllers or programs. Aspire RF Dimmers utilize existing 120V/AC 60Hz standard house wiring and fit in standard wallboxes. No new wiring is needed.</MetaDataItem>
     <MetaDataItem name="Name">Dimmer Accessory Switch</MetaDataItem>
     <ChangeLog>
-      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="1">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/745/xml</Entry>
-      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="2">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/971/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="2">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/745/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="3">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/971/xml</Entry>
     </ChangeLog>
     <MetaDataItem name="ProductPage">http://www.cooperindustries.com/content/public/en/wiring_devices/products/lighting_controls/aspire_rf_wireless/dimmers/aspire_rf_accessory_w_leds_rf9542_z_.html</MetaDataItem>
   </MetaData>

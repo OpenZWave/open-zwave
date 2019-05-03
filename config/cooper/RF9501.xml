@@ -9,7 +9,7 @@
     <MetaDataItem name="Description">The ASPIRE RF 15A switch (RF9501) replaces regular switches or dimmers (where a neutral is present) to provide local and remote ON/OFF control for Incandescent, Magnetic Low-Voltage, Electronic Low-Voltage and Fluorescent lighting loads. Each switch can be manually controlled and remotely controlled by commands sent from an ASPIRE RF controller or other Z-Wave compatible controllers or programs. An ASPIRE RF switch utilizes existing 120V/AC, 60Hz standard house wiring and fits in a standard wallbox. No new wiring is needed.</MetaDataItem>
     <MetaDataItem name="ProductPage">http://www.cooperindustries.com/content/public/en/wiring_devices/products/lighting_controls/aspire_rf_wireless/switches/aspire_rf_15a_wireless_switch_rf9501.html</MetaDataItem>
     <ChangeLog>
-      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="1">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/740/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="2">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/740/xml</Entry>
     </ChangeLog>
   </MetaData>
   <!-- Configuration Parameters -->

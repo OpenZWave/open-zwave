@@ -8,7 +8,7 @@
     <MetaDataItem id="0002" name="FrequencyName" type="0001">U.S. / Canada / Mexico</MetaDataItem>
     <MetaDataItem name="Name">Smoke/CO Alarm</MetaDataItem>
     <ChangeLog>
-      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="1">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/862/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="2">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/862/xml</Entry>
     </ChangeLog>
   </MetaData>
   <!-- First Alert ZCombo Smoke and Carbon Monoxide Detector -->

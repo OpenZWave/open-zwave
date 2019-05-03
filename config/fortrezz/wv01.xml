@@ -10,9 +10,9 @@
     <MetaDataItem name="ProductPage">http://www.fortrezz.com/wv01.html</MetaDataItem>
     <MetaDataItem name="ProductSupport">http://www.fortrezz.com/</MetaDataItem>
     <ChangeLog>
-      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="1">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/178/xml</Entry>
-      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="2">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/817/xml</Entry>
-      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="3">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/818/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="2">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/178/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="3">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/817/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="4">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/818/xml</Entry>
     </ChangeLog>
     <MetaDataItem id="0216" name="ZWProductPage" type="0243">https://products.z-wavealliance.org/products/818/</MetaDataItem>
     <MetaDataItem id="0216" name="FrequencyName" type="0243">U.S. / Canada / Mexico</MetaDataItem>

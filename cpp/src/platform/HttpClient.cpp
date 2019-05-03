@@ -25,10 +25,10 @@
 #if !defined(ETIMEDOUT)
 #  define ETIMEDOUT WSAETIMEDOUT
 #endif
-if !defined(ECONNRESET)
+#if !defined(ECONNRESET)
 #  define ECONNRESET WSAECONNRESET
 #endif
-if !defined(ENOTCONN)
+#if !defined(ENOTCONN)
 #  define ENOTCONN WSAENOTCONN
 #endif
 #  include <io.h>

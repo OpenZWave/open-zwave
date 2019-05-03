@@ -14,9 +14,9 @@ https://aeotec.freshdesk.com/helpdesk/attachments/6009584518
 Across three different Micro controllers, each one letting you perfect everything from your home’s lights to its appliances and to its motorised doors and curtains, you’ll find that the same magic has been built right into the tiny body of each switch.</MetaDataItem>
     <MetaDataItem id="001B" name="FrequencyName" type="0003">U.S. / Canada / Mexico / CEPT (Europe) / Australia / New Zealand</MetaDataItem>
     <ChangeLog>
-      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="1">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/706/xml</Entry>
-      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="2">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/765/xml</Entry>
-      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="3">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/773/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="2">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/706/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="3">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/765/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="4">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/773/xml</Entry>
     </ChangeLog>
   </MetaData>
   <!-- Configuration Parameters -->

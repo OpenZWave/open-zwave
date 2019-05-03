@@ -9,7 +9,7 @@
     <MetaDataItem name="Description">Smart Lighting Control Module(RSM2) which can be used with traditional switch, for use with incandescent, incandescent, fluorescent, ballast , motor , meet customer's requirements.</MetaDataItem>
     <MetaDataItem name="ProductPage">http://www.smart-wave.us/product_show.asp?classid=2&amp;ID=34</MetaDataItem>
     <ChangeLog>
-      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="1">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/713/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="2">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/713/xml</Entry>
     </ChangeLog>
   </MetaData>
   <!-- Configuration Parameters -->

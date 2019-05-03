@@ -11,7 +11,7 @@ https://products.z-wavealliance.org/products/979
     <MetaDataItem id="0005" name="FrequencyName" type="0004">U.S. / Canada / Mexico</MetaDataItem>
     <MetaDataItem name="Description">This plug-in ON/OFF Module is able to detect current wattage (5~1440W) and overload wattage (1460~1580W) of connected non-dimmable lights or appliances.</MetaDataItem>
     <ChangeLog>
-      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="1">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/979/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="2">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/979/xml</Entry>
     </ChangeLog>
   </MetaData>
   <!-- Configuration Parameters -->

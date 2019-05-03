@@ -1,4 +1,4 @@
-<!-- Electronic Solutions Inc DBMZ Motor Control --><Product Revision="5" xmlns="https://github.com/OpenZWave/open-zwave">
+<!-- Electronic Solutions Inc DBMZ Motor Control --><Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0033:3032:5250</MetaDataItem>
     <MetaDataItem name="ProductPic">images/electronicsolutions/dbmz.png</MetaDataItem>

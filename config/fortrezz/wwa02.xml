@@ -12,8 +12,8 @@
     <MetaDataItem id="0109" name="Identifier" type="0023">WWA-02</MetaDataItem>
     <MetaDataItem id="0109" name="FrequencyName" type="0023">U.S. / Canada / Mexico</MetaDataItem>
     <ChangeLog>
-      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="1">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/91/xml</Entry>
-      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="2">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/92/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="2">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/91/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="3">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/92/xml</Entry>
     </ChangeLog>
     <MetaDataItem id="010A" name="ZWProductPage" type="0021">https://products.z-wavealliance.org/products/92/</MetaDataItem>
     <MetaDataItem id="010A" name="FrequencyName" type="0021">CEPT (Europe)</MetaDataItem>

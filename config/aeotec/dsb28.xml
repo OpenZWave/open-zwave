@@ -11,7 +11,7 @@ Installed in an electricity box, the energy meter will monitor the total consump
     <MetaDataItem name="Name">Home Energy Meter G2</MetaDataItem>
     <MetaDataItem name="ProductPage">http://aeotec.com/z-wave-home-energy-measure</MetaDataItem>
     <ChangeLog>
-      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="1">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/705/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="2">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/705/xml</Entry>
     </ChangeLog>
   </MetaData>
   <!-- 

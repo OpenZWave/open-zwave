@@ -9,7 +9,7 @@
     <MetaDataItem name="Description">ASPIRE RF Accessory Switch (RF9517) replaces regular switches or dimmers to provide local and remote ON/OFF control. The device also provides 3-way, multi-location or virtual 3-way remote ON/OFF control of a selected RF switch without the need for traditional 3-way wiring. Each switch can be manually controlled and remotely controlled by commands sent from an ASPIRE RF controller or other Z-Wave compatible controllers or programs. ASPIRE RF switches utilize existing 120V/AC, 60Hz standard house wiring and fit in standard wallboxes. No new wiring is required.</MetaDataItem>
     <MetaDataItem name="ProductPage">http://www.cooperindustries.com/content/public/en/wiring_devices/products/lighting_controls/aspire_rf_wireless/switches/aspire_rf_accessory_switch_rf9517.html</MetaDataItem>
     <ChangeLog>
-      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="1">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/742/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="2">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/742/xml</Entry>
     </ChangeLog>
   </MetaData>
   <!-- Configuration Parameters -->

@@ -11,7 +11,7 @@ Each sensor comes in standard white with an optional and included brown cover. T
     <MetaDataItem name="Name">Schlage Home Door and Window Sensor</MetaDataItem>
     <MetaDataItem id="0002" name="FrequencyName" type="0001">U.S. / Canada / Mexico</MetaDataItem>
     <ChangeLog>
-      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="1">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/647/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="2">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/647/xml</Entry>
     </ChangeLog>
   </MetaData>
   <!-- Configuration Parameters -->
