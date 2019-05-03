@@ -1356,7 +1356,7 @@
     <Product config="remotec/zxt-600.xml" id="8490" name="ZXT-600IN AC MASTER" type="0103"/>
     <Product config="remotec/zrc-90.xml" id="8510" name="ZRC-90" type="0001"/>
     <Product config="remotec/zrc-90.xml" id="8510" name="ZRC-90" type="0002"/>
-    <Product id="8120" name="ZFM-X10EU Dual Mode Insert Module " type="8201"/>
+    <Product config="remotec/bw8120eu.xml" id="8120" name="ZFM-X10EU Dual Mode Insert Module " type="8201"/>
     <Product config="remotec/zfm-80.xml" id="0002" name="ZFM-80" type="8000"/>
     <Product config="remotec/zts-110.xml" id="8031" name="ZTS-110" type="0200"/>
     <Product config="remotec/zts-110.xml" id="8031" name="ZTS-110" type="0202"/>
