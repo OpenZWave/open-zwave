@@ -1,4 +1,4 @@
-<Product Revision="5" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="6" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/010F:1001:0800</MetaDataItem>
     <MetaDataItem name="ProductPic">images/fibaro/fgms.png</MetaDataItem>
@@ -9,7 +9,11 @@
     <MetaDataItem id="1001" name="Identifier" type="0800">FGMS-001 (EU)</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="5">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1048/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="6">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1076/xml</Entry>
     </ChangeLog>
+    <MetaDataItem id="2001" name="ZWProductPage" type="0800">https://products.z-wavealliance.org/products/1076/</MetaDataItem>
+    <MetaDataItem id="2001" name="FrequencyName" type="0800">U.S. / Canada / Mexico</MetaDataItem>
+    <MetaDataItem id="2001" name="Identifier" type="0800">FGMS-001</MetaDataItem>
   </MetaData>
   <!--
 	Fibaro Motion Sensor FGMS-001
