@@ -1,15 +1,16 @@
-<Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="5" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0086:0025:0004</MetaDataItem>
     <MetaDataItem name="ProductPic">images/aeotec/dsd37.png</MetaDataItem>
-    <MetaDataItem id="0025" name="ZWProductPage" type="0004">https://products.z-wavealliance.org/products/1004/</MetaDataItem>
-    <MetaDataItem id="0025" name="Identifier" type="0004">DSD37-ZWEU</MetaDataItem>
-    <MetaDataItem id="0025" name="FrequencyName" type="0004">U.S. / Canada / Mexico / CEPT (Europe)</MetaDataItem>
-    <MetaDataItem name="Name">Aeon Labs Range Extender DSD37-ZWEU</MetaDataItem>
-    <MetaDataItem name="Description">Repeater</MetaDataItem>
+    <MetaDataItem id="0025" name="ZWProductPage" type="0004">https://products.z-wavealliance.org/products/1017/</MetaDataItem>
+    <MetaDataItem id="0025" name="Identifier" type="0004">DSD37-ZWAU</MetaDataItem>
+    <MetaDataItem id="0025" name="FrequencyName" type="0004">U.S. / Canada / Mexico / CEPT (Europe) / Australia / New Zealand</MetaDataItem>
+    <MetaDataItem name="Name">Aeon Labs Range Extender DSD37-ZWAU</MetaDataItem>
+    <MetaDataItem name="Description">Range Extender / Repeater</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="3">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/752/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="4">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1004/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="5">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1017/xml</Entry>
     </ChangeLog>
   </MetaData>
   <!-- 
