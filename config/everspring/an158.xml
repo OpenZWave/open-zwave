@@ -1,34 +1,46 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- EVERSPRING AN158 ON/OFF MODULE -->
-<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="2">
+<!-- EVERSPRING AN158 ON/OFF MODULE --><Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
+  <MetaData>
+    <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0060:0002:0004</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/everspring/an158.png</MetaDataItem>
+    <MetaDataItem id="0002" name="ZWProductPage" type="0004">https://products.z-wavealliance.org/products/213/</MetaDataItem>
+    <MetaDataItem name="Name">On/Off Plug With Power Metering</MetaDataItem>
+    <MetaDataItem id="0002" name="FrequencyName" type="0004">CEPT (Europe)</MetaDataItem>
+    <MetaDataItem name="ProductPage">http://www.everspring.com/AN158.aspx</MetaDataItem>
+    <MetaDataItem name="Description">This plug-in ON/OFF Module is a transceiver which is a Z-Wave enabled device and is fully compatible with any Z-Wave enabled network. Z-Wave enabled devices displaying the Z-Wave logo can also be used with it regardless of the manufacturer, and ours can also be used in other manufacturer’s Z-Wave enabled networks. Remote On/Off control of the connected load is possible with other manufacturer’s Wireless Controller. Each module is designed to act as a repeater.  Repeaters will re-transmit the RF signal to ensure that the signal is received by its intended destination by routing the signal around obstacles and radio dead spots. The plug-in ON/OFF Module is compatible with our Motion Detectors SP814,HSP02 and Door/Window Detectors SM103, HSM02.
+
+This plug-in ON/OFF Module is able to detect current wattage (5~3150W) and overload wattage (3010~3300W) of connected non-dimmable lights or appliances. When detecting overload state, the Module will be disabled and its On/Off button will be lockout of which LED will flash quickly for 30 seconds.  However, unplug and re-connect the Module will reset its overload condition to normal status.</MetaDataItem>
+    <MetaDataItem id="0002" name="Identifier" type="0004">AN158</MetaDataItem>
+    <ChangeLog>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="3">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/213/xml</Entry>
+    </ChangeLog>
+  </MetaData>
   <!-- Configuration Parameters -->
   <CommandClass id="112">
-    <Value type="short" index="1" genre="config" label="True Period" units="100ms" min="0" max="120" value="10">
+    <Value genre="config" index="1" label="True Period" max="120" min="0" type="short" units="100ms" value="10">
       <Help>
 	This is the time the switching status needs to remain
 unchanged after a change to cause the device to send out a status
 message. 0 is Disabled.
       </Help>
     </Value>
-    <Value type="byte" index="2" genre="config" label="Send Out Basic Command" units="" min="0" max="1" value="0">
+    <Value genre="config" index="2" label="Send Out Basic Command" max="1" min="0" type="byte" units="" value="0">
       <Help>
 	Enable or Disable Send Basic Command to Group 2 when the local
 button press changes the switching state.
       </Help>
     </Value>
-    <Value type="short" index="3" genre="config" label="Meter Report Period" units="10s" min="0" max="3240" value="3">
+    <Value genre="config" index="3" label="Meter Report Period" max="3240" min="0" type="short" units="10s" value="3">
       <Help>
 	The device will report its meter value within the interval
 set. Set to 0 will disable the autoreporting function.
       </Help>
     </Value>
   </CommandClass>
-
   <!-- Association Groups -->
   <CommandClass id="133">
     <Associations num_groups="2">
-      <Group index="1" max_associations="1" label="Reports" />
-      <Group index="2" max_associations="4" label="Basic" />
+      <Group index="1" label="Reports" max_associations="1"/>
+      <Group index="2" label="Basic" max_associations="4"/>
     </Associations>
   </CommandClass>
 </Product>
