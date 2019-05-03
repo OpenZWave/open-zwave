@@ -317,7 +317,7 @@
   <Manufacturer id="002d" name="Broadband Energy Networks Inc."></Manufacturer>
   <Manufacturer id="024A" name="BTSTAR(HK) TECHNOLOGY COMPANY LIMITED"></Manufacturer>
   <Manufacturer id="0145" name="Buffalo">
-    <Product id="0004" name="HW-100V15A-ZW Measure Power Monitor" type="0001"/>
+    <Product config="buffalo/hw-100v15a-zw.xml" id="0004" name="HW-100V15A-ZW Measure Power Monitor" type="0001"/>
   </Manufacturer>
   <Manufacturer id="0190" name="Building 36 Technologies"></Manufacturer>
   <Manufacturer id="0396" name="Bulcraft Control"></Manufacturer>
