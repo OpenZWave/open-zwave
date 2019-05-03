@@ -1322,7 +1322,7 @@
     <Product config="quby/qb2.xml" id="0001" name="Energy Management System" type="0001"/>
   </Manufacturer>
   <Manufacturer id="0163" name="Queenlock">
-    <Product id="0301" name="ZW-702 Door Lock" type="3001"/>
+    <Product config="prowell/zw-702.xml" id="0301" name="ZW-702 Door Lock" type="3001"/>
   </Manufacturer>
   <Manufacturer id="0142" name="Rademacher Gerate-Elektronik GmbH"></Manufacturer>
   <Manufacturer id="0098" name="Radio Thermostat Company of America"></Manufacturer>
