@@ -1,17 +1,18 @@
-<!-- Electronic Solutions Inc DBMZ Motor Control --><Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
+<!-- Electronic Solutions Inc DBMZ Motor Control --><Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0033:3032:5250</MetaDataItem>
     <MetaDataItem name="ProductPic">images/electronicsolutions/dbmz.png</MetaDataItem>
-    <MetaDataItem id="3032" name="ZWProductPage" type="5250">https://products.z-wavealliance.org/products/41/</MetaDataItem>
+    <MetaDataItem id="3032" name="ZWProductPage" type="5250">https://products.z-wavealliance.org/products/42/</MetaDataItem>
     <MetaDataItem name="Description">DC Motor Controller for window coverings.	
 Z-Wave DC motor control, packaged in a “Plug &amp; Play” Box. Z-Wave radio allows for bi-directional RF communications with other Z-Wave products in the market. Allows for total switched load of up to 2 Amps at 27VDC. By utilizing the Z-Wave standard, the DBMZ is guaranteed interoperability between systems and devices from other Z-Wave enabled products.</MetaDataItem>
-    <MetaDataItem id="3032" name="FrequencyName" type="5250">Malaysia / India</MetaDataItem>
+    <MetaDataItem id="3032" name="FrequencyName" type="5250">Malaysia / India / Hong Kong</MetaDataItem>
     <MetaDataItem name="ProductPage">http://elec-solutions.com/products/z-wave/dbmz.html</MetaDataItem>
     <MetaDataItem name="ProductSupport">http://elec-solutions.com/home.html</MetaDataItem>
-    <MetaDataItem name="Name">ESI DBMZ - India</MetaDataItem>
+    <MetaDataItem name="Name">ESI DBMZ Hong Kong</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="1">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/40/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="2">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/41/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="3">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/42/xml</Entry>
     </ChangeLog>
   </MetaData>
   <!-- Configuration -->
