@@ -1,12 +1,12 @@
-<Product Revision="7" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="8" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0060:0001:0003</MetaDataItem>
     <MetaDataItem name="ProductPic">images/everspring/lptdm1u.png</MetaDataItem>
-    <MetaDataItem id="0001" name="ZWProductPage" type="0003">https://products.z-wavealliance.org/products/978/</MetaDataItem>
-    <MetaDataItem id="0001" name="FrequencyName" type="0003">CEPT (Europe) / Hong Kong / U.S. / Canada / Mexico / CEPT (Europe) / CEPT (Europe) / Russia / U.S. / Canada / Mexico</MetaDataItem>
-    <MetaDataItem name="Name">Dimmer Module</MetaDataItem>
-    <MetaDataItem name="Description">The AD145 is a lamp holder to receive the Command from the Controller or Routing Slave and through Controller or Routing Slave controls the ON/OFF status of the plug-in lighting fixtures, of which power loading cannot exceed 20W.</MetaDataItem>
-    <MetaDataItem id="0001" name="Identifier" type="0003">AD145-1_Ever_1311</MetaDataItem>
+    <MetaDataItem id="0001" name="ZWProductPage" type="0003">https://products.z-wavealliance.org/products/992/</MetaDataItem>
+    <MetaDataItem id="0001" name="FrequencyName" type="0003">CEPT (Europe) / Hong Kong / U.S. / Canada / Mexico / CEPT (Europe) / CEPT (Europe) / Russia / U.S. / Canada / Mexico / U.S. / Canada / Mexico</MetaDataItem>
+    <MetaDataItem name="Name">Everspring AD126-1</MetaDataItem>
+    <MetaDataItem name="Description">The AD126 is a plug to receive the Command from the Controller or Routing Slave and through Controller or Routing Slave controls the ON/OFF status of the plug-in lighting fixtures, of which power loading cannot exceed 300W.</MetaDataItem>
+    <MetaDataItem id="0001" name="Identifier" type="0003">AD126-1</MetaDataItem>
     <MetaDataItem name="ProductPage">http://www.everspring.com/AD142.aspx</MetaDataItem>
     <MetaDataItem name="ProductSupport">http://www.everspring.com/AD126.aspx</MetaDataItem>
     <ChangeLog>
@@ -17,6 +17,7 @@
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="5">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/277/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="6">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/870/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="7">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/978/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="8">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/992/xml</Entry>
     </ChangeLog>
   </MetaData>
   <CommandClass id="112"/>
