@@ -73,110 +73,21 @@
  <xs:element name='Compatibility'>
   <xs:complexType>
   <xs:sequence>
-   <xs:attribute name='GetSupported' use='optional'>
-    <xs:simpleType>
-     <xs:restriction base='xs:string'>
-      <xs:enumeration value='true'/>
-      <xs:enumeration value='false'/>
-     </xs:restriction>
-    </xs:simpleType>
-   </xs:attribute>
-   <xs:attribute name='CreateVars' use='optional'>
-    <xs:simpleType>
-     <xs:restriction base='xs:string'>
-      <xs:enumeration value='true'/>
-      <xs:enumeration value='false'/>
-     </xs:restriction>
-    </xs:simpleType>
-   </xs:attribute>
-   <xs:attribute name='RefreshOnWakeup' use='optional'>
-    <xs:simpleType>
-     <xs:restriction base='xs:string'>
-      <xs:enumeration value='true'/>
-      <xs:enumeration value='false'/>
-     </xs:restriction>
-    </xs:simpleType>
-   </xs:attribute>
-   <xs:attribute name='IgnoreMapping' use='optional'>
-    <xs:simpleType>
-     <xs:restriction base='xs:string'>
-      <xs:enumeration value='true'/>
-      <xs:enumeration value='false'/>
-     </xs:restriction>
-    </xs:simpleType>
-   </xs:attribute>
-   <xs:attribute name='SetAsReport' use='optional'>
-    <xs:simpleType>
-     <xs:restriction base='xs:string'>
-      <xs:enumeration value='true'/>
-      <xs:enumeration value='false'/>
-     </xs:restriction>
-    </xs:simpleType>
-   </xs:attribute>
-   <xs:attribute name='ColorIndexBug' use='optional'>
-    <xs:simpleType>
-     <xs:restriction base='xs:string'>
-      <xs:enumeration value='true'/>
-      <xs:enumeration value='false'/>
-     </xs:restriction>
-    </xs:simpleType>
-   </xs:attribute>
-   <xs:attribute name='ForceInstances' use='optional'>
-    <xs:simpleType>
-     <xs:restriction base='xs:string'>
-      <xs:enumeration value='true'/>
-      <xs:enumeration value='false'/>
-     </xs:restriction>
-    </xs:simpleType>
-   </xs:attribute>
-   <xs:attribute name='MapRootToEndpoint' use='optional'>
-    <xs:simpleType>
-     <xs:restriction base='xs:string'>
-      <xs:enumeration value='true'/>
-      <xs:enumeration value='false'/>
-     </xs:restriction>
-    </xs:simpleType>
-   </xs:attribute>
-   <xs:attribute name='ForceUniqueEndpoints' use='optional'>
-    <xs:simpleType>
-     <xs:restriction base='xs:string'>
-      <xs:enumeration value='true'/>
-      <xs:enumeration value='false'/>
-     </xs:restriction>
-    </xs:simpleType>
-   </xs:attribute>
-   <xs:attribute name='IgnoreMCCapReports' use='optional'>
-    <xs:simpleType>
-     <xs:restriction base='xs:string'>
-      <xs:enumeration value='true'/>
-      <xs:enumeration value='false'/>
-     </xs:restriction>
-    </xs:simpleType>
-   </xs:attribute>
-   <xs:attribute name='AltTypeInterpretation' use='optional'>
-    <xs:simpleType>
-     <xs:restriction base='xs:string'>
-      <xs:enumeration value='true'/>
-      <xs:enumeration value='false'/>
-     </xs:restriction>
-    </xs:simpleType>
-   </xs:attribute>
-   <xs:attribute name='ExposeRawUserCodes' use='optional'>
-    <xs:simpleType>
-     <xs:restriction base='xs:string'>
-      <xs:enumeration value='true'/>
-      <xs:enumeration value='false'/>
-     </xs:restriction>
-    </xs:simpleType>
-   </xs:attribute>
-   <xs:attribute name='ClassGetVersionSupported' use='optional'>
-    <xs:simpleType>
-     <xs:restriction base='xs:string'>
-      <xs:enumeration value='true'/>
-      <xs:enumeration value='false'/>
-     </xs:restriction>
-    </xs:simpleType>
-   </xs:attribute>
+   <xs:element name="GetSupported" type="xs:string"/>
+   <xs:element name="CreateVars" type="xs:string"/>
+   <xs:element name="RefreshOnWakeup" type="xs:string"/>
+   <xs:element name="IgnoreMapping" type="xs:string"/>
+   <xs:element name="SetAsReport" type="xs:string"/>
+   <xs:element name="ColorIndexBug" type="xs:string"/>
+   <xs:element name="ForceInstances" type="xs:string"/>
+   <xs:element name="MapRootToEndpoint" type="xs:string"/>
+   <xs:element name="ForceUniqueEndpoints" type="xs:string"/>
+   <xs:element name="IgnoreMCCapReports" type="xs:string"/>
+   <xs:element name="AltTypeInterpretation" type="xs:string"/>
+   <xs:element name="ExposeRawUserCodes" type="xs:string"/>
+   <xs:element name="ClassGetVersionSupported" type="xs:string"/>
+   <xs:element name="ForceUniqueEndpoints" type="xs:string"/>
+   <xs:element name="ForceUniqueEndpoints" type="xs:string"/>
   </xs:sequence>
   </xs:complexType>
  </xs:element>
@@ -420,6 +331,5 @@
    <xs:attribute name='name' type='xs:string' use='required'/>
   </xs:complexType>
  </xs:element>
-
 
 </xs:schema>

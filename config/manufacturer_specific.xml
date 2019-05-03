@@ -1418,7 +1418,7 @@
   </Manufacturer>
   <Manufacturer id="0044" name="Sequoia Tech"></Manufacturer>
   <Manufacturer id="0151" name="Sercomm">
-    <Product id="0001" name="SW-CLP01-EU Clamp Power Meter" type="0002"/>
+    <Product config="sercomm/sw-clp01-eu.xml" id="0001" name="SW-CLP01-EU Clamp Power Meter" type="0002"/>
   </Manufacturer>
   <Manufacturer id="0378" name="Shandong Bittel Intelligent Technology"></Manufacturer>
   <Manufacturer id="030B" name="Shandong Smart Life Data System"></Manufacturer>
