@@ -1,20 +1,21 @@
-<Product Revision="1" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/008C:0001:0001</MetaDataItem>
     <MetaDataItem name="ProductPic">images/vera/vera2.png</MetaDataItem>
-    <MetaDataItem id="0001" name="ZWProductPage" type="0001">https://products.z-wavealliance.org/products/118/</MetaDataItem>
-    <MetaDataItem id="0001" name="FrequencyName" type="0001">U.S. / Canada / Mexico</MetaDataItem>
-    <MetaDataItem id="0001" name="Identifier" type="0001">Vera 2 US</MetaDataItem>
-    <MetaDataItem name="ProductPage">http://micasaverde.com/vera.php</MetaDataItem>
-    <MetaDataItem name="Description">Vera 2 US hardware. No Monthly Fee - Secure, remote access over web and mobile phone is FREE.
+    <MetaDataItem id="0001" name="ZWProductPage" type="0001">https://products.z-wavealliance.org/products/119/</MetaDataItem>
+    <MetaDataItem id="0001" name="FrequencyName" type="0001">U.S. / Canada / Mexico / CEPT (Europe)</MetaDataItem>
+    <MetaDataItem id="0001" name="Identifier" type="0001">Vera 2 EU</MetaDataItem>
+    <MetaDataItem name="ProductPage">http://www.micasaverde.com/vera.php</MetaDataItem>
+    <MetaDataItem name="Description">Vera 2 EU hardware.No Monthly Fee - Secure, remote access over web and mobile phone is FREE.
 Guaranteed compatibility with ALL Z-Wave devices – Includes scene controllers and all sorts of sensors, etc., so you can take advantage of everything the Z-Wave world offers--not just appliance modules and a thermostat.
 Simple, focused setup wizard – Simple 1,2,3 set up makes it easy for anyone to use.
 Advanced set-up Tab - Vera is extensible to also appeal to enthusiasts and advanced users with features seen only in high-end systems, like infrared/universal remote control, integration with monitored alarm system, ability to bridge multiple ZWave networks, works with INSTEON, X10 and other platforms.
-MiOS Application Marketplace – Our growing APP store includes numerous 3rd party apps that extend your experience, such as weather forecasting, media control, alarm panel integration, remote live video streaming, etc., and more and it's growing all the time. No Broadband Connection Needed for local control – Vera can set-up and configure your network and control all your devices without any internet connection.</MetaDataItem>
+MiOS Application Marketplace – Our growing APP store includes numerous 3rd party apps that extend your experience, such as weather forecasting, media control, alarm panel integration, remote live video streaming, etc., and more and it's growing all the time. No Broadband Connection Needed for local control – Vera can set-up and configure your network and control all your devices without any internet connection. </MetaDataItem>
     <MetaDataItem name="ProductSupport">http://www.micasaverde.com/setting-up.php</MetaDataItem>
-    <MetaDataItem name="Name">Vera 2 US</MetaDataItem>
+    <MetaDataItem name="Name">Vera 2 EU</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="1">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/118/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="2">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/119/xml</Entry>
     </ChangeLog>
   </MetaData>
   <CommandClass id="112"/>
