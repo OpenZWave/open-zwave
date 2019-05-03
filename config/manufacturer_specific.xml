@@ -534,7 +534,7 @@
     <Product config="everspring/lptdm1u.xml" id="0001" name="AD142 Plug-in Dimmer Module" type="0003"/>
     <Product config="everspring/ad147.xml" id="0003" name="AD147 Plug-in Dimmer Module" type="0003"/>
     <Product config="everspring/ad146.xml" id="0002" name="AD146 In wall Dimmer Module" type="0003"/>
-    <Product id="0001" name="AN157 Plug-in Appliance Module" type="0004"/>
+    <Product config="everspring/an157.xml" id="0001" name="AN157 Plug-in Appliance Module" type="0004"/>
     <Product config="everspring/an158.xml" id="0002" name="AN158 Plug-in Meter Appliance Module" type="0004"/>
     <Product config="everspring/an163.xml" id="0005" name="AN163 Plug-in On/Off with meter function" type="0004"/>
     <Product config="everspring/an181.xml" id="0006" name="AN181 Miniplug On/Off with meter function" type="0004"/>

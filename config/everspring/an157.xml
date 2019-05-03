@@ -1,0 +1,16 @@
+<Product Revision="1" xmlns="https://github.com/OpenZWave/open-zwave">
+  <MetaData>
+    <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0060:0001:0004</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/everspring/an157.png</MetaDataItem>
+    <MetaDataItem id="0001" name="ZWProductPage" type="0004">https://products.z-wavealliance.org/products/33/</MetaDataItem>
+    <MetaDataItem id="0001" name="FrequencyName" type="0004">Malaysia</MetaDataItem>
+    <MetaDataItem name="ProductSupport">http://www.everspring.com.tw/Products/Home_Automation_List.asp?parentUID=83&amp;CateUIDList=0,83</MetaDataItem>
+    <MetaDataItem name="ProductPage">http://www.everspring.com.tw/Products/Home_Automation_List.asp?parentUID=83&amp;CateUIDList=0,83</MetaDataItem>
+    <MetaDataItem name="Description">The LPT_SM1M is a plug-in Slave to receive the Command from the Controller or Routing Slave and through Controller or Routing Slave controls the ON/OFF status of the plug-in lighting fixures, of which power loading can't exceed 600 W.</MetaDataItem>
+    <MetaDataItem name="Name">Plug Switch Z-Wave ON/OFF Plug (EU) - 300 Series</MetaDataItem>
+    <ChangeLog>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="1">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/33/xml</Entry>
+    </ChangeLog>
+  </MetaData>
+  <CommandClass id="112"/>
+</Product>
