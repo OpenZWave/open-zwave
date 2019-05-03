@@ -1666,7 +1666,7 @@
     <Product id="0610" name="ZM1701 Electronic Deadbolt Door Lock without Handle" type="2006"/>
     <Product config="vision/1701.xml" id="0620" name="ZM1702 Electronic Deadbolt Door Lock with Handle" type="2006"/>
     <Product id="0621" name="ZM1701 Electronic Deadbolt Door Lock without Handle" type="2006"/>
-    <Product id="0703" name="Plug-in Switch" type="2007"/>
+    <Product config="vision/zl7201us.xml" id="0703" name="Plug-in Switch" type="2007"/>
     <Product id="0803" name="ZL7101 Plug-in Dimmer Module" type="2008"/>
     <Product config="vision/zm1602eu.xml" id="0903" name="ZM1602 Main Operated Siren" type="2009"/>
     <Product config="vision/zm1602eu5.xml" id="0908" name="ZM1602+ DC/AC Power Siren" type="2009"/>
