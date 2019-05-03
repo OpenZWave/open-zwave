@@ -1,17 +1,18 @@
-<Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0086:0018:0003</MetaDataItem>
     <MetaDataItem name="ProductPic">images/aeotec/dsc24.png</MetaDataItem>
-    <MetaDataItem id="0018" name="ZWProductPage" type="0003">https://products.z-wavealliance.org/products/712/</MetaDataItem>
-    <MetaDataItem name="Description">The Aeotec Smart Energy Switch is a low-cost Z-Wave appliance switch which can report immediate wattage energy usage or kWh energy usage over a period of time. It can also be controlled by other Z-Wave devices to turn on/off to save electricity when appropriate.
+    <MetaDataItem id="0018" name="ZWProductPage" type="0003">https://products.z-wavealliance.org/products/770/</MetaDataItem>
+    <MetaDataItem name="Description">The Aeotec Smart Energy Switch is a low-cost Z-Wave appliance switch which can report immediate wattage energy usage or kWh energy usage over a period of time. It can also be controlled by other Z-Wave devices to turn on/off to save electricity when appropriate. 
 
 With an unobtrusive small form factor, the Aeon Labs Smart Energy Switch will not block other nearby AC outlets. It is available in matte white.</MetaDataItem>
-    <MetaDataItem id="0018" name="Identifier" type="0003">DSC24-ZWUS</MetaDataItem>
-    <MetaDataItem id="0018" name="FrequencyName" type="0003">U.S. / Canada / Mexico</MetaDataItem>
+    <MetaDataItem id="0018" name="Identifier" type="0003">DSC24-ZWEU</MetaDataItem>
+    <MetaDataItem id="0018" name="FrequencyName" type="0003">U.S. / Canada / Mexico / CEPT (Europe)</MetaDataItem>
     <MetaDataItem name="ProductPage">http://aeotec.com/z-wave-plug-in-switch</MetaDataItem>
     <MetaDataItem name="Name">Smart Energy Switch G2</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="1">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/712/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="2">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/770/xml</Entry>
     </ChangeLog>
   </MetaData>
   <!-- 
