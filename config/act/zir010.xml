@@ -1,4 +1,16 @@
-<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
+  <MetaData>
+    <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0001:3330:4952</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/act/zir010.png</MetaDataItem>
+    <MetaDataItem id="3330" name="ZWProductPage" type="4952">https://products.z-wavealliance.org/products/549/</MetaDataItem>
+    <MetaDataItem id="3330" name="FrequencyName" type="4952">U.S. / Canada / Mexico</MetaDataItem>
+    <MetaDataItem name="ProductPage">http://www.act-solutions.com/HomePro-Product-Matrix.html#Euro</MetaDataItem>
+    <MetaDataItem name="Name">ZIR010</MetaDataItem>
+    <MetaDataItem name="Description">PIR Sensor</MetaDataItem>
+    <ChangeLog>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="4">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/549/xml</Entry>
+    </ChangeLog>
+  </MetaData>
   <!-- Configuration Parameters -->
   <CommandClass id="112">
     <Value genre="config" index="17" label="Mode" size="1" type="list" value="0">
