@@ -547,7 +547,7 @@
     <Product config="everspring/se812.xml" id="0001" name="SE812 Siren" type="000c"/>
     <Product config="everspring/sf812.xml" id="0001" name="SF812 Smoke Alarm" type="000d"/>
     <Product config="everspring/hac01.xml" id="0001" name="HAC01 In-wall Remote Module" type="0010"/>
-    <Product id="0001" name="HAN01 In-wall Switch Module" type="0011"/>
+    <Product config="everspring/han01.xml" id="0001" name="HAN01 In-wall Switch Module" type="0011"/>
     <Product id="0002" name="HAN02 In-wall Switch Module" type="0011"/>
     <Product config="everspring/sp103.xml" id="0001" name="SP103 PIR Motion Sensor" type="0101"/>
     <Product config="everspring/an145.xml" id="0001" name="AN145 Lamp Screw In Module" type="0104"/>
