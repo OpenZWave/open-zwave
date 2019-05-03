@@ -1,4 +1,4 @@
-<Product Revision="5" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="6" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0002:0003:0005</MetaDataItem>
     <MetaDataItem name="ProductPic">images/danfoss/z.png</MetaDataItem>
@@ -6,13 +6,19 @@
     <MetaDataItem name="ProductPage">http://heating.consumers.danfoss.com/xxTypex/585379.html</MetaDataItem>
     <MetaDataItem id="0003" name="Identifier" type="0005">014G0013</MetaDataItem>
     <MetaDataItem id="0003" name="FrequencyName" type="0005">CEPT (Europe)</MetaDataItem>
-    <MetaDataItem name="Name">Danfoss Living Connect Thermostat</MetaDataItem>
-    <MetaDataItem name="Description">Wireless temperature control – all around the house. 
+    <MetaDataItem name="Name">Danfoss Living Connect Z Electronic radiator thermostat</MetaDataItem>
+    <MetaDataItem name="Description">living connect® is an Z-Wave controlled electronic radiator thermostat. It is controlled by either a Z-Wave compatible Controller or a central device called Danfoss LinkTM CC. The Danfoss LinkTM CC can also control hydronic and electrical floor heating and on/off switches in a building. living connect® uses Z-Wave wireless communication technology, is easy to install and is supplied with adapters for all thermostatic valves manufactured by Danfoss and most other radiator valve manufacturers.
 
-For total control of your indoor environment, living connect radiator thermostats work wirelessly with Danfoss Link, bringing you the highest performance in home heating control. living connect thermostats have all the smart features of the living eco model, plus they can be wirelessly controlled from a single Danfoss Link control screen centrally placed in the home. This means you can set all living connect thermostats at once, and heating can still be controlled room-by-room. A user-friendly interface with a colourful touchscreen make operating a Danfoss Link simple. It is one of the most immediate, most convenient and most cost-effective ways to improve your home's energy efficiency. </MetaDataItem>
+living connect® is battery powered, compact and very easy to operate with only three buttons on the front.
+
+Additionally the temperature can be set wirelessly to a certain setpoint. The device has a scheduler inside that allows to set up to 9 different setpoint for each day of a 7 day week. This means that energy saving is even achieved when the controlling device is offline or not working. Local buttons can always overwrite the scheduled setting. living connect® features an open-window function, which closes the valve if the temperature in the room is falling dramatically.</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="5">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/932/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="6">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/967/xml</Entry>
     </ChangeLog>
+    <MetaDataItem id="0004" name="ZWProductPage" type="0005">https://products.z-wavealliance.org/products/967/</MetaDataItem>
+    <MetaDataItem id="0004" name="Identifier" type="0005">014G0013</MetaDataItem>
+    <MetaDataItem id="0004" name="FrequencyName" type="0005">CEPT (Europe)</MetaDataItem>
   </MetaData>
   <!-- http://www.popp.eu/wp-content/uploads/2016/07/Manual_Thermostat_POPP_en.pdf -->
   <!-- COMMAND_CLASS_BASIC does not respond to requests -->
