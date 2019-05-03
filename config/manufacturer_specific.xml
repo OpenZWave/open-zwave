@@ -1590,7 +1590,7 @@
   <Manufacturer id="006b" name="Tricklestar"></Manufacturer>
   <Manufacturer id="0055" name="Tridium"></Manufacturer>
   <Manufacturer id="0111" name="Tronico Technology Co. Ltd.">
-    <Product id="0200" name="ZDS-100" type="8200"/>
+    <Product config="airlinemechanical/zds-ud10.xml" id="0200" name="ZDS-100" type="8200"/>
   </Manufacturer>
   <Manufacturer id="0330" name="Tronika">
     <Product config="tronika/zsc01d.xml" id="a10d" name="Touch Panel Wall Controller - ZSC-01D" type="0003"/>
