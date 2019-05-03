@@ -41,7 +41,7 @@
     <Product config="act/zrw230.xml" id="3330" name="ZRW230 Wall Appliance Module" type="5257"/>
     <Product config="act/lfm20.xml" id="3133" name="LFM-20 Relay Fixture Module" type="5246"/>
     <Product config="act/zrw103.xml" id="3033" name="ZRW103 Wall Switch Module" type="5257"/>
-    <Product id="3330" name="ZRM230 Wall Appliance Module" type="524d"/>
+    <Product config="act/zrm230.xml" id="3330" name="ZRM230 Wall Appliance Module" type="524d"/>
     <Product id="3330" name="ZTW230 Wall Transmitter Module" type="5457"/>
     <Product id="3330" name="ZTM230 Wall Transmitter Module" type="544d"/>
   </Manufacturer>
