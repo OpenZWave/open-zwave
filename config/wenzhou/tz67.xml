@@ -1,20 +1,21 @@
-<Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="5" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0118:0611:0202</MetaDataItem>
     <MetaDataItem name="ProductPic">images/wenzhou/tz67.png</MetaDataItem>
-    <MetaDataItem id="0611" name="ZWProductPage" type="0202">https://products.z-wavealliance.org/products/885/</MetaDataItem>
+    <MetaDataItem id="0611" name="ZWProductPage" type="0202">https://products.z-wavealliance.org/products/886/</MetaDataItem>
     <MetaDataItem name="ProductSupport">http://www.tkbhome.com/guestbook.php</MetaDataItem>
-    <MetaDataItem id="0611" name="Identifier" type="0202">TZ67E</MetaDataItem>
+    <MetaDataItem id="0611" name="Identifier" type="0202">TZ67F</MetaDataItem>
     <MetaDataItem id="0611" name="FrequencyName" type="0202">CEPT (Europe)</MetaDataItem>
-    <MetaDataItem name="Name">UK Dimmer Module</MetaDataItem>
+    <MetaDataItem name="Name">French Dimmer Module</MetaDataItem>
     <MetaDataItem name="Description">FEATURES:
 • Provides wireless dimming of lights, and ON/OFF control of lights connected to the Plug-In Lamp Module.
 • Plugs directly into wall outlet and provides a switched 230 VAC source. The programming button on the module is also a manual on and off switch.
 • Each Plug-In Lamp Module functions as an automatic repeater to other Z-WAVE Modules to ensure full home coverage.</MetaDataItem>
-    <MetaDataItem name="ProductPage">http://www.tkbhome.com/?cn-p-d-148.html</MetaDataItem>
+    <MetaDataItem name="ProductPage">http://www.tkbhome.com/?cn-p-d-147.html</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="3">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/36/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="4">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/885/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="5">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/886/xml</Entry>
     </ChangeLog>
   </MetaData>
   <!-- http://products.z-wavealliance.org/products/1880 -->
