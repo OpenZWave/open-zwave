@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ManufacturerSpecificData xmlns='https://github.com/OpenZWave/open-zwave' Revision="16">
+<ManufacturerSpecificData xmlns='https://github.com/OpenZWave/open-zwave' Revision="17">
 	<Manufacturer id="0028" name="2B Electronics">
 	</Manufacturer>
 	<Manufacturer id="0098" name="2GIG Technologies">
@@ -2075,22 +2075,22 @@
 	<Manufacturer id="0188" name="Vipa-Star">
 	</Manufacturer>
 	<Manufacturer id="010a" name="Vitrum (VDA)">
-		<Product type="1100" id="4900" name="Vitrum I EU Wireless Dimmer" config="vitrum/vitrumBS.xml"/>
-		<Product type="1100" id="4a00" name="Vitrum II EU Wireless Dimmer" config="vitrum/vitrumBS.xml"/>
-		<Product type="1100" id="4b00" name="Vitrum III EU Wireless Dimmer" config="vitrum/vitrumBS.xml"/>
-		<Product type="1200" id="5100" name="Vitrum I EU Wireless On-off" config="vitrum/vitrumBS.xml"/>
-		<Product type="1200" id="5200" name="Vitrum II EU Wireless On-off" config="vitrum/vitrumBS.xml"/>
-		<Product type="1200" id="5300" name="Vitrum III EU Wireless On-off" config="vitrum/vitrumBS.xml"/>
-		<Product type="1200" id="5400" name="Vitrum IV EU Wireless On-off" config="vitrum/vitrumBS.xml"/>
-		<Product type="1300" id="5A00" name="Vitrum II EU Roller Blind Control" config="vitrum/vitrumBS.xml"/>
-		<Product type="2100" id="8a00" name="Vitrum II BS Wireless Dimmer" config="vitrum/vitrumBS.xml"/>
-		<Product type="2200" id="9100" name="Vitrum I BS Wireless On-off" config="vitrum/vitrumBS.xml"/>
-		<Product type="2200" id="9200" name="Vitrum II BS Wireless On-off" config="vitrum/vitrumBS.xml"/>
-		<Product type="2200" id="9400" name="Vitrum IV BS Wireless On-off" config="vitrum/vitrumBS.xml"/>
-		<Product type="4400" id="6400" name="Vitrum IV EU Wireless On-off" config="vitrum/vitrumBS.xml"/>
-		<Product type="3400" id="6400" name="Vitrum IV EU Wireless On-off" config="vitrum/vitrumBS.xml"/>
-		<Product type="1400" id="6600" name="Vitrum VI EU Wireless On-off" config="vitrum/vitrumBS.xml"/>
-		<Product type="1400" id="6100" name="Vitrum I EU Wireless On-off" config="vitrum/vitrumBS.xml"/>
+		<Product type="1100" id="4900" name="Vitrum I EU Wireless Dimmer" config="vitrum/vitrumI-Dimmer.xml"/>
+		<Product type="1100" id="4a00" name="Vitrum II EU Wireless Dimmer" config="vitrum/vitrumII-Dimmer.xml"/>
+		<Product type="1100" id="4b00" name="Vitrum III EU Wireless Dimmer" config="vitrum/vitrumIII-Dimmer.xml"/>
+		<Product type="1200" id="5100" name="Vitrum I EU Wireless On-off" config="vitrum/vitrumI-Switch.xml"/>
+		<Product type="1200" id="5200" name="Vitrum II EU Wireless On-off" config="vitrum/vitrumII-Switch.xml"/>
+		<Product type="1200" id="5300" name="Vitrum III EU Wireless On-off" config="vitrum/vitrumIII-Switch.xml"/>
+		<Product type="1200" id="5400" name="Vitrum IV EU Wireless On-off" config="vitrum/vitrumIV-Switch.xml"/>
+		<Product type="1300" id="5A00" name="Vitrum II EU Roller Blind Control" config="vitrum/vitrumII-Blind.xml"/>
+		<Product type="2100" id="8a00" name="Vitrum II BS Wireless Dimmer" config="vitrum/vitrumII-Dimmer.xml"/>
+		<Product type="2200" id="9100" name="Vitrum I BS Wireless On-off" config="vitrum/vitrumI-Dimmer.xml"/>
+		<Product type="2200" id="9200" name="Vitrum II BS Wireless On-off" config="vitrum/vitrumII-Switch.xml"/>
+		<Product type="2200" id="9400" name="Vitrum IV BS Wireless On-off" config="vitrum/vitrumIV-Switch.xml"/>
+		<Product type="4400" id="6400" name="Vitrum IV EU Wireless On-off" config="vitrum/vitrumIV-Switch.xml"/>
+		<Product type="3400" id="6400" name="Vitrum IV EU Wireless On-off" config="vitrum/vitrumIV-Switch.xml"/>
+		<Product type="1400" id="6600" name="Vitrum VI EU Wireless On-off" config="vitrum/vitrumVI-Switch.xml"/>
+		<Product type="1400" id="6100" name="Vitrum I EU Wireless On-off" config="vitrum/vitrumI-Switch.xml"/>
 	</Manufacturer>
 	<Manufacturer id="0109" name="Vision Security">
 		<Product type="1001" id="0101" name="ZU1401 Z-Wave USB Stick"/>
