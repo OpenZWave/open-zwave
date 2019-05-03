@@ -1,18 +1,19 @@
-<Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="5" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0086:0013:0003</MetaDataItem>
     <MetaDataItem name="ProductPic">images/aeotec/dsc19103.png</MetaDataItem>
-    <MetaDataItem id="0013" name="ZWProductPage" type="0003">https://products.z-wavealliance.org/products/766/</MetaDataItem>
+    <MetaDataItem id="0013" name="ZWProductPage" type="0003">https://products.z-wavealliance.org/products/774/</MetaDataItem>
     <MetaDataItem name="Name">Micro Smart Energy Illuminator G2</MetaDataItem>
-    <MetaDataItem id="0013" name="FrequencyName" type="0003">U.S. / Canada / Mexico / CEPT (Europe)</MetaDataItem>
+    <MetaDataItem id="0013" name="FrequencyName" type="0003">U.S. / Canada / Mexico / CEPT (Europe) / Australia / New Zealand</MetaDataItem>
     <MetaDataItem name="Description">With so many new-generation, energy-saving lights now available for your home, dimming lights isn’t as straightforward as it used to be. There’s no one type of light any more. Aeotec’s plug-in Smart Energy Illuminator is, however, compatible with as many dimmable lights as possible. 
 
 Our Smart Energy Illuminator has been designed to work out of the box with halogen lamp, sodium and tungsten lights. It’s also capable of being plugged in to other types of lights that work by reducing the amount of electricity being passed to their transformer. This includes select LED lights.</MetaDataItem>
-    <MetaDataItem id="0013" name="Identifier" type="0003">DSC19103-ZWEU</MetaDataItem>
+    <MetaDataItem id="0013" name="Identifier" type="0003">DSC19103-ZWAU</MetaDataItem>
     <MetaDataItem name="ProductPage">http://aeotec.com/z-wave-in-wall-switches</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="3">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/707/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="4">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/766/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="5">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/774/xml</Entry>
     </ChangeLog>
   </MetaData>
   <!-- 
