@@ -1402,7 +1402,7 @@
     <Product config="schlagelink/itemp.xml" id="4501" name="iTemp Dual Sensor" type="1188"/>
     <Product config="schlagelink/minikeypad.xml" id="4501" name="Mini Keypad RFID" type="6131"/>
     <Product config="schlagelink/minikeypad.xml" id="4101" name="Mini Keypad RFID" type="6131"/>
-    <Product id="5501" name="LE120 Appliance Module" type="6941"/>
+    <Product config="schlagelink/41.xml" id="5501" name="LE120 Appliance Module" type="6941"/>
     <Product id="4501" name="On-Wall Power Socket" type="6943"/>
   </Manufacturer>
   <Manufacturer id="001F" name="Scientia Technologies"></Manufacturer>
