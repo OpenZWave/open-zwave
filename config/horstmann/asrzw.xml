@@ -1,9 +1,36 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Horstmann ASR-ZW Thermostat Receiver also know as Secure SSR303-->
-<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
+<!-- Horstmann ASR-ZW Thermostat Receiver also know as Secure SSR303--><Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
+  <MetaData>
+    <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0059:0001:0003</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/horstmann/asrzw.png</MetaDataItem>
+    <MetaDataItem id="0001" name="ZWProductPage" type="0003">https://products.z-wavealliance.org/products/125/</MetaDataItem>
+    <MetaDataItem id="0001" name="FrequencyName" type="0003">CEPT (Europe)</MetaDataItem>
+    <MetaDataItem name="ProductPage">http://www.securetogether.eu/</MetaDataItem>
+    <MetaDataItem id="0001" name="Identifier" type="0003">SRT322</MetaDataItem>
+    <MetaDataItem name="Name">Secure SRT322 Zwave Stat &amp; Relay Box (Tx/Rx)</MetaDataItem>
+    <MetaDataItem name="Description">Mains powered relay switchhe innovative Horstmann CentaurPlus ZW combined wireless room stat and time control offers installers and householders the opportunity to easily and cost effectively update existing combi boiler controls.
+
+The CentaurPlus has an integral transmitter and receiver, enabling wireless communication with the latest generation Horstmann HRT4-ZW TPI room thermostat.
+
+Suitable for combi boilers
+Volt free contacts
+Automatic BST /GMT time change
+Back lit display
+Boost and Advance
+Helps to meet Part L1 of 2010 Building Regs for existing installations
+Built in Z Wave receiver
+Industry Standard 6 terminal wall plate
+ZW wireless technology
+TPI energy saving software
+Clear backlit display
+Temperature range 5-30°C
+Battery operated for wire free installation.</MetaDataItem>
+    <ChangeLog>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="1">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/125/xml</Entry>
+    </ChangeLog>
+  </MetaData>
   <CommandClass id="64">
     <TriggerRefreshValue Genre="user" Index="0" Instance="1">
-        <RefreshClassValue CommandClass="37" RequestFlags="0" Index="0" Instance="1" />
+      <RefreshClassValue CommandClass="37" Index="0" Instance="1" RequestFlags="0"/>
     </TriggerRefreshValue>
   </CommandClass>
 </Product>
