@@ -132,8 +132,6 @@ DISTFILES =	.gitignore \
 	config/device_classes.xml \
 	config/device_classes.xsd \
 	config/device_configuration.xsd \
-	config/device_configuration.xsd \
-	config/device_configuration.xsd \
 	config/devolo/connectz.xml \
 	config/devolo/mt02648.xml \
 	config/devolo/mt02755.xml \
@@ -303,8 +301,6 @@ DISTFILES =	.gitignore \
 	config/graber/vcz1.xml \
 	config/greenwave/gs1110-1-gr-1.xml \
 	config/greenwave/powernode1.xml \
-	config/greenwave/powernode6.xml \
-	config/greenwave/powernode6.xml \
 	config/greenwave/powernode6.xml \
 	config/hank/hkzw-dws01.xml \
 	config/hank/hkzw-fld01.xml \
@@ -586,8 +582,6 @@ DISTFILES =	.gitignore \
 	config/linear/WT00Z-1.xml \
 	config/logicsoft/ZHC5002.xml \
 	config/logicsoft/ZHC5010.xml \
-	config/manufacturer_specific.xml \
-	config/manufacturer_specific.xml \
 	config/manufacturer_specific.xml \
 	config/manufacturer_specific.xsd \
 	config/mcohome/a8-9.xml \
@@ -925,8 +919,6 @@ DISTFILES =	.gitignore \
 	cpp/src/DNSThread.cpp \
 	cpp/src/DNSThread.h \
 	cpp/src/Defs.h \
-	cpp/src/Defs.h \
-	cpp/src/Defs.h \
 	cpp/src/DoxygenMain.h \
 	cpp/src/Driver.cpp \
 	cpp/src/Driver.h \
@@ -1009,8 +1001,6 @@ DISTFILES =	.gitignore \
 	cpp/src/command_classes/DoorLock.cpp \
 	cpp/src/command_classes/DoorLock.h \
 	cpp/src/command_classes/DoorLockLogging.cpp \
-	cpp/src/command_classes/DoorLockLogging.cpp \
-	cpp/src/command_classes/DoorLockLogging.cpp \
 	cpp/src/command_classes/DoorLockLogging.h \
 	cpp/src/command_classes/EnergyProduction.cpp \
 	cpp/src/command_classes/EnergyProduction.h \
@@ -1034,8 +1024,6 @@ DISTFILES =	.gitignore \
 	cpp/src/command_classes/MultiChannelAssociation.h \
 	cpp/src/command_classes/MultiCmd.cpp \
 	cpp/src/command_classes/MultiCmd.h \
-	cpp/src/command_classes/MultiInstance.cpp \
-	cpp/src/command_classes/MultiInstance.cpp \
 	cpp/src/command_classes/MultiInstance.cpp \
 	cpp/src/command_classes/MultiInstance.h \
 	cpp/src/command_classes/NoOperation.cpp \
@@ -1278,8 +1266,6 @@ DISTFILES =	.gitignore \
 	dist.mk \
 	dist/libopenzwave.changes \
 	dist/libopenzwave.spec \
-	distfiles.mk \
-	distfiles.mk \
 	distfiles.mk \
 	docs/Doxyfile.in \
 	docs/default.htm \
