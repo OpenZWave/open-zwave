@@ -1009,7 +1009,7 @@
     <Product id="030b" name="VRP03-1LW Lamp Module" type="0202"/>
     <Product id="0206" name="RZS15-1LX Binary Scene Switch" type="0301"/>
     <Product id="0209" name="VRS15-1LZ Binary Scene Switch" type="0301"/>
-    <Product id="0334" name="VRS15-1LZ Switch" type="0301"/>
+    <Product config="leviton/vrs15.xml" id="0334" name="VRS15-1LZ Switch" type="0301"/>
     <Product config="leviton/rzi10.xml" id="0206" name="RZI10-1LX Multilevel Scene Switch" type="0401"/>
     <Product config="leviton/vri06.xml" id="0209" name="VRI06-1LX Multilevel Scene Switch" type="0401"/>
     <Product config="leviton/vri10.xml" id="0206" name="VRI10-1LX Multilevel Scene Switch" type="0501"/>
