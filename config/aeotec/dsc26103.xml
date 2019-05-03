@@ -1,21 +1,22 @@
 <!--
 Aeotec DSC26103 Micro Switch (2nd Edition)
 https://aeotec.freshdesk.com/helpdesk/attachments/6009584525
---><Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
+--><Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0086:001A:0003</MetaDataItem>
     <MetaDataItem name="ProductPic">images/aeotec/dsc26103.png</MetaDataItem>
-    <MetaDataItem id="001A" name="ZWProductPage" type="0003">https://products.z-wavealliance.org/products/768/</MetaDataItem>
+    <MetaDataItem id="001A" name="ZWProductPage" type="0003">https://products.z-wavealliance.org/products/776/</MetaDataItem>
     <MetaDataItem name="ProductPage">http://aeotec.com/z-wave-in-wall-switches</MetaDataItem>
-    <MetaDataItem id="001A" name="FrequencyName" type="0003">U.S. / Canada / Mexico / CEPT (Europe)</MetaDataItem>
+    <MetaDataItem id="001A" name="FrequencyName" type="0003">U.S. / Canada / Mexico / CEPT (Europe) / Australia / New Zealand</MetaDataItem>
     <MetaDataItem name="Description">It has long been thought that a house becomes a home when we make it reflect who we are, when we personalise it, when we fill it with objects we treasure. And all of that remains true, but it no longer needs to be just the objects we put in our home that personalises it. Like the music that gently fills the background of your favourite restaurant, Aeotec’s Micro Switches create the perfect ambiance for your home, and then some. They also give you the perfect control and the perfect, intelligent automation. 
 
 Across three different Micro controllers, each one letting you perfect everything from your home’s lights to its appliances and to its motorised doors and curtains, you’ll find that the same magic has been built right into the tiny body of each switch.</MetaDataItem>
     <MetaDataItem name="Name">Micro Switch G2</MetaDataItem>
-    <MetaDataItem id="001A" name="Identifier" type="0003">DSC26103-ZWEU</MetaDataItem>
+    <MetaDataItem id="001A" name="Identifier" type="0003">DSC26103-ZWAU</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="1">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/709/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="2">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/768/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="3">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/776/xml</Entry>
     </ChangeLog>
   </MetaData>
   <!-- Configuration Parameters -->
