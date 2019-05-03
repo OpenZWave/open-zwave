@@ -1,5 +1,17 @@
-<!-- Philio: PAN04-1 Double Relay Switch 2x1.5kW with Power Measurement -->
-<Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
+<!-- Philio: PAN04-1 Double Relay Switch 2x1.5kW with Power Measurement --><Product Revision="5" xmlns="https://github.com/OpenZWave/open-zwave">
+  <MetaData>
+    <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/013C:0003:0001</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/philio/pan04.png</MetaDataItem>
+    <MetaDataItem id="0003" name="ZWProductPage" type="0001">https://products.z-wavealliance.org/products/820/</MetaDataItem>
+    <MetaDataItem id="0003" name="Identifier" type="0001">PAN04-1</MetaDataItem>
+    <MetaDataItem name="ProductPage">http://www.philio-tech.com/</MetaDataItem>
+    <MetaDataItem id="0003" name="FrequencyName" type="0001">CEPT (Europe)</MetaDataItem>
+    <MetaDataItem name="Description">The In-Wall Switch module is a wireless switch, based on Z-Wave technology. Mini size design let the module can easily hide itself into the wall box and that will be good for the house decoration. There are many kind of application by using the module to switch AC power ON and OFF, one main application is the light control. The new smart relay calibration technology can reduce the inrush current caused by the load and let the module work perfectly with many kind of light like incandescent, fluorescent and LED light. This in-wall switch module is able to detect Instant power wattage (5~1500W) and overload wattage (1600~1700W) of connected light or appliances.</MetaDataItem>
+    <MetaDataItem name="Name">In-Wall Switch module</MetaDataItem>
+    <ChangeLog>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="5">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/820/xml</Entry>
+    </ChangeLog>
+  </MetaData>
   <!-- Configuration Parameters -->
   <CommandClass id="112">
     <Value genre="config" index="1" instance="1" label="Watt meter report period" max="32000" min="1" type="short" value="720">
