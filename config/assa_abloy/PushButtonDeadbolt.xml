@@ -1,18 +1,20 @@
-<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0129:0000:0004</MetaDataItem>
     <MetaDataItem name="ProductPic">images/assa_abloy/PushButtonDeadbolt.png</MetaDataItem>
     <MetaDataItem id="0000" name="ZWProductPage" type="0004">https://products.z-wavealliance.org/products/687/</MetaDataItem>
-    <MetaDataItem name="Description">Yale Real Living deadbolt and lever locks are the first products in the Yale Real Living™ (www.yalerealliving.com) portfolio of home control and security solutions.  Available in both durable acrylic touchscreen or simple, elegant, tamper-resistant keypad, Yale's new platform of intelligent locks support Z-Wave, allowing them to integrate seamlessly into a wide range of home control and security systems.  
-
-Regardless of the home control system employed, users will have access to a high degree of functionality, including the ability to lock and unlock doors from web-enabled devices or create customized entry scenes for family members, neighbors and guests. Features of Yale Real Living locks include personalized access-control scenes for up to 250 users; access to all user programmable settings via select user interfaces; plus the touchscreen versions employ voice assisted programming in English, Spanish and French.  The new intelligent locks offer an elegant, next-generation home control solution for entryways and protected interior doors to make everyday living easier and safer.</MetaDataItem>
+    <MetaDataItem name="Description">Key Free Pushbutton Deadbolt, Integrated Z-Wave</MetaDataItem>
     <MetaDataItem id="0000" name="FrequencyName" type="0004">U.S. / Canada / Mexico</MetaDataItem>
     <MetaDataItem id="0000" name="Identifier" type="0004">Yale/YRD/ 210 </MetaDataItem>
     <MetaDataItem name="ProductPage">http://www.yalerealliving.com</MetaDataItem>
-    <MetaDataItem name="Name">Yale Real Living Push Button Deadbolt</MetaDataItem>
+    <MetaDataItem name="Name">Yale YRD110-ZW-US</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="3">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/687/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="4">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1039/xml</Entry>
     </ChangeLog>
+    <MetaDataItem id="0800" name="ZWProductPage" type="0004">https://products.z-wavealliance.org/products/1039/</MetaDataItem>
+    <MetaDataItem id="0800" name="Identifier" type="0004">YRD110-ZW-US</MetaDataItem>
+    <MetaDataItem id="0800" name="FrequencyName" type="0004">U.S. / Canada / Mexico</MetaDataItem>
   </MetaData>
   <!-- Yale Push Button Deadbolt (YRD210)
 http://ozw.my-ho.st/Yale/Yale%20ZWave%20Developer%20Guide.pdf 
