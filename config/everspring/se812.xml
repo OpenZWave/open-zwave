@@ -1,21 +1,19 @@
-<!-- EVERSPRING SE812 SIREN --><Product Revision="5" xmlns="https://github.com/OpenZWave/open-zwave">
+<!-- EVERSPRING SE812 SIREN --><Product Revision="6" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0060:0001:000C</MetaDataItem>
     <MetaDataItem name="ProductPic">images/everspring/se812.png</MetaDataItem>
-    <MetaDataItem id="0001" name="ZWProductPage" type="000C">https://products.z-wavealliance.org/products/616/</MetaDataItem>
-    <MetaDataItem id="0001" name="FrequencyName" type="000C">CEPT (Europe) / U.S. / Canada / Mexico / Australia / New Zealand</MetaDataItem>
+    <MetaDataItem id="0001" name="ZWProductPage" type="000C">https://products.z-wavealliance.org/products/735/</MetaDataItem>
+    <MetaDataItem id="0001" name="FrequencyName" type="000C">CEPT (Europe) / U.S. / Canada / Mexico / Australia / New Zealand / U.S. / Canada / Mexico</MetaDataItem>
     <MetaDataItem name="ProductSupport">http://www.everspring.com/SE812.aspx</MetaDataItem>
-    <MetaDataItem id="0001" name="Identifier" type="000C">SE812-ANZ</MetaDataItem>
-    <MetaDataItem name="Name">Indoor Siren</MetaDataItem>
+    <MetaDataItem id="0001" name="Identifier" type="000C">TSE07-1</MetaDataItem>
+    <MetaDataItem name="Name">Everspring TSE07-1 Indoor Siren</MetaDataItem>
     <MetaDataItem name="ProductPage">http://www.everspring.com/SE812.aspx</MetaDataItem>
-    <MetaDataItem name="Description">The Indoor Siren is a Z-Wave enabled device and is fully compatible with any Z-Wave enabled network. Z-Wave enabled devices displaying the Z-Wave logo can also be used with it regardless of the manufacturer, and ours can also be used in other manufacturer’s Z-Wave enabled networks.  Inclusion of this Indoor Siren on other manufacturer’s Wireless Controller menu allows a full alarm condition to be generated once a connected Z-Wave enabled device has been triggered.  Z-Wave enabled devices (refer to nodes) in the system also act as repeaters, so as to re-transmit the RF signal to ensure that the signal is received by its intended destination by routing the signal around obstacles and radio dead spots.
-
-The Indoor Siren integrates both functions of siren and strobe into one unit.  Two sound levels, 100dB and 90dB, are available for selection.  When it receives a RF command, it will either activate its sounder and flash lights or stop these visual and audible alarm indications. 
-</MetaDataItem>
+    <MetaDataItem name="Description">Z-WAVE INDOOR SIREN (US)  300 SERIES</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="3">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/273/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="4">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/584/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="5">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/616/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="6">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/735/xml</Entry>
     </ChangeLog>
   </MetaData>
   <!-- Configuration Parameters not supported -->
