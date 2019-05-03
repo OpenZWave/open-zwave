@@ -1,5 +1,17 @@
-<!-- https://products.z-wavealliance.org/products/271 -->
-<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
+<!-- https://products.z-wavealliance.org/products/271 --><Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
+  <MetaData>
+    <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0060:0001:0006</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/everspring/st814.png</MetaDataItem>
+    <MetaDataItem id="0001" name="ZWProductPage" type="0006">https://products.z-wavealliance.org/products/3/</MetaDataItem>
+    <MetaDataItem id="0001" name="Identifier" type="0006">ST814-2_Ever_1110</MetaDataItem>
+    <MetaDataItem name="Description">The Temperature/Humidity Detector is designed to monitor the current temperature and humidity of ambient environment. The reading of temperature/humidity can be reported to you on a regular base at your disposal.  If temperature/humidity reaches set points, the detector will send alerts to associated devices for further execution. The application example will be like this , Step 1 include both ST814 and ON/OFF Z-Wave module (like AN158 or AN157, HAN01…) into a Z-wave controller, Step2 associate ST814 to the ON/OFF Z-Wave module  Step3 connect the power wire of the heater or humidifier to the ON/OFF Z-Wave module and this simple 3 step will let user easy to control the temperature or humidity of the room automatically Since sudden temperature/humidity change may cause health problems to people such as elderly or very young children, Temp./Humid. Detector provides you most up-to-date temperature and humidity reading for you to watch your family’s health.</MetaDataItem>
+    <MetaDataItem id="0001" name="FrequencyName" type="0006">U.S. / Canada / Mexico</MetaDataItem>
+    <MetaDataItem name="ProductPage">http://www.everspring.com/ST814.aspx</MetaDataItem>
+    <MetaDataItem name="Name">LCD Temperature &amp; Humidity Sensor</MetaDataItem>
+    <ChangeLog>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="4">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/3/xml</Entry>
+    </ChangeLog>
+  </MetaData>
   <!-- Configuration Parameters -->
   <CommandClass id="112">
     <Value genre="config" index="1" label="Basic Set Level" max="99" min="0" type="byte" units="%" value="99">
