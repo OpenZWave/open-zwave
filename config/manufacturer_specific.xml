@@ -1607,7 +1607,7 @@
   <Manufacturer id="0193" name="Universal Devices"></Manufacturer>
   <Manufacturer id="0020" name="Universal Electronics Inc.">
     <Product id="1390" name="Wireless Lighting Control" type="8007"/>
-    <Product id="1391" name="45601 Advanced Remote" type="8007"/>
+    <Product config="jasco/45601.xml" id="1391" name="45601 Advanced Remote" type="8007"/>
   </Manufacturer>
   <Manufacturer id="0183" name="Universe Future"></Manufacturer>
   <Manufacturer id="0209" name="UTC Fire and Security Americas Corp"></Manufacturer>
