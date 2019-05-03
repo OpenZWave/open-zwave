@@ -1392,7 +1392,7 @@
   <Manufacturer id="0307" name="SATCO Products"></Manufacturer>
   <Manufacturer id="0318" name="SBCK Corp"></Manufacturer>
   <Manufacturer id="003b" name="Schlage (Allegion)">
-    <Product id="504c" name="FE599GR Wireless Door Lock" type="634b"/>
+    <Product config="schlage/fe599.xml" id="504c" name="FE599GR Wireless Door Lock" type="634b"/>
     <Product config="schlage/BE469.xml" id="5044" name="BE469 Touchscreen Deadbolt" type="6341"/>
     <Product config="schlage/BE468.xml" id="5044" name="BE468 Touchscreen Deadbolt" type="6349"/>
     <Product config="schlage/BE469ZP.xml" id="0469" name="BE469ZP Connect Smart Deadbolt" type="0001"/>
