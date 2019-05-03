@@ -1530,7 +1530,7 @@
   <Manufacturer id="000A" name="Techniku"></Manufacturer>
   <Manufacturer id="012F" name="Tecom"></Manufacturer>
   <Manufacturer id="0012" name="Tell It Online">
-    <Product id="0001" name="Switchkeeper Plug-in Appliance Module" type="0001"/>
+    <Product config="icare/zw-66.xml" id="0001" name="Switchkeeper Plug-in Appliance Module" type="0001"/>
   </Manufacturer>
   <Manufacturer id="0176" name="Telldus">
     <Product config="telldus/tzwp100.xml" id="0001" name="TZWP-100 Plug-in Switch" type="0003"/>
