@@ -1,15 +1,19 @@
-<Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="5" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/010F:1000:0900</MetaDataItem>
     <MetaDataItem name="ProductPic">images/fibaro/fgrgbwm441.png</MetaDataItem>
     <MetaDataItem id="1000" name="ZWProductPage" type="0900">https://products.z-wavealliance.org/products/1054/</MetaDataItem>
     <MetaDataItem id="1000" name="Identifier" type="0900">FGRGBWM-441</MetaDataItem>
-    <MetaDataItem name="Name">FIBARO RGBW Controller</MetaDataItem>
+    <MetaDataItem name="Name">FIBARO RGBW Dimmer</MetaDataItem>
     <MetaDataItem id="1000" name="FrequencyName" type="0900">CEPT (Europe)</MetaDataItem>
     <MetaDataItem name="Description">RGBW Controller</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="4">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1054/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="5">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1072/xml</Entry>
     </ChangeLog>
+    <MetaDataItem id="2000" name="ZWProductPage" type="0900">https://products.z-wavealliance.org/products/1072/</MetaDataItem>
+    <MetaDataItem id="2000" name="FrequencyName" type="0900">U.S. / Canada / Mexico</MetaDataItem>
+    <MetaDataItem id="2000" name="Identifier" type="0900">FGRGBWM-441</MetaDataItem>
   </MetaData>
   <!-- Basic Messages should map to the ColorControl Command Class I hope -->
   <CommandClass id="32">
@@ -151,6 +155,7 @@
       <Group auto="true" index="5" label="Lifeline" max_associations="1"/>
     </Associations>
   </CommandClass>
+
 
 
 
