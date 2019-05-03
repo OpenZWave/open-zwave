@@ -1,19 +1,20 @@
-<Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="5" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0060:0001:0003</MetaDataItem>
     <MetaDataItem name="ProductPic">images/everspring/lptdm1u.png</MetaDataItem>
-    <MetaDataItem id="0001" name="ZWProductPage" type="0003">https://products.z-wavealliance.org/products/275/</MetaDataItem>
-    <MetaDataItem id="0001" name="FrequencyName" type="0003">CEPT (Europe) / Hong Kong / U.S. / Canada / Mexico / CEPT (Europe)</MetaDataItem>
-    <MetaDataItem name="Name">Indoor Dimmer Plug</MetaDataItem>
+    <MetaDataItem id="0001" name="ZWProductPage" type="0003">https://products.z-wavealliance.org/products/277/</MetaDataItem>
+    <MetaDataItem id="0001" name="FrequencyName" type="0003">CEPT (Europe) / Hong Kong / U.S. / Canada / Mexico / CEPT (Europe) / CEPT (Europe)</MetaDataItem>
+    <MetaDataItem name="Name">Dimmer Plug</MetaDataItem>
     <MetaDataItem name="Description">This plug-in Lamp Module is a transceiver which is a Z-Wave enabled device and is fully compatible with any Z-Wave enabled network. Z-Wave enabled devices displaying the Z-Wave logo can also be used with it regardless of the manufacturer, and ours can also be used in other manufacturer’s Z-Wave enabled networks.  Inclusion of the Lamp module on other manufacturer’s Wireless Controller menu allows remote On/Off control and dimming of lamps connected.  Each module is designed to act as a repeater.  Repeaters will re-transmit the RF signal to ensure that the signal is received by its intended destination by routing the signal around obstacles and radio dead spots. </MetaDataItem>
-    <MetaDataItem id="0001" name="Identifier" type="0003">AD142</MetaDataItem>
-    <MetaDataItem name="ProductPage">http://www.everspring.com/AD142.aspx</MetaDataItem>
+    <MetaDataItem id="0001" name="Identifier" type="0003">AD131</MetaDataItem>
+    <MetaDataItem name="ProductPage">http://www.everspring.com/AD131.aspx</MetaDataItem>
     <MetaDataItem name="ProductSupport">http://www.everspring.com/AD126.aspx</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="1">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/30/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="2">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/32/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="3">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/208/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="4">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/275/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="5">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/277/xml</Entry>
     </ChangeLog>
   </MetaData>
   <CommandClass id="112"/>
