@@ -733,7 +733,7 @@
   <Manufacturer id="011D" name="Foxconn"></Manufacturer>
   <Manufacturer id="039C" name="Foxconn Industrial Internet"></Manufacturer>
   <Manufacturer id="0110" name="Frostdale">
-    <Product id="0001" name="Nanogrid: FDN2nxx light switch - where n is 1, 2, 3 or 4 buttons" type="2411"/>
+    <Product config="frostdale/fdn2311.xml" id="0001" name="Nanogrid: FDN2nxx light switch - where n is 1, 2, 3 or 4 buttons" type="2411"/>
     <Product config="frostdale/fdn2nxx.xml" id="0031" name="Nanogrid: FDN2nxx light switch - where n is 1, 2, 3 or 4 buttons" type="7333"/>
   </Manufacturer>
   <Manufacturer id="0305" name="Future Home AS"></Manufacturer>
