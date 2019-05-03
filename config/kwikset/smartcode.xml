@@ -1,19 +1,20 @@
 <!-- 
 Kwikset smartcode 
 http://s7d5.scene7.com/is/content/BDHHI/z-wave-configuration
---><Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
+--><Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0090:0001:0001</MetaDataItem>
     <MetaDataItem name="ProductPic">images/kwikset/smartcode.png</MetaDataItem>
-    <MetaDataItem id="0001" name="ZWProductPage" type="0001">https://products.z-wavealliance.org/products/157/</MetaDataItem>
+    <MetaDataItem id="0001" name="ZWProductPage" type="0001">https://products.z-wavealliance.org/products/172/</MetaDataItem>
     <MetaDataItem id="0001" name="FrequencyName" type="0001">U.S. / Canada / Mexico</MetaDataItem>
-    <MetaDataItem id="0001" name="Identifier" type="0001">910 v1.2</MetaDataItem>
-    <MetaDataItem name="ProductPage">http://www.kwikset.com/Products/Categories/Electronic-Locks.aspx</MetaDataItem>
-    <MetaDataItem name="Description">Keyless entry lock with Z-WaveWith your own personal code, you can enter your home with just a few simple pushes of a button and lock it with just one. You also get more control over who has access to your home. Just assign a temporary code to who ever needs one and delete it when you see fit. Now you can totally eliminate the need for keys. SmartCode is easy to install, program and use and operates on 4 AA batteries. SmartCode complements any Kwikset knob, lever or handleset.. </MetaDataItem>
+    <MetaDataItem id="0001" name="Identifier" type="0001">910_BD_1002</MetaDataItem>
+    <MetaDataItem name="ProductPage">http://www.kwikset.com/SmartSecurity/Electronic-Locks.aspx</MetaDataItem>
+    <MetaDataItem name="Description">Keyless entry lock with Z-Wave. With your own personal code, you can enter your home with just a few simple pushes of a button and lock it with just one. You also get more control over who has access to your home. Just assign a temporary code to who ever needs one and delete it when you see fit. Now you can totally eliminate the need for keys. SmartCode is easy to install, program and use and operates on 4 AA batteries. SmartCode complements any Kwikset knob, lever or handleset.</MetaDataItem>
     <MetaDataItem name="ProductSupport">http://www.kwikset.com/Customer-Support/Overview.aspx</MetaDataItem>
     <MetaDataItem name="Name">Kwikset Smart Code with Home Connect Technology</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="3">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/157/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="4">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/172/xml</Entry>
     </ChangeLog>
   </MetaData>
   <!-- Configuration Parameters -->
