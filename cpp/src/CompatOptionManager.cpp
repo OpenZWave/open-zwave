@@ -237,7 +237,7 @@ void CompatOptionManager::WriteXML
 	{
 		TiXmlElement* valElement = new TiXmlElement( it->first.c_str() );
 		char str[32];
-		TiXmlText * text;
+		TiXmlText * text = NULL;
 //		std::cout << "Name " << it->first << " Type: " << m_CompatVals[it->second].type << std::endl;
 		switch (m_CompatVals[it->second].type) {
 			case COMPAT_FLAG_TYPE_BOOL:
