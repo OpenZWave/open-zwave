@@ -123,7 +123,7 @@ void CompatOptionManager::EnableFlag
 						Log::Write(LogLevel_Warning, m_owner->GetNodeId(), "EnableFlag: Default Value for %s is not a Bool", m_availableFlags[i].name.c_str());
 						defaultval = 0;
 					}
-					m_CompatVals[flag].valBool = defaultval;
+					m_CompatVals[flag].valBool = defaultval == 0 ? false : true;
 					break;
 				case COMPAT_FLAG_TYPE_BYTE:
 					if (defaultval > UINT8_MAX) {

@@ -510,7 +510,7 @@ void Localization::ReadXMLVIDHelp(uint8 ccID, uint16 indexId, uint32 pos, const 
 
 	uint64 key = GetValueKey(ccID, indexId, pos);
 	if (m_valueLocalizationMap.find(key) == m_valueLocalizationMap.end()) {
-		m_valueLocalizationMap[key] = new ValueLocalizationEntry(indexId, pos);
+		m_valueLocalizationMap[key] = new ValueLocalizationEntry(ccID, indexId, pos);
 	} else if (m_valueLocalizationMap[key]->HasLabel(Language)) {
 		Log::Write( LogLevel_Warning, "Localization::ReadXMLVIDHelp: Error in %s at line %d - Duplicate Entry for CommandClass %d, ValueID: %d (%d):  %s (Lang: %s)", labelElement->GetDocument()->GetUserData(), labelElement->Row(), ccID, indexId, pos, labelElement->GetText(), Language.c_str() );
 		return;
@@ -597,7 +597,7 @@ bool Localization::SetValueHelp
 {
 	uint64 key = GetValueKey(ccID, indexId, pos);
 	if (m_valueLocalizationMap.find(key) == m_valueLocalizationMap.end()) {
-		m_valueLocalizationMap[key] = new ValueLocalizationEntry(indexId, pos);
+		m_valueLocalizationMap[key] = new ValueLocalizationEntry(ccID, indexId, pos);
 	} else if (m_valueLocalizationMap[key]->HasHelp(lang)) {
 		Log::Write( LogLevel_Warning, "Localization::SetValueHelp: Duplicate Entry for CommandClass %d, ValueID: %d (%d):  %s (Lang: %s)", ccID, indexId, pos, help.c_str(), lang.c_str() );
 	}
@@ -623,7 +623,7 @@ bool Localization::SetValueLabel
 {
 	uint64 key = GetValueKey(ccID, indexId, pos);
 	if (m_valueLocalizationMap.find(key) == m_valueLocalizationMap.end()) {
-		m_valueLocalizationMap[key] = new ValueLocalizationEntry(indexId, pos);
+		m_valueLocalizationMap[key] = new ValueLocalizationEntry(ccID, indexId, pos);
 	} else if (m_valueLocalizationMap[key]->HasLabel(lang)) {
 		Log::Write( LogLevel_Warning, "Localization::SetValueLabel: Duplicate Entry for CommandClass %d, ValueID: %d (%d):  %s (Lang: %s)", ccID, indexId, pos, label.c_str(), lang.c_str() );
 	}
@@ -698,7 +698,7 @@ bool Localization::SetValueItemLabel
 {
 	uint64 key = GetValueKey(ccID, indexId, pos);
 	if (m_valueLocalizationMap.find(key) == m_valueLocalizationMap.end()) {
-		m_valueLocalizationMap[key] = new ValueLocalizationEntry(indexId, pos);
+		m_valueLocalizationMap[key] = new ValueLocalizationEntry(ccID, indexId, pos);
 	} else if (m_valueLocalizationMap[key]->HasItemLabel(itemIndex, lang)) {
 		Log::Write( LogLevel_Warning, "Localization::SetValueItemLabel: Duplicate Item Entry for CommandClass %d, ValueID: %d (%d) itemIndex %d:  %s (Lang: %s)", ccID, indexId, pos, itemIndex, label.c_str(), lang.c_str() );
 	}
@@ -734,7 +734,7 @@ bool Localization::SetValueItemHelp
 {
 	uint64 key = GetValueKey(ccID, indexId, pos);
 	if (m_valueLocalizationMap.find(key) == m_valueLocalizationMap.end()) {
-		m_valueLocalizationMap[key] = new ValueLocalizationEntry(indexId, pos);
+		m_valueLocalizationMap[key] = new ValueLocalizationEntry(ccID, indexId, pos);
 	} else if (m_valueLocalizationMap[key]->HasItemHelp(itemIndex, lang)) {
 		Log::Write( LogLevel_Warning, "Localization::SetValueItemHelp: Duplicate Item Entry for CommandClass %d, ValueID: %d (%d) ItemIndex %d:  %s (Lang: %s)", ccID, indexId, pos, itemIndex, label.c_str(), lang.c_str() );
 	}

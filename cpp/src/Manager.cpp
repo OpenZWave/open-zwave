@@ -3263,7 +3263,7 @@ bool Manager::RefreshValue
 		{
 			CommandClass* cc = node->GetCommandClass( _id.GetCommandClassId() );
 			if (cc) {
-				uint8 index = _id.GetIndex();
+				uint16_t index = _id.GetIndex();
 				uint8 instance = _id.GetInstance();
 				Log::Write( LogLevel_Info, "mgr,     Refreshing node %d: %s index = %d instance = %d (to confirm a reported change)", node->m_nodeId, cc->GetCommandClassName().c_str(), index, instance );
 				cc->RequestValue( 0, index, instance, Driver::MsgQueue_Send );
