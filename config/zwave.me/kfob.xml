@@ -1,4 +1,24 @@
-<Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
+  <MetaData>
+    <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0115:0001:0100</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/zwave.me/kfob.png</MetaDataItem>
+    <MetaDataItem id="0001" name="ZWProductPage" type="0100">https://products.z-wavealliance.org/products/688/</MetaDataItem>
+    <MetaDataItem id="0001" name="Identifier" type="0100">KFOB</MetaDataItem>
+    <MetaDataItem name="Description">The Z-Wave.Me Key Fob is a mobile Z-Wave device that can both control other Z-Wave devices and activate predefined scenes in an IP gateway. 
+
+The Key Fob can be used in five different modes:
+1)	Direct Control of associated Devices with single Buttons 
+2)	Direct Control of associated Devices with two Buttons 
+3)	Scene Activation in IP Gateway 
+4)	Direct Activation of preconfigured Scenes 
+5)	Direct Control of Devices in proximity  
+</MetaDataItem>
+    <MetaDataItem name="Name">Z-Wave.Me Key Fob</MetaDataItem>
+    <MetaDataItem id="0001" name="FrequencyName" type="0100">Russia</MetaDataItem>
+    <ChangeLog>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="3">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/688/xml</Entry>
+    </ChangeLog>
+  </MetaData>
   <!-- COMMAND_CLASS_CONFIGURATION. Configuration Parameters -->
   <CommandClass id="112">
     <Value genre="config" index="1" label="Button 1 and 3 pair mode" max="2" min="0" size="1" type="list" units="" value="1">
