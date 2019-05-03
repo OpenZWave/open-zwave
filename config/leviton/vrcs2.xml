@@ -1,16 +1,17 @@
-<Product Revision="1" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/001D:0206:0201</MetaDataItem>
     <MetaDataItem name="ProductPic">images/leviton/vrcs2.png</MetaDataItem>
-    <MetaDataItem id="0206" name="ZWProductPage" type="0201">https://products.z-wavealliance.org/products/286/</MetaDataItem>
+    <MetaDataItem id="0206" name="ZWProductPage" type="0201">https://products.z-wavealliance.org/products/287/</MetaDataItem>
     <MetaDataItem id="0206" name="FrequencyName" type="0201">U.S. / Canada / Mexico</MetaDataItem>
-    <MetaDataItem name="Description">2-Button Scene Controller with Switches. Vizia RF + 2-Button Scene Controller with Switches for Multi-Location Scene Control. White face assembled on device, ivory and almond faces included.</MetaDataItem>
-    <MetaDataItem name="ProductPage">http://www.leviton.com/OA_HTML/ProductDetail.jsp?partnumber=VRCS2-MRX&amp;section=44147&amp;minisite=10251</MetaDataItem>
-    <MetaDataItem id="0206" name="Identifier" type="0201">VRCS2</MetaDataItem>
+    <MetaDataItem name="Description">4-Button Scene Controller With Switch.Vizia RF + 4-Button Scene Controller with Switch for Multi-Location Scene Control with IR Remote Capability. White face assembled on device, ivory and almond faces included. </MetaDataItem>
+    <MetaDataItem name="ProductPage">http://www.leviton.com/OA_HTML/ibeCCtpItmDspRte.jsp?item=433271&amp;section=28563&amp;minisite=10026</MetaDataItem>
+    <MetaDataItem id="0206" name="Identifier" type="0201">VRCS4-MR</MetaDataItem>
     <MetaDataItem name="ProductSupport">http://www.leviton.com/OA_HTML/Home.jsp?minisite=10251&amp;respid=22372</MetaDataItem>
-    <MetaDataItem name="Name">VRCS2</MetaDataItem>
+    <MetaDataItem name="Name">VRCS4-MR</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="1">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/286/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="2">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/287/xml</Entry>
     </ChangeLog>
   </MetaData>
   <CommandClass id="112"/>
