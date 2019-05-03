@@ -1,23 +1,29 @@
 <!-- 
 Kwikset smartcode 
 http://s7d5.scene7.com/is/content/BDHHI/z-wave-configuration
---><Product Revision="7" xmlns="https://github.com/OpenZWave/open-zwave">
+--><Product Revision="8" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0090:0001:0001</MetaDataItem>
     <MetaDataItem name="ProductPic">images/kwikset/smartcode.png</MetaDataItem>
-    <MetaDataItem id="0001" name="ZWProductPage" type="0001">https://products.z-wavealliance.org/products/749/</MetaDataItem>
+    <MetaDataItem id="0001" name="ZWProductPage" type="0001">https://products.z-wavealliance.org/products/781/</MetaDataItem>
     <MetaDataItem id="0001" name="FrequencyName" type="0001">U.S. / Canada / Mexico</MetaDataItem>
     <MetaDataItem id="0001" name="Identifier" type="0001">910</MetaDataItem>
     <MetaDataItem name="ProductPage">http://www.kwikset.com/Products/Details/Electronic-Locks/910-CNT-ZW-11P-SMT.aspx</MetaDataItem>
-    <MetaDataItem name="Description">Keyless entry lock with ZWave</MetaDataItem>
+    <MetaDataItem name="Description">The SmartCode Deadbolt with Home Connect Technology featuring Z-Wave enables the door lock to wirelessly communicate with other devices in home. The lock allows the user through a web enabled device to remotely check the door lock status, lock or unlock the door and receive text or email messages.
+
+- The motor-driven deadbolt latch allows for true remote locking and unlocking.
+SmartKey cylinders feature a stainless steel side locking bar, racks and pins for increased strength and security
+- Patented side locking bar technology offers improved security by protecting against lock bumping, an attack technique used to defeat conventional pin &amp; tumbler locks
+- Lifetime mechanical and finish warranty. 1 year electronics warranty.</MetaDataItem>
     <MetaDataItem name="ProductSupport">http://www.kwikset.com/Customer-Support/Overview.aspx</MetaDataItem>
-    <MetaDataItem name="Name">Kwikset Lock</MetaDataItem>
+    <MetaDataItem name="Name">Kwikset Lock, w. Anti theft support</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="3">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/157/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="4">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/172/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="5">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/196/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="6">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/605/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="7">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/749/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="8">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/781/xml</Entry>
     </ChangeLog>
   </MetaData>
   <!-- Configuration Parameters -->
