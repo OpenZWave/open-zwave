@@ -1259,7 +1259,7 @@
   <Manufacturer id="0064" name="Popp / Duwi (Reitz-Group.de)">
     <Product config="duwi/zw-edan-300.xml" id="0000" name="ZW EDAN 300 Flush Mounted Dimmer" type="0001"/>
     <Product id="0002" name="Flush Mounted Switch" type="1000"/>
-    <Product id="0000" name="Plugin Dimmer" type="1001"/>
+    <Product config="duwi/zw-zdan-300.xml" id="0000" name="Plugin Dimmer" type="1001"/>
     <Product config="duwi/05458.xml" id="0009" name="Wall Dimmer Set for Busch-Jaeger DURO 2000" type="1000"/>
     <Product config="duwi/ZWES1000.xml" id="0000" name="ZW ES 1000 Flush Mounted Switch" type="2001"/>
     <Product id="0000" name="ZW ZS 3500 Plugin Switch" type="3001"/>
