@@ -1205,7 +1205,7 @@
   </Manufacturer>
   <Manufacturer id="0366" name="PHILIA TECHNOLOGY Co. Ltd"></Manufacturer>
   <Manufacturer id="013c" name="Philio Technology Corp">
-    <Product id="0001" name="PAN11-4 Smart Energy Plug In Switch" type="0001"/>
+    <Product config="philio/pan11-1.xml" id="0001" name="PAN11-4 Smart Energy Plug In Switch" type="0001"/>
     <Product config="philio/pan04.xml" id="0003" name="PAN04-1 Double Relay Switch 2x1.5kW with Power Measurement" type="0001"/>
     <Product config="philio/pan05.xml" id="0010" name="PAN05-1 In Wall Single relay (1 way) Switch" type="0001"/>
     <Product config="philio/pan06.xml" id="0004" name="PAN06-1 In Wall Dual Relay (1 Way) Switch Module" type="0001"/>
