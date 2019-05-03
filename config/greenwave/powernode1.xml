@@ -1,19 +1,19 @@
-<Product Revision="5" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="6" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0099:0002:0002</MetaDataItem>
     <MetaDataItem name="ProductPic">images/greenwave/powernode1.png</MetaDataItem>
-    <MetaDataItem id="0002" name="ZWProductPage" type="0002">https://products.z-wavealliance.org/products/589/</MetaDataItem>
-    <MetaDataItem name="Description">Smart PowerNode NS220-B/NS222-B.PowerNode – 1 Port
-The single port version of the PowerNode, these devices communicate wirelessly to the Gateway, allowing for energy monitoring and device control. Our products come pre-configured to connect to the Gateway with minimal consumer set-up.</MetaDataItem>
-    <MetaDataItem id="0002" name="FrequencyName" type="0002">CEPT (Europe) / Australia / New Zealand / U.S. / Canada / Mexico</MetaDataItem>
-    <MetaDataItem name="Name">Single socket PowerNode US SKU</MetaDataItem>
+    <MetaDataItem id="0002" name="ZWProductPage" type="0002">https://products.z-wavealliance.org/products/629/</MetaDataItem>
+    <MetaDataItem name="Description">Single-socket PowerNode, UK.The single port version of the PowerNode, these devices communicate wirelessly to the Gateway, allowing for energy monitoring and device control. Our products come pre-configured to connect to the Gateway with minimal consumer set-up.</MetaDataItem>
+    <MetaDataItem id="0002" name="FrequencyName" type="0002">CEPT (Europe) / Australia / New Zealand / U.S. / Canada / Mexico / CEPT (Europe)</MetaDataItem>
+    <MetaDataItem name="Name">Greenwave Single socket PowerNode UK</MetaDataItem>
     <MetaDataItem name="ProductPage">http://www.greenwavereality.com/solutions/energymgmt/</MetaDataItem>
-    <MetaDataItem id="0002" name="Identifier" type="0002">NS220-B/NS222-B</MetaDataItem>
+    <MetaDataItem id="0002" name="Identifier" type="0002">NS210-G-EN/NP210-G-EN</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="1">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/52/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="2">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/55/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="3">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/58/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="4">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/589/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="5">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/629/xml</Entry>
     </ChangeLog>
     <MetaDataItem name="ProductSupport">http://www.greenwavereality.com/solutions/energymgmt/</MetaDataItem>
   </MetaData>
