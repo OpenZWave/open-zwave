@@ -1,10 +1,10 @@
-<Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="5" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0098:0106:6401</MetaDataItem>
     <MetaDataItem name="ProductPic">images/2gig/ct100.png</MetaDataItem>
-    <MetaDataItem id="0106" name="ZWProductPage" type="6401">https://products.z-wavealliance.org/products/782/</MetaDataItem>
-    <MetaDataItem id="0106" name="FrequencyName" type="6401">Australia / New Zealand</MetaDataItem>
-    <MetaDataItem name="Name">CT100 Thermostat</MetaDataItem>
+    <MetaDataItem id="0106" name="ZWProductPage" type="6401">https://products.z-wavealliance.org/products/795/</MetaDataItem>
+    <MetaDataItem id="0106" name="FrequencyName" type="6401">Australia / New Zealand / U.S. / Canada / Mexico</MetaDataItem>
+    <MetaDataItem name="Name">CT100-US Thermostat</MetaDataItem>
     <MetaDataItem name="Description">ENERGY MANAGEMENT MADE EASY. 
 
 The CT100 brings together everything you need to create an energy-intelligent home: remote control, seven-day programming, and seamless integration with the Go!Control panel. 
@@ -16,9 +16,10 @@ The CT100 brings together everything you need to create an energy-intelligent ho
 •	Improved Z-Wave Range 
 •	Auto Mode 
 •	Improved User Experience </MetaDataItem>
-    <MetaDataItem id="0106" name="Identifier" type="6401">CT100-ANZ</MetaDataItem>
+    <MetaDataItem id="0106" name="Identifier" type="6401">CT100-US</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="4">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/782/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="5">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/795/xml</Entry>
     </ChangeLog>
   </MetaData>
   <!--
@@ -115,6 +116,7 @@ The CT100 brings together everything you need to create an energy-intelligent ho
       <Item label="HVAC: Normal, Aux Stages: 2, Aux Setup: Elec, Heat Pump Stages: 2, Cool Stages: 2" value="19005954"/>
       <!-- 0x01,0x2,0x2,0x02,0x02 -->
       <Item label="HVAC: Heat Pump, Aux Stages: 2, Aux Setup: Elec, Heat Pump Stages: 2, Cool Stages: 2" value="35783170"/>
+    
     
     <!-- 0x02,0x2,0x2,0x02,0x02 -->
     </Value>
