@@ -1615,7 +1615,7 @@
   <Manufacturer id="030F" name="Vemmio"></Manufacturer>
   <Manufacturer id="0198" name="Venstar"></Manufacturer>
   <Manufacturer id="008c" name="Vera Control">
-    <Product id="0001" name="Vera Lite" type="0001"/>
+    <Product config="vera/vera2.xml" id="0001" name="Vera Lite" type="0001"/>
   </Manufacturer>
   <Manufacturer id="0080" name="Vero Duco"></Manufacturer>
   <Manufacturer id="0237" name="Vestel Elektronik Ticaret ve Sanayi"></Manufacturer>
