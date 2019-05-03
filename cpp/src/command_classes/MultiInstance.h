@@ -84,7 +84,8 @@ namespace OpenZWave
 		bool		m_numEndPointsCanChange;
 		bool		m_endPointsAreSameClass;
 		uint8		m_numEndPoints;
-
+		bool		m_useDestAsSrc;
+		
 		// Finding endpoints
 		uint8		m_endPointFindIndex;
 		uint8		m_numEndPointsFound;

@@ -105,6 +105,7 @@ DISTFILES =	.gitignore \
 	config/aeotec/zwa004.xml \
 	config/aeotec/zwa005.xml \
 	config/aeotec/zwa006.xml \
+	config/aeotec/zwa008.xml \
 	config/airlinemechanical/zds-ud10.xml \
 	config/assa_abloy/ConexisL1.xml \
 	config/assa_abloy/KeyfreeConnected-plus.xml \
@@ -130,6 +131,8 @@ DISTFILES =	.gitignore \
 	config/danfoss/z.xml \
 	config/device_classes.xml \
 	config/device_classes.xsd \
+	config/device_configuration.xsd \
+	config/device_configuration.xsd \
 	config/device_configuration.xsd \
 	config/devolo/connectz.xml \
 	config/devolo/mt02648.xml \
@@ -301,6 +304,8 @@ DISTFILES =	.gitignore \
 	config/greenwave/gs1110-1-gr-1.xml \
 	config/greenwave/powernode1.xml \
 	config/greenwave/powernode6.xml \
+	config/greenwave/powernode6.xml \
+	config/greenwave/powernode6.xml \
 	config/hank/hkzw-dws01.xml \
 	config/hank/hkzw-fld01.xml \
 	config/hank/hkzw-ms01.xml \
@@ -334,6 +339,7 @@ DISTFILES =	.gitignore \
 	config/homeseer/ztroller.xml \
 	config/honeywell/39351-ZW3005.xml \
 	config/honeywell/lynx-touch-l5100.xml \
+	config/honeywell/th6320zw2003.xml \
 	config/honeywell/th8320zw1000.xml \
 	config/horstmann/asrzw.xml \
 	config/horstmann/hrt4zw.xml \
@@ -581,6 +587,8 @@ DISTFILES =	.gitignore \
 	config/logicsoft/ZHC5002.xml \
 	config/logicsoft/ZHC5010.xml \
 	config/manufacturer_specific.xml \
+	config/manufacturer_specific.xml \
+	config/manufacturer_specific.xml \
 	config/manufacturer_specific.xsd \
 	config/mcohome/a8-9.xml \
 	config/mcohome/mh7h.xml \
@@ -650,6 +658,7 @@ DISTFILES =	.gitignore \
 	config/popp/700045.xml \
 	config/popp/700168.xml \
 	config/popp/700397.xml \
+	config/popp/700793.xml \
 	config/popp/smoke-detector.xml \
 	config/popp/solar-siren.xml \
 	config/popp/zweather.xml \
@@ -726,6 +735,9 @@ DISTFILES =	.gitignore \
 	config/steinel/rs-led-d2.xml \
 	config/steinel/xled-home-2.xml \
 	config/stelpro/stzw402.xml \
+	config/sunricher/srzv9001t4dimeu.xml \
+	config/sunricher/srzv9101sachpeu.xml \
+	config/sunricher/zv9101.xml \
 	config/swiid/swiidinter.xml \
 	config/swiid/swiidplug.xml \
 	config/telldus/tzdw100.xml \
@@ -737,9 +749,6 @@ DISTFILES =	.gitignore \
 	config/trane/TZEMT400AB32MAA.xml \
 	config/trane/TZEMT400BB32MAA.xml \
 	config/trane/TZEMT524AA21MA.xml \
-	config/tronika/zsc01d.xml \
-	config/tronika/zv9040.xml \
-	config/tronika/zv9101.xml \
 	config/vera/vera2.xml \
 	config/vision/1701.xml \
 	config/vision/brg1-433.xml \
@@ -916,6 +925,8 @@ DISTFILES =	.gitignore \
 	cpp/src/DNSThread.cpp \
 	cpp/src/DNSThread.h \
 	cpp/src/Defs.h \
+	cpp/src/Defs.h \
+	cpp/src/Defs.h \
 	cpp/src/DoxygenMain.h \
 	cpp/src/Driver.cpp \
 	cpp/src/Driver.h \
@@ -998,6 +1009,8 @@ DISTFILES =	.gitignore \
 	cpp/src/command_classes/DoorLock.cpp \
 	cpp/src/command_classes/DoorLock.h \
 	cpp/src/command_classes/DoorLockLogging.cpp \
+	cpp/src/command_classes/DoorLockLogging.cpp \
+	cpp/src/command_classes/DoorLockLogging.cpp \
 	cpp/src/command_classes/DoorLockLogging.h \
 	cpp/src/command_classes/EnergyProduction.cpp \
 	cpp/src/command_classes/EnergyProduction.h \
@@ -1021,6 +1034,8 @@ DISTFILES =	.gitignore \
 	cpp/src/command_classes/MultiChannelAssociation.h \
 	cpp/src/command_classes/MultiCmd.cpp \
 	cpp/src/command_classes/MultiCmd.h \
+	cpp/src/command_classes/MultiInstance.cpp \
+	cpp/src/command_classes/MultiInstance.cpp \
 	cpp/src/command_classes/MultiInstance.cpp \
 	cpp/src/command_classes/MultiInstance.h \
 	cpp/src/command_classes/NoOperation.cpp \
@@ -1263,6 +1278,8 @@ DISTFILES =	.gitignore \
 	dist.mk \
 	dist/libopenzwave.changes \
 	dist/libopenzwave.spec \
+	distfiles.mk \
+	distfiles.mk \
 	distfiles.mk \
 	docs/Doxyfile.in \
 	docs/default.htm \
