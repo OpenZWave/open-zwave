@@ -708,7 +708,7 @@
     <Product config="forest/fs2z5232000002.xml" id="0100" name="Shuttle L Z-Wave" type="0027"/>
   </Manufacturer>
   <Manufacturer id="0084" name="FortrezZ">
-    <Product id="0210" name="WWA-01AA - Wireless Water and Freeze Alarm" type="0013"/>
+    <Product config="fortrezz/wwa-01aa.xml" id="0210" name="WWA-01AA - Wireless Water and Freeze Alarm" type="0013"/>
     <Product config="fortrezz/wwa02.xml" id="010a" name="WWA-02 Water and Temperature Alarm" type="0021"/>
     <Product config="fortrezz/wwa02.xml" id="0109" name="WWA-02 Water and Temperature Alarm" type="0023"/>
     <Product id="0216" name="WWA-01AA Wireless Water and Freeze Alarm" type="0053"/>
