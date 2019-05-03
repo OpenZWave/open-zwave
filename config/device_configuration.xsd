@@ -137,7 +137,46 @@
      </xs:restriction>
     </xs:simpleType>
    </xs:attribute>
-
+   <xs:attribute name='ForceUniqueEndpoints' use='optional'>
+    <xs:simpleType>
+     <xs:restriction base='xs:string'>
+      <xs:enumeration value='true'/>
+      <xs:enumeration value='false'/>
+     </xs:restriction>
+    </xs:simpleType>
+   </xs:attribute>
+   <xs:attribute name='IgnoreMCCapReports' use='optional'>
+    <xs:simpleType>
+     <xs:restriction base='xs:string'>
+      <xs:enumeration value='true'/>
+      <xs:enumeration value='false'/>
+     </xs:restriction>
+    </xs:simpleType>
+   </xs:attribute>
+   <xs:attribute name='AltTypeInterpretation' use='optional'>
+    <xs:simpleType>
+     <xs:restriction base='xs:string'>
+      <xs:enumeration value='true'/>
+      <xs:enumeration value='false'/>
+     </xs:restriction>
+    </xs:simpleType>
+   </xs:attribute>
+   <xs:attribute name='ExposeRawUserCodes' use='optional'>
+    <xs:simpleType>
+     <xs:restriction base='xs:string'>
+      <xs:enumeration value='true'/>
+      <xs:enumeration value='false'/>
+     </xs:restriction>
+    </xs:simpleType>
+   </xs:attribute>
+   <xs:attribute name='ClassGetVersionSupported' use='optional'>
+    <xs:simpleType>
+     <xs:restriction base='xs:string'>
+      <xs:enumeration value='true'/>
+      <xs:enumeration value='false'/>
+     </xs:restriction>
+    </xs:simpleType>
+   </xs:attribute>
   </xs:sequence>
   </xs:complexType>
  </xs:element>

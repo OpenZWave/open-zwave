@@ -377,7 +377,7 @@
   </Manufacturer>
   <Manufacturer id="0067" name="CyberTAN Technology, Inc."></Manufacturer>
   <Manufacturer id="0030" name="Cytech Technology Pre Ltd.">
-    <Product id="0001" name="Comfort 9000 with UCM/Zwave" type="0001"/>
+    <Product config="comfort/ucm.xml" id="0001" name="Comfort 9000 with UCM/Zwave" type="0001"/>
   </Manufacturer>
   <Manufacturer id="0294" name="D-3 Technology Co. Ltd"></Manufacturer>
   <Manufacturer id="0108" name="D-Link Corporation">
