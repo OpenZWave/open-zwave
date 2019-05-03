@@ -1,0 +1,21 @@
+<Product Revision="1" xmlns="https://github.com/OpenZWave/open-zwave">
+  <MetaData>
+    <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0060:0001:0003</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/everspring/lptdm1u.png</MetaDataItem>
+    <MetaDataItem id="0001" name="ZWProductPage" type="0003">https://products.z-wavealliance.org/products/30/</MetaDataItem>
+    <MetaDataItem id="0001" name="FrequencyName" type="0003">CEPT (Europe)</MetaDataItem>
+    <MetaDataItem name="Name">Dimmer/Lamp module Plug</MetaDataItem>
+    <MetaDataItem name="Description">The LPTDM1U is a plug-in Slave to receive the Command from the Controller or Routing Slave and through Controller or Routing Slave controls the ON/OFF status of the plug-in lighting fixtures, of which power loading cannot exceed 400W.LPTSM1U Plug Through Switch Module 
+This device is a switch plug-in used between a standard 3 pin 13 amp wall outlet and lamps.
+
+Setup and managed by any Z-Wave controller, local operation is possible by pressing the button on the device.
+</MetaDataItem>
+    <MetaDataItem id="0001" name="Identifier" type="0003">LPTDM1U</MetaDataItem>
+    <MetaDataItem name="ProductPage">http://www.mkelectric.com/en-gb/Products/WD/Astral/Interoperable/Pages/LPTSM1UPlugThroughSwitchModule.aspx</MetaDataItem>
+    <MetaDataItem name="ProductSupport">http://www.mkelectric.com/en-gb/ContactUs/Pages/default.aspx</MetaDataItem>
+    <ChangeLog>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="1">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/30/xml</Entry>
+    </ChangeLog>
+  </MetaData>
+  <CommandClass id="112"/>
+</Product>
