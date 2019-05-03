@@ -1,39 +1,20 @@
-<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0118:0611:0202</MetaDataItem>
     <MetaDataItem name="ProductPic">images/wenzhou/tz67.png</MetaDataItem>
-    <MetaDataItem id="0611" name="ZWProductPage" type="0202">https://products.z-wavealliance.org/products/36/</MetaDataItem>
+    <MetaDataItem id="0611" name="ZWProductPage" type="0202">https://products.z-wavealliance.org/products/885/</MetaDataItem>
     <MetaDataItem name="ProductSupport">http://www.tkbhome.com/guestbook.php</MetaDataItem>
-    <MetaDataItem id="0611" name="Identifier" type="0202">TZ67G</MetaDataItem>
+    <MetaDataItem id="0611" name="Identifier" type="0202">TZ67E</MetaDataItem>
     <MetaDataItem id="0611" name="FrequencyName" type="0202">CEPT (Europe)</MetaDataItem>
-    <MetaDataItem name="Name">Z-Wave Plug-in Dimmer</MetaDataItem>
-    <MetaDataItem name="Description">Z67G Z-Wave Plug-in Dimmer Module
-
-FEATURES:
-
+    <MetaDataItem name="Name">UK Dimmer Module</MetaDataItem>
+    <MetaDataItem name="Description">FEATURES:
 • Provides wireless dimming of lights, and ON/OFF control of lights connected to the Plug-In Lamp Module.
 • Plugs directly into wall outlet and provides a switched 230 VAC source. The programming button on the module is also a manual on and off switch.
-• Each Plug-In Lamp Module functions as an automatic repeater to other Z-WAVE Modules to ensure full home coverage.
-
-APPLICATIONS
-
-SAFETY AND SECURITY
-    • ALL ON/ALL OFF - With the Wireless Controller you can turn
-all connected lights on or off with the touch of one button in case
-you come home late or hear noises in the night
-   • Burglar Deterrent - The Wireless Controller can be programmed to randomly turn
-Lamp Modules on or off at selected times through out the house. Lights connected to Lamp Modules simulate the appearance that someone is home.
-   • Child Protection programmed from the Wireless Controller can lock the Lamp Module "OFF" providing extra safety.
-
-COMFORT AND CONVENIENCE
-   • Scenes Plug-In Lamp Modules allow connected lighting to respond to Scene settings. The Wireless Controller can be programmed to preset different light levels, and then with the push of a button select "dinner scene", "watch TV scene", "evening scene", or whatever lighting level combination you choose.
-   • Dimming the lights saves on electric bills.
-   • Plug-In Dimmer Module allows your Wireless Controller to adjust various lights regardless of whether you’re in the kitchen, lying on the couch or on your way out the door.
-   • Grouping activates several, or all Plug-In Lamp Modules (and their connected lights), by the push one of buttons on the Wireless Controller. No more wandering from lamp to lamp when you come home, or you’re on your way to bed.
-   • The Timer on the Wireless Controller lets you set plug-in Lamp Module (and connected lights) to turn on at preset times.</MetaDataItem>
-    <MetaDataItem name="ProductPage">http://www.tkbhome.com/?cn-p-d-83.html</MetaDataItem>
+• Each Plug-In Lamp Module functions as an automatic repeater to other Z-WAVE Modules to ensure full home coverage.</MetaDataItem>
+    <MetaDataItem name="ProductPage">http://www.tkbhome.com/?cn-p-d-148.html</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="3">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/36/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="4">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/885/xml</Entry>
     </ChangeLog>
   </MetaData>
   <!-- http://products.z-wavealliance.org/products/1880 -->
