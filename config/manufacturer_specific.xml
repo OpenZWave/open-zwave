@@ -418,7 +418,7 @@
     <Product config="devolo/mt2651.xml" id="2004" name="Smoke Detector MT2651" type="2004"/>
   </Manufacturer>
   <Manufacturer id="0103" name="Diehl AKO">
-    <Product id="0002" name="Dimmer Actuator" type="0002"/>
+    <Product config="diehlcontrols/766366.xml" id="0002" name="Dimmer Actuator" type="0002"/>
   </Manufacturer>
   <Manufacturer id="0032" name="Digital 5 Inc."></Manufacturer>
   <Manufacturer id="035D" name="Digital Watchdog"></Manufacturer>

@@ -73,21 +73,21 @@
  <xs:element name='Compatibility'>
   <xs:complexType>
 	  <xs:sequence>
-		   <xs:element name="GetSupported" type="xs:string" minOccurs='0' maxOccurs='1'/>
-		   <xs:element name="CreateVars" type="xs:string" minOccurs='0' maxOccurs='1'/>
-		   <xs:element name="RefreshOnWakeup" type="xs:string" minOccurs='0' maxOccurs='1'/>
-		   <xs:element name="IgnoreMapping" type="xs:string"/>
-		   <xs:element name="SetAsReport" type="xs:string"/>
-		   <xs:element name="ColorIndexBug" type="xs:string"/>
-		   <xs:element name="ForceInstances" type="xs:string"/>
-		   <xs:element name="MapRootToEndpoint" type="xs:string"/>
-		   <xs:element name="ForceUniqueEndpoints" type="xs:string"/>
-		   <xs:element name="IgnoreMCCapReports" type="xs:string"/>
-		   <xs:element name="AltTypeInterpretation" type="xs:string"/>
-		   <xs:element name="ExposeRawUserCodes" type="xs:string"/>
-		   <xs:element name="ClassGetVersionSupported" type="xs:string"/>
-		   <xs:element name="ForceUniqueEndpoints" type="xs:string"/>
-		   <xs:element name="ForceUniqueEndpoints" type="xs:string"/>
+		   <xs:element name="GetSupported" type="xs:boolean" minOccurs='0' maxOccurs='1'/>
+		   <xs:element name="CreateVars" type="xs:boolean" minOccurs='0' maxOccurs='1'/>
+		   <xs:element name="RefreshOnWakeup" type="xs:boolean" minOccurs='0' maxOccurs='1'/>
+		   <xs:element name="IgnoreMapping" type="xs:boolean"/>
+		   <xs:element name="SetAsReport" type="xs:boolean"/>
+		   <xs:element name="ColorIndexBug" type="xs:boolean"/>
+		   <xs:element name="ForceInstances" type="xs:boolean"/>
+		   <xs:element name="MapRootToEndpoint" type="xs:boolean"/>
+		   <xs:element name="ForceUniqueEndpoints" type="xs:boolean"/>
+		   <xs:element name="IgnoreMCCapReports" type="xs:boolean"/>
+		   <xs:element name="AltTypeInterpretation" type="xs:boolean"/>
+		   <xs:element name="ExposeRawUserCodes" type="xs:boolean"/>
+		   <xs:element name="ClassGetVersionSupported" type="xs:boolean"/>
+		   <xs:element name="ForceUniqueEndpoints" type="xs:boolean"/>
+		   <xs:element name="ForceUniqueEndpoints" type="xs:boolean"/>
 	  </xs:sequence>
   </xs:complexType>
  </xs:element>
