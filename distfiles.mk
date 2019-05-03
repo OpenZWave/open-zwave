@@ -218,6 +218,7 @@ DISTFILES =	.gitignore \
 	config/everspring/st815.xml \
 	config/everspring/tse03.xml \
 	config/everspringct/hsm02.xml \
+	config/evolve/lfm-20.xml \
 	config/evolve/lrm-as.xml \
 	config/evolve/lsm-15.xml \
 	config/evolve/ltm-5.xml \
@@ -420,7 +421,9 @@ DISTFILES =	.gitignore \
 	config/images/everspring/sp814.png \
 	config/images/everspring/st812.png \
 	config/images/everspring/st814.png \
+	config/images/everspring/st815.png \
 	config/images/everspring/tse03.png \
+	config/images/evolve/lfm-20.png \
 	config/images/evolve/ltm-5.png \
 	config/images/fakro/arz.png \
 	config/images/fakro/zws12.png \
@@ -438,6 +441,7 @@ DISTFILES =	.gitignore \
 	config/images/ge/dimmer_module.png \
 	config/images/ge/receptacle.png \
 	config/images/ge/relay.png \
+	config/images/gr/gr105.png \
 	config/images/greenwave/gs1110-1-gr-1.png \
 	config/images/greenwave/powernode1.png \
 	config/images/greenwave/powernode6.png \
@@ -495,6 +499,7 @@ DISTFILES =	.gitignore \
 	config/images/vision/zd2102.png \
 	config/images/vision/zl7101us.png \
 	config/images/vision/zl7201us.png \
+	config/images/vision/zm1601eu.png \
 	config/images/vision/zp3102.png \
 	config/images/vision/zr1202us.png \
 	config/images/vision/zs610eu.png \
