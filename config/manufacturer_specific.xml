@@ -891,7 +891,7 @@
     <Product config="horstmann/ssr302.xml" id="0002" name="SSR 302 2-zone Thermostat Receiver" type="0003"/>
     <Product config="horstmann/ssr303.xml" id="0005" name="SSR 303 Thermostat Receiver" type="0003"/>
     <Product config="horstmann/scsc17.xml" id="0001" name="SCSC17 Thermostat" type="0004"/>
-    <Product id="0001" name="SES 301 Temperature Sensor" type="000d"/>
+    <Product config="horstmann/ses301.xml" id="0001" name="SES 301 Temperature Sensor" type="000d"/>
     <Product config="horstmann/ses302.xml" id="0002" name="SES 302 Temperature Sensor" type="000d"/>
     <Product config="horstmann/ses303.xml" id="0003" name="SES 303 Temperature and Humidity Sensor" type="000d"/>
     <Product id="0001" name="SWM01 Water Meter Sensor" type="000f"/>
