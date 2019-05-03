@@ -1,31 +1,22 @@
-<Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
-  <!-- Configuration Parameters -->
-  <CommandClass id="112">
-    <Value genre="config" index="1" label="Basic Set Level" max="99" min="0" type="byte" units="" value="99">
-      <Help>
-        The Basic Set Command is sent with value to have the receiving device recognize the value for controlled level, for example, if the Basic Set Command sent to dimmer with value, the dimmer would activate the luminance according to the value
-        0 : Off
-        1 - 99 : On
-      </Help>
-    </Value>
-    <Value genre="config" index="2" label="Amount of delay" max="127" min="0" type="bool" units="second" value="1">
-      <Help>
-        This is applied to determine the delay time setting to send the Basic Set Off command when the manual switch input at NO (open)
-        0 : immediately Off
-        1 - 127 : delay 1 - 127 second to Off
-      </Help>
-    </Value>
-  </CommandClass>
-  <!-- Basic set as report -->
-  <CommandClass id="32">
-    <Compatibility>
-      <SetAsReport>true</SetAsReport>
-    </Compatibility>
-  </CommandClass>
-  <!-- COMMAND_CLASS_ASSOCIATION. Groups -->
-  <CommandClass id="133">
-    <Associations num_groups="1">
-      <Group index="1" label="Reports" max_associations="5"/>
-    </Associations>
-  </CommandClass>
+<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
+  <MetaData>
+    <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0116:0001:0010</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/everspring/hac01.png</MetaDataItem>
+    <MetaDataItem id="0001" name="ZWProductPage" type="0010">https://products.z-wavealliance.org/products/694/</MetaDataItem>
+    <MetaDataItem id="0001" name="FrequencyName" type="0010">CEPT (Europe)</MetaDataItem>
+    <MetaDataItem name="Name">Small Z-Wave In-Wall Remote Module</MetaDataItem>
+    <MetaDataItem name="Description">This in-wall remote module is a transceiver which is a Z-Wave enabled device and is fully compatible with any Z-Wave enabled network. Mini size design let the module can easily put into the wall box and still have enough space to install the traditional wall switch. There are many application for the module , one application is connect the 2 wire of manual switch input to most of the wall switch sell in the market , while the connected wall switch been switched ON or OFF , the module will send the correspond signal to the associated devices like Z-Wave switch module HAN01 or any Z-Wave ON/OFF or dimmer module。Another application is connect this module to any traditional wire sensor which has NC/NO manual switch input output, and this will easily convert those wire sensors into wireless Z-wave sensors. 
+With the external antenna let this module have excellent  communicate RF range, and this will let the module not only send signal to the associated device by itself easily but also act as a good routing node in the z-wave mesh network.
+SM103.HSM02
+
+The Module can be connected to resistive load – 2990 watts for U.K. and Denmark, and 3500 watts for Germany, France and Italy. </MetaDataItem>
+    <MetaDataItem name="ProductPage">http://www.everspring.com/HAC01.aspx</MetaDataItem>
+    <MetaDataItem id="0001" name="Identifier" type="0010">HAC01</MetaDataItem>
+    <MetaDataItem name="ProductSupport">http://www.ctc-chromagic.com/?q=contact</MetaDataItem>
+    <ChangeLog>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="2">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/23/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="3">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/694/xml</Entry>
+    </ChangeLog>
+  </MetaData>
+  <CommandClass id="112"/>
 </Product>

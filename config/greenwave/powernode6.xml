@@ -1,4 +1,21 @@
-<Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="6" xmlns="https://github.com/OpenZWave/open-zwave">
+  <MetaData>
+    <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0099:0004:0003</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/greenwave/powernode6.png</MetaDataItem>
+    <MetaDataItem id="0004" name="ZWProductPage" type="0003">https://products.z-wavealliance.org/products/590/</MetaDataItem>
+    <MetaDataItem name="ProductPage">http://www.greenwavereality.com/solutions/energymgmt/</MetaDataItem>
+    <MetaDataItem id="0004" name="FrequencyName" type="0003">Australia / New Zealand / CEPT (Europe) / CEPT (Europe) / U.S. / Canada / Mexico</MetaDataItem>
+    <MetaDataItem name="Description">The PowerNode 6-Port allows users to connect up to 6 appliances, making them smart, energy conscious and controllable. Our patent-pending DeviceDNA technology instantly recognizes the device upon being plugged into the PowerNode, to facilitate identification of your devices.</MetaDataItem>
+    <MetaDataItem name="Name">Multi socket PowerNode US</MetaDataItem>
+    <MetaDataItem id="0004" name="Identifier" type="0003">MP220-B/NP222-B</MetaDataItem>
+    <ChangeLog>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="3">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/54/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="4">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/56/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="5">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/57/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="6">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/590/xml</Entry>
+    </ChangeLog>
+    <MetaDataItem name="ProductSupport">http://www.greenwavereality.com/about/contact/</MetaDataItem>
+  </MetaData>
   <!-- Configuration -->
   <CommandClass id="112">
     <Value genre="config" index="0" instance="1" label="Power delta" max="100" min="1" type="byte" units="%" value="10">

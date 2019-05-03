@@ -1,4 +1,31 @@
-<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="5" xmlns="https://github.com/OpenZWave/open-zwave">
+  <MetaData>
+    <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0118:0002:0002</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/wenzhou/tsp01.png</MetaDataItem>
+    <MetaDataItem id="0002" name="ZWProductPage" type="0002">https://products.z-wavealliance.org/products/839/</MetaDataItem>
+    <MetaDataItem id="0002" name="Identifier" type="0002">TSM02U</MetaDataItem>
+    <MetaDataItem id="0002" name="FrequencyName" type="0002">CEPT (Europe) / U.S. / Canada / Mexico</MetaDataItem>
+    <MetaDataItem name="Description">PIR, door/window, temperature and illumination, 4 sensors function in one.
+
+ - (1)Door/window (2)PIR (3)illumination and (4)temperature functions in one sensor
+ - Adopt newest Z-wave 400 series chip, support multichannel operation and higher data rate (9.6/40/100kbps)
+ - Higher output power (+2.5dBm output power as compared to -2.5dBm 300 series Z-wave module) to enhance the communication range
+ - 1500mA CR123A lithium battery to guarantee 2 year battery life
+ - Built in light sensor while applied to light control
+ - Adopt Z-Wave protocol to secure the success of wireless two way communication
+ - With Tamper proof protection
+ - Easy install
+ - Low battery indication
+ - Auto report the open/close status and battery status
+ - FCC part15.249 / EN300 220-1/ certification
+ - NCC</MetaDataItem>
+    <MetaDataItem name="Name">TSM02U Multi-Sensor</MetaDataItem>
+    <MetaDataItem name="ProductPage">http://www.tkbhome.com/?cn-p-d-257.html</MetaDataItem>
+    <ChangeLog>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="4">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/838/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="5">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/839/xml</Entry>
+    </ChangeLog>
+  </MetaData>
   <!-- Wenzhou TKB Control System: TSP01 Z-Wave 3 in 1 PIR Motion sensor -->
 
 	<!-- Configuration Parameters -->

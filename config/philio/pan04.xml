@@ -1,5 +1,31 @@
-<!-- Philio: PAN04-1 Double Relay Switch 2x1.5kW with Power Measurement -->
-<Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
+<!-- Philio: PAN04-1 Double Relay Switch 2x1.5kW with Power Measurement --><Product Revision="6" xmlns="https://github.com/OpenZWave/open-zwave">
+  <MetaData>
+    <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/013C:0003:0001</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/philio/pan04.png</MetaDataItem>
+    <MetaDataItem id="0003" name="ZWProductPage" type="0001">https://products.z-wavealliance.org/products/851/</MetaDataItem>
+    <MetaDataItem id="0003" name="Identifier" type="0001">PAN04-2</MetaDataItem>
+    <MetaDataItem name="ProductPage">http://philio-tech.com/</MetaDataItem>
+    <MetaDataItem id="0003" name="FrequencyName" type="0001">CEPT (Europe) / U.S. / Canada / Mexico</MetaDataItem>
+    <MetaDataItem name="Description">Features:
+- World first two relay Z-wave 400 series module in a very slim case.
+- Input voltage AC100~240V / DC24~60V.
+- Adopt Z-Wave protocol to secure the success of wireless two way communication.
+- Slim design, easy install.
+- Adopt newest Z-wave 400series chip, support multichannel operation and higher data rate (9.6/40/100kbps).
+- Resistive load 1500W X 2.
+- Two dry contact relay.
+- Z-Wave V6.02
+- Very low electricity consumption, meet Europe year 2012 energy-related products requirement directive 2009/125/EC no. 1275/2008.
+- LVD:EN 60669-2-1:2004+A1:2009+A12:2010,
+- EN 60669-2-2 :2006
+- EN 60669-1:1999+A1:2002+A2:2008+IS1:2009
+- R&amp;TTE: EN 301489, EN 300200,</MetaDataItem>
+    <MetaDataItem name="Name">In-Wall Switch Module w. Metering</MetaDataItem>
+    <ChangeLog>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="5">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/820/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="6">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/851/xml</Entry>
+    </ChangeLog>
+  </MetaData>
   <!-- Configuration Parameters -->
   <CommandClass id="112">
     <Value genre="config" index="1" instance="1" label="Watt meter report period" max="32000" min="1" type="short" value="720">

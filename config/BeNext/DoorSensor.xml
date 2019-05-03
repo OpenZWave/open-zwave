@@ -1,5 +1,39 @@
-<!--http://www.benext.eu/static/manual/doorsensor.pdf-->
-<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
+<!--http://www.benext.eu/static/manual/doorsensor.pdf--><Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
+  <MetaData>
+    <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/008A:0100:0004</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/BeNext/DoorSensor.png</MetaDataItem>
+    <MetaDataItem id="0100" name="ZWProductPage" type="0004">https://products.z-wavealliance.org/products/75/</MetaDataItem>
+    <MetaDataItem name="Description">A 2-in-1 product The primary function of the Door Sensor is detecting the status of a door or window. Due to it’s build in thermometer you can also measure temperature on that location. Use the Door Sensor for; - Security - Comfort -Lighting - Automation and Saving money.
+- Temperature sensor inside
+- External contact for additional sensor or doorbell-push button
+
+Use The Door Sensor for securing and/or enlarging luxury and automation in your home or office. Receive notifications when unwanted activities are being triggered and keep your room temperature on level due to the build-in thermometer. Make up your own rules in the free of charge online manager so that your preferences are automated when simply opening your front door.
+The primary function of the Door Sensor is detecting the status of a door or window. In combination with our Alarm Sound you can configure rules that enable an alarm when doors or windows are opened unwanted. Broaden functionalities by making your own rules. Make it happen that when you leave your bedroom, any preferred devices and custom scenes switch on and off, depending on the time of day.
+
+- Long battery operation time - Temperature sensor - Extra external contact - Good priced
+
+The dimensions are 3,3 x 5,8 x 1,8cm (LxBxH). The color of the product is traffic White, RAL 9016. Electrical specs can be found on http://www.benext.eu/en/products/door-sensor/
+• Measure the open and/or closed status of doors and windows in your office or home
+• Measure temperature
+• Set up a basic security system by simply adding more sensors
+• Receive notifications on your phone and email when there is registered activity
+• Make up a variety of rules to add functionality to your home
+• Use for security and adding luxury to your office or home
+• Save on your energy bills by reducing unwanted usage of heating
+• Product dimensions: Door Sensor = 58 x 33 x 17 millimeter. Magnet = 58 x 11 x 17 millimeter (L x W x H)
+• Normal operating voltage: 2x AAA 1,5V batteries. From 2,3 to 4,0Vdc. Do not use rechargeable batteries
+• Battery lifetime: approximately 5 years by normal usage. Approximately 3~4 years by long networks and heavily usage
+• Absolute maximum temperature: -15°C to +85°C
+</MetaDataItem>
+    <MetaDataItem name="ProductPage">www.benext.eu/en/products/door-sensor</MetaDataItem>
+    <MetaDataItem name="ProductSupport">Info@Benext.eu</MetaDataItem>
+    <MetaDataItem name="Name">Door Sensor</MetaDataItem>
+    <MetaDataItem id="0100" name="FrequencyName" type="0004">CEPT (Europe)</MetaDataItem>
+    <MetaDataItem id="0100" name="Identifier" type="0004">BeNeXt / Door Sensor</MetaDataItem>
+    <ChangeLog>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="4">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/75/xml</Entry>
+    </ChangeLog>
+  </MetaData>
   <!-- Configuration -->
   <CommandClass id="112">
     <Value genre="config" index="1" instance="1" label="Set to Default" type="byte" value="-1">

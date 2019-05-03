@@ -1,5 +1,20 @@
-<!-- Aeon Labs Door/Window Sensor -->
-<Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
+<!-- Aeon Labs Door/Window Sensor --><Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
+  <MetaData>
+    <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0086:0004:0002</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/aeotec/dsb04100.png</MetaDataItem>
+    <MetaDataItem id="0004" name="ZWProductPage" type="0002">https://products.z-wavealliance.org/products/114/</MetaDataItem>
+    <MetaDataItem name="Description">The Aeon Labs Door/Window Sensor is a battery-powered Z-Wave magnetic door/window sensor with an extremely small form factor. The D/W sensor will send radio signals up to 6 associated Z-Wave devices within its own Z-Wave network when the main unit separates from the smaller unit.
+
+Bidirectional mounting plate and push button allows for easy end-user installation. The Aeon Labs Door/Window Sensor also has tamper prevention capabilities and low-battery alerts.</MetaDataItem>
+    <MetaDataItem id="0004" name="FrequencyName" type="0002">U.S. / Canada / Mexico</MetaDataItem>
+    <MetaDataItem name="ProductSupport">http://www.aeon-labs.com/site/support/</MetaDataItem>
+    <MetaDataItem id="0004" name="Identifier" type="0002">DSB04100-ZWUS</MetaDataItem>
+    <MetaDataItem name="Name">Aeon Labs Door/Window Sensor</MetaDataItem>
+    <MetaDataItem name="ProductPage">http://www.aeon-labs.com/site/products/view/1/</MetaDataItem>
+    <ChangeLog>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="3">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/114/xml</Entry>
+    </ChangeLog>
+  </MetaData>
   <!-- 
 Aeotec Door/Window Sensor 
 https://aeotec.freshdesk.com/helpdesk/attachments/6009584514

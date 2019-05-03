@@ -1,4 +1,19 @@
-<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
+  <MetaData>
+    <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/5254:8031:0200</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/remotec/zts-110.png</MetaDataItem>
+    <MetaDataItem id="8031" name="ZWProductPage" type="0200">https://products.z-wavealliance.org/products/679/</MetaDataItem>
+    <MetaDataItem id="8031" name="Identifier" type="0200">BW8031US </MetaDataItem>
+    <MetaDataItem name="Name">ZTS-110US Thermostat</MetaDataItem>
+    <MetaDataItem id="8031" name="FrequencyName" type="0200">U.S. / Canada / Mexico</MetaDataItem>
+    <MetaDataItem name="ProductSupport">http://www.remotec.com.hk/photos/software/Z-wave/ZTS-100_User_Manual_V10_20120615.pdf</MetaDataItem>
+    <MetaDataItem name="Description">The ZTS-100 Z-Thermostat is a comfort control master that allows to control your room temperature with programmable time schedule WAKE, AWAY, HOME and SLEEP event which can maximize energy conservation and comfort while minimizing the effort required to maintain the appropriate temperature in your home whether you are at home or away. 
+
+Also, it can be utilized to control / check your room temperature by the smart phone or PC while you are at office, home anywhere or around the world which can go through the Z-Wave gateway control. </MetaDataItem>
+    <ChangeLog>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="4">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/679/xml</Entry>
+    </ChangeLog>
+  </MetaData>
   <!-- This thermostat's setpoint descriptions are 0 based, not 1 -->
   <CommandClass id="67">
     <Compatibility>

@@ -2597,7 +2597,15 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		 * \param _metadata the MetadataFields you are requesting.
 		 * \return a string containing the requested metadata
 		 */
-		string GetMetaData( uint32 const _homeId, uint8 const _nodeId, Node::MetaDataFields _metadata );
+		string const GetMetaData( uint32 const _homeId, uint8 const _nodeId, Node::MetaDataFields _metadata );
+		/**
+		 * \brief Retrieve ChangeLogs about a configuration revision
+		 * \param _homeId The Home ID of the driver for the node
+		 * \param _nodeId The node number
+		 * \param revision the revision you are requesting
+		 * \return a Node::ChangeLogEntry struct with the ChangeLog Details. if the revision paramater is -1, then then revision passed to this function is invalid
+		 */
+		Node::ChangeLogEntry const GetChangeLog( uint32 const _homeId, uint8 const _nodeId, uint32_t revision);
 
 	/*@}*/
 		//-----------------------------------------------------------------------------

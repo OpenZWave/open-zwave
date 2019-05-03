@@ -1,4 +1,17 @@
-<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
+  <MetaData>
+    <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/5254:531F:0000</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/remotec/zurc.png</MetaDataItem>
+    <MetaDataItem id="531F" name="ZWProductPage" type="0000">https://products.z-wavealliance.org/products/174/</MetaDataItem>
+    <MetaDataItem name="Name">Z-Wave enabled universal remote control</MetaDataItem>
+    <MetaDataItem id="531F" name="Identifier" type="0000">Z-URC500US</MetaDataItem>
+    <MetaDataItem name="Description">The Z-URC™ product line is Remotec’s answer to the increasing demand for RF solutions. By combining our traditional high-quality IR universal remote control expertise with Z-Wave® (RF) technology, we have succeeded in producing home automation remote controls that truly fulfill the role of “One Home, One Remote.” Z-URC’s dual IR/RF capabilities allow you to control virtually any electronic device in your household. Whether it is for simple home electronics, outdoor lighting or that high end home entertainment system, the Z-URC family of solutions can solve your needs. With the Z-URC, you can enjoy the culmination of 20+ years of universal remote control experience.</MetaDataItem>
+    <MetaDataItem name="ProductPage">http://www.remotec.com.hk/zaspx/product_content.aspx?aboutno=9&amp;subaboutno=22&amp;main=f</MetaDataItem>
+    <MetaDataItem id="531F" name="FrequencyName" type="0000">U.S. / Canada / Mexico</MetaDataItem>
+    <ChangeLog>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="4">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/174/xml</Entry>
+    </ChangeLog>
+  </MetaData>
   <!-- Association Groups -->
   <CommandClass id="133">
     <Associations num_groups="16">

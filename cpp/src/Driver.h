@@ -937,7 +937,9 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 	//-----------------------------------------------------------------------------
 
 	public:
-		string GetMetaData(	uint8 const _nodeId, Node::MetaDataFields _metadata );
+		string const GetMetaData(	uint8 const _nodeId, Node::MetaDataFields _metadata );
+		Node::ChangeLogEntry const GetChangeLog( uint8 const _nodeId, uint32_t revision);
+
 
 	//-----------------------------------------------------------------------------
 	//	ManufacturerSpecificDB Related
