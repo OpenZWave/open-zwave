@@ -789,7 +789,7 @@
     <Product id="0003" name="ZSE02 Motion Sensor" type="0500"/>
   </Manufacturer>
   <Manufacturer id="0099" name="GreenWave Reality Inc">
-    <Product id="0002" name="One Gateway" type="0001"/>
+    <Product config="greenwave/gs1110-1-gr-1.xml" id="0002" name="One Gateway" type="0001"/>
     <Product config="greenwave/powernode1.xml" id="0002" name="PowerNode 1 port" type="0002"/>
     <Product config="greenwave/powernode6.xml" id="0004" name="PowerNode 6 port" type="0003"/>
   </Manufacturer>
