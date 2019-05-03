@@ -702,7 +702,7 @@
   <Manufacturer id="0037" name="Foard Systems"></Manufacturer>
   <Manufacturer id="018F" name="Focal Point Limited"></Manufacturer>
   <Manufacturer id="0137" name="FollowGood Technology Company">
-    <Product id="0002" name="SWZ-1002 Binary Power Switch" type="3001"/>
+    <Product config="followgood/swz-1002.xml" id="0002" name="SWZ-1002 Binary Power Switch" type="3001"/>
   </Manufacturer>
   <Manufacturer id="0207" name="Forest Group Nederland B.V">
     <Product config="forest/fs2z5232000002.xml" id="0100" name="Shuttle L Z-Wave" type="0027"/>
