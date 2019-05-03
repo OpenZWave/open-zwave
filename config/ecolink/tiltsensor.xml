@@ -1,7 +1,18 @@
 <!--
 Ecolink Z-Wave Sensor Z-Wave
--->
-<Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
+--><Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
+  <MetaData>
+    <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/014A:0003:0001</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/ecolink/tiltsensor.png</MetaDataItem>
+    <MetaDataItem id="0003" name="ZWProductPage" type="0001">https://products.z-wavealliance.org/products/816/</MetaDataItem>
+    <MetaDataItem id="0003" name="Identifier" type="0001">TILTZWAVE1</MetaDataItem>
+    <MetaDataItem name="Name">Ecolink Tilt Sensor</MetaDataItem>
+    <MetaDataItem id="0003" name="FrequencyName" type="0001">U.S. / Canada / Mexico</MetaDataItem>
+    <MetaDataItem name="Description">This sensor determines the state (open or closed) of a door (typically a garage door) using a roller ball switch. The open/closed status is communicated to a Z-Wave Gateway/Controller</MetaDataItem>
+    <ChangeLog>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="3">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/816/xml</Entry>
+    </ChangeLog>
+  </MetaData>
   <!-- Basic set as report-->
   <CommandClass id="32">
     <Compatibility>
