@@ -1,0 +1,31 @@
+<Product Revision="1" xmlns="https://github.com/OpenZWave/open-zwave">
+  <MetaData>
+    <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0001:3030:5250</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/act/zrp100.png</MetaDataItem>
+    <MetaDataItem id="3030" name="ZWProductPage" type="5250">https://products.z-wavealliance.org/products/152/</MetaDataItem>
+    <MetaDataItem name="ProductPage">http://www.act-solutions.com/HomePro-Product-Matrix.html#Euro</MetaDataItem>
+    <MetaDataItem name="Name">ZRP100 - Z-Wave Plug-In Appliance Module</MetaDataItem>
+    <MetaDataItem name="Description">- Provides wireless ON/OFF control of lamps and appliances
+
+- Plugs directly into wall outlet and provides a switched 120 VAC source.
+
+- Includes pass through plug.
+
+- Supports load sensing so load is automatically turned on if the attached light is turned on manually. (load should be at least 25 watts for this feature to work)
+
+- Supports Z-Wave 40Kbps speeds
+
+- Resistive Loads: 15 amps (1800 watts) maximum, 120 VAC
+
+- Each Plug-In Lamp Module functions as automatic repeater to other HomePro Modules to ensure full home coverage.
+
+- Signal (Frequency): 908.42 MHz</MetaDataItem>
+    <MetaDataItem id="3030" name="Identifier" type="5250">ZRP100 </MetaDataItem>
+    <MetaDataItem name="ProductSupport">http://www.act-solutions.com/Contact-Advanced-Control-Technologies.html</MetaDataItem>
+    <MetaDataItem id="3030" name="FrequencyName" type="5250">U.S. / Canada / Mexico</MetaDataItem>
+    <ChangeLog>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="1">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/152/xml</Entry>
+    </ChangeLog>
+  </MetaData>
+  <CommandClass id="112"/>
+</Product>
