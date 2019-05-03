@@ -1,15 +1,23 @@
-<Product Revision="5" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="6" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0060:0002:0001</MetaDataItem>
     <MetaDataItem name="ProductPic">images/everspring/sp814.png</MetaDataItem>
-    <MetaDataItem id="0002" name="ZWProductPage" type="0001">https://products.z-wavealliance.org/products/1/</MetaDataItem>
-    <MetaDataItem id="0002" name="FrequencyName" type="0001">U.S. / Canada / Mexico</MetaDataItem>
-    <MetaDataItem name="Name">Everspring PIR Sensor SP814</MetaDataItem>
-    <MetaDataItem name="Description">Z-Wave Motion Detector</MetaDataItem>
-    <MetaDataItem id="0002" name="Identifier" type="0001">SP814-US</MetaDataItem>
+    <MetaDataItem id="0002" name="ZWProductPage" type="0001">https://products.z-wavealliance.org/products/216/</MetaDataItem>
+    <MetaDataItem id="0002" name="FrequencyName" type="0001">U.S. / Canada / Mexico / CEPT (Europe)</MetaDataItem>
+    <MetaDataItem name="Name">PIR Sensor</MetaDataItem>
+    <MetaDataItem name="Description">The Motion Detector is designed with two detecting sensors, Passive Infra-Red (PIR) sensor and light sensor, to detect movement within a protected area, operating at 868.42 , 908.42, and 921.42 MHz. 
+
+The detector can be used as a security device or home automation device.  When the detector is cooperated with security appliances, the detector is acting as a security device by detecting changes in infra-red radiation levels. If a person moves within or across the devices field of vision, a trigger radio signal will be transmitted to cause full alarm condition in order to frighten intruders away. Alternatively, when the detector is worked with Z-Wave Controller , the detector can be set to perform the role of home automation device by detecting both changes in infra-red radiation levels and percentage of lux levels.  Once night falls, the percentage of ambient illumination is lower than preset value. If a person moves within or across the devices field of vision, a trigger radio signal will be transmitted so as to turn connected lightings for better illumination.
+
+Two mounting methods are provided for varying detection range.  The detector can be mounted on a wall for farther detecting distance but narrower coverage; while for ceiling mounting, shorter detecting distance can be made but desired coverage can be expected at user’s disposal.
+</MetaDataItem>
+    <MetaDataItem id="0002" name="Identifier" type="0001">SP814</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="5">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="6">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/216/xml</Entry>
     </ChangeLog>
+    <MetaDataItem name="ProductPage">http://www.everspring.com/SP814.aspx</MetaDataItem>
+    <MetaDataItem name="ProductSupport">http://www.everspring.com/SP814.aspx</MetaDataItem>
   </MetaData>
   <!-- Configuration Parameters -->
   <CommandClass id="112">
