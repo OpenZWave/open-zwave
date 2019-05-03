@@ -976,7 +976,7 @@
   <Manufacturer id="0123" name="IWATSU">
     <Product id="0000" name="TM-H2VHD081 HA Dongle" type="0000"/>
     <Product config="iwatsu/ne-4ct-2p.xml" id="0102" name="NE-4CT-2P Electric Power Measuring Equipment" type="0102"/>
-    <Product id="0103" name="NE-4CT Electric Power Measuring Equipment" type="0103"/>
+    <Product config="iwatsu/ne-4ct.xml" id="0103" name="NE-4CT Electric Power Measuring Equipment" type="0103"/>
   </Manufacturer>
   <Manufacturer id="0063" name="Jasco Products"></Manufacturer>
   <Manufacturer id="015A" name="Jin Tao Bao"></Manufacturer>
