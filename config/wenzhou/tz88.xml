@@ -1,17 +1,29 @@
-<Product Revision="5" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="6" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0118:0001:0001</MetaDataItem>
     <MetaDataItem name="ProductPic">images/wenzhou/tz88.png</MetaDataItem>
-    <MetaDataItem id="0001" name="ZWProductPage" type="0001">https://products.z-wavealliance.org/products/787/</MetaDataItem>
+    <MetaDataItem id="0001" name="ZWProductPage" type="0001">https://products.z-wavealliance.org/products/883/</MetaDataItem>
     <MetaDataItem name="ProductPage">http://www.tkbhome.com/?cn-p-d-259.html</MetaDataItem>
-    <MetaDataItem name="Description">Smart Energy Plug In Switch for UK</MetaDataItem>
-    <MetaDataItem name="Name">TZ88E Smart Energy Plug In Switch for UK</MetaDataItem>
-    <MetaDataItem id="0001" name="Identifier" type="0001">TZ88E</MetaDataItem>
-    <MetaDataItem id="0001" name="FrequencyName" type="0001">CEPT (Europe)</MetaDataItem>
+    <MetaDataItem name="Description">Features
+- Adopt Z-Wave protocol to secure the success of wireless two way communication
+- Higher RF output power (+2.5dBm output power as compared to -2.5dBm 300 series Z-wave module) to enhance the communication range
+- Easy install
+- Very low electricity consumption, meet Europe year 2012 energy-related products requirement directive 2009/125/EC no. 1275/2008
+- Resistive load 3000W, 1500W for incandescent load or 320W for fluorescent load
+- Overload protection
+- Voltage, Current, Power factor, Instant power Wattage and Accumulated power consumption KWh report
+- Z-Wave V6.02
+- Z-Wave Certificated
+- LVD: EN 61058
+- R&amp;TTE : EN 301489, EN 300200,</MetaDataItem>
+    <MetaDataItem name="Name">Smart Energy Plug In Switch</MetaDataItem>
+    <MetaDataItem id="0001" name="Identifier" type="0001">TZ88U</MetaDataItem>
+    <MetaDataItem id="0001" name="FrequencyName" type="0001">CEPT (Europe) / U.S. / Canada / Mexico</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="3">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/785/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="4">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/786/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="5">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/787/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="6">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/883/xml</Entry>
     </ChangeLog>
   </MetaData>
   <!-- http://products.z-wavealliance.org/products/786 -->
