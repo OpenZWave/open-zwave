@@ -1,4 +1,19 @@
-<Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
+  <MetaData>
+    <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0060:0001:000B</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/everspring/st812.png</MetaDataItem>
+    <MetaDataItem id="0001" name="ZWProductPage" type="000B">https://products.z-wavealliance.org/products/217/</MetaDataItem>
+    <MetaDataItem name="Description">The Flood Detector consists of a transceiver, flood sensor and 3-meter flood sensor cable. Protect your property from water damage! The Flood Detector is designed to sense the presence of water in basements, yachts and many others residential and commercial applications, providing early warning of developing floods. The Flood Detector is designed so that the transceiver is mounted on the wall and the flood sensor is placed in a location where water presence, such as a result of leakage or flooding, is probable. Upon flood detection, the Detector will beep and flash and report its status to the node ID. Once water is released, it will report to the node ID as well. 
+
+The Flood Detector is powered by 3 x AA 1.5V alkaline battery. When battery level drops below unacceptable level, the Detector flashes red LED once every 30 seconds and reports low battery status to the node ID. When this occurs, the batteries should be replaced as soon as possible. </MetaDataItem>
+    <MetaDataItem id="0001" name="Identifier" type="000B">ST812</MetaDataItem>
+    <MetaDataItem name="Name">Flood Sensor</MetaDataItem>
+    <MetaDataItem id="0001" name="FrequencyName" type="000B">CEPT (Europe)</MetaDataItem>
+    <MetaDataItem name="ProductPage">http://www.everspring.com/ST812.aspx</MetaDataItem>
+    <ChangeLog>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="3">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/217/xml</Entry>
+    </ChangeLog>
+  </MetaData>
   <!-- Configuration Parameters -->
   <CommandClass id="112">
     <Value genre="config" index="1" label="Basic Set Level" max="99" min="0" type="byte" units="%" value="99">
