@@ -1,48 +1,50 @@
-<Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="5" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0095:0001:3103</MetaDataItem>
     <MetaDataItem name="ProductPic">images/qees/reto-plugin-switch.png</MetaDataItem>
-    <MetaDataItem id="0001" name="ZWProductPage" type="3103">https://products.z-wavealliance.org/products/597/</MetaDataItem>
-    <MetaDataItem name="Description">QEES RETO Plug-in Dimmer Plus brings along comfort and elegance with an extremely easy setup and a unique design. With its help you can now wirelessly control all the dimmable loads you have inside your home.
+    <MetaDataItem id="0001" name="ZWProductPage" type="3103">https://products.z-wavealliance.org/products/613/</MetaDataItem>
+    <MetaDataItem name="Description">Software Updateable Binary Switch with Power MeterQEES RETO Plug-in Switch Plus brings along comfort and elegance with an extremely easy setup and a unique design. With its help you can now wirelessly turn on/off most of the electrical equipment inside your home.
 
 
-QEES RETO Plug-in Dimmer Plus is a Z-Wave-controlled 400W universal dimmer (EU frequency) with schuko plug-in socket outlet, built-in power meter, multi-color LED feedback and one programmable group for retrofit installation.
+QEES RETO Plug-in Switch Plus is a Z-Wave-controlled plug-in socket outlet (EU frequency) with built-in power meter, multi-color LED feedback and one programmable relay for retrofit installation
 
 
-QEES RETO Plug-in Dimmer Plus’s software can be upgraded “over the air”, allowing the device to receive additional features or bug fixes through firmware updates and software apps.This is a unique feature of all QEES products and it facilitates a future-proof, contemporary and flexible infrastructure solution for the building.
+QEES RETO Plug-in Switch Plus’s software can be upgraded “over the air”, allowing the device to receive additional features or bug fixes through firmware updates and software apps. This is a unique feature of all QEES products and it facilitates a future-proof contemporary and flexible infrastructure solution for the building.
 
 
-QEES RETO Plug-in Dimmer Plus is compatible with all Z-Wave certified devices from other manufacturers. It also acts as a repeater inside your Z-Wave network increasing the range for your remote control.
+QEES RETO Plug-in Switch Plus is compatible with all Z-Wave certified devices from other manufacturers. It also acts as a repeater inside your Z-Wave network increasing the range for your remote control.
 
 
-Like all QEES products, QEES RETO Plug-in Dimmer Plus has a self-calibrating built-in power meter and can switch off the device that otherwise would consume power when not needed.
+Like all QEES products, QEES RETO Plug-in Switch Plus has a self-calibrating built-in power meter and can switch off the devices that otherwise would consume power when not needed.
 
  
 
 Z-Wave-controlled
 Built-in power meter
-Up to 400W UNI
+Up to 13A – 3.12 KW
 100-240V, 50/60Hz
 Top cover can be operated as a local switch
 For indoor use only - IP 20
- 
-
- 
-
 1 programmable group
 LED action feedback (multi-color RGB)
 Self-protection feature
 Upgradeable device software
 White; other colors on request
-Operating Temperature: -20 Celsius up to 50 Celsius</MetaDataItem>
+Operating Temperature: -20 Celsius up to +50 Celsius
+ 
+
+ 
+
+Product Number:313-AFW-A1</MetaDataItem>
     <MetaDataItem name="ProductSupport">http://www.qees.eu/support</MetaDataItem>
-    <MetaDataItem id="0001" name="FrequencyName" type="3103">U.S. / Canada / Mexico</MetaDataItem>
-    <MetaDataItem name="Name">QEES Plug-in socket Dimmer US</MetaDataItem>
-    <MetaDataItem name="ProductPage">http://www.qees.eu/products/plus-retrofit-series/plugin-in-socket-outlets/plugin-in-socket-switch-schuko/product/45/103/Plus-Retrofit-Series/Plus-RET</MetaDataItem>
-    <MetaDataItem id="0001" name="Identifier" type="3103">RETO_1202</MetaDataItem>
+    <MetaDataItem id="0001" name="FrequencyName" type="3103">U.S. / Canada / Mexico / CEPT (Europe)</MetaDataItem>
+    <MetaDataItem name="Name">QEES P313A Plug-in Socket Relay</MetaDataItem>
+    <MetaDataItem name="ProductPage">http://www.qees.eu/products/plus-retrofit-series/plugin-in-socket-outlets/plugin-in-socket-switch-schuko/product/45/103/Plus-Retrofit-Series/Plus-RETO-Plug-in/qees-reto-plug-in-switch-plus-schuko</MetaDataItem>
+    <MetaDataItem id="0001" name="Identifier" type="3103">313-A(KFBGLW)(WB)-A1</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="3">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/596/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="4">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/597/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="5">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/613/xml</Entry>
     </ChangeLog>
   </MetaData>
   <!-- COMMAND_CLASS_SWITCH_MULTILEVEL. This class is in the list reported by the device, but it does not respond to requests -->
