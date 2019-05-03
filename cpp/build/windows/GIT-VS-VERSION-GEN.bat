@@ -13,7 +13,7 @@ SET VERSION_FILE=GIT-VS-VERSION-FILE
 
 :: DEFAULT_VERSION - Version string to be processed when neither Git nor a
 ::                packed version file is available.
-SET DEFAULT_VERSION=v1.5.0-NoGit
+SET DEFAULT_VERSION=v1.6.0-NoGit
 
 :: COUNT_PATCHES_FROM - Determines which tag to count the number of patches from
 ::                for the final portion of the digital version number.
