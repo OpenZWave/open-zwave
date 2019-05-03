@@ -1125,7 +1125,7 @@
     <Product id="0001" name="Plug-in Appliance Module" type="8001"/>
     <Product id="0001" name="Plug-in Dimmer Module" type="8002"/>
     <Product config="merten/507801.xml" id="0001" name="Plug-in Roller Shutter Module" type="8003"/>
-    <Product id="0001" name="Wall Dimmer Module" type="4003"/>
+    <Product config="merten/5046xx.xml" id="0001" name="Wall Dimmer Module" type="4003"/>
     <Product config="merten/5044xx.xml" id="0001" name="Wall Appliance Module" type="4002"/>
     <Product config="merten/50x5xx.xml" id="0001" name="Wall Roller Shutter Module" type="4004"/>
     <Product id="8001" name="Receiver Flush-Mounted 1-Gang Switch" type="8001"/>
