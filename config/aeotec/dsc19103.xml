@@ -1,17 +1,18 @@
-<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0086:0013:0003</MetaDataItem>
     <MetaDataItem name="ProductPic">images/aeotec/dsc19103.png</MetaDataItem>
-    <MetaDataItem id="0013" name="ZWProductPage" type="0003">https://products.z-wavealliance.org/products/707/</MetaDataItem>
+    <MetaDataItem id="0013" name="ZWProductPage" type="0003">https://products.z-wavealliance.org/products/766/</MetaDataItem>
     <MetaDataItem name="Name">Micro Smart Energy Illuminator G2</MetaDataItem>
-    <MetaDataItem id="0013" name="FrequencyName" type="0003">U.S. / Canada / Mexico</MetaDataItem>
-    <MetaDataItem name="Description">It has long been thought that a house becomes a home when we make it reflect who we are, when we personalise it, when we fill it with objects we treasure. And all of that remains true, but it no longer needs to be just the objects we put in our home that personalises it. Like the music that gently fills the background of your favourite restaurant, Aeotec’s Micro Switches create the perfect ambiance for your home, and then some. They also give you the perfect control and the perfect, intelligent automation.
+    <MetaDataItem id="0013" name="FrequencyName" type="0003">U.S. / Canada / Mexico / CEPT (Europe)</MetaDataItem>
+    <MetaDataItem name="Description">With so many new-generation, energy-saving lights now available for your home, dimming lights isn’t as straightforward as it used to be. There’s no one type of light any more. Aeotec’s plug-in Smart Energy Illuminator is, however, compatible with as many dimmable lights as possible. 
 
-Across three different Micro controllers, each one letting you perfect everything from your home’s lights to its appliances and to its motorised doors and curtains, you’ll find that the same magic has been built right into the tiny body of each switch.</MetaDataItem>
-    <MetaDataItem id="0013" name="Identifier" type="0003">DSC19103-ZWUS</MetaDataItem>
+Our Smart Energy Illuminator has been designed to work out of the box with halogen lamp, sodium and tungsten lights. It’s also capable of being plugged in to other types of lights that work by reducing the amount of electricity being passed to their transformer. This includes select LED lights.</MetaDataItem>
+    <MetaDataItem id="0013" name="Identifier" type="0003">DSC19103-ZWEU</MetaDataItem>
     <MetaDataItem name="ProductPage">http://aeotec.com/z-wave-in-wall-switches</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="3">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/707/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="4">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/766/xml</Entry>
     </ChangeLog>
   </MetaData>
   <!-- 
