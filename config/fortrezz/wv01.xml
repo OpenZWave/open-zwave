@@ -1,17 +1,24 @@
-<!-- FortrezZ WV-01 Automated Water Shut-Off Valve --><Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
+<!-- FortrezZ WV-01 Automated Water Shut-Off Valve --><Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0084:020C:0213</MetaDataItem>
     <MetaDataItem name="ProductPic">images/fortrezz/wv01.png</MetaDataItem>
     <MetaDataItem id="020C" name="ZWProductPage" type="0213">https://products.z-wavealliance.org/products/178/</MetaDataItem>
     <MetaDataItem id="020C" name="Identifier" type="0213">WV-01_1002</MetaDataItem>
-    <MetaDataItem name="Description">WV-01 is a new professional grade, electrically operated wireless water valve introduced by FortrezZ, LLC.  Used in a wireless Z-Wave home automation network in conjunction with any Z-Wave water alarm sensor (ex. WWA-0X), the WV-01 can reduce or eliminate damages caused by leaky plumbing or appliances.  Every year nearly over 1 million families have their homes ruined and their lives overturned by water damage and the subsequent repairs.  These incidents are always unexpected and the cost of repairs can run into the tens of thousands of dollars. This Patented wireless water detection and automatic water shutoff system can easily be installed on any home's water supply line by a professional, certified plumber.  </MetaDataItem>
-    <MetaDataItem name="Name">Wireless, Z-Wave Emergency Water Shut-off Valve</MetaDataItem>
+    <MetaDataItem name="Description">WV01 is a professional grade, electrically-operated water shutoff valve. It is Z-Wave Wireless compatible and introduced by FortrezZ LLC. Water shut-off system works as an automatic valve for a home's main water supply line and can be easily installed by a certified professional plumber. WV01 can work as a Water Level / Irrigation device. It can be set up to be on a 'timed' schedule using a smart controller inside a Z-Wave home automation network. 
+
+WV01 uses a motorized ball valve in multiple sizes, 1/2", 3/4", 1" and 1 1/4", used to automatically turn off the main water supply when unwanted water is detected due to a leak or overflow.
+</MetaDataItem>
+    <MetaDataItem name="Name">Wireless Z-Wave Water Valve</MetaDataItem>
     <MetaDataItem id="020C" name="FrequencyName" type="0213">U.S. / Canada / Mexico</MetaDataItem>
-    <MetaDataItem name="ProductPage">http://www.fortrezz.com/</MetaDataItem>
+    <MetaDataItem name="ProductPage">http://www.fortrezz.com/wv01.html</MetaDataItem>
     <MetaDataItem name="ProductSupport">http://www.fortrezz.com/</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="1">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/178/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="2">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/817/xml</Entry>
     </ChangeLog>
+    <MetaDataItem id="0216" name="ZWProductPage" type="0243">https://products.z-wavealliance.org/products/817/</MetaDataItem>
+    <MetaDataItem id="0216" name="FrequencyName" type="0243">U.S. / Canada / Mexico</MetaDataItem>
+    <MetaDataItem id="0216" name="Identifier" type="0243">WV-01</MetaDataItem>
   </MetaData>
   <!-- Configuration -->
   <CommandClass id="112">
