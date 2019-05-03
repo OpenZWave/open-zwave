@@ -1,10 +1,9 @@
-<!-- Vision ZP3102 PIR Motion Sensor --><Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
+<!-- Vision ZP3102 PIR Motion Sensor --><Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0109:0201:2002</MetaDataItem>
     <MetaDataItem name="ProductPic">images/vision/zp3102.png</MetaDataItem>
-    <MetaDataItem id="0201" name="ZWProductPage" type="2002">https://products.z-wavealliance.org/products/72/</MetaDataItem>
-    <MetaDataItem name="Description">Motion Detection.ZP 3102 Z-Wave Motion Sensor
- 
+    <MetaDataItem id="0201" name="ZWProductPage" type="2002">https://products.z-wavealliance.org/products/84/</MetaDataItem>
+    <MetaDataItem name="Description">Wireless PIR Motion Detection. ZP 3102 Z-Wave Motion Sensor
 	Features:
 *Passive Infrared Sensor (PIR)
 *2~10 meter Motion Range 
@@ -17,13 +16,15 @@
 *Operating temp: -15oC~40oC
 *Working Voltage: 3V
 *Dimensions: 84*62*50mm</MetaDataItem>
-    <MetaDataItem name="ProductPage">http://www.visionsecurity.com.tw/ha_products_154_p2.html</MetaDataItem>
-    <MetaDataItem name="ProductSupport">http://www.visionsecurity.com.tw/ha_contact_us.html</MetaDataItem>
-    <MetaDataItem id="0201" name="FrequencyName" type="2002">CEPT (Europe)</MetaDataItem>
-    <MetaDataItem name="Name">PIR Motion Sensor - Vision Wireless PIR Sensor. -- EU Version</MetaDataItem>
+    <MetaDataItem name="ProductPage">http://www.visionsecurity.com.tw/ha_products_page2_154_161.html</MetaDataItem>
+    <MetaDataItem name="ProductSupport">http://www.visionsecurity.com.tw/ha_products_page2_154_161.html</MetaDataItem>
+    <MetaDataItem id="0201" name="FrequencyName" type="2002">CEPT (Europe) / U.S. / Canada / Mexico</MetaDataItem>
+    <MetaDataItem name="Name">Vision Wireless PIR Motion Sensor</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="3">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/72/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="4">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/84/xml</Entry>
     </ChangeLog>
+    <MetaDataItem id="0201" name="Identifier" type="2002">ZP 3102</MetaDataItem>
   </MetaData>
   <!-- COMMAND_CLASS_CONFIGURATION -->
         <!--    IMPORTANT: Controllers may only allow to configure signed values.
