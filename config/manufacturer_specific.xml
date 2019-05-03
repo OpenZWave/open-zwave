@@ -566,7 +566,7 @@
   <Manufacturer id="0233" name="eZEX Corporation"></Manufacturer>
   <Manufacturer id="0085" name="Fakro">
     <Product config="fakro/zwp10.xml" id="0001" name="ZWP10 Remote Controller" type="0001"/>
-    <Product id="0002" name="ARZ Roof Window Roller Shutter" type="0002"/>
+    <Product config="fakro/arz.xml" id="0002" name="ARZ Roof Window Roller Shutter" type="0002"/>
     <Product config="fakro/zws230.xml" id="0005" name="ZWS230 Chain actuator 230VAC" type="0002"/>
     <Product config="fakro/zws12.xml" id="0001" name="ZWS12 Chain actuator 12VDC" type="0003"/>
     <Product config="fakro/zws230.xml" id="0002" name="ZWS230 Chain actuator 230VAC" type="0003"/>
