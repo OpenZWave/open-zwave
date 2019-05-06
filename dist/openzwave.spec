@@ -1,5 +1,5 @@
 Name:     openzwave
-Version:  1.6.9
+Version:  1.6.10
 Release:  1.0%{?dist}
 Summary:  Sample Executables for OpenZWave
 URL:      http://www.openzwave.net
@@ -20,7 +20,6 @@ Source0:  http://old.openzwave.com/downloads/openzwave-%{version}.tar.gz
 BuildRequires: gcc-c++
 BuildRequires: doxygen
 BuildRequires: graphviz
-BuildRequires: hidapi-devel
 BuildRequires: tinyxml-devel
 %if 0%{?fedora} >= 18
 BuildRequires: systemd-devel pkgconfig
