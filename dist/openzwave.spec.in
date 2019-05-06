@@ -3,7 +3,11 @@ Version:  @VERSION@
 Release:  1.0%{?dist}
 Summary:  Sample Executables for OpenZWave
 URL:      http://www.openzwave.net
-License:  LGPLv3+
+%if 0%{?suse_version} > 0
+License: LGPL-3.0+
+%else 
+License: LGPLv3+
+%endif
 Source0:  http://old.openzwave.com/downloads/openzwave-%{version}.tar.gz
 
 # Use system tinyxml
@@ -17,9 +21,16 @@ BuildRequires: gcc-c++
 BuildRequires: doxygen
 BuildRequires: graphviz
 BuildRequires: hidapi-devel
-BuildRequires: systemd-devel
 BuildRequires: tinyxml-devel
-
+%if 0%{?fedora} >= 18
+BuildRequires: systemd-devel pkgconfig
+%else
+%if 0%{?suse_version} >= 1220
+BuildRequires: systemd-devel pkg-config
+%else
+BuildRequires: libudev-devel pkgconfig
+%endif
+%endif
 
 %description
 OpenZWave is an open-source, cross-platform library designed to enable anyone to
@@ -59,16 +70,13 @@ applications using openzwave
 
 %prep
 %setup -q -n openzwave-%{version}
-#%patch1 -p1 -b.tinyxml
-#%patch2 -p1 -b.hidapi
-#%patch3 -p1 -b.format
 
 
 %build
 major_ver=$(echo %{version} | awk -F \. {'print $1'})
 minor_ver=$(echo %{version} | awk -F \. {'print $2'})
 revision=$(echo %{version} | awk -F \. {'print $3'})
-CPPFLAGS="%{optflags} -Wformat -DOPENZWAVE_ENABLE_EXCEPTIONS" LDFLAGS="%{__global_ldflags}" VERSION_MAJ=$major_ver VERSION_MIN=$minor_ver VERSION_REV=$revision PREFIX=/usr sysconfdir=%{_sysconfdir}/openzwave/ includedir=%{_includedir} docdir=%{_defaultdocdir}/openzwave-%{version} instlibdir=%{_libdir} make %{?_smp_mflags}
+CPPFLAGS="%{optflags} -Wformat -DOPENZWAVE_ENABLE_EXCEPTIONS" LDFLAGS="%{__global_ldflags}" USE_HID=0 USE_BI_TXML=0 VERSION_MAJ=$major_ver VERSION_MIN=$minor_ver VERSION_REV=$revision PREFIX=/usr sysconfdir=%{_sysconfdir}/openzwave/ includedir=%{_includedir} docdir=%{_defaultdocdir}/openzwave-%{version} instlibdir=%{_libdir} make %{?_smp_mflags}
 
 
 %install
@@ -81,7 +89,7 @@ mkdir -p %{buildroot}/%{_libdir}
 mkdir -p %{buildroot}/%{_defaultdocdir}/openzwave-%{version}/
 mkdir -p %{buildroot}/%{_sysconfdir}/
 mkdir -p %{buildroot}/%{_includedir}/openzwave/
-DESTDIR=%{buildroot} VERSION_MAJ=$major_ver VERSION_MIN=$minor_ver VERSION_REV=$revision PREFIX=/usr sysconfdir=%{_sysconfdir}/openzwave/ includedir=%{_includedir}/openzwave/ docdir=%{_defaultdocdir}/openzwave-%{version} instlibdir=%{_libdir} make install
+DESTDIR=%{buildroot} USE_HID=0 USE_BI_TXML=0 VERSION_MAJ=$major_ver VERSION_MIN=$minor_ver VERSION_REV=$revision PREFIX=/usr sysconfdir=%{_sysconfdir}/openzwave/ includedir=%{_includedir}/openzwave/ docdir=%{_defaultdocdir}/openzwave-%{version} instlibdir=%{_libdir} make install
 rm %{buildroot}%{_defaultdocdir}/openzwave-%{version}/Doxyfile.in
 rm -rf %{buildroot}%{_defaultdocdir}/openzwave-%{version}/html/
 rm -rf %{buildroot}%{_defaultdocdir}/openzwave-%{version}/default.htm
