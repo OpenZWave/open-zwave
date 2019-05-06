@@ -121,7 +121,14 @@ rm -rf %{buildroot}%{_defaultdocdir}/openzwave-%{version}/api/
 %doc docs/api/
 
 
-%ldconfig_scriptlets -n libopenzwave
+%post
+/sbin/ldconfig 
+
+%post -n libopenzwave-devel
+/sbin/ldconfig 
+
+%postun
+/sbin/ldconfig 
 
 
 %changelog
