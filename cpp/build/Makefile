@@ -84,7 +84,19 @@ endif
 #where to put the temporary library
 LIBDIR	?= $(top_builddir)
 
-INCLUDES	:= -I $(top_srcdir)/cpp/src -I $(top_srcdir)/cpp/tinyxml/
+INCLUDES	:= -I $(top_srcdir)/cpp/src
+
+
+ifeq ($(USE_BI_TXML), 1)
+INCLUDES += -I $(top_srcdir)/cpp/tinyxml/
+SOURCES_TXML =$(top_srcdir)/cpp/tinyxml/
+tinyxml := $(notdir $(wildcard $(top_srcdir)/cpp/tinyxml/*.cpp))
+else
+LIBS+= -ltinyxml
+endif
+
+
+
 
 
 ifeq ($(USE_HID),1)
@@ -105,12 +117,11 @@ LIBS += -ludev
 endif
 endif # USE_HID
 
-SOURCES		:= $(top_srcdir)/cpp/src $(top_srcdir)/cpp/src/command_classes $(top_srcdir)/cpp/tinyxml \
+SOURCES		:= $(top_srcdir)/cpp/src $(top_srcdir)/cpp/src/command_classes $(SOURCES_TXML) \
 	$(top_srcdir)/cpp/src/value_classes $(top_srcdir)/cpp/src/platform $(top_srcdir)/cpp/src/platform/unix $(SOURCES_HIDAPI) $(top_srcdir)/cpp/src/aes/
-VPATH = $(top_srcdir)/cpp/src:$(top_srcdir)/cpp/src/command_classes:$(top_srcdir)/cpp/tinyxml:\
+VPATH = $(top_srcdir)/cpp/src:$(top_srcdir)/cpp/src/command_classes:$(SOURCES_TXML):\
 	$(top_srcdir)/cpp/src/value_classes:$(top_srcdir)/cpp/src/platform:$(top_srcdir)/cpp/src/platform/unix:$(SOURCES_HIDAPI):$(top_srcdir)/cpp/src/aes/
 
-tinyxml := $(notdir $(wildcard $(top_srcdir)/cpp/tinyxml/*.cpp))
 
 ifeq ($(USE_HID),1)
 ifeq ($(UNAME),Darwin)
@@ -163,6 +174,9 @@ $(top_srcdir)/cpp/src/vers.cpp:
 	@echo 'uint16_t ozw_vers_minor = $(VERSION_MIN);' >> $(top_srcdir)/cpp/src/vers.cpp
 	@echo 'uint16_t ozw_vers_revision = $(VERSION_REV);' >> $(top_srcdir)/cpp/src/vers.cpp
 	@echo 'char ozw_version_string[] = "$(GITVERSION)";' >> $(top_srcdir)/cpp/src/vers.cpp
+	@$(SED) \
+		-e 's|[@]VERSION@|$(VERSION).$(VERSION_REV)|g' \
+		< "$(top_srcdir)/dist/openzwave.spec.in" > "$(top_srcdir)/dist/openzwave.spec"
 
 
 #$(OBJDIR)/vers.o:	$(top_builddir)/vers.cpp

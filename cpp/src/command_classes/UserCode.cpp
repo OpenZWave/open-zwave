@@ -466,7 +466,9 @@ bool UserCode::HandleMsg
 					node->CreateValueString( ValueID::ValueGenre_User, GetCommandClassId(), _instance, i, str, "", false, false, data, 0 );
 				}
 				m_userCode[i].status = UserCode_Available;
-				memcpy(&m_userCode[i].usercode, 0, 10);
+				/* silly compilers */
+				for (int j = 0; j < 10; j++)
+					m_userCode[i].usercode[i] = 0;
 			}
 			if (m_com.GetFlagBool(COMPAT_FLAG_UC_EXPOSERAWVALUE)) {
 				node->CreateValueRaw( ValueID::ValueGenre_User, GetCommandClassId(), _instance, UserCodeIndex_RawValue, "Raw UserCode", "", false, false, 0, 0, 0);

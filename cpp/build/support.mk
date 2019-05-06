@@ -8,8 +8,11 @@ BUILD	?= release
 #the prefix to install the library into
 PREFIX	?= /usr/local
 
-# build HID support by default
-USE_HID ?= 1
+# dont build HID support by default
+USE_HID ?= 0
+
+# use builtin tinyXML by default 
+USE_BI_TXML ?= 1
 
 #the System we are building on
 UNAME  := $(shell uname -s)

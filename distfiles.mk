@@ -1273,7 +1273,7 @@ DISTFILES =	.gitignore \
 	debian/watch \
 	dist.mk \
 	dist/libopenzwave.changes \
-	dist/libopenzwave.spec \
+	dist/openzwave.spec \
 	distfiles.mk \
 	docs/Doxyfile.in \
 	docs/default.htm \
