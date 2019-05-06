@@ -20,7 +20,6 @@ Source0:  http://old.openzwave.com/downloads/openzwave-%{version}.tar.gz
 BuildRequires: gcc-c++
 BuildRequires: doxygen
 BuildRequires: graphviz
-BuildRequires: hidapi-devel
 BuildRequires: tinyxml-devel
 %if 0%{?fedora} >= 18
 BuildRequires: systemd-devel pkgconfig
