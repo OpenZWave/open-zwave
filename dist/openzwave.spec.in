@@ -1,4 +1,4 @@
-if 0%{?is_opensuse} 
+%if 0%{?is_opensuse} 
 %define __global_ldflags 
 %endif
 
