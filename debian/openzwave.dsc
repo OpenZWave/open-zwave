@@ -9,7 +9,7 @@ Homepage: http://www.openzwave.com/
 Standards-Version: 3.9.8
 Vcs-Browser: https://anonscm.debian.org/cgit/debian-iot/openzwave.git
 Vcs-Git: https://anonscm.debian.org/git/debian-iot/openzwave.git
-Build-Depends: debhelper, dh-exec (>= 0.2), g++ (>= 4.4), quilt, libxml2-utils, libtinyxml-dev
+Build-Depends: debhelper (>= 11), dh-exec (>= 0.2), g++ (>= 4.4), quilt, libxml2-utils, libtinyxml-dev
 Package-List:
  libopenzwave-doc deb doc optional arch=all
  libopenzwave1.6 deb libs optional arch=any
