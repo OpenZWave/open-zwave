@@ -1,9 +1,9 @@
 %if 0%{?is_opensuse} 
-%define __global_ldflags 
+%define __global_ldflags %{nil}
 %endif
 
 Name:     openzwave
-Version:  1.6.12
+Version:  1.6.13
 Release:  1.0%{?dist}
 Summary:  Sample Executables for OpenZWave
 URL:      http://www.openzwave.net
