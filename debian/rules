@@ -7,8 +7,8 @@ CFLAGS:=$(shell dpkg-buildflags --get CFLAGS)
 CXXFLAGS:=$(shell dpkg-buildflags --get CXXFLAGS)
 LDFLAGS:=$(shell dpkg-buildflags --get LDFLAGS)
 #XXX: MORECPPFLAGS=-fPIE -pie
-# add CFLAGS here as upstream make does not care about them and we need -Wformat
-MORECPPFLAGS=$(CFLAGS)
+# because of a issue un Ubuntu - cc1: error: -Wformat-security ignored without -Wformat [-Werror=format-security]
+MORECPPFLAGS="-Wformat -Wformat-security -Werror=format-security $(CFLAGS)"
 MORELDFLAGS:=-Wl,-z,now
 
 export CC=gcc-8
