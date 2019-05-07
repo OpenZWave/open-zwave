@@ -39,16 +39,16 @@ override_dh_clean:
 
 override_dh_auto_build:
 	echo "Build version: >$(MAJOR).$(MINOR).$(REV)<"
-	LDFLAGS="$(LDFLAGS) $(MORELDFLAGS)" CPPFLAGS="$(CPPFLAGS) $(MORECPPFLAGS)" VERSION_MAJ=$(MAJOR) VERSION_MIN=$(MINOR) VERSION_REV=$(REV) PREFIX=/usr SYSCONFDIR=/etc/openzwave instlibdir=$(LIBDIR) make
+	LDFLAGS="$(LDFLAGS) $(MORELDFLAGS)" CPPFLAGS="$(CPPFLAGS) $(MORECPPFLAGS)" USE_HID=0 USE_BI_TXML=0 VERSION_MAJ=$(MAJOR) VERSION_MIN=$(MINOR) VERSION_REV=$(REV) PREFIX=/usr SYSCONFDIR=/etc/openzwave instlibdir=$(LIBDIR) make
 
 override_dh_auto_install:
-	VERSION_MAJ=$(MAJOR) VERSION_MIN=$(MINOR) VERSION_REV=$(REV) DESTDIR=$(DESTDIR) PREFIX=/usr SYSCONFDIR=/etc/openzwave instlibdir=$(LIBDIR) make install
+	USE_HID=0 USE_BI_TXML=0 VERSION_MAJ=$(MAJOR) VERSION_MIN=$(MINOR) VERSION_REV=$(REV) DESTDIR=$(DESTDIR) PREFIX=/usr SYSCONFDIR=/etc/openzwave instlibdir=$(LIBDIR) make install
 	# install docs in /usr/share/doc/openzwave/, not openzwave-VERSION
 	install -d debian/libopenzwave-doc/usr/share/doc
 	###mv debian/tmp/usr/share/doc/openzwave-1* debian/libopenzwave-doc/usr/share/doc/openzwave
 	# install config files in /etc/
-	install -d debian/libopenzwave1.4/etc
-	mv debian/tmp/usr/etc/openzwave debian/libopenzwave1.4/etc/
+	install -d debian/libopenzwave1.6/etc
+	mv debian/tmp/usr/etc/openzwave debian/libopenzwave1.6/etc/
 
 update_debian_version:
 	sed -i '1 s/(.*)/($(shell git describe --long --tags --dirty | sed s/-/./g | sed s/^v// ))/' debian/changelog
