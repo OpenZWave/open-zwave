@@ -9,7 +9,6 @@ Build-Depends: debhelper (>= 11)
 	, quilt
 	, libxml2-utils
 	, libtinyxml-dev
-	, gcc-8, g++-8
 Standards-Version: 4.1.5
 Homepage: http://www.openzwave.com/
 Vcs-Browser: https://salsa.debian.org/debian-iot-team/openzwave
