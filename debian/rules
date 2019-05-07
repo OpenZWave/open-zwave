@@ -50,5 +50,8 @@ override_dh_auto_install:
 	install -d debian/libopenzwave1.6/etc
 	mv debian/tmp/usr/etc/openzwave debian/libopenzwave1.6/etc/
 
+override_dh_test:
+	echo "Ignoring"
+
 update_debian_version:
 	sed -i '1 s/(.*)/($(shell git describe --long --tags --dirty | sed s/-/./g | sed s/^v// ))/' debian/changelog
