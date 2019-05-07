@@ -2,13 +2,13 @@
 
 export DH_VERBOSE=1
 
-CPPFLAGS:=$(shell dpkg-buildflags --get CPPFLAGS)
-CFLAGS:=$(shell dpkg-buildflags --get CFLAGS)
-CXXFLAGS:=$(shell dpkg-buildflags --get CXXFLAGS)
+# because of a issue un Ubuntu - cc1: error: -Wformat-security ignored without -Wformat [-Werror=format-security]
+CPPFLAGS:=$(shell dpkg-buildflags --get CPPFLAGS | sed -e "s/-Wformat-security//g" -e "s/-Wformat//g" -e "s/-Werror\=format-security//g")
+CFLAGS:=$(shell dpkg-buildflags --get CFLAGS | sed -e "s/-Wformat-security//g" -e "s/-Wformat//g" -e "s/-Werror\=format-security//g")
+CXXFLAGS:=$(shell dpkg-buildflags --get CXXFLAGS | sed -e "s/-Wformat-security//g" -e "s/-Wformat//g" -e "s/-Werror\=format-security//g")
 LDFLAGS:=$(shell dpkg-buildflags --get LDFLAGS)
 #XXX: MORECPPFLAGS=-fPIE -pie
-# because of a issue un Ubuntu - cc1: error: -Wformat-security ignored without -Wformat [-Werror=format-security]
-MORECPPFLAGS:=$(shell echo $(CFLAGS) | sed -e "s/-Wformat-security//g" -e "s/-Wformat//g" -e "s/-Werror\=format-security//g")
+MORECPPFLAGS:=$(CFLAGS)
 MORELDFLAGS:=-Wl,-z,now
 
 export CC=gcc-8
