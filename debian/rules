@@ -8,7 +8,7 @@ CXXFLAGS:=$(shell dpkg-buildflags --get CXXFLAGS)
 LDFLAGS:=$(shell dpkg-buildflags --get LDFLAGS)
 #XXX: MORECPPFLAGS=-fPIE -pie
 # because of a issue un Ubuntu - cc1: error: -Wformat-security ignored without -Wformat [-Werror=format-security]
-MORECPPFLAGS=-Wall -Wformat -Wformat-security -Werror=format-security $(CFLAGS)
+MORECPPFLAGS:=$(shell echo $(CFLAGS) | sed -e "s/-Wformat-security//g" -e "s/-Wformat//g" -e "s/-Werror\=format-security//g")
 MORELDFLAGS:=-Wl,-z,now
 
 export CC=gcc-8
