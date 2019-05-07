@@ -1,5 +1,9 @@
+if 0%{?is_opensuse} 
+%define __global_ldflags 
+%endif
+
 Name:     openzwave
-Version:  1.6.10
+Version:  1.6.11
 Release:  1.0%{?dist}
 Summary:  Sample Executables for OpenZWave
 URL:      http://www.openzwave.net
@@ -9,13 +13,6 @@ License: LGPL-3.0+
 License: LGPLv3+
 %endif
 Source0:  http://old.openzwave.com/downloads/openzwave-%{version}.tar.gz
-
-# Use system tinyxml
-#Patch1:   openzwave-tinyxml.patch
-# Use system hidapi
-#Patch2:   openzwave-hidapi.patch
-# Fix FTBFS
-#Patch3:   openzwave-1.5.0-format.patch
 
 BuildRequires: gcc-c++
 BuildRequires: doxygen
