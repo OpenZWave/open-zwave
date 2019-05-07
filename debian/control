@@ -3,7 +3,7 @@ Maintainer: Debian IoT Maintainers <debian-iot-maintainers@lists.alioth.debian.o
 Uploaders: Thorsten Alteholz <debian@alteholz.de>
 Section: devel
 Priority: optional
-Build-Depends: debhelper (>=11)
+Build-Depends: debhelper
 	, dh-exec (>=0.2)
 	, g++ (>= 4.4)
 	, quilt
