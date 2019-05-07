@@ -3,7 +3,7 @@
 %endif
 
 Name:     openzwave
-Version:  1.6.13
+Version:  1.6.14
 Release:  1.0%{?dist}
 Summary:  Sample Executables for OpenZWave
 URL:      http://www.openzwave.net
@@ -117,13 +117,13 @@ rm -rf %{buildroot}%{_defaultdocdir}/openzwave-%{version}/api/
 %doc docs/api/
 
 
-%post
+%post -n libopenzwave
 /sbin/ldconfig 
 
 %post -n libopenzwave-devel
 /sbin/ldconfig 
 
-%postun
+%postun -n libopenzwave
 /sbin/ldconfig 
 
 
