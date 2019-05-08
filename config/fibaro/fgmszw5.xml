@@ -1,4 +1,46 @@
-<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
+  <MetaData>
+    <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/010F:1001:0801</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/fibaro/fgmszw5.png</MetaDataItem>
+    <MetaDataItem id="1001" name="ZWProductPage" type="0801">https://products.z-wavealliance.org/products/1146/</MetaDataItem>
+    <MetaDataItem id="1001" name="Identifier" type="0801">FGMS-001</MetaDataItem>
+    <MetaDataItem name="ExclusionDescription">1) Make sure tampering the device will not result in undesirable effects. Dismounting the sensor can trigger an alarm.
+2) Open the sensor’s casing by turning the cover counter-clockwise. Enclosure lock is marked with a dot.
+3) Make sure the sensor's battery is unlocked.
+4) Set the main controller into learning mode (see main controller’s operating manual).
+5) Quickly, triple click the B-button, located inside Fibaro Motion Sensor’s casing. LED diode will glow blue confirming that the device has sent the Node Info Z-Wave command frame.
+</MetaDataItem>
+    <MetaDataItem name="Name">FIBARO Motion Sensor</MetaDataItem>
+    <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/1146/FGMS-001-EN-A-v1.02.pdf</MetaDataItem>
+    <MetaDataItem name="Description">FIBARO Motion Sensor is a highly advanced ultra-small, battery powered multi-sensor. This device detects movement, measures the current ambient temperature, intensity of the light and thanks to built-in accelerometer detects vibrations. FIBARO Motion Sensor is a completely wireless and mobile device. Depending on user-defined situation in the settings panel it’s eye will shine in different colours, alerting you whenever the temperature and light intensity changes, or when it detects the movement in the room. The battery can last up to 2 years while its level is automatically reported to the central unit. The notification is being sent to the central hub when the battery level approaches to critical.
+
+Product video: 
+https://www.youtube.com/watch?v=R_I2p1Tq2QU</MetaDataItem>
+    <MetaDataItem name="InclusionDescription">The Fibaro Motion Sensor can be included into the Z-Wave network by using the B-button. 
+1) Open the sensor’s casing by turning the cover counter-clockwise. Enclosure lock is marked with a dot.
+2) Unlock battery by removing “I'm ready” stripe.
+3) Make sure the device is located within the direct range of the main controller.
+4) Set the main controller into learning mode (see main controller’s operating manual).
+5) Quickly, triple click the B-button - LED diode will glow blue to confirm setting into learning mode.
+6) Fibaro Motion Sensor will be detected and included into the Z-Wave network. Wait for the main controller to configure the sensor.
+7) If necessary, wake up the Motion Sensor by clicking the B-button.
+8) Close the sensor’s casing and install the device in desired place.</MetaDataItem>
+    <MetaDataItem name="ResetDescription">Please use this procedure in the event that the system’s primary controller is missing or is inoperable.
+
+To reset the device: 
+1) Make sure the battery works and it’s correctly placed.
+2) Press and hold the B-button for 4-6 seconds until the LED glows yellow signaling the 2nd option of the menu mode.
+3) Release the B-button.
+4) Again, press the B-button briefly. Successful reset will be confirmed with the LED changing colour to red and fading.
+
+For more information please check the user's manual.
+</MetaDataItem>
+    <MetaDataItem id="1001" name="FrequencyName" type="0801">CEPT (Europe)</MetaDataItem>
+    <MetaDataItem name="WakeupDescription">The Motion Sensor will wake up at a defined time interval and will ALWAYS try to communicate with the main controller. There is a possibility to wake up the device manually by clicking the B-button.</MetaDataItem>
+    <ChangeLog>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="08 May 2019" revision="4">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1146/xml</Entry>
+    </ChangeLog>
+  </MetaData>
   <!--
 	Fibaro Motion Sensor FGMS-001-ZW5
 	http://manuals.fibaro.com/content/manuals/en/FGMS-001/FGMS-001-EN-T-v2.0.pdf
