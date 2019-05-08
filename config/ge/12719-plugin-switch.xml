@@ -1,21 +1,19 @@
 <!-- 
 GE Z-Wave Plug-in Smart Switch 12719 (ZW4101) 
 https://products.z-wavealliance.org/products/1193
- --><Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
+ --><Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0063:3031:5052</MetaDataItem>
     <MetaDataItem name="ProductPic">images/ge/12719-plugin-switch.png</MetaDataItem>
-    <MetaDataItem id="3031" name="ZWProductPage" type="5052">https://products.z-wavealliance.org/products/1193/</MetaDataItem>
-    <MetaDataItem id="3031" name="Identifier" type="5052">12719 / ZW4101</MetaDataItem>
+    <MetaDataItem id="3031" name="ZWProductPage" type="5052">https://products.z-wavealliance.org/products/1210/</MetaDataItem>
+    <MetaDataItem id="3031" name="Identifier" type="5052">45703</MetaDataItem>
     <MetaDataItem id="3031" name="FrequencyName" type="5052">U.S. / Canada / Mexico</MetaDataItem>
     <MetaDataItem name="ProductPage">http://www.ezzwave.com</MetaDataItem>
-    <MetaDataItem name="Name">GE Z-Wave Plug-in Smart Switch</MetaDataItem>
-    <MetaDataItem name="Description">"Transform any home into a smart home with the GE Z-Wave Smart Lighting Control Fluorescent Light and Appliance Module. The lighting control enables wireless control of on/off functions for standard table and floor lamps, and is compatible with incandescent, LED, Xenon, Halogen, fluorescent and compact fluorescent bulbs. Easily controlled by your mobile device or computer using any Z-Wave certified gateway, the space-saving horizontal module plugs into a standard wall receptacle without blocking the second outlet or obstructing placement of furniture. It provides a Z-Wave enabled outlet for the lamp or appliance that you would like to control and a regular pass-through AC outlet for other electrical appliances. Perfect for plug-in fans, heaters, lamps and more! Take control of your home lighting with GE Z-Wave Smart Lighting Controls!
-
-Z-Wave is the world’s largest ecosystem of interoperable smart home products. Z-Wave lighting controls provide an easy-to-install and affordable system to control lighting and small appliances in your home. Add GE Z-Wave lighting controls to a Z-Wave certified gateway to access and control your home from anywhere in the world using your smartphone, tablet or computer as a home automation command center. Never worry if you accidentally left the lights on because you can turn them off remotely or program your lights to go on/off at specific times. Create customized lighting scenes for any occasion such as a “go to sleep” scene or a “movie night” scene. Give the illusion that someone is home by programming the lights to turn on/off while you are away—perfect for deterring crime and adding additional security!"
-</MetaDataItem>
+    <MetaDataItem name="Name">Jasco Lighting and Small Appliance Module (45703)</MetaDataItem>
+    <MetaDataItem name="Description">Florescent Light and Appliance Module</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="08 May 2019" revision="2">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1193/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="08 May 2019" revision="3">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1210/xml</Entry>
     </ChangeLog>
   </MetaData>
   <!-- Association Groups -->
