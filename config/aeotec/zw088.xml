@@ -1,4 +1,4 @@
-<Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0086:0058:0101</MetaDataItem>
     <MetaDataItem name="ProductPic">images/aeotec/zw088.png</MetaDataItem>
@@ -15,13 +15,17 @@ It is a four buttons design. You can use each button to control your home’s Z-
 Products that are Z-Wave certified can be used and communicate with other Z-Wave certified devices.
 </MetaDataItem>
     <MetaDataItem id="0058" name="Identifier" type="0101">ZW088-A</MetaDataItem>
-    <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/1165/Instructions - Aeon Labs Key Fob Gen5 MCert.pdf</MetaDataItem>
+    <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/1177/Instructions - Aeon Labs Key Fob Gen5 MCert.pdf</MetaDataItem>
     <MetaDataItem name="Name">Key Fob Gen5</MetaDataItem>
     <MetaDataItem name="InclusionDescription">Short press the “Include” button on the Key Fob, it will go into inclusion state and its blue LED will blink slowly to wait including other slave Z-Wave devices.</MetaDataItem>
     <MetaDataItem id="0058" name="FrequencyName" type="0101">U.S. / Canada / Mexico</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="08 May 2019" revision="2">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1165/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="08 May 2019" revision="3">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1177/xml</Entry>
     </ChangeLog>
+    <MetaDataItem id="0058" name="ZWProductPage" type="0201">https://products.z-wavealliance.org/products/1177/</MetaDataItem>
+    <MetaDataItem id="0058" name="FrequencyName" type="0201">Australia / New Zealand</MetaDataItem>
+    <MetaDataItem id="0058" name="Identifier" type="0201">ZW088-B</MetaDataItem>
   </MetaData>
   <!-- Aeon Labs Key Fob Gen5 -->
   <!-- Basic and SwitchMultiLevel are for when the KeyFob is in Group Mode.
