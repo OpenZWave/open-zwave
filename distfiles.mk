@@ -263,6 +263,7 @@ DISTFILES =	.gitignore \
 	config/followgood/swz-1002.xml \
 	config/forest/fs2z5232000002.xml \
 	config/fortrezz/fmi.xml \
+	config/fortrezz/gdc1_fortrezz_1501.xml \
 	config/fortrezz/mimo2plus.xml \
 	config/fortrezz/mimolite.xml \
 	config/fortrezz/ssa2.xml \
@@ -274,6 +275,7 @@ DISTFILES =	.gitignore \
 	config/frostdale/fdn2nxx.xml \
 	config/ge/12719-plugin-switch.xml \
 	config/ge/12724-dimmer.xml \
+	config/ge/12727.xml \
 	config/ge/14282-plugin-switch.xml \
 	config/ge/14288-outlet.xml \
 	config/ge/14291-switch.xml \
@@ -370,6 +372,7 @@ DISTFILES =	.gitignore \
 	config/images/act/zrw103.png \
 	config/images/act/zrw230.png \
 	config/images/aeotec/dsa03202.png \
+	config/images/aeotec/dsa38.png \
 	config/images/aeotec/dsb04100.png \
 	config/images/aeotec/dsb05.png \
 	config/images/aeotec/dsb09104.png \
@@ -385,9 +388,22 @@ DISTFILES =	.gitignore \
 	config/images/aeotec/dsc26103.png \
 	config/images/aeotec/dsc27103.png \
 	config/images/aeotec/dsd37.png \
+	config/images/aeotec/zw056.png \
+	config/images/aeotec/zw062.png \
+	config/images/aeotec/zw074.png \
 	config/images/aeotec/zw075.png \
 	config/images/aeotec/zw078.png \
+	config/images/aeotec/zw080.png \
+	config/images/aeotec/zw088.png \
+	config/images/aeotec/zw089.png \
+	config/images/aeotec/zw090.png \
+	config/images/aeotec/zw095.png \
+	config/images/aeotec/zw096.png \
+	config/images/aeotec/zw097.png \
+	config/images/aeotec/zw098.png \
+	config/images/aeotec/zw100.png \
 	config/images/airlinemechanical/zds-ud10.png \
+	config/images/assa_abloy/KeyfreeConnected.png \
 	config/images/assa_abloy/PushButtonDeadbolt.png \
 	config/images/assa_abloy/TouchDeadbolt.png \
 	config/images/assa_abloy/TouchLever.png \
@@ -402,12 +418,21 @@ DISTFILES =	.gitignore \
 	config/images/danfoss/living.png \
 	config/images/danfoss/rsroom.png \
 	config/images/danfoss/z.png \
+	config/images/devolo/mt02648.png \
+	config/images/devolo/mt2646.png \
+	config/images/devolo/mt2647.png \
+	config/images/devolo/mt2652.png \
 	config/images/diehlcontrols/766366.png \
+	config/images/dlink/dch-z110.png \
+	config/images/dlink/dch-z120.png \
+	config/images/dlink/dch-z510.png \
+	config/images/dragontech/wd-100.png \
 	config/images/duwi/ZWES1000.png \
 	config/images/duwi/zw-edan-300.png \
 	config/images/duwi/zw-zdan-300.png \
 	config/images/duwi/zwws.png \
 	config/images/ecolink/doorwindow.png \
+	config/images/ecolink/motion.png \
 	config/images/ecolink/sensor.png \
 	config/images/ecolink/tiltsensor.png \
 	config/images/electronicsolutions/dbmz.png \
@@ -441,18 +466,32 @@ DISTFILES =	.gitignore \
 	config/images/evolve/ltm-5.png \
 	config/images/fakro/arz.png \
 	config/images/fakro/zws12.png \
+	config/images/fibaro/fgd212.png \
+	config/images/fibaro/fgfs101zw5.png \
 	config/images/fibaro/fgk001.png \
 	config/images/fibaro/fgms.png \
+	config/images/fibaro/fgmszw5.png \
 	config/images/fibaro/fgrgbwm441.png \
+	config/images/fibaro/fgsd002.png \
 	config/images/fibaro/fgwpe.png \
 	config/images/firstalert/zcombo.png \
 	config/images/followgood/swz-1002.png \
+	config/images/forest/fs2z5232000002.png \
+	config/images/fortrezz/gdc1_fortrezz_1501.png \
 	config/images/fortrezz/ssa2.png \
 	config/images/fortrezz/ssa3.png \
 	config/images/fortrezz/wv01.png \
 	config/images/fortrezz/wwa-01aa.png \
 	config/images/fortrezz/wwa02.png \
 	config/images/frostdale/fdn2311.png \
+	config/images/ge/12719-plugin-switch.png \
+	config/images/ge/12724-dimmer.png \
+	config/images/ge/12727.png \
+	config/images/ge/14282-plugin-switch.png \
+	config/images/ge/14291-switch.png \
+	config/images/ge/14294-dimmer.png \
+	config/images/ge/28167-plugin-dimmer.png \
+	config/images/ge/28169-plugin-switch.png \
 	config/images/ge/45604.png \
 	config/images/ge/dimmer.png \
 	config/images/ge/dimmer_module.png \
@@ -462,13 +501,17 @@ DISTFILES =	.gitignore \
 	config/images/greenwave/gs1110-1-gr-1.png \
 	config/images/greenwave/powernode1.png \
 	config/images/greenwave/powernode6.png \
+	config/images/homeseer/hsm200.png \
 	config/images/honeywell/lynx-touch-l5100.png \
 	config/images/honeywell/th8320zw1000.png \
 	config/images/horstmann/asrzw.png \
 	config/images/horstmann/hrt4zw.png \
 	config/images/horstmann/scsc17.png \
 	config/images/horstmann/ses301.png \
+	config/images/horstmann/ses302.png \
+	config/images/horstmann/ses303.png \
 	config/images/horstmann/sir321.png \
+	config/images/horstmann/srt323.png \
 	config/images/horstmann/ssr302.png \
 	config/images/icare/zw-66.png \
 	config/images/ingersoll/dwzwave1.png \
@@ -480,25 +523,39 @@ DISTFILES =	.gitignore \
 	config/images/leviton/vrf01.png \
 	config/images/leviton/vri10.png \
 	config/images/leviton/vrs15.png \
+	config/images/linear/LB60Z-1.png \
+	config/images/linear/ngd00z.png \
 	config/images/merten/5044xx.png \
 	config/images/merten/5046xx.png \
 	config/images/merten/506004.png \
 	config/images/merten/508244.png \
 	config/images/miyakawaelectric/me-d101.png \
+	config/images/nexia/db100z.png \
 	config/images/nodon/asp3100SmartPlug.png \
+	config/images/nodon/crc3100OctanRemote.png \
+	config/images/nodon/crc360xSofremote.png \
+	config/images/nodon/cws3101wallswitch.png \
 	config/images/northq/nq92021.png \
 	config/images/philio/pan04.png \
+	config/images/philio/pan05.png \
 	config/images/philio/pan06.png \
 	config/images/philio/pan08.png \
 	config/images/philio/pan11-1.png \
 	config/images/philio/pan11.png \
+	config/images/philio/phpat02.png \
+	config/images/philio/phpsg01.png \
 	config/images/philio/psm02.png \
+	config/images/philio/psr03-1b.png \
+	config/images/philio/psr04.png \
 	config/images/philio/pst02-1c.png \
 	config/images/philio/pst02-b.png \
 	config/images/philio/pst02.png \
+	config/images/polycontrol/doorlock.png \
 	config/images/prowell/zw-702.png \
 	config/images/qees/reto-dimmer-plus.png \
 	config/images/qees/reto-plugin-switch.png \
+	config/images/qubino/ZMNHDA2.png \
+	config/images/qubino/ZMNHNDx.png \
 	config/images/quby/qb2.png \
 	config/images/rcs/em52-zw.png \
 	config/images/rcs/therm0009.png \
@@ -512,8 +569,11 @@ DISTFILES =	.gitignore \
 	config/images/schlagelink/41.png \
 	config/images/sercomm/sw-clp01-eu.png \
 	config/images/smartthings/pgc401m.png \
+	config/images/smartthings/sth-eth200.png \
 	config/images/swiid/swiidinter.png \
+	config/images/telldus/tzdw100.png \
 	config/images/there/800z.png \
+	config/images/thermofloor/heatit021.png \
 	config/images/trane/TZEMT400AB32MAA.png \
 	config/images/trane/TZEMT400BB32MAA.png \
 	config/images/trane/TZEMT524AA21MA.png \
@@ -521,9 +581,11 @@ DISTFILES =	.gitignore \
 	config/images/vision/1701.png \
 	config/images/vision/brg1-433.png \
 	config/images/vision/zd2102.png \
+	config/images/vision/zd2301.png \
 	config/images/vision/zl7101us.png \
 	config/images/vision/zl7201us.png \
 	config/images/vision/zm1601eu.png \
+	config/images/vision/zm1601eu5.png \
 	config/images/vision/zp3102.png \
 	config/images/vision/zr1202us.png \
 	config/images/vision/zs610eu.png \
@@ -534,14 +596,23 @@ DISTFILES =	.gitignore \
 	config/images/vitrum/vitrumII-Dimmer.png \
 	config/images/vitrum/vitrumII-Switch.png \
 	config/images/wenzhou/tsp01.png \
+	config/images/wenzhou/tz55.png \
+	config/images/wenzhou/tz65d.png \
 	config/images/wenzhou/tz66d.png \
 	config/images/wenzhou/tz67.png \
+	config/images/wenzhou/tz68.png \
 	config/images/wenzhou/tz88.png \
 	config/images/widom/UBS104.png \
+	config/images/widom/UME304C_S.png \
+	config/images/zipato/RGBBulb.png \
+	config/images/zwave.me/004001.png \
 	config/images/zwave.me/ZME_05431.png \
 	config/images/zwave.me/ZME_06433.png \
 	config/images/zwave.me/ZME_06436.png \
 	config/images/zwave.me/kfob.png \
+	config/images/zwave.me/popp_kfob-c.png \
+	config/images/zwave.me/zme_raz5.png \
+	config/images/zwave.me/zweather.png \
 	config/ingersoll/dwzwave1.xml \
 	config/inovelli/nzw1201.xml \
 	config/inovelli/nzw30.xml \
@@ -583,6 +654,7 @@ DISTFILES =	.gitignore \
 	config/linear/WD500Z5-1.xml \
 	config/linear/WS15Z-1.xml \
 	config/linear/WT00Z-1.xml \
+	config/linear/ngd00z.xml \
 	config/logicsoft/ZHC5002.xml \
 	config/logicsoft/ZHC5010.xml \
 	config/manufacturer_specific.xml \
@@ -728,6 +800,7 @@ DISTFILES =	.gitignore \
 	config/simon/10002034-13X.xml \
 	config/simon/10002041-13X.xml \
 	config/smartthings/pgc401m.xml \
+	config/smartthings/sth-eth200.xml \
 	config/somfy/1811265_ZRTSI.xml \
 	config/steinel/is140-2.xml \
 	config/steinel/l810-led-ihf.xml \
@@ -825,6 +898,7 @@ DISTFILES =	.gitignore \
 	config/zooz/zse30.xml \
 	config/zooz/zse33.xml \
 	config/zooz/zse40.xml \
+	config/zwave.me/004001.xml \
 	config/zwave.me/ZME_05431.xml \
 	config/zwave.me/ZME_05461.xml \
 	config/zwave.me/ZME_06433.xml \
@@ -839,6 +913,7 @@ DISTFILES =	.gitignore \
 	config/zwave.me/iTemp.xml \
 	config/zwave.me/kfob.xml \
 	config/zwave.me/popp_kfob-c.xml \
+	config/zwave.me/zme_raz5.xml \
 	config/zwave.me/zweather.xml \
 	config/zwcfg.xsd \
 	config/zwp/PA-100.xml \
