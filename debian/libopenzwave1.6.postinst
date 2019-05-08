@@ -1,4 +1,4 @@
 #Create the zwave user and change our permissions
 getent group zwave >/dev/null || groupadd -f -r zwave
 find /etc/openzwave/ -type d -exec chmod 775 {} \;
-find /etc/openzwave/ -type d -exec chmod 664 {} \;
+find /etc/openzwave/ -type f -exec chmod 664 {} \;
