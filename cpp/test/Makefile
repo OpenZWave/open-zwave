@@ -10,8 +10,8 @@
 .PHONY:	default clean
 
 
-DEBUG_CFLAGS    := -Wall -Wno-format -ggdb -DDEBUG $(CPPFLAGS)
-RELEASE_CFLAGS  := -Wall -Wno-unknown-pragmas -Wno-format -O3 $(CPPFLAGS)
+DEBUG_CFLAGS    := -Wall -ggdb -DDEBUG $(CPPFLAGS)
+RELEASE_CFLAGS  := -Wall -Wno-unknown-pragmas -O3 $(CPPFLAGS)
 
 DEBUG_LDFLAGS	:= -g
 
@@ -71,7 +71,7 @@ $(OBJDIR)/%.o : %.cc
 $(top_builddir)/gtest-main:	$(patsubst %.cc,$(OBJDIR)/%.o,$(gtestsrc)) \
 	$(patsubst %.cpp,$(OBJDIR)/%.o,$(testsrc))
 	@echo "Linking $@"
-	$(LD) $(LDFLAGS) $(TARCH) -o $@ $+ $(LIBS) -pthread
+	@$(LD) $(LDFLAGS) $(TARCH) -o $@ $+ $(LIBS) -pthread
 
 test:	$(top_builddir)/gtest-main
 	$(top_builddir)/gtest-main

@@ -1,3 +1,7 @@
+%if 0%{?is_opensuse} 
+%define __global_ldflags %{nil}
+%endif
+
 Name:     openzwave
 Version:  @VERSION@
 Release:  1.0%{?dist}
@@ -10,25 +14,15 @@ License: LGPLv3+
 %endif
 Source0:  http://old.openzwave.com/downloads/openzwave-%{version}.tar.gz
 
-# Use system tinyxml
-#Patch1:   openzwave-tinyxml.patch
-# Use system hidapi
-#Patch2:   openzwave-hidapi.patch
-# Fix FTBFS
-#Patch3:   openzwave-1.5.0-format.patch
-
 BuildRequires: gcc-c++
 BuildRequires: doxygen
 BuildRequires: graphviz
 BuildRequires: tinyxml-devel
-%if 0%{?fedora} >= 18
+%if 0%{?fedora}
 BuildRequires: systemd-devel pkgconfig
-%else
-%if 0%{?suse_version} >= 1220
-BuildRequires: systemd-devel pkg-config
-%else
-BuildRequires: libudev-devel pkgconfig
 %endif
+%if 0%{?is_opensuse}
+BuildRequires: systemd-devel pkg-config
 %endif
 
 %description
@@ -39,6 +33,11 @@ requiring any in depth knowledge of the Z-Wave protocol.
 
 %package -n libopenzwave
 Summary: Library to access Z-Wave interfaces
+%if 0%{?is_opensuse} 
+Requires(pre): shadow
+%else
+Requires(pre): shadow-utils
+%endif
 
 
 %description -n libopenzwave
@@ -105,6 +104,7 @@ rm -rf %{buildroot}%{_defaultdocdir}/openzwave-%{version}/api/
 %license license/*.txt
 %doc docs/default.htm docs/general/ docs/images+css/
 %{_libdir}/libopenzwave.so.*
+%defattr(664, root, zwave, 775)
 %dir %{_sysconfdir}/openzwave/
 %config(noreplace) %{_sysconfdir}/openzwave/*
 
@@ -120,17 +120,23 @@ rm -rf %{buildroot}%{_defaultdocdir}/openzwave-%{version}/api/
 %doc docs/api/
 
 
-%post
+%post -n libopenzwave
 /sbin/ldconfig 
 
 %post -n libopenzwave-devel
 /sbin/ldconfig 
 
-%postun
+%postun -n libopenzwave
 /sbin/ldconfig 
+
+%pre -n libopenzwave
+getent group zwave >/dev/null || groupadd -f -r zwave
 
 
 %changelog
+* Wed May 08 2019 Justin Hammond <justin@dynam.ac> - @VERSION@
+- Update to new release of OpenZwave - 1.6
+
 * Fri Feb 01 2019 Fedora Release Engineering <releng@fedoraproject.org> - 1.5.0-0.20180624git1e36dcc.0
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_30_Mass_Rebuild
 
