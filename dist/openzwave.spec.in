@@ -18,14 +18,11 @@ BuildRequires: gcc-c++
 BuildRequires: doxygen
 BuildRequires: graphviz
 BuildRequires: tinyxml-devel
-%if 0%{?fedora} >= 18
+%if 0%{?fedora}
 BuildRequires: systemd-devel pkgconfig
-%else
-%if 0%{?suse_version} >= 1220
-BuildRequires: systemd-devel pkg-config
-%else
-BuildRequires: libudev-devel pkgconfig
 %endif
+%if 0%{?is_opensuse}
+BuildRequires: systemd-devel pkg-config
 %endif
 
 %description
@@ -36,7 +33,11 @@ requiring any in depth knowledge of the Z-Wave protocol.
 
 %package -n libopenzwave
 Summary: Library to access Z-Wave interfaces
+%if 0%{?is_opensuse} 
+Requires(pre): shadow
+%else
 Requires(pre): shadow-utils
+%endif
 
 
 %description -n libopenzwave

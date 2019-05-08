@@ -3,7 +3,7 @@
 %endif
 
 Name:     openzwave
-Version:  1.6.34
+Version:  1.6.45
 Release:  1.0%{?dist}
 Summary:  Sample Executables for OpenZWave
 URL:      http://www.openzwave.net
@@ -18,14 +18,11 @@ BuildRequires: gcc-c++
 BuildRequires: doxygen
 BuildRequires: graphviz
 BuildRequires: tinyxml-devel
-%if 0%{?fedora} >= 18
+%if 0%{?fedora}
 BuildRequires: systemd-devel pkgconfig
-%else
-%if 0%{?suse_version} >= 1220
-BuildRequires: systemd-devel pkg-config
-%else
-BuildRequires: libudev-devel pkgconfig
 %endif
+%if 0%{?is_opensuse}
+BuildRequires: systemd-devel pkg-config
 %endif
 
 %description
@@ -36,7 +33,11 @@ requiring any in depth knowledge of the Z-Wave protocol.
 
 %package -n libopenzwave
 Summary: Library to access Z-Wave interfaces
+%if 0%{?is_opensuse} 
+Requires(pre): shadow
+%else
 Requires(pre): shadow-utils
+%endif
 
 
 %description -n libopenzwave
@@ -133,6 +134,9 @@ getent group zwave >/dev/null || groupadd -f -r zwave
 
 
 %changelog
+* Wed May 08 2018 Justin Hammond <justin@dynam.ac> - 1.6.45
+- Update to new release of OpenZwave - 1.6
+
 * Fri Feb 01 2019 Fedora Release Engineering <releng@fedoraproject.org> - 1.5.0-0.20180624git1e36dcc.0
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_30_Mass_Rebuild
 
