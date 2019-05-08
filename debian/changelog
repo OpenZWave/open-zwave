@@ -1,3 +1,9 @@
+openzwave (1.6) unstable; urgency=medium
+
+  * Update to latest release of OpenZWave
+
+ -- Justin Hammond <justin@dynam.ac> Wed, 08 May 2019 17:09:00 +0800
+  
 openzwave (1.5+ds-6) unstable; urgency=medium
 
   * debian/control: use dh11
@@ -30,8 +36,8 @@ openzwave (1.5+ds-3) unstable; urgency=medium
     thanks to Dara Adib for the suggestion and the patch
 
  -- Thorsten Alteholz <debian@alteholz.de>  Mon, 12 Dec 2016 21:10:00 +0100
-
-openzwave (1.5+ds-2) unstable; urgency=medium
+ 
+ openzwave (1.5+ds-2) unstable; urgency=medium
 
   * move from non-free to main
     (comment in debian/copyright for AESBSD)
