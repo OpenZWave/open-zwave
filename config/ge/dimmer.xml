@@ -1,13 +1,13 @@
-<Product Revision="13" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="14" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0063:3230:4457</MetaDataItem>
     <MetaDataItem name="ProductPic">images/ge/dimmer.png</MetaDataItem>
-    <MetaDataItem id="3230" name="ZWProductPage" type="4457">https://products.z-wavealliance.org/products/1217/</MetaDataItem>
+    <MetaDataItem id="3230" name="ZWProductPage" type="4457">https://products.z-wavealliance.org/products/1220/</MetaDataItem>
     <MetaDataItem id="3230" name="FrequencyName" type="4457">U.S. / Canada / Mexico</MetaDataItem>
     <MetaDataItem name="ProductSupport">http://www.jascoproducts.com/support/</MetaDataItem>
-    <MetaDataItem id="3230" name="Identifier" type="4457">45717</MetaDataItem>
-    <MetaDataItem name="Description">in-wall 600w no- neutral light almond color toggle dimmer</MetaDataItem>
-    <MetaDataItem name="Name">Jasco In-Wall Dimmer, Toggle, Almond, No Neutral (45717)</MetaDataItem>
+    <MetaDataItem id="3230" name="Identifier" type="4457">45742</MetaDataItem>
+    <MetaDataItem name="Description">3-way toggle style in-wall dimmer</MetaDataItem>
+    <MetaDataItem name="Name">Jasco In-Wall Dimmer, Toggle, White (45742)</MetaDataItem>
     <MetaDataItem name="ProductPage">www.ezzwave.com</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="2">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/293/xml</Entry>
@@ -22,6 +22,7 @@
       <Entry author="Justin Hammond - Justin@dynam.ac" date="08 May 2019" revision="11">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1215/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="08 May 2019" revision="12">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1216/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="08 May 2019" revision="13">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1217/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="08 May 2019" revision="14">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1220/xml</Entry>
     </ChangeLog>
   </MetaData>
   <!-- Configuration Parameters -->
