@@ -1390,7 +1390,7 @@
   <Manufacturer id="022E" name="Samsung SDS"></Manufacturer>
   <Manufacturer id="0093" name="San Shih Electrical Enterprise"></Manufacturer>
   <Manufacturer id="0150" name="Samsung SmartThings">
-    <Product id="0006" name="SmartThings Hub v2" type="0002"/>
+    <Product config="smartthings/sth-eth200.xml" id="0006" name="SmartThings Hub v2" type="0002"/>
     <Product config="smartthings/pgc401m.xml" id="0191" name="SmartThings Hub v1" type="0001"/>
   </Manufacturer>
   <Manufacturer id="012C" name="SANAV"></Manufacturer>
