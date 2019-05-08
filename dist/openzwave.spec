@@ -3,7 +3,7 @@
 %endif
 
 Name:     openzwave
-Version:  1.6.30
+Version:  1.6.34
 Release:  1.0%{?dist}
 Summary:  Sample Executables for OpenZWave
 URL:      http://www.openzwave.net
@@ -36,6 +36,7 @@ requiring any in depth knowledge of the Z-Wave protocol.
 
 %package -n libopenzwave
 Summary: Library to access Z-Wave interfaces
+Requires(pre): shadow-utils
 
 
 %description -n libopenzwave
@@ -102,6 +103,7 @@ rm -rf %{buildroot}%{_defaultdocdir}/openzwave-%{version}/api/
 %license license/*.txt
 %doc docs/default.htm docs/general/ docs/images+css/
 %{_libdir}/libopenzwave.so.*
+%defattr(664, root, zwave, 775)
 %dir %{_sysconfdir}/openzwave/
 %config(noreplace) %{_sysconfdir}/openzwave/*
 
@@ -125,6 +127,9 @@ rm -rf %{buildroot}%{_defaultdocdir}/openzwave-%{version}/api/
 
 %postun -n libopenzwave
 /sbin/ldconfig 
+
+%pre -n libopenzwave
+getent group zwave >/dev/null || groupadd -f -r zwave
 
 
 %changelog
