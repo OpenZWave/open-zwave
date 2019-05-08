@@ -1749,7 +1749,7 @@
     <Product config="zwave.me/ZME_KFOB-S.xml" id="0102" name="ZME_KFOB-S 4 Button Key Fob" type="0100"/>
     <Product config="zwave.me/popp_kfob-c.xml" id="0103" name="Popp KFOB-C Remote Control" type="0100"/>
     <Product id="0200" name="Smoke Detector" type="0100"/>
-    <Product id="0201" name="Smoke Detector" type="0100"/>
+    <Product config="zwave.me/004001.xml" id="0201" name="Smoke Detector" type="0100"/>
     <Product config="zwave.me/zweather.xml" id="0400" name="Z-Weather Wind and Weather Sensor" type="0100"/>
     <Product config="zwave.me/ZUno.xml" id="0001" name="Z-Uno" type="0110"/>
     <Product config="zwave.me/iTemp.xml" id="0001" name="iTemp Temperature Sensor" type="0200"/>
