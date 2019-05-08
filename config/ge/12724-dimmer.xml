@@ -1,19 +1,23 @@
-<!-- GE(Jasco) 12724 3-Way Dimmer Switch --><Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
+<!-- GE(Jasco) 12724 3-Way Dimmer Switch --><Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0063:3031:4944</MetaDataItem>
     <MetaDataItem name="ProductPic">images/ge/12724-dimmer.png</MetaDataItem>
     <MetaDataItem id="3031" name="ZWProductPage" type="4944">https://products.z-wavealliance.org/products/1197/</MetaDataItem>
-    <MetaDataItem name="Description">"Transform any home into a smart home with the GE Z-Wave Smart Lighting Control Dimmer Switch. The GE Z-Wave Smart Lighting Control Dimmer Switch enables wireless control of on/off and dim functions of hard-wired incandescent lighting. The dimmer switch replaces your current light switch, uses your existing wiring, and provides Z-Wave wireless and in-wall control of overhead lighting. Use the dimmer feature to customize the lighting output and create the perfect ambiance for any room. Providing ultimate flexibility, the GE Z-Wave Smart Lighting Control Dimmer Switch allows you to operate the switch by itself or easily integrate the switch with two-way, three-way or four-way wiring configurations by adding the GE Auxiliary switch for Z-Wave. Two-way wiring configuration turns the light or appliance on/off from one location. Three-way wiring configuration turns the light or appliance on/off from two separate locations. Four-way wiring configuration turns the light or appliance on/off from three separate locations. The GE Auxiliary Switch for Z-Wave is required for three-way or four-way installations.  The dimmer switch includes an LED indicator light to easily locate the switch in a dark room. Take control of your home lighting with GE Z-Wave Smart Lighting Controls!
+    <MetaDataItem name="Description">"Transform any home into a smart home with the GE Z-Wave Smart Lighting Control Smart Dimmer Toggle Switch. The GE Z-Wave Smart Lighting Control Smart Dimmer Toggle Switch replaces your current light switch, uses your existing wiring, and remotely control the On/Off function and brightness level of permanently installed lighting. Use the dimmer feature to customize the lighting output and create the perfect ambiance for any room while providing ultimate flexibility in your home. The GE Z-Wave Smart Lighting Control Dimmer Switch allows you to operate the switch by itself or easily integrate the switch with three- or four-way wiring configurations by adding the GE Auxiliary switch for Z-Wave. Three-way wiring configuration turns the light or appliance on/off from two separate locations. Four-way wiring configuration turns the light or appliance on/off from three separate locations. The GE Auxiliary Switch for Z-Wave is required for three-way or four-way installations and is compatible with any Z-Wave certified gateway, providing access to many popular home automation systems. Take control of your home lighting with GE Z-Wave Smart Lighting Controls!
 
 Z-Wave is the world’s largest ecosystem of interoperable smart home products. Z-Wave lighting controls provide an easy-to-install and affordable system to control lighting and small appliances in your home. Add GE Z-Wave lighting controls to a Z-Wave certified gateway to access and control your home from anywhere in the world using your smartphone, tablet or computer as a home automation command center. Never worry if you accidentally left the lights on because you can turn them off remotely or program your lights to go on/off at specific times. Create customized lighting scenes for any occasion such as a “go to sleep” scene or a “movie night” scene. Give the illusion that someone is home by programming the lights to turn on/off while you are away—perfect for deterring crime and adding additional security!"
 </MetaDataItem>
     <MetaDataItem id="3031" name="FrequencyName" type="4944">U.S. / Canada / Mexico</MetaDataItem>
-    <MetaDataItem name="Name">GE Z-Wave In-Wall Smart Dimmer</MetaDataItem>
+    <MetaDataItem name="Name">GE Z-Wave In-Wall Smart Dimmer (Toggle)</MetaDataItem>
     <MetaDataItem name="ProductPage">http://www.ezzwave.com</MetaDataItem>
     <MetaDataItem id="3031" name="Identifier" type="4944">12724 / ZW3005</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="08 May 2019" revision="3">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1197/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="08 May 2019" revision="4">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1201/xml</Entry>
     </ChangeLog>
+    <MetaDataItem id="3033" name="ZWProductPage" type="4944">https://products.z-wavealliance.org/products/1201/</MetaDataItem>
+    <MetaDataItem id="3033" name="FrequencyName" type="4944">U.S. / Canada / Mexico</MetaDataItem>
+    <MetaDataItem id="3033" name="Identifier" type="4944">12729 / ZW3004</MetaDataItem>
   </MetaData>
   <!-- Configuration Parameters - per http://www.ezzwave.com/advanced-operation/ -->
   <CommandClass id="112">
