@@ -1,3 +1,4 @@
+#!/bin/sh
 #Create the zwave user and change our permissions
 getent group zwave >/dev/null || groupadd -f -r zwave
 chgrp -R zwave /etc/openzwave

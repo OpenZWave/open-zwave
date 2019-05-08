@@ -2,8 +2,8 @@ openzwave (1.6) unstable; urgency=medium
 
   * Update to latest release of OpenZWave
 
- -- Justin Hammond <justin@dynam.ac> Wed, 08 May 2019 17:09:00 +0800
-  
+ -- Justin Hammond <justin@dynam.ac>  Wed, 08 May 2019 17:09:00 +0800
+
 openzwave (1.5+ds-6) unstable; urgency=medium
 
   * debian/control: use dh11
