@@ -768,7 +768,7 @@
     <Product config="ge/dimmer.xml" id="3033" name="45613 3-Way Dimmer Switch" type="4457"/>
     <Product config="ge/receptacle.xml" id="3031" name="12721 Lighting Control Duplex Receptacle" type="4952"/>
     <Product config="ge/relay.xml" id="3032" name="12722 On/Off Relay Switch" type="4952"/>
-    <Product id="3033" name="12727 In-Wall Smart Switch (Toggle)" type="4952"/>
+    <Product config="ge/12727.xml" id="3033" name="12727 In-Wall Smart Switch (Toggle)" type="4952"/>
     <Product config="ge/hinge-pin.xml" id="3032" name="32563 Hinge Pin Smart Door Sensor" type="4953"/>
     <Product config="ge/dimmer_module.xml" id="3031" name="12718 Plug-In Two-Outlet Smart Dimmer" type="5044"/>
     <Product config="ge/12719-plugin-switch.xml" id="3031" name="12719 Plug-in Smart Switch" type="5052"/>
