@@ -1,13 +1,13 @@
-<Product Revision="7" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="8" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0063:3533:5257</MetaDataItem>
     <MetaDataItem name="ProductPic">images/ge/relay.png</MetaDataItem>
-    <MetaDataItem id="3533" name="ZWProductPage" type="5257">https://products.z-wavealliance.org/products/845/</MetaDataItem>
+    <MetaDataItem id="3533" name="ZWProductPage" type="5257">https://products.z-wavealliance.org/products/1213/</MetaDataItem>
     <MetaDataItem name="ProductPage">http://www.ezzwave.com</MetaDataItem>
-    <MetaDataItem name="Description">Transform any home into a smart home with the GE Z-Wave Smart Lighting Control On/Off Switch. The on/off switch replaces your current light switch, uses your existing wiring, and provides Z-Wave wireless and in-wall control of overhead lighting. The switch enables wireless control of on/off functions of direct wire incandescent, LED, xenon, halogen and fluorescent lighting. Providing ultimate flexibility, the GE Z-Wave Smart Lighting Control On/Off Switch allows you to operate the switch by itself or easily integrate the switch with two-way, three-way or four-way wiring configurations by adding the GE Auxiliary switch for Z-Wave. Two-way, Three-way, and Four-way wiring configuration turns the light or appliance on/off from one, two, or three locations.  The GE Auxiliary Switch for Z-Wave is required for Three-way or Four-way installations. The lighting control includes a blue LED indicator light to easily locate the switch in a dark room.</MetaDataItem>
+    <MetaDataItem name="Description">In-wall On/Off Relay Switch</MetaDataItem>
     <MetaDataItem name="ProductSupport">http://www.jascoproducts.com/support/</MetaDataItem>
-    <MetaDataItem id="3533" name="Identifier" type="5257">45760/ZW4003</MetaDataItem>
-    <MetaDataItem name="Name">GE Z-Wave In-Wall Smart Switch</MetaDataItem>
+    <MetaDataItem id="3533" name="Identifier" type="5257">45709</MetaDataItem>
+    <MetaDataItem name="Name">Jasco In-Wall ON/OFF Switch (45709)</MetaDataItem>
     <MetaDataItem id="3533" name="FrequencyName" type="5257">U.S. / Canada / Mexico</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="3">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/653/xml</Entry>
@@ -15,6 +15,7 @@
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="5">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/841/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="6">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/845/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="08 May 2019" revision="7">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1196/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="08 May 2019" revision="8">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1213/xml</Entry>
     </ChangeLog>
     <MetaDataItem id="3032" name="ZWProductPage" type="4952">https://products.z-wavealliance.org/products/1196/</MetaDataItem>
     <MetaDataItem id="3032" name="FrequencyName" type="4952">U.S. / Canada / Mexico</MetaDataItem>
