@@ -1,8 +1,8 @@
-<Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0149:0304:1214</MetaDataItem>
     <MetaDataItem name="ProductPic">images/widom/UME304C_S.png</MetaDataItem>
-    <MetaDataItem id="0304" name="ZWProductPage" type="1214">https://products.z-wavealliance.org/products/1264/</MetaDataItem>
+    <MetaDataItem id="0304" name="ZWProductPage" type="1214">https://products.z-wavealliance.org/products/1283/</MetaDataItem>
     <MetaDataItem name="ResetDescription">Press the push button (B)  located on the top of the device six consecutive times within one minute from system start-up. Please use this procedure only in the event that the primary controller is missing or otherwise inoperable.</MetaDataItem>
     <MetaDataItem name="Description">The smallest device in its category worldwide, and the only device specifically intended for use both as a Relay Switch with integrated power meter, and as an Energy Meter either at the point of entry of your electrical system, or on a section of the latter. Available in two versions, version S featuring an internal shunt resistor, and version C featuring an external current transformer, it is capable of measuring loads exceeding 10 KW. In addition to Power measurements, the device also provides data for Energy, Voltage, Current and Power factor.
 The only device suited for use with all types of Z-Wave controller, and capable of implementing an active energy-saving management policy defined by the user according to his energy consumption, or to the amount of energy produced by his solar power system. It automatically connects and disconnects a specific load if the threshold limit is exceeded, or “supplies” the required power, momentarily excluding non-priority loads.
@@ -22,12 +22,13 @@ Main Feature:
 </MetaDataItem>
     <MetaDataItem name="ExclusionDescription">1. Put your system controller into exclusion mode by following the instructions provided by your controller manufacturer.
 2. Press the push button (B)  located on the top of the device three time."</MetaDataItem>
-    <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/1264/WiDom Energy Driven Switch - EN.pdf</MetaDataItem>
-    <MetaDataItem name="Name">Energy Driven Switch Version C</MetaDataItem>
+    <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/1283/WiDom Energy Driven Switch - EN.pdf</MetaDataItem>
+    <MetaDataItem name="Name">Energy Driven Switch Version S</MetaDataItem>
     <MetaDataItem id="0304" name="Identifier" type="1214">WPM1.04C</MetaDataItem>
     <MetaDataItem id="0304" name="FrequencyName" type="1214">CEPT (Europe)</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="08 May 2019" revision="2">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1264/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="08 May 2019" revision="3">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1283/xml</Entry>
     </ChangeLog>
   </MetaData>
   <!-- wiDom: Energy Driven Switch  Version C and S 1.0-->
