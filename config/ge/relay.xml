@@ -1,13 +1,13 @@
-<Product Revision="9" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="10" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0063:3533:5257</MetaDataItem>
     <MetaDataItem name="ProductPic">images/ge/relay.png</MetaDataItem>
-    <MetaDataItem id="3533" name="ZWProductPage" type="5257">https://products.z-wavealliance.org/products/1219/</MetaDataItem>
+    <MetaDataItem id="3533" name="ZWProductPage" type="5257">https://products.z-wavealliance.org/products/1222/</MetaDataItem>
     <MetaDataItem name="ProductPage">http://www.ezzwave.com</MetaDataItem>
-    <MetaDataItem name="Description">3-way relay wall switch - Toggle Style</MetaDataItem>
+    <MetaDataItem name="Description">3-way relay wall switch - Toggle Style - light almond color</MetaDataItem>
     <MetaDataItem name="ProductSupport">http://www.jascoproducts.com/support/</MetaDataItem>
-    <MetaDataItem id="3533" name="Identifier" type="5257">45740</MetaDataItem>
-    <MetaDataItem name="Name">Jasco In-Wall ON/OFF, Toggle, White (45740)</MetaDataItem>
+    <MetaDataItem id="3533" name="Identifier" type="5257">45760</MetaDataItem>
+    <MetaDataItem name="Name">Jasco In-Wall ON/OFF, Toggle, Almond (45760)</MetaDataItem>
     <MetaDataItem id="3533" name="FrequencyName" type="5257">U.S. / Canada / Mexico</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="3">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/653/xml</Entry>
@@ -17,6 +17,7 @@
       <Entry author="Justin Hammond - Justin@dynam.ac" date="08 May 2019" revision="7">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1196/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="08 May 2019" revision="8">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1213/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="08 May 2019" revision="9">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1219/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="08 May 2019" revision="10">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1222/xml</Entry>
     </ChangeLog>
     <MetaDataItem id="3032" name="ZWProductPage" type="4952">https://products.z-wavealliance.org/products/1196/</MetaDataItem>
     <MetaDataItem id="3032" name="FrequencyName" type="4952">U.S. / Canada / Mexico</MetaDataItem>
