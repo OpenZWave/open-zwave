@@ -211,9 +211,9 @@
     <Product config="aeotec/zw162.xml" id="00a2" name="ZW162 Doorbell 6" type="1d03"/>
     <Product config="aeotec/zwa006.xml" id="00b4" name="ZWA006 Smart Boost Timer Switch" type="0003"/>
     <Product config="aeotec/zwa006.xml" id="00b4" name="ZWA006 Smart Boost Timer Switch" type="0103"/>
-    <Product type="0002" id="0007" name="ZWA008 Door Window Sensor 7" config="aeotec/zwa008.xml"/>
-    <Product type="0102" id="0007" name="ZWA008 Door Window Sensor 7" config="aeotec/zwa008.xml"/>
-    <Product type="0202" id="0007" name="ZWA008 Door Window Sensor 7" config="aeotec/zwa008.xml"/>
+    <Product config="aeotec/zwa008.xml" id="0007" name="ZWA008 Door Window Sensor 7" type="0002"/>
+    <Product config="aeotec/zwa008.xml" id="0007" name="ZWA008 Door Window Sensor 7" type="0102"/>
+    <Product config="aeotec/zwa008.xml" id="0007" name="ZWA008 Door Window Sensor 7" type="0202"/>
   </Manufacturer>
   <Manufacturer id="0088" name="Airvent SAM S.p.A."></Manufacturer>
   <Manufacturer id="0094" name="Alarm.com"></Manufacturer>
@@ -879,7 +879,7 @@
   <Manufacturer id="023D" name="Honest Technology Co. Ltd"></Manufacturer>
   <Manufacturer id="0039" name="Honeywell">
     <Product config="honeywell/th8320zw1000.xml" id="0001" name="TH8320ZW1000 Touchscreen Thermostat" type="0011"/>
-    <Product type="0011" id="0008" name="TH6320ZW2003 T6 Pro Series Thermostat" config="honeywell/th6320zw2003.xml"/>
+    <Product config="honeywell/th6320zw2003.xml" id="0008" name="TH6320ZW2003 T6 Pro Series Thermostat" type="0011"/>
     <Product config="honeywell/lynx-touch-l5100.xml" id="0003" name="Lynx Touch L5100 / L7000" type="0001"/>
     <Product config="honeywell/39351-ZW3005.xml" id="3038" name="39351 / ZW3005 In-Wall Smart Dimmer" type="4944"/>
   </Manufacturer>
@@ -1321,7 +1321,7 @@
     <Product config="qubino/ZMNHTDx.xml" id="0052" name="ZMNHTDx Smart meter S4 S5 S6" type="0007"/>
     <Product config="qubino/ZMNHZDx.xml" id="0053" name="ZMNHZDx Weather Station" type="0007"/>
     <Product config="qubino/ZMNHXDx.xml" id="0054" name="ZMNHXDx 3-phase Smart Meter" type="0007"/>
-    <Product type="0005" id="0054" name="ZMNKIDx OnOff Thermostat 2" config="qubino/ZMNKIDx.xml"/>
+    <Product config="qubino/ZMNKIDx.xml" id="0054" name="ZMNKIDx OnOff Thermostat 2" type="0005"/>
   </Manufacturer>
   <Manufacturer id="0130" name="Quby">
     <Product config="quby/qb2.xml" id="0001" name="Energy Management System" type="0001"/>
@@ -1739,7 +1739,7 @@
   <Manufacturer id="031D" name="Z-Wave Alliance"></Manufacturer>
   <Manufacturer id="004F" name="Z-Wave Technologia"></Manufacturer>
   <Manufacturer id="0115" name="Z-Wave.Me">
-    <Product id="0001" name="Z-Wave USB Stick" type="0001"/>
+    <Product config="zwave.me/zme_raz5.xml" id="0001" name="Z-Wave USB Stick" type="0001"/>
     <Product config="zwave.me/kfob.xml" id="0069" name="Key Fob" type="0001"/>
     <Product id="0003" name="Z-Wave USB Stick" type="0002"/>
     <Product id="0001" name="Floor Thermostat" type="0024"/>
