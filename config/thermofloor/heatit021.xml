@@ -1,14 +1,15 @@
-<Product Revision="7" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="8" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/019B:0001:0001</MetaDataItem>
     <MetaDataItem name="ProductPic">images/thermofloor/heatit021.png</MetaDataItem>
-    <MetaDataItem id="0001" name="ZWProductPage" type="0001">https://products.z-wavealliance.org/products/1182/</MetaDataItem>
-    <MetaDataItem name="Description">Heatit Z-Wave is an electronic thermostat for mounting in a standard wall box. The thermostat has a built-in Z-Wave chip that can be connected to Home Automation systems like Fibaro, Sensio, Vera, Zipato and others.
-The display will show the actual room temperature.
-By pressing the buttons, the display will show the set value.
-Heatit Z-Wave is equipped with a single-pole switch. The thermostat can handle loads up to 16A/3600W at 230V.
-If the load is greater than this, the thermostat needs to be connected to a contactor. It can be used with two external temperature sensors.
-Functions:
+    <MetaDataItem id="0001" name="ZWProductPage" type="0001">https://products.z-wavealliance.org/products/1234/</MetaDataItem>
+    <MetaDataItem name="Description">Heatit Z-Wave is an electronic thermostat for mounting in a standard wall box. The thermostat has a built-in Z-Wave chip that 
+can be connected to Home Automation systems like Fibaro, Sensio, Vera, Zipato and others.
+The display will show the actual room temperature. By pressing the buttons, the display will show the set value.
+Heatit Z-Wave is equipped with a single-pole switch.
+The thermostat can handle loads up to 16A/3600Wat 230V. If the load is greater than this, the thermostat needs to be connected to a contactor. It can be used with two external temperature sensors.
+
+FUNCTIONS
 • Room sensor
 • Floor sensor
 • Temperature limiter
@@ -16,18 +17,16 @@ Functions:
 • Z-Wave chip 500 series
 • Week program/setback temperature via gateway
 • Setback mode
-• 7-segment white LCD-screen
-• Can be used in connection with different NTC-sensors
+• 7-segment LCD-screen
+• Can be used in connection with diff erent NTC-sensors
 • Lock mode/child lock
 • Backlight
 • Calibration
 • 8 scenarios
-
 CONNECTION CLAMPS
 Use 1,5 mm² or 2,5 mm² cables according to power need.
-
 TECHNICAL DATA
-Rated voltage: 230 V 50/60 Hz
+Rated voltage: 230V 50/60Hz
 Max. load: 3600W
 Max. current: 16A
 Power consumption: 1,5W
@@ -42,35 +41,32 @@ Sensor values: 0°C 29,1 kOhm
 15°C 15,1 kOhm
 20°C 12,2 kOhm
 25°C 10,0 kOhm
-Breaker: Single-pole
-</MetaDataItem>
-    <MetaDataItem name="ExclusionDescription">Inclusion/exclusion mode
-To include the thermostat to your home automation gateway, press the Center (confirm) button for 10 seconds.
-The display will show OFF. Press Right (down) button 4 times till you see Con in the display. 
-Now start adding device in your home automation software. 
-Start inclusion mode by pressing Center (confirm) button for approximately 2 seconds. The inclusion/exclusion icon will appear in the display.
-Confirmation will show Inc/EcL in the display. 
-If inclusion fails, Err (error) will appear.</MetaDataItem>
-    <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/1182/Manual_Multireg Z-Wave_Ver2015-A.pdf</MetaDataItem>
+Switch: Single-pole</MetaDataItem>
+    <MetaDataItem name="ExclusionDescription">INCLUSION/EXCLUSION
+To include the thermostat to your home automation gateway, press Center (confirm) for 10 seconds.
+The display will show OFF. Press Right (down) 4 times till you see Con in the display.
+Now start add device in your home automation software. Start inclusion mode by pressing Center (confirm) for approximately
+2 seconds. The inclusion/exclusion icon will appear in the display. Confirmation will show Inc/EcL in the display. If inclusion
+fails, Err (error) will appear.
+Leave programming mode by choosing ESC in menu. Your thermostat is ready for use with default settings.</MetaDataItem>
+    <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/1234/Manual_Multireg Z-Wave_Ver2015-A.pdf</MetaDataItem>
     <MetaDataItem id="0001" name="FrequencyName" type="0001">CEPT (Europe)</MetaDataItem>
-    <MetaDataItem name="Name">Multireg Z-Wave</MetaDataItem>
-    <MetaDataItem id="0001" name="Identifier" type="0001">TF016</MetaDataItem>
-    <MetaDataItem name="ResetDescription">Factory reset - RES:	
-By pressing buttons Left and Center(up and confirm) for 20 seconds, the thermostat will perform a complete factory reset.
-NB! Please use this procedure only when the primary controller is missing or otherwise inoperable.
-
-</MetaDataItem>
-    <MetaDataItem name="InclusionDescription">Inclusion/exclusion mode
-To include the thermostat to your home automation gateway, press the Center (confirm) button for 10 seconds.
-The display will show OFF. Press Right (down) button 4 times till you see Con in the display. 
-Now start adding device in your home automation software. 
-Start inclusion mode by pressing Center (confirm) button for approximately 2 seconds. The inclusion/exclusion icon will appear in the display.
-Confirmation will show Inc/EcL in the display. 
-If inclusion fails, Err (error) will appear.
-</MetaDataItem>
+    <MetaDataItem name="Name">Heatit Z-Wave</MetaDataItem>
+    <MetaDataItem id="0001" name="Identifier" type="0001">TF021</MetaDataItem>
+    <MetaDataItem name="ResetDescription">FACTORY RESET - RES
+By pressing buttons Left and Center (up and confirm) for 20 seconds, the thermostat will perform a complete factory reset.
+NB! Please use this procedure only when the primary controller is missing or otherwise inoperable.</MetaDataItem>
+    <MetaDataItem name="InclusionDescription">INCLUSION/EXCLUSION
+To include the thermostat to your home automation gateway, press Center (confirm) for 10 seconds.
+The display will show OFF. Press Right (down) 4 times till you see Con in the display.
+Now start add device in your home automation software. Start inclusion mode by pressing Center (confirm) for approximately
+2 seconds. The inclusion/exclusion icon will appear in the display. Confirmation will show Inc/EcL in the display. If inclusion
+fails, Err (error) will appear.
+Leave programming mode by choosing ESC in menu. Your thermostat is ready for use with default settings.</MetaDataItem>
     <MetaDataItem name="WakeupDescription">If Er2 appears in the display, touch any button to restart the display.</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="08 May 2019" revision="7">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1182/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="08 May 2019" revision="8">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1234/xml</Entry>
     </ChangeLog>
   </MetaData>
   <CommandClass id="64">
