@@ -73,12 +73,12 @@ foreach my $rev ($data)
 	{
 		if ($CFG::versiondb{$_[0]}{md5} ne $md5) 
 		{
-			my $dbr = $CFG::versiondb{$_[0]}->{Revision};
-			my $fr = $rev->{Revision};
-			if ($dbr ge $fr )
+			my $dbr = int $CFG::versiondb{$_[0]}->{Revision};
+			my $fr = int $rev->{Revision};
+			if ($dbr >= $fr )
 			{
 				print $_[0]." - md5 does not match Database - Database Revision:";
-				print $CFG::versiondb{$_[0]}->{Revision}." File Revision:".int $rev->{Revision};
+				print $dbr." File Revision:".$fr;
 				print "\n";
 				LogError($_[0], 8, "Revision Number Was Not Bumped");	
 			} else {
