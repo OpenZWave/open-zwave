@@ -66,12 +66,12 @@ $(OBJDIR)/%.o : %.cc
 	@$(SED) -e 's/.*://' -e 's/\\$$//' < $(DEPDIR)/$*.d.tmp | fmt -1 | \
 	  $(SED) -e 's/^ *//' -e 's/$$/:/' >> $(DEPDIR)/.$*.d;
 	@rm -f $(DEPDIR)/$*.d.tmp
-	$(CXX) $(CFLAGS) $(TARCH) $(INCLUDES) -o $@ $<
+	@$(CXX) $(CFLAGS) $(TARCH) $(INCLUDES) -o $@ $<
 
 $(top_builddir)/gtest-main:	$(patsubst %.cc,$(OBJDIR)/%.o,$(gtestsrc)) \
 	$(patsubst %.cpp,$(OBJDIR)/%.o,$(testsrc))
 	@echo "Linking $@"
-	$(LD) $(LDFLAGS) $(TARCH) -o $@ $+ $(LIBS) -pthread
+	@$(LD) $(LDFLAGS) $(TARCH) -o $@ $+ $(LIBS) -pthread
 
 test:	$(top_builddir)/gtest-main
 	$(top_builddir)/gtest-main
