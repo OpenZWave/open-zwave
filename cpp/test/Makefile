@@ -10,8 +10,8 @@
 .PHONY:	default clean
 
 
-DEBUG_CFLAGS    := -Wall -Wno-format -ggdb -DDEBUG $(CPPFLAGS)
-RELEASE_CFLAGS  := -Wall -Wno-unknown-pragmas -Wno-format -O3 $(CPPFLAGS)
+DEBUG_CFLAGS    := -Wall -ggdb -DDEBUG $(CPPFLAGS)
+RELEASE_CFLAGS  := -Wall -Wno-unknown-pragmas -O3 $(CPPFLAGS)
 
 DEBUG_LDFLAGS	:= -g
 
@@ -66,7 +66,7 @@ $(OBJDIR)/%.o : %.cc
 	@$(SED) -e 's/.*://' -e 's/\\$$//' < $(DEPDIR)/$*.d.tmp | fmt -1 | \
 	  $(SED) -e 's/^ *//' -e 's/$$/:/' >> $(DEPDIR)/.$*.d;
 	@rm -f $(DEPDIR)/$*.d.tmp
-	@$(CXX) $(CFLAGS) $(TARCH) $(INCLUDES) -o $@ $<
+	$(CXX) $(CFLAGS) $(TARCH) $(INCLUDES) -o $@ $<
 
 $(top_builddir)/gtest-main:	$(patsubst %.cc,$(OBJDIR)/%.o,$(gtestsrc)) \
 	$(patsubst %.cpp,$(OBJDIR)/%.o,$(testsrc))
