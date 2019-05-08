@@ -4497,6 +4497,7 @@ void Manager::SendRawData
 {
 	if ( Driver *driver = GetDriver( _homeId ) )
 	{
+		LockGuard LG(driver->m_nodeMutex);
 		Node* node = driver->GetNode( _nodeId );
 		if ( node )
 		{
