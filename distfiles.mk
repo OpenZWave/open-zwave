@@ -1255,25 +1255,25 @@ DISTFILES =	.gitignore \
 	debian/libopenzwave-doc.doc-base \
 	debian/libopenzwave-doc.install \
 	debian/libopenzwave-doc.lintian-overrides-not-needed \
-	debian/libopenzwave1.4-dev.install \
-	debian/libopenzwave1.4.install \
-	debian/libopenzwave1.4.lintian-overrides \
+	debian/libopenzwave1.6-dev.install \
+	debian/libopenzwave1.6.install \
+	debian/libopenzwave1.6.lintian-overrides \
+	debian/libopenzwave1.6.postinst \
 	debian/openzwave.dsc \
 	debian/openzwave.install \
 	debian/openzwave.manpages \
-	debian/patches/cppflags.patch \
-	debian/patches/gcc8.patch \
 	debian/patches/hardening.patch \
 	debian/patches/series \
 	debian/patches/spelling.patch \
 	debian/rules \
-	debian/shlibs.libopenzwave1.4 \
+	debian/shlibs.libopenzwave1.6 \
 	debian/source/format \
 	debian/version-increment.sh \
 	debian/watch \
 	dist.mk \
 	dist/libopenzwave.changes \
 	dist/openzwave.spec \
+	dist/openzwave.spec.in \
 	distfiles.mk \
 	docs/Doxyfile.in \
 	docs/default.htm \
