@@ -731,7 +731,7 @@
     <Product config="fortrezz/mimo2plus.xml" id="0204" name="MIMO2+" type="0463"/>
     <Product config="fortrezz/mimo2plus.xml" id="0208" name="MIMO2+" type="0463"/>
     <Product config="fortrezz/fmi.xml" id="0110" name="FMI Flow Meter" type="0473"/>
-    <Product id="0111" name="GDC1 Siren/Strobe Light Alarm" type="0513"/>
+    <Product config="fortrezz/gdc1_fortrezz_1501.xml" id="0111" name="GDC1 Siren/Strobe Light Alarm" type="0513"/>
   </Manufacturer>
   <Manufacturer id="011D" name="Foxconn"></Manufacturer>
   <Manufacturer id="039C" name="Foxconn Industrial Internet"></Manufacturer>
