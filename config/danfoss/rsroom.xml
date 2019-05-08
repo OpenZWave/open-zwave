@@ -1,16 +1,17 @@
-<Product Revision="8" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="9" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0002:8010:0003</MetaDataItem>
     <MetaDataItem name="ProductPic">images/danfoss/rsroom.png</MetaDataItem>
-    <MetaDataItem id="8010" name="ZWProductPage" type="0003">https://products.z-wavealliance.org/products/1187/</MetaDataItem>
+    <MetaDataItem id="8010" name="ZWProductPage" type="0003">https://products.z-wavealliance.org/products/1188/</MetaDataItem>
     <MetaDataItem id="8010" name="FrequencyName" type="0003">CEPT (Europe)</MetaDataItem>
-    <MetaDataItem id="8010" name="Identifier" type="0003">014G0160</MetaDataItem>
-    <MetaDataItem name="Description">Temperature Sensor</MetaDataItem>
-    <MetaDataItem name="Name">Danfoss RS 014G0160 Thermostat</MetaDataItem>
+    <MetaDataItem id="8010" name="Identifier" type="0003">014G0159</MetaDataItem>
+    <MetaDataItem name="Description">Devolo Z-Wave RS</MetaDataItem>
+    <MetaDataItem name="Name">Devolo RS 014G0159 Thermostat</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="6">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1062/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="7">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1063/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="08 May 2019" revision="8">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1187/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="08 May 2019" revision="9">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1188/xml</Entry>
     </ChangeLog>
   </MetaData>
   <!-- This thermostat's setpoint descriptions are 0 based, not 1 -->
