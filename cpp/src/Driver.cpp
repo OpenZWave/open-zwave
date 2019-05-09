@@ -2532,7 +2532,7 @@ void Driver::HandleGetVersionResponse
 
 		{
 			Notification* notification = new Notification( Notification::Type_UserAlerts );
-			notification->SetUserAlertNofification( Notification::Alert_UnsupportedController );
+			notification->SetUserAlertNotification( Notification::Alert_UnsupportedController );
 			QueueNotification( notification );
 		}
 		{
@@ -7269,7 +7269,7 @@ void Driver::processConfigRevision
 					Log::Write(LogLevel_Warning, node->GetNodeId(), "Config File for Device \"%s\" is out of date", node->GetProductName().c_str());
 					Notification* notification = new Notification( Notification::Type_UserAlerts );
 					notification->SetHomeAndNodeIds( m_homeId, node->GetNodeId() );
-					notification->SetUserAlertNofification(Notification::Alert_ConfigOutOfDate);
+					notification->SetUserAlertNotification(Notification::Alert_ConfigOutOfDate);
 					QueueNotification( notification );
 
 					bool update = false;
@@ -7285,7 +7285,7 @@ void Driver::processConfigRevision
 				if (m_mfs->getRevision() < (unsigned long)atol(result->result.c_str())) {
 					Log::Write(LogLevel_Warning, "Config Revision of ManufacturerSpecific Database is out of date");
 					Notification* notification = new Notification( Notification::Type_UserAlerts );
-					notification->SetUserAlertNofification(Notification::Alert_MFSOutOfDate);
+					notification->SetUserAlertNotification(Notification::Alert_MFSOutOfDate);
 					QueueNotification( notification );
 
 					bool update = false;
@@ -7306,17 +7306,17 @@ void Driver::processConfigRevision
 	} else if (result->status == DNSError_NotFound) {
 		Log::Write(LogLevel_Info, "Not Found for Device record %s", result->lookup.c_str());
 		Notification* notification = new Notification( Notification::Type_UserAlerts );
-		notification->SetUserAlertNofification(Notification::Alert_DNSError);
+		notification->SetUserAlertNotification(Notification::Alert_DNSError);
 		QueueNotification( notification );
 	} else if (result->status == DNSError_DomainError) {
 		Log::Write(LogLevel_Warning, "Domain Error Looking up record %s", result->lookup.c_str());
 		Notification* notification = new Notification( Notification::Type_UserAlerts );
-		notification->SetUserAlertNofification(Notification::Alert_DNSError);
+		notification->SetUserAlertNotification(Notification::Alert_DNSError);
 		QueueNotification( notification );
 	} else if (result->status == DNSError_InternalError) {
 		Log::Write(LogLevel_Warning, "Internal DNS Error looking up record %s", result->lookup.c_str());
 		Notification* notification = new Notification( Notification::Type_UserAlerts );
-		notification->SetUserAlertNofification(Notification::Alert_DNSError);
+		notification->SetUserAlertNotification(Notification::Alert_DNSError);
 		QueueNotification( notification );
 	}
 	m_mfs->checkInitialized();
@@ -7383,7 +7383,7 @@ bool Driver::refreshNodeConfig
 	Options::Get()->GetOptionAsString("ReloadAfterUpdate",&action);
 	if (ToUpper(action) == "NEVER") {
 		Notification* notification = new Notification( Notification::Type_UserAlerts );
-		notification->SetUserAlertNofification(Notification::Alert_NodeReloadReqired);
+		notification->SetUserAlertNotification(Notification::Alert_NodeReloadReqired);
 		QueueNotification( notification );
 		return true;
 	} else if (ToUpper(action) == "IMMEDIATE") {
@@ -7495,7 +7495,7 @@ void Driver::processDownload
 			m_mfs->mfsConfigDownloaded(this, download->filename, false);
 		}
 		Notification* notification = new Notification( Notification::Type_UserAlerts );
-		notification->SetUserAlertNofification(Notification::Alert_ConfigFileDownloadFailed);
+		notification->SetUserAlertNotification(Notification::Alert_ConfigFileDownloadFailed);
 		QueueNotification( notification );
 	}
 
@@ -7510,14 +7510,14 @@ bool Driver::downloadConfigRevision
 	if (node->getFileConfigRevision() <= 0) {
 		Log::Write(LogLevel_Warning, node->GetNodeId(), "Config File Revision is 0. Not Updating");
 		Notification* notification = new Notification( Notification::Type_UserAlerts );
-		notification->SetUserAlertNofification(Notification::Alert_ConfigFileDownloadFailed);
+		notification->SetUserAlertNotification(Notification::Alert_ConfigFileDownloadFailed);
 		QueueNotification( notification );
 		return false;
 	}
 	if (node->getFileConfigRevision() >= node->getLatestConfigRevision()) {
 		Log::Write(LogLevel_Warning, node->GetNodeId(), "Config File Revision %d is equal to or greater than current revision %d", node->getFileConfigRevision(), node->getLatestConfigRevision());
 		Notification* notification = new Notification( Notification::Type_UserAlerts );
-		notification->SetUserAlertNofification(Notification::Alert_ConfigFileDownloadFailed);
+		notification->SetUserAlertNotification(Notification::Alert_ConfigFileDownloadFailed);
 		QueueNotification( notification );
 		return false;
 	} else {
@@ -7532,14 +7532,14 @@ bool Driver::downloadMFSRevision
 	if (m_mfs->getRevision() <= 0) {
 		Log::Write(LogLevel_Warning, "ManufacturerSpecific Revision is 0. Not Updating");
 		Notification* notification = new Notification( Notification::Type_UserAlerts );
-		notification->SetUserAlertNofification(Notification::Alert_ConfigFileDownloadFailed);
+		notification->SetUserAlertNotification(Notification::Alert_ConfigFileDownloadFailed);
 		QueueNotification( notification );
 		return false;
 	}
 	if (m_mfs->getRevision() >= m_mfs->getLatestRevision()) {
 		Log::Write(LogLevel_Warning, "ManufacturerSpecific Revision %d is equal to or greater than current revision %d", m_mfs->getRevision(), m_mfs->getLatestRevision());
 		Notification* notification = new Notification( Notification::Type_UserAlerts );
-		notification->SetUserAlertNofification(Notification::Alert_ConfigFileDownloadFailed);
+		notification->SetUserAlertNotification(Notification::Alert_ConfigFileDownloadFailed);
 		QueueNotification( notification );
 		return false;
 	}

@@ -126,7 +126,7 @@ namespace OpenZWave
 		 * User Alert Types - These are messages that should be displayed to users to inform them of
 		 * potential issues such as Out of Date configuration files etc
 		 */
-		enum UserAlertNofification
+		enum UserAlertNotification
 		{
 			Alert_None,							/**< No Alert Currently Present */
 			Alert_ConfigOutOfDate,				/**< One of the Config Files is out of date. Use GetNodeId to determine which node is affected. */
@@ -225,7 +225,7 @@ namespace OpenZWave
 		 * Retrieve the User Alert Type Enum to determine what this message is about
 		 * \return UserAlertNotification Enum describing the Alert Type
 		 */
-		UserAlertNofification GetUserAlertType()const {return m_useralerttype;};
+		UserAlertNotification GetUserAlertType()const {return m_useralerttype;};
 
 		/**
 		 * Return the Comport associated with the DriverFailed Message
@@ -245,7 +245,7 @@ namespace OpenZWave
 		void SetSceneId( uint8 const _sceneId ){ assert(Type_SceneEvent==m_type); m_byte = _sceneId; }
 		void SetButtonId( uint8 const _buttonId ){ assert(Type_CreateButton==m_type||Type_DeleteButton==m_type||Type_ButtonOn==m_type||Type_ButtonOff==m_type); m_byte = _buttonId; }
 		void SetNotification( uint8 const _noteId ){ assert((Type_Notification==m_type) || (Type_ControllerCommand == m_type)); m_byte = _noteId; }
-		void SetUserAlertNofification(UserAlertNofification const alerttype){ assert(Type_UserAlerts==m_type); m_useralerttype = alerttype; }
+		void SetUserAlertNotification(UserAlertNotification const alerttype){ assert(Type_UserAlerts==m_type); m_useralerttype = alerttype; }
 		void SetCommand( uint8 const _command ){ assert(Type_ControllerCommand == m_type); m_command = _command; }
 		void SetComPort( string comport) { assert(Type_DriverFailed == m_type); m_comport = comport; }
 		void SetRetry (uint8 const timeout) { assert(Type_UserAlerts == m_type); m_byte = timeout; }
@@ -255,7 +255,7 @@ namespace OpenZWave
 		uint8				m_byte;
 		uint8				m_event;
 		uint8				m_command;
-		UserAlertNofification m_useralerttype;
+		UserAlertNotification m_useralerttype;
 		string				m_comport;
 	};
 

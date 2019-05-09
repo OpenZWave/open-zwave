@@ -62,32 +62,32 @@ bool ApplicationStatus::HandleMsg
 		{
 			case 0:
 			{
-				notification->SetUserAlertNofification(Notification::Alert_ApplicationStatus_Retry);
+				notification->SetUserAlertNotification(Notification::Alert_ApplicationStatus_Retry);
 				break;
 			}
 			case 1:
 			{
-				notification->SetUserAlertNofification(Notification::Alert_ApplicationStatus_Retry);
+				notification->SetUserAlertNotification(Notification::Alert_ApplicationStatus_Retry);
 				notification->SetRetry(_data[2]);
 				break;
 			}
 			case 2:
 			{
-				notification->SetUserAlertNofification(Notification::Alert_ApplicationStatus_Queued);
+				notification->SetUserAlertNotification(Notification::Alert_ApplicationStatus_Queued);
 				break;
 			}
 			default:
 			{
 				// Invalid status
 				Log::Write( LogLevel_Warning, GetNodeId(), "Received a unknown Application Status Message %d - Assuming Rejected", _data[1]);
-				notification->SetUserAlertNofification(Notification::Alert_ApplicationStatus_Rejected);
+				notification->SetUserAlertNotification(Notification::Alert_ApplicationStatus_Rejected);
 			}
 		}
 	}
 
 	if( ApplicationStatusCmd_RejectedRequest == (ApplicationStatusCmd)_data[0] )
 	{
-		notification->SetUserAlertNofification(Notification::Alert_ApplicationStatus_Rejected);
+		notification->SetUserAlertNotification(Notification::Alert_ApplicationStatus_Rejected);
 	}
 
 	GetDriver()->QueueNotification( notification );

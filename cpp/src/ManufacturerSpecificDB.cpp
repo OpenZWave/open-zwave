@@ -331,7 +331,7 @@ void ManufacturerSpecificDB::checkConfigFiles
 				} else {
 					Log::Write(LogLevel_Warning, "Can't download file %s", path.c_str());
 					Notification* notification = new Notification( Notification::Type_UserAlerts );
-					notification->SetUserAlertNofification(Notification::Alert_ConfigFileDownloadFailed);
+					notification->SetUserAlertNotification(Notification::Alert_ConfigFileDownloadFailed);
 					driver->QueueNotification( notification );
 				}
 			} else if (iter != m_downloading.end()) {
@@ -448,7 +448,7 @@ bool ManufacturerSpecificDB::updateConfigFile
 	} else {
 		Log::Write(LogLevel_Warning, "Can't download Config file %s", node->getConfigPath().c_str());
 		Notification* notification = new Notification( Notification::Type_UserAlerts );
-		notification->SetUserAlertNofification(Notification::Alert_ConfigFileDownloadFailed);
+		notification->SetUserAlertNotification(Notification::Alert_ConfigFileDownloadFailed);
 		driver->QueueNotification( notification );
 	}
 	checkInitialized();
@@ -470,7 +470,7 @@ bool ManufacturerSpecificDB::updateMFSConfigFile
 	} else {
 		Log::Write(LogLevel_Warning, "Can't download ManufacturerSpecifix.xml Config file");
 		Notification* notification = new Notification( Notification::Type_UserAlerts );
-		notification->SetUserAlertNofification(Notification::Alert_ConfigFileDownloadFailed);
+		notification->SetUserAlertNotification(Notification::Alert_ConfigFileDownloadFailed);
 		driver->QueueNotification( notification );
 	}
 
