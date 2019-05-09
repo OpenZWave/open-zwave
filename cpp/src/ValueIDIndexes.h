@@ -239,7 +239,7 @@ struct EnumName {                                                      \
                                                                        \
                 processed_names[index] = new char[length + 1];         \
                                                                        \
-                std::strncpy(                                          \
+					strncpy(                                           \
                     processed_names[index], raw_names[index], length); \
                 processed_names[index][length] = '\0';                 \
             }                                                          \
