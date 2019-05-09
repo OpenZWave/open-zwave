@@ -314,6 +314,178 @@ ENUM(ValueID_Index_Configuration,
 		Param_Start = 0,
 		Param_End = 255
 	);
-
+ENUM(ValueID_Index_ControllerReplication,
+		NodeId = 0,
+		Function = 1,
+		Replicate = 2
+	);
+ENUM(ValueID_Index_DoorLock,
+		Lock = 0,
+		Lock_Mode = 1,
+		System_Config_Mode = 2,
+		System_Config_Minutes = 3,
+		System_Config_Seconds = 4,
+		System_Config_OutsideHandles = 5,
+		System_Config_InsideHandles = 6
+	);
+ENUM(ValueID_Index_DoorLockLogging,
+		System_Config_MaxRecords = 0,
+		GetRecordNo = 1,
+		LogRecord = 2
+	);
+ENUM(ValueID_Index_EnergyProduction,
+		Instant = 0,
+		Total = 1,
+		Today = 2,
+		Time = 3
+	);
+ENUM(ValueID_Index_Indicator,
+		Indicator = 0
+	);
+ENUM(ValueID_Index_Language,
+		Language = 0,
+		Country = 1
+	);
+ENUM(ValueID_Index_Lock,
+		Locked = 0
+	);
+ENUM(ValueID_Index_ManufacturerProprietary,
+		FibaroVenetianBlinds_Blinds = 0,
+		FibaroVenetianBlinds_Tilt = 1
+	);
+ENUM(ValueID_Index_ManufacturerSpecific,
+		LoadedConfig = 0,
+		LocalConfig = 1,
+		LatestConfig = 2,
+		DeviceID = 3,
+		SerialNumber = 4
+	);
+ENUM(ValueID_Index_Meter,
+		Start = 0,
+		End = 31,
+		Exporting = 32,
+		Reset = 33
+	);
+ENUM(ValueID_Index_MeterPulse,
+		Count = 0
+	);
+ENUM(ValueID_Index_PowerLevel,
+		Powerlevel = 0,
+		Timeout = 1,
+		Set = 2,
+		TestNode = 3,
+		TestPowerlevel = 4,
+		TestFrames = 5,
+		Test = 6,
+		Report = 7,
+		TestStatus = 8,
+		TestAckFrames = 9
+	);
+ENUM(ValueID_Index_Protection,
+		Protection = 0
+	);
+ENUM(ValueID_Index_SceneActivation,
+		SceneID  = 0,
+		Duration = 1
+	);
+ENUM(ValueID_Index_Security,
+		Secured = 0
+	);
+ENUM(ValueID_Index_SensorAlarm,
+		Start = 0,
+		End = 255
+	);
+ENUM(ValueID_Index_SensorBinary,
+		Sensor = 0,
+		Start = 1,
+		End = 255
+	);
+ENUM(ValueID_Index_SensorMultiLevel,
+		Start = 0,
+		End = 255
+	);
+ENUM(ValueID_Index_SimpleAV,
+		Command = 0
+	);
+ENUM(ValueID_Index_SoundSwitch,
+		Tone_Count = 0,
+		Tones = 1,
+		Volume = 2,
+		Default_Tone = 3
+	);
+ENUM(ValueID_Index_SwitchAll,
+		SwitchAll = 0
+	);
+ENUM(ValueID_Index_SwitchBinary,
+		Level = 0,
+		TargetState = 1,
+		Duration = 2
+	);
+ENUM(ValueID_Index_SwitchMultiLevel,
+		Level = 0,
+		Bright = 1,
+		Dim = 2,
+		IgnoreStartLevel = 3,
+		StartLevel = 4,
+		Duration = 5,
+		Step = 6,
+		Inc = 7,
+		Dec = 8,
+		TargetValue = 9
+	);
+ENUM(ValueID_Index_SwitchToggleBinary,
+		ToggleSwitch = 0
+	);
+ENUM(ValueID_Index_SwitchToggleMultilevel,
+		Level = 0
+	);
+ENUM(ValueID_Index_ThermostatFanMode,
+		FanMode = 0
+	);
+ENUM(ValueID_Index_ThermostatFanState,
+		FanState = 0
+	);
+ENUM(ValueID_Index_ThermostatMode,
+		Mode = 0
+	);
+ENUM(ValueID_Index_ThermostatOperatingState,
+		OperatingState = 0
+	);
+ENUM(ValueID_Index_ThermostatSetpoint,
+		Start = 0,
+		End = 255
+	);
+ENUM(ValueID_Index_TimeParameters,
+		Date = 0,
+		Time = 1,
+		Set = 2,
+		Refresh = 3
+	);
+ENUM(ValueID_Index_UserCode,
+		Start = 1,
+		End = 254,
+		Refresh = 255,
+		RemoveCode = 256,
+		Count = 257,
+		RawValue = 258,
+		RawValueIndex = 259
+	);
+ENUM(ValueID_Index_Version,
+		Library = 0,
+		Protocol = 1,
+		Application = 2
+	);
+ENUM(ValueID_Index_WakeUp,
+		Interval = 0,
+		Min_Interval = 1,
+		Max_Interval = 2,
+		Default_Interval = 3,
+		Interval_Step = 4
+	);
+ENUM(ValueID_Index_ZWavePlusInfo,
+		Version = 0,
+		InstallerIcon = 1,
+		UserIcon = 2
+	);
 }
 #endif

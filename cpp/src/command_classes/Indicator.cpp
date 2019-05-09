@@ -108,7 +108,7 @@ bool Indicator::HandleMsg
 	{
 		Log::Write( LogLevel_Info, GetNodeId(), "Received an Indicator report: Indicator=%d", _data[1] );
 
-		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, 0 ) ) )
+		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, ValueID_Index_Indicator::Indicator ) ) )
 		{
 			value->OnValueRefreshed( _data[1] );
 			value->Release();
@@ -159,6 +159,6 @@ void Indicator::CreateVars
 {
 	if( Node* node = GetNodeUnsafe() )
 	{
-	  	node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Indicator", "", false, false, false, 0 );
+	  	node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_Indicator::Indicator, "Indicator", "", false, false, false, 0 );
 	}
 }

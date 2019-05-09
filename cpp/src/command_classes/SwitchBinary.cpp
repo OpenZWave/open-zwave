@@ -48,13 +48,6 @@ enum SwitchBinaryCmd
 	SwitchBinaryCmd_Report	= 0x03
 };
 
-enum SwitchBinaryIndex
-{
-	SwitchBinaryIndex_Level = 0,
-	SwitchBinaryIndex_TargetState,
-	SwitchBinaryIndex_Duration
-};
-
 //-----------------------------------------------------------------------------
 // <SwitchBinary::RequestState>
 // Request current state from the device
@@ -119,7 +112,7 @@ bool SwitchBinary::HandleMsg
 		Log::Write( LogLevel_Info, GetNodeId(), "Received SwitchBinary report from node %d: level=%s", GetNodeId(), _data[1] ? "On" : "Off" );
 
 		// data[1] => Switch state
-		if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, SwitchBinaryIndex_Level ) ) )
+		if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, ValueID_Index_SwitchBinary::Level ) ) )
 		{
 			value->OnValueRefreshed( _data[1] != 0 );
 			value->Release();
@@ -128,7 +121,7 @@ bool SwitchBinary::HandleMsg
 		if ( GetVersion() >= 2) {
 
 			// data[2] => target state
-			if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, SwitchBinaryIndex_TargetState ) ) )
+			if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, ValueID_Index_SwitchBinary::TargetState ) ) )
 			{
 				value->OnValueRefreshed( _data[2] != 0 );
 				value->Release();
@@ -136,7 +129,7 @@ bool SwitchBinary::HandleMsg
 				
 			// data[3] might be duration
 			if (_length > 3) {
-				if ( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, SwitchBinaryIndex_Duration ) ) )
+				if ( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, ValueID_Index_SwitchBinary::Duration ) ) )
 				{
 					value->OnValueRefreshed( _data[3] );
 					value->Release();
@@ -164,18 +157,18 @@ bool SwitchBinary::SetValue
 
 	switch( _value.GetID().GetIndex() )
 	{
-		case SwitchBinaryIndex_Level:
+		case ValueID_Index_SwitchBinary::Level:
 		{
-			if( ValueBool* value = static_cast<ValueBool*>( GetValue( instance, SwitchBinaryIndex_Level ) ) )
+			if( ValueBool* value = static_cast<ValueBool*>( GetValue( instance, ValueID_Index_SwitchBinary::Level ) ) )
 			{
 				res = SetState( instance, (static_cast<ValueBool const*>(&_value))->GetValue() );
 				value->Release();
 			}
 			break;
 		}
-		case SwitchBinaryIndex_Duration:
+		case ValueID_Index_SwitchBinary::Duration:
 		{
-			if( ValueByte* value = static_cast<ValueByte*>( GetValue( instance, SwitchBinaryIndex_Duration ) ) )
+			if( ValueByte* value = static_cast<ValueByte*>( GetValue( instance, ValueID_Index_SwitchBinary::Duration ) ) )
 			{
 				value->OnValueRefreshed( (static_cast<ValueByte const*>(&_value))->GetValue() );
 				value->Release();
@@ -241,7 +234,7 @@ bool SwitchBinary::SetState
 	
 	if( GetVersion() >= 2 )
 	{
-		ValueByte* durationValue = static_cast<ValueByte*>( GetValue( _instance, SwitchBinaryIndex_Duration ) );
+		ValueByte* durationValue = static_cast<ValueByte*>( GetValue( _instance, ValueID_Index_SwitchBinary::Duration ) );
 		uint8 duration = durationValue->GetValue();
 		durationValue->Release();
 		if( duration == 0xff )
@@ -291,13 +284,13 @@ void SwitchBinary::CreateVars
 		{
 			case 2:
 			{
-				node->CreateValueByte( ValueID::ValueGenre_System, GetCommandClassId(), _instance, SwitchBinaryIndex_Duration, "Transition Duration", "", false, false, 0xff, 0 );
-				node->CreateValueBool( ValueID::ValueGenre_System, GetCommandClassId(), _instance, SwitchBinaryIndex_TargetState, "Target State", "", true, false, true, 0 );
+				node->CreateValueByte( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_SwitchBinary::Duration, "Transition Duration", "", false, false, 0xff, 0 );
+				node->CreateValueBool( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_SwitchBinary::TargetState, "Target State", "", true, false, true, 0 );
 				// Fall through to version 1
 			}
 			case 1:
 			{
-				node->CreateValueBool( ValueID::ValueGenre_User, GetCommandClassId(), _instance, SwitchBinaryIndex_Level, "Switch", "", false, false, false, 0 );
+				node->CreateValueBool( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_SwitchBinary::Level, "Switch", "", false, false, false, 0 );
 				break;
 			}
 		}

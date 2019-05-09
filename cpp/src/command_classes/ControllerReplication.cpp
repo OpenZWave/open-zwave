@@ -48,13 +48,6 @@ enum ControllerReplicationCmd
 	ControllerReplicationCmd_TransferSceneName	= 0x34
 };
 
-enum
-{
-	ControllerReplicationIndex_NodeId = 0,
-	ControllerReplicationIndex_Function,
-	ControllerReplicationIndex_Replicate
-};
-
 static char const* c_controllerReplicationFunctionNames[] =
 {
 	"Groups",
@@ -135,9 +128,9 @@ bool ControllerReplication::SetValue
 
 	switch( _value.GetID().GetIndex() )
 	{
-		case ControllerReplicationIndex_NodeId:
+		case ValueID_Index_ControllerReplication::NodeId:
 		{
-			if( ValueByte* value = static_cast<ValueByte*>( GetValue( instance, (uint16)ControllerReplicationIndex_NodeId ) ) )
+			if( ValueByte* value = static_cast<ValueByte*>( GetValue( instance, (uint16)ValueID_Index_ControllerReplication::NodeId ) ) )
 			{
 				value->OnValueRefreshed( (static_cast<ValueByte const*>( &_value))->GetValue() );
 				value->Release();
@@ -145,9 +138,9 @@ bool ControllerReplication::SetValue
 			}
 			break;
 		}
-		case ControllerReplicationIndex_Function:
+		case ValueID_Index_ControllerReplication::Function:
 		{
-			if( ValueList* value = static_cast<ValueList*>( GetValue( instance, ControllerReplicationIndex_Function ) ) )
+			if( ValueList* value = static_cast<ValueList*>( GetValue( instance, ValueID_Index_ControllerReplication::Function ) ) )
 			{
 				ValueList::Item const *item = (static_cast<ValueList const*>( &_value))->GetItem();
 				value->OnValueRefreshed( item->m_value );
@@ -156,9 +149,9 @@ bool ControllerReplication::SetValue
 			}
 			break;
 		}
-		case ControllerReplicationIndex_Replicate:
+		case ValueID_Index_ControllerReplication::Replicate:
 		{
-			if( ValueButton* button = static_cast<ValueButton*>( GetValue( instance, ControllerReplicationIndex_Replicate ) ) )
+			if( ValueButton* button = static_cast<ValueButton*>( GetValue( instance, ValueID_Index_ControllerReplication::Replicate ) ) )
 			{
 				if( button->IsPressed() )
 				{
@@ -186,7 +179,7 @@ bool ControllerReplication::StartReplication
 		return false;
 	}
 
-	if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, ControllerReplicationIndex_NodeId ) ) )
+	if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, ValueID_Index_ControllerReplication::NodeId ) ) )
 	{
 		m_targetNodeId = value->GetValue();
 		value->Release();
@@ -196,7 +189,7 @@ bool ControllerReplication::StartReplication
 		return false;
 	}
 
-	if( ValueList* value = static_cast<ValueList*>( GetValue( _instance, ControllerReplicationIndex_Function ) ) )
+	if( ValueList* value = static_cast<ValueList*>( GetValue( _instance, ValueID_Index_ControllerReplication::Function ) ) )
 	{
 		ValueList::Item const *item = value->GetItem();
 		if (item)
@@ -310,7 +303,7 @@ void ControllerReplication::CreateVars
 {
 	if( Node* node = GetNodeUnsafe() )
 	{
-		node->CreateValueByte( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ControllerReplicationIndex_NodeId, "Node", "", false, false, 0, 0 );
+		node->CreateValueByte( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_ControllerReplication::NodeId, "Node", "", false, false, 0, 0 );
 		vector<ValueList::Item> items;
 
 		ValueList::Item item;
@@ -321,7 +314,7 @@ void ControllerReplication::CreateVars
 			items.push_back( item );
 		}
 
-		node->CreateValueList( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ControllerReplicationIndex_Function, "Functions", "", false, false, 1, items, 0, 0 );
-		node->CreateValueButton( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ControllerReplicationIndex_Replicate, "Replicate", 0 );
+		node->CreateValueList( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_ControllerReplication::Function, "Functions", "", false, false, 1, items, 0, 0 );
+		node->CreateValueButton( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_ControllerReplication::Replicate, "Replicate", 0 );
 	}
 }

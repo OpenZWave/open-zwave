@@ -43,14 +43,6 @@ enum EnergyProductionCmd
 	EnergyProductionCmd_Report	= 0x03
 };
 
-enum
-{
-	EnergyProductionIndex_Instant = 0,
-	EnergyProductionIndex_Total,
-	EnergyProductionIndex_Today,
-	EnergyProductionIndex_Time
-};
-
 static char const* c_energyParameterNames[] =
 {
 	"Instant energy production",
@@ -74,10 +66,10 @@ bool EnergyProduction::RequestState
 	if( _requestFlags & RequestFlag_Dynamic )
 	{
 		// Request each of the production values
-		request |= RequestValue( _requestFlags, EnergyProductionIndex_Instant, _instance, _queue );
-		request |= RequestValue( _requestFlags, EnergyProductionIndex_Total, _instance, _queue );
-		request |= RequestValue( _requestFlags, EnergyProductionIndex_Today, _instance, _queue );
-		request |= RequestValue( _requestFlags, EnergyProductionIndex_Time, _instance, _queue );
+		request |= RequestValue( _requestFlags, ValueID_Index_EnergyProduction::Instant, _instance, _queue );
+		request |= RequestValue( _requestFlags, ValueID_Index_EnergyProduction::Total, _instance, _queue );
+		request |= RequestValue( _requestFlags, ValueID_Index_EnergyProduction::Today, _instance, _queue );
+		request |= RequestValue( _requestFlags, ValueID_Index_EnergyProduction::Time, _instance, _queue );
 	}
 
 	return request;
@@ -95,7 +87,7 @@ bool EnergyProduction::RequestValue
 	Driver::MsgQueue const _queue
 )
 {
-	if (_valueEnum > EnergyProductionIndex_Time)
+	if (_valueEnum > ValueID_Index_EnergyProduction::Time)
 	{
 		Log::Write (LogLevel_Warning, GetNodeId(), "RequestValue _valueEnum was greater than range. Dropping");
 		return false;
@@ -169,10 +161,10 @@ void EnergyProduction::CreateVars
 {
 	if( Node* node = GetNodeUnsafe() )
 	{
-	  	node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, (uint8)EnergyProductionIndex_Instant, c_energyParameterNames[EnergyProductionIndex_Instant], "W", true, false, "0.0", 0 );
-		node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, (uint8)EnergyProductionIndex_Total, c_energyParameterNames[EnergyProductionIndex_Total], "kWh", true, false, "0.0", 0 );
-		node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, (uint8)EnergyProductionIndex_Today, c_energyParameterNames[EnergyProductionIndex_Today], "kWh", true, false, "0.0", 0 );
-		node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, (uint8)EnergyProductionIndex_Time, c_energyParameterNames[EnergyProductionIndex_Time], "", true, false, "0.0", 0 );
+	  	node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, (uint8)ValueID_Index_EnergyProduction::Instant, c_energyParameterNames[ValueID_Index_EnergyProduction::Instant], "W", true, false, "0.0", 0 );
+		node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, (uint8)ValueID_Index_EnergyProduction::Total, c_energyParameterNames[ValueID_Index_EnergyProduction::Total], "kWh", true, false, "0.0", 0 );
+		node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, (uint8)ValueID_Index_EnergyProduction::Today, c_energyParameterNames[ValueID_Index_EnergyProduction::Today], "kWh", true, false, "0.0", 0 );
+		node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, (uint8)ValueID_Index_EnergyProduction::Time, c_energyParameterNames[ValueID_Index_EnergyProduction::Time], "", true, false, "0.0", 0 );
 	}
 }
 

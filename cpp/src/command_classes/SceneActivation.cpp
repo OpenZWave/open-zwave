@@ -42,12 +42,6 @@ enum SceneActivationCmd
 	SceneActivationCmd_Set				= 0x01
 };
 
-enum
-{
-	SceneActivationIndex_SceneID 	= 0,
-	SceneActivationIndex_Duration	= 1,
-};
-
 //-----------------------------------------------------------------------------
 // <SceneActivation::SceneActivation>
 // Constructor
@@ -99,12 +93,12 @@ bool SceneActivation::HandleIncommingMsg
 		GetDriver()->QueueNotification( notification );
 
 		Log::Write( LogLevel_Info, GetNodeId(), "Received SceneActivation report: %d (duration: %d)", _data[1]);
-		if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, SceneActivationIndex_SceneID ) ) )
+		if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, ValueID_Index_SceneActivation::SceneID ) ) )
 		{
 			value->OnValueRefreshed( _data[1] );
 			value->Release();
 		}
-		if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, SceneActivationIndex_Duration ) ) )
+		if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, ValueID_Index_SceneActivation::Duration ) ) )
 		{
 			value->OnValueRefreshed( duration );
 			value->Release();
@@ -139,12 +133,12 @@ bool SceneActivation::HandleMsg
 // Return the Scene ValueID's to defaults, after the duration has expired
 //-----------------------------------------------------------------------------
 void SceneActivation::ClearScene(uint32 _instance) {
-	if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, SceneActivationIndex_SceneID ) ) )
+	if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, ValueID_Index_SceneActivation::SceneID ) ) )
 	{
 		value->OnValueRefreshed( 0 );
 		value->Release();
 	}
-	if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, SceneActivationIndex_Duration ) ) )
+	if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, ValueID_Index_SceneActivation::Duration ) ) )
 	{
 		value->OnValueRefreshed( 0 );
 		value->Release();
@@ -164,7 +158,7 @@ void SceneActivation::CreateVars
 {
 	if( Node* node = GetNodeUnsafe() )
 	{
-	  	node->CreateValueInt(  ValueID::ValueGenre_User, GetCommandClassId(), _instance, SceneActivationIndex_SceneID, "Scene", "", true, false, 0, 0 );
-	  	node->CreateValueInt(  ValueID::ValueGenre_User, GetCommandClassId(), _instance, SceneActivationIndex_Duration, "Duration", "", true, false, 0, 0 );
+	  	node->CreateValueInt(  ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_SceneActivation::SceneID, "Scene", "", true, false, 0, 0 );
+	  	node->CreateValueInt(  ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_SceneActivation::Duration, "Duration", "", true, false, 0, 0 );
 	}
 }

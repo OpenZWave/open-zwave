@@ -182,7 +182,7 @@ bool SensorBinary::HandleMsg
 	    {
             Log::Write( LogLevel_Info, GetNodeId(), "Received SensorBinary report: State=%s", _data[1] ? "On" : "Off" );
 
-            if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, 0 ) ) )
+            if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, ValueID_Index_SensorBinary::Sensor ) ) )
             {
                 value->OnValueRefreshed( _data[1] != 0 );
                 value->Release();
@@ -238,6 +238,6 @@ void SensorBinary::CreateVars
 {
 	if( Node* node = GetNodeUnsafe() )
 	{
-	  	node->CreateValueBool(  ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Sensor", "", true, false, false, 0 );
+	  	node->CreateValueBool(  ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_SensorBinary::Sensor, "Sensor", "", true, false, false, 0 );
 	}
 }

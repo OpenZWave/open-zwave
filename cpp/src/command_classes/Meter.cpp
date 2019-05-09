@@ -59,13 +59,6 @@ enum MeterType
 	MeterType_Water
 };
 
-enum
-{
-	MeterIndex_Exporting = 32,
-	MeterIndex_Reset
-};
-
-
 static char const* c_meterTypes[] =
 {
 	"Unknown",
@@ -338,12 +331,12 @@ bool Meter::HandleSupportedReport
 		}
 
 		// Create the export flag
-		node->CreateValueBool( ValueID::ValueGenre_User, GetCommandClassId(), _instance, MeterIndex_Exporting, "Exporting", "", true, false, false, 0 );
+		node->CreateValueBool( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_Meter::Exporting, "Exporting", "", true, false, false, 0 );
 
 		// Create the reset button
 		if( canReset )
 		{
-			node->CreateValueButton( ValueID::ValueGenre_System, GetCommandClassId(), _instance, MeterIndex_Reset, "Reset", 0 );
+			node->CreateValueButton( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_Meter::Reset, "Reset", 0 );
 		}
 
 		Log::Write( LogLevel_Info, GetNodeId(), "Received Meter supported report from node %d, %s", GetNodeId(), msg.c_str() );
@@ -369,7 +362,7 @@ bool Meter::HandleReport
 	if( GetVersion() > 1 )
 	{
 		exporting = ((_data[1] & 0x60) == 0x40 );
-		if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, MeterIndex_Exporting ) ) )
+		if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, ValueID_Index_Meter::Exporting ) ) )
 		{
 			value->OnValueRefreshed( exporting );
 			value->Release();
@@ -429,7 +422,7 @@ bool Meter::HandleReport
 			}
 		}
 
-		if( ValueDecimal* value = static_cast<ValueDecimal*>( GetValue( _instance, 0 ) ) )
+		if( ValueDecimal* value = static_cast<ValueDecimal*>( GetValue( _instance, ValueID_Index_Meter::Start ) ) )
 		{
 			Log::Write( LogLevel_Info, GetNodeId(), "Received Meter report from node %d: %s=%s%s", GetNodeId(), label.c_str(), valueStr.c_str(), units.c_str() );
 			value->SetLabel( label );
@@ -525,7 +518,7 @@ bool Meter::SetValue
 	Value const& _value
 )
 {
-	if( MeterIndex_Reset == _value.GetID().GetIndex() )
+	if( ValueID_Index_Meter::Reset == _value.GetID().GetIndex() )
 	{
 		ValueButton const* button = static_cast<ValueButton const*>(&_value);
 		if( button->IsPressed() )
@@ -556,6 +549,6 @@ void Meter::CreateVars
 {
 	if( Node* node = GetNodeUnsafe() )
 	{
-		node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Unknown", "", true, false, "0.0", 0 );
+		node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_Meter::Start, "Unknown", "", true, false, "0.0", 0 );
 	}
 }

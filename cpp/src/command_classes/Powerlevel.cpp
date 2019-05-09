@@ -51,20 +51,6 @@ enum PowerlevelCmd
 	PowerlevelCmd_TestNodeReport		= 0x06
 };
 
-enum
-{
-	PowerlevelIndex_Powerlevel = 0,
-	PowerlevelIndex_Timeout,
-	PowerlevelIndex_Set,
-	PowerlevelIndex_TestNode,
-	PowerlevelIndex_TestPowerlevel,
-	PowerlevelIndex_TestFrames,
-	PowerlevelIndex_Test,
-	PowerlevelIndex_Report,
-	PowerlevelIndex_TestStatus,
-	PowerlevelIndex_TestAckFrames
-};
-
 static char const* c_powerLevelNames[] =
 {
 	"Normal",
@@ -162,12 +148,12 @@ bool Powerlevel::HandleMsg
 		uint8 timeout = _data[2];
 
 		Log::Write( LogLevel_Info, GetNodeId(), "Received a PowerLevel report: PowerLevel=%s, Timeout=%d", c_powerLevelNames[powerLevel], timeout );
-		if( ValueList* value = static_cast<ValueList*>( GetValue( _instance, PowerlevelIndex_Powerlevel ) ) )
+		if( ValueList* value = static_cast<ValueList*>( GetValue( _instance, ValueID_Index_PowerLevel::Powerlevel ) ) )
 		{
 			value->OnValueRefreshed( (int)powerLevel );
 			value->Release();
 		}
-		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, PowerlevelIndex_Timeout ) ) )
+		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, ValueID_Index_PowerLevel::Timeout ) ) )
 		{
 			value->OnValueRefreshed( timeout );
 			value->Release();
@@ -188,17 +174,17 @@ bool Powerlevel::HandleMsg
 		}
 
 		Log::Write( LogLevel_Info, GetNodeId(), "Received a PowerLevel Test Node report: Test Node=%d, Status=%s, Test Frame ACK Count=%d", testNode, c_powerLevelStatusNames[status], ackCount );
-		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, PowerlevelIndex_TestNode ) ) )
+		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, ValueID_Index_PowerLevel::TestNode ) ) )
 		{
 			value->OnValueRefreshed( testNode );
 			value->Release();
 		}
-		if( ValueList* value = static_cast<ValueList*>( GetValue( _instance, PowerlevelIndex_TestStatus ) ) )
+		if( ValueList* value = static_cast<ValueList*>( GetValue( _instance, ValueID_Index_PowerLevel::TestStatus ) ) )
 		{
 			value->OnValueRefreshed( (int)status );
 			value->Release();
 		}
-		if( ValueShort* value = static_cast<ValueShort*>( GetValue( _instance, PowerlevelIndex_TestAckFrames ) ) )
+		if( ValueShort* value = static_cast<ValueShort*>( GetValue( _instance, ValueID_Index_PowerLevel::TestAckFrames ) ) )
 		{
 			value->OnValueRefreshed( (short)ackCount );
 			value->Release();
@@ -222,9 +208,9 @@ bool Powerlevel::SetValue
 
 	switch( _value.GetID().GetIndex() )
 	{
-		case PowerlevelIndex_Powerlevel:
+		case ValueID_Index_PowerLevel::Powerlevel:
 		{
-			if( ValueList* value = static_cast<ValueList*>( GetValue( instance, PowerlevelIndex_Powerlevel ) ) )
+			if( ValueList* value = static_cast<ValueList*>( GetValue( instance, ValueID_Index_PowerLevel::Powerlevel ) ) )
 			{
 				ValueList::Item const *item = (static_cast<ValueList const*>( &_value))->GetItem();
 				if (item != NULL)
@@ -234,9 +220,9 @@ bool Powerlevel::SetValue
 			res = true;
 			break;
 		}
-		case PowerlevelIndex_Timeout:
+		case ValueID_Index_PowerLevel::Timeout:
 		{
-			if( ValueByte* value = static_cast<ValueByte*>( GetValue( instance, PowerlevelIndex_Timeout ) ) )
+			if( ValueByte* value = static_cast<ValueByte*>( GetValue( instance, ValueID_Index_PowerLevel::Timeout ) ) )
 			{
 				value->OnValueRefreshed( (static_cast<ValueByte const*>( &_value))->GetValue() );
 				value->Release();
@@ -244,10 +230,10 @@ bool Powerlevel::SetValue
 			res = true;
 			break;
 		}
-		case PowerlevelIndex_Set:
+		case ValueID_Index_PowerLevel::Set:
 		{
 			// Set
-			if( ValueButton* button = static_cast<ValueButton*>( GetValue( instance, PowerlevelIndex_Set ) ) )
+			if( ValueButton* button = static_cast<ValueButton*>( GetValue( instance, ValueID_Index_PowerLevel::Set ) ) )
 			{
 				if( button->IsPressed() )
 				{
@@ -257,9 +243,9 @@ bool Powerlevel::SetValue
 			}
 			break;
 		}
-		case PowerlevelIndex_TestNode:
+		case ValueID_Index_PowerLevel::TestNode:
 		{
-			if( ValueByte* value = static_cast<ValueByte*>( GetValue( instance, PowerlevelIndex_TestNode ) ) )
+			if( ValueByte* value = static_cast<ValueByte*>( GetValue( instance, ValueID_Index_PowerLevel::TestNode ) ) )
 			{
 				value->OnValueRefreshed( (static_cast<ValueByte const*>( &_value))->GetValue() );
 				value->Release();
@@ -267,9 +253,9 @@ bool Powerlevel::SetValue
 			res = true;
 			break;
 		}
-		case PowerlevelIndex_TestPowerlevel:
+		case ValueID_Index_PowerLevel::TestPowerlevel:
 		{
-			if( ValueList* value = static_cast<ValueList*>( GetValue( instance, PowerlevelIndex_TestPowerlevel ) ) )
+			if( ValueList* value = static_cast<ValueList*>( GetValue( instance, ValueID_Index_PowerLevel::TestPowerlevel ) ) )
 			{
 				ValueList::Item const *item = (static_cast<ValueList const*>( &_value))->GetItem();
 				if (item != NULL)
@@ -279,9 +265,9 @@ bool Powerlevel::SetValue
 			res = true;
 			break;
 		}
-		case PowerlevelIndex_TestFrames:
+		case ValueID_Index_PowerLevel::TestFrames:
 		{
-			if( ValueShort* value = static_cast<ValueShort*>( GetValue( instance, PowerlevelIndex_TestFrames ) ) )
+			if( ValueShort* value = static_cast<ValueShort*>( GetValue( instance, ValueID_Index_PowerLevel::TestFrames ) ) )
 			{
 				value->OnValueRefreshed( (static_cast<ValueByte const*>( &_value))->GetValue() );
 				value->Release();
@@ -289,10 +275,10 @@ bool Powerlevel::SetValue
 			res = true;
 			break;
 		}
-		case PowerlevelIndex_Test:
+		case ValueID_Index_PowerLevel::Test:
 		{
 			// Test
-			if( ValueButton* button = static_cast<ValueButton*>( GetValue( instance, PowerlevelIndex_Test ) ) )
+			if( ValueButton* button = static_cast<ValueButton*>( GetValue( instance, ValueID_Index_PowerLevel::Test ) ) )
 			{
 				if( button->IsPressed() )
 				{
@@ -302,10 +288,10 @@ bool Powerlevel::SetValue
 			}
 			break;
 		}
-		case PowerlevelIndex_Report:
+		case ValueID_Index_PowerLevel::Report:
 		{
 			// Test
-			if( ValueButton* button = static_cast<ValueButton*>( GetValue( instance, PowerlevelIndex_Report ) ) )
+			if( ValueButton* button = static_cast<ValueButton*>( GetValue( instance, ValueID_Index_PowerLevel::Report ) ) )
 			{
 				if( button->IsPressed() )
 				{
@@ -331,7 +317,7 @@ bool Powerlevel::Set
 	PowerLevelEnum powerLevel = PowerLevel_Normal;
 	uint8 timeout;
 
-	if( ValueList* value = static_cast<ValueList*>( GetValue( _instance, PowerlevelIndex_Powerlevel ) ) )
+	if( ValueList* value = static_cast<ValueList*>( GetValue( _instance, ValueID_Index_PowerLevel::Powerlevel ) ) )
 	{
 		ValueList::Item const *item = value->GetItem();
 		if (item != NULL)
@@ -343,7 +329,7 @@ bool Powerlevel::Set
 		return false;
 	}
 
-	if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, PowerlevelIndex_Timeout ) ) )
+	if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, ValueID_Index_PowerLevel::Timeout ) ) )
 	{
 		timeout = value->GetValue();
 		value->Release();
@@ -387,7 +373,7 @@ bool Powerlevel::Test
 	PowerLevelEnum powerLevel = PowerLevel_Normal;
 	uint16 numFrames;
 
-	if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, PowerlevelIndex_TestNode ) ) )
+	if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, ValueID_Index_PowerLevel::TestNode ) ) )
 	{
 		testNodeId = value->GetValue();
 		value->Release();
@@ -397,7 +383,7 @@ bool Powerlevel::Test
 		return false;
 	}
 
-	if( ValueList* value = static_cast<ValueList*>( GetValue( _instance, PowerlevelIndex_TestPowerlevel ) ) )
+	if( ValueList* value = static_cast<ValueList*>( GetValue( _instance, ValueID_Index_PowerLevel::TestPowerlevel ) ) )
 	{
 		ValueList::Item const *item = value->GetItem();
 		if (item != NULL)
@@ -409,7 +395,7 @@ bool Powerlevel::Test
 		return false;
 	}
 
-	if( ValueShort* value = static_cast<ValueShort*>( GetValue( _instance, PowerlevelIndex_TestFrames ) ) )
+	if( ValueShort* value = static_cast<ValueShort*>( GetValue( _instance, ValueID_Index_PowerLevel::TestFrames ) ) )
 	{
 		numFrames = value->GetValue();
 		value->Release();
@@ -483,14 +469,14 @@ void Powerlevel::CreateVars
 			items.push_back( item );
 		}
 
-		node->CreateValueList( ValueID::ValueGenre_System, GetCommandClassId(), _instance, PowerlevelIndex_Powerlevel, "Powerlevel", "dB", false, false, 1, items, 0, 0 );
-		node->CreateValueByte( ValueID::ValueGenre_System, GetCommandClassId(), _instance, PowerlevelIndex_Timeout, "Timeout", "seconds", false, false, 0, 0 );
-		node->CreateValueButton( ValueID::ValueGenre_System, GetCommandClassId(), _instance, PowerlevelIndex_Set, "Set Powerlevel", 0 );
-		node->CreateValueByte( ValueID::ValueGenre_System, GetCommandClassId(), _instance, PowerlevelIndex_TestNode, "Test Node", "", false, false, 0, 0 );
-		node->CreateValueList( ValueID::ValueGenre_System, GetCommandClassId(), _instance, PowerlevelIndex_TestPowerlevel, "Test Powerlevel", "dB", false, false, 1, items, 0, 0 );
-		node->CreateValueShort( ValueID::ValueGenre_System, GetCommandClassId(), _instance, PowerlevelIndex_TestFrames, "Frame Count", "", false, false, 0, 0 );
-		node->CreateValueButton( ValueID::ValueGenre_System, GetCommandClassId(), _instance, PowerlevelIndex_Test, "Test", 0 );
-		node->CreateValueButton( ValueID::ValueGenre_System, GetCommandClassId(), _instance, PowerlevelIndex_Report, "Report", 0 );
+		node->CreateValueList( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_PowerLevel::Powerlevel, "Powerlevel", "dB", false, false, 1, items, 0, 0 );
+		node->CreateValueByte( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_PowerLevel::Timeout, "Timeout", "seconds", false, false, 0, 0 );
+		node->CreateValueButton( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_PowerLevel::Set, "Set Powerlevel", 0 );
+		node->CreateValueByte( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_PowerLevel::TestNode, "Test Node", "", false, false, 0, 0 );
+		node->CreateValueList( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_PowerLevel::TestPowerlevel, "Test Powerlevel", "dB", false, false, 1, items, 0, 0 );
+		node->CreateValueShort( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_PowerLevel::TestFrames, "Frame Count", "", false, false, 0, 0 );
+		node->CreateValueButton( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_PowerLevel::Test, "Test", 0 );
+		node->CreateValueButton( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_PowerLevel::Report, "Report", 0 );
 
 		items.clear();
 		for( uint8 i=0; i<3; ++i )
@@ -499,7 +485,7 @@ void Powerlevel::CreateVars
 			item.m_value = i;
 			items.push_back( item );
 		}
-		node->CreateValueList( ValueID::ValueGenre_System, GetCommandClassId(), _instance, PowerlevelIndex_TestStatus, "Test Status", "", true, false, 1, items, 0, 0 );
-		node->CreateValueShort( ValueID::ValueGenre_System, GetCommandClassId(), _instance, PowerlevelIndex_TestAckFrames, "Acked Frames", "", true, false, 0, 0 );
+		node->CreateValueList( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_PowerLevel::TestStatus, "Test Status", "", true, false, 1, items, 0, 0 );
+		node->CreateValueShort( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_PowerLevel::TestAckFrames, "Acked Frames", "", true, false, 0, 0 );
 	}
 }

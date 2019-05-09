@@ -112,7 +112,7 @@ bool MeterPulse::HandleMsg
 		}
 
 		Log::Write( LogLevel_Info, GetNodeId(), "Received a meter pulse count: Count=%d", count );
-		if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, 0 ) ) )
+		if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, ValueID_Index_MeterPulse::Count ) ) )
 		{
 			value->OnValueRefreshed( count );
 			value->Release();
@@ -135,7 +135,7 @@ void MeterPulse::CreateVars
 {
 	if( Node* node = GetNodeUnsafe() )
 	{
-	  	node->CreateValueInt( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Count", "", true, false, 0, 0 );
+	  	node->CreateValueInt( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_MeterPulse::Count, "Count", "", true, false, 0, 0 );
 	}
 }
 
