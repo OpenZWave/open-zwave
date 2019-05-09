@@ -28,11 +28,14 @@
 #ifndef _ValueIDIndexes_H
 #define _ValueIDIndexes_H
 
+#include "Defs.h"
+#include <cstring>
+
+using namespace std;
+
 namespace OpenZWave
 {
 
-#include <cstddef>
-#include <cstring>
 
 /* this is good for upto 100 entries per ENUM. I shall predict that 100 entries shall be enough for any CommandClass :) */
 
