@@ -48,14 +48,6 @@ enum AssociationCommandConfigurationCmd
 	AssociationCommandConfigurationCmd_Report					= 0x05
 };
 
-enum
-{
-	AssociationCommandConfigurationIndex_MaxCommandLength = 0,
-	AssociationCommandConfigurationIndex_CommandsAreValues,
-	AssociationCommandConfigurationIndex_CommandsAreConfigurable,
-	AssociationCommandConfigurationIndex_NumFreeCommands,
-	AssociationCommandConfigurationIndex_MaxCommands
-};
 
 
 //-----------------------------------------------------------------------------
@@ -159,31 +151,31 @@ bool AssociationCommandConfiguration::HandleMsg
 		ValueByte* valueByte;
 		ValueShort* valueShort;
 
-		if( (valueByte = static_cast<ValueByte*>( GetValue( _instance, AssociationCommandConfigurationIndex_MaxCommandLength ) )) )
+		if( (valueByte = static_cast<ValueByte*>( GetValue( _instance, ValueID_Index_AssociationCommandConfiguration::MaxCommandLength ) )) )
 		{
 			valueByte->OnValueRefreshed( maxCommandLength );
 			valueByte->Release();
 		}
 
-		if( (valueBool = static_cast<ValueBool*>( GetValue( _instance, AssociationCommandConfigurationIndex_CommandsAreValues ) )) )
+		if( (valueBool = static_cast<ValueBool*>( GetValue( _instance, ValueID_Index_AssociationCommandConfiguration::CommandsAreValues ) )) )
 		{
 			valueBool->OnValueRefreshed( commandsAreValues );
 			valueBool->Release();
 		}
 
-		if( (valueBool = static_cast<ValueBool*>( GetValue( _instance, AssociationCommandConfigurationIndex_CommandsAreConfigurable ) )) )
+		if( (valueBool = static_cast<ValueBool*>( GetValue( _instance, ValueID_Index_AssociationCommandConfiguration::CommandsAreConfigurable ) )) )
 		{
 			valueBool->OnValueRefreshed( commandsAreConfigurable );
 			valueBool->Release();
 		}
 
-		if( (valueShort = static_cast<ValueShort*>( GetValue( _instance, AssociationCommandConfigurationIndex_NumFreeCommands ) )) )
+		if( (valueShort = static_cast<ValueShort*>( GetValue( _instance, ValueID_Index_AssociationCommandConfiguration::NumFreeCommands ) )) )
 		{
 			valueShort->OnValueRefreshed( numFreeCommands );
 			valueShort->Release();
 		}
 
-		if( (valueShort = static_cast<ValueShort*>( GetValue( _instance, AssociationCommandConfigurationIndex_MaxCommands ) )) )
+		if( (valueShort = static_cast<ValueShort*>( GetValue( _instance, ValueID_Index_AssociationCommandConfiguration::MaxCommands ) )) )
 		{
 			valueShort->OnValueRefreshed( maxCommands );
 			valueShort->Release();
@@ -239,11 +231,11 @@ void AssociationCommandConfiguration::CreateVars
 {
 	if( Node* node = GetNodeUnsafe() )
 	{
-	  	node->CreateValueByte (	ValueID::ValueGenre_System, GetCommandClassId(), _instance, AssociationCommandConfigurationIndex_MaxCommandLength,			"Max Command Length",			"", true, false, 0, 0 );
-		node->CreateValueBool ( ValueID::ValueGenre_System, GetCommandClassId(), _instance, AssociationCommandConfigurationIndex_CommandsAreValues,			"Commands are Values",			"", true, false, false, 0 );
-		node->CreateValueBool ( ValueID::ValueGenre_System, GetCommandClassId(), _instance, AssociationCommandConfigurationIndex_CommandsAreConfigurable,	"Commands are Configurable",	"", true, false, false, 0 );
-		node->CreateValueShort( ValueID::ValueGenre_System, GetCommandClassId(), _instance, AssociationCommandConfigurationIndex_NumFreeCommands,			"Free Commands",				"", true, false, 0, 0 );
-		node->CreateValueShort( ValueID::ValueGenre_System, GetCommandClassId(), _instance, AssociationCommandConfigurationIndex_MaxCommands,				"Max Commands",					"", true, false, 0, 0 );
+	  	node->CreateValueByte (	ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_AssociationCommandConfiguration::MaxCommandLength,			"Max Command Length",			"", true, false, 0, 0 );
+		node->CreateValueBool ( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_AssociationCommandConfiguration::CommandsAreValues,			"Commands are Values",			"", true, false, false, 0 );
+		node->CreateValueBool ( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_AssociationCommandConfiguration::CommandsAreConfigurable,	"Commands are Configurable",	"", true, false, false, 0 );
+		node->CreateValueShort( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_AssociationCommandConfiguration::NumFreeCommands,			"Free Commands",				"", true, false, 0, 0 );
+		node->CreateValueShort( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_AssociationCommandConfiguration::MaxCommands,				"Max Commands",					"", true, false, 0, 0 );
 	}
 }
 

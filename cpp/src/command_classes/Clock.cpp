@@ -45,13 +45,6 @@ enum ClockCmd
 	ClockCmd_Report	= 0x06
 };
 
-enum
-{
-	ClockIndex_Day = 0,
-	ClockIndex_Hour,
-	ClockIndex_Minute
-};
-
 static char const* c_dayNames[] =
 {
 	"Invalid",
@@ -138,17 +131,17 @@ bool Clock::HandleMsg
 		Log::Write( LogLevel_Info, GetNodeId(), "Received Clock report: %s %.2d:%.2d", c_dayNames[day], hour, minute );
 
 
-		if( ValueList* dayValue = static_cast<ValueList*>( GetValue( _instance, ClockIndex_Day ) ) )
+		if( ValueList* dayValue = static_cast<ValueList*>( GetValue( _instance, ValueID_Index_Clock::Day ) ) )
 		{
 			dayValue->OnValueRefreshed( day );
 			dayValue->Release();
 		}
-		if( ValueByte* hourValue = static_cast<ValueByte*>( GetValue( _instance, ClockIndex_Hour ) ) )
+		if( ValueByte* hourValue = static_cast<ValueByte*>( GetValue( _instance, ValueID_Index_Clock::Hour ) ) )
 		{
 			hourValue->OnValueRefreshed( hour );
 			hourValue->Release();
 		}
-		if( ValueByte* minuteValue = static_cast<ValueByte*>( GetValue( _instance, ClockIndex_Minute ) ) )
+		if( ValueByte* minuteValue = static_cast<ValueByte*>( GetValue( _instance, ValueID_Index_Clock::Minute ) ) )
 		{
 			minuteValue->OnValueRefreshed( minute );
 			minuteValue->Release();
@@ -172,9 +165,9 @@ bool Clock::SetValue
 
 	uint8 instance = _value.GetID().GetInstance();
 
-	ValueList* dayValue = static_cast<ValueList*>( GetValue( instance, ClockIndex_Day ) );
-	ValueByte* hourValue = static_cast<ValueByte*>( GetValue( instance, ClockIndex_Hour ) );
-	ValueByte* minuteValue = static_cast<ValueByte*>( GetValue( instance, ClockIndex_Minute ) );
+	ValueList* dayValue = static_cast<ValueList*>( GetValue( instance, ValueID_Index_Clock::Day ) );
+	ValueByte* hourValue = static_cast<ValueByte*>( GetValue( instance, ValueID_Index_Clock::Hour ) );
+	ValueByte* minuteValue = static_cast<ValueByte*>( GetValue( instance, ValueID_Index_Clock::Minute ) );
 
 	if( dayValue && hourValue && minuteValue )
 	{
@@ -250,8 +243,8 @@ void Clock::CreateVars
 			items.push_back( item );
 		}
 
-		node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ClockIndex_Day, "Day", "", false, false, 1, items, 0, 0 );
-		node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ClockIndex_Hour, "Hour", "", false, false, 12, 0 );
-		node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ClockIndex_Minute, "Minute", "", false, false, 0, 0 );
+		node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_Clock::Day, "Day", "", false, false, 1, items, 0, 0 );
+		node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_Clock::Hour, "Hour", "", false, false, 12, 0 );
+		node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_Clock::Minute, "Minute", "", false, false, 0, 0 );
 	}
 }

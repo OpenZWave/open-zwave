@@ -31,6 +31,7 @@
 #include <string>
 #include <assert.h>
 #include "Defs.h"
+#include "ValueIDIndexes.h"
 
 class TiXmlElement;
 
