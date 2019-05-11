@@ -4273,6 +4273,7 @@ bool Driver::EnablePoll
 			// send notification to indicate polling is enabled
 			Notification* notification = new Notification( Notification::Type_PollingEnabled );
 			notification->SetHomeAndNodeIds( m_homeId, _valueId.GetNodeId() );
+			notification->SetValueId(_valueId);
 			QueueNotification( notification );
 			Log::Write( LogLevel_Info, nodeId, "EnablePoll for HomeID 0x%.8x, value(cc=0x%02x,in=0x%02x,id=0x%02x)--poll list has %d items",
 					_valueId.GetHomeId(), _valueId.GetCommandClassId(), _valueId.GetIndex(), _valueId.GetInstance(), m_pollList.size() );
@@ -4331,6 +4332,7 @@ bool Driver::DisablePoll
 				// send notification to indicate polling is disabled
 				Notification* notification = new Notification( Notification::Type_PollingDisabled );
 				notification->SetHomeAndNodeIds( m_homeId, _valueId.GetNodeId() );
+				notification->SetValueId(_valueId);
 				QueueNotification( notification );
 				Log::Write( LogLevel_Info, nodeId, "DisablePoll for HomeID 0x%.8x, value(cc=0x%02x,in=0x%02x,id=0x%02x)--poll list has %d items",
 						_valueId.GetHomeId(), _valueId.GetCommandClassId(), _valueId.GetIndex(), _valueId.GetInstance(), m_pollList.size() );
