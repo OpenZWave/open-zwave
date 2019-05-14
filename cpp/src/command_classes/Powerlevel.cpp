@@ -283,7 +283,7 @@ bool Powerlevel::SetValue
 		{
 			if( ValueShort* value = static_cast<ValueShort*>( GetValue( instance, PowerlevelIndex_TestFrames ) ) )
 			{
-				value->OnValueRefreshed( (static_cast<ValueByte const*>( &_value))->GetValue() );
+				value->OnValueRefreshed( (static_cast<ValueShort const*>( &_value))->GetValue() );
 				value->Release();
 			}
 			res = true;
