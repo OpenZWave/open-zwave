@@ -1520,7 +1520,10 @@ void Node::UpdateProtocolInfo
 			list<uint8> advertisedCommandClasses = CommandClasses::GetAdvertisedCommandClasses();
 			for (list<uint8>::iterator it = advertisedCommandClasses.begin(); it != advertisedCommandClasses.end(); ++it) {
 				CommandClass *cc = AddCommandClass(*it, true);
-				Log::Write( LogLevel_Info, m_nodeId, "    %s", cc->GetCommandClassName().c_str());
+				if ( cc )
+				{
+					Log::Write(LogLevel_Info, m_nodeId, "    %s", cc->GetCommandClassName().c_str());
+				}
 			}
 		}
 
