@@ -1,4 +1,20 @@
-<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
+  <MetaData>
+    <MetaDataItem name="OzwInfoPage">http://www.openzwave.net/device-database/008a:0101:0005</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/BeNext/AlarmSound.png</MetaDataItem>
+    <MetaDataItem id="0100" name="ZWProductPage" type="0005">https://products.z-wavealliance.org/products/51</MetaDataItem>
+    <MetaDataItem name="Description">The Alarm Sound is a plug and play product developed by BeNext. Depending on present situations and scenes it sets off an alarm sound warning you and your family or scaring off unwanted activities. Use the Alarm Sound for security purposes and notifications indoors.
+Use the Alarm Sound in combination with the Door Sensor or MoLite Sensor to alert you when someone undesirably enters your home or work-space. The Alarm Sound possesses six different sound- and lighting-configurations to scare off any possible intruder. You can also customize personal preferred ‘scenes’ and ‘rules’ in our free of charge online manager in order to give the Alarm Sound dual functionality. You can even choose to create a new kind of alarm clock, which in combination with the Door Sensor or MoLite Sensor gives a wake up alarm if you haven’t left your bedroom after 09:00 am.
+</MetaDataItem>
+    <MetaDataItem name="ProductPage">www.benext.eu/en/products/alarm-sound/</MetaDataItem>
+    <MetaDataItem name="ProductSupport">Info@Benext.eu</MetaDataItem>
+    <MetaDataItem name="Name">Alarm Sound</MetaDataItem>
+    <MetaDataItem id="0100" name="FrequencyName" type="0005">CEPT (Europe)</MetaDataItem>
+    <MetaDataItem id="0100" name="Identifier" type="0005">BeNeXt / Alarm Sound</MetaDataItem>
+    <ChangeLog>
+      <Entry author="Jano42 - decoretjm@gmail.com" date="15 May 2019" revision="4">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/Products/51/XML</Entry>
+    </ChangeLog>
+  </MetaData>	
   <!-- COMMAND_CLASS_ALARM AlarmCmd_Get not supported -->
   <CommandClass id="113">
     <Compatibility>	
