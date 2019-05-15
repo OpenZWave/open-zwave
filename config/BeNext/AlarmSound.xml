@@ -23,7 +23,7 @@
 		<Value type="byte" genre="config" instance="1" index="6" label="Temperature calibration offset (byte 2)" value="0">
 			<Help>A (signed) offset to calibrate the onboard temperature sensor</Help>
 		</Value>
-		<Value genre="config" instance="1" index="7" max="6" min="0" size="1" type="list" label="Select index sound/light mode JMD" value="1">
+		<Value genre="config" instance="1" index="7" max="6" min="0" size="1" type="list" label="Select index sound/light mode" value="1">
 			<Help>The index of the sound mode when a switch binary/basic set frame is received</Help>
 			<Item label="Disabled." value="0"/>
 			<Item label="Sound/Light index 1" value="1"/>
@@ -33,7 +33,7 @@
 			<Item label="Sound/Light index 5" value="5"/>
 			<Item label="Sound/Light index 6" value="6"/>			
 		</Value>
-		<Value genre="config" instance="1" index="8" max="6" min="0" size="1" type="list" label="Power offline sound/light mode JMD" value="6">
+		<Value genre="config" instance="1" index="8" max="6" min="0" size="1" type="list" label="Power offline sound/light mode" value="6">
 			<Help>The index of the sound mode when the AlarmSound will start when it is unplugged</Help>
 			<Item label="Disabled." value="0"/>
 			<Item label="Sound/Light index 1" value="1"/>
@@ -44,7 +44,7 @@
 			<Item label="Sound/Light index 6" value="6"/>
 		</Value>
 
-		<Value genre="config" instance="1" index="9" max="6" min="0" size="1" type="list" label="Error sound/light mode JMD" value="5">
+		<Value genre="config" instance="1" index="9" max="6" min="0" size="1" type="list" label="Error sound/light mode" value="5">
 			<Help>The index of the sound mode when the AlarmSound will play when it is unable to reach the device in association group 2</Help>
 			<Item label="Disabled." value="0"/>
 			<Item label="Sound/Light index 1" value="1"/>
