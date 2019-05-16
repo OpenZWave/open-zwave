@@ -28,7 +28,7 @@
         This parameter defines how long the Mouser will fire continuously before it starts to burst-fire
       </Help>
     </Value>
-    <Value type="list" genre="config" index="4" label=" LED Alarm" min="0" max="1" size="1" value="1">
+    <Value type="list" genre="config" index="4" label="LED Alarm" min="0" max="1" size="1" value="1">
       <Help>
         This parameter enables or disables the indicator LED alarm when the trap is tripped.
       </Help>
