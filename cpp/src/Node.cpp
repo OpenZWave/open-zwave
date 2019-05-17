@@ -4194,7 +4194,6 @@ void Node::WriteMetaDataXML(TiXmlElement *mdElement) {
 		}
 	}
 	if (m_changeLog.size() > 0) {
-		Log::Write(LogLevel_Warning, GetNodeId(), "ChangeLog Size %d", m_changeLog.size());
 		TiXmlElement* cl = new TiXmlElement( "ChangeLog" );
 		for (map<uint32_t, ChangeLogEntry>::iterator it = m_changeLog.begin(); it != m_changeLog.end(); ++it )
 		{
