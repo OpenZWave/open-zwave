@@ -1637,7 +1637,7 @@
     <Product config="vitrum/vitrumII-Switch.xml" id="5200" name="Vitrum II EU Wireless On-off" type="1200"/>
     <Product config="vitrum/vitrumIII-Switch.xml" id="5300" name="Vitrum III EU Wireless On-off" type="1200"/>
     <Product config="vitrum/vitrumIV-Switch.xml" id="5400" name="Vitrum IV EU Wireless On-off" type="1200"/>
-    <Product config="vitrum/vitrumII-Blind.xml" id="5A00" name="Vitrum II EU Roller Blind Control" type="1300"/>
+    <Product config="vitrum/vitrumII-RollerBlind.xml" id="5A00" name="Vitrum II EU Roller Blind Control" type="1300"/>
     <Product config="vitrum/vitrumII-Dimmer.xml" id="8a00" name="Vitrum II BS Wireless Dimmer" type="2100"/>
     <Product config="vitrum/vitrumI-Dimmer.xml" id="9100" name="Vitrum I BS Wireless On-off" type="2200"/>
     <Product config="vitrum/vitrumII-Switch.xml" id="9200" name="Vitrum II BS Wireless On-off" type="2200"/>
