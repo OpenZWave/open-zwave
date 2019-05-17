@@ -4153,11 +4153,10 @@ void Node::ReadMetaDataFromXML(TiXmlElement const* _valueElement) {
 							cle.author = entry->Attribute("author");
 							cle.date = entry->Attribute("date");
 							cle.description = entry->GetText();
-							metadata->QueryIntAttribute( "id", &cle.revision );
-							m_changeLog[cle.revision] = cle;
+							entry->QueryIntAttribute( "revision", &cle.revision );
+							m_changeLog.insert(std::pair<uint32_t, ChangeLogEntry>(cle.revision, cle));
 							entry = entry->NextSiblingElement("Entry");
 						}
-
 					}
 					metadata = metadata->NextSiblingElement();
 				}
@@ -4195,8 +4194,9 @@ void Node::WriteMetaDataXML(TiXmlElement *mdElement) {
 		}
 	}
 	if (m_changeLog.size() > 0) {
+		Log::Write(LogLevel_Warning, GetNodeId(), "ChangeLog Size %d", m_changeLog.size());
 		TiXmlElement* cl = new TiXmlElement( "ChangeLog" );
-		for (map<uint32_t, ChangeLogEntry>::iterator it = m_changeLog.begin(); it != m_changeLog.end(); ++ it )
+		for (map<uint32_t, ChangeLogEntry>::iterator it = m_changeLog.begin(); it != m_changeLog.end(); ++it )
 		{
 			TiXmlElement* cle = new TiXmlElement( "Entry" );
 			cle->SetAttribute( "author", it->second.author.c_str() );
@@ -4204,6 +4204,7 @@ void Node::WriteMetaDataXML(TiXmlElement *mdElement) {
 			cle->SetAttribute( "revision", it->second.revision );
 			TiXmlText* textElement = new TiXmlText( it->second.description.c_str() );
 			cle->LinkEndChild(textElement);
+			cl->LinkEndChild(cle);
 		}
 		mdElement->LinkEndChild(cl);
 	}
