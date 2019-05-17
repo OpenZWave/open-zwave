@@ -7388,7 +7388,7 @@ bool Driver::refreshNodeConfig
 	Options::Get()->GetOptionAsString("ReloadAfterUpdate",&action);
 	if (ToUpper(action) == "NEVER") {
 		Notification* notification = new Notification( Notification::Type_UserAlerts );
-		notification->SetUserAlertNotification(Notification::Alert_NodeReloadReqired);
+		notification->SetUserAlertNotification(Notification::Alert_NodeReloadRequired);
 		QueueNotification( notification );
 		return true;
 	} else if (ToUpper(action) == "IMMEDIATE") {
