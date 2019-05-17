@@ -239,7 +239,7 @@ void NotificationCCTypes::ReadXML
 		AlarmTypeElement = AlarmTypeElement->NextSiblingElement();
 	}
 	Log::Write(LogLevel_Info, "Loaded %s With Revision %d", pDoc->GetUserData(), m_revision);
-#if 1
+#if 0
 	std::cout << "NotificationCCTypes" << std::endl;
 	for (std::map<uint32, NotificationCCTypes::NotificationTypes *>::iterator it = Notifications.begin(); it != Notifications.end(); it++) {
 		std::cout << "\tAlarmType:" << it->first << " Name: " << it->second->name << std::endl;
