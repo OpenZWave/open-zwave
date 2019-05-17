@@ -846,8 +846,8 @@ DISTFILES =	.gitignore \
 	config/vision/zu1401jp.xml \
 	config/vitrum/vitrumI-Dimmer.xml \
 	config/vitrum/vitrumI-Switch.xml \
-	config/vitrum/vitrumII-Blind.xml \
 	config/vitrum/vitrumII-Dimmer.xml \
+	config/vitrum/vitrumII-RollerBlind.xml \
 	config/vitrum/vitrumII-Switch.xml \
 	config/vitrum/vitrumIII-Dimmer.xml \
 	config/vitrum/vitrumIII-Switch.xml \
