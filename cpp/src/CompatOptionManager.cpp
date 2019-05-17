@@ -168,7 +168,6 @@ void CompatOptionManager::ReadXML
 				value = valElement->GetText();
 				char* pStopChar;
 				uint32_t val = strtol( value.c_str(), &pStopChar, 10 );;
-	std::cout << "Flags: " << it->first.c_str() << value.c_str() << std::endl;;
 				switch (m_CompatVals[it->second].type) {
 					case COMPAT_FLAG_TYPE_BOOL:
 						m_CompatVals[it->second].valBool = !strcmp(value.c_str(), "true");
