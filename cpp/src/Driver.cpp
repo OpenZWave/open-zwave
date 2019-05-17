@@ -892,11 +892,11 @@ void Driver::WriteCache
 		{
 			if( m_nodes[i] )
 			{
-				if (m_nodes[i]->GetCurrentQueryStage() == Node::QueryStage_Complete) {
+				if (m_nodes[i]->GetCurrentQueryStage() >= Node::QueryStage_CacheLoad) {
 					m_nodes[i]->WriteXML( driverElement );
-					Log::Write(LogLevel_Info, i, "Cache Save for Node %d as its QueryStage_Complete", i);
+					Log::Write(LogLevel_Info, i, "Cache Save for Node %d as its QueryStage_CacheLoad", i);
 				} else {
-					Log::Write(LogLevel_Info, i, "Skipping Cache Save for Node %d as its not QueryStage_Complete", i);
+					Log::Write(LogLevel_Info, i, "Skipping Cache Save for Node %d as its not past QueryStage_CacheLoad", i);
 				}
 			}
 		}

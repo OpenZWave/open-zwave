@@ -161,6 +161,7 @@ m_deviceType( 0 ),
 m_role( 0 ),
 m_nodeType ( 0 ),
 m_secured ( false ),
+m_nodeCache ( NULL ),
 m_Product ( NULL ),
 m_fileConfigRevision ( 0 ),
 m_loadedConfigRevision ( 0 ),
@@ -254,6 +255,7 @@ Node::~Node
 		map<uint8,uint8>::iterator it = m_buttonMap.begin();
 		m_buttonMap.erase( it );
 	}
+	delete m_nodeCache;
 }
 
 //-----------------------------------------------------------------------------
@@ -963,6 +965,10 @@ void Node::ReadXML
 			notification->SetHomeAndNodeIds( m_homeId, m_nodeId );
 			GetDriver()->QueueNotification( notification );
 		}
+		if (m_queryStage > QueryStage_CacheLoad )
+		{
+			m_nodeCache = _node->Clone();
+		}
 	}
 
 	str = _node->Attribute( "name" );
@@ -1305,6 +1311,14 @@ void Node::WriteXML
 		TiXmlElement* _driverElement
 )
 {
+	if (m_queryStage <= QueryStage_CacheLoad)
+	{
+		/* Just return our cached copy of the "Cache" as nothing new should be here */
+		_driverElement->LinkEndChild(m_nodeCache->Clone());
+		return;
+	}
+
+
 	char str[32];
 
 	TiXmlElement* nodeElement = new TiXmlElement( "Node" );
