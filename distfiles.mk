@@ -3,7 +3,6 @@
 
 DISTFILES =	.gitignore \
 	BSDmakefile \
-	ChangeLog \
 	INSTALL \
 	Makefile \
 	README.md \
@@ -1350,6 +1349,7 @@ DISTFILES =	.gitignore \
 	dist/openzwave.spec \
 	dist/openzwave.spec.in \
 	distfiles.mk \
+	docs/ChangeLog.old \
 	docs/Doxyfile.in \
 	docs/default.htm \
 	docs/general/DoxygenStepByStep.html \

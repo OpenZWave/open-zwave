@@ -1,4 +1,4 @@
-<Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
   <!-- Qubino: ZMNHUD1 DIN Pilot Wire Z-Wave Plus-->
 	<!-- Configuration -->
   <CommandClass id="112">
