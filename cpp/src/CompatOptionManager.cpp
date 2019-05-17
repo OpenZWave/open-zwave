@@ -170,32 +170,40 @@ void CompatOptionManager::ReadXML
 				uint32_t val = strtol( value.c_str(), &pStopChar, 10 );;
 				switch (m_CompatVals[it->second].type) {
 					case COMPAT_FLAG_TYPE_BOOL:
-						m_CompatVals[it->second].valBool = !strcmp(value.c_str(), "true");
-						m_CompatVals[it->second].changed = true;
+						if (m_CompatVals[it->second].valBool != !strcmp(value.c_str(), "true")) {
+							m_CompatVals[it->second].valBool = !strcmp(value.c_str(), "true");
+							m_CompatVals[it->second].changed = true;
+						}
 						break;
 					case COMPAT_FLAG_TYPE_BYTE:
 						if (val > UINT8_MAX) {
 							Log::Write(LogLevel_Warning, m_owner->GetNodeId(), "ReadXML: (%s) - Value for %s is larger than a byte", m_owner->GetCommandClassName().c_str(), it->first.c_str());
 							val = 0;
 						}
-						m_CompatVals[it->second].valByte = val;
-						m_CompatVals[it->second].changed = true;
+						if (m_CompatVals[it->second].valByte != val) {
+							m_CompatVals[it->second].valByte = val;
+							m_CompatVals[it->second].changed = true;
+						}
 						break;
 					case COMPAT_FLAG_TYPE_SHORT:
 						if (val > UINT16_MAX) {
 							Log::Write(LogLevel_Warning, m_owner->GetNodeId(), "ReadXML: (%s) - Value for %s is larger than a short", m_owner->GetCommandClassName().c_str(), it->first.c_str());
 							val = 0;
 						}
-						m_CompatVals[it->second].valShort = val;
-						m_CompatVals[it->second].changed = true;
+						if (m_CompatVals[it->second].valShort != val) {
+							m_CompatVals[it->second].valShort = val;
+							m_CompatVals[it->second].changed = true;
+						}
 						break;
 					case COMPAT_FLAG_TYPE_INT:
 						if (val > UINT32_MAX) {
 							Log::Write(LogLevel_Warning, m_owner->GetNodeId(), "ReadXML: (%s) - Value for %s is larger than a int", m_owner->GetCommandClassName().c_str(), it->first.c_str());
 							val = 0;
 						}
-						m_CompatVals[it->second].valInt = val;
-						m_CompatVals[it->second].changed = true;
+						if (m_CompatVals[it->second].valInt != val) {
+							m_CompatVals[it->second].valInt = val;
+							m_CompatVals[it->second].changed = true;
+						}
 						break;
 				}
 			}
@@ -238,6 +246,10 @@ void CompatOptionManager::WriteXML
 	string value;
 	for ( it = m_enabledCompatFlags.begin(); it != m_enabledCompatFlags.end(); it++)
 	{
+		if (m_CompatVals[it->second].changed == false) {
+			/* skip writing out default values */
+			continue;
+		}
 		TiXmlElement* valElement = new TiXmlElement( it->first.c_str() );
 		char str[32];
 		TiXmlText * text = NULL;
