@@ -28,6 +28,7 @@
 
 #include "Defs.h"
 #include "Utils.h"
+#include <functional>
 
 using namespace OpenZWave;
 
