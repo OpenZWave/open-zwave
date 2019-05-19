@@ -1476,6 +1476,30 @@ void Node::UpdateProtocolInfo
 		m_maxBaudRate = 40000;
 	}
 
+	// Reverse engineered by looking at Zniffer capture of crafted NIF packets
+	// Note 2019-05-19 I have never seen a 200k device, but Zniffer decodes it,
+	// this is not a typo...
+
+	int speed_extension = _data[2] & 0x07;
+
+	switch (speed_extension)
+	{
+	case 0:
+		// No speed_extension
+		break;
+	case 1:
+		m_maxBaudRate = 100000;
+		break;
+	case 2:
+		m_maxBaudRate = 200000;
+		break;
+	default:
+		Log::Write(LogLevel_Warning, m_nodeId,
+				   "  Protocol Info speed_extension = %d is 'Reserved', reported Max Baud Rate might be wrong.",
+				   speed_extension);
+		break;
+	}
+
 	m_version = ( _data[0] & 0x07 ) + 1;
 
 	m_frequentListening = ( ( _data[1] & ( SecurityFlag_Sensor250ms | SecurityFlag_Sensor1000ms ) ) != 0 );
