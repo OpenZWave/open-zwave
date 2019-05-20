@@ -1402,6 +1402,7 @@
     <Product config="schlage/BE469.xml" id="5044" name="BE469 Touchscreen Deadbolt" type="6341"/>
     <Product config="schlage/BE468.xml" id="5044" name="BE468 Touchscreen Deadbolt" type="6349"/>
     <Product config="schlage/BE469ZP.xml" id="0469" name="BE469ZP Connect Smart Deadbolt" type="0001"/>
+    <Product config="schlage/BE468ZP.xml" id="0468" name="BE468ZP Connect Smart Deadbolt" type="0001"/>
   </Manufacturer>
   <Manufacturer id="0097" name="Schlage Link (Wintop)">
     <Product config="schlagelink/itemp.xml" id="4501" name="iTemp Dual Sensor" type="1182"/>
