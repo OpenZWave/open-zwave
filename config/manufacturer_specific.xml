@@ -1001,6 +1001,7 @@
   <Manufacturer id="0090" name="Kwikset (Spectrum Brands)">
     <Product config="kwikset/smartcode.xml" id="0001" name="Touchpad Electronic Deadbolt" type="0001"/>
     <Product config="kwikset/smartcode.xml" id="0642" name="SmartCode 916" type="0003"/>
+    <Product config="kwikset/smartcode.xml" id="0440" name="SmartCode 914" type="0003"/>
     <Product config="kwikset/smartcode.xml" id="0440" name="SmartCode 10" type="0006"/>
   </Manufacturer>
   <Manufacturer id="0051" name="Lagotek Corp"></Manufacturer>
