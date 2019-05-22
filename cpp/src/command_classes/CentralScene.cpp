@@ -439,9 +439,9 @@ bool CentralScene::HandleMsg
 	if( CentralSceneCmd_Set == (CentralSceneCmd)_data[0] )
 	{
 		// Central Scene Set received so send notification
-		/* if the sequence number is the same as what we have recieved previously this is a retried packet */
+		/* if the sequence number is the same as what we have received previously this is a retried packet */
 		if (m_sequence == _data[1]) {
-			Log::Write( LogLevel_Warning, GetNodeId(), "Recieved Duplicated Scene Notification. Dropping...");
+			Log::Write( LogLevel_Warning, GetNodeId(), "Received Duplicated Scene Notification. Dropping...");
 			return true;
 		}
 		m_sequence = _data[1];
