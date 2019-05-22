@@ -287,14 +287,14 @@ bool ThermostatSetpoint::HandleMsg
 	{
 		if( Node* node = GetNodeUnsafe() )
 		{
-			// We have received the capabilites for supported setpoint Type
+			// We have received the capabilities for supported setpoint Type
 			uint8 scale;
 			uint8 precision = 0;
 			uint8 size = _data[2] & 0x07;
 			string minValue = ExtractValue( &_data[2], &scale, &precision );
 			string maxValue = ExtractValue( &_data[2+size+1], &scale, &precision );
 
-			Log::Write( LogLevel_Info, GetNodeId(), "Received capabilites of thermostat setpoint type %d, min %s max %s" , (int)_data[1], minValue.c_str(), maxValue.c_str());
+			Log::Write( LogLevel_Info, GetNodeId(), "Received capabilities of thermostat setpoint type %d, min %s max %s" , (int)_data[1], minValue.c_str(), maxValue.c_str());
 
 			uint8 index = _data[1];
 			// Add supported setpoint
