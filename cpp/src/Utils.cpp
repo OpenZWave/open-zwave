@@ -90,13 +90,13 @@ std::string &OpenZWave::removewhitespace
 
 std::string& OpenZWave::ltrim(std::string& s) {
   s.erase(s.begin(), std::find_if(s.begin(), s.end(),
-    std::ptr_fun<int, int>(std::isgraph)));
+	  [](unsigned char c){ return isgraph(c); }));
   return s;
 }
 
 std::string& OpenZWave::rtrim(std::string& s) {
   s.erase(std::find_if(s.rbegin(), s.rend(),
-    std::ptr_fun<int, int>(std::isgraph)).base(), s.end());
+      [](unsigned char c){ return isgraph(c); }).base(), s.end());
   return s;
 }
 
