@@ -66,9 +66,9 @@ ValueList::ValueList
 	for( vector<Item>::iterator it = m_items.begin(); it != m_items.end(); ++it )
 	{
 		/* first what is currently in m_label is the default text for a Item, so set it */
-		Localization::Get()->SetValueItemLabel(_commandClassId, _index, -1, it->m_value, it->m_label, "");
+		Localization::Get()->SetValueItemLabel(m_id.GetNodeId(), _commandClassId, _index, -1, it->m_value, it->m_label, "");
 		/* now set to the Localized Value */
-		it->m_label = Localization::Get()->GetValueItemLabel(_commandClassId, _index, -1, it->m_value);
+		it->m_label = Localization::Get()->GetValueItemLabel(m_id.GetNodeId(), _commandClassId, _index, -1, it->m_value);
 	}
 }
 
@@ -156,7 +156,7 @@ void ValueList::ReadXML
 			}
 			else
 			{
-				Localization::Get()->SetValueItemLabel(m_id.GetCommandClassId(), m_id.GetIndex(), -1, value, labelStr, lang);
+				Localization::Get()->SetValueItemLabel(m_id.GetNodeId(), m_id.GetCommandClassId(), m_id.GetIndex(), -1, value, labelStr, lang);
 				if (AddItem) {
 					Item item;
 					item.m_label = labelStr;
@@ -171,7 +171,7 @@ void ValueList::ReadXML
 	/* setup any Localization now as we should have read all available languages already */
 	for( vector<Item>::iterator it = m_items.begin(); it != m_items.end(); ++it )
 	{
-		it->m_label = Localization::Get()->GetValueItemLabel(m_id.GetCommandClassId(), m_id.GetIndex(), -1, it->m_value);
+		it->m_label = Localization::Get()->GetValueItemLabel(m_id.GetNodeId(), m_id.GetCommandClassId(), m_id.GetIndex(), -1, it->m_value);
 	}
 
 

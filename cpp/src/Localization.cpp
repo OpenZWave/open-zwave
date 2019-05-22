@@ -33,6 +33,9 @@
 #include "platform/Log.h"
 #include "value_classes/ValueBitSet.h"
 #include "command_classes/Configuration.h"
+#include "command_classes/ThermostatSetpoint.h"
+#include "command_classes/SoundSwitch.h"
+#include "command_classes/Meter.h"
 
 using namespace OpenZWave;
 
@@ -352,7 +355,8 @@ void Localization::ReadXML
 				}
 				if (str && !strcmp( str, "Value" ) )
 				{
-					ReadXMLValue(ccID, nextElement);
+					/* when node = 0, its a Localization that applies to all nodes. */
+					ReadXMLValue(0, ccID, nextElement);
 				}
 				nextElement = nextElement->NextSiblingElement();
 			}
@@ -427,7 +431,7 @@ void Localization::ReadCCXMLLabel(uint8 ccID, const TiXmlElement *labelElement) 
 	}
 }
 
-void Localization::ReadXMLValue(uint8 ccID, const TiXmlElement *valueElement) {
+void Localization::ReadXMLValue(uint8 node, uint8 ccID, const TiXmlElement *valueElement) {
 
 	char const* str = valueElement->Attribute( "index");
 	if ( !str )
@@ -451,24 +455,24 @@ void Localization::ReadXMLValue(uint8 ccID, const TiXmlElement *valueElement) {
 		str = valueIDElement->Value();
 		if (str && !strcmp( str, "Label" ) )
 		{
-			ReadXMLVIDLabel(ccID, indexId, pos, valueIDElement);
+			ReadXMLVIDLabel(node, ccID, indexId, pos, valueIDElement);
 		}
 		if (str && !strcmp( str, "Help" ) )
 		{
-			ReadXMLVIDHelp(ccID, indexId, pos, valueIDElement);
+			ReadXMLVIDHelp(node, ccID, indexId, pos, valueIDElement);
 		}
 		if (str && !strcmp( str, "ItemLabel" ) )
 		{
-			ReadXMLVIDItemLabel(ccID, indexId, pos, valueIDElement);
+			ReadXMLVIDItemLabel(node, ccID, indexId, pos, valueIDElement);
 		}
 
 		valueIDElement = valueIDElement->NextSiblingElement();
 	}
 }
 
-void Localization::ReadXMLVIDLabel(uint8 ccID, uint16 indexId, uint32 pos, const TiXmlElement *labelElement) {
+void Localization::ReadXMLVIDLabel(uint8 node, uint8 ccID, uint16 indexId, uint32 pos, const TiXmlElement *labelElement) {
 
-	uint64 key = GetValueKey(ccID, indexId, pos);
+	uint64 key = GetValueKey(node, ccID, indexId, pos);
 	string Language;
 	if (labelElement->Attribute( "lang" ))
 		 Language = labelElement->Attribute( "lang" );
@@ -494,7 +498,7 @@ void Localization::ReadXMLVIDLabel(uint8 ccID, uint16 indexId, uint32 pos, const
 	}
 }
 
-void Localization::ReadXMLVIDHelp(uint8 ccID, uint16 indexId, uint32 pos, const TiXmlElement *labelElement) {
+void Localization::ReadXMLVIDHelp(uint8 node, uint8 ccID, uint16 indexId, uint32 pos, const TiXmlElement *labelElement) {
 
 	string Language;
 	if (labelElement->Attribute( "lang" ))
@@ -508,7 +512,7 @@ void Localization::ReadXMLVIDHelp(uint8 ccID, uint16 indexId, uint32 pos, const 
 
 	}
 
-	uint64 key = GetValueKey(ccID, indexId, pos);
+	uint64 key = GetValueKey(node, ccID, indexId, pos);
 	if (m_valueLocalizationMap.find(key) == m_valueLocalizationMap.end()) {
 		m_valueLocalizationMap[key] = new ValueLocalizationEntry(ccID, indexId, pos);
 	} else if (m_valueLocalizationMap[key]->HasLabel(Language)) {
@@ -525,9 +529,9 @@ void Localization::ReadXMLVIDHelp(uint8 ccID, uint16 indexId, uint32 pos, const 
 	}
 }
 
-void Localization::ReadXMLVIDItemLabel(uint8 ccID, uint16 indexId, uint32 pos, const TiXmlElement *labelElement) {
+void Localization::ReadXMLVIDItemLabel(uint8 node, uint8 ccID, uint16 indexId, uint32 pos, const TiXmlElement *labelElement) {
 
-	uint64 key = GetValueKey(ccID, indexId, pos);
+	uint64 key = GetValueKey(node, ccID, indexId, pos);
 	string Language;
 	int32 itemIndex;
 	if (labelElement->Attribute( "lang" ))
@@ -564,11 +568,28 @@ void Localization::ReadXMLVIDItemLabel(uint8 ccID, uint16 indexId, uint32 pos, c
 
 uint64 Localization::GetValueKey
 (
+		uint8 _node,
 		uint8 _commandClass,
 		uint16 _index,
-		uint32 _pos
+		uint32 _pos,
+		bool unique
 )
 {
+	if (unique == true) {
+		return ((uint64) _node << 56 | (uint64)_commandClass << 48) | ((uint64)_index << 32) | ((uint64)_pos);
+	}
+	/* configuration CC needs its own Storage per Node. */
+	if (_commandClass == Configuration::StaticGetCommandClassId()) {
+		return ((uint64) _node << 56 | (uint64)_commandClass << 48) | ((uint64)_index << 32) | ((uint64)_pos);
+	}
+	/* ThermoStatSetpoint index's above 100 are unique per node */
+	if ((_commandClass == ThermostatSetpoint::StaticGetCommandClassId()) &&
+			(_index >= 100)) {
+		return ((uint64) _node << 56 | (uint64)_commandClass << 48) | ((uint64)_index << 32) | ((uint64)_pos);
+	}
+	if (_commandClass == Meter::StaticGetCommandClassId()) {
+		return ((uint64) _node << 56 | (uint64)_commandClass << 48) | ((uint64)_index << 32) | ((uint64)_pos);
+	}
 	return ((uint64)_commandClass << 48) | ((uint64)_index << 32) | ((uint64)_pos);
 }
 
@@ -588,6 +609,7 @@ void Localization::SetupCommandClass
 
 bool Localization::SetValueHelp
 (
+		uint8 _node,
 		uint8 ccID,
 		uint16 indexId,
 		uint32 pos,
@@ -595,7 +617,7 @@ bool Localization::SetValueHelp
 		string lang
 )
 {
-	uint64 key = GetValueKey(ccID, indexId, pos);
+	uint64 key = GetValueKey(_node, ccID, indexId, pos);
 	if (m_valueLocalizationMap.find(key) == m_valueLocalizationMap.end()) {
 		m_valueLocalizationMap[key] = new ValueLocalizationEntry(ccID, indexId, pos);
 	} else if (m_valueLocalizationMap[key]->HasHelp(lang)) {
@@ -614,6 +636,7 @@ bool Localization::SetValueHelp
 }
 bool Localization::SetValueLabel
 (
+		uint8 node,
 		uint8 ccID,
 		uint16 indexId,
 		uint32 pos,
@@ -621,7 +644,7 @@ bool Localization::SetValueLabel
 		string lang
 )
 {
-	uint64 key = GetValueKey(ccID, indexId, pos);
+	uint64 key = GetValueKey(node, ccID, indexId, pos);
 	if (m_valueLocalizationMap.find(key) == m_valueLocalizationMap.end()) {
 		m_valueLocalizationMap[key] = new ValueLocalizationEntry(ccID, indexId, pos);
 	} else if (m_valueLocalizationMap[key]->HasLabel(lang)) {
@@ -641,12 +664,13 @@ bool Localization::SetValueLabel
 
 string const Localization::GetValueHelp
 (
+		uint8 node,
 		uint8 ccID,
 		uint16 indexId,
 		uint32 pos
 )
 {
-	uint64 key = GetValueKey(ccID, indexId, pos);
+	uint64 key = GetValueKey(node, ccID, indexId, pos);
 	if (m_valueLocalizationMap.find(key) == m_valueLocalizationMap.end()) {
 		Log::Write( LogLevel_Warning, "Localization::GetValueHelp: No Help for CommandClass %xd, ValueID: %d (%d)", ccID, indexId, pos);
 		return "";
@@ -656,12 +680,13 @@ string const Localization::GetValueHelp
 
 string const Localization::GetValueLabel
 (
+		uint8 node,
 		uint8 ccID,
 		uint16 indexId,
 		int32 pos
 ) const
 {
-	uint64 key = GetValueKey(ccID, indexId, pos);
+	uint64 key = GetValueKey(node, ccID, indexId, pos);
 	if (m_valueLocalizationMap.find(key) == m_valueLocalizationMap.end()) {
 		Log::Write( LogLevel_Warning, "Localization::GetValueLabel: No Label for CommandClass %xd, ValueID: %d (%d)", ccID, indexId, pos);
 		return "";
@@ -672,13 +697,18 @@ string const Localization::GetValueLabel
 
 string const Localization::GetValueItemLabel
 (
+		uint8 node,
 		uint8 ccID,
 		uint16 indexId,
 		int32 pos,
 		int32 itemIndex
 ) const
 {
-	uint64 key = GetValueKey(ccID, indexId, pos);
+	bool unique = false;
+	if ((ccID == SoundSwitch::StaticGetCommandClassId()) && (indexId == 1 || indexId == 3)) {
+		unique = true;
+	}
+	uint64 key = GetValueKey(node, ccID, indexId, pos, unique);
 	if (m_valueLocalizationMap.find(key) == m_valueLocalizationMap.end()) {
 		Log::Write( LogLevel_Warning, "Localization::GetValueItemLabel: No ValueLocalizationMap for CommandClass %xd, ValueID: %d (%d) ItemIndex %d", ccID, indexId, pos, itemIndex);
 		return "";
@@ -688,6 +718,7 @@ string const Localization::GetValueItemLabel
 
 bool Localization::SetValueItemLabel
 (
+		uint8 node,
 		uint8 ccID,
 		uint16 indexId,
 		int32 pos,
@@ -696,7 +727,12 @@ bool Localization::SetValueItemLabel
 		string lang
 )
 {
-	uint64 key = GetValueKey(ccID, indexId, pos);
+	bool unique = false;
+	if ((ccID == SoundSwitch::StaticGetCommandClassId()) && (indexId == 1 || indexId == 3)) {
+		unique = true;
+	}
+
+	uint64 key = GetValueKey(node, ccID, indexId, pos, unique);
 	if (m_valueLocalizationMap.find(key) == m_valueLocalizationMap.end()) {
 		m_valueLocalizationMap[key] = new ValueLocalizationEntry(ccID, indexId, pos);
 	} else if (m_valueLocalizationMap[key]->HasItemLabel(itemIndex, lang)) {
@@ -708,13 +744,19 @@ bool Localization::SetValueItemLabel
 
 string const Localization::GetValueItemHelp
 (
+		uint8 node,
 		uint8 ccID,
 		uint16 indexId,
 		int32 pos,
 		int32 itemIndex
 ) const
 {
-	uint64 key = GetValueKey(ccID, indexId, pos);
+	bool unique = false;
+	if ((ccID == SoundSwitch::StaticGetCommandClassId()) && (indexId == 1 || indexId == 3)) {
+		unique = true;
+	}
+
+	uint64 key = GetValueKey(node, ccID, indexId, pos, unique);
 	if (m_valueLocalizationMap.find(key) == m_valueLocalizationMap.end()) {
 		Log::Write( LogLevel_Warning, "Localization::GetValueItemHelp: No ValueLocalizationMap for CommandClass %xd, ValueID: %d (%d) ItemIndex %d", ccID, indexId, pos, itemIndex);
 		return "";
@@ -724,6 +766,7 @@ string const Localization::GetValueItemHelp
 
 bool Localization::SetValueItemHelp
 (
+		uint8 node,
 		uint8 ccID,
 		uint16 indexId,
 		int32 pos,
@@ -732,7 +775,12 @@ bool Localization::SetValueItemHelp
 		string lang
 )
 {
-	uint64 key = GetValueKey(ccID, indexId, pos);
+	bool unique = false;
+	if ((ccID == SoundSwitch::StaticGetCommandClassId()) && (indexId == 1 || indexId == 3)) {
+		unique = true;
+	}
+
+	uint64 key = GetValueKey(node, ccID, indexId, pos, unique);
 	if (m_valueLocalizationMap.find(key) == m_valueLocalizationMap.end()) {
 		m_valueLocalizationMap[key] = new ValueLocalizationEntry(ccID, indexId, pos);
 	} else if (m_valueLocalizationMap[key]->HasItemHelp(itemIndex, lang)) {
@@ -782,13 +830,14 @@ bool Localization::SetGlobalLabel
 
 bool Localization::WriteXMLVIDHelp
 (
+		uint8 node,
 		uint8 ccID,
 		uint16 indexId,
 		uint32 pos,
 		TiXmlElement *valueElement
 )
 {
-	uint64 key = GetValueKey(ccID, indexId, pos);
+	uint64 key = GetValueKey(node, ccID, indexId, pos);
 	if (m_valueLocalizationMap.find(key) == m_valueLocalizationMap.end()) {
 		Log::Write( LogLevel_Warning, "Localization::WriteXMLVIDHelp: No Help for CommandClass %d, ValueID: %d (%d)", ccID, indexId, pos);
 		return false;

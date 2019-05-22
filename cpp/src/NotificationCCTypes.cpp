@@ -30,6 +30,7 @@
 
 #include "tinyxml.h"
 #include "Options.h"
+#include "Utils.h"
 #include "platform/Log.h"
 
 using namespace OpenZWave;
@@ -102,6 +103,7 @@ void NotificationCCTypes::ReadXML
 				continue;
 			}
 			nt->name = str;
+			trim(nt->name);
 			TiXmlElement const* AlarmEventElement = AlarmTypeElement->FirstChildElement();
 			while (AlarmEventElement) {
 				str = AlarmEventElement->Value();
@@ -128,7 +130,7 @@ void NotificationCCTypes::ReadXML
 						continue;
 					}
 					ne->name = str;
-
+					trim(ne->name);
 					TiXmlElement const* nextElement = AlarmEventElement->FirstChildElement();
 					while (nextElement) {
 						str = nextElement->Value();
@@ -208,7 +210,7 @@ void NotificationCCTypes::ReadXML
 								continue;
 							}
 							aep->name = str;
-
+							trim(aep->name);
 							if (ne->EventParams.find(aep->id) == ne->EventParams.end())
 								ne->EventParams[aep->id] = aep;
 							else {
@@ -251,6 +253,7 @@ void NotificationCCTypes::ReadXML
 			}
 		}
 	}
+	exit(0);
 #endif
 
 }

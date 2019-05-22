@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<NotificationTypes xmlns='https://github.com/OpenZWave/open-zwave' Revision="6">
+<NotificationTypes xmlns='https://github.com/OpenZWave/open-zwave' Revision="7">
     <!--  Please keep this file in Sync with the Localization.xml file for the Notification CC -->
 	<AlarmType id="1" name="Smoke Alarm">
 		<AlarmEvent id="0" name="Clear">
@@ -468,7 +468,7 @@
 				<Item id="1" label="On" />
 			</AlarmEventParam>
 		</AlarmEvent>
-		<AlarmEvent id="3" name=" Valve Short Circuit">
+		<AlarmEvent id="3" name="Valve Short Circuit">
 		</AlarmEvent>
 		<AlarmEvent id="4" name="Master Valve Short Circuit">
 		</AlarmEvent>
@@ -527,7 +527,7 @@
 	</AlarmType>
 
 	<AlarmType id="18" name="Gas">
-		<AlarmEvent id="0" name=" Clear">
+		<AlarmEvent id="0" name="Clear">
 			<AlarmEventParam id="256" type="byte" name="Previous Event Cleared" />
 		</AlarmEvent>
 		<AlarmEvent id="1" name="Combustable Gas Detected at Location">

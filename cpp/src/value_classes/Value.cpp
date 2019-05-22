@@ -268,11 +268,11 @@ void Value::ReadXML
 		char const* str = helpElement->Value();
 		if( str && !strcmp( str, "Help" ) )
 		{
-			Localization::Get()->ReadXMLVIDHelp(_commandClassId, index, -1, helpElement);
+			Localization::Get()->ReadXMLVIDHelp(m_id.GetNodeId(), _commandClassId, index, -1, helpElement);
 		}
 		if (str && !strcmp( str, "Label" ) )
 		{
-			Localization::Get()->ReadXMLVIDLabel(_commandClassId, index, -1, helpElement);
+			Localization::Get()->ReadXMLVIDLabel(m_id.GetNodeId(), _commandClassId, index, -1, helpElement);
 		}
 		helpElement = helpElement->NextSiblingElement();
 	}
@@ -332,7 +332,7 @@ void Value::WriteXML
 		}
 		_valueElement->SetAttribute( "affects", s.c_str() );
 	}
-	Localization::Get()->WriteXMLVIDHelp(m_id.GetCommandClassId(), m_id.GetIndex(),-1, _valueElement);
+	Localization::Get()->WriteXMLVIDHelp(m_id.GetNodeId(), m_id.GetCommandClassId(), m_id.GetIndex(),-1, _valueElement);
 }
 
 //-----------------------------------------------------------------------------
@@ -756,7 +756,7 @@ string const Value::GetHelp
 (
 ) const
 {
-	return Localization::Get()->GetValueHelp(m_id.GetCommandClassId(), m_id.GetIndex(), -1);
+	return Localization::Get()->GetValueHelp(m_id.GetNodeId(), m_id.GetCommandClassId(), m_id.GetIndex(), -1);
 }
 void Value::SetHelp
 (
@@ -764,14 +764,14 @@ void Value::SetHelp
 		string const lang
 )
 {
-	Localization::Get()->SetValueHelp(m_id.GetCommandClassId(), m_id.GetIndex(), -1, _help, lang);
+	Localization::Get()->SetValueHelp(m_id.GetNodeId(), m_id.GetCommandClassId(), m_id.GetIndex(), -1, _help, lang);
 }
 
 string const Value::GetLabel
 (
 ) const
 {
-	return Localization::Get()->GetValueLabel(m_id.GetCommandClassId(), m_id.GetIndex(), -1);
+	return Localization::Get()->GetValueLabel(m_id.GetNodeId(), m_id.GetCommandClassId(), m_id.GetIndex(), -1);
 }
 void Value::SetLabel
 (
@@ -779,7 +779,7 @@ void Value::SetLabel
 		string const lang
 )
 {
-	Localization::Get()->SetValueLabel(m_id.GetCommandClassId(), m_id.GetIndex(), -1, _label, lang);
+	Localization::Get()->SetValueLabel(m_id.GetNodeId(), m_id.GetCommandClassId(), m_id.GetIndex(), -1, _label, lang);
 }
 
 

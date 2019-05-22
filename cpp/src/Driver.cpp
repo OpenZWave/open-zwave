@@ -892,11 +892,11 @@ void Driver::WriteCache
 		{
 			if( m_nodes[i] )
 			{
-				if (m_nodes[i]->GetCurrentQueryStage() == Node::QueryStage_Complete) {
+				if (m_nodes[i]->GetCurrentQueryStage() >= Node::QueryStage_CacheLoad) {
 					m_nodes[i]->WriteXML( driverElement );
-					Log::Write(LogLevel_Info, i, "Cache Save for Node %d as its QueryStage_Complete", i);
+					Log::Write(LogLevel_Info, i, "Cache Save for Node %d as its QueryStage_CacheLoad", i);
 				} else {
-					Log::Write(LogLevel_Info, i, "Skipping Cache Save for Node %d as its not QueryStage_Complete", i);
+					Log::Write(LogLevel_Info, i, "Skipping Cache Save for Node %d as its not past QueryStage_CacheLoad", i);
 				}
 			}
 		}
@@ -2153,14 +2153,17 @@ void Driver::ProcessMsg
 		}
 		case FUNC_ID_ZW_REQUEST_NODE_INFO:
 		{
+			// This code used _data[3] to log Node ID
+			// but FUNC_ID_ZW_REQUEST_NODE_INFO reply does not report back node number.
 			Log::Write( LogLevel_Detail, "" );
 			if( _data[2] )
 			{
-				Log::Write( LogLevel_Info, _data[3], "FUNC_ID_ZW_REQUEST_NODE_INFO Request successful." );
+
+				Log::Write( LogLevel_Info, GetNodeNumber( m_currentMsg ), "FUNC_ID_ZW_REQUEST_NODE_INFO Request successful." );
 			}
 			else
 			{
-				Log::Write( LogLevel_Info, _data[3], "FUNC_ID_ZW_REQUEST_NODE_INFO Request failed." );
+				Log::Write( LogLevel_Info, GetNodeNumber( m_currentMsg ), "FUNC_ID_ZW_REQUEST_NODE_INFO Request failed." );
 			}
 			break;
 		}
@@ -2448,6 +2451,8 @@ void Driver::ProcessMsg
 	}
 
 	// Generic callback handling
+	// This code used _data[3] in some parts to log Node ID,
+	// but not all serial data frames report back node number.
 	if( handleCallback )
 	{
 		if( ( m_expectedCallbackId || m_expectedReply ) )
@@ -2456,7 +2461,7 @@ void Driver::ProcessMsg
 			{
 				if( m_expectedCallbackId == _data[2] )
 				{
-					Log::Write( LogLevel_Detail, _data[3], "  Expected callbackId was received" );
+					Log::Write( LogLevel_Detail, GetNodeNumber( m_currentMsg ), "  Expected callbackId was received" );
 					m_expectedCallbackId = 0;
 				} else if (_data[2] == 0x02 || _data[2] == 0x01) {
 					/* it was a NONCE request/reply. Drop it */
@@ -2483,7 +2488,7 @@ void Driver::ProcessMsg
 						if( IsExpectedReply( _data[3] ) )
 
 						{
-							Log::Write( LogLevel_Detail, _data[3], "  Expected reply was received" );
+							Log::Write( LogLevel_Detail, GetNodeNumber( m_currentMsg ), "  Expected reply was received" );
 							m_expectedReply = 0;
 							m_expectedNodeId = 0;
 						}
@@ -2492,13 +2497,13 @@ void Driver::ProcessMsg
 			}
 			if( !( m_expectedCallbackId || m_expectedReply ) )
 			{
-				Log::Write( LogLevel_Detail, _data[3], "  Message transaction complete" );
+				Log::Write( LogLevel_Detail, GetNodeNumber( m_currentMsg ), "  Message transaction complete" );
 				Log::Write( LogLevel_Detail, "" );
 
 				if( m_notifytransactions )
 				{
 					Notification* notification = new Notification( Notification::Type_Notification );
-					notification->SetHomeAndNodeIds( m_homeId, _data[3] );
+					notification->SetHomeAndNodeIds( m_homeId, GetNodeNumber( m_currentMsg ) );
 					notification->SetNotification( Notification::Code_MsgComplete );
 					QueueNotification( notification );
 				}
@@ -7385,7 +7390,7 @@ bool Driver::refreshNodeConfig
 	Options::Get()->GetOptionAsString("ReloadAfterUpdate",&action);
 	if (ToUpper(action) == "NEVER") {
 		Notification* notification = new Notification( Notification::Type_UserAlerts );
-		notification->SetUserAlertNotification(Notification::Alert_NodeReloadReqired);
+		notification->SetUserAlertNotification(Notification::Alert_NodeReloadRequired);
 		QueueNotification( notification );
 		return true;
 	} else if (ToUpper(action) == "IMMEDIATE") {

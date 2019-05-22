@@ -158,66 +158,77 @@ void CompatOptionManager::ReadXML
 {
 	TiXmlElement const *compatElement = _ccElement->FirstChildElement(GetXMLTagName().c_str());
 
-	map<string,CompatOptionFlags>::iterator it;
-	string value;
-	for ( it = m_enabledCompatFlags.begin(); it != m_enabledCompatFlags.end(); it++)
-	{
-		if (compatElement)
+	if (compatElement) {
+		map<string,CompatOptionFlags>::iterator it;
+		string value;
+		for ( it = m_enabledCompatFlags.begin(); it != m_enabledCompatFlags.end(); it++)
 		{
 			TiXmlElement const *valElement = compatElement->FirstChildElement(it->first.c_str());
-			if (valElement) value = valElement->GetText();
-		}
-		if (!value.empty()) {
-			char* pStopChar;
-			uint32_t val = strtol( value.c_str(), &pStopChar, 10 );;
-
-			switch (m_CompatVals[it->second].type) {
-				case COMPAT_FLAG_TYPE_BOOL:
-					m_CompatVals[it->second].valBool = !strcmp(value.c_str(), "true");
-					break;
-				case COMPAT_FLAG_TYPE_BYTE:
-					if (val > UINT8_MAX) {
-						Log::Write(LogLevel_Warning, m_owner->GetNodeId(), "ReadXML: (%s) - Value for %s is larger than a byte", m_owner->GetCommandClassName().c_str(), it->first.c_str());
-						val = 0;
-					}
-					m_CompatVals[it->second].valByte = val;
-					break;
-				case COMPAT_FLAG_TYPE_SHORT:
-					if (val > UINT16_MAX) {
-						Log::Write(LogLevel_Warning, m_owner->GetNodeId(), "ReadXML: (%s) - Value for %s is larger than a short", m_owner->GetCommandClassName().c_str(), it->first.c_str());
-						val = 0;
-					}
-					m_CompatVals[it->second].valShort = val;
-					break;
-				case COMPAT_FLAG_TYPE_INT:
-					if (val > UINT32_MAX) {
-						Log::Write(LogLevel_Warning, m_owner->GetNodeId(), "ReadXML: (%s) - Value for %s is larger than a int", m_owner->GetCommandClassName().c_str(), it->first.c_str());
-						val = 0;
-					}
-					m_CompatVals[it->second].valInt = val;
-					m_CompatVals[it->second].changed = true;
-					break;
+			if (valElement) {
+				value = valElement->GetText();
+				char* pStopChar;
+				uint32_t val = strtol( value.c_str(), &pStopChar, 10 );;
+				switch (m_CompatVals[it->second].type) {
+					case COMPAT_FLAG_TYPE_BOOL:
+						if (m_CompatVals[it->second].valBool != !strcmp(value.c_str(), "true")) {
+							m_CompatVals[it->second].valBool = !strcmp(value.c_str(), "true");
+							m_CompatVals[it->second].changed = true;
+						}
+						break;
+					case COMPAT_FLAG_TYPE_BYTE:
+						if (val > UINT8_MAX) {
+							Log::Write(LogLevel_Warning, m_owner->GetNodeId(), "ReadXML: (%s) - Value for %s is larger than a byte", m_owner->GetCommandClassName().c_str(), it->first.c_str());
+							val = 0;
+						}
+						if (m_CompatVals[it->second].valByte != val) {
+							m_CompatVals[it->second].valByte = val;
+							m_CompatVals[it->second].changed = true;
+						}
+						break;
+					case COMPAT_FLAG_TYPE_SHORT:
+						if (val > UINT16_MAX) {
+							Log::Write(LogLevel_Warning, m_owner->GetNodeId(), "ReadXML: (%s) - Value for %s is larger than a short", m_owner->GetCommandClassName().c_str(), it->first.c_str());
+							val = 0;
+						}
+						if (m_CompatVals[it->second].valShort != val) {
+							m_CompatVals[it->second].valShort = val;
+							m_CompatVals[it->second].changed = true;
+						}
+						break;
+					case COMPAT_FLAG_TYPE_INT:
+						if (val > UINT32_MAX) {
+							Log::Write(LogLevel_Warning, m_owner->GetNodeId(), "ReadXML: (%s) - Value for %s is larger than a int", m_owner->GetCommandClassName().c_str(), it->first.c_str());
+							val = 0;
+						}
+						if (m_CompatVals[it->second].valInt != val) {
+							m_CompatVals[it->second].valInt = val;
+							m_CompatVals[it->second].changed = true;
+						}
+						break;
+				}
 			}
 		}
 	}
 	{
 		map<string,CompatOptionFlags>::iterator it;
-		Log::Write(LogLevel_Info, m_owner->GetNodeId(), "(%s) - Compatibility Flags: (* = default)", m_owner->GetCommandClassName().c_str());
+		Log::Write(LogLevel_Info, m_owner->GetNodeId(), "(%d - %s) - %s Flags:", m_owner->GetCommandClassId(), m_owner->GetCommandClassName().c_str(), GetXMLTagName().c_str());
 		for ( it = m_enabledCompatFlags.begin(); it != m_enabledCompatFlags.end(); it++)
 		{
-			switch (m_CompatVals[it->second].type) {
-				case COMPAT_FLAG_TYPE_BOOL:
-					Log::Write(LogLevel_Info, m_owner->GetNodeId(), "\t %s: %s %s", it->first.c_str(), m_CompatVals[it->second].valBool ? "true": "false", m_CompatVals[it->second].changed ? "" : "*");
-					break;
-				case COMPAT_FLAG_TYPE_BYTE:
-					Log::Write(LogLevel_Info, m_owner->GetNodeId(), "\t %s: %d %s", it->first.c_str(), m_CompatVals[it->second].valByte, m_CompatVals[it->second].changed ? "" : "*");
-					break;
-				case COMPAT_FLAG_TYPE_SHORT:
-					Log::Write(LogLevel_Info, m_owner->GetNodeId(), "\t %s: %d %s", it->first.c_str(), m_CompatVals[it->second].valShort, m_CompatVals[it->second].changed ? "" : "*");
-					break;
-				case COMPAT_FLAG_TYPE_INT:
-					Log::Write(LogLevel_Info, m_owner->GetNodeId(), "\t %s: %d %s", it->first.c_str(), m_CompatVals[it->second].valInt, m_CompatVals[it->second].changed ? "" : "*");
-					break;
+			if (m_CompatVals[it->second].changed) {
+				switch (m_CompatVals[it->second].type) {
+					case COMPAT_FLAG_TYPE_BOOL:
+						Log::Write(LogLevel_Info, m_owner->GetNodeId(), "\t %s: %s", it->first.c_str(), m_CompatVals[it->second].valBool ? "true": "false");
+						break;
+					case COMPAT_FLAG_TYPE_BYTE:
+						Log::Write(LogLevel_Info, m_owner->GetNodeId(), "\t %s: %d", it->first.c_str(), m_CompatVals[it->second].valByte);
+						break;
+					case COMPAT_FLAG_TYPE_SHORT:
+						Log::Write(LogLevel_Info, m_owner->GetNodeId(), "\t %s: %d", it->first.c_str(), m_CompatVals[it->second].valShort);
+						break;
+					case COMPAT_FLAG_TYPE_INT:
+						Log::Write(LogLevel_Info, m_owner->GetNodeId(), "\t %s: %d", it->first.c_str(), m_CompatVals[it->second].valInt);
+						break;
+				}
 			}
 		}
 	}
@@ -235,6 +246,10 @@ void CompatOptionManager::WriteXML
 	string value;
 	for ( it = m_enabledCompatFlags.begin(); it != m_enabledCompatFlags.end(); it++)
 	{
+		if (m_CompatVals[it->second].changed == false) {
+			/* skip writing out default values */
+			continue;
+		}
 		TiXmlElement* valElement = new TiXmlElement( it->first.c_str() );
 		char str[32];
 		TiXmlText * text = NULL;

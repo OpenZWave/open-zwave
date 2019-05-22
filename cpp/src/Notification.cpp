@@ -295,7 +295,7 @@ string Notification::GetAsString() const {
 					case Alert_DNSError:
 						str = "A DNS Error Occurred";
 						break;
-					case Alert_NodeReloadReqired:
+					case Alert_NodeReloadRequired:
 						str = "Node Reload Is Required due to new Config File";
 						break;
 					case Alert_UnsupportedController:
