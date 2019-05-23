@@ -357,6 +357,7 @@ DISTFILES =	.gitignore \
 	config/idlock/idlock150.xml \
 	config/images/2gig/ct100.png \
 	config/images/2gig/ct32.png \
+	config/images/BeNext/AlarmSound.png \
 	config/images/BeNext/DoorSensor.png \
 	config/images/BeNext/Molite.png \
 	config/images/BeNext/TagReader.png \
@@ -895,6 +896,7 @@ DISTFILES =	.gitignore \
 	config/zooz/zse09.xml \
 	config/zooz/zse18.xml \
 	config/zooz/zse19.xml \
+	config/zooz/zse29.xml \
 	config/zooz/zse30.xml \
 	config/zooz/zse33.xml \
 	config/zooz/zse40.xml \

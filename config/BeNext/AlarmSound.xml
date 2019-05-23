@@ -74,10 +74,6 @@ Use the Alarm Sound in combination with the Door Sensor or MoLite Sensor to aler
 			<Item label="Sound/Light index 6" value="6"/>			
 		</Value>
 		
-		<!-- ------------------------ -->
-		<!-- Configuration of INDEX 1 -->
-		<!-- ------------------------ -->
-		<!-- INDEX 1 : SOUND CONFIG -->
 		<Value type="byte" genre="config" instance="1" index="10" label="Sound [index 1] : Volume" value="99">
 			<Help>Default value : 99</Help>
 		</Value>                                                               
@@ -144,10 +140,6 @@ Use the Alarm Sound in combination with the Door Sensor or MoLite Sensor to aler
 			<Help>Default value : 0</Help>
 		</Value>
 
-		<!-- ------------------------ -->
-		<!-- Configuration of INDEX 2 -->
-		<!-- ------------------------ -->
-		<!-- INDEX 2 : SOUND CONFIG -->
 		<Value type="byte" genre="config" instance="1" index="28" label="Sound [index 2] : Volume" value="99">
 			<Help>Default value : 99</Help>
 		</Value>                                                               
@@ -215,10 +207,6 @@ Use the Alarm Sound in combination with the Door Sensor or MoLite Sensor to aler
 		</Value>
 		
 
-		<!-- ------------------------ -->
-		<!-- Configuration of INDEX 3 -->
-		<!-- ------------------------ -->
-		<!-- INDEX 3 : SOUND CONFIG -->
 		<Value type="byte" genre="config" instance="1" index="46" label="Sound [index 3] : Volume" value="99">
 			<Help>Default value : 99</Help>
 		</Value>                                                               
@@ -286,10 +274,6 @@ Use the Alarm Sound in combination with the Door Sensor or MoLite Sensor to aler
 		</Value>		
 		
 	
-		<!-- ------------------------ -->
-		<!-- Configuration of INDEX 4 -->
-		<!-- ------------------------ -->
-		<!-- INDEX 4 : SOUND CONFIG -->
 		<Value type="byte" genre="config" instance="1" index="64" label="Sound [index 4] : Volume" value="99">
 			<Help>Default value : 99</Help>
 		</Value>                                                               
@@ -357,10 +341,6 @@ Use the Alarm Sound in combination with the Door Sensor or MoLite Sensor to aler
 		</Value>		
 		
 
-		<!-- ------------------------ -->
-		<!-- Configuration of INDEX 5 -->
-		<!-- ------------------------ -->
-		<!-- INDEX 5 : SOUND CONFIG -->
 		<Value type="byte" genre="config" instance="1" index="82" label="Sound [index 5] : Volume" value="99">
 			<Help>Default value : 99</Help>
 		</Value>                                                               
@@ -428,10 +408,6 @@ Use the Alarm Sound in combination with the Door Sensor or MoLite Sensor to aler
 		</Value>		
 		
 
-		<!-- ------------------------ -->
-		<!-- Configuration of INDEX 6 -->
-		<!-- ------------------------ -->
-		<!-- INDEX 6 : SOUND CONFIG -->
 		<Value type="byte" genre="config" instance="1" index="100" label="Sound [index 6] : Volume" value="99">
 			<Help>Default value : 99</Help>
 		</Value>                                                               
