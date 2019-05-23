@@ -3383,7 +3383,7 @@ bool Node::SetPlusDeviceClasses
 	{
 		DeviceClass* deviceClass = nit->second;
 
-		Log::Write( LogLevel_Info, m_nodeId, "  Zwave+ Node Type  (0x%.2x) - %s. Mandatory Command Classes:", m_nodeType, deviceClass->GetLabel().c_str() );
+		Log::Write( LogLevel_Info, m_nodeId, "  Zwave+ Node Type  (0x%02x) - %s. Mandatory Command Classes:", m_nodeType, deviceClass->GetLabel().c_str() );
 		uint8 const *_commandClasses = deviceClass->GetMandatoryCommandClasses();
 
 		/* no CommandClasses to add */
@@ -3398,7 +3398,7 @@ bool Node::SetPlusDeviceClasses
 				}
 				else
 				{
-					Log::Write( LogLevel_Info, m_nodeId, "    0x%.2x (Not Supported)", ccid);
+					Log::Write( LogLevel_Info, m_nodeId, "    0x%02x (Not Supported)", ccid);
 				}
 			}
 
@@ -3413,7 +3413,7 @@ bool Node::SetPlusDeviceClasses
 	}
 	else
 	{
-		Log::Write (LogLevel_Warning, m_nodeId, "  Zwave+ Node Type  (0x%.2x) - NOT FOUND. No Mandatory Command Classes Loaded:", m_nodeType);
+		Log::Write (LogLevel_Warning, m_nodeId, "  Zwave+ Node Type  (0x%02x) - NOT FOUND. No Mandatory Command Classes Loaded:", m_nodeType);
 	}
 
 
@@ -3424,7 +3424,7 @@ bool Node::SetPlusDeviceClasses
 		DeviceClass* deviceClass = dit->second;
 		// m_type = deviceClass->GetLabel(); // do we what to update the type with the zwave+ info??
 
-		Log::Write( LogLevel_Info, m_nodeId, "  Zwave+ Device Type  (0x%.2x) - %s. Mandatory Command Classes:", _deviceType, deviceClass->GetLabel().c_str() );
+		Log::Write( LogLevel_Info, m_nodeId, "  Zwave+ Device Type  (0x%04x) - %s. Mandatory Command Classes:", _deviceType, deviceClass->GetLabel().c_str() );
 		uint8 const *_commandClasses = deviceClass->GetMandatoryCommandClasses();
 
 		/* no CommandClasses to add */
@@ -3439,7 +3439,7 @@ bool Node::SetPlusDeviceClasses
 				}
 				else
 				{
-					Log::Write( LogLevel_Info, m_nodeId, "    0x%.2x (Not Supported)", ccid);
+					Log::Write( LogLevel_Info, m_nodeId, "    0x%02x (Not Supported)", ccid);
 				}
 			}
 
@@ -3454,7 +3454,7 @@ bool Node::SetPlusDeviceClasses
 	}
 	else
 	{
-		Log::Write (LogLevel_Warning, m_nodeId, "  Zwave+ Device Type  (0x%.2x) - NOT FOUND. No Mandatory Command Classes Loaded:", m_nodeType);
+		Log::Write (LogLevel_Warning, m_nodeId, "  Zwave+ Device Type  (0x%04x) - NOT FOUND. No Mandatory Command Classes Loaded:", _deviceType);
 	}
 
 	// Apply any Role device class data
@@ -3463,7 +3463,7 @@ bool Node::SetPlusDeviceClasses
 	{
 		DeviceClass* roleDeviceClass = rit->second;
 
-		Log::Write( LogLevel_Info, m_nodeId, "  ZWave+ Role Type  (0x%.2x) - %s", m_generic, roleDeviceClass->GetLabel().c_str() );
+		Log::Write( LogLevel_Info, m_nodeId, "  ZWave+ Role Type  (0x%02x) - %s", m_generic, roleDeviceClass->GetLabel().c_str() );
 
 		uint8 const *_commandClasses = roleDeviceClass->GetMandatoryCommandClasses();
 
@@ -3479,7 +3479,7 @@ bool Node::SetPlusDeviceClasses
 				}
 				else
 				{
-					Log::Write( LogLevel_Info, m_nodeId, "    0x%.2x (Not Supported)", ccid);
+					Log::Write( LogLevel_Info, m_nodeId, "    0x%02x (Not Supported)", ccid);
 				}
 			}
 
@@ -3495,7 +3495,7 @@ bool Node::SetPlusDeviceClasses
 	}
 	else
 	{
-		Log::Write (LogLevel_Warning, m_nodeId, "  ZWave+ Role Type  (0x%.2x) - NOT FOUND. No Mandatory Command Classes Loaded:", m_nodeType);
+		Log::Write (LogLevel_Warning, m_nodeId, "  ZWave+ Role Type  (0x%02x) - NOT FOUND. No Mandatory Command Classes Loaded:", m_nodeType);
 	}
 
 
