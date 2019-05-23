@@ -1207,7 +1207,7 @@
   <Manufacturer id="013D" name="Pella"></Manufacturer>
   <Manufacturer id="0245" name="permundo GmbH">
     <Product id="0002" name="PSC132ZW Smart Mini Plug" type="0003"/>
-    <Product id="0001" name="PSC234ZW Smart Plug" type="0003"/>
+    <Product config="permundo/psc234zw.xml" id="0001" name="PSC234ZW Smart Plug" type="0003"/>
   </Manufacturer>
   <Manufacturer id="0366" name="PHILIA TECHNOLOGY Co. Ltd"></Manufacturer>
   <Manufacturer id="013c" name="Philio Technology Corp">
