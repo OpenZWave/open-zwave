@@ -206,7 +206,7 @@ $(LIBDIR)/$(SHARED_LIB_NAME):	$(patsubst %.cpp,$(OBJDIR)/%.o,$(tinyxml)) \
 			$(patsubst %.cpp,$(OBJDIR)/%.o,$(indep)) \
 			$(OBJDIR)/vers.o
 	@echo "Linking Shared Library"
-	$(LD) $(LDFLAGS) $(TARCH) -o $@ $+ $(LIBS)
+	@$(LD) $(LDFLAGS) $(TARCH) -o $@ $+ $(LIBS)
 	@ln -sf $(SHARED_LIB_NAME) $(LIBDIR)/$(SHARED_LIB_UNVERSIONED)
 
 $(top_builddir)/libopenzwave.pc: $(top_srcdir)/cpp/build/libopenzwave.pc.in $(PKGCONFIG)
