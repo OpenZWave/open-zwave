@@ -401,7 +401,9 @@ DISTFILES =	.gitignore \
 	config/images/aeotec/zw096.png \
 	config/images/aeotec/zw097.png \
 	config/images/aeotec/zw098.png \
+	config/images/aeotec/zw099.png \
 	config/images/aeotec/zw100.png \
+	config/images/aeotec/zw120.png \
 	config/images/airlinemechanical/zds-ud10.png \
 	config/images/assa_abloy/KeyfreeConnected.png \
 	config/images/assa_abloy/PushButtonDeadbolt.png \
@@ -426,6 +428,8 @@ DISTFILES =	.gitignore \
 	config/images/dlink/dch-z110.png \
 	config/images/dlink/dch-z120.png \
 	config/images/dlink/dch-z510.png \
+	config/images/domitech/zb22uk.png \
+	config/images/domitech/ze27eu.png \
 	config/images/dragontech/wd-100.png \
 	config/images/duwi/ZWES1000.png \
 	config/images/duwi/zw-edan-300.png \
@@ -498,6 +502,7 @@ DISTFILES =	.gitignore \
 	config/images/ge/receptacle.png \
 	config/images/ge/relay.png \
 	config/images/gr/gr105.png \
+	config/images/gr/gr105n.png \
 	config/images/greenwave/gs1110-1-gr-1.png \
 	config/images/greenwave/powernode1.png \
 	config/images/greenwave/powernode6.png \
@@ -511,9 +516,11 @@ DISTFILES =	.gitignore \
 	config/images/horstmann/ses302.png \
 	config/images/horstmann/ses303.png \
 	config/images/horstmann/sir321.png \
+	config/images/horstmann/srt321.png \
 	config/images/horstmann/srt323.png \
 	config/images/horstmann/ssr302.png \
 	config/images/icare/zw-66.png \
+	config/images/idlock/idlock101.png \
 	config/images/ingersoll/dwzwave1.png \
 	config/images/iwatsu/ne-4ct-2p.png \
 	config/images/iwatsu/ne-4ct.png \
@@ -536,12 +543,16 @@ DISTFILES =	.gitignore \
 	config/images/nodon/crc360xSofremote.png \
 	config/images/nodon/cws3101wallswitch.png \
 	config/images/northq/nq92021.png \
+	config/images/oomi/ft100.png \
+	config/images/permundo/psc132zw.png \
+	config/images/permundo/psc234zw.png \
 	config/images/philio/pan04.png \
 	config/images/philio/pan05.png \
 	config/images/philio/pan06.png \
 	config/images/philio/pan08.png \
 	config/images/philio/pan11-1.png \
 	config/images/philio/pan11.png \
+	config/images/philio/phpab01.png \
 	config/images/philio/phpat02.png \
 	config/images/philio/phpsg01.png \
 	config/images/philio/psm02.png \
@@ -554,6 +565,7 @@ DISTFILES =	.gitignore \
 	config/images/prowell/zw-702.png \
 	config/images/qees/reto-dimmer-plus.png \
 	config/images/qees/reto-plugin-switch.png \
+	config/images/qubino/ZMNHBDx.png \
 	config/images/qubino/ZMNHDA2.png \
 	config/images/qubino/ZMNHNDx.png \
 	config/images/quby/qb2.png \
@@ -561,17 +573,21 @@ DISTFILES =	.gitignore \
 	config/images/rcs/therm0009.png \
 	config/images/remotec/bw8120eu.png \
 	config/images/remotec/zfm-80.png \
+	config/images/remotec/zrc-90.png \
 	config/images/remotec/zts-110.png \
 	config/images/remotec/zurc.png \
 	config/images/remotec/zxt-120.png \
+	config/images/remotec/zxt-310.png \
 	config/images/schlage/BE469.png \
 	config/images/schlage/fe599.png \
 	config/images/schlagelink/41.png \
+	config/images/sensative/strips.png \
 	config/images/sercomm/sw-clp01-eu.png \
 	config/images/smartthings/pgc401m.png \
 	config/images/smartthings/sth-eth200.png \
 	config/images/swiid/swiidinter.png \
 	config/images/telldus/tzdw100.png \
+	config/images/telldus/tzwp100.png \
 	config/images/there/800z.png \
 	config/images/thermofloor/heatit021.png \
 	config/images/trane/TZEMT400AB32MAA.png \
@@ -581,12 +597,14 @@ DISTFILES =	.gitignore \
 	config/images/vision/1701.png \
 	config/images/vision/brg1-433.png \
 	config/images/vision/zd2102.png \
+	config/images/vision/zd2201.png \
 	config/images/vision/zd2301.png \
 	config/images/vision/zl7101us.png \
 	config/images/vision/zl7201us.png \
 	config/images/vision/zm1601eu.png \
 	config/images/vision/zm1601eu5.png \
 	config/images/vision/zp3102.png \
+	config/images/vision/zp3111.png \
 	config/images/vision/zr1202us.png \
 	config/images/vision/zs610eu.png \
 	config/images/vision/zu1401jp.png \
@@ -597,6 +615,7 @@ DISTFILES =	.gitignore \
 	config/images/vitrum/vitrumII-Switch.png \
 	config/images/wenzhou/tsp01.png \
 	config/images/wenzhou/tz55.png \
+	config/images/wenzhou/tz56.png \
 	config/images/wenzhou/tz65d.png \
 	config/images/wenzhou/tz66d.png \
 	config/images/wenzhou/tz67.png \
@@ -604,6 +623,7 @@ DISTFILES =	.gitignore \
 	config/images/wenzhou/tz88.png \
 	config/images/widom/UBS104.png \
 	config/images/widom/UME304C_S.png \
+	config/images/widom/WDS.png \
 	config/images/zipato/RGBBulb.png \
 	config/images/zwave.me/004001.png \
 	config/images/zwave.me/ZME_05431.png \
@@ -690,6 +710,8 @@ DISTFILES =	.gitignore \
 	config/oomi/ft111.xml \
 	config/options.xml \
 	config/options.xsd \
+	config/permundo/psc132zw.xml \
+	config/permundo/psc234zw.xml \
 	config/philio/pad02.xml \
 	config/philio/pan03.xml \
 	config/philio/pan04.xml \
@@ -1034,6 +1056,9 @@ DISTFILES =	.gitignore \
 	cpp/src/TimerThread.h \
 	cpp/src/Utils.cpp \
 	cpp/src/Utils.h \
+	cpp/src/ValueIDIndexes.h \
+	cpp/src/ValueIDIndexesDefines.def \
+	cpp/src/ValueIDIndexesDefines.h \
 	cpp/src/ZWSecurity.cpp \
 	cpp/src/ZWSecurity.h \
 	cpp/src/aes/aes.h \
