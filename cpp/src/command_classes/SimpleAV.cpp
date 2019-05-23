@@ -156,7 +156,7 @@ void SimpleAV::CreateVars
 			}
 		}
 
-		node->CreateValueList(ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, string("OutputAVCommand_").append(std::to_string(_instance)), "", false, true, 2, items, 0, 0);
+		node->CreateValueList(ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_SimpleAV::Command, string("OutputAVCommand_").append(std::to_string(_instance)), "", false, true, 2, items, 0, 0);
 		
 		// Create a similar numeric value
 		// node->CreateValueShort(ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, string("OutputAVCommandNumber_").append(std::to_string(_instance)), "", false, true, 0, 0, helpNumeric);

@@ -124,7 +124,7 @@ bool ThermostatOperatingState::HandleMsg
 	if( ThermostatOperatingStateCmd_Report == (ThermostatOperatingStateCmd)_data[0] )
 	{
 		// We have received the thermostat operating state from the Z-Wave device
-		if( ValueString* valueString = static_cast<ValueString*>( GetValue( _instance, 0 ) ) )
+		if( ValueString* valueString = static_cast<ValueString*>( GetValue( _instance, ValueID_Index_ThermostatOperatingState::OperatingState ) ) )
 		{
 			/* no need bounds checking on c_stateName here, as it can only be 1 Byte anyway */
 			valueString->OnValueRefreshed( c_stateName[_data[1]&0x0f] );
@@ -148,7 +148,7 @@ void ThermostatOperatingState::CreateVars
 {
 	if( Node* node = GetNodeUnsafe() )
 	{
-	  	node->CreateValueString( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Operating State", "", true, false, c_stateName[0], 0 );
+	  	node->CreateValueString( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_ThermostatOperatingState::OperatingState, "Operating State", "", true, false, c_stateName[0], 0 );
 	}
 }
 

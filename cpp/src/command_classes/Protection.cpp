@@ -122,7 +122,7 @@ bool Protection::HandleMsg
 			stateValue = 3;
 		}
 		Log::Write( LogLevel_Info, GetNodeId(), "Received a Protection report: %s", c_protectionStateNames[_data[1]] );
-		if( ValueList* value = static_cast<ValueList*>( GetValue( _instance, 0 ) ) )
+		if( ValueList* value = static_cast<ValueList*>( GetValue( _instance, ValueID_Index_Protection::Protection ) ) )
 		{
 			value->OnValueRefreshed( (int)_data[1] );
 			value->Release();
@@ -187,6 +187,6 @@ void Protection::CreateVars
 			items.push_back( item );
 		}
 
-		node->CreateValueList( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 0, "Protection", "", false, false, 1, items, 0, 0 );
+		node->CreateValueList( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_Protection::Protection, "Protection", "", false, false, 1, items, 0, 0 );
 	}
 }

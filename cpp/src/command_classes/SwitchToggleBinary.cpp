@@ -107,7 +107,7 @@ bool SwitchToggleBinary::HandleMsg
 	{
 		Log::Write( LogLevel_Info, GetNodeId(), "Received SwitchToggleBinary report: %s", _data[1] ? "On" : "Off" );
 
-		if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, 0 ) ) )
+		if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, ValueID_Index_SwitchToggleBinary::ToggleSwitch ) ) )
 		{
 			value->OnValueRefreshed( _data[1] != 0 );
 			value->Release();
@@ -150,7 +150,7 @@ void SwitchToggleBinary::CreateVars
 {
 	if( Node* node = GetNodeUnsafe() )
 	{
-	  	node->CreateValueBool( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Toggle Switch", "", false, false, false, 0 );
+	  	node->CreateValueBool( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_SwitchToggleBinary::ToggleSwitch, "Toggle Switch", "", false, false, false, 0 );
 	}
 }
 

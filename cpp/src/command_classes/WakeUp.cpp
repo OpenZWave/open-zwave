@@ -206,7 +206,7 @@ bool WakeUp::HandleMsg
 {
 	if( WakeUpCmd_IntervalReport == (WakeUpCmd)_data[0] )
 	{
-		if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, 0 ) ) )
+		if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, ValueID_Index_WakeUp::Interval ) ) )
 		{
 			// some interval reports received are validly formatted (proper checksum, etc.) but only have length
 			// of 3 (0x84 (classid), 0x06 (IntervalReport), 0x00).  Not sure what this means
@@ -254,22 +254,22 @@ bool WakeUp::HandleMsg
 		uint32 definterval = (((uint32)_data[7]) << 16) | (((uint32)_data[8]) << 8) | ((uint32)_data[9]);
 		uint32 stepinterval = (((uint32)_data[10]) << 16) | (((uint32)_data[11]) << 8) | ((uint32)_data[12]);
 		Log::Write( LogLevel_Info, GetNodeId(), "Received Wakeup Interval Capability report from node %d: Min Interval=%d, Max Interval=%d, Default Interval=%d, Interval Step=%d", GetNodeId(), mininterval, maxinterval, definterval, stepinterval );
-		if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, 1 ) ) )
+		if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, ValueID_Index_WakeUp::Min_Interval ) ) )
 		{
 			value->OnValueRefreshed( (int32)mininterval );
 			value->Release();
 		}
-		if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, 2 ) ) )
+		if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, ValueID_Index_WakeUp::Max_Interval ) ) )
 		{
 			value->OnValueRefreshed( (int32)maxinterval );
 			value->Release();
 		}
-		if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, 3 ) ) )
+		if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, ValueID_Index_WakeUp::Default_Interval ) ) )
 		{
 			value->OnValueRefreshed( (int32)definterval );
 			value->Release();
 		}
-		if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, 4 ) ) )
+		if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, ValueID_Index_WakeUp::Interval_Step ) ) )
 		{
 			value->OnValueRefreshed( (int32)stepinterval );
 			value->Release();
@@ -526,15 +526,15 @@ void WakeUp::CreateVars
 			{
 			case 1:
 			{
-				node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 0, "Wake-up Interval", "Seconds", false, false, 3600, 0 );
+				node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_WakeUp::Interval, "Wake-up Interval", "Seconds", false, false, 3600, 0 );
 				break;
 			}
 			case 2:
 			{
-				node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 1, "Minimum Wake-up Interval", "Seconds", true, false, 0, 0 );
-				node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 2, "Maximum Wake-up Interval", "Seconds", true, false, 0, 0 );
-				node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 3, "Default Wake-up Interval", "Seconds", true, false, 0, 0 );
-				node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 4, "Wake-up Interval Step", "Seconds", true, false, 0, 0 );
+				node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_WakeUp::Min_Interval, "Minimum Wake-up Interval", "Seconds", true, false, 0, 0 );
+				node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_WakeUp::Max_Interval, "Maximum Wake-up Interval", "Seconds", true, false, 0, 0 );
+				node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_WakeUp::Default_Interval, "Default Wake-up Interval", "Seconds", true, false, 0, 0 );
+				node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_WakeUp::Interval_Step, "Wake-up Interval Step", "Seconds", true, false, 0, 0 );
 				break;
 			}
 			}

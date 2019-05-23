@@ -108,10 +108,6 @@ static char const* c_ColorIndex[] =
 
 enum ValueIDSystemIndexes
 {
-	Value_Color							= 0x00,		/* RGB Color */
-	Value_Color_Index					= 0x01,		/* Color Index if Set */
-	Value_Color_Channels_Capabilities	= 0x02,		/* Color Channels Capabilities */
-	Value_Color_Duration				= 0x03
 };
 
 
@@ -196,7 +192,7 @@ bool Color::RequestValue
 		Driver::MsgQueue const _queue
 )
 {
-	if( m_com.GetFlagBool(COMPAT_FLAG_GETSUPPORTED) && (_what == Value_Color || _what == Value_Color_Index))
+	if( m_com.GetFlagBool(COMPAT_FLAG_GETSUPPORTED) && (_what == ValueID_Index_Color::Color || _what == ValueID_Index_Color::Index))
 	{
 		if (m_com.GetFlagBool(COMPAT_FLAG_COLOR_IDXBUG) && m_refreshinprogress == true)
 		{
@@ -308,20 +304,20 @@ bool Color::HandleMsg
 		}
 		if (f_capabilities & 0x100)
 			Log::Write(LogLevel_Info, GetNodeId(), "Indexed Color (0x08)");
-		if( ValueInt* colorchannels = static_cast<ValueInt*>( GetValue( _instance, Value_Color_Channels_Capabilities ) ) )
+		if( ValueInt* colorchannels = static_cast<ValueInt*>( GetValue( _instance, ValueID_Index_Color::Channels_Capabilities ) ) )
 		{
 			colorchannels->OnValueRefreshed( f_capabilities );
 			colorchannels->Release();
 		}
 		if( Node* node = GetNodeUnsafe() )
 		{
-			if ( ValueString *color = static_cast<ValueString *>( GetValue( _instance, Value_Color ) ) )
+			if ( ValueString *color = static_cast<ValueString *>( GetValue( _instance, ValueID_Index_Color::Color ) ) )
 			{
 				color->SetUnits(helpstr);
 			}
 			else
 			{
-				node->CreateValueString( ValueID::ValueGenre_User, GetCommandClassId(), _instance, Value_Color, "Color", helpstr, false, false, "#000000", 0 );
+				node->CreateValueString( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_Color::Color, "Color", helpstr, false, false, "#000000", 0 );
 			}
 
 			/* always create the ColorIndex Value - If the device doesn't support Indexed Colors, we fake it up when sending */
@@ -335,12 +331,12 @@ bool Color::HandleMsg
 					item.m_value = i;
 					items.push_back( item );
 				}
-				node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, Value_Color_Index, "Color Index", "", false, false, (sizeof(c_ColorIndex)/sizeof(c_ColorIndex[0])), items, 0, 0 );
+				node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_Color::Index, "Color Index", "", false, false, (sizeof(c_ColorIndex)/sizeof(c_ColorIndex[0])), items, 0, 0 );
 
 			}
 
 			if (GetVersion() > 1)
-				node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, Value_Color_Duration, "Duration", "Sec", false, false, 255, 0 );
+				node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_Color::Duration, "Duration", "Sec", false, false, 255, 0 );
 
 		}
 		return true;
@@ -382,7 +378,7 @@ bool Color::HandleMsg
 			m_refreshinprogress = false;
 
 		/* if we get here, then we can update our ValueID */
-		if( ValueString* color = static_cast<ValueString*>( GetValue( _instance, Value_Color ) ) )
+		if( ValueString* color = static_cast<ValueString*>( GetValue( _instance, ValueID_Index_Color::Color ) ) )
 		{
 			/* create a RGB[W] String */
 			std::stringstream ss;
@@ -474,7 +470,7 @@ bool Color::HandleMsg
 
 			/* if we don't support the Color Index then fake it */
 			if (!(f_capabilities & (1<<(COLORIDX_INDEXCOLOR)))) {
-				if( ValueList* coloridx = static_cast<ValueList*>( GetValue( _instance, Value_Color_Index ) ) )
+				if( ValueList* coloridx = static_cast<ValueList*>( GetValue( _instance, ValueID_Index_Color::Index ) ) )
 				{
 					/* it supports the AMBER/CYAN/PURPLE Channels */
 					if (f_capabilities > 31) {
@@ -597,7 +593,7 @@ bool Color::HandleMsg
 		}
 		/* if we got a updated Color Index Value - Update our ValueID */
 		if ((m_dom.GetFlagShort(STATE_FLAG_COLOR_CHANNELS)) & (1<<(COLORIDX_INDEXCOLOR))) {
-			if( ValueList* coloridx = static_cast<ValueList*>( GetValue( _instance, Value_Color_Index ) ) )
+			if( ValueList* coloridx = static_cast<ValueList*>( GetValue( _instance, ValueID_Index_Color::Index ) ) )
 			{
 				coloridx->OnValueRefreshed( m_colorvalues[COLORIDX_INDEXCOLOR] );
 				coloridx->Release();
@@ -620,7 +616,7 @@ bool Color::SetValue
 		Value const& _value
 )
 {
-	if (Value_Color == _value.GetID().GetIndex())
+	if (ValueID_Index_Color::Color == _value.GetID().GetIndex())
 	{
 		ValueString const* value = static_cast<ValueString const*>(&_value);
 		string s = value->GetValue();
@@ -722,7 +718,7 @@ bool Color::SetValue
 		}
 		if (GetVersion() > 1) {
 			uint8 duration = 0;
-			if (ValueByte *valduration = static_cast<ValueByte *>(GetValue(_value.GetID().GetInstance(), Value_Color_Duration))) {
+			if (ValueByte *valduration = static_cast<ValueByte *>(GetValue(_value.GetID().GetInstance(), ValueID_Index_Color::Duration))) {
 				duration = valduration->GetValue();
 			}
 			msg->Append(duration);
@@ -731,7 +727,7 @@ bool Color::SetValue
 		GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 
 		return true;
-	} else if (Value_Color_Index == _value.GetID().GetIndex()) {
+	} else if (ValueID_Index_Color::Index == _value.GetID().GetIndex()) {
 
 		ValueList const* value = static_cast<ValueList const*>(&_value);
 		if (value->GetItem() == NULL) {
@@ -755,7 +751,7 @@ bool Color::SetValue
 			msg->Append(index);
 			if (GetVersion() > 1) {
 				uint8 duration = 0;
-				if (ValueByte *valduration = static_cast<ValueByte *>(GetValue(_value.GetID().GetInstance(), Value_Color_Duration))) {
+				if (ValueByte *valduration = static_cast<ValueByte *>(GetValue(_value.GetID().GetInstance(), ValueID_Index_Color::Duration))) {
 					duration = valduration->GetValue();
 				}
 				msg->Append(duration);
@@ -1001,7 +997,7 @@ bool Color::SetValue
 			}
 			if (GetVersion() > 1) {
 				uint8 duration = 0;
-				if (ValueByte *valduration = static_cast<ValueByte *>(GetValue(_value.GetID().GetInstance(), Value_Color_Duration))) {
+				if (ValueByte *valduration = static_cast<ValueByte *>(GetValue(_value.GetID().GetInstance(), ValueID_Index_Color::Duration))) {
 					duration = valduration->GetValue();
 				}
 				msg->Append(duration);
@@ -1010,16 +1006,16 @@ bool Color::SetValue
 			GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 			return true;
 		}
-	} else if (Value_Color_Duration == _value.GetID().GetIndex()) {
+	} else if (ValueID_Index_Color::Duration == _value.GetID().GetIndex()) {
 		Log::Write( LogLevel_Info, GetNodeId(), "Color::SetValue - Setting Color Fade Duration");
 		ValueByte const* value = static_cast<ValueByte const*>(&_value);
 		uint8 _duration = value->GetValue();
-		if (ValueByte * m_value = static_cast<ValueByte *>(GetValue(_value.GetID().GetInstance(), Value_Color_Duration))) {
+		if (ValueByte * m_value = static_cast<ValueByte *>(GetValue(_value.GetID().GetInstance(), ValueID_Index_Color::Duration))) {
 			m_value->OnValueRefreshed(_duration);
 			m_value->Release();
 		}
 		return true;
-	} else if (Value_Color_Channels_Capabilities == _value.GetID().GetIndex()) {
+	} else if (ValueID_Index_Color::Channels_Capabilities == _value.GetID().GetIndex()) {
 		Log::Write( LogLevel_Info, GetNodeId(), "Color::SetValue - Setting Color Channels");
 		ValueInt const* value = static_cast<ValueInt const*>(&_value);
 		m_dom.SetFlagShort(STATE_FLAG_COLOR_CHANNELS, value->GetValue());
@@ -1033,7 +1029,7 @@ bool Color::SetValue
 			msg->Append(GetDriver()->GetTransmitOptions());
 			GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
 		}
-		if (ValueInt *m_value = static_cast<ValueInt *>(GetValue(_value.GetID().GetInstance(), Value_Color_Channels_Capabilities))) {
+		if (ValueInt *m_value = static_cast<ValueInt *>(GetValue(_value.GetID().GetInstance(), ValueID_Index_Color::Channels_Capabilities))) {
 			m_value->OnValueRefreshed(m_dom.GetFlagShort(STATE_FLAG_COLOR_CHANNELS));
 			m_value->Release();
 		}
@@ -1053,7 +1049,7 @@ void Color::CreateVars
 	if( Node* node = GetNodeUnsafe() )
 	{
 		/* XXX TODO convert this to a bitset when we implement */
-		node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, Value_Color_Channels_Capabilities, "Color Channels", "", false, false, m_dom.GetFlagShort(STATE_FLAG_COLOR_CHANNELS), 0 );
+		node->CreateValueInt( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_Color::Channels_Capabilities, "Color Channels", "", false, false, m_dom.GetFlagShort(STATE_FLAG_COLOR_CHANNELS), 0 );
 	}
 
 
@@ -1069,5 +1065,5 @@ void Color::SetValueBasic
 		uint8 const _value
 )
 {
-	RequestValue( 0, Value_Color, _instance, Driver::MsgQueue_Send );
+	RequestValue( 0, ValueID_Index_Color::Color, _instance, Driver::MsgQueue_Send );
 }

@@ -56,7 +56,7 @@ bool Battery::RequestState
 {
 	if( _requestFlags & RequestFlag_Dynamic )
 	{
-		return RequestValue( _requestFlags, 0, _instance, _queue );
+		return RequestValue( _requestFlags, ValueID_Index_Battery::Level, _instance, _queue );
 	}
 
 	return false;
@@ -118,7 +118,7 @@ bool Battery::HandleMsg
 
 		Log::Write( LogLevel_Info, GetNodeId(), "Received Battery report from node %d: level=%d", GetNodeId(), batteryLevel );
 
-		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, 0 ) ) )
+		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, ValueID_Index_Battery::Level ) ) )
 		{
 			value->OnValueRefreshed( batteryLevel );
 			value->Release();
@@ -139,7 +139,7 @@ void Battery::CreateVars
 {
 	if( Node* node = GetNodeUnsafe() )
 	{
-	  	node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Battery Level", "%", true, false, 100, 0 );
+	  	node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_Battery::Level, "Battery Level", "%", true, false, 100, 0 );
 	}
 }
 

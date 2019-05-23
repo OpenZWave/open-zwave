@@ -312,7 +312,7 @@ bool ThermostatMode::HandleMsg
 		if( validMode )
 		{
 			// We have received the thermostat mode from the Z-Wave device
-			if( ValueList* valueList = static_cast<ValueList*>( GetValue( _instance, 0 ) ) )
+			if( ValueList* valueList = static_cast<ValueList*>( GetValue( _instance, ValueID_Index_ThermostatMode::Mode ) ) )
 			{
 				valueList->OnValueRefreshed( mode );
 				if (valueList->GetItem())
@@ -451,6 +451,6 @@ void ThermostatMode::CreateVars
 			}
 		}
 
-		node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, "Mode", "", false, false, 1, m_supportedModes, defaultValue, 0 );
+		node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_ThermostatMode::Mode, "Mode", "", false, false, 1, m_supportedModes, defaultValue, 0 );
 	}
 }
