@@ -422,7 +422,7 @@ bool Meter::HandleReport
 			}
 		}
 
-		if( ValueDecimal* value = static_cast<ValueDecimal*>( GetValue( _instance, ValueID_Index_Meter::Start ) ) )
+		if( ValueDecimal* value = static_cast<ValueDecimal*>( GetValue( _instance, ValueID_Index_Meter::Meter_1 ) ) )
 		{
 			Log::Write( LogLevel_Info, GetNodeId(), "Received Meter report from node %d: %s=%s%s", GetNodeId(), label.c_str(), valueStr.c_str(), units.c_str() );
 			value->SetLabel( label );
@@ -549,6 +549,6 @@ void Meter::CreateVars
 {
 	if( Node* node = GetNodeUnsafe() )
 	{
-		node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_Meter::Start, "Unknown", "", true, false, "0.0", 0 );
+		node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_Meter::Meter_1, "Unknown", "", true, false, "0.0", 0 );
 	}
 }

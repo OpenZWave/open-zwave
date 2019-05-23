@@ -50,29 +50,7 @@ enum ThermostatSetpointCmd
  	ThermostatSetpointCmd_CapabilitiesReport	= 0x0A
 };
 
-enum
-{
-	ThermostatSetpoint_Unused0	= 0,
-	ThermostatSetpoint_Heating1,
-	ThermostatSetpoint_Cooling1,
-	ThermostatSetpoint_Unused3,
-	ThermostatSetpoint_Unused4,
-	ThermostatSetpoint_Unused5,
-	ThermostatSetpoint_Unused6,
-	ThermostatSetpoint_Furnace,
-	ThermostatSetpoint_DryAir,
-	ThermostatSetpoint_MoistAir,
-	ThermostatSetpoint_AutoChangeover,
-	ThermostatSetpoint_HeatingEcon,
-	ThermostatSetpoint_CoolingEcon,
-	ThermostatSetpoint_AwayHeating,
-	ThermostatSetpoint_CoolingHeating,
-	ThermostatSetpoint_Count,
-
-	ThermostatSetpoint_Minimum = 100,
-	ThermostatSetpoint_Maximum = 200
-};
-
+#define ThermostatSetpoint_Count (ValueID_Index_ThermostatSetpoint::CoolingHeating + 1)
 
 static char const* c_setpointName[] =
 {
@@ -302,8 +280,8 @@ bool ThermostatSetpoint::HandleMsg
 			{
 				string setpointName = c_setpointName[index];
 
-				node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ThermostatSetpoint_Minimum + index, setpointName + "_minimum", "C", false, false, minValue, 0 );
-				node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ThermostatSetpoint_Maximum + index, setpointName + "_maximum", "C", false, false, maxValue, 0 );
+				node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_ThermostatSetpoint::Unused_0_Minimum + index, setpointName + "_minimum", "C", false, false, minValue, 0 );
+				node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_ThermostatSetpoint::Unused_0_Maximum + index, setpointName + "_maximum", "C", false, false, maxValue, 0 );
 				Log::Write( LogLevel_Info, GetNodeId(), "    Added setpoint: %s", setpointName.c_str() );
 			}
 

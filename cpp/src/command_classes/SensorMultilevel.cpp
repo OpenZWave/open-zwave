@@ -46,78 +46,7 @@ enum SensorMultilevelCmd
 	SensorMultilevelCmd_Report		= 0x05
 };
 
-enum SensorType
-{
-	SensorType_Temperature = 1,
-	SensorType_General, /* deprecated by v11 */
-	SensorType_Luminance,
-	SensorType_Power,
-	SensorType_RelativeHumidity,
-	SensorType_Velocity,
-	SensorType_Direction,
-	SensorType_AtmosphericPressure,
-	SensorType_BarometricPressure,
-	SensorType_SolarRadiation,
-	SensorType_DewPoint,
-	SensorType_RainRate,
-	SensorType_TideLevel,
-	SensorType_Weight,
-	SensorType_Voltage,
-	SensorType_Current,
-	SensorType_CO2,
-	SensorType_AirFlow,
-	SensorType_TankCapacity,
-	SensorType_Distance,
-	SensorType_AnglePosition,
-	SensorType_Rotation,
-	SensorType_WaterTemperature,
-	SensorType_SoilTemperature,
-	SensorType_SeismicIntensity,
-	SensorType_SeismicMagnitude,
-	SensorType_Ultraviolet,
-	SensorType_ElectricalResistivity,
-	SensorType_ElectricalConductivity,
-	SensorType_Loudness,
-	SensorType_Moisture,
-	SensorType_Frequency,
-	SensorType_Time,
-	SensorType_TargetTemperature,
-	SensorType_PM25,
-	SensorType_CH2O,
-	SensorType_RadonConcentration,
-	SensorType_CH4Density,
-	SensorType_VOC,
-	SensorType_CO,
-	SensorType_SoilHumidity,
-	SensorType_SoilReactivity,
-	SensorType_SoilSalinity,
-	SensorType_HeartRate,
-	SensorType_BloodPressure,
-	SensorType_MuscleMass,
-	SensorType_FatMass,
-	SensorType_BoneMass,
-	SensorType_TBW,
-	SensorType_BMR,
-	SensorType_BMI,
-	SensorType_AccelerationX,
-	SensorType_AccelerationY,
-	SensorType_AccelerationZ,
-	SensorType_SmokeDensity,
-	SensorType_WaterFlow,
-	SensorType_WaterPressure,
-	SensorType_RFSignalStrength,
-	SensorType_PM10,
-	SensorType_RespiratoryRate,
-	SensorType_RelativeModulationLevel,
-	SensorType_BoilerWaterTemperature,
-	SensorType_DHWTemperature,
-	SensorType_OutsideTemperature,
-	SensorType_ExhaustTemperature,
-	SensorType_WaterChlorineLevel,
-	SensorType_WaterAcidity,
-	SensorType_WaterOxidation,
-	SensorType_MaxType
-};
+#define MaxSensorTypes (ValueID_Index_SensorMultiLevel::WaterOxidation +1)
 
 static char const* c_sensorTypeNames[] =
 {
@@ -310,7 +239,7 @@ bool SensorMultilevel::RequestValue
 	}
 	else
 	{
-		for( uint8 i = 1; i < SensorType_MaxType; i++ )
+		for( uint8 i = 1; i < MaxSensorTypes; i++ )
 		{
 			Value* value = GetValue( _instance, i );
 			if( value != NULL )
@@ -358,7 +287,7 @@ bool SensorMultilevel::HandleMsg
 						if( msg != "" )
 							msg += ", ";
 						uint8 index = ( ( i - 1 ) * 8 ) + j + 1;
-						if (index >= SensorType_MaxType) /* max size for c_sensorTypeNames */
+						if (index >= MaxSensorTypes) /* max size for c_sensorTypeNames */
 						{
 							Log::Write (LogLevel_Warning, GetNodeId(), "SensorType Value was greater than range. Dropping");
 							continue;
@@ -388,25 +317,25 @@ bool SensorMultilevel::HandleMsg
 			char const* units = "";
 			switch( sensorType )
 			{
-				case SensorType_Temperature:				units = scale ? "F" : "C";			break;
-				case SensorType_General:				units = scale ? "" : "%";			break;
-				case SensorType_Luminance:				units = scale ? "lux" : "%";			break;
-				case SensorType_Power:					units = scale ? "BTU/h" : "W";			break;
-				case SensorType_RelativeHumidity:			units = scale ? "" : "%";			break;
-				case SensorType_Velocity:				units = scale ? "mph" : "m/s";			break;
-				case SensorType_Direction:				units = "";					break;
-				case SensorType_AtmosphericPressure:			units = scale ? "inHg" : "kPa";			break;
-				case SensorType_BarometricPressure:			units = scale ? "inHg" : "kPa";			break;
-				case SensorType_SolarRadiation:				units = "W/m2";					break;
-				case SensorType_DewPoint:				units = scale ? "F" : "C";			break;
-				case SensorType_RainRate:				units = scale ? "in/h" : "mm/h";		break;
-				case SensorType_TideLevel:				units = scale ? "ft" : "m";			break;
-				case SensorType_Weight:					units = scale ? "lb" : "kg";			break;
-				case SensorType_Voltage:				units = scale ? "mV" : "V";			break;
-				case SensorType_Current:				units = scale ? "mA" : "A";			break;
-				case SensorType_CO2:					units = "ppm";					break;
-				case SensorType_AirFlow:				units = scale ? "cfm" : "m3/h";			break;
-				case SensorType_TankCapacity: {
+				case ValueID_Index_SensorMultiLevel::Temperature:				units = scale ? "F" : "C";			break;
+				case ValueID_Index_SensorMultiLevel::General:				units = scale ? "" : "%";			break;
+				case ValueID_Index_SensorMultiLevel::Luminance:				units = scale ? "lux" : "%";			break;
+				case ValueID_Index_SensorMultiLevel::Power:					units = scale ? "BTU/h" : "W";			break;
+				case ValueID_Index_SensorMultiLevel::RelativeHumidity:			units = scale ? "" : "%";			break;
+				case ValueID_Index_SensorMultiLevel::Velocity:				units = scale ? "mph" : "m/s";			break;
+				case ValueID_Index_SensorMultiLevel::Direction:				units = "";					break;
+				case ValueID_Index_SensorMultiLevel::AtmosphericPressure:			units = scale ? "inHg" : "kPa";			break;
+				case ValueID_Index_SensorMultiLevel::BarometricPressure:			units = scale ? "inHg" : "kPa";			break;
+				case ValueID_Index_SensorMultiLevel::SolarRadiation:				units = "W/m2";					break;
+				case ValueID_Index_SensorMultiLevel::DewPoint:				units = scale ? "F" : "C";			break;
+				case ValueID_Index_SensorMultiLevel::RainRate:				units = scale ? "in/h" : "mm/h";		break;
+				case ValueID_Index_SensorMultiLevel::TideLevel:				units = scale ? "ft" : "m";			break;
+				case ValueID_Index_SensorMultiLevel::Weight:					units = scale ? "lb" : "kg";			break;
+				case ValueID_Index_SensorMultiLevel::Voltage:				units = scale ? "mV" : "V";			break;
+				case ValueID_Index_SensorMultiLevel::Current:				units = scale ? "mA" : "A";			break;
+				case ValueID_Index_SensorMultiLevel::CO2:					units = "ppm";					break;
+				case ValueID_Index_SensorMultiLevel::AirFlow:				units = scale ? "cfm" : "m3/h";			break;
+				case ValueID_Index_SensorMultiLevel::TankCapacity: {
 					if (scale > 2) /* size of c_tankCapcityUnits minus invalid */
 					{
 						Log::Write (LogLevel_Warning, GetNodeId(), "Scale Value for c_tankCapcityUnits was greater than range. Setting to empty");
@@ -418,7 +347,7 @@ bool SensorMultilevel::HandleMsg
 					}
 				}
 				break;
-				case SensorType_Distance: {
+				case ValueID_Index_SensorMultiLevel::Distance: {
 					if (scale > 2) /* size of c_distanceUnits minus invalid */
 					{
 						Log::Write (LogLevel_Warning, GetNodeId(), "Scale Value for c_distanceUnits was greater than range. Setting to empty");
@@ -430,7 +359,7 @@ bool SensorMultilevel::HandleMsg
 					}
 				}
 				break;
-				case SensorType_AnglePosition: {
+				case ValueID_Index_SensorMultiLevel::AnglePosition: {
 					if (scale > 2) /* size of c_anglePositionUnits minus invalid */
 					{
 						Log::Write (LogLevel_Warning, GetNodeId(), "Scale Value for c_anglePositionUnits was greater than range. Setting to empty");
@@ -442,10 +371,10 @@ bool SensorMultilevel::HandleMsg
 					}
 				}
 				break;
-				case SensorType_Rotation:				units = scale ? "hz" : "rpm";			break;
-				case SensorType_WaterTemperature:			units = scale ? "F" : "C";			break;
-				case SensorType_SoilTemperature:			units = scale ? "F" : "C";			break;
-				case SensorType_SeismicIntensity: {
+				case ValueID_Index_SensorMultiLevel::Rotation:				units = scale ? "hz" : "rpm";			break;
+				case ValueID_Index_SensorMultiLevel::WaterTemperature:			units = scale ? "F" : "C";			break;
+				case ValueID_Index_SensorMultiLevel::SoilTemperature:			units = scale ? "F" : "C";			break;
+				case ValueID_Index_SensorMultiLevel::SeismicIntensity: {
 					if (scale > 3) /* size of c_seismicIntensityUnits minus invalid */
 					{
 						Log::Write (LogLevel_Warning, GetNodeId(), "Scale Value for c_seismicIntensityUnits was greater than range. Setting to empty");
@@ -457,7 +386,7 @@ bool SensorMultilevel::HandleMsg
 					}
 				}
 				break;
-				case SensorType_SeismicMagnitude: {
+				case ValueID_Index_SensorMultiLevel::SeismicMagnitude: {
 					if (scale > 3) /* size of c_seismicMagnitudeUnits minus invalid */
 					{
 						Log::Write (LogLevel_Warning, GetNodeId(), "Scale Value for c_seismicMagnitudeUnits was greater than range. Setting to empty");
@@ -469,11 +398,11 @@ bool SensorMultilevel::HandleMsg
 					}
 				}
 				break;
-				case SensorType_Ultraviolet:				units = "";					break;
-				case SensorType_ElectricalResistivity:			units = "ohm";					break;
-				case SensorType_ElectricalConductivity:			units = "siemens/m";				break;
-				case SensorType_Loudness:				units = scale ? "dBA" : "db";			break;
-				case SensorType_Moisture: {
+				case ValueID_Index_SensorMultiLevel::Ultraviolet:				units = "";					break;
+				case ValueID_Index_SensorMultiLevel::ElectricalResistivity:			units = "ohm";					break;
+				case ValueID_Index_SensorMultiLevel::ElectricalConductivity:			units = "siemens/m";				break;
+				case ValueID_Index_SensorMultiLevel::Loudness:				units = scale ? "dBA" : "db";			break;
+				case ValueID_Index_SensorMultiLevel::Moisture: {
 					if (scale > 3) /* size of c_moistureUnits minus invalid */
 					{
 						Log::Write (LogLevel_Warning, GetNodeId(), "Scale Value for c_moistureUnits was greater than range. Setting to empty");
@@ -485,43 +414,43 @@ bool SensorMultilevel::HandleMsg
 					}
 				}
 				break;
-				case SensorType_Frequency:				units = scale ? "kHz" : "Hz";			break;
-				case SensorType_Time:				units = "s";			break;
-				case SensorType_TargetTemperature:				units = scale ? "F" : "C";			break;
-				case SensorType_PM25:				units = scale ? "ug/m3" : "mol/m3";			break;
-				case SensorType_CH2O:				units = "mol/m3";			break;
-				case SensorType_RadonConcentration:				units = scale ? "pCi/l" : "bq/m3";			break;
-				case SensorType_CH4Density:				units = "mol/m3";			break;
-				case SensorType_VOC:				units = scale ? "ppm" : "mol/m3";			break;
-				case SensorType_CO:				units = scale ? "ppm" : "mol/m3";			break;
-				case SensorType_SoilHumidity:				units = "%";			break;
-				case SensorType_SoilReactivity:				units = "pH";			break;
-				case SensorType_SoilSalinity:				units = "mol/m3";			break;
-				case SensorType_HeartRate:				units = "bpm";			break;
-				case SensorType_BloodPressure:				units = scale ? "mmHg (Diastollic)" : "mmHg (Systollic)";	break;
-				case SensorType_MuscleMass:				units = "kg";			break;
-				case SensorType_FatMass:				units = "kg";			break;
-				case SensorType_BoneMass:				units = "kg";			break;
-				case SensorType_TBW:				units = "kg";			break;
-				case SensorType_BMR:				units = "J";			break;
-				case SensorType_BMI:				units = "";			break;
-				case SensorType_AccelerationX:				units = "m/s2";			break;
-				case SensorType_AccelerationY:				units = "m/s2";			break;
-				case SensorType_AccelerationZ:				units = "m/s2";			break;
-				case SensorType_SmokeDensity:				units = "%";			break;
-				case SensorType_WaterFlow:				units = "l/h";			break;
-				case SensorType_WaterPressure:				units = "kPa";			break;
-				case SensorType_RFSignalStrength:				units = scale ? "dBm" : "% (RSSI)";			break;
-				case SensorType_PM10:				units = scale ? "ug/m3" : "mol/m3";			break;
-				case SensorType_RespiratoryRate:				units = "bpm";			break;
-				case SensorType_RelativeModulationLevel:				units = "%";			break;
-				case SensorType_BoilerWaterTemperature:				units = "C";			break;
-				case SensorType_DHWTemperature:				units = "C";			break;
-				case SensorType_OutsideTemperature:				units = "C";			break;
-				case SensorType_ExhaustTemperature:				units = "C";			break;
-				case SensorType_WaterChlorineLevel:				units = "mg/l";			break;
-				case SensorType_WaterAcidity:				units = "pH";			break;
-				case SensorType_WaterOxidation:				units = "mV";			break;
+				case ValueID_Index_SensorMultiLevel::Frequency:				units = scale ? "kHz" : "Hz";			break;
+				case ValueID_Index_SensorMultiLevel::Time:				units = "s";			break;
+				case ValueID_Index_SensorMultiLevel::TargetTemperature:				units = scale ? "F" : "C";			break;
+				case ValueID_Index_SensorMultiLevel::PM25:				units = scale ? "ug/m3" : "mol/m3";			break;
+				case ValueID_Index_SensorMultiLevel::CH2O:				units = "mol/m3";			break;
+				case ValueID_Index_SensorMultiLevel::RadonConcentration:				units = scale ? "pCi/l" : "bq/m3";			break;
+				case ValueID_Index_SensorMultiLevel::CH4Density:				units = "mol/m3";			break;
+				case ValueID_Index_SensorMultiLevel::VOC:				units = scale ? "ppm" : "mol/m3";			break;
+				case ValueID_Index_SensorMultiLevel::CO:				units = scale ? "ppm" : "mol/m3";			break;
+				case ValueID_Index_SensorMultiLevel::SoilHumidity:				units = "%";			break;
+				case ValueID_Index_SensorMultiLevel::SoilReactivity:				units = "pH";			break;
+				case ValueID_Index_SensorMultiLevel::SoilSalinity:				units = "mol/m3";			break;
+				case ValueID_Index_SensorMultiLevel::HeartRate:				units = "bpm";			break;
+				case ValueID_Index_SensorMultiLevel::BloodPressure:				units = scale ? "mmHg (Diastollic)" : "mmHg (Systollic)";	break;
+				case ValueID_Index_SensorMultiLevel::MuscleMass:				units = "kg";			break;
+				case ValueID_Index_SensorMultiLevel::FatMass:				units = "kg";			break;
+				case ValueID_Index_SensorMultiLevel::BoneMass:				units = "kg";			break;
+				case ValueID_Index_SensorMultiLevel::TBW:				units = "kg";			break;
+				case ValueID_Index_SensorMultiLevel::BMR:				units = "J";			break;
+				case ValueID_Index_SensorMultiLevel::BMI:				units = "";			break;
+				case ValueID_Index_SensorMultiLevel::AccelerationX:				units = "m/s2";			break;
+				case ValueID_Index_SensorMultiLevel::AccelerationY:				units = "m/s2";			break;
+				case ValueID_Index_SensorMultiLevel::AccelerationZ:				units = "m/s2";			break;
+				case ValueID_Index_SensorMultiLevel::SmokeDensity:				units = "%";			break;
+				case ValueID_Index_SensorMultiLevel::WaterFlow:				units = "l/h";			break;
+				case ValueID_Index_SensorMultiLevel::WaterPressure:				units = "kPa";			break;
+				case ValueID_Index_SensorMultiLevel::RFSignalStrength:				units = scale ? "dBm" : "% (RSSI)";			break;
+				case ValueID_Index_SensorMultiLevel::PM10:				units = scale ? "ug/m3" : "mol/m3";			break;
+				case ValueID_Index_SensorMultiLevel::RespiratoryRate:				units = "bpm";			break;
+				case ValueID_Index_SensorMultiLevel::RelativeModulationLevel:				units = "%";			break;
+				case ValueID_Index_SensorMultiLevel::BoilerWaterTemperature:				units = "C";			break;
+				case ValueID_Index_SensorMultiLevel::DHWTemperature:				units = "C";			break;
+				case ValueID_Index_SensorMultiLevel::OutsideTemperature:				units = "C";			break;
+				case ValueID_Index_SensorMultiLevel::ExhaustTemperature:				units = "C";			break;
+				case ValueID_Index_SensorMultiLevel::WaterChlorineLevel:				units = "mg/l";			break;
+				case ValueID_Index_SensorMultiLevel::WaterAcidity:				units = "pH";			break;
+				case ValueID_Index_SensorMultiLevel::WaterOxidation:				units = "mV";			break;
 				default: {
 					Log::Write (LogLevel_Warning, GetNodeId(), "sensorType Value was greater than range. Dropping");
 					return false;

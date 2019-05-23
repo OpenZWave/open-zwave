@@ -178,6 +178,10 @@ $(top_srcdir)/cpp/src/vers.cpp:
 		-e 's|[@]VERSION@|$(VERSION).$(VERSION_REV)|g' \
 		< "$(top_srcdir)/dist/openzwave.spec.in" > "$(top_srcdir)/dist/openzwave.spec"
 
+#create a vers.cpp file that contains our version and subversion revisions
+updateIndexDefines: $(top_srcdir)/cpp/src/ValueIDIndexesDefines.def
+	@$(CXX) -E -P -o $(top_srcdir)/cpp/src/ValueIDIndexesDefines.h -x c++ $<	
+
 
 #$(OBJDIR)/vers.o:	$(top_builddir)/vers.cpp
 
@@ -202,7 +206,7 @@ $(LIBDIR)/$(SHARED_LIB_NAME):	$(patsubst %.cpp,$(OBJDIR)/%.o,$(tinyxml)) \
 			$(patsubst %.cpp,$(OBJDIR)/%.o,$(indep)) \
 			$(OBJDIR)/vers.o
 	@echo "Linking Shared Library"
-	@$(LD) $(LDFLAGS) $(TARCH) -o $@ $+ $(LIBS)
+	$(LD) $(LDFLAGS) $(TARCH) -o $@ $+ $(LIBS)
 	@ln -sf $(SHARED_LIB_NAME) $(LIBDIR)/$(SHARED_LIB_UNVERSIONED)
 
 $(top_builddir)/libopenzwave.pc: $(top_srcdir)/cpp/build/libopenzwave.pc.in $(PKGCONFIG)
