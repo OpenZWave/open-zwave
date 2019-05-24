@@ -1,20 +1,20 @@
-<!-- Aeotec LED Bulb --><Product Revision="7" xmlns="https://github.com/OpenZWave/open-zwave">
+<!-- Aeotec LED Bulb --><Product Revision="8" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0086:0062:0103</MetaDataItem>
     <MetaDataItem name="ProductPic">images/aeotec/zw098.png</MetaDataItem>
-    <MetaDataItem id="0062" name="ZWProductPage" type="0103">https://products.z-wavealliance.org/products/1594/</MetaDataItem>
-    <MetaDataItem name="Description">Oomi Bulb is a low-cost Z-Wave LED module which allows control (on/off/dim) with the use of Z-Wave. 
+    <MetaDataItem id="0062" name="ZWProductPage" type="0103">https://products.z-wavealliance.org/products/1829/</MetaDataItem>
+    <MetaDataItem name="Description">Aeotec LED Bulb is a low-cost Z-Wave LED module which allows control (on/off/dim) with the use of Z-Wave. 
 It’s a bulb has a Smart RGB LED, which can be used to add colour to your home. The bulb has 5 main colour channels available for you to adjust: Red, Green, Blue, Warm White and Cold White. You can configure its colour according to your favour.
-The Bulb is also a security Z-wave device and supports the Over The Air (OTA) feature for the product’s firmware upgrade.</MetaDataItem>
-    <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/1594/Oomi Bulb manual.pdf</MetaDataItem>
-    <MetaDataItem name="ExclusionDescription">Turn the primary controller of Z-Wave network into exclusion mode, press the external switch of the Bulb to turn off and then press the external switch again to turn on it, repeat the operation 3 times.</MetaDataItem>
-    <MetaDataItem id="0062" name="Identifier" type="0103">FT098-A52</MetaDataItem>
+The LED Bulb is also a security Z-Wave device and supports the Over The Air (OTA) feature for the product’s firmware upgrade.</MetaDataItem>
+    <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/1829/LED Bulb manual.pdf</MetaDataItem>
+    <MetaDataItem name="ExclusionDescription">Turn the primary controller of Z-Wave network into exclusion mode, press the external switch of LED Bulb to turn off and then press the external switch again to turn on it, repeat the operation 3 times.</MetaDataItem>
+    <MetaDataItem id="0062" name="Identifier" type="0103">ZW098-A52</MetaDataItem>
     <MetaDataItem id="0062" name="FrequencyName" type="0103">U.S. / Canada / Mexico</MetaDataItem>
-    <MetaDataItem name="InclusionDescription">Turn the primary controller of Z-Wave network into inclusion mode, press the external switch of the Bulb to turn it off and then press the external switch again to turn it on.</MetaDataItem>
+    <MetaDataItem name="InclusionDescription">Turn the primary controller of Z-Wave network into inclusion mode, press the external switch of LED Bulb to turn it off and then press the external switch again to turn it on.</MetaDataItem>
     <MetaDataItem name="WakeupDescription">N/A</MetaDataItem>
-    <MetaDataItem name="Name">Bulb</MetaDataItem>
-    <MetaDataItem name="ResetDescription">Turn the controller of Z-Wave network into exclusion mode, press the external switch of the Bulb to turn off and then press the external switch again to turn on it, repeat the operation 3 times.
-After the Bulb is excluded from network, it will be reset to factory default state.
+    <MetaDataItem name="Name">LED Bulb</MetaDataItem>
+    <MetaDataItem name="ResetDescription">Turn the controller of Z-Wave network into exclusion mode, press the external switch of LED Bulb to turn off and then press the external switch again to turn on it, repeat the operation 3 times.
+After the LED Bulb is excluded from network, it will be reset to factory default state.
 Use this procedure only in the event that your primary network controller is missing or inoperable.</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="08 May 2019" revision="3">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1315/xml</Entry>
@@ -22,6 +22,7 @@ Use this procedure only in the event that your primary network controller is mis
       <Entry author="Justin Hammond - Justin@dynam.ac" date="08 May 2019" revision="5">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1379/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="08 May 2019" revision="6">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1380/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="23 May 2019" revision="7">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1594/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="24 May 2019" revision="8">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1829/xml</Entry>
     </ChangeLog>
     <MetaDataItem id="0062" name="ZWProductPage" type="0203">https://products.z-wavealliance.org/products/1379/</MetaDataItem>
     <MetaDataItem id="0062" name="FrequencyName" type="0203">Australia / New Zealand</MetaDataItem>
