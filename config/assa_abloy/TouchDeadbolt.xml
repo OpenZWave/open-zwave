@@ -1,18 +1,19 @@
-<Product Revision="6" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="7" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0129:0000:0002</MetaDataItem>
     <MetaDataItem name="ProductPic">images/assa_abloy/TouchDeadbolt.png</MetaDataItem>
     <MetaDataItem id="0000" name="ZWProductPage" type="0002">https://products.z-wavealliance.org/products/631/</MetaDataItem>
     <MetaDataItem id="0000" name="FrequencyName" type="0002">U.S. / Canada / Mexico</MetaDataItem>
     <MetaDataItem name="ProductPage">http://www.yalerealliving.com</MetaDataItem>
-    <MetaDataItem name="Description">Never worry about carrying around or losing your keys again. Unlock and lock your home with ease from the backlit touchscreen keypad. Create unique pin codes for friends and family and remove codes whenever you need to. This Yale Real Living lock features Z-Wave technology and seamlessly integrates into 50+ home automation and security systems. When added to most Z-Wave automation systems, lock and unlock your door, create pin codes, view access history and receive notifications from anywhere. The lock is tamper resistant, easy to install and even easier to use!</MetaDataItem>
-    <MetaDataItem name="Name">Yale Real Living Touchscreen Assure Lock with Z-Wave</MetaDataItem>
+    <MetaDataItem name="Description">Lose Your Keys. For Good. Lock and unlock your home without the hassle of keys by simply tapping the keypad when you have your phone, or with a 4-8 digit pin code. Forget lending keys; share digital keys with friends and family using the free Yale Assure app. View access history and battery levels, receive notifications, create pin codes and more all from your smartphone. The lock is simple to install and even easier to use. Features Z-Wave Plus technology for seamless integration into your home's alarm or automation system. </MetaDataItem>
+    <MetaDataItem name="Name">Yale Real Living Key Free Touchscreen Assure Lock with Z-Wave and Bluetooth</MetaDataItem>
     <MetaDataItem id="0000" name="Identifier" type="0002">Yale/YRD/ 220</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="3">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/631/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="4">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1040/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="08 May 2019" revision="5">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1358/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="24 May 2019" revision="6">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1878/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="24 May 2019" revision="7">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1972/xml</Entry>
     </ChangeLog>
     <MetaDataItem id="0800" name="ZWProductPage" type="0002">https://products.z-wavealliance.org/products/1040/</MetaDataItem>
     <MetaDataItem id="0800" name="FrequencyName" type="0002">U.S. / Canada / Mexico</MetaDataItem>
@@ -20,9 +21,9 @@
     <MetaDataItem id="0000" name="ZWProductPage" type="0006">https://products.z-wavealliance.org/products/1358/</MetaDataItem>
     <MetaDataItem id="0000" name="Identifier" type="0006">YKFCON</MetaDataItem>
     <MetaDataItem id="0000" name="FrequencyName" type="0006">CEPT (Europe)</MetaDataItem>
-    <MetaDataItem id="0600" name="ZWProductPage" type="8002">https://products.z-wavealliance.org/products/1878/</MetaDataItem>
-    <MetaDataItem id="0600" name="Identifier" type="8002">YRD226-ZW2</MetaDataItem>
-    <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/1878/WGA6ZWManual.pdf</MetaDataItem>
+    <MetaDataItem id="0600" name="ZWProductPage" type="8002">https://products.z-wavealliance.org/products/1972/</MetaDataItem>
+    <MetaDataItem id="0600" name="Identifier" type="8002">YRD446-ZW2</MetaDataItem>
+    <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/1972/WGA6ZWManual.pdf</MetaDataItem>
     <MetaDataItem name="ResetDescription">Remove the battery cover and batteries.
 Remove the interior escutcheon to access the reset button.
 The reset button is located above the PCB cable connector.
