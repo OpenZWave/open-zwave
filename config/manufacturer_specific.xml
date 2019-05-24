@@ -1342,7 +1342,7 @@
   <Manufacturer id="0255" name="Remote Technologies Incorporated"></Manufacturer>
   <Manufacturer id="5254" name="Remotec">
     <Product config="remotec/zurc.xml" id="531f" name="Z-URC" type="0000"/>
-    <Product id="8380" name="ZRC-100" type="0001"/>
+    <Product config="remotec/zrc-100eu.xml" id="8380" name="ZRC-100" type="0001"/>
     <Product config="remotec/zxt-310.xml" id="8371" name="ZXT-310US" type="0100"/>
     <Product config="remotec/zxt-310.xml" id="8371" name="ZXT-310EU" type="0101"/>
     <Product config="remotec/zxt-310.xml" id="8371" name="ZXT-310AU" type="0102"/>
