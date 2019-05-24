@@ -3463,7 +3463,7 @@ bool Node::SetPlusDeviceClasses
 	{
 		DeviceClass* roleDeviceClass = rit->second;
 
-		Log::Write( LogLevel_Info, m_nodeId, "  ZWave+ Role Type  (0x%02x) - %s", m_generic, roleDeviceClass->GetLabel().c_str() );
+		Log::Write( LogLevel_Info, m_nodeId, "  ZWave+ Role Type  (0x%02x) - %s", _role, roleDeviceClass->GetLabel().c_str() );
 
 		uint8 const *_commandClasses = roleDeviceClass->GetMandatoryCommandClasses();
 
@@ -3495,7 +3495,7 @@ bool Node::SetPlusDeviceClasses
 	}
 	else
 	{
-		Log::Write (LogLevel_Warning, m_nodeId, "  ZWave+ Role Type  (0x%02x) - NOT FOUND. No Mandatory Command Classes Loaded:", m_nodeType);
+		Log::Write (LogLevel_Warning, m_nodeId, "  ZWave+ Role Type  (0x%02x) - NOT FOUND. No Mandatory Command Classes Loaded:", _role);
 	}
 
 
