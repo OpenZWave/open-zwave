@@ -1684,7 +1684,7 @@
     <Product id="0f03" name="ZS6301 CO Detector" type="200f"/>
     <Product config="vision/zr1202us.xml" id="1203" name="ZR1202 Repeater" type="2012"/>
     <Product config="vision/brg1-433.xml" id="1401" name="ZL7101 Plug-in Dimmer Module" type="2014"/>
-    <Product id="1717" name="ZL7432 In-Wall Switch, Dual Relay" type="2017"/>
+    <Product config="vision/zl7432us.xml" id="1717" name="ZL7432 In-Wall Switch, Dual Relay" type="2017"/>
     <Product config="vision/zl7261.xml" id="1aa4" name="ZL7261 Plug-in Power Monitor" type="201a"/>
     <Product config="vision/zf5201.xml" id="1c01" name="ZF5201 Flood sensor" type="201c"/>
     <Product config="vision/zd2201.xml" id="1f10" name="ZD2201 Multisensor 4in1" type="201f"/>
