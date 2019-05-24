@@ -789,7 +789,7 @@
     <Product config="gr/gr105.xml" id="0511" name="GR105 Auto Valve" type="0202"/>
     <Product config="gr/gr105n.xml" id="0512" name="GR105n Auto Valve" type="0003"/>
     <Product config="gr/grb3.xml" id="0005" name="GRB3 Multichannel Switch" type="0500"/>
-    <Product id="0003" name="ZSE02 Motion Sensor" type="0500"/>
+    <Product config="gr/gr-302n.xml" id="0003" name="ZSE02 Motion Sensor" type="0500"/>
   </Manufacturer>
   <Manufacturer id="0099" name="GreenWave Reality Inc">
     <Product config="greenwave/gs1110-1-gr-1.xml" id="0002" name="One Gateway" type="0001"/>
