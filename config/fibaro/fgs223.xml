@@ -1,4 +1,4 @@
-<Product Revision="10" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="11" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/010F:1000:0203</MetaDataItem>
     <MetaDataItem name="ProductPic">images/fibaro/fgs223.png</MetaDataItem>
@@ -11,7 +11,7 @@
 6)	Successful removing will be confirmed by the Z-Wave controller’s message.
 </MetaDataItem>
     <MetaDataItem name="Description">The remotely operated FIBARO Double Switch 2 is designed to turn two electrical devices on and off and to measure their power and energy consumption. The compact size of the device makes it the world's smallest of its type and allows for the product to be installed in wall switch boxes or housings. FIBARO Double Switch 2 can be controlled either via Z-Wave network or with a wall switch through a direct connection. </MetaDataItem>
-    <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/1874/FGS-2x3-EN-T-v1.0.pdf</MetaDataItem>
+    <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/1875/FGS-2x3-EN-T-v1.0.pdf</MetaDataItem>
     <MetaDataItem name="InclusionDescription">1)	Switch off the mains voltage (disable the fuse).
 2)	Place the Switch 2 within the direct range of your Z-Wave controller. 
 3)	Connect the device in accordance with one of the diagrams attached in the manual.
@@ -42,10 +42,14 @@ Use reset procedure only if the primary controller is missing or inoperable.
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="24 May 2019" revision="9">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1742/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="24 May 2019" revision="10">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1874/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="24 May 2019" revision="11">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1875/xml</Entry>
     </ChangeLog>
     <MetaDataItem id="2000" name="ZWProductPage" type="0203">https://products.z-wavealliance.org/products/1874/</MetaDataItem>
     <MetaDataItem id="2000" name="Identifier" type="0203">FGS-223</MetaDataItem>
     <MetaDataItem id="2000" name="FrequencyName" type="0203">U.S. / Canada / Mexico</MetaDataItem>
+    <MetaDataItem id="3000" name="ZWProductPage" type="0203">https://products.z-wavealliance.org/products/1875/</MetaDataItem>
+    <MetaDataItem id="3000" name="Identifier" type="0203">FGS-223</MetaDataItem>
+    <MetaDataItem id="3000" name="FrequencyName" type="0203">Australia / New Zealand</MetaDataItem>
   </MetaData>
   <!-- COMMAND_CLASS_SWITCH_MULTILEVEL. This class is in the list reported by the device, but it does not respond to requests -->
   <CommandClass id="38">
