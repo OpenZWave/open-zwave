@@ -1,4 +1,4 @@
-<!-- Fibaro Swipe FGGC-001 --><Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
+<!-- Fibaro Swipe FGGC-001 --><Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/010F:1000:0D01</MetaDataItem>
     <MetaDataItem name="ProductPic">images/fibaro/fggc001.png</MetaDataItem>
@@ -19,6 +19,7 @@
 2)	Loud sound sequence will confirm entering the menu, keep holding your hand.
 3)	Wait for the buzzer to indicate the 1st menu position (1 short beep)
 4)	Withdraw the hand and perform swiping up gesture to confirm selection (two beeps will confirm validity).
+
 </MetaDataItem>
     <MetaDataItem name="ResetDescription">Reset procedure allows to restore the device back to its factory settings, which means all information about the Z-Wave controller and user configuration will be deleted. In order to reset the device:
 1)	Make sure the device is powered.
@@ -26,8 +27,13 @@
 3)	Loud sound sequence will confirm entering the menu, keep holding your hand.
 4)	Wait for the buzzer to indicate the 3rd menu position (3 short beeps)
 5)	Withdraw the hand and perform swiping up gesture to confirm selection (two beeps will confirm validity).
+Resetting the device is not the recommended way of removing the device from the
+Z-Wave network. Use the reset procedure only if the primary controller is missing
+or inoperable. Certain device removal can be achieved by the procedure of removing
+described in "Adding the device" on page 8.
+
 </MetaDataItem>
-    <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/1655/FGGC-001-EN-T-v1.0.pdf</MetaDataItem>
+    <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/1745/FGGC-001-US-T-v1.0.pdf</MetaDataItem>
     <MetaDataItem name="ExclusionDescription">1)	Place the Swipe within the direct range of your Z-Wave controller.
 2)	Set the main controller in remove mode (see the controller’s manual).
 3)	Move and hold your hand close to the centre of the pad.
@@ -37,15 +43,19 @@
 7)	Wait for the removing process to end.
 8)	Successful removing will be confirmed by the Z-Wave controller’s message and sequence of 2 short beeps, pause, 1 short beep.
 </MetaDataItem>
-    <MetaDataItem name="Description">FIBARO Swipe is a revolutionary, battery or Micro USB powered gesture control pad that allows you to control devices through the Z-Wave network. Swipe your hand up, down, left or right in front of the pad, make circular gestures and use sequences of gestures to get full and intuitive control of your smart home.
-Installed device perfectly matches your interior design, as it resembles a picture frame. You can even personalize it with your favourite picture. Gesture controlled menu allow to add/remove or reset the device without dismounting it.
-
-The device is equipped with a buzzer that confirms performed gestures and other actions.</MetaDataItem>
+    <MetaDataItem name="Description">FIBARO Swipe is a revolutionary, battery-powered gesture control pad that allows you to control devices through the Z-Wave network. Swipe your hand up, down, left or right in front of the pad, make circular gestures and use sequences of gestures to get full and intuitive control of your smart home.
+Installed device perfectly matches your interior design, as it resembles a picture frame. You can even personalize it with your favourite picture. Gesture controlled menu allow to add/remove or reset the device without dismounting it. 
+The device is equipped with a buzzer that confirms performed gestures and other actions.
+</MetaDataItem>
     <MetaDataItem id="1000" name="Identifier" type="0D01">FGGC-001</MetaDataItem>
-    <MetaDataItem name="Name">FIBARO Swipe</MetaDataItem>
+    <MetaDataItem name="Name">FIBARO Swipe </MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="24 May 2019" revision="2">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1655/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="24 May 2019" revision="3">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1745/xml</Entry>
     </ChangeLog>
+    <MetaDataItem id="2000" name="ZWProductPage" type="0D01">https://products.z-wavealliance.org/products/1745/</MetaDataItem>
+    <MetaDataItem id="2000" name="Identifier" type="0D01">FGGC-001</MetaDataItem>
+    <MetaDataItem id="2000" name="FrequencyName" type="0D01">U.S. / Canada / Mexico</MetaDataItem>
   </MetaData>
   <!-- Configuration -->
   <CommandClass id="112">
