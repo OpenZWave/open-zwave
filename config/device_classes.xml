@@ -185,7 +185,7 @@
   PowerLevel - 0x73
   Security - If required - 0x98
   -->
-  <DeviceType key="0x0000" label="Unknown Type"/>
+  <DeviceType key="0x0000" label="Unknown Type (0x0000)"/>
   <DeviceType key="0x0100" label="Central Controller" command_classes="0x5a,0x5e,0x59,0x72,0x73,0x85,0x86,0x56,0x22"/>
   <DeviceType key="0x0200" label="Display Simple" command_classes="0x5a,0x5e,0x59,0x72,0x73,0x85,0x86"/>
   <DeviceType key="0x0300" label="Door Lock Keypad" command_classes="0x5a,0x5e,0x59,0x72,0x73,0x85,0x86,0x62,0x63,0x80"/>
@@ -260,4 +260,102 @@
   <DeviceType key="0x1800" label="Window Covering No Position/Endpoint" command_classes="0x5a,0x5e,0x59,0x72,0x73,0x85,0x86,0x26,0x25"/>
   <DeviceType key="0x1900" label="Window Covering Endpoint Aware" command_classes="0x5a,0x5e,0x59,0x72,0x73,0x85,0x86,0x26,0x25"/>
   <DeviceType key="0x1a00" label="Window Covering Position/Endpoint Aware" command_classes="0x5a,0x5e,0x59,0x72,0x73,0x85,0x86,0x26,0x25"/>
+  <!--
+  2019-05-24 add data, based on "Z-Wave Specification release 2019B": SDS13738 Z-Wave Plus Assigned Icon Types.xlsx
+  The DeviceType entries are based on Z-Wave Plus Info Report Command, field User Icon Type (16 bits). 
+  These new entries have no command classes assigned, as per spec SDS13782-10 4.43 Z-Wave Plus Info Command Class:
+  "Icon types do not affect the operation of a product or how it is certified."
+  -->
+  <DeviceType key="0x0601" label="Light Dimmer Switch Plugin"/>
+  <DeviceType key="0x0602" label="Light Dimmer Switch Wall Outlet"/>
+  <DeviceType key="0x0603" label="Light Dimmer Switch Ceiling Outlet"/>
+  <DeviceType key="0x0604" label="Light Dimmer Switch Wall Lamp"/>
+  <DeviceType key="0x0605" label="Light Dimmer Switch Lamp Post High"/>
+  <DeviceType key="0x0606" label="Light Dimmer Switch Lamp Post Low"/>
+  <DeviceType key="0x0607" label="Light Dimmer Switch Din Rail Module"/>
+  <DeviceType key="0x0701" label="On/Off Power Switch Plugin"/>
+  <DeviceType key="0x0702" label="On/Off Power Switch Wall Outlet"/>
+  <DeviceType key="0x0703" label="On/Off Power Switch Ceiling Outlet"/>
+  <DeviceType key="0x0704" label="On/Off Power Switch Wall Lamp"/>
+  <DeviceType key="0x0705" label="On/Off Power Switch Lamp Post High"/>
+  <DeviceType key="0x0706" label="On/Off Power Switch Lamp Post Low"/>
+  <DeviceType key="0x0707" label="On/Off Power Switch Din Rail Module"/>
+  <DeviceType key="0x08ff" label="Power Strip Individual Outlet"/>
+  <DeviceType key="0x0c0c" label="Sensor Notification Appliance"/>
+  <DeviceType key="0x0c0d" label="Sensor Notification Home Health"/>
+  <DeviceType key="0x0c0e" label="Sensor Notification Siren"/>
+  <DeviceType key="0x0c0f" label="Sensor Notification Water Valve"/>
+  <DeviceType key="0x0c10" label="Sensor Notification Weather Alarm"/>
+  <DeviceType key="0x0c11" label="Sensor Notification Irrigation"/>
+  <DeviceType key="0x0c12" label="Sensor Notification Gas Alarm"/>
+  <DeviceType key="0x0c13" label="Sensor Notification Pest Control"/>
+  <DeviceType key="0x0c14" label="Sensor Notification Light Sensor"/>
+  <DeviceType key="0x0cff" label="Sensor Notification Multidevice"/>
+  <DeviceType key="0x0d23" label="Multilevel Sensor: Particulate Matter 2.5"/>
+  <DeviceType key="0x0d24" label="Multilevel Sensor: Formaldehyde CH2O-level"/>
+  <DeviceType key="0x0d25" label="Multilevel Sensor: Radon Concentration"/>
+  <DeviceType key="0x0d26" label="Multilevel Sensor: Methane (CH4) density"/>
+  <DeviceType key="0x0d27" label="Multilevel Sensor: Volatile Organic Compound level"/>
+  <DeviceType key="0x0d28" label="Multilevel Sensor: Carbon Monoxide level"/>
+  <DeviceType key="0x0d29" label="Multilevel Sensor: Soil Humidity"/>
+  <DeviceType key="0x0d2a" label="Multilevel Sensor: Soil Reactivity"/>
+  <DeviceType key="0x0d2b" label="Multilevel Sensor: Soil Salinity"/>
+  <DeviceType key="0x0d2c" label="Multilevel Sensor: Heart Rate"/>
+  <DeviceType key="0x0d2d" label="Multilevel Sensor: Blood Pressure"/>
+  <DeviceType key="0x0d2e" label="Multilevel Sensor: Muscle Mass"/>
+  <DeviceType key="0x0d2f" label="Multilevel Sensor: Fat Mass"/>
+  <DeviceType key="0x0d30" label="Multilevel Sensor: Bone Mass"/>
+  <DeviceType key="0x0d31" label="Multilevel Sensor: Total Body Water"/>
+  <DeviceType key="0x0d32" label="Multilevel Sensor: Basis Metabolic Rate"/>
+  <DeviceType key="0x0d33" label="Multilevel Sensor: Body Mass Index"/>
+  <DeviceType key="0x0d34" label="Multilevel Sensor: Acceleration X Axis"/>
+  <DeviceType key="0x0d35" label="Multilevel Sensor: Acceleration Y Axis"/>
+  <DeviceType key="0x0d36" label="Multilevel Sensor: Acceleration Z Axis"/>
+  <DeviceType key="0x0d37" label="Multilevel Sensor: Smoke Density"/>
+  <DeviceType key="0x0d38" label="Multilevel Sensor: Water Flow"/>
+  <DeviceType key="0x0d39" label="Multilevel Sensor: Water Pressure"/>
+  <DeviceType key="0x0d3a" label="Multilevel Sensor: Signal Strength"/>
+  <DeviceType key="0x0d3b" label="Multilevel Sensor: particulate Matter 10"/>
+  <DeviceType key="0x0d3c" label="Multilevel Sensor: Respiratory Rate"/>
+  <DeviceType key="0x0d3d" label="Multilevel Sensor: Relative Modulation Level"/>
+  <DeviceType key="0x0d3e" label="Multilevel Sensor: Boiler Water Temperature"/>
+  <DeviceType key="0x0d3f" label="Multilevel Sensor: Domestic Hot Water temperature"/>
+  <DeviceType key="0x0d40" label="Multilevel Sensor: Outside temperature"/>
+  <DeviceType key="0x0d41" label="Multilevel Sensor: Exhaust temperature"/>
+  <DeviceType key="0x0d42" label="Multilevel Sensor: Water Chlorine level"/>
+  <DeviceType key="0x0d43" label="Multilevel Sensor: Water Acidity"/>
+  <DeviceType key="0x0d44" label="Multilevel Sensor: Water Oxidation reduction potential"/>
+  <DeviceType key="0x0dff" label="Multilevel Sensor: Multidevice"/>
+  <DeviceType key="0x1201" label="Thermostat, Line Voltage Switching"/>
+  <DeviceType key="0x1202" label="Thermostat, Setback Type"/>
+  <DeviceType key="0x1b00" label="Generic Repeater"/>
+  <DeviceType key="0x1b01" label="Basic Repeater Slave"/>
+  <DeviceType key="0x1b03" label="IR Repeater"/>
+  <DeviceType key="0x1c00" label="Dimmer Wall Switch"/>
+  <DeviceType key="0x1c01" label="Dimmer Wall Switch, 1 button"/>
+  <DeviceType key="0x1c02" label="Dimmer Wall Switch, 2 buttons"/>
+  <DeviceType key="0x1c03" label="Dimmer Wall Switch, 3 buttons"/>
+  <DeviceType key="0x1c04" label="Dimmer Wall Switch, 4 buttons"/>
+  <DeviceType key="0x1cf1" label="Dimmer Wall Switch, 1 rotary knob"/>
+  <DeviceType key="0x1d00" label="On/Off Wall Switch"/>
+  <DeviceType key="0x1d01" label="On/Off Wall Switch, 1 button"/>
+  <DeviceType key="0x1d02" label="On/Off Wall Switch, 2 buttons"/>
+  <DeviceType key="0x1d03" label="On/Off Wall Switch, 3 buttons"/>
+  <DeviceType key="0x1d04" label="On/Off Wall Switch, 4 buttons"/>
+  <DeviceType key="0x1de1" label="On/Off Wall Switch, Door Bell"/>
+  <DeviceType key="0x1df1" label="On/Off Wall Switch, 1 rotary knob"/>
+  <DeviceType key="0x1e00" label="Barrier"/>
+  <DeviceType key="0x1f00" label="Irrigation"/>
+  <DeviceType key="0x2000" label="Entry Control"/>
+  <DeviceType key="0x2001" label="Entry Control, Keypad 0-9"/>
+  <DeviceType key="0x2002" label="Entry Control, RFID tag reader, no button"/>
+  <DeviceType key="0x2003" label="Entry control, keypad 0-9 with ok and cancel buttons"/>
+  <DeviceType key="0x2004" label="Entry control, keypad 0-9 with ok, cancel, home, stay and away buttons"/>
+  <DeviceType key="0x2100" label="Home Security Alarm"/>
+  <DeviceType key="0x2101" label="Home Security Alarm, Intrusion"/>
+  <DeviceType key="0x2102" label="Home Security Alarm, Glass Breakage"/>
+  <DeviceType key="0x2200" label="Sound Switch"/>
+  <DeviceType key="0x2201" label="Sound Switch, Doorbell"/>
+  <DeviceType key="0x2202" label="Sound Switch, Chime"/>
+  <DeviceType key="0x2203" label="Sound Switch, Alarm Clock"/>
 </DeviceClasses>
