@@ -1,4 +1,4 @@
-<Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="5" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/000C:3034:4447</MetaDataItem>
     <MetaDataItem name="ProductPic">images/homeseer/hs-wd100plus.png</MetaDataItem>
@@ -29,6 +29,7 @@ the device.   To manually reset, tap the ON button twice quickly and then tap th
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="24 May 2019" revision="3">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1730/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="24 May 2019" revision="4">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1731/xml</Entry>
+      <Entry author="Jean-Francois Auger- Nechry@gmail.com" date="25 May 2019" revision="5">Apply PR #1546 from kaburke</Entry>
     </ChangeLog>
   </MetaData>
   <!-- Configuration Parameters -->
@@ -38,61 +39,17 @@ the device.   To manually reset, tap the ON button twice quickly and then tap th
       <Item label="No" value="0"/>
       <Item label="Yes" value="1"/>
     </Value>
-    <Value genre="config" index="7" label="Remote level percent" max="99" min="1" type="byte" units="%" value="99">
+    <Value genre="config" index="7" label="Remote level percent" max="99" min="1" type="short" units="%" value="99">
       <Help>Indicates how much each level dims/brightens as a portion of the whole range when set remotely.</Help>
     </Value>
-    <Value genre="config" index="8" label="Remote duration per level" max="22" min="1" size="2" type="list" units="ms" value="22">
+    <Value genre="config" index="8" label="Remote duration per level" max="255" min="1" size="2" type="short" units="cs" value="22">
       <Help>Indicates the time duration of each level when set remotely.</Help>
-      <Item label="10" value="1"/>
-      <Item label="20" value="2"/>
-      <Item label="30" value="3"/>
-      <Item label="40" value="4"/>
-      <Item label="50" value="5"/>
-      <Item label="60" value="6"/>
-      <Item label="70" value="7"/>
-      <Item label="80" value="8"/>
-      <Item label="90" value="9"/>
-      <Item label="100" value="10"/>
-      <Item label="110" value="11"/>
-      <Item label="120" value="12"/>
-      <Item label="130" value="13"/>
-      <Item label="140" value="14"/>
-      <Item label="150" value="15"/>
-      <Item label="160" value="16"/>
-      <Item label="170" value="17"/>
-      <Item label="180" value="18"/>
-      <Item label="190" value="19"/>
-      <Item label="200" value="20"/>
-      <Item label="210" value="21"/>
-      <Item label="220" value="22"/>
     </Value>
-    <Value genre="config" index="9" label="Local level percent" max="99" min="1" type="byte" units="%" value="99">
+    <Value genre="config" index="9" label="Local level percent" max="99" min="1" type="short" units="%" value="99">
       <Help>Indicates how much each level dims/brightens as a portion of the whole range when set locally.</Help>
     </Value>
-    <Value genre="config" index="10" label="Local duration per level" max="22" min="1" size="2" type="list" units="ms" value="22">
+    <Value genre="config" index="10" label="Local duration per level" max="22" min="1" size="2" type="short" units="cs" value="22">
       <Help>Indicates the time duration of each level when set locally.</Help>
-      <Item label="10" value="1"/>
-      <Item label="20" value="2"/>
-      <Item label="30" value="3"/>
-      <Item label="40" value="4"/>
-      <Item label="50" value="5"/>
-      <Item label="60" value="6"/>
-      <Item label="70" value="7"/>
-      <Item label="80" value="8"/>
-      <Item label="90" value="9"/>
-      <Item label="100" value="10"/>
-      <Item label="110" value="11"/>
-      <Item label="120" value="12"/>
-      <Item label="130" value="13"/>
-      <Item label="140" value="14"/>
-      <Item label="150" value="15"/>
-      <Item label="160" value="16"/>
-      <Item label="170" value="17"/>
-      <Item label="180" value="18"/>
-      <Item label="190" value="19"/>
-      <Item label="200" value="20"/>
-      <Item label="210" value="21"/>
-      <Item label="220" value="22"/>
     </Value>
   </CommandClass>
   <!-- Association Groups -->
