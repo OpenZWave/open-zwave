@@ -102,7 +102,7 @@ rm -rf %{buildroot}%{_defaultdocdir}/openzwave-%{version}/api/
 
 
 %files -n libopenzwave
-%license license/*.txt
+%license LICENSE
 %doc docs/default.htm docs/general/ docs/images+css/
 %{_libdir}/libopenzwave.so.*
 %defattr(664, root, zwave, 775)
