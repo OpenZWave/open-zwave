@@ -57,10 +57,10 @@ CommandClass( _homeId, _nodeId )
 }
 
 //-----------------------------------------------------------------------------
-// <SceneActivation::HandleIncommingMsg>
+// <SceneActivation::HandleIncomingMsg>
 // Handle a message from the Z-Wave network
 //-----------------------------------------------------------------------------
-bool SceneActivation::HandleIncommingMsg
+bool SceneActivation::HandleIncomingMsg
 (
 	uint8 const* _data,
 	uint32 const _length,
@@ -114,7 +114,7 @@ bool SceneActivation::HandleIncommingMsg
 }
 
 //-----------------------------------------------------------------------------
-// <SceneActivation::HandleIncommingMsg>
+// <SceneActivation::HandleMsg>
 // Handle a message from the Z-Wave network
 //-----------------------------------------------------------------------------
 bool SceneActivation::HandleMsg
