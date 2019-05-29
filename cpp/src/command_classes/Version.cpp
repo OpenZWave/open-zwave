@@ -163,9 +163,18 @@ bool Version::HandleMsg
 		{
 			if( CommandClass* pCommandClass = node->GetCommandClass( _data[1] ) )
 			{
-				Log::Write( LogLevel_Info, GetNodeId(), "Received Command Class Version report from node %d: CommandClass=%s, Version=%d", GetNodeId(), pCommandClass->GetCommandClassName().c_str(), _data[2] );
+				Log::Write( LogLevel_Info, GetNodeId(), "Received CommandClass Version report from node %d: CommandClass=%s, Version=%d", GetNodeId(), pCommandClass->GetCommandClassName().c_str(), _data[2] );
 				pCommandClass->ClearStaticRequest( StaticRequest_Version );
-				pCommandClass->SetVersion( _data[2] );
+				/* some devices advertise CommandClasses, but return version as 0. In General this means
+				 * that the device doesn't actually support the CommandClass. So lets Remove it
+				 */
+
+				if (_data[2] > 0 ) {
+					pCommandClass->SetVersion( _data[2] );
+				} else {
+					Log::Write( LogLevel_Warning, GetNodeId(), "CommandClass Version is 0, Removing CommandClass %s", pCommandClass->GetCommandClassName().c_str());
+					GetNodeUnsafe()->RemoveCommandClass(_data[2]);
+				}
 			}
 
 			return true;
