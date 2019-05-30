@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<NotificationTypes xmlns='https://github.com/OpenZWave/open-zwave' Revision="8">
-    <!--  Please keep this file in Sync with the Localization.xml file for the Notification CC -->
-    <!--  If you are adding new Types or Params, Please also consider updating ValueIDIndexesDefines.def -->
+<NotificationTypes xmlns='https://github.com/OpenZWave/open-zwave' Revision="9">
+	<!-- Please keep Localization.xml in sync with NotificationCCTypes.xml -->
+	<!-- If you are adding new Types or Params, Please also consider updating ValueIDIndexesDefines.def -->
+	<!-- Bump Revision number, run "xmllint format" and "make xmltest" before submitting -->
 	<AlarmType id="1" name="Smoke Alarm">
 		<AlarmEvent id="0" name="Clear">
 			<AlarmEventParam id="256" type="byte" name="Previous Event Cleared" />

@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Localization xmlns="https://github.com/OpenZWave/open-zwave" Revision="5">
+<Localization xmlns="https://github.com/OpenZWave/open-zwave" Revision="6">
 	<CommandClass id="113">
-		<!-- Please Keep updates in the Notification CC in sync with NotificationCCTypes.xml as well -->
+		<!-- Please keep Localization.xml in sync with NotificationCCTypes.xml -->
+    	<!-- If you are adding new Types or Params, Please also consider updating ValueIDIndexesDefines.def -->
+		<!-- Bump Revision number, run "xmllint format" and "make xmltest" before submitting -->
 		<Label>COMMAND_CLASS_NOTIFICATION</Label>
 		<Value index="1">
 			<Help>A Smoke Alarm Alert</Help>
