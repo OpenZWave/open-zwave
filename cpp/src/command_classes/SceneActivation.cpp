@@ -103,7 +103,9 @@ bool SceneActivation::HandleIncomingMsg
 			value->OnValueRefreshed( duration );
 			value->Release();
 		}
-
+		if (duration < 1000)
+			duration = 1000;
+			
 		Log::Write( LogLevel_Info, GetNodeId(), "Automatically Clearing Alarm in %d ms", duration );
 		TimerThread::TimerCallback callback = bind(&SceneActivation::ClearScene, this, _instance);
 		TimerSetEvent(duration, callback, _instance);
