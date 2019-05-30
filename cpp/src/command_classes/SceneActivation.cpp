@@ -92,7 +92,7 @@ bool SceneActivation::HandleIncomingMsg
 		notification->SetSceneId( _data[1] );
 		GetDriver()->QueueNotification( notification );
 
-		Log::Write( LogLevel_Info, GetNodeId(), "Received SceneActivation report: %d (duration: %d)", _data[1]);
+		Log::Write( LogLevel_Info, GetNodeId(), "Received SceneActivation report: %d (duration: %d)", _data[1], duration);
 		if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, ValueID_Index_SceneActivation::SceneID ) ) )
 		{
 			value->OnValueRefreshed( _data[1] );
