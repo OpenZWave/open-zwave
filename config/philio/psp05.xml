@@ -2,15 +2,15 @@
 Philio: PSP05 PIR/Motion for version B, C and D
 http://products.z-wavealliance.org/products/2002
 http://products.z-wavealliance.org/ProductManual/File?folder=&filename=Manuals/2002/PSP05_manual.pdf
---><Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
+--><Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/013C:0050:0002</MetaDataItem>
     <MetaDataItem name="ProductPic">images/philio/psp05.png</MetaDataItem>
-    <MetaDataItem id="0050" name="ZWProductPage" type="0002">https://products.z-wavealliance.org/products/2037/</MetaDataItem>
-    <MetaDataItem id="0050" name="FrequencyName" type="0002">CEPT (Europe) / Australia / New Zealand</MetaDataItem>
+    <MetaDataItem id="0050" name="ZWProductPage" type="0002">https://products.z-wavealliance.org/products/2068/</MetaDataItem>
+    <MetaDataItem id="0050" name="FrequencyName" type="0002">CEPT (Europe) / Australia / New Zealand / U.S. / Canada / Mexico</MetaDataItem>
     <MetaDataItem id="0050" name="Identifier" type="0002">PSP05</MetaDataItem>
     <MetaDataItem name="Description">The PIR sensor PSP05 has PIR sensor function,based on Z-Wave™ technology.</MetaDataItem>
-    <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/2037/PSP05_manual.pdf</MetaDataItem>
+    <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/2068/PSP05_manual.pdf</MetaDataItem>
     <MetaDataItem name="ResetDescription">There is a button on PSP05.
 1. Pressing button for about 5 seconds.
 2. IDs are excluded and all settings will reset to factory default.
@@ -28,6 +28,7 @@ Press the button once, the device will awake 10 seconds.</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="2">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2002/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="3">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2037/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="4">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2068/xml</Entry>
     </ChangeLog>
   </MetaData>
   <!-- Configuration Parameters -->
