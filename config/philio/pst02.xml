@@ -1,28 +1,28 @@
-<!-- Philio: PST02-A 4 in 1 Multi-Sensor --><Product Revision="8" xmlns="https://github.com/OpenZWave/open-zwave">
+<!-- Philio: PST02-A 4 in 1 Multi-Sensor --><Product Revision="9" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/013C:000C:0002</MetaDataItem>
     <MetaDataItem name="ProductPic">images/zipato/pst02.png</MetaDataItem>
-    <MetaDataItem id="000C" name="ZWProductPage" type="0002">https://products.z-wavealliance.org/products/2433/</MetaDataItem>
+    <MetaDataItem id="000C" name="ZWProductPage" type="0002">https://products.z-wavealliance.org/products/2434/</MetaDataItem>
     <MetaDataItem name="ExclusionDescription">Put the Z-Wave Controller in exclusion mode. Pressing tamper key three times within 1.5 seconds will enter exclusion mode. Node ID has been excluded.</MetaDataItem>
     <MetaDataItem name="WakeupDescription">If the user want to wake-up the device immediately, please remove 
 the front cover, and press the tamper key once. The device will 
 wake-up 10 seconds.</MetaDataItem>
-    <MetaDataItem name="Description">Zipato Multisensor Quad offers elaborate security and ambient sensing options. Multifunctional nature of this product allows you to detect motion, monitor opened/closed status of any opening object,  measure  room’s  ambient  temperature  and light intensity.</MetaDataItem>
-    <MetaDataItem name="Name">Multisensor QUAD - MODOLITE, Z-wave</MetaDataItem>
+    <MetaDataItem name="Description">Zipato Multisensor Trio offers elaborate security and ambient sensing options. Multifunctional nature of this product allows you to monitor opened/closed status of any opening object, measure  room’s  ambient  temperature  and  light  intensity.</MetaDataItem>
+    <MetaDataItem name="Name">Multisensor TRIO - DOLITE, Z-wave</MetaDataItem>
     <MetaDataItem name="InclusionDescription">Put the Z-Wave Controller in inclusion mode. Pressing tamper key three times within 1.5 seconds will enter inclusion mode.
 After  successful  inclusion,  the  device  will  wake  to  receive  the 
 setting command from Z-Wave Controller in about 20 seconds.</MetaDataItem>
-    <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/2433/ph-psm02 - Zipato Mutisensor Quad User Manual 165x295mm v1.5.pdf</MetaDataItem>
+    <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/2434/ph-psm01 - Zipato Mutisensor Trio User Manual 165x295mm v1.5.pdf</MetaDataItem>
     <MetaDataItem id="000C" name="FrequencyName" type="0002">CEPT (Europe)</MetaDataItem>
-    <MetaDataItem name="ResetDescription">Use this procedure only in the event that the primary controller 
-is lost or otherwise inoperable.
+    <MetaDataItem name="ResetDescription">Use this procedure only in the event that the primary controller is lost or otherwise inoperable.
 Pressing tamper key four times within 1.5 seconds and during 
 4th press, hold the tamper key until LED lights up. After 3 seconds the LED will turn OFF, and after next 2 seconds, release the tamper key. If successful, the LED will light ON for one second. Otherwise, the LED will flash once.IDs are excluded and all settings will reset to factory default.</MetaDataItem>
-    <MetaDataItem id="000C" name="Identifier" type="0002">ph-psm02.eu</MetaDataItem>
+    <MetaDataItem id="000C" name="Identifier" type="0002">ph-psm01.eu</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 May 2019" revision="6">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1087/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="08 May 2019" revision="7">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1449/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="8">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2433/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="9">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2434/xml</Entry>
     </ChangeLog>
   </MetaData>
   <!-- Configuration Parameters -->
