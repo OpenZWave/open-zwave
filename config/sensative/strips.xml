@@ -1,8 +1,8 @@
-<Product Revision="9" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="10" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/019A:0003:0003</MetaDataItem>
     <MetaDataItem name="ProductPic">images/sensative/strips.png</MetaDataItem>
-    <MetaDataItem id="0003" name="ZWProductPage" type="0003">https://products.z-wavealliance.org/products/2144/</MetaDataItem>
+    <MetaDataItem id="0003" name="ZWProductPage" type="0003">https://products.z-wavealliance.org/products/2146/</MetaDataItem>
     <MetaDataItem name="ResetDescription">In order to reset Strips (needed when the controller is lost or inoperable):
 
 1. Place the round magnet at the rounded edge of Strips. 
@@ -44,7 +44,7 @@ When the LED blinks, move the magnet away. Repeat 3 times in total within 10 sec
 
 3. A long LED blink indicates that the add process was successful.
 </MetaDataItem>
-    <MetaDataItem id="0003" name="Identifier" type="0003">11 01 012</MetaDataItem>
+    <MetaDataItem id="0003" name="Identifier" type="0003">11 01 011</MetaDataItem>
     <MetaDataItem name="ExclusionDescription">1. Set the controller in remove mode  (See your controller’s manual).  
 
 2. Place the round magnet at the rounded edge of Strips. 
@@ -55,8 +55,8 @@ When the LED blinks, move the magnet away. Repeat 3 times in total within 10 sec
 It is as easy to mount as a sticker using Strips's  adhesive tape.
 Strips is Z-Wave plus compliant and can be used with any existing Z-Wave smarthome systems. </MetaDataItem>
     <MetaDataItem name="Name">Strips-MaZw</MetaDataItem>
-    <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/2144/US Manual - US_INS 11 01 012 R1B 2016.10.12 (WEB).pdf</MetaDataItem>
-    <MetaDataItem id="0003" name="FrequencyName" type="0003">CEPT (Europe) / U.S. / Canada / Mexico / CEPT (Europe) / U.S. / Canada / Mexico / CEPT (Europe) / U.S. / Canada / Mexico / U.S. / Canada / Mexico</MetaDataItem>
+    <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/2146/v0.7_ENGLISH_PDF_Sensative_Strips_languages_170x63.pdf</MetaDataItem>
+    <MetaDataItem id="0003" name="FrequencyName" type="0003">CEPT (Europe) / U.S. / Canada / Mexico / CEPT (Europe) / U.S. / Canada / Mexico / CEPT (Europe) / U.S. / Canada / Mexico / U.S. / Canada / Mexico / CEPT (Europe)</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="23 May 2019" revision="2">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1510/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="24 May 2019" revision="3">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1753/xml</Entry>
@@ -66,6 +66,7 @@ Strips is Z-Wave plus compliant and can be used with any existing Z-Wave smartho
       <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="7">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2073/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="8">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2080/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="9">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2144/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="10">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2146/xml</Entry>
     </ChangeLog>
   </MetaData>
   <!-- Configuration Parameters -->
