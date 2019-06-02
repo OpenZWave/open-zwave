@@ -1,32 +1,60 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
+<Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
+  <MetaData>
+    <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0315:3034:4447</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/zwp/WD-100.png</MetaDataItem>
+    <MetaDataItem id="3034" name="ZWProductPage" type="4447">https://products.z-wavealliance.org/products/2299/</MetaDataItem>
+    <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/2299/ZWP_WD100_UG_030217.pdf</MetaDataItem>
+    <MetaDataItem name="Name">In-Wall Dimmer Switch</MetaDataItem>
+    <MetaDataItem id="3034" name="Identifier" type="4447">WD-100</MetaDataItem>
+    <MetaDataItem name="ExclusionDescription">1. Turn the connected appliance ON/OFF by tapping the switch. Tapping and releasing the upper part of the rocker turns the appliance ON. Tapping and releasing the lower part of the rocker turns the appliance OFF.
+2. Delete(Exclude) the module to/from your Z-Wave network with your primary controller. Please refer to the instructions manual of your gateway or remote controller for details and procedures on how these actions can be done. 
+3. Normally, the sequence is as follows: when the exclusion process is prompted by your primary controller, single click and release the rocker switch.  The controller should show that the action was successful. If the controller shows it was a fail, repeat the procedure.</MetaDataItem>
+    <MetaDataItem name="ResetDescription">Please use this procedure only in the event that the network primary controller is lost or otherwise inoperable.
 
+All Configuration Parameters can all be restored to their factory default settings by using your primary controller to delete/reset the device.  
+To manually reset, tap the ON button twice quickly and then tap the OFF button twice quickly.  Repeat the procedure to restore the settings to the factory default.
+
+</MetaDataItem>
+    <MetaDataItem id="3034" name="FrequencyName" type="4447">U.S. / Canada / Mexico</MetaDataItem>
+    <MetaDataItem name="InclusionDescription">1. Turn the connected lights ON/OFF by tapping the switch. Tapping and releasing the upper part of the rocker turns the appliance ON. Tapping and releasing the lower part of the rocker turns the appliance OFF.
+2. Add(Include) the module to/from your Z-Wave network with your primary controller. Please refer to the instructions manual of your gateway or remote controller for details and procedures on how these actions can be done. 
+3. Normally, the sequence is as follows: when the inclusion process is prompted by your primary controller, single click and release the rocker switch to ON or OFF position.  The controller should show that the action was successful.  If the controller shows it was a fail, repeat the procedure.</MetaDataItem>
+    <MetaDataItem name="Description">- Works with incandescent and dimmable florescent (CFL) or most LED lighting
+- 7 segment LED dim level indicator
+- Fits into standard single or multiple gang junction box
+- Over-The-Air firmware upgrade available with compatible gateway, Z-Wave static controller, or PC and software
+- Internal resettable fuse to protect from surge current
+- Manual reset capability
+- Support Central Scene
+</MetaDataItem>
+    <ChangeLog>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="2">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2299/xml</Entry>
+    </ChangeLog>
+  </MetaData>
   <!-- Configuration Parameters -->
   <CommandClass id="112">
-    <Value genre="config" instance="1" index="4" value="0" label="Orientation" units="" size="1" min="0" max="255" type="list">
+    <Value genre="config" index="4" instance="1" label="Orientation" max="255" min="0" size="1" type="list" units="" value="0">
       <Help>Controls the on/off orientation of the rocker switch</Help>
-      <Item value="0" label="Normal"/>
-      <Item value="1" label="Inverted"/>
+      <Item label="Normal" value="0"/>
+      <Item label="Inverted" value="1"/>
     </Value>
-    <Value genre="config" instance="1" index="7" value="1" label="Remote dim level increment" units="" size="1" min="1" max="99" type="byte">
+    <Value genre="config" index="7" instance="1" label="Remote dim level increment" max="99" min="1" size="1" type="byte" units="" value="1">
       <Help>Number of dim levels to change for each dim step when remotely commanded</Help>
     </Value>
-    <Value genre="config" instance="1" index="8" value="3" label="Remote dim step duration" units="10ms" size="2" min="1" max="255" type="short">
+    <Value genre="config" index="8" instance="1" label="Remote dim step duration" max="255" min="1" size="2" type="short" units="10ms" value="3">
       <Help>Interval between dimming steps when remotely commanded</Help>
     </Value>
-    <Value genre="config" instance="1" index="9" value="1" label="Dim Level Increment" units="%" size="1" min="1" max="99" type="byte">
+    <Value genre="config" index="9" instance="1" label="Dim Level Increment" max="99" min="1" size="1" type="byte" units="%" value="1">
       <Help>Indicates the number of levels (1-99) to change dimming each step</Help>
     </Value>
-    <Value genre="config" instance="1" index="10" value="3" label="Step Duration" units="milliseconds" size="2" min="0" max="255" type="short">
+    <Value genre="config" index="10" instance="1" label="Step Duration" max="255" min="0" size="2" type="short" units="milliseconds" value="3">
       <Help>The number of tens of milliseconds (1-255) to delay on each dimming step.</Help>
     </Value>
   </CommandClass>
-
   <!-- Association Groups -->
   <CommandClass id="133">
     <Associations num_groups="1">
-      <Group index="1" label="Lifeline" max_associations="5" />
+      <Group index="1" label="Lifeline" max_associations="5"/>
     </Associations>
   </CommandClass>
-
 </Product>
