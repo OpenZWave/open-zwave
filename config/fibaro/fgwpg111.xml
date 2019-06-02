@@ -1,9 +1,9 @@
-<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/010F:2000:1701</MetaDataItem>
     <MetaDataItem name="ProductPic">images/fibaro/fgwpg111.png</MetaDataItem>
     <MetaDataItem id="2000" name="ZWProductPage" type="1701">https://products.z-wavealliance.org/products/2854/</MetaDataItem>
-    <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/2854/FGWPB-111-EN-T-v.0.3.pdf</MetaDataItem>
+    <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/2899/FGWPG-111-EN-T-v.0.2.pdf</MetaDataItem>
     <MetaDataItem name="ExclusionDescription">To remove the device from the Z-Wave network:
 1.	Plug the device into a socket nearby the main Z-Wave controller.
 2.	The LED frame will glow green signaling being added (removing is not necessary otherwise).
@@ -22,7 +22,7 @@
 6.	After few seconds the device will restart with factory settings, which is signaled with the red frame color.
 
 Resetting the device is not the recommended way of removing the device from the Z-Wave network. Use the reset procedure only if the primary controller is missing or inoperable.</MetaDataItem>
-    <MetaDataItem name="Name">Wall Plug US</MetaDataItem>
+    <MetaDataItem name="Name">Wall Plug UK</MetaDataItem>
     <MetaDataItem name="Description">FIBARO Wall Plug is a remotely controlled plug-in switch with the ability to measure power and energy consumption. It uses a LED frame to visualize the current load and operating mode with color changing illumination. FIBARO Wall Plug makes it possible to control electrical devices in a convenient and maintenance-free way.  
 Main features of FIBARO Wall Plug:
 - Compatible with any Z-Wave or Z-Wave+ Controller.
@@ -45,7 +45,11 @@ Main features of FIBARO Wall Plug:
     <MetaDataItem id="2000" name="FrequencyName" type="1701">U.S. / Canada / Mexico</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="3">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2854/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="4">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2899/xml</Entry>
     </ChangeLog>
+    <MetaDataItem id="1000" name="ZWProductPage" type="1801">https://products.z-wavealliance.org/products/2899/</MetaDataItem>
+    <MetaDataItem id="1000" name="Identifier" type="1801">FGWPG-111</MetaDataItem>
+    <MetaDataItem id="1000" name="FrequencyName" type="1801">CEPT (Europe)</MetaDataItem>
   </MetaData>
   <!--
     Fibaro FGWPG111 Wall Plug
