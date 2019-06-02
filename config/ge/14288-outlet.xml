@@ -1,15 +1,15 @@
 <!--
   GE In-Wall Tamper Resistant Smart Outlet 
   https://products.z-wavealliance.org/products/2236
---><Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
+--><Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0063:3134:4952</MetaDataItem>
     <MetaDataItem name="ProductPic">images/ge/14288-outlet.png</MetaDataItem>
-    <MetaDataItem id="3134" name="ZWProductPage" type="4952">https://products.z-wavealliance.org/products/2236/</MetaDataItem>
-    <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/2236/14288 QSG v1.pdf</MetaDataItem>
+    <MetaDataItem id="3134" name="ZWProductPage" type="4952">https://products.z-wavealliance.org/products/2372/</MetaDataItem>
+    <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/2372/14315 QSG v0.pdf</MetaDataItem>
     <MetaDataItem name="Name">In-Wall Tamper Resistant Smart Outlet </MetaDataItem>
     <MetaDataItem id="3134" name="FrequencyName" type="4952">U.S. / Canada / Mexico</MetaDataItem>
-    <MetaDataItem id="3134" name="Identifier" type="4952">14288/ZW1002</MetaDataItem>
+    <MetaDataItem id="3134" name="Identifier" type="4952">14315/ZW1002</MetaDataItem>
     <MetaDataItem name="ExclusionDescription">1. Follow the instructions for your Z-Wave certified controller to
 remove a device from the Z-Wave network.
 2. Once the controller is ready to remove your device, press and
@@ -23,10 +23,11 @@ release the Program Button to add it in the network.</MetaDataItem>
 seconds. The LED will blink 5 times to confirm.
 NOTE: This should only be used in the event your network’s primary
 controller is missing or otherwise inoperable</MetaDataItem>
-    <MetaDataItem name="Description">Transform any home into a smart home with the GE Z-Wave Tamper Resistant Smart Outlet. The GE Z-Wave Tamper Resistant Smart Outlet enables wireless control of on/off functions from the Z-Wave controlled outlet, and is compatible with incandescent, LED, Xenon, Halogen, fluorescent and compact fluorescent bulbs. The tamper resistant duplex receptacle includes a blue LED indicator light to easily locate the receptacle in a dark room. The receptacle replaces your current electrical outlet, uses your existing wiring and provides a Z-Wave enabled outlet for the lamp or appliance that you would like to control and a standard pass-through AC outlet for other electrical appliances. Take control of your home lighting with Jasco Z-Wave Smart Lighting Controls! 
+    <MetaDataItem name="Description">Transform any home into a smart home with the Jasco Z-Wave Tamper Resistant Smart Outlet. The Jasco Z-Wave Tamper Resistant Smart Outlet enables wireless control of on/off functions from the Z-Wave controlled outlet, and is compatible with incandescent, LED, Xenon, Halogen, fluorescent and compact fluorescent bulbs. The tamper resistant duplex receptacle includes a blue LED indicator light to easily locate the receptacle in a dark room. The receptacle replaces your current electrical outlet, uses your existing wiring and provides a Z-Wave enabled outlet for the lamp or appliance that you would like to control and a standard pass-through AC outlet for other electrical appliances. Take control of your home lighting with Jasco Z-Wave Smart Lighting Controls! 
 </MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="2">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2236/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="3">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2372/xml</Entry>
     </ChangeLog>
   </MetaData>
   <!-- Configuration Parameters -->
