@@ -1,4 +1,4 @@
-<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0129:0001:0007</MetaDataItem>
     <MetaDataItem name="ProductPic">images/assa_abloy/KeyfreeConnected-plus.png</MetaDataItem>
@@ -22,29 +22,27 @@ Enter the Master code on the lock, followed by #
 
 Press the 4 button, followed by #
 
-Press the 3 button followed by #
+Press the 2 button followed by #
 
 Refer to the operation manual of the Z-Wave controller to complete the remove/exclusion process
 
 For more information on this please visit:
 www.yale.co.uk/smart-living
 </MetaDataItem>
-    <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/2576/Instruction Manual V2b.pdf</MetaDataItem>
-    <MetaDataItem name="Description">Keyless Connected Ready smart lock
+    <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/2743/Instruction Manual V2b.pdf</MetaDataItem>
+    <MetaDataItem name="Description">Keyfree Connected Ready smart lock
 
 Features
 
-    Replaces existing rim cylinder used on a 60mm backset nightlatch
-    Touchscreen with backlit keypad
     Battery operated
     Low battery indicator with emergency battery connection
     User codes and settings remain if batteries are replaced
     3 minute lock out if code is entered incorrectly 5 times
     Tamper alarm
-    For use on timber doors
+    For use on UPVC &amp; Composite Doors
     2 year guarantee
 </MetaDataItem>
-    <MetaDataItem name="Name">Keyless Connected</MetaDataItem>
+    <MetaDataItem name="Name">Keyfree Connected</MetaDataItem>
     <MetaDataItem name="ResetDescription">Enter the Master code on the lock, followed by #
 
 Press the 4 button, followed by #
@@ -56,7 +54,11 @@ Please use this procedure only when the network controller is missing or inopera
     <MetaDataItem id="0001" name="Identifier" type="0007">YD-01-CON</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="3">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2576/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="4">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2743/xml</Entry>
     </ChangeLog>
+    <MetaDataItem id="0001" name="ZWProductPage" type="0006">https://products.z-wavealliance.org/products/2743/</MetaDataItem>
+    <MetaDataItem id="0001" name="FrequencyName" type="0006">CEPT (Europe)</MetaDataItem>
+    <MetaDataItem id="0001" name="Identifier" type="0006">YKFCON</MetaDataItem>
   </MetaData>
   <!-- Yale Keyfree Connected (YKFCON)
 http://ozw.my-ho.st/Yale/Yale%20ZWave%20Developer%20Guide.pdf 
