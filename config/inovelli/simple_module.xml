@@ -1,12 +1,45 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Product xmlns='https://github.com/OpenZWave/open-zwave' Revision="1">
+<Product Revision="2" xmlns="https://github.com/OpenZWave/open-zwave">
+  <MetaData>
+    <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0312:241C:B211</MetaDataItem>
+    <MetaDataItem name="ProductPic">images/inovelli/simple_module.png</MetaDataItem>
+    <MetaDataItem id="241C" name="ZWProductPage" type="B211">https://products.z-wavealliance.org/products/2352/</MetaDataItem>
+    <MetaDataItem name="ResetDescription">Use controller to remove device from network will reset it to factory default.
+
+"Use this procedure only in the event that the network primary controller is missing or otherwise inoperable."
+</MetaDataItem>
+    <MetaDataItem id="241C" name="Identifier" type="B211">NZW36</MetaDataItem>
+    <MetaDataItem name="Name">Smart Plug-In Module (1 Channel)</MetaDataItem>
+    <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/2352/NZW36 Manual.pdf</MetaDataItem>
+    <MetaDataItem name="Description">Inovelli's Smart Plug-In On/Off Module + Repeater has the ability to turn on and off appliances, lights, and more from anywhere in the world. In addition to the outlet, the smart plug acts as a Z-Wave signal repeater, which amplifies your Z-Wave signal, growing the capabilities of your network. 
+
+This smart plug is one of the smallest plugs on the market (3.5"x2.5"x1.5") and has 1 Z-Wave Outlet on the side of the device  and an "Always On" (non-smart outlet) on the other side, allowing for easy fit in compact places. Simplifying lives, one smart home product at a time... that's Inovelli. </MetaDataItem>
+    <MetaDataItem name="InclusionDescription">1. Follow the instructions for your Z-Wave certified controller to include a device to the Z-Wave network.
+
+2. Once the controller is ready to Include your device, press the center button 3-5 times within 3 seconds.
+
+3. Once your controller has confirmed that the device has been included, refresh the Z-Wave network to optimize performance.
+
+4. The device is associated in the same group when it included in setting process. 
+
+Now you can control your Z-Wave device according to groups, scenes, schedules  and automation programmed.
+
+** NOTE: If your product does not include at first, try moving the module closer to the HUB and try again -- you can move to your final location when complete
+
+For setup instructions for your specific HUB (ie: SmartThings, Wink, Vera, etc) please go to: www.inovelli.com/nzw36-setup</MetaDataItem>
+    <MetaDataItem id="241C" name="FrequencyName" type="B211">U.S. / Canada / Mexico</MetaDataItem>
+    <MetaDataItem name="ExclusionDescription">1. Follow the instructions for your Z-Wave certified controller to exclude  a device from the Z-Wave network.
+
+2. Once the controller is ready to Exclude your device, press the center button 3-5 times within 3 seconds to exclude it from the network.</MetaDataItem>
+    <ChangeLog>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="2">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2352/xml</Entry>
+    </ChangeLog>
+  </MetaData>
   <!-- Configuration Parameters -->
-  <CommandClass id="112">
-  </CommandClass>
+  <CommandClass id="112"></CommandClass>
   <!-- Association Groups -->
   <CommandClass id="133">
     <Associations num_groups="1">
-      <Group index="1" max_associations="5" label="Lifeline" />
+      <Group index="1" label="Lifeline" max_associations="5"/>
     </Associations>
   </CommandClass>
 </Product>
