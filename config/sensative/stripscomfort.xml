@@ -1,18 +1,18 @@
-<Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/019A:000A:0003</MetaDataItem>
     <MetaDataItem name="ProductPic">images/sensative/stripscomfort.png</MetaDataItem>
-    <MetaDataItem id="000A" name="ZWProductPage" type="0003">https://products.z-wavealliance.org/products/2443/</MetaDataItem>
-    <MetaDataItem id="000A" name="FrequencyName" type="0003">CEPT (Europe) / U.S. / Canada / Mexico</MetaDataItem>
+    <MetaDataItem id="000A" name="ZWProductPage" type="0003">https://products.z-wavealliance.org/products/2737/</MetaDataItem>
+    <MetaDataItem id="000A" name="FrequencyName" type="0003">CEPT (Europe) / U.S. / Canada / Mexico / CEPT (Europe)</MetaDataItem>
     <MetaDataItem name="InclusionDescription">Set your controller to add mode (see your controller’s manual). Follow the instruction for Wake up. A long LED blink indicates that the add/remove was successful.</MetaDataItem>
-    <MetaDataItem id="000A" name="Identifier" type="0003">11 02 012</MetaDataItem>
+    <MetaDataItem id="000A" name="Identifier" type="0003">11 02 011</MetaDataItem>
     <MetaDataItem name="Name">Strips-Multi-sensor</MetaDataItem>
     <MetaDataItem name="ResetDescription">You may need to reset Strips if your Z-Wave controller is missing or not responding.
 
 Follow the instructions for “Wake up”, but on the 3rd repetition, leave the magnet at the rounded edge for 10 seconds. A long LED signal indicates success.</MetaDataItem>
     <MetaDataItem name="ExclusionDescription">Set your controller to remove mode (see your controller’s manual). Follow the instruction for Wake up. A long LED blink indicates that the add/remove was successful.</MetaDataItem>
     <MetaDataItem name="WakeupDescription">Wake up Strips manually for Z-Wave communication. Place the magnet at the rounded edge. When the LED blinks, move the magnet away. Repeat twice within 10 seconds.</MetaDataItem>
-    <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/2443/Strips-Multi-sensor manual.pdf</MetaDataItem>
+    <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/2737/Strips_Comfort_Drip_zwave_EU.pdf</MetaDataItem>
     <MetaDataItem name="Description">Strips, the ultra-thin multi sensor is now available in two new sensor models, Strips Drip and Strips Comfort. Drip and Comfort join Strips Guard, the thinnest magnet sensor in the world detecting if your windows are open and closed invisibly since 2015.
 
 Strip Drip sends an alarm signal if it detects a water leak. Its unique design allows it to be easily placed almost everywhere, including most places other sensors simply can’t fit.  With soaking pads integrated in the mounting plate even small amounts of water will be detected. The built-in temperature sensor gives the possibility to combine the leakage alarm with a freeze alarm. There is also a built-in ambient light sensor that may be useful in special applications.
@@ -23,6 +23,7 @@ All Strips products can be used both in-doors and out-doors and the integrated c
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="2">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2415/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="3">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2443/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="4">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2737/xml</Entry>
     </ChangeLog>
   </MetaData>
   <!--
