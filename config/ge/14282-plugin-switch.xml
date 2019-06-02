@@ -1,11 +1,11 @@
 <!-- 
 GE Plug-in Smart Switch, Dual Outlet with Simultaneous Control 14282 (ZW4106) 
 http://products.z-wavealliance.org/products/1437
- --><Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
+ --><Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0063:3033:5052</MetaDataItem>
     <MetaDataItem name="ProductPic">images/ge/14282-plugin-switch.png</MetaDataItem>
-    <MetaDataItem id="3033" name="ZWProductPage" type="5052">https://products.z-wavealliance.org/products/2104/</MetaDataItem>
+    <MetaDataItem id="3033" name="ZWProductPage" type="5052">https://products.z-wavealliance.org/products/2525/</MetaDataItem>
     <MetaDataItem name="InclusionDescription">Adding your device to a Z-Wave network:
 1. Follow the instructions for your Z-Wave certified controller to
 include the device to the Z-Wave network.
@@ -33,10 +33,11 @@ primary controller is missing or otherwise inoperable.</MetaDataItem>
     <MetaDataItem id="3033" name="Identifier" type="5052">14282/ZW4106</MetaDataItem>
     <MetaDataItem name="Name">Plug-in Smart Switch, Dual Plug</MetaDataItem>
     <MetaDataItem id="3033" name="FrequencyName" type="5052">U.S. / Canada / Mexico</MetaDataItem>
-    <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/2104/Binder1.pdf</MetaDataItem>
+    <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/2525/Binder1.pdf</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="08 May 2019" revision="2">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1437/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="3">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2104/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="4">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2525/xml</Entry>
     </ChangeLog>
   </MetaData>
   <CommandClass id="112">
