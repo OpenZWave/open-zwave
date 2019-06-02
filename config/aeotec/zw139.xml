@@ -1,7 +1,7 @@
 <!--
 Aeotec ZW139 Nano Switch, base on Engineering Spec 03/19/2018 V2.0
 Product Type ID: EU=0x00, US=0x01, AU=0x02 CN=0x1D 
---><Product Revision="3" xmlns="https://github.com/OpenZWave/open-zwave">
+--><Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0086:008B:0103</MetaDataItem>
     <MetaDataItem name="ProductPic">images/aeotec/zw139.png</MetaDataItem>
@@ -12,13 +12,17 @@ It can connect to 2 external manual switches to control the load ON/OFF independ
 The Nano Switch is also a security Z-Wave device and supports Over The Air (OTA) feature for the products firmware upgrade.</MetaDataItem>
     <MetaDataItem name="ResetDescription">Press and hold the Action button that you can find on the product's housing for 20 seconds and then release. This procedure should only be used when the primary controller is inoperable.</MetaDataItem>
     <MetaDataItem name="ExclusionDescription">Turn the primary controller of Z-Wave network into exclusion mode, short press the product’s Action button that you can find on the product's housing.</MetaDataItem>
-    <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/2306/Nano Switch manual.pdf</MetaDataItem>
+    <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/2319/Nano Switch manual.pdf</MetaDataItem>
     <MetaDataItem id="008B" name="Identifier" type="0103">ZW139-A</MetaDataItem>
     <MetaDataItem id="008B" name="FrequencyName" type="0103">U.S. / Canada / Mexico</MetaDataItem>
     <MetaDataItem name="InclusionDescription">Turn the primary controller of Z-Wave network into inclusion mode, short press the product’s Action button that you can find on the product's housing.</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="3">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2306/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="4">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2319/xml</Entry>
     </ChangeLog>
+    <MetaDataItem id="008B" name="ZWProductPage" type="0203">https://products.z-wavealliance.org/products/2319/</MetaDataItem>
+    <MetaDataItem id="008B" name="Identifier" type="0203">ZW139-B</MetaDataItem>
+    <MetaDataItem id="008B" name="FrequencyName" type="0203">Australia / New Zealand</MetaDataItem>
   </MetaData>
   <!-- Configuration Parameters -->
   <CommandClass id="112">
