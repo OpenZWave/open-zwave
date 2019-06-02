@@ -1,4 +1,4 @@
-<Product Revision="6" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="7" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/010F:1001:0801</MetaDataItem>
     <MetaDataItem name="ProductPic">images/fibaro/fgmszw5.png</MetaDataItem>
@@ -12,7 +12,7 @@
 6.	Successful removing will be confirmed by the Z-Wave controller’s message.
 </MetaDataItem>
     <MetaDataItem name="Name">FIBARO Motion Sensor</MetaDataItem>
-    <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/2762/FGMS-001-EN-T-v2.1.pdf</MetaDataItem>
+    <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/2763/FGMS-001-EN-T-v2.1.pdf</MetaDataItem>
     <MetaDataItem name="Description">FIBARO Motion Sensor is a universal, Z-Wave Plus compatible multi-sensor. This device has a built-in motion sensor, temperature sensor and light sensor. Additionally, through vibrations detection, it may detect tampering attempt or an earthquake. FIBARO Motion Sensor is battery powered, completely wireless, and its casing allows for quick and non-invasive installation on any surface. The eye of the sensor visually indicates motion, temperature level, operating mode or may inform about Z-Wave network range. The device can be used for lighting scenes and presence monitoring systems.</MetaDataItem>
     <MetaDataItem name="InclusionDescription">1.	Open the cover by turning it counter-clockwise. 
 2.	Place the device within the direct range of your Z-Wave controller.
@@ -35,8 +35,9 @@ Use reset procedure only if the primary controller is missing or inoperable.
       <Entry author="Justin Hammond - Justin@dynam.ac" date="08 May 2019" revision="4">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1146/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="23 May 2019" revision="5">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1514/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="6">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2762/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="7">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2763/xml</Entry>
     </ChangeLog>
-    <MetaDataItem id="2001" name="ZWProductPage" type="0801">https://products.z-wavealliance.org/products/1514/</MetaDataItem>
+    <MetaDataItem id="2001" name="ZWProductPage" type="0801">https://products.z-wavealliance.org/products/2763/</MetaDataItem>
     <MetaDataItem id="2001" name="FrequencyName" type="0801">U.S. / Canada / Mexico</MetaDataItem>
     <MetaDataItem id="2001" name="Identifier" type="0801">FGMS-001</MetaDataItem>
   </MetaData>
