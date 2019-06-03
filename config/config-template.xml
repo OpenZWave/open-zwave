@@ -4,6 +4,8 @@
     <MetaDataItem name="Name"><!-- Name of the Device --></MetaDataItem>
     <MetaDataItem name="Description"><!-- Short Description of the Product --></MetaDataItem>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/XXXX:XXXX:XXXX</MetaDataItem>
+    <MetaDataItem name="ProductPage"><!-- URL to the Product Page on the Vendors Website --></MetaDataItem>
+    <MetaDataItem name="ProductSupport"><!-- URL to the Product Support Page on the Vendors Website --></MetaDataItem>
     <MetaDataItem name="ProductPic"><!-- path to images/vendor/product.png --></MetaDataItem>
     <MetaDataItem name="ProductManual"><!-- URL to the product manual. - Prefer to use something hosted on the products.z-wavealliance.org pages --></MetaDataItem>
     <MetaDataItem name="WakeupDescription"><!-- Short description on how to wake up the device if its battery powered --></MetaDataItem>
