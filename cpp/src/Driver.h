@@ -49,7 +49,6 @@ namespace OpenZWave
 	class Mutex;
 	class Controller;
 	class Thread;
-	class ControllerReplication;
 	class Notification;
 	class DNSThread;
 	struct DNSLookup;
@@ -57,6 +56,20 @@ namespace OpenZWave
 	class i_HttpClient;
 	struct HttpDownload;
 	class ManufacturerSpecificDB;
+	namespace Internal {
+		namespace CC {
+			class ApplicationStatus;
+			class Basic;
+			class CommandClass;
+			class WakeUp;
+			class ControllerReplication;
+			class ManufacturerSpecific;
+			class MultiChannelAssociation;
+			class NodeNaming;
+			class Security;
+			class SceneActivation;
+		}
+	}
 
 	/** \brief The Driver class handles communication between OpenZWave
 	 *  and a device attached via a serial port (typically a controller).
@@ -66,23 +79,23 @@ namespace OpenZWave
 		friend class Manager;
 		friend class Node;
 		friend class Group;
-		friend class CommandClass;
-		friend class ControllerReplication;
+		friend class Internal::CC::CommandClass;
+		friend class Internal::CC::ControllerReplication;
 		friend class DNSThread;
 		friend class i_HttpClient;
 		friend class Value;
 		friend class ValueStore;
 		friend class ValueButton;
 		friend class Association;
-		friend class Basic;
-		friend class ManufacturerSpecific;
-		friend class MultiChannelAssociation;
-		friend class NodeNaming;
+		friend class Internal::CC::Basic;
+		friend class Internal::CC::ManufacturerSpecific;
+		friend class Internal::CC::MultiChannelAssociation;
+		friend class Internal::CC::NodeNaming;
 		friend class NoOperation;
-		friend class SceneActivation;
-		friend class WakeUp;
-		friend class ApplicationStatus; /* for Notification messages */
-		friend class Security;
+		friend class Internal::CC::SceneActivation;
+		friend class Internal::CC::WakeUp;
+		friend class Internal::CC::ApplicationStatus; /* for Notification messages */
+		friend class Internal::CC::Security;
 		friend class Msg;
 		friend class ManufacturerSpecificDB;
 		friend class TimerThread;
@@ -291,7 +304,7 @@ namespace OpenZWave
 		Node*					m_nodes[256];								// Array containing all the node objects.
 		Mutex*					m_nodeMutex;								// Serializes access to node data
 
-		ControllerReplication*	m_controllerReplication;					// Controller replication is handled separately from the other command classes, due to older hand-held controllers using invalid node IDs.
+		Internal::CC::ControllerReplication*	m_controllerReplication;					// Controller replication is handled separately from the other command classes, due to older hand-held controllers using invalid node IDs.
 
 		uint8					m_transmitOptions;
 

@@ -40,7 +40,7 @@
 #include "value_classes/ValueInt.h"
 #include "value_classes/ValueBool.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::CC;
 
 enum MeterCmd
 {

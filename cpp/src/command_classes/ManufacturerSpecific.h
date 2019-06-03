@@ -33,6 +33,11 @@
 
 namespace OpenZWave
 {
+namespace Internal
+{
+namespace CC
+{
+
 	/** \brief Implements COMMAND_CLASS_MANUFACTURER_SPECIFIC (0x72), a Z-Wave device command class.
 	 * \ingroup CommandClass
 	 */
@@ -76,7 +81,8 @@ namespace OpenZWave
 		uint32 m_loadedConfigRevision;
 		uint32 m_latestConfigRevision;
 	};
-
+} // namespace CC
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif

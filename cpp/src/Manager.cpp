@@ -1561,7 +1561,7 @@ bool Manager::GetNodeClassInformation
 
 		if( ( node = driver->GetNode( _nodeId ) ) != NULL )
 		{
-			CommandClass *cc;
+			Internal::CC::CommandClass *cc;
 			if( node->NodeInfoReceived() && ( ( cc = node->GetCommandClass( _commandClassId ) ) != NULL ) )
 			{
 				if( _className )
@@ -1604,7 +1604,7 @@ bool Manager::IsNodeAwake
 
 		if( Node* node = driver->GetNode( _nodeId ) )
 		{
-			if( WakeUp* wcc = static_cast<WakeUp*>( node->GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
+			if( Internal::CC::WakeUp* wcc = static_cast<Internal::CC::WakeUp*>( node->GetCommandClass( Internal::CC::WakeUp::StaticGetCommandClassId() ) ) )
 			{
 				result = wcc->IsAwake();
 			}
@@ -3261,7 +3261,7 @@ bool Manager::RefreshValue
 
 		if( (node = driver->GetNode( _id.GetNodeId() ) ) != NULL)
 		{
-			CommandClass* cc = node->GetCommandClass( _id.GetCommandClassId() );
+			Internal::CC::CommandClass* cc = node->GetCommandClass( _id.GetCommandClassId() );
 			if (cc) {
 				uint16_t index = _id.GetIndex();
 				uint8 instance = _id.GetInstance();

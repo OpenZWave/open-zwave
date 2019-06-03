@@ -32,7 +32,10 @@
 
 namespace OpenZWave
 {
-
+	namespace Internal
+	{
+	namespace CC
+	{
 	/** \brief Extract a String from a Z-Wave Encoded Packet
 	 * \ingroup CommandClass
 	 *
@@ -73,7 +76,8 @@ namespace OpenZWave
 	private:
 		NodeNaming( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
 	};
-
+	} // namespace CC
+	} // namespace Internal
 } // namespace OpenZWave
 
 #endif

@@ -32,7 +32,10 @@
 
 namespace OpenZWave
 {
-	class ValueList;
+namespace Internal
+{
+namespace CC
+{
 
 	/** \brief Implements COMMAND_CLASS_SWITCH_ALL (0x27), a Z-Wave device command class.
 	 * \ingroup CommandClass
@@ -63,7 +66,8 @@ namespace OpenZWave
 	private:
 		SwitchAll( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
 	};
-
+} // namespace CC
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif

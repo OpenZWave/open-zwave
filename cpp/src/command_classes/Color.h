@@ -32,7 +32,10 @@
 
 namespace OpenZWave
 {
-	class ValueByte;
+namespace Internal
+{
+namespace CC
+{
 
 	/** \brief Implements COMMAND_CLASS_COLOR (0x33), a Z-Wave device command class.
 	 * \ingroup CommandClass
@@ -66,7 +69,8 @@ namespace OpenZWave
 		uint8 m_coloridxcount;
 		uint8 m_colorvalues[9];
 	};
-
+} // namespace CC
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif

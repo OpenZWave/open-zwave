@@ -34,7 +34,10 @@
 namespace OpenZWave
 {
 	class ValueByte;
-
+	namespace Internal
+	{
+	namespace CC
+	{
 	/** \brief Implements COMMAND_CLASS_NOTIFICATION (0x71), a Z-Wave device command class.
 	 * \ingroup CommandClass
 	 */
@@ -71,9 +74,9 @@ namespace OpenZWave
 		std::vector<uint32> m_ParamsSet;
 		uint32 m_ClearTimeout;
 		std::map<uint32, uint32> m_TimersToInstances;
-
-
 	};
+	} // namespace CommandClass
+	} // namespace Internal
 
 } // namespace OpenZWave
 

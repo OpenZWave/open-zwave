@@ -38,7 +38,7 @@
 
 #include "tinyxml.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::CC;
 
 enum ThermostatFanModeCmd
 {
@@ -49,7 +49,7 @@ enum ThermostatFanModeCmd
 	ThermostatFanModeCmd_SupportedReport			= 0x05
 };
 
-static string const c_modeName[] =
+static std::string const c_modeName[] =
 {
 	"Auto Low",
 	"On Low",

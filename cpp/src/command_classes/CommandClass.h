@@ -38,9 +38,15 @@
 
 namespace OpenZWave
 {
+
 class Msg;
 class Node;
 class Value;
+
+namespace Internal
+{
+namespace CC
+{
 /** \defgroup CommandClass Z-Wave CommandClass Support
  *
  * This is the CommandClasses that OZW currently supports. Typically, a Application does not need
@@ -209,6 +215,8 @@ private:
 
 };
 //@}
+} // namespace CC
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif

@@ -38,16 +38,24 @@ namespace OpenZWave
 {
 	class Msg;
 	class Node;
+	namespace Internal {
+		namespace CC {
+			class EnergyProduction;
+			class Meter;
+			class SensorMultilevel;
+			class ThermostatSetpoint;
+		}
+	}
 
 	/** \brief Decimal value sent to/received from a node.
 	 * \ingroup ValueID
 	 */
 	class ValueDecimal: public Value
 	{
-		friend class EnergyProduction;
-		friend class Meter;
-		friend class SensorMultilevel;
-		friend class ThermostatSetpoint;
+		friend class Internal::CC::EnergyProduction;
+		friend class Internal::CC::Meter;
+		friend class Internal::CC::SensorMultilevel;
+		friend class Internal::CC::ThermostatSetpoint;
 
 	public:
 		ValueDecimal( uint32 const _homeId, uint8 const _nodeId, ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint16 const _index, string const& _label, string const& _units, bool const _readOnly, bool const _writeOnly, string const& _value, uint8 const _pollIntensity );

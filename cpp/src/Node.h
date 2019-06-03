@@ -44,7 +44,21 @@ class TiXmlNode;
 
 namespace OpenZWave
 {
-	class CommandClass;
+	namespace Internal {
+		namespace CC {
+			class CommandClass;
+			class Association;
+			class AssociationCommandConfiguration;
+			class ControllerReplication;
+			class Hail;
+			class ManufacturerSpecific;
+			class MultiChannelAssociation;
+			class MultiInstance;
+			class NodeNaming;
+			class Version;
+			class ZWavePlusInfo;
+		}
+	}
 	class Driver;
 	class Group;
 	class ValueStore;
@@ -70,45 +84,18 @@ namespace OpenZWave
 			friend class Group;
 			friend class Value;
 			friend class ValueButton;
-			friend class Alarm;
-			friend class Association;
-			friend class AssociationCommandConfiguration;
-			friend class Basic;
-			friend class Battery;
-			friend class ClimateControlSchedule;
-			friend class Clock;
-			friend class CommandClass;
-			friend class ControllerReplication;
-			friend class EnergyProduction;
-			friend class Hail;
-			friend class Indicator;
-			friend class Language;
-			friend class Lock;
-			friend class ManufacturerSpecific;
+			friend class Internal::CC::Association;
+			friend class Internal::CC::AssociationCommandConfiguration;
+			friend class Internal::CC::CommandClass;
+			friend class Internal::CC::ControllerReplication;
+			friend class Internal::CC::Hail;
+			friend class Internal::CC::ManufacturerSpecific;
+			friend class Internal::CC::MultiInstance;
+			friend class Internal::CC::MultiChannelAssociation;
+			friend class Internal::CC::NodeNaming;
+			friend class Internal::CC::Version;
+			friend class Internal::CC::ZWavePlusInfo;
 			friend class ManufacturerSpecificDB;
-			friend class Meter;
-			friend class MeterPulse;
-			friend class MultiInstance;
-			friend class MultiChannelAssociation;
-			friend class NodeNaming;
-			friend class Protection;
-			friend class Security;
-			friend class SensorAlarm;
-			friend class SensorBinary;
-			friend class SensorMultilevel;
-			friend class SwitchAll;
-			friend class SwitchBinary;
-			friend class SwitchMultilevel;
-			friend class SwitchToggleBinary;
-			friend class SwitchToggleMultilevel;
-			friend class ThermostatFanMode;
-			friend class ThermostatFanState;
-			friend class ThermostatMode;
-			friend class ThermostatOperatingState;
-			friend class ThermostatSetpoint;
-			friend class Version;
-			friend class WakeUp;
-			friend class ZWavePlusInfo;
 
 			//-----------------------------------------------------------------------------
 			// Construction
@@ -400,7 +387,7 @@ namespace OpenZWave
 			 * \return Pointer to the requested CommandClass object if supported, otherwise NULL.
 			 * \see CommandClass, m_commandClassMap
 			 */
-			CommandClass* GetCommandClass( uint8 const _commandClassId)const;
+			Internal::CC::CommandClass* GetCommandClass( uint8 const _commandClassId)const;
 			void ApplicationCommandHandler( uint8 const* _data, bool encrypted );
 
 			/**
@@ -437,7 +424,7 @@ namespace OpenZWave
 			 * was already there or if the CommandClass object creation failed).
 			 * \see CommandClass, CommandClasses::CreateCommandClass, m_commandClassMap
 			 */
-			CommandClass* AddCommandClass( uint8 const _commandClassId);
+			Internal::CC::CommandClass* AddCommandClass( uint8 const _commandClassId);
 			/**
 			 * Removes a command class object from the node (via the m_commandClassMap).  Before removing the
 			 * object, this function also removes any values stored in the object's ValueStore.
@@ -450,7 +437,7 @@ namespace OpenZWave
 			void ReadCommandClassesXML( TiXmlElement const* _ccsElement );
 			void WriteXML( TiXmlElement* _nodeElement );
 
-			map<uint8,CommandClass*>		m_commandClassMap;	/**< Map of command class ids and pointers to associated command class objects */
+			map<uint8,Internal::CC::CommandClass*>		m_commandClassMap;	/**< Map of command class ids and pointers to associated command class objects */
 			bool							m_secured; /**< Is this Node added Securely */
 			map<uint8, string>				m_globalInstanceLabel; /** < The Global Labels for Instances for CC that dont define their own labels */
 

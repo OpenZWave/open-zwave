@@ -37,7 +37,7 @@
 #include "value_classes/ValueByte.h"
 #include "value_classes/ValueShort.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::CC;
 
 enum AssociationCommandConfigurationCmd
 {

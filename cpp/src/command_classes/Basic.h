@@ -32,8 +32,10 @@
 
 namespace OpenZWave
 {
-	class ValueByte;
-
+namespace Internal
+{
+namespace CC
+{
 	/** \brief Implements COMMAND_CLASS_BASIC (0x20), a Z-Wave device command class.
 	 * \ingroup CommandClass
 	 */
@@ -67,7 +69,8 @@ namespace OpenZWave
 
 		std::vector<int>			m_instances;
 	};
-
+} // namespace CC
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif

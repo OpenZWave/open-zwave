@@ -36,7 +36,11 @@
 
 namespace OpenZWave
 {
-	class CommandClass;
+	namespace Internal {
+		namespace CC {
+			class CommandClass;
+		}
+	}
 	class Driver;
 
 	/** \brief Message object to be passed to and from devices on the Z-Wave network.
@@ -53,7 +57,7 @@ namespace OpenZWave
 		Msg( string const& _logtext, uint8 _targetNodeId, uint8 const _msgType, uint8 const _function, bool const _bCallbackRequired, bool const _bReplyRequired = true, uint8 const _expectedReply = 0, uint8 const _expectedCommandClassId = 0 );
 		~Msg(){}
 
-		void SetInstance( CommandClass* _cc, uint8 const _instance );	// Used to enable wrapping with MultiInstance/MultiChannel during finalize.
+		void SetInstance( OpenZWave::Internal::CC::CommandClass * _cc, uint8 const _instance );	// Used to enable wrapping with MultiInstance/MultiChannel during finalize.
 
 		void Append( uint8 const _data );
 		void AppendArray( const uint8* const _data, const uint8 _length );

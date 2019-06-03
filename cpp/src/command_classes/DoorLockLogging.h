@@ -32,7 +32,10 @@
 
 namespace OpenZWave
 {
-	class ValueBool;
+namespace Internal
+{
+namespace CC
+{
 
 	/** \brief Implements COMMAND_CLASS_DOOR_LOCK_LOGGING (0x4C), a Z-Wave device command class.
 	 * \ingroup CommandClass
@@ -60,7 +63,8 @@ namespace OpenZWave
 		DoorLockLogging( uint32 const _homeId, uint8 const _nodeId );
 		uint8 m_CurRecord;
 	};
-
+} // namespace CC
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif

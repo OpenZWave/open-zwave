@@ -32,7 +32,10 @@
 
 namespace OpenZWave
 {
-	class ValueString;
+namespace Internal
+{
+namespace CC
+{
 
 	/** \brief Implements COMMAND_CLASS_VERSION (0x86), a Z-Wave device command class.
 	 * \ingroup CommandClass
@@ -61,7 +64,8 @@ namespace OpenZWave
 	private:
 		Version( uint32 const _homeId, uint8 const _nodeId );
 	};
-
+} // namespace CC
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif

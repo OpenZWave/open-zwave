@@ -32,7 +32,10 @@
 
 namespace OpenZWave
 {
-	class ValueBool;
+namespace Internal
+{
+namespace CC
+{
 
 	/** \brief Implements COMMAND_CLASS_SWITCH_TOGGLE_BINARY (0x28), a Z-Wave device command class.
 	 * \ingroup CommandClass
@@ -60,7 +63,8 @@ namespace OpenZWave
 	private:
 		SwitchToggleBinary( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
 	};
-
+} // namespace CC
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif

@@ -32,6 +32,10 @@
 
 namespace OpenZWave
 {
+	namespace Internal
+	{
+	namespace CC
+	{
 	/** \brief Implements COMMAND_CLASS_USER_CODE (0x63), a Z-Wave device command class.
 	 * \ingroup CommandClass
 	 */
@@ -107,7 +111,8 @@ namespace OpenZWave
 		std::map<uint16, UserCodeEntry>	m_userCode;
 		bool		m_refreshUserCodes;
 	};
-
+	} // namespace CC
+	} // namespace Internal
 } // namespace OpenZWave
 
 #endif

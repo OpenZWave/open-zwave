@@ -34,7 +34,7 @@
 
 #include "value_classes/ValueByte.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::CC;
 
 
 const uint8 MANUFACTURER_ID_FIBARO[2] = { 0x01, 0x0f };

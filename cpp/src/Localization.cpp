@@ -579,15 +579,15 @@ uint64 Localization::GetValueKey
 		return ((uint64) _node << 56 | (uint64)_commandClass << 48) | ((uint64)_index << 32) | ((uint64)_pos);
 	}
 	/* configuration CC needs its own Storage per Node. */
-	if (_commandClass == Configuration::StaticGetCommandClassId()) {
+	if (_commandClass == Internal::CC::Configuration::StaticGetCommandClassId()) {
 		return ((uint64) _node << 56 | (uint64)_commandClass << 48) | ((uint64)_index << 32) | ((uint64)_pos);
 	}
 	/* ThermoStatSetpoint index's above 100 are unique per node */
-	if ((_commandClass == ThermostatSetpoint::StaticGetCommandClassId()) &&
+	if ((_commandClass == Internal::CC::ThermostatSetpoint::StaticGetCommandClassId()) &&
 			(_index >= 100)) {
 		return ((uint64) _node << 56 | (uint64)_commandClass << 48) | ((uint64)_index << 32) | ((uint64)_pos);
 	}
-	if (_commandClass == Meter::StaticGetCommandClassId()) {
+	if (_commandClass == Internal::CC::Meter::StaticGetCommandClassId()) {
 		return ((uint64) _node << 56 | (uint64)_commandClass << 48) | ((uint64)_index << 32) | ((uint64)_pos);
 	}
 	return ((uint64)_commandClass << 48) | ((uint64)_index << 32) | ((uint64)_pos);
@@ -595,7 +595,7 @@ uint64 Localization::GetValueKey
 
 void Localization::SetupCommandClass
 (
-		CommandClass *cc
+		Internal::CC::CommandClass *cc
 )
 {
 	uint8 ccID = cc->GetCommandClassId();
@@ -705,7 +705,7 @@ string const Localization::GetValueItemLabel
 ) const
 {
 	bool unique = false;
-	if ((ccID == SoundSwitch::StaticGetCommandClassId()) && (indexId == 1 || indexId == 3)) {
+	if ((ccID == Internal::CC::SoundSwitch::StaticGetCommandClassId()) && (indexId == 1 || indexId == 3)) {
 		unique = true;
 	}
 	uint64 key = GetValueKey(node, ccID, indexId, pos, unique);
@@ -728,7 +728,7 @@ bool Localization::SetValueItemLabel
 )
 {
 	bool unique = false;
-	if ((ccID == SoundSwitch::StaticGetCommandClassId()) && (indexId == 1 || indexId == 3)) {
+	if ((ccID == Internal::CC::SoundSwitch::StaticGetCommandClassId()) && (indexId == 1 || indexId == 3)) {
 		unique = true;
 	}
 
@@ -752,7 +752,7 @@ string const Localization::GetValueItemHelp
 ) const
 {
 	bool unique = false;
-	if ((ccID == SoundSwitch::StaticGetCommandClassId()) && (indexId == 1 || indexId == 3)) {
+	if ((ccID == Internal::CC::SoundSwitch::StaticGetCommandClassId()) && (indexId == 1 || indexId == 3)) {
 		unique = true;
 	}
 
@@ -776,7 +776,7 @@ bool Localization::SetValueItemHelp
 )
 {
 	bool unique = false;
-	if ((ccID == SoundSwitch::StaticGetCommandClassId()) && (indexId == 1 || indexId == 3)) {
+	if ((ccID == Internal::CC::SoundSwitch::StaticGetCommandClassId()) && (indexId == 1 || indexId == 3)) {
 		unique = true;
 	}
 

@@ -32,9 +32,10 @@
 
 namespace OpenZWave
 {
-	class ValueByte;
-	class ValueBool;
-
+namespace Internal
+{
+namespace CC
+{
 	/** \brief Implements COMMAND_CLASS_BARRIER_OPERATOR (0x66), a Z-Wave device command class.
 	 * \ingroup CommandClass
 	 */
@@ -64,7 +65,8 @@ namespace OpenZWave
 	private:
 		BarrierOperator( uint32 const _homeId, uint8 const _nodeId );
 	};
-
+} // namespace CC
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif

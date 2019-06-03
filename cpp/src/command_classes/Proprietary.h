@@ -32,6 +32,11 @@
 
 namespace OpenZWave
 {
+namespace Internal
+{
+namespace CC
+{
+
 	/** \brief Implements COMMAND_CLASS_PROPRIETARY (0x88), a Z-Wave device command class.
 	 * \ingroup CommandClass
 	 */
@@ -52,7 +57,8 @@ namespace OpenZWave
 	private:
 		Proprietary( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
 	};
-
+} // namespace CC
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif

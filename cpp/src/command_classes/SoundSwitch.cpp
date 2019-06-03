@@ -36,7 +36,7 @@
 
 #include "value_classes/ValueByte.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::CC;
 
 enum SoundSwitchCmd
 {

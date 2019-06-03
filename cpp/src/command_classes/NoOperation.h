@@ -32,6 +32,10 @@
 
 namespace OpenZWave
 {
+namespace Internal
+{
+namespace CC
+{
 	/** \brief Implements COMMAND_CLASS_NO_OPERATION (0x00), a Z-Wave device command class.
 	 * \ingroup CommandClass
 	 */
@@ -54,7 +58,8 @@ namespace OpenZWave
 	private:
 		NoOperation( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
 	};
-
+} // namespace CC
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif

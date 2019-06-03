@@ -47,7 +47,8 @@
 #include "value_classes/ValueList.h"
 #include "value_classes/ValueString.h"
 #include "value_classes/ValueInt.h"
-using namespace OpenZWave;
+
+using namespace OpenZWave::Internal::CC;
 
 enum AlarmCmd
 {

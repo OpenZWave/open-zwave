@@ -236,7 +236,7 @@ Node::~Node
 	// Delete the command classes
 	while( !m_commandClassMap.empty() )
 	{
-		map<uint8,CommandClass*>::iterator it = m_commandClassMap.begin();
+		map<uint8,Internal::CC::CommandClass*>::iterator it = m_commandClassMap.begin();
 		delete it->second;
 		m_commandClassMap.erase( it );
 	}
@@ -320,7 +320,7 @@ void Node::AdvanceQueries
 				// and alive. Based on the response or lack of response
 				// will determine next step.
 				//
-				NoOperation* noop = static_cast<NoOperation*>( GetCommandClass( NoOperation::StaticGetCommandClassId() ) );
+				Internal::CC::NoOperation* noop = static_cast<Internal::CC::NoOperation*>( GetCommandClass( Internal::CC::NoOperation::StaticGetCommandClassId() ) );
 				/* don't Probe the Controller */
 				if( GetDriver()->GetControllerNodeId() != m_nodeId )
 				{
@@ -341,7 +341,7 @@ void Node::AdvanceQueries
 				// we have told the device to send it's wake-up notifications to the PC controller.
 				Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_WakeUp" );
 
-				WakeUp* wakeUp = static_cast<WakeUp*>( GetCommandClass( WakeUp::StaticGetCommandClassId() ) );
+				Internal::CC::WakeUp* wakeUp = static_cast<Internal::CC::WakeUp*>( GetCommandClass( Internal::CC::WakeUp::StaticGetCommandClassId() ) );
 
 				// if this device is a "sleeping device" and not a controller and not a
 				// FLiRS device. FLiRS will wake up when you send them something and they
@@ -372,7 +372,7 @@ void Node::AdvanceQueries
 				if( GetDriver()->GetControllerNodeId() == m_nodeId )
 				{
 					Log::Write( LogLevel_Detail, m_nodeId, "Load Controller Manufacturer Specific Config");
-					ManufacturerSpecific* cc = static_cast<ManufacturerSpecific*>( GetCommandClass( ManufacturerSpecific::StaticGetCommandClassId() ) );
+					Internal::CC::ManufacturerSpecific* cc = static_cast<Internal::CC::ManufacturerSpecific*>( GetCommandClass( Internal::CC::ManufacturerSpecific::StaticGetCommandClassId() ) );
 					if( cc  ) {
 						cc->SetInstance(1);
 						cc->SetProductDetails(GetDriver()->GetManufacturerId(), GetDriver()->GetProductType(), GetDriver()->GetProductId() );
@@ -390,11 +390,11 @@ void Node::AdvanceQueries
 					 * XXX TODO: This could probably be reworked a bit to make this a Mandatory CC for all devices regardless
 					 * of Generic/Specific Type. Then we can drop the Second ManufacturerSpecific QueryStage later.
 					 */
-					ManufacturerSpecific* cc = static_cast<ManufacturerSpecific*>( GetCommandClass( ManufacturerSpecific::StaticGetCommandClassId() ) );
+					Internal::CC::ManufacturerSpecific* cc = static_cast<Internal::CC::ManufacturerSpecific*>( GetCommandClass( Internal::CC::ManufacturerSpecific::StaticGetCommandClassId() ) );
 					if( cc  )
 					{
 						cc->SetInstance(1);
-						m_queryPending = cc->RequestState( CommandClass::RequestFlag_Static, 1, Driver::MsgQueue_Query );
+						m_queryPending = cc->RequestState( Internal::CC::CommandClass::RequestFlag_Static, 1, Driver::MsgQueue_Query );
 						addQSC = m_queryPending;
 					}
 					if( !m_queryPending )
@@ -432,7 +432,7 @@ void Node::AdvanceQueries
 
 				if ( pluscc )
 				{
-					m_queryPending = pluscc->RequestState( CommandClass::RequestFlag_Static, 1, Driver::MsgQueue_Query );
+					m_queryPending = pluscc->RequestState( Internal::CC::CommandClass::RequestFlag_Static, 1, Driver::MsgQueue_Query );
 				}
 				if (m_queryPending)
 				{
@@ -454,7 +454,7 @@ void Node::AdvanceQueries
 				 */
 				Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_SecurityReport" );
 
-				Security* seccc = static_cast<Security*>( GetCommandClass( Security::StaticGetCommandClassId() ) );
+				Internal::CC::Security* seccc = static_cast<Security*>( GetCommandClass( Internal::CC::Security::StaticGetCommandClassId() ) );
 
 				if( seccc )
 				{
@@ -483,12 +483,12 @@ void Node::AdvanceQueries
 					// Manufacturer Specific data is requested before the other command class data so
 					// that we can modify the supported command classes list through the product XML files.
 					Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_ManufacturerSpecific2" );
-					ManufacturerSpecific* cc = static_cast<ManufacturerSpecific*>( GetCommandClass( ManufacturerSpecific::StaticGetCommandClassId() ) );
+					Internal::CC::ManufacturerSpecific* cc = static_cast<Internal::CC::ManufacturerSpecific*>( GetCommandClass( Internal::CC::ManufacturerSpecific::StaticGetCommandClassId() ) );
 					/* don't do this if its the Controller Node */
 					if( cc && (GetDriver()->GetControllerNodeId() != m_nodeId))
 					{
 						cc->SetInstance(1);
-						m_queryPending = cc->RequestState( CommandClass::RequestFlag_Static, 1, Driver::MsgQueue_Query );
+						m_queryPending = cc->RequestState( Internal::CC::CommandClass::RequestFlag_Static, 1, Driver::MsgQueue_Query );
 						addQSC = m_queryPending;
 					}
 					if( !m_queryPending )
@@ -499,7 +499,7 @@ void Node::AdvanceQueries
 				}
 				else
 				{
-					ManufacturerSpecific* cc = static_cast<ManufacturerSpecific*>( GetCommandClass( ManufacturerSpecific::StaticGetCommandClassId() ) );
+					Internal::CC::ManufacturerSpecific* cc = static_cast<Internal::CC::ManufacturerSpecific*>( GetCommandClass( Internal::CC::ManufacturerSpecific::StaticGetCommandClassId() ) );
 					if( cc  )
 					{
 						cc->SetInstance(1);
@@ -518,9 +518,9 @@ void Node::AdvanceQueries
 				if( vcc )
 				{
 					Log::Write(LogLevel_Info, m_nodeId, "Requesting Versions");
-					for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
+					for( map<uint8,Internal::CC::CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
 					{
-						CommandClass* cc = it->second;
+						Internal::CC::CommandClass* cc = it->second;
 						Log::Write(LogLevel_Info, m_nodeId, "Requesting Versions for %s", cc->GetCommandClassName().c_str());
 
 						if( cc->GetMaxVersion() > 1 )
@@ -549,7 +549,7 @@ void Node::AdvanceQueries
 			{
 				// if the device at this node supports multiple instances, obtain a list of these instances
 				Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_Instances" );
-				MultiInstance* micc = static_cast<MultiInstance*>( GetCommandClass( MultiInstance::StaticGetCommandClassId() ) );
+				Internal::CC::MultiInstance* micc = static_cast<Internal::CC::MultiInstance*>( GetCommandClass( Internal::CC::MultiInstance::StaticGetCommandClassId() ) );
 				if( micc )
 				{
 					m_queryPending = micc->RequestInstances();
@@ -576,14 +576,14 @@ void Node::AdvanceQueries
 				Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_Static" );
 				/* Dont' do this for Controller Nodes */
 				if ( GetDriver()->GetControllerNodeId() != m_nodeId ) {
-					for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
+					for( map<uint8,Internal::CC::CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
 					{
 						if( !it->second->IsAfterMark() )
 						{
-							m_queryPending |= it->second->RequestStateForAllInstances( CommandClass::RequestFlag_Static, Driver::MsgQueue_Query );
+							m_queryPending |= it->second->RequestStateForAllInstances( Internal::CC::CommandClass::RequestFlag_Static, Driver::MsgQueue_Query );
 						} else {
 							/* Controlling CC's might still need to retrieve some info */
-							m_queryPending |= it->second->RequestStateForAllInstances( CommandClass::RequestFlag_AfterMark, Driver::MsgQueue_Query );
+							m_queryPending |= it->second->RequestStateForAllInstances( Internal::CC::CommandClass::RequestFlag_AfterMark, Driver::MsgQueue_Query );
 						}
 					}
 				}
@@ -612,7 +612,7 @@ void Node::AdvanceQueries
 				// and alive. Based on the response or lack of response
 				// will determine next step. Called here when configuration exists.
 				//
-				NoOperation* noop = static_cast<NoOperation*>( GetCommandClass( NoOperation::StaticGetCommandClassId() ) );
+				Internal::CC::NoOperation* noop = static_cast<Internal::CC::NoOperation*>( GetCommandClass( Internal::CC::NoOperation::StaticGetCommandClassId() ) );
 				/* Don't do this if its to the Controller */
 				if( GetDriver()->GetControllerNodeId() != m_nodeId )
 				{
@@ -631,7 +631,7 @@ void Node::AdvanceQueries
 			{
 				// if this device supports COMMAND_CLASS_ASSOCIATION, determine to which groups this node belong
 				Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_Associations" );
-				MultiChannelAssociation* macc = static_cast<MultiChannelAssociation*>( GetCommandClass( MultiChannelAssociation::StaticGetCommandClassId() ) );
+				Internal::CC::MultiChannelAssociation* macc = static_cast<Internal::CC::MultiChannelAssociation*>( GetCommandClass( Internal::CC::MultiChannelAssociation::StaticGetCommandClassId() ) );
 				if( macc )
 				{
 					macc->RequestAllGroups( 0 );
@@ -640,7 +640,7 @@ void Node::AdvanceQueries
 				}
 				else
 				{
-					Association* acc = static_cast<Association*>( GetCommandClass( Association::StaticGetCommandClassId() ) );
+					Internal::CC::Association* acc = static_cast<Internal::CC::Association*>( GetCommandClass( Internal::CC::Association::StaticGetCommandClassId() ) );
 					if( acc )
 					{
 						acc->RequestAllGroups( 0 );
@@ -670,11 +670,11 @@ void Node::AdvanceQueries
 				// Request the session values from the command classes in turn
 				// examples of Session information are: current thermostat setpoints, node names and climate control schedules
 				Log::Write( LogLevel_Detail, m_nodeId, "QueryStage_Session" );
-				for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
+				for( map<uint8,Internal::CC::CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
 				{
 					if( !it->second->IsAfterMark() )
 					{
-						m_queryPending |= it->second->RequestStateForAllInstances( CommandClass::RequestFlag_Session, Driver::MsgQueue_Query );
+						m_queryPending |= it->second->RequestStateForAllInstances( Internal::CC::CommandClass::RequestFlag_Session, Driver::MsgQueue_Query );
 					}
 				}
 				addQSC = m_queryPending;
@@ -730,7 +730,7 @@ void Node::AdvanceQueries
 				GetDriver()->QueueNotification( notification );
 
 				/* if its a sleeping node, this will send a NoMoreInformation Packet to the device */
-				WakeUp* cc = static_cast<WakeUp*>( GetCommandClass( WakeUp::StaticGetCommandClassId() ) );
+				Internal::CC::WakeUp* cc = static_cast<Internal::CC::WakeUp*>( GetCommandClass( Internal::CC::WakeUp::StaticGetCommandClassId() ) );
 				if( cc )
 				{
 					cc->SendPending();
@@ -1146,7 +1146,7 @@ void Node::ReadXML
 						m_productName = str;
 					}
 
-					ManufacturerSpecific* cc = static_cast<ManufacturerSpecific*>( GetCommandClass( ManufacturerSpecific::StaticGetCommandClassId() ) );
+					Internal::CC::ManufacturerSpecific* cc = static_cast<Internal::CC::ManufacturerSpecific*>( GetCommandClass( Internal::CC::ManufacturerSpecific::StaticGetCommandClassId() ) );
 					/* don't do this if its the Controller Node */
 					if( cc ) {
 						cc->SetProductDetails(manufacturerId, productType, productId);
@@ -1270,7 +1270,7 @@ void Node::ReadCommandClassesXML
 					remove = true;
 				}
 
-				CommandClass* cc = GetCommandClass( id );
+				Internal::CC::CommandClass* cc = GetCommandClass( id );
 				if( remove )
 				{
 					// Remove support for the command class
@@ -1280,7 +1280,7 @@ void Node::ReadCommandClassesXML
 				{
 					if( NULL == cc )
 					{
-						if (Security::StaticGetCommandClassId() == id && !GetDriver()->isNetworkKeySet()) {
+						if (Internal::CC::Security::StaticGetCommandClassId() == id && !GetDriver()->isNetworkKeySet()) {
 							Log::Write(LogLevel_Warning, "Security Command Class cannot be Loaded. NetworkKey is not set");
 							ccElement = ccElement->NextSiblingElement();
 							continue;
@@ -1431,9 +1431,9 @@ void Node::WriteXML
 	TiXmlElement* ccsElement = new TiXmlElement( "CommandClasses" );
 	nodeElement->LinkEndChild( ccsElement );
 
-	for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
+	for( map<uint8,Internal::CC::CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
 	{
-		if( it->second->GetCommandClassId() == NoOperation::StaticGetCommandClassId() ) // don't output NoOperation
+		if( it->second->GetCommandClassId() == Internal::CC::NoOperation::StaticGetCommandClassId() ) // don't output NoOperation
 		{
 			continue;
 		}
@@ -1580,7 +1580,7 @@ void Node::UpdateProtocolInfo
 			// Device does not always listen, so we need the WakeUp handler.  We can't
 			// wait for the command class list because the request for the command
 			// classes may need to go in the wakeup queue itself!
-			if( CommandClass* pCommandClass = AddCommandClass( WakeUp::StaticGetCommandClassId() ) )
+			if( Internal::CC::CommandClass* pCommandClass = AddCommandClass( Internal::CC::WakeUp::StaticGetCommandClassId() ) )
 			{
 				pCommandClass->SetInstance( 1 );
 			}
@@ -1627,7 +1627,7 @@ void Node::SetProtocolInfo
 	 * first (before other CC's start sending stuff and slowing down our exchange
 	 */
 	if (m_secured) {
-		if (Security *pCommandClass = static_cast<Security *>(GetCommandClass(Security::StaticGetCommandClassId()))) {
+		if (Internal::CC::Security *pCommandClass = static_cast<Internal::CC::Security *>(GetCommandClass(Internal::CC::Security::StaticGetCommandClassId()))) {
 			/* Security CC has already been loaded, most likely via the SetDeviceClasses Function above */
 			if (!GetDriver()->isNetworkKeySet()) {
 				Log::Write(LogLevel_Warning, m_nodeId, "Security Command Class Disabled. NetworkKey is not Set");
@@ -1637,8 +1637,8 @@ void Node::SetProtocolInfo
 		} else {
 			/* Security CC is not loaded, see if its in our NIF frame and load if necessary */
 			for (int i = 3; i < _length; i++) {
-				if (_protocolInfo[i] == Security::StaticGetCommandClassId()) {
-					pCommandClass = static_cast<Security *>(AddCommandClass(_protocolInfo[i]));
+				if (_protocolInfo[i] == Internal::CC::Security::StaticGetCommandClassId()) {
+					pCommandClass = static_cast<Internal::CC::Security *>(AddCommandClass(_protocolInfo[i]));
 					if (!GetDriver()->isNetworkKeySet()) {
 						Log::Write(LogLevel_Warning, m_nodeId, "Security Command Class Disabled. NetworkKey is not Set");
 					} else {
@@ -1686,7 +1686,7 @@ string Node::GetInstanceLabel
 {
 	string label;
 	/* find the CommandClass */
-	CommandClass *_cc = GetCommandClass(_ccid);
+	Internal::CC::CommandClass *_cc = GetCommandClass(_ccid);
 	if ( _cc )
 		label = _cc->GetInstanceLabel(_instance);
 	/* if the Label is Empty - Then use the Global Label */
@@ -1714,7 +1714,7 @@ uint8 Node::GetNumInstances
 	{
 		ccid = MultiInstance::StaticGetCommandClassId();
 	}
-	if ( CommandClass *cc = GetCommandClass(ccid) )
+	if ( Internal::CC::CommandClass *cc = GetCommandClass(ccid) )
 	{
 		return cc->GetNumInstances();
 	}
@@ -1754,7 +1754,7 @@ void Node::SetSecuredClasses
 			continue;
 		}
 		/* Check if this is a CC that is already registered with the node */
-		if (CommandClass *pCommandClass = GetCommandClass(_data[i]))
+		if (Internal::CC::CommandClass *pCommandClass = GetCommandClass(_data[i]))
 		{
 			/* if it was specified the he NIF frame, and came in as part of the Security SupportedReport message
 			 * then it can support both Clear Text and Secured Comms. So do a check first
@@ -1776,7 +1776,7 @@ void Node::SetSecuredClasses
 				/* we need to get the endpoint from the Security CC, to map over to the target CC if this
 				 * is triggered by a SecurityCmd_SupportedReport from a instance
 				 */
-				CommandClass *secc = GetCommandClass(Security::StaticGetCommandClassId());
+				Internal::CC::CommandClass *secc = GetCommandClass(Internal::CC::Security::StaticGetCommandClassId());
 				int ep = secc->GetEndPoint(_instance);
 				pCommandClass->SetEndPoint(_instance, ep);
 				pCommandClass->SetInstance(_instance);
@@ -1785,9 +1785,9 @@ void Node::SetSecuredClasses
 		/* it might be a new CC we havn't seen as part of the NIF. In that case
 		 * its only supported via the Security CC, so no need to check our SecurityStrategy, just
 		 * encrypt it regardless */
-		else if( CommandClasses::IsSupported( _data[i] ) )
+		else if( Internal::CC::CommandClasses::IsSupported( _data[i] ) )
 		{
-			if( CommandClass* pCommandClass = AddCommandClass( _data[i] ) )
+			if( Internal::CC::CommandClass* pCommandClass = AddCommandClass( _data[i] ) )
 			{
 				// If this class came after the COMMAND_CLASS_MARK, then we do not create values.
 				if( afterMark )
@@ -1812,13 +1812,13 @@ void Node::SetSecuredClasses
 				if( GetCommandClass( MultiInstance::StaticGetCommandClassId() ) )
 				{
 					// Request instances
-					request |= (uint8)CommandClass::StaticRequest_Instances;
+					request |= (uint8)Internal::CC::CommandClass::StaticRequest_Instances;
 				}
 
 				if( GetCommandClass( Version::StaticGetCommandClassId() ) )
 				{
 					// Request versions
-					request |= (uint8)CommandClass::StaticRequest_Version;
+					request |= (uint8)Internal::CC::CommandClass::StaticRequest_Version;
 				}
 
 				if( request )
@@ -1833,7 +1833,7 @@ void Node::SetSecuredClasses
 		}
 	}
 	Log::Write( LogLevel_Info, m_nodeId, "  UnSecured command classes for node %d (instance %d):", m_nodeId, _instance );
-	for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
+	for( map<uint8,Internal::CC::CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
 	{
 		if (!it->second->IsSecured())
 			Log::Write( LogLevel_Info, m_nodeId, "    %s (Unsecured) - %s", it->second->GetCommandClassName().c_str(), it->second->IsInNIF() ? "InNIF" : "NotInNIF" );
@@ -1885,7 +1885,7 @@ void Node::UpdateNodeInfo
 					Log::Write (LogLevel_Info, m_nodeId, "    %s (Disabled - Network Key Not Set)", Security::StaticGetCommandClassName().c_str());
 					continue;
 				}
-				if( CommandClass* pCommandClass = AddCommandClass( _data[i] ) )
+				if( Internal::CC::CommandClass* pCommandClass = AddCommandClass( _data[i] ) )
 				{
 					/* this CC was in the NIF frame */
 					pCommandClass->SetInNIF();
@@ -1901,7 +1901,7 @@ void Node::UpdateNodeInfo
 					pCommandClass->SetInstance( 1 );
 					newCommandClasses = true;
 					Log::Write( LogLevel_Info, m_nodeId, "    %s", pCommandClass->GetCommandClassName().c_str() );
-				} else if (CommandClass *pCommandClass = GetCommandClass( _data[i] ) ) {
+				} else if (Internal::CC::CommandClass *pCommandClass = GetCommandClass( _data[i] ) ) {
 					/* this CC was in the NIF frame */
 					pCommandClass->SetInNIF();
 					Log::Write( LogLevel_Info, m_nodeId, "    %s (Existing)", pCommandClass->GetCommandClassName().c_str() );
@@ -1930,7 +1930,7 @@ void Node::UpdateNodeInfo
 	}
 
 	// Treat the node info frame as a sign that the node is awake
-	if( WakeUp* wakeUp = static_cast<WakeUp*>( GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
+	if( Internal::CC::WakeUp* wakeUp = static_cast<Internal::CC::WakeUp*>( GetCommandClass( Internal::CC::WakeUp::StaticGetCommandClassId() ) ) )
 	{
 		wakeUp->SetAwake( true );
 	}
@@ -1994,18 +1994,18 @@ void Node::SetStaticRequests
 	if( GetCommandClass( MultiInstance::StaticGetCommandClassId() ) )
 	{
 		// Request instances
-		request |= (uint8)CommandClass::StaticRequest_Instances;
+		request |= (uint8)Internal::CC::CommandClass::StaticRequest_Instances;
 	}
 
 	if( GetCommandClass( Version::StaticGetCommandClassId() ) )
 	{
 		// Request versions
-		request |= (uint8)CommandClass::StaticRequest_Version;
+		request |= (uint8)Internal::CC::CommandClass::StaticRequest_Version;
 	}
 
 	if( request )
 	{
-		for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
+		for( map<uint8,Internal::CC::CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
 		{
 			it->second->SetStaticRequest( request );
 		}
@@ -2027,7 +2027,7 @@ void Node::SetNodeName
 	Notification* notification = new Notification( Notification::Type_NodeNaming );
 	notification->SetHomeAndNodeIds( m_homeId, m_nodeId );
 	GetDriver()->QueueNotification( notification );
-	if( NodeNaming* cc = static_cast<NodeNaming*>( GetCommandClass( NodeNaming::StaticGetCommandClassId() ) ) )
+	if( Internal::CC::NodeNaming* cc = static_cast<Internal::CC::NodeNaming*>( GetCommandClass( Internal::CC::NodeNaming::StaticGetCommandClassId() ) ) )
 	{
 		// The node supports naming, so we try to write the name into the device
 		cc->SetName( _nodeName );
@@ -2048,7 +2048,7 @@ void Node::SetLocation
 	Notification* notification = new Notification( Notification::Type_NodeNaming );
 	notification->SetHomeAndNodeIds( m_homeId, m_nodeId );
 	GetDriver()->QueueNotification( notification );
-	if( NodeNaming* cc = static_cast<NodeNaming*>( GetCommandClass( NodeNaming::StaticGetCommandClassId() ) ) )
+	if( Internal::CC::NodeNaming* cc = static_cast<Internal::CC::NodeNaming*>( GetCommandClass( Internal::CC::NodeNaming::StaticGetCommandClassId() ) ) )
 	{
 		// The node supports naming, so we try to write the location into the device
 		cc->SetLocation( _location );
@@ -2066,7 +2066,7 @@ void Node::ApplicationCommandHandler
 
 )
 {
-	if( CommandClass* pCommandClass = GetCommandClass( _data[5] ) )
+	if( Internal::CC::CommandClass* pCommandClass = GetCommandClass( _data[5] ) )
 	{
 		if (pCommandClass->IsSecured() && !encrypted) {
 			Log::Write( LogLevel_Warning, m_nodeId, "Received a Clear Text Message for the CommandClass %s which is Secured", pCommandClass->GetCommandClassName().c_str());
@@ -2095,7 +2095,7 @@ void Node::ApplicationCommandHandler
 	}
 	else
 	{
-		if( _data[5] == ControllerReplication::StaticGetCommandClassId() )
+		if( _data[5] == Internal::CC::ControllerReplication::StaticGetCommandClassId() )
 		{
 			// This is a controller replication message, and we do not support it.
 			// We have to at least acknowledge the message to avoid locking the sending device.
@@ -2104,7 +2104,7 @@ void Node::ApplicationCommandHandler
 			Msg* msg = new Msg( "Replication Command Complete", m_nodeId, REQUEST, FUNC_ID_ZW_REPLICATION_COMMAND_COMPLETE, false );
 			GetDriver()->SendMsg( msg, Driver::MsgQueue_Command );
 		}
-		else if ( _data[5] == MultiInstance::StaticGetCommandClassId() ) {
+		else if ( _data[5] == Internal::CC::MultiInstance::StaticGetCommandClassId() ) {
 			// Devices that support MultiChannelAssociation may send a MultiChannel Encapsulated message if there is a Instance set in the Association Groups
 			// So we will dynamically load the MultiChannel CC if we receive a encapsulated message
 			// We only do this after the QueryStage is Complete as we don't want to Add this CC to the list, and then confusing OZW that
@@ -2115,7 +2115,7 @@ void Node::ApplicationCommandHandler
 			}
 
 			Log::Write (LogLevel_Info, m_nodeId, "ApplicationCommandHandler - Received a MultiInstance Message but MulitInstance CC isn't loaded. Loading it... ");
-			if (CommandClass* pCommandClass = AddCommandClass(MultiInstance::StaticGetCommandClassId())) {
+			if (Internal::CC::CommandClass* pCommandClass = AddCommandClass(MultiInstance::StaticGetCommandClassId())) {
 				pCommandClass->ReceivedCntIncr();
 				if (!pCommandClass->IsAfterMark()) {
 					if (!pCommandClass->HandleMsg( &_data[6], _data[4] ) )
@@ -2141,12 +2141,12 @@ void Node::ApplicationCommandHandler
 // <Node::GetCommandClass>
 // Get the specified command class object if supported, otherwise NULL
 //-----------------------------------------------------------------------------
-CommandClass* Node::GetCommandClass
+Internal::CC::CommandClass* Node::GetCommandClass
 (
 		uint8 const _commandClassId
 )const
 {
-	map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.find( _commandClassId );
+	map<uint8,Internal::CC::CommandClass*>::const_iterator it = m_commandClassMap.find( _commandClassId );
 	if( it != m_commandClassMap.end() )
 	{
 		return it->second;
@@ -2160,7 +2160,7 @@ CommandClass* Node::GetCommandClass
 // <Node::AddCommandClass>
 // Add a command class to the node
 //-----------------------------------------------------------------------------
-CommandClass* Node::AddCommandClass
+Internal::CC::CommandClass* Node::AddCommandClass
 (
 		uint8 const _commandClassId
 )
@@ -2172,7 +2172,7 @@ CommandClass* Node::AddCommandClass
 	}
 
 	// Create the command class object and add it to our map
-	if( CommandClass* pCommandClass = CommandClasses::CreateCommandClass( _commandClassId, m_homeId, m_nodeId ) )
+	if( Internal::CC::CommandClass* pCommandClass = Internal::CC::CommandClasses::CreateCommandClass( _commandClassId, m_homeId, m_nodeId ) )
 	{
 		m_commandClassMap[_commandClassId] = pCommandClass;
 		return pCommandClass;
@@ -2194,7 +2194,7 @@ void Node::RemoveCommandClass
 		uint8 const _commandClassId
 )
 {
-	map<uint8,CommandClass*>::iterator it = m_commandClassMap.find( _commandClassId );
+	map<uint8,Internal::CC::CommandClass*>::iterator it = m_commandClassMap.find( _commandClassId );
 	if( it == m_commandClassMap.end() )
 	{
 		// Class is not found
@@ -2225,7 +2225,7 @@ bool Node::SetConfigParam
 		uint8 const _size
 )
 {
-	if( Configuration* cc = static_cast<Configuration*>( GetCommandClass( Configuration::StaticGetCommandClassId() ) ) )
+	if( Internal::CC::Configuration* cc = static_cast<Internal::CC::Configuration*>( GetCommandClass( Internal::CC::Configuration::StaticGetCommandClassId() ) ) )
 	{
 		// First try to find an existing value representing the parameter, and set that.
 		if( Value* value = cc->GetValue( 1, _param ) )
@@ -2289,7 +2289,7 @@ void Node::RequestConfigParam
 		uint8 const _param
 )
 {
-	if( Configuration* cc = static_cast<Configuration*>( GetCommandClass( Configuration::StaticGetCommandClassId() ) ) )
+	if( Internal::CC::Configuration* cc = static_cast<Internal::CC::Configuration*>( GetCommandClass( Internal::CC::Configuration::StaticGetCommandClassId() ) ) )
 	{
 		cc->RequestValue( 0, _param, 1, Driver::MsgQueue_Send );
 	}
@@ -2305,13 +2305,13 @@ bool Node::RequestAllConfigParams
 )
 {
 	bool res = false;
-	if( Configuration* cc = static_cast<Configuration*>( GetCommandClass( Configuration::StaticGetCommandClassId() ) ) )
+	if( Internal::CC::Configuration* cc = static_cast<Internal::CC::Configuration*>( GetCommandClass( Internal::CC::Configuration::StaticGetCommandClassId() ) ) )
 	{
 		// Go through all the values in the value store, and request all those which are in the Configuration command class
 		for( ValueStore::Iterator it = m_values->Begin(); it != m_values->End(); ++it )
 		{
 			Value* value = it->second;
-			if( value->GetID().GetCommandClassId() == Configuration::StaticGetCommandClassId() && !value->IsWriteOnly() )
+			if( value->GetID().GetCommandClassId() == Internal::CC::Configuration::StaticGetCommandClassId() && !value->IsWriteOnly() )
 			{
 				/* put the ConfigParams Request into the MsgQueue_Query queue. This is so MsgQueue_Send doesn't get backlogged with a
 				 * lot of ConfigParams requests, and should help speed up any user generated messages being sent out (as the MsgQueue_Send has a higher
@@ -2334,11 +2334,11 @@ bool Node::RequestDynamicValues
 )
 {
 	bool res = false;
-	for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
+	for( map<uint8,Internal::CC::CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
 	{
 		if( !it->second->IsAfterMark() )
 		{
-			res |= it->second->RequestStateForAllInstances( CommandClass::RequestFlag_Dynamic, Driver::MsgQueue_Send );
+			res |= it->second->RequestStateForAllInstances( Internal::CC::CommandClass::RequestFlag_Dynamic, Driver::MsgQueue_Send );
 		}
 	}
 
@@ -2352,7 +2352,7 @@ void Node::RefreshValuesOnWakeup
 (
 )
 {
-	for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
+	for( map<uint8,Internal::CC::CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
 	{
 		if( !it->second->IsAfterMark() )
 		{
@@ -2377,7 +2377,7 @@ void Node::SetLevel
 		adjustedLevel = 99;
 	}
 
-	if( Basic* cc = static_cast<Basic*>( GetCommandClass( Basic::StaticGetCommandClassId() ) ) )
+	if( Internal::CC::Basic* cc = static_cast<Internal::CC::Basic*>( GetCommandClass( Internal::CC::Basic::StaticGetCommandClassId() ) ) )
 	{
 		cc->Set( adjustedLevel );
 	}
@@ -2392,7 +2392,7 @@ void Node::SetNodeOn
 )
 {
 	// Level is 0-99, with 0 = off and 99 = fully on. 255 = turn on at last level.
-	if( Basic* cc = static_cast<Basic*>( GetCommandClass( Basic::StaticGetCommandClassId() ) ) )
+	if( Internal::CC::Basic* cc = static_cast<Internal::CC::Basic*>( GetCommandClass( Internal::CC::Basic::StaticGetCommandClassId() ) ) )
 	{
 		cc->Set( 255 );
 	}
@@ -2407,7 +2407,7 @@ void Node::SetNodeOff
 )
 {
 	// Level is 0-99, with 0 = off and 99 = fully on. 255 = turn on at last level.
-	if( Basic* cc = static_cast<Basic*>( GetCommandClass( Basic::StaticGetCommandClassId() ) ) )
+	if( Internal::CC::Basic* cc = static_cast<Internal::CC::Basic*>( GetCommandClass( Internal::CC::Basic::StaticGetCommandClassId() ) ) )
 	{
 		cc->Set( 0 );
 	}
@@ -3276,14 +3276,14 @@ bool Node::SetDeviceClasses
 		// Device does not always listen, so we need the WakeUp handler.  We can't
 		// wait for the command class list because the request for the command
 		// classes may need to go in the wakeup queue itself!
-		if( CommandClass* pCommandClass = AddCommandClass( WakeUp::StaticGetCommandClassId() ) )
+		if( Internal::CC::CommandClass* pCommandClass = AddCommandClass( Internal::CC::WakeUp::StaticGetCommandClassId() ) )
 		{
 			pCommandClass->SetInstance( 1 );
 		}
 	}
 
 	// Apply any COMMAND_CLASS_BASIC remapping
-	if( Basic* cc = static_cast<Basic*>( GetCommandClass( Basic::StaticGetCommandClassId() ) ) )
+	if( Internal::CC::Basic* cc = static_cast<Internal::CC::Basic*>( GetCommandClass( Internal::CC::Basic::StaticGetCommandClassId() ) ) )
 	{
 		cc->SetMapping( basicMapping );
 	}
@@ -3291,13 +3291,13 @@ bool Node::SetDeviceClasses
 	// Write the mandatory command classes to the log
 	if( !m_commandClassMap.empty() )
 	{
-		map<uint8,CommandClass*>::const_iterator cit;
+		map<uint8,Internal::CC::CommandClass*>::const_iterator cit;
 
 		Log::Write( LogLevel_Info, m_nodeId, "  Mandatory Command Classes for Node %d:", m_nodeId );
 		bool reportedClasses = false;
 		for( cit = m_commandClassMap.begin(); cit != m_commandClassMap.end(); ++cit )
 		{
-			if( !cit->second->IsAfterMark() && cit->second->GetCommandClassId() != NoOperation::StaticGetCommandClassId() )
+			if( !cit->second->IsAfterMark() && cit->second->GetCommandClassId() != Internal::CC::NoOperation::StaticGetCommandClassId() )
 			{
 				Log::Write( LogLevel_Info, m_nodeId, "    %s", cit->second->GetCommandClassName().c_str() );
 				reportedClasses = true;
@@ -3451,7 +3451,7 @@ bool Node::SetPlusDeviceClasses
 			{
 				if( CommandClasses::IsSupported( ccid ) )
 				{
-					Log::Write( LogLevel_Info, m_nodeId, "    %s", CommandClasses::GetName(ccid).c_str());
+					Log::Write( LogLevel_Info, m_nodeId, "    %s", Internal::CC::CommandClasses::GetName(ccid).c_str());
 				}
 				else
 				{
@@ -3506,14 +3506,14 @@ bool Node::AddMandatoryCommandClasses
 			continue;
 		}
 
-		if( CommandClasses::IsSupported( cc ) )
+		if( Internal::CC::CommandClasses::IsSupported( cc ) )
 		{
 			if (Security::StaticGetCommandClassId() == cc && !GetDriver()->isNetworkKeySet()) {
 				Log::Write(LogLevel_Warning, m_nodeId, "Security Command Class Cannot be Enabled - NetworkKey is not set");
 				continue;
 			}
 
-			if( CommandClass* commandClass = AddCommandClass( cc ) )
+			if( Internal::CC::CommandClass* commandClass = AddCommandClass( cc ) )
 			{
 				// If this class came after the COMMAND_CLASS_MARK, then we do not create values.
 				if( afterMark )
@@ -3649,7 +3649,7 @@ void Node::GetNodeStatistics
 
 	_data->m_quality = m_quality;
 	memcpy( _data->m_lastReceivedMessage, m_lastReceivedMessage, sizeof(m_lastReceivedMessage) );
-	for( map<uint8,CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
+	for( map<uint8,Internal::CC::CommandClass*>::const_iterator it = m_commandClassMap.begin(); it != m_commandClassMap.end(); ++it )
 	{
 		CommandClassData ccData;
 		ccData.m_commandClassId = it->second->GetCommandClassId();
@@ -3893,7 +3893,7 @@ string Node::GetNodeTypeString() {
 //-----------------------------------------------------------------------------
 bool Node::IsNodeReset()
 {
-	DeviceResetLocally *drl = static_cast<DeviceResetLocally *>(GetCommandClass(DeviceResetLocally::StaticGetCommandClassId()));
+	Internal::CC::DeviceResetLocally *drl = static_cast<Internal::CC::DeviceResetLocally *>(GetCommandClass(Internal::CC::DeviceResetLocally::StaticGetCommandClassId()));
 	if (drl)
 		return drl->IsDeviceReset();
 	else return false;
@@ -3944,7 +3944,7 @@ void Node::setFileConfigRevision
 )
 {
 	m_fileConfigRevision = rev;
-	ManufacturerSpecific* cc = static_cast<ManufacturerSpecific*>( GetCommandClass( ManufacturerSpecific::StaticGetCommandClassId() ) );
+	Internal::CC::ManufacturerSpecific* cc = static_cast<Internal::CC::ManufacturerSpecific*>( GetCommandClass( Internal::CC::ManufacturerSpecific::StaticGetCommandClassId() ) );
 	if( cc  )
 	{
 		cc->setFileConfigRevision(rev);
@@ -3963,7 +3963,7 @@ void Node::setLoadedConfigRevision
 )
 {
 	m_loadedConfigRevision = rev;
-	ManufacturerSpecific* cc = static_cast<ManufacturerSpecific*>( GetCommandClass( ManufacturerSpecific::StaticGetCommandClassId() ) );
+	Internal::CC::ManufacturerSpecific* cc = static_cast<Internal::CC::ManufacturerSpecific*>( GetCommandClass( Internal::CC::ManufacturerSpecific::StaticGetCommandClassId() ) );
 	if( cc  )
 	{
 		cc->setLoadedConfigRevision(rev);
@@ -3982,7 +3982,7 @@ void Node::setLatestConfigRevision
 )
 {
 	m_latestConfigRevision = rev;
-	ManufacturerSpecific* cc = static_cast<ManufacturerSpecific*>( GetCommandClass( ManufacturerSpecific::StaticGetCommandClassId() ) );
+	Internal::CC::ManufacturerSpecific* cc = static_cast<Internal::CC::ManufacturerSpecific*>( GetCommandClass( Internal::CC::ManufacturerSpecific::StaticGetCommandClassId() ) );
 	if( cc  )
 	{
 		cc->setLatestConfigRevision(rev);

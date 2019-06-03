@@ -32,8 +32,10 @@
 
 namespace OpenZWave
 {
-	class ValueByte;
-	class ValueList;
+namespace Internal
+{
+namespace CC
+{
 
 	/** \brief Implements COMMAND_CLASS_TIME_PARAMETERS (0x8B), a Z-Wave device command class.
 	 * \ingroup CommandClass
@@ -61,7 +63,8 @@ namespace OpenZWave
 	private:
 		TimeParameters( uint32 const _homeId, uint8 const _nodeId );
 	};
-
+} // namespace CC
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif

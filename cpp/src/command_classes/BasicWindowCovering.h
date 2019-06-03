@@ -32,8 +32,10 @@
 
 namespace OpenZWave
 {
-	class ValueButton;
-
+namespace Internal
+{
+namespace CC
+{
 	/** \brief Implements COMMAND_CLASS_BASIC_WINDOW_COVERING (0x50), a Z-Wave device command class.
 	 * \ingroup CommandClass
 	 */
@@ -58,7 +60,8 @@ namespace OpenZWave
 	private:
 		BasicWindowCovering( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
 	};
-
+} // namespace CC
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif

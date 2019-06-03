@@ -32,8 +32,10 @@
 
 namespace OpenZWave
 {
-	class ValueByte;
-	class ValueList;
+namespace Internal
+{
+namespace CC
+{
 
 	/** \brief Implements COMMAND_CLASS_SOUND_SWITCH (0x79), a Z-Wave device command class.
 	 * \ingroup CommandClass
@@ -69,7 +71,8 @@ namespace OpenZWave
 		uint8 m_toneCount;
 		std::map<uint8, SoundSwitchToneInfo> m_toneInfo;
 	};
-
+} // namespace CC
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif

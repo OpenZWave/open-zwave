@@ -32,7 +32,10 @@
 
 namespace OpenZWave
 {
-	class ValueDecimal;
+namespace Internal
+{
+namespace CC
+{
 
 	/** \brief Implements COMMAND_CLASS_ENERGY_PRODUCTION (0x90), a Z-Wave device command class.
 	 * \ingroup CommandClass
@@ -59,7 +62,8 @@ namespace OpenZWave
 	private:
 		EnergyProduction( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
 	};
-
+} // namespace CC
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif

@@ -35,6 +35,12 @@
 
 namespace OpenZWave {
 
+	namespace Internal {
+		namespace CC {
+			class CommandClass;
+		}
+	}
+
 enum CompatOptionFlags
 {
 	COMPAT_FLAG_GETSUPPORTED,
@@ -106,10 +112,9 @@ struct CompatOptionFlagDefintions {
 	CompatOptionFlagType type;
 };
 
-class CommandClass;
 class CompatOptionManager {
 public:
-	CompatOptionManager(CompatOptionType type, CommandClass *cc);
+	CompatOptionManager(CompatOptionType type, Internal::CC::CommandClass *cc);
 	virtual ~CompatOptionManager();
 
 	void SetNodeAndCC(uint8_t node, uint8_t cc);
@@ -130,7 +135,7 @@ private:
 	string GetXMLTagName();
 	map<CompatOptionFlags, CompatOptionFlagStorage> m_CompatVals;
 	map<string, CompatOptionFlags> m_enabledCompatFlags;
-	CommandClass *m_owner;
+	Internal::CC::CommandClass *m_owner;
 	CompatOptionType m_comtype;
 	CompatOptionFlagDefintions *m_availableFlags;
 	uint32_t m_availableFlagsCount;

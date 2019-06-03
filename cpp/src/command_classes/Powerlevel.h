@@ -32,7 +32,10 @@
 
 namespace OpenZWave
 {
-	class ValueList;
+namespace Internal
+{
+namespace CC
+{
 
 	/** \brief Implements COMMAND_CLASS_POWERLEVEL (0x73), a Z-Wave device command class.
 	 * \ingroup CommandClass
@@ -85,7 +88,8 @@ namespace OpenZWave
 		bool Test( uint8 const _instance );
 		bool Report( uint8 const _instance );
 	};
-
+} // namespace CC
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif

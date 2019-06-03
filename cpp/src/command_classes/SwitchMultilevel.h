@@ -32,9 +32,10 @@
 
 namespace OpenZWave
 {
-	class ValueBool;
-	class ValueButton;
-	class ValueByte;
+namespace Internal
+{
+namespace CC
+{
 
 	/** \brief Implements COMMAND_CLASS_SWITCH_MULTILEVEL (0x26), a Z-Wave device command class.
 	 * \ingroup CommandClass
@@ -79,7 +80,8 @@ namespace OpenZWave
 		bool StartLevelChange( uint8 const _instance, SwitchMultilevelDirection const _direction );
 		bool StopLevelChange( uint8 const _instance );
 	};
-
+} // namespace CC
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif

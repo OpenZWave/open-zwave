@@ -32,7 +32,10 @@
 
 namespace OpenZWave
 {
-	class ValueList;
+namespace Internal
+{
+namespace CC
+{
 
 	/** \brief Implements COMMAND_CLASS_PROTECTION (0x75), a Z-Wave device command class.
 	 * \ingroup CommandClass
@@ -67,7 +70,8 @@ namespace OpenZWave
 	private:
 		Protection( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
 	};
-
+} // namespace CC
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif

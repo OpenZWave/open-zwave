@@ -33,7 +33,10 @@
 
 namespace OpenZWave
 {
-	class ValueByte;
+namespace Internal
+{
+namespace CC
+{
 
 	/** \brief Implements COMMAND_CLASS_CENTRAL_SCENE (0x5B), a Z-Wave device command class.
 	 *  \ingroup CommandClass
@@ -79,7 +82,8 @@ protected:
 		uint8 m_sequence;
 		std::map<uint32, uint32> m_TimersSet;
 	};
-
+} // namespace CC
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif

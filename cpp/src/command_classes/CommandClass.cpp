@@ -40,7 +40,7 @@
 #include "platform/Log.h"
 #include "value_classes/ValueStore.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::CC;
 
 static uint8 const	c_sizeMask		= 0x07;
 static uint8 const	c_scaleMask		= 0x18;
@@ -115,7 +115,7 @@ CommandClass::~CommandClass
 // <CommandClass::GetDriver>
 // Get a pointer to our driver
 //-----------------------------------------------------------------------------
-Driver* CommandClass::GetDriver
+OpenZWave::Driver* CommandClass::GetDriver
 (
 )const
 {
@@ -126,7 +126,7 @@ Driver* CommandClass::GetDriver
 // <CommandClass::GetNode>
 // Get a pointer to our node without locking the mutex
 //-----------------------------------------------------------------------------
-Node* CommandClass::GetNodeUnsafe
+OpenZWave::Node* CommandClass::GetNodeUnsafe
 (
 )const
 {
@@ -137,7 +137,7 @@ Node* CommandClass::GetNodeUnsafe
 // <CommandClass::GetValue>
 // Get a pointer to a value by its instance and index
 //-----------------------------------------------------------------------------
-Value* CommandClass::GetValue
+OpenZWave::Value* CommandClass::GetValue
 (
 		uint8 const _instance,
 		uint16 const _index
@@ -216,14 +216,14 @@ void CommandClass::SetInstanceLabel
 		char *label
 )
 {
-	m_instanceLabel[_instance] = string(label);
+	m_instanceLabel[_instance] = std::string(label);
 }
 //-----------------------------------------------------------------------------
 // <CommandClass::GetInstanceLabel>
 // Get the Label for a Instance of this CommandClass
 //-----------------------------------------------------------------------------
 
-string CommandClass::GetInstanceLabel
+std::string CommandClass::GetInstanceLabel
 (
 		uint8 const _instance
 )
@@ -232,7 +232,7 @@ string CommandClass::GetInstanceLabel
 	{
 		return Localization::Get()->GetGlobalLabel(m_instanceLabel[_instance]);
 	}
-	return string();
+	return std::string();
 }
 
 //-----------------------------------------------------------------------------
@@ -515,7 +515,7 @@ void CommandClass::WriteXML
 // <CommandClass::ExtractValue>
 // Read a value from a variable length sequence of bytes
 //-----------------------------------------------------------------------------
-string CommandClass::ExtractValue
+std::string CommandClass::ExtractValue
 (
 		uint8 const* _data,
 		uint8* _scale,
@@ -545,7 +545,7 @@ string CommandClass::ExtractValue
 	}
 
 	// Deal with sign extension.  All values are signed
-	string res;
+	std::string res;
 	if( _data[_valueOffset] & 0x80 )
 	{
 		res = "-";
@@ -618,7 +618,7 @@ string CommandClass::ExtractValue
 void CommandClass::AppendValue
 (
 		Msg* _msg,
-		string const& _value,
+		std::string const& _value,
 		uint8 const _scale
 )const
 {
@@ -641,7 +641,7 @@ void CommandClass::AppendValue
 //-----------------------------------------------------------------------------
 uint8 const CommandClass::GetAppendValueSize
 (
-		string const& _value
+		std::string const& _value
 )const
 {
 	uint8 size;
@@ -656,7 +656,7 @@ uint8 const CommandClass::GetAppendValueSize
 //-----------------------------------------------------------------------------
 int32 CommandClass::ValueToInteger
 (
-		string const& _value,
+		std::string const& _value,
 		uint8* o_precision,
 		uint8* o_size
 )const
@@ -666,10 +666,10 @@ int32 CommandClass::ValueToInteger
 
 	// Find the decimal point
 	size_t pos = _value.find_first_of( "." );
-	if( pos == string::npos )
+	if( pos == std::string::npos )
 		pos = _value.find_first_of( "," );
 
-	if( pos == string::npos )
+	if( pos == std::string::npos )
 	{
 		// No decimal point
 		precision = 0;
@@ -682,7 +682,7 @@ int32 CommandClass::ValueToInteger
 		// Remove the decimal point and convert to an integer
 		precision = (uint8) ((_value.size()-pos)-1);
 
-		string str = _value.substr( 0, pos ) + _value.substr( pos+1 );
+		std::string str = _value.substr( 0, pos ) + _value.substr( pos+1 );
 		val = atol( str.c_str() );
 	}
 
@@ -817,7 +817,7 @@ bool CommandClass::RequestStateForAllInstances
 // <CommandClass::RequestStateForAllInstances>
 // Request current state from the device
 //-----------------------------------------------------------------------------
-string const CommandClass::GetCommandClassLabel
+std::string const CommandClass::GetCommandClassLabel
 (
 )
 {
@@ -830,7 +830,7 @@ string const CommandClass::GetCommandClassLabel
 //-----------------------------------------------------------------------------
 void CommandClass::SetCommandClassLabel
 (
-        string label
+        std::string label
 )
 {
     m_commandClassLabel = label;

@@ -29,7 +29,7 @@
 
 #include "command_classes/CommandClasses.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::CC;
 
 #include "command_classes/Alarm.h"
 #include "command_classes/ApplicationStatus.h"
@@ -128,7 +128,7 @@ bool CommandClasses::IsSupported
 	// Test the bit representing the command class
 	return( (Get().m_supportedCommandClasses[_commandClassId>>5] & (1u<<(_commandClassId&0x1f))) != 0 );
 }
-string CommandClasses::GetName
+std::string CommandClasses::GetName
 (
 	uint8 const _commandClassId
 )
@@ -204,7 +204,7 @@ void CommandClasses::RegisterCommandClasses
 	cc.Register( ApplicationStatus::StaticGetCommandClassId(), ApplicationStatus::StaticGetCommandClassName(), ApplicationStatus::Create );
 	cc.Register( Association::StaticGetCommandClassId(), Association::StaticGetCommandClassName(), Association::Create );
 	cc.Register( AssociationCommandConfiguration::StaticGetCommandClassId(), AssociationCommandConfiguration::StaticGetCommandClassName(), AssociationCommandConfiguration::Create );
-	cc.Register( SimpleAV::StaticGetCommandClassId(), AssociationCommandConfiguration::StaticGetCommandClassName(), SimpleAV::Create );
+	cc.Register( SimpleAV::StaticGetCommandClassId(), SimpleAV::StaticGetCommandClassName(), SimpleAV::Create );
 	cc.Register( BarrierOperator::StaticGetCommandClassId(), BarrierOperator::StaticGetCommandClassName(), BarrierOperator::Create);
 	cc.Register( Basic::StaticGetCommandClassId(), Basic::StaticGetCommandClassName(), Basic::Create );
 	cc.Register( BasicWindowCovering::StaticGetCommandClassId(), BasicWindowCovering::StaticGetCommandClassName(), BasicWindowCovering::Create );
@@ -346,7 +346,7 @@ uint8 CommandClasses::GetCommandClassId
 //	<CommandClasses::GetAdvertisedCommandClasses>
 //	return a list of Advertised CommandClasses
 //-----------------------------------------------------------------------------
-list<uint8> CommandClasses::GetAdvertisedCommandClasses
+std::list<uint8> CommandClasses::GetAdvertisedCommandClasses
 (
 )
 {

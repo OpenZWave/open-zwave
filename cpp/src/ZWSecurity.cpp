@@ -157,8 +157,8 @@ namespace OpenZWave {
 		e_buffer[len++] = FUNC_ID_ZW_SEND_DATA;
 		e_buffer[len++] = _receivingNode;
 		e_buffer[len++] = m_length + 11; 					// Length of the payload
-		e_buffer[len++] = Security::StaticGetCommandClassId();
-		e_buffer[len++] = SecurityCmd_MessageEncap;
+		e_buffer[len++] = Internal::CC::Security::StaticGetCommandClassId();
+		e_buffer[len++] = Internal::CC::SecurityCmd_MessageEncap;
 
 		/* create our IV */
 		uint8 initializationVector[16];

@@ -35,6 +35,7 @@
 
 namespace OpenZWave
 {
+	using namespace Internal::CC;
 	/** \brief Provides a container for data sent via the notification callback
 	 *    handler installed by a call to Manager::AddWatcher.
 	 *

@@ -35,9 +35,14 @@
 
 namespace OpenZWave
 {
+
 	class Msg;
 	class ValueInt;
 	class Mutex;
+namespace Internal
+{
+namespace CC
+{
 
 	/** \brief Implements COMMAND_CLASS_WAKE_UP (0x84), a Z-Wave device command class.
 	 * \ingroup CommandClass
@@ -86,7 +91,8 @@ namespace OpenZWave
 		bool						m_awake;
 		bool						m_pollRequired;
 	};
-
+} // namespace CC
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif

@@ -37,6 +37,13 @@ class TiXmlElement;
 
 namespace OpenZWave
 {
+	namespace Internal {
+		namespace CC {
+			class Association;
+			class MultiChannelAssociation;
+		}
+	}
+
 	class Node;
 
 	typedef struct InstanceAssociation {
@@ -49,8 +56,8 @@ namespace OpenZWave
 	class Group
 	{
 		friend class Node;
-		friend class Association;
-		friend class MultiChannelAssociation;
+		friend class Internal::CC::Association;
+		friend class Internal::CC::MultiChannelAssociation;
 
 	//-----------------------------------------------------------------------------
 	// Construction

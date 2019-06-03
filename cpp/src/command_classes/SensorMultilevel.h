@@ -32,7 +32,10 @@
 
 namespace OpenZWave
 {
-	class ValueDecimal;
+namespace Internal
+{
+namespace CC
+{
 
 	/** \brief Implements COMMAND_CLASS_SENSOR_MULTILEVEL (0x31), a Z-Wave device command class.
 	 * \ingroup CommandClass
@@ -61,7 +64,8 @@ namespace OpenZWave
 	private:
 		SensorMultilevel( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
 	};
-
+} // namespace CC
+} // namespace Internal
 } // namespace OpenZWave
 
 

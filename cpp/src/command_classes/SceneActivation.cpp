@@ -35,7 +35,7 @@
 #include "platform/Log.h"
 #include "value_classes/ValueInt.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::CC;
 
 enum SceneActivationCmd
 {

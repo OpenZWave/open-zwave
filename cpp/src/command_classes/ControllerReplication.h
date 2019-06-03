@@ -32,6 +32,11 @@
 
 namespace OpenZWave
 {
+namespace Internal
+{
+namespace CC
+{
+
 	/** \brief Implements COMMAND_CLASS_CONTROLLER_REPLICATION (0x21), a Z-Wave device command class.
 	 * \ingroup CommandClass
 	 */
@@ -68,7 +73,8 @@ namespace OpenZWave
 		int	m_groupIdx;
 		string	m_groupName;
 	};
-
+} // namespace CC
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif

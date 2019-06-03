@@ -32,7 +32,10 @@
 
 namespace OpenZWave
 {
-	class ValueByte;
+namespace Internal
+{
+namespace CC
+{
 
 	/** \brief Implements COMMAND_CLASS_INDICATOR (0x87), a Z-Wave device command class.
 	 * \ingroup CommandClass
@@ -60,7 +63,8 @@ namespace OpenZWave
 	private:
 		Indicator( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
 	};
-
+} // namespace CC
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif

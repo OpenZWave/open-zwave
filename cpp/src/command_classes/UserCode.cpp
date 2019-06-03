@@ -37,7 +37,7 @@
 #include "value_classes/ValueString.h"
 #include "value_classes/ValueRaw.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::CC;
 
 enum UserCodeCmd
 {

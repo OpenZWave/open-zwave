@@ -32,7 +32,10 @@
 
 namespace OpenZWave
 {
-	class ValueDecimal;
+namespace Internal
+{
+namespace CC
+{
 
 	/** \brief Implements COMMAND_CLASS_METER (0x32), a Z-Wave device command class.
 	 * \ingroup CommandClass
@@ -65,7 +68,8 @@ namespace OpenZWave
 		bool HandleReport( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 );
 
 	};
-
+} // namespace CC
+} // namespace Internal
 } // namespace OpenZWave
 
 

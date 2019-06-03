@@ -81,7 +81,7 @@ uint16_t availableDiscoveryFlagsCount = sizeof(availableDiscoveryFlags) / sizeof
 CompatOptionManager::CompatOptionManager
 (
 		CompatOptionType type,
-		CommandClass *owner
+		Internal::CC::CommandClass *owner
 ):
 m_owner(owner),
 m_comtype(type)

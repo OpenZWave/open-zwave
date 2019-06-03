@@ -32,9 +32,10 @@
 
 namespace OpenZWave
 {
-	class ValueSchedule;
-	class ValueList;
-	class ValueByte;
+namespace Internal
+{
+namespace CC
+{
 
 	/** \brief Implements COMMAND_CLASS_CLIMATE_CONTROL_SCHEDULE (0x46), a Z-Wave device command class.
 	 * \ingroup CommandClass
@@ -62,7 +63,8 @@ namespace OpenZWave
 	private:
 		ClimateControlSchedule( uint32 const _homeId, uint8 const _nodeId );
 	};
-
+} // namespace CC
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif

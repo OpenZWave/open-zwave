@@ -40,7 +40,7 @@
 #include "value_classes/ValueList.h"
 #include "value_classes/ValueShort.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::CC;
 
 enum ConfigurationCmd
 {

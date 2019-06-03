@@ -44,7 +44,7 @@
 #include "tinyxml.h"
 
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::CC;
 
 enum ColorCmd
 {
@@ -245,14 +245,14 @@ bool Color::RequestColorChannelReport
 // where the color values in [] are optional.
 // throws a exception when position is out of bounds
 //-----------------------------------------------------------------------------
-uint16 GetColor(string rgbstring, uint8 const position) {
+uint16 GetColor(std::string rgbstring, uint8 const position) {
 
 	/* check the length of the string based on position value we passed in including the #*/
 	if (rgbstring.length() < (size_t)(position *2)+1) {
-		Log::Write( LogLevel_Warning, "Request for Color Position %d exceeds String Length: %s", position, rgbstring.c_str());
+		OpenZWave::Log::Write( OpenZWave::LogLevel_Warning, "Request for Color Position %d exceeds String Length: %s", position, rgbstring.c_str());
 		throw;
 	}
-	string result = rgbstring.substr(((position - 1) * 2) +1, 2);
+	std::string result = rgbstring.substr(((position - 1) * 2) +1, 2);
 	std::stringstream ss(result);
 	uint16 rawresult;
 	ss >> std::hex >> rawresult;

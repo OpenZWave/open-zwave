@@ -32,7 +32,10 @@
 
 namespace OpenZWave
 {
-	class ValueBool;
+namespace Internal
+{
+namespace CC
+{
 
 	/** \brief Implements COMMAND_CLASS_SENSOR_BINARY (0x30), a Z-Wave device command class.
 	 * \ingroup CommandClass
@@ -63,7 +66,8 @@ namespace OpenZWave
 		SensorBinary( uint32 const _homeId, uint8 const _nodeId ): CommandClass( _homeId, _nodeId ){}
 		map<uint8,uint8> m_sensorsMap;
 	};
-
+} // namespace CC
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif

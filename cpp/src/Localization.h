@@ -111,7 +111,7 @@ private:
     static uint64 GetValueKey (uint8 _node, uint8 _commandClass, uint16 _index, uint32 _pos, bool unique = false);
 public:
     static Localization* Get();
-    void SetupCommandClass(CommandClass *cc);
+    void SetupCommandClass(Internal::CC::CommandClass *cc);
     string GetSelectedLang() { return Localization::m_selectedLang;};
     bool SetValueHelp(uint8 node, uint8 ccID, uint16 indexID, uint32 pos, string help, string lang="");
     string const GetValueHelp(uint8 node, uint8 ccID, uint16 indexId, uint32 pos);

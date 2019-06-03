@@ -34,7 +34,7 @@
 #include "platform/Log.h"
 #include "value_classes/ValueButton.h"
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::CC;
 
 enum BasicWindowCoveringCmd
 {

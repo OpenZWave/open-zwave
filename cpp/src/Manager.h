@@ -42,6 +42,11 @@
 
 namespace OpenZWave
 {
+	namespace Internal {
+		namespace CC {
+			class CommandClass;
+		}
+	}
 	class Options;
 	class Node;
 	class Msg;
@@ -110,7 +115,7 @@ namespace OpenZWave
 	class OPENZWAVE_EXPORT Manager
 	{
 		friend class Driver;
-		friend class CommandClass;
+		friend class Internal::CC::CommandClass;
 		friend class Group;
 		friend class Node;
 		friend class Value;
