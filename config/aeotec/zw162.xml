@@ -1,6 +1,6 @@
 <!--
 ZW162 Doorbell 6
---><Product Revision="5" xmlns="https://github.com/OpenZWave/open-zwave">
+--><Product Revision="6" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/0371:00A2:0103</MetaDataItem>
     <MetaDataItem name="ProductPic">images/aeotec/zw162.png</MetaDataItem>
@@ -40,7 +40,7 @@ If Action Button is clicked again during the Learn Mode, the Learn Mode will exi
 4. If Removing fails, it will keep off; repeat steps 1 to 3. Contact us for further support if needed.
 
 5. If Removing succeeds, it will quickly flash white light 3 times and then become breathing white light. Now, Chime is removed from Z-Wave network successfully.</MetaDataItem>
-    <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/3291/Doorbell 6 product manual.pdf</MetaDataItem>
+    <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/3292/Doorbell 6 product manual.pdf</MetaDataItem>
     <MetaDataItem name="ResetDescription">If the primary controller is missing or inoperable, you may need to reset the device to factory settings.
 
 Make sure the Chime is powered. To complete the reset process manually, press and hold the Action Button for at least 20s. The LED indicator will quickly flash white light 3 times and then become breathing white light, which indicates the reset operation is successful. Otherwise, please try again. Contact us for further support if needed.
@@ -55,10 +55,14 @@ Note:
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 Jun 2019" revision="4">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/3218/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 Jun 2019" revision="5">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/3291/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 Jun 2019" revision="6">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/3292/xml</Entry>
     </ChangeLog>
     <MetaDataItem id="00A2" name="ZWProductPage" type="0203">https://products.z-wavealliance.org/products/3291/</MetaDataItem>
     <MetaDataItem id="00A2" name="FrequencyName" type="0203">Australia / New Zealand</MetaDataItem>
     <MetaDataItem id="00A2" name="Identifier" type="0203">ZW162-B</MetaDataItem>
+    <MetaDataItem id="00A2" name="ZWProductPage" type="0003">https://products.z-wavealliance.org/products/3292/</MetaDataItem>
+    <MetaDataItem id="00A2" name="Identifier" type="0003">ZW162-C</MetaDataItem>
+    <MetaDataItem id="00A2" name="FrequencyName" type="0003">CEPT (Europe)</MetaDataItem>
   </MetaData>
   <!--
   Aeotec Doorbell 6
