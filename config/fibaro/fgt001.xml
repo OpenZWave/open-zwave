@@ -1,9 +1,9 @@
-<Product Revision="4" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="5" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/010F:1000:1301</MetaDataItem>
     <MetaDataItem name="ProductPic">images/fibaro/fgt001.png</MetaDataItem>
-    <MetaDataItem id="1000" name="ZWProductPage" type="1301">https://products.z-wavealliance.org/products/2971/</MetaDataItem>
-    <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/2971/FGT-001-EN-T-v1.0.pdf</MetaDataItem>
+    <MetaDataItem id="1000" name="ZWProductPage" type="1301">https://products.z-wavealliance.org/products/3194/</MetaDataItem>
+    <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/3194/FGT-001-EN-T-v1.0.pdf</MetaDataItem>
     <MetaDataItem name="Name">The Heat Controller </MetaDataItem>
     <MetaDataItem name="ResetDescription">Please use this procedure only when the network primary controller is missing or otherwise inoperable.
 Reset procedure allows to restore the device back to its factory settings, which means all information about the network and user configuration will be deleted.
@@ -50,6 +50,7 @@ Main features:
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="3">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2586/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="4">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2971/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 Jun 2019" revision="5">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/3194/xml</Entry>
     </ChangeLog>
   </MetaData>
   <!--
