@@ -1,4 +1,5 @@
 <Product Revision="1" xmlns="https://github.com/OpenZWave/open-zwave">
+  <!-- Please refer to https://github.com/OpenZWave/open-zwave/wiki/Adding-Devices for instructions -->
   <MetaData>
     <MetaDataItem name="Name"><!-- Name of the Device --></MetaDataItem>
     <MetaDataItem name="Description"><!-- Short Description of the Product --></MetaDataItem>
