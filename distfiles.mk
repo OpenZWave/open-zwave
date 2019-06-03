@@ -425,11 +425,13 @@ DISTFILES =	.gitignore \
 	config/images/aeotec/zw139.png \
 	config/images/aeotec/zw140.png \
 	config/images/aeotec/zw141.png \
+	config/images/aeotec/zw162.png \
 	config/images/aeotec/zwa001.png \
 	config/images/aeotec/zwa002.png \
 	config/images/aeotec/zwa003.png \
 	config/images/aeotec/zwa004.png \
 	config/images/aeotec/zwa005.png \
+	config/images/aeotec/zwa006.png \
 	config/images/airlinemechanical/zds-ud10.png \
 	config/images/assa_abloy/ConexisL1.png \
 	config/images/assa_abloy/KeyfreeConnected-plus.png \
@@ -507,6 +509,7 @@ DISTFILES =	.gitignore \
 	config/images/everspring/sm103.png \
 	config/images/everspring/sp103.png \
 	config/images/everspring/sp814.png \
+	config/images/everspring/sp815.png \
 	config/images/everspring/sp816.png \
 	config/images/everspring/st812.png \
 	config/images/everspring/st814.png \
@@ -516,6 +519,7 @@ DISTFILES =	.gitignore \
 	config/images/evolve/ltm-5.png \
 	config/images/fakro/arz.png \
 	config/images/fakro/zws12.png \
+	config/images/fibaro/fgbs222.png \
 	config/images/fibaro/fgcd001.png \
 	config/images/fibaro/fgd212.png \
 	config/images/fibaro/fgdw2.png \
@@ -527,6 +531,7 @@ DISTFILES =	.gitignore \
 	config/images/fibaro/fgms.png \
 	config/images/fibaro/fgmszw5.png \
 	config/images/fibaro/fgpb101.png \
+	config/images/fibaro/fgr223.png \
 	config/images/fibaro/fgrgbwm441.png \
 	config/images/fibaro/fgs213.png \
 	config/images/fibaro/fgs223.png \
@@ -703,8 +708,10 @@ DISTFILES =	.gitignore \
 	config/images/qubino/ZMNHNDx.png \
 	config/images/qubino/ZMNHODx.png \
 	config/images/qubino/ZMNHSDx.png \
+	config/images/qubino/ZMNHTDx.png \
 	config/images/qubino/ZMNHVDx.png \
 	config/images/qubino/ZMNHWD1.png \
+	config/images/qubino/ZMNHYDx.png \
 	config/images/quby/qb2.png \
 	config/images/rcs/em52-zw.png \
 	config/images/rcs/therm0009.png \
@@ -718,7 +725,9 @@ DISTFILES =	.gitignore \
 	config/images/remotec/zxt-120.png \
 	config/images/remotec/zxt-310.png \
 	config/images/remotec/zxt-600.png \
+	config/images/schlage/BE468ZP.png \
 	config/images/schlage/BE469.png \
+	config/images/schlage/BE469ZP.png \
 	config/images/schlage/fe599.png \
 	config/images/schlagelink/41.png \
 	config/images/sensative/strips.png \
@@ -729,6 +738,7 @@ DISTFILES =	.gitignore \
 	config/images/shenzen_neo/nas-pd01z.png \
 	config/images/shenzen_neo/nas-wr01z.png \
 	config/images/shenzen_neo/nas-ws02z.png \
+	config/images/simon/10002034-13X.png \
 	config/images/smartthings/pgc401m.png \
 	config/images/smartthings/sth-eth200.png \
 	config/images/steinel/is140-2.png \
@@ -737,6 +747,7 @@ DISTFILES =	.gitignore \
 	config/images/steinel/xled-home-2.png \
 	config/images/stelpro/stzw402.png \
 	config/images/sunricher/srzv9001t4dimeu.png \
+	config/images/sunricher/srzv9101sachpeu.png \
 	config/images/sunricher/zv9101.png \
 	config/images/swiid/swiidinter.png \
 	config/images/telldus/tzdw100.png \
@@ -744,6 +755,7 @@ DISTFILES =	.gitignore \
 	config/images/telldus/tzwp102.png \
 	config/images/there/800z.png \
 	config/images/thermofloor/heatit021.png \
+	config/images/thermofloor/heatit056.png \
 	config/images/trane/TZEMT400AB32MAA.png \
 	config/images/trane/TZEMT400BB32MAA.png \
 	config/images/trane/TZEMT524AA21MA.png \
@@ -798,9 +810,13 @@ DISTFILES =	.gitignore \
 	config/images/zooz/zen06.png \
 	config/images/zooz/zen15.png \
 	config/images/zooz/zen20.png \
+	config/images/zooz/zen20v2.png \
 	config/images/zooz/zen21.png \
 	config/images/zooz/zen22.png \
+	config/images/zooz/zen26.png \
 	config/images/zooz/zse09.png \
+	config/images/zooz/zse19.png \
+	config/images/zooz/zse29.png \
 	config/images/zooz/zse30.png \
 	config/images/zooz/zse33.png \
 	config/images/zooz/zse40.png \
