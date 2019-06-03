@@ -47,12 +47,12 @@ xmltest:	$(XMLLINT)
 	$(error xmllint command not found.)
 else
 xmltest:	$(XMLLINT)
-	@$(XMLLINT) --noout --schema $(top_srcdir)/config/device_classes.xsd $(top_srcdir)/config/device_classes.xml
-	@$(XMLLINT) --noout --schema $(top_srcdir)/config/options.xsd $(top_srcdir)/config/options.xml
-	@$(XMLLINT) --noout --schema $(top_srcdir)/config/manufacturer_specific.xsd $(top_srcdir)/config/manufacturer_specific.xml
-	@$(XMLLINT) --noout --schema $(top_srcdir)/config/Localization.xsd $(top_srcdir)/config/Localization.xml
-	@$(XMLLINT) --noout --schema $(top_srcdir)/config/NotificationCCTypes.xsd $(top_srcdir)/config/NotificationCCTypes.xml
-	@$(XMLLINT) --noout --schema $(top_srcdir)/config/device_configuration.xsd $(top_srcdir)/config/*/*.xml
+	$(XMLLINT) --noout --schema $(top_srcdir)/config/device_classes.xsd $(top_srcdir)/config/device_classes.xml
+	$(XMLLINT) --noout --schema $(top_srcdir)/config/options.xsd $(top_srcdir)/config/options.xml
+	$(XMLLINT) --noout --schema $(top_srcdir)/config/manufacturer_specific.xsd $(top_srcdir)/config/manufacturer_specific.xml
+	$(XMLLINT) --noout --schema $(top_srcdir)/config/Localization.xsd $(top_srcdir)/config/Localization.xml
+	$(XMLLINT) --noout --schema $(top_srcdir)/config/NotificationCCTypes.xsd $(top_srcdir)/config/NotificationCCTypes.xml
+	$(XMLLINT) --noout --schema $(top_srcdir)/config/device_configuration.xsd $(top_srcdir)/config/*/*.xml
 	-@cpp/build/testconfig.pl
 endif
 fulltest:
