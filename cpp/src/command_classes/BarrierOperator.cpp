@@ -66,14 +66,6 @@ enum BarrierOperator_SignalAttributesMask
 	BarrierOperatorSignalMask_All		   = 0x03
 };
 
-enum BarrierOperatorCmd_Indexes
-{
-    BarrierOperatorCmd_Index             	= 0x00,
-    BarrierOperatorLabel_Index           	= 0x01,
-    BarrierOperatorSupportedSignals_Index   = 0x02,
-    BarrierOperatorAudible_Index        	= 0x03,
-    BarrierOperatorVisual_Index          	= 0x04,
-};
 
 static char const* c_BarrierOperator_States[] =
 {
@@ -118,11 +110,11 @@ bool BarrierOperator::RequestState
 	bool res = false;
 	if( _requestFlags & RequestFlag_Dynamic )
 	{
-		res |= RequestValue( _requestFlags, BarrierOperatorCmd_Index, _instance, _queue );
+		res |= RequestValue( _requestFlags, ValueID_Index_BarrierOperator::Command, _instance, _queue );
 	}
 	if ( _requestFlags & RequestFlag_Static )
 	{
-		res |= RequestValue( _requestFlags, BarrierOperatorSupportedSignals_Index, _instance, _queue );
+		res |= RequestValue( _requestFlags, ValueID_Index_BarrierOperator::SupportedSignals, _instance, _queue );
 	}
 
 	return res;
@@ -140,7 +132,7 @@ bool BarrierOperator::RequestValue
 		Driver::MsgQueue const _queue
 )
 {
-	if (_index == BarrierOperatorCmd_Index)
+	if (_index == ValueID_Index_BarrierOperator::Command)
 	{
 		Msg* msg = new Msg("BarrierOperatorCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
 		msg->SetInstance(this, _instance);
@@ -152,7 +144,7 @@ bool BarrierOperator::RequestValue
 		GetDriver()->SendMsg(msg, _queue);
 		return true;
 	}
-	else if ( _index == BarrierOperatorAudible_Index )
+	else if ( _index == ValueID_Index_BarrierOperator::Audible )
 	{
 		Msg* msg = new Msg("BarrierOperatorCmd_SignalGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
 		msg->SetInstance(this, _instance);
@@ -165,7 +157,7 @@ bool BarrierOperator::RequestValue
 		GetDriver()->SendMsg(msg, _queue);
 		return true;
 	}
-	else if (_index == BarrierOperatorVisual_Index)
+	else if (_index == ValueID_Index_BarrierOperator::Visual)
 	{
 		Msg* msg = new Msg("BarrierOperatorCmd_SignalGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
 		msg->SetInstance(this, _instance);
@@ -178,7 +170,7 @@ bool BarrierOperator::RequestValue
 		GetDriver()->SendMsg(msg, _queue);
 		return true;
 	}
-	else if (_index == BarrierOperatorSupportedSignals_Index)
+	else if (_index == ValueID_Index_BarrierOperator::SupportedSignals)
 	{
 		Msg* msg = new Msg("BarrierOperatorCmd_SignalSupportedGet", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId());
 		msg->SetInstance(this, _instance);
@@ -242,7 +234,7 @@ bool BarrierOperator::HandleMsg
 			}
 		}
 
-		if( ValueList* value = static_cast<ValueList*>( GetValue( _instance, BarrierOperatorLabel_Index ) ) )
+		if( ValueList* value = static_cast<ValueList*>( GetValue( _instance, ValueID_Index_BarrierOperator::Label ) ) )
 		{
 			value->OnValueRefreshed( state_index );
 			value->Release();
@@ -270,21 +262,21 @@ bool BarrierOperator::HandleMsg
 			case BarrierOperatorSignalMask_Audible:
 			{
 				state_index = 1;
-				RequestValue( 0, BarrierOperatorAudible_Index , _instance, Driver::MsgQueue_Send );
+				RequestValue( 0, ValueID_Index_BarrierOperator::Audible , _instance, Driver::MsgQueue_Send );
 				break;
 			}
 			case BarrierOperatorSignalMask_Visual:
 			{
 				state_index = 2;
-				RequestValue( 0, BarrierOperatorVisual_Index , _instance, Driver::MsgQueue_Send );
+				RequestValue( 0, ValueID_Index_BarrierOperator::Visual , _instance, Driver::MsgQueue_Send );
 				break;
 			}
 
 			case BarrierOperatorSignalMask_All:
 			{
 				state_index = 3;
-				RequestValue( 0, BarrierOperatorAudible_Index , _instance, Driver::MsgQueue_Send );
-				RequestValue( 0, BarrierOperatorVisual_Index , _instance, Driver::MsgQueue_Send );
+				RequestValue( 0, ValueID_Index_BarrierOperator::Audible , _instance, Driver::MsgQueue_Send );
+				RequestValue( 0, ValueID_Index_BarrierOperator::Visual , _instance, Driver::MsgQueue_Send );
 				break;
 			}
 			default:
@@ -293,7 +285,7 @@ bool BarrierOperator::HandleMsg
 				break;
 			}
 		}
-		if( ValueList* value = static_cast<ValueList*>( GetValue( _instance, BarrierOperatorSupportedSignals_Index ) ) )
+		if( ValueList* value = static_cast<ValueList*>( GetValue( _instance, ValueID_Index_BarrierOperator::SupportedSignals ) ) )
 		{
 			value->OnValueRefreshed( state_index );
 			value->Release();
@@ -309,7 +301,7 @@ bool BarrierOperator::HandleMsg
 		if (_data[1] & 0x01)
 		{
 			Log::Write(LogLevel_Info, GetNodeId(), "Received BarrierOperator Signal Report for Audible");
-			if (ValueBool* value = static_cast<ValueBool*>(GetValue(_instance, 3)))
+			if (ValueBool* value = static_cast<ValueBool*>(GetValue(_instance, ValueID_Index_BarrierOperator::Audible)))
 			{
 				value->OnValueRefreshed(_data[2] == 0xFF ? true : false);
 				value->Release();
@@ -318,7 +310,7 @@ bool BarrierOperator::HandleMsg
 		if (_data[1] & 0x02)
 		{
 			Log::Write(LogLevel_Info, GetNodeId(), "Received BarrierOperator Signal Report for Visual");
-			if (ValueBool* value = static_cast<ValueBool*>(GetValue(_instance, 4)))
+			if (ValueBool* value = static_cast<ValueBool*>(GetValue(_instance, ValueID_Index_BarrierOperator::Visual)))
 			{
 				value->OnValueRefreshed(_data[2] == 0xFF ? true : false	);
 				value->Release();
@@ -343,7 +335,7 @@ bool BarrierOperator::SetValue
 	uint8 idx = (uint8_t)(_value.GetID().GetIndex() & 0xFF);
 	if (ValueID::ValueType_List == _value.GetID().GetType())
 	{
-		if (idx == BarrierOperatorLabel_Index)
+		if (idx == ValueID_Index_BarrierOperator::Label)
 		{
 			ValueList const* value = static_cast<ValueList const*>(&_value);
 			const ValueList::Item  *item = value->GetItem();
@@ -365,7 +357,7 @@ bool BarrierOperator::SetValue
 	}
 	if (ValueID::ValueType_Bool == _value.GetID().GetType())
 	{
-		if (idx == BarrierOperatorAudible_Index)
+		if (idx == ValueID_Index_BarrierOperator::Audible)
 		{
 			ValueBool const* value = static_cast<ValueBool const*>(&_value);
 			Log::Write(LogLevel_Info, GetNodeId(), "BarrierOperatorSignal::Set - Requesting Audible to be %s", value->GetValue() ? "ON" : "OFF");
@@ -381,7 +373,7 @@ bool BarrierOperator::SetValue
 			GetDriver()->SendMsg(msg, Driver::MsgQueue_Send);
 			return true;
 		}
-		else if (idx == BarrierOperatorVisual_Index)
+		else if (idx == ValueID_Index_BarrierOperator::Visual)
 		{
 			ValueBool const* value = static_cast<ValueBool const*>(&_value);
 			Log::Write(LogLevel_Info, GetNodeId(), "BarrierOperatorSignal::Set - Requesting Visual to be %s", value->GetValue() ? "ON" : "OFF");
@@ -422,7 +414,7 @@ void BarrierOperator::CreateVars
 				item.m_value = i;
 				items.push_back( item );
 			}
-			node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, BarrierOperatorLabel_Index, "Barrier State", "", false, false, size, items, 0, 0 );
+			node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_BarrierOperator::Label, "Barrier State", "", false, false, size, items, 0, 0 );
 		}
 		{
 			vector<ValueList::Item> items;
@@ -434,10 +426,10 @@ void BarrierOperator::CreateVars
 				item.m_value = i;
 				items.push_back( item );
 			}
-			node->CreateValueList( ValueID::ValueGenre_Config, GetCommandClassId(), _instance, BarrierOperatorSupportedSignals_Index, "Supported Signals", "", true, false, size, items, 0, 0 );
+			node->CreateValueList( ValueID::ValueGenre_Config, GetCommandClassId(), _instance, ValueID_Index_BarrierOperator::SupportedSignals, "Supported Signals", "", true, false, size, items, 0, 0 );
 		}
-		node->CreateValueBool(ValueID::ValueGenre_Config, GetCommandClassId(), _instance, BarrierOperatorAudible_Index, "Audible Notification", "", false, false, false, 0);
-		node->CreateValueBool(ValueID::ValueGenre_Config, GetCommandClassId(), _instance, BarrierOperatorVisual_Index, "Visual Notification", "", false, false, false, 0);
+		node->CreateValueBool(ValueID::ValueGenre_Config, GetCommandClassId(), _instance, ValueID_Index_BarrierOperator::Audible, "Audible Notification", "", false, false, false, 0);
+		node->CreateValueBool(ValueID::ValueGenre_Config, GetCommandClassId(), _instance, ValueID_Index_BarrierOperator::Visual, "Visual Notification", "", false, false, false, 0);
 
 
 	}

@@ -85,13 +85,13 @@ bool CRC16Encap::HandleMsg
 		{
 			uint8 commandClassId = _data[1];
 
-			if( CommandClass* pCommandClass = node->GetCommandClass( commandClassId, false ) )
+			if( CommandClass* pCommandClass = node->GetCommandClass( commandClassId ) )
 			{
-				pCommandClass->HandleMsg( &_data[2], _length - 4 );
-			}
-			if( CommandClass* pCommandClass = node->GetCommandClass( commandClassId, true ) )
-			{
-				pCommandClass->HandleIncomingMsg( &_data[2], _length - 4 );
+				if (!pCommandClass->IsAfterMark()) {
+					pCommandClass->HandleMsg( &_data[2], _length - 4 );
+				} else {
+					pCommandClass->HandleIncomingMsg( &_data[2], _length -4);
+				}
 			}
 		}
 

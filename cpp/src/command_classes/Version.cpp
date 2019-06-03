@@ -47,13 +47,6 @@ enum VersionCmd
 	VersionCmd_CommandClassReport			= 0x14
 };
 
-enum
-{
-	VersionIndex_Library = 0,
-	VersionIndex_Protocol,
-	VersionIndex_Application
-};
-
 //-----------------------------------------------------------------------------
 // <Version::Version>
 // Constructor
@@ -147,17 +140,17 @@ bool Version::HandleMsg
 			Log::Write( LogLevel_Info, GetNodeId(), "Received Version report from node %d: Library=%s, Protocol=%s, Application=%s", GetNodeId(), library, protocol, application );
 			ClearStaticRequest( StaticRequest_Values );
 
-			if( ValueString* libraryValue = static_cast<ValueString*>( GetValue( _instance, VersionIndex_Library ) ) )
+			if( ValueString* libraryValue = static_cast<ValueString*>( GetValue( _instance, ValueID_Index_Version::Library ) ) )
 			{
 				libraryValue->OnValueRefreshed( library );
 				libraryValue->Release();
 			}
-			if( ValueString* protocolValue = static_cast<ValueString*>( GetValue( _instance, VersionIndex_Protocol ) ) )
+			if( ValueString* protocolValue = static_cast<ValueString*>( GetValue( _instance, ValueID_Index_Version::Protocol ) ) )
 			{
 				protocolValue->OnValueRefreshed( protocol );
 				protocolValue->Release();
 			}
-			if( ValueString* applicationValue = static_cast<ValueString*>( GetValue( _instance, VersionIndex_Application ) ) )
+			if( ValueString* applicationValue = static_cast<ValueString*>( GetValue( _instance, ValueID_Index_Version::Application ) ) )
 			{
 				applicationValue->OnValueRefreshed( application );
 				applicationValue->Release();
@@ -170,9 +163,18 @@ bool Version::HandleMsg
 		{
 			if( CommandClass* pCommandClass = node->GetCommandClass( _data[1] ) )
 			{
-				Log::Write( LogLevel_Info, GetNodeId(), "Received Command Class Version report from node %d: CommandClass=%s, Version=%d", GetNodeId(), pCommandClass->GetCommandClassName().c_str(), _data[2] );
+				Log::Write( LogLevel_Info, GetNodeId(), "Received CommandClass Version report from node %d: CommandClass=%s, Version=%d", GetNodeId(), pCommandClass->GetCommandClassName().c_str(), _data[2] );
 				pCommandClass->ClearStaticRequest( StaticRequest_Version );
-				pCommandClass->SetVersion( _data[2] );
+				/* some devices advertise CommandClasses, but return version as 0. In General this means
+				 * that the device doesn't actually support the CommandClass. So lets Remove it
+				 */
+
+				if (_data[2] > 0 ) {
+					pCommandClass->SetVersion( _data[2] );
+				} else {
+					Log::Write( LogLevel_Warning, GetNodeId(), "CommandClass Version is 0, Removing CommandClass %s", pCommandClass->GetCommandClassName().c_str());
+					GetNodeUnsafe()->RemoveCommandClass(_data[2]);
+				}
 			}
 
 			return true;
@@ -221,8 +223,8 @@ void Version::CreateVars
 {
 	if( Node* node = GetNodeUnsafe() )
 	{
-	  	node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, VersionIndex_Library, "Library Version", "", true, false, "Unknown", 0 );
-		node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, VersionIndex_Protocol, "Protocol Version", "", true, false, "Unknown", 0 );
-		node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, VersionIndex_Application, "Application Version", "", true, false, "Unknown", 0 );
+	  	node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_Version::Library, "Library Version", "", true, false, "Unknown", 0 );
+		node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_Version::Protocol, "Protocol Version", "", true, false, "Unknown", 0 );
+		node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_Version::Application, "Application Version", "", true, false, "Unknown", 0 );
 	}
 }

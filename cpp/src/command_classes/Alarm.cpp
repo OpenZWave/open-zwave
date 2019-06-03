@@ -62,20 +62,6 @@ enum AlarmCmd
 	AlarmCmd_Event_Supported_Report = 0x02
 };
 
-enum
-{
-	AlarmIndex_Type_Start = 0,
-	AlarmIndex_Type_End = 255,
-	AlarmIndex_Type_ParamStart = 256,
-	AlarmIndex_Type_ParamEnd = 511,
-	AlarmIndex_Type = 512,
-	AlarmIndex_Level,
-	AlarmIndex_AutoClearEvents
-};
-
-
-
-
 //-----------------------------------------------------------------------------
 // <Alarm::Alarm>
 // Constructor
@@ -125,13 +111,13 @@ bool Alarm::RequestState
 			if( Node* node = GetNodeUnsafe() )
 			{
 				m_v1Params = true;
-				node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, AlarmIndex_Type, "Alarm Type", "", true, false, 0, 0 );
-				node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, AlarmIndex_Level, "Alarm Level", "", true, false, 0, 0 );
+				node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_Alarm::Type_v1, "Alarm Type", "", true, false, 0, 0 );
+				node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_Alarm::Level_v1, "Alarm Level", "", true, false, 0, 0 );
 			}
 		}
 		if (GetVersion() < 4) {
 			if ( Node* node = GetNodeUnsafe() ) {
-				node->CreateValueInt( ValueID::ValueGenre_Config, GetCommandClassId(), _instance, AlarmIndex_AutoClearEvents, "Automatically Clear Events", "ms", false, false, m_ClearTimeout, 0);
+				node->CreateValueInt( ValueID::ValueGenre_Config, GetCommandClassId(), _instance, ValueID_Index_Alarm::AutoClearEvents, "Automatically Clear Events", "ms", false, false, m_ClearTimeout, 0);
 			}
 		}
 
@@ -150,7 +136,7 @@ bool Alarm::SetValue
 		Value const& _value
 )
 {
-	if ((ValueID::ValueType_Int== _value.GetID().GetType()) && (_value.GetID().GetIndex() == AlarmIndex_AutoClearEvents)) {
+	if ((ValueID::ValueType_Int== _value.GetID().GetType()) && (_value.GetID().GetIndex() == ValueID_Index_Alarm::AutoClearEvents)) {
 		ValueInt const *value = static_cast<ValueInt const *>(&_value);
 		m_ClearTimeout = value->GetValue();
 		return true;
@@ -226,13 +212,13 @@ bool Alarm::HandleMsg
 		{
 			Log::Write( LogLevel_Info, GetNodeId(), "Received Alarm report: type=%d, level=%d", _data[1], _data[2] );
 
-			if( ValueByte *value = static_cast<ValueByte*>( GetValue( _instance, AlarmIndex_Type ) ) )
+			if( ValueByte *value = static_cast<ValueByte*>( GetValue( _instance, ValueID_Index_Alarm::Type_v1 ) ) )
 			{
 				value->OnValueRefreshed( _data[1] );
 				value->Release();
 			}
 			// For device on version 1 the level could have different value. This level value correspond to a list of alarm type.
-			if ( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, AlarmIndex_Level ) ) )
+			if ( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, ValueID_Index_Alarm::Level_v1 ) ) )
 			{
 				value->OnValueRefreshed( _data[2] );
 				value->Release();
@@ -247,13 +233,13 @@ bool Alarm::HandleMsg
 				Log::Write( LogLevel_Info, GetNodeId(), "Received Notification report (v1): type:%d event:%d",
 						_data[1], _data[2] );
 
-				if( ValueByte *value = static_cast<ValueByte*>( GetValue( _instance, AlarmIndex_Type ) ) )
+				if( ValueByte *value = static_cast<ValueByte*>( GetValue( _instance, ValueID_Index_Alarm::Type_v1 ) ) )
 				{
 					value->OnValueRefreshed( _data[1] );
 					value->Release();
 				}
 				// For device on version 1 the level could have different value. This level value correspond to a list of alarm type.
-				if ( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, AlarmIndex_Level ) ) )
+				if ( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, ValueID_Index_Alarm::Level_v1 ) ) )
 				{
 					value->OnValueRefreshed( _data[2] );
 					value->Release();
@@ -296,7 +282,7 @@ bool Alarm::HandleMsg
 									value->Release();
 									m_ParamsSet.push_back(it->first);
 								} else {
-									Log::Write( LogLevel_Warning, GetNodeId(), "Couldn't Find AlarmIndex_Type_ParamLocation");
+									Log::Write( LogLevel_Warning, GetNodeId(), "Couldn't Find ValueID_Index_Alarm::Type_ParamLocation");
 								}
 							} else {
 								Log::Write( LogLevel_Warning, GetNodeId(), "Location Param didn't have correct Header, or was too small");
@@ -311,7 +297,7 @@ bool Alarm::HandleMsg
 									value->Release();
 									m_ParamsSet.push_back(it->first);
 								} else {
-									Log::Write( LogLevel_Warning, GetNodeId(), "Couldn't Find AlarmIndex_Type_ParamList");
+									Log::Write( LogLevel_Warning, GetNodeId(), "Couldn't Find ValueID_Index_Alarm::Type_ParamList");
 								}
 							} else {
 								Log::Write( LogLevel_Warning, GetNodeId(), "List Param size was not equal to 1");
@@ -332,7 +318,7 @@ bool Alarm::HandleMsg
 									value->Release();
 									m_ParamsSet.push_back(it->first);
 								} else {
-									Log::Write( LogLevel_Warning, GetNodeId(), "Couldn't Find AlarmIndex_Type_ParamUserCodeid");
+									Log::Write( LogLevel_Warning, GetNodeId(), "Couldn't Find ValueID_Index_Alarm::Type_ParamUserCodeid");
 								}
 								if (ValueString *value = static_cast<ValueString *>(GetValue(_instance,it->first)))
 								{
@@ -340,7 +326,7 @@ bool Alarm::HandleMsg
 									value->Release();
 									m_ParamsSet.push_back(it->first);
 								} else {
-									Log::Write( LogLevel_Warning, GetNodeId(), "Couldn't Find AlarmIndex_Type_ParamUserCodeEntered");
+									Log::Write( LogLevel_Warning, GetNodeId(), "Couldn't Find ValueID_Index_Alarm::Type_ParamUserCodeEntered");
 								}
 							} else if (EventParamLength == 1) {
 								/* some devices (Like BeNext TagReader) don't send a Proper UserCodeCmd_Report Message, Just the Index of the Code that Triggered */
@@ -350,7 +336,7 @@ bool Alarm::HandleMsg
 									value->Release();
 									m_ParamsSet.push_back(it->first);
 								} else {
-									Log::Write( LogLevel_Warning, GetNodeId(), "Couldn't Find AlarmIndex_Type_ParamUserCodeid");
+									Log::Write( LogLevel_Warning, GetNodeId(), "Couldn't Find ValueID_Index_Alarm::Type_ParamUserCodeid");
 								}
 							} else {
 								Log::Write( LogLevel_Warning, GetNodeId(), "UserCode Param didn't have correct Header, or was too small");
@@ -365,7 +351,7 @@ bool Alarm::HandleMsg
 									value->Release();
 									m_ParamsSet.push_back(it->first);
 								} else {
-									Log::Write( LogLevel_Warning, GetNodeId(), "Couldn't Find AlarmIndex_Type_ParamByte");
+									Log::Write( LogLevel_Warning, GetNodeId(), "Couldn't Find ValueID_Index_Alarm::Type_ParamByte");
 								}
 							} else {
 								Log::Write( LogLevel_Warning, GetNodeId(), "Byte Param size was not equal to 1");
@@ -379,7 +365,7 @@ bool Alarm::HandleMsg
 								value->Release();
 								m_ParamsSet.push_back(it->first);
 							} else {
-								Log::Write( LogLevel_Warning, GetNodeId(), "Couldn't Find AlarmIndex_Type_ParamString");
+								Log::Write( LogLevel_Warning, GetNodeId(), "Couldn't Find ValueID_Index_Alarm::Type_ParamString");
 							}
 							break;
 						}
@@ -393,7 +379,7 @@ bool Alarm::HandleMsg
 									value->Release();
 									m_ParamsSet.push_back(it->first);
 								} else {
-									Log::Write( LogLevel_Warning, GetNodeId(), "Couldn't Find AlarmIndex_Type_Duration");
+									Log::Write( LogLevel_Warning, GetNodeId(), "Couldn't Find ValueID_Index_Alarm::Type_Duration");
 								}
 							} else {
 								Log::Write( LogLevel_Warning, GetNodeId(), "Duration Param size was not equal to 3");
@@ -437,8 +423,8 @@ bool Alarm::HandleMsg
 			if ((GetVersion() > 2) && (_data[1] & 0x80)) {
 				m_v1Params = true;
 				Log::Write( LogLevel_Info, GetNodeId(), "Notification::SupportedReport - Device Supports Alarm Version 1 Parameters");
-				node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, AlarmIndex_Type, "Alarm Type", "", true, false, 0, 0 );
-				node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, AlarmIndex_Level, "Alarm Level", "", true, false, 0, 0 );
+				node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_Alarm::Type_v1, "Alarm Type", "", true, false, 0, 0 );
+				node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_Alarm::Level_v1, "Alarm Level", "", true, false, 0, 0 );
 			}
 			// Parse the data for the supported alarm types
 			uint8 numBytes = (_data[1] & 0x1F);

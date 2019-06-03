@@ -89,6 +89,7 @@ mkdir -p %{buildroot}/%{_sysconfdir}/
 mkdir -p %{buildroot}/%{_includedir}/openzwave/
 DESTDIR=%{buildroot} USE_HID=0 USE_BI_TXML=0 VERSION_MAJ=$major_ver VERSION_MIN=$minor_ver VERSION_REV=$revision PREFIX=/usr sysconfdir=%{_sysconfdir}/openzwave/ includedir=%{_includedir}/openzwave/ docdir=%{_defaultdocdir}/openzwave-%{version} instlibdir=%{_libdir} make install
 rm %{buildroot}%{_defaultdocdir}/openzwave-%{version}/Doxyfile.in
+rm -rf %{buildroot}%{_defaultdocdir}/openzwave-%{version}/ChangeLog.old
 rm -rf %{buildroot}%{_defaultdocdir}/openzwave-%{version}/html/
 rm -rf %{buildroot}%{_defaultdocdir}/openzwave-%{version}/default.htm
 rm -rf %{buildroot}%{_defaultdocdir}/openzwave-%{version}/general/
@@ -101,7 +102,7 @@ rm -rf %{buildroot}%{_defaultdocdir}/openzwave-%{version}/api/
 
 
 %files -n libopenzwave
-%license license/*.txt
+%license LICENSE
 %doc docs/default.htm docs/general/ docs/images+css/
 %{_libdir}/libopenzwave.so.*
 %defattr(664, root, zwave, 775)

@@ -47,17 +47,8 @@ enum TimeParametersCmd
 	TimeParametersCmd_Report	= 0x03
 };
 
-enum
-{
-	TimeParametersIndex_Date = 0,
-	TimeParametersIndex_Time,
-	TimeParametersIndex_Set,
-	TimeParametersIndex_Refresh
-};
-
-
 //-----------------------------------------------------------------------------
-// <DoorLockLogging::DoorLockLogging>
+// <TimeParameters::TimeParameters>
 // Constructor
 //-----------------------------------------------------------------------------
 TimeParameters::TimeParameters
@@ -140,14 +131,14 @@ bool TimeParameters::HandleMsg
 		uint8 second = (_data[7] & 0x3F);
 
 		Log::Write( LogLevel_Info, GetNodeId(), "Received TimeParameters report: %02d/%02d/%04d %02d:%02d:%02d", (int)day, (int)month, (int)year, (int)hour, (int)minute, (int)second);
-		if( ValueString* value = static_cast<ValueString*>( GetValue( _instance, TimeParametersIndex_Date ) ) )
+		if( ValueString* value = static_cast<ValueString*>( GetValue( _instance, ValueID_Index_TimeParameters::Date ) ) )
 		{
 			char msg[512];
 			snprintf(msg, sizeof(msg), "%02d/%02d/%04d", (int)day, (int)month, (int)year);
 			value->OnValueRefreshed( msg );
 			value->Release();
 		}
-		if( ValueString* value = static_cast<ValueString*>( GetValue( _instance, TimeParametersIndex_Time ) ) )
+		if( ValueString* value = static_cast<ValueString*>( GetValue( _instance, ValueID_Index_TimeParameters::Time ) ) )
 		{
 			char msg[512];
 			snprintf(msg, sizeof(msg), "%02d:%02d:%02d", (int)hour, (int)minute, (int)second);
@@ -174,7 +165,7 @@ bool TimeParameters::SetValue
 
 	uint8 instance = _value.GetID().GetInstance();
 
-	if ( (ValueID::ValueType_Button == _value.GetID().GetType()) && (_value.GetID().GetIndex() == TimeParametersIndex_Set) )
+	if ( (ValueID::ValueType_Button == _value.GetID().GetType()) && (_value.GetID().GetIndex() == ValueID_Index_TimeParameters::Set) )
 	{
 		time_t rawtime;
 		struct tm *timeinfo;
@@ -213,7 +204,7 @@ bool TimeParameters::SetValue
 		SetStaticRequest( StaticRequest_Values );
 		ret = RequestValue( RequestFlag_Static, 0, instance, Driver::MsgQueue_Query );
 	}
-	if ( (ValueID::ValueType_Button == _value.GetID().GetType()) && (_value.GetID().GetIndex() == TimeParametersIndex_Refresh) )
+	if ( (ValueID::ValueType_Button == _value.GetID().GetType()) && (_value.GetID().GetIndex() == ValueID_Index_TimeParameters::Refresh) )
 	{
 		SetStaticRequest( StaticRequest_Values );
 		ret = RequestValue( RequestFlag_Static, 0, instance, Driver::MsgQueue_Query );
@@ -233,10 +224,10 @@ void TimeParameters::CreateVars
 {
 	if( Node* node = GetNodeUnsafe() )
 	{
-		node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, TimeParametersIndex_Date, "Date", "", true, false, "", 0 );
-		node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, TimeParametersIndex_Time, "Time", "", true, false, "", 0 );
-		node->CreateValueButton( ValueID::ValueGenre_System, GetCommandClassId(), _instance, TimeParametersIndex_Set, "Set Date/Time", 0);
-		node->CreateValueButton( ValueID::ValueGenre_System, GetCommandClassId(), _instance, TimeParametersIndex_Refresh, "Refresh Date/Time", 0);
+		node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_TimeParameters::Date, "Date", "", true, false, "", 0 );
+		node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_TimeParameters::Time, "Time", "", true, false, "", 0 );
+		node->CreateValueButton( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_TimeParameters::Set, "Set Date/Time", 0);
+		node->CreateValueButton( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_TimeParameters::Refresh, "Refresh Date/Time", 0);
 
 	}
 }

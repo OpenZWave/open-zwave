@@ -42,12 +42,6 @@ enum SceneActivationCmd
 	SceneActivationCmd_Set				= 0x01
 };
 
-enum
-{
-	SceneActivationIndex_SceneID 	= 0,
-	SceneActivationIndex_Duration	= 1,
-};
-
 //-----------------------------------------------------------------------------
 // <SceneActivation::SceneActivation>
 // Constructor
@@ -66,7 +60,7 @@ CommandClass( _homeId, _nodeId )
 // <SceneActivation::HandleIncommingMsg>
 // Handle a message from the Z-Wave network
 //-----------------------------------------------------------------------------
-bool SceneActivation::HandleIncommingMsg
+bool SceneActivation::HandleIncomingMsg
 (
 	uint8 const* _data,
 	uint32 const _length,
@@ -98,19 +92,21 @@ bool SceneActivation::HandleIncommingMsg
 		notification->SetSceneId( _data[1] );
 		GetDriver()->QueueNotification( notification );
 
-		Log::Write( LogLevel_Info, GetNodeId(), "Received SceneActivation report: %d (duration: %d)", _data[1]);
-		if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, SceneActivationIndex_SceneID ) ) )
+		Log::Write( LogLevel_Info, GetNodeId(), "Received SceneActivation report: %d (duration: %d)", _data[1], duration);
+		if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, ValueID_Index_SceneActivation::SceneID ) ) )
 		{
 			value->OnValueRefreshed( _data[1] );
 			value->Release();
 		}
-		if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, SceneActivationIndex_Duration ) ) )
+		if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, ValueID_Index_SceneActivation::Duration ) ) )
 		{
 			value->OnValueRefreshed( duration );
 			value->Release();
 		}
-
-		Log::Write( LogLevel_Info, GetNodeId(), "Automatically Clearing Alarm in %d ms", duration );
+		if (duration < 1000)
+			duration = 1000;
+			
+		Log::Write( LogLevel_Info, GetNodeId(), "Automatically Clearing SceneID/Duration in %d ms", duration );
 		TimerThread::TimerCallback callback = bind(&SceneActivation::ClearScene, this, _instance);
 		TimerSetEvent(duration, callback, _instance);
 		return true;
@@ -139,12 +135,12 @@ bool SceneActivation::HandleMsg
 // Return the Scene ValueID's to defaults, after the duration has expired
 //-----------------------------------------------------------------------------
 void SceneActivation::ClearScene(uint32 _instance) {
-	if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, SceneActivationIndex_SceneID ) ) )
+	if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, ValueID_Index_SceneActivation::SceneID ) ) )
 	{
 		value->OnValueRefreshed( 0 );
 		value->Release();
 	}
-	if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, SceneActivationIndex_Duration ) ) )
+	if( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, ValueID_Index_SceneActivation::Duration ) ) )
 	{
 		value->OnValueRefreshed( 0 );
 		value->Release();
@@ -164,7 +160,7 @@ void SceneActivation::CreateVars
 {
 	if( Node* node = GetNodeUnsafe() )
 	{
-	  	node->CreateValueInt(  ValueID::ValueGenre_User, GetCommandClassId(), _instance, SceneActivationIndex_SceneID, "Scene", "", true, false, 0, 0 );
-	  	node->CreateValueInt(  ValueID::ValueGenre_User, GetCommandClassId(), _instance, SceneActivationIndex_Duration, "Duration", "", true, false, 0, 0 );
+	  	node->CreateValueInt(  ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_SceneActivation::SceneID, "Scene", "", true, false, 0, 0 );
+	  	node->CreateValueInt(  ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_SceneActivation::Duration, "Duration", "", true, false, 0, 0 );
 	}
 }

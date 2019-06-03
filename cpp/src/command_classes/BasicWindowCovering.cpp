@@ -42,12 +42,6 @@ enum BasicWindowCoveringCmd
 	BasicWindowCoveringCmd_StopLevelChange	= 0x02
 };
 
-enum
-{
-	BasicWindowCoveringIndex_Open = 0,
-	BasicWindowCoveringIndex_Close
-};
-
 //-----------------------------------------------------------------------------
 // <BasicWindowCovering::SetValue>
 // Set a value on the Z-Wave device
@@ -62,7 +56,7 @@ bool BasicWindowCovering::SetValue
 		ValueButton const* button = static_cast<ValueButton const*>(&_value);
 
 		uint8 action = 0x40;
-		if( button->GetID().GetIndex() )	// Open is index zero, so non-zero is close.
+		if( button->GetID().GetIndex()  == ValueID_Index_BasicWindowCovering::Close)	// Open is index zero, so non-zero is close.
 		{
 			// Close
 			action = 0;
@@ -111,8 +105,8 @@ void BasicWindowCovering::CreateVars
 {
 	if( Node* node = GetNodeUnsafe() )
 	{
-		node->CreateValueButton( ValueID::ValueGenre_User, GetCommandClassId(), _instance, BasicWindowCoveringIndex_Open, "Open", 0 );
-		node->CreateValueButton( ValueID::ValueGenre_User, GetCommandClassId(), _instance, BasicWindowCoveringIndex_Close, "Close", 0 );
+		node->CreateValueButton( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_BasicWindowCovering::Open, "Open", 0 );
+		node->CreateValueButton( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_BasicWindowCovering::Close, "Close", 0 );
 	}
 }
 

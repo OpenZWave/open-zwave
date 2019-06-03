@@ -32,6 +32,9 @@ clean:
 	$(MAKE) -C $(top_srcdir)/cpp/examples/MinOZW/ -$(MAKEFLAGS) $(MAKECMDGOALS)
 	$(MAKE) -C $(top_srcdir)/cpp/test/ -$(MAKEFLAGS) $(MAKECMDGOALS)
 
+updateIndexDefines:
+	$(MAKE) -C $(top_srcdir)/cpp/build -$(MAKEFLAGS) $(MAKECMDGOALS)
+
 test:
 	$(MAKE) -C $(top_srcdir)/cpp/test/ -$(MAKEFLAGS) $(MAKECMDGOALS)
 

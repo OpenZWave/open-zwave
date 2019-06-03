@@ -79,7 +79,7 @@ bool Configuration::HandleMsg
 				case ValueID::ValueType_BitSet:
 				{
 					ValueBitSet* vbs = static_cast<ValueBitSet*>( value );
-					vbs->OnValueRefreshed( paramValue != 0 );
+					vbs->OnValueRefreshed( paramValue );
 					break;
 				}
 				case ValueID::ValueType_Bool:

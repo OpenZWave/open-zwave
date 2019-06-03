@@ -115,7 +115,7 @@ bool SwitchAll::HandleMsg
 {
 	if (SwitchAllCmd_Report == (SwitchAllCmd)_data[0])
 	{
-		if( ValueList* value = static_cast<ValueList*>( GetValue( _instance, 0 ) ) )
+		if( ValueList* value = static_cast<ValueList*>( GetValue( _instance, ValueID_Index_SwitchAll::SwitchAll ) ) )
 		{
 			value->OnValueRefreshed( (int32)_data[1] );
 			value->Release();
@@ -222,7 +222,7 @@ void SwitchAll::CreateVars
 			items.push_back( item );
 		}
 
-		node->CreateValueList(  ValueID::ValueGenre_System, GetCommandClassId(), _instance, 0, "Switch All", "", false, false, 1, items, 0, 0 );
+		node->CreateValueList(  ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_SwitchAll::SwitchAll, "Switch All", "", false, false, 1, items, 0, 0 );
 	}
 }
 

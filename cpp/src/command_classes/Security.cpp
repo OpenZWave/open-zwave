@@ -189,7 +189,7 @@ bool Security::HandleMsg
 			 */
 			Log::Write(LogLevel_Info, GetNodeId(), "Received SecurityCmd_SupportedReport from node %d (instance %d)", GetNodeId(), _instance );
 			m_secured = true;
-			if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, 0 ) ) )
+			if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, ValueID_Index_Security::Secured ) ) )
 			{
 				value->OnValueRefreshed( m_secured );
 				value->Release();
@@ -296,7 +296,7 @@ void Security::CreateVars
 {
 	if( Node* node = GetNodeUnsafe() )
 	{
-		node->CreateValueBool( ValueID::ValueGenre_System, GetCommandClassId(), _instance, 0, "Secured", "", true, false, false, 0 );
+		node->CreateValueBool( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_Security::Secured, "Secured", "", true, false, false, 0 );
 	}
 }
 

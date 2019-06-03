@@ -98,7 +98,7 @@ bool Basic::RequestState
 	if( _requestFlags & RequestFlag_Dynamic )
 	{
 		if ((m_com.GetFlagBool(COMPAT_FLAG_BASIC_IGNOREREMAPPING) || (!m_com.GetFlagBool(COMPAT_FLAG_BASIC_IGNOREREMAPPING) && m_com.GetFlagByte(COMPAT_FLAG_BASIC_MAPPING) == 0)))
-			return RequestValue( _requestFlags, 0, _instance, _queue );
+			return RequestValue( _requestFlags, ValueID_Index_Basic::Set, _instance, _queue );
 	}
 	return false;
 }
@@ -151,7 +151,7 @@ bool Basic::HandleMsg
 		{
 			UpdateMappedClass( _instance, m_com.GetFlagByte(COMPAT_FLAG_BASIC_MAPPING), _data[1] );
 		}
-		else if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, 0 ) ) )
+		else if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, ValueID_Index_Basic::Set ) ) )
 		{
 			value->OnValueRefreshed( _data[1] );
 			value->Release();
@@ -170,7 +170,7 @@ bool Basic::HandleMsg
 			{
 				UpdateMappedClass( _instance, m_com.GetFlagByte(COMPAT_FLAG_BASIC_MAPPING), _data[1] );
 			}
-			else if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, 0 ) ) )
+			else if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, ValueID_Index_Basic::Set ) ) )
 			{
 				value->OnValueRefreshed( _data[1] );
 				value->Release();
@@ -244,7 +244,7 @@ void Basic::Set
 {
 	// This may look like a long winded way to do this, but
 	// it ensures that all the proper notifications get sent.
-	if( ValueByte* value = static_cast<ValueByte*>( GetValue( 1, 0 ) ) )
+	if( ValueByte* value = static_cast<ValueByte*>( GetValue( 1, ValueID_Index_Basic::Set ) ) )
 	{
 		value->Set( _level );
 		value->Release();
@@ -287,7 +287,7 @@ bool Basic::SetMapping
 			}
 		}
 		m_com.SetFlagByte(COMPAT_FLAG_BASIC_MAPPING, _commandClassId);
-		RemoveValue( 1, 0 );
+		RemoveValue( 1, ValueID_Index_Basic::Set );
 		res = true;
 	}
 
@@ -299,9 +299,9 @@ bool Basic::SetMapping
 		{
 			if (m_instances.size() > 0) {
 				for (unsigned int i = 0; i < m_instances.size(); i++)
-					node->CreateValueByte( ValueID::ValueGenre_Basic, GetCommandClassId(), m_instances[i], 0, "Basic", "", false, false, 0, 0 );
+					node->CreateValueByte( ValueID::ValueGenre_Basic, GetCommandClassId(), m_instances[i], ValueID_Index_Basic::Set, "Basic", "", false, false, 0, 0 );
 			} else {
-				node->CreateValueByte( ValueID::ValueGenre_Basic, GetCommandClassId(), 0, 0, "Basic", "", false, false, 0, 0 );
+				node->CreateValueByte( ValueID::ValueGenre_Basic, GetCommandClassId(), 0, ValueID_Index_Basic::Set, "Basic", "", false, false, 0, 0 );
 			}
 		}
 	}

@@ -52,12 +52,6 @@ enum ClimateControlScheduleCmd
 	ClimateControlScheduleCmd_OverrideReport
 };
 
-enum
-{
-	ClimateControlScheduleIndex_OverrideState = 8,
-	ClimateControlScheduleIndex_OverrideSetback = 9
-};
-
 static char const* c_dayNames[] =
 {
 	"Invalid",
@@ -257,7 +251,7 @@ bool ClimateControlSchedule::HandleMsg
 		Log::Write( LogLevel_Info, GetNodeId(), "Received climate control schedule override report:" );
 		Log::Write( LogLevel_Info, GetNodeId(), "  Override State: %s:", c_overrideStateNames[overrideState] );
 
-		if( ValueList* valueList = static_cast<ValueList*>( GetValue( _instance, ClimateControlScheduleIndex_OverrideState ) ) )
+		if( ValueList* valueList = static_cast<ValueList*>( GetValue( _instance, ValueID_Index_ClimateControlSchedule::OverrideState ) ) )
 		{
 			valueList->OnValueRefreshed( (int)overrideState );
 			valueList->Release();
@@ -280,7 +274,7 @@ bool ClimateControlSchedule::HandleMsg
 			}
 		}
 
-		if( ValueByte* valueByte = static_cast<ValueByte*>( GetValue( _instance, ClimateControlScheduleIndex_OverrideSetback ) ) )
+		if( ValueByte* valueByte = static_cast<ValueByte*>( GetValue( _instance, ValueID_Index_ClimateControlSchedule::OverrideSetback ) ) )
 		{
 			valueByte->OnValueRefreshed( setback );
 			valueByte->Release();
@@ -346,8 +340,8 @@ bool ClimateControlSchedule::SetValue
 	else
 	{
 		// Set an override
-		ValueList* state = static_cast<ValueList*>( GetValue( instance, ClimateControlScheduleIndex_OverrideState ) );
-		ValueByte* setback = static_cast<ValueByte*>( GetValue( instance, ClimateControlScheduleIndex_OverrideSetback ) );
+		ValueList* state = static_cast<ValueList*>( GetValue( instance, ValueID_Index_ClimateControlSchedule::OverrideState ) );
+		ValueByte* setback = static_cast<ValueByte*>( GetValue( instance, ValueID_Index_ClimateControlSchedule::OverrideSetback ) );
 
 		if( state && setback )
 		{
@@ -400,8 +394,8 @@ void ClimateControlSchedule::CreateVars
 			items.push_back( item );
 		}
 
-		node->CreateValueList(  ValueID::ValueGenre_User, GetCommandClassId(), _instance, ClimateControlScheduleIndex_OverrideState, "Override State", "", false, false, 1, items, 0, 0 );
-		node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ClimateControlScheduleIndex_OverrideSetback, "Override Setback", "", false, false, 0, 0  );
+		node->CreateValueList(  ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_ClimateControlSchedule::OverrideState, "Override State", "", false, false, 1, items, 0, 0 );
+		node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_ClimateControlSchedule::OverrideSetback, "Override Setback", "", false, false, 0, 0  );
 	}
 }
 
