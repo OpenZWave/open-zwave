@@ -1,8 +1,8 @@
-<Product Revision="12" xmlns="https://github.com/OpenZWave/open-zwave">
+<Product Revision="13" xmlns="https://github.com/OpenZWave/open-zwave">
   <MetaData>
     <MetaDataItem name="OzwInfoPage">http://www.openzwave.com/device-database/019A:0003:0003</MetaDataItem>
     <MetaDataItem name="ProductPic">images/sensative/strips.png</MetaDataItem>
-    <MetaDataItem id="0003" name="ZWProductPage" type="0003">https://products.z-wavealliance.org/products/3296/</MetaDataItem>
+    <MetaDataItem id="0003" name="ZWProductPage" type="0003">https://products.z-wavealliance.org/products/3297/</MetaDataItem>
     <MetaDataItem name="ResetDescription">Please use this procedure only when your Z-Wave controller is missing or otherwise inoperable:
 
 1. Place the round magnet at the rounded edge of Strips. 
@@ -44,7 +44,7 @@ When the LED blinks, move the magnet away. Repeat 3 times in total within 10 sec
 
 3. A long LED blink indicates that the add process was successful.
 </MetaDataItem>
-    <MetaDataItem id="0003" name="Identifier" type="0003">11 01 011</MetaDataItem>
+    <MetaDataItem id="0003" name="Identifier" type="0003">11 01 012</MetaDataItem>
     <MetaDataItem name="ExclusionDescription">1. Set the controller in remove mode  (See your controller’s manual).  
 
 2. Place the round magnet at the rounded edge of Strips. 
@@ -55,8 +55,8 @@ When the LED blinks, move the magnet away. Repeat 3 times in total within 10 sec
 It is as easy to mount as a sticker using Strips's  adhesive tape.
 Strips Guard is Z-Wave plus compliant and can be used with any existing Z-Wave smarthome systems. </MetaDataItem>
     <MetaDataItem name="Name">Strips-MaZw</MetaDataItem>
-    <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/3296/Strips Guard EU R3.pdf</MetaDataItem>
-    <MetaDataItem id="0003" name="FrequencyName" type="0003">CEPT (Europe) / U.S. / Canada / Mexico / CEPT (Europe) / U.S. / Canada / Mexico / CEPT (Europe) / U.S. / Canada / Mexico / U.S. / Canada / Mexico / CEPT (Europe) / CEPT (Europe) / CEPT (Europe)</MetaDataItem>
+    <MetaDataItem name="ProductManual">https://Products.Z-WaveAlliance.org/ProductManual/File?folder=&amp;filename=Manuals/3297/Strips Guard US R3.pdf</MetaDataItem>
+    <MetaDataItem id="0003" name="FrequencyName" type="0003">CEPT (Europe) / U.S. / Canada / Mexico / CEPT (Europe) / U.S. / Canada / Mexico / CEPT (Europe) / U.S. / Canada / Mexico / U.S. / Canada / Mexico / CEPT (Europe) / CEPT (Europe) / CEPT (Europe) / U.S. / Canada / Mexico</MetaDataItem>
     <ChangeLog>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="23 May 2019" revision="2">Initial Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1510/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="24 May 2019" revision="3">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/1753/xml</Entry>
@@ -69,6 +69,7 @@ Strips Guard is Z-Wave plus compliant and can be used with any existing Z-Wave s
       <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="10">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2146/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="02 Jun 2019" revision="11">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/2827/xml</Entry>
       <Entry author="Justin Hammond - Justin@dynam.ac" date="03 Jun 2019" revision="12">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/3296/xml</Entry>
+      <Entry author="Justin Hammond - Justin@dynam.ac" date="03 Jun 2019" revision="13">Updated Metadata Import from Z-Wave Alliance Database - https://products.z-wavealliance.org/products/3297/xml</Entry>
     </ChangeLog>
   </MetaData>
   <!-- Configuration Parameters -->
