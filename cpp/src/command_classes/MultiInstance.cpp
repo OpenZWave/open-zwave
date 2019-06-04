@@ -635,7 +635,7 @@ void MultiInstance::HandleMultiChannelEncap
 			 *
 			 */
 			if (endPoint == 0) {
-				Log::Write( LogLevel_Error, GetNodeId(), "MultiChannelEncap with endpoint set to 0 - Send to Root Device");
+				Log::Write( LogLevel_Info, GetNodeId(), "MultiChannelEncap with endpoint set to 0 - Send to Root Device");
 				pCommandClass->HandleMsg(&_data[4], _length-4);
 				return;
 			}

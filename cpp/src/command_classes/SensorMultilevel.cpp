@@ -303,6 +303,7 @@ bool SensorMultilevel::HandleMsg
 			}
 		}
 		Log::Write( LogLevel_Info, GetNodeId(), "Received SensorMultiLevel supported report from node %d: %s", GetNodeId(), msg.c_str() );
+		return true;
 	}
 	else if (SensorMultilevelCmd_Report == (SensorMultilevelCmd)_data[0])
 	{
