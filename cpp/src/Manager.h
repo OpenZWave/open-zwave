@@ -46,25 +46,28 @@ namespace OpenZWave
 		namespace CC {
 			class CommandClass;
 		}
+		namespace VC {
+			class Value;
+//			class ValueBitSet;
+//			class ValueBool;
+//			class ValueByte;
+//			class ValueDecimal;
+//			class ValueInt;
+//			class ValueList;
+//			class ValueShort;
+//			class ValueString;
+//			class ValueRaw;
+			class ValueStore;
+		}
 	}
 	class Options;
 	class Node;
 	class Msg;
-	class Value;
 	class Event;
 	class Mutex;
 	class SerialPort;
 	class Thread;
 	class Notification;
-	class ValueBitSet;
-	class ValueBool;
-	class ValueByte;
-	class ValueDecimal;
-	class ValueInt;
-	class ValueList;
-	class ValueShort;
-	class ValueString;
-	class ValueRaw;
 
 	/** \brief
 	 *   The main public interface to OpenZWave.
@@ -118,9 +121,8 @@ namespace OpenZWave
 		friend class Internal::CC::CommandClass;
 		friend class Group;
 		friend class Node;
-		friend class Value;
-		friend class ValueStore;
-		friend class ValueButton;
+		friend class Internal::VC::Value;
+		friend class Internal::VC::ValueStore;
 		friend class Msg;
 
 	public:

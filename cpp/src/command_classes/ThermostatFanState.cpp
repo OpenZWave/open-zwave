@@ -126,7 +126,7 @@ bool ThermostatFanState::HandleMsg
 	if( ThermostatFanStateCmd_Report == (ThermostatFanStateCmd)_data[0] )
 	{
 		// We have received the thermostat fan state from the Z-Wave device
-		if( ValueString* valueString = static_cast<ValueString*>( GetValue( _instance, ValueID_Index_ThermostatFanState::FanState ) ) )
+		if( Internal::VC::ValueString* valueString = static_cast<Internal::VC::ValueString*>( GetValue( _instance, ValueID_Index_ThermostatFanState::FanState ) ) )
 		{
 			/* No need bounds checking as the state can only be a single byte - No larger than our Char array anyway */
 			uint8 state = (_data[1]&0x0f);

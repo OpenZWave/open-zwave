@@ -212,12 +212,12 @@ bool DoorLock::HandleMsg
 
 		Log::Write( LogLevel_Info, GetNodeId(), "Received DoorLock report: DoorLock is %s", c_LockStateNames[lockState] );
 
-		if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, ValueID_Index_DoorLock::Lock ) ) )
+		if( Internal::VC::ValueBool* value = static_cast<Internal::VC::ValueBool*>( GetValue( _instance, ValueID_Index_DoorLock::Lock ) ) )
 		{
 			value->OnValueRefreshed( lockState == 0x06 );
 			value->Release();
 		}
-		if( ValueList* value = static_cast<ValueList*>( GetValue( _instance, ValueID_Index_DoorLock::Lock_Mode ) ) )
+		if( Internal::VC::ValueList* value = static_cast<Internal::VC::ValueList*>( GetValue( _instance, ValueID_Index_DoorLock::Lock_Mode ) ) )
 		{
 			value->OnValueRefreshed( lockState);
 			value->Release();
@@ -248,13 +248,13 @@ bool DoorLock::HandleMsg
 				Log::Write(LogLevel_Warning, GetNodeId(), "Received a Unsupported Door Lock Config Report %d", _data[1]);
 		}
 
-		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, ValueID_Index_DoorLock::System_Config_OutsideHandles ) ) )
+		if( Internal::VC::ValueByte* value = static_cast<Internal::VC::ValueByte*>( GetValue( _instance, ValueID_Index_DoorLock::System_Config_OutsideHandles ) ) )
 		{
 			value->OnValueRefreshed( ((_data[2] & 0xF0)>>4) );
 			value->Release();
 			m_dom.SetFlagByte(STATE_FLAG_DOORLOCK_OUTSIDEMODE, ((_data[2] & 0xF0)>>4));
 		}
-		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, ValueID_Index_DoorLock::System_Config_InsideHandles ) ) )
+		if( Internal::VC::ValueByte* value = static_cast<Internal::VC::ValueByte*>( GetValue( _instance, ValueID_Index_DoorLock::System_Config_InsideHandles ) ) )
 		{
 			value->OnValueRefreshed( (_data[2] & 0x0F) );
 			value->Release();
@@ -274,13 +274,13 @@ bool DoorLock::HandleMsg
 //-----------------------------------------------------------------------------
 bool DoorLock::SetValue
 (
-	Value const& _value
+	Internal::VC::Value const& _value
 )
 {
 	uint8 instance = _value.GetID().GetInstance();
 	if( (ValueID_Index_DoorLock::Lock == _value.GetID().GetIndex()) && ValueID::ValueType_Bool == _value.GetID().GetType() )
 	{
-		ValueBool const* value = static_cast<ValueBool const*>(&_value);
+		Internal::VC::ValueBool const* value = static_cast<Internal::VC::ValueBool const*>(&_value);
 
 		Log::Write( LogLevel_Info, GetNodeId(), "ValueID_Index_DoorLock::Lock::Set - Requesting lock to be %s", value->GetValue() ? "Locked" : "Unlocked" );
 		Msg* msg = new Msg( "DoorLockCmd_Set",  GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
@@ -296,8 +296,8 @@ bool DoorLock::SetValue
 	}
 	if ( (ValueID_Index_DoorLock::Lock_Mode == _value.GetID().GetIndex()) && (ValueID::ValueType_List == _value.GetID().GetType()) )
 	{
-		ValueList const* value = static_cast<ValueList const*>(&_value);
-		ValueList::Item const *item = value->GetItem();
+		Internal::VC::ValueList const* value = static_cast<Internal::VC::ValueList const*>(&_value);
+		Internal::VC::ValueList::Item const *item = value->GetItem();
 		if (item == NULL)
 			return false;
 
@@ -325,9 +325,9 @@ bool DoorLock::SetValue
 					sendmsg = false;
 					break;
 				}
-				if( ValueList* value = static_cast<ValueList*>( GetValue( instance, _value.GetID().GetIndex() ) ) )
+				if( Internal::VC::ValueList* value = static_cast<Internal::VC::ValueList*>( GetValue( instance, _value.GetID().GetIndex() ) ) )
 				{
-					ValueList::Item const *item = (static_cast<ValueList const*>( &_value))->GetItem();
+					Internal::VC::ValueList::Item const *item = (static_cast<Internal::VC::ValueList const*>( &_value))->GetItem();
 					if (item != NULL)
 						value->OnValueRefreshed( item->m_value );
 					value->Release();
@@ -342,9 +342,9 @@ bool DoorLock::SetValue
 					sendmsg = false;
 					break;
 				}
-				if( ValueInt* value = static_cast<ValueInt*>( GetValue( instance, _value.GetID().GetIndex() ) ) )
+				if( Internal::VC::ValueInt* value = static_cast<Internal::VC::ValueInt*>( GetValue( instance, _value.GetID().GetIndex() ) ) )
 				{
-					value->OnValueRefreshed( (static_cast<ValueInt const*>( &_value))->GetValue() );
+					value->OnValueRefreshed( (static_cast<Internal::VC::ValueInt const*>( &_value))->GetValue() );
 					value->Release();
 				}
 				break;
@@ -355,9 +355,9 @@ bool DoorLock::SetValue
 					sendmsg = false;
 					break;
 				}
-				if( ValueByte* value = static_cast<ValueByte*>( GetValue( instance, _value.GetID().GetIndex() ) ) )
+				if( Internal::VC::ValueByte* value = static_cast<Internal::VC::ValueByte*>( GetValue( instance, _value.GetID().GetIndex() ) ) )
 				{
-					value->OnValueRefreshed( (static_cast<ValueByte const*>( &_value))->GetValue() );
+					value->OnValueRefreshed( (static_cast<Internal::VC::ValueByte const*>( &_value))->GetValue() );
 					value->Release();
 				}
 				break;
@@ -370,8 +370,8 @@ bool DoorLock::SetValue
 		if (sendmsg)
 		{
 			bool ok = true;
-			if( ValueList* value = static_cast<ValueList*>( GetValue( instance, ValueID_Index_DoorLock::System_Config_Mode ) ) ) {
-				ValueList::Item const *item = value->GetItem();
+			if( Internal::VC::ValueList* value = static_cast<Internal::VC::ValueList*>( GetValue( instance, ValueID_Index_DoorLock::System_Config_Mode ) ) ) {
+				Internal::VC::ValueList::Item const *item = value->GetItem();
 				if (item != NULL)
 					m_dom.SetFlagByte(STATE_FLAG_DOORLOCK_TIMEOUT, item->m_value);
 			} else {
@@ -379,7 +379,7 @@ bool DoorLock::SetValue
 				Log::Write(LogLevel_Warning, GetNodeId(), "Failed To Retrieve ValueID_Index_DoorLock::System_Config_Mode For SetValue");
 			}
 			uint8 control = 0;
-			if( ValueByte* value = static_cast<ValueByte*>( GetValue( instance, ValueID_Index_DoorLock::System_Config_OutsideHandles ) ) )
+			if( Internal::VC::ValueByte* value = static_cast<Internal::VC::ValueByte*>( GetValue( instance, ValueID_Index_DoorLock::System_Config_OutsideHandles ) ) )
 			{
 				control = (value->GetValue() << 4);
 				m_dom.SetFlagByte(STATE_FLAG_DOORLOCK_INSIDEMODE, control);
@@ -387,7 +387,7 @@ bool DoorLock::SetValue
 				ok = false;
 				Log::Write(LogLevel_Warning, GetNodeId(), "Failed To Retrieve ValueID_Index_DoorLock::System_Config_OutsideHandles For SetValue");
 			}
-			if( ValueByte* value = static_cast<ValueByte*>( GetValue( instance, ValueID_Index_DoorLock::System_Config_InsideHandles ) ) )
+			if( Internal::VC::ValueByte* value = static_cast<Internal::VC::ValueByte*>( GetValue( instance, ValueID_Index_DoorLock::System_Config_InsideHandles ) ) )
 			{
 				control += (value->GetValue() & 0x0F);
 				m_dom.SetFlagByte(STATE_FLAG_DOORLOCK_OUTSIDEMODE, (value->GetValue() & 0x0F));
@@ -395,14 +395,14 @@ bool DoorLock::SetValue
 				ok = false;
 				Log::Write(LogLevel_Warning, GetNodeId(), "Failed To Retrieve ValueID_Index_DoorLock::System_Config_InsideHandles For SetValue");
 			}
-			if( ValueInt* value = static_cast<ValueInt*>( GetValue( instance, ValueID_Index_DoorLock::System_Config_Minutes ) ) )
+			if( Internal::VC::ValueInt* value = static_cast<Internal::VC::ValueInt*>( GetValue( instance, ValueID_Index_DoorLock::System_Config_Minutes ) ) )
 			{
 				m_dom.SetFlagByte(STATE_FLAG_DOORLOCK_TIMEOUTMINS, value->GetValue());
 			} else {
 				/* Minutes and Seconds Might Not Exist, this is fine. Set to 0xFE */
 				m_dom.SetFlagByte(STATE_FLAG_DOORLOCK_TIMEOUTMINS, 0xFE);
 			}
-			if( ValueInt* value = static_cast<ValueInt*>( GetValue( instance, ValueID_Index_DoorLock::System_Config_Seconds ) ) )
+			if( Internal::VC::ValueInt* value = static_cast<Internal::VC::ValueInt*>( GetValue( instance, ValueID_Index_DoorLock::System_Config_Seconds ) ) )
 			{
 				m_dom.SetFlagByte(STATE_FLAG_DOORLOCK_TIMEOUTSECS, value->GetValue());
 			} else {
@@ -456,7 +456,7 @@ void DoorLock::SetValueBasic
 		{
 			if( !wakeUp->IsAwake() )
 			{
-				if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, ValueID_Index_DoorLock::Lock ) ) )
+				if( Internal::VC::ValueBool* value = static_cast<Internal::VC::ValueBool*>( GetValue( _instance, ValueID_Index_DoorLock::Lock ) ) )
 				{
 					value->OnValueRefreshed( _value != 0 );
 					value->Release();
@@ -481,8 +481,8 @@ void DoorLock::CreateVars
 
 	  	/* Complex Lock Option */
 	  	{
-	  		vector<ValueList::Item> items;
-	  		ValueList::Item item;
+	  		vector<Internal::VC::ValueList::Item> items;
+	  		Internal::VC::ValueList::Item item;
 	  		for( uint8 i=0; i<8; ++i )
 	  		{
 	  			item.m_label = c_LockStateNames[i];
@@ -496,8 +496,8 @@ void DoorLock::CreateVars
 
 	  	/* Timeout mode for Locks that support it */
 	  	{
-	  		vector<ValueList::Item> items;
-	  		ValueList::Item item;
+	  		vector<Internal::VC::ValueList::Item> items;
+	  		Internal::VC::ValueList::Item item;
 	  		for( uint8 i=0; i<2; ++i )
 	  		{
 	  			item.m_label = c_TimeOutModeNames[i];

@@ -152,7 +152,7 @@ bool ClimateControlSchedule::HandleMsg
 
 		Log::Write( LogLevel_Info, GetNodeId(), "Received climate control schedule report for %s", c_dayNames[day] );
 
-		if( ValueSchedule* value = static_cast<ValueSchedule*>( GetValue( _instance, day ) ) )
+		if( Internal::VC::ValueSchedule* value = static_cast<Internal::VC::ValueSchedule*>( GetValue( _instance, day ) ) )
 		{
 			// Remove any existing data
 			value->ClearSwitchPoints();
@@ -251,7 +251,7 @@ bool ClimateControlSchedule::HandleMsg
 		Log::Write( LogLevel_Info, GetNodeId(), "Received climate control schedule override report:" );
 		Log::Write( LogLevel_Info, GetNodeId(), "  Override State: %s:", c_overrideStateNames[overrideState] );
 
-		if( ValueList* valueList = static_cast<ValueList*>( GetValue( _instance, ValueID_Index_ClimateControlSchedule::OverrideState ) ) )
+		if( Internal::VC::ValueList* valueList = static_cast<Internal::VC::ValueList*>( GetValue( _instance, ValueID_Index_ClimateControlSchedule::OverrideState ) ) )
 		{
 			valueList->OnValueRefreshed( (int)overrideState );
 			valueList->Release();
@@ -274,7 +274,7 @@ bool ClimateControlSchedule::HandleMsg
 			}
 		}
 
-		if( ValueByte* valueByte = static_cast<ValueByte*>( GetValue( _instance, ValueID_Index_ClimateControlSchedule::OverrideSetback ) ) )
+		if( Internal::VC::ValueByte* valueByte = static_cast<Internal::VC::ValueByte*>( GetValue( _instance, ValueID_Index_ClimateControlSchedule::OverrideSetback ) ) )
 		{
 			valueByte->OnValueRefreshed( setback );
 			valueByte->Release();
@@ -292,7 +292,7 @@ bool ClimateControlSchedule::HandleMsg
 //-----------------------------------------------------------------------------
 bool ClimateControlSchedule::SetValue
 (
-	Value const& _value
+	Internal::VC::Value const& _value
 )
 {
 //	bool res = false;
@@ -302,7 +302,7 @@ bool ClimateControlSchedule::SetValue
 	if( idx < 8 )
 	{
 		// Set a schedule
-		ValueSchedule const* value = static_cast<ValueSchedule const*>(&_value);
+		Internal::VC::ValueSchedule const* value = static_cast<Internal::VC::ValueSchedule const*>(&_value);
 
 		Log::Write( LogLevel_Info, GetNodeId(), "Set the climate control schedule for %s", c_dayNames[idx]);
 
@@ -340,12 +340,12 @@ bool ClimateControlSchedule::SetValue
 	else
 	{
 		// Set an override
-		ValueList* state = static_cast<ValueList*>( GetValue( instance, ValueID_Index_ClimateControlSchedule::OverrideState ) );
-		ValueByte* setback = static_cast<ValueByte*>( GetValue( instance, ValueID_Index_ClimateControlSchedule::OverrideSetback ) );
+		Internal::VC::ValueList* state = static_cast<Internal::VC::ValueList*>( GetValue( instance, ValueID_Index_ClimateControlSchedule::OverrideState ) );
+		Internal::VC::ValueByte* setback = static_cast<Internal::VC::ValueByte*>( GetValue( instance, ValueID_Index_ClimateControlSchedule::OverrideSetback ) );
 
 		if( state && setback )
 		{
-			ValueList::Item const *item = state->GetItem();
+			Internal::VC::ValueList::Item const *item = state->GetItem();
 			if (item == NULL) {
 			        return false;
             }
@@ -384,9 +384,9 @@ void ClimateControlSchedule::CreateVars
 		}
 
 		// Add values for the override state and setback
-		vector<ValueList::Item> items;
+		vector<Internal::VC::ValueList::Item> items;
 
-		ValueList::Item item;
+		Internal::VC::ValueList::Item item;
 		for( uint8 i=0; i<3; ++i )
 		{
 			item.m_label = c_overrideStateNames[i];

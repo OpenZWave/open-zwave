@@ -147,35 +147,35 @@ bool AssociationCommandConfiguration::HandleMsg
 		Log::Write( LogLevel_Info, GetNodeId(), "    Number of free commands = %d", numFreeCommands );
 		Log::Write( LogLevel_Info, GetNodeId(), "    Commands are %s and are %s", commandsAreValues ? "values" : "not values", commandsAreConfigurable ? "configurable" : "not configurable" );
 
-		ValueBool* valueBool;
-		ValueByte* valueByte;
-		ValueShort* valueShort;
+		Internal::VC::ValueBool* valueBool;
+		Internal::VC::ValueByte* valueByte;
+		Internal::VC::ValueShort* valueShort;
 
-		if( (valueByte = static_cast<ValueByte*>( GetValue( _instance, ValueID_Index_AssociationCommandConfiguration::MaxCommandLength ) )) )
+		if( (valueByte = static_cast<Internal::VC::ValueByte*>( GetValue( _instance, ValueID_Index_AssociationCommandConfiguration::MaxCommandLength ) )) )
 		{
 			valueByte->OnValueRefreshed( maxCommandLength );
 			valueByte->Release();
 		}
 
-		if( (valueBool = static_cast<ValueBool*>( GetValue( _instance, ValueID_Index_AssociationCommandConfiguration::CommandsAreValues ) )) )
+		if( (valueBool = static_cast<Internal::VC::ValueBool*>( GetValue( _instance, ValueID_Index_AssociationCommandConfiguration::CommandsAreValues ) )) )
 		{
 			valueBool->OnValueRefreshed( commandsAreValues );
 			valueBool->Release();
 		}
 
-		if( (valueBool = static_cast<ValueBool*>( GetValue( _instance, ValueID_Index_AssociationCommandConfiguration::CommandsAreConfigurable ) )) )
+		if( (valueBool = static_cast<Internal::VC::ValueBool*>( GetValue( _instance, ValueID_Index_AssociationCommandConfiguration::CommandsAreConfigurable ) )) )
 		{
 			valueBool->OnValueRefreshed( commandsAreConfigurable );
 			valueBool->Release();
 		}
 
-		if( (valueShort = static_cast<ValueShort*>( GetValue( _instance, ValueID_Index_AssociationCommandConfiguration::NumFreeCommands ) )) )
+		if( (valueShort = static_cast<Internal::VC::ValueShort*>( GetValue( _instance, ValueID_Index_AssociationCommandConfiguration::NumFreeCommands ) )) )
 		{
 			valueShort->OnValueRefreshed( numFreeCommands );
 			valueShort->Release();
 		}
 
-		if( (valueShort = static_cast<ValueShort*>( GetValue( _instance, ValueID_Index_AssociationCommandConfiguration::MaxCommands ) )) )
+		if( (valueShort = static_cast<Internal::VC::ValueShort*>( GetValue( _instance, ValueID_Index_AssociationCommandConfiguration::MaxCommands ) )) )
 		{
 			valueShort->OnValueRefreshed( maxCommands );
 			valueShort->Release();

@@ -262,12 +262,12 @@ bool ManufacturerSpecific::HandleMsg
                 deviceID += temp_chr;
         }
 		if (deviceIDType == DeviceSpecificGet_DeviceIDType_FactoryDefault) {
-				ValueString *default_value = static_cast<ValueString*>( GetValue(_instance, ValueID_Index_ManufacturerSpecific::DeviceID) );
+				Internal::VC::ValueString *default_value = static_cast<Internal::VC::ValueString*>( GetValue(_instance, ValueID_Index_ManufacturerSpecific::DeviceID) );
 				default_value->OnValueRefreshed(deviceID);
 				default_value->Release();
 		}
 		else if (deviceIDType == DeviceSpecificGet_DeviceIDType_SerialNumber) {
-				ValueString *serial_value = static_cast<ValueString*>( GetValue(_instance, ValueID_Index_ManufacturerSpecific::SerialNumber) );
+				Internal::VC::ValueString *serial_value = static_cast<Internal::VC::ValueString*>( GetValue(_instance, ValueID_Index_ManufacturerSpecific::SerialNumber) );
 				serial_value->OnValueRefreshed(deviceID);
 				serial_value->Release();
 		}
@@ -368,7 +368,7 @@ void ManufacturerSpecific::setLatestConfigRevision
 
 	m_latestConfigRevision = rev;
 
-	if( ValueInt* value = static_cast<ValueInt*>( GetValue( 1, ValueID_Index_ManufacturerSpecific::LatestConfig ) ) )
+	if( Internal::VC::ValueInt* value = static_cast<Internal::VC::ValueInt*>( GetValue( 1, ValueID_Index_ManufacturerSpecific::LatestConfig ) ) )
 	{
 		value->OnValueRefreshed( rev );
 		value->Release();
@@ -388,7 +388,7 @@ void ManufacturerSpecific::setFileConfigRevision
 {
 	m_fileConfigRevision = rev;
 
-	if( ValueInt* value = static_cast<ValueInt*>( GetValue( 1, ValueID_Index_ManufacturerSpecific::LocalConfig ) ) )
+	if( Internal::VC::ValueInt* value = static_cast<Internal::VC::ValueInt*>( GetValue( 1, ValueID_Index_ManufacturerSpecific::LocalConfig ) ) )
 	{
 		value->OnValueRefreshed( rev );
 		value->Release();
@@ -408,7 +408,7 @@ void ManufacturerSpecific::setLoadedConfigRevision
 {
 	m_latestConfigRevision = rev;
 
-	if( ValueInt* value = static_cast<ValueInt*>( GetValue( 1, ValueID_Index_ManufacturerSpecific::LoadedConfig ) ) )
+	if( Internal::VC::ValueInt* value = static_cast<Internal::VC::ValueInt*>( GetValue( 1, ValueID_Index_ManufacturerSpecific::LoadedConfig ) ) )
 	{
 		value->OnValueRefreshed( rev );
 		value->Release();

@@ -38,6 +38,14 @@ class TiXmlElement;
 
 namespace OpenZWave
 {
+
+namespace Internal {
+	namespace VC {
+		class Value;
+		class ValueStore;
+	};
+};
+
     /** \defgroup ValueID ValueID Support
      *
      * ValueID's in OZW expose device functionality to the application. Many different
@@ -61,17 +69,16 @@ namespace OpenZWave
 	 * The packing of the ID is such that a list of Values sorted by ValueID
 	 * will be in a sensible order for display to the user.
 	 */
+
 	class OPENZWAVE_EXPORT ValueID
 	{
 		friend class Manager;
 		friend class Driver;
 		friend class Node;
 		friend class Group;
-		friend class CommandClass;
-		friend class Value;
-		friend class ValueStore;
+		friend class Internal::VC::Value;
+		friend class Internal::VC::ValueStore;
 		friend class Notification;
-		friend class ManufacturerSpecific;
 
 	public:
 		/** 

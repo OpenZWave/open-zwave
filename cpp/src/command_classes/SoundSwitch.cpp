@@ -133,7 +133,7 @@ bool SoundSwitch::HandleMsg
 	{
 		m_toneCount = _data[1];
 		Log::Write( LogLevel_Info, GetNodeId(), "Received SoundSwitch Tone Count report: %d", m_toneCount);
-		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, ValueID_Index_SoundSwitch::Tone_Count ) ) )
+		if( Internal::VC::ValueByte* value = static_cast<Internal::VC::ValueByte*>( GetValue( _instance, ValueID_Index_SoundSwitch::Tone_Count ) ) )
 		{
 			value->OnValueRefreshed( m_toneCount );
 			value->Release();
@@ -160,16 +160,16 @@ bool SoundSwitch::HandleMsg
 		m_toneInfo[index].name = name;
 		Log::Write( LogLevel_Info, GetNodeId(), "Received SoundSwitch Tone Info Report: %d - %s - %d sec", index, name.c_str(), duration);
 		if (index == m_toneCount) {
-			vector<ValueList::Item> items;
+			vector<Internal::VC::ValueList::Item> items;
 			{
-				ValueList::Item item;
+				Internal::VC::ValueList::Item item;
 				item.m_label = "Inactive";
 				item.m_value = 0;
 				items.push_back( item );
 			}
 			for( unsigned int i=1; i <= m_toneCount; i++)
 			{
-				ValueList::Item item;
+				Internal::VC::ValueList::Item item;
 				char str[32];
 				snprintf( str, sizeof(str), "%s (%d sec)", m_toneInfo[i].name.c_str(), m_toneInfo[i].duration );
 				item.m_label = str;
@@ -177,7 +177,7 @@ bool SoundSwitch::HandleMsg
 				items.push_back( item );
 			}
 			{
-				ValueList::Item item;
+				Internal::VC::ValueList::Item item;
 				item.m_label = "Default Tone";
 				item.m_value = 0xff;
 				items.push_back( item );
@@ -204,12 +204,12 @@ bool SoundSwitch::HandleMsg
 		if (volume > 100)
 			volume = 100;
 		Log::Write( LogLevel_Info, GetNodeId(), "Received SoundSwitch Tone Config report - Volume: %d, defaulttone: %d", volume, defaulttone);
-		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, ValueID_Index_SoundSwitch::Volume ) ) )
+		if( Internal::VC::ValueByte* value = static_cast<Internal::VC::ValueByte*>( GetValue( _instance, ValueID_Index_SoundSwitch::Volume ) ) )
 		{
 			value->OnValueRefreshed( volume );
 			value->Release();
 		}
-		if( ValueList* value = static_cast<ValueList*>( GetValue( _instance, ValueID_Index_SoundSwitch::Default_Tone ) ) )
+		if( Internal::VC::ValueList* value = static_cast<Internal::VC::ValueList*>( GetValue( _instance, ValueID_Index_SoundSwitch::Default_Tone ) ) )
 		{
 			value->OnValueRefreshed( defaulttone );
 			value->Release();
@@ -219,7 +219,7 @@ bool SoundSwitch::HandleMsg
 	}
 	if (SoundSwitchCmd_Tones_Play_Report == (SoundSwitchCmd)_data[0]) {
 		Log::Write( LogLevel_Info, GetNodeId(), "Received SoundSwitch Tone Play report: %d", _data[1]);
-		if( ValueList* value = static_cast<ValueList*>( GetValue( _instance, ValueID_Index_SoundSwitch::Tones ) ) )
+		if( Internal::VC::ValueList* value = static_cast<Internal::VC::ValueList*>( GetValue( _instance, ValueID_Index_SoundSwitch::Tones ) ) )
 		{
 			value->OnValueRefreshed( _data[1] );
 			value->Release();
@@ -235,15 +235,15 @@ bool SoundSwitch::HandleMsg
 //-----------------------------------------------------------------------------
 bool SoundSwitch::SetValue
 (
-		Value const& _value
+	Internal::VC::Value const& _value
 )
 {
 	bool ret = false;
 	uint8 instance = _value.GetID().GetInstance();
 	uint16 index = _value.GetID().GetIndex();
 	if (index == ValueID_Index_SoundSwitch::Tones) {
-		if (ValueList const* value = static_cast<ValueList const*>(&_value)) {
-			ValueList::Item const *item = value->GetItem();
+		if (Internal::VC::ValueList const* value = static_cast<Internal::VC::ValueList const*>(&_value)) {
+			Internal::VC::ValueList::Item const *item = value->GetItem();
 			if (item == NULL)
 				return false;
 			Msg* msg = new Msg( "SoundSwitchCmd_Tones_Play_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );
@@ -261,13 +261,13 @@ bool SoundSwitch::SetValue
 	if (index == ValueID_Index_SoundSwitch::Volume || index == ValueID_Index_SoundSwitch::Default_Tone) {
 		uint8 volume = 0xff;
 		uint8 defaulttone = 0x01;
-		if( ValueByte const* value = static_cast<ValueByte const*>( GetValue( instance, ValueID_Index_SoundSwitch::Volume ) ) )
+		if( Internal::VC::ValueByte const* value = static_cast<Internal::VC::ValueByte const*>( GetValue( instance, ValueID_Index_SoundSwitch::Volume ) ) )
 		{
 			volume = value->GetValue();
 		}
-		if (ValueList const* value = static_cast<ValueList const*>( GetValue( instance, ValueID_Index_SoundSwitch::Default_Tone ) ) )
+		if (Internal::VC::ValueList const* value = static_cast<Internal::VC::ValueList const*>( GetValue( instance, ValueID_Index_SoundSwitch::Default_Tone ) ) )
 		{
-			ValueList::Item const *item = value->GetItem();
+			Internal::VC::ValueList::Item const *item = value->GetItem();
 			if (item == NULL)
 				return false;
 			defaulttone = item->m_value;

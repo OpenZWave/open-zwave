@@ -263,13 +263,13 @@ void Group::AddAssociation
 	{
 		if( Node* node = driver->GetNodeUnsafe( m_nodeId ) )
 		{
-			MultiChannelAssociation* cc = static_cast<MultiChannelAssociation*>( node->GetCommandClass( MultiChannelAssociation::StaticGetCommandClassId() ));
+			Internal::CC::MultiChannelAssociation* cc = static_cast<Internal::CC::MultiChannelAssociation*>( node->GetCommandClass(Internal::CC:: MultiChannelAssociation::StaticGetCommandClassId() ));
 			if( cc && IsMultiInstance() )
 			{
 				cc->Set( m_groupIdx, _nodeId, _instance );
 				cc->QueryGroup( m_groupIdx, 0 );
 			}
-			else if( Association* cc = static_cast<Association*>( node->GetCommandClass( Association::StaticGetCommandClassId() ) ) )
+			else if( Internal::CC::Association* cc = static_cast<Internal::CC::Association*>( node->GetCommandClass( Internal::CC::Association::StaticGetCommandClassId() ) ) )
 			{
 				cc->Set( m_groupIdx, _nodeId );
 				cc->QueryGroup( m_groupIdx, 0 );
@@ -296,13 +296,13 @@ void Group::RemoveAssociation
 	{
 		if( Node* node = driver->GetNodeUnsafe( m_nodeId ) )
 		{
-			MultiChannelAssociation* cc = static_cast<MultiChannelAssociation*>( node->GetCommandClass( MultiChannelAssociation::StaticGetCommandClassId() ));
+			Internal::CC::MultiChannelAssociation* cc = static_cast<Internal::CC::MultiChannelAssociation*>( node->GetCommandClass( Internal::CC::MultiChannelAssociation::StaticGetCommandClassId() ));
 			if( cc && IsMultiInstance() )
 			{
 				cc->Remove( m_groupIdx, _nodeId, _instance );
 				cc->QueryGroup( m_groupIdx, 0 );
 			} 
-			else if( Association* cc = static_cast<Association*>( node->GetCommandClass( Association::StaticGetCommandClassId() ) ) )
+			else if( Internal::CC::Association* cc = static_cast<Internal::CC::Association*>( node->GetCommandClass( Internal::CC::Association::StaticGetCommandClassId() ) ) )
 			{
 					cc->Remove( m_groupIdx, _nodeId );
 					cc->QueryGroup( m_groupIdx, 0 );
@@ -394,7 +394,7 @@ void Group::OnGroupChanged
 		{
 			if( Node* node = driver->GetNodeUnsafe( m_nodeId ) )
 			{
-				if( AssociationCommandConfiguration* cc = static_cast<AssociationCommandConfiguration*>( node->GetCommandClass( AssociationCommandConfiguration::StaticGetCommandClassId() ) ) )
+				if( Internal::CC::AssociationCommandConfiguration* cc = static_cast<Internal::CC::AssociationCommandConfiguration*>( node->GetCommandClass( Internal::CC::AssociationCommandConfiguration::StaticGetCommandClassId() ) ) )
 				{
 					for( map<InstanceAssociation,AssociationCommandVec,classcomp>::iterator it = m_associations.begin(); it != m_associations.end(); ++it )
 					{

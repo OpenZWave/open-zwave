@@ -67,18 +67,18 @@ bool SimpleAV::HandleMsg
 //-----------------------------------------------------------------------------
 bool SimpleAV::SetValue
 (
-	Value const& _value
+	Internal::VC::Value const& _value
 )
 {
 	uint16 shortval;
 	if (ValueID::ValueType_Short == _value.GetID().GetType())
 	{
-		ValueShort const* value = static_cast<ValueShort const*>(&_value);
+		Internal::VC::ValueShort const* value = static_cast<Internal::VC::ValueShort const*>(&_value);
 		shortval = value->GetValue();
 	}
 	else if (ValueID::ValueType_List == _value.GetID().GetType())
 	{
-		ValueList const* value = static_cast<ValueList const*>(&_value);
+		Internal::VC::ValueList const* value = static_cast<Internal::VC::ValueList const*>(&_value);
 		shortval = value->GetItem()->m_value;
 	}
 	else return false;
@@ -117,7 +117,7 @@ void SimpleAV::CreateVars
 	if (Node* node = GetNodeUnsafe())
 	{
 		// Create list value
-		vector<ValueList::Item> items;
+		vector<Internal::VC::ValueList::Item> items;
 		vector<SimpleAVCommandItem> commands = SimpleAVCommandItem::GetCommands();
 		vector<SimpleAVCommandItem>::iterator iterator;
 		string helpList = "Possible values: \n";
@@ -127,7 +127,7 @@ void SimpleAV::CreateVars
 			SimpleAVCommandItem command = *iterator;
 			if (command.GetVersion() <= GetVersion())
 			{
-				ValueList::Item item;
+				Internal::VC::ValueList::Item item;
 				item.m_value = command.GetCode();
 				item.m_label = command.GetName();
 				items.push_back(item);

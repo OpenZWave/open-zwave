@@ -134,11 +134,11 @@ bool Alarm::RequestState
 
 bool Alarm::SetValue
 (
-		Value const& _value
+		Internal::VC::Value const& _value
 )
 {
 	if ((ValueID::ValueType_Int== _value.GetID().GetType()) && (_value.GetID().GetIndex() == ValueID_Index_Alarm::AutoClearEvents)) {
-		ValueInt const *value = static_cast<ValueInt const *>(&_value);
+		Internal::VC::ValueInt const *value = static_cast<Internal::VC::ValueInt const *>(&_value);
 		m_ClearTimeout = value->GetValue();
 		return true;
 	}
@@ -213,13 +213,13 @@ bool Alarm::HandleMsg
 		{
 			Log::Write( LogLevel_Info, GetNodeId(), "Received Alarm report: type=%d, level=%d", _data[1], _data[2] );
 
-			if( ValueByte *value = static_cast<ValueByte*>( GetValue( _instance, ValueID_Index_Alarm::Type_v1 ) ) )
+			if( Internal::VC::ValueByte *value = static_cast<Internal::VC::ValueByte*>( GetValue( _instance, ValueID_Index_Alarm::Type_v1 ) ) )
 			{
 				value->OnValueRefreshed( _data[1] );
 				value->Release();
 			}
 			// For device on version 1 the level could have different value. This level value correspond to a list of alarm type.
-			if ( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, ValueID_Index_Alarm::Level_v1 ) ) )
+			if ( Internal::VC::ValueByte* value = static_cast<Internal::VC::ValueByte*>( GetValue( _instance, ValueID_Index_Alarm::Level_v1 ) ) )
 			{
 				value->OnValueRefreshed( _data[2] );
 				value->Release();
@@ -234,13 +234,13 @@ bool Alarm::HandleMsg
 				Log::Write( LogLevel_Info, GetNodeId(), "Received Notification report (v1): type:%d event:%d",
 						_data[1], _data[2] );
 
-				if( ValueByte *value = static_cast<ValueByte*>( GetValue( _instance, ValueID_Index_Alarm::Type_v1 ) ) )
+				if( Internal::VC::ValueByte *value = static_cast<Internal::VC::ValueByte*>( GetValue( _instance, ValueID_Index_Alarm::Type_v1 ) ) )
 				{
 					value->OnValueRefreshed( _data[1] );
 					value->Release();
 				}
 				// For device on version 1 the level could have different value. This level value correspond to a list of alarm type.
-				if ( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, ValueID_Index_Alarm::Level_v1 ) ) )
+				if ( Internal::VC::ValueByte* value = static_cast<Internal::VC::ValueByte*>( GetValue( _instance, ValueID_Index_Alarm::Level_v1 ) ) )
 				{
 					value->OnValueRefreshed( _data[2] );
 					value->Release();
@@ -277,7 +277,7 @@ bool Alarm::HandleMsg
 							 * _data[9] should be NodeNamingCmd_Report (0x03)
 							 */
 							if ((_data[8] == NodeNaming::StaticGetCommandClassId()) && (_data[9] == 0x03) && EventParamLength > 2) {
-								if (ValueString *value = static_cast<ValueString *>(GetValue(_instance, it->first)))
+								if (Internal::VC::ValueString *value = static_cast<Internal::VC::ValueString *>(GetValue(_instance, it->first)))
 								{
 									value->OnValueRefreshed(ExtractString(&_data[10], EventParamLength-2));
 									value->Release();
@@ -292,7 +292,7 @@ bool Alarm::HandleMsg
 						}
 						case NotificationCCTypes::NEPT_List: {
 							if (EventParamLength == 1) {
-								if (ValueList *value = static_cast<ValueList *>(GetValue(_instance, it->first)))
+								if (Internal::VC::ValueList *value = static_cast<Internal::VC::ValueList *>(GetValue(_instance, it->first)))
 								{
 									value->OnValueRefreshed(_data[8]);
 									value->Release();
@@ -313,7 +313,7 @@ bool Alarm::HandleMsg
 							 * _data[12] onwards is the UserCode Entered (minimum 4 Bytes)
 							 */
 							if ((EventParamLength >= 8 ) && (_data[8] == UserCode::StaticGetCommandClassId()) && (_data[9] == 0x03)) {
-								if (ValueByte *value = static_cast<ValueByte *>(GetValue(_instance, it->first)))
+								if (Internal::VC::ValueByte *value = static_cast<Internal::VC::ValueByte *>(GetValue(_instance, it->first)))
 								{
 									value->OnValueRefreshed(_data[11]);
 									value->Release();
@@ -321,7 +321,7 @@ bool Alarm::HandleMsg
 								} else {
 									Log::Write( LogLevel_Warning, GetNodeId(), "Couldn't Find ValueID_Index_Alarm::Type_ParamUserCodeid");
 								}
-								if (ValueString *value = static_cast<ValueString *>(GetValue(_instance,it->first)))
+								if (Internal::VC::ValueString *value = static_cast<Internal::VC::ValueString *>(GetValue(_instance,it->first)))
 								{
 									value->OnValueRefreshed(ExtractString(&_data[12], EventParamLength-4));
 									value->Release();
@@ -331,7 +331,7 @@ bool Alarm::HandleMsg
 								}
 							} else if (EventParamLength == 1) {
 								/* some devices (Like BeNext TagReader) don't send a Proper UserCodeCmd_Report Message, Just the Index of the Code that Triggered */
-								if (ValueByte *value = static_cast<ValueByte *>(GetValue(_instance, it->first)))
+								if (Internal::VC::ValueByte *value = static_cast<Internal::VC::ValueByte *>(GetValue(_instance, it->first)))
 								{
 									value->OnValueRefreshed(_data[11]);
 									value->Release();
@@ -346,7 +346,7 @@ bool Alarm::HandleMsg
 						}
 						case NotificationCCTypes::NEPT_Byte: {
 							if (EventParamLength == 1) {
-								if (ValueByte *value = static_cast<ValueByte *>(GetValue(_instance, it->first)))
+								if (Internal::VC::ValueByte *value = static_cast<Internal::VC::ValueByte *>(GetValue(_instance, it->first)))
 								{
 									value->OnValueRefreshed(_data[8]);
 									value->Release();
@@ -360,7 +360,7 @@ bool Alarm::HandleMsg
 							break;
 						}
 						case NotificationCCTypes::NEPT_String: {
-							if (ValueString *value = static_cast<ValueString *>(GetValue(_instance, it->first)))
+							if (Internal::VC::ValueString *value = static_cast<Internal::VC::ValueString *>(GetValue(_instance, it->first)))
 							{
 								value->OnValueRefreshed(ExtractString(&_data[10], EventParamLength-2));
 								value->Release();
@@ -374,7 +374,7 @@ bool Alarm::HandleMsg
 							/* This is a Duration Entry, we will expose as seconds. Its 3 Bytes from the Event */
 							if (EventParamLength == 3) {
 								uint32 duration = (_data[10] * 3600) + (_data[11] * 60) + (_data[12]);
-								if (ValueInt *value = static_cast<ValueInt *>(GetValue(_instance, it->first)))
+								if (Internal::VC::ValueInt *value = static_cast<Internal::VC::ValueInt *>(GetValue(_instance, it->first)))
 								{
 									value->OnValueRefreshed(duration);
 									value->Release();
@@ -394,7 +394,7 @@ bool Alarm::HandleMsg
 			}
 
 			/* update the actual value only after we set the Params */
-			if ( ValueList *value = static_cast<ValueList *>( GetValue( _instance, NotificationType ) ) )
+			if ( Internal::VC::ValueList *value = static_cast<Internal::VC::ValueList *>( GetValue( _instance, NotificationType ) ) )
 			{
 				value->OnValueRefreshed(NotificationEvent);
 				value->Release();
@@ -439,7 +439,7 @@ bool Alarm::HandleMsg
 						Log::Write( LogLevel_Info, GetNodeId(), "\tAlarmType: %s", NotificationCCTypes::Get()->GetAlarmType(index).c_str());
 						if (GetVersion() == 2) {
 							/* EventSupported is only compatible in Version 3 and above */
-							vector<ValueList::Item> _items;
+							vector<Internal::VC::ValueList::Item> _items;
 							if (const NotificationCCTypes::NotificationTypes *nt = NotificationCCTypes::Get()->GetAlarmNotificationTypes(index)) {
 								for (std::map<uint32, NotificationCCTypes::NotificationEvents *>::const_iterator it = nt->Events.begin(); it != nt->Events.end(); it++) {
 									/* Create it */
@@ -484,7 +484,7 @@ bool Alarm::HandleMsg
 			Log::Write( LogLevel_Info, GetNodeId(), "Received supported alarm Event types for AlarmType %s (%d)", NotificationCCTypes::Get()->GetAlarmType(type).c_str(), type);
 			// Parse the data for the supported Alarm Event types
 			uint8 numBytes = (_data[2] & 0x1F);
-			vector<ValueList::Item> _items;
+			vector<Internal::VC::ValueList::Item> _items;
 			/* always Add the Clear Event Type */
 			SetupEvents(type, 0, &_items, _instance);
 
@@ -514,13 +514,13 @@ void Alarm::SetupEvents
 (
 		uint32 type,
 		uint32 index,
-		vector<ValueList::Item> *_items,
+		vector<Internal::VC::ValueList::Item> *_items,
 		uint32 const _instance
 )
 {
 	if (const NotificationCCTypes::NotificationEvents *ne = NotificationCCTypes::Get()->GetAlarmNotificationEvents(type, index)) {
 		Log::Write( LogLevel_Info, GetNodeId(), "\tEvent Type %d: %s ", ne->id, ne->name.c_str());
-		ValueList::Item item;
+		Internal::VC::ValueList::Item item;
 		item.m_value = ne->id;
 		item.m_label = ne->name;
 		_items->push_back( item );
@@ -533,9 +533,9 @@ void Alarm::SetupEvents
 					break;
 				}
 				case NotificationCCTypes::NEPT_List: {
-					vector<ValueList::Item> _Paramitems;
+					vector<Internal::VC::ValueList::Item> _Paramitems;
 					for (std::map<uint32, string>::iterator it2 = it->second->ListItems.begin(); it2 != it->second->ListItems.end(); it2++) {
-						ValueList::Item Paramitem;
+						Internal::VC::ValueList::Item Paramitem;
 						Paramitem.m_value = ne->id;
 						Paramitem.m_label = ne->name;
 						_Paramitems.push_back( Paramitem );
@@ -565,7 +565,7 @@ void Alarm::SetupEvents
 		}
 	} else {
 		Log::Write (LogLevel_Info, GetNodeId(), "\tEvent Type %d: Unknown", index);
-		ValueList::Item item;
+		Internal::VC::ValueList::Item item;
 		item.m_value = index;
 		item.m_label = string("Unknown");
 		_items->push_back( item );
@@ -581,11 +581,11 @@ void Alarm::ClearEventParams
 	for (std::vector<uint32>::iterator it = m_ParamsSet.begin(); it != m_ParamsSet.end(); it++)
 	{
 
-		Value *value = GetValue(_instance, (*it));
+		Internal::VC::Value *value = GetValue(_instance, (*it));
 
 		switch (value->GetID().GetType()) {
 		case ValueID::ValueType_Byte: {
-			if (ValueByte *value = static_cast<ValueByte *>(GetValue(_instance, (*it))))
+			if (Internal::VC::ValueByte *value = static_cast<Internal::VC::ValueByte *>(GetValue(_instance, (*it))))
 			{
 				value->OnValueRefreshed(0);
 				value->Release();
@@ -593,7 +593,7 @@ void Alarm::ClearEventParams
 		}
 		break;
 		case ValueID::ValueType_String: {
-			if (ValueString *value = static_cast<ValueString *>(GetValue(_instance, (*it))))
+			if (Internal::VC::ValueString *value = static_cast<Internal::VC::ValueString *>(GetValue(_instance, (*it))))
 			{
 				value->OnValueRefreshed("");
 				value->Release();
@@ -601,7 +601,7 @@ void Alarm::ClearEventParams
 		}
 		break;
 		case ValueID::ValueType_List: {
-			if (ValueList *value = static_cast<ValueList *>(GetValue(_instance, (*it))))
+			if (Internal::VC::ValueList *value = static_cast<Internal::VC::ValueList *>(GetValue(_instance, (*it))))
 			{
 				/* XXX TODO: Need to specify that the default is. Not all Lists have 0 index */
 				value->OnValueRefreshed(0);
@@ -610,7 +610,7 @@ void Alarm::ClearEventParams
 		}
 		break;
 		case ValueID::ValueType_Int: {
-			if (ValueInt *value = static_cast<ValueInt *>(GetValue(_instance, (*it))))
+			if (Internal::VC::ValueInt *value = static_cast<Internal::VC::ValueInt *>(GetValue(_instance, (*it))))
 			{
 				value->OnValueRefreshed(0);
 				value->Release();
@@ -634,7 +634,7 @@ void Alarm::ClearAlarm(uint32 type) {
 	}
 	ClearEventParams(_instance);
 	/* update the actual value only after we set the Params */
-	if ( ValueList *value = static_cast<ValueList *>( GetValue( _instance, type ) ) )
+	if ( Internal::VC::ValueList *value = static_cast<Internal::VC::ValueList *>( GetValue( _instance, type ) ) )
 	{
 		value->OnValueRefreshed(0);
 		value->Release();

@@ -118,7 +118,7 @@ bool Battery::HandleMsg
 
 		Log::Write( LogLevel_Info, GetNodeId(), "Received Battery report from node %d: level=%d", GetNodeId(), batteryLevel );
 
-		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, ValueID_Index_Battery::Level ) ) )
+		if( Internal::VC::ValueByte* value = static_cast<Internal::VC::ValueByte*>( GetValue( _instance, ValueID_Index_Battery::Level ) ) )
 		{
 			value->OnValueRefreshed( batteryLevel );
 			value->Release();

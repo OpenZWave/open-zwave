@@ -36,9 +36,10 @@ class TiXmlElement;
 
 namespace OpenZWave
 {
-	class Msg;
-	class Node;
-	class CommandClass;
+namespace Internal
+{
+namespace VC
+{
 
 	/** \brief Boolean value sent to/received from a node.
 	 * \ingroup ValueID
@@ -65,7 +66,8 @@ namespace OpenZWave
 		bool	m_value;				// the current index in the m_items vector
 		bool	m_valueCheck;			// the previous value (used for double-checking spurious value reads)
 	};
-
+} // namespace VC
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif

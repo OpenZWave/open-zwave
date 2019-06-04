@@ -148,12 +148,12 @@ bool Powerlevel::HandleMsg
 		uint8 timeout = _data[2];
 
 		Log::Write( LogLevel_Info, GetNodeId(), "Received a PowerLevel report: PowerLevel=%s, Timeout=%d", c_powerLevelNames[powerLevel], timeout );
-		if( ValueList* value = static_cast<ValueList*>( GetValue( _instance, ValueID_Index_PowerLevel::Powerlevel ) ) )
+		if( Internal::VC::ValueList* value = static_cast<Internal::VC::ValueList*>( GetValue( _instance, ValueID_Index_PowerLevel::Powerlevel ) ) )
 		{
 			value->OnValueRefreshed( (int)powerLevel );
 			value->Release();
 		}
-		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, ValueID_Index_PowerLevel::Timeout ) ) )
+		if( Internal::VC::ValueByte* value = static_cast<Internal::VC::ValueByte*>( GetValue( _instance, ValueID_Index_PowerLevel::Timeout ) ) )
 		{
 			value->OnValueRefreshed( timeout );
 			value->Release();
@@ -174,17 +174,17 @@ bool Powerlevel::HandleMsg
 		}
 
 		Log::Write( LogLevel_Info, GetNodeId(), "Received a PowerLevel Test Node report: Test Node=%d, Status=%s, Test Frame ACK Count=%d", testNode, c_powerLevelStatusNames[status], ackCount );
-		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, ValueID_Index_PowerLevel::TestNode ) ) )
+		if( Internal::VC::ValueByte* value = static_cast<Internal::VC::ValueByte*>( GetValue( _instance, ValueID_Index_PowerLevel::TestNode ) ) )
 		{
 			value->OnValueRefreshed( testNode );
 			value->Release();
 		}
-		if( ValueList* value = static_cast<ValueList*>( GetValue( _instance, ValueID_Index_PowerLevel::TestStatus ) ) )
+		if( Internal::VC::ValueList* value = static_cast<Internal::VC::ValueList*>( GetValue( _instance, ValueID_Index_PowerLevel::TestStatus ) ) )
 		{
 			value->OnValueRefreshed( (int)status );
 			value->Release();
 		}
-		if( ValueShort* value = static_cast<ValueShort*>( GetValue( _instance, ValueID_Index_PowerLevel::TestAckFrames ) ) )
+		if( Internal::VC::ValueShort* value = static_cast<Internal::VC::ValueShort*>( GetValue( _instance, ValueID_Index_PowerLevel::TestAckFrames ) ) )
 		{
 			value->OnValueRefreshed( (short)ackCount );
 			value->Release();
@@ -200,7 +200,7 @@ bool Powerlevel::HandleMsg
 //-----------------------------------------------------------------------------
 bool Powerlevel::SetValue
 (
-	Value const& _value
+	Internal::VC::Value const& _value
 )
 {
 	bool res = false;
@@ -210,9 +210,9 @@ bool Powerlevel::SetValue
 	{
 		case ValueID_Index_PowerLevel::Powerlevel:
 		{
-			if( ValueList* value = static_cast<ValueList*>( GetValue( instance, ValueID_Index_PowerLevel::Powerlevel ) ) )
+			if( Internal::VC::ValueList* value = static_cast<Internal::VC::ValueList*>( GetValue( instance, ValueID_Index_PowerLevel::Powerlevel ) ) )
 			{
-				ValueList::Item const *item = (static_cast<ValueList const*>( &_value))->GetItem();
+				Internal::VC::ValueList::Item const *item = (static_cast<Internal::VC::ValueList const*>( &_value))->GetItem();
 				if (item != NULL)
 					value->OnValueRefreshed( item->m_value );
 				value->Release();
@@ -222,9 +222,9 @@ bool Powerlevel::SetValue
 		}
 		case ValueID_Index_PowerLevel::Timeout:
 		{
-			if( ValueByte* value = static_cast<ValueByte*>( GetValue( instance, ValueID_Index_PowerLevel::Timeout ) ) )
+			if( Internal::VC::ValueByte* value = static_cast<Internal::VC::ValueByte*>( GetValue( instance, ValueID_Index_PowerLevel::Timeout ) ) )
 			{
-				value->OnValueRefreshed( (static_cast<ValueByte const*>( &_value))->GetValue() );
+				value->OnValueRefreshed( (static_cast<Internal::VC::ValueByte const*>( &_value))->GetValue() );
 				value->Release();
 			}
 			res = true;
@@ -233,7 +233,7 @@ bool Powerlevel::SetValue
 		case ValueID_Index_PowerLevel::Set:
 		{
 			// Set
-			if( ValueButton* button = static_cast<ValueButton*>( GetValue( instance, ValueID_Index_PowerLevel::Set ) ) )
+			if( Internal::VC::ValueButton* button = static_cast<Internal::VC::ValueButton*>( GetValue( instance, ValueID_Index_PowerLevel::Set ) ) )
 			{
 				if( button->IsPressed() )
 				{
@@ -245,9 +245,9 @@ bool Powerlevel::SetValue
 		}
 		case ValueID_Index_PowerLevel::TestNode:
 		{
-			if( ValueByte* value = static_cast<ValueByte*>( GetValue( instance, ValueID_Index_PowerLevel::TestNode ) ) )
+			if( Internal::VC::ValueByte* value = static_cast<Internal::VC::ValueByte*>( GetValue( instance, ValueID_Index_PowerLevel::TestNode ) ) )
 			{
-				value->OnValueRefreshed( (static_cast<ValueByte const*>( &_value))->GetValue() );
+				value->OnValueRefreshed( (static_cast<Internal::VC::ValueByte const*>( &_value))->GetValue() );
 				value->Release();
 			}
 			res = true;
@@ -255,9 +255,9 @@ bool Powerlevel::SetValue
 		}
 		case ValueID_Index_PowerLevel::TestPowerlevel:
 		{
-			if( ValueList* value = static_cast<ValueList*>( GetValue( instance, ValueID_Index_PowerLevel::TestPowerlevel ) ) )
+			if( Internal::VC::ValueList* value = static_cast<Internal::VC::ValueList*>( GetValue( instance, ValueID_Index_PowerLevel::TestPowerlevel ) ) )
 			{
-				ValueList::Item const *item = (static_cast<ValueList const*>( &_value))->GetItem();
+				Internal::VC::ValueList::Item const *item = (static_cast<Internal::VC::ValueList const*>( &_value))->GetItem();
 				if (item != NULL)
 					value->OnValueRefreshed( item->m_value );
 				value->Release();
@@ -267,9 +267,9 @@ bool Powerlevel::SetValue
 		}
 		case ValueID_Index_PowerLevel::TestFrames:
 		{
-			if( ValueShort* value = static_cast<ValueShort*>( GetValue( instance, ValueID_Index_PowerLevel::TestFrames ) ) )
+			if( Internal::VC::ValueShort* value = static_cast<Internal::VC::ValueShort*>( GetValue( instance, ValueID_Index_PowerLevel::TestFrames ) ) )
 			{
-				value->OnValueRefreshed( (static_cast<ValueShort const*>( &_value))->GetValue() );
+				value->OnValueRefreshed( (static_cast<Internal::VC::ValueShort const*>( &_value))->GetValue() );
 				value->Release();
 			}
 			res = true;
@@ -278,7 +278,7 @@ bool Powerlevel::SetValue
 		case ValueID_Index_PowerLevel::Test:
 		{
 			// Test
-			if( ValueButton* button = static_cast<ValueButton*>( GetValue( instance, ValueID_Index_PowerLevel::Test ) ) )
+			if( Internal::VC::ValueButton* button = static_cast<Internal::VC::ValueButton*>( GetValue( instance, ValueID_Index_PowerLevel::Test ) ) )
 			{
 				if( button->IsPressed() )
 				{
@@ -291,7 +291,7 @@ bool Powerlevel::SetValue
 		case ValueID_Index_PowerLevel::Report:
 		{
 			// Test
-			if( ValueButton* button = static_cast<ValueButton*>( GetValue( instance, ValueID_Index_PowerLevel::Report ) ) )
+			if( Internal::VC::ValueButton* button = static_cast<Internal::VC::ValueButton*>( GetValue( instance, ValueID_Index_PowerLevel::Report ) ) )
 			{
 				if( button->IsPressed() )
 				{
@@ -317,9 +317,9 @@ bool Powerlevel::Set
 	PowerLevelEnum powerLevel = PowerLevel_Normal;
 	uint8 timeout;
 
-	if( ValueList* value = static_cast<ValueList*>( GetValue( _instance, ValueID_Index_PowerLevel::Powerlevel ) ) )
+	if( Internal::VC::ValueList* value = static_cast<Internal::VC::ValueList*>( GetValue( _instance, ValueID_Index_PowerLevel::Powerlevel ) ) )
 	{
-		ValueList::Item const *item = value->GetItem();
+		Internal::VC::ValueList::Item const *item = value->GetItem();
 		if (item != NULL)
 			powerLevel = (PowerLevelEnum)item->m_value;
 		value->Release();
@@ -329,7 +329,7 @@ bool Powerlevel::Set
 		return false;
 	}
 
-	if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, ValueID_Index_PowerLevel::Timeout ) ) )
+	if( Internal::VC::ValueByte* value = static_cast<Internal::VC::ValueByte*>( GetValue( _instance, ValueID_Index_PowerLevel::Timeout ) ) )
 	{
 		timeout = value->GetValue();
 		value->Release();
@@ -373,7 +373,7 @@ bool Powerlevel::Test
 	PowerLevelEnum powerLevel = PowerLevel_Normal;
 	uint16 numFrames;
 
-	if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, ValueID_Index_PowerLevel::TestNode ) ) )
+	if( Internal::VC::ValueByte* value = static_cast<Internal::VC::ValueByte*>( GetValue( _instance, ValueID_Index_PowerLevel::TestNode ) ) )
 	{
 		testNodeId = value->GetValue();
 		value->Release();
@@ -383,9 +383,9 @@ bool Powerlevel::Test
 		return false;
 	}
 
-	if( ValueList* value = static_cast<ValueList*>( GetValue( _instance, ValueID_Index_PowerLevel::TestPowerlevel ) ) )
+	if( Internal::VC::ValueList* value = static_cast<Internal::VC::ValueList*>( GetValue( _instance, ValueID_Index_PowerLevel::TestPowerlevel ) ) )
 	{
-		ValueList::Item const *item = value->GetItem();
+		Internal::VC::ValueList::Item const *item = value->GetItem();
 		if (item != NULL)
 			powerLevel = (PowerLevelEnum)item->m_value;
 		value->Release();
@@ -395,7 +395,7 @@ bool Powerlevel::Test
 		return false;
 	}
 
-	if( ValueShort* value = static_cast<ValueShort*>( GetValue( _instance, ValueID_Index_PowerLevel::TestFrames ) ) )
+	if( Internal::VC::ValueShort* value = static_cast<Internal::VC::ValueShort*>( GetValue( _instance, ValueID_Index_PowerLevel::TestFrames ) ) )
 	{
 		numFrames = value->GetValue();
 		value->Release();
@@ -459,9 +459,9 @@ void Powerlevel::CreateVars
 {
 	if( Node* node = GetNodeUnsafe() )
 	{
-		vector<ValueList::Item> items;
+		vector<Internal::VC::ValueList::Item> items;
 
-		ValueList::Item item;
+		Internal::VC::ValueList::Item item;
 		for( uint8 i=0; i<10; ++i )
 		{
 			item.m_label = c_powerLevelNames[i];

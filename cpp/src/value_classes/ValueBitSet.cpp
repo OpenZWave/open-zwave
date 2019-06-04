@@ -34,7 +34,7 @@
 #include "Localization.h"
 #include <ctime>
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::VC;
 
 
 //-----------------------------------------------------------------------------
@@ -74,7 +74,7 @@ bool ValueBitSet::SetFromString
 	return Set( val );
 }
 
-string const ValueBitSet::GetAsString
+std::string const ValueBitSet::GetAsString
 (
 ) const
 {
@@ -83,7 +83,7 @@ string const ValueBitSet::GetAsString
 	return ss.str();
 }
 
-string const ValueBitSet::GetAsBinaryString
+std::string const ValueBitSet::GetAsBinaryString
 (
 ) const
 {
@@ -323,7 +323,7 @@ uint32 ValueBitSet::GetBitMask
 	return m_BitMask;
 }
 
-string ValueBitSet::GetBitHelp
+std::string ValueBitSet::GetBitHelp
 (
 		uint8 _idx
 )
@@ -359,7 +359,7 @@ bool ValueBitSet::isValidBit
 	return true;
 }
 
-string ValueBitSet::GetBitLabel
+std::string ValueBitSet::GetBitLabel
 (
 		uint8 _idx
 )

@@ -151,7 +151,7 @@ bool Basic::HandleMsg
 		{
 			UpdateMappedClass( _instance, m_com.GetFlagByte(COMPAT_FLAG_BASIC_MAPPING), _data[1] );
 		}
-		else if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, ValueID_Index_Basic::Set ) ) )
+		else if( Internal::VC::ValueByte* value = static_cast<Internal::VC::ValueByte*>( GetValue( _instance, ValueID_Index_Basic::Set ) ) )
 		{
 			value->OnValueRefreshed( _data[1] );
 			value->Release();
@@ -170,7 +170,7 @@ bool Basic::HandleMsg
 			{
 				UpdateMappedClass( _instance, m_com.GetFlagByte(COMPAT_FLAG_BASIC_MAPPING), _data[1] );
 			}
-			else if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, ValueID_Index_Basic::Set ) ) )
+			else if( Internal::VC::ValueByte* value = static_cast<Internal::VC::ValueByte*>( GetValue( _instance, ValueID_Index_Basic::Set ) ) )
 			{
 				value->OnValueRefreshed( _data[1] );
 				value->Release();
@@ -198,12 +198,12 @@ bool Basic::HandleMsg
 //-----------------------------------------------------------------------------
 bool Basic::SetValue
 (
-	Value const& _value
+		Internal::VC::Value const& _value
 )
 {
 	if( ValueID::ValueType_Byte == _value.GetID().GetType() )
 	{
-		ValueByte const* value = static_cast<ValueByte const*>(&_value);
+		Internal::VC::ValueByte const* value = static_cast<Internal::VC::ValueByte const*>(&_value);
 
 		Log::Write( LogLevel_Info, GetNodeId(), "Basic::Set - Setting node %d to level %d", GetNodeId(), value->GetValue() );
 		Msg* msg = new Msg( "BasicCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );
@@ -244,7 +244,7 @@ void Basic::Set
 {
 	// This may look like a long winded way to do this, but
 	// it ensures that all the proper notifications get sent.
-	if( ValueByte* value = static_cast<ValueByte*>( GetValue( 1, ValueID_Index_Basic::Set ) ) )
+	if( Internal::VC::ValueByte* value = static_cast<Internal::VC::ValueByte*>( GetValue( 1, ValueID_Index_Basic::Set ) ) )
 	{
 		value->Set( _level );
 		value->Release();

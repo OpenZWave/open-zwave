@@ -157,11 +157,11 @@ bool CentralScene::RequestValue
 
 bool CentralScene::SetValue
 (
-		Value const& _value
+	Internal::VC::Value const& _value
 )
 {
 	if ((ValueID::ValueType_Int == _value.GetID().GetType()) && (_value.GetID().GetIndex() == ValueID_Index_CentralScene::ClearSceneTimeout)) {
-		ValueInt const *value = static_cast<ValueInt const *>(&_value);
+		Internal::VC::ValueInt const *value = static_cast<Internal::VC::ValueInt const *>(&_value);
 		m_dom.SetFlagInt(STATE_FLAG_CS_CLEARTIMEOUT, value->GetValue());
 		return true;
 	}
@@ -192,7 +192,7 @@ bool CentralScene::HandleMsg
 		uint8 sceneID = _data[3];
 		Log::Write( LogLevel_Info, GetNodeId(), "Received Central Scene set from node %d: scene id=%d with key Attribute %d. Sending event notification.", GetNodeId(), sceneID, keyAttribute);
 
-		if( ValueList* value = static_cast<ValueList*>( GetValue( _instance, sceneID ) ) )
+		if( Internal::VC::ValueList* value = static_cast<Internal::VC::ValueList*>( GetValue( _instance, sceneID ) ) )
 		{
 			/* plus one, as we have our own "inactive" entry at index 0 */
 			value->OnValueRefreshed( keyAttribute +1  );
@@ -234,7 +234,7 @@ bool CentralScene::HandleMsg
 				m_slowrefresh = (_data[2] & 0x80) == 1 ? true : false;
 		}
 
-		if ( ValueInt* value = static_cast<ValueInt*>( GetValue( _instance, ValueID_Index_CentralScene::SceneCount)))
+		if ( Internal::VC::ValueInt* value = static_cast<Internal::VC::ValueInt*>( GetValue( _instance, ValueID_Index_CentralScene::SceneCount)))
 		{
 			value->OnValueRefreshed(m_dom.GetFlagByte(STATE_FLAG_CS_SCENECOUNT));
 			value->Release();
@@ -248,10 +248,10 @@ bool CentralScene::HandleMsg
 				// version 1 does not tell us which keyAttributes are supported, but only single press, released and held down are supported, so add these 3
 				if( Node* node = GetNodeUnsafe() )
 				{
-					vector<ValueList::Item> items;
+					vector<Internal::VC::ValueList::Item> items;
 					for( unsigned int i=0; i < 4; i++)
 					{
-						ValueList::Item item;
+						Internal::VC::ValueList::Item item;
 						item.m_label = c_CentralScene_KeyAttributes[i];
 						item.m_value = i;
 						items.push_back( item );
@@ -305,9 +305,9 @@ void CentralScene::createSupportedKeyAttributesValues
 {
 	if( Node* node = GetNodeUnsafe() )
 	{
-		vector<ValueList::Item> items;
+		vector<Internal::VC::ValueList::Item> items;
 		{
-			ValueList::Item item;
+			Internal::VC::ValueList::Item item;
 			item.m_label = c_CentralScene_KeyAttributes[0];
 			item.m_value = 0;
 			items.push_back( item );
@@ -315,49 +315,49 @@ void CentralScene::createSupportedKeyAttributesValues
 
 		if ( keyAttributes & CentralSceneMask_KeyPressed1time)
 		{
-			ValueList::Item item;
+			Internal::VC::ValueList::Item item;
 			item.m_label = c_CentralScene_KeyAttributes[1];
 			item.m_value = 1;
 			items.push_back( item );
 		}
 		if ( keyAttributes & CentralSceneMask_KeyReleased)
 		{
-			ValueList::Item item;
+			Internal::VC::ValueList::Item item;
 			item.m_label = c_CentralScene_KeyAttributes[2];
 			item.m_value = 2;
 			items.push_back( item );
 		}
 		if ( keyAttributes & CentralSceneMask_HeldDown)
 		{
-			ValueList::Item item;
+			Internal::VC::ValueList::Item item;
 			item.m_label = c_CentralScene_KeyAttributes[3];
 			item.m_value = 3;
 			items.push_back( item );
 		}
 		if ( keyAttributes & CentralSceneMask_KeyPressed2times)
 		{
-			ValueList::Item item;
+			Internal::VC::ValueList::Item item;
 			item.m_label = c_CentralScene_KeyAttributes[4];
 			item.m_value = 4;
 			items.push_back( item );
 		}
 		if ( keyAttributes & CentralSceneMask_KeyPressed3times)
 		{
-			ValueList::Item item;
+			Internal::VC::ValueList::Item item;
 			item.m_label = c_CentralScene_KeyAttributes[5];
 			item.m_value = 5;
 			items.push_back( item );
 		}
 		if ( keyAttributes & CentralSceneMask_KeyPressed4times)
 		{
-			ValueList::Item item;
+			Internal::VC::ValueList::Item item;
 			item.m_label = c_CentralScene_KeyAttributes[6];
 			item.m_value = 6;
 			items.push_back( item );
 		}
 		if ( keyAttributes & CentralSceneMask_KeyPressed5times)
 		{
-			ValueList::Item item;
+			Internal::VC::ValueList::Item item;
 			item.m_label = c_CentralScene_KeyAttributes[7];
 			item.m_value = 7;
 			items.push_back( item );
@@ -382,7 +382,7 @@ void CentralScene::ClearScene
 		return;
 	}
 
-	if( ValueList* value = static_cast<ValueList*>( GetValue( _instance, sceneID ) ) )
+	if( Internal::VC::ValueList* value = static_cast<Internal::VC::ValueList*>( GetValue( _instance, sceneID ) ) )
 	{
 		/* plus one, as we have our own "inactive" entry at index 0 */
 		value->OnValueRefreshed( 0 );

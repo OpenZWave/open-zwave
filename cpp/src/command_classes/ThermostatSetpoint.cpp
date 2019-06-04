@@ -146,7 +146,7 @@ bool ThermostatSetpoint::RequestValue
 		Log::Write(  LogLevel_Info, GetNodeId(), "ThermostatSetpointCmd_Get Not Supported on this node");
 		return false;
 	}
-	Value* value = GetValue( 1, _setPointIndex );
+	Internal::VC::Value* value = GetValue( 1, _setPointIndex );
 	if( value != NULL )
 	{
 		value->Release();
@@ -179,7 +179,7 @@ bool ThermostatSetpoint::HandleMsg
 	if( ThermostatSetpointCmd_Report == (ThermostatSetpointCmd)_data[0] )
 	{
 		// We have received a thermostat setpoint value from the Z-Wave device
-		if( ValueDecimal* value = static_cast<ValueDecimal*>( GetValue( _instance, _data[1] ) ) )
+		if( Internal::VC::ValueDecimal* value = static_cast<Internal::VC::ValueDecimal*>( GetValue( _instance, _data[1] ) ) )
 		{
 			uint8 scale;
 			uint8 precision = 0;
@@ -297,12 +297,12 @@ bool ThermostatSetpoint::HandleMsg
 //-----------------------------------------------------------------------------
 bool ThermostatSetpoint::SetValue
 (
-	Value const& _value
+	Internal::VC::Value const& _value
 )
 {
 	if( ValueID::ValueType_Decimal == _value.GetID().GetType() )
 	{
-		ValueDecimal const* value = static_cast<ValueDecimal const*>(&_value);
+		Internal::VC::ValueDecimal const* value = static_cast<Internal::VC::ValueDecimal const*>(&_value);
 		uint8 scale = strcmp( "C", value->GetUnits().c_str() ) ? 1 : 0;
 
 		Msg* msg = new Msg( "ThermostatSetpointCmd_Set", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );

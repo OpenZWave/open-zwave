@@ -44,7 +44,6 @@
 namespace OpenZWave
 {
 	class Msg;
-	class Value;
 	class Event;
 	class Mutex;
 	class Controller;
@@ -69,6 +68,10 @@ namespace OpenZWave
 			class Security;
 			class SceneActivation;
 		}
+		namespace VC {
+			class Value;
+			class ValueStore;
+		}
 	}
 
 	/** \brief The Driver class handles communication between OpenZWave
@@ -83,15 +86,12 @@ namespace OpenZWave
 		friend class Internal::CC::ControllerReplication;
 		friend class DNSThread;
 		friend class i_HttpClient;
-		friend class Value;
-		friend class ValueStore;
-		friend class ValueButton;
-		friend class Association;
+		friend class Internal::VC::Value;
+		friend class Internal::VC::ValueStore;
 		friend class Internal::CC::Basic;
 		friend class Internal::CC::ManufacturerSpecific;
 		friend class Internal::CC::MultiChannelAssociation;
 		friend class Internal::CC::NodeNaming;
-		friend class NoOperation;
 		friend class Internal::CC::SceneActivation;
 		friend class Internal::CC::WakeUp;
 		friend class Internal::CC::ApplicationStatus; /* for Notification messages */
@@ -470,7 +470,7 @@ OPENZWAVE_EXPORT_WARNINGS_ON
 		void SetNodeOn( uint8 const _nodeId );
 		void SetNodeOff( uint8 const _nodeId );
 
-		Value* GetValue( ValueID const& _id );
+		Internal::VC::Value* GetValue( ValueID const& _id );
 
 		bool IsAPICallSupported( uint8 const _apinum )const{ return (( m_apiMask[( _apinum - 1 ) >> 3] & ( 1 << (( _apinum - 1 ) & 0x07 ))) != 0 ); }
 		void SetAPICall( uint8 const _apinum, bool _toSet )

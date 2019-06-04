@@ -38,9 +38,10 @@ class TiXmlElement;
 
 namespace OpenZWave
 {
-	class Msg;
-	class Node;
-	class CommandClass;
+namespace Internal
+{
+namespace VC
+{
 
 	/** \brief BitSet value sent to/received from a node.
 	 * \ingroup ValueID
@@ -88,7 +89,8 @@ namespace OpenZWave
 		uint8 			m_size;					// Number of bytes in size
 		vector<int32>   m_bits;
 	};
-
+} // namespace VC
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif

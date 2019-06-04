@@ -178,7 +178,7 @@ bool UserCode::HandleMsg
 			Log::Write( LogLevel_Info, GetNodeId(), "Received User Number report from node %d: Supported Codes %d (%d)", GetNodeId(), _data[1], _data[1] );
 		}
 
-		if( ValueShort* value = static_cast<ValueShort*>( GetValue( _instance, ValueID_Index_UserCode::Count ) ) )
+		if( Internal::VC::ValueShort* value = static_cast<Internal::VC::ValueShort*>( GetValue( _instance, ValueID_Index_UserCode::Count ) ) )
 		{
 			value->OnValueRefreshed( _data[1] );
 			value->Release();
@@ -226,7 +226,7 @@ bool UserCode::HandleMsg
 		}
 		m_userCode[i].status = (UserCodeStatus)_data[2];
 		memcpy(&m_userCode[i].usercode, &_data[3], size);
-		if( ValueString* value = static_cast<ValueString*>( GetValue( _instance, i ) ) )
+		if( Internal::VC::ValueString* value = static_cast<Internal::VC::ValueString*>( GetValue( _instance, i ) ) )
 		{
 			string data;
 			/* Max UserCode Length is 10 */
@@ -236,11 +236,11 @@ bool UserCode::HandleMsg
 			value->Release();
 		}
 		if (m_com.GetFlagBool(COMPAT_FLAG_UC_EXPOSERAWVALUE)) {
-			if( ValueShort* value = static_cast<ValueShort*>( GetValue( _instance, ValueID_Index_UserCode::RawValueIndex ) ) ) {
+			if( Internal::VC::ValueShort* value = static_cast<Internal::VC::ValueShort*>( GetValue( _instance, ValueID_Index_UserCode::RawValueIndex ) ) ) {
 				value->OnValueRefreshed(i);
 				value->Release();
 			}
-			if( ValueRaw* value = static_cast<ValueRaw*>( GetValue( _instance, ValueID_Index_UserCode::RawValue ) ) ) {
+			if( Internal::VC::ValueRaw* value = static_cast<Internal::VC::ValueRaw*>( GetValue( _instance, ValueID_Index_UserCode::RawValue ) ) ) {
 				value->OnValueRefreshed(&_data[3], (_length - 4));
 				value->Release();
 			}
@@ -278,12 +278,12 @@ bool UserCode::HandleMsg
 //-----------------------------------------------------------------------------
 bool UserCode::SetValue
 (
-	Value const& _value
+	Internal::VC::Value const& _value
 )
 {
 	if( (ValueID::ValueType_String == _value.GetID().GetType()) && (_value.GetID().GetIndex() < ValueID_Index_UserCode::Refresh) )
 	{
-		ValueString const* value = static_cast<ValueString const*>(&_value);
+		Internal::VC::ValueString const* value = static_cast<Internal::VC::ValueString const*>(&_value);
 		string s = value->GetValue();
 		if (s.length() < 4) {
 			Log::Write( LogLevel_Warning, GetNodeId(), "UserCode is smaller than 4 digits", value->GetID().GetIndex());
@@ -327,7 +327,7 @@ bool UserCode::SetValue
 	}
 	if ( (ValueID::ValueType_Short == _value.GetID().GetType()) && (_value.GetID().GetIndex() == ValueID_Index_UserCode::RemoveCode) )
 	{
-		ValueShort const* value = static_cast<ValueShort const*>(&_value);
+		Internal::VC::ValueShort const* value = static_cast<Internal::VC::ValueShort const*>(&_value);
 		uint8_t index = (uint8_t)(value->GetValue() & 0xFF);
 		if (index == 0 || index > m_dom.GetFlagByte(STATE_FLAG_USERCODE_COUNT)) {
 			Log::Write( LogLevel_Warning, GetNodeId(), "Index %d is out of range of UserCodeCount", index);
@@ -364,13 +364,13 @@ bool UserCode::SetValue
 	}
 	if ( (ValueID::ValueType_Short == _value.GetID().GetType()) && (_value.GetID().GetIndex() == ValueID_Index_UserCode::RawValueIndex) )
 	{
-		ValueShort const* value = static_cast<ValueShort const*>(&_value);
+		Internal::VC::ValueShort const* value = static_cast<Internal::VC::ValueShort const*>(&_value);
 		uint16 index = value->GetValue();
 		if (index == 0 || index > m_dom.GetFlagByte(STATE_FLAG_USERCODE_COUNT)) {
 			Log::Write( LogLevel_Warning, GetNodeId(), "Index %d is out of range of UserCodeCount", index);
 			return false;
 		}
-		if( ValueRaw* oldvalue = static_cast<ValueRaw*>( GetValue(  _value.GetID().GetInstance(), ValueID_Index_UserCode::RawValue ) ) )
+		if( Internal::VC::ValueRaw* oldvalue = static_cast<Internal::VC::ValueRaw*>( GetValue(  _value.GetID().GetInstance(), ValueID_Index_UserCode::RawValue ) ) )
 		{
 			oldvalue->OnValueRefreshed((const uint8*)&m_userCode[index].usercode, 10);
 			oldvalue->Release();
@@ -379,9 +379,9 @@ bool UserCode::SetValue
 	}
 	if ( (ValueID::ValueType_Raw == _value.GetID().GetType()) && (_value.GetID().GetIndex() == ValueID_Index_UserCode::RawValue) )
 	{
-		ValueRaw const* value = static_cast<ValueRaw const*>(&_value);
+		Internal::VC::ValueRaw const* value = static_cast<Internal::VC::ValueRaw const*>(&_value);
 		uint16 index = 0;
-		if( ValueShort* valueindex = static_cast<ValueShort*>( GetValue(  _value.GetID().GetInstance(), ValueID_Index_UserCode::RawValueIndex ) ) )
+		if( Internal::VC::ValueShort* valueindex = static_cast<Internal::VC::ValueShort*>( GetValue(  _value.GetID().GetInstance(), ValueID_Index_UserCode::RawValueIndex ) ) )
 		{
 			index = valueindex->GetValue();
 		}

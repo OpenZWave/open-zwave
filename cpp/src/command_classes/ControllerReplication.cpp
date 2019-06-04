@@ -120,7 +120,7 @@ bool ControllerReplication::HandleMsg
 //-----------------------------------------------------------------------------
 bool ControllerReplication::SetValue
 (
-	Value const& _value
+	Internal::VC::Value const& _value
 )
 {
 	bool res = false;
@@ -130,9 +130,9 @@ bool ControllerReplication::SetValue
 	{
 		case ValueID_Index_ControllerReplication::NodeId:
 		{
-			if( ValueByte* value = static_cast<ValueByte*>( GetValue( instance, (uint16)ValueID_Index_ControllerReplication::NodeId ) ) )
+			if( Internal::VC::ValueByte* value = static_cast<Internal::VC::ValueByte*>( GetValue( instance, (uint16)ValueID_Index_ControllerReplication::NodeId ) ) )
 			{
-				value->OnValueRefreshed( (static_cast<ValueByte const*>( &_value))->GetValue() );
+				value->OnValueRefreshed( (static_cast<Internal::VC::ValueByte const*>( &_value))->GetValue() );
 				value->Release();
 				res = true;
 			}
@@ -140,9 +140,9 @@ bool ControllerReplication::SetValue
 		}
 		case ValueID_Index_ControllerReplication::Function:
 		{
-			if( ValueList* value = static_cast<ValueList*>( GetValue( instance, ValueID_Index_ControllerReplication::Function ) ) )
+			if( Internal::VC::ValueList* value = static_cast<Internal::VC::ValueList*>( GetValue( instance, ValueID_Index_ControllerReplication::Function ) ) )
 			{
-				ValueList::Item const *item = (static_cast<ValueList const*>( &_value))->GetItem();
+				Internal::VC::ValueList::Item const *item = (static_cast<Internal::VC::ValueList const*>( &_value))->GetItem();
 				value->OnValueRefreshed( item->m_value );
 				value->Release();
 				res = true;
@@ -151,7 +151,7 @@ bool ControllerReplication::SetValue
 		}
 		case ValueID_Index_ControllerReplication::Replicate:
 		{
-			if( ValueButton* button = static_cast<ValueButton*>( GetValue( instance, ValueID_Index_ControllerReplication::Replicate ) ) )
+			if( Internal::VC::ValueButton* button = static_cast<Internal::VC::ValueButton*>( GetValue( instance, ValueID_Index_ControllerReplication::Replicate ) ) )
 			{
 				if( button->IsPressed() )
 				{
@@ -179,7 +179,7 @@ bool ControllerReplication::StartReplication
 		return false;
 	}
 
-	if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, ValueID_Index_ControllerReplication::NodeId ) ) )
+	if( Internal::VC::ValueByte* value = static_cast<Internal::VC::ValueByte*>( GetValue( _instance, ValueID_Index_ControllerReplication::NodeId ) ) )
 	{
 		m_targetNodeId = value->GetValue();
 		value->Release();
@@ -189,9 +189,9 @@ bool ControllerReplication::StartReplication
 		return false;
 	}
 
-	if( ValueList* value = static_cast<ValueList*>( GetValue( _instance, ValueID_Index_ControllerReplication::Function ) ) )
+	if( Internal::VC::ValueList* value = static_cast<Internal::VC::ValueList*>( GetValue( _instance, ValueID_Index_ControllerReplication::Function ) ) )
 	{
-		ValueList::Item const *item = value->GetItem();
+		Internal::VC::ValueList::Item const *item = value->GetItem();
 		if (item)
 			m_funcId = item->m_value;
 		value->Release();
@@ -304,9 +304,9 @@ void ControllerReplication::CreateVars
 	if( Node* node = GetNodeUnsafe() )
 	{
 		node->CreateValueByte( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_ControllerReplication::NodeId, "Node", "", false, false, 0, 0 );
-		vector<ValueList::Item> items;
+		vector<Internal::VC::ValueList::Item> items;
 
-		ValueList::Item item;
+		Internal::VC::ValueList::Item item;
 		for( uint8 i=0; i<4; ++i )
 		{
 			item.m_label = c_controllerReplicationFunctionNames[i];

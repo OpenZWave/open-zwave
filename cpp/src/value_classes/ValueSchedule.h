@@ -36,8 +36,10 @@ class TiXmlElement;
 
 namespace OpenZWave
 {
-	class Msg;
-	class Node;
+namespace Internal
+{
+namespace VC
+{
 
 	/** \brief Schedule sent to/received from a node.
 	 * \ingroup ValueID
@@ -76,7 +78,8 @@ namespace OpenZWave
 		SwitchPoint		m_switchPoints[9];
 		uint8			m_numSwitchPoints;
 	};
-
+} // namespace VC
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif

@@ -27,6 +27,7 @@
 
 #include <math.h>
 #include <locale.h>
+#include "Defs.h"
 #include "tinyxml.h"
 #include "command_classes/CommandClass.h"
 #include "command_classes/Basic.h"
@@ -38,6 +39,7 @@
 #include "Localization.h"
 #include "Manager.h"
 #include "platform/Log.h"
+#include "value_classes/Value.h"
 #include "value_classes/ValueStore.h"
 
 using namespace OpenZWave::Internal::CC;
@@ -137,13 +139,13 @@ OpenZWave::Node* CommandClass::GetNodeUnsafe
 // <CommandClass::GetValue>
 // Get a pointer to a value by its instance and index
 //-----------------------------------------------------------------------------
-OpenZWave::Value* CommandClass::GetValue
+OpenZWave::Internal::VC::Value* CommandClass::GetValue
 (
 		uint8 const _instance,
 		uint16 const _index
 )
 {
-	Value* value = NULL;
+	Internal::VC::Value* value = NULL;
 	if( Node* node = GetNodeUnsafe() )
 	{
 		value = node->GetValue( GetCommandClassId(), _instance, _index );
@@ -333,7 +335,7 @@ void CommandClass::ReadValueRefreshXML
 	RefreshValue *rcc = new RefreshValue();
 	rcc->cc = GetCommandClassId();
 	genre = _ccElement->Attribute( "Genre" );
-	rcc->genre = Value::GetGenreEnumFromName(genre);
+	rcc->genre = Internal::VC::Value::GetGenreEnumFromName(genre);
 	int temp;
 	_ccElement->QueryIntAttribute( "Instance", &temp);
 	rcc->instance = (uint8)temp;
@@ -399,7 +401,7 @@ void CommandClass::ReadValueRefreshXML
 //-----------------------------------------------------------------------------
 
 bool CommandClass::CheckForRefreshValues (
-		Value const* _value
+		Internal::VC::Value const* _value
 )
 {
 	if (m_RefreshClassValues.empty())
@@ -478,10 +480,10 @@ void CommandClass::WriteXML
 	}
 
 	// Write out the values for this command class
-	ValueStore* store = GetNodeUnsafe()->GetValueStore();
-	for( ValueStore::Iterator it = store->Begin(); it != store->End(); ++it )
+	Internal::VC::ValueStore* store = GetNodeUnsafe()->GetValueStore();
+	for( Internal::VC::ValueStore::Iterator it = store->Begin(); it != store->End(); ++it )
 	{
-		Value* value = it->second;
+		Internal::VC::Value* value = it->second;
 		if( value->GetID().GetCommandClassId() == GetCommandClassId() )
 		{
 			TiXmlElement* valueElement = new TiXmlElement( "Value" );
@@ -495,7 +497,7 @@ void CommandClass::WriteXML
 		RefreshValue *rcc = m_RefreshClassValues.at(i);
 		TiXmlElement* RefreshElement = new TiXmlElement("TriggerRefreshValue");
 		_ccElement->LinkEndChild( RefreshElement );
-		RefreshElement->SetAttribute("Genre", Value::GetGenreNameFromEnum((ValueID::ValueGenre)rcc->genre));
+		RefreshElement->SetAttribute("Genre", Internal::VC::Value::GetGenreNameFromEnum((ValueID::ValueGenre)rcc->genre));
 		RefreshElement->SetAttribute("Instance", rcc->instance);
 		RefreshElement->SetAttribute("Index", rcc->index);
 		for (uint32 j = 0; j < rcc->RefreshClasses.size(); j++)

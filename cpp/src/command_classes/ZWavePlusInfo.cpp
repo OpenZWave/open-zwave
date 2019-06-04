@@ -139,21 +139,21 @@ bool ZWavePlusInfo::HandleMsg
 			}
 //			ClearStaticRequest( StaticRequest_Values );
 		}
-		ValueByte* value;
-		if( (value = static_cast<ValueByte*>( GetValue( _instance, ValueID_Index_ZWavePlusInfo::Version ) )) )
+		Internal::VC::ValueByte* value;
+		if( (value = static_cast<Internal::VC::ValueByte*>( GetValue( _instance, ValueID_Index_ZWavePlusInfo::Version ) )) )
 		{
 			value->OnValueRefreshed( version );
 			value->Release();
 		}
 
-		ValueShort* svalue;
-		if( (svalue = static_cast<ValueShort*>( GetValue( _instance, ValueID_Index_ZWavePlusInfo::InstallerIcon ) )) )
+		Internal::VC::ValueShort* svalue;
+		if( (svalue = static_cast<Internal::VC::ValueShort*>( GetValue( _instance, ValueID_Index_ZWavePlusInfo::InstallerIcon ) )) )
 		{
 			svalue->OnValueRefreshed( installerIcon );
 			svalue->Release();
 		}
 
-		if( (svalue = static_cast<ValueShort*>( GetValue( _instance, ValueID_Index_ZWavePlusInfo::UserIcon ) )) )
+		if( (svalue = static_cast<Internal::VC::ValueShort*>( GetValue( _instance, ValueID_Index_ZWavePlusInfo::UserIcon ) )) )
 		{
 			svalue->OnValueRefreshed( deviceType );
 			svalue->Release();

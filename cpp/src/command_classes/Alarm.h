@@ -62,12 +62,12 @@ namespace OpenZWave
 		/** \brief Handle a response to a message associated with this command class. (Inherited from CommandClass) */
 		virtual bool HandleMsg( uint8 const* _data, uint32 const _length, uint32 const _instance = 1 ) override;
 		virtual uint8 GetMaxVersion() override { return 8; }
-		virtual bool SetValue( Value const& _value ) override;
+		virtual bool SetValue( Internal::VC::Value const& _value ) override;
 
 
 	private:
 		Alarm( uint32 const _homeId, uint8 const _nodeId );
-		void SetupEvents(uint32 type, uint32 index, vector<ValueList::Item> *_items, uint32 const _instance);
+		void SetupEvents(uint32 type, uint32 index, vector<Internal::VC::ValueList::Item> *_items, uint32 const _instance);
 		void ClearAlarm(uint32 type);
 		void ClearEventParams(uint32 const _instance);
 		bool m_v1Params;

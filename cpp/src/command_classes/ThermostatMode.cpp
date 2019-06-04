@@ -134,7 +134,7 @@ void ThermostatMode::ReadXML
 
 	if( GetNodeUnsafe() )
 	{
-		vector<ValueList::Item>	supportedModes;
+		vector<Internal::VC::ValueList::Item>	supportedModes;
 
 		TiXmlElement const* supportedModesElement = _ccElement->FirstChildElement( "SupportedModes" );
 		if( supportedModesElement )
@@ -153,7 +153,7 @@ void ThermostatMode::ReadXML
 							Log::Write (LogLevel_Warning, GetNodeId(), "index Value in XML was greater than range. Setting to Invalid");
 							index = ThermostatMode_Count+1;
 						}
-						ValueList::Item item;
+						Internal::VC::ValueList::Item item;
 						item.m_value = index;
 						item.m_label = c_modeName[index];
 						supportedModes.push_back( item );
@@ -195,9 +195,9 @@ void ThermostatMode::WriteXML
 		TiXmlElement* supportedModesElement = new TiXmlElement( "SupportedModes" );
 		_ccElement->LinkEndChild( supportedModesElement );
 
-		for( vector<ValueList::Item>::iterator it = m_supportedModes.begin(); it != m_supportedModes.end(); ++it )
+		for( vector<Internal::VC::ValueList::Item>::iterator it = m_supportedModes.begin(); it != m_supportedModes.end(); ++it )
 		{
-			ValueList::Item const& item = *it;
+			Internal::VC::ValueList::Item const& item = *it;
 
 			TiXmlElement* modeElement = new TiXmlElement( "Mode" );
 			supportedModesElement->LinkEndChild( modeElement );
@@ -300,9 +300,9 @@ bool ThermostatMode::HandleMsg
 	{
 		uint8 mode = _data[1]&0x1f;
 		bool validMode = false;
-		for (vector<ValueList::Item>::iterator it = m_supportedModes.begin(); it != m_supportedModes.end(); ++it )
+		for (vector<Internal::VC::ValueList::Item>::iterator it = m_supportedModes.begin(); it != m_supportedModes.end(); ++it )
 		{
-			ValueList::Item const& item = *it;
+			Internal::VC::ValueList::Item const& item = *it;
 			if (item.m_value == mode) {
 				validMode = true;
 				break;
@@ -312,7 +312,7 @@ bool ThermostatMode::HandleMsg
 		if( validMode )
 		{
 			// We have received the thermostat mode from the Z-Wave device
-			if( ValueList* valueList = static_cast<ValueList*>( GetValue( _instance, ValueID_Index_ThermostatMode::Mode ) ) )
+			if( Internal::VC::ValueList* valueList = static_cast<Internal::VC::ValueList*>( GetValue( _instance, ValueID_Index_ThermostatMode::Mode ) ) )
 			{
 				valueList->OnValueRefreshed( mode );
 				if (valueList->GetItem())
@@ -347,7 +347,7 @@ bool ThermostatMode::HandleMsg
 			{
 				if( ( _data[i] & (1<<bit) ) != 0 )
 				{
-					ValueList::Item item;
+					Internal::VC::ValueList::Item item;
 					item.m_value = (int32)((i-1)<<3) + bit;
 					/* minus 1 in the sizeof calc here, as the Unknown entry is our addition */
 					if ((size_t)item.m_value >= (sizeof(c_modeName)/sizeof(*c_modeName) -1))
@@ -378,12 +378,12 @@ bool ThermostatMode::HandleMsg
 //-----------------------------------------------------------------------------
 bool ThermostatMode::SetValue
 (
-	Value const& _value
+	Internal::VC::Value const& _value
 )
 {
 	if( ValueID::ValueType_List == _value.GetID().GetType() )
 	{
-		ValueList const* value = static_cast<ValueList const*>(&_value);
+		Internal::VC::ValueList const* value = static_cast<Internal::VC::ValueList const*>(&_value);
 		if (value->GetItem() == NULL)
 			return false;
 		uint8 state = (uint8)value->GetItem()->m_value;
@@ -444,7 +444,7 @@ void ThermostatMode::CreateVars
 		{
 			// This instance might already have been created (in NodeInfo, in preparation for loading the values
 			// from zwcfg xml file).  So, if the instance already exists, we delete its value and add a new one below
-			if( ValueList* valueList = static_cast<ValueList*>( GetValue( _instance, 0 ) ) )
+			if( Internal::VC::ValueList* valueList = static_cast<Internal::VC::ValueList*>( GetValue( _instance, 0 ) ) )
 			{
 				node->RemoveValueList( valueList );
 				valueList->Release();

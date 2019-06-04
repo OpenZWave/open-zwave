@@ -34,7 +34,7 @@
 #include "Manager.h"
 #include <ctime>
 
-using namespace OpenZWave;
+using namespace OpenZWave::Internal::VC;
 
 
 //-----------------------------------------------------------------------------
@@ -80,7 +80,7 @@ ValueInt::ValueInt
 	m_max = INT_MAX;
 }
 
-string const ValueInt::GetAsString
+std::string const ValueInt::GetAsString
 (
 ) const
 {

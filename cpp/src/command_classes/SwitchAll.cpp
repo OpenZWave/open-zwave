@@ -115,7 +115,7 @@ bool SwitchAll::HandleMsg
 {
 	if (SwitchAllCmd_Report == (SwitchAllCmd)_data[0])
 	{
-		if( ValueList* value = static_cast<ValueList*>( GetValue( _instance, ValueID_Index_SwitchAll::SwitchAll ) ) )
+		if( Internal::VC::ValueList* value = static_cast<Internal::VC::ValueList*>( GetValue( _instance, ValueID_Index_SwitchAll::SwitchAll ) ) )
 		{
 			value->OnValueRefreshed( (int32)_data[1] );
 			value->Release();
@@ -136,13 +136,13 @@ bool SwitchAll::HandleMsg
 //-----------------------------------------------------------------------------
 bool SwitchAll::SetValue
 (
-	Value const& _value
+	Internal::VC::Value const& _value
 )
 {
 	if( ValueID::ValueType_List == _value.GetID().GetType() )
 	{
-		ValueList const* value = static_cast<ValueList const*>(&_value);
-		ValueList::Item const *item = value->GetItem();
+		Internal::VC::ValueList const* value = static_cast<Internal::VC::ValueList const*>(&_value);
+		Internal::VC::ValueList::Item const *item = value->GetItem();
 		if (item == NULL)
 			return false;
 
@@ -213,10 +213,10 @@ void SwitchAll::CreateVars
 {
 	if( Node* node = GetNodeUnsafe() )
 	{
-		vector<ValueList::Item> items;
+		vector<Internal::VC::ValueList::Item> items;
 		for( int i=0; i<4; ++i )
 		{
-			ValueList::Item item;
+			Internal::VC::ValueList::Item item;
 			item.m_label = c_switchAllStateName[i];
 			item.m_value = (i==3) ? 0x000000ff : i;
 			items.push_back( item );

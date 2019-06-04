@@ -122,7 +122,7 @@ bool Protection::HandleMsg
 			stateValue = 3;
 		}
 		Log::Write( LogLevel_Info, GetNodeId(), "Received a Protection report: %s", c_protectionStateNames[_data[1]] );
-		if( ValueList* value = static_cast<ValueList*>( GetValue( _instance, ValueID_Index_Protection::Protection ) ) )
+		if( Internal::VC::ValueList* value = static_cast<Internal::VC::ValueList*>( GetValue( _instance, ValueID_Index_Protection::Protection ) ) )
 		{
 			value->OnValueRefreshed( (int)_data[1] );
 			value->Release();
@@ -140,13 +140,13 @@ bool Protection::HandleMsg
 //-----------------------------------------------------------------------------
 bool Protection::SetValue
 (
-	Value const& _value
+	Internal::VC::Value const& _value
 )
 {
 	if( ValueID::ValueType_List == _value.GetID().GetType() )
 	{
-		ValueList const* value = static_cast<ValueList const*>(&_value);
-		ValueList::Item const *item = value->GetItem();
+		Internal::VC::ValueList const* value = static_cast<Internal::VC::ValueList const*>(&_value);
+		Internal::VC::ValueList::Item const *item = value->GetItem();
 		if (item == NULL)
 			return false;
 
@@ -177,9 +177,9 @@ void Protection::CreateVars
 {
 	if( Node* node = GetNodeUnsafe() )
 	{
-		vector<ValueList::Item> items;
+		vector<Internal::VC::ValueList::Item> items;
 
-		ValueList::Item item;
+		Internal::VC::ValueList::Item item;
 		for( uint8 i=0; i<3; ++i )
 		{
 			item.m_label = c_protectionStateNames[i];

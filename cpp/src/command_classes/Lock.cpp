@@ -108,7 +108,7 @@ bool Lock::HandleMsg
 	{
 		Log::Write( LogLevel_Info, GetNodeId(), "Received Lock report: Lock is %s", _data[1] ? "Locked" : "Unlocked" );
 
-		if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, ValueID_Index_Lock::Locked ) ) )
+		if( Internal::VC::ValueBool* value = static_cast<Internal::VC::ValueBool*>( GetValue( _instance, ValueID_Index_Lock::Locked ) ) )
 		{
 			value->OnValueRefreshed( _data[1] != 0 );
 			value->Release();
@@ -125,12 +125,12 @@ bool Lock::HandleMsg
 //-----------------------------------------------------------------------------
 bool Lock::SetValue
 (
-	Value const& _value
+	Internal::VC::Value const& _value
 )
 {
 	if( ValueID::ValueType_Bool == _value.GetID().GetType() )
 	{
-		ValueBool const* value = static_cast<ValueBool const*>(&_value);
+		Internal::VC::ValueBool const* value = static_cast<Internal::VC::ValueBool const*>(&_value);
 
 		Log::Write( LogLevel_Info, GetNodeId(), "Lock::Set - Requesting lock to be %s", value->GetValue() ? "Locked" : "Unlocked" );
 		Msg* msg = new Msg( "LockCmd_Get", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );

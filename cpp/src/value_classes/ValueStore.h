@@ -36,6 +36,11 @@ class TiXmlElement;
 
 namespace OpenZWave
 {
+namespace Internal
+{
+namespace VC
+{
+
 	class Value;
 
 	/** \brief Container that holds all of the values associated with a given node.
@@ -62,7 +67,8 @@ namespace OpenZWave
 	private:
 		map<uint32,Value*>	m_values;
 	};
-
+} // namespace VC
+} // namespace Internal
 } // namespace OpenZWave
 
 #endif

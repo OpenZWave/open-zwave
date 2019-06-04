@@ -824,10 +824,10 @@ bool Driver::ReadCache
 	{
 		if( m_nodes[i] != NULL )
 		{
-			ValueStore* vs = m_nodes[i]->m_values;
-			for( ValueStore::Iterator it = vs->Begin(); it != vs->End(); ++it )
+			Internal::VC::ValueStore* vs = m_nodes[i]->m_values;
+			for( Internal::VC::ValueStore::Iterator it = vs->Begin(); it != vs->End(); ++it )
 			{
-				Value* value = it->second;
+				Internal::VC::Value* value = it->second;
 				if( value->m_pollIntensity != 0 )
 					EnablePoll( value->GetID(), value->m_pollIntensity );
 			}
@@ -977,7 +977,7 @@ void Driver::SendQueryStageComplete
 	{
 		if( !node->IsListeningDevice() )
 		{
-			if( WakeUp* wakeUp = static_cast<WakeUp*>( node->GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
+			if( Internal::CC::WakeUp* wakeUp = static_cast<Internal::CC::WakeUp*>( node->GetCommandClass( Internal::CC::WakeUp::StaticGetCommandClassId() ) ) )
 			{
 				if( !wakeUp->IsAwake() )
 				{
@@ -1050,9 +1050,9 @@ void Driver::SendMsg
 		if( Node* node = GetNode(_msg->GetTargetNodeId()) )
 		{
 			/* if the node Supports the Security Class - check if this message is meant to be encapsulated */
-			if ( node->GetCommandClass(Security::StaticGetCommandClassId()) )
+			if ( node->GetCommandClass(Internal::CC::Security::StaticGetCommandClassId()) )
 			{
-				CommandClass *cc = node->GetCommandClass(_msg->GetSendingCommandClass());
+				Internal::CC::CommandClass *cc = node->GetCommandClass(_msg->GetSendingCommandClass());
 				if ( (cc) && (cc->IsSecured()) )
 				{
 					Log::Write( LogLevel_Detail, GetNodeNumber( _msg ), "Setting Encryption Flag on Message For Command Class %s", cc->GetCommandClassName().c_str());
@@ -1063,7 +1063,7 @@ void Driver::SendMsg
 			// If the message is for a sleeping node, we queue it in the node itself.
 			if( !node->IsListeningDevice() )
 			{
-				if( WakeUp* wakeUp = static_cast<WakeUp*>( node->GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
+				if( Internal::CC::WakeUp* wakeUp = static_cast<Internal::CC::WakeUp*>( node->GetCommandClass( Internal::CC::WakeUp::StaticGetCommandClassId() ) ) )
 				{
 					if( !wakeUp->IsAwake() )
 					{
@@ -1360,7 +1360,7 @@ bool Driver::WriteMsg
 			node->m_sentTS.SetTime();
 			if( m_expectedReply == FUNC_ID_APPLICATION_COMMAND_HANDLER )
 			{
-				CommandClass *cc = node->GetCommandClass(m_expectedCommandClassId);
+				Internal::CC::CommandClass *cc = node->GetCommandClass(m_expectedCommandClassId);
 				if( cc != NULL )
 				{
 					cc->SentCntIncr();
@@ -1411,7 +1411,7 @@ bool Driver::MoveMessagesToWakeUpQueue
 	{
 		if( !node->IsListeningDevice() && !node->IsFrequentListeningDevice() && _targetNodeId != m_Controller_nodeId )
 		{
-			if( WakeUp* wakeUp = static_cast<WakeUp*>( node->GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
+			if( Internal::CC::WakeUp* wakeUp = static_cast<Internal::CC::WakeUp*>( node->GetCommandClass( Internal::CC::WakeUp::StaticGetCommandClassId() ) ) )
 			{
 				// Mark the node as asleep
 				wakeUp->SetAwake( false );
@@ -1914,9 +1914,9 @@ void Driver::ProcessMsg
 	//uint8 nodeId = GetNodeNumber( m_currentMsg );
 
 	if ((REQUEST == _data[0]) &&
-			(Security::StaticGetCommandClassId() == _data[5])) {
+			(Internal::CC::Security::StaticGetCommandClassId() == _data[5])) {
 		/* if this message is a NONCE Report - Then just Trigger the Encrypted Send */
-		if (SecurityCmd_NonceReport == _data[6]) {
+		if (Internal::CC::SecurityCmd_NonceReport == _data[6]) {
 			Log::Write(LogLevel_Info,  _data[3], "Received SecurityCmd_NonceReport from node %d", _data[3] );
 
 			/* handle possible resends of NONCE_REPORT messages.... See Issue #931 */
@@ -1931,7 +1931,7 @@ void Driver::ProcessMsg
 			return;
 
 			/* if this is a NONCE Get - Then call to the CC directly, process it, and then bail out. */
-		} else if (SecurityCmd_NonceGet == _data[6]) {
+		} else if (Internal::CC::SecurityCmd_NonceGet == _data[6]) {
 			Log::Write(LogLevel_Info,  _data[3], "Received SecurityCmd_NonceGet from node %d", _data[3] );
 			{
 				uint8 *nonce = NULL;
@@ -1951,7 +1951,7 @@ void Driver::ProcessMsg
 			return;
 
 			/* if this message is encrypted, decrypt it first */
-		} else if ((SecurityCmd_MessageEncap == _data[6]) || (SecurityCmd_MessageEncapNonceGet == _data[6])) {
+		} else if ((Internal::CC::SecurityCmd_MessageEncap == _data[6]) || (Internal::CC::SecurityCmd_MessageEncapNonceGet == _data[6])) {
 			uint8 _newdata[256];
 			uint8 SecurityCmd = _data[6];
 			uint8 *_nonce;
@@ -1986,7 +1986,7 @@ void Driver::ProcessMsg
 				//PrintHex("Decrypted Packet", _data, _data[4]+5);
 
 				/* if the Node has something else to send, it will encrypt a message and send it as a MessageEncapNonceGet */
-				if (SecurityCmd_MessageEncapNonceGet == SecurityCmd )
+				if (Internal::CC::SecurityCmd_MessageEncapNonceGet == SecurityCmd )
 				{
 					Log::Write(LogLevel_Info,  _data[3], "Received SecurityCmd_MessageEncapNonceGet from node %d - Sending New Nonce", _data[3] );
 					LockGuard LG(m_nodeMutex);
@@ -2004,7 +2004,7 @@ void Driver::ProcessMsg
 
 			} else {
 				/* if the Node has something else to send, it will encrypt a message and send it as a MessageEncapNonceGet */
-				if (SecurityCmd_MessageEncapNonceGet == SecurityCmd )
+				if (Internal::CC::SecurityCmd_MessageEncapNonceGet == SecurityCmd )
 				{
 					Log::Write(LogLevel_Info,  _data[3], "Received SecurityCmd_MessageEncapNonceGet from node %d - Sending New Nonce", _data[3] );
 					LockGuard LG(m_nodeMutex);
@@ -2691,7 +2691,7 @@ void Driver::HandleGetSerialAPICapabilitiesResponse
 	msg->Append( 0x01 );			// Specific Static PC Controller
 
 	/* get a list of Advertised Command Classes */
-	list<uint8> advertisedCommandClasses = CommandClasses::GetAdvertisedCommandClasses();
+	list<uint8> advertisedCommandClasses = Internal::CC::CommandClasses::GetAdvertisedCommandClasses();
 	msg->Append( (uint8)advertisedCommandClasses.size() );			// Length
 	for (list<uint8>::iterator it = advertisedCommandClasses.begin(); it != advertisedCommandClasses.end(); ++it)
 		msg->Append(*it);
@@ -2831,7 +2831,7 @@ void Driver::HandleMemoryGetIdResponse
 	Log::Write( LogLevel_Info, GetNodeNumber( m_currentMsg ), "Received reply to FUNC_ID_ZW_MEMORY_GET_ID. Home ID = 0x%02x%02x%02x%02x.  Our node ID = %d", _data[2], _data[3], _data[4], _data[5], _data[6] );
 	m_homeId = ( ( (uint32)_data[2] )<<24 ) | ( ( (uint32)_data[3] )<<16 ) | ( ( (uint32)_data[4] )<<8 ) | ( (uint32)_data[5] );
 	m_Controller_nodeId = _data[6];
-	m_controllerReplication = static_cast<ControllerReplication*>(ControllerReplication::Create( m_homeId, m_Controller_nodeId ));
+	m_controllerReplication = static_cast<Internal::CC::ControllerReplication*>(Internal::CC::ControllerReplication::Create( m_homeId, m_Controller_nodeId ));
 }
 
 //-----------------------------------------------------------------------------
@@ -3313,7 +3313,7 @@ void Driver::HandleSendDataRequest
 			// If WakeUpNoMoreInformation request succeeds, update our status
 			if( m_currentMsg && m_currentMsg->IsWakeUpNoMoreInformationCommand() )
 			{
-				if( WakeUp* wakeUp = static_cast<WakeUp*>( node->GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
+				if( Internal::CC::WakeUp* wakeUp = static_cast<Internal::CC::WakeUp*>( node->GetCommandClass( Internal::CC::WakeUp::StaticGetCommandClassId() ) ) )
 				{
 					// Mark the node as asleep
 					wakeUp->SetAwake( false );
@@ -3796,11 +3796,11 @@ void Driver::HandleApplicationCommandHandlerRequest
 			node->SetNodeAlive( true );
 		}
 	}
-	if( ApplicationStatus::StaticGetCommandClassId() == classId )
+	if( Internal::CC::ApplicationStatus::StaticGetCommandClassId() == classId )
 	{
 		//TODO: Test this class function or implement
 	}
-	else if( ControllerReplication::StaticGetCommandClassId() == classId )
+	else if( Internal::CC::ControllerReplication::StaticGetCommandClassId() == classId )
 	{
 		if( m_controllerReplication && m_currentControllerCommand && ( ControllerCommand_ReceiveConfiguration == m_currentControllerCommand->m_controllerCommand ) )
 		{
@@ -4248,7 +4248,7 @@ bool Driver::EnablePoll
 	if( node != NULL )
 	{
 		// confirm that this value is in the node's value store
-		if( Value* value = node->GetValue( _valueId ) )
+		if( Internal::VC::Value* value = node->GetValue( _valueId ) )
 		{
 			// update the value's pollIntensity
 			value->SetPollIntensity( _intensity );
@@ -4327,7 +4327,7 @@ bool Driver::DisablePoll
 				m_pollList.erase( it );
 
 				// get the value object and reset pollIntensity to zero (indicating no polling)
-				Value* value = GetValue( _valueId );
+				Internal::VC::Value* value = GetValue( _valueId );
 				if (!value)
 					continue;
 				value->SetPollIntensity( 0 );
@@ -4372,7 +4372,7 @@ bool Driver::isPolled
 	// make sure the polling thread doesn't lock the node while we're in this function
 	m_pollMutex->Lock();
 
-	Value* value = GetValue( _valueId );
+	Internal::VC::Value* value = GetValue( _valueId );
 	if( value && value->GetPollIntensity() != 0 )
 	{
 		bPolled = true;
@@ -4447,7 +4447,7 @@ void Driver::SetPollIntensity
 	// make sure the polling thread doesn't lock the value while we're in this function
 	m_pollMutex->Lock();
 
-	Value* value = GetValue( _valueId );
+	Internal::VC::Value* value = GetValue( _valueId );
 	if (!value)
 		return;
 	value->SetPollIntensity( _intensity );
@@ -4510,7 +4510,7 @@ void Driver::PollThreadProc
 			{
 				LockGuard LG(m_nodeMutex);
 				(void)GetNode( valueId.GetNodeId() );
-				Value* value = GetValue( valueId );
+				Internal::VC::Value* value = GetValue( valueId );
 				if (!value)
 					continue;
 				pe.m_pollCounter = value->GetPollIntensity();
@@ -4539,7 +4539,7 @@ void Driver::PollThreadProc
 					{
 						// The device is not awake all the time.  If it is not awake, we mark it
 						// as requiring a poll.  The poll will be done next time the node wakes up.
-						if( WakeUp* wakeUp = static_cast<WakeUp*>( node->GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
+						if( Internal::CC::WakeUp* wakeUp = static_cast<Internal::CC::WakeUp*>( node->GetCommandClass( Internal::CC::WakeUp::StaticGetCommandClassId() ) ) )
 						{
 							if( !wakeUp->IsAwake() )
 							{
@@ -4552,7 +4552,7 @@ void Driver::PollThreadProc
 					if( requestState )
 					{
 						// Request an update of the value
-						CommandClass* cc = node->GetCommandClass( valueId.GetCommandClassId() );
+						Internal::CC::CommandClass* cc = node->GetCommandClass( valueId.GetCommandClassId() );
 						if (cc) {
 							uint16_t index = valueId.GetIndex();
 							uint8_t instance = valueId.GetInstance();
@@ -5321,7 +5321,7 @@ void Driver::SetNodeOff
 // <Driver::GetValue>
 // Get a pointer to a Value object for the specified ValueID
 //-----------------------------------------------------------------------------
-Value* Driver::GetValue
+Internal::VC::Value* Driver::GetValue
 (
 		ValueID const& _id
 )
@@ -5946,7 +5946,7 @@ void Driver::TestNetwork
 			}
 			if( m_nodes[i] != NULL )
 			{
-				NoOperation *noop = static_cast<NoOperation*>( m_nodes[i]->GetCommandClass( NoOperation::StaticGetCommandClassId() ) );
+				Internal::CC::NoOperation *noop = static_cast<Internal::CC::NoOperation*>( m_nodes[i]->GetCommandClass( Internal::CC::NoOperation::StaticGetCommandClassId() ) );
 				for( int j=0; j < (int)_count; j++ )
 				{
 					noop->Set( true );
@@ -5956,7 +5956,7 @@ void Driver::TestNetwork
 	}
 	else if( _nodeId != m_Controller_nodeId && m_nodes[_nodeId] != NULL )
 	{
-		NoOperation *noop = static_cast<NoOperation*>( m_nodes[_nodeId]->GetCommandClass( NoOperation::StaticGetCommandClassId() ) );
+		Internal::CC::NoOperation *noop = static_cast<Internal::CC::NoOperation*>( m_nodes[_nodeId]->GetCommandClass(Internal::CC::NoOperation::StaticGetCommandClassId() ) );
 		for( int i=0; i < (int)_count; i++ )
 		{
 			noop->Set( true );
@@ -5976,16 +5976,16 @@ void Driver::SwitchAllOn
 (
 )
 {
-	SwitchAll::On( this, 0xff );
+	Internal::CC::SwitchAll::On( this, 0xff );
 
 	LockGuard LG(m_nodeMutex);
 	for( int i=0; i<256; ++i )
 	{
 		if( GetNodeUnsafe( i ) )
 		{
-			if( m_nodes[i]->GetCommandClass( SwitchAll::StaticGetCommandClassId() ) )
+			if( m_nodes[i]->GetCommandClass( Internal::CC::SwitchAll::StaticGetCommandClassId() ) )
 			{
-				SwitchAll::On( this, (uint8)i );
+				Internal::CC::SwitchAll::On( this, (uint8)i );
 			}
 		}
 	}
@@ -5999,16 +5999,16 @@ void Driver::SwitchAllOff
 (
 )
 {
-	SwitchAll::Off( this, 0xff );
+	Internal::CC::SwitchAll::Off( this, 0xff );
 
 	LockGuard LG(m_nodeMutex);
 	for( int i=0; i<256; ++i )
 	{
 		if( GetNodeUnsafe( i ) )
 		{
-			if( m_nodes[i]->GetCommandClass( SwitchAll::StaticGetCommandClassId() ) )
+			if( m_nodes[i]->GetCommandClass( Internal::CC::SwitchAll::StaticGetCommandClassId() ) )
 			{
-				SwitchAll::Off( this, (uint8)i );
+				Internal::CC::SwitchAll::Off( this, (uint8)i );
 			}
 		}
 	}
@@ -6241,7 +6241,7 @@ void Driver::NotifyWatchers
 		switch (notification->GetType()) {
 		case Notification::Type_ValueChanged:
 		case Notification::Type_ValueRefreshed: {
-			Value *val = GetValue(notification->GetValueID());
+			Internal::VC::Value *val = GetValue(notification->GetValueID());
 			if (!val) {
 				Log::Write(LogLevel_Info, notification->GetNodeId(), "Dropping Notification as ValueID does not exist");
 				nit = m_notifications.begin();
@@ -7072,8 +7072,8 @@ bool Driver::SendNonceRequest(string logmsg) {
 	m_buffer[3] = FUNC_ID_ZW_SEND_DATA;
 	m_buffer[4] = m_currentMsg->GetTargetNodeId();
 	m_buffer[5] = 2; 					// Length of the payload
-	m_buffer[6] = Security::StaticGetCommandClassId();
-	m_buffer[7] = SecurityCmd_NonceGet;
+	m_buffer[6] = Internal::CC::Security::StaticGetCommandClassId();
+	m_buffer[7] = Internal::CC::SecurityCmd_NonceGet;
 	//m_buffer[8] = TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE;
 	m_buffer[8] = TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_AUTO_ROUTE;
 	/* this is the same as the Actual Message */
@@ -7167,8 +7167,8 @@ void Driver::SendNonceKey(uint8 nodeId, uint8 *nonce) {
 	m_buffer[3] = FUNC_ID_ZW_SEND_DATA;
 	m_buffer[4] = nodeId;
 	m_buffer[5] = 10; 					// Length of the payload
-	m_buffer[6] = Security::StaticGetCommandClassId();
-	m_buffer[7] = SecurityCmd_NonceReport;
+	m_buffer[6] = Internal::CC::Security::StaticGetCommandClassId();
+	m_buffer[7] = Internal::CC::SecurityCmd_NonceReport;
 	for (int i = 0; i < 8; ++i) {
 		m_buffer[8+i] = nonce[i];
 	}
@@ -7402,7 +7402,7 @@ bool Driver::refreshNodeConfig
 		Node *node = GetNode(_nodeId);
 		if( !node->IsListeningDevice() )
 		{
-			if( WakeUp* wakeUp = static_cast<WakeUp*>( node->GetCommandClass( WakeUp::StaticGetCommandClassId() ) ) )
+			if( Internal::CC::WakeUp* wakeUp = static_cast<Internal::CC::WakeUp*>( node->GetCommandClass( Internal::CC::WakeUp::StaticGetCommandClassId() ) ) )
 			{
 				if( !wakeUp->IsAwake() )
 				{

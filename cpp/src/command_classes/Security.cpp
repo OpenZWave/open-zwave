@@ -189,7 +189,7 @@ bool Security::HandleMsg
 			 */
 			Log::Write(LogLevel_Info, GetNodeId(), "Received SecurityCmd_SupportedReport from node %d (instance %d)", GetNodeId(), _instance );
 			m_secured = true;
-			if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, ValueID_Index_Security::Secured ) ) )
+			if( Internal::VC::ValueBool* value = static_cast<Internal::VC::ValueBool*>( GetValue( _instance, ValueID_Index_Security::Secured ) ) )
 			{
 				value->OnValueRefreshed( m_secured );
 				value->Release();

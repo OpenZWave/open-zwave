@@ -170,7 +170,7 @@ bool SensorBinary::HandleMsg
 
             Log::Write( LogLevel_Info, GetNodeId(), "Received SensorBinary report: Sensor:%d State=%s", _data[2], _data[1] ? "On" : "Off" );
 
-            if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, index ) ) )
+            if( Internal::VC::ValueBool* value = static_cast<Internal::VC::ValueBool*>( GetValue( _instance, index ) ) )
             {
                 value->OnValueRefreshed( _data[1] != 0 );
                 value->Release();
@@ -182,7 +182,7 @@ bool SensorBinary::HandleMsg
 	    {
             Log::Write( LogLevel_Info, GetNodeId(), "Received SensorBinary report: State=%s", _data[1] ? "On" : "Off" );
 
-            if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, ValueID_Index_SensorBinary::Sensor_1 ) ) )
+            if( Internal::VC::ValueBool* value = static_cast<Internal::VC::ValueBool*>( GetValue( _instance, ValueID_Index_SensorBinary::Sensor_1 ) ) )
             {
                 value->OnValueRefreshed( _data[1] != 0 );
                 value->Release();
@@ -217,7 +217,7 @@ void SensorBinary::SetValueBasic
 		{
 			if( !wakeUp->IsAwake() )
 			{
-				if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, 0 ) ) )
+				if( Internal::VC::ValueBool* value = static_cast<Internal::VC::ValueBool*>( GetValue( _instance, 0 ) ) )
 				{
 					value->OnValueRefreshed( _value != 0 );
 					value->Release();

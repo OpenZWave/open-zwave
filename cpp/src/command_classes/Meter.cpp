@@ -187,7 +187,7 @@ bool Meter::RequestValue
 	{
 		uint8 baseIndex = i<<2;
 
-		Value* value = GetValue( _instance, baseIndex );
+		Internal::VC::Value* value = GetValue( _instance, baseIndex );
 		if( value != NULL )
 		{
 			value->Release();
@@ -273,7 +273,7 @@ bool Meter::HandleSupportedReport
 				{
 					case MeterType_Electric:
 					{
-						if( ValueDecimal* value = static_cast<ValueDecimal*>( GetValue( _instance, baseIndex ) ) )
+						if( Internal::VC::ValueDecimal* value = static_cast<Internal::VC::ValueDecimal*>( GetValue( _instance, baseIndex ) ) )
 						{
 							value->SetLabel( c_electricityLabels[i] );
 							value->SetUnits( c_electricityUnits[i] );
@@ -290,7 +290,7 @@ bool Meter::HandleSupportedReport
 					}
 					case MeterType_Gas:
 					{
-						if( ValueDecimal* value = static_cast<ValueDecimal*>( GetValue( _instance, baseIndex ) ) )
+						if( Internal::VC::ValueDecimal* value = static_cast<Internal::VC::ValueDecimal*>( GetValue( _instance, baseIndex ) ) )
 						{
 							value->SetLabel( c_meterTypes[MeterType_Gas] );
 							value->SetUnits( c_gasUnits[i] );
@@ -307,7 +307,7 @@ bool Meter::HandleSupportedReport
 					}
 					case MeterType_Water:
 					{
-						if( ValueDecimal* value = static_cast<ValueDecimal*>( GetValue( _instance, baseIndex ) ) )
+						if( Internal::VC::ValueDecimal* value = static_cast<Internal::VC::ValueDecimal*>( GetValue( _instance, baseIndex ) ) )
 						{
 							value->SetLabel( c_meterTypes[MeterType_Water] );
 							value->SetUnits( c_waterUnits[i] );
@@ -362,7 +362,7 @@ bool Meter::HandleReport
 	if( GetVersion() > 1 )
 	{
 		exporting = ((_data[1] & 0x60) == 0x40 );
-		if( ValueBool* value = static_cast<ValueBool*>( GetValue( _instance, ValueID_Index_Meter::Exporting ) ) )
+		if( Internal::VC::ValueBool* value = static_cast<Internal::VC::ValueBool*>( GetValue( _instance, ValueID_Index_Meter::Exporting ) ) )
 		{
 			value->OnValueRefreshed( exporting );
 			value->Release();
@@ -422,7 +422,7 @@ bool Meter::HandleReport
 			}
 		}
 
-		if( ValueDecimal* value = static_cast<ValueDecimal*>( GetValue( _instance, ValueID_Index_Meter::Meter_1 ) ) )
+		if( Internal::VC::ValueDecimal* value = static_cast<Internal::VC::ValueDecimal*>( GetValue( _instance, ValueID_Index_Meter::Meter_1 ) ) )
 		{
 			Log::Write( LogLevel_Info, GetNodeId(), "Received Meter report from node %d: %s=%s%s", GetNodeId(), label.c_str(), valueStr.c_str(), units.c_str() );
 			value->SetLabel( label );
@@ -446,7 +446,7 @@ bool Meter::HandleReport
 			baseIndex = scale << 2;
 		}
 
-		if( ValueDecimal* value = static_cast<ValueDecimal*>( GetValue( _instance, baseIndex ) ) )
+		if( Internal::VC::ValueDecimal* value = static_cast<Internal::VC::ValueDecimal*>( GetValue( _instance, baseIndex ) ) )
 		{
 			Log::Write( LogLevel_Info, GetNodeId(), "Received Meter report from node %d: %s%s=%s%s", GetNodeId(), exporting ? "Exporting ": "", value->GetLabel().c_str(), valueStr.c_str(), value->GetUnits().c_str() );
 			value->OnValueRefreshed( valueStr );
@@ -463,14 +463,14 @@ bool Meter::HandleReport
 			if( delta )
 			{
 				// There is only a previous value if the time delta is non-zero
-				ValueDecimal* previous = static_cast<ValueDecimal*>( GetValue( _instance, baseIndex+1 ) );
+				Internal::VC::ValueDecimal* previous = static_cast<Internal::VC::ValueDecimal*>( GetValue( _instance, baseIndex+1 ) );
 				if( NULL == previous )
 				{
 					// We need to create a value to hold the previous
 					if( Node* node = GetNodeUnsafe() )
 					{
 						node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, baseIndex+1, "Previous Reading", value->GetUnits().c_str(), true, false, "0.0", 0 );
-						previous = static_cast<ValueDecimal*>( GetValue( _instance, baseIndex+1 ) );
+						previous = static_cast<Internal::VC::ValueDecimal*>( GetValue( _instance, baseIndex+1 ) );
 					}
 				}
 				if( previous )
@@ -487,14 +487,14 @@ bool Meter::HandleReport
 				}
 
 				// Time delta
-				ValueInt* interval = static_cast<ValueInt*>( GetValue( _instance, baseIndex+2 ) );
+				Internal::VC::ValueInt* interval = static_cast<Internal::VC::ValueInt*>( GetValue( _instance, baseIndex+2 ) );
 				if( NULL == interval )
 				{
 					// We need to create a value to hold the time delta
 					if( Node* node = GetNodeUnsafe() )
 					{
 						node->CreateValueInt( ValueID::ValueGenre_User, GetCommandClassId(), _instance, baseIndex+2, "Interval", "seconds", true, false, 0, 0 );
-						interval = static_cast<ValueInt*>( GetValue( _instance, baseIndex+2 ) );
+						interval = static_cast<Internal::VC::ValueInt*>( GetValue( _instance, baseIndex+2 ) );
 					}
 				}
 				if( interval )
@@ -515,12 +515,12 @@ bool Meter::HandleReport
 //-----------------------------------------------------------------------------
 bool Meter::SetValue
 (
-	Value const& _value
+	Internal::VC::Value const& _value
 )
 {
 	if( ValueID_Index_Meter::Reset == _value.GetID().GetIndex() )
 	{
-		ValueButton const* button = static_cast<ValueButton const*>(&_value);
+		Internal::VC::ValueButton const* button = static_cast<Internal::VC::ValueButton const*>(&_value);
 		if( button->IsPressed() )
 		{
 			Msg* msg = new Msg( "MeterCmd_Reset", GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true );

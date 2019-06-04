@@ -225,7 +225,7 @@ bool DoorLockLogging::HandleMsg
 	{
 		Log::Write( LogLevel_Info, GetNodeId(), "Received DoorLockLoggingCmd_RecordSupported_Report: Max Records is %d ", _data[1]);
 		m_dom.SetFlagByte(STATE_FLAG_DOORLOCKLOG_MAXRECORDS, _data[1]);
-		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, ValueID_Index_DoorLockLogging::System_Config_MaxRecords ) ) )
+		if( Internal::VC::ValueByte* value = static_cast<Internal::VC::ValueByte*>( GetValue( _instance, ValueID_Index_DoorLockLogging::System_Config_MaxRecords ) ) )
 		{
 
 			value->OnValueRefreshed( _data[1] );
@@ -241,12 +241,12 @@ bool DoorLockLogging::HandleMsg
 
 		Log::Write (LogLevel_Info, GetNodeId(), "Received a DoorLockLogging Record %d which is \"%s\"", _data[1], c_DoorLockEventType[EventType-1]);
 
-		if( ValueByte* value = static_cast<ValueByte*>( GetValue( _instance, ValueID_Index_DoorLockLogging::GetRecordNo ) ) )
+		if( Internal::VC::ValueByte* value = static_cast<Internal::VC::ValueByte*>( GetValue( _instance, ValueID_Index_DoorLockLogging::GetRecordNo ) ) )
 		{
 			value->OnValueRefreshed( _data[1]);
 			value->Release();
 		}
-		if( ValueString* value = static_cast<ValueString*>( GetValue( _instance, ValueID_Index_DoorLockLogging::LogRecord ) ) )
+		if( Internal::VC::ValueString* value = static_cast<Internal::VC::ValueString*>( GetValue( _instance, ValueID_Index_DoorLockLogging::LogRecord ) ) )
 		{
 			char msg[512];
 			uint16 year = (_data[2] << 8) + (_data[3] & 0xFF);
@@ -290,12 +290,12 @@ bool DoorLockLogging::HandleMsg
 //-----------------------------------------------------------------------------
 bool DoorLockLogging::SetValue
 (
-	Value const& _value
+		Internal::VC::Value const& _value
 )
 {
 	if( (ValueID_Index_DoorLockLogging::GetRecordNo == _value.GetID().GetIndex()) && ValueID::ValueType_Byte == _value.GetID().GetType() )
 	{
-		ValueByte const* value = static_cast<ValueByte const*>(&_value);
+		Internal::VC::ValueByte const* value = static_cast<Internal::VC::ValueByte const*>(&_value);
 
 		Log::Write( LogLevel_Info, GetNodeId(), "DoorLockLoggingCmd_Record_Get - Requesting Log Record %d", value->GetValue() );
 		Msg* msg = new Msg( "DoorLockLoggingCmd_Record_Get",  GetNodeId(), REQUEST, FUNC_ID_ZW_SEND_DATA, true, true, FUNC_ID_APPLICATION_COMMAND_HANDLER, GetCommandClassId() );

@@ -58,19 +58,23 @@ namespace OpenZWave
 			class Version;
 			class ZWavePlusInfo;
 		}
+		namespace VC {
+			class Value;
+			class ValueStore;
+#if 0
+		class ValueBool;
+		class ValueButton;
+		class ValueByte;
+		class ValueDecimal;
+		class ValueInt;
+		class ValueSchedule;
+		class ValueShort;
+		class ValueString;
+#endif
+		}
 	}
 	class Driver;
 	class Group;
-	class ValueStore;
-	class Value;
-	class ValueBool;
-	class ValueButton;
-	class ValueByte;
-	class ValueDecimal;
-	class ValueInt;
-	class ValueSchedule;
-	class ValueShort;
-	class ValueString;
 	class Mutex;
 	class ProductDescriptor;
 
@@ -82,7 +86,7 @@ namespace OpenZWave
 			friend class Manager;
 			friend class Driver;
 			friend class Group;
-			friend class Value;
+			friend class Internal::VC::Value;
 			friend class ValueButton;
 			friend class Internal::CC::Association;
 			friend class Internal::CC::AssociationCommandConfiguration;
@@ -515,8 +519,8 @@ namespace OpenZWave
 		public:
 			ValueID CreateValueID( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint16 const _valueIndex, ValueID::ValueType const _type );
 
-			Value* GetValue( ValueID const& _id );
-			Value* GetValue( uint8 const _commandClassId, uint8 const _instance, uint16 const _valueIndex );
+			Internal::VC::Value* GetValue( ValueID const& _id );
+			Internal::VC::Value* GetValue( uint8 const _commandClassId, uint8 const _instance, uint16 const _valueIndex );
 			bool RemoveValue( uint8 const _commandClassId, uint8 const _instance, uint16 const _valueIndex );
 
 			// Helpers for creating values
@@ -526,22 +530,22 @@ namespace OpenZWave
 			bool CreateValueByte( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint16 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, bool const _writeOnly, uint8 const _default, uint8 const _pollIntensity );
 			bool CreateValueDecimal( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint16 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, bool const _writeOnly, string const& _default, uint8 const _pollIntensity );
 			bool CreateValueInt( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint16 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, bool const _writeOnly, int32 const _default, uint8 const _pollIntensity );
-			bool CreateValueList( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint16 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, bool const _writeOnly, uint8 const _size, vector<ValueList::Item> const& _items, int32 const _default, uint8 const _pollIntensity );
+			bool CreateValueList( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint16 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, bool const _writeOnly, uint8 const _size, vector<Internal::VC::ValueList::Item> const& _items, int32 const _default, uint8 const _pollIntensity );
 			bool CreateValueRaw( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint16 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, bool const _writeOnly, uint8 const* _default, uint8 const _length, uint8 const _pollIntensity );
 			bool CreateValueSchedule( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint16 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, bool const _writeOnly, uint8 const _pollIntensity );
 			bool CreateValueShort( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint16 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, bool const _writeOnly, int16 const _default, uint8 const _pollIntensity );
 			bool CreateValueString( ValueID::ValueGenre const _genre, uint8 const _commandClassId, uint8 const _instance, uint16 const _valueIndex, string const& _label, string const& _units, bool const _readOnly, bool const _writeOnly, string const& _default, uint8 const _pollIntensity );
 
 			// helpers for removing values
-			void RemoveValueList( ValueList* _value );
+			void RemoveValueList( Internal::VC::ValueList* _value );
 
 			void ReadValueFromXML( uint8 const _commandClassId, TiXmlElement const* _valueElement );
 			bool CreateValueFromXML( uint8 const _commandClassId, TiXmlElement const* _valueElement );
 
 		private:
-			ValueStore* GetValueStore()const{ return m_values; }
+			Internal::VC::ValueStore* GetValueStore()const{ return m_values; }
 
-			ValueStore*	m_values;			// Values reported via command classes
+			Internal::VC::ValueStore*	m_values;			// Values reported via command classes
 
 			//-----------------------------------------------------------------------------
 			// Configuration Parameters (handled by the Configuration command class)
