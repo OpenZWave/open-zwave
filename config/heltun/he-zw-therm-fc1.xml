@@ -2,6 +2,28 @@
 <!--<Product xmlns="http://code.google.com/p/open-zwave/">-->
 <Product Revision="2" xmlns='https://github.com/OpenZWave/open-zwave'>
 <!-- Configuration Parameters -->
+  <CommandClass id="67">
+    <Instance index="1"/>
+    <Value genre="user" index="1" instance="1" label="Heating" max="0" min="0" read_only="false" type="decimal" units="C" value="20" write_only="false"/>
+    <Compatibility>
+      <Base>0</Base>
+      <CreateVars>true</CreateVars>
+    </Compatibility>
+  </CommandClass>
+  <CommandClass id="64">
+    <Instance index="1"/>
+    <Value genre="user" index="0" instance="1" label="Mode" max="0" min="0" read_only="false" size="1" type="list" units="" write_only="false">
+      <Item label="Auto" value="10"/>
+      <Item label="Heat Econ" value="11"/>
+      <Item label="Comfort" value="15"/>
+    </Value>
+    <SupportedModes>
+      <Mode index="10" label="Auto"/>
+      <Mode index="11" label="Heat Econ"/>
+      <Mode index="15" label="Comfort"/>
+    </SupportedModes>
+    <Compatibility/>
+  </CommandClass>
    <CommandClass id="112">
 	<!-- Configuration Parameter 1 -->
 	<Value genre="config" index="1" label="Degree mode" max="1" min="0" size="1" type="list" units="" value="0">

@@ -118,6 +118,7 @@ DISTFILES =	.gitignore \
 	config/august/asl-03.xml \
 	config/buffalo/hw-100v15a-zw.xml \
 	config/comfort/ucm.xml \
+	config/config-template.xml \
 	config/cooper/RF9501.xml \
 	config/cooper/RF9505-T.xml \
 	config/cooper/RF9505-T.xml.zip \
@@ -1482,4 +1483,5 @@ DISTFILES =	.gitignore \
 	licenses/lgpl.txt \
 	licenses/license.txt \
 	makedist \
+	tools/imagedownload.pl \
 	cpp/src/vers.cpp
