@@ -159,7 +159,7 @@ bool HidController::Open(string const& _hidControllerName)
 
 		}).wait();
 	}
-	catch (Platform::Exception^ ex)
+	catch (::Platform::Exception^ ex)
 	{
 	}
 
@@ -190,12 +190,12 @@ task<bool> HidController::Init()
 	// Yields the same as API above w/o the usage page and usage Id filters
 	wchar_t buffer[AQS_LENGTH];
 	swprintf_s(buffer, AQS_FORMAT, m_vendorId, m_productId);
-	auto selector = ref new String(buffer);
+	auto selector = ref new ::Platform::String(buffer);
 
 	return create_task(Windows::Devices::Enumeration::DeviceInformation::FindAllAsync(selector))
-		.then([this](DeviceInformationCollection ^ devices) -> String ^
+		.then([this](DeviceInformationCollection ^ devices) -> ::Platform::String ^
 	{
-		String ^deviceId = L"";
+		::Platform::String ^deviceId = L"";
 		for (auto iterator = devices->First(); iterator->HasCurrent; iterator->MoveNext())
 		{
 			// Not sure how to differentiate when there are multiple things returned.
@@ -205,7 +205,7 @@ task<bool> HidController::Init()
 		}
 		return deviceId;
 
-	}).then([this](String ^deviceId) -> IAsyncOperation<HidDevice ^> ^
+	}).then([this](::Platform::String ^deviceId) -> IAsyncOperation<HidDevice ^> ^
 	{
 		return HidDevice::FromIdAsync(deviceId, Windows::Storage::FileAccessMode::Read);
 
@@ -227,7 +227,7 @@ task<bool> HidController::Init()
 
 			return true;
 		}
-		catch (Platform::Exception^ ex)
+		catch (::Platform::Exception^ ex)
 		{
 			return false;
 		}
@@ -262,8 +262,8 @@ uint32 HidController::SendFeatureReport
 	auto featureReport = m_device->CreateFeatureReport();
 	auto dataWriter = ref new DataWriter();
 
-	auto array = ref new Array<uint8>(_buffer, _length);
-	dataWriter->WriteBytes(ArrayReference<uint8>(_buffer, _length));
+	auto array = ref new ::Platform::Array<uint8>(_buffer, _length);
+	dataWriter->WriteBytes(::Platform::ArrayReference<uint8>(_buffer, _length));
 
 	featureReport->Data = dataWriter->DetachBuffer();
 
@@ -272,7 +272,7 @@ uint32 HidController::SendFeatureReport
 	{
 		bytesWritten = create_task(m_device->SendFeatureReportAsync(featureReport)).get();
 	}
-	catch (Platform::Exception^)
+	catch (::Platform::Exception^)
 	{
 	}
 	return bytesWritten;

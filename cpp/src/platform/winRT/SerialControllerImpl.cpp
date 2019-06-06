@@ -204,7 +204,7 @@ void SerialControllerImpl::StartReadTask()
 					}
 				}).wait();
 			}
-			catch (Platform::Exception^ ex)
+			catch (::Platform::Exception^ ex)
 			{
 				if (ex->HResult == HRESULT_FROM_WIN32(ERROR_OPERATION_ABORTED))
 				{
@@ -240,7 +240,7 @@ uint32 SerialControllerImpl::Write
 	}
 
 	DataWriter ^ writer = ref new DataWriter();
-	writer->WriteBytes(ref new Platform::Array<uint8>(_buffer, _length));
+	writer->WriteBytes(ref new ::Platform::Array<uint8>(_buffer, _length));
 	try
 	{
 		auto writeTask = create_task(m_serialDevice->OutputStream->WriteAsync(writer->DetachBuffer()));
@@ -248,7 +248,7 @@ uint32 SerialControllerImpl::Write
 		// since the consumer of this function expects this to be synchronous, just wait here.
 		retVal = writeTask.get();
 	}
-	catch (Platform::Exception^ )
+	catch (::Platform::Exception^ )
 	{
 		//ignore - return 0
 		retVal = 0;

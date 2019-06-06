@@ -96,7 +96,7 @@ bool ThreadImpl::Start
 		{
 			m_pfnThreadProc(m_exitEvent, m_context);
 		}
-		catch (Platform::Exception^)
+		catch (::Platform::Exception^)
 		{
 		}
 
