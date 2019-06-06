@@ -769,7 +769,7 @@ namespace OpenZWave
 				string description;
 			};
 			string const GetMetaData(MetaDataFields);
-			MetaDataFields const GetMetaDataId(string);
+			MetaDataFields GetMetaDataId(string);
 			string const GetMetaDataString(MetaDataFields);
 			ChangeLogEntry const GetChangeLog(uint32_t);
 

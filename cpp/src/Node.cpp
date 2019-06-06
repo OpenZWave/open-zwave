@@ -4043,7 +4043,7 @@ Node::ChangeLogEntry const Node::GetChangeLog
 // <Node::GetMetaDataId>
 // Translate the MetaData String to a ID
 //-----------------------------------------------------------------------------
-Node::MetaDataFields const Node::GetMetaDataId(string name) {
+Node::MetaDataFields Node::GetMetaDataId(string name) {
 	if (name == "OzwInfoPage") return MetaData_OzwInfoPage_URL;
 	if (name == "ZWProductPage") return MetaData_ZWProductPage_URL;
 	if (name == "ProductPic") return MetaData_ProductPic;
