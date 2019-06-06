@@ -33,7 +33,9 @@
 #include "Notification.h"
 #include "platform/Log.h"
 
-using namespace OpenZWave::Internal::CC;
+namespace OpenZWave {
+namespace Internal {
+namespace CC {
 
 enum ApplicationStatusCmd
 {
@@ -94,4 +96,7 @@ bool ApplicationStatus::HandleMsg
 
 	return true;
 }
+} // namespace CC
+} // namespace Internal
+} // namespace OpenZWave
 

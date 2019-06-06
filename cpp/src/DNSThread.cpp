@@ -29,7 +29,8 @@
 #include "Utils.h"
 #include "Driver.h"
 
-using namespace OpenZWave::Internal;
+namespace OpenZWave {
+namespace Internal {
 
 
 DNSThread::DNSThread
@@ -140,5 +141,5 @@ void DNSThread::processResult
 
 
 }
-
-
+} // namespace Internal
+} // namespace OpenZWave

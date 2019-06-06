@@ -28,7 +28,9 @@
 #include "Driver.h"
 #include "platform/Controller.h"
 
-using namespace OpenZWave::Internal::Platform;
+namespace OpenZWave {
+namespace Internal {
+namespace Platform {
 
 //-----------------------------------------------------------------------------
 // <Controller::PlayInitSequence>
@@ -65,4 +67,6 @@ uint32 Controller::Read
 
 	return 0;
 }
-
+} // namespace Platform
+} // namespace Internal
+} // namespace OpenZWave

@@ -32,7 +32,9 @@
 #include "Manager.h"
 #include "platform/Log.h"
 
-using namespace OpenZWave::Internal::CC;
+namespace OpenZWave {
+namespace Internal {
+namespace CC {
 
 enum DeviceResetLocallyCmd
 {
@@ -73,4 +75,7 @@ bool DeviceResetLocally::HandleMsg
 	}
 	return false;
 }
+} // namespace CC
+} // namespace Internal
+} // namespace OpenZWave
 

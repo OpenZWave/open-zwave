@@ -27,8 +27,8 @@
 
 #include "Bitfield.h"
 
-using namespace OpenZWave::Internal;
-
+namespace OpenZWave {
+namespace Internal {
 /* Note: we have our own "BitSet" class rather than using the Std Library version
  * as the Std Library version can not be resized at runtime. This version can. Its the basis
  * of the BitSet ValueID class
@@ -202,3 +202,5 @@ void Bitfield::Iterator::NextSetBit()
 		}
 	}
 }
+} // namespace Internal
+} // namespace OpenZWave

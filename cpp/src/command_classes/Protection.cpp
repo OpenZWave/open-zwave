@@ -37,7 +37,9 @@
 
 #include "value_classes/ValueList.h"
 
-using namespace OpenZWave::Internal::CC;
+namespace OpenZWave {
+namespace Internal {
+namespace CC {
 
 enum ProtectionCmd
 {
@@ -190,3 +192,6 @@ void Protection::CreateVars
 		node->CreateValueList( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_Protection::Protection, "Protection", "", false, false, 1, items, 0, 0 );
 	}
 }
+} // namespace CC
+} // namespace Internal
+} // namespace OpenZWave

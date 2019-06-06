@@ -35,7 +35,9 @@
 
 #include "value_classes/ValueDecimal.h"
 
-using namespace OpenZWave::Internal::CC;
+namespace OpenZWave {
+namespace Internal {
+namespace CC {
 
 enum EnergyProductionCmd
 {
@@ -167,6 +169,9 @@ void EnergyProduction::CreateVars
 		node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, (uint8)ValueID_Index_EnergyProduction::Time, c_energyParameterNames[ValueID_Index_EnergyProduction::Time], "", true, false, "0.0", 0 );
 	}
 }
+} // namespace CC
+} // namespace Internal
+} // namespace OpenZWave
 
 
 

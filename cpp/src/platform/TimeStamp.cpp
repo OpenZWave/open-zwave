@@ -37,7 +37,9 @@
 #include "platform/unix/TimeStampImpl.h"	// Platform-specific implementation of a TimeStamp
 #endif
 
-using namespace OpenZWave::Internal::Platform;
+namespace OpenZWave {
+namespace Internal {
+namespace Platform {
 
 //-----------------------------------------------------------------------------
 //	<TimeStamp::TimeStamp>
@@ -106,3 +108,6 @@ int32 TimeStamp::operator-
 {
 	return (int32)(m_pImpl - _other.m_pImpl);
 }
+} // namespace Platform
+} // namespace Internal
+} // namespace OpenZWave

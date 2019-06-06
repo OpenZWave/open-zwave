@@ -31,7 +31,9 @@
 #include "ThreadImpl.h"
 #include "Options.h"
 
-using namespace OpenZWave::Internal::Platform;
+namespace OpenZWave {
+namespace Internal {
+namespace Platform {
 using namespace Concurrency;
 using namespace Windows::Foundation;
 using namespace Windows::System::Threading;
@@ -146,3 +148,6 @@ bool ThreadImpl::IsSignalled()
 {
 	return !m_bIsRunning;
 }
+} // namespace Platform
+} // namespace Internal
+} // namespace OpenZWave

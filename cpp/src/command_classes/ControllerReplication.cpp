@@ -38,7 +38,9 @@
 #include "value_classes/ValueList.h"
 #include "value_classes/ValueButton.h"
 
-using namespace OpenZWave::Internal::CC;
+namespace OpenZWave {
+namespace Internal {
+namespace CC {
 
 enum ControllerReplicationCmd
 {
@@ -318,3 +320,6 @@ void ControllerReplication::CreateVars
 		node->CreateValueButton( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_ControllerReplication::Replicate, "Replicate", 0 );
 	}
 }
+} // namespace CC
+} // namespace Internal
+} // namespace OpenZWave

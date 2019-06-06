@@ -30,7 +30,8 @@
 #include "platform/Log.h"
 #include "Driver.h"
 
-using namespace OpenZWave::Internal;
+namespace OpenZWave {
+namespace Internal {
 
 //-----------------------------------------------------------------------------
 // <TimerThread::TimerThreadEntryPoint>
@@ -333,4 +334,5 @@ void Timer::TimerFireEvent
 	te->callback(te->id);
 	TimerDelEvent(te);
 }
-
+} // namespace Internal
+} // namespace OpenZWave

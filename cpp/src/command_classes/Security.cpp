@@ -40,7 +40,9 @@
 #include "value_classes/ValueBool.h"
 
 
-using namespace OpenZWave::Internal::CC;
+namespace OpenZWave {
+namespace Internal {
+namespace CC {
 
 
 
@@ -299,4 +301,7 @@ void Security::CreateVars
 		node->CreateValueBool( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_Security::Secured, "Secured", "", true, false, false, 0 );
 	}
 }
+} // namespace CC
+} // namespace Internal
+} // namespace OpenZWave
 

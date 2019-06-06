@@ -41,8 +41,6 @@
 
 #include "tinyxml.h"
 
-using namespace OpenZWave::Internal::CC;
-
 namespace OpenZWave {
 	namespace Internal {
 		namespace CC {
@@ -546,6 +544,6 @@ void WakeUp::CreateVars
 		}
 	}
 }
-		}
-	}
-}
+} // namespace CC
+} // namespace Internal
+} // namespace OpenZWave

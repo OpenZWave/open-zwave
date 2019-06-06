@@ -33,7 +33,9 @@
 #include "Driver.h"
 #include "platform/Log.h"
 
-using namespace OpenZWave::Internal::CC;
+namespace OpenZWave {
+namespace Internal {
+namespace CC {
 
 enum HailCmdEnum
 {
@@ -65,4 +67,7 @@ bool Hail::HandleMsg
 	}
 	return false;
 }
+} // namespace CC
+} // namespace Internal
+} // namespace OpenZWave
 

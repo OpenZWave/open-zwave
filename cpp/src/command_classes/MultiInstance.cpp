@@ -37,7 +37,9 @@
 #include "Node.h"
 #include "platform/Log.h"
 
-using namespace OpenZWave::Internal::CC;
+namespace OpenZWave {
+namespace Internal {
+namespace CC {
 
 // Reduced set of Generic Device classes sorted to reduce
 // the likely number of calls to MultiChannelCmd_EndPointFind.
@@ -673,4 +675,7 @@ void MultiInstance::SetInstanceLabel
 		node->SetInstanceLabel(_instance, label);
 	}
 }
+} // namespace CC
+} // namespace Internal
+} // namespace OpenZWave
 

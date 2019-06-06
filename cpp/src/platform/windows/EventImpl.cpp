@@ -30,7 +30,9 @@
 #include "Defs.h"
 #include "EventImpl.h"
 
-using namespace OpenZWave::Internal::Platform;
+namespace OpenZWave {
+namespace Internal {
+namespace Platform {
 
 
 //-----------------------------------------------------------------------------
@@ -100,3 +102,6 @@ bool EventImpl::Wait
 {
 	return( WAIT_TIMEOUT != ::WaitForSingleObject( m_hEvent, (DWORD)_timeout ) );
 }
+} // namespace Platform
+} // namespace Internal
+} // namespace OpenZWave

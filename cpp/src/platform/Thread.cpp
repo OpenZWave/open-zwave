@@ -37,7 +37,9 @@
 #include "platform/unix/ThreadImpl.h"	// Platform-specific implementation of a thread
 #endif
 
-using namespace OpenZWave::Internal::Platform;
+namespace OpenZWave {
+namespace Internal {
+namespace Platform {
 
 
 //-----------------------------------------------------------------------------
@@ -121,5 +123,7 @@ bool Thread::IsSignalled
 {
 	return m_pImpl->IsSignalled();
 }
-
+} // namespace Platform
+} // namespace Internal
+} // namespace OpenZWave
 

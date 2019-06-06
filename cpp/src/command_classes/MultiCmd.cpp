@@ -33,7 +33,9 @@
 #include "Driver.h"
 #include "platform/Log.h"
 
-using namespace OpenZWave::Internal::CC;
+namespace OpenZWave {
+namespace Internal {
+namespace CC {
 
 
 //-----------------------------------------------------------------------------
@@ -77,4 +79,7 @@ bool MultiCmd::HandleMsg
 	}
 	return false;
 }
+} // namespace CC
+} // namespace Internal
+} // namespace OpenZWave
 

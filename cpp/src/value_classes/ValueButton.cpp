@@ -32,7 +32,9 @@
 #include "Node.h"
 #include "platform/Log.h"
 
-using namespace OpenZWave::Internal::VC;
+namespace OpenZWave {
+namespace Internal {
+namespace VC {
 
 
 //-----------------------------------------------------------------------------
@@ -107,6 +109,6 @@ bool ValueButton::ReleaseButton
 	m_pressed = false;
 	return Value::Set();
 }
-
-
-
+} // namespace VC
+} // namespace Internal
+} // namespace OpenZWave

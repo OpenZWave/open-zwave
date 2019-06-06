@@ -37,7 +37,8 @@
 #include "Notification.h"
 #include "Utils.h"
 
-using namespace OpenZWave::Internal;
+namespace OpenZWave {
+namespace Internal {
 
 ManufacturerSpecificDB *ManufacturerSpecificDB::s_instance = NULL;
 std::map<uint16,std::string> ManufacturerSpecificDB::s_manufacturerMap;
@@ -477,4 +478,5 @@ bool ManufacturerSpecificDB::updateMFSConfigFile
 	checkInitialized();
 	return ret;
 }
-
+} // namespace Internal
+} // namespace OpenZWave

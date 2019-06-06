@@ -35,7 +35,9 @@
 
 #include "value_classes/ValueByte.h"
 
-using namespace OpenZWave::Internal::CC;
+namespace OpenZWave {
+namespace Internal {
+namespace CC {
 
 enum SwitchToggleMultilevelCmd
 {
@@ -198,4 +200,7 @@ void SwitchToggleMultilevel::CreateVars
 	  	node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_SwitchToggleMultilevel::Level, "Level", "", false, false, 0, 0 );
 	}
 }
+} // namespace CC
+} // namespace Internal
+} // namespace OpenZWave
 

@@ -39,7 +39,9 @@
 #include "value_classes/ValueList.h"
 #include "value_classes/ValueButton.h"
 
-using namespace OpenZWave::Internal::CC;
+namespace OpenZWave {
+namespace Internal {
+namespace CC {
 
 enum PowerlevelCmd
 {
@@ -489,3 +491,6 @@ void Powerlevel::CreateVars
 		node->CreateValueShort( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_PowerLevel::TestAckFrames, "Acked Frames", "", true, false, 0, 0 );
 	}
 }
+} // namespace CC
+} // namespace Internal
+} // namespace OpenZWave

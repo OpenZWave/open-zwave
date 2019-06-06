@@ -36,7 +36,9 @@
 #include "value_classes/ValueByte.h"
 #include "value_classes/ValueBool.h"
 
-using namespace OpenZWave::Internal::CC;
+namespace OpenZWave {
+namespace Internal {
+namespace CC {
 
 enum BarrierOperatorCmd
 {
@@ -434,4 +436,7 @@ void BarrierOperator::CreateVars
 
 	}
 }
+} // namespace CC
+} // namespace Internal
+} // namespace OpenZWave
 

@@ -39,7 +39,9 @@
 #include "value_classes/ValueBool.h"
 #include "value_classes/ValueByte.h"
 
-using namespace OpenZWave::Internal::CC;
+namespace OpenZWave {
+namespace Internal {
+namespace CC {
 
 enum SwitchBinaryCmd
 {
@@ -296,3 +298,6 @@ void SwitchBinary::CreateVars
 		}
 	}
 }
+} // namespace CC
+} // namespace Internal
+} // namespace OpenZWave

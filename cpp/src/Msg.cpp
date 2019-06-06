@@ -36,7 +36,8 @@
 #include "command_classes/Security.h"
 #include "aes/aescpp.h"
 
-using namespace OpenZWave::Internal;
+namespace OpenZWave {
+namespace Internal {
 
 /* Callback for normal messages start at 10. Special Messages using a Callback prior to 10 */
 uint8 Msg::s_nextCallbackId = 10;
@@ -340,4 +341,5 @@ uint8* Msg::GetBuffer
 			return NULL;
 		}
 }
-
+} // namespace Internal
+} // namespace OpenZWave

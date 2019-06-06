@@ -36,7 +36,9 @@
 #include "value_classes/ValueByte.h"
 #include "value_classes/ValueList.h"
 
-using namespace OpenZWave::Internal::CC;
+namespace OpenZWave {
+namespace Internal {
+namespace CC {
 
 enum ClockCmd
 {
@@ -248,3 +250,6 @@ void Clock::CreateVars
 		node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_Clock::Minute, "Minute", "", false, false, 0, 0 );
 	}
 }
+} // namespace CC
+} // namespace Internal
+} // namespace OpenZWave

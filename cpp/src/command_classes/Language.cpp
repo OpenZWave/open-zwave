@@ -35,7 +35,9 @@
 
 #include "value_classes/ValueString.h"
 
-using namespace OpenZWave::Internal::CC;
+namespace OpenZWave {
+namespace Internal {
+namespace CC {
 
 enum LanguageCmd
 {
@@ -155,4 +157,7 @@ void Language::CreateVars
 		node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_Language::Country, "Country", "", false, false, "", 0 );
 	}
 }
+} // namespace CC
+} // namespace Internal
+} // namespace OpenZWave
 

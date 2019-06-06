@@ -36,7 +36,9 @@
 #include "platform/unix/DNSImpl.h"	// Platform-specific implementation of a DNS Operations
 #endif
 
-using namespace OpenZWave::Internal::Platform;
+namespace OpenZWave {
+namespace Internal {
+namespace Platform {
 
 DNS::DNS
 (
@@ -62,3 +64,6 @@ string &result
 	status = this->m_pImpl->status;
 	return ret;
 }
+} // namespace Platform
+} // namespace Internal
+} // namespace OpenZWave

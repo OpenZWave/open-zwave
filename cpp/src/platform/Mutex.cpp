@@ -37,7 +37,9 @@
 #endif
 
 
-using namespace OpenZWave::Internal::Platform;
+namespace OpenZWave {
+namespace Internal {
+namespace Platform {
 
 //-----------------------------------------------------------------------------
 //	<Mutex::Mutex>
@@ -100,4 +102,6 @@ bool Mutex::IsSignalled
 {
 	return m_pImpl->IsSignalled();
 }
-
+} // namespace Platform
+} // namespace Internal
+} // namespace OpenZWave

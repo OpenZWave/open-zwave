@@ -35,7 +35,9 @@
 
 #include "value_classes/ValueInt.h"
 
-using namespace OpenZWave::Internal::CC;
+namespace OpenZWave {
+namespace Internal {
+namespace CC {
 
 enum MeterPulseCmd
 {
@@ -138,6 +140,9 @@ void MeterPulse::CreateVars
 	  	node->CreateValueInt( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_MeterPulse::Count, "Count", "", true, false, 0, 0 );
 	}
 }
+} // namespace CC
+} // namespace Internal
+} // namespace OpenZWave
 
 
 

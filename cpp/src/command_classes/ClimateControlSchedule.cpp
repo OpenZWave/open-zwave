@@ -38,7 +38,9 @@
 
 #include "tinyxml.h"
 
-using namespace OpenZWave::Internal::CC;
+namespace OpenZWave {
+namespace Internal {
+namespace CC {
 
 enum ClimateControlScheduleCmd
 {
@@ -398,4 +400,7 @@ void ClimateControlSchedule::CreateVars
 		node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_ClimateControlSchedule::OverrideSetback, "Override Setback", "", false, false, 0, 0  );
 	}
 }
+} // namespace CC
+} // namespace Internal
+} // namespace OpenZWave
 

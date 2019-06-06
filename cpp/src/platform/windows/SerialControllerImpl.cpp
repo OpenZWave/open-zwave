@@ -30,7 +30,9 @@
 
 #include "platform/Log.h"
 
-using namespace OpenZWave::Internal::Platform;
+namespace OpenZWave {
+namespace Internal {
+namespace Platform {
 
 DWORD WINAPI SerialReadThreadEntryPoint( void* _context );
 
@@ -408,3 +410,6 @@ uint32 SerialControllerImpl::Write
 	CloseHandle( overlapped.hEvent );
 	return (uint32)bytesWritten;
 }
+} // namespace Platform
+} // namespace Internal
+} // namespace OpenZWave

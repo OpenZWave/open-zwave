@@ -37,7 +37,9 @@
 #include "value_classes/ValueShort.h"
 #include "value_classes/ValueList.h"
 
-using namespace OpenZWave::Internal::CC;
+namespace OpenZWave {
+namespace Internal {
+namespace CC {
 
 enum ZWavePlusInfoCmdEnum
 {
@@ -184,5 +186,8 @@ void ZWavePlusInfo::CreateVars
 
 	}
 }
+} // namespace CC
+} // namespace Internal
+} // namespace OpenZWave
 
 

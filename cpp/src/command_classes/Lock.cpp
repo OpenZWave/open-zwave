@@ -35,7 +35,9 @@
 
 #include "value_classes/ValueBool.h"
 
-using namespace OpenZWave::Internal::CC;
+namespace OpenZWave {
+namespace Internal {
+namespace CC {
 
 enum LockCmd
 {
@@ -162,5 +164,8 @@ void Lock::CreateVars
 	  	node->CreateValueBool( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_Lock::Locked, "Locked", "", false, false, false, 0 );
 	}
 }
+} // namespace CC
+} // namespace Internal
+} // namespace OpenZWave
 
 

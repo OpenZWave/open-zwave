@@ -36,7 +36,9 @@
 #include "platform/unix/EventImpl.h"	// Platform-specific implementation of an event
 #endif
 
-using namespace OpenZWave::Internal::Platform;
+namespace OpenZWave {
+namespace Internal {
+namespace Platform {
 
 //-----------------------------------------------------------------------------
 //	<Event::Event>
@@ -105,5 +107,7 @@ bool Event::Wait
 {
 	return m_pImpl->Wait( _timeout );
 }
-
+} // namespace Platform
+} // namespace Internal
+} // namespace OpenZWave
 

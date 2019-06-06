@@ -35,7 +35,9 @@
 
 #include "value_classes/ValueBool.h"
 
-using namespace OpenZWave::Internal::CC;
+namespace OpenZWave {
+namespace Internal {
+namespace CC {
 
 enum SwitchToggleBinaryCmd
 {
@@ -153,5 +155,8 @@ void SwitchToggleBinary::CreateVars
 	  	node->CreateValueBool( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_SwitchToggleBinary::ToggleSwitch, "Toggle Switch", "", false, false, false, 0 );
 	}
 }
+} // namespace CC
+} // namespace Internal
+} // namespace OpenZWave
 
 

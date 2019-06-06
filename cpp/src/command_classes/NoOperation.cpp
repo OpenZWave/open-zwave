@@ -33,7 +33,9 @@
 #include "Driver.h"
 #include "platform/Log.h"
 
-using namespace OpenZWave::Internal::CC;
+namespace OpenZWave {
+namespace Internal {
+namespace CC {
 
 //-----------------------------------------------------------------------------
 // <NoOperation::HandleMsg>
@@ -74,3 +76,6 @@ void NoOperation::Set
 		msg->Append( TRANSMIT_OPTION_ACK | TRANSMIT_OPTION_NO_ROUTE );
 	GetDriver()->SendMsg( msg, _queue );
 }
+} // namespace CC
+} // namespace Internal
+} // namespace OpenZWave

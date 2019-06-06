@@ -39,7 +39,9 @@
 #include "FileOpsImpl.h"
 #include "Utils.h"
 
-using namespace OpenZWave::Internal::Platform;
+namespace OpenZWave {
+namespace Internal {
+namespace Platform {
 using std::ios_base;
 
 //-----------------------------------------------------------------------------
@@ -185,5 +187,7 @@ bool FileOpsImpl::FolderCreate
 	Log::Write(LogLevel_Warning, "Create Directory Failed: %s - %s", _dirname.c_str(), strerror(errno));
 	return false;
 }
-
+} // namespace Platform
+} // namespace Internal
+} // namespace OpenZWave
 

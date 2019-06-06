@@ -34,7 +34,9 @@
 #include "Manager.h"
 #include <ctime>
 
-using namespace OpenZWave::Internal::VC;
+namespace OpenZWave {
+namespace Internal {
+namespace VC {
 
 
 //-----------------------------------------------------------------------------
@@ -187,3 +189,6 @@ void ValueShort::OnValueRefreshed
 		break;
 	}
 }
+} // namespace VC
+} // namespace Internal
+} // namespace OpenZWave

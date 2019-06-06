@@ -32,7 +32,9 @@
 #include "Msg.h"
 #include "platform/Log.h"
 
-using namespace OpenZWave::Internal::VC;
+namespace OpenZWave {
+namespace Internal {
+namespace VC {
 
 //-----------------------------------------------------------------------------
 // <ValueSchedule::ValueSchedule>
@@ -363,3 +365,6 @@ std::string const ValueSchedule::GetAsString() const {
 	/* we should actuall find a way to return the arrays of switchpoints nicely */
 	return "SwitchPoint";
 }
+} // namespace VC
+} // namespace Internal
+} // namespace OpenZWave

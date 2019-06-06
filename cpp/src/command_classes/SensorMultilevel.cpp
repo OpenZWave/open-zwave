@@ -36,7 +36,9 @@
 
 #include "value_classes/ValueDecimal.h"
 
-using namespace OpenZWave::Internal::CC;
+namespace OpenZWave {
+namespace Internal {
+namespace CC {
 
 enum SensorMultilevelCmd
 {
@@ -495,3 +497,6 @@ void SensorMultilevel::CreateVars
 {
 	// Don't create anything here. We do it in the report.
 }
+} // namespace CC
+} // namespace Internal
+} // namespace OpenZWave

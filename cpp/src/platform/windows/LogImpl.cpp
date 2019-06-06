@@ -64,9 +64,9 @@ errno_t fopen_s(FILE** pFile, const char *filename, const char *mode)
 
 #endif
 
-
-
-using namespace OpenZWave::Internal::Platform;
+namespace OpenZWave {
+namespace Internal {
+namespace Platform {
 
 //-----------------------------------------------------------------------------
 //	<LogImpl::LogImpl>
@@ -378,3 +378,6 @@ string LogImpl::GetLogLevelString
 	else
 		return "Unknown, ";
 }
+} // namespace Platform
+} // namespace Internal
+} // namespace OpenZWave

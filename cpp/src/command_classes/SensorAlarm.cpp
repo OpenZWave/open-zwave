@@ -35,7 +35,9 @@
 
 #include "value_classes/ValueByte.h"
 
-using namespace OpenZWave::Internal::CC;
+namespace OpenZWave {
+namespace Internal {
+namespace CC {
 
 enum SensorAlarmCmd
 {
@@ -212,4 +214,7 @@ bool SensorAlarm::HandleMsg
 
 	return false;
 }
+} // namespace CC
+} // namespace Internal
+} // namespace OpenZWave
 

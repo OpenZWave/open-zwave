@@ -37,7 +37,8 @@
 #include "platform/FileOps.h"
 #include "Utils.h"
 
-using namespace OpenZWave::Internal;
+namespace OpenZWave {
+namespace Internal {
 
 i_HttpClient::i_HttpClient
 (
@@ -199,5 +200,7 @@ void HttpClient::HttpThreadProc
 		}
 	}
 	Internal::Platform::StopNetwork();
-    client->m_httpThreadRunning = false;
+	client->m_httpThreadRunning = false;
 }
+} // namespace Internal
+} // namespace OpenZWave

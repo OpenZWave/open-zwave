@@ -31,7 +31,9 @@
 #include "Notification.h"
 #include "Localization.h"
 
-using namespace OpenZWave::Internal::VC;
+namespace OpenZWave {
+namespace Internal {
+namespace VC {
 
 
 //-----------------------------------------------------------------------------
@@ -193,12 +195,6 @@ Value* ValueStore::GetValue
 	return value;
 }
 
-////-----------------------------------------------------------------------------
-//// <ValueStore::GetValue>
-//// Get a value from the store
-////-----------------------------------------------------------------------------
-//Value* ValueStore::GetValue
-//(
-//	ValueID const& _id
-//)const
-
+} // namespace VC
+} // namespace Internal
+} // namespace OpenZWave

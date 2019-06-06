@@ -39,7 +39,9 @@
 #include "platform/unix/WaitImpl.h"	// Platform-specific implementation of a Wait object
 #endif
 
-using namespace OpenZWave::Internal::Platform;
+namespace OpenZWave {
+namespace Internal {
+namespace Platform {
 
 void WaitMultipleCallback( void* _context );
 
@@ -182,4 +184,6 @@ void WaitMultipleCallback
 	Event* waitEvent = (Event*)_context;
 	waitEvent->Set();
 }
-
+} // namespace Platform
+} // namespace Internal
+} // namespace OpenZWave

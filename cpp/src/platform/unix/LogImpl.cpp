@@ -32,7 +32,9 @@
 #include "Defs.h"
 #include "LogImpl.h"
 
-using namespace OpenZWave::Internal::Platform;
+namespace OpenZWave {
+namespace Internal {
+namespace Platform {
 
 //-----------------------------------------------------------------------------
 //	<LogImpl::LogImpl>
@@ -348,3 +350,6 @@ std::string LogImpl::GetLogLevelString
 	else
 		return "Unknown, ";
 }
+} // namespace Platform
+} // namespace Internal
+} // namespace OpenZWave

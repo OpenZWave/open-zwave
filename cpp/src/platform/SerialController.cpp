@@ -39,7 +39,9 @@
 #include "platform/unix/SerialControllerImpl.h"	// Platform-specific implementation of a serial port
 #endif
 
-using namespace OpenZWave::Internal::Platform;
+namespace OpenZWave {
+namespace Internal {
+namespace Platform {
 
 
 //-----------------------------------------------------------------------------
@@ -182,6 +184,6 @@ uint32 SerialController::Write
 
 	return( m_pImpl->Write( _buffer, _length ) );
 }
-
-
-
+} // namespace Platform
+} // namespace Internal
+} // namespace OpenZWave

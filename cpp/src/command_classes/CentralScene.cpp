@@ -38,7 +38,9 @@
 
 #include "tinyxml.h"
 
-using namespace OpenZWave::Internal::CC;
+namespace OpenZWave {
+namespace Internal {
+namespace CC {
 
 enum CentralSceneCmd
 {
@@ -391,3 +393,6 @@ void CentralScene::ClearScene
 	m_TimersSet.erase(sceneID);
 
 }
+} // namespace CC
+} // namespace Internal
+} // namespace OpenZWave

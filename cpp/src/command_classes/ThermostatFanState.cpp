@@ -35,7 +35,9 @@
 
 #include "value_classes/ValueString.h"
 
-using namespace OpenZWave::Internal::CC;
+namespace OpenZWave {
+namespace Internal {
+namespace CC {
 
 enum ThermostatFanStateCmd
 {
@@ -155,4 +157,7 @@ void ThermostatFanState::CreateVars
 	  	node->CreateValueString( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_ThermostatFanState::FanState, "Fan State", "", true, false, c_stateName[0], 0 );
 	}
 }
+} // namespace CC
+} // namespace Internal
+} // namespace OpenZWave
 

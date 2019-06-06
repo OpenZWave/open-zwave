@@ -37,7 +37,9 @@
 
 #include "tinyxml.h"
 
-using namespace OpenZWave::Internal::CC;
+namespace OpenZWave {
+namespace Internal {
+namespace CC {
 
 enum ThermostatSetpointCmd
 {
@@ -336,3 +338,6 @@ void ThermostatSetpoint::CreateVars
 	  	node->CreateValueDecimal( ValueID::ValueGenre_User, GetCommandClassId(), _instance, _index, "Setpoint", "C", false, false, "0.0", 0  );
 	}
 }
+} // namespace CC
+} // namespace Internal
+} // namespace OpenZWave

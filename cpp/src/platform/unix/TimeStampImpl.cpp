@@ -30,7 +30,9 @@
 #include "Defs.h"
 #include "TimeStampImpl.h"
 
-using namespace OpenZWave::Internal::Platform;
+namespace OpenZWave {
+namespace Internal {
+namespace Platform {
 
 //-----------------------------------------------------------------------------
 //	<TimeStampImpl::TimeStampImpl>
@@ -142,3 +144,6 @@ int32 TimeStampImpl::operator-
     
     return diff;  
 }
+} // namespace Platform
+} // namespace Internal
+} // namespace OpenZWave

@@ -35,7 +35,9 @@
 
 #include "value_classes/ValueByte.h"
 
-using namespace OpenZWave::Internal::CC;
+namespace OpenZWave {
+namespace Internal {
+namespace CC {
 
 enum BatteryCmd
 {
@@ -142,5 +144,8 @@ void Battery::CreateVars
 	  	node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_Battery::Level, "Battery Level", "%", true, false, 100, 0 );
 	}
 }
+} // namespace CC
+} // namespace Internal
+} // namespace OpenZWave
 
 

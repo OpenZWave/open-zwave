@@ -38,7 +38,9 @@
 #include "value_classes/ValueButton.h"
 #include "value_classes/ValueString.h"
 
-using namespace OpenZWave::Internal::CC;
+namespace OpenZWave {
+namespace Internal {
+namespace CC {
 
 enum TimeParametersCmd
 {
@@ -231,3 +233,6 @@ void TimeParameters::CreateVars
 
 	}
 }
+} // namespace CC
+} // namespace Internal
+} // namespace OpenZWave

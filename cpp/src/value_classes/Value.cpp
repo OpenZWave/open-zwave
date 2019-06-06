@@ -39,7 +39,9 @@
 #include <ctime>
 #include "Options.h"
 
-using namespace OpenZWave::Internal::VC;
+namespace OpenZWave {
+namespace Internal {
+namespace VC {
 
 static char const* c_genreName[] =
 {
@@ -781,5 +783,8 @@ void Value::SetLabel
 {
 	Localization::Get()->SetValueLabel(m_id.GetNodeId(), m_id.GetCommandClassId(), m_id.GetIndex(), -1, _label, lang);
 }
+} // namespace VC
+} // namespace Internal
+} // namespace OpenZWave
 
 

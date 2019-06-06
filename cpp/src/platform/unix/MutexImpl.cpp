@@ -33,7 +33,9 @@
 #include <stdio.h>
 #include <errno.h>
 
-using namespace OpenZWave::Internal::Platform;
+namespace OpenZWave {
+namespace Internal {
+namespace Platform {
 
 //-----------------------------------------------------------------------------
 //	<MutexImpl::MutexImpl>
@@ -144,4 +146,6 @@ bool MutexImpl::IsSignalled
 {
 	return( 0 == m_lockCount );
 }
-
+} // namespace Platform
+} // namespace Internal
+} // namespace OpenZWave

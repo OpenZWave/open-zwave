@@ -30,8 +30,6 @@
 #include "Utils.h"
 #include <functional>
 
-using namespace OpenZWave::Internal;
-
 namespace OpenZWave {
 	namespace Internal {
 

@@ -40,7 +40,9 @@
 
 #include "tinyxml.h"
 
-using namespace OpenZWave::Internal::CC;
+namespace OpenZWave {
+namespace Internal {
+namespace CC {
 
 enum DoorLockCmd
 {
@@ -511,5 +513,8 @@ void DoorLock::CreateVars
 
 	}
 }
+} // namespace CC
+} // namespace Internal
+} // namespace OpenZWave
 
 

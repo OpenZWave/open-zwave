@@ -44,7 +44,9 @@
 #define INPUT_REPORT_LENGTH 0x5
 #define OUTPUT_REPORT_LENGTH 0x0
 
-using namespace OpenZWave::Internal::Platform;
+namespace OpenZWave {
+namespace Internal {
+namespace Platform {
 
 //-----------------------------------------------------------------------------
 //	<HidController::HidController>
@@ -540,5 +542,7 @@ int HidController::SendFeatureReport
 	}
 	return result;
 }
-
+} // namespace Platform
+} // namespace Internal
+} // namespace OpenZWave
 #endif /* USE_HID */

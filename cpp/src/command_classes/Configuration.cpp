@@ -40,7 +40,9 @@
 #include "value_classes/ValueList.h"
 #include "value_classes/ValueShort.h"
 
-using namespace OpenZWave::Internal::CC;
+namespace OpenZWave {
+namespace Internal {
+namespace CC {
 
 enum ConfigurationCmd
 {
@@ -289,3 +291,6 @@ void Configuration::Set
 	msg->Append( GetDriver()->GetTransmitOptions() );
 	GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 }
+} // namespace CC
+} // namespace Internal
+} // namespace OpenZWave

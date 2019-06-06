@@ -31,7 +31,9 @@
 #include "platform/Log.h"
 #include "Manager.h"
 
-using namespace OpenZWave::Internal::VC;
+namespace OpenZWave {
+namespace Internal {
+namespace VC {
 
 
 //-----------------------------------------------------------------------------
@@ -143,3 +145,6 @@ void ValueString::OnValueRefreshed
 		break;
 	}
 }
+} // namespace VC
+} // namespace Internal
+} // namespace OpenZWave

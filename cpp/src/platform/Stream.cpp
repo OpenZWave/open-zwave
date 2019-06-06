@@ -33,7 +33,9 @@
 
 #include <cstdio>
 
-using namespace OpenZWave::Internal::Platform;
+namespace OpenZWave {
+namespace Internal {
+namespace Platform {
 
 //-----------------------------------------------------------------------------
 //	<Stream::Stream>
@@ -227,3 +229,6 @@ void Stream::LogData
 	}
 	Log::Write( LogLevel_StreamDetail, "%s%s", _function.c_str(), str.c_str() );
 }
+} // namespace Platform
+} // namespace Internal
+} // namespace OpenZWave

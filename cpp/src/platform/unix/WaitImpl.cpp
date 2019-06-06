@@ -34,7 +34,9 @@
 #include <errno.h>
 #include <string.h>
 
-using namespace OpenZWave::Internal::Platform;
+namespace OpenZWave {
+namespace Internal {
+namespace Platform {
 
 //-----------------------------------------------------------------------------
 //	<WaitImpl::WaitImpl>
@@ -160,3 +162,6 @@ void WaitImpl::Notify
 		assert( 0 );
 	}
 }
+} // namespace Platform
+} // namespace Internal
+} // namespace OpenZWave

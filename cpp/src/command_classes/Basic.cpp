@@ -40,7 +40,9 @@
 
 #include "tinyxml.h"
 
-using namespace OpenZWave::Internal::CC;
+namespace OpenZWave {
+namespace Internal {
+namespace CC {
 
 enum BasicCmd
 {
@@ -307,3 +309,6 @@ bool Basic::SetMapping
 	}
 	return res;
 }
+} // namespace CC
+} // namespace Internal
+} // namespace OpenZWave

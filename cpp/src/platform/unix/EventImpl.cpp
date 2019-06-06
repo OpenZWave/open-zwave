@@ -31,7 +31,9 @@
 #include <stdio.h>
 #include <sys/time.h>
 
-using namespace OpenZWave::Internal::Platform;
+namespace OpenZWave {
+namespace Internal {
+namespace Platform {
 
 //-----------------------------------------------------------------------------
 //	<EventImpl::EventImpl>
@@ -261,4 +263,6 @@ bool EventImpl::Wait
 	}
 	return result;
 }
-
+} // namespace Platform
+} // namespace Internal
+} // namespace OpenZWave

@@ -34,7 +34,9 @@
 #include "platform/Log.h"
 #include "value_classes/ValueButton.h"
 
-using namespace OpenZWave::Internal::CC;
+namespace OpenZWave {
+namespace Internal {
+namespace CC {
 
 enum BasicWindowCoveringCmd
 {
@@ -109,4 +111,7 @@ void BasicWindowCovering::CreateVars
 		node->CreateValueButton( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_BasicWindowCovering::Close, "Close", 0 );
 	}
 }
+} // namespace CC
+} // namespace Internal
+} // namespace OpenZWave
 

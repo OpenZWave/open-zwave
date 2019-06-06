@@ -36,7 +36,9 @@
 #include "value_classes/ValueBool.h"
 #include "tinyxml.h"
 
-using namespace OpenZWave::Internal::CC;
+namespace OpenZWave {
+namespace Internal {
+namespace CC {
 
 enum SensorBinaryCmd
 {
@@ -241,3 +243,6 @@ void SensorBinary::CreateVars
 	  	node->CreateValueBool(  ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_SensorBinary::Sensor_1, "Sensor", "", true, false, false, 0 );
 	}
 }
+} // namespace CC
+} // namespace Internal
+} // namespace OpenZWave

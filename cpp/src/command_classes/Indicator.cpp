@@ -35,7 +35,9 @@
 
 #include "value_classes/ValueByte.h"
 
-using namespace OpenZWave::Internal::CC;
+namespace OpenZWave {
+namespace Internal {
+namespace CC {
 
 enum IndicatorCmd
 {
@@ -162,3 +164,6 @@ void Indicator::CreateVars
 	  	node->CreateValueByte( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_Indicator::Indicator, "Indicator", "", false, false, false, 0 );
 	}
 }
+} // namespace CC
+} // namespace Internal
+} // namespace OpenZWave

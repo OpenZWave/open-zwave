@@ -35,7 +35,9 @@
 #include "platform/Log.h"
 #include "value_classes/ValueInt.h"
 
-using namespace OpenZWave::Internal::CC;
+namespace OpenZWave {
+namespace Internal {
+namespace CC {
 
 enum SceneActivationCmd
 {
@@ -170,3 +172,6 @@ void SceneActivation::CreateVars
 	  	node->CreateValueInt(  ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_SceneActivation::Duration, "Duration", "", true, false, 0, 0 );
 	}
 }
+} // namespace CC
+} // namespace Internal
+} // namespace OpenZWave

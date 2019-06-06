@@ -35,7 +35,9 @@
 #include "Notification.h"
 #include "platform/Log.h"
 
-using namespace OpenZWave::Internal::CC;
+namespace OpenZWave {
+namespace Internal {
+namespace CC {
 
 enum NodeNamingCmd
 {
@@ -395,7 +397,7 @@ void NodeNaming::SetLocation
 // <ExtractString>
 // Extract a string from the report data
 //-----------------------------------------------------------------------------
-std::string OpenZWave::Internal::CC::ExtractString
+std::string ExtractString
 (
 	uint8 const* _data,
 	uint32 const _length
@@ -471,7 +473,7 @@ std::string OpenZWave::Internal::CC::ExtractString
 // <ConvertUFT16ToUTF8>
 // Convert a UTF-16 string into UTF-8 encoding.
 //-----------------------------------------------------------------------------
-uint32 OpenZWave::Internal::CC::ConvertUFT16ToUTF8
+uint32 ConvertUFT16ToUTF8
 (
 	uint16 _utf16,
 	char* _buffer,
@@ -526,6 +528,9 @@ uint32 OpenZWave::Internal::CC::ConvertUFT16ToUTF8
 
 	return pos;
 }
+} // namespace CC
+} // namespace Internal
+} // namespace OpenZWave
 
 
 

@@ -29,7 +29,9 @@
 #include <string>
 #include "Defs.h"
 
-using namespace OpenZWave::Internal::CC;
+namespace OpenZWave {
+namespace Internal {
+namespace CC {
 
 static std::vector<SimpleAVCommandItem> m_commands;
 
@@ -549,3 +551,6 @@ std::vector<SimpleAVCommandItem> SimpleAVCommandItem::GetCommands()
 	}
 	return m_commands;
 }
+} // namespace CC
+} // namespace Internal
+} // namespace OpenZWave

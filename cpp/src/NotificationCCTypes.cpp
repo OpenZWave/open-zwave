@@ -33,7 +33,8 @@
 #include "Utils.h"
 #include "platform/Log.h"
 
-using namespace OpenZWave::Internal;
+namespace OpenZWave {
+namespace Internal {
 
 NotificationCCTypes *NotificationCCTypes::m_instance = NULL;
 std::map<uint32, NotificationCCTypes::NotificationTypes *> NotificationCCTypes::Notifications;
@@ -385,3 +386,5 @@ NotificationCCTypes *NotificationCCTypes::Get
 	ReadXML();
 	return m_instance;
 }
+} // namespace Internal
+} // namespace OpenZWave

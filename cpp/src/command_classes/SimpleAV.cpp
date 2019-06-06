@@ -38,7 +38,9 @@
 #include "value_classes/ValueShort.h"
 #include "value_classes/ValueList.h"
 
-using namespace OpenZWave::Internal::CC;
+namespace OpenZWave {
+namespace Internal {
+namespace CC {
 
 uint8 m_sequence;
 
@@ -188,3 +190,6 @@ void SimpleAV::CreateVars
 		// node->CreateValueShort(ValueID::ValueGenre_User, GetCommandClassId(), _instance, 0, string("OutputAVCommandNumber_").append(std::to_string(_instance)), "", false, true, 0, 0, helpNumeric);
 	}
 }
+} // namespace CC
+} // namespace Internal
+} // namespace OpenZWave

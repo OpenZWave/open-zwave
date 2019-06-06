@@ -553,4 +553,3 @@ Group::AssociationCommand::~AssociationCommand
 	delete [] m_data;
 }
 
-

@@ -30,7 +30,9 @@
 #include "FileOpsImpl.h"
 #include "Utils.h"
 
-using namespace OpenZWave::Internal::Platform;
+namespace OpenZWave {
+namespace Internal {
+namespace Platform {
 
 //-----------------------------------------------------------------------------
 //	<FileOpsImpl::FileOpsImpl>
@@ -186,3 +188,6 @@ bool FileOpsImpl::FolderCreate
 	}
 	return true;
 }
+} // namespace Platform
+} // namespace Internal
+} // namespace OpenZWave

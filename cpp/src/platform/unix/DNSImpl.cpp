@@ -33,9 +33,9 @@
 
 #include "DNSImpl.h"
 
-
-
-using namespace OpenZWave::Internal::Platform;
+namespace OpenZWave {
+namespace Internal {
+namespace Platform {
 
 DNSImpl::DNSImpl
 (
@@ -125,3 +125,6 @@ string &result
    	status = DNSError_None;
 	return true;
 }
+} // namespace Platform
+} // namespace Internal
+} // namespace OpenZWave

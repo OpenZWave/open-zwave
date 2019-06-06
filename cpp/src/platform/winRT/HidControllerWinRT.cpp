@@ -33,6 +33,10 @@
 #include <ppltasks.h>
 #include <winstring.h>
 
+namespace OpenZWave {
+namespace Internal {
+namespace Platform {
+
 using namespace Windows::Devices::Enumeration;
 using namespace Windows::Devices::HumanInterfaceDevice;
 using namespace Windows::Devices::Usb;
@@ -40,7 +44,6 @@ using namespace Windows::Foundation;
 using namespace Windows::Storage::Streams;
 using namespace Platform;
 using namespace Concurrency;
-using namespace OpenZWave::Internal::Platform;
 
 #define AQS_FORMAT L"System.Devices.InterfaceClassGuid:=\"{4D1E55B2-F16F-11CF-88CB-001111000030}\" AND System.Devices.InterfaceEnabled:=System.StructuredQueryType.Boolean#True AND System.DeviceInterface.Hid.VendorId:=%04d AND System.DeviceInterface.Hid.ProductId:=%04d"
 #define AQS_LENGTH 300
@@ -274,3 +277,6 @@ uint32 HidController::SendFeatureReport
 	}
 	return bytesWritten;
 }
+} // namespace Platform
+} // namespace Internal
+} // namespace OpenZWave

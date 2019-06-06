@@ -48,7 +48,9 @@
 #include "value_classes/ValueString.h"
 #include "value_classes/ValueInt.h"
 
-using namespace OpenZWave::Internal::CC;
+namespace OpenZWave {
+namespace Internal {
+namespace CC {
 
 enum AlarmCmd
 {
@@ -642,4 +644,7 @@ void Alarm::ClearAlarm(uint32 type) {
 		Log::Write ( LogLevel_Warning, GetNodeId(), "Couldn't Find a ValueList to ClearAlarm for Notification Type %d (%d)", type, _instance);
 	}
 }
+} // namespace CC
+} // namespace Internal
+} // namespace OpenZWave
 

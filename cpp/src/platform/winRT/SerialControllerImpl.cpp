@@ -33,7 +33,9 @@
 #include <winstring.h>
 #include <ppltasks.h>
 
-using namespace OpenZWave::Internal::Platform;
+namespace OpenZWave {
+namespace Internal {
+namespace Platform {
 using namespace Windows::Devices::SerialCommunication;
 using namespace Windows::Devices::Enumeration;
 using namespace Windows::Storage::Streams;
@@ -254,3 +256,6 @@ uint32 SerialControllerImpl::Write
 
 	return retVal;
 }
+} // namespace Platform
+} // namespace Internal
+} // namespace OpenZWave

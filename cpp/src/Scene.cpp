@@ -35,7 +35,8 @@
 
 #include "tinyxml.h"
 
-using namespace OpenZWave::Internal;
+namespace OpenZWave {
+namespace Internal {
 
 uint32 const c_sceneVersion = 1;
 
@@ -479,3 +480,5 @@ bool Scene::Activate
 	}
 	return res;
 }
+} // namespace Internal
+} // namespace OpenZWave

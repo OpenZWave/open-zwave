@@ -43,8 +43,9 @@
 
 #include "tinyxml.h"
 
-
-using namespace OpenZWave::Internal::CC;
+namespace OpenZWave {
+namespace Internal {
+namespace CC {
 
 enum ColorCmd
 {
@@ -1067,3 +1068,6 @@ void Color::SetValueBasic
 {
 	RequestValue( 0, ValueID_Index_Color::Color, _instance, Driver::MsgQueue_Send );
 }
+} // namespace CC
+} // namespace Internal
+} // namespace OpenZWave

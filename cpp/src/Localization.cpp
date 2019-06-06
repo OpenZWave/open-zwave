@@ -37,7 +37,8 @@
 #include "command_classes/SoundSwitch.h"
 #include "command_classes/Meter.h"
 
-using namespace OpenZWave::Internal;
+namespace OpenZWave {
+namespace Internal {
 
 Localization *Localization::m_instance = NULL;
 std::map<uint64,ValueLocalizationEntry*> Localization::m_valueLocalizationMap;
@@ -865,3 +866,5 @@ Localization *Localization::Get
 	Options::Get()->GetOptionAsString( "Language", &m_selectedLang );
 	return m_instance;
 }
+} // namespace Internal
+} // namespace OpenZWave

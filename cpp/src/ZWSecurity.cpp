@@ -39,7 +39,6 @@
 
 namespace OpenZWave {
 	namespace Internal {
-	//using namespace OpenZWave;
 
 	//-----------------------------------------------------------------------------
 	// <GenerateAuthentication>

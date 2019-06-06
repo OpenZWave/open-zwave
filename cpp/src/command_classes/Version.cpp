@@ -37,7 +37,9 @@
 
 #include "tinyxml.h"
 
-using namespace OpenZWave::Internal::CC;
+namespace OpenZWave {
+namespace Internal {
+namespace CC {
 
 enum VersionCmd
 {
@@ -228,3 +230,6 @@ void Version::CreateVars
 		node->CreateValueString( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_Version::Application, "Application Version", "", true, false, "Unknown", 0 );
 	}
 }
+} // namespace CC
+} // namespace Internal
+} // namespace OpenZWave

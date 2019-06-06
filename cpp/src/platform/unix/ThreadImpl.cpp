@@ -35,7 +35,9 @@
 #define pthread_yield pthread_yield_np
 #endif
 
-using namespace OpenZWave::Internal::Platform;
+namespace OpenZWave {
+namespace Internal {
+namespace Platform {
 
 //-----------------------------------------------------------------------------
 //	<ThreadImpl::ThreadImpl>
@@ -188,3 +190,6 @@ void ThreadImpl::Run
 	// Let any watchers know that the thread has finished running
 	m_owner->Notify();
 }
+} // namespace Platform
+} // namespace Internal
+} // namespace OpenZWave

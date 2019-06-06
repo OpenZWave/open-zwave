@@ -43,7 +43,9 @@
 #include "value_classes/ValueString.h"
 #include "value_classes/ValueInt.h"
 
-using namespace OpenZWave::Internal::CC;
+namespace OpenZWave {
+namespace Internal {
+namespace CC {
 
 enum ManufacturerSpecificCmd
 {
@@ -413,5 +415,7 @@ void ManufacturerSpecific::setLoadedConfigRevision
 		value->OnValueRefreshed( rev );
 		value->Release();
 	}
-
 }
+} // namespace CC
+} // namespace Internal
+} // namespace OpenZWave

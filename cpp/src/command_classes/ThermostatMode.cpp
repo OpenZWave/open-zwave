@@ -37,7 +37,9 @@
 
 #include "tinyxml.h"
 
-using namespace OpenZWave::Internal::CC;
+namespace OpenZWave {
+namespace Internal {
+namespace CC {
 
 enum ThermostatModeCmd
 {
@@ -454,3 +456,6 @@ void ThermostatMode::CreateVars
 		node->CreateValueList( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_ThermostatMode::Mode, "Mode", "", false, false, 1, m_supportedModes, defaultValue, 0 );
 	}
 }
+} // namespace CC
+} // namespace Internal
+} // namespace OpenZWave

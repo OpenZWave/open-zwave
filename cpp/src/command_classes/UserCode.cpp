@@ -37,7 +37,9 @@
 #include "value_classes/ValueString.h"
 #include "value_classes/ValueRaw.h"
 
-using namespace OpenZWave::Internal::CC;
+namespace OpenZWave {
+namespace Internal {
+namespace CC {
 
 enum UserCodeCmd
 {
@@ -432,3 +434,6 @@ void UserCode::CreateVars
 		node->CreateValueShort( ValueID::ValueGenre_System, GetCommandClassId(), _instance, ValueID_Index_UserCode::RemoveCode, "Remove User Code", "", false, true, 0, 0);
 	}
 }
+} // namespace CC
+} // namespace Internal
+} // namespace OpenZWave

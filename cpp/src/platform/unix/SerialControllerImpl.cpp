@@ -43,7 +43,9 @@ cfsetspeed(struct termios *tios, speed_t speed)
 }
 #endif
 
-using namespace OpenZWave::Internal::Platform;
+namespace OpenZWave {
+namespace Internal {
+namespace Platform {
 
 //-----------------------------------------------------------------------------
 // <SerialControllerImpl::SerialControllerImpl>
@@ -379,3 +381,6 @@ uint32 SerialControllerImpl::Write
 	bytesWritten = write( m_hSerialController, _buffer, _length);
 	return bytesWritten;
 }
+} // namespace Platform
+} // namespace Internal
+} // namespace OpenZWave

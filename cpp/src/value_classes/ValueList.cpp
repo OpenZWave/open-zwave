@@ -33,7 +33,9 @@
 #include "Localization.h"
 #include <ctime>
 
-using namespace OpenZWave::Internal::VC;
+namespace OpenZWave {
+namespace Internal {
+namespace VC {
 
 
 //-----------------------------------------------------------------------------
@@ -418,9 +420,6 @@ ValueList::Item const *ValueList::GetItem() const {
 		return NULL;
 	}
 }
-
-
-
-
-
-
+} // namespace VC
+} // namespace Internal
+} // namespace OpenZWave

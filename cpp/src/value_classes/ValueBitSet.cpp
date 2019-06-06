@@ -34,7 +34,9 @@
 #include "Localization.h"
 #include <ctime>
 
-using namespace OpenZWave::Internal::VC;
+namespace OpenZWave {
+namespace Internal {
+namespace VC {
 
 
 //-----------------------------------------------------------------------------
@@ -424,3 +426,6 @@ void ValueBitSet::OnValueRefreshed
 		break;
 	}
 }
+} // namespace VC
+} // namespace Internal
+} // namespace OpenZWave

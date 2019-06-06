@@ -36,7 +36,9 @@
 
 #include "value_classes/ValueByte.h"
 
-using namespace OpenZWave::Internal::CC;
+namespace OpenZWave {
+namespace Internal {
+namespace CC {
 
 enum SoundSwitchCmd
 {
@@ -306,3 +308,6 @@ void SoundSwitch::CreateVars
 		node->CreateValueByte( ValueID::ValueGenre_Config, GetCommandClassId(), _instance, ValueID_Index_SoundSwitch::Volume, "Volume", "", false, false, 100, 0);
 	}
 }
+} // namespace CC
+} // namespace Internal
+} // namespace OpenZWave

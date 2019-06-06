@@ -35,7 +35,9 @@
 #include "Group.h"
 #include "platform/Log.h"
 
-using namespace OpenZWave::Internal::CC;
+namespace OpenZWave {
+namespace Internal {
+namespace CC {
 
 enum MultiChannelAssociationCmd
 {
@@ -462,4 +464,7 @@ void MultiChannelAssociation::Remove
 		GetDriver()->SendMsg( msg, Driver::MsgQueue_Send );
 	}
 }
+} // namespace CC
+} // namespace Internal
+} // namespace OpenZWave
 

@@ -28,9 +28,6 @@
 #include <string.h>
 
 #include "command_classes/CommandClasses.h"
-
-using namespace OpenZWave::Internal::CC;
-
 #include "command_classes/Alarm.h"
 #include "command_classes/ApplicationStatus.h"
 #include "command_classes/Association.h"
@@ -103,6 +100,10 @@ using namespace OpenZWave::Internal::CC;
 #include "Options.h"
 #include "Utils.h"
 #include "Localization.h"
+
+namespace OpenZWave {
+namespace Internal {
+namespace CC {
 
 //-----------------------------------------------------------------------------
 //	<CommandClasses::CommandClasses>
@@ -353,5 +354,8 @@ std::list<uint8> CommandClasses::GetAdvertisedCommandClasses
 	CommandClasses& cc = Get();
 	return cc.m_advertisedCommandClasses;
 }
+} // namespace CC
+} // namespace Internal
+} // namespace OpenZWave
 
 

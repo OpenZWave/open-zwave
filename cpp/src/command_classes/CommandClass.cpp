@@ -42,7 +42,9 @@
 #include "value_classes/Value.h"
 #include "value_classes/ValueStore.h"
 
-using namespace OpenZWave::Internal::CC;
+namespace OpenZWave {
+namespace Internal {
+namespace CC {
 
 static uint8 const	c_sizeMask		= 0x07;
 static uint8 const	c_scaleMask		= 0x18;
@@ -885,4 +887,7 @@ bool CommandClass::HandleIncomingMsg( uint8 const* _data, uint32 const _length, 
 	Log::Write(LogLevel_Warning, GetNodeId(), "Routing HandleIncomingMsg to HandleMsg - Please Report: %s ", GetCommandClassName().c_str());
 	return HandleMsg(_data, _length, _instance);
 }
+} // namespace CC
+} // namespace Internal
+} // namespace OpenZWave
 

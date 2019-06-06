@@ -30,7 +30,9 @@
 #include "platform/Thread.h"
 #include "ThreadImpl.h"
 
-using namespace OpenZWave::Internal::Platform;
+namespace OpenZWave {
+namespace Internal {
+namespace Platform {
 
 
 //-----------------------------------------------------------------------------
@@ -155,4 +157,6 @@ void ThreadImpl::Run
 	// Let any watchers know that the thread has finished running.
 	m_owner->Notify();
 }
-
+} // namespace Platform
+} // namespace Internal
+} // namespace OpenZWave

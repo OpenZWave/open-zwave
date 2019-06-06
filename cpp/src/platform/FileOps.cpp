@@ -36,7 +36,9 @@
 #include "platform/unix/FileOpsImpl.h"	// Platform-specific implementation of a File Operations
 #endif
 
-using namespace OpenZWave::Internal::Platform;
+namespace OpenZWave {
+namespace Internal {
+namespace Platform {
 
 FileOps* FileOps::s_instance = NULL;
 FileOpsImpl* FileOps::m_pImpl = NULL;
@@ -195,3 +197,6 @@ FileOps::~FileOps
 {
 	delete m_pImpl;
 }
+} // namespace Platform
+} // namespace Internal
+} // namespace OpenZWave

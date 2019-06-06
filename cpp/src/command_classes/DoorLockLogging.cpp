@@ -40,7 +40,9 @@
 
 #include "tinyxml.h"
 
-using namespace OpenZWave::Internal::CC;
+namespace OpenZWave {
+namespace Internal {
+namespace CC {
 
 enum DoorLockLoggingCmd
 {
@@ -331,5 +333,8 @@ void DoorLockLogging::CreateVars
   		node->CreateValueString( ValueID::ValueGenre_User, GetCommandClassId(), _instance, ValueID_Index_DoorLockLogging::LogRecord, "Log Record", "", true, false, "", 0 );
 	}
 }
+} // namespace CC
+} // namespace Internal
+} // namespace OpenZWave
 
 
