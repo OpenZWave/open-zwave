@@ -33,24 +33,26 @@
 
 namespace OpenZWave
 {
-	namespace Internal {
-		namespace Platform {
-	class MutexImpl
+	namespace Internal
 	{
-	private:
-		friend class Mutex;
+		namespace Platform
+		{
+			class MutexImpl
+			{
+				private:
+					friend class Mutex;
 
-		MutexImpl();
-		~MutexImpl();
+					MutexImpl();
+					~MutexImpl();
 
-		bool Lock( bool const _bWait = true );
-		void Unlock();
+					bool Lock(bool const _bWait = true);
+					void Unlock();
 
-		bool IsSignalled();
+					bool IsSignalled();
 
-		int32				m_lockCount;				// Keep track of the locks (there can be more than one if they occur on the same thread.
-		pthread_mutex_t		m_criticalSection;
-	};
+					int32 m_lockCount;				// Keep track of the locks (there can be more than one if they occur on the same thread.
+					pthread_mutex_t m_criticalSection;
+			};
 		} // namespace Platform
 	} // namespace Internal
 } // namespace OpenZWave

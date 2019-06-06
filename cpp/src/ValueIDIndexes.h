@@ -25,8 +25,6 @@
 //
 //-----------------------------------------------------------------------------
 
-
-
 /* This file is includes the pre-processed ValueIDIndexesDefines.h to avoid problems
  * with MSVC not supporting enough arguments with Macro's.
  * If you are adding a ValueID, you should add its index ENUM to ValuIDIndexDefines.def and the run

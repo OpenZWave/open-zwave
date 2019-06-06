@@ -35,29 +35,29 @@
 
 namespace OpenZWave
 {
-namespace Internal
-{
-namespace Platform
-{
-
-	class FileOpsImpl
+	namespace Internal
 	{
-		friend class FileOps;
+		namespace Platform
+		{
 
-	private:
-		FileOpsImpl();
-		~FileOpsImpl();
+			class FileOpsImpl
+			{
+					friend class FileOps;
 
-		bool FolderExists( const string &_filename );
-		bool FileExists( const string _filename );
-		bool FileWriteable ( const string _filename );
-		bool FileRotate ( const string _filename );
-		bool FileCopy (const string, const string);
-		bool FolderCreate( const string _dirname);
+				private:
+					FileOpsImpl();
+					~FileOpsImpl();
 
-	};
-} // namespace Platform
-} // namespace Internal
+					bool FolderExists(const string &_filename);
+					bool FileExists(const string _filename);
+					bool FileWriteable(const string _filename);
+					bool FileRotate(const string _filename);
+					bool FileCopy(const string, const string);
+					bool FolderCreate(const string _dirname);
+
+			};
+		} // namespace Platform
+	} // namespace Internal
 } // namespace OpenZWave
 
 #endif //_FileOpsImpl_H

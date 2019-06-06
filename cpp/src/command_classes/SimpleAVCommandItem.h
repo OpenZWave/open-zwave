@@ -34,30 +34,30 @@
 
 namespace OpenZWave
 {
-namespace Internal
-{
-namespace CC
-{
-
-	class SimpleAVCommandItem
+	namespace Internal
 	{
-	public:
-		SimpleAVCommandItem(uint16 const _code, string _name, string _description, uint16 const _version);
-		uint16 GetCode();
-		string GetName();
-		string GetDescription();
-		uint16 GetVersion();
+		namespace CC
+		{
 
-		static vector<SimpleAVCommandItem> GetCommands();
+			class SimpleAVCommandItem
+			{
+				public:
+					SimpleAVCommandItem(uint16 const _code, string _name, string _description, uint16 const _version);
+					uint16 GetCode();
+					string GetName();
+					string GetDescription();
+					uint16 GetVersion();
 
-	private:
-		uint16 m_code;
-		string m_name;
-		string m_description;
-		uint16 m_version;
-	};
-} // namespace CC
-} // namespace Internal
+					static vector<SimpleAVCommandItem> GetCommands();
+
+				private:
+					uint16 m_code;
+					string m_name;
+					string m_description;
+					uint16 m_version;
+			};
+		} // namespace CC
+	} // namespace Internal
 } // namespace CC
 
 #endif

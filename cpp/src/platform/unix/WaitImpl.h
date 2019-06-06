@@ -42,35 +42,35 @@ namespace OpenZWave
 	{
 		namespace Platform
 		{
-	/** \brief Windows specific implementation of Wait objects.
-	 */
-	class WaitImpl
-	{
-	private:
-		friend class Wait;
+			/** \brief Windows specific implementation of Wait objects.
+			 */
+			class WaitImpl
+			{
+				private:
+					friend class Wait;
 
-		WaitImpl( Wait* _owner );
-		virtual ~WaitImpl();
+					WaitImpl(Wait* _owner);
+					virtual ~WaitImpl();
 
-		void AddWatcher( Wait::pfnWaitNotification_t _callback, void* _context );
-		bool RemoveWatcher( Wait::pfnWaitNotification_t _callback, void* _context );
-		void Notify();
+					void AddWatcher(Wait::pfnWaitNotification_t _callback, void* _context);
+					bool RemoveWatcher(Wait::pfnWaitNotification_t _callback, void* _context);
+					void Notify();
 
-		static int32 Multiple( Wait** _objects, uint32 _numObjects, int32 _timeout = -1 );
+					static int32 Multiple(Wait** _objects, uint32 _numObjects, int32 _timeout = -1);
 
-		WaitImpl( Wait const&	);					// prevent copy
-		WaitImpl& operator = ( WaitImpl const& );	// prevent assignment
+					WaitImpl(Wait const&);					// prevent copy
+					WaitImpl& operator =(WaitImpl const&);	// prevent assignment
 
-		struct Watcher
-		{
-			Wait::pfnWaitNotification_t		m_callback;
-			void*							m_context;
-		};
+					struct Watcher
+					{
+							Wait::pfnWaitNotification_t m_callback;
+							void* m_context;
+					};
 
-		list<Watcher>		m_watchers;
-		Wait*				m_owner;
-		pthread_mutex_t		m_criticalSection;
-	};
+					list<Watcher> m_watchers;
+					Wait* m_owner;
+					pthread_mutex_t m_criticalSection;
+			};
 		} // namespace Platform
 	} // namespace Internal
 } // namespace OpenZWave

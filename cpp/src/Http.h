@@ -37,79 +37,77 @@ namespace OpenZWave
 {
 	class Driver;
 
+	namespace Internal
+	{
+		/* This is a abstract class you can implement if you wish to override the built in HTTP Client
+		 * Code in OZW with your own code.
+		 *
+		 * The built in Code uses threads to download updated files to a temporary file
+		 * and then this class moves the files into the correct place.
+		 *
+		 */
 
-namespace Internal
-{
-	/* This is a abstract class you can implement if you wish to override the built in HTTP Client
-	 * Code in OZW with your own code.
-	 *
-	 * The built in Code uses threads to download updated files to a temporary file
-	 * and then this class moves the files into the correct place.
-	 *
-	 */
+		struct HttpDownload
+		{
+				string filename;
+				string url;
+				uint8 node;
+				enum DownloadType
+				{
+					None,
+					File,
+					Config,
+					MFSConfig
+				};
+				DownloadType operation;
+				enum Status
+				{
+					Ok,
+					Failed
+				};
+				Status transferStatus;
 
-	struct HttpDownload {
-			string filename;
-			string url;
-			uint8 node;
-			enum DownloadType
-			{
-				None,
-				File,
-				Config,
-				MFSConfig
-			};
-			DownloadType operation;
-			enum Status
-			{
-				Ok,
-				Failed
-			};
-			Status transferStatus;
+		};
 
-	};
+		class i_HttpClient
+		{
+			public:
+				i_HttpClient(Driver *);
+				virtual ~i_HttpClient()
+				{
+				}
+				;
+				virtual bool StartDownload(HttpDownload *transfer) = 0;
+				void FinishDownload(HttpDownload *transfer);
+			private:
+				Driver* m_driver;
+		};
 
-	class i_HttpClient {
-		public:
-			i_HttpClient(Driver *);
-			virtual ~i_HttpClient() {};
-			virtual bool StartDownload(HttpDownload *transfer) = 0;
-			void FinishDownload(HttpDownload *transfer);
-		private:
-			Driver* 	m_driver;
-	};
+		/* this is OZW's implementation of a Http Client. It uses threads to download Config Files in the background.
+		 *
+		 */
 
+		class HttpClient: public i_HttpClient
+		{
+			public:
+				HttpClient(Driver *);
+				~HttpClient();
+				bool StartDownload(HttpDownload *transfer);
+			private:
 
-	/* this is OZW's implementation of a Http Client. It uses threads to download Config Files in the background.
-	 *
-	 */
+				static void HttpThreadProc(Internal::Platform::Event* _exitEvent, void* _context);
+				//Driver* 	m_driver;
+				Internal::Platform::Event* m_exitEvent;
 
+				Internal::Platform::Thread* m_httpThread;
+				bool m_httpThreadRunning;
+				Internal::Platform::Mutex* m_httpMutex;
+				list<HttpDownload *> m_httpDownlist;
+				Internal::Platform::Event* m_httpDownloadEvent;
 
+		};
 
-
-	class HttpClient : public i_HttpClient {
-		public:
-			HttpClient(Driver *);
-			~HttpClient();
-			bool StartDownload(HttpDownload *transfer);
-		private:
-
-			static void HttpThreadProc(Internal::Platform::Event* _exitEvent,  void* _context);
-			//Driver* 	m_driver;
-			Internal::Platform::Event* 		m_exitEvent;
-
-			Internal::Platform::Thread*		m_httpThread;
-			bool		m_httpThreadRunning;
-			Internal::Platform::Mutex*			  m_httpMutex;
-			list<HttpDownload *> m_httpDownlist;
-			Internal::Platform::Event*			  m_httpDownloadEvent;
-
-	};
-
-
-} // namespace Internal
+	} // namespace Internal
 } /* namespace OpenZWave */
-
-
 
 #endif
