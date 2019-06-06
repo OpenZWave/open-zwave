@@ -188,8 +188,7 @@ namespace OpenZWave
 				// Yields the same as API above w/o the usage page and usage Id filters
 				wchar_t buffer[AQS_LENGTH];
 				swprintf_s(buffer, AQS_FORMAT, m_vendorId, m_productId);
-				auto selector = ref
-				new ::Platform::String(buffer);
+				auto selector = ref new ::Platform::String(buffer);
 
 			return create_task(Windows::Devices::Enumeration::DeviceInformation::FindAllAsync(selector))
 			.then([this](DeviceInformationCollection ^ devices) -> ::Platform::String ^
@@ -250,11 +249,9 @@ namespace OpenZWave
 		uint32 HidController::SendFeatureReport(uint8* _buffer, uint32 _length, unsigned short reportId)
 		{
 			auto featureReport = m_device->CreateFeatureReport();
-			auto dataWriter = ref
-			new DataWriter();
+			auto dataWriter = ref new DataWriter();
 
-			auto array = ref
-			new ::Platform::Array<uint8>(_buffer, _length);
+			auto array = ref new ::Platform::Array<uint8>(_buffer, _length);
 			dataWriter->WriteBytes(::Platform::ArrayReference < uint8 > (_buffer, _length));
 
 			featureReport->Data = dataWriter->DetachBuffer();

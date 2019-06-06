@@ -239,8 +239,7 @@ namespace OpenZWave
 				return 0;
 			}
 
-			DataWriter ^ writer = ref
-			new DataWriter();
+			DataWriter ^ writer = ref new DataWriter();
 			writer->WriteBytes(ref new ::Platform::Array<uint8>(_buffer, _length));
 			try
 			{
